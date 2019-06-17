@@ -1,0 +1,20 @@
+
+/*
+ * quack
+*/
+
+"Games"
+{
+	"left4dead2"
+	{
+		"Signatures"
+		{
+			"PassServerEntityFilter"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8b\xec\x57\x8b\x7d\x0c\x85\xff\x75\x2a\xb0\x01\x5f\x5d\xc3\x56\x8b\x75"
+				"linux"		"@_Z22PassServerEntityFilterPK13IHandleEntityS1_"
+			}
+		}
+	}
+}

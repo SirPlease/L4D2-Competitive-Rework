@@ -1,0 +1,491 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Addresses"
+		{
+			"CDirector"
+			{
+				"windows"
+				{
+					"signature" "DirectorMusicBanks_OnRoundStart"
+					"read" "12"
+				}
+				"linux"
+				{
+					"signature" "TheDirector"
+				}
+				"read" "0"
+			}
+			"TerrorNavMesh"
+			{
+				"windows"
+				{
+					"signature" "CommandNavSave"
+					"read" "11"
+				}
+				"linux"
+				{
+					"signature" "TheNavMesh"
+				}
+				"read" "0"
+			}
+		}
+		
+		"Offsets"
+		{
+			/* Virtual Table Offsets */
+			"CBaseEntity::GetBaseEntity"
+			{
+				"windows" 	"5"
+				"linux"		"6"
+			}
+
+			"CTerrorPlayer::DoAnimationEvent"
+			{
+				"windows"	"509"
+				"linux"		"510"
+			}
+
+			/* Offsets into CDirector of other CDirector class pointers */
+
+			"CDirectorTacticalServices"
+			{
+				"windows"	"1384"
+				"linux"		"1384"
+			}
+
+			"CDirectorItemManager"
+			{
+				"windows"	"1388"
+				"linux"		"1388"
+			}
+
+			"CDirectorMusicBanks"
+			{
+				"windows"	"1392"
+				"linux"		"1392"
+			}
+
+			"CDirectorSessionManager"
+			{
+				"windows"	"1396"
+				"linux"		"1396"
+			}
+
+			"CDirectorScriptedEventManager"
+			{
+				"windows"	"1400"
+				"linux"		"1400"
+			}
+
+			"CDirectorVersusMode"
+			{
+				"windows" 	"1404"
+				"linux"		"1404"
+			}
+
+			"CDirectorSurvivalMode"
+			{
+				"windows"	"1408"
+				"linux"		"1408"
+			}
+
+			"CDirectorScavengeMode"
+			{
+				"windows"	"1412"
+				"linux"		"1412"
+			}
+
+			"CDirectorChallengeMode"
+			{
+				"windows"	"1416"
+				"linux"		"1416"
+			}
+			
+			/* CDirector Variable Offsets */
+			
+			"CDirector::m_iTankCount"
+			{
+				"windows"	"256"
+				"linux"		"256"
+			}
+
+			"CDirector::m_fTankFlowDistance"
+			{
+				"windows"	"260"
+				"linux"		"260"
+			}
+
+			"CDirector::MobSpawnTimer"
+			{
+				"windows"	"468"
+				"linux"		"468"
+			}
+
+			"CDirector::ClassDeathTimers"
+			{
+				"windows"	"500"
+				"linux"		"500"
+			}
+
+			"CDirector::ClassSpawnTimers"
+			{
+				"windows"	"564"
+				"linux"		"564"
+			}
+
+			"CDirector::m_fMobSpawnSize"
+			{
+				"windows"	"708"
+				"linux"		"708"
+			}
+
+			"CDirector::m_bIsFirstRoundFinished"
+			{
+				"windows"	"1161"
+				"linux"		"1161"
+			}
+
+			"CDirector::m_bIsSecondroundFinished"
+			{
+				"windows"	"1162"
+				"linux"		"1162"
+			}
+			
+			"CDirector::m_iTankPassedCount"
+			{
+				"windows"	"88"
+				"linux"		"88"
+			}
+			
+			/* CDirectorVersusMode Variable Offsets */
+			
+			"CDirectorVersusMode::m_bVersusRoundInProgress"
+			{
+				"windows"	"4"
+				"linux"		"4"
+			}
+			
+			"CDirectorVersusMode::m_bFirstMap"
+			{
+				"windows"	"5"
+				"linux"		"5"
+			}
+			
+			"CDirectorVersusMode::m_bTransitioning"
+			{
+				"windows"	"6"
+				"linux"		"6"
+			}
+			
+
+			"CDirectorVersusMode::m_iCampaignScores"
+			{
+				"windows"	"8"
+				"linux"		"8"
+			}
+			
+			"CDirectorVersusMode::VersusStartTimer"
+			{
+				"windows" 	"28"
+				"linux"		"28"
+			}
+
+			"CDirectorVersusMode::m_fTankSpawnFlowPercent"
+			{
+				"windows"	"40"
+				"linux"		"40"
+			}
+			
+			"CDirectorVersusMode::m_fWitchSpawnFlowPercent"
+			{
+				"windows"	"48"
+				"linux"		"48"
+			}
+
+			"CDirectorVersusMode::m_bTankThisRound"
+			{
+				"windows"	"56"
+				"linux"		"56"
+			}
+			
+			"CDirectorVersusMode::m_bWitchThisRound"
+			{
+				"windows"	"58"
+				"linux"		"58"
+			}
+
+			"CDirectorVersusMode::m_fFinaleTravelCompletionValue"
+			{
+				"windows"	"60"
+				"linux"		"60"
+			}
+
+			"CDirectorVersusMode::m_bInFinaleMap"
+			{
+				"windows"	"68"
+				"linux"		"68"
+			}
+
+			"CDirectorVersusMode::m_iNumMarkersReached"
+			{
+				"windows"	"72"
+				"linux"		"72"
+			}
+
+			"CDirectorVersusMode::m_iMarkersCount"
+			{
+				"windows"	"76"
+				"linux"		"76"
+			}
+
+			"CDirectorVersusMode::UpdateMarkersTimer"
+			{
+				"windows"	"80"
+				"linux"		"80"
+			}
+
+			/* CDirectorScavengeMode Offsets */
+
+			"CDirectorScavengeMode::m_bScavengeRoundInProgress"
+			{
+				"windows"	"8"
+				"linux"		"8"
+			}
+
+			"CDirectorScavengeMode::m_bAreTeamsSwapped"
+			{
+				"windows"	"10"
+				"linux"		"10"
+			}
+
+			"CDirectorScavengeMode::m_bInOvertime"
+			{
+				"windows"	"11"
+				"linux"		"11"
+			}
+
+			"CDirectorScavengeMode::m_bInOvertime2"
+			{
+				"windows"	"12"
+				"linux"		"12"
+			}
+
+			"CDirectorScavengeMode::RoundSetupTimer"
+			{
+				"windows"	"16"
+				"linux"		"16"
+			}
+			
+			"CDirectorScavengeMode::OvertimeGraceTimer"
+			{
+				"windows"	"28"
+				"linux"		"28"
+			}
+
+			/* TerrorNavMesh Offsets */
+			
+			"TerrorNavMesh::m_fMapMaxFlowDistance"
+			{
+				"windows"	"1528"
+				"linux"		"1524"
+				// Compared against inside of the current_flow_distance ccommand.
+			}
+			
+			/* Structure Sizes */
+			/* Look for InitGameSystems(), NavMeshFactory(), and CDirector::CDirector() to find sizes */
+			
+			"sizeof_CDirector"
+			{
+				"windows"	"1420"
+				"linux"		"1420"
+			}
+			
+			/* Google: sizeof empty */
+			"sizeof_CDirectorTacticalServices"
+			{
+				"windows"	"1"
+				"linux"		"1"
+			}
+			
+			"sizeof_CDirectorItemManager"
+			{
+				"windows"	"1128"
+				"linux"		"1128"
+			}
+			
+			"sizeof_CDirectorMusicBanks"
+			{
+				"windows"	"92"
+				"linux"		"92"
+			}
+			
+			"sizeof_CDirectorSessionManager"
+			{
+				"windows"	"76"
+				"linux"		"76"
+			}
+			
+			"sizeof_CDirectorScriptedEventManager"
+			{
+				"windows"	"340"
+				"linux"		"340"
+			}
+			
+			"sizeof_CDirectorVersusMode"
+			{
+				"windows"	"92"
+				"linux"		"92"
+			}
+			
+			"sizeof_CDirectorSurvivalMode"
+			{
+				"windows"	"160"
+				"linux"		"160"
+			}
+			
+			"sizeof_CDirectorScavengeMode"
+			{
+				"windows"	"104"
+				"linux"		"104"
+			}
+			
+			"sizeof_CDirectorChallengeMode"
+			{
+				"windows"	"412"
+				"linux"		"412"
+			}
+			
+			"sizeof_TerrorNavMesh"
+			{
+				"windows"	"1748"
+				"linux"		"1744"
+			}
+			
+			/* CTerrorPlayer Variable Offsets */
+			
+			"CTerrorPlayer::m_preIncapacitatedHealth"
+			{
+				"windows"	"14876"
+				"linux"		"14856"
+			}
+			
+			"CTerrorPlayer::m_preIncapacitatedHealthBuffer"
+			{
+				"windows"	"14880"
+				"linux"		"14860"
+			}
+			
+			// I have no idea what this variable is supposed to be so I'm skipping it!
+			"CTerrorPlayer::SpawnTimer"
+			{
+				"windows"	"11308"
+				"linux"		"11288"
+			}
+			
+			"CTerrorPlayer::InvulnerabilityTimer"
+			{
+				"windows"	"11924"
+				"linux"		"11904"
+			}	
+			
+			"CTerrorPlayer::m_iTankTickets"
+			{
+				"windows"	"12476"
+				"linux"		"12456"
+			}
+			
+			"CTerrorPlayer::m_iShovePenalty"
+			{
+				"windows"	"11536"
+				"linux"		"11516"
+			}
+			
+			"CTerrorPlayer::m_fNextShoveTime"
+			{
+				"windows"	"11532"
+				"linux"		"11512"
+			}
+			
+			/* TerrorNavArea Variable Offsets */
+			
+			"TerrorNavArea::m_flow"
+			{
+				"windows"	"332"
+				"linux"		"340"
+			}
+			
+			/* CInferno Variable Offsets */
+			
+			"CInferno::m_maxFlames"
+			{
+				"windows"	"2960"
+				"linux"		"2980"
+				// This offset is cmp'd against 64 at the start
+				// of CInferno::CreateFire. Look for 2 refs to "insect_swarm" in 1 func.
+			}
+		}
+		
+		"Signatures"
+		{
+			/* Used solely to get the offset for TheDirector */
+			"DirectorMusicBanks_OnRoundStart"
+			{
+				"library"  "server"
+				"windows"  "\x55\x8B\xEC\x83\xEC\x2A\x56\x57\x8B\xF9\x8B\x0D\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84"
+				/* 55 8B EC 83 EC ? 56 57 8B F9 8B 0D ? ? ? ? E8 ? ? ? ? 84 */
+			}
+			
+			/* Used solely to get the offset for TheNavMesh 
+			   Look for string "Navigation map '%s' saved.\n" in a short function */
+			"CommandNavSave"
+			{
+				"library"	"server"
+				"windows"  "\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x0D\x2A\x2A\x2A\x2A\x8B\x01\x8B\x50\x2A\xFF\xD2\x8B\x0D\x2A\x2A\x2A\x2A\x84\xC0"
+				/* E8 ? ? ? ? 84 C0 74 ? 8B 0D ? ? ? ? 8B 01 8B 50 ? FF D2 8B 0D ? ? ? ? 84 C0 */
+			}
+
+			/* Find the Director/ZombieManager singleton classes */
+			
+			"TheDirector"
+			{
+				"library"	"server"
+				"linux"		"@TheDirector"
+			}
+			
+			"TheNavMesh"
+			{
+				"library"	"server"
+				"linux"		"@TheNavMesh"
+			}
+
+			// find string " Highest survivor flow distance = %f  Tank at = %f witch at %f\n" in CDirectorVersusMode::UpdateVersusBossSpawning
+			// look for __RTDynamicCast which is called on the result of this function.
+			"CNavMesh::GetNavArea"
+			{
+				"library"  "server"
+				"linux"    "@_ZNK8CNavMesh10GetNavAreaERK6Vectorf"
+				"windows"  "\x55\x8B\xEC\x83\xEC\x2A\x83\x79\x2A\x00\x75\x08\x33\xC0\x8B\xE5\x5D\xC2\x08"
+				/* 55 8B EC 83 EC ? 83 79 ? 00 75 08 33 C0 8B E5 5D C2 08 */
+			}
+
+			"CDirector::TryOfferingTankBot"
+			{
+				"library"  "server"
+				"linux"    "@_ZN9CDirector18TryOfferingTankBotEP11CBaseEntityb"
+				"windows"  "\x55\x8B\xEC\x51\x83\x7D\x08\x00\x56\x8B\xF1\x89"
+				/* 55 8B EC 51 83 7D 08 0  56 8B F1 89 */
+			}
+
+			"CTerrorPlayer::GetFlowDistance"
+			{
+				"library"  "server"
+				"linux"    "@_ZNK13CTerrorPlayer15GetFlowDistanceEN13TerrorNavArea8FlowTypeE"
+				"windows"  "\x55\x8B\xEC\x8B\x01\x8B\x90\x2A\x2A\x2A\x2A\xFF\xD2\x85"
+				/* 55 8B EC 8B 01 8B 90 ? ? ? ? FF D2 85 */
+			}
+		}
+		
+	}
+}

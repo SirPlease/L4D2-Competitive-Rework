@@ -1,0 +1,53 @@
+"Phrases"
+{
+	"Cstrike_Chat_CT_Loc"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"			"(Counter-Terrorist) {1} :  {2}"
+	}
+	"Cstrike_Chat_CT"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"			"(Counter-Terrorist) {1} :  {2}"
+	}
+	"Cstrike_Chat_T_Loc"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"			"(Terrorist) {1} :  {2}"
+	}
+	"Cstrike_Chat_T"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"			"(Terrorist) {1} :  {2}"
+	}
+	"Cstrike_Chat_CT_Dead"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"			"*DEAD*(Counter-Terrorist) {1} :  {2}"
+	}
+	"Cstrike_Chat_T_Dead"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"			"*DEAD*(Terrorist) {1} :  {2}"
+	}
+	"Cstrike_Chat_Spec"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"			"(Spectator) {1} :  {2}"
+	}
+	"Cstrike_Chat_All"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"			"{1} :  {2}"
+	}
+	"Cstrike_Chat_AllDead"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"			"*DEAD* {1} :  {2}"
+	}
+	"Cstrike_Chat_AllSpec"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"			"*SPEC* {1} :  {2}"
+	}
+}

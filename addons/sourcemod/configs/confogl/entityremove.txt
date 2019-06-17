@@ -1,0 +1,92 @@
+//	Entity Remover KeyValues file
+//	************
+//	Each major section should have a name which matches an entityclassname
+//	Each minor section can have a throwaway name to describe the entry
+//	
+//	KV Action values:
+//	Kill			1
+//
+//	KV Property Types:
+//	Int				1
+//	Float			2
+//	Boolean			3
+//	String			4
+//
+//	KV Condition Types:
+//	Equal			1
+//	Not Equal		2
+//	Less Than		3
+//	Greater Than	4
+//	Contains (STR)	5
+//
+//	Property value is LHS, KV defined value is RHS.
+//
+//	Example:
+//	"entityclassname" // Class name of entities to be handled
+//	{
+//		"KillMyEntity" // throwaway name for this removal case
+//		{
+//			"cvar"		"remove_my_entities" 	// Cvar to be created (if not exists) and checked before removal. Should be bool.
+//			"cvar_desc"	"Removes my entities" 	// Description to be used if convar will be created. Might be okay blank if cvar exists
+//			"cvar_val"	"1" 					// Default value of the CVAR if it will be created. Might be okay blank if cvar exists
+//			"map"		"c5m4_quarter" 			// Map to apply this entry to--will not be run on other maps
+//			"excludemap"	"c8m4_interior"			// Map to not apply this entry to--will be run on other maps (if map and exclude map is specified, if will only run on a map specified at map)
+//			"action"	"1" 					// Action to take on the entity (KILL=1)
+//			"property"	"m_fMyProp" 			// Entity property name to use in a check
+//			"propdata"	"1" 					// is the property a SEND prop or DATA prop? 0 = send, 1 = data
+//			"proptype"	"2" 					// Data type of the property. 2 = float
+//			"condition"	"3" 					// Condition to apply to the property. 3 = less than.  If m_fMyProp < 500.0, kill this entity
+//			"propval"	"500.0" 				// Value to compare the property against
+//		}
+//	}
+"EntityRemover"
+{
+	"trigger_hurt_ghost"
+	{
+		"GhostHurt"
+		{
+			"cvar"		"disable_ghost_hurt"
+			"cvar_desc" "Prevents ghost infected from dying when falling into water or off c1m1"
+			"cvar_val"	"0"
+			"action"	"1"
+		}
+	}
+	"func_playerinfected_clip"
+	{
+		"RemoveInfClip"
+		{
+			"cvar"		"remove_inf_clips"
+			"cvar_desc"	"Removes all infected clip brushes.  This fixes tanks getting stuck on Dark Carnival 5 and allows a bit more area for infected to spawn on a few maps. Removed for No Mercy 4 because of elevator bug"
+			"cvar_val"	"1"
+			"action"	"1"
+			"excludemap"	"c8m4_interior"
+		}
+	}
+	"trigger_hurt"
+	{
+		"KillBombTriggers"
+		{
+			"cvar"		"remove_c5m4_hurts"
+			"cvar_desc"	"Removes all nonlethal trigger_hurt from c5m4. Removes explosion hurt spots, including some within the saferoom"
+			"cvar_val"	"1"
+			"map"		"c5m4_quarter"
+			"action"	"1"
+			"property"	"m_flDamage"
+			"propdata"	"1"
+			"proptype"	"2"
+			"condition"	"3"
+			"propval"	"500.0"
+		}
+	}
+	"logic_director_query"
+	{
+		"KillGrenadeLauncher"
+		{
+			"cvar"		"remove_grenade"
+			"cvar_desc"	"Remove all grenade launchers"
+			"cvar_val"	"1"
+			"map"		"c5m5_bridge"
+			"action"	"1"
+		}
+	}
+}

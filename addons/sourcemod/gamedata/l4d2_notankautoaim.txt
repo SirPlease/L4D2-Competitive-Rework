@@ -1,0 +1,42 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Addresses"
+		{
+			"OnWindupFinished_Sig"
+			{
+				"linux"
+				{
+					"signature"	"CTankClaw::OnWindupFinished"
+				}
+				"windows"
+				{
+					"signature"	"CTankClaw::OnWindupFinished"			
+				}
+			}
+		}
+		"Signatures"
+		{
+			"CTankClaw::OnWindupFinished"
+			{
+				"library"   "server"
+				"linux"     "@_ZN9CTankClaw16OnWindupFinishedEv"
+				"windows"   "\x83\xec\x2a\x53\x56\x57\x8b\xf1\xe8\x2a\x2a\x2a\x2a\x8b\xf8\x33\xdb\x3b\xfb\x0f\x84\x2a\x2a\x2a\x2a\xf3\x0f"
+			}
+		}
+		"Offsets"
+		{
+			"ClawTargetScan"
+			{
+				"linux"     "248"
+				"windows"   "265"
+			}
+			"Platform"
+			{
+				"linux"     "0"
+				"windows"   "1"
+			}
+		}
+	}
+}

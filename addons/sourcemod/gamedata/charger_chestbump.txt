@@ -1,0 +1,37 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Addresses"
+		{
+			"ChargerCollision_Sig"
+			{
+				"linux"
+				{
+					"signature"	"CCharge::HandleCustomCollision"
+				}
+				"windows"
+				{
+					"signature" "CCharge::HandleCustomCollision"
+				}
+			}
+		}
+		"Signatures"
+		{
+			"CCharge::HandleCustomCollision"
+			{
+				"library"   "server"
+				"linux"     "@_ZN7CCharge21HandleCustomCollisionEP11CBaseEntityRK6VectorS4_P10CGameTraceP9CMoveData"
+				"windows"	"\x55\x8B\xEC\x81\xEC\xA0\x00\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x8B\x45\x10"
+			}
+		}
+		"Offsets"
+		{
+			"HandleCustomCollision_TooShortCheck"
+			{
+				"linux"     "430"
+				"windows"	"317"
+			}
+		}
+	}
+}

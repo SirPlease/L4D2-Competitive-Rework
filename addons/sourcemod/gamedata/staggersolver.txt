@@ -1,0 +1,15 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Signatures"
+		{
+			"IsStaggering"
+			{
+				"library" "server"
+				"windows" "\x83\xB9\x2A\x2A\x2A\x2A\xFF\x74"
+				"linux" "@_ZNK13CTerrorPlayer12IsStaggeringEv"
+			}
+		}
+	}
+}

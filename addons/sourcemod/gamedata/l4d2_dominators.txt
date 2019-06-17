@@ -1,0 +1,35 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Addresses"
+		{
+			"bIsDominator"
+			{
+				"windows"
+				{
+					"signature" "CTerrorPlayer::IsClassOverLimit"
+					"read" "156"
+				}
+				"linux"
+				{
+					"signature" "CTerrorPlayer::IsClassOverLimit::bIsDominator"
+				}
+			}
+		}
+		"Signatures"
+		{
+			"CTerrorPlayer::IsClassOverLimit::bIsDominator"
+			{
+				"library"	"server"
+				"linux"	"@_ZZN13CTerrorPlayer16IsClassOverLimitEiE12bIsDominator"
+			}
+			"CTerrorPlayer::IsClassOverLimit"
+			{
+				"library"		"server"
+				"windows"		"\x83\xEC\x40\x56\x8B\x74\x24\x48\x83\xC6\xFF\x83\xFE\x05\x0F\x87\xEF\x00\x00\x00"
+				/* 83 EC 40 56 8B 74 24 48 83 C6 FF 83 FE 05 0F 87 EF 00 00 00 */
+			}
+		}
+	}
+}

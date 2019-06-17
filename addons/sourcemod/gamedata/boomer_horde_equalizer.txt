@@ -1,0 +1,31 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Addresses"
+		{
+			"OnCharacterVomitedUpon_Sig"
+			{
+				"linux"
+				{
+					"signature"	"NextBotManager::OnCharacterVomitedUpon"
+				}
+			}
+		}
+		"Signatures"
+		{
+			"NextBotManager::OnCharacterVomitedUpon"
+			{
+				"library"   "server"
+				"linux"     "@_ZN14NextBotManager22OnCharacterVomitedUponEP20CBaseCombatCharacter"
+			}
+		}
+		"Offsets"
+		{
+			"WanderersCondition"
+			{
+				"linux"     "475"
+			}
+		}
+	}
+}

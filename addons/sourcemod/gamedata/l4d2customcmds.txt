@@ -1,0 +1,122 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Signatures"
+		{
+			/*
+			* CTerrorPlayer::Fling(Vector  const&,PlayerAnimEvent_t,CBaseCombatCharacter *,float)
+			*
+			*	Vector: how target is supposed to fly, Animevent is "76" for chargerbounce, CBasePlayer is attacker, float is Incap Animation time
+			*
+			*/
+			"CTerrorPlayer_Fling"
+			{
+				"library"	"server"
+				"linux"	"@_ZN13CTerrorPlayer5FlingERK6Vector17PlayerAnimEvent_tP20CBaseCombatCharacterf"
+				"windows" "\x81\xEC\x2A\x2A\x2A\x2A\x55\x57\x8B\xE9\x33\xFF\x57\x89\x2A\x2A\x2A\xE8"
+				/* 81 EC ? ? ? ? 55 57 8B E9 33 FF 57 89 ? ? ? E8 */
+			}
+
+			/*
+			*  CTerrorPlayer::OnHitByVomitJar(CBaseCombatCharacter *)
+			*/
+			"CTerrorPlayer_OnHitByVomitJar"
+			{
+				"library"	"server"
+				"linux"	"@_ZN13CTerrorPlayer15OnHitByVomitJarEP20CBaseCombatCharacter"
+				"windows" "\x83\xEC\x2A\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2\x84\xC0\x0F"
+				/* 83 EC ? 56 8B F1 E8 ? ? ? ? 84 C0 74 ? 8B 06 8B 90 ? ? ? ? 8B CE FF D2 84 C0 0F */
+			}
+
+			/*
+			*  CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool)
+			*/
+			"CTerrorPlayer_OnVomitedUpon"
+			{
+				"library"	"server"
+				"linux"	"@_ZN13CTerrorPlayer13OnVomitedUponEPS_b"
+				"windows" "\x83\xEC\x2A\x53\x55\x56\x57\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x06\x8B"
+				/* 83 EC ? 53 55 56 57 8B F1 E8 ? ? ? ? 84 C0 74 ? 8B 06 8B */
+			}
+
+			/*
+			*	CSpitterProjectile::Detonate(void)
+			*
+			*  ->Search for string "spit_burst"
+			*/
+			"CSpitterProjectile_Detonate"
+			{
+				"library"	"server"
+				"linux"	"@_ZN18CSpitterProjectile8DetonateEv"
+				"windows"	"\x81\xEC\x8C\x2A\x2A\x2A\x55\x57\x8B\xE9\xE8\x2A\x2A\xD6\x2A\x8B\xF8\xF6\x47\x42\x04\x0F\x85\xC6\x02"
+				/* 81 EC 8C ? ? ? 55 57 8B E9 E8 ? ? D6 ? 8B F8 F6 47 42 04 0F 85 C6 02*/
+			}
+
+			/*
+			*	 CTerrorPlayer::OnAdrenalineUsed(float)
+			*	
+			*	 Float: Adrenaline Effect Duration
+			*
+			*  ->Search for string "%s used adrenaline\n", then 3 calls above. Thats the function. Param must be float.
+			*/
+			"CTerrorPlayer_OnAdrenalineUsed"
+			{
+				"library"	"server"
+				"linux"	"@_ZN13CTerrorPlayer16OnAdrenalineUsedEf"
+				"windows" "\xD9\x44\x24\x04\x56\x8B\xF1\x51\x8D\x8E\x6C\x32\x2A\x2A\xD9\x1C\x24\xE8\x2A\x2A\xD6\xFF\x80\xBE"
+				/* D9 44 24 04 56 8B F1 51 8D 8E 6C 32 ? ? D9 1C 24 E8 ? ? D6 FF 80 BE */
+			}
+
+			/*
+			*  CTerrorPlayer::SetHealthBuffer(float)
+			*
+			*  Float: Set temporary health buffer to this float
+			*
+			*  ->Search for string "RelaxedSigh", then go to the top of the function. The 3rd call should be this function. (Check for a float param)
+			*/
+			"CTerrorPlayer_SetHealthBuffer"
+			{
+				"library" "server"
+				"linux" "@_ZN13CTerrorPlayer15SetHealthBufferEf"
+				"windows" "\xD9\xEE\x56\xD9\x44\x2A\x2A\x57\xD8\xD1\x8B\xF1\xDF\xE0\xF6\xC4\x2A\x75\x04\xDD\xD9\xEB\x02"
+				/* D9 EE 56 D9 44 ? ? 57 D8 D1 8B F1 DF E0 F6 C4 ? 75 04 DD D9 EB 02 */
+			}
+			
+			/*
+			*  CTerrorPlayer::OnRevived(void)
+			*
+			*  ->Search for string "revive_success", then open vtables window. Should be the 5th member.
+			*/
+			"CTerrorPlayer_OnRevived"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer9OnRevivedEv"
+				"windows"	"\x83\xEC\x38\x53\x55\x56\x8B\xF1\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x57\xFF\xD2\x84\xC0\x0F\x84\xF1\x06"
+				/* 83 EC 38 53 55 56 8B F1 8B 06 8B 90 ? ? ? ? 57 FF D2 84 C0 0F 84 F1 06 */
+			}
+			
+			/*
+			 *   CTerrorPlayer::OnStaggered(CBaseEntity *, Vector  const*) - used by L4D2 on Survivors, causes staggering (e.g. Charger Impact nearby)
+			 */
+			"CTerrorPlayer_OnStaggered"
+			{
+				"library"	"server"
+				"linux"	"@_ZN13CTerrorPlayer11OnStaggeredEP11CBaseEntityPK6Vector"
+				"windows" "\x83\xEC\x2A\x53\x55\x56\x57\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x0F\x2A\x2A\x2A\x2A\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2\x84\xC0\x0F"
+				/* 83 EC ? 53 55 56 57 8B F1 E8 ? ? ? ? 84 C0 0F ? ? ? ? ? 8B 06 8B 90 ? ? ? ? 8B CE FF D2 84 C0 0F */
+			}
+			
+			/*
+			 *   CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector  const&) - used by L4D2 on Special Infected (got melee'd)
+			 */
+			"CTerrorPlayer_OnShovedBySurvivor"
+			{
+				"library"	"server"
+				"linux"	"@_ZN13CTerrorPlayer18OnShovedBySurvivorEPS_RK6Vector"
+				"windows" "\x81\xEC\x2A\x2A\x2A\x2A\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x0F\x2A\x2A\x2A\x2A\x2A\x8B\x8C\x2A\x2A\x2A\x2A\x2A\x55\x33\xED\x3B\xCD\x74"
+				/* 81 EC ? ? ? ? 56 8B F1 E8 ? ? ? ? 84 C0 0F ? ? ? ? ? 8B 8C ? ? ? ? ? 55 33 ED 3B CD 74 */
+			}
+		}
+	}
+}

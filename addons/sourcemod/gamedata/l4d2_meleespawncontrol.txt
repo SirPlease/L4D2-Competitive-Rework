@@ -1,0 +1,29 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Signatures"
+		{
+		
+			"CTerrorGameRules::GetMissionInfo" //found by V10
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules14GetMissionInfoEv"
+				"windows"	"\x55\x8b\xec\x51\x8b\x0d****\x8b\x01\x8b\x50*\x56\xff\xd2\x8b\x10\x8b\xc8\x8b\x42*\x6a\x00\xff\xd0\x8b\xf0\x85\xf6\x75*\x5e\x8b\xe5\x5d\xc3"
+			}
+			"CDirectorItemManager::IsMeleeWeaponAllowedToExist" //found by V10
+			{
+				"library"	"server"
+				"linux"		"@_ZN20CDirectorItemManager27IsMeleeWeaponAllowedToExistEPKc"
+				"windows"	"\x55\x8b\xec\x56\x8b\xf1\x8b\x0d****\x8b\x01\x8b\x90****\xff\xd2\x84\xc0\x75*\x8b\x45*\x6a*\x68****\x50\xe8****\x83\xc4*\x85\xc0"
+			}
+			"KeyValues::SetString" //found by V10
+			{
+				"library"	"server"
+				"windows"	"\x55\x8b\xec\x8b\x45*\x56\x6a\x01\x50\xe8****\x8b\xf0\x85\xf6\x74*\x8b\x4e*\x53\x57\x51\xe8****\x8b\x56*\x52"
+				"linux"		"! Not Used !"
+			}
+		}
+		
+	}
+}

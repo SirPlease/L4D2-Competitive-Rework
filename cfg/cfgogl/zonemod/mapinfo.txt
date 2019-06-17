@@ -1,0 +1,1560 @@
+"MapInfo"
+{
+	"c1m1_hotel"
+	{
+		"start_point"       "427.606232 5739.467773 2926.982178"
+		"end_point"         "2045.685913 4429.264160 1246.031250"
+		"start_dist"        "100.000000"
+		"start_extra_dist"  "0.000000"
+		"end_dist"          "200.000000"
+		"tank_z_fix"        "1"
+		"max_tank_z"        "1200.000000"
+		"tank_warpto"       "2168.357666 5803.427734 2464.031250"
+		"tank_ban_flow_min" "28"
+        "tank_ban_flow_max" "82"
+		"max_distance"      "400"
+	}
+	"c1m2_streets"
+	{
+		"start_point"       "2395.007813 4964.173340 522.224670"
+		"end_point"         "-7688.886230 -4694.720703 463.251282"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "250.000000"
+		"end_dist"          "200.000000"
+		"horde_limit"       "120"
+	}
+	"c1m3_mall"
+	{
+		"start_point"       "6520.577148 -1477.425659 103.001579"
+		"end_point"         "-2182.585938 -4630.097168 615.226501"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "150.000000"
+		"end_dist"          "200.000000"
+		"tank_ban_flow_min" "64"
+		"tank_ban_flow_max" "68"
+		"max_distance"      "600"
+		"horde_limit"       "180"
+	}
+	"c1m4_atrium"
+	{
+		"start_point"       "-2207.119141 -4694.244141 615.226318"
+		"end_point"         "-4467.291016 -4060.759277 88.031250"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "150.000000"
+		"end_dist"          "150.000000"
+		"max_distance"      "700"
+		"ItemLimits"
+		{
+			"pain_pills"    "0"
+		}
+		"horde_tank"        "1"
+	}
+	"c2m1_highway"
+	{
+		"start_point"       "10678.891602 7860.774414 -496.546509"
+		"end_point"         "-820.387512 -2532.216064 -1004.767700"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "0.000000"
+		"end_dist"          "150.000000"
+	}
+	"c2m2_fairgrounds"
+	{
+		"start_point"       "1718.106934 2897.631592 83.232269"
+		"end_point"         "-4797.248047 -5396.388184 15.232277"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "0.000000"
+		"end_dist"          "150.000000"
+		"max_distance"      "500"
+		"horde_limit"       "120"
+	}
+	"c2m3_coaster"
+	{
+		"start_point"       "4106.046387 2151.258301 15.232275"
+		"end_point"         "-5442.394043 1928.548462 66.031250"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "200.000000"
+		"end_dist"          "150.000000"
+		"max_distance"      "600"
+		"horde_limit"       "300"
+		"tank_ban_flow_min" "56"
+		"tank_ban_flow_max" "100"
+	}
+	"c2m4_barns"
+	{
+		"start_point"       "2918.205078 3847.128174 -125.968750"
+		"end_point"         "-772.226257 2221.974365 -193.969513"
+		"start_dist"        "100.000000"
+		"start_extra_dist"  "150.000000"
+		"end_dist"          "250.000000"
+		"max_distance"      "500"
+		"horde_limit"       "150"
+	}
+	"c2m5_concert"
+	{
+		"start_point"       "-648.774109 2223.472168 -176.998734"
+		"end_point"         "-2209.094238 3460.875244 -99.968750"
+		"start_dist"        "100.000000"
+		"start_extra_dist"  "300.000000"
+		"end_dist"          "150.000000"
+		"ItemLimits"
+		{
+			"pain_pills"    "0"
+		}
+	}
+	"c3m1_plankcountry"
+	{
+		"start_point"       "-12468.835938 10519.109375 319.434265"
+		"end_point"         "-2710.059326 483.648499 131.811050"
+		"start_dist"        "100.000000"
+		"start_extra_dist"  "0.000000"
+		"end_dist"          "200.000000"
+		"max_distance"      "500"
+		"tank_ban_flow_min" "45"
+		"tank_ban_flow_max" "60"
+	}
+	"c3m2_swamp"
+	{
+		"start_point"       "-8213.404297 7624.283203 88.810654"
+		"end_point"         "7550.402344 -1061.843262 215.226273"
+		"start_dist"        "100.000000"
+		"start_extra_dist"  "200.000000"
+		"end_dist"          "200.000000"
+		"max_distance"      "500"
+	}
+	"c3m3_shantytown"
+	{
+		"start_point"       "-5705.945801 2006.518921 215.226288"
+		"end_point"         "5025.185059 -3697.070557 427.435242"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "200.000000"
+		"end_dist"          "200.000000"
+		"max_distance"      "500"
+	}
+	"c3m4_plantation"
+	{
+		"start_point"       "-5023.209473 -1574.434448 -20.564751"
+		"end_point"         "1056.862549 806.977112 208.031250"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "200.000000"
+		"end_dist"          "200.000000"
+		"ItemLimits"
+		{
+			"pain_pills"    "0"
+		}
+	}
+	"c4m1_milltown_a"
+	{
+		"start_point"       "-6008.747070 7381.954590 192.909424"
+		"end_point"         "3993.458008 -1598.952271 294.281250"
+		"start_dist"        "100.000000"
+		"start_extra_dist"  "500.000000"
+		"end_dist"          "275.000000"
+		"max_distance"      "400"
+	}
+	"c4m2_sugarmill_a"
+	{
+		"start_point"       "3780.781250 -1684.738770 306.723663"
+		"end_point"         "-1790.401970 -13713.732422 174.281250"
+		"start_dist"        "100.000000"
+		"start_extra_dist"  "250.000000"
+		"end_dist"          "150.000000"
+		"max_distance"      "600"
+		"tank_ban_flow_min" "80"
+		"tank_ban_flow_max" "100"
+	}
+	"c4m3_sugarmill_b"
+	{
+		"start_point"       "-1804.696167 -13811.134766 186.994522"
+		"end_point"         "3729.135010 -1578.550781 294.281250"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "200.000000"
+		"end_dist"          "300.000000"
+		"max_distance"      "600"
+		"tank_ban_flow_min" "20"
+		"tank_ban_flow_max" "35"
+	}
+	"c4m4_milltown_b"
+	{
+		"start_point"       "4037.589355 -1547.009277 306.473663"
+		"end_point"         "-3241.400879 7849.852539 182.031250"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "275.000000"
+		"end_dist"          "200.000000"
+		"max_distance"      "400"
+	}
+	"c4m5_milltown_escape"
+	{
+		"start_point"       "-3378.816895 7770.011230 182.031250"
+		"end_point"         "-6006.484375 7381.770508 192.909409"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "350.000000"
+		"end_dist"          "100.000000"
+		"max_distance"      "400"
+		"ItemLimits"
+		{
+			"pain_pills"    "0"
+		}
+	}
+	"c5m1_waterfront"
+	{
+		"start_point"       "735.921692 730.683960 -437.968750"
+		"end_point"         "-4386.030273 -1280.031250 -281.968750"
+		"start_dist"        "75.000000"
+		"start_extra_dist"  "0.000000"
+		"end_dist"          "250.000000"
+		"max_distance"      "300"
+		"tank_ban_flow_min" "0"
+		"tank_ban_flow_max" "38"
+	}
+	"c5m2_park"
+	{
+		"start_point"       "-4331.246094 -1133.826660 -299.968750"
+		"end_point"         "-9787.088867 -8134.997559 -193.968750"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "0.000000"
+		"end_dist"          "250.000000"
+		"tank_ban_flow_min" "49"
+		"tank_ban_flow_max" "54"
+		"horde_limit"       "240"
+	}
+	"c5m3_cemetery"
+	{
+		"start_point"       "6292.211426 8216.120117 79.232285"
+		"end_point"         "7424.436035 -9671.151367 183.226273"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "200.000000"
+		"end_dist"          "250.000000"
+		"tank_ban_flow_min" "50"
+		"tank_ban_flow_max" "70"
+	}
+	"c5m4_quarter"
+	{
+		"start_point"       "-3065.877686 4776.646484 147.226166"
+		"end_point"         "1475.194214 -3489.227295 297.716370"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "200.000000"
+		"end_dist"          "350.000000"
+		"tank_ban_flow_min" "80"
+		"tank_ban_flow_max" "100"
+	}
+	"c5m5_bridge"
+	{
+		"start_point"       "-11921.506836 5976.045410 547.226318"
+		"start_dist"        "70.112122"
+		"start_extra_dist"  "264.157257"
+		"end_point"         "3001.944092 6272.879395 494.284149"
+		"end_dist"          "130.807541"
+		"max_distance"      "600"
+	}
+	"c6m1_riverbank"
+	{
+		"start_point"       "930.36016 3843.36181 94.029960"
+		"end_point"         "-4140.35009 1483.70129 765.001281"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "0.000000"
+		"end_dist"          "50.000000"
+		"max_distance"      "500"
+	}
+	"c6m2_bedlam"
+	{
+		"start_point"       "3062.55200 -1122.89624 -258.998718"
+		"end_point"         "11405.46093 4912.65869 -590.962768"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "0.000000"
+		"end_dist"          "50.000000"
+		"max_distance"      "800"
+		"horde_limit"       "150"
+	}
+	"c6m3_port"
+	{
+		"start_point"       "-2259.96948 -606.96893 -214.962753"
+		"end_point"         "-283.08215 -823.07836 37.001598"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "0.000000"
+		"end_dist"          "50.000000"
+		"max_distance"      "700"
+		"ItemLimits"
+		{
+			"pain_pills"    "0"
+		}
+	}
+	"c7m1_docks"
+	{
+		"start_point"       "13552.489258 2207.394043 5.524101"
+		"end_point"         "1975.615234 2353.251465 270.336121"
+		"start_dist"        "75.000000"
+		"start_extra_dist"  "0.000000"
+		"end_dist"          "50.000000"
+		"max_distance"      "700"
+	}
+	"c7m2_barge"
+	{
+		"start_point"       "10743.761719 2343.008789 270.807251"
+		"end_point"         "-11288.833008 3128.797363 270.430115"
+		"start_dist"        "75.000000"
+		"start_extra_dist"  "0.000000"
+		"end_dist"          "50.000000"
+		"max_distance"      "700"
+	}
+	"c7m3_port"
+	{
+		"start_point"       "960.031250 3247.345459 262.430115"
+		"end_point"         "-272.031250 -834.873291 97.001595"
+		"start_dist"        "75.000000"
+		"start_extra_dist"  "0.000000"
+		"end_dist"          "75.000000"
+		"max_distance"      "700"
+		"ItemLimits"
+		{
+			"pain_pills"    "0"
+		}
+	}
+	"c8m1_apartment"
+	{
+		"start_point"       "1888.341675 917.455017 476.342407"
+		"start_dist"        "267.108032"
+		"start_extra_dist"  "605.247620"
+		"end_point"         "2883.220703 2962.613037 -204.742737"
+		"end_dist"          "336.442200"
+		"max_distance"      "300"
+	}
+	"c8m2_subway"
+	{
+		"start_point"       "2882.260986 2977.796387 51.257275"
+		"start_dist"        "164.919525"
+		"start_extra_dist"  "323.406708"
+		"end_point"         "11008.688477 4657.793945 49.151138"
+		"end_dist"          "180.738693"
+	}
+	"c8m3_sewers"
+	{
+		"start_point"       "10936.943359 4650.031250 90.761696"
+		"end_point"         "12288.031250 12235.729492 78.031250"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "0.000000"
+		"end_dist"          "75.000000"
+		"max_distance"      "600"
+		"tank_ban_flow_min" "55"
+		"tank_ban_flow_max" "80"
+	}
+	"c8m4_interior"
+	{
+		"start_point"       "12297.031250 12247.379883 16.031250"
+		"start_dist"        "165.464249"
+		"start_extra_dist"  "409.338440"
+		"end_point"         "11459.563477 15087.968750 5565.974609"
+		"end_dist"          "332.486664"
+		"tank_z_fix"        "1"
+		"max_tank_z"        "4000.000000"
+		"tank_warpto"       "13428.627930 15072.313477 486.031250"
+		"max_distance"      "500"
+	}
+	"c8m5_rooftop"
+	{
+		"start_point"       "5287.943848 8467.129883 5536.031250"
+		"start_dist"        "149.711517"
+		"start_extra_dist"  "421.803650"
+		"end_point"         "5675.121582 8443.446289 6142.031250"
+		"end_dist"          "100.000000"
+		"tank_ban_flow_min" "0"
+        "tank_ban_flow_max" "55"
+		"ItemLimits"
+		{
+			"pain_pills"    "0"
+		}
+	}
+	"c9m1_alleys"
+	{
+		"start_point"       "-9862.552734 -8714.114258 -5.783222"
+		"start_dist"        "138.332581"
+		"start_extra_dist"  "1502.202637"
+		"end_point"         "153.076584 -1426.919556 -139.968750"
+		"end_dist"          "210.283035"
+	}
+	"c9m2_lots"
+	{
+		"start_point"       "150.086899 -1372.455322 -139.968750"
+		"start_dist"        "90.983040"
+		"start_extra_dist"  "301.270020"
+		"end_point"         "7095.529297 6474.146484 45.645901"
+		"end_dist"          "1387.183838"
+		"max_distance"      "800"
+		"ItemLimits"
+		{
+			"pain_pills"    "2"
+		}
+	}
+	"c10m1_caves"
+	{
+		"start_point"       "-11747.106445 -14618.416016 -197.777359"
+		"start_dist"        "86.396400"
+		"start_extra_dist"  "587.266541"
+		"end_point"         "-10784.895508 -4906.771973 318.224670"
+		"end_dist"          "403.989594"
+		"max_distance"      "300"
+	}
+	"c10m2_drainage"
+	{
+		"start_point"       "-11079.036133 -8946.167969 -562.025330"
+		"start_dist"        "78.842514"
+		"start_extra_dist"  "399.942505"
+		"end_point"         "-8339.282227 -5592.915039 0.031253"
+		"end_dist"          "322.081451"
+		"max_distance"      "400"
+	}
+	"c10m3_ranchhouse"
+	{
+		"start_point"       "-8334.761719 -5592.995117 6.031253"
+		"start_dist"        "82.983238"
+		"start_extra_dist"  "327.413300"
+		"end_point"         "-2673.776611 107.736259 316.727081"
+		"end_dist"          "327.768036"
+		"max_distance"      "500"
+	}
+	"c10m4_mainstreet"
+	{
+		"start_point"       "-3155.918945 107.783440 328.031250"
+		"start_dist"        "99.209229"
+		"start_extra_dist"  "307.155029"
+		"end_point"         "1309.379883 -5479.276367 -26.821182"
+		"end_dist"          "324.451355"
+		"horde_limit"       "180"
+	}
+	"c10m5_houseboat"
+	{
+		"start_point"       "2019.751953 4538.839844 -34.821182"
+		"start_dist"        "76.933571"
+		"start_extra_dist"  "317.183868"
+		"end_point"         "3805.135254 -4660.525391 -151.968750"
+		"end_dist"          "795.922058"
+		"ItemLimits"
+		{
+			"pain_pills"    "0"
+		}
+	}
+	"c11m1_greenhouse"
+	{
+		"start_point"       "6753.771484 -534.288940 804.342407"
+		"start_dist"        "65.117729"
+		"start_extra_dist"  "577.638000"
+		"end_point"         "5274.120605 2715.548584 88.261955"
+		"end_dist"          "314.896759"
+		"max_distance"      "300"
+	}
+	"c11m2_offices"
+	{
+		"start_point"       "5295.039062 2718.428467 88.261955"
+		"start_dist"        "60.237633"
+		"start_extra_dist"  "333.408081"
+		"end_point"         "7934.695801 6070.557617 48.318222"
+		"end_dist"          "310.929138"
+		"max_distance"      "600"
+	}
+	"c11m3_garage"
+	{
+		"start_point"       "-5393.304199 -3161.442627 48.318222"
+		"start_dist"        "56.400623"
+		"start_extra_dist"  "304.760986"
+		"end_point"         "-343.016815 3583.830566 332.031250"
+		"end_dist"          "187.318344"
+	}
+	"c11m4_terminal"
+	{
+		"start_point"       "-326.099091 3588.496338 277.327820"
+		"start_dist"        "63.233967"
+		"start_extra_dist"  "206.287918"
+		"end_point"         "3276.041992 4504.324707 181.974670"
+		"end_dist"          "343.399078"
+		"max_distance"      "500"
+	}
+	"c11m5_runway"
+	{
+		"start_point"       "-6726.473145 12007.691406 181.974670"
+		"start_dist"        "75.086731"
+		"start_extra_dist"  "344.831299"
+		"end_point"         "-5196.772949 9229.695312 -191.968750"
+		"end_dist"          "538.437988"
+		"ItemLimits"
+		{
+			"pain_pills"    "0"
+		}
+	}
+	"c12m1_hilltop"
+	{
+		"start_point"       "-7888.898926 -14891.244141 337.681976"
+		"start_dist"        "88.897858"
+		"start_extra_dist"  "753.082764"
+		"end_point"         "-6468.546387 -6767.946777 377.974670"
+		"end_dist"          "275.937225"
+		"tank_ban_flow_min" "0"
+		"tank_ban_flow_max" "57"
+		"max_distance"      "300"
+	}
+	"c12m2_traintunnel"
+	{
+		"start_point"       "-6472.856445 -6769.449707 377.974670"
+		"start_dist"        "78.032898"
+		"start_extra_dist"  "270.500549"
+		"end_point"         "-870.702148 -10408.813477 -63.968750"
+		"end_dist"          "261.087494"
+		"max_distance"      "400"
+	}
+	"c12m3_bridge"
+	{
+		"start_point"       "-870.702148 -10415.481445 -63.968750"
+		"start_dist"        "71.034355"
+		"start_extra_dist"  "264.843231"
+		"end_point"         "7754.335938 -11443.834961 440.031250"
+		"end_dist"          "264.020966"
+		"tank_ban_flow_min" "70"
+		"tank_ban_flow_max" "100"
+		"max_distance"      "400"
+		"horde_limit"       "90"
+	}
+	"c12m4_barn"
+	{
+		"start_point"       "7755.584961 -11443.834961 440.031250"
+		"start_dist"        "85.814095"
+		"start_extra_dist"  "264.932068"
+		"end_point"         "10398.775391 -310.353424 2.031253"
+		"end_dist"          "316.505157"
+		"max_distance"      "400"
+		"horde_limit"       "60"
+	}
+	"c12m5_cornfield"
+	{
+		"start_point"       "10399.091797 -312.162628 2.031253"
+		"start_dist"        "97.089050"
+		"start_extra_dist"  "315.198547"
+		"end_point"         "6972.038086 1354.824463 274.312256"
+		"end_dist"          "183.031281"
+		"tank_ban_flow_min" "80"
+		"tank_ban_flow_max" "100"
+		"ItemLimits"
+		{
+			"pain_pills"    "0"
+		}
+	}
+	"c13m1_alpinecreek"
+	{
+		"start_point"       "-3046.889648 -705.233765 75.031250"
+		"start_dist"        "75.765724"
+		"start_extra_dist"  "437.938110"
+		"end_point"         "1186.061401 -1247.817627 389.251373"
+		"end_dist"          "604.894531"
+	}
+	"c13m2_southpinestream"
+	{
+		"start_point"       "8691.102539 7056.350586 533.251343"
+		"start_dist"        "80.806526"
+		"start_extra_dist"  "604.901245"
+		"end_point"         "470.932892 8823.397461 -368.968750"
+		"end_dist"          "324.996063"
+	}
+	"c13m3_memorialbridge"
+	{
+		"start_point"       "-4194.461914 -5143.972168 132.031250"
+		"start_dist"        "77.191292"
+		"start_extra_dist"  "321.877747"
+		"end_point"         "6097.708496 -6337.365234 422.031250"
+		"end_dist"          "356.709808"
+	}
+	"c13m4_cutthroatcreek"
+	{
+		"start_point"       "-3374.723633 -9166.667969 396.031250"
+		"start_dist"        "84.812645"
+		"start_extra_dist"  "349.184357"
+		"end_point"         "-1823.846191 -1815.961670 -250.417389"
+		"end_dist"          "254.989624"
+	}
+	"c5m1_darkwaterfront"
+	{
+		"start_point"       "735.921692 732.535217 -481.968750"
+		"start_dist"        "57.458103"
+		"start_extra_dist"  "804.191406"
+		"end_point"         "-4351.050293 -1135.742554 -343.968750"
+		"end_dist"          "591.145630"
+		"tank_ban_flow_min" "0"
+		"tank_ban_flow_max" "38"
+		"max_distance" 	    "300"
+	}
+	"c5m2_darkpark"
+	{
+		"start_point"       "-4331.847656 -1132.059937 -343.968750"
+		"start_dist"        "90.058136"
+		"start_extra_dist"  "604.716553"
+		"end_point"         "-9823.082031 -8162.369141 -220.767731"
+		"end_dist"          "487.969635"
+	}
+	"c5m3_darkcemetery"
+	{
+		"start_point"       "6304.688477 8218.079102 35.232285"
+		"start_dist"        "85.487289"
+		"start_extra_dist"  "492.614685"
+		"end_point"         "7466.641113 -9682.580078 139.226273"
+		"end_dist"          "402.227936"
+		"tank_ban_flow_min" "50"
+		"tank_ban_flow_max" "70"
+	}
+	"c5m4_darkquarter"
+	{
+		"start_point"       "-3064.031494 4778.493164 103.226173"
+		"start_dist"        "75.451675"
+		"start_extra_dist"  "404.631805"
+		"end_point"         "1585.341553 -3387.864502 483.226257"
+		"end_dist"          "591.899353"
+		"tank_ban_flow_min" "80"
+		"tank_ban_flow_max" "100"
+	}
+	"c5m5_darkbridge"
+	{
+		"start_point"       "-11922.366211 5976.044922 547.226318"
+		"start_dist"        "95.325073"
+		"start_extra_dist"  "270.602844"
+		"end_point"         "3015.024414 6265.400391 494.284149"
+		"end_dist"          "149.938278"
+		"max_distance"      "500"
+	}
+	"cdta_01detour"
+	{
+		"start_point"       "-581.311157 4279.300293 129.100113"
+		"start_dist"        "460.836548"
+		"start_extra_dist"  "566.889465"
+		"end_point"         "-2013.103882 -3279.305176 144.031250"
+		"end_dist"          "276.152161"
+	}
+	"cdta_02road"
+	{
+		"start_point"       "-3986.539551 -467.070282 -111.968750"
+		"start_dist"        "180.229767"
+		"start_extra_dist"  "285.327118"
+		"end_point"         "-4824.578125 -7661.144043 566.031250"
+		"end_dist"          "393.489532"
+		"horde_limit"       "120"
+	}
+	"cdta_03warehouse"
+	{
+		"start_point"       "-4868.136719 -7658.532715 566.031250"
+		"start_dist"        "152.838638"
+		"start_extra_dist"  "386.233795"
+		"end_point"         "9837.693359 -12491.964844 776.031250"
+		"end_dist"          "245.495361"
+		"tank_ban_flow_min" "55"
+		"tank_ban_flow_max" "78"
+	}
+	"cdta_04onarail"
+	{
+		"start_point"       "-11160.266602 2500.985107 656.031250"
+		"start_dist"        "248.178223"
+		"start_extra_dist"  "251.028473"
+		"tank_ban_flow_min" "0"
+		"tank_ban_flow_max" "28"
+		"max_distance"      "700"
+	}
+	"cdta_05finalroad"
+	{
+		"start_point"       "-11259.937500 -12213.681641 1048.943604"
+		"start_dist"        "191.200378"
+		"start_extra_dist"  "269.938385"
+		"end_point"         "-12561.050781 -11283.779297 985.953308"
+		"end_dist"          "245.495361"
+		"tank_ban_flow_min" "1"
+		"tank_ban_flow_max" "70"
+	}
+	"l4d_deathaboard01_prison"
+	{
+		"start_point"       "1172.334229 3525.726318 264.031250"
+		"start_dist"        "359.071625"
+		"start_extra_dist"  "854.892578"
+		"end_point"         "1024.260742 -708.012878 -511.968750"
+		"end_dist"          "437.646271"
+	}
+	"l4d_deathaboard02_yard"
+	{
+		"start_point"       "583.303711 2430.031250 128.031250"
+		"start_dist"        "193.628845"
+		"start_extra_dist"  "414.816742"
+		"end_point"         "2265.425537 386.693542 -231.968750"
+		"end_dist"          "422.613495"
+	}
+	"l4d_deathaboard03_docks"
+	{
+		"start_point"       "-699.597900 -135.347733 -95.968750"
+		"start_dist"        "213.407654"
+		"start_extra_dist"  "445.357971"
+		"end_point"         "7204.936523 1781.486450 268.031250"
+		"end_dist"          "129.135315"
+		"tank_ban_flow_min" "25"
+		"tank_ban_flow_max" "50"
+	}
+	"l4d_deathaboard04_ship"
+	{
+		"start_point"       "-1490.525269 705.338257 32.031250"
+		"start_dist"        "143.486145"
+		"start_extra_dist"  "95.611107"
+		"end_point"         "3464.061279 -922.227356 -263.968750"
+		"end_dist"          "229.138062"
+		"tank_ban_flow_min" "0"
+		"tank_ban_flow_max" "40"
+	}
+	"l4d_deathaboard05_light"
+	{
+		"start_point"       "-2383.999756 -2986.743652 88.031250"
+		"start_dist"        "185.257492"
+		"start_extra_dist"  "194.090973"
+		"ItemLimits"
+		{
+			"pain_pills"    "0"
+		}
+	}
+	"l4d_ihm01_forest"
+	{
+		"start_point"       "-1832.194580 152.090195 41.045280"
+		"start_dist"        "228.211761"
+		"start_extra_dist"  "387.249268"
+		"end_point"         "1704.728271 -8333.527344 87.642601"
+		"end_dist"          "247.891632"
+	}
+	"l4d_ihm02_manor"
+	{
+		"start_point"       "601.349548 2955.968750 175.381592"
+		"start_dist"        "207.611847"
+		"start_extra_dist"  "237.150528"
+		"end_point"         "-3221.213867 2582.877197 171.136597"
+		"end_dist"          "250.894577"
+	}
+	"l4d_ihm03_underground"
+	{
+		"start_point"       "8803.642578 -297.364868 35.136597"
+		"start_dist"        "155.457993"
+		"start_extra_dist"  "263.341949"
+		"end_point"         "3271.968750 7977.582031 -2256.968750"
+		"end_dist"          "335.011475"
+	}
+	"l4d_ihm04_lumberyard"
+	{
+		"start_point"       "-10009.968750 -10641.541992 -177.968750"
+		"start_dist"        "140.137665"
+		"start_extra_dist"  "329.797272"
+		"end_point"         "2004.079468 1037.415161 -188.618408"
+		"end_dist"          "304.708099"
+		"max_distance"      "600"
+	}
+	"l4d_ihm05_lakeside"
+	{
+		"start_point"       "-684.040649 -4216.978027 -17.616570"
+		"start_dist"        "170.021622"
+		"start_extra_dist"  "346.297455"
+		"end_point"         "5840.246094 9788.924805 60.349205"
+		"end_dist"          "540.438049"
+		"ItemLimits"
+		{
+			"pain_pills"    "0"
+		}
+	}
+	"bloodtracks_01"
+	{
+		"start_point"       "3633.225098 9182.102539 305.031250"
+		"start_dist"        "100.137680"
+		"start_extra_dist"  "974.442017"
+		"end_point"         "2489.081055 1259.860107 598.031250"
+		"end_dist"          "279.215881"
+	}
+	"bloodtracks_02"
+	{
+		"end_point"         "5533.325195 -7508.791016 -2049.168701"
+		"end_dist"          "345.644775"
+		"start_point"       "9041.178711 5355.283203 -2477.968750"
+		"start_dist"        "78.584602"
+		"start_extra_dist"  "264.419159"
+	}
+	"bloodtracks_03"
+	{
+		"start_point"       "-6291.274414 9638.728516 -2755.968750"
+		"start_dist"        "76.679153"
+		"start_extra_dist"  "130.744766"
+		"end_point"         "3956.997559 -4572.921875 -3026.025391"
+		"end_dist"          "114.179108"
+	}
+	"bloodtracks_04"
+	{
+		"start_point"       "3746.593018 -4707.327637 -3026.025391"
+		"start_dist"        "113.105247"
+		"start_extra_dist"  "216.522690"
+		"end_point"         "4238.532715 -11658.243164 -2224.328857"
+		"end_dist"          "1521.507202"
+		"ItemLimits"
+		{
+			"pain_pills"    "0"
+		}
+	}
+	"cwm1_intro"
+	{
+		"start_point"       "2012.118164 -2094.778809 18.982275"
+		"start_dist"        "114.916298"
+		"start_extra_dist"  "277.567169"
+		"end_point"         "-1740.397949 9428.968750 437.031250"
+		"end_dist"          "180.474869"
+		"max_distance"      "400"
+	}
+	"cwm2_warehouse"
+	{
+		"start_point"       "-1672.171265 -3640.306885 323.366241"
+		"start_dist"        "88.376144"
+		"start_extra_dist"  "265.292664"
+		"end_point"         "9135.749023 5400.031250 -109.017723"
+		"end_dist"          "225.499374"
+		"tank_ban_flow_min" "72"
+		"tank_ban_flow_max" "99"
+		"max_distance"      "700"
+		"horde_limit"       "90"
+	}
+	"cwm3_drain"
+	{
+		"start_point"       "-1866.161865 88.182999 -349.017731"
+		"start_dist"        "111.862396"
+		"start_extra_dist"  "159.655685"
+		"end_point"         "3538.319580 -2976.031250 29.974674"
+		"end_dist"          "245.566330"
+		"max_distance"      "600"
+	}
+	"cwm4_building"
+	{
+		"start_point"       "729.522034 796.603210 -114.025330"
+		"start_dist"        "99.067696"
+		"start_extra_dist"  "330.218414"
+		"end_point"         "950.599304 91.748909 1784.017456"
+		"end_dist"          "1904.152710"
+		"max_distance"      "700"
+	}
+	"l4d2_stadium1_apartment"
+	{
+		"start_point"       "-350.822113 1008.031250 35.031250"
+		"start_dist"        "106.649513"
+		"start_extra_dist"  "410.564026"
+		"end_point"         "6162.972168 -814.121765 -3936.968750"
+		"end_dist"          "133.006638"
+		"tank_ban_flow_min" "0"
+		"tank_ban_flow_max" "45"
+		"max_distance"      "400"
+	}
+	"l4d2_vs_stadium2_riverwalk"
+	{
+		"start_point"       "-1329.243530 332.547577 -194.968750"
+		"start_dist"        "88.429596"
+		"start_extra_dist"  "149.953766"
+		"end_point"         "524.056885 10057.031250 -806.850220"
+		"end_dist"          "264.000458"
+		"max_distance"      "600"
+	}
+	"l4d2_stadium3_city1"
+	{
+		"start_point"       "1509.655640 6670.499512 -392.850189"
+		"start_dist"        "70.232407"
+		"start_extra_dist"  "162.199844"
+		"end_point"         "6849.338867 6643.520020 -390.850189"
+		"end_dist"          "298.808014"
+		"tank_ban_flow_min" "0"
+		"tank_ban_flow_max" "40"
+		"max_distance"      "500"
+	}
+	"l4d2_stadium4_city2"
+	{
+		"start_point"       "544.368713 -645.999207 -390.850189"
+		"start_dist"        "106.220863"
+		"start_extra_dist"  "259.126312"
+		"end_point"         "-8466.472656 7044.023438 -334.468750"
+		"end_dist"          "642.662781"
+		"max_distance"      "600"
+	}
+	"l4d2_stadium5_stadium"
+	{
+		"start_point"       "7589.871094 -5110.670898 12.781250"
+		"start_dist"        "169.033142"
+		"start_extra_dist"  "349.691711"
+		"end_point"         "-8753.460938 -3717.820068 407.562927"
+		"end_dist"          "2375.248535"
+		"max_distance"      "700"
+	}
+	"l4d2_city17_01"
+	{
+		"start_point"       "4062.740234 -5380.488770 -84.985329"
+		"start_dist"        "133.048111"
+		"start_extra_dist"  "334.703857"
+		"end_point"         "1821.018677 -243.278412 140.031250"
+		"end_dist"          "202.679367"
+	}
+	"l4d2_city17_02"
+	{
+		"start_point"       "812.839783 2429.771729 52.031250"
+		"start_dist"        "51.261543"
+		"start_extra_dist"  "90.044106"
+		"end_point"         "3584.326904 4702.048340 2152.031250"
+		"end_dist"          "192.458542"
+		"tank_ban_flow_min" "0"
+		"tank_ban_flow_max" "80"
+	}
+	"l4d2_city17_03"
+	{
+		"start_point"       "3964.807617 773.953186 0.031250"
+		"start_dist"        "116.445244"
+		"start_extra_dist"  "185.011871"
+		"end_point"         "-7720.420410 2617.992676 -143.968750"
+		"end_dist"          "149.220322"
+		"tank_ban_flow_min" "55"
+		"tank_ban_flow_max" "68"
+	}
+	"l4d2_city17_04"
+	{
+		"start_point"       "-1784.939697 1920.992554 -127.968750"
+		"start_dist"        "102.841270"
+		"start_extra_dist"  "248.606247"
+		"end_point"         "-8148.830078 5653.411133 34.031250"
+		"end_dist"          "167.384216"
+		"tank_ban_flow_min" "25"
+		"tank_ban_flow_max" "68"
+	}
+	"l4d2_city17_05"
+	{
+		"start_point"       "10037.169922 12202.440430 -631.864746"
+		"start_dist"        "79.219292"
+		"start_extra_dist"  "103.749420"
+		"end_point"         "12230.234375 8827.060547 -551.968750"
+		"end_dist"          "2195.812500"
+		"ItemLimits"
+		{
+			"pain_pills"    "0"
+		}
+	}
+	"hf01_theforest"
+	{
+		"start_point"       "-10749.938477 4779.373535 0.445169"
+		"start_dist"        "212.760223"
+		"start_extra_dist"  "261.492371"
+		"end_point"         "-256.969452 -6424.031250 -196.863403"
+		"end_dist"          "301.782318"
+	}
+	"hf02_thesteeple"
+	{
+		"start_point"       "3307.178223 733.893616 34.136597"
+		"start_dist"        "126.926369"
+		"start_extra_dist"  "354.287750"
+		"end_point"         "-2980.672607 -7486.620605 -191.968750"
+		"end_dist"          "267.900513"
+		"horde_limit"       "90"
+	}
+	"hf03_themansion"
+	{
+		"start_point"       "2892.050049 507.968750 -53.968750"
+		"start_dist"        "144.722931"
+		"start_extra_dist"  "123.490318"
+		"end_point"         "-3424.100586 1176.238281 440.031250"
+		"end_dist"          "389.248535"
+	}
+	"hf04_escape"
+	{
+		"start_point"       "121.300797 -15342.977539 -136.968750"
+		"start_dist"        "161.615570"
+		"start_extra_dist"  "409.378784"
+		"end_point"         "1585.235596 8390.712891 -1028.968750"
+		"end_dist"          "885.892273"
+	}
+	"ddg1_tower_v1_6"
+	{
+		"start_point"       "274.642731 -719.995789 -224.017731"
+		"start_dist"        "95.810226"
+		"start_extra_dist"  "131.129135"
+		"end_point"         "-6693.599121 -7526.025391 1069.340332"
+		"end_dist"          "452.745697"
+	}
+	"ddg2_gristmill_v1_5"
+	{
+		"start_point"       "-8199.602539 -11649.031250 1286.361938"
+		"start_dist"        "153.030640"
+		"start_extra_dist"  "111.767357"
+		"end_point"         "-10563.800781 -537.866882 1622.086182"
+		"end_dist"          "372.963531"
+	}
+	"ddg3_bluff_v1_5"
+	{
+		"start_point"       "-1061.709961 -640.968750 -361.913879"
+		"start_dist"        "90.773743"
+		"start_extra_dist"  "122.307701"
+		"end_point"         "1241.002563 4694.170898 1920.031250"
+		"end_dist"          "1227.881958"
+		"ItemLimits"
+		{
+			"pain_pills"    "0"
+		}
+	}
+	"l4d_dbd2dc_anna_is_gone"
+	{
+		"start_point"       "3325.206787 -2614.453857 39.508949"
+		"start_dist"        "112.968796"
+		"start_extra_dist"  "357.132141"
+		"end_point"         "2948.021729 7602.731445 -604.782043"
+		"end_dist"          "142.267410"
+		"max_distance"      "400"
+	}
+	"l4d_dbd2dc_the_mall"
+	{
+		"start_point"       "-1018.316406 -2429.388672 -860.782043"
+		"start_dist"        "203.891953"
+		"start_extra_dist"  "577.908813"
+		"end_point"         "137.894608 5129.338867 -637.909546"
+		"end_dist"          "464.308899"
+		"max_distance"      "600"
+	}
+	"l4d_dbd2dc_clean_up"
+	{
+		"start_point"       "-365.654816 3180.702148 -636.909546"
+		"start_dist"        "128.250610"
+		"start_extra_dist"  "244.648331"
+		"end_point"         "-2060.603027 6556.208496 -671.968750"
+		"end_dist"          "286.359802"
+		"max_distance"      "700"
+	}
+	"l4d_dbd2dc_undead_center"
+	{
+		"start_point"       "-1953.168945 6571.233887 -671.968750"
+		"start_dist"        "100.454994"
+		"start_extra_dist"  "188.167191"
+		"end_point"         "-7367.650391 8434.535156 -671.968750"
+		"end_dist"          "365.062012"
+		"max_distance"      "700"
+	}
+	"l4d_dbd2dc_new_dawn"
+	{
+		"start_point"       "-3574.833740 2068.519531 -1279.968750"
+		"start_dist"        "132.993073"
+		"start_extra_dist"  "306.183685"
+		"end_point"         "-463.786469 876.165771 -243.441345"
+		"end_dist"          "1558.433960"
+		"tank_ban_flow_min" "0"
+		"tank_ban_flow_max" "70"
+		"max_distance"      "800"
+	}
+	"uf1_boulevard"
+	{
+		"start_point"       "-232.634720 -1984.366577 351.766357"
+		"start_dist"        "95.445610"
+		"start_extra_dist"  "220.139542"
+		"end_point"         "-264.031250 8712.565430 -27.968758"
+		"end_dist"          "268.509125"
+	}
+	"uf2_rooftops"
+	{
+		"start_point"       "-1160.010376 -1646.275513 -27.968758"
+		"start_dist"        "122.857811"
+		"start_extra_dist"  "203.035721"
+		"end_point"         "696.980591 8058.962891 0.031250"
+		"end_dist"          "164.379135"
+		"tank_ban_flow_min" "60"
+		"tank_ban_flow_max" "100"
+	}
+	"uf3_harbor"
+	{
+		"start_point"       "-255.164536 -10224.962891 0.031250"
+		"start_dist"        "88.981186"
+		"start_extra_dist"  "148.034637"
+		"end_point"         "1857.567749 5826.479980 -3.932751"
+		"end_dist"          "513.700989"
+	}
+	"uf4_airfield"
+	{
+		"start_point"       "-3001.363525 1736.132202 28.067249"
+		"start_dist"        "172.756744"
+		"start_extra_dist"  "123.117989"
+		"end_point"         "-697.423767 -182.836334 214.806290"
+		"end_dist"          "1754.263794"
+	}
+	"l4d_149_1"
+	{
+		"start_point"       "-1462.563477 -1781.392212 82.864456"
+		"start_dist"        "146.754852"
+		"start_extra_dist"  "241.007614"
+		"end_point"         "1011.257202 -496.456573 -1408.878540"
+		"end_dist"          "353.211945"
+		"tank_ban_flow_min" "30"
+		"tank_ban_flow_max" "62"
+	}
+	"l4d_149_2"
+	{
+		"start_point"       "1030.149048 -459.791870 -1408.746948"
+		"start_dist"        "82.774239"
+		"start_extra_dist"  "229.293549"
+		"end_point"         "7697.099609 5412.605469 -1288.989502"
+		"end_dist"          "116.960152"
+	}
+	"l4d_149_3"
+	{
+		"start_point"       "7692.622070 5411.134766 -1288.989502"
+		"start_dist"        "108.442497"
+		"start_extra_dist"  "209.354187"
+		"end_point"         "9071.968750 1457.948853 -1434.025269"
+		"end_dist"          "269.195496"
+		"tank_ban_flow_min" "0"
+		"tank_ban_flow_max" "75"
+	}
+	"l4d_149_4"
+	{
+		"start_point"       "9071.881836 1483.660034 -1434.025269"
+		"start_dist"        "128.356369"
+		"start_extra_dist"  "218.735062"
+		"end_point"         "6017.462402 -3480.372070 -1356.947998"
+		"end_dist"          "146.841553"
+		"tank_ban_flow_min" "45"
+		"tank_ban_flow_max" "85"
+	}
+	"l4d_149_5"
+	{
+		"start_point"       "6015.885742 -3480.465576 -1356.947998"
+		"start_dist"        "95.855858"
+		"start_extra_dist"  "391.300476"
+		"end_point"         "8174.469238 -8135.983887 -2077.968750"
+		"end_dist"          "1143.486694"
+		"ItemLimits"
+		{
+			"pain_pills"    "0"
+		}
+	}
+	"eu01_residential_b16"
+	{
+		"start_point"       "2261.835449 -2570.114990 771.031250"
+		"start_dist"        "101.935509"
+		"start_extra_dist"  "204.105286"
+		"end_point"         "-8.031250 3685.870850 -404.742737"
+		"end_dist"          "300.281189"
+	}
+	"eu02_castle_b16"
+	{
+		"start_point"       "3094.181152 -3318.096680 -52.742722"
+		"start_dist"        "134.198914"
+		"start_extra_dist"  "189.860016"
+		"end_point"         "-799.900696 2543.301758 -1549.968750"
+		"end_dist"          "286.437347"
+		"tank_ban_flow_min" "55"
+		"tank_ban_flow_max" "100"
+	}
+	"eu03_oldtown_b16"
+	{
+		"start_point"       "2015.968750 622.096680 98.149147"
+		"start_dist"        "117.347237"
+		"start_extra_dist"  "181.326752"
+		"end_point"         "-4968.265137 4014.010254 -639.663879"
+		"end_dist"          "233.640030"
+	}
+	"eu04_freeway_b16"
+	{
+		"start_point"       "-9778.779297 2336.001709 -703.663879"
+		"start_dist"        "92.092087"
+		"start_extra_dist"  "263.408325"
+		"end_point"         "-809.301636 -2075.790283 112.058319"
+		"end_dist"          "274.439819"
+	}
+	"eu05_train_b16"
+	{
+		"start_point"       "-800.569214 -2073.149658 112.058319"
+		"start_dist"        "97.496170"
+		"start_extra_dist"  "183.146271"
+		"end_point"         "-2326.152588 -481.388062 -391.968750"
+		"end_dist"          "1371.141602"
+		"ItemLimits"
+		{
+			"pain_pills"    "0"
+		}
+	}
+	"srocchurch"
+	{
+		"start_point"       "1084.297607 2462.667236 168.901855"
+		"start_dist"        "205.314194"
+		"start_extra_dist"  "1489.374390"
+		"end_point"         "-2698.415771 -4883.087402 96.336136"
+		"end_dist"          "321.482483"
+		"tank_ban_flow_min" "0"
+		"tank_ban_flow_max" "25"
+		"max_distance"      "400"
+	}
+	"plaza_espana"
+	{
+		"start_point"       "-8173.943848 -8988.014648 96.336136"
+		"start_dist"        "124.527382"
+		"start_extra_dist"  "113.680771"
+		"end_point"         "-1100.709839 -8383.968750 -242.025330"
+		"end_dist"          "236.288925"
+		"max_distance"      "600"
+		"horde_limit"       "90"
+	}
+	"maria_cristina"
+	{
+		"start_point"       "-10153.728516 6304.031250 -142.025330"
+		"start_dist"        "89.510788"
+		"start_extra_dist"  "193.511887"
+		"end_point"         "-8628.766602 -7242.274902 576.063660"
+		"end_dist"          "278.292633"
+		"max_distance"      "600"
+		"horde_limit"       "90"
+	}
+	"mnac"
+	{
+		"start_point"       "9040.031250 12497.177734 -4450.115234"
+		"start_dist"        "150.790268"
+		"start_extra_dist"  "96.800598"
+		"end_point"         "7171.526855 -2417.946289 -1053.332031"
+		"end_dist"          "1572.107178"
+		"max_distance"      "800"
+	}
+	"jsarena201_town"
+	{
+		"start_point"       "497.707031 -1611.576416 62.031250"
+		"end_point"         "3112.440430 -594.903381 145.031250"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "250.000000"
+		"end_dist"          "50.000000"
+	}
+	"jsarena202_alley"
+	{
+		"start_point"       "5414.663086 716.187561 145.031250"
+		"end_point"         "-491.261719 471.349823 676.031250"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "250.000000"
+		"end_dist"          "50.000000"
+		"tank_ban_flow_min" "35"
+		"tank_ban_flow_max" "70"
+	}
+	"jsarena203_roof"
+	{
+		"start_point"       "3418.395264 3229.471436 674.031250"
+		"end_point"         "-888.021973 474.375458 668.247681"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "250.000000"
+		"end_dist"          "50.000000"
+		"tank_ban_flow_min" "72"
+		"tank_ban_flow_max" "99"
+		"max_distance"      "600"
+	}
+	"jsarena204_arena"
+	{
+		"start_point"       "4937.140137 -155.900192 668.247681"
+		"end_point"         "-849.202332 -976.774170 531.078735"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "250.000000"
+		"end_dist"          "50.000000"
+		"tank_ban_flow_min" "86"
+		"tank_ban_flow_max" "99"
+	}
+	"versus_1"
+	{
+		"start_point"       "3422.058838 9965.772461 -1884.943359"
+		"end_point"         "2661.990234 8446.703125 -1942.863403"
+		"start_dist"        "25.000000"
+		"start_extra_dist"  "225.000000"
+		"end_dist"          "25.000000"
+		"tank_ban_flow_min" "84"
+		"tank_ban_flow_max" "99"
+		"max_distance"      "400"
+	}
+	"versus_2"
+	{
+		"start_point"       "2641.317627 8449.403320 -1942.863403"
+		"end_point"         "8799.020508 2727.134033 -1466.025269"
+		"start_dist"        "25.000000"
+		"start_extra_dist"  "225.000000"
+		"end_dist"          "25.000000"
+		"max_distance"      "500"
+	}
+	"versus_3"
+	{
+		"start_point"       "8792.213867 2715.910156 -1466.025269"
+		"end_point"         "12202.734375 5155.361816 -1410.185425"
+		"start_dist"        "25.000000"
+		"start_extra_dist"  "250.000000"
+		"end_dist"          "75.000000"
+		"max_distance"      "600"
+		"tank_ban_flow_min" "30"
+		"tank_ban_flow_max" "78"
+	}
+	"versus_4"
+	{
+		"start_point"       "12214.042969 5164.038574 -1410.825195"
+		"end_point"         "9295.207031 -4650.206543 1218.068481"
+		"start_dist"        "75.000000"
+		"start_extra_dist"  "250.000000"
+		"end_dist"          "100.000000"
+		"tank_ban_flow_min" "1"
+		"tank_ban_flow_max" "70"
+		"max_distance"      "700"
+	}
+	"l4d2_bts01_forest"
+	{
+		"start_point"       "4130.246582 -9368.455078 6046.454590"
+		"end_point"         "-9542.071289 -2564.294922 5714.157227"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "300.000000"
+		"end_dist"          "50.000000"
+		"tank_ban_flow_min" "1"
+		"tank_ban_flow_max" "50"
+	}
+	"l4d2_bts02_station"
+	{
+		"start_point"       "4991.999023 -2604.749023 2771.566650"
+		"end_point"         "-6369.087891 577.145386 2749.982178"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "300.000000"
+		"end_dist"          "50.000000"
+		"tank_ban_flow_min" "1"
+		"tank_ban_flow_max" "40"
+	}
+	"l4d2_bts03_town"
+	{
+		"start_point"       "2696.533936 -2262.290771 96.982269"
+		"end_point"         "-2715.990479 5399.455566 -215.312866"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "300.000000"
+		"end_dist"          "100.000000"
+		"max_distance"      "800"
+	}
+	"l4d2_bts04_cinema"
+	{
+		"start_point"       "-8031.139160 -1851.702393 4013.227051"
+		"end_point"         "-2319.806885 -3634.134033 3992.008057"
+		"start_dist"        "100.000000"
+		"start_extra_dist"  "250.000000"
+		"end_dist"          "100.000000"
+	}
+	"l4d2_bts05_church"
+	{
+		"start_point"       "-2326.687500 -3631.203125 3991.338135"
+		"end_point"         "8629.720703 6720.044434 3758.387695"
+		"start_dist"        "100.000000"
+		"start_extra_dist"  "350.000000"
+		"end_dist"          "75.000000"
+		"max_distance"      "800"
+	}
+	"l4d2_bts06_school"
+	{
+		"start_point"       "-186.529556 -9786.741211 361.911438"
+		"end_point"         "92.987526 676.283325 669.281250"
+		"start_dist"        "250.000000"
+		"start_extra_dist"  "350.000000"
+		"end_dist"          "100.000000"
+	}
+	"AirCrash"
+	{
+		"start_point"       "-2894.737061 832.790588 62.031250"
+		"end_point"         "10004.405273 -3347.849121 442.031250"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "700.000000"
+		"end_dist"          "100.000000"
+	}
+	"RiverMotel"
+	{
+		"start_point"       "-4466.333984 6039.489746 -242.968750"
+		"end_point"         "-7504.548828 -8078.171387 -417.226288"
+		"start_dist"        "80.000000"
+		"start_extra_dist"  "225.000000"
+		"end_dist"          "50.000000"
+		"tank_ban_flow_min" "20"
+		"tank_ban_flow_max" "55"
+	}
+	"OutSkirts"
+	{
+		"start_point"       "-1410.445923 1065.465820 103.773918"
+		"end_point"         "-7270.211426 -1249.545410 -168.968750"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "200.000000"
+		"end_dist"          "180.000000"
+	}
+	"CityHall"
+	{
+		"start_point"       "9595.025391 9285.395508 -441.968750"
+		"end_point"         "5001.468750 -3361.346924 -873.968750"
+		"start_dist"        "180.000000"
+		"start_extra_dist"  "320.000000"
+		"end_dist"          "50.000000"
+		"tank_ban_flow_min" "35"
+		"tank_ban_flow_max" "72"
+		"max_distance"      "800"
+	}
+	"BombShelter"
+	{
+		"start_point"       "895.680847 263.351044 -361.775330"
+		"end_point"         "273.041870 -4326.456543 -411.968750"
+		"start_dist"        "150.000000"
+		"start_extra_dist"  "900.000000"
+		"end_dist"          "75.000000"
+	}
+	"l4d2_diescraper1_apartment_33"
+	{
+		"start_point"       "9000.979492 7243.940430 831.974670"
+		"end_point"         "10251.913086 4722.644531 52.338150"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "400.000000"
+		"end_dist"          "50.000000"
+		"tank_ban_flow_min" "30"
+		"tank_ban_flow_max" "50"
+	}
+	"l4d2_diescraper2_streets_33"
+	{
+		"start_point"       "10250.208008 4723.329590 70.338150"
+		"end_point"         "256.697845 144.240356 2.031250"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "350.000000"
+		"end_dist"          "50.000000"
+		"horde_limit"       "90"
+	}
+	"l4d2_diescraper3_mid_33"
+	{
+		"start_point"       "286.949280 145.143188 -1841.968750"
+		"end_point"         "-14.215425 -485.376556 510.031250"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "200.000000"
+		"end_dist"          "50.000000"
+		"horde_limit"       "60"
+	}
+	"l4d2_diescraper4_top_33"
+	{
+		"start_point"       "-10.403743 -485.376556 -497.968750"
+		"end_point"         "1307.318848 3.531982 -68.582138"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "400.000000"
+		"end_dist"          "50.000000"
+	}
+	"damitdc1"
+	{
+		"start_point"       "1733.933838 11597.541016 -606.293701"
+		"end_point"         "-983.111633 -4413.025879 -1257.968750"
+		"start_dist"        "80.000000"
+		"start_extra_dist"  "270.000000"
+		"end_dist"          "50.000000"
+		"tank_ban_flow_min" "30"
+		"tank_ban_flow_max" "50"
+		"max_distance"      "600"
+	}
+	"damitdc2"
+	{
+		"start_point"       "-990.591675 -4410.679199 -1257.968750"
+		"end_point"         "-2508.393555 1425.824219 -839.968750"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "450.000000"
+		"end_dist"          "50.000000"
+		"tank_ban_flow_min" "0"
+		"tank_ban_flow_max" "75"
+		"max_distance"      "500"
+	}
+	"damitdc3"
+	{
+		"start_point"       "-2506.914063 1422.134155 -839.968750"
+		"end_point"         "-1643.718018 3088.899414 674.281250"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "350.000000"
+		"end_dist"          "150.000000"
+		"tank_ban_flow_min" "0"
+		"tank_ban_flow_max" "45"
+		"max_distance"      "700"
+	}
+	"damitdc4"
+	{
+		"start_point"       "-1649.614258 3086.075684 674.281250"
+		"end_point"         "-3019.174805 -2739.631104 1150.908936"
+		"start_dist"        "150.000000"
+		"start_extra_dist"  "300.000000"
+		"end_dist"          "50.000000"
+		"tank_ban_flow_min" "0"
+		"tank_ban_flow_max" "70"
+	}
+	"l4d_tbm_1"
+	{
+		"start_point"		"5953.716797 -10323.491211 164.946655"
+		"end_point"         "-4719.364258 -7518.160156 606.232300"
+		"start_dist"        "75.000000"
+		"start_extra_dist"  "1200.000000"
+		"end_dist"          "50.000000"
+	}
+	"l4d_tbm_2"
+	{
+		"start_point"		"-4716.017090 -7516.337891 606.232300"
+		"end_point"         "4613.727539 3761.413574 107.974670"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "125.000000"
+		"end_dist"          "75.000000"
+		"tank_ban_flow_min" "52"
+		"tank_ban_flow_max" "88"
+		"max_distance"      "600"
+		"horde_limit"       "60"
+	}
+	"l4d_tbm_3"
+	{
+		"start_point"		"4616.124023 -846.119324 107.974670"
+		"end_point"         "1119.971069 8550.123047 510.031250"
+		"start_dist"        "75.000000"
+		"start_extra_dist"  "350.000000"
+		"end_dist"          "50.000000"
+		"tank_ban_flow_min" "60"
+		"tank_ban_flow_max" "80"
+		"max_distance"      "500"
+		"horde_limit"       "60"
+	}
+	"l4d_tbm_4"
+	{
+		"start_point"		"-12124.754883 -9292.593750 -161.968750"
+		"end_point"         "6286.219238 8830.492188 -605.968750"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "300.000000"
+		"end_dist"          "75.000000"
+		"tank_ban_flow_min" "0"
+		"tank_ban_flow_max" "25"
+		"max_distance"      "700"
+	}
+	"l4d_tbm_5"
+	{
+		"start_point"		"436.830170 -4734.862793 1026.031250"
+		"end_point"         "7580.302734 4824.854004 381.113770"
+		"start_dist"        "75.000000"
+		"start_extra_dist"  "250.000000"
+		"end_dist"          "100.000000"
+		"tank_ban_flow_min" "50"
+		"tank_ban_flow_max" "100"
+		"max_distance"      "600"
+	}
+	"l4d2_fallindeath01"
+	{
+		"start_point"		"214.333710 -1407.492676 222.812622"
+		"end_point"         "-4109.611328 4095.184082 374.066864"
+        "start_dist"        "100.000000"
+        "start_extra_dist"  "150.000000"
+        "end_dist"          "100.000000"
+		"max_distance"      "500"
+		"max_distance"		"500"
+	}
+	
+	"l4d2_fallindeath02"
+	{
+		"start_point"		"-4109.611328 342.256897 382.066864"
+		"end_point"         "11485.612305 7981.953613 506.440613"
+        "start_dist"        "100.000000"
+        "start_extra_dist"  "175.000000"
+        "end_dist"          "50.000000"
+		"max_distance"		"500"
+	}
+	"l4d2_fallindeath03"
+	{
+		"start_point"		"-4568.857910 116.963791 59.737034"
+		"end_point"         "5344.410645 -3423.376465 1587.031250"
+        "start_dist"        "50.000000"
+        "start_extra_dist"  "350.000000"
+        "end_dist"          "50.000000"
+		"max_distance"		"600"
+	}
+	"l4d2_fallindeath04"
+	{
+		"start_point"		"-642.819702 -1240.376587 -960.968750"
+		"end_point"         "-99.351852 922.977234 326.031250"
+        "start_dist"        "50.000000"
+        "start_extra_dist"  "325.000000"
+        "end_dist"          "50.000000"
+		"max_distance"		"800"
+		"tank_ban_flow_min" "0"
+		"tank_ban_flow_max" "40"
+	}
+}

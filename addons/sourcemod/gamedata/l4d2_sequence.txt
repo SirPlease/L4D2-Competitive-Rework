@@ -1,0 +1,19 @@
+﻿"Games"
+{
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			"CTerrorPlayer::SelectWeightedSequence"
+			{
+				"windows"	"206"
+				"linux"		"207"
+			}
+			"CTerrorPlayer::DoAnimationEvent"
+			{
+				"windows"	"509"
+				"linux"		"510"
+			}
+		}
+	}
+}

@@ -1,0 +1,5 @@
+"Metamod Plugin"
+{
+	"file"		"addons/stripper/bin/stripper_mm"
+	"alias"		"stripper"
+}
