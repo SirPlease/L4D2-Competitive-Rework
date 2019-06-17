@@ -5,7 +5,8 @@
 < This means Windows is not Supported, so don't ask~ :smile: >
 
 > **About:**
-This is mainly a project that focuses on reworking the very outdated platform for competitive L4D2 for [b]Linux[/b] Servers.
+
+This is mainly a project that focuses on reworking the very outdated platform for competitive L4D2 for **Linux** Servers.
 It will contain both much needed fixes that are simply unable to be implemented on the older sourcemod versions as well as incompatible and outdated files being updated to working versions.
 Issues and Discussions can be held both on Github and on our [Steam Group](https://steamcommunity.com/groups/srv_rework)
 
@@ -25,7 +26,7 @@ Issues and Discussions can be held both on Github and on our [Steam Group](https
 
 > **Extensions Loaded:**
 * Special Version of [DHooks](https://github.com/XutaxKamay/dhooks/releases/tag/v2.2.1b)
-  * Required for Bullet Displacement Fix(https://forums.alliedmods.net/showthread.php?t=315405)
+  * Required for [Bullet Displacement Fix](https://forums.alliedmods.net/showthread.php?t=315405)
 
 > **Plugins Loaded:**
 * [Bullet Displacement Fix](https://forums.alliedmods.net/showthread.php?t=315405)
