@@ -34,6 +34,7 @@
 #pragma semicolon 1
 
 #include <sourcemod>
+#include <l4d2_changelevel>
 #undef REQUIRE_PLUGIN
 #include <adminmenu>
 
@@ -266,7 +267,7 @@ public int Handler_VoteCallback(Menu menu, MenuAction action, int param1, int pa
 	}	
 	else if (action == MenuAction_VoteEnd)
 	{
-		char item[PLATFORM_MAX_PATH], display[64];
+		char item[64], display[64];
 		float percent, limit;
 		int votes, totalVotes;
 
@@ -394,7 +395,7 @@ void VoteMenuClose()
 
 float GetVotePercent(int votes, int totalVotes)
 {
-	return float(votes) / float(totalVotes);
+	return FloatDiv(float(votes),float(totalVotes));
 }
 
 bool TestVoteDelay(int client)
@@ -405,7 +406,7 @@ bool TestVoteDelay(int client)
  	{
  		if (delay > 60)
  		{
- 			ReplyToCommand(client, "[SM] %t", "Vote Delay Minutes", (delay / 60));
+ 			ReplyToCommand(client, "[SM] %t", "Vote Delay Minutes", delay % 60);
  		}
  		else
  		{
@@ -420,12 +421,12 @@ bool TestVoteDelay(int client)
 
 public Action Timer_ChangeMap(Handle timer, DataPack dp)
 {
-	char mapname[PLATFORM_MAX_PATH];
+	char mapname[65];
 	
 	dp.Reset();
 	dp.ReadString(mapname, sizeof(mapname));
 	
-	ForceChangeLevel(mapname, "sm_votemap Result");
+	L4D2_ChangeLevel(mapname);
 	
 	return Plugin_Stop;
 }

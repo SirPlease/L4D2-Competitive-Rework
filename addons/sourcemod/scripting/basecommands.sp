@@ -34,6 +34,7 @@
 #pragma semicolon 1
 
 #include <sourcemod>
+#include <l4d2_changelevel>
 #undef REQUIRE_PLUGIN
 #include <adminmenu>
 
