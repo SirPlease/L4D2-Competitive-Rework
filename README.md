@@ -12,7 +12,7 @@ Issues and Discussions can be held both on Github and on our [Steam Group](https
 
 > **Test Server Specifications:**
 * **OS:** Ubuntu 64Bit (18.04)
-* **IP:** 193.70.81.202:27029
+* **IP:** 149.202.88.193:27030
 * **Sourcemod:** 1.9 (6281)
 * **Metamod:** 1.11 (1127)
 * **Stripper Source:** 1.2.2 (hg82)
@@ -42,6 +42,8 @@ Issues and Discussions can be held both on Github and on our [Steam Group](https
   * Like the title says, you now simply just aim at the rock. You no longer have to "lead" your shots.
 
 > **Additional Fixes:**
+* Added "**mv_maxplayers**" that replaces sv_maxplayers in the Server.cfg, this is used to prevent it from being overwritten every map change.
+  * On config unload, the value will be to the value used in the Server.cfg
 * Fixed **!forcematch** causing the Server to crash if a custom builtinvote was currently active.
 * Fixed players being able to duplicate Survivors by using "**jointeam charactername**" when it was already taken.
 * Fixed the **playermanagement** plugin causing issues with creating bots and leaving the server full with bots called "k9Q6CK42".

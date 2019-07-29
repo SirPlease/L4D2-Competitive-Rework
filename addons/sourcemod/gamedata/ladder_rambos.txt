@@ -1,0 +1,68 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			"CTerrorPlayer::m_fNextShoveTime"
+			{
+				"linux"		"11512"
+				"windows"	"11532"
+			}
+			"CBaseCombatWeapon::m_iClip1"
+			{
+				"linux"		"5152"
+				"windows"	""
+			}
+			"CBaseEntity::m_owner"
+			{
+				"linux"		"5108"
+				"windows"	""
+			}
+			"CBaseEntity::movetype"
+			{
+				"linux"		"390"
+				"windows"	""
+			}
+			"CTerrorPlayer::PreThink__SafeDropLogic"
+			{
+				"linux"		"181"
+				"windows"	""
+			}
+		}
+
+		"Signatures"
+		{
+			"CTerrorGun::Deploy"
+			{
+				"library"	"server"
+				"linux"		"@_ZN10CTerrorGun6DeployEv"
+				"windows"	""
+			}
+			"CTerrorGun::Holster"
+			{
+				"library"	"server"
+				"linux"		"@_ZN10CTerrorGun7HolsterEP17CBaseCombatWeapon"
+				"windows"	""
+			}
+			"CTerrorGun::Reload"	// doesn't fire for shotties, they require a dedicated hook
+			{
+				"library"	"server"
+				"linux"		"@_ZN10CTerrorGun6ReloadEv"
+				"windows"	""
+			}
+			"CBaseShotgun::Reload"
+			{
+				"library"	"server"
+				"linux"		"@_ZN12CBaseShotgun6ReloadEv"
+				"windows"	""
+			}
+			"CTerrorPlayer::PreThink"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer8PreThinkEv"
+				"windows"	""
+			}
+		}
+	}
+}
