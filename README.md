@@ -19,6 +19,7 @@ Issues and Discussions can be held both on Github and on our [Steam Group](https
 
 > **Included & Working Matchmodes:**
 * **Zonemod 1.9.3**
+* **Promod Elite 1.1**
 
 ---
 
