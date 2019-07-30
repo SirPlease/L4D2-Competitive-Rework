@@ -19,4 +19,11 @@
 			"name" "1v1 ZoneMod"
 		}
 	}
+	"Promod Configs"
+	{
+		"pmelite"
+		{
+			"name" "Promod Elite 1.1"
+		}
+	}
 }

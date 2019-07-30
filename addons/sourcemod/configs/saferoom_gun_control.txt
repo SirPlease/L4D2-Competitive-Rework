@@ -1,0 +1,38 @@
+"SaferoomGunControl"
+{
+    "default"
+    {
+        "1" "weapon_pumpshotgun"
+        "2" "weapon_smg"
+    }
+    "c1m4_atrium"
+    {
+        "1" "weapon_shotgun_chrome"
+        "2" "weapon_smg_silenced"
+    }
+    "c2m3_coaster"
+    {
+        "1" "weapon_shotgun_chrome"
+        "2" "weapon_smg_silenced"
+    }
+    "c3m4_plantation"
+    {
+        "1" "weapon_shotgun_chrome"
+        "2" "weapon_smg_silenced"
+    }
+    "c4m2_sugarmill_a"
+    {
+        "1" "weapon_shotgun_chrome"
+        "2" "weapon_smg_silenced"
+    }
+    "c5m1_waterfront"
+    {
+        "1" "weapon_shotgun_chrome"
+        "2" "weapon_smg_silenced"
+    }
+    "c5m5_bridge"
+    {
+        "1" "weapon_shotgun_chrome"
+        "2" "weapon_smg"
+    }
+}
