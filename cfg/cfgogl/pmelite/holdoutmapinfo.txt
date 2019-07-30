@@ -1,0 +1,166 @@
+"HoldoutEvents"
+{
+	// gate opening wait time
+	"c2m4_barns"
+	{
+		"holdout"	"1"
+		"pointabsolute"	"40"
+		"time"		"38"
+
+		"t_start"	"minifinale_gates_button"
+		"t_s_class"	"func_button"
+		"t_s_hook"	"OnPressed"
+
+		"t_end"		"relay_minifinale_gates_open"
+		"t_e_class"	"logic_relay"
+		"t_e_hook"	"OnTrigger"
+	}
+
+	// swamp fever 1 ferry
+	"c3m1_plankcountry"
+	{
+		"holdout"	"1"				// indicates there is an event
+		"pointabsolute"	"80"				// total points
+		"time"		"80"				// time in seconds the event lasts
+
+		"t_start"	"ferry_button"			// targetname of starting trigger
+		"t_s_class"	"func_button"			// classname of starting trigger
+		"t_s_hook"	"OnPressed"			// output to hook for starting trigger
+
+		"t_end"		"ferry_tram_arrive_relay"	// likewise, but for event end trigger
+		"t_e_class"	"logic_relay"
+		"t_e_hook"	"OnTrigger"
+	}
+
+	// hard rain elevator wait
+	"c4m2_sugarmill_a"
+	{
+		"holdout"	"1"
+		"pointabsolute"	"40"
+		"time"		"50"
+
+		"t_start"	"button_callelevator"
+		"t_s_class"	"func_button"
+		"t_s_hook"	"OnPressed"
+
+		"t_end"		"elevator"
+		"t_e_class"	"func_elevator"
+		"t_e_hook"	"OnReachedTop"
+	}
+
+	// wait for parade float
+	"c5m4_quarter"
+	{
+		"holdout"	"1"
+		"pointabsolute"	"40"
+		"time"		"48"
+
+		"t_start"	"tractor_button"
+		"t_s_class"	"func_button"
+		"t_s_hook"	"OnPressed"
+	}
+
+	//"c8m2_subway"	<= maybe, for generator room doors? too short?
+
+	// elevator boringness
+	"c8m4_interior"
+	{
+		"holdout"	"0"
+		"pointabsolute"	"60"
+		"time"		"55"
+		
+		"t_start"	""
+		"t_s_hamid"	"1199249"
+		"t_s_class"	"func_button"
+		"t_s_hook"	"OnPressed"
+
+		"t_end"		""
+		"t_e_hamid"	"4999344"
+		"t_e_class"	"func_door"
+		"t_e_hook"	"OnOpen"
+	}
+
+	// floodgates closing
+	"c10m2_drainage"
+	{
+		"holdout"	"1"
+		"pointabsolute"	"40"
+		"time"		"35"
+
+		"t_start"	"button_minifinale"
+		"t_s_class"	"func_button"
+		"t_s_hook"	"OnPressed"
+
+		"t_end"		"relay_platform_01"
+		"t_e_class"	"logic_relay"
+		"t_e_hook"	"OnTrigger"
+	}
+
+	// huge wait for church door at the end
+	"c10m3_ranchhouse"
+	{
+		"holdout"	"1"
+		"pointabsolute"	"100"
+		"time"		"100"
+
+		"t_start"	"button_safedoor_PANIC"
+		"t_s_class"	"func_button"
+		"t_s_hook"	"OnPressed"
+
+		"t_end"		"relay_enable_chuch_zombie_loop"
+		"t_e_class"	"logic_relay"
+		"t_e_hook"	"OnTrigger"
+	}
+
+	// crane wait
+	"c11m2_offices"
+	{
+		"holdout"	"1"
+		"pointabsolute"	"60"
+		"time"		"55"
+
+		"t_start"	"crane button"
+		"t_s_class"	"func_button"
+		"t_s_hook"	"OnPressed"
+	}
+
+	// barricade burn
+	"c11m3_garage"
+	{
+		"holdout"	"0"
+		"pointabsolute"	"40"
+		"time"		"40"
+
+		"t_start"	"barricade_gas_can"
+		"t_s_class"	"prop_physics"
+		"t_s_hook"	"OnBreak"
+	}
+
+	// wait for dark parade float
+	"c5m4_darkquarter"
+	{
+		"holdout"	"1"
+		"pointabsolute"	"40"
+		"time"		"48"
+
+		"t_start"	"tractor_button"
+		"t_s_class"	"func_button"
+		"t_s_hook"	"OnPressed"
+	}
+	
+	
+	// "l4d_ihm02_manor" <= wait for chopper to crash
+	// "l4d_ihm03_underground" <= wait for gates to open?
+	// "l4d_ihm04_lumberyard" <= wait for house to collapse
+
+	// "cwm3_drain" <= wait for floodgates
+
+	// "l4d2_stadium2_riverwalk" <= wait for boat
+	// "l4d2_stadium3_city1" <= ?
+	// "l4d2_stadium4_city2" <= ?
+
+	// back to school
+	// the bloody moors
+	// blood tracks?
+	// ...
+}
