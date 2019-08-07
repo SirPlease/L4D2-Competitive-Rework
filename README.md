@@ -12,7 +12,8 @@ Issues and Discussions can be held both on Github and on our [Steam Group](https
 
 > **Test Server Specifications:**
 * **OS:** Ubuntu 64Bit (18.04)
-* **IP:** 149.202.88.193:27030
+* **EU IP:** 149.202.88.193:27030 (High Performance, can play 8 player games on)
+* **US IP:** 108.61.158.18:27015  (Low to Medium Performance, can't promise "playable" Games)
 * **Sourcemod:** 1.9 (6281)
 * **Metamod:** 1.11 (1127)
 * **Stripper Source:** 1.2.2 (hg82)
@@ -20,6 +21,7 @@ Issues and Discussions can be held both on Github and on our [Steam Group](https
 > **Included & Working Matchmodes:**
 * **Zonemod 1.9.3**
 * **Promod Elite 1.1**
+* **Equilibrium 3.0c**
 
 ---
 
@@ -41,6 +43,14 @@ Issues and Discussions can be held both on Github and on our [Steam Group](https
     * This means you no longer have to restart your Servers after every game to ensure the Servers are on their peak performance.
 * [Tank Rock Lag Compensation](https://forums.alliedmods.net/showthread.php?p=2646073)
   * Like the title says, you now simply just aim at the rock. You no longer have to "lead" your shots.
+* Tank Hittable Glow.
+  * This plugin adds a constant Glow to Hittables the Tank has punched.
+    * This is such a big QoL Fix and is implemented so smoothly that people often think it's part of the game, why not load it in every config?
+* Tons of Jockey Fixes:
+  * Fixed Jockeys and Chargers from capping the same Survivors at the same time.
+  * Fixed jockeyed Survivors going down ladders slowly.
+  * Fixed an issue where Survivors could selfclear themselves by just spamming M2 while holding a melee (while being jockeyed)
+  * Fixed an issue that allowed Jockeys to be able to pounce Survivors when spamming jump while their ability isn't ready and/or just got shoved.
 
 > **Additional Fixes:**
 * Added "**mv_maxplayers**" that replaces sv_maxplayers in the Server.cfg, this is used to prevent it from being overwritten every map change.

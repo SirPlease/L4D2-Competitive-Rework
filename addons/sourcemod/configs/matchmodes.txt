@@ -26,4 +26,23 @@
 			"name" "Promod Elite 1.1"
 		}
 	}
+	"EQ Configs"
+	{
+		"eq"
+		{
+			"name" "Equilibrium 3.0c"
+		}
+		"eq3v3"
+		{
+			"name" "3v3 EQ"
+		}
+		"eq2v2"
+		{
+			"name" "2v2 EQ"
+		}
+		"eq1v1"
+		{
+			"name" "1v1 EQ"
+		}
+	}
 }
