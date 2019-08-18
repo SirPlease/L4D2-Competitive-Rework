@@ -1211,6 +1211,9 @@
 		"start_dist"        "50.000000"
 		"start_extra_dist"  "250.000000"
 		"end_dist"          "50.000000"
+		"max_distance"      "800"
+		"tank_ban_flow_min" "75"
+		"tank_ban_flow_max" "99"
 	}
 	"jsarena202_alley"
 	{
@@ -1556,5 +1559,56 @@
 		"max_distance"		"800"
 		"tank_ban_flow_min" "0"
 		"tank_ban_flow_max" "40"
+	}
+	"l4d2_daybreak01_hotel"
+	{
+		"start_point" 		"90.343987 0.308769 62.031250"
+		"end point" 		"7032.421875 11570.696289 -700.968750"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "250.000000"
+		"end_dist"          "250.000000"
+		"max_distance"      "500"
+	}
+	"l4d2_daybreak02_coastline"
+	{
+		"start_point" 		"-12713.225586 -11746.325195 235.031250"
+		"end point" 		"-1623.365356 3938.154541 454.031250"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "250.000000"
+		"end_dist"          "50.000000"
+	}
+	"l4d2_daybreak03_bridge"
+	{
+		"start_point" 		"-9400.212891 381.715149 -6131.968750"
+		"end point" 		"7837.872559 -1757.597534 -5001.968750"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "150.000000"
+		"end_dist"          "250.000000"
+	}
+	"l4d2_daybreak04_cruise"
+	{
+		"start_point" 		"-7698.556152 -4633.521484 -5001.968750"
+		"end point" 		"1737.531982 -8322.154297 -6465.968750"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "250.000000"
+		"end_dist"          "50.000000"
+		"tank_ban_flow_min" "35"
+		"tank_ban_flow_max" "60"
+		"max_distance"      "600"
+	}
+	"l4d2_daybreak05_rescue"
+	{
+		"start_point" 		"7626.222656 12266.819336 -6465.968750"
+		"end point" 		"5934.712891 6175.033203 -4417.968750"
+		"start_dist"        "50.000000"
+		"start_extra_dist"  "250.000000"
+		"end_dist"          "150.000000"
+		"max_distance"      "800"
+	}
+	"l4d2_ff04_plant"
+	{
+		"tank_ban_flow_min" "56"
+		"tank_ban_flow_max" "99"
+		"horde_limit"       "200"
 	}
 }

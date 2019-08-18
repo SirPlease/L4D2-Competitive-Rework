@@ -1,4 +1,4 @@
-#define PLUGIN_VERSION		"1.2"
+#define PLUGIN_VERSION		"1.3"
 
 #include <sourcemod>
 #include <sdktools>
@@ -102,7 +102,7 @@ GetTotalPlayers()
 	new players;
 
 	for (new i = 1; i <= MaxClients; i++)
-		if (IsClientInGame(i) && GetClientTeam(i) != 1 && !IsFakeClient(i))
+		if (IsClientInGame(i) && GetClientTeam(i) > 1 && !IsFakeClient(i))
 			players++;
 
 	return players;

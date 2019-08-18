@@ -19,9 +19,10 @@ Issues and Discussions can be held both on Github and on our [Steam Group](https
 * **Stripper Source:** 1.2.2 (hg82)
 
 > **Included & Working Matchmodes:**
-* **Zonemod 1.9.3**
+* **Zonemod 1.9.4**
 * **Promod Elite 1.1**
 * **Equilibrium 3.0c**
+* **Apex 1.1.2**
 
 ---
 
@@ -51,6 +52,9 @@ Issues and Discussions can be held both on Github and on our [Steam Group](https
   * Fixed jockeyed Survivors going down ladders slowly.
   * Fixed an issue where Survivors could selfclear themselves by just spamming M2 while holding a melee (while being jockeyed)
   * Fixed an issue that allowed Jockeys to be able to pounce Survivors when spamming jump while their ability isn't ready and/or just got shoved.
+* L4D2 Ghost Anti-Cheat: A safe plugin that prevents 3rd party programs from being able to lock and see Infected Ghosts.
+* Shadow Fix: This prevents shadows showing through buildings, which would allow Survivors to know exactly where an infected was.
+
 
 > **Additional Fixes:**
 * Added "**mv_maxplayers**" that replaces sv_maxplayers in the Server.cfg, this is used to prevent it from being overwritten every map change.
@@ -112,6 +116,11 @@ Issues and Discussions can be held both on Github and on our [Steam Group](https
 * V10 
 * Vintik
 * VoiDeD
+
+> **Testing/Issue Reporting:**
+* Devilesk (+ Fixing)
+* Electr0
+* Rena (+ Fixing)
 
 **NOTE:** If your work is being used and I forgot to credit you, my sincere apologies.  
 I've done my best to include everyone on the list, simply create an issue and name the plugin/extension you've made/contributed to and I'll make sure to credit you properly.
