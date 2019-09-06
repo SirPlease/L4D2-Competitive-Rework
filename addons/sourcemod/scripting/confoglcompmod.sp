@@ -12,7 +12,6 @@
 
 #include <sourcemod>
 #include <sdktools>
-#include <socket>
 #include <sdkhooks>
 #include <left4downtown>
 #include <colors>

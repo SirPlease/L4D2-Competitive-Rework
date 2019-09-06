@@ -44,6 +44,8 @@ Issues and Discussions can be held both on Github and on our [Steam Group](https
     * This means you no longer have to restart your Servers after every game to ensure the Servers are on their peak performance.
 * [Tank Rock Lag Compensation](https://forums.alliedmods.net/showthread.php?p=2646073)
   * Like the title says, you now simply just aim at the rock. You no longer have to "lead" your shots.
+* [Buffer Overflow Fix](https://forums.alliedmods.net/showthread.php?p=2607757)
+  * Prevents large .cfg files from causing a Buffer Overflow.
 * Tank Hittable Glow.
   * This plugin adds a constant Glow to Hittables the Tank has punched.
     * This is such a big QoL Fix and is implemented so smoothly that people often think it's part of the game, why not load it in every config?
@@ -121,6 +123,7 @@ Issues and Discussions can be held both on Github and on our [Steam Group](https
 * Devilesk (+ Fixing)
 * Electr0
 * Rena (+ Fixing)
+* Eric (+ Fixing)
 
 **NOTE:** If your work is being used and I forgot to credit you, my sincere apologies.  
 I've done my best to include everyone on the list, simply create an issue and name the plugin/extension you've made/contributed to and I'll make sure to credit you properly.
