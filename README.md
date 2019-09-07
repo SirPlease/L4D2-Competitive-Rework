@@ -20,6 +20,7 @@ Issues and Discussions can be held both on Github and on our [Steam Group](https
 
 > **Included & Working Matchmodes:**
 * **Zonemod 1.9.4**
+* **NextMod 1.0.3**
 * **Promod Elite 1.1**
 * **Equilibrium 3.0c**
 * **Apex 1.1.2**

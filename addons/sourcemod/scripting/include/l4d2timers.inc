@@ -64,7 +64,7 @@ enum L4D2IntervalTimer
  * @param timer 		CountdownTimer to reset
  * @noreturn 				
  */
-native L4D2_CTimerReset(L4D2CountdownTimer:timer);
+native void L4D2_CTimerReset(L4D2CountdownTimer timer);
 
 /**
  * @brief Starts a given CountdownTimer with a given duration
@@ -74,7 +74,7 @@ native L4D2_CTimerReset(L4D2CountdownTimer:timer);
  * @param duration		Duration for the timer to use
  * @noreturn 				
  */
-native L4D2_CTimerStart(L4D2CountdownTimer:timer, Float:duration);
+native void L4D2_CTimerStart(L4D2CountdownTimer timer, float duration);
 
 /**
  * @brief Invalidates a given CountdownTimer (Timer essentially does not run)
@@ -83,7 +83,7 @@ native L4D2_CTimerStart(L4D2CountdownTimer:timer, Float:duration);
  * @param timer 		CountdownTimer to Invalidate
  * @noreturn 				
  */
-native L4D2_CTimerInvalidate(L4D2CountdownTimer:timer);
+native void L4D2_CTimerInvalidate(L4D2CountdownTimer timer);
 
 /**
  * @brief Tells if a given CountdownTimer has started
@@ -92,7 +92,7 @@ native L4D2_CTimerInvalidate(L4D2CountdownTimer:timer);
  * @param timer 		CountdownTimer to check
  * @return 				true if timer has started, false if timer is not started/invalid.
  */
-native bool:L4D2_CTimerHasStarted(L4D2CountdownTimer:timer);
+native bool L4D2_CTimerHasStarted(L4D2CountdownTimer timer);
 
 /**
  * @brief Tells if a given CountdownTimer is elapsed
@@ -101,7 +101,7 @@ native bool:L4D2_CTimerHasStarted(L4D2CountdownTimer:timer);
  * @param timer 		CountdownTimer to check
  * @return 				true if timer has elapsed or timer invalid/not started, false otherwise
  */
-native bool:L4D2_CTimerIsElapsed(L4D2CountdownTimer:timer);
+native bool L4D2_CTimerIsElapsed(L4D2CountdownTimer timer);
 
 /**
  * @brief Gets elapsed time of a given CountdownTimer, from the timed it was Start()ed
@@ -110,7 +110,7 @@ native bool:L4D2_CTimerIsElapsed(L4D2CountdownTimer:timer);
  * @param timer 		CountdownTimer to get elapsed time of
  * @return 				Float amount of time since timer started
  */
-native Float:L4D2_CTimerGetElapsedTime(L4D2CountdownTimer:timer);
+native float L4D2_CTimerGetElapsedTime(L4D2CountdownTimer timer);
 
 /**
  * @brief Gets remaining time on a given CountdownTimer
@@ -119,7 +119,7 @@ native Float:L4D2_CTimerGetElapsedTime(L4D2CountdownTimer:timer);
  * @param timer 		CountdownTimer to get remaining time of
  * @return 				Float amount of time remaining on the timer
  */
-native Float:L4D2_CTimerGetRemainingTime(L4D2CountdownTimer:timer);
+native float L4D2_CTimerGetRemainingTime(L4D2CountdownTimer timer);
 
 /**
  * @brief Gets the duration of a given CountdownTimer
@@ -128,7 +128,7 @@ native Float:L4D2_CTimerGetRemainingTime(L4D2CountdownTimer:timer);
  * @param timer 		CountdownTimer to get duration of
  * @return 				0.0 for invalid/not started timers, timer duration otherwise.
  */
-native Float:L4D2_CTimerGetCountdownDuration(L4D2CountdownTimer:timer);
+native float L4D2_CTimerGetCountdownDuration(L4D2CountdownTimer timer);
 
 /*************************************
 	IntervalTimer Natives 
@@ -141,7 +141,7 @@ native Float:L4D2_CTimerGetCountdownDuration(L4D2CountdownTimer:timer);
  * @param timer 		IntervalTimer to start
  * @noreturn 				
  */
-native L4D2_ITimerStart(L4D2IntervalTimer:timer);
+native void L4D2_ITimerStart(L4D2IntervalTimer timer);
 
 /**
  * @brief Invalidates a given IntervalTimer
@@ -150,7 +150,7 @@ native L4D2_ITimerStart(L4D2IntervalTimer:timer);
  * @param timer 		IntervalTimer to Invalidate
  * @noreturn 				
  */
-native L4D2_ITimerInvalidate(L4D2IntervalTimer:timer);
+native void L4D2_ITimerInvalidate(L4D2IntervalTimer timer);
 
 /**
  * @brief Tells whether a given IntervalTimer has started
@@ -159,7 +159,7 @@ native L4D2_ITimerInvalidate(L4D2IntervalTimer:timer);
  * @param timer 		IntervalTimer to check
  * @return 				true if timer is started, false if it is invalid/not started
  */
-native bool:L4D2_ITimerHasStarted(L4D2IntervalTimer:timer);
+native bool L4D2_ITimerHasStarted(L4D2IntervalTimer timer);
 	
 /**
  * @brief Gets the elapsed time of a given IntervalTimer
@@ -168,4 +168,4 @@ native bool:L4D2_ITimerHasStarted(L4D2IntervalTimer:timer);
  * @param timer 		IntervalTimer to get elapsed time of
  * @return				Elapsed time if timer started and valid, 99999.9f otherwise
  */
-native Float:L4D2_ITimerGetElapsedTime(L4D2IntervalTimer:timer);
+native float L4D2_ITimerGetElapsedTime(L4D2IntervalTimer timer);

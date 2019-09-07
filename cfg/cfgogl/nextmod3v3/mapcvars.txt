@@ -1,0 +1,27 @@
+"MapCvars"
+{
+	"c1m4_atrium"
+	{
+		"z_common_limit"	"10"
+	}
+	"c5m5_bridge"
+	{
+		"z_common_limit"	"4"
+	}
+	"c6m3_port"
+	{
+		"z_common_limit"	"10"
+	}
+	"c7m1_docks"
+	{
+		"z_common_limit"	"22"
+	}
+	"c7m2_barge"
+	{
+		"z_common_limit"	"22"
+	}
+	"c13m4_cutthroatcreek"
+	{
+		"z_common_limit"	"4"
+	}
+}

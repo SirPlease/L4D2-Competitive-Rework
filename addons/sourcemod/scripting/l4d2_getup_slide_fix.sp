@@ -156,5 +156,5 @@ stock bool IsValidInfected(int client)
 { 
     if (client <= 0 || client > MaxClients) return false;
     if (!IsClientConnected(client) || !IsClientInGame(client)) return false; 
-    return GetClientTeam(client) == 2;
+    return GetClientTeam(client) == 3;
 } 

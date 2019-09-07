@@ -46,9 +46,9 @@ A note regarding Clipsize: Any nonstandard value will NOT be in effect at weapon
 has to reload once to achieve the modified value. To fix this, add a weapon pickup hook in your plugin (eg "player_use")
 and use something like this with a small timer delay of 0.1 seconds or more (dont you love this engine)
 	
-	new weapon = GetPlayerWeaponSlot(client, 0);
+	int weapon = GetPlayerWeaponSlot(client, 0);
 	if (weapon == INVALID_ENT_REFERENCE) return; 
-	decl String:class[56];
+	char class[56];
 	GetEdictClassname(weapon, class, sizeof(class));
 	SetEntProp(weapon, Prop_Send, "m_iClip1", L4D2_GetIntWeaponAttribute(class, L4D2IWA_ClipSize));
 */
@@ -100,7 +100,7 @@ enum L4D2FloatMeleeWeaponAttributes
  * @param weaponName 	Weapon to check up on
  * @return 				True if weapon is found, false if not
  */
-native bool:L4D2_IsValidWeapon(const String:weaponName[]);
+native bool L4D2_IsValidWeapon(const char[] weaponName);
 
 /**
  * @brief Read an int-typed attribute for a given weapon from the WeaponInformationDatabase
@@ -110,7 +110,7 @@ native bool:L4D2_IsValidWeapon(const String:weaponName[]);
  * @param attr			Attribute to read from the weapon's info struct
  * @return 				The value read.
  */
-native L4D2_GetIntWeaponAttribute(const String:weaponName[], L4D2IntWeaponAttributes:attr);
+native int L4D2_GetIntWeaponAttribute(const char[] weaponName, L4D2IntWeaponAttributes attr);
 
 /**
  * @brief Read a float-typed attribute for a given weapon from the WeaponInformationDatabase
@@ -120,7 +120,7 @@ native L4D2_GetIntWeaponAttribute(const String:weaponName[], L4D2IntWeaponAttrib
  * @param attr			Attribute to read from the weapon's info struct
  * @return 				The value read.
  */
-native Float:L4D2_GetFloatWeaponAttribute(const String:weaponName[], L4D2FloatWeaponAttributes:attr);
+native float L4D2_GetFloatWeaponAttribute(const char[] weaponName, L4D2FloatWeaponAttributes attr);
 
 /**
  * @brief Set an int-typed attribute for a given weapon from the WeaponInformationDatabase to a given value
@@ -131,7 +131,7 @@ native Float:L4D2_GetFloatWeaponAttribute(const String:weaponName[], L4D2FloatWe
  * @param value			Value to set the attribute to
  * @noreturn
  */
-native L4D2_SetIntWeaponAttribute(const String:weaponName[], L4D2IntWeaponAttributes:attr, value);
+native void L4D2_SetIntWeaponAttribute(const char[] weaponName, L4D2IntWeaponAttributes attr, int value);
 
 /**
  * @brief Set a float-typed attribute for a given weapon from the WeaponInformationDatabase to a given value
@@ -142,11 +142,7 @@ native L4D2_SetIntWeaponAttribute(const String:weaponName[], L4D2IntWeaponAttrib
  * @param value			Value to set the attribute to
  * @noreturn
  */
-native Float:L4D2_SetFloatWeaponAttribute(const String:weaponName[], L4D2FloatWeaponAttributes:attr, Float:value);
-
-
-
-
+native void L4D2_SetFloatWeaponAttribute(const char[] weaponName, L4D2FloatWeaponAttributes attr, float value);
 
 /**
  * @brief Retrieve the index for a given melee weapon from the Melee Weapon Database
@@ -155,7 +151,7 @@ native Float:L4D2_SetFloatWeaponAttribute(const String:weaponName[], L4D2FloatWe
  * @param weaponName 	Weapon to lookup index id for
  * @return 				The index id
  */
-native L4D2_GetMeleeWeaponIndex(const String:weaponName[]);
+native int L4D2_GetMeleeWeaponIndex(const char[] weaponName);
 
 /**
  * @brief Read an int-typed attribute for a given id from the Melee Weapon Database
@@ -165,7 +161,7 @@ native L4D2_GetMeleeWeaponIndex(const String:weaponName[]);
  * @param attr			Attribute to read from the weapon's info struct
  * @return 				The value read.
  */
-native L4D2_GetIntMeleeAttribute(id, L4D2IntMeleeWeaponAttributes:attr);
+native int L4D2_GetIntMeleeAttribute(int id, L4D2IntMeleeWeaponAttributes attr);
 
 /**
  * @brief Read a float-typed attribute for a given id from the Melee Weapon Database
@@ -175,7 +171,7 @@ native L4D2_GetIntMeleeAttribute(id, L4D2IntMeleeWeaponAttributes:attr);
  * @param attr			Attribute to read from the weapon's info struct
  * @return 				The value read.
  */
-native Float:L4D2_GetFloatMeleeAttribute(id, L4D2FloatMeleeWeaponAttributes:attr);
+native float L4D2_GetFloatMeleeAttribute(int id, L4D2FloatMeleeWeaponAttributes attr);
 
 /**
  * @brief Read a bool-typed attribute for a given id from the Melee Weapon Database
@@ -185,7 +181,7 @@ native Float:L4D2_GetFloatMeleeAttribute(id, L4D2FloatMeleeWeaponAttributes:attr
  * @param attr			Attribute to read from the weapon's info struct
  * @return 				The value read.
  */
-native bool:L4D2_GetBoolMeleeAttribute(id, L4D2BoolMeleeWeaponAttributes:attr);
+native bool L4D2_GetBoolMeleeAttribute(int id, L4D2BoolMeleeWeaponAttributes attr);
 
 /**
  * @brief Set an int-typed attribute for a given id from the Melee Weapon Database to a given value
@@ -196,7 +192,7 @@ native bool:L4D2_GetBoolMeleeAttribute(id, L4D2BoolMeleeWeaponAttributes:attr);
  * @param value			Value to set the attribute to
  * @noreturn
  */
-native L4D2_SetIntMeleeAttribute(id, L4D2IntMeleeWeaponAttributes:attr, value);
+native void L4D2_SetIntMeleeAttribute(int id, L4D2IntMeleeWeaponAttributes attr, int value);
 
 /**
  * @brief Set a float-typed attribute for a given id from the Melee Weapon Database to a given value
@@ -207,7 +203,7 @@ native L4D2_SetIntMeleeAttribute(id, L4D2IntMeleeWeaponAttributes:attr, value);
  * @param value			Value to set the attribute to
  * @noreturn
  */
-native Float:L4D2_SetFloatMeleeAttribute(id, L4D2FloatMeleeWeaponAttributes:attr, Float:value);
+native void L4D2_SetFloatMeleeAttribute(int id, L4D2FloatMeleeWeaponAttributes attr, float value);
 
 /**
  * @brief Set a bool-typed attribute for a given id from the Melee Weapon Database to a given value
@@ -218,4 +214,4 @@ native Float:L4D2_SetFloatMeleeAttribute(id, L4D2FloatMeleeWeaponAttributes:attr
  * @param value			Value to set the attribute to
  * @noreturn
  */
-native Float:L4D2_SetBoolMeleeAttribute(id, L4D2BoolMeleeWeaponAttributes:attr, bool:value);
+native void L4D2_SetBoolMeleeAttribute(int id, L4D2BoolMeleeWeaponAttributes attr, bool value);

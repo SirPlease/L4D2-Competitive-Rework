@@ -45,7 +45,7 @@
  * @param qangle	QAngle where tank will be facing
  * @return 		Pl_Handled to block tank from spawning, Pl_Continue otherwise.
  */
-forward Action:L4D_OnSpawnTank(const Float:vector[3], const Float:qangle[3]);
+forward Action L4D_OnSpawnTank(const float vecOrigin[3], const float vecAngles[3]);
 
 /**
  * @brief Called whenever ZombieManager::SpawnWitch(Vector&,QAngle&) is invoked
@@ -54,7 +54,7 @@ forward Action:L4D_OnSpawnTank(const Float:vector[3], const Float:qangle[3]);
  * @param qangle	QAngle where witch will be facing
  * @return 		Pl_Handled to block witch from spawning, Pl_Continue otherwise.
  */
-forward Action:L4D_OnSpawnWitch(const Float:vector[3], const Float:qangle[3]);
+forward Action L4D_OnSpawnWitch(const float vecOrigin[3], const float vecAngles[3]);
 
 /**
  * @brief Called whenever ZombieManager::SpawnWitchBride(Vector&,QAngle&) is invoked
@@ -63,7 +63,7 @@ forward Action:L4D_OnSpawnWitch(const Float:vector[3], const Float:qangle[3]);
  * @param qangle	QAngle where witch will be facing
  * @return 		Pl_Handled to block witch from spawning, Pl_Continue otherwise.
  */
-forward Action:L4D_OnSpawnWitchBride(const Float:vector[3], const Float:qangle[3]);
+forward Action L4D_OnSpawnWitchBride(const float vecOrigin[3], const float vecAngles[3]);
 
 /**
  * @brief Called whenever ZombieManager::SpawnSpecial(ZombieClassType,Vector&,QAngle&) is invoked
@@ -75,7 +75,7 @@ forward Action:L4D_OnSpawnWitchBride(const Float:vector[3], const Float:qangle[3
  * @return 				Pl_Handled to block special from spawning, 
  * 				Pl_Changed to change the zombie class type to spawn, Pl_Continue otherwise.
  */
-forward Action:L4D_OnSpawnSpecial(&zombieClass, const Float:vector[3], const Float:qangle[3]);
+forward Action L4D_OnSpawnSpecial(int &zombieClass, const float vecOrigin[3], const float vecAngles[3]);
 
 /**
  * @brief Called whenever CTerrorGameRules::ClearTeamScores(bool) is invoked
@@ -85,7 +85,7 @@ forward Action:L4D_OnSpawnSpecial(&zombieClass, const Float:vector[3], const Flo
  * @param newCampaign  if true then this is a new campaign, if false a new chapter
  * @return 		Pl_Handled to block scores from being cleared, Pl_Continue otherwise.
  */
-forward Action:L4D_OnClearTeamScores(bool:newCampaign);
+forward Action L4D_OnClearTeamScores(bool newCampaign);
 
 /**
  * @brief Called whenever CTerrorGameRules::SetCampaignScores(int,int) is invoked
@@ -95,7 +95,7 @@ forward Action:L4D_OnClearTeamScores(bool:newCampaign);
  * @param scoreB  score of logical team B
  * @return 		Pl_Handled to block campaign scores from being set, Pl_Continue otherwise.
  */
-forward Action:L4D_OnSetCampaignScores(&scoreA, &scoreB);
+forward Action L4D_OnSetCampaignScores(int &scoreA, int &scoreB);
 
 /**
  * @brief Called whenever CDirector::OnFirstSurvivorLeftSafeArea is invoked
@@ -106,7 +106,7 @@ forward Action:L4D_OnSetCampaignScores(&scoreA, &scoreB);
  * 
  * @return 		Pl_Handled to block round from being started, Pl_Continue otherwise.
  */
-forward Action:L4D_OnFirstSurvivorLeftSafeArea(client);
+forward Action L4D_OnFirstSurvivorLeftSafeArea(int client);
 
 /**
  * @brief Called whenever CDirector::GetScriptValue(const char*, int) is invoked
@@ -117,7 +117,7 @@ forward Action:L4D_OnFirstSurvivorLeftSafeArea(client);
  * 
  * @return 		Pl_Handled to override return value, Pl_Continue otherwise.
  */
-forward Action:L4D_OnGetScriptValueInt(const String:key[], &retVal);
+forward Action L4D_OnGetScriptValueInt(const char[] key, int &retVal);
 
 /**
  * @brief Called whenever CDirector::GetScriptValue(const char*, float) is invoked
@@ -128,7 +128,7 @@ forward Action:L4D_OnGetScriptValueInt(const String:key[], &retVal);
  * 
  * @return 		Pl_Handled to override return value, Pl_Continue otherwise.
  */
-forward Action:L4D_OnGetScriptValueFloat(const String:key[], &Float:retVal);
+forward Action L4D_OnGetScriptValueFloat(const char[] key, float &retVal);
 
 /**
  * @brief Called whenever CDirector::GetScriptValue(const char*, const char*, char*, int) is invoked
@@ -140,7 +140,7 @@ forward Action:L4D_OnGetScriptValueFloat(const String:key[], &Float:retVal);
  * 
  * @return 		Pl_Handled to override return value, Pl_Continue otherwise.
  */
-forward Action:L4D_OnGetScriptValueString(const String:key[], const String:defaultVal[], String:retVal[128]);
+forward Action L4D_OnGetScriptValueString(const char[] key, const char[] defaultVal, char retVal[128]);
 
 /**
  * @brief Called whenever CTerrorPlayer::OnEnterGhostState(CTerrorPlayer*) is invoked
@@ -148,7 +148,16 @@ forward Action:L4D_OnGetScriptValueString(const String:key[], const String:defau
  * 
  * @param client  the client that has entered ghost mode
  */
-forward L4D_OnEnterGhostState(client);
+forward void L4D_OnEnterGhostState(int client);
+
+/**
+ * @brief Called whenever ZombieManager::ReplaceTank(CTerrorPlayer *,CTerrorPlayer *) is invoked
+ * @remarks Not invoked if tank is bot
+ *
+ * @param CTerrorPlayer	tank the player who was a tank
+ * @param CTerrorPlayer	newtank a player who has become a new tank
+ */
+forward void L4D_OnReplaceTank(int tank, int newtank);
 
 /**
  * @brief Called whenever CDirector::TryOfferingTankBot is invoked
@@ -156,7 +165,7 @@ forward L4D_OnEnterGhostState(client);
  * 
  * @return 		Pl_Handled to block window from showing and to keep Tank Bot, Pl_Continue otherwise
  */
-forward Action:L4D_OnTryOfferingTankBot(tank_index, &bool:enterStasis);
+forward Action L4D_OnTryOfferingTankBot(int tank_index, bool &enterStasis);
 
 /**
  * @brief Called whenever CDirector::OnMobRushStart(void) is invoked
@@ -166,7 +175,7 @@ forward Action:L4D_OnTryOfferingTankBot(tank_index, &bool:enterStasis);
  * 
  * @return 		Pl_Handled to block, Pl_Continue otherwise
  */
-forward Action:L4D_OnMobRushStart();
+forward Action L4D_OnMobRushStart();
 
 /**
  * @brief Called whenever ZombieManager::SpawnITMob(int) is invoked
@@ -176,7 +185,7 @@ forward Action:L4D_OnMobRushStart();
  * 
  * @return 		Pl_Handled to block, Pl_Continue otherwise
  */
-forward Action:L4D_OnSpawnITMob(&amount);
+forward Action L4D_OnSpawnITMob(int &amount);
 
 /**
  * @brief Called whenever ZombieManager::SpawnMob(int) is invoked
@@ -188,7 +197,7 @@ forward Action:L4D_OnSpawnITMob(&amount);
  * 
  * @return 		Pl_Handled to block, Pl_Continue otherwise
  */
-forward Action:L4D_OnSpawnMob(&amount);
+forward Action L4D_OnSpawnMob(int &amount);
 
 /**
  * @brief Called whenever CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer, Vector&) is invoked
@@ -200,7 +209,7 @@ forward Action:L4D_OnSpawnMob(&amount);
  *
  * @return 		Pl_Handled to block melee effect (staggering), Pl_Continue otherwise.
  */
-forward Action:L4D_OnShovedBySurvivor(client, victim, const Float:vector[3]);
+forward Action L4D_OnShovedBySurvivor(int client, int victim, const float vecDirection[3]);
 
 /**
  * @brief Called whenever CTerrorPlayer::GetCrouchTopSpeed() is invoked
@@ -210,7 +219,7 @@ forward Action:L4D_OnShovedBySurvivor(client, victim, const Float:vector[3]);
  * 
  * @return 		Pl_Handled to override return value, Pl_Continue otherwise.
  */
-forward Action:L4D_OnGetCrouchTopSpeed(target, &Float:retVal);
+forward Action L4D_OnGetCrouchTopSpeed(int target, float &retVal);
 
 /**
  * @brief Called whenever CTerrorPlayer::GetRunTopSpeed() is invoked
@@ -220,7 +229,7 @@ forward Action:L4D_OnGetCrouchTopSpeed(target, &Float:retVal);
  * 
  * @return 		Pl_Handled to override return value, Pl_Continue otherwise.
  */
-forward Action:L4D_OnGetRunTopSpeed(target, &Float:retVal);
+forward Action L4D_OnGetRunTopSpeed(int target, float &retVal);
 
 /**
  * @brief Called whenever CTerrorPlayer::GetWalkTopSpeed() is invoked
@@ -230,7 +239,7 @@ forward Action:L4D_OnGetRunTopSpeed(target, &Float:retVal);
  * 
  * @return 		Pl_Handled to override return value, Pl_Continue otherwise.
  */
-forward Action:L4D_OnGetWalkTopSpeed(target, &Float:retVal);
+forward Action L4D_OnGetWalkTopSpeed(int target, float &retVal);
 
 /**
  * @brief Called whenever CTerrorGameRules::HasConfigurableDifficultySetting() is invoked
@@ -240,7 +249,7 @@ forward Action:L4D_OnGetWalkTopSpeed(target, &Float:retVal);
  * 
  * @return 		Pl_Handled to override return value, Pl_Continue otherwise.
  */
-forward Action:L4D_OnHasConfigurableDifficulty(&retVal);
+forward Action L4D_OnHasConfigurableDifficulty(int &retVal);
 
 /**
  * @brief Called whenever CTerrorGameRules::GetSurvivorSet(void) is invoked
@@ -249,7 +258,7 @@ forward Action:L4D_OnHasConfigurableDifficulty(&retVal);
  * 
  * @return 		Pl_Handled to override return value, Pl_Continue otherwise.
  */
-forward Action:L4D_OnGetSurvivorSet(&retVal);
+forward Action L4D_OnGetSurvivorSet(int &retVal);
 
 /**
  * @brief Called whenever CTerrorGameRules::FastGetSurvivorSet(void) is invoked
@@ -258,7 +267,7 @@ forward Action:L4D_OnGetSurvivorSet(&retVal);
  * 
  * @return 		Pl_Handled to override return value, Pl_Continue otherwise.
  */
-forward Action:L4D_OnFastGetSurvivorSet(&retVal);
+forward Action L4D_OnFastGetSurvivorSet(int &retVal);
 
 /**
  * @brief Called whenever CDirectorVersusMode::GetMissionVersusBossSpawning() is invoked
@@ -271,7 +280,7 @@ forward Action:L4D_OnFastGetSurvivorSet(&retVal);
  * 
  * @return 		Pl_Handled to block reading map data, Pl_Changed to use overwritten values from plugin, Pl_Continue to continue to read from mission data.
  */
-forward Action:L4D_OnGetMissionVSBossSpawning(&Float:spawn_pos_min, &Float:spawn_pos_max, &Float:tank_chance, &Float:witch_chance);
+forward Action L4D_OnGetMissionVSBossSpawning(float &spawn_pos_min, float &spawn_pos_max, float &tank_chance, float &witch_chance);
 
 /**
  * @brief Called whenever CThrow::ActivateAbility(void) is invoked
@@ -282,7 +291,7 @@ forward Action:L4D_OnGetMissionVSBossSpawning(&Float:spawn_pos_min, &Float:spawn
  * 
  * @return 		Pl_Handled to block, Pl_Continue otherwise
  */
-forward Action:L4D_OnCThrowActivate(ability);
+forward Action L4D_OnCThrowActivate(int ability);
 
 /**
  * @brief Called whenever InfectedShoved::OnShoved(Infected *, CBaseEntity *) is invoked
@@ -290,7 +299,7 @@ forward Action:L4D_OnCThrowActivate(ability);
  * 
  * @return 		Pl_Handled to block, Pl_Continue otherwise
  */
-forward Action:L4D_OnInfectedShoved(infected, entity);
+forward Action L4D_OnInfectedShoved(int infected, int entity);
 
 /**
  * @brief Called whenever CTerrorMeleeWeapon::StartMeleeSwing(CTerrorPlayer *, bool) is invoked
@@ -299,7 +308,7 @@ forward Action:L4D_OnInfectedShoved(infected, entity);
  * 
  * @return 		Pl_Handled to block, Pl_Continue otherwise
  */
-forward Action:L4D_OnStartMeleeSwing(client, bool:boolean);
+forward Action L4D_OnStartMeleeSwing(int client, bool boolean);
 
 /**
  * @brief Called whenever CDirectorScriptedEventManager::SendInRescueVehicle(void) is invoked
@@ -308,7 +317,7 @@ forward Action:L4D_OnStartMeleeSwing(client, bool:boolean);
  * 
  * @return 		Pl_Handled to block, Pl_Continue otherwise
  */
-forward Action:L4D2_OnSendInRescueVehicle();
+forward Action L4D2_OnSendInRescueVehicle();
 
 /**
  * @brief Called whenever CDirectorScriptedEventManager::ChangeFinaleStage is invoked
@@ -319,7 +328,7 @@ forward Action:L4D2_OnSendInRescueVehicle();
  * 
  * @return 		Pl_Handled to block, Pl_Continue otherwise
  */
-forward Action:L4D2_OnChangeFinaleStage(&finaleType, const String:arg[]);
+forward Action L4D2_OnChangeFinaleStage(int &finaleType, const char[] arg);
 
 /**
  * @brief Called whenever CDirectorVersusMode::EndVersusModeRound(bool) is invoked
@@ -330,7 +339,7 @@ forward Action:L4D2_OnChangeFinaleStage(&finaleType, const String:arg[]);
  * 
  * @return 		Pl_Handled to block, Pl_Continue otherwise
  */
-forward Action:L4D2_OnEndVersusModeRound(bool:countSurvivors);
+forward Action L4D2_OnEndVersusModeRound(bool countSurvivors);
 
 /**
  * @brief Called after CDirectorVersusMode::EndVersusModeRound(bool)
@@ -338,7 +347,7 @@ forward Action:L4D2_OnEndVersusModeRound(bool:countSurvivors);
  * 
  * @return 		noreturn
  */
-forward L4D2_OnEndVersusModeRound_Post();
+forward void L4D2_OnEndVersusModeRound_Post();
 
 /**
  * @brief Called when CBaseAnimating::SelectWeightedSequence(int Activity) is invoked with tank attack activity
@@ -351,7 +360,7 @@ forward L4D2_OnEndVersusModeRound_Post();
  * 
  * @return 		Pl_Handled to override return value, Pl_Continue otherwise.
  */
-forward Action:L4D2_OnSelectTankAttack(client, &sequence);
+forward Action L4D2_OnSelectTankAttack(int client, int &sequence);
 
 /**
  * @brief Called when CTerrorPlayer::OnRevived(void) is invoked
@@ -361,7 +370,7 @@ forward Action:L4D2_OnSelectTankAttack(client, &sequence);
  *
  * @noreturn Pl_Handled to override return value, Pl_Continue otherwise.
  */
-forward Action:L4D2_OnRevived(client);
+forward Action L4D2_OnRevived(int client);
 
 /**
  * @brief Called when SurvivorBot::UseHealingItems(Action<SurvivorBot> *) is invoked
@@ -371,7 +380,7 @@ forward Action:L4D2_OnRevived(client);
  *
  * @noreturn Pl_Handled to block, Pl_Continue otherwise.
  */
-forward Action:L4D2_OnUseHealingItems(client);
+forward Action L4D2_OnUseHealingItems(int client);
 
 /**
  * @brief Called after SurvivorBot::FindScavengeItem(Action<SurvivorBot> *) is invoked
@@ -382,7 +391,7 @@ forward Action:L4D2_OnUseHealingItems(client);
  *
  * @noreturn Pl_Handled to block, Pl_Continue otherwise.
  */
-forward Action:L4D2_OnFindScavengeItem(client, item);
+forward Action L4D2_OnFindScavengeItem(int client, int item);
 
 /**
  * @brief Called whenever CBasePlayer::WaterMove() is invoked
@@ -392,7 +401,7 @@ forward Action:L4D2_OnFindScavengeItem(client, item);
  *
  * @noreturn
  */
-forward L4D2_OnWaterMove(client);
+forward void L4D2_OnWaterMove(int client);
 
 /**
  * @brief Called whenever CTerrorPlayer::OnStaggered(CBaseEntity *, Vector const *) is invoked
@@ -403,7 +412,7 @@ forward L4D2_OnWaterMove(client);
  *
  * @return 		Pl_Handled to block, Pl_Continue otherwise
  */
-forward Action:L4D2_OnStagger(target, source);
+forward Action L4D2_OnStagger(int target, int source);
 
 /**
  * @brief Called whenever CTerrorWeapon::OnHit(CGameTrace &, Vector  const&, bool) is invoked
@@ -417,7 +426,7 @@ forward Action:L4D2_OnStagger(target, source);
  *
  * @return 		Pl_Handled to block, Pl_Continue otherwise
  */
-forward Action:L4D2_OnEntityShoved(client, entity, weapon, Float:vector[3], bool:bIsHighPounce);
+forward Action L4D2_OnEntityShoved(int client, int entity, int weapon, float vector[3], bool bIsHighPounce);
 
 /**
  * @brief Called when the client's material system is expecting instructions from the server in regards to addons
@@ -427,20 +436,7 @@ forward Action:L4D2_OnEntityShoved(client, entity, weapon, Float:vector[3], bool
  *
  * @return      Pl_Handled to let the client through with addons, Pl_Continue otherwise.
  */
-forward Action:L4D2_OnClientDisableAddons(const String:SteamID[]);
-
-/**
- * @brief Called whenever CInferno::Spread(Vector const&) is invoked (only for spitters -- ignores fire)
- *
- * @param spitter	 	spitter that spat (:D)
- * @param projectile	spitter's projectile entity
- * @param x				x coordinate of the new acid puddle (can be overridden)
- * @param y				y coordinate of the new acid puddle (can be overridden)
- * @param z				z coordinate of the new acid puddle (can be overridden)
- *
- * @return 		Pl_Handled to block, Pl_Continue otherwise
- */
-forward Action:L4D2_OnSpitSpread(spitter, projectile, &Float:x, &Float:y, &Float:z);
+forward Action L4D2_OnClientDisableAddons(const char[] SteamID);
 
 /**
  * @brief Called whenever CTerrorPlayer::OnShovedByPounceLanding(CTerrorPlayer*) is invoked
@@ -450,7 +446,17 @@ forward Action:L4D2_OnSpitSpread(spitter, projectile, &Float:x, &Float:y, &Float
  *
  * @return 		Pl_Handled to block, Pl_Continue otherwise
  */
-forward Action:L4D2_OnPounceOrLeapStumble(victim, attacker);
+forward Action L4D2_OnPounceOrLeapStumble(int victim, int attacker);
+
+/**
+ * @brief Called whenever BossZombiePlayer(CTerrorPlayer *, int, CBaseEntity *) is invoked
+ *
+ * @param specialInfected	the SI entity index
+ * @param curTarget			the survivor player index who is chosen victim
+ *
+ * @return 		Pl_Handled to block, Pl_Changed to use overwritten values from plugin, Pl_Continue otherwise
+ */
+forward Action L4D2_OnChooseVictim(int specialInfected, int &curTarget);
 
 /**
  * @brief Get the current campaign scores stored in the Director
@@ -464,7 +470,7 @@ forward Action:L4D2_OnPounceOrLeapStumble(victim, attacker);
  * @return 		1 always
  */
 #pragma deprecated Use GetTeamScore and OnClearTeamScores instead
-native L4D_GetCampaignScores(&scoreA, &scoreB);
+native int L4D_GetCampaignScores(int &scoreA, int &scoreB);
 
 /**
  * @brief Get the team scores for the current map
@@ -480,14 +486,14 @@ native L4D_GetCampaignScores(&scoreA, &scoreB);
  *                      or -1 if the team hasn't played the round yet,
  *                or the team's campaign score if campaign_score = true
  */
-native L4D_GetTeamScore(logical_team, campaign_score=false);
+native int L4D_GetTeamScore(int logical_team, bool campaign_score=false);
 
 /**
  * @brief Restarts the setup timer (when in scavenge mode)
  * @remarks If game has already started, the setup timer will show,
  *           but it still won't go back into setup.
  */
-native L4D_ScavengeBeginRoundSetupTime();
+native void L4D_ScavengeBeginRoundSetupTime();
 
 /**
  * @brief Restarts the round, switching the map if necessary
@@ -496,14 +502,14 @@ native L4D_ScavengeBeginRoundSetupTime();
  * @param map  the mapname it should go to after the round restarts
  * @return     1 always
  */
-native L4D_RestartScenarioFromVote(const String:map[]);
+native void L4D_RestartScenarioFromVote(const char[] map);
 
 /**
  * @brief Removes lobby reservation from a server
  * @remarks Sets the reservation cookie to 0,
  *           it is safe to call this even if it's unreserved.
  */
-native L4D_LobbyUnreserve();
+native void L4D_LobbyUnreserve();
 
 /**
  * @brief Checks if the server is currently reserved for a lobby
@@ -515,7 +521,7 @@ native L4D_LobbyUnreserve();
  * @return     true if reserved, false if not reserved
  */
 #pragma deprecated This will always return false on L4D2 or on Linux.
-native bool:L4D_LobbyIsReserved();
+native bool L4D_LobbyIsReserved();
 
 /**
  * @brief Gets the max versus completion score for the map
@@ -525,7 +531,7 @@ native bool:L4D_LobbyIsReserved();
  *
  * @return     The map's max completion distance (map distance score)
  */
-native L4D_GetVersusMaxCompletionScore();
+native int L4D_GetVersusMaxCompletionScore();
 
 /**
  * @brief Sets the max versus completion score for the map
@@ -534,14 +540,21 @@ native L4D_GetVersusMaxCompletionScore();
  *
  * @param	score	The versus max completion score to set for the round
  */
-native L4D_SetVersusMaxCompletionScore(score);
+native void L4D_SetVersusMaxCompletionScore(int score);
+
+/**
+ * @brief Tells if the Mission (map) is the first map of the campaign
+ *
+ * @return		true if the map is the first map of the campaign
+ */
+native bool L4D_IsFirstMapInScenario();
 
 /**
  * @brief Tells if the Mission (map) is the final map of the campaign
  *
  * @return		true if the map is the last map of the campaign (finale)
  */
-native bool:L4D_IsMissionFinalMap();
+native bool L4D_IsMissionFinalMap();
 
 /**
  * @brief Resets the natural mob (horde) timer
@@ -549,7 +562,7 @@ native bool:L4D_IsMissionFinalMap();
  *
  * @noreturn
  */
-native L4D_ResetMobTimer();
+native void L4D_ResetMobTimer();
 
 /**
  * @brief Notifies the CGameRulesProxy that the game state has been changed
@@ -558,7 +571,7 @@ native L4D_ResetMobTimer();
  *
  * @noreturn
  */
-native L4D_NotifyNetworkStateChanged();
+native void L4D_NotifyNetworkStateChanged();
 
 /**
  * @brief Trigger's a target player's stagger behavior 
@@ -566,10 +579,10 @@ native L4D_NotifyNetworkStateChanged();
  * 
  * @param target 		Player to stagger
  * @param source_ent	Source of the stagger (another player, etc)
- * @param source_vector Source location of the stagger. If NULL_VECTOR, origins of source_ent is used.
+ * @param vecSource 	Source location of the stagger. If NULL_VECTOR, origins of source_ent is used.
  * @noreturn 				
  */
-native L4D_StaggerPlayer(target, source_ent, Float:source_vector[3]);
+native void L4D_StaggerPlayer(int target, int source_ent, float vecSource[3]);
 
 /**
  * @brief Get the time remaining before the next director horde. 
@@ -578,7 +591,7 @@ native L4D_StaggerPlayer(target, source_ent, Float:source_vector[3]);
  * @return 	Time remaining before next director horde
  */
 #pragma deprecated Use L4D2_CTimerGetRemainingTime(L4D2CT_MobSpawnTimer)
-native Float:L4D_GetMobSpawnTimerRemaining();
+native float L4D_GetMobSpawnTimerRemaining();
 
 /**
  * @brief Get the duration the horde timer was set to after the last horde
@@ -587,7 +600,7 @@ native Float:L4D_GetMobSpawnTimerRemaining();
  * @return 	Total time from last horde to next horde.
  */
 #pragma deprecated Use L4D2_CTimerGetCountdownDuration(L4D2CT_MobSpawnTimer)
-native Float:L4D_GetMobSpawnTimerDuration();
+native float L4D_GetMobSpawnTimerDuration();
 
 /**
  * @brief Get the remaining spawn time for an SI
@@ -595,7 +608,7 @@ native Float:L4D_GetMobSpawnTimerDuration();
  * 
  * @return 	Time (seconds) until the SI will spawn.
  */
-native Float:L4D_GetPlayerSpawnTime(player);
+native float L4D_GetPlayerSpawnTime(int player);
 
 /**
  * @brief Calls CDirectorScriptedEventManager::SendInRescueVehicle(void)
@@ -604,7 +617,15 @@ native Float:L4D_GetPlayerSpawnTime(player);
  * 
  * @noreturn
  */
-native L4D2_SendInRescueVehicle();
+native void L4D2_SendInRescueVehicle();
+
+/**
+ * @brief Calls ZombieManager::ReplaceTank(CTerrorPlayer *,CTerrorPlayer *)
+ *
+ * @param tank	the player who was a tank
+ * @param newtank	a player who has become a new tank
+ */
+native void L4D_ReplaceTank(int tank, int newtank);
 
 /**
  * @brief Calls CDirectorScriptedEventManager::ChangeFinaleStage(CDirectorScriptedEventManager::FinaleStageType,char  const*)
@@ -616,7 +637,7 @@ native L4D2_SendInRescueVehicle();
  *
  * @noreturn
  */
-native L4D2_ChangeFinaleStage(finaleType, const String:arg[]);
+native void L4D2_ChangeFinaleStage(int finaleType, const char[] arg);
 
 /**
  * @brief Calls ZombieManager::SpawnTank(Vector&,QAngle&)
@@ -625,7 +646,7 @@ native L4D2_ChangeFinaleStage(finaleType, const String:arg[]);
  * @param qangle	QAngle where the tank will be facing
  * @return 			Entity index of the spawned tank
  */
-native L4D2_SpawnTank(const Float:vector[3], const Float:qangle[3]);
+native int L4D2_SpawnTank(const float vecOrigin[3], const float vecAngles[3]);
 
 /**
  * @brief Calls ZombieManager::SpawnSpecial(ZombieClassType,Vector&,QAngle&)
@@ -635,7 +656,7 @@ native L4D2_SpawnTank(const Float:vector[3], const Float:qangle[3]);
  * @param qangle	QAngle where the SI will be facing
  * @return 			Entity index of the spawned SI
  */
-native L4D2_SpawnSpecial(zombieClass, const Float:vector[3], const Float:qangle[3]);
+native int L4D2_SpawnSpecial(int zombieClass, const float vecOrigin[3], const float vecAngles[3]);
 
 /**
  * @brief Calls ZombieManager::SpawnWitch(Vector&,QAngle&)
@@ -644,7 +665,7 @@ native L4D2_SpawnSpecial(zombieClass, const Float:vector[3], const Float:qangle[
  * @param qangle	QAngle where the witch will be facing
  * @return 			Entity index of the spawned witch
  */
-native L4D2_SpawnWitch(const Float:vector[3], const Float:qangle[3]);
+native int L4D2_SpawnWitch(const float vecOrigin[3], const float vecAngles[3]);
 
 /**
  * @brief Calls ZombieManager::SpawnWitchBride(Vector&,QAngle&)
@@ -653,13 +674,13 @@ native L4D2_SpawnWitch(const Float:vector[3], const Float:qangle[3]);
  * @param qangle	QAngle where the witch bride will be facing
  * @return 			Entity index of the spawned witch bride
  */
-native L4D2_SpawnWitchBride(const Float:vector[3], const Float:qangle[3]);
+native int L4D2_SpawnWitchBride(const float vecOrigin[3], const float vecAngles[3]);
 
 /*
 Makes the extension required by the plugins, undefine REQUIRE_EXTENSIONS
 if you want to use it optionally before including this .inc file
 */
-public Extension:__ext_left4downtown = 
+public Extension __ext_left4downtown = 
 {
 	name = "Left 4 Downtown",
 	file = "left4downtown.ext",

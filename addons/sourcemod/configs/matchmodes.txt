@@ -19,6 +19,25 @@
 			"name" "1v1 ZoneMod"
 		}
 	}
+	"NextMod Configs"
+	{
+		"nextmod"
+		{
+			"name" "NextMod 1.0.3"
+		}
+		"nextmod3v3"
+		{
+			"name" "3v3 NextMod"
+		}
+		"nextmod2v2"
+		{
+			"name" "2v2 NextMod"
+		}
+		"nextmod1v1"
+		{
+			"name" "1v1 NextMod"
+		}
+	}
 	"Promod Configs"
 	{
 		"pmelite"

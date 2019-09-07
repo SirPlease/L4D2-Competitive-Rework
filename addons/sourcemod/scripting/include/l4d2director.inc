@@ -41,7 +41,16 @@
  * 
  * @return 	current tank count
  */
-native L4D2_GetTankCount();
+native int L4D2_GetTankCount();
+
+/**
+ * @brief Gets the number of witches currently in play.
+ * @remarks This value is tracked by the director, and should be a good 
+ *		indicator that a witch is in play
+ * 
+ * @return 	current witch count
+ */
+native int L4D2_GetWitchCount();
 
 /**
  * @brief Gets the campaign scores stored in the Versus Director
@@ -50,7 +59,7 @@ native L4D2_GetTankCount();
  * @param scores 		Array to store the campaign scores in
  * @noreturn 				
  */
-native L4D2_GetVersusCampaignScores(scores[2]);
+native void L4D2_GetVersusCampaignScores(int scores[2]);
 
 /**
  * @brief Sets the campaign scores stored in the Versus Director
@@ -59,7 +68,7 @@ native L4D2_GetVersusCampaignScores(scores[2]);
  * @param scores 		Array of campaign scores to set the director's values to.
  * @noreturn 				
  */
-native L4D2_SetVersusCampaignScores(const scores[2]);
+native void L4D2_SetVersusCampaignScores(const int scores[2]);
 
 /**
  * @brief Gets the flow percent for tank spawns for both versus rounds.
@@ -70,7 +79,7 @@ native L4D2_SetVersusCampaignScores(const scores[2]);
  * @param tankFlows	Array to store the Tank Spawn Flow percents in
  * @noreturn 				
  */
-native L4D2_GetVersusTankFlowPercent(Float:tankFlows[2]);
+native void L4D2_GetVersusTankFlowPercent(float tankFlows[2]);
 
 /**
  * @brief Sets the flow percent for tank spawns for both versus rounds.
@@ -81,5 +90,27 @@ native L4D2_GetVersusTankFlowPercent(Float:tankFlows[2]);
  * @param tankFlows	Array of Tank Spawn Flow percents to store in director
  * @noreturn 				
  */
-native L4D2_SetVersusTankFlowPercent(const Float:tankFlows[2]);
+native void L4D2_SetVersusTankFlowPercent(const float tankFlows[2]);
+
+/**
+ * @brief Gets the flow percent for witch spawns for both versus rounds.
+ * @remarks These values are checked against as the survivors move through the
+ *		map. Once they are passed, the witch spawns. Note that this is flow
+ *		as a percent of the map's flow, not flow distance.
+ * 
+ * @param witchFlows	Array to store the Witch Spawn Flow percents in
+ * @noreturn 				
+ */
+native void L4D2_GetVersusWitchFlowPercent(float witchFlows[2]);
+
+/**
+ * @brief Sets the flow percent for witch spawns for both versus rounds.
+ * @remarks These values are checked against as the survivors move through the
+ *		map. Once they are passed, the witch spawns. Note that this is flow
+ *		as a percent of the map's flow, not flow distance.
+ * 
+ * @param witchFlows	Array of Witch Spawn Flow percents to store in director
+ * @noreturn 				
+ */
+native void L4D2_SetVersusWitchFlowPercent(const float witchFlows[2]);
 

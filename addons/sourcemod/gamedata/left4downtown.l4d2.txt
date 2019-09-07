@@ -856,7 +856,7 @@
 			{
 				"library"   "server"
 				"linux"    	"@_ZN13CTerrorWeapon5OnHitER10CGameTraceRK6Vectorb"
-				"windows" 	"\x55\x8B\xEC\x81\xEC\xB0\x00\x00\x00\x80\x7D\x10\x00"
+				"windows" 	"\x55\x8B\xEC\x56\x8B\x75\x08\x83\x7E\x4C\x00\x57"
 			}
 
             /* 
