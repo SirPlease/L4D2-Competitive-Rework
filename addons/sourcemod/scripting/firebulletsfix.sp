@@ -1,6 +1,3 @@
-#pragma newdecls required
-#pragma semicolon 1 
-
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
@@ -79,7 +76,7 @@ public void OnClientPutInServer(int client)
 
 public Action OnPlayerRunCmd(int client)
 {	
-	if (IsClientConnected(client) && IsClientInGame(client) && !IsFakeClient(client))
+	if (IsSurvivor(client) && IsClientConnected(client) && !IsFakeClient(client))
 	{
 		GetClientEyePosition(client, g_vecOldWeaponShootPos[client]);
 		/*
@@ -94,20 +91,16 @@ public Action OnPlayerRunCmd(int client)
 
 public MRESReturn Weapon_ShootPosition_Post(int client, Handle hReturn)
 {
-	/*
-	if (!g_bCallingWeapon_ShootPosition)
-	{
-	*/
-		// At this point we always want to use our old origin.
-		DHookSetReturnVector(hReturn, g_vecOldWeaponShootPos[client]);
-		return MRES_Supercede;
-	/*
-	}
-	else 
-	{
-		// Otherwhise we just let it call.
-		return MRES_Ignored;
-	}
-	*/
+    if (IsSurvivor(client)) 
+    {
+        // At this point we always want to use our old origin.
+        DHookSetReturnVector(hReturn, g_vecOldWeaponShootPos[client]);
+        return MRES_Supercede;
+    }
+    return MRES_Ignored;
 }
 
+public bool IsSurvivor(client)
+{
+    return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2;
+}

@@ -669,28 +669,28 @@
 		"start_loc_a"	"-553.65 -10058.52 489.07"
 		"start_loc_b"	"-114.61 -9502.98 259.55"
 	}
-	"l4d2_diescraper1_apartment_33"
+	"l4d2_diescraper1_apartment_361"
 	{
 		"start_loc_a"	"8726.65 7574.81 780.11"
 		"start_loc_b"	"9457.72 6900.78 995.97"
 		"end_loc_a"	"10045.89 4245.27 156.33"
 		"end_loc_b"	"10270.80 4800.03 -7.62"
 	}
-	"l4d2_diescraper2_streets_33"
+	"l4d2_diescraper2_streets_361"
 	{
 		"start_loc_a"	"10044.03 4806.13 157.26"
 		"start_loc_b"	"10274.86 4243.71 -9.4"
 		"end_loc_a"	"133.34 353.63 167.01"
 		"end_loc_b"	"360.40 117.34 -17.93"
 	}
-	"l4d2_diescraper3_mid_33"
+	"l4d2_diescraper3_mid_361"
 	{
 		"start_loc_a"	"120.28 354.45 -1663.92"
 		"start_loc_b"	"360.40 117.34 -1838.66"
 		"end_loc_a"	"-98.07 -95.68 428.77"
 		"end_loc_b"	"95.42 -532.03 579.24"
 	}
-	"l4d2_diescraper4_top_33"
+	"l4d2_diescraper4_top_361"
 	{
 		"start_loc_a"	"-104.81 -83.42 -424.00"
 		"start_loc_b"	"100.81 -522.70 -578.01"

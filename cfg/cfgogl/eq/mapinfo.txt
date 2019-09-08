@@ -1381,7 +1381,7 @@
 		"start_extra_dist"  "900.000000"
 		"end_dist"          "75.000000"
 	}
-	"l4d2_diescraper1_apartment_33"
+	"l4d2_diescraper1_apartment_361"
 	{
 		"start_point"       "9000.979492 7243.940430 831.974670"
 		"end_point"         "10251.913086 4722.644531 52.338150"
@@ -1391,7 +1391,7 @@
 		"tank_ban_flow_min" "30"
 		"tank_ban_flow_max" "50"
 	}
-	"l4d2_diescraper2_streets_33"
+	"l4d2_diescraper2_streets_361"
 	{
 		"start_point"       "10250.208008 4723.329590 70.338150"
 		"end_point"         "256.697845 144.240356 2.031250"
@@ -1400,7 +1400,7 @@
 		"end_dist"          "50.000000"
 		"horde_limit"		"90"
 	}
-	"l4d2_diescraper3_mid_33"
+	"l4d2_diescraper3_mid_361"
 	{
 		"start_point"       "286.949280 145.143188 -1841.968750"
 		"end_point"         "-14.215425 -485.376556 510.031250"
@@ -1409,7 +1409,7 @@
 		"end_dist"          "50.000000"
 		"horde_limit"		"60"
 	}
-	"l4d2_diescraper4_top_33"
+	"l4d2_diescraper4_top_361"
 	{
 		"start_point"       "-10.403743 -485.376556 -497.968750"
 		"end_point"         "1307.318848 3.531982 -68.582138"
