@@ -162,7 +162,7 @@ stock ConvertWeaponSpawn(entity, WeaponId:wepid, count=5, const String:model[] =
     SetEntProp(entity, Prop_Send, "m_weaponID", wepid);
 
     decl String:buf[64];
-    if(model[0] == '\0')
+    if(model[0] != '\0')
     {
         SetEntityModel(entity, model);
     }
