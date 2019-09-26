@@ -72,7 +72,7 @@ new Handle:hCvarEnableShotFF;
 new Handle:hCvarModifier;
 new Handle:hCvarMinFF;
 new Handle:hCvarMaxFF;
-new Handle:buckshotTimer;
+new bool:bBuckshot[MAXPLAYERS + 1];
 
 //undo ff
 new Handle:g_cvarEnable = INVALID_HANDLE;
@@ -109,14 +109,15 @@ new bool:bLateLoad;
 public APLRes:AskPluginLoad2( Handle:plugin, bool:late, String:error[], errMax )
 {
 	bLateLoad = late;
+	CreateNative("GiveClientGodFrames", Native_GiveClientGodFrames);
 	return APLRes_Success;
 }
 
 public Plugin:myinfo =
 {
 	name = "L4D2 Godframes Control combined with FF Plugins",
-	author = "Stabby, CircleSquared, Tabun, Visor, dcx, Sir",
-	version = "0.4",
+	author = "Stabby, CircleSquared, Tabun, Visor, dcx, Sir, Spoon",
+	version = "0.6",
 	description = "Allows for control of what gets godframed and what doesnt along with integrated FF Support from l4d2_survivor_ff (by dcx and Visor) and l4d2_shotgun_ff (by Visor)"
 };
 
@@ -205,7 +206,23 @@ public OnRoundStart()
 	for (new i = 1; i <= MaxClients; i++) //clear both fake and real just because
 	{
 		fFakeGodframeEnd[i] = 0.0;
+		bBuckshot[i] = false;
 	}
+}
+
+public Native_GiveClientGodFrames(Handle:plugin, numParams)
+{
+	new client = GetNativeCell(1);
+	new Float:godFrameTime = GetNativeCell(2);
+	new attackerClass = GetNativeCell(3);
+	
+	if (!IsClientAndInGame(client)) { return; } //just in case
+	
+	fFakeGodframeEnd[client] = GetGameTime() + godFrameTime;
+	iLastSI[client] = attackerClass;
+	
+	SetGodframedGlow(client);
+	CreateTimer(fFakeGodframeEnd[client] - GetGameTime(), Timed_ResetGlow, client);
 }
 
 public PostSurvivorRelease(Handle:event, const String:name[], bool:dontBroadcast)
@@ -259,6 +276,7 @@ InitializeHooks(client = -1)
 		{
 			SDKHook(i, SDKHook_OnTakeDamage, OnTakeDamage);
 			SDKHook(i, SDKHook_TraceAttack, TraceAttackUndoFF);
+			bBuckshot[i] = false;
 		}
 		
 		for (new j = 0; j < UNDO_SIZE; j++)
@@ -437,13 +455,14 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 		{	
 			pelletsShot[victim][attacker]++;
 
-			if (buckshotTimer == INVALID_HANDLE)
+			if (!bBuckshot[attacker])
 			{
+				bBuckshot[attacker] = true;
 				new Handle:stack = CreateStack(3);
 				PushStackCell(stack, weapon);
 				PushStackCell(stack, attacker);
 				PushStackCell(stack, victim);
-				buckshotTimer = CreateTimer(0.1, ProcessShot, stack);
+				RequestFrame(ProcessShot, stack);
 			}
 			return Plugin_Handled;
 		}
@@ -943,7 +962,7 @@ bool:IsT1Shotgun(weapon)
 	return (StrEqual(classname, "weapon_pumpshotgun") || StrEqual(classname, "weapon_shotgun_chrome"));
 }
 
-public Action:ProcessShot(Handle:timer, any:stack)
+void ProcessShot(ArrayStack stack)
 {
 	static victim, attacker, weapon;
 	if (!IsStackEmpty(stack))
@@ -967,15 +986,5 @@ public Action:ProcessShot(Handle:timer, any:stack)
 		}
 	}
 	
-	ClearTimer(buckshotTimer);
+	bBuckshot[attacker] = false;
 }
-
-ClearTimer(&Handle:timer)
-{
-	if (timer != INVALID_HANDLE)
-	{
-		KillTimer(timer);
-		timer = INVALID_HANDLE;
-	}     
-}
-

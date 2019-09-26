@@ -18,10 +18,10 @@ new const getUpAnimations[SurvivorCharacter][5] = {
 public Plugin:myinfo =
 {
     name        = "Stagger Blocker",
-    author      = "Standalone (aka Manu), Visor",
-    description = "Block players from being staggered for a time while getting up from a Hunter pounce or a Charger pummel",
-    version     = "1.1",
-    url         = "https://github.com/Attano/L4D2-Competitive-Framework"
+    author      = "Standalone (aka Manu), Visor, Sir",
+    description = "Block players from being staggered by Jockeys and Hunters for a time while getting up from a Hunter pounce & Charger pummel",
+    version     = "1.3",
+    url         = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
 public OnPluginStart() 
@@ -104,7 +104,7 @@ public OnThink(client)
 
 public Action:L4D2_OnStagger(target, source) 
 {
-    if (source != 0 && IsValidInfected(source))
+    if (IsValidInfected(source))
     {
         new L4D2_Infected:sourceClass = GetInfectedClass(source);
         
