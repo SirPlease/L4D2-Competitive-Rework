@@ -43,7 +43,7 @@ forward LGO_OnMatchModeLoaded();
  * 
  * @noreturn
  */
-forward LGO_OnMatchModeLoaded();
+forward LGO_OnMatchModeUnloaded();
 
 /**
  * @brief Tells if a confogl match is currently running
