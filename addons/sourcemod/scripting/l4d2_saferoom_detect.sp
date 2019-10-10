@@ -3,11 +3,11 @@
 #include <sourcemod>
 #include <sdktools>
 #undef REQUIRE_PLUGIN
-#include <lgofnoc>
+#include <confogl>
 
 #define SR_DEBUG_MODE       0               // outputs some coordinate data
 
-#define DETMODE_LGO         0               // use mapinfo.txt (through lgofnoc)
+#define DETMODE_LGO         0               // use mapinfo.txt (through confogl)
 #define DETMODE_EXACT       1               // use exact list (coordinate-in-box)
 
 #define SR_RADIUS           200.0           // the radius used to check distance from saferoom-coordinate (LGO mapinfo default)
@@ -26,6 +26,9 @@ static const String:MAPINFO_PATH[] = "configs/saferoominfo.txt";
         
     Changelog
     =========
+    
+        0.0.8
+            - Replace lgofnoc with confogl.
     
         0.0.7
             - Built in safeguard against trying to find values before keyvalues file is loaded.
@@ -46,13 +49,13 @@ static const String:MAPINFO_PATH[] = "configs/saferoominfo.txt";
 public Plugin:myinfo = 
 {
     name = "Precise saferoom detection",
-    author = "Tabun",
+    author = "Tabun, devilesk",
     description = "Allows checks whether a coordinate/entity/player is in start or end saferoom (uses saferoominfo.txt).",
-    version = "0.0.7",
-    url = ""
+    version = "0.0.8",
+    url = "https://github.com/devilesk/rl4d2l-plugins"
 }
 
-new     bool:           g_bLGOIsAvailable                                   = false;                // whether lgofnoc is loaded
+new     bool:           g_bLGOIsAvailable                                   = false;                // whether confogl is loaded
 
 new     Handle:         g_kSIData                                           = INVALID_HANDLE;       // keyvalues handle for SaferoomInfo.txt
 new                     g_iMode                                             = DETMODE_LGO;          // detection mode for this map (LGO = mapinfo.txt 'vague radius' mode)
@@ -96,7 +99,7 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 
 public OnAllPluginsLoaded()
 {
-    g_bLGOIsAvailable = LibraryExists("lgofnoc");
+    g_bLGOIsAvailable = LibraryExists("confogl");
 }
 
 public Native_IsEntityInStartSaferoom(Handle:plugin, numParams)
@@ -255,7 +258,7 @@ IsPointInStartSaferoom(Float:location[3], entity=-1)
     }
     else if (g_bLGOIsAvailable)
     {
-        // trust lgofnoc / mapinfo
+        // trust confogl / mapinfo
         
         new Float:saferoom_distance = LGO_GetMapValueFloat("start_dist", SR_RADIUS);
         new Float:saferoom_distance_extra = LGO_GetMapValueFloat("start_extra_dist", 0.0);
@@ -323,7 +326,7 @@ IsPointInEndSaferoom(Float:location[3], entity = -1)
     }
     else if (g_bLGOIsAvailable)
     {
-        // trust lgofnoc / mapinfo
+        // trust confogl / mapinfo
         
         new Float:saferoom_distance = LGO_GetMapValueFloat("end_dist", SR_RADIUS);
         new Float:saferoom[3];
