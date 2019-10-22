@@ -2,14 +2,18 @@
 
 #include <sourcemod>
 #include <sdktools>
+#undef REQUIRE_PLUGIN
+#include <readyup>
 #define MAX_SPEED 2
+
+new bool:readyUpIsAvailable;
 
 public Plugin:myinfo =
 {
     name = "Caster Assister",
     author = "CanadaRox, Sir",
     description = "Allows spectators to control their own specspeed and move vertically",
-    version = "2.1",
+    version = "2.2",
     url = ""
 };
 
@@ -26,6 +30,35 @@ public OnPluginStart()
     RegConsoleCmd("sm_set_vertical_increment", SetVerticalIncrement_Cmd);
 
     HookEvent("player_team", PlayerTeam_Event);
+}
+
+public OnAllPluginsLoaded()
+{
+    readyUpIsAvailable = LibraryExists("readyup");
+}
+
+public OnLibraryRemoved(const String:name[])
+{
+    if (StrEqual(name, "readyup"))
+    {
+        readyUpIsAvailable = false;
+    }
+}
+
+public OnLibraryAdded(const String:name[])
+{
+    if (StrEqual(name, "readyup"))
+    {
+        readyUpIsAvailable = true;
+    }
+}
+
+public OnClientPutInServer(client)
+{
+    if (readyUpIsAvailable && IsClientCaster(client))
+    {
+        FakeClientCommand(client, "sm_spechud");
+    }
 }
 
 public PlayerTeam_Event(Handle:event, const String:name[], bool:dontBroadcast)
