@@ -110,7 +110,7 @@ GW_FindNextSurvivor(client,charz)
 		charz = 0;
 	}
 	
-	for(new index = charz;index<MaxClients;index++)
+	for(new index = charz;index<=MaxClients;index++)
 	{
 		if (index >= NUM_OF_SURVIVORS)
 		{

@@ -121,7 +121,7 @@ PS_SetPasswordOnClients()
 	decl String:pwbuffer[128];
 	GetConVarString(PS_hPassword,pwbuffer,128);
 	
-	for(new client = 1;client<MaxClients;client++)
+	for(new client = 1;client<=MaxClients;client++)
 	{
 		if(!IsClientInGame(client) || IsFakeClient(client)){continue;}
 		LogMessage("Set password on %N, password %s",client,pwbuffer);
