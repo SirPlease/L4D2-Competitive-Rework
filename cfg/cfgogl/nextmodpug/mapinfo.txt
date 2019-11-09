@@ -12,8 +12,8 @@
 		"tank_warpto"       "2168.357666 5803.427734 2464.031250"
 		"tank_ban_flow_min" "28"
         "tank_ban_flow_max" "82"
-	    
-		
+	    "witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 		"max_distance"      "400"
 	}
 	"c1m2_streets"
@@ -23,9 +23,9 @@
 		"start_dist"        "50.000000"
 		"start_extra_dist"  "250.000000"
 		"end_dist"          "200.000000"
-		"horde_limit"       "90"
-		
-		
+		"horde_limit"       "120"
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c1m3_mall"
 	{
@@ -37,9 +37,9 @@
 		"tank_ban_flow_min" "64"
 		"tank_ban_flow_max" "68"
 		"max_distance"      "600"
-		"horde_limit"       "120"
-		
-		
+		"horde_limit"       "180"
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c1m4_atrium"
 	{
@@ -62,8 +62,8 @@
 		"start_dist"        "50.000000"
 		"start_extra_dist"  "0.000000"
 		"end_dist"          "150.000000"
-		
-		
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c2m2_fairgrounds"
 	{
@@ -73,9 +73,9 @@
 		"start_extra_dist"  "0.000000"
 		"end_dist"          "150.000000"
 		"max_distance"      "500"
-		"horde_limit"       "90"
-		
-
+		"horde_limit"       "120"
+		"witch_flow_min"    "10"
+        "witch_flow_max"    "80"
 	}
 	"c2m3_coaster"
 	{
@@ -85,11 +85,11 @@
 		"start_extra_dist"  "200.000000"
 		"end_dist"          "150.000000"
 		"max_distance"      "600"
-		"horde_limit"       "180"
+		"horde_limit"       "240"
 		"tank_ban_flow_min" "56"
 		"tank_ban_flow_max" "100"
-		
-		
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c2m4_barns"
 	{
@@ -99,8 +99,9 @@
 		"start_extra_dist"  "150.000000"
 		"end_dist"          "250.000000"
 		"max_distance"      "500"
-		"horde_limit"       "100"
-
+		"horde_limit"       "150"
+		"witch_flow_min"    "10"
+        "witch_flow_max"    "80"
 	}
 	"c2m5_concert"
 	{
@@ -124,8 +125,8 @@
 		"max_distance"      "500"
 		"tank_ban_flow_min" "45"
 		"tank_ban_flow_max" "60"
-		
-		
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c3m2_swamp"
 	{
@@ -135,7 +136,8 @@
 		"start_extra_dist"  "200.000000"
 		"end_dist"          "200.000000"
 		"max_distance"      "500"
-		
+		"witch_flow_min"    "10"
+        "witch_flow_max"    "95"
 	}
 	"c3m3_shantytown"
 	{
@@ -145,7 +147,8 @@
 		"start_extra_dist"  "200.000000"
 		"end_dist"          "200.000000"
 		"max_distance"      "500"
-
+		"witch_flow_min"    "10"
+        "witch_flow_max"    "54"
 	}
 	"c3m4_plantation"
 	{
@@ -178,8 +181,8 @@
 		"max_distance"      "600"
 		"tank_ban_flow_min" "80"
 		"tank_ban_flow_max" "100"
-		
-		
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c4m3_sugarmill_b"
 	{
@@ -191,7 +194,8 @@
 		"max_distance"      "500"
 		"tank_ban_flow_min" "20"
 		"tank_ban_flow_max" "35"
-
+		"witch_flow_min"    "28"
+        "witch_flow_max"    "94"
 	}
 	"c4m4_milltown_b"
 	{
@@ -201,8 +205,8 @@
 		"start_extra_dist"  "275.000000"
 		"end_dist"          "200.000000"
 		"max_distance"      "400"
-		
-		
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c4m5_milltown_escape"
 	{
@@ -212,8 +216,8 @@
 		"start_extra_dist"  "350.000000"
 		"end_dist"          "100.000000"
 		"max_distance"      "400"
-		
-		
+		"witch_flow_min"    "0"
+		"witch_flow_max"    "0"
 		"ItemLimits"
 		{
 			"pain_pills"    "0"
@@ -229,7 +233,8 @@
 		"max_distance"      "300"
 		"tank_ban_flow_min" "0"
 		"tank_ban_flow_max" "38"
-		
+		"witch_flow_min"    "28"
+		"witch_flow_max"    "99"
 	}
 	"c5m2_park"
 	{
@@ -240,9 +245,9 @@
 		"end_dist"          "250.000000"
 		"tank_ban_flow_min" "49"
 		"tank_ban_flow_max" "54"
-		"horde_limit"       "180"
-
-		
+		"horde_limit"       "240"
+		"witch_flow_min"    "20"
+		"witch_flow_max"    "99"
 	}
 	"c5m3_cemetery"
 	{
@@ -253,8 +258,8 @@
 		"end_dist"          "250.000000"
 		"tank_ban_flow_min" "50"
 		"tank_ban_flow_max" "70"
-
-		
+		"witch_flow_min"    "28"
+		"witch_flow_max"    "99"
 	}
 	"c5m4_quarter"
 	{
@@ -265,8 +270,8 @@
 		"end_dist"          "350.000000"
 		"tank_ban_flow_min" "80"
 		"tank_ban_flow_max" "100"
-		
-		
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c5m5_bridge"
 	{
@@ -276,8 +281,8 @@
 		"end_point"         "3001.944092 6272.879395 494.284149"
 		"end_dist"          "130.807541"
 		"max_distance"      "600"
-		
-		
+		"witch_flow_min"    "0"
+		"witch_flow_max"    "0"
 	}
 	"c6m1_riverbank"
 	{
@@ -296,7 +301,7 @@
 		"start_extra_dist"  "0.000000"
 		"end_dist"          "50.000000"
 		"max_distance"      "500"
-		"horde_limit"       "100"
+		"horde_limit"       "150"
 		"tank_ban_flow_min" "70"
 		"tank_ban_flow_max" "100"
 	}
@@ -308,8 +313,8 @@
 		"start_extra_dist"  "0.000000"
 		"end_dist"          "50.000000"
 		"max_distance"      "700"
-		
-		
+		"witch_flow_min"    "0"
+		"witch_flow_max"    "0"
 		"ItemLimits"
 		{
 			"pain_pills"    "0"
@@ -341,8 +346,8 @@
 		"start_extra_dist"  "0.000000"
 		"end_dist"          "75.000000"
 		"max_distance"      "700"
-		
-		
+		"witch_flow_min"    "0"
+		"witch_flow_max"    "0"
 		"ItemLimits"
 		{
 			"pain_pills"    "0"
@@ -356,8 +361,8 @@
 		"end_point"         "2883.220703 2962.613037 -204.742737"
 		"end_dist"          "336.442200"
 		"max_distance"      "300"
-		
-		
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c8m2_subway"
 	{
@@ -366,8 +371,8 @@
 		"start_extra_dist"  "323.406708"
 		"end_point"         "11008.688477 4657.793945 49.151138"
 		"end_dist"          "180.738693"
-		
-		
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c8m3_sewers"
 	{
@@ -379,8 +384,8 @@
 		"max_distance"      "600"
 		"tank_ban_flow_min" "55"
 		"tank_ban_flow_max" "80"
-		
-		
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c8m4_interior"
 	{
@@ -393,8 +398,8 @@
 		"max_tank_z"        "4000.000000"
 		"tank_warpto"       "13428.627930 15072.313477 486.031250"
 		"max_distance"      "500"
-		
-		
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c8m5_rooftop"
 	{
@@ -439,8 +444,8 @@
 		"end_point"         "-10784.895508 -4906.771973 318.224670"
 		"end_dist"          "403.989594"
 		"max_distance"      "300"
-		
-		
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c10m2_drainage"
 	{
@@ -450,8 +455,8 @@
 		"end_point"         "-8339.282227 -5592.915039 0.031253"
 		"end_dist"          "322.081451"
 		"max_distance"      "400"
-		
-		
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c10m3_ranchhouse"
 	{
@@ -461,8 +466,8 @@
 		"end_point"         "-2673.776611 107.736259 316.727081"
 		"end_dist"          "327.768036"
 		"max_distance"      "500"
-		
-		
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c10m4_mainstreet"
 	{
@@ -471,9 +476,9 @@
 		"start_extra_dist"  "307.155029"
 		"end_point"         "1309.379883 -5479.276367 -26.821182"
 		"end_dist"          "324.451355"
-		"horde_limit"       "120"
-
-		
+		"horde_limit"       "180"
+		"witch_flow_min"    "64"
+		"witch_flow_max"    "99"
 	}
 	"c10m5_houseboat"
 	{
@@ -495,8 +500,8 @@
 		"end_point"         "5274.120605 2715.548584 88.261955"
 		"end_dist"          "314.896759"
 		"max_distance"      "300"
-		
-		
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c11m2_offices"
 	{
@@ -506,8 +511,8 @@
 		"end_point"         "7934.695801 6070.557617 48.318222"
 		"end_dist"          "310.929138"
 		"max_distance"      "600"
-		
-		
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c11m3_garage"
 	{
@@ -516,8 +521,8 @@
 		"start_extra_dist"  "304.760986"
 		"end_point"         "-343.016815 3583.830566 332.031250"
 		"end_dist"          "187.318344"
-		
-		
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c11m4_terminal"
 	{
@@ -550,8 +555,8 @@
 		"tank_ban_flow_min" "0"
 		"tank_ban_flow_max" "57"
 		"max_distance"      "300"
-		
-		
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c12m2_traintunnel"
 	{
@@ -561,8 +566,8 @@
 		"end_point"         "-870.702148 -10408.813477 -63.968750"
 		"end_dist"          "261.087494"
 		"max_distance"      "400"
-		
-		
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c12m3_bridge"
 	{
@@ -575,8 +580,8 @@
 		"tank_ban_flow_max" "100"
 		"max_distance"      "400"
 		"horde_limit"       "90"
-		
-		
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c12m4_barn"
 	{
@@ -587,8 +592,8 @@
 		"end_dist"          "316.505157"
 		"max_distance"      "400"
 		"horde_limit"       "60"
-		
-		
+		"witch_flow_min"    "10"
+		"witch_flow_max"    "99"
 	}
 	"c12m5_cornfield"
 	{
@@ -599,7 +604,8 @@
 		"end_dist"          "183.031281"
 		"tank_ban_flow_min" "80"
 		"tank_ban_flow_max" "100"
-
+		"witch_flow_min"    "10"
+        "witch_flow_max"    "80"
 		"ItemLimits"
 		{
 			"pain_pills"    "0"
@@ -700,7 +706,7 @@
 		"start_extra_dist"  "285.327118"
 		"end_point"         "-4824.578125 -7661.144043 566.031250"
 		"end_dist"          "393.489532"
-		"horde_limit"       "100"
+		"horde_limit"       "120"
 	}
 	"cdta_03warehouse"
 	{
@@ -1454,7 +1460,7 @@
 		"start_extra_dist"  "900.000000"
 		"end_dist"          "75.000000"
 	}
-	"l4d2_diescraper1_apartment_361"
+	"l4d2_diescraper1_apartment_33"
 	{
 		"start_point"       "9000.979492 7243.940430 831.974670"
 		"end_point"         "10251.913086 4722.644531 52.338150"
@@ -1464,7 +1470,7 @@
 		"tank_ban_flow_min" "30"
 		"tank_ban_flow_max" "50"
 	}
-	"l4d2_diescraper2_streets_361"
+	"l4d2_diescraper2_streets_33"
 	{
 		"start_point"       "10250.208008 4723.329590 70.338150"
 		"end_point"         "256.697845 144.240356 2.031250"
@@ -1473,7 +1479,7 @@
 		"end_dist"          "50.000000"
 		"horde_limit"       "90"
 	}
-	"l4d2_diescraper3_mid_361"
+	"l4d2_diescraper3_mid_33"
 	{
 		"start_point"       "286.949280 145.143188 -1841.968750"
 		"end_point"         "-14.215425 -485.376556 510.031250"
@@ -1482,7 +1488,7 @@
 		"end_dist"          "50.000000"
 		"horde_limit"       "60"
 	}
-	"l4d2_diescraper4_top_361"
+	"l4d2_diescraper4_top_33"
 	{
 		"start_point"       "-10.403743 -485.376556 -497.968750"
 		"end_point"         "1307.318848 3.531982 -68.582138"
@@ -1676,6 +1682,6 @@
 	{
 		"tank_ban_flow_min" "56"
 		"tank_ban_flow_max" "99"
-		"horde_limit"       "160"
+		"horde_limit"       "200"
 	}
 }
