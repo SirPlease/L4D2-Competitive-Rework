@@ -24,7 +24,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.2.0"
+#define PLUGIN_VERSION "1.2.1"
 
 static Handle hDirectorChangeLevel;
 static Handle hDirectorClearTeamScores;
@@ -91,7 +91,7 @@ public void OnPluginStart()
 public Action Changelevel(int iClient, int iArg)
 {
 	char sMapName[PLATFORM_MAX_PATH];
-	char temp[1];
+	char temp[2];
 	
 	GetCmdArg(1, sMapName, sizeof(sMapName));
 	if(sMapName[0] == '\0' || FindMap(sMapName, temp, sizeof(temp)) == FindMap_NotFound)
@@ -99,15 +99,24 @@ public Action Changelevel(int iClient, int iArg)
 		ReplyToCommand(iClient, "sm_changelevel Unable to find map \"%s\"", sMapName);
 		return Plugin_Handled;
 	}
+	bool bResetScores = true;
+	if(GetCmdArgs() >= 2)
+	{
+		GetCmdArg(2, temp, sizeof(temp));
+		bResetScores = view_as<bool>(StringToInt(temp));
+	}
 	
-	L4D2_ChangeLevel(sMapName);
+	L4D2_ChangeLevel(sMapName, bResetScores);
 	return Plugin_Handled;
 }
 
-void L4D2_ChangeLevel(const char[] sMapName)
+void L4D2_ChangeLevel(const char[] sMapName, bool bShouldResetScores=true)
 {
 	PrintToServer("[SM] Changelevel to %s", sMapName);
-	SDKCall(hDirectorClearTeamScores, TheDirector, 1);
+	if(bShouldResetScores)
+	{
+		SDKCall(hDirectorClearTeamScores, TheDirector, 1);
+	}
 	SDKCall(hDirectorChangeLevel, TheDirector, sMapName);
 }
 
@@ -123,5 +132,9 @@ public int L4D2_ChangeLevelNV(Handle plugin, int numParams)
 	if(sMapName[0] == '\0' || FindMap(sMapName, temp, sizeof(temp)) == FindMap_NotFound)
 		ThrowNativeError(SP_ERROR_PARAM, "Unable to change to that map \"%s\"", sMapName);
 	
-	L4D2_ChangeLevel(sMapName);
+	bool bResetScores = true;
+	if(numParams >= 2)
+		bResetScores = view_as<bool>(GetNativeCell(2));
+	
+	L4D2_ChangeLevel(sMapName, bResetScores);
 }
