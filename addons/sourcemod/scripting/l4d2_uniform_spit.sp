@@ -42,7 +42,7 @@ public Plugin:myinfo =
     name = "L4D2 Uniform Spit",
     author = "Visor, Sir",
     description = "Make the spit deal a set amount of DPS under all circumstances",
-    version = "1.3",
+    version = "1.3.1",
     url = "https://github.com/Attano/smplugins"
 };
 
@@ -92,8 +92,8 @@ public OnEntityCreated(entity, const String:classname[])
         decl String:trieKey[8];
         IndexToKey(entity, trieKey, sizeof(trieKey));
 
-        new count[MaxClients];
-        SetTrieArray(hPuddles, trieKey, count, MaxClients);
+        new count[MaxClients + 1];
+        SetTrieArray(hPuddles, trieKey, count, MaxClients + 1);
     }
 }
 
@@ -102,8 +102,8 @@ public OnEntityDestroyed(entity)
     decl String:trieKey[8];
     IndexToKey(entity, trieKey, sizeof(trieKey));
 
-    decl count[MaxClients];
-    if (GetTrieArray(hPuddles, trieKey, count, MaxClients))
+    decl count[MaxClients + 1];
+    if (GetTrieArray(hPuddles, trieKey, count, MaxClients + 1))
     {
         RemoveFromTrie(hPuddles, trieKey);
     }
@@ -123,8 +123,8 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
         decl String:trieKey[8];
         IndexToKey(inflictor, trieKey, sizeof(trieKey));
 
-        decl count[MaxClients];
-        if (GetTrieArray(hPuddles, trieKey, count, MaxClients))
+        decl count[MaxClients + 1];
+        if (GetTrieArray(hPuddles, trieKey, count, MaxClients + 1))
         {
             count[victim]++;
 
@@ -135,7 +135,7 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
             }
 
             // Update the array with stored tickcounts
-            SetTrieArray(hPuddles, trieKey, count, MaxClients);
+            SetTrieArray(hPuddles, trieKey, count, MaxClients + 1);
 
             // Let's see what do we have here
             if (damagePerTick > -1.0)

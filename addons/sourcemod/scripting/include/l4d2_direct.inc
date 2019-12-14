@@ -795,7 +795,7 @@ stock Float:L4D2Direct_GetFlowDistance(client)
  */
 stock L4D2Direct_DoAnimationEvent(client, event)
 {
-	if(client <= 0 || client > MaxClients+1)
+	if (client < 1 || client > MaxClients)
 	{
 		return;
 	}
