@@ -40,6 +40,13 @@
 				"library"	"server"
 				"linux"		"@TheDirector"
 			}
+			"CDirector::ClearTeamScores"
+			{
+				"library"		"server"
+				"linux"			"@_ZN9CDirector15ClearTeamScoresEb"
+				"windows"		"\x55\x8B\xEC\x56\x8B\x75\x08\x57\x8B\xF9\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9"
+								/* 55 8B EC 56 8B 75 08 57 8B F9 8B 0D ? ? ? ? 85 C9 */
+			}
 		}
 	}
 }
