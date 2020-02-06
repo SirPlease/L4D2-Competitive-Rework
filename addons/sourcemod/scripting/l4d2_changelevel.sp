@@ -24,10 +24,10 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1.2"
+#define PLUGIN_VERSION "1.2.1"
 
-//static Handle hInfoMapChange;
 static Handle hDirectorChangeLevel;
+static Handle hDirectorClearTeamScores;
 
 //Credit ProdigySim for l4d2_direct reading of TheDirector class https://forums.alliedmods.net/showthread.php?t=180028
 static Address TheDirector = Address_Null;
@@ -51,7 +51,7 @@ public Plugin myinfo =
 	author = "Lux",
 	description = "Creates a clean way to change maps, sm_map causes leaks and other spooky stuff causing server perf to be worse over time.",
 	version = PLUGIN_VERSION,
-	url = "https://forums.alliedmods.net/showthread.php?p=2607394"
+	url = "https://forums.alliedmods.net/showthread.php?p=2669850"
 };
 
 public void OnPluginStart()
@@ -60,14 +60,6 @@ public void OnPluginStart()
 	if(hGamedata == null) 
 		SetFailState("Failed to load \"l4d2_changelevel.txt\" gamedata.");
 	
-	/*StartPrepSDKCall(SDKCall_Entity);
-	if(!PrepSDKCall_SetFromConf(hGamedata, SDKConf_Signature, "InfoChangelevel::ChangeLevelNow"))
-		SetFailState("Error finding the 'InfoChangelevel::ChangeLevelNow' signature.");
-	
-	hInfoMapChange = EndPrepSDKCall();
-	if(hInfoMapChange == null)
-		SetFailState("Unable to prep SDKCall 'InfoChangelevel::ChangeLevelNow'");*/
-		
 	StartPrepSDKCall(SDKCall_Raw);
 	if(!PrepSDKCall_SetFromConf(hGamedata, SDKConf_Signature, "CDirector::OnChangeChapterVote"))
 		SetFailState("Error finding the 'CDirector::OnChangeChapterVote' signature.");
@@ -81,49 +73,25 @@ public void OnPluginStart()
 	if(TheDirector == Address_Null)
 		SetFailState("Unable to get 'CDirector' Address");
 	
+	
+	StartPrepSDKCall(SDKCall_Raw);
+	if(!PrepSDKCall_SetFromConf(hGamedata, SDKConf_Signature, "CDirector::ClearTeamScores"))
+		SetFailState("Error finding the 'CDirector::ClearTeamScores' signature.");
+	PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
+	
+	hDirectorClearTeamScores = EndPrepSDKCall();
+	if(hDirectorClearTeamScores == null)
+		SetFailState("Unable to prep SDKCall 'CDirector::ClearTeamScores'");
+	
 	delete hGamedata;
 	
-	RegServerCmd("sm_changelevelex", ChangelevelEx, "L4D2 changelevel method to release all resources");
 	RegAdminCmd("sm_changelevel", Changelevel, ADMFLAG_ROOT, "L4D2 changelevel method to release all resources");
 }
 
-public Action CmdMapChange(int iClient, const char[] sCommand, int iArg)
-{
-	if(GetCmdArgs() < 1)
-		return Plugin_Continue;
-		
-	char sMapName[256];
-	GetCmdArg(1, sMapName, sizeof(sMapName));
-	if(sMapName[0] == '\0')
-		return Plugin_Continue;
-	
-	char temp[1];
-	if(FindMap(sMapName, temp, sizeof(temp)) == FindMap_NotFound)
-		return Plugin_Continue;
-	
-	L4D2_ChangeLevel(sMapName);
-	return Plugin_Handled;
-}
-
-public Action ChangelevelEx(int iArg)
-{
-	char sMapName[PLATFORM_MAX_PATH];
-	char temp[1];
-	
-	GetCmdArg(1, sMapName, sizeof(sMapName));
-	if(sMapName[0] == '\0' || FindMap(sMapName, temp, sizeof(temp)) == FindMap_NotFound)
-	{
-		PrintToServer("sm_changelevelex Unable to find map \"%s\"", sMapName);
-		return Plugin_Handled;
-	}
-	
-	L4D2_ChangeLevel(sMapName);
-	return Plugin_Handled;
-}
 public Action Changelevel(int iClient, int iArg)
 {
 	char sMapName[PLATFORM_MAX_PATH];
-	char temp[1];
+	char temp[2];
 	
 	GetCmdArg(1, sMapName, sizeof(sMapName));
 	if(sMapName[0] == '\0' || FindMap(sMapName, temp, sizeof(temp)) == FindMap_NotFound)
@@ -131,33 +99,24 @@ public Action Changelevel(int iClient, int iArg)
 		ReplyToCommand(iClient, "sm_changelevel Unable to find map \"%s\"", sMapName);
 		return Plugin_Handled;
 	}
+	bool bResetScores = true;
+	if(GetCmdArgs() >= 2)
+	{
+		GetCmdArg(2, temp, sizeof(temp));
+		bResetScores = view_as<bool>(StringToInt(temp));
+	}
 	
-	L4D2_ChangeLevel(sMapName);
+	L4D2_ChangeLevel(sMapName, bResetScores);
 	return Plugin_Handled;
 }
 
-/*stock bool L4D2_ChangeLevel(const char[] sMapName)
-{
-	int iInfoChangelevel = CreateEntityByName("info_changelevel");
-	if(iInfoChangelevel < 1 || !IsValidEntity(iInfoChangelevel))
-		return false;
-	
-	DispatchKeyValue(iInfoChangelevel, "map", sMapName);
-	if(!DispatchSpawn(iInfoChangelevel))
-	{
-		AcceptEntityInput(iInfoChangelevel, "Kill");
-		return false;
-	}
-	
-	PrintToServer("SDKCall changelevel to %s", sMapName);
-	SDKCall(hInfoMapChange, iInfoChangelevel);	//don't allow invalid maps get here or it will break level changing.
-	AcceptEntityInput(iInfoChangelevel, "Kill");
-	return true;
-}*/
-
-void L4D2_ChangeLevel(const char[] sMapName)
+void L4D2_ChangeLevel(const char[] sMapName, bool bShouldResetScores=true)
 {
 	PrintToServer("[SM] Changelevel to %s", sMapName);
+	if(bShouldResetScores)
+	{
+		SDKCall(hDirectorClearTeamScores, TheDirector, 1);
+	}
 	SDKCall(hDirectorChangeLevel, TheDirector, sMapName);
 }
 
@@ -173,5 +132,9 @@ public int L4D2_ChangeLevelNV(Handle plugin, int numParams)
 	if(sMapName[0] == '\0' || FindMap(sMapName, temp, sizeof(temp)) == FindMap_NotFound)
 		ThrowNativeError(SP_ERROR_PARAM, "Unable to change to that map \"%s\"", sMapName);
 	
-	L4D2_ChangeLevel(sMapName);
+	bool bResetScores = true;
+	if(numParams >= 2)
+		bResetScores = view_as<bool>(GetNativeCell(2));
+	
+	L4D2_ChangeLevel(sMapName, bResetScores);
 }
