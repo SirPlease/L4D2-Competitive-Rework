@@ -11,7 +11,7 @@
 		"max_tank_z"        "1200.000000"
 		"tank_warpto"       "2168.357666 5803.427734 2464.031250"
 		"tank_ban_flow_min" "28"
-		"tank_ban_flow_max" "82"
+        "tank_ban_flow_max" "82"
 		"max_distance"      "400"
 	}
 	"c1m2_streets"
@@ -158,7 +158,7 @@
 		"start_dist"        "100.000000"
 		"start_extra_dist"  "250.000000"
 		"end_dist"          "150.000000"
-		"max_distance"      "600"
+		"max_distance"      "500"
 		"tank_ban_flow_min" "80"
 		"tank_ban_flow_max" "100"
 	}
@@ -169,7 +169,7 @@
 		"start_dist"        "50.000000"
 		"start_extra_dist"  "200.000000"
 		"end_dist"          "300.000000"
-		"max_distance"      "600"
+		"max_distance"      "500"
 		"tank_ban_flow_min" "20"
 		"tank_ban_flow_max" "35"
 	}
@@ -357,7 +357,7 @@
 		"end_point"         "5675.121582 8443.446289 6142.031250"
 		"end_dist"          "100.000000"
 		"tank_ban_flow_min" "0"
-		"tank_ban_flow_max" "55"
+        "tank_ban_flow_max" "55"
 		"ItemLimits"
 		{
 			"pain_pills"    "0"
@@ -576,7 +576,7 @@
 		"end_dist"          "591.145630"
 		"tank_ban_flow_min" "0"
 		"tank_ban_flow_max" "38"
-		"max_distance"      "300"
+		"max_distance" 	    "300"
 	}
 	"c5m2_darkpark"
 	{
@@ -1468,7 +1468,7 @@
 	}
 	"l4d_tbm_1"
 	{
-		"start_point"       "5953.716797 -10323.491211 164.946655"
+		"start_point"		"5953.716797 -10323.491211 164.946655"
 		"end_point"         "-4719.364258 -7518.160156 606.232300"
 		"start_dist"        "75.000000"
 		"start_extra_dist"  "1200.000000"
@@ -1476,7 +1476,7 @@
 	}
 	"l4d_tbm_2"
 	{
-		"start_point"       "-4716.017090 -7516.337891 606.232300"
+		"start_point"		"-4716.017090 -7516.337891 606.232300"
 		"end_point"         "4613.727539 3761.413574 107.974670"
 		"start_dist"        "50.000000"
 		"start_extra_dist"  "125.000000"
@@ -1488,7 +1488,7 @@
 	}
 	"l4d_tbm_3"
 	{
-		"start_point"       "4616.124023 -846.119324 107.974670"
+		"start_point"		"4616.124023 -846.119324 107.974670"
 		"end_point"         "1119.971069 8550.123047 510.031250"
 		"start_dist"        "75.000000"
 		"start_extra_dist"  "350.000000"
@@ -1500,7 +1500,7 @@
 	}
 	"l4d_tbm_4"
 	{
-		"start_point"       "-12124.754883 -9292.593750 -161.968750"
+		"start_point"		"-12124.754883 -9292.593750 -161.968750"
 		"end_point"         "6286.219238 8830.492188 -605.968750"
 		"start_dist"        "50.000000"
 		"start_extra_dist"  "300.000000"
@@ -1511,7 +1511,7 @@
 	}
 	"l4d_tbm_5"
 	{
-		"start_point"       "436.830170 -4734.862793 1026.031250"
+		"start_point"		"436.830170 -4734.862793 1026.031250"
 		"end_point"         "7580.302734 4824.854004 381.113770"
 		"start_dist"        "75.000000"
 		"start_extra_dist"  "250.000000"
@@ -1522,48 +1522,48 @@
 	}
 	"l4d2_fallindeath01"
 	{
-		"start_point"       "214.333710 -1407.492676 222.812622"
+		"start_point"		"214.333710 -1407.492676 222.812622"
 		"end_point"         "-4109.611328 4095.184082 374.066864"
-		"start_dist"        "100.000000"
-		"start_extra_dist"  "150.000000"
-		"end_dist"          "100.000000"
+        "start_dist"        "100.000000"
+        "start_extra_dist"  "150.000000"
+        "end_dist"          "100.000000"
 		"max_distance"      "500"
-		"max_distance"      "500"
+		"max_distance"		"500"
 	}
-
+	
 	"l4d2_fallindeath02"
 	{
-		"start_point"       "-4109.611328 342.256897 382.066864"
+		"start_point"		"-4109.611328 342.256897 382.066864"
 		"end_point"         "11485.612305 7981.953613 506.440613"
-		"start_dist"        "100.000000"
-		"start_extra_dist"  "175.000000"
-		"end_dist"          "50.000000"
-		"max_distance"      "500"
+        "start_dist"        "100.000000"
+        "start_extra_dist"  "175.000000"
+        "end_dist"          "50.000000"
+		"max_distance"		"500"
 	}
 	"l4d2_fallindeath03"
 	{
-		"start_point"       "-4568.857910 116.963791 59.737034"
+		"start_point"		"-4568.857910 116.963791 59.737034"
 		"end_point"         "5344.410645 -3423.376465 1587.031250"
-		"start_dist"        "50.000000"
-		"start_extra_dist"  "350.000000"
-		"end_dist"          "50.000000"
-		"max_distance"      "600"
+        "start_dist"        "50.000000"
+        "start_extra_dist"  "350.000000"
+        "end_dist"          "50.000000"
+		"max_distance"		"600"
 	}
 	"l4d2_fallindeath04"
 	{
-		"start_point"       "-642.819702 -1240.376587 -960.968750"
+		"start_point"		"-642.819702 -1240.376587 -960.968750"
 		"end_point"         "-99.351852 922.977234 326.031250"
-		"start_dist"        "50.000000"
-		"start_extra_dist"  "325.000000"
-		"end_dist"          "50.000000"
-		"max_distance"      "800"
+        "start_dist"        "50.000000"
+        "start_extra_dist"  "325.000000"
+        "end_dist"          "50.000000"
+		"max_distance"		"800"
 		"tank_ban_flow_min" "0"
 		"tank_ban_flow_max" "40"
 	}
 	"l4d2_daybreak01_hotel"
 	{
-		"start_point"       "90.343987 0.308769 62.031250"
-		"end point"         "7032.421875 11570.696289 -700.968750"
+		"start_point" 		"90.343987 0.308769 62.031250"
+		"end point" 		"7032.421875 11570.696289 -700.968750"
 		"start_dist"        "50.000000"
 		"start_extra_dist"  "250.000000"
 		"end_dist"          "250.000000"
@@ -1571,24 +1571,24 @@
 	}
 	"l4d2_daybreak02_coastline"
 	{
-		"start_point"       "-12713.225586 -11746.325195 235.031250"
-		"end point"         "-1623.365356 3938.154541 454.031250"
+		"start_point" 		"-12713.225586 -11746.325195 235.031250"
+		"end point" 		"-1623.365356 3938.154541 454.031250"
 		"start_dist"        "50.000000"
 		"start_extra_dist"  "250.000000"
 		"end_dist"          "50.000000"
 	}
 	"l4d2_daybreak03_bridge"
 	{
-		"start_point"       "-9400.212891 381.715149 -6131.968750"
-		"end point"         "7837.872559 -1757.597534 -5001.968750"
+		"start_point" 		"-9400.212891 381.715149 -6131.968750"
+		"end point" 		"7837.872559 -1757.597534 -5001.968750"
 		"start_dist"        "50.000000"
 		"start_extra_dist"  "150.000000"
 		"end_dist"          "250.000000"
 	}
 	"l4d2_daybreak04_cruise"
 	{
-		"start_point"       "-7698.556152 -4633.521484 -5001.968750"
-		"end point"         "1737.531982 -8322.154297 -6465.968750"
+		"start_point" 		"-7698.556152 -4633.521484 -5001.968750"
+		"end point" 		"1737.531982 -8322.154297 -6465.968750"
 		"start_dist"        "50.000000"
 		"start_extra_dist"  "250.000000"
 		"end_dist"          "50.000000"
@@ -1598,8 +1598,8 @@
 	}
 	"l4d2_daybreak05_rescue"
 	{
-		"start_point"       "7626.222656 12266.819336 -6465.968750"
-		"end point"         "5934.712891 6175.033203 -4417.968750"
+		"start_point" 		"7626.222656 12266.819336 -6465.968750"
+		"end point" 		"5934.712891 6175.033203 -4417.968750"
 		"start_dist"        "50.000000"
 		"start_extra_dist"  "250.000000"
 		"end_dist"          "150.000000"

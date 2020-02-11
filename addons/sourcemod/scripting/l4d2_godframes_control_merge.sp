@@ -66,6 +66,7 @@ new Handle: hCharger = INVALID_HANDLE;
 new Handle: hSpitFlags = INVALID_HANDLE;
 new Handle: hCommonFlags = INVALID_HANDLE;
 new Handle: hGodframeGlows = INVALID_HANDLE;
+new Handle: hRock = INVALID_HANDLE;
 
 //shotgun ff stuff
 new Handle:hCvarEnableShotFF;
@@ -98,7 +99,7 @@ new Float: fFakeGodframeEnd[MAXPLAYERS + 1];
 new iLastSI[MAXPLAYERS + 1];
 
 //shotgun ff
-new pelletsShot[MAXPLAYERS + 1][MAXPLAYERS + 1];
+new pelletsShot[MAXPLAYERS][MAXPLAYERS];
 
 //frustration
 new frustrationOffset[MAXPLAYERS + 1];
@@ -110,6 +111,7 @@ public APLRes:AskPluginLoad2( Handle:plugin, bool:late, String:error[], errMax )
 {
 	bLateLoad = late;
 	CreateNative("GiveClientGodFrames", Native_GiveClientGodFrames);
+	RegPluginLibrary("l4d2_godframes_control_merge");
 	return APLRes_Success;
 }
 
@@ -117,7 +119,7 @@ public Plugin:myinfo =
 {
 	name = "L4D2 Godframes Control combined with FF Plugins",
 	author = "Stabby, CircleSquared, Tabun, Visor, dcx, Sir, Spoon",
-	version = "0.6.1",
+	version = "0.6",
 	description = "Allows for control of what gets godframed and what doesnt along with integrated FF Support from l4d2_survivor_ff (by dcx and Visor) and l4d2_shotgun_ff (by Visor)"
 };
 
@@ -133,6 +135,9 @@ public OnPluginStart()
 									"Allow tank to gain rage from godframed hits. 0 blocks rage gain.",
 									0, true, 0.0, true, 1.0 );
 	hHittable = CreateConVar(	"gfc_hittable_override", "1",
+									"Allow hittables to always ignore godframes.",
+									0, true, 0.0, true, 1.0 );
+	hRock = CreateConVar(	"gfc_rock_override", "0",
 									"Allow hittables to always ignore godframes.",
 									0, true, 0.0, true, 1.0 );
 	hWitch = CreateConVar( 		"gfc_witch_override", "1",
@@ -495,12 +500,13 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 		{
 			if (GetConVarBool(hHittable)) { return Plugin_Continue; }
 		}
-		else
+		if (weapon == 52) //tank rock
 		{
-			if (StrEqual(sClassname, "witch")) //witches
-			{
-				if (GetConVarBool(hWitch)) { return Plugin_Continue; }
-			}
+			if (GetConVarBool(hRock)) { return Plugin_Continue; }
+		}
+		if (StrEqual(sClassname, "witch")) //witches
+		{
+			if (GetConVarBool(hWitch)) { return Plugin_Continue; }
 		}
 		return Plugin_Handled;
 	}
@@ -513,7 +519,7 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 
 stock IsClientAndInGame(client)
 {
-	if (0 < client && client <= MaxClients)
+	if (0 < client && client < MaxClients)
 	{	
 		return IsClientInGame(client);
 	}
