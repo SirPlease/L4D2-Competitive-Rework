@@ -489,9 +489,7 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 				frustrationOffset[attacker] = 0;
 			}
 			CreateTimer(0.1, Timed_SetFrustration, attacker);
-		} else {
-		
-		}
+		} 
 	}
 
 	if (fTimeLeft > 0) //means fake god frames are in effect
@@ -500,7 +498,7 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 		{
 			if (GetConVarBool(hHittable)) { return Plugin_Continue; }
 		}
-		if (weapon == 52) //tank rock
+		if (IsTankRock(inflictor)) //tank rock
 		{
 			if (GetConVarBool(hRock)) { return Plugin_Continue; }
 		}
@@ -993,4 +991,15 @@ void ProcessShot(ArrayStack stack)
 	}
 	
 	bBuckshot[attacker] = false;
+}
+
+bool:IsTankRock(entity)
+{
+    if (entity > 0 && IsValidEntity(entity) && IsValidEdict(entity))
+    {
+        decl String:classname[64];
+        GetEdictClassname(entity, classname, sizeof(classname));
+        return StrEqual(classname, "tank_rock");
+    }
+    return false;
 }
