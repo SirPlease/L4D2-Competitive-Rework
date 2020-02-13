@@ -63,7 +63,6 @@ new Float:g_ddDoors[2048][DoorsData];
 #include <sourcemod>
 #include <sdkhooks>
 #include <sdktools>
-#include <smlib>
 
 public Plugin:myinfo = 
 {
@@ -306,4 +305,24 @@ Door_ClearSettingsAll()
         g_ddDoors[i][DoorsData_Speed] = 0.0;
         g_ddDoors[i][DoorsData_ForceClose] = false;
     }
+}
+
+stock Entity_SetSpeed(entity, Float:speed)
+{
+    SetEntPropFloat(entity, Prop_Data, "m_flSpeed", speed);
+}
+
+stock Float:Entity_GetSpeed(entity)
+{
+    return GetEntPropFloat(entity, Prop_Data, "m_flSpeed");
+}
+
+stock Entity_SetForceClose(entity, bool:forceClose)
+{
+    SetEntProp(entity, Prop_Data, "m_bForceClosed", forceClose);
+}
+
+stock bool:Entity_GetForceClose(entity)
+{
+    return bool:GetEntProp(entity, Prop_Data, "m_bForceClosed");
 }
