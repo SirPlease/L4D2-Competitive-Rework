@@ -67,7 +67,7 @@ public APLRes:AskPluginLoad2(Handle:plugin, bool:late, String:error[], errMax)
     CreateNative("SMPlus_GetMaxHealthBonus", Native_GetMaxHealthBonus);
     CreateNative("SMPlus_GetMaxDamageBonus", Native_GetMaxDamageBonus);
     CreateNative("SMPlus_GetMaxPillsBonus", Native_GetMaxPillsBonus);
-    RegPluginLibrary("l4d2_hybrid_scoremod_zone");
+    RegPluginLibrary("l4d2_hybrid_scoremod");
     bLateLoad = late;
     return APLRes_Success;
 }
