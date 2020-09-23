@@ -43,8 +43,8 @@
 
 			"CTerrorPlayer::DoAnimationEvent"
 			{
-				"windows"	"509"
-				"linux"		"510"
+				"windows"	"510"
+				"linux"		"511"
 			}
 
 			/* Offsets into CDirector of other CDirector class pointers */

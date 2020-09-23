@@ -6,8 +6,8 @@
 		{
 			"CLunge_ActivateAbility"
 			{
-				"windows"	"202"
-				"linux"		"203"
+				"windows"	"203"
+				"linux"		"204"
 			}
 		}
 	}

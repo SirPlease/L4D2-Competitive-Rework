@@ -17,8 +17,8 @@
 		{
 			"CBaseAbility_OnOwnerTakeDamage"
 			{
-				"windows"	"221"
-				"linux"		"222"
+				"windows"	"222"
+				"linux"		"223"
 			}
 		}
 	}

@@ -1,0 +1,3168 @@
+"Games"
+{
+	/*
+	 * Many signatures were found or updated by "Silvers".
+	 * All detours were created by "Silvers".
+	 * Please credit if using.
+	 */
+	"left4dead2"
+	{
+		// ====================================================================================================
+		// DETOURS
+		// ====================================================================================================
+		"Functions"
+		{
+			"GetRandomPZSpawnPosition"
+			{
+				"signature"		"GetRandomPZSpawnPosition"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"zombieClass"
+					{
+						"type"	"int"
+					}
+					"attempts"
+					{
+						"type"	"int"
+					}
+					"client"
+					{
+						"type"	"cbaseentity"
+					}
+					"vecPos"
+					{
+						"type"	"vectorptr"
+					}
+				}
+			}
+
+			"SpawnSpecial"
+			{
+				"signature"		"SpawnSpecial"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"int"
+					}
+					"a2"
+					{
+						"type"	"vectorptr"
+					}
+					"a3"
+					{
+						"type"	"vectorptr"
+					}
+				}
+			}
+
+			"SpawnTank"
+			{
+				"signature"		"SpawnTank"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"vectorptr"
+					}
+					"a2"
+					{
+						"type"	"vectorptr"
+					}
+				}
+			}
+
+			"SpawnWitch"
+			{
+				"signature"		"SpawnWitch"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"vectorptr"
+					}
+					"a2"
+					{
+						"type"	"vectorptr"
+					}
+				}
+			}
+
+			"SpawnWitchBride"
+			{
+				"signature"		"SpawnWitchBride"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"vectorptr"
+					}
+					"a2"
+					{
+						"type"	"vectorptr"
+					}
+				}
+			}
+
+			"OnMobRushStart"
+			{
+				"signature"		"OnMobRushStart"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+			}
+
+			"SpawnITMob"
+			{
+				"signature"		"SpawnITMob"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"int"
+					}
+				}
+			}
+
+			"SpawnMob"
+			{
+				"signature"		"SpawnMob"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"int"
+					}
+				}
+			}
+
+			"OnEnterGhostState"
+			{
+				"signature"		"OnEnterGhostState"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+			}
+
+			"IsTeamFull"
+			{
+				"signature"		"IsTeamFull"
+				"callconv"		"thiscall"
+				"return"		"bool"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"int"
+					}
+					"a2"
+					{
+						"type"	"int"
+					}
+				}
+			}
+
+			"ClearTeamScores"
+			{
+				"signature"		"ClearTeamScores"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"bool"
+					}
+				}
+			}
+
+			"SetCampaignScores"
+			{
+				"signature"		"SetCampaignScores"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"int"
+					}
+					"a2"
+					{
+						"type"	"int"
+					}
+				}
+			}
+
+			"OnFirstSurvivorLeftSafeArea"
+			{
+				"signature"		"OnFirstSurvivorLeftSafeArea"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"cbaseentity"
+					}
+				}
+			}
+
+			"GetCrouchTopSpeed"
+			{
+				"signature"		"GetCrouchTopSpeed"
+				"callconv"		"thiscall"
+				"return"		"float"
+				"this"			"entity"
+			}
+
+			"GetRunTopSpeed"
+			{
+				"signature"		"GetRunTopSpeed"
+				"callconv"		"thiscall"
+				"return"		"float"
+				"this"			"entity"
+			}
+
+			"GetWalkTopSpeed"
+			{
+				"signature"		"GetWalkTopSpeed"
+				"callconv"		"thiscall"
+				"return"		"float"
+				"this"			"entity"
+			}
+
+			"GetScriptValueInt"
+			{
+				"signature"		"GetScriptValueInt"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"charptr"
+					}
+					"a2"
+					{
+						"type"	"int"
+					}
+				}
+			}
+
+			"GetScriptValueFloat"
+			{
+				"signature"		"GetScriptValueFloat"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"charptr"
+					}
+					"a2"
+					{
+						"type"	"float"
+					}
+				}
+			}
+
+			"GetScriptValueString"
+			{
+				"signature"		"GetScriptValueString"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"charptr"
+					}
+					"a2"
+					{
+						"type"	"charptr"
+					}
+					"a3"
+					{
+						"type"	"charptr"
+					}
+					"a4"
+					{
+						"type"	"int"
+					}
+				}
+			}
+
+			"HasConfigurableDifficulty"
+			{
+				"signature"		"HasConfigurableDifficulty"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+			}
+
+			"GetSurvivorSet"
+			{
+				"signature"		"GetSurvivorSet"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+			}
+
+			"FastGetSurvivorSet"
+			{
+				"signature"		"FastGetSurvivorSet"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+			}
+
+			"GetMissionVersusBossSpawning"
+			{
+				"signature"		"GetMissionVersusBossSpawning"
+				"callconv"		"thiscall"
+				"return"		"bool"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"objectptr"
+					}
+					"a2"
+					{
+						"type"	"objectptr"
+					}
+					"a3"
+					{
+						"type"	"objectptr"
+					}
+					"a4"
+					{
+						"type"	"objectptr"
+					}
+				}
+			}
+
+			"ReplaceTank"
+			{
+				"signature"		"ReplaceTank"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"cbaseentity"
+					}
+					"a2"
+					{
+						"type"	"cbaseentity"
+					}
+				}
+			}
+
+			"TryOfferingTankBot"
+			{
+				"signature"		"TryOfferingTankBot"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"cbaseentity"
+					}
+					"a2"
+					{
+						"type"	"bool"
+					}
+				}
+			}
+
+			"CThrowActivate"
+			{
+				"signature"		"CThrowActivate"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+			}
+
+			"SelectTankAttack"
+			{
+				"signature"		"SelectWeightedSequence"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"int"
+					}
+				}
+			}
+
+			"StartMeleeSwing"
+			{
+				"signature"		"StartMeleeSwing"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"cbaseentity"
+					}
+					"a2"
+					{
+						"type"	"bool"
+					}
+				}
+			}
+
+			/* Works for Linux L4D2 but not L4D1, currently leaving out
+			"SendInRescueVehicle"
+			{
+				"signature"		"SendInRescueVehicle"
+				"callconv"		"cdecl"
+				"return"		"void"
+				"arguments"
+				{
+					"ret"
+					{
+						"type"	"object"
+						"size"	"2"
+					}
+					"this"
+					{
+						"type"	"cbaseentity"
+						"windows"
+						{
+							"register"	"ecx"
+						}
+					}
+				}
+			}
+			*/
+			"SendInRescueVehicle"
+			{
+				"signature"		"SendInRescueVehicle"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+			}
+
+			"ChangeFinaleStage"
+			{
+				"signature"		"ChangeFinaleStage"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"int"
+					}
+					"a2"
+					{
+						"type"	"charptr"
+					}
+				}
+			}
+
+			"EndVersusModeRound"
+			{
+				"signature"		"EndVersusModeRound"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"bool"
+					}
+				}
+			}
+
+			"OnLedgeGrabbed"
+			{
+				"signature"		"OnLedgeGrabbed"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"vectorptr"
+					}
+				}
+			}
+
+			"OnRevived"
+			{
+				"signature"		"OnRevived"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+			}
+
+			"OnStaggered"
+			{
+				"signature"		"OnStaggered"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"cbaseentity"
+					}
+					"a2"
+					{
+						"type"	"vectorptr"
+					}
+				}
+			}
+
+			"OnShovedBySurvivor"
+			{
+				"signature"		"OnShovedBySurvivor"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"cbaseentity"
+					}
+					"a2"
+					{
+						"type"	"vectorptr"
+					}
+				}
+			}
+
+			"OnHit"
+			{
+				"signature"		"OnHit"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"int"
+					}
+					"a2"
+					{
+						"type"	"vectorptr"
+					}
+					"a3"
+					{
+						"type"	"bool"
+					}
+				}
+			}
+
+			"OnShovedByPounceLanding"
+			{
+				"signature"		"OnShovedByPounceLanding"
+				"callconv"		"thiscall"
+				"return"		"float"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"cbaseentity"
+					}
+					"a2"
+					{
+						"type"	"int"
+					}
+				}
+			}
+
+			"Spread"
+			{
+				"signature"		"Spread"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"vectorptr"
+					}
+				}
+			}
+
+			"UseHealingItems"
+			{
+				"signature"		"UseHealingItems"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"int"
+					}
+					"a2"
+					{
+						"type"	"int"
+					}
+				}
+			}
+
+			"FindScavengeItem"
+			{
+				"signature"		"FindScavengeItem"
+				"callconv"		"thiscall"
+				"return"		"cbaseentity"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"float"
+					}
+				}
+			}
+
+			/* cdecl BossZombiePlayerBot::ChooseVictim(BossZombiePlayerBot *this, CTerrorPlayer *, char, CBaseCombatCharacter *) */
+			"ChooseVictim"
+			{
+				"signature"		"ChooseVictim"
+				"callconv"		"thiscall"
+				"return"		"cbaseentity"
+				"this"			"entity"
+				"arguments"
+				{
+					"player"
+					{
+						"type"	"int"
+					}
+					"a_char"
+					{
+						"type"	"int"
+					}
+					"character"
+					{
+						"type"	"int"
+					}
+				}
+			}
+
+			"OnVocalize"
+			{
+				"signature"		"Vocalize"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"charptr"
+					}
+					"a2"
+					{
+						"type"	"float"
+					}
+					"a3"
+					{
+						"type"	"float"
+					}
+				}
+			}
+
+			// Addons Disabler
+			"FillServerInfo"
+			{
+				"signature"		"FillServerInfo"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"address"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"int"
+					}
+				}
+			}
+
+
+
+			// UNUSED
+			"InfectedShoved"
+			{
+				"signature"		"InfectedShoved"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"int"
+					}
+					"a2"
+					{
+						"type"	"int"
+					}
+				}
+			}
+
+			"WaterMove"
+			{
+				"signature"		"WaterMove"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+			}
+		}
+
+
+
+		// ====================================================================================================
+		// ADDRESSES
+		// ====================================================================================================
+		"Addresses"
+		{
+			"CDirector"
+			{
+				"windows"
+				{
+					"signature" "DirectorMusicBanks_OnRoundStart"
+					"read" "12"
+				}
+				"linux"
+				{
+					"signature" "TheDirector"
+				}
+				"read" "0"
+			}
+
+			"ZombieManager"
+			{
+				"windows"
+				{
+					"signature"	"StartChangeLevel"
+					"read"	"293"
+				}
+				"linux"
+				{
+					"signature" "TheZombieManager"
+				}
+				"read" "0"
+			}
+
+			"ServerAddr"
+			{
+				"windows"
+				{
+					"signature" "CVEngineServer_CreateFakeClient"
+					"read" "8"
+				}
+				"linux"
+				{
+					"signature" "CVEngineServer_CreateFakeClient"
+					"read" "12"
+				}
+			}
+
+			/* Offset into CreateGameRulesObject */
+			"GameRules"
+			{
+				"windows"
+				{
+					"signature" "CreateGameRulesObject"
+					"read" "2"
+				}
+				"linux"
+				{
+					"signature" "g_pGameRules"
+				}
+				"read" "0"
+			}
+
+			"WeaponInfoDatabase"
+			{
+				"windows"
+				{
+					"signature" "ReadWeaponDataFromFileForSlot"
+					"read" "75"
+				}
+				"linux"
+				{
+					"signature" "WeaponInfoDatabase"
+				}
+			}
+
+			"MeleeWeaponInfoStore"
+			{
+				"windows"
+				{
+					"signature" "GiveNamedItem"
+					"read" "340"
+				}
+				"linux"
+				{
+					"signature" "CMeleeWeaponInfoStore"
+				}
+			}
+
+			"TerrorNavMesh"
+			{
+				"windows"
+				{
+					"signature" "CommandNavSave"
+					"read" "11"
+				}
+				"linux"
+				{
+					"signature" "TheNavMesh"
+				}
+				"read" "0"
+			}
+
+			"VanillaModeAddress"
+			{
+				"windows"
+				{
+					"signature" "VanillaModeOffset"
+				}
+				"linux"
+				{
+					"signature" "VanillaModeOffset"
+				}
+			}
+		}
+
+
+
+		// ====================================================================================================
+		// OFFSETS
+		// ====================================================================================================
+		"Offsets"
+		{
+			// Used to block "L4D2_OnSendInRescueVehicle" and "L4D2_OnUseHealingItems" on Linux until DHooks supports object returns.
+			"OS"
+			{
+				"windows"	"0"
+				"linux"		"1"
+			}
+
+
+
+			// VIRTUAL CALLS
+			"CBaseServer_GetClient"
+			{
+				"linux"		"7"
+				"windows"	"6"
+			}
+
+			"DoAnimationEvent"
+			{
+				"windows"	"509"
+				"linux"		"510"
+			}
+
+			/*
+			* CTerrorPlayer::Deafen(float,float,float)
+			*/
+			"CTerrorPlayer::Deafen"
+			{
+				"windows"	"516"
+				"linux"		"517"
+			}
+
+			/*
+			* CTerrorPlayer::GetLastKnownArea() const
+			*/
+			"CTerrorPlayer::GetLastKnownArea"
+			{
+				"windows"	"329"
+				"linux"		"330"
+			}
+
+
+
+			// VARIOUS OFFSETS
+
+			// USING PTR BELOW INSTEAD
+			/* Offset into CDirector::AreWanderersAllowed */
+			// "ScavengeModePtr"
+			// {
+				// "windows"	"11"	/* mov ecx, [esi+offs] */
+				// "linux"		"13"	/* mov eax, [ebx+offs] */
+			// }
+			"ScavengeModePtr"
+			{
+				"windows"	"1412"
+				"linux"		"1412"
+			}
+
+			"VersusModePtr"
+			{
+				"windows"	"1404"
+				"linux"		"1404"
+			}
+
+			"ScriptedEventManagerPtr"
+			{
+				"windows"	"1400"
+				"linux"		"1400"
+			}
+
+			/* Offset into CTerrorPlayer
+			 * Is this right? How do we find it?
+			 */
+			"SpawnTimer"
+			{
+				"windows"	"11308"
+				"linux"		"11288"
+			}
+
+			"m_rescueCheckTimer"
+			{
+				"windows"	"788"
+				"linux"		"788"
+			}
+
+			"m_PendingMobCount"
+			{
+				"windows"	"528"
+				"linux"		"528"
+			}
+
+			"MobSpawnTimer"
+			{
+				"windows"	"468"
+				"linux"		"468"
+			}
+
+			"OnBeginRoundSetupTime"
+			{
+				"windows"	"16"
+				"linux"		"16"
+			}
+
+			/* Member variable offset into CTerrorGameRules
+			 *
+			 * - Look for CTerrorGameRules::GetVersusMaxCompletionScore, which is ref'd
+			 * - by CL4DGameStats::AddSurvivorStats--unique string "CharacterId"
+			 */
+			"VersusMaxCompletionScore"
+			{
+				"windows"	"3584"
+				"linux"		"3580"
+			}
+
+			// Addons Disabler
+			"VanillaModeOffset"
+			{
+				"windows"	"0"
+				"linux"		"0"
+			}
+
+			// UNUSED
+			/* Offset from ConnectClientLobbyCheck to cmp with max players check
+				string #Valve_Reject_Server_Full
+			 */
+			"ValveRejectServerFullFirst"
+			{
+				"windows"	"30"	/* cmp eax, [esi+180h] -> cmp eax, imm32 */
+				"linux"		"0"		/* cmp esi, [ebx+17Ch] -> cmp esi, imm32 */
+			}
+
+
+
+			// l4d_direct.inc
+			// VARIOUS OFFSETS
+			"m_iWitchCount"
+			{
+				"linux"		"252"
+				"windows"	"252"
+			}
+			"m_iTankCount"
+			{
+				"linux"		"256"
+				"windows"	"256"
+			}
+			"m_iCampaignScores"
+			{
+				"windows"	"8"
+				"linux"		"8"
+			}
+			"m_fTankSpawnFlowPercent"
+			{
+				"windows"	"40"
+				"linux"		"40"
+			}
+			"m_fWitchSpawnFlowPercent"
+			{
+				"windows"	"48"
+				"linux"		"48"
+			}
+
+
+
+			// l4d_direct.inc
+			"m_iTankPassedCount"
+			{
+				"windows"	"88"
+				"linux"		"88"
+			}
+			"m_bTankThisRound"
+			{
+				"windows"	"56"
+				"linux"		"56"
+			}
+			"m_bWitchThisRound"
+			{
+				"windows"	"58"
+				"linux"		"58"
+			}
+			"OvertimeGraceTimer"
+			{
+				"windows"	"28"
+				"linux"		"28"
+			}
+			"InvulnerabilityTimer"
+			{
+				"windows"	"11924"
+				"linux"		"11904"
+			}
+			"m_iTankTickets"
+			{
+				"windows"	"12476"
+				"linux"		"12456"
+			}
+			"m_iShovePenalty"
+			{
+				"windows"	"11536"
+				"linux"		"11516"
+			}
+			"m_fNextShoveTime"
+			{
+				"windows"	"11532"
+				"linux"		"11512"
+			}
+			"m_preIncapacitatedHealth"
+			{
+				"windows"	"14876"
+				"linux"		"14856"
+			}
+			"m_preIncapacitatedHealthBuffer"
+			{
+				"windows"	"14880"
+				"linux"		"14860"
+			}
+			"m_maxFlames"
+			{
+				"windows"	"2960"
+				"linux"		"2980"
+				// This offset is cmp'd against 64 at the start
+				// of CInferno::CreateFire. Look for 2 refs to "insect_swarm" in 1 func.
+			}
+			"m_fMapMaxFlowDistance"
+			{
+				"windows"	"1528"
+				"linux"		"1524"
+				// Compared against inside of the current_flow_distance ccommand.
+			}
+			"m_flow"
+			{
+				"windows"	"332"
+				"linux"		"340"
+			}
+
+
+
+			// l4d2timers.inc offsets
+			// L4D2CountdownTimer
+			"L4D2CountdownTimer_MobSpawnTimer"
+			{
+				"windows"	"468"
+				"linux"		"468"
+			}
+			"L4D2CountdownTimer_SmokerSpawnTimer"
+			{
+				"windows"	"564"
+				"linux"		"564"
+			}
+			"L4D2CountdownTimer_BoomerSpawnTimer"
+			{
+				"windows"	"576"
+				"linux"		"576"
+			}
+			"L4D2CountdownTimer_HunterSpawnTimer"
+			{
+				"windows"	"588"
+				"linux"		"588"
+			}
+			"L4D2CountdownTimer_SpitterSpawnTimer"
+			{
+				"windows"	"600"
+				"linux"		"600"
+			}
+			"L4D2CountdownTimer_JockeySpawnTimer"
+			{
+				"windows"	"612"
+				"linux"		"612"
+			}
+			"L4D2CountdownTimer_ChargerSpawnTimer"
+			{
+				"windows"	"624"
+				"linux"		"624"
+			}
+			"L4D2CountdownTimer_VersusStartTimer"
+			{
+				"windows"	"28"
+				"linux"		"28"
+			}
+			"L4D2CountdownTimer_UpdateMarkersTimer"
+			{
+				"windows"	"80"
+				"linux"		"80"
+			}
+
+			// L4D2IntervalTimer
+			"L4D2IntervalTimer_SmokerDeathTimer"
+			{
+				"windows"	"500"
+				"linux"		"500"
+			}
+			"L4D2IntervalTimer_BoomerDeathTimer"
+			{
+				"windows"	"508"
+				"linux"		"508"
+			}
+			"L4D2IntervalTimer_HunterDeathTimer"
+			{
+				"windows"	"516"
+				"linux"		"516"
+			}
+			"L4D2IntervalTimer_SpitterDeathTimer"
+			{
+				"windows"	"524"
+				"linux"		"524"
+			}
+			"L4D2IntervalTimer_JockeyDeathTimer"
+			{
+				"windows"	"532"
+				"linux"		"532"
+			}
+			"L4D2IntervalTimer_ChargerDeathTimer"
+			{
+				"windows"	"540"
+				"linux"		"540"
+			}
+
+			// l4d2weapons.inc offsets
+			// L4D2IntWeapon
+			"L4D2IntWeapon_Damage"
+			{
+				"windows"	"2508"
+				"linux"		"2508"
+			}
+			"L4D2IntWeapon_Bullets"
+			{
+				"windows"	"2520"
+				"linux"		"2520"
+			}
+			"L4D2IntWeapon_ClipSize"
+			{
+				"windows"	"352"
+				"linux"		"352"
+			}
+
+			// L4D2FloatWeapon
+			"L4D2FloatWeapon_MaxPlayerSpeed"
+			{
+				"windows"	"2192"
+				"linux"		"2192"
+			}
+			"L4D2FloatWeapon_SpreadPerShot"
+			{
+				"windows"	"3088"
+				"linux"		"3088"
+			}
+			"L4D2FloatWeapon_MaxSpread"
+			{
+				"windows"	"3092"
+				"linux"		"3092"
+			}
+			"L4D2FloatWeapon_SpreadDecay"
+			{
+				"windows"	"3096"
+				"linux"		"3096"
+			}
+			"L4D2FloatWeapon_MinDuckingSpread"
+			{
+				"windows"	"3100"
+				"linux"		"3100"
+			}
+			"L4D2FloatWeapon_MinStandingSpread"
+			{
+				"windows"	"3104"
+				"linux"		"3104"
+			}
+			"L4D2FloatWeapon_MinInAirSpread"
+			{
+				"windows"	"3108"
+				"linux"		"3108"
+			}
+			"L4D2FloatWeapon_MaxMovementSpread"
+			{
+				"windows"	"3112"
+				"linux"		"3112"
+			}
+			"L4D2FloatWeapon_PenetrationNumLayers"
+			{
+				"windows"	"3144"
+				"linux"		"3144"
+			}
+			"L4D2FloatWeapon_PenetrationPower"
+			{
+				"windows"	"3148"
+				"linux"		"3148"
+			}
+			"L4D2FloatWeapon_PenetrationMaxDist"
+			{
+				"windows"	"3152"
+				"linux"		"3152"
+			}
+			"L4D2FloatWeapon_CharPenetrationMaxDist"
+			{
+				"windows"	"3156"
+				"linux"		"3156"
+			}
+			"L4D2FloatWeapon_Range"
+			{
+				"windows"	"2512"
+				"linux"		"2512"
+			}
+			"L4D2FloatWeapon_RangeModifier"
+			{
+				"windows"	"2516"
+				"linux"		"2516"
+			}
+			"L4D2FloatWeapon_CycleTime"
+			{
+				"windows"	"2524"
+				"linux"		"2524"
+			}
+			"L4D2FloatWeapon_ScatterPitch"
+			{
+				"windows"	"3116"
+				"linux"		"3116"
+			}
+			"L4D2FloatWeapon_ScatterYaw"
+			{
+				"windows"	"3120"
+				"linux"		"3120"
+			}
+
+			// L4D2BoolMeleeWeapon
+			"L4D2BoolMeleeWeapon_Decapitates"
+			{
+				"windows"	"300"
+				"linux"		"300"
+			}
+
+			// L4D2IntMeleeWeapon
+			"L4D2IntMeleeWeapon_DamageFlags"
+			{
+				"windows"	"292"
+				"linux"		"292"
+			}
+			"L4D2IntMeleeWeapon_RumbleEffect"
+			{
+				"windows"	"296"
+				"linux"		"296"
+			}
+
+			// L4D2FloatMeleeWeapon
+			"L4D2FloatMeleeWeapon_Damage"
+			{
+				"windows"	"288"
+				"linux"		"288"
+			}
+			"L4D2FloatMeleeWeapon_RefireDelay"
+			{
+				"windows"	"4"
+				"linux"		"4"
+			}
+			"L4D2FloatMeleeWeapon_WeaponIdleTime"
+			{
+				"windows"	"3148"
+				"linux"		"3148"
+			}
+		}
+
+
+
+		// ====================================================================================================
+		// SIGNATURES
+		// ====================================================================================================
+		"Signatures"
+		{
+			// =========================
+			// SILVERS SIGS
+			// =========================
+			/* GetWeaponInfo(CSWeaponID) */
+			"GetWeaponInfo"
+			{
+				"library"		"server"
+				"linux"			"@_Z13GetWeaponInfo10CSWeaponID"
+				"windows"		"\x55\x8B\x2A\x53\x8B\x2A\x2A\x85\x2A\x75\x2A\x33\x2A\x5B\x5D\xC3\x80"
+				/* 55 8B ? 53 8B ? ? 85 ? 75 ? 33 ? 5B 5D C3 80 */
+				/* Search "weapon_reparse_server" for "CTerrorWeaponInfo::Reload", inside top call */
+			}
+
+			/* CMeleeWeaponInfoStore::GetMeleeWeaponInfo(CMeleeWeaponInfoStore *this, int) */
+			"GetMeleeWeaponInfo"
+			{
+				"library"		"server"
+				"linux"			"@_ZN21CMeleeWeaponInfoStore18GetMeleeWeaponInfoEi"
+				"windows"		"\x55\x8B\x2A\x83\x2A\x2A\x8B\x2A\x2A\x56\x8B\x2A\x8D\x2A\x2A\x51\x8D\x2A\x2A\x89\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x75"
+				/* 55 8B ? 83 ? ? 8B ? ? 56 8B ? 8D ? ? 51 8D ? ? 89 ? ? E8 ? ? ? ? 83 ? ? 75 */
+				/* Search "models/props_junk/gascan001a.mdl", one of xrefs, compare to NIX code easily found. */
+			}
+
+			/*
+			* CEntityDissolve::Create(CBaseEntity *pTarget, const char *pMaterialName, float flStartTime, int nDissolveType, bool *pRagdollCreated)
+			*/
+			"CEntityDissolve_Create"
+			{
+				"library"		"server"
+				"linux"			"@_ZN15CEntityDissolve6CreateEP11CBaseEntityPKcfiPb"
+				"windows"		"\x55\x8B\xEC\x8B\x45\x18\x81\xEC\xC0\x00\x00\x00"
+				/* 55 8B EC 8B 45 18 81 EC C0 00 00 00 */
+				/* Search: "sprites/blueglow1.vmt" */
+			}
+
+			/*
+			*  CTerrorPlayer::OnITExpired(void)
+			*/
+			"CTerrorPlayer::OnITExpired"
+			{
+				"library"		"server"
+				"linux"			"@_ZN13CTerrorPlayer11OnITExpiredEv"
+				"windows"		"\x56\x57\x8B\x2A\xF3\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x2A\x2A\x2A\x2A\x2A\x2A\x8D\x2A\x2A\x2A\x2A\x2A\x9F\xF6\x2A\x2A\x7B\x2A\x8B\x2A\x2A\x8B\x2A\x8D\x2A\x2A\x56\xFF\x2A\xF3\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xF3\x2A\x2A\x2A\x8B\x2A\x6A"
+				/* 56 57 8B ? F3 ? ? ? ? ? ? ? 0F ? ? ? ? ? ? 8D ? ? ? ? ? 9F F6 ? ? 7B ? 8B ? ? 8B ? 8D ? ? 56 FF ? F3 ? ? ? ? ? ? ? F3 ? ? ? 8B ? 6A */
+				/* Search: "PlayerVomitExpired" */
+				// Search: "Spitter projectile spawned at %f %f %f, velocity %f %f %f"
+			}
+
+			/*
+			 * CBaseEntity::ApplyLocalAngularVelocityImpulse(CBaseEntity *this, const Vector *a2)
+			 */
+			"CBaseEntity::ApplyLocalAngularVelocityImpulse"
+			{
+				"library"	"server"
+				"linux"		"@_ZN11CBaseEntity32ApplyLocalAngularVelocityImpulseERK6Vector"
+				"windows"	"\x55\x8B\x2A\xB8\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xF3\x0F\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B"
+				/* 55 8B ? B8 ? ? ? ? E8 ? ? ? ? F3 0F ? ? ? ? ? ? 57 8B */
+				/* Search: "Molotov.Throw" for CMolotovProjectile::Create function. Above string is call. */
+			}
+
+			/*
+			*  CPipeBombProjectile::Create(Vector  const&, QAngle  const&, Vector  const&, Vector  const&, CBaseCombatCharacter *, float)
+			*  Search: "BEEP_CONTEXT"
+			*/
+			"CPipeBombProjectile_Create"
+			{
+				"library"	"server"
+				"linux"		"@_ZN19CPipeBombProjectile6CreateERK6VectorRK6QAngleS2_S2_P20CBaseCombatCharacterf"
+				"windows"	"\x55\x8B\x2A\x8B\x2A\x2A\x8B\x2A\x2A\x53\x8B\x2A\x2A\x56\x57\x50\x51\x53\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B"
+				/* 55 8B ? 8B ? ? 8B ? ? 53 8B ? ? 56 57 50 51 53 68 ? ? ? ? E8 ? ? ? ? 8B ? ? ? ? ? 83 ? ? ? ? ? ? 8B ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? 68 ? ? ? ? E8 ? ? ? ? 8B */
+			}
+
+			/*
+			*  CSpitterProjectile::Create(Vector  const&,QAngle  const&,Vector  const&,Vector  const&,CBaseCombatCharacter *)
+			*/
+			"CSpitterProjectile_Create"
+			{
+				"library"	"server"
+				"linux"		"@_ZN18CSpitterProjectile6CreateERK6VectorRK6QAngleS2_S2_P20CBaseCombatCharacter"
+				"windows"	"\x55\x8B\x2A\x8B\x2A\x2A\x8B\x2A\x2A\x53\x8B\x2A\x2A\x56\x57\x50\x51\x53\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xD9\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x8B\x2A\xD9\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57"
+				/* 55 8B ? 8B ? ? 8B ? ? 53 8B ? ? 56 57 50 51 53 68 ? ? ? ? E8 ? ? ? ? 8B ? ? ? ? ? 83 ? ? ? ? ? ? 8B ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? 68 ? ? ? ? E8 ? ? ? ? D9 ? ? ? ? ? 83 ? ? 8B ? D9 ? ? E8 ? ? ? ? 57 8B ? E8 ? ? ? ? 57 8B ? E8 ? ? ? ? ? ? ? 57 */
+			}
+
+			/*
+			*  CDirector::ForceNextStage(CDirector *this)
+			*/
+			"ForceNextStage"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector14ForceNextStageEv"
+				"windows"	"\x8B\x2A\x88\x05\x00\x00\xE9\x2A\x89\x01\x00"
+				/* 8B ? 88 05 00 00 E9 ? 89 01 00 */
+				/* Search "ForceNextStage" call below */
+			}
+
+			/*
+			*  CDirector::IsTankInPlay(CDirector *this)
+			*/
+			"IsTankInPlay"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK9CDirector12IsTankInPlayEv"
+				"windows"	"\x33\x2A\x39\x2A\x00\x2A\x2A\x2A\x0F\x9F\x2A\xC3"
+				/* 33 ? 39 ? 00 ? ? ? 0F 9F ? C3 */
+				/* Search "IsTankInPlay" call below */
+			}
+
+			/*
+			*  CDirector::GetFurthestSurvivorFlow(CDirector *this)
+			*/
+			"GetFurthestSurvivorFlow"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK9CDirector23GetFurthestSurvivorFlowEv"
+				"windows"	"\xD9\x2A\x8C\x01\x00\x00\xC3"
+				/* D9 ? 8C 01 00 00 C3 */
+				/* Search "GetFurthestSurvivorFlow" call below */
+			}
+
+			/*
+			*  ZombieManager::GetRandomPZSpawnPosition(ZombieManager *_ZombieManager, int zombieClass, int attempts, int a4, int a5)
+			*/
+			"GetRandomPZSpawnPosition"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK13ZombieManager24GetRandomPZSpawnPositionE15ZombieClassTypeiP13CTerrorPlayerP6Vector"
+				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\x53\x57\x8B\x2A\x2A\x8B\x2A\x89\x2A\x2A\x85\x2A\x75\x2A\x5F\x32"
+				/* 55 8B ? 83 ? ? 53 57 8B ? ? 8B ? 89 ? ? 85 ? 75 ? 5F 32 */
+				/* Search "ZombieManager::GetRandomPZSpawnPosition" */
+			}
+
+			/*
+			*  CNavMesh::GetNearestNavArea(CNavMesh *this, const Vector *, bool, float, bool, bool, bool)
+			*/
+			"GetNearestNavArea"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK8CNavMesh17GetNearestNavAreaERK6Vectorbfbbb"
+				"windows"	"\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x8B\x2A\x83\x2A\x2A\x2A\x57\x8B"
+				/* 55 8B ? 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 56 8B ? 83 ? ? ? 57 8B */
+				/* Search "Couldn't find a %s Spawn position in %d tries\n", some calls below */
+			}
+
+			/*
+			*  TerrorNavArea::FindRandomSpot(TerrorNavArea *this)
+			*/
+			"FindRandomSpot"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK13TerrorNavArea14FindRandomSpotEv"
+				"windows"	"\x55\x8B\x2A\xF3\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x56\x8B\x2A\xF3\x2A\x2A\x2A\x2A\xF3\x2A\x2A\x2A\x2A\x0F"
+				/* 55 8B ? F3 ? ? ? ? ? ? ? 83 ? ? 56 8B ? F3 ? ? ? ? F3 ? ? ? ? 0F */
+				/* Search "Couldn't find a %s Spawn position in %d tries\n", some calls below */
+			}
+
+			/*
+			*  TerrorNavArea::FindRandomSpot(TerrorNavArea *this)
+			*/
+			"FindRandomSpot"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK13TerrorNavArea14FindRandomSpotEv"
+				"windows"	"\x55\x8B\x2A\xF3\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x56\x8B\x2A\xF3\x2A\x2A\x2A\x2A\xF3\x2A\x2A\x2A\x2A\x0F"
+				/* 55 8B ? F3 ? ? ? ? ? ? ? 83 ? ? 56 8B ? F3 ? ? ? ? F3 ? ? ? ? 0F */
+				/* Search "Couldn't find a %s Spawn position in %d tries\n", some calls below */
+			}
+
+			/*
+			*  CDirector::HasAnySurvivorLeftSafeArea(CDirector *this)
+			*/
+			"HasAnySurvivorLeftSafeArea"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector26HasAnySurvivorLeftSafeAreaEv"
+				"windows"	"\x8A\x2A\xA0\x00\x00\x00\xC3"
+				/* 8A ? A0 00 00 00 C3 */
+				/* Search "I've walked out of the checkpoint" call below */
+			}
+
+			/*
+			*  CDirector::IsAnySurvivorInStartArea(CDirector *__hidden this)
+			*/
+			"IsAnySurvivorInStartArea"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK9CDirector24IsAnySurvivorInStartAreaEv"
+				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\xF3\x0F\x2A\x2A\x2A\x2A\x2A\x2A\x8D\x2A\x2A\x50\xF3"
+				/* 55 8B ? 83 ? ? F3 0F ? ? ? ? ? ? 8D ? ? 50 F3 */
+				/* Search "FPlayerCanRespawn: pPlayer=0" 2nd function, call below, above "HasAnySurvivorLeftSafeArea" */
+			}
+
+			/*
+			*  CDirector::IsAnySurvivorInExitCheckpoint(CDirector *__hidden this)
+			*/
+			"IsAnySurvivorInExitCheckpoint"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK9CDirector29IsAnySurvivorInExitCheckpointEv"
+				"windows"	"\x55\x8B\x2A\x51\x8D\x2A\x2A\x50\x66\x2A\x2A\x2A\x2A\x2A\xE8"
+				/* 55 8B ? 51 8D ? ? 50 66 ? ? ? ? ? E8 */
+				/* Search "tank_frustrated", below "HasAnySurvivorLeftSafeArea" call */
+			}
+
+			/*
+			*  SurvivorBot::IsReachable(SurvivorBot *this, const Vector *)
+			*/
+			"SurvivorBot::IsReachable"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK11SurvivorBot11IsReachableERK6Vector"
+				"windows"	"\x55\x8B\xEC\xD9\x05\x2A\x2A\x2A\x2A\x8B\x45\x08"
+				/*  55 8B EC D9 05 ? ? ? ? 8B 45 08 */
+				/* Search "Trying to use something to help us along" call somewhere above */
+			}
+			// =========================
+
+
+
+			// ====================================================================================================
+			// DETOURS
+			// ====================================================================================================
+			/*
+			* ZombieManager::SpawnSpecial(ZombieClassType, Vector const&, QAngle const&)
+			* Be careful, there are a few overrides for SpawnSpecial
+			* Make sure the one you have has like 11 xrefs, 6 from CCommentaryZombieSpawner::InputSpawnZombie
+			* To find, look for non-unique string "common_", has three refs, one ref will have strings for all classes, that's CCommentaryZombieSpawner::InputSpawnZombie
+			*/
+			"SpawnSpecial"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13ZombieManager12SpawnSpecialE15ZombieClassTypeRK6VectorRK6QAngle"
+				"windows"	"\x55\x8B\xEC\x53\x8B\x5D\x08\x8D\x43\xFF\x56"
+				/* 55 8B EC 53 8B 5D 08 8D 43 FF 56 */
+			}
+
+			/*
+			 * ZombieManager::SpawnTank(Vector const&, QAngle const&)
+			 *
+			 * find by Navarea variant method and "Failed to find a tank spawn position i"
+			 * OR
+			 * To find, look for non-unique string "common_", has three refs, one ref will have strings for all classes, that's CCommentaryZombieSpawner::InputSpawnZombie
+			 * SpawnTank will be called after string "tank"
+			 */
+			"SpawnTank"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13ZombieManager9SpawnTankERK6VectorRK6QAngle"
+				"windows"	"\x55\x8B\xEC\x57\x8B\xF9\x8B\x0D\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x85\xC0\x78\x2A\x8B\x0D\x2A\x2A\x2A\x2A\x39"
+				/* 55 8B EC 57 8B F9 8B 0D ? ? ? ? E8 ? ? ? ? 85 C0 78 ? 8B 0D ? ? ? ? 39 */
+			}
+
+			/*
+			 * ZombieManager::SpawnWitch(Vector const&, QAngle const&)
+			 *
+			 * find by Navarea variant method and "Failed to find a witch spawn position i"
+			 * OR
+			 * To find, look for non-unique string "common_", has three refs, one ref will have strings for all classes, that's CCommentaryZombieSpawner::InputSpawnZombie
+			 * SpawnWitch will be called after string "witch"
+			 */
+			"SpawnWitch"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13ZombieManager10SpawnWitchERK6VectorRK6QAngle"
+				"windows"	"\x55\x8B\xEC\x8B\x0D\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x85\xC0\x78\x2A\x8B\x0D\x2A\x2A\x2A\x2A\x39\x81"
+				/* 55 8B EC 8B 0D ? ? ? ? E8 ? ? ? ? 85 C0 78 */
+			}
+
+			/*
+			* ZombieManager::SpawnWitchBride(Vector const&, QAngle const&)
+			* Has three xref, one is CInfoZombieSpawn::SpawnZombie (shared with SpawnWitch above)
+			* where SpawnWitch is the third call after string "bride", and SpawnWitchBride is the second call after "bride"
+			*/
+			"SpawnWitchBride"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13ZombieManager15SpawnWitchBrideERK6VectorRK6QAngle"
+				"windows"	"\x55\x8B\xEC\x8B\x0D\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x85\xC0\x75"
+				/* 55 8B EC 8B 0D ? ? ? ? E8 ? ? ? ? 85 C0 75 */
+			}
+
+			/*
+			 * CDirector::OnMobRushStart(void) - used by boomer and natural horde functions. Resets natural horde timer.
+			 *
+			 * find by String: "MobMinSize", its inlined in Windows
+			 */
+			"OnMobRushStart"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector14OnMobRushStartEv"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x08\xA1\x2A\x2A\x2A\x2A\xD9\x40\x2C\x56\x57\x51"
+				/* 55 8B EC 83 EC 08 A1 ? ? ? ? D9 40 2C 56 57 51 */
+			}
+
+			/*
+			 * ZombieManager::SpawnITMob(int) - used for bile hordes, increases spawn count
+			 *
+			 * search for unique strings with "SpawnITMob"
+			 */
+			"SpawnITMob"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13ZombieManager10SpawnITMobEi"
+				"windows"	"\x55\x8B\xEC\xA1\x2A\x2A\x2A\x2A\xD9\x40\x0C\x56\x57"
+				/* 55 8B EC A1 ? ? ? ? D9 40 0C 56 57 */
+			}
+
+			/*
+			 * ZombieManager::SpawnMob(int) - used for natural/z_spawn
+			 *		hordes, increases spawn count and calls horde music, etc
+			 *
+			 * search for unique strings with "SpawnMob"
+			 */
+			"SpawnMob"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13ZombieManager8SpawnMobEi"
+				"windows"	"\x55\x8B\xEC\xA1\x2A\x2A\x2A\x2A\xD9\x40\x0C\x83\xEC\x2A\x53\x56\x57"
+				/* 55 8B EC A1 ? ? ? ? D9 40 0C 83 EC ? 53 56 57 */
+			}
+
+			/*
+			 * CTerrorPlayer::OnEnterGhostState()
+			 * almost unique string spawnmode_bar has three refs, one ref has strings "zombieClass" and "data"
+			 */
+			"OnEnterGhostState"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer17OnEnterGhostStateEv"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x08\x53\x56\x8B\xF1\x8B\x86\x2A\x2A\x2A\x2A\x8B"
+				/* 55 8B EC 83 EC 08 53 56 8B F1 8B 86 ? ? ? ? 8B */
+			}
+
+			/*
+			 * int CDirector::IsTeamFull(CTerrorGameRules *, int, int)
+			 * Search: "is auto-joining infected". Called from here.
+			 */
+			"IsTeamFull"
+			{
+				"library"		"server"
+				"linux"			"@_ZNK9CDirector10IsTeamFullEiNS_15PlayerCountTypeE"
+				"windows"		"\x55\x8B\x2A\x8B\x2A\x2A\x53\x56\x57\x8B\x2A\x2A\x50\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B"
+				/* 55 8B ? 8B ? ? 53 56 57 8B ? ? 50 57 8B ? E8 ? ? ? ? 8B */
+			}
+
+			/*
+			 * CTerrorGameRules::ClearTeamScores(bool)
+			 */
+			"ClearTeamScores"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules15ClearTeamScoresEb"
+				"windows"	"\x55\x8B\xEC\x51\x0F\x57\xC0\x53\x56\x57\x33\xDB\x8B"
+				/* 55 8B EC 51 0F 57 C0 53 56 57 33 DB 8B */
+			}
+
+			/*
+			 * CTerrorGameRules::SetCampaignScores(int,int)
+			 * Search for unique string "singlechapter"
+			 * -> has two xref from same function, CTerrorGameRules::IsSingleChapterMode()
+			 * -> has two xref, one is CRestartGameIssue::ExecuteCommand() (exclude the other, CServerGameDLL::ServerHibernationUpdate(), which has string "FCVAR_NEVER_AS_STRING")
+			 * -> CRestartGameIssue::ExecuteCommand() calls CDirectorVersusMode::VoteRestartVersusLevel() (fourth call..?)
+			 * -> first call is CTerrorGameRules::SetCampaignScores()
+			 * make sure to double check uniqueness when done
+			 */
+			"SetCampaignScores"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules17SetCampaignScoresEii"
+				"windows"	"\x55\x8B\xEC\x56\x57\x8B\x7D\x08\x8B\xF1\x39\xBE\x2A\x2A\x2A\x2A\x74\x2A\xE8\x2A\x2A\x2A\x2A\x89\xBE\x2A\x2A\x2A\x2A\x8B"
+				/* 55 8B EC 56 57 8B 7D 08 8B F1 39 BE ? ? ? ? 74 ? E8 ? ? ? ? 89 BE ? ? ? ? 8B */
+			}
+
+			/*
+			 * CDirector::OnFirstSurvivorLeftSafeArea(CTerrorPlayer *)
+			 *
+			 * string "Allowing spawning - %s left safe area\n"
+			 */
+			"OnFirstSurvivorLeftSafeArea"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector27OnFirstSurvivorLeftSafeAreaEP13CTerrorPlayer"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x56\x57\x8B\x7D\x2A\x8B\xF1\x8B\x8E\x2A\x2A\x2A\x2A\x57\xE8"
+				/* 55 8B EC 83 EC ? 56 57 8B 7D ? 8B F1 8B 8E ? ? ? ? 57 E8 */
+			}
+
+			/*
+			 * CTerrorPlayer::GetCrouchTopSpeed(void)const
+			 * an xref from GetRunTopSpeed
+			 */
+			"GetCrouchTopSpeed"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK13CTerrorPlayer17GetCrouchTopSpeedEv"
+				"windows" 	"\x56\x8B\xF1\x80\x2A\x2A\x2A\x2A\x2A\x2A\x74\x2A\x5E\xE9\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x83\xF8"
+				/* 56 8B F1 80 ? ? ? ? ? ? 74 ? 5E E9 ? ? ? ? E8 ? ? ? ? 83 F8 */
+			}
+
+			/*
+			 * CTerrorPlayer::GetRunTopSpeed(void)const
+			 *
+			 * - Only references to float value 115.0 (00 00 E6 42) are in this func.
+			 */
+			"GetRunTopSpeed"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK13CTerrorPlayer14GetRunTopSpeedEv"
+				"windows" 	"\x55\x8B\xEC\x83\xEC\x2A\x56\x8B\xF1\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\xFF\xD2\x84\xC0\x74\x0D\xA1\x2A\x2A\x2A\x2A\xD9\x40\x2A\x5E"
+				/* 55 8B EC 83 EC ? 56 8B F1 8B 06 8B 90 ? ? ? ? FF D2 84 C0 74 0D A1 ? ? ? ? D9 40 ? 5E */
+			}
+
+			/*
+			 * CTerrorPlayer::GetWalkTopSpeed(void)const
+			 * an xref from GetRunTopSpeed
+			 */
+			"GetWalkTopSpeed"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK13CTerrorPlayer15GetWalkTopSpeedEv"
+				"windows" 	"\x56\x8B\xF1\x80\x2A\x2A\x2A\x2A\x2A\x2A\x74\x2A\x5E\xE9\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x50\xE8"
+				/* 56 8B F1 80 ? ? ? ? ? ? 74 ? 5E E9 ? ? ? ? E8 ? ? ? ? 50 E8 */
+			}
+
+			/*
+			 * CDirector::GetScriptValue(const char*, int)
+			 * Find CTerrorPlayer::OnRevived(), then look for string SurvivorMaxIncapacitatedCount
+			 * If you look for string "No conversion from %s to int now\n" you will be one call too deep
+			 */
+			"GetScriptValueInt"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector14GetScriptValueEPKci"
+				"windows"	"\x55\x8B\xEC\x8B\x81\x2A\x2A\x2A\x2A\x83\xEC\x10\x83\xF8\xFF\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x45\x2A\x8B"
+				/* 55 8B EC 8B 81 ? ? ? ? 83 EC 10 83 F8 FF ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? 8B 45 ? 8B */
+			}
+
+			/*
+			 * CDirector::GetScriptValue(const char*, float)
+			 * Called in CDirector::OnMobRushStart
+			 */
+			"GetScriptValueFloat"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector14GetScriptValueEPKcf"
+				"windows"	"\x55\x8B\xEC\x8B\x81\x2A\x2A\x2A\x2A\x83\xEC\x10\x83\xF8\xFF\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xD9"
+				/* 55 8B EC 8B 81 ? ? ? ? 83 EC 10 83 F8 FF ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? D9 */
+			}
+
+			/*
+			 * CDirector::GetScriptValue(const char*, const char*, char*, int)
+			 * unique string "OnChangeFinaleMusic", call right after it
+			 */
+			"GetScriptValueString"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector14GetScriptValueEPKcS1_Pci"
+				"windows"	"\x55\x8B\xEC\x8B\x81\x2A\x2A\x2A\x2A\x83\xEC\x2A\x56\x8B"
+				/* 55 8B EC 8B 81 ? ? ? ? 83 EC ? 56 8B */
+			}
+
+			/*
+			 *	 CTerrorGameRules::HasConfigurableDifficultySetting(void)
+			 *
+			 * - Look for string "hasdifficulty"
+			 */
+			"HasConfigurableDifficulty"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules32HasConfigurableDifficultySettingEv"
+				"windows"	"\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9\x75\x1B\xE8\x2A\x2A\x2A\x2A\x84"
+				/* 8B 0D ? ? ? ? 85 C9 75 1B E8 ? ? ? ? 84 */
+			}
+
+			/*
+			 * CTerrorGameRules::GetSurvivorSet(void)
+			 *
+			 * - string "survivor_set"
+			 */
+			"GetSurvivorSet"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules14GetSurvivorSetEv"
+				"windows" 	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x01\x8B\x50\x2A\x53\x56\xBB"
+				/* ? ? ? ? ? ? ? ? ? ? 8B 01 8B 50 ? 53 56 BB */ // Wildcarded for 3rd party plugins
+				/* 55 8B EC 51 8B 0D ? ? ? ? 8B 01 8B 50 ? 53 */
+			}
+
+			/*
+			 * CTerrorGameRules::FastGetSurvivorSet(void)
+			 *
+			 * - Should be 2 calls after "DistToMechanic" in CTerrorPlayer::ModifyOrAppendCriteria
+			 */
+			"FastGetSurvivorSet"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules18FastGetSurvivorSetEv"
+				"windows" 	"\xA1\x2A\x2A\x2A\x2A\x85\xC0\x75\x0A\xE8"
+				/* A1 ? ? ? ? 85 C0 75 0A E8 */
+			}
+
+			/*
+			 *	CDirectorVersusMode::GetMissionVersusBossSpawning(float&, float&, float&, float&)
+			 *
+			 * - string "versus_boss_spawning" hits in 2 functions: This short func and the much longer InitVersusBossSpawning
+			 */
+			"GetMissionVersusBossSpawning"
+			{
+				"library"	"server"
+				"linux"		"@_ZN19CDirectorVersusMode28GetMissionVersusBossSpawningERfS0_S0_S0_Rb"
+				"windows"	"\x55\x8B\xEC\x6A\x00\xE8\x2A\x2A\x2A\x2A\x83\xC4\x04\x85"
+				/* 55 8B EC 6A 00 E8 ? ? ? ? 83 C4 04 85 */
+			}
+
+			/*
+			 * ZombieManager::ReplaceTank(CTerrorPlayer *, CTerrorPlayer *)
+			 *
+			 * for finding: in CDirector::UpdateTankSpawns, easily findable in graph view from ReplaceWithBot
+			 */
+			"ReplaceTank"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13ZombieManager11ReplaceTankEP13CTerrorPlayerS1_"
+				"windows" 	"\x55\x8B\xEC\x83\xEC\x2A\x53\x56\x8B\x75\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x57\x8B\xF9\x8B\xCE\xFF\xD2\x84\xC0\x0F"
+				/* 55 8B EC 83 EC ? 53 56 8B 75 ? 8B 06 8B 90 ? ? ? ? 57 8B F9 8B CE FF D2 84 C0 0F */
+			}
+
+			/*
+			 * CDirector::TryOfferingTankBot(void)
+			 * unique string "Tank offer: Starting the lottery\n"
+			 */
+			"TryOfferingTankBot"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector18TryOfferingTankBotEP11CBaseEntityb"
+				"windows"	"\x55\x8B\xEC\x51\x83\x7D\x08\x00\x56\x8B\xF1\x89"
+				/* 55 8B EC 51 83 7D 08 00 56 8B F1 89 */
+			}
+
+			/*
+			 * CThrow::ActivateAbililty()
+			 *		Start a tank rock throw
+			 *
+			 * - "HulkZombie.Throw.Fail" has 2 refs in this function. Should be easy to find.
+			 */
+			"CThrowActivate"
+			{
+				"library"	"server"
+				"linux"		"@_ZN6CThrow15ActivateAbilityEv"
+				"windows"	"\x55\x8B\xEC\x51\x53\x8B\xD9\x8B\x83\x2A\x2A\x2A\x2A\x83"
+				/* 55 8B EC 51 53 8B D9 8B 83 ? ? ? ? 83 */
+			}
+
+			/*
+			 * int CBaseAnimating::SelectWeightedSequence(int Activity)
+			 *
+			 * - Called at the end of CTerrorPlayer::SelectWeightedSequence() (found via string "Hulk_RunAttack1_Gesture")
+			 * NOTE - WARNING - This function should probably be hooked using vtable methods!!!!!!!! DEPRECATE
+			 */
+			"SelectWeightedSequence"
+			{
+				"library"	"server"
+				"linux"		"@_ZN14CBaseAnimating22SelectWeightedSequenceE8Activity"
+				"windows"	"\x55\x8B\xEC\x56\x8B\xF1\x83\xBE\x2A\x2A\x2A\x2A\x00\x57\x8B\xBE"
+				/* 55 8B EC 56 8B F1 83 BE ? ? ? ? 00 57 8B BE */
+			}
+
+			/*
+			 * CTerrorMeleeWeapon::StartMeleeSwing(CTerrorPlayer *, bool)
+			 *
+			 * find "melee attack failed - !IsWeaponVisible" in CTerrorWeapon::PrimaryAttack and look for a call (being passed ptr and float) followed by some sse xmm0 calls.
+			 */
+			"StartMeleeSwing"
+			{
+				"library"	"server"
+				"linux"		"@_ZN18CTerrorMeleeWeapon15StartMeleeSwingEP13CTerrorPlayerb"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x8B\xF1\x8B\x86\x2A\x2A\x2A\x2A\x50\xB9\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B"
+				/* ? ? ? ? ? 8B F1 8B 86 ? ? ? ? 50 B9 ? ? ? ? E8 ? ? ? ? 8B */ // Wildcarded for 3rd party plugins
+				/* 55 8B EC 53 56 8B F1 8B 86 ? ? ? ? 50 B9 */
+			}
+
+			/*
+			 * CDirectorScriptedEventManager::SendInRescueVehicle(void)
+			 *
+			 * find by String "FinaleEscapeStarted"
+			 */
+			"SendInRescueVehicle"
+			{
+				"library"	"server"
+				"linux"		"@_ZN29CDirectorScriptedEventManager19SendInRescueVehicleEv"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x18\x56\x68\x2A\x2A\x2A\x2A\x8B\xF1"
+				/* 55 8B EC 83 EC 18 56 68 ? ? ? ? 8B F1 */
+			}
+
+			/*
+			 * CDirectorScriptedEventManager__ChangeFinaleStage(int, char arg, int)
+			 * or CDirectorScriptedEventManager::ChangeFinaleStage(CDirectorScriptedEventManager::FinaleStageType,char const*)
+			 *
+			 * find by String "CHANGEFINALESTAGEOVERRIDE: %s\n"
+			 */
+			"ChangeFinaleStage"
+			{
+				"library"	"server"
+				"linux"		"@_ZN29CDirectorScriptedEventManager17ChangeFinaleStageENS_18ScriptedEventStageEPKc"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x8B\x2A\x2A\x56\x8B\x2A\x2A\x57\x53\x68"
+				/* ? ? ? ? ? ? ? ? ? ? ? ? ? ? 33 ? 89 ? ? 53 8B ? ? 56 8B ? ? 57 53 68 */ // Wildcarded for 3rd party plugins
+				/* 55 8B ? 81 ? ? ? ? ? ? ? ? ? ? 33 ? 89 ? ? 53 8B ? ? 56 8B ? ? 57 53 68 */
+			}
+
+			/*
+			 * CDirectorVersusMode::EndVersusModeRound(bool)
+			 * Updates scores using a bunch of CTerrorGameRules calls and triggers the fullscreen_vs_scoreboard viewport panel
+			 *
+			 * find by String "fullscreen_vs_scoreboard", and look for a func which also creates a "scores" kv and sets values for "t1", "t2", "c1", "c2", and "tiebreak"
+			 */
+			"EndVersusModeRound"
+			{
+				"library"	"server"
+				"linux"		"@_ZN19CDirectorVersusMode18EndVersusModeRoundEb"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x57\x8B\xF9\xE8\x2A\x2A\x2A\x2A\x84\xC0\x0F\x84"
+				/* 55 8B EC 83 EC ? 57 8B F9 E8 ? ? ? ? 84 C0 0F 84 */
+			}
+
+			/*
+			 * void CTerrorPlayer::OnLedgeGrabbed(CTerrorPlayer *this, const Vector *)
+			 * Search: "%s grabs a ledge - last standing at %s."
+			 */
+			"OnLedgeGrabbed"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer14OnLedgeGrabbedERK6Vector"
+				"windows"	"\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x56\x8B\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x57\x2A\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B"
+				/* 55 8B ? 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 56 8B ? 8B ? 8B ? ? ? ? ? 57 ? ? 84 ? 0F 84 ? ? ? ? 8B */
+			}
+
+			/*
+			* CTerrorPlayer::OnRevived(void)
+			*
+			* ->Search for string "revive_success", then open vtables window. Should be the 5th member.
+			* Left4Downtown2 patches this function, which will prevent Sourcemod from finding it
+			* That is why the first six bytes are wild cards (five bytes for detour + nop fill the remaining bytes of the instructions)
+			*/
+			"OnRevived"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer9OnRevivedEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x8B\xF1\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x57\xFF\xD2\x84\xC0\x0F\x84\x2A\x2A\x2A\x2A\x8B\xCE"
+				/* ? ? ? ? ? ? 53 56 8B F1 8B 06 8B 90 ? ? ? ? 57 FF D2 84 C0 0F 84 ? ? ? ? 8B CE */
+			}
+
+			/*
+			 * CTerrorPlayer::OnStaggered(CBaseEntity *, Vector const*) - used by L4D2 on Survivors, causes staggering (e.g. Charger Impact nearby)
+			 *
+			 * - string "PlayerShoved" has 3 refs, the one furthest into a function should be this one.
+			 */
+			"OnStaggered"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer11OnStaggeredEP11CBaseEntityPK6Vector"
+				"windows" 	"\x53\x8B\x2A\x83\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
+				/* 53 8B ? 83 ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 83 ? ? 56 57 8B ? E8 ? ? ? ? 84 ? 0F 85 ? ? ? ? 8B ? 8B
+				 * Using a long local jump as the unique portion (last few bytes of sig)
+				 */
+			}
+
+			/*
+			 * CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&) - used by L4D2 on Special Infected (got melee'd)
+			 * unique string "jockey_ride" in CTerrorPlayer::OnLeptOnSurvivor(), look up for "JockeyZombie.Ride", look up for var_14, CTerrorPlayer::OnShovedBySurvivor is call after that
+			 */
+			"OnShovedBySurvivor"
+			{
+				"library"	"server"
+				"linux" 	"@_ZN13CTerrorPlayer18OnShovedBySurvivorEPS_RK6Vector"
+				"windows" 	"\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x8B\x5D\x2A\x56\x57\x8B\x7D\x2A\x8B\xF1"
+				/* 55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 33 C5 89 45 FC 53 8B 5D ? 56 57 8B 7D ? 8B F1 */
+			}
+
+			/*
+			* CTerrorWeapon::OnHit(CGameTrace &, Vector const&, bool)
+			*/
+			"OnHit"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorWeapon5OnHitER10CGameTraceRK6Vectorb"
+				"windows"	"\x55\x8B\xEC\x81\xEC\xB0\x00\x00\x00\x80\x7D\x10\x00"
+				/* 55 8B EC 81 EC B0 00 00 00 80 7D 10 00 */
+			}
+
+			/*
+			* CTerrorPlayer::OnShovedByPounceLanding(CTerrorPlayer*)
+			*/
+			"OnShovedByPounceLanding"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer23OnShovedByPounceLandingEPS_b"
+				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x57\x8B"
+				/* 55 8B ? 83 ? ? 56 8B ? E8 ? ? ? ? 84 ? 0F 85 ? ? ? ? 57 8B */
+				/* Search: "pounced on %s, %d damage interrupts".
+				 * Several calls from here to target function, visual match with nix code.
+				 */
+			}
+
+			/*
+			* CInferno::Spread(Vector const&)
+			*/
+			"Spread"
+			{
+				"library"	"server"
+				"linux"		"@_ZN8CInferno6SpreadERK6Vector"
+				"windows" 	"\x53\x8B\x2A\x83\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x8B\x2A\x2A\x56\x57\x8B\x2A\xF3\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x2F"
+				/* 53 8B ? 83 ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 8B ? ? 56 57 8B ? F3 ? ? ? ? ? ? ? 0F 2F */
+				/* Search: "CInferno::InfernoThink (spread)" bit below is target call. */
+			}
+
+			/*
+			* SurvivorBot::UseHealingItems(Action<SurvivorBot> *)
+			* Called by the game when deciding whether the bots should use any healing items
+			* unique string "Trying to heal a friend"
+			*/
+			"UseHealingItems"
+			{
+				"library"	"server"
+				"linux"		"@_ZN11SurvivorBot15UseHealingItemsEP6ActionIS_E"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x20\x53\x56\x8B\xD9\x57\x8D\x8B"
+				/* 55 8B EC 83 EC 20 53 56 8B D9 57 8D 8B */
+			}
+
+			/*
+			* SurvivorBot::FindScavengeItem(float)
+			* Called by the game when deciding what items a bot should attempt to pick up
+			* Despite name, has nothing to do with scavenge game mode
+			* SurvivorBot::ScavengeNearbyItems(Action<SurvivorBot>*) has almost unique string "Scavenging something"
+			* FindScavengeItem(float) is called with 420.0 (0x43D20000) as its argument
+			*/
+			"FindScavengeItem"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK11SurvivorBot16FindScavengeItemEf"
+				"windows"	"\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x56\x57\x8B\xF9\x8B\x97\x2A\x2A\x2A\x2A\x8D\x85"
+				/* 55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 33 C5 89 45 FC 53 56 57 8B F9 8B 97 ? ? ? ? 8D 85 */
+			}
+
+			/* cdecl BossZombiePlayerBot::ChooseVictim(BossZombiePlayerBot *this, CTerrorPlayer *, char, CBaseCombatCharacter *) */
+			"ChooseVictim"
+			{
+				"library"		"server"
+				"windows"		"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x53\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x56"
+				"linux"			"@_ZN19BossZombiePlayerBot12ChooseVictimEP13CTerrorPlayeriP20CBaseCombatCharacter"
+				/* ? ? ? ? ? ? ? ? ? ? ? 83 ? ? ? 53 8B ? 8B ? ? ? ? ? 8B ? ? ? ? ? 56 */ // Wildcarded for 3rd party plugins
+				/* 55 8B ? 83 ? ? ? ? ? ? ? 83 ? ? ? 53 8B ? 8B ? ? ? ? ? 8B */
+				/* Search: "switching to mobile victim" */
+			}
+
+
+
+			// ====================================================================================================
+			// NATIVES
+			// ====================================================================================================
+			/* CDirector::ResetMobTimer()
+				Resets the Director's natural horde timer. Normally this
+				is called when a horde is spawned naturally or by boomer.
+				Small function, nearly hits another segment in the file.
+
+				- Find it through only xref, which is setting up ScriptDesc structures: string "Trigger a mob as soon as possible when"
+				- If you go past the first call, you should hit unique bytes in sig making
+				*/
+			"ResetMobTimer"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector13ResetMobTimerEv"
+				"windows"	"\x55\x8B\xEC\x51\x56\x57\x8D\xB9\x2A\x2A\x2A\x2A\x8B\xCF\xE8\x2A\x2A\x2A\x2A\xD9"
+							/* 55 8B EC 51 56 57 8D B9 ? ? ? ? 8B CF E8 ? ? ? ? D9 */
+			}
+
+			/*
+			 * CDirector::RestartScenarioFromVote(const char*)
+			 * Search for unique string "singlechapter"
+			 * -> has two xref from same function, CTerrorGameRules::IsSingleChapterMode()
+			 * -> has two xref, one is CRestartGameIssue::ExecuteCommand() (exclude the other, CServerGameDLL::ServerHibernationUpdate(), which has string "FCVAR_NEVER_AS_STRING")
+			 * -> Last call in CRestartGameIssue::ExecuteCommand
+			 */
+			"RestartScenarioFromVote"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector23RestartScenarioFromVoteEPKc"
+				"windows"	"\x55\x8B\xEC\x56\x8B\xF1\x8B\x0D\x2A\x2A\x2A\x2A\x57\x85"
+				/* 55 8B EC 56 8B F1 8B 0D ? ? ? ? 57 85 */
+			}
+
+			/*
+			 * CTerrorGameRules::GetTeamScore(int,bool)
+			 * Find "Staying on original map %s\n"
+			 * -> CDirector::Restart(void)
+			 * -> showed up near "info_window"
+			 * -> called twice along with another function called twice (CterrorGameRules::UpdateChapterScores)
+			 */
+			"GetTeamScore"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules12GetTeamScoreEib"
+				"windows"	"\x55\x8B\xEC\x8B\x2A\x2A\x85\xC0\x2A\x2A\x33\xC0\x5D\xC2"
+				/* 55 8B EC 8B ? ? 85 C0 ? ? 33 C0 5D C2 */
+			}
+
+			/* CDirector::IsFirstMapInScenario()
+				Uses campaign mission file to determine if the current map
+				is a First map.
+				Called from CDirector::OnEndScenario, look near string "vs_shutting_down", up to case 7
+				*/
+			"IsFirstMapInScenario"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK9CDirector20IsFirstMapInScenarioEv"
+				"windows"	"\xA1\x2A\x2A\x2A\x2A\x8B\x40\x3C\x56\x8B\xF0"
+							/* A1 ? ? ? ? 8B 40 3C 56 8B F0 */
+			}
+
+			/* CTerrorGameRules::IsMissionFinalMap()
+				Uses campaign mission file to determine if the current map
+				is a Final(e) map.
+				Called from CDirectorVersusMode::EndVersusModeRound(), look near string "versus_match_finished"
+				*/
+			"IsMissionFinalMap"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules17IsMissionFinalMapEv"
+				"windows"	"\x8B\x0D\x2A\x2A\x2A\x2A\x8B\x01\x8B\x50\x28\x56\xFF\xD2\x8B\x10\x8B\xC8\x8B\x42\x04\x6A\x00\xFF\xD0\x8B\xF0\x85\xF6\x75\x04\xB0"
+							/* 8B 0D ? ? ? ? 8B 01 8B 50 28 56 FF D2 8B 10 8B C8 8B 42 04 6A 00 FF D0 8B F0 85 F6 75 04 B0 */
+			}
+
+			/* CGameRulesProxy::NotifyNetworkStateChanged()
+				This function is called before changing a variety of
+				pieces of networked data (data which is reflected in network
+				game states).
+
+				- Find "Going to intermission...\n" in CGameRules::GoToIntermission
+				- Last call in the func
+				*/
+			"NotifyNetworkStateChanged"
+			{
+				"library"	"server"
+				"linux"		"@_ZN15CGameRulesProxy25NotifyNetworkStateChangedEv"
+				"windows"	"\xA1\x2A\x2A\x2A\x2A\x85\xC0\x74\x2A\x80\x78"
+							/* A1 ? ? ? ? 85 C0 74 ? 80 78 */
+			}
+
+			// find string " Highest survivor flow distance = %f Tank at = %f witch at %f\n" in CDirectorVersusMode::UpdateVersusBossSpawning
+			// look for __RTDynamicCast which is called on the result of this function.
+			"GetNavArea"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK8CNavMesh10GetNavAreaERK6Vectorf"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x83\x79\x2A\x00\x75\x08\x33\xC0\x8B\xE5\x5D\xC2\x08"
+				/* 55 8B EC 83 EC ? 83 79 ? 00 75 08 33 C0 8B E5 5D C2 08 */
+			}
+
+			/*
+			 * CTerrorPlayer::GetFlowDistance(TerrorNavArea::FlowType)
+			 */
+			"GetFlowDistance"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK13CTerrorPlayer15GetFlowDistanceEN13TerrorNavArea8FlowTypeE"
+				"windows"	"\x55\x8B\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x74"
+				/* 55 8B ? 8B ? 8B ? ? ? ? ? ? ? 85 ? 74 */
+				/* Search: "Director state change SUSTAIN_PEAK" few calls below */
+				/* Found by SilverShot */
+			}
+
+
+
+			// ====================================================================================================
+			// l4d2addresses.txt
+			// ====================================================================================================
+			/*
+			 * CTerrorPlayer::OnVomitedUpon(CTerrorPlayer*, bool)
+			 */
+			"CTerrorPlayer_OnVomitedUpon"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer13OnVomitedUponEPS_b"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x53\x56\x57\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x06\x8B\x90"
+				/* 55 8B EC 83 EC ? 53 56 57 8B F1 E8 ? ? ? ? 84 C0 74 ? 8B 06 8B 90 */
+			}
+
+			/*
+			 * CTerrorPlayer::OnHitByVomitJar(CBaseCombatCharacter *)
+			 */
+			"CTerrorPlayer_OnHitByVomitJar"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer15OnHitByVomitJarEP20CBaseCombatCharacter"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2\x84\xC0\x0F"
+				/* 55 8B EC 83 EC ? 56 8B F1 E8 ? ? ? ? 84 C0 74 ? 8B 06 8B 90 ? ? ? ? 8B CE FF D2 84 C0 0F */
+			}
+
+			/*
+			 * Infected::OnHitByVomitJar(CBaseCombatCharacter *)
+			 */
+			"Infected_OnHitByVomitJar"
+			{
+				"library"	"server"
+				"linux"		"@_ZN8Infected15OnHitByVomitJarEP20CBaseCombatCharacter"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x56\x8B\xF1\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\xFF\xD2\x84\xC0\x0F\x2A\x2A\x2A\x2A\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2\x84\xC0\x75\x2A\x56\xE8\x2A\x2A\x2A\x2A\x8B\xC8\xE8"
+				/* 55 8B EC 83 EC ? 56 8B F1 8B 06 8B 90 ? ? ? ? FF D2 84 C0 0F ? ? ? ? ? 8B 06 8B 90 ? ? ? ? 8B CE FF D2 84 C0 75 ? 56 E8 ? ? ? ? 8B C8 E8 */
+			}
+
+			/*
+			 * CTerrorPlayer::Fling(Vector const&,PlayerAnimEvent_t,CBaseCombatCharacter *,float)
+			 *
+			 *	Vector: how target is supposed to fly, Animevent is "76" for chargerbounce, CBasePlayer is attacker, float is Incap Animation time
+			 *
+			 *	Find via CCharge::HandleCustomCollision (strings) -> ThrowImpactedSurvivor (strings, structure) -> Fling (feel it out)
+			 *
+			 */
+			"CTerrorPlayer_Fling"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer5FlingERK6Vector17PlayerAnimEvent_tP20CBaseCombatCharacterf"
+				"windows"	"\x53\x8B\xDC\x83\xEC\x2A\x83\xE4\x2A\x83\xC4\x2A\x55\x8B\x6B\x2A\x89\x6C\x2A\x2A\x8B\xEC\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\x2A\x8B\x43\x2A\x56\x8B\x73\x2A\x57\x6A\x2A\x8B\xF9\x89\x45"
+				/* 53 8B DC 83 EC ? 83 E4 ? 83 C4 ? 55 8B 6B ? 89 6C ? ? 8B EC 81 ? ? ? ? ? A1 ? ? ? ? 33 C5 89 45 ? 8B 43 ? 56 8B 73 ? 57 6A ? 8B F9 89 45 */
+			}
+
+			/*
+			 * CTerrorPlayer::CancelStagger(void) - used by the game to stop Survivor Staggering as something else happens
+			 */
+			"CancelStagger"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer13CancelStaggerEv"
+				"windows"	"\x56\x8B\x2A\xF3\x2A\x2A\x2A\x2C\x2A\x2A\x2A\x0F\x2A\x2A\x2A\x2A\x2A\x2A\x57"
+				/* Sig may break, using offsets to make unique */
+				/* 56 8B ? F3 ? ? ? 2C ? ? ? 0F ? ? ? ? ? ? 57 */
+				/* Search "SurvivorWasPounced" - few calls above. */ // Found by SilverShot.
+			}
+
+			/*
+			 * CDirector::CreateRescuableSurvivors(void)
+			 */
+			"CreateRescuableSurvivors"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector24CreateRescuableSurvivorsEv"
+				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x57\x8B\x2A\x89\x2A\x2A\x0F\x85"
+				/* 55 8B ? 83 ? ? A1 ? ? ? ? 83 ? ? ? 57 8B ? 89 ? ? 0F 85 */ // Updated by SilverShot.
+				/* String "rescue spot %d(%s) stops calling for he" */
+			}
+
+			/*
+			 * CTerrorGameRules::GetVersusCompletion(CTerrorPlayer *)
+			 */
+			"GetVersusCompletionPlayer"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules19GetVersusCompletionEP13CTerrorPlayer"
+				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\x53\x56\x8B\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\xE8"
+				/* 55 8B ? 83 ? ? 53 56 8B ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B ? E8 */ // Found by SilverShot.
+				/* Found via "RecomputeTeamScores" and "RecomputeVersusCompletion" function. Difficult but can be matched comparing Nix/Win HexRays */
+			}
+
+			/*
+			* CDirectorTacticalServices::GetHighestFlowSurvivor(TerrorNavArea::FlowType)const
+			*/
+			"GetHighestFlowSurvivor"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK25CDirectorTacticalServices22GetHighestFlowSurvivorEN13TerrorNavArea8FlowTypeE"
+				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\xF3\x0F\x2A\x2A\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x89\x2A\x2A\x89"
+				/* 55 8B ? 83 ? ? F3 0F ? ? ? ? ? ? 33 ? 89 ? ? 89 ? ? 89 */ // Found by SilverShot.
+				/* Search "Director state change SUSTAIN_PEAK". Call below. */
+			}
+
+			/*
+			 * Infected::GetFlowDistance(void)const
+			 */
+			"GetInfectedFlowDistance"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK8Infected15GetFlowDistanceEv"
+				"windows"	"\x8B\x01\x8B\x90\x2A\x2A\x2A\x2A\xFF\xD2\x85\xC0\x74\x2A\xD9\x80\x2A\x2A\x2A\x2A\xC3"
+				/* 8B 01 8B 90 ? ? ? ? FF D2 85 C0 74 ? D9 80 ? ? ? ? C3 */
+			}
+
+			/*
+			 * CTerrorPlayer::TakeOverZombieBot(CTerrorPlayer*)
+			 *
+			 * for finding:
+			 * "bot_player_replace"
+			 */
+			"TakeOverZombieBot"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer17TakeOverZombieBotEPS_"
+				"windows"	"\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\x2A\x53\x8B\x5D\x2A\x80"
+				/* 55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 33 C5 89 45 ? 53 8B 5D ? 80 */
+			}
+
+			/*
+			 * CTerrorPlayer::ReplaceWithBot(bool)
+			 *
+			 * for finding: in CDirector::UpdateTankSpawns, easily findable in graph view
+			 * "TANK OFFER: No tickets, choosing random"
+			 */
+			"ReplaceWithBot"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer14ReplaceWithBotEb"
+				"windows"	"\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\x2A\x56\x8B\xF1\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\xFF\xD2\x84\xC0\x74"
+				/* 55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 33 C5 89 45 ? 56 8B F1 8B 06 8B 90 ? ? ? ? FF D2 84 C0 74 */
+			}
+
+			/*
+			 * CTerrorPlayer::CullZombie(void)
+			 * Called in ReplaceTank, followed by a call to CCSPlayer::State_Transition
+			 */
+			"CullZombie"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer10CullZombieEv"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x56\x8B\xF1\x8B\x0D\x2A\x2A\x2A\x2A\x57\x56\xE8"
+				/* 55 8B EC 83 EC ? 56 8B F1 8B 0D ? ? ? ? 57 56 E8 */
+			}
+
+			"SetClass"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer8SetClassE15ZombieClassType"
+				"windows"	"\x55\x8B\x2A\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x0F\x85\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x40\xA3"
+				/* 55 8B ? 56 8B ? E8 ? ? ? ? 83 ? ? 0F 85 ? ? ? ? A1 ? ? ? ? 40 A3 */ // Updated by SilverShot.
+				/* Search "weapon_smoker_claw" */
+			}
+
+			"CreateAbility"
+			{
+				"library"	"server"
+				"linux"		"@_ZN12CBaseAbility15CreateForPlayerEP13CTerrorPlayer"
+				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\x56\x8B\x2A\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83"
+				/* 55 8B ? 83 ? ? 56 8B ? ? 85 ? 0F 84 ? ? ? ? 8B ? E8 ? ? ? ? 83 */ // Updated by SilverShot.
+				/* Search "ability_tongue" */
+			}
+
+			/*
+			 * CTerrorPlayer::MaterializeFromGhost(void)
+			 */
+			"MaterializeFromGhost"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer20MaterializeFromGhostEv"
+				"windows"	"\x56\x8B\xF1\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\xFF\xD2\x50\xE8\x2A\x2A\x2A\x2A\x83\xC4"
+				/* 56 8B F1 8B 06 8B 90 ? ? ? ? FF D2 50 E8 ? ? ? ? 83 C4 */
+				/* Search "%s materialized from spawn mode as a %s" */
+			}
+
+			/* CTerrorPlayer::BecomeGhost(bool) */
+			"BecomeGhost"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer11BecomeGhostEb"
+				"windows"	"\x55\x8B\xEC\x53\x8B\x5D\x2A\x56\x53\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84"
+				/* 55 8B EC 53 8B 5D ? 56 53 8B F1 E8 ? ? ? ? 84 */
+			}
+
+			/* CCSPlayer::State_Transition(CSPlayerState) */
+			"State_Transition"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CCSPlayer16State_TransitionE13CSPlayerState"
+				"windows"	"\x55\x8B\xEC\x56\x8B\xF1\x8B\x86\x2A\x2A\x2A\x2A\x57\x8B\x7D\x2A\x85\xC0\x74\x2A\x83"
+				/* 55 8B EC 56 8B F1 8B 86 ? ? ? ? 57 8B 7D ? 85 C0 74 ? 83 */
+			}
+
+			/*
+			 * CDirector::SwapTeams(void)
+			 */
+			"SwapTeams"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector9SwapTeamsEv"
+				"windows"	"\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\x53\x56\x8B\xF1\x8B\x8E\x2A\x2A\x2A\x2A\x57\x89\x75\x2A\xC6\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B"
+				/* 55 8B EC 81 EC ? ? ? ? 53 56 8B F1 8B 8E ? ? ? ? 57 89 75 ? C6 ? ? ? E8 ? ? ? ? 8B */
+			}
+
+			/*
+			 * CDirector::AreTeamsFlipped(void)const
+			 *
+			 * got via CTerrorPlayer::UpdateTeamDesired and its String "CTerrorPlayer::UpdateTeamDesired error "
+			 *
+			 */
+			"AreTeamsFlipped"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK9CDirector15AreTeamsFlippedEv"
+				"windows"	"\x57\x8B\xF9\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75\x2A\xF7"
+				/* 57 8B F9 E8 ? ? ? ? 84 C0 75 ? F7 */
+			}
+
+			/*
+			 * CDirector::StartRematchVote(void)
+			 */
+			"StartRematchVote"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector16StartRematchVoteEv"
+				"windows"	"\x83\x2A\x2A\x56\x8B\xF1\x68\x2A\x2A\x2A\x2A\x6A\x2A\xB9\x2A\x2A\x2A\x2A\xC6"
+				/* 83 ? ? 56 8B F1 68 ? ? ? ? 6A ? B9 ? ? ? ? C6 */ // Found by SilverShot.
+				/* Search: "PZEndGame" one of two. */
+			}
+
+			/*
+			 * CDirector::FullRestart(void)
+			 */
+			"FullRestart"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector11FullRestartEv"
+				"windows"	"\x56\x8B\x2A\xC7\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xE8"
+				/* 56 8B ? C7 ? ? ? ? ? ? ? ? ? E8 ? ? ? ? E8 */ // Found by SilverShot.
+				/* Search "Staying on original map" for "CDirector::Restart". XRef - small function.*/
+			}
+
+			/*
+			 * CDirectorVersusMode::HideScoreboardNonVirtual(void)
+			 */
+			"HideVersusScoreboard"
+			{
+				"library"	"server"
+				"linux"		"@_ZN19CDirectorVersusMode24HideScoreboardNonVirtualEv"
+				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x74\x2A\x53\x8D"
+				/* 55 8B ? 83 ? ? E8 ? ? ? ? 84 ? 74 ? 53 8D */ // Found by SilverShot.
+				/* String "fullscreen_vs_results" */
+			}
+
+			/*
+			 * CDirectorScavengeMode::HideScoreboardNonVirtual(void)
+			 */
+			"HideScavengeScoreboard"
+			{
+				"library"	"server"
+				"linux"		"@_ZN21CDirectorScavengeMode24HideScoreboardNonVirtualEv"
+				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x74\x2A\x33\x2A\x88"
+				/* 55 8B ? 83 ? ? E8 ? ? ? ? 84 ? 74 ? 33 ? 88 */
+				/* Search: "fullscreen_scavenge_scoreboard" (smaller function) */
+			}
+
+			/*
+			 * CDirector::HideScoreboard(void)
+			 */
+			"HideScoreboard"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector14HideScoreboardEv"
+				"windows"	"\x56\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B"
+				/* 56 8B ? 8B ? ? ? ? ? E8 ? ? ? ? 8B ? ? ? ? ? E8 ? ? ? ? 8B */ // Found by SilverShot.
+				/* Search "message_box". Function with 1 string. Xref is target. */
+			}
+
+			/*
+			 * CDirector::RegisterForbiddenTarget(CBaseEntity *) - used to create Car Alarms
+			 */
+			"RegisterForbiddenTarget"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector23RegisterForbiddenTargetEP11CBaseEntity"
+				"windows"	"\x55\x8B\x2A\x53\x8B\x2A\x2A\x56\x8D\x2A\x2A\x03\x00\x00\x8B\x2A\x2A\x33"
+				/* Sig may break, using offsets to make unique */
+				/* 55 8B ? 53 8B ? ? 56 8D ? ? 03 00 00 8B ? ? 33 */ // Found by SilverShot.
+				/* Search: "prop %s at %.0f %.0f %0.f missing model" for "CBaseProp::Spawn". XRef called by "CBreakableProp::Spawn" (largest function) which calls target function */
+			}
+
+			/*
+			 * CDirector::UnregisterForbiddenTarget(CBaseEntity *) - used to remove Car Alarms
+			 */
+			"UnRegisterForbiddenTarget"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector25UnregisterForbiddenTargetEP11CBaseEntity"
+				"windows"	"\x55\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x81\x2A\x2A\x2A\x2A\x2A\x33\x2A\x85"
+				/* 55 8B ? 8B ? ? ? ? ? 81 ? ? ? ? ? 33 ? 85 */ // Found by SilverShot.
+				/* Search "triggered_car_alarm" for "CCarProp::InputSurvivorStandingOnCar". Called in here. */
+			}
+
+
+
+			// UNUSED / BROKEN
+
+			/*
+			 * CTerrorPlayer::OnSlammedSurvivor(CTerrorPlayer*, bool, bool) - Charger hit Survivor function call
+			 */
+			"OnSlammedSurvivor"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer17OnSlammedSurvivorEPS_bb"
+				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\xD9\x2A\x56\x57\x6A\x2A\x51\xD9\x2A\x2A\x68\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\xF3"
+				/* 55 8B ? 83 ? ? D9 ? 56 57 6A ? 51 D9 ? ? 68 ? ? ? ? 8B ? E8 ? ? ? ? F3 */ // Found by SilverShot.
+				/* Search "ChargerZombie.ImpactHard" */
+			}
+
+			/*
+			 * CTerrorPlayer::OnLeptOnSurvivor(CTerrorPlayer*) - Jockey hit Survivor function call
+			 */
+			"OnLeptOnSurvivor"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer16OnLeptOnSurvivorEPS_"
+				"windows"	"\x55\x8B\x2A\xA1\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x2A\x57\x8B\x2A\x0F\x85\x2A\x2A\x2A\x2A\x56"
+				/* 55 8B ? A1 ? ? ? ? 83 ? ? 83 ? ? ? 57 8B ? 0F 85 ? ? ? ? 56 */
+				/* Search: "JockeyZombie.Ride" */ // Found by SilverShot.
+			}
+
+			/*
+			 * CTerrorGameRules::ClearScavengeScores(bool)
+			 */
+			"GameRulesClearScavengeScores"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules19ClearScavengeScoresEb"
+				"windows"	""
+				/* */
+				/* found in CDirector::OnServerShutDown via String "ServerConfig.vdf" */
+			}
+
+			/*
+			 * CTerrorGameRules::ClearRoundDurations(void)
+			 */
+			"GameRulesClearRoundDurations"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules19ClearRoundDurationsEv"
+				"windows"	""
+				/*  */
+			}
+
+			/*
+			 * CDirectorVersusMode::ClearTeamScoresNonVirtual(bool)
+			 */
+			"DirectorClearTeamScores"
+			{
+				"library"	"server"
+				"linux"		"@_ZN19CDirectorVersusMode25ClearTeamScoresNonVirtualEb"
+				"windows"	""
+				/*  */
+			}
+
+			/*
+			 * CTerrorPlayer::Vocalize(char const *, float, float)
+			 * does not bypass new Valve Vocalize Lock
+			 */
+			"Vocalize"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer8VocalizeEPKcff"
+				"windows"	"\x55\x8B\x2A\x51\x0F\x57\x2A\xD9"
+				/* 55 8B ? 51 0F 57 ? D9 */ // Updated by SilverShot.
+				/* Search: "BoomerZombie.Groan", call below. */
+			}
+
+			/*
+			 * CTerrorGameRules::GetVersusCompletionPerCharacter(SurvivorCharacterType, int)const
+			 *
+			 * survivorCharacterType is likely int, 0-3 or 1-4
+			 * function can be found via the CDirectorVersusMode::UpdateMarkersReached(void) function, unique string "versus_marker_reached"
+			 */
+			"GetVersusCompletionPerCharacter"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK16CTerrorGameRules31GetVersusCompletionPerCharacterE21SurvivorCharacterTypei"
+				"windows"	"\x55\x8B\x2A\x8B\x2A\x2A\x56\x50\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x8D\x2A\x2A\x2A\x8B"
+				/* 55 8B ? 8B ? ? 56 50 8B ? E8 ? ? ? ? 8B ? ? 8D ? ? ? 8B */ // Updated by SilverShot.
+			}
+
+			/*
+			 * CTerrorGameRules::RecordInfectedDamageForVersus(int)
+			 *
+			 * Found using AreTeamsFlipped and NotifyNetWorkStateChanged - but im not sure its the right one
+			 */
+			"RecordInfectedDamageForVersus"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules29RecordInfectedDamageForVersusEi"
+				"windows"	"\x55\x8B\x2A\xF7\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56"
+				/* 55 8B ? F7 ? ? ? ? ? ? ? ? ? 53 56 */ // Found by SilverShot.
+				/* Search "victim_x" for "CTerrorGameRules::PopulateDeathEvent". Xref to vtable.
+				 * Function below is "CTerrorGameRules::TrackPlayerZombieDamage". This calls target.
+				 * Probably correct, Win looks different to Nix.
+				*/
+			}
+
+			/*
+			 * SurvivorBot::IsReachable(CBaseEntity *)const
+			 */
+			"IsReachable_Entity"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK11SurvivorBot11IsReachableEP11CBaseEntity"
+				"windows"	"\xD9\x2A\x2A\x2A\x2A\x2A\x56\x6A\x2A\x6A\x2A\x6A\x2A\x51\x8B\xF1\xD9"
+				/* D9 ? ? ? ? ? 56 6A ? 6A ? 6A ? 51 8B F1 D9 */
+			}
+
+			/*
+			 * CNavArea::IsBlocked(int, bool)const
+			 */
+			"CNavArea_IsBlocked"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK8CNavArea9IsBlockedEib"
+				"windows"	"\x55\x8B\x2A\x80\x2A\x2A\x2A\x74\x2A\x8B\x2A\x2A\x85\x2A\x79"
+				/* 55 8B ? 80 ? ? ? 74 ? 8B ? ? 85 ? 79 */ // Found by SilverShot.
+				/* Search: "BLOCKED_SURVIVOR". Above/below is target. */
+			}
+
+
+
+			// ====================================================================================================
+			// POINTERS
+			// ====================================================================================================
+			/* Find the Director/ZombieManager singleton classes */
+			"TheDirector"
+			{
+				"library"	"server"
+				"linux"		"@TheDirector"
+			}
+
+			/* Used solely to get the offset for TheDirector
+			 * CDirectorMusicBanks::OnRoundStart
+			 * Has unique string "Event.Reveal"
+			*/
+			"DirectorMusicBanks_OnRoundStart"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x56\x57\x8B\xF9\x8B\x0D\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x0F"
+				/* 55 8B EC 83 EC ? 56 57 8B F9 8B 0D ? ? ? ? E8 ? ? ? ? 84 C0 0F */
+			}
+
+			"TheZombieManager"
+			{
+				"library"	"server"
+				"linux"		"@TheZombieManager"
+			}
+
+			/*
+			 * InfoChangelevel::StartChangeLevel(Checkpoint const*)
+			 *
+			 * Used for finding ZombieManager on Windows
+			 * - String "Would change level, but not going to!\n" is unique to this function
+			 */
+			"StartChangeLevel"
+			{
+				"library"	"server"
+				"linux"		"@_ZN15InfoChangelevel16StartChangeLevelEPK10Checkpoint"
+				"windows"	"\x55\x8B\xEC\xA1\x2A\x2A\x2A\x2A\x83\x78\x30\x00\x56\x8B\xF1\x74"
+				/* 55 8B EC A1 ? ? ? ? 83 78 30 00 56 8B F1 74 */
+			}
+
+			"CVEngineServer_CreateFakeClient"
+			{
+				"library"	"engine"
+				"linux"		"@_ZN14CVEngineServer16CreateFakeClientEPKc"
+				"windows"	"\x55\x8B\x2A\x8B\x2A\x2A\x50\xB9\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x85\x2A\x75\x2A\x5D\xC2"
+				/* 55 8B ? 8B ? ? 50 B9 ? ? ? ? E8 ? ? ? ? 85 ? 75 ? 5D C2 */
+				/* Search: "cl_updaterate" - function with many strings together. Called by target. */
+			}
+
+			"g_pGameRules"
+			{
+				"library"	"server"
+				"linux"		"@g_pGameRules"
+			}
+
+			/* This signature sometimes has multiple matches, but this
+			 * does not matter as g_pGameRules is involved in all of them.
+			 * The same g_pGameRules offset applies to each match.
+			 *
+			 * Sometimes this block of bytes is at the beginning of the static
+			 * CreateGameRulesObject function and sometimes it is in the middle
+			 * of an entirely different function. This depends on the game.
+			 */
+			"CreateGameRulesObject"
+			{
+				"library"	"server"
+				"windows"	"\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9\x74\x2A\x8B\x01\x8B\x50\x2A\x6A\x01\xFF\xD2"
+				/* 8B 0D ? ? ? ? 85 C9 74 ? 8B 01 8B 50 ? 6A 01 FF D2 */
+			}
+
+			/* Find the WeaponInfo Database dictionary */
+			"WeaponInfoDatabase"
+			{
+				"library"	"server"
+				"linux"		"@_ZL20m_WeaponInfoDatabase"
+			}
+
+			/* We can find the WeaponInfoDatabase address in this sub on Windows
+			 *
+			 * Look for "scripts/%s", should be the ref that's furthest into a func.
+			 * OR
+			 * Look for unique string "scripts/weapon_manifest.txt", then look in same func for almost unique string "Expecting 'file', got %s\n", should be two calls before that string
+			*/
+			"ReadWeaponDataFromFileForSlot"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x8B\x45\x14\x53\x8B\x5D\x10"
+				/* 55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 33 C5 89 45 FC 8B 45 14 53 8B 5D 10 */
+			}
+
+			/* Find the Melee Weapon Info dictionary */
+			"CMeleeWeaponInfoStore"
+			{
+				"library"	"server"
+				"linux"		"@g_MeleeWeaponInfoStore"
+			}
+
+			/* We can find the MeleeWeaponInfoStore address in this sub on Windows
+			 *
+			 * "NULL Ent '%s' in GiveNamedItem!\n" is unique in this function
+			 * There are at least 3 calls using the g_MeleeWeaponInfoStore here--use some brain for offset.
+			 */
+			"GiveNamedItem"
+			{
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x8B\x45\x14\x53\x8B\x5D\x08"
+					/* 55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 33 C5 89 45 FC 8B 45 14 53 8B 5D 08 */
+			}
+
+			"TheNavMesh"
+			{
+				"library"	"server"
+				"linux"		"@TheNavMesh"
+			}
+
+			/* Used solely to get the offset for TheNavMesh
+			 * Look for string "Navigation map '%s' saved.\n" in a short function
+			*/
+			"CommandNavSave"
+			{
+				"library"	"server"
+				"windows"	"\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x0D\x2A\x2A\x2A\x2A\x8B\x01\x8B\x50\x2A\xFF\xD2\x8B\x0D\x2A\x2A\x2A\x2A\x84\xC0"
+				/* E8 ? ? ? ? 84 C0 74 ? 8B 0D ? ? ? ? 8B 01 8B 50 ? FF D2 8B 0D ? ? ? ? 84 C0 */
+			}
+
+
+
+			// ====================================================================================================
+			// ADDONS DISABLER
+			// ====================================================================================================
+			/*
+			* CBaseServer::FillServerInfo(SVC_ServerInfo *)
+			*/
+			"FillServerInfo"
+			{
+				"library"	"engine"
+				"linux"		"@_ZN11CBaseServer14FillServerInfoER14SVC_ServerInfo"
+				"windows"	"\x55\x8B\xEC\x53\x56\x57\x68\x04\x01\x00\x00"
+				/* 55 8B EC 53 56 57 68 04 01 00 00 */
+				/* Search: "Game/mode" - second entry is target */
+			}
+
+			/*
+			* CBaseServer::GetClient(int)
+			*/
+			"CBaseServer_GetClient"
+			{
+				"library"	"engine"
+				"linux"		"@_ZN11CBaseServer9GetClientEi"
+				"windows"	"\x55\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x8B\x2A\x2A\x85\x2A\x74"
+				/* 55 8B ? 8B ? ? ? ? ? 8B ? ? 8B ? ? 85 ? 74 */
+				/* Vtable */
+			}
+
+			/*
+			* Instruction where CBaseServer::FillServerInfo saves the result of the "Game/vanilla" check to member variable.
+			* Should be near instructions filling member variables with "L" or "W"
+			* Linux:
+                        * mov     [esi+55h], al
+			* mov     dword ptr [esp], 'L' ; c
+			* Windows:
+			* MOV        byte ptr [EDI + 0x5d],BL
+        		* MOV        dword ptr [EDI + 0x8c],DAT_10678ec8
+			* MOV        dword ptr [EDI + 0x90],DAT_10678dc0
+        		* MOV        byte ptr [EDI + 0x5f],'W'
+			*/
+			"VanillaModeOffset"
+			{
+				"library"	"engine"
+				"linux"		"\x88\x46\x55\xC7\x04\x24\x4C"
+				/* 88 46 55 C7 04 24 4C */
+				"windows"	"\x88\x5F\x5D\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xC6\x47\x5F\x57"
+				/* 88 5f 5d .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. c6 47 5f 57 */
+			}
+
+
+
+			// ====================================================================================================
+			// PLAYER SLOTS PATCHING - UNUSED
+			// ====================================================================================================
+			/*
+			* CTerrorGameRules::GetMaxHumanPlayers(void)
+			* We just override the return value to our own
+			*
+			* This method is called for max players when viewing server info
+			* Overriding this on Linux changes the server browser maxplayers
+			*
+			* On Windows overriding it doesn't fix the server browser,
+			* but it does break scavenge mode (like the map doesn't support scavenge)
+			*
+			* Find via string "playercontrolledzombies", unique in Linux, inlined a few times in Windows
+			* look for an inline that is very short and returns either 8 or 4 as a result
+			* Commented out since the note above suggests it breaks scavenge?
+			* Since it is inlined, its signature will look a LOT like CTerrorGameRules::HasPlayerControlledZombies()
+			* this sig is probably also excessively wild carded (lots of very short local jumps that are probably safe)
+			*/
+			"GetMaxHumanPlayers"
+			{
+				"library" "server"
+				"linux" "@_ZNK16CTerrorGameRules18GetMaxHumanPlayersEv"
+				// "windows" "\xF7\x05\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x74\x2A\xB8\x2A\x2A\x2A\x2A\xEB\x2A\xA1\x2A\x2A\x2A\x2A\x8B\x40\x2A\x85\xC0\x75\x2A\xB8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x11\x50\x8B\x2A\x2A\xFF\xD0\x85\xC0\x74\x2A\x6A\x00\x68\x2A\x2A\x2A\x2A\x8B\xC8\xE8\x2A\x2A\x2A\x2A\x85\xC0\xB8"
+				/* F7 05 ? ? ? ? ? ? ? ? 74 ? B8 ? ? ? ? EB ? A1 ? ? ? ? 8B 40 ? 85 C0 75 ? B8 ? ? ? ? 8B ? ? ? ? ? 8B 11 50 8B ? ? FF D0 85 C0 74 ? 6A 00 68 ? ? ? ? 8B C8 E8 ? ? ? ? 85 C0 B8 */
+			}
+
+			/*
+			* Total Number of Players Supported (Steam Group/Lobby)
+			* Currently disabled - SourceMod unable to look up other libraries.
+			*
+				"GetTotalNumPlayersSupported"
+				{
+					"library"	"matchmaking_ds"
+					"linux"		"@_ZN11CMatchTitle27GetTotalNumPlayersSupportedEv"
+				}
+			*/
+
+			/* CServerGameClients::GetPlayerLimits(int& , int&, int&)
+			* Sig is still broken, cannot find in Windows
+			*/
+			"GetPlayerLimits"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK18CServerGameClients15GetPlayerLimitsERiS0_S0_"
+				// "windows"	"\x8B\x44\x24\x04\x8B\x4C\x24\x08\xC7\x00\x2A\x2A\x2A\x2A\xC7\x01\x2A\x2A\x2A\x2A\x8B\x10"
+					/* 8B 44 24 04 8B 4C 24 08 C7 00 ? ? ? ? C7 01 ? ? ? ? 8B 10 */
+			}
+
+			/*
+			* int CBaseServer::GetMasterServerPlayerCounts(int &, int &, int &)
+			*
+			* Used to override server browser maxplayers reporting (Windows)
+			* Search for string: "increased_maxplayers", call is just before the string
+			*/
+			"GetMasterServerPlayerCounts"
+			{
+				"library"	"engine"
+				"linux"		"@_ZN11CBaseServer27GetMasterServerPlayerCountsERiS0_S0_"
+				"windows"	"\x55\x8B\xEC\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x8B\x4D\x2A\x89\x01\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9\x74"
+				/* 55 8B EC 56 8B F1 E8 ? ? ? ? 8B 4D ? 89 01 8B 0D ? ? ? ? 85 C9 74 */
+			}
+
+			/* Not an actual function,
+			 * this is inside CBaseServer::ConnectClient (a jz instruction)
+			 * use it to remove skippable code when sv_allow_lobby_connect 0
+			*/
+			"ConnectClientLobbyCheck"
+			{
+				/* look for jz between "#Valve_Reject_Server_Full" and "#Valve_Reject_Bad_Password" in Windows
+				 * On Linux, this points directy at the cmp for "#Valve_Reject_Server_Full" instead of the jz for the lobby
+				 * For 2.1.2.5 this offset was ebx+17Ch on Linux and esi+180h on Windows */
+				"library"	"engine"
+				"linux"		"\x3B\xB3\x2A\x2A\x2A\x2A\x0F\x8E\x2A\x2A\x2A\x2A\x8B\x03\xC7\x44\x24\x08\x2A\x2A\x2A\x2A\x89"
+				/* 3B B3 ? ? ? ? 0F 8E ? ? ? ? 8B 03 C7 44 24 08 ? ? ? ? 89 */
+
+				"windows"	"\x74\x2A\x8B\x55\x2A\x8B\x06\x8B\x7A\x2A\x8B\x50"
+				/*74 ? 8B 55 ? 8B 06 8B 7A ? 8B 50 */
+			}
+
+			/* Not an actual function,
+				This rejects players when there are all full human players
+
+				jl just before string "Human player limit reached (%d/%d)"
+
+				deprecated on linux: This function checks GetMaxHumanPlayers
+					on linux, so patching this to an unconditional jump
+					removes a check on maxplayers.
+			*/
+			"HumanPlayerLimitReached"
+			{
+				"library"	"server"
+				// "linux"		"\x7E\x2A\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x2A"
+				/* 7E ? 8B ? ? 89 ? ? ? 8B ? ? 89 ? ? ? 8B ? ? 89 ? ? ? 8B ? ? 89 ? ? ? 8B ? ? 89 ? ? ? 8B ? ? */
+				"windows" "\x7C\x2A\x8B\x4D\x2A\x8B\x55\x2A\x50\x57\x68"
+				/* 7C ? 8B 4D ? 8B 55 ? 50 57 68 */
+			}
+			// ====================================================================================================
+
+
+
+			// ====================================================================================================
+			// UNUSED SIGNATURES
+			// ====================================================================================================
+			/*
+			 * CDirectorScavengeMode::OnBeginRoundSetupTime
+			 * used to reset the setup timer during scavenge mode
+			 * has one of five references to string "ready_countdown"
+			 */
+			"CDirectorScavengeMode_OnBeginRoundSetupTime"
+			{
+				"library"	"server"
+				"linux"		"@_ZN21CDirectorScavengeMode21OnBeginRoundSetupTimeEv"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x10\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\xF3"
+				/* 55 8B EC 83 EC 10 56 8B F1 E8 ? ? ? ? 84 C0 74 ? F3 */
+			}
+
+			/* CTerrorGameRules::ResetRoundNumber
+			 * used to reset the round number during scavenge mode
+ 			 * Search for unique string "singlechapter"
+			 * -> has two xref from same function, CTerrorGameRules::IsSingleChapterMode()
+			 * -> has two xref, one is CRestartGameIssue::ExecuteCommand() (exclude the other, CServerGameDLL::ServerHibernationUpdate(), which has string "FCVAR_NEVER_AS_STRING")
+			 * -> calls CTerrorGameRules::GetMissionFirstMap (TODO more detail on where this is)
+			 * -> xref from CDirector::Rematch
+			 * -> CTerrorGameRules::ResetRoundNumber is called right before CTerrorGameRules::IsVersusMode
+			 */
+			"CTerrorGameRules_ResetRoundNumber"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules16ResetRoundNumberEv"
+				"windows"	"\x56\x8B\xF1\x83\xBE\x2A\x2A\x2A\x2A\x00\x74\x2A\xE8\x2A\x2A\x2A\x2A\xC7\x86\x2A\x2A\x2A\x2A\x00\x00\x00\x00\x5E\xC3"
+				/* 56 8B F1 83 BE ? ? ? ? 00 74 ? E8 ? ? ? ? C7 86 ? ? ? ? 00 00 00 00 5E C3 */
+			}
+
+			/* CTerrorGameRules::SetRoundEndTime(float)
+			 * used to freeze the scavenge game clock
+			 * start with unique string "scavenge_round_halftime" in function CDirectorScavengeMode::EndScavengeRound
+			 * -> first call in CDirectorScavengeMode::EndScavengeRound
+ 			 */
+			"CTerrorGameRules_SetRoundEndTime"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules15SetRoundEndTimeEf"
+				"windows"	"\x55\x8B\xEC\x56\x8B\xF1\xF3\x0F\x10\x86\x2A\x2A\x2A\x2A\x0F\x2E\x45\x08\x9F\x57"
+				/* 55 8B EC 56 8B F1 F3 0F 10 86 ? ? ? ? 0F 2E 45 08 9F 57 */
+			}
+
+			/* CDirector::AreWanderersAllowed(void)
+			* Used to get offset for CDirectorScavengeMode
+			*	*(director + offset) == ptr to CDirectorScavengeMode
+			* has unique string "AlwaysAllowWanderers"
+ 			*/
+			"AreWanderersAllowed"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK9CDirector19AreWanderersAllowedEv"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x56\x8B\xF1\x8B\x8E\x2A\x2A\x2A\x2A\x8D\x45\xFF"
+				/* 55 8B EC 83 EC ? 56 8B F1 8B 8E ? ? ? ? 8D 45 FF */
+			}
+
+			/*
+			* CDirectorVersusMode::OnVersusRoundStarted()
+			* Unused? Nothing in source accesses this signature
+			* Last call in CDirector::OnFirstSurvivorLeftSafeArea()
+			* Also has string "versus_round_start"
+			*/
+			"OnVersusRoundStarted"
+			{
+				"library" 	"server"
+				"linux" 	"@_ZN19CDirectorVersusMode20OnVersusRoundStartedEv"
+				"windows" 	"\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9\x74\x2A\xA1\x2A\x2A\x2A\x2A\xD9\x2A\x2A\x51\xD9\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B"
+				/* 8B 0D ? ? ? ? 85 C9 74 ? A1 ? ? ? ? D9 ? ? 51 D9 ? ? E8 ? ? ? ? 8B */
+			}
+
+			/*
+			 * CDirector::IsFinaleEscapeInProgress(void)
+			 * unique string "#L4D_idle_spectator" in CTerrorPlayer::PreThink()
+			 * CDirector::IsFinaleEscapeInProgress is a couple calls before the string, and a couple calls after CountdownTimer::Now
+			 */
+			"IsFinaleEscapeInProgress"
+			{
+				"library" 	"server"
+				"linux" 	"@_ZNK9CDirector24IsFinaleEscapeInProgressEv"
+				"windows" 	"\x8B\x81\x2A\x2A\x2A\x2A\x83\x38\x2A\x75\x03\x32\xC0\xC3\x33\xC0\x83\xB9\x2A\x2A\x2A\x2A\x02\x0F\x94\xC0\xC3"
+				/* 8B 81 ? ? ? ? 83 38 ? 75 03 32 C0 C3 33 C0 83 B9 ? ? ? ? 02 0F 94 C0 C3 */
+			}
+
+			/*
+			 * CTerrorPlayer::CanBecomeGhost(bool areSpawnsDisabled)
+			 * unique string "ghost_spawn_time"
+			 */
+			"CanBecomeGhost"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer14CanBecomeGhostEb"
+				"windows"	"\x53\x8B\xDC\x83\xEC\x2A\x83\xE4\xF0\x83\xC4\x2A\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x83\xEC\x2A\x56\x57\x8B\xF1\xE8\x0E"
+				/* 53 8B DC 83 EC ? 83 E4 F0 83 C4 ? 55 8B 6B 04 89 6C 24 04 8B EC 83 EC ? 56 57 8B F1 E8 0E */
+			}
+
+			/*
+			 * CDirector::IsFinale(void)const
+			 */
+			"IsFinale"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK9CDirector8IsFinaleEv"
+				"windows"	"\x8B\x81\x2A\x2A\x2A\x2A\x33\xC9\x83\x38\x2A\x0F\x95\xC0\xC3"
+				/* 8B 81 ? ? ? ? 33 C9 83 38 ? 0F 95 C0 C3 */
+			}
+
+			/*
+			 * GetDifficulty(void)
+			 */
+			"GetDifficulty"
+			{
+				"library"	"server"
+				"linux"		"@_Z13GetDifficultyv"
+				"windows" 	"\xA1\x2A\x48\x7A\x10\xC3"
+				/* A1 ? 48 7A 10 C3 */
+			}
+
+			/*
+			 *	CTerrorGameRules::GetMissionCurrentMap(KeyValues **)
+			 *
+			 * - Look for string "chapter" (unique on Windows only) in CDirector:OnMapLoaded.
+			 * - Function called right before that with 0 as arg.
+			 * NOTE/WARNING: This function is incredibly non-unique!!!! Replace with a native implementation!!
+			 */
+			"GetMissionCurrentMap"
+			{
+				"library"	"server"
+				"linux" 	"@_ZN16CTerrorGameRules20GetMissionCurrentMapEPP9KeyValues"
+				"windows"	"\x55\x8B\xEC\x56\x57\x8B\x7D\x08\x85\xFF\x74\x06\xC7\x07\x00\x00\x00\x00\x8B\x0D\x2A\x2A\x2A\x2A\x8B\x01\x8B\x50\x28\xFF\xD2\x8B\x10\x8B\xC8\x8B\x42\x04\x6A\x00\xFF\xD0\x8B\xF0\x85\xF6\x75\x04\x5F\x5E\x5D\xC3\x8B\x0D\x2A\x2A\x2A\x2A\x8B\x11\x8B\x42\x08\x57\x56\xFF\xD0\x8B"
+				/*
+				 * 68 byte signature. Fuck me.
+				 * 55 8B EC 56 57 8B 7D 08 85 FF 74 06 C7 07 00 00 00 00 8B 0D ? ? ? ? 8B 01 8B 50 28 FF D2 8B 10 8B C8 8B 42 04 6A 00 FF D0 8B F0 85 F6 75 04 5F 5E 5D C3 8B 0D ? ? ? ? 8B 11 8B 42 08 57 56 FF D0 8B
+				 */
+			}
+
+			/*
+			* CBasePlayer::WaterMove(void)
+			*/
+			"WaterMove"
+			{
+				"library"	"server"
+				"linux"		"@_ZN11CBasePlayer9WaterMoveEv"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x60\x56\x8B\xF1\x80\xBE\x72\x01\x00\x00\x08"
+				/* 55 8B EC 83 EC 60 56 8B F1 80 BE 72 01 00 00 08 */
+			}
+
+			/*
+			* KeyValues *CTerrorGameRules::GetMissionInfo(void)
+			*/
+			"CTerrorGameRules__GetMissionInfo"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules14GetMissionInfoEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x01\x8B\x50\x28\x56\xFF\xD2\x8B\x10\x8B\xC8\x8B\x42"
+				/* 2A 2A 2A 2A 2A 2A 2A 2A 2A 2A 8B 01 8B 50 28 56 FF D2 8B 10 8B C8 8B 42 */
+			}
+
+			/*
+			 * InfectedShoved::OnShoved(InfectedShoved *this, Infected *, CBaseEntity *)
+			 * Have to hook each common infected to enable. Feature not planned.
+			 */
+			"InfectedShoved"
+			{
+				"library"	"server"
+				"linux"		"@_ZN14InfectedShoved8OnShovedEP8InfectedP11CBaseEntity"
+				"windows"	""
+				/*  */
+			}
+
+			/*
+			 * CBaseServer::SetReservationCookie(uint64_t, char*, va_list)
+			 * - clear the reservation by setting a cookie of 0
+			 */
+			"SetReservationCookie"
+			{
+				"library"	"engine"
+				"linux"		"@_ZN11CBaseServer20SetReservationCookieEyPKcz"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x8B\x2A\x2A\x56\x8B\x2A\x2A\x57\x8B\x2A\x2A\x3B"
+				/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 8B ? ? 56 8B ? ? 57 8B ? ? 3B */
+				// Wildcarded so compatible with l4dtoolz.
+				// "windows"	"\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x8B\x2A\x2A\x56\x8B\x2A\x2A\x57\x8B\x2A\x2A\x3B"
+				/* 55 8B ? 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 8B ? ? 56 8B ? ? 57 8B ? ? 3B */
+			}
+
+			/*
+			 * CTerrorPlayer::TakeOverBot
+			 * unique string "[TAKEOVER]: %s (%d) possessed %s"
+			 */
+			"TakeOverBot"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer11TakeOverBotEb"
+				"windows"	"\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x56\x8D\x85"
+				/* 55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 33 C5 89 45 FC 53 56 8D 85 */
+			}
+
+			/*
+			 * SurvivorBot::SetHumanSpectator(CTerrorPlayer*)
+			 * Very similar to BossZombiePlayerBot::SetHumanSpectator()
+			 * SurvivorBot version has 5 xref (one of them is CTerrorPlayer::TakeOverBot), BossZombie has just 1 (CTerrorPlayer::TakeOverBot)
+			 */
+			"SetHumanSpec"
+			{
+				"library"	"server"
+				"linux"		"@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
+				"windows"	"\x55\x8B\xEC\x56\x8B\xF1\x83\xBE\x2A\x2A\x2A\x2A\x00\x7E\x07\x32\xC0\x5E\x5D\xC2\x04\x00\x8B\x0D"
+				/* 55 8B EC 56 8B F1 83 BE ? ? ? ? 00 7E 07 32 C0 5E 5D C2 04 00 8B 0D */
+			}
+
+			/*
+			* CBaseServer::GetClient(int)
+			*/
+			"CBaseClient_GetNetworkIDString"
+			{
+				"library"	"engine"
+				"linux"		"@_ZNK11CBaseClient18GetNetworkIDStringEv"
+				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x8B\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\xFF\x2A\x84"
+				/* 55 8B ? 83 ? ? A1 ? ? ? ? 33 ? 89 ? ? 56 8B ? 8B ? 8B ? ? ? ? ? FF ? 84 */
+				/* Search: "STEAM_%u:%u:%u" - called by target that contains "BOT". */
+			}
+		}
+	}
+}

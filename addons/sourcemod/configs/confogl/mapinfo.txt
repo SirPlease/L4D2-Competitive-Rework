@@ -1554,4 +1554,20 @@
 		"tank_ban_flow_min" "0"
 		"tank_ban_flow_max" "40"
 	}
+	"c14m1_junkyard"
+	{
+		"start_point"		"-4255.190918 -10576.644531 -267.087708"
+		"start_dist"		"50.000000"
+		"start_extra_dist"		"500.000000"
+		"end_point"		"-2992.162842 10403.122070 -92.863403"
+		"end_dist"		"350.000000"
+	}
+	"c14m2_lighthouse"
+	{
+		"start_point"		"2369.292969 -986.074829 483.136597"
+		"start_dist"		"50.000000"
+		"start_extra_dist"		"350.000000"
+		"end_point"		"-4318.968750 3638.318115 872.031250"
+		"end_dist"		"500.000000"
+	}
 }
