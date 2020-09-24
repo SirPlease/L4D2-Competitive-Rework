@@ -369,6 +369,10 @@
 					{
 						"type"	"objectptr"
 					}
+					"a5"
+					{
+						"type"	"objectptr"
+					}
 				}
 			}
 
