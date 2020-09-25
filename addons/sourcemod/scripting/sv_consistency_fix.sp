@@ -2,10 +2,8 @@
 #include <sourcemod>
 #include <colors>
 
-#define PLUGIN_VERSION "1.3.1"
+#define PLUGIN_VERSION "1.3"
 #define PLUGIN_URL "http://step.l4dnation.com/"
-
-new bool:bTimerCheater[MAXPLAYERS + 1];
 
 //Convars
 new Handle:hCvarServerMessage;
@@ -37,15 +35,12 @@ public OnPluginStart()
 
 public Action:Event_PlayerConnectFull(Handle:event, const String:name[], bool:dontBroadcast)
 {
-	CreateTimer(0.1, PrintWhitelist, GetEventInt(event, "userid"));
+	CreateTimer(0.1, PrintWhitelist, GetClientOfUserId(GetEventInt(event, "userid")));
 	return Plugin_Continue;
 }
 
-public Action:PrintWhitelist(Handle:timer, any:userid)
+public Action:PrintWhitelist(Handle:timer, any:client)
 {
-	new client = GetClientOfUserId(userid);
-	if (client == 0 || !IsClientInGame(client) || IsFakeClient(client)) return;
-
 	new String:sMessage[128];
 	GetConVarString(hCvarServerMessage, sMessage, sizeof(sMessage));
 
@@ -95,33 +90,15 @@ public ConsistencyCheck(client)
 			if (IsClientInGame(i) && !IsFakeClient(i))
 			{
 				ClientCommand(i, "cl_consistencycheck");
-				bTimerCheater[client] = true;
-				CreateTimer(1.0, CheaterBoi, client);
 			}
 		}
 		return;
 	}
 
 	ClientCommand(client, "cl_consistencycheck");
-	bTimerCheater[client] = true;
-	CreateTimer(1.0, CheaterBoi, client);
-}
-
-public Action:CheaterBoi(Handle:timer, any:client)
-{
-	bTimerCheater[client] = false;
 }
 
 public OnClientConnected(client)
 {
 	ClientCommand(client, "cl_consistencycheck");
-}
-
-public OnClientDisconnect(client)
-{
-	if (bTimerCheater[client])
-	{
-		CPrintToChatAll("{blue}[{default}SoundM{blue}]{default}: Modified Sound Files detected on {olive}%N", client);
-		bTimerCheater[client] = false;
-	}
 }
