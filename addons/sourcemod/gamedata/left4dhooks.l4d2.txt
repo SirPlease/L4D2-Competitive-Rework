@@ -901,17 +901,46 @@
 
 
 
+			// ADDONS ECLIPSE
+			/*
+				View source for more details, this method slightly differs from left4downtown extension but worked before Last Stand update.
+				Still not entirely sure why it worked or how. This offsets might currently be wrong but in testing worked 3/4 times.
+			*/
+
+			// Network slot offset
+			"AddonEclipse1"
+			{
+				"windows"	"48"
+				"linux"		"48"
+			}
+
+			// Client offset
+			"AddonEclipse2"
+			{
+				"windows"	"48"
+				"linux"		"48"
+			}
+
+			// Patch offset
+			"AddonEclipse3"
+			{
+				"windows"	"85"
+				"linux"		"85"
+			}
+			
+
+
 			// VIRTUAL CALLS
 			"CBaseServer_GetClient"
 			{
-				"linux"		"7"
 				"windows"	"6"
+				"linux"		"7"
 			}
 
 			"DoAnimationEvent"
 			{
-				"windows"	"509"
-				"linux"		"510"
+				"windows"	"510"
+				"linux"		"511"
 			}
 
 			/*
@@ -919,8 +948,8 @@
 			*/
 			"CTerrorPlayer::Deafen"
 			{
-				"windows"	"516"
-				"linux"		"517"
+				"windows"	"517"
+				"linux"		"518"
 			}
 
 			/*
@@ -928,8 +957,8 @@
 			*/
 			"CTerrorPlayer::GetLastKnownArea"
 			{
-				"windows"	"329"
-				"linux"		"330"
+				"windows"	"330"
+				"linux"		"331"
 			}
 
 
@@ -1445,8 +1474,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CDirector14ForceNextStageEv"
-				"windows"	"\x8B\x2A\x88\x05\x00\x00\xE9\x2A\x89\x01\x00"
-				/* 8B ? 88 05 00 00 E9 ? 89 01 00 */
+				"windows"	"\x8B\x2A\x88\x05\x00\x00\xE9\x2A\x8C\x01\x00"
+				/* 8B ? 88 05 00 00 E9 ? 8C 01 00 */
 				/* Search "ForceNextStage" call below */
 			}
 
@@ -1736,8 +1765,9 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CDirector27OnFirstSurvivorLeftSafeAreaEP13CTerrorPlayer"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x56\x57\x8B\x7D\x2A\x8B\xF1\x8B\x8E\x2A\x2A\x2A\x2A\x57\xE8"
-				/* 55 8B EC 83 EC ? 56 57 8B 7D ? 8B F1 8B 8E ? ? ? ? 57 E8 */
+				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\x53\x8B\x2A\x2A\x57\x8B\x2A\x8B"
+				/* 55 8B ? 83 ? ? 53 8B ? ? 57 8B ? 8B */
+				/* Search: "player_left_start_area" */
 			}
 
 			/*
@@ -2838,7 +2868,7 @@
 				"linux"		"\x88\x46\x55\xC7\x04\x24\x4C"
 				/* 88 46 55 C7 04 24 4C */
 				"windows"	"\x88\x5F\x5D\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xC6\x47\x5F\x57"
-				/* 88 5f 5d .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. .. c6 47 5f 57 */
+				/* 88 5F 5D ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? C6 47 5F 57 */
 			}
 
 
