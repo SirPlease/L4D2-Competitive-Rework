@@ -20,7 +20,6 @@ public OnPluginStart()
     new LungeActivateAbilityOffset = GameConfGetOffset(gameConf, "CLunge_ActivateAbility");
     
     hCLunge_ActivateAbility = DHookCreate(LungeActivateAbilityOffset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, CLunge_ActivateAbility);
-    DHookAddEntityListener(ListenType_Created, OnEntityCreated);
 
     HookEvent("round_start", OnRoundStart, EventHookMode_PostNoCopy);
     HookEvent("player_jump", OnPlayerJump);

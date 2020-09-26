@@ -23,8 +23,6 @@ public OnPluginStart()
 		ThisPointer_Ignore, 
 		CBaseAbility_OnOwnerTakeDamage);
 	DHookAddParam(hCBaseAbility_OnOwnerTakeDamage, HookParamType_ObjectPtr);
-	
-	DHookAddEntityListener(ListenType_Created, OnEntityCreated);
 }
 
 public OnEntityCreated(entity, const String:classname[])
