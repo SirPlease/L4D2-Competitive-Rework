@@ -1,44 +1,26 @@
-/*
-	SourcePawn is Copyright (C) 2006-2008 AlliedModders LLC.  All rights reserved.
-	SourceMod is Copyright (C) 2006-2008 AlliedModders LLC.  All rights reserved.
-	Pawn and SMALL are Copyright (C) 1997-2008 ITB CompuPhase.
-	Source is Copyright (C) Valve Corporation.
-	All trademarks are property of their respective owners.
-
-	This program is free software: you can redistribute it and/or modify it
-	under the terms of the GNU General Public License as published by the
-	Free Software Foundation, either version 3 of the License, or (at your
-	option) any later version.
-
-	This program is distributed in the hope that it will be useful, but
-	WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	General Public License for more details.
-
-	You should have received a copy of the GNU General Public License along
-	with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
 #pragma semicolon 1
 
 #include <sourcemod>
 #include <sdkhooks>
 #include <left4dhooks>
 
+ 
 #define MAX_ATTRS           21
 #define TANK_ZOMBIE_CLASS   8
 
+ 
 public Plugin:myinfo =
 {
     name        = "L4D2 Weapon Attributes",
-    author      = "Jahze, Stabby",
-    version     = "1.2a",
+    author      = "Jahze",
+    version     = "1.3",
     description = "Allowing tweaking of the attributes of all weapons"
 };
 
 new L4D2IntWeaponAttributes:iIntWeaponAttributes[3] = {
     L4D2IWA_Damage,
     L4D2IWA_Bullets,
-    L4D2IWA_ClipSize,
+    L4D2IWA_ClipSize
 };
 
 new L4D2FloatWeaponAttributes:iFloatWeaponAttributes[17] = {
@@ -57,10 +39,11 @@ new L4D2FloatWeaponAttributes:iFloatWeaponAttributes[17] = {
     L4D2FWA_Range,
     L4D2FWA_RangeModifier,
     L4D2FWA_CycleTime,
-    L4D2FWA_PelletScatterPitch,	 	
-    L4D2FWA_PelletScatterYaw,
+    L4D2FWA_PelletScatterPitch,     
+    L4D2FWA_PelletScatterYaw
 };
 
+ 
 new String:sWeaponAttrNames[MAX_ATTRS][32] = {
     "Damage",
     "Bullets",
@@ -85,6 +68,7 @@ new String:sWeaponAttrNames[MAX_ATTRS][32] = {
     "Tank damage multiplier"
 };
 
+ 
 new String:sWeaponAttrShortName[MAX_ATTRS][32] = {
     "damage",
     "bullets",
@@ -109,30 +93,34 @@ new String:sWeaponAttrShortName[MAX_ATTRS][32] = {
     "tankdamagemult"
 };
 
+ 
 new bool:bLateLoad;
 
+ 
 new Handle:hTankDamageKVs;
-new Handle:hWeaponDefaultAttsTrie[MAX_ATTRS];
-new Handle:hWeaponNamesInTrie[MAX_ATTRS];
 
+new Handle:hVanillaAttributesWeapon;
+new Handle:hVanillaAttributesAttribute;
+new Handle:hVanillaAttributesValue;
+ 
 public APLRes:AskPluginLoad2( Handle:plugin, bool:late, String:error[], errMax ) {
     bLateLoad = late;
     return APLRes_Success;
 }
 
+ 
 public OnPluginStart() {
     RegServerCmd("sm_weapon", Weapon);
     RegConsoleCmd("sm_weapon_attributes", WeaponAttributes);
 
+    hVanillaAttributesWeapon = CreateArray(32);
+    hVanillaAttributesAttribute = CreateArray();
+    hVanillaAttributesValue = CreateArray();
     hTankDamageKVs = CreateKeyValues("DamageVsTank");
 
-    for ( new i = 0; i < MAX_ATTRS; i++ ) {
-        hWeaponDefaultAttsTrie[i] = INVALID_HANDLE;
-        hWeaponNamesInTrie[i] = INVALID_HANDLE;
-    }
-
+ 
     if ( bLateLoad ) {
-        for ( new i = 1; i <= MaxClients; i++ ) {
+        for ( new i = 1; i < MaxClients+1; i++ ) {
             if ( IsClientInGame(i) ) {
                 SDKHook(i, SDKHook_OnTakeDamage, DamageBuffVsTank);
             }
@@ -140,37 +128,36 @@ public OnPluginStart() {
     }
 }
 
+ 
 public OnClientPutInServer( client ) {
     SDKHook(client, SDKHook_OnTakeDamage, DamageBuffVsTank);
 }
 
+ 
 public OnPluginEnd() {
     if ( hTankDamageKVs != INVALID_HANDLE ) {
         CloseHandle(hTankDamageKVs);
         hTankDamageKVs = INVALID_HANDLE;
     }
-
-    decl i, j, String:sWeaponName[32], buf, Float:fub;
-    for ( i = 0; i < 3; i++ ) {
-        if (hWeaponDefaultAttsTrie[i] != INVALID_HANDLE) {
-            for ( j = 0; j < GetArraySize(hWeaponNamesInTrie[i]); j++ ) {
-                GetArrayString(hWeaponNamesInTrie[i], j, sWeaponName, 32);
-                GetTrieValue(hWeaponDefaultAttsTrie[i], sWeaponName, buf);
-                SetWeaponAttributeInt(sWeaponName, i, buf);
-            }
+    new iSize = GetArraySize(hVanillaAttributesWeapon);
+    new iAtIndex;
+    decl String:sBuffer[32];
+    for (new i = 0; i < iSize; i++)
+    {
+        GetArrayString(hVanillaAttributesWeapon, i, sBuffer, 32);
+        iAtIndex = GetArrayCell(hVanillaAttributesAttribute, i);
+        if (iAtIndex < 3)
+        {
+            L4D2_SetIntWeaponAttribute(sBuffer, iIntWeaponAttributes[iAtIndex], GetArrayCell(hVanillaAttributesValue, i));
         }
-    }
-    for ( i = 0; i < MAX_ATTRS - 1; i++ ) {
-        if (hWeaponDefaultAttsTrie[i] != INVALID_HANDLE) {
-            for ( j = 0; j < GetArraySize(hWeaponNamesInTrie[i]); j++ ) {
-                GetArrayString(hWeaponNamesInTrie[i], j, sWeaponName, 32);
-                GetTrieValue(hWeaponDefaultAttsTrie[i], sWeaponName, fub);
-                SetWeaponAttributeFloat(sWeaponName, i, fub);
-            }
+        else if (iAtIndex < MAX_ATTRS - 1)
+        {
+            L4D2_SetFloatWeaponAttribute(sBuffer, iFloatWeaponAttributes[iAtIndex - 3], GetArrayCell(hVanillaAttributesValue, i));
         }
     }
 }
 
+ 
 GetWeaponAttributeIndex( String:sAttrName[128] ) {
     for ( new i = 0; i < MAX_ATTRS; i++ ) {
         if ( StrEqual(sAttrName, sWeaponAttrShortName[i]) ) {
@@ -178,25 +165,57 @@ GetWeaponAttributeIndex( String:sAttrName[128] ) {
         }
     }
 
+ 
     return -1;
 }
 
+ 
 GetWeaponAttributeInt( const String:sWeaponName[], idx ) {
     return L4D2_GetIntWeaponAttribute(sWeaponName, iIntWeaponAttributes[idx]);
 }
 
+ 
 Float:GetWeaponAttributeFloat( const String:sWeaponName[], idx ) {
     return L4D2_GetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[idx]);
 }
 
+ 
 SetWeaponAttributeInt( const String:sWeaponName[], idx, value ) {
+    new iSize = GetArraySize(hVanillaAttributesWeapon);
+    decl String:sBuffer[32];
+    for (new i = 0; i < iSize; i++)
+    {
+        GetArrayString(hVanillaAttributesWeapon, i, sBuffer, 32);
+        if (StrEqual(sWeaponName, sBuffer) && idx == GetArrayCell(hVanillaAttributesAttribute, i))
+        {
+            return;
+        }
+    }
+    PushArrayCell(hVanillaAttributesValue, L4D2_GetIntWeaponAttribute(sWeaponName, iIntWeaponAttributes[idx]));
+    PushArrayString(hVanillaAttributesWeapon, sWeaponName);
+    PushArrayCell(hVanillaAttributesAttribute, idx);
     L4D2_SetIntWeaponAttribute(sWeaponName, iIntWeaponAttributes[idx], value);
 }
 
+ 
 SetWeaponAttributeFloat( const String:sWeaponName[], idx, Float:value ) {
+    new iSize = GetArraySize(hVanillaAttributesWeapon);
+    decl String:sBuffer[32];
+    for (new i = 0; i < iSize; i++)
+    {
+        GetArrayString(hVanillaAttributesWeapon, i, sBuffer, 32);
+        if (StrEqual(sWeaponName, sBuffer) && idx == GetArrayCell(hVanillaAttributesAttribute, i))
+        {
+            return;
+        }
+    }
+    PushArrayCell(hVanillaAttributesValue, L4D2_GetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[idx]));
+    PushArrayString(hVanillaAttributesWeapon, sWeaponName);
+    PushArrayCell(hVanillaAttributesAttribute, idx);
     L4D2_SetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[idx], value);
 }
 
+ 
 public Action:Weapon( args ) {
     new iValue;
     new Float:fValue;
@@ -206,47 +225,49 @@ public Action:Weapon( args ) {
     decl String:sAttrName[128];
     decl String:sAttrValue[128];
 
+ 
     if ( GetCmdArgs() < 3 ) {
         PrintToServer("Syntax: sm_weapon <weapon> <attr> <value>");
         return;
     }
 
+ 
     GetCmdArg(1, sWeaponName, sizeof(sWeaponName));
     GetCmdArg(2, sAttrName, sizeof(sAttrName));
     GetCmdArg(3, sAttrValue, sizeof(sAttrValue));
 
-    if ( L4D2_IsValidWeapon(sWeaponName) ) {
+ 
+    if (!L4D2_IsValidWeapon(sWeaponName) ) {
         PrintToServer("Bad weapon name: %s", sWeaponName);
         return;
     }
 
+ 
     iAttrIdx = GetWeaponAttributeIndex(sAttrName);
 
+ 
     if ( iAttrIdx == -1 ) {
         PrintToServer("Bad attribute name: %s", sAttrName);
         return;
     }
 
+ 
     sWeaponNameFull[0] = 0;
     StrCat(sWeaponNameFull, sizeof(sWeaponNameFull), "weapon_");
     StrCat(sWeaponNameFull, sizeof(sWeaponNameFull), sWeaponName);
 
-    if (hWeaponDefaultAttsTrie[iAttrIdx] == INVALID_HANDLE) {
-        hWeaponDefaultAttsTrie[iAttrIdx] = CreateTrie();
-        hWeaponNamesInTrie[iAttrIdx] = CreateArray(32);
-    }
-    PushArrayString(hWeaponNamesInTrie[iAttrIdx], sWeaponNameFull);
-
+ 
     iValue = StringToInt(sAttrValue);
     fValue = StringToFloat(sAttrValue);
 
+ 
     if ( iAttrIdx < 3 ) {
-        SetTrieValue(hWeaponDefaultAttsTrie[iAttrIdx], sWeaponNameFull, GetWeaponAttributeInt(sWeaponNameFull, iAttrIdx), false);
         SetWeaponAttributeInt(sWeaponNameFull, iAttrIdx, iValue);
         PrintToServer("%s for %s set to %d", sWeaponAttrNames[iAttrIdx], sWeaponName, iValue);
     }
-    else if ( (iAttrIdx -= 3) < MAX_ATTRS - 1 ) {
-        SetTrieValue(hWeaponDefaultAttsTrie[iAttrIdx], sWeaponNameFull, GetWeaponAttributeFloat(sWeaponNameFull, iAttrIdx), false);
+    else if ( iAttrIdx < MAX_ATTRS - 1 ) 
+    {
+        iAttrIdx = iAttrIdx - 3;
         SetWeaponAttributeFloat(sWeaponNameFull, iAttrIdx, fValue);
         PrintToServer("%s for %s set to %.2f", sWeaponAttrNames[iAttrIdx], sWeaponName, fValue);
     }
@@ -256,67 +277,89 @@ public Action:Weapon( args ) {
     }
 }
 
+ 
 public Action:WeaponAttributes( client, args ) {
     decl String:sWeaponName[128];
     decl String:sWeaponNameFull[128];
 
+ 
     if ( GetCmdArgs() < 1 ) {
         ReplyToCommand(client, "Syntax: sm_weapon_attributes <weapon>");
-        return;
+        return Plugin_Handled;
     }
 
+ 
     GetCmdArg(1, sWeaponName, sizeof(sWeaponName));
 
-    if ( L4D2_IsValidWeapon(sWeaponName) ) {
+ 
+    if (!L4D2_IsValidWeapon(sWeaponName) ) {
         ReplyToCommand(client, "Bad weapon name: %s", sWeaponName);
-        return;
+        return Plugin_Handled;
     }
 
+ 
     sWeaponNameFull[0] = 0;
     StrCat(sWeaponNameFull, sizeof(sWeaponNameFull), "weapon_");
     StrCat(sWeaponNameFull, sizeof(sWeaponNameFull), sWeaponName);
 
+ 
     ReplyToCommand(client, "Weapon stats for %s", sWeaponName);
 
-    for ( new i = 0; i < 3; i++ ) {
-        new iValue = GetWeaponAttributeInt(sWeaponNameFull, i);
-        ReplyToCommand(client, "%s: %d", sWeaponAttrNames[i], iValue);
+ 
+    for ( new i = 0; i < MAX_ATTRS - 1; i++ ) 
+    {
+        if ( i < 3)
+        {
+            new iValue = GetWeaponAttributeInt(sWeaponNameFull, i);
+            ReplyToCommand(client, "%s: %d", sWeaponAttrNames[i], iValue);
+        }
+        else
+        {
+            new fI = i - 3;
+            new Float:fValue = GetWeaponAttributeFloat(sWeaponNameFull, fI);
+            ReplyToCommand(client, "%s: %.2f", sWeaponAttrNames[i], fValue);
+        }
     }
 
-    for ( new i = 3; i < MAX_ATTRS-1; i++ ) {
-        new Float:fValue = GetWeaponAttributeFloat(sWeaponNameFull, i);
-        ReplyToCommand(client, "%s: %.2f", sWeaponAttrNames[i], fValue);
-    }
-
+ 
     new Float:fBuff = KvGetFloat(hTankDamageKVs, sWeaponNameFull, 0.0);
 
+ 
     if ( fBuff ) {
         ReplyToCommand(client, "%s: %.2f", sWeaponAttrNames[MAX_ATTRS-1], fBuff);
     }
+    return Plugin_Handled;
 }
 
+ 
 public Action:DamageBuffVsTank( victim, &attacker, &inflictor, &Float:damage, &damageType, &weapon, Float:damageForce[3], Float:damagePosition[3] ) {
     if (attacker <= 0 || attacker > MaxClients+1) {
         return Plugin_Continue;
     }
 
+ 
     if ( !IsTank(victim) ) {
         return Plugin_Continue;
     }
 
+ 
     decl String:sWeaponName[128];
     GetClientWeapon(attacker, sWeaponName, sizeof(sWeaponName));
     new Float:fBuff = KvGetFloat(hTankDamageKVs, sWeaponName, 0.0);
 
+ 
     if ( !fBuff ) {
         return Plugin_Continue;
     }
 
+ 
     damage *= fBuff;
 
+ 
     return Plugin_Changed;
 }
 
+ 
 bool:IsTank( client ) {
     if ( client <= 0
     || client > MaxClients+1
@@ -326,11 +369,14 @@ bool:IsTank( client ) {
         return false;
     }
 
+ 
     new playerClass = GetEntProp(client, Prop_Send, "m_zombieClass");
 
+ 
     if ( playerClass == TANK_ZOMBIE_CLASS ) {
         return true;
     }
 
+ 
     return false;
 }
