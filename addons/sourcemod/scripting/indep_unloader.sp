@@ -65,18 +65,6 @@ public void OnPluginStart()
 	sb_stop.Flags = sb_stop.Flags | FCVAR_NOTIFY;
 	sv_infinite_primary_ammo.Flags = sv_infinite_primary_ammo.Flags | FCVAR_NOTIFY;
 	z_common_limit.Flags = z_common_limit.Flags | FCVAR_NOTIFY;
-
-	char GameMode[32];
-	GetConVarString(FindConVar("mp_gamemode"), GameMode, 32);
-
-	if (StrEqual(GameMode, "versus"))
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			GameRules_SetProp("m_iVersusDistancePerSurvivor", 0, _,
-					i + 4 * GameRules_GetProp("m_bAreTeamsFlipped"));
-		}
-	}
 }
 
 void EnableEntities() 
