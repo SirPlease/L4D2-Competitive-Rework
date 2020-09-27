@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.22"
+#define PLUGIN_VERSION		"1.23"
 
 #define DEBUG				0
 // #define DEBUG			1	// Prints addresses + detour info (only use for debugging, slows server down)
@@ -37,6 +37,9 @@
 
 ========================================================================================
 	Change Log:
+
+1.23 (27-Sep-2020)
+	- Update by "ProdigySim" to fix Addons Eclipse. Thank you!
 
 1.22 (24-Sep-2020)
 	- Compatibility update for L4D2's "The Last Stand" update.
@@ -451,7 +454,6 @@ GlobalForward g_hForward_AddonsDisabler;
 
 // NATIVES - SDKCall
 // Silvers Natives
-Handle g_hSDK_Call_GetClient;
 Handle g_hSDK_Call_GetLastKnownArea;
 Handle g_hSDK_Call_Deafen;
 Handle g_hSDK_Call_Dissolve;
@@ -538,7 +540,6 @@ Handle g_hSDK_Call_UnRegisterForbiddenTarget;
 // int ClearTeamScore_B;
 int g_iAddonEclipse1;
 int g_iAddonEclipse2;
-int g_iAddonEclipse3;
 
 int VersusStartTimer;
 int m_rescueCheckTimer;
@@ -1375,6 +1376,7 @@ void AddonsDisabler_Patch()
 		AddonsDisabler_Restore[2] = LoadFromAddress(VanillaModeAddress + view_as<Address>(VanillaModeOffset + 2), NumberType_Int8);
 	}
 
+	//PrintToServer("Addons restore: %02x%02x%02x", AddonsDisabler_Restore[0], AddonsDisabler_Restore[1], AddonsDisabler_Restore[2]);
 	StoreToAddress(VanillaModeAddress + view_as<Address>(VanillaModeOffset), 0x0F, NumberType_Int8);
 	StoreToAddress(VanillaModeAddress + view_as<Address>(VanillaModeOffset + 1), 0x1F, NumberType_Int8);
 	StoreToAddress(VanillaModeAddress + view_as<Address>(VanillaModeOffset + 2), 0x00, NumberType_Int8);
@@ -1398,25 +1400,23 @@ void AddonsDisabler_Unpatch()
 // ====================================================================================================
 public MRESReturn AddonsDisabler(int pThis, Handle hReturn, Handle hParams)
 {
+	// Details on finding offsets can be found here: https://github.com/ProdigySim/left4dhooks/pull/1
+	// Big thanks to "ProdigySim" for updating for The Last Stand update.
+
 	#if DEBUG
 	PrintToServer("##### DTR AddonsDisabler");
 	#endif
-
-	// Get client index like downtown:
-	// int m_nPlayerSlot = *(int *)((unsigned char *)SVC_ServerInfo + 48);
-	// IClient *pClient = g_pServer->GetClient(m_nPlayerSlot);
 
 	int cvar = g_hCvarAddonsEclipse.IntValue;
 	if( cvar != -1 )
 	{
 		int ptr = DHookGetParam(hParams, 1);
-		int client = LoadFromAddress(view_as<Address>(ptr + g_iAddonEclipse1), NumberType_Int8); // Network slot
 
-		//PrintToServer("#### CALL g_hSDK_Call_GetClient");
-
-		client = SDKCall(g_hSDK_Call_GetClient, g_pServer, client); // Pointer to somewhere in client address, not their actual entity address.
-		client = LoadFromAddress(view_as<Address>(client + g_iAddonEclipse2), NumberType_Int8); // Strange, don't know why but works. Found with sm_ptr dump.
-
+		// This is `m_nPlayerSlot` on the `SVC_ServerInfo`.
+		// It represents the client index of the connecting user.
+		int playerSlot = LoadFromAddress(view_as<Address>(ptr + g_iAddonEclipse1), NumberType_Int8);
+		// The playerslot is an index into `CBaseServer::m_Clients`, and SourceMod's client entity indexes are just `m_Clients` index plus 1.
+		int client = playerSlot + 1;
 		#if DEBUG
 		PrintToServer("#### AddonCheck for %d", client);
 		#endif
@@ -1436,7 +1436,13 @@ public MRESReturn AddonsDisabler(int pThis, Handle hReturn, Handle hParams)
 			Call_PushString(netID);
 			Call_Finish(aResult);
 
-			StoreToAddress(view_as<Address>(ptr + g_iAddonEclipse3), aResult == Plugin_Handled ? 0 : view_as<int>(!cvar), NumberType_Int8);
+			// 1 to tell the client it should use "vanilla mode"--no addons. 0 to enable addons.
+			int bVanillaMode =  aResult == Plugin_Handled ? 0 : view_as<int>(!cvar);
+			StoreToAddress(view_as<Address>(ptr + g_iAddonEclipse2), bVanillaMode, NumberType_Int8);
+			
+			#if DEBUG
+			PrintToServer("#### AddonCheck vanillaMode for %d [%s] (%N): %d", client, netID, client, bVanillaMode);
+			#endif
 		}
 	}
 
@@ -1869,18 +1875,6 @@ void LoadGameData()
 			g_hSDK_Call_GetWeaponInfo = EndPrepSDKCall();
 			if( g_hSDK_Call_GetWeaponInfo == null )
 				LogError("Failed to create SDKCall: GetWeaponInfo");
-		}
-
-		StartPrepSDKCall(SDKCall_Raw);
-		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Virtual, "CBaseServer_GetClient") == false )
-		{
-			LogError("Failed to find signature: CBaseServer_GetClient");
-		} else {
-			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
-			g_hSDK_Call_GetClient = EndPrepSDKCall();
-			if( g_hSDK_Call_GetClient == null )
-				LogError("Failed to create SDKCall: CBaseServer_GetClient");
 		}
 	}
 
@@ -2930,8 +2924,6 @@ void LoadGameData()
 	ValidateOffset(g_iAddonEclipse1, "AddonEclipse1");
 	g_iAddonEclipse2 = hGameData.GetOffset("AddonEclipse2");
 	ValidateOffset(g_iAddonEclipse2, "AddonEclipse2");
-	g_iAddonEclipse3 = hGameData.GetOffset("AddonEclipse3");
-	ValidateOffset(g_iAddonEclipse3, "AddonEclipse3");
 
 	m_iCampaignScores = hGameData.GetOffset("m_iCampaignScores");
 	ValidateOffset(m_iCampaignScores, "m_iCampaignScores");
@@ -3067,7 +3059,6 @@ void LoadGameData()
 	#if DEBUG
 	PrintToServer("g_iAddonEclipse1 = %d", g_iAddonEclipse1);
 	PrintToServer("g_iAddonEclipse2 = %d", g_iAddonEclipse2);
-	PrintToServer("g_iAddonEclipse3 = %d", g_iAddonEclipse3);
 
 	PrintToServer("m_iCampaignScores = %d", m_iCampaignScores);
 	PrintToServer("m_fTankSpawnFlowPercent = %d", m_fTankSpawnFlowPercent);

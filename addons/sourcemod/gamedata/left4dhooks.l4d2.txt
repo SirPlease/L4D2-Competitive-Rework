@@ -823,7 +823,7 @@
 				"windows"
 				{
 					"signature" "CreateGameRulesObject"
-					"read" "2"
+					"read" "5"
 				}
 				"linux"
 				{
@@ -903,31 +903,26 @@
 
 			// ADDONS ECLIPSE
 			/*
-				View source for more details, this method slightly differs from left4downtown extension but worked before Last Stand update.
-				Still not entirely sure why it worked or how. This offsets might currently be wrong but in testing worked 3/4 times.
+				Details on finding offsets can be found here: https://github.com/ProdigySim/left4dhooks/pull/1
+				Big thanks to "ProdigySim" for updating for The Last Stand update.
 			*/
 
 			// Network slot offset
+			// Offset into SVC_ServerInfo struct of player slot number
 			"AddonEclipse1"
 			{
-				"windows"	"48"
-				"linux"		"48"
-			}
-
-			// Client offset
-			"AddonEclipse2"
-			{
-				"windows"	"48"
-				"linux"		"48"
+				"windows"	"116"
+				"linux"		"108"
 			}
 
 			// Patch offset
-			"AddonEclipse3"
+			// Offset into SVC_ServerInfo struct of "Vanilla Mode" boolean
+			"AddonEclipse2"
 			{
-				"windows"	"85"
+				"windows"	"93"
 				"linux"		"85"
 			}
-			
+
 
 
 			// VIRTUAL CALLS
@@ -1582,8 +1577,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZNK9CDirector29IsAnySurvivorInExitCheckpointEv"
-				"windows"	"\x55\x8B\x2A\x51\x8D\x2A\x2A\x50\x66\x2A\x2A\x2A\x2A\x2A\xE8"
-				/* 55 8B ? 51 8D ? ? 50 66 ? ? ? ? ? E8 */
+				"windows"	"\x55\x8B\x2A\x51\x8D\x2A\x2A\x50\x66\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8A\x2A\x2A\x83"
+				/* 55 8B ? 51 8D ? ? 50 66 ? ? ? ? ? E8 ? ? ? ? 8A ? ? 83 */
 				/* Search "tank_frustrated", below "HasAnySurvivorLeftSafeArea" call */
 			}
 
@@ -2762,8 +2757,8 @@
 			"CreateGameRulesObject"
 			{
 				"library"	"server"
-				"windows"	"\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9\x74\x2A\x8B\x01\x8B\x50\x2A\x6A\x01\xFF\xD2"
-				/* 8B 0D ? ? ? ? 85 C9 74 ? 8B 01 8B 50 ? 6A 01 FF D2 */
+				"windows"	"\x55\x8B\xEC\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9\x74\x2A\x8B\x01\x8B\x50\x30"
+				/* 55 8B EC 8B 0D ? ? ? ? 85 C9 74 ? 8B 01 8B 50 30 */
 			}
 
 			/* Find the WeaponInfo Database dictionary */
@@ -3068,8 +3063,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer14CanBecomeGhostEb"
-				"windows"	"\x53\x8B\xDC\x83\xEC\x2A\x83\xE4\xF0\x83\xC4\x2A\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x83\xEC\x2A\x56\x57\x8B\xF1\xE8\x0E"
-				/* 53 8B DC 83 EC ? 83 E4 F0 83 C4 ? 55 8B 6B 04 89 6C 24 04 8B EC 83 EC ? 56 57 8B F1 E8 0E */
+				"windows"	"\x53\x8B\xDC\x83\xEC\x08\x83\xE4\xF0\x83\xC4\x04\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x83\xEC\x78\x56\x57\x8B\xF1"
+				/* 53 8B DC 83 EC ? 83 E4 F0 83 C4 ? 55 8B 6B 04 89 6C 24 ? 8B EC 83 EC 78 56 57 8B F1 */
 			}
 
 			/*
