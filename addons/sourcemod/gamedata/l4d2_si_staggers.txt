@@ -1,0 +1,31 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			// CTerrorPlayer dominator offsets
+			// These are checked in CTerrorPlayer::IsDominatedBySpecialInfected
+			"DomninatorOffset_Smoker"
+			{
+				"windows"	"13304"
+				"linux"		"13284"
+			}
+			"DomninatorOffset_Hunter"
+			{
+				"windows"	"16028"
+				"linux"		"16008"
+			}
+			"DomninatorOffset_Jockey"
+			{
+				"windows"	"16148"
+				"linux"		"16128"
+			}
+			"DomninatorOffset_Charger"
+			{
+				"windows"	"15996"
+				"linux"		"15976"
+			}
+		}
+	}
+}

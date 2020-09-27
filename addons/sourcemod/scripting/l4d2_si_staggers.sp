@@ -21,14 +21,13 @@
 #include <sourcemod>
 #include <left4dhooks>
 
-new const LINUX_SI_DOMINATION_OFFSETS[4] = {
-    13284,    // smoker
-    16008,    // hunter
-    16128,    // jockey
-    15976     // charger
-};
+#if !defined DEBUG
+#define DEBUG 0
+#endif
 
-new const FLAGS[3] = {
+int SI_DOMINATION_OFFSETS[4];
+
+int FLAGS[3] = {
     1 << 0, // boomer
     1 << 1, // charger
     1 << 2, // witch
@@ -49,6 +48,11 @@ public Plugin:myinfo =
 
 public OnPluginStart()
 {
+    Handle hGameConf = LoadGameConfigFile("l4d2_si_stagger");
+    SI_DOMINATION_OFFSETS[0] = GameConfGetOffset(hGameConf, "DomninatorOffset_Smoker");
+    SI_DOMINATION_OFFSETS[1] = GameConfGetOffset(hGameConf, "DomninatorOffset_Hunter");
+    SI_DOMINATION_OFFSETS[2] = GameConfGetOffset(hGameConf, "DomninatorOffset_Jockey");
+    SI_DOMINATION_OFFSETS[3] = GameConfGetOffset(hGameConf, "DomninatorOffset_Charger");
     hCvarInfectedFlags = CreateConVar("l4d2_disable_si_friendly_staggers", "0", "Remove SI staggers caused by other SI(bitmask: 1-Boomer/2-Charger/4-Witch)");
     iActiveFlags = GetConVarInt(hCvarInfectedFlags);
     HookConVarChange(hCvarInfectedFlags, PluginActivityChanged);
@@ -61,20 +65,31 @@ public PluginActivityChanged(Handle:cvar, const String:oldValue[], const String:
 
 public Action:L4D2_OnStagger(target, source)
 {
-    // IndexOfEdict() returns random shit when used on a NULL edict
-    // For some reason, Valve chose to set a null source for charger impact staggers
+    // For some reason, Valve chose to set a null source for charger impact staggers.
+    // And Left4DHooks converts this null source to -1.
     // Since there aren't really any other possible calls for this function,
-    // assume (source == 0) as a charger impact stagger
+    // assume (source == -1) as a charger impact stagger
     // TODO: Patch the binary to pass on the Charger's client ID instead of nothing?
     // Probably not worth it, for now, at least
-
+    #if DEBUG
+    PrintToServer("OnStagger(target=%d, source=%d) SourceValid: %d, SourceInfectedClass %d",
+        target,
+        source,
+        IsValidEdict(source),
+        GetInfectedClass(source)
+    );
+    #endif
+    
+    if (!IsValidEdict(source) && source != -1)
+        return Plugin_Continue;
+        
     if (!iActiveFlags)  // Is the plugin active at all?
         return Plugin_Continue;
 
     if (GetInfectedClass(source) == 2 && !(iActiveFlags & FLAGS[0]))  // Is the Boomer eligible?
         return Plugin_Continue;
 
-    if (!IsValidEdict(source) && !(iActiveFlags & FLAGS[1]))  // Is the Charger eligible?
+    if (source == -1 && !(iActiveFlags & FLAGS[1]))  // Is the Charger eligible?
         return Plugin_Continue;
 
     if (GetClientTeam(target) == 2 && IsBeingAttacked(target))  // Capped Survivors should not get staggered
@@ -83,12 +98,15 @@ public Action:L4D2_OnStagger(target, source)
     if (GetClientTeam(target) != 3) // We'll only need SI for the following checks
         return Plugin_Continue;
 
-    if (!IsValidEdict(source) && GetInfectedClass(target) != 6)    // Allow Charger selfstaggers through
+    if (source == -1 && GetInfectedClass(target) != 6)    // Allow Charger selfstaggers through
         return Plugin_Handled;
 
     if (source <= MaxClients && GetInfectedClass(source) == 2) // Cancel any staggers caused by a Boomer explosion
         return Plugin_Handled;
     
+    if (source == -1) // Return early if we don't have a valid edict.
+        return Plugin_Continue;
+
     decl String:classname[64];
     GetEdictClassname(source, classname, sizeof(classname));
     if ((iActiveFlags & FLAGS[2]) && StrEqual(classname, "witch"))  // Cancel any staggers caused by a running Witch(if eligible)
@@ -99,14 +117,14 @@ public Action:L4D2_OnStagger(target, source)
 
 bool:IsBeingAttacked(survivor)
 {
-    new Address:pEntity = GetEntityAddress(survivor);
+    Address pEntity = GetEntityAddress(survivor);
     if (pEntity == Address_Null)
         return false;
     
-    new survivorState = 0;
-    for (new i = 0; i < sizeof(LINUX_SI_DOMINATION_OFFSETS); i++)
+    int survivorState = 0;
+    for (new i = 0; i < sizeof(SI_DOMINATION_OFFSETS); i++)
     {    
-        survivorState += LoadFromAddress(pEntity + Address:LINUX_SI_DOMINATION_OFFSETS[i], NumberType_Int32);
+        survivorState += LoadFromAddress(pEntity + view_as<Address>(SI_DOMINATION_OFFSETS[i]), NumberType_Int32);
     }
     
     return survivorState > 0 ? true : false;
