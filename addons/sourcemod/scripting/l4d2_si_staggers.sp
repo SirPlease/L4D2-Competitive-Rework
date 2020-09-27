@@ -71,7 +71,6 @@ public Action:L4D2_OnStagger(target, source)
     // assume (source == -1) as a charger impact stagger
     // TODO: Patch the binary to pass on the Charger's client ID instead of nothing?
     // Probably not worth it, for now, at least
-
     #if DEBUG
     PrintToServer("OnStagger(target=%d, source=%d) SourceValid: %d, SourceInfectedClass %d",
         target,
@@ -80,9 +79,10 @@ public Action:L4D2_OnStagger(target, source)
         GetInfectedClass(source)
     );
     #endif
+    
     if (!IsValidEdict(source) && source != -1)
         return Plugin_Continue;
-
+        
     if (!iActiveFlags)  // Is the plugin active at all?
         return Plugin_Continue;
 
