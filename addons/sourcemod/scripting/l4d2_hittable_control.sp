@@ -164,7 +164,7 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 			{
 				damage = GetConVarFloat(hForkliftStandingDamage);
 			}
-			else if (StrEqual(sModelName, "models/props/cs_assault/forklift_brokenlift.mdl"))
+			else if (StrContains(sModelName, "forklift_brokenlift") != -1)
 			{
 				damage = GetConVarFloat(hBrokenForkliftStandingDamage);
 			}		
