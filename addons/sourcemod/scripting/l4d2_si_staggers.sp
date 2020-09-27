@@ -68,16 +68,13 @@ public Action:L4D2_OnStagger(target, source)
     // TODO: Patch the binary to pass on the Charger's client ID instead of nothing?
     // Probably not worth it, for now, at least
 
-    if (!IsValidEdict(source))
-        return Plugin_Continue;
-
     if (!iActiveFlags)  // Is the plugin active at all?
         return Plugin_Continue;
 
     if (GetInfectedClass(source) == 2 && !(iActiveFlags & FLAGS[0]))  // Is the Boomer eligible?
         return Plugin_Continue;
 
-    if (!source && !(iActiveFlags & FLAGS[1]))  // Is the Charger eligible?
+    if (!IsValidEdict(source) && !(iActiveFlags & FLAGS[1]))  // Is the Charger eligible?
         return Plugin_Continue;
 
     if (GetClientTeam(target) == 2 && IsBeingAttacked(target))  // Capped Survivors should not get staggered
@@ -86,7 +83,7 @@ public Action:L4D2_OnStagger(target, source)
     if (GetClientTeam(target) != 3) // We'll only need SI for the following checks
         return Plugin_Continue;
 
-    if (!source && GetInfectedClass(target) != 6)    // Allow Charger selfstaggers through
+    if (!IsValidEdict(source) && GetInfectedClass(target) != 6)    // Allow Charger selfstaggers through
         return Plugin_Handled;
 
     if (source <= MaxClients && GetInfectedClass(source) == 2) // Cancel any staggers caused by a Boomer explosion
