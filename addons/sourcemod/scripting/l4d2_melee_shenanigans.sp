@@ -42,7 +42,7 @@ public Action PlayerHit(Handle event, char[] event_name, bool dontBroadcast)
             {
                 switch(iDropMethod)
                 {
-                    case 0: return Plugin_Continue;
+                    case 0: return Plugin_Continue; // Don't care.
                     case 1: SDKHooks_DropWeapon(Player, activeweapon); // Drop Melee, will most likely fly away as Tank's punch will cause it to launch far away, can test some stuff with the Vector or perhaps a delayed timer.
                     case 2: // Force a weapon switch
                     {
