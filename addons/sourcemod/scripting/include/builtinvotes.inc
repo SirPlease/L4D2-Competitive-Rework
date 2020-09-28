@@ -182,7 +182,7 @@ enum BuiltinVoteFailReason
  * @param param2			Second action parameter (usually the item).
  * @noreturn
  */
-functag public BuiltinVoteActionHandler(Handle:vote, BuiltinVoteAction:action, param1, param2);
+typedef BuiltinVoteActionHandler = function int (Handle vote, BuiltinVoteAction action, int param1, int param2);
 
 /**
  * Creates a new, empty vote.
@@ -390,12 +390,12 @@ native CancelBuiltinVote();
  *							defines.
  * @noreturn
  */
-functag public BuiltinVoteHandler(Handle:vote,
-						   num_votes, 
-						   num_clients,
-						   const client_info[][2], 
-						   num_items,
-						   const item_info[][2]);
+typedef BuiltinVoteHandler = function int (Handle vote,
+						   int num_votes, 
+						   int num_clients,
+						   const int client_info[][2], 
+						   int num_items,
+						   const int item_info[][2]);
 
 /**
  * Sets an advanced vote handling callback.  If this callback is set,
