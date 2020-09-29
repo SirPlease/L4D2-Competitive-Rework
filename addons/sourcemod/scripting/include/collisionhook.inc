@@ -14,7 +14,6 @@ forward Action:CH_ShouldCollide( ent1, ent2, &bool:result );
 // note: any code in this forward should be very performant, the game will use many filtered traces per player per game frame
 forward Action:CH_PassFilter( ent1, ent2, &bool:result );
 
-
 public Extension:__ext_collisionhook = 
 {
 	name = "CollisionHook",

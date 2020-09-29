@@ -1,5 +1,6 @@
 "Games"
-{/*
+{
+	/*
 	*  bool CCommandBuffer::InsertCommand( const char *pArgS, int nCommandSize, int nTick )
 	*  Search: "WARNING: Command too long... ignoring!\n%s\n"
 	*/
@@ -47,7 +48,7 @@
 				"library"		"engine"
 				"linux"			"@_ZN14CCommandBuffer13InsertCommandEPKcii"
 				"windows"		"\x56\x57\x8B\x2A\x2A\x2A\x81\x2A\x2A\x2A\x2A\x2A\x8B"
-				/* 56 57 8B ? ? ? 81 ? ? ? ? ? 8B ?	7C ? 8B ? ? ? 50 68 */
+				/* 56 57 8B ? ? ? 81 ? ? ? ? ? 8B ? 7C ? 8B ? ? ? 50 68 */
 			}
 		}
 	}
@@ -94,6 +95,34 @@
 				"library"		"engine"
 				"windows"		"\x55\x8B\x2A\x51\x53\x56\x57\x8B\x2A\x2A\x8B\x2A\x81"
 				/* 55 8B ? 51 53 56 57 8B ? ? 8B ? 81 */
+			}
+		}
+	}
+
+	"cstrike"
+	{
+		"Signatures"
+		{
+			"CCommandBuffer::InsertCommand"
+			{
+				"library"		"engine"
+				"linux"			"@_ZN14CCommandBuffer13InsertCommandEPKcii"
+				"windows"		"\x55\x8B\x2A\x56\x57\x8B\x2A\x2A\x8B\x2A\x81\x2A\xFF"
+				/* 55 8B ? 56 57 8B ? ? 8B ? 81 ? FF */
+			}
+		}
+	}
+
+	"tf"
+	{
+		"Signatures"
+		{
+			"CCommandBuffer::InsertCommand"
+			{
+				"library"		"engine"
+				"linux"			"@_ZN14CCommandBuffer13InsertCommandEPKcii"
+				"windows"		"\x55\x8B\x2A\x56\x57\x8B\x2A\x2A\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x7C"
+				/* 55 8B ? 56 57 8B ? ? 8B ? 81 ? ? ? ? ? 7C */
 			}
 		}
 	}
