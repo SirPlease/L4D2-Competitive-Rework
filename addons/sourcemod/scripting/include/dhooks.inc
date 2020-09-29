@@ -3,6 +3,9 @@
 #endif
 #define _dhooks_included
 
+// Needed for the SDKFuncConfSource enum.
+#include <sdktools>
+
 enum ObjectValueType
 {
 	ObjectValueType_Int = 0,
@@ -77,6 +80,7 @@ enum CallingConvention
 	CallConv_CDECL,
 	CallConv_THISCALL,
 	CallConv_STDCALL,
+	CallConv_FASTCALL,
 };
 
 enum MRESReturn
@@ -306,7 +310,7 @@ native void DHookAddParam(Handle setup, HookParamType type, int size=-1, DHookPa
  * @param removalcb		Callback for when the hook is removed (Entity hooks are auto-removed on entity destroyed and will call this callback)
  * @param callback		Optional callback function, if not set here must be set when creating the hook.
  * 
- * @error Invalid setup handle, invalid entity, invalid hook type or invalid callback.
+ * @error Invalid setup handle, invalid address, invalid hook type or invalid callback.
  * @return -1 on fail a hookid on success
 */
 native int DHookEntity(Handle setup, bool post, int entity, DHookRemovalCB removalcb=INVALID_FUNCTION, DHookCallback callback=INVALID_FUNCTION);
@@ -318,7 +322,7 @@ native int DHookEntity(Handle setup, bool post, int entity, DHookRemovalCB remov
  * @param removalcb		Callback for when the hook is removed (Game rules hooks are auto-removed on map end and will call this callback)
  * @param callback		Optional callback function, if not set here must be set when creating the hook.
  * 
- * @error Invalid setup handle, failing to get gamerules pointer, invalid hook type or invalid callback.
+ * @error Invalid setup handle, invalid address, invalid hook type or invalid callback.
  * @return -1 on fail a hookid on success
 */
 native int DHookGamerules(Handle setup, bool post, DHookRemovalCB removalcb=INVALID_FUNCTION, DHookCallback callback=INVALID_FUNCTION);
