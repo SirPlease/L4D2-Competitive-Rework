@@ -146,7 +146,7 @@ public OnPluginStart()
 
 public Action:CheckStuff(Handle:timer)
 {
-	bHostName = (FindPluginByFile("optional/server_namer.smx") != INVALID_HANDLE);	
+	bHostName = (FindPluginByFile("server_namer.smx") != INVALID_HANDLE);	
 }
 
 public Action:Say_Callback(client, const String:command[], argc)
