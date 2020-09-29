@@ -2,9 +2,7 @@
 
 #include <sourcemod>
 #include <sdktools>
-#include <l4d2util>
-#include <l4d2_direct>
-#include <left4downtown>
+#include <left4dhooks>
 #include <colors>
 #include <readyup>
 
@@ -310,6 +308,7 @@ public chooseTank()
     // Select a random person to become tank
     new rndIndex = GetRandomInt(0, GetArraySize(infectedPool) - 1);
     GetArrayString(infectedPool, rndIndex, queuedTankSteamId, sizeof(queuedTankSteamId));
+    CloseHandle(infectedPool);
 }
 
 /**
@@ -324,7 +323,7 @@ public Action:L4D_OnTryOfferingTankBot(tank_index, &bool:enterStatis)
         PrintHintText(tank_index, "Rage Meter Refilled");
         for (new i = 1; i <= MaxClients; i++) 
         {
-            if (! IsClientInGame(i) || ! IsInfected(i))
+            if (! IsClientInGame(i) || GetClientTeam(i) != 3)
                 continue;
 
             if (tank_index == i) CPrintToChat(i, "{red}<{default}Tank Rage{red}> {olive}Rage Meter {red}Refilled");
@@ -361,7 +360,7 @@ public setTankTickets(const String:steamId[], const tickets)
     
     for (new i = 1; i <= MaxClients; i++)
     {
-        if (IsClientConnected(i) && IsClientInGame(i) && ! IsFakeClient(i) && IsInfected(i))
+        if (IsClientConnected(i) && IsClientInGame(i) && ! IsFakeClient(i) && GetClientTeam(i) == 3)
         {
             L4D2Direct_SetTankTickets(i, (i == tankClientId) ? tickets : 0);
         }
@@ -492,7 +491,7 @@ public getInfectedPlayerBySteamId(const String:steamId[])
    
     for (new i = 1; i <= MaxClients; i++) 
     {
-        if (!IsClientConnected(i) || !IsInfected(i))
+        if (!IsClientConnected(i) || GetClientTeam(i) != 3)
             continue;
         
         GetClientAuthId(i, AuthId_Steam2, tmpSteamId, sizeof(tmpSteamId));     
@@ -502,4 +501,12 @@ public getInfectedPlayerBySteamId(const String:steamId[])
     }
     
     return -1;
+}
+
+SetTankFrustration(int iTankClient, int iFrustration) {
+    if (iFrustration < 0 || iFrustration > 100) {
+        return;
+    }
+    
+    SetEntProp(iTankClient, Prop_Send, "m_frustration", 100-iFrustration);
 }
