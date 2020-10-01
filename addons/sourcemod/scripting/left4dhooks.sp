@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.23"
+#define PLUGIN_VERSION		"1.26"
 
 #define DEBUG				0
 // #define DEBUG			1	// Prints addresses + detour info (only use for debugging, slows server down)
@@ -37,6 +37,25 @@
 
 ========================================================================================
 	Change Log:
+
+1.26 (01-Oct-2020)
+	- L4D2: Fixed the new target filters not working correctly, now matches by modelname for Survivors instead of character netprop.
+
+1.25 (01-Oct-2020)
+	- Added survivor specific target filters:	@nick, @rochelle, @coach, @ellis, @bill, @zoey, @francis, @louis
+	- Added special infected target filters:	@smokers, @boomers, @hunters, @spitters, @jockeys, @chargers
+	- Changed native "L4D2_GetMeleeWeaponIndex" to return -1 instead of throwing an error, due to melee being unavailable.
+	- Fixed melee weapon IDs being incorrect depending on which are enabled. Thanks to "iaNanaNana" for reporting.
+	- Updated the "data/left4dhooks.l4d2.cfg" config with latest "ACT_*" animation numbers.
+
+1.24 (27-Sep-2020)
+	- Reverted change: native "L4D_GetTeamScore" now accepts values 1 and 2 again.
+	- Changed natives:
+		"L4D2Direct_GetVSTankFlowPercent", "L4D2Direct_SetVSTankFlowPercent", "L4D2Direct_GetVSTankToSpawnThisRound",
+		"L4D2Direct_SetVSTankToSpawnThisRound", "L4D2Direct_GetVSWitchFlowPercent", "L4D2Direct_SetVSWitchFlowPercent",
+		"L4D2Direct_GetVSWitchToSpawnThisRound" and "L4D2Direct_SetVSWitchToSpawnThisRound".
+	- Corrected natives "roundNumber" to consider "m_bAreTeamsFlipped" and "m_bInSecondHalfOfRound".
+	- Thanks to "devilesk" for native value clarification.
 
 1.23 (27-Sep-2020)
 	- Update by "ProdigySim" to fix Addons Eclipse. Thank you!
@@ -292,6 +311,9 @@
 		https://github.com/raziEiL/l4d_direct-port
 
 *	"AtomicStryker" and whoever else contributed to "l4d2addresses.txt" gamedata file.
+
+*	"Dragokas" for "String Tables Dumper" some code used to get melee weapon IDs.
+		https://forums.alliedmods.net/showthread.php?t=322674
 
 ===================================================================================================*/
 
@@ -1061,6 +1083,23 @@ public void OnPluginStart()
 	AddMultiTargetFilter("@infe",			FilterInfected,	"Infected", false);
 	AddMultiTargetFilter("@infected",		FilterInfected,	"Infected", false);
 	AddMultiTargetFilter("@i",				FilterInfected,	"Infected", false);
+
+	AddMultiTargetFilter("@nick",			FilterNick,		"Nick", false);
+	AddMultiTargetFilter("@rochelle",		FilterRochelle,	"Rochelle", false);
+	AddMultiTargetFilter("@coach",			FilterCoach,	"Coach", false);
+	AddMultiTargetFilter("@ellis",			FilterEllis,	"Ellis", false);
+	AddMultiTargetFilter("@bill",			FilterBill,		"Bill", false);
+	AddMultiTargetFilter("@zoey",			FilterZoey,		"Zoey", false);
+	AddMultiTargetFilter("@francis",		FilterFrancis,	"Francis", false);
+	AddMultiTargetFilter("@louis",			FilterLous,		"Louis", false);
+
+	AddMultiTargetFilter("@smokers",		FilterSmoker,	"Smokers", false);
+	AddMultiTargetFilter("@boomers",		FilterBoomer,	"Boomers", false);
+	AddMultiTargetFilter("@hunters",		FilterHunter,	"Hunters", false);
+	AddMultiTargetFilter("@spitters",		FilterSpitter,	"Spitters", false);
+	AddMultiTargetFilter("@jockeys",		FilterJockey,	"Jockeys", false);
+	AddMultiTargetFilter("@chargers",		FilterCharger,	"Chargers", false);
+
 	AddMultiTargetFilter("@tank",			FilterTanks,	"Tanks", false);
 	AddMultiTargetFilter("@tanks",			FilterTanks,	"Tanks", false);
 	AddMultiTargetFilter("@t",				FilterTanks,	"Tanks", false);
@@ -1297,6 +1336,106 @@ public bool FilterSurvivor(const char[] pattern, Handle clients)
 	return true;
 }
 
+// Specific survivors
+void MatchSurvivor(Handle clients, int survivorCharacter)
+{
+	int type;
+	bool matched;
+
+	for( int i = 1; i <= MaxClients; i++ )
+	{
+		if( IsClientInGame(i) && GetClientTeam(i) == 2 )
+		{
+			matched = false;
+
+			if( g_bLeft4Dead2 )
+			{
+				static char modelname[32];
+				GetClientModel(i, modelname, sizeof(modelname));
+
+				switch( modelname[29] )
+				{
+					case 'b':		type = 0; //nick
+					case 'd', 'w':	type = 1; //rochelle, adawong
+					case 'c':		type = 2; //coach
+					case 'h':		type = 3; //ellis
+					case 'v':		type = 4; //bill
+					case 'n':		type = 5; //zoey
+					case 'e':		type = 6; //francis
+					case 'a':		type = 7; //louis
+					default:		type = 0;
+				}
+
+				if( type == survivorCharacter )
+					matched = true;
+			} else {
+				survivorCharacter -= 4;
+
+				if( GetEntProp(i, Prop_Send, "m_survivorCharacter") == survivorCharacter )
+					matched = true;
+			}
+
+			if( matched )
+			{
+				PushArrayCell(clients, i);
+			}
+		}
+	}
+}
+
+public bool FilterNick(const char[] pattern, Handle clients)
+{
+	if( g_bLeft4Dead2 )
+		MatchSurvivor(clients, 0);
+	return true;
+}
+
+public bool FilterRochelle(const char[] pattern, Handle clients)
+{
+	if( g_bLeft4Dead2 )
+		MatchSurvivor(clients, 1);
+	return true;
+}
+
+public bool FilterCoach(const char[] pattern, Handle clients)
+{
+	if( g_bLeft4Dead2 )
+		MatchSurvivor(clients, 2);
+	return true;
+}
+
+public bool FilterEllis(const char[] pattern, Handle clients)
+{
+	if( g_bLeft4Dead2 )
+		MatchSurvivor(clients, 3);
+	return true;
+}
+
+public bool FilterBill(const char[] pattern, Handle clients)
+{
+	MatchSurvivor(clients, 4);
+	return true;
+}
+
+public bool FilterZoey(const char[] pattern, Handle clients)
+{
+	MatchSurvivor(clients, 5);
+	return true;
+}
+
+public bool FilterFrancis(const char[] pattern, Handle clients)
+{
+	MatchSurvivor(clients, 6);
+	return true;
+}
+
+public bool FilterLous(const char[] pattern, Handle clients)
+{
+	MatchSurvivor(clients, 7);
+	return true;
+}
+
+// Filter all Infected
 public bool FilterInfected(const char[] pattern, Handle clients)
 {
 	for( int i = 1; i <= MaxClients; i++ )
@@ -1314,17 +1453,58 @@ public bool FilterInfected(const char[] pattern, Handle clients)
 	return true;
 }
 
+// Specific Infected
+public bool FilterSmoker(const char[] pattern, Handle clients)
+{
+	MatchZombie(clients, 1);
+	return true;
+}
+
+public bool FilterBoomer(const char[] pattern, Handle clients)
+{
+	MatchZombie(clients, 2);
+	return true;
+}
+
+public bool FilterHunter(const char[] pattern, Handle clients)
+{
+	MatchZombie(clients, 3);
+	return true;
+}
+
+public bool FilterSpitter(const char[] pattern, Handle clients)
+{
+	MatchZombie(clients, 4);
+	return true;
+}
+
+public bool FilterJockey(const char[] pattern, Handle clients)
+{
+	MatchZombie(clients, 5);
+	return true;
+}
+
+public bool FilterCharger(const char[] pattern, Handle clients)
+{
+	MatchZombie(clients, 6);
+	return true;
+}
+
 public bool FilterTanks(const char[] pattern, Handle clients)
+{
+	MatchZombie(clients, g_iClassTank);
+	return true;
+}
+
+void MatchZombie(Handle clients, int zombieClass)
 {
 	for( int i = 1; i <= MaxClients; i++ )
 	{
-		if( IsClientInGame(i) && GetClientTeam(i) == 3 && GetEntProp(i, Prop_Send, "m_zombieClass") == g_iClassTank )
+		if( IsClientInGame(i) && GetClientTeam(i) == 3 && GetEntProp(i, Prop_Send, "m_zombieClass") == zombieClass )
 		{
 			PushArrayCell(clients, i);
 		}
 	}
-
-	return true;
 }
 
 
@@ -1344,6 +1524,23 @@ public void OnPluginEnd()
 	RemoveMultiTargetFilter("@infe",		FilterInfected);
 	RemoveMultiTargetFilter("@infected",	FilterInfected);
 	RemoveMultiTargetFilter("@i",			FilterInfected);
+
+	RemoveMultiTargetFilter("@nick",		FilterNick);
+	RemoveMultiTargetFilter("@rochelle",	FilterRochelle);
+	RemoveMultiTargetFilter("@coach",		FilterCoach);
+	RemoveMultiTargetFilter("@ellis",		FilterEllis);
+	RemoveMultiTargetFilter("@bill",		FilterBill);
+	RemoveMultiTargetFilter("@zoey",		FilterZoey);
+	RemoveMultiTargetFilter("@francis",		FilterFrancis);
+	RemoveMultiTargetFilter("@louis",		FilterLous);
+
+	RemoveMultiTargetFilter("@smokers",		FilterSmoker);
+	RemoveMultiTargetFilter("@boomers",		FilterBoomer);
+	RemoveMultiTargetFilter("@hunters",		FilterHunter);
+	RemoveMultiTargetFilter("@spitters",	FilterSpitter);
+	RemoveMultiTargetFilter("@jockeys",		FilterJockey);
+	RemoveMultiTargetFilter("@chargers",	FilterCharger);
+
 	RemoveMultiTargetFilter("@tank",		FilterTanks);
 	RemoveMultiTargetFilter("@tanks",		FilterTanks);
 	RemoveMultiTargetFilter("@t",			FilterTanks);
@@ -1823,6 +2020,42 @@ public void OnMapStart()
 			// SDKCall(g_hSDK_Call_GetScriptValueInt, g_pDirector, "TotalSpitter",			1);
 			// SDKCall(g_hSDK_Call_GetScriptValueInt, g_pDirector, "TotalJockey",			1);
 			// SDKCall(g_hSDK_Call_GetScriptValueInt, g_pDirector, "TotalCharger",			1);
+		}
+
+		if( g_bLeft4Dead2 )
+		{
+			delete g_aMeleePtrs;
+			delete g_aMeleeIDs;
+
+			g_aMeleePtrs = new ArrayList(2);
+			g_aMeleeIDs = new StringMap();
+
+			int iTable = FindStringTable("meleeweapons");
+			if( iTable == INVALID_STRING_TABLE )
+			{
+				g_aMeleeIDs.SetValue("fireaxe",								0);
+				g_aMeleeIDs.SetValue("frying_pan",							1);
+				g_aMeleeIDs.SetValue("machete",								2);
+				g_aMeleeIDs.SetValue("baseball_bat",						3);
+				g_aMeleeIDs.SetValue("crowbar",								4);
+				g_aMeleeIDs.SetValue("cricket_bat",							5);
+				g_aMeleeIDs.SetValue("tonfa",								6);
+				g_aMeleeIDs.SetValue("katana",								7);
+				g_aMeleeIDs.SetValue("electric_guitar",						8);
+				g_aMeleeIDs.SetValue("knife",								9);
+				g_aMeleeIDs.SetValue("golfclub",							10);
+				g_aMeleeIDs.SetValue("pitchfork",							11);
+				g_aMeleeIDs.SetValue("shovel",								12);
+			} else {
+				int iNum = GetStringTableNumStrings(iTable);
+				char sName[PLATFORM_MAX_PATH];
+
+				for( int i = 0; i < iNum; i++ )
+				{
+					ReadStringTable(iTable, i, sName, sizeof(sName));
+					g_aMeleeIDs.SetValue(sName, i);
+				}
+			}
 		}
 	}
 }
@@ -3530,8 +3763,8 @@ public int Native_SetVersusMaxCompletionScore(Handle plugin, int numParams)
 
 public int Native_GetTeamScore(Handle plugin, int numParams)
 {
-	#define SCORE_TEAM_A 0
-	#define SCORE_TEAM_B 1
+	#define SCORE_TEAM_A 1
+	#define SCORE_TEAM_B 2
 	#define SCORE_TYPE_ROUND 0
 	#define SCORE_TYPE_CAMPAIGN 1
 
@@ -3943,7 +4176,9 @@ public int Native_GetMeleeWeaponIndex(Handle plugin, int numParams)
 
 	int ptr;
 	if( g_aMeleeIDs.GetValue(weaponName, ptr) == false )
-		ThrowNativeError(SP_ERROR_PARAM, "Invalid melee name or melee unavailable");
+	{
+		ptr = -1;
+	}
 
 	return ptr;
 }
@@ -4411,7 +4646,9 @@ public any Direct_GetVSTankFlowPercent(Handle plugin, int numParams)
 	int round = GetNativeCell(1);
 	if( round < 0 || round > 1 ) return -1.0;
 
-	return LoadFromAddress(view_as<Address>(VersusModePtr + m_fTankSpawnFlowPercent + (round * 4)), NumberType_Int32);
+	int team = round ^ GameRules_GetProp("m_bInSecondHalfOfRound") != GameRules_GetProp("m_bAreTeamsFlipped");
+
+	return LoadFromAddress(view_as<Address>(VersusModePtr + m_fTankSpawnFlowPercent + (team * 4)), NumberType_Int32);
 }
 
 public int Direct_SetVSTankFlowPercent(Handle plugin, int numParams)
@@ -4422,8 +4659,10 @@ public int Direct_SetVSTankFlowPercent(Handle plugin, int numParams)
 	int round = GetNativeCell(1);
 	if( round < 0 || round > 1 ) return;
 
+	int team = round ^ GameRules_GetProp("m_bInSecondHalfOfRound") != GameRules_GetProp("m_bAreTeamsFlipped");
 	float flow = GetNativeCell(2);
-	StoreToAddress(view_as<Address>(VersusModePtr + m_fTankSpawnFlowPercent + (round * 4)), view_as<int>(flow), NumberType_Int32);
+
+	StoreToAddress(view_as<Address>(VersusModePtr + m_fTankSpawnFlowPercent + (team * 4)), view_as<int>(flow), NumberType_Int32);
 }
 
 public int Direct_GetVSTankToSpawnThisRound(Handle plugin, int numParams)
@@ -4434,7 +4673,9 @@ public int Direct_GetVSTankToSpawnThisRound(Handle plugin, int numParams)
 	int round = GetNativeCell(1);
 	if( round < 0 || round > 1 ) return false;
 
-	return LoadFromAddress(view_as<Address>(VersusModePtr + m_bTankThisRound + round), NumberType_Int8);
+	int team = round ^ GameRules_GetProp("m_bInSecondHalfOfRound") != GameRules_GetProp("m_bAreTeamsFlipped");
+
+	return LoadFromAddress(view_as<Address>(VersusModePtr + m_bTankThisRound + team), NumberType_Int8);
 }
 
 public int Direct_SetVSTankToSpawnThisRound(Handle plugin, int numParams)
@@ -4445,8 +4686,10 @@ public int Direct_SetVSTankToSpawnThisRound(Handle plugin, int numParams)
 	int round = GetNativeCell(1);
 	if( round < 0 || round > 1 ) return;
 
+	int team = round ^ GameRules_GetProp("m_bInSecondHalfOfRound") != GameRules_GetProp("m_bAreTeamsFlipped");
 	bool spawn = GetNativeCell(2);
-	StoreToAddress(view_as<Address>(VersusModePtr + m_bTankThisRound + round), spawn, NumberType_Int8);
+
+	StoreToAddress(view_as<Address>(VersusModePtr + m_bTankThisRound + team), spawn, NumberType_Int8);
 }
 
 public any Direct_GetVSWitchFlowPercent(Handle plugin, int numParams)
@@ -4457,7 +4700,9 @@ public any Direct_GetVSWitchFlowPercent(Handle plugin, int numParams)
 	int round = GetNativeCell(1);
 	if( round < 0 || round > 1 ) return false;
 
-	return LoadFromAddress(view_as<Address>(VersusModePtr + m_fWitchSpawnFlowPercent + (round * 4)), NumberType_Int32);
+	int team = round ^ GameRules_GetProp("m_bInSecondHalfOfRound") != GameRules_GetProp("m_bAreTeamsFlipped");
+
+	return LoadFromAddress(view_as<Address>(VersusModePtr + m_fWitchSpawnFlowPercent + (team * 4)), NumberType_Int32);
 }
 
 public int Direct_SetVSWitchFlowPercent(Handle plugin, int numParams)
@@ -4468,8 +4713,10 @@ public int Direct_SetVSWitchFlowPercent(Handle plugin, int numParams)
 	int round = GetNativeCell(1);
 	if( round < 0 || round > 1 ) return;
 
+	int team = round ^ GameRules_GetProp("m_bInSecondHalfOfRound") != GameRules_GetProp("m_bAreTeamsFlipped");
 	float flow = GetNativeCell(2);
-	StoreToAddress(view_as<Address>(VersusModePtr + m_fWitchSpawnFlowPercent + (round * 4)), view_as<int>(flow), NumberType_Int32);
+
+	StoreToAddress(view_as<Address>(VersusModePtr + m_fWitchSpawnFlowPercent + (team * 4)), view_as<int>(flow), NumberType_Int32);
 }
 
 public int Direct_GetVSWitchToSpawnThisRound(Handle plugin, int numParams)
@@ -4480,7 +4727,9 @@ public int Direct_GetVSWitchToSpawnThisRound(Handle plugin, int numParams)
 	int round = GetNativeCell(1);
 	if( round < 0 || round > 1 ) return false;
 
-	return LoadFromAddress(view_as<Address>(VersusModePtr + m_bWitchThisRound + round), NumberType_Int8);
+	int team = round ^ GameRules_GetProp("m_bInSecondHalfOfRound") != GameRules_GetProp("m_bAreTeamsFlipped");
+
+	return LoadFromAddress(view_as<Address>(VersusModePtr + m_bWitchThisRound + team), NumberType_Int8);
 }
 
 public int Direct_SetVSWitchToSpawnThisRound(Handle plugin, int numParams)
@@ -4491,8 +4740,10 @@ public int Direct_SetVSWitchToSpawnThisRound(Handle plugin, int numParams)
 	int round = GetNativeCell(1);
 	if( round < 0 || round > 1 ) return;
 
+	int team = round ^ GameRules_GetProp("m_bInSecondHalfOfRound") != GameRules_GetProp("m_bAreTeamsFlipped");
 	bool spawn = GetNativeCell(2);
-	StoreToAddress(view_as<Address>(VersusModePtr + m_bWitchThisRound + round), spawn, NumberType_Int8);
+
+	StoreToAddress(view_as<Address>(VersusModePtr + m_bWitchThisRound + team), spawn, NumberType_Int8);
 }
 
 public any Direct_GetVSStartTimer(Handle plugin, int numParams)
