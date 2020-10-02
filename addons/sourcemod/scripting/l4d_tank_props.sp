@@ -197,7 +197,8 @@ public void PossibleTankPropCreated(int entity, const char[] classname)
 
 void PropSpawned(int entity)
 {
-    if (IsValidEntity(entity))
+    if (IsValidEntity(entity) && 
+    GetEntProp(entity, Prop_Send, "m_hasTankGlow", 1)) // Just to be safe.
     {
         if (FindValueInArray(hTankPropsHit, entity) == -1)
           PushArrayCell(hTankPropsHit, entity);
