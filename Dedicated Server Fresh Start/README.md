@@ -3,7 +3,7 @@
 <== IMPORTANT NOTICE DON'T IGNORE THIS OKAY?! ===>  
 <------------------ **LINUX SUPPORT ONLY** ------------------>  
 < This means Windows is not Supported, so don't ask~ :smile: >
-> **Project's Purpose:**
+> **Document's Purpose:**
 
 This purpose of this document is to make it very easy to get Optimized Servers ready for people interested in hosting their own servers for L4D2.  Most (if not all) server hosts will refuse to assist with the installation of 3rd party software so this document aims to help you do everything from start to finish without needing outside assistance.  
 
