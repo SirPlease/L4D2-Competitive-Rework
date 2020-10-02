@@ -5,7 +5,7 @@
 < This means Windows is not Supported, so don't ask~ :smile: >
 > **Document's Purpose:**
 
-This purpose of this document is to make it very easy to get Optimized Servers ready for people interested in hosting their own servers for L4D2.  Most (if not all) server hosts will refuse to assist with the installation of 3rd party software and current guides have missing information so this document aims to help you do everything from start to finish without needing outside assistance.  
+This purpose of this document is to make it very easy to get Optimized Servers ready for people interested in hosting their own servers for L4D2.  Most (if not all) server hosts will refuse to assist with the installation of 3rd party software so this document aims to help you do everything from start to finish without needing outside assistance.  
 
 > **Recommended Server Specifications:**
 * **OS:** Ubuntu **18.04 or earlier**.  Newer versions of Ubuntu appear to have blood splatter on your screen if you shoot a zombie that is far away.
@@ -19,7 +19,7 @@ This purpose of this document is to make it very easy to get Optimized Servers r
 * NFOServers (**for US**, mostly)
 * OVH (**for EU**, mostly)
 
-The initial part of the guide is written with a random provder (Gcorelabs) in mind to ensure no part of the process of setting up a server is overlooked no matter how small.  Other providers should have an inuitive admin panel to perform the initial steps.
+The initial part of the guide is written with a random provder (Gcorelabs) in mind to ensure no part of the process of setting up a server is overlooked no matter how small.  Other providers should have an intuitive admin panel to perform the initial steps.
 - - - -
 # | **Dedicated Server: Fresh Start**
 
