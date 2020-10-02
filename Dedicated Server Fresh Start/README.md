@@ -5,72 +5,75 @@
 < This means Windows is not Supported, so don't ask~ :smile: >
 > **Project's Purpose:**
 
-This Project's purpose is to make it very easy to get Optimized Servers ready for people interested in hosting their own servers for L4D2.  
-Feel free to contact me on [Steam](http://steamcommunity.com/id/SirPlease/) regarding the project.  
-Also, definitely take a look at [Issues](https://github.com/SirPlease/Server4Dead-Project/issues) to see what's being worked on and or discussed, or to simply request for something to be added to the Project.
+This purpose of this document is to make it very easy to get Optimized Servers ready for people interested in hosting their own servers for L4D2.  Most (if not all) server hosts will refuse to assist with the installation of 3rd party software so this document aims to help you do everything from start to finish without needing outside assistance.  
 
 > **Recommended Server Specifications:**
-* **OS:** Ubuntu 64Bit.
+* **OS:** Ubuntu **18.04 or earlier**.  Newer versions of Ubuntu appear to have blood splatter on your screen if you shoot a zombie that is far away.
 * A Dedicated Server Space, do not use shared resources. (A proper VDS will work just fine)
+* 1 core per server, 1GB Memory per server
   * Gameservers are usually hosted in a Shared Environment, thus not recommended. 
 * A modern CPU, if you're planning on increasing the tickrate I would aim for a solid 3GHz CPU at minimum.
 * DDoS Protection to absorb volume attacks and to filter out malicious traffic.
 
 > **Solid Server Hosts (In My Experience):**
 * NFOServers (**for US**, mostly)
-  * High Quality VDS and Dedicated Machines.
-  * Solid DDoS Protection.
-    * Comes for free, included in the price for VDS/Dedicated Server. 
-  * Very knowledgeable and Quick Support, they know what they're talking about.
-
 * OVH (**for EU**, mostly)
-  * High Quality Dedicated Machines for Dirt Cheap.
-  * One of the best DDoS Protection services (if not the best) you can get.
-    * Comes for free, included in the price for Dedicated Servers. 
-  * Solid Network, low latency.
-  
-* Amazon (**Worldwide**)
-  * Solid performance (When you have CPU Credits available)
-  * Quality DDoS Protection.
-  * Allowed to setup additional Firewall rules on the go.
-  * Downside is the hidden costs, the price you see when aquiring a server will be far lower then what you end up paying.
-    * Bandwidth Costs.
-	* CPU Credit Costs (depending on if you buy unlimited burst, if you do not, then your Server will be unplayable on and you can forget "quality performance")
-  
-> **Do not rent from these Hosts (Tested):**
-* Vilayer (Worldwide)
-  * Your server takes forever to setup, if they even plan to do so at all.
-  * Support tickets requesting refunds are closed rather fast, you need to use external measures such as Paypal disputes to actually get your money back.
-  * 3.5/10 rating on Trustpilot.
 
-* PhotonVPS (US, SA, Asia, Africa)
-  * Tech Support is unable to add simple firewall ACL rules that should filter out small DoS attacks that somehow slip past their promised DDoS Protection.
-  
-
+The initial part of the guide is written with a random provder (Gcorelabs) in mind to ensure no part of the process of setting up a server is overlooked no matter how small.  Other providers should have an inuitive admin panel to perform the initial steps.
 - - - -
-# < 1 > | **Project Current Status**
+# | **Dedicated Server: Fresh Start**
 
-> **Completed:**
-* **Instructions** for setting up your **Dedicated Server** from Scratch.
-* **Instructions** for easy Server starting, rebooting and stopping.
-* **Tickrate Enabler**, along with Instructions.
-* **Sourcemod**, **Metamod**, **Stripper:Source** Package.
-* **Extensions**, **Gamedata**, **Competitive Preperation** Package.
-* **Sourcemod Anti-Cheat** Pre-configured Package.
-* **Optimized Server.cfg:** 
-  * Perfect for both "Vanilla" and Competitive Servers. 
-  * Easy to understand, as everything is explained within the Server.cfg.
-  * Easy to modify to work with **30**, **60**, **100**, **128** or any other Tickrate.
-  * Addons are disabled by default (registered Casters can use addons) - Check the Server.cfg for details.
-* **Competitive Configs:**
-  * **ZoneMod** [1.9.3](https://github.com/SirPlease/ZoneMod) (1v1, 2v2, 3v3, 4v4)
-  * **Apex** [1.1.2](https://github.com/SirPlease/Apex) (4v4) 
-      * Includes **Apex Hunters** (1v1, 2v2, 3v3, 4v4)
+This part of the Project will focus on preparing your dedicated Server/VDS for L4D2.  
+For this you will need to make use of an SSH Client such as [Putty](http://www.putty.org/).
 
-> **Coming up / In Progress:**
-* Additional Competitive Configs.
-* Instructions for protecting your Server from small DoS attacks that slip past DDoS filtering. 
-  * **Low Priority: as these are filtered by any decent Host that cares about Game Server hosting.**
+> **L4D2 Prerequisites:**  
+> Simply enter these commands into your Terminal after connecting and logging in to your Dedicated Server with your SSH Client.
+
+**dpkg --add-architecture i386 # enable multi-arch  
+apt-get update && apt-get upgrade  
+apt-get install libc6:i386 # install base 32bit libraries  
+apt-get install lib32z1**
+
+> **Creating a User to run the Servers on**  
+> You don't want to be running these services on root, do you?!  
+> We'll call the account Steam and allow it to run certain Root commands so that you won't have to log into Root all the time.  
+> After that, we'll login to the user. (login will ask you which user to log in to, simply log in to your new user)
+
+**adduser steam**  
+**adduser steam sudo**  
+**login**
+
+> **Installing Steam and L4D2 Files**  
+> We're no longer logged in to our Root user, we'll be logged in to our user "Steam".  
+> By entering these commands in order you'll have your files installed in "**/home/steam/Steam/steamapps/common/l4d2**"
+
+**wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz  
+tar -xvzf steamcmd_linux.tar.gz  
+./steamcmd.sh  
+login anonymous  
+force_install_dir ./Steam/steamapps/common/l4d2  
+app_update 222860 validate  
+quit**
+
+> **Setup the Server Start/Restart/Stop Files**  
+> Now we'll be using the srcds1 file provided with the README.  
+> I recommend having [Notepad++](https://notepad-plus-plus.org/download/v7.5.1.html) in order to make this as smooth as possible.
+
+The srcds1 file provided has all the information you need inside it.  
+After setting up your server cfgs and properly editing the srcds files, put them into your **/etc/init.d** folder.
+To do this you will need to use of an FTP Client such as [FileZilla](https://filezilla-project.org/) or [WinSCP](https://winscp.net/eng/download.php).  
+Simply login to your root user as you would through SSH, I recommend using SFTP. (Port 23)
+
+> **Starting, Restarting or Stopping your Servers**  
+> First we'll have to allow the system to actually run the files, which we'll do by entering the following command(s) into the Terminal, run the command for every srcds file you have placed into the folder.
+
+**sudo chmod +x /etc/init.d/srcds1**
+
+> **All set!**  
+>Now you can simply Start/Restart/Stop servers individually with simple commands.  
+>Start your command with the file location and then the action.
+
+Example: **/etc/init.d/srcds1 restart**
 
 - - - -
 # < 2 > | **F.A.Q.**
