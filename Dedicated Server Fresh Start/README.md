@@ -1,4 +1,4 @@
-# < 0 > | **The Server4Dead Project**
+# < 0 > | **Dedicated Server Fresh Start Guide**
 
 <== IMPORTANT NOTICE DON'T IGNORE THIS OKAY?! ===>  
 <------------------ **LINUX SUPPORT ONLY** ------------------>  
