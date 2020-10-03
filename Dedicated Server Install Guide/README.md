@@ -98,7 +98,7 @@ Example: **/etc/init.d/srcds1 restart
 
 > **My VDS has multiple cores and lots of RAM, can I run multiple servers simultaneously?!**
 
-Yes.  You just need to blahblahblah
+Yes.  You just need to not lose the motivation to complete this FAQ.
 
 > **How do I get that super cool mix plugin the SirPlease servers have?!**
 
