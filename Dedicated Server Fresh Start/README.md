@@ -99,7 +99,7 @@ Yes.  You just need to blahblahblah
 
 > **How do I get that super cool mix plugin the SirPlease servers have?!**
 
-You can't as he hasn't made it public.  You can use the one created by LuckyLock though which serves the same purpose with minor differences.  To install this you will need to download the [plugin file](https://github.com/LuckyServ/sourcemod-plugins/raw/master/compiled/l4d2_mix.smx).  Upload the file using filezilla to the addons/sourcemod/plugins/optional/ folder.  Open the cfg/cfgogl/zonemod/confogl_plugins.cfg file and add "sm plugins load optional/l4d2_mix.smx" to the bottom of the file without quotes.
+You can't as he hasn't made it public.  You can use the one created by LuckyLock though which serves the same purpose with minor differences.  To install this you will need to download the [plugin file](https://github.com/LuckyServ/sourcemod-plugins/raw/master/compiled/l4d2_mix.smx).  Upload the file using filezilla to the addons/sourcemod/plugins/optional/ folder.  Open the cfg/cfgogl/zonemod/confogl_plugins.cfg file and add "sm plugins load optional/l4d2_mix.smx" to the bottom of the file without quotes.  Upload the confogl_plugins.cfg over the top of your current server file using filezilla and restart your server.
 
 > **I've installed the Tickrate Enabler and set my tickrate to 128 or higher, but on the net_graph the bottom value will still be 100!**
 
