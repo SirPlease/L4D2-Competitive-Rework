@@ -34,12 +34,13 @@ Once Putty is installed and launched, you only need to enter the IP address of y
 After this you should get a black screen which says "login as:".  You should enter the username provided by your hosting provider (likely 'root').  After this you'll be prompted for the password.  NB: With the username or password in your clipboard you can simply right click to paste it into putty.  The password will not display on screen but it will paste as long as it's in your clipboard.
 
 > **L4D2 Prerequisites:**  
-> Before you can install L4D2, there are a number of items you must install first.  Simply copy and paste each of these commands one by one into the putty terminal.  You won't get any feedback on the first command, but the next 3 will visibily install something, and potentially ask you give permission.  You just need to type 'y' and enter when prompted.
+> Before you can install L4D2, there are a number of items you must install first.  Simply copy and paste each of these commands one by one into the putty terminal.  You won't get any feedback on the first command, but the next 4 will visibily install something, and potentially ask you give permission.  You just need to type 'y' and enter when prompted.
 
 **dpkg --add-architecture i386 # enable multi-arch  
 apt-get update && apt-get upgrade  
 apt-get install libc6:i386 # install base 32bit libraries  
-apt-get install lib32z1**
+apt-get install lib32z1  
+apt-get install screen**
 
 > **Creating a User to run the Servers on**  
 > You don't want to be running these services on root, do you?!  
