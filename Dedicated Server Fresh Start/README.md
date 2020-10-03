@@ -71,7 +71,9 @@ When this file has been edited and correctly saved as srcds1, you need to put it
 To do this you will need to use of an FTP Client such as [FileZilla](https://filezilla-project.org/).  
 When Filezilla is installed, launch it and select the site manager option at the top left.  Select 'New Site' and give it a name.  Change the Protocol to 'SFTP' and leave the port blank. Enter the same username/password combination you used for Putty and click on 'Connect'.  If the server puts you in the 'root' folder by default, you can use the ".." at the top to go back and help you find the **/etc/init.d** folder.  Once you are in the **/etc/init.d** folder you just need to drag and drop the srcds1 from your computer into this directory on the server.
 
-> **Install the competitive mods/server configuration files**  
+> **Install the addons/server configuration files**  
+> Before starting the server we can install the addons/cfg files and ensure they are configured correctly.
+
 
 
 > **Starting, Restarting or Stopping your Servers**  
