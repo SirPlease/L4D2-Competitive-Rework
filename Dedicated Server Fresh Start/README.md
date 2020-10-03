@@ -44,7 +44,7 @@ apt-get install lib32z1**
 > **Creating a User to run the Servers on**  
 > You don't want to be running these services on root, do you?!  
 > We'll call the account Steam and allow it to run certain Root commands so that you won't have to log into Root all the time.  
-> After that, we'll login to the user. (login will ask you which user to log in to, simply log in to your new user)
+> After that, we'll login to the user. (when you enter the login comamnd it will ask you which user to log in to, simply log in with the new username (steam) and password you just created seconds ago).
 
 **adduser steam**  
 **adduser steam sudo**  
@@ -52,7 +52,7 @@ apt-get install lib32z1**
 
 > **Installing Steam and L4D2 Files**  
 > We're no longer logged in to our Root user, we'll be logged in to our user "Steam".  
-> By entering these commands in order you'll have your files installed in "**/home/steam/Steam/steamapps/common/l4d2**"
+> By entering these commands one by one in order you'll have all the required files for a L4D2 vanilla server installed in "**/home/steam/Steam/steamapps/common/l4d2**"
 
 **wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz  
 tar -xvzf steamcmd_linux.tar.gz  
@@ -63,13 +63,16 @@ app_update 222860 validate
 quit**
 
 > **Setup the Server Start/Restart/Stop Files**  
-> Now we'll be using the srcds1 file provided with the README.  
-> I recommend having [Notepad++](https://notepad-plus-plus.org/download/v7.5.1.html) in order to make this as smooth as possible.
+> Next you'll need to download the srcds1 file provided within this directory.  
+> I recommend having [Notepad++](https://notepad-plus-plus.org/download/v7.5.1.html) in order to make this as smooth as possible but the notepad within windows works fine.
 
-The srcds1 file provided has all the information you need inside it.  
-After setting up your server cfgs and properly editing the srcds files, put them into your **/etc/init.d** folder.
-To do this you will need to use of an FTP Client such as [FileZilla](https://filezilla-project.org/) or [WinSCP](https://winscp.net/eng/download.php).  
-Simply login to your root user as you would through SSH, I recommend using SFTP. (Port 23)
+The srcds1 file provided has all the information you need inside it.  Realistically, if you are hosting one server and you have followed every step in this guide you will only need to input the IP address of your server from 1.3.3.7 to your actual IP.  After this save the file as srcds1.  If it saves as srcds1.txt you should rename it to remove the .txt extension.  
+When this file has been edited and correctly saved as srcds1, you need to put it into your **/etc/init.d** folder.
+To do this you will need to use of an FTP Client such as [FileZilla](https://filezilla-project.org/).  
+When Filezilla is installed, launch it and select the site manager option at the top left.  Select 'New Site' and give it a name.  Change the Protocol to 'SFTP' and leave the port blank. Enter the same username/password combination you used for Putty and click on 'Connect'.  If the server puts you in the 'root' folder by default, you can use the ".." at the top to go back and help you find the **/etc/init.d** folder.  Once you are in the **/etc/init.d** folder you just need to drag and drop the srcds1 from your computer into this directory on the server.
+
+> **Install the competitive mods/server configuration files**  
+
 
 > **Starting, Restarting or Stopping your Servers**  
 > First we'll have to allow the system to actually run the files, which we'll do by entering the following command(s) into the Terminal, run the command for every srcds file you have placed into the folder.
