@@ -103,13 +103,13 @@ You can't as he hasn't made it public.  You can use the one created by LuckyLock
 
 > **Left 4 Dead 2 just had an update and I can't connect to my server anymore?!**
 
-You will need to update your server.
-
-./steamcmd.sh
-login anonymous
-force_install_dir ./Steam/steamapps/common/l4d2
-app_update 222860 validate
-quit
+You will need to update your server.  
+  
+./steamcmd.sh  
+login anonymous  
+force_install_dir ./Steam/steamapps/common/l4d2  
+app_update 222860 validate  
+quit  
 
 > **I've installed the Tickrate Enabler and set my tickrate to 128 or higher, but on the net_graph the bottom value will still be 100!**
 
