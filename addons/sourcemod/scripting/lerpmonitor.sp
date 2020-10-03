@@ -51,13 +51,13 @@ public OnPluginStart() {
 	cvarL4DReadyEnabled = FindConVar("l4d_ready_enabled");
 	cvarL4DReadyBothHalves = FindConVar("l4d_ready_both_halves");
 	
-	cVarAllowedLerpChanges = CreateConVar("sm_allowed_lerp_changes", "1", "Allowed number of lerp changes for a half", CVAR_FLAGS);
-	cVarLerpChangeSpec = CreateConVar("sm_lerp_change_spec", "1", "Move to spectators on exceeding lerp changes count?", CVAR_FLAGS);
-	cVarReadyUpLerpChanges = CreateConVar("sm_readyup_lerp_changes", "1", "Allow lerp changes during ready-up", CVAR_FLAGS);
-	cVarMinLerp = CreateConVar("sm_min_lerp", "0.000", "Minimum allowed lerp value", CVAR_FLAGS);
-	cVarMaxLerp = CreateConVar("sm_max_lerp", "0.067", "Maximum allowed lerp value", CVAR_FLAGS);
+	cVarAllowedLerpChanges = CreateConVar("sm_allowed_lerp_changes", "1", "Allowed number of lerp changes for a half");
+	cVarLerpChangeSpec = CreateConVar("sm_lerp_change_spec", "1", "Move to spectators on exceeding lerp changes count?");
+	cVarReadyUpLerpChanges = CreateConVar("sm_readyup_lerp_changes", "1", "Allow lerp changes during ready-up");
+	cVarMinLerp = CreateConVar("sm_min_lerp", "0.000", "Minimum allowed lerp value");
+	cVarMaxLerp = CreateConVar("sm_max_lerp", "0.067", "Maximum allowed lerp value");
 	
-	RegConsoleCmd("sm_lerps", Lerps_Cmd, "List the Lerps of all players in game", CVAR_FLAGS);
+	RegConsoleCmd("sm_lerps", Lerps_Cmd, "List the Lerps of all players in game");
 	
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
@@ -167,7 +167,7 @@ stock GetClientBySteamID(const String:steamID[]) {
 	
 	for (new client = 1; client < MaxClients+1; client++) {
 		if (!IsClientInGame(client)) continue;
-		GetClientAuthString(client, tempSteamID, STEAMID_SIZE);
+		GetClientAuthId(client, AuthId_Steam2, tempSteamID, STEAMID_SIZE);
 		
 		if (StrEqual(steamID, tempSteamID)) {
 			return client;
@@ -226,7 +226,7 @@ ProcessPlayerLerp(client, bool:load = false, bool:team = false)
 
 	// Get steamid and index
 	decl String:steamID[STEAMID_SIZE];
-	GetClientAuthString(client, steamID, STEAMID_SIZE);
+	GetClientAuthId(client, AuthId_Steam2, steamID, STEAMID_SIZE);
 	new index = FindStringInArray(arrayLerps, steamID);
 
 	if ((FloatCompare(newLerpTime, GetConVarFloat(cVarMinLerp)) == -1) || (FloatCompare(newLerpTime, GetConVarFloat(cVarMaxLerp)) == 1)) {
@@ -320,8 +320,8 @@ Float:GetLerpTime(client)
 	return maximum(flLerpAmount, flLerpRatio / updateRate);
 }
 
-Float:clamp(Float:in, Float:low, Float:high) {
-	return in > high ? high : (in < low ? low : in);
+Float:clamp(Float:inc, Float:low, Float:high) {
+	return inc > high ? high : (inc < low ? low : inc);
 }
 
 Float:maximum(Float:a, Float:b) {
