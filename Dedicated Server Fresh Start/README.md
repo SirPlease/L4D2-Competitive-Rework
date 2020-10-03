@@ -81,7 +81,7 @@ When Filezilla is installed, launch it and select the site manager option at the
 Go to the [Competitive Rework](https://github.com/SirPlease/L4D2-Competitive-Rework) github page.  Select the green 'code' option at the top right and choose the 'Download Zip' option from the dropdown.  Unzip the files to somewhere handy on your computer and open up the folder.  Edit 'myhost.txt' and 'mymotd.txt' to whatever you want to display to users who join your server.  Open the 'cfg' folder and rename 'server.cfg' to 'server1.cfg'.  We call it server1 as we already defined it as server1 in the srcds1 file.  Once the file is renamed open it up and edit the options in here as you please.  Everything should be clearly defined but you should probably only touch the hostname, password, and steamgroup options.  After this you can navigate to home/steam/Steam/steamapps/common/l4d2/left4dead2/ on your server through filezilla and upload all the files (including the ones we just edited) from the competitive rework download on top of what is currently there.  With everything uploaded we are now ready to start the server!
 
 > **Starting, Restarting or Stopping your Servers**  
-> First we'll have to allow the system to actually run the files, which we'll do by entering the following command(s) into the Terminal, run the command for every srcds file you have placed into the folder.
+> First we'll have to allow the system to actually run the files, which we'll do by entering the following command into the Terminal.  If you opt to run multiple servers (see the FAQ) you will need to run this command for each server.
 
 **sudo chmod +x /etc/init.d/srcds1**
 
@@ -89,7 +89,9 @@ Go to the [Competitive Rework](https://github.com/SirPlease/L4D2-Competitive-Rew
 >Now you can simply Start/Restart/Stop servers individually with simple commands.  
 >Start your command with the file location and then the action.
 
-Example: **/etc/init.d/srcds1 restart**
+Example: **/etc/init.d/srcds1 restart  
+/etc/init.d/srcds1 start  
+/etc/init.d/srcds1 stop**
 
 - - - -
 # < 2 > | **F.A.Q.**
