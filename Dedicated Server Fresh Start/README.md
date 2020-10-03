@@ -19,15 +19,22 @@ This purpose of this document is to make it very easy to get Optimized Servers r
 * NFOServers (**for US**, mostly)
 * OVH (**for EU**, mostly)
 
-The initial part of the guide is written with a random provder (Gcorelabs) in mind to ensure no part of the process of setting up a server is overlooked no matter how small.  Other providers should have an intuitive admin panel to perform the initial steps.
+
 - - - -
 # | **Dedicated Server: Fresh Start**
 
 This part of the Project will focus on preparing your dedicated Server/VDS for L4D2.  
-For this you will need to make use of an SSH Client such as [Putty](http://www.putty.org/).
+
+Login to your webhosts admin panel and ensure you are using Ubuntu **18.04 or earlier**.  You should have had an option to do this during the order process, but if not most hosts will have an intuitive admin panel to allow you to do this.  I used GCoreLabs to set up a server whilst writing this guide, and they have a 'reinstall' option under "[Management > Virtual Machines](http://www.putty.org/)".
+
+For the next part, you will need to make use of an SSH Client such as [Putty](http://www.putty.org/).
+
+Once Putty is installed and launched, you only need to enter the IP address of your server into the Hostname field.  The port should default to 22 and the connection type to SSH which is correct.  Once you've input the IP address select 'open'.  If you get a security warning select yes.
+
+After this you should get a black screen which says "login as:".  You should enter the username provided by your hosting provider (likely 'root').  After this you'll be prompted for the password.  NB: With the username or password in your clipboard you can simply right click to paste it into putty.  The password will not display on screen but it will paste as long as it's in your clipboard.
 
 > **L4D2 Prerequisites:**  
-> Simply enter these commands into your Terminal after connecting and logging in to your Dedicated Server with your SSH Client.
+> Before you can install L4D2, there are a number of items you must install first.  Simply copy and paste each of these commands one by one into the putty terminal.  You won't get any feedback on the first command, but the next 3 will visibily install something, and potentially ask you give permission.  You just need to type 'y' and enter when prompted.
 
 **dpkg --add-architecture i386 # enable multi-arch  
 apt-get update && apt-get upgrade  
