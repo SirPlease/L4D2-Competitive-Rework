@@ -72,9 +72,9 @@ To do this you will need to use of an FTP Client such as [FileZilla](https://fil
 When Filezilla is installed, launch it and select the site manager option at the top left.  Select 'New Site' and give it a name.  Change the Protocol to 'SFTP' and leave the port blank. Enter the same username/password combination you used for Putty and click on 'Connect'.  If the server puts you in the 'root' folder by default, you can use the ".." at the top to go back and help you find the **/etc/init.d** folder.  Once you are in the **/etc/init.d** folder you just need to drag and drop the srcds1 from your computer into this directory on the server.
 
 > **Install the addons/server configuration files**  
-> Before starting the server we can install the addons/cfg files and ensure they are configured correctly.
+> Before starting the server we can install the addons/cfg files and ensure they are configured correctly.  Keep filezilla handy as we will be making use of this again.
 
-
+Go to the (Competitive Rework)[https://github.com/SirPlease/L4D2-Competitive-Rework] github page.  Select the green 'code' option at the top right and choose the 'Download Zip' option from the dropdown.  Unzip the files to somewhere handy on your computer and open up the folder.  Edit 'myhost.txt' and 'mymotd.txt' to whatever you want to display to users who join your server.  Open the 'cfg' folder and rename 'server.cfg' to 'server1.cfg'.  We call it server1 as we already defined it as server1 in the srcds1 file.  Once the file is renamed open it up and edit the options in here as you please.  Everything should be clearly defined but you should probably only touch the hostname, password, and steamgroup options.  
 
 > **Starting, Restarting or Stopping your Servers**  
 > First we'll have to allow the system to actually run the files, which we'll do by entering the following command(s) into the Terminal, run the command for every srcds file you have placed into the folder.
@@ -90,7 +90,13 @@ Example: **/etc/init.d/srcds1 restart**
 - - - -
 # < 2 > | **F.A.Q.**
 
-> **I'd like to make a suggestion for the Project!**
+> **My VDS has multiple cores and lots of RAM, can I run multiple servers simultaneously?!**
+
+Yes.  blahblahblah
+
+> **How do I get that super cool mix plugin the SirPlease servers have?!**
+
+You can't as he hasn't made it public.  You can use the one created by LuckyLock though which is just as good.  
 
 > **Something isn't working and the F.A.Q. doesn't provide answers either!**
 
