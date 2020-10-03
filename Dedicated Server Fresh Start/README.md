@@ -95,16 +95,11 @@ Example: **/etc/init.d/srcds1 restart**
 
 > **My VDS has multiple cores and lots of RAM, can I run multiple servers simultaneously?!**
 
-Yes.  blahblahblah
+Yes.  You just need to blahblahblah
 
 > **How do I get that super cool mix plugin the SirPlease servers have?!**
 
-You can't as he hasn't made it public.  You can use the one created by LuckyLock though which is just as good.  
-
-> **Something isn't working and the F.A.Q. doesn't provide answers either!**
-
-Both of these can be requested/reported in Github's issue tracker for this Project.  
-You can do this [**here**](https://github.com/SirPlease/Server4Dead-Project/issues).
+You can't as he hasn't made it public.  You can use the one created by LuckyLock though which serves the same purpose with minor differences.  To install this you will need to download the [plugin file](https://github.com/LuckyServ/sourcemod-plugins/raw/master/compiled/l4d2_mix.smx).  Upload the file using filezilla to the addons/sourcemod/plugins/optional/ folder.  Open the cfg/cfgogl/zonemod/confogl_plugins.cfg file and add "sm plugins load optional/l4d2_mix.smx" to the bottom of the file without quotes.
 
 > **I've installed the Tickrate Enabler and set my tickrate to 128 or higher, but on the net_graph the bottom value will still be 100!**
 
