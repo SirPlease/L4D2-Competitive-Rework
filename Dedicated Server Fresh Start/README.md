@@ -77,7 +77,7 @@ When Filezilla is installed, launch it and select the site manager option at the
 > **Install the addons/server configuration files**  
 > Before starting the server we can install the addons/cfg files and ensure they are configured correctly.  Keep filezilla handy as we will be making use of this again.
 
-Go to the [Competitive Rework](https://github.com/SirPlease/L4D2-Competitive-Rework) github page.  Select the green 'code' option at the top right and choose the 'Download Zip' option from the dropdown.  Unzip the files to somewhere handy on your computer and open up the folder.  Edit 'myhost.txt' and 'mymotd.txt' to whatever you want to display to users who join your server.  Open the 'cfg' folder and rename 'server.cfg' to 'server1.cfg'.  We call it server1 as we already defined it as server1 in the srcds1 file.  Once the file is renamed open it up and edit the options in here as you please.  Everything should be clearly defined but you should probably only touch the hostname, password, and steamgroup options.  
+Go to the [Competitive Rework](https://github.com/SirPlease/L4D2-Competitive-Rework) github page.  Select the green 'code' option at the top right and choose the 'Download Zip' option from the dropdown.  Unzip the files to somewhere handy on your computer and open up the folder.  Edit 'myhost.txt' and 'mymotd.txt' to whatever you want to display to users who join your server.  Open the 'cfg' folder and rename 'server.cfg' to 'server1.cfg'.  We call it server1 as we already defined it as server1 in the srcds1 file.  Once the file is renamed open it up and edit the options in here as you please.  Everything should be clearly defined but you should probably only touch the hostname, password, and steamgroup options.  After this you can navigate to home/steam/Steam/steamapps/common/l4d2/left4dead2/ and upload all the files (including the ones we just edited) from the competitive rework download on top of what is currently there.  With everything uploaded we are now ready to start the server!
 
 > **Starting, Restarting or Stopping your Servers**  
 > First we'll have to allow the system to actually run the files, which we'll do by entering the following command(s) into the Terminal, run the command for every srcds file you have placed into the folder.
@@ -100,6 +100,16 @@ Yes.  You just need to blahblahblah
 > **How do I get that super cool mix plugin the SirPlease servers have?!**
 
 You can't as he hasn't made it public.  You can use the one created by LuckyLock though which serves the same purpose with minor differences.  To install this you will need to download the [plugin file](https://github.com/LuckyServ/sourcemod-plugins/raw/master/compiled/l4d2_mix.smx).  Upload the file using filezilla to the addons/sourcemod/plugins/optional/ folder.  Open the cfg/cfgogl/zonemod/confogl_plugins.cfg file and add "sm plugins load optional/l4d2_mix.smx" to the bottom of the file without quotes.  Upload the confogl_plugins.cfg over the top of your current server file using filezilla and restart your server.
+
+> **Left 4 Dead 2 just had an update and I can't connect to my server anymore?!**
+
+You will need to update your server.
+
+./steamcmd.sh
+login anonymous
+force_install_dir ./Steam/steamapps/common/l4d2
+app_update 222860 validate
+quit
 
 > **I've installed the Tickrate Enabler and set my tickrate to 128 or higher, but on the net_graph the bottom value will still be 100!**
 
