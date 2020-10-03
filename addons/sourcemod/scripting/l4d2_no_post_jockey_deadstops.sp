@@ -1,10 +1,9 @@
 #pragma semicolon 1
-#pragma newdecls required
 
 #include <sourcemod>
-#include <left4downtown>
+#include <left4dhooks>
 
-public Plugin myinfo = 
+public Plugin:myinfo = 
 {
 	name = "L4D2 No Post-Jockeyed Shoves",
 	author = "Sir",
@@ -13,35 +12,35 @@ public Plugin myinfo =
 	url = "nah"
 };
 
-public Action L4D_OnShovedBySurvivor(int shover, int shovee, const float vector[3])
+public Action L4D_OnShovedBySurvivor(int client, int victim, const float vecDir[3])
 {
-	if (!IsSurvivor(shover) || !IsJockey(shovee))
+	if (!IsSurvivor(client) || !IsJockey(victim))
 		return Plugin_Continue;
 	
-	if (IsJockeyed(shover)) return Plugin_Handled;
+	if (IsJockeyed(client)) return Plugin_Handled;
 	return Plugin_Continue;
 }
 
-public Action L4D2_OnEntityShoved(int shover, int shovee_ent, int weapon, float vector[3], bool bIsHunterDeadstop)
+public Action L4D2_OnEntityShoved(int client, int entity, int weapon, float vecDir[3], bool bIsHighPounce)
 {
-	if (!IsSurvivor(shover) || !IsJockey(shovee_ent))
+	if (!IsSurvivor(client) || !IsJockey(entity))
 		return Plugin_Continue;
 	
-	if (IsJockeyed(shover)) return Plugin_Handled;
+	if (IsJockeyed(client)) return Plugin_Handled;
 	return Plugin_Continue;
 }
 
-stock bool IsSurvivor(int client)
+bool IsSurvivor(int client)
 {
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2;
 }
 
-stock bool IsInfected(int client)
+bool IsInfected(int client)
 {
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 3;
 }
 
-stock bool IsJockey(int client)  
+bool IsJockey(int client)  
 {
 	if (!IsInfected(client))
 		return false;
@@ -55,7 +54,7 @@ stock bool IsJockey(int client)
 	return true;
 }
 
-stock bool IsJockeyed(int client)
+bool IsJockeyed(int client)
 {
 	return GetEntPropEnt(client, Prop_Send, "m_jockeyAttacker") > 0;
 }

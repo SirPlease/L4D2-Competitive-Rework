@@ -9,9 +9,7 @@
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
-#include <left4downtown>
-#include <l4d2_direct>
-#include <l4d2util>
+#include <left4dhooks>
 
 #define CLASSNAME_LENGTH 64
 #define MIN(%0,%1) (((%0) < (%1)) ? (%0) : (%1))

@@ -1,9 +1,9 @@
 #pragma semicolon 1
 
 #include <sourcemod>
-#include <left4downtown>
-#include <l4d2_direct>
+#include <left4dhooks>
 #include <l4d2lib>
+#include <sdktools>
 #include <colors>
 
 #define HORDE_MIN_SIZE_AUDIAL_FEEDBACK	120
@@ -35,10 +35,10 @@ public Plugin:myinfo =
 
 public OnPluginStart()
 {
-	new Handle:gamedata = LoadGameConfigFile("left4downtown.l4d2");
+	new Handle:gamedata = LoadGameConfigFile("left4dhooks.l4d2");
 	if (!gamedata)
 	{
-		SetFailState("Left4Downtown2 gamedata missing or corrupt");
+		SetFailState("Left4DHooks gamedata missing or corrupt");
 	}
 
 	pZombieManager = GameConfGetAddress(gamedata, "ZombieManager");

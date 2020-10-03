@@ -1,10 +1,7 @@
-// New Syntax Includes
 #pragma newdecls required
 
-#include <left4downtown>
-
-// Sourcemod
 #include <sourcemod>
+#include <left4dhooks>
 
 public Plugin myinfo =
 {
@@ -24,7 +21,6 @@ public Action L4D_OnShovedBySurvivor(int client, int victim, const float vecDire
 	!IsValidClient(client) ||
 	GetEntProp(victim, Prop_Send, "m_zombieClass") != 2)
 		return Plugin_Continue;
-
 
 	// Get the Ability
 	int iAbility = GetEntPropEnt(victim, Prop_Send,"m_customAbility")

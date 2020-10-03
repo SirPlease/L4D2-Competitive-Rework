@@ -2,8 +2,7 @@
 
 #include <sourcemod>
 #include <sdktools>
-#include <left4downtown>
-#include <l4d2_direct>
+#include <left4dhooks>
 #include <l4d2lib>
 #include <colors>
 

@@ -1,9 +1,9 @@
 #pragma semicolon 1
 
 #include <sourcemod>
+#include <sdktools>
 #include <sdkhooks>
-#include <left4downtown>
-#include <l4d2_direct>
+#include <left4dhooks>
 #include <l4d2lib>
 
 #define CLAMP(%0,%1,%2) (((%0) > (%2)) ? (%2) : (((%0) < (%1)) ? (%1) : (%0)))
@@ -67,17 +67,17 @@ public APLRes:AskPluginLoad2(Handle:plugin, bool:late, String:error[], errMax)
     CreateNative("SMPlus_GetMaxHealthBonus", Native_GetMaxHealthBonus);
     CreateNative("SMPlus_GetMaxDamageBonus", Native_GetMaxDamageBonus);
     CreateNative("SMPlus_GetMaxPillsBonus", Native_GetMaxPillsBonus);
-    RegPluginLibrary("l4d2_hybrid_scoremod");
+    RegPluginLibrary("l4d2_hybrid_scoremod_zone");
     bLateLoad = late;
     return APLRes_Success;
 }
 
 public OnPluginStart()
 {
-	hCvarBonusPerSurvivorMultiplier = CreateConVar("sm2_bonus_per_survivor_multiplier", "0.5", "Total Survivor Bonus = this * Number of Survivors * Map Distance", FCVAR_PLUGIN);
-	hCvarPermanentHealthProportion = CreateConVar("sm2_permament_health_proportion", "0.75", "Permanent Health Bonus = this * Map Bonus; rest goes for Temporary Health Bonus", FCVAR_PLUGIN);
-	hCvarPillsHpFactor = CreateConVar("sm2_pills_hp_factor", "6.0", "Unused pills HP worth = map bonus HP value / this", FCVAR_PLUGIN);
-	hCvarPillsMaxBonus = CreateConVar("sm2_pills_max_bonus", "30", "Unused pills cannot be worth more than this", FCVAR_PLUGIN);
+	hCvarBonusPerSurvivorMultiplier = CreateConVar("sm2_bonus_per_survivor_multiplier", "0.5", "Total Survivor Bonus = this * Number of Survivors * Map Distance", FCVAR_NONE);
+	hCvarPermanentHealthProportion = CreateConVar("sm2_permament_health_proportion", "0.75", "Permanent Health Bonus = this * Map Bonus; rest goes for Temporary Health Bonus", FCVAR_NONE);
+	hCvarPillsHpFactor = CreateConVar("sm2_pills_hp_factor", "6.0", "Unused pills HP worth = map bonus HP value / this", FCVAR_NONE);
+	hCvarPillsMaxBonus = CreateConVar("sm2_pills_max_bonus", "30", "Unused pills cannot be worth more than this", FCVAR_NONE);
 	// hCvarTiebreakerBonus = CreateConVar("sm2_tiebreaker_bonus", "25", "Tiebreaker for those cases when both teams make saferoom with no bonus", FCVAR_PLUGIN);
 	
 	hCvarValveSurvivalBonus = FindConVar("vs_survival_bonus");
