@@ -13,7 +13,7 @@ public Plugin:myinfo =
 {
     name        = "L4D2 Weapon Attributes",
     author      = "Jahze",
-    version     = "1.3",
+    version     = "1.4",
     description = "Allowing tweaking of the attributes of all weapons"
 };
 
@@ -186,14 +186,13 @@ SetWeaponAttributeInt( const String:sWeaponName[], idx, value ) {
     for (new i = 0; i < iSize; i++)
     {
         GetArrayString(hVanillaAttributesWeapon, i, sBuffer, 32);
-        if (StrEqual(sWeaponName, sBuffer) && idx == GetArrayCell(hVanillaAttributesAttribute, i))
+        if (StrEqual(sWeaponName, sBuffer) && idx != GetArrayCell(hVanillaAttributesAttribute, i))
         {
-            return;
+            PushArrayCell(hVanillaAttributesValue, L4D2_GetIntWeaponAttribute(sWeaponName, iIntWeaponAttributes[idx]));
+            PushArrayString(hVanillaAttributesWeapon, sWeaponName);
+            PushArrayCell(hVanillaAttributesAttribute, idx);
         }
     }
-    PushArrayCell(hVanillaAttributesValue, L4D2_GetIntWeaponAttribute(sWeaponName, iIntWeaponAttributes[idx]));
-    PushArrayString(hVanillaAttributesWeapon, sWeaponName);
-    PushArrayCell(hVanillaAttributesAttribute, idx);
     L4D2_SetIntWeaponAttribute(sWeaponName, iIntWeaponAttributes[idx], value);
 }
 
@@ -204,14 +203,13 @@ SetWeaponAttributeFloat( const String:sWeaponName[], idx, Float:value ) {
     for (new i = 0; i < iSize; i++)
     {
         GetArrayString(hVanillaAttributesWeapon, i, sBuffer, 32);
-        if (StrEqual(sWeaponName, sBuffer) && idx == GetArrayCell(hVanillaAttributesAttribute, i))
+        if (StrEqual(sWeaponName, sBuffer) && idx != GetArrayCell(hVanillaAttributesAttribute, i))
         {
-            return;
+            PushArrayCell(hVanillaAttributesValue, L4D2_GetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[idx]));
+            PushArrayString(hVanillaAttributesWeapon, sWeaponName);
+            PushArrayCell(hVanillaAttributesAttribute, idx);
         }
     }
-    PushArrayCell(hVanillaAttributesValue, L4D2_GetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[idx]));
-    PushArrayString(hVanillaAttributesWeapon, sWeaponName);
-    PushArrayCell(hVanillaAttributesAttribute, idx);
     L4D2_SetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[idx], value);
 }
 
@@ -269,7 +267,7 @@ public Action:Weapon( args ) {
     {
         iAttrIdx = iAttrIdx - 3;
         SetWeaponAttributeFloat(sWeaponNameFull, iAttrIdx, fValue);
-        PrintToServer("%s for %s set to %.2f", sWeaponAttrNames[iAttrIdx], sWeaponName, fValue);
+        PrintToServer("%s for %s set to %.2f", sWeaponAttrNames[iAttrIdx + 3], sWeaponName, fValue);
     }
     else {
         KvSetFloat(hTankDamageKVs, sWeaponNameFull, fValue);
