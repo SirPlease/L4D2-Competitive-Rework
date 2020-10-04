@@ -100,7 +100,7 @@ public Plugin: myinfo =
     name = "Holdout Bonus",
     author = "Tabun",
     description = "Gives bonus for (partially) surviving holdout/camping events. (Requires penalty_bonus.)",
-    version = "0.0.9",
+    version = "0.0.10",
     url = "https://github.com/Tabbernaut/L4D2-Plugins"
 };
 
@@ -127,6 +127,7 @@ public OnLibraryRemoved(const String:name[])
     if ( StrEqual(name, "lgofnoc") ) { g_bLGOAvailable = false; }
     else if ( StrEqual(name, "readyup") ) { g_bReadyUpAvailable = false; }
     else if ( StrEqual(name, "pause") ) { g_bPauseAvailable = false; }
+    else if ( StrEqual(name, "left4dhooks") ) { OnPluginEnd(); }
 }
 public OnLibraryAdded(const String:name[])
 {

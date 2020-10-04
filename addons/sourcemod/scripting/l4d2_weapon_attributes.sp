@@ -13,7 +13,7 @@ public Plugin:myinfo =
 {
     name        = "L4D2 Weapon Attributes",
     author      = "Jahze",
-    version     = "1.4",
+    version     = "1.4.1",
     description = "Allowing tweaking of the attributes of all weapons"
 };
 
@@ -157,7 +157,14 @@ public OnPluginEnd() {
     }
 }
 
- 
+public void OnLibraryRemoved(const char[] name)
+{
+    if (StrEqual(name, "left4dhooks"))
+    {
+        OnPluginEnd();
+    }
+}
+
 GetWeaponAttributeIndex( String:sAttrName[128] ) {
     for ( new i = 0; i < MAX_ATTRS; i++ ) {
         if ( StrEqual(sAttrName, sWeaponAttrShortName[i]) ) {

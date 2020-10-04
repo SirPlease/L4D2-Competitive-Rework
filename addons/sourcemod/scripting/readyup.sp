@@ -19,7 +19,7 @@ public Plugin:myinfo =
 	name = "L4D2 Ready-Up",
 	author = "CanadaRox, (Lazy unoptimized additions by Sir)",
 	description = "New and improved ready-up plugin.",
-	version = "9.2",
+	version = "9.2.1",
 	url = ""
 };
 
@@ -158,6 +158,14 @@ public OnPluginEnd()
 {
 	if (inReadyUp)
 		InitiateLive(false);
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		OnPluginEnd();
+	}
 }
 
 public OnMapStart()

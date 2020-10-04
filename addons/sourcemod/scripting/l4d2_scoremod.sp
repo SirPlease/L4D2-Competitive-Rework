@@ -16,7 +16,7 @@ public Plugin:myinfo =
 	name = "L4D2 Scoremod",
 	author = "CanadaRox, ProdigySim",
 	description = "L4D2 Custom Scoring System (Health Bonus)",
-	version = "1.1b",
+	version = "1.2.1",
 	url = "https://bitbucket.org/CanadaRox/random-sourcemod-stuff"
 };
 
@@ -125,6 +125,10 @@ public OnLibraryRemoved(const String:name[])
 	if (StrEqual(name, "l4d2lib"))
 	{
 		l4d2lib_available = false;
+	}
+	else if (StrEqual(name, "left4dhooks"))
+	{
+		OnPluginEnd();
 	}
 }
  

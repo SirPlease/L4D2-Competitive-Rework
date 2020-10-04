@@ -55,7 +55,7 @@ public Plugin:myinfo =
 	name = "L4D2 Scoremod+",
 	author = "Visor",
 	description = "The next generation scoring mod",
-	version = "2.2.2",
+	version = "2.2.3",
 	url = "https://github.com/Attano/L4D2-Competitive-Framework"
 };
 
@@ -112,6 +112,14 @@ public OnPluginEnd()
 {
 	ResetConVar(hCvarValveSurvivalBonus);
 	ResetConVar(hCvarValveTieBreaker);
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "left4dhooks"))
+	{
+		OnPluginEnd();
+	}
 }
 
 public OnConfigsExecuted()
