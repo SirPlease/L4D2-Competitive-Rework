@@ -1,5 +1,4 @@
 #include <sourcemod>
-#include <left4dhooks>
 #include <sdktools>
 #include <sdkhooks>
 #include <colors>

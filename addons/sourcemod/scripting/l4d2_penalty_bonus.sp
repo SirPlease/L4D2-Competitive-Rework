@@ -2,7 +2,6 @@
 
 #include <sourcemod>
 #include <sdktools>
-#include <left4dhooks>
 #include <l4d2util>
 
 #define DEBUG_MODE false

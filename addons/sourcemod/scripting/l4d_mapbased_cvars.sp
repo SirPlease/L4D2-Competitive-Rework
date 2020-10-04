@@ -2,7 +2,6 @@
 
 #include <sourcemod>
 #include <sdktools>
-#include <left4dhooks>
 //#include <confogl>
 
 #define KV_MAPCVAR              "/mapcvars.txt"

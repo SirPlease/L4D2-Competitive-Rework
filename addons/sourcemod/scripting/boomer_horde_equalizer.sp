@@ -1,7 +1,6 @@
 #pragma semicolon 1
 
 #include <sourcemod>
-#include <left4dhooks>
 
 new Handle:z_mob_spawn_max_size;
 

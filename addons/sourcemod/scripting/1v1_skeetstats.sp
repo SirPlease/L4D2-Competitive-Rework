@@ -3,7 +3,6 @@
 #include <sourcemod>
 #include <sdkhooks>
 #include <sdktools>
-#include <left4dhooks>
 
 #define MAX(%0,%1) (((%0) > (%1)) ? (%0) : (%1))
 
