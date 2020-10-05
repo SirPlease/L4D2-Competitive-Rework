@@ -29,6 +29,7 @@ public OnPluginEnd()
 public Action:L4D_OnSpawnITMob(&amount)
 {
 	amount = GetConVarInt(z_mob_spawn_max_size);
+	return Plugin_Changed;
 }
 
 PatchWanderersCheck(bool:enable)
