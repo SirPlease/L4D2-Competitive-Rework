@@ -13,7 +13,7 @@ native bool:IsPlatformWindows();
 
 forward OnPatchApplied(const String:name[]);
 
-public SharedPlugin:__pl_l4d2util =
+public SharedPlugin:__pl_code_patcher =
 {
 	name = "code_patcher",
 	file = "code_patcher.smx",
@@ -24,7 +24,7 @@ public SharedPlugin:__pl_l4d2util =
 #endif
 };
 
-public __pl_lgofnoc_SetNTVOptional()
+public __pl_code_patcher_SetNTVOptional()
 {
 	MarkNativeAsOptional("IsPatchApplied");
 	MarkNativeAsOptional("GetPatchAddress");
