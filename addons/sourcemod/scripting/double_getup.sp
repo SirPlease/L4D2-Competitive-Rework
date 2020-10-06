@@ -42,14 +42,15 @@
 public Plugin:myinfo =
 {
     name = "L4D2 Get-Up Fix",
-    author = "Darkid",
+    author = "Darkid, Jacob",
     description = "Fixes the problem when, after completing a getup animation, you have another one.",
-    version = "3.6",
-    url = "https://github.com/jbzdarkid/Double-Getup"
+    version = "3.7",
+    url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
 new bool:lateLoad;
 new Handle:rockPunchFix;
+new Handle:longerTankPunchGetup;
 new const bool:DEBUG = false;
 
 enum PlayerState {
@@ -85,6 +86,7 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 
 public OnPluginStart() {
     rockPunchFix = CreateConVar("rock_punch_fix", "1", "When a tank punches someone who is getting up from a rock, cause them to have an extra getup.", FCVAR_PLUGIN);
+    longerTankPunchGetup = CreateConVar("longer_tank_punch_getup", "0", "When a tank punches someone give them a slightly longer getup.", FCVAR_PLUGIN, false, 0.0, false, 0.0);
 
     HookEvent("round_start", round_start);
     HookEvent("tongue_grab", smoker_land);
@@ -296,10 +298,25 @@ public Action:TankLandTimer(Handle:timer, any:client) {
             return Plugin_Continue;
         }
         if (DEBUG) PrintToChatAll("[Getup] Giving %N an extra getup...", client);
-        L4D2Direct_DoAnimationEvent(client, 96); // 96 is the tank punch getup.
+        if (GetConVarBool(longerTankPunchGetup))
+        {
+            L4D2Direct_DoAnimationEvent(client, 57);
+        }
+        else
+        {
+            L4D2Direct_DoAnimationEvent(client, 96); // 96 is the tank punch getup.
+        }
     }
     if (playerState[survivor] == PlayerState:TANK_PUNCH_FLY) {
         playerState[survivor] = PlayerState:TANK_PUNCH_GETUP;
+    }
+    if (GetConVarBool(longerTankPunchGetup))
+    {
+        L4D2Direct_DoAnimationEvent(client, 57);
+    }
+    else
+    {
+        L4D2Direct_DoAnimationEvent(client, 96); // 96 is the tank punch getup.
     }
     _GetupTimer(client);
     return Plugin_Stop;
@@ -328,8 +345,16 @@ public Action:GetupTimer(Handle:timer, any:client) {
         return Plugin_Continue;
     } else if (playerState[survivor] == PlayerState:TANK_PUNCH_FIX) {
         if (DEBUG) PrintToChatAll("[Getup] Giving %N an extra getup...", client);
-        L4D2Direct_DoAnimationEvent(client, 96); // 96 is the tank punch getup.
-        playerState[survivor] = PlayerState:TANK_PUNCH_GETUP;
+        if (GetConVarBool(longerTankPunchGetup))
+        {
+            L4D2Direct_DoAnimationEvent(client, 57);
+            playerState[survivor] = PlayerState:CHARGER_GETUP;
+        }
+        else
+        {
+            L4D2Direct_DoAnimationEvent(client, 96); // 96 is the tank punch getup.
+            playerState[survivor] = PlayerState:TANK_PUNCH_GETUP;
+        }
         currentSequence[survivor] = 0;
         _TankLandTimer(client);
         return Plugin_Stop;
