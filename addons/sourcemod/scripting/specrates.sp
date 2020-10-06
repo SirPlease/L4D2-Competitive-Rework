@@ -2,6 +2,8 @@
 
 #include <sourcemod>
 #include <sdktools>
+#undef REQUIRE_PLUGIN
+#include <readyup>
 
 enum L4D2Team
 {
@@ -11,6 +13,7 @@ enum L4D2Team
 	L4D2Team_Infected
 };
 
+new bool:readyUpIsAvailable;
 new Handle:sv_mincmdrate;
 new Handle:sv_maxcmdrate;
 new Handle:sv_minupdaterate;
@@ -29,8 +32,8 @@ public Plugin:myinfo =
     name = "Lightweight Spectating",
     author = "Visor",
     description = "Forces low rates on spectators",
-    version = "1.2",
-    url = "https://github.com/Attano/smplugins"
+    version = "1.2.1",
+    url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public OnPluginStart()
@@ -50,6 +53,28 @@ public OnPluginStart()
 public OnPluginEnd()
 {
     SetConVarString(sv_minupdaterate, netvars[2]);
+    SetConVarString(sv_mincmdrate, netvars[0]);
+}
+
+public OnAllPluginsLoaded()
+{
+    readyUpIsAvailable = LibraryExists("readyup");
+}
+
+public OnLibraryRemoved(const String:name[])
+{
+    if (StrEqual(name, "readyup", true))
+    {
+        readyUpIsAvailable = false;
+    }
+}
+
+public OnLibraryAdded(const String:name[])
+{
+    if (StrEqual(name, "readyup", true))
+    {
+        readyUpIsAvailable = true;
+    }
 }
 
 public OnConfigsExecuted()
@@ -63,7 +88,8 @@ public OnConfigsExecuted()
     GetConVarString(sv_client_min_interp_ratio, netvars[6], 8);
     GetConVarString(sv_client_max_interp_ratio, netvars[7], 8);
 
-    SetConVarInt(sv_minupdaterate, 20);
+    SetConVarInt(sv_minupdaterate, 30);
+    SetConVarInt(sv_mincmdrate, 30);
 }
 
 public OnClientPutInServer(client)
@@ -98,7 +124,7 @@ AdjustRates(client)
         fLastAdjusted[client] = GetEngineTime();
 
         new L4D2Team:team = L4D2Team:GetClientTeam(client);
-        if (team == L4D2Team_Survivor || team == L4D2Team_Infected)
+        if (team == L4D2Team_Survivor || team == L4D2Team_Infected || (readyUpIsAvailable && IsClientCaster(client)))
         {
             ResetRates(client);
         }
@@ -113,14 +139,13 @@ SetSpectatorRates(client)
 {
     SendConVarValue(client, sv_mincmdrate, "30");
     SendConVarValue(client, sv_maxcmdrate, "30");
-    SendConVarValue(client, sv_minupdaterate, "20");
-    SendConVarValue(client, sv_maxupdaterate, "20");
+    SendConVarValue(client, sv_minupdaterate, "30");
+    SendConVarValue(client, sv_maxupdaterate, "30");
     SendConVarValue(client, sv_minrate, "10000");
     SendConVarValue(client, sv_maxrate, "10000");
-    SendConVarValue(client, sv_client_min_interp_ratio, "2.0");
-    SendConVarValue(client, sv_client_max_interp_ratio, "2.0");
 
-    SetClientInfo(client, "cl_updaterate", "20");
+    SetClientInfo(client, "cl_updaterate", "30");
+    SetClientInfo(client, "cl_cmdrate", "30");
 }
 
 ResetRates(client)
@@ -131,10 +156,9 @@ ResetRates(client)
     SendConVarValue(client, sv_maxupdaterate, netvars[3]);
     SendConVarValue(client, sv_minrate, netvars[4]);
     SendConVarValue(client, sv_maxrate, netvars[5]);
-    SendConVarValue(client, sv_client_min_interp_ratio, netvars[6]);
-    SendConVarValue(client, sv_client_max_interp_ratio, netvars[7]);
 
-    SetClientInfo(client, "cl_updaterate", netvars[2]);
+    SetClientInfo(client, "cl_updaterate", netvars[3]);
+    SetClientInfo(client, "cl_cmdrate", netvars[1]);
 }
 
 bool:IsValidClient(client)
