@@ -64,7 +64,7 @@ public Plugin:myinfo =
 	name = "L4D2 Various Sounds Blocker",
 	description = "Blocks out more annoying sounds and allows the option for blocking custom sounds. Designed for NextMod Config.",
 	author = "Spoon",
-	version = "1.3",
+	version = "1.3.1",
 	url = "https://github.com/spoon-l4d2/"
 };
 
@@ -178,7 +178,7 @@ public checkSound(String:sample[256]) {
 	
 	// Generator
 	if (ConVarBoolValue(h_Generators)) {
-		if ((StrContains(sample, "generator", true) > -1) && (StrContains(sample, "_stop", true) < 0) && (StrContains(sample, "_sputter", true) < 0) && (StrContains(sample, "nostart_loop", true) < 0))
+		if ((StrContains(sample, "generator", true) > -1) && !(StrContains(sample, "_stop", true) > -1) && !(StrContains(sample, "_sputter", true) > -1) && !(StrContains(sample, "nostart_loop", true) > -1))
 		{
 			return checkWhitelist(sample);
 		}
@@ -194,7 +194,7 @@ public checkSound(String:sample[256]) {
 	
 	// Lifts / Event
 	if (ConVarBoolValue(h_Lifts)) {
-		if ((StrContains(sample, "c6_bridgelower_seg01", true) > -1) || (StrContains(sample, "garage_lift_loop", true) > -1) || (StrContains(sample, "floodgate", true) > -1) || (StrContains(sample, "c5_bridge_lower_seg01", true) > -1))
+		if ((StrContains(sample, "c6_bridgelower_seg01", true) > -1) || (StrContains(sample, "garage_lift_loop", true) > -1) || (StrContains(sample, "floodgate", true) > -1))
 		{
 			return checkWhitelist(sample);
 		}
@@ -251,4 +251,3 @@ public bool:ConVarBoolValue(Handle:cvar) {
 		return false;
 	}
 }
-
