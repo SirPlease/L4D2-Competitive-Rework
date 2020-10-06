@@ -2,6 +2,7 @@
 
 #include <sourcemod>
 #include <sdktools>
+#include <colors>
 
 new bool:g_bIsTankAlive;
 
@@ -10,8 +11,8 @@ public Plugin:myinfo =
 	name = "L4D2 Tank Announcer",
 	author = "Visor",
 	description = "Announce in chat and via a sound when a Tank has spawned",
-	version = "1.0",
-	url = "https://github.com/Attano"
+	version = "1.1",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public OnMapStart()
@@ -35,7 +36,7 @@ public OnTankSpawn()
 	if (!g_bIsTankAlive)
 	{
 		g_bIsTankAlive = true;
-		PrintToChatAll("\x04Tank\x01 has spawned!");
+		CPrintToChatAll("{red}[{default}!{red}] {olive}Tank {default}has spawned!");
 		EmitSoundToAll("ui/pickup_secret01.wav");
 	}
 }
