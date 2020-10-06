@@ -82,7 +82,7 @@ public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:ang
 {
 	if(tankCount > 0)
 	{
-		if(GetClientTeam(client) == 3 && GetEntProp(client, Prop_Send, "m_zombieClass") == tankClassIndex)
+		if(IsValidClient(client) && GetClientTeam(client) == 3 && GetEntProp(client, Prop_Send, "m_zombieClass") == tankClassIndex)
 		{
 			if(buttons & IN_ATTACK)
 			{
@@ -118,8 +118,6 @@ public Action:Timer_DoorCheck(Handle:timer, any:clientUserID)
 		
 		if(result > 0)
 		{
-			LogMessage("Door bug circumvented.");
-			PrintToChat(client, "Door bug circumvented.");
 			SDKHooks_TakeDamage(result, client, client, 1200.0, 128, _, direction);
 		}
 	}
@@ -175,4 +173,10 @@ stock IsLookingAtBreakableDoor(client, Float:direction[3])
 	{
 		return -1;
 	}
+}
+
+bool:IsValidClient(client)
+{
+	if (client <= 0 || client > MaxClients || !IsClientConnected(client)) return false;
+	return IsClientInGame(client);
 }

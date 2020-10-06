@@ -9,7 +9,7 @@ public Plugin:myinfo =
 {
 	name = "Thirdpersonshoulder Block",
 	author = "Don",
-	description = "Spectates clients who enable the thirdpersonshoulder mode on L4D1/2 to prevent them from looking around corners, through walls etc.",
+	description = "Kicks clients who enable the thirdpersonshoulder mode on L4D1/2 to prevent them from looking around corners, through walls etc.",
 	version = PLUGIN_VERSION,
 	url = "http://forums.alliedmods.net/showthread.php?t=159582"
 }
@@ -63,7 +63,7 @@ public QueryClientConVarCallback(QueryCookie:cookie, client, ConVarQueryResult:r
 			new String:sName[MAX_NAME_LENGTH];
 			GetClientName(client, sName, sizeof(sName));
 			ChangeClientTeam(client, 1);
-			PrintToChatAll("\x03%s\x01 spectated due to \x04c_thirdpersonshoulder\x01 not valid or protected!", sName);
+			PrintToChatAll("\x01\x03%s\x01 spectated due to \x04c_thirdpersonshoulder\x01 not valid or protected!", sName);
 		}
 		else if (!StrEqual(cvarValue, "false") && !StrEqual(cvarValue, "0"))	/* If the ConVar was found on the client, but is not set to either "false" or "0",
 											 * kick the client as well, as he might be using thirdpersonshoulder.
@@ -72,7 +72,7 @@ public QueryClientConVarCallback(QueryCookie:cookie, client, ConVarQueryResult:r
 			new String:sName[MAX_NAME_LENGTH];
 			GetClientName(client, sName, sizeof(sName));
 			ChangeClientTeam(client, 1);
-			PrintToChatAll("\x03%s\x01 spectated due to \x04c_thirdpersonshoulder\x01, set at\x05 0\x01 to play!", sName);
+			PrintToChatAll("\x01\x03%s\x01 spectated due to \x04c_thirdpersonshoulder\x01, set at\x05 0\x01 to play!", sName);
 		}
 	}
 }

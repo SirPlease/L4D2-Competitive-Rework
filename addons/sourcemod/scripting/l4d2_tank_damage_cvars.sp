@@ -19,7 +19,7 @@ public Plugin:myinfo =
 	name = "L4D2 Tank Damage Cvars",
 	author = "Visor",
 	description = "Toggle Tank attack damage per type",
-	version = "1.0",
+	version = "1.1",
 	url = "https://github.com/Attano/Equilibrium"
 };
 
@@ -57,7 +57,7 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 		return Plugin_Continue;
 	}
 	
-	if (IsIncapped(victim))
+	if (IsIncapped(victim) && IsTank(inflictor))
 	{
 		damage = GetConVarFloat(vs_tank_pound_damage);
 	}

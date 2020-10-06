@@ -3,10 +3,10 @@
 #include <sourcemod>
 #include <sdktools>
 
-new bool:bNoCans;
-new bool:bNoPropane;
-new bool:bNoOxygen;
-new bool:bNoFireworks;
+new bool:bNoCans = true;
+new bool:bNoPropane = true;
+new bool:bNoOxygen = true;
+new bool:bNoFireworks = true;
 
 new Handle:cvar_noCans;
 new Handle:cvar_noPropane;
@@ -35,6 +35,7 @@ public OnPluginStart() {
     HookConVarChange(cvar_noPropane, NoPropaneChange);
     HookConVarChange(cvar_noOxygen, NoOxygenChange);
     HookConVarChange(cvar_noFireworks, NoFireworksChange);
+    HookEvent("round_start", RoundStartHook, EventHookMode_Post);
 }
 
 IsCan(iEntity) 

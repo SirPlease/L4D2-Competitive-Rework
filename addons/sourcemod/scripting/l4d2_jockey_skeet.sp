@@ -26,14 +26,14 @@ public Plugin:myinfo =
 	name = "L4D2 Jockey Skeet",
 	author = "Visor",
 	description = "A dream come true",
-	version = "1.2.1",
+	version = "1.3",
 	url = "https://github.com/Attano/Equilibrium"
 };
 
 public OnPluginStart()
 {
 	z_leap_damage_interrupt = CreateConVar("z_leap_damage_interrupt", "195.0", "Taking this much damage interrupts a leap attempt", FCVAR_PLUGIN, true, 10.0, true, 325.0);
-	jockey_skeet_report = CreateConVar("jockey_skeet_report", "0", "Report jockey skeets in chat?", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	jockey_skeet_report = CreateConVar("jockey_skeet_report", "1", "Report jockey skeets in chat?", FCVAR_PLUGIN, true, 0.0, true, 1.0);
 	z_jockey_health = FindConVar("z_jockey_health");
 
 	if (lateLoad) 

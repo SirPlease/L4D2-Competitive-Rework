@@ -101,7 +101,7 @@ public Action:Event_Round_End(Handle:event, const String:name[], bool:dontBroadc
         if (!IsClientInGame(i)) continue;
         if (GetClientTeam(i) != 1) continue;
         
-        GetClientAuthString(i, spectatorSteamIds[spectatorCount], STEAMID_LENGTH);
+        GetClientAuthId(i, AuthId_Steam2, spectatorSteamIds[spectatorCount], STEAMID_LENGTH);
         spectatorCount++;
     }	
     
@@ -140,7 +140,7 @@ public Action:Timer_MoveToSpec(Handle:timer, any:client) {
     
     // get steamid
     new String:auth[STEAMID_LENGTH];
-    GetClientAuthString(client, auth, STEAMID_LENGTH);
+    GetClientAuthId(client, AuthId_Steam2, auth, STEAMID_LENGTH);
     
     // find index
     new index = Function_GetIndex(auth);
@@ -173,7 +173,7 @@ public Action:Timer_MoveToSpec(Handle:timer, any:client) {
 
 public Action:ReSpec(Handle:timer, any:client)
 {
-    if(GetClientTeam(client) == 1) FakeClientCommand(client, "say /spectate");
+    if(IsValidClient(client) && IsClientInGame(client) && GetClientTeam(client) == 1) FakeClientCommand(client, "say /spectate");
 }
 
 /*
@@ -183,7 +183,7 @@ public Action:ReSpec(Handle:timer, any:client)
 public OnClientDisconnect(client) {
     // get steamid
     new String:clientSteamId[STEAMID_LENGTH];
-    GetClientAuthString(client, clientSteamId, STEAMID_LENGTH);
+    GetClientAuthId(client, AuthId_Steam2, clientSteamId, STEAMID_LENGTH);
     
     // find index
     new index = Function_GetIndex(clientSteamId);
@@ -220,4 +220,10 @@ GetRealClientCount()
         if(IsClientInGame(i) && IsClientConnected(i) && !IsFakeClient(i) && GetClientTeam(i) != 1) clients++;
     }
     return clients;
+}
+
+bool:IsValidClient(client)
+{
+	if (client <= 0 || client > MaxClients) return false;
+	return true;
 }

@@ -7,7 +7,7 @@
 #define DEBUG                   false
 
 #define MAX_SOUNDFILE_LENGTH    64
-#define MAX_JOCKEYSOUND         1
+#define MAX_JOCKEYSOUND         17
 
 #define JOCKEY_VOICE_TIMEOUT    2.0
 #define SOUND_CHECK_INTERVAL    3.0
@@ -26,8 +26,24 @@ new Handle: hJockeyLaughingTimer[MAXPLAYERS+1];
 
 new const String: sJockeySound[MAX_JOCKEYSOUND+1][] =
 {
-    "player/jockey/voice/idle/jockey_spotprey_01.wav",
-	"player/jockey/voice/idle/jockey_lurk04.wav"
+    "player/jockey/voice/idle/jockey_recognize02.wav",
+    "player/jockey/voice/idle/jockey_recognize06.wav",
+    "player/jockey/voice/idle/jockey_recognize07.wav",
+    "player/jockey/voice/idle/jockey_recognize08.wav",
+    "player/jockey/voice/idle/jockey_recognize09.wav",
+    "player/jockey/voice/idle/jockey_recognize10.wav",
+    "player/jockey/voice/idle/jockey_recognize11.wav",
+    "player/jockey/voice/idle/jockey_recognize12.wav",
+    "player/jockey/voice/idle/jockey_recognize13.wav",
+    "player/jockey/voice/idle/jockey_recognize15.wav",
+    "player/jockey/voice/idle/jockey_recognize16.wav",
+    "player/jockey/voice/idle/jockey_recognize17.wav",
+    "player/jockey/voice/idle/jockey_recognize18.wav",
+    "player/jockey/voice/idle/jockey_recognize19.wav",
+    "player/jockey/voice/idle/jockey_recognize20.wav",
+    "player/jockey/voice/idle/jockey_recognize24.wav",
+    "player/jockey/voice/idle/jockey_lurk04.wav",
+    "player/jockey/voice/idle/jockey_lurk05.wav"
 };
 
 /*
@@ -65,7 +81,7 @@ public OnPluginStart()
 {
     // cvars
     hPluginEnabled =     CreateConVar("sm_unsilentjockey_enabled", "1",   "Enable unsilent jockey mode.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-    hJockeySoundAlways = CreateConVar("sm_unsilentjockey_always",  "1",   "Whether to play jockey spawn sound even if it is not detected as silent.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+    hJockeySoundAlways = CreateConVar("sm_unsilentjockey_always",  "0",   "Whether to play jockey spawn sound even if it is not detected as silent.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
     hJockeySoundTime =   CreateConVar("sm_unsilentjockey_time",    "0.1", "How soon to play sound after spawning (in seconds).", FCVAR_PLUGIN, true, 0.0, true, 10.0);
     
     // hooks / events
