@@ -1,4 +1,4 @@
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.1.1"
 
 #pragma semicolon 1
 
@@ -67,7 +67,7 @@ public OnPluginStart()
 */
 public Action:OnPlayerRunCmd(client, &buttons)
 {
-	if (g_iCvarEngineFlags && IsPlayerAlive(client) && !IsFakeClient(client)){
+	if (g_iCvarEngineFlags && IsValidClient(client) && IsPlayerAlive(client) && !IsFakeClient(client)){
 
 		if (g_iCvarEngineFlags & (1 << LadderSpeedGlitch) && GetEntityMoveType(client) == MOVETYPE_LADDER){
 
@@ -459,6 +459,12 @@ EF_ToogleEvents(bool:bHook)
 		UnhookEvent("revive_success", EF_ev_HealSuccess);
 		UnhookEvent("player_incapacitated", EF_ev_HealSuccess);
 	}
+}
+
+bool:IsValidClient(client)
+{
+	if (client <= 0 || client > MaxClients || !IsClientConnected(client)) return false;
+	return IsClientInGame(client);
 }
 
 /*                                      +==========================================+
