@@ -1,6 +1,7 @@
 #include <sourcemod>
+#include <colors>
 #pragma semicolon 1
-#define PLUGIN_VERSION "1.31"
+#define PLUGIN_VERSION "1.31.1"
 
 #define ZOEY 0
 #define LOUIS 1
@@ -129,7 +130,7 @@ public EventReviveSuccess(Handle:event, const String:name[], bool:dontBroadcast)
 		else if(bandw_notice == 2) 
 		{
 			if(bandw_type == 1) PrintHintTextToAll("%s (\x04%s\x01) is black and white.", targetName, charName);
-			else PrintToChatAll("%s (\x04%s\x01) is black and white.", targetName, charName);
+			else CPrintToChatAll("{blue}[{default}!{blue}]{default} {olive}%s{default} is black and white.", targetName);
 		}
 		//print to infected
 		else if(bandw_notice == 3)
@@ -139,7 +140,7 @@ public EventReviveSuccess(Handle:event, const String:name[], bool:dontBroadcast)
 				if(!IsClientInGame(x) || GetClientTeam(x) == GetClientTeam(target) || x == target || IsFakeClient(x))
 					continue;
 				if(bandw_type == 1) PrintHintText(x, "%s (\x04%s\x01) is black and white.", targetName, charName);
-				else PrintToChat(x, "%s (\x04%s\x01) is black and white.", targetName, charName);
+				else CPrintToChat(x, "{blue}[{default}!{blue}]{default} {olive}%s{default} is black and white.", targetName);
 			}
 		}
 		//print to survivors
@@ -151,7 +152,7 @@ public EventReviveSuccess(Handle:event, const String:name[], bool:dontBroadcast)
 					continue;
 					
 				if(bandw_type == 1) PrintHintText(x, "%s (\x04%s\x01) is black and white.", targetName, charName);
-				else PrintToChat(x, "%s (\x04%s\x01) is black and white.", targetName, charName);
+				else CPrintToChat(x, "{blue}[{default}!{blue}]{default} {olive}%s{default} is black and white.", targetName);
 			}
 		}	
 	}
