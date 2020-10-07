@@ -14,7 +14,7 @@ public Plugin:myinfo =
     name = "Ghost Hurt Management",
     author = "Jacob",
     description = "Allows for modifications of trigger_hurt_ghost",
-    version = "1.4",
+    version = "1.1",
     url = "github.com/jacob404/myplugins"
 }
 
@@ -42,7 +42,7 @@ public OnRoundIsLive()
 {
     if(GetConVarBool(ghost_hurt_type) == true)
     {
-        ModifyEntity("Enable");
+        EnableGhostHurt();
     }
 }
 
@@ -50,25 +50,30 @@ public Action: L4D_OnFirstSurvivorLeftSafeArea( client )
 {   
     if (!g_bReadyUpAvailable && GetConVarBool(ghost_hurt_type) == true)
     {
-        ModifyEntity("Enable");
+        EnableGhostHurt();
     }
 }
 
-public Event_Round_Start(Handle:event, const String:name[], bool:dontBroadcast)
+public OnMapStart()
 {
-    ModifyEntity("Disable");
+    DisableGhostHurt();
 }
 
-public Action:ResetGhostHurt_Cmd(args)
+public DisableGhostHurt()
 {
-    ModifyEntity("Enable");
+    ModifyEntity("trigger_hurt_ghost", "Disable");
 }
 
-ModifyEntity(String:inputName[])
+public EnableGhostHurt()
+{
+    ModifyEntity("trigger_hurt_ghost", "Enable");
+}
+
+ModifyEntity(String:className[], String:inputName[])
 { 
     new iEntity;
 
-    while ( (iEntity = FindEntityByClassname(iEntity, "trigger_hurt_ghost")) != -1 )
+    while ( (iEntity = FindEntityByClassname(iEntity, className)) != -1 )
     {
         if ( !IsValidEdict(iEntity) || !IsValidEntity(iEntity) )
         {
@@ -76,4 +81,14 @@ ModifyEntity(String:inputName[])
         }
         AcceptEntityInput(iEntity, inputName);
     }
+}
+
+public Event_Round_Start(Handle:event, const String:name[], bool:dontBroadcast)
+{
+    DisableGhostHurt();
+}
+
+public Action:ResetGhostHurt_Cmd(args)
+{
+    DisableGhostHurt();
 }
