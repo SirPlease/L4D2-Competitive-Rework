@@ -34,7 +34,7 @@ public Plugin:myinfo =
     name = "Simple Witch Kill Bonus",
     author = "Tabun",
     description = "Gives bonus for witches getting killed without doing damage to survivors (uses pbonus).",
-    version = "0.9.2",
+    version = "0.9.3",
     url = "none"
 }
 
@@ -137,7 +137,7 @@ stock GiveWitchBonus()
 	{
         PrintToChatAll("\x01Killing the witch has awarded: \x05%d \x01points!", iBonus);
     }
-    PBONUS_AddRoundBonus(iBonus);
+    PBONUS_AddRoundBonus(iBonus, true);
 }
 
 stock bool: IsWitch(entity)
