@@ -14,9 +14,9 @@
 public Plugin:myinfo = 
 {
     name = "Saferoom Item Remover",
-    author = "Tabun",
+    author = "Tabun, Sir",
     description = "Removes any saferoom item (start or end).",
-    version = "0.0.5",
+    version = "0.0.6",
     url = ""
 }
 
@@ -32,7 +32,8 @@ enum _:eTrieItemKillable
     ITEM_KILLABLE           = 0,
     ITEM_KILLABLE_HEALTH    = (1 << 0),
     ITEM_KILLABLE_WEAPON    = (1 << 1),
-    ITEM_KILLABLE_OTHER     = (1 << 2)
+    ITEM_KILLABLE_MELEE     = (1 << 2),
+    ITEM_KILLABLE_OTHER     = (1 << 3)
 }
 
 
@@ -40,7 +41,7 @@ public OnPluginStart()
 {
     g_hCvarEnabled = CreateConVar(      "sm_safeitemkill_enable",       "1",    "Whether end saferoom items should be removed.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
     g_hCvarSaferoom = CreateConVar(     "sm_safeitemkill_saferooms",    "1",    "Saferooms to empty. Flags: 1 = end saferoom, 2 = start saferoom (3 = kill items from both).", FCVAR_PLUGIN, true, 0.0, false);
-    g_hCvarItems = CreateConVar(        "sm_safeitemkill_items",        "3",    "Types to rmove. Flags: 1 = health items, 2 = weapons, 4 = all other usable items (add them up).", FCVAR_PLUGIN, true, 0.0, false);
+    g_hCvarItems = CreateConVar(        "sm_safeitemkill_items",        "7",    "Types to rmove. Flags: 1 = health items, 2 = guns, 4 = melees, 8 = all other usable items", FCVAR_PLUGIN, true, 0.0, false);
     
     PrepareTrie();
 }
@@ -115,7 +116,6 @@ PrepareTrie()
     g_hTrieItems = CreateTrie();
     SetTrieValue(g_hTrieItems, "weapon_spawn",                         ITEM_KILLABLE_WEAPON);
     SetTrieValue(g_hTrieItems, "weapon_ammo_spawn",                    ITEM_KILLABLE_WEAPON);
-    SetTrieValue(g_hTrieItems, "weapon_melee_spawn",                   ITEM_KILLABLE_WEAPON);
     SetTrieValue(g_hTrieItems, "weapon_pistol_spawn",                  ITEM_KILLABLE_WEAPON);
     SetTrieValue(g_hTrieItems, "weapon_pistol_magnum_spawn",           ITEM_KILLABLE_WEAPON);
     SetTrieValue(g_hTrieItems, "weapon_smg_spawn",                     ITEM_KILLABLE_WEAPON);
@@ -132,6 +132,7 @@ PrepareTrie()
     SetTrieValue(g_hTrieItems, "weapon_rifle_m60_spawn",               ITEM_KILLABLE_WEAPON);
     SetTrieValue(g_hTrieItems, "weapon_grenade_launcher_spawn",        ITEM_KILLABLE_WEAPON);
     SetTrieValue(g_hTrieItems, "weapon_chainsaw_spawn",                ITEM_KILLABLE_WEAPON);
+    SetTrieValue(g_hTrieItems, "weapon_melee_spawn",                   ITEM_KILLABLE_MELEE);
     SetTrieValue(g_hTrieItems, "weapon_item_spawn",                    ITEM_KILLABLE_HEALTH);
     SetTrieValue(g_hTrieItems, "weapon_first_aid_kit_spawn",           ITEM_KILLABLE_HEALTH);
     SetTrieValue(g_hTrieItems, "weapon_defibrillator_spawn",           ITEM_KILLABLE_HEALTH);
