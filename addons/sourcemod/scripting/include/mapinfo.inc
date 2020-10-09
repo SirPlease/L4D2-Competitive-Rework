@@ -1,7 +1,7 @@
 #include <sourcemod>
 #include <sdktools>
 #include <left4dhooks>
-#include <lgofnoc.inc>
+#include <confogl.inc>
 
 #if defined __mapinfo__
 #endinput

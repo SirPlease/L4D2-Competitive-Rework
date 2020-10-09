@@ -7,7 +7,7 @@
 #include <clientprefs>
 #undef REQUIRE_PLUGIN
 #include <readyup>
-#include <lgofnoc>
+#include <confogl>
 #define REQUIRE_PLUGIN
 
 #define IS_VALID_CLIENT(%1)     (%1 > 0 && %1 <= MaxClients)
@@ -395,7 +395,7 @@ new     bool:   g_bLateLoad             = false;
 new     bool:   g_bFirstLoadDone        = false;                                        // true after first onMapStart
 new     bool:   g_bLoadSkipDone         = false;                                        // true after skipping the _resetnextmap for stats
 
-new     bool:   g_bLGOAvailable         = false;                                        // whether lgofnoc is loaded
+new     bool:   g_bLGOAvailable         = false;                                        // whether confogl is loaded
 new     bool:   g_bReadyUpAvailable     = false;
 new     bool:   g_bPauseAvailable       = false;
 new     bool:   g_bSkillDetectLoaded    = false;
@@ -522,21 +522,21 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 // crox readyup usage
 public OnAllPluginsLoaded()
 {
-    g_bLGOAvailable = LibraryExists("lgofnoc");
+    g_bLGOAvailable = LibraryExists("confogl");
     g_bReadyUpAvailable = LibraryExists("readyup");
     g_bPauseAvailable = LibraryExists("pause");
     g_bSkillDetectLoaded = LibraryExists("skill_detect");
 }
 public OnLibraryRemoved(const String:name[])
 {
-    if ( StrEqual(name, "lgofnoc") ) { g_bLGOAvailable = false; }
+    if ( StrEqual(name, "confogl") ) { g_bLGOAvailable = false; }
     else if ( StrEqual(name, "readyup") ) { g_bReadyUpAvailable = false; }
     else if ( StrEqual(name, "pause") ) { g_bPauseAvailable = false; }
     else if ( StrEqual(name, "skill_detect") ) { g_bSkillDetectLoaded = false; }
 }
 public OnLibraryAdded(const String:name[])
 {
-    if ( StrEqual(name, "lgofnoc") ) { g_bLGOAvailable = true; }
+    if ( StrEqual(name, "confogl") ) { g_bLGOAvailable = true; }
     else if ( StrEqual(name, "readyup") ) { g_bReadyUpAvailable = true; }
     else if ( StrEqual(name, "pause") ) { g_bPauseAvailable = true; }
     else if ( StrEqual(name, "skill_detect") ) { g_bSkillDetectLoaded = true; }
@@ -710,7 +710,7 @@ public OnPluginStart()
 }
 
 /*
-    Forwards from lgofnoc
+    Forwards from confogl
     --------------------- */
 public LGO_OnMatchModeStart( const String: sConfig[] )
 {

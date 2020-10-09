@@ -6,7 +6,7 @@
 #include <left4dhooks>
 #include <l4d2_penalty_bonus>
 #undef REQUIRE_PLUGIN
-#include <lgofnoc>
+#include <confogl>
 #include <readyup>
 #include <pause>
 #define REQUIRE_PLUGIN
@@ -41,7 +41,7 @@ new     Handle: g_hForwardSet           = INVALID_HANDLE;
 new     Handle: g_hForwardStart         = INVALID_HANDLE;
 new     Handle: g_hForwardEnd           = INVALID_HANDLE;
 
-new     bool:   g_bLGOAvailable         = false;                                        // whether lgofnoc is loaded
+new     bool:   g_bLGOAvailable         = false;                                        // whether confogl is loaded
 new     bool:   g_bReadyUpAvailable     = false;
 new     bool:   g_bPauseAvailable       = false;
 
@@ -118,19 +118,19 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 // crox readyup usage
 public OnAllPluginsLoaded()
 {
-    g_bLGOAvailable = LibraryExists("lgofnoc");
+    g_bLGOAvailable = LibraryExists("confogl");
     g_bReadyUpAvailable = LibraryExists("readyup");
     g_bPauseAvailable = LibraryExists("pause");
 }
 public OnLibraryRemoved(const String:name[])
 {
-    if ( StrEqual(name, "lgofnoc") ) { g_bLGOAvailable = false; }
+    if ( StrEqual(name, "confogl") ) { g_bLGOAvailable = false; }
     else if ( StrEqual(name, "readyup") ) { g_bReadyUpAvailable = false; }
     else if ( StrEqual(name, "pause") ) { g_bPauseAvailable = false; }
 }
 public OnLibraryAdded(const String:name[])
 {
-    if ( StrEqual(name, "lgofnoc") ) { g_bLGOAvailable = true; }
+    if ( StrEqual(name, "confogl") ) { g_bLGOAvailable = true; }
     else if ( StrEqual(name, "readyup") ) { g_bReadyUpAvailable = true; }
     else if ( StrEqual(name, "pause") ) { g_bPauseAvailable = true; }
 }
