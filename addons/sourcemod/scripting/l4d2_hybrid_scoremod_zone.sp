@@ -86,7 +86,7 @@ public OnPluginStart()
 	HookConVarChange(hCvarBonusPerSurvivorMultiplier, CvarChanged);
 	HookConVarChange(hCvarPermanentHealthProportion, CvarChanged);
 
-	HookEvent("round_start", EventHook:OnRoundStart, EventHookMode_PostNoCopy);
+	HookEvent("round_start", EventHook:RoundStartEvent, EventHookMode_PostNoCopy);
 	HookEvent("player_ledge_grab", OnPlayerLedgeGrab);
 	HookEvent("player_incapacitated", OnPlayerIncapped);
 	HookEvent("player_hurt", OnPlayerHurt);
@@ -166,7 +166,7 @@ public OnClientDisconnect(client)
 	SDKUnhook(client, SDKHook_OnTakeDamagePost, OnTakeDamagePost);
 }
 
-public OnRoundStart()
+public RoundStartEvent()
 {
 	for (new i = 0; i <= MAXPLAYERS; i++)
 	{

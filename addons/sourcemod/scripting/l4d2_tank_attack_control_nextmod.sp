@@ -7,7 +7,7 @@ public Plugin:myinfo =
 	name = "[L4D2] Tank Attack Control / Jump Rock Cooldown Hybrid", 
 	author = "Spoon",
 	description = "Remake of https://github.com/Stabbath/ProMod/blob/master/addons/sourcemod/scripting/l4d_tank_control.sp.",
-	version = "0.8",
+	version = "0.8.1",
 	url = "https://github.com/spoon-l4d2"
 }
 
@@ -37,12 +37,12 @@ public OnPluginStart()
 	g_hJumpRockCooldown = CreateConVar("l4d2_jump_rock_cooldown", "20", "Sets cooldown for jump rock ability");
 	hOverhandOnly = CreateConVar("tank_overhand_only", "0", "Force tank to only throw overhand rocks.");
 
-	HookEvent("round_start", EventHook:OnRoundStart, EventHookMode_PostNoCopy);
+	HookEvent("round_start", EventHook:RoundStartEvent, EventHookMode_PostNoCopy);
 	HookEvent("tank_spawn", TankSpawn_Event);
 }
 
 
-public OnRoundStart()
+public RoundStartEvent()
 {
 	for (new i = 1; i <= MaxClients; i++)
 	{

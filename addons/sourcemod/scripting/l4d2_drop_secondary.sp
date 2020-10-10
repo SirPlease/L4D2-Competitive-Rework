@@ -11,21 +11,21 @@ public Plugin:myinfo =
 {
 	name        = "L4D2 Drop Secondary",
 	author      = "Jahze, Visor",
-	version     = "2.0",
+	version     = "2.0.1",
 	description = "Survivor players will drop their secondary weapon when they die",
 	url         = "https://github.com/Attano/Equilibrium"
 };
 
 public OnPluginStart() 
 {
-	HookEvent("round_start", EventHook:OnRoundStart, EventHookMode_PostNoCopy);
+	HookEvent("round_start", EventHook:RoundStartEvent, EventHookMode_PostNoCopy);
 	HookEvent("player_use", OnPlayerUse, EventHookMode_Post);
 	HookEvent("player_bot_replace", OnBotSwap);
 	HookEvent("bot_player_replace", OnBotSwap);
 	HookEvent("player_death", OnPlayerDeath, EventHookMode_Pre);
 }
 
-public OnRoundStart() 
+public RoundStartEvent()
 {
 	for (new i = 0; i <= MAXPLAYERS; i++) 
 	{

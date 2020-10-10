@@ -21,7 +21,7 @@ public Plugin:myinfo =
 	name = "Tank Attack Control", 
 	author = "vintik, CanadaRox, Jacob, Visor",
 	description = "",
-	version = "0.7",
+	version = "0.7.1",
 	url = "https://github.com/Attano/L4D2-Competitive-Framework"
 }
 
@@ -39,11 +39,11 @@ public OnPluginStart()
 	g_hBlockJumpRock = CreateConVar("l4d2_block_jump_rock", "0", "Block tanks from jumping and throwing a rock at the same time");
 	hOverhandOnly = CreateConVar("tank_overhand_only", "0", "Force tank to only throw overhand rocks.");
 
-	HookEvent("round_start", EventHook:OnRoundStart, EventHookMode_PostNoCopy);
+	HookEvent("round_start", EventHook:RoundStartEvent, EventHookMode_PostNoCopy);
 	HookEvent("tank_spawn", TankSpawn_Event);
 }
 
-public OnRoundStart()
+public RoundStartEvent()
 {
 	for (new i = 1; i <= MaxClients; i++)
 	{
