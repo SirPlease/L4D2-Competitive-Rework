@@ -6,6 +6,7 @@
 #include <builtinvotes>
 #include <colors>
 
+#define NULL_VELOCITY Float:{0.0, 0.0, 0.0}
 #define MAX_FOOTERS 10
 #define MAX_FOOTER_LEN 65
 #define MAX_SOUNDS 5
@@ -933,6 +934,8 @@ ReturnPlayerToSaferoom(client, bool:flagsSet = true)
 		SetCommandFlags("warp_to_start_area", warp_flags);
 		SetCommandFlags("give", give_flags);
 	}
+
+	TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, NULL_VELOCITY);
 }
 
 ReturnTeamToSaferoom(L4D2Team:team)
