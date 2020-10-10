@@ -245,6 +245,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			fOverkill[victim][inflictor] = GetGameTime() + interval;	//standardise them bitchin over-hits
 		}
 		inflictor = 0; // We have to set set the inflictor to 0 or else it will sometimes just refuse to apply damage.
+		return Plugin_Changed;
 	}
 	
 	return Plugin_Continue;
