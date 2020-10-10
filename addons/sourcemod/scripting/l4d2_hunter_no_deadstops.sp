@@ -17,7 +17,7 @@ public Plugin:myinfo =
 	name = "[L4D2] No Hunter Deadstops",
 	author = "Spoon & Luckylock",
 	description = "Prevents deadstops but allows m2s on standing hunters",
-	version = "1",
+	version = "1.0.1",
 	url = "https://github.com/luckyserv"
 };
 
@@ -170,7 +170,7 @@ public bool:IsGrounded(client)
 
 bool:IsClientAndInGame(index)
 {
-    if (index > 0 && index < MaxClients)
+    if (index > 0 && index <= MaxClients)
     {
         return IsClientInGame(index);
     }

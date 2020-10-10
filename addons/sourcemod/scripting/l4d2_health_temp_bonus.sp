@@ -104,7 +104,7 @@ public Plugin myinfo =
 	name = "L4D2 Competitive Health Bonus System",
 	author = "Luckylock",
 	description = "Scoring system for l4d2 competitive",
-	version = "3.1",
+	version = "3.1.1",
 	url = "https://github.com/LuckyServ/"
 };
 
@@ -334,7 +334,7 @@ public void copyTableValues(int health[HEALTH_TABLE_SIZE], int healthCopy[HEALTH
 stock bool:IsSurvivor(client)                                                   
 {                                                                               
     return client > 0 
-        && client < MaxClients 
+        && client <= MaxClients
         && IsClientInGame(client) 
         && GetClientTeam(client) == 2; 
 }

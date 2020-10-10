@@ -55,7 +55,7 @@ public Plugin:myinfo =
 	name = "L4D2 Scoremod+",
 	author = "Visor",
 	description = "The next generation scoring mod",
-	version = "2.2.2",
+	version = "2.2.4",
 	url = "https://github.com/Attano/L4D2-Competitive-Framework"
 };
 
@@ -168,7 +168,7 @@ public OnClientDisconnect(client)
 
 public OnRoundStart()
 {
-	for (new i = 0; i < MAXPLAYERS; i++)
+	for (new i = 0; i <= MAXPLAYERS; i++)
 	{
 		iTempHealth[i] = 0;
 	}
