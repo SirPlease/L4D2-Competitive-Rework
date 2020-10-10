@@ -117,7 +117,7 @@ public Plugin:myinfo =
 {
 	name = "L4D2 Godframes Control combined with FF Plugins",
 	author = "Stabby, CircleSquared, Tabun, Visor, dcx, Sir, Spoon",
-	version = "0.6.1",
+	version = "0.6.2",
 	description = "Allows for control of what gets godframed and what doesnt along with integrated FF Support from l4d2_survivor_ff (by dcx and Visor) and l4d2_shotgun_ff (by Visor)"
 };
 
@@ -989,6 +989,8 @@ void ProcessShot(ArrayStack stack)
 	}
 	
 	bBuckshot[attacker] = false;
+
+	CloseHandle(stack);
 }
 
 bool:IsTankRock(entity)

@@ -283,8 +283,11 @@ public chooseTank()
     
     // If there is nobody on the infected team, return (otherwise we'd be stuck trying to select forever)
     if (GetArraySize(infectedPool) == 0)
+    {
+        CloseHandle(infectedPool);
         return;
-    
+    }
+
     // Remove players who've already had tank from the pool.
     infectedPool = removeTanksFromPool(infectedPool, h_whosHadTank);
     
@@ -302,6 +305,8 @@ public chooseTank()
             queuedTankSteamId = "";
         }
         
+        CloseHandle(infectedTeam);
+        CloseHandle(infectedPool);
         return;
     }
     
