@@ -10,6 +10,7 @@
 #include <sdktools>
 #include <sdkhooks>
 #include <left4dhooks>
+#include <l4d2util>
 
 #define CLASSNAME_LENGTH 64
 #define MIN(%0,%1) (((%0) < (%1)) ? (%0) : (%1))

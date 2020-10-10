@@ -5,6 +5,7 @@
 #include <left4dhooks>
 #include <colors>
 #include <readyup>
+#include <l4d2util>
 
 #define IS_VALID_CLIENT(%1)     (%1 > 0 && %1 <= MaxClients)
 #define IS_INFECTED(%1)         (GetClientTeam(%1) == 3)
