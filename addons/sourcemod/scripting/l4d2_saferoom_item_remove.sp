@@ -16,7 +16,7 @@ public Plugin:myinfo =
     name = "Saferoom Item Remover",
     author = "Tabun, Sir",
     description = "Removes any saferoom item (start or end).",
-    version = "0.0.6",
+    version = "0.0.7",
     url = ""
 }
 
@@ -27,7 +27,7 @@ new     Handle:         g_hCvarItems                                        = IN
 new     Handle:         g_hTrieItems                                        = INVALID_HANDLE;
 
 
-enum _:eTrieItemKillable
+enum eTrieItemKillable
 {
     ITEM_KILLABLE           = 0,
     ITEM_KILLABLE_HEALTH    = (1 << 0),
@@ -81,7 +81,7 @@ RemoveEndSaferoomItems()
         if (!GetTrieValue(g_hTrieItems, classname, checkItem)) { continue; }
         
         // see if item is of a killable type by cvar
-        if (_:checkItem == ITEM_KILLABLE || GetConVarInt(g_hCvarItems) & _:checkItem)
+        if (checkItem == ITEM_KILLABLE || GetConVarInt(g_hCvarItems) & _:checkItem)
         {
             if (GetConVarInt(g_hCvarSaferoom) & SAFEROOM_END)
             {
