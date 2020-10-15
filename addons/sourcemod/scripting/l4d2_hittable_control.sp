@@ -1,7 +1,6 @@
 #pragma newdecls required
 
 #include <sourcemod>
-#include <left4dhooks>
 #include <sdktools>
 #include <sdkhooks>
 
