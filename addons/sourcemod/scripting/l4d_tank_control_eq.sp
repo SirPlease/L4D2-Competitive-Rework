@@ -298,7 +298,7 @@ public chooseTank()
         new Handle:infectedTeam = teamSteamIds(L4D2Team_Infected);
         if (GetArraySize(infectedTeam) > 1)
         {
-            h_whosHadTank = removeTanksFromPool(h_whosHadTank, teamSteamIds(L4D2Team_Infected));
+            h_whosHadTank = removeTanksFromPool(h_whosHadTank, infectedTeam);
             chooseTank();
         }
         else
