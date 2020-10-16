@@ -47,7 +47,7 @@ public Plugin:myinfo =
 	name = "[L4D2] Long Charger Get-Up Fix",
 	author = "Spoon",
 	description = "Allows control over long charger get ups.",
-	version = "2",
+	version = "2.0.1",
 	url = "https://github.com/spoon-l4d2"
 };
 
