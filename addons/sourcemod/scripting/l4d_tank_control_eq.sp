@@ -5,7 +5,6 @@
 #include <left4dhooks>
 #include <colors>
 #include <readyup>
-#include <l4d2util>
 
 #define IS_VALID_CLIENT(%1)     (%1 > 0 && %1 <= MaxClients)
 #define IS_INFECTED(%1)         (GetClientTeam(%1) == 3)
@@ -54,6 +53,7 @@ public OnPluginStart()
     
     // Event hooks
     HookEvent("player_left_start_area", EventHook:PlayerLeftStartArea_Event, EventHookMode_PostNoCopy);
+    HookEvent("round_start", EventHook:RoundStart_Event, EventHookMode_PostNoCopy);
     HookEvent("round_end", EventHook:RoundEnd_Event, EventHookMode_PostNoCopy);
     HookEvent("player_team", EventHook:PlayerTeam_Event, EventHookMode_PostNoCopy);
     HookEvent("tank_killed", EventHook:TankKilled_Event, EventHookMode_PostNoCopy);
@@ -95,7 +95,7 @@ public OnClientDisconnect(client)
  * When a new game starts, reset the tank pool.
  */
  
-public OnRoundStart()
+public RoundStart_Event()
 {
     CreateTimer(10.0, newGame);
 }
