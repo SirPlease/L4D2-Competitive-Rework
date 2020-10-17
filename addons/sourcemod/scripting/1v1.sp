@@ -45,7 +45,7 @@ public Plugin:myinfo =
 	name = "1v1 EQ",
 	author = "Blade + Confogl Team, Tabun, Visor",
 	description = "A plugin designed to support 1v1.",
-	version = "0.1",
+	version = "0.1.1",
 	url = "https://github.com/Attano/Equilibrium"
 };
 
@@ -85,7 +85,7 @@ stock GetZombieClass(client) return GetEntProp(client, Prop_Send, "m_zombieClass
 
 stock bool:IsClientAndInGame(index)
 {
-	if (index > 0 && index < MaxClients)
+	if (index > 0 && index <= MaxClients)
 	{
 		return IsClientInGame(index);
 	}

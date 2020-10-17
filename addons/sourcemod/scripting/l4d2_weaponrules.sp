@@ -30,6 +30,15 @@ new g_GlobalWeaponRules[WeaponId]={-1, ...};
 new g_bRoundStartHit;
 new g_bConfigsExecuted;
 
+public Plugin:myinfo =
+{
+	name = "L4D2 Weapon Rules",
+	author = "ProdigySim",
+	version = "1.0.1",
+	description = "^",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
+};
+
 public OnPluginStart()
 {
 	RegServerCmd("l4d2_addweaponrule", AddWeaponRuleCb);
@@ -112,7 +121,7 @@ AddWeaponRule(WeaponId:match, to)
 WeaponSearchLoop()
 {
 	new entcnt = GetEntityCount();
-	for(new ent=1; ent < entcnt; ent++)
+	for(new ent=1; ent <= entcnt; ent++)
 	{
 		new WeaponId:source=IdentifyWeapon(ent);
 		if(source > WEPID_NONE && g_GlobalWeaponRules[source] != -1)

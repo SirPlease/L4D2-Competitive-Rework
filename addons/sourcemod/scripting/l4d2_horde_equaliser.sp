@@ -29,7 +29,7 @@ public Plugin:myinfo =
 	name = "L4D2 Horde Equaliser",
 	author = "Visor (original idea by Sir)",
 	description = "Make certain event hordes finite",
-	version = "3.0.7",
+	version = "3.0.8",
 	url = "https://github.com/Attano/Equilibrium"
 };
 
@@ -50,7 +50,7 @@ public OnPluginStart()
 	hCvarNoEventHordeDuringTanks = CreateConVar("l4d2_heq_no_tank_horde", "0", "Put infinite hordes on a 'hold up' during Tank fights");
 	hCvarHordeCheckpointAnnounce = CreateConVar("l4d2_heq_checkpoint_sound", "1", "Play the incoming mob sound at checkpoints (each 1/4 of total commons killed off) to simulate L4D1 behaviour");
 
-	HookEvent("round_start", EventHook:OnRoundStart, EventHookMode_PostNoCopy);
+	HookEvent("round_start", EventHook:RoundStartEvent, EventHookMode_PostNoCopy);
 }
 
 public OnMapStart()
@@ -61,7 +61,7 @@ public OnMapStart()
 	PrecacheSound(HORDE_SOUND);
 }
 
-public OnRoundStart()
+public RoundStartEvent()
 {
 	commonTotal = 0;
 	lastCheckpoint = 0;

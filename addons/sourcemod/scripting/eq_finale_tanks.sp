@@ -45,13 +45,13 @@ public Plugin:myinfo =
 	name = "EQ2 Finale Tank Manager",
 	author = "Visor, Electr0",
 	description = "Either two event tanks or one flow and one (second) event tank",
-	version = "2.5",
+	version = "2.5.1",
 	url = "https://github.com/Attano/Equilibrium"
 };
 
 public OnPluginStart()
 {
-	HookEvent("round_start", OnRoundStart, EventHookMode_PostNoCopy);
+	HookEvent("round_start", RoundStartEvent, EventHookMode_PostNoCopy);
 
 	hFirstTankSpawningScheme = CreateTrie();
 	hSecondTankSpawningScheme = CreateTrie();
@@ -74,7 +74,7 @@ public Action:SetMapSecondTankSpawningScheme(args)
 	SetTrieValue(hSecondTankSpawningScheme, mapname, true);
 }
 
-public Action:OnRoundStart(Handle:event, const String:name[], bool:dontBroadcast)
+public Action:RoundStartEvent(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	CreateTimer(8.0, ProcessTankSpawn);
 }

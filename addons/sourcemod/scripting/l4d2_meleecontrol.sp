@@ -24,7 +24,7 @@ public Plugin:myinfo =
 	name = "L4D2 Melee Fatigue Control",
 	description = "Allows players to set custom fatigue levels.",
 	author = "Rotoblin Team & Blade; rebuilt by Visor",
-	version = "0.1",
+	version = "0.1.1",
 	url = "https://github.com/ConfoglTeam/ProMod"
 };
 
@@ -99,7 +99,7 @@ static bool:ShouldPerformCustomFatigueLogic(const String:StrSample[PLATFORM_MAX_
 		return false;	
 
 	// bugfix for some people on L4D2
-	if (entity > MAXPLAYERS) 
+	if (entity > MaxClients)
 		return false; 
 
 	// note 'entity' means 'client' here

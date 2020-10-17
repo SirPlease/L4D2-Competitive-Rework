@@ -10,7 +10,7 @@
 */
 #define DEBUG_MODE 0
 #define MAX_SPECTATORS 	24
-#define PLUGIN_VERSION 	"1.0"
+#define PLUGIN_VERSION 	"1.0.1"
 #define STEAMID_LENGTH 	32
 
 new Handle:g_hMaxSurvivors            = INVALID_HANDLE;
@@ -96,7 +96,7 @@ public Action:Event_Round_End(Handle:event, const String:name[], bool:dontBroadc
     }
     
     // get steamids
-    for (new i = 1; i < MaxClients; i++) 
+    for (new i = 1; i <= MaxClients; i++)
     {
         if (!IsClientInGame(i)) continue;
         if (GetClientTeam(i) != 1) continue;

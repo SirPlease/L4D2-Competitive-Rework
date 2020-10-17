@@ -10,7 +10,7 @@ public Plugin:myinfo =
     name        = "L4D2 No Backjump",
     author      = "Visor",
     description = "Gah",
-    version     = "1.2",
+    version     = "1.2.1",
     url         = "https://github.com/Attano/Equilibrium"
 }
 
@@ -21,7 +21,7 @@ public OnPluginStart()
     
     hCLunge_ActivateAbility = DHookCreate(LungeActivateAbilityOffset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, CLunge_ActivateAbility);
 
-    HookEvent("round_start", OnRoundStart, EventHookMode_PostNoCopy);
+    HookEvent("round_start", RoundStartEvent, EventHookMode_PostNoCopy);
     HookEvent("player_jump", OnPlayerJump);
 }
 
@@ -31,7 +31,7 @@ public OnEntityCreated(entity, const String:classname[])
         DHookEntity(hCLunge_ActivateAbility, false, entity); 
 }
 
-public OnRoundStart(Handle:event, const String:name[], bool:bDontBroadcast)
+public RoundStartEvent(Handle:event, const String:name[], bool:bDontBroadcast)
 {
     for (new i = 1; i <= MaxClients; i++)
         fSuspectedBackjump[i] = 0.0;

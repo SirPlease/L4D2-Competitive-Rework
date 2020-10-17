@@ -72,7 +72,7 @@ RemoveEndSaferoomItems()
     new iCountEnd = 0;
     new iCountStart = 0;
     
-    for (new i=1; i < entityCount; i++)
+    for (new i=1; i <= entityCount; i++)
     {
         if (!IsValidEntity(i)) { continue; }
         

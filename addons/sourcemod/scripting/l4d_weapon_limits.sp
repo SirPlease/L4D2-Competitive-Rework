@@ -14,7 +14,7 @@ public Plugin:myinfo =
 	name = "L4D Weapon Limits",
 	author = "CanadaRox, Stabby",
 	description = "Restrict weapons individually or together",
-	version = "1.3",
+	version = "1.3.2",
 	url = "https://www.github.com/CanadaRox/sourcemod-plugins/tree/master/weapon_limits"
 }
 
@@ -59,10 +59,10 @@ public OnPluginStart()
 
 	HookEvent("player_incapacitated_start", OnIncap);
 	HookEvent("revive_success", OnRevive);
-	HookEvent("round_end", OnRoundEnd);
+	HookEvent("round_end", RoundEndEvent);
 }
 
-public OnRoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
+public RoundEndEvent(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	for (new i = 1; i <= MaxClients; i++)
 	{
@@ -239,7 +239,7 @@ stock FindAmmoSpawn()
 {
 	new psychonic = GetEntityCount();
 	decl String:classname[64];
-	for (new i = MaxClients; i < psychonic; ++i)
+	for (new i = MaxClients+1; i <= psychonic; ++i)
 	{
 		if (IsValidEntity(i))
 		{

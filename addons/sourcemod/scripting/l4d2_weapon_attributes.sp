@@ -13,7 +13,7 @@ public Plugin:myinfo =
 {
     name        = "L4D2 Weapon Attributes",
     author      = "Jahze",
-    version     = "1.4",
+    version     = "1.4.1",
     description = "Allowing tweaking of the attributes of all weapons"
 };
 
@@ -331,7 +331,7 @@ public Action:WeaponAttributes( client, args ) {
 
  
 public Action:DamageBuffVsTank( victim, &attacker, &inflictor, &Float:damage, &damageType, &weapon, Float:damageForce[3], Float:damagePosition[3] ) {
-    if (attacker <= 0 || attacker > MaxClients+1) {
+    if (attacker <= 0 || attacker > MaxClients) {
         return Plugin_Continue;
     }
 
@@ -360,7 +360,7 @@ public Action:DamageBuffVsTank( victim, &attacker, &inflictor, &Float:damage, &d
  
 bool:IsTank( client ) {
     if ( client <= 0
-    || client > MaxClients+1
+    || client > MaxClients
     || !IsClientInGame(client)
     || GetClientTeam(client) != 3
     || !IsPlayerAlive(client) ) {
