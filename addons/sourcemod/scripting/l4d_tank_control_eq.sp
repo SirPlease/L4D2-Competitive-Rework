@@ -22,7 +22,7 @@ public Plugin:myinfo =
     name = "L4D2 Tank Control",
     author = "arti",
     description = "Distributes the role of the tank evenly throughout the team",
-    version = "0.0.16",
+    version = "0.0.17",
     url = "https://github.com/alexberriman/l4d2-plugins/tree/master/l4d_tank_control"
 }
 
@@ -193,6 +193,9 @@ public TankKilled_Event(Handle:event, const String:name[], bool:dontBroadcast)
  
 public Action:Tank_Cmd(client, args)
 {
+    if (!IsClientInGame(client)) 
+      return Plugin_Handled;
+
     new tankClientId;
     decl String:tankClientName[128];
     
@@ -495,7 +498,7 @@ public getInfectedPlayerBySteamId(const String:steamId[])
    
     for (new i = 1; i <= MaxClients; i++) 
     {
-        if (!IsClientConnected(i) || GetClientTeam(i) != 3)
+        if (!IsClientConnected(i) || !IsClientInGame(i) || GetClientTeam(i) != 3)
             continue;
         
         GetClientAuthId(i, AuthId_Steam2, tmpSteamId, sizeof(tmpSteamId));     
