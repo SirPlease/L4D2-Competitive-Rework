@@ -36,7 +36,7 @@ public Plugin:myinfo =
 {
     name        = "L4D2 Display Infected HP",
     author      = "Visor",
-    version     = "1.2",
+    version     = "1.2.1",
     description = "Survivors receive damage reports after they get capped",
     url         = "https://github.com/Attano/Equilibrium"
 };
@@ -56,6 +56,11 @@ public OnPluginStart()
 public OnConfigsExecuted()
 {
     fGhostDelay = GetConVarFloat(FindConVar("z_ghost_delay_min"));
+}
+
+public OnMapEnd()
+{
+    ClearTimer(hTongueParalyzeTimer);
 }
 
 public Action:Event_PlayerHurt(Handle:event, const String:name[], bool:dontBroadcast)
@@ -117,7 +122,7 @@ public Event_SmokerAttackFirst(Handle:event, const String:name[], bool:dontBroad
     PushStackCell(hEventMembers, checks);
 
     // It takes exactly 1.0s of dragging to get paralyzed, so we'll give the timer additional 0.1s to update
-    hTongueParalyzeTimer = CreateTimer(1.1, CheckSurvivorState, hEventMembers, TIMER_FLAG_NO_MAPCHANGE);
+    hTongueParalyzeTimer = CreateTimer(1.1, CheckSurvivorState, hEventMembers);
 }
 
 public Action:CheckSurvivorState(Handle:timer, any:hEventMembers)
@@ -129,6 +134,7 @@ public Action:CheckSurvivorState(Handle:timer, any:hEventMembers)
         PopStackCell(hEventMembers, victim);
         PopStackCell(hEventMembers, attacker);
     }
+    CloseHandle(hEventMembers);
 
     if (IsSurvivorParalyzed(victim))
     {
