@@ -60,7 +60,6 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 	CreateNative("L4D2_GetMapValueVector", _native_GetMapValueVector);
 	CreateNative("L4D2_GetMapValueString", _native_GetMapValueString);
 	CreateNative("L4D2_CopyMapSubsection", _native_CopyMapSubsection);
-	MarkNativeAsOptional("LGO_BuildConfigPath"); // Prevent loading issues.
 	
 	/* Plugin Forward Declarations */
 	hFwdRoundStart = CreateGlobalForward("L4D2_OnRealRoundStart", ET_Ignore, Param_Cell);
