@@ -1,4 +1,4 @@
-#define PLUGIN_VERSION "1.1.1"
+#define PLUGIN_VERSION "1.1.2"
 
 #pragma semicolon 1
 
@@ -58,6 +58,18 @@ public OnPluginStart()
 #if debug
 	RegConsoleCmd("debug", CmdDebug);
 #endif
+}
+
+public OnMapEnd()
+{
+	for (new i = 0; i <= MAXPLAYERS; i++)
+	{
+		g_hRestoreTimer[i] = INVALID_HANDLE;
+		g_hFixGlitchTimer[i] = INVALID_HANDLE;
+#if debug
+		g_hDebugTimer[i] = INVALID_HANDLE;
+#endif
+	}
 }
 
 /*                                      +==========================================+
