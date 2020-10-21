@@ -152,7 +152,7 @@ public __pl_confogl_SetNTVOptional()
 	MarkNativeAsOptional("LGO_IsMapDataAvailable");
 	MarkNativeAsOptional("LGO_GetMapValueInt");
 	MarkNativeAsOptional("LGO_GetMapValueFloat");
-	MarkNativeAsOptional("LGO__GetMapValueVector");
+	MarkNativeAsOptional("LGO_GetMapValueVector");
 	MarkNativeAsOptional("LGO_GetMapValueString");
 	MarkNativeAsOptional("LGO_CopyMapSubsection");
 	MarkNativeAsOptional("LGO_IsMatchModeLoaded");
