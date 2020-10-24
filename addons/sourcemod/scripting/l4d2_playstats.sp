@@ -978,7 +978,7 @@ stock HandleRoundAddition()
     // also sets end time to NOW for any 'ongoing' times for round/player
     
     // round data
-    for ( i = 0; i < rndStartTime; i++ )
+    for ( i = 0; i < _:rndStartTime; i++ )
     {
         g_strAllRoundData[g_iCurTeam][i] += g_strRoundData[g_iRound][g_iCurTeam][i];
     }
@@ -999,7 +999,7 @@ stock HandleRoundAddition()
     // player data
     for ( j = 0; j < g_iPlayers; j++ )
     {
-        for ( i = 0; i < plyTimeStartPresent; i++ )
+        for ( i = 0; i < _:plyTimeStartPresent; i++ )
         {
             g_strPlayerData[j][i] += g_strRoundPlayerData[j][g_iCurTeam][i];
         }
@@ -1017,7 +1017,7 @@ stock HandleRoundAddition()
         }
         
         // same for infected data
-        for ( i = 0; i < infTimeStartPresent; i++ )
+        for ( i = 0; i < _:infTimeStartPresent; i++ )
         {
             g_strPlayerInfData[j][i] += g_strRoundPlayerInfData[j][g_iCurTeam][i];
         }
@@ -1729,11 +1729,11 @@ public Action: Event_PlayerHurt ( Handle:event, const String:name[], bool:dontBr
             
             switch ( weaponType )
             {
-                case WPTYPE_SHOTGUN: { storeA = plyHitsShotgun; storeB = plyHitsSIShotgun;  }
-                case WPTYPE_SMG: {     storeA = plyHitsSmg;     storeB = plyHitsSISmg;      storeC = ( hitgroup == HITGROUP_HEAD ) ? plyHeadshotsSmg : -1; }
-                case WPTYPE_SNIPER: {  storeA = plyHitsSniper;  storeB = plyHitsSISniper;   storeC = ( hitgroup == HITGROUP_HEAD ) ? plyHeadshotsSniper : -1; }
+                case WPTYPE_SHOTGUN: { storeA = _:plyHitsShotgun; storeB = _:plyHitsSIShotgun;  }
+                case WPTYPE_SMG: {     storeA = _:plyHitsSmg;     storeB = _:plyHitsSISmg;      storeC = ( hitgroup == HITGROUP_HEAD ) ? (_:plyHeadshotsSmg) : -1; }
+                case WPTYPE_SNIPER: {  storeA = _:plyHitsSniper;  storeB = _:plyHitsSISniper;   storeC = ( hitgroup == HITGROUP_HEAD ) ? (_:plyHeadshotsSniper) : -1; }
                 case WPTYPE_PISTOL: {
-                        storeA = plyHitsPistol;  storeB = plyHitsSIPistol;   storeC = ( hitgroup == HITGROUP_HEAD ) ? plyHeadshotsPistol : -1;
+                        storeA = _:plyHitsPistol;  storeB = _:plyHitsSIPistol;   storeC = ( hitgroup == HITGROUP_HEAD ) ? (_:plyHeadshotsPistol) : -1;
                         // incapped: don't count hits
                         if ( IsPlayerIncapacitated(attacker) ) { storeA = -1; }
                     }
@@ -1753,11 +1753,11 @@ public Action: Event_PlayerHurt ( Handle:event, const String:name[], bool:dontBr
             {
                 switch ( weaponType )
                 {
-                    case WPTYPE_SHOTGUN: { storeA = plyHitsShotgun; storeB = plyHitsTankShotgun;  }
-                    case WPTYPE_SMG: {     storeA = plyHitsSmg;     storeB = plyHitsTankSmg; }
-                    case WPTYPE_SNIPER: {  storeA = plyHitsSniper;  storeB = plyHitsTankSniper; }
+                    case WPTYPE_SHOTGUN: { storeA = _:plyHitsShotgun; storeB = _:plyHitsTankShotgun;  }
+                    case WPTYPE_SMG: {     storeA = _:plyHitsSmg;     storeB = _:plyHitsTankSmg; }
+                    case WPTYPE_SNIPER: {  storeA = _:plyHitsSniper;  storeB = _:plyHitsTankSniper; }
                     case WPTYPE_PISTOL: {
-                            storeA = plyHitsPistol;  storeB = plyHitsTankPistol;
+                            storeA = _:plyHitsPistol;  storeB = _:plyHitsTankPistol;
                             // incapped: don't count hits
                             if ( IsPlayerIncapacitated(attacker) ) { storeA = -1; }
                         }
@@ -1984,11 +1984,11 @@ public Action: Event_InfectedHurt ( Handle:event, const String:name[], bool:dont
     
     switch ( weaponType )
     {
-        case WPTYPE_SHOTGUN: { storeA = plyHitsShotgun; }
-        case WPTYPE_SMG: {     storeA = plyHitsSmg;     storeC = ( hitgroup == HITGROUP_HEAD ) ? plyHeadshotsSmg : -1; }
-        case WPTYPE_SNIPER: {  storeA = plyHitsSniper;  storeC = ( hitgroup == HITGROUP_HEAD ) ? plyHeadshotsSniper : -1; }
+        case WPTYPE_SHOTGUN: { storeA = _:plyHitsShotgun; }
+        case WPTYPE_SMG: {     storeA = _:plyHitsSmg;     storeC = ( hitgroup == HITGROUP_HEAD ) ? (_:plyHeadshotsSmg) : -1; }
+        case WPTYPE_SNIPER: {  storeA = _:plyHitsSniper;  storeC = ( hitgroup == HITGROUP_HEAD ) ? (_:plyHeadshotsSniper) : -1; }
         case WPTYPE_PISTOL: {
-                storeA = plyHitsPistol;  storeC = ( hitgroup == HITGROUP_HEAD ) ? plyHeadshotsPistol : -1;
+                storeA = _:plyHitsPistol;  storeC = ( hitgroup == HITGROUP_HEAD ) ? (_:plyHeadshotsPistol) : -1;
                 // incapped: don't count hits
                 if ( IsPlayerIncapacitated(attacker) ) { storeA = -1; }
             }
@@ -2682,14 +2682,14 @@ stock ResetStats ( bool:bCurrentRoundOnly = false, iTeam = -1, bool: bFailedRoun
     {
         if ( iTeam == -1 ) {
             for ( k = 0; k <= MAXRNDSTATS; k++ ) {
-                if ( bFailedRound && k == rndRestarts ) { continue; }
+                if ( bFailedRound && k == _:rndRestarts ) { continue; }
                 g_strRoundData[g_iRound][LTEAM_A][k] = 0;
                 g_strRoundData[g_iRound][LTEAM_B][k] = 0;
             }
         }
         else {
             for ( k = 0; k <= MAXRNDSTATS; k++ ) {
-                if ( bFailedRound && k == rndRestarts ) { continue; }
+                if ( bFailedRound && k == _:rndRestarts ) { continue; }
                 g_strRoundData[g_iRound][iTeam][k] = 0;
             }
         }
