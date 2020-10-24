@@ -22,7 +22,7 @@ public Plugin:myinfo =
     name = "L4D2 Tank Control",
     author = "arti",
     description = "Distributes the role of the tank evenly throughout the team",
-    version = "0.0.16",
+    version = "0.0.17",
     url = "https://github.com/alexberriman/l4d2-plugins/tree/master/l4d_tank_control"
 }
 
@@ -53,6 +53,7 @@ public OnPluginStart()
     
     // Event hooks
     HookEvent("player_left_start_area", EventHook:PlayerLeftStartArea_Event, EventHookMode_PostNoCopy);
+    HookEvent("round_start", EventHook:RoundStart_Event, EventHookMode_PostNoCopy);
     HookEvent("round_end", EventHook:RoundEnd_Event, EventHookMode_PostNoCopy);
     HookEvent("player_team", EventHook:PlayerTeam_Event, EventHookMode_PostNoCopy);
     HookEvent("tank_killed", EventHook:TankKilled_Event, EventHookMode_PostNoCopy);
@@ -94,7 +95,7 @@ public OnClientDisconnect(client)
  * When a new game starts, reset the tank pool.
  */
  
-public OnRoundStart()
+public RoundStart_Event()
 {
     CreateTimer(10.0, newGame);
 }
@@ -192,6 +193,9 @@ public TankKilled_Event(Handle:event, const String:name[], bool:dontBroadcast)
  
 public Action:Tank_Cmd(client, args)
 {
+    if (!IsClientInGame(client)) 
+      return Plugin_Handled;
+
     new tankClientId;
     decl String:tankClientName[128];
     
@@ -279,22 +283,27 @@ public Action:GiveTank_Cmd(client, args)
 public chooseTank()
 {
     // Create our pool of players to choose from
-    new Handle:infectedPool = teamSteamIds(L4D2Team_Infected);
+    new Handle:infectedPool = CreateArray(64);
+    addTeamSteamIdsToArray(infectedPool, L4D2Team_Infected);
     
     // If there is nobody on the infected team, return (otherwise we'd be stuck trying to select forever)
     if (GetArraySize(infectedPool) == 0)
+    {
+        CloseHandle(infectedPool);
         return;
-    
+    }
+
     // Remove players who've already had tank from the pool.
     infectedPool = removeTanksFromPool(infectedPool, h_whosHadTank);
     
     // If the infected pool is empty, remove infected players from pool
     if (GetArraySize(infectedPool) == 0) // (when nobody on infected ,error)
     {
-        new Handle:infectedTeam = teamSteamIds(L4D2Team_Infected);
+        new Handle:infectedTeam = CreateArray(64);
+        addTeamSteamIdsToArray(infectedTeam, L4D2Team_Infected);
         if (GetArraySize(infectedTeam) > 1)
         {
-            h_whosHadTank = removeTanksFromPool(h_whosHadTank, teamSteamIds(L4D2Team_Infected));
+            h_whosHadTank = removeTanksFromPool(h_whosHadTank, infectedTeam);
             chooseTank();
         }
         else
@@ -302,6 +311,8 @@ public chooseTank()
             queuedTankSteamId = "";
         }
         
+        CloseHandle(infectedTeam);
+        CloseHandle(infectedPool);
         return;
     }
     
@@ -413,18 +424,16 @@ stock PrintToInfected(const String:Message[], any:... )
     }
 }
 /**
- * Returns an array of steam ids for a particular team.
+ * Adds steam ids for a particular team to an array.
  * 
+ * @ param Handle:steamIds
+ *     The array steam ids will be added to.
  * @param L4D2Team:team
- *     The team which to return steam ids for.
- * 
- * @return
- *     An array of steam ids.
+ *     The team to get steam ids for.
  */
  
-public Handle:teamSteamIds(L4D2Team:team)
+public Handle:addTeamSteamIdsToArray(Handle:steamIds, L4D2Team:team)
 {
-    new Handle:steamIds = CreateArray(64);
     decl String:steamId[64];
 
     for (new i = 1; i <= MaxClients; i++)
@@ -440,8 +449,6 @@ public Handle:teamSteamIds(L4D2Team:team)
             PushArrayString(steamIds, steamId);
         }
     }
-    
-    return steamIds;
 }
 
 /**
@@ -491,7 +498,7 @@ public getInfectedPlayerBySteamId(const String:steamId[])
    
     for (new i = 1; i <= MaxClients; i++) 
     {
-        if (!IsClientConnected(i) || GetClientTeam(i) != 3)
+        if (!IsClientConnected(i) || !IsClientInGame(i) || GetClientTeam(i) != 3)
             continue;
         
         GetClientAuthId(i, AuthId_Steam2, tmpSteamId, sizeof(tmpSteamId));     

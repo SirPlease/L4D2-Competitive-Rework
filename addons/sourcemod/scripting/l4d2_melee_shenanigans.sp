@@ -13,7 +13,7 @@ public Plugin myinfo =
     name = "Shove Shenanigans - REVAMPED",
     author = "Sir",
     description = "Stops Shoves slowing the Tank and Charger, gives control over what happens when a Survivor is punched while having a melee out.",
-    version = "1.2",
+    version = "1.3",
     url = ""
 }
 
@@ -38,7 +38,8 @@ public Action PlayerHit(Handle event, char[] event_name, bool dontBroadcast)
             char weaponname[64];
             GetEdictClassname(activeweapon, weaponname, sizeof(weaponname));    
             
-            if (StrEqual(weaponname, "weapon_melee", false) && GetPlayerWeaponSlot(Player, 0) != -1)
+            if (StrEqual(weaponname, "weapon_melee", false) && 
+            GetPlayerWeaponSlot(Player, 0) != -1) // Must have a Primary Weapon.
             {
                 switch(iDropMethod)
                 {
@@ -46,8 +47,10 @@ public Action PlayerHit(Handle event, char[] event_name, bool dontBroadcast)
                     case 1: SDKHooks_DropWeapon(Player, activeweapon); // Drop Melee, will most likely fly away as Tank's punch will cause it to launch far away, can test some stuff with the Vector or perhaps a delayed timer.
                     case 2: // Force a weapon switch
                     {
+                        // Note: If a player's primary weapon is empty, it will still switch to the primary weapon, but then instantly switch back to the melee weapon.
                         int PrimaryWeapon = GetPlayerWeaponSlot(Player, 0);
                         SetEntPropEnt(Player, Prop_Send, "m_hActiveWeapon", PrimaryWeapon); 
+                        SetEntPropFloat(PrimaryWeapon, Prop_Send, "m_flNextPrimaryAttack", GetGameTime() + 0.1); // Prevent players instantly firing their Primary Weapon when they're holding down M1 with their melee.
                     }
                 }
             }
@@ -77,12 +80,12 @@ stock bool IsValidClient(int client)
 
 stock bool IsSurvivor(int client)
 {
-    return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2;
+    return IsValidClient(client) && GetClientTeam(client) == 2;
 }
  
 stock bool IsInfected(int client)
 {
-    return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 3;
+    return IsValidClient(client) && GetClientTeam(client) == 3;
 }
  
 stock bool IsTankOrCharger(int client)  

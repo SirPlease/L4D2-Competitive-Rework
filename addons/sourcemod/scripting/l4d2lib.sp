@@ -8,15 +8,14 @@
 
 #define LIBRARYNAME "l4d2lib"
 
-// Workaround
-new bool:bFirstLoad = true;
+new bool:g_bConfogl = false;
 
 public Plugin:myinfo = 
 {
 	name = "L4D2Lib",
 	author = "Confogl Team",
 	description = "Useful natives and fowards for L4D2 Plugins",
-	version = "1.0",
+	version = "1.0.1",
 	url = "https://bitbucket.org/ProdigySim/misc-sourcemod-plugins"
 }
 
@@ -61,7 +60,6 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 	CreateNative("L4D2_GetMapValueVector", _native_GetMapValueVector);
 	CreateNative("L4D2_GetMapValueString", _native_GetMapValueString);
 	CreateNative("L4D2_CopyMapSubsection", _native_CopyMapSubsection);
-	MarkNativeAsOptional("LGO_BuildConfigPath"); // Prevent loading issues.
 	
 	/* Plugin Forward Declarations */
 	hFwdRoundStart = CreateGlobalForward("L4D2_OnRealRoundStart", ET_Ignore, Param_Cell);
@@ -76,16 +74,30 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 	return APLRes_Success;
 }
 
+public OnLibraryAdded(const String:name[])
+{
+	if (StrEqual(name, "confogl"))
+	{
+		MapInfo_Init();
+		g_bConfogl = true;
+	}
+}
+
+public OnLibraryRemoved(const String:name[])
+{
+	if (StrEqual(name, "confogl"))
+	{
+		g_bConfogl = false;
+	}
+}
+
 public OnMapStart()
 {
-	if (bFirstLoad) 
+	if (g_bConfogl)
 	{
-		// Little workaround, do it here so that it won't get loaded on OnPluginStart or OnAllPluginsLoaded, or it will fail to use the needed LGO native due to how Confoglcompmod works.
-		MapInfo_Init();
-		bFirstLoad = false;
+		MapInfo_OnMapStart_Update();
+		Tanks_OnMapStart();
 	}
-	MapInfo_OnMapStart_Update();
-	Tanks_OnMapStart();
 }
 
 public OnMapEnd()
@@ -219,6 +231,8 @@ public _native_GetMapEndDist(Handle:plugin, numParams)
 
 public _native_GetMapValueInt(Handle:plugin, numParams)
 {
+	if (!g_bConfogl) return 0;
+
 	decl len, defval;
 	
 	GetNativeStringLength(1, len);
@@ -231,6 +245,8 @@ public _native_GetMapValueInt(Handle:plugin, numParams)
 }
 public _native_GetMapValueFloat(Handle:plugin, numParams)
 {
+	if (!g_bConfogl) return 0;
+
 	decl len, Float:defval;
 	
 	GetNativeStringLength(1, len);
@@ -244,6 +260,8 @@ public _native_GetMapValueFloat(Handle:plugin, numParams)
 
 public _native_GetMapValueVector(Handle:plugin, numParams)
 {
+	if (!g_bConfogl) return;
+
 	decl len, Float:defval[3], Float:value[3];
 	
 	GetNativeStringLength(1, len);
@@ -259,6 +277,8 @@ public _native_GetMapValueVector(Handle:plugin, numParams)
 
 public _native_GetMapValueString(Handle:plugin, numParams)
 {
+	if (!g_bConfogl) return;
+
 	decl len;
 	GetNativeStringLength(1, len);
 	new String:key[len+1];
@@ -278,6 +298,8 @@ public _native_GetMapValueString(Handle:plugin, numParams)
 
 public _native_CopyMapSubsection(Handle:plugin, numParams)
 {
+	if (!g_bConfogl) return;
+
 	decl len, Handle:kv;
 	GetNativeStringLength(2, len);
 	new String:key[len+1];

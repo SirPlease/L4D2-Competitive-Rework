@@ -1,7 +1,7 @@
 #include "includes/hardcoop_util.sp"
 
 new Handle:arraySurvivors; // dynamic array holding only the survivor entity IDs
-new targetSurvivor[MAXPLAYERS]; // survivor target of each special infected
+new targetSurvivor[MAXPLAYERS+1]; // survivor target of each special infected
 
 public SI_TargetingModule_Start() 
 {
@@ -23,7 +23,7 @@ public SI_TargetingModule_Start()
 RefreshTargets() {
 	// Refresh survivor array
 	ClearArray(arraySurvivors);
-	for (new i = 1; i < MaxClients; i++) 
+	for (new i = 1; i <= MaxClients; i++)
 	{
 		if (IsSurvivor(i)) {
 			PushArrayCell(arraySurvivors, i);
@@ -31,7 +31,7 @@ RefreshTargets() {
 	}
 	 
 	// Assign targets
-	for (new i = 1; i < MaxClients; i++) 
+	for (new i = 1; i <= MaxClients; i++)
 	{
 		if (IsBotCapper(i) && IsPlayerAlive(i)) {
 			targetSurvivor[i] = GetTargetSurvivor();

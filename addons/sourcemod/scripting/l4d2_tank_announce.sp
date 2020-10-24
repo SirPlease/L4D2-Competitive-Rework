@@ -11,7 +11,7 @@ public Plugin:myinfo =
 	name = "L4D2 Tank Announcer",
 	author = "Visor",
 	description = "Announce in chat and via a sound when a Tank has spawned",
-	version = "1.1",
+	version = "1.1.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -22,16 +22,16 @@ public OnMapStart()
 
 public OnPluginStart()
 {
-	HookEvent("tank_spawn", EventHook:OnTankSpawn, EventHookMode_PostNoCopy);
-	HookEvent("round_start", EventHook:OnRoundStart, EventHookMode_PostNoCopy);
+	HookEvent("tank_spawn", EventHook:TankSpawnEvent, EventHookMode_PostNoCopy);
+	HookEvent("round_start", EventHook:RoundStartEvent, EventHookMode_PostNoCopy);
 }
 
-public OnRoundStart()
+public RoundStartEvent()
 {
 	g_bIsTankAlive = false;
 }
 
-public OnTankSpawn()
+public TankSpawnEvent()
 {
 	if (!g_bIsTankAlive)
 	{

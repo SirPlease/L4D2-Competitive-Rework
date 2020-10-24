@@ -1,4 +1,4 @@
-#define PLUGIN_VERSION "1.1.1"
+#define PLUGIN_VERSION "1.1.2"
 
 #pragma semicolon 1
 
@@ -38,10 +38,10 @@ public OnPluginStart()
 {
 	new Handle:hCvarDecayRate = FindConVar("pain_pills_decay_rate");
 
-	CreateConVar("engine_fix_version", PLUGIN_VERSION, "Engine Fix plugin version", FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_PLUGIN);
+	CreateConVar("engine_fix_version", PLUGIN_VERSION, "Engine Fix plugin version", FCVAR_REPLICATED|FCVAR_NOTIFY);
 
-	new Handle:hCvarWarnEnabled = CreateConVar("engine_warning", "0", "Display a warning message saying that player using expolit: 1=enable, 0=disable.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	new Handle:hCvarEngineFlags = CreateConVar("engine_fix_flags", "14", "Enables what kind of exploit should be fixed/blocked. Flags (add together): 0=disable, 2=ladder speed glitch, 4=no fall damage bug, 8=health boost glitch.", FCVAR_PLUGIN, true, 0.0, true, 14.0);
+	new Handle:hCvarWarnEnabled = CreateConVar("engine_warning", "0", "Display a warning message saying that player using expolit: 1=enable, 0=disable.", FCVAR_NONE, true, 0.0, true, 1.0);
+	new Handle:hCvarEngineFlags = CreateConVar("engine_fix_flags", "14", "Enables what kind of exploit should be fixed/blocked. Flags (add together): 0=disable, 2=ladder speed glitch, 4=no fall damage bug, 8=health boost glitch.", FCVAR_NONE, true, 0.0, true, 14.0);
 	//AutoExecConfig(true, "Fix_Engine");
 
 	g_fCvarDecayRate = GetConVarFloat(hCvarDecayRate);
@@ -58,6 +58,18 @@ public OnPluginStart()
 #if debug
 	RegConsoleCmd("debug", CmdDebug);
 #endif
+}
+
+public OnMapEnd()
+{
+	for (new i = 0; i <= MAXPLAYERS; i++)
+	{
+		g_hRestoreTimer[i] = INVALID_HANDLE;
+		g_hFixGlitchTimer[i] = INVALID_HANDLE;
+#if debug
+		g_hDebugTimer[i] = INVALID_HANDLE;
+#endif
+	}
 }
 
 /*                                      +==========================================+
@@ -405,7 +417,7 @@ Float:GetTempHealth(client)
 WarningsMsg(client, msg)
 {
 	decl String:STEAM_ID[32];
-	GetClientAuthString(client, STEAM_ID, sizeof(STEAM_ID));
+	GetClientAuthId(client, AuthId_Steam2, STEAM_ID, sizeof(STEAM_ID));
 
 	switch (msg){
 

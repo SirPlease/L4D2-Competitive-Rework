@@ -1,7 +1,7 @@
 #pragma semicolon 1
 
 #include <sourcemod>
-#include <left4downtown>
+#include <left4dhooks>
 #include <colors>
 #define L4D2UTIL_STOCKS_ONLY
 #include <l4d2util>
@@ -20,7 +20,7 @@ new Handle:cvar_noTankRush;
 public Plugin:myinfo = {
     name = "L4D2 No Tank Rush",
     author = "Jahze, vintik, devilesk",
-    version = "1.1.2",
+    version = "1.1.3",
     description = "Stops distance points accumulating whilst the tank is alive"
 };
 

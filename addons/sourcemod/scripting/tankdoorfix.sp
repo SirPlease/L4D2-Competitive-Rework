@@ -7,7 +7,7 @@
 #include <sdkhooks>
 #include <entity_prop_stocks>
 
-#define VERSION "1.4"
+#define VERSION "1.4.1"
 
 //Found ent 'prop_door_rotating', id: 163
 
@@ -27,7 +27,7 @@
 
 new tankCount;
 
-new Float:nextTankPunchAllowed[19];
+new Float:nextTankPunchAllowed[MAXPLAYERS+1];
 
 new tankClassIndex;
 

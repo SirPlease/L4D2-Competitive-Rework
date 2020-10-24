@@ -26,7 +26,7 @@ native PBONUS_ResetRoundBonus();
 native PBONUS_SetRoundBonus(bonus);
 
 // Adds points to the bonus for the current round
-native PBONUS_AddRoundBonus(bonus);
+native PBONUS_AddRoundBonus(bonus, bool:bNoReport=false);
 
 // Get the amount of defibs used in the current round
 //    returns int

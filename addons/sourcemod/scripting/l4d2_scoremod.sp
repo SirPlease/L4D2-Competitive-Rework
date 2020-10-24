@@ -16,7 +16,7 @@ public Plugin:myinfo =
 	name = "L4D2 Scoremod",
 	author = "CanadaRox, ProdigySim",
 	description = "L4D2 Custom Scoring System (Health Bonus)",
-	version = "1.1b",
+	version = "1.1.1",
 	url = "https://bitbucket.org/CanadaRox/random-sourcemod-stuff"
 };
 
@@ -362,7 +362,7 @@ stock Float:SM_CalculateAvgHealth(&iAliveCount=0)
 	new iSurvCount;
 	iAliveCount =0;
 		
-	for (new index = 1; index < MaxClients; index++)
+	for (new index = 1; index <= MaxClients; index++)
 	{
 		if (IsSurvivor(index))
 		{

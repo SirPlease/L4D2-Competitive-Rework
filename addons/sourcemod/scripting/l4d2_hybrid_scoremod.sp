@@ -55,7 +55,7 @@ public Plugin:myinfo =
 	name = "L4D2 Scoremod+",
 	author = "Visor",
 	description = "The next generation scoring mod",
-	version = "2.2.2",
+	version = "2.2.4",
 	url = "https://github.com/Attano/L4D2-Competitive-Framework"
 };
 
@@ -86,7 +86,7 @@ public OnPluginStart()
 	HookConVarChange(hCvarBonusPerSurvivorMultiplier, CvarChanged);
 	HookConVarChange(hCvarPermanentHealthProportion, CvarChanged);
 
-	HookEvent("round_start", EventHook:OnRoundStart, EventHookMode_PostNoCopy);
+	HookEvent("round_start", EventHook:RoundStartEvent, EventHookMode_PostNoCopy);
 	HookEvent("player_ledge_grab", OnPlayerLedgeGrab);
 	HookEvent("player_hurt", OnPlayerHurt);
 	HookEvent("revive_success", OnPlayerRevived, EventHookMode_Post);
@@ -165,9 +165,9 @@ public OnClientDisconnect(client)
 	SDKUnhook(client, SDKHook_OnTakeDamagePost, OnTakeDamagePost);
 }
 
-public OnRoundStart()
+public RoundStartEvent()
 {
-	for (new i = 0; i < MAXPLAYERS; i++)
+	for (new i = 0; i <= MAXPLAYERS; i++)
 	{
 		iTempHealth[i] = 0;
 	}

@@ -1,6 +1,7 @@
 #include <sourcemod>
 #include <sdktools>
 #include <left4dhooks>
+#undef REQUIRE_PLUGIN
 #include <confogl.inc>
 
 #if defined __mapinfo__
@@ -24,8 +25,8 @@ static Float:Start_Dist;
 static Float:Start_Extra_Dist;
 static Float:End_Dist;
 
-static iIsInEditMode[MAXPLAYERS];
-static Float:fLocTemp[MAXPLAYERS][3];
+static iIsInEditMode[MAXPLAYERS+1];
+static Float:fLocTemp[MAXPLAYERS+1][3];
 
 MapInfo_Init()
 {
@@ -45,7 +46,7 @@ MapInfo_OnMapEnd_Update()
 {
 	KvRewind(kMIData);
 	MapDataAvailable = false;
-	for (new i; i < MAXPLAYERS; i++) iIsInEditMode[i] = 0;
+	for (new i; i <= MAXPLAYERS; i++) iIsInEditMode[i] = 0;
 }
 
 MapInfo_OnPluginEnd()
@@ -56,7 +57,7 @@ MapInfo_OnPluginEnd()
 MapInfo_PlayerDisconnect_Event(Handle:event)
 {
 	new client = GetClientOfUserId(GetEventInt(event, "userid"));
-	if (client > -1 && client < MAXPLAYERS) iIsInEditMode[client] = 0;
+	if (client > -1 && client <= MAXPLAYERS) iIsInEditMode[client] = 0;
 }
 
 public Action:MI_KV_CmdSave(client, args)

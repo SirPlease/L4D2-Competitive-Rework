@@ -1,3 +1,22 @@
+/******************************************************************
+*
+* v0.1 ~ v1.2 by Visor
+* ------------------------
+* ------- Details: -------
+* ------------------------
+* > Creates a timer that runs checks to prevent Survivors from baiting attacks (Which is extremely boring)
+* - Keeps track of Readyup, Event Hordes, Tanks, and Pauses to prevent sending in hordes unfairly.
+*
+* v1.3 by Sir (pointer to hordeDelayChecks by devilesk)
+* ------------------------
+* ------- Details: -------
+* ------------------------
+* - Now resets internal "hordeDelayChecks" on Round Live to prevent teams from suddenly getting a horde shortly after the round goes live. (Timer wouldn't even be visible at the top)
+* - Now also resets saved "baiting" progress that didn't get reset after Event Hordes / Tank Spawns were triggered (Although, it'd be very unlikely that no SI would go in while these were active)
+* - Fixed the Timer from showing up on the top while Tank was alive and SI just weren't attacking (to reset the timer) this was only a visual thing though, as the plugin already didn't spawn in horde when a Tank was up.
+*
+******************************************************************/
+
 #pragma semicolon 1
 
 #include <sourcemod>
@@ -42,10 +61,10 @@ new L4D2SI:zombieclass[MAXPLAYERS + 1];
 public Plugin:myinfo = 
 {
 	name = "L4D2 Antibaiter",
-	author = "Visor",
+	author = "Visor, Sir (assisted by Devilesk)",
 	description = "Makes you think twice before attempting to bait that shit",
-	version = "1.2",
-	url = "https://github.com/ConfoglTeam/ProMod"
+	version = "1.3",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public OnPluginStart()
@@ -87,16 +106,27 @@ public OnRoundIsLive()
 			aliveSince[i] = GetGameTime();
 		}
 	}
+	hordeDelayChecks = 0; // Needs to be reset as it's not reset on Round End. (Prevents the Plugin from just picking up where it left off)
 }
 	
 public Action:AntibaiterThink(Handle:timer) 
 {
-	if (IsInReady() || IsInPause() || IsPanicEventInProgress() || L4D2Direct_GetTankCount() > 0)
+	// Game is paused or in Ready-up, we "pause" the timer.
+	if (IsInPause() || IsInReady())
 	{
-	#if DEBUG
-		PrintToChatAll("\x03[Antibaiter DEBUG] \x04ReadyUp: \x05%d\x01, \x04Pause: \x05%d\x01, \x04active panic event: \x05%d\x01/312 %d/316 %d, \x04Tank count: \x05%d\x01", IsInReady(), IsInPause(), IsPanicEventInProgress(), LoadFromAddress(L4D2_GetCDirectorScriptedEventManager() + Address:312, NumberType_Int8), LoadFromAddress(L4D2_GetCDirectorScriptedEventManager() + Address:316, NumberType_Int8), L4D2Direct_GetTankCount());
-	#endif
         return Plugin_Handled;
+	}
+
+	// These are all Events where we shouldn't even save Antibaiter's current status, invalidate the timer if it is active.
+	if (IsPanicEventInProgress() || L4D2Direct_GetTankCount() > 0)
+	{
+		hordeDelayChecks = 0;
+		if (IsCountdownRunning())
+		{
+			HideCountdown();
+			StopCountdown();
+		}
+		return Plugin_Handled;
 	}
 
 	new eligibleZombies;
