@@ -12,7 +12,7 @@ public Plugin:myinfo =
 {
     name        = "L4D2 Weapon Attributes",
     author      = "Jahze",
-    version     = "1.4.1",
+    version     = "1.4.2",
     description = "Allowing tweaking of the attributes of all weapons"
 };
 
@@ -153,8 +153,8 @@ public OnPluginEnd()
         }
         else if (iAtIndex < MAX_ATTRS - 1)
         {
-            L4D2_SetFloatWeaponAttribute(sBuffer, iFloatWeaponAttributes[iAtIndex], GetArrayCell(hVanillaAttributesValue, i));
-            // DEBUG: PrintToChatAll("%s, '%s' set to %f", sBuffer, sWeaponAttrShortName[iAtIndex + 3], GetArrayCell(hVanillaAttributesValue, i));
+            L4D2_SetFloatWeaponAttribute(sBuffer, iFloatWeaponAttributes[iAtIndex - 3], GetArrayCell(hVanillaAttributesValue, i));
+            // DEBUG: PrintToChatAll("%s, '%s' set to %f", sBuffer, sWeaponAttrShortName[iAtIndex], GetArrayCell(hVanillaAttributesValue, i));
         }
     }
 }
@@ -210,14 +210,14 @@ SetWeaponAttributeFloat( const String:sWeaponName[], idx, Float:value ) {
         GetArrayString(hVanillaAttributesWeapon, i, sBuffer, 32);
         if (StrEqual(sWeaponName, sBuffer) && idx == GetArrayCell(hVanillaAttributesAttribute, i))
         {
-            L4D2_SetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[idx], value);
+            L4D2_SetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[idx - 3], value);
             return;
         }
     }
-    PushArrayCell(hVanillaAttributesValue, L4D2_GetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[idx]));
+    PushArrayCell(hVanillaAttributesValue, L4D2_GetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[idx - 3]));
     PushArrayString(hVanillaAttributesWeapon, sWeaponName);
     PushArrayCell(hVanillaAttributesAttribute, idx);
-    L4D2_SetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[idx], value);
+    L4D2_SetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[idx - 3], value);
 }
 
  
@@ -272,9 +272,8 @@ public Action:Weapon( args ) {
     }
     else if ( iAttrIdx < MAX_ATTRS - 1 ) 
     {
-        iAttrIdx = iAttrIdx - 3;
         SetWeaponAttributeFloat(sWeaponNameFull, iAttrIdx, fValue);
-        PrintToServer("%s for %s set to %.2f", sWeaponAttrNames[iAttrIdx + 3], sWeaponName, fValue);
+        PrintToServer("%s for %s set to %.2f", sWeaponAttrNames[iAttrIdx], sWeaponName, fValue);
     }
     else {
         KvSetFloat(hTankDamageKVs, sWeaponNameFull, fValue);
@@ -338,7 +337,7 @@ public Action:WeaponAttributes( client, args ) {
 
  
 public Action:DamageBuffVsTank( victim, &attacker, &inflictor, &Float:damage, &damageType, &weapon, Float:damageForce[3], Float:damagePosition[3] ) {
-    if (attacker <= 0 || attacker > MaxClients+1) {
+    if (attacker <= 0 || attacker > MaxClients) {
         return Plugin_Continue;
     }
 
@@ -367,7 +366,7 @@ public Action:DamageBuffVsTank( victim, &attacker, &inflictor, &Float:damage, &d
  
 bool:IsTank( client ) {
     if ( client <= 0
-    || client > MaxClients+1
+    || client > MaxClients
     || !IsClientInGame(client)
     || GetClientTeam(client) != 3
     || !IsPlayerAlive(client) ) {
