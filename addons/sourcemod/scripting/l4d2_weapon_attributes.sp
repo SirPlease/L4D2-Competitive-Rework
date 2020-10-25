@@ -4,7 +4,6 @@
 #include <sdkhooks>
 #include <left4dhooks>
 
- 
 #define MAX_ATTRS           21
 #define TANK_ZOMBIE_CLASS   8
 
@@ -134,7 +133,8 @@ public OnClientPutInServer( client ) {
 }
 
  
-public OnPluginEnd() {
+public OnPluginEnd() 
+{
     if ( hTankDamageKVs != INVALID_HANDLE ) {
         CloseHandle(hTankDamageKVs);
         hTankDamageKVs = INVALID_HANDLE;
@@ -149,10 +149,12 @@ public OnPluginEnd() {
         if (iAtIndex < 3)
         {
             L4D2_SetIntWeaponAttribute(sBuffer, iIntWeaponAttributes[iAtIndex], GetArrayCell(hVanillaAttributesValue, i));
+            // DEBUG: PrintToChatAll("%s - '%s' set to %i", sBuffer, sWeaponAttrShortName[iAtIndex], GetArrayCell(hVanillaAttributesValue, i));
         }
         else if (iAtIndex < MAX_ATTRS - 1)
         {
-            L4D2_SetFloatWeaponAttribute(sBuffer, iFloatWeaponAttributes[iAtIndex - 3], GetArrayCell(hVanillaAttributesValue, i));
+            L4D2_SetFloatWeaponAttribute(sBuffer, iFloatWeaponAttributes[iAtIndex], GetArrayCell(hVanillaAttributesValue, i));
+            // DEBUG: PrintToChatAll("%s, '%s' set to %f", sBuffer, sWeaponAttrShortName[iAtIndex + 3], GetArrayCell(hVanillaAttributesValue, i));
         }
     }
 }
@@ -180,19 +182,22 @@ Float:GetWeaponAttributeFloat( const String:sWeaponName[], idx ) {
 }
 
  
-SetWeaponAttributeInt( const String:sWeaponName[], idx, value ) {
+SetWeaponAttributeInt( const String:sWeaponName[], idx, value ) 
+{
     new iSize = GetArraySize(hVanillaAttributesWeapon);
     decl String:sBuffer[32];
     for (new i = 0; i < iSize; i++)
     {
         GetArrayString(hVanillaAttributesWeapon, i, sBuffer, 32);
-        if (StrEqual(sWeaponName, sBuffer) && idx != GetArrayCell(hVanillaAttributesAttribute, i))
+        if (StrEqual(sWeaponName, sBuffer) && idx == GetArrayCell(hVanillaAttributesAttribute, i))
         {
-            PushArrayCell(hVanillaAttributesValue, L4D2_GetIntWeaponAttribute(sWeaponName, iIntWeaponAttributes[idx]));
-            PushArrayString(hVanillaAttributesWeapon, sWeaponName);
-            PushArrayCell(hVanillaAttributesAttribute, idx);
+            L4D2_SetIntWeaponAttribute(sWeaponName, iIntWeaponAttributes[idx], value);
+            return;
         }
     }
+    PushArrayCell(hVanillaAttributesValue, L4D2_GetIntWeaponAttribute(sWeaponName, iIntWeaponAttributes[idx]));
+    PushArrayString(hVanillaAttributesWeapon, sWeaponName);
+    PushArrayCell(hVanillaAttributesAttribute, idx);
     L4D2_SetIntWeaponAttribute(sWeaponName, iIntWeaponAttributes[idx], value);
 }
 
@@ -203,13 +208,15 @@ SetWeaponAttributeFloat( const String:sWeaponName[], idx, Float:value ) {
     for (new i = 0; i < iSize; i++)
     {
         GetArrayString(hVanillaAttributesWeapon, i, sBuffer, 32);
-        if (StrEqual(sWeaponName, sBuffer) && idx != GetArrayCell(hVanillaAttributesAttribute, i))
+        if (StrEqual(sWeaponName, sBuffer) && idx == GetArrayCell(hVanillaAttributesAttribute, i))
         {
-            PushArrayCell(hVanillaAttributesValue, L4D2_GetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[idx]));
-            PushArrayString(hVanillaAttributesWeapon, sWeaponName);
-            PushArrayCell(hVanillaAttributesAttribute, idx);
+            L4D2_SetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[idx], value);
+            return;
         }
     }
+    PushArrayCell(hVanillaAttributesValue, L4D2_GetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[idx]));
+    PushArrayString(hVanillaAttributesWeapon, sWeaponName);
+    PushArrayCell(hVanillaAttributesAttribute, idx);
     L4D2_SetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[idx], value);
 }
 
@@ -331,7 +338,7 @@ public Action:WeaponAttributes( client, args ) {
 
  
 public Action:DamageBuffVsTank( victim, &attacker, &inflictor, &Float:damage, &damageType, &weapon, Float:damageForce[3], Float:damagePosition[3] ) {
-    if (attacker <= 0 || attacker > MaxClients) {
+    if (attacker <= 0 || attacker > MaxClients+1) {
         return Plugin_Continue;
     }
 
@@ -360,7 +367,7 @@ public Action:DamageBuffVsTank( victim, &attacker, &inflictor, &Float:damage, &d
  
 bool:IsTank( client ) {
     if ( client <= 0
-    || client > MaxClients
+    || client > MaxClients+1
     || !IsClientInGame(client)
     || GetClientTeam(client) != 3
     || !IsPlayerAlive(client) ) {
