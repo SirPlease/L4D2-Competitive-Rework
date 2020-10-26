@@ -397,8 +397,6 @@ stock DisplayBonus(client=-1)
             PrintToChatAll("\x01%s: %s", msgPartHdr, msgPartBon);
         } else if (client) {
             PrintToChat(client, "\x01%s: %s", msgPartHdr, msgPartBon);
-        } else {
-            PrintToServer("\x01%s: %s", msgPartHdr, msgPartBon);
         }
     }
 }
@@ -423,8 +421,6 @@ stock ReportChange(bonusChange, client=-1, absoluteSet=false)
         PrintToChatAll("\x01%s", msgPartBon);
     } else if (client) {
         PrintToChat(client, "\x01%s", msgPartBon);
-    } else {
-        PrintToServer("\x01%s", msgPartBon);
     }
 }
 

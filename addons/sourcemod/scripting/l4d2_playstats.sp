@@ -1371,8 +1371,6 @@ public Action: Cmd_StatsDisplayGeneral ( client, args )
             else {
                 if ( IS_VALID_INGAME(client) ) {
                     PrintToChat( client, "Stats command: unknown argument: '%s'. Type '/stats help' for possible arguments.", sArg );
-                } else {
-                    PrintToServer( "Stats command: unknown argument: '%s'. Type '/stats help' for possible arguments.", sArg );
                 }
             }
         }
@@ -3125,6 +3123,7 @@ stock DisplayStats( client = -1, bool:bRound = false, round = -1, bool:bTeam = t
 // display mvp stats
 stock DisplayStatsMVPChat( client, bool:bRound = true, bool:bTeam = true, iTeam = -1 )
 {
+	if (client == 0 || client == -1) return;
     // make sure the MVP stats itself is called first, so the players are already sorted
     
     decl String:printBuffer[1024];
@@ -3133,21 +3132,12 @@ stock DisplayStatsMVPChat( client, bool:bRound = true, bool:bTeam = true, iTeam 
     new i, j, x;
     
     printBuffer = GetMVPChatString( bRound, bTeam, iTeam );
-    
-    if ( client == -1 ) {
-        PrintToServer("\x01%s", printBuffer);
-    }
 
     // PrintToChatAll has a max length. Split it in to individual lines to output separately
     new intPieces = ExplodeString( printBuffer, "\n", strLines, sizeof(strLines), sizeof(strLines[]) );
     if ( client > 0 ) {
         for ( i = 0; i < intPieces; i++ ) {
             PrintToChat(client, "\x01%s", strLines[i]);
-        }
-    }
-    else if ( client == 0 ) {
-        for ( i = 0; i < intPieces; i++ ) {
-            PrintToServer("\x01%s", strLines[i]);
         }
     }
     else {

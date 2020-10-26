@@ -555,10 +555,6 @@ public Action:SurvivorMVP_Cmd(client, args)
             CPrintToChat(client, "%s", strLines[i]);
         }
     }
-    else
-    {
-        PrintToServer("\x01%s", printBuffer);
-    }
     PrintLoserz(true, client);
 }
 
@@ -573,7 +569,6 @@ public Action:delayedMVPPrint(Handle:timer)
     new String:strLines[8][192];
     
     printBuffer = GetMVPString();
-    PrintToServer("\x01%s", printBuffer);
     
     // PrintToChatAll has a max length. Split it in to individual lines to output separately
     new intPieces = ExplodeString(printBuffer, "\n", strLines, sizeof(strLines), sizeof(strLines[]));

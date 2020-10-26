@@ -785,7 +785,6 @@ String: PrintSkeetStats(toClient)
         StrCat(printBuffer, sizeof(printBuffer), tmpBuffer);
         
         if (!toClient) {
-            PrintToServer("\x01%s", printBuffer);
             PrintToChatAll("\x01%s", printBuffer);
         } else if (IsClientAndInGame(toClient)) {
             PrintToChat(toClient, "\x01%s", printBuffer);
@@ -799,7 +798,6 @@ String: PrintSkeetStats(toClient)
         StrCat(printBuffer, sizeof(printBuffer), tmpBuffer);
         
         if (!toClient) {
-            PrintToServer("\x01%s", printBuffer);
             PrintToChatAll("\x01%s", printBuffer);
         } else if (IsClientAndInGame(toClient)) {
             PrintToChat(toClient, "\x01%s", printBuffer);
@@ -831,7 +829,6 @@ String: PrintSkeetStats(toClient)
         StrCat(printBuffer, sizeof(printBuffer), tmpBuffer);
         
         if (!toClient) {
-            PrintToServer("\x01%s", printBuffer);
             PrintToChatAll("\x01%s", printBuffer);
         } else if (IsClientAndInGame(toClient)) {
             PrintToChat(toClient, "\x01%s", printBuffer);
