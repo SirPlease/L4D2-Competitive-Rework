@@ -20,7 +20,7 @@ public Plugin:myinfo =
 	name = "L4D2 Ready-Up",
 	author = "CanadaRox, (Lazy unoptimized additions by Sir)",
 	description = "New and improved ready-up plugin.",
-	version = "9.2.1",
+	version = "9.2.2",
 	url = ""
 };
 
@@ -97,7 +97,7 @@ public OnPluginStart()
 	l4d_ready_cfg_name = CreateConVar("l4d_ready_cfg_name", "", "Configname to display on the ready-up panel", FCVAR_PRINTABLEONLY);
 	l4d_ready_disable_spawns = CreateConVar("l4d_ready_disable_spawns", "0", "Prevent SI from having spawns during ready-up", 0, true, 0.0, true, 1.0);
 	l4d_ready_survivor_freeze = CreateConVar("l4d_ready_survivor_freeze", "1", "Freeze the survivors during ready-up.  When unfrozen they are unable to leave the saferoom but can move freely inside", 0, true, 0.0, true, 1.0);
-	l4d_ready_max_players = CreateConVar("l4d_ready_max_players", "12", "Maximum number of players to show on the ready-up panel.", 0, true, 0.0, true, MAXPLAYERS);
+	l4d_ready_max_players = CreateConVar("l4d_ready_max_players", "12", "Maximum number of players to show on the ready-up panel.", 0, true, 0.0, true, MAXPLAYERS+1.0);
 	l4d_ready_delay = CreateConVar("l4d_ready_delay", "3", "Number of seconds to count down before the round goes live.", 0, true, 0.0);
 	l4d_ready_enable_sound = CreateConVar("l4d_ready_enable_sound", "1", "Enable sound during countdown & on live");
 	l4d_ready_chuckle = CreateConVar("l4d_ready_chuckle", "1", "Enable chuckle during countdown");
@@ -157,8 +157,7 @@ public Action:Say_Callback(client, const String:command[], argc)
 
 public OnPluginEnd()
 {
-	if (inReadyUp)
-		InitiateLive(false);
+	InitiateLive(false);
 }
 
 public OnMapStart()
@@ -857,7 +856,7 @@ InitiateReadyUp()
 	SetConVarFlags(sv_infinite_primary_ammo, GetConVarFlags(sv_infinite_primary_ammo) | FCVAR_NOTIFY);
 	SetConVarFlags(god, GetConVarFlags(god) & ~FCVAR_NOTIFY);
 	SetConVarBool(god, true);
-	SetConVarFlags(god, GetConVarFlags(god) | FCVAR_NOTIFY);
+	SetConVarFlags(sb_stop, GetConVarFlags(sb_stop) | FCVAR_NOTIFY);
 	SetConVarBool(sb_stop, true);
 	L4D2_CTimerStart(L4D2CT_VersusStartTimer, 99999.9);
 	return;
@@ -877,11 +876,8 @@ InitiateLive(bool:real = true)
 	SetConVarBool(director_no_specials, false);
 	SetConVarFlags(god, GetConVarFlags(god) & ~FCVAR_NOTIFY);
 	SetConVarBool(god, false);
-	SetConVarFlags(god, GetConVarFlags(god) | FCVAR_NOTIFY);
+	SetConVarFlags(sb_stop, GetConVarFlags(sb_stop) | FCVAR_NOTIFY);
 	SetConVarBool(sb_stop, false);
-
-	new String:GameMode[32];
-	GetConVarString(FindConVar("mp_gamemode"), GameMode, 32);
 
 	L4D2_CTimerStart(L4D2CT_VersusStartTimer, 60.0);
 
