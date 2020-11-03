@@ -18,11 +18,11 @@
 	You should have received a copy of the GNU General Public License along
 	with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#pragma semicolon 1
-
 #include <sourcemod>
-#include <sdkhooks>
 #include <left4dhooks>
+
+#pragma semicolon 1
+#pragma newdecls required
 
 // Force %0 to be between %1 and %2.
 #define CLAMP(%0,%1,%2) (((%0) > (%2)) ? (%2) : (((%0) < (%1)) ? (%1) : (%0)))
@@ -31,48 +31,55 @@
 // Quadratic scale %0 between %1 and %2
 #define SCALE2(%0,%1,%2) SCALE(%0*%0, %1*%1, %2*%2)
 
-static const float fSurvRunSpeed = 220.0;
-//static const float fSurvWaterSpeedVS = 170.0;
+#define SURVIVOR_RUNSPEED		220.0
+#define SURVIVOR_WATERSPEED_VS	170.0
 
-new Handle:hCvarSdPistolMod;
-new Handle:hCvarSdDeagleMod;
-new Handle:hCvarSdUziMod;
-new Handle:hCvarSdMacMod;
-new Handle:hCvarSdAkMod;
-new Handle:hCvarSdM4Mod;
-new Handle:hCvarSdScarMod;
-new Handle:hCvarSdPumpMod;
-new Handle:hCvarSdChromeMod;
-new Handle:hCvarSdAutoMod;
-new Handle:hCvarSdRifleMod;
-new Handle:hCvarSdScoutMod;
-new Handle:hCvarSdMilitaryMod;
+ConVar hCvarSdPistolMod;
+ConVar hCvarSdDeagleMod;
+ConVar hCvarSdUziMod;
+ConVar hCvarSdMacMod;
+ConVar hCvarSdAkMod;
+ConVar hCvarSdM4Mod;
+ConVar hCvarSdScarMod;
+ConVar hCvarSdPumpMod;
+ConVar hCvarSdChromeMod;
+ConVar hCvarSdAutoMod;
+ConVar hCvarSdRifleMod;
+ConVar hCvarSdScoutMod;
+ConVar hCvarSdMilitaryMod;
 
-new Handle:hCvarSdGunfireSi;
-new Handle:hCvarSdGunfireTank;
-new Handle:hCvarSdInwaterTank;
-new Handle:hCvarSdInwaterSurvivor;
-new Handle:hCvarSdInwaterDuringTank;
-new Handle:hCvarSurvivorLimpspeed;
+ConVar hCvarSdGunfireSi;
+ConVar hCvarSdGunfireTank;
+ConVar hCvarSdInwaterTank;
+ConVar hCvarSdInwaterSurvivor;
+ConVar hCvarSdInwaterDuringTank;
+ConVar hCvarSurvivorLimpspeed;
 
-new bool:tankInPlay = false;
+ConVar hCvarTankSpeedVS;
+
+float fTankWaterSpeed;
+float fSurvWaterSpeed;
+float fSurvWaterSpeedDuringTank;
+float fTankRunSpeed;
+
+bool tankInPlay = false;
 
 float fModifier[MAXPLAYERS+1] = -1.0;
 
-public Plugin:myinfo =
+public Plugin myinfo =
 {
 	name = "L4D2 Slowdown Control",
 	author = "Visor, Sir, darkid, Forgetest",
-	version = "2.6.1",
+	version = "2.6.2",
 	description = "Manages the water/gunfire slowdown for both teams",
 	url = "https://github.com/ConfoglTeam/ProMod"
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
 	hCvarSdGunfireSi = CreateConVar("l4d2_slowdown_gunfire_si", "0.0", "Maximum slowdown from gunfire for SI (-1: native slowdown; 0.0: No slowdown, 0.01-1.0: 1%%-100%% slowdown)", FCVAR_NONE, true, -1.0, true, 1.0);
 	hCvarSdGunfireTank = CreateConVar("l4d2_slowdown_gunfire_tank", "0.2", "Maximum slowdown from gunfire for the Tank (-1: native slowdown; 0.0: No slowdown, 0.01-1.0: 1%%-100%% slowdown)", FCVAR_NONE, true, -1.0, true, 1.0);
-	hCvarSdInwaterTank = CreateConVar("l4d2_slowdown_water_tank", "-1", "Maximum tank speed in the water (-1: no slowdown;)", FCVAR_NONE, true, -1.0);
+	hCvarSdInwaterTank = CreateConVar("l4d2_slowdown_water_tank", "-1", "Maximum tank speed in the water (-1: ignore setting; 0: default; 210: default Tank Speed)", FCVAR_NONE, true, -1.0);
 	hCvarSdInwaterSurvivor = CreateConVar("l4d2_slowdown_water_survivors", "-1", "Maximum survivor speed in the water outside of Tank fights (-1: ignore setting; 0: default; 220: default Survivor speed)", FCVAR_NONE, true, -1.0);
 	hCvarSdInwaterDuringTank = CreateConVar("l4d2_slowdown_water_survivors_during_tank", "0", "Maximum survivor speed in the water during Tank fights (0: ignore setting; 220: default Survivor speed)", FCVAR_NONE, true, 0.0);
 
@@ -91,11 +98,22 @@ public OnPluginStart()
 	hCvarSdMilitaryMod = CreateConVar("l4d2_slowdown_military_percent", "0.1", "Military Rifles cause this much slowdown * l4d2_slowdown_gunfire at maximum damage.");
 
 	hCvarSurvivorLimpspeed = FindConVar("survivor_limp_health");
+	hCvarTankSpeedVS = FindConVar("z_tank_speed_vs");
+	
+	fTankWaterSpeed = GetConVarFloat(hCvarSdInwaterTank);
+	fSurvWaterSpeed = GetConVarFloat(hCvarSdInwaterSurvivor);
+	fSurvWaterSpeedDuringTank = GetConVarFloat(hCvarSdInwaterDuringTank);
+	fTankRunSpeed = GetConVarFloat(hCvarTankSpeedVS);
+	
+	hCvarSdInwaterTank.AddChangeHook(OnConVarChanged);
+	hCvarSdInwaterSurvivor.AddChangeHook(OnConVarChanged);
+	hCvarSdInwaterDuringTank.AddChangeHook(OnConVarChanged);
+	hCvarTankSpeedVS.AddChangeHook(OnConVarChanged);
 
+	HookEvent("tank_spawn", TankSpawn, EventHookMode_PostNoCopy);
+	HookEvent("round_start", RoundStart, EventHookMode_PostNoCopy);
 	HookEvent("player_hurt", PlayerHurt);
-	HookEvent("tank_spawn", TankSpawn);
 	HookEvent("player_death", TankDeath);
-	HookEvent("round_end", RoundEnd);
 }
 
 public void OnClientPutInServer(int client)
@@ -108,32 +126,49 @@ public void OnClientDisconnect(int client)
 	fModifier[client] = -1.0;
 }
 
-public Action: TankSpawn(Handle:event, const String:name[], bool:dontBroadcast) 
+public void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	fTankWaterSpeed = GetConVarFloat(hCvarSdInwaterTank);
+	fSurvWaterSpeed = GetConVarFloat(hCvarSdInwaterSurvivor);
+	fSurvWaterSpeedDuringTank = GetConVarFloat(hCvarSdInwaterDuringTank);
+	fTankRunSpeed = GetConVarFloat(hCvarTankSpeedVS);
+}
+
+public Action TankSpawn(Event event, const char[] name, bool dontBroadcast) 
 {
 	if (!tankInPlay) 
 	{
 		tankInPlay = true;
-		if (GetConVarFloat(hCvarSdInwaterDuringTank) > 0.0) 
+		if (fSurvWaterSpeedDuringTank > 0.0) 
 		{
 			PrintToChatAll("\x05Water Slowdown\x01 has been reduced while Tank is in play.");
 		}
 	}
 }
 
-public Action: TankDeath(Handle:event, const String:name[], bool:dontBroadcast) 
+public Action TankDeath(Event event, const char[] name, bool dontBroadcast)
 {
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
-	if (IsInfected(client) && IsTank(client) && !FindTankClient()) 
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	if (IsInfected(client) && IsTank(client)) 
+	{
+		CreateTimer(0.1, Timer_CheckTank);
+	}
+}
+
+public Action Timer_CheckTank(Handle timer)
+{
+	int tankclient = FindTankClient();
+	if (!tankclient || !IsPlayerAlive(tankclient))
 	{
 		tankInPlay = false;
-		if (GetConVarFloat(hCvarSdInwaterDuringTank) > 0.0) {
-		
+		if (fSurvWaterSpeedDuringTank > 0.0)
+		{
 			PrintToChatAll("\x05Water Slowdown\x01 has been restored to normal.");
 		}
 	}
 }
 
-public Action: RoundEnd(Handle:event, const String:name[], bool:dontBroadcast) 
+public Action RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	tankInPlay = false;
 }
@@ -144,24 +179,24 @@ public Action: RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
  *
 **/
 
-public Action: PlayerHurt(Handle:event, const String:name[], bool:dontBroadcast) 
+public Action PlayerHurt(Event event, const char[] name, bool dontBroadcast)
 {
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	if (IsInfected(client)) 
 	{
-		new Float:slowdown = IsTank(client) ? GetActualValue(hCvarSdGunfireTank) : GetActualValue(hCvarSdGunfireSi);
+		float slowdown = IsTank(client) ? GetActualValue(hCvarSdGunfireTank) : GetActualValue(hCvarSdGunfireSi);
 		if (slowdown == 1.0)
 		{
 			ApplySlowdown(client, slowdown);
 		}
 		else if (slowdown > 0.0)
 		{
-			new damage = GetEventInt(event, "dmg_health");
-			decl String:weapon[64];
+			int damage = GetEventInt(event, "dmg_health");
+			static char weapon[64];
 			GetEventString(event, "weapon", weapon, sizeof(weapon));
 
-			decl Float:scale;
-			decl Float:modifier;
+			float scale;
+			float modifier;
 			GetScaleAndModifier(scale, modifier, weapon, damage);
 			ApplySlowdown(client, 1 - modifier * scale * slowdown);
 		}
@@ -170,20 +205,17 @@ public Action: PlayerHurt(Handle:event, const String:name[], bool:dontBroadcast)
 
 /**
  *
- * Slowdown from water: Tank & Survivors
+ * Slowdown application: Infected & Survivors
  *
 **/
 
 public Action L4D_OnGetRunTopSpeed(int client, float &retVal)
 {
-	if (!tankInPlay) return Plugin_Continue;
 	if (!IsClientInGame(client)) return Plugin_Continue;
 	
 	bool bInWater = (GetEntityFlags(client) & FL_INWATER) ? true : false;
 	bool bAdrenaline = GetEntProp(client, Prop_Send, "m_bAdrenalineActive") ? true : false;
-	float fSurvSpeed = fSurvRunSpeed;
-	float fTankSpeed = GetConVarFloat(FindConVar("z_tank_speed_vs"));
-
+	
 	if (IsSurvivor(client))
 	{
 		// Adrenaline = Don't care, don't mess with it.
@@ -192,48 +224,82 @@ public Action L4D_OnGetRunTopSpeed(int client, float &retVal)
 		if (bAdrenaline) 
 		  return Plugin_Continue;
 
+		// Only bother if survivor is in water and healthy
 		if (bInWater && !IsLimping(client))
 		{
-			if (GetConVarFloat(hCvarSdInwaterDuringTank) > 0.0) 
+			// speed of survivors in water during Tank fights
+			if (tankInPlay)
 			{
-				retVal = GetConVarFloat(hCvarSdInwaterDuringTank);
-				return Plugin_Handled;
+				if (fSurvWaterSpeedDuringTank == 0.0) return Plugin_Continue; // Vanilla YEEEEEEEEEEEEEEEs
+				else 
+				{
+					retVal = fSurvWaterSpeedDuringTank;
+					return Plugin_Handled;
+				}
 			}
-			else if (GetConVarFloat(hCvarSdInwaterSurvivor) != -1.0)
+			
+			// speed of survivors in water outside of Tank fights
+			else if (fSurvWaterSpeed != -1.0)
 			{
-				retVal = GetConVarFloat(hCvarSdInwaterSurvivor) == 0.0 ?
-									fSurvSpeed : GetConVarFloat(hCvarSdInwaterSurvivor);
-				return Plugin_Handled;
+				// slowdown off
+				if (fSurvWaterSpeed == 0.0)
+				{
+					retVal = SURVIVOR_RUNSPEED;
+					return Plugin_Handled;
+				}
+					
+				// specific speed
+				else
+				{
+					retVal = fSurvWaterSpeed;
+					return Plugin_Handled;
+				}
 			}
 		}
 	}
 	
 	else if (IsInfected(client)) 
 	{
-		if (bInWater && IsTank(client) && GetConVarFloat(hCvarSdInwaterTank) != -1.0)
+		// boolean to store whether the speed is changed (probably no need, but for safety)
+		bool bOverride = false;
+		
+		// Only bother the actual speed if player is a tank moving in water
+		if (bInWater && IsTank(client) && fTankWaterSpeed != -1.0)
 		{
-			retVal = GetConVarFloat(hCvarSdInwaterTank) == 0.0 ?
-						fTankSpeed : (fModifier[client] != -1.0 ?
-										fModifier[client] * GetConVarFloat(hCvarSdInwaterTank) : GetConVarFloat(hCvarSdInwaterTank));
+			// slowdown off
+			if (fTankWaterSpeed == 0.0)
+			{
+				retVal = fTankRunSpeed;
+				bOverride = true;
+			}
 			
-			fModifier[client] = -1.0;
-			return Plugin_Handled;
+			// specific speed
+			else
+			{
+				retVal = fTankWaterSpeed;
+				bOverride = true;
+			}
 		}
-		else if (fModifier[client] != -1.0)
+		
+		// The player (SI or Tank) is getting slowdown due to gunfire
+		if (fModifier[client] != -1.0)
 		{
 			retVal *= fModifier[client];
 			fModifier[client] = -1.0;
-			return Plugin_Handled;
+			bOverride = true;
 		}
+		
+		// The final value is either changed or unchanged one
+		if (bOverride) return Plugin_Handled;
 	}
 	
 	return Plugin_Continue;
 }
 
 // The old slowdown plugin's cvars weren't quite intuitive, so I'll try to fix it this time
-Float:GetActualValue(Handle:cvar)
+float GetActualValue(ConVar cvar)
 {
-	new Float:value = GetConVarFloat(cvar);
+	float value = GetConVarFloat(cvar);
 	if (value == -1.0)  // native slowdown
 		return -1.0;
 		
@@ -243,13 +309,18 @@ Float:GetActualValue(Handle:cvar)
 	return CLAMP(value, 0.01, 2.0); // slowdown multiplier
 }
 
-ApplySlowdown(client, Float:value)
+void ApplySlowdown(int client, float value)
 {
 	if (value == -1.0)
 		return;
 
+	// Await to be checked and used in L4D_OnGetRunTopSpeed
 	fModifier[client] = value;
-	SetEntPropFloat(client, Prop_Send, "m_flVelocityModifier", value);
+	
+	// We don't need this old-school method anymore,
+	// in which any speed is affected, such as jumping speed.
+	
+	//SetEntPropFloat(client, Prop_Send, "m_flVelocityModifier", value);
 }
 
 stock int FindTankClient()
@@ -264,36 +335,36 @@ stock int FindTankClient()
 	return 0;
 }
 
-bool:IsSurvivor(client)
+bool IsSurvivor(int client)
 {
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2;
 }
 
-bool:IsInfected(client)
+bool IsInfected(int client)
 {
 	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 3;
 }
 
-bool:IsTank(client)
+bool IsTank(int client)
 {
 	return GetEntProp(client, Prop_Send, "m_zombieClass") == 8;
 }
 
-bool:IsLimping(client)
+bool IsLimping(int client)
 {
 	// Assume Clientchecks and the like have been done already
-	new PermHealth = GetClientHealth(client);
+	int PermHealth = GetClientHealth(client);
 
-	new Float:buffer = GetEntPropFloat(client, Prop_Send, "m_healthBuffer");
-	new Float:bleedTime = GetGameTime() - GetEntPropFloat(client, Prop_Send, "m_healthBufferTime");
-	new Float:decay = GetConVarFloat(FindConVar("pain_pills_decay_rate"));
+	float buffer = GetEntPropFloat(client, Prop_Send, "m_healthBuffer");
+	float bleedTime = GetGameTime() - GetEntPropFloat(client, Prop_Send, "m_healthBufferTime");
+	float decay = GetConVarFloat(FindConVar("pain_pills_decay_rate"));
 
-	new Float:TempHealth = CLAMP(buffer - (bleedTime * decay), 0.0, 100.0); // buffer may be negative, also if pills bleed out then bleedTime may be too large.
+	float TempHealth = CLAMP(buffer - (bleedTime * decay), 0.0, 100.0); // buffer may be negative, also if pills bleed out then bleedTime may be too large.
 
 	return RoundToFloor(PermHealth + TempHealth) < GetConVarInt(hCvarSurvivorLimpspeed);
 }
 
-GetScaleAndModifier(&Float:scale, &Float:modifier, const String:weapon[], damage)
+void GetScaleAndModifier(float &scale, float &modifier, const char[] weapon, int damage)
 {
 	// If max slowdown is 20%, and tank takes 10 damage from a chrome shotgun shell, they recieve:
 	//// 1 - .5 * 0.434 * .2 = 0.9566 -> 95.6% base speed, or 4.4% slowdown.
@@ -390,7 +461,7 @@ GetScaleAndModifier(&Float:scale, &Float:modifier, const String:weapon[], damage
 	else if (strcmp(weapon, "sniper_military") == 0)
 	{
 		scale = SCALE(damage, 90.0, 90.0);
-		modifier = GetConVarFloat(Handle:hCvarSdMilitaryMod);
+		modifier = GetConVarFloat(hCvarSdMilitaryMod);
 	}
 	else
 	{
