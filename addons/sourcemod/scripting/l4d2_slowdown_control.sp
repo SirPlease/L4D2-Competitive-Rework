@@ -63,7 +63,7 @@ public Plugin:myinfo =
 {
 	name = "L4D2 Slowdown Control",
 	author = "Visor, Sir, darkid, Forgetest",
-	version = "2.6",
+	version = "2.6.1",
 	description = "Manages the water/gunfire slowdown for both teams",
 	url = "https://github.com/ConfoglTeam/ProMod"
 };
@@ -72,7 +72,7 @@ public OnPluginStart()
 {
 	hCvarSdGunfireSi = CreateConVar("l4d2_slowdown_gunfire_si", "0.0", "Maximum slowdown from gunfire for SI (-1: native slowdown; 0.0: No slowdown, 0.01-1.0: 1%%-100%% slowdown)", FCVAR_NONE, true, -1.0, true, 1.0);
 	hCvarSdGunfireTank = CreateConVar("l4d2_slowdown_gunfire_tank", "0.2", "Maximum slowdown from gunfire for the Tank (-1: native slowdown; 0.0: No slowdown, 0.01-1.0: 1%%-100%% slowdown)", FCVAR_NONE, true, -1.0, true, 1.0);
-	hCvarSdInwaterTank = CreateConVar("l4d2_slowdown_water_tank", "-1", "Maximum slowdown in the water for the Tank (-1: native slowdown; 0.0: No slowdown, 0.01-1.0: 1%%-100%% slowdown)", FCVAR_NONE, true, -1.0);
+	hCvarSdInwaterTank = CreateConVar("l4d2_slowdown_water_tank", "-1", "Maximum tank speed in the water (-1: no slowdown;)", FCVAR_NONE, true, -1.0);
 	hCvarSdInwaterSurvivor = CreateConVar("l4d2_slowdown_water_survivors", "-1", "Maximum survivor speed in the water outside of Tank fights (-1: ignore setting; 0: default; 220: default Survivor speed)", FCVAR_NONE, true, -1.0);
 	hCvarSdInwaterDuringTank = CreateConVar("l4d2_slowdown_water_survivors_during_tank", "0", "Maximum survivor speed in the water during Tank fights (0: ignore setting; 220: default Survivor speed)", FCVAR_NONE, true, 0.0);
 
@@ -249,7 +249,7 @@ ApplySlowdown(client, Float:value)
 		return;
 
 	fModifier[client] = value;
-	//SetEntPropFloat(client, Prop_Send, "m_flVelocityModifier", value);
+	SetEntPropFloat(client, Prop_Send, "m_flVelocityModifier", value);
 }
 
 stock int FindTankClient()
