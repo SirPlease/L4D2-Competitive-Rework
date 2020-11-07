@@ -20,22 +20,23 @@
 		{
 			"CTankClaw::OnWindupFinished"
 			{
-				"library"   "server"
-				"linux"     "@_ZN9CTankClaw16OnWindupFinishedEv"
-				"windows"   "\x83\xec\x2a\x53\x56\x57\x8b\xf1\xe8\x2a\x2a\x2a\x2a\x8b\xf8\x33\xdb\x3b\xfb\x0f\x84\x2a\x2a\x2a\x2a\xf3\x0f"
+				"library"	"server"
+				"linux"		"@_ZN9CTankClaw16OnWindupFinishedEv"
+				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\x53\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x33\x2A\x3B\x2A\x0F\x84\x2A\x2A\x2A\x2A\xD9"
+				/* 55 8B ? 83 ? ? 53 56 57 8B ? E8 ? ? ? ? 8B ? 33 ? 3B ? 0F 84 ? ? ? ? D9 */
 			}
 		}
 		"Offsets"
 		{
 			"ClawTargetScan"
 			{
-				"linux"     "248"
-				"windows"   "265"
+				"linux"		"248" // not sure what is happening here
+				"windows"	"265" // 0x74 -> 0xEB Force jump to eyeangle check
 			}
 			"Platform"
 			{
-				"linux"     "0"
-				"windows"   "1"
+				"linux"		"0"
+				"windows"	"1"
 			}
 		}
 	}
