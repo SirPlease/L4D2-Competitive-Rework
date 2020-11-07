@@ -1,20 +1,20 @@
 #pragma semicolon 1
 
 #include <sourcemod>
-#include <sdktools>
+#include <left4dhooks>
 
-public Plugin:myinfo =
+public Plugin myinfo =
 {
 	name = "No Tank",
-	author = "Don",
-	description = "Slays any tanks that spawn. Designed for 1v1 configs",
-	version = "1.1",
-	url = "https://bitbucket.org/DonSanchez/random-sourcemod-stuff"
+	author = "Don, Forgetest",
+	description = "Slays any tanks that spawn. Designed for 1v1 configs.",
+	version = "1.2",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
-public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	decl String:sGame[12];
+	char sGame[12];
 	GetGameFolderName(sGame, sizeof(sGame));
 	if (StrEqual(sGame, "left4dead") || StrEqual(sGame, "left4dead2"))	// Only load the plugin if the server is running Left 4 Dead or Left 4 Dead 2.
 	{
@@ -27,23 +27,7 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 	}
 }
 
-new iSpawned;
-
-public OnPluginStart()
+public Action L4D_OnSpawnTank(const float vecPos[3], const float vecAng[3])
 {
-	HookEvent("tank_spawn", Event_tank_spawn_Callback);
-}
-
-public Event_tank_spawn_Callback(Handle:event, const String:name[], bool:dontBroadcast)
-{
-	iSpawned = GetClientOfUserId(GetEventInt(event, "userid"));
-	if (IsClientInGame(iSpawned) && IsPlayerAlive(iSpawned))
-	{
-		CreateTimer(1.0, SlayTank);	// Slaying or kicking tanks instantly would break finale maps.
-	}
-}
-
-public Action:SlayTank(Handle:timer)
-{
-	ForcePlayerSuicide(iSpawned);
+	return Plugin_Handled;
 }
