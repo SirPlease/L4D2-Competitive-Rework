@@ -41,7 +41,7 @@ public ClientQueryCallback(QueryCookie:cookie, client, ConVarQueryResult:result,
                 //gets client name
                 GetClientName(client,t_name,31);
                 //gets steam id
-                GetClientAuthString(client,t_steamid,31);
+                GetClientAuthId(client, AuthId_Steam2, t_steamid, sizeof(t_steamid));
                 //checks to see if client is conncted -  also checks to see if client is a bot
                 if(IsFakeClient(client)) return;  
                 //gets clients ip	

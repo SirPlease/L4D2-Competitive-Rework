@@ -7,7 +7,7 @@ public Plugin:myinfo =
     name = "L4D HOTs",
     author = "ProdigySim, CircleSquared",
     description = "Pills and Adrenaline heal over time",
-    version = "0.3",
+    version = "0.4",
     url = "https://bitbucket.org/ProdigySim/misc-sourcemod-plugins"
 }
 
@@ -168,7 +168,7 @@ public Action:__HOT_ACTION(Handle:timer, Handle:pack)
     ResetPack(pack);
     new client = ReadPackCell(pack);
     new increment = ReadPackCell(pack);
-    new pos = GetPackPosition(pack);
+    DataPackPos pos = GetPackPosition(pack);
     new remaining = ReadPackCell(pack);
     new maxhp = ReadPackCell(pack);
     
