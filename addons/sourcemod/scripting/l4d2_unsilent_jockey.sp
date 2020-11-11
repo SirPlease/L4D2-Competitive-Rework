@@ -80,9 +80,9 @@ public Plugin:myinfo =
 public OnPluginStart()
 {
     // cvars
-    hPluginEnabled =     CreateConVar("sm_unsilentjockey_enabled", "1",   "Enable unsilent jockey mode.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-    hJockeySoundAlways = CreateConVar("sm_unsilentjockey_always",  "0",   "Whether to play jockey spawn sound even if it is not detected as silent.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-    hJockeySoundTime =   CreateConVar("sm_unsilentjockey_time",    "0.1", "How soon to play sound after spawning (in seconds).", FCVAR_PLUGIN, true, 0.0, true, 10.0);
+    hPluginEnabled =     CreateConVar("sm_unsilentjockey_enabled", "1",   "Enable unsilent jockey mode.", FCVAR_NONE, true, 0.0, true, 1.0);
+    hJockeySoundAlways = CreateConVar("sm_unsilentjockey_always",  "0",   "Whether to play jockey spawn sound even if it is not detected as silent.", FCVAR_NONE, true, 0.0, true, 1.0);
+    hJockeySoundTime =   CreateConVar("sm_unsilentjockey_time",    "0.1", "How soon to play sound after spawning (in seconds).", FCVAR_NONE, true, 0.0, true, 10.0);
     
     // hooks / events
     AddNormalSoundHook(NormalSHook:HookSound_Callback);

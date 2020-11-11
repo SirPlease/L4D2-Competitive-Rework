@@ -51,7 +51,7 @@ new bool:g_bReadyUpAvailable = false;
 
 public OnPluginStart()
 {
-    hCvarItemType = CreateConVar("starting_item_flags", "0", "Item flags to give on leaving the saferoom (1: Kit, 2: Defib, 4: Pills, 8: Adren, 16: Pipebomb, 32: Molotov, 64: Bile)", FCVAR_PLUGIN);
+    hCvarItemType = CreateConVar("starting_item_flags", "0", "Item flags to give on leaving the saferoom (1: Kit, 2: Defib, 4: Pills, 8: Adren, 16: Pipebomb, 32: Molotov, 64: Bile)", FCVAR_NONE);
     HookEvent("player_left_start_area", PlayerLeftStartArea);
 }
 

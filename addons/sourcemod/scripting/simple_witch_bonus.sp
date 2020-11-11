@@ -49,9 +49,9 @@ public OnPluginStart()
     HookEvent("witch_spawn", Event_WitchSpawned, EventHookMode_Post);
     HookEvent("witch_killed", Event_WitchKilled, EventHookMode_Post);
 
-    g_hCvarBonus = CreateConVar("sm_simple_witch_bonus", "25", "Bonus points to award for clean witch kills.", FCVAR_PLUGIN, true, 0.0);
-    g_hCvarPrint = CreateConVar("sm_witch_bonus_print", "1", "Should we print when we award points for killing the witch?", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-    g_hCvarBonusAlways = CreateConVar("sm_witch_bonus_always", "0", "Should you receive points when something other than survivors kills witch?", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+    g_hCvarBonus = CreateConVar("sm_simple_witch_bonus", "25", "Bonus points to award for clean witch kills.", FCVAR_NONE, true, 0.0);
+    g_hCvarPrint = CreateConVar("sm_witch_bonus_print", "1", "Should we print when we award points for killing the witch?", FCVAR_NONE, true, 0.0, true, 1.0);
+    g_hCvarBonusAlways = CreateConVar("sm_witch_bonus_always", "0", "Should you receive points when something other than survivors kills witch?", FCVAR_NONE, true, 0.0, true, 1.0);
 
     g_hWitchTrie = CreateTrie();
     g_hTrieEntityCreated = CreateTrie();

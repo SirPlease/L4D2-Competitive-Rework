@@ -34,10 +34,10 @@ public OnPluginStart()
     IsL4D2 = IsTargetL4D2();
 
     g_hPillCvar=FindConVar("pain_pills_health_value");
-    pillhot = CreateConVar("l4d_pills_hot", "0", "Pills heal over time", FCVAR_PLUGIN);
-    hCvarPillInterval = CreateConVar("l4d_pills_hot_interval", "1.0", "Interval for pills hot", FCVAR_PLUGIN);
-    hCvarPillIncrement = CreateConVar("l4d_pills_hot_increment", "10", "Increment amount for pills hot", FCVAR_PLUGIN);
-    hCvarPillTotal = CreateConVar("l4d_pills_hot_total", "50", "Total amount for pills hot", FCVAR_PLUGIN);
+    pillhot = CreateConVar("l4d_pills_hot", "0", "Pills heal over time", FCVAR_NONE);
+    hCvarPillInterval = CreateConVar("l4d_pills_hot_interval", "1.0", "Interval for pills hot", FCVAR_NONE);
+    hCvarPillIncrement = CreateConVar("l4d_pills_hot_increment", "10", "Increment amount for pills hot", FCVAR_NONE);
+    hCvarPillTotal = CreateConVar("l4d_pills_hot_total", "50", "Total amount for pills hot", FCVAR_NONE);
     if(GetConVarBool(pillhot))
     {
         EnablePillHot();
@@ -46,10 +46,10 @@ public OnPluginStart()
     if(IsL4D2)
     {
         g_hAdrenCvar = FindConVar("adrenaline_health_buffer");
-        adrenhot = CreateConVar("l4d_adrenaline_hot", "0", "Adrenaline heals over time", FCVAR_PLUGIN);
-        hCvarAdrenInterval = CreateConVar("l4d_adrenaline_hot_interval", "1.0", "Interval for adrenaline hot", FCVAR_PLUGIN);
-        hCvarAdrenIncrement = CreateConVar("l4d_adrenaline_hot_increment", "15", "Increment amount for adrenaline hot", FCVAR_PLUGIN);
-        hCvarAdrenTotal = CreateConVar("l4d_adrenaline_hot_total", "25", "Total amount for adrenaline hot", FCVAR_PLUGIN);
+        adrenhot = CreateConVar("l4d_adrenaline_hot", "0", "Adrenaline heals over time", FCVAR_NONE);
+        hCvarAdrenInterval = CreateConVar("l4d_adrenaline_hot_interval", "1.0", "Interval for adrenaline hot", FCVAR_NONE);
+        hCvarAdrenIncrement = CreateConVar("l4d_adrenaline_hot_increment", "15", "Increment amount for adrenaline hot", FCVAR_NONE);
+        hCvarAdrenTotal = CreateConVar("l4d_adrenaline_hot_total", "25", "Total amount for adrenaline hot", FCVAR_NONE);
         if(GetConVarBool(adrenhot))
         {
             EnableAdrenHot();

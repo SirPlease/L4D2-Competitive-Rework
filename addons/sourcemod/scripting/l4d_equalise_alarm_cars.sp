@@ -42,7 +42,7 @@ new Handle:hSecondRoundCars;
 new Handle:hCvarEqAlarmCars;
 
 public OnPluginStart() {
-    hCvarEqAlarmCars = CreateConVar("l4d_equalise_alarm_cars", "1", "Makes alarmed cars spawn in the same way for both teams", FCVAR_PLUGIN);
+    hCvarEqAlarmCars = CreateConVar("l4d_equalise_alarm_cars", "1", "Makes alarmed cars spawn in the same way for both teams", FCVAR_NONE);
     HookConVarChange(hCvarEqAlarmCars, EqAlarmCarsChange);
     
     hFirstRoundCars = CreateArray(128);

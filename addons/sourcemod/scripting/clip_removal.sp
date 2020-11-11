@@ -20,11 +20,11 @@ public Plugin:myinfo =
 
 public OnPluginStart()
 {
-        remove_motel_clip = CreateConVar("remove_motel_clip", "1", "Should we remove the clip above the motel on c2m1?", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-        remove_swan_clip = CreateConVar("remove_swan_clip", "1", "Should we remove the clip above the swan room shelf on c2m3?", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-        remove_plantation_clip = CreateConVar("remove_plantation_clip", "1", "Should we remove the clip inside the plantation on c3m4?", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-        remove_waterfront_clip = CreateConVar("remove_waterfront_clip", "1", "Should we remove the clip around start saferoom and above end saferoom on c5m1?", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-        remove_sugarmill_clip = CreateConVar("remove_sugarmill_clip", "1", "Should we remove the clip over the sugarmill building on c4m2 and c4m3?", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+        remove_motel_clip = CreateConVar("remove_motel_clip", "1", "Should we remove the clip above the motel on c2m1?", FCVAR_NONE, true, 0.0, true, 1.0);
+        remove_swan_clip = CreateConVar("remove_swan_clip", "1", "Should we remove the clip above the swan room shelf on c2m3?", FCVAR_NONE, true, 0.0, true, 1.0);
+        remove_plantation_clip = CreateConVar("remove_plantation_clip", "1", "Should we remove the clip inside the plantation on c3m4?", FCVAR_NONE, true, 0.0, true, 1.0);
+        remove_waterfront_clip = CreateConVar("remove_waterfront_clip", "1", "Should we remove the clip around start saferoom and above end saferoom on c5m1?", FCVAR_NONE, true, 0.0, true, 1.0);
+        remove_sugarmill_clip = CreateConVar("remove_sugarmill_clip", "1", "Should we remove the clip over the sugarmill building on c4m2 and c4m3?", FCVAR_NONE, true, 0.0, true, 1.0);
         RegAdminCmd("sm_disableallclips", DisableAllClips_Cmd, ADMFLAG_BAN, "Removes all clips from the map. Possibly used for testing purposes.");
         RegAdminCmd("sm_enableallclips", EnableAllClips_Cmd, ADMFLAG_BAN, "Enables all clips on the map. Possibly used for testing purposes.");
 }

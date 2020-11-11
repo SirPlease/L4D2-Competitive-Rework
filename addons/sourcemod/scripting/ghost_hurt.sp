@@ -20,7 +20,7 @@ public Plugin:myinfo =
 
 public OnPluginStart()
 {
-    ghost_hurt_type = CreateConVar("ghost_hurt_type", "0", "When should trigger_hurt_ghost be enabled? 0 = Never, 1 = On Round Start", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+    ghost_hurt_type = CreateConVar("ghost_hurt_type", "0", "When should trigger_hurt_ghost be enabled? 0 = Never, 1 = On Round Start", FCVAR_NONE, true, 0.0, true, 1.0);
     HookEvent("round_start", Event_Round_Start, EventHookMode_PostNoCopy);
     RegServerCmd("sm_reset_ghost_hurt", ResetGhostHurt_Cmd, "Used to reset trigger_hurt_ghost between matches.  This should be in confogl_off.cfg or equivalent for your system");
 }

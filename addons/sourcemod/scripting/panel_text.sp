@@ -21,11 +21,11 @@ new Handle:sm_readypaneltextdelay;
 
 public OnPluginStart()
 {
-	RegServerCmd("sm_addreadystring", AddReadyString_Cmd, "Sets the string to add to the ready-up panel", FCVAR_PLUGIN);
-	RegServerCmd("sm_resetstringcount", ResetStringCount_Cmd, "Resets the string count", FCVAR_PLUGIN);
-	RegServerCmd("sm_lockstrings", LockStrings_Cmd, "Locks the strings", FCVAR_PLUGIN);
+	RegServerCmd("sm_addreadystring", AddReadyString_Cmd, "Sets the string to add to the ready-up panel", FCVAR_NONE);
+	RegServerCmd("sm_resetstringcount", ResetStringCount_Cmd, "Resets the string count", FCVAR_NONE);
+	RegServerCmd("sm_lockstrings", LockStrings_Cmd, "Locks the strings", FCVAR_NONE);
 	HookEvent("round_start", RoundStart_Event, EventHookMode_PostNoCopy);
-	sm_readypaneltextdelay = CreateConVar("sm_readypaneltextdelay", "4.0", "Delay before adding the text to the ready-up panel for order control", FCVAR_PLUGIN, true, 0.0, true, 10.0);
+	sm_readypaneltextdelay = CreateConVar("sm_readypaneltextdelay", "4.0", "Delay before adding the text to the ready-up panel for order control", FCVAR_NONE, true, 0.0, true, 10.0);
 }
 
 public Action:LockStrings_Cmd(args)

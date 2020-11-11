@@ -47,7 +47,7 @@ public Plugin:myinfo =
 public OnPluginStart()
 {
     HookEvent("player_bot_replace", PlayerBotReplace);
-    bot_kick_delay = CreateConVar("bot_kick_delay", "0", "How long should we wait before kicking infected bots?", FCVAR_PLUGIN, true, 0.0, true, 30.0);
+    bot_kick_delay = CreateConVar("bot_kick_delay", "0", "How long should we wait before kicking infected bots?", FCVAR_NONE, true, 0.0, true, 30.0);
 }
 
 public PlayerBotReplace(Handle:event, const String:name[], bool:dontBroadcast)

@@ -23,7 +23,7 @@ public OnPluginStart()
 {
 	hRing1BulletsCvar = CreateConVar("sgspread_ring1_bullets", "3");
 	hRing1FactorCvar = CreateConVar("sgspread_ring1_factor", "2");
-	hCenterPelletCvar = CreateConVar("sgspread_center_pellet", "1", "0 : center pellet off; 1 : on", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	hCenterPelletCvar = CreateConVar("sgspread_center_pellet", "1", "0 : center pellet off; 1 : on", FCVAR_NONE, true, 0.0, true, 1.0);
 
 	HookConVarChange(hRing1BulletsCvar, OnRing1BulletsChange);
 	HookConVarChange(hRing1FactorCvar, OnRing1FactorChange);

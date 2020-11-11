@@ -39,9 +39,9 @@ enum eTrieItemKillable
 
 public OnPluginStart()
 {
-    g_hCvarEnabled = CreateConVar(      "sm_safeitemkill_enable",       "1",    "Whether end saferoom items should be removed.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-    g_hCvarSaferoom = CreateConVar(     "sm_safeitemkill_saferooms",    "1",    "Saferooms to empty. Flags: 1 = end saferoom, 2 = start saferoom (3 = kill items from both).", FCVAR_PLUGIN, true, 0.0, false);
-    g_hCvarItems = CreateConVar(        "sm_safeitemkill_items",        "7",    "Types to rmove. Flags: 1 = health items, 2 = guns, 4 = melees, 8 = all other usable items", FCVAR_PLUGIN, true, 0.0, false);
+    g_hCvarEnabled = CreateConVar(      "sm_safeitemkill_enable",       "1",    "Whether end saferoom items should be removed.", FCVAR_NONE, true, 0.0, true, 1.0);
+    g_hCvarSaferoom = CreateConVar(     "sm_safeitemkill_saferooms",    "1",    "Saferooms to empty. Flags: 1 = end saferoom, 2 = start saferoom (3 = kill items from both).", FCVAR_NONE, true, 0.0, false);
+    g_hCvarItems = CreateConVar(        "sm_safeitemkill_items",        "7",    "Types to rmove. Flags: 1 = health items, 2 = guns, 4 = melees, 8 = all other usable items", FCVAR_NONE, true, 0.0, false);
     
     PrepareTrie();
 }

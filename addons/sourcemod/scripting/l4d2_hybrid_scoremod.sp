@@ -78,7 +78,7 @@ public OnPluginStart()
 	hCvarPermanentHealthProportion = CreateConVar("sm2_permament_health_proportion", "0.75", "Permanent Health Bonus = this * Map Bonus; rest goes for Temporary Health Bonus", FCVAR_NONE);
 	hCvarPillsHpFactor = CreateConVar("sm2_pills_hp_factor", "6.0", "Unused pills HP worth = map bonus HP value / this", FCVAR_NONE);
 	hCvarPillsMaxBonus = CreateConVar("sm2_pills_max_bonus", "30", "Unused pills cannot be worth more than this", FCVAR_NONE);
-	// hCvarTiebreakerBonus = CreateConVar("sm2_tiebreaker_bonus", "25", "Tiebreaker for those cases when both teams make saferoom with no bonus", FCVAR_PLUGIN);
+	// hCvarTiebreakerBonus = CreateConVar("sm2_tiebreaker_bonus", "25", "Tiebreaker for those cases when both teams make saferoom with no bonus", FCVAR_NONE);
 	
 	hCvarValveSurvivalBonus = FindConVar("vs_survival_bonus");
 	hCvarValveTieBreaker = FindConVar("vs_tiebreak_bonus");

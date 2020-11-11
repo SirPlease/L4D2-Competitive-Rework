@@ -41,9 +41,9 @@ public OnPluginStart()
 	HookEvent("player_death", EventPlayerDeath);
 	
 	//create option convars
-	h_cvarNoticeType = CreateConVar("l4d_bandw_notice", "1", "0 turns notifications off, 1 notifies survivors, 2 notifies all, 3 notifies infected.", FCVAR_PLUGIN, true, 0.0, true, 3.0);
-	h_cvarPrintType = CreateConVar("l4d_bandw_type", "1", "0 prints to chat, 1 displays hint box.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-	h_cvarGlowEnable = CreateConVar("l4d_bandw_glow", "0", "0 turns glow off, 1 turns glow on.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+	h_cvarNoticeType = CreateConVar("l4d_bandw_notice", "1", "0 turns notifications off, 1 notifies survivors, 2 notifies all, 3 notifies infected.", FCVAR_NONE, true, 0.0, true, 3.0);
+	h_cvarPrintType = CreateConVar("l4d_bandw_type", "1", "0 prints to chat, 1 displays hint box.", FCVAR_NONE, true, 0.0, true, 1.0);
+	h_cvarGlowEnable = CreateConVar("l4d_bandw_glow", "0", "0 turns glow off, 1 turns glow on.", FCVAR_NONE, true, 0.0, true, 1.0);
 	
 	//read values from convars initially
 	bandw_notice = GetConVarInt(h_cvarNoticeType);

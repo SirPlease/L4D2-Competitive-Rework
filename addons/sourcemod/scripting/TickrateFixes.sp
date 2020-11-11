@@ -82,11 +82,11 @@ public OnPluginStart()
         SDKHook(client, SDKHook_PostThinkPost, Hook_OnPostThinkPost);
     }
     g_hPistolDelayDualies = CreateConVar("l4d_pistol_delay_dualies", "0.1", "Minimum time (in seconds) between dual pistol shots",
-    FCVAR_PLUGIN | FCVAR_SPONLY | FCVAR_NOTIFY, true, 0.0, true, 5.0);
+    FCVAR_NONE | FCVAR_SPONLY | FCVAR_NOTIFY, true, 0.0, true, 5.0);
     g_hPistolDelaySingle = CreateConVar("l4d_pistol_delay_single", "0.2", "Minimum time (in seconds) between single pistol shots",
-    FCVAR_PLUGIN | FCVAR_SPONLY | FCVAR_NOTIFY, true, 0.0, true, 5.0);
+    FCVAR_NONE | FCVAR_SPONLY | FCVAR_NOTIFY, true, 0.0, true, 5.0);
     g_hPistolDelayIncapped = CreateConVar("l4d_pistol_delay_incapped", "0.3", "Minimum time (in seconds) between pistol shots while incapped",
-    FCVAR_PLUGIN | FCVAR_SPONLY | FCVAR_NOTIFY, true, 0.0, true, 5.0);
+    FCVAR_NONE | FCVAR_SPONLY | FCVAR_NOTIFY, true, 0.0, true, 5.0);
         
     UpdatePistolDelays();
         
@@ -96,7 +96,7 @@ public OnPluginStart()
     HookEvent("weapon_fire", Event_WeaponFire);
 
     // Slow Doors
-    hCvarDoorSpeed     = CreateConVar("tick_door_speed",        "1.3", "Sets the speed of all prop_door entities on a map. 1.05 means = 105% speed", FCVAR_PLUGIN);
+    hCvarDoorSpeed     = CreateConVar("tick_door_speed",        "1.3", "Sets the speed of all prop_door entities on a map. 1.05 means = 105% speed", FCVAR_NONE);
     fDoorSpeed         = GetConVarFloat(hCvarDoorSpeed);
     
     HookConVarChange(hCvarDoorSpeed, cvarChanged);

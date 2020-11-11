@@ -18,7 +18,7 @@ public OnPluginStart()
 	HookEvent("entity_shoved", Event_EntShoved);
 	AddNormalSoundHook(NormalSHook:HookSound_Callback); //my melee hook since they didnt include an event for it
 	
-	CreateConVar("l4d_stuckzombiemeleefix_version", PLUGIN_VERSION, " Version of L4D Stuck Zombie Melee Fix on this server ", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	CreateConVar("l4d_stuckzombiemeleefix_version", PLUGIN_VERSION, " Version of L4D Stuck Zombie Melee Fix on this server ", FCVAR_SPONLY|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 }
 
 new bool:MeleeDelay[MAXPLAYERS+1];

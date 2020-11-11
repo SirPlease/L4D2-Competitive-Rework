@@ -113,14 +113,14 @@ public OnPluginStart()
     }
     
     // cvars
-    //hPluginEnabled = CreateConVar("sm_jockeyglitchfix_enabled", "1", "Enable the fix for the jockey-damage glitch.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-    hDmgPunch = CreateConVar("charger_dmg_punch",          			"8",    "Damage per (normal) charger punch.", FCVAR_PLUGIN, true, 0.0);
-    hDmgFirst = CreateConVar("charger_dmg_firstpunch",     			"8",    "Damage for first charger punch (in its life). -1 to ignore punch count", FCVAR_PLUGIN, true, -1.0);
-    hDmgSmash = CreateConVar("charger_dmg_impact",         			"10",    "Damage for impact after a charge.", FCVAR_PLUGIN, true, 0.0);
-    hDmgStumble = CreateConVar("charger_dmg_stumble",      			"2",    "Damage for stumbled impact after a charge.", FCVAR_PLUGIN, true, 0.0);
-    hDmgPound = CreateConVar("charger_dmg_pound",          			"15",    "Damage for pounds after charge/collision completed.", FCVAR_PLUGIN, true, 0.0);
-    hDmgCappedVictim = CreateConVar("charger_dmg_cappedvictim",  	"8",    "Damage for capped Survivor victims.", FCVAR_PLUGIN, true, 0.0);
-    hDmgIncappedPound = CreateConVar("charger_dmg_incapped",  	"15",    "Damage for incapped victims.", FCVAR_PLUGIN, true, 0.0);
+    //hPluginEnabled = CreateConVar("sm_jockeyglitchfix_enabled", "1", "Enable the fix for the jockey-damage glitch.", FCVAR_NONE, true, 0.0, true, 1.0);
+    hDmgPunch = CreateConVar("charger_dmg_punch",          			"8",    "Damage per (normal) charger punch.", FCVAR_NONE, true, 0.0);
+    hDmgFirst = CreateConVar("charger_dmg_firstpunch",     			"8",    "Damage for first charger punch (in its life). -1 to ignore punch count", FCVAR_NONE, true, -1.0);
+    hDmgSmash = CreateConVar("charger_dmg_impact",         			"10",    "Damage for impact after a charge.", FCVAR_NONE, true, 0.0);
+    hDmgStumble = CreateConVar("charger_dmg_stumble",      			"2",    "Damage for stumbled impact after a charge.", FCVAR_NONE, true, 0.0);
+    hDmgPound = CreateConVar("charger_dmg_pound",          			"15",    "Damage for pounds after charge/collision completed.", FCVAR_NONE, true, 0.0);
+    hDmgCappedVictim = CreateConVar("charger_dmg_cappedvictim",  	"8",    "Damage for capped Survivor victims.", FCVAR_NONE, true, 0.0);
+    hDmgIncappedPound = CreateConVar("charger_dmg_incapped",  	"15",    "Damage for incapped victims.", FCVAR_NONE, true, 0.0);
     
     // hooks
     HookEvent("round_start", RoundStart_Event, EventHookMode_PostNoCopy);

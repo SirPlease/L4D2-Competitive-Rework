@@ -70,7 +70,7 @@ public OnPluginStart()
 	HookEvent("tank_spawn", Event_TankSpawn);
 	HookEvent("tank_killed", Event_TankKilled);
 	
-	CreateConVar("tankdoorfix_version", VERSION, "TankDoorFix Version", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
+	CreateConVar("tankdoorfix_version", VERSION, "TankDoorFix Version", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
 }
 
 public OnMapStart()

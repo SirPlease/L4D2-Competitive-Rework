@@ -18,8 +18,8 @@ public Plugin:myinfo =
 
 public OnPluginStart()
 {
-	infected_fire_immunity = CreateConVar("infected_fire_immunity", "3", "What type of fire immunity should infected have? 0 = None, 3 = Extinguish burns, 2 = Prevent burns, 1 = Complete immunity", FCVAR_PLUGIN, true, 0.0, true, 3.0);
-	tank_fire_immunity = CreateConVar("tank_fire_immunity", "2", "What type of fire immunity should the tank have? 0 = None, 3 = Extinguish burns, 2 = Prevent burns, 1 = Complete immunity", FCVAR_PLUGIN, true, 0.0, true, 3.0);
+	infected_fire_immunity = CreateConVar("infected_fire_immunity", "3", "What type of fire immunity should infected have? 0 = None, 3 = Extinguish burns, 2 = Prevent burns, 1 = Complete immunity", FCVAR_NONE, true, 0.0, true, 3.0);
+	tank_fire_immunity = CreateConVar("tank_fire_immunity", "2", "What type of fire immunity should the tank have? 0 = None, 3 = Extinguish burns, 2 = Prevent burns, 1 = Complete immunity", FCVAR_NONE, true, 0.0, true, 3.0);
 	HookEvent("player_hurt",SIOnFire);
 }
 

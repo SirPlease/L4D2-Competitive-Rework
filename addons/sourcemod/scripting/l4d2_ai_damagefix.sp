@@ -97,7 +97,7 @@ public APLRes:AskPluginLoad2( Handle:plugin, bool:late, String:error[], errMax)
 public OnPluginStart()
 {
     // find/create cvars, hook changes, cache current values
-    new Handle:hCvarEnabled = CreateConVar("sm_aidmgfix_enable", "7", "Bit flag: Enables plugin features (add together): 1=Skeet pouncing AI, 2=Debuff charging AI, 4=Block stumble scratches, 7=all, 0=off", FCVAR_PLUGIN|FCVAR_NOTIFY);
+    new Handle:hCvarEnabled = CreateConVar("sm_aidmgfix_enable", "7", "Bit flag: Enables plugin features (add together): 1=Skeet pouncing AI, 2=Debuff charging AI, 4=Block stumble scratches, 7=all, 0=off", FCVAR_NONE|FCVAR_NOTIFY);
     new Handle:hCvarPounceInterrupt = FindConVar("z_pounce_damage_interrupt");
 
     HookConVarChange(hCvarEnabled, OnAIDamageFixEnableChanged);

@@ -27,10 +27,10 @@ public Plugin:myinfo =
 }
 
 public OnPluginStart() {
-    cvar_noCans = CreateConVar("l4d_no_cans", "1", "Remove Gascans?", FCVAR_PLUGIN);
-    cvar_noPropane = CreateConVar("l4d_no_propane", "1", "Remove Propane Tanks?", FCVAR_PLUGIN);
-    cvar_noOxygen = CreateConVar("l4d_no_oxygen", "1", "Remove Oxygen Tanks?", FCVAR_PLUGIN);
-    cvar_noFireworks = CreateConVar("l4d_no_fireworks", "1", "Remove Fireworks?", FCVAR_PLUGIN);
+    cvar_noCans = CreateConVar("l4d_no_cans", "1", "Remove Gascans?", FCVAR_NONE);
+    cvar_noPropane = CreateConVar("l4d_no_propane", "1", "Remove Propane Tanks?", FCVAR_NONE);
+    cvar_noOxygen = CreateConVar("l4d_no_oxygen", "1", "Remove Oxygen Tanks?", FCVAR_NONE);
+    cvar_noFireworks = CreateConVar("l4d_no_fireworks", "1", "Remove Fireworks?", FCVAR_NONE);
     HookConVarChange(cvar_noCans, NoCansChange);
     HookConVarChange(cvar_noPropane, NoPropaneChange);
     HookConVarChange(cvar_noOxygen, NoOxygenChange);

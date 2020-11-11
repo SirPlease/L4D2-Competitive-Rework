@@ -29,7 +29,7 @@ public OnPluginStart()
 	hCvarServerMessage = CreateConVar("soundm_server_message", "a SoundM Protected Server", "Message to show to Players in console");
 
 	HookEvent("player_connect_full", Event_PlayerConnectFull, EventHookMode_Post);
-	RegAdminCmd("sm_consistencycheck", Command_ConsistencyCheck, ADMFLAG_RCON, "Performs a consistency check on all players.", "", FCVAR_PLUGIN);
+	RegAdminCmd("sm_consistencycheck", Command_ConsistencyCheck, ADMFLAG_RCON, "Performs a consistency check on all players.", "", FCVAR_NONE);
 	SetConVarInt(CreateConVar("cl_consistencycheck_interval", "180.0", "Perform a consistency check after this amount of time (seconds) has passed since the last.", FCVAR_REPLICATED|FCVAR_LAUNCHER), 999999);
 }
 

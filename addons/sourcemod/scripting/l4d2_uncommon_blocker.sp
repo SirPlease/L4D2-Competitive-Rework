@@ -48,8 +48,8 @@ public Plugin:myinfo =
 public OnPluginStart()
 {
     // cvars
-    hPluginEnabled = CreateConVar("sm_uncinfblock_enabled", "1", "Enable the fix for the jockey-damage glitch.", FCVAR_PLUGIN, true, 0.0, true, 1.0);
-    hBlockFlags =    CreateConVar("sm_uncinfblock_types",   "31", "Which uncommon infected to block (1:ceda, 2:clowns, 4:mudmen, 8:riot cops, 16:roadcrew).", FCVAR_PLUGIN, true, 0.0);
+    hPluginEnabled = CreateConVar("sm_uncinfblock_enabled", "1", "Enable the fix for the jockey-damage glitch.", FCVAR_NONE, true, 0.0, true, 1.0);
+    hBlockFlags =    CreateConVar("sm_uncinfblock_types",   "31", "Which uncommon infected to block (1:ceda, 2:clowns, 4:mudmen, 8:riot cops, 16:roadcrew).", FCVAR_NONE, true, 0.0);
 }
 
 /* -------------------------------

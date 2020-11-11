@@ -23,7 +23,7 @@ public APLRes:AskPluginLoad2( Handle:plugin, bool:late, String:error[], errMax) 
 }
 
 public OnPluginStart() {
-    cvar_bashKills = CreateConVar("l4d_no_bash_kills", "1", "Prevent special infected from getting bashed to death", FCVAR_PLUGIN);
+    cvar_bashKills = CreateConVar("l4d_no_bash_kills", "1", "Prevent special infected from getting bashed to death", FCVAR_NONE);
     
     if ( bLateLoad ) {
         for ( new i = 1; i < MaxClients+1; i++ ) {

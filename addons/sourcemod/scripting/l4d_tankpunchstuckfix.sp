@@ -70,8 +70,8 @@ public OnPluginStart()
     }
     
     // cvars
-    g_hCvarDeStuckTime = CreateConVar(      "sm_punchstuckfix_unstucktime",     "1.0",      "How many seconds to wait before detecting and unstucking a punched motionless player.", FCVAR_PLUGIN, true, 0.05, false);
-    tpsf_debug_print = CreateConVar("tpsf_debug_print", "1","Enable the Debug Print?", FCVAR_PLUGIN, true, 0.0, true, 1.0);
+    g_hCvarDeStuckTime = CreateConVar(      "sm_punchstuckfix_unstucktime",     "1.0",      "How many seconds to wait before detecting and unstucking a punched motionless player.", FCVAR_NONE, true, 0.05, false);
+    tpsf_debug_print = CreateConVar("tpsf_debug_print", "1","Enable the Debug Print?", FCVAR_NONE, true, 0.0, true, 1.0);
 	
     // hooks
     HookEvent("round_start", RoundStart_Event, EventHookMode_PostNoCopy);

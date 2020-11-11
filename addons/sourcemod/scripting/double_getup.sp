@@ -85,8 +85,8 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 }
 
 public OnPluginStart() {
-    rockPunchFix = CreateConVar("rock_punch_fix", "1", "When a tank punches someone who is getting up from a rock, cause them to have an extra getup.", FCVAR_PLUGIN);
-    longerTankPunchGetup = CreateConVar("longer_tank_punch_getup", "0", "When a tank punches someone give them a slightly longer getup.", FCVAR_PLUGIN, false, 0.0, false, 0.0);
+    rockPunchFix = CreateConVar("rock_punch_fix", "1", "When a tank punches someone who is getting up from a rock, cause them to have an extra getup.", FCVAR_NONE);
+    longerTankPunchGetup = CreateConVar("longer_tank_punch_getup", "0", "When a tank punches someone give them a slightly longer getup.", FCVAR_NONE, false, 0.0, false, 0.0);
 
     HookEvent("round_start", round_start);
     HookEvent("tongue_grab", smoker_land);

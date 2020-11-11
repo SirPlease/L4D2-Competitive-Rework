@@ -2,7 +2,7 @@
 #include <sourcemod>
 
 #define CVAR_PREFIX			"confogl_"
-#define CVAR_FLAGS			FCVAR_PLUGIN
+#define CVAR_FLAGS			FCVAR_NONE
 #define CVAR_PRIVATE		(FCVAR_DONTRECORD|FCVAR_PROTECTED)
 
 Handle:CreateConVarEx(const String:name[], const String:defaultValue[], const String:description[]="", flags=0, bool:hasMin=false, Float:min=0.0, bool:hasMax=false, Float:max=0.0)

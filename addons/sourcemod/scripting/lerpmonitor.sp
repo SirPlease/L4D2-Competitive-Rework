@@ -2,7 +2,7 @@
 #include <sourcemod>
 #include <colors>
 
-#define CVAR_FLAGS 			FCVAR_PLUGIN
+#define CVAR_FLAGS 			FCVAR_NONE
 #define PLUGIN_VERSION 		"1.0"
 
 #define STEAMID_SIZE 		32

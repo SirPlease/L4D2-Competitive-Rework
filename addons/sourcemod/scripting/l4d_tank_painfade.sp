@@ -55,9 +55,9 @@ public Plugin:myinfo =
 
 public OnPluginStart()
 {
-    g_hCvarEnabled = CreateConVar("l4d_tank_painfade", "1", "Enable/disable plugin", FCVAR_PLUGIN|FCVAR_NOTIFY, true, 0.0, true, 1.0);
+    g_hCvarEnabled = CreateConVar("l4d_tank_painfade", "1", "Enable/disable plugin", FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_hCvarFadeDuration = CreateConVar("l4d_tank_painfade_duration", "150", "Fade duration in ticks");
-    g_hCvarWeaponFlags = CreateConVar("l4d_tank_painfade_flags", "8", "What kind of weapons will cause the fade effect(1:Uzi,2:Shotgun,4:Sniper,8:Melee)", FCVAR_PLUGIN|FCVAR_NOTIFY, true, 1.0, true, 15.0);
+    g_hCvarWeaponFlags = CreateConVar("l4d_tank_painfade_flags", "8", "What kind of weapons will cause the fade effect(1:Uzi,2:Shotgun,4:Sniper,8:Melee)", FCVAR_NOTIFY, true, 1.0, true, 15.0);
     
     bEnabled = GetConVarBool(g_hCvarEnabled);
     iFadeDuration = GetConVarInt(g_hCvarFadeDuration);

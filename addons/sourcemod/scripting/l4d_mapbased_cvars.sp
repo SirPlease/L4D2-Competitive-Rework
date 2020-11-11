@@ -157,7 +157,7 @@ public GetThisMapPrefs()
                 // what to do with non-existant cvars?
                 // don't add, for now
             if (hConVar == INVALID_HANDLE) {
-                hConVar = CreateConVar(tmpKey, "", "[mcv] added because it didn't exist yet...", FCVAR_PLUGIN);
+                hConVar = CreateConVar(tmpKey, "", "[mcv] added because it didn't exist yet...", FCVAR_NONE);
             }
             */
             
