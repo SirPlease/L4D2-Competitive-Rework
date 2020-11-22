@@ -25,10 +25,6 @@
 		{
 			"name" "NextMod 1.0.5"
 		}
-		"nextmodpug"
-		{
-			"name" "NextMod PUG"
-		}
 		"nextmod3v3"
 		{
 			"name" "3v3 NextMod"
