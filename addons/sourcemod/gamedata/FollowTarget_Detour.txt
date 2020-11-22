@@ -1,0 +1,49 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Addresses"
+		{
+			"CMoveableCamera::FollowTarget"
+			{
+				"linux"
+				{
+					"signature" "CMoveableCamera::FollowTarget"
+				}
+			}
+		}
+		"Offsets"
+		{
+			"g_pEntityList_Opcode_Offset" // offset from "CMoveableCamera::FollowTarget" sig
+			{
+				"linux"			"17" // mov ecx, g_pEntityList
+			}
+			"g_pEntityList_Relative_Offset" // offset from opcode offset to g_pEntityList address itself
+			{
+				"linux"			"2"
+			}
+			"g_pEntityList_Bytes" // opcode + arg bytes (should be exact 2 bytes, in vice versa order)
+			{
+				"linux"		"3467" // 0x0D8B - mov ecx
+			}
+		}
+		"Functions"
+		{
+			"CMoveableCamera::FollowTarget"
+			{
+				"signature"		"CMoveableCamera::FollowTarget"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+			}
+		}
+		"Signatures"
+		{
+			"CMoveableCamera::FollowTarget"
+			{
+				"library"		"server"
+				"linux"			"@_ZN15CMoveableCamera12FollowTargetEv"
+			}
+		}
+	}
+}
