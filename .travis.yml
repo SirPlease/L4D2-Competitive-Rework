@@ -1,0 +1,17 @@
+# https://docs.travis-ci.com/user/job-lifecycle
+
+language: minimal
+
+dist: focal
+
+git:
+  depth: 5
+
+stages:
+  - compile
+
+jobs:
+  include:
+    - stage: compile
+      script:
+        - ./addons/sourcemod/scripting/compile.sh
