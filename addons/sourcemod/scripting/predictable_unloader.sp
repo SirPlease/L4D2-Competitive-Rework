@@ -21,6 +21,15 @@
 * --> Unloading Plugins with the pred_unload_plugins will push all currently loaded plugins to the Array and unloads them from Last loaded to First loaded. This way, dependencies should'nt be an issue.
 * --> Removed the possibility of just Unloading Reserved Plugins... as there's no need for it?
 *
+*
+* v1.2
+* ------------------------
+* ------- Details: -------
+* ------------------------
+* - Removed the unnecessary "ReservePlugin" function.
+* - Added a failsafe after plugins are supposed to be unloaded, as we've seen some cases where this plugin would be the only one refusing to unload, thus never refreshing the plugins.
+* - Added a less messy way of preventing double pushing, as this plugin is the only one that could possibly be double pushed. (StrEqual instead of FindInArray for every single plugin)
+*
 * ------------------------
 * -------- NOTES: --------
 * ------------------------
@@ -29,20 +38,20 @@
 ******************************************************************/
 
 ConVar hRefresh;
+char sBuffer[PLATFORM_MAX_PATH];
 Handle aReservedPlugins;
 
 public Plugin myinfo = 
 {
 	name = "Predictable Plugin Unloader",
 	author = "Sir (heavily influenced by keyCat)",
-	version = "1.1",
+	version = "1.2",
 	description = "Allows for unloading plugins from last to first, with reservation support."
 }
 
 public void OnPluginStart()
 {
 	RegServerCmd("pred_unload_plugins", UnloadPlugins, "Unload Plugins!");
-	RegServerCmd("pred_reserve_plugin", ReservePlugin, "Reserve Plugin to prevent from being unloaded when .");
 	hRefresh = CreateConVar("pred_restart", "1", "To prevent order issues due to ServerCommands, do we use the plugin to load_unlock and refresh when finished as its final task?")
 
 	// Reserved Plugins
@@ -50,7 +59,6 @@ public void OnPluginStart()
 
 	// Gotta reserve ourself of course.
 	// - Support for moving it elsewhere/renaming it by using INVALID_HANDLE as it's the calling plugin.
-	char sBuffer[PLATFORM_MAX_PATH];
 	GetPluginFilename(INVALID_HANDLE, sBuffer, sizeof(sBuffer))
 
 	PushArrayString(aReservedPlugins, sBuffer);
@@ -76,7 +84,7 @@ public Action UnloadPlugins(int args)
 		GetPluginFilename(currentPlugin, stockpluginname, sizeof(stockpluginname));
 
 		// Prevent double pushing.
-		if (FindStringInArray(aReservedPlugins, stockpluginname) == -1) 
+		if (!StrEqual(sBuffer, stockpluginname)) 
 		  PushArrayString(aReservedPlugins, stockpluginname);
 	}
 
@@ -89,30 +97,7 @@ public Action UnloadPlugins(int args)
 		GetArrayString(aReservedPlugins, iSize - 1, sReserved, sizeof(sReserved)); // -1 because of how arrays work. :)
 		ServerCommand("sm plugins unload %s", sReserved);
 	}
-}
 
-public Action ReservePlugin(int args) 
-{
-	// Gotta provide a plugin to reserve.
-	if (args != 1)
-	{
-		PrintToServer("[PREDICTABLE UNLOADER]: pred_reserve_plugin <plugin> (ending with .smx)");
-		return;
-	}
-
-	char sPluginName[32];
-
-	// Get Plugin..
-	GetCmdArg(1, sPluginName, sizeof(sPluginName));
-
-	// Check if provided Plugin is actually loaded
-	if (FindPluginByFile(sPluginName) == INVALID_HANDLE)
-	{
-		PrintToServer("[PREDICTABLE UNLOADER]: pred_reserve_plugin <plugin> (Make sure the plugin is loaded)");
-		PrintToServer("[PREDICTABLE UNLOADER]: Don't forget adding the folder if it's outside of the main plugins folder (and ending with .smx)");
-		return;
-	}
-
-	// Push Plugin into Reserved Array.
-	PushArrayString(aReservedPlugins, sPluginName);
+	// Failsafe.
+	ServerCommand("sm plugins unload_all");
 }
