@@ -30,6 +30,15 @@
 * - Added a failsafe after plugins are supposed to be unloaded, as we've seen some cases where this plugin would be the only one refusing to unload, thus never refreshing the plugins.
 * - Added a less messy way of preventing double pushing, as this plugin is the only one that could possibly be double pushed. (StrEqual instead of FindInArray for every single plugin)
 *
+*
+* v1.2.1
+* ------------------------
+* ------- Details: -------
+* ------------------------
+* - Removed the unnecessary "ReservePlugin" function.
+* - Added a failsafe after plugins are supposed to be unloaded, as we've seen some cases where this plugin would be the only one refusing to unload, thus never refreshing the plugins.
+* - Added a less messy way of preventing double pushing, as this plugin is the only one that could possibly be double pushed. (StrEqual instead of FindInArray for every single plugin)
+*
 * ------------------------
 * -------- NOTES: --------
 * ------------------------
@@ -37,40 +46,22 @@
 *
 ******************************************************************/
 
-ConVar hRefresh;
-char sBuffer[PLATFORM_MAX_PATH];
 Handle aReservedPlugins;
 
 public Plugin myinfo = 
 {
 	name = "Predictable Plugin Unloader",
 	author = "Sir (heavily influenced by keyCat)",
-	version = "1.2",
-	description = "Allows for unloading plugins from last to first, with reservation support."
+	version = "1.2.1",
+	description = "Allows for unloading plugins from last to first."
 }
 
 public void OnPluginStart()
 {
 	RegServerCmd("pred_unload_plugins", UnloadPlugins, "Unload Plugins!");
-	hRefresh = CreateConVar("pred_restart", "1", "To prevent order issues due to ServerCommands, do we use the plugin to load_unlock and refresh when finished as its final task?")
 
 	// Reserved Plugins
 	aReservedPlugins = CreateArray(PLATFORM_MAX_PATH);
-
-	// Gotta reserve ourself of course.
-	// - Support for moving it elsewhere/renaming it by using INVALID_HANDLE as it's the calling plugin.
-	GetPluginFilename(INVALID_HANDLE, sBuffer, sizeof(sBuffer))
-
-	PushArrayString(aReservedPlugins, sBuffer);
-}
-
-public void OnPluginEnd()
-{
-	if (GetConVarBool(hRefresh))
-	{
-		ServerCommand("sm plugins load_unlock");
-		ServerCommand("sm plugins refresh");
-	}
 }
 
 public Action UnloadPlugins(int args) 
@@ -78,6 +69,12 @@ public Action UnloadPlugins(int args)
 	char stockpluginname[64];
 	Handle pluginIterator = GetPluginIterator();
 	Handle currentPlugin;
+
+	// Gotta reserve ourself of course.
+	// - Supports moving the plugin to another folder. (INVALID_HANDLE simply gets the calling plugin)
+	char sBuffer[PLATFORM_MAX_PATH];
+	GetPluginFilename(INVALID_HANDLE, sBuffer, sizeof(sBuffer));
+
 	while (MorePlugins(pluginIterator))
 	{
 		currentPlugin = ReadPlugin(pluginIterator);
@@ -91,6 +88,8 @@ public Action UnloadPlugins(int args)
 	CloseHandle(currentPlugin); // This one I probably don't have to close, but whatevs.
 	CloseHandle(pluginIterator);
 
+	ServerCommand("sm plugins load_unlock");
+
 	for (int iSize = GetArraySize(aReservedPlugins); iSize > 0; iSize--)
 	{
 		char sReserved[PLATFORM_MAX_PATH];
@@ -98,6 +97,7 @@ public Action UnloadPlugins(int args)
 		ServerCommand("sm plugins unload %s", sReserved);
 	}
 
-	// Failsafe.
-	ServerCommand("sm plugins unload_all");
+	// Refresh first, then unload this plugin.
+	ServerCommand("sm plugins refresh");
+	ServerCommand("sm plugins unload %s", sBuffer)
 }
