@@ -64,7 +64,7 @@ app_update 222860 validate
 quit**
 
 > **Setup the Server Start/Restart/Stop Files**  
-> Next you'll need to download the srcds1 file provided within this directory.  You can [click here](https://github.com/Craicer1/L4D2-Competitive-Rework/blob/master/Dedicated%20Server%20Fresh%20Start/srcds1), select raw, then right click and save.
+> Next you'll need to download the srcds1 file provided within this directory.  You can [click here](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/Dedicated%20Server%20Install%20Guide/srcds1), select raw, then right click and save.
 > I recommend having [Notepad++](https://notepad-plus-plus.org/download/v7.5.1.html) in order to make this as smooth as possible but the notepad within windows works fine.
 
 The srcds1 file provided has all the information you need inside it.  Realistically, if you are hosting one server and you have followed every step in this guide you will only need to change the IP address of your server from 1.3.3.7 to your actual IP.  After this save the file as srcds1.  If it saves as srcds1.txt you should rename it to remove the .txt extension.  
