@@ -28,7 +28,9 @@ public void OnPluginStart()
 	PrepSDKCall_SetFromConf(hGameConf, SDKConf_Signature, "CLagCompensationManager_RemoveAdditionaEntity");
 	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
 	g_hLagCompRemoveEntity = EndPrepSDKCall();
-	// PrintToServer("Values: 0x%08x, %08x, %08x", g_lagcompensation, g_hLagCompAddEntity, g_hLagCompRemoveEntity);
+	if (g_lagcompensation == Address_Null || g_hLagCompAddEntity == null || g_hLagCompRemoveEntity == null) {
+		SetFailState("Failed to find LagComp addresses: 0x%08x, %08x, %08x", g_lagcompensation, g_hLagCompAddEntity, g_hLagCompRemoveEntity);
+	}
 }
 
 public void OnEntityCreated(int entity, const char[] classname)
