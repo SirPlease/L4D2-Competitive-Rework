@@ -190,7 +190,7 @@ RegisterSettings(client)
     
      // Punish for low rate settings(if we're good on previous check)
     if ((iCmdRate < iMinCmd && iMinCmd > -1) 
-        || (iRate < iMinRate && iRate > -1)
+        || (iRate < iMinRate && iMinRate > -1)
         || (iUpdateRate < iMinUpd && iMinUpd > -1)
     ) {
         sCounter = "[low cmd/update/rate]";
