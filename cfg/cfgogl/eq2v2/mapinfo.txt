@@ -265,6 +265,8 @@
 		"end_dist"          "50.000000"
 		"max_distance"      "800"
 		"horde_limit"       "150"
+		"tank_ban_flow_min" "74"
+		"tank_ban_flow_max" "100"
 	}
 	"c6m3_port"
 	{

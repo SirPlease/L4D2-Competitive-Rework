@@ -288,6 +288,8 @@
 		"start_extra_dist"  "0.000000"
 		"end_dist"          "50.000000"
 		"max_distance"      "800"
+		"tank_ban_flow_min" "74"
+		"tank_ban_flow_max" "100"
 	}
 	"c6m3_port"
 	{
