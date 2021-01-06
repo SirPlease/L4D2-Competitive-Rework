@@ -18,7 +18,8 @@
 #pragma semicolon 1
 
 #include <sourcemod>
-#include <l4d2_direct>
+#include <sdktools>
+#include <left4dhooks>
 
 new const L4D2_SI_Victim_Slots[] = {
     -1,

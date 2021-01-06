@@ -36,7 +36,7 @@
 #define L4D2UTIL_STOCKS_ONLY
 #include <l4d2util> // Needed for IdentifySurvivor calls. I use survivor indices rather than client indices in case someone leaves while incapped (with a pending getup).
 #undef L4D2UTIL_STOCKS_ONLY
-#include <l4d2_direct> // Needed for forcing players to have a getup animation.
+#include <left4dhooks> // Needed for forcing players to have a getup animation.
 #pragma semicolon 1
 
 public Plugin:myinfo =
