@@ -2,6 +2,14 @@
 
 #include <code_patcher>
 
+// Original code & Notes: https://github.com/Jahze/l4d2_plugins/tree/master/spread_patch
+// Static Shotgun Spread leverages code_patcher (code_patcher.txt gamedata)
+// to replace RNG in pellet spread with static factors.
+// This plugin allows you to adjust the spread characteristics, by live patching operands in the custom ASM.
+
+// You can use the visualise_impacts.smx plugin to test the resulting spread.
+// It will render small purple boxes where the server-side pellets land.
+
 new Handle:hRing1BulletsCvar;
 new Handle:hRing1FactorCvar;
 new Handle:hCenterPelletCvar;

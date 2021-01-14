@@ -45,7 +45,38 @@
 			"sgspread_length_windows"	"78"
 			"sgspread_length_linux"		"85"
 			"sgspread_bytes_windows"	"\x83\xec\x0c\x31\xc0\x89\x45\xa0\x8b\xd6\x8b\xc4\x83\xfa\x04\x7f\x02\xeb\x1f\xc7\x45\xa0\x00\x00\xa0\x40\x89\x10\x01\x38\x83\x28\x04\xdb\x00\xc7\x00\x00\x00\xb4\x43\xd9\x00\xde\xf1\x83\xea\x05\xeb\x12\xc7\x45\xa0\x00\x00\x40\x40\x83\xea\x02\xc7\x00\x00\x00\xf0\x42\xd9\x00\x89\x10\xdb\x00\xde\xc9\x0f\x1f\x40\x00"
-			"sgspread_bytes_linux"		"\x8d\x8d\x54\xff\xff\xff\xf3\x0f\x11\x01\x8b\x55\x20\x8b\xc4\x83\xfa\x04\x7f\x02\xeb\x16\x89\x10\x01\x38\x83\x28\x05\xdb\x00\xc7\x00\x00\x00\x34\x43\xd8\x38\x83\xea\x05\xeb\x17\xc7\x00\x02\x00\x00\x00\xdb\x00\xd8\x39\xd9\x19\x83\xea\x02\xc7\x00\x00\x00\x70\x42\xd9\x00\x89\x10\xda\x08\x6a\x2d\x8f\x00\xda\x00\xd9\x95\x3c\xff\xff\xff\x90\x90"
+
+			// 0:  8d 8d 54 ff ff ff       lea    ecx,[ebp-0xac]
+			// 6:  f3 0f 11 01             movss  DWORD PTR [ecx],xmm0
+			// a:  8b 55 20                mov    edx,DWORD PTR [ebp+0x20]
+			// d:  8b c4                   mov    eax,esp
+			// f:  83 fa 04                cmp    edx,0x4   ; "Bullet offset 0"
+			// 12: 7f 02                   jg     0x16
+			// 14: eb 16                   jmp    0x2c
+			// 16: 89 10                   mov    DWORD PTR [eax],edx
+			// 18: 01 38                   add    DWORD PTR [eax],edi
+			// 1a: 83 28 05                sub    DWORD PTR [eax],0x5 ; "Bullet offset 1"
+			// 1d: db 00                   fild   DWORD PTR [eax]
+			// 1f: c7 00 00 00 34 43       mov    DWORD PTR [eax],0x43340000
+			// 25: d8 38                   fdivr  DWORD PTR [eax]
+			// 27: 83 ea 05                sub    edx,0x5             ; "Bullet offset 2"
+			// 2a: eb 17                   jmp    0x43
+			// 2c: c7 00 02 00 00 00       mov    DWORD PTR [eax],0x2 ; "Factor offset"
+			// 32: db 00                   fild   DWORD PTR [eax]
+			// 34: d8 39                   fdivr  DWORD PTR [ecx]
+			// 36: d9 19                   fstp   DWORD PTR [ecx]
+			// 38: 83 ea 02                sub    edx,0x2
+			// 3b: c7 00 00 00 70 42       mov    DWORD PTR [eax],0x42700000 ; "Bullet offset 3"
+			// 41: d9 00                   fld    DWORD PTR [eax]
+			// 43: 89 10                   mov    DWORD PTR [eax],edx
+			// 45: da 08                   fimul  DWORD PTR [eax]
+			// 47: 6a 2d                   push   0x2d
+			// 49: 8f 00                   pop    DWORD PTR [eax]
+			// 4b: da 00                   fiadd  DWORD PTR [eax]
+			// 4d: d9 9d 3c ff ff ff       fstp   DWORD PTR [ebp-0xc4]
+			// 53: 90                      nop
+			// 54: 90                      nop 
+			"sgspread_bytes_linux"		"\x8d\x8d\x54\xff\xff\xff\xf3\x0f\x11\x01\x8b\x55\x20\x8b\xc4\x83\xfa\x04\x7f\x02\xeb\x16\x89\x10\x01\x38\x83\x28\x05\xdb\x00\xc7\x00\x00\x00\x34\x43\xd8\x38\x83\xea\x05\xeb\x17\xc7\x00\x02\x00\x00\x00\xdb\x00\xd8\x39\xd9\x19\x83\xea\x02\xc7\x00\x00\x00\x70\x42\xd9\x00\x89\x10\xda\x08\x6a\x2d\x8f\x00\xda\x00\xd9\x9d\x3c\xff\xff\xff\x90\x90"
 		}
 	}
 }
