@@ -1,0 +1,55 @@
+"Games"
+{
+	"#default"
+	{
+		"Offsets"
+		{
+			"OS"
+			{
+				"windows"	"0"
+				"linux"		"1"
+			}
+		}
+	}
+	"left4dead2"
+	{
+		"Addresses"
+		{
+			"CTerrorPlayer::UpdatePounce::SetAbsVelocity"
+			{
+				"signature"	"CTerrorPlayer::UpdatePounce::SetAbsVelocity"			
+			}
+		}
+		"Signatures"
+		{
+			"CBaseEntity::SetAbsOrigin"
+			{
+				"library"		"server"
+				"linux"			"@_ZN11CBaseEntity12SetAbsOriginERK6Vector"
+				"windows"		"\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x56\x57\x8B\x7D\x08\x8B\xF1\xE8\x2A\x2A\x2A\x2A\xF3\x0F\x10\x07\x0F\x2E\x86\xCC\x02\x00\x00"
+								/* ? ? ? ? ? ? A1 ? ? ? ? 33 C5 89 45 FC 56 57 8B 7D 08 8B F1 E8 ? ? ? ? F3 0F 10 07 0F 2E 86 CC 02 00 00 */
+			}
+			"CBaseEntity::SetAbsVelocity"
+			{
+				"library"		"server"
+				"linux"			"@_ZN11CBaseEntity14SetAbsVelocityERK6Vector"
+				"windows"		"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x75\x08\xF3\x0F\x10\x06\x57\x8B\xF9"
+								/* ? ? ? ? ? ? 56 8B 75 08 F3 0F 10 06 57 8B F9 */
+			}
+			/*
+				location of CBaseEntity::SetAbsVelocity patching, 
+				not bothered about CBaseEntity::SetAbsOrigin since will likely exit since origin matches what is trying to be set.
+			*/
+			"CTerrorPlayer::UpdatePounce::SetAbsVelocity"
+			{
+				"library"		"server"
+				"linux"			"\xC7\x44\x24\x04\x2A\x2A\x2A\x2A\x89\x1C\x24\xE8\x2A\x2A\x2A\x2A\xC7\x44\x24\x04\x01\x00\x00\x00\x89\x34\x24\xE8\x2A\x2A\x2A\x2A\x89\x3C\x24"
+				"windows"		"\x68\x2A\x2A\x2A\x2A\x8B\xCE\xE8\x2A\x2A\x2A\x2A\x6A\x01\x8B\xCF"
+								/*
+									Windows:	68 ? ? ? ? 8B CE E8 ? ? ? ? 6A 01 8B CF
+									Linux:		C7 44 24 04 ? ? ? ? 89 1C 24 E8 ? ? ? ? C7 44 24 04 01 00 00 00 89 34 24 E8 ? ? ? ? 89 3C 24
+								*/
+			}
+		}
+	}
+}
