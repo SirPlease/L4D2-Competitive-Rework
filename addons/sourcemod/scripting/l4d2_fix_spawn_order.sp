@@ -11,6 +11,7 @@
 
 // Spawn Storage
 new bool:PlayerSpawned[MAXPLAYERS + 1];
+new bool:bRespawning[MAXPLAYERS + 1];
 new storedClass[MAXPLAYERS + 1];
 
 // Small Timer to Fix AI Tank pass
@@ -59,7 +60,7 @@ public Plugin:myinfo =
 	name = "L4D2 Proper Sack Order",
 	author = "Sir",
 	description = "Finally fix that pesky spawn rotation not being reliable",
-	version = "1.2",
+	version = "1.3",
 	url = "nah"
 };
 
@@ -110,6 +111,7 @@ public PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
 	if (!IsValidClient(client) || IsFakeClient(client) || GetClientTeam(client) != 3 || !bLive || GetEntProp(client, Prop_Send, "m_zombieClass") == _:SI_Tank) return;
 
 	PlayerSpawned[client] = true;
+	bRespawning[client] = false;
 }
 
 public PlayerTeam(Handle:event, const String:name[], bool:dontBroadcast)
@@ -117,10 +119,17 @@ public PlayerTeam(Handle:event, const String:name[], bool:dontBroadcast)
 	new client = GetClientOfUserId(GetEventInt(event, "userid"));
 	new oldteam = GetEventInt(event, "oldteam");
 
+	// 1.3 Notes: Investigate if I did these because they have issues, considering I didn't document this anywhere.
+	//--------------------------------------------------------------------------------------------------------------
+	// - Why am I checking for Tank here if we only care about Ghost Infected? 
+	// - Why not reset stats on players regardless (for safety) prior to the Ghost/Tank check?
+	//--------------------------------------------------------------------------------------------------------------
 	if (!IsValidClient(client) || oldteam != 3 || !bLive || GetEntProp(client, Prop_Send, "m_isGhost") < 1 || GetEntProp(client, Prop_Send, "m_zombieClass") == _:SI_Tank) return;
 
 	PlayerSpawned[client] = false;
+	bRespawning[client] = false;
 	storedClass[client] = 0;
+
 	if (GetArraySize(g_SpawnsArray) > 0) ShiftArrayUp(g_SpawnsArray, 0);
 	SetArrayCell(g_SpawnsArray, 0, GetEntProp(client, Prop_Send, "m_zombieClass"));
 }
@@ -128,7 +137,11 @@ public PlayerTeam(Handle:event, const String:name[], bool:dontBroadcast)
 public OnClientDisconnect(client)
 {
 	if (!IsValidClient(client) || IsFakeClient(client)) return;
-	else PlayerSpawned[client] = false;
+	else 
+	{
+		PlayerSpawned[client] = false;
+		bRespawning[client] = false;
+	}
 }
 
 public PlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
@@ -169,8 +182,15 @@ public L4D_OnEnterGhostState(client)
 	// Is Game live?
 	// Is Valid Client?
 	// Is Infected?
-	// Is Infected Respawning?
-	if (!bLive || !IsValidClient(client) || GetClientTeam(client) != 3 || PlayerSpawned[client] || fTankPls[client] > GetGameTime()) return;
+	// Instant spawn after passing Tank to AI? (Gets slain) - NOTE: We don't need to reset fTankPls thanks to nodeathcamskip.smx
+	if (!bLive || !IsValidClient(client) || GetClientTeam(client) != 3 || fTankPls[client] > GetGameTime()) return;
+
+	// Is Player Respawning?
+	if (PlayerSpawned[client]) 
+	{
+		bRespawning[client] = true; 
+		return;
+	}
 
 	// Switch Class and Pass Client Info as he will already be counted in the total.
 	// If for some reason the returned SI is invalid or if the Array isn't filled up yet: allow Director to continue.
@@ -199,7 +219,11 @@ public L4D2_OnTankPassControl(oldTank, newTank, passCount)
 	{
 		if (storedClass[newTank] > 0)
 		{
-			if (!PlayerSpawned[newTank]) PushArrayCell(g_SpawnsArray, storedClass[newTank]);
+			if (!PlayerSpawned[newTank] || bRespawning[newTank]) 
+			{
+				PushArrayCell(g_SpawnsArray, storedClass[newTank]);
+				bRespawning[newTank] = false;
+			}
 		}
 		bKeepChecking[newTank] = false;
 	}
@@ -347,15 +371,13 @@ stock CleanSlate()
 	bLive = false;
 
 	//Clear Spawn Storage
-	for(new i = 1; i <= MaxClients; i++)
+	for(new i = 1; i <= MAXPLAYERS; i++)
 	{
-		if (IsValidClient(i)) 
-		{
-			PlayerSpawned[i] = false;
-			fTankPls[i] = 0.0;
-			storedClass[i] = 0;
-			bKeepChecking[i] = false;
-		}
+		PlayerSpawned[i] = false;
+		fTankPls[i] = 0.0;
+		storedClass[i] = 0;
+		bKeepChecking[i] = false;
+		bRespawning[i] = false;
 	}
 }
 
