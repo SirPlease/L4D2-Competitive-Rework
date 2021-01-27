@@ -1191,7 +1191,7 @@ native int L4D_SetVersusMaxCompletionScore(int score);
  * @deprecated This function can be called through SDKTools using CTerrorGameRules,
  *			and so you should switch off to using SDKTools instead of this native.
  *
- * @param logical_team		0 for A, 1 for B
+ * @param logical_team		1 for A, 2 for B
  * @param campaign_score	true to get campaign score instead of map score
  *
  * @return			the logical team's map score
@@ -1761,12 +1761,13 @@ native void L4D2_SetFloatWeaponAttribute(const char[] weaponName, L4D2FloatWeapo
 
 
 /**
- * @brief Retrieve the index for a given melee weapon from the Melee Weapon Database
- * @remarks returns -1 if no match is found
+ * @brief Retrieve the index for a given melee weapon from the Melee Weapon Database.
+ * @remarks Index updated on OnMapStart - suggest using RequestFrame to find index.
+ * @remarks Index can change depending on available melee weapons each map.
  *
  * @param weaponName 	Weapon to lookup index id for
  *
- * @return				The index id
+ * @return				The index id. Returns -1 if no match is found or melee unavailable.
  */
 // L4D2 only.
 native int L4D2_GetMeleeWeaponIndex(const char[] weaponName);

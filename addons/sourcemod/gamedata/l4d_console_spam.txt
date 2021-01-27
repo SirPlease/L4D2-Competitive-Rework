@@ -229,6 +229,17 @@
 					"signature"	"SpamPatch_Sig20"
 				}
 			}
+			"SpamPatch_Sig21"
+			{
+				"windows"
+				{
+					"signature"	"SpamPatch_Sig21"
+				}
+				"linux"
+				{
+					"signature"	"SpamPatch_Sig21"
+				}
+			}
 		}
 		"Signatures"
 		{
@@ -307,50 +318,56 @@
 			"SpamPatch_Sig13"
 			{
 				"library"		"server"
-				"windows"		"SCRIPT PERF WARNING"
-				"linux"			"SCRIPT PERF WARNING"
+				"windows"		"WARNING: %s at"
+				"linux"			"WARNING: %s at"
 			}
 			"SpamPatch_Sig14"
-			{
-				"library"		"server"
-				"windows"		"WARNING: orator at"
-				"linux"			"WARNING: orator at"
-			}
-			"SpamPatch_Sig15"
 			{
 				"library"		"server"
 				"windows"		">>>REMATCH Stats"
 				"linux"			">>>REMATCH Stats"
 			}
-			"SpamPatch_Sig16"
+			"SpamPatch_Sig15"
 			{
 				"library"		"server"
 				"windows"		">>REMATCH Stats"
 				"linux"			">>REMATCH Stats"
 			}
-			"SpamPatch_Sig17"
+			"SpamPatch_Sig16"
 			{
 				"library"		"server"
 				"windows"		"    %d players\n"
 				"linux"			"    %d players\n"
 			}
-			"SpamPatch_Sig18"
+			"SpamPatch_Sig17"
 			{
 				"library"		"server"
 				"windows"		"    %d yes\n"
 				"linux"			"    %d yes\n"
 			}
-			"SpamPatch_Sig19"
+			"SpamPatch_Sig18"
 			{
 				"library"		"server"
 				"windows"		"    %d no\n"
 				"linux"			"    %d no\n"
 			}
-			"SpamPatch_Sig20"
+			"SpamPatch_Sig19"
 			{
 				"library"		"server"
 				"windows"		"Team %d: %s\n"
 				"linux"			"Team %d: %s\n"
+			}
+			"SpamPatch_Sig20"
+			{
+				"library" 		"engine"
+				"windows"		"%s in solid list (not solid)"
+				"linux"			"%s in solid list (not solid)"
+			}
+			"SpamPatch_Sig21"
+			{
+				"library" 		"engine"
+				"windows"		"Entity %d (class '%s') reported ENTITY_CHANGE_NONE but '%s' changed."
+				"linux"			"Entity %d (class '%s') reported ENTITY_CHANGE_NONE but '%s' changed."
 			}
 		}
 	}
