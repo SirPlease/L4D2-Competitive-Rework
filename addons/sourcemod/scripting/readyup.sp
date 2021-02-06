@@ -20,7 +20,7 @@ public Plugin:myinfo =
 	name = "L4D2 Ready-Up",
 	author = "CanadaRox, (Lazy unoptimized additions by Sir)",
 	description = "New and improved ready-up plugin.",
-	version = "9.2.2",
+	version = "9.2.3",
 	url = ""
 };
 
@@ -255,7 +255,7 @@ public SpecVoteResultHandler(Handle:vote, num_votes, num_clients, const client_i
 
 public Action:Secret_Cmd(client, args)
 {
-	if (inReadyUp)
+	if (inReadyUp && IsClientInGame(client) && GetClientTeam(client) != 1)
 	{
 		decl String:steamid[64];
 		decl String:argbuf[30];
@@ -524,7 +524,7 @@ public Action:ForceStart_Cmd(client, args)
 
 public Action:Ready_Cmd(client, args)
 {
-	if (inReadyUp)
+	if (inReadyUp && IsClientInGame(client) && IsPlayer(client))
 	{
 		isPlayerReady[client] = true;
 		if (CheckFullReady())
@@ -536,7 +536,7 @@ public Action:Ready_Cmd(client, args)
 
 public Action:Unready_Cmd(client, args)
 {
-	if (inReadyUp)
+	if (inReadyUp && IsClientInGame(client) && IsPlayer(client))
 	{
 		SetEngineTime(client);
 		isPlayerReady[client] = false;
@@ -548,7 +548,7 @@ public Action:Unready_Cmd(client, args)
 
 public Action:ToggleReady_Cmd(client, args)
 {
-	if (inReadyUp)
+	if (inReadyUp && IsClientInGame(client) && IsPlayer(client))
 	{
 		if (!isPlayerReady[client])
 		{
@@ -850,7 +850,6 @@ InitiateReadyUp()
 		SetConVarBool(director_no_specials, true);
 	}
 
-	DisableEntities();
 	SetConVarFlags(sv_infinite_primary_ammo, GetConVarFlags(sv_infinite_primary_ammo) & ~FCVAR_NOTIFY);
 	SetConVarBool(sv_infinite_primary_ammo, true);
 	SetConVarFlags(sv_infinite_primary_ammo, GetConVarFlags(sv_infinite_primary_ammo) | FCVAR_NOTIFY);
@@ -869,7 +868,6 @@ InitiateLive(bool:real = true)
 
 	SetTeamFrozen(L4D2Team_Survivor, false);
 
-	EnableEntities();
 	SetConVarFlags(sv_infinite_primary_ammo, GetConVarFlags(sv_infinite_primary_ammo) & ~FCVAR_NOTIFY);
 	SetConVarBool(sv_infinite_primary_ammo, false);
 	SetConVarFlags(sv_infinite_primary_ammo, GetConVarFlags(sv_infinite_primary_ammo) | FCVAR_NOTIFY);
@@ -1092,58 +1090,4 @@ stock IsPlayer(client)
 {
 	new L4D2Team:team = L4D2Team:GetClientTeam(client);
 	return (team == L4D2Team_Survivor || team == L4D2Team_Infected);
-}
-
-
-DisableEntities() 
-{
-	ActivateEntities("prop_door_rotating", "SetUnbreakable");
-	MakePropsUnbreakable();
-}
-
-EnableEntities() 
-{	
-	ActivateEntities("prop_door_rotating", "SetBreakable");
-	MakePropsBreakable();
-}
-
-ActivateEntities(String:className[], String:inputName[]) { 
-	new iEntity;
-	
-	while ( (iEntity = FindEntityByClassname(iEntity, className)) != -1 ) {
-		if ( !IsValidEdict(iEntity) || !IsValidEntity(iEntity) ) {
-			continue;
-		}
-			
-		if (GetEntProp(iEntity, Prop_Data, "m_spawnflags") & (1 << 19)) 
-		{
-			continue;
-		}
-	
-		AcceptEntityInput(iEntity, inputName);
-	}
-}
-
-MakePropsUnbreakable() {
-	new iEntity;
-	
-	while ( (iEntity = FindEntityByClassname(iEntity, "prop_physics")) != -1 ) {
-	if ( !IsValidEdict(iEntity) || !IsValidEntity(iEntity)) {
-		continue;
-	}
-	
-	
-	DispatchKeyValueFloat(iEntity, "minhealthdmg", 10000.0);
-	}
-}
-
-MakePropsBreakable() {
-	new iEntity;
-	
-	while ( (iEntity = FindEntityByClassname(iEntity, "prop_physics")) != -1 ) {
-	if ( !IsValidEdict(iEntity) ||  !IsValidEntity(iEntity) ) {
-		continue;
-	}
-	DispatchKeyValueFloat(iEntity, "minhealthdmg", 0.0);
-	}
 }
