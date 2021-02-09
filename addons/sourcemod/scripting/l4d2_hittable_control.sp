@@ -28,6 +28,7 @@
 bool bIsBridge;		//for parish bridge cars
 bool bIsStadium;	//for suicide blitz finale hittables
 float fOverkill[MAXPLAYERS + 1][2048]; // Overkill, prolly don't need this big of a global array, could also use adt_array.
+float fSpecialOverkill[MAXPLAYERS + 1][2]; // Dealing with breakable pieces that will cause multiple hits in a row (unintended behaviour)
 bool bLateLoad;   // Late load support!
 
 //cvars
@@ -46,13 +47,14 @@ ConVar hBaggageStandingDamage;
 ConVar hStandardIncapDamage;
 ConVar hTankSelfDamage;
 ConVar hOverHitInterval;
+ConVar hOverHitDebug;
 
 public Plugin myinfo = 
 {
     name = "L4D2 Hittable Control",
     author = "Stabby, Visor, Sir",
-    version = "0.5",
-    description = "Allows for customisation of hittable damage values."
+    version = "0.6",
+    description = "Allows for customisation of hittable damage values (and debugging)"
 };
 
 public void OnPluginStart()
@@ -102,6 +104,9 @@ public void OnPluginStart()
 	hOverHitInterval		= CreateConVar( "hc_overhit_time",				"1.2",
 											"The amount of time to wait before allowing consecutive hits from the same hittable to register. Recommended values: 0.0-0.5: instant kill; 0.5-0.7: sizeable overhit; 0.7-1.0: standard overhit; 1.0-1.2: reduced overhit; 1.2+: no overhit unless the car rolls back on top. Set to tank's punch interval (default 1.5) to fully remove all possibility of overhit.",
 											FCVAR_NONE, true, 0.0, false );
+	hOverHitDebug		    = CreateConVar( "hc_debug",				"0",
+											"0: Disable Debug - 1: Enable Debug",
+											FCVAR_NONE, true, 0.0, false );
 
 	if (bLateLoad)
 	{
@@ -111,6 +116,8 @@ public void OnPluginStart()
 			  SDKHook(i, SDKHook_OnTakeDamage, OnTakeDamage);
 		}
 	}
+
+	HookEvent("round_start", Event_RoundStart);
 }
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -141,6 +148,20 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
+public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+{
+	// Reset everything to make sure we don't run into issues when a map is restarted (as GameTime resets)
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		for (int e = 0; e++ <= 2047; e++)
+		{
+			fOverkill[i][e] = 0.0;
+		}
+		fSpecialOverkill[i][0] = 0.0;
+		fSpecialOverkill[i][1] = 0.0;
+	}
+}
+
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	// Hey, we don't care.
@@ -167,6 +188,23 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		
 		char sModelName[128];
 		GetEntPropString(inflictor, Prop_Data, "m_ModelName", sModelName, 128);
+		float interval = GetConVarFloat(hOverHitInterval);
+
+		// Special Overkill section
+		if (StrContains(sModelName, "brickpallets_break") != -1) // [0]
+		{
+			if (fSpecialOverkill[victim][0] - GetGameTime() > 0) return Plugin_Handled;
+			fSpecialOverkill[victim][0] = GetGameTime() + interval;
+			damage = 13.0;
+			attacker = FindTank();
+		}
+		else if (StrContains(sModelName, "boat_smash_break") != -1) // [1]
+		{
+			if (fSpecialOverkill[victim][1] - GetGameTime() > 0) return Plugin_Handled;
+			fSpecialOverkill[victim][1] = GetGameTime() + interval;
+			damage = 23.0;
+			attacker = FindTank();
+		}
 		
 		float val = GetConVarFloat(hStandardIncapDamage);
 		if (GetEntProp(victim, Prop_Send, "m_isIncapacitated") 
@@ -237,15 +275,31 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				damage = 4.0*GetConVarFloat(hStadiumCarDamage);
 			}
 		}
-		
-		float interval = GetConVarFloat(hOverHitInterval);		
+			
 		if (interval >= 0.0)
 		{
 			fOverkill[victim][inflictor] = GetGameTime() + interval;	//standardise them bitchin over-hits
 		}
 		inflictor = 0; // We have to set set the inflictor to 0 or else it will sometimes just refuse to apply damage.
+
+		if (GetConVarBool(hOverHitDebug)) PrintToChatAll("[l4d2_hittable_control]: \x03%N \x01was hit by \x04%s \x01for \x03%i \x01damage", victim, sModelName, RoundToNearest(damage));
+
 		return Plugin_Changed;
 	}
 	
 	return Plugin_Continue;
+}
+
+int FindTank()
+{
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (IsClientInGame(i)
+		&& GetClientTeam(i) == 3
+		&& GetEntProp(i, Prop_Send, "m_zombieClass") == 8)
+		{
+			return i;
+		}
+	}
+	return 0;
 }
