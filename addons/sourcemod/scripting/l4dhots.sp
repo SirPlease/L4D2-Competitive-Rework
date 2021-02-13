@@ -1,272 +1,159 @@
+#pragma semicolon 1
 #include <sourcemod>
 
-#pragma semicolon 1
-#pragma newdecls required
 
-public Plugin myinfo = 
+public Plugin:myinfo = 
 {
     name = "L4D HOTs",
     author = "ProdigySim, CircleSquared",
     description = "Pills and Adrenaline heal over time",
-    version = "0.5",
+    version = "0.4",
     url = "https://bitbucket.org/ProdigySim/misc-sourcemod-plugins"
 }
 
-#define MAX(%0,%1) (((%0) > (%1)) ? (%0) : (%1))
+new bool:IsL4D2;
 
-#define WEPID_PAIN_PILLS 15
-#define WEPID_ADRENALINE 23
+new Handle:g_hPillCvar;
+new OldPillValue;
+new Handle:g_hAdrenCvar;
+new OldAdrenValue;
 
-enum struct hBuffer
+new Handle:pillhot;
+new Handle:hCvarPillInterval;
+new Handle:hCvarPillIncrement;
+new Handle:hCvarPillTotal;
+
+new Handle:adrenhot;
+new Handle:hCvarAdrenInterval;
+new Handle:hCvarAdrenIncrement;
+new Handle:hCvarAdrenTotal;
+
+
+public OnPluginStart()
 {
-	float fHBuffer;
-	float fHBTime;
-	
-	void Clear() {
-		this.fHBuffer = 0.0;
-		this.fHBTime = 0.0;
-	}
-	
-	void Record(int client) {
-		this.fHBuffer = GetEntPropFloat(client, Prop_Send, "m_healthBuffer");
-		this.fHBTime = GetEntPropFloat(client, Prop_Send, "m_healthBufferTime");
-	}
-	
-	void Refresh(int client) {
-		float fNewHBuffer = MAX(0.0, this.fHBuffer - ((GetGameTime() - this.fHBTime) * GetConVarFloat(FindConVar("pain_pills_decay_rate"))));
-		float fNewHBTime = GetGameTime();
-		
-		SetEntPropFloat(client, Prop_Send, "m_healthBuffer", fNewHBuffer);
-		SetEntPropFloat(client, Prop_Send, "m_healthBufferTime", fNewHBTime);
-		
-		this.Record(client);
-	}
-}
+    IsL4D2 = IsTargetL4D2();
 
-hBuffer g_stctStoredHB[MAXPLAYERS+1];
-
-bool IsL4D2;
-
-ConVar pillhot;
-ConVar hCvarPillInterval;
-ConVar hCvarPillIncrement;
-ConVar hCvarPillTotal;
-
-ConVar adrenhot;
-ConVar hCvarAdrenInterval;
-ConVar hCvarAdrenIncrement;
-ConVar hCvarAdrenTotal;
-
-public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
-{
-	EngineVersion test = GetEngineVersion();
-	if( test == Engine_Left4Dead ) IsL4D2 = false;
-	else if( test == Engine_Left4Dead2 ) IsL4D2 = true;
-	else
-	{
-		strcopy(error, err_max, "Plugin only supports Left 4 Dead 1 & 2.");
-		return APLRes_SilentFailure;
-	}
-	
-	return APLRes_Success;
-}
-
-public void OnPluginStart()
-{
-    pillhot = CreateConVar("l4d_pills_hot", "0", "Pills heal over time");
-    hCvarPillInterval = CreateConVar("l4d_pills_hot_interval", "1.0", "Interval for pills hot");
-    hCvarPillIncrement = CreateConVar("l4d_pills_hot_increment", "10", "Increment amount for pills hot");
-    hCvarPillTotal = CreateConVar("l4d_pills_hot_total", "50", "Total amount for pills hot");
-    
-    if (GetConVarBool(pillhot)) EnablePillHot();
-    HookConVarChange(pillhot, PillHotChanged);
-    
-    if (IsL4D2)
+    g_hPillCvar=FindConVar("pain_pills_health_value");
+    pillhot = CreateConVar("l4d_pills_hot", "0", "Pills heal over time", FCVAR_NONE);
+    hCvarPillInterval = CreateConVar("l4d_pills_hot_interval", "1.0", "Interval for pills hot", FCVAR_NONE);
+    hCvarPillIncrement = CreateConVar("l4d_pills_hot_increment", "10", "Increment amount for pills hot", FCVAR_NONE);
+    hCvarPillTotal = CreateConVar("l4d_pills_hot_total", "50", "Total amount for pills hot", FCVAR_NONE);
+    if(GetConVarBool(pillhot))
     {
-        adrenhot = CreateConVar("l4d_adrenaline_hot", "0", "Adrenaline heals over time");
-        hCvarAdrenInterval = CreateConVar("l4d_adrenaline_hot_interval", "1.0", "Interval for adrenaline hot");
-        hCvarAdrenIncrement = CreateConVar("l4d_adrenaline_hot_increment", "15", "Increment amount for adrenaline hot");
-        hCvarAdrenTotal = CreateConVar("l4d_adrenaline_hot_total", "25", "Total amount for adrenaline hot");
-        
-        if (GetConVarBool(adrenhot)) EnableAdrenHot();
+        EnablePillHot();
+    }
+    HookConVarChange(pillhot, PillHotChanged);
+    if(IsL4D2)
+    {
+        g_hAdrenCvar = FindConVar("adrenaline_health_buffer");
+        adrenhot = CreateConVar("l4d_adrenaline_hot", "0", "Adrenaline heals over time", FCVAR_NONE);
+        hCvarAdrenInterval = CreateConVar("l4d_adrenaline_hot_interval", "1.0", "Interval for adrenaline hot", FCVAR_NONE);
+        hCvarAdrenIncrement = CreateConVar("l4d_adrenaline_hot_increment", "15", "Increment amount for adrenaline hot", FCVAR_NONE);
+        hCvarAdrenTotal = CreateConVar("l4d_adrenaline_hot_total", "25", "Total amount for adrenaline hot", FCVAR_NONE);
+        if(GetConVarBool(adrenhot))
+        {
+            EnableAdrenHot();
+        }
         HookConVarChange(adrenhot, AdrenHotChanged);
     }
 }
 
-public void PillHotChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+public OnPluginEnd()
 {
-    bool newval = StringToInt(newValue)!=0;
-    if (newval && StringToInt(oldValue) ==0)
+    DisablePillHot(false);
+    if(IsL4D2)
+    {
+        DisableAdrenHot(false);
+    }
+}
+
+public PillHotChanged(Handle:convar, const String:oldValue[], const String:newValue[])
+{
+    new bool:newval = StringToInt(newValue)!=0;
+    if(newval && StringToInt(oldValue) ==0)
     {
         EnablePillHot();
     }
-    else if (!newval && StringToInt(oldValue) != 0)
+    else if(!newval && StringToInt(oldValue) != 0)
     {
-        DisablePillHot();
+        DisablePillHot(true);
     }
 }
 
-public void AdrenHotChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+public AdrenHotChanged(Handle:convar, const String:oldValue[], const String:newValue[])
 {
-    bool newval = StringToInt(newValue)!=0;
-    if (newval && StringToInt(oldValue) ==0)
+    new bool:newval = StringToInt(newValue)!=0;
+    if(newval && StringToInt(oldValue) ==0)
     {
         EnableAdrenHot();
     }
-    else if (!newval && StringToInt(oldValue) != 0)
+    else if(!newval && StringToInt(oldValue) != 0)
     {
-        DisableAdrenHot();
+        DisableAdrenHot(true);
     }
 }
 
-void EnablePillHot()	{ SwitchEventHooks(true);	HookEvent("pills_used", PillsUsed_Event); }
-void EnableAdrenHot()	{ SwitchEventHooks(true);	HookEvent("adrenaline_used", AdrenalineUsed_Event); }
-void DisablePillHot()	{ SwitchEventHooks(false);	UnhookEvent("pills_used", PillsUsed_Event); }
-void DisableAdrenHot()	{ SwitchEventHooks(false);	UnhookEvent("adrenaline_used", AdrenalineUsed_Event); }
-
-void SwitchEventHooks(bool hook)
+EnablePillHot()
 {
-	static bool hooked = false;
-	
-	if (hook && !hooked)
-	{
-		HookEvent("player_team", PlayerTeam_Event);
-		HookEvent("player_hurt", PlayerHurt_Event);
-		HookEvent("heal_success", HealSuccess_Event);
-		HookEvent("revive_success", ReviveSuccess_Event);
-		HookEvent("weapon_fire", WeaponFire_Event);
-		
-		hooked = true;
-	}
-	
-	if (!hook && hooked)
-	{
-		if (GetConVarBool(pillhot) || GetConVarBool(adrenhot)) return;
-		
-		UnhookEvent("player_team", PlayerTeam_Event);
-		UnhookEvent("player_hurt", PlayerHurt_Event);
-		UnhookEvent("heal_success", HealSuccess_Event);
-		UnhookEvent("revive_success", ReviveSuccess_Event);
-		UnhookEvent("weapon_fire", WeaponFire_Event);
-		
-		hooked = false;
-	}
+    OldPillValue=GetConVarInt(g_hPillCvar);
+    SetConVarInt(g_hPillCvar, 0);
+    HookEvent("pills_used", PillsUsed_Event);
 }
 
-public void OnClientDisconnect(int client) { g_stctStoredHB[client].Clear(); }
-
-public void DelayRecord(int client)
+DisablePillHot(bool:unhook)
 {
-	if (client && IsClientInGame(client) && GetClientTeam(client) == 2)
-	{
-		g_stctStoredHB[client].Record(client);
-	}
+    if(unhook) UnhookEvent("pills_used", PillsUsed_Event);
+    SetConVarInt(g_hPillCvar, OldPillValue);
 }
 
-public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
+EnableAdrenHot()
 {
-	if (event.GetBool("disconnect"))
-	{
-		// Leave it dealt in OnClientDisconnect
-		return;
-	}
-	
-	int client = GetClientOfUserId(event.GetInt("userid"));
-	if (client && IsClientInGame(client))
-	{
-		int team = event.GetInt("team");
-		int oldteam = event.GetInt("oldteam");
-		
-		if (team == 2 || oldteam == 2) // entering or leaving Survivor Team
-		{
-			g_stctStoredHB[client].Clear();
-			if (team == 2) RequestFrame(DelayRecord, client);
-		}
-	}
+    OldAdrenValue=GetConVarInt(g_hAdrenCvar);
+    SetConVarInt(g_hAdrenCvar, 0);
+    HookEvent("adrenaline_used", AdrenalineUsed_Event);
 }
 
-public void PlayerHurt_Event(Event event, const char[] name, bool dontBroadcast)
+DisableAdrenHot(bool:unhook)
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
-	RequestFrame(DelayRecord, client);
+    if(unhook) UnhookEvent("adrenaline_used", AdrenalineUsed_Event);
+    SetConVarInt(g_hAdrenCvar, OldAdrenValue);
 }
 
-public void HealSuccess_Event(Event event, const char[] name, bool dontBroadcast)
-{
-	int client = GetClientOfUserId(GetEventInt(event, "subject"));	
-	RequestFrame(DelayRecord, client);
-}
 
-public void ReviveSuccess_Event(Event event, const char[] name, bool dontBroadcast)
+public Action:PillsUsed_Event(Handle:event, const String:name[], bool:dontBroadcast)
 {
-	int client = GetClientOfUserId(GetEventInt(event, "subject"));	
-	RequestFrame(DelayRecord, client);
-}
-
-public void WeaponFire_Event(Event event, const char[] name, bool dontBroadcast)
-{
-	int client = GetClientOfUserId(event.GetInt("userid"));
-	if (!client || !IsClientInGame(client) || !IsPlayerAlive(client))
-	{
-		return;
-	}
-	
-	if (!IsL4D2) // seems WeaponID not work in L4D1, untested.
-	{
-		char weapon[32];
-		event.GetString("weapon", weapon, sizeof(weapon));
-		if (strcmp(weapon, "weapon_pain_pills") == 0)
-		{
-			g_stctStoredHB[client].Record(client);
-		}
-	}
-	else
-	{
-		int wepid = event.GetInt("weaponid");
-		if (wepid == WEPID_PAIN_PILLS || wepid == WEPID_ADRENALINE)
-		{
-			g_stctStoredHB[client].Record(client);
-		}
-	}
-}
-
-public void PillsUsed_Event(Event event, const char[] name, bool dontBroadcast)
-{
-    int client = GetClientOfUserId(GetEventInt(event, "userid"));
-    float iPillInterval = GetConVarFloat(hCvarPillInterval);
-    int iPillIncrement = GetConVarInt(hCvarPillIncrement);
-    int iPillTotal = GetConVarInt(hCvarPillTotal);
+    new client = GetClientOfUserId(GetEventInt(event, "userid"));
+    new Float:iPillInterval = GetConVarFloat(hCvarPillInterval);
+    new iPillIncrement = GetConVarInt(hCvarPillIncrement);
+    new iPillTotal = GetConVarInt(hCvarPillTotal);
     HealEntityOverTime(client, iPillInterval, iPillIncrement, iPillTotal);
 }
 
-public void AdrenalineUsed_Event(Event event, const char[] name, bool dontBroadcast)
+public Action:AdrenalineUsed_Event(Handle:event, const String:name[], bool:dontBroadcast)
 {
-    int client = GetClientOfUserId(GetEventInt(event, "userid"));
-    float iAdrenInterval = GetConVarFloat(hCvarAdrenInterval);
-    int iAdrenIncrement = GetConVarInt(hCvarAdrenIncrement);
-    int iAdrenTotal = GetConVarInt(hCvarAdrenTotal);
+    new client = GetClientOfUserId(GetEventInt(event, "userid"));
+    new Float:iAdrenInterval = GetConVarFloat(hCvarAdrenInterval);
+    new iAdrenIncrement = GetConVarInt(hCvarAdrenIncrement);
+    new iAdrenTotal = GetConVarInt(hCvarAdrenTotal);
     HealEntityOverTime(client, iAdrenInterval, iAdrenIncrement, iAdrenTotal);
 }
 
-void HealEntityOverTime(int client, float interval, int increment, int total)
+stock HealEntityOverTime(client, Float:interval, increment, total)
 {
-    int maxhp=GetEntProp(client, Prop_Send, "m_iMaxHealth", 2);
+    new maxhp=GetEntProp(client, Prop_Send, "m_iMaxHealth", 2);
     
-    if (!client || !IsClientInGame(client) || !IsPlayerAlive(client))
+    if(client==0 || !IsClientInGame(client) || !IsPlayerAlive(client))
     {
         return;
     }
-    
-    g_stctStoredHB[client].Refresh(client);
-    
-    if (increment >= total)
+    if(increment >= total)
     {
         HealTowardsMax(client, total, maxhp);
     }
     else
     {
         HealTowardsMax(client, increment, maxhp);
-        DataPack myDP;
+        new Handle:myDP;
         CreateDataTimer(interval, __HOT_ACTION, myDP, 
             TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
         WritePackCell(myDP, client);
@@ -276,23 +163,23 @@ void HealEntityOverTime(int client, float interval, int increment, int total)
     }
 }
 
-public Action __HOT_ACTION(Handle timer, DataPack pack)
+public Action:__HOT_ACTION(Handle:timer, Handle:pack)
 {
     ResetPack(pack);
-    int client = ReadPackCell(pack);
-    int increment = ReadPackCell(pack);
+    new client = ReadPackCell(pack);
+    new increment = ReadPackCell(pack);
     DataPackPos pos = GetPackPosition(pack);
-    int remaining = ReadPackCell(pack);
-    int maxhp = ReadPackCell(pack);
+    new remaining = ReadPackCell(pack);
+    new maxhp = ReadPackCell(pack);
     
 //  PrintToChatAll("HOT: %d %d %d %d", client, increment, remaining, maxhp);
     
-    if (!client || !IsClientInGame(client) || IsIncapacitated(client) || !IsPlayerAlive(client))
+    if(client==0 || !IsClientInGame(client) || !IsPlayerAlive(client))
     {
         return Plugin_Stop;
     }
     
-    if (increment >= remaining)
+    if(increment >= remaining)
     {
         HealTowardsMax(client, remaining, maxhp);
         return Plugin_Stop;
@@ -304,21 +191,20 @@ public Action __HOT_ACTION(Handle timer, DataPack pack)
     return Plugin_Continue;
 }
 
-void HealTowardsMax(int client, int amount, int max)
+stock HealTowardsMax(client, amount, max)
 {
-    float hb = float(amount) + GetEntPropFloat(client, Prop_Send, "m_healthBuffer");
-    float overflow = (hb+GetClientHealth(client))-max;
-    if (overflow > 0)
+    new Float:hb = float(amount) + GetEntPropFloat(client, Prop_Send, "m_healthBuffer");
+    new Float:overflow = (hb+GetClientHealth(client))-max;
+    if(overflow > 0)
     {
         hb -= overflow;
     }
     SetEntPropFloat(client, Prop_Send, "m_healthBuffer", hb);
-    
-    g_stctStoredHB[client].Record(client);
 }
 
-
-stock bool IsIncapacitated(int client)
+bool:IsTargetL4D2()
 {
-    return view_as<bool>(GetEntProp(client, Prop_Send, "m_isIncapacitated"));
+    decl String:gameFolder[32];
+    GetGameFolderName(gameFolder, sizeof(gameFolder));
+    return StrContains(gameFolder, "left4dead2") >= -1;
 }
