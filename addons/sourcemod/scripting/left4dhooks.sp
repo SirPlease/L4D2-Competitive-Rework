@@ -1,6 +1,6 @@
 /*
 *	Left 4 DHooks Direct
-*	Copyright (C) 2020 Silvers
+*	Copyright (C) 2021 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.29"
+#define PLUGIN_VERSION		"1.30"
 
 #define DEBUG				0
 // #define DEBUG			1	// Prints addresses + detour info (only use for debugging, slows server down)
@@ -37,6 +37,17 @@
 
 ========================================================================================
 	Change Log:
+
+1.30 (15-Feb-2021)
+	- Fixed natives "L4D2_SetIntMeleeAttribute" and "L4D2_SetFloatMeleeAttribute" functions. Thanks to "bw4re" for reporting.
+	- Fixed native "L4D_GetPlayerSpawnTime" giving the wrong time. Thanks to "Forgetest" for reporting.
+
+	- Fixes by "Dragokas"
+	- Fixed native "L4D_IsFirstMapInScenario" call with SDKCall_Raw returned error in SM 1.11, L4D1. Tthanks to "Crasher" for reporting, and "FortyTwo" for help.
+	- Fixed "ForceNextStage" signature (WIN).
+
+	- Updated: L4D2 GameData file.
+	- Updated: Plugin.
 
 1.29 (10-Oct-2020)
 	- Fixed "L4D_StaggerPlayer" not working with NULL_VECTOR. Thanks to "Zippeli" for reporting.
@@ -608,6 +619,7 @@ int m_maxFlames;
 int m_flow;
 int m_PendingMobCount;
 int m_fMapMaxFlowDistance;
+int m_iClrRender;
 
 // l4d2timers.inc
 int L4D2CountdownTimer_Offsets[9];
@@ -995,6 +1007,14 @@ public void OnPluginStart()
 	g_iHookedClients = new ArrayList();
 	g_hAnimationCallbackPre = new PrivateForward(ET_Event, Param_Cell, Param_CellByRef);
 	g_hAnimationCallback = new PrivateForward(ET_Event, Param_Cell, Param_CellByRef);
+
+
+	// Null pointer - by Dragokas
+	m_iClrRender = FindSendPropInfo("CBaseEntity", "m_clrRender");
+	if( m_iClrRender == -1 )
+	{
+		SetFailState("Error: m_clrRender not found.");
+	}
 
 
 
@@ -2432,10 +2452,11 @@ void LoadGameData()
 	} else {
 		if( !g_bLeft4Dead2 )
 		{
-			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+			// PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
-		} else
-		PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
+		} else {
+			PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
+		}
 		g_hSDK_Call_IsFirstMapInScenario = EndPrepSDKCall();
 		if( g_hSDK_Call_IsFirstMapInScenario == null )
 			LogError("Failed to create SDKCall: IsFirstMapInScenario");
@@ -3308,9 +3329,6 @@ void LoadGameData()
 
 
 	#if DEBUG
-	PrintToServer("g_iAddonEclipse1 = %d", g_iAddonEclipse1);
-	PrintToServer("g_iAddonEclipse2 = %d", g_iAddonEclipse2);
-
 	PrintToServer("m_iCampaignScores = %d", m_iCampaignScores);
 	PrintToServer("m_fTankSpawnFlowPercent = %d", m_fTankSpawnFlowPercent);
 	PrintToServer("m_fWitchSpawnFlowPercent = %d", m_fWitchSpawnFlowPercent);
@@ -3326,6 +3344,8 @@ void LoadGameData()
 
 	if( g_bLeft4Dead2 )
 	{
+		PrintToServer("g_iAddonEclipse1 = %d", g_iAddonEclipse1);
+		PrintToServer("g_iAddonEclipse2 = %d", g_iAddonEclipse2);
 		PrintToServer("SpawnTimer = %d", SpawnTimer);
 		PrintToServer("MobSpawnTimer = %d", MobSpawnTimer);
 		PrintToServer("OnBeginRoundSetupTime = %d", OnBeginRoundSetupTime);
@@ -3747,7 +3767,7 @@ public any Native_GetPlayerSpawnTime(Handle plugin, int numParams)
 	ValidateAddress(SpawnTimer, "SpawnTimer");
 
 	int client = GetNativeCell(1);
-	return LoadFromAddress(GetEntityAddress(client) + view_as<Address>(SpawnTimer + 8), NumberType_Int32);
+	return (LoadFromAddress(GetEntityAddress(client) + view_as<Address>(SpawnTimer + 8), NumberType_Int32) - GetGameTime());
 }
 
 public int Native_RestartScenarioFromVote(Handle plugin, int numParams)
@@ -3831,8 +3851,46 @@ public int Native_IsFirstMapInScenario(Handle plugin, int numParams)
 		ValidateNatives(SDK_KV_GetString, "SDK_KV_GetString");
 		static char sMap[64], check[64];
 
+		// "malloc" replacement hack (method by @Rostu)
+		Address pNull = GetEntityAddress(0) + view_as<Address>(m_iClrRender);
+
+		// Save old value
+		int iRestore = LoadFromAddress(pNull, NumberType_Int32);
+
+		// Some test to ensure that our temporary buffer is not corrupted with SDK Call
+		// Test first 1024 bytes
+		/*
+		int data[256];
+		for( int i = 0; i < sizeof(data); i++ )
+		{
+			data[i] = LoadFromAddress(pNull + view_as<Address>(i*4), NumberType_Int32);
+		}
+		*/
+
+		// Should be 0 to match the original call arguments
+		StoreToAddress(pNull, 0, NumberType_Int32);
+
 		//PrintToServer("#### CALL g_hSDK_Call_IsFirstMapInScenario");
-		int keyvalue = SDKCall(g_hSDK_Call_IsFirstMapInScenario, 0, 0);
+		int keyvalue = SDKCall(g_hSDK_Call_IsFirstMapInScenario, pNull);
+
+		// Restore the old value
+		StoreToAddress(pNull, iRestore, NumberType_Int32);
+	
+		// Verification
+		/*
+		PrintToServer("Checking for temp. buffer modifications ...");
+		int new_byte;
+		for( int i = 0; i < sizeof(data); i++ )
+		{
+			new_byte = LoadFromAddress(pNull + view_as<Address>(i*4), NumberType_Int32);
+			if( data[i] != new_byte )
+			{
+				PrintToServer("m_iClrRender struct corrupted @%i: byte %X != %X", i*4, new_byte, data[i]);
+			}
+		}
+		*/
+
+		//PrintToServer("#### CALL g_hSDK_Call_IsFirstMapInScenario");
 		if( keyvalue )
 		{
 			GetCurrentMap(sMap, sizeof(sMap));
@@ -4257,7 +4315,7 @@ public int Native_GetBoolMeleeAttribute(Handle plugin, int numParams)
 public int Native_SetIntMeleeAttribute(Handle plugin, int numParams)
 {
 	int attr = GetNativeCell(2);
-	if( attr >= view_as<int>(MAX_SIZE_L4D2BoolMeleeWeaponAttributes) ) // view_as to avoid tag mismatch from enum "type"
+	if( attr >= view_as<int>(MAX_SIZE_L4D2IntMeleeWeaponAttributes) ) // view_as to avoid tag mismatch from enum "type"
 		ThrowNativeError(SP_ERROR_PARAM, "Invalid attribute id");
 
 	int ptr = GetMeleePointer(GetNativeCell(1));
@@ -4272,7 +4330,7 @@ public int Native_SetIntMeleeAttribute(Handle plugin, int numParams)
 public int Native_SetFloatMeleeAttribute(Handle plugin, int numParams)
 {
 	int attr = GetNativeCell(2);
-	if( attr >= view_as<int>(MAX_SIZE_L4D2BoolMeleeWeaponAttributes) ) // view_as to avoid tag mismatch from enum "type"
+	if( attr >= view_as<int>(MAX_SIZE_L4D2FloatMeleeWeaponAttributes) ) // view_as to avoid tag mismatch from enum "type"
 		ThrowNativeError(SP_ERROR_PARAM, "Invalid attribute id");
 
 	int ptr = GetMeleePointer(GetNativeCell(1));
