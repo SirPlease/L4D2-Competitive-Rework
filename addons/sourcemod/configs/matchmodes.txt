@@ -4,7 +4,7 @@
 	{
 		"zonemod"
 		{
-			"name" "ZoneMod 1.9.14"
+			"name" "ZoneMod 1.9.15"
 		}
 		"zm3v3"
 		{
