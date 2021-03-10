@@ -39,6 +39,14 @@
 * - Added a failsafe after plugins are supposed to be unloaded, as we've seen some cases where this plugin would be the only one refusing to unload, thus never refreshing the plugins.
 * - Added a less messy way of preventing double pushing, as this plugin is the only one that could possibly be double pushed. (StrEqual instead of FindInArray for every single plugin)
 *
+* v1.2.2
+* ------------------------
+* ------- Details: -------
+* ------------------------
+* - Added sPlugin which will store this plugin's path on load, rather than looking it up during the "UnloadPlugins" function.
+* - Added Timers for closing functionality of UnloadPlugins to ensure accuracy.
+*
+***************************************************************************************************************************************************************************************************
 * ------------------------
 * -------- NOTES: --------
 * ------------------------
@@ -47,18 +55,23 @@
 ******************************************************************/
 
 Handle aReservedPlugins;
+char sPlugin[PLATFORM_MAX_PATH];
 
 public Plugin myinfo = 
 {
 	name = "Predictable Plugin Unloader",
 	author = "Sir (heavily influenced by keyCat)",
-	version = "1.2.1",
+	version = "1.2.2",
 	description = "Allows for unloading plugins from last to first."
 }
 
 public void OnPluginStart()
 {
 	RegServerCmd("pred_unload_plugins", UnloadPlugins, "Unload Plugins!");
+
+	// Gotta reserve ourself of course.
+	// - Supports moving the plugin to another folder. (INVALID_HANDLE simply gets the calling plugin)
+	GetPluginFilename(INVALID_HANDLE, sPlugin, sizeof(sPlugin));
 
 	// Reserved Plugins
 	aReservedPlugins = CreateArray(PLATFORM_MAX_PATH);
@@ -70,18 +83,13 @@ public Action UnloadPlugins(int args)
 	Handle pluginIterator = GetPluginIterator();
 	Handle currentPlugin;
 
-	// Gotta reserve ourself of course.
-	// - Supports moving the plugin to another folder. (INVALID_HANDLE simply gets the calling plugin)
-	char sBuffer[PLATFORM_MAX_PATH];
-	GetPluginFilename(INVALID_HANDLE, sBuffer, sizeof(sBuffer));
-
 	while (MorePlugins(pluginIterator))
 	{
 		currentPlugin = ReadPlugin(pluginIterator);
 		GetPluginFilename(currentPlugin, stockpluginname, sizeof(stockpluginname));
 
-		// Prevent double pushing.
-		if (!StrEqual(sBuffer, stockpluginname)) 
+		// We're not pushing this plugin itself into the array as we'll unload it on a timer at the end.
+		if (!StrEqual(sPlugin, stockpluginname)) 
 		  PushArrayString(aReservedPlugins, stockpluginname);
 	}
 
@@ -98,6 +106,20 @@ public Action UnloadPlugins(int args)
 	}
 
 	// Refresh first, then unload this plugin.
-	ServerCommand("sm plugins refresh");
-	ServerCommand("sm plugins unload %s", sBuffer)
+	// Using Timers because these are time crucial and ServerCommands aren't a 100% reliable in terms of execution order.
+	CreateTimer(0.1, RefreshPlugins);
+	CreateTimer(0.5, UnloadSelf);
 }
+
+public Action RefreshPlugins(Handle timer)
+{
+	ServerCommand("sm plugins refresh");
+}
+
+public Action UnloadSelf(Handle timer)
+{
+	ServerCommand("sm plugins unload %s", sPlugin)
+}
+
+
+
