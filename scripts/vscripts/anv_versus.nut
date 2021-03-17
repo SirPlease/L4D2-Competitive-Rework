@@ -284,6 +284,7 @@ make_ladder( "_ladder_columnfallbanner_cloned_columnbusystairs", "-4948 -4181 31
 
 kill_entity( Entities.FindByClassnameNearest( "env_player_blocker", Vector( 1388, 5660, -649 ), 1 ) );
 kill_entity( Entities.FindByClassnameNearest( "env_player_blocker", Vector( 2972, 3724, -649 ), 1 ) );
+make_navblock( "_nav_motelfencejump", "Survivors", "Apply", "-24 -108 -24", "24 24 24", "2105 3700 -820" );
 make_brush( "_losfix_bush",		"-10 -190 -60",	"10 200 35",	"8224 8378 -536" );
 make_brush( "_losfix_end_fence",	"-254 -1 -5",	"254 0 5",	"-522 -2416 -1083" );
 make_brush( "_losfix_highway_bus1",		"-40 -1 -10",	"100 1 14",	"7035 7874 -641" );
@@ -594,6 +595,8 @@ make_prop( "dynamic", "_startfoodcart_wrongwaya", "models/props_misc/wrongway_si
 make_prop( "dynamic", "_startfoodcart_wrongwayb", "models/props_misc/wrongway_sign01_optimized.mdl", "2325 3970 -130", "0 -90 0", "shadow_no", "solid_no", "255 255 255", "17", "217" );
 make_prop( "dynamic", "_startfoodcart_wrongwayc", "models/props_misc/wrongway_sign01_optimized.mdl", "1966 3938 -130", "0 0 0", "shadow_no", "solid_no", "255 255 255", "17", "217" );
 make_prop( "physics",		"_barn_middleroom_hittable",	"models/props_unique/haybails_single.mdl",	"-1103 191 -147.42",		"0 0 -92", "shadow_no" );
+make_prop( "physics", "_hittable_bumpera", "models/props_fairgrounds/bumpercar.mdl", "3329 3280 -186", "0 338 0" );
+make_prop( "physics", "_hittable_bumperb", "models/props_fairgrounds/bumpercar.mdl", "3254 3293 -159", "-1 178 106" );
 patch_ladder( "-666 2044 -192", "11 -29 0" );
 patch_ladder( "1907 894 -64", "-40 -5 0" );
 
