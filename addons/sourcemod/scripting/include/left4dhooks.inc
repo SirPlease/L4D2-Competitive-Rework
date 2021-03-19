@@ -883,9 +883,9 @@ forward void L4D2_OnWaterMove(int client);
  * @param client			Client id to find an area near this player
  * @param zombieClass		Special Infected class to search for a spawn position for
  * @param attempts			How many tries to find a valid location
- * @param vecPos			The vector location. Sometimes is 0,0,0. Use post hook for real selected position.
+ * @param vecPos			The vector location. Sometimes is 0,0,0. Use post hook for real selected position
  *
- * @return					Plugin_Changed to change any values, Plugin_Continue otherwise.
+ * @return					Plugin_Changed to change any values, Plugin_Continue otherwise
  */
 #pragma deprecated Removed because it spawns specials at 0,0,0 when modifying any value.
 forward Action L4D_OnGetRandomPZSpawnPosition(int &client, int &zombieClass, int &attempts, float vecPos[3]);
@@ -962,7 +962,7 @@ native int L4D_AngularVelocity(int entity, const float vecAng[3]);
  * @remarks The zombieClass does not matter but different values yield different results:
  * @remarks Using the Tank zombieClass probably searches for a larger area that's clear of objects
  *
- * @param client			Client id to find an area near this player
+ * @param client			Client id to find an area near this player. Accepts 0 to find a random area instead
  * @param zombieClass		Special Infected class to search for a spawn position for
  * @param attempts			How many tries to find a valid location
  * @param vecPos			The vector array to store the valid location on success
