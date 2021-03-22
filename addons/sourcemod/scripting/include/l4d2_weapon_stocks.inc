@@ -5,10 +5,10 @@
 
 #define GETWEAPONNAME(%0) (IsValidWeaponId(WeaponId:(%0)) ? (WeaponNames[_:(%0)]) : "")
 #define GETLONGWEAPONNAME(%0) (IsValidWeaponId(WeaponId:(%0)) ? (LongWeaponNames[_:(%0)]) : "")
-#define GETMELEEWEAPONNAME(%0) (IsValidWeaponId(MeleeWeaponId:(%0)) ? (MeleeWeaponNames[_:(%0)]) : "")
-#define GETLONGMELEEWEAPONNAME(%0) (IsValidWeaponId(MeleeWeaponId:(%0)) ? (LongMeleeWeaponNames[_:(%0)]) : "")
+#define GETMELEEWEAPONNAME(%0) (IsValidMeleeWeaponId(MeleeWeaponId:(%0)) ? (MeleeWeaponNames[_:(%0)]) : "")
+#define GETLONGMELEEWEAPONNAME(%0) (IsValidMeleeWeaponId(MeleeWeaponId:(%0)) ? (LongMeleeWeaponNames[_:(%0)]) : "")
 #define GETWEAPONMODEL(%0) (HasValidWeaponModel(WeaponId:(%0)) ? (WeaponModels[_:(%0)]) : "")
-#define GETMELEEWEAPONMODEL(%0) (HasValidWeaponModel(MeleeWeaponId:(%0)) ? (MeleeWeaponModels[_:(%0)]) : "")
+#define GETMELEEWEAPONMODEL(%0) (HasValidMeleeWeaponModel(MeleeWeaponId:(%0)) ? (MeleeWeaponModels[_:(%0)]) : "")
 
 // Weapon ID enumerations.
 // These values are *NOT* arbitrary! 
@@ -90,7 +90,9 @@ enum MeleeWeaponId
     WEPID_KATANA,
     WEPID_MACHETE,
     WEPID_RIOT_SHIELD,
-    WEPID_TONFA
+    WEPID_TONFA,
+    WEPID_SHOVEL,
+    WEPID_PITCHFORK
 };
 
 // Weapon names for each of the weapons, used in identification.
@@ -158,7 +160,9 @@ new const String:MeleeWeaponNames[MeleeWeaponId][] =
     "katana",
     "machete",
     "riotshield",
-    "tonfa"
+    "tonfa",
+    "shovel",
+    "pitchfork"
 };
 
 // Long melee weapon names
@@ -178,7 +182,9 @@ new const String:LongMeleeWeaponNames[MeleeWeaponId][] =
     "Katana",
     "Machete",
     "Riot Shield",
-    "Tonfa"
+    "Tonfa",
+    "Shovel",
+    "Pitchfork"
 };
 
 // World weapon models for each of the weapons. Useful for making new weapon spawns.
@@ -259,7 +265,9 @@ new const String:MeleeWeaponModels[MeleeWeaponId][] =
     "/weapons/melee/w_katana.mdl",
     "/weapons/melee/w_machete.mdl",
     "/weapons/melee/w_riotshield.mdl",
-    "/weapons/melee/w_tonfa.mdl"
+    "/weapons/melee/w_tonfa.mdl",
+    "/weapons/melee/v_shovel.mdl",
+    "/weapons/melee/v_pitchfork.mdl"
 };
 
 new const WeaponSlots[_:WeaponId] =
@@ -365,6 +373,18 @@ stock bool:IsValidWeaponId(WeaponId:wepid)
 }
 
 /**
+ * Performs bounds checking to determine if a MeleeWeaponId is valid
+ * @remark Simple check to see if wepid has a garbage value
+ *
+ * @param wepid        MeleeWeaponId to check for validity
+ * @return True if wepid is valid, false otherwise.
+ */
+stock bool:IsValidMeleeWeaponId(MeleeWeaponId:wepid)
+{
+    return wepid >= WEPID_MELEE_NONE && wepid < MeleeWeaponId;
+}
+
+/**
  * Get the player weapon slot used by the given WeaponId.
  * 
  * @param wepid     WeaponId to get the slot for.
@@ -385,6 +405,17 @@ stock GetSlotFromWeaponId(WeaponId:wepid)
 stock bool:HasValidWeaponModel(WeaponId:wepid)
 {
     return IsValidWeaponId(wepid) && WeaponModels[wepid][0] != '\0';
+}
+
+/**
+ * Checks to see if a given meleeweaponid has a known WeaponModel in this file's model array
+ *
+ * @param wepid        MeleeWeaponId to check for a known weapon model for.
+ * @return True if a valid weapon model exists for wepid, false otherwise.
+ */
+stock bool:HasValidMeleeWeaponModel(MeleeWeaponId:wepid)
+{
+	return IsValidMeleeWeaponId(wepid) && MeleeWeaponModels[wepid][0] != '\0';
 }
 
 /**
@@ -421,6 +452,19 @@ stock GetWeaponName(WeaponId:wepid, String:nameBuffer[], length)
 }
 
 /**
+ * Tries to look up L4D2's internal weapon name for a given MeleeWeaponId.
+ *
+ * @param wepid            MeleeWeaponId To get name of.
+ * @param nameBuffer    String buffer to write the weapon name to.
+ * @param length        Max length which can be written to the buffer.
+ * @return                Number of bytes written to buffer, or 0 for invalid weaponId.
+ */
+stock GetMeleeWeaponName(MeleeWeaponId:wepid, String:nameBuffer[], length)
+{
+    strcopy(nameBuffer, length, GETMELEEWEAPONNAME(wepid));
+}
+
+/**
  * Tries to look up L4D2's internal weapon name for a given WeaponId.
  *
  * @param wepid            WeaponId To get name of.
@@ -434,6 +478,19 @@ stock GetLongWeaponName(WeaponId:wepid, String:nameBuffer[], length)
 }
     
 /**
+ * Tries to look up L4D2's internal weapon name for a given MeleeWeaponId.
+ *
+ * @param wepid            MeleeWeaponId To get name of.
+ * @param nameBuffer    String buffer to write the weapon name to.
+ * @param length        Max length which can be written to the buffer.
+ * @return                Number of bytes written to buffer, or 0 for invalid weaponId.
+ */
+stock GetLongMeleeWeaponName(MeleeWeaponId:wepid, String:nameBuffer[], length)
+{
+    strcopy(nameBuffer, length, GETLONGMELEEWEAPONNAME(wepid));
+}
+
+/**
  * Tries to look up the weapon model for a given WeaponId.
  * @remarks You should use HasValidWeaponModel to make sure the WeaponId you're looking up has a valid model associated with it.
  *
@@ -445,6 +502,20 @@ stock GetLongWeaponName(WeaponId:wepid, String:nameBuffer[], length)
 stock GetWeaponModel(WeaponId:wepid, String:modelBuffer[], length)
 {
     strcopy(modelBuffer, length, GETWEAPONMODEL(wepid));
+}
+
+/**
+ * Tries to look up the weapon model for a given MeleeWeaponId.
+ * @remarks You should use HasValidWeaponModel to make sure the MeleeWeaponId you're looking up has a valid model associated with it.
+ *
+ * @param wepid            MeleeWeaponId To get name of.
+ * @param nameBuffer    String buffer to write the weapon name to.
+ * @param length        Max length which can be written to the buffer.
+ * @return                Number of bytes written to buffer, or 0 for invalid weaponid or no weapon model available.
+ */
+stock GetMeleeWeaponModel(MeleeWeaponId:wepid, String:modelBuffer[], length)
+{
+    strcopy(modelBuffer, length, GETMELEEWEAPONMODEL(wepid));
 }
 
 /**
