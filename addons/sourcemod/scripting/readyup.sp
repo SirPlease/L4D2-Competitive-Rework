@@ -1,14 +1,13 @@
-#include <colors>
+#include <sourcemod>
+#include <sdktools>
+#include <left4dhooks>
 #include <builtinvotes>
+#include <colors>
 
 #pragma semicolon 1
 #pragma newdecls required
 
-#include <sourcemod>
-#include <sdktools>
-#include <left4dhooks>
-
-#define PLUGIN_VERSION "9.1.0"
+#define PLUGIN_VERSION "9.1.1b"
 
 #define NULL_VELOCITY view_as<float>({0.0, 0.0, 0.0})
 
@@ -213,28 +212,37 @@ public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 	{
 		ArrayStack stack = new ArrayStack();
 		stack.Push(client);
+		stack.Push(GetClientUserId(client));
 		stack.Push(oldteam);
-		g_hChangeTeamTimer[client] = CreateTimer(0.1, Timer_PlayerTeam, stack, TIMER_FLAG_NO_MAPCHANGE);
+		g_hChangeTeamTimer[client] = CreateTimer(0.1, Timer_PlayerTeam, stack, TIMER_FLAG_NO_MAPCHANGE | TIMER_DATA_HNDL_CLOSE);
 	}
 }
 
 public Action Timer_PlayerTeam(Handle timer, ArrayStack stack)
 {
 	int oldteam = stack.Pop();
-	int client = stack.Pop();
+	int userid = stack.Pop();
+	int client = GetClientOfUserId(userid);
 	
-	if (IsClientInGame(client))
+	if (client > 0 && IsClientInGame(client))
 	{
 		if (inLiveCountdown)
 		{
 			int team = GetClientTeam(client);
 			if (team != oldteam)
 			{
-				CancelFullReady(client, teamShuffle);
+				if (oldteam != L4D2Team_None || team != L4D2Team_Spectator) // Client joined but not player
+				{
+					CancelFullReady(client, teamShuffle);
+				}
 			}
 		}
 		
-		if (IsScavenge()) CreateTimer(0.3, Timer_HideCountdown, GetClientUserId(client));
+		if (IsScavenge()) CreateTimer(0.3, Timer_HideCountdown, userid);
+	}
+	else
+	{
+		client = stack.Pop();
 	}
 	
 	delete stack;
@@ -1348,7 +1356,8 @@ void InitiateCountdown()
 			ShowVGUIPanel(i, "ready_countdown", _, true);
 		}
 	}
-
+	
+	L4D_ScavengeBeginRoundSetupTime();
 	//CTimer_Start(L4D2Direct_GetScavengeRoundSetupTimer(), duration);
 }
 

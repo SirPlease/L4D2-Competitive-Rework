@@ -194,7 +194,7 @@ public Action Timer_MoveToSpec(Handle timer, int client) {
 
 public Action ReSpec(Handle timer, int client)
 {
-    if(GetClientTeam(client) == 1) FakeClientCommand(client, "say /spectate");
+    if(IsClientInGame(client) && GetClientTeam(client) == 1) FakeClientCommand(client, "say /spectate");
 }
 
 /*

@@ -776,13 +776,10 @@ void FillInfectedInfo(Panel hSpecHud)
 			else
 			{
 				int iCooldown = RoundToNearest(GetAbilityCooldown(client));
-				if (iCooldown > 0)
+				float fDuration = GetAbilityCooldownDuration(client);
+				if (!HasAbilityVictim(client, zClass) && iCooldown > 0 && fDuration > 1.0)
 				{
-					if (GetAbilityCooldownDuration(client) > 1.0
-						&& !HasAbilityVictim(client, zClass))
-					{
-						FormatEx(buffer, sizeof(buffer), " [%is]", info, iCooldown);
-					}
+					FormatEx(buffer, sizeof(buffer), " [%is]", info, iCooldown);
 				}
 				else { buffer[0] = '\0'; }
 				
