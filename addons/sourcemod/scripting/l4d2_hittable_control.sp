@@ -179,7 +179,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		if (fOverkill[victim][inflictor] - GetGameTime() > 0.0)
 			return Plugin_Handled; // Overkill on this Hittable.
 
-		if (GetClientTeam(victim) == FindTank() 
+		if (victim == FindTank() 
 		&& GetConVarBool(hTankSelfDamage))
 		  return Plugin_Handled; // Tank is hitting himself with the Hittable (+added usecase when the Tank would be hit by a hittable that he punched a hittable against before it hit him)
 
