@@ -245,7 +245,6 @@ public Action Timer_PlayerTeam(Handle timer, ArrayStack stack)
 		client = stack.Pop();
 	}
 	
-	delete stack;
 	g_hChangeTeamTimer[client] = null;
 }
 
