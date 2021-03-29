@@ -776,10 +776,13 @@ void FillInfectedInfo(Panel hSpecHud)
 			else
 			{
 				int iCooldown = RoundToNearest(GetAbilityCooldown(client));
-				float fDuration = GetAbilityCooldownDuration(client);
-				if (!HasAbilityVictim(client, zClass) && iCooldown > 0 && fDuration > 1.0)
+				if (iCooldown > 0)
 				{
-					FormatEx(buffer, sizeof(buffer), " [%is]", info, iCooldown);
+					if (GetAbilityCooldownDuration(client) > 1.0
+						&& !HasAbilityVictim(client, zClass))
+					{
+						FormatEx(buffer, sizeof(buffer), " [%is]", info, iCooldown);
+					}
 				}
 				else { buffer[0] = '\0'; }
 				
@@ -878,7 +881,7 @@ bool FillTankInfo(Panel hSpecHud, bool bTankHUD = false)
 	// Draw network
 	if (!IsFakeClient(tank))
 	{
-		FormatEx(info, sizeof(info), "Network: %ims / %.1f", RoundToNearest(GetClientAvgLatency(tank, NetFlow_Both) * 500.0), GetLerpTime(tank) * 1000.0);
+		FormatEx(info, sizeof(info), "Network: %ims / %.1f", RoundToNearest(GetClientAvgLatency(tank, NetFlow_Both) * 1000.0), GetLerpTime(tank) * 1000.0);
 	}
 	else
 	{
