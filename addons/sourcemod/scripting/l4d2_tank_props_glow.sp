@@ -6,12 +6,12 @@
 #include <dhooks>
 
 #define TANK_ZOMBIE_CLASS   8
-ConVar g_hCvartankPropsGlow,g_hCvarRange,g_hCvarColor,g_hCvarTankOnly,g_hCvarTankSpec;
+ConVar g_hCvartankPropsGlow,g_hCvarRange,g_hCvarColor,g_hCvarTankOnly,g_hCvarTankSpec, g_hCvarTankPropsBeGone;
 int g_iCvarRange,g_iCvarColor;
 bool g_iCvarTankOnly,g_iCvarTankSpec;
 
-Handle hTankProps       = INVALID_HANDLE;
-Handle hTankPropsHit    = INVALID_HANDLE;
+Handle hTankProps;
+Handle hTankPropsHit;
 int i_Ent[2048] = -1;
 int iTankClient = -1;
 bool tankSpawned;
@@ -19,7 +19,7 @@ bool tankSpawned;
 public Plugin myinfo = {
 	name        = "L4D2 Tank Hittable Glow",
 	author      = "Harry Potter, Sir",
-	version     = "1.9",
+	version     = "2.0",
 	description = "Stop tank props from fading whilst the tank is alive + add Hittable Glow."
 };
 
@@ -29,6 +29,7 @@ public void OnPluginStart() {
 	g_hCvarRange =	CreateConVar(	"l4d2_tank_prop_glow_range",		"4500",				"How near to props do players need to be to enable their glow.", FCVAR_NOTIFY);
 	g_hCvarTankOnly =	CreateConVar(	"l4d2_tank_prop_glow_only",		"0",				"Only Tank can see the glow", FCVAR_NOTIFY);
 	g_hCvarTankSpec =	CreateConVar(	"l4d2_tank_prop_glow_spectators",		"1",				"Spectators can see the glow too", FCVAR_NOTIFY);
+	g_hCvarTankPropsBeGone = CreateConVar("l4d2_tank_prop_dissapear_time", "10.0", "Time it takes for hittables that were punched by Tank to dissapear after the Tank dies.", FCVAR_NOTIFY);
 
 	GetCvars();
 	g_hCvartankPropsGlow.AddChangeHook(TankPropsGlowAllow);
@@ -121,11 +122,17 @@ public Action TankPropTankKilled( Handle event, const char[] name, bool dontBroa
 }
 
 public Action TankDeadCheck( Handle timer ) {
-	if ( GetTankClient() == -1 ) {
-		UnhookTankProps();
+	if ( GetTankClient() == -1 ) 
+	{
+		CreateTimer(g_hCvarTankPropsBeGone.FloatValue, TankPropsBeGone);
 		DHookRemoveEntityListener(ListenType_Created, PossibleTankPropCreated);
 		tankSpawned = false;
 	}
+}
+
+public Action TankPropsBeGone(Handle timer)
+{
+	UnhookTankProps();
 }
 
 public void PropDamaged(int victim, int attacker, int inflictor, float damage, int damageType) {

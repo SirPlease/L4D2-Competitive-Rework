@@ -1469,9 +1469,9 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CDirector14ForceNextStageEv"
-				"windows"	"\x8B\x2A\x88\x05\x00\x00\xE9\x2A\x8C\x01\x00"
-				/* 8B ? 88 05 00 00 E9 ? 8C 01 00 */
-				/* Search "ForceNextStage" call below */
+				"windows"	"\x8B\x2A\x88\x05\x00\x00\xE9\x2A\x8D\x01\x00"
+				/* 8B ? 88 05 00 00 E9 ? 8D 01 00 */
+				/* Search "ForceNextStage" call below of XRef */
 			}
 
 			/*

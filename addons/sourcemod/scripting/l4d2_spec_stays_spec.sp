@@ -1,5 +1,7 @@
 #include <sourcemod>
+
 #pragma semicolon 1
+#pragma newdecls required
 
 #define ACTIVE_SECONDS 	120
 /*
@@ -10,17 +12,17 @@
 */
 #define DEBUG_MODE 0
 #define MAX_SPECTATORS 	24
-#define PLUGIN_VERSION 	"1.0.1"
+#define PLUGIN_VERSION 	"1.2"
 #define STEAMID_LENGTH 	32
 
-new Handle:g_hMaxSurvivors            = INVALID_HANDLE;
-new Handle:g_hMaxInfected             = INVALID_HANDLE;
+ConVar g_hMaxSurvivors;
+ConVar g_hMaxInfected;
 
 /*
 * plugin info
 * #######################
 */
-public Plugin:myinfo =
+public Plugin myinfo =
 {
     name = "Spectator stays spectator",
     author = "Die Teetasse",
@@ -33,20 +35,36 @@ public Plugin:myinfo =
 * global variables
 * #######################
 */
-new lastTimestamp = 0;
-new spectatorCount = 0;
-new Handle:spectatorTimer[MAX_SPECTATORS];
-new String:spectatorSteamIds[MAX_SPECTATORS][STEAMID_LENGTH];
+int lastTimestamp = 0;
+int spectatorCount = 0;
+Handle spectatorTimer[MAX_SPECTATORS];
+char spectatorSteamIds[MAX_SPECTATORS][STEAMID_LENGTH];
+
+/*
+* ask plugin load - check game
+* #######################
+*/
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	switch (GetEngineVersion())
+	{
+		case Engine_Left4Dead, Engine_Left4Dead2:
+		{
+			return APLRes_Success;
+		}
+		default:
+		{
+			strcopy(error, err_max, "Spec stays spec work with Left 4 Dead 1 or 2 only!");
+			return APLRes_SilentFailure;
+		}
+	}
+}
 
 /*
 * plugin start - check game
 * #######################
 */
-public OnPluginStart() {
-    decl String:gameFolder[12];
-    GetGameFolderName(gameFolder, sizeof(gameFolder));
-    if (StrContains(gameFolder, "left4dead") == -1) SetFailState("Spec stays spec work with Left 4 Dead 1 or 2 only!");
-    
+public void OnPluginStart() {
     HookEvent("round_start", Event_Round_Start);
     
     g_hMaxSurvivors = FindConVar("survivor_limit");
@@ -57,22 +75,22 @@ public OnPluginStart() {
 * map start - hook event
 * #######################
 */
-public OnMapStart() {
+public void OnMapStart() {
     HookEvent("round_end", Event_Round_End);
 }
 
-public Action:Event_Round_Start(Handle:event, const String:name[], bool:dontBroadcast)
+public void Event_Round_Start(Event event, const char[] name, bool dontBroadcast)
 {
     CreateTimer(15.0, Check4Spec, _, TIMER_REPEAT);
 }
 
-public Action:Check4Spec(Handle:timer)
+public Action Check4Spec(Handle timer)
 {
     if (GetRealClientCount() != (GetConVarInt(g_hMaxSurvivors) + GetConVarInt(g_hMaxInfected))) return Plugin_Continue;
     
-    for (new i = 1; i <= GetMaxClients(); i++) 
+    for (int i = 1; i <= MaxClients; i++) 
     {
-        if(IsClientInGame(i) && IsClientConnected(i) && GetClientTeam(i) == 1) FakeClientCommand(i, "say /spectate");   
+        if(IsClientInGame(i) && IsClientConnected(i) && GetClientTeam(i) == 1 && !IsClientSourceTV(i)) FakeClientCommand(i, "say /spectate");   
     }
     return Plugin_Stop;
 }
@@ -82,11 +100,11 @@ public Action:Check4Spec(Handle:timer)
 * round end event - save spec steamids
 * #######################
 */
-public Action:Event_Round_End(Handle:event, const String:name[], bool:dontBroadcast) {
+public void Event_Round_End(Event event, const char[] name, bool dontBroadcast) {
     spectatorCount = 0;
     
     // clear arrays and kill timers
-    for (new i = 0; i < MAX_SPECTATORS; i++) {
+    for (int i = 0; i < MAX_SPECTATORS; i++) {
         spectatorSteamIds[i] = "";
         
         if (spectatorTimer[i] != INVALID_HANDLE) {
@@ -96,10 +114,12 @@ public Action:Event_Round_End(Handle:event, const String:name[], bool:dontBroadc
     }
     
     // get steamids
-    for (new i = 1; i <= MaxClients; i++)
+    for (int i = 1; i <= MaxClients; i++) 
     {
         if (!IsClientInGame(i)) continue;
+        if (IsFakeClient(i)) continue;
         if (GetClientTeam(i) != 1) continue;
+        if (IsClientSourceTV(i)) continue;
         
         GetClientAuthId(i, AuthId_Steam2, spectatorSteamIds[spectatorCount], STEAMID_LENGTH);
         spectatorCount++;
@@ -107,23 +127,24 @@ public Action:Event_Round_End(Handle:event, const String:name[], bool:dontBroadc
     
     // set timestamp
     lastTimestamp = GetTime();
-    
-    return Plugin_Continue;
 }
 
 /*
 * client authorisation - check and create timer if neccessary
 * #######################
 */
-public OnClientAuthorized(client, const String:auth[]) {
+public void OnClientAuthorized(int client, const char[] auth) {
     // get timestamp
-    new currentTimestamp = GetTime();
+    int currentTimestamp = GetTime();
     
     // check timestamp
     if ((currentTimestamp - lastTimestamp) > ACTIVE_SECONDS) return;
     
+    // check fake client
+    if (strcmp(auth, "BOT") == 0) return;
+    
     // find steamid
-    new index = Function_GetIndex(auth);
+    int index = Function_GetIndex(auth);
     if (index == -1) return;
     
     // create move timer
@@ -134,16 +155,16 @@ public OnClientAuthorized(client, const String:auth[]) {
 * move to spec timer - checks for ingame and move the client
 * #######################
 */
-public Action:Timer_MoveToSpec(Handle:timer, any:client) {
+public Action Timer_MoveToSpec(Handle timer, int client) {
     // check ingame - if not => repeat
     if (!IsClientInGame(client)) return Plugin_Continue;
     
     // get steamid
-    new String:auth[STEAMID_LENGTH];
+    char auth[STEAMID_LENGTH];
     GetClientAuthId(client, AuthId_Steam2, auth, STEAMID_LENGTH);
     
     // find index
-    new index = Function_GetIndex(auth);
+    int index = Function_GetIndex(auth);
     
     // check index (this should not happen^^)
     if (index == -1) return Plugin_Stop;
@@ -152,7 +173,7 @@ public Action:Timer_MoveToSpec(Handle:timer, any:client) {
     spectatorTimer[index] = INVALID_HANDLE;
     
     // check team - if already spec => stop
-    new team = GetClientTeam(client);
+    int team = GetClientTeam(client);
     if (team == 1)
     {
         CreateTimer(2.0, ReSpec, client);
@@ -160,7 +181,7 @@ public Action:Timer_MoveToSpec(Handle:timer, any:client) {
     }
     
     // get client name
-    decl String:name[MAX_NAME_LENGTH];
+    char name[MAX_NAME_LENGTH];
     GetClientName(client, name, sizeof(name));
     
     // change team and stop
@@ -171,22 +192,22 @@ public Action:Timer_MoveToSpec(Handle:timer, any:client) {
     return Plugin_Stop;
 }
 
-public Action:ReSpec(Handle:timer, any:client)
+public Action ReSpec(Handle timer, int client)
 {
-    if(IsValidClient(client) && IsClientInGame(client) && GetClientTeam(client) == 1) FakeClientCommand(client, "say /spectate");
+    if(IsClientInGame(client) && GetClientTeam(client) == 1) FakeClientCommand(client, "say /spectate");
 }
 
 /*
 * client disconnect - stop timer
 * #######################
 */
-public OnClientDisconnect(client) {
+public void OnClientDisconnect(int client) {
     // get steamid
-    new String:clientSteamId[STEAMID_LENGTH];
+    char clientSteamId[STEAMID_LENGTH];
     GetClientAuthId(client, AuthId_Steam2, clientSteamId, STEAMID_LENGTH);
     
     // find index
-    new index = Function_GetIndex(clientSteamId);
+    int index = Function_GetIndex(clientSteamId);
     
     // check index
     if (index == -1) return;
@@ -203,27 +224,21 @@ public OnClientDisconnect(client) {
 * private function - find steamid in array and return index
 * #######################
 */
-Function_GetIndex(const String:clientSteamId[]) {
+int Function_GetIndex(const char[] clientSteamId) {
     // loop through steamids
-    for (new i = 0; i < spectatorCount; i++) {
+    for (int i = 0; i < spectatorCount; i++) {
         if (StrEqual(spectatorSteamIds[i], clientSteamId)) return i;	
     }
     
     return -1;
 }
 
-GetRealClientCount() 
+int GetRealClientCount() 
 {
-    new clients = 0;
-    for (new i = 1; i <= GetMaxClients(); i++) 
+    int clients = 0;
+    for (int i = 1; i <= MaxClients; i++) 
     {
         if(IsClientInGame(i) && IsClientConnected(i) && !IsFakeClient(i) && GetClientTeam(i) != 1) clients++;
     }
     return clients;
-}
-
-bool:IsValidClient(client)
-{
-	if (client <= 0 || client > MaxClients) return false;
-	return true;
 }
