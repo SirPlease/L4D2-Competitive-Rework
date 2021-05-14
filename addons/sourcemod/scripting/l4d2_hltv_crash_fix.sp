@@ -18,7 +18,7 @@ public OnPluginStart()
 	Address addy = GameConfGetAddress(config, "ProcessClientInfo");
 	int offset = GameConfGetOffset(config, "hltv_write");
 
-	if (addy != Address_Null && offset != 0)
+	if (addy != Address_Null && offset > 0)
 	{
 		static int patch[] = {
 			0x31, 0xC0, // xor eax, eax
