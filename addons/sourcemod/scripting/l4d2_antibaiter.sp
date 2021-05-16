@@ -64,7 +64,7 @@ public Plugin:myinfo =
 	name = "L4D2 Antibaiter",
 	author = "Visor, Sir (assisted by Devilesk)",
 	description = "Makes you think twice before attempting to bait that shit",
-	version = "1.3",
+	version = "1.3.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
