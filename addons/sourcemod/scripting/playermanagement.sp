@@ -161,8 +161,11 @@ public Action:SecureSpec(Handle:timer, any:client)
 
 public Action:RespecDelay_Timer(Handle:timer, any:client)
 {
-	ChangeClientTeamEx(client, L4D2Team_Spectator, true);
-	blockVotes[client] = false;
+	if (IsClientInGame(client)) 
+	{
+		ChangeClientTeamEx(client, L4D2Team_Spectator, true);
+		blockVotes[client] = false;
+	}
 }
 
 public Action:Vote_Listener(client, const String:command[], argc)

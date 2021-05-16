@@ -284,6 +284,7 @@ make_ladder( "_ladder_columnfallbanner_cloned_columnbusystairs", "-4948 -4181 31
 
 kill_entity( Entities.FindByClassnameNearest( "env_player_blocker", Vector( 1388, 5660, -649 ), 1 ) );
 kill_entity( Entities.FindByClassnameNearest( "env_player_blocker", Vector( 2972, 3724, -649 ), 1 ) );
+make_navblock( "_nav_motelfencejump", "Survivors", "Apply", "-24 -108 -24", "24 24 24", "2105 3700 -820" );
 make_brush( "_losfix_bush",		"-10 -190 -60",	"10 200 35",	"8224 8378 -536" );
 make_brush( "_losfix_end_fence",	"-254 -1 -5",	"254 0 5",	"-522 -2416 -1083" );
 make_brush( "_losfix_highway_bus1",		"-40 -1 -10",	"100 1 14",	"7035 7874 -641" );

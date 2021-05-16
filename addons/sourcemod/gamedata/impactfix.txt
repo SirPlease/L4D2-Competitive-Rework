@@ -1,0 +1,47 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			"CBaseEntity::WorldSpaceCenter"
+			{
+				"linux"		"162"
+				"windows"	"161"
+			}
+
+			"CBaseEntity::GetVectors"
+			{
+				"linux"		"147"
+				"windows"	"146"
+			}
+			
+			"CBasePlayer::PlayerSolidMask"
+			{
+				"linux"		"488"
+				"windows"	"487"
+			}
+		}
+
+		"Signatures"
+		{
+			"CCharge::DoImpactProbe"
+			{
+				"library"	"server"
+				"linux"		"@_ZN7CCharge13DoImpactProbeEv"
+				// xref to string "charger_wall_impact"
+				// 55 8B EC 81 EC FC 00 00 00 A1 ? ? ? ? 33 C5 89 45 FC 53 8B D9
+				"windows"	"\x55\x8B\xEC\x81\xEC\xFC\x00\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x8B\xD9"
+			}
+			
+			"CTraceFilterSimple::CTraceFilterSimple"
+			{
+				"library"	"server"
+				"linux"		"@_ZN18CTraceFilterSimpleC2EPK13IHandleEntityiPFbPS0_iE"
+				// xref from vtable
+				// 55 8B EC 8B 55 0C 8B C1 8B 4D 08 89 48 04 8B 4D 10 C7 00 ? ? ? ? 89 50 08 89 48 0C 5D
+				"windows"	"\x55\x8B\xEC\x8B\x55\x0C\x8B\xC1\x8B\x4D\x08\x89\x48\x04\x8B\x4D\x10\xC7\x00\x2A\x2A\x2A\x2A\x89\x50\x08\x89\x48\x0C\x5D"
+			}
+		}
+	}
+}
