@@ -24,6 +24,7 @@
 #include <readyup>
 #include <pause>
 #include <sdkhooks>
+#include <colors>
 
 #define MAX(%0,%1) (((%0) > (%1)) ? (%0) : (%1))
 
@@ -186,6 +187,7 @@ public Action:AntibaiterThink(Handle:timer)
 					HideCountdown();
 					LaunchHorde();
 					hordeDelayChecks = 0;
+					CPrintToChatAll("{blue}[{default}Anti-baiter{blue}]{default} Prepare for the incoming horde!");
 				}
 			}
 			else
