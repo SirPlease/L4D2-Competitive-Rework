@@ -123,7 +123,7 @@ public Action Command_SetScores(int client, int args)
 	if (GetUserAdmin(client) != INVALID_ADMIN_ID) {
 		//If we are forcing admins to start votes, start a vote
 		if (!forceAdminsToVote.BoolValue) {
-			SetScores(client, tempSurvivorScore, tempInfectedScore);
+			SetScores(tempSurvivorScore, tempInfectedScore, client);
 			return Plugin_Handled;
 		}
 		
