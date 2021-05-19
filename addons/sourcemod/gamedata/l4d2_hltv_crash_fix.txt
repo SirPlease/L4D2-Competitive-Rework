@@ -1,0 +1,33 @@
+"Games"
+{
+	"#default"
+	{
+		"Addresses"
+		{
+			/* CBaseClient::ProcessClientInfo */
+			"ProcessClientInfo"
+			{
+				"linux"
+				{
+					"signature" "CBaseClient::ProcessClientInfo"
+				}
+			}
+		}
+		"Offsets"
+		{
+			"hltv_write"
+			{
+				"linux" "23"
+				// movzx eax, byte ptr [esi+54h]
+			}
+		}
+		"Signatures"
+		{
+			"CBaseClient::ProcessClientInfo"
+			{
+				"library"	"engine"
+				"linux"		"@_ZN11CBaseClient17ProcessClientInfoEP14CLC_ClientInfo"
+			}
+		}
+	}
+}

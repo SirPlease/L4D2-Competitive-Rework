@@ -4,6 +4,7 @@
 #include <sdktools>
 #include <sdkhooks>
 #include <weapons>
+#include <colors>
 
 #define MAX_WEAPON_NAME_LENGTH 32
 #define GAMEDATA_FILE          "l4d_wlimits"
@@ -14,7 +15,7 @@ public Plugin:myinfo =
 	name = "L4D Weapon Limits",
 	author = "CanadaRox, Stabby",
 	description = "Restrict weapons individually or together",
-	version = "1.3.2",
+	version = "1.3.3",
 	url = "https://www.github.com/CanadaRox/sourcemod-plugins/tree/master/weapon_limits"
 }
 
@@ -60,6 +61,11 @@ public OnPluginStart()
 	HookEvent("player_incapacitated_start", OnIncap);
 	HookEvent("revive_success", OnRevive);
 	HookEvent("round_end", RoundEndEvent);
+}
+
+public OnMapStart()
+{
+	PrecacheSound("player/suit_denydevice.wav");
 }
 
 public RoundEndEvent(Handle:event, const String:name[], bool:dontBroadcast)
@@ -170,7 +176,8 @@ public Action:WeaponCanUse(client, weapon)
 			{
 				if ((wep_slot == 0 && arrayEntry[LAE_iGiveAmmo] == -1) || arrayEntry[LAE_iGiveAmmo] != 0) GiveDefaultAmmo(client);
 				if (player_wepid == WEPID_MELEE && wepid == WEPID_MELEE) return Plugin_Continue;
-				if (player_wepid) PrintToChat(client, "[Weapon Limits] This weapon group has reached its max of %d", arrayEntry[LAE_iLimit]);
+				CPrintToChat(client, "{blue}[{default}Weapon Limits{blue}]{default} This weapon group has reached its max of {green}%d", arrayEntry[LAE_iLimit]);
+				EmitSoundToClient(client, "player/suit_denydevice.wav");
 				return Plugin_Handled;
 			}
 		}
