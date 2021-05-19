@@ -615,7 +615,7 @@ void FillHeaderInfo(Panel &hSpecHud)
 	}
 	
 	static char buf[64];
-	Format(buf, sizeof(buf), "☂ %s [Slots %i/%i | %iT]", sHostname, GetRealClientCount(), iMaxPlayers, iTickrate);
+	Format(buf, sizeof(buf), "Server: %s [Slots %i/%i | %iT]", sHostname, GetRealClientCount(), iMaxPlayers, iTickrate);
 	DrawPanelText(hSpecHud, buf);
 }
 
