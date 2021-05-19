@@ -14,7 +14,7 @@ public Plugin myinfo =
 	author = "Visor, Forgetest",
 	description = "Announce in chat and via a sound when a Tank has spawned",
 	version = PLUGIN_VERSION,
-	url = "https://github.com/Attano"
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 #define DANG "ui/pickup_secret01.wav"
