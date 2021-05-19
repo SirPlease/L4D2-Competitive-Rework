@@ -62,6 +62,16 @@ new Handle:SM_hTempMulti2;
 // Score Difference
 new iDifference;
 
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	CreateNative("HealthBonus", _Native_HealthBonus);
+	RegPluginLibrary("l4d2_scoremod");
+}
+
+public int _Native_HealthBonus(Handle plugin, int numParams)
+{
+	return SM_CalculateSurvivalBonus();
+}
 
 public OnPluginStart()
 {

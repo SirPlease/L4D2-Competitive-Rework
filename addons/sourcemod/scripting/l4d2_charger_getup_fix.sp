@@ -1,13 +1,12 @@
+#include <sourcemod>
+#include <left4dhooks>
+#include <sdkhooks>
 #include <godframecontrol>
 
 #pragma semicolon 1
 #pragma newdecls required
 
-#include <sourcemod>
-#include <left4dhooks>
-#include <sdkhooks>
-
-#define PLUGIN_VERSION "3.0.0a"
+#define PLUGIN_VERSION "3.0.2"
 #define DEBUG 0
 
 public Plugin myinfo = 
@@ -57,6 +56,7 @@ ConVar g_hChargeDuration;
 // Variables
 int ChargerTarget[MAXPLAYERS+1];
 bool bLateLoad, bWallSlamed[MAXPLAYERS+1], bInForcedGetUp[MAXPLAYERS+1], bIgnoreJockeyed[MAXPLAYERS+1];
+
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -115,6 +115,18 @@ public void OnClientDisconnect(int client)
 	SDKUnhook(client, SDKHook_OnTakeDamagePost, OnTakeDamagePost);
 }
 
+public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+{	
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		bWallSlamed[i] = false;
+		bInForcedGetUp[i] = false;
+		bIgnoreJockeyed[i] = false;
+		if (ChargerTarget[i] != -1)
+			ChargerTarget[i] = -1;
+	}
+}
+
 public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 { // Wall Slam Charge Checks
 
@@ -133,15 +145,44 @@ public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 		bWallSlamed[client] = false;
 		bInForcedGetUp[client] = false;
 		bIgnoreJockeyed[client] = false;
-		for (int i = 0; i <= MaxClients; i++)
+		
+		// Update ChargerTarget of disconnected client
+		for (int i = 1; i <= MaxClients; i++)
 		{
 			if (ChargerTarget[i] == client)
 			{
-				int newChargerTarget = GetEntDataEnt2(i, 15972);
+				// TODO: fix throwing errors
+				// TODO: why is this asking for m_pummelVictim
+				int newChargerTarget = GetEntDataEnt2(i, 15972); // m_pummelVictim
 				ChargerTarget[i] = newChargerTarget;
 			}
 		}
 	}
+}
+
+// ========================================================
+// ================= No Get-up Workaround =================
+// ========================================================
+
+// NOTE:
+// - In case like after being pounced, almost at the end of the get-up animation,
+//   survivor seems to refuse another one from charge impact.
+
+// - Get-up animation would stack before the pound section.
+
+void PlayClientGetUpAnimation(int client)
+{
+	L4D2Direct_DoAnimationEvent(client, 78);
+}
+
+void CancelGetUpAnimation(int client)
+{
+	SetEntPropFloat(client, Prop_Send, "m_flCycle", 1000.0);
+}
+
+public Action Timer_Uncheck(Handle timer, int client)
+{
+	bWallSlamed[client] = false;
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3])
@@ -159,69 +200,31 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		bWallSlamed[victim] = true;
 		
 		// In case this damage is blocked
-		// (barely happen since charger cannot impact one godframed)
+		// (barely happen since charger cannot impact one in godframe)
 		CreateTimer(0.1, Timer_Uncheck, victim);
 	}
 }
 
-public Action Timer_Uncheck(Handle timer, int victim)
-{
-	bWallSlamed[victim] = false;
-}
-
 public void OnTakeDamagePost(int victim, int attacker, int inflictor, float damage, int damagetype)
 {
-	if (victim <= MaxClients && bWallSlamed[victim])
+	if (bWallSlamed[victim])
 	{
 		bWallSlamed[victim] = false;
+		
 		if (IsSurvivor(victim) && IsPlayerAlive(victim) && !IsPlayerIncap(victim))
 		{
-			//int jockeyAttacker = GetJockeyAttacker(victim);
-			//if (IsJockey(jockeyAttacker)) {
-			//	PrintToChatAll("\x01 - \x03Checked being Jockeyed");
-			//	ForceJockeyDismount(jockeyAttacker);
-			//}
 			ChargerTarget[attacker] = victim;
 			bInForcedGetUp[victim] = true;
+			
+			// Adds one get-up into stack
 			PlayClientGetUpAnimation(victim);
 		}
 	}
 }
 
-//void ForceJockeyDismount(int client)
-//{
-//	ExecuteCommand(client, "dismount");
-//}
-
-//void ExecuteCommand(int client, const char[] command)
-//{
-//	int flags = GetCommandFlags(command);
-//	SetCommandFlags(command, flags & ~FCVAR_CHEAT);
-//	FakeClientCommand(client, "%s", command);
-//	SetCommandFlags(command, flags);
-//}
-
-void PlayClientGetUpAnimation(int client)
-{
-	L4D2Direct_DoAnimationEvent(client, 78);
-}
-
-void CancelGetUpAnimation(int client)
-{
-	SetEntPropFloat(client, Prop_Send, "m_flCycle", 1000.0);
-}
-
-public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
-{	
-	for (int i = 0; i <= MaxClients; i++)
-	{
-		bWallSlamed[i] = false;
-		bInForcedGetUp[i] = false;
-		bIgnoreJockeyed[i] = false;
-		if (ChargerTarget[i] != -1)
-			ChargerTarget[i] = -1;
-	}
-}
+// ==========================================
+// ================= Events =================
+// ==========================================
 
 public void Event_PummelStart(Event event, const char[] name, bool dontBroadcast)
 {
@@ -233,6 +236,9 @@ public void Event_PummelStart(Event event, const char[] name, bool dontBroadcast
 	if (survivorClient > 0 && chargerClient > 0)
 	{
 		ChargerTarget[chargerClient] = survivorClient;
+		
+		// Once a charge goes into the pound section, the get-up stack will be overridden.
+		// Here uncheck our stuffs.
 		bInForcedGetUp[survivorClient] = false;
 		bIgnoreJockeyed[survivorClient] = false;
 	}
@@ -248,14 +254,31 @@ public void Event_ChargerKilled(Event event, const char[] name, bool dontBroadca
 	if (survivorClient > 0 && chargerClient > 0)
 	{
 		#if DEBUG
-			PrintToChatAll("\x05Event_ChargerKilled \x01- seq: \x05%i", GetEntProp(survivorClient, Prop_Send, "m_nSequence"));
+			PrintToChatAll("\x05Event_ChargerKilled \x01- victim: \x05%N \x01| charger: \x05%N \x01| seq: \x05%i", survivorClient, chargerClient, GetEntProp(survivorClient, Prop_Send, "m_nSequence"));
 		#endif
 		if (bInForcedGetUp[survivorClient])
 		{
 			#if DEBUG
-				PrintToChatAll("\x01 - IgnoreJockeyed: %i", bIgnoreJockeyed[survivorClient]);
+				PrintToChatAll("\x01> IgnoreJockeyed: \x05%i", bIgnoreJockeyed[survivorClient]);
 			#endif
 			bInForcedGetUp[survivorClient] = false;
+			
+			// NOTE:
+			//
+			// Overall, we should manually override the wall-slam get-ups from longer ones to normal ones,
+			// or "l4d2_getupfix" will try to "fix" this, leading to multiple get-ups.
+			//
+			// However, here's a thing that jockeyed charges deal no get-up to survivors,
+			// so situations should be the following:
+			//
+			//   1. Was the survivor charged when jockeyed?
+			//        - We don't do anything here since a get-up was forced to the survivor.
+			//        - Generous "l4d2_getupfix" can figure it out and stop the following fix action.
+			//
+			//   2. The opposite to (1), the normal happening ones.
+			//        - We need to cancel the get-up added previously.
+			//        - If it is wall-slam, we must override the animation to normal get-up one.
+			
 			if (!bIgnoreJockeyed[survivorClient])
 			{
 				CancelGetUpAnimation(survivorClient);
@@ -265,7 +288,7 @@ public void Event_ChargerKilled(Event event, const char[] name, bool dontBroadca
 		if (IsPlayingGetUpAnimation(survivorClient, 2))
 		{ // Long Charge Get Up		
 			#if DEBUG
-				PrintToChatAll("\x05Event_ChargerKilled \x01- \x04Long Charge");
+				PrintToChatAll("\x01> \x05Event_ChargerKilled \x01- \x04Long Charge");
 			#endif
 			if (GetConVarBool(cvar_keepLongChargeLongGetUp))
 			{
@@ -284,47 +307,45 @@ public void Event_ChargerKilled(Event event, const char[] name, bool dontBroadca
 		else if (IsPlayingGetUpAnimation(survivorClient, 1))
 		{ // Wall Slam Get Up
 			#if DEBUG
-				PrintToChatAll("\x05Event_ChargerKilled \x01- \x04Wall Slam");
+				PrintToChatAll("\x01> \x05Event_ChargerKilled \x01- \x04Wall Slam");
 			#endif
-			//if (GetConVarBool(cvar_keepWallSlamLongGetUp))
-			//{
-			//	GiveClientGodFrames(survivorClient, GetConVarFloat(g_hChargeDuration), 6);
-			//}
-			//else
-			//{
-				if (!bIgnoreJockeyed[survivorClient])
-				{
-					CancelGetUpAnimation(survivorClient);
-					PlayClientGetUpAnimation(survivorClient);
-				}
-				GiveClientGodFrames(survivorClient, GetConVarFloat(g_hLongChargeDuration), 6);
-			//}
+			if (!bIgnoreJockeyed[survivorClient])
+			{
+				CancelGetUpAnimation(survivorClient);
+				PlayClientGetUpAnimation(survivorClient);
+			}
+			GiveClientGodFrames(survivorClient, GetConVarFloat(g_hLongChargeDuration), 6);
 		}
 		else
 		{
 			// There's a weird case, where the game won't register the client as playing the animation, it's once in a blue moon
 			CreateTimer(0.02, BlueMoonCaseCheck, survivorClient);
+			return;
 		}
 		
-		CreateTimer(0.06, ResetChargerTarget, chargerClient);
+		ResetChargerTarget(chargerClient);
 	}
 }
 
-public Action ResetChargerTarget(Handle timer, int client)
+void ResetChargerTarget(int chargerClient)
 {
-	bIgnoreJockeyed[ChargerTarget[client]] = false;
-	ChargerTarget[client] = -1;
+	ChargerTarget[chargerClient] = -1;
+}
+
+void ResetIgnoreJockeyed(int survivorClient)
+{
+	bIgnoreJockeyed[survivorClient] = false;
 }
 
 public Action BlueMoonCaseCheck(Handle timer, int survivorClient)
 {
 	#if DEBUG
-		PrintToChatAll("\x05BlueMoonCaseCheck \x01- seq: \x05%i", GetEntProp(survivorClient, Prop_Send, "m_nSequence"));
+		PrintToChatAll("\x05BlueMoonCaseCheck \x01- victim: \x05%N \x01| seq: \x05%i", survivorClient, GetEntProp(survivorClient, Prop_Send, "m_nSequence"));
 	#endif
 	if (IsPlayingGetUpAnimation(survivorClient, 2))
 	{ // Long Charge Get Up
 		#if DEBUG
-			PrintToChatAll("\x05BlueMoonCaseCheck \x01- \x04Long Charge");
+			PrintToChatAll("\x01> \x05BlueMoonCaseCheck \x01- \x04Long Charge");
 		#endif
 		if (GetConVarBool(cvar_keepLongChargeLongGetUp))
 		{
@@ -343,22 +364,17 @@ public Action BlueMoonCaseCheck(Handle timer, int survivorClient)
 	else if (IsPlayingGetUpAnimation(survivorClient, 1))
 	{ // Wall Slam Get Up
 		#if DEBUG
-			PrintToChatAll("\x05BlueMoonCaseCheck \x01- \x04Wall Slam");
+			PrintToChatAll("\x01> \x05BlueMoonCaseCheck \x01- \x04Wall Slam");
 		#endif
-		//if (GetConVarBool(cvar_keepWallSlamLongGetUp))
-		//{
-		//	GiveClientGodFrames(survivorClient, GetConVarFloat(g_hChargeDuration), 6);
-		//}
-		//else
-		//{
-			if (!bIgnoreJockeyed[survivorClient])
-			{
-				CancelGetUpAnimation(survivorClient);
-				PlayClientGetUpAnimation(survivorClient);
-			}
-			GiveClientGodFrames(survivorClient, GetConVarFloat(g_hLongChargeDuration), 6);
-		//}
+		if (!bIgnoreJockeyed[survivorClient])
+		{
+			CancelGetUpAnimation(survivorClient);
+			PlayClientGetUpAnimation(survivorClient);
+		}
+		GiveClientGodFrames(survivorClient, GetConVarFloat(g_hLongChargeDuration), 6);
 	}
+	
+	ResetIgnoreJockeyed(survivorClient);
 }
 
 public void Event_ChargeCarryStart(Event event, const char[] name, bool dontBroadcast)
@@ -371,7 +387,7 @@ public void Event_ChargeCarryStart(Event event, const char[] name, bool dontBroa
 	if (survivorClient > 0 && chargerClient > 0)
 	{
 		#if DEBUG
-			PrintToChatAll("\x01[\x05Event_ChargeCarryStart\x01] victim: %N (#%i)", survivorClient, GetClientUserId(survivorClient));
+			PrintToChatAll("\x05Event_ChargeCarryStart \x01- victim: \x05%N \x01| charger: \x05%N", survivorClient, chargerClient);
 		#endif
 		ChargerTarget[chargerClient] = survivorClient;
 	}
@@ -392,7 +408,7 @@ public void Event_PlayerHurt(Event event, const char[] name, bool dontBroadcast)
 	if (chargerUserId)
 		chargerClient = GetClientOfUserId(chargerUserId);
 		
-	if (!IsCharger(chargerClient) && !IsSurvivor(survivorClient)) return;
+	if (!IsCharger(chargerClient) || !IsSurvivor(survivorClient)) return;
 	
 	ChargerTarget[chargerClient] = survivorClient; 
 }
@@ -404,10 +420,10 @@ public void Event_JockeyRide(Event event, const char[] name, bool dontBroadcast)
 	
 	if (jockey > 0 && survivor > 0)
 	{
-		#if DEBUG
-			PrintToChatAll("\x01[\x05Event_JockeyRide\x01] victim: %N (#%i)", survivor, GetClientUserId(survivor));
-		#endif
 		bIgnoreJockeyed[survivor] = true;
+		#if DEBUG
+			PrintToChatAll("\x05Event_JockeyRide \x01- victim: \x05%N \x01| jockey: \x05%N \x01| ignore: \x05%i", survivor, jockey, bIgnoreJockeyed[survivor]);
+		#endif
 	}
 }
 
@@ -419,12 +435,24 @@ public void Event_JockeyRideEnd(Event event, const char[] name, bool dontBroadca
 	if (jockey > 0 && survivor > 0)
 	{
 		#if DEBUG
-			PrintToChatAll("\x01[\x05Event_JockeyRideEnd\x01] victim: %N (#%i)", survivor, GetClientUserId(survivor));
+			PrintToChatAll("\x05Event_JockeyRideEnd \x01- victim: \x05%N \x01| jockey: \x05%N", survivor, jockey);
 		#endif
 		bIgnoreJockeyed[survivor] = false;
+		
+		#if DEBUG
+			PrintToChatAll("\x01> ignore: \x05%i", bIgnoreJockeyed[survivor]);
+		#endif
+		// Fix when the ride end was due to a charge grab.
 		for (int i = 1; i <= MaxClients; i++)
 		{
-			if (ChargerTarget[i] == survivor) bIgnoreJockeyed[survivor] = true;
+			if (ChargerTarget[i] == survivor)
+			{
+				bIgnoreJockeyed[survivor] = true;
+				#if DEBUG
+					PrintToChatAll("\x01> ignore reverted due to charge grab. ChargerTarget[i]: \x05%i \x01| ignore: \x05%i", ChargerTarget[i], bIgnoreJockeyed[survivor]);
+				#endif
+				break;
+			}
 		}
 	}
 }

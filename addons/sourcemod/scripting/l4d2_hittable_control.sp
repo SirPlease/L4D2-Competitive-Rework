@@ -53,7 +53,7 @@ public Plugin myinfo =
 {
     name = "L4D2 Hittable Control",
     author = "Stabby, Visor, Sir",
-    version = "0.6",
+    version = "0.6.1",
     description = "Allows for customisation of hittable damage values (and debugging)"
 };
 
@@ -99,7 +99,7 @@ public void OnPluginStart()
 											"Damage of all hittables to incapped players. -1 will have incap damage default to valve's standard incoherent damages. -2 will have incap damage default to each hittable's corresponding standing damage.",
 											FCVAR_NONE, true, -2.0, true, 300.0 );
 	hTankSelfDamage			= CreateConVar( "hc_disable_self_damage",		"0",
-											"If set, tank will not damage itself with hittables.",
+											"If set, tank will not damage itself with hittables. (0.6.1 simply prevents all damage from Prop_Physics & Alarm Cars to cover for the event a Tank punches a hittable into another and gets hit)",
 											FCVAR_NONE, true, 0.0, true, 1.0 );
 	hOverHitInterval		= CreateConVar( "hc_overhit_time",				"1.2",
 											"The amount of time to wait before allowing consecutive hits from the same hittable to register. Recommended values: 0.0-0.5: instant kill; 0.5-0.7: sizeable overhit; 0.7-1.0: standard overhit; 1.0-1.2: reduced overhit; 1.2+: no overhit unless the car rolls back on top. Set to tank's punch interval (default 1.5) to fully remove all possibility of overhit.",
@@ -179,9 +179,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		if (fOverkill[victim][inflictor] - GetGameTime() > 0.0)
 			return Plugin_Handled; // Overkill on this Hittable.
 
-		if (victim == attacker 
+		if (victim == FindTank() 
 		&& GetConVarBool(hTankSelfDamage))
-		  return Plugin_Handled; // Tank is hitting himself with the Hittable.
+		  return Plugin_Handled; // Tank is hitting himself with the Hittable (+added usecase when the Tank would be hit by a hittable that he punched a hittable against before it hit him)
 
 		if (GetClientTeam(victim) != 2)
 		  return Plugin_Continue; // Victim is not a Survivor.

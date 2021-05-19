@@ -22,12 +22,14 @@
 #pragma semicolon 1
 //#pragma newdecls required
 
-#define PLUGIN_VERSION "1.3"
+#define PLUGIN_VERSION "1.4"
+
+#define GAMEDATA_FILE "left4dhooks.l4d2"
 
 public Plugin myinfo =
 {
 	name = "SetScores",
-	author = "vintik, Forgetest",
+	author = "vintik, Forgetest, A1m`",
 	description = "Changes team scores.",
 	version = PLUGIN_VERSION,
 	url = "https://bitbucket.org/vintik/various-plugins"
@@ -35,22 +37,48 @@ public Plugin myinfo =
 
 #define L4D_TEAM_SPECTATE    1
 
-ConVar minimumPlayersForVote, allowPlayersToVote, forceAdminsToVote;
-Handle voteHandler, hSetCampaignScores;
-int survivorScore, infectedScore, initiatingClient;
-bool adminInitiated, inFirstReadyUpOfRound;
+ConVar 
+	minimumPlayersForVote, 
+	allowPlayersToVote, 
+	forceAdminsToVote;
+	
+Handle 
+	voteHandler,
+	hSetCampaignScores;
+	
+int 
+	survivorScore, 
+	infectedScore;
+	
+bool 
+	inFirstReadyUpOfRound;
 
 //Beginning of our plugin, verifies the game is l4d2 and sets up our convars/command
 public void OnPluginStart()
 {
+	CheckGame();
+	LoadSDK();
+	
+	minimumPlayersForVote = CreateConVar("setscore_player_limit", "2", "Minimum # of players in game to start the vote");
+	allowPlayersToVote = CreateConVar("setscore_allow_player_vote", "1", "Whether player initiated votes are allowed, 1 to allow (default), 0 to disallow.");
+	forceAdminsToVote = CreateConVar("setscore_force_admin_vote", "0", "Whether admin score changes require a vote, 1 vote required, 0 vote not required (default).");
+	
+	RegConsoleCmd("sm_setscores", Command_SetScores, "sm_setscores <survivor score> <infected score>");
+}
+
+void CheckGame()
+{
 	if (GetEngineVersion() != Engine_Left4Dead2) {
 		SetFailState("Plugin 'SetScores' supports Left 4 Dead 2 only!");
 	}
-	
-	GameData conf = LoadGameConfigFile("left4dhooks.l4d2");
+}
+
+void LoadSDK()
+{
+	GameData conf = LoadGameConfigFile(GAMEDATA_FILE);
 	if (conf == INVALID_HANDLE)
 	{
-		SetFailState("Could not load gamedata/left4dhooks.l4d2.txt");
+		SetFailState("Could not load gamedata/%s.txt", GAMEDATA_FILE);
 	}
 
 	StartPrepSDKCall(SDKCall_GameRules);
@@ -65,11 +93,6 @@ public void OnPluginStart()
 	}
 	
 	delete conf;
-	
-	minimumPlayersForVote = CreateConVar("setscore_player_limit", "2", "Minimum # of players in game to start the vote");
-	allowPlayersToVote = CreateConVar("setscore_allow_player_vote", "1", "Whether player initiated votes are allowed, 1 to allow (default), 0 to disallow.");
-	forceAdminsToVote = CreateConVar("setscore_force_admin_vote", "0", "Whether admin score changes require a vote, 1 vote required, 0 vote not required (default).");
-	RegConsoleCmd("sm_setscores", Command_SetScores, "sm_setscores <survivor score> <infected score>");
 }
 
 //Starting point for the setscores command
@@ -86,47 +109,41 @@ public Action Command_SetScores(int client, int args)
 		return Plugin_Handled;
 	}
 	
-	//Store the client that requested a score change
-	initiatingClient = client;
-	
 	char buffer[32];
 	//Retrieve and store the survivor score
 	GetCmdArg(1, buffer, sizeof(buffer));
-	survivorScore = StringToInt(buffer);
+	int tempSurvivorScore = StringToInt(buffer);
 	//Retrieve and store the infected score
 	GetCmdArg(2, buffer, sizeof(buffer));
-	infectedScore = StringToInt(buffer);
+	int tempInfectedScore = StringToInt(buffer);
 	
-	AdminId id = GetUserAdmin(client);
+	bool IsAdmin = false;
 	
 	//Determine whether the user is admin and what action to take
-	if (id != INVALID_ADMIN_ID)
-	{
+	if (GetUserAdmin(client) != INVALID_ADMIN_ID) {
 		//If we are forcing admins to start votes, start a vote
-		if (GetConVarInt(forceAdminsToVote) == 1) {
-			adminInitiated = false;
-			StartScoreVote();
-		} else {
-			adminInitiated = true;
-			SetScores();
+		if (!forceAdminsToVote.BoolValue) {
+			SetScores(tempSurvivorScore, tempInfectedScore, client);
+			return Plugin_Handled;
 		}
+		
+		IsAdmin = true; //else, ignore setscore_allow_player_vote convar for admins
 	}
-	else if (GetConVarInt(allowPlayersToVote) == 1)
-	{ 
+	
+	if (IsAdmin || allowPlayersToVote.BoolValue) {
 		//If players are allowed to vote, start a vote
-		adminInitiated = false;
-		StartScoreVote();
+		StartScoreVote(tempSurvivorScore, tempInfectedScore, client, IsAdmin);
 	}
 	
 	return Plugin_Handled;
 }
 
 //Starts a vote to change scores
-void StartScoreVote()
+void StartScoreVote(const int survScore, const int infectScore, const int initiator, bool IsAdmin)
 {
 	//Disallow spectator voting
-	if (GetClientTeam(initiatingClient) == L4D_TEAM_SPECTATE) {
-		PrintToChat(initiatingClient, "Score voting isn't allowed for spectators.");
+	if (!IsAdmin && GetClientTeam(initiator) == L4D_TEAM_SPECTATE) {
+		PrintToChat(initiator, "Score voting isn't allowed for spectators.");
 		return;
 	}
 
@@ -142,10 +159,14 @@ void StartScoreVote()
 		}
 
 		//If there aren't enough players for the vote indicate so to the user
-		if (iNumPlayers < GetConVarInt(minimumPlayersForVote)) {
-			PrintToChat(initiatingClient, "Score vote cannot be started. Not enough players.");
+		if (iNumPlayers < minimumPlayersForVote.IntValue) {
+			PrintToChat(initiator, "Score vote cannot be started. Not enough players.");
 			return;
 		}
+		
+		//The best place for this
+		survivorScore = survScore; 
+		infectedScore = infectScore;
 		
 		//Create the vote
 		voteHandler = CreateBuiltinVote(VoteActionHandler, BuiltinVoteType_Custom_YesNo, BuiltinVoteAction_Cancel | BuiltinVoteAction_VoteEnd | BuiltinVoteAction_End);
@@ -154,20 +175,20 @@ void StartScoreVote()
 		char sBuffer[64];
 		Format(sBuffer, sizeof(sBuffer), "Change scores to %d - %d?", survivorScore, infectedScore);
 		SetBuiltinVoteArgument(voteHandler, sBuffer);
-		SetBuiltinVoteInitiator(voteHandler, initiatingClient);
+		SetBuiltinVoteInitiator(voteHandler, initiator);
 		SetBuiltinVoteResultCallback(voteHandler, ScoreVoteResultHandler);
 		
 		//Display the vote and make the initiator automatically vote yes
 		DisplayBuiltinVote(voteHandler, iPlayers, iNumPlayers, 20);
-		FakeClientCommand(initiatingClient, "Vote Yes");
+		FakeClientCommand(initiator, "Vote Yes");
 		return;
 	}
 
-	PrintToChat(initiatingClient, "Score vote cannot be started now.");
+	PrintToChat(initiator, "Score vote cannot be started now.");
 }
 
 //Actually sets the scores of the teams and print the results to all chat
-void SetScores()
+void SetScores(const int survScore, const int infectScore, const int iAdminIndex)
 {
 	//Determine which teams are which
 	bool bFlipped = L4D2_AreTeamsFlipped();
@@ -176,17 +197,17 @@ void SetScores()
 	
 	//Set the scores
 	SDKCall(hSetCampaignScores,
-				bFlipped ? infectedScore : survivorScore,
-				bFlipped ? survivorScore : infectedScore); //visible scores
-	L4D2Direct_SetVSCampaignScore(SurvivorTeamIndex, survivorScore); //real scores
-	L4D2Direct_SetVSCampaignScore(InfectedTeamIndex, infectedScore);
+				bFlipped ? infectScore : survScore,
+				bFlipped ? survScore : infectScore); //visible scores
+	L4D2Direct_SetVSCampaignScore(SurvivorTeamIndex, survScore); //real scores
+	L4D2Direct_SetVSCampaignScore(InfectedTeamIndex, infectScore);
 	
-	if (!adminInitiated) {
-		PrintToChatAll("\x01Scores set to \x05%d \x01 (\x04Sur\x01) - \x05%d \x01 (\x04Inf\x01) by vote.", survivorScore, infectedScore);
-	} else {
+	if (iAdminIndex != -1) { //This works well for an index '0' as well, if the initiator is CONSOLE
 		char client_name[32];
-		GetClientName(initiatingClient, client_name, sizeof(client_name));
-		PrintToChatAll("\x01Scores set to \x05%d \x01 (\x04Sur\x01) - \x05%d \x01 (\x04Inf\x01) by \x03%s\x01.", survivorScore, infectedScore, client_name);
+		GetClientName(iAdminIndex, client_name, sizeof(client_name));
+		PrintToChatAll("\x01Scores set to \x05%d \x01 (\x04Sur\x01) - \x05%d \x01 (\x04Inf\x01) by \x03%s\x01.", survScore, infectScore, client_name);
+	} else {
+		PrintToChatAll("\x01Scores set to \x05%d \x01 (\x04Sur\x01) - \x05%d \x01 (\x04Inf\x01) by vote.", survScore, infectScore);
 	}
 }
 
@@ -210,7 +231,7 @@ public int ScoreVoteResultHandler(Handle vote, int num_votes, int num_clients, c
 		if (item_info[i][BUILTINVOTEINFO_ITEM_INDEX] == BUILTINVOTES_VOTE_YES) {
 			if (item_info[i][BUILTINVOTEINFO_ITEM_VOTES] > (num_clients / 2)) {
 				DisplayBuiltinVotePass(vote, "Changing scores...");
-				SetScores();
+				SetScores(survivorScore, infectedScore, -1);
 				return;
 			}
 		}

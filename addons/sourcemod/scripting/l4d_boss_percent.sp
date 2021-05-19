@@ -25,7 +25,7 @@ out what's going on :D Kinda makes my other plugins look bad huh :/
 #include <left4dhooks>
 #include <readyup>
 
-#define PLUGIN_VERSION "3.2.0"
+#define PLUGIN_VERSION "3.2.1"
 
 public Plugin myinfo =
 {
@@ -759,8 +759,9 @@ public Action BossCmd(int client, int args)
 	CreateTimer(0.1, PrintCurrent, client);
 }
 
-public Action PrintCurrent(Handle timer, int client) {
-	FakeClientCommand(client, "say /current");
+public Action PrintCurrent(Handle timer, int client) 
+{
+	if (IsClientInGame(client)) FakeClientCommand(client, "say /current");
 }
 
 public void PrintBossMiddleMan(int client) {
