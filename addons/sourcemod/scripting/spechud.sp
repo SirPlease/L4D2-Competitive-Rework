@@ -18,7 +18,7 @@
 #pragma newdecls required
 
 #define DEBUG 0
-#define PLUGIN_VERSION	"3.4.8b"
+#define PLUGIN_VERSION	"3.5.0a"
 
 public Plugin myinfo = 
 {
@@ -30,7 +30,7 @@ public Plugin myinfo =
 };
 
 // ======================================================================
-// Macros
+//  Macros
 // ======================================================================
 #define SPECHUD_DRAW_INTERVAL   0.5
 
@@ -40,10 +40,13 @@ public Plugin myinfo =
 #define MAX(%0,%1) (((%0) > (%1)) ? (%0) : (%1))
 #define MIN(%0,%1) (((%0) < (%1)) ? (%0) : (%1))
 
-#define TEAM_NONE 0
-#define TEAM_SPECTATOR 1
-#define TEAM_SURVIVOR 2
-#define TEAM_INFECTED 3
+// ToPercent(int score, int maxbonus) : float
+#define ToPercent(%0,%1) ((%0) < 1 ? 0.0 : (100.0 * (%0) / (%1)))
+
+#define TEAM_NONE       0
+#define TEAM_SPECTATOR  1
+#define TEAM_SURVIVOR   2
+#define TEAM_INFECTED   3
 
 // ======================================================================
 //  Plugin Vars
@@ -97,8 +100,8 @@ enum SurvivorCharacter
 };
 
 // Game Var
-ConVar survivor_limit, z_max_player_zombies, versus_boss_buffer, mp_gamemode, sv_maxplayers, tank_burn_duration, pain_pills_decay_rate;
-int iSurvivorLimit, iMaxPlayerZombies, iMaxPlayers;
+ConVar survivor_limit, z_max_player_zombies, versus_boss_buffer, mp_gamemode, mp_roundlimit, sv_maxplayers, tank_burn_duration, pain_pills_decay_rate;
+int iSurvivorLimit, iMaxPlayerZombies, iMaxPlayers, iRoundLimit;
 float fVersusBossBuffer, fTankBurnDuration, fPainPillsDecayRate;
 
 // Network Var
@@ -110,8 +113,8 @@ ConVar l4d_tank_percent, l4d_witch_percent, hServerNamer, l4d_ready_cfg_name;
 
 // Plugin Var
 char sReadyCfgName[64], sHostname[64];
-bool bPendingArrayRefresh, bRoundLive;
-int iSurvivorArray[MAXPLAYERS+1], iInfectedArray[MAXPLAYERS+1];
+bool bRoundLive, bPendingArrayRefresh = true;
+int iSurvivorArray[MAXPLAYERS/2+1], iInfectedArray[MAXPLAYERS/2+1];
 
 // Plugin Handle
 //ArrayList hSurvivorArray;
@@ -150,6 +153,7 @@ public void OnPluginStart()
 	(	z_max_player_zombies	= FindConVar("z_max_player_zombies")	).AddChangeHook(OnGameConVarChanged);
 	(	versus_boss_buffer		= FindConVar("versus_boss_buffer")		).AddChangeHook(OnGameConVarChanged);
 	(	mp_gamemode				= FindConVar("mp_gamemode")				).AddChangeHook(OnGameConVarChanged);
+	(	mp_roundlimit			= FindConVar("mp_roundlimit")			).AddChangeHook(OnGameConVarChanged);
 	(	sv_maxplayers			= FindConVar("sv_maxplayers")			).AddChangeHook(OnGameConVarChanged);
 	(	tank_burn_duration		= FindConVar("tank_burn_duration")		).AddChangeHook(OnGameConVarChanged);
 	(	pain_pills_decay_rate	= FindConVar("pain_pills_decay_rate")	).AddChangeHook(OnGameConVarChanged);
@@ -202,6 +206,7 @@ void GetGameCvars()
 	iMaxPlayerZombies	= z_max_player_zombies.IntValue;
 	fVersusBossBuffer	= versus_boss_buffer.FloatValue;
 	GetCurrentGameMode();
+	iRoundLimit			= CLAMP(mp_roundlimit.IntValue, 1, 5);
 	iMaxPlayers			= sv_maxplayers.IntValue;
 	fTankBurnDuration	= tank_burn_duration.FloatValue;
 	fPainPillsDecayRate	= pain_pills_decay_rate.FloatValue;
@@ -385,6 +390,7 @@ public void OnRoundIsLive()
 	FillReadyConfig();
 	
 	bRoundLive = true;
+	bPendingArrayRefresh = true;
 	
 	GetCurrentGameMode();
 	
@@ -452,11 +458,15 @@ public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if (!client) return;
 	
-	int team = event.GetInt("team");	
+	int team = event.GetInt("team");
+	int oldteam = event.GetInt("oldteam");
+	
 	if (team == TEAM_NONE) // Player disconnecting
 	{
 		bSpecHudActive[client] = false;
 		bTankHudActive[client] = true;
+		
+		if (oldteam == TEAM_SPECTATOR) return;
 	}
 	
 	bPendingArrayRefresh = true;
@@ -505,7 +515,7 @@ public Action HudDrawTimer(Handle hTimer)
 	{
 		// 1. Human spectator with spechud active. 
 		// 2. SourceTV active.
-		if( IsClientInGame(i) && (IsClientSourceTV(i) || (GetClientTeam(i) == TEAM_SPECTATOR && bSpecHudActive[i])) )
+		if( IsClientInGame(i) && GetClientTeam(i) == TEAM_SPECTATOR && bSpecHudActive[i] )
 		{
 			bSpecsOnServer = true;
 			break;
@@ -515,6 +525,12 @@ public Action HudDrawTimer(Handle hTimer)
 	if (bSpecsOnServer) // Only bother if someone's watching us
 	{
 		Panel specHud = new Panel();
+		
+		if (bPendingArrayRefresh)
+		{
+			bPendingArrayRefresh = false;
+			BuildPlayerArrays();
+		}
 
 		FillHeaderInfo(specHud);
 		FillSurvivorInfo(specHud);
@@ -691,27 +707,31 @@ void FillSurvivorInfo(Panel &hSpecHud)
 	static char name[MAX_NAME_LENGTH];
 
 	int SurvivorTeamIndex = L4D2_AreTeamsFlipped();
-	
-	if (bRoundLive) {
-		int distance = 0;
-		for (int i = 0; i < 4; ++i)
-			distance += GameRules_GetProp("m_iVersusDistancePerSurvivor", _, i + 4 * SurvivorTeamIndex);
-			
-		FormatEx(info, sizeof(info), "->1. Survivors [%d]",
-					L4D2Direct_GetVSCampaignScore(SurvivorTeamIndex) + distance);
-	} else {
-		FormatEx(info, sizeof(info), "->1. Survivors [%d]",
-					L4D2Direct_GetVSCampaignScore(SurvivorTeamIndex));
+
+	switch (g_Gamemode)
+	{
+		case L4D2Gamemode_Scavenge:
+		{
+			int score = GetScavengeMatchScore(SurvivorTeamIndex);
+			FormatEx(info, sizeof info, "->1. Survivors [%d of %d]", score, iRoundLimit);
+		}
+		case L4D2Gamemode_Versus:
+		{
+			if (bRoundLive)
+			{
+				FormatEx(info, sizeof(info), "->1. Survivors [%d]",
+							L4D2Direct_GetVSCampaignScore(SurvivorTeamIndex) + GetVersusProgressDistance(SurvivorTeamIndex));
+			}
+			else
+			{
+				FormatEx(info, sizeof(info), "->1. Survivors [%d]",
+							L4D2Direct_GetVSCampaignScore(SurvivorTeamIndex));
+			}
+		}
 	}
 	
 	DrawPanelText(hSpecHud, " ");
 	DrawPanelText(hSpecHud, info);
-	
-	if (bPendingArrayRefresh)
-	{
-		bPendingArrayRefresh = false;
-		BuildPlayerArrays();
-	}
 	
 	for (int i = 0; i < iSurvivorLimit; ++i)
 	{
@@ -763,97 +783,124 @@ void FillSurvivorInfo(Panel &hSpecHud)
 	}
 }
 
-// ToPercent(int score, int maxbonus) : float
-#define ToPercent(%0,%1) ((%0) < 1 ? 0.0 : (100.0 * (%0) / (%1)))
 void FillScoreInfo(Panel &hSpecHud)
 {
 	static char info[64];
-
-	if (bHybridScoremod)
-	{
-		int healthBonus	= SMPlus_GetHealthBonus(),	maxHealthBonus	= SMPlus_GetMaxHealthBonus();
-		int damageBonus	= SMPlus_GetDamageBonus(),	maxDamageBonus	= SMPlus_GetMaxDamageBonus();
-		int pillsBonus	= SMPlus_GetPillsBonus(),	maxPillsBonus	= SMPlus_GetMaxPillsBonus();
-		
-		int totalBonus		= healthBonus		+ damageBonus		+ pillsBonus;
-		int maxTotalBonus	= maxHealthBonus	+ maxDamageBonus	+ maxPillsBonus;
-		
-		DrawPanelText(hSpecHud, " ");
-		
-		// > HB: 100% | DB: 100% | Pills: 60 / 100%
-		// > Bonus: 860 <100.0%>
-		// > Distance: 400
-		
-		FormatEx(	info,
-					sizeof(info),
-					"> HB: %.0f%% | DB: %.0f%% | Pills: %i / %.0f%%",
-					ToPercent(healthBonus, maxHealthBonus),
-					ToPercent(damageBonus, maxDamageBonus),
-					pillsBonus, ToPercent(pillsBonus, maxPillsBonus));
-		DrawPanelText(hSpecHud, info);
-		
-		FormatEx(info, sizeof(info), "> Bonus: %i <%.1f%%>", totalBonus, ToPercent(totalBonus, maxTotalBonus));
-		DrawPanelText(hSpecHud, info);
-		
-		FormatEx(info, sizeof(info), "> Distance: %i", L4D_GetVersusMaxCompletionScore() / 4 * iSurvivorLimit);
-		//if (InSecondHalfOfRound())
-		//{
-		//	Format(info, sizeof(info), "%s | R#1: %i <%.1f%%>", info, iFirstHalfScore, ToPercent(iFirstHalfScore, L4D_GetVersusMaxCompletionScore() + maxTotalBonus));
-		//}
-		DrawPanelText(hSpecHud, info);
-	}
 	
-	else if (bScoremod)
+	switch (g_Gamemode)
 	{
-		int healthBonus = HealthBonus();
+		case L4D2Gamemode_Scavenge:
+		{
+			bool bSecondHalf = !!InSecondHalfOfRound();
+			bool bTeamFlipped = L4D2_AreTeamsFlipped();
+			
+			float fDuration = GetScavengeRoundDuration(bTeamFlipped);
+			int iMinutes = RoundToFloor(fDuration / 60);
+			
+			DrawPanelText(hSpecHud, " ");
+				
+			FormatEx(info, sizeof info, "> Elapsed Time [%02d:%02.0f]", iMinutes, fDuration - 60 * iMinutes);
+			DrawPanelText(hSpecHud, info);
+			
+			if (bSecondHalf)
+			{
+				fDuration = GetScavengeRoundDuration(!bTeamFlipped);
+				iMinutes = RoundToFloor(fDuration / 60);
+				
+				FormatEx(info, sizeof info, "> Opponent Duration [%02d:%05.2f]", iMinutes, fDuration - 60 * iMinutes);
+				DrawPanelText(hSpecHud, info);
+			}
+		}
 		
-		DrawPanelText(hSpecHud, " ");
-		
-		// > Health Bonus: 860
-		// > Distance: 400
-		
-		FormatEx(info, sizeof(info), "> Health Bonus: %i", healthBonus);
-		DrawPanelText(hSpecHud, info);
-		
-		FormatEx(info, sizeof(info), "> Distance: %i", L4D_GetVersusMaxCompletionScore() / 4 * iSurvivorLimit);
-		//if (InSecondHalfOfRound())
-		//{
-		//	Format(info, sizeof(info), "%s | R#1: %i", info, iFirstHalfScore);
-		//}
-		DrawPanelText(hSpecHud, info);
-	}
-	
-	else if (bNextScoremod)
-	{
-		int permBonus	= SMNext_GetPermBonus(),	maxPermBonus	= SMNext_GetMaxPermBonus();
-		int tempBonus	= SMNext_GetTempBonus(),	maxTempBonus	= SMNext_GetMaxTempBonus();
-		int pillsBonus	= SMNext_GetPillsBonus(),	maxPillsBonus	= SMNext_GetMaxPillsBonus();
-		
-		int totalBonus		= permBonus		+ tempBonus		+ pillsBonus;
-		int maxTotalBonus	= maxPermBonus	+ maxTempBonus	+ maxPillsBonus;
-		
-		DrawPanelText(hSpecHud, " ");
-		
-		// > Perm: 114 | Temp: 514 | Pills: 810
-		// > Bonus: 114514 <100.0%>
-		// > Distance: 191
-		// never ever played on Next so take it easy.
-		
-		FormatEx(	info,
-					sizeof(info),
-					"> Perm: %i | Temp: %i | Pills: %i",
-					permBonus, tempBonus, pillsBonus);
-		DrawPanelText(hSpecHud, info);
-		
-		FormatEx(info, sizeof(info), "> Bonus: %i <%.1f%%>", totalBonus, ToPercent(totalBonus, maxTotalBonus));
-		DrawPanelText(hSpecHud, info);
-		
-		FormatEx(info, sizeof(info), "> Distance: %i", L4D_GetVersusMaxCompletionScore() / 4 * iSurvivorLimit);
-		//if (InSecondHalfOfRound())
-		//{
-		//	Format(info, sizeof(info), "%s | R#1: %i <%.1f%%>", info, iFirstHalfScore, ToPercent(iFirstHalfScore, L4D_GetVersusMaxCompletionScore() + maxTotalBonus));
-		//}
-		DrawPanelText(hSpecHud, info);
+		case L4D2Gamemode_Versus:
+		{
+			if (bHybridScoremod)
+			{
+				int healthBonus	= SMPlus_GetHealthBonus(),	maxHealthBonus	= SMPlus_GetMaxHealthBonus();
+				int damageBonus	= SMPlus_GetDamageBonus(),	maxDamageBonus	= SMPlus_GetMaxDamageBonus();
+				int pillsBonus	= SMPlus_GetPillsBonus(),	maxPillsBonus	= SMPlus_GetMaxPillsBonus();
+				
+				int totalBonus		= healthBonus		+ damageBonus		+ pillsBonus;
+				int maxTotalBonus	= maxHealthBonus	+ maxDamageBonus	+ maxPillsBonus;
+				
+				DrawPanelText(hSpecHud, " ");
+				
+				// > HB: 100% | DB: 100% | Pills: 60 / 100%
+				// > Bonus: 860 <100.0%>
+				// > Distance: 400
+				
+				FormatEx(	info,
+							sizeof(info),
+							"> HB: %.0f%% | DB: %.0f%% | Pills: %i / %.0f%%",
+							ToPercent(healthBonus, maxHealthBonus),
+							ToPercent(damageBonus, maxDamageBonus),
+							pillsBonus, ToPercent(pillsBonus, maxPillsBonus));
+				DrawPanelText(hSpecHud, info);
+				
+				FormatEx(info, sizeof(info), "> Bonus: %i <%.1f%%>", totalBonus, ToPercent(totalBonus, maxTotalBonus));
+				DrawPanelText(hSpecHud, info);
+				
+				FormatEx(info, sizeof(info), "> Distance: %i", L4D_GetVersusMaxCompletionScore() / 4 * iSurvivorLimit);
+				//if (InSecondHalfOfRound())
+				//{
+				//	Format(info, sizeof(info), "%s | R#1: %i <%.1f%%>", info, iFirstHalfScore, ToPercent(iFirstHalfScore, L4D_GetVersusMaxCompletionScore() + maxTotalBonus));
+				//}
+				DrawPanelText(hSpecHud, info);
+			}
+			
+			else if (bScoremod)
+			{
+				int healthBonus = HealthBonus();
+				
+				DrawPanelText(hSpecHud, " ");
+				
+				// > Health Bonus: 860
+				// > Distance: 400
+				
+				FormatEx(info, sizeof(info), "> Health Bonus: %i", healthBonus);
+				DrawPanelText(hSpecHud, info);
+				
+				FormatEx(info, sizeof(info), "> Distance: %i", L4D_GetVersusMaxCompletionScore() / 4 * iSurvivorLimit);
+				//if (InSecondHalfOfRound())
+				//{
+				//	Format(info, sizeof(info), "%s | R#1: %i", info, iFirstHalfScore);
+				//}
+				DrawPanelText(hSpecHud, info);
+			}
+			
+			else if (bNextScoremod)
+			{
+				int permBonus	= SMNext_GetPermBonus(),	maxPermBonus	= SMNext_GetMaxPermBonus();
+				int tempBonus	= SMNext_GetTempBonus(),	maxTempBonus	= SMNext_GetMaxTempBonus();
+				int pillsBonus	= SMNext_GetPillsBonus(),	maxPillsBonus	= SMNext_GetMaxPillsBonus();
+				
+				int totalBonus		= permBonus		+ tempBonus		+ pillsBonus;
+				int maxTotalBonus	= maxPermBonus	+ maxTempBonus	+ maxPillsBonus;
+				
+				DrawPanelText(hSpecHud, " ");
+				
+				// > Perm: 114 | Temp: 514 | Pills: 810
+				// > Bonus: 114514 <100.0%>
+				// > Distance: 191
+				// never ever played on Next so take it easy.
+				
+				FormatEx(	info,
+							sizeof(info),
+							"> Perm: %i | Temp: %i | Pills: %i",
+							permBonus, tempBonus, pillsBonus);
+				DrawPanelText(hSpecHud, info);
+				
+				FormatEx(info, sizeof(info), "> Bonus: %i <%.1f%%>", totalBonus, ToPercent(totalBonus, maxTotalBonus));
+				DrawPanelText(hSpecHud, info);
+				
+				FormatEx(info, sizeof(info), "> Distance: %i", L4D_GetVersusMaxCompletionScore() / 4 * iSurvivorLimit);
+				//if (InSecondHalfOfRound())
+				//{
+				//	Format(info, sizeof(info), "%s | R#1: %i <%.1f%%>", info, iFirstHalfScore, ToPercent(iFirstHalfScore, L4D_GetVersusMaxCompletionScore() + maxTotalBonus));
+				//}
+				DrawPanelText(hSpecHud, info);
+			}
+		}
 	}
 }
 
@@ -865,21 +912,29 @@ void FillInfectedInfo(Panel &hSpecHud)
 
 	int InfectedTeamIndex = !L4D2_AreTeamsFlipped();
 	
-	FormatEx(info, sizeof(info), "->2. Infected [%d]", L4D2Direct_GetVSCampaignScore(InfectedTeamIndex));
+	switch (g_Gamemode)
+	{
+		case L4D2Gamemode_Scavenge:
+		{
+			int score = GetScavengeMatchScore(InfectedTeamIndex);
+			FormatEx(info, sizeof info, "->2. Infected [%d of %d]", score, iRoundLimit);
+		}
+		case L4D2Gamemode_Versus:
+		{
+			FormatEx(info, sizeof info, "->2. Infected [%d]",
+						L4D2Direct_GetVSCampaignScore(InfectedTeamIndex));
+		}
+	}
+	
 	DrawPanelText(hSpecHud, " ");
 	DrawPanelText(hSpecHud, info);
 
-	if (bPendingArrayRefresh)
-	{
-		bPendingArrayRefresh = false;
-		BuildPlayerArrays();
-	}
-	
+	int infectedCount = 0;
 	for (int i = 0; i < iMaxPlayerZombies; ++i)
 	{
 		int client = iInfectedArray[i];
 		if (!client) continue;
-
+		
 		GetClientFixedName(client, name, sizeof(name));
 		if (!IsPlayerAlive(client)) 
 		{
@@ -925,9 +980,9 @@ void FillInfectedInfo(Panel &hSpecHud)
 			}
 			else
 			{
-				int iCooldown = RoundToNearest(GetAbilityCooldown(client));
+				int iCooldown = RoundToCeil(GetAbilityCooldown(client));
 				float fDuration = GetAbilityCooldownDuration(client);
-				if (!HasAbilityVictim(client, zClass) && iCooldown > 0 && fDuration > 1.0)
+				if (iCooldown > 0 && fDuration > 1.0 && !HasAbilityVictim(client, zClass))
 				{
 					FormatEx(buffer, sizeof(buffer), " [%is]", iCooldown);
 				}
@@ -946,12 +1001,13 @@ void FillInfectedInfo(Panel &hSpecHud)
 			}
 		}
 
+		infectedCount++;
 		DrawPanelText(hSpecHud, info);
 	}
 	
-	if (!iInfectedArray[0])
+	if (!infectedCount)
 	{
-		DrawPanelText(hSpecHud, "There are no SI at this moment.");
+		DrawPanelText(hSpecHud, "There is no SI at this moment.");
 	}
 }
 
@@ -1011,7 +1067,7 @@ bool FillTankInfo(Panel &hSpecHud, bool bTankHUD = false)
 	else
 	{
 		int healthPercent = RoundFloat((100.0 / maxhealth) * health);
-		FormatEx(info, sizeof(info), "Health  : %i / %i%%", health, ((healthPercent < 1) ? 1 : healthPercent));
+		FormatEx(info, sizeof(info), "Health  : %i / %i%%", health, MAX(1, healthPercent));
 	}
 	DrawPanelText(hSpecHud, info);
 
@@ -1052,28 +1108,18 @@ void FillGameInfo(Panel &hSpecHud)
 {
 	// Turns out too much info actually CAN be bad, funny ikr
 	static char info[64];
-	static char buffer[8];
+	static char buffer[10];
 
 	switch (g_Gamemode)
 	{
 		case L4D2Gamemode_Scavenge:
 		{
-			FormatEx(info, sizeof(info), "->3. %s", sReadyCfgName);
+			FormatEx(info, sizeof(info), "->3. %s (R#%i)", sReadyCfgName, GetScavengeRoundNumber());
 			
 			DrawPanelText(hSpecHud, " ");
 			DrawPanelText(hSpecHud, info);
-	
-			int round = GetScavengeRoundNumber();
-			switch (round)
-			{
-				case 0: Format(buffer, sizeof(buffer), "N/A");
-				case 1: Format(buffer, sizeof(buffer), "%ist", round);
-				case 2: Format(buffer, sizeof(buffer), "%ind", round);
-				case 3: Format(buffer, sizeof(buffer), "%ird", round);
-				default: Format(buffer, sizeof(buffer), "%ith", round);
-			}
-	
-			FormatEx(info, sizeof(info), "Half: %s | Round: %s", (InSecondHalfOfRound() ? "2nd" : "1st"), buffer);
+			
+			FormatEx(info, sizeof info, "Best of %i", iRoundLimit);
 			DrawPanelText(hSpecHud, info);
 		}
 		
@@ -1261,6 +1307,7 @@ stock void BuildPlayerArrays()
 	for (int client = 1; client <= MaxClients; ++client) 
 	{
 		if (!IsClientInGame(client)) continue;
+		
 		switch (GetClientTeam(client))
 		{
 			case TEAM_SURVIVOR:
@@ -1270,7 +1317,7 @@ stock void BuildPlayerArrays()
 			}
 			case TEAM_INFECTED:
 			{
-				if (GetInfectedClass(client) != ZC_Tank && infectedCount < iMaxPlayerZombies)
+				if (infectedCount < iMaxPlayerZombies)
 					iInfectedArray[infectedCount++] = client;
 			}
 		}
@@ -1369,6 +1416,68 @@ stock int GetRealClientCount()
 stock int InSecondHalfOfRound()
 {
 	return GameRules_GetProp("m_bInSecondHalfOfRound");
+}
+
+stock int GetVersusProgressDistance(int teamIndex)
+{
+	int distance = 0;
+	for (int i = 0; i < 4; ++i)
+	{
+		distance += GameRules_GetProp("m_iVersusDistancePerSurvivor", _, i + 4 * teamIndex);
+	}
+	return distance;
+}
+
+/*
+ * Future use
+ */
+stock void FillScavengeScores(int arr[2][5])
+{
+	for (int i = 1; i <= iRoundLimit; ++i)
+	{
+		arr[0][i-1] = GetScavengeTeamScore(0, i);
+		arr[1][i-1] = GetScavengeTeamScore(1, i);
+	}
+}
+
+stock int FormatScavengeRoundTime(char[] buffer, int maxlen, int teamIndex, bool nodecimalpoint = false)
+{
+	float seconds = GetScavengeRoundDuration(teamIndex);
+	int minutes = RoundToFloor(seconds) / 60;
+	seconds -= 60 * minutes;
+	
+	return nodecimalpoint ?
+				Format(buffer, maxlen, "%d:%02.0f", minutes, seconds) :
+				Format(buffer, maxlen, "%d:%05.2f", minutes, seconds);
+}
+
+/* 
+ * GetScavengeRoundDuration & GetScavengeTeamScore
+ * credit to ProdigySim
+ */
+stock float GetScavengeRoundDuration(int teamIndex)
+{
+	float flRoundStartTime = GameRules_GetPropFloat("m_flRoundStartTime");
+	if (teamIndex == view_as<int>(L4D2_AreTeamsFlipped()) && flRoundStartTime != 0.0 && GameRules_GetPropFloat("m_flRoundEndTime") == 0.0)
+	{
+		// Survivor team still playing round.
+		return GetGameTime() - flRoundStartTime;
+	}
+	return GameRules_GetPropFloat("m_flRoundDuration", teamIndex);
+}
+
+stock int GetScavengeTeamScore(int teamIndex, int round=-1)
+{
+	if (!(1 <= round <= 5))
+	{
+		round = GameRules_GetProp("m_nRoundNumber");
+	}
+	return GameRules_GetProp("m_iScavengeTeamScore", _, (2*(round-1)) + teamIndex);
+}
+
+stock int GetScavengeMatchScore(int teamIndex)
+{
+	return GameRules_GetProp("m_iScavengeMatchScore", _, teamIndex);
 }
 
 stock int GetScavengeRoundNumber()
