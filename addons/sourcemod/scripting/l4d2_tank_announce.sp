@@ -1,42 +1,65 @@
-#pragma semicolon 1
-
 #include <sourcemod>
-#include <sdktools>
+#include <sdktools_sound>
+#include <dhooks>
 #include <colors>
 
-new bool:g_bIsTankAlive;
+#pragma semicolon 1
+#pragma newdecls required
 
-public Plugin:myinfo = 
+#define PLUGIN_VERSION "1.3"
+
+public Plugin myinfo = 
 {
 	name = "L4D2 Tank Announcer",
-	author = "Visor",
+	author = "Visor, Forgetest",
 	description = "Announce in chat and via a sound when a Tank has spawned",
-	version = "1.1.2",
+	version = PLUGIN_VERSION,
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-public OnMapStart()
+#define DANG "ui/pickup_secret01.wav"
+
+Handle g_hDetour;
+
+public void OnPluginStart()
 {
-	PrecacheSound("ui/pickup_secret01.wav");
+	GameData hData = new GameData("left4dhooks.l4d2");
+	if (hData == null)
+		SetFailState("Missing gamedata \"left4dhooks.l4d2\".");
+	
+	g_hDetour = DHookCreateFromConf(hData, "SpawnTank");
+	if (g_hDetour == null)
+		SetFailState("Failed to create detour \"SpawnTank\" from gamedata.");
+	
+	if (!DHookEnableDetour(g_hDetour, true, OnSpawnTank))
+		SetFailState("Failed to enable detour \"SpawnTank\".");
+		
+	delete hData;
 }
 
-public OnPluginStart()
+public void OnPluginEnd()
 {
-	HookEvent("tank_spawn", EventHook:TankSpawnEvent, EventHookMode_PostNoCopy);
-	HookEvent("round_start", EventHook:RoundStartEvent, EventHookMode_PostNoCopy);
+	if (!DHookDisableDetour(g_hDetour, true, OnSpawnTank))
+		SetFailState("Failed to disable detour \"SpawnTank\".");
 }
 
-public RoundStartEvent()
+public void OnMapStart()
 {
-	g_bIsTankAlive = false;
+	PrecacheSound(DANG);
 }
 
-public TankSpawnEvent()
+public MRESReturn OnSpawnTank(Handle hReturn, Handle hParams)
 {
-	if (!g_bIsTankAlive)
-	{
-		g_bIsTankAlive = true;
-		CPrintToChatAll("{red}[{default}!{red}] {olive}Tank {default}has spawned!");
-		EmitSoundToAll("ui/pickup_secret01.wav");
-	}
+	bool ret = DHookGetReturn(hReturn) != 0; // left4dhooks sets it 0 to disable tank spawns
+	
+	if (ret == true)
+		RequestFrame(OnNextFrame);	// seems it occurs often that prints with wrong teamcolors
+									// make a slight delay here to try fixing this
+	return MRES_Ignored;
+}
+
+public void OnNextFrame()
+{
+	CPrintToChatAll("{red}[{default}!{red}] {olive}Tank {default}has spawned!");
+	EmitSoundToAll(DANG);
 }
