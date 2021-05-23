@@ -222,7 +222,7 @@ ProcessPlayerLerp(client, bool:load = false, bool:team = false)
 	// set lerp for fixing differences between server and client with cl_interp_ratio 0
 	SetEntPropFloat(client, Prop_Data, "m_fLerpTime", newLerpTime);
 	// check lerp first
-	if (GetClientTeam(client) == L4D_TEAM_SPECTATE) return;
+	if (GetClientTeam(client) < 2) return;
 
 	// Get steamid and index
 	decl String:steamID[STEAMID_SIZE];
