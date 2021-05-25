@@ -726,4 +726,5 @@ public void __ext_builtinvotes_SetNTVOptional()
 	MarkNativeAsOptional("DisplayBuiltinVotePass2");
 	MarkNativeAsOptional("DisplayBuiltinVoteFail");
 	MarkNativeAsOptional("Game_IsVoteInProgress");
+	MarkNativeAsOptional("BuiltinVote_IsVoteInProgress");
 }
