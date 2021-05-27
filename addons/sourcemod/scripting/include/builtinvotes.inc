@@ -225,18 +225,18 @@ native bool DisplayBuiltinVote(Handle vote, int[] clients, int numClients, int t
  */
 stock bool DisplayBuiltinVoteToAll(Handle vote, int time)
 {
-	int total, players[MaxClients];
+	int iNumPlayers;
+	int[] iPlayers = new int[MaxClients];
 
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		if (!IsClientInGame(i) || IsFakeClient(i))
-		{
+	for (int i = 1; i <= MaxClients; i++) {
+		if (!IsClientInGame(i) || IsFakeClient(i)) {
 			continue;
 		}
-		players[total++] = i;
+		
+		iPlayers[iNumPlayers++] = i;
 	}
 
-	return DisplayBuiltinVote(vote, players, total, time);
+	return DisplayBuiltinVote(vote, iPlayers, iNumPlayers, time);
 }
 
 /**
@@ -567,19 +567,19 @@ stock void GetBuiltinVoteInfo(int param2, int &winningVotes, int &totalVotes)
 stock bool DisplayBuiltinVoteToTeam(Handle vote, int team, int time)
 {
 	SetBuiltinVoteTeam(vote, team);
+	
+	int iNumPlayers;
+	int[] iPlayers = new int[MaxClients];
 
-	int total, players[MaxClients];
-
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		if (!IsClientInGame(i) || IsFakeClient(i) || (GetClientTeam(i) != team))
-		{
+	for (int i = 1; i <= MaxClients; i++) {
+		if (!IsClientInGame(i) || IsFakeClient(i) || (GetClientTeam(i) != team)) {
 			continue;
 		}
-		players[total++] = i;
+		
+		iPlayers[iNumPlayers++] = i;
 	}
 
-	return DisplayBuiltinVote(vote, players, total, time);
+	return DisplayBuiltinVote(vote, iPlayers, iNumPlayers, time);
 }
 
 /**
@@ -595,20 +595,22 @@ stock bool DisplayBuiltinVoteToTeam(Handle vote, int team, int time)
  */
 stock bool DisplayBuiltinVoteToAllButOne(Handle vote, int client, int time)
 {
-	if (!IsClientInGame(client)) return false;
+	if (!IsClientInGame(client)) {
+		return false;
+	}
+	
+	int iNumPlayers;
+	int[] iPlayers = new int[MaxClients];
 
-	int total, players[MaxClients];
-
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		if (!IsClientInGame(i) || IsFakeClient(i) || (i == client))
-		{
+	for (int i = 1; i <= MaxClients; i++) {
+		if (!IsClientInGame(i) || IsFakeClient(i) || (i == client)) {
 			continue;
 		}
-		players[total++] = i;
+		
+		iPlayers[iNumPlayers++] = i;
 	}
 
-	return DisplayBuiltinVote(vote, players, total, time);
+	return DisplayBuiltinVote(vote, iPlayers, iNumPlayers, time);
 }
 
 /**
@@ -623,34 +625,32 @@ stock bool DisplayBuiltinVoteToAllButOne(Handle vote, int client, int time)
  */
 stock bool DisplayBuiltinVoteToTeamButOne(Handle vote, int client, int time)
 {
-	if (!IsClientInGame(client))
-	{
+	if (!IsClientInGame(client)) {
 		return false;
 	}
 
 	int team = GetClientTeam(client);
 
 #if 0
-	if (team < 2)
-	{
+	if (team < 2) {
 		return false;
 	}
 #endif
 
 	SetBuiltinVoteTeam(vote, team);
+	
+	int iNumPlayers;
+	int[] iPlayers = new int[MaxClients];
 
-	int total, players[MaxClients];
-
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		if (!IsClientInGame(i) || IsFakeClient(i) || (i == client) || (GetClientTeam(i) != team))
-		{
+	for (int i = 1; i <= MaxClients; i++) {
+		if (!IsClientInGame(i) || IsFakeClient(i) || (i == client) || (GetClientTeam(i) != team)) {
 			continue;
 		}
-		players[total++] = i;
+		
+		iPlayers[iNumPlayers++] = i;
 	}
-
-	return DisplayBuiltinVote(vote, players, total, time);
+	
+	return DisplayBuiltinVote(vote, iPlayers, iNumPlayers, time);
 }
 
 /**
@@ -664,18 +664,18 @@ stock bool DisplayBuiltinVoteToTeamButOne(Handle vote, int client, int time)
  */
 stock bool DisplayBuiltinVoteToAllNonSpectators(Handle vote, int time)
 {
-	int total, players[MaxClients];
+	int iNumPlayers;
+	int[] iPlayers = new int[MaxClients];
 
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		if (!IsClientInGame(i) || IsFakeClient(i) || (GetClientTeam(i) < 2))
-		{
+	for (int i = 1; i <= MaxClients; i++) {
+		if (!IsClientInGame(i) || IsFakeClient(i) || (GetClientTeam(i) < 2)) {
 			continue;
 		}
-		players[total++] = i;
+		
+		iPlayers[iNumPlayers++] = i;
 	}
 
-	return DisplayBuiltinVote(vote, players, total, time);
+	return DisplayBuiltinVote(vote, iPlayers, iNumPlayers, time);
 }
 
 /**
