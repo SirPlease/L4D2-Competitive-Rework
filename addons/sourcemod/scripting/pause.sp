@@ -512,7 +512,7 @@ UpdatePanel()
 		delete menuPanel;
 	}
 	
-	if (IsBuiltinVoteInProgress())
+	if (BuiltinVote_IsVoteInProgress())
 	{
 		for (int i = 1; i <= MaxClients; i++)
 		{
