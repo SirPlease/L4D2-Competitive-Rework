@@ -976,9 +976,8 @@ public Action VoteBossCmd(int client, int args)
 	}
 	
 	// Check if a new vote is allowed to be called
-	if (IsNewBuiltinVoteAllowed() && !IsBuiltinVoteInProgress())
+	if (IsNewBuiltinVoteAllowed())
 	{
-		
 		char bv_voteTitle[64];
 		
 		// Set vote title
@@ -1006,12 +1005,11 @@ public Action VoteBossCmd(int client, int args)
 		SetBuiltinVoteResultCallback(bv_hVote, BossVoteResultHandler);
 		DisplayBuiltinVote(bv_hVote, iPlayers, iNumPlayers, 20);
 		FakeClientCommand(client, "Vote Yes");
-	}
-	else
-	{
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Boss Vote cannot be called right now...");
 		return;
 	}
+
+	CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Boss Vote cannot be called right now...");
+	return;
 }
 
 public int BossVoteActionHandler(Handle vote, BuiltinVoteAction action, int param1, int param2)
@@ -1030,7 +1028,7 @@ public int BossVoteActionHandler(Handle vote, BuiltinVoteAction action, int para
 	}
 }
 
-public int BossVoteResultHandler(Handle vote, int num_votes, int num_clients, const client_info[][2], int num_items, const item_info[][2])
+public void BossVoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
 {
 	for (int i=0; i<num_items; i++)
 	{

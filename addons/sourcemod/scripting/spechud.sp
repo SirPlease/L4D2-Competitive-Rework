@@ -557,7 +557,7 @@ public Action HudDrawTimer(Handle hTimer)
 			if (!IsClientInGame(i) || GetClientTeam(i) != TEAM_SPECTATOR || !bSpecHudActive[i] || (IsFakeClient(i) && !IsClientSourceTV(i)))
 				continue;
 
-			if (IsBuiltinVoteInProgress() && IsClientInBuiltinVotePool(i))
+			if (BuiltinVote_IsVoteInProgress() && IsClientInBuiltinVotePool(i))
 				continue;
 
 			SendPanelToClient(specHud, i, DummySpecHudHandler, 3);
@@ -583,7 +583,7 @@ public Action HudDrawTimer(Handle hTimer)
 			if (!IsClientInGame(i) || IsFakeClient(i) || GetClientTeam(i) == TEAM_SURVIVOR || !bTankHudActive[i] || (bSpecHudActive[i] && GetClientTeam(i) == TEAM_SPECTATOR))
 				continue;
 			
-			if (IsBuiltinVoteInProgress() && IsClientInBuiltinVotePool(i))
+			if (BuiltinVote_IsVoteInProgress() && IsClientInBuiltinVotePool(i))
 				continue;
 	
 			SendPanelToClient(tankHud, i, DummyTankHudHandler, 3);

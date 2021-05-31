@@ -225,7 +225,7 @@ public int VoteActionHandler(Handle vote, BuiltinVoteAction action, int param1, 
 }
 
 //Handles a score vote's results, if a majority voted for the score change then set the scores
-public int ScoreVoteResultHandler(Handle vote, int num_votes, int num_clients, const client_info[][2], int num_items, const item_info[][2])
+public void ScoreVoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
 {
 	for (int i = 0; i < num_items; i++) {
 		if (item_info[i][BUILTINVOTEINFO_ITEM_INDEX] == BUILTINVOTES_VOTE_YES) {
