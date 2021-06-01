@@ -254,7 +254,7 @@ public VoteActionHandler(Handle:vote, BuiltinVoteAction:action, param1, param2)
 	}
 }
 
-public MatchVoteResultHandler(Handle:vote, num_votes, num_clients, const client_info[][2], num_items, const item_info[][2])
+public void MatchVoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
 {
 	for (new i=0; i<num_items; i++)
 	{
@@ -319,7 +319,7 @@ StartResetMatchVote(client)
 	CPrintToChat(client, "{blue}[{default}Match{blue}] {default}Resetmatch vote cannot be started now.");
 }
 
-public ResetMatchVoteResultHandler(Handle:vote, num_votes, num_clients, const client_info[][2], num_items, const item_info[][2])
+public void ResetMatchVoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
 {
 	for (new i=0; i<num_items; i++)
 	{

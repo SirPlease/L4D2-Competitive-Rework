@@ -1,6 +1,6 @@
 /*
 *	Left 4 DHooks Direct - TESTER
-*	Copyright (C) 2020 Silvers
+*	Copyright (C) 2021 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.19"
+#define PLUGIN_VERSION		"1.36"
 
 /*=======================================================================================
 	Plugin Info:
@@ -31,6 +31,12 @@
 
 ========================================================================================
 	Change Log:
+
+1.36 (20-Apr-2021)
+	- Restricted native "L4D2_IsReachable" client index to Survivor bots only. Attempts to find a valid bot otherwise it will throw an error. Thanks to "Forgetest" for reporting.
+
+1.20 (23-Mar-2021)
+	- Added native "L4D_HasPlayerControlledZombies".
 
 1.19 (27-Aug-2020)
 	- Marked "Direct_TryOfferingTankBot" as tested and working.
@@ -413,7 +419,7 @@ public Action sm_l4dd(int client, int args)
 
 			for( int i = 1; i <= MaxClients; i++ )
 			{
-				if( IsClientInGame(i) && IsFakeClient(i) == true )
+				if( IsClientInGame(i) && IsFakeClient(i) == true && GetClientTeam(i) == 2 )
 				{
 					bot = i;
 					break;
@@ -486,6 +492,8 @@ public Action sm_l4dd(int client, int args)
 	PrintToServer("L4D_IsInFirstCheckpoint %d",							L4D_IsInFirstCheckpoint(client)); // WORKING
 
 	PrintToServer("L4D_IsInLastCheckpoint %d",							L4D_IsInLastCheckpoint(client)); // WORKING
+
+	PrintToServer("L4D_HasPlayerControlledZombies %d",					L4D_HasPlayerControlledZombies()); // WORKING
 
 
 
@@ -1802,7 +1810,7 @@ public Action L4D_OnGetRandomPZSpawnPosition(int &client, int &zombieClass, int 
 		ForwardCalled("\"L4D_OnGetRandomPZSpawnPosition\" Client(%d). Class(%d). Attempts(%d). (%f %f %f)", client, zombieClass, attempts, vecPos[0], vecPos[1], vecPos[2]);
 	}
 
-	// zombieClass = 1;
+	// zombieClass = 1; // Smoker
 	attempts = 20;
 	return Plugin_Changed; // WORKS
 }
