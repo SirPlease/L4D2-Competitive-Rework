@@ -28,7 +28,7 @@
 bool bIsBridge;		//for parish bridge cars
 bool bIsStadium;	//for suicide blitz finale hittables
 float fOverkill[MAXPLAYERS + 1][2048]; // Overkill, prolly don't need this big of a global array, could also use adt_array.
-float fSpecialOverkill[MAXPLAYERS + 1][2]; // Dealing with breakable pieces that will cause multiple hits in a row (unintended behaviour)
+float fSpecialOverkill[MAXPLAYERS + 1][3]; // Dealing with breakable pieces that will cause multiple hits in a row (unintended behaviour)
 bool bLateLoad;   // Late load support!
 
 //cvars
@@ -48,6 +48,7 @@ ConVar hGeneratorTrailerStandingDamage;
 ConVar hMilitiaRockStandingDamage;
 ConVar hSofaChairStandingDamage;
 ConVar hAtlasBallDamage;
+ConVar hIBeamDamage;
 ConVar hDiescraperBallDamage;
 ConVar hVanDamage;
 ConVar hStandardIncapDamage;
@@ -112,6 +113,9 @@ public void OnPluginStart()
 											FCVAR_NONE, true, 0.0, true, 300.0 );
 	hAtlasBallDamage	= CreateConVar( "hc_atlas_ball_standing_damage",	"100.0",
 											"Damage of hittable atlas balls to non-incapped survivors.",
+											FCVAR_NONE, true, 0.0, true, 300.0 );
+	hIBeamDamage	= CreateConVar( "hc_ibeam_standing_damage",	"48.0",
+											"Damage of ibeams to non-incapped survivors.",
 											FCVAR_NONE, true, 0.0, true, 300.0 );
 	hDiescraperBallDamage	= CreateConVar( "hc_diescraper_ball_standing_damage",	"100.0",
 											"Damage of hittable ball statue on Diescraper finale to non-incapped survivors.",
@@ -183,6 +187,7 @@ public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcas
 		}
 		fSpecialOverkill[i][0] = 0.0;
 		fSpecialOverkill[i][1] = 0.0;
+		fSpecialOverkill[i][2] = 0.0;
 	}
 }
 
@@ -228,6 +233,13 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			if (fSpecialOverkill[victim][1] - GetGameTime() > 0) return Plugin_Handled;
 			fSpecialOverkill[victim][1] = GetGameTime() + interval;
 			damage = 23.0;
+			attacker = FindTank();
+		}
+		else if (StrContains(sModelName, "concretepiller01_dm01", false) != -1) // [2]
+		{
+			if (fSpecialOverkill[victim][2] - GetGameTime() > 0) return Plugin_Handled;
+			fSpecialOverkill[victim][2] = GetGameTime() + interval;
+			damage = 8.0;
 			attacker = FindTank();
 		}
 		
@@ -320,6 +332,10 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			else if (StrContains(sModelName, "atlas_break_ball.mdl", false) != -1)
 			{
 				damage = GetConVarFloat(hAtlasBallDamage);
+			}
+			else if (StrContains(sModelName, "ibeam_breakable01", false) != -1)
+			{
+				damage = GetConVarFloat(hIBeamDamage);
 			}
 			else if (StrEqual(sModelName, "models/props_diescraper/statue_break_ball.mdl", false))
 			{
