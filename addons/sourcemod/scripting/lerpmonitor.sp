@@ -1,335 +1,380 @@
-#pragma semicolon 1
-#include <sourcemod>
 #include <colors>
+#pragma newdecls required
+#pragma semicolon 1
 
-#define CVAR_FLAGS 			FCVAR_NONE
-#define PLUGIN_VERSION 		"1.0"
+#include <sourcemod>
+#undef REQUIRE_PLUGIN
+#tryinclude <readyup>
 
-#define STEAMID_SIZE 		32
+#define STEAMID_SIZE 32
+
 #define L4D_TEAM_SPECTATE 1
+#define L4D_TEAM_SURVIVORS 2
 
-static const ARRAY_STEAMID = 0;
-static const ARRAY_LERP = 1;
-static const ARRAY_CHANGES = 2;
-static const ARRAY_COUNT = 3;
+StringMap
+	ArrLerpsValue = null,
+	ArrLerpsCountChanges = null;
+	
+ConVar 
+	cVarReadyUpLerpChanges = null,
+	cVarAllowedLerpChanges = null,
+	cVarLerpChangeSpec = null,
+	cVarMinLerp = null,
+	cVarMaxLerp = null,
+	cVarMinUpdateRate = null,
+	cVarMaxUpdateRate = null,
+	cVarMinInterpRatio = null,
+	cVarMaxInterpRatio = null,
+	cVarShowLerpTeamChange = null;
 
-static Handle:arrayLerps;
-static Handle:cVarReadyUpLerpChanges;
-static Handle:cVarAllowedLerpChanges;
-static Handle:cVarLerpChangeSpec;
-static Handle:cVarMinLerp;
-static Handle:cVarMaxLerp;
+bool
+	IsLateLoad = false,
+	isFirstHalf = true,
+	isMatchLife = true,
+	isTransfer = false;
 
-static Handle:cVarMinUpdateRate;
-static Handle:cVarMaxUpdateRate;
-static Handle:cVarMinInterpRatio;
-static Handle:cVarMaxInterpRatio;
-
-static bool:isFirstHalf = true;
-static bool:isMatchLife = true;
-static bool:isTransfer = false;
-static Handle:cvarL4DReadyEnabled = INVALID_HANDLE;
-static Handle:cvarL4DReadyBothHalves = INVALID_HANDLE;
-new bool:bBadValveCoding[MAXPLAYERS + 1];
-
-public Plugin:myinfo = {
+public Plugin myinfo = 
+{
 	name = "LerpMonitor++",
-	author = "ProdigySim, Die Teetasse, vintik",
+	author = "ProdigySim, Die Teetasse, vintik, A1m`",
 	description = "Keep track of players' lerp settings",
-	version = PLUGIN_VERSION,
-	url = "https://bitbucket.org/vintik/various-plugins"
+	version = "2.1",
+	url = "https://github.com/A1mDev/L4D2-Competitive-Plugins"
 };
 
-public OnPluginStart() {
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	IsLateLoad = late;
+	CreateNative("LM_GetLerpTime", LM_GetLerpTime);
+	CreateNative("LM_GetCurrentLerpTime", LM_GetCurrentLerpTime);
+	RegPluginLibrary("lerpmonitor");
+	return APLRes_Success;
+}
 
+public int LM_GetLerpTime(Handle plugin, int numParams) 
+{
+	int client = GetNativeCell(1);
+	if (client < 1 || client > MaxClients) {
+		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index %d!", client);
+	}
+	
+	if (!IsClientInGame(client)) {
+		return ThrowNativeError(SP_ERROR_NATIVE, "Client %d is not in game!", client);
+	}
+	
+	float fLerpValue = -1.0;
+	char sSteamID[STEAMID_SIZE];
+	GetClientAuthId(client, AuthId_Steam2, sSteamID, sizeof(sSteamID));
+	if (ArrLerpsValue.GetValue(sSteamID, fLerpValue)) {
+		return view_as<int>(fLerpValue);
+	}
+	return view_as<int>(-1.0);
+}
+
+public int LM_GetCurrentLerpTime(Handle plugin, int numParams) 
+{
+	int client = GetNativeCell(1);
+	if (client < 1 || client > MaxClients) {
+		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index %d!", client);
+	}
+	
+	if (!IsClientConnected(client)) {
+		return ThrowNativeError(SP_ERROR_NATIVE, "Client %d not connected!", client);
+	}
+	
+	return view_as<int>(GetLerpTime(client));
+}
+
+public void OnPluginStart()
+{
+	cVarAllowedLerpChanges = CreateConVar("sm_allowed_lerp_changes", "4", "Allowed number of lerp changes for a half", _, true, 0.0, true, 20.0);
+	cVarLerpChangeSpec = CreateConVar("sm_lerp_change_spec", "1", "Move to spectators on exceeding lerp changes count?", _, true, 0.0, true, 1.0);
+	cVarReadyUpLerpChanges = CreateConVar("sm_readyup_lerp_changes", "1", "Allow lerp changes during ready-up", _, true, 0.0, true, 1.0);
+	cVarShowLerpTeamChange = CreateConVar("sm_show_lerp_team_changes", "1", "show a message about the player's lerp if he changes the team", _, true, 0.0, true, 1.0);
+	cVarMinLerp = CreateConVar("sm_min_lerp", "0.000", "Minimum allowed lerp value", _, true, 0.000, true, 0.500);
+	cVarMaxLerp = CreateConVar("sm_max_lerp", "0.067", "Maximum allowed lerp value", _, true, 0.000, true, 0.500);
+	
+	RegConsoleCmd("sm_lerps", Lerps_Cmd, "List the Lerps of all players in game");
+	
 	cVarMinUpdateRate = FindConVar("sv_minupdaterate");
 	cVarMaxUpdateRate = FindConVar("sv_maxupdaterate");
 	cVarMinInterpRatio = FindConVar("sv_client_min_interp_ratio");
 	cVarMaxInterpRatio = FindConVar("sv_client_max_interp_ratio");
-
 	
-	cvarL4DReadyEnabled = FindConVar("l4d_ready_enabled");
-	cvarL4DReadyBothHalves = FindConVar("l4d_ready_both_halves");
+	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
+	HookEvent("round_end", Event_RoundEnd, EventHookMode_PostNoCopy);
+	HookEvent("player_team", OnTeamChange, EventHookMode_Post);
+	HookEvent("player_disconnect", Event_PlayerDisconnect, EventHookMode_Post);
+	HookEvent("player_left_start_area", Event_RoundGoesLive, EventHookMode_PostNoCopy);
 	
-	cVarAllowedLerpChanges = CreateConVar("sm_allowed_lerp_changes", "1", "Allowed number of lerp changes for a half");
-	cVarLerpChangeSpec = CreateConVar("sm_lerp_change_spec", "1", "Move to spectators on exceeding lerp changes count?");
-	cVarReadyUpLerpChanges = CreateConVar("sm_readyup_lerp_changes", "1", "Allow lerp changes during ready-up");
-	cVarMinLerp = CreateConVar("sm_min_lerp", "0.000", "Minimum allowed lerp value");
-	cVarMaxLerp = CreateConVar("sm_max_lerp", "0.067", "Maximum allowed lerp value");
+	// create arrays
+	ArrLerpsValue = new StringMap();
+	ArrLerpsCountChanges = new StringMap();
 	
-	RegConsoleCmd("sm_lerps", Lerps_Cmd, "List the Lerps of all players in game");
-	
-	HookEvent("round_start", Event_RoundStart);
-	HookEvent("round_end", Event_RoundEnd);
-	HookEvent("player_team", OnTeamChange);
-	
-	// create array
-	arrayLerps = CreateArray(ByteCountToCells(STEAMID_SIZE));
-	// process current players
-	for (new client = 1; client < MaxClients+1; client++) {	
-		if (!IsClientInGame(client) || IsFakeClient(client)) continue;
-		ProcessPlayerLerp(client, true);
+	if (IsLateLoad) {
+		// process current players
+		for (int i = 1; i <= MaxClients; i++) {	
+			if (IsClientInGame(i) && !IsFakeClient(i)) {
+				ProcessPlayerLerp(i, true);
+			}
+		}
 	}
 }
 
-public OnClientPutInServer(client)
+public void OnClientPutInServer(int client)
 {
-	if (IsValidEntity(client) && !IsFakeClient(client))
-	{
-		CreateTimer(1.0, Process, client);
+	if (IsValidEntity(client) && !IsFakeClient(client)) {
+		CreateTimer(1.0, Process, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
-public Action:Process(Handle:timer, any:client)
+public Action Process(Handle hTimer, int userid)
 {
-	if (IsValidEntity(client) && !IsFakeClient(client) && GetClientTeam(client) != 1)
-	{
+	int client = GetClientOfUserId(userid);
+	if (client > 0 && GetClientTeam(client) > L4D_TEAM_SPECTATE) {
 		ProcessPlayerLerp(client);
 	}
 }
 
-public OnMapStart() {
-	if ((cvarL4DReadyEnabled!=INVALID_HANDLE) && (GetConVarBool(cvarL4DReadyEnabled))) {
-		isMatchLife = false;
-	}
-	else {
-		isMatchLife = true;
-	}
+public void OnMapStart()
+{
+	isMatchLife = false;
 }
 
-public OnMapEnd() {
+public void OnMapEnd()
+{
 	isFirstHalf = true;
-	ClearArray(arrayLerps);
+	ArrLerpsValue.Clear();
+	ArrLerpsCountChanges.Clear();
 }
 
-public OnClientSettingsChanged(client) {
+public void Event_RoundGoesLive(Event hEvent, const char[] name, bool dontBroadcast)
+{
+	//This event works great with the plugin readyup.smx (does not conflict)
+	//This event works great in different game modes: versus, coop, scavenge and etc
+	isMatchLife = true;
+}
+
+public void OnClientSettingsChanged(int client)
+{
 	if (IsValidEntity(client) && !IsFakeClient(client)) {
 		ProcessPlayerLerp(client);
 	}
 }
 
-
-public OnTeamChange(Handle:event, String:name[], bool:dontBroadcast)
+public void Event_PlayerDisconnect(Event hEvent, const char[] name, bool dontBroadcast)
 {
-    if (GetEventInt(event, "team") != L4D_TEAM_SPECTATE)
-	{
-		new client = GetClientOfUserId(GetEventInt(event, "userid"));
-		if (client > 0)
-		{
-			if (IsClientInGame(client) && !IsFakeClient(client) && !bBadValveCoding[client] && !isTransfer)
-			{
-				CreateTimer(0.1, OnTeamChangeDelay, client, TIMER_FLAG_NO_MAPCHANGE);
+	char SteamID[64];
+	hEvent.GetString("networkid", SteamID, sizeof(SteamID));
+	
+	if (StrContains(SteamID, "STEAM") != 0) {
+		return;
+	}
+	
+	ArrLerpsValue.Clear();
+	//ArrLerpsCountChanges.Clear();
+}
+
+public void OnTeamChange(Event hEvent, const char[] eName, bool dontBroadcast)
+{
+	if (hEvent.GetInt("team") > L4D_TEAM_SPECTATE) {
+		int userid = hEvent.GetInt("userid");
+		int client = GetClientOfUserId(userid);
+		if (client > 0 && IsClientInGame(client) && !IsFakeClient(client)) {
+			if (!isTransfer) {
+				CreateTimer(0.1, OnTeamChangeDelay, userid, TIMER_FLAG_NO_MAPCHANGE);
 			}
 		}
-    }
+	}
 }
 
-public Action:OnTeamChangeDelay(Handle:timer, any:client)
+public Action OnTeamChangeDelay(Handle hTimer, int userid)
 {
-	ProcessPlayerLerp(client, false, true);
-	return Plugin_Handled;
+	int client = GetClientOfUserId(userid);
+	if (client > 0) {
+		ProcessPlayerLerp(client, false, true);
+	}
+	return Plugin_Stop;
 }
 
-public Action:OnBadCoding(Handle:timer, any:client)
+public void OnRoundIsLive()
 {
-	bBadValveCoding[client] = false;
-	return Plugin_Handled;
-}
-
-public Action:OnRoundIsLive() {
 	isMatchLife = true;
 }
- 
-public Event_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast) {
+
+public void Event_RoundEnd(Event hEvent, const char[] name, bool dontBroadcast)
+{
 	// little delay for other round end used modules
-	CreateTimer(0.5, Timer_RoundEndDelay);
+	CreateTimer(0.5, Timer_RoundEndDelay, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action:Timer_RoundEndDelay(Handle:timer) {
+public Action Timer_RoundEndDelay(Handle hTimer)
+{
 	isFirstHalf = false;
 	isTransfer = true;
+	isMatchLife = false;
 	
-	if ((cvarL4DReadyBothHalves!=INVALID_HANDLE) && (GetConVarBool(cvarL4DReadyBothHalves))) {
-		isMatchLife = false;
-	}
+	ArrLerpsCountChanges.Clear();
 }
 
-stock bool:IsFirstHalf() {
-	return isFirstHalf;
-}
-
-stock bool:IsMatchLife() {
-	return isMatchLife;
-}
-
-stock GetClientBySteamID(const String:steamID[]) {
-	decl String:tempSteamID[STEAMID_SIZE];
-	
-	for (new client = 1; client < MaxClients+1; client++) {
-		if (!IsClientInGame(client)) continue;
-		GetClientAuthId(client, AuthId_Steam2, tempSteamID, STEAMID_SIZE);
+public Action Lerps_Cmd(int client, int args)
+{
+	bool isEmpty = true;
+	if (ArrLerpsValue.Size > 0) {
+		ReplyToCommand(client, "[!] Lerp setting list:");
 		
-		if (StrEqual(steamID, tempSteamID)) {
-			return client;
+		float fLerpValue;
+		char sSteamID[STEAMID_SIZE];
+		for (int i = 1; i <= MaxClients; i++) {
+			if (IsClientInGame(i) && !IsFakeClient(i)) {
+				GetClientAuthId(i, AuthId_Steam2, sSteamID, sizeof(sSteamID));
+				
+				if (ArrLerpsValue.GetValue(sSteamID, fLerpValue)) {
+					ReplyToCommand(client, "%N [%s]: %.01f", i, sSteamID, fLerpValue * 1000);
+					isEmpty = false;
+				}
+			}
 		}
 	}
 	
-	return -1;
-}
-
-public Action:Lerps_Cmd(client, args) {
-	new clientID, index;
-	decl Float:lerp;
-	decl String:steamID[STEAMID_SIZE];
-	
-	for (new i = 0; i < (GetArraySize(arrayLerps) / ARRAY_COUNT); i++) {
-		index = (i * ARRAY_COUNT);
-		
-		GetArrayString(arrayLerps, index + ARRAY_STEAMID, steamID, STEAMID_SIZE);
-		clientID = GetClientBySteamID(steamID);
-		lerp = GetArrayCell(arrayLerps, index + ARRAY_LERP);
-		
-		if (clientID != -1 && GetClientTeam(clientID) != L4D_TEAM_SPECTATE) {
-			ReplyToCommand(client, "%N [%s]: %.01f", clientID, steamID, lerp*1000);
-		}
+	if (isEmpty) {
+		ReplyToCommand(client, "There is nothing here!");
 	}
-	
 	return Plugin_Handled;
 }
 
-public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast) {
+public void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
+{
 	// delete change count for second half
-	if (!IsFirstHalf()) {
-		for (new i = 0; i < (GetArraySize(arrayLerps) / ARRAY_COUNT); i++) {
-			SetArrayCell(arrayLerps, (i * ARRAY_COUNT) + ARRAY_CHANGES, 0);
-		}
+	if (!isFirstHalf) {
+		ArrLerpsCountChanges.Clear();
 	}
-	CreateTimer(0.5, OnTransfer, TIMER_FLAG_NO_MAPCHANGE);
+	
+	CreateTimer(0.5, OnTransfer, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action:OnTransfer(Handle:timer, any:client)
+public Action OnTransfer(Handle hTimer)
 {
 	isTransfer = false;
-	return Plugin_Handled;
+	return Plugin_Stop;
 }
 
-ProcessPlayerLerp(client, bool:load = false, bool:team = false) 
-{	
-	if (!IsValidClient(client)) return;
+void ProcessPlayerLerp(int client, bool load = false, bool team = false) 
+{
+	float newLerpTime = GetLerpTime(client); // get lerp
 	
-	// get lerp
-	new Float:newLerpTime = GetLerpTime(client);
 	// set lerp for fixing differences between server and client with cl_interp_ratio 0
 	SetEntPropFloat(client, Prop_Data, "m_fLerpTime", newLerpTime);
-	// check lerp first
-	if (GetClientTeam(client) < 2) return;
-
-	// Get steamid and index
-	decl String:steamID[STEAMID_SIZE];
-	GetClientAuthId(client, AuthId_Steam2, steamID, STEAMID_SIZE);
-	new index = FindStringInArray(arrayLerps, steamID);
-
-	if ((FloatCompare(newLerpTime, GetConVarFloat(cVarMinLerp)) == -1) || (FloatCompare(newLerpTime, GetConVarFloat(cVarMaxLerp)) == 1)) {
-		
-		//PrintToChatAll("%N's lerp changed to %.01f", client, newLerpTime*1000);
-		if (!load) 
-		{
-			if (index != -1)
-			{
-				new Float:currentLerpTime = GetArrayCell(arrayLerps, index + ARRAY_LERP);
 	
-				// no change?
-				if (currentLerpTime == newLerpTime)
-				{
+	// check lerp first
+	if (GetClientTeam(client) < L4D_TEAM_SURVIVORS) {
+		return;
+	}
+	
+	// Get steamid
+	char steamID[STEAMID_SIZE];
+	GetClientAuthId(client, AuthId_Steam2, steamID, sizeof(steamID));
+
+	if ((FloatCompare(newLerpTime, cVarMinLerp.FloatValue) == -1)  || (FloatCompare(newLerpTime, cVarMaxLerp.FloatValue) == 1)) {
+		//PrintToChatAll("%N's lerp changed to %.01f", client, newLerpTime * 1000);
+		if (!load) {
+			float currentLerpTime = 0.0;
+			if (ArrLerpsValue.GetValue(steamID, currentLerpTime)) {
+				if (currentLerpTime == newLerpTime) { // no change?
 					ChangeClientTeam(client, L4D_TEAM_SPECTATE); 
 					return;
 				}
 			}
-			CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}was moved to spectators for lerp {teamcolor}%.01f", client, newLerpTime*1000);
+			
+			CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}was moved to spectators for lerp {teamcolor}%.01f", client, newLerpTime * 1000);
 			ChangeClientTeam(client, L4D_TEAM_SPECTATE);
-			CPrintToChatEx(client, client, "{default}<{olive}Lerp{default}> Illegal lerp value (min: {teamcolor}%.01f{default}, max: {teamcolor}%.01f{default})",
-					GetConVarFloat(cVarMinLerp)*1000, GetConVarFloat(cVarMaxLerp)*1000);
+			CPrintToChatEx(client, client, "{default}<{olive}Lerp{default}> Illegal lerp value (min: {teamcolor}%.01f{default}, max: {teamcolor}%.01f{default})", cVarMinLerp.FloatValue * 1000, cVarMaxLerp.FloatValue * 1000);
 		}
+		
 		// nothing else to do
 		return;
 	}
 	
-	if (index != -1) {
-		new Float:currentLerpTime = GetArrayCell(arrayLerps, index + ARRAY_LERP);
+	float currentLerpTime = 0.0;
+	if (!ArrLerpsValue.GetValue(steamID, currentLerpTime)) {
+		// add to array
+		if (team && cVarShowLerpTeamChange.BoolValue) {
+			CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f", client, newLerpTime * 1000);
+		}
+
+		ArrLerpsValue.SetValue(steamID, newLerpTime, true);
+		//ArrLerpsCountChanges.SetValue(steamID, 0, true); 
+		return;
+	}
 	
-		// no change?
-		if (currentLerpTime == newLerpTime)
-		{
-			if (team) CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f", client, newLerpTime*1000); 
+	if (currentLerpTime == newLerpTime) { // no change?
+		if (team && cVarShowLerpTeamChange.BoolValue) {
+			CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f", client, newLerpTime * 1000); 
+		}
+		return;
+	}
+
+	if (isMatchLife || !cVarReadyUpLerpChanges.BoolValue) { // Midgame?
+		int count = 0;
+		ArrLerpsCountChanges.GetValue(steamID, count);
+		count++;
+		
+		int max = cVarAllowedLerpChanges.IntValue;
+		CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {green}%.01f {default}[%s%d{default}/%d {olive}changes]", client, newLerpTime * 1000, currentLerpTime * 1000, ((count > max) ? "{teamcolor} ": ""), count, max);
+	
+		if (cVarLerpChangeSpec.BoolValue && (count > max)) {
+			CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}was moved to spectators (illegal lerp change)!", client);
+			ChangeClientTeam(client, L4D_TEAM_SPECTATE);
+			CPrintToChatEx(client, client, "{default}<{olive}Lerp{default}> Illegal change of Lerp midgame! Change it back to {teamcolor}%.01f", currentLerpTime * 1000);
+			// no lerp update
 			return;
 		}
 		
-		// Midgame?
-		if (IsMatchLife() || !GetConVarBool(cVarReadyUpLerpChanges)) {
-			new count = GetArrayCell(arrayLerps, index + ARRAY_CHANGES)+1;
-			new max = GetConVarInt(cVarAllowedLerpChanges);
-			CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {green}%.01f {default}[%s%d{default}/%d {olive}changes]", client, newLerpTime*1000, currentLerpTime*1000, ((count > max)?"{teamcolor}":""), count, max);
-		
-			if (GetConVarBool(cVarLerpChangeSpec) && (count > max)) {
-				
-				CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}was moved to spectators (illegal lerp change)!", client);
-				ChangeClientTeam(client, L4D_TEAM_SPECTATE);
-				CPrintToChatEx(client, client, "{default}<{olive}Lerp{default}> Illegal change of Lerp midgame! Change it back to {teamcolor}%.01f", currentLerpTime*1000);
-				// no lerp update
-				return;
-			}
-			
-			// update changes
-			SetArrayCell(arrayLerps, index + ARRAY_CHANGES, count);
-		}
-		else {
-			CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {green}%.01f", client, newLerpTime*1000, currentLerpTime*1000);
-		}
-		
-		// update lerp
-		SetArrayCell(arrayLerps, index + ARRAY_LERP, newLerpTime);
+		ArrLerpsCountChanges.SetValue(steamID, count); // update changes
+	} else {
+		CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {green}%.01f", client, newLerpTime * 1000, currentLerpTime * 1000);
 	}
-	else {
-		
-		// add to array
-		if (team) CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f", client, newLerpTime*1000);
-		PushArrayString(arrayLerps, steamID);
-		PushArrayCell(arrayLerps, newLerpTime);
-		PushArrayCell(arrayLerps, 0);
-	}
+	
+	ArrLerpsValue.SetValue(steamID, newLerpTime); // update lerp
+	//ArrLerpsCountChanges.SetValue(steamID, 0, true); 
 }
 
-Float:GetLerpTime(client)
+float GetLerpTime(int client)
 {
-	decl String:buffer[64];
+	char buffer[64];
 	
-	if (!GetClientInfo(client, "cl_updaterate", buffer, sizeof(buffer))) buffer = "";
-	new updateRate = StringToInt(buffer);
-	updateRate = RoundFloat(clamp(float(updateRate), GetConVarFloat(cVarMinUpdateRate), GetConVarFloat(cVarMaxUpdateRate)));
+	if (!GetClientInfo(client, "cl_updaterate", buffer, sizeof(buffer))) {
+		buffer = "";
+	}
 	
-	if (!GetClientInfo(client, "cl_interp_ratio", buffer, sizeof(buffer))) buffer = "";
-	new Float:flLerpRatio = StringToFloat(buffer);
+	int updateRate = StringToInt(buffer);
+	updateRate = RoundFloat(clamp(float(updateRate), cVarMinUpdateRate.FloatValue, cVarMaxUpdateRate.FloatValue));
 	
-	if (!GetClientInfo(client, "cl_interp", buffer, sizeof(buffer))) buffer = "";
-	new Float:flLerpAmount = StringToFloat(buffer);	
+	if (!GetClientInfo(client, "cl_interp_ratio", buffer, sizeof(buffer))) {
+		buffer = "";
+	}
 	
-	if (cVarMinInterpRatio != INVALID_HANDLE && cVarMaxInterpRatio != INVALID_HANDLE && GetConVarFloat(cVarMinInterpRatio) != -1.0 ) {
-		flLerpRatio = clamp(flLerpRatio, GetConVarFloat(cVarMinInterpRatio), GetConVarFloat(cVarMaxInterpRatio) );
+	float flLerpRatio = StringToFloat(buffer);
+	
+	if (!GetClientInfo(client, "cl_interp", buffer, sizeof(buffer))) {
+		buffer = "";
+	}
+	
+	float flLerpAmount = StringToFloat(buffer);	
+	
+	if (cVarMinInterpRatio != null && cVarMaxInterpRatio != null && cVarMinInterpRatio.FloatValue != -1.0) {
+		flLerpRatio = clamp(flLerpRatio, cVarMinInterpRatio.FloatValue, cVarMaxInterpRatio.FloatValue);
 	}
 	
 	return maximum(flLerpAmount, flLerpRatio / updateRate);
 }
 
-Float:clamp(Float:inc, Float:low, Float:high) {
-	return inc > high ? high : (inc < low ? low : inc);
+float maximum(float a, float b)
+{
+	return (a > b) ? a : b;
 }
 
-Float:maximum(Float:a, Float:b) {
-	return a > b ? a : b;
+float clamp(float inc, float low, float high)
+{
+	return (inc > high) ? high : ((inc < low) ? low : inc);
 }
-
-bool:IsValidClient(client) 
-{ 
-    if (client <= 0 || client > MaxClients || !IsClientConnected(client) || !IsClientInGame(client) || IsFakeClient(client)) return false; 
-    return true; 
-} 
