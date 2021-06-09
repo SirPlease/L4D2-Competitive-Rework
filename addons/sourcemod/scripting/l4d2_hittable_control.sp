@@ -28,7 +28,7 @@
 bool bIsBridge;		//for parish bridge cars
 bool bIsStadium;	//for suicide blitz finale hittables
 float fOverkill[MAXPLAYERS + 1][2048]; // Overkill, prolly don't need this big of a global array, could also use adt_array.
-float fSpecialOverkill[MAXPLAYERS + 1][2]; // Dealing with breakable pieces that will cause multiple hits in a row (unintended behaviour)
+float fSpecialOverkill[MAXPLAYERS + 1][3]; // Dealing with breakable pieces that will cause multiple hits in a row (unintended behaviour)
 bool bLateLoad;   // Late load support!
 
 //cvars
@@ -44,6 +44,13 @@ ConVar hBHLogStandingDamage;
 ConVar hDumpsterStandingDamage;
 ConVar hHaybaleStandingDamage;
 ConVar hBaggageStandingDamage;
+ConVar hGeneratorTrailerStandingDamage;
+ConVar hMilitiaRockStandingDamage;
+ConVar hSofaChairStandingDamage;
+ConVar hAtlasBallDamage;
+ConVar hIBeamDamage;
+ConVar hDiescraperBallDamage;
+ConVar hVanDamage;
 ConVar hStandardIncapDamage;
 ConVar hTankSelfDamage;
 ConVar hOverHitInterval;
@@ -52,8 +59,8 @@ ConVar hOverHitDebug;
 public Plugin myinfo = 
 {
     name = "L4D2 Hittable Control",
-    author = "Stabby, Visor, Sir",
-    version = "0.6.1",
+    author = "Stabby, Visor, Sir, Derpduck",
+    version = "0.6.2",
     description = "Allows for customisation of hittable damage values (and debugging)"
 };
 
@@ -94,6 +101,27 @@ public void OnPluginStart()
 											FCVAR_NONE, true, 0.0, true, 300.0 );
 	hBaggageStandingDamage	= CreateConVar( "hc_baggage_standing_damage",	"48.0",
 											"Damage of hittable baggage carts to non-incapped survivors.",
+											FCVAR_NONE, true, 0.0, true, 300.0 );
+	hGeneratorTrailerStandingDamage	= CreateConVar( "hc_generator_trailer_standing_damage",	"48.0",
+											"Damage of hittable generator trailers to non-incapped survivors.",
+											FCVAR_NONE, true, 0.0, true, 300.0 );
+	hMilitiaRockStandingDamage	= CreateConVar( "hc_militia_rock_standing_damage",	"100.0",
+											"Damage of hittable militia rocks to non-incapped survivors.",
+											FCVAR_NONE, true, 0.0, true, 300.0 );
+	hSofaChairStandingDamage	= CreateConVar( "hc_sofa_chair_standing_damage",	"100.0",
+											"Damage of hittable sofa chair on Blood Harvest finale to non-incapped survivors. Applies only to sofa chair with a targetname of 'hittable_chair_l4d1' to emulate L4D1 behaviour, the hittable chair from TLS update is parented to a bumper car.",
+											FCVAR_NONE, true, 0.0, true, 300.0 );
+	hAtlasBallDamage	= CreateConVar( "hc_atlas_ball_standing_damage",	"100.0",
+											"Damage of hittable atlas balls to non-incapped survivors.",
+											FCVAR_NONE, true, 0.0, true, 300.0 );
+	hIBeamDamage	= CreateConVar( "hc_ibeam_standing_damage",	"48.0",
+											"Damage of ibeams to non-incapped survivors.",
+											FCVAR_NONE, true, 0.0, true, 300.0 );
+	hDiescraperBallDamage	= CreateConVar( "hc_diescraper_ball_standing_damage",	"100.0",
+											"Damage of hittable ball statue on Diescraper finale to non-incapped survivors.",
+											FCVAR_NONE, true, 0.0, true, 300.0 );
+	hVanDamage	= CreateConVar( "hc_van_standing_damage",	"100.0",
+											"Damage of hittable van on Detour Ahead map 2 to non-incapped survivors.",
 											FCVAR_NONE, true, 0.0, true, 300.0 );
 	hStandardIncapDamage	= CreateConVar( "hc_incap_standard_damage",		"100",
 											"Damage of all hittables to incapped players. -1 will have incap damage default to valve's standard incoherent damages. -2 will have incap damage default to each hittable's corresponding standing damage.",
@@ -159,6 +187,7 @@ public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcas
 		}
 		fSpecialOverkill[i][0] = 0.0;
 		fSpecialOverkill[i][1] = 0.0;
+		fSpecialOverkill[i][2] = 0.0;
 	}
 }
 
@@ -188,21 +217,29 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		
 		char sModelName[128];
 		GetEntPropString(inflictor, Prop_Data, "m_ModelName", sModelName, 128);
+		ReplaceString(sModelName, 128, "\\", "/", false);
 		float interval = GetConVarFloat(hOverHitInterval);
 
 		// Special Overkill section
-		if (StrContains(sModelName, "brickpallets_break") != -1) // [0]
+		if (StrContains(sModelName, "brickpallets_break", false) != -1) // [0]
 		{
 			if (fSpecialOverkill[victim][0] - GetGameTime() > 0) return Plugin_Handled;
 			fSpecialOverkill[victim][0] = GetGameTime() + interval;
 			damage = 13.0;
 			attacker = FindTank();
 		}
-		else if (StrContains(sModelName, "boat_smash_break") != -1) // [1]
+		else if (StrContains(sModelName, "boat_smash_break", false) != -1) // [1]
 		{
 			if (fSpecialOverkill[victim][1] - GetGameTime() > 0) return Plugin_Handled;
 			fSpecialOverkill[victim][1] = GetGameTime() + interval;
 			damage = 23.0;
+			attacker = FindTank();
+		}
+		else if (StrContains(sModelName, "concretepiller01_dm01", false) != -1) // [2]
+		{
+			if (fSpecialOverkill[victim][2] - GetGameTime() > 0) return Plugin_Handled;
+			fSpecialOverkill[victim][2] = GetGameTime() + interval;
+			damage = 8.0;
 			attacker = FindTank();
 		}
 		
@@ -217,9 +254,10 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		}
 		else 
 		{
-			if (StrContains(sModelName, "cara_") != -1 
-			|| StrContains(sModelName, "taxi_") != -1 
-			|| StrContains(sModelName, "police_car") != -1)
+			if (StrContains(sModelName, "cara_", false) != -1 
+			|| StrContains(sModelName, "taxi_", false) != -1 
+			|| StrContains(sModelName, "police_car", false) != -1
+			|| StrContains(sModelName, "utility_truck", false) != -1)
 			{
 				if (bIsBridge)
 				{
@@ -234,43 +272,76 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 					damage = GetConVarFloat(hCarStandingDamage);
 				}
 			}
-			else if (StrContains(sModelName, "dumpster") != -1)
+			else if (StrContains(sModelName, "dumpster", false) != -1)
 			{
 				damage = GetConVarFloat(hDumpsterStandingDamage);
 			}
-			else if (StrEqual(sModelName, "models/props/cs_assault/forklift.mdl"))
+			else if (StrEqual(sModelName, "models/props/cs_assault/forklift.mdl", false))
 			{
 				damage = GetConVarFloat(hForkliftStandingDamage);
 			}
-			else if (StrContains(sModelName, "forklift_brokenlift") != -1)
+			else if (StrContains(sModelName, "forklift_brokenlift", false) != -1)
 			{
 				damage = GetConVarFloat(hBrokenForkliftStandingDamage);
 			}		
-			else if (StrEqual(sModelName, "models/props_vehicles/airport_baggage_cart2.mdl"))
+			else if (StrEqual(sModelName, "models/props_vehicles/airport_baggage_cart2.mdl", false))
 			{
 				damage = GetConVarFloat(hBaggageStandingDamage);
 			}
-			else if (StrEqual(sModelName, "models/props_unique/haybails_single.mdl"))
+			else if (StrEqual(sModelName, "models/props_unique/haybails_single.mdl", false))
 			{
 				damage = GetConVarFloat(hHaybaleStandingDamage);
 			}
-			else if (StrEqual(sModelName, "models/props_foliage/Swamp_FallenTree01_bare.mdl"))
+			else if (StrEqual(sModelName, "models/props_foliage/swamp_fallentree01_bare.mdl", false))
 			{
 				damage = GetConVarFloat(hLogStandingDamage);
 			}
-			else if (StrEqual(sModelName, "models/props_foliage/tree_trunk_fallen.mdl"))
+			else if (StrEqual(sModelName, "models/props_foliage/tree_trunk_fallen.mdl", false))
 			{
 				damage = GetConVarFloat(hBHLogStandingDamage);
 			}
-			else if (StrEqual(sModelName, "models/props_fairgrounds/bumpercar.mdl"))
+			else if (StrEqual(sModelName, "models/props_fairgrounds/bumpercar.mdl", false))
 			{
 				damage = GetConVarFloat(hBumperCarStandingDamage);
 			}
-			else if (StrEqual(sModelName, "models/props/cs_assault/handtruck.mdl"))
+			else if (StrEqual(sModelName, "models/props/cs_assault/handtruck.mdl", false))
 			{
 				damage = GetConVarFloat(hHandtruckStandingDamage);
 			}
-			else if (StrEqual(sModelName, "models/sblitz/field_equipment_cart.mdl"))
+			else if (StrEqual(sModelName, "models/props_vehicles/generatortrailer01.mdl", false))
+			{
+				damage = GetConVarFloat(hGeneratorTrailerStandingDamage);
+			}
+			else if (StrEqual(sModelName, "models/props/cs_militia/militiarock01.mdl", false))
+			{
+				damage = GetConVarFloat(hMilitiaRockStandingDamage);
+			}
+			else if (StrEqual(sModelName, "models/props_interiors/sofa_chair02.mdl", false))
+			{
+				char targetname[128];
+				GetEntPropString(inflictor, Prop_Data, "m_iName", targetname, 128);
+				if (StrEqual(targetname, "hittable_chair_l4d1", false))
+				{
+					damage = GetConVarFloat(hSofaChairStandingDamage);
+				}
+			}
+			else if (StrEqual(sModelName, "models/props_vehicles/van.mdl", false))
+			{
+				damage = GetConVarFloat(hVanDamage);
+			}
+			else if (StrContains(sModelName, "atlas_break_ball.mdl", false) != -1)
+			{
+				damage = GetConVarFloat(hAtlasBallDamage);
+			}
+			else if (StrContains(sModelName, "ibeam_breakable01", false) != -1)
+			{
+				damage = GetConVarFloat(hIBeamDamage);
+			}
+			else if (StrEqual(sModelName, "models/props_diescraper/statue_break_ball.mdl", false))
+			{
+				damage = GetConVarFloat(hDiescraperBallDamage);
+			}
+			else if (StrEqual(sModelName, "models/sblitz/field_equipment_cart.mdl", false))
 			{
 				damage = 4.0*GetConVarFloat(hStadiumCarDamage);
 			}

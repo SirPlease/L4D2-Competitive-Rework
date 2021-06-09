@@ -1,9 +1,7 @@
 #pragma semicolon 1
 
 #include <sourcemod>
-#include <sdktools>
 #include <left4dhooks>
-#include <l4d2lib>
 #include <colors>
 
 #undef REQUIRE_PLUGIN
@@ -24,11 +22,6 @@ new Handle:g_SpawnsArray;
 // Ready-up
 new bool:readyUpIsAvailable;
 new bool:bLive;
-
-// Changing SI
-new Handle:g_hSetClass;
-new Handle:g_hCreateAbility;
-new g_oAbility;
 
 // Get dem Cvars
 new Handle:hDominators;
@@ -72,9 +65,6 @@ public OnPluginStart()
 	HookEvent("player_team", PlayerTeam);
 	HookEvent("player_spawn", PlayerSpawn);
 	HookEvent("player_death", PlayerDeath);
-
-	// Gamedata
-	Sub_HookGameData();
 
 	// Array
 	g_SpawnsArray = CreateArray(16);
@@ -195,7 +185,7 @@ public L4D_OnEnterGhostState(client)
 	// Switch Class and Pass Client Info as he will already be counted in the total.
 	// If for some reason the returned SI is invalid or if the Array isn't filled up yet: allow Director to continue.
 	new SI = ReturnNextSIInQueue(client);
-	if (SI > 0) Sub_DetermineClass(client, SI);
+	if (SI > 0) L4D_SetClass(client, SI);
 	if (bKeepChecking[client]) 
 	{
 		storedClass[client] = SI;
@@ -247,54 +237,6 @@ public Action:CheckTankie(Handle:timer)
 			}
 		}
 	}
-}
-
-//--------------------------------------------------------------------------------- Gamedata // SDK Stuff
-
-public Sub_HookGameData()
-{
-	new Handle:g_hGameConf = LoadGameConfigFile("l4d2_zcs");
-
-	if (g_hGameConf != INVALID_HANDLE)
-	{
-		StartPrepSDKCall(SDKCall_Player);
-		PrepSDKCall_SetFromConf(g_hGameConf, SDKConf_Signature, "SetClass");
-		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-		g_hSetClass = EndPrepSDKCall();
-
-		if (g_hSetClass == INVALID_HANDLE)
-			SetFailState("Unable to find SetClass signature.");
-
-		StartPrepSDKCall(SDKCall_Static);
-		PrepSDKCall_SetFromConf(g_hGameConf, SDKConf_Signature, "CreateAbility");
-		PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-		PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
-		g_hCreateAbility = EndPrepSDKCall();
-
-		if (g_hCreateAbility == INVALID_HANDLE)
-			SetFailState("Unable to find CreateAbility signature.");
-
-		g_oAbility = GameConfGetOffset(g_hGameConf, "oAbility");
-
-		CloseHandle(g_hGameConf);
-	}
-
-	else SetFailState("Unable to load l4d2_zcs.txt");
-}
-
-// Sets the class of a client.
-public Sub_DetermineClass(any:Client, any:ZClass)
-{
-	new WeaponIndex;
-	while ((WeaponIndex = GetPlayerWeaponSlot(Client, 0)) != -1)
-	{
-		RemovePlayerItem(Client, WeaponIndex);
-		RemoveEdict(WeaponIndex);
-	}
-
-	SDKCall(g_hSetClass, Client, ZClass);
-	AcceptEntityInput(MakeCompatEntRef(GetEntProp(Client, Prop_Send, "m_customAbility")), "Kill");
-	SetEntProp(Client, Prop_Send, "m_customAbility", GetEntData(SDKCall(g_hCreateAbility, Client), g_oAbility));
 }
 
 public cvarChanged(Handle:cvar, const String:oldValue[], const String:newValue[])
@@ -407,12 +349,14 @@ stock bool:IsInfectedTeamFull()
 
 stock bool:IsSupportSIAlive(client)
 {
-	new iSupport;
 	for(new i = 1; i <= MaxClients; i++)
 	{
-		if (IsValidClient(i) && GetClientTeam(i) == 3 && IsPlayerAlive(i) && i != client)
+		if (IsValidClient(i) && 
+		GetClientTeam(i) == 3 && 
+		IsPlayerAlive(i) 
+		&& i != client)
 		{
-			if (IsSupport(i)) iSupport++;
+			if (IsSupport(i)) return true;
 		}
 	}
 
