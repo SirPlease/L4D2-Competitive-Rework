@@ -1,0 +1,14 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			"Sequence"
+			{
+				"windows"	"207"
+				"linux"		"208"
+			}
+		}
+	}
+}

@@ -4,6 +4,14 @@
 	{
 		"zonemod"
 		{
+			"name" "ZoneMod 2.0"
+		}
+		"zoneretro"
+		{
+			"name" "ZoneMod Retro 2.0"
+		}
+		"zonemodold"
+		{
 			"name" "ZoneMod 1.9.16"
 		}
 		"zm3v3"
@@ -69,6 +77,21 @@
 		"apex"
 		{
 			"name" "Apex 1.1.2"
+		}
+	}
+	"Hunters Configs"
+	{
+		"zonehunters"
+		{
+			"name" "ZoneHunters 2.0"
+		}
+		"zh3v3"
+		{
+			"name" "3v3 ZoneHunters"
+		}
+		"zh2v2"
+		{
+			"name" "2v2 ZoneHunters"
 		}
 	}
 }
