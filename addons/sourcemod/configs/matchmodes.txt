@@ -93,7 +93,7 @@
 		{
 			"name" "2v2 ZoneHunters"
 		}
-		"zm1v1"
+		"zh1v1"
 		{
 			"name" "2v2 ZoneHunters"
 		}
