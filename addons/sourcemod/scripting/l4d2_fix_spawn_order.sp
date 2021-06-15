@@ -327,7 +327,7 @@ stock bool:IsTankInPlay()
 {
 	for(new i = 1; i <= MaxClients; i++)
 	{
-		if (IsValidClient(i) && GetClientTeam(i) == 3 && IsPlayerAlive(i) && IsTank(i)) return true;
+		if (IsValidClient(i) && GetClientTeam(i) == 3 && IsPlayerAlive(i) && !IsFakeClient(i) && IsTank(i)) return true;
 	}
 	return false;
 }
