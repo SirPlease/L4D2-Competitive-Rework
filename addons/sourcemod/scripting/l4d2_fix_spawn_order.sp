@@ -262,7 +262,7 @@ stock ReturnNextSIInQueue(client)
 		// - No Tank Alive.
 		// - A Full Infected Team (4 Players)
 		// - No "Support" SI Alive.
-		if (dominators != 0 && !IsTankInPlay() && !IsSupportSIAlive(client) && IsInfectedTeamFull())
+		if (dominators != 0 && !IsTankInPlay() && !IsSupportSIAlive(client) && IsInfectedTeamFull() && IsInfectedTeamAlive() >= (maxSI - 1))
 		{
 			// Look for the Boomer's position in the Array.
 			QueuedSI = _:SI_Boomer;
@@ -345,6 +345,23 @@ stock bool:IsInfectedTeamFull()
 
 	if (SI >= maxSI) return true;
 	return false;
+}
+
+IsInfectedTeamAlive()
+{
+	new SI;
+	for(new i = 1; i <= MaxClients; i++)
+	{
+		if (IsValidClient(i) &&
+		!IsFakeClient(i) &&
+		GetClientTeam(i) == 3 && 
+		IsPlayerAlive(i))
+		{
+			SI++;
+		}
+	}
+
+	return SI;
 }
 
 stock bool:IsSupportSIAlive(client)
