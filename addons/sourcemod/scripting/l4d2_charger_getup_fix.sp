@@ -319,11 +319,12 @@ public void Event_ChargerKilled(Event event, const char[] name, bool dontBroadca
 		else
 		{
 			// There's a weird case, where the game won't register the client as playing the animation, it's once in a blue moon
-			CreateTimer(0.02, BlueMoonCaseCheck, survivorClient);
+			CreateTimer(0.02, BlueMoonCaseCheck, chargerClient);
 			return;
 		}
 		
 		ResetChargerTarget(chargerClient);
+		ResetIgnoreJockeyed(survivorClient);
 	}
 }
 
@@ -337,8 +338,10 @@ void ResetIgnoreJockeyed(int survivorClient)
 	bIgnoreJockeyed[survivorClient] = false;
 }
 
-public Action BlueMoonCaseCheck(Handle timer, int survivorClient)
+public Action BlueMoonCaseCheck(Handle timer, int chargerClient)
 {
+	int survivorClient = ChargerTarget[chargerClient];
+	
 	#if DEBUG
 		PrintToChatAll("\x05BlueMoonCaseCheck \x01- victim: \x05%N \x01| seq: \x05%i", survivorClient, GetEntProp(survivorClient, Prop_Send, "m_nSequence"));
 	#endif
@@ -374,6 +377,7 @@ public Action BlueMoonCaseCheck(Handle timer, int survivorClient)
 		GiveClientGodFrames(survivorClient, GetConVarFloat(g_hLongChargeDuration), 6);
 	}
 	
+	ResetChargerTarget(chargerClient);
 	ResetIgnoreJockeyed(survivorClient);
 }
 
