@@ -53,25 +53,6 @@
 		}
 	}
 
-	/* CSGO + L4D2 share the same Linux signature. */
-	"#default"
-	{
-		"#supported"
-		{
-			"engine"	"csgo"
-			"engine"	"left4dead2"
-		}
-		"Signatures"
-		{
-			"CCommandBuffer::InsertCommand"
-			{
-				"library"		"engine"
-				"linux"			"\x55\x89\x2A\x83\x2A\x2A\x89\x2A\x2A\x8B\x2A\x2A\x89\x2A\x2A\x8B\x2A\x2A\x89\x2A\x2A\x8B\x2A\x2A\x81\x2A\x2A\x2A\x2A\x2A\x0F"
-				/* 55 89 ? 83 ? ? 89 ? ? 8B ? ? 89 ? ? 8B ? ? 89 ? ? 8B ? ? 81 ? ? ? ? ? 0F */
-			}
-		}
-	}
-
 	/* CSGO has an extra argument. */
 	"csgo"
 	{
@@ -93,6 +74,8 @@
 			"CCommandBuffer::InsertCommand"
 			{
 				"library"		"engine"
+				"linux"			"\x55\x89\x2A\x83\x2A\x2A\x89\x2A\x2A\x8B\x2A\x2A\x89\x2A\x2A\x8B\x2A\x2A\x89\x2A\x2A\x8B\x2A\x2A\x81\x2A\x2A\x2A\x2A\x2A\x0F"
+				/* 55 89 ? 83 ? ? 89 ? ? 8B ? ? 89 ? ? 8B ? ? 89 ? ? 8B ? ? 81 ? ? ? ? ? 0F */
 				"windows"		"\x55\x8B\x2A\x51\x53\x56\x57\x8B\x2A\x2A\x8B\x2A\x81"
 				/* 55 8B ? 51 53 56 57 8B ? ? 8B ? 81 */
 			}
@@ -135,6 +118,7 @@
 			"CCommandBuffer::InsertCommand"
 			{
 				"library"		"engine"
+				"linux"			"@_ZN14CCommandBuffer13InsertCommandEPKcii"
 				"windows"		"\x55\x8B\x2A\x56\x57\x8B\x2A\x2A\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x7C"
 				/* 55 8B ? 56 57 8B ? ? 8B ? 81 ? ? ? ? ? 7C */
 			}
