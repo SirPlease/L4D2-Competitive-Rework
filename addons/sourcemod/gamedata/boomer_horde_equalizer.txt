@@ -24,7 +24,7 @@
 		{
 			"WanderersCondition"
 			{
-				"linux"     "475"
+				"linux"     "217"
 			}
 		}
 	}
