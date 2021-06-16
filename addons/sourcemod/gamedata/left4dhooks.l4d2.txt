@@ -1101,13 +1101,13 @@
 			}
 			"InvulnerabilityTimer"
 			{
-				"windows"	"11924"
-				"linux"		"11904"
+				"windows"	"11892"
+				"linux"		"11872"
 			}
 			"m_iTankTickets"
 			{
-				"windows"	"12476"
-				"linux"		"12456"
+				"windows"	"12444"
+				"linux"		"12424"
 			}
 			"m_iShovePenalty"
 			{
