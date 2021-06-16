@@ -1481,8 +1481,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CDirector14ForceNextStageEv"
-				"windows"	"\x8B\x2A\x88\x05\x00\x00\xE9\x2A\x8D\x01\x00"
-				/* 8B ? 88 05 00 00 E9 ? 8D 01 00 */
+				"windows"	"\x8B\x2A\x88\x05\x00\x00\xE9\x2A\x99\x01\x00"
+				/* 8B ? 88 05 00 00 E9 ? 99 01 00 */ 
 				/* Search "ForceNextStage" call below of XRef */
 			}
 
@@ -2256,7 +2256,7 @@
 				"windows"	"\x55\x8B\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x74"
 				/* 55 8B ? 8B ? 8B ? ? ? ? ? ? ? 85 ? 74 */
 				/* Search: "Director state change SUSTAIN_PEAK" few calls below */
-				/* Found by SilverShot */
+				/* Found by "SilverShot" */
 			}
 
 
@@ -2320,10 +2320,10 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer13CancelStaggerEv"
-				"windows"	"\x56\x8B\x2A\xF3\x2A\x2A\x2A\x2C\x2A\x2A\x2A\x0F\x2A\x2A\x2A\x2A\x2A\x2A\x57"
+				"windows"	"\x56\x8B\x2A\xF3\x2A\x2A\x2A\x0C\x2A\x2A\x2A\x0F\x2A\x2A\x2A\x2A\x2A\x2A\x57"
 				/* Sig may break, using offsets to make unique */
-				/* 56 8B ? F3 ? ? ? 2C ? ? ? 0F ? ? ? ? ? ? 57 */
-				/* Search "SurvivorWasPounced" - few calls above. */ // Found by SilverShot.
+				/* 56 8B ? F3 ? ? ? 0C ? ? ? 0F ? ? ? ? ? ? 57 */ 
+				/* Search "SurvivorWasPounced" - few calls above. */ // Found by "SilverShot" updated by "Crasher_3637".
 			}
 
 			/*
@@ -2346,7 +2346,7 @@
 				"library"	"server"
 				"linux"		"@_ZN16CTerrorGameRules19GetVersusCompletionEP13CTerrorPlayer"
 				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\x53\x56\x8B\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\xE8"
-				/* 55 8B ? 83 ? ? 53 56 8B ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B ? E8 */ // Found by SilverShot.
+				/* 55 8B ? 83 ? ? 53 56 8B ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B ? E8 */ // Found by "SilverShot".
 				/* Found via "RecomputeTeamScores" and "RecomputeVersusCompletion" function. Difficult but can be matched comparing Nix/Win HexRays */
 			}
 
@@ -2358,7 +2358,7 @@
 				"library"	"server"
 				"linux"		"@_ZNK25CDirectorTacticalServices22GetHighestFlowSurvivorEN13TerrorNavArea8FlowTypeE"
 				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\xF3\x0F\x2A\x2A\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x89\x2A\x2A\x89"
-				/* 55 8B ? 83 ? ? F3 0F ? ? ? ? ? ? 33 ? 89 ? ? 89 ? ? 89 */ // Found by SilverShot.
+				/* 55 8B ? 83 ? ? F3 0F ? ? ? ? ? ? 33 ? 89 ? ? 89 ? ? 89 */ // Found by "SilverShot".
 				/* Search "Director state change SUSTAIN_PEAK". Call below. */
 			}
 
@@ -2494,7 +2494,7 @@
 				"library"	"server"
 				"linux"		"@_ZN9CDirector16StartRematchVoteEv"
 				"windows"	"\x83\x2A\x2A\x56\x8B\xF1\x68\x2A\x2A\x2A\x2A\x6A\x2A\xB9\x2A\x2A\x2A\x2A\xC6"
-				/* 83 ? ? 56 8B F1 68 ? ? ? ? 6A ? B9 ? ? ? ? C6 */ // Found by SilverShot.
+				/* 83 ? ? 56 8B F1 68 ? ? ? ? 6A ? B9 ? ? ? ? C6 */ // Found by "SilverShot".
 				/* Search: "PZEndGame" one of two. */
 			}
 
@@ -2506,7 +2506,7 @@
 				"library"	"server"
 				"linux"		"@_ZN9CDirector11FullRestartEv"
 				"windows"	"\x56\x8B\x2A\xC7\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xE8"
-				/* 56 8B ? C7 ? ? ? ? ? ? ? ? ? E8 ? ? ? ? E8 */ // Found by SilverShot.
+				/* 56 8B ? C7 ? ? ? ? ? ? ? ? ? E8 ? ? ? ? E8 */ // Found by "SilverShot".
 				/* Search "Staying on original map" for "CDirector::Restart". XRef - small function.*/
 			}
 
@@ -2518,7 +2518,7 @@
 				"library"	"server"
 				"linux"		"@_ZN19CDirectorVersusMode24HideScoreboardNonVirtualEv"
 				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x74\x2A\x53\x8D"
-				/* 55 8B ? 83 ? ? E8 ? ? ? ? 84 ? 74 ? 53 8D */ // Found by SilverShot.
+				/* 55 8B ? 83 ? ? E8 ? ? ? ? 84 ? 74 ? 53 8D */ // Found by "SilverShot".
 				/* String "fullscreen_vs_results" */
 			}
 
@@ -2542,7 +2542,7 @@
 				"library"	"server"
 				"linux"		"@_ZN9CDirector14HideScoreboardEv"
 				"windows"	"\x56\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B"
-				/* 56 8B ? 8B ? ? ? ? ? E8 ? ? ? ? 8B ? ? ? ? ? E8 ? ? ? ? 8B */ // Found by SilverShot.
+				/* 56 8B ? 8B ? ? ? ? ? E8 ? ? ? ? 8B ? ? ? ? ? E8 ? ? ? ? 8B */ // Found by "SilverShot".
 				/* Search "message_box". Function with 1 string. Xref is target. */
 			}
 
@@ -2553,9 +2553,9 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CDirector23RegisterForbiddenTargetEP11CBaseEntity"
-				"windows"	"\x55\x8B\x2A\x53\x8B\x2A\x2A\x56\x8D\x2A\x2A\x03\x00\x00\x8B\x2A\x2A\x33"
+				"windows"	"\x55\x8B\x2A\x53\x56\x57\x8B\x7D\x08\x83\xCB\xFF\x8B\xF1\x85\xFF\x74\x2A\x8B\x07\x8B\x50\x08\x8B\xCF\xFF\xD2\x8B\x00\x89\x45\x08\xEB\x2A\x89\x5D\x08\x8D\x4D\x08\x51\x8D\x8E\xB4\x03\x00\x00"
 				/* Sig may break, using offsets to make unique */
-				/* 55 8B ? 53 8B ? ? 56 8D ? ? 03 00 00 8B ? ? 33 */ // Found by SilverShot.
+				/* 55 8B ? 53 56 57 8B 7D 08 83 CB FF 8B F1 85 FF 74 ? 8B 07 8B 50 08 8B CF FF D2 8B 00 89 45 08 EB ? 89 5D 08 8D 4D 08 51 8D 8E B4 03 00 00 */ // Found by "SilverShot" updated by "Crasher_3637"
 				/* Search: "prop %s at %.0f %.0f %0.f missing model" for "CBaseProp::Spawn". XRef called by "CBreakableProp::Spawn" (largest function) which calls target function */
 			}
 
@@ -2566,8 +2566,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CDirector25UnregisterForbiddenTargetEP11CBaseEntity"
-				"windows"	"\x55\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x81\x2A\x2A\x2A\x2A\x2A\x33\x2A\x85"
-				/* 55 8B ? 8B ? ? ? ? ? 81 ? ? ? ? ? 33 ? 85 */ // Found by SilverShot.
+                "windows"		"\x55\x8B\x2A\x56\x57\x8B\x7D\x08\x8B\xF1\x85\xFF\x74\x2A\x8B\x07\x8B\x50\x08\x8B\xCF\xFF\xD2\x8B\x00\x89\x45\x08"
+				/* 55 8B ? 56 57 8B 7D 08 8B F1 85 FF 74 ? 8B 07 8B 50 08 8B CF FF D2 8B 00 89 45 08 */ // Found by "SilverShot" updated by "Crasher_3637"
 				/* Search "triggered_car_alarm" for "CCarProp::InputSurvivorStandingOnCar". Called in here. */
 			}
 
@@ -2583,7 +2583,7 @@
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer17OnSlammedSurvivorEPS_bb"
 				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\xD9\x2A\x56\x57\x6A\x2A\x51\xD9\x2A\x2A\x68\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\xF3"
-				/* 55 8B ? 83 ? ? D9 ? 56 57 6A ? 51 D9 ? ? 68 ? ? ? ? 8B ? E8 ? ? ? ? F3 */ // Found by SilverShot.
+				/* 55 8B ? 83 ? ? D9 ? 56 57 6A ? 51 D9 ? ? 68 ? ? ? ? 8B ? E8 ? ? ? ? F3 */ // Found by "SilverShot".
 				/* Search "ChargerZombie.ImpactHard" */
 			}
 
@@ -2596,7 +2596,7 @@
 				"linux"		"@_ZN13CTerrorPlayer16OnLeptOnSurvivorEPS_"
 				"windows"	"\x55\x8B\x2A\xA1\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x2A\x57\x8B\x2A\x0F\x85\x2A\x2A\x2A\x2A\x56"
 				/* 55 8B ? A1 ? ? ? ? 83 ? ? 83 ? ? ? 57 8B ? 0F 85 ? ? ? ? 56 */
-				/* Search: "JockeyZombie.Ride" */ // Found by SilverShot.
+				/* Search: "JockeyZombie.Ride" */ // Found by "SilverShot".
 			}
 
 			/*
@@ -2670,7 +2670,7 @@
 				"library"	"server"
 				"linux"		"@_ZN16CTerrorGameRules29RecordInfectedDamageForVersusEi"
 				"windows"	"\x55\x8B\x2A\xF7\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56"
-				/* 55 8B ? F7 ? ? ? ? ? ? ? ? ? 53 56 */ // Found by SilverShot.
+				/* 55 8B ? F7 ? ? ? ? ? ? ? ? ? 53 56 */ // Found by "SilverShot".
 				/* Search "victim_x" for "CTerrorGameRules::PopulateDeathEvent". Xref to vtable.
 				 * Function below is "CTerrorGameRules::TrackPlayerZombieDamage". This calls target.
 				 * Probably correct, Win looks different to Nix.
@@ -2696,7 +2696,7 @@
 				"library"	"server"
 				"linux"		"@_ZNK8CNavArea9IsBlockedEib"
 				"windows"	"\x55\x8B\x2A\x80\x2A\x2A\x2A\x74\x2A\x8B\x2A\x2A\x85\x2A\x79"
-				/* 55 8B ? 80 ? ? ? 74 ? 8B ? ? 85 ? 79 */ // Found by SilverShot.
+				/* 55 8B ? 80 ? ? ? 74 ? 8B ? ? 85 ? 79 */ // Found by "SilverShot".
 				/* Search: "BLOCKED_SURVIVOR". Above/below is target. */
 			}
 
@@ -2872,8 +2872,8 @@
 			"VanillaModeOffset"
 			{
 				"library"	"engine"
-				"linux"		"\x88\x46\x55\xC7\x04\x24\x4C"
-				/* 88 46 55 C7 04 24 4C */
+				"linux"		"\x88\x2A\x55\xC7\x04\x24\x4C"
+				/* 88 ? 55 C7 04 24 4C */
 				"windows"	"\x88\x5F\x5D\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xC6\x47\x5F\x57"
 				/* 88 5F 5D ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? C6 47 5F 57 */
 			}
