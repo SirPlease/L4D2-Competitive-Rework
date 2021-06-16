@@ -1111,23 +1111,23 @@
 			}
 			"m_iShovePenalty"
 			{
-				"windows"	"11536"
-				"linux"		"11516"
+				"windows"	"11504"
+				"linux"		"11484"
 			}
 			"m_fNextShoveTime"
 			{
-				"windows"	"11532"
-				"linux"		"11512"
+				"windows"	"11500"
+				"linux"		"11480"
 			}
 			"m_preIncapacitatedHealth"
 			{
-				"windows"	"14876"
-				"linux"		"14856"
+				"windows"	"14844"
+				"linux"		"14824"
 			}
 			"m_preIncapacitatedHealthBuffer"
 			{
-				"windows"	"14880"
-				"linux"		"14860"
+				"windows"	"14848"
+				"linux"		"14828"
 			}
 			"m_maxFlames"
 			{
