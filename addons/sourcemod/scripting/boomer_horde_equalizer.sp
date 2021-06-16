@@ -1,7 +1,7 @@
 #pragma semicolon 1
 
 #include <sourcemod>
-#include <left4downtown>
+#include <left4dhooks>
 
 #define GAMEDATA "boomer_horde_equalizer"
 #define MAX_PATCH_SIZE 4
