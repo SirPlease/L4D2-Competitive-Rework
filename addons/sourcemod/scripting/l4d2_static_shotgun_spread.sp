@@ -16,7 +16,7 @@ new Handle:hCenterPelletCvar;
 
 new g_BulletOffsets[] = { 0x11, 0x1c, 0x29, 0x3d };
 new g_FactorOffset = 0x2e;
-new g_CenterPelletOffset = -0x31;
+new g_CenterPelletOffset = -0x1c;
 
 public Plugin:myinfo = 
 {
