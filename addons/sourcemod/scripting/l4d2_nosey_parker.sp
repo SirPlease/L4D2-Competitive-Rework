@@ -28,7 +28,7 @@
 
 #pragma newdecls required
 
-#define TIMESTAMP_OFFSET 4
+#define TIMESTAMP_OFFSET 4 //DT_IntervalTimer
 
 int
 	m_tongueVictimTimerTimeStamp;
@@ -63,9 +63,6 @@ public void OnPluginStart()
 	}
 	
 	m_tongueVictimTimerTimeStamp = m_tongueVictimTimer + TIMESTAMP_OFFSET;
-	if (m_tongueVictimTimerTimeStamp != 13260) { //for test
-		SetFailState("Could not find 13260 for CTerrorPlayer::m_tongueVictimTimer"); 
-	}
 	
 	HookEvent("player_hurt", Event_PlayerHurt);
 	HookEvent("player_death", Event_PlayerDeath);

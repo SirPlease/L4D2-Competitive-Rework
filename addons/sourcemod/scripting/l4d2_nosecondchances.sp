@@ -80,7 +80,6 @@ bool ShouldBeKicked(int iBot)
 		return false;
 	}
 
-    new zcOffset = L4D2_SI_Victim_Slots[GetEntProp(infected, Prop_Send, "m_zombieClass")];
 	return true;
 }
 
