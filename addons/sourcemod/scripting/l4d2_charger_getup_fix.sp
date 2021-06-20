@@ -153,7 +153,7 @@ public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 			{
 				// TODO: fix throwing errors
 				// TODO: why is this asking for m_pummelVictim
-				int newChargerTarget = GetEntDataEnt2(i, 15972); // m_pummelVictim
+				int newChargerTarget = GetEntPropEnt(i, Prop_Send, "m_pummelVictim");
 				ChargerTarget[i] = newChargerTarget;
 			}
 		}
@@ -610,7 +610,7 @@ stock bool IsJockeyed(int survivor)
 
 stock int GetJockeyAttacker(int survivor)
 {
-	return GetEntDataEnt2(survivor, 16128);
+	return GetEntPropEnt(survivor, Prop_Send, "m_jockeyAttacker");
 }
 
 stock bool IsPlayerIncap(int client)

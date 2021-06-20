@@ -1,95 +1,99 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdkhooks>
 #include <colors>
 
-new Handle:z_leap_damage_interrupt;
-new Handle:z_jockey_health;
-new Handle:jockey_skeet_report;
+#define Z_JOCKEY 5
+#define TEAM_SURVIVOR 2
+#define TEAM_INFECTED 3
 
-new Float:jockeySkeetDmg;
-new Float:jockeyHealth;
-new Float:inflictedDamage[MAXPLAYERS + 1][MAXPLAYERS + 1];
+ConVar 
+	z_leap_damage_interrupt,
+	z_jockey_health,
+	jockey_skeet_report;
 
-new bool:reportJockeySkeets;
-new bool:lateLoad;
+float 
+	jockeySkeetDmg,
+	jockeyHealth,
+	inflictedDamage[MAXPLAYERS + 1][MAXPLAYERS + 1];
 
-public APLRes:AskPluginLoad2(Handle:plugin, bool:late, String:error[], errMax) 
+bool 
+	reportJockeySkeets,
+	lateLoad;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	lateLoad = late;
-	return APLRes_Success;    
+	return APLRes_Success;
 }
 
-public Plugin:myinfo = 
+public Plugin myinfo = 
 {
 	name = "L4D2 Jockey Skeet",
-	author = "Visor",
+	author = "Visor, A1m`",
 	description = "A dream come true",
-	version = "1.3",
-	url = "https://github.com/Attano/Equilibrium"
+	version = "1.4",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
-	z_leap_damage_interrupt = CreateConVar("z_leap_damage_interrupt", "195.0", "Taking this much damage interrupts a leap attempt", FCVAR_NONE, true, 10.0, true, 325.0);
-	jockey_skeet_report = CreateConVar("jockey_skeet_report", "1", "Report jockey skeets in chat?", FCVAR_NONE, true, 0.0, true, 1.0);
+	z_leap_damage_interrupt = CreateConVar("z_leap_damage_interrupt", "195.0", "Taking this much damage interrupts a leap attempt", _, true, 10.0, true, 325.0);
+	jockey_skeet_report = CreateConVar("jockey_skeet_report", "1", "Report jockey skeets in chat?", _, true, 0.0, true, 1.0);
 	z_jockey_health = FindConVar("z_jockey_health");
 
-	if (lateLoad) 
-	{
-		for (new i = 1; i <= MaxClients; i++) 
-		{
-			if (IsClientInGame(i)) 
-			{
-				SDKHook(i, SDKHook_OnTakeDamage, OnTakeDamage);
+	if (lateLoad) {
+		for (int i = 1; i <= MaxClients; i++) {
+			if (IsClientInGame(i)) {
+				OnClientPutInServer(i);
 			}
 		}
 	}
 }
 
-public OnConfigsExecuted()
+public void OnConfigsExecuted()
 {
-	jockeySkeetDmg = GetConVarFloat(z_leap_damage_interrupt);
-	reportJockeySkeets = GetConVarBool(jockey_skeet_report);
-	jockeyHealth = GetConVarFloat(z_jockey_health);
+	jockeySkeetDmg = z_leap_damage_interrupt.FloatValue;
+	reportJockeySkeets = jockey_skeet_report.BoolValue;
+	jockeyHealth = z_jockey_health.FloatValue;
 }
 
-public OnClientPutInServer(client)
+public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
-public OnClientDisconnect(client)
+public void OnClientDisconnect(int client)
 {
 	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
-public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damageType, &weapon, Float:damageForce[3], Float:damagePosition[3]) 
+public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon,
+							float damageForce[3], float damagePosition[3], int damagecustom)
 {
-	if (!IsJockey(victim) || !IsSurvivor(attacker) || IsFakeClient(attacker))
+	if (!IsJockey(victim) || !IsSurvivor(attacker) || IsFakeClient(attacker)) {
 		return Plugin_Continue;
-
-	if (!HasJockeyTarget(victim) && IsAttachable(victim) && IsShotgun(weapon))
-	{
+	}
+	
+	if (!HasJockeyTarget(victim) && IsAttachable(victim) && IsShotgun(weapon)) {
 		inflictedDamage[victim][attacker] += damage;
-		if (inflictedDamage[victim][attacker] >= jockeySkeetDmg)
-		{
-			if (reportJockeySkeets)
-			{
+		if (inflictedDamage[victim][attacker] >= jockeySkeetDmg) {
+			if (reportJockeySkeets) {
 				CPrintToChat(victim, "{green}★★{default} You were {blue}skeeted{default} by {olive}%N{default}.", attacker);
 				CPrintToChat(attacker, "{green}★★{default} You {blue}skeeted {olive}%N{default}'s Jockey.", victim);
-				for (new i = 1; i <= MaxClients; i++) 
-				{
+				
+				for (int i = 1; i <= MaxClients; i++)  {
 					if (i == victim || i == attacker)
 						continue;
 
-					if (IsClientInGame(i) && !IsFakeClient(i)) 
-					{
+					if (IsClientInGame(i) && !IsFakeClient(i)) {
 						CPrintToChat(i, "{green}★★{default} {olive}%N{default}'s Jockey was {blue}skeeted{default} by {olive}%N{default}.", victim, attacker);
 					}
 				}
 			}
+			
 			damage = jockeyHealth;
 			return Plugin_Changed;
 		}
@@ -98,45 +102,49 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 	return Plugin_Continue;	
 }
 
-public Action:ResetDamageCounter(Handle:timer, any:jockey)
+public Action ResetDamageCounter(Handle hTimer, any jockey)
 {
-    for (new i = 1; i <= MaxClients; i++) 
-	{
+	for (int i = 1; i <= MaxClients; i++) {
 		inflictedDamage[jockey][i] = 0.0;
 	}
 }
 
-bool:IsSurvivor(client)
+bool IsSurvivor(int client)
 {
-	return (client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2);
+	return (client > 0 
+		&& client <= MaxClients 
+		&& IsClientInGame(client) 
+		&& GetClientTeam(client) == TEAM_SURVIVOR);
 }
 
-bool:IsJockey(client)
+bool IsJockey(int client)
 {
 	return (client > 0
 		&& client <= MaxClients
 		&& IsClientInGame(client)
-		&& GetClientTeam(client) == 3
-		&& GetEntProp(client, Prop_Send, "m_zombieClass") == 5
-		&& GetEntProp(client, Prop_Send, "m_isGhost") != 1);
+		&& GetClientTeam(client) == TEAM_INFECTED
+		&& GetEntProp(client, Prop_Send, "m_zombieClass") == Z_JOCKEY
+		&& view_as<bool>(GetEntProp(client, Prop_Send, "m_isGhost")));
 }
 
-bool:HasJockeyTarget(infected)
+bool HasJockeyTarget(int infected)
 {
-	new client = GetEntDataEnt2(infected, 16124);
+	int client = GetEntPropEnt(infected, Prop_Send, "m_jockeyVictim");
+	
 	return (IsSurvivor(client) && IsPlayerAlive(client));
 }
 
 // A function conveniently named & implemented after the Jockey's ability of
 // capping Survivors without actually using the ability itself.
-bool:IsAttachable(jockey)
+bool IsAttachable(int jockey)
 {
-	return !(GetEntityFlags(jockey) & FL_ONGROUND);
+	return (!(GetEntityFlags(jockey) & FL_ONGROUND));
 }
 
-bool:IsShotgun(weapon)
+bool IsShotgun(int weapon)
 {
-	decl String:classname[64];
+	char classname[64];
 	GetEdictClassname(weapon, classname, sizeof(classname));
-	return (StrEqual(classname, "weapon_pumpshotgun") || StrEqual(classname, "weapon_shotgun_chrome"));
+	return (StrEqual(classname, "weapon_pumpshotgun") || StrEqual(classname, "weapon_shotgun_chrome")
+		/*|| StrEqual(classname, "weapon_autoshotgun") || StrEqual(classname, "weapon_shotgun_spas")*/); //visor code need?
 }
