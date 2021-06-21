@@ -61,11 +61,13 @@ UpdateDragDamageInterval(client)
 
 bool:IsSurvivorBeingDragged(client)
 {
+	//13284 = m_tongueOwner
 	return ((GetEntData(client, 13284) > 0) && !IsSurvivorBeingChoked(client));
 }
 
 bool:IsSurvivorBeingChoked(client)
 {
+	//m_isHangingFromTongue
 	return (GetEntData(client, 13308) > 0);
 }
 
