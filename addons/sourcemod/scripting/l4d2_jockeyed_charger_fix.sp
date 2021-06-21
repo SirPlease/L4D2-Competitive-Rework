@@ -32,9 +32,9 @@ public void OnPluginStart()
 		SetFailState("Gamedata '%s.txt' missing or corrupt.", GAMEDATA);
 	}
 	
-	m_QuenePummelAttacker = GameConfGetOffset(hGamedata, "m_QuenePummelAttacker");
+	m_QuenePummelAttacker = GameConfGetOffset(hGamedata, "CTerrorPlayer->m_QuenePummelAttacker");
 	if (m_QuenePummelAttacker == -1) {
-		SetFailState("Failed to get offset 'm_QuenePummelAttacker'.");
+		SetFailState("Failed to get offset 'CTerrorPlayer->m_QuenePummelAttacker'.");
 	}
 	
 	int iCleapOnTouch = GameConfGetOffset(hGamedata, "CLeap::OnTouch");

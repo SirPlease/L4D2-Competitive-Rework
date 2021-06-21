@@ -1,115 +1,156 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdkhooks>
 #include <colors>
 
-new Handle:tongue_drag_damage_interval;
-new Handle:tongue_drag_first_damage_interval;
-new Handle:tongue_drag_first_damage;
+#define GAMEDATA "l4d2_si_ability"
+#define TIMESTAMP_OFFSET 8
+#define TEAM_INFECTED 2
+#define TEAM_SURVIVOR 3
 
-public Plugin:myinfo =
+int 
+	m_tongueDragDamageTimer;
+	
+ConVar 
+	tongue_drag_damage_interval,
+	tongue_drag_first_damage_interval,
+	tongue_drag_first_damage;
+
+public Plugin myinfo =
 {
 	name = "L4D2 Smoker Drag Damage Interval",
-	author = "Visor, Sir",
+	author = "Visor, Sir, A1m`",
 	description = "Implements a native-like cvar that should've been there out of the box",
-	version = "0.7",
-	url = "https://github.com/Attano/Equilibrium"
+	version = "0.9",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
-	HookEvent("tongue_grab", OnTongueGrab);
+	Handle hGamedata = LoadGameConfigFile(GAMEDATA);
 
-	new String:value[32];
-	GetConVarString(FindConVar("tongue_choke_damage_interval"), value, sizeof(value));
+	if (!hGamedata) {
+		SetFailState("Gamedata '%s.txt' missing or corrupt.", GAMEDATA);
+	}
+	
+	m_tongueDragDamageTimer = GameConfGetOffset(hGamedata, "CTerrorPlayer->m_tongueDragDamageTimer");
+	if (m_tongueDragDamageTimer == -1) {
+		SetFailState("Failed to get offset 'CTerrorPlayer->m_tongueDragDamageTimer'.");
+	}
+	
+	m_tongueDragDamageTimer += TIMESTAMP_OFFSET;
+	
+	HookEvent("tongue_grab", OnTongueGrab);
+	
+	char value[32];
+	ConVar tongue_choke_damage_interval = FindConVar("tongue_choke_damage_interval");
+	tongue_choke_damage_interval.GetString(value, sizeof(value));
+	
 	tongue_drag_damage_interval = CreateConVar("tongue_drag_damage_interval", value, "How often the drag does damage.");
 	tongue_drag_first_damage_interval = CreateConVar("tongue_drag_first_damage_interval", "0.0", "After how many seconds do we apply our first tick of damage? | 0.0 to Disable.");
 	tongue_drag_first_damage = CreateConVar("tongue_drag_first_damage", "3.0", "How much damage do we apply on the first tongue hit? | Only applies when first_damage_interval is used");
 
-	HookConVarChange(FindConVar("tongue_choke_damage_amount"), tongue_choke_damage_amount_ValueChanged);
+	ConVar tongue_choke_damage_amount = FindConVar("tongue_choke_damage_amount");
+	tongue_choke_damage_amount.AddChangeHook(tongue_choke_damage_amount_ValueChanged);
+	
+	delete hGamedata;
 }
 
-public tongue_choke_damage_amount_ValueChanged(Handle:convar, const String:oldValue[], const String:newValue[])
+public void tongue_choke_damage_amount_ValueChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	SetConVarInt(convar, 1); // hack-hack: game tries to change this cvar for some reason, can't be arsed so HARDCODETHATSHIT
 }
 
-public OnTongueGrab(Handle:event, const String:name[], bool:dontBroadcast)
+public void OnTongueGrab(Event hEvent, const char[] name, bool dontBroadcast)
 {
-	new client = GetClientOfUserId(GetEventInt(event, "victim"));
-	new Float:fFirst = GetConVarFloat(tongue_drag_first_damage_interval);
+	int userid = hEvent.GetInt("victim");
+	int client = GetClientOfUserId(userid);
+	float fFirst = tongue_drag_first_damage_interval.FloatValue;
 
-	if (fFirst > 0.0)
-	{
-		UpdateDragDamageInterval(client, tongue_drag_first_damage_interval);
-		CreateTimer(fFirst, FirstDamage, client);
-	}
-	else
-	{
-		UpdateDragDamageInterval(client, tongue_drag_damage_interval);
+	if (fFirst > 0.0) {
+		SetDragDamageInterval(client, tongue_drag_first_damage_interval);
+		CreateTimer(fFirst, FirstDamage, userid, TIMER_FLAG_NO_MAPCHANGE);
+	} else {
+		SetDragDamageInterval(client, tongue_drag_damage_interval);
 		
-		CreateTimer(
-				GetConVarFloat(tongue_drag_damage_interval) + 0.1, 
-				FixDragInterval, 
-				client, 
-				TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE
-		);
+		float fTimerUpdate = tongue_drag_damage_interval.FloatValue + 0.1;
+		CreateTimer(fTimerUpdate, FixDragInterval, userid, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
-public Action:FirstDamage(Handle:timer, any:client)
+public Action FirstDamage(Handle hTimer, any userid)
 {
-	if (!IsSurvivor(client) || !IsSurvivorBeingDragged(client))
-	{
-		return Plugin_Stop;
-	}
-
-	for (new i = 1; i < MaxClients + 1; i++)
-	{
-		if (IsTongue(i))
-		{
-			SDKHooks_TakeDamage(client, i, i, GetConVarFloat(tongue_drag_first_damage) - 1.0);
-			break;
+	int client = GetClientOfUserId(userid);
+	if (client > 0 && GetClientTeam(client) == TEAM_SURVIVOR && IsSurvivorBeingDragged(client)) {
+		int iAttacker = GetEntPropEnt(client, Prop_Send, "m_tongueOwner");
+		if (IsClientInGame(iAttacker) && GetClientTeam(iAttacker) == TEAM_INFECTED) {
+			float fDamage = tongue_drag_first_damage.FloatValue - 1.0;
+			SDKHooks_TakeDamage(client, iAttacker, iAttacker, fDamage);
 		}
-	}
 
-	UpdateDragDamageInterval(client, tongue_drag_damage_interval);
+		SetDragDamageInterval(client, tongue_drag_damage_interval);
+		return Plugin_Continue;
+	}
+	
 	return Plugin_Continue;
 }
 
-public Action:FixDragInterval(Handle:timer, any:client)
+public Action FixDragInterval(Handle hTimer, any userid)
 {
-	if (!IsSurvivor(client) || !IsSurvivorBeingDragged(client))
-	{
-		return Plugin_Stop;
+	int client = GetClientOfUserId(userid);
+	if (client > 0 && GetClientTeam(client) == TEAM_SURVIVOR && IsSurvivorBeingDragged(client)) {
+		SetDragDamageInterval(client, tongue_drag_damage_interval);
+		return Plugin_Continue;
 	}
-
-	UpdateDragDamageInterval(client, tongue_drag_damage_interval);
-	return Plugin_Continue;
+	return Plugin_Stop;
 }
 
-UpdateDragDamageInterval(client, Handle:convar)
+/*
+ * It cannot be found using sourcemod, can only be found in the code:
+ * 
+ * Function 'CTerrorPlayer::OnGrabbedByTongue' below the middle:
+ *
+ *     v13 = dword_FDA87C;
+ *     *((_DWORD *)this + 1535) = 0;
+ *     v22 = *(float *)(v13 + 44);
+ *     CountdownTimer::Now((CTerrorPlayer *)((char *)this + 13312)); //we need this line, this is the new offset
+ *     v20 = a1;
+ *     if ( (float)(v20 + v22) != *((float *)this + 3330) )
+ *     {
+ *       (*(void (__cdecl **)(char *, char *))(*((_DWORD *)this + 3328) + 4))((char *)this + 13312, (char *)this + 13320);
+ *       *((float *)this + 3330) = v20 + v22;
+ *     }
+ *     if ( v22 != *((float *)this + 3329) )
+ *     {
+ *       (*(void (__cdecl **)(char *, char *))(*((_DWORD *)this + 3328) + 4))((char *)this + 13312, (char *)this + 13316);
+ *       *((float *)this + 3329) = v22;
+ *     }
+ *     CBaseEntity::EmitSound(this, "SmokerZombie.TongueHit", 0.0, 0);
+ *
+ * How does it look:
+ *
+ * 13352 - 8 (m_timestamp) = 13344 (old offset) - what was previously written here.
+ * New offset 13312, the plugin will add 8 more and we will get where we need to
+ *
+ * CountdownTimer m_tongueDragDamageTimer 13312 
+ *       Member: m_duration (offset 4) (type float)
+ *       Member: m_timestamp (offset 8) (type float) (bits 0) (NoScale)
+ *
+*/
+void SetDragDamageInterval(int client, ConVar hConvar)
 {
-	SetEntDataFloat(client, 13352, (GetGameTime() + GetConVarFloat(convar)));
+	float fIntervalValue = GetGameTime() + hConvar.FloatValue;
+	SetEntDataFloat(client, m_tongueDragDamageTimer, fIntervalValue);
 }
 
-bool:IsSurvivorBeingDragged(client)
+bool IsSurvivorBeingDragged(int client)
 {
-	return ((GetEntData(client, 13284) > 0) && !IsSurvivorBeingChoked(client));
+	return ((GetEntPropEnt(client, Prop_Send, "m_tongueOwner") > 0) && !IsSurvivorBeingChoked(client));
 }
 
-bool:IsSurvivorBeingChoked(client)
+bool IsSurvivorBeingChoked(int client)
 {
-	return (GetEntData(client, 13308) > 0);
-}
-
-bool:IsSurvivor(client)
-{
-	return (client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2);
-}
-
-bool:IsTongue(client)
-{
-	return (client > 0 && client <= MaxClients && IsClientInGame(client) && GetEntPropEnt(client, Prop_Send, "m_tongueVictim") > 0);
+	return (GetEntProp(client, Prop_Send, "m_isHangingFromTongue") > 0);
 }
