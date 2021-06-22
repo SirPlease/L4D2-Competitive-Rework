@@ -3123,7 +3123,7 @@ stock DisplayStats( client = -1, bool:bRound = false, round = -1, bool:bTeam = t
 // display mvp stats
 stock DisplayStatsMVPChat( client, bool:bRound = true, bool:bTeam = true, iTeam = -1 )
 {
-	if (client == 0 || client == -1) return;
+    if (client == 0 || client == -1) return;
     // make sure the MVP stats itself is called first, so the players are already sorted
     
     decl String:printBuffer[1024];

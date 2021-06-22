@@ -135,7 +135,7 @@ public EventReviveSuccess(Handle:event, const String:name[], bool:dontBroadcast)
 		//print to infected
 		else if(bandw_notice == 3)
 		{
-			for( new x = 1; x <= GetMaxClients(); x++)
+			for (new x = 1; x <= MaxClients; x++)
 			{
 				if(!IsClientInGame(x) || GetClientTeam(x) == GetClientTeam(target) || x == target || IsFakeClient(x))
 					continue;
@@ -146,7 +146,7 @@ public EventReviveSuccess(Handle:event, const String:name[], bool:dontBroadcast)
 		//print to survivors
 		else
 		{
-			for( new x = 1; x <= GetMaxClients(); x++)
+			for (new x = 1; x <= MaxClients; x++)
 			{
 				if(!IsClientInGame(x) || GetClientTeam(x) != GetClientTeam(target) || x == target || IsFakeClient(x)) 
 					continue;

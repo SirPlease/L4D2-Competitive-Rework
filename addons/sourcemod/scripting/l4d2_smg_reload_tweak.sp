@@ -1,99 +1,114 @@
 #pragma semicolon 1
+#pragma newdecls required;
 
 #include <sourcemod>
 #include <sdktools>
+
+#pragma newdecls optional;
 #include <l4d2_weapon_stocks>
+#pragma newdecls required;
 
-new Handle:hCvarReloadSpeedUzi;
-new Handle:hCvarReloadSpeedSilencedSmg;
+#define TEAM_SURVIVOR 2
 
-public Plugin:myinfo =
+ConVar hCvarReloadSpeedUzi;
+ConVar hCvarReloadSpeedSilencedSmg;
+
+public Plugin myinfo =
 {
 	name = "L4D2 SMG Reload Speed Tweaker",
 	description = "Allows cvar'd control over the reload durations for both types of SMG",
-	author = "Visor",
-	version = "1.1",
-	url = "https://github.com/Attano/L4D2-Competitive-Framework"
+	author = "Visor", //update syntax A1m`, little fix
+	version = "1.1.1",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework/"
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
 	hCvarReloadSpeedUzi = CreateConVar("l4d2_reload_speed_uzi", "0", "Reload duration of Uzi(normal SMG)", FCVAR_CHEAT|FCVAR_NOTIFY, true, 0.0, true, 10.0);
 	hCvarReloadSpeedSilencedSmg = CreateConVar("l4d2_reload_speed_silenced_smg", "0", "Reload duration of Silenced SMG", FCVAR_CHEAT|FCVAR_NOTIFY, true, 0.0, true, 10.0);
+	
 	HookEvent("weapon_reload", OnWeaponReload, EventHookMode_Post);
 }
 
-public OnWeaponReload(Handle:event, String:name[], bool:dontBroadcast)
+public void OnWeaponReload(Event hEvent, const char[] eName, bool dontBroadcast)
 {
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int client = GetClientOfUserId(hEvent.GetInt("userid"));
 
-	if (!IsSurvivor(client) || !IsPlayerAlive(client) || IsFakeClient(client))
-		return;
-
-	new Float:originalReloadDuration = 0.0;
-	new Float:alteredReloadDuration = 0.0;
-	new weapon = GetPlayerWeaponSlot(client, 0);
-	new WeaponId:weaponId = IdentifyWeapon(weapon);
-	if (weaponId == WEPID_SMG)
-	{
-		originalReloadDuration = 2.235352;
-		alteredReloadDuration = GetConVarFloat(hCvarReloadSpeedUzi);
-	}
-	else if (weaponId == WEPID_SMG_SILENCED)
-	{
-		originalReloadDuration = 2.235291;
-		alteredReloadDuration = GetConVarFloat(hCvarReloadSpeedSilencedSmg);
-	}
-	else
-	{
+	if (!IsSurvivor(client) || !IsPlayerAlive(client) || IsFakeClient(client)) {
 		return;
 	}
+	
+	float originalReloadDuration = 0.0, alteredReloadDuration = 0.0;
 
-	if (alteredReloadDuration <= 0.0)
-	{
+	int weapon = GetPlayerWeaponSlot(client, 0);
+	WeaponId weaponId = IdentifyWeapon(weapon);
+
+	switch (weaponId) {
+		case WEPID_SMG: {
+			originalReloadDuration = 2.235352;
+			alteredReloadDuration = hCvarReloadSpeedUzi.FloatValue;
+		}
+		case WEPID_SMG_SILENCED: {
+			originalReloadDuration = 2.235291;
+			alteredReloadDuration = hCvarReloadSpeedSilencedSmg.FloatValue;
+		}
+		default: {
+			return;
+		}
+	}
+	
+	if (alteredReloadDuration <= 0.0) {
 		return;
 	}
 
-	new Float:oldNextAttack = GetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack", 0);
-	new Float:newNextAttack = oldNextAttack - originalReloadDuration + alteredReloadDuration;
-	new Float:playbackRate = originalReloadDuration / alteredReloadDuration;
+	float oldNextAttack = GetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack", 0);
+	float newNextAttack = oldNextAttack - originalReloadDuration + alteredReloadDuration;
+	float playbackRate = originalReloadDuration / alteredReloadDuration;
+	
 	SetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack", newNextAttack);
 	SetEntPropFloat(client, Prop_Send, "m_flNextAttack", newNextAttack);
 	SetEntPropFloat(weapon, Prop_Send, "m_flPlaybackRate", playbackRate);
 }
 
-public Action:OnPlayerRunCmd(client, &buttons)
+public Action OnPlayerRunCmd(int client, int &buttons)
 {
-	if (!(buttons & IN_ATTACK2))
+	if (!(buttons & IN_ATTACK2)) {
 		return Plugin_Continue;
+	}
+	
+	if (!IsSurvivor(client) || !IsPlayerAlive(client) || IsFakeClient(client)) {
+		return Plugin_Continue;
+	}
+	
+	float originalReloadDuration = 0.0, alteredReloadDuration = 0.0;
+	
+	int weapon = GetPlayerWeaponSlot(client, 0);
+	WeaponId weaponId = IdentifyWeapon(weapon);
 
-	if (!IsSurvivor(client) || !IsPlayerAlive(client) || IsFakeClient(client))
-		return Plugin_Continue;
+	switch (weaponId) {
+		case WEPID_SMG: {
+			originalReloadDuration = 2.235352;
+			alteredReloadDuration = hCvarReloadSpeedUzi.FloatValue;
+		}
+		case WEPID_SMG_SILENCED: {
+			originalReloadDuration = 2.235291;
+			alteredReloadDuration = hCvarReloadSpeedSilencedSmg.FloatValue;
+		}
+		default: {
+			return Plugin_Continue;
+		}
+	}
 
-	new Float:originalReloadDuration = 0.0;
-	new Float:alteredReloadDuration = 0.0;
-	new weapon = GetPlayerWeaponSlot(client, 0);
-	new WeaponId:weaponId = IdentifyWeapon(weapon);
-	if (weaponId == WEPID_SMG)
-	{
-		originalReloadDuration = 2.235352;
-		alteredReloadDuration = GetConVarFloat(hCvarReloadSpeedUzi);
-	}
-	else if (weaponId == WEPID_SMG_SILENCED)
-	{
-		originalReloadDuration = 2.235291;
-		alteredReloadDuration = GetConVarFloat(hCvarReloadSpeedSilencedSmg);
-	}
-	else
-	{
-		return Plugin_Continue;
-	}
-	new Float:playbackRate = originalReloadDuration / alteredReloadDuration;
+	float playbackRate = originalReloadDuration / alteredReloadDuration;
 	SetEntPropFloat(weapon, Prop_Send, "m_flPlaybackRate", playbackRate);
+	
+	return Plugin_Continue;
 }
 
-bool:IsSurvivor(client)
+bool IsSurvivor(int client)
 {
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2;
+	return (client > 0 
+		&& client <= MaxClients 
+		&& IsClientInGame(client) 
+		&& GetClientTeam(client) == TEAM_SURVIVOR);
 }
-

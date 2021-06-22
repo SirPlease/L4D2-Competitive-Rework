@@ -4,11 +4,15 @@
 #include <sourcemod>
 
 #define GAMEDATA "l4d2_si_ability"
+
+#define DURATION_OFFSET 4
 #define TIMESTAMP_OFFSET 8
+
 #define TEAM_SURVIVOR 3
 
 int 
-	m_tongueDragDamageTimer;
+	m_tongueDragDamageTimerDuration,
+	m_tongueDragDamageTimerTimeStamp;
 
 ConVar 
 	tongue_drag_damage_interval;
@@ -30,12 +34,13 @@ public void OnPluginStart()
 		SetFailState("Gamedata '%s.txt' missing or corrupt.", GAMEDATA);
 	}
 	
-	m_tongueDragDamageTimer = GameConfGetOffset(hGamedata, "CTerrorPlayer->m_tongueDragDamageTimer");
+	int m_tongueDragDamageTimer = GameConfGetOffset(hGamedata, "CTerrorPlayer->m_tongueDragDamageTimer");
 	if (m_tongueDragDamageTimer == -1) {
 		SetFailState("Failed to get offset 'CTerrorPlayer->m_tongueDragDamageTimer'.");
 	}
 	
-	m_tongueDragDamageTimer += TIMESTAMP_OFFSET;
+	m_tongueDragDamageTimerDuration = m_tongueDragDamageTimer + DURATION_OFFSET;
+	m_tongueDragDamageTimerTimeStamp = m_tongueDragDamageTimer + TIMESTAMP_OFFSET;
 	
 	HookEvent("tongue_grab", OnTongueGrab);
 	
@@ -111,8 +116,11 @@ public Action FixDragInterval(Handle hTimer, any userid)
 */
 void SetDragDamageInterval(int client)
 {
-	float fIntervalValue = GetGameTime() + tongue_drag_damage_interval.FloatValue;
-	SetEntDataFloat(client, m_tongueDragDamageTimer, fIntervalValue);
+	float fCvarValue = tongue_drag_damage_interval.FloatValue;
+	float fTimeStamp = GetGameTime() + fCvarValue;
+	
+	SetEntDataFloat(client, m_tongueDragDamageTimerDuration, fCvarValue); //duration
+	SetEntDataFloat(client, m_tongueDragDamageTimerTimeStamp, fTimeStamp); //timestamp
 }
 
 bool IsSurvivorBeingDragged(int client)

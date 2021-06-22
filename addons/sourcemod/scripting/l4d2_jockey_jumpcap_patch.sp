@@ -31,9 +31,9 @@ public void OnPluginStart()
 		SetFailState("Gamedata '%s.txt' missing or corrupt.", GAMEDATA);
 	}
 	
-	int iCleapOnTouch = GameConfGetOffset(hGamedata, "CLeap::OnTouch");
+	int iCleapOnTouch = GameConfGetOffset(hGamedata, "CBaseAbility::OnTouch");
 	if (iCleapOnTouch == -1) {
-		SetFailState("Failed to get offset 'CLeap::OnTouch'.");
+		SetFailState("Failed to get offset 'CBaseAbility::OnTouch'.");
 	}
 
 	hCLeap_OnTouch = DHookCreate(iCleapOnTouch, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, CLeap_OnTouch);

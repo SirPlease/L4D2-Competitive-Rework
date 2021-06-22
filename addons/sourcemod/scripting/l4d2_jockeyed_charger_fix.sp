@@ -11,7 +11,7 @@
 
 #define GAMEDATA "l4d2_si_ability"
 
-int m_QuenePummelAttacker = -1;
+int m_queuedPummelAttacker = -1;
 
 Handle hCLeap_OnTouch;
 
@@ -32,14 +32,14 @@ public void OnPluginStart()
 		SetFailState("Gamedata '%s.txt' missing or corrupt.", GAMEDATA);
 	}
 	
-	m_QuenePummelAttacker = GameConfGetOffset(hGamedata, "CTerrorPlayer->m_QuenePummelAttacker");
-	if (m_QuenePummelAttacker == -1) {
-		SetFailState("Failed to get offset 'CTerrorPlayer->m_QuenePummelAttacker'.");
+	m_queuedPummelAttacker = GameConfGetOffset(hGamedata, "CTerrorPlayer->m_queuedPummelAttacker");
+	if (m_queuedPummelAttacker == -1) {
+		SetFailState("Failed to get offset 'CTerrorPlayer->m_queuedPummelAttacker'.");
 	}
 	
-	int iCleapOnTouch = GameConfGetOffset(hGamedata, "CLeap::OnTouch");
+	int iCleapOnTouch = GameConfGetOffset(hGamedata, "CBaseAbility::OnTouch");
 	if (iCleapOnTouch == -1) {
-		SetFailState("Failed to get offset 'CLeap::OnTouch'.");
+		SetFailState("Failed to get offset 'CBaseAbility::OnTouch'.");
 	}
 	
 	hCLeap_OnTouch = DHookCreate(iCleapOnTouch, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, CLeap_OnTouch);
@@ -139,7 +139,7 @@ int GetCarrier(int survivor)
  */
 int GetPummelQueueAttacker(int survivor)
 {
-	return GetEntDataEnt2(survivor, m_QuenePummelAttacker);
+	return GetEntDataEnt2(survivor, m_queuedPummelAttacker);
 }
 
 int GetPummelAttacker(int survivor)

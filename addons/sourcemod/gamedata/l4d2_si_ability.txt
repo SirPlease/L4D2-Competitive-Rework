@@ -39,7 +39,7 @@
 			 *        *((float *)this + 3988) = v8;
 			 *        return result;
 			 */
-			"CTerrorPlayer->m_QuenePummelAttacker"
+			"CTerrorPlayer->m_queuedPummelAttacker"
 			{
 				"linux"     "15956"
 			}
@@ -82,11 +82,23 @@
 			
 			/*
 			 * Has not changed after the update on linux
-			 * 216	CLeap::OnTouch(CBaseEntity *)
+			 * I think it is not different for any ability
+			 * 216	CBaseAbility::OnTouch(CBaseEntity *)
 			*/
-			"CLeap::OnTouch"
+			"CBaseAbility::OnTouch"
 			{
 				"linux"     "216"
+			}
+			
+			/*
+			 * Has not changed after the update on linux
+			 * I think it is not different for any ability
+			 * 204	CBaseAbility::ActivateAbility(void)
+			*/
+			"CBaseAbility::ActivateAbility"
+			{
+				"windows"   "203"
+				"linux"     "204"
 			}
 		}
 	}

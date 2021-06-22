@@ -30,7 +30,7 @@ public OnPluginStart()
 
 	HookEvent("player_connect_full", Event_PlayerConnectFull, EventHookMode_Post);
 	RegAdminCmd("sm_consistencycheck", Command_ConsistencyCheck, ADMFLAG_RCON, "Performs a consistency check on all players.", "", FCVAR_NONE);
-	SetConVarInt(CreateConVar("cl_consistencycheck_interval", "180.0", "Perform a consistency check after this amount of time (seconds) has passed since the last.", FCVAR_REPLICATED|FCVAR_LAUNCHER), 999999);
+	SetConVarInt(CreateConVar("cl_consistencycheck_interval", "180.0", "Perform a consistency check after this amount of time (seconds) has passed since the last.", FCVAR_REPLICATED), 999999);
 }
 
 public Action:Event_PlayerConnectFull(Handle:event, const String:name[], bool:dontBroadcast)
