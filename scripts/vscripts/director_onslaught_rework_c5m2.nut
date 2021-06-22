@@ -26,31 +26,56 @@ Director.ResetMobTimer()
 g_TankFirstSpawned <- false
 
 // Control the horde when tank is alive
+// Bug: tank_spawn fires every time the tank switches control, it starts under AI control then switches to a player
 function OnGameEvent_tank_spawn(params)
 {
 	if (g_TankFirstSpawned == false)
 	{
+		TankHordeParams()
+		g_TankFirstSpawned = true
+		
 		if (developer() > 0)
 		{
 			Msg("Tank Spawned\n")
 		}
-		TankHordeParams()
-		g_TankFirstSpawned = true
 	}
 }
 
+// Handle player tank deaths
+// Bug: tank_killed only fires when an AI tank is killed
 function OnGameEvent_tank_killed(params)
 {
 	if (g_TankFirstSpawned == true)
 	{
+		ResetHordeParams()
+		
 		if (developer() > 0)
 		{
 			Msg("Tank Killed\n")
 		}
-		ResetHordeParams()
 	}
 }
 
+// Handle player tank deaths
+function OnGameEvent_player_death(params)
+{
+	if (g_TankFirstSpawned == true && params.victimisbot == 0)
+	{
+		// Only check for tank deaths
+		if (params.victimname == "Tank")
+		{
+			ResetHordeParams()
+			
+			if (developer() > 0)
+			{
+				Msg("Tank Killed\n")
+			}
+		}
+	}
+}
+
+// Handle tanks being kicked
+// Bug: This fires when the AI that started out controlling the tank passes control to players and "disconnects"
 function OnGameEvent_player_team(params)
 {
 	if (g_TankFirstSpawned == true)
@@ -61,12 +86,13 @@ function OnGameEvent_player_team(params)
 			// Player is a disconnecting bot tank
 			if (params.team == 0 && params.disconnect && params.isbot && GetPlayerFromUserID(params.userid).GetZombieType() == 8)
 			{
+				ResetHordeParams()
+				
 				if (developer() > 0)
 				{
 					Msg("Tank Disconnected\n")
 					ClientPrint(null, 3, "\x05Tank was kicked")
 				}
-				ResetHordeParams()
 			}
 		}
 	}
