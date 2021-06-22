@@ -27,15 +27,22 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	infected_fire_immunity = CreateConVar("infected_fire_immunity", "3", "What type of fire immunity should infected have? 0 = None, 3 = Extinguish burns, 2 = Prevent burns, 1 = Complete immunity", _, true, 0.0, true, 3.0);
-	tank_fire_immunity = CreateConVar("tank_fire_immunity", "2", "What type of fire immunity should the tank have? 0 = None, 3 = Extinguish burns, 2 = Prevent burns, 1 = Complete immunity", _, true, 0.0, true, 3.0);
+	infected_fire_immunity = CreateConVar("infected_fire_immunity", 
+	"3", 
+	"What type of fire immunity should infected have? 0 = None, 3 = Extinguish burns, 2 = Prevent burns, 1 = Complete immunity",_, true, 0.0, true, 3.0);
+	tank_fire_immunity = CreateConVar("tank_fire_immunity", 
+	"2", 
+	"What type of fire immunity should the tank have? 0 = None, 3 = Extinguish burns, 2 = Prevent burns, 1 = Complete immunity",_, true, 0.0, true, 3.0);
 	
 	infected_extinguish_time = CreateConVar("infected_extinguish_time", 
 	"1.0", 
 	"After what time will the infected player be extinguished, works if cvar 'infected_fire_immunity' equal 3", 
 	_, true, 0.0, true, 999.0);
 	
-	tank_extinguish_time = CreateConVar("tank_extinguish_time", "1.0", "After what time will the tanl player be extinguished, works if cvar 'tank_fire_immunity' equal 3", _, true, 0.0, true, 999.0);
+	tank_extinguish_time = CreateConVar("tank_extinguish_time", 
+	"1.0", 
+	"After what time will the tanl player be extinguished, works if cvar 'tank_fire_immunity' equal 3", 
+	_, true, 0.0, true, 999.0);
 	
 	HookEvent("player_hurt", SIOnFire, EventHookMode_Post);
 	HookEvent("round_start", view_as<EventHook>(EventReset), EventHookMode_PostNoCopy);
