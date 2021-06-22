@@ -1,4 +1,4 @@
-Msg("Initiating Onslaught\n");
+Msg("Initiating Onslaught Rework c5m2\n");
 
 DirectorOptions <-
 {
@@ -22,26 +22,53 @@ DirectorOptions <-
 
 Director.ResetMobTimer()
 
+// Variables
+g_TankFirstSpawned <- false
+
 // Control the horde when tank is alive
 function OnGameEvent_tank_spawn(params)
 {
-	Msg("Tank Spawned\n");
-	TankHordeParams()
+	if (g_TankFirstSpawned == false)
+	{
+		if (developer() > 0)
+		{
+			Msg("Tank Spawned\n")
+		}
+		TankHordeParams()
+		g_TankFirstSpawned = true
+	}
 }
 
 function OnGameEvent_tank_killed(params)
 {
-	Msg("Tank Killed\n");
-	ResetHordeParams()
+	if (g_TankFirstSpawned == true)
+	{
+		if (developer() > 0)
+		{
+			Msg("Tank Killed\n")
+		}
+		ResetHordeParams()
+	}
 }
 
 function OnGameEvent_player_team(params)
 {
-	// Player is a disconnecting bot tank
-	if (params.disconnect && params.isbot && GetPlayerFromUserID(params.userid).GetZombieType() == 8)
+	if (g_TankFirstSpawned == true)
 	{
-		Msg("Tank Disconnected\n");
-		ResetHordeParams()
+		// Only check if the tank is no longer in play, luckily this is updated before player_team is called
+		if (Director.IsTankInPlay() == false)
+		{
+			// Player is a disconnecting bot tank
+			if (params.team == 0 && params.disconnect && params.isbot && GetPlayerFromUserID(params.userid).GetZombieType() == 8)
+			{
+				if (developer() > 0)
+				{
+					Msg("Tank Disconnected\n")
+					ClientPrint(null, 3, "\x05Tank was kicked")
+				}
+				ResetHordeParams()
+			}
+		}
 	}
 }
 
@@ -69,7 +96,8 @@ function ResetHordeParams()
 	ClientPrint(null, 3, "\x05Ramping up the horde!")
 	
 	// Stop measuring flow
-	EntFire("OnslaughtFlowChecker", "Kill")
+	EntFire("OnslaughtFlowChecker", "Disable")
+	g_TankFirstSpawned = false
 }
 
 __CollectEventCallbacks(this, "OnGameEvent_", "GameEventCallbacks", RegisterScriptGameEventListener)
