@@ -1,85 +1,92 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <left4dhooks>
 
-static const deadstopSequences[] = {64, 67, 11, 8};
+#define Z_HUNTER 3
+#define TEAM_SURVIVOR 2
+#define TEAM_INFECTED 3
 
-public Plugin:myinfo = 
+static const int deadstopSequences[] = {64, 67, 11, 8};
+
+public Plugin myinfo = 
 {
 	name = "L4D2 No Hunter Deadstops",
-	author = "Visor",
+	author = "Visor, A1m",
 	description = "Self-descriptive",
-	version = "3.3",
-	url = "https://github.com/Attano/Equilibrium"
+	version = "3.4",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-public Action:L4D_OnShovedBySurvivor(shover, shovee, const Float:vector[3])
+public Action L4D_OnShovedBySurvivor(int shover, int shovee, const float vector[3])
 {
-	if (!IsSurvivor(shover) || !IsHunter(shovee))
-		return Plugin_Continue;
-	
-	if (HasTarget(shovee))
-		return Plugin_Continue;
+	return Shove_Handler(shover, shovee);
+}
 
-	if (IsPlayingDeadstopAnimation(shovee))
-	{
+public Action L4D2_OnEntityShoved(int shover, int shovee_ent, int weapon, float vector[3], bool bIsHunterDeadstop)
+{
+	return Shove_Handler(shover, shovee_ent);
+}
+
+Action Shove_Handler(int shover, int shovee)
+{
+	if (!IsSurvivor(shover) || !IsHunter(shovee)) {
+		return Plugin_Continue;
+	}
+	
+	if (HasTarget(shovee)) {
+		return Plugin_Continue;
+	}
+	
+	if (IsPlayingDeadstopAnimation(shovee)) {
 		return Plugin_Handled;
 	}
+	
 	return Plugin_Continue;
+} 
+
+bool IsSurvivor(int client)
+{
+	return (client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == TEAM_SURVIVOR);
 }
 
-public Action:L4D2_OnEntityShoved(shover, shovee_ent, weapon, Float:vector[3], bool:bIsHunterDeadstop)
+bool IsInfected(int client)
 {
-	if (!IsSurvivor(shover) || !IsHunter(shovee_ent))
-		return Plugin_Continue;
-	
-	if (HasTarget(shovee_ent))
-		return Plugin_Continue;
-	
-	if (IsPlayingDeadstopAnimation(shovee_ent))
-	{
-		return Plugin_Handled;
+	return (client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == TEAM_INFECTED);
+}
+
+bool IsHunter(int client)
+{
+	if (!IsInfected(client)) {
+		return false;
 	}
-	return Plugin_Continue;
-}
-
-stock bool:IsSurvivor(client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2;
-}
-
-stock bool:IsInfected(client)
-{
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 3;
-}
-
-stock bool:IsHunter(client)  
-{
-	if (!IsInfected(client))
+	
+	if (!IsPlayerAlive(client)) {
 		return false;
-		
-	if (!IsPlayerAlive(client))
+	}
+	
+	if (GetEntProp(client, Prop_Send, "m_zombieClass") != Z_HUNTER) {
 		return false;
-
-	if (GetEntProp(client, Prop_Send, "m_zombieClass") != 3)
-		return false;
-
+	}
+	
 	return true;
 }
 
-bool:IsPlayingDeadstopAnimation(hunter)  
+bool IsPlayingDeadstopAnimation(int hunter)
 {
-	new sequence = GetEntProp(hunter, Prop_Send, "m_nSequence");
-	for (new i = 0; i < sizeof(deadstopSequences); i++)
-	{
-		if (deadstopSequences[i] == sequence) return true;
+	int sequence = GetEntProp(hunter, Prop_Send, "m_nSequence");
+	for (int i = 0; i < sizeof(deadstopSequences); i++) {
+		if (deadstopSequences[i] == sequence) {
+			return true;
+		}
 	}
 	return false;
 }
 
-bool:HasTarget(hunter)
+bool HasTarget(int hunter)
 {
-	new target = GetEntDataEnt2(hunter, 16004);
+	int target = GetEntPropEnt(hunter, Prop_Send, "m_pounceVictim");
+
 	return (IsSurvivor(target) && IsPlayerAlive(target));
 }

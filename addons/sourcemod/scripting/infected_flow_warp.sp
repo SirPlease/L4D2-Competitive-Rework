@@ -1,136 +1,126 @@
 #pragma semicolon 1
+#pragma newdecls required;
 
 #include <sourcemod>
 #include <sdktools>
-#include <l4d2_direct>
+#include <left4dhooks>
 
-public Plugin:myinfo =
+#define TEAM_SURVIVOR 2
+#define TEAM_INFECTED 3
+
+StringMap hNameToCharIDTrie;
+
+public Plugin myinfo =
 {
 	name = "Infected Flow Warp",
-	author = "CanadaRox",
+	author = "CanadaRox, A1m`",
 	description = "Allows infected to warp to survivors based on their flow",
-	version = "1",
-	url = "htts://github.com/CanadaRox/sourcemod-plugins/tree/master/infected_flow_warp"
+	version = "1.3",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-enum survFlowEnum
+public void OnPluginStart()
 {
-	surv,
-	Float:flow
-};
-
-new Handle:hNameToCharIDTrie;
-new Handle:hFlowArray;
-
-public OnPluginStart()
-{
-	PrepTries();
-	hFlowArray = CreateArray(2);
+	SaveCharacter();
 
 	RegConsoleCmd("sm_warpto", WarpTo_Cmd, "Warps to the specified survivor");
 }
 
-PrepTries()
+void SaveCharacter()
 {
-	hNameToCharIDTrie = CreateTrie();
-	SetTrieValue(hNameToCharIDTrie, "bill", 0);
-	SetTrieValue(hNameToCharIDTrie, "zoey", 1);
-	SetTrieValue(hNameToCharIDTrie, "louis", 2);
-	SetTrieValue(hNameToCharIDTrie, "francis", 3);
+	hNameToCharIDTrie = new StringMap();
+	hNameToCharIDTrie.SetValue("bill", 0);
+	hNameToCharIDTrie.SetValue("zoey", 1);
+	hNameToCharIDTrie.SetValue("louis", 2);
+	hNameToCharIDTrie.SetValue("francis", 3);
 	
-	SetTrieValue(hNameToCharIDTrie, "nick", 0);
-	SetTrieValue(hNameToCharIDTrie, "rochelle", 1);
-	SetTrieValue(hNameToCharIDTrie, "coach", 2);
-	SetTrieValue(hNameToCharIDTrie, "ellis", 3);
+	hNameToCharIDTrie.SetValue("nick", 0);
+	hNameToCharIDTrie.SetValue("rochelle", 1);
+	hNameToCharIDTrie.SetValue("coach", 2);
+	hNameToCharIDTrie.SetValue("ellis", 3);
 }
 
-public Action:WarpTo_Cmd(client, args)
+public Action WarpTo_Cmd(int client, int args)
 {
-	if (!IsGhostInfected(client))
-	{
+	if (!IsGhostInfected(client)) {
 		return Plugin_Handled;
 	}
 
-	if (args != 1)
-	{
-		ReplyToCommand(client, "Usage: sm_warpto <#|name> (name must be lowercase)");
+	if (args == 0) {
+		int fMaxFlowSurvivor = L4D_GetHighestFlowSurvivor(); //left4dhooks functional or left4downtown2 by A1m`
+		if (!IsValidIndex(fMaxFlowSurvivor) || !IsSurvivor(fMaxFlowSurvivor)) {
+			return Plugin_Handled;
+		}
+		
+		TeleportToClient(client, fMaxFlowSurvivor);
 		return Plugin_Handled;
 	}
 
-	decl String:arg[12];
-	decl survivorFlowRank;
+	char arg[12];
 	GetCmdArg(1, arg, sizeof(arg));
-	survivorFlowRank = StringToInt(arg);
-
-	if (survivorFlowRank)
-	{
-		decl Float:origin[3];
-		GetClientAbsOrigin(GetSurvivorOfFlowRank(survivorFlowRank), origin);
-		TeleportEntity(client, origin, NULL_VECTOR, NULL_VECTOR);
-	}
-	else
-	{
-		decl target;
-		if (GetTrieValue(hNameToCharIDTrie, arg, target))
-		{
-			target = GetClientOfCharID(target);
-			decl Float:origin[3];
-			GetClientAbsOrigin(target, origin);
-			TeleportEntity(client, origin, NULL_VECTOR, NULL_VECTOR);
+	StripQuotes(arg);
+	String_ToLower(arg, sizeof(arg));
+	
+	int characterID;
+	if (GetTrieValue(hNameToCharIDTrie, arg, characterID)) {
+		int target = GetClientOfCharID(characterID);
+		if (target > 0) {
+			TeleportToClient(client, target);
 		}
 	}
+
 	return Plugin_Handled;
 }
 
-stock GetSurvivorOfFlowRank(rank)
+void TeleportToClient(int client, int target)
 {
-	decl survFlowEnum:currentSurv[survFlowEnum];
-	for (new client = 1; client <= MaxClients; client++)
-	{
-		if(IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client))
-		{
-			currentSurv[surv] = client;
-			currentSurv[flow] = L4D2Direct_GetFlowDistance(client);
-			PushArrayArray(hFlowArray, currentSurv[0]);
-		}
-	}
-	SortADTArrayCustom(hFlowArray, sortFunc);
-	new arraySize = GetArraySize(hFlowArray);
-	if (rank - 1 > arraySize)
-		rank = arraySize;
-	GetArrayArray(hFlowArray, rank - 1, currentSurv);
-	ClearArray(hFlowArray);
-
-	return currentSurv[0];
+	float origin[3];
+	GetClientAbsOrigin(target, origin);
+	TeleportEntity(client, origin, NULL_VECTOR, NULL_VECTOR);
 }
 
-public sortFunc(index1, index2, Handle:array, Handle:hndl)
+int GetClientOfCharID(int characterID)
 {
-	decl item1[2];
-
-	decl item2[2];
-
-	if (Float:item1[1] > Float:item2[1])
-		return -1;
-	else if (Float:item1[1] < Float:item2[1])
-		return 1;
-	else
-		return 0;
-}
-
-stock GetClientOfCharID(characterID)
-{
-	for (new client = 1; client <= MaxClients; client++)
-	{
-		if(IsClientInGame(client) && GetClientTeam(client) == 2)
-		{
-			if (GetEntProp(client, Prop_Send, "m_survivorCharacter") == characterID)
+	for (int client = 1; client <= MaxClients; client++) {
+		if (IsSurvivor(client)) {
+			if (GetEntProp(client, Prop_Send, "m_survivorCharacter") == characterID) {
 				return client;
+			}
 		}
 	}
+
 	return 0;
 }
-stock IsGhostInfected(client)
+
+bool IsValidIndex(int client)
 {
-	return GetClientTeam(client) == 3 && IsPlayerAlive(client) && GetEntProp(client, Prop_Send, "m_isGhost");
+	return (client > 0 
+		&& client <= MaxClients);
+}
+
+bool IsSurvivor(int client)
+{
+	return (IsClientInGame(client)
+		&& GetClientTeam(client) == TEAM_SURVIVOR 
+		&& IsPlayerAlive(client));
+}
+
+bool IsGhostInfected(int client)
+{
+	return (GetClientTeam(client) == TEAM_INFECTED 
+		&& IsPlayerAlive(client) 
+		&& GetEntProp(client, Prop_Send, "m_isGhost"));
+}
+
+void String_ToLower(char[] str, const int MaxSize)
+{
+	int iSize = strlen(str); //Сounts string length to zero terminator
+
+	for (int i = 0; i < iSize && i < MaxSize; i++) { //more security, so that the cycle is not endless
+		if (IsCharUpper(str[i])) {
+			str[i] = CharToLower(str[i]);
+		}
+	}
+
+	str[iSize] = '\0';
 }

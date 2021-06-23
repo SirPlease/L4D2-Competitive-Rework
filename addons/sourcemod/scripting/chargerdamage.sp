@@ -73,22 +73,21 @@ new bool: bChargerCharging[MAXPLAYERS + 1];                     // whether the c
 
 //new Float: fPlayerPreviousHit[MAXPLAYERS + 1][MAXPLAYERS + 1];  // when was the previous attack from the client (EngineTime)
 
-new const survivorProps[] = 
+static const char survivorProps[][] = 
 {
-	13284,	// smoker
-	16008,	// hunter
-	16128,	// jockey
-	15976	// charger
+	"m_tongueOwner",
+	"m_pounceAttacker",
+	"m_jockeyAttacker",
+	"m_pummelAttacker"
 };
-
 
 public Plugin:myinfo = 
 {
-    name = "Charger Damage",
-    author = "Tabun, Jacob, Visor",
-    description = "Charger damage modifier",
-    version = "0.4",
-    url = "https://github.com/Attano/L4D2-Competitive-Framework"
+	name = "Charger Damage",
+	author = "Tabun, Jacob, Visor",
+	description = "Charger damage modifier",
+	version = "0.4",
+	url = "https://github.com/Attano/L4D2-Competitive-Framework"
 }
 
 /* -------------------------------
@@ -336,12 +335,15 @@ Handle:BuildInflictorTrie()
     return trie;    
 }
 
-bool:IsUnderAttack(survivor)
+bool IsUnderAttack(int survivor)
 {
-	for (new i = 0; i < sizeof(survivorProps); i++)
+	int Attacker;
+	for (int i = 0; i < sizeof(survivorProps); i++)
 	{
-		if (IsClientAndInGame(GetEntDataEnt2(survivor, survivorProps[i])))
+		Attacker = GetEntPropEnt(survivor, Prop_Send, survivorProps[i]); 
+		if (IsClientAndInGame(Attacker)) {
 			return true;
+		}
 	}
 	return false;
 }
