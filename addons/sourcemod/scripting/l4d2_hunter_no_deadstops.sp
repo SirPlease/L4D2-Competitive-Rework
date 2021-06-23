@@ -112,8 +112,7 @@ bool HasTarget(int hunter)
 public void Event_RoundStart()
 {
 	// clear SI tracking stats
-	for (int i = 0; i <= MAXPLAYERS; i++)
-	{
+	for (int i = 0; i <= MAXPLAYERS; i++) {
 		bIsPouncing[i] = false;
 	}
 }
@@ -138,8 +137,7 @@ public void Event_AbilityUse(Event hEvent, const char[] name, bool dontBroadcast
 	
 	if (strcmp(abilityName, "ability_lunge", false) == 0) {
 		int client = GetClientOfUserId(hEvent.GetInt("userid"));
-		
-		if (client < 0 || !IsClientInGame(client) || GetClientTeam(client) != TEAM_INFECTED) { 
+		if (client > 0) { 
 			// Hunter pounce
 			bIsPouncingStopTime[client] = 0.0;
 			bIsPouncingStartTime[client] = GetGameTime();
@@ -154,14 +152,15 @@ public void OnGameFrame()
 		bIsPouncing[client] = bIsPouncing[client] && IsClientInGame(client) && IsPlayerAlive(client);
 
 		if (bIsPouncing[client]) {
-			if (GetGameTime() - bIsPouncingStartTime[client] > 0.04) {
+			float fNow = GetGameTime();
+			if (fNow - bIsPouncingStartTime[client] > 0.04) {
 
 				if (bIsPouncingStopTime[client] == 0.0) {
 					if (GetEntityFlags(client) & FL_ONGROUND) {
 						// PrintToChatAll("Hunter grounded (buffer = %.0f ms)", cvarHunterGroundM2Godframes.FloatValue * 1000);
-						bIsPouncingStopTime[client] = GetGameTime();    
+						bIsPouncingStopTime[client] = fNow;
 					}
-				} else if (GetGameTime() - bIsPouncingStopTime[client] > cvarHunterGroundM2Godframes.FloatValue) {
+				} else if (fNow - bIsPouncingStopTime[client] > cvarHunterGroundM2Godframes.FloatValue) {
 					// PrintToChatAll("Not pouncing anymore.");
 					bIsPouncing[client] = false;
 				}
