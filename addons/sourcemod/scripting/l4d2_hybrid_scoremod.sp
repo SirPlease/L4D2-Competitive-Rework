@@ -61,24 +61,25 @@ public Plugin:myinfo =
 
 public APLRes:AskPluginLoad2(Handle:plugin, bool:late, String:error[], errMax)
 {
-    CreateNative("SMPlus_GetHealthBonus", Native_GetHealthBonus);
-    CreateNative("SMPlus_GetDamageBonus", Native_GetDamageBonus);
-    CreateNative("SMPlus_GetPillsBonus", Native_GetPillsBonus);
-    CreateNative("SMPlus_GetMaxHealthBonus", Native_GetMaxHealthBonus);
-    CreateNative("SMPlus_GetMaxDamageBonus", Native_GetMaxDamageBonus);
-    CreateNative("SMPlus_GetMaxPillsBonus", Native_GetMaxPillsBonus);
-    RegPluginLibrary("l4d2_hybrid_scoremod_zone");
-    bLateLoad = late;
-    return APLRes_Success;
+	CreateNative("SMPlus_GetHealthBonus", Native_GetHealthBonus);
+	CreateNative("SMPlus_GetDamageBonus", Native_GetDamageBonus);
+	CreateNative("SMPlus_GetPillsBonus", Native_GetPillsBonus);
+	CreateNative("SMPlus_GetMaxHealthBonus", Native_GetMaxHealthBonus);
+	CreateNative("SMPlus_GetMaxDamageBonus", Native_GetMaxDamageBonus);
+	CreateNative("SMPlus_GetMaxPillsBonus", Native_GetMaxPillsBonus);
+
+	RegPluginLibrary("l4d2_hybrid_scoremod_zone");
+	bLateLoad = late;
+	return APLRes_Success;
 }
 
 public OnPluginStart()
 {
-	hCvarBonusPerSurvivorMultiplier = CreateConVar("sm2_bonus_per_survivor_multiplier", "0.5", "Total Survivor Bonus = this * Number of Survivors * Map Distance", FCVAR_NONE);
-	hCvarPermanentHealthProportion = CreateConVar("sm2_permament_health_proportion", "0.75", "Permanent Health Bonus = this * Map Bonus; rest goes for Temporary Health Bonus", FCVAR_NONE);
-	hCvarPillsHpFactor = CreateConVar("sm2_pills_hp_factor", "6.0", "Unused pills HP worth = map bonus HP value / this", FCVAR_NONE);
-	hCvarPillsMaxBonus = CreateConVar("sm2_pills_max_bonus", "30", "Unused pills cannot be worth more than this", FCVAR_NONE);
-	// hCvarTiebreakerBonus = CreateConVar("sm2_tiebreaker_bonus", "25", "Tiebreaker for those cases when both teams make saferoom with no bonus", FCVAR_NONE);
+	hCvarBonusPerSurvivorMultiplier = CreateConVar("sm2_bonus_per_survivor_multiplier", "0.5", "Total Survivor Bonus = this * Number of Survivors * Map Distance");
+	hCvarPermanentHealthProportion = CreateConVar("sm2_permament_health_proportion", "0.75", "Permanent Health Bonus = this * Map Bonus; rest goes for Temporary Health Bonus");
+	hCvarPillsHpFactor = CreateConVar("sm2_pills_hp_factor", "6.0", "Unused pills HP worth = map bonus HP value / this");
+	hCvarPillsMaxBonus = CreateConVar("sm2_pills_max_bonus", "30", "Unused pills cannot be worth more than this");
+	// hCvarTiebreakerBonus = CreateConVar("sm2_tiebreaker_bonus", "25", "Tiebreaker for those cases when both teams make saferoom with no bonus");
 	
 	hCvarValveSurvivalBonus = FindConVar("vs_survival_bonus");
 	hCvarValveTieBreaker = FindConVar("vs_tiebreak_bonus");
@@ -176,32 +177,32 @@ public RoundStartEvent()
 
 public Native_GetHealthBonus(Handle:plugin, numParams)
 {
-    return RoundToFloor(GetSurvivorHealthBonus());
+	return RoundToFloor(GetSurvivorHealthBonus());
 }
  
 public Native_GetMaxHealthBonus(Handle:plugin, numParams)
 {
-    return RoundToFloor(fMapHealthBonus);
+	return RoundToFloor(fMapHealthBonus);
 }
  
 public Native_GetDamageBonus(Handle:plugin, numParams)
 {
-    return RoundToFloor(GetSurvivorDamageBonus());
+	return RoundToFloor(GetSurvivorDamageBonus());
 }
  
 public Native_GetMaxDamageBonus(Handle:plugin, numParams)
 {
-    return RoundToFloor(fMapDamageBonus);
+	return RoundToFloor(fMapDamageBonus);
 }
  
 public Native_GetPillsBonus(Handle:plugin, numParams)
 {
-    return RoundToFloor(GetSurvivorPillBonus());
+	return RoundToFloor(GetSurvivorPillBonus());
 }
  
 public Native_GetMaxPillsBonus(Handle:plugin, numParams)
 {
-    return iPillWorth * iTeamSize;
+	return iPillWorth * iTeamSize;
 }
 
 public Action:CmdBonus(client, args)

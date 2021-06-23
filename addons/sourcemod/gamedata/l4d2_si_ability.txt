@@ -1,0 +1,105 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			/* @A1m:
+			 * It cannot be simply found using sourcemod, 
+			 * now there is a problem with this plugin, it can break after every update. 
+			 * Need to check this every update.
+			 * I need to add game data here to make it easier to fix.
+			 *
+			 * After the last update, all offsets in the class 'CTerrorPlayer' changed to offset - 32,
+			 * which proves that we found it right (old offset 15988 -32 = 15956)
+			 *
+			 * How can find this:
+			 * function 'CTerrorPlayer::OnPummelEnded' the very end 
+			 *
+			 *        v37 = *((_DWORD *)this + 3757);
+			 *        *((_DWORD *)this + 3989) = -1; 									//we need to find this line 3989. 3989*4=15956
+			 *        result = (*(int (__fastcall **)(void *))(v37 + 248))(v35);
+			 *        if ( !*((_BYTE *)this + 14833) )
+			 *          result = CTerrorPlayer::WarpToValidPositionIfStuck();
+			 *
+			 * Or we need to find this function 'CTerrorPlayer::QueuePummelVictim' the very end 
+			 *
+			 *        if ( a2 )
+			 *        {
+			 *           //we need to find this line 3989. 3989*4=15956
+			 *          *((_DWORD *)a2 + 3989) = *(_DWORD *)(*(int (__fastcall **)(char *, int, CTerrorPlayer *))(*(_DWORD *)this + 12))(v3, v7, this);  
+			 *          result = CBaseEntity::AddFlag(this, 32);
+			 *        }
+			 *        v8 = -1.0;
+			 *        if ( a3 != -1.0 )
+			 *        {
+			 *          result = gpGlobals;
+			 *          v8 = a3 + *(float *)(gpGlobals + 12);
+			 *        }
+			 *        *((float *)this + 3988) = v8;
+			 *        return result;
+			 */
+			"CTerrorPlayer->m_queuedPummelAttacker"
+			{
+				"linux"     "15956"
+			}
+			
+			/* @A1m:
+			 * It cannot be found using sourcemod, can only be found in the code:
+			 * 
+			 * Function 'CTerrorPlayer::OnGrabbedByTongue' below the middle:
+			 *
+			 *     v13 = dword_FDA87C;
+			 *     *((_DWORD *)this + 1535) = 0;
+			 *     v22 = *(float *)(v13 + 44);
+			 *     CountdownTimer::Now((CTerrorPlayer *)((char *)this + 13312)); //we need this line, this is the new offset
+			 *     v20 = a1;
+			 *     if ( (float)(v20 + v22) != *((float *)this + 3330) )
+			 *     {
+			 *       (*(void (__cdecl **)(char *, char *))(*((_DWORD *)this + 3328) + 4))((char *)this + 13312, (char *)this + 13320);
+			 *       *((float *)this + 3330) = v20 + v22;
+			 *     }
+			 *     if ( v22 != *((float *)this + 3329) )
+			 *     {
+			 *       (*(void (__cdecl **)(char *, char *))(*((_DWORD *)this + 3328) + 4))((char *)this + 13312, (char *)this + 13316);
+			 *       *((float *)this + 3329) = v22;
+			 *     }
+			 *     CBaseEntity::EmitSound(this, "SmokerZombie.TongueHit", 0.0, 0);
+			 *
+			 * How does it look:
+			 *
+			 * New offset 13312, the plugin will add 8 more and we will get where we need to
+			 *
+			 * CountdownTimer m_tongueDragDamageTimer 13312 
+			 *       Member: m_duration (offset 4) (type float)
+			 *       Member: m_timestamp (offset 8) (type float) (bits 0) (NoScale)
+			 *
+			*/
+			"CTerrorPlayer->m_tongueDragDamageTimer"
+			{
+				"linux"     "13312"
+			}
+			
+			/*
+			 * Has not changed after the update on linux
+			 * I think it is not different for any ability
+			 * 216	CBaseAbility::OnTouch(CBaseEntity *)
+			*/
+			"CBaseAbility::OnTouch"
+			{
+				"linux"     "216"
+			}
+			
+			/*
+			 * Has not changed after the update on linux
+			 * I think it is not different for any ability
+			 * 204	CBaseAbility::ActivateAbility(void)
+			*/
+			"CBaseAbility::ActivateAbility"
+			{
+				"windows"   "203"
+				"linux"     "204"
+			}
+		}
+	}
+}

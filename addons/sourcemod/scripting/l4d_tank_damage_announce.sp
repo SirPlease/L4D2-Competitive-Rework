@@ -350,14 +350,17 @@ FindTankClient()
 	return 0;
 }
 
-GetDamageAsPercent(damage)
+int GetDamageAsPercent(int damage)
 {
-	return RoundToFloor(FloatMul(FloatDiv(float(damage), g_fMaxTankHealth), 100.0));
+	return RoundToNearest((damage / g_fMaxTankHealth) * 100.0);
 }
 
-bool:IsExactPercent(damage)
+//comparing the type of int with the float, how different is it
+bool IsExactPercent(int damage)
 {
-	return (FloatAbs(float(GetDamageAsPercent(damage)) - FloatMul(FloatDiv(float(damage), g_fMaxTankHealth), 100.0)) < 0.001) ? true:false;
+	float fDamageAsPercent = (damage / g_fMaxTankHealth) * 100.0;
+	float fDifference = float(GetDamageAsPercent(damage)) - fDamageAsPercent;
+	return (FloatAbs(fDifference) < 0.001) ? true : false;
 }
 
 public SortByDamageDesc(elem1, elem2, const array[], Handle:hndl)

@@ -186,8 +186,9 @@ public Action:SwapTeams_Cmd(client, args)
 	return Plugin_Handled;
 }
 
-bool:IsGhost(client) {
-    return GetEntProp(client, Prop_Send, "m_isGhost") == 1;
+bool:IsGhost(client)
+{
+	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isGhost"));
 }
 
 public Action:Swap_Cmd(client, args)

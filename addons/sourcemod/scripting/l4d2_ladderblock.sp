@@ -28,156 +28,168 @@
 *
 * ============================================================================
 */
-
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
-new			inCharge		[MAXPLAYERS + 1];
 
-public Plugin:myinfo =
+int
+	g_iCvarFlags, 
+	g_iCvarImmune,
+	inCharge [MAXPLAYERS + 1];
+	
+ConVar
+	g_hFlags,
+	g_hImmune;
+
+bool
+	g_bLoadLate;
+
+public Plugin myinfo =
 {
-    name = "StopTrolls",
-    author = "raziEiL [disawar1]",
-    description = "Prevents people from blocking players who climb on the ladder.",
-    version = PLUGIN_VERSION,
-    url = "http://steamcommunity.com/id/raziEiL"
+	name = "StopTrolls",
+	author = "raziEiL [disawar1]",
+	description = "Prevents people from blocking players who climb on the ladder.",
+	version = PLUGIN_VERSION,
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework/"
+};
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	if (GetEngineVersion() != Engine_Left4Dead2) {
+		strcopy(error, err_max, "Plugin only support L4D2 engine");
+		return APLRes_Failure;
+	}
+
+	g_bLoadLate = late;
+	return APLRes_Success;
 }
 
-static		Handle:g_hFlags, Handle:g_hImmune, g_iCvarFlags, g_iCvarImmune, bool:g_bLoadLate;
-
-public OnPluginStart()
+public void OnPluginStart()
 {
-    CreateConVar("stop_trolls_version", PLUGIN_VERSION, "StopTrolls plugin version", FCVAR_REPLICATED|FCVAR_NOTIFY);
-    
-    g_hFlags = CreateConVar("stop_trolls_flags", "862", "Who can push trolls when climbs on the ladder. 0=Disable, 2=Smoker, 4=Boomer, 8=Hunter, 16=Spitter, 64=Charger, 256=Tank, 512=Survivors, 862=All");
-    g_hImmune = CreateConVar("stop_trolls_immune", "256", "What class is immune. 0=Disable, 2=Smoker, 4=Boomer, 8=Hunter, 16=Spitter, 32=Jockey, 64=Charger, 256=Tank, 512=Survivors, 894=All");
-    //AutoExecConfig(true, "StopTrollss"); // If u want a cfg file uncomment it. But I don't like.
-    
-    HookEvent("charger_charge_start", Charging);
-    HookEvent("charger_charge_end", NotCharging);
-    
-    HookConVarChange(g_hFlags, OnCvarChange_Flags);
-    HookConVarChange(g_hImmune, OnCvarChange_Immune);
-    ST_GetCvars();
-    
-    if (g_iCvarFlags && g_bLoadLate)
-        ST_ToogleHook(true);
+	CreateConVar("stop_trolls_version", PLUGIN_VERSION, "StopTrolls plugin version", FCVAR_REPLICATED|FCVAR_NOTIFY);
+
+	g_hFlags = CreateConVar("stop_trolls_flags", "862", "Who can push trolls when climbs on the ladder. 0=Disable, 2=Smoker, 4=Boomer, 8=Hunter, 16=Spitter, 64=Charger, 256=Tank, 512=Survivors, 862=All");
+	g_hImmune = CreateConVar("stop_trolls_immune", "256", "What class is immune. 0=Disable, 2=Smoker, 4=Boomer, 8=Hunter, 16=Spitter, 32=Jockey, 64=Charger, 256=Tank, 512=Survivors, 894=All");
+	//AutoExecConfig(true, "StopTrollss"); // If u want a cfg file uncomment it. But I don't like.
+
+	HookEvent("charger_charge_start", Charging);
+	HookEvent("charger_charge_end", NotCharging);
+
+	HookConVarChange(g_hFlags, OnCvarChange_Flags);
+	HookConVarChange(g_hImmune, OnCvarChange_Immune);
+	ST_GetCvars();
+
+	if (g_iCvarFlags && g_bLoadLate) {
+		ST_ToogleHook(true);
+	}
 }
 
-public OnClientPutInServer(client)
+public void OnClientPutInServer(int client)
 {
-    inCharge[client] = 0;
-    if (g_iCvarFlags && client)
-        SDKHook(client, SDKHook_Touch, SDKHook_cb_Touch);
-    
+	inCharge[client] = 0;
+	if (g_iCvarFlags) {
+		SDKHook(client, SDKHook_Touch, SDKHook_cb_Touch);
+	}
 }
 
-public Charging(Handle:event, const String:name[], bool:dontBroadcast)
+public void Charging(Event hEvent, const char[] name, bool dontBroadcast)
 {
-    new ChargerID = GetEventInt(event, "userid");
-    new charger = GetClientOfUserId(ChargerID);
-    
-    inCharge[charger] = 1;
+	int charger = GetClientOfUserId(hEvent.GetInt("userid"));
+	inCharge[charger] = 1;
 }
 
-public NotCharging(Handle:event, const String:name[], bool:dontBroadcast)
+public void NotCharging(Event hEvent, const char[] name, bool dontBroadcast)
 {
-    new ChargerID = GetEventInt(event, "userid");
-    new charger = GetClientOfUserId(ChargerID);
-    
-    inCharge[charger] = 0;
+	int charger = GetClientOfUserId(hEvent.GetInt("userid"));
+	inCharge[charger] = 0;
 }
 
-
-public Action:SDKHook_cb_Touch(entity, other)
+public Action SDKHook_cb_Touch(int entity, int other)
 {
-    if (other > MaxClients || other < 1) return;
-    
-    if (IsGuyTroll(entity, other)){
-        
-        new iClass = GetEntProp(entity, Prop_Send, "m_zombieClass");
-        
-        if (iClass != 5 && g_iCvarFlags & (1 << iClass)){
-            
-            // Tank AI and Witch have this skill but Valve method is sucks because ppl get STUCKS!
-            if (iClass == 8 && IsFakeClient(entity)) return;
-            
-            iClass = GetEntProp(other, Prop_Send, "m_zombieClass");
-            
-            if (g_iCvarImmune & (1 << iClass)) return;
-            
-            if (inCharge[other]) return;
-            
-            if (IsOnLadder(other)){
-                
-                decl Float:vOrg[3];
-                GetClientAbsOrigin(other, vOrg);
-                vOrg[2] += 2.5;
-                TeleportEntity(other, vOrg, NULL_VECTOR, NULL_VECTOR);
-            }
-            else
-            TeleportEntity(other, NULL_VECTOR, NULL_VECTOR, Float:{0.0, 0.0, 251.0});
-        }
-    }
+	if (other > MaxClients || other < 1) {
+		return;
+	}
+
+	if (IsGuyTroll(entity, other)) {
+		int iClass = GetEntProp(entity, Prop_Send, "m_zombieClass");
+		
+		if (iClass != 5 && g_iCvarFlags & (1 << iClass)) {
+			// Tank AI and Witch have this skill but Valve method is sucks because ppl get STUCKS!
+			if (iClass == 8 && IsFakeClient(entity)) {
+				return;
+			}
+			
+			iClass = GetEntProp(other, Prop_Send, "m_zombieClass");
+
+			/* @A1m`:
+			 * Can use netprop m_carryVictim, I'll do it later if I remember))
+			*/
+			if (g_iCvarImmune & (1 << iClass) || inCharge[other]) {
+				return;
+			}
+			
+			if (IsOnLadder(other)) {
+				float vOrg[3];
+				GetClientAbsOrigin(other, vOrg);
+				vOrg[2] += 2.5;
+				TeleportEntity(other, vOrg, NULL_VECTOR, NULL_VECTOR);
+			} else {
+				TeleportEntity(other, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 251.0}));
+			}
+		}
+	}
 }
 
-bool:IsGuyTroll(victim, troll)
+bool IsGuyTroll(int victim, int troll)
 {
-    return IsOnLadder(victim) && GetClientTeam(victim) != GetClientTeam(troll) && GetEntPropFloat(victim, Prop_Send, "m_vecOrigin[2]") < GetEntPropFloat(troll, Prop_Send, "m_vecOrigin[2]");
+	return (IsOnLadder(victim) && GetClientTeam(victim) != GetClientTeam(troll) && GetEntPropFloat(victim, Prop_Send, "m_vecOrigin[2]") < GetEntPropFloat(troll, Prop_Send, "m_vecOrigin[2]"));
 }
 
-bool:IsOnLadder(entity)
+bool IsOnLadder(int entity)
 {
-    return GetEntityMoveType(entity) == MOVETYPE_LADDER;
+	return (GetEntityMoveType(entity) == MOVETYPE_LADDER);
 }
 
-ST_ToogleHook(bool:bHook)
+void ST_ToogleHook(bool bHook)
 {
-    for (new i = 1; i <= MaxClients; i++){
-        
-        if (!IsClientInGame(i)) continue;
-        
-        if (bHook)
-            SDKHook(i, SDKHook_Touch, SDKHook_cb_Touch);
-        else
-        SDKUnhook(i, SDKHook_Touch, SDKHook_cb_Touch);
-    }
+	for (int i = 1; i <= MaxClients; i++){
+		if (IsClientInGame(i)) {
+			if (bHook) {
+				SDKHook(i, SDKHook_Touch, SDKHook_cb_Touch);
+			} else {
+				SDKUnhook(i, SDKHook_Touch, SDKHook_cb_Touch);
+			}
+		}
+	}
 }
 
-public OnCvarChange_Flags(Handle:convar_hndl, const String:oldValue[], const String:newValue[])
+public void OnCvarChange_Flags(ConVar hConvar, const char[] oldValue, const char[] newValue)
 {
-    if (StrEqual(oldValue, newValue)) return;
-    
-    g_iCvarFlags = GetConVarInt(g_hFlags);
-    
-    if (!StringToInt(oldValue))
-        ST_ToogleHook(true);
-    else if (!g_iCvarFlags)
-        ST_ToogleHook(false);
+	if (StrEqual(oldValue, newValue)) {
+		return;
+	}
+
+	g_iCvarFlags = g_hFlags.IntValue;
+
+	if (!StringToInt(oldValue)) {
+		ST_ToogleHook(true);
+	} else if (!g_iCvarFlags) {
+		ST_ToogleHook(false);
+	}
 }
 
-public OnCvarChange_Immune(Handle:convar_hndl, const String:oldValue[], const String:newValue[])
+public void OnCvarChange_Immune(ConVar hConvar, const char[] oldValue, const char[] newValue)
 {
-    if (!StrEqual(oldValue, newValue))
-        g_iCvarImmune = GetConVarInt(g_hImmune);
+	if (!StrEqual(oldValue, newValue)) {
+		g_iCvarImmune = g_hImmune.IntValue;
+	}
 }
 
-ST_GetCvars()
+void ST_GetCvars()
 {
-    g_iCvarFlags = GetConVarInt(g_hFlags);
-    g_iCvarImmune = GetConVarInt(g_hImmune);
-}
-
-public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
-{
-    if (GuessSDKVersion() != SOURCE_SDK_LEFT4DEAD2){
-        
-        strcopy(error, err_max, "Plugin only support L4D2 engine");
-        return APLRes_Failure;
-    }
-    
-    g_bLoadLate = late;
-    return APLRes_Success;
+	g_iCvarFlags = g_hFlags.IntValue;
+	g_iCvarImmune = g_hImmune.IntValue;
 }

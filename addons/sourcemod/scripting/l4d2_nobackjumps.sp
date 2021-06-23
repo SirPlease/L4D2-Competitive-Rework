@@ -1,74 +1,103 @@
+#pragma semicolon 1
+#pragma newdecls required
+
 #include <sourcemod>
 #include <dhooks>
 
-new Handle:hCLunge_ActivateAbility;
+#define Z_HUNTER 3
+#define TEAM_INFECTED 3
 
-new Float:fSuspectedBackjump[MAXPLAYERS + 1];
+#define GAMEDATA "l4d2_si_ability"
 
-public Plugin:myinfo =
+Handle hCLunge_ActivateAbility;
+
+float fSuspectedBackjump[MAXPLAYERS + 1];
+
+public Plugin myinfo =
 {
-    name        = "L4D2 No Backjump",
-    author      = "Visor",
-    description = "Gah",
-    version     = "1.2.1",
-    url         = "https://github.com/Attano/Equilibrium"
+	name = "L4D2 No Backjump",
+	author = "Visor", //Update syntax, add new gamedata file - A1m`
+	description = "Look at the title",
+	version = "1.2.2",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
-public OnPluginStart()
+public void OnPluginStart()
 {
-    new Handle:gameConf = LoadGameConfigFile("l4d2_nobackjumps"); 
-    new LungeActivateAbilityOffset = GameConfGetOffset(gameConf, "CLunge_ActivateAbility");
-    
-    hCLunge_ActivateAbility = DHookCreate(LungeActivateAbilityOffset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, CLunge_ActivateAbility);
+	Handle hGamedata = LoadGameConfigFile(GAMEDATA);
 
-    HookEvent("round_start", RoundStartEvent, EventHookMode_PostNoCopy);
-    HookEvent("player_jump", OnPlayerJump);
+	if (!hGamedata) {
+		SetFailState("Gamedata '%s.txt' missing or corrupt.", GAMEDATA);
+	}
+	
+	int LungeActivateAbilityOffset = GameConfGetOffset(hGamedata, "CLunge::ActivateAbility");
+	if (LungeActivateAbilityOffset == -1) {
+		SetFailState("Failed to get offset 'CLunge::ActivateAbility'.");
+	}
+	
+	hCLunge_ActivateAbility = DHookCreate(LungeActivateAbilityOffset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, CLunge_ActivateAbility);
+
+	HookEvent("round_start", view_as<EventHook>(ResetEvent), EventHookMode_PostNoCopy);
+	HookEvent("round_end",  view_as<EventHook>(ResetEvent), EventHookMode_PostNoCopy);
+	
+	HookEvent("player_jump", OnPlayerJump, EventHookMode_Post);
+	
+	delete hGamedata;
 }
 
-public OnEntityCreated(entity, const String:classname[])
+public void OnEntityCreated(int entity, const char[] classname)
 {
-    if (StrEqual(classname, "ability_lunge"))
-        DHookEntity(hCLunge_ActivateAbility, false, entity); 
+	if (strcmp(classname, "ability_lunge") == 0) {
+		DHookEntity(hCLunge_ActivateAbility, false, entity); 
+	}
 }
 
-public RoundStartEvent(Handle:event, const String:name[], bool:bDontBroadcast)
+public void ResetEvent()
 {
-    for (new i = 1; i <= MaxClients; i++)
-        fSuspectedBackjump[i] = 0.0;
+	for (int i = 0; i <= MAXPLAYERS; i++) {
+		fSuspectedBackjump[i] = 0.0;
+	}
 }
 
-public Action:OnPlayerJump(Handle:event, const String:name[], bool:dontBroadcast)
+public Action OnPlayerJump(Event hEvent, const char[] eName, bool dontBroadcast)
 {
-    new client = GetClientOfUserId(GetEventInt(event, "userid"));
-    
-    if (IsHunter(client) && !IsGhost(client) && IsOutwardJump(client))
-        fSuspectedBackjump[client] = GetGameTime();
+	int client = GetClientOfUserId(hEvent.GetInt("userid"));
+
+	if (IsHunter(client) && !IsGhost(client) && IsOutwardJump(client)) {
+		fSuspectedBackjump[client] = GetGameTime();
+	}
 }
 
-public MRESReturn:CLunge_ActivateAbility(ability, Handle:hParams)
+public MRESReturn CLunge_ActivateAbility(int ability)
 {
-    new client = GetEntPropEnt(ability, Prop_Send, "m_owner");
-    if (fSuspectedBackjump[client] + 1.5 > GetGameTime())
-    {
-        //PrintToChat(client, "\x01[SM] No \x03backjumps\x01, sorry");
-        return MRES_Supercede;
-    }
-    
-    return MRES_Ignored;
+	int client = GetEntPropEnt(ability, Prop_Send, "m_owner");
+	if (fSuspectedBackjump[client] + 1.5 > GetGameTime()) {
+		//PrintToChat(client, "\x01[SM] No \x03backjumps\x01, sorry");
+		return MRES_Supercede;
+	}
+
+	return MRES_Ignored;
 }
 
-bool:IsOutwardJump(client) {
-    return GetEntProp(client, Prop_Send, "m_isAttemptingToPounce") == 0 && !(GetEntityFlags(client) & FL_ONGROUND);
+bool IsOutwardJump(int client)
+{
+	bool IsGround = view_as<bool>(GetEntityFlags(client) & FL_ONGROUND);
+	bool IsAttemptingToPounce = view_as<bool>(GetEntProp(client, Prop_Send, "m_isAttemptingToPounce"));
+
+	return (!IsAttemptingToPounce && !IsGround);
 }
 
-bool:IsHunter(client)  {
-    if (client < 1 || client > MaxClients) return false;
-    if (!IsClientInGame(client) || !IsPlayerAlive(client)) return false;
-    if (GetClientTeam(client) != 3 || GetEntProp(client, Prop_Send, "m_zombieClass") != 3) return false;
-
-    return true;
+bool IsHunter(int client)
+{
+	return (client > 0 
+		/*&& client <= MaxClients*/ //GetClientOfUserId return 0, if not found
+		&& IsClientInGame(client)
+		&& IsPlayerAlive(client)
+		&& GetClientTeam(client) == TEAM_INFECTED
+		&& GetEntProp(client, Prop_Send, "m_zombieClass") == Z_HUNTER);
 }
 
-bool:IsGhost(client) {
-    return GetEntProp(client, Prop_Send, "m_isGhost") == 1;
+bool IsGhost(int client)
+{
+	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isGhost"));
 }

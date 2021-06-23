@@ -1,61 +1,65 @@
 #pragma semicolon 1
-
-#define L4D2UTIL_STOCKS_ONLY
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdktools>
-#include <l4d2util>
 
-new Float:fLedgeHangInterval;
-new Handle:hCvarJockeyLedgeHang;
+#define ARRAY_INDEX_DURATION 0
+#define ARRAY_INDEX_TIMESTAMP 1
 
-public Plugin:myinfo = {
-    name = "L4D2 Jockey Ledge Hang Recharge",
-    author = "Jahze",
-    version = "1.0",
-    description = "Adds a cvar to adjust the recharge timer of a jockey after he ledge hangs a survivor."
+float fLedgeHangInterval;
+
+ConVar hCvarJockeyLedgeHang;
+
+public Plugin myinfo =
+{
+	name = "L4D2 Jockey Ledge Hang Recharge",
+	author = "Jahze, A1m`",
+	version = "1.3",
+	description = "Adds a cvar to adjust the recharge timer of a jockey after he ledge hangs a survivor.",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-public OnPluginStart() {
-    hCvarJockeyLedgeHang = CreateConVar("z_leap_interval_post_ledge_hang", "10", "How long before a jockey can leap again after a ledge hang");
-    HookConVarChange(hCvarJockeyLedgeHang, JockeyLedgeHangChange);
-    
-    fLedgeHangInterval = GetConVarFloat(hCvarJockeyLedgeHang);
-    
-    PluginEnable();
+public void OnPluginStart()
+{
+	hCvarJockeyLedgeHang = CreateConVar("z_leap_interval_post_ledge_hang", "10", "How long before a jockey can leap again after a ledge hang");
+	fLedgeHangInterval = hCvarJockeyLedgeHang.FloatValue;
+	hCvarJockeyLedgeHang.AddChangeHook(JockeyLedgeHangChange);
+
+	HookEvent("jockey_ride_end", JockeyRideEnd, EventHookMode_Post);
 }
 
-PluginEnable() {
-    HookEvent("jockey_ride_end", JockeyRideEnd);
+public void JockeyLedgeHangChange(ConVar cVar, const char[] oldValue, const char[] newValue)
+{
+	fLedgeHangInterval = hCvarJockeyLedgeHang.FloatValue;
 }
 
-public JockeyLedgeHangChange(Handle:hCvar, const String:oldValue[], const String:newValue[]) {
-    fLedgeHangInterval = StringToFloat(newValue);
+public void JockeyRideEnd(Event hEvent, const char[] name, bool dontBroadcast) 
+{
+	int jockeyVictim = GetClientOfUserId(GetEventInt(hEvent, "victim"));
+
+	if (jockeyVictim > 0 && IsHangingFromLedge(jockeyVictim)) {
+		int jockeyAttacker = GetClientOfUserId(hEvent.GetInt("userid"));
+		if (jockeyAttacker > 0) {
+			int ability = GetEntPropEnt(jockeyAttacker, Prop_Send, "m_customAbility");
+			if (ability != -1 && IsValidEntity(ability)) {
+				char abName[32];
+				GetEntityClassname(ability, abName, sizeof(abName));
+				if (strcmp(abName, "ability_leap") == 0) {
+					/*
+					 * Table: m_nextActivationTimer (offset 1104) (type DT_CountdownTimer)
+					 *	Member: m_duration (offset 4) (type float) (bits 0) (NoScale)
+					 *	Member: m_timestamp (offset 8) (type float) (bits 0) (NoScale)
+					*/
+					SetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", fLedgeHangInterval, ARRAY_INDEX_DURATION);
+					SetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", GetGameTime() + fLedgeHangInterval, ARRAY_INDEX_TIMESTAMP);
+				}
+			}
+		}
+	}
 }
 
-public Action:JockeyRideEnd(Handle:hEvent, const String:name[], bool:bDontBroadcast) {
-    new jockeyAttacker = GetClientOfUserId(GetEventInt(hEvent, "userid"));
-    new jockeyVictim = GetClientOfUserId(GetEventInt(hEvent, "victim"));
-    
-    if (IsHangingFromLedge(jockeyVictim)) {
-        FixupJockeyTimer(jockeyAttacker);
-    }
+bool IsHangingFromLedge(int client)
+{
+	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isHangingFromLedge") || GetEntProp(client, Prop_Send, "m_isFallingFromLedge"));
 }
-
-FixupJockeyTimer(client) {
-    new iEntity = -1;
-    
-    while ((iEntity = FindEntityByClassname(iEntity, "ability_leap")) != -1) {
-        if (GetEntPropEnt(iEntity, Prop_Send, "m_owner") == client) {
-            break;
-        }
-    }
-    
-    if (iEntity == -1) {
-        return;
-    }
-    
-    SetEntPropFloat(iEntity, Prop_Send, "m_timestamp", GetGameTime() + fLedgeHangInterval);
-    SetEntPropFloat(iEntity, Prop_Send, "m_duration", fLedgeHangInterval);
-}
-

@@ -16,76 +16,78 @@
 	with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdktools>
-#include <left4dhooks>
 
-new const L4D2_SI_Victim_Slots[] = {
-    -1,
-    13280,    // Smoker
-    -1,
-    16004,    // Hunter
-    -1,
-    16124,    // Jockey
-    15972,    // Charger
-    -1,
-    -1,
-    -1
+#define TEAM_INFECTED 3
+
+static const char L4D2_SI_Victim_NetProps[][] = {
+	"",
+	"m_tongueVictim",	// Smoker
+	"",
+	"m_pounceVictim",	// Hunter
+	"",
+	"m_jockeyVictim",    // Jockey
+	"m_pummelVictim",    // Charger
+	"",
+	""
 };
 
-new Handle:bot_kick_delay;
+ConVar bot_kick_delay;
 
-public Plugin:myinfo = 
+public Plugin myinfo = 
 {
-    name = "L4D2 No Second Chances",
-    author = "Visor + Jacob",
-    description = "Previously human-controlled SI bots with a cap won't die",
-    version = "1.1",
-    url = "https://github.com/Attano/Equilibrium"
+	name = "L4D2 No Second Chances",
+	author = "Visor, Jacob, A1m`",
+	description = "Previously human-controlled SI bots with a cap won't die",
+	version = "1.3",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
-    HookEvent("player_bot_replace", PlayerBotReplace);
-    bot_kick_delay = CreateConVar("bot_kick_delay", "0", "How long should we wait before kicking infected bots?", FCVAR_NONE, true, 0.0, true, 30.0);
+	HookEvent("player_bot_replace", PlayerBotReplace);
+	
+	bot_kick_delay = CreateConVar("bot_kick_delay", "0", "How long should we wait before kicking infected bots?", _, true, 0.0, true, 30.0);
 }
 
-public PlayerBotReplace(Handle:event, const String:name[], bool:dontBroadcast)
+public void PlayerBotReplace(Event hEvent, const char[] eName, bool dontBroadcast)
 {
-    new bot = GetClientOfUserId(GetEventInt(event, "bot"));
-    new Float:delay = GetConVarFloat(bot_kick_delay);
-    if (IsClientConnected(bot) && IsClientInGame(bot) && GetClientTeam(bot) == 3 && IsFakeClient(bot))
-    {
-        if (delay >= 1.0)
-        {
-            CreateTimer(delay, KillBot, bot);
-        }
-        else if (ShouldBeKicked(bot))
-        {
-            ForcePlayerSuicide(bot);
-        }
-    }
+	int iUserID = hEvent.GetInt("bot");
+	int iBot = GetClientOfUserId(iUserID);
+
+	if (IsClientInGame(iBot) && GetClientTeam(iBot) == TEAM_INFECTED && IsFakeClient(iBot)) {
+		float delay = bot_kick_delay.FloatValue;
+		if (delay >= 1.0) {
+			CreateTimer(delay, KillBot, iUserID, TIMER_FLAG_NO_MAPCHANGE);
+		} else if (ShouldBeKicked(iBot)) {
+			ForcePlayerSuicide(iBot);
+		}
+	}
 }
 
-bool:ShouldBeKicked(infected)
+bool ShouldBeKicked(int iBot)
 {
-    new Address:pEntity = GetEntityAddress(infected);
-    if (pEntity == Address_Null)
-        return false;
+	int iZombieClassType = GetEntProp(iBot, Prop_Send, "m_zombieClass");
+	
+	if (strlen(L4D2_SI_Victim_NetProps[iZombieClassType]) == 0) {
+		return false;
+	}
+	
+	if (GetEntPropEnt(iBot, Prop_Send, L4D2_SI_Victim_NetProps[iZombieClassType]) != -1) {
+		return false;
+	}
 
-    new zcOffset = L4D2_SI_Victim_Slots[GetEntProp(infected, Prop_Send, "m_zombieClass")];
-    if (zcOffset == -1)
-        return false;
-    
-    new hasTarget = LoadFromAddress(pEntity + Address:zcOffset, NumberType_Int32);
-    return hasTarget > 0 ? false : true;
+	return true;
 }
 
-public Action:KillBot(Handle:timer, any:bot)
+public Action KillBot(Handle hTimer, any iUserID)
 {
-    if (IsClientConnected(bot) && IsClientInGame(bot) && GetClientTeam(bot) == 3 && IsFakeClient(bot) && ShouldBeKicked(bot))
-    {
-        ForcePlayerSuicide(bot);
-    }
+	int iBot = GetClientOfUserId(iUserID);
+	if (iBot > 0 && ShouldBeKicked(iBot))
+	{
+		ForcePlayerSuicide(iBot);
+	}
 }
