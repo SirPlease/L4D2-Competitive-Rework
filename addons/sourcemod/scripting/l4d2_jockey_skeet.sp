@@ -73,7 +73,7 @@ public void OnClientDisconnect(int client)
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon,
 							float damageForce[3], float damagePosition[3], int damagecustom)
 {
-	if (!IsJockey(victim) || !IsSurvivor(attacker) || IsFakeClient(attacker)) {
+	if (!IsJockey(victim) || !IsSurvivor(attacker) || IsFakeClient(attacker) || !IsValidEdict(weapon)) {
 		return Plugin_Continue;
 	}
 	
