@@ -8,7 +8,7 @@
 #define DURATION_OFFSET 4
 #define TIMESTAMP_OFFSET 8
 
-#define TEAM_SURVIVOR 3
+#define TEAM_SURVIVOR 2
 
 int 
 	m_tongueDragDamageTimerDuration,
