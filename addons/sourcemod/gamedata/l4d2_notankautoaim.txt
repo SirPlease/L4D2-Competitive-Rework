@@ -12,12 +12,19 @@
 				}
 				"windows"
 				{
-					"signature"	"CTankClaw::OnWindupFinished"			
+					"signature"	"CTankClaw::OnWindupFinished"
 				}
 			}
 		}
 		"Signatures"
 		{
+			/* @A1m`:
+			 * Windows: How to find it
+			 * Find any string in the class CTankClaw, example "tank_survivor_pound"
+			 * Make vtable dump this class
+			 * This is always the last function
+			 * 450 sub_103DF1A0
+			*/
 			"CTankClaw::OnWindupFinished"
 			{
 				"library"	"server"
@@ -30,8 +37,8 @@
 		{
 			"ClawTargetScan"
 			{
-				"linux"		"248" // not sure what is happening here
-				"windows"	"265" // 0x74 -> 0xEB Force jump to eyeangle check
+				"linux"		"277" //jz loc_54E670 -> jmp loc_54E670, jump if zero -> unconditional jump to eyeangle check
+				"windows"	"265" //jz short loc_103DF2D4 -> jmp short loc_103DF2D4, jump if zero -> unconditional jump to eyeangle check
 			}
 			"Platform"
 			{
