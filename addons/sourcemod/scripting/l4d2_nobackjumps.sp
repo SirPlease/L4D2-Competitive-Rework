@@ -30,9 +30,9 @@ public void OnPluginStart()
 		SetFailState("Gamedata '%s.txt' missing or corrupt.", GAMEDATA);
 	}
 	
-	int LungeActivateAbilityOffset = GameConfGetOffset(hGamedata, "CLunge::ActivateAbility");
+	int LungeActivateAbilityOffset = GameConfGetOffset(hGamedata, "CBaseAbility::ActivateAbility");
 	if (LungeActivateAbilityOffset == -1) {
-		SetFailState("Failed to get offset 'CLunge::ActivateAbility'.");
+		SetFailState("Failed to get offset 'CBaseAbility::ActivateAbility'.");
 	}
 	
 	hCLunge_ActivateAbility = DHookCreate(LungeActivateAbilityOffset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, CLunge_ActivateAbility);
