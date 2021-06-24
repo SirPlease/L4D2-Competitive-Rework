@@ -122,9 +122,10 @@ public void Event_PlayerDeath(Event hEvent, const char[] name, bool dontBroadcas
 {
 	int victim = GetClientOfUserId(hEvent.GetInt("userid"));
 
-	if (victim <= 0 || victim > MaxClients || !IsClientInGame(victim)) { 
+	if (victim <= 0 
+	|| victim > MaxClients
+	|| !IsClientInGame(victim)) 
 		return;
-	}
 
 	bIsPouncing[victim] = false;
 }
@@ -139,12 +140,17 @@ public void Event_AbilityUse(Event hEvent, const char[] name, bool dontBroadcast
 	if (strcmp(abilityName, "ability_lunge", false) == 0) {
 		int client = GetClientOfUserId(hEvent.GetInt("userid"));
 		
-		if (client <= 0 || client > MaxClients || !IsClientInGame(client) || GetClientTeam(client) != TEAM_INFECTED) { 
-			// Hunter pounce
-			bIsPouncingStopTime[client] = 0.0;
-			bIsPouncingStartTime[client] = GetGameTime();
-			bIsPouncing[client] = true;
-		}
+		if (client <= 0 
+		|| client > MaxClients 
+		|| !IsClientInGame(client) 
+		|| GetClientTeam(client) != TEAM_INFECTED)
+			return;
+
+
+		// Hunter pounce
+		bIsPouncingStopTime[client] = 0.0;
+		bIsPouncingStartTime[client] = GetGameTime();
+		bIsPouncing[client] = true;
 	}
 }
 
