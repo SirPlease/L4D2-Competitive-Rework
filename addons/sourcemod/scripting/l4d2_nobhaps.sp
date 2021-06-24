@@ -14,20 +14,43 @@ public Plugin:myinfo =
 #define DEBUG 0
 
 #define MIN_JUMP_TIME 0.500
+#define GAMEDATA_FILE "left4dhooks.l4d2"
 
-new Handle:hCvarEnable;
-new Handle:hCvarSIExcept;
-new Handle:hCvarSurvivorExcept;
-new Handle:hCvarConsecutiveHopsSI;
+Handle hCvarEnable;
+Handle hCvarSIExcept;
+Handle hCvarSurvivorExcept;
+Handle hCvarConsecutiveHopsSI;
+Handle hGetRunTopSpeed;
 
 int consecutiveBhops = 0;
 
 public OnPluginStart()
 {
+	LoadSDK();
+
 	hCvarEnable = CreateConVar("simple_antibhop_enable", "1", "Enable or disable the Simple Anti-Bhop plugin");
 	hCvarSIExcept = CreateConVar("bhop_except_si_flags", "0", "Bitfield for exempting SI in anti-bhop functionality. From least significant: Smoker, Boomer, Hunter, Spitter, Jockey, Charger, Tank");
 	hCvarSurvivorExcept = CreateConVar("bhop_allow_survivor", "0", "Allow Survivors to bhop while plugin is enabled");
 	hCvarConsecutiveHopsSI = CreateConVar("bhop_consecutive_hops_si", "0", "How many consecutive bhops to allow for non-exempt SI");
+}
+
+void LoadSDK()
+{
+	GameData conf = LoadGameConfigFile(GAMEDATA_FILE);
+	if (conf == INVALID_HANDLE) {
+		SetFailState("Could not load gamedata/%s.txt", GAMEDATA_FILE);
+	}
+
+	StartPrepSDKCall(SDKCall_Player);
+	if (!PrepSDKCall_SetFromConf(conf, SDKConf_Signature, "GetRunTopSpeed")) {
+		SetFailState("Function 'GetRunTopSpeed' not found");
+	}
+	PrepSDKCall_SetReturnInfo(SDKType_Float, SDKPass_Plain);
+	hGetRunTopSpeed = EndPrepSDKCall();
+	if (hGetRunTopSpeed == INVALID_HANDLE) {
+		SetFailState("Function 'GetRunTopSpeed' found, but something went wrong");
+	}
+	delete conf;
 }
 
 public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:angles[3], &weapon)
@@ -95,16 +118,19 @@ public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:ang
 	int allowedConsecHops = GetConVarInt(hCvarConsecutiveHopsSI);
 	if (bhopDetected && consecutiveBhops > allowedConsecHops) {
 		float CurVelVec[3];
+#if DEBUG
 		float maxSpeed = GetEntPropFloat(client, Prop_Data, "m_flMaxspeed");
+#endif
+		float maxRunSpeed = SDKCall(hGetRunTopSpeed, client);
 
 		GetEntPropVector(client, Prop_Data, "m_vecAbsVelocity", CurVelVec);
 
-		if (GetVectorLength(CurVelVec) > maxSpeed) {
+		if (GetVectorLength(CurVelVec) > maxRunSpeed) {
 #if DEBUG
-			PrintToChat(client, "Speed: %f {%.02f, %.02f, %.02f}, MaxSpeed: %f", GetVectorLength(CurVelVec), CurVelVec[0], CurVelVec[1], CurVelVec[2], maxSpeed);
+			PrintToChat(client, "Speed: %f {%.02f, %.02f, %.02f}, MaxSpeed: %f, MaxRunSpeed: %f", GetVectorLength(CurVelVec), CurVelVec[0], CurVelVec[1], CurVelVec[2], maxSpeed, maxRunSpeed);
 #endif
 			NormalizeVector(CurVelVec, CurVelVec);
-			ScaleVector(CurVelVec, maxSpeed);
+			ScaleVector(CurVelVec, maxRunSpeed);
 			SetEntPropVector(client, Prop_Data, "m_vecAbsVelocity", CurVelVec);
 		}
 	}
