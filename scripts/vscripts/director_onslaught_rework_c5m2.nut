@@ -23,7 +23,7 @@ DirectorOptions <-
 Director.ResetMobTimer()
 
 // Variables
-g_TankFirstSpawned <- false
+local g_TankFirstSpawned = false
 
 // Control the horde when tank is alive
 // Bug: tank_spawn fires every time the tank switches control, it starts under AI control then switches to a player
@@ -43,7 +43,7 @@ function OnGameEvent_tank_spawn(params)
 
 // Handle player tank deaths
 // Bug: tank_killed only fires when an AI tank is killed
-function OnGameEvent_tank_killed(params)
+/*function OnGameEvent_tank_killed(params)
 {
 	if (g_TankFirstSpawned == true)
 	{
@@ -51,15 +51,15 @@ function OnGameEvent_tank_killed(params)
 		
 		if (developer() > 0)
 		{
-			Msg("Tank Killed\n")
+			Msg("Tank Killed Bot\n")
 		}
 	}
-}
+}*/
 
-// Handle player tank deaths
+// Handle tank deaths
 function OnGameEvent_player_death(params)
 {
-	if (g_TankFirstSpawned == true && params.victimisbot == 0)
+	if (g_TankFirstSpawned == true)
 	{
 		// Only check for tank deaths
 		if (params.victimname == "Tank")
