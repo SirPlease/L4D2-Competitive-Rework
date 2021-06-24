@@ -112,7 +112,7 @@ bool HasTarget(int hunter)
 public void Event_RoundStart()
 {
 	// clear SI tracking stats
-	for (int i = i; i <= MaxClients; i++)
+	for (int i = 1; i <= MaxClients; i++)
 	{
 		bIsPouncing[i] = false;
 	}
