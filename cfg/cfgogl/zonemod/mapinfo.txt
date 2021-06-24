@@ -583,7 +583,7 @@
 		"end_point"		    "-4318.968750 3638.318115 872.031250"
 		"end_dist"		    "500.000000"
 		"tank_ban_flow_min" "0"
-		"tank_ban_flow_max" "34"
+		"tank_ban_flow_max" "30"
 		"ItemLimits"
 		{
 			"pain_pills"    "2"
