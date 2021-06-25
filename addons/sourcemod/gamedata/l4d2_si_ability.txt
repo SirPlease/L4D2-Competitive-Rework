@@ -37,8 +37,8 @@
 			 */
 			"CTerrorPlayer->m_queuedPummelAttacker"
 			{
-				"linux"     "15956"
-				"windows"   "15976"
+				"linux"		"15956"
+				"windows"	"15976"
 			}
 			
 			/* @A1m`:
@@ -95,8 +95,8 @@
 			*/
 			"CTerrorPlayer->m_tongueDragDamageTimer"
 			{
-				"linux"     "13312"
-				"windows"   "13332"
+				"linux"		"13312"
+				"windows"	"13332"
 			}
 			
 			/* @A1m`:
@@ -114,10 +114,24 @@
 			*/
 			"CBaseAbility::OnTouch"
 			{
-				"linux"     "216"
-				"windows"   "215"
+				"linux"		"216"
+				"windows"	"215"
 			}
 			
+			/* @A1m`:
+			 * Has not changed after the update on linux
+			 * 223	CLunge::OnOwnerTakeDamage(CTakeDamageInfo const&)
+			 *
+			 * How to find it on windows:
+			 * Find the same as above 'CBaseAbility::OnTouch' description
+			 * 222	sub_1035F590
+			*/
+			"CBaseAbility::OnOwnerTakeDamage"
+			{
+				"linux"		"223"
+				"windows"	"222"
+			}
+
 			/* @A1m`:
 			 * Has not changed after the update on linux
 			 * 204	CBaseAbility::ActivateAbility(void)
@@ -132,8 +146,19 @@
 			*/
 			"CBaseAbility::ActivateAbility"
 			{
-				"linux"     "204"
-				"windows"   "203"
+				"linux"		"204"
+				"windows"	"203"
+			}
+		}
+	}
+	"left4dead"
+	{
+		"Offsets"
+		{
+			"CBaseAbility::OnOwnerTakeDamage"
+			{
+				"linux"		"207"
+				"windows"	"206"
 			}
 		}
 	}
