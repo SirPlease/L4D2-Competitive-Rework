@@ -50,7 +50,7 @@ void InitGameData()
 	
 	int iPlatform = GameConfGetOffset(hGamedata, "Platform");
 	if (iPlatform != 0 && iPlatform != 1) {
-		SetFailState("Invalid offset 'WanderersCondition'.");
+		SetFailState("Section not specified 'Platform'.");
 	}
 	
 	int iOffset = GameConfGetOffset(hGamedata, "ClawTargetScan");
