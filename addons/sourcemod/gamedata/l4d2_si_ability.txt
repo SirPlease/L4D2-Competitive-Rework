@@ -4,7 +4,7 @@
 	{
 		"Offsets"
 		{
-			/* @A1m:
+			/* @A1m`:
 			 * It cannot be simply found using sourcemod, 
 			 * now there is a problem with this plugin, it can break after every update. 
 			 * Need to check this every update.
@@ -14,7 +14,7 @@
 			 * which proves that we found it right (old offset 15988 -32 = 15956)
 			 *
 			 * How can find this:
-			 * function 'CTerrorPlayer::OnPummelEnded' the very end 
+			 * function 'CTerrorPlayer::OnPummelEnded' the very end:
 			 *
 			 *        v37 = *((_DWORD *)this + 3757);
 			 *        *((_DWORD *)this + 3989) = -1; 									//we need to find this line 3989. 3989*4=15956
@@ -22,29 +22,26 @@
 			 *        if ( !*((_BYTE *)this + 14833) )
 			 *          result = CTerrorPlayer::WarpToValidPositionIfStuck();
 			 *
-			 * Or we need to find this function 'CTerrorPlayer::QueuePummelVictim' the very end 
+			 * How to find it on windows: 
+			 * We need to find the string "charger_pummel_end",
+			 * this will point to a function 'CTerrorPlayer::OnPummelEnded' in windows.
+			 * function 'CTerrorPlayer::OnPummelEnded' the very end:
 			 *
-			 *        if ( a2 )
-			 *        {
-			 *           //we need to find this line 3989. 3989*4=15956
-			 *          *((_DWORD *)a2 + 3989) = *(_DWORD *)(*(int (__fastcall **)(char *, int, CTerrorPlayer *))(*(_DWORD *)this + 12))(v3, v7, this);  
-			 *          result = CBaseEntity::AddFlag(this, 32);
-			 *        }
-			 *        v8 = -1.0;
-			 *        if ( a3 != -1.0 )
-			 *        {
-			 *          result = gpGlobals;
-			 *          v8 = a3 + *(float *)(gpGlobals + 12);
-			 *        }
-			 *        *((float *)this + 3988) = v8;
-			 *        return result;
+			 *        v3[3994] = -1;													//we need to find this line 3994. 3994*4=15976
+			 *        (*(void (**)(void))(v3[3762] + 244))();
+			 *        sub_102FB440(v3);
+			 *
+			 *        //sub_102FB440 this is a function WarpToValidPositionIfStuck(), click on it there should be a line at the end
+			 *        //DevMsg("unsticking %s from %.1f %.1f %.1f to %.1f %.1f %.1f\n", v5); 
+			 *        //if it is, then you have found the right place
 			 */
 			"CTerrorPlayer->m_queuedPummelAttacker"
 			{
-				"linux"     "15956"
+				"linux"		"15956"
+				"windows"	"15976"
 			}
 			
-			/* @A1m:
+			/* @A1m`:
 			 * It cannot be found using sourcemod, can only be found in the code:
 			 * 
 			 * Function 'CTerrorPlayer::OnGrabbedByTongue' below the middle:
@@ -52,7 +49,7 @@
 			 *     v13 = dword_FDA87C;
 			 *     *((_DWORD *)this + 1535) = 0;
 			 *     v22 = *(float *)(v13 + 44);
-			 *     CountdownTimer::Now((CTerrorPlayer *)((char *)this + 13312)); //we need this line, this is the new offset
+			 *     CountdownTimer::Now((CTerrorPlayer *)((char *)this + 13312)); //we need this line, this is the new offset 13312
 			 *     v20 = a1;
 			 *     if ( (float)(v20 + v22) != *((float *)this + 3330) )
 			 *     {
@@ -66,39 +63,102 @@
 			 *     }
 			 *     CBaseEntity::EmitSound(this, "SmokerZombie.TongueHit", 0.0, 0);
 			 *
+			 * How to find it on windows: 
+			 * We need to find the string "PlayerGrabbedByTongue",
+			 * this will point to a function 'CTerrorPlayer::OnGrabbedByTongue' in windows.
+			 * function 'CTerrorPlayer::OnGrabbedByTongue' below the middle::
+			 *
+			 *     ((_DWORD *)v2 + 1535) = 0;
+			 *     v28 = *(float *)(dword_1085B054 + 44);
+			 *     v19 = sub_1020B990(v2 + 13332) + v28; //we need this line, this is the new offset 13332
+			 *     if ( *((float *)v2 + 3335) != v19 )
+			 *     {
+			 *       (**((void (__thiscall ***)(int, int))v2 + 3333))((int)(v2 + 13332), (int)(v2 + 13340));
+			 *       v20 = v19;
+			 *       ((float *)v2 + 3335) = v20;
+			 *     }
+			 *     if ( *((float *)v2 + 3334) != v28 )
+			 *     {
+			 *       (**((void (__thiscall ***)(int, int))v2 + 3333))((int)(v2 + 13332), (int)(v2 + 13336));
+			 *       *((float *)v2 + 3334) = v28;
+			 *     }
+			 *     sub_101D6000("SmokerZombie.TongueHit", 0.0, 0);
+			 *
 			 * How does it look:
 			 *
-			 * New offset 13312, the plugin will add 8 more and we will get where we need to
+			 * New offset 13312(linux), 13332(windows), the plugin will add 8 more and we will get where we need to
 			 *
-			 * CountdownTimer m_tongueDragDamageTimer 13312 
+			 * CountdownTimer m_tongueDragDamageTimer 13312(linux), 13332(windows)
 			 *       Member: m_duration (offset 4) (type float)
 			 *       Member: m_timestamp (offset 8) (type float) (bits 0) (NoScale)
 			 *
 			*/
 			"CTerrorPlayer->m_tongueDragDamageTimer"
 			{
-				"linux"     "13312"
+				"linux"		"13312"
+				"windows"	"13332"
 			}
 			
-			/*
+			/* @A1m`:
 			 * Has not changed after the update on linux
-			 * I think it is not different for any ability
 			 * 216	CBaseAbility::OnTouch(CBaseEntity *)
+			 *
+			 * How to find it on windows
+			 * We need to find the string "pounce_fail", 
+			 * this points to the function of this class CLunge,
+			 * But it makes no difference to us, this indicates the OnTouch function in any class 
+			 * CLunge, CLeap, CCharge etc.
+			 * Make vtable dump this class
+			 * 215	sub_1035F7A0
+			 * On windows it is always linux offset - 1
 			*/
 			"CBaseAbility::OnTouch"
 			{
-				"linux"     "216"
+				"linux"		"216"
+				"windows"	"215"
 			}
 			
-			/*
+			/* @A1m`:
 			 * Has not changed after the update on linux
-			 * I think it is not different for any ability
+			 * 223	CLunge::OnOwnerTakeDamage(CTakeDamageInfo const&)
+			 *
+			 * How to find it on windows:
+			 * Find the same as above 'CBaseAbility::OnTouch' description
+			 * 222	sub_1035F590
+			*/
+			"CBaseAbility::OnOwnerTakeDamage"
+			{
+				"linux"		"223"
+				"windows"	"222"
+			}
+
+			/* @A1m`:
+			 * Has not changed after the update on linux
 			 * 204	CBaseAbility::ActivateAbility(void)
+			 *
+			 * How to find it on windows
+			 * We need to find the string "ability_use", 
+			 * it makes no difference to us, this indicates the OnTouch function in any class 
+			 * CLunge, CLeap, CCharge etc.
+			 * Make vtable dump this class
+			 * 203	sub_1035CCE0
+			 * On windows it is always linux offset - 1
 			*/
 			"CBaseAbility::ActivateAbility"
 			{
-				"windows"   "203"
-				"linux"     "204"
+				"linux"		"204"
+				"windows"	"203"
+			}
+		}
+	}
+	"left4dead"
+	{
+		"Offsets"
+		{
+			"CBaseAbility::OnOwnerTakeDamage"
+			{
+				"linux"		"207"
+				"windows"	"206"
 			}
 		}
 	}
