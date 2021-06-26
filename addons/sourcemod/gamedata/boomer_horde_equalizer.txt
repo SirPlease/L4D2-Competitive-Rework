@@ -10,21 +10,46 @@
 				{
 					"signature"	"NextBotManager::OnCharacterVomitedUpon"
 				}
+				"windows"
+				{
+					"signature"	"NextBotManager::OnCharacterVomitedUpon"
+				}
 			}
 		}
 		"Signatures"
 		{
+			/* @A1m`:
+			 * How to find it on windows
+			 * find a string or part of a string: "(MOB) %d wanderers grabbed for an IT mob of desired size %d.\n"
+			*/
 			"NextBotManager::OnCharacterVomitedUpon"
 			{
-				"library"   "server"
-				"linux"     "@_ZN14NextBotManager22OnCharacterVomitedUponEP20CBaseCombatCharacter"
+				"library"		"server"
+				"linux"			"@_ZN14NextBotManager22OnCharacterVomitedUponEP20CBaseCombatCharacter"
+				"windows"		"\x55\x8B\xEC\x8B\x45\x08\x83\xEC\x0C\x56\x57\x33\xFF"
+								/* 55 8B EC 8B 45 08 83 EC 0C 56 57 33 FF */
 			}
 		}
 		"Offsets"
 		{
+			/* @A1m`:
+			 * Windows:
+			 * 3B FE			cmp		edi, esi
+			 * 7D 0E			jge		short loc_104A5BBB
+			 * Linux:
+			 * 39 F3			cmp		ebx, esi
+			 * 7D 13			jge		short loc_743BA0
+			 * change to nop -> 90 90 90 90
+			*/
 			"WanderersCondition"
 			{
-				"linux"     "217"
+				"linux"			"217"
+				"windows"		"153"
+			}
+			"Platform"
+			{
+				"linux"			"0"
+				"windows"		"1"
 			}
 		}
 	}
