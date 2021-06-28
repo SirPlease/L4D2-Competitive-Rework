@@ -154,11 +154,9 @@ static ApplyPatch(const String:name[], Address:addr, const String:bytes[], lengt
 	PushArrayCell(hPatchAddresses, addr);
 	PushBytes(hPatchBytes, oldBytes, length);
 
-	new Action:result;
-
 	Call_StartForward(hPatchAppliedForward);
 	Call_PushString(name);
-	Call_Finish(_:result);
+	Call_Finish();
 }
 
 static bool:RevertPatch(const String:name[])
@@ -184,7 +182,7 @@ static bool:RevertPatch(const String:name[])
 
 public OnPluginStart()
 {
-	hPatchAppliedForward = CreateGlobalForward("OnPatchApplied", ET_Event, Param_String);
+	hPatchAppliedForward = CreateGlobalForward("OnPatchApplied", ET_Ignore, Param_String);
 	hGameConfig = LoadGameConfigFile("code_patcher");
 
 	if (hGameConfig == INVALID_HANDLE)

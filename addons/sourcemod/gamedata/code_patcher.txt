@@ -12,7 +12,7 @@
 				}
 				"windows"
 				{
-					"signature"	"CTerrorPlayer::FireBullet"			
+					"signature"	"CTerrorPlayer::FireBullet"
 				}
 			}
 			"CTerrorPlayer::GetRunTopSpeed_Signature"
@@ -23,7 +23,7 @@
 				}
 				"windows"
 				{
-					"signature"	"CTerrorPlayer::GetRunTopSpeed"			
+					"signature"	"CTerrorPlayer::GetRunTopSpeed"
 				}
 			}
 		}
@@ -31,75 +31,108 @@
 		{
 			"CTerrorPlayer::FireBullet"
 			{
-				"library"   "server"
-				"linux"     "@_ZN13CTerrorPlayer10FireBulletE6VectorRK6QAngle10CSWeaponIDi"
-				"windows"   "\x55\x8b\xec\x81\xec\x2a\x2a\x2a\x2a\x8b\x45\x18\x57\x8b\xf9"
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer10FireBulletE6VectorRK6QAngle10CSWeaponIDi"
+				"windows"	"\x55\x8b\xec\x81\xec\x2a\x2a\x2a\x2a\x8b\x45\x18\x57\x8b\xf9"
 			}
 			"CTerrorPlayer::GetRunTopSpeed"
 			{
-				"library"   "server"
-				"linux"     "@_ZNK13CTerrorPlayer14GetRunTopSpeedEv"
-				"windows"   "findityourself"
+				"library"	"server"
+				"linux"		"@_ZNK13CTerrorPlayer14GetRunTopSpeedEv"
+				"windows"	"findityourself"
 			}
 		}
 		"Offsets"
 		{
 			"CTerrorPlayer::FireBullet_SpreadPatch"
 			{
-				"linux"     "1029"
-				"windows"   "835"
+				"linux"		"1029"
+				"windows"	"823"
 			}
 			"CTerrorPlayer::Slowdown_Patch"
 			{
-				"linux"     "150"
-				"windows"   "findityourself"
+				"linux"		"150"
+				"windows"	"findityourself"
 			}
 			"Platform"
 			{
-				"linux"     "0"
-				"windows"   "1"
+				"linux"		"0"
+				"windows"	"1"
 			}
 		}
 		"Keys"
 		{
 			"sgspread_signature"		"CTerrorPlayer::FireBullet_Signature"
 			"sgspread_offset"			"CTerrorPlayer::FireBullet_SpreadPatch"
-			"sgspread_length_windows"	"78"
+			"sgspread_length_windows"	"75"
 			"sgspread_length_linux"		"85"
-			"sgspread_bytes_windows"	"\x83\xec\x0c\x31\xc0\x89\x45\xa0\x8b\xd6\x8b\xc4\x83\xfa\x04\x7f\x02\xeb\x1f\xc7\x45\xa0\x00\x00\xa0\x40\x89\x10\x01\x38\x83\x28\x04\xdb\x00\xc7\x00\x00\x00\xb4\x43\xd9\x00\xde\xf1\x83\xea\x05\xeb\x12\xc7\x45\xa0\x00\x00\x40\x40\x83\xea\x02\xc7\x00\x00\x00\xf0\x42\xd9\x00\x89\x10\xdb\x00\xde\xc9\x0f\x1f\x40\x00"
+			
+			// 0:  56						push esi			; needs to be written due to instruction offset after update
+			// 1:  83 ec 0c					sub esp, 0ch		; keep the stack correct
+			// 4:  31 c0					xor eax, eax
+			// 6:  89 45 9c					mov [ebp+a0], eax	; spread = 0.0f
+			// 9:  8b d6					mov edx, esi
+			// b:  8b c4					mov eax, esp		; eax = esp
+			// d:  83 fa 04					cmp edx, 4			; if edx > 4							"Bullet offset 1"
+			// 10: 7f 02					jg ring2
+			// 12: eb 1f					jmp ring1
+			//
+			//ring2:
+			// 14: c7 45 9c 00 00 a0 40 	mov [ebp+a0], 5.0f	; spread = 5.0f
+			// 1b: 89 10					mov [esp], edx
+			// 1d: 01 38					add [esp], edi
+			// 1f: 83 28 04					sub [esp], 4		; esp = max_bullets - 4					"Bullet offset 1"
+			// 22: db 00					fild [esp]
+			// 24: c7 00 00 00 b4 43		mov [esp], 360.0f
+			// 2a: d9 00					fld [esp]
+			// 2c: de f1					fdivrp				; st(0) = 360 / (max_bullets - 4)
+			// 2e: 83 ea 05					sub edx, 5			; edx = i - 4							"Bullet offset 2"
+			// 31: eb 12					jmp end
+			//
+			//ring1:
+			// 33: c7 45 9c 00 00 40 40		mov [ebp+a0], 3.0f	; spread = 3.0f							"Factor offset"
+			// 3a: 83 ea 02					sub edx, 2			; edx = i - 1
+			// 3d: c7 00 00 00 f0 42		mov [esp], 120.0f	;										"Bullet offset 3"
+			// 43: d9 00					fld [esp]			; st(0) = 120.0f
+			//
+			//end:
+			// 45: 89 10					mov [esp], edx
+			// 47: db 00					fild [esp]
+			// 49: de c9					fmulp				; st(0) = spread_dir
+			"sgspread_bytes_windows"	"\x56\x83\xec\x0c\x31\xc0\x89\x45\x9c\x8b\xd6\x8b\xc4\x83\xfa\x04\x7f\x02\xeb\x1f\xc7\x45\x9c\x00\x00\xa0\x40\x89\x10\x01\x38\x83\x28\x04\xdb\x00\xc7\x00\x00\x00\xb4\x43\xd9\x00\xde\xf1\x83\xea\x05\xeb\x12\xc7\x45\x9c\x00\x00\x40\x40\x83\xea\x02\xc7\x00\x00\x00\xf0\x42\xd9\x00\x89\x10\xdb\x00\xde\xc9"
 
-			// 0:  8d 8d 54 ff ff ff       lea    ecx,[ebp-0xac]
-			// 6:  f3 0f 11 01             movss  DWORD PTR [ecx],xmm0
-			// a:  8b 55 20                mov    edx,DWORD PTR [ebp+0x20]
-			// d:  8b c4                   mov    eax,esp
-			// f:  83 fa 04                cmp    edx,0x4   ; "Bullet offset 0"
-			// 12: 7f 02                   jg     0x16
-			// 14: eb 16                   jmp    0x2c
-			// 16: 89 10                   mov    DWORD PTR [eax],edx
-			// 18: 01 38                   add    DWORD PTR [eax],edi
-			// 1a: 83 28 05                sub    DWORD PTR [eax],0x5 ; "Bullet offset 1"
-			// 1d: db 00                   fild   DWORD PTR [eax]
-			// 1f: c7 00 00 00 34 43       mov    DWORD PTR [eax],0x43340000
-			// 25: d8 38                   fdivr  DWORD PTR [eax]
-			// 27: 83 ea 05                sub    edx,0x5             ; "Bullet offset 2"
-			// 2a: eb 17                   jmp    0x43
-			// 2c: c7 00 02 00 00 00       mov    DWORD PTR [eax],0x2 ; "Factor offset"
-			// 32: db 00                   fild   DWORD PTR [eax]
-			// 34: d8 39                   fdivr  DWORD PTR [ecx]
-			// 36: d9 19                   fstp   DWORD PTR [ecx]
-			// 38: 83 ea 02                sub    edx,0x2
-			// 3b: c7 00 00 00 70 42       mov    DWORD PTR [eax],0x42700000 ; "Bullet offset 3"
-			// 41: d9 00                   fld    DWORD PTR [eax]
-			// 43: 89 10                   mov    DWORD PTR [eax],edx
-			// 45: da 08                   fimul  DWORD PTR [eax]
-			// 47: 6a 2d                   push   0x2d
-			// 49: 8f 00                   pop    DWORD PTR [eax]
-			// 4b: da 00                   fiadd  DWORD PTR [eax]
-			// 4d: d9 9d 3c ff ff ff       fstp   DWORD PTR [ebp-0xc4]
-			// 53: 90                      nop
-			// 54: 90                      nop 
+			// 0:  8d 8d 54 ff ff ff		lea    ecx,[ebp-0xac]
+			// 6:  f3 0f 11 01				movss  DWORD PTR [ecx],xmm0
+			// a:  8b 55 20					mov    edx,DWORD PTR [ebp+0x20]
+			// d:  8b c4					mov    eax,esp
+			// f:  83 fa 04					cmp    edx,0x4   ; "Bullet offset 0"
+			// 12: 7f 02					jg     0x16
+			// 14: eb 16					jmp    0x2c
+			// 16: 89 10					mov    DWORD PTR [eax],edx
+			// 18: 01 38					add    DWORD PTR [eax],edi
+			// 1a: 83 28 05					sub    DWORD PTR [eax],0x5 ;								"Bullet offset 1"
+			// 1d: db 00					fild   DWORD PTR [eax]
+			// 1f: c7 00 00 00 34 43		mov    DWORD PTR [eax],0x43340000
+			// 25: d8 38					fdivr  DWORD PTR [eax]
+			// 27: 83 ea 05					sub    edx,0x5             ;								"Bullet offset 2"
+			// 2a: eb 17					jmp    0x43
+			// 2c: c7 00 02 00 00 00		mov    DWORD PTR [eax],0x2 ;								"Factor offset"
+			// 32: db 00					fild   DWORD PTR [eax]
+			// 34: d8 39					fdivr  DWORD PTR [ecx]
+			// 36: d9 19					fstp   DWORD PTR [ecx]
+			// 38: 83 ea 02					sub    edx,0x2
+			// 3b: c7 00 00 00 70 42		mov    DWORD PTR [eax],0x42700000 ;							"Bullet offset 3"
+			// 41: d9 00					fld    DWORD PTR [eax]
+			// 43: 89 10					mov    DWORD PTR [eax],edx
+			// 45: da 08					fimul  DWORD PTR [eax]
+			// 47: 6a 2d					push   0x2d
+			// 49: 8f 00					pop    DWORD PTR [eax]
+			// 4b: da 00					fiadd  DWORD PTR [eax]
+			// 4d: d9 9d 3c ff ff ff		fstp   DWORD PTR [ebp-0xc4]
+			// 53: 90						nop
+			// 54: 90						nop
 			"sgspread_bytes_linux"		"\x8d\x8d\xa4\xf9\xff\xff\xf3\x0f\x11\x01\x8b\x55\x20\x8b\xc4\x83\xfa\x04\x7f\x02\xeb\x16\x89\x10\x01\x38\x83\x28\x05\xdb\x00\xc7\x00\x00\x00\x34\x43\xd8\x38\x83\xea\x05\xeb\x17\xc7\x00\x02\x00\x00\x00\xdb\x00\xd8\x39\xd9\x19\x83\xea\x02\xc7\x00\x00\x00\x70\x42\xd9\x00\x89\x10\xda\x08\x6a\x2d\x8f\x00\xda\x00\xd9\x9d\xb0\xf9\xff\xff\x90\x90"
-
+			
 			"slowdown_signature"		"CTerrorPlayer::GetRunTopSpeed_Signature"
 			"slowdown_offset"			"CTerrorPlayer::Slowdown_Patch"
 			"slowdown_length_windows"	"findityourself"
