@@ -1,19 +1,17 @@
-#pragma semicolon 1
-
 #if defined codepatcher_inc_
 	#endinput
 #endif
 #define codepatcher_inc_
 
-native bool:IsPatchApplied(const String:name[]);
+native bool IsPatchApplied(const char[] name);
 
-native Address:GetPatchAddress(const String:name[]);
+native Address GetPatchAddress(const char[] name);
 
-native bool:IsPlatformWindows();
+native bool IsPlatformWindows();
 
-forward OnPatchApplied(const String:name[]);
+forward void OnPatchApplied(const char[] name);
 
-public SharedPlugin:__pl_code_patcher =
+public SharedPlugin __pl_code_patcher =
 {
 	name = "code_patcher",
 	file = "code_patcher.smx",
@@ -24,7 +22,7 @@ public SharedPlugin:__pl_code_patcher =
 #endif
 };
 
-public __pl_code_patcher_SetNTVOptional()
+public void __pl_code_patcher_SetNTVOptional()
 {
 	MarkNativeAsOptional("IsPatchApplied");
 	MarkNativeAsOptional("GetPatchAddress");
