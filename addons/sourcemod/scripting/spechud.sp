@@ -17,8 +17,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#define DEBUG 0
-#define PLUGIN_VERSION	"3.5.0a"
+#define PLUGIN_VERSION	"3.5.4"
 
 public Plugin myinfo = 
 {
@@ -40,7 +39,7 @@ public Plugin myinfo =
 #define MAX(%0,%1) (((%0) > (%1)) ? (%0) : (%1))
 #define MIN(%0,%1) (((%0) < (%1)) ? (%0) : (%1))
 
-// ToPercent(int score, int maxbonus) : float
+// ToPercent(int var, int varmax): float
 #define ToPercent(%0,%1) ((%0) < 1 ? 0.0 : (100.0 * (%0) / (%1)))
 
 #define TEAM_NONE       0
@@ -113,15 +112,16 @@ ConVar l4d_tank_percent, l4d_witch_percent, hServerNamer, l4d_ready_cfg_name;
 
 // Plugin Var
 char sReadyCfgName[64], sHostname[64];
-bool bRoundLive, bPendingArrayRefresh = true;
+bool bRoundLive, bPendingArrayRefresh;
 int iSurvivorArray[MAXPLAYERS/2+1], iInfectedArray[MAXPLAYERS/2+1];
 
 // Plugin Handle
-//ArrayList hSurvivorArray;
+ArrayList hSpecHudViewers, hTankHudViewers;
 
-// Finale Tank Spawn Scheme
+// Boss Spawn Scheme
 StringMap hFirstTankSpawningScheme, hSecondTankSpawningScheme;		// eq_finale_tanks (Zonemod, Acemod, etc.)
 StringMap hFinaleExceptionMaps;										// finale_tank_blocker (Promod and older?)
+StringMap hCustomTankScriptMaps;									// Handled by this plugin
 
 // Flow Bosses
 int iTankCount, iWitchCount;
@@ -130,6 +130,7 @@ bool bRoundHasFlowTank, bRoundHasFlowWitch, bFlowTankActive;
 // Score & Scoremod
 //int iFirstHalfScore;
 bool bScoremod, bHybridScoremod, bNextScoremod;
+int iMaxDistance;
 
 // Tank Control EQ
 bool bTankSelection;
@@ -137,10 +138,6 @@ bool bTankSelection;
 // Hud Toggle & Hint Message
 bool bSpecHudActive[MAXPLAYERS+1], bTankHudActive[MAXPLAYERS+1];
 bool bSpecHudHintShown[MAXPLAYERS+1], bTankHudHintShown[MAXPLAYERS+1];
-
-#if DEBUG
-bool bDebugActive[MAXPLAYERS+1];
-#endif
 
 /**********************************************************************************************/
 
@@ -172,14 +169,10 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_spechud", ToggleSpecHudCmd);
 	RegConsoleCmd("sm_tankhud", ToggleTankHudCmd);
 	
-	#if DEBUG
-	RegAdminCmd("sm_debugspechud", DebugSpecHudCmd, ADMFLAG_CHEATS);
-	#endif
-	
-	HookEvent("round_end",		view_as<EventHook>(Event_RoundEnd), EventHookMode_PostNoCopy);
-	HookEvent("player_death",	Event_PlayerDeath);
-	HookEvent("witch_killed",	Event_WitchDeath);
-	HookEvent("player_team",	Event_PlayerTeam);
+	HookEvent("round_start",			view_as<EventHook>(Event_RoundStart), EventHookMode_PostNoCopy);
+	HookEvent("player_death",			Event_PlayerDeath);
+	HookEvent("witch_killed",			Event_WitchDeath);
+	HookEvent("player_team",			Event_PlayerTeam);
 	
 	GetGameCvars();
 	GetNetworkCvars();
@@ -191,6 +184,11 @@ public void OnPluginStart()
 		bTankHudActive[i] = true;
 		bTankHudHintShown[i] = false;
 	}
+	
+	hSpecHudViewers = new ArrayList();
+	hTankHudViewers = new ArrayList();
+	
+	bPendingArrayRefresh = true;
 	
 	CreateTimer(SPECHUD_DRAW_INTERVAL, HudDrawTimer, _, TIMER_REPEAT);
 }
@@ -252,8 +250,17 @@ void FillBossPercents()
 void FillServerNamer()
 {
 	ConVar convar = null;
-	if ((convar = FindConVar("sn_main_name")) == null)
+	if ((convar = FindConVar("l4d_ready_server_cvar")) != null)
+	{
+		char buffer[64];
+		convar.GetString(buffer, sizeof buffer);
+		convar = FindConVar(buffer);
+	}
+	
+	if (convar == null)
+	{
 		convar = FindConVar("hostname");
+	}
 	
 	if (hServerNamer == null)
 	{
@@ -262,8 +269,7 @@ void FillServerNamer()
 	else if (hServerNamer != convar)
 	{
 		hServerNamer.RemoveChangeHook(OnHostnameChanged);
-		delete hServerNamer;
-		hServerNamer = view_as<ConVar>(CloneHandle(convar));
+		hServerNamer = convar;
 	}
 	
 	hServerNamer.AddChangeHook(OnHostnameChanged);
@@ -332,38 +338,47 @@ public void OnLibraryRemoved(const char[] name)
 }
 
 // ======================================================================
-//  Finale Bosses Cache
+//  Bosses Caching
 // ======================================================================
+void BuildCustomTrieEntries()
+{
+	// Haunted Forest 3
+	hCustomTankScriptMaps.SetValue("hf03_themansion", true);
+}
+
 void InitTankSpawnSchemeTrie()
 {
 	hFirstTankSpawningScheme	= new StringMap();
 	hSecondTankSpawningScheme	= new StringMap();
 	hFinaleExceptionMaps		= new StringMap();
+	hCustomTankScriptMaps		= new StringMap();
 	
 	RegServerCmd("tank_map_flow_and_second_event",	SetMapFirstTankSpawningScheme);
 	RegServerCmd("tank_map_only_first_event",		SetMapSecondTankSpawningScheme);
 	RegServerCmd("finale_tank_default",				SetFinaleExceptionMap);
+	
+	BuildCustomTrieEntries();
 }
 
 public Action SetMapFirstTankSpawningScheme(int args)
 {
 	char mapname[64];
 	GetCmdArg(1, mapname, sizeof(mapname));
-	SetTrieValue(hFirstTankSpawningScheme, mapname, true);
+	hFirstTankSpawningScheme.SetValue(mapname, true);
 }
 
 public Action SetMapSecondTankSpawningScheme(int args)
 {
 	char mapname[64];
 	GetCmdArg(1, mapname, sizeof(mapname));
-	SetTrieValue(hSecondTankSpawningScheme, mapname, true);
+	hSecondTankSpawningScheme.SetValue(mapname, true);
 }
 
 public Action SetFinaleExceptionMap(int args)
 {
 	char mapname[64];
 	GetCmdArg(1, mapname, sizeof(mapname));
-	SetTrieValue(hFinaleExceptionMaps, mapname, true);
+	hFinaleExceptionMaps.SetValue(mapname, true);
 }
 
 /**********************************************************************************************/
@@ -375,13 +390,6 @@ public void OnClientDisconnect(int client)
 {
 	bSpecHudHintShown[client] = false;
 	bTankHudHintShown[client] = false;
-	
-	#if DEBUG
-	if (bDebugActive[client])
-	{
-		bDebugActive[client] = false;
-	}
-	#endif
 }
 
 public void OnMapStart() { bRoundLive = false; }
@@ -400,23 +408,24 @@ public void OnRoundIsLive()
 	{
 		bRoundHasFlowTank = RoundHasFlowTank();
 		bRoundHasFlowWitch = RoundHasFlowWitch();
+		bFlowTankActive = bRoundHasFlowTank;
 		
-		iTankCount = iWitchCount = 0;
+		iMaxDistance = L4D_GetVersusMaxCompletionScore() / 4 * iSurvivorLimit;
 		
-		if (l4d_witch_percent)
-			iWitchCount = (GetConVarBool(l4d_witch_percent) ? 1 : 0);
+		iTankCount = 0;
+		iWitchCount = 0;
 		
-		if (l4d_tank_percent && GetConVarBool(l4d_tank_percent))
+		if (l4d_tank_percent != null && l4d_tank_percent.BoolValue)
 		{
 			iTankCount = 1;
-			bFlowTankActive = bRoundHasFlowTank;
 			
 			char mapname[64];
 			bool dummy;
 			GetCurrentMap(mapname, sizeof(mapname));
 			
 			// TODO: individual plugin served as an interface to tank counts?
-			if (strcmp(mapname, "hf03_themansion") == 0) iTankCount += 1; // hardcodin is good
+			if (hCustomTankScriptMaps.GetValue(mapname, dummy)) iTankCount += 1;
+			
 			else if (!IsDarkCarniRemix() && L4D_IsMissionFinalMap())
 			{
 				iTankCount = 3
@@ -426,6 +435,11 @@ public void OnRoundIsLive()
 							- view_as<int>(IsStaticTankMap());
 			}
 		}
+		
+		if (l4d_witch_percent != null && l4d_witch_percent.BoolValue)
+		{
+			iWitchCount = 1;
+		}
 	}
 }
 
@@ -434,7 +448,7 @@ public void OnRoundIsLive()
 // ======================================================================
 //  Events
 // ======================================================================
-public void Event_RoundEnd() { bRoundLive = false; }
+public void Event_RoundStart() { bRoundLive = false; bPendingArrayRefresh = true; }
 
 public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
@@ -459,14 +473,11 @@ public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 	if (!client) return;
 	
 	int team = event.GetInt("team");
-	int oldteam = event.GetInt("oldteam");
 	
 	if (team == TEAM_NONE) // Player disconnecting
 	{
 		bSpecHudActive[client] = false;
 		bTankHudActive[client] = true;
-		
-		if (oldteam == TEAM_SPECTATOR) return;
 	}
 	
 	bPendingArrayRefresh = true;
@@ -477,27 +488,133 @@ public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 /**********************************************************************************************/
 
 // ======================================================================
+//  Player Arrays & Custom Sorting
+// ======================================================================
+stock void BuildPlayerArrays()
+{
+	hSpecHudViewers.Clear();
+	hTankHudViewers.Clear();
+	
+	int survivorCount = 0, infectedCount = 0;
+	for (int client = 1; client <= MaxClients; ++client) 
+	{
+		if (!IsClientInGame(client)) continue;
+		
+		switch (GetClientTeam(client))
+		{
+			case TEAM_SPECTATOR:
+			{
+				if (!IsFakeClient(client))
+				{
+					if (bSpecHudActive[client])
+						hSpecHudViewers.Push(client);
+						
+					else if (bTankHudActive[client])
+						hTankHudViewers.Push(client);
+				}
+			}
+			case TEAM_SURVIVOR:
+			{
+				if (survivorCount < iSurvivorLimit)
+					iSurvivorArray[survivorCount++] = client;
+			}
+			case TEAM_INFECTED:
+			{
+				if (infectedCount < iMaxPlayerZombies)
+					iInfectedArray[infectedCount++] = client;
+					
+				if (!IsFakeClient(client) && bTankHudActive[client])
+					hTankHudViewers.Push(client);
+			}
+		}
+	}
+	
+	iSurvivorArray[survivorCount] = 0;
+	iInfectedArray[infectedCount] = 0;
+	
+	SortCustom1D(iSurvivorArray, survivorCount, SortSurvArray);
+}
+
+public int SortSurvArray(int elem1, int elem2, const int[] array, Handle hndl)
+{
+	SurvivorCharacter sc1 = GetFixedSurvivorCharacter(elem1);
+	SurvivorCharacter sc2 = GetFixedSurvivorCharacter(elem2);
+	
+	if (sc1 > sc2) { return 1; }
+	else if (sc1 < sc2) { return -1; }
+	else { return 0; }
+}
+
+// ======================================================================
 //  HUD Command Callbacks
 // ======================================================================
 public Action ToggleSpecHudCmd(int client, int args) 
 {
-	bSpecHudActive[client] = !bSpecHudActive[client];
+	if (GetClientTeam(client) != TEAM_SPECTATOR)
+		return;
+	
+	if (bSpecHudActive[client])
+	{
+		bSpecHudActive[client] = false;
+		
+		int index = hSpecHudViewers.FindValue(client);
+		if (index != -1)
+			hSpecHudViewers.Erase(index);
+		
+		if (bTankHudActive[client])
+		{
+			index = hTankHudViewers.FindValue(client);
+			if (index == -1)
+				hTankHudViewers.Push(client);
+		}
+	}
+	else
+	{
+		bSpecHudActive[client] = true;
+		
+		int index = hSpecHudViewers.FindValue(client);
+		if (index == -1)
+			hSpecHudViewers.Push(client);
+			
+		if (bTankHudActive[client])
+		{
+			index = hTankHudViewers.FindValue(client);
+			if (index != -1)
+				hTankHudViewers.Erase(index);
+		}
+	}
+	
 	CPrintToChat(client, "<{olive}HUD{default}> Spectator HUD is now %s.", (bSpecHudActive[client] ? "{blue}on{default}" : "{red}off{default}"));
 }
 
 public Action ToggleTankHudCmd(int client, int args) 
 {
-	bTankHudActive[client] = !bTankHudActive[client];
+	int team = GetClientTeam(client);
+	if (team == TEAM_SURVIVOR)
+		return;
+	
+	if (bTankHudActive[client])
+	{
+		bTankHudActive[client] = false;
+		
+		int index = hTankHudViewers.FindValue(client);
+		if (index != -1)
+			hTankHudViewers.Erase(index);
+	}
+	else
+	{
+		bTankHudActive[client] = true;
+		
+		if (!bSpecHudActive[client] || team == TEAM_INFECTED)
+		{
+			int index = hTankHudViewers.FindValue(client);
+			if (index == -1)
+				hTankHudViewers.Push(client);
+		}
+	}
+	
 	CPrintToChat(client, "<{olive}HUD{default}> Tank HUD is now %s.", (bTankHudActive[client] ? "{blue}on{default}" : "{red}off{default}"));
 }
-
-#if DEBUG
-public Action DebugSpecHudCmd(int client, int args)
-{
-	bDebugActive[client] = !bDebugActive[client];
-	CPrintToChat(client, "<{olive}HUD{default}> Spectator HUD debugging is now %s.", (bDebugActive[client] ? "{blue}on{default}" : "{red}off{default}"));
-}
-#endif
 
 /**********************************************************************************************/
 
@@ -509,29 +626,17 @@ public Action HudDrawTimer(Handle hTimer)
 	if (IsInReady() || IsInPause())
 		return Plugin_Continue;
 
-	bool bSpecsOnServer = false;
-	
-	for (int i = 1; i <= MaxClients; ++i)
+	if (bPendingArrayRefresh)
 	{
-		// 1. Human spectator with spechud active. 
-		// 2. SourceTV active.
-		if( IsClientInGame(i) && GetClientTeam(i) == TEAM_SPECTATOR && bSpecHudActive[i] )
-		{
-			bSpecsOnServer = true;
-			break;
-		}
+		bPendingArrayRefresh = false;
+		BuildPlayerArrays();
 	}
 
-	if (bSpecsOnServer) // Only bother if someone's watching us
+	int arraysize = hSpecHudViewers.Length;
+	if (arraysize) // Only bother if someone's watching us
 	{
 		Panel specHud = new Panel();
 		
-		if (bPendingArrayRefresh)
-		{
-			bPendingArrayRefresh = false;
-			BuildPlayerArrays();
-		}
-
 		FillHeaderInfo(specHud);
 		FillSurvivorInfo(specHud);
 		FillScoreInfo(specHud);
@@ -539,58 +644,33 @@ public Action HudDrawTimer(Handle hTimer)
 		if (!FillTankInfo(specHud))
 			FillGameInfo(specHud);
 
-		#if DEBUG
-		for (int i = 1; i <= MaxClients; ++i)
+		for (int i = 0; i < arraysize; ++i)
 		{
-			if (IsClientInGame(i) && bDebugActive[i])
+			int client = hSpecHudViewers.Get(i);
+			SendPanelToClient(specHud, client, DummySpecHudHandler, 3);
+			if (!bSpecHudHintShown[client])
 			{
-				SendPanelToClient(specHud, i, DummySpecHudHandler, 3);
-			}
-		}
-		#endif
-		
-		for (int i = 1; i <= MaxClients; ++i)
-		{
-			// - Client is in game.
-			//    1. Client is non-bot and spectator with spechud active.
-			//    2. Client is bot as SourceTV.
-			if (!IsClientInGame(i) || GetClientTeam(i) != TEAM_SPECTATOR || !bSpecHudActive[i] || (IsFakeClient(i) && !IsClientSourceTV(i)))
-				continue;
-
-			if (BuiltinVote_IsVoteInProgress() && IsClientInBuiltinVotePool(i))
-				continue;
-
-			SendPanelToClient(specHud, i, DummySpecHudHandler, 3);
-			if (!bSpecHudHintShown[i])
-			{
-				bSpecHudHintShown[i] = true;
-				CPrintToChat(i, "<{olive}HUD{default}> Type {green}!spechud{default} into chat to toggle the {blue}Spectator HUD{default}.");
+				bSpecHudHintShown[client] = true;
+				CPrintToChat(client, "<{olive}HUD{default}> Type {green}!spechud{default} into chat to toggle the {blue}Spectator HUD{default}.");
 			}
 		}
 		delete specHud;
 	}
 	
+	arraysize = hTankHudViewers.Length;
+	if (!arraysize) return Plugin_Continue;
+	
 	Panel tankHud = new Panel();
 	if (FillTankInfo(tankHud, true)) // No tank -- no HUD
 	{
-		for (int i = 1; i <= MaxClients; ++i)
+		for (int i = 0; i < arraysize; ++i)
 		{
-			// - Client is in game
-			// - Client is non-bot
-			// - Client is not survivor
-			// - Client has tank HUD active
-			// - If Client is spectator, client has spec HUD inactive
-			if (!IsClientInGame(i) || IsFakeClient(i) || GetClientTeam(i) == TEAM_SURVIVOR || !bTankHudActive[i] || (bSpecHudActive[i] && GetClientTeam(i) == TEAM_SPECTATOR))
-				continue;
-			
-			if (BuiltinVote_IsVoteInProgress() && IsClientInBuiltinVotePool(i))
-				continue;
-	
-			SendPanelToClient(tankHud, i, DummyTankHudHandler, 3);
-			if (!bTankHudHintShown[i])
+			int client = hTankHudViewers.Get(i);
+			SendPanelToClient(tankHud, client, DummyTankHudHandler, 3);
+			if (!bTankHudHintShown[client])
 			{
-				bTankHudHintShown[i] = true;
-				CPrintToChat(i, "<{olive}HUD{default}> Type {green}!tankhud{default} into chat to toggle the {red}Tank HUD{default}.");
+				bTankHudHintShown[client] = true;
+				CPrintToChat(client, "<{olive}HUD{default}> Type {green}!tankhud{default} into chat to toggle the {red}Tank HUD{default}.");
 			}
 		}
 	}
@@ -610,9 +690,8 @@ public int DummyTankHudHandler(Menu hMenu, MenuAction action, int param1, int pa
 void FillHeaderInfo(Panel &hSpecHud)
 {
 	static int iTickrate = 0;
-	if (iTickrate == 0 && IsServerProcessing()) {
+	if (iTickrate == 0 && IsServerProcessing())
 		iTickrate = RoundToNearest(1.0 / GetTickInterval());
-	}
 	
 	static char buf[64];
 	Format(buf, sizeof(buf), "Server: %s [Slots %i/%i | %iT]", sHostname, GetRealClientCount(), iMaxPlayers, iTickrate);
@@ -840,7 +919,7 @@ void FillScoreInfo(Panel &hSpecHud)
 				FormatEx(info, sizeof(info), "> Bonus: %i <%.1f%%>", totalBonus, ToPercent(totalBonus, maxTotalBonus));
 				DrawPanelText(hSpecHud, info);
 				
-				FormatEx(info, sizeof(info), "> Distance: %i", L4D_GetVersusMaxCompletionScore() / 4 * iSurvivorLimit);
+				FormatEx(info, sizeof(info), "> Distance: %i", iMaxDistance);
 				//if (InSecondHalfOfRound())
 				//{
 				//	Format(info, sizeof(info), "%s | R#1: %i <%.1f%%>", info, iFirstHalfScore, ToPercent(iFirstHalfScore, L4D_GetVersusMaxCompletionScore() + maxTotalBonus));
@@ -860,7 +939,7 @@ void FillScoreInfo(Panel &hSpecHud)
 				FormatEx(info, sizeof(info), "> Health Bonus: %i", healthBonus);
 				DrawPanelText(hSpecHud, info);
 				
-				FormatEx(info, sizeof(info), "> Distance: %i", L4D_GetVersusMaxCompletionScore() / 4 * iSurvivorLimit);
+				FormatEx(info, sizeof(info), "> Distance: %i", iMaxDistance);
 				//if (InSecondHalfOfRound())
 				//{
 				//	Format(info, sizeof(info), "%s | R#1: %i", info, iFirstHalfScore);
@@ -893,7 +972,7 @@ void FillScoreInfo(Panel &hSpecHud)
 				FormatEx(info, sizeof(info), "> Bonus: %i <%.1f%%>", totalBonus, ToPercent(totalBonus, maxTotalBonus));
 				DrawPanelText(hSpecHud, info);
 				
-				FormatEx(info, sizeof(info), "> Distance: %i", L4D_GetVersusMaxCompletionScore() / 4 * iSurvivorLimit);
+				FormatEx(info, sizeof(info), "> Distance: %i", iMaxDistance);
 				//if (InSecondHalfOfRound())
 				//{
 				//	Format(info, sizeof(info), "%s | R#1: %i <%.1f%%>", info, iFirstHalfScore, ToPercent(iFirstHalfScore, L4D_GetVersusMaxCompletionScore() + maxTotalBonus));
@@ -1058,16 +1137,16 @@ bool FillTankInfo(Panel &hSpecHud, bool bTankHUD = false)
 	DrawPanelText(hSpecHud, info);
 
 	// Draw health
-	int health = GetClientHealth(tank);
-	int maxhealth = GetEntProp(tank, Prop_Send, "m_iMaxHealth");
+	int health = GetClientHealth(tank),
+		maxhealth = GetEntProp(tank, Prop_Send, "m_iMaxHealth");
+	float healthPercent = ToPercent(health, maxhealth);
 	if (health <= 0 || IsIncapacitated(tank) || !IsPlayerAlive(tank))
 	{
 		info = "Health  : Dead";
 	}
 	else
 	{
-		int healthPercent = RoundFloat((100.0 / maxhealth) * health);
-		FormatEx(info, sizeof(info), "Health  : %i / %i%%", health, MAX(1, healthPercent));
+		FormatEx(info, sizeof(info), "Health  : %i / %i%%", health, MAX(1, RoundFloat(healthPercent)));
 	}
 	DrawPanelText(hSpecHud, info);
 
@@ -1096,7 +1175,7 @@ bool FillTankInfo(Panel &hSpecHud, bool bTankHUD = false)
 	// Draw fire status
 	if (GetEntityFlags(tank) & FL_ONFIRE)
 	{
-		int timeleft = RoundToCeil(health / (maxhealth / fTankBurnDuration));
+		int timeleft = RoundToCeil(healthPercent * fTankBurnDuration);
 		FormatEx(info, sizeof(info), "On Fire : %is", timeleft);
 		DrawPanelText(hSpecHud, info);
 	}
@@ -1161,10 +1240,10 @@ void FillGameInfo(Panel &hSpecHud)
 					FormatEx(buffer, sizeof(buffer), "%i%%", witchPercent);
 					
 					if (bDivide) {
-						Format(info, sizeof(info), "%s | Witch: %s", info, (bRoundHasFlowWitch ? buffer : (IsStaticWitchMap() ? "Static" : "Event")));
+						Format(info, sizeof(info), "%s | Witch: %s", info, ((bRoundHasFlowWitch || IsDarkCarniRemix()) ? buffer : (IsStaticWitchMap() ? "Static" : "Event")));
 					} else {
 						bDivide = true;
-						FormatEx(info, sizeof(info), "Witch: %s", (bRoundHasFlowWitch ? buffer : (IsStaticWitchMap() ? "Static" : "Event")));
+						FormatEx(info, sizeof(info), "Witch: %s", ((bRoundHasFlowWitch || IsDarkCarniRemix()) ? buffer : (IsStaticWitchMap() ? "Static" : "Event")));
 					}
 				}
 				
@@ -1299,44 +1378,6 @@ stock int GetWeaponExtraAmmo(int client, WeaponId wepid)
 stock int GetWeaponClipAmmo(int weapon)
 {
 	return (weapon > 0 ? GetEntProp(weapon, Prop_Send, "m_iClip1") : -1);
-}
-
-stock void BuildPlayerArrays()
-{
-	int survivorCount = 0, infectedCount = 0;
-	for (int client = 1; client <= MaxClients; ++client) 
-	{
-		if (!IsClientInGame(client)) continue;
-		
-		switch (GetClientTeam(client))
-		{
-			case TEAM_SURVIVOR:
-			{
-				if (survivorCount < iSurvivorLimit)
-					iSurvivorArray[survivorCount++] = client;
-			}
-			case TEAM_INFECTED:
-			{
-				if (infectedCount < iMaxPlayerZombies)
-					iInfectedArray[infectedCount++] = client;
-			}
-		}
-	}
-	
-	iSurvivorArray[survivorCount] = 0;
-	iInfectedArray[infectedCount] = 0;
-	
-	SortCustom1D(iSurvivorArray, survivorCount, SortSurvArray);
-}
-
-public int SortSurvArray(int elem1, int elem2, const int[] array, Handle hndl)
-{
-	SurvivorCharacter sc1 = GetFixedSurvivorCharacter(elem1);
-	SurvivorCharacter sc2 = GetFixedSurvivorCharacter(elem2);
-	
-	if (sc1 > sc2) { return 1; }
-	else if (sc1 < sc2) { return -1; }
-	else { return 0; }
 }
 
 stock SurvivorCharacter GetFixedSurvivorCharacter(int client)
