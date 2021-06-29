@@ -342,7 +342,14 @@ public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3
 			}
 			else
 			{
-				if (GetEntityFlags(client) & FL_INWATER)
+				/* Check how much the player is submerged
+				- Possible states:
+			    WL_NotInWater=0,
+			    WL_Feet,
+			    WL_Waist,
+			    WL_Eyes 
+			    */
+				if (GetEntProp(client, Prop_Send, "m_nWaterLevel") == 3)
 				{
 					ReturnPlayerToSaferoom(client, false);
 				}

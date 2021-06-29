@@ -1,6 +1,10 @@
 #pragma semicolon 1
+#pragma newdecls required
 
+#include <sourcemod>
 #include <code_patcher>
+
+#define BULLET_MAX_SIZE 4
 
 // Original code & Notes: https://github.com/Jahze/l4d2_plugins/tree/master/spread_patch
 // Static Shotgun Spread leverages code_patcher (code_patcher.txt gamedata)
@@ -10,115 +14,126 @@
 // You can use the visualise_impacts.smx plugin to test the resulting spread.
 // It will render small purple boxes where the server-side pellets land.
 
-new Handle:hRing1BulletsCvar;
-new Handle:hRing1FactorCvar;
-new Handle:hCenterPelletCvar;
+ConVar
+	hRing1BulletsCvar,
+	hRing1FactorCvar,
+	hCenterPelletCvar;
 
-new g_BulletOffsets[] = { 0x11, 0x1c, 0x29, 0x3d };
-new g_FactorOffset = 0x2e;
-new g_CenterPelletOffset = -0x1c;
+static const int g_BulletWindowsOffsets[BULLET_MAX_SIZE] = { 0xf, 0x21, 0x30, 0x3f };
+static const int g_FactorWindowsOffset = 0x36;
+static const int g_CenterWindowsPelletOffset = -0x30;
 
-public Plugin:myinfo = 
+static const int g_BulletLinuxOffsets[BULLET_MAX_SIZE] = { 0x11, 0x1c, 0x29, 0x3d };
+static const int g_FactorLinuxOffset = 0x2e;
+static const int g_CenterLinuxPelletOffset = -0x1c;
+
+public Plugin myinfo = 
 {
-    name = "L4D2 Static Shotgun Spread",
-    author = "Jahze, Visor",
-    version = "1.1",
-    description = "^",
-	url = "https://github.com/Attano"
+	name = "L4D2 Static Shotgun Spread",
+	author = "Jahze, Visor, A1m`, Rena",
+	version = "1.3",
+	description = "Changes the values in the sgspread patch",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
 	hRing1BulletsCvar = CreateConVar("sgspread_ring1_bullets", "3");
 	hRing1FactorCvar = CreateConVar("sgspread_ring1_factor", "2");
-	hCenterPelletCvar = CreateConVar("sgspread_center_pellet", "1", "0 : center pellet off; 1 : on", FCVAR_NONE, true, 0.0, true, 1.0);
+	hCenterPelletCvar = CreateConVar("sgspread_center_pellet", "1", "0 : center pellet off; 1 : on", _, true, 0.0, true, 1.0);
 
 	HookConVarChange(hRing1BulletsCvar, OnRing1BulletsChange);
 	HookConVarChange(hRing1FactorCvar, OnRing1FactorChange);
 	HookConVarChange(hCenterPelletCvar, OnCenterPelletChange);
 }
 
-static HotPatchCenterPellet(newValue)
+static void HotPatchCenterPellet(int newValue)
 {
-	if (IsPlatformWindows())
-	{
-		LogMessage("Static shotgun spread not supported on windows");
-		return;
-	}
-
-	new Address:addr = GetPatchAddress("sgspread");
+	int iCenterPelletOffset = (IsPlatformWindows()) ? g_CenterWindowsPelletOffset : g_CenterLinuxPelletOffset;
 	
-	new currentValue = LoadFromAddress(addr + Address:g_CenterPelletOffset, NumberType_Int8);
-	if (currentValue == newValue)
-	{
+	Address pAddr = GetPatchAddress("sgspread");
+	
+	LoadFromAddress(pAddr + view_as<Address>(iCenterPelletOffset), NumberType_Int8);
+	
+	int currentValue = LoadFromAddress(pAddr + view_as<Address>(iCenterPelletOffset), NumberType_Int8);
+
+	if (currentValue == newValue) {
 		return;
 	}
 	
-	StoreToAddress(addr + Address:g_CenterPelletOffset, newValue, NumberType_Int8);
+	StoreToAddress(pAddr + view_as<Address>(iCenterPelletOffset), newValue, NumberType_Int8);
 }
 
-static HotPatchBullets(nBullets)
+static void HotPatchBullets(int nBullets)
 {
-	if (IsPlatformWindows())
-	{
-		LogMessage("Static shotgun spread not supported on windows");
+	if (IsPlatformWindows()) {
+		Address pAddr = GetPatchAddress("sgspread");
+		
+		StoreToAddress(pAddr + view_as<Address>(g_BulletWindowsOffsets[0]), nBullets + 1, NumberType_Int8);
+		StoreToAddress(pAddr + view_as<Address>(g_BulletWindowsOffsets[1]), nBullets + 1, NumberType_Int8);
+		StoreToAddress(pAddr + view_as<Address>(g_BulletWindowsOffsets[2]), nBullets + 2, NumberType_Int8);
+
+		float degree = 360.0 / float(nBullets);
+		
+		StoreToAddress(pAddr + view_as<Address>(g_BulletWindowsOffsets[3]), view_as<int>(degree), NumberType_Int32);
 		return;
 	}
+	
+	Address pAddr = GetPatchAddress("sgspread");
+	
+	StoreToAddress(pAddr + view_as<Address>(g_BulletLinuxOffsets[0]), nBullets + 1, NumberType_Int8);
+	StoreToAddress(pAddr + view_as<Address>(g_BulletLinuxOffsets[1]), nBullets + 1, NumberType_Int8);
+	StoreToAddress(pAddr + view_as<Address>(g_BulletLinuxOffsets[2]), nBullets + 2, NumberType_Int8);
 
-	new Address:addr = GetPatchAddress("sgspread");
-
-	StoreToAddress(addr + Address:g_BulletOffsets[0], nBullets + 1, NumberType_Int8);
-	StoreToAddress(addr + Address:g_BulletOffsets[1], nBullets + 2, NumberType_Int8);
-	StoreToAddress(addr + Address:g_BulletOffsets[2], nBullets + 2, NumberType_Int8);
-
-	new Float:degree = 360.0 / (2.0*float(nBullets));
-
-	StoreToAddress(addr + Address:g_BulletOffsets[3], _:degree, NumberType_Int32);
+	float degree = 360.0 / (2.0 * float(nBullets));
+	
+	StoreToAddress(pAddr + view_as<Address>(g_BulletLinuxOffsets[3]), view_as<int>(degree), NumberType_Int32);
 }
 
-static HotPatchFactor(factor)
+static void HotPatchFactor(int factor)
 {
-	if (IsPlatformWindows())
-	{
-		LogMessage("Static shotgun spread not supported on windows");
+	Address pAddr = GetPatchAddress("sgspread");
+
+	if (IsPlatformWindows()) {
+		StoreToAddress(pAddr + view_as<Address>(g_FactorWindowsOffset), view_as<int>(float(factor)), NumberType_Int32);
 		return;
 	}
-
-	new Address:addr = GetPatchAddress("sgspread");
-
-	StoreToAddress(addr + Address:g_FactorOffset, factor, NumberType_Int32);
+	
+	StoreToAddress(pAddr + view_as<Address>(g_FactorLinuxOffset), factor, NumberType_Int32);
 }
 
-public OnRing1BulletsChange(Handle:cvar, const String:oldVal[], const String:newVal[])
+public void OnRing1BulletsChange(ConVar hCvar, const char[] oldVal, const char[] newVal)
 {
-	new nBullets = StringToInt(newVal);
+	int nBullets = StringToInt(newVal);
 
-	if (IsPatchApplied("sgspread"))
+	if (IsPatchApplied("sgspread")) {
 		HotPatchBullets(nBullets);
+	}
 }
 
-public OnRing1FactorChange(Handle:cvar, const String:oldVal[], const String:newVal[])
+public void OnRing1FactorChange(ConVar hCvar, const char[] oldVal, const char[] newVal)
 {
-	new factor = StringToInt(newVal);
+	int factor = StringToInt(newVal);
 
-	if (IsPatchApplied("sgspread"))
+	if (IsPatchApplied("sgspread")) {
 		HotPatchFactor(factor);
+	}
 }
 
-public OnCenterPelletChange(Handle:cvar, const String:oldVal[], const String:newVal[])
+public void OnCenterPelletChange(ConVar hCvar, const char[] oldVal, const char[] newVal)
 {
-	new value = StringToInt(newVal);
+	int value = StringToInt(newVal);
 
-	if (IsPatchApplied("sgspread"))
+	if (IsPatchApplied("sgspread")) {
 		HotPatchCenterPellet(value);
+	}
 }
 
-public OnPatchApplied(const String:name[])
+public void OnPatchApplied(const char[] name)
 {
-	if (StrEqual("sgspread", name))
-	{
-		HotPatchBullets(GetConVarInt(hRing1BulletsCvar));
-		HotPatchFactor(GetConVarInt(hRing1FactorCvar));
-		HotPatchCenterPellet(GetConVarInt(hCenterPelletCvar));
+	if (strcmp("sgspread", name) == 0) {
+		HotPatchBullets(hRing1BulletsCvar.IntValue);
+		HotPatchFactor(hRing1FactorCvar.IntValue);
+		HotPatchCenterPellet(hCenterPelletCvar.IntValue);
 	}
 }
