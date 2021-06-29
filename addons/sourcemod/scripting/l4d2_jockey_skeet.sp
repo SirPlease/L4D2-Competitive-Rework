@@ -124,7 +124,7 @@ bool IsJockey(int client)
 		&& IsClientInGame(client)
 		&& GetClientTeam(client) == TEAM_INFECTED
 		&& GetEntProp(client, Prop_Send, "m_zombieClass") == Z_JOCKEY
-		&& view_as<bool>(GetEntProp(client, Prop_Send, "m_isGhost")));
+		&& !GetEntProp(client, Prop_Send, "m_isGhost"));
 }
 
 bool HasJockeyTarget(int infected)
