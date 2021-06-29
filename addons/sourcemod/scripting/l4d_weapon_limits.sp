@@ -16,7 +16,7 @@ public Plugin myinfo =
 	name = "L4D Weapon Limits",
 	author = "CanadaRox, Stabby, Forgetest",
 	description = "Restrict weapons individually or together",
-	version = "1.3.4",
+	version = "1.3.5",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
@@ -176,16 +176,19 @@ public Action WeaponCanUse(int client, int weapon)
 		hLimitArray.GetArray(i, arrayEntry);
 		if (arrayEntry.LAE_WeaponArray[wepid/32] & (1 << (wepid % 32)) && GetWeaponCount(arrayEntry.LAE_WeaponArray) >= arrayEntry.LAE_iLimit)
 		{
-			// Swap melee, np
-			if (player_wepid == view_as<int>(WEPID_MELEE) && wepid == view_as<int>(WEPID_MELEE))
-				return Plugin_Continue;
-			
-			if ((wep_slot == 0 && arrayEntry.LAE_iGiveAmmo == -1) || arrayEntry.LAE_iGiveAmmo != 0)
-				GiveDefaultAmmo(client);
+			if (!player_wepid || wepid == player_wepid || !(arrayEntry.LAE_WeaponArray[player_wepid/32] & (1 << (player_wepid % 32))))
+			{
+				// Swap melee, np
+				if (player_wepid == view_as<int>(WEPID_MELEE) && wepid == view_as<int>(WEPID_MELEE))
+					return Plugin_Continue;
 				
-			CPrintToChat(client, "{blue}[{default}Weapon Limits{blue}]{default} This weapon group has reached its max of {green}%d", arrayEntry.LAE_iLimit);
-			EmitSoundToClient(client, "player/suit_denydevice.wav");
-			return Plugin_Handled;
+				if ((wep_slot == 0 && arrayEntry.LAE_iGiveAmmo == -1) || arrayEntry.LAE_iGiveAmmo != 0)
+					GiveDefaultAmmo(client);
+					
+				CPrintToChat(client, "{blue}[{default}Weapon Limits{blue}]{default} This weapon group has reached its max of {green}%d", arrayEntry.LAE_iLimit);
+				EmitSoundToClient(client, "player/suit_denydevice.wav");
+				return Plugin_Handled;
+			}
 		}
 	}
 	return Plugin_Continue;

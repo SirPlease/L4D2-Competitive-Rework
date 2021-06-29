@@ -7,7 +7,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#define PLUGIN_VERSION "9.2.3"
+#define PLUGIN_VERSION "9.2.4"
 
 public Plugin myinfo =
 {
@@ -22,6 +22,7 @@ public Plugin myinfo =
 //  Defines
 // ========================
 #define NULL_VELOCITY view_as<float>({0.0, 0.0, 0.0})
+#define MIN(%0,%1) ((%0) < (%1) ? (%0) : (%1))
 
 #define L4D2Team_None		0
 #define L4D2Team_Spectator	1
@@ -64,7 +65,7 @@ ConVar
 	l4d_ready_disable_spawns, l4d_ready_survivor_freeze,
 	l4d_ready_cfg_name, l4d_ready_server_cvar, 
 	l4d_ready_max_players,
-	l4d_ready_delay, l4d_ready_autostart_delay, l4d_ready_autostart_wait,
+	l4d_ready_delay, l4d_ready_force_extra, l4d_ready_autostart_delay, l4d_ready_autostart_wait,
 	l4d_ready_enable_sound, l4d_ready_chuckle, l4d_ready_countdown_sound, l4d_ready_live_sound, l4d_ready_autostart_sound,
 	l4d_ready_secret,
 	l4d_ready_unbalanced_start,
@@ -173,7 +174,8 @@ public void OnPluginStart()
 	l4d_ready_disable_spawns	= CreateConVar("l4d_ready_disable_spawns", "0", "Prevent SI from having spawns during ready-up", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	l4d_ready_survivor_freeze	= CreateConVar("l4d_ready_survivor_freeze", "1", "Freeze the survivors during ready-up.  When unfrozen they are unable to leave the saferoom but can move freely inside", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	l4d_ready_max_players		= CreateConVar("l4d_ready_max_players", "12", "Maximum number of players to show on the ready-up panel.", FCVAR_NOTIFY, true, 0.0, true, MAXPLAYERS+1.0);
-	l4d_ready_delay				= CreateConVar("l4d_ready_delay", "5", "Number of seconds to count down before the round goes live.", FCVAR_NOTIFY, true, 0.0);
+	l4d_ready_delay				= CreateConVar("l4d_ready_delay", "3", "Number of seconds to count down before the round goes live.", FCVAR_NOTIFY, true, 0.0);
+	l4d_ready_force_extra		= CreateConVar("l4d_ready_force_extra", "2", "Number of seconds added to the duration of live count down.", FCVAR_NOTIFY, true, 0.0);
 	l4d_ready_autostart_delay	= CreateConVar("l4d_ready_autostart_delay", "5", "Number of seconds to count down before auto-start kicks in.", FCVAR_NOTIFY, true, 0.0);
 	l4d_ready_autostart_wait	= CreateConVar("l4d_ready_autostart_wait", "20", "Number of seconds to wait for connecting players before auto-start is forced.", FCVAR_NOTIFY, true, 0.0);
 	l4d_ready_enable_sound		= CreateConVar("l4d_ready_enable_sound", "1", "Enable sound during autostart & countdown & on live", FCVAR_NOTIFY, true, 0.0, true, 1.0);
@@ -554,6 +556,7 @@ public Action Unready_Cmd(int client, int args)
 		{
 			if (!hasflag) return Plugin_Handled;
 			CancelFullReady(client, forceStartAbort);
+			isForceStart = false;
 		}
 		else
 		{
@@ -1365,8 +1368,8 @@ void InitiateLiveCountdown()
 		SetTeamFrozen(L4D2Team_Survivor, true);
 		PrintHintTextToAll("%t", "LiveCountdownBegin");
 		inLiveCountdown = true;
-		if (isForceStart) readyDelay = 5;
-		else readyDelay = l4d_ready_delay.IntValue;
+		readyDelay = l4d_ready_delay.IntValue;
+		if (isForceStart) readyDelay += l4d_ready_force_extra.IntValue;
 		readyCountdownTimer = CreateTimer(1.0, ReadyCountdownDelay_Timer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
@@ -1416,6 +1419,7 @@ bool CheckFullReady()
 	}
 	
 	int iBaseline = l4d_ready_unbalanced_min.IntValue;
+	iBaseline = MIN(MIN(iBaseline, survivor_limit.IntValue), z_max_player_zombies.IntValue);
 	if (l4d_ready_unbalanced_start.BoolValue)
 	{
 		return survReadyCount >= iBaseline
