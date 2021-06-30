@@ -1,0 +1,215 @@
+"Phrases"
+{
+// The following uses bracket style color tags (see colors.inc)
+	"SelfCastNotAllowed"
+	{
+		"en"		"{blue}[{default}Cast{blue}] {green}该服务器{default}拒绝了你的解说认证"
+	}
+
+	"SelfCast1"
+	{
+		"chi"		"{blue}[{default}Cast{blue}] 你已经被认证成为了解说"
+	}
+
+	"SelfCast2"
+	{
+		"chi"		"{blue}[{default}Cast{blue}] 重连服务器以加载 MOD"
+	}
+
+	"RegCasterTarget"
+	{
+		"#format"	"{1:N}"
+		"chi"		"{default}[{olive}!{default}] {blue}管理员 {default}({olive}{1}{default}) 认证了你为解说"
+	}
+
+	"Reconnect1"
+	{
+		"chi"		"{blue}[{default}Reconnect{blue}] 你将会被重连至服务器..."
+	}
+
+	"Reconnect2"
+	{
+		"chi"		"{blue}[{default}Reconnect{blue}] 期间会黑屏而没有加载条！"
+	}
+
+	"UnregCasterTarget"
+	{
+		"#format"	"{1:N}"
+		"chi"		"{default}[{olive}!{default}] {blue}管理员 {default}({olive}{1}{default}) 解除了你的解说身份"
+	}
+	
+	"PanelHide"
+	{
+		"chi"		"[{olive}Readyup{default}] 准备面板已 {red}关闭{default}"
+	}
+	
+	"PanelShow"
+	{
+		"chi"		"[{olive}Readyup{default}] 准备面板已 {blue}开启{default}"
+	}
+	
+	"ForceStartAdmin"
+	{
+		"#format"	"{1:N}"
+		"chi"		"[{green}!{default}] {blue}管理员 {default}({olive}{1}{default}) {green}强制{default}了{blue}游戏开始"
+	}
+	
+	"KickSpecsAdmin"
+	{
+		"#format"	"{1:N}"
+		"chi"		"[{green}!{default}] {blue}管理员 {default}({olive}{1}{default}) {default}踢出了{blue}所有旁观者"
+	}
+	
+	"KickSpecsVoteSpec"
+	{
+		"chi"		"[{olive}Readyup{default}] {blue}旁观 {default}不可以投票 {green}踢出旁观{default}"
+	}
+	
+	"VoteInProgress"
+	{
+		"chi"		"[{olive}Readyup{default}] 现在有{olive}投票{green}正在进行{default}"
+	}
+	
+	"VoteDelay"
+	{
+		"#format"	"{1:d}"
+		"chi"		"[{olive}Readyup{default}] 请等待 {blue}{1}秒 {default}以发起下一轮投票"
+	}
+
+	"DisruptReadyStatus"
+	{
+		"#format"	"{1:N}"
+		"chi"		"{default}[{green}!{default}] {green}倒数中止！ {default}({teamcolor}{1} {green}取消了准备{default})"
+	}
+	
+	"DisruptTeamShuffle"
+	{
+		"#format"	"{1:N}"
+		"chi"		"{default}[{green}!{default}] {green}倒数中止！ {default}({teamcolor}{1} {olive}切换了阵营{default})"
+	}
+	
+	"DisruptPlayerDisc"
+	{
+		"#format"	"{1:N}"
+		"chi"		"{default}[{green}!{default}] {green}倒数中止！ {default}({teamcolor}{1} {green}离开了游戏{default})"
+	}
+	
+	"DisruptForceStartAbort"
+	{
+		"#format"	"{1:N}"
+		"en"		"{default}[{green}!{default}] {green}叫停强制开始！ {default}({green}由 {olive}{1} {green}负责{default})"
+	}
+	
+	
+// The following are not allowed to use any color tag
+	"RegCasterReply"
+	{
+		"#format"	"{1:N}"
+		"chi"		"认证了 {1} 为解说"
+	}
+	
+	"CasterSteamIDError"
+	{
+		"chi"		"Steam ID查询失败。  请检查拼写错误，等待玩家加载。"
+	}
+
+	"UnregCasterNonAdmin"
+	{
+		"chi"		"只有管理员可以撤销其他人的解说身份。 输入不带参数的 sm_notcasting 以解除解说身份。"
+	}
+
+	"UnregCasterSuccess"
+	{
+		"#format"	"{1:N}"
+		"chi"		"{1} 已不再是解说。"
+	}
+	
+	"CasterDBReset"
+	{
+		"chi"		"[casters_database] 重置成功"
+	}
+	
+	"CasterDBAdd"
+	{
+		"#format"	"{1:s}"
+		"chi"		"[casters_database] 添加了 '{1}'"
+	}
+	
+	"CasterDBRemove"
+	{
+		"#format"	"{1:s}"
+		"chi"		"[casters_database] 移除了 '{1}'"
+	}
+	
+	"CasterDBFound"
+	{
+		"#format"	"{1:s}"
+		"chi"		"[casters_database] '{1}' 已存在"
+	}
+	
+	"CasterDBError"
+	{
+		"chi"		"[casters_database] 缺少参数 / 空字符串"
+	}
+	
+	"KickSpecsVoteTitle"
+	{
+		"chi"		"踢出所有非管理员和解说的旁观？"
+	}
+	
+	"KickSpecsVoteSuccess"
+	{
+		"chi"		"撒尤娜拉"
+	}
+	
+	"KickSpecsReason"
+	{
+		"chi"		"本比赛不允许旁观"
+	}
+	
+	"HintReady"
+	{
+		"chi"		"你已经准备了\n输入 !unready / 按 F2 取消准备"
+	}
+	
+	"HintUnready"
+	{
+		"chi"		"你还没有准备\n输入 !ready / 按 F1 确认准备"
+	}
+	
+	"LiveCountdownBegin"
+	{
+		"chi"		"比赛即将开始！\n输入 !unready / 按 F2 中断倒数"
+	}
+	
+	"LiveCountdown"
+	{
+		"#format"	"{1:d}"
+		"chi"		"请各就各位：{1} \n输入 !unready / 按 F2 中断倒数"
+	}
+	
+	"LiveCountdownCancelled"
+	{
+		"chi"		"倒数中止！"
+	}
+	
+	"RoundIsLive"
+	{
+		"chi"		"比赛开始！"
+	}	
+	
+	"InitiateAutoStart"
+	{
+		"chi"		"游戏将会自动开始！"
+	}
+	
+	"AutoStartCountdown"
+	{
+		"chi"		"游戏开始于：%i"
+	}
+	
+	"AutoStartWaiting"
+	{
+		"chi"		"等待玩家加入 ..."
+	}
+}
