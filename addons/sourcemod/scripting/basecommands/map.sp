@@ -110,23 +110,23 @@ public Action Command_Map(int client, int args)
 	GetMapDisplayName(displayName, displayName, sizeof(displayName));
 
 	ShowActivity2(client, "[SM] ", "%t", "Changing map", displayName);
-	LogAction(client, -1, "\"%L\" changed map to \"%s\"", client, map);
+	LogAction(client, -1, "\"%L\" changed map to \"%s\"", client, displayName);
 
 	DataPack dp;
 	CreateDataTimer(3.0, Timer_ChangeMap, dp);
-	dp.WriteString(map);
+	dp.WriteString(displayName);
 
 	return Plugin_Handled;
 }
 
 public Action Timer_ChangeMap(Handle timer, DataPack dp)
 {
-	char map[PLATFORM_MAX_PATH];
+	char displayName[PLATFORM_MAX_PATH];
 
 	dp.Reset();
-	dp.ReadString(map, sizeof(map));
+	dp.ReadString(displayName, sizeof(displayName));
 
-	ForceChangeLevel(map, "sm_map Command");
+	ForceChangeLevel(displayName, "sm_map Command");
 
 	return Plugin_Stop;
 }
