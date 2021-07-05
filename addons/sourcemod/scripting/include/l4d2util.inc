@@ -1,9 +1,9 @@
-#pragma semicolon 1
-
 #if defined l4d2util_inc_
-    #endinput
+	#endinput
 #endif
 #define l4d2util_inc_
+
+#pragma semicolon 1
 
 #include <l4d2util_constants>
 #include <l4d2util_infected>
@@ -15,18 +15,20 @@
 #if !defined L4D2UTIL_STOCKS_ONLY
 #if !defined __IN_L4D2UTIL__
 
-public SharedPlugin:__pl_l4d2util = {
-    name = "l4d2util",
-    file = "l4d2util.smx",
+public SharedPlugin __pl_l4d2util =
+{
+	name = "l4d2util",
+	file = "l4d2util.smx",
 #if defined REQUIRE_PLUGIN
-    required = 1,
+	required = 1,
 #else
-    required = 0,
+	required = 0,
 #endif
 };
 
-public __pl_l4d2util_SetNTVOptional() {
-    // Stub
+public void __pl_l4d2util_SetNTVOptional()
+{
+	// Stub
 }
 
 #endif // __IN_L4D2UTIL__

@@ -18,62 +18,56 @@
 	You should have received a copy of the GNU General Public License along
 	with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#pragma semicolon 1
 
-#define L4D2UTIL_STOCKS_ONLY 1
+#pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdkhooks>
+#define L4D2UTIL_STOCKS_ONLY
 #include <l4d2util>
 
-#define PARISH_PREFIX   "c5m"
+#define PARISH_PREFIX "c5m"
 
-new bool:bPluginActive;
+bool
+	bPluginActive;
 
-public Plugin:myinfo = {
-    name        = "L4D2 Riot Cops",
-    author      = "Jahze, Visor",
-    version     = "1.2",
-    description = "Allow riot cops to be killed by a headshot"
+public Plugin myinfo =
+{
+	name		= "L4D2 Riot Cops",
+	author		= "Jahze, Visor",
+	version		= "1.3", //new syntax A1m`
+	description	= "Allow riot cops to be killed by a headshot"
 }
 
-public OnMapStart() {
-    decl String:sMap[128];
-    GetCurrentMap(sMap, sizeof(sMap));
+public void OnMapStart()
+{
+	char sMap[128];
+	GetCurrentMap(sMap, sizeof(sMap));
 
-    bPluginActive = StrContains(sMap, PARISH_PREFIX, false) > -1 ? true : false;
+	bPluginActive = (StrContains(sMap, PARISH_PREFIX, false) > -1) ? true : false;
 }
 
-public OnEntityCreated(entity, const String:classname[]) {
-    if (!bPluginActive) {
-        return;
-    }
-
-    if (entity <= 0 || entity > 2048) {
-        return;
-    }
-
-    if (StrEqual("infected", classname)) {
-        SDKHook(entity, SDKHook_SpawnPost, RiotCopSpawn);
-    }
+public void OnEntityCreated(int entity, const char[] classname)
+{
+	if (bPluginActive && strcmp("infected", classname) == 0) {
+		SDKHook(entity, SDKHook_SpawnPost, RiotCopSpawn);
+	}
 }
 
-public RiotCopSpawn(entity) {
-    if (GetGender(entity) == L4D2Gender_RiotCop) {
-        SDKHook(entity, SDKHook_TraceAttack, RiotCopTraceAttack);
-    }
+public void RiotCopSpawn(int entity)
+{
+	if (IsValidEntity(entity) && GetGender(entity) == L4D2Gender_RiotCop) {
+		SDKHook(entity, SDKHook_TraceAttack, RiotCopTraceAttack);
+	}
 }
 
-public Action:RiotCopTraceAttack(victim, &attacker, &inflictor, &Float:damage, &damageType, &ammotype, hitbox, hitgroup) {
-    if (! attacker) {
-        return Plugin_Continue;
-    }
-
-    if (hitgroup == 1) {
-        SDKHooks_TakeDamage(victim, 0, attacker, damage);
-        return Plugin_Handled;
-    }
-
-    return Plugin_Continue;
+public Action RiotCopTraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
+{
+	if (hitgroup == 1 && IsValidEntity(victim)) {
+		if (IS_VALID_CLIENT(attacker) && IsSurvivor(attacker)) {
+			SDKHooks_TakeDamage(victim, 0, attacker, damage);
+		}
+	}
+	return Plugin_Continue;
 }
-

@@ -3,6 +3,8 @@
 #endif
 #define l4d2util_constants_inc_
 
+#define IS_VALID_CLIENT(%1)     (%1 > 0 && %1 <= MaxClients)
+
 enum L4D2_Team
 {
 	L4D2Team_Spectator = 1,
@@ -368,7 +370,8 @@ stock const char SurvivorModels[SurvivorCharacter][] =
 
 // Animation IDs used by CTerrorPlayer::DoAnimationEvent
 // Gaps do not mean the animation doesn't exist, just that I don't know what it maps to.
-enum Animation {
+enum Animation
+{
 	ANIM_RELOAD_PISTOL_UZI_SNIPER = 4,
 	ANIM_RELOAD_SHOTGUN = 5,
 	ANIM_RELOAD_SHOTGUN_FINAL = 6,
