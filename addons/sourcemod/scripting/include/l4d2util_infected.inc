@@ -1,32 +1,38 @@
 #if defined l4d2util_infected_inc_
-    #endinput
+	#endinput
 #endif
 #define l4d2util_infected_inc_
 
 #include <sdktools>
+#include <l4d2util_constants>
+
+#define ARRAY_INDEX_DURATION 0
+#define ARRAY_INDEX_TIMESTAMP 1
 
 // Internal array of strings for timer ability timer entity classnames
-new const String:L4D2_InfectedTimerEntities[8][] = {
-    "ability_tongue",
-    "ability_vomit",
-    "ability_lunge",
-    "ability_spit",
-    "ability_leap",
-    "ability_charge",
-    "",
-    ""
+stock const char L4D2_InfectedTimerEntities[8][] =
+{
+	"ability_tongue",
+	"ability_vomit",
+	"ability_lunge",
+	"ability_spit",
+	"ability_leap",
+	"ability_charge",
+	"",
+	""
 };
 
 // Internal array of strings for Infected victim netprops
-new const String:L4D2_InfectedVictimNetprops[8][] = {
-    "m_tongueVictim",
-    "",
-    "m_pounceVictim",
-    "",
-    "m_jockeyVictim",
-    "m_pummelVictim",
-    "",
-    ""
+stock const char L4D2_InfectedVictimNetprops[8][] =
+{
+	"m_tongueVictim",
+	"",
+	"m_pounceVictim",
+	"",
+	"m_jockeyVictim",
+	"m_pummelVictim",
+	"",
+	""
 };
 
 /**
@@ -35,11 +41,9 @@ new const String:L4D2_InfectedVictimNetprops[8][] = {
  * @param client client ID
  * @return bool
  */
-stock bool:IsInfected(client) {
-    if (!IsClientInGame(client) || L4D2_Team:GetClientTeam(client) != L4D2Team_Infected) {
-        return false;
-    }
-    return true;
+stock bool IsInfected(int client)
+{
+	return (IsClientInGame(client) && view_as<L4D2_Team>(GetClientTeam(client)) == L4D2Team_Infected);
 }
 
 /**
@@ -49,8 +53,9 @@ stock bool:IsInfected(client) {
  * @param client client ID
  * @return class ID
  */
-stock L4D2_Infected:GetInfectedClass(client) {
-    return L4D2_Infected:GetEntProp(client, Prop_Send, "m_zombieClass");
+stock L4D2_Infected GetInfectedClass(int client)
+{
+	return view_as<L4D2_Infected>(GetEntProp(client, Prop_Send, "m_zombieClass"));
 }
 
 /**
@@ -59,8 +64,9 @@ stock L4D2_Infected:GetInfectedClass(client) {
  * @param client client ID
  * @return bool
  */
-stock bool:IsInfectedGhost(client) {
-    return bool:GetEntProp(client, Prop_Send, "m_isGhost");
+stock bool IsInfectedGhost(int client)
+{
+	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isGhost"));
 }
 
 /**
@@ -71,8 +77,9 @@ stock bool:IsInfectedGhost(client) {
  * @param iBufLen size of sBuffer
  * @noreturn
  */
-stock GetInfectedClassName(L4D2_Infected:iClass, String:sBuffer[], iBufLen) {
-    strcopy(sBuffer, iBufLen, L4D2_InfectedNames[_:iClass-1]); 
+stock void GetInfectedClassName(L4D2_Infected iClass, char[] sBuffer, const int iBufLen)
+{
+	strcopy(sBuffer, iBufLen, L4D2_InfectedNames[view_as<int>(iClass) - 1]);
 }
 
 /**
@@ -82,14 +89,9 @@ stock GetInfectedClassName(L4D2_Infected:iClass, String:sBuffer[], iBufLen) {
  * @param type classname of entity
  * @return entity ID or -1
  */
-stock GetInfectedAbilityTimerEntity(owner, const String:type[]) {
-    new iEntity = -1;
-    while ((iEntity = FindEntityByClassname(iEntity, type)) != -1) {
-        if (GetEntPropEnt(iEntity, Prop_Send, "m_owner") == owner) {
-            break;
-        }
-    }
-    return iEntity;
+stock int GetInfectedAbilityEntity(int owner)
+{
+	return GetEntPropEnt(owner, Prop_Send, "m_customAbility");
 }
 
 /**
@@ -100,22 +102,27 @@ stock GetInfectedAbilityTimerEntity(owner, const String:type[]) {
  * @param duration output parameter for the duration
  * @return true if the timer was found otherwise false
  */
-stock bool:GetInfectedAbilityTimer(client, &Float:timestamp, &Float:duration) {
-    new L4D2_Infected:zClass = GetInfectedClass(client);
-    new ability = -1;
-    
-    if (strlen(L4D2_InfectedTimerEntities[_:zClass-1]) == 0) {
-        return false;
-    }
-    
-    ability = GetInfectedAbilityTimerEntity(client, L4D2_InfectedTimerEntities[_:zClass-1]);
-    if (ability == -1) {
-        return false;
-    }
-    
-    timestamp = GetEntPropFloat(ability, Prop_Send, "m_timestamp");
-    duration = GetEntPropFloat(ability, Prop_Send, "m_duration");
-    return true;
+stock bool GetInfectedAbilityTimer(int client, float &timestamp, float &duration)
+{
+	L4D2_Infected zClass = GetInfectedClass(client);
+	if (strlen(L4D2_InfectedTimerEntities[view_as<int>(zClass) - 1]) == 0) {
+		return false;
+	}
+
+	int ability = GetInfectedAbilityEntity(client);
+	if (ability == -1 || !IsValidEntity(ability)) {
+		return false;
+	}
+	
+	/*
+	 * Table: m_nextActivationTimer (offset 1104) (type DT_CountdownTimer)
+	 *	Member: m_duration (offset 4) (type float) (bits 0) (NoScale)
+	 *	Member: m_timestamp (offset 8) (type float) (bits 0) (NoScale)
+	*/
+	duration = GetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", ARRAY_INDEX_DURATION);
+	timestamp = GetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", ARRAY_INDEX_TIMESTAMP);
+
+	return true;
 }
 
 /**
@@ -126,22 +133,28 @@ stock bool:GetInfectedAbilityTimer(client, &Float:timestamp, &Float:duration) {
  * @param duration
  * @return true if the timer was found otherwise false
  */
-stock bool:SetInfectedAbilityTimer(client, Float:timestamp, Float:duration) {
-    new L4D2_Infected:zClass = GetInfectedClass(client);
-    new ability = -1;
-    
-    if (strlen(L4D2_InfectedTimerEntities[_:zClass-1]) == 0) {
-        return false;
-    }
-    
-    ability = GetInfectedAbilityTimerEntity(client, L4D2_InfectedTimerEntities[_:zClass-1]);
-    if (ability == -1) {
-        return false;
-    }
-    
-    SetEntPropFloat(ability, Prop_Send, "m_timestamp", timestamp);
-    SetEntPropFloat(ability, Prop_Send, "m_duration", duration);
-    return true;
+stock bool SetInfectedAbilityTimer(int client, float &timestamp, float &duration)
+{
+	L4D2_Infected zClass = GetInfectedClass(client);
+
+	if (strlen(L4D2_InfectedTimerEntities[view_as<int>(zClass) - 1]) == 0) {
+		return false;
+	}
+
+	int ability = GetInfectedAbilityEntity(client);
+	if (ability == -1 || !IsValidEntity(ability)) {
+		return false;
+	}
+	
+	/*
+	 * Table: m_nextActivationTimer (offset 1104) (type DT_CountdownTimer)
+	 *	Member: m_duration (offset 4) (type float) (bits 0) (NoScale)
+	 *	Member: m_timestamp (offset 8) (type float) (bits 0) (NoScale)
+	*/
+	SetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", duration, ARRAY_INDEX_DURATION);
+	SetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", timestamp, ARRAY_INDEX_TIMESTAMP);
+
+	return true;
 }
 
 /**
@@ -150,14 +163,15 @@ stock bool:SetInfectedAbilityTimer(client, Float:timestamp, Float:duration) {
  * @param client whose victim to get
  * @return client ID or -1 on error
  */
-stock GetInfectedVictim(client) {
-    new L4D2_Infected:zClass = GetInfectedClass(client);
-    
-    if (strlen(L4D2_InfectedVictimNetprops[_:zClass-1]) == 0) {
-        return -1;
-    }
-    
-    return GetEntPropEnt(client, Prop_Send, L4D2_InfectedVictimNetprops[_:zClass-1]);
+stock int GetInfectedVictim(int client)
+{
+	L4D2_Infected zClass = GetInfectedClass(client);
+
+	if (strlen(L4D2_InfectedVictimNetprops[view_as<int>(zClass) - 1]) == 0) {
+		return -1;
+	}
+
+	return GetEntPropEnt(client, Prop_Send, L4D2_InfectedVictimNetprops[view_as<int>(zClass) - 1]);
 }
 
 /**
@@ -166,6 +180,7 @@ stock GetInfectedVictim(client) {
  * @param entity
  * @return L4D_Gender
  */
-stock L4D2_Gender:GetGender(entity) {
-    return L4D2_Gender:GetEntProp(entity, Prop_Send, "m_Gender");
+stock L4D2_Gender GetGender(int entity)
+{
+	return view_as<L4D2_Gender>(GetEntProp(entity, Prop_Send, "m_Gender"));
 }

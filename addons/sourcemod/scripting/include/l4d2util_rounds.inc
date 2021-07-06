@@ -1,5 +1,5 @@
 #if defined l4d2util_rounds_inc_
-    #endinput
+	#endinput
 #endif
 #define l4d2util_rounds_inc_
 
@@ -12,15 +12,15 @@
  * Called when a new round begins.
  *
  * @noreturn
- */
-forward OnRoundStart();
+ */ 
+forward void OnRoundStart();
 
 /**
  * Called when a round ends.
  *
  * @noreturn
  */
-forward OnRoundEnd();
+forward void OnRoundEnd();
 
 #endif // __IN_L4D2UTIL__
 #endif // L4D2UTIL_STOCKS_ONLY
@@ -31,6 +31,7 @@ forward OnRoundEnd();
  *
  * @return bool
  */
-stock bool:InSecondHalfOfRound() {
-    return bool:GameRules_GetProp("m_bInSecondHalfOfRound");
+stock bool InSecondHalfOfRound()
+{
+	return view_as<bool>(GameRules_GetProp("m_bInSecondHalfOfRound"));
 }

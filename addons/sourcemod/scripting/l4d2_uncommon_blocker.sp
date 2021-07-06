@@ -5,13 +5,13 @@
 #include <sdktools>
 #include <sdkhooks>
 
-#define DEBUG                   false
+#define DEBUG					false
 
-#define UNC_CEDA                1
-#define UNC_CLOWN               2
-#define UNC_MUDMEN              4
-#define UNC_RIOT                8
-#define UNC_ROADCREW            16
+#define UNC_CEDA				1
+#define UNC_CLOWN				2
+#define UNC_MUDMEN				4
+#define UNC_RIOT				8
+#define UNC_ROADCREW			16
 
 ConVar hPluginEnabled; // convar: enable block
 ConVar hBlockFlags; // convar: what to block
@@ -21,6 +21,8 @@ ConVar hBlockFlags; // convar: what to block
 
     Changelog
     ---------
+		0.1d
+            - fixes description of cvar 'sm_uncinfblock_enabled' after 12+- years of using the plugin: D
 		0.1c
             - new syntax, little fixes
         0.1b
@@ -36,25 +38,25 @@ public Plugin myinfo =
 	name = "Uncommon Infected Blocker",
 	author = "Tabun", //sytax update A1m`
 	description = "Blocks uncommon infected from ruining your day.",
-	version = "0.1c",
+	version = "0.1d",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
 /* -------------------------------
- *      Init
+ *		Init
  * ------------------------------- */
 public void OnPluginStart()
 {
-	hPluginEnabled = CreateConVar("sm_uncinfblock_enabled", "1", "Enable the fix for the jockey-damage glitch.", _, true, 0.0, true, 1.0);
-	hBlockFlags = CreateConVar("sm_uncinfblock_types",   "31", "Which uncommon infected to block (1:ceda, 2:clowns, 4:mudmen, 8:riot cops, 16:roadcrew).", _, true, 0.0);
+	hPluginEnabled = CreateConVar("sm_uncinfblock_enabled", "1", "Enable uncommon blocker plugin?", _, true, 0.0, true, 1.0);
+	hBlockFlags = CreateConVar("sm_uncinfblock_types", "31", "Which uncommon infected to block (1:ceda, 2:clowns, 4:mudmen, 8:riot cops, 16:roadcrew). 31 - block all uncommon.", _, true, 0.0, true, 31.0); //16 + 8 + 4 + 2 + 1 = 31
 }
 
 /* -------------------------------
- *      General hooks / events
+ * 		General hooks / events
  * ------------------------------- */
 public void OnEntityCreated(int entity, const char[] classname)
 {
-	if (strcmp(classname, "infected", false) == 0 && hPluginEnabled.BoolValue) {
+	if (hPluginEnabled.BoolValue && strcmp(classname, "infected", false) == 0) {
 		if (entity > 0 && IsValidEntity(entity) && IsValidEdict(entity)) {
 			SDKHook(entity, SDKHook_SpawnPost, OnEntitySpawned);
 		}
@@ -65,24 +67,24 @@ public void OnEntitySpawned(int entity)
 {
 	if (isUncommon(entity)) {
 		float location[3];
-		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", location);           // get location
+		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", location);			// get location
 		
-		AcceptEntityInput(entity, "Kill");                                      // kill the uncommon
+		AcceptEntityInput(entity, "Kill");										// kill the uncommon
 		
 		#if DEBUG
 		PrintToChatAll("Blocked uncommon (loc: %.0f %.0f %.0f)", location[0], location[1], location[2]);
 		#endif
 		
-		SpawnCommon(location);                                                  // spawn common in location instead
+		SpawnCommon(location);													// spawn common in location instead
 	}
 }
 
 /* --------------------------------------
- *     Shared function(s)
+ *		Shared function(s)
  * -------------------------------------- */
 bool isUncommon(int entity)
 {
-	if (entity <= 0 || entity > 2048 || !IsValidEdict(entity)) {
+	if (!IsValidEdict(entity)) {
 		return false;
 	}
 	

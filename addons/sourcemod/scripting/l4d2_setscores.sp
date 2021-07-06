@@ -13,14 +13,13 @@
  *
  * Testers: LuckyLock, DuckDuckGo, XBye, Statik
  */
+#pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdktools>
 #include <left4dhooks>
 #include <builtinvotes>
-
-#pragma semicolon 1
-//#pragma newdecls required
 
 #define PLUGIN_VERSION "1.4"
 
@@ -35,7 +34,7 @@ public Plugin myinfo =
 	url = "https://bitbucket.org/vintik/various-plugins"
 }
 
-#define L4D_TEAM_SPECTATE    1
+#define L4D_TEAM_SPECTATE 1
 
 ConVar 
 	minimumPlayersForVote, 
@@ -197,8 +196,8 @@ void SetScores(const int survScore, const int infectScore, const int iAdminIndex
 	
 	//Set the scores
 	SDKCall(hSetCampaignScores,
-				bFlipped ? infectScore : survScore,
-				bFlipped ? survScore : infectScore); //visible scores
+				(bFlipped) ? infectScore : survScore,
+				(bFlipped) ? survScore : infectScore); //visible scores
 	L4D2Direct_SetVSCampaignScore(SurvivorTeamIndex, survScore); //real scores
 	L4D2Direct_SetVSCampaignScore(InfectedTeamIndex, infectScore);
 	
@@ -216,7 +215,7 @@ public int VoteActionHandler(Handle vote, BuiltinVoteAction action, int param1, 
 	switch (action) {
 		case BuiltinVoteAction_End: {
 			voteHandler = null;
-			CloseHandle(vote);
+			delete vote;
 		}
 		case BuiltinVoteAction_Cancel: {
 			DisplayBuiltinVoteFail(vote, BuiltinVoteFail_Generic);
@@ -240,11 +239,13 @@ public void ScoreVoteResultHandler(Handle vote, int num_votes, int num_clients, 
 }
 
 // Disables score changes once round goes live
-public OnRoundIsLive() {
+public void OnRoundIsLive()
+{
 	inFirstReadyUpOfRound = false;
 }
 
 // Enables scores changes when map is loaded
-public void OnMapStart() {
+public void OnMapStart()
+{
 	inFirstReadyUpOfRound = true;
 }
