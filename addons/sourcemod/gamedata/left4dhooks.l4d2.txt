@@ -640,6 +640,48 @@
 				}
 			}
 
+			"OnVomitedUpon"
+			{
+				"signature"		"CTerrorPlayer_OnVomitedUpon"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"cbaseentity"
+					}
+					"a2"
+					{
+						"type"	"bool"
+					}
+				}
+			}
+
+			"OnHitByVomitJar"
+			{
+				"signature"		"CTerrorPlayer_OnHitByVomitJar"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"cbaseentity"
+					}
+				}
+			}
+
+			"OnMaterializeFromGhost"
+			{
+				"signature"		"MaterializeFromGhost"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
+			}
+
 			"UseHealingItems"
 			{
 				"signature"		"UseHealingItems"
@@ -1099,35 +1141,39 @@
 				"windows"	"28"
 				"linux"		"28"
 			}
+			// Can be found in the "CTerrorPlayer::IsInvulnerable" function
 			"InvulnerabilityTimer"
 			{
-				"windows"	"11892"
-				"linux"		"11872"
+				"windows"	"11892" // 2.2.1.3
+				"linux"		"11872" // 2.2.1.3
 			}
+			// Can be found near the text "TANK OFFER: Player %s has %d tickets\n" in that section above, where the line reads "mov     edx, [ebx+30A8h]" - it's this value
 			"m_iTankTickets"
 			{
-				"windows"	"12444"
-				"linux"		"12424"
+				"windows"	"12444" // 2.2.1.3
+				"linux"		"12424" // 2.2.1.3
 			}
+			// Can be found in the "CTerrorPlayer::GetShovePenalty" and "CTerrorPlayer::SetShovePenalty" functions
 			"m_iShovePenalty"
 			{
-				"windows"	"11504"
-				"linux"		"11484"
+				"windows"	"11504" // 2.2.1.3
+				"linux"		"11484" // 2.2.1.3
 			}
 			"m_fNextShoveTime"
 			{
-				"windows"	"11500"
-				"linux"		"11480"
+				"windows"	"11500" // 2.2.1.3
+				"linux"		"11480" // 2.2.1.3
 			}
+			// Can be in the "CTerrorPlayer::OnRevived" function
 			"m_preIncapacitatedHealth"
 			{
-				"windows"	"14844"
-				"linux"		"14824"
+				"windows"	"14844" // 2.2.1.3
+				"linux"		"14824" // 2.2.1.3
 			}
 			"m_preIncapacitatedHealthBuffer"
 			{
-				"windows"	"14848"
-				"linux"		"14828"
+				"windows"	"14848" // 2.2.1.3
+				"linux"		"14828" // 2.2.1.3
 			}
 			"m_maxFlames"
 			{
@@ -1475,6 +1521,18 @@
 			}
 
 			/*
+			*  CTerrorPlayer::OnAdrenalineUsed(CTerrorPlayer *this, float)
+			*/
+			"OnAdrenalineUsed"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer16OnAdrenalineUsedEf"
+				"windows"	"\x55\x8B\x2A\x51\x53\x56\x8B\x2A\x8D\x2A\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8"
+				/* 55 8B ? 51 53 56 8B ? 8D ? ? ? ? ? 57 8B ? E8 */
+				/* Search: "%s used adrenaline\n" call is 3rd above, match to Linux. */
+			}
+
+			/*
 			*  CDirector::ForceNextStage(CDirector *this)
 			*/
 			"ForceNextStage"
@@ -1602,8 +1660,33 @@
 				"library"	"server"
 				"linux"		"@_ZNK11SurvivorBot11IsReachableERK6Vector"
 				"windows"	"\x55\x8B\xEC\xD9\x05\x2A\x2A\x2A\x2A\x8B\x45\x08"
-				/*  55 8B EC D9 05 ? ? ? ? 8B 45 08 */
+				/* 55 8B EC D9 05 ? ? ? ? 8B 45 08 */
 				/* Search "Trying to use something to help us along" call somewhere above */
+			}
+
+			/*
+			*  float NavAreaTravelDistance<ShortestPathCost>(Vector const&, Vector const&, ShortestPathCost &)
+			*/
+			"NavAreaTravelDistance"
+			{
+				"library"	"server"
+				"linux"		"@_Z21NavAreaTravelDistanceI16ShortestPathCostEfRK6VectorS3_RT_"
+				"windows"	"\x53\x8B\x2A\x83\x2A\x2A\x83\x2A\x2A\x83\x2A\x04\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\xD9\x2A\x2A\x2A\x2A\x2A\x83"
+				/* 53 8B ? 83 ? ? 83 ? ? 83 ? 04 55 8B ? ? 89 ? ? ? 8B ? D9 ? ? ? ? ? 83 */
+				/* Search string: "Degenerate area %d". Xref this sub and goto .rdata VTable. Go ~6 entries down to "CNavArea::ComputeEarliestOccupyTimes". This sub calls our target function. */
+			}
+
+			// UNUSED: Using VScript Wrapper alternative. Args are difficult to follow for SDKCall.
+			/*
+			*  int NavAreaBuildPath<ShortestPathCost>(CNavArea *,CNavArea *,Vector const*,Vector const*,ShortestPathCost &,CNavArea **,float,int,bool)
+			*/
+			"NavAreaBuildPath"
+			{
+				"library"	"server"
+				"linux"		"@_Z16NavAreaBuildPathI16ShortestPathCostEbP8CNavAreaS2_PK6VectorS5_RT_PS2_fib"
+				"windows"	"\x53\x8B\x2A\x83\x2A\x08\x83\x2A\x2A\x83\x2A\x04\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x56"
+				/* 53 8B ? 83 ? 08 83 ? ? 83 ? 04 55 8B ? ? 89 ? ? ? 8B ? 83 ? ? A1 ? ? ? ? 33 ? 56 */
+				/* Search "Arguments: ( area, area, flMaxPathLengt". Go into 3rd sub above or 2nd in HexRays. Match against Linux function. At the bottom is a call to target function, which should contain "& 0xF9 | 9" a little above the middle of the script in Hexrays */
 			}
 			// =========================
 
@@ -2049,8 +2132,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer11OnStaggeredEP11CBaseEntityPK6Vector"
-				"windows" 	"\x53\x8B\x2A\x83\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
-				/* 53 8B ? 83 ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 83 ? ? 56 57 8B ? E8 ? ? ? ? 84 ? 0F 85 ? ? ? ? 8B ? 8B
+				"windows" 	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
+				/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 83 ? ? 56 57 8B ? E8 ? ? ? ? 84 ? 0F 85 ? ? ? ? 8B ? 8B
 				 * Using a long local jump as the unique portion (last few bytes of sig)
 				 */
 			}
@@ -2161,7 +2244,7 @@
 				"library"	"server"
 				"linux"		"@_ZN9CDirector13ResetMobTimerEv"
 				"windows"	"\x55\x8B\xEC\x51\x56\x57\x8D\xB9\x2A\x2A\x2A\x2A\x8B\xCF\xE8\x2A\x2A\x2A\x2A\xD9"
-							/* 55 8B EC 51 56 57 8D B9 ? ? ? ? 8B CF E8 ? ? ? ? D9 */
+				/* 55 8B EC 51 56 57 8D B9 ? ? ? ? 8B CF E8 ? ? ? ? D9 */
 			}
 
 			/*
@@ -2204,7 +2287,7 @@
 				"library"	"server"
 				"linux"		"@_ZNK9CDirector20IsFirstMapInScenarioEv"
 				"windows"	"\xA1\x2A\x2A\x2A\x2A\x8B\x40\x3C\x56\x8B\xF0"
-							/* A1 ? ? ? ? 8B 40 3C 56 8B F0 */
+				/* A1 ? ? ? ? 8B 40 3C 56 8B F0 */
 			}
 
 			/* CTerrorGameRules::IsMissionFinalMap()
@@ -2217,7 +2300,7 @@
 				"library"	"server"
 				"linux"		"@_ZN16CTerrorGameRules17IsMissionFinalMapEv"
 				"windows"	"\x8B\x0D\x2A\x2A\x2A\x2A\x8B\x01\x8B\x50\x28\x56\xFF\xD2\x8B\x10\x8B\xC8\x8B\x42\x04\x6A\x00\xFF\xD0\x8B\xF0\x85\xF6\x75\x04\xB0"
-							/* 8B 0D ? ? ? ? 8B 01 8B 50 28 56 FF D2 8B 10 8B C8 8B 42 04 6A 00 FF D0 8B F0 85 F6 75 04 B0 */
+				/* 8B 0D ? ? ? ? 8B 01 8B 50 28 56 FF D2 8B 10 8B C8 8B 42 04 6A 00 FF D0 8B F0 85 F6 75 04 B0 */
 			}
 
 			/* CGameRulesProxy::NotifyNetworkStateChanged()
@@ -2233,7 +2316,7 @@
 				"library"	"server"
 				"linux"		"@_ZN15CGameRulesProxy25NotifyNetworkStateChangedEv"
 				"windows"	"\xA1\x2A\x2A\x2A\x2A\x85\xC0\x74\x2A\x80\x78"
-							/* A1 ? ? ? ? 85 C0 74 ? 80 78 */
+				/* A1 ? ? ? ? 85 C0 74 ? 80 78 */
 			}
 
 			// find string " Highest survivor flow distance = %f Tank at = %f witch at %f\n" in CDirectorVersusMode::UpdateVersusBossSpawning
@@ -2259,6 +2342,69 @@
 				/* Found by "SilverShot" */
 			}
 
+			/* CDirector::AreWanderersAllowed(void)
+			* Used to get offset for CDirectorScavengeMode
+			*	*(director + offset) == ptr to CDirectorScavengeMode
+			* has unique string "AlwaysAllowWanderers"
+ 			*/
+			"AreWanderersAllowed"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK9CDirector19AreWanderersAllowedEv"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x56\x8B\xF1\x8B\x8E\x2A\x2A\x2A\x2A\x8D\x45\xFF"
+				/* 55 8B EC 83 EC ? 56 8B F1 8B 8E ? ? ? ? 8D 45 FF */
+			}
+
+			/*
+			 * CDirector::IsFinaleEscapeInProgress(void)
+			 * unique string "#L4D_idle_spectator" in CTerrorPlayer::PreThink()
+			 * CDirector::IsFinaleEscapeInProgress is a couple calls before the string, and a couple calls after CountdownTimer::Now
+			 */
+			"IsFinaleEscapeInProgress"
+			{
+				"library" 	"server"
+				"linux" 	"@_ZNK9CDirector24IsFinaleEscapeInProgressEv"
+				"windows" 	"\x8B\x81\x2A\x2A\x2A\x2A\x83\x38\x2A\x75\x03\x32\xC0\xC3\x33\xC0\x83\xB9\x2A\x2A\x2A\x2A\x02\x0F\x94\xC0\xC3"
+				/* 8B 81 ? ? ? ? 83 38 ? 75 03 32 C0 C3 33 C0 83 B9 ? ? ? ? 02 0F 94 C0 C3 */
+			}
+
+			/*
+			 * CTerrorPlayer::CanBecomeGhost(bool areSpawnsDisabled)
+			 * unique string "ghost_spawn_time"
+			 */
+			"CanBecomeGhost"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer14CanBecomeGhostEb"
+				"windows"	"\x53\x8B\xDC\x83\xEC\x08\x83\xE4\xF0\x83\xC4\x04\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x83\xEC\x78\x56\x57\x8B\xF1"
+				/* 53 8B DC 83 EC ? 83 E4 F0 83 C4 ? 55 8B 6B 04 89 6C 24 ? 8B EC 83 EC 78 56 57 8B F1 */
+			}
+
+			/*
+			 * CTerrorPlayer::TakeOverBot
+			 * unique string "[TAKEOVER]: %s (%d) possessed %s"
+			 */
+			"TakeOverBot"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer11TakeOverBotEb"
+				"windows"	"\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x56\x8D\x85"
+				/* 55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 33 C5 89 45 FC 53 56 8D 85 */
+			}
+
+			/*
+			 * SurvivorBot::SetHumanSpectator(CTerrorPlayer*)
+			 * Very similar to BossZombiePlayerBot::SetHumanSpectator()
+			 * SurvivorBot version has 5 xref (one of them is CTerrorPlayer::TakeOverBot), BossZombie has just 1 (CTerrorPlayer::TakeOverBot)
+			 */
+			"SetHumanSpec"
+			{
+				"library"	"server"
+				"linux"		"@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\xBE\x2A\x2A\x2A\x2A\x00\x7E\x07\x32\xC0\x5E\x5D\xC2\x04\x00\x8B\x0D"
+				/* ? ? ? ? ? ? 83 BE ? ? ? ? 00 7E 07 32 C0 5E 5D C2 04 00 8B 0D */
+			}
+
 
 
 			// ====================================================================================================
@@ -2271,8 +2417,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer13OnVomitedUponEPS_b"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x53\x56\x57\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x06\x8B\x90"
-				/* 55 8B EC 83 EC ? 53 56 57 8B F1 E8 ? ? ? ? 84 C0 74 ? 8B 06 8B 90 */
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x57\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x06\x8B\x90"
+				/* ? ? ? ? ? ? 53 56 57 8B F1 E8 ? ? ? ? 84 C0 74 ? 8B 06 8B 90 */
 			}
 
 			/*
@@ -2438,8 +2584,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer20MaterializeFromGhostEv"
-				"windows"	"\x56\x8B\xF1\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\xFF\xD2\x50\xE8\x2A\x2A\x2A\x2A\x83\xC4"
-				/* 56 8B F1 8B 06 8B 90 ? ? ? ? FF D2 50 E8 ? ? ? ? 83 C4 */
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x50\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x50\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x50\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x68"
+				/* ? ? ? ? ? ? ? ? ? ? ? ? ? 50 E8 ? ? ? ? 83 ? ? 50 8B ? 8B ? ? ? ? ? 8B ? ? ? 50 68 ? ? ? ? E8 ? ? ? ? 68 */
 				/* Search "%s materialized from spawn mode as a %s" */
 			}
 
@@ -2619,7 +2765,7 @@
 				"library"	"server"
 				"linux"		"@_ZN16CTerrorGameRules19ClearRoundDurationsEv"
 				"windows"	""
-				/*  */
+				/* */
 			}
 
 			/*
@@ -2630,7 +2776,7 @@
 				"library"	"server"
 				"linux"		"@_ZN19CDirectorVersusMode25ClearTeamScoresNonVirtualEb"
 				"windows"	""
-				/*  */
+				/* */
 			}
 
 			/*
@@ -2833,6 +2979,9 @@
 			// ====================================================================================================
 			// ADDONS DISABLER
 			// ====================================================================================================
+			// Details on finding offsets can be found here: https://github.com/ProdigySim/left4dhooks/pull/1
+			// Big thanks to "ProdigySim" for updating for The Last Stand update.
+
 			/*
 			* CBaseServer::FillServerInfo(SVC_ServerInfo *)
 			*/
@@ -2876,6 +3025,27 @@
 				/* 88 ? 55 C7 04 24 4C */
 				"windows"	"\x88\x5F\x5D\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xC6\x47\x5F\x57"
 				/* 88 5F 5D ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? C6 47 5F 57 */
+			}
+
+
+
+			// ====================================================================================================
+			// LOBBY RESERVATION
+			// ====================================================================================================
+
+			/*
+			 * CBaseServer::SetReservationCookie(uint64_t, char*, va_list)
+			 * - clear the reservation by setting a cookie of 0
+			 */
+			"SetReservationCookie"
+			{
+				"library"	"engine"
+				"linux"		"@_ZN11CBaseServer20SetReservationCookieEyPKcz"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x8B\x2A\x2A\x56\x8B\x2A\x2A\x57\x8B\x2A\x2A\x3B"
+				/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 8B ? ? 56 8B ? ? 57 8B ? ? 3B */
+				// Wildcarded so compatible with l4dtoolz.
+				// "windows"	"\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x8B\x2A\x2A\x56\x8B\x2A\x2A\x57\x8B\x2A\x2A\x3B"
+				/* 55 8B ? 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 8B ? ? 56 8B ? ? 57 8B ? ? 3B */
 			}
 
 
@@ -3027,17 +3197,15 @@
 				/* 55 8B EC 56 8B F1 F3 0F 10 86 ? ? ? ? 0F 2E 45 08 9F 57 */
 			}
 
-			/* CDirector::AreWanderersAllowed(void)
-			* Used to get offset for CDirectorScavengeMode
-			*	*(director + offset) == ptr to CDirectorScavengeMode
-			* has unique string "AlwaysAllowWanderers"
- 			*/
-			"AreWanderersAllowed"
+			/*
+			 * CDirector::IsFinale(void)const
+			 */
+			"IsFinale"
 			{
 				"library"	"server"
-				"linux"		"@_ZNK9CDirector19AreWanderersAllowedEv"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x56\x8B\xF1\x8B\x8E\x2A\x2A\x2A\x2A\x8D\x45\xFF"
-				/* 55 8B EC 83 EC ? 56 8B F1 8B 8E ? ? ? ? 8D 45 FF */
+				"linux"		"@_ZNK9CDirector8IsFinaleEv"
+				"windows"	"\x8B\x81\x2A\x2A\x2A\x2A\x33\xC9\x83\x38\x2A\x0F\x95\xC0\xC3"
+				/* 8B 81 ? ? ? ? 33 C9 83 38 ? 0F 95 C0 C3 */
 			}
 
 			/*
@@ -3054,19 +3222,6 @@
 				/* 8B 0D ? ? ? ? 85 C9 74 ? A1 ? ? ? ? D9 ? ? 51 D9 ? ? E8 ? ? ? ? 8B */
 			}
 
-			/*
-			 * CDirector::IsFinaleEscapeInProgress(void)
-			 * unique string "#L4D_idle_spectator" in CTerrorPlayer::PreThink()
-			 * CDirector::IsFinaleEscapeInProgress is a couple calls before the string, and a couple calls after CountdownTimer::Now
-			 */
-			"IsFinaleEscapeInProgress"
-			{
-				"library" 	"server"
-				"linux" 	"@_ZNK9CDirector24IsFinaleEscapeInProgressEv"
-				"windows" 	"\x8B\x81\x2A\x2A\x2A\x2A\x83\x38\x2A\x75\x03\x32\xC0\xC3\x33\xC0\x83\xB9\x2A\x2A\x2A\x2A\x02\x0F\x94\xC0\xC3"
-				/* 8B 81 ? ? ? ? 83 38 ? 75 03 32 C0 C3 33 C0 83 B9 ? ? ? ? 02 0F 94 C0 C3 */
-			}
-
 			/* CTerrorPlayer::RoundRespawn */
 			"RoundRespawn"
 			{
@@ -3074,29 +3229,6 @@
 				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
 				"windows"	"\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75"
 				/* 56 8B F1 E8 ? ? ? ? E8 ? ? ? ? 84 C0 75	*/
-			}
-
-			/*
-			 * CTerrorPlayer::CanBecomeGhost(bool areSpawnsDisabled)
-			 * unique string "ghost_spawn_time"
-			 */
-			"CanBecomeGhost"
-			{
-				"library"	"server"
-				"linux"		"@_ZN13CTerrorPlayer14CanBecomeGhostEb"
-				"windows"	"\x53\x8B\xDC\x83\xEC\x08\x83\xE4\xF0\x83\xC4\x04\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x83\xEC\x78\x56\x57\x8B\xF1"
-				/* 53 8B DC 83 EC ? 83 E4 F0 83 C4 ? 55 8B 6B 04 89 6C 24 ? 8B EC 83 EC 78 56 57 8B F1 */
-			}
-
-			/*
-			 * CDirector::IsFinale(void)const
-			 */
-			"IsFinale"
-			{
-				"library"	"server"
-				"linux"		"@_ZNK9CDirector8IsFinaleEv"
-				"windows"	"\x8B\x81\x2A\x2A\x2A\x2A\x33\xC9\x83\x38\x2A\x0F\x95\xC0\xC3"
-				/* 8B 81 ? ? ? ? 33 C9 83 38 ? 0F 95 C0 C3 */
 			}
 
 			/*
@@ -3159,47 +3291,7 @@
 				"library"	"server"
 				"linux"		"@_ZN14InfectedShoved8OnShovedEP8InfectedP11CBaseEntity"
 				"windows"	""
-				/*  */
-			}
-
-			/*
-			 * CBaseServer::SetReservationCookie(uint64_t, char*, va_list)
-			 * - clear the reservation by setting a cookie of 0
-			 */
-			"SetReservationCookie"
-			{
-				"library"	"engine"
-				"linux"		"@_ZN11CBaseServer20SetReservationCookieEyPKcz"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x8B\x2A\x2A\x56\x8B\x2A\x2A\x57\x8B\x2A\x2A\x3B"
-				/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 8B ? ? 56 8B ? ? 57 8B ? ? 3B */
-				// Wildcarded so compatible with l4dtoolz.
-				// "windows"	"\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x8B\x2A\x2A\x56\x8B\x2A\x2A\x57\x8B\x2A\x2A\x3B"
-				/* 55 8B ? 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 8B ? ? 56 8B ? ? 57 8B ? ? 3B */
-			}
-
-			/*
-			 * CTerrorPlayer::TakeOverBot
-			 * unique string "[TAKEOVER]: %s (%d) possessed %s"
-			 */
-			"TakeOverBot"
-			{
-				"library"	"server"
-				"linux"		"@_ZN13CTerrorPlayer11TakeOverBotEb"
-				"windows"	"\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x56\x8D\x85"
-				/* 55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 33 C5 89 45 FC 53 56 8D 85 */
-			}
-
-			/*
-			 * SurvivorBot::SetHumanSpectator(CTerrorPlayer*)
-			 * Very similar to BossZombiePlayerBot::SetHumanSpectator()
-			 * SurvivorBot version has 5 xref (one of them is CTerrorPlayer::TakeOverBot), BossZombie has just 1 (CTerrorPlayer::TakeOverBot)
-			 */
-			"SetHumanSpec"
-			{
-				"library"	"server"
-				"linux"		"@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
-				"windows"	"\x55\x8B\xEC\x56\x8B\xF1\x83\xBE\x2A\x2A\x2A\x2A\x00\x7E\x07\x32\xC0\x5E\x5D\xC2\x04\x00\x8B\x0D"
-				/* 55 8B EC 56 8B F1 83 BE ? ? ? ? 00 7E 07 32 C0 5E 5D C2 04 00 8B 0D */
+				/* */
 			}
 
 			/*
