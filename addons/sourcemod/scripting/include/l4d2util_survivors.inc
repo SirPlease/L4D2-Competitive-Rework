@@ -3,7 +3,7 @@
 #endif
 #define l4d2util_survivors_inc_
 
-stock static Handle SurvivorModelsTrie = null;
+stock static Handle hSurvivorModelsTrie = null;
 
 /**
  * Returns true if the player is currently on the survivor team. 
