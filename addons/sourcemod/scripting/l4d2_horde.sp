@@ -9,12 +9,12 @@
 #include <sdkhooks>
 #include <sdktools>
 
-#define Z_TANK					8
-#define TEAM_SURVIVOR			2
-#define TEAM_INFECTED			3
+#define Z_TANK 8
+#define TEAM_SURVIVOR 2
+#define TEAM_INFECTED 3
 
-#define ZOMBIEMANAGER_GAMEDATA		"l4d2_zombiemanager"
-#define LEFT4FRAMEFORK_GAMEDATA	"left4dhooks.l4d2"
+#define ZOMBIEMANAGER_GAMEDATA "l4d2_zombiemanager"
+#define LEFT4FRAMEFORK_GAMEDATA "left4dhooks.l4d2"
 
 float 
 	fSavedTime;
@@ -52,9 +52,9 @@ public void OnPluginStart()
 
 void InitGameData()
 {
-	Handle hDamedata = LoadGameConfigFile(ZOMBIEMANAGER_GAMEDATA);
+	Handle hDamedata = LoadGameConfigFile(LEFT4FRAMEFORK_GAMEDATA);
 	if (!hDamedata) {
-		SetFailState("%s gamedata missing or corrupt", ZOMBIEMANAGER_GAMEDATA);
+		SetFailState("%s gamedata missing or corrupt", LEFT4FRAMEFORK_GAMEDATA);
 	}
 
 	pZombieManager = GameConfGetAddress(hDamedata, "ZombieManager");

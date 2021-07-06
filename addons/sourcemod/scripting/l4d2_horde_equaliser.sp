@@ -9,16 +9,16 @@
 #include <sdktools>
 #include <colors>
 
-#define Z_TANK							8
-#define TEAM_INFECTED					3
+#define Z_TANK 8
+#define TEAM_INFECTED 3
 
-#define ZOMBIEMANAGER_GAMEDATA			"l4d2_zombiemanager"
-#define LEFT4FRAMEFORK_GAMEDATA			"left4dhooks.l4d2"
+#define ZOMBIEMANAGER_GAMEDATA "l4d2_zombiemanager"
+#define LEFT4FRAMEFORK_GAMEDATA "left4dhooks.l4d2"
 
-#define HORDE_MIN_SIZE_AUDIAL_FEEDBACK	120
-#define MAX_CHECKPOINTS					4
+#define HORDE_MIN_SIZE_AUDIAL_FEEDBACK 120
+#define MAX_CHECKPOINTS 4
 
-#define HORDE_SOUND						"/npc/mega_mob/mega_mob_incoming.wav"
+#define HORDE_SOUND "/npc/mega_mob/mega_mob_incoming.wav"
 
 ConVar
 	hCvarNoEventHordeDuringTanks,
