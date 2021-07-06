@@ -1,0 +1,43 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			/* @A1m`:
+			 * How to find it in Linux:
+			 * Function ZombieManager::SpawnMob(int)
+			 *
+			 *	UTIL_LogPrintf("%3.2f: (MOB) SpawnMob requested of size %d.\n", *(float *)(gpGlobals + 12), a3);
+			 *	v3 = TheDirector;
+			 *	*((_DWORD *)this + 132) += a3;																						//we need this offset 132 * 4 = 528
+			 *	v4 = CDirector::GetMaxPendingMobCount(v3);
+			 *	if ( v4 <= 0 )
+			 *	{
+			 *		v4 = *((_DWORD *)this + 132);
+			 *	}
+			 *	else
+			 *	{
+			 *		if ( v4 > *((_DWORD *)this + 132) )
+			 *			v4 = *((_DWORD *)this + 132);
+			 *		*((_DWORD *)this + 132) = v4;
+			 *	}
+			 *	UTIL_LogPrintf("%3.2f: (MOB) SpawnMob pending count is now %d.\n", *(float *)(gpGlobals + 12), v4);
+			 *	if ( *((_DWORD *)this + 132) >= *(_DWORD *)(dword_1007E1C + 48) )													//z_mob_min_notify_count cvar
+			 *	{
+			 *		LOBYTE(v15) = 0;
+			 *		ForEachTerrorPlayer<MobAlert>(&v15);
+			 *	}
+			 *
+			 * How to find it in Windows:
+			 * We can find the function by the lines indicated above in 'UTIL_LogPrintf'
+			 * Everything's the same in linux, it looks like it is no different for windows
+			*/
+			"ZombieManager->m_nPendingMobCount"
+			{
+				"linux"		"528" //0x210
+				"windows"	"528" //0x210
+			}
+		}
+	}
+}

@@ -28,6 +28,21 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	InitGameData();
+	HookEvent("tongue_grab", OnTongueGrab);
+	
+	char value[32];
+	ConVar tongue_choke_damage_interval = FindConVar("tongue_choke_damage_interval");
+	tongue_choke_damage_interval.GetString(value, sizeof(value));
+	
+	tongue_drag_damage_interval = CreateConVar("tongue_drag_damage_interval", value, "How often the drag does damage.");
+	
+	ConVar tongue_choke_damage_amount = FindConVar("tongue_choke_damage_amount");
+	tongue_choke_damage_amount.AddChangeHook(tongue_choke_damage_amount_ValueChanged);
+}
+
+void InitGameData()
+{
 	Handle hGamedata = LoadGameConfigFile(GAMEDATA);
 
 	if (!hGamedata) {
@@ -41,17 +56,6 @@ public void OnPluginStart()
 	
 	m_tongueDragDamageTimerDuration = m_tongueDragDamageTimer + DURATION_OFFSET;
 	m_tongueDragDamageTimerTimeStamp = m_tongueDragDamageTimer + TIMESTAMP_OFFSET;
-	
-	HookEvent("tongue_grab", OnTongueGrab);
-	
-	char value[32];
-	ConVar tongue_choke_damage_interval = FindConVar("tongue_choke_damage_interval");
-	tongue_choke_damage_interval.GetString(value, sizeof(value));
-	
-	tongue_drag_damage_interval = CreateConVar("tongue_drag_damage_interval", value, "How often the drag does damage.");
-	
-	ConVar tongue_choke_damage_amount = FindConVar("tongue_choke_damage_amount");
-	tongue_choke_damage_amount.AddChangeHook(tongue_choke_damage_amount_ValueChanged);
 	
 	delete hGamedata;
 }
@@ -82,7 +86,7 @@ public Action FixDragInterval(Handle hTimer, any userid)
 	return Plugin_Stop;
 }
 
-/*
+/* @A1m`:
  * It cannot be found using sourcemod, can only be found in the code:
  * 
  * Function 'CTerrorPlayer::OnGrabbedByTongue' below the middle:

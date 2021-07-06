@@ -1,59 +1,90 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <left4dhooks>
+#pragma newdecls optional
 #include <l4d2lib>
+#pragma newdecls required
 #include <sdktools>
 #include <colors>
 
-#define HORDE_MIN_SIZE_AUDIAL_FEEDBACK	120
-#define MAX_CHECKPOINTS					4
+#define Z_TANK 8
+#define TEAM_INFECTED 3
 
-#define HORDE_SOUND	"/npc/mega_mob/mega_mob_incoming.wav"
+#define ZOMBIEMANAGER_GAMEDATA "l4d2_zombiemanager"
+#define LEFT4FRAMEFORK_GAMEDATA "left4dhooks.l4d2"
 
-new Handle:hCvarNoEventHordeDuringTanks;
-new Handle:hCvarHordeCheckpointAnnounce;
+#define HORDE_MIN_SIZE_AUDIAL_FEEDBACK 120
+#define MAX_CHECKPOINTS 4
 
-new Address:pZombieManager = Address_Null;
+#define HORDE_SOUND "/npc/mega_mob/mega_mob_incoming.wav"
 
-new commonLimit;
-new commonTank;
-new commonTotal;
-new lastCheckpoint;
+ConVar
+	hCvarNoEventHordeDuringTanks,
+	hCvarHordeCheckpointAnnounce;
 
-new bool:announcedInChat;
-new bool:checkpointAnnounced[MAX_CHECKPOINTS];
+Address
+	pZombieManager = Address_Null;
 
-public Plugin:myinfo = 
+int
+	commonLimit,
+	commonTank,
+	commonTotal,
+	lastCheckpoint,
+	m_nPendingMobCount;
+
+bool
+	announcedInChat,
+	checkpointAnnounced[MAX_CHECKPOINTS];
+
+public Plugin myinfo = 
 {
 	name = "L4D2 Horde Equaliser",
-	author = "Visor (original idea by Sir)",
+	author = "Visor (original idea by Sir)", //update syntax add gamedata A1m`
 	description = "Make certain event hordes finite",
-	version = "3.0.8",
-	url = "https://github.com/Attano/Equilibrium"
+	version = "3.0.9",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
-	new Handle:gamedata = LoadGameConfigFile("left4dhooks.l4d2");
-	if (!gamedata)
-	{
-		SetFailState("Left4DHooks gamedata missing or corrupt");
-	}
-
-	pZombieManager = GameConfGetAddress(gamedata, "ZombieManager");
-	if (!pZombieManager)
-	{
-		SetFailState("Couldn't find the 'ZombieManager' address");
-	}
-
+	InitGameData();
+	
 	hCvarNoEventHordeDuringTanks = CreateConVar("l4d2_heq_no_tank_horde", "0", "Put infinite hordes on a 'hold up' during Tank fights");
 	hCvarHordeCheckpointAnnounce = CreateConVar("l4d2_heq_checkpoint_sound", "1", "Play the incoming mob sound at checkpoints (each 1/4 of total commons killed off) to simulate L4D1 behaviour");
 
-	HookEvent("round_start", EventHook:RoundStartEvent, EventHookMode_PostNoCopy);
+	HookEvent("round_start", view_as<EventHook>(RoundStartEvent), EventHookMode_PostNoCopy);
 }
 
-public OnMapStart()
+void InitGameData()
+{
+	Handle hDamedata = LoadGameConfigFile(LEFT4FRAMEFORK_GAMEDATA);
+	if (!hDamedata) {
+		SetFailState("%s gamedata missing or corrupt", LEFT4FRAMEFORK_GAMEDATA);
+	}
+
+	pZombieManager = GameConfGetAddress(hDamedata, "ZombieManager");
+	if (!pZombieManager) {
+		SetFailState("Couldn't find the 'ZombieManager' address");
+	}
+	
+	delete hDamedata;
+
+	Handle hDamedata2 = LoadGameConfigFile(ZOMBIEMANAGER_GAMEDATA);
+	if (!hDamedata2) {
+		SetFailState("%s gamedata missing or corrupt", ZOMBIEMANAGER_GAMEDATA);
+	}
+	
+	m_nPendingMobCount = GameConfGetOffset(hDamedata2, "ZombieManager->m_nPendingMobCount");
+	if (m_nPendingMobCount == -1) {
+		SetFailState("Failed to get offset 'ZombieManager->m_nPendingMobCount'.");
+	}
+
+	delete hDamedata2;
+}
+
+public void OnMapStart()
 {
 	commonLimit = L4D2_GetMapValueInt("horde_limit", -1);
 	commonTank = L4D2_GetMapValueInt("horde_tank", -1);
@@ -61,49 +92,50 @@ public OnMapStart()
 	PrecacheSound(HORDE_SOUND);
 }
 
-public RoundStartEvent()
+public void RoundStartEvent()
 {
 	commonTotal = 0;
 	lastCheckpoint = 0;
 	announcedInChat = false;
-	for (new i = 0; i < MAX_CHECKPOINTS; i++)
-	{
+	for (int i = 0; i < MAX_CHECKPOINTS; i++) {
 		checkpointAnnounced[i] = false;
 	}
 }
 
-public OnEntityCreated(entity, const String:classname[])
+public void OnEntityCreated(int entity, const char[] classname)
 {
 	// TO-DO: Find a value that tells wanderers from active event commons?
-	if (StrEqual(classname, "infected", false) && IsInfiniteHordeActive())
-	{
+	if (strcmp(classname, "infected") == 0 && IsInfiniteHordeActive()) {
 		// Don't count in boomer hordes, alarm cars and wanderers during a Tank fight
-		if (GetConVarBool(hCvarNoEventHordeDuringTanks) && IsTankUp())
-		{
+		if (hCvarNoEventHordeDuringTanks.BoolValue && IsTankUp()) {
 			return;
 		}
 		
 		// Our job here is done
-		if (commonTotal >= commonLimit)
-		{
+		if (commonTotal >= commonLimit) {
 			return;
 		}
 		
 		commonTotal++;
-		if (GetConVarBool(hCvarHordeCheckpointAnnounce) && 
+		if (hCvarHordeCheckpointAnnounce.BoolValue && 
 			(commonTotal >= ((lastCheckpoint + 1) * RoundFloat(float(commonLimit / MAX_CHECKPOINTS))))
-		) 
-		{
-			if (commonLimit >= HORDE_MIN_SIZE_AUDIAL_FEEDBACK) EmitSoundToAll(HORDE_SOUND);
-			new remaining = commonLimit - commonTotal;
-			if (remaining != 0) CPrintToChatAll("<{olive}Horde{default}> {red}%i {default}common remaining..", remaining);
+		) {
+			if (commonLimit >= HORDE_MIN_SIZE_AUDIAL_FEEDBACK) {
+				EmitSoundToAll(HORDE_SOUND);
+			}
+			
+			int remaining = commonLimit - commonTotal;
+			if (remaining != 0) {
+				CPrintToChatAll("<{olive}Horde{default}> {red}%i {default}common remaining..", remaining);
+			}
+			
 			checkpointAnnounced[lastCheckpoint] = true;
 			lastCheckpoint++;
 		}
 	}
 }
 
-public Action:L4D_OnSpawnMob(&amount)
+public Action L4D_OnSpawnMob(int &amount)
 {
 	/////////////////////////////////////
 	// - Called on Event Hordes.
@@ -116,31 +148,28 @@ public Action:L4D_OnSpawnMob(&amount)
 	////////////////////////////////////
 	
 	// "Pause" the infinite horde during the Tank fight
-	if ((GetConVarBool(hCvarNoEventHordeDuringTanks) || commonTank > 0) && IsTankUp() && IsInfiniteHordeActive())
-	{
+	if ((hCvarNoEventHordeDuringTanks.BoolValue || commonTank > 0) 
+		&& IsTankUp() && IsInfiniteHordeActive()
+	){
 		SetPendingMobCount(0);
 		amount = 0;
 		return Plugin_Handled;
 	}
 
 	// Excluded map -- don't block any infinite hordes on this one
-	if (commonLimit < 0)
-	{
+	if (commonLimit < 0) {
 		return Plugin_Continue;
 	}
 
 	// If it's a "finite" infinite horde...
-	if (IsInfiniteHordeActive())
-	{
-		if (!announcedInChat)
-		{
+	if (IsInfiniteHordeActive()) {
+		if (!announcedInChat) {
 			CPrintToChatAll("<{olive}Horde{default}> A {blue}finite event{default} of {olive}%i{default} commons has started! Rush or wait it out, the choice is yours!", commonLimit);
 			announcedInChat = true;
 		}
 		
 		// ...and it's overlimit...
-		if (commonTotal >= commonLimit)
-		{
+		if (commonTotal >= commonLimit) {
 			SetPendingMobCount(0);
 			amount = 0;
 			return Plugin_Handled;
@@ -152,35 +181,38 @@ public Action:L4D_OnSpawnMob(&amount)
 	return Plugin_Continue;
 }
 
-bool:IsInfiniteHordeActive()
+bool IsInfiniteHordeActive()
 {
-	new countdown = GetHordeCountdown();
+	int countdown = GetHordeCountdown();
 	return (/*GetPendingMobCount() > 0 &&*/ countdown > -1 && countdown <= 10);
 }
 
-// GetPendingMobCount()
-// {
-	// return LoadFromAddress(pZombieManager + Address:528, NumberType_Int32);
-// }
-
-SetPendingMobCount(count)
+/*
+int GetPendingMobCount()
 {
-	StoreToAddress(pZombieManager + Address:528, count, NumberType_Int32);
+	return LoadFromAddress(pZombieManager + view_as<Address>(m_nPendingMobCount), NumberType_Int32);
+}
+*/
+
+void SetPendingMobCount(int count)
+{
+	StoreToAddress(pZombieManager + view_as<Address>(m_nPendingMobCount), count, NumberType_Int32);
 }
 
-GetHordeCountdown()
+int GetHordeCountdown()
 {
-	return CTimer_HasStarted(L4D2Direct_GetMobSpawnTimer()) ? RoundFloat(CTimer_GetRemainingTime(L4D2Direct_GetMobSpawnTimer())) : -1;
+	return (CTimer_HasStarted(L4D2Direct_GetMobSpawnTimer())) ? RoundFloat(CTimer_GetRemainingTime(L4D2Direct_GetMobSpawnTimer())) : -1;
 }
 
-bool:IsTankUp()
+bool IsTankUp()
 {
-	for (new i = 1; i <= MaxClients; i++)
-	{
-		if (IsClientInGame(i) && GetClientTeam(i) == 3 && GetEntProp(i, Prop_Send, "m_zombieClass") == 8 && IsPlayerAlive(i))
-		{
-			return true;
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsClientInGame(i) && GetClientTeam(i) == TEAM_INFECTED) {
+			if (GetEntProp(i, Prop_Send, "m_zombieClass") == Z_TANK && IsPlayerAlive(i)) {
+				return true;
+			}
 		}
 	}
+
 	return false;
 }

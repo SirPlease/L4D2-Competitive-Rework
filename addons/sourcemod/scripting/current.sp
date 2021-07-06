@@ -2,8 +2,6 @@
 
 #include <sourcemod>
 #include <left4dhooks>
-#define L4D2UTIL_STOCKS_ONLY
-#include <l4d2util>
 
 #define MAX(%0,%1) (((%0) > (%1)) ? (%0) : (%1))
 
@@ -11,11 +9,11 @@ new Handle:g_hVsBossBuffer;
 
 public Plugin:myinfo =
 {
-    name = "L4D2 Survivor Progress",
-    author = "CanadaRox, Visor",
-    description = "Print survivor progress in flow percents ",
-    version = "2.0.1",
-    url = "https://github.com/Attano/ProMod"
+	name = "L4D2 Survivor Progress",
+	author = "CanadaRox, Visor",
+	description = "Print survivor progress in flow percents ",
+	version = "2.0.1",
+	url = "https://github.com/Attano/ProMod"
 };
 
 public OnPluginStart()

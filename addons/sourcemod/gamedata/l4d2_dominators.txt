@@ -6,10 +6,53 @@
 		{
 			"bIsDominator"
 			{
+				/* @A1m`: 
+				 * How to find offset on windows:
+				 *
+				 *	if ( *(&v17 + v6) < *(_DWORD *)(*((_DWORD *)*(&off_107A7F98 + v6) + 7) + 48) )
+				 *	{
+				 *		if ( !byte_107A7F90[v6] )
+				 *			goto LABEL_27;
+				 *		v7 = 0;
+				 *		if ( byte_107A7F90[0] )												//we need it 'byte_107A7F90'
+				 *			v7 = v23;
+				 *		if ( byte_107A7F91 )
+				 *			v7 += v24;
+				 *		if ( byte_107A7F92 )
+				 *			 v7 += v25;
+				 *		if ( byte_107A7F93 )
+				 *			v7 += v26;
+				 *		if ( byte_107A7F94 )
+				 *			v7 += v27;
+				 *		if ( byte_107A7F95 )
+				 *			v7 += v28;
+				 *		if ( v7 >= 3 != 1 )
+				 *		{
+				 *			v13 = v4;
+				 *			v11 = v5;
+				 *		}
+				 *	}
+				 *
+				 * We need an offset from the signature to the instruction that uses this 'byte_107A7F90' 
+				 * + 2 bytes excluding the instruction itself (cmp) and other addresses, the address itself must occupy 4 bytes in memory.
+				 * .text:10300CB3 38 05 90 7F 7A 10                             cmp     byte_107A7F90, al
+				 *
+				 * If we go to this 'byte_107A7F90', we will see an array like this (8 bytes 01 or 00):
+				 *
+				 * .data:107A7F90                               ; char byte_107A7F90[]
+				 * .data:107A7F90 01                            byte_107A7F90   db 1                    ; DATA XREF: sub_10300BD0+D8↑r
+				 * .data:107A7F90                                                                       ; sub_10300BD0+E3↑r
+				 * .data:107A7F91 00                            byte_107A7F91   db 0                    ; DATA XREF: sub_10300BD0+ED↑r
+				 * .data:107A7F92 01                            byte_107A7F92   db 1                    ; DATA XREF: sub_10300BD0:loc_10300CC9↑r
+				 * .data:107A7F93 00                            byte_107A7F93   db 0                    ; DATA XREF: sub_10300BD0:loc_10300CD5↑r
+				 * .data:107A7F94 01                            byte_107A7F94   db 1                    ; DATA XREF: sub_10300BD0:loc_10300CE1↑r
+				 * .data:107A7F95 01                            byte_107A7F95   db 1                    ; DATA XREF: sub_10300BD0:loc_10300CED↑r
+				 * .data:107A7F96 00 00
+				*/
 				"windows"
 				{
 					"signature" "CTerrorPlayer::IsClassOverLimit"
-					"read" "156"
+					"read" "229" //227 + 2 
 				}
 				"linux"
 				{
@@ -22,13 +65,44 @@
 			"CTerrorPlayer::IsClassOverLimit::bIsDominator"
 			{
 				"library"	"server"
-				"linux"	"@_ZZN13CTerrorPlayer16IsClassOverLimitEiE12bIsDominator"
+				"linux"		"@_ZZN13CTerrorPlayer16IsClassOverLimitEiE12bIsDominator"
 			}
+			
+			/* @A1m`: 
+			 * How to find it on windows:
+			 * Need to find a string "Player %s spawned as %s after waiting %", this will point to a function 'CTerrorPlayer::Spawn(void)' (sub_103216A0)
+			 * What we need is just above this string
+			 *
+			 *	if ( (unsigned __int8)sub_102D51F0()
+			 *		&& !(*(unsigned __int8 (__thiscall **)(int))(*(_DWORD *)v1 + 1908))(v1)
+			 *		&& !*(_BYTE *)(v1 + 16373)
+			 *		&& dword_10857790 != 8 )
+			 *	{
+			 *		if ( *(_DWORD *)(v1 + 11192) )
+			 *		{
+			 *			sub_10300400(v1 + 11192);
+			 *			*(_DWORD *)(v1 + 11192) = 0;
+			 *		}
+			 *		dword_10857790 = sub_10300BD0((_DWORD *)v1, 1);									//we need this function sub_10300BD0
+			 *		v89 = *(_DWORD *)(dword_10835050 + 1416);
+			 *		dword_10857790 = sub_102764F0(dword_10857790);
+			 *	}
+			 *	(*(void (__thiscall **)(int, int))(*(_DWORD *)v1 + 2324))(v1, dword_10857790);
+			 *	v137 = *(_DWORD *)(v1 + 4 * dword_10857790 + 11560) + 1;
+			 *	sub_102B2B30(dword_10857790, &v137);
+			 *	if ( !(*(unsigned __int8 (__thiscall **)(int))(*(_DWORD *)v1 + 1908))(v1) && *(_DWORD *)(dword_10857C64 + 48) )
+			 *	{
+			 *		v90 = (*(int (__thiscall **)(int))(*(_DWORD *)v1 + 1344))(v1);
+			 *		v91 = sub_1034B5A0(v90);
+			 *		v92 = (*(int (__thiscall **)(int, int, _DWORD, _DWORD))(*(_DWORD *)v1 + 180))(v1, v91, *(unsigned __int64 *)&v138, *(unsigned __int64 *)&v138 >> 32);
+			 *		DevMsg("Player %s spawned as %s after waiting %3.2f seconds\n", v92);
+			 *	}
+			*/
 			"CTerrorPlayer::IsClassOverLimit"
 			{
 				"library"		"server"
-				"windows"		"\x83\xEC\x40\x56\x8B\x74\x24\x48\x83\xC6\xFF\x83\xFE\x05\x0F\x87\xEF\x00\x00\x00"
-				/* 83 EC 40 56 8B 74 24 48 83 C6 FF 83 FE 05 0F 87 EF 00 00 00 */
+				"windows"		"\x55\x8B\xEC\x83\xEC\x58\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\xA1\x2A\x2A\x2A\x2A"
+								/* 55 8B EC 83 EC 58 A1 ? ? ? ? 33 C5 89 45 FC A1 ? ? ? ? */
 			}
 		}
 	}
