@@ -3,7 +3,7 @@
 // The following uses bracket style color tags (see colors.inc)
 	"SelfCastNotAllowed"
 	{
-		"en"		"{blue}[{default}Cast{blue}] {green}该服务器{default}拒绝了你的解说认证"
+		"chi"		"{blue}[{default}Cast{blue}] {green}该服务器{default}拒绝了你的解说认证"
 	}
 
 	"SelfCast1"
@@ -97,7 +97,7 @@
 	"DisruptForceStartAbort"
 	{
 		"#format"	"{1:N}"
-		"en"		"{default}[{green}!{default}] {green}叫停强制开始！ {default}({green}由 {olive}{1} {green}负责{default})"
+		"chi"		"{default}[{green}!{default}] {green}叫停强制开始！ {default}({green}由 {olive}{1} {green}负责{default})"
 	}
 	
 	
