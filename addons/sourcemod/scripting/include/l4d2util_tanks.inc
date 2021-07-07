@@ -53,7 +53,6 @@ forward void OnTankDeath(int iOldTank);
 stock bool IsTank(int client)
 {
 	return (IsClientInGame(client)
-		&& IsPlayerAlive(client)
 		&& view_as<L4D2_Team>(GetClientTeam(client)) == L4D2Team_Infected
 		&& GetInfectedClass(client) == L4D2Infected_Tank);
 }
