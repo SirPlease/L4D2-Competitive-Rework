@@ -61,7 +61,7 @@ void PluginEnable()
 		HookEvent("tank_spawn", view_as<EventHook>(TankSpawn), EventHookMode_PostNoCopy); //no params pls
 		HookEvent("player_death", PlayerDeath, EventHookMode_Post);
 		
-		if (IsTankInPlay()) { //IsTankInPlay l4d2util
+		if (IsTankActuallyInPlay()) {
 			FreezePoints();
 		}
 		bHooked = true;
@@ -70,7 +70,7 @@ void PluginEnable()
 
 public Action L4D2_OnEndVersusModeRound(bool countSurvivors)
 {
-	if (cvar_unfreezeSaferoom.IntValue == 1 && IsTankInPlay() && GetUprightSurvivors() > 0) { //IsTankInPlay l4d2util
+	if (cvar_unfreezeSaferoom.IntValue == 1 && IsTankActuallyInPlay() && GetUprightSurvivors() > 0) {
 		UnFreezePoints(true, 2);
 	}
 }
@@ -126,7 +126,7 @@ public void OnClientDisconnect(int client)
 
 public Action CheckForTanksDelay(Handle timer)
 {
-	if (!IsTankInPlay()) { //IsTankInPlay l4d2util
+	if (!IsTankActuallyInPlay()) {
 		UnFreezePoints(true);
 	}
 }
@@ -179,4 +179,11 @@ int GetUprightSurvivors()
 	}
 
 	return aliveCount;
+}
+
+bool IsTankActuallyInPlay()
+{
+	int tank = FindTankClient(0);
+
+	return tank != -1 && IsPlayerAlive(tank);
 }
