@@ -14,7 +14,7 @@
 				{
 					"CBaseCombatWeapon"
 					{
-						"type"  "int"
+						"type"	"int"
 					}
 				}
 			}
@@ -24,15 +24,15 @@
 				"callconv"	"thiscall"
 				"return"	"void"
 				"this"		"entity"
-			}	
+			}
 			"CBaseShotgun::Reload"
 			{
 				"signature"	"CBaseShotgun::Reload"
 				"callconv"	"thiscall"
 				"return"	"void"
 				"this"		"entity"
-			}				
-        }
+			}
+		}
 		"Addresses"
 		{
 			"CTerrorPlayer::PreThink"
@@ -52,7 +52,7 @@
 			"CTerrorGun::Holster"
 			{
 				"library"	"server"
-				"linux"    	"@_ZN10CTerrorGun7HolsterEP17CBaseCombatWeapon"
+				"linux"		"@_ZN10CTerrorGun7HolsterEP17CBaseCombatWeapon"
 				"windows"	"\x55\x8B\xEC\x56\x8B\xF1\x80\xBE\xDD\x17\x00\x00\x00\x74\x2A"
 				/* Signature for sub_103DA5D0: 55 8B EC 56 8B F1 80 BE DD 17 00 00 00 74 ? */
 				/* Signature provided by crasher_3637 */
@@ -62,7 +62,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN10CTerrorGun6ReloadEv"
-				"windows"		"\x55\x8B\x2A\x83\x2A\x2A\x53\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83"
+				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\x53\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83"
 				/* 55 8B ? 83 ? ? 53 56 8B ? E8 ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B ? ? ? ? ? 83 */
 				/* VTable method. Using "!player->CanAttack()" 1 call below. */
 			}
@@ -70,9 +70,9 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN12CBaseShotgun6ReloadEv"
-				"windows"		"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x57\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x8B\xF8\x85\xFF\x0F\x84\x2A\x2A\x2A\x2A\x8B\x87\xD4\x1C\x00\x00"
-				/* ? ? ? ? ? ? 56 57 8B F1 E8 ? ? ? ? 8B F8 85 FF 0F 84 ? ? ? ? 8B 87 D4 1C 00 00 */
-				/* Signature provided by Lux */
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x57\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x8B\xF8\x85\xFF\x0F\x84\x2A\x2A\x2A\x2A\x8B\x87\xB4\x1C\x00\x00"
+				/* ? ? ? ? ? ? 56 57 8B F1 E8 ? ? ? ? 8B F8 85 FF 0F 84 ? ? ? ? 8B 87 B4 1C 00 00 */
+				/* Signature provided by Lux & Crasher_3637 */
 			}
 			"CTerrorPlayer::PreThink"
 			{
@@ -89,7 +89,7 @@
 			{
 				"linux"		"181"
 				"windows"	"498"
-			}			
+			}
 		}
-    }
+	}
 }

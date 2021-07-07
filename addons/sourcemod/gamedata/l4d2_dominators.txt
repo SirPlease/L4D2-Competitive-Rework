@@ -8,6 +8,7 @@
 			{
 				/* @A1m`: 
 				 * How to find offset on windows:
+				 * In the function that we found below 'CTerrorPlayer::IsClassOverLimit':
 				 *
 				 *	if ( *(&v17 + v6) < *(_DWORD *)(*((_DWORD *)*(&off_107A7F98 + v6) + 7) + 48) )
 				 *	{
