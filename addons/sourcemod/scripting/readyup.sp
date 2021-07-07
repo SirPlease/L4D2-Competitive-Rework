@@ -1,16 +1,28 @@
+#include <sourcemod>
+#include <sdktools>
+#include <left4dhooks>
 #include <builtinvotes>
 #include <colors>
 
 #pragma semicolon 1
 #pragma newdecls required
 
-#include <sourcemod>
-#include <sdktools>
-#include <left4dhooks>
+#define PLUGIN_VERSION "9.2.4"
 
-#define PLUGIN_VERSION "9.1.1c"
+public Plugin myinfo =
+{
+	name = "L4D2 Ready-Up with convenience fixes",
+	author = "CanadaRox, Target",
+	description = "New and improved ready-up plugin with optimal for convenience.",
+	version = PLUGIN_VERSION,
+	url = "https://github.com/Target5150/MoYu_Server_Stupid_Plugins"
+};
 
+// ========================
+//  Defines
+// ========================
 #define NULL_VELOCITY view_as<float>({0.0, 0.0, 0.0})
+#define MIN(%0,%1) ((%0) < (%1) ? (%0) : (%1))
 
 #define L4D2Team_None		0
 #define L4D2Team_Spectator	1
@@ -24,61 +36,107 @@
 #define SECRET_SOUND "/level/gnomeftw.wav"
 #define DEFAULT_COUNTDOWN_SOUND "weapons/hegrenade/beep.wav"
 #define DEFAULT_LIVE_SOUND "ui/survival_medal.wav"
+#define DEFAULT_AUTOSTART_SOUND "ui/buttonrollover.wav"
+
+#define TRANSLATION_COMMON "common.phrases"
+#define TRANSLATION_READYUP "readyup.phrases"
+
+#define READY_MODE_MANUAL 1
+#define READY_MODE_AUTOSTART 2
 
 #define DEBUG 0
 
-public Plugin myinfo =
-{
-	name = "L4D2 Ready-Up with convenience fixes",
-	author = "CanadaRox, Target",
-	description = "New and improved ready-up plugin with optimal for convenience.",
-	version = PLUGIN_VERSION,
-	url = "https://github.com/Target5150/MoYu_Server_Stupid_Plugins"
-};
-
+// ========================
+//  Plugin Variables
+// ========================
 // Game Cvars
-ConVar	director_no_specials, god, sb_stop, survivor_limit, z_max_player_zombies, sv_infinite_primary_ammo, scavenge_round_setup_time;
+ConVar
+	director_no_specials,
+	god,
+	sb_stop,
+	survivor_limit,
+	z_max_player_zombies,
+	sv_infinite_primary_ammo,
+	scavenge_round_setup_time;
 
 // Plugin Cvars
-ConVar	l4d_ready_disable_spawns, l4d_ready_survivor_freeze,
-		l4d_ready_cfg_name,
-		l4d_ready_max_players, l4d_ready_delay,
-		l4d_ready_enable_sound, l4d_ready_chuckle, l4d_ready_countdown_sound, l4d_ready_live_sound,
-		l4d_ready_secret;
+ConVar
+	l4d_ready_enabled,
+	l4d_ready_disable_spawns, l4d_ready_survivor_freeze,
+	l4d_ready_cfg_name, l4d_ready_server_cvar, 
+	l4d_ready_max_players,
+	l4d_ready_delay, l4d_ready_force_extra, l4d_ready_autostart_delay, l4d_ready_autostart_wait,
+	l4d_ready_enable_sound, l4d_ready_chuckle, l4d_ready_countdown_sound, l4d_ready_live_sound, l4d_ready_autostart_sound,
+	l4d_ready_secret,
+	l4d_ready_unbalanced_start,
+	l4d_ready_unbalanced_min;
 
-// Plugin Handles
+// Caster System
+StringMap
+	casterTrie,
+	allowedCastersTrie;
+bool forbidSelfRegister;
+
+// Server Name
 ConVar ServerNamer;
-Handle g_hVote;
-GlobalForward liveForward;
-Handle readyCountdownTimer;
-StringMap casterTrie;
-//StringMap allowedCastersTrie;
-Handle blockSecretSpam[MAXPLAYERS+1];
 
 // Ready Panel
-Panel menuPanel;
-bool hiddenPanel[MAXPLAYERS+1], hiddenManually[MAXPLAYERS+1];
-char sCmd[32], readyFooter[MAX_FOOTERS][MAX_FOOTER_LEN];
-int iCmd, footerCounter;
-float g_fTime;
+bool
+	hiddenPanel[MAXPLAYERS+1];
+char
+	sCmd[32],
+	readyFooter[MAX_FOOTERS][MAX_FOOTER_LEN];
+int
+	iCmd,
+	footerCounter;
+float
+	fStartTimestamp;
+	
+// Standard Ready Up
+bool
+	inLiveCountdown,
+	inReadyUp,
+	isForceStart,
+	readySurvFreeze,
+	isPlayerReady[MAXPLAYERS+1];
+Handle
+	readyCountdownTimer;
+char
+	countdownSound[PLATFORM_MAX_PATH],
+	liveSound[PLATFORM_MAX_PATH];
+int
+	readyDelay;
+GlobalForward
+	liveForward;
 
-// Plugin Vars
-bool inLiveCountdown, inReadyUp, bSkipWarp, readySurvFreeze, isPlayerReady[MAXPLAYERS+1];
-char countdownSound[PLATFORM_MAX_PATH], liveSound[PLATFORM_MAX_PATH];
-int readyDelay;
+// Auto Start
+bool
+	isAutoStartMode,
+	inAutoStart;
+Handle
+	autoStartTimer;
+char
+	autoStartSound[PLATFORM_MAX_PATH];
+int
+	autoStartDelay,
+	expireTime;
 
 //AFK?!
 float g_fButtonTime[MAXPLAYERS+1];
-int g_iLastMouse[MAXPLAYERS+1][2];
 
 // Spectate Fix
 Handle g_hChangeTeamTimer[MAXPLAYERS+1];
 
+// :D
+Handle blockSecretSpam[MAXPLAYERS+1];
+
+// Reason enum for Countdown cancelling
 enum disruptType
 {
 	readyStatus,
 	teamShuffle,
-	playerDisconn
+	playerDisconn,
+	forceStartAbort
 };
 
 static const char chuckleSound[MAX_SOUNDS][] =
@@ -90,6 +148,10 @@ static const char chuckleSound[MAX_SOUNDS][] =
 	"/npc/moustachio/strengthattract09.wav"
 };
 
+
+// ========================
+//  Plugin Setup
+// ========================
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	CreateNative("AddStringToReadyFooter",	Native_AddStringToReadyFooter);
@@ -106,24 +168,32 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
-	CreateConVar("l4d_ready_enabled", "1", "This cvar doesn't do anything, but if it is 0 the logger wont log this game.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	l4d_ready_enabled			= CreateConVar("l4d_ready_enabled", "1", "Enable this plugin. (Values: 1 = Manual ready, 2 = Auto start)", FCVAR_NOTIFY, true, 0.0, true, 2.0);
 	l4d_ready_cfg_name			= CreateConVar("l4d_ready_cfg_name", "", "Configname to display on the ready-up panel", FCVAR_NOTIFY|FCVAR_PRINTABLEONLY);
+	l4d_ready_server_cvar		= CreateConVar("l4d_ready_server_cvar", "sn_main_name", "ConVar to retrieve the server name for displaying on the ready-up panel", FCVAR_NOTIFY|FCVAR_PRINTABLEONLY);
 	l4d_ready_disable_spawns	= CreateConVar("l4d_ready_disable_spawns", "0", "Prevent SI from having spawns during ready-up", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	l4d_ready_survivor_freeze	= CreateConVar("l4d_ready_survivor_freeze", "1", "Freeze the survivors during ready-up.  When unfrozen they are unable to leave the saferoom but can move freely inside", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	l4d_ready_max_players		= CreateConVar("l4d_ready_max_players", "12", "Maximum number of players to show on the ready-up panel.", FCVAR_NOTIFY, true, 0.0, true, MAXPLAYERS+1.0);
-	l4d_ready_delay				= CreateConVar("l4d_ready_delay", "5", "Number of seconds to count down before the round goes live.", FCVAR_NOTIFY, true, 0.0);
-	l4d_ready_enable_sound		= CreateConVar("l4d_ready_enable_sound", "1", "Enable sound during countdown & on live");
+	l4d_ready_delay				= CreateConVar("l4d_ready_delay", "3", "Number of seconds to count down before the round goes live.", FCVAR_NOTIFY, true, 0.0);
+	l4d_ready_force_extra		= CreateConVar("l4d_ready_force_extra", "2", "Number of seconds added to the duration of live count down.", FCVAR_NOTIFY, true, 0.0);
+	l4d_ready_autostart_delay	= CreateConVar("l4d_ready_autostart_delay", "5", "Number of seconds to count down before auto-start kicks in.", FCVAR_NOTIFY, true, 0.0);
+	l4d_ready_autostart_wait	= CreateConVar("l4d_ready_autostart_wait", "20", "Number of seconds to wait for connecting players before auto-start is forced.", FCVAR_NOTIFY, true, 0.0);
+	l4d_ready_enable_sound		= CreateConVar("l4d_ready_enable_sound", "1", "Enable sound during autostart & countdown & on live", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	l4d_ready_countdown_sound	= CreateConVar("l4d_ready_countdown_sound", DEFAULT_COUNTDOWN_SOUND, "The sound that plays when a round goes on countdown");	
 	l4d_ready_live_sound		= CreateConVar("l4d_ready_live_sound", DEFAULT_LIVE_SOUND, "The sound that plays when a round goes live");
+	l4d_ready_autostart_sound	= CreateConVar("l4d_ready_autostart_sound", DEFAULT_AUTOSTART_SOUND, "The sound that plays when auto-start goes on countdown");
 	l4d_ready_chuckle			= CreateConVar("l4d_ready_chuckle", "0", "Enable random moustachio chuckle during countdown");
-	l4d_ready_secret			= CreateConVar("l4d_ready_secret", "1", "Play something suck", _, true, 0.0, true, 1.0);
-
+	l4d_ready_secret			= CreateConVar("l4d_ready_secret", "1", "Play something good", _, true, 0.0, true, 1.0);
+	l4d_ready_unbalanced_start	= CreateConVar("l4d_ready_unbalanced_start", "0", "Allow game to go live when teams are not full.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	l4d_ready_unbalanced_min	= CreateConVar("l4d_ready_unbalanced_min", "2", "Minimum of players in each team to allow a unbalanced start.", FCVAR_NOTIFY, true, 0.0);
+	
 	HookEvent("round_start", RoundStart_Event, EventHookMode_PostNoCopy);
 	HookEvent("player_team", PlayerTeam_Event, EventHookMode_Pre);
+	HookEvent("gameinstructor_draw", GameInstructorDraw_Event, EventHookMode_PostNoCopy);
 
 	casterTrie = new StringMap();
-	//allowedCastersTrie = new StringMap();
-
+	allowedCastersTrie = new StringMap();
+	
 	director_no_specials = FindConVar("director_no_specials");
 	god = FindConVar("god");
 	sb_stop = FindConVar("sb_stop");
@@ -133,41 +203,43 @@ public void OnPluginStart()
 	scavenge_round_setup_time = FindConVar("scavenge_round_setup_time");
 
 	// Ready Commands
-	RegConsoleCmd("sm_ready",		Ready_Cmd, "Mark yourself as ready for the round to go live");
-	RegConsoleCmd("sm_r",			Ready_Cmd, "Mark yourself as ready for the round to go live");
-	RegConsoleCmd("sm_toggleready",	ToggleReady_Cmd, "Toggle your ready status");
-	RegConsoleCmd("sm_unready",		Unready_Cmd, "Mark yourself as not ready if you have set yourself as ready");
-	RegConsoleCmd("sm_nr",			Unready_Cmd, "Mark yourself as not ready if you have set yourself as ready");
+	RegConsoleCmd("sm_ready",			Ready_Cmd, "Mark yourself as ready for the round to go live");
+	RegConsoleCmd("sm_r",				Ready_Cmd, "Mark yourself as ready for the round to go live");
+	RegConsoleCmd("sm_toggleready",		ToggleReady_Cmd, "Toggle your ready status");
+	RegConsoleCmd("sm_unready",			Unready_Cmd, "Mark yourself as not ready if you have set yourself as ready");
+	RegConsoleCmd("sm_nr",				Unready_Cmd, "Mark yourself as not ready if you have set yourself as ready");
 	
 	// Caster System
-	RegAdminCmd("sm_caster",		Caster_Cmd, ADMFLAG_BAN, "Registers a player as a caster so the round will not go live unless they are ready");
-	RegConsoleCmd("sm_cast",		Cast_Cmd, "Registers the calling player as a caster so the round will not go live unless they are ready");
-	RegConsoleCmd("sm_notcasting",	NotCasting_Cmd, "Deregister yourself as a caster or allow admins to deregister other players");
-	RegConsoleCmd("sm_uncast",		NotCasting_Cmd, "Deregister yourself as a caster or allow admins to deregister other players");
-	//RegServerCmd("sm_resetcasters", ResetCaster_Cmd, "Used to reset casters between matches.  This should be in confogl_off.cfg or equivalent for your system");
-	//RegServerCmd("sm_add_caster_id", AddCasterSteamID_Cmd, "Used for adding casters to the whitelist -- i.e. who's allowed to self-register as a caster");
+	RegAdminCmd("sm_caster",			Caster_Cmd, ADMFLAG_BAN, "Registers a player as a caster");
+	RegAdminCmd("sm_resetcasters",		ResetCaster_Cmd, ADMFLAG_BAN, "Used to reset casters between matches.  This should be in confogl_off.cfg or equivalent for your system");
+	RegAdminCmd("sm_add_caster_id",		AddCasterSteamID_Cmd, ADMFLAG_BAN, "Used for adding casters to the whitelist -- i.e. who's allowed to self-register as a caster");
+	RegAdminCmd("sm_remove_caster_id",	RemoveCasterSteamID_Cmd, ADMFLAG_BAN, "Used for removing casters to the whitelist -- i.e. who's allowed to self-register as a caster");
+	RegAdminCmd("sm_printcasters",		PrintCasters_Cmd, ADMFLAG_BAN, "Used for print casters in the whitelist");
+	RegConsoleCmd("sm_cast",			Cast_Cmd, "Registers the calling player as a caster");
+	RegConsoleCmd("sm_notcasting",		NotCasting_Cmd, "Deregister yourself as a caster or allow admins to deregister other players");
+	RegConsoleCmd("sm_uncast",			NotCasting_Cmd, "Deregister yourself as a caster or allow admins to deregister other players");
 	
+	// Admin Commands
+	RegAdminCmd("sm_forcestart",		ForceStart_Cmd, ADMFLAG_BAN, "Forces the round to start regardless of player ready status.");
+	RegAdminCmd("sm_fs",				ForceStart_Cmd, ADMFLAG_BAN, "Forces the round to start regardless of player ready status.");
+
 	// Player Commands
-	RegConsoleCmd("sm_hide",		Hide_Cmd, "Hides the ready-up panel so other menus can be seen");
-	RegConsoleCmd("sm_show",		Show_Cmd, "Shows a hidden ready-up panel");
-	RegConsoleCmd("sm_return",		Return_Cmd, "Return to a valid saferoom spawn if you get stuck during an unfrozen ready-up period");
-	RegConsoleCmd("sm_forcestart",	ForceStart_Cmd, "Forces the round to start regardless of player ready status.  Players can unready to stop a force");
-	RegConsoleCmd("sm_fs",			ForceStart_Cmd, "Forces the round to start regardless of player ready status.  Players can unready to stop a force");
-	RegConsoleCmd("sm_kickspecs",	KickSpecs_Cmd, "Let's vote to kick those Spectators!");
+	RegConsoleCmd("sm_hide",			Hide_Cmd, "Hides the ready-up panel so other menus can be seen");
+	RegConsoleCmd("sm_show",			Show_Cmd, "Shows a hidden ready-up panel");
+	RegConsoleCmd("sm_return",			Return_Cmd, "Return to a valid saferoom spawn if you get stuck during an unfrozen ready-up period");
+	RegConsoleCmd("sm_kickspecs",		KickSpecs_Cmd, "Let's vote to kick those Spectators!");
 	
 #if DEBUG
 	RegAdminCmd("sm_initready", InitReady_Cmd, ADMFLAG_ROOT);
 	RegAdminCmd("sm_initlive", InitLive_Cmd, ADMFLAG_ROOT);
 #endif
 
-	AddCommandListener(Say_Callback, "say");
-	AddCommandListener(Say_Callback, "say_team");
-	AddCommandListener(Vote_Callback, "Vote");
+	LoadTranslation();
 
-	LoadTranslations("common.phrases");
-	
 	readySurvFreeze = l4d_ready_survivor_freeze.BoolValue;
 	l4d_ready_survivor_freeze.AddChangeHook(SurvFreezeChange);
+	
+	l4d_ready_server_cvar.AddChangeHook(view_as<ConVarChanged>(FillServerNamer));
 }
 
 public void OnPluginEnd()
@@ -177,7 +249,33 @@ public void OnPluginEnd()
 
 public void OnAllPluginsLoaded()
 {
-	if ((ServerNamer = FindConVar("sn_main_name")) == null)
+	FillServerNamer();
+}
+
+void LoadTranslation()
+{
+	char sPath[PLATFORM_MAX_PATH];
+	
+	BuildPath(Path_SM, sPath, sizeof sPath, "translations/" ... TRANSLATION_COMMON ... ".txt");
+	if (!FileExists(sPath))
+	{
+		SetFailState("Missing translation file \"" ... TRANSLATION_COMMON ... ".txt\"");
+	}
+	LoadTranslations(TRANSLATION_COMMON);
+	
+	BuildPath(Path_SM, sPath, sizeof sPath, "translations/" ... TRANSLATION_READYUP ... ".txt");
+	if (!FileExists(sPath))
+	{
+		SetFailState("Missing translation file \"" ... TRANSLATION_READYUP ... ".txt\"");
+	}
+	LoadTranslations(TRANSLATION_READYUP);
+}
+
+public void FillServerNamer()
+{
+	char buffer[64];
+	l4d_ready_server_cvar.GetString(buffer, sizeof buffer);
+	if ((ServerNamer = FindConVar(buffer)) == null)
 		ServerNamer = FindConVar("hostname");
 }
 
@@ -192,15 +290,26 @@ public void RoundStart_Event(Event event, const char[] name, bool dontBroadcast)
 	InitiateReadyUp();
 }
 
+public void GameInstructorDraw_Event(Event event, const char[] name, bool dontBroadcast)
+{
+	// Workaround for remove countdown after scavenge intro
+	CreateTimer(0.1, Timer_RemoveCountdown, .flags = TIMER_FLAG_NO_MAPCHANGE);
+}
+
 public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 {
 	if (!inReadyUp) return;
 	
-	int client = GetClientOfUserId(event.GetInt("userid"));
-	if (!client || IsFakeClient(client)) return;
+	int userid = event.GetInt("userid");
+	int client = GetClientOfUserId(userid);
+	if (!client || IsFakeClient(client))
+		return;
 	
 	isPlayerReady[client] = false;
 	SetEngineTime(client);
+	
+	if (isAutoStartMode || isForceStart)
+		return;
 	
 	int team = event.GetInt("team");
 	int oldteam = event.GetInt("oldteam");
@@ -211,49 +320,38 @@ public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 	
 	else if (!g_hChangeTeamTimer[client]) // Player in-game swapping team
 	{
-		ArrayStack stack = new ArrayStack();
-		stack.Push(client);
-		stack.Push(GetClientUserId(client));
-		stack.Push(oldteam);
-		g_hChangeTeamTimer[client] = CreateTimer(0.1, Timer_PlayerTeam, stack, TIMER_FLAG_NO_MAPCHANGE);
+		DataPack dp;
+		g_hChangeTeamTimer[client] = CreateDataTimer(0.1, Timer_PlayerTeam, dp);
+		dp.WriteCell(client);
+		dp.WriteCell(userid);
+		dp.WriteCell(oldteam);
 	}
 }
 
-public Action Timer_PlayerTeam(Handle timer, ArrayStack stack)
+public Action Timer_PlayerTeam(Handle timer, DataPack dp)
 {
-	int oldteam = stack.Pop();
-	int userid = stack.Pop();
-	int client = GetClientOfUserId(userid);
+	dp.Reset();
 	
-	if (client > 0 && IsClientInGame(client))
+	int client = dp.ReadCell();
+	int userid = dp.ReadCell();
+	int oldteam = dp.ReadCell();
+	
+	if (client == GetClientOfUserId(userid))
 	{
 		if (inLiveCountdown)
 		{
 			int team = GetClientTeam(client);
 			if (team != oldteam)
 			{
-				if (oldteam != L4D2Team_None || team != L4D2Team_Spectator) // Client joined but not player
+				if (oldteam != L4D2Team_None || team != L4D2Team_Spectator)
 				{
 					CancelFullReady(client, teamShuffle);
 				}
 			}
 		}
-		
-		if (IsScavenge()) CreateTimer(0.3, Timer_HideCountdown, userid);
-	}
-	else
-	{
-		client = stack.Pop();
 	}
 	
-	delete stack;
 	g_hChangeTeamTimer[client] = null;
-}
-
-public Action Timer_HideCountdown(Handle timer, int userid)
-{
-	int client = GetClientOfUserId(userid);
-	if (client > 0) HideCountdown(client);
 }
 
 
@@ -269,6 +367,7 @@ public void OnMapStart()
 	
 	l4d_ready_countdown_sound.GetString(countdownSound, sizeof(countdownSound));
 	l4d_ready_live_sound.GetString(liveSound, sizeof(liveSound));
+	l4d_ready_autostart_sound.GetString(autoStartSound, sizeof(autoStartSound));
 	
 	Format(szPath, sizeof(szPath), "sound/%s", countdownSound);
 	if (!FileExists(szPath, true)) {
@@ -280,9 +379,15 @@ public void OnMapStart()
 		strcopy(liveSound, sizeof(liveSound), DEFAULT_LIVE_SOUND);
 	}
 	
+	Format(szPath, sizeof(szPath), "sound/%s", autoStartSound);
+	if (!FileExists(szPath, true)) {
+		strcopy(autoStartSound, sizeof(autoStartSound), DEFAULT_AUTOSTART_SOUND);
+	}
+	
 	PrecacheSound(SECRET_SOUND);
 	PrecacheSound(countdownSound);
 	PrecacheSound(liveSound);
+	PrecacheSound(autoStartSound);
 	for (int i = 0; i < MAX_SOUNDS; i++)
 	{
 		PrecacheSound(chuckleSound[i]);
@@ -298,17 +403,26 @@ public void OnMapStart()
 /* This ensures all cvars are reset if the map is changed during ready-up */
 public void OnMapEnd()
 {
-	if (inReadyUp) InitiateLive(false);
+	if (inReadyUp)
+	{
+		if (inAutoStart) InitiateAutoStart(false);
+		InitiateLive(false);
+	}
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	if (inReadyUp && IsScavenge() && !IsFakeClient(client))
+	{
+		ToggleCountdownPanel(false, client);
+	}
 }
 
 public void OnClientDisconnect(int client)
 {
 	hiddenPanel[client] = false;
-	hiddenManually[client] = false;
 	isPlayerReady[client] = false;
 	g_fButtonTime[client] = 0.0;
-	g_iLastMouse[client][0] = 0;
-	g_iLastMouse[client][1] = 0;
 	g_hChangeTeamTimer[client] = null;
 }
 
@@ -319,15 +433,16 @@ public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3
 	{
 		if (!IsFakeClient(client))
 		{
-			if (buttons || impulse) SetEngineTime(client);
+			static int iLastMouse[MAXPLAYERS+1][2];
 			
 			// Mouse Movement Check
-			if (mouse[0] != g_iLastMouse[client][0] || mouse[1] != g_iLastMouse[client][1])
+			if (mouse[0] != iLastMouse[client][0] || mouse[1] != iLastMouse[client][1])
 			{
-				g_iLastMouse[client][0] = mouse[0];
-				g_iLastMouse[client][1] = mouse[1];
+				iLastMouse[client][0] = mouse[0];
+				iLastMouse[client][1] = mouse[1];
 				SetEngineTime(client);
 			}
+			else if (buttons || impulse) SetEngineTime(client);
 		}
 		
 		if (GetClientTeam(client) == L4D2Team_Survivor)
@@ -335,7 +450,7 @@ public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3
 			if (readySurvFreeze)
 			{
 				MoveType iMoveType = GetEntityMoveType(client);
-				if (!(iMoveType == MOVETYPE_NONE || iMoveType == MOVETYPE_NOCLIP))
+				if (iMoveType != MOVETYPE_NONE && iMoveType != MOVETYPE_NOCLIP)
 				{
 					SetClientFrozen(client, true);
 				}
@@ -374,15 +489,14 @@ public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
 //  Command Listener
 // ========================
 
-public Action Say_Callback(int client, char[] command, int argc)
+public Action Say_Callback(int client, const char[] command, int argc)
 {
 	SetEngineTime(client);
 }
 
-public Action Vote_Callback(int client, char[] command, int argc)
+public Action Vote_Callback(int client, const char[] command, int argc)
 {
-	// Used to fast ready/unready through default keybinds for voting
-	if (!inReadyUp) return;
+	// Fast ready / unready through default keybinds for voting
 	if (IsBuiltinVoteInProgress()) return;
 	if (!client) return;
 	
@@ -424,7 +538,7 @@ public Action Ready_Cmd(int client, int args)
 		isPlayerReady[client] = true;
 		if (l4d_ready_secret.BoolValue)
 			DoSecrets(client);
-		if (CheckFullReady())
+		if (!inAutoStart && CheckFullReady())
 			InitiateLiveCountdown();
 		return Plugin_Handled;
 	}
@@ -433,18 +547,30 @@ public Action Ready_Cmd(int client, int args)
 
 public Action Unready_Cmd(int client, int args)
 {
-	if (inReadyUp)
+	if (inReadyUp && !isAutoStartMode)
 	{
-		if (IsPlayer(client))
+		AdminId id = GetUserAdmin(client);
+		bool hasflag = (id != INVALID_ADMIN_ID && GetAdminFlag(id, Admin_Ban)); // Check for specific admin flag
+		
+		if (isForceStart)
 		{
-			SetEngineTime(client);
-			isPlayerReady[client] = false;
+			if (!hasflag) return Plugin_Handled;
+			CancelFullReady(client, forceStartAbort);
+			isForceStart = false;
 		}
-		else if (!(GetUserFlagBits(client) & ADMFLAG_BAN)) { return Plugin_Handled; }
-		
-		// Client must be a player or an admin with ban flag to request.
-		CancelFullReady(client, readyStatus);
-		
+		else
+		{
+			if (IsPlayer(client))
+			{
+				SetEngineTime(client);
+				isPlayerReady[client] = false;
+			}
+			else if (!hasflag)
+			{
+				return Plugin_Handled;
+			}
+			CancelFullReady(client, readyStatus);
+		}
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
@@ -473,6 +599,15 @@ public Action Cast_Cmd(int client, int args)
 	GetClientAuthId(client, AuthId_Steam2, buffer, sizeof(buffer));
 	
 	bool temp;
+	if (forbidSelfRegister)
+	{
+		if (!allowedCastersTrie.GetValue(buffer, temp))
+		{
+			CPrintToChat(client, "%t", "SelfCastNotAllowed");
+			return Plugin_Handled;
+		}
+	}
+	
 	if (!casterTrie.GetValue(buffer, temp))
 	{
 		if (GetClientTeam(client) != L4D2Team_Spectator)
@@ -480,8 +615,8 @@ public Action Cast_Cmd(int client, int args)
 			ChangeClientTeam(client, L4D2Team_Spectator);
 		}
 		casterTrie.SetValue(buffer, true);
-		CPrintToChat(client, "{blue}[{default}Cast{blue}] {default}You have registered yourself as a caster");
-		CPrintToChat(client, "{blue}[{default}Cast{blue}] {default}Reconnect to make your Addons work.");
+		CPrintToChat(client, "%t", "SelfCast1");
+		CPrintToChat(client, "%t", "SelfCast2");
 	}
 	
 	return Plugin_Handled;
@@ -504,13 +639,13 @@ public Action Caster_Cmd(int client, int args)
 		if (GetClientAuthId(target, AuthId_Steam2, buffer, sizeof(buffer)))
 		{
 			casterTrie.SetValue(buffer, true);
-			ReplyToCommand(client, "Registered %N as a caster", target);
-			CPrintToChat(target, "{blue}[{olive}!{blue}] {blue}Admin {default}({olive}%N{default}) has registered you as a caster", client);
-			CPrintToChat(target, "{blue}[{default}Cast{blue}] {default}Reconnect to make your Addons work.");
+			ReplyToCommand(client, "\x01%t", "RegCasterReply", target);
+			CPrintToChat(target, "%t", "RegCasterTarget", client);
+			CPrintToChat(target, "%t", "SelfCast2");
 		}
 		else
 		{
-			ReplyToCommand(client, "Couldn't find Steam ID.  Check for typos and let the player get fully connected.");
+			ReplyToCommand(client, "\x01%t", "CasterSteamIDError");
 		}
 	}
 	
@@ -526,8 +661,8 @@ public Action NotCasting_Cmd(int client, int args)
 		GetClientAuthId(client, AuthId_Steam2, buffer, sizeof(buffer));
 		if (casterTrie.Remove(buffer))
 		{
-			CPrintToChat(client, "{blue}[{default}Reconnect{blue}] {default}You will be reconnected to the server..");
-			CPrintToChat(client, "{blue}[{default}Reconnect{blue}] {default}There's a black screen instead of a loading bar!");
+			CPrintToChat(client, "%t", "Reconnect1");
+			CPrintToChat(client, "%t", "Reconnect2");
 			
 			// Reconnection to disable their addons
 			CreateTimer(3.0, Reconnect, client);
@@ -536,9 +671,9 @@ public Action NotCasting_Cmd(int client, int args)
 	else // If a target is specified
 	{
 		AdminId id = GetUserAdmin(client);
-		if (id != INVALID_ADMIN_ID && GetAdminFlag(id, Admin_Ban)) // Check for specific admin flag
+		if (id == INVALID_ADMIN_ID || !GetAdminFlag(id, Admin_Ban)) // Check for specific admin flag
 		{
-			ReplyToCommand(client, "Only admins can remove other casters. Use sm_notcasting without arguments if you wish to remove yourself.");
+			ReplyToCommand(client, "\x01%t", "UnregCasterNonAdmin");
 			return Plugin_Handled;
 		}
 		
@@ -551,14 +686,14 @@ public Action NotCasting_Cmd(int client, int args)
 			{
 				if (casterTrie.Remove(buffer))
 				{
-					CPrintToChat(target, "{blue}[{olive}!{blue}] {default}You are unregistered as a caster by {blue}Admin {default}({olive}%N{default})", client);
+					CPrintToChat(target, "%t", "UnregCasterTarget", client);
 					NotCasting_Cmd(target, 0);
 				}
-				ReplyToCommand(client, "%N is no longer a caster", target);
+				ReplyToCommand(client, "\x01%t", "UnregCasterSuccess", target);
 			}
 			else
 			{
-				ReplyToCommand(client, "Couldn't find Steam ID.  Check for typos and let the player get fully connected.");
+				ReplyToCommand(client, "\x01%t", "CasterSteamIDError");
 			}
 		}
 	}
@@ -570,27 +705,96 @@ public Action Reconnect(Handle timer, int client)
 	if (IsClientConnected(client)) ReconnectClient(client);
 }
 
-/*public Action ResetCaster_Cmd(int args)
+public Action ResetCaster_Cmd(int client, int args)
 {
 	casterTrie.Clear();
+	forbidSelfRegister = false;
+	ReplyToCommand(client, "\x01%t", "CasterDBReset");
+	return Plugin_Handled;
 }
 
-public Action AddCasterSteamID_Cmd(int args)
+public Action AddCasterSteamID_Cmd(int client, int args)
 {
 	char buffer[128];
 	GetCmdArg(1, buffer, sizeof(buffer));
 	if (buffer[0] != EOS) 
 	{
-		int index = FindStringInArray(allowedCastersTrie, buffer);
-		if (index == -1)
+		forbidSelfRegister = true;
+		if (allowedCastersTrie.SetValue(buffer, 1, false))
 		{
-			PushArrayString(allowedCastersTrie, buffer);
-			PrintToServer("[casters_database] Added '%s'", buffer);
+			ReplyToCommand(client, "\x01%t", "CasterDBAdd", buffer);
 		}
-		else PrintToServer("[casters_database] '%s' already exists", buffer);
+		else ReplyToCommand(client, "\x01%t", "CasterDBFound", buffer);
 	}
-	else PrintToServer("[casters_database] No args specified / empty buffer");
-}*/
+	else ReplyToCommand(client, "\x01%t", "CasterDBError");
+	return Plugin_Handled;
+}
+
+public Action RemoveCasterSteamID_Cmd(int client, int args)
+{
+	char buffer[128];
+	GetCmdArg(1, buffer, sizeof(buffer));
+	if (buffer[0] != EOS) 
+	{
+		int dummy;
+		if (allowedCastersTrie.GetValue(buffer, dummy))
+		{
+			allowedCastersTrie.Remove(buffer);
+			if (allowedCastersTrie.Size == 0) forbidSelfRegister = false;
+			ReplyToCommand(client, "\x01%t", "CasterDBRemove", buffer);
+		}
+		else ReplyToCommand(client, "\x01%t", "CasterDBFound", buffer);
+	}
+	else ReplyToCommand(client, "\x01%t", "CasterDBError");
+	return Plugin_Handled;
+}
+
+public Action PrintCasters_Cmd(int client, int args)
+{
+	StringMapSnapshot ss = allowedCastersTrie.Snapshot();
+	char buffer[128];
+	
+	if (GetCmdReplySource() == SM_REPLY_TO_CHAT)
+	{
+		if (client > 0) PrintToChat(client, "[casters_database] List is printed in console");
+		SetCmdReplySource(SM_REPLY_TO_CONSOLE);
+	}
+	
+	ReplyToCommand(client, "/***********[casters_database]***********\\");
+	
+	int len = ss.Length;
+	for (int i = 0; i < len; i++)
+	{
+		ss.GetKey(i, buffer, sizeof buffer);
+		ReplyToCommand(client, "Caster #%i: %s", buffer);
+	}
+	ReplyToCommand(client, "Total Casters: %i", len);
+	
+	delete ss;
+	return Plugin_Handled;
+}
+
+
+// ========================
+//  Admin Commands
+// ========================
+
+public Action ForceStart_Cmd(int client, int args)
+{
+	if (inReadyUp && !isAutoStartMode)
+	{		
+		// Check if admin always allowed to do so
+		AdminId id = GetUserAdmin(client);
+		if (id != INVALID_ADMIN_ID && GetAdminFlag(id, Admin_Ban)) // Check for specific admin flag
+		{
+			isForceStart = true;
+			InitiateLiveCountdown();
+			CPrintToChatAll("%t", "ForceStartAdmin", client);
+			return Plugin_Handled;
+		}
+	}
+	return Plugin_Continue;
+}
 
 
 
@@ -603,8 +807,7 @@ public Action Hide_Cmd(int client, int args)
 	if (inReadyUp)
 	{
 		hiddenPanel[client] = true;
-		hiddenManually[client] = true;
-		CPrintToChat(client, "[{olive}Readyup{default}] Panel is now {red}off{default}");
+		CPrintToChat(client, "%t", "PanelHide");
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
@@ -615,8 +818,7 @@ public Action Show_Cmd(int client, int args)
 	if (inReadyUp)
 	{
 		hiddenPanel[client] = false;
-		hiddenManually[client] = false;
-		CPrintToChat(client, "[{olive}Readyup{default}] Panel is now {blue}on{default}");
+		CPrintToChat(client, "%t", "PanelShow");
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
@@ -634,76 +836,25 @@ public Action Return_Cmd(int client, int args)
 	return Plugin_Continue;
 }
 
-public Action ForceStart_Cmd(int client, int args)
-{
-	if (inReadyUp)
-	{
-		// Check if admin always allowed to do so
-		AdminId id = GetUserAdmin(client);
-		if (id != INVALID_ADMIN_ID && GetAdminFlag(id, Admin_Ban)) // Check for specific admin flag
-		{
-			InitiateLiveCountdown();
-			CPrintToChatAll("[{green}!{default}] {blue}Game {default}start is {green}forced {default}by {blue}Admin {default}({olive}%N{default})", client);
-			return Plugin_Handled;
-		}
-		
-		// ----------------------------------------------
-		// * Additional voting function, prepared for PUG
-		// ----------------------------------------------
-		
-		// Filter spectator
-		if (!IsPlayer(client))
-		{
-			CPrintToChat(client, "[{olive}Readyup{default}] {blue}Spectators {default}are not allowed to {green}force start{default}.");
-			return Plugin_Handled;
-		}
-		
-		// No reason to call this when players are full
-		int playercount = GetTeamHumanCount(L4D2Team_Survivor) + GetTeamHumanCount(L4D2Team_Infected);
-		if (playercount == survivor_limit.IntValue + z_max_player_zombies.IntValue)
-		{
-			CPrintToChat(client, "[{olive}Readyup{default}] You are {red}not allowed {default}to call a vote for force start due to {green}full players{default}.");
-			return Plugin_Handled;
-		}
-		
-		// Vote section
-		StartForceStartVote(client);
-		return Plugin_Handled;
-	}
-	return Plugin_Continue;
-}
-
 public Action KickSpecs_Cmd(int client, int args)
 {
-	if (inReadyUp)
+	AdminId id = GetUserAdmin(client);
+	if (id != INVALID_ADMIN_ID && GetAdminFlag(id, Admin_Ban)) // Check for specific admin flag
 	{
-		AdminId id;
-		id = GetUserAdmin(client);
-		bool hasFlag = false;
-		
-		if (id != INVALID_ADMIN_ID)
-		{
-			hasFlag = GetAdminFlag(id, Admin_Ban); // Check for specific admin flag
-		}
-		
-		if (hasFlag)
-		{
-			CreateTimer(2.0, Timer_KickSpecs);
-			CPrintToChatAll("[{green}!{default}] {blue}Spectators {default}are kicked by {blue}Admin {default}({olive}%N{default})", client);
-			return Plugin_Handled;
-		}
-		
-		// Filter spectator
-		if (!IsPlayer(client))
-		{
-			CPrintToChat(client, "[{olive}Readyup{default}] {blue}Spectators {default}are not allowed to call a vote for {green}kicking specs{default}.");
-			return Plugin_Handled;
-		}
-		
-		StartKickSpecsVote(client);
+		CreateTimer(2.0, Timer_KickSpecs);
+		CPrintToChatAll("%t", "KickSpecsAdmin", client);
 		return Plugin_Handled;
 	}
-	return Plugin_Continue;
+	
+	// Filter spectator
+	if (!IsPlayer(client))
+	{
+		CPrintToChat(client, "%t", "KickSpecsVoteSpec");
+		return Plugin_Handled;
+	}
+	
+	StartKickSpecsVote(client);
+	return Plugin_Handled;
 }
 
 
@@ -712,66 +863,26 @@ public Action KickSpecs_Cmd(int client, int args)
 //  Vote
 // ========================
 
-void StartForceStartVote(int client)
-{
-	if (IsBuiltinVoteInProgress())
-	{
-		CPrintToChat(client, "[{olive}Readyup{default}] There's {olive}a vote {green}in progress{default}.");
-		return;
-	}
-	if (CheckBuiltinVoteDelay() > 0)
-	{
-		CPrintToChat(client, "[{olive}Readyup{default}] Wait for another {blue}%is {default}to call a vote.", CheckBuiltinVoteDelay());
-		return;
-	}
-	
-	g_hVote = CreateBuiltinVote(VoteActionHandler, BuiltinVoteType_Custom_YesNo, BuiltinVoteAction_Cancel | BuiltinVoteAction_VoteEnd | BuiltinVoteAction_End);
-
-	char sBuffer[128];
-	FormatEx(sBuffer, sizeof(sBuffer), "Force start the Game? (100%%%%)"); // kinda format :D
-	SetBuiltinVoteArgument(g_hVote, sBuffer);
-	SetBuiltinVoteInitiator(g_hVote, client);
-	SetBuiltinVoteResultCallback(g_hVote, ForceStartVoteResultHandler);
-	
-	// Display to players and admins
-	int total = 0;
-	int[] players = new int[MaxClients];
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		if (!IsClientInGame(i) || IsFakeClient(i))
-			continue;
-			
-		AdminId id = GetUserAdmin(i);
-		if (!IsPlayer(i) && (id == INVALID_ADMIN_ID || !GetAdminFlag(id, Admin_Ban))) continue;
-		
-		players[total++] = i;
-	}
-	DisplayBuiltinVote(g_hVote, players, total, FindConVar("sv_vote_timer_duration").IntValue);
-
-	// Client is voting for
-	FakeClientCommand(client, "Vote Yes");
-}
-
 void StartKickSpecsVote(int client)
 {
 	if (IsBuiltinVoteInProgress())
 	{
-		CPrintToChat(client, "[{olive}Readyup{default}] There has been {olive}a vote {green}in progress{default}.");
+		CPrintToChat(client, "%t", "VoteInProgress");
 		return;
 	}
 	if (CheckBuiltinVoteDelay() > 0)
 	{
-		CPrintToChat(client, "[{olive}Readyup{default}] Wait for another {blue}%is {default}to call a vote.", CheckBuiltinVoteDelay());
+		CPrintToChat(client, "%t", "VoteDelay", CheckBuiltinVoteDelay());
 		return;
 	}
 	
-	g_hVote = CreateBuiltinVote(VoteActionHandler, BuiltinVoteType_Custom_YesNo, BuiltinVoteAction_Cancel | BuiltinVoteAction_VoteEnd | BuiltinVoteAction_End);
+	Handle hVote = CreateBuiltinVote(VoteActionHandler, BuiltinVoteType_Custom_YesNo, BuiltinVoteAction_Cancel | BuiltinVoteAction_VoteEnd | BuiltinVoteAction_End);
 
 	char sBuffer[128];
-	FormatEx(sBuffer, sizeof(sBuffer), "Kick Non-Admin & Non-Casting Spectators?");
-	SetBuiltinVoteArgument(g_hVote, sBuffer);
-	SetBuiltinVoteInitiator(g_hVote, client);
-	SetBuiltinVoteResultCallback(g_hVote, KickSpecsVoteResultHandler);
+	FormatEx(sBuffer, sizeof(sBuffer), "%T", "KickSpecsVoteTitle", LANG_SERVER);
+	SetBuiltinVoteArgument(hVote, sBuffer);
+	SetBuiltinVoteInitiator(hVote, client);
+	SetBuiltinVoteResultCallback(hVote, KickSpecsVoteResultHandler);
 	
 	// Display to players
 	int total = 0;
@@ -782,19 +893,18 @@ void StartKickSpecsVote(int client)
 			continue;
 		players[total++] = i;
 	}
-	DisplayBuiltinVote(g_hVote, players, total, FindConVar("sv_vote_timer_duration").IntValue);
+	DisplayBuiltinVote(hVote, players, total, FindConVar("sv_vote_timer_duration").IntValue);
 
 	// Client is voting for
 	FakeClientCommand(client, "Vote Yes");
 }
 
-public int VoteActionHandler(Handle vote, BuiltinVoteAction action, int param1, int param2)
+public void VoteActionHandler(Handle vote, BuiltinVoteAction action, int param1, int param2)
 {
 	switch (action)
 	{
 		case BuiltinVoteAction_End:
 		{
-			g_hVote = null;
 			CloseHandle(vote);
 		}
 		case BuiltinVoteAction_Cancel:
@@ -802,42 +912,6 @@ public int VoteActionHandler(Handle vote, BuiltinVoteAction action, int param1, 
 			DisplayBuiltinVoteFail(vote, BuiltinVoteFail_Generic);
 		}
 	}
-}
-
-public void ForceStartVoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
-{
-	if (!inReadyUp || inLiveCountdown)
-	{
-		DisplayBuiltinVoteFail(vote, BuiltinVoteFail_Generic);
-		return;
-	}
-	
-	for (int i = 0; i < num_items; i++)
-	{
-		if (item_info[i][BUILTINVOTEINFO_ITEM_INDEX] == BUILTINVOTES_VOTE_YES)
-		{
-			if (item_info[i][BUILTINVOTEINFO_ITEM_VOTES] < num_clients)
-			{
-				DisplayBuiltinVoteFail(vote, BuiltinVoteFail_NotEnoughVotes);
-				return;
-			}
-			
-			char buffer[64];
-			FormatEx(buffer, sizeof(buffer), "Enforcing to Live...");
-			DisplayBuiltinVotePass(vote, buffer);
-			
-			float delay = FindConVar("sv_vote_command_delay").FloatValue;
-			CreateTimer(delay, Timer_ForceStart);
-			return;
-		}
-	}
-
-	DisplayBuiltinVoteFail(vote, BuiltinVoteFail_Loses);
-}
-
-public Action Timer_ForceStart(Handle timer)
-{
-	InitiateLiveCountdown();
 }
 
 public void KickSpecsVoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
@@ -849,7 +923,7 @@ public void KickSpecsVoteResultHandler(Handle vote, int num_votes, int num_clien
 			if (item_info[i][BUILTINVOTEINFO_ITEM_VOTES] > (num_clients / 2))
 			{
 				char buffer[64];
-				FormatEx(buffer, sizeof(buffer), "Ciao Spectators!");
+				FormatEx(buffer, sizeof(buffer), "%T", "KickSpecsVoteSuccess", LANG_SERVER);
 				DisplayBuiltinVotePass(vote, buffer);
 				
 				float delay = FindConVar("sv_vote_command_delay").FloatValue;
@@ -871,20 +945,20 @@ public Action Timer_KickSpecs(Handle timer)
 		if (IsClientCaster(i)) { continue; }
 		if (GetUserAdmin(i) != INVALID_ADMIN_ID) { continue; }
 					
-		KickClient(i, "No Spectators, please!");
+		KickClient(i, "%t", "KickSpecsReason");
 	}
 }
 
 
 
 #if DEBUG
-public Action:InitReady_Cmd(client, args)
+public Action InitReady_Cmd(int client, int args)
 {
 	InitiateReadyUp();
 	return Plugin_Handled;
 }
 
-public Action:InitLive_Cmd(client, args)
+public Action InitLive_Cmd(int client, int args)
 {
 	InitiateLive();
 	return Plugin_Handled;
@@ -897,6 +971,23 @@ public Action:InitLive_Cmd(client, args)
 //  Readyup Stuff
 // ========================
 
+void ToggleCommandListeners(bool hook)
+{
+	static bool hooked = false;
+	if (hooked && !hook)
+	{
+		RemoveCommandListener(Say_Callback, "say");
+		RemoveCommandListener(Say_Callback, "say_team");
+		RemoveCommandListener(Vote_Callback, "Vote");
+	}
+	else if (!hooked && hook)
+	{
+		AddCommandListener(Say_Callback, "say");
+		AddCommandListener(Say_Callback, "say_team");
+		AddCommandListener(Vote_Callback, "Vote");
+	}
+}
+
 public int DummyHandler(Handle menu, MenuAction action, int param1, int param2) { }
 
 public Action MenuRefresh_Timer(Handle timer)
@@ -906,8 +997,6 @@ public Action MenuRefresh_Timer(Handle timer)
 		UpdatePanel();
 		return Plugin_Continue;
 	}
-	
-	if (menuPanel != null) delete menuPanel;
 	return Plugin_Stop;
 }
 
@@ -921,25 +1010,24 @@ public Action MenuCmd_Timer(Handle timer)
 	return Plugin_Stop;
 }
 
+void PrintCmd()
+{
+	switch (iCmd)
+	{
+		case 1: FormatEx(sCmd, sizeof(sCmd), "->1. !ready|!r / !unready|!nr");
+		case 2: FormatEx(sCmd, sizeof(sCmd), "->2. !slots #");
+		case 3: FormatEx(sCmd, sizeof(sCmd), "->3. !voteboss <tank> <witch>");
+		case 4: FormatEx(sCmd, sizeof(sCmd), "->4. !match / !rmatch");
+		case 5: FormatEx(sCmd, sizeof(sCmd), "->5. !show / !hide");
+		case 6: FormatEx(sCmd, sizeof(sCmd), "->6. !setscores <survs> <inf>");
+		case 7: FormatEx(sCmd, sizeof(sCmd), "->7. !lerps");
+		case 8: FormatEx(sCmd, sizeof(sCmd), "->8. !secondary");
+		case 9: FormatEx(sCmd, sizeof(sCmd), "->9. !forcestart / !fs");
+	}
+}
+
 void UpdatePanel()
 {
-	if (BuiltinVote_IsVoteInProgress())
-	{
-		for (int i = 1; i <= MaxClients; i++)
-		{
-			if (IsClientInGame(i) && IsClientInBuiltinVotePool(i)) hiddenPanel[i] = true;
-		}
-	}
-	else
-	{
-		for (int i = 1; i <= MaxClients; i++)
-		{
-			if (IsClientInGame(i) && !hiddenManually[i]) hiddenPanel[i] = false;
-		}
-	}
-	
-	if (menuPanel != null) delete menuPanel;
-
 	char survivorBuffer[800] = "";
 	char infectedBuffer[800] = "";
 	char casterBuffer[600] = "";
@@ -948,24 +1036,23 @@ void UpdatePanel()
 	int casterCount = 0;
 	int specCount = 0;
 
-	menuPanel = new Panel();
+	Panel menuPanel = new Panel();
 
 	char ServerBuffer[128];
 	char ServerName[32];
 	char cfgName[32];
 	PrintCmd();
 
-	float fTime = GetEngineTime();
-	int iPassTime = RoundToFloor(fTime - g_fTime);
+	int iPassTime = RoundToFloor(GetGameTime() - fStartTimestamp);
 
-	if (ServerNamer) ServerNamer.GetString(ServerName, sizeof(ServerName));
+	ServerNamer.GetString(ServerName, sizeof(ServerName));
 	
 	l4d_ready_cfg_name.GetString(cfgName, sizeof(cfgName));
 	Format(ServerBuffer, sizeof(ServerBuffer), "▸ Server: %s \n▸ Slots: %d/%d\n▸ Config: %s", ServerName, GetSeriousClientCount(), FindConVar("sv_maxplayers").IntValue, cfgName);
 	menuPanel.DrawText(ServerBuffer);
 	
 	FormatTime(ServerBuffer, sizeof(ServerBuffer), "▸ %m/%d/%Y - %I:%M%p");
-	Format(ServerBuffer, sizeof(ServerBuffer), "%s (%s%d:%s%d)", ServerBuffer, (iPassTime / 60 < 10) ? "0" : "", iPassTime / 60, (iPassTime % 60 < 10) ? "0" : "", iPassTime % 60);
+	Format(ServerBuffer, sizeof(ServerBuffer), "%s (%02d:%02d)", ServerBuffer, iPassTime / 60, iPassTime % 60);
 	menuPanel.DrawText(ServerBuffer);
 	
 	menuPanel.DrawText(" ");
@@ -991,17 +1078,14 @@ void UpdatePanel()
 			{
 				if (isPlayerReady[client])
 				{
-					if (!inLiveCountdown) PrintHintText(client, "You are ready.\nSay !unready / Press F2 to unready.");
-					Format(nameBuf, sizeof(nameBuf), "☑ %s\n", nameBuf);
+					if (!inLiveCountdown && !isAutoStartMode) PrintHintText(client, "%t", "HintReady");
+					Format(nameBuf, sizeof(nameBuf), isAutoStartMode ? "%s\n" : "☑ %s\n", nameBuf);
 					GetClientTeam(client) == L4D2Team_Survivor ? StrCat(survivorBuffer, sizeof(survivorBuffer), nameBuf) : StrCat(infectedBuffer, sizeof(infectedBuffer), nameBuf);
 				}
 				else 
 				{
-					if (GetClientTeam(client) != L4D2Team_Spectator)
-						if (!inLiveCountdown)
-							PrintHintText(client, "You are not ready.\nSay !ready / Press F1 to ready up.");
-							
-					Format(nameBuf, sizeof(nameBuf), "☐ %s%s\n", nameBuf, ( IsPlayerAfk(client, fTime) ? " [AFK]" : "" ));
+					if (!inLiveCountdown && !isAutoStartMode) PrintHintText(client, "%t", "HintUnready");
+					Format(nameBuf, sizeof(nameBuf), isAutoStartMode ? "%s\n" : "☐ %s%s\n", nameBuf, ( IsPlayerAfk(client) ? " [AFK]" : "" ));
 					GetClientTeam(client) == L4D2Team_Survivor ? StrCat(survivorBuffer, sizeof(survivorBuffer), nameBuf) : StrCat(infectedBuffer, sizeof(infectedBuffer), nameBuf);
 				}
 			}
@@ -1076,7 +1160,8 @@ void UpdatePanel()
 	bufLen = strlen(readyFooter[0]);
 	if (bufLen != 0)
 	{
-		for (int i = 0; i < MAX_FOOTERS; i++)
+		menuPanel.DrawText(" ");
+		for (int i = 0; i < footerCounter; i++)
 		{
 			menuPanel.DrawText(readyFooter[i]);
 		}
@@ -1084,29 +1169,40 @@ void UpdatePanel()
 
 	for (int client = 1; client <= MaxClients; client++)
 	{
-		if (IsClientInGame(client) && !IsFakeClient(client) && !hiddenPanel[client])
+		if (IsClientInGame(client) && !IsFakeClient(client) && !hiddenPanel[client]) 
 		{
+			if (BuiltinVote_IsVoteInProgress() && IsClientInBuiltinVotePool(client))
+			{
+				continue;
+			}
+			
 			menuPanel.Send(client, DummyHandler, 1);
 		}
 	}
+	
+	delete menuPanel;
 }
 
 void InitiateReadyUp()
 {
-	for (int i = 0; i <= MAXPLAYERS; i++)
+	for (int i = 1; i <= MaxClients; i++)
 	{
 		isPlayerReady[i] = false;
+		SetEngineTime(i);
 	}
 
 	UpdatePanel();
 	CreateTimer(1.0, MenuRefresh_Timer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	CreateTimer(4.0, MenuCmd_Timer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 
-	g_fTime = GetEngineTime();
-
 	inReadyUp = true;
 	inLiveCountdown = false;
+	isForceStart = false;
 	readyCountdownTimer = null;
+	
+	fStartTimestamp = GetGameTime();
+	
+	isAutoStartMode = (l4d_ready_enabled.IntValue == READY_MODE_AUTOSTART);
 
 	if (l4d_ready_disable_spawns.BoolValue)
 	{
@@ -1121,33 +1217,107 @@ void InitiateReadyUp()
 	god.Flags |= FCVAR_NOTIFY;
 	sb_stop.SetBool(true);
 
-	if (IsScavenge()) {
-		scavenge_round_setup_time.FloatValue = 99999.9;
-		HideCountdown();
+	for (int i = 0; i < MAX_FOOTERS; i++)
+	{
+		readyFooter[i][0] = '\0';
 	}
-	else L4D2_CTimerStart(L4D2CT_VersusStartTimer, 99999.9);
+	footerCounter = 0;
+	
+	if (IsScavenge())
+	{
+		CreateTimer(0.1, Timer_RemoveCountdown, .flags = TIMER_FLAG_NO_MAPCHANGE);
+	}
+	else
+	{
+		L4D2_CTimerStart(L4D2CT_VersusStartTimer, 99999.0);
+	}
+	
+	ToggleCommandListeners(true);
+	
+	if (isAutoStartMode)
+	{
+		expireTime = l4d_ready_autostart_wait.IntValue;
+		CreateTimer(1.0, Timer_AutoStartHelper, _, TIMER_FLAG_NO_MAPCHANGE | TIMER_REPEAT);
+	}
 }
 
-void PrintCmd()
+public Action Timer_RemoveCountdown(Handle timer)
 {
-	switch (iCmd)
+	RestartScavengeCountdown(99999.0, false);
+}
+
+public Action Timer_AutoStartHelper(Handle timer)
+{
+	if (GetSeriousClientCount(true) == 0)
 	{
-		case 1: Format(sCmd, sizeof(sCmd), "->1. !ready|!r / !unready|!nr");
-		case 2: Format(sCmd, sizeof(sCmd), "->2. !slots #");
-		case 3: Format(sCmd, sizeof(sCmd), "->3. !voteboss <tank> <witch>");
-		case 4: Format(sCmd, sizeof(sCmd), "->4. !match / !rmatch");
-		case 5: Format(sCmd, sizeof(sCmd), "->5. !show / !hide");
-		case 6: Format(sCmd, sizeof(sCmd), "->6. !setscores <survs> <inf>");
-		case 7: Format(sCmd, sizeof(sCmd), "->7. !lerps");
-		case 8: Format(sCmd, sizeof(sCmd), "->8. !secondary");
-		case 9: Format(sCmd, sizeof(sCmd), "->9. !forcestart / !fs");
+		// no player in game
+		expireTime = l4d_ready_autostart_wait.IntValue;
+		return Plugin_Continue;
 	}
+	
+	if (IsAnyPlayerLoading())
+	{
+		if (expireTime > 0)
+		{
+			expireTime--;
+			PrintHintTextToAll("%t", "AutoStartWaiting");
+			return Plugin_Continue;
+		}
+	}
+	
+	CreateTimer(8.0, Timer_InitiateAutoStart, _, TIMER_FLAG_NO_MAPCHANGE);
+	return Plugin_Stop;
+}
+
+public Action Timer_InitiateAutoStart(Handle timer)
+{
+	InitiateAutoStart();
+}
+
+void InitiateAutoStart(bool real = true)
+{
+	if (!real)
+	{
+		inAutoStart = false;
+		autoStartTimer = null;
+		return;
+	}
+	
+	if (autoStartTimer == null)
+	{
+		PrintHintTextToAll("%t", "InitiateAutoStart");
+		inAutoStart = true;
+		autoStartDelay = l4d_ready_autostart_delay.IntValue;
+		autoStartTimer = CreateTimer(1.0, AutoStartDelay_Timer, _, TIMER_FLAG_NO_MAPCHANGE | TIMER_REPEAT);
+	}
+}
+
+public Action AutoStartDelay_Timer(Handle timer)
+{
+	if (autoStartDelay == 0)
+	{
+		InitiateLiveCountdown();
+		autoStartTimer = null;
+		inAutoStart = false;
+		return Plugin_Stop;
+	}
+	else
+	{
+		PrintHintTextToAll("%t", "AutoStartCountdown", autoStartDelay);
+		if (l4d_ready_enable_sound.BoolValue)
+		{
+			EmitSoundToAll(autoStartSound, _, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.5);
+		}
+		autoStartDelay--;
+	}
+	return Plugin_Continue;
 }
 
 void InitiateLive(bool real = true)
 {
 	inReadyUp = false;
 	inLiveCountdown = false;
+	isForceStart = false;
 
 	SetTeamFrozen(L4D2Team_Survivor, false);
 
@@ -1160,34 +1330,33 @@ void InitiateLive(bool real = true)
 	god.Flags |= FCVAR_NOTIFY;
 	sb_stop.SetBool(false);
 	
-	if (IsScavenge()) {
-		scavenge_round_setup_time.FloatValue = 45.0;
-		InitiateCountdown();
+	if (IsScavenge())
+	{
+		RestartScavengeCountdown(scavenge_round_setup_time.FloatValue, true);
 	}
-	else L4D2_CTimerStart(L4D2CT_VersusStartTimer, 60.0);
+	else
+	{
+		L4D2_CTimerStart(L4D2CT_VersusStartTimer, 60.0);
+	}
 
 	for (int i = 0; i < 4; i++)
 	{
 		GameRules_SetProp("m_iVersusDistancePerSurvivor", 0, _,
 				i + 4 * GameRules_GetProp("m_bAreTeamsFlipped"));
 	}
-
-	for (int i = 0; i < MAX_FOOTERS; i++)
-	{
-		readyFooter[i][0] = '\0';
-	}
-	footerCounter = 0;
+	
+	ToggleCommandListeners(false);
 
 	if (real)
 	{
 		Call_StartForward(liveForward);
 		Call_Finish();
 	}
-	else if (readyCountdownTimer != null)
+	else
 	{
 		// TIMER_FLAG_NO_MAPCHANGE doesn't free the timer handle.
 		// So here manually clear it to prevent issues.
-		readyCountdownTimer = null;
+		if (readyCountdownTimer != null) readyCountdownTimer = null;
 	}
 }
 
@@ -1197,9 +1366,10 @@ void InitiateLiveCountdown()
 	{
 		ReturnTeamToSaferoom(L4D2Team_Survivor);
 		SetTeamFrozen(L4D2Team_Survivor, true);
-		PrintHintTextToAll("Going live!\nSay !unready / Press F2 to cancel");
+		PrintHintTextToAll("%t", "LiveCountdownBegin");
 		inLiveCountdown = true;
 		readyDelay = l4d_ready_delay.IntValue;
+		if (isForceStart) readyDelay += l4d_ready_force_extra.IntValue;
 		readyCountdownTimer = CreateTimer(1.0, ReadyCountdownDelay_Timer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
@@ -1208,7 +1378,7 @@ public Action ReadyCountdownDelay_Timer(Handle timer)
 {
 	if (readyDelay == 0)
 	{
-		PrintHintTextToAll("Round is live!");
+		PrintHintTextToAll("%t", "RoundIsLive");
 		InitiateLive();
 		readyCountdownTimer = null;
 		if (l4d_ready_enable_sound.BoolValue)
@@ -1223,7 +1393,7 @@ public Action ReadyCountdownDelay_Timer(Handle timer)
 	}
 	else
 	{
-		PrintHintTextToAll("Live in: %d\nSay !unready / Press F2 to cancel", readyDelay);
+		PrintHintTextToAll("%t", "LiveCountdown", readyDelay);
 		if (l4d_ready_enable_sound.BoolValue)
 		{
 			EmitSoundToAll(countdownSound, _, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.5);
@@ -1235,44 +1405,49 @@ public Action ReadyCountdownDelay_Timer(Handle timer)
 
 bool CheckFullReady()
 {
-	int readyCount = 0;
+	int survReadyCount = 0, infReadyCount = 0;
 	for (int client = 1; client <= MaxClients; client++)
 	{
-		if (IsClientInGame(client))
+		if (IsClientInGame(client) && isPlayerReady[client])
 		{
-			if (IsPlayer(client) && isPlayerReady[client])
+			switch (GetClientTeam(client))
 			{
-				readyCount++;
+				case L4D2Team_Survivor: survReadyCount++;
+				case L4D2Team_Infected: infReadyCount++;
 			}
 		}
 	}
 	
-	return readyCount >= GetConVarInt(survivor_limit) + GetConVarInt(z_max_player_zombies);
+	int iBaseline = l4d_ready_unbalanced_min.IntValue;
+	iBaseline = MIN(MIN(iBaseline, survivor_limit.IntValue), z_max_player_zombies.IntValue);
+	if (l4d_ready_unbalanced_start.BoolValue)
+	{
+		return survReadyCount >= iBaseline
+			&& infReadyCount >= iBaseline;
+	}
+	else
+	{
+		return (survReadyCount + infReadyCount) >= survivor_limit.IntValue + z_max_player_zombies.IntValue;
+	}
 }
 
 void CancelFullReady(int client, disruptType type)
 {
 	if (readyCountdownTimer != null)
 	{
-		if (bSkipWarp)
-		{
-			SetTeamFrozen(L4D2Team_Survivor, true);
-		}
-		else
-		{
-			SetTeamFrozen(L4D2Team_Survivor, GetConVarBool(l4d_ready_survivor_freeze));
-			if (type == teamShuffle) SetClientFrozen(client, false);
-		}
+		SetTeamFrozen(L4D2Team_Survivor, GetConVarBool(l4d_ready_survivor_freeze));
+		if (type == teamShuffle) SetClientFrozen(client, false);
 		inLiveCountdown = false;
 		KillTimer(readyCountdownTimer);
 		readyCountdownTimer = null;
-		PrintHintTextToAll("Countdown Cancelled!");
+		PrintHintTextToAll("%t", "LiveCountdownCancelled");
 		
 		switch (type)
 		{
-			case readyStatus: CPrintToChatAllEx(client, "{default}[{green}!{default}] {green}Countdown Cancelled! {default}({teamcolor}%N {green}marked unready{default})", client);
-			case teamShuffle: CPrintToChatAllEx(client, "{default}[{green}!{default}] {green}Countdown Cancelled! {default}({teamcolor}%N {olive}switched team{default})", client);
-			case playerDisconn: CPrintToChatAllEx(client, "{default}[{green}!{default}] {green}Countdown Cancelled! {default}({teamcolor}%N {green}disconnected{default})", client);
+			case readyStatus: CPrintToChatAllEx(client, "%t", "DisruptReadyStatus", client);
+			case teamShuffle: CPrintToChatAllEx(client, "%t", "DisruptTeamShuffle", client);
+			case playerDisconn: CPrintToChatAllEx(client, "%t", "DisruptPlayerDisc", client);
+			case forceStartAbort: CPrintToChatAll("%t", "DisruptForceStartAbort", client);
 		}
 	}
 }
@@ -1280,18 +1455,15 @@ void CancelFullReady(int client, disruptType type)
 void ReturnPlayerToSaferoom(int client, bool flagsSet = true)
 {
 	int warp_flags;
-	int give_flags;
 	if (!flagsSet)
 	{
 		warp_flags = GetCommandFlags("warp_to_start_area");
 		SetCommandFlags("warp_to_start_area", warp_flags & ~FCVAR_CHEAT);
-		give_flags = GetCommandFlags("give");
-		SetCommandFlags("give", give_flags & ~FCVAR_CHEAT);
 	}
 
 	if (GetEntProp(client, Prop_Send, "m_isHangingFromLedge"))
 	{
-		FakeClientCommand(client, "give health");
+		L4D_ReviveSurvivor(client);
 	}
 
 	FakeClientCommand(client, "warp_to_start_area");
@@ -1299,7 +1471,6 @@ void ReturnPlayerToSaferoom(int client, bool flagsSet = true)
 	if (!flagsSet)
 	{
 		SetCommandFlags("warp_to_start_area", warp_flags);
-		SetCommandFlags("give", give_flags);
 	}
 	
 	TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, NULL_VELOCITY);
@@ -1309,8 +1480,6 @@ void ReturnTeamToSaferoom(int team)
 {
 	int warp_flags = GetCommandFlags("warp_to_start_area");
 	SetCommandFlags("warp_to_start_area", warp_flags & ~FCVAR_CHEAT);
-	int give_flags = GetCommandFlags("give");
-	SetCommandFlags("give", give_flags & ~FCVAR_CHEAT);
 
 	for (int client = 1; client <= MaxClients; client++)
 	{
@@ -1321,7 +1490,6 @@ void ReturnTeamToSaferoom(int team)
 	}
 
 	SetCommandFlags("warp_to_start_area", warp_flags);
-	SetCommandFlags("give", give_flags);
 }
 
 void SetTeamFrozen(int team, bool freezeStatus)
@@ -1355,35 +1523,23 @@ bool IsScavenge()
 	return strcmp(sGamemode, "scavenge") == 0;
 }
 
-void InitiateCountdown()
+void RestartScavengeCountdown(float duration, bool startOn)
 {
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		if (IsClientInGame(i) && !IsFakeClient(i))
-		{
-			ShowVGUIPanel(i, "ready_countdown", _, true);
-		}
-	}
-	
-	L4D_ScavengeBeginRoundSetupTime();
-	//CTimer_Start(L4D2Direct_GetScavengeRoundSetupTimer(), duration);
+	CTimer_Invalidate(L4D2Direct_GetScavengeRoundSetupTimer());
+	CTimer_Start(L4D2Direct_GetScavengeRoundSetupTimer(), duration);
+	ToggleCountdownPanel(startOn);
 }
 
-//void StopCountdown()
-//{
-//	CTimer_Start(L4D2Direct_GetScavengeRoundSetupTimer(), 9999.9);
-//}
-
-void HideCountdown(int client = 0)
+void ToggleCountdownPanel(bool onoff, int client = 0)
 {
-	if (client > 0 && IsClientInGame(client)) ShowVGUIPanel(client, "ready_countdown", _, false);
+	if (client > 0 && IsClientInGame(client)) ShowVGUIPanel(client, "ready_countdown", _, onoff);
 	else
 	{
 		for (int i = 1; i <= MaxClients; i++)
 		{
 			if (IsClientInGame(i) && !IsFakeClient(i))
 			{
-				ShowVGUIPanel(i, "ready_countdown", _, false);
+				ShowVGUIPanel(i, "ready_countdown", _, onoff);
 			}
 		}
 	}
@@ -1438,7 +1594,6 @@ public Action killSound(Handle timer)
 
 
 
-
 // ========================
 //  Natives
 // ========================
@@ -1450,7 +1605,7 @@ public int Native_AddStringToReadyFooter(Handle plugin, int numParams)
 	if (footerCounter < MAX_FOOTERS)
 	{
 		int len = strlen(footer);
-		if (0 < len && len < MAX_FOOTER_LEN)
+		if (0 < len < MAX_FOOTER_LEN && !IsEmptyString(footer, len))
 		{
 			strcopy(readyFooter[footerCounter], MAX_FOOTER_LEN, footer);
 			footerCounter++;
@@ -1483,7 +1638,7 @@ public int Native_FindIndexOfFooterString(Handle plugin, int numParams)
 	GetNativeString(1, stringToSearchFor, sizeof(stringToSearchFor));
 	
 	for (int i = 0; i < footerCounter; i++){
-		if (StrEqual(readyFooter[i], "\0", true)) continue;
+		if (strlen(readyFooter[i]) == 0) continue;
 		
 		if (StrContains(readyFooter[i], stringToSearchFor, false) > -1){
 			return i;
@@ -1496,7 +1651,7 @@ public int Native_FindIndexOfFooterString(Handle plugin, int numParams)
 public int Native_GetFooterStringAtIndex(Handle plugin, int numParams)
 {
 	int index = GetNativeCell(1), maxlen = GetNativeCell(3);
-	char buffer[65];
+	char buffer[MAX_FOOTER_LEN];
 	
 	if (index < MAX_FOOTERS) {
 		strcopy(buffer, sizeof(buffer), readyFooter[index]);
@@ -1529,6 +1684,23 @@ public int Native_IsIDCaster(Handle plugin, int numParams)
 //  Stocks
 // ========================
 
+bool IsEmptyString(const char[] str, int length)
+{
+	for (int i = 0; i < length; ++i)
+	{
+		if (!IsCharSpace(str[i]))
+		{
+			switch (str[i])
+			{
+				case '\r', '\n': continue;
+				
+				default: return false;
+			}
+		}
+	}
+	return true;
+}
+
 bool IsClientCaster(int client)
 {
 	char buffer[64];
@@ -1541,15 +1713,27 @@ bool IsIDCaster(const char[] AuthID)
 	return GetTrieValue(casterTrie, AuthID, dummy);
 }
 
-stock int GetSeriousClientCount()
+stock bool IsAnyPlayerLoading()
+{
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (IsClientConnected(i) && (!IsClientInGame(i) || GetClientTeam(i) == L4D2Team_None))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+stock int GetSeriousClientCount(bool inGame = false)
 {
 	int clients = 0;
 	
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (IsClientConnected(i) && !IsFakeClient(i))
+		if ((inGame ? IsClientInGame(i) : IsClientConnected(i)))
 		{
-			clients++;
+			if (!IsFakeClient(i)) clients++;
 		}
 	}
 	
@@ -1561,9 +1745,9 @@ stock int SetClientFrozen(int client, bool freeze)
 	SetEntityMoveType(client, freeze ? MOVETYPE_NONE : (GetClientTeam(client) == L4D2Team_Spectator ? MOVETYPE_NOCLIP : MOVETYPE_WALK));
 }
 
-stock bool IsPlayerAfk(int client, float fTime)
+stock bool IsPlayerAfk(int client)
 {
-	return fTime - g_fButtonTime[client] > 15.0;
+	return GetEngineTime() - g_fButtonTime[client] > 15.0;
 }
 
 stock bool IsPlayer(int client)

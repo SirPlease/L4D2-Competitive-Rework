@@ -1,5 +1,5 @@
 #if defined l4d2_tanks_inc_
-    #endinput
+	#endinput
 #endif
 #define l4d2_tanks_inc_
 
@@ -13,7 +13,7 @@
  * @param iEntity Entity ID of the hittable
  * @noreturn
  */
-forward OnTankPunchHittable(iTank, iEntity);
+forward void OnTankPunchHittable(int iTank, int iEntity);
 
 /**
  * Called when a tank first spawns.
@@ -21,7 +21,7 @@ forward OnTankPunchHittable(iTank, iEntity);
  * @param iTank Client ID of the tank
  * @noreturn
  */
-forward OnTankSpawn(iTank);
+forward void OnTankSpawn(int iTank);
 
 /**
  * Called when a tank passes control from one player to another.
@@ -30,7 +30,7 @@ forward OnTankSpawn(iTank);
  * @param iOldTank Client ID of the previous tank
  * @noreturn
  */
-forward OnTankPass(iTank, iOldTank);
+forward void OnTankPass(int iTank, int iOldTank);
 
 /**
  * Called when the tank dies.
@@ -38,7 +38,7 @@ forward OnTankPass(iTank, iOldTank);
  * @param iOldTank Client ID of the dead tank
  * @noreturn
  */
-forward OnTankDeath(iOldTank);
+forward void OnTankDeath(int iOldTank);
 
 #endif // __IN_L4D2UTIL__
 #endif // L4D2UTIL_STOCKS_ONLY
@@ -50,10 +50,11 @@ forward OnTankDeath(iOldTank);
  * @param client client ID
  * @return bool
  */
-stock bool:IsTank(client) {
-    return IsClientInGame(client)
-        && L4D2_Team:GetClientTeam(client) == L4D2Team_Infected
-        && GetInfectedClass(client) == L4D2Infected_Tank;
+stock bool IsTank(int client)
+{
+	return (IsClientInGame(client)
+		&& view_as<L4D2_Team>(GetClientTeam(client)) == L4D2Team_Infected
+		&& GetInfectedClass(client) == L4D2Infected_Tank);
 }
 
 /**
@@ -62,24 +63,24 @@ stock bool:IsTank(client) {
  * @param iEntity entity ID
  * @return bool
  */
-stock bool:IsTankHittable(iEntity) {
-    if (!IsValidEntity(iEntity)) {
-        return false;
-    }
-    
-    decl String:className[64];
-    
-    GetEdictClassname(iEntity, className, sizeof(className));
-    if ( StrEqual(className, "prop_physics") ) {
-        if ( GetEntProp(iEntity, Prop_Send, "m_hasTankGlow", 1) ) {
-            return true;
-        }
-    }
-    else if ( StrEqual(className, "prop_car_alarm") ) {
-        return true;
-    }
-    
-    return false;
+stock bool IsTankHittable(int iEntity)
+{
+	if (!IsValidEntity(iEntity)) {
+		return false;
+	}
+
+	char className[64];
+	GetEdictClassname(iEntity, className, sizeof(className));
+	
+	if (strcmp(className, "prop_physics") == 0) {
+		if (GetEntProp(iEntity, Prop_Send, "m_hasTankGlow", 1)) {
+			return true;
+		}
+	} else if (strcmp(className, "prop_car_alarm") == 0) {
+		return true;
+	}
+
+	return false;
 }
 
 /**
@@ -89,8 +90,11 @@ stock bool:IsTankHittable(iEntity) {
  * @param iTankClient tank's client ID
  * @return frustration level
  */
-stock GetTankFrustration(iTankClient) {
-    return (100 - GetEntProp(iTankClient, Prop_Send, "m_frustration"));
+stock int GetTankFrustration(int iTankClient)
+{
+	int iFrustration = 100 - GetEntProp(iTankClient, Prop_Send, "m_frustration");
+
+	return iFrustration;
 }
 
 /**
@@ -100,23 +104,25 @@ stock GetTankFrustration(iTankClient) {
  * @param iFrustration frustration level (0-100)
  * @noreturn
  */
-stock SetTankFrustration(iTankClient, iFrustration) {
-    if (iFrustration < 0 || iFrustration > 100) {
-        return;
-    }
-    
-    SetEntProp(iTankClient, Prop_Send, "m_frustration", 100-iFrustration);
+stock void SetTankFrustration(int iTankClient, int iFrustration)
+{
+	if (iFrustration < 0 || iFrustration > 100) {
+		ThrowError("Native SetTankFrustration. Invalid parameter passed: %d", iFrustration);
+	}
+	
+	int iSetFrustration = 100 - iFrustration;
+	SetEntProp(iTankClient, Prop_Send, "m_frustration", iSetFrustration);
 }
 
 /**
- * Returns true if the tank is on fire.
- * @remarks This should work for any client ID, even if they are not the tank 
+ * Returns true if the entity or player is on fire.
  *
- * @param iTankClient tank's client ID
- * @param bool
+ * @param entity entity index
+ * @return bool
  */
-stock bool:IsTankOnFire(iTankClient) {
-    return bool:(GetEntityFlags(iTankClient) & FL_ONFIRE);
+stock bool IsEntityOnFire(int entity)
+{
+	return view_as<bool>(GetEntityFlags(entity) & FL_ONFIRE);
 }
 
 /**
@@ -125,14 +131,17 @@ stock bool:IsTankOnFire(iTankClient) {
  * @param iTankClient client index to begin searching from
  * @return client ID or -1 if not found
  */
-stock FindTankClient(iTankClient) {
-    for (new i = iTankClient < 0 ? 1 : iTankClient+1; i < MaxClients+1; i++) {
-        if (IsTank(i)) {
-            return i;
-        }
-    }
-    
-    return -1;
+stock int FindTankClient(int iTankClient)
+{
+	int i = (iTankClient < 0) ? 1 : iTankClient + 1;
+	
+	for (; i <= MaxClients; i++) {
+		if (IsTank(i)) {
+			return i;
+		}
+	}
+
+	return -1;
 }
 
 /**
@@ -140,8 +149,9 @@ stock FindTankClient(iTankClient) {
  *
  * @return bool
  */
-stock bool:IsTankInPlay() {
-    return bool:(FindTankClient(-1) != -1);
+stock bool IsTankInPlay()
+{
+	return (FindTankClient(-1) != -1);
 }
 
 /**
@@ -149,13 +159,14 @@ stock bool:IsTankInPlay() {
  *
  * @return number of tanks in play
  */
-stock NumTanksInPlay() {
-    new count = 0;
-    new client = -1;
-    
-    while ((client = FindTankClient(client)) != -1) {
-        ++count;
-    }
-    
-    return count;
+stock int NumTanksInPlay()
+{
+	int count = 0;
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsTank(i)) {
+			count++;
+		}
+	}
+	
+	return count;
 }

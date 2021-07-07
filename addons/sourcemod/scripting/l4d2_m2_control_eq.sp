@@ -1,8 +1,8 @@
 #pragma semicolon 1
-
-#define L4D2UTIL_STOCKS_ONLY
+#pragma newdecls required
 
 #include <sourcemod>
+#define L4D2UTIL_STOCKS_ONLY
 #include <l4d2util>
 #include <left4dhooks>
 
@@ -15,27 +15,29 @@
 // stagger time. Use an epsilon to set it slightly before the stagger is over.
 #define STAGGER_TIME_EPS 0.1
 
-new Handle:hMaxShovePenaltyCvar;
-new Handle:hShovePenaltyAmtCvar;
-new Handle:hPounceCrouchDelayCvar;
-new Handle:hMaxStaggerDurationCvar;
-new Handle:hLeapIntervalCvar;
-new Handle:hPenaltyIncreaseHunterCvar;
-new Handle:hPenaltyIncreaseJockeyCvar;
-new Handle:hPenaltyIncreaseSmokerCvar;
+ConVar 
+	hMaxShovePenaltyCvar,
+	hShovePenaltyAmtCvar,
+	hPounceCrouchDelayCvar,
+	hMaxStaggerDurationCvar,
+	hLeapIntervalCvar,
+	hPenaltyIncreaseHunterCvar,
+	hPenaltyIncreaseJockeyCvar,
+	hPenaltyIncreaseSmokerCvar;
 
-new bool:g_NoHunterM2 = false;
+bool
+	g_NoHunterM2 = false;
 
-public Plugin:myinfo =
+public Plugin myinfo =
 {
-	name        = "L4D2 M2 Control",
-	author      = "Jahze, Visor",
-	version     = "1.5",
-	description = "Blocks instant repounces and gives m2 penalty after a shove/deadstop",
-	url 		= "https://github.com/Attano/Equilibrium"
+	name		= "L4D2 M2 Control",
+	author		= "Jahze, Visor", //update syntax, minor fixes A1m`
+	version		= "1.7",
+	description	= "Blocks instant repounces and gives m2 penalty after a shove/deadstop",
+	url 		= "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
-public OnPluginStart()
+public void OnPluginStart()
 {
 	HookEvent("player_shoved", OutSkilled);
 	
@@ -50,97 +52,84 @@ public OnPluginStart()
 	hPenaltyIncreaseSmokerCvar = CreateConVar("l4d2_m2_smoker_penalty", "0", "How much penalty gets added when you shove a Smoker");
 }
 
-public OnAllPluginsLoaded()
+public void OnAllPluginsLoaded()
 {
-	g_NoHunterM2 = (FindPluginByFile("optional/l4d2_no_hunter_deadstops.smx") != INVALID_HANDLE);
+	g_NoHunterM2 = (FindPluginByFile("optional/l4d2_no_hunter_deadstops.smx") != null);
 }
 
-public Action:OutSkilled(Handle:event, const String:name[], bool:dontBroadcast)
+public void OutSkilled(Event hEvent, const char[] eName, bool dontBroadcast)
 {
-	new shovee = GetClientOfUserId(GetEventInt(event, "userid"));
-	new shover = GetClientOfUserId(GetEventInt(event, "attacker"));
-
-	if (!IsSurvivor(shover) || !IsInfected(shovee))
-	{
-		return;
-	}
-
-	new penaltyIncrease;
-	new L4D2_Infected:zClass = GetInfectedClass(shovee);
-	if (zClass == L4D2Infected_Hunter)
-	{
-		penaltyIncrease = GetConVarInt(hPenaltyIncreaseHunterCvar);
-	}
-	else if (zClass == L4D2Infected_Jockey)
-	{
-		penaltyIncrease = GetConVarInt(hPenaltyIncreaseJockeyCvar);
-	}
-	else if (zClass == L4D2Infected_Smoker)
-	{
-		penaltyIncrease = GetConVarInt(hPenaltyIncreaseSmokerCvar);
-	}
-	else
-	{
+	int shover = GetClientOfUserId(hEvent.GetInt("attacker"));
+	if (!IsSurvivor(shover)) {
 		return;
 	}
 	
-	new maxPenalty = GetConVarInt(hMaxShovePenaltyCvar);
-	new penalty = L4D2Direct_GetShovePenalty(shover);
+	int shovee_userid = hEvent.GetInt("userid");
+	int shovee = GetClientOfUserId(shovee_userid);
+	if (!IsInfected(shovee)) {
+		return;
+	}
+	
+	int penaltyIncrease;
+	L4D2_Infected zClass = GetInfectedClass(shovee);
+	switch (zClass) {
+		case L4D2Infected_Hunter: {
+			penaltyIncrease = hPenaltyIncreaseHunterCvar.IntValue;
+		}
+		case L4D2Infected_Jockey: {
+			penaltyIncrease = hPenaltyIncreaseJockeyCvar.IntValue;
+		}
+		case L4D2Infected_Smoker: {
+			penaltyIncrease = hPenaltyIncreaseSmokerCvar.IntValue;
+		}
+		default: {
+			return;
+		}
+	}
+
+	int maxPenalty = hMaxShovePenaltyCvar.IntValue;
+	int penalty = L4D2Direct_GetShovePenalty(shover);
 
 	penalty += penaltyIncrease;
-	if (penalty > maxPenalty)
-	{
+	if (penalty > maxPenalty) {
 		penalty = maxPenalty;
 	}
 
 	L4D2Direct_SetShovePenalty(shover, penalty);
 	L4D2Direct_SetNextShoveTime(shover, CalcNextShoveTime(penalty, maxPenalty));
 
-	if (zClass == L4D2Infected_Smoker || (zClass == L4D2Infected_Hunter && g_NoHunterM2))
-	{
+	if (zClass == L4D2Infected_Smoker 
+	|| (zClass == L4D2Infected_Hunter && g_NoHunterM2)) {
 		return;
 	}
 	
-	new Float:staggerTime = GetConVarFloat(hMaxStaggerDurationCvar);
-	CreateTimer(staggerTime - STAGGER_TIME_EPS, ResetAbilityTimer, shovee);
+	float staggerTime = hMaxStaggerDurationCvar.FloatValue - STAGGER_TIME_EPS;
+	CreateTimer(staggerTime, ResetAbilityTimer, shovee_userid, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action:ResetAbilityTimer(Handle:event, any:shovee)
+public Action ResetAbilityTimer(Handle hTimer, any shovee_userid)
 {
-	new Float:time = GetGameTime();
-	new L4D2_Infected:zClass = GetInfectedClass(shovee);
-	new Float:recharge;
+	int shovee = GetClientOfUserId(shovee_userid);
+	if (shovee > 0) {
+		float recharge = (GetInfectedClass(shovee) == L4D2Infected_Hunter) ? hPounceCrouchDelayCvar.FloatValue : hLeapIntervalCvar.FloatValue;
+		
+		float timestamp, duration;
+		if (!GetInfectedAbilityTimer(shovee, timestamp, duration)) {
+			return;
+		}
 
-	if (zClass == L4D2Infected_Hunter)
-	{
-		recharge = GetConVarFloat(hPounceCrouchDelayCvar);
-	}
-	else
-	{
-		recharge = GetConVarFloat(hLeapIntervalCvar);
-	}
-
-	new Float:timestamp;
-	new Float:duration;
-	if (!GetInfectedAbilityTimer(shovee, timestamp, duration))
-	{
-		return;
-	}
-
-	duration = time + recharge + STAGGER_TIME_EPS;
-	if (duration > timestamp)
-	{
-		SetInfectedAbilityTimer(shovee, duration, recharge);
+		duration = GetGameTime() + recharge + STAGGER_TIME_EPS;
+		if (duration > timestamp) {
+			SetInfectedAbilityTimer(shovee, duration, recharge);
+		}
 	}
 }
 
-static Float:CalcNextShoveTime(penalty, max)
+float CalcNextShoveTime(int currentPenalty, int maxPenalty)
 {
-	new Float:time = GetGameTime();
-	new Float:maxPenalty = float(max);
-	new Float:currentPenalty = float(penalty);
-	new Float:ratio = currentPenalty/maxPenalty;
-	new Float:maxTime = GetConVarFloat(hShovePenaltyAmtCvar);
+	float ratio = float(currentPenalty) / float(maxPenalty);
+	float fDuration = ratio * hShovePenaltyAmtCvar.FloatValue;
+	float fReturn = GetGameTime() + fDuration + COOLDOWN_EXTRA_TIME;
 
-	return time + ratio*maxTime + COOLDOWN_EXTRA_TIME;
+	return fReturn;
 }

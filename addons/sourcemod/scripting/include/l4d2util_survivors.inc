@@ -1,9 +1,9 @@
 #if defined l4d2util_survivors_inc_
-    #endinput
+	#endinput
 #endif
 #define l4d2util_survivors_inc_
 
-static Handle:hSurvivorModelsTrie = INVALID_HANDLE;
+stock static Handle hSurvivorModelsTrie = null;
 
 /**
  * Returns true if the player is currently on the survivor team. 
@@ -11,11 +11,13 @@ static Handle:hSurvivorModelsTrie = INVALID_HANDLE;
  * @param client client ID
  * @return bool
  */
-stock bool:IsSurvivor(client) {
-    if (!IsClientInGame(client) || L4D2_Team:GetClientTeam(client) != L4D2Team_Survivor) {
-        return false;
-    }
-    return true;
+stock bool IsSurvivor(int client)
+{
+	if (!IsClientInGame(client) || view_as<L4D2_Team>(GetClientTeam(client)) != L4D2Team_Survivor) {
+		return false;
+	}
+
+	return true;
 }
 
 /**
@@ -24,32 +26,40 @@ stock bool:IsSurvivor(client) {
  * @param client client ID
  * @return bool
  */
-stock bool:IsIncapacitated(client) {
-    return bool:GetEntProp(client, Prop_Send, "m_isIncapacitated");
+stock bool IsIncapacitated(int client)
+{
+	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isIncapacitated"));
 }
 
 /**
  * Returns the amount of permanent health a survivor has. 
  *
  * @param client client ID
- * @return bool
+ * @return int
  */
-stock GetSurvivorPermanentHealth(client) {
-    return GetEntProp(client, Prop_Send, "m_iHealth");
+stock int GetSurvivorPermanentHealth(int client)
+{
+	return GetEntProp(client, Prop_Send, "m_iHealth");
 }
 
 /**
  * Returns the amount of temporary health a survivor has. 
  *
  * @param client client ID
- * @return bool
+ * @return int
  */
-stock GetSurvivorTemporaryHealth(client) {
-    new Float:fDecayRate = GetConVarFloat(FindConVar("pain_pills_decay_rate"));
-    new Float:fHealthBuffer = GetEntPropFloat(client, Prop_Send, "m_healthBuffer");
-    new Float:fHealthBufferTime = GetEntPropFloat(client, Prop_Send, "m_healthBufferTime");
-    new iTempHp = RoundToCeil(fHealthBuffer - ((GetGameTime() - fHealthBufferTime) * fDecayRate)) - 1;
-    return iTempHp > 0 ? iTempHp : 0;
+stock int GetSurvivorTemporaryHealth(int client)
+{
+	float fDecayRate = (FindConVar("pain_pills_decay_rate")).FloatValue;
+
+	float fHealthBuffer = GetEntPropFloat(client, Prop_Send, "m_healthBuffer");
+	float fHealthBufferTimeStamp = GetEntPropFloat(client, Prop_Send, "m_healthBufferTime");
+	
+	float fHealthBufferDuration = GetGameTime() - fHealthBufferTimeStamp;
+
+	int iTempHp = RoundToCeil(fHealthBuffer - (fHealthBufferDuration * fDecayRate)) - 1;
+
+	return (iTempHp > 0) ? iTempHp : 0;
 }
 
 /**
@@ -58,8 +68,9 @@ stock GetSurvivorTemporaryHealth(client) {
  * @param client client ID
  * @return incap count
  */
-stock GetSurvivorIncapCount(client) {
-    return GetEntProp(client, Prop_Send, "m_currentReviveCount");
+stock int GetSurvivorIncapCount(int client)
+{
+	return GetEntProp(client, Prop_Send, "m_currentReviveCount");
 }
 
 /**
@@ -68,8 +79,10 @@ stock GetSurvivorIncapCount(client) {
  * @param client client ID
  * @return bool
  */
-stock bool:IsHangingFromLedge(client) {
-    return bool:(GetEntProp(client, Prop_Send, "m_isHangingFromLedge") || GetEntProp(client, Prop_Send, "m_isFallingFromLedge"));
+stock bool IsHangingFromLedge(int client)
+{
+	return (view_as<bool>(GetEntProp(client, Prop_Send, "m_isHangingFromLedge")) 
+		|| view_as<bool>(GetEntProp(client, Prop_Send, "m_isFallingFromLedge")));
 }
 
 /**
@@ -78,13 +91,12 @@ stock bool:IsHangingFromLedge(client) {
  *
  * @noreturn
  */
-stock InitSurvivorModelTrie()
+stock void InitSurvivorModelTrie()
 {
-    hSurvivorModelsTrie = CreateTrie();
-    for(new i = 0; i < _:SurvivorCharacter; i++)
-    {
-        SetTrieValue(hSurvivorModelsTrie, SurvivorModels[SurvivorCharacter:i], i);
-    }
+	hSurvivorModelsTrie = CreateTrie();
+	for (int i = 0; i < view_as<int>(SurvivorCharacter); i++) {
+		SetTrieValue(hSurvivorModelsTrie, SurvivorModels[i], i);
+	}
 }
 
 /**
@@ -94,15 +106,16 @@ stock InitSurvivorModelTrie()
  * @param client                Survivor client to identify
  * @return SurvivorCharacter    index identifying the survivor, or SC_NONE if not identified.
  */
-stock SurvivorCharacter:IdentifySurvivor(client)
+stock SurvivorCharacter IdentifySurvivor(int client)
 {
-    if (!client || !IsClientInGame(client) || !IsSurvivor(client))
-    {
-        return SC_NONE;
-    }
-    decl String:clientModel[42];
-    GetClientModel(client, clientModel, sizeof(clientModel));
-    return ClientModelToSC(clientModel);
+	if (!client || !IsClientInGame(client) || !IsSurvivor(client)) {
+		return SC_NONE;
+	}
+
+	char clientModel[42];
+	GetClientModel(client, clientModel, sizeof(clientModel));
+
+	return ClientModelToSC(clientModel);
 }
 
 /**
@@ -112,18 +125,18 @@ stock SurvivorCharacter:IdentifySurvivor(client)
  * @param model                 Player model to identify
  * @return SurvivorCharacter    index identifying the model, or SC_NONE if not identified.
  */
-stock SurvivorCharacter:ClientModelToSC(const String:model[])
+stock SurvivorCharacter ClientModelToSC(const char[] model)
 {
-    if(hSurvivorModelsTrie == INVALID_HANDLE)
-    {
-        InitSurvivorModelTrie();
-    }
-    new SurvivorCharacter:sc;
-    if(GetTrieValue(hSurvivorModelsTrie, model, sc))
-    {
-        return sc;
-    }
-    return SC_NONE;
+	if (hSurvivorModelsTrie == null) {
+		InitSurvivorModelTrie();
+	}
+	
+	SurvivorCharacter sc;
+	if (GetTrieValue(hSurvivorModelsTrie, model, sc)) {
+		return sc;
+	}
+
+	return SC_NONE;
 }
 
 /**
@@ -134,11 +147,14 @@ stock SurvivorCharacter:ClientModelToSC(const String:model[])
  * @param length        length of buffer
  * @return bool         false if SC_NONE, otherwise true
  */
-stock bool:GetSurvivorName(SurvivorCharacter:character, String:buffer[], length)
+stock bool GetSurvivorName(SurvivorCharacter character, char[] buffer, const int length)
 {
-    if (character == SC_NONE)
-        return false;
+	if (character == SC_NONE) {
+		return false;
+	}
 
-    strcopy(buffer, length, SurvivorNames[_:character]);
-    return true;
+	strcopy(buffer, length, SurvivorNames[view_as<int>(character)]);
+
+	return true;
 }
+

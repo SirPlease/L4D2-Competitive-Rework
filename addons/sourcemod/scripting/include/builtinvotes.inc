@@ -541,6 +541,16 @@ native bool BuiltinVote_IsVoteInProgress();
 native bool Game_IsVoteInProgress();
 
 /**
+ * @brief		Returns the number of the team in which the vote is progress
+ * @remarks		Team number: 1 - spectators, 2 - survivors, 3 - infected
+ * @remarks		It hardly works for a team of spectators
+ *
+ * @returns		-1 if no vote in progress or vote is for everyone, 
+ *					otherwise the command number
+ */
+native int Game_GetVoteTeam();
+
+/**
  * Retrieves voting information from BuiltinVoteAction_VoteEnd.
  *
  * @param param2		Second parameter of BuiltinVoteAction_VoteEnd.
@@ -725,6 +735,7 @@ public void __ext_builtinvotes_SetNTVOptional()
 	MarkNativeAsOptional("DisplayBuiltinVotePass");
 	MarkNativeAsOptional("DisplayBuiltinVotePass2");
 	MarkNativeAsOptional("DisplayBuiltinVoteFail");
-	MarkNativeAsOptional("Game_IsVoteInProgress");
 	MarkNativeAsOptional("BuiltinVote_IsVoteInProgress");
+	MarkNativeAsOptional("Game_IsVoteInProgress");
+	MarkNativeAsOptional("Game_GetVoteTeam");
 }
