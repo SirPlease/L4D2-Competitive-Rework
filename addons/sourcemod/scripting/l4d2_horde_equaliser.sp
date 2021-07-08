@@ -13,7 +13,7 @@
 #define TEAM_INFECTED 3
 
 #define ZOMBIEMANAGER_GAMEDATA "l4d2_zombiemanager"
-#define LEFT4FRAMEFORK_GAMEDATA "left4dhooks.l4d2"
+#define LEFT4FRAMEWORK_GAMEDATA "left4dhooks.l4d2"
 
 #define HORDE_MIN_SIZE_AUDIAL_FEEDBACK 120
 #define MAX_CHECKPOINTS 4
@@ -59,9 +59,9 @@ public void OnPluginStart()
 
 void InitGameData()
 {
-	Handle hDamedata = LoadGameConfigFile(LEFT4FRAMEFORK_GAMEDATA);
+	Handle hDamedata = LoadGameConfigFile(LEFT4FRAMEWORK_GAMEDATA);
 	if (!hDamedata) {
-		SetFailState("%s gamedata missing or corrupt", LEFT4FRAMEFORK_GAMEDATA);
+		SetFailState("%s gamedata missing or corrupt", LEFT4FRAMEWORK_GAMEDATA);
 	}
 
 	pZombieManager = GameConfGetAddress(hDamedata, "ZombieManager");

@@ -99,4 +99,32 @@
 			}
 		}
 	}
+	
+	/*Found a Crasher_3637*/
+	"left4dead"
+	{
+		"Signatures"
+		{
+			"GetSpew"
+			{
+				"library" "engine"
+				"windows" "\x53\x56\xFF\x15\x2A\x2A\x2A\x2A\x8B\xC8\xA1\x2A\x2A\x2A\x2A\x3B\xC8"
+						/* 53 56 FF 15 ? ? ? ? 8B C8 A1 ? ? ? ? 3B C8 */
+			}
+		}
+	}
+	
+	/*Found a Crasher_3637*/
+	"left4dead2"
+	{
+		"Signatures"
+		{
+			"GetSpew"
+			{
+				"library" "engine"
+				"windows" "\x55\x8B\xEC\x53\x56\xFF\x15\x2A\x2A\x2A\x2A\x8B\xC8\xA1\x2A\x2A\x2A\x2A\x3B\xC8"
+						/* 55 8B EC 53 56 FF 15 ? ? ? ? 8B C8 A1 ? ? ? ? 3B C8 */  // Thanks to "cravenge" for the signature
+			}
+		}
+	} 
 }
