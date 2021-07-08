@@ -6,8 +6,8 @@
 #include <sdktools>
 #include <l4d2util_constants>
 
-#define ARRAY_INDEX_DURATION 0
-#define ARRAY_INDEX_TIMESTAMP 1
+#define UTIL_ARRAY_INDEX_DURATION 0
+#define UTIL_ARRAY_INDEX_TIMESTAMP 1
 
 // Internal array of strings for timer ability timer entity classnames
 stock const char L4D2_InfectedTimerEntities[8][] =
@@ -119,8 +119,8 @@ stock bool GetInfectedAbilityTimer(int client, float &timestamp, float &duration
 	 *	Member: m_duration (offset 4) (type float) (bits 0) (NoScale)
 	 *	Member: m_timestamp (offset 8) (type float) (bits 0) (NoScale)
 	*/
-	duration = GetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", ARRAY_INDEX_DURATION);
-	timestamp = GetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", ARRAY_INDEX_TIMESTAMP);
+	duration = GetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", UTIL_ARRAY_INDEX_DURATION);
+	timestamp = GetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", UTIL_ARRAY_INDEX_TIMESTAMP);
 
 	return true;
 }
@@ -151,8 +151,8 @@ stock bool SetInfectedAbilityTimer(int client, float &timestamp, float &duration
 	 *	Member: m_duration (offset 4) (type float) (bits 0) (NoScale)
 	 *	Member: m_timestamp (offset 8) (type float) (bits 0) (NoScale)
 	*/
-	SetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", duration, ARRAY_INDEX_DURATION);
-	SetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", timestamp, ARRAY_INDEX_TIMESTAMP);
+	SetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", duration, UTIL_ARRAY_INDEX_DURATION);
+	SetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", timestamp, UTIL_ARRAY_INDEX_TIMESTAMP);
 
 	return true;
 }
