@@ -15,17 +15,6 @@
 					"signature"	"CTerrorPlayer::FireBullet"
 				}
 			}
-			"CTerrorPlayer::GetRunTopSpeed_Signature"
-			{
-				"linux"
-				{
-					"signature"	"CTerrorPlayer::GetRunTopSpeed"
-				}
-				"windows"
-				{
-					"signature"	"CTerrorPlayer::GetRunTopSpeed"
-				}
-			}
 		}
 		"Signatures"
 		{
@@ -35,24 +24,13 @@
 				"linux"		"@_ZN13CTerrorPlayer10FireBulletE6VectorRK6QAngle10CSWeaponIDi"
 				"windows"	"\x55\x8b\xec\x81\xec\x2a\x2a\x2a\x2a\x8b\x45\x18\x57\x8b\xf9"
 			}
-			"CTerrorPlayer::GetRunTopSpeed"
-			{
-				"library"	"server"
-				"linux"		"@_ZNK13CTerrorPlayer14GetRunTopSpeedEv"
-				"windows"	"findityourself"
-			}
 		}
 		"Offsets"
 		{
 			"CTerrorPlayer::FireBullet_SpreadPatch"
 			{
-				"linux"		"1029"
+				"linux"		"1047"
 				"windows"	"823"
-			}
-			"CTerrorPlayer::Slowdown_Patch"
-			{
-				"linux"		"150"
-				"windows"	"findityourself"
 			}
 			"Platform"
 			{
@@ -132,13 +110,6 @@
 			// 53: 90						nop
 			// 54: 90						nop
 			"sgspread_bytes_linux"		"\x8d\x8d\xa4\xf9\xff\xff\xf3\x0f\x11\x01\x8b\x55\x20\x8b\xc4\x83\xfa\x04\x7f\x02\xeb\x16\x89\x10\x01\x38\x83\x28\x05\xdb\x00\xc7\x00\x00\x00\x34\x43\xd8\x38\x83\xea\x05\xeb\x17\xc7\x00\x02\x00\x00\x00\xdb\x00\xd8\x39\xd9\x19\x83\xea\x02\xc7\x00\x00\x00\x70\x42\xd9\x00\x89\x10\xda\x08\x6a\x2d\x8f\x00\xda\x00\xd9\x9d\xb0\xf9\xff\xff\x90\x90"
-			
-			"slowdown_signature"		"CTerrorPlayer::GetRunTopSpeed_Signature"
-			"slowdown_offset"			"CTerrorPlayer::Slowdown_Patch"
-			"slowdown_length_windows"	"findityourself"
-			"slowdown_length_linux"		"12"
-			"slowdown_bytes_windows"	"findityourself"
-			"slowdown_bytes_linux"		"\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90"
 		}
 	}
 }
