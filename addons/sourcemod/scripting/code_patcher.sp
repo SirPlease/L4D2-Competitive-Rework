@@ -54,9 +54,6 @@ public void OnPluginStart()
 	RegServerCmd("codepatch_list", CodePatchListCommand);
 	RegServerCmd("codepatch_patch", CodePatchPatchCommand);
 	RegServerCmd("codepatch_unpatch", CodePatchUnpatchCommand);
-
-	// Waterslowdown Optimization fix. (Stupid Valve check)
-	ServerCommand("codepatch_patch slowdown");
 }
 
 public void OnPluginEnd()

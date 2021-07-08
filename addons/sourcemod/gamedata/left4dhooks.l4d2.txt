@@ -1537,10 +1537,10 @@
 			*/
 			"ForceNextStage"
 			{
-				"library"	"server"
-				"linux"		"@_ZN9CDirector14ForceNextStageEv"
-				"windows"	"\x8B\x2A\x88\x05\x00\x00\xE9\x2A\x99\x01\x00"
-				/* 8B ? 88 05 00 00 E9 ? 99 01 00 */ 
+				"library"    "server"
+				"linux"        "@_ZN9CDirector14ForceNextStageEv"
+				"windows"    "\x8B\x2A\x88\x05\x00\x00\xE9\x2A\x99\x01\x00"
+				/* 8B ? 88 05 00 00 E9 ? 9A 01 00 */
 				/* Search "ForceNextStage" call below of XRef */
 			}
 
@@ -2194,11 +2194,11 @@
 			*/
 			"UseHealingItems"
 			{
-				"library"	"server"
-				"linux"		"@_ZN11SurvivorBot15UseHealingItemsEP6ActionIS_E"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x20\x53\x56\x8B\xD9\x57\x8D\x8B"
-				/* 55 8B EC 83 EC 20 53 56 8B D9 57 8D 8B */
-			}
+				"library"    "server"
+				"linux"        "@_ZN11SurvivorBot15UseHealingItemsEP6ActionIS_E"
+				"windows"    "\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x57\x8B\x2A\x8D\x8F"
+				/* ? ? ? ? ? ? 53 56 57 8B ? 8D 8F */
+			} 
 
 			/*
 			* SurvivorBot::FindScavengeItem(float)
