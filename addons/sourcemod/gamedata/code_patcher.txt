@@ -18,6 +18,10 @@
 		}
 		"Signatures"
 		{
+			/* @A1m`:
+			 * How to find in windows:
+			 * Can be found by string "CTerrorPlayer::FireBullet Spread" or "CTerrorPlayer::FireBullet SpreadDir"
+			 */
 			"CTerrorPlayer::FireBullet"
 			{
 				"library"	"server"
@@ -30,7 +34,7 @@
 			"CTerrorPlayer::FireBullet_SpreadPatch"
 			{
 				"linux"		"1047"
-				"windows"	"823"
+				"windows"	"802"
 			}
 			"Platform"
 			{

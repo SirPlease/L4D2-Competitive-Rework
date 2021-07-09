@@ -5,6 +5,7 @@
 #include <code_patcher>
 
 #define BULLET_MAX_SIZE 4
+#define DEBUG 0
 
 // Original code & Notes: https://github.com/Jahze/l4d2_plugins/tree/master/spread_patch
 // Static Shotgun Spread leverages code_patcher (code_patcher.txt gamedata)
@@ -21,7 +22,7 @@ ConVar
 
 static const int g_BulletWindowsOffsets[BULLET_MAX_SIZE] = { 0xf, 0x21, 0x30, 0x3f };
 static const int g_FactorWindowsOffset = 0x36;
-static const int g_CenterWindowsPelletOffset = -0x30;
+static const int g_CenterWindowsPelletOffset = -0x36;
 
 static const int g_BulletLinuxOffsets[BULLET_MAX_SIZE] = { 0x11, 0x1c, 0x29, 0x3d };
 static const int g_FactorLinuxOffset = 0x2e;
@@ -56,7 +57,16 @@ static void HotPatchCenterPellet(int newValue)
 	LoadFromAddress(pAddr + view_as<Address>(iCenterPelletOffset), NumberType_Int8);
 	
 	int currentValue = LoadFromAddress(pAddr + view_as<Address>(iCenterPelletOffset), NumberType_Int8);
-
+	
+	#if DEBUG
+	static bool IsFirstPatch = false;
+	if (!IsFirstPatch) {
+		PrintToServer("Center pellet offset is %s! CheckByte: %x", (currentValue == 0x01) ? "correct ": "uncorrect", currentValue);
+		PrintToChatAll("Center pellet offset is %s! CheckByte: %x", (currentValue == 0x01) ? "correct ": "uncorrect", currentValue);
+		IsFirstPatch = true;
+	}
+	#endif
+	
 	if (currentValue == newValue) {
 		return;
 	}
