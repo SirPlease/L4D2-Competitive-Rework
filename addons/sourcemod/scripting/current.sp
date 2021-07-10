@@ -1,22 +1,23 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <left4dhooks>
 
-#define MAX(%0,%1) (((%0) > (%1)) ? (%0) : (%1))
+#define TEAM_SURVIVORS 2
 
-new Handle:g_hVsBossBuffer;
+ConVar g_hVsBossBuffer;
 
-public Plugin:myinfo =
+public Plugin myinfo =
 {
 	name = "L4D2 Survivor Progress",
-	author = "CanadaRox, Visor",
+	author = "CanadaRox, Visor", //update syntax A1m`
 	description = "Print survivor progress in flow percents ",
-	version = "2.0.1",
-	url = "https://github.com/Attano/ProMod"
+	version = "2.0.2",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
 	g_hVsBossBuffer = FindConVar("versus_boss_buffer");
 
@@ -24,57 +25,34 @@ public OnPluginStart()
 	RegConsoleCmd("sm_current", CurrentCmd);
 }
 
-public Action:CurrentCmd(client, args)
+public Action CurrentCmd(int client, int args)
 {
-	new boss_proximity = RoundToNearest(GetBossProximity() * 100.0);
+	int boss_proximity = RoundToNearest(GetBossProximity() * 100.0);
 	PrintToChat(client, "\x01Current: \x04%d%%", boss_proximity);
 	return Plugin_Handled;
 }
 
-Float:GetBossProximity()
+float GetBossProximity()
 {
-	new Float:proximity = GetMaxSurvivorCompletion() + GetConVarFloat(g_hVsBossBuffer) / L4D2Direct_GetMapMaxFlowDistance();
-	new Float:var1;
-	if (proximity > 1.0)
-	{
-		var1 = 1.0;
-	}
-	else
-	{
-		var1 = proximity;
-	}
-	return var1;
+	float proximity = GetMaxSurvivorCompletion() + g_hVsBossBuffer.FloatValue / L4D2Direct_GetMapMaxFlowDistance();
+
+	return (proximity > 1.0) ? 1.0 : proximity;
 }
 
-Float:GetMaxSurvivorCompletion()
+float GetMaxSurvivorCompletion()
 {
-	new Float:flow = 0.0;
-	decl Float:tmp_flow;
-	decl Float:origin[3];
-	decl Address:pNavArea;
-	new client = 1;
-	while (client <= MaxClients)
-	{
-		if (IsClientInGame(client) && GetClientTeam(client) == 2)
-		{
-			GetClientAbsOrigin(client, origin);
-			pNavArea = L4D2Direct_GetTerrorNavArea(origin, 120.0);
-			if (pNavArea)
-			{
+	float flow = 0.0, tmp_flow = 0.0, origin[3];
+	Address pNavArea;
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsClientInGame(i) && GetClientTeam(i) == TEAM_SURVIVORS) {
+			GetClientAbsOrigin(i, origin);
+			pNavArea = L4D2Direct_GetTerrorNavArea(origin);
+			if (pNavArea != Address_Null) {
 				tmp_flow = L4D2Direct_GetTerrorNavAreaFlow(pNavArea);
-				new Float:var2;
-				if (flow > tmp_flow)
-				{
-					var2 = flow;
-				}
-				else
-				{
-					var2 = tmp_flow;
-				}
-				flow = var2;
+				flow = (flow > tmp_flow) ? flow : tmp_flow;
 			}
 		}
-		client++;
 	}
-	return flow / L4D2Direct_GetMapMaxFlowDistance();
+
+	return (flow / L4D2Direct_GetMapMaxFlowDistance());
 }
