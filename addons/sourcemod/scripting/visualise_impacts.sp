@@ -1,23 +1,36 @@
 #pragma semicolon 1
+#pragma newdecls required
 
+#include <sourcemod>
 #include <sdktools>
 
-new g_precachedIndex;
+#define DECAL_NAME "materials/decals/metal/metal01b.vtf"
 
-public OnPluginStart()
+int g_precachedIndex;
+
+public void OnPluginStart()
 {
-	g_precachedIndex = PrecacheDecal("materials/decals/metal/metal01b.vtf", true);
+	g_precachedIndex = PrecacheDecal(DECAL_NAME, true);
+	
 	HookEvent("bullet_impact", BulletImpactEvent);
 }
 
-public Action:BulletImpactEvent(Handle:event, const String:name[], bool:dontBroadcast)
+public void OnMapStart()
 {
-	decl Float:pos[3];
+	if (!IsDecalPrecached(DECAL_NAME)) {
+		g_precachedIndex = PrecacheDecal(DECAL_NAME, true); //true or false?
+	}
+}
 
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
-	pos[0] = GetEventFloat(event, "x");
-	pos[1] = GetEventFloat(event, "y");
-	pos[2] = GetEventFloat(event, "z");
+public void BulletImpactEvent(Event hEvent, const char[] name, bool dontBroadcast)
+{
+	float pos[3];
+
+	int client = GetClientOfUserId(hEvent.GetInt("userid"));
+	
+	pos[0] = hEvent.GetFloat("x");
+	pos[1] = hEvent.GetFloat("y");
+	pos[2] = hEvent.GetFloat("z");
 
 	TE_Start("BSP Decal");
 	TE_WriteVector("m_vecOrigin", pos);
