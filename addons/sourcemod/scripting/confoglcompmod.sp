@@ -33,7 +33,7 @@
 #include "modules/UnprohibitBosses.sp"
 #include "modules/PasswordSystem.sp"
 #include "modules/BotKick.sp"
-#include "modules/EntityRemover.sp"
+//#include "modules/EntityRemover.sp"
 #include "modules/ScoreMod.sp"
 #include "modules/FinaleSpawn.sp"
 #include "modules/BossSpawning.sp"
@@ -66,7 +66,7 @@ public OnPluginStart()
 	PS_OnModuleStart();
 	UL_OnModuleStart();
 	
-	ER_OnModuleStart();
+	//ER_OnModuleStart();
 	GW_OnModuleStart();
 	WS_OnModuleStart();
 	GT_OnModuleStart();
@@ -97,7 +97,7 @@ public OnPluginEnd()
 {
 	CVS_OnModuleEnd();
 	PS_OnModuleEnd();
-	ER_OnModuleEnd();
+	//ER_OnModuleEnd();
 	SM_OnModuleEnd();
 	
 	WS_OnModuleEnd();

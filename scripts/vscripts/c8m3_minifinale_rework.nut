@@ -5,7 +5,7 @@ local TANK = 1
 local DELAY = 2
 //-----------------------------------------------------
 
-Msg("Initiating c9m1_minifinale rework script\n");
+Msg("Initiating c8m3_minifinale rework script\n");
 
 
 DirectorOptions <-
