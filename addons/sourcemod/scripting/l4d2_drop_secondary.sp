@@ -29,7 +29,7 @@ bool bDebug;
 public Plugin myinfo = 
 {
 	name = "L4D2 Drop Secondary",
-	author = "Sir (Initial Plugin by Jahze & Visor)",
+	author = "Sir, ProjectSky (Initial Plugin by Jahze & Visor)",
 	version = "1.1",
 	description = "Testing Purposes"
 }
