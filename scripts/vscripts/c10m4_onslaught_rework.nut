@@ -1,26 +1,28 @@
-Msg("Initiating Onslaught Rework c5m2\n");
+Msg("Initiating Onslaught Rework c10m4\n");
 
 DirectorOptions <-
 {
 	// This turns off tanks and witches.
 	ProhibitBosses = true
 
-	MobSpawnMinTime = 8
-	MobSpawnMaxTime = 8
-	MobMinSize = 20
-	MobMaxSize = 30
+	PreferredMobDirection = SPAWN_IN_FRONT_OF_SURVIVORS
+	MobSpawnMinTime = 3
+	MobSpawnMaxTime = 5
+	MobMaxPending = 30
+	MobMinSize = 15
+	MobMaxSize = 25
 	SustainPeakMinTime = 1
 	SustainPeakMaxTime = 3
 	IntensityRelaxThreshold = 0.90
-	RelaxMinInterval = 5
+	RelaxMinInterval = 1
 	RelaxMaxInterval = 5
-	RelaxMaxFlowTravel = 600
+	RelaxMaxFlowTravel = 200
 	
-	// Limit max horde in queue
-	MobMaxPending = 30
+	CommonLimit = 25
 }
 
 Director.ResetMobTimer()
+Director.PlayMegaMobWarningSounds()
 
 // Variables
 local g_TankFirstSpawned = false
@@ -114,15 +116,15 @@ function TankHordeParams()
 
 function ResetHordeParams()
 {
-	DirectorOptions.MobSpawnMinTime = 8
-	DirectorOptions.MobSpawnMaxTime = 8
-	DirectorOptions.MobMinSize = 20
-	DirectorOptions.MobMaxSize = 30
+	DirectorOptions.MobSpawnMinTime = 3
+	DirectorOptions.MobSpawnMaxTime = 5
+	DirectorOptions.MobMinSize = 15
+	DirectorOptions.MobMaxSize = 25
 	Director.ResetMobTimer()
 	ClientPrint(null, 3, "\x05Ramping up the horde!")
 	
 	// Stop measuring flow
-	//EntFire("OnslaughtFlowChecker", "FireUser2")
+	EntFire("OnslaughtFlowChecker", "FireUser2")
 	EntFire("OnslaughtFlowChecker", "Disable")
 	g_TankFirstSpawned = false
 }
