@@ -1,4 +1,24 @@
-#define PLUGIN_VERSION		"1.4"
+/*
+*	First Map - Skip Intro Cutscenes
+*	Copyright (C) 2021 Silvers
+*
+*	This program is free software: you can redistribute it and/or modify
+*	it under the terms of the GNU General Public License as published by
+*	the Free Software Foundation, either version 3 of the License, or
+*	(at your option) any later version.
+*
+*	This program is distributed in the hope that it will be useful,
+*	but WITHOUT ANY WARRANTY; without even the implied warranty of
+*	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*	GNU General Public License for more details.
+*
+*	You should have received a copy of the GNU General Public License
+*	along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+
+
+#define PLUGIN_VERSION		"1.11"
 
 /*======================================================================================
 	Plugin Info:
@@ -12,9 +32,31 @@
 ========================================================================================
 	Change Log:
 
+1.11 (11-Jul-2021)
+	- Slight optimization and change to fix the unhook event errors.
+
+1.10 (21-Jun-2021)
+	- Changes to fix the last update potentially not working for all maps.
+
+1.9 (20-Jun-2021)
+	- Changed some code to prevent adding multiple identical outputs.
+
+1.8 (15-Feb-2021)
+	- Blocked working on finale maps when not using left4dhooks. Thanks to "Zheldorg" for reporting.
+
+1.7 (10-Oct-2020)
+	- Minor change again to hopefully fix unhook event errors.
+
+1.6 (05-Oct-2020)
+	- Changes to hopefully fix unhook event errors.
+
+1.5 (01-Oct-2020)
+	- Changes to support "The Last Stand" update.
+	- Fixed lateload not enabling the plugin.
+
 1.4 (10-May-2020)
 	- Added cvars: "l4d_skip_intro_allow", "l4d_skip_intro_modes", "l4d_skip_intro_modes_off" and "l4d_skip_intro_modes_tog".
-	- Cvar config saved as "l4d_skip_intro.cfg" in "cfgs/sourcemod" folder. 
+	- Cvar config saved as "l4d_skip_intro.cfg" in "cfgs/sourcemod" folder.
 	- Extra checks to skip intro on some addon maps that use a different entity.
 	- Thanks to "TiTz" for reporting.
 
@@ -42,7 +84,7 @@
 
 
 ConVar g_hCvarAllow, g_hCvarMPGameMode, g_hCvarModes, g_hCvarModesOff, g_hCvarModesTog;
-bool g_bCvarAllow, g_bMapStarted, g_bHookedEvent, g_bLeft4DHooks;
+bool g_bCvarAllow, g_bMapStarted, g_bLeft4DHooks, g_bFaded, g_bOutput1, g_bOutput2;
 
 
 
@@ -93,6 +135,8 @@ public void OnPluginStart()
 	g_hCvarModes.AddChangeHook(ConVarChanged_Allow);
 	g_hCvarModesOff.AddChangeHook(ConVarChanged_Allow);
 	g_hCvarAllow.AddChangeHook(ConVarChanged_Allow);
+
+	HookEvent("gameinstructor_nodraw", Event_NoDraw, EventHookMode_PostNoCopy); // Because round_start can be too early when clients are not in-game.
 }
 
 
@@ -117,7 +161,6 @@ void IsAllowed()
 
 	if( g_bCvarAllow == false && bCvarAllow == true && bAllowMode == true )
 	{
-		OnMapStart();
 		g_bCvarAllow = true;
 	}
 
@@ -197,44 +240,29 @@ public void OnGamemode(const char[] output, int caller, int activator, float del
 		g_iCurrentMode = 8;
 }
 
-// Only hook for first map when using left4dhooks, otherwise always hooked.
-public void OnMapStart()
-{
-	g_bMapStarted = true;
-
-	if( (g_bLeft4DHooks && L4D_IsFirstMapInScenario()) || (!g_bLeft4DHooks && !g_bHookedEvent) )
-	{
-		if( g_bCvarAllow )
-		{
-			HookEvent("gameinstructor_nodraw", Event_NoDraw); // Because round_start can be too early when clients are not in-game.
-			g_bHookedEvent = true;
-		}
-	}
-}
-
-public void OnMapEnd()
-{
-	g_bMapStarted = false;
-
-	if( g_bLeft4DHooks && g_bHookedEvent )
-	{
-		UnhookEvent("gameinstructor_nodraw", Event_NoDraw);
-		g_bHookedEvent = false;
-	}
-}
-
 public void Event_NoDraw(Event event, const char[] name, bool dontBroadcast)
 {
 	if( g_bCvarAllow && (!g_bLeft4DHooks || L4D_IsFirstMapInScenario()) )
 	{
+		// Block finale
+		if( !g_bLeft4DHooks && FindEntityByClassname(MaxClients + 1, "trigger_finale") != INVALID_ENT_REFERENCE )
+			return;
+
+		g_bFaded = false;
+		g_bOutput1 = false;
+		g_bOutput2 = false;
 		CreateTimer(1.0, TimerStart);
+		CreateTimer(5.0, TimerStart);
+		CreateTimer(6.0, TimerStart);
+		CreateTimer(6.5, TimerStart);
+		CreateTimer(7.0, TimerStart);
+		CreateTimer(8.0, TimerStart);
 	}
 }
 
 public Action TimerStart(Handle timer)
 {
 	char buffer[128]; // 128 should be long enough, 3rd party maps could be longer than Valves ~52 chars (including OnUser1 below)?
-	bool done;
 
 	char director[32];
 	int entity = FindEntityByClassname(-1, "info_director"); // Every map should have a director, but apparently some still throw -1 error.
@@ -248,32 +276,44 @@ public Action TimerStart(Handle timer)
 			while( (entity = FindEntityByClassname(entity, i == 0 ? "point_viewcontrol_survivor" : "point_viewcontrol_multiplayer")) != INVALID_ENT_REFERENCE )
 			{
 				// ALLOW CONTROL
-				if( !done )
+				if( (i == 0 && !g_bOutput1) || (i == 1 && !g_bOutput2) )
 				{
+					// Testing outputs
+					// static int tester;
+					// FormatEx(buffer, sizeof(buffer), "OnUser1 silvers_point_cmd:Command:say test%d:0:-1", tester++);
+					// SetVariantString(buffer);
+					// AcceptEntityInput(entity, "AddOutput");
+
+					// ALLOW MOVEMENT
 					FormatEx(buffer, sizeof(buffer), "OnUser1 %s:ReleaseSurvivorPositions::0:-1", director);
 					SetVariantString(buffer);
 					AcceptEntityInput(entity, "AddOutput");
+
 					FormatEx(buffer, sizeof(buffer), "OnUser1 %s:FinishIntro::0:-1", director);
 					SetVariantString(buffer);
 					AcceptEntityInput(entity, "AddOutput");
+
 					AcceptEntityInput(entity, "FireUser1");
-					done = true;
+
+					if( i == 0 )			g_bOutput1 = true;
+					else if( i == 1 )		g_bOutput2 = true;
+				} else {
+					AcceptEntityInput(entity, "FireUser1");
 				}
 
 				// STOP SCENE
-				GetEntPropString(entity, Prop_Data, "m_iName", buffer, sizeof(buffer));
-				Format(buffer, sizeof(buffer), "OnUser2 %s:StartMovement::0:-1", buffer);
-				SetVariantString(buffer);
-				AcceptEntityInput(entity, "AddOutput");
-				AcceptEntityInput(entity, "FireUser2");
+				SetVariantString("!self");
+				AcceptEntityInput(entity, "StartMovement");
 
 				// AcceptEntityInput(entity, "Kill"); // Kill works good, but maybe some 3rd party maps use this for other scenes, so better to not kill.. especially if no left4dhooks and checking every map.
 			}
 		}
 
 		// FADE IN
-		if( done )
+		if( (g_bOutput1 || g_bOutput2 ) && !g_bFaded )
 		{
+			g_bFaded = true;
+
 			entity = CreateEntityByName("env_fade");
 			DispatchKeyValue(entity, "spawnflags", "1");
 			DispatchKeyValue(entity, "rendercolor", "0 0 0");
@@ -283,9 +323,14 @@ public Action TimerStart(Handle timer)
 			DispatchSpawn(entity);
 			AcceptEntityInput(entity, "Fade");
 
-			SetVariantString("OnUser1 !self:Kill::2.1:-1");
+			SetVariantString("OnUser1 !self:Kill::2.5:-1");
 			AcceptEntityInput(entity, "AddOutput");
 			AcceptEntityInput(entity, "FireUser1");
+
+			// Testing outputs
+			// entity = CreateEntityByName("point_servercommand");
+			// DispatchKeyValue(entity, "targetname", "silvers_point_cmd");
+			// DispatchSpawn(entity);
 		}
 	}
 }
