@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.43"
+#define PLUGIN_VERSION		"1.36"
 
 /*=======================================================================================
 	Plugin Info:
@@ -31,6 +31,10 @@
 
 ========================================================================================
 	Change Log:
+
+1.46 (09-Jul-2021)
+	- L4D2: Added native "L4D2_ExecVScriptCode" to exec VScript code instead of having to create an entity to fire code.
+	- L4D2: Fixed GameData file from the "2.2.2.0" game update.
 
 1.43 (01-Jul-2021)
 	- L4D1 & L4D2 update:
@@ -472,6 +476,13 @@ public Action sm_l4dd(int client, int args)
 			PrintToServer("L4D2_VScriptWrapper_UseAdrenaline %d", L4D2_VScriptWrapper_UseAdrenaline(client, 20.0));
 			PrintToServer("L4D2_VScriptWrapper_ReviveByDefib %d", L4D2_VScriptWrapper_ReviveByDefib(client));
 			PrintToServer("L4D2_VScriptWrapper_ReviveFromIncap %d", L4D2_VScriptWrapper_ReviveFromIncap(client));
+
+			char code[256];
+			FormatEx(code, sizeof(code), "GetPlayerFromUserID(%d).ReviveByDefib();", GetClientUserId(client));
+			L4D2_ExecVScriptCode(code);
+
+			FormatEx(code, sizeof(code), "GetPlayerFromUserID(%d).UseAdrenaline(%f);", GetClientUserId(client), 20.0);
+			L4D2_ExecVScriptCode(code);
 		}
 
 		int bot;
@@ -694,7 +705,7 @@ public Action sm_l4dd(int client, int args)
 	float vPos[3];
 	float vAng[3];
 
-	if( client == 0 ) client = GetRandomClient();
+	if( client == 0 ) client = GetRandomSurvivor();
 	PrintToServer("TESTING NATIVES. Using client: %d (%N)", client, client);
 	GetClientAbsOrigin(client, vPos);
 	GetClientAbsAngles(client, vAng);
@@ -2075,7 +2086,7 @@ void ForwardCalled(const char[] format, any ...)
 	PrintToServer("----------");
 }
 
-stock int GetRandomClient()
+stock int GetRandomSurvivor()
 {
 	int client;
 	for( int i = 1; i <= MaxClients; i++ )
@@ -2092,6 +2103,45 @@ stock int GetRandomClient()
 		for( int i = 1; i <= MaxClients; i++ )
 		{
 			if( IsClientInGame(i) && GetClientTeam(i) == 2 )
+			{
+				client = i;
+				break;
+			}
+		}
+	}
+
+	if( !client )
+	{
+		for( int i = 1; i <= MaxClients; i++ )
+		{
+			if( IsClientInGame(i) )
+			{
+				client = i;
+				break;
+			}
+		}
+	}
+
+	return client;
+}
+
+stock int GetRandomInfected()
+{
+	int client;
+	for( int i = 1; i <= MaxClients; i++ )
+	{
+		if( IsClientInGame(i) && GetClientTeam(i) == 3 && IsFakeClient(i) == false )
+		{
+			client = i;
+			break;
+		}
+	}
+
+	if( !client )
+	{
+		for( int i = 1; i <= MaxClients; i++ )
+		{
+			if( IsClientInGame(i) && GetClientTeam(i) == 3 )
 			{
 				client = i;
 				break;

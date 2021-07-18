@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.45"
+#define PLUGIN_VERSION		"1.49"
 
 #define DEBUG				0
 // #define DEBUG			1	// Prints addresses + detour info (only use for debugging, slows server down)
@@ -41,6 +41,21 @@
 
 ========================================================================================
 	Change Log:
+
+1.49 (13-Jul-2021)
+	- L4D2: Fixed the "SpawnTimer" offset being wrong. Thanks to "Forgetest" for reporting.
+	- L4D2 GameData file updated.
+
+1.48 (13-Jul-2021)
+	- Fixed "Param is not a pointer" in the "L4D_OnVomitedUpon" forward. Thanks to "ddd123" for reporting.
+	- L4D2: Changed the way "ForceNextStage" address is read on Windows, hopefully future proof.
+
+1.47 (10-Jul-2021)
+	- Fixed "Trying to get value for null pointer" in the "L4D_OnVomitedUpon" forward. Thanks to "Shadowart" for reporting.
+
+1.46 (09-Jul-2021)
+	- L4D2: Added native "L4D2_ExecVScriptCode" to exec VScript code instead of having to create an entity to fire code.
+	- L4D2: Fixed GameData file from the "2.2.2.0" game update.
 
 1.45 (04-Jul-2021)
 	- Fixed bad description for "L4D_SetHumanSpec" and "L4D_TakeOverBot" in the Include file.
@@ -916,7 +931,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	// ====================================================================================================
 	//									NATIVES
 	// L4D1 = 12 [left4downtown] + 43 - 0 (deprecated) [l4d_direct] + 15 [l4d2addresses] + 15 [silvers - mine!] + 4 [anim] = 94
-	// L4D2 = 52 [left4downtown] + 62 - 1 (deprecated) [l4d_direct] + 26 [l4d2addresses] + 36 [silvers - mine!] + 4 [anim] = 184
+	// L4D2 = 52 [left4downtown] + 62 - 1 (deprecated) [l4d_direct] + 26 [l4d2addresses] + 37 [silvers - mine!] + 4 [anim] = 185
 	// ====================================================================================================
 	// ANIMATION HOOK
 	CreateNative("AnimHookEnable",		 							Native_AnimHookEnable);
@@ -953,6 +968,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	if( g_bLeft4Dead2 )
 	{
 		CreateNative("L4D2_AreWanderersAllowed",					Native_AreWanderersAllowed);
+		CreateNative("L4D2_ExecVScriptCode",						Native_ExecVScriptCode);
 		CreateNative("L4D2_GetVScriptOutput",						Native_GetVScriptOutput);
 		CreateNative("L4D2_SpitterPrj",		 						Native_SpitterPrj);
 		CreateNative("L4D2_UseAdrenaline",		 					Native_OnAdrenalineUsed);
@@ -2772,15 +2788,21 @@ void LoadGameData()
 				LogError("Failed to create SDKCall: OnAdrenalineUsed");
 		}
 
+		/* Verify ForceNextStage addresses are equal (B will break in future updates, where A should remain intact)
+		Address aa = hGameData.GetAddress("ForceNextStageAddress");
+		Address bb = hGameData.GetAddress("ForceNextStage");
+		PrintToServer("ForceNextStage: A: %d B: %d", aa, bb);
+		*/
+
 		StartPrepSDKCall(SDKCall_Raw);
-		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "ForceNextStage") == false )
+		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Address, "ForceNextStageAddress") == false )
 		{
-			LogError("Failed to find signature: ForceNextStage");
+			LogError("Failed to find signature: ForceNextStageAddress");
 		} else {
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 			g_hSDK_Call_ForceNextStage = EndPrepSDKCall();
 			if( g_hSDK_Call_ForceNextStage == null )
-				LogError("Failed to create SDKCall: ForceNextStage");
+				LogError("Failed to create SDKCall: ForceNextStageAddress");
 		}
 
 		StartPrepSDKCall(SDKCall_Raw);
@@ -3779,7 +3801,7 @@ void LoadGameData()
 		ValidateOffset(VersusMaxCompletionScore, "VersusMaxCompletionScore");
 
 		m_iTankCount = hGameData.GetOffset("m_iTankCount");
-		ValidateOffset(SpawnTimer, "SpawnTimer");
+		ValidateOffset(m_iTankCount, "m_iTankCount");
 
 		m_iWitchCount = hGameData.GetOffset("m_iWitchCount");
 		ValidateOffset(m_iWitchCount, "m_iWitchCount");
@@ -3950,6 +3972,19 @@ void ValidateOffset(int test, const char[] name, bool check = true)
 // ==================================================
 // Silvers Natives
 // ==================================================
+public int Native_ExecVScriptCode(Handle plugin, int numParams)
+{
+	int maxlength;
+	GetNativeStringLength(1, maxlength);
+	maxlength += 1;
+	char[] code = new char[maxlength];
+	GetNativeString(1, code, maxlength);
+
+	bool success = ExecVScriptCode(code);
+
+	return success;
+}
+
 public int Native_GetVScriptOutput(Handle plugin, int numParams)
 {
 	int maxlength;
@@ -4513,9 +4548,10 @@ public int Native_IsFirstMapInScenario(Handle plugin, int numParams)
 
 		if( keyvalue )
 		{
-			GetCurrentMap(sMap, sizeof(sMap));
 			//PrintToServer("#### CALL SDK_KV_GetString");
 			SDKCall(SDK_KV_GetString, keyvalue, check, sizeof(check), "map", "N/A");
+
+			GetCurrentMap(sMap, sizeof(sMap));
 			return strcmp(sMap, check) == 0;
 		}
 
@@ -7500,6 +7536,8 @@ public MRESReturn OnVomitedUpon(int client, Handle hReturn, Handle hParams)
 {
 	// PrintToServer("##### DTR OnVomitedUpon");
 
+	if( DHookIsNullParam(hParams, 1) ) return MRES_Ignored;
+
 	int a1 = DHookGetParam(hParams, 1);
 	int a2 = DHookGetParam(hParams, 2);
 
@@ -7740,58 +7778,46 @@ public int Native_VS_UseAdrenaline(Handle plugin, int numParams)
 {
 	// Vars
 	char code[256];
-	char buffer[8];
 
 	int client = GetNativeCell(1);
 	client = GetClientUserId(client);
 	float fTime = GetNativeCell(2);
 
 	// Code
-	FormatEx(code, sizeof(code), "GetPlayerFromUserID(%d).UseAdrenaline(%f); <RETURN>1</RETURN>", client, fTime);
+	FormatEx(code, sizeof(code), "GetPlayerFromUserID(%d).UseAdrenaline(%f);", client, fTime);
 
 	// Exec
-	if( GetVScriptOutput(code, buffer, sizeof(buffer)) )
-		return true;
-	else
-		return false;
+	return ExecVScriptCode(code);
 }
 
 public int Native_VS_ReviveByDefib(Handle plugin, int numParams)
 {
 	// Vars
 	char code[256];
-	char buffer[8];
 
 	int client = GetNativeCell(1);
 	client = GetClientUserId(client);
 
 	// Code
-	FormatEx(code, sizeof(code), "GetPlayerFromUserID(%d).ReviveByDefib(); <RETURN>1</RETURN>", client);
+	FormatEx(code, sizeof(code), "GetPlayerFromUserID(%d).ReviveByDefib();", client);
 
 	// Exec
-	if( GetVScriptOutput(code, buffer, sizeof(buffer)) )
-		return true;
-	else
-		return false;
+	return ExecVScriptCode(code);
 }
 
 public int Native_VS_ReviveFromIncap(Handle plugin, int numParams)
 {
 	// Vars
 	char code[256];
-	char buffer[8];
 
 	int client = GetNativeCell(1);
 	client = GetClientUserId(client);
 
 	// Code
-	FormatEx(code, sizeof(code), "GetPlayerFromUserID(%d).ReviveFromIncap(); <RETURN>1</RETURN>", client);
+	FormatEx(code, sizeof(code), "GetPlayerFromUserID(%d).ReviveFromIncap();", client);
 
 	// Exec
-	if( GetVScriptOutput(code, buffer, sizeof(buffer)) )
-		return true;
-	else
-		return false;
+	return ExecVScriptCode(code);
 }
 
 public int Native_VS_GetSenseFlags(Handle plugin, int numParams)
@@ -7885,24 +7911,46 @@ public any Native_VS_NavAreaTravelDistance(Handle plugin, int numParams)
 // ====================================================================================================
 //										HELPERS
 // ====================================================================================================
-bool GetVScriptOutput(char[] code, char[] ret, int maxlength)
+int g_iLogicScript;
+
+bool GetVScriptEntity()
 {
-	static int logic;
-
-	if( !logic || EntRefToEntIndex(logic) == INVALID_ENT_REFERENCE )
+	if( !g_iLogicScript || EntRefToEntIndex(g_iLogicScript) == INVALID_ENT_REFERENCE )
 	{
-		logic = CreateEntityByName("logic_script");
+		g_iLogicScript = CreateEntityByName("logic_script");
 
-		if( logic == INVALID_ENT_REFERENCE || !IsValidEntity(logic) )
+		if( g_iLogicScript == INVALID_ENT_REFERENCE || !IsValidEntity(g_iLogicScript) )
 		{
 			LogError("Could not create 'logic_script'");
 			return false;
 		}
 
-		DispatchSpawn(logic);
+		DispatchSpawn(g_iLogicScript);
 
-		logic = EntIndexToEntRef(logic);
+		g_iLogicScript = EntIndexToEntRef(g_iLogicScript);
 	}
+
+	return true;
+}
+
+bool ExecVScriptCode(char[] code)
+{
+	if( !GetVScriptEntity() ) return false;
+
+	// Run code
+	SetVariantString(code);
+	AcceptEntityInput(g_iLogicScript, "RunScriptCode");
+
+	#if KILL_VSCRIPT
+	AcceptEntityInput(g_iLogicScript, "Kill");
+	#endif
+
+	return true;
+}
+
+bool GetVScriptOutput(char[] code, char[] ret, int maxlength)
+{
+	if( !GetVScriptEntity() ) return false;
 
 	// Return values between <RETURN> </RETURN>
 	int length = strlen(code) + 256;
@@ -7922,10 +7970,10 @@ bool GetVScriptOutput(char[] code, char[] ret, int maxlength)
 
 	// Run code
 	SetVariantString(buffer);
-	AcceptEntityInput(logic, "RunScriptCode");
+	AcceptEntityInput(g_iLogicScript, "RunScriptCode");
 
 	#if KILL_VSCRIPT
-	AcceptEntityInput(logic, "Kill");
+	AcceptEntityInput(g_iLogicScript, "Kill");
 	#endif
 
 	// Retrieve value and return to buffer
