@@ -18,6 +18,19 @@ stock void InitWeaponNamesTrie()
 }
 
 /**
+ * Initializes internal structure necessary for weapons.inc functions
+ * @remark It is recommended that you run this function on plugin start, but not necessary
+ *
+ * @noreturn
+ */
+stock void L4D2Weapons_Init()
+{
+	if (hWeaponNamesTrie == null) {
+		InitWeaponNamesTrie();
+	}
+}
+
+/**
  * Performs bounds checking to determine if a WeaponId is valid
  * @remark Simple check to see if wepid has a garbage value
  *
@@ -60,11 +73,11 @@ stock bool HasValidWeaponModel(WeaponId wepid)
  */
 stock WeaponId WeaponNameToId(const char[] weaponName)
 {
-	int id;
 	if (hWeaponNamesTrie == null) {
 		InitWeaponNamesTrie();
 	}
 	
+	int id;
 	if (GetTrieValue(hWeaponNamesTrie, weaponName, id)) {
 		return view_as<WeaponId>(id);
 	}
