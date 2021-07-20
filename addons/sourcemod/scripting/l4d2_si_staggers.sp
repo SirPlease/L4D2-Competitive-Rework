@@ -23,7 +23,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
-#include <left4framework>
+#include <left4dhooks>
 #define L4D2UTIL_STOCKS_ONLY
 #include <l4d2util>
 
