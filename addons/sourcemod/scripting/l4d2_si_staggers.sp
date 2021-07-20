@@ -18,124 +18,127 @@
 	You should have received a copy of the GNU General Public License along
 	with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#pragma semicolon 1
+#pragma newdecls required
+
 #include <sourcemod>
-#include <left4dhooks>
+#include <left4framework>
+#define L4D2UTIL_STOCKS_ONLY
+#include <l4d2util>
 
-#if !defined DEBUG
 #define DEBUG 0
-#endif
 
-int SI_DOMINATION_OFFSETS[4];
+#define BLOCK_BOOMER	(1 << 0)
+#define BLOCK_CHARGER	(1 << 1)
+#define BLOCK_WITCH		(1 << 2)
 
-int FLAGS[3] = {
-    1 << 0, // boomer
-    1 << 1, // charger
-    1 << 2, // witch
+ConVar hCvarInfectedFlags;
+
+int iActiveFlags;
+
+static const char L4D2_Attacker_NetProps[][] =
+{
+	"m_tongueOwner",	// Smoker
+	"m_pounceAttacker",	// Hunter
+	"m_jockeyAttacker",	// Jockey
+	"m_pummelAttacker",	// Charger
 };
 
-new Handle:hCvarInfectedFlags;
-
-new iActiveFlags;
-
-public Plugin:myinfo = 
+public Plugin myinfo = 
 {
-    name = "L4D2 No SI Friendly Staggers",
-    author = "Visor",
-    description = "Removes SI staggers caused by other SI(Boomer, Charger, Witch)",
-    version = "1.1",
-    url = ""
+	name = "L4D2 No SI Friendly Staggers",
+	author = "Visor, A1m`",
+	description = "Removes SI staggers caused by other SI(Boomer, Charger, Witch)",
+	version = "1.2",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
-    Handle hGameConf = LoadGameConfigFile("l4d2_si_stagger");
-    SI_DOMINATION_OFFSETS[0] = GameConfGetOffset(hGameConf, "DomninatorOffset_Smoker");
-    SI_DOMINATION_OFFSETS[1] = GameConfGetOffset(hGameConf, "DomninatorOffset_Hunter");
-    SI_DOMINATION_OFFSETS[2] = GameConfGetOffset(hGameConf, "DomninatorOffset_Jockey");
-    SI_DOMINATION_OFFSETS[3] = GameConfGetOffset(hGameConf, "DomninatorOffset_Charger");
-    hCvarInfectedFlags = CreateConVar("l4d2_disable_si_friendly_staggers", "0", "Remove SI staggers caused by other SI(bitmask: 1-Boomer/2-Charger/4-Witch)");
-    iActiveFlags = GetConVarInt(hCvarInfectedFlags);
-    HookConVarChange(hCvarInfectedFlags, PluginActivityChanged);
+	hCvarInfectedFlags = CreateConVar("l4d2_disable_si_friendly_staggers", "0", "Remove SI staggers caused by other SI(bitmask: 1-Boomer/2-Charger/4-Witch)");
+	
+	iActiveFlags = hCvarInfectedFlags.IntValue;
+	hCvarInfectedFlags.AddChangeHook(PluginActivityChanged);
 }
 
-public PluginActivityChanged(Handle:cvar, const String:oldValue[], const String:newValue[])
+public void PluginActivityChanged(ConVar cvar, const char[] oldValue, const char[] newValue)
 {
-    iActiveFlags = GetConVarInt(hCvarInfectedFlags);
+	iActiveFlags = hCvarInfectedFlags.IntValue;
 }
 
-public Action:L4D2_OnStagger(target, source)
+public Action L4D2_OnStagger(int target, int source)
 {
-    // For some reason, Valve chose to set a null source for charger impact staggers.
-    // And Left4DHooks converts this null source to -1.
-    // Since there aren't really any other possible calls for this function,
-    // assume (source == -1) as a charger impact stagger
-    // TODO: Patch the binary to pass on the Charger's client ID instead of nothing?
-    // Probably not worth it, for now, at least
-    #if DEBUG
-    PrintToServer("OnStagger(target=%d, source=%d) SourceValid: %d, SourceInfectedClass %d",
-        target,
-        source,
-        IsValidEdict(source),
-        GetInfectedClass(source)
-    );
-    #endif
-    
-    if (!IsValidEdict(source) && source != -1)
-        return Plugin_Continue;
-        
-    if (!iActiveFlags)  // Is the plugin active at all?
-        return Plugin_Continue;
-
-    if (GetInfectedClass(source) == 2 && !(iActiveFlags & FLAGS[0]))  // Is the Boomer eligible?
-        return Plugin_Continue;
-
-    if (source == -1 && !(iActiveFlags & FLAGS[1]))  // Is the Charger eligible?
-        return Plugin_Continue;
-
-    if (GetClientTeam(target) == 2 && IsBeingAttacked(target))  // Capped Survivors should not get staggered
-        return Plugin_Handled;
-
-    if (GetClientTeam(target) != 3) // We'll only need SI for the following checks
-        return Plugin_Continue;
-
-    if (source == -1 && GetInfectedClass(target) != 6)    // Allow Charger selfstaggers through
-        return Plugin_Handled;
-
-    if (source <= MaxClients && GetInfectedClass(source) == 2) // Cancel any staggers caused by a Boomer explosion
-        return Plugin_Handled;
-    
-    if (source == -1) // Return early if we don't have a valid edict.
-        return Plugin_Continue;
-
-    decl String:classname[64];
-    GetEdictClassname(source, classname, sizeof(classname));
-    if ((iActiveFlags & FLAGS[2]) && StrEqual(classname, "witch"))  // Cancel any staggers caused by a running Witch(if eligible)
-        return Plugin_Handled;
-    
-    return Plugin_Continue;  // Is this even reachable? Probably yes, in case some plugin has used the L4D_StaggerPlayer() native
+	// For some reason, Valve chose to set a null source for charger impact staggers.
+	// And Left4DHooks converts this null source to -1.
+	// Since there aren't really any other possible calls for this function,
+	// assume (source == -1) as a charger impact stagger
+	// TODO: Patch the binary to pass on the Charger's client ID instead of nothing?
+	// Probably not worth it, for now, at least
+	#if DEBUG
+	PrintToServer("OnStagger(target=%d, source=%d) SourceValid: %d, SourceInfectedClass %d",
+						target, source, IsValidEdict(source), GetInfectedClass(source));
+	#endif
+	
+	if (!iActiveFlags) { // Is the plugin active at all?
+		return Plugin_Continue;
+	}
+	
+	if (source != -1 && !IsValidEdict(source)) {
+		return Plugin_Continue;
+	}
+	
+	if (GetInfectedZClass(source) == view_as<int>(L4D2Infected_Boomer) && !(iActiveFlags & BLOCK_BOOMER)) { // Is the Boomer eligible?
+		return Plugin_Continue;
+	}
+	
+	if (source == -1 && !(iActiveFlags & BLOCK_CHARGER)) { // Is the Charger eligible?
+		return Plugin_Continue;
+	}
+	
+	if (GetClientTeam(target) == view_as<int>(L4D2Team_Survivor) && IsBeingAttacked(target)) { // Capped Survivors should not get staggered
+		return Plugin_Handled;
+	}
+	
+	if (GetClientTeam(target) != view_as<int>(L4D2Team_Infected)) { // We'll only need SI for the following checks
+		return Plugin_Continue;
+	}
+	
+	if (source == -1 && GetInfectedZClass(target) != view_as<int>(L4D2Infected_Charger)) { // Allow Charger selfstaggers through
+		return Plugin_Handled;
+	}
+	
+	if (source <= MaxClients && GetInfectedZClass(source) == view_as<int>(L4D2Infected_Boomer)) { // Cancel any staggers caused by a Boomer explosion
+		return Plugin_Handled;
+	}
+	
+	if ((iActiveFlags & BLOCK_WITCH) && source != -1) { // Return early if we don't have a valid edict.
+		char classname[64];
+		GetEdictClassname(source, classname, sizeof(classname));
+		if (StrContains(classname, "witch") != -1) { // Cancel any staggers caused by a running Witch or Witch Bride(if eligible)
+			return Plugin_Handled;
+		}
+	}
+	
+	return Plugin_Continue; // Is this even reachable? Probably yes, in case some plugin has used the L4D_StaggerPlayer() native
 }
 
-bool:IsBeingAttacked(survivor)
+bool IsBeingAttacked(int survivor)
 {
-    Address pEntity = GetEntityAddress(survivor);
-    if (pEntity == Address_Null)
-        return false;
-    
-    int survivorState = 0;
-    for (new i = 0; i < sizeof(SI_DOMINATION_OFFSETS); i++)
-    {    
-        survivorState += LoadFromAddress(pEntity + view_as<Address>(SI_DOMINATION_OFFSETS[i]), NumberType_Int32);
-    }
-    
-    return survivorState > 0 ? true : false;
+	for (int i = 0; i < sizeof(L4D2_Attacker_NetProps); i++) {
+		if (GetEntPropEnt(survivor, Prop_Send, L4D2_Attacker_NetProps[i]) != -1) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
-GetInfectedClass(client)
+int GetInfectedZClass(int client)
 {
-    if (client > 0 && client <= MaxClients && IsClientInGame(client))
-    {
-        return GetEntProp(client, Prop_Send, "m_zombieClass");
-    }
+	if (client > 0 && client <= MaxClients && IsClientInGame(client)) {
+		return GetEntProp(client, Prop_Send, "m_zombieClass");
+	}
 
-    return -1;
+	return -1;
 }

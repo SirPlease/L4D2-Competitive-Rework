@@ -183,7 +183,11 @@ int GetUprightSurvivors()
 
 bool IsTankActuallyInPlay()
 {
-	int tank = FindTankClient(0);
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsTank(i) && IsPlayerAlive(i)) {
+			return true;
+		}
+	}
 
-	return tank != -1 && IsPlayerAlive(tank);
+	return false;
 }
