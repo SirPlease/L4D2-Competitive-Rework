@@ -5,7 +5,7 @@
 #include <sourcemod>
 #include <sdktools>
 #include <l4d2util>
-#include <l4d2_direct>
+#include <left4dhooks> //#include <l4d2_direct>
 
 public Plugin:myinfo = 
 {

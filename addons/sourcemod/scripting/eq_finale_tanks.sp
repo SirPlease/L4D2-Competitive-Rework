@@ -2,7 +2,7 @@
 
 #include <sourcemod>
 #include <sdktools>
-#include <l4d2_direct>
+#include <left4dhooks> //#include <l4d2_direct>
 
 // from https://developer.valvesoftware.com/wiki/L4D2_Director_Scripts
 enum ()
