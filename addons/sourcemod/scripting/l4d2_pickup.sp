@@ -70,7 +70,7 @@ int
 public Plugin myinfo = 
 {
 	name = "L4D2 Pick-up Changes",
-	author = "Sir",
+	author = "Sir", //Update syntax A1m`
 	description = "Alters a few things regarding picking up/giving items and incapped Players.",
 	version = "1.2.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework/"
