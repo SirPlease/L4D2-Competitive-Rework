@@ -3,8 +3,8 @@
 #endif
 #define l4d2_weapons_inc_
 
-#define GETWEAPONNAME(%0) (IsValidWeaponId(WeaponId:(%0)) ? (WeaponNames[_:(%0)]) : "")
-#define GETWEAPONMODEL(%0) (HasValidWeaponModel(WeaponId:(%0)) ? (WeaponModels[_:(%0)]) : "")
+#define GETWEAPONNAME(%0) (IsValidWeaponId(view_as<WeaponId>(%0)) ? (WeaponNames[view_as<int>(%0)]) : "")
+#define GETWEAPONMODEL(%0) (HasValidWeaponModel(view_as<WeaponId>(%0)) ? (WeaponModels[view_as<int>(%0)]) : "")
 
 static Handle hWeaponNamesTrie = null;
 
@@ -182,7 +182,7 @@ stock int ConvertWeaponSpawn(int entity, WeaponId wepid, int count = 5, const ch
 
 	TeleportEntity(entity, origins, angles, NULL_VECTOR);
 	DispatchSpawn(entity);
-	SetEntityMoveType(entity ,MOVETYPE_NONE);
+	SetEntityMoveType(entity, MOVETYPE_NONE);
 
 	return entity;
 }
