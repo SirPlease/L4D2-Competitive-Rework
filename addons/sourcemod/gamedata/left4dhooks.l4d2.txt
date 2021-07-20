@@ -925,6 +925,32 @@
 					"signature" "VanillaModeOffset"
 				}
 			}
+
+			"ForceNextStage"
+			{
+				"windows"
+				{
+					"signature" "ForceNextStage"
+				}
+				"linux"
+				{
+					"signature" "ForceNextStage"
+				}
+			}
+
+			"ForceNextStageAddress"
+			{
+				"windows"
+				{
+					"signature" "ForceNextStageAddress"
+					"read"		"163"	// Midway through nearer target call
+					// "read"	"1436"	// From function start
+				}
+				"linux"
+				{
+					"signature" "ForceNextStageAddress"
+				}
+			}
 		}
 
 
@@ -1033,7 +1059,7 @@
 			"SpawnTimer"
 			{
 				"windows"	"11308"
-				"linux"		"11288"
+				"linux"		"11256"
 			}
 
 			"m_rescueCheckTimer"
@@ -1533,14 +1559,32 @@
 			}
 
 			/*
+			*  ScriptClassDesc_t * GetScriptDesc<CDirector>(CDirector *)
+			*/
+			"ForceNextStageAddress"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector14ForceNextStageEv"
+				// Midway through nearer target call
+				"windows"	"\x89\x2A\x2A\xC7\x2A\x2A\x2A\x2A\x2A\x2A\xC7\x2A\x2A\x2A\x2A\x2A\x2A\x89\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x50\xE8\x2A\x2A\x2A\x2A\x33\x2A\x8D"
+				/* 89 ? ? C7 ? ? ? ? ? ? C7 ? ? ? ? ? ? 89 ? ? A1 ? ? ? ? 50 E8 ? ? ? ? 33 ? 8D */
+
+				// FUnction start
+				// "windows"	"\x80\x2A\x2A\x2A\x2A\x2A\x00\x0F\x85\x2A\x2A\x2A\x2A\x53\x56\xB8\x2A\x2A\x2A\x2A\xA3"
+				/* 80 ? ? ? ? ? 00 0F 85 ? ? ? ? 53 56 B8 ? ? ? ? A3 */
+				/* Search "Push the ScriptedMode to next stage" */
+			}
+
+			/*
 			*  CDirector::ForceNextStage(CDirector *this)
+			*  Note: Unused since breaks every update, windows has a new method above to get the address
 			*/
 			"ForceNextStage"
 			{
-				"library"    "server"
-				"linux"        "@_ZN9CDirector14ForceNextStageEv"
-				"windows"    "\x8B\x2A\x88\x05\x00\x00\xE9\x2A\x99\x01\x00"
-				/* 8B ? 88 05 00 00 E9 ? 9A 01 00 */
+				"library"	"server"
+				"linux"		"@_ZN9CDirector14ForceNextStageEv"
+				"windows"	"\x8B\x2A\x88\x05\x00\x00\xE9\x2A\x9A\x01\x00"
+				/* 8B ? 88 05 00 00 E9 ? 9A 01 00 */ 
 				/* Search "ForceNextStage" call below of XRef */
 			}
 
@@ -2194,11 +2238,12 @@
 			*/
 			"UseHealingItems"
 			{
-				"library"    "server"
-				"linux"        "@_ZN11SurvivorBot15UseHealingItemsEP6ActionIS_E"
-				"windows"    "\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x57\x8B\x2A\x8D\x8F"
-				/* ? ? ? ? ? ? 53 56 57 8B ? 8D 8F */
-			} 
+				"library"	"server"
+				"linux"		"@_ZN11SurvivorBot15UseHealingItemsEP6ActionIS_E"
+				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\x53\x56\x57\x8B\x2A\x8D\x2A\x2A\x2A\x2A\x2A\x8D\x2A\x2A\x2A\x2A\x2A\xE8"
+				/* 55 8B ? 83 ? ? 53 56 57 8B ? 8D ? ? ? ? ? 8D ? ? ? ? ? E8 */
+				/* Search "Trying to heal a friend" */
+			}
 
 			/*
 			* SurvivorBot::FindScavengeItem(float)

@@ -314,7 +314,6 @@
 		"start_extra_dist"  "605.247620"
 		"end_point"         "2883.220703 2962.613037 -204.742737"
 		"end_dist"          "336.442200"
-		"max_distance"      "300"
 	}
 	"c8m2_subway"
 	{
@@ -331,9 +330,10 @@
 		"start_dist"        "50.000000"
 		"start_extra_dist"  "0.000000"
 		"end_dist"          "75.000000"
-		"max_distance"      "600"
-		"tank_ban_flow_min" "55"
-		"tank_ban_flow_max" "80"
+		"tank_ban_flow_min" "50"
+		"tank_ban_flow_max" "70"
+		"tank_ban_flow_min_b" "29"
+		"tank_ban_flow_max_b" "35"
 	}
 	"c8m4_interior"
 	{
@@ -346,6 +346,8 @@
 		"max_tank_z"        "4000.000000"
 		"tank_warpto"       "13428.627930 15072.313477 486.031250"
 		"max_distance"      "500"
+		"tank_ban_flow_min" "45"
+		"tank_ban_flow_max" "80"
 	}
 	"c8m5_rooftop"
 	{
@@ -355,7 +357,7 @@
 		"end_point"         "5675.121582 8443.446289 6142.031250"
 		"end_dist"          "100.000000"
 		"tank_ban_flow_min" "0"
-		"tank_ban_flow_max" "55"
+		"tank_ban_flow_max" "45"
 		"ItemLimits"
 		{
 			"pain_pills"    "0"
@@ -368,6 +370,7 @@
 		"start_extra_dist"  "1502.202637"
 		"end_point"         "153.076584 -1426.919556 -139.968750"
 		"end_dist"          "210.283035"
+		"max_distance"      "600"
 	}
 	"c9m2_lots"
 	{
@@ -389,7 +392,6 @@
 		"start_extra_dist"  "587.266541"
 		"end_point"         "-10784.895508 -4906.771973 318.224670"
 		"end_dist"          "403.989594"
-		"max_distance"      "300"
 	}
 	"c10m2_drainage"
 	{
@@ -398,7 +400,6 @@
 		"start_extra_dist"  "399.942505"
 		"end_point"         "-8339.282227 -5592.915039 0.031253"
 		"end_dist"          "322.081451"
-		"max_distance"      "400"
 	}
 	"c10m3_ranchhouse"
 	{
@@ -407,7 +408,6 @@
 		"start_extra_dist"  "327.413300"
 		"end_point"         "-2673.776611 107.736259 316.727081"
 		"end_dist"          "327.768036"
-		"max_distance"      "500"
 	}
 	"c10m4_mainstreet"
 	{
@@ -416,7 +416,9 @@
 		"start_extra_dist"  "307.155029"
 		"end_point"         "1309.379883 -5479.276367 -26.821182"
 		"end_dist"          "324.451355"
-		"horde_limit"       "180"
+		"tank_ban_flow_min" "68"
+		"tank_ban_flow_max" "75"
+		"horde_limit"       "90"
 	}
 	"c10m5_houseboat"
 	{
@@ -516,8 +518,8 @@
 		"start_extra_dist"  "264.932068"
 		"end_point"         "10398.775391 -310.353424 2.031253"
 		"end_dist"          "316.505157"
-		"tank_ban_flow_min" "43"
-		"tank_ban_flow_max" "51"
+		"tank_ban_flow_min" "39"
+		"tank_ban_flow_max" "54"
 		"max_distance"      "500"
 		"horde_limit"       "60"
 	}
@@ -664,15 +666,13 @@
 		"end_point"         "9837.693359 -12491.964844 776.031250"
 		"end_dist"          "245.495361"
 		"tank_ban_flow_min" "60"
-		"tank_ban_flow_max" "78"
+		"tank_ban_flow_max" "79"
 	}
 	"cdta_04onarail"
 	{
 		"start_point"       "-11160.266602 2500.985107 656.031250"
 		"start_dist"        "248.178223"
 		"start_extra_dist"  "251.028473"
-		"tank_ban_flow_min" "0"
-		"tank_ban_flow_max" "28"
 		"max_distance"      "700"
 	}
 	"cdta_05finalroad"
@@ -682,8 +682,9 @@
 		"start_extra_dist"  "269.938385"
 		"end_point"         "-12561.050781 -11283.779297 985.953308"
 		"end_dist"          "245.495361"
-		"tank_ban_flow_min" "1"
+		"tank_ban_flow_min" "0"
 		"tank_ban_flow_max" "70"
+		"max_distance"      "600"
 	}
 	"l4d_deathaboard01_prison"
 	{

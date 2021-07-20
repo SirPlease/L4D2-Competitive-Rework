@@ -41,43 +41,43 @@
 //	}
 "EntityRemover"
 {
-	"trigger_hurt_ghost"
-	{
-		"GhostHurt"
-		{
-			"cvar"		"disable_ghost_hurt"
-			"cvar_desc" "Prevents ghost infected from dying when falling into water or off c1m1"
-			"cvar_val"	"0"
-			"action"	"1"
-		}
-	}
-	"func_playerinfected_clip"
-	{
-		"RemoveInfClip"
-		{
-			"cvar"		"remove_inf_clips"
-			"cvar_desc"	"Removes all infected clip brushes.  This fixes tanks getting stuck on Dark Carnival 5 and allows a bit more area for infected to spawn on a few maps. Removed for No Mercy 4 because of elevator bug"
-			"cvar_val"	"1"
-			"action"	"1"
-			"excludemap"	"c8m4_interior"
-		}
-	}
-	"trigger_hurt"
-	{
-		"KillBombTriggers"
-		{
-			"cvar"		"remove_c5m4_hurts"
-			"cvar_desc"	"Removes all nonlethal trigger_hurt from c5m4. Removes explosion hurt spots, including some within the saferoom"
-			"cvar_val"	"1"
-			"map"		"c5m4_quarter"
-			"action"	"1"
-			"property"	"m_flDamage"
-			"propdata"	"1"
-			"proptype"	"2"
-			"condition"	"3"
-			"propval"	"500.0"
-		}
-	}
+//	"trigger_hurt_ghost"
+//	{
+//		"GhostHurt"
+//		{
+//			"cvar"		"disable_ghost_hurt"
+//			"cvar_desc" "Prevents ghost infected from dying when falling into water or off c1m1"
+//			"cvar_val"	"0"
+//			"action"	"1"
+//		}
+//	}
+//	"func_playerinfected_clip"
+//	{
+//		"RemoveInfClip"
+//		{
+//			"cvar"		"remove_inf_clips"
+//			"cvar_desc"	"Removes all infected clip brushes.  This fixes tanks getting stuck on Dark Carnival 5 and allows a bit more area for infected to spawn on a few maps. Removed for No Mercy 4 because of elevator bug"
+//			"cvar_val"	"1"
+//			"action"	"1"
+//			"excludemap"	"c8m4_interior"
+//		}
+//	}
+//	"trigger_hurt"
+//	{
+//		"KillBombTriggers"
+//		{
+//			"cvar"		"remove_c5m4_hurts"
+//			"cvar_desc"	"Removes all nonlethal trigger_hurt from c5m4. Removes explosion hurt spots, including some within the saferoom"
+//			"cvar_val"	"1"
+//			"map"		"c5m4_quarter"
+//			"action"	"1"
+//			"property"	"m_flDamage"
+//			"propdata"	"1"
+//			"proptype"	"2"
+//			"condition"	"3"
+//			"propval"	"500.0"
+//		}
+//	}
 	"logic_director_query"
 	{
 		"KillGrenadeLauncher"
