@@ -1,10 +1,8 @@
-#include <colors>
-#pragma newdecls required
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
-#undef REQUIRE_PLUGIN
-#tryinclude <readyup>
+#include <colors>
 
 #define STEAMID_SIZE 32
 
@@ -38,7 +36,7 @@ public Plugin myinfo =
 	name = "LerpMonitor++",
 	author = "ProdigySim, Die Teetasse, vintik, A1m`",
 	description = "Keep track of players' lerp settings",
-	version = "2.1",
+	version = "2.3",
 	url = "https://github.com/A1mDev/L4D2-Competitive-Plugins"
 };
 
@@ -171,8 +169,8 @@ public void Event_PlayerDisconnect(Event hEvent, const char[] name, bool dontBro
 		return;
 	}
 	
-	ArrLerpsValue.Clear();
-	//ArrLerpsCountChanges.Clear();
+	ArrLerpsValue.Remove(SteamID);
+	//ArrLerpsCountChanges.Remove(SteamID);
 }
 
 public void OnTeamChange(Event hEvent, const char[] eName, bool dontBroadcast)
@@ -195,11 +193,6 @@ public Action OnTeamChangeDelay(Handle hTimer, int userid)
 		ProcessPlayerLerp(client, false, true);
 	}
 	return Plugin_Stop;
-}
-
-public void OnRoundIsLive()
-{
-	isMatchLife = true;
 }
 
 public void Event_RoundEnd(Event hEvent, const char[] name, bool dontBroadcast)

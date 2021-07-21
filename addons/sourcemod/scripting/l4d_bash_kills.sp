@@ -20,8 +20,8 @@ ConVar
 public Plugin myinfo =
 {
 	name = "L4D2 Bash Kills",
-	author = "Jahze", //Update syntax A1m`
-	version = "1.2",
+	author = "Jahze, A1m`",
+	version = "1.3",
 	description = "Stop special infected getting bashed to death",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
@@ -63,7 +63,7 @@ public Action OnHurt(int victim, int& attacker, int& inflictor, float& damage, i
 		return Plugin_Continue;
 	}
 	
-	if (damage == 250.0 && damagetype == 128 && weapon == -1) {
+	if (damagetype == DMG_CLUB && weapon == -1 && damage == 250.0) {
 		if (IsSurvivor(attacker) && IsValidSI(victim)) {
 			return Plugin_Handled;
 		}
