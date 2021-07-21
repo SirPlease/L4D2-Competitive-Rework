@@ -444,13 +444,13 @@ new             g_iPlayerSortedUseTeam  [MAXSORTS][MAXTRACKED];                 
 new             g_iPlayerRoundTeam      [3][MAXTRACKED];                                // which team is the player 0 = A, 1 = B, -1 = no team; [2] = current survivor round; [0]/[1] = team A / B (anyone who was ever on it)
 new             g_iPlayerGameTeam       [2][MAXTRACKED];                                // for entire game for team A / B if the player was ever on it
 
-new             g_strGameData           [strGameData];
-new             g_strAllRoundData       [2][strRoundData];                              // rounddata for ALL rounds, per team
-new             g_strRoundData          [MAXROUNDS][2][strRoundData];                   // rounddata per game round, per team
-new             g_strPlayerData         [MAXTRACKED][strPlayerData];
-new             g_strRoundPlayerData    [MAXTRACKED][2][strPlayerData];                 // player data per team
-new             g_strPlayerInfData      [MAXTRACKED][strPlayerData];
-new             g_strRoundPlayerInfData [MAXTRACKED][2][strPlayerData];                 // player data for infected action per team (team is survivor team! -- when infected player was on opposite team)
+new             g_strGameData           [view_as<int>(strGameData)];
+new             g_strAllRoundData       [2][view_as<int>(strRoundData)];                              // rounddata for ALL rounds, per team
+new             g_strRoundData          [MAXROUNDS][2][view_as<int>(strRoundData)];                   // rounddata per game round, per team
+new             g_strPlayerData         [MAXTRACKED][view_as<int>(strPlayerData)];
+new             g_strRoundPlayerData    [MAXTRACKED][2][view_as<int>(strPlayerData)];                 // player data per team
+new             g_strPlayerInfData      [MAXTRACKED][view_as<int>(strPlayerData)];
+new             g_strRoundPlayerInfData [MAXTRACKED][2][view_as<int>(strPlayerData)];                 // player data for infected action per team (team is survivor team! -- when infected player was on opposite team)
 
 new     Handle: g_hTriePlayers                                      = INVALID_HANDLE;   // trie for getting player index
 new     Handle: g_hTrieWeapons                                      = INVALID_HANDLE;   // trie for getting weapon type (from classname)
