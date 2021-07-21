@@ -32,9 +32,9 @@
 public Plugin myinfo =
 {
 	name = "Pause plugin",
-    author = "CanadaRox, Sir, Forgetest",
-    description = "Adds pause functionality without breaking pauses, also prevents SI from spawning because of the Pause.",
-    version = "6.2",
+	author = "CanadaRox, Sir, Forgetest",
+	description = "Adds pause functionality without breaking pauses, also prevents SI from spawning because of the Pause.",
+	version = "6.2",
 	url = ""
 };
 
@@ -66,7 +66,7 @@ ConVar pauseDelayCvar, l4d_ready_delay;
 
 // Plugin Vars
 int	readyDelay, pauseDelay;
-bool adminPause, isPaused, RoundEnd, teamReady[L4D2_Team];
+bool adminPause, isPaused, RoundEnd, teamReady[view_as<int>(L4D2_Team)];
 
 // Ready Up Available
 bool readyUpIsAvailable;
