@@ -13,7 +13,8 @@ public Plugin myinfo =
 	name = "Director-scripted common limit blocker",
 	author = "Tabun", //Update syntax A1m`
 	description = "Prevents director scripted overrides of z_common_limit. Only affects scripted common limits higher than the cvar.",
-	version = "0.2"
+	version = "0.2",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
 public void OnPluginStart()
