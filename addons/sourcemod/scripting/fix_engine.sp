@@ -15,21 +15,18 @@
 #define CONSTANT_HEALTH 1
 #define MAX_TEMP_HEALTH MAX_HEALTH - CONSTANT_HEALTH
 
+#define LADDER_SPEED_GLITCH_FIX (1 << 1)
+#define NO_FALL_DAMAGE_BUG_FIX (1 << 2)
+#define HEALTH_BOOST_GLITCH_FIX (1 << 3)
+
 public Plugin:myinfo =
 {
 	name = "[L4D & L4D2] Engine Fix",
-	author = "raziEiL [disawar1]",
+	author = "raziEiL [disawar1]", //Add support sm 1.11 - A1m`
 	description = "Blocking ladder speed glitch, no fall damage bug, health boost glitch.",
 	version = PLUGIN_VERSION,
-	url = "http://steamcommunity.com/id/raziEiL"
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
-
-enum ()
-{
-	LadderSpeedGlitch = 1,
-	NoFallDamageBug,
-	HealthBoostGlitch
-};
 
 static		Handle:g_hFixGlitchTimer[MAXPLAYERS+1], g_iHealthToRestore[MAXPLAYERS+1], g_iLastKnownHealth[MAXPLAYERS+1], Handle:g_hRestoreTimer[MAXPLAYERS+1],
 			g_bTempWarnLock[MAXPLAYERS+1], Float:g_fCvarDecayRate, bool:g_bCvarWarnEnabled, g_iCvarEngineFlags;
@@ -48,7 +45,7 @@ public OnPluginStart()
 	g_bCvarWarnEnabled = GetConVarBool(hCvarWarnEnabled);
 	g_iCvarEngineFlags = GetConVarInt(hCvarEngineFlags);
 
-	if (g_iCvarEngineFlags & (1 << HealthBoostGlitch))
+	if (g_iCvarEngineFlags & HEALTH_BOOST_GLITCH_FIX)
 		EF_ToogleEvents(true);
 
 	HookConVarChange(hCvarDecayRate, OnConvarChange_DecayRate);
@@ -81,7 +78,7 @@ public Action:OnPlayerRunCmd(client, &buttons)
 {
 	if (g_iCvarEngineFlags && IsValidClient(client) && IsPlayerAlive(client) && !IsFakeClient(client)){
 
-		if (g_iCvarEngineFlags & (1 << LadderSpeedGlitch) && GetEntityMoveType(client) == MOVETYPE_LADDER){
+		if (g_iCvarEngineFlags & LADDER_SPEED_GLITCH_FIX && GetEntityMoveType(client) == MOVETYPE_LADDER){
 
 			static iUsingBug[MAXPLAYERS+1];
 
@@ -107,7 +104,7 @@ public Action:OnPlayerRunCmd(client, &buttons)
 			else
 				iUsingBug[client] = 0;
 		}
-		if (g_iCvarEngineFlags & (1 << NoFallDamageBug) && GetClientTeam(client) == 2 && IsFallDamage(client) && buttons & IN_USE){
+		if (g_iCvarEngineFlags & NO_FALL_DAMAGE_BUG_FIX && GetClientTeam(client) == 2 && IsFallDamage(client) && buttons & IN_USE){
 
 			buttons &= ~IN_USE;
 
@@ -138,7 +135,7 @@ bool:IsFallDamage(client)
 */
 public OnClientDisconnect(client)
 {
-	if (client && g_iCvarEngineFlags & (1 << HealthBoostGlitch))
+	if (client && g_iCvarEngineFlags & HEALTH_BOOST_GLITCH_FIX)
 		EF_ClearAllVars(client);
 }
 
@@ -443,7 +440,7 @@ public OnConvarChange_WarnEnabled(Handle:convar, const String:oldValue[], const 
 public OnConvarChange_EngineFlags(Handle:convar, const String:oldValue[], const String:newValue[])
 {
 	g_iCvarEngineFlags = GetConVarInt(convar);
-	EF_ToogleEvents(bool:(g_iCvarEngineFlags & (1 << HealthBoostGlitch)));
+	EF_ToogleEvents(bool:(g_iCvarEngineFlags & HEALTH_BOOST_GLITCH_FIX));
 }
 
 EF_ToogleEvents(bool:bHook)

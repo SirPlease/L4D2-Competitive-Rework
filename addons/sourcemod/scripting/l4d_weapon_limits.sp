@@ -15,7 +15,7 @@
 public Plugin myinfo =
 {
 	name = "L4D Weapon Limits",
-	author = "CanadaRox, Stabby, Forgetest", //'weapons.inc' replaced with a l4d2_util - A1m`
+	author = "CanadaRox, Stabby, Forgetest", //'weapons.inc' replaced with a l4d2_util and add support sm1.11 - A1m`
 	description = "Restrict weapons individually or together",
 	version = "1.3.6",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
@@ -27,7 +27,7 @@ enum struct LimitArrayEntry
 {
 	int LAE_iLimit;
 	int LAE_iGiveAmmo;
-	int LAE_WeaponArray[view_as<int>(WeaponId)/32+1];
+	int LAE_WeaponArray[view_as<int>(WEPID_SIZE)/32+1];
 }
 
 Handle
@@ -70,7 +70,7 @@ public void OnPluginStart()
 	RegServerCmd("l4d_wlimits_lock", LockLimits_Cmd, "Locks the limits to improve search speeds");
 	RegServerCmd("l4d_wlimits_clear", ClearLimits_Cmd, "Clears all weapon limits (limits must be locked to be cleared)");
 
-	HookEvent("round_start", view_as<EventHook>(ClearUp), EventHookMode_PostNoCopy);
+	HookEvent("round_start", ClearUp, EventHookMode_PostNoCopy);
 	HookEvent("player_incapacitated_start", OnIncap);
 	HookEvent("revive_success", OnRevive);
 	HookEvent("player_death", OnDeath);
@@ -83,7 +83,7 @@ public void OnMapStart()
 	PrecacheSound("player/suit_denydevice.wav");
 }
 
-public void ClearUp()
+public void ClearUp(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	for (int i = 0; i <= MAXPLAYERS; i++) {
 		bIsIncappedWithMelee[i] = false;

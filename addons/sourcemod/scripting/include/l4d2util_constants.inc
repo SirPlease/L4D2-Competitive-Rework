@@ -3,17 +3,21 @@
 #endif
 #define l4d2util_constants_inc_
 
-#define IS_VALID_CLIENT(%1)     (%1 > 0 && %1 <= MaxClients)
+//#define IS_VALID_CLIENT(%1)     (%1 > 0 && %1 <= MaxClients)
 
-enum L4D2_Team
+enum L4D2_Team:
 {
-	L4D2Team_Spectator = 1,
+	L4D2Team_None = 0,
+	L4D2Team_Spectator,
 	L4D2Team_Survivor,
-	L4D2Team_Infected
+	L4D2Team_Infected,
+	
+	L4D2_Team_Size //4 size
 };
 
-enum L4D2_Infected
+enum L4D2_Infected:
 {
+	L4D2Infected_None = 0,
 	L4D2Infected_Smoker = 1,
 	L4D2Infected_Boomer,
 	L4D2Infected_Hunter,
@@ -21,11 +25,14 @@ enum L4D2_Infected
 	L4D2Infected_Jockey,
 	L4D2Infected_Charger,
 	L4D2Infected_Witch,
-	L4D2Infected_Tank
+	L4D2Infected_Tank,
+	
+	L4D2Infected_SIZE //9 size
 };
 
-stock const char L4D2_InfectedNames[8][] =
+stock const char L4D2_InfectedNames[L4D2Infected_SIZE][] =
 {
+	"None",
 	"Smoker",
 	"Boomer",
 	"Hunter",
@@ -36,7 +43,7 @@ stock const char L4D2_InfectedNames[8][] =
 	"Tank"
 };
 
-enum L4D2_Gender
+enum L4D2_Gender:
 {
 	L4D2Gender_Neutral,
 	L4D2Gender_Male,
@@ -56,13 +63,26 @@ enum L4D2_Gender
 	L4D2Gender_RiotCop,
 	L4D2Gender_Clown,
 	L4D2Gender_JimmyGibbs,
-	L4D2Gender_HospitalPatient
+	L4D2Gender_HospitalPatient,
+	
+	L4D2Gender_MaxSize //19 size
+};
+
+enum L4D2WeaponSlot:
+{
+	L4D2WeaponSlot_Primary,
+	L4D2WeaponSlot_Secondary,
+	L4D2WeaponSlot_Throwable,
+	L4D2WeaponSlot_HeavyHealthItem,
+	L4D2WeaponSlot_LightHealthItem,
+	
+	L4D2WeaponSlot_Size //5 size
 };
 
 // Weapon ID enumerations.
 // These values are *NOT* arbitrary! 
 // They are used in game as the weaponid for weapon_spawn entities
-enum WeaponId
+enum WeaponId:
 {
 	WEPID_NONE,             // 0
 	WEPID_PISTOL,           // 1
@@ -119,11 +139,13 @@ enum WeaponId
 	WEPID_ROCK,             // 52
 	WEPID_PHYSICS,          // 53
 	WEPID_AMMO,             // 54
-	WEPID_UPGRADE_ITEM      // 55
+	WEPID_UPGRADE_ITEM,     // 55
+
+	WEPID_SIZE //56 size
 };
 
 // These values are arbitrary
-enum MeleeWeaponId
+enum MeleeWeaponId:
 {
 	WEPID_MELEE_NONE,
 	WEPID_KNIFE,
@@ -139,11 +161,15 @@ enum MeleeWeaponId
 	WEPID_KATANA,
 	WEPID_MACHETE,
 	WEPID_RIOT_SHIELD,
-	WEPID_TONFA
+	WEPID_TONFA,
+	WEPID_SHOVEL,
+	WEPID_PITCHFORK,
+	
+	WEPID_MELEES_SIZE //15 size
 };
 
 // Weapon names for each of the weapons, used in identification.
-stock const char WeaponNames[WeaponId][] =
+stock const char WeaponNames[WEPID_SIZE][] =
 {
 	"weapon_none", "weapon_pistol", "weapon_smg",                                            // 0
 	"weapon_pumpshotgun", "weapon_autoshotgun", "weapon_rifle",                              // 3
@@ -166,8 +192,33 @@ stock const char WeaponNames[WeaponId][] =
 	"ammo", "upgrade_item"                                                                   // 54
 };
 
+// Long weapon names
+stock const char LongWeaponNames[WEPID_SIZE][] = 
+{
+	"None", "Pistol", "Uzi", // 0
+	"Pump", "Autoshotgun", "M-16", // 3
+	"Hunting Rifle", "Mac", "Chrome", // 6
+	"Desert Rifle", "Military Sniper", "SPAS Shotgun", // 9
+	"First Aid Kit", "Molotov", "Pipe Bomb", // 12
+	"Pills", "Gascan", "Propane Tank", // 15
+	"Oxygen Tank", "Melee", "Chainsaw", // 18
+	"Grenade Launcher", "Ammo Pack", "Adrenaline", // 21
+	"Defibrillator", "Bile Bomb", "AK-47", // 24
+	"Gnome", "Cola Bottles", "Fireworks", // 27
+	"Incendiary Ammo Pack", "Explosive Ammo Pack", "Deagle", // 30
+	"MP5", "SG552", "AWP", // 33
+	"Scout", "M60", "Tank Claw", // 36
+	"Hunter Claw", "Charger Claw", "Boomer Claw", // 39
+	"Smoker Claw", "Spitter Claw", "Jockey Claw", // 42
+	"Turret", "vomit", "splat", // 45
+	"pounce", "lounge", "pull", // 48
+	"choke", "rock", "physics", // 51
+	"ammo", "upgrade_item" // 54
+};
+
+
 // Internal names for melee weapons
-stock const char MeleeWeaponNames[MeleeWeaponId][] =
+stock const char MeleeWeaponNames[WEPID_MELEES_SIZE][] =
 {
 	"",
 	"knife",
@@ -183,12 +234,35 @@ stock const char MeleeWeaponNames[MeleeWeaponId][] =
 	"katana",
 	"machete",
 	"riotshield",
-	"tonfa"
+	"tonfa",
+	"shovel",
+	"pitchfork"
+};
+
+stock const char LongMeleeWeaponNames[WEPID_MELEES_SIZE][] =
+{
+	"None",
+	"Knife",
+	"Baseball Bat",
+	"Chainsaw",
+	"Cricket Bat",
+	"Crowbar",
+	"didgeridoo", // derp
+	"Guitar",
+	"Axe",
+	"Frying Pan",
+	"Golf Club",
+	"Katana",
+	"Machete",
+	"Riot Shield",
+	"Tonfa",
+	"Shovel",
+	"Pitchfork"
 };
 
 // World weapon models for each of the weapons. Useful for making new weapon spawns.
 // Some models are left blank because no single model can be given, the model is known or none exist.
-stock const char WeaponModels[WeaponId][] =
+stock const char WeaponModels[WEPID_SIZE][] =
 {
 	"",
 	"/w_models/weapons/w_pistol_B.mdl",
@@ -261,7 +335,7 @@ stock const char WeaponModels[WeaponId][] =
 	""
 };
 
-stock const char MeleeWeaponModels[MeleeWeaponId][] =
+stock const char MeleeWeaponModels[WEPID_MELEES_SIZE][] =
 {
 	"",
 	"/w_models/weapons/w_knife_t.mdl",
@@ -277,10 +351,12 @@ stock const char MeleeWeaponModels[MeleeWeaponId][] =
 	"/weapons/melee/w_katana.mdl",
 	"/weapons/melee/w_machete.mdl",
 	"/weapons/melee/w_riotshield.mdl",
-	"/weapons/melee/w_tonfa.mdl"
+	"/weapons/melee/w_tonfa.mdl",
+	"/weapons/melee/v_shovel.mdl",
+	"/weapons/melee/v_pitchfork.mdl"
 };
 
-stock const int WeaponSlots[view_as<int>(WeaponId)] =
+stock const int WeaponSlots[WEPID_SIZE] =
 {
 	-1, // WEPID_NONE
 	1,  // WEPID_PISTOL
@@ -351,12 +427,14 @@ enum SurvivorCharacter
 	SC_LOUIS,
 	SC_ZOEY,
 	SC_BILL,
-	SC_FRANCIS
+	SC_FRANCIS,
+	
+	SC_SIZE //8 size
 };
 
 // Names of the survivors
 // TODO: languages?
-stock const char SurvivorNames[SurvivorCharacter][] =
+stock const char SurvivorNames[SC_SIZE][] =
 {
 	"Coach",
 	"Nick",
@@ -369,7 +447,7 @@ stock const char SurvivorNames[SurvivorCharacter][] =
 };
 
 // Models for each of the characters
-stock const char SurvivorModels[SurvivorCharacter][] =
+stock const char SurvivorModels[SC_SIZE][] =
 {
 	"models/survivors/survivor_coach.mdl",
 	"models/survivors/survivor_gambler.mdl",
@@ -383,7 +461,7 @@ stock const char SurvivorModels[SurvivorCharacter][] =
 
 // Animation IDs used by CTerrorPlayer::DoAnimationEvent
 // Gaps do not mean the animation doesn't exist, just that I don't know what it maps to.
-enum Animation
+enum Animation:
 {
 	ANIM_RELOAD_PISTOL_UZI_SNIPER = 4,
 	ANIM_RELOAD_SHOTGUN = 5,
@@ -432,4 +510,6 @@ enum Animation
 	ANIM_TANK_CLIMB = 94, // Secondary value: Height (1-6)
 	ANIM_TANK_PUNCH_GETUP = 96,
 	ANIM_IDLE = 98,
-}
+	
+	ANIMATION_SIZE //99 size
+};

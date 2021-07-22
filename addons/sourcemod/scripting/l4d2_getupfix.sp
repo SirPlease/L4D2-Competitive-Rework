@@ -10,7 +10,7 @@
 public Plugin:myinfo = 
 {
     name = "L4D2 Get-Up Fix",
-    author = "Blade, ProdigySim, DieTeetasse, Stabby, Jahze",
+    author = "Blade, ProdigySim, DieTeetasse, Stabby, Jahze", //Add support sm1.11 - A1m`
     description = "Double/no/self-clear get-up fix.",
     version = "1.7.2",
     url = "http://bitbucket.org/ProdigySim/misc-sourcemod-plugins/"
@@ -34,7 +34,7 @@ public Plugin:myinfo =
 #define INDEX_CHARGER_WALL        2    //index for getup anim on mid-slam clears against walls
 #define INDEX_CHARGER_GROUND    3    //index for getup anim on mid-slam clears against ground (after long charges)
 
-new const getUpAnimations[SurvivorCharacter][4] = {    
+new const getUpAnimations[SC_SIZE][4] = {    
     // 0: Coach, 1: Nick, 2: Rochelle, 3: Ellis
     {621, 656, 660, 661}, {620, 667, 671, 672}, {629, 674, 678, 679}, {625, 671, 675, 676},
     // 4: Louis, 5: Zoey, 6: Bill, 7: Francis
@@ -42,7 +42,7 @@ new const getUpAnimations[SurvivorCharacter][4] = {
 };
 
 //incapped animations: 0 = single-pistol, 1 = dual pistols
-new const incapAnimations[SurvivorCharacter][2] = {
+new const incapAnimations[SC_SIZE][2] = {
     // 0: Coach, 1: Nick, 2: Rochelle, 3: Ellis
     {613, 614}, {612, 613}, {621, 622}, {617, 618},
     // 4: Louis, 5: Zoey, 6: Bill, 7: Francis

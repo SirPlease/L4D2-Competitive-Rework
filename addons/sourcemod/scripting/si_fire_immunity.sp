@@ -49,14 +49,14 @@ public void OnPluginStart()
 	_, true, 0.0, true, 999.0);
 	
 	HookEvent("player_hurt", SIOnFire, EventHookMode_Post);
-	HookEvent("round_start", view_as<EventHook>(EventReset), EventHookMode_PostNoCopy);
-	HookEvent("round_end", view_as<EventHook>(EventReset), EventHookMode_PostNoCopy);
+	HookEvent("round_start", EventReset, EventHookMode_PostNoCopy);
+	HookEvent("round_end", EventReset, EventHookMode_PostNoCopy);
 }
 
 /* @A1m`:
  * This is necessary because each round starts from 0.0.
 */
-public void EventReset()
+public void EventReset(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	for (int i = 0; i <= MAXPLAYERS; i++) {
 		fWaitTime[i] = 0.0;

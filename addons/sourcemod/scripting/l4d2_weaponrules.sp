@@ -31,7 +31,7 @@
 #define DEBUG 0
 
 int
-	g_GlobalWeaponRules[view_as<int>(WeaponId)] = {-1, ...},
+	g_GlobalWeaponRules[WEPID_SIZE] = {-1, ...},
 	// state tracking for roundstart looping
 	g_bRoundStartHit,
 	g_bConfigsExecuted;
@@ -39,7 +39,7 @@ int
 public Plugin myinfo =
 {
 	name = "L4D2 Weapon Rules",
-	author = "ProdigySim", //Update syntax A1m`
+	author = "ProdigySim", //Update syntax and add support sm1.11 - A1m`
 	version = "1.0.2",
 	description = "^",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
@@ -50,7 +50,7 @@ public void OnPluginStart()
 	RegServerCmd("l4d2_addweaponrule", AddWeaponRuleCb);
 	RegServerCmd("l4d2_resetweaponrules", ResetWeaponRulesCb);
 	
-	HookEvent("round_start", view_as<EventHook>(RoundStartCb), EventHookMode_PostNoCopy);
+	HookEvent("round_start", RoundStartCb, EventHookMode_PostNoCopy);
 	
 	ResetWeaponRules();
 }
@@ -64,12 +64,12 @@ public Action ResetWeaponRulesCb(int args)
 
 void ResetWeaponRules()
 {
-	for (int i = 0; i < view_as<int>(WeaponId); i++) {
+	for (int i = 0; i < view_as<int>(WEPID_SIZE); i++) {
 		g_GlobalWeaponRules[i] = -1;
 	}
 }
 
-public void RoundStartCb()
+public void RoundStartCb(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	CreateTimer(0.3, RoundStartDelay, _, TIMER_FLAG_NO_MAPCHANGE);
 }

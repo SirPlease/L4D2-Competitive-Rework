@@ -1,18 +1,19 @@
+#pragma semicolon 1
+#pragma newdecls required
+
 #include <sourcemod>
 #include <sdktools>
 #include <left4dhooks>
 #include <builtinvotes>
+#include <l4d2util_stocks>
 #include <colors>
-
-#pragma semicolon 1
-#pragma newdecls required
 
 #define PLUGIN_VERSION "9.2.4"
 
 public Plugin myinfo =
 {
 	name = "L4D2 Ready-Up with convenience fixes",
-	author = "CanadaRox, Target",
+	author = "CanadaRox, Target", //Add support sm1.11 - A1m`
 	description = "New and improved ready-up plugin with optimal for convenience.",
 	version = PLUGIN_VERSION,
 	url = "https://github.com/Target5150/MoYu_Server_Stupid_Plugins"
@@ -22,7 +23,6 @@ public Plugin myinfo =
 //  Defines
 // ========================
 #define NULL_VELOCITY view_as<float>({0.0, 0.0, 0.0})
-#define MIN(%0,%1) ((%0) < (%1) ? (%0) : (%1))
 
 #define L4D2Team_None		0
 #define L4D2Team_Spectator	1
@@ -239,7 +239,12 @@ public void OnPluginStart()
 	readySurvFreeze = l4d_ready_survivor_freeze.BoolValue;
 	l4d_ready_survivor_freeze.AddChangeHook(SurvFreezeChange);
 	
-	l4d_ready_server_cvar.AddChangeHook(view_as<ConVarChanged>(FillServerNamer));
+	l4d_ready_server_cvar.AddChangeHook(ServerCvar_Changed);
+}
+
+public void ServerCvar_Changed(Handle convar, const char[] oldValue, const char[] newValue)
+{
+	FillServerNamer();
 }
 
 public void OnPluginEnd()
@@ -1419,7 +1424,7 @@ bool CheckFullReady()
 	}
 	
 	int iBaseline = l4d_ready_unbalanced_min.IntValue;
-	iBaseline = MIN(MIN(iBaseline, survivor_limit.IntValue), z_max_player_zombies.IntValue);
+	iBaseline = L4D2Util_GetMin(L4D2Util_GetMin(iBaseline, survivor_limit.IntValue), z_max_player_zombies.IntValue);
 	if (l4d_ready_unbalanced_start.BoolValue)
 	{
 		return survReadyCount >= iBaseline

@@ -11,7 +11,7 @@ float SurvivorStart[3];
 public Plugin myinfo = 
 {
 	name = "No Safe Room Medkits",
-	author = "Blade", //update syntax A1m`
+	author = "Blade", //Update syntax add support sm1.11 - A1m`
 	description = "Removes Safe Room Medkits",
 	version = PLUGIN_VERSION,
 	url = "https://github.com/Attano/L4D2-Competitive-Framework"
@@ -26,10 +26,10 @@ public void OnPluginStart()
 	}
 	
 	CreateConVar("nokits_version", PLUGIN_VERSION,"No Safe Room Medkits Version", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
-	HookEvent("round_start", view_as<EventHook>(Event_RoundStart), EventHookMode_PostNoCopy);
+	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 }
 
-public void Event_RoundStart()
+public void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	char GameMode[32];
 	GetConVarString(FindConVar("mp_gamemode"), GameMode, sizeof(GameMode));

@@ -32,7 +32,7 @@ new spitterlimit;
 new maxSI;
 
 /* These class numbers are the same ones used internally in L4D2 */
-enum SIClass
+enum SIClass:
 {
 	SI_None=0,
 	SI_Smoker=1,
@@ -42,16 +42,18 @@ enum SIClass
 	SI_Jockey,
 	SI_Charger,
 	SI_Witch,
-	SI_Tank
+	SI_Tank,
+	
+	SI_MAX_SIZE
 };
 
-stock const String:g_sSIClassNames[SIClass][] = 
+stock const String:g_sSIClassNames[SI_MAX_SIZE][] = 
 {	"", "Smoker", "Boomer", "Hunter", "Spitter", "Jockey", "Charger", "Witch", "Tank" };
 
 public Plugin:myinfo = 
 {
 	name = "L4D2 Proper Sack Order",
-	author = "Sir",
+	author = "Sir", //Add support sm1.11 - A1m`
 	description = "Finally fix that pesky spawn rotation not being reliable",
 	version = "1.3",
 	url = "nah"

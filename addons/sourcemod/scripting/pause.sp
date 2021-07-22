@@ -34,21 +34,22 @@
 public Plugin myinfo =
 {
 	name = "Pause plugin",
-	author = "CanadaRox, Sir, Forgetest",
+	author = "CanadaRox, Sir, Forgetest", //Add support sm1.11 - A1m`
 	description = "Adds pause functionality without breaking pauses, also prevents SI from spawning because of the Pause.",
 	version = "6.3",
 	url = "https://github.com/A1mDev/L4D2-Competitive-Plugins"
 };
 
-enum L4D2_Team
+enum L4D2_Team:
 {
 	L4D2Team_None = 0,
 	L4D2Team_Spectator,
 	L4D2Team_Survivor,
-	L4D2Team_Infected
+	L4D2Team_Infected,
+	L4D2Team_Size //4 size
 }
 
-static const char teamString[view_as<int>(L4D2_Team)][] =
+static const char teamString[L4D2Team_Size][] =
 {
 	"None",
 	"Spectator",
@@ -68,7 +69,7 @@ ConVar pauseDelayCvar, l4d_ready_delay;
 
 // Plugin Vars
 int	readyDelay, pauseDelay;
-bool adminPause, isPaused, RoundEnd, teamReady[view_as<int>(L4D2_Team)];
+bool adminPause, isPaused, RoundEnd, teamReady[L4D2Team_Size];
 
 // Ready Up Available
 bool readyUpIsAvailable;
@@ -152,8 +153,8 @@ public void OnPluginStart()
 	g_bEnableInitReady = initiatorReadyCvar.BoolValue;
 	HookConVarChange(initiatorReadyCvar, OnInitiatorReadyChanged);
 
-	HookEvent("round_end", view_as<EventHook>(RoundEnd_Event), EventHookMode_PostNoCopy);
-	HookEvent("round_start", view_as<EventHook>(RoundStart_Event), EventHookMode_PostNoCopy);
+	HookEvent("round_end", RoundEnd_Event, EventHookMode_PostNoCopy);
+	HookEvent("round_start", RoundStart_Event, EventHookMode_PostNoCopy);
 }
 
 public void OnInitiatorReadyChanged(ConVar convar, const char[] oldValue, const char[] newValue)
@@ -215,7 +216,7 @@ public void OnMapEnd()
 	deferredPauseTimer = null;
 }
 
-public void RoundEnd_Event()
+public void RoundEnd_Event(Event event, const char[] name, bool dontBroadcast)
 {
 	if (deferredPauseTimer != null)
 	{
@@ -226,7 +227,7 @@ public void RoundEnd_Event()
 	RoundEnd = true;
 }
 
-public void RoundStart_Event()
+public void RoundStart_Event(Event event, const char[] name, bool dontBroadcast)
 {
 	for (int client = 1; client <= MaxClients; client++)
 	{
@@ -344,6 +345,7 @@ public Action Unpause_Cmd(int client, int args)
 			}
 		}
 	}
+	return Plugin_Handled;
 }
 
 public Action Unready_Cmd(int client, int args)
@@ -384,6 +386,7 @@ public Action Unready_Cmd(int client, int args)
 			CancelFullReady(client);
 		}
 	}
+	return Plugin_Handled;
 }
 
 public Action ToggleReady_Cmd(int client, int args)
@@ -461,7 +464,7 @@ public Action DeferredPause_Timer(Handle timer)
 
 void Pause()
 {
-	for (L4D2_Team team; team < L4D2_Team; team++)
+	for (int team; team < view_as<int>(L4D2Team_Size); team++)
 	{
 		teamReady[team] = false;
 	}

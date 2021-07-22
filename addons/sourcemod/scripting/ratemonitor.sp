@@ -85,9 +85,9 @@ public void OnPluginStart()
 
 	RegConsoleCmd("sm_rates", ListRates, "List netsettings of all players in game");
 	
-	HookEvent("round_start", view_as<EventHook>(Event_RoundStart), EventHookMode_PostNoCopy);
-	HookEvent("round_end", view_as<EventHook>(Event_RoundEnd), EventHookMode_PostNoCopy);
-	HookEvent("player_left_start_area", view_as<EventHook>(Event_RoundGoesLive), EventHookMode_PostNoCopy);
+	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
+	HookEvent("round_end", Event_RoundEnd, EventHookMode_PostNoCopy);
+	HookEvent("player_left_start_area", Event_RoundGoesLive, EventHookMode_PostNoCopy);
 	HookEvent("player_team", OnTeamChange);
 
 	hClientSettingsArray = new ArrayList(sizeof(NetsettingsStruct));
@@ -101,7 +101,7 @@ public void OnPluginStart()
 	}
 }
 
-public void Event_RoundStart()
+public void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	NetsettingsStruct player;
 	int iSize = hClientSettingsArray.Length;
@@ -119,7 +119,7 @@ public void Event_RoundGoesLive(Event hEvent, const char[] name, bool dontBroadc
 	bIsMatchLive = true;
 }
 
-public void Event_RoundEnd()
+public void Event_RoundEnd(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	bIsMatchLive = false;
 }

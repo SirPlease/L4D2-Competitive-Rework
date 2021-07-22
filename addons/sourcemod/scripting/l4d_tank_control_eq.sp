@@ -29,7 +29,7 @@ public int Native_GetTankSelection(Handle plugin, int numParams) { return getInf
 public Plugin myinfo = 
 {
     name = "L4D2 Tank Control",
-    author = "arti",
+    author = "arti", //Add support sm1.11 - A1m`
     description = "Distributes the role of the tank evenly throughout the team",
     version = "0.0.18",
     url = "https://github.com/alexberriman/l4d2-plugins/tree/master/l4d_tank_control"
@@ -61,12 +61,12 @@ public void OnPluginStart()
     LoadTranslations("common.phrases");
     
     // Event hooks
-    HookEvent("player_left_start_area", view_as<EventHook>(PlayerLeftStartArea_Event), EventHookMode_PostNoCopy);
-    HookEvent("round_start", view_as<EventHook>(RoundStart_Event), EventHookMode_PostNoCopy);
-    HookEvent("round_end", view_as<EventHook>(RoundEnd_Event), EventHookMode_PostNoCopy);
-    HookEvent("player_team", view_as<EventHook>(PlayerTeam_Event), EventHookMode_PostNoCopy);
-    HookEvent("tank_killed", view_as<EventHook>(TankKilled_Event), EventHookMode_PostNoCopy);
-    HookEvent("player_death", view_as<EventHook>(PlayerDeath_Event), EventHookMode_Post);
+    HookEvent("player_left_start_area", PlayerLeftStartArea_Event, EventHookMode_PostNoCopy);
+    HookEvent("round_start", RoundStart_Event, EventHookMode_PostNoCopy);
+    HookEvent("round_end", RoundEnd_Event, EventHookMode_PostNoCopy);
+    HookEvent("player_team", PlayerTeam_Event, EventHookMode_Post);
+    HookEvent("tank_killed", TankKilled_Event, EventHookMode_PostNoCopy);
+    HookEvent("player_death", PlayerDeath_Event, EventHookMode_Post);
     
     // Initialise the tank arrays/data values
     h_whosHadTank = new ArrayList(AUTH_ADT_LENGTH);
@@ -104,7 +104,7 @@ public void OnPluginStart()
  * When a new game starts, reset the tank pool.
  */
  
-public void RoundStart_Event()
+public void RoundStart_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
     CreateTimer(10.0, newGame);
 }
@@ -126,7 +126,7 @@ public Action newGame(Handle timer)
  * When the round ends, reset the active tank.
  */
  
-public void RoundEnd_Event(Event event, const char[] name, bool dontBroadcast)
+public void RoundEnd_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
     queuedTankSteamId = "";
 }
@@ -135,7 +135,7 @@ public void RoundEnd_Event(Event event, const char[] name, bool dontBroadcast)
  * When a player leaves the start area, choose a tank and output to all.
  */
  
-public void PlayerLeftStartArea_Event(Event event, const char[] name, bool dontBroadcast)
+public void PlayerLeftStartArea_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
     chooseTank();
     outputTankToAll();
@@ -145,10 +145,10 @@ public void PlayerLeftStartArea_Event(Event event, const char[] name, bool dontB
  * When the queued tank switches teams, choose a new one
  */
  
-public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
+public void PlayerTeam_Event(Event hEvent, const char[] name, bool dontBroadcast)
 {
-    L4D2Team oldTeam = view_as<L4D2Team>(GetEventInt(event, "oldteam"));
-    int client = GetClientOfUserId(GetEventInt(event, "userid"));
+    L4D2Team oldTeam = view_as<L4D2Team>(hEvent.GetInt("oldteam"));
+    int client = GetClientOfUserId(hEvent.GetInt("userid"));
     char tmpSteamId[64];
     
     if (client && oldTeam == view_as<L4D2Team>(L4D2Team_Infected))
@@ -166,10 +166,10 @@ public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
  * When the tank dies, requeue a player to become tank (for finales)
  */
  
-public void PlayerDeath_Event(Event event, const char[] name, bool dontBroadcast)
+public void PlayerDeath_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
     int zombieClass = 0;
-    int victimId = GetEventInt(event, "userid");
+    int victimId = hEvent.GetInt("userid");
     int victim = GetClientOfUserId(victimId);
     
     if (victimId && IsClientInGame(victim)) 
@@ -186,7 +186,7 @@ public void PlayerDeath_Event(Event event, const char[] name, bool dontBroadcast
     }
 }
 
-public void TankKilled_Event(Event event, const char[] name, bool dontBroadcast)
+public void TankKilled_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
     if (GetConVarBool(hTankDebug))
     {

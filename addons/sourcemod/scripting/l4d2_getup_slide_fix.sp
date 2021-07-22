@@ -7,7 +7,7 @@
 new bool:isSurvivorStaggerBlocked[8];
 
 //Courtesy of the l4d2_getupfix plugin
-new const getUpAnimations[SurvivorCharacter][5] = {    
+new const getUpAnimations[SC_SIZE][5] = {    
     // 0: Coach, 1: Nick, 2: Rochelle, 3: Ellis
     //[][4] = Flying animation from being hit by a tank
     {621, 656, 660, 661, 629}, {620, 667, 671, 672, 629}, {629, 674, 678, 679, 637}, {625, 671, 675, 676, 634},
@@ -18,7 +18,7 @@ new const getUpAnimations[SurvivorCharacter][5] = {
 public Plugin:myinfo =
 {
     name        = "Stagger Blocker",
-    author      = "Standalone (aka Manu), Visor, Sir",
+    author      = "Standalone (aka Manu), Visor, Sir", //Add support sm1.11 - A1m`
     description = "Block players from being staggered by Jockeys and Hunters for a time while getting up from a Hunter pounce & Charger pummel",
     version     = "1.3",
     url         = "https://github.com/SirPlease/L4D2-Competitive-Rework"

@@ -68,7 +68,7 @@ public void OnPluginStart()
 {
 	L4D2Weapons_Init();
 
-	HookEvent("round_start", view_as<EventHook>(RoundStart_Event), EventHookMode_PostNoCopy);
+	HookEvent("round_start", RoundStart_Event, EventHookMode_PostNoCopy);
 
 	hBlockedEntities = new ArrayList(sizeof(EntInfo));
 
@@ -92,7 +92,7 @@ public Action EntCheck_Timer(Handle hTimer)
 	}
 }
 
-public void RoundStart_Event()
+public void RoundStart_Event(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	hBlockedEntities.Clear();
 	CreateTimer(1.2, RoundStartDelay_Timer, _, TIMER_FLAG_NO_MAPCHANGE);
