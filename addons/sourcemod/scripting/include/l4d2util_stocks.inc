@@ -3,6 +3,13 @@
 #endif
 #define l4d2util_stocks_inc_
 
+//Author - A1m`
+
+stock bool L4D2Util_IsValidClient(int client)
+{
+	return (client > 0 && client <= MaxClients);
+}
+
 stock int L4D2Util_GetMin(int a, int b)
 {
 	return (a < b) ? a : b;
@@ -33,11 +40,6 @@ stock int L4D2Util_Clamp(int inc, int low, int high)
 	return (inc > high) ? high : ((inc < low) ? low : inc);
 }
 
-stock bool L4D2Util_IsValidClient(int client)
-{
-	return (client > 0 && client <= MaxClients);
-}
-
 /* Unsafe functions
 stock any L4D2Utill_GetMin(any a, any b)
 {
@@ -49,3 +51,47 @@ stock any L4D2Utill_GetMax(any a, any b)
 	return (a > b) ? a : b;
 }
 */
+
+stock int L4D2Util_IntToPercentInt(int iVar, int iVarMax)
+{
+	if (iVar > iVarMax) {
+		return 100;
+	} else if (iVar < 1) {
+		return 0;
+	}
+	
+	return RoundToNearest((float(iVar) / float(iVarMax)) * 100.0);
+}
+
+stock float L4D2Util_IntToPercentFloat(int iVar, int iVarMax)
+{
+	if (iVar > iVarMax) {
+		return 100.0;
+	} else if (iVar < 1) {
+		return 0.0;
+	}
+	
+	return ((float(iVar) / float(iVarMax)) * 100.0);
+}
+
+stock float L4D2Util_FloatToPercentFloat(float iVar, float iVarMax)
+{
+	if (iVar > iVarMax) {
+		return 100.0;
+	} else if (iVar < 1) {
+		return 0.0;
+	}
+	
+	return ((iVar / iVarMax) * 100.0);
+}
+
+stock int L4D2Util_FloatToPercentInt(float iVar, float iVarMax)
+{
+	if (iVar > iVarMax) {
+		return 100;
+	} else if (iVar < 1) {
+		return 0;
+	}
+	
+	return RoundToNearest((iVar / iVarMax) * 100.0);
+}

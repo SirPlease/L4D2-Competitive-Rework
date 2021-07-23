@@ -13,8 +13,6 @@
 #define IS_VALID_INFECTED(%1)   (IS_VALID_INGAME(%1) && IS_INFECTED(%1))
 #define IS_VALID_CASTER(%1)     (IS_VALID_INGAME(%1) && IsClientCaster(%1))
 
-#define AUTH_ADT_LENGTH (ByteCountToCells(64))
-
 ArrayList h_whosHadTank;
 char queuedTankSteamId[64];
 ConVar hTankPrint, hTankDebug;
@@ -69,7 +67,7 @@ public void OnPluginStart()
     HookEvent("player_death", PlayerDeath_Event, EventHookMode_Post);
     
     // Initialise the tank arrays/data values
-    h_whosHadTank = new ArrayList(AUTH_ADT_LENGTH);
+    h_whosHadTank = new ArrayList(ByteCountToCells(64));
     
     // Admin commands
     RegAdminCmd("sm_tankshuffle", TankShuffle_Cmd, ADMFLAG_SLAY, "Re-picks at random someone to become tank.");
@@ -292,7 +290,7 @@ public Action GiveTank_Cmd(int client, int args)
 public void chooseTank()
 {
     // Create our pool of players to choose from
-    ArrayList infectedPool = new ArrayList(AUTH_ADT_LENGTH);
+    ArrayList infectedPool = new ArrayList(ByteCountToCells(64));
     addTeamSteamIdsToArray(infectedPool, L4D2Team_Infected);
     
     // If there is nobody on the infected team, return (otherwise we'd be stuck trying to select forever)
@@ -308,7 +306,7 @@ public void chooseTank()
     // If the infected pool is empty, remove infected players from pool
     if (GetArraySize(infectedPool) == 0) // (when nobody on infected ,error)
     {
-        ArrayList infectedTeam = new ArrayList(AUTH_ADT_LENGTH);
+        ArrayList infectedTeam = new ArrayList(ByteCountToCells(64));
         addTeamSteamIdsToArray(infectedTeam, L4D2Team_Infected);
         if (GetArraySize(infectedTeam) > 1)
         {

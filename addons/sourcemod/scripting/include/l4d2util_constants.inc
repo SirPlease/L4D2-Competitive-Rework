@@ -3,8 +3,6 @@
 #endif
 #define l4d2util_constants_inc_
 
-//#define IS_VALID_CLIENT(%1)     (%1 > 0 && %1 <= MaxClients)
-
 enum L4D2_Team:
 {
 	L4D2Team_None = 0,

@@ -5,7 +5,7 @@
 #include <left4dhooks>
 #include <l4d2util>
 
-#define DEBUG_MODE false
+#define DEBUG_MODE 0
 
 /*
 

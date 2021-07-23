@@ -96,9 +96,10 @@ public Action Event_RoundStart(Event event, char[] name , bool dontBroadcast)
 public Action Command_VoteMode(int client, int args)
 {
 	// Don't care about non-loaded players or Spectators.
-	if (!IsClientInGame(client) || 
-	GetClientTeam(client) == 1) return Plugin_Handled;
-
+	if (client == 0 || GetClientTeam(client) == 1) {
+		return Plugin_Handled;
+	}
+	
 	// We've already decided on a mode.
 	if (!IsInReady() || InSecondHalfOfRound())
 	{
@@ -458,8 +459,8 @@ public Action Timer_InformPlayers(Handle timer)
 
 stock bool IsValidSurvivor(int client)
 {
-    if (client <= 0 || client > MaxClients || !IsClientConnected(client)) return false;
-    if (!IsClientInGame(client)) return false;
-    if (GetClientTeam(client) != 2) return false;
-    return true; 
+	if (client <= 0 || client > MaxClients || !IsClientConnected(client)) return false;
+	if (!IsClientInGame(client)) return false;
+	if (GetClientTeam(client) != 2) return false;
+	return true; 
 }

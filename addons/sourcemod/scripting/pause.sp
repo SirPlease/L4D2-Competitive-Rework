@@ -25,11 +25,10 @@
 #include <sourcemod>
 #include <colors>
 #include <builtinvotes>
+#include <l4d2util_stocks>
 #undef REQUIRE_PLUGIN
 #include <readyup>
 //#define REQUIRE_PLUGIN
-
-#define min(%0,%1) (((%0) < (%1)) ? (%0) : (%1))
 
 public Plugin myinfo =
 {
@@ -740,7 +739,7 @@ public Action Callvote_Callback(int client, char[] command, int argc)
 	if (spacepos > -1)
 	{
 		char temp[12];
-		strcopy(temp, min(spacepos + 1, sizeof(temp)), therest);
+		strcopy(temp, L4D2Util_GetMin(spacepos + 1, sizeof(temp)), therest);
 		userid = StringToInt(temp);
 	}
 	else

@@ -5,8 +5,7 @@
 #include <left4dhooks>
 #include <sdktools>
 #include <l4d2lib>
-
-#define CLAMP(%0,%1,%2) (((%0) > (%2)) ? (%2) : (((%0) < (%1)) ? (%1) : (%0)))
+#include <l4d2util_stocks>
 
 #define PLUGIN_TAG "" // \x04[Hybrid Bonus]
 
@@ -53,7 +52,7 @@ new bool:bTiebreakerEligibility[2];
 public Plugin:myinfo =
 {
 	name = "L4D2 Scoremod+",
-	author = "Visor",
+	author = "Visor", //Add support sm1.11 - A1m`
 	description = "The next generation scoring mod",
 	version = "2.2.4",
 	url = "https://github.com/Attano/L4D2-Competitive-Framework"
@@ -131,7 +130,7 @@ public OnConfigsExecuted()
 	fMapTempHealthBonus = iTeamSize * 100/* HP */ / fPermHealthProportion * fTempHealthProportion;
 	fPermHpWorth = fMapBonus / iTeamSize / 100 * fPermHealthProportion;
 	fTempHpWorth = fMapBonus * fTempHealthProportion / fMapTempHealthBonus; // this should be almost equal to the perm hp worth, but for accuracy we'll keep it separate
-	iPillWorth = CLAMP(RoundToNearest(50 * (fPermHpWorth / GetConVarFloat(hCvarPillsHpFactor)) / 5) * 5, 5, GetConVarInt(hCvarPillsMaxBonus)); // make it pretty
+	iPillWorth = L4D2Util_Clamp(RoundToNearest(50 * (fPermHpWorth / GetConVarFloat(hCvarPillsHpFactor)) / 5) * 5, 5, GetConVarInt(hCvarPillsMaxBonus)); // make it pretty
 #if SM2_DEBUG
 	PrintToChatAll("\x01Map health bonus: \x05%.1f\x01, temp health bonus: \x05%.1f\x01, perm hp worth: \x03%.1f\x01, temp hp worth: \x03%.1f\x01, pill worth: \x03%i\x01", fMapBonus, fMapTempHealthBonus, fPermHpWorth, fTempHpWorth, iPillWorth);
 #endif

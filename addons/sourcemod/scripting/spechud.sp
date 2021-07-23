@@ -34,9 +34,6 @@ public Plugin myinfo =
 // ======================================================================
 #define SPECHUD_DRAW_INTERVAL   0.5
 
-// ToPercent(int var, int varmax): float
-#define ToPercent(%0,%1) ((%0) < 1 ? 0.0 : (100.0 * (%0) / (%1)))
-
 #define TEAM_NONE       0
 #define TEAM_SPECTATOR  1
 #define TEAM_SURVIVOR   2
@@ -872,18 +869,18 @@ void FillScoreInfo(Panel &hSpecHud)
 				FormatEx(	info,
 							sizeof(info),
 							"> HB: %.0f%% | DB: %.0f%% | Pills: %i / %.0f%%",
-							ToPercent(healthBonus, maxHealthBonus),
-							ToPercent(damageBonus, maxDamageBonus),
-							pillsBonus, ToPercent(pillsBonus, maxPillsBonus));
+							L4D2Util_IntToPercentFloat(healthBonus, maxHealthBonus),
+							L4D2Util_IntToPercentFloat(damageBonus, maxDamageBonus),
+							pillsBonus, L4D2Util_IntToPercentFloat(pillsBonus, maxPillsBonus));
 				DrawPanelText(hSpecHud, info);
-				
-				FormatEx(info, sizeof(info), "> Bonus: %i <%.1f%%>", totalBonus, ToPercent(totalBonus, maxTotalBonus));
+
+				FormatEx(info, sizeof(info), "> Bonus: %i <%.1f%%>", totalBonus, L4D2Util_IntToPercentFloat(totalBonus, maxTotalBonus));
 				DrawPanelText(hSpecHud, info);
 				
 				FormatEx(info, sizeof(info), "> Distance: %i", iMaxDistance);
 				//if (iInSecondHalfOfRound())
 				//{
-				//	Format(info, sizeof(info), "%s | R#1: %i <%.1f%%>", info, iFirstHalfScore, ToPercent(iFirstHalfScore, L4D_GetVersusMaxCompletionScore() + maxTotalBonus));
+				//	Format(info, sizeof(info), "%s | R#1: %i <%.1f%%>", info, iFirstHalfScore, L4D2Util_IntToPercentFloat(iFirstHalfScore, (L4D_GetVersusMaxCompletionScore() + maxTotalBonus)));
 				//}
 				DrawPanelText(hSpecHud, info);
 			}
@@ -930,13 +927,13 @@ void FillScoreInfo(Panel &hSpecHud)
 							permBonus, tempBonus, pillsBonus);
 				DrawPanelText(hSpecHud, info);
 				
-				FormatEx(info, sizeof(info), "> Bonus: %i <%.1f%%>", totalBonus, ToPercent(totalBonus, maxTotalBonus));
+				FormatEx(info, sizeof(info), "> Bonus: %i <%.1f%%>", totalBonus, L4D2Util_IntToPercentFloat(totalBonus, maxTotalBonus));
 				DrawPanelText(hSpecHud, info);
 				
 				FormatEx(info, sizeof(info), "> Distance: %i", iMaxDistance);
 				//if (iInSecondHalfOfRound())
 				//{
-				//	Format(info, sizeof(info), "%s | R#1: %i <%.1f%%>", info, iFirstHalfScore, ToPercent(iFirstHalfScore, L4D_GetVersusMaxCompletionScore() + maxTotalBonus));
+				//	Format(info, sizeof(info), "%s | R#1: %i <%.1f%%>", info, iFirstHalfScore, L4D2Util_IntToPercentFloat(iFirstHalfScore, L4D_GetVersusMaxCompletionScore() + maxTotalBonus));
 				//}
 				DrawPanelText(hSpecHud, info);
 			}
@@ -1100,7 +1097,7 @@ bool FillTankInfo(Panel &hSpecHud, bool bTankHUD = false)
 	// Draw health
 	int health = GetClientHealth(tank),
 		maxhealth = GetEntProp(tank, Prop_Send, "m_iMaxHealth");
-	float healthPercent = ToPercent(health, maxhealth);
+	float healthPercent = L4D2Util_IntToPercentFloat(health, maxhealth);
 	if (health <= 0 || IsIncapacitated(tank) || !IsPlayerAlive(tank))
 	{
 		info = "Health  : Dead";
