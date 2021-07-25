@@ -3,7 +3,7 @@
 #endif
 #define l4d2util_survivors_inc_
 
-stock static Handle hSurvivorModelsTrie = null;
+stock static StringMap hSurvivorModelsTrie = null;
 
 /**
  * Returns true if the player is currently on the survivor team. 
@@ -93,9 +93,9 @@ stock bool IsHangingFromLedge(int client)
  */
 stock void InitSurvivorModelTrie()
 {
-	hSurvivorModelsTrie = CreateTrie();
-	for (int i = 0; i < view_as<int>(SurvivorCharacter); i++) {
-		SetTrieValue(hSurvivorModelsTrie, SurvivorModels[i], i);
+	hSurvivorModelsTrie = new StringMap();
+	for (int i = 0; i < view_as<int>(SC_SIZE); i++) {
+		hSurvivorModelsTrie.SetValue(SurvivorModels[i], i);
 	}
 }
 
@@ -132,7 +132,7 @@ stock SurvivorCharacter ClientModelToSC(const char[] model)
 	}
 	
 	SurvivorCharacter sc;
-	if (GetTrieValue(hSurvivorModelsTrie, model, sc)) {
+	if (hSurvivorModelsTrie.GetValue(model, sc)) {
 		return sc;
 	}
 
