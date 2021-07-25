@@ -95,3 +95,16 @@ stock int L4D2Util_FloatToPercentInt(float iVar, float iVarMax)
 	
 	return RoundToNearest((iVar / iVarMax) * 100.0);
 }
+
+stock void String_ToLower(char[] str, const int MaxSize)
+{
+	int iSize = strlen(str); //Сounts string length to zero terminator
+
+	for (int i = 0; i < iSize && i < MaxSize; i++) { //more security, so that the cycle is not endless
+		if (IsCharUpper(str[i])) {
+			str[i] = CharToLower(str[i]);
+		}
+	}
+
+	str[iSize] = '\0';
+}
