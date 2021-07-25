@@ -111,7 +111,7 @@ public void OnPluginStart()
 	
 	if (IsLateLoad) {
 		// process current players
-		for (int i = 1; i <= MaxClients; i++) {	
+		for (int i = 1; i <= MaxClients; i++) {
 			if (IsClientInGame(i) && !IsFakeClient(i)) {
 				ProcessPlayerLerp(i, true);
 			}
@@ -353,7 +353,7 @@ float GetLerpTime(int client)
 		buffer = "";
 	}
 	
-	float flLerpAmount = StringToFloat(buffer);	
+	float flLerpAmount = StringToFloat(buffer);
 	
 	if (cVarMinInterpRatio != null && cVarMaxInterpRatio != null && cVarMinInterpRatio.FloatValue != -1.0) {
 		flLerpRatio = clamp(flLerpRatio, cVarMinInterpRatio.FloatValue, cVarMaxInterpRatio.FloatValue);

@@ -350,8 +350,8 @@ stock const char MeleeWeaponModels[WEPID_MELEES_SIZE][] =
 	"/weapons/melee/w_machete.mdl",
 	"/weapons/melee/w_riotshield.mdl",
 	"/weapons/melee/w_tonfa.mdl",
-	"/weapons/melee/v_shovel.mdl",
-	"/weapons/melee/v_pitchfork.mdl"
+	"/weapons/melee/w_shovel.mdl",
+	"/weapons/melee/w_pitchfork.mdl"
 };
 
 stock const int WeaponSlots[WEPID_SIZE] =

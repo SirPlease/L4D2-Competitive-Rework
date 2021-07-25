@@ -11,6 +11,8 @@
 #define TICK_TIME 0.200072
 #define TEAM_SURVIVOR 2
 
+#define DMG_TYPE_SPIT (DMG_RADIATION|DMG_ENERGYBEAM)
+
 ConVar
 	hCvarDamagePerTick,
 	hCvarAlternateDamagePerTwoTicks,
@@ -141,7 +143,7 @@ public void OnEntityDestroyed(int entity)
 */
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (!(damagetype & (DMG_RADIATION|DMG_ENERGYBEAM))) { //for performance
+	if (!(damagetype & DMG_TYPE_SPIT)) { //for performance
 		return Plugin_Continue;
 	}
 
@@ -207,5 +209,5 @@ bool IsInsectSwarm(int entity) //=D
 
 bool IsSurvivor(int client)
 {
-	return (client > 0 && client <= MaxClients && GetClientTeam(client) == TEAM_SURVIVOR);
+	return (client > 0 && client <= MaxClients /*&& IsClientInGame(client)*/ && GetClientTeam(client) == TEAM_SURVIVOR);
 }
