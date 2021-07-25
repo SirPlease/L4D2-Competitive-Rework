@@ -51,14 +51,6 @@ public OnPluginStart() {
 #endif
 }
 
-public Action:L4D_OnSpawnWitch(const Float:vector[3], const Float:qangle[3]) {
-    return Plugin_Handled;
-}
-
-public Action:L4D_OnSpawnWitchBride(const Float:vector[3], const Float:qangle[3]) {
-    return Plugin_Handled;
-}
-
 public Action:StaticTank_Command(args) {
     decl String:mapname[64];
     GetCmdArg(1, mapname, sizeof(mapname));
