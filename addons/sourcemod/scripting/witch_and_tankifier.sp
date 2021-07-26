@@ -9,9 +9,6 @@
 #include <l4d2util>
 #include <left4dhooks>
 
-#define MAX(%0,%1) (((%0) > (%1)) ? (%0) : (%1))
-#define MIN(%0,%1) (((%0) < (%1)) ? (%0) : (%1))
-
 public Plugin:myinfo = {
     name = "Tank and Witch ifier!",
     author = "CanadaRox, Sir, devilesk, Derpduck",
@@ -159,58 +156,56 @@ public Action:AdjustBossFlow(Handle:timer) {
     }
     
     // Set witch spawn, if witch spawning is enabled
-    if (!GetTrieValue(hStaticWitchMaps, sCurMap, dummy)) {
-        if (GetConVarBool(g_hCvarWitchCanSpawn)) {
-            PrintDebug("[AdjustBossFlow] Not static witch map. Flow witch enabled.");
+    if (!GetTrieValue(hStaticWitchMaps, sCurMap, dummy) || GetConVarBool(g_hCvarWitchCanSpawn)) {
+		PrintDebug("[AdjustBossFlow] Not static witch map. Flow witch enabled.");
 
-            new iCvarMinFlow = RoundFloat(GetConVarFloat(g_hVsBossFlowMin) * 100);
-            new iCvarMaxFlow = RoundFloat(GetConVarFloat(g_hVsBossFlowMax) * 100);
+		new iCvarMinFlow = RoundFloat(GetConVarFloat(g_hVsBossFlowMin) * 100);
+		new iCvarMaxFlow = RoundFloat(GetConVarFloat(g_hVsBossFlowMax) * 100);
 
-            // mapinfo override
-            iCvarMinFlow = L4D2_GetMapValueInt("versus_boss_flow_min", iCvarMinFlow);
-            iCvarMaxFlow = L4D2_GetMapValueInt("versus_boss_flow_max", iCvarMaxFlow);
+		// mapinfo override
+		iCvarMinFlow = L4D2_GetMapValueInt("versus_boss_flow_min", iCvarMinFlow);
+		iCvarMaxFlow = L4D2_GetMapValueInt("versus_boss_flow_max", iCvarMaxFlow);
 
-            new iMinBanFlow = L4D2_GetMapValueInt("witch_ban_flow_min", -1);
-            new iMaxBanFlow = L4D2_GetMapValueInt("witch_ban_flow_max", -1);
-            new iMinBanFlowB = L4D2_GetMapValueInt("witch_ban_flow_min_b", -1);
-            new iMaxBanFlowB = L4D2_GetMapValueInt("witch_ban_flow_max_b", -1);
-            new iMinBanFlowC = L4D2_GetMapValueInt("witch_ban_flow_min_c", -1);
-            new iMaxBanFlowC = L4D2_GetMapValueInt("witch_ban_flow_max_c", -1);
+		new iMinBanFlow = L4D2_GetMapValueInt("witch_ban_flow_min", -1);
+		new iMaxBanFlow = L4D2_GetMapValueInt("witch_ban_flow_max", -1);
+		new iMinBanFlowB = L4D2_GetMapValueInt("witch_ban_flow_min_b", -1);
+		new iMaxBanFlowB = L4D2_GetMapValueInt("witch_ban_flow_max_b", -1);
+		new iMinBanFlowC = L4D2_GetMapValueInt("witch_ban_flow_min_c", -1);
+		new iMaxBanFlowC = L4D2_GetMapValueInt("witch_ban_flow_max_c", -1);
 
-            PrintDebug("[AdjustBossFlow] flow: (%i, %i). ban (%i, %i). ban b (%i, %i). ban c (%i, %i)", iCvarMinFlow, iCvarMaxFlow, iMinBanFlow, iMaxBanFlow, iMinBanFlowB, iMaxBanFlowB, iMinBanFlowC, iMaxBanFlowC);
+		PrintDebug("[AdjustBossFlow] flow: (%i, %i). ban (%i, %i). ban b (%i, %i). ban c (%i, %i)", iCvarMinFlow, iCvarMaxFlow, iMinBanFlow, iMaxBanFlow, iMinBanFlowB, iMaxBanFlowB, iMinBanFlowC, iMaxBanFlowC);
 
-            // check each array index to see if it is within a ban range
-            new iValidSpawnTotal = 0;
-            for (new i = 0; i <= 100; i++) {
-                bValidSpawn[i] = (iCvarMinFlow <= i && i <= iCvarMaxFlow) && !(iMinBanFlow <= i && i <= iMaxBanFlow) && !(iMinBanFlowB <= i && i <= iMaxBanFlowB) && !(iMinBanFlowC <= i && i <= iMaxBanFlowC);
-                if (bValidSpawn[i]) iValidSpawnTotal++;
-            }
+		// check each array index to see if it is within a ban range
+		new iValidSpawnTotal = 0;
+		for (new i = 0; i <= 100; i++) {
+			bValidSpawn[i] = (iCvarMinFlow <= i && i <= iCvarMaxFlow) && !(iMinBanFlow <= i && i <= iMaxBanFlow) && !(iMinBanFlowB <= i && i <= iMaxBanFlowB) && !(iMinBanFlowC <= i && i <= iMaxBanFlowC);
+			if (bValidSpawn[i]) iValidSpawnTotal++;
+		}
 
-            if (iValidSpawnTotal == 0) {
-                L4D2Direct_SetVSWitchToSpawnThisRound(0, false);
-                L4D2Direct_SetVSWitchToSpawnThisRound(1, false);
-                PrintDebug("[AdjustBossFlow] Ban range covers entire flow range. Flow witch disabled.");
-            }
-            else {
-                new n = Math_GetRandomInt(1, iValidSpawnTotal);
+		if (iValidSpawnTotal == 0) {
+			L4D2Direct_SetVSWitchToSpawnThisRound(0, false);
+			L4D2Direct_SetVSWitchToSpawnThisRound(1, false);
+			PrintDebug("[AdjustBossFlow] Ban range covers entire flow range. Flow witch disabled.");
+		}
+		else {
+			new n = Math_GetRandomInt(1, iValidSpawnTotal);
 
-                // the nth valid spawn index is the chosen witch flow %
-                for (new iWitchFlow = 0; iWitchFlow <= 100; iWitchFlow++) {
-                    if (bValidSpawn[iWitchFlow]) {
-                        n--;
-                        if (n == 0) {
-                            new Float:fWitchFlow = iWitchFlow / 100.0;
-                            PrintDebug("[AdjustBossFlow] iWitchFlow: %i, fWitchFlow: %f. iValidSpawnTotal: %i", iWitchFlow, fWitchFlow, iValidSpawnTotal);
-                            L4D2Direct_SetVSWitchToSpawnThisRound(0, true);
-                            L4D2Direct_SetVSWitchToSpawnThisRound(1, true);
-                            L4D2Direct_SetVSWitchFlowPercent(0, fWitchFlow);
-                            L4D2Direct_SetVSWitchFlowPercent(1, fWitchFlow);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
+			// the nth valid spawn index is the chosen witch flow %
+			for (new iWitchFlow = 0; iWitchFlow <= 100; iWitchFlow++) {
+				if (bValidSpawn[iWitchFlow]) {
+					n--;
+					if (n == 0) {
+						new Float:fWitchFlow = iWitchFlow / 100.0;
+						PrintDebug("[AdjustBossFlow] iWitchFlow: %i, fWitchFlow: %f. iValidSpawnTotal: %i", iWitchFlow, fWitchFlow, iValidSpawnTotal);
+						L4D2Direct_SetVSWitchToSpawnThisRound(0, true);
+						L4D2Direct_SetVSWitchToSpawnThisRound(1, true);
+						L4D2Direct_SetVSWitchFlowPercent(0, fWitchFlow);
+						L4D2Direct_SetVSWitchFlowPercent(1, fWitchFlow);
+						break;
+					}
+				}
+			}
+		}
     }
     else {
         L4D2Direct_SetVSWitchToSpawnThisRound(0, false);
