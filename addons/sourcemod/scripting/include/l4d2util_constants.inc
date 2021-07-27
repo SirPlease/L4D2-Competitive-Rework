@@ -414,8 +414,58 @@ stock const int WeaponSlots[WEPID_SIZE] =
 	-1  // WEPID_UPGRADE_ITEM
 };
 
+/* @A1m`:
+ * The correct order of characters in the game,
+ * this may work correctly with a netprop 'm_survivorCharacter'.
+ * We need to update a lot of plugins to add this,
+ * since many plugins use the old order =(
+*/
+/*enum SurvivorCharacter:
+{
+	SurvivorCharacter_Invalid = -1,
+
+	SurvivorCharacter_Nick = 0,
+	SurvivorCharacter_Rochelle,
+	SurvivorCharacter_Coach,
+	SurvivorCharacter_Ellis,
+	SurvivorCharacter_Bill,
+	SurvivorCharacter_Zoey,
+	SurvivorCharacter_Louis,
+	SurvivorCharacter_Francis,
+
+	SurvivorCharacter_Size //8 size
+};
+
+// Names of the survivors
+// TODO: languages?
+stock const char SurvivorNames[SurvivorCharacter_Size][] =
+{
+	"Nick",
+	"Rochelle",
+	"Coach",
+	"Ellis",
+	"Bill",
+	"Zoey",
+	"Louis",
+	"Francis"
+};
+
+// Models for each of the characters
+stock const char SurvivorModels[SurvivorCharacter_Size][] =
+{
+	"models/survivors/survivor_gambler.mdl",	//MODEL_NICK
+	"models/survivors/survivor_producer.mdl",	//MODEL_ROCHELLE
+	"models/survivors/survivor_coach.mdl",		//MODEL_COACH
+	"models/survivors/survivor_mechanic.mdl",	//MODEL_ELLIS
+	"models/survivors/survivor_namvet.mdl",		//MODEL_BILL
+	"models/survivors/survivor_teenangst.mdl",	//MODEL_ZOEY
+	"models/survivors/survivor_manager.mdl",	//MODEL_LOUIS
+	"models/survivors/survivor_biker.mdl"		//MODEL_FRANCIS
+};
+*/
+
 // Indexes are arbitrary at this point.
-enum SurvivorCharacter
+enum SurvivorCharacter:
 {
 	SC_NONE=-1,
 	SC_COACH=0,
@@ -447,14 +497,14 @@ stock const char SurvivorNames[SC_SIZE][] =
 // Models for each of the characters
 stock const char SurvivorModels[SC_SIZE][] =
 {
-	"models/survivors/survivor_coach.mdl",
-	"models/survivors/survivor_gambler.mdl",
-	"models/survivors/survivor_producer.mdl",
-	"models/survivors/survivor_mechanic.mdl",
-	"models/survivors/survivor_manager.mdl",
-	"models/survivors/survivor_teenangst.mdl",
-	"models/survivors/survivor_namvet.mdl",
-	"models/survivors/survivor_biker.mdl"
+	"models/survivors/survivor_coach.mdl",		//SC_COACH
+	"models/survivors/survivor_gambler.mdl",	//SC_NICK
+	"models/survivors/survivor_producer.mdl",	//SC_ROCHELLE
+	"models/survivors/survivor_mechanic.mdl",	//SC_ELLIS
+	"models/survivors/survivor_manager.mdl",	//SC_LOUIS
+	"models/survivors/survivor_teenangst.mdl",	//SC_ZOEY
+	"models/survivors/survivor_namvet.mdl",		//SC_BILL
+	"models/survivors/survivor_biker.mdl"		//SC_FRANCIS
 };
 
 // Animation IDs used by CTerrorPlayer::DoAnimationEvent
@@ -509,5 +559,5 @@ enum Animation:
 	ANIM_TANK_PUNCH_GETUP = 96,
 	ANIM_IDLE = 98,
 	
-	ANIMATION_SIZE //99 size
+	//ANIMATION_SIZE //99 size
 };
