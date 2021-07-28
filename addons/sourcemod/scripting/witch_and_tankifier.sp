@@ -158,7 +158,7 @@ public Action:AdjustBossFlow(Handle:timer) {
 	}
 	
 	// Set witch spawn, if witch spawning is enabled
-	if (!GetTrieValue(hStaticWitchMaps, sCurMap, dummy) || GetConVarBool(g_hCvarWitchCanSpawn)) {
+	if (!GetTrieValue(hStaticWitchMaps, sCurMap, dummy) && GetConVarBool(g_hCvarWitchCanSpawn)) {
 		PrintDebug("[AdjustBossFlow] Not static witch map. Flow witch enabled.");
 
 		new iCvarMinFlow = RoundFloat(GetConVarFloat(g_hVsBossFlowMin) * 100);
