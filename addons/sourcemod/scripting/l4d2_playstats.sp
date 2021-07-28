@@ -35,36 +35,36 @@
 #define ZC_NOTINFECTED			9
 #define ZC_TOTAL				7
 
-#define CONBUFSIZE				(1 << 10)	   // 1k
-#define CONBUFSIZELARGE			(1 << 12)	   // 4k
-#define MAXCHUNKS				10			  // how many chunks of 4k max
-#define CHARTHRESHOLD			160			 // detecting unicode stuff
-#define MAXLINESPERCHUNK		4			   // how many lines in a chunk
-#define DIVIDERINTERVAL			4			   // add divider line every X lines
+#define CONBUFSIZE				(1 << 10)								// 1k
+#define CONBUFSIZELARGE			(1 << 12)								// 4k
+#define MAXCHUNKS				10								// how many chunks of 4k max
+#define CHARTHRESHOLD			160								// detecting unicode stuff
+#define MAXLINESPERCHUNK		4								// how many lines in a chunk
+#define DIVIDERINTERVAL			4								// add divider line every X lines
 
 #define MAXTRACKED				64
-#define MAXROUNDS				48			  // ridiculously high, but just in case players do a marathon or something
-#define MAXSHOWROUNDS			10			  // how many rounds to show in the general stats table, max
+#define MAXROUNDS				48								// ridiculously high, but just in case players do a marathon or something
+#define MAXSHOWROUNDS			10								// how many rounds to show in the general stats table, max
 
 #define MAXNAME					64
-#define MAXNAME_TABLE			20			  // name size max in console tables
+#define MAXNAME_TABLE			20								// name size max in console tables
 #define MAXCHARACTERS			4
 #define MAXMAP					32
 #define MAXGAME					24
 #define MAXWEAPNAME				24
 
-#define STUMBLE_DMG_THRESH		3			   // smaller than this is stumble damage (for chargers)
+#define STUMBLE_DMG_THRESH		3								// smaller than this is stumble damage (for chargers)
 
 #define STATS_RESET_DELAY		5.0
-#define ROUNDSTART_DELAY		5.5			 // this should always be longer than CMT's roundstart scores check, so we know whether there's been a swap! hardcoded 5.0 in there
+#define ROUNDSTART_DELAY		5.5								// this should always be longer than CMT's roundstart scores check, so we know whether there's been a swap! hardcoded 5.0 in there
 #define ROUNDEND_SCORE_DELAY	1.0
 #define ROUNDEND_DELAY			3.0
 #define ROUNDEND_DELAY_SCAV		2.0
-#define PRINT_REPEAT_DELAY		15			  // how many seconds to wait before re-doing automatic round end prints (opening/closing end door, etc)
-#define PRINT_DELAY_INC			0.1			 // print delay increments (pauses between tables)
+#define PRINT_REPEAT_DELAY		15								// how many seconds to wait before re-doing automatic round end prints (opening/closing end door, etc)
+#define PRINT_DELAY_INC			0.1								// print delay increments (pauses between tables)
 #define FREQ_FLOWCHECK			1.0
 
-#define MIN_TEAM_PRESENT_TIME	30			  // how many seconds a player with 0-stats has to have been on a team to be listed as part of that team
+#define MIN_TEAM_PRESENT_TIME	30								// how many seconds a player with 0-stats has to have been on a team to be listed as part of that team
 
 #define WP_MELEE				19
 #define WP_PISTOL				1
@@ -89,7 +89,7 @@
 
 #define HITGROUP_HEAD			1
 
-#define FIRST_NON_BOT			4			   // first index that doesn't belong to a survivor bot
+#define FIRST_NON_BOT			4								// first index that doesn't belong to a survivor bot
 
 #define TOTAL_FFGIVEN			0
 #define TOTAL_FFTAKEN			1
@@ -114,32 +114,32 @@
 #define LTEAM_B					1
 #define LTEAM_CURRENT			2
 
-#define BREV_SI					(1 << 0)		// flags for MVP chat print appearance
+#define BREV_SI					(1 << 0)						// flags for MVP chat print appearance
 #define BREV_CI					(1 << 1)
 #define BREV_FF					(1 << 2)
-#define BREV_RANK				(1 << 3)		// note: 16 reserved/removed
+#define BREV_RANK				(1 << 3)						// note: 16 reserved/removed
 #define BREV_PERCENT			(1 << 5)
 #define BREV_ABSOLUTE			(1 << 6)
 
-#define AUTO_MVPCHAT_ROUND		(1 << 0)		// flags for what to print automatically at round end
+#define AUTO_MVPCHAT_ROUND		(1 << 0)						// flags for what to print automatically at round end
 #define AUTO_MVPCHAT_GAME		(1 << 1)
 #define AUTO_MVPCON_ROUND		(1 << 2)
 #define AUTO_MVPCON_GAME		(1 << 3)
-#define AUTO_MVPCON_TANK		(1 << 4)		// 16
+#define AUTO_MVPCON_TANK		(1 << 4)						// 16
 #define AUTO_FFCON_ROUND		(1 << 5)
 #define AUTO_FFCON_GAME			(1 << 6)
-#define AUTO_SKILLCON_ROUND		(1 << 7)		// 128
+#define AUTO_SKILLCON_ROUND		(1 << 7)						// 128
 #define AUTO_SKILLCON_GAME		(1 << 8)
 #define AUTO_ACCCON_ROUND		(1 << 9)
-#define AUTO_ACCCON_GAME		(1 << 10)	   // 1024
+#define AUTO_ACCCON_GAME		(1 << 10)						// 1024
 #define AUTO_ACCCON_MORE_ROUND	(1 << 11)
 #define AUTO_ACCCON_MORE_GAME	(1 << 12)
 #define AUTO_FUNFACT_ROUND		(1 << 13)
-#define AUTO_FUNFACT_GAME		(1 << 14)	   // 16384
+#define AUTO_FUNFACT_GAME		(1 << 14)						// 16384
 #define AUTO_MVPCON_MORE_ROUND	(1 << 15)
 #define AUTO_MVPCON_MORE_GAME	(1 << 16)
-#define AUTO_INFCON_ROUND		(1 << 17)	   // 131072
-#define AUTO_INFCON_GAME		(1 << 18)	   // 262144
+#define AUTO_INFCON_ROUND		(1 << 17)						// 131072
+#define AUTO_INFCON_GAME		(1 << 18)						// 262144
 
 
 // fun fact
@@ -198,7 +198,7 @@
 // writing
 #define DIR_OUTPUT				"logs/"
 #define MAX_QUERY_SIZE			8192
-#define FILETABLEFLAGS			164532		  // AUTO_ flags for what to print to a file automatically
+#define FILETABLEFLAGS			164532						// AUTO_ flags for what to print to a file automatically
 
 // types of statistic table(sets)
 enum strStatType
@@ -213,17 +213,17 @@ enum strStatType
 };
 
 // information for entire game
-enum strGameData:
+enum strGameData
 {
-	gmFailed,			   // survivors lost the mission * times
-	gmStartTime,			// GetTime() value when starting
+	gmFailed,												// survivors lost the mission * times
+	gmStartTime,											// GetTime() value when starting
 	gmMax
 };
 
 // information per round
-enum strRoundData:
+enum strRoundData
 {
-	rndRestarts,			// how many times retried?
+	rndRestarts,											// how many times retried?
 	rndPillsUsed,
 	rndKitsUsed,
 	rndDefibsUsed,
@@ -233,11 +233,11 @@ enum strRoundData:
 	rndSISpawned,
 	rndWitchKilled,
 	rndTankKilled,
-	rndIncaps,			  // 10
+	rndIncaps,												// 10
 	rndDeaths,
 	rndFFDamageTotal,
-	rndStartTime,		   // GetTime() value when starting
-	rndEndTime,			 // GetTime() value when done
+	rndStartTime,											// GetTime() value when starting
+	rndEndTime,												// GetTime() value when done
 	rndStartTimePause,
 	rndStopTimePause,
 	rndStartTimeTank,
@@ -248,29 +248,29 @@ enum strRoundData:
 #define MAXRNDSTATS				 18
 
 // information per player
-enum strPlayerData:
+enum strPlayerData
 {
-	plyShotsShotgun,		// 0 pellets
-	plyShotsSmg,			// all bullets from smg/rifle
-	plyShotsSniper,		 // all bullets from snipers
-	plyShotsPistol,		 // all bullets from pistol/magnum
+	plyShotsShotgun,										// 0 pellets
+	plyShotsSmg,											// all bullets from smg/rifle
+	plyShotsSniper,											// all bullets from snipers
+	plyShotsPistol,											// all bullets from pistol/magnum
 	plyHitsShotgun,
 	plyHitsSmg,
 	plyHitsSniper,
 	plyHitsPistol,
-	plyHeadshotsSmg,		// headshots for everything but on tank
+	plyHeadshotsSmg,										// headshots for everything but on tank
 	plyHeadshotsSniper,
-	plyHeadshotsPistol,	 // 10
-	plyHeadshotsSISmg,	  // headshots for SI only
+	plyHeadshotsPistol,										// 10
+	plyHeadshotsSISmg,										// headshots for SI only
 	plyHeadshotsSISniper,
 	plyHeadshotsSIPistol,
-	plyHitsSIShotgun,	   // all hits on special infected (not tank)
+	plyHitsSIShotgun,										// all hits on special infected (not tank)
 	plyHitsSISmg,
 	plyHitsSISniper,
 	plyHitsSIPistol,
-	plyHitsTankShotgun,	 // all hits on tank
-	plyHitsTankSmg,		 // useful for getting real headshot count (leave tank out of it)
-	plyHitsTankSniper,	  // 20
+	plyHitsTankShotgun,										// all hits on tank
+	plyHitsTankSmg,											// useful for getting real headshot count (leave tank out of it)
+	plyHitsTankSniper,										// 20
 	plyHitsTankPistol,
 	plyCommon,
 	plyCommonTankUp,
@@ -280,27 +280,27 @@ enum strPlayerData:
 	plySIDamageTankUp,
 	plyIncaps,
 	plyDied,
-	plySkeets,			  // 30 skeets, full
+	plySkeets,												// 30 skeets, full
 	plySkeetsHurt,
 	plySkeetsMelee,
-	plyLevels,			  // charger levels, full
+	plyLevels,												// charger levels, full
 	plyLevelsHurt,
-	plyPops,				// boomer pops (pre puke)
+	plyPops,												// boomer pops (pre puke)
 	plyCrowns,
-	plyCrownsHurt,		  // non-full crowns
-	plyShoves,			  // count every shove
+	plyCrownsHurt,											// non-full crowns
+	plyShoves,												// count every shove
 	plyDeadStops,
-	plyTongueCuts,		  // 40 only real cuts
+	plyTongueCuts,											// 40 only real cuts
 	plySelfClears,
 	plyFallDamage,
 	plyDmgTaken,
 	plyFFGiven,
 	plyFFTaken,
-	plyFFHits,			  // total amount of shotgun blasts / bullets / etc
-	plyTankDamage,		  // survivor damage to tank
+	plyFFHits,												// total amount of shotgun blasts / bullets / etc
+	plyTankDamage,											// survivor damage to tank
 	plyWitchDamage,
 	plyMeleesOnTank,
-	plyRockSkeets,		  // 50
+	plyRockSkeets,											// 50
 	plyRockEats,
 	plyFFGivenPellet,
 	plyFFGivenBullet,
@@ -310,7 +310,7 @@ enum strPlayerData:
 	plyFFGivenIncap,
 	plyFFGivenOther,
 	plyFFGivenSelf,
-	plyFFTakenPellet,	   // 60
+	plyFFTakenPellet,										// 60
 	plyFFTakenBullet,
 	plyFFTakenSniper,
 	plyFFTakenMelee,
@@ -319,50 +319,50 @@ enum strPlayerData:
 	plyFFTakenOther,
 	plyFFGivenTotal,
 	plyFFTakenTotal,
-	plyClears,			  //	  amount of clears (under a min)
-	plyAvgClearTime,		// 70   average time it takes to clear someone (* 1000 so it doesn't have to be a float)
-	plyTimeStartPresent,	//	  time present (on the team)
-	plyTimeStopPresent,	 //	  if stoptime is 0, then it's NOW, ongoing
+	plyClears,												// amount of clears (under a min)
+	plyAvgClearTime,										// 70 average time it takes to clear someone (* 1000 so it doesn't have to be a float)
+	plyTimeStartPresent,									// time present (on the team)
+	plyTimeStopPresent,										// if stoptime is 0, then it's NOW, ongoing
 	plyTimeStartAlive,
 	plyTimeStopAlive,
-	plyTimeStartUpright,	//	  time not capped
+	plyTimeStartUpright,									// time not capped
 	plyTimeStopUpright,
 	plyMax
 };
 
-#define MAXPLYSTATS				 76
+#define MAXPLYSTATS				76
 
 // information per infected player (during other team's survivor round)
 enum strInfData
 {
-	infDmgTotal,			//	  including on incapped, excluding all tank damage!
-	infDmgUpright,		  // 1
-	infDmgTank,			 //	  only upright
-	infDmgTankIncap,		//	  only incapped
-	infDmgScratch,		  //	  only upright
-	infDmgSpit,			 //	  only upright
-	infDmgBoom,			 //	  only upright
-	infDmgTankUp,		   //	  only upright, excluding the tank itself
+	infDmgTotal,											// including on incapped, excluding all tank damage!
+	infDmgUpright,											// 1
+	infDmgTank,												// only upright
+	infDmgTankIncap,										// only incapped
+	infDmgScratch,											// only upright
+	infDmgSpit,												// only upright
+	infDmgBoom,												// only upright
+	infDmgTankUp,											// only upright, excluding the tank itself
 	infHunterDPs,
 	infHunterDPDmg,
-	infJockeyDPs,		   // 10
+	infJockeyDPs,											// 10
 	infDeathCharges,
-	infBooms,			   //	  boomed survivors
-	infLedged,			  //	  survivors ledged
-	infCommon,			  //	  common killed by SI
+	infBooms,												// boomed survivors
+	infLedged,												// survivors ledged
+	infCommon,												// common killed by SI
 	infSpawns,
 	infSpawnSmoker,
 	infSpawnBoomer,
 	infSpawnHunter,
 	infSpawnCharger,
-	infSpawnSpitter,		// 20
+	infSpawnSpitter,										// 20
 	infSpawnJockey,
 	infTankPasses,
-	infTimeStartPresent,	//	  time present (on the team)
-	infTimeStopPresent,	 //	  if stoptime is 0, then it's NOW, ongoing
+	infTimeStartPresent,									// time present (on the team)
+	infTimeStopPresent,										// if stoptime is 0, then it's NOW, ongoing
 };
 
-#define MAXINFSTATS				 24
+#define MAXINFSTATS				24
 
 // trie values: weapon type (per accuracy-class)
 enum strWeaponType
@@ -389,9 +389,9 @@ enum strOEC
 
 bool
 	g_bLateLoad = false,
-	g_bFirstLoadDone = false,										// true after first onMapStart
-	g_bLoadSkipDone = false,										// true after skipping the _resetnextmap for stats
-	g_bLGOAvailable = false,										// whether confogl is loaded
+	g_bFirstLoadDone = false,									// true after first onMapStart
+	g_bLoadSkipDone = false,									// true after skipping the _resetnextmap for stats
+	g_bLGOAvailable = false,									// whether confogl is loaded
 	g_bReadyUpAvailable = false,
 	g_bPauseAvailable = false,
 	g_bSkillDetectLoaded = false,
@@ -405,8 +405,8 @@ bool
 	g_bTankInGame = false,
 	g_bPlayersLeftStart = false,
 	g_bSecondHalf = false,										// second roundhalf in a versus round
-	g_bFailedPrevious = false,										// whether the previous attempt was a failed campaign mode round
-	g_bPaused = false;										// whether paused with pause.smx
+	g_bFailedPrevious = false,									// whether the previous attempt was a failed campaign mode round
+	g_bPaused = false;											// whether paused with pause.smx
 
 Handle
 	g_hCookiePrint = null,
@@ -418,34 +418,34 @@ Handle
 	g_hCvarDetailPercent = null,
 	g_hCvarWriteStats = null,
 	g_hCvarSkipMap = null,
-	g_hTriePlayers = null,   // trie for getting player index
-	g_hTrieWeapons = null,   // trie for getting weapon type (from classname)
-	g_hTrieMaps = null,   // trie for getting finale maps
-	g_hTrieEntityCreated = null,   // trie for getting classname of entity created
-	g_hStatsFile;														   // handle for a statsfile that we write tables to
+	g_hTriePlayers = null,										// trie for getting player index
+	g_hTrieWeapons = null,										// trie for getting weapon type (from classname)
+	g_hTrieMaps = null,											// trie for getting finale maps
+	g_hTrieEntityCreated = null,								// trie for getting classname of entity created
+	g_hStatsFile;												// handle for a statsfile that we write tables to
 
 int
 	g_iRound = 0,
-	g_iCurTeam = LTEAM_A,									  // current logical team
+	g_iCurTeam = LTEAM_A,										// current logical team
 	g_iTeamSize = 4,
-	g_iLastRoundEndPrint = 0,											// when the last automatic print was shown
+	g_iLastRoundEndPrint = 0,									// when the last automatic print was shown
 	g_iSurvived [2],											// just for stats: how many survivors that round (0 = wipe)
-	g_iCookieValue[MAXPLAYERS + 1],								 // if a cookie is set for a client, this is its value
+	g_iCookieValue[MAXPLAYERS + 1],								// if a cookie is set for a client, this is its value
 	g_iPauseStart = 0,											// time the current pause started
-	g_iScores[2],											// scores for both teams, as currently known
-	g_iFirstScoresSet[3],											// scores when first set for a new map (index 3 = 0 if not yet set)
-	g_iBoomedBy[MAXPLAYERS+1],								 // if someone is boomed, by whom?
-	g_iPlayerIndexSorted[MAXSORTS][MAXTRACKED],						 // used to create a sorted list
-	g_iPlayerSortedUseTeam[MAXSORTS][MAXTRACKED],						 // after sorting: which team to use as the survivor team for player
-	g_iPlayerRoundTeam[3][MAXTRACKED],								// which team is the player 0 = A, 1 = B, -1 = no team; [2] = current survivor round; [0]/[1] = team A / B (anyone who was ever on it)
-	g_iPlayerGameTeam[2][MAXTRACKED],								// for entire game for team A / B if the player was ever on it
-	g_strGameData[gmMax],
-	g_strAllRoundData[2][rndMax],							  // rounddata for ALL rounds, per team
-	g_strRoundData[MAXROUNDS][2][rndMax],				   // rounddata per game round, per team
-	g_strPlayerData[MAXTRACKED][plyMax],
-	g_strRoundPlayerData[MAXTRACKED][2][plyMax],				 // player data per team
-	g_strPlayerInfData[MAXTRACKED][plyMax],
-	g_strRoundPlayerInfData[MAXTRACKED][2][plyMax],				 // player data for infected action per team (team is survivor team! -- when infected player was on opposite team)
+	g_iScores[2],												// scores for both teams, as currently known
+	g_iFirstScoresSet[3],										// scores when first set for a new map (index 3 = 0 if not yet set)
+	g_iBoomedBy[MAXPLAYERS+1],									// if someone is boomed, by whom?
+	g_iPlayerIndexSorted[MAXSORTS][MAXTRACKED],					// used to create a sorted list
+	g_iPlayerSortedUseTeam[MAXSORTS][MAXTRACKED],				// after sorting: which team to use as the survivor team for player
+	g_iPlayerRoundTeam[3][MAXTRACKED],							// which team is the player 0 = A, 1 = B, -1 = no team; [2] = current survivor round; [0]/[1] = team A / B (anyone who was ever on it)
+	g_iPlayerGameTeam[2][MAXTRACKED],							// for entire game for team A / B if the player was ever on it
+	g_strGameData[view_as<int>(gmMax)],
+	g_strAllRoundData[2][view_as<int>(rndMax)],					// rounddata for ALL rounds, per team
+	g_strRoundData[MAXROUNDS][2][view_as<int>(rndMax)],			// rounddata per game round, per team
+	g_strPlayerData[MAXTRACKED][view_as<int>(plyMax)],
+	g_strRoundPlayerData[MAXTRACKED][2][view_as<int>(plyMax)],	// player data per team
+	g_strPlayerInfData[MAXTRACKED][view_as<int>(plyMax)],
+	g_strRoundPlayerInfData[MAXTRACKED][2][view_as<int>(plyMax)], // player data for infected action per team (team is survivor team! -- when infected player was on opposite team)
 	g_iPlayers = 0,
 	g_iConsoleBufChunks = 0;
 	
@@ -454,12 +454,12 @@ float
 
 char
 	g_sPlayerName [MAXTRACKED][MAXNAME],
-	g_sPlayerNameSafe[MAXTRACKED][MAXNAME],						  // version of name without unicode characters
-	g_sPlayerId[MAXTRACKED][32],							   // steam id
+	g_sPlayerNameSafe[MAXTRACKED][MAXNAME],						// version of name without unicode characters
+	g_sPlayerId[MAXTRACKED][32],								// steam id
 	g_sMapName[MAXROUNDS][MAXMAP],
 	g_sConfigName[MAXMAP],
 	g_sConsoleBuf[MAXCHUNKS][CONBUFSIZELARGE],
-	g_sStatsFile[MAXNAME];									  // name for the statsfile we should write to
+	g_sStatsFile[MAXNAME];										// name for the statsfile we should write to
 
 public Plugin myinfo =
 {

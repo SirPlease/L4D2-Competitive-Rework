@@ -1,15 +1,20 @@
+#pragma semicolon 1
+#pragma newdecls required
+
 #include <sourcemod>
 #include <sdktools_sound>
 #include <dhooks>
 #include <colors>
+#define L4D2UTIL_STOCKS_ONLY
+#include <l4d2util>
 #undef REQUIRE_PLUGIN
 #include <l4d_tank_control_eq>
-#define REQUIRE_PLUGIN
+//#define REQUIRE_PLUGIN
 
-#pragma semicolon 1
-#pragma newdecls required
+#define PLUGIN_VERSION "1.3b"
+#define DANG "ui/pickup_secret01.wav"
 
-#define PLUGIN_VERSION "1.3a"
+Handle g_hDetour;
 
 public Plugin myinfo = 
 {
@@ -20,41 +25,23 @@ public Plugin myinfo =
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-#define DANG "ui/pickup_secret01.wav"
-#define TEAM_NONE 0
-#define TEAM_SPECTATOR 1
-#define TEAM_SURVIVOR 2
-#define TEAM_INFECTED 3
-
-enum L4D2SI
-{
-	ZC_None,
-	ZC_Smoker,
-	ZC_Boomer,
-	ZC_Hunter,
-	ZC_Spitter,
-	ZC_Jockey,
-	ZC_Charger,
-	ZC_Witch,
-	ZC_Tank
-};
-
-Handle g_hDetour;
-
 public void OnPluginStart()
 {
-	GameData hData = new GameData("left4dhooks.l4d2");
-	if (hData == null)
+	Handle hGameData = LoadGameConfigFile("left4dhooks.l4d2");
+	if (hGameData == null) {
 		SetFailState("Missing gamedata \"left4dhooks.l4d2\".");
+	}
 	
-	g_hDetour = DHookCreateFromConf(hData, "SpawnTank");
-	if (g_hDetour == null)
+	g_hDetour = DHookCreateFromConf(hGameData, "SpawnTank");
+	if (g_hDetour == null) {
 		SetFailState("Failed to create detour \"SpawnTank\" from gamedata.");
+	}
 	
-	if (!DHookEnableDetour(g_hDetour, true, OnSpawnTank))
+	if (!DHookEnableDetour(g_hDetour, true, OnSpawnTank)) {
 		SetFailState("Failed to enable detour \"SpawnTank\".");
-		
-	delete hData;
+	}
+
+	delete hGameData;
 }
 
 public void OnPluginEnd()
@@ -72,34 +59,35 @@ public MRESReturn OnSpawnTank(Handle hReturn, Handle hParams)
 {
 	bool ret = DHookGetReturn(hReturn) != 0; // left4dhooks sets it 0 to disable tank spawns
 	
-	if (ret == true)
-		RequestFrame(OnNextFrame);	// seems it occurs often that prints with wrong teamcolors
+	if (ret == true) {
+		RequestFrame(OnNextFrame, 0);	// seems it occurs often that prints with wrong teamcolors
 									// make a slight delay here to try fixing this
+	}
 	return MRES_Ignored;
 }
 
-public void OnNextFrame()
+public void OnNextFrame(any data)
 {
 	char nameBuf[MAX_NAME_LENGTH];
-	if (IsTankSelection())
-	{
-		int tankClient = FindTank();
+	if (IsTankSelection()) {
+		int tankClient = FindAliveTankClient();
 	
-		if (tankClient > 0 && !IsFakeClient(tankClient))
+		if (tankClient > 0 && !IsFakeClient(tankClient)) {
 			FormatEx(nameBuf, sizeof(nameBuf), "%N", tankClient);
-		else {
+		} else {
 			tankClient = GetTankSelection();
-			if (tankClient > 0 && IsClientInGame(tankClient))
+			if (tankClient > 0 && IsClientInGame(tankClient)) {
 				FormatEx(nameBuf, sizeof(nameBuf), "%N", tankClient);
-			else
+			} else {
 				FormatEx(nameBuf, sizeof(nameBuf), "AI");
+			}
 		}
 	} else {
-		int tankClient = FindTank();
+		int tankClient = FindAliveTankClient();
 		
-		if (tankClient > 0 && !IsFakeClient(tankClient))
+		if (tankClient > 0 && !IsFakeClient(tankClient)) {
 			FormatEx(nameBuf, sizeof(nameBuf), "%N", tankClient);
-		else {
+		} else {
 			FormatEx(nameBuf, sizeof(nameBuf), "AI");
 		}
 	}
@@ -107,37 +95,6 @@ public void OnNextFrame()
 	CPrintToChatAll("{red}[{default}!{red}] {olive}Tank{default}({red}Control: %s{default}) has spawned!", nameBuf);
 	EmitSoundToAll(DANG);
 }
-
-// ========================
-//  Stocks
-// ========================
-
-bool IsInfected(int client)
-{
-	return IsClientInGame(client) && GetClientTeam(client) == TEAM_INFECTED;
-}
-
-
-L4D2SI GetInfectedClass(int client)
-{
-	return view_as<L4D2SI>(GetEntProp(client, Prop_Send, "m_zombieClass"));
-}
-
-
-/*
- * @return			TankClient id if can't found return -1.
- */
-int FindTank()
-{
-	for (int i = 1; i <= MaxClients; ++i)
-	{
-		if (IsInfected(i) && GetInfectedClass(i) == ZC_Tank && IsPlayerAlive(i))
-			return i;
-	}
-
-	return -1;
-}
-
 
 /*
  * @return			true if GetTankSelection exist false otherwise.

@@ -145,6 +145,23 @@ stock int FindTankClient(int iTankClient)
 }
 
 /**
+ * Searches for a live player who is in control of a tank.
+ *
+ * @param iTankClient client index to begin searching from
+ * @return client ID or -1 if not found
+ */
+stock int FindAliveTankClient()
+{
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsTank(i) && IsPlayerAlive(i)) {
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+/**
  * Is there a tank currently in play?
  *
  * @return bool

@@ -25,42 +25,25 @@
 #include <sourcemod>
 #include <colors>
 #include <builtinvotes>
-#include <l4d2util_stocks>
+#define L4D2UTIL_STOCKS_ONLY
+#include <l4d2util>
 #undef REQUIRE_PLUGIN
 #include <readyup>
-//#define REQUIRE_PLUGIN
 
 public Plugin myinfo =
 {
 	name = "Pause plugin",
 	author = "CanadaRox, Sir, Forgetest", //Add support sm1.11 - A1m`
 	description = "Adds pause functionality without breaking pauses, also prevents SI from spawning because of the Pause.",
-	version = "6.3",
-	url = "https://github.com/A1mDev/L4D2-Competitive-Plugins"
-};
-
-enum L4D2_Team:
-{
-	L4D2Team_None = 0,
-	L4D2Team_Spectator,
-	L4D2Team_Survivor,
-	L4D2Team_Infected,
-	L4D2Team_Size //4 size
-}
-
-static const char teamString[L4D2Team_Size][] =
-{
-	"None",
-	"Spectator",
-	"Survivors",
-	"Infected"
+	version = "6.4",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 // Game ConVar
 ConVar sv_pausable, sv_noclipduringpause;
 
 // Plugin Handle
-GlobalForward pauseForward, unpauseForward;
+Handle pauseForward, unpauseForward;
 Handle readyCountdownTimer, deferredPauseTimer;
 
 // Plugin ConVar
@@ -68,7 +51,7 @@ ConVar pauseDelayCvar, l4d_ready_delay;
 
 // Plugin Vars
 int	readyDelay, pauseDelay;
-bool adminPause, isPaused, RoundEnd, teamReady[L4D2Team_Size];
+bool adminPause, isPaused, RoundEnd, teamReady[view_as<int>(L4D2Team_Size)];
 
 // Ready Up Available
 bool readyUpIsAvailable;
@@ -83,25 +66,7 @@ float g_fPauseTime;
 L4D2_Team g_PauseTeam;
 bool hiddenPanel[MAXPLAYERS+1], hiddenManually[MAXPLAYERS+1];
 
-// Initiator Struct
-enum struct Player {
-	int userid;
-	void Set(int userid) {
-		this.userid = userid;
-	}
-	int GetClient() {
-		return GetClientOfUserId(this.userid);
-	}
-	bool InGame() {
-		int client = GetClientOfUserId(this.userid);
-		return client > 0 && IsClientInGame(client);
-	}
-	void Clear() {
-		this.userid = 0;
-	}
-}
-
-Player g_eInitiator;
+int g_eInitiator;
 
 // Initiator Vars
 ConVar initiatorReadyCvar;
@@ -111,8 +76,8 @@ bool g_bEnableInitReady, g_bInitiatorReady;
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	CreateNative("IsInPause", Native_IsInPause);
-	pauseForward = new GlobalForward("OnPause", ET_Ignore);
-	unpauseForward = new GlobalForward("OnUnpause", ET_Ignore);
+	pauseForward = CreateGlobalForward("OnPause", ET_Ignore);
+	unpauseForward = CreateGlobalForward("OnUnpause", ET_Ignore);
 	RegPluginLibrary("pause");
 
 	MarkNativeAsOptional("IsInReady");
@@ -268,7 +233,7 @@ public Action Pause_Cmd(int client, int args)
 	if ((!readyUpIsAvailable || !IsInReady()) && pauseDelay == 0 && !isPaused && IsPlayer(client) && !RoundEnd)
 	{
 		CPrintToChatAll("{default}[{green}!{default}] {olive}%N {blue}Paused{default}.", client);
-		g_eInitiator.Set(GetClientUserId(client));
+		g_eInitiator = GetClientUserId(client);
 		g_PauseTeam = view_as<L4D2_Team>(GetClientTeam(client));
 		GetClientName(client, g_szInitiatorName, sizeof(g_szInitiatorName));
 		
@@ -305,18 +270,18 @@ public Action Unpause_Cmd(int client, int args)
 	if (isPaused && IsPlayer(client))
 	{
 		L4D2_Team clientTeam = view_as<L4D2_Team>(GetClientTeam(client));
-		int initiator = g_eInitiator.GetClient();
+		int initiator = GetClientOfUserId(g_eInitiator);
 		if (!teamReady[clientTeam])
 		{
 			switch (clientTeam)
 			{
 				case L4D2Team_Survivor:
 				{
-					CPrintToChatAll("{default}[{green}!{default}] {olive}%N %s{default}marked {blue}%s {default}ready.", client, (g_bEnableInitReady && client == initiator) ? "{default}as {green}Initiator " : "", teamString[clientTeam]);
+					CPrintToChatAll("{default}[{green}!{default}] {olive}%N %s{default}marked {blue}%s {default}ready.", client, (g_bEnableInitReady && client == initiator) ? "{default}as {green}Initiator " : "", L4D2_TeamName[clientTeam]);
 				}
 				case L4D2Team_Infected:
 				{
-					CPrintToChatAll("{default}[{green}!{default}] {olive}%N %s{default}marked {red}%s {default}ready.", client, (g_bEnableInitReady && client == initiator) ? "{default}as {green}Initiator " : "", teamString[clientTeam]);					
+					CPrintToChatAll("{default}[{green}!{default}] {olive}%N %s{default}marked {red}%s {default}ready.", client, (g_bEnableInitReady && client == initiator) ? "{default}as {green}Initiator " : "", L4D2_TeamName[clientTeam]);					
 				}
 			}
 		}
@@ -352,18 +317,18 @@ public Action Unready_Cmd(int client, int args)
 	if (isPaused && IsPlayer(client))
 	{
 		L4D2_Team clientTeam = view_as<L4D2_Team>(GetClientTeam(client));
-		int initiator = g_eInitiator.GetClient();
+		int initiator = GetClientOfUserId(g_eInitiator);
 		if (teamReady[clientTeam])
 		{
 			switch (clientTeam)
 			{
 				case L4D2Team_Survivor:
 				{
-					CPrintToChatAll("{default}[{green}!{default}] {olive}%N %s{default}marked {blue}%s {default}not ready.", client, (g_bEnableInitReady && client == initiator) ? "{default}as {green}Initiator " : "", teamString[clientTeam]);
+					CPrintToChatAll("{default}[{green}!{default}] {olive}%N %s{default}marked {blue}%s {default}not ready.", client, (g_bEnableInitReady && client == initiator) ? "{default}as {green}Initiator " : "", L4D2_TeamName[clientTeam]);
 				}
 				case L4D2Team_Infected:
 				{
-					CPrintToChatAll("{default}[{green}!{default}] {olive}%N %s{default}marked {red}%s {default}not ready.", client, (g_bEnableInitReady && client == initiator) ? "{default}as {green}Initiator " : "", teamString[clientTeam]);
+					CPrintToChatAll("{default}[{green}!{default}] {olive}%N %s{default}marked {red}%s {default}not ready.", client, (g_bEnableInitReady && client == initiator) ? "{default}as {green}Initiator " : "", L4D2_TeamName[clientTeam]);
 				}
 			}
 		}
@@ -419,7 +384,7 @@ public Action ForcePause_Cmd(int client, int args)
 	if (!isPaused)
 	{
 		adminPause = true;
-		g_eInitiator.Set(GetClientUserId(client));
+		g_eInitiator = GetClientUserId(client);
 		GetClientName(client, g_szInitiatorName, sizeof(g_szInitiatorName));
 		Pause();
 	}
@@ -542,7 +507,7 @@ void Unpause()
 			}
 		}
 	}
-	g_eInitiator.Clear();
+	g_eInitiator = 0;
 	g_bInitiatorReady = false;
 	g_szInitiatorName = "";
 	g_PauseTeam = L4D2Team_None;
@@ -637,9 +602,9 @@ void UpdatePanel()
 
 	menuPanel.DrawText(" ");
 
-	int initiator = g_eInitiator.GetClient();
+	int initiator = GetClientOfUserId(g_eInitiator);
 	char name[MAX_NAME_LENGTH];
-	if (g_eInitiator.InGame())
+	if (initiator > 0)
 	{
 		GetClientName(initiator, name, sizeof(name));
 	}
@@ -650,7 +615,7 @@ void UpdatePanel()
 	}
 	else
 	{
-		FormatEx(info, sizeof(info), "▸ Initiator -> %s (%s)", (name[0] == '\0') ? g_szInitiatorName : name, teamString[g_PauseTeam]);
+		FormatEx(info, sizeof(info), "▸ Initiator -> %s (%s)", (name[0] == '\0') ? g_szInitiatorName : name, L4D2_TeamName[g_PauseTeam]);
 	}
 	
 	menuPanel.DrawText(info);
@@ -818,9 +783,11 @@ public Action Unpause_Callback(int client, char[] command, int argc)
 
 bool CheckFullReady()
 {
+	int InitiatorClient = GetClientOfUserId(g_eInitiator);
+
 	return (teamReady[L4D2Team_Survivor] || GetTeamHumanCount(L4D2Team_Survivor) == 0)
 		&& (teamReady[L4D2Team_Infected] || GetTeamHumanCount(L4D2Team_Infected) == 0)
-		&& (!g_bEnableInitReady || g_bInitiatorReady || !g_eInitiator.InGame() || !IsPlayer(g_eInitiator.GetClient()));
+		&& (!g_bEnableInitReady || g_bInitiatorReady || (InitiatorClient < 1) || !IsPlayer(InitiatorClient));
 }
 
 stock bool IsPlayer(int client)
@@ -835,7 +802,7 @@ stock void PrintToTeam(int author, L4D2_Team team, const char[] buffer)
 	{
 		if (IsClientInGame(client) && view_as<L4D2_Team>(GetClientTeam(client)) == team)
 		{
-			CPrintToChatEx(client, author, "(%s) {teamcolor}%N{default} :  %s", teamString[GetClientTeam(author)], author, buffer);
+			CPrintToChatEx(client, author, "(%s) {teamcolor}%N{default} :  %s", L4D2_TeamName[GetClientTeam(author)], author, buffer);
 		}
 	}
 }
