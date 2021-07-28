@@ -74,7 +74,7 @@ enum PlayerState {
 new pendingGetups[8] = 0; // This is used to track the number of pending getups. The collective opinion is that you should have at most 1.
 new interrupt[8] = false; // If the player was getting up, and that getup is interrupted. This alows us to break out of the GetupTimer loop.
 new currentSequence[8] = 0; // Kept to track when a player changes sequences, i.e. changes animations.
-new PlayerState:playerState[8] = PlayerState:UPRIGHT; // Since there are multiple sequences for each animation, this acts as a simpler way to track a player's state.
+new PlayerState:playerState[8] = {PlayerState:UPRIGHT, ...}; // Since there are multiple sequences for each animation, this acts as a simpler way to track a player's state.
 
 // Coach, Nick, Rochelle, Ellis, Louis, Zoey, Bill, Francis
 new tankFlyAnim[8] = {628, 628, 636, 633, 536, 545, 536, 539};

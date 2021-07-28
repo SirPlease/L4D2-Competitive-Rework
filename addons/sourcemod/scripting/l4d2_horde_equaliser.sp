@@ -54,7 +54,7 @@ public void OnPluginStart()
 	hCvarNoEventHordeDuringTanks = CreateConVar("l4d2_heq_no_tank_horde", "0", "Put infinite hordes on a 'hold up' during Tank fights");
 	hCvarHordeCheckpointAnnounce = CreateConVar("l4d2_heq_checkpoint_sound", "1", "Play the incoming mob sound at checkpoints (each 1/4 of total commons killed off) to simulate L4D1 behaviour");
 
-	HookEvent("round_start", view_as<EventHook>(RoundStartEvent), EventHookMode_PostNoCopy);
+	HookEvent("round_start", RoundStartEvent, EventHookMode_PostNoCopy);
 }
 
 void InitGameData()
@@ -92,7 +92,7 @@ public void OnMapStart()
 	PrecacheSound(HORDE_SOUND);
 }
 
-public void RoundStartEvent()
+public void RoundStartEvent(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	commonTotal = 0;
 	lastCheckpoint = 0;

@@ -11,7 +11,7 @@
 #define MAX_VALUELENGTH         128
 #define MAX_SETVARS             64
 
-#define DEBUG                   false
+#define DEBUG                   0
 
 
 new Handle: g_hUseConfigDir;

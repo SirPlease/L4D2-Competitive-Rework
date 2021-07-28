@@ -13,8 +13,6 @@
 #include <l4d2util>
 
 #define CLASSNAME_LENGTH 64
-#define MIN(%0,%1) (((%0) < (%1)) ? (%0) : (%1))
-#define MAX(%0,%1) (((%0) > (%1)) ? (%0) : (%1))
 
 // Macros for easily referencing the Undo Damage array
 #define UNDO_PERM 0
@@ -116,7 +114,7 @@ public APLRes:AskPluginLoad2( Handle:plugin, bool:late, String:error[], errMax )
 
 public Plugin:myinfo =
 {
-	name = "L4D2 Godframes Control combined with FF Plugins",
+	name = "L4D2 Godframes Control combined with FF Plugins", //Add support sm1.11 - A1m`
 	author = "Stabby, CircleSquared, Tabun, Visor, dcx, Sir, Spoon",
 	version = "0.6.2",
 	description = "Allows for control of what gets godframed and what doesnt along with integrated FF Support from l4d2_survivor_ff (by dcx and Visor) and l4d2_shotgun_ff (by Visor)"
@@ -980,7 +978,7 @@ void ProcessShot(ArrayStack stack)
 		// Replicate natural behaviour
 		new Float:minFF = GetConVarFloat(hCvarMinFF);
 		new Float:maxFF = GetConVarFloat(hCvarMaxFF) <= 0.0 ? 99999.0 : GetConVarFloat(hCvarMaxFF);
-		new Float:damage = MAX(minFF, MIN((pelletsShot[victim][attacker] * GetConVarFloat(hCvarModifier)), maxFF));
+		new Float:damage = L4D2Util_GetMaxFloat(minFF, L4D2Util_GetMinFloat((pelletsShot[victim][attacker] * GetConVarFloat(hCvarModifier)), maxFF));
 		new newPelletCount = RoundFloat(damage);
 		pelletsShot[victim][attacker] = 0;
 		for (new i = 0; i < newPelletCount; i++)

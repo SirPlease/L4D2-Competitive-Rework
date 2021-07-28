@@ -8,8 +8,6 @@
 #include <timers.inc>
 #include <colors>
 
-#define MAX(%0,%1) (((%0) > (%1)) ? (%0) : (%1))
-
 #define TEAM_SPECTATOR          1 
 #define TEAM_SURVIVOR           2 
 #define TEAM_INFECTED           3

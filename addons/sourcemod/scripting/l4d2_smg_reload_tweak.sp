@@ -3,10 +3,8 @@
 
 #include <sourcemod>
 #include <sdktools>
-
-#pragma newdecls optional;
-#include <l4d2_weapon_stocks>
-#pragma newdecls required;
+#define L4D2UTIL_STOCKS_ONLY
+#include <l4d2util>
 
 #define TEAM_SURVIVOR 2
 
@@ -34,7 +32,7 @@ public void OnWeaponReload(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("userid"));
 
-	if (!IsSurvivor(client) || !IsPlayerAlive(client) || IsFakeClient(client)) {
+	if (client < 1 || !IsSurvivor(client) || !IsPlayerAlive(client) || IsFakeClient(client)) {
 		return;
 	}
 	
@@ -103,12 +101,4 @@ public Action OnPlayerRunCmd(int client, int &buttons)
 	SetEntPropFloat(weapon, Prop_Send, "m_flPlaybackRate", playbackRate);
 	
 	return Plugin_Continue;
-}
-
-bool IsSurvivor(int client)
-{
-	return (client > 0 
-		&& client <= MaxClients 
-		&& IsClientInGame(client) 
-		&& GetClientTeam(client) == TEAM_SURVIVOR);
 }

@@ -2,10 +2,10 @@
 
 #include <sourcemod>
 #include <sdktools>
-#include <l4d2_direct>
+#include <left4dhooks> //#include <l4d2_direct>
 
 // from https://developer.valvesoftware.com/wiki/L4D2_Director_Scripts
-enum ()
+enum OnChangeFinaleStage
 {
 	FINALE_GAUNTLET_1 = 0,
 	FINALE_HORDE_ATTACK_1 = 1,
@@ -43,7 +43,7 @@ new tankCount;
 public Plugin:myinfo =
 {
 	name = "EQ2 Finale Tank Manager",
-	author = "Visor, Electr0",
+	author = "Visor, Electr0", //Add support sm1.11 - A1m`
 	description = "Either two event tanks or one flow and one (second) event tank",
 	version = "2.5.1",
 	url = "https://github.com/Attano/Equilibrium"
@@ -105,8 +105,11 @@ public Action:ProcessTankSpawn(Handle:timer)
 
 public Action:L4D2_OnChangeFinaleStage(&finaleType, const String:arg[]) 
 {	
-	if (spawnScheme != Skip && (finaleType == FINALE_CUSTOM_TANK || finaleType == FINALE_GAUNTLET_BOSS || finaleType == FINALE_GAUNTLET_ESCAPE))
-	{
+	if (spawnScheme != Skip 
+		&& (finaleType == view_as<int>(FINALE_CUSTOM_TANK) //view_as<int> - add support 1.11
+		|| finaleType == view_as<int>(FINALE_GAUNTLET_BOSS) //view_as<int> - add support 1.11
+		|| finaleType == view_as<int>(FINALE_GAUNTLET_ESCAPE)) //view_as<int> - add support 1.11
+	) {
 		//PrintToChatAll("Finale type %i has commenced", finaleType);
 		
 		tankCount++;

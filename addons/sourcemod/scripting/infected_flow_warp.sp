@@ -4,18 +4,20 @@
 #include <sourcemod>
 #include <sdktools>
 #include <left4dhooks>
+#include <l4d2util_stocks> //String_ToLower & L4D2Util_IsValidClient
 
 #define TEAM_SURVIVOR 2
 #define TEAM_INFECTED 3
 
-StringMap hNameToCharIDTrie;
+StringMap 
+	hNameToCharIDTrie;
 
 public Plugin myinfo =
 {
 	name = "Infected Flow Warp",
 	author = "CanadaRox, A1m`",
 	description = "Allows infected to warp to survivors based on their flow",
-	version = "1.3",
+	version = "1.4",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -42,13 +44,14 @@ void SaveCharacter()
 
 public Action WarpTo_Cmd(int client, int args)
 {
-	if (!IsGhostInfected(client)) {
+	if (client == 0 || !IsGhostInfected(client)) {
 		return Plugin_Handled;
 	}
 
 	if (args == 0) {
 		int fMaxFlowSurvivor = L4D_GetHighestFlowSurvivor(); //left4dhooks functional or left4downtown2 by A1m`
-		if (!IsValidIndex(fMaxFlowSurvivor) || !IsSurvivor(fMaxFlowSurvivor)) {
+		if (!L4D2Util_IsValidClient(fMaxFlowSurvivor) || !IsSurvivor(fMaxFlowSurvivor)) {
+			PrintToChat(client, "No survivor player could be found!");
 			return Plugin_Handled;
 		}
 		
@@ -92,12 +95,6 @@ int GetClientOfCharID(int characterID)
 	return 0;
 }
 
-bool IsValidIndex(int client)
-{
-	return (client > 0 
-		&& client <= MaxClients);
-}
-
 bool IsSurvivor(int client)
 {
 	return (IsClientInGame(client)
@@ -110,17 +107,4 @@ bool IsGhostInfected(int client)
 	return (GetClientTeam(client) == TEAM_INFECTED 
 		&& IsPlayerAlive(client) 
 		&& GetEntProp(client, Prop_Send, "m_isGhost"));
-}
-
-void String_ToLower(char[] str, const int MaxSize)
-{
-	int iSize = strlen(str); //Сounts string length to zero terminator
-
-	for (int i = 0; i < iSize && i < MaxSize; i++) { //more security, so that the cycle is not endless
-		if (IsCharUpper(str[i])) {
-			str[i] = CharToLower(str[i]);
-		}
-	}
-
-	str[iSize] = '\0';
 }

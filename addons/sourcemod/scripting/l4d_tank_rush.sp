@@ -22,7 +22,7 @@ ConVar
 public Plugin myinfo =
 {
 	name = "L4D2 No Tank Rush",
-	author = "Jahze, vintik, devilesk, Sir", //little fix A1m`
+	author = "Jahze, vintik, devilesk, Sir", //Add support sm1.11 - A1m`
 	version = "1.1.4",
 	description = "Stops distance points accumulating whilst the tank is alive, with the option of unfreezing distance on reaching the Saferoom"
 };
@@ -57,8 +57,8 @@ public void OnMapStart()
 void PluginEnable()
 {
 	if (!bHooked) {
-		HookEvent("round_start", view_as<EventHook>(RoundStart), EventHookMode_PostNoCopy); //no params pls
-		HookEvent("tank_spawn", view_as<EventHook>(TankSpawn), EventHookMode_PostNoCopy); //no params pls
+		HookEvent("round_start", RoundStart, EventHookMode_PostNoCopy); //no params pls
+		HookEvent("tank_spawn", TankSpawn, EventHookMode_PostNoCopy); //no params pls
 		HookEvent("player_death", PlayerDeath, EventHookMode_Post);
 		
 		if (IsTankActuallyInPlay()) {
@@ -78,8 +78,8 @@ public Action L4D2_OnEndVersusModeRound(bool countSurvivors)
 void PluginDisable()
 {
 	if (bHooked) {
-		UnhookEvent("round_start", view_as<EventHook>(RoundStart), EventHookMode_PostNoCopy); //no params pls
-		UnhookEvent("tank_spawn", view_as<EventHook>(TankSpawn), EventHookMode_PostNoCopy); //no params pls
+		UnhookEvent("round_start", RoundStart, EventHookMode_PostNoCopy); //no params pls
+		UnhookEvent("tank_spawn", TankSpawn, EventHookMode_PostNoCopy); //no params pls
 		UnhookEvent("player_death", PlayerDeath, EventHookMode_Post);
 		
 		bHooked = false;
@@ -88,7 +88,7 @@ void PluginDisable()
 	UnFreezePoints();
 }
 
-void NoTankRushChange(ConVar convar, const char[] oldValue, const char[] newValue)
+public void NoTankRushChange(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	if (StringToInt(newValue) == 0) {
 		PluginDisable();
@@ -97,14 +97,14 @@ void NoTankRushChange(ConVar convar, const char[] oldValue, const char[] newValu
 	}
 }
 
-public void RoundStart()
+public void RoundStart(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	if (InSecondHalfOfRound()) {
 		UnFreezePoints();
 	}
 }
 
-public void TankSpawn()
+public void TankSpawn(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	FreezePoints(true);
 }
@@ -183,7 +183,11 @@ int GetUprightSurvivors()
 
 bool IsTankActuallyInPlay()
 {
-	int tank = FindTankClient(0);
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsTank(i) && IsPlayerAlive(i)) {
+			return true;
+		}
+	}
 
-	return tank != -1 && IsPlayerAlive(tank);
+	return false;
 }

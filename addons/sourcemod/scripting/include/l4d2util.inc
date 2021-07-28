@@ -3,8 +3,9 @@
 #endif
 #define l4d2util_inc_
 
-#pragma semicolon 1
+//#pragma semicolon 1
 
+#include <l4d2util_stocks>
 #include <l4d2util_constants>
 #include <l4d2util_infected>
 #include <l4d2util_rounds>

@@ -25,8 +25,7 @@
 #include <pause>
 #include <sdkhooks>
 #include <colors>
-
-#define MAX(%0,%1) (((%0) > (%1)) ? (%0) : (%1))
+#include <l4d2util_stocks>
 
 #define DEBUG 0
 
@@ -62,7 +61,7 @@ new L4D2SI:zombieclass[MAXPLAYERS + 1];
 public Plugin:myinfo = 
 {
 	name = "L4D2 Antibaiter",
-	author = "Visor, Sir (assisted by Devilesk)",
+	author = "Visor, Sir (assisted by Devilesk)", //Add support sm1.11 - A1m`
 	description = "Makes you think twice before attempting to bait that shit",
 	version = "1.3.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
@@ -308,7 +307,7 @@ Float:GetMaxSurvivorCompletion()
 		// Prevent rushers from convoluting the logic
 		if (IsSurvivor(i) && IsPlayerAlive(i) && !IsIncapped(i))
 		{
-			flow = MAX(flow, L4D2Direct_GetFlowDistance(i));
+			flow = L4D2Util_GetMaxFloat(flow, L4D2Direct_GetFlowDistance(i));
 		}
 	}
 	return (flow / L4D2Direct_GetMapMaxFlowDistance());

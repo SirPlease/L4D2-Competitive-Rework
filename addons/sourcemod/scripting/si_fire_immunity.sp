@@ -49,14 +49,14 @@ public void OnPluginStart()
 	_, true, 0.0, true, 999.0);
 	
 	HookEvent("player_hurt", SIOnFire, EventHookMode_Post);
-	HookEvent("round_start", view_as<EventHook>(EventReset), EventHookMode_PostNoCopy);
-	HookEvent("round_end", view_as<EventHook>(EventReset), EventHookMode_PostNoCopy);
+	HookEvent("round_start", EventReset, EventHookMode_PostNoCopy);
+	HookEvent("round_end", EventReset, EventHookMode_PostNoCopy);
 }
 
 /* @A1m`:
  * This is necessary because each round starts from 0.0.
 */
-public void EventReset()
+public void EventReset(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	for (int i = 0; i <= MAXPLAYERS; i++) {
 		fWaitTime[i] = 0.0;
@@ -134,8 +134,9 @@ public void SIOnFire(Event hEvent, const char[] eName, bool dontBroadcast)
 	 * if the player was set on fire with fireworks
 	*/
 	if (strcmp(sEntityName, "inferno") != 0 
-	&& strcmp(sEntityName, "entityflame") != 0 
-	&& strcmp(sEntityName, "fire_cracker_blast") != 0) {
+		&& strcmp(sEntityName, "entityflame") != 0 
+		&& strcmp(sEntityName, "fire_cracker_blast") != 0
+	) {
 		return;
 	}
 
@@ -164,7 +165,7 @@ void ExtinguishType(int client, int userid, int iDamage)
 			 * + 0.1 -> We already know that the timer has definitely expired so as to call another timer
 			 * Old code started many timers
 			*/
-			fWaitTime[client] = GetGameTime() + iExtinguishTime + 0.1; //maybe 0.01 next frame? =D
+			fWaitTime[client] = GetGameTime() + iExtinguishTime + 0.1;
 
 			CreateTimer(iExtinguishTime, TimerWait, userid, TIMER_FLAG_NO_MAPCHANGE);
 		}

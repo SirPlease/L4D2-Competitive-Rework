@@ -2,7 +2,8 @@
 
 #include <sourcemod>
 #include <sdktools>
-#include <l4d2_weapon_stocks>
+#define L4D2UTIL_STOCKS_ONLY
+#include <l4d2util>
 
 new const snipers[2] =
 {

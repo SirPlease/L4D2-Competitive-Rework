@@ -1,22 +1,22 @@
 #if defined _lerpmonitor
- #endinput
+	#endinput
 #endif
 #define _lerpmonitor
 
  /**
- * @brief               Get the player's saved lerp value
- * @param	client      Client index
+ * @brief				Get the player's saved lerp value
+ * @param	client		Client index
  *
- * @return              -1.0 if the current lerp time has not been saved, otherwise current lerp value
+ * @return				-1.0 if the current lerp time has not been saved, otherwise current lerp value
  * @error				If the client is not connected or the index is invalid.
  */
-native float NM_GetLerpTime(int client);
+native float LM_GetLerpTime(int client);
 
  /**
- * @brief               Get the player's current lerp
- * @param	client      Client index
+ * @brief				Get the player's current lerp
+ * @param	client		Client index
  *
- * @return              Current lerp value
+ * @return				Current lerp value
  * @error				Invalid client index, or client not connected.
  */
 native float LM_GetCurrentLerpTime(int client);

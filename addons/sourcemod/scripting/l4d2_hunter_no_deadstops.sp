@@ -28,7 +28,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	HookEvent("round_start", view_as<EventHook>(Event_RoundStart), EventHookMode_PostNoCopy);
+	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 	HookEvent("player_death", Event_PlayerDeath, EventHookMode_Post);
 	HookEvent("ability_use", Event_AbilityUse, EventHookMode_Post);
 
@@ -109,7 +109,7 @@ bool HasTarget(int hunter)
 	return (IsSurvivor(target) && IsPlayerAlive(target));
 }
 
-public void Event_RoundStart()
+public void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	// clear SI tracking stats
 	for (int i = 1; i <= MaxClients; i++)

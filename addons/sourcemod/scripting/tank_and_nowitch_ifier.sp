@@ -9,9 +9,6 @@
 #include <l4d2util>
 #include <left4dhooks>
 
-#define MAX(%0,%1) (((%0) > (%1)) ? (%0) : (%1))
-#define MIN(%0,%1) (((%0) < (%1)) ? (%0) : (%1))
-
 public Plugin:myinfo = {
     name = "Tank and no Witch ifier!",
     author = "CanadaRox, Sir, devilesk",

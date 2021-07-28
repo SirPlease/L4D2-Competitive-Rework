@@ -9,20 +9,37 @@
 
 #define GAMEDATA "l4d2_si_ability"
 
-Handle hCLunge_ActivateAbility;
+int
+	LungeActivateAbilityOffset;
 
-float fSuspectedBackjump[MAXPLAYERS + 1];
+Handle
+	hCLunge_ActivateAbility;
+
+float
+	fSuspectedBackjump[MAXPLAYERS + 1];
 
 public Plugin myinfo =
 {
 	name = "L4D2 No Backjump",
-	author = "Visor", //Update syntax, add new gamedata file - A1m`
+	author = "Visor, A1m`",
 	description = "Look at the title",
-	version = "1.2.2",
+	version = "1.2.3",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
-}
+};
 
 public void OnPluginStart()
+{
+	InitGameData();
+	
+	hCLunge_ActivateAbility = DHookCreate(LungeActivateAbilityOffset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, CLunge_ActivateAbility);
+
+	HookEvent("round_start", ResetEvent, EventHookMode_PostNoCopy);
+	HookEvent("round_end",  ResetEvent, EventHookMode_PostNoCopy);
+	
+	HookEvent("player_jump", OnPlayerJump, EventHookMode_Post);
+}
+
+void InitGameData()
 {
 	Handle hGamedata = LoadGameConfigFile(GAMEDATA);
 
@@ -30,18 +47,11 @@ public void OnPluginStart()
 		SetFailState("Gamedata '%s.txt' missing or corrupt.", GAMEDATA);
 	}
 	
-	int LungeActivateAbilityOffset = GameConfGetOffset(hGamedata, "CBaseAbility::ActivateAbility");
+	LungeActivateAbilityOffset = GameConfGetOffset(hGamedata, "CBaseAbility::ActivateAbility");
 	if (LungeActivateAbilityOffset == -1) {
 		SetFailState("Failed to get offset 'CBaseAbility::ActivateAbility'.");
 	}
-	
-	hCLunge_ActivateAbility = DHookCreate(LungeActivateAbilityOffset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, CLunge_ActivateAbility);
 
-	HookEvent("round_start", view_as<EventHook>(ResetEvent), EventHookMode_PostNoCopy);
-	HookEvent("round_end",  view_as<EventHook>(ResetEvent), EventHookMode_PostNoCopy);
-	
-	HookEvent("player_jump", OnPlayerJump, EventHookMode_Post);
-	
 	delete hGamedata;
 }
 
@@ -52,7 +62,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 	}
 }
 
-public void ResetEvent()
+public void ResetEvent(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	for (int i = 0; i <= MAXPLAYERS; i++) {
 		fSuspectedBackjump[i] = 0.0;

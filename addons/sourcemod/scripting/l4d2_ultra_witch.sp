@@ -2,7 +2,8 @@
 
 #include <sourcemod>
 #include <sdkhooks>
-#include <l4d2_direct>
+#include <sdktools>
+#include <left4dhooks> //#include <l4d2_direct>
 
 new Handle:z_witch_damage;
 
@@ -11,7 +12,7 @@ new bool:lateLoad;
 public APLRes:AskPluginLoad2(Handle:plugin, bool:late, String:error[], errMax) 
 {
 	lateLoad = late;
-	return APLRes_Success;    
+	return APLRes_Success;
 }
 
 public Plugin:myinfo =
@@ -103,13 +104,13 @@ bool:IsIncapped(client)
 
 bool:IsWitch(entity)
 {
-    if (entity > 0 && IsValidEntity(entity) && IsValidEdict(entity))
-    {
-        decl String:strClassName[64];
-        GetEdictClassname(entity, strClassName, sizeof(strClassName));
-        return StrEqual(strClassName, "witch");
-    }
-    return false;
+	if (entity > 0 && IsValidEntity(entity) && IsValidEdict(entity))
+	{
+		decl String:strClassName[64];
+		GetEdictClassname(entity, strClassName, sizeof(strClassName));
+		return StrEqual(strClassName, "witch");
+	}
+	return false;
 }
 
 bool:IsSurvivor(client)

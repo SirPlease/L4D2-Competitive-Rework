@@ -19,7 +19,7 @@ public Plugin myinfo =
 	name = "L4D2 Jockey Jump-Cap Patch",
 	author = "Visor, A1m`",
 	description = "Prevent Jockeys from being able to land caps with non-ability jumps in unfair situations",
-	version = "1.3",
+	version = "1.4",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -39,14 +39,14 @@ public void OnPluginStart()
 	hCLeap_OnTouch = DHookCreate(iCleapOnTouch, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, CLeap_OnTouch);
 	DHookAddParam(hCLeap_OnTouch, HookParamType_CBaseEntity);
 	
-	HookEvent("round_start", view_as<EventHook>(ResetEvent), EventHookMode_PostNoCopy);
-	HookEvent("round_end", view_as<EventHook>(ResetEvent), EventHookMode_PostNoCopy);
+	HookEvent("round_start", ResetEvent, EventHookMode_PostNoCopy);
+	HookEvent("round_end", ResetEvent, EventHookMode_PostNoCopy);
 	HookEvent("player_shoved", OnPlayerShoved);
 	
 	delete hGamedata;
 }
 
-public void ResetEvent()
+public void ResetEvent(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	for (int i = 0; i <= MAXPLAYERS; i++) {
 		blockJumpCap[i] = false;

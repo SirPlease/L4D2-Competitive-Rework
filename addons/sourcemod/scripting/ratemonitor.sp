@@ -1,383 +1,400 @@
 #pragma semicolon 1
-
-#define L4D2UTIL_STOCKS_ONLY
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdktools>
+#define L4D2UTIL_STOCKS_ONLY
 #include <l4d2util>
 #include <colors>
 
-#define STEAMID_SIZE  32
+#define STEAMID_SIZE 32
 
-new Handle:hCvarAllowedRateChanges;
-new Handle:hCvarMinRate;
-new Handle:hCvarMinUpd;
-new Handle:hCvarMinCmd;
-new Handle:hCvarProhibitFakePing;
-new Handle:hCvarProhibitedAction;
-new Handle:hClientSettingsArray;
-new Handle:hCvarPublicNotice;
+ConVar
+	hCvarAllowedRateChanges,
+	hCvarMinRate,
+	hCvarMinUpd,
+	hCvarMinCmd,
+	hCvarProhibitFakePing,
+	hCvarProhibitedAction,
+	hCvarPublicNotice;
 
-new iAllowedRateChanges;
-new iMinRate;
-new iMinUpd;
-new iMinCmd;
-new iActionUponExceed;
+ArrayList
+	hClientSettingsArray;
 
-new bool:bPublic;
-new bool:bProhibitFakePing;
-new bool:bIsMatchLive = false;
+int
+	iAllowedRateChanges,
+	iMinRate,
+	iMinUpd,
+	iMinCmd,
+	iActionUponExceed;
 
-enum NetsettingsStruct {
-    String:Client_SteamId[STEAMID_SIZE],
-    Client_Rate,
-    Client_Cmdrate,
-    Client_Updaterate,
-    Client_Changes
+bool
+	IsLateLoad,
+	bPublic,
+	bProhibitFakePing,
+	bIsMatchLive;
+
+enum struct NetsettingsStruct
+{
+	char Client_SteamId[STEAMID_SIZE];
+	int Client_Rate;
+	int Client_Cmdrate;
+	int Client_Updaterate;
+	int Client_Changes;
+}
+
+public Plugin myinfo =
+{
+	name = "RateMonitor",
+	author = "Visor, Sir, A1m`",
+	description = "Keep track of players' netsettings",
+	version = "2.5",
+	url = "https://github.com/A1mDev/L4D2-Competitive-Plugins"
 };
 
-public Plugin:myinfo =
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-    name = "RateMonitor",
-    author = "Visor, Sir",
-    description = "Keep track of players' netsettings",
-    version = "2.2.1",
-    url = "https://github.com/Attano/smplugins"
-};
+	IsLateLoad = late;
+	return APLRes_Success;
+}
 
-public OnPluginStart()
+public void OnPluginStart()
 {
-    hCvarAllowedRateChanges = CreateConVar("rm_allowed_rate_changes", "-1", "Allowed number of rate changes during a live round(-1: no limit)");
-    hCvarPublicNotice = CreateConVar ("rm_public_notice", "0", "Print Rate Changes to the Public? (rm_countermeasure 1 and 3 will still be Public Notice)");
-    hCvarMinRate = CreateConVar("rm_min_rate", "20000", "Minimum allowed value of rate(-1: none)");
-    hCvarMinUpd = CreateConVar("rm_min_upd", "20", "Minimum allowed value of cl_updaterate(-1: none)");
-    hCvarMinCmd = CreateConVar("rm_min_cmd", "20", "Minimum allowed value of cl_cmdrate(-1: none)");
-    hCvarProhibitFakePing = CreateConVar("rm_no_fake_ping", "0", "Allow or disallow the use of + - . in netsettings, which is commonly used to hide true ping in the scoreboard.");
-    hCvarProhibitedAction = CreateConVar("rm_countermeasure", "2", "Countermeasure against illegal actions - change overlimit/forbidden netsettings(1:chat notify,2:move to spec,3:kick)", FCVAR_NONE, true, 1.0, true, 3.0);
-    
-    iAllowedRateChanges = GetConVarInt(hCvarAllowedRateChanges);
-    iMinRate = GetConVarInt(hCvarMinRate);
-    iMinUpd = GetConVarInt(hCvarMinUpd);
-    iMinCmd = GetConVarInt(hCvarMinCmd);
-    bProhibitFakePing = GetConVarBool(hCvarProhibitFakePing);
-    iActionUponExceed = GetConVarInt(hCvarProhibitedAction);
-    bPublic = GetConVarBool(hCvarPublicNotice);
+	hCvarAllowedRateChanges = CreateConVar("rm_allowed_rate_changes", "-1", "Allowed number of rate changes during a live round(-1: no limit)");
+	hCvarPublicNotice = CreateConVar ("rm_public_notice", "0", "Print Rate Changes to the Public? (rm_countermeasure 1 and 3 will still be Public Notice)");
+	hCvarMinRate = CreateConVar("rm_min_rate", "20000", "Minimum allowed value of rate(-1: none)");
+	hCvarMinUpd = CreateConVar("rm_min_upd", "20", "Minimum allowed value of cl_updaterate(-1: none)");
+	hCvarMinCmd = CreateConVar("rm_min_cmd", "20", "Minimum allowed value of cl_cmdrate(-1: none)");
+	hCvarProhibitFakePing = CreateConVar("rm_no_fake_ping", "0", "Allow or disallow the use of + - . in netsettings, which is commonly used to hide true ping in the scoreboard.");
+	hCvarProhibitedAction = CreateConVar("rm_countermeasure", "2", "Countermeasure against illegal actions - change overlimit/forbidden netsettings(1:chat notify,2:move to spec,3:kick)", _, true, 1.0, true, 3.0);
 
-    HookConVarChange(hCvarAllowedRateChanges, cvarChanged_AllowedRateChanges);
-    HookConVarChange(hCvarMinRate, cvarChanged_MinRate);
-    HookConVarChange(hCvarMinCmd, cvarChanged_MinCmd);
-    HookConVarChange(hCvarProhibitFakePing, cvarChanged_ProhibitFakePing);
-    HookConVarChange(hCvarProhibitedAction, cvarChanged_ExceedAction);
-    HookConVarChange(hCvarPublicNotice, cvarChanged_PublicNotice);
-    
-    RegConsoleCmd("sm_rates", ListRates, "List netsettings of all players in game");
-    
-    HookEvent("player_team", OnTeamChange);
-    
-    hClientSettingsArray = CreateArray(_:NetsettingsStruct);
+	iAllowedRateChanges = hCvarAllowedRateChanges.IntValue;
+	iMinRate = hCvarMinRate.IntValue;
+	iMinUpd = hCvarMinUpd.IntValue;
+	iMinCmd = hCvarMinCmd.IntValue;
+	bProhibitFakePing = hCvarProhibitFakePing.BoolValue;
+	iActionUponExceed = hCvarProhibitedAction.IntValue;
+	bPublic = hCvarPublicNotice.BoolValue;
+	
+	hCvarAllowedRateChanges.AddChangeHook(cvarChanged_AllowedRateChanges);
+	hCvarMinRate.AddChangeHook(cvarChanged_MinRate);
+	hCvarMinCmd.AddChangeHook(cvarChanged_MinCmd);
+	hCvarProhibitFakePing.AddChangeHook(cvarChanged_ProhibitFakePing);
+	hCvarProhibitedAction.AddChangeHook(cvarChanged_ExceedAction);
+	hCvarPublicNotice.AddChangeHook(cvarChanged_PublicNotice);
+
+	RegConsoleCmd("sm_rates", ListRates, "List netsettings of all players in game");
+	
+	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
+	HookEvent("round_end", Event_RoundEnd, EventHookMode_PostNoCopy);
+	HookEvent("player_left_start_area", Event_RoundGoesLive, EventHookMode_PostNoCopy);
+	HookEvent("player_team", OnTeamChange);
+
+	hClientSettingsArray = new ArrayList(sizeof(NetsettingsStruct));
+
+	if (IsLateLoad) {
+		for (int i = 1; i <= MaxClients; i++) {
+			if (IsClientInGame(i) && !IsFakeClient(i)) {
+				RegisterSettings(i);
+			}
+		}
+	}
 }
 
-public OnRoundStart() 
+public void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
 {
-    decl player[NetsettingsStruct];
-    for (new i = 0; i < GetArraySize(hClientSettingsArray); i++) 
-    {
-        GetArrayArray(hClientSettingsArray, i, player[0]);
-        player[Client_Changes] = _:0;
-        SetArrayArray(hClientSettingsArray, i, player[0]);
-    }
+	NetsettingsStruct player;
+	int iSize = hClientSettingsArray.Length;
+	for (int i = 0; i < iSize; i++) {
+		hClientSettingsArray.GetArray(i, player, sizeof(NetsettingsStruct));
+		player.Client_Changes = 0;
+		hClientSettingsArray.SetArray(i, player, sizeof(NetsettingsStruct));
+	}
 }
 
-public Action:OnRoundIsLive() 
-    bIsMatchLive = true;
-
-public OnRoundEnd()
-    bIsMatchLive = false;
-
-public OnMapEnd()
-    ClearArray(hClientSettingsArray);
-
-public OnTeamChange(Handle:event, String:name[], bool:dontBroadcast)
+public void Event_RoundGoesLive(Event hEvent, const char[] name, bool dontBroadcast)
 {
-    if (L4D2_Team:GetEventInt(event, "team") != L4D2Team_Spectator)
-    {
-        new client = GetClientOfUserId(GetEventInt(event, "userid"));
-        if (client > 0)
-        {
-            if (IsClientInGame(client) && !IsFakeClient(client))
-                CreateTimer(0.1, OnTeamChangeDelay, client, TIMER_FLAG_NO_MAPCHANGE);
-        }
-    }
+	//This event works great with the plugin readyup.smx (does not conflict)
+	//This event works great in different game modes: versus, coop, scavenge and etc
+	bIsMatchLive = true;
 }
 
-public Action:OnTeamChangeDelay(Handle:timer, any:client)
+public void Event_RoundEnd(Event hEvent, const char[] name, bool dontBroadcast)
 {
-    RegisterSettings(client);
-    return Plugin_Handled;
+	bIsMatchLive = false;
 }
 
-public OnClientSettingsChanged(client) 
+public void OnMapEnd()
 {
-    RegisterSettings(client);
+	hClientSettingsArray.Clear();
 }
 
-public Action:ListRates(client, args) 
+public void OnTeamChange(Event hEvent, const char[] name, bool dontBroadcast)
 {
-    decl player[NetsettingsStruct];
-    new iClient;
-    
-    ReplyToCommand(client, "\x01[RateMonitor] List of player netsettings(\x03cmd\x01/\x04upd\x01/\x05rate\x01):");
-    
-    for (new i = 0; i < GetArraySize(hClientSettingsArray); i++) 
-    {
-        GetArrayArray(hClientSettingsArray, i, player[0]);
-        
-        iClient = GetClientBySteamId(player[Client_SteamId]);
-        if (iClient < 0) continue;
-        
-        if (IsClientConnected(iClient) && !IsSpectator(iClient)) 
-        {
-            ReplyToCommand(client, "\x03%N\x01 : %d/%d/%d", iClient, player[Client_Cmdrate], player[Client_Updaterate], player[Client_Rate]);
-        }
-    }
-    
-    return Plugin_Handled;
+	if (hEvent.GetInt("team") != view_as<int>(L4D2Team_Spectator)) {
+		int userid = hEvent.GetInt("userid");
+		int client = GetClientOfUserId(userid);
+		if (client > 0 && !IsFakeClient(client)) {
+			CreateTimer(0.1, OnTeamChangeDelay, userid, TIMER_FLAG_NO_MAPCHANGE);
+		}
+	}
 }
 
-RegisterSettings(client) 
-{   
-    if (!IsValidClient(client) || IsSpectator(client) || IsFakeClient(client)) 
-        return;
-
-    decl player[NetsettingsStruct];
-    decl String:sCmdRate[32], String:sUpdateRate[32], String:sRate[32];
-    decl String:sSteamId[STEAMID_SIZE];
-    decl String:sCounter[32] = "";
-    new iCmdRate, iUpdateRate, iRate;
-    
-    GetClientAuthId(client, AuthId_Steam2, sSteamId, STEAMID_SIZE);
-
-    new iIndex = FindStringInArray(hClientSettingsArray, sSteamId);
-
-    // rate
-    iRate = GetClientDataRate(client);
-    // cl_cmdrate
-    GetClientInfo(client, "cl_cmdrate", sCmdRate, sizeof(sCmdRate));
-    iCmdRate = StringToInt(sCmdRate);
-    // cl_updaterate
-    GetClientInfo(client, "cl_updaterate", sUpdateRate, sizeof(sUpdateRate));
-    iUpdateRate = StringToInt(sUpdateRate);
-   
-    // Punish for fake ping or other unallowed symbols in rate settings
-    if (bProhibitFakePing)
-    {
-        new bool:bIsCmdRateClean, bIsUpdateRateClean;
-        
-        bIsCmdRateClean = IsNatural(sCmdRate);
-        bIsUpdateRateClean = IsNatural(sUpdateRate);
-
-        if (!bIsCmdRateClean || !bIsUpdateRateClean) 
-        {
-            sCounter = "[bad cmd/upd]";
-            Format(sCmdRate, sizeof(sCmdRate), "%s", sCmdRate);
-            Format(sUpdateRate, sizeof(sUpdateRate), "%s", sUpdateRate);
-            Format(sRate, sizeof(sRate), "%d", iRate);
-            
-            PunishPlayer(client, sCmdRate, sUpdateRate, sRate, sCounter, iIndex);
-            return;
-        }
-    }
-    
-     // Punish for low rate settings(if we're good on previous check)
-    if ((iCmdRate < iMinCmd && iMinCmd > -1) 
-        || (iRate < iMinRate && iMinRate > -1)
-        || (iUpdateRate < iMinUpd && iMinUpd > -1)
-    ) {
-        sCounter = "[low cmd/update/rate]";
-        Format(sCmdRate, sizeof(sCmdRate), "%s%d%s", iCmdRate < iMinCmd ? ">" : "", iCmdRate, iCmdRate < iMinCmd ? "<" : "");
-        Format(sUpdateRate, sizeof(sCmdRate), "%s%d%s", iUpdateRate < iMinUpd ? ">" : "", iUpdateRate, iUpdateRate < iMinUpd ? "<" : "");
-        Format(sRate, sizeof(sRate), "%s%d%s", iRate < iMinRate ? ">" : "", iRate, iRate < iMinRate ? "<" : "");
-        
-        PunishPlayer(client, sCmdRate, sUpdateRate, sRate, sCounter, iIndex);
-        return;
-    }
-
-    if (iIndex > -1) 
-    {
-        GetArrayArray(hClientSettingsArray, iIndex, player[0]);
-        
-        if (iRate == player[Client_Rate] && 
-            iCmdRate == player[Client_Cmdrate] && 
-            iUpdateRate == player[Client_Updaterate]
-            )   return; // No change
-
-        if (bIsMatchLive && iAllowedRateChanges > -1)
-        {
-            player[Client_Changes] += 1;
-            Format(sCounter, sizeof(sCounter), "[%d/%d]", player[Client_Changes], iAllowedRateChanges);
-            
-            // If not punished for bad rate settings yet, punish for overlimit rate change(if any)
-            if (player[Client_Changes] > iAllowedRateChanges)
-            {
-                Format(sCmdRate, sizeof(sCmdRate), "%s%d", iCmdRate != player[Client_Cmdrate] ? "*" : "", iCmdRate);
-                Format(sUpdateRate, sizeof(sUpdateRate), "%s%d\x01", iUpdateRate != player[Client_Updaterate] ? "*" : "", iUpdateRate);
-                Format(sRate, sizeof(sRate), "%s%d\x01", iRate != player[Client_Rate] ? "*" : "", iRate);
-            
-                PunishPlayer(client, sCmdRate, sUpdateRate, sRate, sCounter, iIndex);
-                return;
-            }
-        }
-        
-        if (bPublic) CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N{default}'s netsettings changed from {teamcolor}%d/%d/%d {default}to {teamcolor}%d/%d/%d {olive}%s", 
-                        client, 
-                        player[Client_Cmdrate], player[Client_Updaterate], player[Client_Rate], 
-                        iCmdRate, iUpdateRate, iRate,
-                        sCounter);
-                        
-        player[Client_Cmdrate] = _:iCmdRate;
-        player[Client_Updaterate] = _:iUpdateRate;
-        player[Client_Rate] = _:iRate;
-        
-        SetArrayArray(hClientSettingsArray, iIndex, player[0]);
-    }
-    else
-    {
-        strcopy(player[Client_SteamId], STEAMID_SIZE, sSteamId);
-        player[Client_Cmdrate] = _:iCmdRate;
-        player[Client_Updaterate] = _:iUpdateRate;
-        player[Client_Rate] = _:iRate;
-        player[Client_Changes] = _:0;
-        
-        PushArrayArray(hClientSettingsArray, player[0]);
-        if (bPublic) CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N{default}'s netsettings set to {teamcolor}%d/%d/%d", client, player[Client_Cmdrate], player[Client_Updaterate], player[Client_Rate]);
-    }
-}
-
-PunishPlayer(client, const String:sCmdRate[], const String:sUpdateRate[], const String:sRate[], const String:sCounter[], iIndex)
+public Action OnTeamChangeDelay(Handle hTimer, any userid)
 {
-    new bool:bInitialRegister = iIndex > -1 ? false : true;
-    
-    switch (iActionUponExceed)
-    {
-        case 1: // Just notify all players(zero punishment)
-        {
-            if (bInitialRegister) {
-                CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N{default}'s netsettings set to illegal values: {teamcolor}%s/%s/%s {olive}%s", 
-                                client, 
-                                sCmdRate, sUpdateRate, sRate, 
-                                sCounter);
-            }
-            else {
-               CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N{default}'s illegaly changed netsettings midgame: {teamcolor}%s/%s/%s {olive}%s", 
-                                client, 
-                                sCmdRate, sUpdateRate, sRate, 
-                                sCounter);
-            }
-        }
-        case 2: // Move to spec
-        {
-            ChangeClientTeam(client, _:L4D2Team_Spectator);
-            
-            if (bInitialRegister) {
-                if (bPublic) CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N {default}was moved to spectators for illegal netsettings: {teamcolor}%s/%s/%s {olive}%s", 
-                                client, 
-                                sCmdRate, sUpdateRate, sRate, 
-                                sCounter);
-                CPrintToChatEx(client, client, "{default}<{olive}Rates{default}> Please adjust your rates to values higher than {olive}%d/%d/%d%s", iMinCmd, iMinUpd, iMinRate, bProhibitFakePing ? " and remove any non-digital characters" : "");
-            }
-            else {
-                decl player[NetsettingsStruct];
-                GetArrayArray(hClientSettingsArray, iIndex, player[0]);
-                
-                if (bPublic) CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N {default}was moved to spectators for illegal netsettings: {teamcolor}%s/%s/%s {olive}%s", 
-                                client, 
-                                sCmdRate, sUpdateRate, sRate, 
-                                sCounter);
-                CPrintToChatEx(client, client, "{default}<{olive}Rates{default}> Change your netsettings back to: {teamcolor}%d/%d/%d", player[Client_Cmdrate], player[Client_Updaterate], player[Client_Rate]);
-            }
-        }
-        case 3: // Kick
-        {
-            if (bInitialRegister) {
-                KickClient(client, "Please use rates higher than %d/%d/%d%s", iMinCmd, iMinUpd, iMinRate, bProhibitFakePing ? " and remove any non-digits" : "");
-                CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N {default}was kicked for illegal netsettings: {teamcolor}%s/%s/%s {olive}%s", 
-                                client, 
-                                sCmdRate, sUpdateRate, sRate, 
-                                sCounter);
-            }
-            else {
-                decl player[NetsettingsStruct];
-                GetArrayArray(hClientSettingsArray, iIndex, player[0]);
-                
-                KickClient(client, "Change your rates to previous values and remove non-digits: %d/%d/%d", player[Client_Cmdrate], player[Client_Updaterate], player[Client_Rate]);
-                CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N {default}was kicked due to illegal netsettings change: {teamcolor}%s/%s/%s {olive}%s", 
-                                client, 
-                                sCmdRate, sUpdateRate, sRate, 
-                                sCounter);
-            }
-        }
-    }
-    return;
+	int client = GetClientOfUserId(userid);
+	if (client > 0) {
+		RegisterSettings(client);
+	}
 }
 
-stock GetClientBySteamId(const String:steamID[]) 
+public void OnClientSettingsChanged(int client)
 {
-    decl String:tempSteamID[STEAMID_SIZE];
-    
-    for (new client = 1; client <= MaxClients; client++) 
-    {
-        if (!IsClientInGame(client)) continue;
-        
-        GetClientAuthId(client, AuthId_Steam2, tempSteamID, STEAMID_SIZE);
-
-        if (StrEqual(steamID, tempSteamID))
-            return client;
-    }
-    
-    return -1;
+	if (IsValidEntity(client) && !IsFakeClient(client)) {
+		RegisterSettings(client);
+	}
 }
 
-bool:IsSpectator(client) {
-    new L4D2_Team:team = L4D2_Team:GetClientTeam(client);
-    if (team != L4D2Team_Survivor && team != L4D2Team_Infected)
-        return true;
-    return false;
+public Action ListRates(int client, int args)
+{
+	ReplyToCommand(client, "\x01[RateMonitor] List of player netsettings(\x03cmd\x01/\x04upd\x01/\x05rate\x01):");
+	
+	NetsettingsStruct player;
+	int iSize = hClientSettingsArray.Length;
+	for (int i = 0; i < iSize; i++) {
+		hClientSettingsArray.GetArray(i, player, sizeof(NetsettingsStruct));
+
+		int iClient = GetClientBySteamId(player.Client_SteamId);
+		if (iClient > 0 && GetClientTeam(client) > view_as<int>(L4D2Team_Spectator)) {
+			ReplyToCommand(client, "\x03%N\x01 : %d/%d/%d", iClient, player.Client_Cmdrate, player.Client_Updaterate, player.Client_Rate);
+		}
+	}
+
+	return Plugin_Handled;
 }
 
-stock bool:IsNatural(const String:str[])
-{   
-    new x = 0;
-    while (str[x] != '\0') 
-    {
-        if (!IsCharNumeric(str[x])) {
-            return false;
-        }
-        x++;
-    }
+void RegisterSettings(int client)
+{
+	if (GetClientTeam(client) < view_as<int>(L4D2Team_Infected)) {
+		return;
+	}
+	
+	NetsettingsStruct
+		player;
+	
+	char 
+		sCmdRate[32],
+		sUpdateRate[32],
+		sRate[32],
+		sSteamId[STEAMID_SIZE],
+		sCounter[32] = "";
 
-    return true;
+	GetClientAuthId(client, AuthId_Steam2, sSteamId, STEAMID_SIZE);
+
+	int iIndex = hClientSettingsArray.FindString(sSteamId);
+
+	// rate
+	int iRate = GetClientDataRate(client);
+	// cl_cmdrate
+	GetClientInfo(client, "cl_cmdrate", sCmdRate, sizeof(sCmdRate));
+	int iCmdRate = StringToInt(sCmdRate);
+	// cl_updaterate
+	GetClientInfo(client, "cl_updaterate", sUpdateRate, sizeof(sUpdateRate));
+	int iUpdateRate = StringToInt(sUpdateRate);
+
+	// Punish for fake ping or other unallowed symbols in rate settings
+	if (bProhibitFakePing) {
+		bool bIsCmdRateClean, bIsUpdateRateClean;
+		
+		bIsCmdRateClean = IsNatural(sCmdRate);
+		bIsUpdateRateClean = IsNatural(sUpdateRate);
+
+		if (!bIsCmdRateClean || !bIsUpdateRateClean) {
+			sCounter = "[bad cmd/upd]";
+			Format(sCmdRate, sizeof(sCmdRate), "%s", sCmdRate);
+			Format(sUpdateRate, sizeof(sUpdateRate), "%s", sUpdateRate);
+			Format(sRate, sizeof(sRate), "%d", iRate);
+			
+			PunishPlayer(client, sCmdRate, sUpdateRate, sRate, sCounter, iIndex);
+			return;
+		}
+	}
+
+	 // Punish for low rate settings(if we're good on previous check)
+	if ((iCmdRate < iMinCmd && iMinCmd > -1) || (iRate < iMinRate && iMinRate > -1) || (iUpdateRate < iMinUpd && iMinUpd > -1)) {
+		sCounter = "[low cmd/update/rate]";
+		Format(sCmdRate, sizeof(sCmdRate), "%s%d%s", iCmdRate < iMinCmd ? ">" : "", iCmdRate, iCmdRate < iMinCmd ? "<" : "");
+		Format(sUpdateRate, sizeof(sCmdRate), "%s%d%s", iUpdateRate < iMinUpd ? ">" : "", iUpdateRate, iUpdateRate < iMinUpd ? "<" : "");
+		Format(sRate, sizeof(sRate), "%s%d%s", iRate < iMinRate ? ">" : "", iRate, iRate < iMinRate ? "<" : "");
+		
+		PunishPlayer(client, sCmdRate, sUpdateRate, sRate, sCounter, iIndex);
+		return;
+	}
+
+	if (iIndex > -1) {
+		hClientSettingsArray.GetArray(iIndex, player, sizeof(NetsettingsStruct));
+		
+		if (iRate == player.Client_Rate && iCmdRate == player.Client_Cmdrate && iUpdateRate == player.Client_Updaterate) {
+			return; // No change
+		}
+		
+		if (bIsMatchLive && iAllowedRateChanges > -1) {
+			player.Client_Changes += 1;
+			Format(sCounter, sizeof(sCounter), "[%d/%d]", player.Client_Changes, iAllowedRateChanges);
+			
+			// If not punished for bad rate settings yet, punish for overlimit rate change(if any)
+			if (player.Client_Changes > iAllowedRateChanges) {
+				Format(sCmdRate, sizeof(sCmdRate), "%s%d", iCmdRate != player.Client_Cmdrate ? "*" : "", iCmdRate);
+				Format(sUpdateRate, sizeof(sUpdateRate), "%s%d\x01", iUpdateRate != player.Client_Updaterate ? "*" : "", iUpdateRate);
+				Format(sRate, sizeof(sRate), "%s%d\x01", iRate != player.Client_Rate ? "*" : "", iRate);
+			
+				PunishPlayer(client, sCmdRate, sUpdateRate, sRate, sCounter, iIndex);
+				return;
+			}
+		}
+		
+		if (bPublic) {
+			CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N{default}'s netsettings changed from {teamcolor}%d/%d/%d {default}to {teamcolor}%d/%d/%d {olive}%s", 
+						client, player.Client_Cmdrate, player.Client_Updaterate, player.Client_Rate, iCmdRate, iUpdateRate, iRate, sCounter);
+		}
+		
+		player.Client_Cmdrate = iCmdRate;
+		player.Client_Updaterate = iUpdateRate;
+		player.Client_Rate = iRate;
+		
+		hClientSettingsArray.SetArray(iIndex, player, sizeof(NetsettingsStruct));
+	} else {
+		strcopy(player.Client_SteamId, STEAMID_SIZE, sSteamId);
+		player.Client_Cmdrate = iCmdRate;
+		player.Client_Updaterate = iUpdateRate;
+		player.Client_Rate = iRate;
+		player.Client_Changes = 0;
+		
+		hClientSettingsArray.PushArray(player, sizeof(NetsettingsStruct));
+		if (bPublic) {
+			CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N{default}'s netsettings set to {teamcolor}%d/%d/%d", 
+						client, player.Client_Cmdrate, player.Client_Updaterate, player.Client_Rate);
+		}
+	}
 }
 
-public cvarChanged_AllowedRateChanges(Handle:cvar, const String:oldValue[], const String:newValue[])
-    iAllowedRateChanges = GetConVarInt(hCvarAllowedRateChanges);
+void PunishPlayer(int client, const char[] sCmdRate, const char[] sUpdateRate, const char[] sRate, const char[] sCounter, int iIndex)
+{
+	bool bInitialRegister = (iIndex > -1) ? false : true;
 
-public cvarChanged_MinRate(Handle:cvar, const String:oldValue[], const String:newValue[])
-    iMinRate = GetConVarInt(hCvarMinRate);
-    
-public cvarChanged_MinCmd(Handle:cvar, const String:oldValue[], const String:newValue[])
-    iMinCmd = GetConVarInt(hCvarMinCmd);
+	switch (iActionUponExceed)
+	{
+		case 1: {// Just notify all players(zero punishment)
+			if (bInitialRegister) {
+				CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N{default}'s netsettings set to illegal values: {teamcolor}%s/%s/%s {olive}%s", 
+								client, sCmdRate, sUpdateRate, sRate, sCounter);
+			} else {
+				CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N{default}'s illegaly changed netsettings midgame: {teamcolor}%s/%s/%s {olive}%s", 
+								client, sCmdRate, sUpdateRate, sRate, sCounter);
+			}
+		}
+		case 2: {// Move to spec
+			ChangeClientTeam(client, view_as<int>(L4D2Team_Spectator));
+			
+			if (bInitialRegister) {
+				if (bPublic) {
+					CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N {default}was moved to spectators for illegal netsettings: {teamcolor}%s/%s/%s {olive}%s", 
+								client, sCmdRate, sUpdateRate, sRate, sCounter);
+				}
 
-public cvarChanged_ProhibitFakePing(Handle:cvar, const String:oldValue[], const String:newValue[])
-    bProhibitFakePing = GetConVarBool(hCvarProhibitFakePing);
-    
-public cvarChanged_ExceedAction(Handle:cvar, const String:oldValue[], const String:newValue[])
-    iActionUponExceed = GetConVarInt(hCvarProhibitedAction);
+				CPrintToChatEx(client, client, "{default}<{olive}Rates{default}> Please adjust your rates to values higher than {olive}%d/%d/%d%s", 
+								iMinCmd, iMinUpd, iMinRate, bProhibitFakePing ? " and remove any non-digital characters" : "");
+			} else {
+				NetsettingsStruct player;
+				hClientSettingsArray.GetArray(iIndex, player, sizeof(NetsettingsStruct));
+	
+				if (bPublic) {
+					CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N {default}was moved to spectators for illegal netsettings: {teamcolor}%s/%s/%s {olive}%s", 
+								client, sCmdRate, sUpdateRate, sRate, sCounter);
+				}
+				CPrintToChatEx(client, client, "{default}<{olive}Rates{default}> Change your netsettings back to: {teamcolor}%d/%d/%d", 
+								player.Client_Cmdrate, player.Client_Updaterate, player.Client_Rate);
+			}
+		}
+		case 3: {// Kick
+			if (bInitialRegister) {
+				KickClient(client, "Please use rates higher than %d/%d/%d%s", 
+								iMinCmd, iMinUpd, iMinRate, bProhibitFakePing ? " and remove any non-digits" : "");
 
-public cvarChanged_PublicNotice(Handle:cvar, const String:oldValue[], const String:newValue[])
-    bPublic = GetConVarBool(hCvarPublicNotice);
+				CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N {default}was kicked for illegal netsettings: {teamcolor}%s/%s/%s {olive}%s", 
+								client, sCmdRate, sUpdateRate, sRate, sCounter);
+			} else {
+				NetsettingsStruct player;
+				hClientSettingsArray.GetArray(iIndex, player, sizeof(NetsettingsStruct));
 
-bool:IsValidClient(client) 
-{ 
-    if (client <= 0 || client > MaxClients || !IsClientConnected(client)) return false; 
-    return IsClientInGame(client); 
-} 
+				KickClient(client, "Change your rates to previous values and remove non-digits: %d/%d/%d", 
+								player.Client_Cmdrate, player.Client_Updaterate, player.Client_Rate);
+				
+				CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N {default}was kicked due to illegal netsettings change: {teamcolor}%s/%s/%s {olive}%s", 
+								client, sCmdRate, sUpdateRate, sRate, sCounter);
+			}
+		}
+	}
+}
+
+int GetClientBySteamId(const char[] steamID)
+{
+	char tempSteamID[STEAMID_SIZE];
+
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsClientInGame(i)) {
+			GetClientAuthId(i, AuthId_Steam2, tempSteamID, STEAMID_SIZE);
+
+			if (strcmp(steamID, tempSteamID) == 0) {
+				return i;
+			}
+		}
+	}
+
+	return -1;
+}
+
+bool IsNatural(const char[] str)
+{
+	int x = 0;
+	while (str[x] != '\0') 
+	{
+		if (!IsCharNumeric(str[x])) {
+			return false;
+		}
+	
+		x++;
+	}
+
+	return true;
+}
+
+public void cvarChanged_AllowedRateChanges(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	iAllowedRateChanges = hCvarAllowedRateChanges.IntValue;
+}
+
+public void cvarChanged_MinRate(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	iMinRate = hCvarMinRate.IntValue;
+}
+
+public void cvarChanged_MinCmd(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	iMinCmd = hCvarMinCmd.IntValue;
+}
+
+public void cvarChanged_ProhibitFakePing(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	bProhibitFakePing = hCvarProhibitFakePing.BoolValue;
+}
+
+public void cvarChanged_ExceedAction(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	iActionUponExceed = hCvarProhibitedAction.IntValue;
+}
+
+public void cvarChanged_PublicNotice(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	bPublic = hCvarPublicNotice.BoolValue;
+}

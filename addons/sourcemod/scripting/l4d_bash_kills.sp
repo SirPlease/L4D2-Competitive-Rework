@@ -1,78 +1,95 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdkhooks>
 
-#define BOOMER_ZOMBIE_CLASS     2
-#define SPITTER_ZOMBIE_CLASS    4
+#define TEAM_SURVIVOR 2
+#define TEAM_INFECTED 3
 
-new bool:bLateLoad;
-new Handle:cvar_bashKills;
+#define BOOMER_ZOMBIE_CLASS  2
+#define SPITTER_ZOMBIE_CLASS 4
 
-public Plugin:myinfo =
+bool 
+	bLateLoad,
+	IsEnabled;
+
+ConVar 
+	CbashKills;
+
+public Plugin myinfo =
 {
-    name        = "L4D2 Bash Kills",
-    author      = "Jahze",
-    version     = "1.0",
-    description = "Stop special infected getting bashed to death"
+	name = "L4D2 Bash Kills",
+	author = "Jahze, A1m`",
+	version = "1.3",
+	description = "Stop special infected getting bashed to death",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
-public APLRes:AskPluginLoad2( Handle:plugin, bool:late, String:error[], errMax) {
-    bLateLoad = late;
-    return APLRes_Success;
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	bLateLoad = late;
+	return APLRes_Success;
 }
 
-public OnPluginStart() {
-    cvar_bashKills = CreateConVar("l4d_no_bash_kills", "1", "Prevent special infected from getting bashed to death", FCVAR_NONE);
-    
-    if ( bLateLoad ) {
-        for ( new i = 1; i < MaxClients+1; i++ ) {
-            if ( IsClientInGame(i) ) {
-                SDKHook(i, SDKHook_OnTakeDamage, Hurt);
-            }
-        }
-    }
+public void OnPluginStart()
+{
+	CbashKills = CreateConVar("l4d_no_bash_kills", "1", "Prevent special infected from getting bashed to death", _, true, 0.0, true, 1.0);
+	IsEnabled = CbashKills.BoolValue;
+	CbashKills.AddChangeHook(BashKills_Changed);
+
+	if (bLateLoad) {
+		for(int i = 1; i <= MaxClients; i++) {
+			if (IsClientInGame(i)) {
+				OnClientPutInServer(i);
+			}
+		}
+	}
 }
 
-public OnClientPutInServer( client ) {
-    SDKHook(client, SDKHook_OnTakeDamage, Hurt);
+public void BashKills_Changed(ConVar Cvar, const char[] oldValue, const char[] newValue)
+{
+	IsEnabled = Cvar.BoolValue;
 }
 
-public Action:Hurt( victim, &attacker, &inflictor, &Float:damage, &damageType, &weapon, Float:damageForce[3], Float:damagePosition[3] ) {
-    if ( !GetConVarBool(cvar_bashKills) || !IsSI(victim) ) {
-        return Plugin_Continue;
-    }
-    
-    if ( damage == 250.0 && damageType == 128 && weapon == -1 && IsSurvivor(attacker) ) {
-        return Plugin_Handled;
-    }
-    
-    return Plugin_Continue;
+public void OnClientPutInServer(int client)
+{
+	SDKHook(client, SDKHook_OnTakeDamage, OnHurt);
 }
 
-bool:IsSI( client ) {
-    if ( GetClientTeam(client) != 3 || !IsPlayerAlive(client) ) {
-        return false;
-    }
-    
-    // Allow boomer and spitter m2 kills
-    new playerClass = GetEntProp(client, Prop_Send, "m_zombieClass");
-    
-    if ( playerClass == BOOMER_ZOMBIE_CLASS || playerClass == SPITTER_ZOMBIE_CLASS ) {
-        return false;
-    }
-    
-    return true;
+public Action OnHurt(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& weapon, float damageForce[3], float damagePosition[3])
+{
+	if (!IsEnabled) {
+		return Plugin_Continue;
+	}
+	
+	if (damagetype == DMG_CLUB && weapon == -1 && damage == 250.0) {
+		if (IsSurvivor(attacker) && IsValidSI(victim)) {
+			return Plugin_Handled;
+		}
+	}
+	return Plugin_Continue;
 }
 
-bool:IsSurvivor( client ) {
-    if ( client < 1
-    || !IsClientConnected(client)
-    || !IsClientInGame(client)
-    || GetClientTeam(client) != 2
-    || !IsPlayerAlive(client) ) {
-        return false;
-    }
-    
-    return true;
+bool IsValidSI(int client)
+{
+	if (GetClientTeam(client) == TEAM_INFECTED && IsPlayerAlive(client)) {
+		int playerClass = GetEntProp(client, Prop_Send, "m_zombieClass");
+		// Allow boomer and spitter m2 kills
+		if (playerClass == BOOMER_ZOMBIE_CLASS || playerClass == SPITTER_ZOMBIE_CLASS) {
+			return false;
+		}
+		return true;
+	}
+
+	return false;
+}
+
+bool IsSurvivor(int client)
+{
+	return (client > 0 
+	&& client <= MaxClients 
+	&& IsClientInGame(client) 
+	&& GetClientTeam(client) == TEAM_SURVIVOR 
+	/*&& IsPlayerAlive(client)*/);
 }
