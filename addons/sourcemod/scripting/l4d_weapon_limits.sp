@@ -85,7 +85,7 @@ public void OnMapStart()
 
 public void ClearUp(Event hEvent, const char[] name, bool dontBroadcast)
 {
-	for (int i = 0; i <= MAXPLAYERS; i++) {
+	for (int i = 1; i <= MAXPLAYERS; i++) {
 		bIsIncappedWithMelee[i] = false;
 	}
 }
