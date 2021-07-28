@@ -50,7 +50,7 @@ public Plugin:myinfo =
 };
 
 public OnPluginStart()
-{      
+{
 	hCvarDmgThreshold = CreateConVar("sm_1v1_dmgthreshold", "24", "Amount of damage done (at once) before SI suicides.", FCVAR_NONE, true, 1.0);
 
 	HookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);

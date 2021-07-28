@@ -2,7 +2,7 @@
 **
 */
 #if defined _l4d_tank_control_eq_included
- #endinput
+	#endinput
 #endif
 #define _l4d_tank_control_eq_included
 
@@ -13,14 +13,12 @@
  */
 native int GetTankSelection();
 
-
 #if !defined REQUIRE_PLUGIN
-public __pl_l4d_tank_control_eq_SetNTVOptional()
+public void __pl_l4d_tank_control_eq_SetNTVOptional()
 {
 	MarkNativeAsOptional("GetTankSelection");
 }
 #endif
-
 
 public SharedPlugin __pl_l4d_tank_control_eq =
 {

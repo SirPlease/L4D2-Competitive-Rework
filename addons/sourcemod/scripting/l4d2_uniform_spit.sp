@@ -66,7 +66,6 @@ public void OnPluginStart()
 	hPuddles = new StringMap();
 
 	if (bLateLoad) {
-		OnConfigsExecuted();
 		for (int i = 1; i <= MaxClients; i++) {
 			if (IsClientInGame(i)) {
 				OnClientPutInServer(i);

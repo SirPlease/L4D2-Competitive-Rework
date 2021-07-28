@@ -13,11 +13,7 @@ stock static StringMap hSurvivorModelsTrie = null;
  */
 stock bool IsSurvivor(int client)
 {
-	if (!IsClientInGame(client) || view_as<L4D2_Team>(GetClientTeam(client)) != L4D2Team_Survivor) {
-		return false;
-	}
-
-	return true;
+	return (IsClientInGame(client) && GetClientTeam(client) == view_as<int>(L4D2Team_Survivor));
 }
 
 /**

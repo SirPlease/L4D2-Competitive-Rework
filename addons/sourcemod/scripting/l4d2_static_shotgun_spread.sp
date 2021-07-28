@@ -15,7 +15,7 @@
 // You can use the visualise_impacts.smx plugin to test the resulting spread.
 // It will render small purple boxes where the server-side pellets land.
 
-enum Platforms:
+enum Platforms
 {
 	eWindows = 0,
 	eLinux,
@@ -24,15 +24,15 @@ enum Platforms:
 }
 
 static const int
-	g_BulletOffsets[ePlatform_Size][BULLET_MAX_SIZE] = {
+	g_BulletOffsets[view_as<int>(ePlatform_Size)][BULLET_MAX_SIZE] = {
 		{ 0xf, 0x21, 0x30, 0x3f },	// Windows
 		{ 0x11, 0x22, 0x2f, 0x43 }	// Linux
 	},
-	g_FactorOffset[ePlatform_Size] = {
+	g_FactorOffset[view_as<int>(ePlatform_Size)] = {
 		0x36,	// Windows
 		0x34	// Linux
 	},
-	g_CenterPelletOffset[ePlatform_Size] = {
+	g_CenterPelletOffset[view_as<int>(ePlatform_Size)] = {
 		-0x36,	// Windows
 		-0x1c	// Linux
 	};

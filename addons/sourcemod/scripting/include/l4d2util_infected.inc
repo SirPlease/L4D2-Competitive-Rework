@@ -10,7 +10,7 @@
 #define UTIL_ARRAY_INDEX_TIMESTAMP 1
 
 // Internal array of strings for timer ability timer entity classnames
-stock const char L4D2_InfectedTimerEntities[L4D2Infected_SIZE][] =
+stock const char L4D2_InfectedTimerEntities[view_as<int>(L4D2Infected_Size)][] =
 {
 	"",
 	"ability_tongue",
@@ -24,7 +24,7 @@ stock const char L4D2_InfectedTimerEntities[L4D2Infected_SIZE][] =
 };
 
 // Internal array of strings for Infected victim netprops
-stock const char L4D2_InfectedVictimNetprops[L4D2Infected_SIZE][] =
+stock const char L4D2_InfectedVictimNetprops[view_as<int>(L4D2Infected_Size)][] =
 {
 	"",
 	"m_tongueVictim",
@@ -45,7 +45,7 @@ stock const char L4D2_InfectedVictimNetprops[L4D2Infected_SIZE][] =
  */
 stock bool IsInfected(int client)
 {
-	return (IsClientInGame(client) && view_as<L4D2_Team>(GetClientTeam(client)) == L4D2Team_Infected);
+	return (IsClientInGame(client) && GetClientTeam(client) == view_as<int>(L4D2Team_Infected));
 }
 
 /**
