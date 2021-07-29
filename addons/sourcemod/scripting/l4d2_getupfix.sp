@@ -1,9 +1,8 @@
 #pragma semicolon 1
 
-#define L4D2UTIL_STOCKS_ONLY 1
-
 #include <sourcemod>
 #include <sdktools>
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 #include <left4dhooks> //#include <l4d2_direct>
 

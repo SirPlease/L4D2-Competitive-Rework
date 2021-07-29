@@ -104,7 +104,7 @@ stock void InitSurvivorModelTrie()
  */
 stock SurvivorCharacter IdentifySurvivor(int client)
 {
-	if (!client || !IsClientInGame(client) || !IsSurvivor(client)) {
+	if (!client || !IsSurvivor(client)) {
 		return SC_NONE;
 	}
 
