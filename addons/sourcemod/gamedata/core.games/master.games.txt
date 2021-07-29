@@ -101,7 +101,7 @@
 		"game"		"dinodday"
 	}
 
-	"blocklist.plugins.txt"
+	"blacklist.plugins.txt"
 	{
 	}
 }
