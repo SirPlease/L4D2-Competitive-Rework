@@ -31,7 +31,7 @@
 #define DEBUG 0
 
 int
-	g_GlobalWeaponRules[WEPID_SIZE] = {-1, ...},
+	g_GlobalWeaponRules[view_as<int>(WEPID_SIZE)] = {-1, ...},
 	// state tracking for roundstart looping
 	g_bRoundStartHit,
 	g_bConfigsExecuted;

@@ -336,12 +336,13 @@ stock int ConvertWeaponSpawn(int entity, WeaponId wepid, int count = 5, const ch
 	
 	SetEntProp(entity, Prop_Send, "m_weaponID", wepid);
 
-	char buf[64];
+	static char buf[64], modelName[255];
 	if (model[0] != '\0') {
 		SetEntityModel(entity, model);
 	} else {
 		GetWeaponModel(wepid, buf, sizeof(buf));
-		SetEntityModel(entity, buf);
+		Format(modelName, sizeof(modelName), "models%s", buf);
+		SetEntityModel(entity, modelName);
 	}
 	
 	IntToString(count, buf, sizeof(buf));
