@@ -225,7 +225,7 @@ public Action AntibaiterThink(Handle hTimer)
 		
 		if (IsPlayerAlive(i)) {
 			zombieclass[i] = GetInfectedClass(i);
-			if (zombieclass[i] > L4D2Infected_None && zombieclass[i] < L4D2Infected_Witch
+			if (zombieclass[i] > L4D2Infected_Common && zombieclass[i] < L4D2Infected_Witch
 				&& aliveSince[i] != -1.0 && GetGameTime() - aliveSince[i] >= timerStartDelay
 			) {
 				#if DEBUG
@@ -395,9 +395,11 @@ float GetMaxSurvivorCompletion()
 bool IsPanicEventInProgress()
 {
 	CountdownTimer pPanicCountdown = view_as<CountdownTimer>(pScriptedEventManager + view_as<Address>(m_PostMobDelayTimerOffset));
+	
 	#if DEBUG
 	PrintToChatAll("m_PostMobDelay - duration: %f, timestamp: %f", CTimer_GetDuration(pPanicCountdown), CTimer_GetTimestamp(pPanicCountdown));
 	#endif
+	
 	if (!CTimer_IsElapsed(pPanicCountdown)) {
 		return true;
 	}

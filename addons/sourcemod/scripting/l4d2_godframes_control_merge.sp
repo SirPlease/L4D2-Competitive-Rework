@@ -203,7 +203,7 @@ public OnPluginStart()
 	if (bLateLoad) InitializeHooks();
 }
 
-public OnRoundStart()
+public OnRoundStart() //l4d2util forward
 {
 	for (new i = 1; i <= MaxClients; i++) //clear both fake and real just because
 	{
@@ -319,7 +319,7 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 	new CountdownTimer:cTimerGod = L4D2Direct_GetInvulnerabilityTimer(victim);
 	if (cTimerGod != CTimer_Null) { CTimer_Invalidate(cTimerGod); }
 
-	decl String:sClassname[CLASSNAME_LENGTH];
+	new String:sClassname[CLASSNAME_LENGTH];
 	GetEntityClassname(inflictor, sClassname, CLASSNAME_LENGTH);
 
 	new Float:fTimeLeft = fFakeGodframeEnd[victim] - GetGameTime();
@@ -335,7 +335,7 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 	if (IS_VALID_SURVIVOR(attacker)) //friendly fire
 	{	
 		//Block FF While Capped
-		if (IsSurvivorBusy(victim)) return Plugin_Handled;
+		if (IsSurvivorAttacked(victim)) return Plugin_Handled;
 
 		//Block AI FF
 		if (IsFakeClient(victim) && IsFakeClient(attacker)) return Plugin_Handled;
@@ -521,14 +521,6 @@ stock IsClientAndInGame(client)
 	return false;
 }
 
-stock IsSurvivorBusy(client)
-{
-	return (GetEntPropEnt(client, Prop_Send, "m_pummelAttacker") > 0 || 
-	GetEntPropEnt(client, Prop_Send, "m_carryAttacker") > 0 || 
-	GetEntPropEnt(client, Prop_Send, "m_pounceAttacker") > 0 || 
-	GetEntPropEnt(client, Prop_Send, "m_jockeyAttacker") > 0 || 
-	GetEntPropEnt(client, Prop_Send, "m_tongueOwner") > 0);
-}
 public Action:Timed_ResetGlow(Handle:timer, any:client) {
 	ResetGlow(client);
 }
@@ -911,8 +903,8 @@ stock L4D_GetPlayerTempHealth(client)
 
 stock L4D_SetPlayerTempHealth(client, tempHealth)
 {
-    SetEntPropFloat(client, Prop_Send, "m_healthBuffer", float(tempHealth));
-    SetEntPropFloat(client, Prop_Send, "m_healthBufferTime", GetGameTime());
+	SetEntPropFloat(client, Prop_Send, "m_healthBuffer", float(tempHealth));
+	SetEntPropFloat(client, Prop_Send, "m_healthBufferTime", GetGameTime());
 }
 
 stock L4D_GetPlayerReviveCount(client)
@@ -932,10 +924,10 @@ stock bool:L4D_IsPlayerIncapacitated(client)
 
 stock CheatCommand(client, const String:command[], const String:arguments[])
 {
-    new flags = GetCommandFlags(command);
-    SetCommandFlags(command, flags & ~FCVAR_CHEAT);
-    FakeClientCommand(client, "%s %s", command, arguments);
-    SetCommandFlags(command, flags);
+			new flags = GetCommandFlags(command);
+			SetCommandFlags(command, flags & ~FCVAR_CHEAT);
+			FakeClientCommand(client, "%s %s", command, arguments);
+			SetCommandFlags(command, flags);
 }
 
 public OnUndoFFEnableChanged(Handle:cvar, const String:oldVal[], const String:newVal[])
@@ -994,11 +986,11 @@ void ProcessShot(ArrayStack stack)
 
 bool:IsTankRock(entity)
 {
-    if (entity > 0 && IsValidEntity(entity) && IsValidEdict(entity))
-    {
-        decl String:classname[64];
-        GetEdictClassname(entity, classname, sizeof(classname));
-        return StrEqual(classname, "tank_rock");
-    }
-    return false;
+	if (entity > 0 && IsValidEntity(entity) && IsValidEdict(entity))
+	{
+		decl String:classname[64];
+		GetEdictClassname(entity, classname, sizeof(classname));
+		return StrEqual(classname, "tank_rock");
+	}
+	return false;
 }

@@ -13,9 +13,10 @@ enum L4D2_Team
 	L4D2Team_Size //4 size
 };
 
+//The official order of characters in the game
 enum L4D2_Infected
 {
-	L4D2Infected_None = 0,
+	L4D2Infected_Common = 0,
 	L4D2Infected_Smoker = 1,
 	L4D2Infected_Boomer,
 	L4D2Infected_Hunter,
@@ -24,13 +25,14 @@ enum L4D2_Infected
 	L4D2Infected_Charger,
 	L4D2Infected_Witch,
 	L4D2Infected_Tank,
+	L4D2Infected_Survivor,
 	
-	L4D2Infected_Size //9 size
+	L4D2Infected_Size //10 size
 };
 
 stock const char L4D2_InfectedNames[view_as<int>(L4D2Infected_Size)][] =
 {
-	"None",
+	"Common",
 	"Smoker",
 	"Boomer",
 	"Hunter",
@@ -38,7 +40,8 @@ stock const char L4D2_InfectedNames[view_as<int>(L4D2Infected_Size)][] =
 	"Jockey",
 	"Charger",
 	"Witch",
-	"Tank"
+	"Tank",
+	"Survivor"
 };
 
 stock const char L4D2_TeamName[view_as<int>(L4D2Team_Size)][] =
@@ -424,10 +427,9 @@ stock const int WeaponSlots[view_as<int>(WEPID_SIZE)] =
 /* @A1m`:
  * The correct order of characters in the game,
  * this may work correctly with a netprop 'm_survivorCharacter'.
- * We need to update a lot of plugins to add this,
- * since many plugins use the old order =(
+ * We need to find out the type of map l4d1 or l4d2...
 */
-/*enum SurvivorCharacter
+enum SurvivorCharacter
 {
 	SurvivorCharacter_Invalid = -1,
 
@@ -443,8 +445,6 @@ stock const int WeaponSlots[view_as<int>(WEPID_SIZE)] =
 	SurvivorCharacter_Size //8 size
 };
 
-// Names of the survivors
-// TODO: languages?
 stock const char SurvivorNames[view_as<int>(SurvivorCharacter_Size)][] =
 {
 	"Nick",
@@ -468,50 +468,6 @@ stock const char SurvivorModels[view_as<int>(SurvivorCharacter_Size)][] =
 	"models/survivors/survivor_teenangst.mdl",	//MODEL_ZOEY
 	"models/survivors/survivor_manager.mdl",	//MODEL_LOUIS
 	"models/survivors/survivor_biker.mdl"		//MODEL_FRANCIS
-};
-*/
-
-// Indexes are arbitrary at this point.
-enum SurvivorCharacter
-{
-	SC_NONE=-1,
-	SC_COACH=0,
-	SC_NICK,
-	SC_ROCHELLE,
-	SC_ELLIS,
-	SC_LOUIS,
-	SC_ZOEY,
-	SC_BILL,
-	SC_FRANCIS,
-	
-	SC_SIZE //8 size
-};
-
-// Names of the survivors
-// TODO: languages?
-stock const char SurvivorNames[view_as<int>(SC_SIZE)][] =
-{
-	"Coach",
-	"Nick",
-	"Rochelle",
-	"Ellis",
-	"Louis",
-	"Zoey",
-	"Bill",
-	"Francis"
-};
-
-// Models for each of the characters
-stock const char SurvivorModels[view_as<int>(SC_SIZE)][] =
-{
-	"models/survivors/survivor_coach.mdl",		//SC_COACH
-	"models/survivors/survivor_gambler.mdl",	//SC_NICK
-	"models/survivors/survivor_producer.mdl",	//SC_ROCHELLE
-	"models/survivors/survivor_mechanic.mdl",	//SC_ELLIS
-	"models/survivors/survivor_manager.mdl",	//SC_LOUIS
-	"models/survivors/survivor_teenangst.mdl",	//SC_ZOEY
-	"models/survivors/survivor_namvet.mdl",		//SC_BILL
-	"models/survivors/survivor_biker.mdl"		//SC_FRANCIS
 };
 
 // Animation IDs used by CTerrorPlayer::DoAnimationEvent

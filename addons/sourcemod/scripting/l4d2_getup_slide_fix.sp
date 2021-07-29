@@ -1,141 +1,157 @@
+#pragma semicolon 1
+#pragma newdecls required
+
 #include <sourcemod>
 #include <sdkhooks>
 #include <sdktools>
 #include <left4dhooks>
+#define L4D2UTIL_STOCKS_ONLY
 #include <l4d2util>
 
-new bool:isSurvivorStaggerBlocked[8];
+bool
+	isSurvivorStaggerBlocked[view_as<int>(SurvivorCharacter_Size)];
 
-//Courtesy of the l4d2_getupfix plugin
-new const getUpAnimations[SC_SIZE][5] = {    
-    // 0: Coach, 1: Nick, 2: Rochelle, 3: Ellis
-    //[][4] = Flying animation from being hit by a tank
-    {621, 656, 660, 661, 629}, {620, 667, 671, 672, 629}, {629, 674, 678, 679, 637}, {625, 671, 675, 676, 634},
-    // 4: Louis, 5: Zoey, 6: Bill, 7: Francis
-    {528, 759, 763, 764, 537}, {537, 819, 823, 824, 546}, {528, 759, 763, 764, 537}, {531, 762, 766, 767, 540}
-};
+static const int 
+	getUpAnimations[view_as<int>(SurvivorCharacter_Size)][5] = 
+	{
+		//l4d2
+		// 0: Nick, 1: Rochelle, 2: Coach, 3: Ellis
+		//[][4] = Flying animation from being hit by a tank
+		{620, 667, 671, 672, 629}, //Nick
+		{629, 674, 678, 679, 637}, //Rochelle
+		{621, 656, 660, 661, 629}, //Coach
+		{625, 671, 675, 676, 634}, //Ellis
+		
+		//l4d1
+		// 4: Bill, 5: Zoey, 6: Louis, 7: Francis
+		{528, 759, 763, 764, 537}, //Bill
+		{537, 819, 823, 824, 546}, //Zoey
+		{528, 759, 763, 764, 537}, //Louis
+		{531, 762, 766, 767, 540} //Francis
+	};
 
-public Plugin:myinfo =
+public Plugin myinfo =
 {
-    name        = "Stagger Blocker",
-    author      = "Standalone (aka Manu), Visor, Sir", //Add support sm1.11 - A1m`
-    description = "Block players from being staggered by Jockeys and Hunters for a time while getting up from a Hunter pounce & Charger pummel",
-    version     = "1.3",
-    url         = "https://github.com/SirPlease/L4D2-Competitive-Rework"
+	name		= "Stagger Blocker",
+	author		= "Standalone (aka Manu), Visor, Sir, A1m`",
+	description	= "Block players from being staggered by Jockeys and Hunters for a time while getting up from a Hunter pounce & Charger pummel",
+	version		= "1.4",
+	url		= "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
-public OnPluginStart() 
+public void OnPluginStart()
 {
-    HookEvent("pounce_stopped", Event_PounceChargeEnd);
-    HookEvent("charger_pummel_end", Event_PounceChargeEnd);
-    HookEvent("charger_carry_end", Event_PounceChargeEnd);
-    HookEvent("player_bot_replace", Event_PlayerBotReplace);
-    HookEvent("bot_player_replace", Event_BotPlayerReplace);
-    HookEvent("round_end", Event_RoundEnd, EventHookMode_PostNoCopy);
+	HookEvent("pounce_stopped", Event_PounceChargeEnd);
+	HookEvent("charger_pummel_end", Event_PounceChargeEnd);
+	HookEvent("charger_carry_end", Event_PounceChargeEnd);
+	HookEvent("player_bot_replace", Event_PlayerBotReplace);
+	HookEvent("bot_player_replace", Event_BotPlayerReplace);
+	HookEvent("round_end", Event_RoundEnd, EventHookMode_PostNoCopy);
 }
 
-public Action:Event_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
+public void Event_RoundEnd(Event hEvent, const char[] eName, bool dontBroadcast)
 {
-    ResetStaggerBlocked();
+	ResetStaggerBlocked();
 }
 
-public OnMapEnd()
+public void OnMapEnd()
 {
-    ResetStaggerBlocked();
+	ResetStaggerBlocked();
 }
 
 //Called when a Player replaces a Bot
-public Action:Event_BotPlayerReplace(Handle:event, const String:name[], bool:dontBroadcast) 
+public void Event_BotPlayerReplace(Event hEvent, const char[] eName, bool dontBroadcast)
 {
-    new player = GetClientOfUserId(GetEventInt(event, "player"));
-    new SurvivorCharacter:charIndex = IdentifySurvivor(player);
-    if (charIndex == SC_NONE) return;
-    
-    if (isSurvivorStaggerBlocked[charIndex])
-    {
-        SDKHook(player, SDKHook_PostThink, OnThink);
-    }
+	int player = GetClientOfUserId(hEvent.GetInt("player"));
+	SurvivorCharacter charIndex = IdentifySurvivor(player);
+	if (charIndex == SurvivorCharacter_Invalid) {
+		return;
+	}
+	
+	if (isSurvivorStaggerBlocked[charIndex]) {
+		SDKHook(player, SDKHook_PostThink, OnThink);
+	}
 }
 
 //Called when a Bot replaces a Player
-public Action:Event_PlayerBotReplace(Handle:event, const String:name[], bool:dontBroadcast) 
+public void Event_PlayerBotReplace(Event hEvent, const char[] eName, bool dontBroadcast)
 {
-    new bot = GetClientOfUserId(GetEventInt(event, "bot"));
-    new SurvivorCharacter:charIndex = IdentifySurvivor(bot);
-    if (charIndex == SC_NONE) return;
-    
-    if (isSurvivorStaggerBlocked[charIndex])
-    {
-        SDKHook(bot, SDKHook_PostThink, OnThink);
-    }
+	int bot = GetClientOfUserId(hEvent.GetInt("bot"));
+	SurvivorCharacter charIndex = IdentifySurvivor(bot);
+	if (charIndex == SurvivorCharacter_Invalid) {
+		return;
+	}
+	
+	if (isSurvivorStaggerBlocked[charIndex]) {
+		SDKHook(bot, SDKHook_PostThink, OnThink);
+	}
 }
 
-public Action:Event_PounceChargeEnd(Handle:event, const String:name[], bool:dontBroadcast)
+public void Event_PounceChargeEnd(Event hEvent, const char[] eName, bool dontBroadcast)
 {
-    new client = GetClientOfUserId(GetEventInt(event, "victim"));
-    new SurvivorCharacter:charIndex = IdentifySurvivor(client);
-    if (charIndex == SC_NONE) return;
-    
-    CreateTimer(0.2, HookOnThink, client);
-    isSurvivorStaggerBlocked[charIndex] = true;
+	int client = GetClientOfUserId(hEvent.GetInt("victim"));
+	SurvivorCharacter charIndex = IdentifySurvivor(client);
+	if (charIndex == SurvivorCharacter_Invalid) {
+		return;
+	}
+	
+	CreateTimer(0.2, HookOnThink, client);
+	isSurvivorStaggerBlocked[charIndex] = true;
 }
 
-public Action:HookOnThink(Handle:timer, any:client)
+public Action HookOnThink(Handle hTimer, any client)
 {
-    if (client && IsClientInGame(client) && IsSurvivor(client))
-    {
-        SDKHook(client, SDKHook_PostThink, OnThink);
-    }
-    
+	if (client && IsSurvivor(client)) {
+		SDKHook(client, SDKHook_PostThink, OnThink);
+	}
 }
 
-public OnThink(client)
+public void OnThink(int client)
 {
-    new SurvivorCharacter:charIndex = IdentifySurvivor(client);
-    if (charIndex == SC_NONE) return;
-    
-    new sequence = GetEntProp(client, Prop_Send, "m_nSequence");
-    if (sequence != getUpAnimations[charIndex][0] && sequence != getUpAnimations[charIndex][1] && sequence != getUpAnimations[charIndex][2] && sequence != getUpAnimations[charIndex][3]&& sequence != getUpAnimations[charIndex][4])
-    {
-        isSurvivorStaggerBlocked[charIndex] = false;
-        SDKUnhook(client, SDKHook_PostThink, OnThink);
-    }
+	SurvivorCharacter charIndex = IdentifySurvivor(client);
+	if (charIndex == SurvivorCharacter_Invalid) {
+		return;
+	}
+	
+	int sequence = GetEntProp(client, Prop_Send, "m_nSequence");
+	if (sequence != getUpAnimations[charIndex][0] && sequence != getUpAnimations[charIndex][1] && sequence != getUpAnimations[charIndex][2] && sequence != getUpAnimations[charIndex][3] && sequence != getUpAnimations[charIndex][4]) {
+		isSurvivorStaggerBlocked[charIndex] = false;
+		SDKUnhook(client, SDKHook_PostThink, OnThink);
+	}
 }
 
-public Action:L4D2_OnStagger(target, source) 
+public Action L4D2_OnStagger(int target, int source)
 {
-    if (IsValidInfected(source))
-    {
-        new L4D2_Infected:sourceClass = GetInfectedClass(source);
-        
-        if (sourceClass == L4D2Infected_Hunter || sourceClass == L4D2Infected_Jockey)
-        {
-            new SurvivorCharacter:charIndex = IdentifySurvivor(target);
-            if (charIndex == SC_NONE) return Plugin_Continue;
-            
-            if (isSurvivorStaggerBlocked[charIndex])
-            {
-                return Plugin_Handled;
-            }
-        }
-    }
-
-    return Plugin_Continue;
-}
-
-public Action:L4D2_OnPounceOrLeapStumble(victim, attacker)
-{
-	if (IsValidInfected(attacker))
-	{
-		new L4D2_Infected:sourceClass = GetInfectedClass(attacker);
+	if (L4D2Util_IsValidClient(source) && IsInfected(source)) {
+		L4D2_Infected sourceClass = GetInfectedClass(source);
 		
-		if (sourceClass == L4D2Infected_Hunter || sourceClass == L4D2Infected_Jockey)
-		{
-			new SurvivorCharacter:charIndex = IdentifySurvivor(victim);
-			if (charIndex == SC_NONE) return Plugin_Continue;
+		if (sourceClass == L4D2Infected_Hunter || sourceClass == L4D2Infected_Jockey) {
+			SurvivorCharacter charIndex = IdentifySurvivor(target);
+			if (charIndex == SurvivorCharacter_Invalid) {
+				return Plugin_Continue;
+			}
 			
-			if (isSurvivorStaggerBlocked[charIndex])
-			{
+			if (isSurvivorStaggerBlocked[charIndex]) {
+				return Plugin_Handled;
+			}
+		}
+	}
+
+	return Plugin_Continue;
+}
+
+public Action L4D2_OnPounceOrLeapStumble(int victim, int attacker)
+{
+	if (L4D2Util_IsValidClient(attacker) && IsInfected(attacker)) {
+		L4D2_Infected sourceClass = GetInfectedClass(attacker);
+		
+		if (sourceClass == L4D2Infected_Hunter || sourceClass == L4D2Infected_Jockey) {
+			SurvivorCharacter charIndex = IdentifySurvivor(victim);
+			if (charIndex == SurvivorCharacter_Invalid) {
+				return Plugin_Continue;
+			}
+			
+			if (isSurvivorStaggerBlocked[charIndex]) {
 				return Plugin_Handled;
 			}
 		}
@@ -144,17 +160,9 @@ public Action:L4D2_OnPounceOrLeapStumble(victim, attacker)
 	return Plugin_Continue;
 }
 
-public ResetStaggerBlocked()
+void ResetStaggerBlocked()
 {
-    for (new i = 0; i < 8; i++)
-    {
-        isSurvivorStaggerBlocked[i] = false;
-    }
+	for (int i = 0; i < view_as<int>(SurvivorCharacter_Size); i++) {
+		isSurvivorStaggerBlocked[i] = false;
+	}
 }
-
-stock bool IsValidInfected(int client) 
-{ 
-    if (client <= 0 || client > MaxClients) return false;
-    if (!IsClientConnected(client) || !IsClientInGame(client)) return false; 
-    return GetClientTeam(client) == 3;
-} 
