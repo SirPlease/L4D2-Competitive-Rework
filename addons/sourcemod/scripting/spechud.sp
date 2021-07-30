@@ -490,18 +490,23 @@ stock void BuildPlayerArrays()
 	iSurvivorArray[survivorCount] = 0;
 	iInfectedArray[infectedCount] = 0;
 	
-	SortCustom1D(iSurvivorArray, survivorCount, SortSurvArray);
+	//SortCustom1D(iSurvivorArray, survivorCount, SortSurvArray);
 }
 
-public int SortSurvArray(int elem1, int elem2, const int[] array, Handle hndl)
+// This code doesn't work correctly anyway
+/*public int SortSurvArray(int elem1, int elem2, const int[] array, Handle hndl)
 {
 	SurvivorCharacter sc1 = GetFixedSurvivorCharacter(elem1);
 	SurvivorCharacter sc2 = GetFixedSurvivorCharacter(elem2);
 	
-	if (sc1 > sc2) { return 1; }
-	else if (sc1 < sc2) { return -1; }
-	else { return 0; }
-}
+	if (sc1 > sc2) {
+		return 1;
+	} else if (sc1 < sc2) {
+		return -1;
+	}else { 
+		return 0;
+	}
+}*/
 
 // ======================================================================
 //  HUD Command Callbacks
