@@ -26,7 +26,9 @@
 #include <sdkhooks>
 #include <sdktools>
 
-#define TEAM_SURVIVORS 2
+#define TEAM_SURVIVORS	2
+
+#define MAX_EDICTS		2048 //(1 << 11)
 
 //Tracking
 enum DoorsTypeTracked
@@ -42,12 +44,28 @@ static const char g_szDoors_Type_Tracked[][MAX_NAME_LENGTH] =
 	"prop_door_rotating_checkpoint"
 };
 
+#if SOURCEMOD_V_MINOR > 9
 enum struct DoorsData
 {
 	DoorsTypeTracked DoorsData_Type;
 	float DoorsData_Speed;
 	bool DoorsData_ForceClose;
 }
+
+DoorsData
+	g_ddDoors[MAX_EDICTS];
+
+#else
+enum DoorsData 
+{
+	DoorsTypeTracked:DoorsData_Type,
+	Float:DoorsData_Speed,
+	bool:DoorsData_ForceClose
+};
+
+DoorsData
+	g_ddDoors[MAX_EDICTS][DoorsData];
+#endif
 
 //<<<<<<<<<<<<<<<<<<<<< TICKRATE FIXES >>>>>>>>>>>>>>>>>>
 //// ------- Fast Pistols ---------
@@ -69,9 +87,6 @@ float
 
 bool
 	bLateLoad;
-
-DoorsData
-	g_ddDoors[2048];
 
 public Plugin myinfo = 
 {
@@ -291,7 +306,11 @@ void Door_SetSettingsAll()
 
 void Door_SetSettings(int entity)
 {
+#if SOURCEMOD_V_MINOR > 9
 	Entity_SetSpeed(entity, g_ddDoors[entity].DoorsData_Speed * fDoorSpeed);
+#else
+	Entity_SetSpeed(entity, g_ddDoors[entity][DoorsData_Speed] * fDoorSpeed);
+#endif
 }
 
 void Door_ResetSettingsAll()
@@ -310,7 +329,11 @@ void Door_ResetSettingsAll()
 
 void Door_ResetSettings(int entity)
 {
+#if SOURCEMOD_V_MINOR > 9
 	Entity_SetSpeed(entity, g_ddDoors[entity].DoorsData_Speed);
+#else
+	Entity_SetSpeed(entity, g_ddDoors[entity][DoorsData_Speed]);
+#endif
 }
 
 void Door_GetSettingsAll()
@@ -329,17 +352,29 @@ void Door_GetSettingsAll()
 
 void Door_GetSettings(int entity, DoorsTypeTracked type)
 {
+#if SOURCEMOD_V_MINOR > 9
 	g_ddDoors[entity].DoorsData_Type = type;
 	g_ddDoors[entity].DoorsData_Speed = Entity_GetSpeed(entity);
 	g_ddDoors[entity].DoorsData_ForceClose = Entity_GetForceClose(entity);
+#else
+	g_ddDoors[entity][DoorsData_Type] = type;
+	g_ddDoors[entity][DoorsData_Speed] = Entity_GetSpeed(entity);
+	g_ddDoors[entity][DoorsData_ForceClose] = Entity_GetForceClose(entity);
+#endif
 }
 
 void Door_ClearSettingsAll()
 {
-	for (int i = 0;i < sizeof(g_ddDoors); i++) {
-		g_ddDoors[i].DoorsData_Type = DoorsTypeTracked_None;
-		g_ddDoors[i].DoorsData_Speed = 0.0;
-		g_ddDoors[i].DoorsData_ForceClose = false;
+	for (int i = 0;i < MAX_EDICTS; i++) {
+		#if SOURCEMOD_V_MINOR > 9
+			g_ddDoors[i].DoorsData_Type = DoorsTypeTracked_None;
+			g_ddDoors[i].DoorsData_Speed = 0.0;
+			g_ddDoors[i].DoorsData_ForceClose = false;
+		#else
+			g_ddDoors[i][DoorsData_Type] = DoorsTypeTracked_None;
+			g_ddDoors[i][DoorsData_Speed] = 0.0;
+			g_ddDoors[i][DoorsData_ForceClose] = false;
+		#endif
 	}
 }
 
