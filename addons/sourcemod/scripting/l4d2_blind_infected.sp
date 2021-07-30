@@ -12,20 +12,19 @@
 #define ENT_CHECK_INTERVAL 1.0
 #define TRACE_TOLERANCE 75.0
 
-public Plugin myinfo =
-{
-	name = "Blind Infected",
-	author = "CanadaRox, ProdigySim", //Update syntax A1m`
-	description = "Hides specified weapons from the infected team until they are (possibly) visible to one of the survivors to prevent SI scouting the map",
-	version = "1.0.3",
-	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
-};
-
+#if SOURCEMOD_V_MINOR > 9
 enum struct EntInfo
 {
 	int iEntRef;
 	bool hasBeenSeen;
 }
+#else
+enum EntInfo
+{
+	iEntRef,
+	bool:hasBeenSeen
+};
+#endif
 
 static const WeaponId iIdsToBlock[] =
 {
@@ -64,13 +63,26 @@ static const WeaponId iIdsToBlock[] =
 ArrayList
 	hBlockedEntities;
 
+public Plugin myinfo =
+{
+	name = "Blind Infected",
+	author = "CanadaRox, ProdigySim, A1m`",
+	description = "Hides specified weapons from the infected team until they are (possibly) visible to one of the survivors to prevent SI scouting the map",
+	version = "1.0.5",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
+};
+
 public void OnPluginStart()
 {
 	L4D2Weapons_Init();
 
 	HookEvent("round_start", RoundStart_Event, EventHookMode_PostNoCopy);
 
+#if SOURCEMOD_V_MINOR > 9
 	hBlockedEntities = new ArrayList(sizeof(EntInfo));
+#else
+	hBlockedEntities = new ArrayList(view_as<int>(EntInfo));
+#endif
 
 	CreateTimer(ENT_CHECK_INTERVAL, EntCheck_Timer, _, TIMER_REPEAT);
 }
@@ -79,8 +91,9 @@ public Action EntCheck_Timer(Handle hTimer)
 {
 	char tmp[128];
 	int iSize = hBlockedEntities.Length;
-	EntInfo currentEnt;
 
+#if SOURCEMOD_V_MINOR > 9
+	EntInfo currentEnt;
 	for (int i = 0; i < iSize; i++) {
 		hBlockedEntities.GetArray(i, currentEnt, sizeof(EntInfo));
 		int ent = EntRefToEntIndex(currentEnt.iEntRef);
@@ -90,6 +103,19 @@ public Action EntCheck_Timer(Handle hTimer)
 			hBlockedEntities.SetArray(i, currentEnt, sizeof(EntInfo));
 		}
 	}
+#else
+	EntInfo currentEnt[EntInfo];
+	for (int i = 0; i < iSize; i++) {
+		hBlockedEntities.GetArray(i, currentEnt[0], view_as<int>(EntInfo));
+		int ent = EntRefToEntIndex(currentEnt[iEntRef]);
+		if (ent != INVALID_ENT_REFERENCE && !currentEnt[hasBeenSeen] && IsVisibleToSurvivors(ent)) {
+			GetEntPropString(ent, Prop_Data, "m_ModelName", tmp, sizeof(tmp));
+			currentEnt[hasBeenSeen] = true;
+			hBlockedEntities.SetArray(i, currentEnt[0], view_as<int>(EntInfo));
+		}
+	}
+#endif
+
 }
 
 public void RoundStart_Event(Event hEvent, const char[] name, bool dontBroadcast)
@@ -100,7 +126,12 @@ public void RoundStart_Event(Event hEvent, const char[] name, bool dontBroadcast
 
 public Action RoundStartDelay_Timer(Handle hTimer)
 {
+#if SOURCEMOD_V_MINOR > 9
 	EntInfo bhTemp;
+#else
+	EntInfo bhTemp[EntInfo];
+#endif
+	
 	WeaponId weapon;
 	int psychonic = GetEntityCount();
 
@@ -110,9 +141,17 @@ public Action RoundStartDelay_Timer(Handle hTimer)
 			for (int j = 0; j < sizeof(iIdsToBlock); j++) {
 				if (weapon == iIdsToBlock[j]) {
 					SDKHook(i, SDKHook_SetTransmit, OnTransmit);
-					bhTemp.iEntRef = EntIndexToEntRef(i);
-					bhTemp.hasBeenSeen = false;
-					hBlockedEntities.PushArray(bhTemp, sizeof(EntInfo));
+					
+					#if SOURCEMOD_V_MINOR > 9
+						bhTemp.iEntRef = EntIndexToEntRef(i);
+						bhTemp.hasBeenSeen = false;
+						hBlockedEntities.PushArray(bhTemp, sizeof(EntInfo));
+					#else
+						bhTemp[iEntRef] = EntIndexToEntRef(i);
+						bhTemp[hasBeenSeen] = false;
+						hBlockedEntities.PushArray(bhTemp[0], view_as<int>(EntInfo));
+					#endif
+					
 					break;
 				}
 			}
@@ -126,14 +165,25 @@ public Action OnTransmit(int entity, int client)
 		return Plugin_Continue;
 	}
 	
-	int size = hBlockedEntities.Length;
+#if SOURCEMOD_V_MINOR > 9
 	EntInfo currentEnt;
-
-	for (int i = 0 ; i < size; i++) {
-		hBlockedEntities.GetArray(i, currentEnt, sizeof(EntInfo));
-		if (entity == EntRefToEntIndex(currentEnt.iEntRef)) {
-			return (currentEnt.hasBeenSeen) ? Plugin_Continue : Plugin_Handled;
-		}
+#else
+	EntInfo currentEnt[EntInfo];
+#endif
+	
+	int iSize = hBlockedEntities.Length;
+	for (int i = 0 ; i < iSize; i++) {
+		#if SOURCEMOD_V_MINOR > 9
+			hBlockedEntities.GetArray(i, currentEnt, sizeof(EntInfo));
+			if (entity == EntRefToEntIndex(currentEnt.iEntRef)) {
+				return (currentEnt.hasBeenSeen) ? Plugin_Continue : Plugin_Handled;
+			}
+		#else
+			hBlockedEntities.GetArray(i, currentEnt[0], view_as<int>(EntInfo));
+			if (entity == EntRefToEntIndex(currentEnt[iEntRef])) {
+				return (currentEnt[hasBeenSeen]) ? Plugin_Continue : Plugin_Handled;
+			}
+		#endif
 	}
 	
 	return Plugin_Continue;
