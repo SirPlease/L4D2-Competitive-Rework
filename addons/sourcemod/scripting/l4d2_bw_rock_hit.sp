@@ -88,7 +88,7 @@ void InitGameData()
 	
 	g_hTankRockDetonate = EndPrepSDKCall();
 	
-	if (g_hTankRockDetonate == INVALID_HANDLE) {
+	if (g_hTankRockDetonate == null) {
 		SetFailState("Function '%s' found, but something went wrong", SIGNATURE_NAME);
 	}
 
