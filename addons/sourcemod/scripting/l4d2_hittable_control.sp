@@ -202,22 +202,20 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	char sClass[64];
 	GetEdictClassname(inflictor, sClass, sizeof(sClass));
 
-	if (StrEqual(sClass,"prop_physics") || 
-	StrEqual(sClass,"prop_car_alarm"))
+	if (StrEqual(sClass,"prop_physics") || StrEqual(sClass,"prop_car_alarm"))
 	{
 		if (fOverkill[victim][inflictor] - GetGameTime() > 0.0)
 			return Plugin_Handled; // Overkill on this Hittable.
 
-		if (victim == FindTank() 
-		&& GetConVarBool(hTankSelfDamage))
-		  return Plugin_Handled; // Tank is hitting himself with the Hittable (+added usecase when the Tank would be hit by a hittable that he punched a hittable against before it hit him)
+		if (victim == FindTank() && GetConVarBool(hTankSelfDamage))
+			return Plugin_Handled; // Tank is hitting himself with the Hittable (+added usecase when the Tank would be hit by a hittable that he punched a hittable against before it hit him)
 
 		if (GetClientTeam(victim) != 2)
-		  return Plugin_Continue; // Victim is not a Survivor.
+			return Plugin_Continue; // Victim is not a Survivor.
 		
-		char sModelName[128];
-		GetEntPropString(inflictor, Prop_Data, "m_ModelName", sModelName, 128);
-		ReplaceString(sModelName, 128, "\\", "/", false);
+		char sModelName[PLATFORM_MAX_PATH];
+		GetEntPropString(inflictor, Prop_Data, "m_ModelName", sModelName, sizeof(sModelName));
+		ReplaceString(sModelName, sizeof(sModelName), "\\", "/", false);
 		float interval = GetConVarFloat(hOverHitInterval);
 
 		// Special Overkill section

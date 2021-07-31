@@ -201,7 +201,7 @@ stock bool GetMeleeWeaponNameFromEntity(int entity, char[] buffer, const int len
 			InitWeaponNamesTrie();
 		}
 
-		char sModelName[128];
+		char sModelName[PLATFORM_MAX_PATH];
 		GetEntPropString(entity, Prop_Data, "m_ModelName", sModelName, sizeof(sModelName));
 
 		// Strip models directory
@@ -336,7 +336,7 @@ stock int ConvertWeaponSpawn(int entity, WeaponId wepid, int count = 5, const ch
 	
 	SetEntProp(entity, Prop_Send, "m_weaponID", wepid);
 
-	static char buf[64], modelName[255];
+	static char buf[PLATFORM_MAX_PATH - 16], modelName[PLATFORM_MAX_PATH];
 	if (model[0] != '\0') {
 		SetEntityModel(entity, model);
 	} else {

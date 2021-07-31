@@ -89,7 +89,7 @@ public void OnPluginStart()
 
 public Action EntCheck_Timer(Handle hTimer)
 {
-	char tmp[128];
+	char tmp[PLATFORM_MAX_PATH];
 	int iSize = hBlockedEntities.Length;
 
 #if SOURCEMOD_V_MINOR > 9
