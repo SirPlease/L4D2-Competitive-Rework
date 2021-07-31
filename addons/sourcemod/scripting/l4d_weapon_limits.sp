@@ -287,25 +287,21 @@ public void OnDeath(Event event, const char[] name, bool dontBroadcast)
 public void OnBotReplacedPlayer(Event event, const char[] name, bool dontBroadcast)
 {
 	int bot = GetClientOfUserId(event.GetInt("bot"));
-	if (!bot && GetClientTeam(bot) != TEAM_SURVIVOR) {
-		return;
+	if (bot > 0 && GetClientTeam(bot) == TEAM_SURVIVOR) {
+		int player = GetClientOfUserId(event.GetInt("player"));
+		bIsIncappedWithMelee[bot] = bIsIncappedWithMelee[player];
+		bIsIncappedWithMelee[player] = false;
 	}
-	
-	int player = GetClientOfUserId(event.GetInt("player"));
-	bIsIncappedWithMelee[bot] = bIsIncappedWithMelee[player];
-	bIsIncappedWithMelee[player] = false;
 }
 
 public void OnPlayerReplacedBot(Event event, const char[] name, bool dontBroadcast)
 {
 	int player = GetClientOfUserId(event.GetInt("player"));
-	if (!player && GetClientTeam(player) != TEAM_SURVIVOR) {
-		return;
+	if (player > 0 && GetClientTeam(player) == TEAM_SURVIVOR) {
+		int bot = GetClientOfUserId(event.GetInt("bot"));
+		bIsIncappedWithMelee[player] = bIsIncappedWithMelee[bot];
+		bIsIncappedWithMelee[bot] = false;
 	}
-	
-	int bot = GetClientOfUserId(event.GetInt("bot"));
-	bIsIncappedWithMelee[player] = bIsIncappedWithMelee[bot];
-	bIsIncappedWithMelee[bot] = false;
 }
 
 stock int GetWeaponCount(const int[] mask)
