@@ -713,7 +713,7 @@ stock GetPlayerCharacter ( client )
     // use models when incorrect character returned
     if ( tmpChr < 0 || tmpChr >= MAXCHARACTERS )
     {
-        decl String:model[256];
+        decl String:model[PLATFORM_MAX_PATH];
         GetEntPropString(client, Prop_Data, "m_ModelName", model, sizeof(model));
         
         if (StrContains(model, "gambler") != -1) {          tmpChr = 0; }

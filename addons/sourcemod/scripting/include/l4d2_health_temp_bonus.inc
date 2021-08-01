@@ -1,8 +1,5 @@
-/*
-**
-*/
 #if defined _l4d2_health_temp_bonus_included
- #endinput
+	#endinput
 #endif
 #define _l4d2_health_temp_bonus_included
 
@@ -13,10 +10,8 @@ native int SMNext_GetMaxPermBonus();
 native int SMNext_GetMaxTempBonus();
 native int SMNext_GetMaxPillsBonus();
 
-
-
 #if !defined REQUIRE_PLUGIN
-public __pl_l4d2_health_temp_bonus_SetNTVOptional()
+public void __pl_l4d2_health_temp_bonus_SetNTVOptional()
 {
 	MarkNativeAsOptional("SMNext_GetPermBonus");
 	MarkNativeAsOptional("SMNext_GetTempBonus");
@@ -26,7 +21,6 @@ public __pl_l4d2_health_temp_bonus_SetNTVOptional()
 	MarkNativeAsOptional("SMNext_GetMaxPillsBonus");
 }
 #endif
-
 
 public SharedPlugin __pl_l4d2_health_temp_bonus =
 {

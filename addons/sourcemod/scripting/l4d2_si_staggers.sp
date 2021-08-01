@@ -33,30 +33,24 @@
 #define BLOCK_CHARGER	(1 << 1)
 #define BLOCK_WITCH		(1 << 2)
 
-ConVar hCvarInfectedFlags;
+ConVar
+	hCvarInfectedFlags;
 
-int iActiveFlags;
-
-static const char L4D2_Attacker_NetProps[][] =
-{
-	"m_tongueOwner",	// Smoker
-	"m_pounceAttacker",	// Hunter
-	"m_jockeyAttacker",	// Jockey
-	"m_pummelAttacker",	// Charger
-};
+int
+	iActiveFlags;
 
 public Plugin myinfo = 
 {
 	name = "L4D2 No SI Friendly Staggers",
 	author = "Visor, A1m`",
 	description = "Removes SI staggers caused by other SI(Boomer, Charger, Witch)",
-	version = "1.2",
+	version = "1.3",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public void OnPluginStart()
 {
-	hCvarInfectedFlags = CreateConVar("l4d2_disable_si_friendly_staggers", "0", "Remove SI staggers caused by other SI(bitmask: 1-Boomer/2-Charger/4-Witch)");
+	hCvarInfectedFlags = CreateConVar("l4d2_disable_si_friendly_staggers", "0", "Remove SI staggers caused by other SI(bitmask: 1-Boomer/2-Charger/4-Witch)", _, true, 0.0, true, 7.0);
 	
 	iActiveFlags = hCvarInfectedFlags.IntValue;
 	hCvarInfectedFlags.AddChangeHook(PluginActivityChanged);
@@ -96,7 +90,7 @@ public Action L4D2_OnStagger(int target, int source)
 		return Plugin_Continue;
 	}
 	
-	if (GetClientTeam(target) == view_as<int>(L4D2Team_Survivor) && IsBeingAttacked(target)) { // Capped Survivors should not get staggered
+	if (GetClientTeam(target) == view_as<int>(L4D2Team_Survivor) && IsSurvivorAttacked(target)) { // Capped Survivors should not get staggered
 		return Plugin_Handled;
 	}
 	
@@ -121,17 +115,6 @@ public Action L4D2_OnStagger(int target, int source)
 	}
 	
 	return Plugin_Continue; // Is this even reachable? Probably yes, in case some plugin has used the L4D_StaggerPlayer() native
-}
-
-bool IsBeingAttacked(int survivor)
-{
-	for (int i = 0; i < sizeof(L4D2_Attacker_NetProps); i++) {
-		if (GetEntPropEnt(survivor, Prop_Send, L4D2_Attacker_NetProps[i]) != -1) {
-			return true;
-		}
-	}
-
-	return false;
 }
 
 int GetInfectedZClass(int client)

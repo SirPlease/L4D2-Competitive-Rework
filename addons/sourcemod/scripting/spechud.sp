@@ -1,3 +1,6 @@
+#pragma semicolon 1
+#pragma newdecls required
+
 #include <sourcemod>
 #include <sdktools>
 #include <builtinvotes>
@@ -13,10 +16,7 @@
 #include <l4d2_scoremod>
 #include <l4d2_health_temp_bonus>
 #include <l4d_tank_control_eq>
-#define REQUIRE_PLUGIN
-
-#pragma semicolon 1
-#pragma newdecls required
+//#define REQUIRE_PLUGIN
 
 #define PLUGIN_VERSION	"3.5.4"
 
@@ -490,18 +490,23 @@ stock void BuildPlayerArrays()
 	iSurvivorArray[survivorCount] = 0;
 	iInfectedArray[infectedCount] = 0;
 	
-	SortCustom1D(iSurvivorArray, survivorCount, SortSurvArray);
+	//SortCustom1D(iSurvivorArray, survivorCount, SortSurvArray);
 }
 
-public int SortSurvArray(int elem1, int elem2, const int[] array, Handle hndl)
+// This code doesn't work correctly anyway
+/*public int SortSurvArray(int elem1, int elem2, const int[] array, Handle hndl)
 {
 	SurvivorCharacter sc1 = GetFixedSurvivorCharacter(elem1);
 	SurvivorCharacter sc2 = GetFixedSurvivorCharacter(elem2);
 	
-	if (sc1 > sc2) { return 1; }
-	else if (sc1 < sc2) { return -1; }
-	else { return 0; }
-}
+	if (sc1 > sc2) {
+		return 1;
+	} else if (sc1 < sc2) {
+		return -1;
+	}else { 
+		return 0;
+	}
+}*/
 
 // ======================================================================
 //  HUD Command Callbacks
@@ -1050,7 +1055,7 @@ void FillInfectedInfo(Panel &hSpecHud)
 
 bool FillTankInfo(Panel &hSpecHud, bool bTankHUD = false)
 {
-	int tank = FindTank();
+	int tank = FindAliveTankClient();
 	if (tank == -1)
 		return false;
 
@@ -1338,7 +1343,8 @@ stock int GetWeaponClipAmmo(int weapon)
 	return (weapon > 0 ? GetEntProp(weapon, Prop_Send, "m_iClip1") : -1);
 }
 
-stock SurvivorCharacter GetFixedSurvivorCharacter(int client)
+// This code doesn't work correctly anyway
+/*stock SurvivorCharacter GetFixedSurvivorCharacter(int client)
 {
 	int sc = GetEntProp(client, Prop_Send, "m_survivorCharacter");
 	
@@ -1354,7 +1360,7 @@ stock SurvivorCharacter GetFixedSurvivorCharacter(int client)
 			return SC_BILL;			// match it correctly
 	}
 	return view_as<SurvivorCharacter>(sc);
-}
+}*/
 
 stock float GetLerpTime(int client)
 {
@@ -1515,15 +1521,4 @@ stock bool RoundHasFlowTank()
 stock bool RoundHasFlowWitch()
 {
 	return L4D2Direct_GetVSWitchToSpawnThisRound(iInSecondHalfOfRound());
-}
-
-stock int FindTank() 
-{
-	for (int i = 1; i <= MaxClients; ++i)
-	{
-		if (IsInfected(i) && GetInfectedClass(i) == L4D2Infected_Tank && IsPlayerAlive(i))
-			return i;
-	}
-
-	return -1;
 }

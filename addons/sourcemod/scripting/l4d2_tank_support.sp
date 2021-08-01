@@ -83,11 +83,11 @@ public CreateClone(any:entity)
 	decl Float:vAngles[3];
 	GetEntPropVector(entity, Prop_Send, "m_vecOrigin", vOrigin);
 	GetEntPropVector(entity, Prop_Data, "m_angRotation", vAngles); 
-	decl String:entityModel[64]; 
+	decl String:entityModel[PLATFORM_MAX_PATH];
 	GetEntPropString(entity, Prop_Data, "m_ModelName", entityModel, sizeof(entityModel)); 
 	new clone=0;
 	clone = CreateEntityByName("prop_dynamic_override"); //prop_dynamic
-	SetEntityModel(clone, entityModel);  
+	SetEntityModel(clone, entityModel);
 	DispatchSpawn(clone);
 
 	TeleportEntity(clone, vOrigin, vAngles, NULL_VECTOR); 

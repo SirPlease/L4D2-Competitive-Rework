@@ -106,7 +106,8 @@ char
 	liveSound[PLATFORM_MAX_PATH];
 int
 	readyDelay;
-GlobalForward
+
+Handle
 	liveForward;
 
 // Auto Start
@@ -161,7 +162,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("IsInReady",				Native_IsInReady);
 	CreateNative("IsClientCaster", 			Native_IsClientCaster);
 	CreateNative("IsIDCaster", 				Native_IsIDCaster);
-	liveForward = new GlobalForward("OnRoundIsLive", ET_Event);
+	liveForward = CreateGlobalForward("OnRoundIsLive", ET_Event);
 	RegPluginLibrary("readyup");
 	return APLRes_Success;
 }

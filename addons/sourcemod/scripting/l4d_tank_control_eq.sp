@@ -92,8 +92,8 @@ public void OnPluginStart()
         GetClientAuthId(client, AuthId_Steam2, tmpSteamId, sizeof(tmpSteamId));
         if (strcmp(queuedTankSteamId, tmpSteamId) == 0)
         {
-            chooseTank();
-            outputTankToAll();
+            chooseTank(0);
+            outputTankToAll(0);
         }
     }
 }*/
@@ -135,8 +135,8 @@ public void RoundEnd_Event(Event hEvent, const char[] eName, bool dontBroadcast)
  
 public void PlayerLeftStartArea_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
-    chooseTank();
-    outputTankToAll();
+    chooseTank(0);
+    outputTankToAll(0);
 }
 
 /**
@@ -145,19 +145,19 @@ public void PlayerLeftStartArea_Event(Event hEvent, const char[] eName, bool don
  
 public void PlayerTeam_Event(Event hEvent, const char[] name, bool dontBroadcast)
 {
-    L4D2Team oldTeam = view_as<L4D2Team>(hEvent.GetInt("oldteam"));
-    int client = GetClientOfUserId(hEvent.GetInt("userid"));
-    char tmpSteamId[64];
-    
-    if (client && oldTeam == view_as<L4D2Team>(L4D2Team_Infected))
-    {
-        GetClientAuthId(client, AuthId_Steam2, tmpSteamId, sizeof(tmpSteamId));
-        if (strcmp(queuedTankSteamId, tmpSteamId) == 0)
-        {
-            RequestFrame(chooseTank);
-            RequestFrame(outputTankToAll);
-        }
-    }
+	L4D2Team oldTeam = view_as<L4D2Team>(hEvent.GetInt("oldteam"));
+	int client = GetClientOfUserId(hEvent.GetInt("userid"));
+	char tmpSteamId[64];
+
+	if (client && oldTeam == view_as<L4D2Team>(L4D2Team_Infected))
+	{
+		GetClientAuthId(client, AuthId_Steam2, tmpSteamId, sizeof(tmpSteamId));
+		if (strcmp(queuedTankSteamId, tmpSteamId) == 0)
+		{
+			RequestFrame(chooseTank, 0);
+			RequestFrame(outputTankToAll, 0);
+		}
+	}
 }
 
 /**
@@ -179,7 +179,7 @@ public void PlayerDeath_Event(Event hEvent, const char[] eName, bool dontBroadca
             {
                 PrintToConsoleAll("[TC] Tank died(1), choosing a new tank");
             }
-            chooseTank();
+            chooseTank(0);
         }
     }
 }
@@ -190,7 +190,7 @@ public void TankKilled_Event(Event hEvent, const char[] eName, bool dontBroadcas
     {
         PrintToConsoleAll("[TC] Tank died(2), choosing a new tank");
     }
-    chooseTank();
+    chooseTank(0);
 }
 
 /**
@@ -235,8 +235,8 @@ public Action Tank_Cmd(int client, int args)
  
 public Action TankShuffle_Cmd(int client, int args)
 {
-    chooseTank();
-    outputTankToAll();
+    chooseTank(0);
+    outputTankToAll(0);
     
     return Plugin_Handled;
 }
@@ -276,7 +276,7 @@ public Action GiveTank_Cmd(int client, int args)
         GetClientAuthId(target, AuthId_Steam2, steamId, sizeof(steamId));
 
         strcopy(queuedTankSteamId, sizeof(queuedTankSteamId), steamId);
-        outputTankToAll();
+        outputTankToAll(0);
     }
     
     return Plugin_Handled;
@@ -287,7 +287,7 @@ public Action GiveTank_Cmd(int client, int args)
  * tank and gives it to them.
  */
  
-public void chooseTank()
+public void chooseTank(any data)
 {
     // Create our pool of players to choose from
     ArrayList infectedPool = new ArrayList(ByteCountToCells(64));
@@ -311,7 +311,7 @@ public void chooseTank()
         if (GetArraySize(infectedTeam) > 1)
         {
             removeTanksFromPool(h_whosHadTank, infectedTeam);
-            chooseTank();
+            chooseTank(0);
         }
         else
         {
@@ -356,7 +356,7 @@ public Action L4D_OnTryOfferingTankBot(int tank_index, bool &enterStatis)
     
     // If we don't have a queued tank, choose one
     if (! strcmp(queuedTankSteamId, ""))
-        chooseTank();
+        chooseTank(0);
     
     // Mark the player as having had tank
     if (strcmp(queuedTankSteamId, "") != 0)
@@ -389,7 +389,7 @@ public void setTankTickets(const char[] steamId, int tickets)
  * Output who will become tank
  */
  
-public void outputTankToAll()
+public void outputTankToAll(any data)
 {
     char tankClientName[MAX_NAME_LENGTH];
     int tankClientId = getInfectedPlayerBySteamId(queuedTankSteamId);

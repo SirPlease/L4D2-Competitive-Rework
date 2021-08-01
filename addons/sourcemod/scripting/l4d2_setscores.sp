@@ -74,9 +74,8 @@ void CheckGame()
 
 void LoadSDK()
 {
-	GameData conf = LoadGameConfigFile(GAMEDATA_FILE);
-	if (conf == INVALID_HANDLE)
-	{
+	Handle conf = LoadGameConfigFile(GAMEDATA_FILE);
+	if (conf == INVALID_HANDLE) {
 		SetFailState("Could not load gamedata/%s.txt", GAMEDATA_FILE);
 	}
 

@@ -13,12 +13,13 @@
 stock const char L4D2_InfectedTimerEntities[view_as<int>(L4D2Infected_Size)][] =
 {
 	"",
-	"ability_tongue",
-	"ability_vomit",
-	"ability_lunge",
-	"ability_spit",
-	"ability_leap",
-	"ability_charge",
+	"ability_tongue", //Smoker
+	"ability_vomit", //Boomer
+	"ability_lunge", //Hunter
+	"ability_spit", //Spitter
+	"ability_leap", //Jockey
+	"ability_charge", //Charger
+	"",
 	"",
 	""
 };
@@ -27,12 +28,13 @@ stock const char L4D2_InfectedTimerEntities[view_as<int>(L4D2Infected_Size)][] =
 stock const char L4D2_InfectedVictimNetprops[view_as<int>(L4D2Infected_Size)][] =
 {
 	"",
-	"m_tongueVictim",
+	"m_tongueVictim", //Smoker
 	"",
-	"m_pounceVictim",
+	"m_pounceVictim", //Hunter
 	"",
-	"m_jockeyVictim",
-	"m_pummelVictim",
+	"m_jockeyVictim", //Jockey
+	"m_pummelVictim", //Charger
+	"",
 	"",
 	""
 };
