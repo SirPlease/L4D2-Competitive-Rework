@@ -3,7 +3,7 @@
 
 #include <sourcemod>
 #include <sdkhooks>
-#include <left4downtown> //#include <left4downtown>
+#include <left4dhooks> //#include <left4downtown>
 
 #define DEBUG						0
 
