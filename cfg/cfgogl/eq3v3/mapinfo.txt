@@ -227,6 +227,8 @@
 		"end_dist"          "250.000000"
 		"tank_ban_flow_min" "50"
 		"tank_ban_flow_max" "70"
+		"witch_ban_flow_min"	"0"
+		"witch_ban_flow_max"    "29"
 	}
 	"c5m4_quarter"
 	{
