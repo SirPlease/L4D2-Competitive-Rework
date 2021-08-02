@@ -59,7 +59,7 @@ public void OnPluginStart()
 	tank_extinguish_time = CreateConVar( \
 		"tank_extinguish_time", \
 		"1.0", \
-		"After what time will the tanl player be extinguished, works if cvar 'tank_fire_immunity' equal 3", \
+		"After what time will the tank player be extinguished, works if cvar 'tank_fire_immunity' equal 3", \
 		_, true, 0.0, true, 999.0 \
 	);
 	
