@@ -24,14 +24,6 @@
 #define _pause_included_
 
 /**
- * Returns if the game is currently paused from this pause plugin.
- * This can't tell you if it is paused from another plugin on manual pause
- *
- * @return	Current pause state
- */
-native bool IsInPause();
-
-/**
  * Called when a pause starts
  * If delayed pauses are on this will be called when the delay ends and the
  * pause actually begins
@@ -42,6 +34,14 @@ forward void OnPause();
  * Called when the pause ends and the round goes live
  */
 forward void OnUnpause();
+
+/**
+ * Returns if the game is currently paused from this pause plugin.
+ * This can't tell you if it is paused from another plugin on manual pause
+ *
+ * @return	Current pause state
+ */
+native bool IsInPause();
 
 public SharedPlugin __pl_pause =
 {
