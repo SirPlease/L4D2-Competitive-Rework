@@ -28,11 +28,12 @@
  * or <http://www.sourcemod.net/license.php>.
  *
  */
- 
+
  /**
  * Describes a saferoom location. Can be OR'd together
  */
- enum Saferoom {
+enum Saferoom
+{
 	Saferoom_Neither = 0,
 	Saferoom_Start = 1,
 	Saferoom_End = 2,
@@ -40,29 +41,12 @@
 }; 
  
 /**
- * @brief Returns the current round number
- * @remarks Updated on round_start events
- * 
- * @return 	0 for pre first round, round number otherwise
- */
-native L4D2_GetCurrentRound();
-
-/**
- * @brief Tells if we're actually in a round or in between rounds
- * @remarks Updated on first round_start/end
- * 
- * @return 	True if within an actual round, false otherwise.
- */
-native bool:L4D2_CurrentlyInRound();
-
-
-/**
  * Called on a real L4D2 round_start
  *
  * @param roundNumber			The round number for the round that is starting
  * @noreturn
  */
-forward L4D2_OnRealRoundStart(roundNumber);
+forward void L4D2_OnRealRoundStart(int roundNumber);
 
 /**
  * Called on a real L4D2 round_end
@@ -70,24 +54,7 @@ forward L4D2_OnRealRoundStart(roundNumber);
  * @param roundNumber			The round number for the round that has ended
  * @noreturn
  */
-forward L4D2_OnRealRoundEnd(roundNumber);
-
-/**
- * @brief Returns the number of alive survivors
- * @remarks Includes all living human and bot survivors
- * 
- * @return The number of alive survivors
- */
-native L4D2_GetSurvivorCount();
-
-/**
- * @brief Returns the survivor of a specific index
- * @remarks returns 0 if a survivor doesn't exist at the specified index
- * @params	index	the index to retrieve the client number from
- * 
- * @return Client number of a survivor stored at the given index.
- */
-native L4D2_GetSurvivorOfIndex(index);
+forward void L4D2_OnRealRoundEnd(int roundNumber);
 
 /**
  * @Called when a tank is first spawned into the game
@@ -95,7 +62,7 @@ native L4D2_GetSurvivorOfIndex(index);
  * @param tankClient		The client index of the tank
  * @noreturn
  */
-forward L4D2_OnTankFirstSpawn(tankClient);
+forward void L4D2_OnTankFirstSpawn(int tankClient);
 
 /**
  * @Called when a tank passes from one client to another
@@ -105,7 +72,7 @@ forward L4D2_OnTankFirstSpawn(tankClient);
  * @param passCount			The number of times this tank has been passed
  * @noreturn
  */
-forward L4D2_OnTankPassControl(oldTank, newTank, passCount);
+forward void L4D2_OnTankPassControl(int oldTank, int newTank, int passCount);
 
 /**
  * @Called 0.5s after a tank death
@@ -113,7 +80,41 @@ forward L4D2_OnTankPassControl(oldTank, newTank, passCount);
  * @param tankClient		The client index of the tank that died
  * @noreturn
  */
-forward L4D2_OnTankDeath(tankClient);
+forward void L4D2_OnTankDeath(int tankClient);
+
+/**
+ * @brief Returns the current round number
+ * @remarks Updated on round_start events
+ * 
+ * @return 	0 for pre first round, round number otherwise
+ */
+native int L4D2_GetCurrentRound();
+
+/**
+ * @brief Tells if we're actually in a round or in between rounds
+ * @remarks Updated on first round_start/end
+ * 
+ * @return 	True if within an actual round, false otherwise.
+ */
+native bool L4D2_CurrentlyInRound();
+
+/**
+ * @brief Returns the number of alive survivors
+ * @remarks Includes all living human and bot survivors
+ * 
+ * @return The number of alive survivors
+ */
+native int L4D2_GetSurvivorCount();
+
+/**
+ * @brief Returns the survivor of a specific index
+ * @remarks returns 0 if a survivor doesn't exist at the specified index
+ * @params	index	the index to retrieve the client number from
+ * 
+ * @return Client number of a survivor stored at the given index.
+ */
+native int L4D2_GetSurvivorOfIndex(int index);
+
 
 /**
  * @brief Tells if map data is available
@@ -121,7 +122,7 @@ forward L4D2_OnTankDeath(tankClient);
  * 
  * @return 	True if map data is available, false if it is not.
  */
-native bool:L4D2_IsMapDataAvailable();
+native bool L4D2_IsMapDataAvailable();
 
 /**
  * Determines if an entity is in a start or end saferoom (based on mapinfo.txt or automatically generated info)
@@ -132,7 +133,7 @@ native bool:L4D2_IsMapDataAvailable();
  *						Saferoom_End if it is in the ending saferoom
  *						Saferoom_Start | Saferoom_End if it is in both saferooms (probably won't happen)
  */
-native Saferoom:L4D2_IsEntityInSaferoom(ent);
+native Saferoom L4D2_IsEntityInSaferoom(int ent);
 
 /**
  * @brief Gives the Origins of the starting saferoom area
@@ -141,7 +142,7 @@ native Saferoom:L4D2_IsEntityInSaferoom(ent);
  * @param origin	Vector to store the origins in.
  * @noreturn
  */
-native L4D2_GetMapStartOrigin(Float:origin[3]);
+native void L4D2_GetMapStartOrigin(float origin[3]);
 
 /**
  * @brief Gives the Origins of the ending saferoom area
@@ -150,7 +151,7 @@ native L4D2_GetMapStartOrigin(Float:origin[3]);
  * @param origin	Vector to store the origins in.
  * @noreturn
  */
-native L4D2_GetMapEndOrigin(Float:origin[3]);
+native void L4D2_GetMapEndOrigin(float origin[3]);
 
 /**
  * @brief Gives the distance from the map start origin to the edge of the medkit spawns
@@ -158,7 +159,7 @@ native L4D2_GetMapEndOrigin(Float:origin[3]);
  * 
  * @return	Float distance from map start origin to medkits
  */
-native Float:L4D2_GetMapStartDistance();
+native float L4D2_GetMapStartDistance();
 
 /**
  * @brief Gives the distance from the map start origin to the edge of the saferoom
@@ -166,7 +167,7 @@ native Float:L4D2_GetMapStartDistance();
  * 
  * @return	Float distance from map start origin to edge of saferoom
  */
-native Float:L4D2_GetMapStartExtraDistance();
+native float L4D2_GetMapStartExtraDistance();
 
 /**
  * @brief Gives the distance from the map end origin to the edge of the medkit spawns
@@ -174,7 +175,7 @@ native Float:L4D2_GetMapStartExtraDistance();
  * 
  * @return	Float distance from map end origin to medkits
  */
-native Float:L4D2_GetMapEndDistance();
+native float L4D2_GetMapEndDistance();
 
 /**
  * @brief Get an Int value from the MapInfo keyvalues for the current map with a specific key
@@ -184,7 +185,7 @@ native Float:L4D2_GetMapEndDistance();
  * @param defvalue	Default value to return if key is not found (default 0)
  * @return			Integer value for given key, or defvalue if key is not found
  */
-native L4D2_GetMapValueInt(const String:key[], const defvalue=0);
+native int L4D2_GetMapValueInt(const char[] key, const int defvalue = 0);
 
 /**
  * @brief Get a Float value from the MapInfo keyvalues for the current map with a specific key
@@ -194,7 +195,7 @@ native L4D2_GetMapValueInt(const String:key[], const defvalue=0);
  * @param defvalue	Default value to return if key is not found (default 0.0)
  * @return			Float value for given key, or defvalue if key is not found
  */
-native Float:L4D2_GetMapValueFloat(const String:key[], const Float:defvalue=0.0);
+native float L4D2_GetMapValueFloat(const char[] key, const float defvalue = 0.0);
 
 /**
  * @brief Get a Vector from the MapInfo keyvalues for the current map with a specific key
@@ -205,7 +206,7 @@ native Float:L4D2_GetMapValueFloat(const String:key[], const Float:defvalue=0.0)
  * @param defvalue	Default value to use if key is not found (default NULL_VECTOR)
  * @noreturn
  */
-native L4D2_GetMapValueVector(const String:key[], Float:vector[3], const Float:defvalue[3]=NULL_VECTOR);
+native void L4D2_GetMapValueVector(const char[] key, float vector[3], const float defvalue[3] = NULL_VECTOR);
 
 /**
  * @brief Get a String from the MapInfo keyvalues for the current map with a specific key
@@ -217,7 +218,7 @@ native L4D2_GetMapValueVector(const String:key[], Float:vector[3], const Float:d
  * @param defvalue	Default value to use if key is not found (default "")
  * @noreturn
  */
-native L4D2_GetMapValueString(const String:key[], String:value[], maxlength, const String:defvalue[]="");
+native void L4D2_GetMapValueString(const char[] key, char[] value, int maxlength, const char[] defvalue = "");
 
 /**
  * @brief Copy a Subsection from the MapInfo keyvalues for the current map
@@ -227,9 +228,9 @@ native L4D2_GetMapValueString(const String:key[], String:value[], maxlength, con
  * @param section	Name of the section to copy
  * @noreturn
  */
-native L4D2_CopyMapSubsection(Handle:kv, const String:section[]);
+native void L4D2_CopyMapSubsection(Handle kv, const char[] section);
 
-public SharedPlugin:__pl_l4d2lib = 
+public SharedPlugin __pl_l4d2lib = 
 {
 	name = "l4d2lib",
 	file = "l4d2lib.smx",
@@ -239,8 +240,9 @@ public SharedPlugin:__pl_l4d2lib =
 	required = 0,
 #endif
 };
- 
-public __pl_l4d2lib_SetNTVOptional()
+
+#if !defined REQUIRE_PLUGIN
+public void __pl_l4d2lib_SetNTVOptional()
 {
 	MarkNativeAsOptional("L4D2_GetCurrentRound");
 	MarkNativeAsOptional("L4D2_CurrentlyInRound");
@@ -259,5 +261,4 @@ public __pl_l4d2lib_SetNTVOptional()
 	MarkNativeAsOptional("L4D2_GetMapValueString");
 	MarkNativeAsOptional("L4D2_CopyMapSubsection");	
 }
-
-	
+#endif

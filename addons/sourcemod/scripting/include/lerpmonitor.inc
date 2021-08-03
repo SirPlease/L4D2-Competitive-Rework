@@ -31,7 +31,7 @@ public SharedPlugin __lerpmonitor =
 	required = 0
 #endif
 };
- 
+
 #if !defined REQUIRE_PLUGIN
 public void __pl_lerpmonitor_SetNTVOptional()
 {

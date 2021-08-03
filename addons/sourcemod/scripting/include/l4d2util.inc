@@ -27,10 +27,12 @@ public SharedPlugin __pl_l4d2util =
 #endif
 };
 
+#if !defined REQUIRE_PLUGIN
 public void __pl_l4d2util_SetNTVOptional()
 {
 	// Stub
 }
+#endif
 
 #endif // __IN_L4D2UTIL__
 #endif // L4D2UTIL_STOCKS_ONLY

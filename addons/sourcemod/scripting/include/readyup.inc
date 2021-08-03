@@ -18,8 +18,8 @@
 	You should have received a copy of the GNU General Public License along
 	with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#if defined  _readyup_included_
- #endinput
+#if defined _readyup_included_
+	#endinput
 #endif
 #define _readyup_included_
 
@@ -112,5 +112,3 @@ public void __pl_readyup_SetNTVOptional()
 	MarkNativeAsOptional("IsIDCaster");
 }
 #endif
-
-// vim: ft=sourcepawn et sw=8

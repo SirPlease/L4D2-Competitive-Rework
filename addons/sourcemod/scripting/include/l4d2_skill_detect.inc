@@ -1,8 +1,19 @@
-#if defined  _skilldetect_included_
-        #endinput
+#if defined _skilldetect_included_
+	#endinput
 #endif
 #define _skilldetect_included_
 
+/**
+ *  CarAlarmTriggerReason: the 'reason' parameter in OnCarAlarmTriggered() forward
+ */
+enum CarAlarmTriggerReason
+{
+	CarAlarmTrigger_Unknown,
+	CarAlarmTrigger_Hit,
+	CarAlarmTrigger_Touched,
+	CarAlarmTrigger_Explosion,
+	CarAlarmTrigger_Boomer
+};
 
 /**
  *  Called whenever a true skeet with shotgun is done.
@@ -10,7 +21,7 @@
  *  @param  int     survivor    the survivor client that performed the feat
  *  @param  int     hunter      the infected client that underwent it
  */
-forward OnSkeet( survivor, hunter );
+forward void OnSkeet(int survivor, int hunter);
 
 /**
  *  Called whenever a true melee-skeet is done.
@@ -18,7 +29,7 @@ forward OnSkeet( survivor, hunter );
  *  @param  int     survivor    the survivor client that performed the feat
  *  @param  int     hunter      the infected client that underwent it
  */
-forward OnSkeetMelee( survivor, hunter );
+forward void OnSkeetMelee(int survivor, int hunter);
 
 /**
  *  Called whenever a direct grenade launcher hit on a hunter connects.
@@ -26,15 +37,15 @@ forward OnSkeetMelee( survivor, hunter );
  *  @param  int     survivor    the survivor client that performed the feat
  *  @param  int     hunter      the infected client that underwent it
  */
-forward OnSkeetGL( survivor, hunter );
-  
+forward void OnSkeetGL(int survivor, int hunter);
+
 /**
  *  Called whenever a true skeeting sniper headshot landed.
  *
  *  @param  int     survivor    the survivor client that performed the feat
  *  @param  int     hunter      the infected client that underwent it
  */
-forward OnSkeetSniper( survivor, hunter );
+forward void OnSkeetSniper(int survivor, int hunter);
 
 /**
  *  Called whenever a pouncing hunter got killed with shotgun
@@ -45,7 +56,7 @@ forward OnSkeetSniper( survivor, hunter );
  *  @param  int     damage      damage done in the killing hit
  *  @param  bool    isOverKill  true if it would've been a skeet if the hunter hadn't been chipped
  */
-forward OnSkeetHurt( survivor, hunter, damage, bool:isOverkill );
+forward void OnSkeetHurt(int survivor, int hunter, int damage, bool isOverkill);
 
 /**
  *  Called whenever a pouncing hunter got killed with melee
@@ -56,7 +67,7 @@ forward OnSkeetHurt( survivor, hunter, damage, bool:isOverkill );
  *  @param  int     damage      damage done in the killing hit
  *  @param  bool    isOverKill  true if it would've been a skeet if the hunter hadn't been chipped
  */  
-forward OnSkeetMeleeHurt( survivor, hunter, damage, bool:isOverkill );
+forward void OnSkeetMeleeHurt(int survivor, int hunter, int damage, bool isOverkill);
 
 /**
  *  Called whenever a pouncing hunter got killed with a sniper headshot
@@ -67,7 +78,7 @@ forward OnSkeetMeleeHurt( survivor, hunter, damage, bool:isOverkill );
  *  @param  int     damage      damage done in the killing hit
  *  @param  bool    isOverKill  true if it would've been a skeet if the hunter hadn't been chipped
  */  
-forward OnSkeetSniperHurt( survivor, hunter, damage, bool:isOverkill );
+forward void OnSkeetSniperHurt(int survivor, int hunter, int damage, bool isOverkill);
 
 /**
  *  Called whenever a hunter is deadstopped (pouncing => m2'd).
@@ -75,7 +86,7 @@ forward OnSkeetSniperHurt( survivor, hunter, damage, bool:isOverkill );
  *  @param  int     survivor    the survivor client that performed the feat
  *  @param  int     hunter      the infected client that underwent it
  */  
-forward OnHunterDeadstop( survivor, hunter );
+forward void OnHunterDeadstop(int survivor, int hunter);
 
 /**
  *  Called whenever a boomer is killed that didn't land on anyone,
@@ -86,7 +97,7 @@ forward OnHunterDeadstop( survivor, hunter );
  *  @param  int     shoveCount  the amount of times the boomer got shoved, if any
  *  @param  Float   timeAlive   the time, in seconds, that the boomer lived
  */  
-forward OnBoomerPop( survivor, boomer, shoveCount, Float:timeAlive );
+forward void OnBoomerPop(int survivor, int boomer, int shoveCount, float timeAlive);
   
 /**
  *  Called whenever a charger is fully melee-leveled (no chip).
@@ -95,7 +106,7 @@ forward OnBoomerPop( survivor, boomer, shoveCount, Float:timeAlive );
  *  @param  int     survivor    the survivor client that performed the feat
  *  @param  int     charger     the infected client that underwent it
  */
-forward OnChargerLevel( survivor, charger );
+forward void OnChargerLevel(int survivor, int charger);
 
 /**
  *  Called whenever a charger is melee-leveled after being chipped.
@@ -105,7 +116,7 @@ forward OnChargerLevel( survivor, charger );
  *  @param  int     charger     the infected client that underwent it
  *  @param  int     damage      damage done in the killing hit
  */
-forward OnChargerLevelHurt( survivor, charger, damage );
+forward void OnChargerLevelHurt(int survivor, int charger, int damage);
 
 /**
  *  Called whenever a witch was crowned without her being angered first.
@@ -113,7 +124,7 @@ forward OnChargerLevelHurt( survivor, charger, damage );
  *  @param  int     survivor    the survivor client that performed the feat
  *  @param  int     damage      damage done in the killing hit
  */
-forward OnWitchCrown( survivor, damage );
+forward void OnWitchCrown(int survivor, int damage);
 
 /**
  *  Called whenever a witch gets crowned after she got angered/triggered.
@@ -123,7 +134,7 @@ forward OnWitchCrown( survivor, damage );
  *  @param  int     damage      damage done in the killing hit
  *  @param  int     chipdamage  damage done to the witch before she got crowned
  */
-forward OnWitchCrownHurt( survivor, damage, chipdamage );
+forward void OnWitchCrownHurt(int survivor, int damage, int chipdamage);
 
 /**
  *  Called whenever a survivor melee-cuts a smoker tongue that was aimed for them.
@@ -131,7 +142,7 @@ forward OnWitchCrownHurt( survivor, damage, chipdamage );
  *  @param  int     survivor    the survivor client that performed the feat
  *  @param  int     smoker      the infected client that underwent it
  */
-forward OnTongueCut( survivor, smoker );
+forward void OnTongueCut(int survivor, int smoker);
 
 /**
  *  Called whenever a survivor frees himself from a smoker that grabbed them,
@@ -141,8 +152,8 @@ forward OnTongueCut( survivor, smoker );
  *  @param  int     smoker      the infected client that underwent it
  *  @param  bool    withShove   true if the self-clear was by a shove/m2
  */
-forward OnSmokerSelfClear( survivor, smoker, bool:withShove );
-  
+forward void OnSmokerSelfClear(int survivor, int smoker, bool withShove);
+
 /**
  *  Called whenever a survivor shoots/melees a tank rock out of the air.
  *
@@ -152,7 +163,7 @@ forward OnSmokerSelfClear( survivor, smoker, bool:withShove );
  *  @param  int     survivor    the survivor client that performed the feat
  *  @param  int     tank        the infected client that underwent it
  */
-forward OnTankRockSkeeted( survivor, tank );
+forward void OnTankRockSkeeted(int survivor, int tank);
 
 /**
  *  Called whenever a tank lands a rock on a survivor.
@@ -163,7 +174,7 @@ forward OnTankRockSkeeted( survivor, tank );
  *  @param  int     tank        the infected client that performed the feat
  *  @param  int     survivor    the survivor client that underwent it
  */
-forward OnTankRockEaten( tank, survivor );
+forward void OnTankRockEaten(int tank, int survivor);
 
 /**
  *  Called whenever a hunter lands a high-pounce on a survivor.
@@ -175,7 +186,7 @@ forward OnTankRockEaten( tank, survivor );
  *  @param  Float   height              the vertical distance between the pounce origin and its landing
  *  @param  bool    reportedHigh        whether skill_detect considers it a high pounce for reporting purposes
  */
-forward OnHunterHighPounce( hunter, survivor, actualDamage, Float:calculatedDamage, Float:height, bool:reportedHigh );
+forward void OnHunterHighPounce(int hunter, int survivor, int actualDamage, float calculatedDamage, float height, bool reportedHigh);
 
 /**
  *  Called whenever a jockey lands a high-pounce on a survivor.
@@ -188,7 +199,7 @@ forward OnHunterHighPounce( hunter, survivor, actualDamage, Float:calculatedDama
  *  @param  Float   height          the vertical distance between the pounce origin and its landing
  *  @param  bool    reportedHigh    whether skill_detect considers it a high pounce for reporting purposes
  */
-forward OnJockeyHighPounce( jockey, victim, Float:height, bool:reportedHigh );
+forward void OnJockeyHighPounce(int jockey, int victim, float height, bool reportedHigh);
 
 /**
  *  Called whenever a charger lands a death-charge on a survivor.
@@ -206,8 +217,8 @@ forward OnJockeyHighPounce( jockey, victim, Float:height, bool:reportedHigh );
  *  @param  Float   distance    the full vector distance between the grab and the survivor's death spot
  *  @param  bool    wasCarried  true if the survivor was the one that the charger grabbed
  */
-forward OnDeathCharge( charger, survivor, Float:height, Float:distance, bool:wasCarried );
-  
+forward void OnDeathCharge(int charger, int survivor, float height, float distance, bool wasCarried);
+
 /**
  *  Called whenever a survivor clears a teammate from a special infected pin.
  * 
@@ -227,7 +238,7 @@ forward OnDeathCharge( charger, survivor, Float:height, Float:distance, bool:was
  *  @param  Float   timeB       for charger/smoker: time from grab/tongue connect to clear
  *  @param  bool    withShove   true if the clear was done by shove/m2
  */
-forward OnSpecialClear( clearer, pinner, pinvictim, zombieClass, Float:timeA, Float:timeB, bool:withShove );
+forward void OnSpecialClear(int clearer, int pinner, int pinvictim, int zombieClass, float timeA, float timeB, bool withShove);
 
 /**
  *  Called whenever a boomer is done vomiting, and landed his vomit on one
@@ -238,7 +249,7 @@ forward OnSpecialClear( clearer, pinner, pinvictim, zombieClass, Float:timeA, Fl
  *  @param  int     boomer      the infected client that performed the feat
  *  @param  int     amount      the amount of survivors vomited on
  */
-forward OnBoomerVomitLanded( boomer, amount );
+forward void OnBoomerVomitLanded(int boomer, int amount);
 
 /**
  *  Called whenever a survivor shoves a special infected (any kind).
@@ -247,7 +258,7 @@ forward OnBoomerVomitLanded( boomer, amount );
  *  @param  int     infected      the infected client that underwent it
  *  @param  int     zombieClass   the class type of the infected shoved
  */
-forward OnSpecialShoved( survivor, infected, zombieClass );
+forward void OnSpecialShoved(int survivor, int infected, int zombieClass);
 
 /**
  *  Called whenever a survivor lands any number of bunnyhops in a row. Called
@@ -257,7 +268,7 @@ forward OnSpecialShoved( survivor, infected, zombieClass );
  *  @param  int     streak        the amount of hops in a row
  *  @param  Float   maxVelocity   the highest speed during any jump or jump apex
  */
-forward OnBunnyHopStreak( survivor, streak, Float:maxVelocity );
+forward void OnBunnyHopStreak(int survivor, int streak, float maxVelocity);
 
 /**
  *  Called whenever a car alarm is triggered (by a survivor).
@@ -266,31 +277,15 @@ forward OnBunnyHopStreak( survivor, streak, Float:maxVelocity );
  *  @param  int     infected      if > 0: the infected client that assisted in triggering it (boomer, smoker, jockey or charger)
  *  @param  int     reason        the reason for triggering (see CarAlarmTriggerType)
  */
-forward OnCarAlarmTriggered( survivor, infected, CarAlarmTriggerReason:reason );
+forward void OnCarAlarmTriggered(int survivor, int infected, CarAlarmTriggerReason reason);
 
-
-
-/**
- *  CarAlarmTriggerReason: the 'reason' parameter in OnCarAlarmTriggered() forward
- */
-enum CarAlarmTriggerReason
-{
-    CarAlarmTrigger_Unknown,
-    CarAlarmTrigger_Hit,
-    CarAlarmTrigger_Touched,
-    CarAlarmTrigger_Explosion,
-    CarAlarmTrigger_Boomer
-};
-
-
-
-public SharedPlugin:__pl_skilldetect =
+public SharedPlugin __pl_skilldetect =
 {
 	name = "skill_detect",
 	file = "l4d2_skill_detect.smx",
 #if defined REQUIRE_PLUGIN
-    required = 1,
+	required = 1,
 #else
-    required = 0,
+	required = 0,
 #endif
 };

@@ -707,6 +707,7 @@ public Extension __ext_builtinvotes =
 #endif
 };
 
+#if !defined REQUIRE_EXTENSIONS
 public void __ext_builtinvotes_SetNTVOptional()
 {
 	MarkNativeAsOptional("CreateBuiltinVote");
@@ -739,3 +740,4 @@ public void __ext_builtinvotes_SetNTVOptional()
 	MarkNativeAsOptional("Game_IsVoteInProgress");
 	MarkNativeAsOptional("Game_GetVoteTeam");
 }
+#endif

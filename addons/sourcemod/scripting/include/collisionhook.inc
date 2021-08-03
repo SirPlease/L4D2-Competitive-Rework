@@ -1,5 +1,5 @@
 #if defined _collisionhook_included
- #endinput
+	#endinput
 #endif
 #define _collisionhook_included
 

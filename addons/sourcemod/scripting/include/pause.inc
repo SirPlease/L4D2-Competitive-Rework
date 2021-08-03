@@ -16,7 +16,7 @@
 	General Public License for more details.
 
 	You should have received a copy of the GNU General Public License along
-	with this program.  If not, see <http://www.gnu.org/licenses/>.
+	with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 #if defined _pause_included_
 	#endinput
@@ -54,9 +54,9 @@ public SharedPlugin __pl_pause =
 #endif
 };
 
+#if !defined REQUIRE_PLUGIN
 public void __pl_pause_SetNTVOptional()
 {
 	MarkNativeAsOptional("IsInPause");
 }
-
-// vim: ft=sourcepawn et sw=8
+#endif

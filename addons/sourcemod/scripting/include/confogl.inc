@@ -28,9 +28,8 @@
  * or <http://www.sourcemod.net/license.php>.
  *
  */
- 
 #if defined _confogl_Included
- #endinput
+	#endinput
 #endif
 #define _confogl_Included
 
