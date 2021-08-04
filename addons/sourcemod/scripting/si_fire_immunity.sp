@@ -8,11 +8,18 @@
 #define Z_TANK 8
 #define TEAM_INFECTED 3
 
+static const char sEntityList[][] = 
+{
+	"inferno",
+	"entityflame",
+	"fire_cracker_blast"
+};
+
 ConVar
-	infected_fire_immunity,
-	tank_fire_immunity,
-	infected_extinguish_time,
-	tank_extinguish_time;
+	infected_fire_immunity = null,
+	tank_fire_immunity = null,
+	infected_extinguish_time = null,
+	tank_extinguish_time = null;
 
 float
 	fWaitTime[MAXPLAYERS + 1] = {0.0, ...};
@@ -22,31 +29,39 @@ public Plugin myinfo =
 	name = "SI Fire Immunity",
 	author = "Jacob, darkid, A1m`",
 	description = "Special Infected fire damage management.",
-	version = "3.0",
+	version = "3.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
 public void OnPluginStart()
 {
-	infected_fire_immunity = CreateConVar("infected_fire_immunity", 
-	"3", 
-	"What type of fire immunity should infected have? 0 = None, 3 = Extinguish burns, 2 = Prevent burns, 1 = Complete immunity", 
-	_, true, 0.0, true, 3.0);
+	infected_fire_immunity = CreateConVar( \
+		"infected_fire_immunity", \
+		"3", \
+		"What type of fire immunity should infected have? 0 = None, 3 = Extinguish burns, 2 = Prevent burns, 1 = Complete immunity", \
+		_, true, 0.0, true, 3.0 \
+	);
 	
-	tank_fire_immunity = CreateConVar("tank_fire_immunity", 
-	"2", 
-	"What type of fire immunity should the tank have? 0 = None, 3 = Extinguish burns, 2 = Prevent burns, 1 = Complete immunity", 
-	_, true, 0.0, true, 3.0);
+	tank_fire_immunity = CreateConVar( \
+		"tank_fire_immunity", \
+		"2", \
+		"What type of fire immunity should the tank have? 0 = None, 3 = Extinguish burns, 2 = Prevent burns, 1 = Complete immunity", \
+		_, true, 0.0, true, 3.0 \
+	);
 	
-	infected_extinguish_time = CreateConVar("infected_extinguish_time", 
-	"1.0", 
-	"After what time will the infected player be extinguished, works if cvar 'infected_fire_immunity' equal 3", 
-	_, true, 0.0, true, 999.0);
+	infected_extinguish_time = CreateConVar( \
+		"infected_extinguish_time", \
+		"1.0", \
+		"After what time will the infected player be extinguished, works if cvar 'infected_fire_immunity' equal 3", \
+		_, true, 0.0, true, 999.0 \
+	);
 	
-	tank_extinguish_time = CreateConVar("tank_extinguish_time", 
-	"1.0", 
-	"After what time will the tanl player be extinguished, works if cvar 'tank_fire_immunity' equal 3", 
-	_, true, 0.0, true, 999.0);
+	tank_extinguish_time = CreateConVar( \
+		"tank_extinguish_time", \
+		"1.0", \
+		"After what time will the tank player be extinguished, works if cvar 'tank_fire_immunity' equal 3", \
+		_, true, 0.0, true, 999.0 \
+	);
 	
 	HookEvent("player_hurt", SIOnFire, EventHookMode_Post);
 	HookEvent("round_start", EventReset, EventHookMode_PostNoCopy);
@@ -133,13 +148,12 @@ public void SIOnFire(Event hEvent, const char[] eName, bool dontBroadcast)
 	 * then the damage will be done to the infected and the tank,
 	 * if the player was set on fire with fireworks
 	*/
-	if (strcmp(sEntityName, "inferno") != 0 
-		&& strcmp(sEntityName, "entityflame") != 0 
-		&& strcmp(sEntityName, "fire_cracker_blast") != 0
-	) {
-		return;
+	for (int i = 0; i < sizeof(sEntityList); i++) {
+		if (strcmp(sEntityName, sEntityList[i]) != 0) {
+			return;
+		}
 	}
-
+	
 	int userid = hEvent.GetInt("userid");
 	int client = GetClientOfUserId(userid);
 
@@ -165,7 +179,7 @@ void ExtinguishType(int client, int userid, int iDamage)
 			 * + 0.1 -> We already know that the timer has definitely expired so as to call another timer
 			 * Old code started many timers
 			*/
-			fWaitTime[client] = GetGameTime() + iExtinguishTime + 0.1;
+			fWaitTime[client] = fNow + iExtinguishTime + 0.1;
 
 			CreateTimer(iExtinguishTime, TimerWait, userid, TIMER_FLAG_NO_MAPCHANGE);
 		}

@@ -1,5 +1,5 @@
 #if defined _l4d2_hybrid_scoremod
- #endinput
+	#endinput
 #endif
 #define _l4d2_hybrid_scoremod
 

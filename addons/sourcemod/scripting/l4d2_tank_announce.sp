@@ -11,6 +11,8 @@
 #include <l4d_tank_control_eq>
 //#define REQUIRE_PLUGIN
 
+#define LEFT4FRAMEWORK_GAMEDATA "left4dhooks.l4d2"
+
 #define PLUGIN_VERSION "1.3b"
 #define DANG "ui/pickup_secret01.wav"
 
@@ -27,9 +29,9 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	Handle hGameData = LoadGameConfigFile("left4dhooks.l4d2");
+	Handle hGameData = LoadGameConfigFile(LEFT4FRAMEWORK_GAMEDATA);
 	if (hGameData == null) {
-		SetFailState("Missing gamedata \"left4dhooks.l4d2\".");
+		SetFailState("Missing gamedata \"%s\".", LEFT4FRAMEWORK_GAMEDATA);
 	}
 	
 	g_hDetour = DHookCreateFromConf(hGameData, "SpawnTank");

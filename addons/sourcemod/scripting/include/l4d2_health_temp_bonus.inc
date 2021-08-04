@@ -10,6 +10,17 @@ native int SMNext_GetMaxPermBonus();
 native int SMNext_GetMaxTempBonus();
 native int SMNext_GetMaxPillsBonus();
 
+public SharedPlugin __pl_l4d2_health_temp_bonus =
+{
+	name = "l4d2_health_temp_bonus",
+	file = "l4d2_health_temp_bonus.smx",
+#if defined REQUIRE_PLUGIN
+	required = 1,
+#else
+	required = 0,
+#endif
+};
+
 #if !defined REQUIRE_PLUGIN
 public void __pl_l4d2_health_temp_bonus_SetNTVOptional()
 {
@@ -21,14 +32,3 @@ public void __pl_l4d2_health_temp_bonus_SetNTVOptional()
 	MarkNativeAsOptional("SMNext_GetMaxPillsBonus");
 }
 #endif
-
-public SharedPlugin __pl_l4d2_health_temp_bonus =
-{
-	name = "l4d2_health_temp_bonus",
-	file = "l4d2_health_temp_bonus.smx",
-#if defined REQUIRE_PLUGIN
-	required = 1,
-#else
-	required = 0,
-#endif
-};

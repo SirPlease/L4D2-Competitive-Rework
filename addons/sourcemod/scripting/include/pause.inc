@@ -16,20 +16,12 @@
 	General Public License for more details.
 
 	You should have received a copy of the GNU General Public License along
-	with this program.  If not, see <http://www.gnu.org/licenses/>.
+	with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 #if defined _pause_included_
 	#endinput
 #endif
 #define _pause_included_
-
-/**
- * Returns if the game is currently paused from this pause plugin.
- * This can't tell you if it is paused from another plugin on manual pause
- *
- * @return	Current pause state
- */
-native bool IsInPause();
 
 /**
  * Called when a pause starts
@@ -43,6 +35,14 @@ forward void OnPause();
  */
 forward void OnUnpause();
 
+/**
+ * Returns if the game is currently paused from this pause plugin.
+ * This can't tell you if it is paused from another plugin on manual pause
+ *
+ * @return	Current pause state
+ */
+native bool IsInPause();
+
 public SharedPlugin __pl_pause =
 {
 	name = "pause",
@@ -54,9 +54,9 @@ public SharedPlugin __pl_pause =
 #endif
 };
 
+#if !defined REQUIRE_PLUGIN
 public void __pl_pause_SetNTVOptional()
 {
 	MarkNativeAsOptional("IsInPause");
 }
-
-// vim: ft=sourcepawn et sw=8
+#endif

@@ -23,7 +23,7 @@
 
 #define PLUGIN_VERSION "1.4"
 
-#define GAMEDATA_FILE "left4dhooks.l4d2"
+#define LEFT4FRAMEWORK_GAMEDATA "left4dhooks.l4d2"
 
 public Plugin myinfo =
 {
@@ -74,9 +74,9 @@ void CheckGame()
 
 void LoadSDK()
 {
-	Handle conf = LoadGameConfigFile(GAMEDATA_FILE);
+	Handle conf = LoadGameConfigFile(LEFT4FRAMEWORK_GAMEDATA);
 	if (conf == INVALID_HANDLE) {
-		SetFailState("Could not load gamedata/%s.txt", GAMEDATA_FILE);
+		SetFailState("Could not load gamedata/%s.txt", LEFT4FRAMEWORK_GAMEDATA);
 	}
 
 	StartPrepSDKCall(SDKCall_GameRules);

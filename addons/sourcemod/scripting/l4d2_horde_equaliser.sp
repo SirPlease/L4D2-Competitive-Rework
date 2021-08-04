@@ -3,9 +3,7 @@
 
 #include <sourcemod>
 #include <left4dhooks>
-#pragma newdecls optional
 #include <l4d2lib>
-#pragma newdecls required
 #include <sdktools>
 #include <colors>
 
