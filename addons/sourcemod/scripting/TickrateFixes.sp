@@ -29,6 +29,7 @@
 #define TEAM_SURVIVORS	2
 
 #define MAX_EDICTS		2048 //(1 << 11)
+#define ENTITY_MAX_NAME 64
 
 //Tracking
 enum DoorsTypeTracked
@@ -56,7 +57,7 @@ DoorsData
 	g_ddDoors[MAX_EDICTS];
 
 #else
-enum DoorsData 
+enum DoorsData
 {
 	DoorsTypeTracked:DoorsData_Type,
 	Float:DoorsData_Speed,
@@ -93,7 +94,7 @@ public Plugin myinfo =
 	name = "Tickrate Fixes",
 	author = "Sir, Griffin, A1m`",
 	description = "Fixes a handful of silly Tickrate bugs",
-	version = "1.2",
+	version = "1.3",
 	url = "https://github.com/A1mDev/L4D2-Competitive-Rework"
 }
 
@@ -105,13 +106,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
-	g_hPistolDelayDualies = CreateConVar("l4d_pistol_delay_dualies", "0.1", "Minimum time (in seconds) between dual pistol shots",
-	FCVAR_SPONLY | FCVAR_NOTIFY, true, 0.0, true, 5.0);
-	g_hPistolDelaySingle = CreateConVar("l4d_pistol_delay_single", "0.2", "Minimum time (in seconds) between single pistol shots",
-	FCVAR_SPONLY | FCVAR_NOTIFY, true, 0.0, true, 5.0);
-	g_hPistolDelayIncapped = CreateConVar("l4d_pistol_delay_incapped", "0.3", "Minimum time (in seconds) between pistol shots while incapped",
-	FCVAR_SPONLY | FCVAR_NOTIFY, true, 0.0, true, 5.0);
-		
+	g_hPistolDelayDualies = CreateConVar("l4d_pistol_delay_dualies", "0.1", "Minimum time (in seconds) between dual pistol shots",FCVAR_SPONLY | FCVAR_NOTIFY, true, 0.0, true, 5.0);
+	g_hPistolDelaySingle = CreateConVar("l4d_pistol_delay_single", "0.2", "Minimum time (in seconds) between single pistol shots", FCVAR_SPONLY | FCVAR_NOTIFY, true, 0.0, true, 5.0);
+	g_hPistolDelayIncapped = CreateConVar("l4d_pistol_delay_incapped", "0.3", "Minimum time (in seconds) between pistol shots while incapped", FCVAR_SPONLY | FCVAR_NOTIFY, true, 0.0, true, 5.0);
+
 	UpdatePistolDelays();
 		
 	g_hPistolDelayDualies.AddChangeHook(Cvar_PistolDelay);
@@ -170,7 +168,7 @@ public void DoorSpawnPost(int entity)
 		return;
 	}
 	
-	char classname[128];
+	char classname[ENTITY_MAX_NAME];
 	GetEntityClassname(entity, classname, sizeof(classname));
 
 	// Save Original Settings.
@@ -186,14 +184,14 @@ public void DoorSpawnPost(int entity)
 
 public void OnClientPutInServer(int client)
 {
-	SDKHook(client, SDKHook_PreThink, Hook_OnPostThinkPost);
+	SDKHook(client, SDKHook_PreThink, Hook_OnPreThink);
 
 	g_fNextAttack[client] = 0.0;
 }
 
 public void OnClientDisconnect(int client)
 {
-	SDKUnhook(client, SDKHook_PreThink, Hook_OnPostThinkPost);
+	SDKUnhook(client, SDKHook_PreThink, Hook_OnPreThink);
 }
 
 public void Cvar_PistolDelay(ConVar convar, const char[] oldValue, const char[] newValue)
@@ -225,7 +223,7 @@ void UpdatePistolDelays()
 	}
 }
 
-public void Hook_OnPostThinkPost(int client)
+public void Hook_OnPreThink(int client)
 {
 	// Human survivors only
 	if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != TEAM_SURVIVORS) {
@@ -237,7 +235,7 @@ public void Hook_OnPostThinkPost(int client)
 		return;
 	}
 	
-	char wName[64];
+	char wName[ENTITY_MAX_NAME];
 	GetEdictClassname(activeweapon, wName, sizeof(wName));
 	if (strcmp(wName, "weapon_pistol") != 0) {
 		return;
@@ -265,7 +263,7 @@ public void Event_WeaponFire(Event hEvent, const char[] name, bool dontBroadcast
 		return;
 	}
 	
-	char wName[64];
+	char wName[ENTITY_MAX_NAME];
 	GetEdictClassname(activeweapon, wName, sizeof(wName));
 	if (strcmp(wName, "weapon_pistol") != 0) {
 		return;

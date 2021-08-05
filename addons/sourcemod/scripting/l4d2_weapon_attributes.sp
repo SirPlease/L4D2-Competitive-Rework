@@ -166,7 +166,6 @@ public void OnPluginEnd()
 {
 	bTankDamageEnableAttri = false;
 
-	//I think we need to remove the sdkhook first so that there are no errors if we remove the KeyValues
 	for (int i = 1; i <= MaxClients; i++) {
 		if (IsClientInGame(i)) {
 			OnClientDisconnect(i);
@@ -457,6 +456,7 @@ int ResetWeaponAttributes(bool bIsClearArray = false)
 		}
 	
 		delete hTrieSnapshot;
+		hTrieSnapshot = null;
 	}
 
 	#if DEBUG
