@@ -16,12 +16,24 @@
 	General Public License for more details.
 
 	You should have received a copy of the GNU General Public License along
-	with this program.  If not, see <http://www.gnu.org/licenses/>.
+	with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-#if defined  _pause_included_
-        #endinput
+#if defined _pause_included_
+	#endinput
 #endif
 #define _pause_included_
+
+/**
+ * Called when a pause starts
+ * If delayed pauses are on this will be called when the delay ends and the
+ * pause actually begins
+ */
+forward void OnPause();
+
+/**
+ * Called when the pause ends and the round goes live
+ */
+forward void OnUnpause();
 
 /**
  * Returns if the game is currently paused from this pause plugin.
@@ -29,34 +41,22 @@
  *
  * @return	Current pause state
  */
-native bool:IsInPause();
+native bool IsInPause();
 
-/**
- * Called when a pause starts
- * If delayed pauses are on this will be called when the delay ends and the
- * pause actually begins
- */
-forward OnPause();
-
-/**
- * Called when the pause ends and the round goes live
- */
-forward OnUnpause();
-
-public SharedPlugin:__pl_pause =
+public SharedPlugin __pl_pause =
 {
-        name = "pause",
-        file = "pause.smx",
+	name = "pause",
+	file = "pause.smx",
 #if defined REQUIRE_PLUGIN
-        required = 1,
+	required = 1,
 #else
-        required = 0,
+	required = 0,
 #endif
 };
 
-public __pl_pause_SetNTVOptional()
+#if !defined REQUIRE_PLUGIN
+public void __pl_pause_SetNTVOptional()
 {
-        MarkNativeAsOptional("IsInPause");
+	MarkNativeAsOptional("IsInPause");
 }
-
-// vim: ft=sourcepawn et sw=8
+#endif

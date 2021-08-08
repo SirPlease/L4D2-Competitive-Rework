@@ -47,7 +47,7 @@ public void OnPluginStart()
 	hCvarCommonLimit = FindConVar("z_common_limit");
 	hCvarSurvivorLimit = FindConVar("survivor_limit");
 
-	HookEvent("round_start", view_as<EventHook>(RoundStart), EventHookMode_PostNoCopy);
+	HookEvent("round_start", RoundStart, EventHookMode_PostNoCopy);
 }
 
 void InitGameData()
@@ -101,7 +101,7 @@ public void CommonSpawnPost(int entity)
 	}
 }
 
-public void RoundStart()
+public void RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	fSavedTime = 0.0;
 }

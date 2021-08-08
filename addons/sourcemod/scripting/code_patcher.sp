@@ -318,7 +318,7 @@ static void WriteBytesToMemory(Address addr, const char[] bytes, int count)
 static void ReadBytesFromMemory(Address addr, char[] bytes, int count)
 {
 	for (int i = 0; i < count; ++i) {
-		bytes[i] = LoadFromAddress(addr + view_as<Address>(i), NumberType_Int8);
+		bytes[i] = view_as<char>(LoadFromAddress(addr + view_as<Address>(i), NumberType_Int8)); //view_as<char> - add support sourcemod 1.11
 	}
 }
 

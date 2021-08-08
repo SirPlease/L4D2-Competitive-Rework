@@ -9,11 +9,11 @@ public Plugin myinfo =
 	name = "Temp Health Fixer",
 	author = "CanadaRox, Sir",
 	description = "Ensures that survivors that have been incapacitated with a hittable or ledged get their temp health set correctly",
-	version = "2.0",
-	url = "https://bitbucket.org/CanadaRox/random-sourcemod-stuff/"
+	version = "2.1",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework/"
 };
 
-public void OnPluginStart() 
+public void OnPluginStart()
 {
 	// Important Stuff
 	HookEvent("player_incapacitated_start", Incap_Event);
@@ -58,12 +58,12 @@ public Action PlayerChange_Event(Event event, const char[] name, bool dontBroadc
 	int bot = GetClientOfUserId(event.GetInt("bot"))
 	int player = GetClientOfUserId(event.GetInt("player"))
 
-	if (!isLedged(bot) 
-	&& !isLedged(player))
+	if (!isLedged(bot) && !isLedged(player)) {
 		return;
-
+	}
+	
 	// Player replaced by bot
-	if (StrContains(name, "p") == 0)
+	if (name[0] == 'p')
 	{
 		fTemp[bot][0] = fTemp[player][0];
 		fTemp[bot][1] = fTemp[player][1];

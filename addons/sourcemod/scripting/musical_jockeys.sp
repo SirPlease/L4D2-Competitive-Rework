@@ -2,41 +2,38 @@
 
 #include <sourcemod>
 #include <sdktools>
-#include <left4dhooks>
 
-public Plugin:myinfo = 
+#define SOUND_NAME "music/bacteria/jockeybacterias.wav"
+
+#define Z_JOCKEY 5
+#define TEAM_INFECTED 3
+
+public Plugin myinfo = 
 {
 	name = "Musical Jockeys",
-	author = "Jacob",
+	author = "Jacob", //Update syntax and minor fixes - A1m`
 	description = "Prevents the Jockey from having silent spawns.",
-	version = "1.2",
-	url = "Earth"
+	version = "1.4",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
-public OnPluginStart()
+public void OnPluginStart()
 {
 	HookEvent("player_spawn", Event_PlayerSpawn);
 }
 
-public OnMapStart()
+public void OnMapStart()
 {
-	PrecacheSound("music/bacteria/jockeybacterias.wav");
+	PrecacheSound(SOUND_NAME);
 }
 
-public Action:Event_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_PlayerSpawn(Event hEvent, const char[] name, bool dontBroadcast)
 {
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
-	if (IsValidPlayer(client) && GetClientTeam(client) == 3)
-	{
+	int client = GetClientOfUserId(hEvent.GetInt("userid"));
+	if (client > 0 && !IsFakeClient(client) && GetClientTeam(client) == TEAM_INFECTED) {
 		int zClass = GetEntProp(client, Prop_Send, "m_zombieClass");
-		if (zClass == 5) EmitSoundToAll("music/bacteria/jockeybacterias.wav", _, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
+		if (zClass == Z_JOCKEY) {
+			EmitSoundToAll(SOUND_NAME, _, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 1.0);
+		}
 	}
-}
-
-bool:IsValidPlayer(client)
-{
-	if (client <= 0 || client > MaxClients) return false;
-	if (!IsClientInGame(client)) return false;
-	if (IsFakeClient(client)) return false;
-	return true;
 }

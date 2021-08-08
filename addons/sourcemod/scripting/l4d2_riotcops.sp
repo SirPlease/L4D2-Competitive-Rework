@@ -36,7 +36,7 @@ public Plugin myinfo =
 {
 	name		= "L4D2 Riot Cops",
 	author		= "Jahze, Visor",
-	version		= "1.3", //new syntax A1m`
+	version		= "1.4", //new syntax A1m`
 	description	= "Allow riot cops to be killed by a headshot"
 }
 
@@ -65,7 +65,7 @@ public void RiotCopSpawn(int entity)
 public Action RiotCopTraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
 {
 	if (hitgroup == 1 && IsValidEntity(victim)) {
-		if (IS_VALID_CLIENT(attacker) && IsSurvivor(attacker)) {
+		if (L4D2Util_IsValidClient(attacker) && IsSurvivor(attacker)) {
 			SDKHooks_TakeDamage(victim, 0, attacker, damage);
 		}
 	}

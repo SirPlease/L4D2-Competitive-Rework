@@ -148,7 +148,7 @@ public void PropDamaged(int victim, int attacker, int inflictor, float damage, i
 void CreateTankPropGlow(int target)
 {
 	// Get Client Model
-	char sModelName[64];
+	char sModelName[PLATFORM_MAX_PATH];
 	GetEntPropString(target, Prop_Data, "m_ModelName", sModelName, sizeof(sModelName));
 	
 	// Spawn dynamic prop entity
@@ -204,19 +204,20 @@ public Action OnTransmit(int entity, int client)
 	return Plugin_Handled;
 }
 
-bool IsTankProp(int iEntity ) {
+bool IsTankProp(int iEntity )
+{
 	if ( !IsValidEdict(iEntity) ) {
 		return false;
 	}
 	
-	char className[64];
+	static char className[64];
 	
 	GetEdictClassname(iEntity, className, sizeof(className));
 	if (StrEqual(className, "prop_physics")) 
 	{
 		if (GetEntProp(iEntity, Prop_Send, "m_hasTankGlow", 1)) 
 		{
-			char sModel[64];
+			static char sModel[PLATFORM_MAX_PATH];
 			GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
 
 			if (StrEqual("models/props/cs_assault/forklift.mdl", sModel))
@@ -231,8 +232,7 @@ bool IsTankProp(int iEntity ) {
 		if (StrContains(m_ModelName, "atlas_break_ball") != -1) {
 			return true;
 		}
-	}
-	else if (StrEqual(className, "prop_car_alarm")) {
+	} else if (StrEqual(className, "prop_car_alarm")) {
 		return true;
 	}
 	
@@ -392,7 +392,7 @@ public void PossibleTankPropCreated(int entity, const char[] classname)
 {
 	if (StrEqual(classname, "prop_physics")) // Hooks c11m4_terminal World Sphere
 	{
-		char m_ModelName[64];
+		char m_ModelName[PLATFORM_MAX_PATH];
 		GetEntPropString(entity, Prop_Data, "m_ModelName", m_ModelName, sizeof(m_ModelName));
 
 		// Use SpawnPost to just push it into the Array right away.

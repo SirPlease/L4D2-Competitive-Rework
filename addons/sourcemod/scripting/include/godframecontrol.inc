@@ -1,5 +1,5 @@
-#if defined  _godframecontrol_included_
-    #endinput
+#if defined _godframecontrol_included_
+	#endinput
 #endif
 #define _godframecontrol_included_
 
@@ -11,20 +11,22 @@
  * @param time   	The ZClass of the attacker.
  * @return          True if successful, false otherwise.
  */
-native void GiveClientGodFrames(int client, Float:time, int zclass);
+native void GiveClientGodFrames(int client, float time, int zclass);
 
-public SharedPlugin:__pl_godframecontrol =
+public SharedPlugin __pl_godframecontrol =
 {
-    name = "l4d2_godframes_control_merge",
-    file = "l4d2_godframes_control_merge.smx",
+	name = "l4d2_godframes_control_merge",
+	file = "l4d2_godframes_control_merge.smx",
 #if defined REQUIRE_PLUGIN
-    required = 1,
+	required = 1,
 #else
-    required = 0,
+	required = 0,
 #endif
 };
 
-public __pl_godframecontrol_SetNTVOptional()
+#if !defined REQUIRE_PLUGIN
+public void __pl_godframecontrol_SetNTVOptional()
 {
-    MarkNativeAsOptional("GiveClientGodFrames");
+	MarkNativeAsOptional("GiveClientGodFrames");
 }
+#endif

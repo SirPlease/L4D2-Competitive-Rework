@@ -10,11 +10,10 @@ public Plugin:myinfo =
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-
 #define DEBUG 0
 
 #define L4DBUILD 1
-#define GAMEDATA_FILE "left4dhooks.l4d2"
+#define LEFT4FRAMEWORK_GAMEDATA "left4dhooks.l4d2"
 
 new Handle:hCvarEnable;
 #if defined(L4DBUILD)
@@ -31,14 +30,13 @@ public OnPluginStart()
 	hCvarSIExcept = CreateConVar("bhop_except_si_flags", "0", "Bitfield for exempting SI in anti-bhop functionality. From least significant: Smoker, Boomer, Hunter, Spitter, Jockey, Charger, Tank");
 	hCvarSurvivorExcept = CreateConVar("bhop_allow_survivor", "0", "Allow Survivors to bhop while plugin is enabled");
 #endif
-
 }
 
 void LoadSDK()
 {
-	GameData conf = LoadGameConfigFile(GAMEDATA_FILE);
+	Handle conf = LoadGameConfigFile(LEFT4FRAMEWORK_GAMEDATA);
 	if (conf == INVALID_HANDLE) {
-		SetFailState("Could not load gamedata/%s.txt", GAMEDATA_FILE);
+		SetFailState("Could not load gamedata/%s.txt", LEFT4FRAMEWORK_GAMEDATA);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
@@ -50,6 +48,7 @@ void LoadSDK()
 	if (hGetRunTopSpeed == INVALID_HANDLE) {
 		SetFailState("Function 'GetRunTopSpeed' found, but something went wrong");
 	}
+	
 	delete conf;
 }
 

@@ -3,8 +3,9 @@
 #endif
 #define l4d2util_inc_
 
-#pragma semicolon 1
+//#pragma semicolon 1
 
+#include <l4d2util_stocks>
 #include <l4d2util_constants>
 #include <l4d2util_infected>
 #include <l4d2util_rounds>
@@ -26,10 +27,12 @@ public SharedPlugin __pl_l4d2util =
 #endif
 };
 
+#if !defined REQUIRE_PLUGIN
 public void __pl_l4d2util_SetNTVOptional()
 {
 	// Stub
 }
+#endif
 
 #endif // __IN_L4D2UTIL__
 #endif // L4D2UTIL_STOCKS_ONLY

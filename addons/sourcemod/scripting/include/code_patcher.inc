@@ -22,9 +22,11 @@ public SharedPlugin __pl_code_patcher =
 #endif
 };
 
+#if !defined REQUIRE_PLUGIN
 public void __pl_code_patcher_SetNTVOptional()
 {
 	MarkNativeAsOptional("IsPatchApplied");
 	MarkNativeAsOptional("GetPatchAddress");
 	MarkNativeAsOptional("IsPlatformWindows");
 }
+#endif

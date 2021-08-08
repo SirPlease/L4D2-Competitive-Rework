@@ -1,14 +1,10 @@
 #pragma semicolon 1
 
-#include <sourcemod.inc>
+#include <sourcemod>
 #include <sdkhooks>
 #include <sdktools>
-#include <sdktools_functions>
 #include <left4dhooks>
-#include <timers.inc>
 #include <colors>
-
-#define MAX(%0,%1) (((%0) > (%1)) ? (%0) : (%1))
 
 #define TEAM_SPECTATOR          1 
 #define TEAM_SURVIVOR           2 

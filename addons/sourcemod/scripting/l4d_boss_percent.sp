@@ -68,7 +68,7 @@ ConVar g_hVsBossFlowMin; 												// Boss Flow Min
 ConVar g_hVsBossFlowMax; 												// Boss Flow Max
 StringMap g_hStaticTankMaps; 											// Stores All Static Tank Maps
 StringMap g_hStaticWitchMaps; 											// Stores All Static Witch Maps
-GlobalForward g_forwardUpdateBosses;
+Handle g_forwardUpdateBosses;
 Handle g_hUpdateFooterTimer;
 
 // Variables

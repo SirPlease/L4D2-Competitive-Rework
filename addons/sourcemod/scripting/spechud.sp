@@ -1,7 +1,11 @@
+#pragma semicolon 1
+#pragma newdecls required
+
 #include <sourcemod>
 #include <sdktools>
 #include <builtinvotes>
-#include <l4d2_weapon_stocks>
+#define L4D2UTIL_STOCKS_ONLY
+#include <l4d2util>
 #include <colors>
 #include <left4dhooks>
 #undef REQUIRE_PLUGIN
@@ -12,17 +16,14 @@
 #include <l4d2_scoremod>
 #include <l4d2_health_temp_bonus>
 #include <l4d_tank_control_eq>
-#define REQUIRE_PLUGIN
-
-#pragma semicolon 1
-#pragma newdecls required
+//#define REQUIRE_PLUGIN
 
 #define PLUGIN_VERSION	"3.5.4"
 
 public Plugin myinfo = 
 {
 	name = "Hyper-V HUD Manager",
-	author = "Visor, Forgetest",
+	author = "Visor, Forgetest", //Add support sm1.11 - A1m`
 	description = "Provides different HUDs for spectators",
 	version = PLUGIN_VERSION,
 	url = "https://github.com/Target5150/MoYu_Server_Stupid_Plugins"
@@ -32,15 +33,6 @@ public Plugin myinfo =
 //  Macros
 // ======================================================================
 #define SPECHUD_DRAW_INTERVAL   0.5
-
-#define ZOMBIECLASS_NAME(%0) (L4D2SI_Names[(%0)])
-
-#define CLAMP(%0,%1,%2) (((%0) > (%2)) ? (%2) : (((%0) < (%1)) ? (%1) : (%0)))
-#define MAX(%0,%1) (((%0) > (%1)) ? (%0) : (%1))
-#define MIN(%0,%1) (((%0) < (%1)) ? (%0) : (%1))
-
-// ToPercent(int var, int varmax): float
-#define ToPercent(%0,%1) ((%0) < 1 ? 0.0 : (100.0 * (%0) / (%1)))
 
 #define TEAM_NONE       0
 #define TEAM_SPECTATOR  1
@@ -58,50 +50,12 @@ enum L4D2Gamemode
 };
 L4D2Gamemode g_Gamemode;
 
-enum L4D2SI 
-{
-	ZC_None,
-	ZC_Smoker,
-	ZC_Boomer,
-	ZC_Hunter,
-	ZC_Spitter,
-	ZC_Jockey,
-	ZC_Charger,
-	ZC_Witch,
-	ZC_Tank
-};
-//L4D2SI storedClass[MAXPLAYERS+1];
-
-static const char L4D2SI_Names[][] = 
-{
-	"None",
-	"Smoker",
-	"Boomer",
-	"Hunter",
-	"Spitter",
-	"Jockey",
-	"Charger",
-	"Witch",
-	"Tank"
-};
-
-enum SurvivorCharacter
-{
-	SC_NONE=-1,
-	SC_NICK=0,
-	SC_ROCHELLE,
-	SC_COACH,
-	SC_ELLIS,
-	SC_BILL,
-	SC_ZOEY,
-	SC_LOUIS,
-	SC_FRANCIS
-};
+//L4D2_Infected storedClass[MAXPLAYERS+1];
 
 // Game Var
-ConVar survivor_limit, z_max_player_zombies, versus_boss_buffer, mp_gamemode, mp_roundlimit, sv_maxplayers, tank_burn_duration, pain_pills_decay_rate;
+ConVar survivor_limit, z_max_player_zombies, versus_boss_buffer, mp_gamemode, mp_roundlimit, sv_maxplayers, tank_burn_duration/*, pain_pills_decay_rate*/;
 int iSurvivorLimit, iMaxPlayerZombies, iMaxPlayers, iRoundLimit;
-float fVersusBossBuffer, fTankBurnDuration, fPainPillsDecayRate;
+float fVersusBossBuffer, fTankBurnDuration/*, fPainPillsDecayRate*/;
 
 // Network Var
 ConVar cVarMinUpdateRate, cVarMaxUpdateRate, cVarMinInterpRatio, cVarMaxInterpRatio;
@@ -153,7 +107,7 @@ public void OnPluginStart()
 	(	mp_roundlimit			= FindConVar("mp_roundlimit")			).AddChangeHook(OnGameConVarChanged);
 	(	sv_maxplayers			= FindConVar("sv_maxplayers")			).AddChangeHook(OnGameConVarChanged);
 	(	tank_burn_duration		= FindConVar("tank_burn_duration")		).AddChangeHook(OnGameConVarChanged);
-	(	pain_pills_decay_rate	= FindConVar("pain_pills_decay_rate")	).AddChangeHook(OnGameConVarChanged);
+	//(	pain_pills_decay_rate	= FindConVar("pain_pills_decay_rate")	).AddChangeHook(OnGameConVarChanged);
 
 	(	cVarMinUpdateRate		= FindConVar("sv_minupdaterate")			).AddChangeHook(OnNetworkConVarChanged);
 	(	cVarMaxUpdateRate		= FindConVar("sv_maxupdaterate")			).AddChangeHook(OnNetworkConVarChanged);
@@ -169,7 +123,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_spechud", ToggleSpecHudCmd);
 	RegConsoleCmd("sm_tankhud", ToggleTankHudCmd);
 	
-	HookEvent("round_start",			view_as<EventHook>(Event_RoundStart), EventHookMode_PostNoCopy);
+	HookEvent("round_start",			Event_RoundStart, EventHookMode_PostNoCopy);
 	HookEvent("player_death",			Event_PlayerDeath);
 	HookEvent("witch_killed",			Event_WitchDeath);
 	HookEvent("player_team",			Event_PlayerTeam);
@@ -204,10 +158,10 @@ void GetGameCvars()
 	iMaxPlayerZombies	= z_max_player_zombies.IntValue;
 	fVersusBossBuffer	= versus_boss_buffer.FloatValue;
 	GetCurrentGameMode();
-	iRoundLimit			= CLAMP(mp_roundlimit.IntValue, 1, 5);
+	iRoundLimit			= L4D2Util_Clamp(mp_roundlimit.IntValue, 1, 5);
 	iMaxPlayers			= sv_maxplayers.IntValue;
 	fTankBurnDuration	= tank_burn_duration.FloatValue;
-	fPainPillsDecayRate	= pain_pills_decay_rate.FloatValue;
+	//fPainPillsDecayRate	= pain_pills_decay_rate.FloatValue;
 }
 
 void GetNetworkCvars()
@@ -443,19 +397,23 @@ public void OnRoundIsLive()
 	}
 }
 
-//public void L4D2_OnEndVersusModeRound_Post() { if (!InSecondHalfOfRound()) iFirstHalfScore = L4D_GetTeamScore(GetRealTeam(0) + 1); }
+//public void L4D2_OnEndVersusModeRound_Post() { if (!iInSecondHalfOfRound()) iFirstHalfScore = L4D_GetTeamScore(GetRealTeam(0) + 1); }
 
 // ======================================================================
 //  Events
 // ======================================================================
-public void Event_RoundStart() { bRoundLive = false; bPendingArrayRefresh = true; }
+public void Event_RoundStart(Event hEvent, const char[] eName, bool dontBroadcast) 
+{
+	bRoundLive = false; 
+	bPendingArrayRefresh = true; 
+}
 
 public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if (!client || !IsInfected(client)) return;
 	
-	if (GetInfectedClass(client) == ZC_Tank)
+	if (GetInfectedClass(client) == L4D2Infected_Tank)
 	{
 		if (iTankCount > 0) iTankCount--;
 		if (!RoundHasFlowTank()) bFlowTankActive = false;
@@ -532,18 +490,23 @@ stock void BuildPlayerArrays()
 	iSurvivorArray[survivorCount] = 0;
 	iInfectedArray[infectedCount] = 0;
 	
-	SortCustom1D(iSurvivorArray, survivorCount, SortSurvArray);
+	//SortCustom1D(iSurvivorArray, survivorCount, SortSurvArray);
 }
 
-public int SortSurvArray(int elem1, int elem2, const int[] array, Handle hndl)
+// This code doesn't work correctly anyway
+/*public int SortSurvArray(int elem1, int elem2, const int[] array, Handle hndl)
 {
 	SurvivorCharacter sc1 = GetFixedSurvivorCharacter(elem1);
 	SurvivorCharacter sc2 = GetFixedSurvivorCharacter(elem2);
 	
-	if (sc1 > sc2) { return 1; }
-	else if (sc1 < sc2) { return -1; }
-	else { return 0; }
-}
+	if (sc1 > sc2) {
+		return 1;
+	} else if (sc1 < sc2) {
+		return -1;
+	}else { 
+		return 0;
+	}
+}*/
 
 // ======================================================================
 //  HUD Command Callbacks
@@ -824,7 +787,7 @@ void FillSurvivorInfo(Panel &hSpecHud)
 		}
 		else
 		{
-			if (IsSurvivorHanging(client))
+			if (IsHangingFromLedge(client))
 			{
 				// Nick: <300HP@Hanging>
 				FormatEx(info, sizeof(info), "%s: <%iHP@Hanging>", name, GetClientHealth(client));
@@ -870,7 +833,7 @@ void FillScoreInfo(Panel &hSpecHud)
 	{
 		case L4D2Gamemode_Scavenge:
 		{
-			bool bSecondHalf = !!InSecondHalfOfRound();
+			bool bSecondHalf = !!iInSecondHalfOfRound();
 			bool bTeamFlipped = L4D2_AreTeamsFlipped();
 			
 			float fDuration = GetScavengeRoundDuration(bTeamFlipped);
@@ -911,18 +874,18 @@ void FillScoreInfo(Panel &hSpecHud)
 				FormatEx(	info,
 							sizeof(info),
 							"> HB: %.0f%% | DB: %.0f%% | Pills: %i / %.0f%%",
-							ToPercent(healthBonus, maxHealthBonus),
-							ToPercent(damageBonus, maxDamageBonus),
-							pillsBonus, ToPercent(pillsBonus, maxPillsBonus));
+							L4D2Util_IntToPercentFloat(healthBonus, maxHealthBonus),
+							L4D2Util_IntToPercentFloat(damageBonus, maxDamageBonus),
+							pillsBonus, L4D2Util_IntToPercentFloat(pillsBonus, maxPillsBonus));
 				DrawPanelText(hSpecHud, info);
-				
-				FormatEx(info, sizeof(info), "> Bonus: %i <%.1f%%>", totalBonus, ToPercent(totalBonus, maxTotalBonus));
+
+				FormatEx(info, sizeof(info), "> Bonus: %i <%.1f%%>", totalBonus, L4D2Util_IntToPercentFloat(totalBonus, maxTotalBonus));
 				DrawPanelText(hSpecHud, info);
 				
 				FormatEx(info, sizeof(info), "> Distance: %i", iMaxDistance);
-				//if (InSecondHalfOfRound())
+				//if (iInSecondHalfOfRound())
 				//{
-				//	Format(info, sizeof(info), "%s | R#1: %i <%.1f%%>", info, iFirstHalfScore, ToPercent(iFirstHalfScore, L4D_GetVersusMaxCompletionScore() + maxTotalBonus));
+				//	Format(info, sizeof(info), "%s | R#1: %i <%.1f%%>", info, iFirstHalfScore, L4D2Util_IntToPercentFloat(iFirstHalfScore, (L4D_GetVersusMaxCompletionScore() + maxTotalBonus)));
 				//}
 				DrawPanelText(hSpecHud, info);
 			}
@@ -940,7 +903,7 @@ void FillScoreInfo(Panel &hSpecHud)
 				DrawPanelText(hSpecHud, info);
 				
 				FormatEx(info, sizeof(info), "> Distance: %i", iMaxDistance);
-				//if (InSecondHalfOfRound())
+				//if (iInSecondHalfOfRound())
 				//{
 				//	Format(info, sizeof(info), "%s | R#1: %i", info, iFirstHalfScore);
 				//}
@@ -969,13 +932,13 @@ void FillScoreInfo(Panel &hSpecHud)
 							permBonus, tempBonus, pillsBonus);
 				DrawPanelText(hSpecHud, info);
 				
-				FormatEx(info, sizeof(info), "> Bonus: %i <%.1f%%>", totalBonus, ToPercent(totalBonus, maxTotalBonus));
+				FormatEx(info, sizeof(info), "> Bonus: %i <%.1f%%>", totalBonus, L4D2Util_IntToPercentFloat(totalBonus, maxTotalBonus));
 				DrawPanelText(hSpecHud, info);
 				
 				FormatEx(info, sizeof(info), "> Distance: %i", iMaxDistance);
-				//if (InSecondHalfOfRound())
+				//if (iInSecondHalfOfRound())
 				//{
-				//	Format(info, sizeof(info), "%s | R#1: %i <%.1f%%>", info, iFirstHalfScore, ToPercent(iFirstHalfScore, L4D_GetVersusMaxCompletionScore() + maxTotalBonus));
+				//	Format(info, sizeof(info), "%s | R#1: %i <%.1f%%>", info, iFirstHalfScore, L4D2Util_IntToPercentFloat(iFirstHalfScore, L4D_GetVersusMaxCompletionScore() + maxTotalBonus));
 				//}
 				DrawPanelText(hSpecHud, info);
 			}
@@ -1030,7 +993,7 @@ void FillInfectedInfo(Panel &hSpecHud)
 				FormatEx(info, sizeof(info), "%s: Dead (%s)", name, (timeLeft ? buffer : "Spawning..."));
 				
 				//if (storedClass[client] > ZC_None) {
-				//	FormatEx(info, sizeof(info), "%s: Dead (%s) [%s]", name, ZOMBIECLASS_NAME(storedClass[client]), (RoundToNearest(timeLeft) ? buffer : "Spawning..."));
+				//	FormatEx(info, sizeof(info), "%s: Dead (%s) [%s]", name, L4D2_InfectedNames[storedClass[client]], (RoundToNearest(timeLeft) ? buffer : "Spawning..."));
 				//} else {
 				//	FormatEx(info, sizeof(info), "%s: Dead (%s)", name, (RoundToNearest(timeLeft) ? buffer : "Spawning..."));
 				//}
@@ -1038,8 +1001,8 @@ void FillInfectedInfo(Panel &hSpecHud)
 		}
 		else
 		{
-			L4D2SI zClass = GetInfectedClass(client);
-			if (zClass == ZC_Tank)
+			L4D2_Infected zClass = GetInfectedClass(client);
+			if (zClass == L4D2Infected_Tank)
 				continue;
 			
 			int iHP = GetClientHealth(client), iMaxHP = GetEntProp(client, Prop_Send, "m_iMaxHealth");
@@ -1049,12 +1012,12 @@ void FillInfectedInfo(Panel &hSpecHud)
 				if (iHP < iMaxHP)
 				{
 					// verygood: Charger (Ghost@1HP)
-					FormatEx(info, sizeof(info), "%s: %s (Ghost@%iHP)", name, ZOMBIECLASS_NAME(zClass), iHP);
+					FormatEx(info, sizeof(info), "%s: %s (Ghost@%iHP)", name, L4D2_InfectedNames[view_as<int>(zClass)], iHP);
 				}
 				else
 				{
 					// verygood: Charger (Ghost)
-					FormatEx(info, sizeof(info), "%s: %s (Ghost)", name, ZOMBIECLASS_NAME(zClass));
+					FormatEx(info, sizeof(info), "%s: %s (Ghost)", name, L4D2_InfectedNames[view_as<int>(zClass)]);
 				}
 			}
 			else
@@ -1070,12 +1033,12 @@ void FillInfectedInfo(Panel &hSpecHud)
 				if (GetEntityFlags(client) & FL_ONFIRE)
 				{
 					// verygood: Charger (1HP) [On Fire] [6s]
-					FormatEx(info, sizeof(info), "%s: %s (%iHP) [On Fire]%s", name, ZOMBIECLASS_NAME(zClass), iHP, buffer);
+					FormatEx(info, sizeof(info), "%s: %s (%iHP) [On Fire]%s", name, L4D2_InfectedNames[view_as<int>(zClass)], iHP, buffer);
 				}
 				else
 				{
 					// verygood: Charger (1HP) [6s]
-					FormatEx(info, sizeof(info), "%s: %s (%iHP)%s", name, ZOMBIECLASS_NAME(zClass), iHP, buffer);
+					FormatEx(info, sizeof(info), "%s: %s (%iHP)%s", name, L4D2_InfectedNames[view_as<int>(zClass)], iHP, buffer);
 				}
 			}
 		}
@@ -1092,7 +1055,7 @@ void FillInfectedInfo(Panel &hSpecHud)
 
 bool FillTankInfo(Panel &hSpecHud, bool bTankHUD = false)
 {
-	int tank = FindTank();
+	int tank = FindAliveTankClient();
 	if (tank == -1)
 		return false;
 
@@ -1139,14 +1102,14 @@ bool FillTankInfo(Panel &hSpecHud, bool bTankHUD = false)
 	// Draw health
 	int health = GetClientHealth(tank),
 		maxhealth = GetEntProp(tank, Prop_Send, "m_iMaxHealth");
-	float healthPercent = ToPercent(health, maxhealth);
+	float healthPercent = L4D2Util_IntToPercentFloat(health, maxhealth);
 	if (health <= 0 || IsIncapacitated(tank) || !IsPlayerAlive(tank))
 	{
 		info = "Health  : Dead";
 	}
 	else
 	{
-		FormatEx(info, sizeof(info), "Health  : %i / %i%%", health, MAX(1, RoundFloat(healthPercent)));
+		FormatEx(info, sizeof(info), "Health  : %i / %i%%", health, L4D2Util_GetMax(1, RoundFloat(healthPercent)));
 	}
 	DrawPanelText(hSpecHud, info);
 
@@ -1204,7 +1167,7 @@ void FillGameInfo(Panel &hSpecHud)
 		
 		case L4D2Gamemode_Versus:
 		{
-			FormatEx(info, sizeof(info), "->3. %s (R#%d)", sReadyCfgName, InSecondHalfOfRound() + 1);
+			FormatEx(info, sizeof(info), "->3. %s (R#%d)", sReadyCfgName, iInSecondHalfOfRound() + 1);
 			DrawPanelText(hSpecHud, " ");
 			DrawPanelText(hSpecHud, info);
 			
@@ -1314,14 +1277,14 @@ stock int GetInfectedCustomAbility(int client)
 	return -1;
 }
 
-stock bool HasAbilityVictim(int client, L4D2SI zClass)
+stock bool HasAbilityVictim(int client, L4D2_Infected zClass)
 {
 	switch (zClass)
 	{
-		case ZC_Smoker: return GetEntPropEnt(client, Prop_Send, "m_tongueVictim") > 0;
-		case ZC_Hunter: return GetEntPropEnt(client, Prop_Send, "m_pounceVictim") > 0;
-		case ZC_Jockey: return GetEntPropEnt(client, Prop_Send, "m_jockeyVictim") > 0;
-		case ZC_Charger: return GetEntPropEnt(client, Prop_Send, "m_pummelVictim") > 0 || GetEntPropEnt(client, Prop_Send, "m_carryVictim") > 0;
+		case L4D2Infected_Smoker: return GetEntPropEnt(client, Prop_Send, "m_tongueVictim") > 0;
+		case L4D2Infected_Hunter: return GetEntPropEnt(client, Prop_Send, "m_pounceVictim") > 0;
+		case L4D2Infected_Jockey: return GetEntPropEnt(client, Prop_Send, "m_jockeyVictim") > 0;
+		case L4D2Infected_Charger: return GetEntPropEnt(client, Prop_Send, "m_pummelVictim") > 0 || GetEntPropEnt(client, Prop_Send, "m_carryVictim") > 0;
 	}
 	return false;
 }
@@ -1380,7 +1343,8 @@ stock int GetWeaponClipAmmo(int weapon)
 	return (weapon > 0 ? GetEntProp(weapon, Prop_Send, "m_iClip1") : -1);
 }
 
-stock SurvivorCharacter GetFixedSurvivorCharacter(int client)
+// This code doesn't work correctly anyway
+/*stock SurvivorCharacter GetFixedSurvivorCharacter(int client)
 {
 	int sc = GetEntProp(client, Prop_Send, "m_survivorCharacter");
 	
@@ -1396,7 +1360,7 @@ stock SurvivorCharacter GetFixedSurvivorCharacter(int client)
 			return SC_BILL;			// match it correctly
 	}
 	return view_as<SurvivorCharacter>(sc);
-}
+}*/
 
 stock float GetLerpTime(int client)
 {
@@ -1404,7 +1368,7 @@ stock float GetLerpTime(int client)
 	
 	if (!GetClientInfo(client, "cl_updaterate", value, sizeof(value))) value = "";
 	int updateRate = StringToInt(value);
-	updateRate = RoundFloat(CLAMP(float(updateRate), fMinUpdateRate, fMaxUpdateRate));
+	updateRate = RoundFloat(L4D2Util_ClampFloat(float(updateRate), fMinUpdateRate, fMaxUpdateRate));
 	
 	if (!GetClientInfo(client, "cl_interp_ratio", value, sizeof(value))) value = "";
 	float flLerpRatio = StringToFloat(value);
@@ -1413,10 +1377,10 @@ stock float GetLerpTime(int client)
 	float flLerpAmount = StringToFloat(value);
 	
 	if (cVarMinInterpRatio != null && cVarMaxInterpRatio != null && fMinInterpRatio != -1.0 ) {
-		flLerpRatio = CLAMP(flLerpRatio, fMinInterpRatio, fMaxInterpRatio );
+		flLerpRatio = L4D2Util_ClampFloat(flLerpRatio, fMinInterpRatio, fMaxInterpRatio);
 	}
 	
-	return MAX(flLerpAmount, flLerpRatio / updateRate);
+	return L4D2Util_GetMaxFloat(flLerpAmount, flLerpRatio / updateRate);
 }
 
 stock void GetClientFixedName(int client, char[] name, int length)
@@ -1441,7 +1405,7 @@ stock void GetClientFixedName(int client, char[] name, int length)
 
 //stock int GetRealTeam(int team)
 //{
-//	return team ^ view_as<int>(!!InSecondHalfOfRound() != L4D2_AreTeamsFlipped());
+//	return team ^ view_as<int>(!!iInSecondHalfOfRound() != L4D2_AreTeamsFlipped());
 //}
 
 stock int GetRealClientCount() 
@@ -1454,7 +1418,7 @@ stock int GetRealClientCount()
 	return clients;
 }
 
-stock int InSecondHalfOfRound()
+stock int iInSecondHalfOfRound()
 {
 	return GameRules_GetProp("m_bInSecondHalfOfRound");
 }
@@ -1529,7 +1493,7 @@ stock int GetScavengeRoundNumber()
 stock int GetFurthestSurvivorFlow()
 {
 	int flow = RoundToNearest(100.0 * (L4D2_GetFurthestSurvivorFlow() + fVersusBossBuffer) / L4D2Direct_GetMapMaxFlowDistance());
-	return MIN(flow, 100);
+	return L4D2Util_GetMin(flow, 100);
 }
 
 //stock float GetClientFlow(int client)
@@ -1546,77 +1510,15 @@ stock int GetHighestSurvivorFlow()
 		flow = RoundToNearest(100.0 * (L4D2Direct_GetFlowDistance(client) + fVersusBossBuffer) / L4D2Direct_GetMapMaxFlowDistance());
 	}
 	
-	return MIN(flow, 100);
+	return L4D2Util_GetMin(flow, 100);
 }
 
 stock bool RoundHasFlowTank()
 {
-	return L4D2Direct_GetVSTankToSpawnThisRound(InSecondHalfOfRound());
+	return L4D2Direct_GetVSTankToSpawnThisRound(iInSecondHalfOfRound());
 }
 
 stock bool RoundHasFlowWitch()
 {
-	return L4D2Direct_GetVSWitchToSpawnThisRound(InSecondHalfOfRound());
-}
-
-//bool IsSpectator(int client)
-//{
-//	return IsClientInGame(client) && GetClientTeam(client) == TEAM_SPECTATOR;
-//}
-
-stock bool IsSurvivor(int client)
-{
-	return IsClientInGame(client) && GetClientTeam(client) == TEAM_SURVIVOR;
-}
-
-stock bool IsInfected(int client)
-{
-	return IsClientInGame(client) && GetClientTeam(client) == TEAM_INFECTED;
-}
-
-stock bool IsInfectedGhost(int client) 
-{
-	return !!GetEntProp(client, Prop_Send, "m_isGhost");
-}
-
-stock L4D2SI GetInfectedClass(int client)
-{
-	return view_as<L4D2SI>(GetEntProp(client, Prop_Send, "m_zombieClass"));
-}
-
-stock int FindTank() 
-{
-	for (int i = 1; i <= MaxClients; ++i)
-	{
-		if (IsInfected(i) && GetInfectedClass(i) == ZC_Tank && IsPlayerAlive(i))
-			return i;
-	}
-
-	return -1;
-}
-
-stock int GetTankFrustration(int tank)
-{
-	return (100 - GetEntProp(tank, Prop_Send, "m_frustration"));
-}
-
-stock bool IsIncapacitated(int client)
-{
-	return !!GetEntProp(client, Prop_Send, "m_isIncapacitated");
-}
-
-stock bool IsSurvivorHanging(int client)
-{
-	return !!(GetEntProp(client, Prop_Send, "m_isHangingFromLedge") | GetEntProp(client, Prop_Send, "m_isFallingFromLedge"));
-}
-
-stock int GetSurvivorIncapCount(int client)
-{
-	return GetEntProp(client, Prop_Send, "m_currentReviveCount");
-}
-
-stock int GetSurvivorTemporaryHealth(int client)
-{
-	int temphp = RoundToCeil(GetEntPropFloat(client, Prop_Send, "m_healthBuffer") - ((GetGameTime() - GetEntPropFloat(client, Prop_Send, "m_healthBufferTime")) * fPainPillsDecayRate)) - 1;
-	return (temphp > 0 ? temphp : 0);
+	return L4D2Direct_GetVSWitchToSpawnThisRound(iInSecondHalfOfRound());
 }

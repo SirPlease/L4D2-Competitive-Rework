@@ -70,7 +70,7 @@
 #define IS_VALID_INFECTED(%1)   (IS_VALID_INGAME(%1) && IS_INFECTED(%1))
 #define IS_SURVIVOR_ALIVE(%1)   (IS_VALID_SURVIVOR(%1) && IsPlayerAlive(%1))
 #define IS_INFECTED_ALIVE(%1)   (IS_VALID_INFECTED(%1) && IsPlayerAlive(%1))
-#define QUOTES(%1)              (%1)
+//#define QUOTES(%1)              (%1)
 
 #define SHOTGUN_BLAST_TIME      0.1
 #define POUNCE_CHECK_TIME       0.1

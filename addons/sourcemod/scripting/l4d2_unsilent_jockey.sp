@@ -4,7 +4,7 @@
 #include <sdktools>
 #include <timers.inc>
 
-#define DEBUG                   false
+#define DEBUG                   0
 
 #define MAX_SOUNDFILE_LENGTH    64
 #define MAX_JOCKEYSOUND         17

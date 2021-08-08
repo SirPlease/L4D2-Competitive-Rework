@@ -1,8 +1,5 @@
-/*
-**
-*/
 #if defined _l4d_tank_control_eq_included
- #endinput
+	#endinput
 #endif
 #define _l4d_tank_control_eq_included
 
@@ -12,15 +9,6 @@
  * @return			Client id of the selected tank, -1 if no one is selected.
  */
 native int GetTankSelection();
-
-
-#if !defined REQUIRE_PLUGIN
-public __pl_l4d_tank_control_eq_SetNTVOptional()
-{
-	MarkNativeAsOptional("GetTankSelection");
-}
-#endif
-
 
 public SharedPlugin __pl_l4d_tank_control_eq =
 {
@@ -32,3 +20,10 @@ public SharedPlugin __pl_l4d_tank_control_eq =
 	required = 0,
 #endif
 };
+
+#if !defined REQUIRE_PLUGIN
+public void __pl_l4d_tank_control_eq_SetNTVOptional()
+{
+	MarkNativeAsOptional("GetTankSelection");
+}
+#endif

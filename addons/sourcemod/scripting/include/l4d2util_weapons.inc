@@ -3,17 +3,44 @@
 #endif
 #define l4d2_weapons_inc_
 
-#define GETWEAPONNAME(%0) (IsValidWeaponId(WeaponId:(%0)) ? (WeaponNames[_:(%0)]) : "")
-#define GETWEAPONMODEL(%0) (HasValidWeaponModel(WeaponId:(%0)) ? (WeaponModels[_:(%0)]) : "")
+#define GETWEAPONNAME(%0) (IsValidWeaponId(view_as<WeaponId>(%0)) ? (WeaponNames[view_as<int>(%0)]) : "")
+#define GETLONGWEAPONNAME(%0) (IsValidWeaponId(view_as<WeaponId>(%0)) ? (LongWeaponNames[view_as<int>(%0)]) : "")
+#define GETMELEEWEAPONNAME(%0) (IsValidMeleeWeaponId(view_as<MeleeWeaponId>(%0)) ? (MeleeWeaponNames[view_as<int>(%0)]) : "")
+#define GETLONGMELEEWEAPONNAME(%0) (IsValidMeleeWeaponId(view_as<MeleeWeaponId>(%0)) ? (LongMeleeWeaponNames[view_as<int>(%0)]) : "")
+#define GETWEAPONMODEL(%0) (HasValidWeaponModel(view_as<WeaponId>(%0)) ? (WeaponModels[view_as<int>(%0)]) : "")
+#define GETMELEEWEAPONMODEL(%0) (HasValidMeleeWeaponModel(view_as<MeleeWeaponId>(%0)) ? (MeleeWeaponModels[view_as<int>(%0)]) : "")
 
-static Handle hWeaponNamesTrie = null;
+static StringMap hWeaponNamesTrie = null;
+static StringMap hMeleeWeaponNamesTrie = null;
+static StringMap hMeleeWeaponModelsTrie = null;
 
 stock void InitWeaponNamesTrie()
 {
-	hWeaponNamesTrie = CreateTrie();
+	hWeaponNamesTrie = new StringMap();
 
-	for (int i = 0; i < view_as<int>(WeaponId); i++) {
-		SetTrieValue(hWeaponNamesTrie, WeaponNames[i], i);
+	for (int i = 0; i < view_as<int>(WEPID_SIZE); i++) {
+		hWeaponNamesTrie.SetValue(WeaponNames[i], i);
+	}
+
+	hMeleeWeaponNamesTrie = new StringMap();
+	hMeleeWeaponModelsTrie = new StringMap();
+
+	for (int i = 0; i < view_as<int>(WEPID_MELEES_SIZE); i++) {
+		hMeleeWeaponNamesTrie.SetValue(MeleeWeaponNames[i], i);
+		hMeleeWeaponModelsTrie.SetString(MeleeWeaponModels[i], MeleeWeaponNames[i]);
+	}
+}
+
+/**
+ * Initializes internal structure necessary for weapons.inc functions
+ * @remark It is recommended that you run this function on plugin start, but not necessary
+ *
+ * @noreturn
+ */
+stock void L4D2Weapons_Init()
+{
+	if (hWeaponNamesTrie == null) {
+		InitWeaponNamesTrie();
 	}
 }
 
@@ -26,7 +53,30 @@ stock void InitWeaponNamesTrie()
  */
 stock bool IsValidWeaponId(WeaponId wepid)
 {
-	return (wepid >= WEPID_NONE && wepid < WeaponId);
+	return (wepid >= WEPID_NONE && wepid < WEPID_SIZE);
+}
+
+/**
+ * Performs bounds checking to determine if a MeleeWeaponId is valid
+ * @remark Simple check to see if wepid has a garbage value
+ *
+ * @param wepid        MeleeWeaponId to check for validity
+ * @return True if wepid is valid, false otherwise.
+ */
+stock bool IsValidMeleeWeaponId(MeleeWeaponId wepid)
+{
+	return (wepid >= WEPID_MELEE_NONE && wepid < WEPID_MELEES_SIZE);
+}
+
+/**
+ * Checks to see if a given meleeweaponid has a known WeaponModel in this file's model array
+ *
+ * @param wepid        MeleeWeaponId to check for a known weapon model for.
+ * @return True if a valid weapon model exists for wepid, false otherwise.
+ */
+stock bool HasValidMeleeWeaponModel(MeleeWeaponId wepid)
+{
+	return (IsValidMeleeWeaponId(wepid) && MeleeWeaponModels[wepid][0] != '\0');
 }
 
 /**
@@ -60,12 +110,12 @@ stock bool HasValidWeaponModel(WeaponId wepid)
  */
 stock WeaponId WeaponNameToId(const char[] weaponName)
 {
-	int id;
 	if (hWeaponNamesTrie == null) {
 		InitWeaponNamesTrie();
 	}
 	
-	if (GetTrieValue(hWeaponNamesTrie, weaponName, id)) {
+	int id;
+	if (hWeaponNamesTrie.GetValue(weaponName, id)) {
 		return view_as<WeaponId>(id);
 	}
 	
@@ -83,6 +133,93 @@ stock WeaponId WeaponNameToId(const char[] weaponName)
 stock void GetWeaponName(WeaponId wepid, char[] nameBuffer, const int length)
 {
 	strcopy(nameBuffer, length, GETWEAPONNAME(wepid));
+}
+
+/**
+ * Tries to look up L4D2's internal weapon name for a given MeleeWeaponId.
+ *
+ * @param wepid            MeleeWeaponId To get name of.
+ * @param nameBuffer    String buffer to write the weapon name to.
+ * @param length        Max length which can be written to the buffer.
+ * @return                Number of bytes written to buffer, or 0 for invalid weaponId.
+ */
+stock void GetMeleeWeaponName(MeleeWeaponId wepid, char[] nameBuffer, const int length)
+{
+	strcopy(nameBuffer, length, GETMELEEWEAPONNAME(wepid));
+}
+
+/**
+ * Tries to look up L4D2's internal weapon name for a given WeaponId.
+ *
+ * @param wepid            WeaponId To get name of.
+ * @param nameBuffer    String buffer to write the weapon name to.
+ * @param length        Max length which can be written to the buffer.
+ * @return                Number of bytes written to buffer, or 0 for invalid weaponId.
+ */
+stock void GetLongWeaponName(WeaponId wepid, char[] nameBuffer, const int length)
+{
+	strcopy(nameBuffer, length, GETLONGWEAPONNAME(wepid));
+}
+
+/**
+ * Tries to look up L4D2's internal weapon name for a given MeleeWeaponId.
+ *
+ * @param wepid            MeleeWeaponId To get name of.
+ * @param nameBuffer    String buffer to write the weapon name to.
+ * @param length        Max length which can be written to the buffer.
+ * @return                Number of bytes written to buffer, or 0 for invalid weaponId.
+ */
+stock void GetLongMeleeWeaponName(MeleeWeaponId wepid, char[] nameBuffer, const int length)
+{
+	strcopy(nameBuffer, length, GETLONGMELEEWEAPONNAME(wepid));
+}
+
+/**
+ * Tries to look up the weapon model for a given MeleeWeaponId.
+ * @remarks You should use HasValidWeaponModel to make sure the MeleeWeaponId you're looking up has a valid model associated with it.
+ *
+ * @param wepid            MeleeWeaponId To get name of.
+ * @param nameBuffer    String buffer to write the weapon name to.
+ * @param length        Max length which can be written to the buffer.
+ * @return                Number of bytes written to buffer, or 0 for invalid weaponid or no weapon model available.
+ */
+stock void GetMeleeWeaponModel(MeleeWeaponId wepid, char[] modelBuffer, const int length)
+{
+	strcopy(modelBuffer, length, GETMELEEWEAPONMODEL(wepid));
+}
+
+// Helper function used for getting an entity's internal melee name
+stock bool GetMeleeWeaponNameFromEntity(int entity, char[] buffer, const int length)
+{
+	char classname[64];
+	if (!GetEdictClassname(entity, classname, sizeof(classname))) {
+		return false;
+	}
+
+	if (StrEqual(classname, "weapon_melee_spawn")) {
+		if (hMeleeWeaponModelsTrie == null) {
+			InitWeaponNamesTrie();
+		}
+
+		char sModelName[PLATFORM_MAX_PATH];
+		GetEntPropString(entity, Prop_Data, "m_ModelName", sModelName, sizeof(sModelName));
+
+		// Strip models directory
+		if (strncmp(sModelName, "models/", 7, false) == 0) {
+			strcopy(sModelName, sizeof(sModelName), sModelName[6]);
+		}
+
+		if (hMeleeWeaponModelsTrie.GetString(sModelName, buffer, length)) {
+			return true;
+		}
+		
+		return false;
+	} else if (StrEqual(classname, "weapon_melee")) {
+		GetEntPropString(entity, Prop_Data, "m_strMapSetScriptName", buffer, length);
+		return true;
+	}
+
+	return false;
 }
 
 /**
@@ -118,7 +255,7 @@ stock WeaponId IdentifyWeapon(int entity)
 	}
 
 	if (strcmp(class, "weapon_spawn") == 0) {
-		return view_as<WeaponId>(GetEntProp(entity,Prop_Send,"m_weaponID"));
+		return view_as<WeaponId>(GetEntProp(entity, Prop_Send, "m_weaponID"));
 	}
 
 	int len = strlen(class);
@@ -129,6 +266,36 @@ stock WeaponId IdentifyWeapon(int entity)
 	}
 
 	return WeaponNameToId(class);
+}
+
+/**
+ * Identifies a melee weapon spawn or weapon entity as a MeleeWeaponId
+ * @remark Should work on most weapon ents--even spawns, singles, held, etc.
+ *
+ * @param entity        Index of entity to identify
+ * @return MeleeWeaponId for the entity if it is a weapon, WEPID_MELEE_NONE otherwise
+ */
+stock MeleeWeaponId IdentifyMeleeWeapon(int entity)
+{
+	if (IdentifyWeapon(entity) != WEPID_MELEE) {
+		return WEPID_MELEE_NONE;
+	}
+
+	char sName[128];
+	if (!GetMeleeWeaponNameFromEntity(entity, sName, sizeof(sName))) {
+		return WEPID_MELEE_NONE;
+	}
+
+	if (hMeleeWeaponNamesTrie == null) {
+		InitWeaponNamesTrie();
+	}
+
+	int id;
+	if (hMeleeWeaponNamesTrie.GetValue(sName, id)) {
+		return view_as<MeleeWeaponId>(id);
+	}
+
+	return WEPID_MELEE_NONE;
 }
 
 /**
@@ -169,12 +336,13 @@ stock int ConvertWeaponSpawn(int entity, WeaponId wepid, int count = 5, const ch
 	
 	SetEntProp(entity, Prop_Send, "m_weaponID", wepid);
 
-	char buf[64];
+	static char buf[PLATFORM_MAX_PATH - 16], modelName[PLATFORM_MAX_PATH];
 	if (model[0] != '\0') {
 		SetEntityModel(entity, model);
 	} else {
 		GetWeaponModel(wepid, buf, sizeof(buf));
-		SetEntityModel(entity, buf);
+		Format(modelName, sizeof(modelName), "models%s", buf);
+		SetEntityModel(entity, modelName);
 	}
 	
 	IntToString(count, buf, sizeof(buf));
@@ -182,7 +350,7 @@ stock int ConvertWeaponSpawn(int entity, WeaponId wepid, int count = 5, const ch
 
 	TeleportEntity(entity, origins, angles, NULL_VECTOR);
 	DispatchSpawn(entity);
-	SetEntityMoveType(entity ,MOVETYPE_NONE);
+	SetEntityMoveType(entity, MOVETYPE_NONE);
 
 	return entity;
 }

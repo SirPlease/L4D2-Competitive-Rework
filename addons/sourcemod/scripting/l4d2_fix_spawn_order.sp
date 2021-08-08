@@ -42,10 +42,12 @@ enum SIClass
 	SI_Jockey,
 	SI_Charger,
 	SI_Witch,
-	SI_Tank
+	SI_Tank,
+	
+	SI_MAX_SIZE
 };
 
-stock const String:g_sSIClassNames[SIClass][] = 
+stock const String:g_sSIClassNames[view_as<int>(SI_MAX_SIZE)][] = 
 {	"", "Smoker", "Boomer", "Hunter", "Spitter", "Jockey", "Charger", "Witch", "Tank" };
 
 public Plugin:myinfo = 

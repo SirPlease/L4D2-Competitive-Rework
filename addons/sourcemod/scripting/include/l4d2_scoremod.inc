@@ -1,21 +1,9 @@
-/*
-**
-*/
 #if defined _l4d2_scoremod_included
- #endinput
+	#endinput
 #endif
 #define _l4d2_scoremod_included
 
 native int HealthBonus();
-
-
-#if !defined REQUIRE_PLUGIN
-public __pl_l4d2_scoremod_SetNTVOptional()
-{
-	MarkNativeAsOptional("HealthBonus");
-}
-#endif
-
 
 public SharedPlugin __pl_l4d2_scoremod =
 {
@@ -27,3 +15,10 @@ public SharedPlugin __pl_l4d2_scoremod =
 	required = 0,
 #endif
 };
+
+#if !defined REQUIRE_PLUGIN
+public void __pl_l4d2_scoremod_SetNTVOptional()
+{
+	MarkNativeAsOptional("HealthBonus");
+}
+#endif
