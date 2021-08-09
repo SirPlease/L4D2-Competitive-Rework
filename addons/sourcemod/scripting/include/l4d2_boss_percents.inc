@@ -43,20 +43,6 @@ native void SetWitchDisabled(bool disable);
 native void UpdateBossPercents();
 
 /**
- * @brief Check if the current map contains a static witch spawn.
- *
- * @return					True on contains a static spawn, false otherwise.
- */
-native bool IsStaticWitchMap();
-
-/**
- * @brief Check if the current map contains a static tank spawn.
- *
- * @return					True on contains a static spawn, false otherwise.
- */
-native bool IsStaticTankMap();
-
-/**
  * @brief Get the stored tank percent.
  *
  * @return					Integer of the percentage, 0 if spawn disabled or spawn static, -1 if unsupported game.
@@ -112,8 +98,6 @@ public void __pl_l4d2_boss_percents_SetNTVOptional()
 	MarkNativeAsOptional("SetTankDisabled");
 	MarkNativeAsOptional("SetWitchDisabled");
 	MarkNativeAsOptional("UpdateBossPercents");
-	MarkNativeAsOptional("IsStaticWitchMap");
-	MarkNativeAsOptional("IsStaticTankMap");
 	MarkNativeAsOptional("GetStoredTankPercent");
 	MarkNativeAsOptional("GetStoredWitchPercent");
 	MarkNativeAsOptional("GetReadyUpFooterIndex");

@@ -1,0 +1,129 @@
+"Phrases"
+{
+// The following uses bracket style color tags (see colors.inc)
+	"SelfCastNotAllowed"
+	{
+		"ko"		"{blue}[{default}Cast{blue}] {default}당신은 {green}이 서버에{default} 캐스터 등록이 허가되지 않았습니다."
+	}
+
+	"SelfCast1"
+	{
+		"ko"		"{blue}[{default}Cast{blue}] {default}캐스터 등록이 완료되었습니다."
+	}
+
+	"SelfCast2"
+	{
+		"ko"		"{blue}[{default}Cast{blue}] {default}애드온을 활성화 하려면 재접속하십시오."
+	}
+
+	"RegCasterTarget"
+	{
+		"#format"	"{1:N}"
+		"ko"		"{default}[{olive}!{default}] {blue}관리자 {default}({olive}{1}{default}) 가 당신을 캐스터로 등록하였습니다."
+	}
+
+	"Reconnect1"
+	{
+		"ko"		"{blue}[{default}Reconnect{blue}] {default}당신은 서버에 재접속 될 것 입니다.."
+	}
+
+	"Reconnect2"
+	{
+		"ko"		"{blue}[{default}Reconnect{blue}] {default}로딩화면 대신에 검은화면이 나옵니다!"
+	}
+
+	"UnregCasterTarget"
+	{
+		"#format"	"{1:N}"
+		"ko"		"{default}[{olive}!{default}] {default}당신은 {blue}관리자 {default}({olive}{1}{default})에 의해 캐스터 등록이 해제되었습니다."
+	}
+	
+	"KickSpecsAdmin"
+	{
+		"#format"	"{1:N}"
+		"ko"		"[{green}!{default}] {blue}관리자 {default}({olive}{1}{default})에 의해{blue}관전자가 {default}추방되었습니다."
+	}
+	
+	"KickSpecsVoteSpec"
+	{
+		"ko"		"[{olive}Cast{default}] {blue}관전자는 {green}관전자 추방 투표를 {default}할 수 없습니다."
+	}
+	
+	"VoteInProgress"
+	{
+		"ko"		"[{olive}Cast{default}] {olive}투표가 {green}진행중{default} 입니다."
+	}
+	
+	"VoteDelay"
+	{
+		"#format"	"{1:d}"
+		"ko"		"[{olive}Cast{default}]{blue}{1}초 {default}후 투표를 시작할 수 있습니다."
+	}
+
+	
+// The following are not allowed to use any color tag
+	"RegCasterReply"
+	{
+		"#format"	"{1:N}"
+		"ko"		"{1} 이 캐스터로 등록됨"
+	}
+	
+	"CasterSteamIDError"
+	{
+		"ko"		"Steam ID를 찾지 못함.  오탈자 확인과 플레이어가 완전히 연결되게 하십시오."
+	}
+
+	"UnregCasterNonAdmin"
+	{
+		"ko"		"관리자만 다른 캐스터를 삭제할 수 있습니다. sm_notcasting 를 사용하여 스스로 캐스터 등록을 해제할 수 있습니다."
+	}
+
+	"UnregCasterSuccess"
+	{
+		"#format"	"{1:N}"
+		"ko"		"{1} 은 더 이상 캐스터가 아닙니다."
+	}
+	
+	"CasterDBReset"
+	{
+		"ko"		"[casters_database] 초기화 성공"
+	}
+	
+	"CasterDBAdd"
+	{
+		"#format"	"{1:s}"
+		"ko"		"[casters_database] '{1}' 추가됨"
+	}
+	
+	"CasterDBRemove"
+	{
+		"#format"	"{1:s}"
+		"ko"		"[casters_database] '{1}' 삭제됨"
+	}
+	
+	"CasterDBFound"
+	{
+		"#format"	"{1:s}"
+		"ko"		"[casters_database] '{1}' 이미 존재함"
+	}
+	
+	"CasterDBError"
+	{
+		"ko"		"[casters_database] args가 명시되지 않음 / 비어있는 버퍼"
+	}
+	
+	"KickSpecsVoteTitle"
+	{
+		"ko"		"관리자가 아니고 캐스터가 아닌 관전자를 추방하시겠습니까?"
+	}
+	
+	"KickSpecsVoteSuccess"
+	{
+		"ko"		"잘가 관전자들!"
+	}
+	
+	"KickSpecsReason"
+	{
+		"ko"		"관전자를 원하지 않습니다."
+	}
+}

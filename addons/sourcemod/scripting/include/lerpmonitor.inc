@@ -35,7 +35,7 @@ public SharedPlugin __lerpmonitor =
 #if !defined REQUIRE_PLUGIN
 public void __pl_lerpmonitor_SetNTVOptional()
 {
-	MarkNativeAsOptional("NM_GetLerpTime");
+	MarkNativeAsOptional("LM_GetLerpTime");
 	MarkNativeAsOptional("LM_GetCurrentLerpTime");
 }
 #endif

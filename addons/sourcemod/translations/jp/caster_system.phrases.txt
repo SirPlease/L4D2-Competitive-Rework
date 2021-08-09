@@ -1,0 +1,129 @@
+"Phrases"
+{
+// The following uses bracket style color tags (see colors.inc)
+	"SelfCastNotAllowed"
+	{
+		"jp"		"{blue}[{default}Cast{blue}] {default}あなたはこの{green}サーバー{default}にキャスターとして登録することはできません。"
+	}
+
+	"SelfCast1"
+	{
+		"jp"		"{blue}[{default}Cast{blue}] {default}あなたをキャスターに登録しました。"
+	}
+
+	"SelfCast2"
+	{
+		"jp"		"{blue}[{default}Cast{blue}] {default}サーバーに再接続を行うと、アドオンが有効になります。"
+	}
+
+	"RegCasterTarget"
+	{
+		"#format"	"{1:N}"
+		"jp"		"{default}[{olive}!{default}] {blue}アドミン {default}({olive}{1}{default}) があなたをキャスターに登録しました。"
+	}
+
+	"Reconnect1"
+	{
+		"jp"		"{blue}[{default}Reconnect{blue}] {default}サーバーに再接続を行います。"
+	}
+
+	"Reconnect2"
+	{
+		"jp"		"{blue}[{default}Reconnect{blue}] {default}画面が真っ暗になります。"
+	}
+
+	"UnregCasterTarget"
+	{
+		"#format"	"{1:N}"
+		"jp"		"{default}[{olive}!{default}] {default}あなたは {blue}アドミン {default}({olive}{1}{default}) によってキャスターが解除されました。"
+	}
+	
+	"KickSpecsAdmin"
+	{
+		"#format"	"{1:N}"
+		"jp"		"[{green}!{default}] {blue}アドミン {default}({olive}{1}{default}) は{blue}観戦者全員{default}をキックしました。"
+	}
+	
+	"KickSpecsVoteSpec"
+	{
+		"jp"		"[{olive}Cast{default}] {blue}観戦者{default}は {green}kicking specs{default} に投票することはできません。"
+	}
+	
+	"VoteInProgress"
+	{
+		"jp"		"[{olive}Cast{default}] {green}投票中{default}です。"
+	}
+	
+	"VoteDelay"
+	{
+		"#format"	"{1:d}"
+		"jp"		"[{olive}Cast{default}] 別の投票が行われており、残り {blue}{1}秒 {default}で投票が行えます。"
+	}
+
+	
+// The following are not allowed to use any color tag
+	"RegCasterReply"
+	{
+		"#format"	"{1:N}"
+		"jp"		"{1} をキャスターに登録しました。"
+	}
+	
+	"CasterSteamIDError"
+	{
+		"jp"		"SteamIDが見つかりませんでした。 タイプミスが無いかどうかチェックしてください。"
+	}
+
+	"UnregCasterNonAdmin"
+	{
+		"jp"		"アドミンのみが他のキャスターの解除を行うことができます。 あなたのキャスターの解除を行いたい場合は sm_notcasting を使用してください。"
+	}
+
+	"UnregCasterSuccess"
+	{
+		"#format"	"{1:N}"
+		"jp"		"{1} はキャスターではなくなりました。"
+	}
+	
+	"CasterDBReset"
+	{
+		"jp"		"[casters_database] キャスターのリセットに成功しました。"
+	}
+	
+	"CasterDBAdd"
+	{
+		"#format"	"{1:s}"
+		"jp"		"[casters_database] '{1}' を追加しました。"
+	}
+	
+	"CasterDBRemove"
+	{
+		"#format"	"{1:s}"
+		"jp"		"[casters_database] '{1}' を削除しました。"
+	}
+	
+	"CasterDBFound"
+	{
+		"#format"	"{1:s}"
+		"jp"		"[casters_database] '{1}' は既に登録されています。"
+	}
+	
+	"CasterDBError"
+	{
+		"jp"		"[casters_database] 引数が指定されていないか、バッファが空です。"
+	}
+	
+	"KickSpecsVoteTitle"
+	{
+		"jp"		"観戦者全員をキックしますか？（アドミン権限は除く）"
+	}
+	
+	"KickSpecsVoteSuccess"
+	{
+		"jp"		"観戦者全員をキックします..."
+	}
+	
+	"KickSpecsReason"
+	{
+		"jp"		"観戦はお断り！"
+	}
+}

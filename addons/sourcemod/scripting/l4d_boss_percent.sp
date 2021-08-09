@@ -13,18 +13,20 @@ out what's going on :D Kinda makes my other plugins look bad huh :/
 
 */
 
-#include <sourcemod>
-#include <builtinvotes>
-#include <left4dhooks>
-#include <l4d2util_rounds>
-#include <l4d2lib>
-#include <readyup>
-#include <colors>
-
 #pragma semicolon 1
 #pragma newdecls required
 
-#define PLUGIN_VERSION "3.2.3"
+#include <sourcemod>
+#include <builtinvotes>
+#include <left4dhooks>
+#include <colors>
+#define L4D2UTIL_STOCKS_ONLY
+#include <l4d2util_rounds>
+#undef REQUIRE_PLUGIN
+#include <confogl>
+#include <readyup>
+
+#define PLUGIN_VERSION "3.2.4a"
 
 public Plugin myinfo =
 {
@@ -68,7 +70,7 @@ ConVar g_hVsBossFlowMin; 												// Boss Flow Min
 ConVar g_hVsBossFlowMax; 												// Boss Flow Max
 StringMap g_hStaticTankMaps; 											// Stores All Static Tank Maps
 StringMap g_hStaticWitchMaps; 											// Stores All Static Witch Maps
-Handle g_forwardUpdateBosses;
+GlobalForward g_forwardUpdateBosses;
 Handle g_hUpdateFooterTimer;
 
 // Variables
@@ -117,9 +119,9 @@ public void OnPluginStart()
 	g_hCvarWitchPercent = CreateConVar("l4d_witch_percent", "1", "Display Witch flow percentage in chat"); // Sets if Witch Percents will be displayed on ready-up and when boss percentage command is used
 	g_hCvarBossVoting = CreateConVar("l4d_boss_vote", "1", "Enable boss voting"); // Sets if boss voting is enabled or disabled
 
-	g_hCvarGlobalPercent.AddChangeHook(view_as<ConVarChanged>(GetCvars));
-	g_hCvarTankPercent.AddChangeHook(view_as<ConVarChanged>(GetCvars));
-	g_hCvarWitchPercent.AddChangeHook(view_as<ConVarChanged>(GetCvars));
+	g_hCvarGlobalPercent.AddChangeHook(OnConVarChanged);
+	g_hCvarTankPercent.AddChangeHook(OnConVarChanged);
+	g_hCvarWitchPercent.AddChangeHook(OnConVarChanged);
 	
 	GetCvars();
 	
@@ -144,7 +146,12 @@ public void OnPluginStart()
 	HookEvent("player_say", DKRWorkaround, EventHookMode_Post); // Called when a message is sent in chat. Used to grab the Dark Carnival: Remix boss percentages.
 }
 
-public void GetCvars()
+public void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	GetCvars();
+}
+
+void GetCvars()
 {
 	g_bCvarGlobalPercent = g_hCvarGlobalPercent.BoolValue;
 	g_bCvarTankPercent = g_hCvarTankPercent.BoolValue;
@@ -1144,20 +1151,20 @@ bool ValidateFlow(int iTankFlow = -1,
 	int iBossMaxFlow = RoundToFloor(GetConVarFloat(g_hVsBossFlowMax) * 100);
 	
 	// mapinfo override
-	iBossMinFlow = L4D2_GetMapValueInt("versus_boss_flow_min", iBossMinFlow);
-	iBossMaxFlow = L4D2_GetMapValueInt("versus_boss_flow_max", iBossMaxFlow);
+	iBossMinFlow = LGO_GetMapValueInt("versus_boss_flow_min", iBossMinFlow);
+	iBossMaxFlow = LGO_GetMapValueInt("versus_boss_flow_max", iBossMaxFlow);
 
 	if (bCheckTank)
 	{
 		if (iTankFlow < iBossMinFlow || iBossMaxFlow < iTankFlow)
 			return false;
 		
-		int iMinBanFlow = L4D2_GetMapValueInt("tank_ban_flow_min", 101);
-		int iMaxBanFlow = L4D2_GetMapValueInt("tank_ban_flow_max", 101);
-		int iMinBanFlowB = L4D2_GetMapValueInt("tank_ban_flow_min_b", 101);
-		int iMaxBanFlowB = L4D2_GetMapValueInt("tank_ban_flow_max_b", 101);
-		int iMinBanFlowC = L4D2_GetMapValueInt("tank_ban_flow_min_c", 101);
-		int iMaxBanFlowC = L4D2_GetMapValueInt("tank_ban_flow_max_c", 101);
+		int iMinBanFlow = LGO_GetMapValueInt("tank_ban_flow_min", 101);
+		int iMaxBanFlow = LGO_GetMapValueInt("tank_ban_flow_max", 101);
+		int iMinBanFlowB = LGO_GetMapValueInt("tank_ban_flow_min_b", 101);
+		int iMaxBanFlowB = LGO_GetMapValueInt("tank_ban_flow_max_b", 101);
+		int iMinBanFlowC = LGO_GetMapValueInt("tank_ban_flow_min_c", 101);
+		int iMaxBanFlowC = LGO_GetMapValueInt("tank_ban_flow_max_c", 101);
 		
 		if ((iMinBanFlow <= iTankFlow <= iMaxBanFlow)
 		|| (iMinBanFlowB <= iTankFlow <= iMaxBanFlowB)
@@ -1167,8 +1174,8 @@ bool ValidateFlow(int iTankFlow = -1,
 	
 	if (bCheckWitch)
 	{
-		iBossMinFlow = L4D2_GetMapValueInt("witch_flow_min", iBossMinFlow);
-		iBossMaxFlow = L4D2_GetMapValueInt("witch_flow_max", iBossMaxFlow);
+		iBossMinFlow = LGO_GetMapValueInt("witch_flow_min", iBossMinFlow);
+		iBossMaxFlow = LGO_GetMapValueInt("witch_flow_max", iBossMaxFlow);
 		
 		if (iWitchFlow < iBossMinFlow || iBossMaxFlow < iWitchFlow)
 			return false;
