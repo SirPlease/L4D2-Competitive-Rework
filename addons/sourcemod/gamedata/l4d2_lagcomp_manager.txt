@@ -45,6 +45,7 @@
 			*/
 			"CLagCompensationManager_AddAdditionalEntity"
 			{
+				"library"		"server"
 				"linux"			"@_ZN23CLagCompensationManager19AddAdditionalEntityEP11CBaseEntity"
 				"windows"		"\x55\x8B\xEC\x83\xEC\x08\x56\x8B\xF1\x8B\x4D\x08\x83\xC8\xFF"
 								/* 55 8B EC 83 EC 08 56 8B F1 8B 4D 08 83 C8 FF */
@@ -59,6 +60,7 @@
 			*/
 			"CLagCompensationManager_RemoveAdditionalEntity"
 			{
+				"library"		"server"
 				"linux"			"@_ZN23CLagCompensationManager22RemoveAdditionalEntityEP11CBaseEntity"
 				"windows"		"\x55\x8B\xEC\x51\x56\x8B\xF1\x8B\x4D\x08\x83\xC8\xFF"
 								/* 55 8B EC 51 56 8B F1 8B 4D 08 83 C8 FF */
@@ -66,6 +68,7 @@
 			
 			"g_LagCompensationManager"
 			{
+				"library"		"server"
 				"linux"			"@_ZL24g_LagCompensationManager"
 			}
 			
