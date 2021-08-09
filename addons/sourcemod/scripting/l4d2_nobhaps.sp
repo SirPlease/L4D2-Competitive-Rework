@@ -1,6 +1,16 @@
 #include <sourcemod>
 #include <sdktools>
 
+#define DEBUG 0
+
+#define L4DBUILD 1
+
+#define LEFT4FRAMEWORK_GAMEDATA "left4dhooks.l4d2" // left4dhooks
+#define SECTION_NAME "GetRunTopSpeed" // left4dhooks
+
+//#define LEFT4FRAMEWORK_GAMEDATA "left4downtown.l4d2" // left4downtown
+//#define SECTION_NAME "CTerrorPlayer_GetRunTopSpeed" // left4downtown
+
 public Plugin:myinfo =
 {
 	name = "Simple Anti-Bunnyhop",
@@ -9,11 +19,6 @@ public Plugin:myinfo =
 	version = "0.3",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
-
-#define DEBUG 0
-
-#define L4DBUILD 1
-#define LEFT4FRAMEWORK_GAMEDATA "left4dhooks.l4d2"
 
 new Handle:hCvarEnable;
 #if defined(L4DBUILD)
@@ -34,22 +39,24 @@ public OnPluginStart()
 
 void LoadSDK()
 {
-	Handle conf = LoadGameConfigFile(LEFT4FRAMEWORK_GAMEDATA);
-	if (conf == INVALID_HANDLE) {
+	Handle hGameData = LoadGameConfigFile(LEFT4FRAMEWORK_GAMEDATA);
+	if (hGameData == null) {
 		SetFailState("Could not load gamedata/%s.txt", LEFT4FRAMEWORK_GAMEDATA);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
-	if (!PrepSDKCall_SetFromConf(conf, SDKConf_Signature, "GetRunTopSpeed")) {
-		SetFailState("Function 'GetRunTopSpeed' not found");
-	}
-	PrepSDKCall_SetReturnInfo(SDKType_Float, SDKPass_Plain);
-	hGetRunTopSpeed = EndPrepSDKCall();
-	if (hGetRunTopSpeed == INVALID_HANDLE) {
-		SetFailState("Function 'GetRunTopSpeed' found, but something went wrong");
+	if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, SECTION_NAME)) {
+		SetFailState("Function '%s' not found", SECTION_NAME);
 	}
 	
-	delete conf;
+	PrepSDKCall_SetReturnInfo(SDKType_Float, SDKPass_Plain);
+	
+	g_hGetRunTopSpeed = EndPrepSDKCall();
+	if (g_hGetRunTopSpeed == null) {
+		SetFailState("Function '%s' found, but something went wrong", SECTION_NAME);
+	}
+	
+	delete hGameData;
 }
 
 public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:angles[3], &weapon)
