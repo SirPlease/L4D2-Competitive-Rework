@@ -14,7 +14,7 @@
 #define GAME_WEAPON_MAX_ATTRS		(PLUGIN_WEAPON_MAX_ATTRS - 1) // Excluding: tankdamagemult(Tank damage multiplier), the plugin is responsible for this attribute
 
 #define MAX_ATTRS_NAME_LENGTH		32
-#define MAX_WEAPON_NAME_LENGTH		128
+#define MAX_WEAPON_NAME_LENGTH		64
 #define MAX_ATTRS_VALUE_LENGTH		32
 
 enum
@@ -26,9 +26,9 @@ enum
 
 enum MessageTypeFlag
 {
-	eServerPrint = (1 << 0),
-	ePrintChatAll = (1 << 1),
-	eLogError = (1 << 2)
+	eServerPrint =	(1 << 0),
+	ePrintChatAll =	(1 << 1),
+	eLogError =		(1 << 2)
 };
 
 static const L4D2IntWeaponAttributes iIntWeaponAttributes[3] =
@@ -130,7 +130,7 @@ public Plugin myinfo =
 {
 	name = "L4D2 Weapon Attributes",
 	author = "Jahze, A1m`",
-	version = "2.4",
+	version = "2.5",
 	description = "Allowing tweaking of the attributes of all weapons"
 };
 
@@ -139,7 +139,8 @@ public void OnPluginStart()
 	hHideWeaponAttributes = CreateConVar( \
 		"sm_weapon_hide_attributes", \
 		"2", \
-		"Allows to customize the command 'sm_weapon_attributes'. 0 - disable command, 1 - show weapons attribute to admin only. 2 - show weapon attributes to everyone.", \
+		"Allows to customize the command 'sm_weapon_attributes'. \
+		0 - disable command, 1 - show weapons attribute to admin only. 2 - show weapon attributes to everyone.", \
 		_, true, 0.0, true, 2.0 \
 	);
 	
@@ -150,9 +151,10 @@ public void OnPluginStart()
 	}
 
 	RegServerCmd("sm_weapon", Cmd_Weapon);
-	RegConsoleCmd("sm_weapon_attributes", Cmd_WeaponAttributes);
 	RegServerCmd("sm_weapon_attributes_reset", Cmd_WeaponAttributesReset);
-
+	
+	RegConsoleCmd("sm_weapon_attributes", Cmd_WeaponAttributes);
+	
 	if (bLateLoad) {
 		for (int i = 1; i <= MaxClients; i++) {
 			if (IsClientInGame(i)) {
@@ -194,7 +196,7 @@ public void OnClientDisconnect(int client)
 public Action Cmd_Weapon(int args)
 {
 	if (args < 3) {
-		PrintDebug(eLogError|eServerPrint, "Syntax: sm_weapon <weapon> <attr> <value>");
+		PrintDebug(eLogError|eServerPrint, "Syntax: sm_weapon <weapon> <attr> <value>.");
 		return Plugin_Handled;
 	}
 
@@ -206,7 +208,7 @@ public Action Cmd_Weapon(int args)
 	}
 	
 	if (!L4D2_IsValidWeapon(sWeaponName)) {
-		PrintDebug(eLogError|eServerPrint, "Bad weapon name: %s", sWeaponName);
+		PrintDebug(eLogError|eServerPrint, "Bad weapon name: %s.", sWeaponName);
 		return Plugin_Handled;
 	}
 	
@@ -216,7 +218,7 @@ public Action Cmd_Weapon(int args)
 	int iAttrIdx = GetWeaponAttributeIndex(sAttrName);
 
 	if (iAttrIdx == -1) {
-		PrintDebug(eLogError|eServerPrint, "Bad attribute name: %s", sAttrName);
+		PrintDebug(eLogError|eServerPrint, "Bad attribute name: %s.", sAttrName);
 		return Plugin_Handled;
 	}
 	
@@ -226,15 +228,21 @@ public Action Cmd_Weapon(int args)
 	if (iAttrIdx < 3) {
 		int iValue = StringToInt(sAttrValue);
 		SetWeaponAttributeInt(sWeaponName, iAttrIdx, iValue);
-		PrintToServer("%s for %s set to %d", sWeaponAttrNames[iAttrIdx], sWeaponName, iValue);
+		PrintToServer("%s for %s set to %d.", sWeaponAttrNames[iAttrIdx], sWeaponName, iValue);
 	} else {
 		float fValue = StringToFloat(sAttrValue);
 		if (iAttrIdx < GAME_WEAPON_MAX_ATTRS) {
 			SetWeaponAttributeFloat(sWeaponName, iAttrIdx, fValue);
-			PrintToServer("%s for %s set to %.2f", sWeaponAttrNames[iAttrIdx], sWeaponName, fValue);
+			PrintToServer("%s for %s set to %.2f.", sWeaponAttrNames[iAttrIdx], sWeaponName, fValue);
 		} else {
 			if (fValue <= 0.0) {
-				PrintDebug(eLogError|eServerPrint, "Сheck weapon attribute '%s' value, cannot be set below zero or zero. Set the value: %f", sAttrName, fValue);
+				if (!hTankDamageAttri.Remove(sWeaponName)) {
+					PrintDebug(eLogError|eServerPrint, "Сheck weapon attribute '%s' value, cannot be set below zero or zero. Set the value: %f!", sAttrName, fValue);
+					return Plugin_Handled;
+				}
+				
+				PrintToServer("Tank Damage Multiplier (tankdamagemult) attribute reset for %s weapon!", sWeaponName);
+				bTankDamageEnableAttri = (hTankDamageAttri.Size != 0);
 				return Plugin_Handled;
 			}
 			
@@ -259,7 +267,7 @@ public Action Cmd_WeaponAttributes(int client, int args)
 	}
 	
 	if (args < 1) {
-		ReplyToCommand(client, "Syntax: sm_weapon_attributes <weapon>");
+		ReplyToCommand(client, "Syntax: sm_weapon_attributes <weapon>.");
 		return Plugin_Handled;
 	}
 	
@@ -271,25 +279,25 @@ public Action Cmd_WeaponAttributes(int client, int args)
 	}
 	
 	if (!L4D2_IsValidWeapon(sWeaponName)) {
-		ReplyToCommand(client, "Bad weapon name: %s", sWeaponName);
+		ReplyToCommand(client, "Bad weapon name: %s.", sWeaponName);
 		return Plugin_Handled;
 	}
 
-	ReplyToCommand(client, "Weapon stats for %s", sWeaponName);
+	ReplyToCommand(client, "Weapon stats for %s:", sWeaponName);
 
 	for (int iAtrriIndex = 0; iAtrriIndex < GAME_WEAPON_MAX_ATTRS; iAtrriIndex++) {
 		if (iAtrriIndex < 3) {
 			int iValue = GetWeaponAttributeInt(sWeaponName, iAtrriIndex);
-			ReplyToCommand(client, "%s: %d", sWeaponAttrNames[iAtrriIndex], iValue);
+			ReplyToCommand(client, "%s: %d.", sWeaponAttrNames[iAtrriIndex], iValue);
 		} else {
 			float fValue = GetWeaponAttributeFloat(sWeaponName, iAtrriIndex);
-			ReplyToCommand(client, "%s: %.2f", sWeaponAttrNames[iAtrriIndex], fValue);
+			ReplyToCommand(client, "%s: %.2f.", sWeaponAttrNames[iAtrriIndex], fValue);
 		}
 	}
 	
 	float fBuff = 0.0;
 	if (hTankDamageAttri.GetValue(sWeaponName, fBuff)) {
-		ReplyToCommand(client, "%s: %.2f", sWeaponAttrNames[GAME_WEAPON_MAX_ATTRS], fBuff);
+		ReplyToCommand(client, "%s: %.2f.", sWeaponAttrNames[GAME_WEAPON_MAX_ATTRS], fBuff);
 	}
 	
 	return Plugin_Handled;
@@ -297,6 +305,15 @@ public Action Cmd_WeaponAttributes(int client, int args)
 
 public Action Cmd_WeaponAttributesReset(int args)
 {
+	bTankDamageEnableAttri = false;
+	
+	bool IsReset = (hTankDamageAttri.Size > 0);
+	hTankDamageAttri.Clear();
+	
+	if (IsReset) {
+		PrintToServer("Tank Damage Multiplier (tankdamagemult) attribute reset for all weapons!");
+	}
+	
 	int iCount = ResetWeaponAttributes();
 	if (iCount == 0) {
 		PrintToServer("Weapon attributes were not reset, because no weapon attributes were saved!");
@@ -304,6 +321,7 @@ public Action Cmd_WeaponAttributesReset(int args)
 	}
 	
 	PrintToServer("The weapon attributes for all saved weapons have been reset successfully. Number of reset weapon attributes: %d!", iCount);
+
 	return Plugin_Handled;
 }
 
@@ -337,7 +355,7 @@ public Action DamageBuffVsTank(int victim, int &attacker, int &inflictor, float 
 		damage *= fBuff;
 		
 		#if DEBUG
-		PrintDebug(eLogError|eServerPrint|ePrintChatAll, "Damage to the tank %N(%d) is set %f. Attacker: %N(%d), weapon: %s", victim, victim, damage, attacker, attacker, sWeaponName);
+			PrintDebug(eLogError|eServerPrint|ePrintChatAll, "Damage to the tank %N(%d) is set %f. Attacker: %N(%d), weapon: %s.", victim, victim, damage, attacker, attacker, sWeaponName);
 		#endif
 		
 		return Plugin_Changed;
@@ -376,16 +394,16 @@ void SetWeaponAttributeInt(const char[] sWeaponName, int iAtrriIndex, int iSetVa
 			hDefaultWeaponAttributes[iAtrriIndex].SetValue(sWeaponName, iDefValue, true);
 			
 			#if DEBUG
-			PrintDebug(eLogError|eServerPrint|ePrintChatAll, "The default int value '%d' of the attribute for the weapon '%s' is saved! Attributes index: %d", iDefValue, sWeaponName, iAtrriIndex);
+				PrintDebug(eLogError|eServerPrint|ePrintChatAll, "The default int value '%d' of the attribute for the weapon '%s' is saved! Attributes index: %d.", iDefValue, sWeaponName, iAtrriIndex);
 			#endif
 		}
 	}
 	
 	L4D2_SetIntWeaponAttribute(sWeaponName, iIntWeaponAttributes[iAtrriIndex], iSetValue);
 
-	#if DEBUG
-	PrintDebug(eLogError|eServerPrint|ePrintChatAll, "Weapon attribute int set. %s - Trying to set: %d, was set: %d", sWeaponName, iSetValue, GetWeaponAttributeInt(sWeaponName, iAtrriIndex));
-	#endif
+#if DEBUG
+	PrintDebug(eLogError|eServerPrint|ePrintChatAll, "Weapon attribute int set. %s - Trying to set: %d, was set: %d.", sWeaponName, iSetValue, GetWeaponAttributeInt(sWeaponName, iAtrriIndex));
+#endif
 }
 
 void SetWeaponAttributeFloat(const char[] sWeaponName, int iAtrriIndex, float fSetValue, bool bIsSaveDefValue = true)
@@ -397,16 +415,16 @@ void SetWeaponAttributeFloat(const char[] sWeaponName, int iAtrriIndex, float fS
 			hDefaultWeaponAttributes[iAtrriIndex].SetValue(sWeaponName, fDefValue, true);
 			
 			#if DEBUG
-			PrintDebug(eLogError|eServerPrint|ePrintChatAll, "The default float value '%f' of the attribute for the weapon '%s' is saved! Attributes index: %d", fDefValue, sWeaponName, iAtrriIndex);
+				PrintDebug(eLogError|eServerPrint|ePrintChatAll, "The default float value '%f' of the attribute for the weapon '%s' is saved! Attributes index: %d.", fDefValue, sWeaponName, iAtrriIndex);
 			#endif
 		}
 	}
 
 	L4D2_SetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[iAtrriIndex - 3], fSetValue);
 
-	#if DEBUG
-	PrintDebug(eLogError|eServerPrint|ePrintChatAll, "Weapon attribute float set. %s - Trying to set: %f, was set: %f", sWeaponName, fSetValue, GetWeaponAttributeFloat(sWeaponName, iAtrriIndex));
-	#endif
+#if DEBUG
+	PrintDebug(eLogError|eServerPrint|ePrintChatAll, "Weapon attribute float set. %s - Trying to set: %f, was set: %f.", sWeaponName, fSetValue, GetWeaponAttributeFloat(sWeaponName, iAtrriIndex));
+#endif
 }
 
 int ResetWeaponAttributes(bool bIsClearArray = false)
@@ -434,7 +452,7 @@ int ResetWeaponAttributes(bool bIsClearArray = false)
 				}
 				
 				#if DEBUG
-				PrintDebug(eLogError|eServerPrint|ePrintChatAll, "Reset Attributes: %s - '%s' set default to %d. Current value: %d.", sWeaponName, sWeaponAttrShortName[iAtrriIndex], iDefValue, iCurValue);
+					PrintDebug(eLogError|eServerPrint|ePrintChatAll, "Reset Attributes: %s - '%s' set default to %d. Current value: %d.", sWeaponName, sWeaponAttrShortName[iAtrriIndex], iDefValue, iCurValue);
 				#endif
 			} else {
 				hDefaultWeaponAttributes[iAtrriIndex].GetValue(sWeaponName, fDefValue);
@@ -446,7 +464,7 @@ int ResetWeaponAttributes(bool bIsClearArray = false)
 				}
 				
 				#if DEBUG
-				PrintDebug(eLogError|eServerPrint|ePrintChatAll, "Reset Attributes: %s - '%s' set default to %f. Current value: %f.", sWeaponName, sWeaponAttrShortName[iAtrriIndex], fDefValue, fCurValue);
+					PrintDebug(eLogError|eServerPrint|ePrintChatAll, "Reset Attributes: %s - '%s' set default to %f. Current value: %f.", sWeaponName, sWeaponAttrShortName[iAtrriIndex], fDefValue, fCurValue);
 				#endif
 			}
 		}
@@ -459,9 +477,10 @@ int ResetWeaponAttributes(bool bIsClearArray = false)
 		hTrieSnapshot = null;
 	}
 
-	#if DEBUG
+#if DEBUG
 	PrintDebug(eLogError|eServerPrint|ePrintChatAll, "Reset all attributes. Count: %d.", iCount);
-	#endif
+#endif
+
 	return iCount;
 }
 
