@@ -73,8 +73,14 @@
 		"start_dist"		"50.000000"
 		"start_extra_dist"	"0.000000"
 		"end_dist"			"150.000000"
-		"witch_ban_flow_min"		"80"
-		"witch_ban_flow_max"		"100"
+		"witch_ban_flow"
+		{
+			"1"
+			{
+				"min"		"80"
+				"max"		"100"
+			}
+		}
 	}
 	"c2m3_coaster"
 	{
@@ -100,14 +106,20 @@
 		"start_extra_dist"	"150.000000"
 		"end_dist"			"250.000000"
 		"max_distance"		"600"
-		"witch_ban_flow_min"		"80"
-		"witch_ban_flow_max"		"100"
 		"tank_ban_flow"
 		{
 			"1"
 			{
 				"min"		"0"
 				"max"		"16"
+			}
+		}
+		"witch_ban_flow"
+		{
+			"1"
+			{
+				"min"		"80"
+				"max"		"100"
 			}
 		}
 	}
@@ -156,8 +168,14 @@
 		"start_extra_dist"	"200.000000"
 		"end_dist"			"200.000000"
 		"max_distance"		"600"
-		"witch_ban_flow_min"		"54"
-		"witch_ban_flow_max"		"100"
+		"witch_ban_flow"
+		{
+			"1"
+			{
+				"min"		"54"
+				"max"		"100"
+			}
+		}
 	}
 	"c3m4_plantation"
 	{
@@ -211,14 +229,20 @@
 		"start_dist"		"50.000000"
 		"start_extra_dist"	"200.000000"
 		"end_dist"			"300.000000"
-		"witch_ban_flow_min"		"0"
-		"witch_ban_flow_max"		"29"
 		"tank_ban_flow"
 		{
 			"1"
 			{
 				"min"		"20"
 				"max"		"35"
+			}
+		}
+		"witch_ban_flow"
+		{
+			"1"
+			{
+				"min"		"0"
+				"max"		"29"
 			}
 		}
 	}
@@ -275,14 +299,20 @@
 		"start_dist"		"50.000000"
 		"start_extra_dist"	"200.000000"
 		"end_dist"			"250.000000"
-		"witch_ban_flow_min"		"0"
-		"witch_ban_flow_max"		"29"
 		"tank_ban_flow"
 		{
 			"1"
 			{
 				"min"		"57"
 				"max"		"70"
+			}
+		}
+		"witch_ban_flow"
+		{
+			"1"
+			{
+				"min"		"0"
+				"max"		"29"
 			}
 		}
 	}
