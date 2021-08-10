@@ -2,29 +2,85 @@
 {
 	"left4dead2"
 	{
+		"Offsets"
+		{
+			/* @A1m:
+			 * How can find:
+			 * This offset should be in functions 'CLagCompensationManager::AddAdditionalEntity'
+			 * and 'CLagCompensationManager::RemoveAdditionalEntity', this offset points to a binary tree (CUtlRBTree).
+			 * In windows it is usually 12 bytes less, we can check it like this.
+			 *
+			 * This offset is only needed for debugging!
+			*/
+			"CLagCompensationManager->m_AdditionalEntities"
+			{
+				"linux"			"88"
+				"windows"		"76"
+			}
+		}
 		"Addresses"
 		{
 			"lagcompensation"
 			{
 				"linux"
 				{
-					"signature" "g_LagCompensationManager"
+					"signature"	"g_LagCompensationManager"
+				}
+				"windows"
+				{
+					"signature"	"CBaseEntity::UpdateOnRemove"
+					"read"		"39" //37 offset + 2 byte (mov ecx)
+					"read"		"0"
 				}
 			}
 		}
 		"Signatures"
 		{
-			"CLagCompensationManager_AddAdditionaEntity"
+			/* @A1m:
+			 * How to find in windows:
+			 * Can be found by string "FrameUpdatePostEntityThink", this will point to the function
+			 * 'CLagCompensationManager::FrameUpdatePostEntityThink', need to create a virtual table using this function.
+			 * as a rule, this function is at number 2, or just compare the code on Windows and the code on Linux to make sure.
+			 * sub_101870A0 - vesion 2.2.2.0
+			*/
+			"CLagCompensationManager_AddAdditionalEntity"
 			{
-				"linux"		"@_ZN23CLagCompensationManager19AddAdditionalEntityEP11CBaseEntity"
+				"library"		"server"
+				"linux"			"@_ZN23CLagCompensationManager19AddAdditionalEntityEP11CBaseEntity"
+				"windows"		"\x55\x8B\xEC\x83\xEC\x08\x56\x8B\xF1\x8B\x4D\x08\x83\xC8\xFF"
+								/* 55 8B EC 83 EC 08 56 8B F1 8B 4D 08 83 C8 FF */
 			}
-			"CLagCompensationManager_RemoveAdditionaEntity"
+			
+			/* @A1m:
+			 * How to find in windows:
+			 * Can be found by string "FrameUpdatePostEntityThink", this will point to the function
+			 * 'CLagCompensationManager::FrameUpdatePostEntityThink', need to create a virtual table using this function.
+			 * as a rule, this function is at number 3, or just compare the code on Windows and the code on Linux to make sure.
+			 * sub_10187130 - vesion 2.2.2.0
+			*/
+			"CLagCompensationManager_RemoveAdditionalEntity"
 			{
-				"linux"		"@_ZN23CLagCompensationManager22RemoveAdditionalEntityEP11CBaseEntity"
+				"library"		"server"
+				"linux"			"@_ZN23CLagCompensationManager22RemoveAdditionalEntityEP11CBaseEntity"
+				"windows"		"\x55\x8B\xEC\x51\x56\x8B\xF1\x8B\x4D\x08\x83\xC8\xFF"
+								/* 55 8B EC 51 56 8B F1 8B 4D 08 83 C8 FF */
 			}
+			
 			"g_LagCompensationManager"
 			{
-				"linux"   "@_ZL24g_LagCompensationManager"
+				"library"		"server"
+				"linux"			"@_ZL24g_LagCompensationManager"
+			}
+			
+			/* @A1m:
+			 * Can be found by string "Warning: Deleting orphaned children of %s",
+			 * the xref will point to this function 'CBaseEntity::UpdateOnRemove'
+			*/
+			"CBaseEntity::UpdateOnRemove"
+			{
+				"library"		"server"
+				"windows"		"\x55\x8B\xEC\x83\xEC\x14\x53\x56\x8B\xF1\xC6\x05\x2A\x2A\x2A\x2A\x01"
+								/* 55 8B EC 83 EC 14 53 56 8B F1 C6 05 ? ? ? ? 01 */
 			}
 		}
 	}

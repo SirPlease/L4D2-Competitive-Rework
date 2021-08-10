@@ -83,18 +83,18 @@ new     Float:          g_fEndRotate;
  
 public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 {
-    CreateNative("SAFEDETECT_IsEntityInStartSaferoom", Native_IsEntityInStartSaferoom);
-    CreateNative("SAFEDETECT_IsPlayerInStartSaferoom", Native_IsPlayerInStartSaferoom);
-    CreateNative("SAFEDETECT_IsEntityInEndSaferoom", Native_IsEntityInEndSaferoom);
-    CreateNative("SAFEDETECT_IsPlayerInEndSaferoom", Native_IsPlayerInEndSaferoom);    
-    
-    RegPluginLibrary("saferoom_detect");
-    
-    MarkNativeAsOptional("LGO_IsMapDataAvailable");
-    MarkNativeAsOptional("LGO_GetMapValueVector");
-    MarkNativeAsOptional("LGO_GetMapValueFloat");
-    
-    return APLRes_Success;
+	CreateNative("SAFEDETECT_IsEntityInStartSaferoom", Native_IsEntityInStartSaferoom);
+	CreateNative("SAFEDETECT_IsPlayerInStartSaferoom", Native_IsPlayerInStartSaferoom);
+	CreateNative("SAFEDETECT_IsEntityInEndSaferoom", Native_IsEntityInEndSaferoom);
+	CreateNative("SAFEDETECT_IsPlayerInEndSaferoom", Native_IsPlayerInEndSaferoom);    
+
+	MarkNativeAsOptional("LGO_IsMapDataAvailable");
+	MarkNativeAsOptional("LGO_GetMapValueVector");
+	MarkNativeAsOptional("LGO_GetMapValueFloat");
+
+	RegPluginLibrary("l4d2_saferoom_detect");
+
+	return APLRes_Success;
 }
 
 public OnAllPluginsLoaded()
