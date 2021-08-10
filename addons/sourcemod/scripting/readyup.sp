@@ -14,7 +14,7 @@
 public Plugin myinfo =
 {
 	name = "L4D2 Ready-Up with convenience fixes",
-	author = "CanadaRox, Target",
+	author = "CanadaRox, Target", //Add support sm1.11 - A1m`
 	description = "New and improved ready-up plugin with optimal for convenience.",
 	version = PLUGIN_VERSION,
 	url = "https://github.com/Target5150/MoYu_Server_Stupid_Plugins"
@@ -302,8 +302,7 @@ public void RoundStart_Event(Event event, const char[] name, bool dontBroadcast)
 public void GameInstructorDraw_Event(Event event, const char[] name, bool dontBroadcast)
 {
 	// Workaround for restarting countdown after scavenge intro
-	if (inReadyUp)
-		CreateTimer(0.1, Timer_RestartCountdowns, false, TIMER_FLAG_NO_MAPCHANGE);
+	CreateTimer(0.1, Timer_RestartCountdowns, false, TIMER_FLAG_NO_MAPCHANGE);
 }
 
 public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
@@ -502,7 +501,7 @@ public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
 
 public Action Timer_RestartMob(Handle timer)
 {
-	RestartMobCountdown(false);
+	if (inReadyUp) RestartMobCountdown(false);
 }
 
 
@@ -583,7 +582,7 @@ public Action Unready_Cmd(int client, int args)
 
 public Action ToggleReady_Cmd(int client, int args)
 {
-	if (inReadyUp && IsPlayer(client))
+	if (inReadyUp)
 	{
 		return isPlayerReady[client] ? Unready_Cmd(client, 0) : Ready_Cmd(client, 0);
 	}
@@ -685,12 +684,14 @@ void ToggleCommandListeners(bool hook)
 		RemoveCommandListener(Say_Callback, "say");
 		RemoveCommandListener(Say_Callback, "say_team");
 		RemoveCommandListener(Vote_Callback, "Vote");
+		hooked = false;
 	}
 	else if (!hooked && hook)
 	{
 		AddCommandListener(Say_Callback, "say");
 		AddCommandListener(Say_Callback, "say_team");
 		AddCommandListener(Vote_Callback, "Vote");
+		hooked = true;
 	}
 }
 
@@ -1180,6 +1181,8 @@ void ReturnTeamToSaferoom(int team)
 
 public Action Timer_RestartCountdowns(Handle timer, bool startOn)
 {
+	if (!inReadyUp && !startOn) return;
+	
 	if (IsScavenge())
 	{
 		RestartScvngSetupCountdown(startOn);
