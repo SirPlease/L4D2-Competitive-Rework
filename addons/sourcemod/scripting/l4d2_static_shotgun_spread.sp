@@ -15,7 +15,7 @@
 // You can use the visualise_impacts.smx plugin to test the resulting spread.
 // It will render small purple boxes where the server-side pellets land.
 
-enum Platforms
+enum
 {
 	eWindows = 0,
 	eLinux,
@@ -24,15 +24,15 @@ enum Platforms
 }
 
 static const int
-	g_BulletOffsets[view_as<int>(ePlatform_Size)][BULLET_MAX_SIZE] = {
+	g_BulletOffsets[ePlatform_Size][BULLET_MAX_SIZE] = {
 		{ 0xf, 0x21, 0x30, 0x3f },	// Windows
 		{ 0x11, 0x22, 0x2f, 0x43 }	// Linux
 	},
-	g_FactorOffset[view_as<int>(ePlatform_Size)] = {
+	g_FactorOffset[ePlatform_Size] = {
 		0x36,	// Windows
 		0x34	// Linux
 	},
-	g_CenterPelletOffset[view_as<int>(ePlatform_Size)] = {
+	g_CenterPelletOffset[ePlatform_Size] = {
 		-0x36,	// Windows
 		-0x1c	// Linux
 	};
@@ -46,7 +46,7 @@ public Plugin myinfo =
 {
 	name = "L4D2 Static Shotgun Spread",
 	author = "Jahze, Visor, A1m`, Rena",
-	version = "1.5",
+	version = "1.6",
 	description = "Changes the values in the sgspread patch",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
@@ -64,7 +64,7 @@ public void OnPluginStart()
 
 static void HotPatchCenterPellet(int newValue)
 {
-	Platforms platform = (IsPlatformWindows()) ? eWindows : eLinux;
+	int platform = (IsPlatformWindows()) ? eWindows : eLinux;
 
 	Address pAddr = GetPatchAddress("sgspread");
 	
@@ -89,7 +89,7 @@ static void HotPatchCenterPellet(int newValue)
 static void HotPatchBullets(int nBullets)
 {
 	float degree = 0.0;
-	Platforms platform = eLinux;
+	int platform = eLinux;
 	
 	if (IsPlatformWindows()) {
 		platform = eWindows;

@@ -1,0 +1,33 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Signatures"
+		{
+			/* @A1m:
+			 * How to find in windows:
+			 * Can be found by string "PlayerGroundPoundedByTank" or "HulkZombie.PunchIncap",
+			 * it is found function 'CTankClaw::OnPlayerHit'. The function we need is almost at the bottom.
+			 *
+			 *     v22 = v28 * v17;
+			 *     v23 = v29 * v17;
+			 *     v24 = v17 * v30;
+			 *     sub_1006EEC0((float *)a2, &v22);				// We need this function
+			 *     sub_10304B50(v4);
+			 *     (*(void (__thiscall **)(int *, signed int, _DWORD))(*a2 + 2040))(a2, 96, 0);
+			 *     sub_10176D90(a2);
+			 *   }
+			 *   return sub_103E9E10(*(float *)(dword_10838FBC + 44));
+			 *
+			 * sub_1006EEC0 - version 2.2.2.0
+			*/
+			"CBaseEntity::ApplyAbsVelocityImpulse"
+			{
+				"library"	"server"
+				"linux"		"@_ZN11CBaseEntity23ApplyAbsVelocityImpulseERK6Vector"
+				"windows"	"\x55\x8B\xEC\xB8\x0C\x10\x00\x00\xE8\x2A\x2A\x2A\x2A\xF3\x0F\x10\x05\x2A\x2A\x2A\x2A\x56"
+							/* 55 8B EC B8 0C 10 00 00 E8 ? ? ? ? F3 0F 10 05 ? ? ? ? 56 */
+			}
+		}
+	}
+}

@@ -184,7 +184,7 @@ public Action ListRates(int client, int args)
 	ReplyToCommand(client, "\x01[RateMonitor] List of player netsettings(\x03cmd\x01/\x04upd\x01/\x05rate\x01):");
 	
 	int iSize = hClientSettingsArray.Length;
-	
+
 #if SOURCEMOD_V_MINOR > 9
 	NetsettingsStruct player;
 	for (int i = 0; i < iSize; i++) {
@@ -201,7 +201,7 @@ public Action ListRates(int client, int args)
 		hClientSettingsArray.GetArray(i, player[0], view_as<int>(NetsettingsStruct));
 
 		int iClient = GetClientBySteamId(player[Client_SteamId]);
-		if (iClient > 0 && GetClientTeam(client) > view_as<int>(L4D2Team_Spectator)) {
+		if (iClient > 0 && GetClientTeam(iClient) > view_as<int>(L4D2Team_Spectator)) {
 			ReplyToCommand(client, "\x03%N\x01 : %d/%d/%d", iClient, player[Client_Cmdrate], player[Client_Updaterate], player[Client_Rate]);
 		}
 	}
@@ -212,7 +212,7 @@ public Action ListRates(int client, int args)
 
 void RegisterSettings(int client)
 {
-	if (GetClientTeam(client) < view_as<int>(L4D2Team_Infected)) {
+	if (GetClientTeam(client) < view_as<int>(L4D2Team_Survivor)) {
 		return;
 	}
 	
@@ -447,7 +447,7 @@ int GetClientBySteamId(const char[] steamID)
 
 	for (int i = 1; i <= MaxClients; i++) {
 		if (IsClientInGame(i)) {
-			GetClientAuthId(i, AuthId_Steam2, tempSteamID, STEAMID_SIZE);
+			GetClientAuthId(i, AuthId_Steam2, tempSteamID, sizeof(tempSteamID));
 
 			if (strcmp(steamID, tempSteamID) == 0) {
 				return i;

@@ -3,6 +3,9 @@
 #endif
 #define l4d2util_survivors_inc_
 
+#include <l4d2util_constants>
+#include <l4d2util_stocks>
+
 stock static StringMap hSurvivorModelsTrie = null;
 
 stock const char L4D2_AttackerNetProps[][] =
@@ -40,6 +43,17 @@ stock bool IsSurvivorAttacked(int survivor)
 stock bool IsSurvivor(int client)
 {
 	return (IsClientInGame(client) && GetClientTeam(client) == view_as<int>(L4D2Team_Survivor));
+}
+
+/**
+ * Returns true if the player is currently on the survivor team. 
+ *
+ * @param client client ID
+ * @return bool
+ */
+stock bool IsValidSurvivor(int client)
+{
+	return (L4D2Util_IsValidClient(client) && IsSurvivor(client));
 }
 
 /**

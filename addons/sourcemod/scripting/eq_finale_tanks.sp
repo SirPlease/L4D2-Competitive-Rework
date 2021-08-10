@@ -1,11 +1,14 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdktools>
 #include <left4dhooks> //#include <l4d2_direct>
 
+#define MAP_NAME_MAX_LENGTH 64
+
 // from https://developer.valvesoftware.com/wiki/L4D2_Director_Scripts
-enum OnChangeFinaleStage
+enum
 {
 	FINALE_GAUNTLET_1 = 0,
 	FINALE_HORDE_ATTACK_1 = 1,
@@ -34,101 +37,127 @@ enum TankSpawningScheme
 	FirstOnEvent
 };
 
-new Handle:hFirstTankSpawningScheme;
-new Handle:hSecondTankSpawningScheme;
+ConVar
+	hVersusTankChanceFinale = null;
 
-new TankSpawningScheme:spawnScheme;
-new tankCount;
+StringMap
+	hFirstTankSpawningScheme = null,
+	hSecondTankSpawningScheme = null;
 
-public Plugin:myinfo =
+TankSpawningScheme
+	spawnScheme = Skip;
+
+int
+	tankCount = 0;
+
+public Plugin myinfo =
 {
 	name = "EQ2 Finale Tank Manager",
-	author = "Visor, Electr0", //Add support sm1.11 - A1m`
+	author = "Visor, Electr0", //Update syntax A1m`
 	description = "Either two event tanks or one flow and one (second) event tank",
-	version = "2.5.1",
-	url = "https://github.com/Attano/Equilibrium"
+	version = "2.5.2",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
-	HookEvent("round_start", RoundStartEvent, EventHookMode_PostNoCopy);
+	hFirstTankSpawningScheme = new StringMap();
+	hSecondTankSpawningScheme = new StringMap();
 
-	hFirstTankSpawningScheme = CreateTrie();
-	hSecondTankSpawningScheme = CreateTrie();
+	hVersusTankChanceFinale = FindConVar("versus_tank_chance_finale");
 
 	RegServerCmd("tank_map_flow_and_second_event", SetMapFirstTankSpawningScheme);
 	RegServerCmd("tank_map_only_first_event", SetMapSecondTankSpawningScheme);
+
+	HookEvent("round_start", RoundStartEvent, EventHookMode_PostNoCopy);
 }
 
-public Action:SetMapFirstTankSpawningScheme(args)
+public Action SetMapFirstTankSpawningScheme(int args)
 {
-	decl String:mapname[64];
+	if (args != 1) {
+		PrintToServer("Usage: tank_map_flow_and_second_event <mapname>");
+		LogError("Usage: tank_map_flow_and_second_event <mapname>");
+		return Plugin_Handled;
+	}
+	
+	char mapname[MAP_NAME_MAX_LENGTH];
 	GetCmdArg(1, mapname, sizeof(mapname));
-	SetTrieValue(hFirstTankSpawningScheme, mapname, true);
+	hFirstTankSpawningScheme.SetValue(mapname, true);
+
+	return Plugin_Handled;
 }
 
-public Action:SetMapSecondTankSpawningScheme(args)
+public Action SetMapSecondTankSpawningScheme(int args)
 {
-	decl String:mapname[64];
+	if (args != 1) {
+		PrintToServer("Usage: tank_map_only_first_event <mapname>");
+		LogError("Usage: tank_map_only_first_event <mapname>");
+		return Plugin_Handled;
+	}
+	
+	char mapname[MAP_NAME_MAX_LENGTH];
 	GetCmdArg(1, mapname, sizeof(mapname));
-	SetTrieValue(hSecondTankSpawningScheme, mapname, true);
+	hSecondTankSpawningScheme.SetValue(mapname, true);
+
+	return Plugin_Handled;
 }
 
-public Action:RoundStartEvent(Handle:event, const String:name[], bool:dontBroadcast)
+public void RoundStartEvent(Event hEvent, const char[] name, bool dontBroadcast)
 {
-	CreateTimer(8.0, ProcessTankSpawn);
+	CreateTimer(8.0, ProcessTankSpawn, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action:ProcessTankSpawn(Handle:timer) 
+public Action ProcessTankSpawn(Handle hTimer)
 {
 	spawnScheme = Skip;
 	tankCount = 0;
 	
-	decl String:mapname[64];
+	char mapname[MAP_NAME_MAX_LENGTH];
 	GetCurrentMap(mapname, sizeof(mapname));
 	
-	new bool:dummy;
-	if (GetTrieValue(hFirstTankSpawningScheme, mapname, dummy))
-	{
+	int iValue;
+	if (hFirstTankSpawningScheme.GetValue(mapname, iValue)) {
 		spawnScheme = FlowAndSecondOnEvent;
 	}
-	if (GetTrieValue(hSecondTankSpawningScheme, mapname, dummy))
-	{
+	
+	if (hSecondTankSpawningScheme.GetValue(mapname, iValue)) {
 		spawnScheme = FirstOnEvent;
 	}
 	
-	if (IsTankAllowed() && spawnScheme != Skip)
-	{
-		L4D2Direct_SetVSTankToSpawnThisRound(InSecondHalfOfRound(), (spawnScheme == FlowAndSecondOnEvent));
+	if (IsTankAllowed() && spawnScheme != Skip) {
+		bool bIsSpawn = (spawnScheme == FlowAndSecondOnEvent);
+		L4D2Direct_SetVSTankToSpawnThisRound(InSecondHalfOfRound(), bIsSpawn);
 	}
+
+	return Plugin_Stop;
 }
 
-public Action:L4D2_OnChangeFinaleStage(&finaleType, const String:arg[]) 
-{	
-	if (spawnScheme != Skip 
-		&& (finaleType == view_as<int>(FINALE_CUSTOM_TANK) //view_as<int> - add support 1.11
-		|| finaleType == view_as<int>(FINALE_GAUNTLET_BOSS) //view_as<int> - add support 1.11
-		|| finaleType == view_as<int>(FINALE_GAUNTLET_ESCAPE)) //view_as<int> - add support 1.11
+public Action L4D2_OnChangeFinaleStage(int &finaleType, const char[] arg)
+{
+	if (spawnScheme != Skip
+		&& (finaleType == FINALE_CUSTOM_TANK
+		|| finaleType == FINALE_GAUNTLET_BOSS
+		|| finaleType == FINALE_GAUNTLET_ESCAPE)
 	) {
 		//PrintToChatAll("Finale type %i has commenced", finaleType);
 		
 		tankCount++;
 		
 		if ((spawnScheme == FlowAndSecondOnEvent && tankCount != 2)
-			|| (spawnScheme == FirstOnEvent && tankCount != 1))
-		{
+			|| (spawnScheme == FirstOnEvent && tankCount != 1)
+		) {
 			return Plugin_Handled;
 		}
 	}
 	return Plugin_Continue;
 }
 
-InSecondHalfOfRound()
+int InSecondHalfOfRound()
 {
 	return GameRules_GetProp("m_bInSecondHalfOfRound");
 }
 
-bool:IsTankAllowed()
+bool IsTankAllowed()
 {
-	return GetConVarFloat(FindConVar("versus_tank_chance_finale")) > 0.0;
+	return (hVersusTankChanceFinale.FloatValue > 0.0);
 }

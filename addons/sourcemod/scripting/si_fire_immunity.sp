@@ -3,10 +3,20 @@
 
 #include <sourcemod>
 #include <sdktools>
-#include <sdkhooks> //add define DMG_BURN
+#include <sdkhooks> //DMG_BURN
 
 #define Z_TANK 8
 #define TEAM_INFECTED 3
+
+#define ENTITY_MAX_NAME 64
+
+enum
+{
+	eDisable = 0,
+	eCompleteImmunity,
+	ePreventBurns,
+	eExtinguishBurnsThroughTime
+};
 
 static const char sEntityList[][] = 
 {
@@ -22,30 +32,30 @@ ConVar
 	tank_extinguish_time = null;
 
 float
-	fWaitTime[MAXPLAYERS + 1] = {0.0, ...};
+	g_fWaitTime[MAXPLAYERS + 1] = {0.0, ...};
 
-public Plugin myinfo = 
+public Plugin myinfo =
 {
 	name = "SI Fire Immunity",
 	author = "Jacob, darkid, A1m`",
 	description = "Special Infected fire damage management.",
-	version = "3.1",
+	version = "3.3",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
-}
+};
 
 public void OnPluginStart()
 {
 	infected_fire_immunity = CreateConVar( \
 		"infected_fire_immunity", \
 		"3", \
-		"What type of fire immunity should infected have? 0 = None, 3 = Extinguish burns, 2 = Prevent burns, 1 = Complete immunity", \
+		"What type of fire immunity should infected have? 0 = None, 3 = Extinguish burns through time, 2 = Prevent burns, 1 = Complete immunity", \
 		_, true, 0.0, true, 3.0 \
 	);
 	
 	tank_fire_immunity = CreateConVar( \
 		"tank_fire_immunity", \
 		"2", \
-		"What type of fire immunity should the tank have? 0 = None, 3 = Extinguish burns, 2 = Prevent burns, 1 = Complete immunity", \
+		"What type of fire immunity should the tank have? 0 = None, 3 = Extinguish burns through time, 2 = Prevent burns, 1 = Complete immunity", \
 		_, true, 0.0, true, 3.0 \
 	);
 	
@@ -63,18 +73,15 @@ public void OnPluginStart()
 		_, true, 0.0, true, 999.0 \
 	);
 	
-	HookEvent("player_hurt", SIOnFire, EventHookMode_Post);
+	HookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);
 	HookEvent("round_start", EventReset, EventHookMode_PostNoCopy);
 	HookEvent("round_end", EventReset, EventHookMode_PostNoCopy);
 }
 
-/* @A1m`:
- * This is necessary because each round starts from 0.0.
-*/
 public void EventReset(Event hEvent, const char[] eName, bool dontBroadcast)
 {
-	for (int i = 0; i <= MAXPLAYERS; i++) {
-		fWaitTime[i] = 0.0;
+	for (int i = 1; i <= MaxClients; i++) {
+		g_fWaitTime[i] = 0.0;
 	}
 }
 
@@ -93,117 +100,122 @@ public void EventReset(Event hEvent, const char[] eName, bool dontBroadcast)
  * 		"hitgroup"	"byte"		// hitgroup that was damaged
  * 		"type"		"long"		// damage type
  * }
- * char weapon[64];
- * hEvent.GetString("weapon", weapon, sizeof(weapon));
  *
- * This returns an empty string, and this plugin calls the function every time if attacker == 0
- * The new method described here will work much better
+ * If the attacker is not a player but an entity, then the parameter 'weapon' in the event returns an empty string
  *
  * Incendiary ammo:
- * SIOnFire: Hunter, attacker: 2 (entityclassname player), attackerentid: 1 (entityclassname player)
+ * Event_PlayerHurt: Hunter, attacker: 2 (entityclassname player), attackerentid: 1 (entityclassname player)
  * Event string weapon: entityflame, type: 268435464 
  *
  * Static fire on the map:
- * SIOnFire: A1m`, attacker: 0 (entityclassname entityflame), attackerentid: 277 (entityclassname entityflame)
+ * Event_PlayerHurt: A1m`, attacker: 0 (entityclassname entityflame), attackerentid: 277 (entityclassname entityflame)
  * Event string weapon: , type: 268435464 //weapon empty =/
  *
  * Molotov:
- * SIOnFire: Tank, attacker: 2 (entityclassname player), attackerentid: 1 (entityclassname player)
+ * Event_PlayerHurt: Tank, attacker: 2 (entityclassname player), attackerentid: 1 (entityclassname player)
  * weapon: inferno, type: 8
- * SIOnFire: Tank, attacker: 2 (entityclassname player), attackerentid: 1 (entityclassname player)
+ * Event_PlayerHurt: Tank, attacker: 2 (entityclassname player), attackerentid: 1 (entityclassname player)
  * Event string weapon: entityflame, type: 268435464
  *
  * Сanister:
- * SIOnFire: Tank, attacker: 2 (entityclassname player), attackerentid: 1 (entityclassname player)
+ * Event_PlayerHurt: Tank, attacker: 2 (entityclassname player), attackerentid: 1 (entityclassname player)
  * Event string weapon: entityflame, type: 268435464
  *
  * Fireworks:
- * SIOnFire: A1m`, attacker: 2 (entityclassname player), attackerentid: 0 (entityclassname player)
+ * Event_PlayerHurt: A1m`, attacker: 2 (entityclassname player), attackerentid: 0 (entityclassname player)
  * Event string weapon: fire_cracker_blast, type: 8 //fire_cracker_blast need check?
- * SIOnFire: A1m`, attacker: 2 (entityclassname player), attackerentid: 0 (entityclassname player)
+ * Event_PlayerHurt: A1m`, attacker: 2 (entityclassname player), attackerentid: 0 (entityclassname player)
  * Event string weapon: entityflame, type: 268435464
- *
 */
-public void SIOnFire(Event hEvent, const char[] eName, bool dontBroadcast)
+public void Event_PlayerHurt(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	/*
 	 * This event 'player_hurt' is called very often
 	 */
-	int type = hEvent.GetInt("type");
-	if (!(type & DMG_BURN)) { //more performance
+	int iDmgType = hEvent.GetInt("type");
+	if (!(iDmgType & DMG_BURN)) { //more performance
 		return;
 	}
 
-	char sEntityName[32];
-	int attackerentid = hEvent.GetInt("attackerentid");
-	if (attackerentid > MaxClients) { //The entity should not have a weapon =)
-		GetEntityClassname(attackerentid, sEntityName, sizeof(sEntityName));
+	char sEntityName[ENTITY_MAX_NAME];
+	int iAttackerentID = hEvent.GetInt("attackerentid");
+	if (iAttackerentID > MaxClients) { //The entity should not have a weapon =)
+		GetEntityClassname(iAttackerentID, sEntityName, sizeof(sEntityName));
 	} else {
 		hEvent.GetString("weapon", sEntityName, sizeof(sEntityName));
 	}
-	
-	/* @A1m`:
-	 * 'fire_cracker_blast' - if you remove this check, 
-	 * even if you set cvar tank_fire_immunity or infected_fire_immunity to 1, 
-	 * then the damage will be done to the infected and the tank,
-	 * if the player was set on fire with fireworks
-	*/
-	for (int i = 0; i < sizeof(sEntityList); i++) {
-		if (strcmp(sEntityName, sEntityList[i]) != 0) {
-			return;
-		}
+
+	if (!IsFireEntity(sEntityName)) {
+		return;
 	}
 	
-	int userid = hEvent.GetInt("userid");
-	int client = GetClientOfUserId(userid);
+	int iUserID = hEvent.GetInt("userid");
+	int iClient = GetClientOfUserId(iUserID);
 
-	if (client < 1 || !IsLiveInfected(client)) {
+	if (iClient < 1 || !IsLiveInfected(iClient)) {
 		return;
 	}
 
 	int iDamage = hEvent.GetInt("dmg_health");
-	ExtinguishType(client, userid, iDamage);
+	ExtinguishType(iClient, iUserID, iDamage);
 }
 
-void ExtinguishType(int client, int userid, int iDamage)
+void ExtinguishType(int iClient, int iUserID, int iDamage)
 {
-	bool IsTank = (GetEntProp(client, Prop_Send, "m_zombieClass") == Z_TANK);
-	int iCvarValue = (IsTank) ? tank_fire_immunity.IntValue : infected_fire_immunity.IntValue;
+	bool bIsTank = (GetEntProp(iClient, Prop_Send, "m_zombieClass") == Z_TANK);
+	int iCvarValue = (bIsTank) ? tank_fire_immunity.IntValue : infected_fire_immunity.IntValue;
 
-	if (iCvarValue == 3) {
+	if (iCvarValue == eExtinguishBurnsThroughTime) {
 		float fNow = GetGameTime();
 		
-		if (fWaitTime[client] - fNow <= 0.0) {
-			float iExtinguishTime = (IsTank) ? tank_extinguish_time.FloatValue : infected_extinguish_time.FloatValue;
+		if (g_fWaitTime[iClient] - fNow <= 0.0) {
+			float fExtinguishTime = (bIsTank) ? tank_extinguish_time.FloatValue : infected_extinguish_time.FloatValue;
+			
 			/* @A1m`:
 			 * + 0.1 -> We already know that the timer has definitely expired so as to call another timer
 			 * Old code started many timers
 			*/
-			fWaitTime[client] = fNow + iExtinguishTime + 0.1;
+			g_fWaitTime[iClient] = fNow + fExtinguishTime + 0.1;
 
-			CreateTimer(iExtinguishTime, TimerWait, userid, TIMER_FLAG_NO_MAPCHANGE);
+			CreateTimer(fExtinguishTime, ExtinguishDelay, iUserID, TIMER_FLAG_NO_MAPCHANGE);
 		}
-	} else if (iCvarValue == 1 || iCvarValue == 2) {
-		ExtinguishEntity(client);
-		if (iCvarValue == 1) {
-			int iHealth = GetClientHealth(client) + iDamage;
-			SetEntityHealth(client, iHealth);
-		}
-	}
-}
-
-public Action TimerWait(Handle hTimer, any userid)
-{
-	int client = GetClientOfUserId(userid);
-	if (client > 0 && IsLiveInfected(client)) {
-		// A1m`: maybe this has already been checked in the game code, well, let it be)
-		if (GetEntityFlags(client) & FL_ONFIRE) { 
-			ExtinguishEntity(client);
+	} else if (iCvarValue == eCompleteImmunity || iCvarValue == ePreventBurns) {
+		ExtinguishFire(iClient);
+		
+		if (iCvarValue == eCompleteImmunity) {
+			int iHealth = GetClientHealth(iClient) + iDamage;
+			SetEntityHealth(iClient, iHealth);
 		}
 	}
 }
 
-bool IsLiveInfected(int client)
+public Action ExtinguishDelay(Handle hTimer, any iUserID)
 {
-	return (GetClientTeam(client) == TEAM_INFECTED && IsPlayerAlive(client));
+	int iClient = GetClientOfUserId(iUserID);
+	if (iClient > 0 && IsLiveInfected(iClient)) {
+		ExtinguishFire(iClient);
+	}
+}
+
+bool IsLiveInfected(int iClient)
+{
+	return (GetClientTeam(iClient) == TEAM_INFECTED && IsPlayerAlive(iClient));
+}
+
+void ExtinguishFire(int iClient)
+{
+	if (GetEntityFlags(iClient) & FL_ONFIRE) {
+		ExtinguishEntity(iClient);
+	}
+}
+
+bool IsFireEntity(char[] sEntityName)
+{
+	for (int i = 0; i < sizeof(sEntityList); i++) {
+		if (strcmp(sEntityName, sEntityList[i]) == 0) {
+			return true;
+		}
+	}
+
+	return false;
 }
