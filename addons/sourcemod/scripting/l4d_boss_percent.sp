@@ -25,8 +25,9 @@ out what's going on :D Kinda makes my other plugins look bad huh :/
 #undef REQUIRE_PLUGIN
 #include <confogl>
 #include <readyup>
+#include <witch_and_tankifier>
 
-#define PLUGIN_VERSION "3.2.4a"
+#define PLUGIN_VERSION "3.2.5"
 
 public Plugin myinfo =
 {
@@ -42,8 +43,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("SetTankDisabled", Native_SetTankDisabled); 				// Other plugins can use this to set the tank as "disabled" on the ready up, and when the !boss command is used - YOU NEED TO SET THIS EVERY MAP
 	CreateNative("SetWitchDisabled", Native_SetWitchDisabled); 				// Other plugins can use this to set the witch as "disabled" on the ready up, and when the !boss command is used - YOU NEED TO SET THIS EVERY MAP
 	CreateNative("UpdateBossPercents", Native_UpdateBossPercents); 			// Used for other plugins to update the boss percentages
-	CreateNative("IsStaticWitchMap", Native_IsStaticWitchMap); 				// Used for other plugins to check if the current map contains a static witch spawn
-	CreateNative("IsStaticTankMap", Native_IsStaticTankMap); 				// Used for other plugins to check if the current map contains a static tank spawn
 	CreateNative("GetStoredTankPercent", Native_GetStoredTankPercent); 		// Used for other plugins to get the stored tank percent
 	CreateNative("GetStoredWitchPercent", Native_GetStoredWitchPercent); 	// Used for other plugins to get the stored witch percent
 	CreateNative("GetReadyUpFooterIndex", Native_GetReadyUpFooterIndex); 	// Used for other plugins to get the ready footer index of the boss percents
@@ -57,7 +56,6 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 ConVar g_hCvarGlobalPercent;											// Determines if Percents will be displayed to entire team when boss percentage command is used
 ConVar g_hCvarTankPercent; 												// Determines if Tank Percents will be displayed on ready-up and when boss percentage command is used
 ConVar g_hCvarWitchPercent; 											// Determines if Witch Percents will be displayed on ready-up and when boss percentage command is used
-ConVar g_hCvarBossVoting; 												// Determines if boss voting will be enabled
 
 // ConVar Storages
 bool g_bCvarGlobalPercent;
@@ -65,12 +63,6 @@ bool g_bCvarTankPercent;
 bool g_bCvarWitchPercent;
 
 // Handles
-//ConVar g_hVsBossBuffer; 												// Boss Buffer
-ConVar g_hVsBossFlowMin; 												// Boss Flow Min
-ConVar g_hVsBossFlowMax; 												// Boss Flow Max
-StringMap g_hStaticTankMaps; 											// Stores All Static Tank Maps
-StringMap g_hStaticWitchMaps; 											// Stores All Static Witch Maps
-GlobalForward g_forwardUpdateBosses;
 Handle g_hUpdateFooterTimer;
 
 // Variables
@@ -88,13 +80,6 @@ int g_fDKRFirstRoundTankPercent; 										// Stores the Tank percent from the f
 int g_fDKRFirstRoundWitchPercent; 										// Stores the Witch percent from the first half of a DKR map. Used so we can set the 2nd half to the same percent
 //bool g_bDKRFirstRoundBossesSet; 										// Stores if the first round of DKR boss percentages have been set
 
-// Boss Voting Variables
-Handle bv_hVote;														// Our boss vote handle
-bool bv_bWitch;															// Stores if the Witch percent will change
-bool bv_bTank;															// Stores if the Tank percent will change
-int bv_iTank;															// Where we will keep our requested Tank percentage
-int bv_iWitch;															// Where we will keep our requested Witch percentage
-
 // Percent Variables
 int g_fWitchPercent;													// Stores current Witch Percent
 int g_fTankPercent;														// Stores current Tank Percent
@@ -103,21 +88,10 @@ char g_sTankString[80];
 
 public void OnPluginStart()
 {
-	// Variable Setting
-	//g_hVsBossBuffer = FindConVar("versus_boss_buffer"); // Get the boss buffer
-	g_hVsBossFlowMin = FindConVar("versus_boss_flow_min"); // Get boss flow min
-	g_hVsBossFlowMax = FindConVar("versus_boss_flow_max"); // Get boss flow max
-	g_hStaticWitchMaps = new StringMap(); // Create list of static witch maps
-	g_hStaticTankMaps = new StringMap(); // Create list of static tank maps
-	
-	// Forwards
-	g_forwardUpdateBosses = new GlobalForward("OnUpdateBosses", ET_Event);
-
 	// ConVars
 	g_hCvarGlobalPercent = CreateConVar("l4d_global_percent", "0", "Display boss percentages to entire team when using commands"); // Sets if Percents will be displayed to entire team when boss percentage command is used
 	g_hCvarTankPercent = CreateConVar("l4d_tank_percent", "1", "Display Tank flow percentage in chat"); // Sets if Tank Percents will be displayed on ready-up and when boss percentage command is used
 	g_hCvarWitchPercent = CreateConVar("l4d_witch_percent", "1", "Display Witch flow percentage in chat"); // Sets if Witch Percents will be displayed on ready-up and when boss percentage command is used
-	g_hCvarBossVoting = CreateConVar("l4d_boss_vote", "1", "Enable boss voting"); // Sets if boss voting is enabled or disabled
 
 	g_hCvarGlobalPercent.AddChangeHook(OnConVarChanged);
 	g_hCvarTankPercent.AddChangeHook(OnConVarChanged);
@@ -129,17 +103,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_boss", BossCmd); // Used to see percentages of both bosses
 	RegConsoleCmd("sm_tank", BossCmd); // Used to see percentages of both bosses
 	RegConsoleCmd("sm_witch", BossCmd); // Used to see percentages of both bosses
-	RegConsoleCmd("sm_voteboss", VoteBossCmd); // Allows players to vote for custom boss spawns
-	RegConsoleCmd("sm_bossvote", VoteBossCmd); // Allows players to vote for custom boss spawns
 	
-	// Admin Commands
-	RegAdminCmd("sm_ftank", ForceTankCommand, ADMFLAG_BAN);
-	RegAdminCmd("sm_fwitch", ForceWitchCommand, ADMFLAG_BAN);
-	
-	// Server Commands
-	RegServerCmd("static_witch_map", StaticWitchMap_Command); // Server command that is used to store static witch maps
-	RegServerCmd("static_tank_map", StaticTankMap_Command); // Server command that is used to store static tank maps
-
 	// Hooks/Events
 	HookEvent("player_left_start_area", LeftStartAreaEvent, EventHookMode_PostNoCopy); // Called when a player has left the saferoom
 	HookEvent("round_start", RoundStartEvent, EventHookMode_PostNoCopy); // When a new round starts (2 rounds in 1 map -- this should be called twice a map)
@@ -173,16 +137,6 @@ void GetCvars()
 public int Native_UpdateBossPercents(Handle plugin, int numParams){
 	CreateTimer(0.1, GetBossPercents);
 	UpdateReadyUpFooter(0.2);
-}
-
-// Allows other plugins to check if the current map contains a static witch spawn
-public int Native_IsStaticWitchMap(Handle plugin, int numParams){
-	return IsStaticWitchMap();
-}
-
-// Allows other plugins to check if the current map contains a static tank spawn
-public int Native_IsStaticTankMap(Handle plugin, int numParams){
-	return IsStaticTankMap();
 }
 
 // Used for other plugins to check if the current map is Dark Carnival: Remix (It tends to break things when it comes to bosses)
@@ -346,47 +300,6 @@ public void RoundStartEvent(Event event, const char[] name, bool dontBroadcast)
 
 /* ========================================================
 // ====================== Section #4 ======================
-// ================== Static Map Control ==================
-// ========================================================
- *
- * This section is where all of our methods that have to due
- * with Static Boss Spawn maps will go.
- *
- * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-*/
-
-// Server Command - When it is executed it will add a static witch map name to a list.
-public Action StaticWitchMap_Command(int args)
-{
-	char mapname[64];
-	GetCmdArg(1, mapname, sizeof(mapname));
-	SetTrieValue(g_hStaticWitchMaps, mapname, true);
-}
-
-// Server Command - When it is executed it will add a static tank map name to a list.
-public Action StaticTankMap_Command(int args)
-{
-	char mapname[64];
-	GetCmdArg(1, mapname, sizeof(mapname));
-	SetTrieValue(g_hStaticTankMaps, mapname, true);
-}
-
-// Checks the static witch map list to see if the current map contains a static witch spawn
-bool IsStaticWitchMap()
-{
-	bool tempValue;
-	return GetTrieValue(g_hStaticWitchMaps, g_sCurrentMap, tempValue);
-}
-
-// Checks the static tank map list to see if the current map contains a static tank spawn
-bool IsStaticTankMap()
-{
-	bool tempValue;
-	return GetTrieValue(g_hStaticTankMaps, g_sCurrentMap, tempValue);
-}
-
-/* ========================================================
-// ====================== Section #5 ======================
 // ============ Dark Carnival: Remix Workaround ===========
 // ========================================================
  *
@@ -517,7 +430,7 @@ public void DKRWorkaround(Event event, const char[] name, bool dontBroadcast)
 }
 
 /* ========================================================
-// ====================== Section #6 ======================
+// ====================== Section #5 ======================
 // ================= Percent Updater/Saver ================
 // ========================================================
  *
@@ -530,14 +443,12 @@ public void DKRWorkaround(Event event, const char[] name, bool dontBroadcast)
 // This method will return the Tank flow for a specified round
 stock float GetTankFlow(int round)
 {
-	return L4D2Direct_GetVSTankFlowPercent(round)/* -
-		( GetConVarFloat(g_hVsBossBuffer) / L4D2Direct_GetMapMaxFlowDistance() )*/;
+	return L4D2Direct_GetVSTankFlowPercent(round);
 }
 
 stock float GetWitchFlow(int round)
 {
-	return L4D2Direct_GetVSWitchFlowPercent(round)/* -
-		( GetConVarFloat(g_hVsBossBuffer) / L4D2Direct_GetMapMaxFlowDistance() )*/;
+	return L4D2Direct_GetVSWitchFlowPercent(round);
 }
 
 /* 
@@ -759,7 +670,7 @@ public Action Timer_UpdateReadyUpFooter(Handle timer)
 }
 
 /* ========================================================
-// ====================== Section #7 ======================
+// ====================== Section #6 ======================
 // ======================= Commands =======================
 // ========================================================
  *
@@ -884,506 +795,3 @@ void PrintBossPercents(int client = 0)
 	}
 }
 
-/* ========================================================
-// ====================== Section #8 ======================
-// ====================== Boss Votin ======================
-// ========================================================
- *
- *
- *
- * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-*/
-
-public Action UpdatedForward(Handle timer)
-{
-	Call_StartForward(g_forwardUpdateBosses);
-	Call_Finish();
-}
-
-bool IsInteger(const char[] buffer)
-{
-	// negative check
-	if ( !IsCharNumeric(buffer[0]) && buffer[0] != '-' )
-		return false;
-	
-	int len = strlen(buffer);
-	for (int i = 1; i < len; i++)
-	{
-		if ( !IsCharNumeric(buffer[i]) )
-			return false;
-	}
-
-	return true;
-}
-
-bool RunVoteChecks(int client)
-{
-	if (g_bIsRemix)
-	{
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Boss voting is not available on this map.");
-		return false;
-	}
-	if (!IsInReady())
-	{
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Boss voting is only available during ready up.");
-		return false;
-	}
-	if (InSecondHalfOfRound())
-	{
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Boss voting is only available during the first round of a map.");
-		return false;
-	}
-	if (GetClientTeam(client) == 1)
-	{
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Boss voting is not available for spectators.");
-		return false;
-	}
-	if (!IsNewBuiltinVoteAllowed())
-	{
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Boss Vote cannot be called right now...");
-		return false;
-	}
-	return true;
-}
-
-public Action VoteBossCmd(int client, int args)
-{
-	if (!GetConVarBool(g_hCvarBossVoting)) return;
-	if (!RunVoteChecks(client)) return;
-	if (args != 2)
-	{
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Usage: !voteboss {olive}<{default}tank{olive}> <{default}witch{olive}>{default}.");
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Use {default}\"{blue}0{default}\" for {olive}No Spawn{default}, \"{blue}-1{default}\" for {olive}Ignorance.");
-		return;
-	}
-	
-	// Get all non-spectating players
-	int iNumPlayers;
-	int[] iPlayers = new int[MaxClients];
-	for (int i=1; i<=MaxClients; i++)
-	{
-		if (!IsClientInGame(i) || IsFakeClient(i) || (GetClientTeam(i) == 1))
-		{
-			continue;
-		}
-		iPlayers[iNumPlayers++] = i;
-	}
-	
-	// Get Requested Boss Percents
-	char bv_sTank[8];
-	char bv_sWitch[8];
-	GetCmdArg(1, bv_sTank, 8);
-	GetCmdArg(2, bv_sWitch, 8);
-	
-	bv_iTank = -1;
-	bv_iWitch = -1;
-	
-	// Make sure the args are actual numbers
-	if (!IsInteger(bv_sTank) || !IsInteger(bv_sWitch))
-	{
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Percentages are {olive}invalid{default}.");
-		return;
-	}
-	
-	// Check to make sure static bosses don't get changed
-	if (!IsStaticTankMap())
-	{
-		bv_bTank = (bv_iTank = StringToInt(bv_sTank)) > 0;
-	}
-	else
-	{
-		bv_bTank = false;
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Tank spawn is static and can not be changed on this map.");
-	}
-	
-	if (!IsStaticWitchMap())
-	{
-		bv_bWitch = (bv_iWitch = StringToInt(bv_sWitch)) > 0;
-	}
-	else
-	{
-		bv_bWitch = false;
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Witch spawn is static and can not be changed on this map.");
-	}
-	
-	// Check if percent is within limits
-	if (!ValidateFlow(bv_iTank, bv_iWitch, bv_bTank, bv_bWitch))
-	{
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Percentages are {blue}banned{default}.");
-		return;
-	}
-	
-	char bv_voteTitle[64];
-	
-	// Set vote title
-	if (bv_bTank && bv_bWitch)	// Both Tank and Witch can be changed 
-	{
-		Format(bv_voteTitle, 64, "Set Tank to: %s and Witch to: %s?", bv_sTank, bv_sWitch);
-	}
-	else if (bv_bTank)	// Only Tank can be changed
-	{
-		if (bv_iWitch == 0)
-		{
-			Format(bv_voteTitle, 64, "Set Tank to: %s and Witch to: Disabled?", bv_sTank);
-		}
-		else
-		{
-			Format(bv_voteTitle, 64, "Set Tank to: %s?", bv_sTank);
-		}
-	}
-	else if (bv_bWitch) // Only Witch can be changed
-	{
-		if (bv_iTank == 0)
-		{
-			Format(bv_voteTitle, 64, "Set Tank to: Disabled and Witch to: %s?", bv_sWitch);
-		}
-		else
-		{
-			Format(bv_voteTitle, 64, "Set Witch to: %s?", bv_sWitch);
-		}
-	}
-	else // Neither can be changed... ok...
-	{
-		if (bv_iTank == 0 && bv_iWitch == 0)
-		{
-			Format(bv_voteTitle, 64, "Set Bosses to: Disabled?");
-		}
-		else if (bv_iTank == 0)
-		{
-			Format(bv_voteTitle, 64, "Set Tank to: Disabled?");
-		}
-		else if (bv_iWitch == 0)
-		{
-			Format(bv_voteTitle, 64, "Set Witch to: Disabled?");
-		}
-		else // Probably not.
-		{
-			return;
-		}
-	}
-	
-	// Start the vote!
-	bv_hVote = CreateBuiltinVote(BossVoteActionHandler, BuiltinVoteType_Custom_YesNo, BuiltinVoteAction_Cancel | BuiltinVoteAction_VoteEnd | BuiltinVoteAction_End);
-	SetBuiltinVoteArgument(bv_hVote, bv_voteTitle);
-	SetBuiltinVoteInitiator(bv_hVote, client);
-	SetBuiltinVoteResultCallback(bv_hVote, BossVoteResultHandler);
-	DisplayBuiltinVote(bv_hVote, iPlayers, iNumPlayers, 20);
-	FakeClientCommand(client, "Vote Yes");
-}
-
-public void BossVoteActionHandler(Handle vote, BuiltinVoteAction action, int param1, int param2)
-{
-	switch (action)
-	{
-		case BuiltinVoteAction_End:
-		{
-			bv_hVote = INVALID_HANDLE;
-			CloseHandle(vote);
-		}
-		case BuiltinVoteAction_Cancel:
-		{
-			DisplayBuiltinVoteFail(vote, view_as<BuiltinVoteFailReason>(param1));
-		}
-	}
-}
-
-public void BossVoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
-{
-	for (int i=0; i<num_items; i++)
-	{
-		if (item_info[i][BUILTINVOTEINFO_ITEM_INDEX] == BUILTINVOTES_VOTE_YES)
-		{
-			if (item_info[i][BUILTINVOTEINFO_ITEM_VOTES] > (num_clients / 2))
-			{
-			
-				// One last ready-up check.
-				if (!IsInReady())  {
-					DisplayBuiltinVoteFail(vote, BuiltinVoteFail_Loses);
-					CPrintToChatAll("{blue}<{green}BossVote{blue}>{default} Spawns can only be set during ready up.");
-					return;
-				}
-				
-				if (bv_bTank && bv_bWitch)	// Both Tank and Witch can be changed 
-				{
-					DisplayBuiltinVotePass(vote, "Setting Boss Spawns...");
-				}
-				else if (bv_bTank)	// Only Tank can be changed -- Witch must be static
-				{
-					DisplayBuiltinVotePass(vote, "Setting Tank Spawn...");
-				}
-				else if (bv_bWitch) // Only Witch can be changed -- Tank must be static
-				{
-					DisplayBuiltinVotePass(vote, "Setting Witch Spawn...");
-				}
-				else // Neither can be changed... ok...
-				{
-					DisplayBuiltinVotePass(vote, "Setting Boss Disabled...");
-				}
-				
-				SetTankPercent(bv_iTank);
-				SetWitchPercent(bv_iWitch);
-				
-				// Update our shiz yo
-				CreateTimer(0.1, GetBossPercents);
-				UpdateReadyUpFooter(0.2);
-				
-				// Forward da message man :)
-				Call_StartForward(g_forwardUpdateBosses);
-				Call_Finish();
-				
-				return;
-			}
-		}
-	}
-	
-	// Vote Failed
-	DisplayBuiltinVoteFail(vote, BuiltinVoteFail_Loses);
-	return;
-}
-
-// credit to SirPlease
-bool ValidateFlow(int iTankFlow = -1,
-				int iWitchFlow = -1,
-				bool bCheckTank = false,
-				bool bCheckWitch = false)
-{
-	int iBossMinFlow = RoundToCeil(GetConVarFloat(g_hVsBossFlowMin) * 100);
-	int iBossMaxFlow = RoundToFloor(GetConVarFloat(g_hVsBossFlowMax) * 100);
-	
-	// mapinfo override
-	iBossMinFlow = LGO_GetMapValueInt("versus_boss_flow_min", iBossMinFlow);
-	iBossMaxFlow = LGO_GetMapValueInt("versus_boss_flow_max", iBossMaxFlow);
-
-	if (bCheckTank)
-	{
-		if (iTankFlow < iBossMinFlow || iBossMaxFlow < iTankFlow)
-			return false;
-		
-		int iMinBanFlow = LGO_GetMapValueInt("tank_ban_flow_min", 101);
-		int iMaxBanFlow = LGO_GetMapValueInt("tank_ban_flow_max", 101);
-		int iMinBanFlowB = LGO_GetMapValueInt("tank_ban_flow_min_b", 101);
-		int iMaxBanFlowB = LGO_GetMapValueInt("tank_ban_flow_max_b", 101);
-		int iMinBanFlowC = LGO_GetMapValueInt("tank_ban_flow_min_c", 101);
-		int iMaxBanFlowC = LGO_GetMapValueInt("tank_ban_flow_max_c", 101);
-		
-		if ((iMinBanFlow <= iTankFlow <= iMaxBanFlow)
-		|| (iMinBanFlowB <= iTankFlow <= iMaxBanFlowB)
-		|| (iMinBanFlowC <= iTankFlow <= iMaxBanFlowC))
-			return false;
-	}
-	
-	if (bCheckWitch)
-	{
-		iBossMinFlow = LGO_GetMapValueInt("witch_flow_min", iBossMinFlow);
-		iBossMaxFlow = LGO_GetMapValueInt("witch_flow_max", iBossMaxFlow);
-		
-		if (iWitchFlow < iBossMinFlow || iBossMaxFlow < iWitchFlow)
-			return false;
-	}
-	
-	// Any boss change is requested and passes validation
-	// Any boss disabling is requested
-	return bCheckTank || bCheckWitch || iTankFlow == 0 || iWitchFlow == 0;
-}
-
-void SetWitchPercent(int percent)
-{
-	if (IsStaticWitchMap())
-		return;
-	
-	if (percent == -1)
-		return;
-	
-	g_bWitchDisabled = (percent == 0);
-	
-	if (percent == 0)
-	{
-		L4D2Direct_SetVSWitchFlowPercent(0, 0.0);
-		L4D2Direct_SetVSWitchFlowPercent(1, 0.0);
-		L4D2Direct_SetVSWitchToSpawnThisRound(0, false);
-		L4D2Direct_SetVSWitchToSpawnThisRound(1, false);
-	}
-	else if (percent == 100)
-	{
-		L4D2Direct_SetVSWitchFlowPercent(0, 1.0);
-		L4D2Direct_SetVSWitchFlowPercent(1, 1.0);
-		L4D2Direct_SetVSWitchToSpawnThisRound(0, true);
-		L4D2Direct_SetVSWitchToSpawnThisRound(1, true);
-	}
-	else
-	{
-		float p_newPercent = (float(percent)/100);
-		L4D2Direct_SetVSWitchFlowPercent(0, p_newPercent);
-		L4D2Direct_SetVSWitchFlowPercent(1, p_newPercent);
-		L4D2Direct_SetVSWitchToSpawnThisRound(0, true);
-		L4D2Direct_SetVSWitchToSpawnThisRound(1, true);
-	}
-}
-
-void SetTankPercent(int percent)
-{
-	if (IsStaticTankMap())
-		return;
-	
-	if (percent == -1)
-		return;
-		
-	g_bTankDisabled = (percent == 0);
-	
-	if (percent == 0)
-	{
-		L4D2Direct_SetVSTankFlowPercent(0, 0.0);
-		L4D2Direct_SetVSTankFlowPercent(1, 0.0);
-		L4D2Direct_SetVSTankToSpawnThisRound(0, false);
-		L4D2Direct_SetVSTankToSpawnThisRound(1, false);
-	}
-	else if (percent == 100)
-	{
-		L4D2Direct_SetVSTankFlowPercent(0, 1.0);
-		L4D2Direct_SetVSTankFlowPercent(1, 1.0);
-		L4D2Direct_SetVSTankToSpawnThisRound(0, true);
-		L4D2Direct_SetVSTankToSpawnThisRound(1, true);
-	}
-	else
-	{
-		float p_newPercent = (float(percent)/100);
-		L4D2Direct_SetVSTankFlowPercent(0, p_newPercent);
-		L4D2Direct_SetVSTankFlowPercent(1, p_newPercent);
-		L4D2Direct_SetVSTankToSpawnThisRound(0, true);
-		L4D2Direct_SetVSTankToSpawnThisRound(1, true);
-	}
-}
-
-/* ========================================================
-// ====================== Section #9 ======================
-// ==================== Admin Commands ====================
-// ========================================================
- *
- * Where the admin commands for setting boss spawns will go
- *
- * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-*/
-
-public Action ForceTankCommand(int client, int args)
-{
-	if (!GetConVarBool(g_hCvarBossVoting)) return;
-	if (g_bIsRemix)
-	{
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Command not available on this map.");
-		return;
-	}
-	
-	if (IsStaticTankMap())
-	{
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Tank spawn is static and can not be changed on this map.");
-		return;
-	}
-	
-	if (!IsInReady())
-	{
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Command can only be used during ready up.");
-		return;
-	}
-	
-	// Get Requested Tank Percent
-	char bv_sTank[32];
-	GetCmdArg(1, bv_sTank, 32);
-	
-	// Make sure the cmd argument is a number
-	if (!IsInteger(bv_sTank))
-		return;
-	
-	// Convert it to in int boy
-	int p_iRequestedPercent = StringToInt(bv_sTank);
-	
-	if (p_iRequestedPercent < 0)
-	{
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Percentage is {blue}invalid{default}.");
-		return;
-	}
-	
-	// Check if percent is within limits
-	if (!ValidateFlow(p_iRequestedPercent, _, p_iRequestedPercent > 0))
-	{
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Percentage is {blue}banned{default}.");
-		return;
-	}
-	
-	// Set the boss
-	SetTankPercent(p_iRequestedPercent);
-	
-	// Let everybody know
-	char clientName[32];
-	GetClientName(client, clientName, sizeof(clientName));
-	CPrintToChatAll("{blue}<{green}BossVote{blue}>{default} Tank spawn set to {olive}%i%%{default} by Admin {blue}%s{default}.", p_iRequestedPercent, clientName);
-	
-	// Update our shiz yo
-	CreateTimer(0.1, GetBossPercents);
-	UpdateReadyUpFooter(0.2);
-	
-	// Forward da message man :)
-	CreateTimer(0.5, UpdatedForward);
-	return;
-}
-
-public Action ForceWitchCommand(int client, int args)
-{
-	if (!GetConVarBool(g_hCvarBossVoting)) return;
-	if (g_bIsRemix)
-	{
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Command not available on this map.");
-		return;
-	}
-	
-	if (IsStaticWitchMap())
-	{
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Witch spawn is static and can not be changed on this map.");
-		return;
-	}
-	
-	if (!IsInReady())
-	{
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Command can only be used during ready up.");
-		return;
-	}
-	
-	// Get Requested Witch Percent
-	char bv_sWitch[32];
-	GetCmdArg(1, bv_sWitch, 32);
-	
-	// Make sure the cmd argument is a number
-	if (!IsInteger(bv_sWitch))
-		return;
-	
-	// Convert it to in int boy
-	int p_iRequestedPercent = StringToInt(bv_sWitch);
-	
-	if (p_iRequestedPercent < 0)
-	{
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Percentage is {blue}invalid{default}.");
-		return;
-	}
-	
-	// Check if percent is within limits
-	if (!ValidateFlow(_, p_iRequestedPercent, _, p_iRequestedPercent > 0))
-	{
-		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Percentage is {olive}banned{default}.");
-		return;
-	}
-	
-	// Set the boss
-	SetWitchPercent(p_iRequestedPercent);
-	
-	// Let everybody know
-	char clientName[32];
-	GetClientName(client, clientName, sizeof(clientName));
-	CPrintToChatAll("{blue}<{green}BossVote{blue}>{default} Witch spawn set to {olive}%i%%{default} by Admin {blue}%s{default}.", p_iRequestedPercent, clientName);
-	
-	// Update our shiz yo
-	CreateTimer(0.1, GetBossPercents);
-	UpdateReadyUpFooter(0.2);
-	
-	// Forward da message man :)
-	CreateTimer(0.5, UpdatedForward);
-	return;
-}

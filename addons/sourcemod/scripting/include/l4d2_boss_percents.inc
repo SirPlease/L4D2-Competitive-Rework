@@ -8,14 +8,6 @@
 #define _l4d2_boss_percents_included
 
 /**
- * @brief Called when the boss percents are updated.
- * @remarks Triggered via boss votes, force tanks, force witches.
- */
-forward void OnUpdateBosses();
-
-
-
-/**
  * @brief Set the tank as "disabled" on the ready up, and when the !boss command is used.
  * @remarks YOU NEED TO SET THIS EVERY MAP.
  *
