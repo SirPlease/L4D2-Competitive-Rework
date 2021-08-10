@@ -273,14 +273,20 @@
 		"start_dist"		"50.000000"
 		"start_extra_dist"	"200.000000"
 		"end_dist"			"250.000000"
-		"witch_ban_flow_min"		"0"
-		"witch_ban_flow_max"		"29"
 		"tank_ban_flow"
 		{
 			"1"
 			{
 				"min"		"50"
 				"max"		"70"
+			}
+		}
+		"witch_ban_flow"
+		{
+			"1"
+			{
+				"min"		"0"
+				"max"		"29"
 			}
 		}
 	}
