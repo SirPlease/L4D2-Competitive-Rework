@@ -11,7 +11,6 @@ StringMap hMapTransitionPair = null
 
 Handle hSetCampaignScores
 
-//int g_iAreTeamsFlipped = 0
 int g_iPointsTeamA = 0
 int g_iPointsTeamB = 0
 bool g_bHasTransitioned = false
@@ -116,7 +115,7 @@ static void OnRoundStart_Event(Event hEvent, const char[] eName, bool dontBroadc
 
 static Action:OnRoundStart_Post(Handle timer)
 {
-	//Teams will not be flipped because the game thinks we have started a new match
+	//Print scores, teams will not be flipped because the game thinks we have started a new match
 	CPrintToChatAll("{olive}[MT]{default} Set scores to: {blue}(Survivors) %i{default} vs {blue}(Infected) %i{default}", g_iPointsTeamA, g_iPointsTeamB)
 	
 	//Set scores on scoreboard
@@ -137,6 +136,7 @@ static Action:AddMapTransition(int args)
 		return Plugin_Handled;
 	}
 	
+	//Read map pair names
 	char mapStart[MAP_NAME_MAX_LENGTH]
 	char mapEnd[MAP_NAME_MAX_LENGTH]
 	GetCmdArg(1, mapStart, sizeof(mapStart))
