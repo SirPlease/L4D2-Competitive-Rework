@@ -29,7 +29,7 @@ Handle
 	g_hWarpToValidPositionSDKCall = null;
 
 bool
-	g_bLateLoad = false;
+	g_bLateLoad = false,
 	g_bPlayerFlight[MAXPLAYERS + 1];		// is a player in (potentially stuckable) punched flight?
 
 float
