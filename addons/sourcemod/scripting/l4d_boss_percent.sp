@@ -17,7 +17,6 @@ out what's going on :D Kinda makes my other plugins look bad huh :/
 #pragma newdecls required
 
 #include <sourcemod>
-#include <builtinvotes>
 #include <left4dhooks>
 #include <colors>
 #define L4D2UTIL_STOCKS_ONLY

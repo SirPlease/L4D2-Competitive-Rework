@@ -3,7 +3,7 @@
 // The following uses bracket style color tags (see colors.inc)
 	"SelfCastNotAllowed"
 	{
-		"jp"		"{blue}[{default}Cast{blue}] {default}あなたはこの{green}サーバー{default}にキャスターとして登録することはできません。"
+		"jp"		"{blue}[{default}Cast{blue}] {default}あなたはこの{green}サーバー{default}では、キャスターに登録することは出来ません。"
 	}
 
 	"SelfCast1"
@@ -13,51 +13,71 @@
 
 	"SelfCast2"
 	{
-		"jp"		"{blue}[{default}Cast{blue}] {default}サーバーに再接続を行うと、アドオンが有効になります。"
+		"jp"		"{blue}[{default}Cast{blue}] {default}アドオンを有効するには、サーバーの再接続が必要です。"
 	}
 
 	"RegCasterTarget"
 	{
 		"#format"	"{1:N}"
-		"jp"		"{default}[{olive}!{default}] {blue}アドミン {default}({olive}{1}{default}) があなたをキャスターに登録しました。"
+		"jp"		"{default}[{olive}!{default}] {blue}管理者{default}({olive}{1}{default}) があなたをキャスターに登録しました。"
 	}
 
 	"Reconnect1"
 	{
-		"jp"		"{blue}[{default}Reconnect{blue}] {default}サーバーに再接続を行います。"
+		"jp"		"{blue}[{default}Reconnect{blue}] {default}サーバーへ再接続を行います.."
 	}
 
 	"Reconnect2"
 	{
-		"jp"		"{blue}[{default}Reconnect{blue}] {default}画面が真っ暗になります。"
+		"jp"		"{blue}[{default}Reconnect{blue}] {default}ローディングバーの代わりに黒い画面が表示されます！"
 	}
 
 	"UnregCasterTarget"
 	{
 		"#format"	"{1:N}"
-		"jp"		"{default}[{olive}!{default}] {default}あなたは {blue}アドミン {default}({olive}{1}{default}) によってキャスターが解除されました。"
+		"jp"		"{default}[{olive}!{default}] {default}あなたは {blue}管理者{default}({olive}{1}{default}) にキャスターの登録が解除されました。"
 	}
 	
 	"KickSpecsAdmin"
 	{
 		"#format"	"{1:N}"
-		"jp"		"[{green}!{default}] {blue}アドミン {default}({olive}{1}{default}) は{blue}観戦者全員{default}をキックしました。"
+		"jp"		"[{green}!{default}] {blue}観戦者{default}は {blue}管理者{default}({olive}{1}{default}) にキックされました。"
 	}
 	
 	"KickSpecsVoteSpec"
 	{
-		"jp"		"[{olive}Cast{default}] {blue}観戦者{default}は {green}kicking specs{default} に投票することはできません。"
+		"jp"		"[{olive}Cast{default}] {blue}観戦者{default}は {green}kicking specs{default} に投票することは出来ません。"
 	}
 	
 	"VoteInProgress"
 	{
-		"jp"		"[{olive}Cast{default}] {green}投票中{default}です。"
+		"jp"		"[{olive}Cast{default}] {olive}投票{green}行われています。{default}"
 	}
 	
 	"VoteDelay"
 	{
 		"#format"	"{1:d}"
-		"jp"		"[{olive}Cast{default}] 別の投票が行われており、残り {blue}{1}秒 {default}で投票が行えます。"
+		"jp"		"[{olive}Cast{default}] 他の投票が行われており、残り {blue}{1}秒 {default}で投票が行えます。"
+	}
+	
+	"ForbidAddons"
+	{
+		"jp"		"{blue}[{default}!{blue}] {default}キャスターはアドオンの使用が {green}禁止{default} されました。"
+	}
+	
+	"AllowAddons"
+	{
+		"jp"		"{blue}[{default}!{blue}] {default}キャスターはアドオンの使用が {green}許可{default} されました。"
+	}
+	
+	"CasterCheck1"
+	{
+		"jp"		"{default}<{olive}Cast{default}> ゲームをプレイするには、キャスターの登録を解除して下さい。"
+	}
+	
+	"CasterCheck2"
+	{
+		"jp"		"{default}<{olive}Cast{default}> {green}!notcasting {default} / {green}!uncast {default}コマンドで解除"
 	}
 
 	
@@ -65,17 +85,17 @@
 	"RegCasterReply"
 	{
 		"#format"	"{1:N}"
-		"jp"		"{1} をキャスターに登録しました。"
+		"jp"		"{1} はキャスターとして登録済です。"
 	}
 	
 	"CasterSteamIDError"
 	{
-		"jp"		"SteamIDが見つかりませんでした。 タイプミスが無いかどうかチェックしてください。"
+		"jp"		"SteamIDが見つかりませんでした。 タイプミスが無いかどうか、プレイヤーがサーバーに接続されているかどうかを確認して下さい。"
 	}
 
 	"UnregCasterNonAdmin"
 	{
-		"jp"		"アドミンのみが他のキャスターの解除を行うことができます。 あなたのキャスターの解除を行いたい場合は sm_notcasting を使用してください。"
+		"jp"		"管理者のみが他のキャスターの解除が行えます。 あなたのキャスターの解除を行いたい場合は sm_notcasting を使用して下さい。"
 	}
 
 	"UnregCasterSuccess"
@@ -86,7 +106,7 @@
 	
 	"CasterDBReset"
 	{
-		"jp"		"[casters_database] キャスターのリセットに成功しました。"
+		"jp"		"[casters_database] リセットに成功しました。"
 	}
 	
 	"CasterDBAdd"
@@ -104,7 +124,7 @@
 	"CasterDBFound"
 	{
 		"#format"	"{1:s}"
-		"jp"		"[casters_database] '{1}' は既に登録されています。"
+		"jp"		"[casters_database] '{1}' は既に登録済です。"
 	}
 	
 	"CasterDBError"
@@ -114,7 +134,7 @@
 	
 	"KickSpecsVoteTitle"
 	{
-		"jp"		"観戦者全員をキックしますか？（アドミン権限は除く）"
+		"jp"		"観戦者全員（管理者・キャスターは除く）をキックしますか？"
 	}
 	
 	"KickSpecsVoteSuccess"
@@ -124,6 +144,6 @@
 	
 	"KickSpecsReason"
 	{
-		"jp"		"観戦はお断り！"
+		"jp"		"観戦はお断りです！"
 	}
 }

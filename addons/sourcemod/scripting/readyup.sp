@@ -9,7 +9,7 @@
 #undef REQUIRE_PLUGIN
 #include <caster_system>
 
-#define PLUGIN_VERSION "9.3.1"
+#define PLUGIN_VERSION "9.3.2"
 
 public Plugin myinfo =
 {
@@ -40,6 +40,9 @@ public Plugin myinfo =
 #define DEFAULT_AUTOSTART_SOUND "ui/buttonrollover.wav"
 
 #define TRANSLATION_READYUP "readyup.phrases"
+
+#define GAMEDATA_READYUP "readyup"
+#define GAMEDATA_L4DH "left4dhooks.l4d2"
 
 #define READY_MODE_MANUAL 1
 #define READY_MODE_AUTOSTART 2
@@ -101,14 +104,13 @@ char
 	liveSound[PLATFORM_MAX_PATH];
 int
 	readyDelay;
-GlobalForward
+Handle
 	liveForward;
 
 // Auto Start
 bool
 	isAutoStartMode,
 	inAutoStart;
-	isPlayerInGame[MAXPLAYERS+1];
 Handle
 	autoStartTimer;
 char
@@ -128,6 +130,10 @@ Handle blockSecretSpam[MAXPLAYERS+1];
 
 // Caster System
 bool casterSystemAvailable;
+
+// CDirector::IsInTransition
+Handle g_hSDKCall_IsInTransition;
+Address g_pDirector;
 
 // Reason enum for Countdown cancelling
 enum disruptType
@@ -159,13 +165,15 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("GetFooterStringAtIndex",	Native_GetFooterStringAtIndex);
 	CreateNative("IsInReady",				Native_IsInReady);
 	CreateNative("ToggleReadyPanel",		Native_ToggleReadyPanel);
-	liveForward = new GlobalForward("OnRoundIsLive", ET_Ignore);
+	liveForward = CreateGlobalForward("OnRoundIsLive", ET_Ignore);
 	RegPluginLibrary("readyup");
 	return APLRes_Success;
 }
 
 public void OnPluginStart()
 {
+	LoadSDK(true);
+	
 	l4d_ready_enabled			= CreateConVar("l4d_ready_enabled", "1", "Enable this plugin. (Values: 1 = Manual ready, 2 = Auto start)", FCVAR_NOTIFY, true, 0.0, true, 2.0);
 	l4d_ready_cfg_name			= CreateConVar("l4d_ready_cfg_name", "", "Configname to display on the ready-up panel", FCVAR_NOTIFY|FCVAR_PRINTABLEONLY);
 	l4d_ready_server_cvar		= CreateConVar("l4d_ready_server_cvar", "sn_main_name", "ConVar to retrieve the server name for displaying on the ready-up panel", FCVAR_NOTIFY|FCVAR_PRINTABLEONLY);
@@ -228,6 +236,53 @@ public void OnPluginStart()
 public void OnPluginEnd()
 {
 	InitiateLive(false);
+}
+
+void LoadSDK(bool optional)
+{
+	Handle conf = LoadGameConfigFile(GAMEDATA_L4DH);
+	if (conf != null)
+	{
+		g_pDirector = GameConfGetAddress(conf, "CDirector");
+		if (g_pDirector == Address_Null)
+		{
+			if (optional) LogError("Failed to get address of \"CDirector\"");
+			else SetFailState("Failed to get address of \"CDirector\"");
+		}
+		delete conf;
+	}
+	else
+	{
+		if (optional) LogError("Missing gamedata \""... GAMEDATA_L4DH ... "\"");
+		else SetFailState("Missing gamedata \""... GAMEDATA_L4DH ... "\"");
+	}
+	
+	conf = LoadGameConfigFile(GAMEDATA_READYUP);
+	if (conf != null)
+	{
+		StartPrepSDKCall(SDKCall_Raw);
+		if (!PrepSDKCall_SetFromConf(conf, SDKConf_Signature, "CDirector_IsInTransition"))
+		{
+			if (optional) LogError("Failed to PrepSDKCall of \"CDirector_IsInTransition\"");
+			else SetFailState("Failed to PrepSDKCall of \"CDirector_IsInTransition\"");
+		}
+		else
+		{
+			PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
+			g_hSDKCall_IsInTransition = EndPrepSDKCall();
+			if (g_hSDKCall_IsInTransition == null)
+			{
+				if (optional) LogError("Failed to EndPrepSDKCall of \"CDirector_IsInTransition\"");
+				else SetFailState("Failed to EndPrepSDKCall of \"CDirector_IsInTransition\"");
+			}
+		}
+		delete conf;
+	}
+	else
+	{
+		if (optional) LogError("Missing gamedata \""... GAMEDATA_READYUP ... "\"");
+		else SetFailState("Missing gamedata \""... GAMEDATA_READYUP ... "\"");
+	}
 }
 
 public void OnAllPluginsLoaded()
@@ -294,9 +349,14 @@ public void ServerCvarChanged(ConVar convar, const char[] oldValue, const char[]
 //  Events
 // ========================
 
-public void RoundStart_Event(Event event, const char[] name, bool dontBroadcast)
+public void OnConfigsExecuted()
 {
 	InitiateReadyUp();
+}
+
+public void RoundStart_Event(Event event, const char[] name, bool dontBroadcast)
+{
+	if (InSecondHalfOfRound()) InitiateReadyUp();
 }
 
 public void GameInstructorDraw_Event(Event event, const char[] name, bool dontBroadcast)
@@ -313,10 +373,7 @@ public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 		return;
 	
 	isPlayerReady[client] = false;
-	isPlayerInGame[client] = !event.GetBool("disconnect");
 	SetEngineTime(client);
-	
-	//PrintToChatAll("\x03%N \x01- [\x04%i \x01-> \x05%i\x01] %s %s", client, oldteam, team, event.GetBool("disconnect") ? "[\x04disconnect\x01]" : "", isPlayerInGame[client] ? "[\x03in-game\x01]" : "");
 	
 	if (!inReadyUp) return;
 	
@@ -435,7 +492,6 @@ public void OnClientDisconnect(int client)
 {
 	hiddenPanel[client] = false;
 	isPlayerReady[client] = false;
-	isPlayerInGame[client] = false;
 	g_fButtonTime[client] = 0.0;
 	g_hChangeTeamTimer[client] = null;
 }
@@ -976,7 +1032,7 @@ void InitiateLive(bool real = true)
 
 public Action Timer_AutoStartHelper(Handle timer)
 {
-	if (GetSeriousClientCount(true) == 0)
+	if (IsInTransition() || GetSeriousClientCount(true) == 0)
 	{
 		// no player in game
 		expireTime = l4d_ready_autostart_wait.IntValue;
@@ -1443,6 +1499,18 @@ public int Native_ToggleReadyPanel(Handle plugin, int numParams)
 //  Helpers
 // ========================
 
+bool IsInTransition()
+{
+	return g_pDirector != Address_Null
+		&& g_hSDKCall_IsInTransition != null
+		&& SDKCall(g_hSDKCall_IsInTransition, g_pDirector);
+}
+
+bool InSecondHalfOfRound()
+{
+	return view_as<bool>(GameRules_GetProp("m_bInSecondHalfOfRound"));
+}
+
 void SetEngineTime(int client)
 {
 	g_fButtonTime[client] = GetEngineTime();
@@ -1498,7 +1566,7 @@ stock bool IsAnyPlayerLoading()
 {
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (IsClientConnected(i) && !IsFakeClient(i) && !isPlayerInGame[i] /*(!IsClientInGame(i) || GetClientTeam(i) == L4D2Team_None)*/)
+		if (IsClientConnected(i) && (!IsClientInGame(i) || GetClientTeam(i) == L4D2Team_None))
 		{
 			return true;
 		}
@@ -1514,7 +1582,7 @@ stock int GetSeriousClientCount(bool inGame = false)
 	{
 		if (inGame)
 		{
-			if (isPlayerInGame[i] && !IsFakeClient(i)) clients++;
+			if (IsClientInGame(i) && !IsFakeClient(i)) clients++;
 		}
 		else
 		{
