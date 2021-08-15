@@ -1,56 +1,70 @@
+#pragma semicolon 1
+#pragma newdecls required
+
 #include <sourcemod>
 #include <sdkhooks>
 
-new bool:bLateLoad;
+#define DEBUG 0
 
-public Plugin:myinfo =
+#define TEAM_INFECTED 3
+
+bool
+	g_bLateLoad = false;
+
+public Plugin myinfo =
 {
 	name = "L4D2 Explosion Damage Prevention",
-	author = "Sir",
-	version = "1.0",
-	description = "No more explosion damage from attacker (world)",
-	url = ""
+	author = "Sir, A1m`",
+	version = "1.1",
+	description = "No more explosion damage to the infected from entity",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-public APLRes:AskPluginLoad2(Handle:plugin, bool:late, String:error[], errMax) 
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	bLateLoad = late;
+	g_bLateLoad = late;
+
 	return APLRes_Success;
 }
 
-public OnPluginStart()
+public void OnPluginStart()
 {
-	if (bLateLoad) 
-	{
-		for (new i = 1; i <= MaxClients; i++) 
-		{
-			if (!IsClientInGame(i))
-				continue;
-
-			OnClientPutInServer(i);
+	if (g_bLateLoad) {
+		for (int i = 1; i <= MaxClients; i++) {
+			if (IsClientInGame(i)) {
+				OnClientPutInServer(i);
+			}
 		}
 	}
 }
 
-public OnClientPutInServer(client)
+public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
-public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damagetype)
+public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	// Is the Victim an infected molested by Explosive damage caused by a non-client?
-	if (!IsInfected(victim) || IsValidClient(attacker) || !(damagetype & DMG_BLAST)) return Plugin_Continue;
-	return Plugin_Handled;
+	if (!(damagetype & DMG_BLAST)) {
+		return Plugin_Continue;
+	}
+	
+	// If the victim an infected taken explosive damage from the entity
+	// env_explosion, trigger_hurt, point_hurt etc...
+	if (attacker > MaxClients && IsValidEntity(attacker) && IsInfected(victim)) {
+		#if DEBUG
+			char sEntityName[64];
+			GetEntityClassname(attacker, sEntityName, sizeof(sEntityName));
+			PrintToChatAll("hOnTakeDamage victim: %d, attacker: %d (%s), inflictor: %d, damage: %f, damagetype: %d", \
+								victim, attacker, sEntityName, inflictor, damage, damagetype);
+		#endif
+		return Plugin_Handled;
+	}
+
+	return Plugin_Continue;
 }
 
-bool:IsInfected(client)
+bool IsInfected(int client)
 {
-	return client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 3;
-}
-
-bool:IsValidClient(client)
-{
-	if (client <= 0 || client > MaxClients) return false;
-	return (IsClientInGame(client));
+	return (client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == TEAM_INFECTED);
 }
