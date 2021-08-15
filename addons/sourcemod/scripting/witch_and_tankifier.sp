@@ -27,13 +27,6 @@ new Handle:g_hCvarWitchCanSpawn = INVALID_HANDLE;
 new Handle:g_hCvarWitchAvoidTank = INVALID_HANDLE;
 new bool:bValidSpawn[101];
 
-public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
-{
-	CreateNative("IsStaticTankMap", Native_IsStaticTankMap);
-	CreateNative("IsStaticWitchMap", Native_IsStaticWitchMap);
-	RegPluginLibrary("witch_and_tankifier");
-}
-
 public OnPluginStart() {
 	g_hCvarDebug = CreateConVar("sm_tank_witch_debug", "0", "Tank and Witch ifier debug mode", 0, true, 0.0, true, 1.0);
 	g_hCvarWitchCanSpawn = CreateConVar("sm_witch_can_spawn", "1", "Tank and Witch ifier enables witches to spawn", 0, true, 0.0, true, 1.0);
@@ -55,38 +48,6 @@ public OnPluginStart() {
 #if DEBUG
 	RegConsoleCmd("sm_tank_witch_debug_test", Test_Cmd);
 #endif
-}
-
-public any Native_IsStaticTankMap(Handle plugin, int numParams)
-{
-	int bytes = 0;
-	
-	char mapname[64];
-	GetNativeString(1, mapname, sizeof mapname, bytes);
-	StrToLower(mapname);
-	
-	if (!bytes)
-	{
-		GetCurrentMapLower(mapname, sizeof mapname);
-	}
-	
-	return GetTrieValue(hStaticTankMaps, mapname, bytes);
-}
-
-public any Native_IsStaticWitchMap(Handle plugin, int numParams)
-{
-	int bytes = 0;
-	
-	char mapname[64];
-	GetNativeString(1, mapname, sizeof mapname, bytes);
-	StrToLower(mapname);
-	
-	if (!bytes)
-	{
-		GetCurrentMapLower(mapname, sizeof mapname);
-	}
-	
-	return GetTrieValue(hStaticWitchMaps, mapname, bytes);
 }
 
 public Action:StaticTank_Command(args) {
