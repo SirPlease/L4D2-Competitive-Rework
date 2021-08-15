@@ -34,7 +34,7 @@ public Plugin myinfo =
 	name = "L4D2 Ultra Witch",
 	author = "Visor, A1m`",
 	description = "The Witch's hit deals a set amount of damage instead of instantly incapping, while also sending the survivor flying. Fixes convar z_witch_damage",
-	version = "1.2.1",
+	version = "1.2.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -77,78 +77,78 @@ void InitGameData()
 	delete hGameData;
 }
 
-public void OnClientPutInServer(int client)
+public void OnClientPutInServer(int iClient)
 {
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	SDKHook(iClient, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
-public void OnClientDisconnect(int client)
+public void OnClientDisconnect(int iClient)
 {
-	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	SDKUnhook(iClient, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
-public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+public Action OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamageType)
 {
-	if (!(damagetype & DMG_SLASH)) {
+	if (!(iDamageType & DMG_SLASH)) {
 		return Plugin_Continue;
 	}
 	
-	if (!IsWitch(attacker) || !IsValidSurvivor(victim)) {
+	if (!IsWitch(iAttacker) || !IsValidSurvivor(iVictim)) {
 		return Plugin_Continue;
 	}
 	
-	if (IsIncapacitated(victim)) {
+	if (IsIncapacitated(iVictim)) {
 		return Plugin_Continue;
 	}
 
-	float witchDamage = g_hZWitchDamage.FloatValue;
-	if (witchDamage >= (iGetSurvivorPermanentHealth(victim) + GetSurvivorTemporaryHealth(victim))) {
+	float fWitchDamage = g_hZWitchDamage.FloatValue;
+	if (fWitchDamage >= (iGetSurvivorPermanentHealth(iVictim) + GetSurvivorTemporaryHealth(iVictim))) {
 		return Plugin_Continue;
 	}
 
 	// Replication of tank punch throw algorithm from CTankClaw::OnPlayerHit()
-	float victimPos[3], witchPos[3], throwForce[3];
-	GetEntPropVector(victim, Prop_Send, "m_vecOrigin", victimPos);
-	GetEntPropVector(attacker, Prop_Send, "m_vecOrigin", witchPos);
+	float fVictimPos[3], fWitchPos[3], fThrowForce[3];
+	GetEntPropVector(iVictim, Prop_Send, "m_vecOrigin", fVictimPos);
+	GetEntPropVector(iAttacker, Prop_Send, "m_vecOrigin", fWitchPos);
 
-	NormalizeVector(victimPos, victimPos);
-	NormalizeVector(witchPos, witchPos);
+	NormalizeVector(fVictimPos, fVictimPos);
+	NormalizeVector(fWitchPos, fWitchPos);
 	
-	throwForce[0] = L4D2Util_ClampFloat((360000.0 * (victimPos[0] - witchPos[0])), -400.0, 400.0);
-	throwForce[1] = L4D2Util_ClampFloat((90000.0 * (victimPos[1] - witchPos[1])), -400.0, 400.0);
-	throwForce[2] = 300.0;
+	fThrowForce[0] = L4D2Util_ClampFloat((360000.0 * (fVictimPos[0] - fWitchPos[0])), -400.0, 400.0);
+	fThrowForce[1] = L4D2Util_ClampFloat((90000.0 * (fVictimPos[1] - fWitchPos[1])), -400.0, 400.0);
+	fThrowForce[2] = 300.0;
 	
-	ApplyAbsVelocityImpulse(victim, throwForce);
-	L4D2Direct_DoAnimationEvent(victim, view_as<int>(ANIM_TANK_PUNCH_GETUP));
+	ApplyAbsVelocityImpulse(iVictim, fThrowForce);
+	L4D2Direct_DoAnimationEvent(iVictim, view_as<int>(ANIM_TANK_PUNCH_GETUP));
 	
-	damage = witchDamage;
+	fDamage = fWitchDamage;
 	
 	return Plugin_Changed;
 }
 
-int iGetSurvivorPermanentHealth(int client)
+int iGetSurvivorPermanentHealth(int iClient)
 {
-	if (GetEntProp(client, Prop_Send, "m_currentReviveCount") > 0) {
+	if (GetEntProp(iClient, Prop_Send, "m_currentReviveCount") > 0) {
 		return 0;
 	}
 	
-	int iHealth = GetEntProp(client, Prop_Send, "m_iHealth");
+	int iHealth = GetEntProp(iClient, Prop_Send, "m_iHealth");
 	
 	return (iHealth > 0) ? iHealth : 0;
 }
 
-bool IsWitch(int entity)
+bool IsWitch(int iEntity)
 {
-	if (!IsValidEdict(entity)) {
+	if (iEntity < 1 || !IsValidEdict(iEntity)) {
 		return false;
 	}
 	
 	char sClassName[MAX_ENTITY_NAME_SIZE];
-	GetEdictClassname(entity, sClassName, sizeof(sClassName));
-	return (StrContains(sClassName, "witch") != -1); //witch and witch_bride
+	GetEdictClassname(iEntity, sClassName, sizeof(sClassName));
+	return (strncmp(sClassName, "witch", 5) == 0); //witch and witch_bride
 }
 
-void ApplyAbsVelocityImpulse(int client, const float impulseForce[3])
+void ApplyAbsVelocityImpulse(int iClient, const float fImpulseForce[3])
 {
-	SDKCall(g_hApplyAbsVelocityImpulse, client, impulseForce);
+	SDKCall(g_hApplyAbsVelocityImpulse, iClient, fImpulseForce);
 }

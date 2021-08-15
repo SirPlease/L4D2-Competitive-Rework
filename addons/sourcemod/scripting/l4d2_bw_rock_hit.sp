@@ -7,6 +7,8 @@
 
 #define DEBUG 0
 
+#define MAX_ENTITY_NAME_SIZE 64
+
 #define GAMEDATA_FILE "l4d2_bw_rock_hit"
 #define SIGNATURE_NAME "CTankRock::Detonate"
 
@@ -31,11 +33,11 @@ bool
 	g_bLateLoad = false;
 
 Handle
-	g_hTankRockDetonate = null;
+	g_hTankRockDetonateCall = null;
 
-public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErrMax)
 {
-	g_bLateLoad = late;
+	g_bLateLoad = bLate;
 	return APLRes_Success;
 }
 
@@ -44,7 +46,7 @@ public Plugin myinfo =
 	name = "L4D2 Black&White Rock Hit",
 	author = "Visor, A1m`",
 	description = "Stops rocks from passing through soon-to-be-dead Survivors",
-	version = "1.2",
+	version = "1.3",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -86,16 +88,16 @@ void InitGameData()
 		SetFailState("Function '%s' not found", SIGNATURE_NAME);
 	}
 	
-	g_hTankRockDetonate = EndPrepSDKCall();
+	g_hTankRockDetonateCall = EndPrepSDKCall();
 	
-	if (g_hTankRockDetonate == null) {
+	if (g_hTankRockDetonateCall == null) {
 		SetFailState("Function '%s' found, but something went wrong", SIGNATURE_NAME);
 	}
 
 	delete hGameData;
 }
 
-public void CvarsChanged(ConVar hConVar, const char[] oldValue, const char[] newValue)
+public void CvarsChanged(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	CvarsToType();
 }
@@ -107,84 +109,85 @@ void CvarsToType()
 	g_fPainPillsDecayRate = g_hPainPillsDecayRate.FloatValue;
 }
 
-public void OnClientPutInServer(int client)
+public void OnClientPutInServer(int iClient)
 {
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	SDKHook(iClient, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
-public void OnClientDisconnect(int client)
+public void OnClientDisconnect(int iClient)
 {
-	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	SDKUnhook(iClient, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
-public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3])
+public Action OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamagetype, 
+								int &iWeapon, float fDamageForce[3], float fDamagePosition[3])
 {
-	if (damagetype != DMG_CLUB || !IsTankRock(inflictor)) {
+	if (iDamagetype != DMG_CLUB || !IsTankRock(iInflictor)) {
 		return Plugin_Continue;
 	}
 	
-	if (!IsSurvivor(victim)/* || !IsTank(attacker)*/) {
+	if (!IsSurvivor(iVictim)/* || !IsTank(iAttacker)*/) {
 		return Plugin_Continue;
 	}
 	
 #if DEBUG
-	char classname[64];
-	GetEdictClassname(inflictor, classname, sizeof(classname));
-	PrintToChatAll("Victim %d attacker %d inflictor %d damageType %d weapon %d", victim, attacker, inflictor, damagetype, weapon);
-	PrintToChatAll("Victim %N(%i/%i) attacker %N classname %s", victim, GetSurvivorPermanentHealth(victim), GetSurvivorTemporaryHealth(victim), attacker, classname);
+	char sClassName[MAX_ENTITY_NAME_SIZE];
+	GetEdictClassname(iInflictor, sClassName, sizeof(sClassName));
+	PrintToChatAll("Victim %d attacker %d inflictor %d damageType %d weapon %d", 
+								iVictim, iAttacker, iInflictor, iDamagetype, iWeapon);
+			
+	PrintToChatAll("Victim %N(%i/%i) attacker %N classname %s", 
+								iVictim, GetSurvivorPermanentHealth(iVictim), GetSurvivorTemporaryHealth(iVictim), iAttacker, sClassName);
 #endif
 
 	// Not b&w
-	if (!IsOnCriticalStrike(victim)) {
+	if (!IsOnCriticalStrike(iVictim)) {
 		return Plugin_Continue;
 	}
 	
 	// Gotcha
-	if (GetSurvivorTemporaryHealth(victim) <= g_iVsTankDamage) {
-		// SDKHooks_TakeDamage(inflictor, attacker, attacker, 300.0, DMG_CLUB, GetActiveWeapon(victim));
-		// AcceptEntityInput(inflictor, "Kill");
-		// StopSound(attacker, SNDCHAN_AUTO, "player/tank/attack/thrown_missile_loop_1.wav");
-		CTankRock__Detonate(inflictor);
+	if (GetSurvivorTemporaryHealth(iVictim) <= g_iVsTankDamage) {
+		CTankRock__Detonate(iInflictor);
 	}
 
 	return Plugin_Continue;
 }
 
-int GetSurvivorTemporaryHealth(int client)
+int GetSurvivorTemporaryHealth(int iClient)
 {
-	int temphp = RoundToCeil(GetEntPropFloat(client, Prop_Send, "m_healthBuffer") - ((GetGameTime() - GetEntPropFloat(client, Prop_Send, "m_healthBufferTime")) * g_fPainPillsDecayRate)) - 1;
+	int temphp = RoundToCeil(GetEntPropFloat(iClient, Prop_Send, "m_healthBuffer") - ((GetGameTime() - GetEntPropFloat(iClient, Prop_Send, "m_healthBufferTime")) * g_fPainPillsDecayRate)) - 1;
 	return (temphp > 0 ? temphp : 0);
 }
 
-bool IsOnCriticalStrike(int client)
+bool IsOnCriticalStrike(int iClient)
 {
-	return (g_iSurvivorMaxIncapCount == GetEntProp(client, Prop_Send, "m_currentReviveCount"));
+	return (g_iSurvivorMaxIncapCount == GetEntProp(iClient, Prop_Send, "m_currentReviveCount"));
 }
 
-bool IsSurvivor(int client)
+bool IsSurvivor(int iClient)
 {
-	return (client > 0
-		&& client <= MaxClients
-		&& IsClientInGame(client)
-		&& GetClientTeam(client) == TEAM_SURVIVOR);
+	return (iClient > 0
+		&& iClient <= MaxClients
+		&& IsClientInGame(iClient)
+		&& GetClientTeam(iClient) == TEAM_SURVIVOR);
 }
 
-/*bool IsTank(int client)
+/*bool IsTank(int iClient)
 {
-	return (client > 0
-		&& client <= MaxClients
-		&& IsClientInGame(client)
-		&& GetClientTeam(client) == TEAM_INFECTED 
-		&& GetEntProp(client, Prop_Send, "m_zombieClass") == Z_TANK
-		&& IsPlayerAlive(client));
+	return (iClient > 0
+		&& iClient <= MaxClients
+		&& IsClientInGame(iClient)
+		&& GetClientTeam(iClient) == TEAM_INFECTED 
+		&& GetEntProp(iClient, Prop_Send, "m_zombieClass") == Z_TANK
+		&& IsPlayerAlive(iClient));
 }*/
 
-bool IsTankRock(int entity)
+bool IsTankRock(int iEntity)
 {
-	if (/*entity > 0 && */IsValidEntity(entity)) {
-		char classname[64];
-		GetEdictClassname(entity, classname, sizeof(classname));
-		return (strcmp(classname, "tank_rock") == 0);
+	if (iEntity > 0 && IsValidEntity(iEntity)) {
+		char sClassName[MAX_ENTITY_NAME_SIZE];
+		GetEdictClassname(iEntity, sClassName, sizeof(sClassName));
+		return (strcmp(sClassName, "tank_rock") == 0);
 	}
 
 	return false;
@@ -196,11 +199,11 @@ void CTankRock__Detonate(int iTankRock)
 	PrintToChatAll("CTankRock__Detonate: %d", iTankRock);
 #endif
 
-	SDKCall(g_hTankRockDetonate, iTankRock);
+	SDKCall(g_hTankRockDetonateCall, iTankRock);
 }
 
 #if DEBUG
-public Action Cmd_DetonateRock(int client, int args)
+public Action Cmd_DetonateRock(int iClient, int iArgs)
 {
 	int iEntity = -1;
 	while ((iEntity = FindEntityByClassname(iEntity, "tank_rock")) != -1) {
@@ -218,13 +221,13 @@ public Action Cmd_DetonateRock(int client, int args)
 	return Plugin_Handled;
 }
 
-int GetSurvivorPermanentHealth(int client)
+int GetSurvivorPermanentHealth(int iClient)
 {
-	if (GetEntProp(client, Prop_Send, "m_currentReviveCount") > 0) {
+	if (GetEntProp(iClient, Prop_Send, "m_currentReviveCount") > 0) {
 		return 0;
 	}
 	
-	int iHealth = GetEntProp(client, Prop_Send, "m_iHealth");
+	int iHealth = GetEntProp(iClient, Prop_Send, "m_iHealth");
 	return (iHealth > 0) ? iHealth : 0;
 }
 #endif
