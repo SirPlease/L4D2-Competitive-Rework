@@ -5,9 +5,8 @@
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
-#include <entity_prop_stocks>
 
-#define VERSION "1.4.1"
+#define VERSION "1.4.2"
 
 //Found ent 'prop_door_rotating', id: 163
 
@@ -25,13 +24,13 @@
 
 */
 
-new tankCount;
+int tankCount;
 
-new Float:nextTankPunchAllowed[MAXPLAYERS+1];
+float nextTankPunchAllowed[MAXPLAYERS+1];
 
-new tankClassIndex;
+int tankClassIndex;
 
-public Plugin:myinfo = 
+public Plugin myinfo = 
 {
 	name = "TankDoorFix",
 	author = "PP(R)TH: Dr. Gregory House",
@@ -40,23 +39,19 @@ public Plugin:myinfo =
 	url = "http://forums.alliedmods.net/showthread.php?t=225087"
 }
 
-public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	decl String:gameName[32];
-	
-	GetGameFolderName(gameName, sizeof(gameName));
-	
-	if(StrEqual(gameName, "left4dead"))
+	switch (GetEngineVersion())
 	{
-		tankClassIndex = 5;
-	}
-	else
-	{
-		if(StrContains(gameName, "left4dead2") > -1)
+		case Engine_Left4Dead:
+		{
+			tankClassIndex = 5;
+		}
+		case Engine_Left4Dead2:
 		{
 			tankClassIndex = 8;
 		}
-		else
+		default:
 		{
 			strcopy(error, err_max, "This plugin only supports L4D(2).");
 			return APLRes_SilentFailure;
@@ -65,32 +60,28 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 	return APLRes_Success;
 }
 
-public OnPluginStart()
+public void OnPluginStart()
 {
+	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 	HookEvent("tank_spawn", Event_TankSpawn);
-	HookEvent("tank_killed", Event_TankKilled);
+	HookEvent("player_death", Event_PlayerDeath);
 	
 	CreateConVar("tankdoorfix_version", VERSION, "TankDoorFix Version", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
 }
 
-public OnMapStart()
-{
-	tankCount = 0;
-}
-
-public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:angles[3], &weapon)
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon, int &subtype, int &cmdnum, int &tickcount, int &seed, int mouse[2])
 {
 	if(tankCount > 0)
 	{
-		if(IsValidClient(client) && GetClientTeam(client) == 3 && GetEntProp(client, Prop_Send, "m_zombieClass") == tankClassIndex)
+		if(IsClientInGame(client) && GetClientTeam(client) == 3 && GetEntProp(client, Prop_Send, "m_zombieClass") == tankClassIndex)
 		{
 			if(buttons & IN_ATTACK)
 			{
-				new tankweapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+				int tankweapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 				
 				if(tankweapon > 0)
 				{
-					new Float:gameTime = GetGameTime();
+					float gameTime = GetGameTime();
 					
 					if(GetEntPropFloat(tankweapon, Prop_Send, "m_flTimeWeaponIdle") <= gameTime && nextTankPunchAllowed[client] <= gameTime)
 					{
@@ -106,55 +97,67 @@ public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:ang
 	return Plugin_Continue;
 }
 
-public Action:Timer_DoorCheck(Handle:timer, any:clientUserID)
+public Action Timer_DoorCheck(Handle timer, int clientUserID)
 {
-	new client = GetClientOfUserId(clientUserID);
+	int client = GetClientOfUserId(clientUserID);
 	
 	if(client > 0 && IsClientInGame(client))
 	{
-		decl Float:direction[3];
+		float direction[3];
 		
-		new result = IsLookingAtBreakableDoor(client, direction);
+		int result = IsLookingAtBreakableDoor(client, direction);
 		
 		if(result > 0)
 		{
-			SDKHooks_TakeDamage(result, client, client, 1200.0, 128, _, direction);
+			SDKHooks_TakeDamage(result, client, client, 1200.0, DMG_CLUB, _, direction);
 		}
 	}
 }
 
-public Event_TankSpawn(Handle:event, const String:name[], bool:dontBroadcast)
+public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+{
+	tankCount = 0;
+}
+
+public void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
 {
 	tankCount++;
 	
-	nextTankPunchAllowed[GetClientOfUserId(GetEventInt(event, "userid"))] = GetGameTime() + 0.8;
+	nextTankPunchAllowed[GetClientOfUserId(event.GetInt("userid"))] = GetGameTime() + 0.8;
 }
 
-public Event_TankKilled(Handle:event, const String:name[], bool:dontBroadcast)
+public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
-	tankCount--;
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	
+	if (client > 0 && GetClientTeam(client) == 3 && GetEntProp(client, Prop_Send, "m_zombieClass") == tankClassIndex)
+	{
+		tankCount--;
+	}
 }
 
-stock IsLookingAtBreakableDoor(client, Float:direction[3])
+stock int IsLookingAtBreakableDoor(int client, float direction[3] = NULL_VECTOR)
 {
-	new target = GetClientAimTarget(client, false);
+	int target = GetClientAimTarget(client, false);
 	
 	if(target > 0)
 	{
-		decl String:entName[MAX_NAME_LENGTH];
+		char entName[64];
 		
-		GetEntityClassname(target, entName, sizeof(entName));
+		if(!GetEntityClassname(target, entName, sizeof(entName)))
+		{
+			return 0;
+		}
 		
-		if(StrEqual(entName, "prop_door_rotating"))
+		if(entName[0] == 'p' && strcmp(entName, "prop_door_rotating") == 0)
 		{
 			//Compare distances, i.e. "is in range to destroy the door"
-			decl Float:clientPos[3];
-			decl Float:doorPos[3];
+			float clientPos[3], doorPos[3];
 			
 			GetClientAbsOrigin(client, clientPos);
 			GetEntPropVector(target, Prop_Send, "m_vecOrigin", doorPos);
-			//90.0
-			if(GetVectorDistance(clientPos, doorPos) <= 90.0)
+			
+			if(GetVectorDistance(clientPos, doorPos, true) <= 8100.0) //90.0
 			{
 				SubtractVectors(doorPos, clientPos, direction);
 				return target;
@@ -173,10 +176,4 @@ stock IsLookingAtBreakableDoor(client, Float:direction[3])
 	{
 		return -1;
 	}
-}
-
-bool:IsValidClient(client)
-{
-	if (client <= 0 || client > MaxClients || !IsClientConnected(client)) return false;
-	return IsClientInGame(client);
 }
