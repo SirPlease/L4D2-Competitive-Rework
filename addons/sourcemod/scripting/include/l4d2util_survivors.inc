@@ -3,6 +3,7 @@
 #endif
 #define l4d2util_survivors_inc_
 
+#include <sdktools>
 #include <l4d2util_constants>
 #include <l4d2util_stocks>
 
@@ -86,7 +87,13 @@ stock int GetSurvivorPermanentHealth(int client)
  */
 stock int GetSurvivorTemporaryHealth(int client)
 {
-	float fDecayRate = (FindConVar("pain_pills_decay_rate")).FloatValue;
+	static ConVar pain_pills_decay_rate = null;
+	if (pain_pills_decay_rate == null)
+	{
+		pain_pills_decay_rate = FindConVar("pain_pills_decay_rate");
+	}
+	
+	float fDecayRate = pain_pills_decay_rate.FloatValue;
 
 	float fHealthBuffer = GetEntPropFloat(client, Prop_Send, "m_healthBuffer");
 	float fHealthBufferTimeStamp = GetEntPropFloat(client, Prop_Send, "m_healthBufferTime");

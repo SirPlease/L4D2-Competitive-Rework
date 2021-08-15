@@ -1,7 +1,9 @@
-#if defined l4d2_tanks_inc_
+#if defined l4d2util_tanks_inc_
 	#endinput
 #endif
-#define l4d2_tanks_inc_
+#define l4d2util_tanks_inc_
+
+#include <l4d2util_constants>
 
 #if !defined L4D2UTIL_STOCKS_ONLY
 #if !defined __IN_L4D2UTIL__
