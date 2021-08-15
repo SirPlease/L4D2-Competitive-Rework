@@ -6,16 +6,19 @@
 
 #include <sourcemod>
 #include <left4dhooks>
+#undef REQUIRE_PLUGIN
+#include <caster_system>
 
 #define IS_VALID_CLIENT(%1)     (%1 > 0 && %1 <= MaxClients)
 #define IS_INFECTED(%1)         (GetClientTeam(%1) == 3)
 #define IS_VALID_INGAME(%1)     (IS_VALID_CLIENT(%1) && IsClientInGame(%1))
 #define IS_VALID_INFECTED(%1)   (IS_VALID_INGAME(%1) && IS_INFECTED(%1))
-#define IS_VALID_CASTER(%1)     (IS_VALID_INGAME(%1) && IsClientCaster(%1))
+#define IS_VALID_CASTER(%1)     (IS_VALID_INGAME(%1) && casterSystemAvailable && IsClientCaster(%1))
 
 ArrayList h_whosHadTank;
 char queuedTankSteamId[64];
 ConVar hTankPrint, hTankDebug;
+bool casterSystemAvailable;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -81,6 +84,21 @@ public void OnPluginStart()
     // Cvars
     hTankPrint = CreateConVar("tankcontrol_print_all", "0", "Who gets to see who will become the tank? (0 = Infected, 1 = Everyone)");
     hTankDebug = CreateConVar("tankcontrol_debug", "0", "Whether or not to debug to console");
+}
+
+public void OnAllPluginsLoaded()
+{
+	casterSystemAvailable = LibraryExists("caster_system");
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "caster_system")) casterSystemAvailable = true;
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "caster_system")) casterSystemAvailable = false;
 }
 
 /*public void OnClientDisconnect(int client) 
@@ -218,7 +236,7 @@ public Action Tank_Cmd(int client, int args)
         GetClientName(tankClientId, tankClientName, sizeof(tankClientName));
         
         // If on infected, print to entire team
-        if (view_as<L4D2Team>(GetClientTeam(client)) == L4D2Team_Infected || IsClientCaster(client))
+        if (view_as<L4D2Team>(GetClientTeam(client)) == L4D2Team_Infected || (casterSystemAvailable && IsClientCaster(client)))
         {
             if (client == tankClientId) CPrintToChat(client, "{red}<{default}Tank Selection{red}> {green}You {default}will become the {red}Tank{default}!");
             else CPrintToChat(client, "{red}<{default}Tank Selection{red}> {olive}%s {default}will become the {red}Tank!", tankClientName);

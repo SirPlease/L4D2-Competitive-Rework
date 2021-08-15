@@ -3,7 +3,7 @@
 #include <sourcemod>
 #include <sdktools>
 #undef REQUIRE_PLUGIN
-#include <readyup>
+#include <caster_system>
 
 enum L4D2Team
 {
@@ -58,12 +58,12 @@ public OnPluginEnd()
 
 public OnAllPluginsLoaded()
 {
-    readyUpIsAvailable = LibraryExists("readyup");
+    readyUpIsAvailable = LibraryExists("caster_system");
 }
 
 public OnLibraryRemoved(const String:name[])
 {
-    if (StrEqual(name, "readyup", true))
+    if (StrEqual(name, "caster_system", true))
     {
         readyUpIsAvailable = false;
     }
@@ -71,7 +71,7 @@ public OnLibraryRemoved(const String:name[])
 
 public OnLibraryAdded(const String:name[])
 {
-    if (StrEqual(name, "readyup", true))
+    if (StrEqual(name, "caster_system", true))
     {
         readyUpIsAvailable = true;
     }

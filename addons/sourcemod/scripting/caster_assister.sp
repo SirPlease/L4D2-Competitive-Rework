@@ -3,7 +3,7 @@
 #include <sourcemod>
 #include <sdktools>
 #undef REQUIRE_PLUGIN
-#include <readyup>
+#include <caster_system>
 #define MAX_SPEED 2
 
 new bool:readyUpIsAvailable;
@@ -34,12 +34,12 @@ public OnPluginStart()
 
 public OnAllPluginsLoaded()
 {
-    readyUpIsAvailable = LibraryExists("readyup");
+    readyUpIsAvailable = LibraryExists("caster_system");
 }
 
 public OnLibraryRemoved(const String:name[])
 {
-    if (StrEqual(name, "readyup"))
+    if (StrEqual(name, "caster_system"))
     {
         readyUpIsAvailable = false;
     }
@@ -47,7 +47,7 @@ public OnLibraryRemoved(const String:name[])
 
 public OnLibraryAdded(const String:name[])
 {
-    if (StrEqual(name, "readyup"))
+    if (StrEqual(name, "caster_system"))
     {
         readyUpIsAvailable = true;
     }
