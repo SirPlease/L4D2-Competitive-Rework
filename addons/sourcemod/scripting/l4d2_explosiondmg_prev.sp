@@ -6,6 +6,8 @@
 
 #define DEBUG 0
 
+#define MAX_ENTITY_NAME_SIZE 64
+
 #define TEAM_INFECTED 3
 
 bool
@@ -53,7 +55,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	// env_explosion, trigger_hurt, point_hurt etc...
 	if (attacker > MaxClients && IsValidEntity(attacker) && IsInfected(victim)) {
 		#if DEBUG
-			char sEntityName[64];
+			char sEntityName[MAX_ENTITY_NAME_SIZE];
 			GetEntityClassname(attacker, sEntityName, sizeof(sEntityName));
 			PrintToChatAll("hOnTakeDamage victim: %d, attacker: %d (%s), inflictor: %d, damage: %f, damagetype: %d", \
 								victim, attacker, sEntityName, inflictor, damage, damagetype);

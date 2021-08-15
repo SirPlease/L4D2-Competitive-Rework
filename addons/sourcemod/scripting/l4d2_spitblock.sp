@@ -5,45 +5,48 @@
 #include <sdktools>
 #include <sdkhooks>
 
+#define MAX_ENTITY_NAME_SIZE 64
+#define MAX_MAP_NAME_SIZE 64
+
 #define DMG_TYPE_SPIT (DMG_RADIATION|DMG_ENERGYBEAM)
 #define PLUGIN_TAG "l4d2_spitblock"
 
 bool
-	IsBlockEnable = false;
+	g_bIsBlockEnable = false;
 
 float
-	block_square[4];
+	g_fBlockSquare[4] = {0.0, ...};
 
 StringMap
-	hSpitBlockSquares;
+	g_hSpitBlockSquares = null;
 
 bool
-	bLateLoad;
+	g_bLateLoad = false;
 
 public Plugin myinfo =
 {
 	name = "L4D2 Spit Blocker",
 	author = "ProdigySim, Estoopi, Jacob, Visor, A1m`",
 	description = "Blocks spit damage on various maps",
-	version = "2.2",
+	version = "2.3",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	bLateLoad = late;
+	g_bLateLoad = late;
+
 	return APLRes_Success;
 }
 
 public void OnPluginStart()
 {
-	hSpitBlockSquares = new StringMap();
+	g_hSpitBlockSquares = new StringMap();
 	
 	RegServerCmd("spit_block_square", AddSpitBlockSquare);
 	RegServerCmd("spit_remove_block_square", RemoveSpitBlockSquare);
 	
-	if (bLateLoad) {
-		OnMapStart();
+	if (g_bLateLoad) {
 		for (int i = 1; i <= MaxClients; i++) {
 			if (IsClientInGame(i)) {
 				OnClientPostAdminCheck(i);
@@ -52,52 +55,52 @@ public void OnPluginStart()
 	}
 }
 
-public Action AddSpitBlockSquare(int args)
+public Action AddSpitBlockSquare(int iArgs)
 {
-	static float square[4];
-	static char mapname[64], buf[32], sGetCmd[128];
+	float fSquare[4];
+	char sMapName[MAX_MAP_NAME_SIZE], sBuffer[32], sGetCmd[128];
 	
-	if (args != 5) {
+	if (iArgs != 5) {
 		GetCmdArgString(sGetCmd, sizeof(sGetCmd));
 		ErrorAnnounce("[%s] You entered the wrong number of arguments '%f'. Need 5 arguments.", PLUGIN_TAG, sGetCmd);
 		ErrorAnnounce("[%s] Usage: spit_block_square <mapname> <x1> <y1> <x2> <y2>.", PLUGIN_TAG);
 		return Plugin_Handled;
 	}
 	
-	GetCmdArg(1, mapname, sizeof(mapname));
+	GetCmdArg(1, sMapName, sizeof(sMapName));
 
 	for (int i = 0; i < 4; i++) {
-		GetCmdArg(2 + i, buf, sizeof(buf));
-		square[i] = StringToFloat(buf);
+		GetCmdArg(2 + i, sBuffer, sizeof(sBuffer));
+		fSquare[i] = StringToFloat(sBuffer);
 	}
 	
-	hSpitBlockSquares.SetArray(mapname, square, sizeof(square), true);
+	g_hSpitBlockSquares.SetArray(sMapName, fSquare, sizeof(fSquare), true);
 
 	OnMapStart();
 	
-	//PrintToServer("[%s] Spit block square added on this map '%s'.", PLUGIN_TAG, mapname);
+	//PrintToServer("[%s] Spit block square added on this map '%s'.", PLUGIN_TAG, sMapName);
 	
 	return Plugin_Handled;
 }
 
-public Action RemoveSpitBlockSquare(int args)
+public Action RemoveSpitBlockSquare(int iArgs)
 {
-	static float square[4];
-	static char mapname[64], sGetCmd[128];
+	float fSquare[4];
+	char sMapName[MAX_MAP_NAME_SIZE], sGetCmd[128];
 	
-	if (args != 1) {
+	if (iArgs != 1) {
 		GetCmdArgString(sGetCmd, sizeof(sGetCmd));
 		ErrorAnnounce("[%s] You entered the wrong number of arguments '%f'. Need 1 argument.", PLUGIN_TAG, sGetCmd);
 		ErrorAnnounce("[%s] Usage: spit_remove_block_square <mapname>.", PLUGIN_TAG);
 		return Plugin_Handled;
 	}
 	
-	GetCmdArg(1, mapname, sizeof(mapname));
-	if (hSpitBlockSquares.GetArray(mapname, square, sizeof(square))) {
-		hSpitBlockSquares.Remove(mapname);
-		PrintToServer("[%s] Spit block square removed on this map '%s'.", PLUGIN_TAG, mapname);
+	GetCmdArg(1, sMapName, sizeof(sMapName));
+	if (g_hSpitBlockSquares.GetArray(sMapName, fSquare, sizeof(fSquare))) {
+		g_hSpitBlockSquares.Remove(sMapName);
+		PrintToServer("[%s] Spit block square removed on this map '%s'.", PLUGIN_TAG, sMapName);
 	} else {
-		PrintToServer("[%s] Сould not find the specified map '%s'.", PLUGIN_TAG, mapname);
+		PrintToServer("[%s] Сould not find the specified map '%s'.", PLUGIN_TAG, sMapName);
 	}
 	
 	OnMapStart();
@@ -107,46 +110,46 @@ public Action RemoveSpitBlockSquare(int args)
 
 public void OnMapStart()
 {
-	static char mapname[64];
-	GetCurrentMap(mapname, sizeof(mapname));
+	char sMapName[MAX_MAP_NAME_SIZE];
+	GetCurrentMap(sMapName, sizeof(sMapName));
 	
-	if (hSpitBlockSquares.GetArray(mapname, block_square, sizeof(block_square))) {
-		IsBlockEnable = true;
+	if (g_hSpitBlockSquares.GetArray(sMapName, g_fBlockSquare, sizeof(g_fBlockSquare))) {
+		g_bIsBlockEnable = true;
 		return;
 	}
 	
-	for (int i = 0; i < sizeof(block_square); i++) {
-		block_square[i] = 0.0;
+	for (int i = 0; i < sizeof(g_fBlockSquare); i++) {
+		g_fBlockSquare[i] = 0.0;
 	}
 
-	IsBlockEnable = false;
+	g_bIsBlockEnable = false;
 }
 
-public void OnClientPostAdminCheck(int client)
+public void OnClientPostAdminCheck(int iClient)
 {
-	SDKHook(client, SDKHook_OnTakeDamage, stop_spit_dmg);
+	SDKHook(iClient, SDKHook_OnTakeDamage, stop_spit_dmg);
 }
 
-public Action stop_spit_dmg(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+public Action stop_spit_dmg(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamageType)
 {
-	if (!IsBlockEnable || !(damagetype & DMG_TYPE_SPIT)) { //for performance
+	if (!g_bIsBlockEnable || !(iDamageType & DMG_TYPE_SPIT)) { //for performance
 		return Plugin_Continue;
 	}
 	
-	if (!IsInsectSwarm(inflictor) || !IsValidClient(victim)) {
+	if (!IsInsectSwarm(iInflictor) || !IsValidClient(iVictim)) {
 		return Plugin_Continue;
 	}
 
-	float origin[3];
-	GetClientAbsOrigin(victim, origin);
-	if (isPointIn2DBox(origin[0], origin[1], block_square[0], block_square[1], block_square[2], block_square[3])) {
+	float fOrigin[3];
+	GetClientAbsOrigin(iVictim, fOrigin);
+	if (isPointIn2DBox(fOrigin[0], fOrigin[1], g_fBlockSquare[0], g_fBlockSquare[1], g_fBlockSquare[2], g_fBlockSquare[3])) {
 		return Plugin_Handled;
 	}
 
 	return Plugin_Continue;
 }
 
-// Is x0,y0 in the box defined by x1,y1 and x2,y2
+// Is x0, y0 in the box defined by x1, y1 and x2, y2
 bool isPointIn2DBox(float x0, float y0, float x1, float y1, float x2, float y2)
 {
 	if (x1 > x2) {
@@ -164,20 +167,20 @@ bool isPointIn2DBox(float x0, float y0, float x1, float y1, float x2, float y2)
 	}
 }
 
-bool IsInsectSwarm(int entity)
+bool IsInsectSwarm(int iEntity)
 {
-	if (IsValidEntity(entity)) {
-		char classname[32];
-		GetEntityClassname(entity, classname, sizeof(classname));
-		return (strcmp(classname, "insect_swarm") == 0);
+	if (iEntity > 0 && IsValidEntity(iEntity)) {
+		char sClassName[MAX_ENTITY_NAME_SIZE];
+		GetEntityClassname(iEntity, sClassName, sizeof(sClassName));
+		return (strcmp(sClassName, "insect_swarm") == 0);
 	}
 
 	return false;
 }
 
-bool IsValidClient(int client)
+bool IsValidClient(int iClient)
 {
-	return (client > 0 && client <= MaxClients /*&& IsClientInGame(client)*/); //need?
+	return (iClient > 0 && iClient <= MaxClients /*&& IsClientInGame(iClient)*/); //need?
 }
 
 void ErrorAnnounce(const char[] szFormat, any ...)

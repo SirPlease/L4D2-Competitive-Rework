@@ -8,58 +8,56 @@
 
 #define GAMEDATA "l4d2_si_ability"
 
+#define MAX_ENTITY_NAME_SIZE 64
+#define MAX_INT_STRING_SIZE 8
+
 #define TICK_TIME 0.200072
 #define TEAM_SURVIVOR 2
 
 #define DMG_TYPE_SPIT (DMG_RADIATION|DMG_ENERGYBEAM)
 
-#if SOURCEMOD_V_MINOR > 9
-enum struct eVictimStruct
+enum
 {
-	int eiCount;
-	bool ebAltTick;
-}
-#else
-enum eVictimStruct
-{
-	eiCount,
-	bool:ebAltTick
+	eCount = 0,
+	eAltTick,
+	
+	eArray_Size
 };
-#endif
 
 ConVar
-	hCvarDamagePerTick,
-	hCvarAlternateDamagePerTwoTicks,
-	hCvarMaxTicks,
-	hCvarGodframeTicks;
+	g_hCvarDamagePerTick,
+	g_hCvarAlternateDamagePerTwoTicks,
+	g_hCvarMaxTicks,
+	g_hCvarGodframeTicks;
 
 StringMap
-	hPuddles;
+	g_hPuddles;
 
 int
-	m_activeTimerOffset,
-	maxTicks,
-	godframeTicks;
+	g_iActiveTimerOffset,
+	g_iMaxTicks,
+	g_iGodframeTicks;
 
 bool
-	bLateLoad;
+	g_bLateLoad;
 
 float
-	damagePerTick,
-	alternatePerTick;
+	g_fDamagePerTick,
+	g_fAlternatePerTick;
 
-public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErrMax)
 {
-	bLateLoad = late;
+	g_bLateLoad = bLate;
+	
 	return APLRes_Success;
 }
 
-public Plugin myinfo = 
+public Plugin myinfo =
 {
 	name = "L4D2 Uniform Spit",
 	author = "Visor, Sir, A1m`",
 	description = "Make the spit deal a set amount of DPS under all circumstances",
-	version = "1.3.6",
+	version = "1.4.8",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -67,22 +65,22 @@ public void OnPluginStart()
 {
 	InitGameData();
 
-	hCvarDamagePerTick = CreateConVar("l4d2_spit_dmg", "-1.0", "Damage per tick the spit inflicts. -1 to skip damage adjustments");
-	hCvarAlternateDamagePerTwoTicks = CreateConVar("l4d2_spit_alternate_dmg", "-1.0", "Damage per alternate tick. -1 to disable");
-	hCvarMaxTicks = CreateConVar("l4d2_spit_max_ticks", "28", "Maximum number of acid damage ticks");
-	hCvarGodframeTicks = CreateConVar("l4d2_spit_godframe_ticks", "4", "Number of initial godframed acid ticks");
+	g_hCvarDamagePerTick = CreateConVar("l4d2_spit_dmg", "-1.0", "Damage per tick the spit inflicts. -1 to skip damage adjustments");
+	g_hCvarAlternateDamagePerTwoTicks = CreateConVar("l4d2_spit_alternate_dmg", "-1.0", "Damage per alternate tick. -1 to disable");
+	g_hCvarMaxTicks = CreateConVar("l4d2_spit_max_ticks", "28", "Maximum number of acid damage ticks");
+	g_hCvarGodframeTicks = CreateConVar("l4d2_spit_godframe_ticks", "4", "Number of initial godframed acid ticks");
 	
-	hCvarDamagePerTick.AddChangeHook(CvarsChanged);
-	hCvarAlternateDamagePerTwoTicks.AddChangeHook(CvarsChanged);
-	hCvarMaxTicks.AddChangeHook(CvarsChanged);
-	hCvarGodframeTicks.AddChangeHook(CvarsChanged);
+	g_hCvarDamagePerTick.AddChangeHook(CvarsChanged);
+	g_hCvarAlternateDamagePerTwoTicks.AddChangeHook(CvarsChanged);
+	g_hCvarMaxTicks.AddChangeHook(CvarsChanged);
+	g_hCvarGodframeTicks.AddChangeHook(CvarsChanged);
+	
+	g_hPuddles = new StringMap();
 	
 	HookEvent("round_start", Event_RoundReset, EventHookMode_PostNoCopy);
 	//HookEvent("round_end", Event_RoundReset, EventHookMode_PostNoCopy);
 	
-	hPuddles = new StringMap();
-	
-	if (bLateLoad) {
+	if (g_bLateLoad) {
 		for (int i = 1; i <= MaxClients; i++) {
 			if (IsClientInGame(i)) {
 				OnClientPutInServer(i);
@@ -99,15 +97,15 @@ void InitGameData()
 		SetFailState("Gamedata '%s.txt' missing or corrupt.", GAMEDATA);
 	}
 	
-	m_activeTimerOffset = GameConfGetOffset(hGamedata, "CInferno->m_activeTimer");
-	if (m_activeTimerOffset == -1) {
+	g_iActiveTimerOffset = GameConfGetOffset(hGamedata, "CInferno->m_activeTimer");
+	if (g_iActiveTimerOffset == -1) {
 		SetFailState("Failed to get offset 'CInferno->m_activeTimer'.");
 	}
 	
 	delete hGamedata;
 }
 
-public void CvarsChanged(ConVar hConVar, const char[] oldValue, const char[] newValue)
+public void CvarsChanged(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	CvarsToType();
 }
@@ -119,55 +117,54 @@ public void OnConfigsExecuted()
 
 void CvarsToType()
 {
-	damagePerTick = hCvarDamagePerTick.FloatValue;
-	alternatePerTick = hCvarAlternateDamagePerTwoTicks.FloatValue;
-	maxTicks = hCvarMaxTicks.IntValue;
-	godframeTicks = hCvarGodframeTicks.IntValue;
+	g_fDamagePerTick = g_hCvarDamagePerTick.FloatValue;
+	g_fAlternatePerTick = g_hCvarAlternateDamagePerTwoTicks.FloatValue;
+	g_iMaxTicks = g_hCvarMaxTicks.IntValue;
+	g_iGodframeTicks = g_hCvarGodframeTicks.IntValue;
 }
 
-public void Event_RoundReset(Event hEvent, const char[] eName, bool dontBroadcast)
+public void Event_RoundReset(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	hPuddles.Clear();
+	g_hPuddles.Clear();
 }
 
 public void OnMapEnd()
 {
-	hPuddles.Clear();
+	g_hPuddles.Clear();
 }
 
-public void OnClientPutInServer(int client)
+public void OnClientPutInServer(int iClient)
 {
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	SDKHook(iClient, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
 }
 
-public void OnClientDisconnect(int client)
+public void OnClientDisconnect(int iClient)
 {
-	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	SDKUnhook(iClient, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
 }
 
-public void OnEntityCreated(int entity, const char[] classname)
+public void OnEntityCreated(int iEntity, const char[] sClassName)
 {
-	if (strcmp(classname, "insect_swarm") == 0) {
-		char trieKey[8];
-		IntToString(entity, trieKey, sizeof(trieKey));
-		
-		#if SOURCEMOD_V_MINOR > 9
-		eVictimStruct victimArray[MAXPLAYERS + 1];
-		hPuddles.SetArray(trieKey, victimArray[0], (sizeof(victimArray) * sizeof(eVictimStruct)));
-		#else
-		eVictimStruct victimArray[MAXPLAYERS + 1][eVictimStruct];
-		hPuddles.SetArray(trieKey, victimArray[0][0], (sizeof(victimArray) * view_as<int>(eVictimStruct)));
-		#endif
+	if (sClassName[0] != 'i') {
+		return;
+	}
+	
+	if (strcmp(sClassName, "insect_swarm") == 0) {
+		char sTrieKey[MAX_INT_STRING_SIZE];
+		IntToString(iEntity, sTrieKey, sizeof(sTrieKey));
+
+		int iVictimArray[MAXPLAYERS + 1][eArray_Size];
+		g_hPuddles.SetArray(sTrieKey, iVictimArray[0][0], (sizeof(iVictimArray) * sizeof(iVictimArray[])));
 	}
 }
 
-public void OnEntityDestroyed(int entity)
+public void OnEntityDestroyed(int iEntity)
 {
-	if (IsInsectSwarm(entity)) {
-		char trieKey[8];
-		IntToString(entity, trieKey, sizeof(trieKey));
+	if (IsInsectSwarm(iEntity)) {
+		char sTrieKey[MAX_INT_STRING_SIZE];
+		IntToString(iEntity, sTrieKey, sizeof(sTrieKey));
 
-		hPuddles.Remove(trieKey);
+		g_hPuddles.Remove(sTrieKey);
 	}
 }
 
@@ -177,109 +174,76 @@ public void OnEntityDestroyed(int entity)
  *   return 263168; //DMG_RADIATION|DMG_ENERGYBEAM
  * }
 */
-public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+public Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &fDamageType)
 {
-	if (!(damagetype & DMG_TYPE_SPIT)) { //for performance
+	if (!(fDamageType & DMG_TYPE_SPIT)) { //for performance
 		return Plugin_Continue;
 	}
 
-	if (!IsInsectSwarm(inflictor) || !IsSurvivor(victim)) {
+	if (!IsInsectSwarm(iInflictor) || !IsSurvivor(iVictim)) {
 		return Plugin_Continue;
 	}
 	
-	char trieKey[8];
-	IntToString(inflictor, trieKey, sizeof(trieKey));
+	char sTrieKey[MAX_INT_STRING_SIZE];
+	IntToString(iInflictor, sTrieKey, sizeof(sTrieKey));
 
-#if SOURCEMOD_V_MINOR > 9
-	eVictimStruct victimArray[MAXPLAYERS + 1];
-	if (hPuddles.GetArray(trieKey, victimArray[0], (sizeof(victimArray) * sizeof(eVictimStruct)))) {
-		victimArray[victim].eiCount++;
+	int iVictimArray[MAXPLAYERS + 1][eArray_Size];
+	if (g_hPuddles.GetArray(sTrieKey, iVictimArray[0][0], (sizeof(iVictimArray) * sizeof(iVictimArray[])))) {
+		iVictimArray[iVictim][eCount]++;
 		
 		// Check to see if it's a godframed tick
-		if ((GetPuddleLifetime(inflictor) >= godframeTicks * TICK_TIME) && victimArray[victim].eiCount < godframeTicks) {
-			victimArray[victim].eiCount = godframeTicks + 1;
+		if ((GetPuddleLifetime(iInflictor) >= g_iGodframeTicks * TICK_TIME) && iVictimArray[iVictim][eCount] < g_iGodframeTicks) {
+			iVictimArray[iVictim][eCount] = g_iGodframeTicks + 1;
 		}
 
 		// Let's see what do we have here
-		if (damagePerTick > -1.0) {
-			if (alternatePerTick > -1.0 && victimArray[victim].ebAltTick) {
-				victimArray[victim].ebAltTick = false;
-				damage = alternatePerTick;
+		if (g_fDamagePerTick > -1.0) {
+			if (g_fAlternatePerTick > -1.0 && iVictimArray[iVictim][eAltTick]) {
+				iVictimArray[iVictim][eAltTick] = false;
+				fDamage = g_fAlternatePerTick;
 			} else {
-				damage = damagePerTick;
-				victimArray[victim].ebAltTick = true;
+				fDamage = g_fDamagePerTick;
+				iVictimArray[iVictim][eAltTick] = true;
 			}
 		}
 		
 		// Update the array with stored tickcounts
-		hPuddles.SetArray(trieKey, victimArray[0], (sizeof(victimArray) * sizeof(eVictimStruct)));
+		g_hPuddles.SetArray(sTrieKey, iVictimArray[0][0], (sizeof(iVictimArray) * sizeof(iVictimArray[])));
 		
-		if (godframeTicks >= victimArray[victim].eiCount || victimArray[victim].eiCount > maxTicks) {
-			damage = 0.0;
+		if (g_iGodframeTicks >= iVictimArray[iVictim][eCount] || iVictimArray[iVictim][eCount] > g_iMaxTicks) {
+			fDamage = 0.0;
 		}
 		
-		if (victimArray[victim].eiCount > maxTicks) {
-			AcceptEntityInput(inflictor, "Kill");
-		}
-		
-		return Plugin_Changed;
-	}
-#else
-	eVictimStruct victimArray[MAXPLAYERS + 1][eVictimStruct];
-	if (hPuddles.GetArray(trieKey, victimArray[0][0], (sizeof(victimArray) * view_as<int>(eVictimStruct)))) {
-		victimArray[victim][eiCount]++;
-		
-		// Check to see if it's a godframed tick
-		if ((GetPuddleLifetime(inflictor) >= godframeTicks * TICK_TIME) && victimArray[victim][eiCount] < godframeTicks) {
-			victimArray[victim][eiCount] = godframeTicks + 1;
-		}
-
-		// Let's see what do we have here
-		if (damagePerTick > -1.0) {
-			if (alternatePerTick > -1.0 && victimArray[victim][ebAltTick]) {
-				victimArray[victim][ebAltTick] = false;
-				damage = alternatePerTick;
-			} else {
-				damage = damagePerTick;
-				victimArray[victim][ebAltTick] = true;
-			}
-		}
-
-		// Update the array with stored tickcounts
-		hPuddles.SetArray(trieKey, victimArray[0][0], (sizeof(victimArray) * view_as<int>(eVictimStruct)));
-		
-		if (godframeTicks >= victimArray[victim][eiCount] || victimArray[victim][eiCount] > maxTicks) {
-			damage = 0.0;
-		}
-		
-		if (victimArray[victim][eiCount] > maxTicks) {
-			AcceptEntityInput(inflictor, "Kill");
+		if (iVictimArray[iVictim][eCount] > g_iMaxTicks) {
+			AcceptEntityInput(iInflictor, "Kill");
 		}
 		
 		return Plugin_Changed;
 	}
-#endif
 
 	return Plugin_Continue;
 }
 
-float GetPuddleLifetime(int puddle)
+float GetPuddleLifetime(int iPuddle)
 {
-	return ITimer_GetElapsedTime(view_as<IntervalTimer>(GetEntityAddress(puddle) + view_as<Address>(m_activeTimerOffset)));
+	return ITimer_GetElapsedTime(view_as<IntervalTimer>(GetEntityAddress(iPuddle) + view_as<Address>(g_iActiveTimerOffset)));
 }
 
-bool IsInsectSwarm(int entity) //=D
+bool IsInsectSwarm(int iEntity)
 {
-	if (IsValidEntity(entity)) {
-		char classname[32];
-		GetEntityClassname(entity, classname, sizeof(classname));
-		return (strcmp(classname, "insect_swarm") == 0);
+	if (iEntity < 1 || !IsValidEntity(iEntity)) {
+		return false;
 	}
 
-	return false;
+	char sClassName[MAX_ENTITY_NAME_SIZE];
+	GetEntityClassname(iEntity, sClassName, sizeof(sClassName));
+	return (strcmp(sClassName, "insect_swarm") == 0);
 }
 
-bool IsSurvivor(int client)
+bool IsSurvivor(int iClient)
 {
-	return (client > 0 && client <= MaxClients /*&& IsClientInGame(client)*/ && GetClientTeam(client) == TEAM_SURVIVOR);
+	return (iClient > 0
+		&& iClient <= MaxClients
+		&& IsClientInGame(iClient)
+		&& GetClientTeam(iClient) == TEAM_SURVIVOR);
 }

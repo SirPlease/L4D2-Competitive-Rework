@@ -97,7 +97,6 @@ public void OnPluginStart()
 	hCvarSurvivorLimpspeed = FindConVar("survivor_limp_health");
 	hCvarTankSpeedVS = FindConVar("z_tank_speed_vs");
 	
-	CvarsToType();
 	hCvarSdInwaterTank.AddChangeHook(OnConVarChanged);
 	hCvarSdInwaterSurvivor.AddChangeHook(OnConVarChanged);
 	hCvarSdInwaterDuringTank.AddChangeHook(OnConVarChanged);
