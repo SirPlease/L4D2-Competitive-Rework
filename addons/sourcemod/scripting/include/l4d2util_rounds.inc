@@ -3,7 +3,7 @@
 #endif
 #define l4d2util_rounds_inc_
 
-#include <sdktools>
+#include <sdktools_gamerules>
 
 #if !defined L4D2UTIL_STOCKS_ONLY
 #if !defined __IN_L4D2UTIL__

@@ -1,7 +1,10 @@
-#if defined l4d2_weapons_inc_
+#if defined l4d2util_weapons_inc_
 	#endinput
 #endif
-#define l4d2_weapons_inc_
+#define l4d2util_weapons_inc_
+
+#include <sdktools>
+#include <l4d2util_constants>
 
 #define GETWEAPONNAME(%0) (IsValidWeaponId(view_as<WeaponId>(%0)) ? (WeaponNames[view_as<int>(%0)]) : "")
 #define GETLONGWEAPONNAME(%0) (IsValidWeaponId(view_as<WeaponId>(%0)) ? (LongWeaponNames[view_as<int>(%0)]) : "")
@@ -10,9 +13,9 @@
 #define GETWEAPONMODEL(%0) (HasValidWeaponModel(view_as<WeaponId>(%0)) ? (WeaponModels[view_as<int>(%0)]) : "")
 #define GETMELEEWEAPONMODEL(%0) (HasValidMeleeWeaponModel(view_as<MeleeWeaponId>(%0)) ? (MeleeWeaponModels[view_as<int>(%0)]) : "")
 
-static StringMap hWeaponNamesTrie = null;
-static StringMap hMeleeWeaponNamesTrie = null;
-static StringMap hMeleeWeaponModelsTrie = null;
+stock static StringMap hWeaponNamesTrie = null;
+stock static StringMap hMeleeWeaponNamesTrie = null;
+stock static StringMap hMeleeWeaponModelsTrie = null;
 
 stock void InitWeaponNamesTrie()
 {

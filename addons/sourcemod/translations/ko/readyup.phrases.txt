@@ -1,0 +1,102 @@
+"Phrases"
+{
+// The following uses bracket style color tags (see colors.inc)
+	"PanelHide"
+	{
+		"ko"		"[{olive}Readyup{default}] 패널이 {red}꺼짐{default}"
+	}
+	
+	"PanelShow"
+	{
+		"ko"		"[{olive}Readyup{default}] 패널이 {blue}켜짐{default}"
+	}
+	
+	"ForceStartAdmin"
+	{
+		"#format"	"{1:N}"
+		"ko"		"[{green}!{default}] {blue}관리자 {default}({olive}{1}{default})에 의해 {blue}게임이 {green}강제시작 {default}되었습니다."
+	}
+	
+	"VoteInProgress"
+	{
+		"ko"		"[{olive}Readyup{default}] {olive}투표가 {green}진행중{default} 입니다."
+	}
+	
+	"VoteDelay"
+	{
+		"#format"	"{1:d}"
+		"ko"		"[{olive}Readyup{default}]{blue}{1}초 {default}후 투표를 시작할 수 있습니다."
+	}
+
+	"DisruptReadyStatus"
+	{
+		"#format"	"{1:N}"
+		"ko"		"{default}[{green}!{default}] {green}카운트다운 취소됨! {default}({teamcolor}{1} {green}이 준비되지않음{default})"
+	}
+	
+	"DisruptTeamShuffle"
+	{
+		"#format"	"{1:N}"
+		"ko"		"{default}[{green}!{default}] {green}카운트다운 취소됨! {default}({teamcolor}{1} {olive}의 팀이 바뀜{default})"
+	}
+	
+	"DisruptPlayerDisc"
+	{
+		"#format"	"{1:N}"
+		"ko"		"{default}[{green}!{default}] {green}카운트다운 취소됨! {default}({teamcolor}{1} {green}의 연결이 종료됨{default})"
+	}
+	
+	"DisruptForceStartAbort"
+	{
+		"#format"	"{1:N}"
+		"ko"		"{default}[{green}!{default}] {green}강제시작 알림! {default}({olive}{1} {green}이 승인함{default})"
+	}
+	
+	
+// The following are not allowed to use any color tag
+	"HintReady"
+	{
+		"ko"		"당신은 준비되었습니다.\n!unready 를 입력 / F2 를 눌러 준비해제할 수 있습니다."
+	}
+	
+	"HintUnready"
+	{
+		"ko"		"당신은 준비되지않았습니다.\n!ready 를 입력 / F1 를 눌러 준비할 수 있습니다."
+	}
+	
+	"LiveCountdownBegin"
+	{
+		"ko"		"시작 중!\n!unready 를 입력 / F2 를 눌러 취소할 수 있습니다."
+	}
+	
+	"LiveCountdown"
+	{
+		"#format"	"{1:d}"
+		"ko"		"{1} 초 후 시작\n!unready 를 입력 / F2 를 눌러 취소할 수 있습니다."
+	}
+	
+	"LiveCountdownCancelled"
+	{
+		"ko"		"카운트다운 취소됨!"
+	}
+	
+	"RoundIsLive"
+	{
+		"ko"		"라운드 시작!"
+	}
+	
+	"InitiateAutoStart"
+	{
+		"ko"		"자동으로 게임이 시작됩니다!"
+	}
+	
+	"AutoStartCountdown"
+	{
+		"ko"		"%i 초 후 게임시작"
+	}
+	
+	"AutoStartWaiting"
+	{
+		"ko"		"로드 중인 플레이어를 기다립니다."
+	}
+}
