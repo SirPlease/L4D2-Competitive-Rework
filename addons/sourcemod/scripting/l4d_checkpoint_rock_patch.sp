@@ -3,7 +3,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 
 public Plugin myinfo = 
 {
@@ -58,6 +58,7 @@ void ApplyPatch(bool patch)
 			SetFailState("Failed to apply patch \"" ... PATCH_KEY ... "\"");
 			
 		StoreToAddress(g_pAddress, JMP_SHORT_OPCODE, NumberType_Int8);
+		patched = true;
 	}
 	else if (!patch && patched)
 	{
@@ -66,5 +67,6 @@ void ApplyPatch(bool patch)
 			SetFailState("Failed to apply patch \"" ... PATCH_KEY ... "\"");
 			
 		StoreToAddress(g_pAddress, JZ_SHORT_OPCODE, NumberType_Int8);
+		patched = false;
 	}
 }
