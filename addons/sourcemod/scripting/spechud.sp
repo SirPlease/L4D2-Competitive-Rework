@@ -17,8 +17,9 @@
 #include <l4d2_health_temp_bonus>
 #include <l4d_tank_control_eq>
 #include <lerpmonitor>
+#include <witch_and_tankifier>
 
-#define PLUGIN_VERSION	"3.5.8"
+#define PLUGIN_VERSION	"3.5.9"
 
 public Plugin myinfo = 
 {
@@ -81,6 +82,7 @@ int iMaxDistance;
 bool bTankSelection;
 
 // Witch and Tankifier
+bool bTankifier;
 bool bStaticTank, bStaticWitch;
 
 // Hud Toggle & Hint Message
@@ -229,6 +231,11 @@ void FindTankSelection()
 	bTankSelection = (GetFeatureStatus(FeatureType_Native, "GetTankSelection") != FeatureStatus_Unknown);
 }
 
+void FindTankifier()
+{
+	bTankifier = LibraryExists("witch_and_tankifier");
+}
+
 // ======================================================================
 //  Dependency Monitor
 // ======================================================================
@@ -251,18 +258,21 @@ public void OnAllPluginsLoaded()
 	FillReadyConfig();
 	
 	FindTankSelection();
+	FindTankifier();
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	FindScoreMod();
 	FillBossPercents();
+	FindTankifier();
 }
 
 public void OnLibraryRemoved(const char[] name)
 {
 	FindScoreMod();
 	FillBossPercents();
+	FindTankifier();
 }
 
 // ======================================================================
@@ -339,8 +349,8 @@ public void OnRoundIsLive()
 		bRoundHasFlowWitch = RoundHasFlowWitch();
 		bFlowTankActive = bRoundHasFlowTank;
 		
-		bStaticTank = IsStaticTankMap();
-		bStaticWitch = IsStaticWitchMap();
+		bStaticTank = bTankifier && IsStaticTankMap();
+		bStaticWitch = bTankifier && IsStaticWitchMap();
 		
 		iMaxDistance = L4D_GetVersusMaxCompletionScore() / 4 * iSurvivorLimit;
 		

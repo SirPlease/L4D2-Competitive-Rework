@@ -23,6 +23,46 @@ native bool IsStaticWitchMap(const char[] map = "");
  */
 native bool IsStaticTankMap(const char[] map = "");
 
+/**
+ * @brief Validate the flow percentage of tank on current map.
+ * @remarks Passing 0 is allowed and considered disabling.
+ *
+ * @param	percent			Flow percentage to check.
+ *
+ * @return					True on valid, false otherwise.
+ */
+native bool IsTankPercentValid(int percent);
+
+/**
+ * @brief Validate the flow percentage of witch on current map.
+ * @remarks Passing 0 is allowed and considered disabling.
+ *
+ * @param	percent			Flow percentage to check.
+ *
+ * @return					True on valid, false otherwise.
+ */
+native bool IsWitchPercentValid(int percent);
+
+/**
+ * @brief Set the flow percentage of tank on current map.
+ * @remarks Passing 0 is allowed and will disable flow tank.
+ *
+ * @param	percent			Flow percentage to check.
+ *
+ * @return					True on success, false otherwise.
+ */
+native bool SetTankPercent(int percent);
+
+/**
+ * @brief Set the flow percentage of witch on current map.
+ * @remarks Passing 0 is allowed and will disable flow witch.
+ *
+ * @param	percent			Flow percentage to check.
+ *
+ * @return					True on success, false otherwise.
+ */
+native bool SetWitchPercent(int percent);
+
 public SharedPlugin __pl_witch_and_tankifier =
 {
 	name = "witch_and_tankifier",
@@ -39,5 +79,9 @@ public void __pl_witch_and_tankifier_SetNTVOptional()
 {
 	MarkNativeAsOptional("IsStaticWitchMap");
 	MarkNativeAsOptional("IsStaticTankMap");
+	MarkNativeAsOptional("IsTankPercentValid");
+	MarkNativeAsOptional("IsWitchPercentValid");
+	MarkNativeAsOptional("SetTankPercent");
+	MarkNativeAsOptional("SetWitchPercent");
 }
 #endif
