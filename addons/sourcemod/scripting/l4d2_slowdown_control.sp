@@ -97,7 +97,6 @@ public void OnPluginStart()
 	hCvarSurvivorLimpspeed = FindConVar("survivor_limp_health");
 	hCvarTankSpeedVS = FindConVar("z_tank_speed_vs");
 	
-	CvarsToType();
 	hCvarSdInwaterTank.AddChangeHook(OnConVarChanged);
 	hCvarSdInwaterSurvivor.AddChangeHook(OnConVarChanged);
 	hCvarSdInwaterDuringTank.AddChangeHook(OnConVarChanged);
@@ -412,5 +411,5 @@ float fScaleFloat2(float inc, float low, float high)
 	 * Quadratic scale %0 between %1 and %2
 	* #define SCALE2(%0,%1,%2) SCALE(%0*%0, %1*%1, %2*%2)
 	*/
-	return L4D2Util_ClampFloat((inc * inc), (low * low), (high * high));
+	return fScaleFloat((inc * inc), (low * low), (high * high));
 }

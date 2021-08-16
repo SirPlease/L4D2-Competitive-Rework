@@ -261,7 +261,8 @@ stock Math_GetRandomInt(min, max)
 }
 
 stock StrToLower(String:arg[]) {
-	for (new i = 0; i < strlen(arg); i++) {
+	int length = strlen(arg);
+	for (new i = 0; i < length; i++) {
 		arg[i] = CharToLower(arg[i]);
 	}
 }

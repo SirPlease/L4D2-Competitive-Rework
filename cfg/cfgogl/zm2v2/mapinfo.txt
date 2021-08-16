@@ -148,6 +148,8 @@
 		"start_extra_dist"  "500.000000"
 		"end_dist"          "275.000000"
 		"max_distance"      "400"
+		"tank_ban_flow_min" "0"
+		"tank_ban_flow_max" "20"
 	}
 	"c4m2_sugarmill_a"
 	{
@@ -223,6 +225,8 @@
 		"end_dist"          "250.000000"
 		"tank_ban_flow_min" "54"
 		"tank_ban_flow_max" "70"
+		"witch_ban_flow_min"	"0"
+		"witch_ban_flow_max"    "29"
 	}
 	"c5m4_quarter"
 	{
@@ -334,6 +338,8 @@
 		"tank_ban_flow_max" "70"
 		"tank_ban_flow_min_b" "29"
 		"tank_ban_flow_max_b" "35"
+		"tank_ban_flow_min_c" "0"
+		"tank_ban_flow_max_c" "22"
 	}
 	"c8m4_interior"
 	{
@@ -382,7 +388,7 @@
 		"max_distance"      "800"
 		"ItemLimits"
 		{
-			"pain_pills"    "2"
+			"pain_pills"    "0"
 		}
 	}
 	"c10m1_caves"
@@ -448,7 +454,6 @@
 		"start_extra_dist"  "333.408081"
 		"end_point"         "7934.695801 6070.557617 48.318222"
 		"end_dist"          "310.929138"
-		"max_distance"      "600"
 	}
 	"c11m3_garage"
 	{
@@ -465,7 +470,8 @@
 		"start_extra_dist"  "206.287918"
 		"end_point"         "3276.041992 4504.324707 181.974670"
 		"end_dist"          "343.399078"
-		"max_distance"      "500"
+		"tank_ban_flow_min" "80"
+		"tank_ban_flow_max" "100"
 	}
 	"c11m5_runway"
 	{
@@ -588,7 +594,7 @@
 		"tank_ban_flow_max" "30"
 		"ItemLimits"
 		{
-			"pain_pills"    "2"
+			"pain_pills"    "0"
 		}
 	}
 	"c5m1_darkwaterfront"

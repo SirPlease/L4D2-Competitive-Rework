@@ -24,7 +24,7 @@ new Handle:hCvarEnable;
 #if defined(L4DBUILD)
 new Handle:hCvarSIExcept;
 new Handle:hCvarSurvivorExcept;
-new Handle:hGetRunTopSpeed;
+new Handle:g_hGetRunTopSpeed;
 #endif
 
 public OnPluginStart()
@@ -109,7 +109,7 @@ public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:ang
 				LeftGroundMaxSpeed[client] = -1.0;
 			}
 		} else if (LeftGroundMaxSpeed[client] == -1.0) {
-			LeftGroundMaxSpeed[client] = SDKCall(hGetRunTopSpeed, client);
+			LeftGroundMaxSpeed[client] = SDKCall(g_hGetRunTopSpeed, client);
 		}
 	}
 

@@ -18,8 +18,8 @@
 	You should have received a copy of the GNU General Public License along
 	with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#if defined _readyup_included_
-	#endinput
+#if defined  _readyup_included_
+ #endinput
 #endif
 #define _readyup_included_
 
@@ -75,19 +75,12 @@ native int AddStringToReadyFooter(const char[] footer);
 native bool IsInReady();
 
 /**
- * If this in-game and fully connected client is a caster or not
+ * @brief Toggle ready panel of one target or all clients.
+ * @remarks Always return false if currently not in ready-up phase.
  *
- * @return          True if this is a registered caster
+ * @return          True if no target if specified, or previous ready panel state of target.
  */
-native bool IsClientCaster(int client);
-
-/**
- * If this Steam ID is a registered caster or not
- *
- * @param           String containing the user's auth id
- * @return          True if this is a registered caster
- */
-native bool IsIDCaster(const char[] AuthID);
+native bool ToggleReadyPanel(bool show, int target = 0);
 
 public SharedPlugin __pl_readyup =
 {
@@ -108,7 +101,5 @@ public void __pl_readyup_SetNTVOptional()
 	MarkNativeAsOptional("EditFooterStringAtIndex");
 	MarkNativeAsOptional("AddStringToReadyFooter");
 	MarkNativeAsOptional("IsInReady");
-	MarkNativeAsOptional("IsClientCaster");
-	MarkNativeAsOptional("IsIDCaster");
 }
 #endif
