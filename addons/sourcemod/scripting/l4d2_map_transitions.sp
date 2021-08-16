@@ -131,7 +131,7 @@ static Action:SetScores(Handle timer)
 		LogMessage("Set scores to: (Survivors) %i vs (Infected) %i", g_iPointsTeamA, g_iPointsTeamB)
 	#endif
 	
-	CreateTimer(10.0, PrintScores_Delay) //We need to do this before l4d_tank_control_eq checks scores (at 10 seconds)
+	CreateTimer(10.0, PrintScores_Delay)
 }
 
 static Action:PrintScores_Delay(Handle timer)
