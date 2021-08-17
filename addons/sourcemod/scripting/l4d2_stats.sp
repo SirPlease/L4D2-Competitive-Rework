@@ -51,7 +51,7 @@ public Plugin myinfo =
 	name = "L4D2 Realtime Stats",
 	author = "Griffin, Philogl, Sir, A1m`",
 	description = "Display Skeets/Etc to Chat to clients",
-	version = "1.2",
+	version = "1.2.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
@@ -123,6 +123,7 @@ public void Event_WeaponFire(Event hEvent, const char[] sEventName, bool bDontBr
 
 public void OnMapStart()
 {
+	g_hBoomerKillTimer = null;
 	g_hBoomerShoveTimer = null;
 	g_bHasRoundEnded = false;
 	ClearMapStats();
