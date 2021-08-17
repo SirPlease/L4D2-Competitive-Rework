@@ -51,7 +51,7 @@ public Plugin myinfo =
 	name = "L4D2 Realtime Stats",
 	author = "Griffin, Philogl, Sir, A1m`",
 	description = "Display Skeets/Etc to Chat to clients",
-	version = "1.2",
+	version = "1.2.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
@@ -123,9 +123,21 @@ public void Event_WeaponFire(Event hEvent, const char[] sEventName, bool bDontBr
 
 public void OnMapStart()
 {
-	g_hBoomerShoveTimer = null;
 	g_bHasRoundEnded = false;
+
 	ClearMapStats();
+}
+
+public void OnMapEnd()
+{
+	/*
+	 * Sometimes the event 'round_start' is called before OnMapStart()
+	 * and the timer handle is not reset, so it's better to do it here.
+	*/
+	g_hBoomerShoveTimer = null; // TIMER_FLAG_NO_MAPCHANGE
+	g_hBoomerKillTimer = null; // TIMER_FLAG_NO_MAPCHANGE
+	
+	g_bHasRoundEnded = true;
 }
 
 public void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
