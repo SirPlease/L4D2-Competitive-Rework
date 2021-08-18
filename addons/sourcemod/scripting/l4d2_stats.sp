@@ -20,8 +20,6 @@ int
 //
 
 int
-	g_iAlarmCarClient = 0,
-	//g_iSurvivorLimit = 4,
 	g_iBoomerClient = 0,									// Last player to be boomer (or current boomer)
 	g_iBoomerKiller = 0,									// Client who shot the boomer
 	g_iBoomerShover = 0,									// Client who shoved the boomer
@@ -35,9 +33,6 @@ bool
 	g_bHasBoomLanded = false,
 	g_bIsPouncing[MAXPLAYERS + 1] = {false, ...},
 	g_bShotCounted[MAXPLAYERS + 1][MAXPLAYERS + 1];			// Victim - Attacker, used by playerhurt and weaponfired
-
-//ConVar
-	//g_hCvarSurvivorLimit = null;
 
 Handle
 	g_hBoomerShoveTimer = null,
@@ -70,14 +65,7 @@ public void OnPluginStart()
 	HookEvent("player_shoved", Event_PlayerShoved);
 	HookEvent("player_now_it", Event_PlayerBoomed);
 	
-	HookEvent("create_panic_event", Event_Panic);
 	HookEvent("triggered_car_alarm", Event_AlarmCar);
-	
-	//g_hCvarSurvivorLimit = FindConVar("survivor_limit");
-	
-	//g_iSurvivorLimit = g_hCvarSurvivorLimit.IntValue;
-	
-	//g_hCvarSurvivorLimit.AddChangeHook(Cvar_SurvivorLimit);
 }
 
 public void Event_PlayerSpawn(Event hEvent, const char[] sEventName, bool bDontBroadcast)
@@ -147,7 +135,6 @@ public void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBr
 	DestroyTimer(g_hBoomerKillTimer);
 	
 	BoomerKillTime = 0.0;
-	g_iAlarmCarClient = 0;
 }
 
 public void Event_RoundEnd(Event hEvent, const char[] sEventName, bool bDontBroadcast)
@@ -218,17 +205,14 @@ public void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBr
 	}
 	
 	int victim = GetClientOfUserId(hEvent.GetInt("userid"));
-	int attacker = GetClientOfUserId(hEvent.GetInt("attacker"));
-	
 	if (victim == 0 || !IsClientInGame(victim)) {
 		return;
 	}
 	
+	int attacker = GetClientOfUserId(hEvent.GetInt("attacker"));
 	if (!attacker || !IsClientInGame(attacker)) {
 		return;
 	}
-	
-	int damage = hEvent.GetInt("dmg_health");
 
 	if (GetClientTeam(attacker) == TEAM_SURVIVOR && GetClientTeam(victim) == TEAM_INFECTED) {
 		L4D2_Infected zombieclass = GetInfectedClass(victim);
@@ -251,6 +235,7 @@ public void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBr
 		// remainder health will be awarded as damage on kill
 		g_iLastHealth[victim] = remaining_health;
 		
+		int damage = hEvent.GetInt("dmg_health");
 		g_iDamageDealt[victim][attacker] += damage;
 		
 		/*switch(zombieclass) {
@@ -340,8 +325,6 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 			
 			DestroyTimer(g_hBoomerKillTimer);
 		} else if (zombieclass == L4D2Infected_Hunter && g_bIsPouncing[victim]) { // Skeet!
-			//int assisters[g_iSurvivorLimit][2];
-			
 			int[][] assisters = new int[MaxClients][2];
 			
 			int assister_count, i;
@@ -596,40 +579,25 @@ public void Event_PlayerBoomed(Event hEvent, const char[] sEventName, bool bDont
 	//}
 }
 
-// Car Alarm Stuff!
-public void Event_Panic(Event hEvent, const char[] sEventName, bool bDontBroadcast)
-{
-	g_iAlarmCarClient = GetClientOfUserId(hEvent.GetInt("userid"));
-	CreateTimer(0.5, Clear, g_iAlarmCarClient, TIMER_FLAG_NO_MAPCHANGE);
-}
-
-// g_iAlarmCarClient cleared.
-public Action Clear(Handle hTimer)
-{
-	g_iAlarmCarClient = 0;
-}
-
-// Found you..! Sneaky Car Shooter.
+/*
+ * "triggered_car_alarm"
+ * {
+ * 	"userid"	"short"		// person who triggered the car alarm
+ * }
+*/
 public void Event_AlarmCar(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	if (g_iAlarmCarClient && IsClientInGame(g_iAlarmCarClient) && GetClientTeam(g_iAlarmCarClient) == 2) {
-		CPrintToChatAll("{green}★ {olive}%N {default}triggered an {olive}Alarmed Car", g_iAlarmCarClient);
-		g_iAlarmCarClient = 0;
+	int iClient = GetClientOfUserId(hEvent.GetInt("userid"));
+	if (iClient > 0 && GetClientTeam(iClient) == TEAM_SURVIVOR) {
+		CPrintToChatAll("{green}★ {olive}%N {default}triggered an {olive}Alarmed Car", iClient);
 	}
 }
-
-/*public void Cvar_SurvivorLimit(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
-{
-	g_iSurvivorLimit = StringToInt(sNewValue);
-}*/
 
 void ClearMapStats()
 {
 	for (int i = 1; i <= MaxClients; i++) {
 		ClearDamage(i);
 	}
-	
-	g_iAlarmCarClient = 0;
 }
 
 void ClearDamage(int client)
