@@ -2,6 +2,7 @@
 #include <sdktools>
 #include <sdkhooks>
 #include <left4dhooks>
+#include <l4d2util>
 #include <colors>
 
 #define DEBUG 0
@@ -79,7 +80,7 @@ public OnRoundEnd()
 	}
 }
 
-static Action:OnRoundEnd_Post(Handle timer)
+public Action:OnRoundEnd_Post(Handle timer)
 {
 	//Check if map has been registered for a map transition
 	char currentMapName[MAP_NAME_MAX_LENGTH]
@@ -114,12 +115,12 @@ public OnMapStart()
 	}
 }
 
-static Action:OnMapStart_Post(Handle timer)
+public Action:OnMapStart_Post(Handle timer)
 {
 	SetScores()
 }
 
-static SetScores()
+public SetScores()
 {
 	//If team B is winning, swap teams. Does not change how scores are set
 	if (g_iPointsTeamA < g_iPointsTeamB)
@@ -143,7 +144,7 @@ static SetScores()
 	#endif
 }
 
-static Action:AddMapTransition(int args)
+public Action:AddMapTransition(int args)
 {
 	if (args != 2)
 	{
@@ -164,7 +165,7 @@ static Action:AddMapTransition(int args)
 }
 
 //Return if round is first or second half
-stock InSecondHalfOfRound()
+/*stock InSecondHalfOfRound()
 {
 	return GameRules_GetProp("m_bInSecondHalfOfRound");
-}
+}*/
