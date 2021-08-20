@@ -16,7 +16,7 @@
 public Plugin myinfo = {
 	name = "Tank and Witch ifier!",
 	author = "CanadaRox, Sir, devilesk, Derpduck",
-	version = "2.3.2",
+	version = "2.3.3",
 	description = "Sets a tank spawn and has the option to remove the witch spawn point on every map",
 	url = "https://github.com/devilesk/rl4d2l-plugins"
 };
@@ -32,6 +32,7 @@ StringMap
 	
 ConVar
 	g_hCvarDebug = null,
+	g_hCvarTankCanSpawn = null,
 	g_hCvarWitchCanSpawn = null,
 	g_hCvarWitchAvoidTank = null;
 	
@@ -55,6 +56,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart() {
 	g_hCvarDebug = CreateConVar("sm_tank_witch_debug", "0", "Tank and Witch ifier debug mode", FCVAR_DONTRECORD, true, 0.0, true, 1.0);
+	g_hCvarTankCanSpawn = CreateConVar("sm_tank_can_spawn", "1", "Tank and Witch ifier enables tanks to spawn", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	g_hCvarWitchCanSpawn = CreateConVar("sm_witch_can_spawn", "1", "Tank and Witch ifier enables witches to spawn", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	g_hCvarWitchAvoidTank = CreateConVar("sm_witch_avoid_tank_spawn", "20", "Minimum flow amount witches should avoid tank spawns by, by half the value given on either side of the tank spawn", FCVAR_NOTIFY, true, 0.0, true, 100.0);
 
@@ -147,6 +149,21 @@ public Action Profiler_Cmd(int client, int args) {
 }
 #endif
 
+public Action L4D_OnSpawnTank(const float vecPos[3], const float vecAng[3])
+{
+	return g_hCvarTankCanSpawn.BoolValue ? Plugin_Continue : Plugin_Handled;
+}
+
+public Action L4D_OnSpawnWitch(const float vecPos[3], const float vecAng[3])
+{
+	return g_hCvarWitchCanSpawn.BoolValue ? Plugin_Continue : Plugin_Handled;
+}
+
+public Action L4D2_OnSpawnWitchBride(const float vecPos[3], const float vecAng[3])
+{
+	return g_hCvarWitchCanSpawn.BoolValue ? Plugin_Continue : Plugin_Handled;
+}
+
 public void OnMapStart() {
 	GetCurrentMapLower(g_sCurrentMap, sizeof g_sCurrentMap);
 }
@@ -169,7 +186,7 @@ public Action AdjustBossFlow(Handle timer) {
 	iCvarMaxFlow = L4D2_GetMapValueInt("versus_boss_flow_max", iCvarMaxFlow);
 	PrintDebug("[AdjustBossFlow] flow: (%i, %i).", iCvarMinFlow, iCvarMaxFlow);
 	
-	if (!IsStaticTankMap(g_sCurrentMap)) {
+	if (!IsStaticTankMap(g_sCurrentMap) && g_hCvarTankCanSpawn.BoolValue) {
 		PrintDebug("[AdjustBossFlow] Not static tank map. Flow tank enabled.");
 		
 		ArrayList hBannedFlows = new ArrayList(2);
