@@ -59,6 +59,26 @@
 		"#format"	"{1:d}"
 		"ko"		"[{olive}Cast{default}]{blue}{1}초 {default}후 투표를 시작할 수 있습니다."
 	}
+	
+	"ForbidAddons"
+	{
+		"ko"		"{blue}[{default}!{blue}] 캐스터에 대한 에드온이 {green}금지됩니다{default}."
+	}
+	
+	"AllowAddons"
+	{
+		"ko"		"{blue}[{default}!{blue}] 이제 캐스터에 대한 에드온이 {green}허용됩니다{default}."
+	}
+	
+	"CasterCheck1"
+	{
+		"ko"		"{default}<{olive}Cast{default}> 캐스터는 플레이 하기 전에 등록을 취소해야됩니다."
+	}
+	
+	"CasterCheck2"
+	{
+		"ko"		"{default}<{olive}Cast{default}> 사용 !notcasting / !uncast"
+	}
 
 	
 // The following are not allowed to use any color tag

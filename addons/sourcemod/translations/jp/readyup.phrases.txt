@@ -3,7 +3,7 @@
 // The following uses bracket style color tags (see colors.inc)
 	"PanelHide"
 	{
-		"jp"		"[{olive}Readyup{default}] パネルを{red}オフ{default にします。"
+		"jp"		"[{olive}Readyup{default}] パネルを{red}オフ{default}にします。"
 	}
 	
 	"PanelShow"
@@ -14,18 +14,18 @@
 	"ForceStartAdmin"
 	{
 		"#format"	"{1:N}"
-		"jp"		"[{green}!{default}] {blue}アドミン {default}({olive}{1}{default}) が{green}強制的{default}に{blue}ラウンド{default}をスタートしました。"
+		"jp"		"[{green}!{default}] {blue}管理者{default}({olive}{1}{default}) が{green}強制的{default}に{blue}ラウンド{default}をスタートしました。"
 	}
 	
 	"VoteInProgress"
 	{
-		"jp"		"[{olive}Readyup{default}] {green}投票中{default}です。"
+		"jp"		"[{olive}Readyup{default}] {olive}投票{green}行われています。{default}"
 	}
 	
 	"VoteDelay"
 	{
 		"#format"	"{1:d}"
-		"jp"		"[{olive}Readyup{default}] 別の投票が行われており、残り {blue}{1}秒 {default}で投票が行えます。"
+		"jp"		"[{olive}Readyup{default}] 他の投票が行われており、残り {blue}{1}秒 {default}で投票が行えます。"
 	}
 
 	"DisruptReadyStatus"
@@ -37,7 +37,7 @@
 	"DisruptTeamShuffle"
 	{
 		"#format"	"{1:N}"
-		"jp"		"{default}[{green}!{default}] {green}カウントダウンがキャンセルされました！ {default}({teamcolor}{1} {olive}がチーム移動しました{default})"
+		"jp"		"{default}[{green}!{default}] {green}カウントダウンがキャンセルされました！ {default}({teamcolor}{1} {olive}がチームを移動しました{default})"
 	}
 	
 	"DisruptPlayerDisc"
@@ -56,23 +56,23 @@
 // The following are not allowed to use any color tag
 	"HintReady"
 	{
-		"jp"		"準備解除の場合は\n !unready と入力 / F2 キーを押す"
+		"jp"		"準備解除の場合は\n !unready と入力 / F2 キーを押下"
 	}
 	
 	"HintUnready"
 	{
-		"jp"		"準備完了の場合は\n !ready と入力 / F1 キーを押す"
+		"jp"		"準備完了の場合は\n !ready と入力 / F1 キーを押下"
 	}
 	
 	"LiveCountdownBegin"
 	{
-		"jp"		"ラウンドを開始します！\n !unready と入力 / F2 キーを押すとキャンセル"
+		"jp"		"ラウンドを開始します！\n !unready と入力 / F2 キーを押下するとキャンセル"
 	}
 	
 	"LiveCountdown"
 	{
 		"#format"	"{1:d}"
-		"jp"		"ラウンド開始まで: {1}\n !unready と入力 / F2 キーを押すとキャンセル"
+		"jp"		"ラウンド開始まで: {1}\n !unready と入力 / F2 キーを押下するとキャンセル"
 	}
 	
 	"LiveCountdownCancelled"
