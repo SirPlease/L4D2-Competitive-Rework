@@ -1,4 +1,3 @@
-
 //-----------------------------------------------------
 local PANIC = 0
 local TANK = 1
@@ -13,6 +12,3 @@ DirectorOptions <-
 	A_CustomFinale1 = PANIC
 	A_CustomFinaleValue1 = 1
 }
-
-
-//-----------------------------------------------------

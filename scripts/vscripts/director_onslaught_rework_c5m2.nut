@@ -41,21 +41,6 @@ function OnGameEvent_tank_spawn(params)
 	}
 }
 
-// Handle player tank deaths
-// Bug: tank_killed only fires when an AI tank is killed
-/*function OnGameEvent_tank_killed(params)
-{
-	if (g_TankFirstSpawned == true)
-	{
-		ResetHordeParams()
-		
-		if (developer() > 0)
-		{
-			Msg("Tank Killed Bot\n")
-		}
-	}
-}*/
-
 // Handle tank deaths
 function OnGameEvent_player_death(params)
 {
