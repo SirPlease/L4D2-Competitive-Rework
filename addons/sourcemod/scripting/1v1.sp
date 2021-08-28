@@ -16,78 +16,81 @@
 	General Public License for more details.
 
 	You should have received a copy of the GNU General Public License along
-	with this program.  If not, see <http://www.gnu.org/licenses/>.
+	with this program. If not, see <http://www.gnu.org/licenses/>.
 */
+
 #pragma semicolon 1
- 
+#pragma newdecls required
+
 #include <sourcemod>
 #include <sdktools>
 #include <colors>
+#include <l4d2util_constants>
 
-new const String:SI_Names[][] =
-{
-	"Unknown",
-	"Smoker",
-	"Boomer",
-	"Hunter",
-	"Spitter",
-	"Jockey",
-	"Charger",
-	"Witch",
-	"Tank",
-	"Not SI"
-};
+ConVar
+	g_hCvarDmgThreshold = null;
 
-new Handle:hCvarDmgThreshold;
-
-public Plugin:myinfo =
+public Plugin myinfo =
 {
 	name = "1v1 EQ",
 	author = "Blade + Confogl Team, Tabun, Visor",
 	description = "A plugin designed to support 1v1.",
-	version = "0.1.1",
-	url = "https://github.com/Attano/Equilibrium"
+	version = "0.2.1",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
-	hCvarDmgThreshold = CreateConVar("sm_1v1_dmgthreshold", "24", "Amount of damage done (at once) before SI suicides.", FCVAR_NONE, true, 1.0);
+	g_hCvarDmgThreshold = CreateConVar("sm_1v1_dmgthreshold", "24", "Amount of damage done (at once) before SI suicides.", _, true, 1.0);
 
 	HookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);
 }
- 
-public Action:Event_PlayerHurt(Handle:event, const String:name[], bool:dontBroadcast)
+
+public void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	new attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
-	new victim = GetClientOfUserId(GetEventInt(event, "userid"));
-
-	if (!IsClientAndInGame(attacker))
+	int fDamage = hEvent.GetInt("dmg_health");
+	if (fDamage < g_hCvarDmgThreshold.IntValue) {
 		return;
+	}
+	
+	int iAttacker = GetClientOfUserId(hEvent.GetInt("attacker"));
+	if (!IsClientAndInGame(iAttacker) || GetClientTeam(iAttacker) != view_as<int>(L4D2Team_Infected)) {
+		return;
+	}
+	
+	int iZclass = GetEntProp(iAttacker, Prop_Send, "m_zombieClass");
+	
+	if (iZclass < view_as<int>(L4D2Infected_Smoker) || iZclass > view_as<int>(L4D2Infected_Charger)) {
+		return;
+	}
+	
+	int iVictim = GetClientOfUserId(hEvent.GetInt("userid"));
+	if (!IsClientAndInGame(iVictim) || GetClientTeam(iVictim) != view_as<int>(L4D2Team_Survivor)) {
+		return;
+	}
+	
+	int iRemainingHealth = GetClientHealth(iAttacker);
 
-	new damage = GetEventInt(event, "dmg_health");
-	new zombie_class = GetZombieClass(attacker);
-
-	if (GetClientTeam(attacker) == 3 && zombie_class != 8 && damage >= GetConVarInt(hCvarDmgThreshold))
-	{
-		new remaining_health = GetClientHealth(attacker);
-		CPrintToChatAll("[{olive}1v1{default}] {red}%N{default}({green}%s{default}) had {olive}%d{default} health remaining!", attacker, SI_Names[zombie_class], remaining_health);
-
-		ForcePlayerSuicide(attacker);    
-
-		if (remaining_health == 1)
-		{
-			CPrintToChat(victim, "You don't have to be mad...");
-		}
+	// [1v1] A1m` (Hunter) had 250 health remaining!
+	// [1v1] AI (Hunter) had 250 health remaining!
+	
+	char sName[MAX_NAME_LENGTH];
+	if (IsFakeClient(iAttacker)) {
+		Format(sName, sizeof(sName), "AI");
+	} else {
+		GetClientName(iAttacker, sName, sizeof(sName));
+	}
+	
+	CPrintToChatAll("[{olive}1v1{default}] {red}%s{default} ({green}%s{default}) had {olive}%d{default} health remaining!", sName, L4D2_InfectedNames[iZclass], iRemainingHealth);
+	
+	ForcePlayerSuicide(iAttacker);
+	
+	if (iRemainingHealth == 1) {
+		CPrintToChat(iVictim, "You don't have to be mad...");
 	}
 }
 
-stock GetZombieClass(client) return GetEntProp(client, Prop_Send, "m_zombieClass");
-
-stock bool:IsClientAndInGame(index)
+bool IsClientAndInGame(int iClient)
 {
-	if (index > 0 && index <= MaxClients)
-	{
-		return IsClientInGame(index);
-	}
-	return false;
+	return (iClient > 0 && IsClientInGame(iClient));
 }

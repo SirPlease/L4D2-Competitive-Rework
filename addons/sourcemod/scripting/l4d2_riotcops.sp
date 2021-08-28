@@ -31,7 +31,7 @@
 #define HITGROUP_HEAD 1
 
 bool
-	bPluginActive = false;
+	g_bPluginActive = false;
 
 public Plugin myinfo =
 {
@@ -47,12 +47,12 @@ public void OnMapStart()
 	GetCurrentMap(sMap, sizeof(sMap));
 	String_ToLower(sMap, sizeof(sMap));
 	
-	bPluginActive = (strncmp(sMap, "c5m", 3) == 0);
+	g_bPluginActive = (strncmp(sMap, PARISH_PREFIX, 3) == 0);
 }
 
 public void OnEntityCreated(int iEntity, const char[] sClassName)
 {
-	if (sClassName[0] != 'i' || !bPluginActive) {
+	if (sClassName[0] != 'i' || !g_bPluginActive) {
 		return;
 	}
 	
