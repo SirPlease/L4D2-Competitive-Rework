@@ -1,3 +1,34 @@
+/*
+	todo
+	----
+
+		fix:
+		------
+		- the current CMT + forwards for teamswaps solution is kinda bad.
+			- would be nicer to fix CMT so the normal gamerules swapped
+			  check is correct -- so: test whether "m_bAreTeamsFlipped"
+			  can be unproblematically written to (yes, I was afraid to
+			  just try this without doing some serious testing with it
+			  first).
+
+		- end of round MVP chat prints: doesn't show your rank
+
+		- full game stats don't show before round is live
+		- full game stat: shows last round time, instead of full game time
+
+
+		build:
+		------
+		- skill
+			- clears / instaclears (show in stats)
+			- show average clear time (for all survivors?)
+
+	ideas
+	-----
+	- instead of hits/shots, display average multiplier for shotgun pellets
+		(can just do that per hitgroup, if we use what we know about the SI)
+*/
+
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -9,7 +40,6 @@
 #undef REQUIRE_PLUGIN
 #include <readyup>
 #include <confogl>
-//#define REQUIRE_PLUGIN
 
 #define IS_VALID_CLIENT(%1) (%1 > 0 && %1 <= MaxClients)
 #define IS_SURVIVOR(%1) (GetClientTeam(%1) == 2)
@@ -201,7 +231,7 @@
 #define FILETABLEFLAGS			164532						// AUTO_ flags for what to print to a file automatically
 
 // types of statistic table(sets)
-enum strStatType
+enum /*strStatType*/
 {
 	typGeneral,
 	typMVP,
@@ -213,15 +243,16 @@ enum strStatType
 };
 
 // information for entire game
-enum strGameData
+enum /*strGameData*/
 {
 	gmFailed,												// survivors lost the mission * times
 	gmStartTime,											// GetTime() value when starting
-	gmMax
+	
+	gmMaxSize
 };
 
 // information per round
-enum strRoundData
+enum /*strRoundData*/
 {
 	rndRestarts,											// how many times retried?
 	rndPillsUsed,
@@ -242,13 +273,14 @@ enum strRoundData
 	rndStopTimePause,
 	rndStartTimeTank,
 	rndStopTimeTank,
-	rndMax
+	
+	rndMaxSize
 };
 
 #define MAXRNDSTATS				 18
 
 // information per player
-enum strPlayerData
+enum /*strPlayerData*/
 {
 	plyShotsShotgun,										// 0 pellets
 	plyShotsSmg,											// all bullets from smg/rifle
@@ -327,13 +359,14 @@ enum strPlayerData
 	plyTimeStopAlive,
 	plyTimeStartUpright,									// time not capped
 	plyTimeStopUpright,
-	plyMax
+
+	plyMaxSize
 };
 
 #define MAXPLYSTATS				76
 
 // information per infected player (during other team's survivor round)
-enum strInfData
+enum /*strInfData*/
 {
 	infDmgTotal,											// including on incapped, excluding all tank damage!
 	infDmgUpright,											// 1
@@ -359,13 +392,13 @@ enum strInfData
 	infSpawnJockey,
 	infTankPasses,
 	infTimeStartPresent,									// time present (on the team)
-	infTimeStopPresent,										// if stoptime is 0, then it's NOW, ongoing
+	infTimeStopPresent										// if stoptime is 0, then it's NOW, ongoing
 };
 
 #define MAXINFSTATS				24
 
 // trie values: weapon type (per accuracy-class)
-enum strWeaponType
+enum /*strWeaponType*/
 {
 	WPTYPE_NONE,
 	WPTYPE_SHOTGUN,
@@ -375,13 +408,13 @@ enum strWeaponType
 };
 
 // trie values: weapon type (per accuracy-class)
-enum strMapType
+enum /*strMapType*/
 {
 	MP_FINALE
 };
 
 // trie values: OnEntityCreated classname
-enum strOEC
+enum /*strOEC*/
 {
 	OEC_INFECTED,
 	OEC_WITCH
@@ -434,18 +467,18 @@ int
 	g_iPauseStart = 0,											// time the current pause started
 	g_iScores[2],												// scores for both teams, as currently known
 	g_iFirstScoresSet[3],										// scores when first set for a new map (index 3 = 0 if not yet set)
-	g_iBoomedBy[MAXPLAYERS+1],									// if someone is boomed, by whom?
+	g_iBoomedBy[MAXPLAYERS + 1],								// if someone is boomed, by whom?
 	g_iPlayerIndexSorted[MAXSORTS][MAXTRACKED],					// used to create a sorted list
 	g_iPlayerSortedUseTeam[MAXSORTS][MAXTRACKED],				// after sorting: which team to use as the survivor team for player
 	g_iPlayerRoundTeam[3][MAXTRACKED],							// which team is the player 0 = A, 1 = B, -1 = no team; [2] = current survivor round; [0]/[1] = team A / B (anyone who was ever on it)
 	g_iPlayerGameTeam[2][MAXTRACKED],							// for entire game for team A / B if the player was ever on it
-	g_strGameData[view_as<int>(gmMax)],
-	g_strAllRoundData[2][view_as<int>(rndMax)],					// rounddata for ALL rounds, per team
-	g_strRoundData[MAXROUNDS][2][view_as<int>(rndMax)],			// rounddata per game round, per team
-	g_strPlayerData[MAXTRACKED][view_as<int>(plyMax)],
-	g_strRoundPlayerData[MAXTRACKED][2][view_as<int>(plyMax)],	// player data per team
-	g_strPlayerInfData[MAXTRACKED][view_as<int>(plyMax)],
-	g_strRoundPlayerInfData[MAXTRACKED][2][view_as<int>(plyMax)], // player data for infected action per team (team is survivor team! -- when infected player was on opposite team)
+	g_strGameData[gmMaxSize],
+	g_strAllRoundData[2][rndMaxSize],							// rounddata for ALL rounds, per team
+	g_strRoundData[MAXROUNDS][2][rndMaxSize],					// rounddata per game round, per team
+	g_strPlayerData[MAXTRACKED][plyMaxSize],
+	g_strRoundPlayerData[MAXTRACKED][2][plyMaxSize],			// player data per team
+	g_strPlayerInfData[MAXTRACKED][plyMaxSize],
+	g_strRoundPlayerInfData[MAXTRACKED][2][plyMaxSize], 		// player data for infected action per team (team is survivor team! -- when infected player was on opposite team)
 	g_iPlayers = 0,
 	g_iConsoleBufChunks = 0;
 	
@@ -464,46 +497,20 @@ char
 public Plugin myinfo =
 {
 	name = "Player Statistics",
-	author = "Tabun", //Add support sourcemod 1.11 and update syntax - A1m` (Yes! I`m crazy!)
+	author = "Tabun, A1m`",
 	description = "Tracks statistics, even when clients disconnect. MVP, Skills, Accuracy, etc.",
-	version = "0.9.4",
+	version = "1.1.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
-
-/*
-	todo
-	----
-
-		fix:
-		------
-		- the current CMT + forwards for teamswaps solution is kinda bad.
-			- would be nicer to fix CMT so the normal gamerules swapped
-			  check is correct -- so: test whether "m_bAreTeamsFlipped"
-			  can be unproblematically written to (yes, I was afraid to
-			  just try this without doing some serious testing with it
-			  first).
-
-		- end of round MVP chat prints: doesn't show your rank
-
-		- full game stats don't show before round is live
-		- full game stat: shows last round time, instead of full game time
-
-
-		build:
-		------
-		- skill
-			- clears / instaclears (show in stats)
-			- show average clear time (for all survivors?)
-
-	ideas
-	-----
-	- instead of hits/shots, display average multiplier for shotgun pellets
-		(can just do that per hitgroup, if we use what we know about the SI)
-*/
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	g_bLateLoad = late;
+
+	CreateNative("PLAYSTATS_BroadcastRoundStats",  Native_BroadcastRoundStats);
+	CreateNative("PLAYSTATS_BroadcastGameStats",  Native_BroadcastGameStats);
+	
+	RegPluginLibrary("l4d2_playstats");
 	return APLRes_Success;
 }
 
@@ -576,53 +583,60 @@ public void OnPluginStart()
 
 	// cvars
 	g_hCvarDebug = CreateConVar(
-			"sm_stats_debug",
-			"0",
-			"Debug mode",
-			_, true, 0.0, false
-		);
+		"sm_stats_debug",
+		"0",
+		"Debug mode",
+		_, true, 0.0, false
+	);
+	
 	g_hCvarMVPBrevityFlags = CreateConVar(
-			"sm_survivor_mvp_brevity_latest",
-			"4",
-			"Flags for setting brevity of MVP chat report (hide 1:SI, 2:CI, 4:FF, 8:rank, 32:perc, 64:abs).",
-			_, true, 0.0, false
-		);
+		"sm_survivor_mvp_brevity_latest",
+		"4",
+		"Flags for setting brevity of MVP chat report (hide 1:SI, 2:CI, 4:FF, 8:rank, 32:perc, 64:abs).",
+		_, true, 0.0, false
+	);
+	
 	g_hCvarAutoPrintVs = CreateConVar(
-			"sm_stats_autoprint_vs_round",
-			"8325",									 // default = 1 (mvpchat) + 4 (mvpcon-round) + 128 (special round) = 133 + (funfact round) 8192 = 8325
-			"Flags for automatic print [versus round] (show 1,4:MVP-chat, 4,8,16:MVP-console, 32,64:FF, 128,256:special, 512,1024,2048,4096:accuracy).",
-			_, true, 0.0, false
-		);
+		"sm_stats_autoprint_vs_round",
+		"8325",									 // default = 1 (mvpchat) + 4 (mvpcon-round) + 128 (special round) = 133 + (funfact round) 8192 = 8325
+		"Flags for automatic print [versus round] (show 1,4:MVP-chat, 4,8,16:MVP-console, 32,64:FF, 128,256:special, 512,1024,2048,4096:accuracy).",
+		_, true, 0.0, false
+	);
+	
 	g_hCvarAutoPrintCoop = CreateConVar(
-			"sm_stats_autoprint_coop_round",
-			"1289",									 // default = 1 (mvpchat) + 8 (mvpcon-all) + 256 (special all) + 1024 (acc all) = 1289
-			"Flags for automatic print [campaign round] (show 1,4:MVP-chat, 4,8,16:MVP-console, 32,64:FF, 128,256:special, 512,1024,2048,4096:accuracy).",
-			_, true, 0.0, false
-		);
+		"sm_stats_autoprint_coop_round",
+		"1289",									 // default = 1 (mvpchat) + 8 (mvpcon-all) + 256 (special all) + 1024 (acc all) = 1289
+		"Flags for automatic print [campaign round] (show 1,4:MVP-chat, 4,8,16:MVP-console, 32,64:FF, 128,256:special, 512,1024,2048,4096:accuracy).",
+		_, true, 0.0, false
+	);
+	
 	g_hCvarShowBots = CreateConVar(
-			"sm_stats_showbots",
-			"1",
-			"Show bots in all tables (0 = show them in MVP and FF tables only)",
-			_, true, 0.0, false
-		);
+		"sm_stats_showbots",
+		"1",
+		"Show bots in all tables (0 = show them in MVP and FF tables only)",
+		_, true, 0.0, false
+	);
+	
 	g_hCvarDetailPercent = CreateConVar(
-			"sm_stats_percentdecimal",
-			"0",
-			"Show the first decimal for (most) MVP percent in console tables.",
-			_, true, 0.0, false
-		);
+		"sm_stats_percentdecimal",
+		"0",
+		"Show the first decimal for (most) MVP percent in console tables.",
+		_, true, 0.0, false
+	);
+	
 	g_hCvarWriteStats = CreateConVar(
-			"sm_stats_writestats",
-			"0",
-			"Whether to store stats in logs/ dir (1 = write csv; 2 = write csv & pretty tables). Versus only.",
-			_, true, 0.0, false
-		);
+		"sm_stats_writestats",
+		"0",
+		"Whether to store stats in logs/ dir (1 = write csv; 2 = write csv & pretty tables). Versus only.",
+		_, true, 0.0, false
+	);
+	
 	g_hCvarSkipMap = CreateConVar(
-			"sm_stats_resetnextmap",
-			"0",
-			"First round is ignored (for use with confogl/matchvotes - this will be automatically unset after a new map is loaded).",
-			_, true, 0.0, false
-		);
+		"sm_stats_resetnextmap",
+		"0",
+		"First round is ignored (for use with confogl/matchvotes - this will be automatically unset after a new map is loaded).",
+		_, true, 0.0, false
+	);
 
 	g_iTeamSize = 4;
 	g_iFirstScoresSet[2] = 1;   // don't save scores for first map
@@ -650,38 +664,31 @@ public void OnPluginStart()
 	// prepare team array
 	ClearPlayerTeam();
 
-	if (g_bLateLoad)
-	{
+	if (g_bLateLoad) {
 		int i;
 		int time = GetTime();
 
-		for (i = 1; i <= MaxClients; i++)
-		{
-			if (IsClientInGame(i) && !IsFakeClient(i))
-			{
+		for (i = 1; i <= MaxClients; i++) {
+			if (IsClientInGame(i) && !IsFakeClient(i)) {
 				// store each player with a first check
 				int index = GetPlayerIndexForClient(i);
 
 				// set start time to now
-				if (IS_VALID_SURVIVOR(i))
-				{
+				if (IS_VALID_SURVIVOR(i)) {
 					g_strRoundPlayerData[index][0][plyTimeStartPresent] = time;
 					g_strRoundPlayerData[index][0][plyTimeStartAlive] = time;
 					g_strRoundPlayerData[index][0][plyTimeStartUpright] = time;
 					g_strRoundPlayerData[index][1][plyTimeStartPresent] = time;
 					g_strRoundPlayerData[index][1][plyTimeStartAlive] = time;
 					g_strRoundPlayerData[index][1][plyTimeStartUpright] = time;
-				}
-				else
-				{
+				} else {
 					g_strRoundPlayerInfData[index][0][infTimeStartPresent] = time;
 				}
 			}
 		}
 
 		// set time for bots aswell
-		for (i = 0; i < FIRST_NON_BOT; i++)
-		{
+		for (i = 0; i < FIRST_NON_BOT; i++) {
 			g_strRoundPlayerData[i][0][plyTimeStartPresent] = time;
 			g_strRoundPlayerData[i][0][plyTimeStartAlive] = time;
 			g_strRoundPlayerData[i][0][plyTimeStartUpright] = time;
@@ -866,6 +873,11 @@ public Action Timer_RoundStart(Handle hTimer)
 
 public void Event_RoundEnd(Event hEvent, const char[] eName, bool dontBroadcast)
 {
+	// In coop, when we fail, the mission lost event has already handled this.
+	if (g_bModeCampaign && g_bFailedPrevious) {
+		return;
+	}
+	
 	// called on versus round end
 	// and mission failed coop
 	HandleRoundEnd();
@@ -877,7 +889,7 @@ void HandleRoundEnd(bool bFailed = false)
 	PrintDebug(1, "HandleRoundEnd (failed: %i): inround: %i, current round: %i", bFailed, g_bInRound, g_iRound);
 
 	// only do once
-	if (!g_bInRound) {
+	if (!g_bInRound && !g_bModeCampaign) {
 		return;
 	}
 
@@ -918,12 +930,16 @@ void HandleRoundEnd(bool bFailed = false)
 	if ((g_bModeCampaign || g_bSecondHalf) && !AreClientsConnected()) {
 		PrintDebug(2, "HandleRoundEnd: Reset stats for entire game (no players on server)...");
 		ResetStats(false, -1);
+	} else if (g_bModeCampaign && bFailed) {
+		PrintDebug(2, "HandleRoundEnd: Reset stats for coop on mission failure...");
+		AutomaticRoundEndPrint(false);
+		ResetStats(true, -1);
 	}
 
 	if (!g_bModeCampaign) {
 		// prepare for storing 'previous scores' after second roundhalf's roundend
 		if (g_bSecondHalf) {
-			g_iFirstScoresSet[2] = 0;		   // unset, so first scores A/B will be stored on next L4D_OnSetCampaignScores
+			g_iFirstScoresSet[2] = 0;		// unset, so first scores A/B will be stored on next L4D_OnSetCampaignScores
 		}
 
 		g_bSecondHalf = true;
@@ -6889,7 +6905,7 @@ int GetCurrentTeamSurvivor()
 
 int GetWeaponTypeForClassname(const char[] classname)
 {
-	strWeaponType weaponType;
+	int weaponType;
 
 	if (!GetTrieValue(g_hTrieWeapons, classname, weaponType)) {
 		return WPTYPE_NONE;
@@ -7013,13 +7029,13 @@ bool IsWitch(int iEntity)
 	if (iEntity > 0 && IsValidEntity(iEntity) && IsValidEdict(iEntity)) {
 		char strClassName[64];
 		GetEdictClassname(iEntity, strClassName, sizeof(strClassName));
-		strOEC entType;
+		int entType;
 
 		if (!GetTrieValue(g_hTrieEntityCreated, strClassName, entType)) { 
 			return false; 
 		}
 
-		return view_as<bool>(entType == OEC_WITCH);
+		return (entType == OEC_WITCH);
 	}
 
 	return false;
@@ -7030,13 +7046,13 @@ bool IsCommon(int iEntity)
 	if (iEntity > 0 && IsValidEntity(iEntity) && IsValidEdict(iEntity)) {
 		char strClassName[64];
 		GetEdictClassname(iEntity, strClassName, sizeof(strClassName));
-		strOEC entType;
+		int entType;
 
 		if (!GetTrieValue(g_hTrieEntityCreated, strClassName, entType)) { 
 			return false; 
 		}
 
-		return view_as<bool>(entType == OEC_INFECTED);
+		return (entType == OEC_INFECTED);
 	}
 
 	return false;
@@ -7512,11 +7528,13 @@ void CheckGameMode()
 	char tmpStr[24];
 	GetConVarString(FindConVar("mp_gamemode"), tmpStr, sizeof(tmpStr));
 
-	if (StrEqual(tmpStr, "coop", false) ||
-		StrEqual(tmpStr, "mutation4", false) || // hard eight
-		StrEqual(tmpStr, "mutation14", false) || // gib fest
-		StrEqual(tmpStr, "mutation20", false) || // healing gnome
-		StrEqual(tmpStr, "mutationrandomcoop", false) // healing gnome
+	if (StrEqual(tmpStr, "coop", false)
+		|| StrEqual(tmpStr, "mutation4", false)					// hard eight
+		|| StrEqual(tmpStr, "mutation14", false)				// gib fest
+		|| StrEqual(tmpStr, "mutation20", false)				// healing gnome
+		|| StrEqual(tmpStr, "mutationrandomcoop", false)		// my random mutation
+		|| StrEqual(tmpStr, "mutationrandomcoopeasy", false)
+		|| StrEqual(tmpStr, "mutationrandomeasy", false)
 	) {
 		g_bModeCampaign = true;
 		g_bModeScavenge = false;
@@ -7532,12 +7550,12 @@ void CheckGameMode()
 bool IsMissionFinalMap()
 {
 	// since L4D_IsMissionFinalMap() is bollocksed, simple map string check
-	strMapType mapType;
+	int mapType;
 	if (!GetTrieValue(g_hTrieMaps, g_sMapName[g_iRound], mapType)) {
 		return false;
 	}
 
-	return view_as<bool>(mapType == MP_FINALE);
+	return (mapType == MP_FINALE);
 }
 
 void stripUnicode(char testString[MAXNAME], int maxLength = 20)
@@ -7611,6 +7629,43 @@ void PrintDebug(int debugLevel, const char[] Message, any ...)
 		char DebugBuff[256];
 		VFormat(DebugBuff, sizeof(DebugBuff), Message, 3);
 		LogMessage(DebugBuff);
+		PrintToServer(DebugBuff);
 		//PrintToServer(DebugBuff);
 	}
+}
+
+// --------------------------------
+//		Natives
+// --------------------------------
+
+// Forces broadcasting/print of current round stats
+public int Native_BroadcastRoundStats(Handle plugin, int numParams)
+{
+	int iFlags = GetConVarInt(g_bModeCampaign ? g_hCvarAutoPrintCoop : g_hCvarAutoPrintVs);
+
+	AutomaticPrintPerClient(iFlags, -1);
+
+	for (int client = 1; client <= MaxClients; client++) {
+		if (g_iCookieValue[client] > 0) {
+			AutomaticPrintPerClient(g_iCookieValue[client], client);
+		}
+	}
+
+	return 1;
+}
+
+// Forces broadcasting/print of current full game stats
+public int Native_BroadcastGameStats(Handle plugin, int numParams)
+{
+	// No distinction between round stat printing and game stat printing, so just default to the other native for now.
+	int iFlags = GetConVarInt(g_bModeCampaign ? g_hCvarAutoPrintCoop : g_hCvarAutoPrintVs);
+
+	AutomaticPrintPerClient(iFlags, -1);
+
+	for (int client = 1; client <= MaxClients; client++) {
+		if (g_iCookieValue[client] > 0) {
+			AutomaticPrintPerClient(g_iCookieValue[client], client);
+		}
+	}
+	return 1;
 }
