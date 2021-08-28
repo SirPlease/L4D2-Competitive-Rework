@@ -28,46 +28,62 @@
 #include <l4d2util>
 
 #define PARISH_PREFIX "c5m"
+#define HITGROUP_HEAD 1
 
 bool
-	bPluginActive;
+	bPluginActive = false;
 
 public Plugin myinfo =
 {
 	name		= "L4D2 Riot Cops",
-	author		= "Jahze, Visor",
-	version		= "1.4", //new syntax A1m`
+	author		= "Jahze, Visor, A1m`",
+	version		= "1.6",
 	description	= "Allow riot cops to be killed by a headshot"
 }
 
 public void OnMapStart()
 {
-	char sMap[128];
+	char sMap[64];
 	GetCurrentMap(sMap, sizeof(sMap));
-
-	bPluginActive = (StrContains(sMap, PARISH_PREFIX, false) > -1) ? true : false;
+	String_ToLower(sMap, sizeof(sMap));
+	
+	bPluginActive = (strncmp(sMap, "c5m", 3) == 0);
 }
 
-public void OnEntityCreated(int entity, const char[] classname)
+public void OnEntityCreated(int iEntity, const char[] sClassName)
 {
-	if (bPluginActive && strcmp("infected", classname) == 0) {
-		SDKHook(entity, SDKHook_SpawnPost, RiotCopSpawn);
+	if (sClassName[0] != 'i' || !bPluginActive) {
+		return;
+	}
+	
+	if (strcmp("infected", sClassName) == 0) {
+		SDKHook(iEntity, SDKHook_SpawnPost, RiotCopSpawn);
 	}
 }
 
-public void RiotCopSpawn(int entity)
+public void RiotCopSpawn(int iEntity)
 {
-	if (IsValidEntity(entity) && GetGender(entity) == L4D2Gender_RiotCop) {
-		SDKHook(entity, SDKHook_TraceAttack, RiotCopTraceAttack);
+	if (IsRiotCop(iEntity)) {
+		SDKHook(iEntity, SDKHook_TraceAttack, RiotCopTraceAttack);
 	}
 }
 
-public Action RiotCopTraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
+public Action RiotCopTraceAttack(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamageType, \
+										int &iAmmoType, int iHitBox, int iHitGroup)
 {
-	if (hitgroup == 1 && IsValidEntity(victim)) {
-		if (L4D2Util_IsValidClient(attacker) && IsSurvivor(attacker)) {
-			SDKHooks_TakeDamage(victim, 0, attacker, damage);
-		}
+	if (iHitGroup != HITGROUP_HEAD || !IsRiotCop(iVictim)) {
+		return Plugin_Continue;
 	}
+	
+	if (!L4D2Util_IsValidClient(iAttacker) || !IsSurvivor(iAttacker)) {
+		return Plugin_Continue;
+	}
+	
+	SDKHooks_TakeDamage(iVictim, iInflictor, iAttacker, fDamage, DMG_GENERIC);
 	return Plugin_Continue;
+}
+
+bool IsRiotCop(int iEntity)
+{
+	return (iEntity > MaxClients && IsValidEntity(iEntity) && GetGender(iEntity) == L4D2Gender_RiotCop);
 }
