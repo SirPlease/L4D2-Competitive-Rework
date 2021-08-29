@@ -176,7 +176,7 @@ void PluginDisable()
 			iRef = g_iEntityList[iValue];
 			
 			if (IsValidEntRef(iRef)) {
-				RemoveEntity(iRef);
+				KillEntity(iRef);
 			}
 		}
 	}
@@ -375,7 +375,7 @@ void UnhookTankProps()
 		iValue = g_hTankPropsHit.Get(i);
 		
 		if (iValue > 0 && IsValidEdict(iValue)) {
-			RemoveEntity(iValue);
+			KillEntity(iValue);
 			//PrintToChatAll("remove %d", iValue);
 		}
 	}
@@ -415,11 +415,7 @@ public void Hook_PropSpawned(int iEntity)
 			g_hTankPropsHit.Push(iEntity);
 			CreateTankPropGlow(iEntity);
 		} else if (StrContains(sModelName, "forklift_brokenfork.mdl") != -1) {
-			#if SOURCEMOD_V_MINOR > 8
-				RemoveEntity(iEntity);
-			#else
-				AcceptEntityInput(iEntity, "Kill");
-			#endif
+			KillEntity(iEntity);
 		}
 	}
 }
@@ -484,3 +480,11 @@ bool IsTank(int iClient)
 	return (GetEntProp(iClient, Prop_Send, "m_zombieClass", 8) == Z_TANK && IsPlayerAlive(iClient));
 }
 
+void KillEntity(int iEntity)
+{
+	#if SOURCEMOD_V_MINOR > 8
+		RemoveEntity(iEntity);
+	#else
+		AcceptEntityInput(iEntity, "Kill");
+	#endif
+}
