@@ -1,35 +1,76 @@
-#include <colors>
+#pragma semicolon 1
 #pragma newdecls required
+
 #include <sourcemod>
+#include <l4d2util_constants>
+#include <builtinvotes>
 #include <sdktools>
+#include <colors>
 #undef REQUIRE_PLUGIN
 #include <readyup>
-#define REQUIRE_PLUGIN
-#include <builtinvotes>
 
-// 0: Undecided.
-// 1: Pump Shotgun.
-// 2: Chrome Shotgun.
-// 3: Uzi.
-// 4: Silenced Uzi.
-// 5: Scout.
-// 6: AWP.
-// 7: Grenade Launcher.
-// 8: Deagle.
-int iCurrentMode;
-int bv_VotingMode;
-bool bAdminVote;
-bool bVoteUnderstood[MAXPLAYERS + 1];
+#define MAX_ENTITY_NAME_LENGTH 64
 
-Menu g_hMenu;
-Handle bv_hVote;
-
-public Plugin myinfo = 
+enum
 {
-	name = "Weapon Loadout", 
-	author = "Sir", 
-	description = "Allows the Players to choose which weapons to play the mode in.", 
-	version = "1.0", 
+	eUndecided = 0,		// 0: Undecided.
+	ePumpShotgun,		// 1: Pump Shotgun.
+	eChromeShotgun,		// 2: Chrome Shotgun.
+	eUzi,				// 3: Uzi.
+	eSilencedUzi,		// 4: Silenced Uzi.
+	eScout,				// 5: Scout.
+	eAwp,				// 6: AWP.
+	eGrenadeLauncher,	// 7: Grenade Launcher.
+	eDeagle				// 8: Deagle.
+};
+
+static const char sGiveWeaponNames[][] =
+{
+	"",							// 0: Undecided.
+	"weapon_pumpshotgun",		// 1: Pump Shotgun.
+	"weapon_shotgun_chrome",	// 2: Chrome Shotgun.
+	"weapon_smg",				// 3: Uzi.
+	"weapon_smg_silenced",		// 4: Silenced Uzi.
+	"weapon_sniper_scout",		// 5: Scout.
+	"weapon_sniper_awp",		// 6: AWP.
+	"weapon_grenade_launcher",	// 7: Grenade Launcher.
+	"weapon_pistol_magnum"		// 8: Deagle.
+};
+
+static const char sRemoveWeaponNames[][] =
+{
+	"shotgun_chrome_spawn",
+	"spawn",
+	"ammo_spawn",
+	"smg",
+	"smg_silenced",
+	"shotgun_chrome",
+	"pumpshotgun",
+	"hunting_rifle",
+	"pistol",
+	"pistol_magnum"
+};
+
+int
+	g_iCurrentMode = eUndecided,
+	g_iVotingMode = 0;
+
+bool
+	g_bIsAdminVote = false,
+	g_bVoteUnderstood[MAXPLAYERS + 1] = {false, ...};
+
+Menu
+	g_hMenu = null;
+
+Handle
+	g_hVote = null;
+
+public Plugin myinfo =
+{
+	name = "Weapon Loadout",
+	author = "Sir, A1m`",
+	description = "Allows the Players to choose which weapons to play the mode in.",
+	version = "2.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -37,9 +78,17 @@ public void OnPluginStart()
 {
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("player_team", Event_PlayerTeam);
-	RegConsoleCmd("sm_mode", Command_VoteMode, "Opens the Voting menu");
-	RegAdminCmd("sm_forcemode", Command_ForceVoteMode, ADMFLAG_ROOT, "Forces the Voting menu");
-	g_hMenu = new Menu(VoteMenuHandler);
+	
+	RegConsoleCmd("sm_mode", Cmd_VoteMode, "Opens the Voting menu");
+	
+	RegAdminCmd("sm_forcemode", Cmd_ForceVoteMode, ADMFLAG_ROOT, "Forces the Voting menu");
+	
+	InitMenu();
+}
+
+void InitMenu()
+{
+	g_hMenu = new Menu(Menu_VoteMenuHandler);
 
 	g_hMenu.SetTitle("Hunters vs ???");
 	g_hMenu.AddItem("Pump Shotguns", "Pump Shotgun");
@@ -53,275 +102,229 @@ public void OnPluginStart()
 	g_hMenu.ExitButton = true;
 }
 
-public Action Event_PlayerTeam(Event event, char[] name , bool dontBroadcast)
+public void Event_PlayerTeam(Event hEvent, char[] sEventName , bool bDontBroadcast)
 {
-	int iPlayer = GetClientOfUserId(event.GetInt("userid"));
-	int team = event.GetInt("team");
-
 	// Mode not picked, don't care.
-	if (iCurrentMode == 0) return;
-
-	// Only care about Survivors (Team 2)
-	if (team != 2) return;
-
+	if (g_iCurrentMode == eUndecided) {
+		return;
+	}
+	
 	// Only during Ready-up
-	if (!IsInReady()) return;
-
-	CreateTimer(0.1, PlayerTimer, iPlayer);
+	if (!IsInReady()) {
+		return;
+	}
+	
+	int iTeam = hEvent.GetInt("team");
+	// Only care about Survivors (Team 2)
+	if (iTeam != view_as<int>(L4D2Team_Survivor)) {
+		return;
+	}
+	
+	int iUserId = hEvent.GetInt("userid");
+	CreateTimer(0.1, Timer_ChangeTeamDelay, iUserId, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action PlayerTimer(Handle timer, any iPlayer)
+public Action Timer_ChangeTeamDelay(Handle hTimer, any iUserId)
 {
-	if (iPlayer > 0 && 
-	iPlayer <= MaxClients &&
-	IsClientConnected(iPlayer) &&
-	GetClientTeam(iPlayer) == 2)
-	{
+	int iPlayer = GetClientOfUserId(iUserId);
+	if (iPlayer > 0 && GetClientTeam(iPlayer) == view_as<int>(L4D2Team_Survivor)) {
 		GiveSurvivorsWeapons(iPlayer, true);
 	}
 }
 
-public Action Event_RoundStart(Event event, char[] name , bool dontBroadcast)
+public void Event_RoundStart(Event hEvent, char[] sEventName, bool bDontBroadcast)
 {
-	CreateTimer(0.5, Timer_ClearMap); // Clear all Weapons on this delayed timer.
+	CreateTimer(0.5, Timer_ClearMap, _, TIMER_FLAG_NO_MAPCHANGE); // Clear all Weapons on this delayed timer.
 
 	// Let players know they can vote for their mode if the mode is undecided.
-	if (iCurrentMode == 0)
-	{
+	if (g_iCurrentMode == eUndecided) {
 		CreateTimer(15.0, Timer_InformPlayers, _, TIMER_REPEAT);
+		return;
 	}
-	else GiveSurvivorsWeapons();
+	
+	GiveSurvivorsWeapons();
 }
 
-public Action Command_VoteMode(int client, int args)
+public Action Cmd_VoteMode(int iClient, int iArgs)
 {
 	// Don't care about non-loaded players or Spectators.
-	if (client == 0 || GetClientTeam(client) == 1) {
+	if (iClient == 0 || GetClientTeam(iClient) < view_as<int>(L4D2Team_Survivor)) {
 		return Plugin_Handled;
 	}
 	
 	// We've already decided on a mode.
-	if (!IsInReady() || InSecondHalfOfRound())
-	{
-		CPrintToChat(client, "{blue}[{green}Zone{blue}]{default}: You can only call for the vote during the first ready-up of a round")
+	if (!IsInReady() || InSecondHalfOfRound()) {
+		CPrintToChat(iClient, "{blue}[{green}Zone{blue}]{default}: You can only call for the vote during the first ready-up of a round");
 		return Plugin_Handled;
 	}
 
 	// This player understands what to do.
-	bVoteUnderstood[client] = true;
+	g_bVoteUnderstood[iClient] = true;
 
 	// Is a new vote allowed?
-	if (!IsNewBuiltinVoteAllowed()) 
-	{
-		CPrintToChat(client, "A vote cannot be called at this moment, try again in a second or five.")
+	if (!IsNewBuiltinVoteAllowed()) {
+		CPrintToChat(iClient, "A vote cannot be called at this moment, try again in a second or five.");
 		return Plugin_Handled;
 	}
 
 	// Check if all players are present, if not.. tell them about it.
-	if (ReadyPlayers() != MaxPlayers())
-	{
-		CPrintToChat(client, "{blue}[{green}Zone{blue}]{default}: Both teams need to be full.")
+	if (ReadyPlayers() != GetMaxPlayers()) {
+		CPrintToChat(iClient, "{blue}[{green}Zone{blue}]{default}: Both teams need to be full.");
 		return Plugin_Handled;
 	}
 
 	// Show the Menu.
-	ShowMenu(client);
+	ShowMenu(iClient);
 	return Plugin_Handled;
 }
 
-public Action Command_ForceVoteMode(int client, int args)
+public Action Cmd_ForceVoteMode(int iClient, int iArgs)
 {
+	if (iClient == 0) {
+		return Plugin_Handled;
+	}
+	
 	// This player understands what to do.
-	bVoteUnderstood[client] = true;
+	g_bVoteUnderstood[iClient] = true;
 
 	// Is a new vote allowed?
-	if (!IsNewBuiltinVoteAllowed()) 
-	{
-		CPrintToChat(client, "A vote cannot be called at this moment, try again in a second or five.")
+	if (!IsNewBuiltinVoteAllowed()) {
+		CPrintToChat(iClient, "A vote cannot be called at this moment, try again in a second or five.");
 		return Plugin_Handled;
 	}
 
 	// Show the Menu.
-	ShowMenu(client);
+	ShowMenu(iClient);
 	return Plugin_Handled;
 }
 
-void ShowMenu(int client)
+void ShowMenu(int iClient)
 {
-	if (IsInReady()) FakeClientCommand(client, "sm_hide");
-	g_hMenu.Display(client, MENU_TIME_FOREVER);
+	if (IsInReady()) {
+		FakeClientCommand(iClient, "sm_hide");
+	}
+	
+	g_hMenu.Display(iClient, MENU_TIME_FOREVER);
 }
 
-public int VoteMenuHandler(Menu menu, MenuAction action, int client, int index)
+public int Menu_VoteMenuHandler(Menu hMenu, MenuAction iAction, int iClient, int iIndex)
 {
-	if(action == MenuAction_Select)
-	{
-		// Is a new vote allowed?
-		if (!IsNewBuiltinVoteAllowed()) 
-		{
-			CPrintToChat(client, "A vote cannot be called at this moment, try again in a second or five.")
-			return;
-		}
-
-		char info[16];
-		char bv_voteTitle[32];
-		bool found = menu.GetItem(index, info, sizeof(info));
-		if (found)
-		{
-			Format(bv_voteTitle, sizeof(bv_voteTitle), "Survivors get %s?", info)
-			bv_VotingMode = index + 1;
-
-			// Get all non-spectating players
-			int iNumPlayers;
-			int[] iPlayers = new int[MaxClients];
-
-			for (int i=1; i<=MaxClients; i++)
-			{
-				if (!IsClientInGame(i) || IsFakeClient(i) || (GetClientTeam(i) == 1))
-				{
-					continue;
-				}
-				iPlayers[iNumPlayers++] = i;
+	switch (iAction) {
+		case MenuAction_Select: {
+			// Is a new vote allowed?
+			if (!IsNewBuiltinVoteAllowed()) {
+				CPrintToChat(iClient, "A vote cannot be called at this moment, try again in a second or five.");
+				return 0;
 			}
 
-			bv_hVote = CreateBuiltinVote(bv_VoteActionHandler, BuiltinVoteType_Custom_YesNo, BuiltinVoteAction_Cancel | BuiltinVoteAction_VoteEnd | BuiltinVoteAction_End);
-			SetBuiltinVoteArgument(bv_hVote, bv_voteTitle);
-			SetBuiltinVoteInitiator(bv_hVote, client);
-			SetBuiltinVoteResultCallback(bv_hVote, bv_VoteResultHandler);
-			DisplayBuiltinVote(bv_hVote, iPlayers, iNumPlayers, 20);
-			if (CheckCommandAccess(client, "sm_kick", ADMFLAG_KICK, false)) bAdminVote = true;
-			FakeClientCommand(client, "Vote Yes");
+			char sInfo[16], sVoteTitle[32];
+			if (hMenu.GetItem(iIndex, sInfo, sizeof(sInfo))) {
+				Format(sVoteTitle, sizeof(sVoteTitle), "Survivors get %s?", sInfo);
+				g_iVotingMode = iIndex + 1;
+
+				// Get all non-spectating players
+				int iNumPlayers;
+				int[] iPlayers = new int[MaxClients];
+
+				for (int i = 1; i <= MaxClients; i++) {
+					if (!IsClientInGame(i) || IsFakeClient(i) || (GetClientTeam(i) == view_as<int>(L4D2Team_Spectator))) {
+						continue;
+					}
+					
+					iPlayers[iNumPlayers++] = i;
+				}
+
+				g_hVote = CreateBuiltinVote(BV_VoteActionHandler, BuiltinVoteType_Custom_YesNo, BuiltinVoteAction_Cancel | BuiltinVoteAction_VoteEnd | BuiltinVoteAction_End);
+				SetBuiltinVoteArgument(g_hVote, sVoteTitle);
+				SetBuiltinVoteInitiator(g_hVote, iClient);
+				SetBuiltinVoteResultCallback(g_hVote, BV_VoteResultHandler);
+				DisplayBuiltinVote(g_hVote, iPlayers, iNumPlayers, 20);
+				
+				if (CheckCommandAccess(iClient, "sm_kick", ADMFLAG_KICK, false)) {
+					g_bIsAdminVote = true;
+				}
+				
+				FakeClientCommand(iClient, "Vote Yes");
+			}
+		}
+		case MenuAction_Cancel: {
+			FakeClientCommand(iClient, "sm_show");
 		}
 	}
-	else if (action == MenuAction_Cancel) 
-	{
-		FakeClientCommand(client, "sm_show");
+
+	return 0;
+}
+
+public void BV_VoteActionHandler(Handle hVote, BuiltinVoteAction iAction, int iParam1, int iParam2)
+{
+	switch (iAction) {
+		case BuiltinVoteAction_End: {
+			delete hVote;
+			g_hVote = null;
+		}
+		case BuiltinVoteAction_Cancel: {
+			DisplayBuiltinVoteFail(hVote, view_as<BuiltinVoteFailReason>(iParam1));
+		}
 	}
 }
 
-public void bv_VoteActionHandler(Handle vote, BuiltinVoteAction action, int param1, int param2)
+public void BV_VoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
 {
-	switch (action)
-	{
-		case BuiltinVoteAction_End:
-		{
-			bv_hVote = INVALID_HANDLE;
-			CloseHandle(vote);
-		}
-		case BuiltinVoteAction_Cancel:
-		{
-			DisplayBuiltinVoteFail(vote, view_as<BuiltinVoteFailReason>(param1));
-		}
-	}
-}
-
-public void bv_VoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
-{
-	for (int i=1; i<=MaxClients; i++)
-	{
-		if (!IsClientInGame(i) || 
-		IsFakeClient(i) || 
-		(GetClientTeam(i) == 1))
-		{
-			continue;
-		}
-		FakeClientCommand(i, "sm_show");
-	}
-
-	for (int i=0; i<num_items; i++)
-	{
-		if (item_info[i][BUILTINVOTEINFO_ITEM_INDEX] == BUILTINVOTES_VOTE_YES)
-		{
-			if (item_info[i][BUILTINVOTEINFO_ITEM_VOTES] > (num_clients / 2))
-			{
-			
+	ReturnReadyUpPanel();
+	
+	for (int i = 0; i < num_items; i++) {
+		if (item_info[i][BUILTINVOTEINFO_ITEM_INDEX] == BUILTINVOTES_VOTE_YES) {
+			if (item_info[i][BUILTINVOTEINFO_ITEM_VOTES] > (num_clients / 2)) {
 				// One last ready-up check (Let it go through if we don't have weapons set)
 				// Allow Admins though
-				if (!IsInReady() && iCurrentMode != 0 && !bAdminVote)  
-				{
+				if (!IsInReady() && g_iCurrentMode != eUndecided && !g_bIsAdminVote) {
 					DisplayBuiltinVoteFail(vote, BuiltinVoteFail_Loses);
 					CPrintToChatAll("{blue}[{green}Zone{blue}]{default}: Vote didn't pass before you left ready-up.");
 					return;
 				}
 				
-				bAdminVote = false;
+				g_bIsAdminVote = false;
 				DisplayBuiltinVotePass(vote, "Survivor Weapons Set!");
-				iCurrentMode = bv_VotingMode;
+				g_iCurrentMode = g_iVotingMode;
 				GiveSurvivorsWeapons();
 				return;
 			}
 		}
 	}
 	
-	bAdminVote = false;
+	g_bIsAdminVote = false;
 	// Vote Failed
 	DisplayBuiltinVoteFail(vote, BuiltinVoteFail_Loses);
 	return;
 }
 
-public Action Timer_ClearMap(Handle timer)
+public Action Timer_ClearMap(Handle hTimer)
 {
 	// We only clear Chrome Shotguns because we need weaponrules to be loaded for pistols and deagles, so we converted everything to chromes in it. :D
 	// After the weaponrules timer, we strike.
 	// Surely you can do better than this Sir, get to this when you have time.
-	int ent = -1;
+	
+	char sEntityName[MAX_ENTITY_NAME_LENGTH];
+	int iOwner = -1, iEntity = INVALID_ENT_REFERENCE;
 
 	// Converted Weapons
-	while ((ent = FindEntityByClassname(ent, "weapon_shotgun_chrome_spawn")) != -1)
-	{
-		AcceptEntityInput(ent, "Kill");
-	}
-	// Director
-	while ((ent = FindEntityByClassname(ent, "weapon_spawn")) != -1)
-	{
-		AcceptEntityInput(ent, "Kill");
-	}
-	// Forced stripper spawns
-	while ((ent = FindEntityByClassname(ent, "weapon_ammo_spawn")) != -1)
-	{
-		AcceptEntityInput(ent, "Kill");
-	}
-	while ((ent = FindEntityByClassname(ent, "weapon_smg")) != -1)
-	{
-		int iOwner = GetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity");
-		if (!IsValidSurvivor(iOwner))
-		  AcceptEntityInput(ent, "Kill");
-	}
-	while ((ent = FindEntityByClassname(ent, "weapon_smg_silenced")) != -1)
-	{
-		int iOwner = GetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity");
-		if (!IsValidSurvivor(iOwner))
-		  AcceptEntityInput(ent, "Kill");
-	}
-	while ((ent = FindEntityByClassname(ent, "weapon_shotgun_chrome")) != -1)
-	{
-		int iOwner = GetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity");
-		if (!IsValidSurvivor(iOwner))
-		  AcceptEntityInput(ent, "Kill");
-	}
-	while ((ent = FindEntityByClassname(ent, "weapon_pumpshotgun")) != -1)
-	{
-		int iOwner = GetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity");
-		if (!IsValidSurvivor(iOwner))
-		  AcceptEntityInput(ent, "Kill");
-	}
-	while ((ent = FindEntityByClassname(ent, "weapon_hunting_rifle")) != -1)
-	{
-		int iOwner = GetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity");
-		if (!IsValidSurvivor(iOwner))
-		  AcceptEntityInput(ent, "Kill");
-	}
-	while ((ent = FindEntityByClassname(ent, "weapon_pistol")) != -1)
-	{
-		int iOwner = GetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity");
-		if (!IsValidSurvivor(iOwner))
-		  AcceptEntityInput(ent, "Kill");
-	}
-	while ((ent = FindEntityByClassname(ent, "weapon_pistol_magnum")) != -1)
-	{
-		int iOwner = GetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity");
-		if (!IsValidSurvivor(iOwner))
-		  AcceptEntityInput(ent, "Kill");
+	while ((iEntity = FindEntityByClassname(iEntity, "weapon_*")) != INVALID_ENT_REFERENCE) {
+		if (iEntity < MaxClients || !IsValidEntity(iEntity)) {
+			continue;
+		}
+		
+		GetEntityClassname(iEntity, sEntityName, sizeof(sEntityName));
+		for (int i = 0; i < sizeof(sRemoveWeaponNames); i++) {
+			// weapon_ - 7
+			if (strcmp(sEntityName[7], sRemoveWeaponNames[i]) == 0) {
+				iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
+				if (!IsValidOwner(iOwner)) {
+					KillEntity(iEntity);
+				}
+				
+				break;
+			}
+		}
 	}
 }
 
@@ -332,135 +335,128 @@ public void OnRoundIsLive()
 
 int ReadyPlayers()
 {
-	int players;
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		if (IsClientInGame(i) && 
-			GetClientTeam(i) != 1)
-				players++;
+	int iPlayersCount = 0;
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsClientInGame(i) && GetClientTeam(i) > 1) {
+			iPlayersCount++;
+		}
 	}
-	return players;
+	
+	return iPlayersCount;
 }
 
-void GiveSurvivorsWeapons(int player = 0, bool OnlyIfSurvivorEmpty = false)
+void GiveSurvivorsWeapons(int iClient = 0, bool bOnlyIfSurvivorEmpty = false)
 {
 	// Establish what Weapon we're going for and format its name into a String.
-	char sWeapon[32]
+	char sWeapon[MAX_ENTITY_NAME_LENGTH];
 
-	switch (iCurrentMode)
-	{
-		case 1: Format(sWeapon, sizeof(sWeapon), "weapon_pumpshotgun");
-		case 2: Format(sWeapon, sizeof(sWeapon), "weapon_shotgun_chrome");
-		case 3: Format(sWeapon, sizeof(sWeapon), "weapon_smg");
-		case 4: Format(sWeapon, sizeof(sWeapon), "weapon_smg_silenced");
-		case 5: Format(sWeapon, sizeof(sWeapon), "weapon_sniper_scout");
-		case 6: Format(sWeapon, sizeof(sWeapon), "weapon_sniper_awp");
-		case 7: Format(sWeapon, sizeof(sWeapon), "weapon_grenade_launcher");
-		case 8: Format(sWeapon, sizeof(sWeapon), "weapon_pistol_magnum");
+	strcopy(sWeapon, sizeof(sWeapon), sGiveWeaponNames[g_iCurrentMode]);
+	
+	if (strlen(sWeapon) == 0) {
+		LogError("Failed to get the name of the weapon! Current mode: %d", g_iCurrentMode);
+		return;
 	}
-
+	
 	// Loop through Clients, clear their current primary weapons (if they have one)
-	if (!player)
-	{
-		for (int i = 1; i <= MaxClients; i++)
-		{
-			if (IsClientInGame(i) && 
-			GetClientTeam(i) == 2)
-			{
-				int iCurrMainWeapon = GetPlayerWeaponSlot(i, 0);
-				int iCurrSecondaryWeapon = GetPlayerWeaponSlot(i, 1);
-
-				// Does the player already have an item in this slot?
-				if (iCurrMainWeapon != -1) 
-				{
-					// If we only want to give weapons to empty handed players, don't do anything for this player.
-					if (OnlyIfSurvivorEmpty) continue;
-
-					// Remove current Weapon.
-					AcceptEntityInput(iCurrMainWeapon, "Kill");
-				}
-				if (iCurrSecondaryWeapon != -1)
-				{
-					// Remove current Weapon.
-					AcceptEntityInput(iCurrSecondaryWeapon, "Kill");
-				}
-
-				int ent;
-				ent = CreateEntityByName(sWeapon);
-				DispatchSpawn(ent);
-				EquipPlayerWeapon(i, ent);
-			}
-		}
+	if (iClient != 0) {
+		GiveAndRemovePlayerWeapon(iClient, sWeapon, bOnlyIfSurvivorEmpty);
+		return;
 	}
-	else
-	{
-		if (IsClientInGame(player) && 
-		GetClientTeam(player) == 2)
-		{
-			int iCurrMainWeapon = GetPlayerWeaponSlot(player, 0);
-			int iCurrSecondaryWeapon = GetPlayerWeaponSlot(player, 1);
-
-			// Does the player already have an item in this slot?
-			if (iCurrMainWeapon != -1) 
-			{
-				// If we only want to give weapons to empty handed players, don't do anything for this player.
-				if (OnlyIfSurvivorEmpty) return;
-
-				// Remove current Weapon.
-				AcceptEntityInput(iCurrMainWeapon, "Kill");
-			}
-			if (iCurrSecondaryWeapon != -1)
-			{
-				// Remove current Weapon.
-				AcceptEntityInput(iCurrSecondaryWeapon, "Kill");
-			}
-
-			int ent;
-			ent = CreateEntityByName(sWeapon);
-			DispatchSpawn(ent);
-			EquipPlayerWeapon(player, ent);
-		}
+	
+	for (int i = 1; i <= MaxClients; i++) {
+		GiveAndRemovePlayerWeapon(i, sWeapon, bOnlyIfSurvivorEmpty);
 	}
 }
 
-int MaxPlayers()
+void GiveAndRemovePlayerWeapon(int iClient, const char[] sWeaponName, bool bOnlyIfSurvivorEmpty = false)
 {
-	return GetConVarInt(FindConVar("survivor_limit")) + GetConVarInt(FindConVar("z_max_player_zombies"));
+	if (!IsClientInGame(iClient) || GetClientTeam(iClient) != view_as<int>(L4D2Team_Survivor) || !IsPlayerAlive(iClient)) {
+		return;
+	}
+	
+	int iCurrMainWeapon = GetPlayerWeaponSlot(iClient, 0);
+	int iCurrSecondaryWeapon = GetPlayerWeaponSlot(iClient, 1);
+
+	// Does the player already have an item in this slot?
+	if (iCurrMainWeapon != -1) {
+		// If we only want to give weapons to empty handed players, don't do anything for this player.
+		if (bOnlyIfSurvivorEmpty) {
+			return;
+		}
+		
+		// Remove current Weapon.
+		RemovePlayerItem(iClient, iCurrMainWeapon);
+	}
+	
+	if (iCurrSecondaryWeapon != -1) {
+		// Remove current Weapon.
+		RemovePlayerItem(iClient, iCurrSecondaryWeapon);
+	}
+	
+	GivePlayerWeaponByName(iClient, sWeaponName);
 }
 
-bool InSecondHalfOfRound()
+public Action Timer_InformPlayers(Handle hTimer)
 {
-	return view_as<bool>(GameRules_GetProp("m_bInSecondHalfOfRound"))
-}
-
-public Action Timer_InformPlayers(Handle timer)
-{
-	static int numPrinted = 0;
+	static int iNumPrinted = 0;
  
 	// Don't annoy the players, remind them a maximum of 6 times.
-	if (numPrinted >= 6 || iCurrentMode != 0) 
-	{
-		numPrinted = 0;
+	if (iNumPrinted >= 6 || g_iCurrentMode != eUndecided) {
+		iNumPrinted = 0;
 		return Plugin_Stop;
 	}
 
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		if (IsClientInGame(i) && GetClientTeam(i) != 1 && !bVoteUnderstood[i])
-		{
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsClientInGame(i) && GetClientTeam(i) != view_as<int>(L4D2Team_Spectator) && !g_bVoteUnderstood[i]) {
 			CPrintToChat(i, "{blue}[{green}Zone{blue}]{default}: Welcome to {blue}Zone{green}Hunters{default}.");
 			CPrintToChat(i, "{blue}[{green}Zone{blue}]{default}: Type {olive}!mode {default}in chat to vote on weapons used.");
 		}
 	}
-	numPrinted++;
- 
+	
+	iNumPrinted++;
 	return Plugin_Continue;
 }
 
-stock bool IsValidSurvivor(int client)
+void ReturnReadyUpPanel()
 {
-	if (client <= 0 || client > MaxClients || !IsClientConnected(client)) return false;
-	if (!IsClientInGame(client)) return false;
-	if (GetClientTeam(client) != 2) return false;
-	return true; 
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) > view_as<int>(L4D2Team_Spectator)) {
+			FakeClientCommand(i, "sm_show");
+		}
+	}
+}
+
+int GetMaxPlayers()
+{
+	return FindConVar("survivor_limit").IntValue + FindConVar("z_max_player_zombies").IntValue;
+}
+
+bool InSecondHalfOfRound()
+{
+	return view_as<bool>(GameRules_GetProp("m_bInSecondHalfOfRound", 1));
+}
+
+bool IsValidOwner(int iClient)
+{
+	return (iClient != -1 && IsClientInGame(iClient));
+}
+
+void KillEntity(int iEntity)
+{
+#if SOURCEMOD_V_MINOR > 8
+	RemoveEntity(iEntity);
+#else
+	AcceptEntityInput(iEntity, "Kill");
+#endif
+}
+
+void GivePlayerWeaponByName(int iClient, const char[] sWeaponName)
+{
+	int iEntity = CreateEntityByName(sWeaponName);
+	if (iEntity == -1) {
+		return;
+	}
+	
+	DispatchSpawn(iEntity);
+	EquipPlayerWeapon(iClient, iEntity);
 }
