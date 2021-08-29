@@ -101,5 +101,6 @@ public void __pl_readyup_SetNTVOptional()
 	MarkNativeAsOptional("EditFooterStringAtIndex");
 	MarkNativeAsOptional("AddStringToReadyFooter");
 	MarkNativeAsOptional("IsInReady");
+	MarkNativeAsOptional("ToggleReadyPanel");
 }
 #endif

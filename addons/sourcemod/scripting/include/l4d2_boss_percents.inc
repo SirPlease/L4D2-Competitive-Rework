@@ -8,14 +8,6 @@
 #define _l4d2_boss_percents_included
 
 /**
- * @brief Called when the boss percents are updated.
- * @remarks Triggered via boss votes, force tanks, force witches.
- */
-forward void OnUpdateBosses();
-
-
-
-/**
  * @brief Set the tank as "disabled" on the ready up, and when the !boss command is used.
  * @remarks YOU NEED TO SET THIS EVERY MAP.
  *
@@ -41,20 +33,6 @@ native void SetWitchDisabled(bool disable);
  * @noreturn
  */
 native void UpdateBossPercents();
-
-/**
- * @brief Check if the current map contains a static witch spawn.
- *
- * @return					True on contains a static spawn, false otherwise.
- */
-native bool IsStaticWitchMap();
-
-/**
- * @brief Check if the current map contains a static tank spawn.
- *
- * @return					True on contains a static spawn, false otherwise.
- */
-native bool IsStaticTankMap();
 
 /**
  * @brief Get the stored tank percent.
@@ -112,8 +90,6 @@ public void __pl_l4d2_boss_percents_SetNTVOptional()
 	MarkNativeAsOptional("SetTankDisabled");
 	MarkNativeAsOptional("SetWitchDisabled");
 	MarkNativeAsOptional("UpdateBossPercents");
-	MarkNativeAsOptional("IsStaticWitchMap");
-	MarkNativeAsOptional("IsStaticTankMap");
 	MarkNativeAsOptional("GetStoredTankPercent");
 	MarkNativeAsOptional("GetStoredWitchPercent");
 	MarkNativeAsOptional("GetReadyUpFooterIndex");
