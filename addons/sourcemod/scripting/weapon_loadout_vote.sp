@@ -217,7 +217,7 @@ public int Menu_VoteMenuHandler(Menu hMenu, MenuAction iAction, int iClient, int
 				return 0;
 			}
 
-			char sInfo[16], sVoteTitle[32];
+			char sInfo[32], sVoteTitle[64];
 			if (hMenu.GetItem(iIndex, sInfo, sizeof(sInfo))) {
 				Format(sVoteTitle, sizeof(sVoteTitle), "Survivors get %s?", sInfo);
 				g_iVotingMode = iIndex + 1;
