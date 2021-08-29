@@ -37,7 +37,7 @@ public void OnPluginStart()
 	DHookAddParam(hCLunge_OnTouch, HookParamType_CBaseEntity);
 	
 	iCLunge_BlockMidPounce = GameConfGetOffset(conf, KEY_BLOCKMIDPOUNCE);
-	if (iCLungeOnTouch == -1)
+	if (iCLunge_BlockMidPounce == -1)
 		SetFailState("Failed to get offset \"" ... KEY_BLOCKMIDPOUNCE ... "\"");
 	
 	delete conf;
