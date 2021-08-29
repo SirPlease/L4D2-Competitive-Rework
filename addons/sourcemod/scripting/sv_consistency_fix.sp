@@ -1,104 +1,140 @@
 #pragma semicolon 1
+#pragma newdecls required
+
 #include <sourcemod>
 #include <colors>
 
-#define PLUGIN_VERSION "1.3"
-#define PLUGIN_URL "http://step.l4dnation.com/"
+bool
+	g_bIsEventHook;
 
-//Convars
-new Handle:hCvarServerMessage;
+ConVar
+	g_hCvarServerMessageToggle,
+	g_hCvarServerWelcomeMessage;
 
-#define LINE_SIZE 512
-
-public Plugin:myinfo =
+public Plugin myinfo =
 {
 	name = "sv_consistency fixes",
-	author = "step, Sir",
+	author = "step, Sir, A1m`",
 	description = "Fixes multiple sv_consistency issues.",
-	version = PLUGIN_VERSION,
-	url = PLUGIN_URL
+	version = "1.4.1",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework/"
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
-	if (!FileExists("whitelist.cfg"))
-	{
+	if (!FileExists("whitelist.cfg")) {
 		SetFailState("Couldn't find whitelist.cfg");
 	}
 	
-	hCvarServerMessage = CreateConVar("soundm_server_message", "a SoundM Protected Server", "Message to show to Players in console");
+	g_hCvarServerMessageToggle = g_hCvarServerWelcomeMessage = CreateConVar( \
+		"svctyfix_message_enable", \
+		"1.0", \
+		"Enable print message in console when player join.", \
+		_, true, 0.0, true, 1.0 \
+	);
+	
+	g_hCvarServerWelcomeMessage = CreateConVar( \
+		"svctyfix_welcome_message", \
+		"a SoundM Protected Server", \
+		"Message to show to Players in console" \
+	);
+	
+	ConVar hConsistencyCheckInterval = CreateConVar( \
+		"cl_consistencycheck_interval", \
+		"180.0", \
+		"Perform a consistency check after this amount of time (seconds) has passed since the last.", \
+		FCVAR_REPLICATED \
+	);
+	
+	ToggleMessage();
+	g_hCvarServerMessageToggle.AddChangeHook(Cvar_Changed);
+	
+	RegAdminCmd("sm_consistencycheck", Cmd_ConsistencyCheck, ADMFLAG_RCON, "Performs a consistency check on all players.");
 
-	HookEvent("player_connect_full", Event_PlayerConnectFull, EventHookMode_Post);
-	RegAdminCmd("sm_consistencycheck", Command_ConsistencyCheck, ADMFLAG_RCON, "Performs a consistency check on all players.", "", FCVAR_NONE);
-	SetConVarInt(CreateConVar("cl_consistencycheck_interval", "180.0", "Perform a consistency check after this amount of time (seconds) has passed since the last.", FCVAR_REPLICATED), 999999);
+	hConsistencyCheckInterval.SetInt(999999);
+	
+	LoadTranslations("common.phrases"); // Load translations (for targeting player)
 }
 
-public Action:Event_PlayerConnectFull(Handle:event, const String:name[], bool:dontBroadcast)
+void ToggleMessage()
 {
-	CreateTimer(0.1, PrintWhitelist, GetClientOfUserId(GetEventInt(event, "userid")));
-	return Plugin_Continue;
-}
-
-public Action:PrintWhitelist(Handle:timer, any:client)
-{
-	new String:sMessage[128];
-	GetConVarString(hCvarServerMessage, sMessage, sizeof(sMessage));
-
-	PrintToConsole(client, " ");
-	PrintToConsole(client, " ");
-	PrintToConsole(client, "// -------------------------------- \\");
-	PrintToConsole(client, "/| --> Welcome to %s <--", sMessage);
-	PrintToConsole(client, "|");
-	PrintToConsole(client, "| Your Sound Files have been checked.");
-	PrintToConsole(client, "| Don't be a filthy Cheater.");
-	PrintToConsole(client, "| Enjoy your Stay, or don't.");
-	PrintToConsole(client, "|");
-	PrintToConsole(client, "/| --> Welcome to %s <--", sMessage);
-	PrintToConsole(client, "// -------------------------------- \\");
-	PrintToConsole(client, " ");
-	PrintToConsole(client, " ");
-}
-
-public Action:Command_ConsistencyCheck(client, args)
-{
-	if (args < 1) 
-	{
-		ConsistencyCheck(0);
-		return Plugin_Handled;
+	if (g_hCvarServerMessageToggle.BoolValue) {
+		if (!g_bIsEventHook) {
+			HookEvent("player_connect_full", Event_PlayerConnectFull, EventHookMode_Post);
+			g_bIsEventHook = true;
+		}
+	} else {
+		if (g_bIsEventHook) {
+			UnhookEvent("player_connect_full", Event_PlayerConnectFull, EventHookMode_Post);
+			g_bIsEventHook = false;
+		}
 	}
-
-	new String:sPlayer[32];
-	GetCmdArg(1, sPlayer, sizeof(sPlayer));
-
-	for (new i=1; i<=MaxClients; i++)
-	{
-		if (!IsClientConnected(i)) continue;
-		new String:sOther[32];
-		GetClientName(i, sOther, sizeof(sOther));
-
-		if (StrEqual(sPlayer, sOther, false)) ConsistencyCheck(i);
-	}
-	return Plugin_Handled;
 }
 
-public ConsistencyCheck(client)
+public void Cvar_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
-	if (!client)
-	{
-		for (new i = 1; i <= MaxClients; i++)
-		{
-			if (IsClientInGame(i) && !IsFakeClient(i))
-			{
+	ToggleMessage();
+}
+
+public void OnClientConnected(int client)
+{
+	ClientCommand(client, "cl_consistencycheck");
+}
+
+public void Event_PlayerConnectFull(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+{
+	int iUserId = hEvent.GetInt("userid");
+	CreateTimer(0.2, PrintWhitelist, iUserId, TIMER_FLAG_NO_MAPCHANGE);
+}
+
+public Action PrintWhitelist(Handle hTimer, any iUserId)
+{
+	int iClient = GetClientOfUserId(iUserId);
+	if (iClient > 0) {
+		char sMessage[128];
+		GetConVarString(g_hCvarServerWelcomeMessage, sMessage, sizeof(sMessage));
+
+		PrintToConsole(iClient, " ");
+		PrintToConsole(iClient, " ");
+		PrintToConsole(iClient, "// -------------------------------- \\");
+		PrintToConsole(iClient, "/| --> Welcome to %s <--", sMessage);
+		PrintToConsole(iClient, "|");
+		PrintToConsole(iClient, "| Your Sound Files have been checked.");
+		PrintToConsole(iClient, "| Don't be a filthy Cheater.");
+		PrintToConsole(iClient, "| Enjoy your Stay, or don't.");
+		PrintToConsole(iClient, "|");
+		PrintToConsole(iClient, "/| --> Welcome to %s <--", sMessage);
+		PrintToConsole(iClient, "// -------------------------------- \\");
+		PrintToConsole(iClient, " ");
+		PrintToConsole(iClient, " ");
+	}
+}
+
+public Action Cmd_ConsistencyCheck(int iClient, int iArgs)
+{
+	if (iArgs < 1) {
+		for (int i = 1; i <= MaxClients; i++) {
+			if (IsClientInGame(i) && !IsFakeClient(i)) {
 				ClientCommand(i, "cl_consistencycheck");
 			}
 		}
-		return;
+		
+		ReplyToCommand(iClient, "Started checking the consistency of files for all players!");
+		return Plugin_Handled;
 	}
 
-	ClientCommand(client, "cl_consistencycheck");
-}
+	char sArg1[MAX_NAME_LENGTH];
+	GetCmdArg(1, sArg1, sizeof(sArg1));
 
-public OnClientConnected(client)
-{
-	ClientCommand(client, "cl_consistencycheck");
+	// Try and find a matching player
+	int iTarget = FindTarget(iClient, sArg1, true);
+	if (iTarget == -1) {
+		return Plugin_Handled;
+	}
+	
+	ClientCommand(iTarget, "cl_consistencycheck");
+
+	ReplyToCommand(iClient, "Started checking the consistency of files for the player %N (%d)", iTarget, iTarget);
+	
+	return Plugin_Handled;
 }
