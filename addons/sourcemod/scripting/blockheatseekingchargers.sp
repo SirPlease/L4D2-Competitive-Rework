@@ -9,58 +9,78 @@
  - Initial release
 ^^^^^^^^^^^^^^^^^^^^CHANGELOG^^^^^^^^^^^^^^^^^^^^ */
 
-
+#pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
-new IsInCharge[MAXPLAYERS + 1] = false;
 
-#define PL_VERSION "1.2"
+#define PL_VERSION "1.2.1"
 
-public Plugin:myinfo =
+bool
+	IsInCharge[MAXPLAYERS + 1] = {false, ...};
+
+public Plugin myinfo =
 {
 	name = "Blocks heatseeking chargers",
-	version = PL_VERSION,
+	description = "Blocks heatseeking chargers",
 	author = "sheo",
+	version = PL_VERSION,
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
-public OnPluginStart()
+public void OnPluginStart()
 {
+	CreateConVar("l4d2_block_heatseeking_chargers_version", PL_VERSION, "Block heatseeking chargers fix version");
+	
 	HookEvent("player_bot_replace", BotReplacesPlayer);
 	HookEvent("charger_charge_start", Event_ChargeStart);
 	HookEvent("charger_charge_end", Event_ChargeEnd);
 	HookEvent("player_spawn", Event_OnPlayerSpawn);
 	HookEvent("player_death", Event_OnPlayerDeath);
-	CreateConVar("l4d2_block_heatseeking_chargers_version", PL_VERSION, "Block heatseeking chargers fix version");
+	
+	HookEvent("round_start", Event_Reset, EventHookMode_PostNoCopy);
+	HookEvent("round_end", Event_Reset, EventHookMode_PostNoCopy);
 }
 
-public Event_ChargeStart(Handle:event, const String:name[], bool:dontBroadcast)
+void ResetArray()
 {
-    IsInCharge[GetClientOfUserId(GetEventInt(event, "userid"))] = true;
-}
-
-public Event_ChargeEnd(Handle:event, const String:name[], bool:dontBroadcast)
-{
-    IsInCharge[GetClientOfUserId(GetEventInt(event, "userid"))] = false;
-}
-
-public Action:BotReplacesPlayer(Handle:event, const String:name[], bool:dontBroadcast)
-{
-	new client = GetClientOfUserId(GetEventInt(event, "player"));
-	if (IsInCharge[client])
-	{
-		//SetEntityMoveType(GetClientOfUserId(GetEventInt(event, "bot")), MOVETYPE_NONE); //Old method, by me
-		new bot = GetClientOfUserId(GetEventInt(event, "bot"));
-		SetEntProp(bot, Prop_Send, "m_fFlags", GetEntProp(bot, Prop_Send, "m_fFlags") | FL_FROZEN); //New method, by dcx2
-		IsInCharge[client] = false;
+	for (int i = 0; i <= MaxClients; i++) {
+		IsInCharge[i] = false;
 	}
 }
 
-public Event_OnPlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
+public void Event_Reset(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
 {
-	IsInCharge[GetClientOfUserId(GetEventInt(event, "userid"))] = false;
+	ResetArray();
 }
 
-public Event_OnPlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
+public void Event_ChargeStart(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
 {
-	IsInCharge[GetClientOfUserId(GetEventInt(event, "userid"))] = false;
+	IsInCharge[GetClientOfUserId(hEvent.GetInt("userid"))] = true;
+}
+
+public void Event_ChargeEnd(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
+{
+	IsInCharge[GetClientOfUserId(hEvent.GetInt("userid"))] = false;
+}
+
+public void BotReplacesPlayer(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
+{
+	int iClient = GetClientOfUserId(hEvent.GetInt("player"));
+	if (iClient > 0 && IsInCharge[iClient]) {
+		int iBot = GetClientOfUserId(hEvent.GetInt("bot"));
+		
+		SetEntityFlags(iBot, GetEntityFlags(iBot) | FL_FROZEN);
+		IsInCharge[iClient] = false;
+	}
+}
+
+public void Event_OnPlayerSpawn(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
+{
+	IsInCharge[GetClientOfUserId(hEvent.GetInt("userid"))] = false;
+}
+
+public void Event_OnPlayerDeath(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
+{
+	IsInCharge[GetClientOfUserId(hEvent.GetInt("userid"))] = false;
 }

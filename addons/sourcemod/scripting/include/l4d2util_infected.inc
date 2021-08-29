@@ -5,6 +5,7 @@
 
 #include <sdktools>
 #include <l4d2util_constants>
+#include <l4d2util_stocks>
 
 #define UTIL_ARRAY_INDEX_DURATION 0
 #define UTIL_ARRAY_INDEX_TIMESTAMP 1
@@ -48,6 +49,17 @@ stock const char L4D2_InfectedVictimNetprops[view_as<int>(L4D2Infected_Size)][] 
 stock bool IsInfected(int client)
 {
 	return (IsClientInGame(client) && GetClientTeam(client) == view_as<int>(L4D2Team_Infected));
+}
+
+/**
+ * Return true if the valid client index and is client on the infected team.
+ *
+ * @param client client ID
+ * @return bool
+ */
+stock bool IsValidInfected(int client)
+{
+	return (L4D2Util_IsValidClient(client) && IsClientInGame(client) && GetClientTeam(client) == view_as<int>(L4D2Team_Infected));
 }
 
 /**

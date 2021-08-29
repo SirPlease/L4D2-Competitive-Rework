@@ -1,46 +1,53 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdktools>
 
-public Plugin:myinfo = 
+#define TEAM_INFECTED 3
+#define Z_TANK 8
+
+ConVar
+	g_hKillOnCrash = null;
+
+public Plugin myinfo = 
 {
-    name = "AI Tank Gank",
-    author = "Stabby",
-    version = "0.2",
-    description = "Kills tanks on pass to AI."
+	name = "AI Tank Gank",
+	author = "Stabby",
+	version = "0.3",
+	description = "Kills tanks on pass to AI."
 };
 
-new Handle:hKillOnCrash = INVALID_HANDLE;
-
-public OnPluginStart() 
+public void OnPluginStart()
 {
-	hKillOnCrash = CreateConVar("tankgank_killoncrash",	"0",
-								"If 0, tank will not be killed if the player that controlled it crashes.",
-								FCVAR_NONE, true,  0.0, true, 1.0);
+	g_hKillOnCrash = CreateConVar( \
+		"tankgank_killoncrash", \
+		"0", \
+		"If 0, tank will not be killed if the player that controlled it crashes.", \
+		_, true,  0.0, true, 1.0 \
+	);
+	
 	HookEvent("player_bot_replace", OnTankGoneAi);
 }
 
-public Action:OnTankGoneAi(Handle:event, const String: name[], bool:dontBroadcast)
-{	
-	new formerTank = GetClientOfUserId(GetEventInt(event, "player"));
-	new newTank = GetClientOfUserId(GetEventInt(event, "bot"));
+public void OnTankGoneAi(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+{
+	int iNewTank = GetClientOfUserId(hEvent.GetInt("bot"));
 	
-	if (GetClientTeam(newTank) == 3 && GetEntProp(newTank, Prop_Send, "m_zombieClass") == 8)
-	{
-		if (formerTank == 0 && !GetConVarBool(hKillOnCrash) )	//if people disconnect, formerTank = 0 instead of the old player's id
-		{
-			CreateTimer(1.0, Timed_CheckAndKill, newTank);
+	if (GetClientTeam(iNewTank) == TEAM_INFECTED && GetEntProp(iNewTank, Prop_Send, "m_zombieClass") == Z_TANK) {
+		int iFormerTank = GetClientOfUserId(hEvent.GetInt("player"));
+		if (iFormerTank == 0 && !g_hKillOnCrash.BoolValue) {//if people disconnect, iFormerTank = 0 instead of the old player's id
+			CreateTimer(1.0, Timed_CheckAndKill, iNewTank, TIMER_FLAG_NO_MAPCHANGE);
 			return;
 		}
-		ForcePlayerSuicide(newTank);
+		
+		ForcePlayerSuicide(iNewTank);
 	}
 }
 
-public Action:Timed_CheckAndKill(Handle:unused, any:newTank)
+public Action Timed_CheckAndKill(Handle hTimer, any iNewTank)
 {
-	if (IsFakeClient(newTank))
-	{
-		ForcePlayerSuicide(newTank);		
+	if (IsFakeClient(iNewTank) && IsPlayerAlive(iNewTank)) {
+		ForcePlayerSuicide(iNewTank);
 	}
 }
