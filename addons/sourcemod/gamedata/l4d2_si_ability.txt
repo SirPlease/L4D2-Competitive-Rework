@@ -179,6 +179,12 @@
 				"linux"		"204"
 				"windows"	"203"
 			}
+			
+			"CLunge->m_blockMidPounce"
+			{
+				"linux"		"1164"
+				"windows"	"1144"
+			}
 		}
 	}
 	"left4dead"
@@ -189,6 +195,18 @@
 			{
 				"linux"		"207"
 				"windows"	"206"
+			}
+			
+			"CBaseAbility::OnTouch"
+			{
+				"linux"		"201"
+				"windows"	"200"
+			}
+			
+			"CLunge->m_blockMidPounce"
+			{
+				"linux"		"968"
+				"windows"	"948"
 			}
 		}
 	}
