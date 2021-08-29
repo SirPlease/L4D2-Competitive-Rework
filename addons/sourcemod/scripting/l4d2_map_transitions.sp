@@ -2,6 +2,7 @@
 #include <sdktools>
 #include <sdkhooks>
 #include <left4dhooks>
+#include <l4d2util>
 #include <colors>
 
 #define DEBUG 0
@@ -20,9 +21,9 @@ bool g_bHasTransitioned = false
 public Plugin:myinfo = 
 {
 	name = "Map Transitions",
-	author = "Derpduck",
+	author = "Derpduck, Forgetest",
 	description = "Define map transitions to combine campaigns",
-	version = "2",
+	version = "3",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
@@ -33,8 +34,6 @@ public OnPluginStart()
 	
 	hMapTransitionPair = new StringMap()
 	RegServerCmd("sm_add_map_transition", AddMapTransition)
-	
-	HookEvent("round_start", OnRoundStart_Event, EventHookMode_PostNoCopy)
 }
 
 void CheckGame()
@@ -81,7 +80,7 @@ public OnRoundEnd()
 	}
 }
 
-static Action:OnRoundEnd_Post(Handle timer)
+public Action:OnRoundEnd_Post(Handle timer)
 {
 	//Check if map has been registered for a map transition
 	char currentMapName[MAP_NAME_MAX_LENGTH]
@@ -106,20 +105,33 @@ static Action:OnRoundEnd_Post(Handle timer)
 	}
 }
 
-static void OnRoundStart_Event(Event hEvent, const char[] eName, bool dontBroadcast)
+public OnMapStart()
 {
-	int isSecondHalf = InSecondHalfOfRound()
-	
 	//Set scores after a modified transition
-	if (g_bHasTransitioned && isSecondHalf == 0)
+	if (g_bHasTransitioned)
 	{
-		CreateTimer(5.0, SetScores) //We need to do this before l4d_tank_control_eq checks scores (at 10 seconds)
+		CreateTimer(1.0, OnMapStart_Post) //Clients have issues connecting if team swap happens exactly on map start, so we delay it
 		g_bHasTransitioned = false
 	}
 }
 
-static Action:SetScores(Handle timer)
+public Action:OnMapStart_Post(Handle timer)
 {
+	SetScores()
+}
+
+public SetScores()
+{
+	//If team B is winning, swap teams. Does not change how scores are set
+	if (g_iPointsTeamA < g_iPointsTeamB)
+	{
+		L4D2_SwapTeams()
+		
+		#if DEBUG
+			LogMessage("Teams swapped")
+		#endif
+	}
+	
 	//Set scores on scoreboard
 	SDKCall(hSetCampaignScores, g_iPointsTeamA, g_iPointsTeamB)
 	
@@ -130,17 +142,9 @@ static Action:SetScores(Handle timer)
 	#if DEBUG
 		LogMessage("Set scores to: (Survivors) %i vs (Infected) %i", g_iPointsTeamA, g_iPointsTeamB)
 	#endif
-	
-	CreateTimer(10.0, PrintScores_Delay)
 }
 
-static Action:PrintScores_Delay(Handle timer)
-{
-	//Print scores, teams will not be flipped because the game thinks we have started a new match
-	CPrintToChatAll("{olive}[MT]{default} Set scores to: {blue}(Survivors) %i{default} vs {blue}(Infected) %i{default}", g_iPointsTeamA, g_iPointsTeamB)
-}
-
-static Action:AddMapTransition(int args)
+public Action:AddMapTransition(int args)
 {
 	if (args != 2)
 	{
@@ -161,7 +165,7 @@ static Action:AddMapTransition(int args)
 }
 
 //Return if round is first or second half
-stock InSecondHalfOfRound()
+/*stock InSecondHalfOfRound()
 {
 	return GameRules_GetProp("m_bInSecondHalfOfRound");
-}
+}*/
