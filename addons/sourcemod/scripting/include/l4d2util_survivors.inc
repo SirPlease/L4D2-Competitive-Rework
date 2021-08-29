@@ -36,7 +36,7 @@ stock bool IsSurvivorAttacked(int survivor)
 }
 
 /**
- * Returns true if the player is currently on the survivor team. 
+ * Returns true if the client is currently on the survivor team. 
  *
  * @param client client ID
  * @return bool
@@ -47,7 +47,7 @@ stock bool IsSurvivor(int client)
 }
 
 /**
- * Returns true if the player is currently on the survivor team. 
+ * Return true if the valid client index and is client on the survivor team.
  *
  * @param client client ID
  * @return bool
