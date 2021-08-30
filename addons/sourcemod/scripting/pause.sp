@@ -65,7 +65,8 @@ int
 	pauseDelay;
 bool
 	isPaused,
-	RoundEnd;
+	RoundEnd,
+	listened;
 
 // Pause Info
 int
@@ -279,11 +280,11 @@ public Action Unpause_Cmd(int client, int args)
 			{
 				case L4D2Team_Survivor:
 				{
-					CPrintToChatAll("{default}[{green}!{default}] {olive}%N %s{default}marked {blue}%s{default}ready.", client, (initiatorReady && client == initiator) ? "{default}as {green}Initiator " : "", L4D2_TeamName[clientTeam]);
+					CPrintToChatAll("{default}[{green}!{default}] {olive}%N %s{default}marked {blue}%s {default}ready.", client, (initiatorReady && client == initiator) ? "{default}as {green}Initiator " : "", L4D2_TeamName[clientTeam]);
 				}
 				case L4D2Team_Infected:
 				{
-					CPrintToChatAll("{default}[{green}!{default}] {olive}%N %s{default}marked {red}%s{default}ready.", client, (initiatorReady && client == initiator) ? "{default}as {green}Initiator " : "", L4D2_TeamName[clientTeam]);					
+					CPrintToChatAll("{default}[{green}!{default}] {olive}%N %s{default}marked {red}%s {default}ready.", client, (initiatorReady && client == initiator) ? "{default}as {green}Initiator " : "", L4D2_TeamName[clientTeam]);					
 				}
 			}
 		}
@@ -684,13 +685,13 @@ public Action SecureSpec(Handle timer, any client)
 
 void ToggleCommandListeners(bool enable)
 {
-	static bool listened = false;
 	if (enable && !listened)
 	{
 		AddCommandListener(Say_Callback, "say");
 		AddCommandListener(TeamSay_Callback, "say_team");
 		AddCommandListener(Unpause_Callback, "unpause");
 		AddCommandListener(Callvote_Callback, "callvote");
+		listened = true;
 	}
 	else if (!enable && listened)
 	{
@@ -698,6 +699,7 @@ void ToggleCommandListeners(bool enable)
 		RemoveCommandListener(TeamSay_Callback, "say_team");
 		RemoveCommandListener(Unpause_Callback, "unpause");
 		RemoveCommandListener(Callvote_Callback, "callvote");
+		listened = false;
 	}
 }
 
