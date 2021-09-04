@@ -1,7 +1,9 @@
-#if defined l4d2_tanks_inc_
+#if defined l4d2util_tanks_inc_
 	#endinput
 #endif
-#define l4d2_tanks_inc_
+#define l4d2util_tanks_inc_
+
+#include <l4d2util_constants>
 
 #if !defined L4D2UTIL_STOCKS_ONLY
 #if !defined __IN_L4D2UTIL__
@@ -137,6 +139,23 @@ stock int FindTankClient(int iTankClient)
 	
 	for (; i <= MaxClients; i++) {
 		if (IsTank(i)) {
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+/**
+ * Searches for a live player who is in control of a tank.
+ *
+ * @param iTankClient client index to begin searching from
+ * @return client ID or -1 if not found
+ */
+stock int FindAliveTankClient()
+{
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsTank(i) && IsPlayerAlive(i)) {
 			return i;
 		}
 	}

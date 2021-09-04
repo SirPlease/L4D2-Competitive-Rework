@@ -5,32 +5,37 @@
 
 #include <sdktools>
 #include <l4d2util_constants>
+#include <l4d2util_stocks>
 
-#define ARRAY_INDEX_DURATION 0
-#define ARRAY_INDEX_TIMESTAMP 1
+#define UTIL_ARRAY_INDEX_DURATION 0
+#define UTIL_ARRAY_INDEX_TIMESTAMP 1
 
 // Internal array of strings for timer ability timer entity classnames
-stock const char L4D2_InfectedTimerEntities[8][] =
+stock const char L4D2_InfectedTimerEntities[view_as<int>(L4D2Infected_Size)][] =
 {
-	"ability_tongue",
-	"ability_vomit",
-	"ability_lunge",
-	"ability_spit",
-	"ability_leap",
-	"ability_charge",
+	"",
+	"ability_tongue", //Smoker
+	"ability_vomit", //Boomer
+	"ability_lunge", //Hunter
+	"ability_spit", //Spitter
+	"ability_leap", //Jockey
+	"ability_charge", //Charger
+	"",
 	"",
 	""
 };
 
 // Internal array of strings for Infected victim netprops
-stock const char L4D2_InfectedVictimNetprops[8][] =
+stock const char L4D2_InfectedVictimNetprops[view_as<int>(L4D2Infected_Size)][] =
 {
-	"m_tongueVictim",
 	"",
-	"m_pounceVictim",
+	"m_tongueVictim", //Smoker
 	"",
-	"m_jockeyVictim",
-	"m_pummelVictim",
+	"m_pounceVictim", //Hunter
+	"",
+	"m_jockeyVictim", //Jockey
+	"m_pummelVictim", //Charger
+	"",
 	"",
 	""
 };
@@ -43,7 +48,18 @@ stock const char L4D2_InfectedVictimNetprops[8][] =
  */
 stock bool IsInfected(int client)
 {
-	return (IsClientInGame(client) && view_as<L4D2_Team>(GetClientTeam(client)) == L4D2Team_Infected);
+	return (IsClientInGame(client) && GetClientTeam(client) == view_as<int>(L4D2Team_Infected));
+}
+
+/**
+ * Return true if the valid client index and is client on the infected team.
+ *
+ * @param client client ID
+ * @return bool
+ */
+stock bool IsValidInfected(int client)
+{
+	return (L4D2Util_IsValidClient(client) && IsClientInGame(client) && GetClientTeam(client) == view_as<int>(L4D2Team_Infected));
 }
 
 /**
@@ -79,7 +95,7 @@ stock bool IsInfectedGhost(int client)
  */
 stock void GetInfectedClassName(L4D2_Infected iClass, char[] sBuffer, const int iBufLen)
 {
-	strcopy(sBuffer, iBufLen, L4D2_InfectedNames[view_as<int>(iClass) - 1]);
+	strcopy(sBuffer, iBufLen, L4D2_InfectedNames[view_as<int>(iClass)]);
 }
 
 /**
@@ -105,7 +121,7 @@ stock int GetInfectedAbilityEntity(int owner)
 stock bool GetInfectedAbilityTimer(int client, float &timestamp, float &duration)
 {
 	L4D2_Infected zClass = GetInfectedClass(client);
-	if (strlen(L4D2_InfectedTimerEntities[view_as<int>(zClass) - 1]) == 0) {
+	if (strlen(L4D2_InfectedTimerEntities[view_as<int>(zClass)]) == 0) {
 		return false;
 	}
 
@@ -119,8 +135,8 @@ stock bool GetInfectedAbilityTimer(int client, float &timestamp, float &duration
 	 *	Member: m_duration (offset 4) (type float) (bits 0) (NoScale)
 	 *	Member: m_timestamp (offset 8) (type float) (bits 0) (NoScale)
 	*/
-	duration = GetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", ARRAY_INDEX_DURATION);
-	timestamp = GetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", ARRAY_INDEX_TIMESTAMP);
+	duration = GetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", UTIL_ARRAY_INDEX_DURATION);
+	timestamp = GetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", UTIL_ARRAY_INDEX_TIMESTAMP);
 
 	return true;
 }
@@ -137,7 +153,7 @@ stock bool SetInfectedAbilityTimer(int client, float &timestamp, float &duration
 {
 	L4D2_Infected zClass = GetInfectedClass(client);
 
-	if (strlen(L4D2_InfectedTimerEntities[view_as<int>(zClass) - 1]) == 0) {
+	if (strlen(L4D2_InfectedTimerEntities[view_as<int>(zClass)]) == 0) {
 		return false;
 	}
 
@@ -151,8 +167,8 @@ stock bool SetInfectedAbilityTimer(int client, float &timestamp, float &duration
 	 *	Member: m_duration (offset 4) (type float) (bits 0) (NoScale)
 	 *	Member: m_timestamp (offset 8) (type float) (bits 0) (NoScale)
 	*/
-	SetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", duration, ARRAY_INDEX_DURATION);
-	SetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", timestamp, ARRAY_INDEX_TIMESTAMP);
+	SetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", duration, UTIL_ARRAY_INDEX_DURATION);
+	SetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", timestamp, UTIL_ARRAY_INDEX_TIMESTAMP);
 
 	return true;
 }
@@ -167,11 +183,11 @@ stock int GetInfectedVictim(int client)
 {
 	L4D2_Infected zClass = GetInfectedClass(client);
 
-	if (strlen(L4D2_InfectedVictimNetprops[view_as<int>(zClass) - 1]) == 0) {
+	if (strlen(L4D2_InfectedVictimNetprops[view_as<int>(zClass)]) == 0) {
 		return -1;
 	}
 
-	return GetEntPropEnt(client, Prop_Send, L4D2_InfectedVictimNetprops[view_as<int>(zClass) - 1]);
+	return GetEntPropEnt(client, Prop_Send, L4D2_InfectedVictimNetprops[view_as<int>(zClass)]);
 }
 
 /**

@@ -1,176 +1,249 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
+#include <sdktools>
 #include <sdkhooks>
-#include <l4d2d_timers>
+#include <left4dhooks> //#include <l4d2d_timers>
 
-#define TICK_TIME       0.200072
+#define GAMEDATA "l4d2_si_ability"
 
-new Handle:hCvarDamagePerTick;
-new Handle:hCvarAlternateDamagePerTwoTicks;
-new Handle:hCvarMaxTicks;
-new Handle:hCvarGodframeTicks;
-new Handle:hPuddles;
-new bool:bAltTick[MAXPLAYERS + 1]; // Yikes.
+#define MAX_ENTITY_NAME_SIZE 64
+#define MAX_INT_STRING_SIZE 8
 
-new Float:damagePerTick;
-new Float:alternatePerTick;
+#define TICK_TIME 0.200072
+#define TEAM_SURVIVOR 2
 
-/*
--------------------------------------------------------------------------------------------------------------------------------------------------
+#define DMG_TYPE_SPIT (DMG_RADIATION|DMG_ENERGYBEAM)
 
-TODO:
-- Stop being a lazy bastard and actually alternate the damage per puddle, rather than setting it on clients per default. 
-^ To support multiple spitters at the same time and to fix Death Spit + Regular Spit at the same time applying their own separate damage)
-
--------------------------------------------------------------------------------------------------------------------------------------------------
-*/
-
-new maxTicks;
-new godframeTicks;
-
-new bool:bLateLoad;
-
-public APLRes:AskPluginLoad2(Handle:plugin, bool:late, String:error[], errMax) 
+enum
 {
-    bLateLoad = late;
-    return APLRes_Success;    
-}
-
-public Plugin:myinfo = 
-{
-    name = "L4D2 Uniform Spit",
-    author = "Visor, Sir",
-    description = "Make the spit deal a set amount of DPS under all circumstances",
-    version = "1.3.1",
-    url = "https://github.com/Attano/smplugins"
+	eCount = 0,
+	eAltTick,
+	
+	eArray_Size
 };
 
-public OnPluginStart()
+ConVar
+	g_hCvarDamagePerTick,
+	g_hCvarAlternateDamagePerTwoTicks,
+	g_hCvarMaxTicks,
+	g_hCvarGodframeTicks;
+
+StringMap
+	g_hPuddles;
+
+int
+	g_iActiveTimerOffset,
+	g_iMaxTicks,
+	g_iGodframeTicks;
+
+bool
+	g_bLateLoad;
+
+float
+	g_fDamagePerTick,
+	g_fAlternatePerTick;
+
+public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErrMax)
 {
-    hCvarDamagePerTick = CreateConVar("l4d2_spit_dmg", "-1.0", "Damage per tick the spit inflicts. -1 to skip damage adjustments");
-    hCvarAlternateDamagePerTwoTicks = CreateConVar("l4d2_spit_alternate_dmg", "-1.0", "Damage per alternate tick. -1 to disable");
-    hCvarMaxTicks = CreateConVar("l4d2_spit_max_ticks", "28", "Maximum number of acid damage ticks");
-    hCvarGodframeTicks = CreateConVar("l4d2_spit_godframe_ticks", "4", "Number of initial godframed acid ticks");
-
-    hPuddles = CreateTrie();
-
-    if (bLateLoad) 
-    {
-        for (new i = 1; i <= MaxClients; i++) 
-        {
-            if (IsClientInGame(i)) 
-            {
-                OnClientPutInServer(i);
-            }
-        }
-    }
+	g_bLateLoad = bLate;
+	
+	return APLRes_Success;
 }
 
-public OnConfigsExecuted()
+public Plugin myinfo =
 {
-    damagePerTick = GetConVarFloat(hCvarDamagePerTick);
-    alternatePerTick = GetConVarFloat(hCvarAlternateDamagePerTwoTicks);
-    maxTicks = GetConVarInt(hCvarMaxTicks);
-    godframeTicks = GetConVarInt(hCvarGodframeTicks);
+	name = "L4D2 Uniform Spit",
+	author = "Visor, Sir, A1m`",
+	description = "Make the spit deal a set amount of DPS under all circumstances",
+	version = "1.4.8",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
+};
+
+public void OnPluginStart()
+{
+	InitGameData();
+
+	g_hCvarDamagePerTick = CreateConVar("l4d2_spit_dmg", "-1.0", "Damage per tick the spit inflicts. -1 to skip damage adjustments");
+	g_hCvarAlternateDamagePerTwoTicks = CreateConVar("l4d2_spit_alternate_dmg", "-1.0", "Damage per alternate tick. -1 to disable");
+	g_hCvarMaxTicks = CreateConVar("l4d2_spit_max_ticks", "28", "Maximum number of acid damage ticks");
+	g_hCvarGodframeTicks = CreateConVar("l4d2_spit_godframe_ticks", "4", "Number of initial godframed acid ticks");
+	
+	g_hCvarDamagePerTick.AddChangeHook(CvarsChanged);
+	g_hCvarAlternateDamagePerTwoTicks.AddChangeHook(CvarsChanged);
+	g_hCvarMaxTicks.AddChangeHook(CvarsChanged);
+	g_hCvarGodframeTicks.AddChangeHook(CvarsChanged);
+	
+	g_hPuddles = new StringMap();
+	
+	HookEvent("round_start", Event_RoundReset, EventHookMode_PostNoCopy);
+	//HookEvent("round_end", Event_RoundReset, EventHookMode_PostNoCopy);
+	
+	if (g_bLateLoad) {
+		for (int i = 1; i <= MaxClients; i++) {
+			if (IsClientInGame(i)) {
+				OnClientPutInServer(i);
+			}
+		}
+	}
 }
 
-public OnClientPutInServer(client)
+void InitGameData()
 {
-    SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	Handle hGamedata = LoadGameConfigFile(GAMEDATA);
+
+	if (!hGamedata) {
+		SetFailState("Gamedata '%s.txt' missing or corrupt.", GAMEDATA);
+	}
+	
+	g_iActiveTimerOffset = GameConfGetOffset(hGamedata, "CInferno->m_activeTimer");
+	if (g_iActiveTimerOffset == -1) {
+		SetFailState("Failed to get offset 'CInferno->m_activeTimer'.");
+	}
+	
+	delete hGamedata;
 }
 
-public OnClientDisconnect(client)
+public void CvarsChanged(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
-    SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	CvarsToType();
 }
 
-public OnEntityCreated(entity, const String:classname[])
+public void OnConfigsExecuted()
 {
-    if (StrEqual(classname, "insect_swarm"))
-    {
-        decl String:trieKey[8];
-        IndexToKey(entity, trieKey, sizeof(trieKey));
-
-        new count[MaxClients + 1];
-        SetTrieArray(hPuddles, trieKey, count, MaxClients + 1);
-    }
+	CvarsToType();
 }
 
-public OnEntityDestroyed(entity)
+void CvarsToType()
 {
-    decl String:trieKey[8];
-    IndexToKey(entity, trieKey, sizeof(trieKey));
-
-    decl count[MaxClients + 1];
-    if (GetTrieArray(hPuddles, trieKey, count, MaxClients + 1))
-    {
-        RemoveFromTrie(hPuddles, trieKey);
-    }
+	g_fDamagePerTick = g_hCvarDamagePerTick.FloatValue;
+	g_fAlternatePerTick = g_hCvarAlternateDamagePerTwoTicks.FloatValue;
+	g_iMaxTicks = g_hCvarMaxTicks.IntValue;
+	g_iGodframeTicks = g_hCvarGodframeTicks.IntValue;
 }
 
-public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damageType, &weapon, Float:damageForce[3], Float:damagePosition[3]) 
+public void Event_RoundReset(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-    if (victim <= 0 || victim > MaxClients || GetClientTeam(victim) != 2 || !IsValidEdict(inflictor))
-    {
-        return Plugin_Continue;
-    }
-
-    decl String:classname[64];
-    GetEdictClassname(inflictor, classname, sizeof(classname));
-    if (StrEqual(classname, "insect_swarm"))
-    {
-        decl String:trieKey[8];
-        IndexToKey(inflictor, trieKey, sizeof(trieKey));
-
-        decl count[MaxClients + 1];
-        if (GetTrieArray(hPuddles, trieKey, count, MaxClients + 1))
-        {
-            count[victim]++;
-
-            // Check to see if it's a godframed tick
-            if (GetPuddleLifetime(inflictor) >= godframeTicks * TICK_TIME && count[victim] < godframeTicks)
-            {
-                count[victim] = godframeTicks + 1;
-            }
-
-            // Update the array with stored tickcounts
-            SetTrieArray(hPuddles, trieKey, count, MaxClients + 1);
-
-            // Let's see what do we have here
-            if (damagePerTick > -1.0)
-            {
-                if (alternatePerTick > -1.0 && bAltTick[victim])
-                {
-                    bAltTick[victim] = false;
-                    damage = alternatePerTick;
-                }
-                else
-                {
-                    damage = damagePerTick;
-                    bAltTick[victim] = true;
-                }
-            }
-            if (godframeTicks >= count[victim] || count[victim] > maxTicks)
-            {
-                damage = 0.0;
-            }
-            if (count[victim] > maxTicks)
-            {
-                AcceptEntityInput(inflictor, "Kill");
-            }
-            return Plugin_Changed;
-        }
-    }
-    return Plugin_Continue; 
+	g_hPuddles.Clear();
 }
 
-Float:GetPuddleLifetime(puddle)
+public void OnMapEnd()
 {
-    return ITimer_GetElapsedTime(IntervalTimer:(GetEntityAddress(puddle) + Address:2968));
+	g_hPuddles.Clear();
 }
 
-IndexToKey(index, String:str[], maxlength)
+public void OnClientPutInServer(int iClient)
 {
-    Format(str, maxlength, "%x", index);
+	SDKHook(iClient, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
+}
+
+public void OnClientDisconnect(int iClient)
+{
+	SDKUnhook(iClient, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
+}
+
+public void OnEntityCreated(int iEntity, const char[] sClassName)
+{
+	if (sClassName[0] != 'i') {
+		return;
+	}
+	
+	if (strcmp(sClassName, "insect_swarm") == 0) {
+		char sTrieKey[MAX_INT_STRING_SIZE];
+		IntToString(iEntity, sTrieKey, sizeof(sTrieKey));
+
+		int iVictimArray[MAXPLAYERS + 1][eArray_Size];
+		g_hPuddles.SetArray(sTrieKey, iVictimArray[0][0], (sizeof(iVictimArray) * sizeof(iVictimArray[])));
+	}
+}
+
+public void OnEntityDestroyed(int iEntity)
+{
+	if (IsInsectSwarm(iEntity)) {
+		char sTrieKey[MAX_INT_STRING_SIZE];
+		IntToString(iEntity, sTrieKey, sizeof(sTrieKey));
+
+		g_hPuddles.Remove(sTrieKey);
+	}
+}
+
+/*
+ * signed int CInsectSwarm::GetDamageType()
+ * {
+ *   return 263168; //DMG_RADIATION|DMG_ENERGYBEAM
+ * }
+*/
+public Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &fDamageType)
+{
+	if (!(fDamageType & DMG_TYPE_SPIT)) { //for performance
+		return Plugin_Continue;
+	}
+
+	if (!IsInsectSwarm(iInflictor) || !IsSurvivor(iVictim)) {
+		return Plugin_Continue;
+	}
+	
+	char sTrieKey[MAX_INT_STRING_SIZE];
+	IntToString(iInflictor, sTrieKey, sizeof(sTrieKey));
+
+	int iVictimArray[MAXPLAYERS + 1][eArray_Size];
+	if (g_hPuddles.GetArray(sTrieKey, iVictimArray[0][0], (sizeof(iVictimArray) * sizeof(iVictimArray[])))) {
+		iVictimArray[iVictim][eCount]++;
+		
+		// Check to see if it's a godframed tick
+		if ((GetPuddleLifetime(iInflictor) >= g_iGodframeTicks * TICK_TIME) && iVictimArray[iVictim][eCount] < g_iGodframeTicks) {
+			iVictimArray[iVictim][eCount] = g_iGodframeTicks + 1;
+		}
+
+		// Let's see what do we have here
+		if (g_fDamagePerTick > -1.0) {
+			if (g_fAlternatePerTick > -1.0 && iVictimArray[iVictim][eAltTick]) {
+				iVictimArray[iVictim][eAltTick] = false;
+				fDamage = g_fAlternatePerTick;
+			} else {
+				fDamage = g_fDamagePerTick;
+				iVictimArray[iVictim][eAltTick] = true;
+			}
+		}
+		
+		// Update the array with stored tickcounts
+		g_hPuddles.SetArray(sTrieKey, iVictimArray[0][0], (sizeof(iVictimArray) * sizeof(iVictimArray[])));
+		
+		if (g_iGodframeTicks >= iVictimArray[iVictim][eCount] || iVictimArray[iVictim][eCount] > g_iMaxTicks) {
+			fDamage = 0.0;
+		}
+		
+		if (iVictimArray[iVictim][eCount] > g_iMaxTicks) {
+			AcceptEntityInput(iInflictor, "Kill");
+		}
+		
+		return Plugin_Changed;
+	}
+
+	return Plugin_Continue;
+}
+
+float GetPuddleLifetime(int iPuddle)
+{
+	return ITimer_GetElapsedTime(view_as<IntervalTimer>(GetEntityAddress(iPuddle) + view_as<Address>(g_iActiveTimerOffset)));
+}
+
+bool IsInsectSwarm(int iEntity)
+{
+	if (iEntity < 1 || !IsValidEntity(iEntity)) {
+		return false;
+	}
+
+	char sClassName[MAX_ENTITY_NAME_SIZE];
+	GetEntityClassname(iEntity, sClassName, sizeof(sClassName));
+	return (strcmp(sClassName, "insect_swarm") == 0);
+}
+
+bool IsSurvivor(int iClient)
+{
+	return (iClient > 0
+		&& iClient <= MaxClients
+		&& IsClientInGame(iClient)
+		&& GetClientTeam(iClient) == TEAM_SURVIVOR);
 }

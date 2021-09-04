@@ -77,7 +77,7 @@ public void OnPluginStart()
 	Cvar_Debug		= CreateConVar("cssladders_debug",				"0",	"On/Off switch to log debug messages");
 	
 	// Load the GameData file.
-	GameData hGameData = LoadGameConfigFile(GAMEDATA);
+	Handle hGameData = LoadGameConfigFile(GAMEDATA);
 	if( hGameData == null ) 
 		SetFailState("Failed to load \"%s.txt\" gamedata.", GAMEDATA);
 	
@@ -97,12 +97,12 @@ public void OnPluginStart()
 		SetFailState("Failed to setup detour for hDetour_ShotgunReload");
 	
 	// Get signature for Prethink
-	g_pAddress			= hGameData.GetAddress("CTerrorPlayer::PreThink");
+	g_pAddress			= GameConfGetAddress(hGameData, "CTerrorPlayer::PreThink");
 	if(!g_pAddress)
 		SetFailState("Failed to get 'CTerrorPlayer::PreThink' signature.");
 	
 	// Get offset for SafeDropPatch
-	g_iOffsetPrethink	= hGameData.GetOffset("CTerrorPlayer::PreThink__SafeDropLogic");
+	g_iOffsetPrethink	= GameConfGetOffset(hGameData, "CTerrorPlayer::PreThink__SafeDropLogic");
 	if(!g_iOffsetPrethink)
 		SetFailState("Failed to get 'CTerrorPlayer::PreThink__SafeDropLogic' offset.");
 

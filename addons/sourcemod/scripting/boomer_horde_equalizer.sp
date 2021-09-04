@@ -7,22 +7,50 @@
 #define GAMEDATA "boomer_horde_equalizer"
 #define MAX_PATCH_SIZE 4
 
-ConVar 
-	hPatchEnable = null,
-	z_mob_spawn_max_size = null;
+enum
+{
+	eWindows = 0,
+	eLinux,
+	/* eMac, joke:) */
+	ePlatform_Size
+};
+
+/* Windows:
+ * 3B FE			cmp		edi, esi
+ * 7D 0E			jge		short loc_104A5BBB
+ * Change to nop -> 90 90 90 90
+*/
+/* Linux:
+ * 39 F3			cmp		ebx, esi
+ * 7D 13			jge		short loc_743BA0
+ * Change to nop -> 90 90 90 90
+*/
+static const int
+	patchBytes[ePlatform_Size][MAX_PATCH_SIZE] = {
+		{0x90, 0x90, 0x90, 0x90}, // Windows
+		{0x90, 0x90, 0x90, 0x90}, // Linux
+	},
+	originalBytes[ePlatform_Size][MAX_PATCH_SIZE] = {
+		{0x3B, 0xFE, 0x7D, 0x0E}, // Windows
+		{0x39, 0xF3, 0x7D, 0x13} // Linux
+	};
+
+ConVar
+	g_hPatchEnable = null,
+	g_hzMobSpawnMaxSize = null;
 
 bool
-	IsPatched = false,
-	IsWindows = false;
+	g_bIsPatched = false,
+	g_bIsWindows = false;
 
 Address
-	patchAddress = Address_Null;
+	g_aPatchAddress = Address_Null;
 
 public Plugin myinfo = 
 {
 	name = "Boomer Horde Equalizer",
 	author = "Visor, Jacob, A1m`",
-	version = "1.4",
+	version = "1.5",
 	description = "Fixes boomer hordes being different sizes based on wandering commons.",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
@@ -31,13 +59,13 @@ public void OnPluginStart()
 {
 	InitGameData();
 
-	hPatchEnable = CreateConVar("boomer_horde_equalizer", "1", "Fix boomer hordes being different sizes based on wandering commons. (1 - enable, 0 - disable)", _, true, 0.0, true, 1.0);
+	g_hPatchEnable = CreateConVar("boomer_horde_equalizer", "1", "Fix boomer hordes being different sizes based on wandering commons. (1 - enable, 0 - disable)", _, true, 0.0, true, 1.0);
+
+	CheckPatch(g_hPatchEnable.BoolValue);
 	
-	CheckPatch(hPatchEnable.BoolValue);
+	g_hPatchEnable.AddChangeHook(Cvars_Changed);
 	
-	hPatchEnable.AddChangeHook(Cvars_Changed);
-	
-	z_mob_spawn_max_size = FindConVar("z_mob_spawn_max_size");
+	g_hzMobSpawnMaxSize = FindConVar("z_mob_spawn_max_size");
 }
 
 void InitGameData()
@@ -63,22 +91,22 @@ void InitGameData()
 		SetFailState("Invalid offset 'WanderersCondition'.");
 	}
 	
-	IsWindows = (GameConfGetOffset(hGamedata, "Platform") == 1);
+	g_bIsWindows = (GameConfGetOffset(hGamedata, "Platform") == 1);
 	
-	patchAddress = pAddress + view_as<Address>(iOffset);
+	g_aPatchAddress = pAddress + view_as<Address>(iOffset);
 
 	delete hGamedata;
 }
 
-public Action L4D_OnSpawnITMob(int &amount)
+public Action L4D_OnSpawnITMob(int &iAmount)
 {
-	amount = z_mob_spawn_max_size.IntValue;
+	iAmount = g_hzMobSpawnMaxSize.IntValue;
 	return Plugin_Changed;
 }
 
-public void Cvars_Changed(ConVar convar, const char[] oldValue, const char[] newValue)
+public void Cvars_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
-	CheckPatch(convar.BoolValue);
+	CheckPatch(hConVar.BoolValue);
 }
 
 public void OnPluginEnd()
@@ -86,16 +114,16 @@ public void OnPluginEnd()
 	CheckPatch(false);
 }
 
-void CheckPatch(bool IsPatch)
+void CheckPatch(bool bIsPatch)
 {
-	if (IsPatch) {
-		if (IsPatched) {
+	if (bIsPatch) {
+		if (g_bIsPatched) {
 			PrintToServer("[%s] Plugin already enabled", GAMEDATA);
 			return;
 		}
 		SelectBytes(true);
 	} else {
-		if (!IsPatched) {
+		if (!g_bIsPatched) {
 			PrintToServer("[%s] Plugin already disabled", GAMEDATA);
 			return;
 		}
@@ -103,59 +131,44 @@ void CheckPatch(bool IsPatch)
 	}
 }
 
-void SelectBytes(bool IsPatch)
+void SelectBytes(bool bIsPatch)
 {
-	int patchBytes[MAX_PATCH_SIZE];
-	int originalBytes[MAX_PATCH_SIZE];
+	int iPlatform = (g_bIsWindows) ? eWindows : eLinux;
 
-	if (IsWindows) {
-		//3B FE			cmp		edi, esi
-		//7D 0E			jge		short loc_104A5BBB
-		//change to nop -> 90 90 90 90
-		patchBytes = {0x90, 0x90, 0x90, 0x90};
-		originalBytes = {0x3B, 0xFE, 0x7D, 0x0E};
+	if (bIsPatch) {
+		CheckBytes(g_aPatchAddress, originalBytes[iPlatform], MAX_PATCH_SIZE);
+		PatchBytes(g_aPatchAddress, patchBytes[iPlatform], MAX_PATCH_SIZE);
+		g_bIsPatched = true;
 	} else {
-		//39 F3			cmp		ebx, esi
-		//7D 13			jge		short loc_743BA0
-		//change to nop -> 90 90 90 90
-		patchBytes = {0x90, 0x90, 0x90, 0x90};
-		originalBytes = {0x39, 0xF3, 0x7D, 0x13};
-	}
-	
-	if (IsPatch) {
-		CheckBytes(patchAddress, originalBytes, MAX_PATCH_SIZE);
-		PatchBytes(patchAddress, patchBytes, MAX_PATCH_SIZE);
-		IsPatched = true;
-	} else {
-		CheckBytes(patchAddress, patchBytes, MAX_PATCH_SIZE);
-		PatchBytes(patchAddress, originalBytes, MAX_PATCH_SIZE);
-		IsPatched = false;
+		CheckBytes(g_aPatchAddress, patchBytes[iPlatform], MAX_PATCH_SIZE);
+		PatchBytes(g_aPatchAddress, originalBytes[iPlatform], MAX_PATCH_SIZE);
+		g_bIsPatched = false;
 	}
 }
 
-void CheckBytes(const Address ptrAddress, int[] checkBytes, const int iPatchSize)
+void CheckBytes(const Address ptrAddress, int iCheckBytes[MAX_PATCH_SIZE], const int iPatchSize)
 {
 	int iReadByte;
 	for (int i = 0; i < iPatchSize; i++) {
 		iReadByte = LoadFromAddress(ptrAddress + view_as<Address>(i), NumberType_Int8);
-		if (checkBytes[i] < 0 || iReadByte != checkBytes[i]) {
+		if (iCheckBytes[i] < 0 || iReadByte != iCheckBytes[i]) {
 			PrintToServer("Check bytes failed. Invalid byte (read: %x@%i, expected byte: %x@%i). Check offset 'WanderersCondition'.", 
-			iReadByte, i, checkBytes[i], i);
+			iReadByte, i, iCheckBytes[i], i);
 			SetFailState("Check bytes failed. Invalid byte (read: %x@%i, expected byte: %x@%i). Check offset 'WanderersCondition'.", 
-			iReadByte, i, checkBytes[i], i);
+			iReadByte, i, iCheckBytes[i], i);
 		}
 	}
 }
 
-void PatchBytes(const Address ptrAddress, int[] patchBytes, const int iPatchSize)
+void PatchBytes(const Address ptrAddress, int iPatchBytes[MAX_PATCH_SIZE], const int iPatchSize)
 {
 	for (int i = 0; i < iPatchSize; i++) {
-		if (patchBytes[i] < 0) {
-			PrintToServer("Patch bytes failed. Invalid write byte: %x@%i. Check offset 'WanderersCondition'.", patchBytes[i], i);
-			SetFailState("Patch bytes failed. Invalid write byte: %x@%i. Check offset 'WanderersCondition'.", patchBytes[i], i);
+		if (iPatchBytes[i] < 0) {
+			PrintToServer("Patch bytes failed. Invalid write byte: %x@%i. Check offset 'WanderersCondition'.", iPatchBytes[i], i);
+			SetFailState("Patch bytes failed. Invalid write byte: %x@%i. Check offset 'WanderersCondition'.", iPatchBytes[i], i);
 		}
 		
-		StoreToAddress(ptrAddress + view_as<Address>(i), patchBytes[i], NumberType_Int8);
-		PrintToServer("[%s] Write byte %x@%i", GAMEDATA, patchBytes[i], i); //GAMEDATA == plugin name
+		StoreToAddress(ptrAddress + view_as<Address>(i), iPatchBytes[i], NumberType_Int8);
+		PrintToServer("[%s] Write byte %x@%i", GAMEDATA, iPatchBytes[i], i); //GAMEDATA == plugin name
 	}
 }

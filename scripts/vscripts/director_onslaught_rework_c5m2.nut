@@ -41,21 +41,6 @@ function OnGameEvent_tank_spawn(params)
 	}
 }
 
-// Handle player tank deaths
-// Bug: tank_killed only fires when an AI tank is killed
-/*function OnGameEvent_tank_killed(params)
-{
-	if (g_TankFirstSpawned == true)
-	{
-		ResetHordeParams()
-		
-		if (developer() > 0)
-		{
-			Msg("Tank Killed Bot\n")
-		}
-	}
-}*/
-
 // Handle tank deaths
 function OnGameEvent_player_death(params)
 {
@@ -100,8 +85,8 @@ function OnGameEvent_player_team(params)
 
 function TankHordeParams()
 {
-	DirectorOptions.MobSpawnMinTime = 20
-	DirectorOptions.MobSpawnMaxTime = 20
+	DirectorOptions.MobSpawnMinTime = 10
+	DirectorOptions.MobSpawnMaxTime = 10
 	DirectorOptions.MobMinSize = 10
 	DirectorOptions.MobMaxSize = 10
 	Director.ResetMobTimer()
@@ -122,6 +107,7 @@ function ResetHordeParams()
 	ClientPrint(null, 3, "\x05Ramping up the horde!")
 	
 	// Stop measuring flow
+	//EntFire("OnslaughtFlowChecker", "FireUser2")
 	EntFire("OnslaughtFlowChecker", "Disable")
 	g_TankFirstSpawned = false
 }

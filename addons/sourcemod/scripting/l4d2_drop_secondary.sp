@@ -22,35 +22,6 @@ char sMeleeScript[MAXPLAYERS + 1][64];
 #define SECONDARY_MELEE          "weapon_melee"
 
 #define MELEE_NONE            "none"
-#define MELEE_FIREAXE         "fireaxe"
-#define MELEE_FRYING_PAN      "frying_pan"
-#define MELEE_MACHETE         "machete"
-#define MELEE_BASEBALL_BAT    "baseball_bat"
-#define MELEE_CROWBAR         "crowbar"
-#define MELEE_CRICKET_BAT     "cricket_bat"
-#define MELEE_TONFA           "tonfa"
-#define MELEE_KATANA          "katana"
-#define MELEE_ELECTRIC_GUITAR "electric_guitar"
-#define MELEE_GOLFCLUB        "golfclub"
-#define MELEE_SHIELD          "riotshield"
-#define MELEE_KNIFE           "hunting_knife"
-#define MELEE_PITCHFORK       "pitchfork"
-#define MELEE_SHOVEL          "shovel"
-
-#define MODEL_V_FIREAXE "models/weapons/melee/v_fireaxe.mdl"
-#define MODEL_V_FRYING_PAN "models/weapons/melee/v_frying_pan.mdl"
-#define MODEL_V_MACHETE "models/weapons/melee/v_machete.mdl"
-#define MODEL_V_BASEBALL_BAT "models/weapons/melee/v_bat.mdl"
-#define MODEL_V_CROWBAR "models/weapons/melee/v_crowbar.mdl"
-#define MODEL_V_CRICKET_BAT "models/weapons/melee/v_cricket_bat.mdl"
-#define MODEL_V_TONFA "models/weapons/melee/v_tonfa.mdl"
-#define MODEL_V_KATANA "models/weapons/melee/v_katana.mdl"
-#define MODEL_V_ELECTRIC_GUITAR "models/weapons/melee/v_electric_guitar.mdl"
-#define MODEL_V_GOLFCLUB "models/weapons/melee/v_golfclub.mdl"
-#define MODEL_V_SHIELD "models/weapons/melee/v_riotshield.mdl"
-#define MODEL_V_KNIFE "models/v_models/v_knife_t.mdl"
-#define MODEL_V_PITCHFORK "models/weapons/melee/v_pitchfork.mdl"
-#define MODEL_V_SHOVEL "models/weapons/melee/v_shovel.mdl"
 
 ConVar l4d2_drop_secondary_debug;
 bool bDebug;
@@ -58,8 +29,8 @@ bool bDebug;
 public Plugin myinfo = 
 {
 	name = "L4D2 Drop Secondary",
-	author = "Sir (Initial Plugin by Jahze & Visor)",
-	version = "1.0",
+	author = "Sir, ProjectSky (Initial Plugin by Jahze & Visor)",
+	version = "1.1",
 	description = "Testing Purposes"
 }
 
@@ -222,68 +193,12 @@ void SpawnSecondary(int client)
 void DetermineMeleeScript(int client, int iWeaponIndex)
 {
 	sSecondary[client] = SECONDARY_MELEE;
-	char buffSecondary[64];
-	GetEntPropString(iWeaponIndex, Prop_Data, "m_ModelName", buffSecondary, sizeof(buffSecondary));
+	char buffScriptName[64];
+	GetEntPropString(iWeaponIndex, Prop_Data, "m_strMapSetScriptName", buffScriptName, sizeof(buffScriptName));
 
-	if (StrEqual(buffSecondary, MODEL_V_FIREAXE))
-	{
-		sMeleeScript[client] = MELEE_FIREAXE;
-	}
-	else if (StrEqual(buffSecondary, MODEL_V_FRYING_PAN))
-	{
-		sMeleeScript[client] = MELEE_FRYING_PAN;
-	}
-	else if (StrEqual(buffSecondary, MODEL_V_MACHETE))
-	{
-		sMeleeScript[client] = MELEE_MACHETE;
-	}
-	else if (StrEqual(buffSecondary, MODEL_V_BASEBALL_BAT))
-	{
-		sMeleeScript[client] = MELEE_BASEBALL_BAT;
-	}
-	else if (StrEqual(buffSecondary, MODEL_V_CROWBAR))
-	{
-		sMeleeScript[client] = MELEE_CROWBAR;
-	}
-	else if (StrEqual(buffSecondary, MODEL_V_CRICKET_BAT))
-	{
-		sMeleeScript[client] = MELEE_CRICKET_BAT;
-	}
-	else if (StrEqual(buffSecondary, MODEL_V_TONFA))
-	{
-		sMeleeScript[client]  = MELEE_TONFA;
-	}
-	else if (StrEqual(buffSecondary, MODEL_V_KATANA))
-	{
-		sMeleeScript[client] = MELEE_KATANA;
-	}
-	else if (StrEqual(buffSecondary, MODEL_V_ELECTRIC_GUITAR))
-	{
-		sMeleeScript[client] = MELEE_ELECTRIC_GUITAR;
-	}
-	else if (StrEqual(buffSecondary, MODEL_V_GOLFCLUB))
-	{
-		sMeleeScript[client] = MELEE_GOLFCLUB;
-	}
-	else if (StrEqual(buffSecondary, MODEL_V_SHIELD))
-	{
-		sMeleeScript[client] = MELEE_SHIELD;
-	}
-	else if (StrEqual(buffSecondary, MODEL_V_KNIFE))
-	{
-		sMeleeScript[client] = MELEE_KNIFE;
-	}
-	else if (StrEqual(buffSecondary, MODEL_V_PITCHFORK))
-	{
-		sMeleeScript[client] = MELEE_PITCHFORK;
-	}
-	else if (StrEqual(buffSecondary, MODEL_V_SHOVEL))
-	{
-		sMeleeScript[client] = MELEE_SHOVEL;
-	}
-	else sMeleeScript[client] = MELEE_NONE;
+	sMeleeScript[client] = buffScriptName;
 
-	if (bDebug) CPrintToChatAll("{green}[{olive}DetermineMeleeScript{green}] {default}- {blue}%N {default}has {olive}%s {default}- MS: {olive}%s", client, buffSecondary, sMeleeScript[client]);
+	if (bDebug) CPrintToChatAll("{green}[{olive}DetermineMeleeScript{green}] {default}- {blue}%N {default}has {olive}%s {default}- MS: {olive}%s", client, buffScriptName, sMeleeScript[client]);
 }
 
 public void DebugChanged(ConVar convar, const char[] oldValue, const char[] newValue)

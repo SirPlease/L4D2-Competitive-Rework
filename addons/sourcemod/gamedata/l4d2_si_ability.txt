@@ -100,6 +100,36 @@
 			}
 			
 			/* @A1m`:
+			 * It cannot be found using sourcemod, can only be found in the code:
+			 * Function 'CInferno::StartBurning' almost the very end:
+			 * In Windows this function can be found along the strings 'SpitterZombie.Acid' or 'Inferno.StartSweeten'
+			 *
+			 *       CBaseEntity::EmitSound(a2, "Inferno.Loop", 0.0, 0);
+			 *       break;
+			 *     }
+			 *     v18 = (_DWORD *)*((_DWORD *)a2 + 658);
+			 *     *((_DWORD *)a2 + 739) = *v18;
+			 *     *((_DWORD *)a2 + 740) = v18[1];
+			 *     *((_DWORD *)a2 + 741) = v18[2];
+			 *     CBaseEntity::SetAbsOrigin(a2, (int)v16);
+			 *   }
+			 *   result = IntervalTimer::Now((CBaseEntity *)((char *)a2 + 2968));				//we need to find this line, offset - 2968
+			 *   v22 = a1;
+			 *   if ( v22 != *((float *)a2 + 743) )
+			 *   {
+			 *     result = (*(int (__cdecl **)(char *, char *))(*((_DWORD *)a2 + 742) + 4))((char *)a2 + 2968, (char *)a2 + 2972);
+			 *     *((float *)a2 + 743) = v22;
+			 *   }
+			 *   return result;
+			 * }
+			*/
+			"CInferno->m_activeTimer"
+			{
+				"linux"		"2968"
+				"windows"	"2948"
+			}
+			
+			/* @A1m`:
 			 * Has not changed after the update on linux
 			 * 216	CBaseAbility::OnTouch(CBaseEntity *)
 			 *
@@ -149,6 +179,12 @@
 				"linux"		"204"
 				"windows"	"203"
 			}
+			
+			"CLunge->m_blockMidPounce"
+			{
+				"linux"		"1164"
+				"windows"	"1144"
+			}
 		}
 	}
 	"left4dead"
@@ -159,6 +195,18 @@
 			{
 				"linux"		"207"
 				"windows"	"206"
+			}
+			
+			"CBaseAbility::OnTouch"
+			{
+				"linux"		"201"
+				"windows"	"200"
+			}
+			
+			"CLunge->m_blockMidPounce"
+			{
+				"linux"		"968"
+				"windows"	"948"
 			}
 		}
 	}

@@ -1,0 +1,86 @@
+"Games"
+{
+	"left4dead"
+	{
+		"Offsets"
+		{
+			"PatchOffset"
+			{
+				"linux"			"1401"
+				"windows"		"152"
+			}
+		}
+		
+		"Addresses"
+		{
+			"ForEachPlayer_ProximityCheck"
+			{
+				"linux"
+				{
+					"signature"	"ForEachPlayer_ProximityCheck"
+				}
+				"windows"
+				{
+					"signature"	"ForEachPlayer_ProximityCheck"
+				}
+			}
+		}
+		
+		/* Windows sig:
+		 *	Search "CTankRock::ProximityThink", then look for "prop_door*".
+		 *	Go to the only x-ref to this location, there's a call above.
+		 *	Find the location with lots of 'jz' instructions, the call before the very last one is the sig.
+		**/
+		"Signatures"
+		{
+			"ForEachPlayer_ProximityCheck"
+			{
+				"library"		"server"
+				"linux"			"@_ZN9CTankRock14ProximityThinkEv"
+				"windows"		"\x81\xEC\x94\x00\x00\x00\x56\x8B\xB4\x24\x9C\x00\x00\x00"
+				/* 81 EC 94 00 00 00 56 8B B4 24 9C 00 00 00 */
+			}
+		}
+	}
+
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			"PatchOffset"
+			{
+				"linux"			"759"
+				"windows"		"168"
+			}
+		}
+		
+		"Addresses"
+		{
+			"ForEachPlayer_ProximityCheck"
+			{
+				"linux"
+				{
+					"signature"	"ForEachPlayer_ProximityCheck"
+				}
+				"windows"
+				{
+					"signature"	"ForEachPlayer_ProximityCheck"
+				}
+			}
+		}
+		
+		/* Windows sig:
+		 *	The same as on L4D1.
+		**/
+		"Signatures"
+		{
+			"ForEachPlayer_ProximityCheck"
+			{
+				"library"		"server"
+				"linux"			"@_Z13ForEachPlayerI14ProximityCheckEbRT_"
+				"windows"		"\x55\x8B\xEC\x81\xEC\x90\x00\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x56\x8B\x75\x08\x57\x8B\xF9"
+				/* 55 8B EC 81 EC 90 00 00 00 A1 ? ? ? ? 33 C5 89 45 FC 56 8B 75 08 57 8B F9 */
+			}
+		}
+	}
+}

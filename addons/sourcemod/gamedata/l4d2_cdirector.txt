@@ -1,0 +1,47 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			/* @A1m:
+			 * How to find in windows:
+			 * Can be found by string "STAGE_INITIAL_DELAY -> STAGE_MEGA_MOB"
+			 * We will find a function - 'CDirectorScriptedEventManager::UpdatePanicEvents' at the beginning:
+			 *
+			 *  Table: m_PostMobDelayTimer (offset 300) (type DT_CountdownTimer)
+			 *    Member: m_duration (offset 4) (type float) (bits 0) (NoScale)
+			 *    Member: m_timestamp (offset 8) (type float) (bits 0) (NoScale)
+			 *
+			 *   v1 = this;
+			 *   switch ( *(_DWORD *)(this + 296) )
+			 *   {
+			 *    case 0:
+			 *      if ( sub_1020C690() >= *(float *)(this + 308) )					//308 - this is our offset, we must subtract 8, because it CountdownTimer (308 - 8 = 300)
+			 *      {
+			 *        *(_DWORD *)(v1 + 296) = 1;
+			 *        DevMsg("STAGE_INITIAL_DELAY -> STAGE_MEGA_MOB\n");
+			 *        *(_DWORD *)(v1 + 312) = 0;
+			 *        sub_10287CE0(v1);
+			 *      }
+			 *
+			 * In the same function you can find offset on linux:
+			 * Function - 'CDirectorScriptedEventManager::UpdatePanicEvents' in the middle:
+			 *   CountdownTimer::Now((CDirectorScriptedEventManager *)((char *)this + 300));    //300 - This is our offset
+			 *   v4 = a2;
+			 *   if ( v4 >= *((float *)this + 77)
+			 *     && (!*((_DWORD *)TheDirector + 53) || !(unsigned __int8)CDirector::ShouldPausePanicWhenRelaxing(TheDirector)) )
+			 *   {
+			 *     *((_DWORD *)this + 74) = 1;
+			 *     DevMsg("STAGE_PAUSE -> STAGE_MEGA_MOB\n");
+			 *   }
+			 *
+			*/
+			"CDirectorScriptedEventManager->m_PostMobDelayTimer"
+			{
+				"linux"		"300"
+				"windows"	"300"
+			}
+		}
+	}
+}

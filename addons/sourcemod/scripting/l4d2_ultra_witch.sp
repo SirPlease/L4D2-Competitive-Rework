@@ -1,150 +1,154 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdkhooks>
-#include <l4d2_direct>
+#include <sdktools>
+#include <left4dhooks> //#include <l4d2_direct>
+#define L4D2UTIL_STOCKS_ONLY 1
+#include <l4d2util>
 
-new Handle:z_witch_damage;
+#define GAMEDATA_FILE "l4d2_ultra_witch"
+#define SIGNATURE_NAME "CBaseEntity::ApplyAbsVelocityImpulse"
 
-new bool:lateLoad;
+#define MAX_ENTITY_NAME_SIZE 64
 
-public APLRes:AskPluginLoad2(Handle:plugin, bool:late, String:error[], errMax) 
+ConVar
+	g_hZWitchDamage = null;
+
+bool
+	g_blateLoad = false;
+
+Handle
+	g_hApplyAbsVelocityImpulse;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	lateLoad = late;
-	return APLRes_Success;    
+	g_blateLoad = late;
+
+	return APLRes_Success;
 }
 
-public Plugin:myinfo =
+public Plugin myinfo =
 {
 	name = "L4D2 Ultra Witch",
-	author = "Visor",
+	author = "Visor, A1m`",
 	description = "The Witch's hit deals a set amount of damage instead of instantly incapping, while also sending the survivor flying. Fixes convar z_witch_damage",
-	version = "1.1",
-	url = "https://github.com/Attano/Equilibrium"
+	version = "1.2.2",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
-	z_witch_damage = FindConVar("z_witch_damage");
+	InitGameData();
+	
+	g_hZWitchDamage = FindConVar("z_witch_damage");
 
-	if (lateLoad) 
-	{
-		for (new i = 1; i <= MaxClients; i++) 
-		{
-			if (IsClientInGame(i)) 
-			{
+	if (g_blateLoad) {
+		for (int i = 1; i <= MaxClients; i++) {
+			if (IsClientInGame(i)) {
 				OnClientPutInServer(i);
 			}
 		}
 	}
 }
 
-public OnClientPutInServer(client)
+void InitGameData()
 {
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	Handle hGameData = LoadGameConfigFile(GAMEDATA_FILE);
+	if (!hGameData) {
+		SetFailState("Could not load gamedata/%s.txt", GAMEDATA_FILE);
+	}
+
+	StartPrepSDKCall(SDKCall_Player);
+	
+	if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, SIGNATURE_NAME)) {
+		SetFailState("Function '%s' not found", SIGNATURE_NAME);
+	}
+	
+	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+	
+	g_hApplyAbsVelocityImpulse = EndPrepSDKCall();
+	
+	if (g_hApplyAbsVelocityImpulse == null) {
+		SetFailState("Function '%s' found, but something went wrong", SIGNATURE_NAME);
+	}
+
+	delete hGameData;
 }
 
-public OnClientDisconnect(client)
+public void OnClientPutInServer(int iClient)
 {
-	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	SDKHook(iClient, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
-public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damageType, &weapon, Float:damageForce[3], Float:damagePosition[3]) 
+public void OnClientDisconnect(int iClient)
 {
-	if (!IsSurvivor(victim) || !IsWitch(attacker))
-	{
+	SDKUnhook(iClient, SDKHook_OnTakeDamage, OnTakeDamage);
+}
+
+public Action OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamageType)
+{
+	if (!(iDamageType & DMG_SLASH)) {
 		return Plugin_Continue;
 	}
 	
-	if (IsIncapped(victim))
-	{
+	if (!IsWitch(iAttacker) || !IsValidSurvivor(iVictim)) {
 		return Plugin_Continue;
 	}
 	
-	new Float:witchDamage = GetConVarFloat(z_witch_damage);
-	if (witchDamage >= (GetSurvivorPermanentHealth(victim) + GetSurvivorTemporaryHealth(victim)))
-	{
+	if (IsIncapacitated(iVictim)) {
 		return Plugin_Continue;
 	}
-	
+
+	float fWitchDamage = g_hZWitchDamage.FloatValue;
+	if (fWitchDamage >= (iGetSurvivorPermanentHealth(iVictim) + GetSurvivorTemporaryHealth(iVictim))) {
+		return Plugin_Continue;
+	}
+
 	// Replication of tank punch throw algorithm from CTankClaw::OnPlayerHit()
-	new Float:victimPos[3], Float:witchPos[3], Float:throwForce[3];
-	GetEntPropVector(victim, Prop_Send, "m_vecOrigin", victimPos);
-	GetEntPropVector(attacker, Prop_Send, "m_vecOrigin", witchPos);
+	float fVictimPos[3], fWitchPos[3], fThrowForce[3];
+	GetEntPropVector(iVictim, Prop_Send, "m_vecOrigin", fVictimPos);
+	GetEntPropVector(iAttacker, Prop_Send, "m_vecOrigin", fWitchPos);
 
-	NormalizeVector(victimPos, victimPos);
-	NormalizeVector(witchPos, witchPos);
-	throwForce[0] = Clamp((360000.0 * (victimPos[0] - witchPos[0])), -400.0, 400.0);
-	throwForce[1] = Clamp((90000.0 * (victimPos[1] - witchPos[1])), -400.0, 400.0);
-	throwForce[2] = 300.0;
+	NormalizeVector(fVictimPos, fVictimPos);
+	NormalizeVector(fWitchPos, fWitchPos);
 	
-	ApplyAbsVelocityImpulse(victim, throwForce);
-	L4D2Direct_DoAnimationEvent(victim, 96);
-	damage = witchDamage;
+	fThrowForce[0] = L4D2Util_ClampFloat((360000.0 * (fVictimPos[0] - fWitchPos[0])), -400.0, 400.0);
+	fThrowForce[1] = L4D2Util_ClampFloat((90000.0 * (fVictimPos[1] - fWitchPos[1])), -400.0, 400.0);
+	fThrowForce[2] = 300.0;
+	
+	ApplyAbsVelocityImpulse(iVictim, fThrowForce);
+	L4D2Direct_DoAnimationEvent(iVictim, view_as<int>(ANIM_TANK_PUNCH_GETUP));
+	
+	fDamage = fWitchDamage;
 	
 	return Plugin_Changed;
 }
 
-GetSurvivorTemporaryHealth(client)
+int iGetSurvivorPermanentHealth(int iClient)
 {
-	new temphp = RoundToCeil(GetEntPropFloat(client, Prop_Send, "m_healthBuffer") - ((GetGameTime() - GetEntPropFloat(client, Prop_Send, "m_healthBufferTime")) * GetConVarFloat(FindConVar("pain_pills_decay_rate")))) - 1;
-	return (temphp > 0 ? temphp : 0);
-}
-
-GetSurvivorPermanentHealth(client)
-{
-	return GetEntProp(client, Prop_Send, "m_currentReviveCount") > 0 ? 0 : (GetEntProp(client, Prop_Send, "m_iHealth") > 0 ? GetEntProp(client, Prop_Send, "m_iHealth") : 0);
-}
-
-bool:IsIncapped(client)
-{
-	return bool:GetEntProp(client, Prop_Send, "m_isIncapacitated");
-}
-
-bool:IsWitch(entity)
-{
-    if (entity > 0 && IsValidEntity(entity) && IsValidEdict(entity))
-    {
-        decl String:strClassName[64];
-        GetEdictClassname(entity, strClassName, sizeof(strClassName));
-        return StrEqual(strClassName, "witch");
-    }
-    return false;
-}
-
-bool:IsSurvivor(client)
-{
-	return (client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2);
-}
-
-Float:Clamp(Float:value, Float:min, Float:max)
-{
-	if (value > max) return max;
-	if (value < min) return min;
-	return value;
-}
-
-ApplyAbsVelocityImpulse(client, const Float:impulseForce[3])
-{
-	static Handle:call = INVALID_HANDLE;
-
-	if (call == INVALID_HANDLE)
-	{
-		StartPrepSDKCall(SDKCall_Player);
-		
-		if (!PrepSDKCall_SetSignature(SDKLibrary_Server, "@_ZN11CBaseEntity23ApplyAbsVelocityImpulseERK6Vector", 0))
-		{
-			return;
-		}
-		
-		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-		call = EndPrepSDKCall();
-		
-		if (call == INVALID_HANDLE)
-		{
-			return;
-		}
+	if (GetEntProp(iClient, Prop_Send, "m_currentReviveCount") > 0) {
+		return 0;
 	}
+	
+	int iHealth = GetEntProp(iClient, Prop_Send, "m_iHealth");
+	
+	return (iHealth > 0) ? iHealth : 0;
+}
 
-	SDKCall(call, client, impulseForce);
+bool IsWitch(int iEntity)
+{
+	if (iEntity < 1 || !IsValidEdict(iEntity)) {
+		return false;
+	}
+	
+	char sClassName[MAX_ENTITY_NAME_SIZE];
+	GetEdictClassname(iEntity, sClassName, sizeof(sClassName));
+	return (strncmp(sClassName, "witch", 5) == 0); //witch and witch_bride
+}
+
+void ApplyAbsVelocityImpulse(int iClient, const float fImpulseForce[3])
+{
+	SDKCall(g_hApplyAbsVelocityImpulse, iClient, fImpulseForce);
 }

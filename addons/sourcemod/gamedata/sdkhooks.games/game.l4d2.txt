@@ -26,7 +26,7 @@
 			{
 				"windows"	"109"
 				"linux"		"110"
-				"mac"		"111"
+				"mac"		"110"
 			}
 			"FireBullets"
 			{

@@ -3,17 +3,20 @@
 #endif
 #define l4d2util_constants_inc_
 
-#define IS_VALID_CLIENT(%1)     (%1 > 0 && %1 <= MaxClients)
-
 enum L4D2_Team
 {
-	L4D2Team_Spectator = 1,
+	L4D2Team_None = 0,
+	L4D2Team_Spectator,
 	L4D2Team_Survivor,
-	L4D2Team_Infected
+	L4D2Team_Infected,
+	
+	L4D2Team_Size //4 size
 };
 
+//The official order of characters in the game
 enum L4D2_Infected
 {
+	L4D2Infected_Common = 0,
 	L4D2Infected_Smoker = 1,
 	L4D2Infected_Boomer,
 	L4D2Infected_Hunter,
@@ -21,11 +24,15 @@ enum L4D2_Infected
 	L4D2Infected_Jockey,
 	L4D2Infected_Charger,
 	L4D2Infected_Witch,
-	L4D2Infected_Tank
+	L4D2Infected_Tank,
+	L4D2Infected_Survivor,
+	
+	L4D2Infected_Size //10 size
 };
 
-stock const char L4D2_InfectedNames[8][] =
+stock const char L4D2_InfectedNames[view_as<int>(L4D2Infected_Size)][] =
 {
+	"Common",
 	"Smoker",
 	"Boomer",
 	"Hunter",
@@ -33,7 +40,16 @@ stock const char L4D2_InfectedNames[8][] =
 	"Jockey",
 	"Charger",
 	"Witch",
-	"Tank"
+	"Tank",
+	"Survivor"
+};
+
+stock const char L4D2_TeamName[view_as<int>(L4D2Team_Size)][] =
+{
+	"None",
+	"Spectator",
+	"Survivors",
+	"Infected"
 };
 
 enum L4D2_Gender
@@ -56,7 +72,20 @@ enum L4D2_Gender
 	L4D2Gender_RiotCop,
 	L4D2Gender_Clown,
 	L4D2Gender_JimmyGibbs,
-	L4D2Gender_HospitalPatient
+	L4D2Gender_HospitalPatient,
+	
+	L4D2Gender_MaxSize //19 size
+};
+
+enum L4D2WeaponSlot
+{
+	L4D2WeaponSlot_Primary,
+	L4D2WeaponSlot_Secondary,
+	L4D2WeaponSlot_Throwable,
+	L4D2WeaponSlot_HeavyHealthItem,
+	L4D2WeaponSlot_LightHealthItem,
+	
+	L4D2WeaponSlot_Size //5 size
 };
 
 // Weapon ID enumerations.
@@ -119,7 +148,9 @@ enum WeaponId
 	WEPID_ROCK,             // 52
 	WEPID_PHYSICS,          // 53
 	WEPID_AMMO,             // 54
-	WEPID_UPGRADE_ITEM      // 55
+	WEPID_UPGRADE_ITEM,     // 55
+
+	WEPID_SIZE //56 size
 };
 
 // These values are arbitrary
@@ -139,11 +170,15 @@ enum MeleeWeaponId
 	WEPID_KATANA,
 	WEPID_MACHETE,
 	WEPID_RIOT_SHIELD,
-	WEPID_TONFA
+	WEPID_TONFA,
+	WEPID_SHOVEL,
+	WEPID_PITCHFORK,
+	
+	WEPID_MELEES_SIZE //15 size
 };
 
 // Weapon names for each of the weapons, used in identification.
-stock const char WeaponNames[WeaponId][] =
+stock const char WeaponNames[view_as<int>(WEPID_SIZE)][] =
 {
 	"weapon_none", "weapon_pistol", "weapon_smg",                                            // 0
 	"weapon_pumpshotgun", "weapon_autoshotgun", "weapon_rifle",                              // 3
@@ -166,8 +201,32 @@ stock const char WeaponNames[WeaponId][] =
 	"ammo", "upgrade_item"                                                                   // 54
 };
 
+// Long weapon names
+stock const char LongWeaponNames[view_as<int>(WEPID_SIZE)][] = 
+{
+	"None", "Pistol", "Uzi", // 0
+	"Pump", "Autoshotgun", "M-16", // 3
+	"Hunting Rifle", "Mac", "Chrome", // 6
+	"Desert Rifle", "Military Sniper", "SPAS Shotgun", // 9
+	"First Aid Kit", "Molotov", "Pipe Bomb", // 12
+	"Pills", "Gascan", "Propane Tank", // 15
+	"Oxygen Tank", "Melee", "Chainsaw", // 18
+	"Grenade Launcher", "Ammo Pack", "Adrenaline", // 21
+	"Defibrillator", "Bile Bomb", "AK-47", // 24
+	"Gnome", "Cola Bottles", "Fireworks", // 27
+	"Incendiary Ammo Pack", "Explosive Ammo Pack", "Deagle", // 30
+	"MP5", "SG552", "AWP", // 33
+	"Scout", "M60", "Tank Claw", // 36
+	"Hunter Claw", "Charger Claw", "Boomer Claw", // 39
+	"Smoker Claw", "Spitter Claw", "Jockey Claw", // 42
+	"Turret", "vomit", "splat", // 45
+	"pounce", "lounge", "pull", // 48
+	"choke", "rock", "physics", // 51
+	"ammo", "upgrade_item" // 54
+};
+
 // Internal names for melee weapons
-stock const char MeleeWeaponNames[MeleeWeaponId][] =
+stock const char MeleeWeaponNames[view_as<int>(WEPID_MELEES_SIZE)][] =
 {
 	"",
 	"knife",
@@ -183,12 +242,35 @@ stock const char MeleeWeaponNames[MeleeWeaponId][] =
 	"katana",
 	"machete",
 	"riotshield",
-	"tonfa"
+	"tonfa",
+	"shovel",
+	"pitchfork"
+};
+
+stock const char LongMeleeWeaponNames[view_as<int>(WEPID_MELEES_SIZE)][] =
+{
+	"None",
+	"Knife",
+	"Baseball Bat",
+	"Chainsaw",
+	"Cricket Bat",
+	"Crowbar",
+	"didgeridoo", // derp
+	"Guitar",
+	"Axe",
+	"Frying Pan",
+	"Golf Club",
+	"Katana",
+	"Machete",
+	"Riot Shield",
+	"Tonfa",
+	"Shovel",
+	"Pitchfork"
 };
 
 // World weapon models for each of the weapons. Useful for making new weapon spawns.
 // Some models are left blank because no single model can be given, the model is known or none exist.
-stock const char WeaponModels[WeaponId][] =
+stock const char WeaponModels[view_as<int>(WEPID_SIZE)][] =
 {
 	"",
 	"/w_models/weapons/w_pistol_B.mdl",
@@ -209,7 +291,20 @@ stock const char WeaponModels[WeaponId][] =
 	"/props_junk/gascan001a.mdl",
 	"/props_junk/propanecanister001.mdl",
 	"/props_equipment/oxygentank01.mdl",
-	"",
+	"",                                               // "/weapons/w_knife_t.mdl",
+	                                                  // "/weapons/melee/w_bat.mdl",
+	                                                  // "/weapons/melee/w_chainsaw.mdl
+	                                                  // "/weapons/melee/w_cricket_bat.mdl",
+	                                                  // "/weapons/melee/w_crowbar.mdl",
+	                                                  // "/weapons/melee/w_didgeridoo.mdl",
+	                                                  // "/weapons/melee/w_electric_guitar.mdl",
+	                                                  // "/weapons/melee/w_fireaxe.mdl",
+	                                                  // "/weapons/melee/w_frying_pan.mdl",
+	                                                  // "/weapons/melee/w_golfclub.mdl",
+	                                                  // "/weapons/melee/w_katana.mdl",
+	                                                  // "/weapons/melee/w_machete.mdl",
+	                                                  // "/weapons/melee/w_riotshield.mdl",
+	                                                  // "/weapons/melee/w_tonfa.mdl"
 	"/weapons/melee/w_chainsaw.mdl",
 	"/w_models/weapons/w_grenade_launcher.mdl",
 	"",
@@ -248,7 +343,7 @@ stock const char WeaponModels[WeaponId][] =
 	""
 };
 
-stock const char MeleeWeaponModels[MeleeWeaponId][] =
+stock const char MeleeWeaponModels[view_as<int>(WEPID_MELEES_SIZE)][] =
 {
 	"",
 	"/w_models/weapons/w_knife_t.mdl",
@@ -264,10 +359,12 @@ stock const char MeleeWeaponModels[MeleeWeaponId][] =
 	"/weapons/melee/w_katana.mdl",
 	"/weapons/melee/w_machete.mdl",
 	"/weapons/melee/w_riotshield.mdl",
-	"/weapons/melee/w_tonfa.mdl"
+	"/weapons/melee/w_tonfa.mdl",
+	"/weapons/melee/w_shovel.mdl",
+	"/weapons/melee/w_pitchfork.mdl"
 };
 
-stock const int WeaponSlots[view_as<int>(WeaponId)] =
+stock const int WeaponSlots[view_as<int>(WEPID_SIZE)] =
 {
 	-1, // WEPID_NONE
 	1,  // WEPID_PISTOL
@@ -327,45 +424,50 @@ stock const int WeaponSlots[view_as<int>(WeaponId)] =
 	-1  // WEPID_UPGRADE_ITEM
 };
 
-// Indexes are arbitrary at this point.
+/* @A1m`:
+ * The correct order of characters in the game,
+ * this may work correctly with a netprop 'm_survivorCharacter'.
+ * We need to find out the type of map l4d1 or l4d2...
+*/
 enum SurvivorCharacter
 {
-	SC_NONE=-1,
-	SC_COACH=0,
-	SC_NICK,
-	SC_ROCHELLE,
-	SC_ELLIS,
-	SC_LOUIS,
-	SC_ZOEY,
-	SC_BILL,
-	SC_FRANCIS
+	SurvivorCharacter_Invalid = -1,
+
+	SurvivorCharacter_Nick = 0,
+	SurvivorCharacter_Rochelle,
+	SurvivorCharacter_Coach,
+	SurvivorCharacter_Ellis,
+	SurvivorCharacter_Bill,
+	SurvivorCharacter_Zoey,
+	SurvivorCharacter_Louis,
+	SurvivorCharacter_Francis,
+
+	SurvivorCharacter_Size //8 size
 };
 
-// Names of the survivors
-// TODO: languages?
-stock const char SurvivorNames[SurvivorCharacter][] =
+stock const char SurvivorNames[view_as<int>(SurvivorCharacter_Size)][] =
 {
-	"Coach",
 	"Nick",
 	"Rochelle",
+	"Coach",
 	"Ellis",
-	"Louis",
-	"Zoey",
 	"Bill",
+	"Zoey",
+	"Louis",
 	"Francis"
 };
 
 // Models for each of the characters
-stock const char SurvivorModels[SurvivorCharacter][] =
+stock const char SurvivorModels[view_as<int>(SurvivorCharacter_Size)][] =
 {
-	"models/survivors/survivor_coach.mdl",
-	"models/survivors/survivor_gambler.mdl",
-	"models/survivors/survivor_producer.mdl",
-	"models/survivors/survivor_mechanic.mdl",
-	"models/survivors/survivor_manager.mdl",
-	"models/survivors/survivor_teenangst.mdl",
-	"models/survivors/survivor_namvet.mdl",
-	"models/survivors/survivor_biker.mdl"
+	"models/survivors/survivor_gambler.mdl",	//MODEL_NICK
+	"models/survivors/survivor_producer.mdl",	//MODEL_ROCHELLE
+	"models/survivors/survivor_coach.mdl",		//MODEL_COACH
+	"models/survivors/survivor_mechanic.mdl",	//MODEL_ELLIS
+	"models/survivors/survivor_namvet.mdl",		//MODEL_BILL
+	"models/survivors/survivor_teenangst.mdl",	//MODEL_ZOEY
+	"models/survivors/survivor_manager.mdl",	//MODEL_LOUIS
+	"models/survivors/survivor_biker.mdl"		//MODEL_FRANCIS
 };
 
 // Animation IDs used by CTerrorPlayer::DoAnimationEvent
@@ -419,4 +521,6 @@ enum Animation
 	ANIM_TANK_CLIMB = 94, // Secondary value: Height (1-6)
 	ANIM_TANK_PUNCH_GETUP = 96,
 	ANIM_IDLE = 98,
-}
+	
+	//ANIMATION_SIZE //99 size
+};

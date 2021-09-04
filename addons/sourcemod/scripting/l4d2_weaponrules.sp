@@ -18,127 +18,133 @@
 	You should have received a copy of the GNU General Public License along
 	with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 #pragma semicolon 1
+#pragma newdecls required
+
 #include <sourcemod>
-#include <weapons>
+#include <sdktools>
+#include <sdktools>
+#define L4D2UTIL_STOCKS_ONLY
+#include <l4d2util>
 
 #define DEBUG 0
 
-new g_GlobalWeaponRules[WeaponId]={-1, ...};
+int
+	g_GlobalWeaponRules[view_as<int>(WEPID_SIZE)] = {-1, ...},
+	// state tracking for roundstart looping
+	g_bRoundStartHit,
+	g_bConfigsExecuted;
 
-// state tracking for roundstart looping
-new g_bRoundStartHit;
-new g_bConfigsExecuted;
-
-public Plugin:myinfo =
+public Plugin myinfo =
 {
 	name = "L4D2 Weapon Rules",
-	author = "ProdigySim",
-	version = "1.0.1",
+	author = "ProdigySim", //Update syntax and add support sm1.11 - A1m`
+	version = "1.0.2",
 	description = "^",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
 	RegServerCmd("l4d2_addweaponrule", AddWeaponRuleCb);
 	RegServerCmd("l4d2_resetweaponrules", ResetWeaponRulesCb);
+	
 	HookEvent("round_start", RoundStartCb, EventHookMode_PostNoCopy);
+	
 	ResetWeaponRules();
 }
 
-public Action:ResetWeaponRulesCb(args)
+public Action ResetWeaponRulesCb(int args)
 {
 	ResetWeaponRules();
+
 	return Plugin_Handled;
 }
 
-ResetWeaponRules()
+void ResetWeaponRules()
 {
-	for(new i=0; i < _:WeaponId; i++) g_GlobalWeaponRules[i]=-1;
-}
-
-public RoundStartCb(Handle:event, const String:name[], bool:dontBroadcast)
-{
-	CreateTimer(0.3, RoundStartDelay, INVALID_HANDLE, TIMER_FLAG_NO_MAPCHANGE);
-}
-
-public OnMapStart()
-{
-	g_bRoundStartHit=false;
-	g_bConfigsExecuted=false;
-}
-
-public OnConfigsExecuted()
-{
-	g_bConfigsExecuted=true;
-	if(g_bRoundStartHit)
-	{
-		WeaponSearchLoop();
+	for (int i = 0; i < view_as<int>(WEPID_SIZE); i++) {
+		g_GlobalWeaponRules[i] = -1;
 	}
 }
-public Action:RoundStartDelay(Handle:timer)
+
+public void RoundStartCb(Event hEvent, const char[] eName, bool dontBroadcast)
 {
-	g_bRoundStartHit=true;
-	if(g_bConfigsExecuted)
-	{
+	CreateTimer(0.3, RoundStartDelay, _, TIMER_FLAG_NO_MAPCHANGE);
+}
+
+public void OnMapStart()
+{
+	g_bRoundStartHit = false;
+	g_bConfigsExecuted = false;
+}
+
+public void OnConfigsExecuted()
+{
+	g_bConfigsExecuted = true;
+	
+	if (g_bRoundStartHit) {
 		WeaponSearchLoop();
 	}
 }
 
-public Action:AddWeaponRuleCb(args)
+public Action RoundStartDelay(Handle hTimer)
 {
-	if(args < 2)
-	{
+	g_bRoundStartHit = true;
+	
+	if (g_bConfigsExecuted) {
+		WeaponSearchLoop();
+	}
+}
+
+public Action AddWeaponRuleCb(int args)
+{
+	if (args < 2) {
 		PrintToServer("Usage: l4d2_addweaponrule <match> <replace>");
 		return Plugin_Handled;
 	}
-	decl String:weaponbuf[64];
+	
+	char weaponbuf[64];
 
 	GetCmdArg(1, weaponbuf, sizeof(weaponbuf));
-	new WeaponId:match = WeaponNameToId2(weaponbuf);
+	WeaponId match = WeaponNameToId2(weaponbuf);
 
 	GetCmdArg(2, weaponbuf, sizeof(weaponbuf));
-	new WeaponId:to = WeaponNameToId2(weaponbuf);
+	WeaponId to = WeaponNameToId2(weaponbuf);
 
-	AddWeaponRule(match, _:to);
+	AddWeaponRule(match, view_as<int>(to));
+
 	return Plugin_Handled;
 }
 
 
-AddWeaponRule(WeaponId:match, to)
+void AddWeaponRule(WeaponId match, int to)
 {
-	if(IsValidWeaponId(match) && (to == -1 || IsValidWeaponId(WeaponId:to)))
-	{
-		g_GlobalWeaponRules[match] = _:to;
-#if DEBUG
+	if (IsValidWeaponId(match) && (to == -1 || IsValidWeaponId(view_as<WeaponId>(to)))) {
+		g_GlobalWeaponRules[match] = to;
+		#if DEBUG
 		PrintToServer("Added weapon rule: %d to %d", match, to);
-#endif
-
+		#endif
 	}
 }
 
-WeaponSearchLoop()
+void WeaponSearchLoop()
 {
-	new entcnt = GetEntityCount();
-	for(new ent=1; ent <= entcnt; ent++)
-	{
-		new WeaponId:source=IdentifyWeapon(ent);
-		if(source > WEPID_NONE && g_GlobalWeaponRules[source] != -1)
-		{
-			if(g_GlobalWeaponRules[source] == _:WEPID_NONE)
-			{
+	int entcnt = GetEntityCount();
+	for (int ent = 1; ent <= entcnt; ent++) {
+		WeaponId source = IdentifyWeapon(ent);
+		if (source > WEPID_NONE && g_GlobalWeaponRules[source] != -1) {
+			if (g_GlobalWeaponRules[source] == view_as<int>(WEPID_NONE)) {
 				AcceptEntityInput(ent, "kill");
 				#if DEBUG
 				PrintToServer("Found Weapon %d, killing", source);
 				#endif
-			}
-			else
-			{
+			} else {
 				#if DEBUG
 				PrintToServer("Found Weapon %d, converting to %d", source, g_GlobalWeaponRules[source]);
 				#endif
-				ConvertWeaponSpawn(ent, WeaponId:g_GlobalWeaponRules[source]);
+				ConvertWeaponSpawn(ent, view_as<WeaponId>(g_GlobalWeaponRules[source]));
 			}
 		}
 	}
@@ -146,14 +152,15 @@ WeaponSearchLoop()
 
 // Tries the given weapon name directly, and upon failure,
 // tries prepending "weapon_" to the given name
-stock WeaponId:WeaponNameToId2(const String:name[])
+WeaponId WeaponNameToId2(const char[] name)
 {
-	static String:namebuf[64]="weapon_";
-	new WeaponId:wepid = WeaponNameToId(name);
-	if(wepid == WEPID_NONE)
-	{
-		strcopy(namebuf[7], sizeof(namebuf)-7, name);
-		wepid=WeaponNameToId(namebuf);
+	static char namebuf[64] = "weapon_";
+	WeaponId wepid = WeaponNameToId(name);
+	
+	if (wepid == WEPID_NONE) {
+		strcopy(namebuf[7], sizeof(namebuf) - 7, name);
+		wepid = WeaponNameToId(namebuf);
 	}
+
 	return wepid;
 }

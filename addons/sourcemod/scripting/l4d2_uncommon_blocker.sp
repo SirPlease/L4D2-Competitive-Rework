@@ -5,7 +5,7 @@
 #include <sdktools>
 #include <sdkhooks>
 
-#define DEBUG					false
+#define DEBUG					0
 
 #define UNC_CEDA				1
 #define UNC_CLOWN				2
@@ -36,7 +36,7 @@ ConVar hBlockFlags; // convar: what to block
 public Plugin myinfo = 
 {
 	name = "Uncommon Infected Blocker",
-	author = "Tabun", //sytax update A1m`
+	author = "Tabun", // //Update syntax and add support sm1.11 - A1m`
 	description = "Blocks uncommon infected from ruining your day.",
 	version = "0.1d",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
@@ -58,12 +58,12 @@ public void OnEntityCreated(int entity, const char[] classname)
 {
 	if (hPluginEnabled.BoolValue && strcmp(classname, "infected", false) == 0) {
 		if (entity > 0 && IsValidEntity(entity) && IsValidEdict(entity)) {
-			SDKHook(entity, SDKHook_SpawnPost, OnEntitySpawned);
+			SDKHook(entity, SDKHook_SpawnPost, fOnEntitySpawned);
 		}
 	}
 }
 
-public void OnEntitySpawned(int entity)
+public void fOnEntitySpawned(int entity)
 {
 	if (isUncommon(entity)) {
 		float location[3];

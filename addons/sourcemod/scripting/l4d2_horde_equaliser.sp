@@ -3,9 +3,7 @@
 
 #include <sourcemod>
 #include <left4dhooks>
-#pragma newdecls optional
 #include <l4d2lib>
-#pragma newdecls required
 #include <sdktools>
 #include <colors>
 
@@ -13,7 +11,7 @@
 #define TEAM_INFECTED 3
 
 #define ZOMBIEMANAGER_GAMEDATA "l4d2_zombiemanager"
-#define LEFT4FRAMEFORK_GAMEDATA "left4dhooks.l4d2"
+#define LEFT4FRAMEWORK_GAMEDATA "left4dhooks.l4d2"
 
 #define HORDE_MIN_SIZE_AUDIAL_FEEDBACK 120
 #define MAX_CHECKPOINTS 4
@@ -54,14 +52,14 @@ public void OnPluginStart()
 	hCvarNoEventHordeDuringTanks = CreateConVar("l4d2_heq_no_tank_horde", "0", "Put infinite hordes on a 'hold up' during Tank fights");
 	hCvarHordeCheckpointAnnounce = CreateConVar("l4d2_heq_checkpoint_sound", "1", "Play the incoming mob sound at checkpoints (each 1/4 of total commons killed off) to simulate L4D1 behaviour");
 
-	HookEvent("round_start", view_as<EventHook>(RoundStartEvent), EventHookMode_PostNoCopy);
+	HookEvent("round_start", RoundStartEvent, EventHookMode_PostNoCopy);
 }
 
 void InitGameData()
 {
-	Handle hDamedata = LoadGameConfigFile(LEFT4FRAMEFORK_GAMEDATA);
+	Handle hDamedata = LoadGameConfigFile(LEFT4FRAMEWORK_GAMEDATA);
 	if (!hDamedata) {
-		SetFailState("%s gamedata missing or corrupt", LEFT4FRAMEFORK_GAMEDATA);
+		SetFailState("%s gamedata missing or corrupt", LEFT4FRAMEWORK_GAMEDATA);
 	}
 
 	pZombieManager = GameConfGetAddress(hDamedata, "ZombieManager");
@@ -92,7 +90,7 @@ public void OnMapStart()
 	PrecacheSound(HORDE_SOUND);
 }
 
-public void RoundStartEvent()
+public void RoundStartEvent(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	commonTotal = 0;
 	lastCheckpoint = 0;

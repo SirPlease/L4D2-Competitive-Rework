@@ -201,7 +201,7 @@ public void OnSmokerSurvivorClear(any smoker)
 //                 CONVARS
 //
 // ----------------------------------------------
-void ConvarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+public void ConvarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	fTongueDelayTank = convarTongueDelayTank.FloatValue;
 	fTongueDelaySurvivor = convarTongueDelaySurvivor.FloatValue;

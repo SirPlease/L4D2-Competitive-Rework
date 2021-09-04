@@ -1,6 +1,16 @@
 #include <sourcemod>
 #include <sdktools>
 
+#define DEBUG 0
+
+#define L4DBUILD 1
+
+#define LEFT4FRAMEWORK_GAMEDATA "left4dhooks.l4d2" // left4dhooks
+#define SECTION_NAME "GetRunTopSpeed" // left4dhooks
+
+//#define LEFT4FRAMEWORK_GAMEDATA "left4downtown.l4d2" // left4downtown
+//#define SECTION_NAME "CTerrorPlayer_GetRunTopSpeed" // left4downtown
+
 public Plugin:myinfo =
 {
 	name = "Simple Anti-Bunnyhop",
@@ -10,17 +20,11 @@ public Plugin:myinfo =
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-
-#define DEBUG 0
-
-#define L4DBUILD 1
-#define GAMEDATA_FILE "left4dhooks.l4d2"
-
 new Handle:hCvarEnable;
 #if defined(L4DBUILD)
 new Handle:hCvarSIExcept;
 new Handle:hCvarSurvivorExcept;
-new Handle:hGetRunTopSpeed;
+new Handle:g_hGetRunTopSpeed;
 #endif
 
 public OnPluginStart()
@@ -31,26 +35,28 @@ public OnPluginStart()
 	hCvarSIExcept = CreateConVar("bhop_except_si_flags", "0", "Bitfield for exempting SI in anti-bhop functionality. From least significant: Smoker, Boomer, Hunter, Spitter, Jockey, Charger, Tank");
 	hCvarSurvivorExcept = CreateConVar("bhop_allow_survivor", "0", "Allow Survivors to bhop while plugin is enabled");
 #endif
-
 }
 
 void LoadSDK()
 {
-	GameData conf = LoadGameConfigFile(GAMEDATA_FILE);
-	if (conf == INVALID_HANDLE) {
-		SetFailState("Could not load gamedata/%s.txt", GAMEDATA_FILE);
+	Handle hGameData = LoadGameConfigFile(LEFT4FRAMEWORK_GAMEDATA);
+	if (hGameData == null) {
+		SetFailState("Could not load gamedata/%s.txt", LEFT4FRAMEWORK_GAMEDATA);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
-	if (!PrepSDKCall_SetFromConf(conf, SDKConf_Signature, "GetRunTopSpeed")) {
-		SetFailState("Function 'GetRunTopSpeed' not found");
+	if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, SECTION_NAME)) {
+		SetFailState("Function '%s' not found", SECTION_NAME);
 	}
+	
 	PrepSDKCall_SetReturnInfo(SDKType_Float, SDKPass_Plain);
-	hGetRunTopSpeed = EndPrepSDKCall();
-	if (hGetRunTopSpeed == INVALID_HANDLE) {
-		SetFailState("Function 'GetRunTopSpeed' found, but something went wrong");
+	
+	g_hGetRunTopSpeed = EndPrepSDKCall();
+	if (g_hGetRunTopSpeed == null) {
+		SetFailState("Function '%s' found, but something went wrong", SECTION_NAME);
 	}
-	delete conf;
+	
+	delete hGameData;
 }
 
 public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:angles[3], &weapon)
@@ -103,7 +109,7 @@ public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:ang
 				LeftGroundMaxSpeed[client] = -1.0;
 			}
 		} else if (LeftGroundMaxSpeed[client] == -1.0) {
-			LeftGroundMaxSpeed[client] = SDKCall(hGetRunTopSpeed, client);
+			LeftGroundMaxSpeed[client] = SDKCall(g_hGetRunTopSpeed, client);
 		}
 	}
 

@@ -93,6 +93,7 @@ public void __pl_l4dh_SetNTVOptional()
 	MarkNativeAsOptional("L4D_HasPlayerControlledZombies");
 	MarkNativeAsOptional("L4D_PipeBombPrj");
 
+	MarkNativeAsOptional("L4D2_ExecVScriptCode");
 	MarkNativeAsOptional("L4D2_GetVScriptOutput");
 	MarkNativeAsOptional("L4D2_SpitterPrj");
 	MarkNativeAsOptional("L4D2_UseAdrenaline");
@@ -972,6 +973,19 @@ forward Action L4D_OnGetRandomPZSpawnPosition(int &client, int &zombieClass, int
 // ====================================================================================================
 // NATIVES - Silvers
 // ====================================================================================================
+/**
+* @brief Runs a specified VScript code.
+* @remarks Saves having to create an entity. The entity can remain alive and used again...
+* @remarks unless the core plugins define KILL_VSCRIPT is changed and the plugin recompiled.
+*
+* @param	code			The VScript code to execute. Maximum length seems to be 1006 characters.
+*
+* @return	True on success, false otherwise.
+* @error	Invalid code or failed to create logic_script.
+*/
+// L4D2 only.
+native bool L4D2_ExecVScriptCode(char[] code);
+
 /**
 * @brief Runs a specified VScript code and returns values from it.
 * @remarks Can execute several code blocks on a single line separating them with ; as standard coding practice.
@@ -1915,8 +1929,8 @@ A note regarding Clipsize: Any nonstandard value will NOT be in effect at weapon
 has to reload once to achieve the modified value. To fix this, add a weapon pickup hook in your plugin (eg "player_use")
 and use something like this with a small timer delay of 0.1 seconds or more (dont you love this engine).
 
-	new weapon = GetPlayerWeaponSlot(client, 0);
-	if (weapon == INVALID_ENT_REFERENCE) return;
+	int weapon = GetPlayerWeaponSlot(client, 0);
+	if( weapon == INVALID_ENT_REFERENCE ) return;
 	char class[56];
 	GetEdictClassname(weapon, class, sizeof(class));
 	SetEntProp(weapon, Prop_Send, "m_iClip1", L4D2_GetIntWeaponAttribute(class, L4D2IWA_ClipSize));

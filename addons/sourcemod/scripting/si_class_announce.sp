@@ -73,8 +73,8 @@ public void OnPluginStart()
 									"Decide where the plugin prints the announce. (0: Disable, 1: Chat, 2: Hint, 3: Chat and Hint)",
 									FCVAR_NOTIFY, true, 0.0, true, 3.0);
 									
-	HookEvent("round_start", view_as<EventHook>(Event_RoundStart), EventHookMode_PostNoCopy);
-	HookEvent("round_end", view_as<EventHook>(Event_RoundEnd), EventHookMode_PostNoCopy);
+	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
+	HookEvent("round_end", Event_RoundEnd, EventHookMode_PostNoCopy);
 	HookEvent("player_left_start_area", Event_PlayerLeftStartArea, EventHookMode_Post);
 	HookEvent("player_team", Event_PlayerTeam);
 }
@@ -92,7 +92,7 @@ void ProcessReadyupFooter()
 	}
 }
 
-public void Event_RoundStart()
+public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	g_bMessagePrinted = false;
 	g_bRoundStarted = true;
@@ -108,7 +108,7 @@ public void Event_RoundStart()
 	}
 }
 
-public void Event_RoundEnd()
+public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	g_bRoundStarted = false;
 }
