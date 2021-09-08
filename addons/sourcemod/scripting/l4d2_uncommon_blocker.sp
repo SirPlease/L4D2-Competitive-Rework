@@ -71,7 +71,7 @@
 #include <l4d2util>
 
 #define DEBUG 0
-#define UNCOMMON_COMMON_AMOUNT 7
+#define UNCOMMON_INFECTED_AMOUNT 7
 
 static const char sUncommon[][] =
 {
@@ -131,7 +131,7 @@ public void OnPluginStart()
 
 public Action Cmd_UncInfBlock_Check(int iClient, int iArgs)
 {
-	for (int i = 0; i < UNCOMMON_COMMON_AMOUNT; i++) {
+	for (int i = 0; i < UNCOMMON_INFECTED_AMOUNT; i++) {
 		ReplyToCommand(iClient, "Uncommon class '%s' %s. Uncommon infected Flag: %d.", sUncommon[i], (IsUncommonInfectedBlocked(i)) ? "blocked" : "unblocked", (1 << i));
 	}
 	
@@ -167,7 +167,7 @@ public void Hook_OnEntitySpawned(int iEntity)
 	}
 	
 	int iUncommonInfected = view_as<int>(GetGender(iEntity) - L4D2Gender_Ceda);
-	bool bIsUncommonInfected = (iUncommonInfected >= 0 && iUncommonInfected < UNCOMMON_COMMON_AMOUNT);
+	bool bIsUncommonInfected = (iUncommonInfected >= 0 && iUncommonInfected < UNCOMMON_INFECTED_AMOUNT);
 	
 	if (!bIsUncommonInfected) {
 		return;
