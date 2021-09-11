@@ -10,9 +10,9 @@ This is mainly a project that focuses on reworking the very outdated platform fo
 It will contain both much needed fixes that are simply unable to be implemented on the older sourcemod versions as well as incompatible and outdated files being updated to working versions.
 
 > **Included Matchmodes:**
-* **Zonemod 2.1**
-* **Zonemod Hunters 2.1**
-* **Zonemod Retro 2.1**
+* **Zonemod 2.5**
+* **Zonemod Hunters 2.5**
+* **Zonemod Retro 2.5**
 * **NextMod 1.0.5**
 * **Promod Elite 1.1**
 * **Equilibrium 3.0c**
