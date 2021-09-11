@@ -48,7 +48,7 @@ public Plugin myinfo =
 {
 	name = "L4D2 Display Infected HP",
 	author = "Visor, A1m`",
-	version = "1.5.1",
+	version = "1.5.2",
 	description = "Survivors receive damage reports after they get capped",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
@@ -64,7 +64,7 @@ public void OnPluginStart()
 	HookEvent("tongue_grab", Event_SmokerAttackFirst);
 	HookEvent("choke_start", Event_SmokerAttackSecond);
 	
-	g_hGhostDelayMin = FindConVar("g_hGhostDelayMin");
+	g_hGhostDelayMin = FindConVar("z_ghost_delay_min");
 	
 	g_fGhostDelay = g_hGhostDelayMin.FloatValue;
 	g_hGhostDelayMin.AddChangeHook(Cvar_Changed);
@@ -116,7 +116,7 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 		return;
 	}
 	
-	for (int i = 0; i <= MAXPLAYERS; i++) {
+	for (int i = 1; i <= MAXPLAYERS; i++) {
 		g_iDamage[i][iClient] = 0;
 	}
 
