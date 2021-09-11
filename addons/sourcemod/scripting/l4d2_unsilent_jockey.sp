@@ -31,7 +31,7 @@ float
 
 char sJockeySound[MAX_JOCKEYSOUND+1][] =
 {
-    "player/items/voice/idle/jockey_recognize02.wav",
+    "player/jockey/voice/idle/jockey_recognize02.wav",
     "player/jockey/voice/idle/jockey_recognize06.wav",
     "player/jockey/voice/idle/jockey_recognize07.wav",
     "player/jockey/voice/idle/jockey_recognize08.wav",
