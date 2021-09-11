@@ -54,27 +54,31 @@ stock const char L4D2_TeamName[view_as<int>(L4D2Team_Size)][] =
 
 enum L4D2_Gender
 {
-	L4D2Gender_Neutral,
-	L4D2Gender_Male,
-	L4D2Gender_Female,
-	L4D2Gender_Bill,
-	L4D2Gender_Zoey,
-	L4D2Gender_Francis,
-	L4D2Gender_Louis,
-	L4D2Gender_Nick,
-	L4D2Gender_Rochelle,
-	L4D2Gender_Coach,
-	L4D2Gender_Ellis,
-	L4D2Gender_CEDA,
-	L4D2Gender_Mudman,
-	L4D2Gender_Workman,
-	L4D2Gender_Fallen,
-	L4D2Gender_RiotCop,
-	L4D2Gender_Clown,
-	L4D2Gender_JimmyGibbs,
-	L4D2Gender_HospitalPatient,
+	L4D2Gender_Neutral			= 0,
+	L4D2Gender_Male				= 1,
+	L4D2Gender_Female			= 2,
+	L4D2Gender_Nanvet			= 3, //Bill
+	L4D2Gender_TeenGirl			= 4, //Zoey
+	L4D2Gender_Biker			= 5, //Francis
+	L4D2Gender_Manager			= 6, //Louis
+	L4D2Gender_Gambler			= 7, //Nick
+	L4D2Gender_Producer			= 8, //Rochelle
+	L4D2Gender_Coach			= 9, //Coach
+	L4D2Gender_Mechanic			= 10, //Ellis
+	L4D2Gender_Ceda				= 11,
+	L4D2Gender_Crawler			= 12, //Mudman
+	L4D2Gender_Undistractable	= 13, //Workman
+	L4D2Gender_Fallen			= 14,
+	L4D2Gender_Riot_Control		= 15, //RiotCop
+	L4D2Gender_Clown			= 16,
+	L4D2Gender_Jimmy			= 17, //JimmyGibbs
+	L4D2Gender_Hospital_Patient	= 18,
+	L4D2Gender_Witch_Bride		= 19,
+	L4D2Gender_Police			= 20, //l4d1 RiotCop (was removed from the game)
+	L4D2Gender_Male_L4D1		= 21,
+	L4D2Gender_Female_L4D1		= 22,
 	
-	L4D2Gender_MaxSize //19 size
+	L4D2Gender_MaxSize //23 size
 };
 
 enum L4D2WeaponSlot
