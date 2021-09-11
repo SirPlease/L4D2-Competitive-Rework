@@ -286,14 +286,20 @@
 		"start_dist"		"50.000000"
 		"start_extra_dist"	"200.000000"
 		"end_dist"			"250.000000"
-		"witch_ban_flow_min"		"0"
-		"witch_ban_flow_max"		"29"
 		"tank_ban_flow"
 		{
 			"1"
 			{
 				"min"		"54"
 				"max"		"70"
+			}
+		}
+		"witch_ban_flow"
+		{
+			"1"
+			{
+				"min"		"0"
+				"max"		"29"
 			}
 		}
 	}
@@ -697,6 +703,15 @@
 		"start_extra_dist"	"437.938110"
 		"end_point"			"1186.061401 -1247.817627 389.251373"
 		"end_dist"			"604.894531"
+		"max_distance"		"300"
+		"tank_ban_flow"
+		{
+			"1"
+			{
+				"min"		"87"
+				"max"		"100"
+			}
+		}
 	}
 	"c13m2_southpinestream"
 	{
@@ -705,6 +720,15 @@
 		"start_extra_dist"	"604.901245"
 		"end_point"			"470.932892 8823.397461 -368.968750"
 		"end_dist"			"324.996063"
+		"horde_limit"		"120"
+		"tank_ban_flow"
+		{
+			"1"
+			{
+				"min"		"82"
+				"max"		"100"
+			}
+		}
 	}
 	"c13m3_memorialbridge"
 	{
@@ -713,6 +737,14 @@
 		"start_extra_dist"	"321.877747"
 		"end_point"			"6097.708496 -6337.365234 422.031250"
 		"end_dist"			"356.709808"
+		"tank_ban_flow"
+		{
+			"1"
+			{
+				"min"		"52"
+				"max"		"64"
+			}
+		}
 	}
 	"c13m4_cutthroatcreek"
 	{
@@ -721,6 +753,7 @@
 		"start_extra_dist"	"349.184357"
 		"end_point"			"-1823.846191 -1815.961670 -250.417389"
 		"end_dist"			"254.989624"
+		"max_distance"		"600"
 	}
 	"c14m1_junkyard"
 	{
