@@ -62,13 +62,15 @@ public void OnPluginStart()
 	hCenterPelletCvar.AddChangeHook(OnCenterPelletChange);
 }
 
-static void HotPatchCenterPellet(int newValue)
+static void HotPatchCenterPellet(bool newValue)
 {
 	int platform = (IsPlatformWindows()) ? eWindows : eLinux;
-
+	
 	Address pAddr = GetPatchAddress("sgspread");
 	
 	int currentValue = LoadFromAddress(pAddr + view_as<Address>(g_CenterPelletOffset[platform]), NumberType_Int8);
+	
+	int bullets = hRing1BulletsCvar.IntValue;
 	
 	#if DEBUG
 	static bool IsFirstPatch = false;
@@ -79,15 +81,20 @@ static void HotPatchCenterPellet(int newValue)
 	}
 	#endif
 	
-	if (currentValue == newValue) {
+	if (!!currentValue == newValue) {
 		return;
 	}
 	
-	StoreToAddress(pAddr + view_as<Address>(g_CenterPelletOffset[platform]), newValue, NumberType_Int8);
+	StoreToAddress(pAddr + view_as<Address>(g_CenterPelletOffset[platform]), view_as<int>(newValue), NumberType_Int8);
+	
+	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[platform][0]), bullets + (1 - view_as<int>(!newValue)), NumberType_Int8);
+	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[platform][1]), bullets + (1 - view_as<int>(!newValue)), NumberType_Int8);
+	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[platform][2]), bullets + (2 - view_as<int>(!newValue)), NumberType_Int8);
 }
 
 static void HotPatchBullets(int nBullets)
 {
+	bool centerpellet = !hCenterPelletCvar.BoolValue;
 	float degree = 0.0;
 	int platform = eLinux;
 	
@@ -98,13 +105,13 @@ static void HotPatchBullets(int nBullets)
 		platform = eLinux;
 		degree = 360.0 / (2.0 * float(nBullets));
 	}
-
+	
 	Address pAddr = GetPatchAddress("sgspread");
 	
-	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[platform][0]), nBullets + 1, NumberType_Int8);
-	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[platform][1]), nBullets + 1, NumberType_Int8);
-	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[platform][2]), nBullets + 2, NumberType_Int8);
-
+	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[platform][0]), nBullets + (1 - view_as<int>(centerpellet)), NumberType_Int8);
+	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[platform][1]), nBullets + (1 - view_as<int>(centerpellet)), NumberType_Int8);
+	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[platform][2]), nBullets + (2 - view_as<int>(centerpellet)), NumberType_Int8);
+	
 	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[platform][3]), view_as<int>(degree), NumberType_Int32);
 }
 
@@ -123,7 +130,7 @@ static void HotPatchFactor(int factor)
 public void OnRing1BulletsChange(ConVar hCvar, const char[] oldVal, const char[] newVal)
 {
 	int nBullets = StringToInt(newVal);
-
+	
 	if (IsPatchApplied("sgspread")) {
 		HotPatchBullets(nBullets);
 	}
@@ -140,8 +147,8 @@ public void OnRing1FactorChange(ConVar hCvar, const char[] oldVal, const char[] 
 
 public void OnCenterPelletChange(ConVar hCvar, const char[] oldVal, const char[] newVal)
 {
-	int value = StringToInt(newVal);
-
+	bool value = !!StringToInt(newVal);
+	
 	if (IsPatchApplied("sgspread")) {
 		HotPatchCenterPellet(value);
 	}
@@ -152,6 +159,6 @@ public void OnPatchApplied(const char[] name)
 	if (strcmp("sgspread", name) == 0) {
 		HotPatchBullets(hRing1BulletsCvar.IntValue);
 		HotPatchFactor(hRing1FactorCvar.IntValue);
-		HotPatchCenterPellet(hCenterPelletCvar.IntValue);
+		HotPatchCenterPellet(hCenterPelletCvar.BoolValue);
 	}
 }
