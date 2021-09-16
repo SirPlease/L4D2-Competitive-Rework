@@ -1,0 +1,53 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Functions"
+		{
+			"ProcessUsercmds"
+			{
+				"offset"		"ProcessUsercmds"
+				"hooktype"		"entity"
+				"return"		"void"
+				"this"			"entity"
+				
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"int"
+					}
+					
+					"a2"
+					{
+						"type"	"int"
+					}
+					
+					"a3"
+					{
+						"type"	"int"
+					}
+					
+					"a4"
+					{
+						"type"	"int"
+					}
+					
+					"a5"
+					{
+						"type"	"bool"
+					}
+				}
+			}
+		}
+		
+		"Offsets"
+		{
+			"ProcessUsercmds"
+			{
+				"windows"	"453"
+				"linux"		"454"
+			}
+		}
+	}
+}
