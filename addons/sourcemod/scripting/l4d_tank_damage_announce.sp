@@ -25,6 +25,7 @@ new                     g_iDamage[MAXPLAYERS + 1];
 new             Float:  g_fMaxTankHealth            = 6000.0;
 new             Handle: g_hCvarEnabled              = INVALID_HANDLE;
 new             Handle: g_hCvarTankHealth           = INVALID_HANDLE;
+new             Handle: g_hCvarDifficulty           = INVALID_HANDLE;
 new             Handle: g_hCvarSurvivorLimit        = INVALID_HANDLE;
 new Handle:fwdOnTankDeath                = INVALID_HANDLE;
 
@@ -36,6 +37,10 @@ new Handle:fwdOnTankDeath                = INVALID_HANDLE;
 * Version 0.6.6b
 * - Fixed Printing Two Tanks when last map Tank survived.
 * Added by; Sir
+
+* Version 0.6.7
+* - Added Campaign Difficulty Support.
+* Added by; Sir
 */    
 
 public Plugin:myinfo =
@@ -43,7 +48,7 @@ public Plugin:myinfo =
 	name = "Tank Damage Announce L4D2",
 	author = "Griffin and Blade",
 	description = "Announce damage dealt to tanks by survivors",
-	version = "0.6.6",
+	version = "0.6.7",
 }
 
 public OnPluginStart()
@@ -61,10 +66,12 @@ public OnPluginStart()
 	g_hCvarEnabled = CreateConVar("l4d_tankdamage_enabled", "1", "Announce damage done to tanks when enabled", FCVAR_NONE|FCVAR_SPONLY|FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	g_hCvarSurvivorLimit = FindConVar("survivor_limit");
 	g_hCvarTankHealth = FindConVar("z_tank_health");
+	g_hCvarDifficulty = FindConVar("z_difficulty");
 	
 	HookConVarChange(g_hCvarEnabled, Cvar_Enabled);
 	HookConVarChange(g_hCvarSurvivorLimit, Cvar_SurvivorLimit);
 	HookConVarChange(g_hCvarTankHealth, Cvar_TankHealth);
+	HookConVarChange(g_hCvarDifficulty, Cvar_TankHealth);
 	HookConVarChange(FindConVar("mp_gamemode"), Cvar_TankHealth);
 	g_bEnabled = GetConVarBool(g_hCvarEnabled);
 	CalculateTankHealth();
@@ -107,9 +114,25 @@ CalculateTankHealth()
 	new String:sGameMode[32];
 	GetConVarString(FindConVar("mp_gamemode"), sGameMode, sizeof(sGameMode));
 
-	if (StrEqual(sGameMode, "versus") || StrEqual(sGameMode, "mutation12")) g_fMaxTankHealth = GetConVarFloat(g_hCvarTankHealth) * 1.5;
-	else g_fMaxTankHealth = GetConVarFloat(g_hCvarTankHealth);
-	if (g_fMaxTankHealth <= 0.0) g_fMaxTankHealth = 1.0; // No dividing by 0!
+	g_fMaxTankHealth = GetConVarFloat(g_hCvarTankHealth);
+	if (g_fMaxTankHealth <= 0.0) g_fMaxTankHealth = 1.0;
+
+	// Versus or Realism Versus
+	if (StrEqual(sGameMode, "versus") || StrEqual(sGameMode, "mutation12"))
+		g_fMaxTankHealth *= 1.5;
+
+	// Anything else (should be fine...?)
+	else 
+	{
+		g_fMaxTankHealth = GetConVarFloat(g_hCvarTankHealth);
+
+		char sDifficulty[16];
+		GetConVarString(g_hCvarDifficulty, sDifficulty, sizeof(sDifficulty));
+
+		if (sDifficulty[0] == 'E') g_fMaxTankHealth *= 0.75;     // Easy
+		else if (sDifficulty[0] == 'H'
+		|| sDifficulty[0] == 'I') g_fMaxTankHealth *= 2.0; // Advanced or Expert
+	}
 }
 
 public Event_PlayerHurt(Handle:event, const String:name[], bool:dontBroadcast)

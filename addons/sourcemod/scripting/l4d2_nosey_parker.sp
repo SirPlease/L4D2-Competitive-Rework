@@ -24,33 +24,31 @@
 
 #include <sourcemod>
 #include <sdktools>
-#pragma newdecls optional
 #define L4D2UTIL_STOCKS_ONLY
 #include <l4d2util>
-#pragma newdecls required
 
 #define TEAM_SURVIVOR 2
 #define TEAM_INFECTED 3
 #define ARRAY_INDEX_TIMESTAMP 0 //DT_IntervalTimer
 
-ConVar 
-	z_ghost_delay_min;
-	
-Handle 
-	hTongueParalyzeTimer = null;
+ConVar
+	g_hGhostDelayMin = null;
+
+Handle
+	g_hTongueParalyzeTimer = null;
 
 int
-	iDamage[MAXPLAYERS + 1][MAXPLAYERS + 1];
+	g_iDamage[MAXPLAYERS + 1][MAXPLAYERS + 1];
 
-float 
-	fGhostDelay,
-	fReported[MAXPLAYERS + 1][MAXPLAYERS + 1];
+float
+	g_fGhostDelay = 0.0,
+	g_fReported[MAXPLAYERS + 1][MAXPLAYERS + 1];
 
 public Plugin myinfo =
 {
 	name = "L4D2 Display Infected HP",
 	author = "Visor, A1m`",
-	version = "1.5",
+	version = "1.5.2",
 	description = "Survivors receive damage reports after they get capped",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
@@ -66,175 +64,185 @@ public void OnPluginStart()
 	HookEvent("tongue_grab", Event_SmokerAttackFirst);
 	HookEvent("choke_start", Event_SmokerAttackSecond);
 	
-	z_ghost_delay_min = FindConVar("z_ghost_delay_min");
+	g_hGhostDelayMin = FindConVar("z_ghost_delay_min");
 	
-	fGhostDelay = z_ghost_delay_min.FloatValue;
-	z_ghost_delay_min.AddChangeHook(Cvar_Changed);
+	g_fGhostDelay = g_hGhostDelayMin.FloatValue;
+	g_hGhostDelayMin.AddChangeHook(Cvar_Changed);
 }
 
-public void Cvar_Changed(ConVar convar, const char[] oldValue, const char[] newValue)
+public void Cvar_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
-	fGhostDelay = convar.FloatValue;
+	g_fGhostDelay = hConVar.FloatValue;
 }
 
 public void OnMapEnd()
 {
-	hTongueParalyzeTimer = null; //if TIMER_FLAG_NO_MAPCHANGE
+	g_hTongueParalyzeTimer = null; //if TIMER_FLAG_NO_MAPCHANGE
 }
 
-public void Event_PlayerHurt(Event hEvent, const char[] eName, bool dontBroadcast)
+public void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	int victim = GetClientOfUserId(hEvent.GetInt("userid"));
-	if (victim > 0 && IsClientInGame(victim) 
-	&& GetClientTeam(victim) == TEAM_INFECTED && IsTargetedSi(victim) > 0
+	int iVictim = GetClientOfUserId(hEvent.GetInt("userid"));
+	if (iVictim > 0
+		&& IsClientInGame(iVictim)
+		&& GetClientTeam(iVictim) == TEAM_INFECTED
+		&& IsTargetedSi(iVictim) > 0
 	) {
-		int attacker = GetClientOfUserId(hEvent.GetInt("attacker"));
-		if (attacker > 0 && IsClientInGame(attacker) 
-		&& GetClientTeam(attacker) == TEAM_SURVIVOR 
-		&& !IsFakeClient(attacker) && IsPlayerAlive(attacker)
+		
+		int iAttacker = GetClientOfUserId(hEvent.GetInt("attacker"));
+		if (iAttacker > 0
+			&& IsClientInGame(iAttacker)
+			&& GetClientTeam(iAttacker) == TEAM_SURVIVOR
+			&& !IsFakeClient(iAttacker)
+			&& IsPlayerAlive(iAttacker)
 		) {
-			iDamage[attacker][victim] += hEvent.GetInt("dmg_health");
+			g_iDamage[iAttacker][iVictim] += hEvent.GetInt("dmg_health");
 		}
 	}
 }
 
-public void Event_PlayerDeath(Event hEvent, const char[] eName, bool dontBroadcast)
+public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	int client = GetClientOfUserId(hEvent.GetInt("userid"));
-	if (client == 0 || !IsClientInGame(client) 
-	|| GetClientTeam(client) != TEAM_INFECTED
+	int iClient = GetClientOfUserId(hEvent.GetInt("userid"));
+	if (iClient == 0 
+		|| !IsClientInGame(iClient) 
+		|| GetClientTeam(iClient) != TEAM_INFECTED
 	) {
 		return;
 	}
 	
-	int zombieclass = IsTargetedSi(client);
-	if (zombieclass < 0) {
+	int iZClass = IsTargetedSi(iClient);
+	if (iZClass < 0) {
 		return;
 	}
 	
-	for (int i = 0; i <= MAXPLAYERS; i++) {
-		iDamage[i][client] = 0;
+	for (int i = 1; i <= MAXPLAYERS; i++) {
+		g_iDamage[i][iClient] = 0;
 	}
 
-	if (zombieclass == view_as<int>(L4D2Infected_Smoker)) {
+	if (iZClass == view_as<int>(L4D2Infected_Smoker)) {
 		ClearTimer();
 	}
 }
 
-public void Event_CHJ_Attack(Event hEvent, const char[] name, bool dontBroadcast)
+public void Event_CHJ_Attack(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	int attacker = GetClientOfUserId(hEvent.GetInt("userid"));
-	if (attacker == 0 || !IsClientInGame(attacker) 
-	|| GetClientTeam(attacker) != TEAM_INFECTED 
-	|| !IsPlayerAlive(attacker)
+	int iAttacker = GetClientOfUserId(hEvent.GetInt("userid"));
+	if (iAttacker == 0 
+		|| !IsClientInGame(iAttacker) 
+		|| GetClientTeam(iAttacker) != TEAM_INFECTED 
+		|| !IsPlayerAlive(iAttacker)
 	) {
 		return;
 	}
 	
-	int victim = GetClientOfUserId(hEvent.GetInt("victim"));
-	if (victim == 0 || !IsClientInGame(victim) 
-	|| GetClientTeam(victim) != TEAM_SURVIVOR 
-	|| IsFakeClient(victim) || !IsPlayerAlive(victim)
+	int iVictim = GetClientOfUserId(hEvent.GetInt("victim"));
+	if (iVictim == 0 
+		|| !IsClientInGame(iVictim)
+		|| GetClientTeam(iVictim) != TEAM_SURVIVOR
+		|| IsFakeClient(iVictim) 
+		|| !IsPlayerAlive(iVictim)
 	) {
 		return;
 	}
 	
-	PrintInflictedDamage(victim, attacker);
+	PrintInflictedDamage(iVictim, iAttacker);
 }
 
-public void Event_SmokerAttackFirst(Event hEvent, const char[] name, bool dontBroadcast)
+public void Event_SmokerAttackFirst(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	int attacker_userid = hEvent.GetInt("userid");
-	int attacker = GetClientOfUserId(attacker_userid);
-	int victim_userid = hEvent.GetInt("victim");
-	int victim = GetClientOfUserId(victim_userid);
+	int iAttackerUserid = hEvent.GetInt("userid");
+	int iAttacker = GetClientOfUserId(iAttackerUserid);
+	int iVictimUserid = hEvent.GetInt("victim");
+	int iVictim = GetClientOfUserId(iVictimUserid);
 	
-	if (attacker > 0 && victim > 0) {
-		//int checks = 0;
-		ArrayStack hEventMembers = new ArrayStack(3);
-		hEventMembers.Push(attacker_userid);
-		hEventMembers.Push(victim_userid);
-		//hEventMembers.Push(checks);
+	if (iAttacker > 0 && iVictim > 0) {
+		// int checks = 0;
+		ArrayStack hEventMembers = new ArrayStack(2); // new ArrayStack(3)
+		hEventMembers.Push(iAttackerUserid);
+		hEventMembers.Push(iVictimUserid);
+		// hEventMembers.Push(checks);
 
 		// It takes exactly 1.0s of dragging to get paralyzed, so we'll give the timer additional 0.1s to update
 		ClearTimer();
-		hTongueParalyzeTimer = CreateTimer(1.1, CheckSurvivorState, hEventMembers, TIMER_FLAG_NO_MAPCHANGE | TIMER_HNDL_CLOSE);
+		g_hTongueParalyzeTimer = CreateTimer(1.1, CheckSurvivorState, hEventMembers, TIMER_FLAG_NO_MAPCHANGE | TIMER_HNDL_CLOSE);
 	}
 }
 
 public Action CheckSurvivorState(Handle hTimer, ArrayStack hEventMembers)
 {
 	/* Fix warning 204: symbol is assigned a value that is never used: "checks"*/
-	static int /*checks, */victim, attacker;
 	if (!hEventMembers.Empty) {
-		//checks = hEventMembers.Pop();
-		victim = GetClientOfUserId(hEventMembers.Pop());
-		attacker = GetClientOfUserId(hEventMembers.Pop());
-		if (victim > 0 && attacker > 0) { //if players in game
-			if (IsSurvivorParalyzed(victim)) {
-				PrintInflictedDamage(victim, attacker);
+		// int checks = hEventMembers.Pop();
+		int iVictim = GetClientOfUserId(hEventMembers.Pop());
+		int iAttacker = GetClientOfUserId(hEventMembers.Pop());
+		if (iVictim > 0 && iAttacker > 0) { //if players in game
+			if (IsSurvivorParalyzed(iVictim)) {
+				PrintInflictedDamage(iVictim, iAttacker);
 			}
 		}
 	}
-	//delete hEventMembers; //TIMER_HNDL_CLOSE, the timer will do for us
 	
-	hTongueParalyzeTimer = null;
+	// delete hEventMembers; // TIMER_HNDL_CLOSE, the timer will do for us
+	
+	g_hTongueParalyzeTimer = null;
 }
 
-/* @A1m:
- * Big problem, I don't know what it is 13292
- * it was a long time before I realized:
- * 13288 + 4 = 13292 old, new 13256 + 4 = 13260
+public void Event_SmokerAttackSecond(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+{
+	int iAttacker = GetClientOfUserId(hEvent.GetInt("userid"));
+	int iVictim = GetClientOfUserId(hEvent.GetInt("victim"));
+
+	ClearTimer();
+	PrintInflictedDamage(iVictim, iAttacker);
+}
+
+/*
  * Table: m_tongueVictimTimer (offset 13288) (type DT_IntervalTimer)
  * Member: m_timestamp (offset 4) (type float) (bits 0) (NoScale)
 */
-bool IsSurvivorParalyzed(int client)
+bool IsSurvivorParalyzed(int iClient)
 {
-	float fVictimTimer = GetGameTime() - GetEntPropFloat(client, Prop_Send, "m_tongueVictimTimer", ARRAY_INDEX_TIMESTAMP);
-	return (fVictimTimer >= 1.0 && GetEntProp(client, Prop_Send, "m_tongueOwner") != -1);
-}
-
-public void Event_SmokerAttackSecond(Event hEvent, const char[] name, bool dontBroadcast)
-{
-	int attacker = GetClientOfUserId(hEvent.GetInt("userid"));
-	int victim = GetClientOfUserId(hEvent.GetInt("victim"));
-
-	ClearTimer();
-	PrintInflictedDamage(victim, attacker);
+	int iTongueOwner = GetEntProp(iClient, Prop_Send, "m_tongueOwner");
+	if (iTongueOwner != -1) {
+		float fVictimTimer = GetGameTime() - GetEntPropFloat(iClient, Prop_Send, "m_tongueVictimTimer", ARRAY_INDEX_TIMESTAMP);
+		return (fVictimTimer >= 1.0);
+	}
+	
+	return false;
 }
 
 void PrintInflictedDamage(int iSurvivor, int iInfected)
 {
 	float fGameTime = GetGameTime();
-	if ((fReported[iSurvivor][iInfected] + fGhostDelay) >= fGameTime) {// Used as a workaround to prevent double prints that might happen for Charger/Smoker
+	
+	// Used as a workaround to prevent double prints that might happen for Charger/Smoker
+	if ((g_fReported[iSurvivor][iInfected] + g_fGhostDelay) >= fGameTime) {
 		return;
 	}
 	
-	if (iDamage[iSurvivor][iInfected] == 0) { // Don't bother
+	if (g_iDamage[iSurvivor][iInfected] == 0) { // Don't bother
 		return;
 	}
 	
 	int iZClass = GetEntProp(iInfected, Prop_Send, "m_zombieClass");
 	
-	PrintToChat(iSurvivor, "\x04[DmgReport]\x01 \x03%N\x01(\x04%s\x01) took \x05%d\x01 damage from you!", 
-								iInfected, 
-								L4D2_InfectedNames[iZClass - 1], 
-								iDamage[iSurvivor][iInfected]);
+	PrintToChat(iSurvivor, "\x04[DmgReport]\x01 \x03%N\x01(\x04%s\x01) took \x05%d\x01 damage from you!", iInfected, L4D2_InfectedNames[iZClass], g_iDamage[iSurvivor][iInfected]);
 
-	fReported[iSurvivor][iInfected] = GetGameTime();
-	iDamage[iSurvivor][iInfected] = 0;
+	g_fReported[iSurvivor][iInfected] = GetGameTime();
+	g_iDamage[iSurvivor][iInfected] = 0;
 }
 
-int IsTargetedSi(int client)
+int IsTargetedSi(int iClient)
 {
-	L4D2_Infected zombieclass = view_as<L4D2_Infected>(GetEntProp(client, Prop_Send, "m_zombieClass"));
+	L4D2_Infected iZClass = view_as<L4D2_Infected>(GetEntProp(iClient, Prop_Send, "m_zombieClass"));
 
-	if (zombieclass == L4D2Infected_Charger 
-	|| zombieclass == L4D2Infected_Hunter 
-	|| zombieclass == L4D2Infected_Jockey 
-	|| zombieclass == L4D2Infected_Smoker
+	if (iZClass == L4D2Infected_Smoker
+		|| iZClass == L4D2Infected_Hunter
+		|| iZClass == L4D2Infected_Jockey
+		|| iZClass == L4D2Infected_Charger
 	) {
-		return view_as<int>(zombieclass);
+		return view_as<int>(iZClass);
 	}
 	
 	return -1;
@@ -242,8 +250,8 @@ int IsTargetedSi(int client)
 
 void ClearTimer()
 {
-	if (hTongueParalyzeTimer != null) {
-		KillTimer(hTongueParalyzeTimer);
-		hTongueParalyzeTimer = null;
+	if (g_hTongueParalyzeTimer != null) {
+		KillTimer(g_hTongueParalyzeTimer);
+		g_hTongueParalyzeTimer = null;
 	}
 }
