@@ -18,12 +18,14 @@ int g_iPointsTeamA = 0
 int g_iPointsTeamB = 0
 bool g_bHasTransitioned = false
 
+Handle g_hTransitionTimer = null
+
 public Plugin:myinfo = 
 {
 	name = "Map Transitions",
 	author = "Derpduck, Forgetest",
 	description = "Define map transitions to combine campaigns",
-	version = "3",
+	version = "3.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
@@ -69,6 +71,15 @@ void LoadSDK()
 	delete conf
 }
 
+public OnRoundStart()
+{
+	//Keep in mind that do not bother if round restarted / map changed
+	if (g_hTransitionTimer)
+	{
+		delete g_hTransitionTimer
+	}
+}
+
 public OnRoundEnd()
 {
 	int isSecondHalf = InSecondHalfOfRound()
@@ -76,17 +87,21 @@ public OnRoundEnd()
 	//If map is in last half, attempt a transition
 	if (isSecondHalf == 1)
 	{
-		CreateTimer(15.0, OnRoundEnd_Post) 
+		// Keep in mind that we don't bother if round restarted / map changed
+		g_hTransitionTimer = CreateTimer(15.0, OnRoundEnd_Post)
 	}
 }
 
 public Action:OnRoundEnd_Post(Handle timer)
 {
+	g_hTransitionTimer = null
+	
 	//Check if map has been registered for a map transition
 	char currentMapName[MAP_NAME_MAX_LENGTH]
 	char nextMapName[MAP_NAME_MAX_LENGTH]
 	
-	GetCurrentMap(currentMapName, sizeof(currentMapName))
+	// don't trust valve :D
+	GetCurrentMapLower(currentMapName, sizeof(currentMapName))
 	
 	//We have a map to transition to
 	if (hMapTransitionPair.GetString(currentMapName, nextMapName, sizeof(nextMapName)))
@@ -110,7 +125,7 @@ public OnMapStart()
 	//Set scores after a modified transition
 	if (g_bHasTransitioned)
 	{
-		CreateTimer(1.0, OnMapStart_Post) //Clients have issues connecting if team swap happens exactly on map start, so we delay it
+		CreateTimer(1.0, OnMapStart_Post, _, TIMER_FLAG_NO_MAPCHANGE) //Clients have issues connecting if team swap happens exactly on map start, so we delay it
 		g_bHasTransitioned = false
 	}
 }
@@ -158,10 +173,19 @@ public Action:AddMapTransition(int args)
 	char mapEnd[MAP_NAME_MAX_LENGTH]
 	GetCmdArg(1, mapStart, sizeof(mapStart))
 	GetCmdArg(2, mapEnd, sizeof(mapEnd))
+	String_ToLower(mapStart, sizeof(mapStart))
+	String_ToLower(mapEnd, sizeof(mapEnd))
 	
 	hMapTransitionPair.SetString(mapStart, mapEnd, true)
 	
 	return Plugin_Handled;
+}
+
+int GetCurrentMapLower(char[] buffer, int maxlength)
+{
+	int bytes = GetCurrentMap(buffer, maxlength)
+	if (bytes) String_ToLower(buffer, maxlength)
+	return bytes
 }
 
 //Return if round is first or second half
