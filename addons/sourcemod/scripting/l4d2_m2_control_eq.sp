@@ -70,8 +70,7 @@ public void OutSkilled(Event hEvent, const char[] eName, bool dontBroadcast)
 		return;
 	}
 	
-	int penaltyIncrease;
-	L4D2_Infected zClass = GetInfectedClass(shovee);
+	int penaltyIncrease, zClass = GetInfectedClass(shovee);
 	switch (zClass) {
 		case L4D2Infected_Hunter: {
 			penaltyIncrease = hPenaltyIncreaseHunterCvar.IntValue;
@@ -98,8 +97,7 @@ public void OutSkilled(Event hEvent, const char[] eName, bool dontBroadcast)
 	L4D2Direct_SetShovePenalty(shover, penalty);
 	L4D2Direct_SetNextShoveTime(shover, CalcNextShoveTime(penalty, maxPenalty));
 
-	if (zClass == L4D2Infected_Smoker 
-	|| (zClass == L4D2Infected_Hunter && g_NoHunterM2)) {
+	if (zClass == L4D2Infected_Smoker || (zClass == L4D2Infected_Hunter && g_NoHunterM2)) {
 		return;
 	}
 	

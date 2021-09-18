@@ -75,13 +75,13 @@ int
 	initiatorId;
 bool
 	adminPause,
-	teamReady[view_as<int>(L4D2Team_Size)],
+	teamReady[L4D2Team_Size],
 	initiatorReady;
 char
 	initiatorName[MAX_NAME_LENGTH];
 float
 	pauseTime;
-L4D2_Team
+int
 	pauseTeam;
 
 // Pause Panel
@@ -237,7 +237,7 @@ public Action Pause_Cmd(int client, int args)
 			return Plugin_Continue;
 
 		initiatorId = GetClientUserId(client);
-		pauseTeam = view_as<L4D2_Team>(GetClientTeam(client));
+		pauseTeam = GetClientTeam(client);
 		GetClientName(client, initiatorName, sizeof(initiatorName));
 		
 		CPrintToChatAll("{default}[{green}!{default}] {olive}%N {blue}Paused{default}.", client);
@@ -288,7 +288,7 @@ public Action Unpause_Cmd(int client, int args)
 {
 	if (isPaused && IsPlayer(client))
 	{
-		L4D2_Team clientTeam = view_as<L4D2_Team>(GetClientTeam(client));
+		int clientTeam = GetClientTeam(client);
 		int initiator = GetClientOfUserId(initiatorId);
 		if (!teamReady[clientTeam])
 		{
@@ -336,7 +336,7 @@ public Action Unready_Cmd(int client, int args)
 	if (isPaused && IsPlayer(client))
 	{
 		int initiator = GetClientOfUserId(initiatorId);
-		L4D2_Team clientTeam = view_as<L4D2_Team>(GetClientTeam(client));
+		int clientTeam = GetClientTeam(client);
 		if (teamReady[clientTeam])
 		{
 			switch (clientTeam)
@@ -384,7 +384,7 @@ public Action ForceUnpause_Cmd(int client, int args)
 
 public Action ToggleReady_Cmd(int client, int args)
 {
-	L4D2_Team clientTeam = view_as<L4D2_Team>(GetClientTeam(client));
+	int clientTeam = GetClientTeam(client);
 	teamReady[clientTeam] ? Unready_Cmd(client, 0) : Unpause_Cmd(client, 0);
 }
 
@@ -440,7 +440,7 @@ public Action DeferredPause_Timer(Handle timer)
 
 void Pause()
 {
-	for (int team; team < view_as<int>(L4D2Team_Size); team++)
+	for (int team; team < L4D2Team_Size; team++)
 	{
 		teamReady[team] = false;
 	}
@@ -465,7 +465,7 @@ void Pause()
 	{
 		if (IsClientInGame(client) && !IsFakeClient(client))
 		{
-			L4D2_Team team = view_as<L4D2_Team>(GetClientTeam(client));
+			int team = GetClientTeam(client);
 			
 			if (team == L4D2Team_Infected && IsInfectedGhost(client))
 			{
@@ -527,7 +527,7 @@ void Unpause(bool real = true)
 					unpauseProcessed = true;
 				}
 				
-				if (view_as<L4D2_Team>(GetClientTeam(client)) == L4D2Team_Spectator)
+				if (GetClientTeam(client) == L4D2Team_Spectator)
 				{
 					sv_noclipduringpause.ReplicateToClient(client, "0");
 				}
@@ -740,7 +740,7 @@ void ToggleCommandListeners(bool enable)
 
 public Action Callvote_Callback(int client, char[] command, int argc)
 {
-	if (view_as<L4D2_Team>(GetClientTeam(client)) == L4D2Team_Spectator)
+	if (GetClientTeam(client) == L4D2Team_Spectator)
 	{
 		CPrintToChat(client, "{blue}[{green}!{blue}] {default}You're unable to call votes as a spectator.");
 		return Plugin_Handled;
@@ -838,7 +838,7 @@ public Action TeamSay_Callback(int client, char[] command, int argc)
 		{
 			return Plugin_Handled;
 		}
-		PrintToTeam(client, view_as<L4D2_Team>(GetClientTeam(client)), buffer);
+		PrintToTeam(client, GetClientTeam(client), buffer);
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
@@ -866,15 +866,15 @@ stock bool IsPlayer(int client)
 {
 	if (!client) return false;
 	
-	L4D2_Team team = view_as<L4D2_Team>(GetClientTeam(client));
+	int team = GetClientTeam(client);
 	return !SpecTimer[client] && (team == L4D2Team_Survivor || team == L4D2Team_Infected);
 }
 
-stock void PrintToTeam(int author, L4D2_Team team, const char[] buffer)
+stock void PrintToTeam(int author, int team, const char[] buffer)
 {
 	for (int client = 1; client <= MaxClients; client++)
 	{
-		if (IsClientInGame(client) && view_as<L4D2_Team>(GetClientTeam(client)) == team)
+		if (IsClientInGame(client) && GetClientTeam(client) == team)
 		{
 			CPrintToChatEx(client, author, "(%s) {teamcolor}%N{default} :  %s", L4D2_TeamName[GetClientTeam(author)], author, buffer);
 		}
@@ -896,13 +896,13 @@ stock int GetSeriousClientCount()
 	return clients;
 }
 
-stock int GetTeamHumanCount(L4D2_Team team)
+stock int GetTeamHumanCount(int team)
 {
 	int humans = 0;
 	
 	for (int client = 1; client <= MaxClients; client++)
 	{
-		if (IsClientInGame(client) && !IsFakeClient(client) && view_as<L4D2_Team>(GetClientTeam(client)) == team)
+		if (IsClientInGame(client) && !IsFakeClient(client) && GetClientTeam(client) == team)
 		{
 			humans++;
 		}
@@ -915,7 +915,7 @@ stock bool IsSurvivorReviving()
 {
 	for (int client = 1; client <= MaxClients; client++)
 	{
-		if (IsClientInGame(client) && view_as<L4D2_Team>(GetClientTeam(client)) == L4D2Team_Survivor && IsPlayerAlive(client))
+		if (IsClientInGame(client) && GetClientTeam(client) == L4D2Team_Survivor && IsPlayerAlive(client))
 		{
 			if (GetEntProp(client, Prop_Send, "m_reviveTarget") > 0)
 			{

@@ -155,7 +155,7 @@ public void OnMapEnd()
 
 public void OnTeamChange(Event hEvent, const char[] name, bool dontBroadcast)
 {
-	if (hEvent.GetInt("team") != view_as<int>(L4D2Team_Spectator)) {
+	if (hEvent.GetInt("team") != L4D2Team_Spectator) {
 		int userid = hEvent.GetInt("userid");
 		int client = GetClientOfUserId(userid);
 		if (client > 0 && !IsFakeClient(client)) {
@@ -191,7 +191,7 @@ public Action ListRates(int client, int args)
 		hClientSettingsArray.GetArray(i, player, sizeof(NetsettingsStruct));
 
 		int iClient = GetClientBySteamId(player.Client_SteamId);
-		if (iClient > 0 && GetClientTeam(client) > view_as<int>(L4D2Team_Spectator)) {
+		if (iClient > 0 && GetClientTeam(client) > L4D2Team_Spectator) {
 			ReplyToCommand(client, "\x03%N\x01 : %d/%d/%d", iClient, player.Client_Cmdrate, player.Client_Updaterate, player.Client_Rate);
 		}
 	}
@@ -201,7 +201,7 @@ public Action ListRates(int client, int args)
 		hClientSettingsArray.GetArray(i, player[0], view_as<int>(NetsettingsStruct));
 
 		int iClient = GetClientBySteamId(player[Client_SteamId]);
-		if (iClient > 0 && GetClientTeam(iClient) > view_as<int>(L4D2Team_Spectator)) {
+		if (iClient > 0 && GetClientTeam(iClient) > L4D2Team_Spectator) {
 			ReplyToCommand(client, "\x03%N\x01 : %d/%d/%d", iClient, player[Client_Cmdrate], player[Client_Updaterate], player[Client_Rate]);
 		}
 	}
@@ -212,7 +212,7 @@ public Action ListRates(int client, int args)
 
 void RegisterSettings(int client)
 {
-	if (GetClientTeam(client) < view_as<int>(L4D2Team_Survivor)) {
+	if (GetClientTeam(client) < L4D2Team_Survivor) {
 		return;
 	}
 	
@@ -378,7 +378,7 @@ void PunishPlayer(int client, const char[] sCmdRate, const char[] sUpdateRate, c
 			}
 		}
 		case 2: {// Move to spec
-			ChangeClientTeam(client, view_as<int>(L4D2Team_Spectator));
+			ChangeClientTeam(client, L4D2Team_Spectator);
 			
 			if (bInitialRegister) {
 				if (bPublic) {

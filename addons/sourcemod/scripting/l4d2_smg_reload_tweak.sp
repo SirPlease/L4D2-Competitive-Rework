@@ -39,7 +39,7 @@ public void OnWeaponReload(Event hEvent, const char[] eName, bool dontBroadcast)
 	float originalReloadDuration = 0.0, alteredReloadDuration = 0.0;
 
 	int weapon = GetPlayerWeaponSlot(client, 0);
-	WeaponId weaponId = IdentifyWeapon(weapon);
+	int weaponId = IdentifyWeapon(weapon);
 
 	switch (weaponId) {
 		case WEPID_SMG: {
@@ -81,7 +81,7 @@ public Action OnPlayerRunCmd(int client, int &buttons)
 	float originalReloadDuration = 0.0, alteredReloadDuration = 0.0;
 	
 	int weapon = GetPlayerWeaponSlot(client, 0);
-	WeaponId weaponId = IdentifyWeapon(weapon);
+	int weaponId = IdentifyWeapon(weapon);
 
 	switch (weaponId) {
 		case WEPID_SMG: {

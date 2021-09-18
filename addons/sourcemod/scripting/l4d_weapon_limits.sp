@@ -21,14 +21,14 @@ enum struct LimitArrayEntry
 {
 	int LAE_iLimit;
 	int LAE_iGiveAmmo;
-	int LAE_WeaponArray[view_as<int>(WEPID_SIZE) / 32 + 1];
+	int LAE_WeaponArray[WEPID_SIZE / 32 + 1];
 }
 #else
 enum LimitArrayEntry
 {
 	LAE_iLimit,
 	LAE_iGiveAmmo,
-	LAE_WeaponArray[view_as<int>(WEPID_SIZE) / 32 + 1]
+	LAE_WeaponArray[WEPID_SIZE / 32 + 1]
 };
 #endif
 
@@ -205,10 +205,10 @@ public Action WeaponCanUse(int client, int weapon)
 		return Plugin_Continue;
 	}
 	
-	int wepid = view_as<int>(IdentifyWeapon(weapon));
-	int wep_slot = GetSlotFromWeaponId(view_as<WeaponId>(wepid));
+	int wepid = IdentifyWeapon(weapon);
+	int wep_slot = GetSlotFromWeaponId(wepid);
 	int player_weapon = GetPlayerWeaponSlot(client, wep_slot);
-	int player_wepid = view_as<int>(IdentifyWeapon(player_weapon));
+	int player_wepid = IdentifyWeapon(player_weapon);
 
 #if SOURCEMOD_V_MINOR > 9
 	LimitArrayEntry arrayEntry;

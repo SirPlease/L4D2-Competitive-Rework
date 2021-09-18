@@ -166,7 +166,7 @@ public void Hook_OnEntitySpawned(int iEntity)
 		return;
 	}
 	
-	int iUncommonInfected = view_as<int>(GetGender(iEntity) - L4D2Gender_Ceda);
+	int iUncommonInfected = GetGender(iEntity) - L4D2Gender_Ceda;
 	bool bIsUncommonInfected = (iUncommonInfected >= 0 && iUncommonInfected < UNCOMMON_INFECTED_AMOUNT);
 	
 	if (!bIsUncommonInfected) {

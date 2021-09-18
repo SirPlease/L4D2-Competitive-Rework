@@ -8,27 +8,26 @@
 #define L4D2UTIL_STOCKS_ONLY
 #include <l4d2util>
 
-bool
-	isSurvivorStaggerBlocked[view_as<int>(SurvivorCharacter_Size)];
+static const int getUpAnimations[SurvivorCharacter_Size][5] = 
+{
+	//l4d2
+	// 0: Nick, 1: Rochelle, 2: Coach, 3: Ellis
+	//[][4] = Flying animation from being hit by a tank
+	{620, 667, 671, 672, 629}, //Nick
+	{629, 674, 678, 679, 637}, //Rochelle
+	{621, 656, 660, 661, 629}, //Coach
+	{625, 671, 675, 676, 634}, //Ellis
+	
+	//l4d1
+	// 4: Bill, 5: Zoey, 6: Louis, 7: Francis
+	{528, 759, 763, 764, 537}, //Bill
+	{537, 819, 823, 824, 546}, //Zoey
+	{528, 759, 763, 764, 537}, //Louis
+	{531, 762, 766, 767, 540} //Francis
+};
 
-static const int 
-	getUpAnimations[view_as<int>(SurvivorCharacter_Size)][5] = 
-	{
-		//l4d2
-		// 0: Nick, 1: Rochelle, 2: Coach, 3: Ellis
-		//[][4] = Flying animation from being hit by a tank
-		{620, 667, 671, 672, 629}, //Nick
-		{629, 674, 678, 679, 637}, //Rochelle
-		{621, 656, 660, 661, 629}, //Coach
-		{625, 671, 675, 676, 634}, //Ellis
-		
-		//l4d1
-		// 4: Bill, 5: Zoey, 6: Louis, 7: Francis
-		{528, 759, 763, 764, 537}, //Bill
-		{537, 819, 823, 824, 546}, //Zoey
-		{528, 759, 763, 764, 537}, //Louis
-		{531, 762, 766, 767, 540} //Francis
-	};
+bool
+	isSurvivorStaggerBlocked[SurvivorCharacter_Size];
 
 public Plugin myinfo =
 {
@@ -63,7 +62,7 @@ public void OnMapEnd()
 public void Event_BotPlayerReplace(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	int player = GetClientOfUserId(hEvent.GetInt("player"));
-	SurvivorCharacter charIndex = IdentifySurvivor(player);
+	int charIndex = IdentifySurvivor(player);
 	if (charIndex == SurvivorCharacter_Invalid) {
 		return;
 	}
@@ -77,7 +76,7 @@ public void Event_BotPlayerReplace(Event hEvent, const char[] eName, bool dontBr
 public void Event_PlayerBotReplace(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	int bot = GetClientOfUserId(hEvent.GetInt("bot"));
-	SurvivorCharacter charIndex = IdentifySurvivor(bot);
+	int charIndex = IdentifySurvivor(bot);
 	if (charIndex == SurvivorCharacter_Invalid) {
 		return;
 	}
@@ -90,7 +89,7 @@ public void Event_PlayerBotReplace(Event hEvent, const char[] eName, bool dontBr
 public void Event_PounceChargeEnd(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("victim"));
-	SurvivorCharacter charIndex = IdentifySurvivor(client);
+	int charIndex = IdentifySurvivor(client);
 	if (charIndex == SurvivorCharacter_Invalid) {
 		return;
 	}
@@ -108,7 +107,7 @@ public Action HookOnThink(Handle hTimer, any client)
 
 public void OnThink(int client)
 {
-	SurvivorCharacter charIndex = IdentifySurvivor(client);
+	int charIndex = IdentifySurvivor(client);
 	if (charIndex == SurvivorCharacter_Invalid) {
 		return;
 	}
@@ -123,10 +122,10 @@ public void OnThink(int client)
 public Action L4D2_OnStagger(int target, int source)
 {
 	if (L4D2Util_IsValidClient(source) && IsInfected(source)) {
-		L4D2_Infected sourceClass = GetInfectedClass(source);
+		int sourceClass = GetInfectedClass(source);
 		
 		if (sourceClass == L4D2Infected_Hunter || sourceClass == L4D2Infected_Jockey) {
-			SurvivorCharacter charIndex = IdentifySurvivor(target);
+			int charIndex = IdentifySurvivor(target);
 			if (charIndex == SurvivorCharacter_Invalid) {
 				return Plugin_Continue;
 			}
@@ -143,10 +142,10 @@ public Action L4D2_OnStagger(int target, int source)
 public Action L4D2_OnPounceOrLeapStumble(int victim, int attacker)
 {
 	if (L4D2Util_IsValidClient(attacker) && IsInfected(attacker)) {
-		L4D2_Infected sourceClass = GetInfectedClass(attacker);
+		int sourceClass = GetInfectedClass(attacker);
 		
 		if (sourceClass == L4D2Infected_Hunter || sourceClass == L4D2Infected_Jockey) {
-			SurvivorCharacter charIndex = IdentifySurvivor(victim);
+			int charIndex = IdentifySurvivor(victim);
 			if (charIndex == SurvivorCharacter_Invalid) {
 				return Plugin_Continue;
 			}
@@ -162,7 +161,7 @@ public Action L4D2_OnPounceOrLeapStumble(int victim, int attacker)
 
 void ResetStaggerBlocked()
 {
-	for (int i = 0; i < view_as<int>(SurvivorCharacter_Size); i++) {
+	for (int i = 0; i < SurvivorCharacter_Size; i++) {
 		isSurvivorStaggerBlocked[i] = false;
 	}
 }

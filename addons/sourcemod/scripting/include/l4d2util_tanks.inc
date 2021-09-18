@@ -14,7 +14,7 @@
 stock bool IsTank(int client)
 {
 	return (IsClientInGame(client)
-		&& view_as<L4D2_Team>(GetClientTeam(client)) == L4D2Team_Infected
+		&& GetClientTeam(client) == L4D2Team_Infected
 		&& GetInfectedClass(client) == L4D2Infected_Tank);
 }
 
@@ -83,7 +83,7 @@ stock void SetTankFrustration(int iTankClient, int iFrustration)
  */
 stock bool IsEntityOnFire(int entity)
 {
-	return view_as<bool>(GetEntityFlags(entity) & FL_ONFIRE);
+	return ((GetEntityFlags(entity) & FL_ONFIRE) != 0);
 }
 
 /**

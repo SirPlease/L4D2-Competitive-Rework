@@ -32,7 +32,7 @@ new spitterlimit;
 new maxSI;
 
 /* These class numbers are the same ones used internally in L4D2 */
-enum SIClass
+enum /*SIClass*/
 {
 	SI_None=0,
 	SI_Smoker=1,
@@ -47,7 +47,7 @@ enum SIClass
 	SI_MAX_SIZE
 };
 
-stock const String:g_sSIClassNames[view_as<int>(SI_MAX_SIZE)][] = 
+stock const String:g_sSIClassNames[SI_MAX_SIZE][] = 
 {	"", "Smoker", "Boomer", "Hunter", "Spitter", "Jockey", "Charger", "Witch", "Tank" };
 
 public Plugin:myinfo = 

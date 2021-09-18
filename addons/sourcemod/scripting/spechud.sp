@@ -46,7 +46,7 @@ enum L4D2Gamemode
 };
 L4D2Gamemode g_Gamemode;
 
-//L4D2_Infected storedClass[MAXPLAYERS+1];
+//int storedClass[MAXPLAYERS+1];
 
 // Game Var
 ConVar survivor_limit, z_max_player_zombies, versus_boss_buffer, mp_gamemode, mp_roundlimit, sv_maxplayers, tank_burn_duration;
@@ -423,7 +423,7 @@ public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if (!client) return;
 	
-	L4D2_Team team = view_as<L4D2_Team>(event.GetInt("team"));
+	int team = event.GetInt("team");
 	
 	if (team == L4D2Team_None) // Player disconnecting
 	{
@@ -451,7 +451,7 @@ stock void BuildPlayerArrays()
 	{
 		if (!IsClientInGame(client)) continue;
 		
-		switch (view_as<L4D2_Team>(GetClientTeam(client)))
+		switch (GetClientTeam(client))
 		{
 			case L4D2Team_Spectator:
 			{
@@ -488,8 +488,8 @@ stock void BuildPlayerArrays()
 
 public int SortSurvArray(int elem1, int elem2, const int[] array, Handle hndl)
 {
-	SurvivorCharacter sc1 = IdentifySurvivor(elem1);
-	SurvivorCharacter sc2 = IdentifySurvivor(elem2);
+	int sc1 = IdentifySurvivor(elem1);
+	int sc2 = IdentifySurvivor(elem2);
 	
 	if (sc1 > sc2) { return 1; }
 	else if (sc1 < sc2) { return -1; }
@@ -501,7 +501,7 @@ public int SortSurvArray(int elem1, int elem2, const int[] array, Handle hndl)
 // ======================================================================
 public Action ToggleSpecHudCmd(int client, int args) 
 {
-	if (view_as<L4D2_Team>(GetClientTeam(client)) != L4D2Team_Spectator)
+	if (GetClientTeam(client) != L4D2Team_Spectator)
 		return;
 	
 	if (bSpecHudActive[client])
@@ -540,7 +540,7 @@ public Action ToggleSpecHudCmd(int client, int args)
 
 public Action ToggleTankHudCmd(int client, int args) 
 {
-	L4D2_Team team = view_as<L4D2_Team>(GetClientTeam(client));
+	int team = GetClientTeam(client);
 	if (team == L4D2Team_Survivor)
 		return;
 	
@@ -651,8 +651,8 @@ void FillHeaderInfo(Panel &hSpecHud)
 
 void GetMeleePrefix(int client, char[] prefix, int length)
 {
-	int secondary = GetPlayerWeaponSlot(client, view_as<int>(L4D2WeaponSlot_Secondary));
-	WeaponId secondaryWep = IdentifyWeapon(secondary);
+	int secondary = GetPlayerWeaponSlot(client, L4D2WeaponSlot_Secondary);
+	int secondaryWep = IdentifyWeapon(secondary);
 
 	static char buf[4];
 	switch (secondaryWep)
@@ -672,9 +672,9 @@ void GetWeaponInfo(int client, char[] info, int length)
 	static char buffer[32];
 	
 	int activeWep = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-	int primaryWep = GetPlayerWeaponSlot(client, view_as<int>(L4D2WeaponSlot_Primary));
-	WeaponId activeWepId = IdentifyWeapon(activeWep);
-	WeaponId primaryWepId = IdentifyWeapon(primaryWep);
+	int primaryWep = GetPlayerWeaponSlot(client, L4D2WeaponSlot_Primary);
+	int activeWepId = IdentifyWeapon(activeWep);
+	int primaryWepId = IdentifyWeapon(primaryWep);
 	
 	// Let's begin with what player is holding,
 	// but cares only pistols if holding secondary.
@@ -715,7 +715,7 @@ void GetWeaponInfo(int client, char[] info, int length)
 		// Default display -> [Primary <In Detail> | Secondary <Prefix>]
 		// Holding melee included in this way
 		// i.e. [Chrome 8/56 | M]
-		if (GetSlotFromWeaponId(activeWepId) != view_as<int>(L4D2WeaponSlot_Secondary) || activeWepId == WEPID_MELEE || activeWepId == WEPID_CHAINSAW)
+		if (GetSlotFromWeaponId(activeWepId) != L4D2WeaponSlot_Secondary || activeWepId == WEPID_MELEE || activeWepId == WEPID_CHAINSAW)
 		{
 			GetMeleePrefix(client, buffer, sizeof(buffer));
 			Format(info, length, "%s | %s", info, buffer);
@@ -992,7 +992,7 @@ void FillInfectedInfo(Panel &hSpecHud)
 		}
 		else
 		{
-			L4D2_Infected zClass = GetInfectedClass(client);
+			int zClass = GetInfectedClass(client);
 			if (zClass == L4D2Infected_Tank)
 				continue;
 				
@@ -1261,7 +1261,7 @@ void FillGameInfo(Panel &hSpecHud)
 #define	MILITARY_SNIPER_OFFSET_IAMMO	40;
 #define	GRENADE_LAUNCHER_OFFSET_IAMMO	68;
 
-stock int GetWeaponExtraAmmo(int client, WeaponId wepid)
+stock int GetWeaponExtraAmmo(int client, int wepid)
 {
 	static int ammoOffset;
 	if (!ammoOffset) ammoOffset = FindSendPropInfo("CCSPlayer", "m_iAmmo");

@@ -62,9 +62,7 @@ float
 int
 	m_PostMobDelayTimerOffset,
 	z_max_player_zombies,
-	hordeDelayChecks;
-
-L4D2_Infected
+	hordeDelayChecks,
 	zombieclass[MAXPLAYERS + 1];
 
 public Plugin myinfo = 
@@ -181,14 +179,14 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryRemoved(const char[] szName)
 {
-	if (StrEqual(szName, "pause", true)) {
+	if (strcmp(szName, "pause", true) == 0) {
 		IsPauseAvailable = false;
 	} 
 }
 
 public void OnLibraryAdded(const char[] szName)
 {
-	if (StrEqual(szName, "pause", true)) {
+	if (strcmp(szName, "pause", true) == 0) {
 		IsPauseAvailable = true;
 	}
 }
@@ -229,7 +227,7 @@ public Action AntibaiterThink(Handle hTimer)
 				&& aliveSince[i] != -1.0 && GetGameTime() - aliveSince[i] >= timerStartDelay
 			) {
 				#if DEBUG
-				PrintToChatAll("\x03[Antibaiter DEBUG] Eligible player \x04%N\x01 is a zombieclass \x05%d\x01 alive for \x05%fs\x01", i, view_as<int>(zombieclass[i]), GetGameTime() - aliveSince[i]);
+				PrintToChatAll("\x03[Antibaiter DEBUG] Eligible player \x04%N\x01 is a zombieclass \x05%d\x01 alive for \x05%fs\x01", i, zombieclass[i], GetGameTime() - aliveSince[i]);
 				#endif
 				
 				eligibleZombies++;
