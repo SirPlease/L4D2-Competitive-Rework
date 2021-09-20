@@ -31,6 +31,7 @@ float fSpecialOverkill[MAXPLAYERS + 1][3]; // Dealing with breakable pieces that
 bool bLateLoad;   // Late load support!
 
 //cvars
+ConVar hGauntletFinaleMulti;
 ConVar hLogStandingDamage;
 ConVar hBHLogStandingDamage;
 ConVar hCarStandingDamage;
@@ -64,6 +65,9 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	hGauntletFinaleMulti	= CreateConVar( "hc_gauntlet_finale_multiplier",		"0.25",
+											"Multiplier of damage that hittables deal on gauntlet finales.",
+											FCVAR_NONE, true, 0.0, true, 4.0 );
 	hLogStandingDamage		= CreateConVar( "hc_sflog_standing_damage",		"48.0",
 											"Damage of hittable swamp fever logs to non-incapped survivors.",
 											FCVAR_NONE, true, 0.0, true, 300.0 );
@@ -79,10 +83,10 @@ public void OnPluginStart()
 	hHandtruckStandingDamage= CreateConVar( "hc_handtruck_standing_damage",	"8.0",
 											"Damage of hittable handtrucks (aka dollies) to non-incapped survivors.",
 											FCVAR_NONE, true, 0.0, true, 300.0 );
-	hForkliftStandingDamage	= CreateConVar(  "hc_forklift_standing_damage",	"100.0",
+	hForkliftStandingDamage	= CreateConVar( "hc_forklift_standing_damage",	"100.0",
 											"Damage of hittable forklifts to non-incapped survivors.",
 											FCVAR_NONE, true, 0.0, true, 300.0 );
-	hBrokenForkliftStandingDamage= CreateConVar(  "hc_broken_forklift_standing_damage",	"100.0",
+	hBrokenForkliftStandingDamage= CreateConVar( "hc_broken_forklift_standing_damage",	"100.0",
 											"Damage of hittable broken forklifts to non-incapped survivors.",
 											FCVAR_NONE, true, 0.0, true, 300.0 );
 	hDumpsterStandingDamage	= CreateConVar( "hc_dumpster_standing_damage",	"100.0",
@@ -127,9 +131,9 @@ public void OnPluginStart()
 	hOverHitDebug		    = CreateConVar( "hc_debug",				"0",
 											"0: Disable Debug - 1: Enable Debug",
 											FCVAR_NONE, true, 0.0, false );
-	hUnbreakableForklifts	= CreateConVar( "hc_unbreakable_forklifts",	"0.0",
+	hUnbreakableForklifts	= CreateConVar( "hc_unbreakable_forklifts",	"0",
 											"Prevents forklifts breaking into pieces when hit by a tank.",
-											FCVAR_NONE, true, 0.0, true, 300.0 );
+											FCVAR_NONE, true, 0.0, false );
 
 	if (bLateLoad)
 	{
@@ -263,6 +267,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		}
 		
 		float val = GetConVarFloat(hStandardIncapDamage);
+		float gauntletMulti = GetConVarFloat(hGauntletFinaleMulti);
 		if (GetEntProp(victim, Prop_Send, "m_isIncapacitated") 
 		&& val != -2) // Survivor is Incapped. (Damage)
 		{
@@ -271,7 +276,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 				// Use standard damage on gauntlet finales
 				if (bIsGauntletFinale)
 				{
-					damage = val * 4.0;
+					damage = val * 4.0 * gauntletMulti;
 				}
 				else
 				{
@@ -367,7 +372,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			// Use standard damage on gauntlet finales
 			if (bIsGauntletFinale)
 			{
-				damage = damage * 4.0
+				damage = damage * 4.0 * gauntletMulti;
 			}
 		}
 		
