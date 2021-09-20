@@ -58,6 +58,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("IsStaticWitchMap", Native_IsStaticWitchMap);
 	CreateNative("IsTankPercentValid", Native_IsTankPercentValid);
 	CreateNative("IsWitchPercentValid", Native_IsWitchPercentValid);
+	CreateNative("IsWitchPercentBlockedForTank", Native_IsWitchPercentBlockedForTank);
 	CreateNative("SetTankPercent", Native_SetTankPercent);
 	CreateNative("SetWitchPercent", Native_SetWitchPercent);
 	RegPluginLibrary("witch_and_tankifier");
@@ -506,7 +507,37 @@ public any Native_IsTankPercentValid(Handle plugin, int numParams) {
 
 public any Native_IsWitchPercentValid(Handle plugin, int numParams) {
 	int flow = GetNativeCell(1);
-	return IsWitchPercentValid(flow);
+	bool ignoreBlock = GetNativeCell(2);
+	
+	if (ignoreBlock) {
+		ArrayList p_hValidFlows = hValidWitchFlows.Clone(), p_hTemp = hValidWitchFlows;
+		
+		int interval[2];
+		if (GetTankAvoidInterval(interval) && IsValidInterval(interval)) {
+			// Restore the avoidance flow
+			p_hValidFlows.PushArray(interval);
+			MergeIntervals(p_hValidFlows);
+			hValidWitchFlows = p_hValidFlows;
+		}
+		
+		bool result = IsWitchPercentValid(flow);
+		
+		hValidWitchFlows = p_hTemp;
+		delete p_hValidFlows;
+		
+		return result;
+	} else {
+		return IsWitchPercentValid(flow);
+	}
+}
+
+public any Native_IsWitchPercentBlockedForTank(Handle plugin, int numParams) {
+	int interval[2];
+	if (GetTankAvoidInterval(interval)) {
+		int flow = GetNativeCell(1);
+		return interval[0] <= flow <= interval[1];
+	}
+	return false;
 }
 
 public any Native_SetTankPercent(Handle plugin, int numParams) {

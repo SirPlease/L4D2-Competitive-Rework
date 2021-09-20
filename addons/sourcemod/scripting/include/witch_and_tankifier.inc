@@ -38,10 +38,22 @@ native bool IsTankPercentValid(int percent);
  * @remarks Passing 0 is allowed and considered disabling.
  *
  * @param	percent			Flow percentage to check.
+ * @param	ignoreBlock		Ignore percent block due to tank percent.
  *
  * @return					True on valid, false otherwise.
  */
-native bool IsWitchPercentValid(int percent);
+native bool IsWitchPercentValid(int percent, bool ignoreBlock = false);
+
+/**
+ * @brief Check if the flow percentage of witch is blocked due to current tank percent.
+ * @remarks The blocked range covers as much as the value of convar "sm_witch_avoid_tank_spawn",
+ *			taking current tank percent as middle point.
+ *
+ * @param	percent			Flow percentage to check.
+ *
+ * @return					True on blocked, false otherwise.
+ */
+native bool IsWitchPercentBlockedForTank(int percent);
 
 /**
  * @brief Set the flow percentage of tank on current map.
