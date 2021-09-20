@@ -31,6 +31,15 @@ new const L4D2Team:oppositeTeamMap[] =
 	L4D2Team_Survivor
 };
 
+public const char L4D2_AttackerNetProps[][] =
+{
+	"m_tongueOwner",	// Smoker
+	"m_pounceAttacker",	// Hunter
+	"m_jockeyAttacker",	// Jockey
+	"m_carryAttacker", // Charger carry
+	"m_pummelAttacker",	// Charger pummel
+};
+
 new Handle:survivor_limit;
 new Handle:z_max_player_zombies;
 
@@ -123,13 +132,18 @@ public OnClientDisconnect_Post(client)
 public Action:Spectate_Cmd(client, args)
 {
 	new L4D2Team:team = GetClientTeamEx(client);
-	if (!GetConVarBool(l4d_pm_supress_spectate) && team != L4D2Team_Spectator && SpecTimer[client] == INVALID_HANDLE)
-	{
-		CPrintToChatAllEx(client, "{teamcolor}%N{default} has become a spectator!", client);
-	}
+
 	if (team == L4D2Team_Survivor)
 	{
-		ChangeClientTeamEx(client, L4D2Team_Spectator, true);
+		if (IsSurvivorAttacked(client))
+		{
+			CPrintToChat(client, "You {red}cannot{default} spectate while capped!");
+			return Plugin_Handled;
+		}
+		else
+		{
+			ChangeClientTeamEx(client, L4D2Team_Spectator, true);
+		}
 	}
 	else if (team == L4D2Team_Infected)
 	{
@@ -149,6 +163,12 @@ public Action:Spectate_Cmd(client, args)
 			CreateTimer(0.1, RespecDelay_Timer, client);
 		}
 	}
+	
+	if (!GetConVarBool(l4d_pm_supress_spectate) && team != L4D2Team_Spectator && SpecTimer[client] == INVALID_HANDLE)
+	{
+		CPrintToChatAllEx(client, "{teamcolor}%N{default} has become a spectator!", client);
+	}
+	
 	if (SpecTimer[client] == INVALID_HANDLE) SpecTimer[client] = CreateTimer(7.0, SecureSpec, client);
 	return Plugin_Handled;
 }
@@ -469,4 +489,15 @@ stock FixBotCount()
 stock L4D2Team:GetClientTeamEx(client)
 {
 	return L4D2Team:GetClientTeam(client);
+}
+
+stock bool IsSurvivorAttacked(int survivor)
+{
+	for (int i = 0; i < sizeof(L4D2_AttackerNetProps); i++) {
+		if (GetEntPropEnt(survivor, Prop_Send, L4D2_AttackerNetProps[i]) != -1) {
+			return true;
+		}
+	}
+
+	return false;
 }
