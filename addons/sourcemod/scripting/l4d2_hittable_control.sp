@@ -182,22 +182,6 @@ public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcas
 	}
 }
 
-public Action Event_FinaleStart(Event event, const char[] name, bool dontBroadcast)
-{
-	// Hittable damage is only reduced once the finale is triggered
-	int triggerFinale = -1;
-
-	while ((triggerFinale = FindEntityByClassname(triggerFinale, "trigger_finale")) != -1)
-	{
-		int finaleType;
-		finaleType = GetEntProp(triggerFinale, Prop_Data, "m_type");
-		if (finaleType == 1)
-		{
-			bIsGauntletFinale = true;
-		}
-	}
-}
-
 public Action PatchBreakableForklifts(Handle timer)
 {
 	int forklift = -1;
@@ -212,6 +196,22 @@ public Action PatchBreakableForklifts(Handle timer)
 		{
 			SetEntProp(forklift, Prop_Data, "m_iMinHealthDmg", 0)
 			SetEntProp(forklift, Prop_Data, "m_takedamage", 1)
+		}
+	}
+}
+
+public Action Event_FinaleStart(Event event, const char[] name, bool dontBroadcast)
+{
+	// Hittable damage is only reduced once the finale is triggered
+	int triggerFinale = -1;
+
+	while ((triggerFinale = FindEntityByClassname(triggerFinale, "trigger_finale")) != -1)
+	{
+		int finaleType;
+		finaleType = GetEntProp(triggerFinale, Prop_Data, "m_type");
+		if (finaleType == 1)
+		{
+			bIsGauntletFinale = true;
 		}
 	}
 }
