@@ -146,14 +146,17 @@ public void OnPluginStart()
 
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("finale_radio_start", Event_FinaleStart);
+	
+	hUnbreakableForklifts.AddChangeHook(ConVarChanged_UnbreakableForklifts);
 }
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	bLateLoad = late;
+	CreateNative("AreForkliftsUnbreakable", Native_UnbreakableForklifts);
+	RegPluginLibrary("witch_and_tankifier");
 	return APLRes_Success;
 }
-
 public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
@@ -178,7 +181,11 @@ public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcas
 	// Delay breakable forklift patch as it must run after vscripts
 	if (GetConVarBool(hUnbreakableForklifts))
 	{
-		CreateTimer(20.0, PatchBreakableForklifts)
+		CreateTimer(20.0, PatchBreakableForklifts);
+	}
+	else
+	{
+		CreateTimer(20.0, UnpatchBreakableForklifts);
 	}
 }
 
@@ -194,10 +201,45 @@ public Action PatchBreakableForklifts(Handle timer)
 		
 		if (StrEqual(sModelName, "models/props/cs_assault/forklift.mdl", false))
 		{
-			SetEntProp(forklift, Prop_Data, "m_iMinHealthDmg", 0)
-			SetEntProp(forklift, Prop_Data, "m_takedamage", 1)
+			SetEntProp(forklift, Prop_Data, "m_iMinHealthDmg", 0);
+			SetEntProp(forklift, Prop_Data, "m_takedamage", 1);
 		}
 	}
+}
+
+public Action UnpatchBreakableForklifts(Handle timer)
+{
+	int forklift = -1;
+
+	while ((forklift = FindEntityByClassname(forklift, "prop_physics")) != -1)
+	{
+		char sModelName[PLATFORM_MAX_PATH];
+		GetEntPropString(forklift, Prop_Data, "m_ModelName", sModelName, sizeof(sModelName));
+		ReplaceString(sModelName, sizeof(sModelName), "\\", "/", false);
+		
+		if (StrEqual(sModelName, "models/props/cs_assault/forklift.mdl", false))
+		{
+			SetEntProp(forklift, Prop_Data, "m_iMinHealthDmg", 400);
+			SetEntProp(forklift, Prop_Data, "m_takedamage", 3);
+		}
+	}
+}
+
+public void ConVarChanged_UnbreakableForklifts(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+{
+	if (GetConVarBool(hUnbreakableForklifts))
+	{
+		CreateTimer(1.0, PatchBreakableForklifts);
+	}
+	else
+	{
+		CreateTimer(1.0, UnpatchBreakableForklifts);
+	}
+}
+
+
+public any Native_UnbreakableForklifts(Handle plugin, int numParams) {
+	return GetConVarBool(hUnbreakableForklifts);
 }
 
 public Action Event_FinaleStart(Event event, const char[] name, bool dontBroadcast)
