@@ -38,7 +38,8 @@ int
 bool
 	g_bCvarTankOnly = false,
 	g_bCvarTankSpec = false,
-	g_bTankSpawned = false;
+	g_bTankSpawned = false,
+	g_bHittableControlExists = false;
 
 public Plugin myinfo =
 {
@@ -69,6 +70,25 @@ public void OnPluginStart()
 	g_hCvarTankSpec.AddChangeHook(ConVarChanged_Cvars);
 
 	PluginEnable();
+}
+
+public void OnAllPluginsLoaded()
+{
+	g_bHittableControlExists = LibraryExists("l4d2_hittable_control");
+}
+
+public void OnLibraryRemoved(const char[] name)
+{
+	if (StrEqual(name, "l4d2_hittable_control", true)) {
+		g_bHittableControlExists = false;
+	} 
+}
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (StrEqual(name, "l4d2_hittable_control", true)) {
+		g_bHittableControlExists = true;
+	}
 }
 
 public void ConVarChanged_Cvars(ConVar hConvar, const char[] sOldValue, const char[] sNewValue)
@@ -377,9 +397,21 @@ bool IsTankProp(int iEntity)
 	}
 	
 	// Exception
+	bool bAreForkliftsUnbreakable;
+	if (g_bHittableControlExists)
+	{
+		PrintToChatAll("lib exists");
+		bAreForkliftsUnbreakable = AreForkliftsUnbreakable();
+	}
+	else
+	{
+		PrintToChatAll("lib not exists");
+		bAreForkliftsUnbreakable = false;
+	}
+	
 	char sModel[PLATFORM_MAX_PATH];
 	GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-	if (strcmp("models/props/cs_assault/forklift.mdl", sModel) == 0 && AreForkliftsUnbreakable() == false) {
+	if (strcmp("models/props/cs_assault/forklift.mdl", sModel) == 0 && bAreForkliftsUnbreakable == false) {
 		return false;
 	}
 	
