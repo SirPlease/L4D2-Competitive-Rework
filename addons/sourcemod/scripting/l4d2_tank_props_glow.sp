@@ -400,12 +400,10 @@ bool IsTankProp(int iEntity)
 	bool bAreForkliftsUnbreakable;
 	if (g_bHittableControlExists)
 	{
-		PrintToChatAll("lib exists");
 		bAreForkliftsUnbreakable = AreForkliftsUnbreakable();
 	}
 	else
 	{
-		PrintToChatAll("lib not exists");
 		bAreForkliftsUnbreakable = false;
 	}
 	
