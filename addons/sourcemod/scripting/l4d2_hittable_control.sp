@@ -154,7 +154,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 {
 	bLateLoad = late;
 	CreateNative("AreForkliftsUnbreakable", Native_UnbreakableForklifts);
-	RegPluginLibrary("witch_and_tankifier");
+	RegPluginLibrary("l4d2_hittable_control");
 	return APLRes_Success;
 }
 public void OnClientPutInServer(int client)
