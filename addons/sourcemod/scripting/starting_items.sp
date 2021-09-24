@@ -73,12 +73,13 @@ public Action PlayerLeftStartArea(Handle event, const char[] name, bool dontBroa
 
 void DetermineItems()
 {
-	ArrayList items = new ArrayList(ByteCountToCells(WEAPON_NAME_MAX));
 	int iItemFlags = GetConVarInt(hCvarItemType);
 
 	if (iItemFlags < 1) {
 		return;
 	}
+
+	ArrayList items = new ArrayList(ByteCountToCells(WEAPON_NAME_MAX));
 
 	if (iItemFlags & HEALTH_FIRST_AID_KIT) {
 		items.PushString("weapon_first_aid_kit");
@@ -103,6 +104,7 @@ void DetermineItems()
 	if (items.Length > 0) {
 		giveStartingItems(items);
 	}
+	delete items;
 }
 
 void giveStartingItems(ArrayList items)
