@@ -240,6 +240,12 @@ void PluginDisable()
 	g_hTankPropsHit = null;
 }
 
+public void OnMapEnd()
+{
+	g_hTankProps.Clear();
+	g_hTankPropsHit.Clear();
+}
+
 public void TankPropRoundReset(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	g_bTankSpawned = false;
