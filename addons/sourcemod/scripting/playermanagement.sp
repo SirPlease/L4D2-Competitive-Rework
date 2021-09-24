@@ -6,6 +6,8 @@
 
 #define ZC_TANK 8
 
+#define GAMEDATA "l4d2_si_ability"
+
 public Plugin:myinfo =
 {
 	name = "Player Management Plugin",
@@ -50,6 +52,8 @@ new Handle:SpecTimer[MAXPLAYERS+1];
 
 new TimerLive = 0;
 
+int m_queuedPummelAttacker = -1;
+
 new Handle:l4d_pm_supress_spectate;
 
 public OnPluginStart()
@@ -73,6 +77,20 @@ public OnPluginStart()
 	z_max_player_zombies = FindConVar("z_max_player_zombies");
 
 	l4d_pm_supress_spectate = CreateConVar("l4d_pm_supress_spectate", "0", "Don't print messages when players spectate");
+	
+	
+	Handle hGamedata = LoadGameConfigFile(GAMEDATA);
+
+	if (!hGamedata) {
+		SetFailState("Gamedata '%s.txt' missing or corrupt.", GAMEDATA);
+	}
+	
+	m_queuedPummelAttacker = GameConfGetOffset(hGamedata, "CTerrorPlayer->m_queuedPummelAttacker");
+	if (m_queuedPummelAttacker == -1) {
+		SetFailState("Failed to get offset 'CTerrorPlayer->m_queuedPummelAttacker'.");
+	}
+	
+	delete hGamedata;
 }
 
 public OnMapStart()
@@ -135,9 +153,9 @@ public Action:Spectate_Cmd(client, args)
 
 	if (team == L4D2Team_Survivor)
 	{
-		if (IsSurvivorAttacked(client))
+		if ((IsSurvivorAttacked(client) && !IsSurvivorAndIncapacitated(client)) || GetPummelQueueAttacker(client) != -1)
 		{
-			CPrintToChat(client, "You {red}cannot{default} spectate while capped!");
+			CPrintToChat(client, "No spectating while capped!");
 			return Plugin_Handled;
 		}
 		else
@@ -491,13 +509,45 @@ stock L4D2Team:GetClientTeamEx(client)
 	return L4D2Team:GetClientTeam(client);
 }
 
-stock bool IsSurvivorAttacked(int survivor)
+stock bool IsValidClient(int client)
 {
-	for (int i = 0; i < sizeof(L4D2_AttackerNetProps); i++) {
-		if (GetEntPropEnt(survivor, Prop_Send, L4D2_AttackerNetProps[i]) != -1) {
+	return (client > 0 && client <= MaxClients && IsClientInGame(client));
+}
+
+stock bool IsSurvivor(int client)
+{
+	return (IsValidClient(client) && L4D2Team:GetClientTeam(client) == L4D2Team_Survivor);
+}
+
+stock bool IsSurvivorAndIncapacitated(int client)
+{
+	if (IsSurvivor(client)) {
+		if (GetEntProp(client, Prop_Send, "m_isIncapacitated") > 0) {
+			return true;
+		}
+
+		if (!IsPlayerAlive(client)) {
 			return true;
 		}
 	}
 
 	return false;
+}
+
+stock bool IsSurvivorAttacked(int client)
+{
+	if (IsSurvivor(client)) {
+		for (int i = 0; i < sizeof(L4D2_AttackerNetProps); i++) {
+			if (GetEntPropEnt(client, Prop_Send, L4D2_AttackerNetProps[i]) != -1) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+stock int GetPummelQueueAttacker(int client)
+{
+	return GetEntDataEnt2(client, m_queuedPummelAttacker);
 }
