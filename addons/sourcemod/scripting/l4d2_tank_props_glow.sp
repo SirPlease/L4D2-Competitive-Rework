@@ -43,8 +43,8 @@ bool
 public Plugin myinfo =
 {
 	name = "L4D2 Tank Hittable Glow",
-	author = "Harry Potter, Sir, A1m`",
-	version = "2.3",
+	author = "Harry Potter, Sir, A1m`, Derpduck",
+	version = "2.4",
 	description = "Stop tank props from fading whilst the tank is alive + add Hittable Glow."
 };
 
