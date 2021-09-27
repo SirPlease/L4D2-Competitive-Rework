@@ -6,6 +6,8 @@
 
 #define ZC_TANK 8
 
+#define GAMEDATA "l4d2_si_ability"
+
 public Plugin:myinfo =
 {
 	name = "Player Management Plugin",
@@ -31,6 +33,15 @@ new const L4D2Team:oppositeTeamMap[] =
 	L4D2Team_Survivor
 };
 
+public const char L4D2_AttackerNetProps[][] =
+{
+	"m_tongueOwner",	// Smoker
+	"m_pounceAttacker",	// Hunter
+	"m_jockeyAttacker",	// Jockey
+	"m_carryAttacker", // Charger carry
+	"m_pummelAttacker",	// Charger pummel
+};
+
 new Handle:survivor_limit;
 new Handle:z_max_player_zombies;
 
@@ -40,6 +51,8 @@ new bool:isMapActive = false;
 new Handle:SpecTimer[MAXPLAYERS+1];
 
 new TimerLive = 0;
+
+int m_queuedPummelAttacker = -1;
 
 new Handle:l4d_pm_supress_spectate;
 
@@ -64,6 +77,20 @@ public OnPluginStart()
 	z_max_player_zombies = FindConVar("z_max_player_zombies");
 
 	l4d_pm_supress_spectate = CreateConVar("l4d_pm_supress_spectate", "0", "Don't print messages when players spectate");
+	
+	
+	Handle hGamedata = LoadGameConfigFile(GAMEDATA);
+
+	if (!hGamedata) {
+		SetFailState("Gamedata '%s.txt' missing or corrupt.", GAMEDATA);
+	}
+	
+	m_queuedPummelAttacker = GameConfGetOffset(hGamedata, "CTerrorPlayer->m_queuedPummelAttacker");
+	if (m_queuedPummelAttacker == -1) {
+		SetFailState("Failed to get offset 'CTerrorPlayer->m_queuedPummelAttacker'.");
+	}
+	
+	delete hGamedata;
 }
 
 public OnMapStart()
@@ -123,13 +150,18 @@ public OnClientDisconnect_Post(client)
 public Action:Spectate_Cmd(client, args)
 {
 	new L4D2Team:team = GetClientTeamEx(client);
-	if (!GetConVarBool(l4d_pm_supress_spectate) && team != L4D2Team_Spectator && SpecTimer[client] == INVALID_HANDLE)
-	{
-		CPrintToChatAllEx(client, "{teamcolor}%N{default} has become a spectator!", client);
-	}
+
 	if (team == L4D2Team_Survivor)
 	{
-		ChangeClientTeamEx(client, L4D2Team_Spectator, true);
+		if ((IsSurvivorAttacked(client) && !IsSurvivorAndIncapacitated(client)) || GetPummelQueueAttacker(client) != -1)
+		{
+			CPrintToChat(client, "No spectating while capped!");
+			return Plugin_Handled;
+		}
+		else
+		{
+			ChangeClientTeamEx(client, L4D2Team_Spectator, true);
+		}
 	}
 	else if (team == L4D2Team_Infected)
 	{
@@ -149,6 +181,12 @@ public Action:Spectate_Cmd(client, args)
 			CreateTimer(0.1, RespecDelay_Timer, client);
 		}
 	}
+	
+	if (!GetConVarBool(l4d_pm_supress_spectate) && team != L4D2Team_Spectator && SpecTimer[client] == INVALID_HANDLE)
+	{
+		CPrintToChatAllEx(client, "{teamcolor}%N{default} has become a spectator!", client);
+	}
+	
 	if (SpecTimer[client] == INVALID_HANDLE) SpecTimer[client] = CreateTimer(7.0, SecureSpec, client);
 	return Plugin_Handled;
 }
@@ -469,4 +507,47 @@ stock FixBotCount()
 stock L4D2Team:GetClientTeamEx(client)
 {
 	return L4D2Team:GetClientTeam(client);
+}
+
+stock bool IsValidClient(int client)
+{
+	return (client > 0 && client <= MaxClients && IsClientInGame(client));
+}
+
+stock bool IsSurvivor(int client)
+{
+	return (IsValidClient(client) && L4D2Team:GetClientTeam(client) == L4D2Team_Survivor);
+}
+
+stock bool IsSurvivorAndIncapacitated(int client)
+{
+	if (IsSurvivor(client)) {
+		if (GetEntProp(client, Prop_Send, "m_isIncapacitated") > 0) {
+			return true;
+		}
+
+		if (!IsPlayerAlive(client)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+stock bool IsSurvivorAttacked(int client)
+{
+	if (IsSurvivor(client)) {
+		for (int i = 0; i < sizeof(L4D2_AttackerNetProps); i++) {
+			if (GetEntPropEnt(client, Prop_Send, L4D2_AttackerNetProps[i]) != -1) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+stock int GetPummelQueueAttacker(int client)
+{
+	return GetEntDataEnt2(client, m_queuedPummelAttacker);
 }
