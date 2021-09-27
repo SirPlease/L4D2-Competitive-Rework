@@ -138,6 +138,18 @@
 				"linux"		"181"
 				"windows"	"498"
 			}
+			
+			"CBaseCombatWeapon::AbortReload"
+			{
+				"linux"		"281"
+				"windows"	"280"
+			}
+			
+			"CBaseCombatWeapon::Holster"
+			{
+				"linux"		"266"
+				"windows"	"265"
+			}
 		}
 		"Signatures"
 		{

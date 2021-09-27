@@ -1,4 +1,4 @@
-#define PLUGIN_VERSION 		"2.3"
+#define PLUGIN_VERSION 		"2.4"
 
 /*
 *	Ladder Rambos Dhooks
@@ -44,16 +44,18 @@
 
 #define GAMEDATA			"l4d2_ladderrambos"
 
-// Setting up ConVAr Handles
+// Setting up ConVar Handles
 ConVar	Cvar_Enabled;
 ConVar	Cvar_M2;
 ConVar	Cvar_Reload;
+ConVar	Cvar_SgReload;
 ConVar	Cvar_Debug;
 
-// ConVAr Storage
+// ConVar Storage
 bool	bCvar_Enabled;
 bool	bCvar_M2;
 bool	bCvar_Reload;
+bool	bCvar_SgReload;
 bool	bCvar_Debug;
 
 // Patching from [l4d2_cs_ladders] credit to Lux
@@ -68,6 +70,10 @@ MemoryPatch hPatch_PreThink;
 MemoryPatch hPatch_OnLadderMount;
 MemoryPatch hPatch_OnLadderDismount;
 
+// Block shotgun reload
+Handle hSDKCall_AbortReload;
+Handle hSDKCall_Holster;
+
 // ====================================================================================================
 // myinfo - Basic plugin information
 // ====================================================================================================
@@ -75,7 +81,7 @@ MemoryPatch hPatch_OnLadderDismount;
 public Plugin myinfo =
 {
 	name			=	"Ladder Rambos Dhooks [Merged]",
-	author			=	"$atanic $pirit, Lux",
+	author			=	"$atanic $pirit, Lux, Forgetest",
 	description		=	"Allows players to shoot from Ladders",
 	version			=	PLUGIN_VERSION,
 	url				=	""
@@ -88,18 +94,45 @@ public Plugin myinfo =
 public void OnPluginStart()
 {	
 	// Setup plugin ConVars
-	Cvar_Enabled	= CreateConVar("cssladders_enabled",			"1",	"Enable the Survivors to shoot from ladders? 1 to enable, 0 to disable.");
-	Cvar_M2			= CreateConVar("cssladders_allow_m2",			"0",	"Allow shoving whilst on a ladder? 1 to allow M2, 0 to block.");
-	Cvar_Reload		= CreateConVar("cssladders_allow_reload",		"1",	"Allow reloading whilst on a ladder? 1 to allow M2, 0 to block. Keep in mind that shotguns are broken and won't reload on ladders no matter what.");
-	Cvar_Debug		= CreateConVar("cssladders_debug",				"0",	"On/Off switch to log debug messages");
+	Cvar_Enabled	= CreateConVar(
+								"cssladders_enabled",
+								"1",
+								"Enable the Survivors to shoot from ladders? 1 to enable, 0 to disable.",
+								FCVAR_NOTIFY|FCVAR_SPONLY,
+								true, 0.0, true, 1.0);
+	Cvar_M2			= CreateConVar(
+								"cssladders_allow_m2",
+								"0",
+								"Allow shoving whilst on a ladder? 1 to allow, 0 to block.",
+								FCVAR_NOTIFY|FCVAR_SPONLY,
+								true, 0.0, true, 1.0);
+	Cvar_Reload		= CreateConVar(
+								"cssladders_allow_reload",
+								"1",
+								"Allow reloading whilst on a ladder? 1 to allow, 0 to block.",
+								FCVAR_NOTIFY|FCVAR_SPONLY,
+								true, 0.0, true, 1.0);
+	Cvar_SgReload	= CreateConVar(
+								"cssladders_allow_shotgun_reload",
+								"1",
+								"Allow shotgun reloading whilst on a ladder? 1 to allow, 0 to block.",
+								FCVAR_NOTIFY|FCVAR_SPONLY,
+								true, 0.0, true, 1.0);
+	Cvar_Debug		= CreateConVar(
+								"cssladders_debug",
+								"0",
+								"On/Off switch to log debug messages",
+								FCVAR_HIDDEN,
+								true, 0.0, true, 1.0);
 	
 	// Setup ConVars change hook
 	Cvar_Enabled.AddChangeHook(OnEnableDisable);
 	Cvar_M2.AddChangeHook(OnConVarChanged);
 	Cvar_Reload.AddChangeHook(OnConVarChanged);
+	Cvar_SgReload.AddChangeHook(OnConVarChanged);
 	Cvar_Debug.AddChangeHook(OnConVarChanged);
 	
-	// ConVAr Storage
+	// ConVar Storage
 	GetCvars();
 	
 	// Load the GameData file.
@@ -121,6 +154,25 @@ public void OnPluginStart()
 	Handle hDetour_ShotgunReload = DHookCreateFromConf(hGameData, "CBaseShotgun::Reload");
 	if( !hDetour_ShotgunReload )
 		SetFailState("Failed to setup detour for hDetour_ShotgunReload");
+	
+	StartPrepSDKCall(SDKCall_Entity);
+	if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Virtual, "CBaseCombatWeapon::AbortReload")) {
+		SetFailState("Failed to find offset \"CBaseCombatWeapon::AbortReload\"");
+	} else {
+		hSDKCall_AbortReload = EndPrepSDKCall();
+		if (hSDKCall_AbortReload == null)
+			SetFailState("Failed to setup SDKCall \"CBaseCombatWeapon::AbortReload\"");
+	}
+	
+	StartPrepSDKCall(SDKCall_Entity);
+	if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Virtual, "CBaseCombatWeapon::Holster")) {
+		SetFailState("Failed to find offset \"CBaseCombatWeapon::Holster\"");
+	} else {
+		PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_ByValue);
+		hSDKCall_Holster = EndPrepSDKCall();
+		if (hSDKCall_Holster == null)
+			SetFailState("Failed to setup SDKCall \"CBaseCombatWeapon::Holster\"");
+	}
 	
 	hPatch_CanDeployFor = MemoryPatch.CreateFromConf(hGameData, TERROR_CAN_DEPLOY_FOR_KEY);
 	if(!hPatch_CanDeployFor.Validate())
@@ -202,6 +254,7 @@ void GetCvars()
 {
 	bCvar_M2 = Cvar_M2.BoolValue;
 	bCvar_Reload = Cvar_Reload.BoolValue;
+	bCvar_SgReload = Cvar_SgReload.BoolValue;
 	bCvar_Debug = Cvar_Debug.BoolValue;
 }
 
@@ -222,13 +275,33 @@ public MRESReturn Detour_CanDeployFor(int pThis, Handle hReturn)
 	
 	if (bIsOnLadder)
 	{
-		if (GetClientTeam(client) == 2) // Infected triggers this though, will be blocked
+		// Infected triggers this though, will be blocked
+		// v2.4: Forgot melees, block them
+		if (GetClientTeam(client) == 2 && !HasEntProp(pThis, Prop_Send, "m_bInMeleeSwing"))
 		{
 			if(!bCvar_M2)
-				SetEntPropFloat(client, Prop_Send, "m_flNextShoveTime", GetGameTime() + 0.1);
+				SetEntPropFloat(client, Prop_Send, "m_flNextShoveTime", GetGameTime() + 0.2);
+			
+			bool bEmptyClip = GetEntProp(pThis, Prop_Send, "m_iClip1") == 0;
+			bool bReloading = GetEntProp(pThis, Prop_Send, "m_bInReload") == 1;
+			
+			if (HasEntProp(pThis, Prop_Send, "m_reloadNumShells") ? (!bCvar_SgReload) : (!bCvar_Reload))
+			{
+				if (bReloading)
+				{
+					Weapon_AbortReload(pThis);
+				}
+				
+				if (bEmptyClip)
+				{
+					Weapon_Holster(pThis);
+					DHookSetReturn(hReturn, 0);
+					return MRES_Supercede;
+				}
+			}
 			
 			int weapon = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
-			if (weapon == pThis || weapon == EntRefToEntIndex(pThis)/* Safety? */)
+			if (weapon == pThis)
 				return MRES_Ignored;
 			
 			LogAcitivity("Function::Detour_CanDeployFor IsPlayerOnLadder: %d, %N", bIsOnLadder, client);
@@ -266,7 +339,7 @@ public MRESReturn Detour_ShotgunReload(int pThis, Handle hReturn)
 {
 	int client = GetEntPropEnt(pThis, Prop_Data, "m_hOwnerEntity");
 	bool bIsOnLadder = GetEntityMoveType(client) == MOVETYPE_LADDER;
-	if(!bCvar_Reload && bIsOnLadder)
+	if(!bCvar_SgReload && bIsOnLadder)
 	{
 		LogAcitivity("Function::Detour_ShotgunReload blocking reload for %d, %N", bIsOnLadder, client);
 		return MRES_Supercede;
@@ -298,6 +371,23 @@ stock void LogAcitivity(const char[] format, any ...)
 	}
 }
 
+// ====================================================================================================
+// Weapon_AbortReload - SDKCall to abort weapon reload
+// ====================================================================================================
+
+void Weapon_AbortReload(int weapon)
+{
+	SDKCall(hSDKCall_AbortReload, weapon);
+}
+
+// ====================================================================================================
+// Weapon_Holster - SDKCall to stop pulling out weapon
+// ====================================================================================================
+
+void Weapon_Holster(int weapon)
+{
+	SDKCall(hSDKCall_Holster, weapon, 0);
+}
 
 // ====================================================================================================
 // SafeDropPatch - Patching/UnPatching the memory
