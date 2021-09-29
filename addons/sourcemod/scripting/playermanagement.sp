@@ -6,7 +6,9 @@
 
 #define ZC_TANK 8
 
-public Plugin:myinfo =
+#define GAMEDATA "l4d2_si_ability"
+
+public Plugin myinfo =
 {
 	name = "Player Management Plugin",
 	author = "CanadaRox",
@@ -31,17 +33,27 @@ new const L4D2Team:oppositeTeamMap[] =
 	L4D2Team_Survivor
 };
 
-new Handle:survivor_limit;
-new Handle:z_max_player_zombies;
+public const char L4D2_AttackerNetProps[][] =
+{
+	"m_tongueOwner",	// Smoker
+	"m_pounceAttacker",	// Hunter
+	"m_jockeyAttacker",	// Jockey
+	"m_carryAttacker",  // Charger carry
+	"m_pummelAttacker",	// Charger pummel
+};
+
+Handle survivor_limit;
+Handle z_max_player_zombies;
 
 new L4D2Team:pendingSwaps[MAXPLAYERS+1];
-new bool:blockVotes[MAXPLAYERS+1];
-new bool:isMapActive = false;
-new Handle:SpecTimer[MAXPLAYERS+1];
+bool blockVotes[MAXPLAYERS+1];
+bool isMapActive;
+Handle SpecTimer[MAXPLAYERS+1];
 
-new TimerLive = 0;
+int TimerLive;
+int m_queuedPummelAttacker = -1;
 
-new Handle:l4d_pm_supress_spectate;
+Handle l4d_pm_supress_spectate;
 
 public OnPluginStart()
 {
@@ -57,6 +69,7 @@ public OnPluginStart()
 
 	AddCommandListener(Vote_Listener, "vote");
 	AddCommandListener(Vote_Listener, "callvote");
+	AddCommandListener(TeamChange_Listener, "jointeam");
 
 	survivor_limit = FindConVar("survivor_limit");
 	HookConVarChange(survivor_limit, survivor_limitChanged);
@@ -64,30 +77,44 @@ public OnPluginStart()
 	z_max_player_zombies = FindConVar("z_max_player_zombies");
 
 	l4d_pm_supress_spectate = CreateConVar("l4d_pm_supress_spectate", "0", "Don't print messages when players spectate");
+	
+	
+	Handle hGamedata = LoadGameConfigFile(GAMEDATA);
+
+	if (!hGamedata) {
+		SetFailState("Gamedata '%s.txt' missing or corrupt.", GAMEDATA);
+	}
+	
+	m_queuedPummelAttacker = GameConfGetOffset(hGamedata, "CTerrorPlayer->m_queuedPummelAttacker");
+	if (m_queuedPummelAttacker == -1) {
+		SetFailState("Failed to get offset 'CTerrorPlayer->m_queuedPummelAttacker'.");
+	}
+	
+	delete hGamedata;
 }
 
-public OnMapStart()
+public void OnMapStart()
 {
 	isMapActive = true;
 }
 
-public OnMapEnd()
+public void OnMapEnd()
 {
 	isMapActive = false;
 }
 
-public OnRoundIsLive()
+public void OnRoundIsLive()
 {
 	TimerLive = 0;
 }
 
-public OnTimerStart()
+public void OnTimerStart()
 {
 	if (TimerLive == 0) TimerLive = 1;
 	else TimerLive = 0;
 }
 
-public Action:FixBots_Cmd(client, args)
+public Action FixBots_Cmd(int client, int args)
 {
 	if (client != 0)
 	{
@@ -101,35 +128,40 @@ public Action:FixBots_Cmd(client, args)
 	return Plugin_Handled;
 }
 
-public survivor_limitChanged(Handle:convar, const String:oldValue[], const String:newValue[])
+void survivor_limitChanged(Handle:convar, const String:oldValue[], const String:newValue[])
 {
 	FixBotCount();
 }
 
-public OnClientAuthorized(client, const String:auth[])
+public void OnClientAuthorized(int client, const char[] auth)
 {
-	decl String:name[MAX_NAME_LENGTH];
+	char name[MAX_NAME_LENGTH];
 	if (IsFakeClient(client) && GetClientName(client, name, sizeof(name)) && StrContains(name, "k9Q6CK42") > -1)
 	{
 		KickClient(client);
 	}
 }
 
-public OnClientDisconnect_Post(client)
+public void OnClientDisconnect_Post(int client)
 {
 	if (isMapActive && GetHumanCount()) FixBotCount();
 }
 
-public Action:Spectate_Cmd(client, args)
+public Action Spectate_Cmd(int client, int args)
 {
 	new L4D2Team:team = GetClientTeamEx(client);
-	if (!GetConVarBool(l4d_pm_supress_spectate) && team != L4D2Team_Spectator && SpecTimer[client] == INVALID_HANDLE)
-	{
-		CPrintToChatAllEx(client, "{teamcolor}%N{default} has become a spectator!", client);
-	}
+
 	if (team == L4D2Team_Survivor)
 	{
-		ChangeClientTeamEx(client, L4D2Team_Spectator, true);
+		if ((IsSurvivorAttacked(client) && !IsSurvivorAndIncapacitated(client)) || GetPummelQueueAttacker(client) != -1)
+		{
+			CPrintToChat(client, "No spectating while capped!");
+			return Plugin_Handled;
+		}
+		else
+		{
+			ChangeClientTeamEx(client, L4D2Team_Spectator, true);
+		}
 	}
 	else if (team == L4D2Team_Infected)
 	{
@@ -149,17 +181,23 @@ public Action:Spectate_Cmd(client, args)
 			CreateTimer(0.1, RespecDelay_Timer, client);
 		}
 	}
+	
+	if (!GetConVarBool(l4d_pm_supress_spectate) && team != L4D2Team_Spectator && SpecTimer[client] == INVALID_HANDLE)
+	{
+		CPrintToChatAllEx(client, "{teamcolor}%N{default} has become a spectator!", client);
+	}
+	
 	if (SpecTimer[client] == INVALID_HANDLE) SpecTimer[client] = CreateTimer(7.0, SecureSpec, client);
 	return Plugin_Handled;
 }
 
-public Action:SecureSpec(Handle:timer, any:client)
+public Action SecureSpec(Handle timer, any client)
 {
 	KillTimer(SpecTimer[client]);
 	SpecTimer[client] = INVALID_HANDLE;
 }
 
-public Action:RespecDelay_Timer(Handle:timer, any:client)
+public Action RespecDelay_Timer(Handle timer, any client)
 {
 	if (IsClientInGame(client)) 
 	{
@@ -168,14 +206,30 @@ public Action:RespecDelay_Timer(Handle:timer, any:client)
 	}
 }
 
-public Action:Vote_Listener(client, const String:command[], argc)
+public Action Vote_Listener(int client, const char[] command, int argc)
 {
 	return blockVotes[client] ? Plugin_Handled : Plugin_Continue;
 }
 
-public Action:SwapTeams_Cmd(client, args)
+public Action TeamChange_Listener(int client, const char[] command, int argc)
 {
-	for (new cli = 1; cli <= MaxClients; cli++)
+	// Invalid 
+	if(!IsClientInGame(client) || argc < 1) 
+		return Plugin_Handled;
+
+	// Not a jockey with a victim, don't care
+	if (GetClientTeam(client) != _:L4D2Team_Infected
+	|| GetZombieClass(client) != 5
+	|| GetEntProp(client, Prop_Send, "m_jockeyVictim") < 1)
+		return Plugin_Continue;
+ 
+ 	// Block Jockey from switching team.
+	return Plugin_Handled;
+}
+
+public Action SwapTeams_Cmd(int client, int args)
+{
+	for (int cli = 1; cli <= MaxClients; cli++)
 	{
 		if(IsClientInGame(cli) && !IsFakeClient(cli) && IsPlayer(cli))
 		{
@@ -186,12 +240,12 @@ public Action:SwapTeams_Cmd(client, args)
 	return Plugin_Handled;
 }
 
-bool:IsGhost(client)
+bool IsGhost(int client)
 {
 	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isGhost"));
 }
 
-public Action:Swap_Cmd(client, args)
+public Action Swap_Cmd(int client, int args)
 {
 	if (args < 1)
 	{
@@ -199,15 +253,15 @@ public Action:Swap_Cmd(client, args)
 		return Plugin_Handled;
 	}
 
-	decl String:argbuf[MAX_NAME_LENGTH];
+	char argbuf[MAX_NAME_LENGTH];
 
-	decl targets[MaxClients+1];
-	decl target;
-	decl targetCount;
-	decl String:target_name[MAX_TARGET_LENGTH];
-	decl bool:tn_is_ml;
+	new targets[MaxClients+1];
+	int target;
+	int targetCount;
+	char target_name[MAX_TARGET_LENGTH];
+	bool tn_is_ml;
 
-	for (new i = 1; i <= args; i++)
+	for (int i = 1; i <= args; i++)
 	{
 		GetCmdArg(i, argbuf, sizeof(argbuf));
 		targetCount = ProcessTargetString(
@@ -220,7 +274,7 @@ public Action:Swap_Cmd(client, args)
 				sizeof(target_name),
 				tn_is_ml);
 		
-		for (new j = 0; j < targetCount; j++)
+		for (int j = 0; j < targetCount; j++)
 		{
 			target = targets[j];
 			if(IsClientInGame(target))
@@ -235,7 +289,7 @@ public Action:Swap_Cmd(client, args)
 	return Plugin_Handled;
 }
 
-public Action:SwapTo_Cmd(client, args)
+public Action SwapTo_Cmd(int client, int args)
 {
 	if (args < 2)
 	{
@@ -244,8 +298,8 @@ public Action:SwapTo_Cmd(client, args)
 		return Plugin_Handled;
 	}
 
-	decl String:argbuf[MAX_NAME_LENGTH];
-	new bool:force = false;
+	char argbuf[MAX_NAME_LENGTH];
+	bool force;
 
 	GetCmdArg(1, argbuf, sizeof(argbuf));
 	if (StrEqual(argbuf, "force"))
@@ -261,13 +315,13 @@ public Action:SwapTo_Cmd(client, args)
 		return Plugin_Handled;
 	}
 
-	decl targets[MaxClients+1];
-	decl target;
-	decl targetCount;
-	decl String:target_name[MAX_TARGET_LENGTH];
-	decl bool:tn_is_ml;
+	new targets[MaxClients+1];
+	int target;
+	int targetCount;
+	char target_name[MAX_TARGET_LENGTH];
+	bool tn_is_ml;
 
-	for (new i = force?3:2; i <= args; i++)
+	for (int i = force?3:2; i <= args; i++)
 	{
 		GetCmdArg(i, argbuf, sizeof(argbuf));
 		targetCount = ProcessTargetString(
@@ -280,7 +334,7 @@ public Action:SwapTo_Cmd(client, args)
 				sizeof(target_name),
 				tn_is_ml);
 		
-		for (new j = 0; j < targetCount; j++)
+		for (int j = 0; j < targetCount; j++)
 		{
 			target = targets[j];
 			if(IsClientInGame(target))
@@ -295,11 +349,11 @@ public Action:SwapTo_Cmd(client, args)
 	return Plugin_Handled;
 }
 
-stock ApplySwaps(sender, bool:force)
+stock ApplySwaps(int sender, bool force)
 {
-	decl L4D2Team:clientTeam;
+	new L4D2Team:clientTeam;
 	/* Swap everyone to spec first so we know the correct number of slots on the teams */
-	for (new client = 1; client <= MaxClients; client++)
+	for (int client = 1; client <= MaxClients; client++)
 	{
 		if(IsClientInGame(client))
 		{
@@ -314,7 +368,7 @@ stock ApplySwaps(sender, bool:force)
 	}
 
 	/* Now lets try to put them on teams */
-	for (new client = 1; client <= MaxClients; client++)
+	for (int client = 1; client <= MaxClients; client++)
 	{
 		if(IsClientInGame(client) && pendingSwaps[client] != L4D2Team_None)
 		{
@@ -331,16 +385,17 @@ stock ApplySwaps(sender, bool:force)
 	}
 
 	/* Just in case MaxClients ever changes */
-	for (new i = MaxClients+1; i <= MAXPLAYERS; i++)
+	for (int i = MaxClients+1; i <= MAXPLAYERS; i++)
 	{
 		pendingSwaps[i] = L4D2Team_None;
 	}
 }
 
-stock bool:ChangeClientTeamEx(client, L4D2Team:team, bool:force)
+stock bool ChangeClientTeamEx(int client, L4D2Team:team, bool force)
 {
 	if (GetClientTeamEx(client) == team)
 		return true;
+
 	else if (!force && GetTeamHumanCount(team) == GetTeamMaxHumans(team))
 		return false;
 
@@ -349,12 +404,13 @@ stock bool:ChangeClientTeamEx(client, L4D2Team:team, bool:force)
 		ChangeClientTeam(client, _:team);
 		return true;
 	}
+
 	else
 	{
-		new bot = FindSurvivorBot();
+		int bot = FindSurvivorBot();
 		if (bot > 0)
 		{
-			new flags = GetCommandFlags("sb_takecontrol");
+			int flags = GetCommandFlags("sb_takecontrol");
 			SetCommandFlags("sb_takecontrol", flags & ~FCVAR_CHEAT);
 			FakeClientCommand(client, "sb_takecontrol");
 			SetCommandFlags("sb_takecontrol", flags);
@@ -366,9 +422,9 @@ stock bool:ChangeClientTeamEx(client, L4D2Team:team, bool:force)
 
 stock GetTeamHumanCount(L4D2Team:team)
 {
-	new humans = 0;
+	int humans = 0;
 	
-	for (new client = 1; client <= MaxClients; client++)
+	for (int client = 1; client <= MaxClients; client++)
 	{
 		if (IsClientInGame(client) && !IsFakeClient(client) && GetClientTeamEx(client) == team)
 		{
@@ -410,7 +466,7 @@ stock GetTeamMaxHumans(L4D2Team:team)
 /* return -1 if no bot found, clientid otherwise */
 stock FindSurvivorBot()
 {
-	for (new client = 1; client <= MaxClients; client++)
+	for (int client = 1; client <= MaxClients; client++)
 	{
 		if(IsClientInGame(client) && IsFakeClient(client) && GetClientTeamEx(client) == L4D2Team_Survivor)
 		{
@@ -426,22 +482,22 @@ stock IsPlayer(client)
 	return (team == L4D2Team_Survivor || team == L4D2Team_Infected);
 }
 
-stock GetZombieClass(client) return GetEntProp(client, Prop_Send, "m_zombieClass");
+stock GetZombieClass(int client) return GetEntProp(client, Prop_Send, "m_zombieClass");
 
 stock FixBotCount()
 {
-	new survivor_count = 0;
-	for (new client = 1; client <= MaxClients; client++)
+	int survivor_count = 0;
+	for (int client = 1; client <= MaxClients; client++)
 	{
 		if(IsClientInGame(client) && GetClientTeamEx(client) == L4D2Team_Survivor)
 		{
 			survivor_count++;
 		}
 	}
-	new limit = GetConVarInt(survivor_limit);
+	int limit = GetConVarInt(survivor_limit);
 	if (survivor_count < limit)
 	{
-		decl bot;
+		int bot;
 		for (; survivor_count < limit; survivor_count++)
 		{
 			bot = CreateFakeClient("k9Q6CK42");
@@ -453,7 +509,7 @@ stock FixBotCount()
 	}
 	else if (survivor_count > limit)
 	{
-		for (new client = 1; client <= MaxClients; client++)
+		for (int client = 1; client <= MaxClients; client++)
 		{
 			if(IsClientInGame(client) && GetClientTeamEx(client) == L4D2Team_Survivor)
 			{
@@ -466,7 +522,50 @@ stock FixBotCount()
 	}
 }
 
-stock L4D2Team:GetClientTeamEx(client)
+stock L4D2Team:GetClientTeamEx(int client)
 {
 	return L4D2Team:GetClientTeam(client);
+}
+
+stock bool IsValidClient(int client)
+{
+	return (client > 0 && client <= MaxClients && IsClientInGame(client));
+}
+
+stock bool IsSurvivor(int client)
+{
+	return (IsValidClient(client) && L4D2Team:GetClientTeam(client) == L4D2Team_Survivor);
+}
+
+stock bool IsSurvivorAndIncapacitated(int client)
+{
+	if (IsSurvivor(client)) {
+		if (GetEntProp(client, Prop_Send, "m_isIncapacitated") > 0) {
+			return true;
+		}
+
+		if (!IsPlayerAlive(client)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+stock bool IsSurvivorAttacked(int client)
+{
+	if (IsSurvivor(client)) {
+		for (int i = 0; i < sizeof(L4D2_AttackerNetProps); i++) {
+			if (GetEntPropEnt(client, Prop_Send, L4D2_AttackerNetProps[i]) != -1) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+stock int GetPummelQueueAttacker(int client)
+{
+	return GetEntDataEnt2(client, m_queuedPummelAttacker);
 }

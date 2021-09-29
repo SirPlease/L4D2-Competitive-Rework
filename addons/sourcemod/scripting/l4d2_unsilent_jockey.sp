@@ -16,15 +16,11 @@
 
 ConVar 
     hPluginEnabled,
-    hJockeyVoiceInterval,
-    hDebug;
+    hJockeyVoiceInterval;
+
 
 Handle 
     hJockeySoundTimer[MAXPLAYERS+1];
-
-bool
-    isEnabled,
-    isDebug;
 
 float
     fJockeyVoiceInterval;
@@ -55,6 +51,9 @@ char sJockeySound[MAX_JOCKEYSOUND+1][] =
 
 Changelog
 ---------
+0.4 (Sir)
+- Refined the code a bit, simpler code.
+- Fixes an issue with timers still existing on players.
 0.3 (Sir)
 - Updated the code to the latest syntax.
 - Add additional checks/optimization to resolve potential and existing issues with 0.2-alpha.
@@ -74,7 +73,7 @@ public Plugin myinfo =
     name = "Unsilent Jockey",
     author = "Tabun, robex, Sir",
     description = "Makes jockeys emit sound constantly.",
-    version = "0.3",
+    version = "0.4",
     url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
@@ -85,17 +84,12 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
     // ConVars
-    hPluginEnabled          = CreateConVar("sm_unsilentjockey_enabled", "1", "Enable unsilent jockey mode.", _, true, 0.0, true, 1.0);
     hJockeyVoiceInterval    = CreateConVar("sm_unsilentjockey_interval", "2.0", "Interval between forced jockey sounds.");
-    hDebug                  = CreateConVar("sm_unsilentjockey_debug", "0", "Enable debug mode.", _, true, 0.0, true, 1.0);
 
-    isEnabled            = hPluginEnabled.BoolValue;
-    isDebug              = hDebug.BoolValue;
     fJockeyVoiceInterval = hJockeyVoiceInterval.FloatValue;
 
     hPluginEnabled.AddChangeHook(ConVar_Changed);
     hJockeyVoiceInterval.AddChangeHook(ConVar_Changed);
-    hDebug.AddChangeHook(ConVar_Changed);
 
     // Events
     HookEvent("player_spawn", PlayerSpawn_Event);
@@ -107,8 +101,6 @@ public void OnPluginStart()
 
 public void ConVar_Changed(ConVar convar, const char[] oldValue, const char[] newValue)
 {
-    isEnabled            = hPluginEnabled.BoolValue;
-    isDebug              = hDebug.BoolValue;
     fJockeyVoiceInterval = hJockeyVoiceInterval.FloatValue;
 }
 
@@ -117,7 +109,6 @@ public void OnMapStart()
     // Precache
     for (int i = 0; i <= MAX_JOCKEYSOUND; i++)
     {
-        PrefetchSound(sJockeySound[i]);
         PrecacheSound(sJockeySound[i], true);
     }
 }
@@ -130,41 +121,25 @@ public void OnMapStart()
 public void L4D_OnEnterGhostState(int client)
 {
     // Simply disable the timer if the client enters ghost mode and has the timer set.
-
-    /// --- DEBUG
-    if (isDebug)
-        PrintToChatAll("\x04uj: \x01Removed Jockey timer on Ghost Mode \x03%N\x01.", client);
-
     ChangeJockeyTimerStatus(client, false);
 }
 
 public Action PlayerSpawn_Event(Event event, const char[] name, bool dontBroadcast)
 {
-    if (!isEnabled)
-        return;
-
     int client = GetClientOfUserId(event.GetInt("userid"));
 
+    // Valve
     if (!IsClientAndInGame(client))
         return;
+
+    // Kill the sound timer if it exists (this will also trigger if you switch to Tank)
+    ChangeJockeyTimerStatus(client, false);
 
     if (!IsInfected(client))
         return;
 
-    // Check if the player is becoming the Tank to get rid of the timer, or else it would keep playing.
-    if (IsTank(client))
-    {
-        // If we have a timer running, get rid of it here.
-        ChangeJockeyTimerStatus(client, false);
-        return;
-    }
-
     if (!IsJockey(client))
         return;
-
-    /// --- DEBUG
-    if (isDebug)
-        PrintToChatAll("\x04uj: \x01Jockey spawned: \x03%N\x01.", client);
 
     // Setup the sound interval
     ChangeJockeyTimerStatus(client, true);
@@ -174,48 +149,31 @@ public Action PlayerDeath_Event(Event event, const char[] name, bool dontBroadca
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
 
+    // Valve
     if (!IsClientAndInGame(client))
         return;
 
-    if (!IsInfected(client))
-        return;
-
-    if (!IsJockey(client))
-        return;
-
-    /// --- DEBUG
-    if (isDebug)
-        PrintToChatAll("\x04uj: \x01 Jockey died: \x03%N\x01.", client);
-
-    // Kill Sound timer.
+    // Kill the sound timer if it exists
     ChangeJockeyTimerStatus(client, false);
 }
 
 public Action PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
-    int oldTeam = event.GetInt("oldteam");
 
-    // Switched team
-    if (oldTeam == TEAM_INFECTED) 
-    {
-        /// --- DEBUG
-        if (isDebug)
-            PrintToChatAll("\x04uj: \x01Removed Jockey timer on team change: \x03%N\x01.", client);
+    // Valve
+    if (!IsClientAndInGame(client))
+        return;
 
-        // Kill Sound timer if it's active
-        ChangeJockeyTimerStatus(client, false);
-    }
+    // Kill the sound timer if it exists
+    ChangeJockeyTimerStatus(client, false);
 }
 
 public Action JockeyRideStart_Event(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
 
-    /// --- DEBUG
-    if (isDebug)
-        PrintToChatAll("\x03%N\x04: \x01Jockey sound ended because of a cap.", client);
-
+    // Jockey ridin' a Survivor
     ChangeJockeyTimerStatus(client, false);
 }
 
@@ -234,12 +192,8 @@ public void JockeyRideEnd_NextFrame(any userid)
     if (IsClientAndInGame(client)
         && IsPlayerAlive(client)) {
 
-        // Resume our sound spam
+        // Resume our sound spam as the Jockey is still alive
         ChangeJockeyTimerStatus(client, true);
-        
-        /// --- DEBUG
-        if (isDebug)
-            PrintToChatAll("\x04uj: \x01 Jockey(\x03%N\x01) got cleared, but is \x04alive\x01.", client);
     }
 }
 
@@ -249,10 +203,6 @@ public void JockeyRideEnd_NextFrame(any userid)
 
 public Action delayedJockeySound(Handle timer, any client)
 {
-    /// --- DEBUG
-    if (isDebug)
-        PrintToChatAll("\x03%N\x04: \x01Jockey sound...", client);
-
     int rndPick = GetRandomInt(0, MAX_JOCKEYSOUND);
     EmitSoundToAll(sJockeySound[rndPick], client, SNDCHAN_VOICE);
 }
@@ -274,11 +224,6 @@ bool IsInfected(int client)
 bool IsJockey(int client)
 {
     return GetEntProp(client, Prop_Send, "m_zombieClass") == ZC_JOCKEY;
-}
-
-bool IsTank(int client)
-{
-    return GetEntProp(client, Prop_Send, "m_zombieClass") == ZC_TANK;
 }
 
 void ChangeJockeyTimerStatus(int client, bool bEnable)

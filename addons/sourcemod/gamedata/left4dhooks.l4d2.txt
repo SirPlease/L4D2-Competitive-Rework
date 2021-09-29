@@ -1218,6 +1218,13 @@
 			{
 				"windows"	"332"
 				"linux"		"340"
+				// From "CTerrorPlayer::GetFlowDistance"
+			}
+			"m_chapter"
+			{
+				"windows"	"868"
+				"linux"		"876"
+				// From "Director::UpdateMapScores" before "CTerrorGameRules::GetTeamScore" call. // v5 = *((_DWORD *)this + 412);
 			}
 
 
@@ -1472,6 +1479,17 @@
 				"windows"		"\x55\x8B\x2A\x83\x2A\x2A\x8B\x2A\x2A\x56\x8B\x2A\x8D\x2A\x2A\x51\x8D\x2A\x2A\x89\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x75"
 				/* 55 8B ? 83 ? ? 8B ? ? 56 8B ? 8D ? ? 51 8D ? ? 89 ? ? E8 ? ? ? ? 83 ? ? 75 */
 				/* Search "models/props_junk/gascan001a.mdl", one of xrefs, compare to NIX code easily found. */
+			}
+
+			/*
+			* KeyValues *CTerrorGameRules::GetMissionInfo(void)
+			*/
+			"CTerrorGameRules::GetMissionInfo"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules14GetMissionInfoEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x01\x8B\x50\x28\x56\xFF\xD2\x8B\x10\x8B\xC8\x8B\x42"
+				/* 2A 2A 2A 2A 2A 2A 2A 2A 2A 2A 8B 01 8B 50 28 56 FF D2 8B 10 8B C8 8B 42 */
 			}
 
 			/*
@@ -1731,6 +1749,36 @@
 				"windows"	"\x53\x8B\x2A\x83\x2A\x08\x83\x2A\x2A\x83\x2A\x04\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x56"
 				/* 53 8B ? 83 ? 08 83 ? ? 83 ? 04 55 8B ? ? 89 ? ? ? 8B ? 83 ? ? A1 ? ? ? ? 33 ? 56 */
 				/* Search "Arguments: ( area, area, flMaxPathLengt". Go into 3rd sub above or 2nd in HexRays. Match against Linux function. At the bottom is a call to target function, which should contain "& 0xF9 | 9" a little above the middle of the script in Hexrays */
+			}
+
+			/* const char *KeyValues::GetString(const char *keyName, const char *defaultValue) */
+			"KeyValues::GetString"
+			{
+				"library"		"server"
+				"linux"			"@_ZN9KeyValues9GetStringEPKcS1_"
+				"windows"		"\x55\x8B\x2A\x81\x2A\x44\x02\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53"
+				/* 55 8B ? 81 ? 44 02 ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 */
+				/* Search: "WrongTeamMsg", call below is our function. */
+			}
+
+			/* CTerrorGameRules::GetNumChaptersForMissionAndMode(CTerrorGameRules *__hidden this) */
+			"GetNumChaptersForMissionAndMode"
+			{
+				"library"		"server"
+				"linux"			"@_ZN16CTerrorGameRules31GetNumChaptersForMissionAndModeEv"
+				"windows"		"\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x83\x2A\x2A\x2A\x2A\x2A\x2A\x75\x2A\x33"
+				/* 55 8B ? 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 83 ? ? ? ? ? ? 75 ? 33 */
+				/* Search: "Modes/%s". */
+			}
+
+			/* CDirector::GetGameModeBase(CDirector *__hidden this) */
+			"CDirector_GetGameModeBase"
+			{
+				"library"		"server"
+				"linux"			"@_ZN9CDirector15GetGameModeBaseEv"
+				"windows"		"\xF7\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x56\x74\x2A\xBE\x2A\x2A\x2A\x2A\xEB\x2A\xA1\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x85\x2A\x75\x2A\xBE\x2A\x2A\x2A\x2A\x8B"
+				/* F7 ? ? ? ? ? ? ? ? ? 56 74 ? BE ? ? ? ? EB ? A1 ? ? ? ? 8B ? ? 85 ? 75 ? BE ? ? ? ? 8B */
+				/* Search: "NumberOfTeamDead" call is 2 functions below this. */
 			}
 			// =========================
 
@@ -2303,8 +2351,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CDirector23RestartScenarioFromVoteEPKc"
-				"windows"	"\x55\x8B\xEC\x56\x8B\xF1\x8B\x0D\x2A\x2A\x2A\x2A\x57\x85"
-				/* 55 8B EC 56 8B F1 8B 0D ? ? ? ? 57 85 */
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x0D\x2A\x2A\x2A\x2A\x57\x85\x2A\x74\x2A\x6A"
+				/* ? ? ? ? ? ? 8B 0D ? ? ? ? 57 85 ? 74 ? 6A */
 			}
 
 			/*
@@ -2500,8 +2548,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer5FlingERK6Vector17PlayerAnimEvent_tP20CBaseCombatCharacterf"
-				"windows"	"\x53\x8B\xDC\x83\xEC\x2A\x83\xE4\x2A\x83\xC4\x2A\x55\x8B\x6B\x2A\x89\x6C\x2A\x2A\x8B\xEC\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\x2A\x8B\x43\x2A\x56\x8B\x73\x2A\x57\x6A\x2A\x8B\xF9\x89\x45"
-				/* 53 8B DC 83 EC ? 83 E4 ? 83 C4 ? 55 8B 6B ? 89 6C ? ? 8B EC 81 ? ? ? ? ? A1 ? ? ? ? 33 C5 89 45 ? 8B 43 ? 56 8B 73 ? 57 6A ? 8B F9 89 45 */
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\xE4\x2A\x83\xC4\x2A\x55\x8B\x6B\x2A\x89\x6C\x2A\x2A\x8B\xEC\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\x2A\x8B\x43\x2A\x56\x8B\x73\x2A\x57\x6A\x2A\x8B\xF9\x89\x45"
+				/* ? ? ? ? ? ? 83 E4 ? 83 C4 ? 55 8B 6B ? 89 6C ? ? 8B EC 81 ? ? ? ? ? A1 ? ? ? ? 33 C5 89 45 ? 8B 43 ? 56 8B 73 ? 57 6A ? 8B F9 89 45 */
 			}
 
 			/*
@@ -3314,17 +3362,6 @@
 				"linux"		"@_ZN11CBasePlayer9WaterMoveEv"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x60\x56\x8B\xF1\x80\xBE\x72\x01\x00\x00\x08"
 				/* 55 8B EC 83 EC 60 56 8B F1 80 BE 72 01 00 00 08 */
-			}
-
-			/*
-			* KeyValues *CTerrorGameRules::GetMissionInfo(void)
-			*/
-			"CTerrorGameRules__GetMissionInfo"
-			{
-				"library"	"server"
-				"linux"		"@_ZN16CTerrorGameRules14GetMissionInfoEv"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x01\x8B\x50\x28\x56\xFF\xD2\x8B\x10\x8B\xC8\x8B\x42"
-				/* 2A 2A 2A 2A 2A 2A 2A 2A 2A 2A 8B 01 8B 50 28 56 FF D2 8B 10 8B C8 8B 42 */
 			}
 
 			/*
