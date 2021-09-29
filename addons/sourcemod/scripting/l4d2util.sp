@@ -1,60 +1,98 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #define __IN_L4D2UTIL__
 
+#define ROUNDS_MODULE_ENABLE 1
+#define TANKS_MODULE_ENABLE 0
+
 #include <l4d2util>
-#include "rounds_l4d2util.inc" // renamed from rounds.inc resolve conflict with l4d2lib
-#include "tanks_l4d2util.inc" // renamed from tanks.inc to resolve conflict with l4d2lib
 
-new const String:sLibraryName[] = "l4d2util";
+#if ROUNDS_MODULE_ENABLE
+#include "l4d2util/rounds.sp"
+#endif
 
-public Plugin:myinfo = {
-    name = "L4D2 Utilities",
-    author = "Confogl Team",
-    description = "Useful functions and forwards for Left 4 Dead 2 SourceMod plugins",
-    version = "1.0",
-    url = "https://github.com/ConfoglTeam/l4d2util"
+#if TANKS_MODULE_ENABLE
+#include "l4d2util/tanks.sp"
+#endif
+
+public const char sLibraryName[] = "l4d2util";
+
+public Plugin myinfo =
+{
+	name = "L4D2 Utilities",
+	author = "Confogl Team",
+	description = "Useful functions and forwards for Left 4 Dead 2 SourceMod plugins",
+	version = "2.2",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
+};
+
+public void OnPluginStart()
+{
+#if ROUNDS_MODULE_ENABLE
+	HookEvent("round_start", L4D2Util_RoundStart);
+	HookEvent("round_end", L4D2Util_RoundEnd);
+#endif
+
+#if TANKS_MODULE_ENABLE
+	L4D2Util_Tanks_Init();
+	
+	HookEvent("tank_spawn", L4D2Util_TankSpawn);
+	HookEvent("player_death", L4D2Util_PlayerDeath);
+#endif
 }
 
-public OnPluginStart() {
-    L4D2Util_Tanks_Init();
-
-    HookEvent("round_start", L4D2Util_RoundStart);
-    HookEvent("round_end", L4D2Util_RoundEnd);
-    HookEvent("tank_spawn", L4D2Util_TankSpawn);
-    HookEvent("player_death", L4D2Util_PlayerDeath);
+public void OnMapEnd()
+{
+#if ROUNDS_MODULE_ENABLE
+	L4D2Util_Rounds_OnMapEnd();
+#endif
 }
 
-public OnMapEnd() {
-    L4D2Util_Rounds_OnMapEnd();
+public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErrMax)
+{
+#if ROUNDS_MODULE_ENABLE
+	L4D2Util_Rounds_CreateForwards();
+#endif
+
+#if TANKS_MODULE_ENABLE
+	L4D2Util_Tanks_CreateForwards();
+#endif
+
+	RegPluginLibrary(sLibraryName);
+	return APLRes_Success;
 }
 
-public APLRes:AskPluginLoad2(Handle:hPlugin, bool:bLateLoad, String:sError[], iErrMax) {
-    L4D2Util_Rounds_CreateForwards();
-    L4D2Util_Tanks_CreateForwards();
+public void L4D2Util_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+{
+#if ROUNDS_MODULE_ENABLE
+	L4D2Util_Rounds_OnRoundStart();
+#endif
 
-    RegPluginLibrary(sLibraryName);
-
-    return APLRes_Success;
+#if TANKS_MODULE_ENABLE
+	L4D2Util_Tanks_OnRoundStart();
+#endif
 }
 
-public Action:L4D2Util_RoundStart(Handle:event, const String:name[], bool:dontBroadcast) {
-    L4D2Util_Rounds_OnRoundStart();
-    L4D2Util_Tanks_OnRoundStart();
+public void L4D2Util_RoundEnd(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+{
+#if ROUNDS_MODULE_ENABLE
+	L4D2Util_Rounds_OnRoundEnd();
+#endif
 }
 
-public Action:L4D2Util_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast) {
-    L4D2Util_Rounds_OnRoundEnd();
+#if TANKS_MODULE_ENABLE
+public void L4D2Util_TankSpawn(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+{
+	int iTank = GetClientOfUserId(hEvent.GetInt("userid"));
+
+	L4D2Util_Tanks_TankSpawn(iTank);
 }
 
-public Action:L4D2Util_TankSpawn(Handle:event, const String:name[], bool:dontBroadcast) {
-    new iTank = GetClientOfUserId(GetEventInt(event, "userid"));
+public void L4D2Util_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+{
+	int iPlayer = GetClientOfUserId(hEvent.GetInt("userid"));
 
-    L4D2Util_Tanks_TankSpawn(iTank);
+	L4D2Util_Tanks_PlayerDeath(iPlayer);
 }
-
-public Action:L4D2Util_PlayerDeath(Handle:event, const String:name[], bool:dontBroadcast) {
-    new iPlayer = GetClientOfUserId(GetEventInt(event, "userid"));
-
-    L4D2Util_Tanks_PlayerDeath(iPlayer);
-}
+#endif
