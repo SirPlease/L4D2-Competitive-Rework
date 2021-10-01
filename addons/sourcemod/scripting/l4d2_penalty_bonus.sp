@@ -4,7 +4,7 @@
 		0.1.1
 			- added PBONUS_RequestFinalUpdate() forward.
 			- replaced netprop round tracking with bool. (odd behaviour fix?)
-			
+
 		0.0.1 - 0.0.9
 			- added library registration ('penaltybonus')
 			- simplified round-end: L4D2_OnEndVersusRound instead of a bunch of hooked events.
@@ -34,7 +34,9 @@
 #include <sdktools>
 #define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util> //IsTank
-#include <left4dhooks>
+
+//L4D2_OnEndVersusModeRound
+#include <left4dhooks> //#include <left4downtown>
 
 #define DEBUG_MODE 0
 
@@ -112,8 +114,9 @@ public void OnPluginStart()
 	AddCommandListener(Command_Say, "say_team");*/
 
 	RegConsoleCmd("sm_bonus", Cmd_Bonus, "Prints the current extra bonus(es) for this round.");
-	
+
 	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
+	HookEvent("round_end", Event_RoundEnd, EventHookMode_PostNoCopy);
 }
 
 public void OnPluginEnd()
@@ -132,7 +135,7 @@ public void OnMapStart()
 	g_hCvarDefibPenalty.SetInt(g_iOriginalPenalty);
 
 	g_bSecondHalf = false;
-	
+
 	for (int i = 0; i < 2; i++) {
 		g_bRoundOver[i] = false;
 		g_iDefibsUsed[i] = 0;
@@ -153,8 +156,14 @@ public void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBr
 	g_iSameChange = -1;
 }
 
-public void OnRoundEnd()
+public void Event_RoundEnd(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
+	// Fix double event call
+	float fRoundEndTime = GameRules_GetPropFloat("m_flRoundEndTime");
+	if (fRoundEndTime != GetGameTime()) {
+		return;
+	}
+
 	g_bRoundOver[RoundNum()] = true;
 	g_bSecondHalf = true;
 
@@ -178,7 +187,7 @@ public Action Cmd_Bonus(int iClient, int iArgs)
 	if (!g_hCvarEnabled.BoolValue || !g_hCvarDoDisplay.BoolValue) {
 		return Plugin_Continue;
 	}
-	
+
 	if (IsChatTrigger()) {
 		char sMessage[MAX_NAME_LENGTH];
 		GetCmdArg(1, sMessage, sizeof(sMessage));
@@ -209,7 +218,7 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 void TankKilled()
 {
 	int iTankBonus = g_hCvarBonusTank.IntValue;
-	
+
 	if (iTankBonus == 0 || g_bRoundOver[RoundNum()]) {
 		return;
 	}
@@ -228,13 +237,13 @@ void TankKilled()
 
 public void Event_WitchKilled(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	if (!g_hCvarEnabled.BoolValue) { 
-		return; 
+	if (!g_hCvarEnabled.BoolValue) {
+		return;
 	}
-	
+
 	int iWitchBonus = g_hCvarBonusWitch.IntValue;
-	if (iWitchBonus == 0 || g_bRoundOver[RoundNum()]) { 
-		return; 
+	if (iWitchBonus == 0 || g_bRoundOver[RoundNum()]) {
+		return;
 	}
 
 	g_iBonus[RoundNum()] += iWitchBonus;
@@ -286,7 +295,7 @@ void SetBonus()
 	if (g_bSetSameChange && g_iSameChange != 0 && !g_iDefibsUsed[RoundNum()]) {
 		iFakeDefibs = g_iBonus[RoundNum()] / g_iSameChange;
 		iBonus = 0 - g_iSameChange;  // flip sign, so bonus = - penalty
-		
+
 		// only do it this way if fakedefibs stays small enough:
 		if (iFakeDefibs > 15) {
 			iFakeDefibs = 1;
@@ -310,22 +319,22 @@ int CalculateBonus()
 void DisplayBonus(int iClient = -1)
 {
 	char sMsgPartHdr[48], sMsgPartBon[48];
-	
+
 	int iRoundNum = RoundNum();
-	
+
 	for (int iRound = 0; iRound <= iRoundNum; iRound++) {
 		if (g_bRoundOver[iRound]) {
 			Format(sMsgPartHdr, sizeof(sMsgPartHdr), "Round \x05%i\x01 extra bonus", iRound + 1);
 		} else {
 			Format(sMsgPartHdr, sizeof(sMsgPartHdr), "Current extra bonus");
 		}
-		
+
 		Format(sMsgPartBon, sizeof(sMsgPartBon), "\x04%4d\x01", g_iBonus[iRound]);
 
 		if (g_iDefibsUsed[iRound]) {
 			Format(sMsgPartBon, sizeof(sMsgPartBon), "%s (- \x04%d\x01 defib penalty)", sMsgPartBon, g_iOriginalPenalty * g_iDefibsUsed[iRound]);
 		}
-		
+
 		if (iClient == -1) {
 			PrintToChatAll("\x01%s: %s", sMsgPartHdr, sMsgPartBon);
 		} else if (iClient) {
@@ -412,7 +421,7 @@ public int Native_SetRoundBonus(Handle hPlugin, int iNumParams)
 	g_iBonus[RoundNum()] = iBonus;
 
 	if (g_hCvarReportChange.BoolValue) {
-		ReportChange(0, -1, true); 
+		ReportChange(0, -1, true);
 	}
 }
 
@@ -420,7 +429,7 @@ public int Native_AddRoundBonus(Handle hPlugin, int iNumParams)
 {
 	bool bNoReport = false;
 	int iBonus = GetNativeCell(1);
-	
+
 	g_iBonus[RoundNum()] += iBonus;
 
 	if (g_bSetSameChange) {
