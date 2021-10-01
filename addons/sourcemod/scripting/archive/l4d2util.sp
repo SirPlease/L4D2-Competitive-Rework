@@ -23,15 +23,15 @@ public Plugin myinfo =
 	name = "L4D2 Utilities",
 	author = "Confogl Team",
 	description = "Useful functions and forwards for Left 4 Dead 2 SourceMod plugins",
-	version = "2.2",
+	version = "2.3",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public void OnPluginStart()
 {
 #if ROUNDS_MODULE_ENABLE
-	HookEvent("round_start", L4D2Util_RoundStart);
-	HookEvent("round_end", L4D2Util_RoundEnd);
+	HookEvent("round_start", L4D2Util_RoundStart, EventHookMode_PostNoCopy);
+	HookEvent("round_end", L4D2Util_RoundEnd, EventHookMode_PostNoCopy);
 #endif
 
 #if TANKS_MODULE_ENABLE

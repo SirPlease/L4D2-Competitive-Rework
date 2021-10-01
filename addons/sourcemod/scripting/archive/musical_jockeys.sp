@@ -1,4 +1,7 @@
+// replaced by a plugin 'l4d2_unsilent_jockey'
+
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdktools>
@@ -11,7 +14,7 @@
 public Plugin myinfo = 
 {
 	name = "Musical Jockeys",
-	author = "Jacob", //Update syntax and minor fixes - A1m`
+	author = "Jacob",
 	description = "Prevents the Jockey from having silent spawns.",
 	version = "1.4",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
