@@ -118,11 +118,6 @@ public void OnPluginStart()
 	hPlayerInCrouchTrigger = new StringMap();
 }
 
-public void OnMapStart()
-{
-	HookCrouchTriggers();
-}
-
 public void OnConfigsExecuted()
 {
 	CvarsToType();
@@ -175,6 +170,7 @@ public Action RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	tankInPlay = false;
 	hPlayerInCrouchTrigger.Clear();
+	HookCrouchTriggers();
 }
 
 public void HookCrouchTriggers()
