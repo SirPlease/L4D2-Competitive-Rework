@@ -15,7 +15,6 @@
 
 
 ConVar 
-    hPluginEnabled,
     hJockeyVoiceInterval;
 
 
@@ -87,8 +86,6 @@ public void OnPluginStart()
     hJockeyVoiceInterval    = CreateConVar("sm_unsilentjockey_interval", "2.0", "Interval between forced jockey sounds.");
 
     fJockeyVoiceInterval = hJockeyVoiceInterval.FloatValue;
-
-    hPluginEnabled.AddChangeHook(ConVar_Changed);
     hJockeyVoiceInterval.AddChangeHook(ConVar_Changed);
 
     // Events
