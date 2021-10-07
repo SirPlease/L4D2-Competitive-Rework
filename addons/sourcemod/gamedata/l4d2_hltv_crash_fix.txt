@@ -1,6 +1,6 @@
 "Games"
 {
-	"#default"
+	"left4dead2"
 	{
 		"Addresses"
 		{
@@ -9,24 +9,42 @@
 			{
 				"linux"
 				{
-					"signature" "CBaseClient::ProcessClientInfo"
+					"signature"	"CBaseClient::ProcessClientInfo"
+				}
+				"windows"
+				{
+					"signature"	"CBaseClient::ProcessClientInfo"
 				}
 			}
 		}
+		
 		"Offsets"
 		{
 			"hltv_write"
 			{
-				"linux" "23"
-				// movzx eax, byte ptr [esi+54h]
+				"linux"			"23" // 0F B6 46 54			movzx	eax, byte ptr [esi+54h]
+				"windows"		"20" // 8A 4F 5C			mov		cl, [edi+5Ch]
+			}
+			"Platform"
+			{
+				"linux"			"0"
+				"windows"		"1"
 			}
 		}
+		
+		/*
+		 * How to find in windows:
+		 * We can find the function by string 'CGameClient::ProcessClientInfo', 
+		 * the function we need is on the first line.
+		*/
 		"Signatures"
 		{
 			"CBaseClient::ProcessClientInfo"
 			{
-				"library"	"engine"
-				"linux"		"@_ZN11CBaseClient17ProcessClientInfoEP14CLC_ClientInfo"
+				"library"		"engine"
+				"linux"			"@_ZN11CBaseClient17ProcessClientInfoEP14CLC_ClientInfo"
+				"windows"		"\x55\x8B\xEC\x53\x56\x57\x8B\x7D\x08\x8B\x47\x54"
+								/* 55 8B EC 53 56 57 8B 7D 08 8B 47 54 */
 			}
 		}
 	}
