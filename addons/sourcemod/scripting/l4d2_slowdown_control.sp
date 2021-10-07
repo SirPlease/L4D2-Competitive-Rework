@@ -193,7 +193,7 @@ public void HookCrouchTriggers()
 
 public void CrouchSpeedStartTouch(const char[] output, int caller, int activator, float delay)
 {
-	if (1 <= activator <= MaxClients && IsClientInGame(activator) && IsPlayerAlive(activator)) {
+	if (activator >= 0 && activator <= MaxClients && IsClientInGame(activator) && IsPlayerAlive(activator)) {
 		char sAuthId[18];
 		GetClientAuthId(activator, AuthId_SteamID64, sAuthId, sizeof(sAuthId));
 		hPlayerInCrouchTrigger.SetValue(sAuthId, true);
@@ -202,7 +202,7 @@ public void CrouchSpeedStartTouch(const char[] output, int caller, int activator
 
 public void CrouchSpeedEndTouch(const char[] output, int caller, int activator, float delay)
 {
-	if (1 <= activator <= MaxClients && IsClientInGame(activator) && IsPlayerAlive(activator)) {
+	if (activator >= 0 && activator <= MaxClients && IsClientInGame(activator) && IsPlayerAlive(activator)) {
 		char sAuthId[18];
 		GetClientAuthId(activator, AuthId_SteamID64, sAuthId, sizeof(sAuthId));
 		hPlayerInCrouchTrigger.SetValue(sAuthId, false);
