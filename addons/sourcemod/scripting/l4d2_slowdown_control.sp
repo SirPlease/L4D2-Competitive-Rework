@@ -25,9 +25,7 @@
 #include <left4dhooks>
 #include <l4d2util_stocks>
 
-#define SURVIVOR_RUNSPEED		220.0
-#define SURVIVOR_WATERSPEED_VS	170.0
-
+#define SURVIVOR_RUNSPEED 220.0
 #define TEAM_SURVIVORS 2
 #define TEAM_INFECTED 3
 #define Z_TANK 8
@@ -52,13 +50,15 @@ ConVar
 	hCvarSdInwaterSurvivor,
 	hCvarSdInwaterDuringTank,
 	hCvarSurvivorLimpspeed,
-	hCvarTankSpeedVS;
+	hCvarTankSpeedVS,
+	hCvarJockeyMinMoundedSpeed;
 
 float
 	fTankWaterSpeed,
 	fSurvWaterSpeed,
 	fSurvWaterSpeedDuringTank,
-	fTankRunSpeed;
+	fTankRunSpeed,
+	fJockeyMinMountedSpeed;
 
 bool
 	tankInPlay = false;
@@ -96,11 +96,13 @@ public void OnPluginStart()
 
 	hCvarSurvivorLimpspeed = FindConVar("survivor_limp_health");
 	hCvarTankSpeedVS = FindConVar("z_tank_speed_vs");
+	hCvarJockeyMinMoundedSpeed = FindConVar("z_jockey_min_mounted_speed");
 	
 	hCvarSdInwaterTank.AddChangeHook(OnConVarChanged);
 	hCvarSdInwaterSurvivor.AddChangeHook(OnConVarChanged);
 	hCvarSdInwaterDuringTank.AddChangeHook(OnConVarChanged);
 	hCvarTankSpeedVS.AddChangeHook(OnConVarChanged);
+	hCvarJockeyMinMoundedSpeed.AddChangeHook(OnConVarChanged);
 
 	HookEvent("tank_spawn", TankSpawn, EventHookMode_PostNoCopy);
 	HookEvent("round_start", RoundStart, EventHookMode_PostNoCopy);
@@ -124,6 +126,7 @@ void CvarsToType()
 	fSurvWaterSpeed = hCvarSdInwaterSurvivor.FloatValue;
 	fSurvWaterSpeedDuringTank = hCvarSdInwaterDuringTank.FloatValue;
 	fTankRunSpeed = hCvarTankSpeedVS.FloatValue;
+	fJockeyMinMountedSpeed = hCvarJockeyMinMoundedSpeed.FloatValue;
 }
 
 public Action TankSpawn(Event event, const char[] name, bool dontBroadcast) 
@@ -196,20 +199,35 @@ public Action L4D_OnGetRunTopSpeed(int client, float &retVal)
 		return Plugin_Continue;
 	}
 	
-	bool bInWater = (GetEntityFlags(client) & FL_INWATER) ? true : false;
-	
 	switch (GetClientTeam(client)) {
 		case TEAM_SURVIVORS: {
+			// Tongue victim, simulates game logics here.
+			if (GetEntPropEnt(client, Prop_Send, "m_tongueOwner") != -1) {
+				return Plugin_Continue;
+			}
+			
+			// Jockey victim, simulates game logics here.
+			if (GetEntPropEnt(client, Prop_Send, "m_jockeyAttacker") != -1) {
+				if (retVal == 115.0 && ((tankInPlay && fSurvWaterSpeedDuringTank > 0.0) || fSurvWaterSpeed != -1.0)) {
+					// TODO: As a reminder when we decide to normalize speed of jockeyed survivor
+					float fRate = GetSurvivorHealthRate(client);
+					retVal = SURVIVOR_RUNSPEED * (fRate > fJockeyMinMountedSpeed ? fRate : fJockeyMinMountedSpeed);
+					return Plugin_Handled;
+				}
+				
+				return Plugin_Continue;
+			}
+			
 			// Adrenaline = Don't care, don't mess with it.
 			// Limping = 260 speed (both in water and on the ground)
 			// Healthy = 260 speed (both in water and on the ground)
-			bool bAdrenaline = GetEntProp(client, Prop_Send, "m_bAdrenalineActive") ? true : false;
-			if (bAdrenaline) {
+			bool bAdrenaline = !!GetEntProp(client, Prop_Send, "m_bAdrenalineActive");
+			if (bAdrenaline || IsLimping(client)) {
 				return Plugin_Continue;
 			}
 			
 			// Only bother if survivor is in water and healthy
-			if (bInWater && !IsLimping(client)) {
+			if (GetEntityFlags(client) & FL_INWATER) {
 				// speed of survivors in water during Tank fights
 				if (tankInPlay) {
 					if (fSurvWaterSpeedDuringTank == 0.0) {
@@ -233,7 +251,7 @@ public Action L4D_OnGetRunTopSpeed(int client, float &retVal)
 		case TEAM_INFECTED: {
 			if (IsTank(client)) {
 				// Only bother the actual speed if player is a tank moving in water
-				if (bInWater && fTankWaterSpeed != -1.0) {
+				if ((GetEntityFlags(client) & FL_INWATER) && fTankWaterSpeed != -1.0) {
 					// slowdown off
 					if (fTankWaterSpeed == 0.0) {
 						retVal = fTankRunSpeed;
@@ -248,6 +266,12 @@ public Action L4D_OnGetRunTopSpeed(int client, float &retVal)
 	}
 	
 	return Plugin_Continue;
+}
+
+float GetSurvivorHealthRate(int client)
+{
+	float total = GetClientHealth(client) + L4D_GetTempHealth(client);
+	return total / 100.0;
 }
 
 // The old slowdown plugin's cvars weren't quite intuitive, so I'll try to fix it this time
@@ -376,13 +400,7 @@ bool IsLimping(int client)
 {
 	// Assume Clientchecks and the like have been done already
 	int PermHealth = GetClientHealth(client);
-
-	float buffer = GetEntPropFloat(client, Prop_Send, "m_healthBuffer");
-	float bleedTime = GetGameTime() - GetEntPropFloat(client, Prop_Send, "m_healthBufferTime");
-	float decay = GetConVarFloat(FindConVar("pain_pills_decay_rate"));
-	
-	float fCalculations = buffer - (bleedTime * decay);
-	float TempHealth = L4D2Util_ClampFloat(fCalculations, 0.0, 100.0); // buffer may be negative, also if pills bleed out then bleedTime may be too large.
+	float TempHealth = L4D_GetTempHealth(client);
 
 	return RoundToFloor(PermHealth + TempHealth) < hCvarSurvivorLimpspeed.IntValue;
 }
