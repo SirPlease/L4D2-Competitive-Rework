@@ -17,7 +17,7 @@
 public Plugin myinfo = {
 	name = "Tank and Witch ifier!",
 	author = "CanadaRox, Sir, devilesk, Derpduck, Forgetest",
-	version = "2.4.0",
+	version = "2.4.1",
 	description = "Sets a tank spawn and has the option to remove the witch spawn point on every map",
 	url = "https://github.com/devilesk/rl4d2l-plugins"
 };
@@ -533,7 +533,7 @@ public any Native_IsWitchPercentValid(Handle plugin, int numParams) {
 
 public any Native_IsWitchPercentBlockedForTank(Handle plugin, int numParams) {
 	int interval[2];
-	if (GetTankAvoidInterval(interval)) {
+	if (GetTankAvoidInterval(interval) && IsValidInterval(interval)) {
 		int flow = GetNativeCell(1);
 		return interval[0] <= flow <= interval[1];
 	}
