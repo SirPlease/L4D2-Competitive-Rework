@@ -194,18 +194,18 @@ public void HookCrouchTriggers()
 public void CrouchSpeedStartTouch(const char[] output, int caller, int activator, float delay)
 {
 	if (IsClientInGame(activator)) {
-		char authId[18];
-		GetClientAuthId(activator, AuthId_SteamID64, authId, sizeof(authId));
-		hPlayerInCrouchTrigger.SetValue(authId, true);
+		char sAuthId[18];
+		GetClientAuthId(activator, AuthId_SteamID64, sAuthId, sizeof(sAuthId));
+		hPlayerInCrouchTrigger.SetValue(sAuthId, true);
 	}
 }
 
 public void CrouchSpeedEndTouch(const char[] output, int caller, int activator, float delay)
 {
 	if (IsClientInGame(activator)) {
-		char authId[18];
-		GetClientAuthId(activator, AuthId_SteamID64, authId, sizeof(authId));
-		hPlayerInCrouchTrigger.SetValue(authId, false);
+		char sAuthId[18];
+		GetClientAuthId(activator, AuthId_SteamID64, sAuthId, sizeof(sAuthId));
+		hPlayerInCrouchTrigger.SetValue(sAuthId, false);
 	}
 }
 
@@ -493,11 +493,11 @@ float fScaleFloat2(float inc, float low, float high)
 
 bool IsPlayerInCrouchTrigger(int client)
 {
-	bool value = false;
-	char authId[18];
+	bool bResult = false;
+	char sAuthId[18];
 	
-	GetClientAuthId(client, AuthId_SteamID64, authId, sizeof(authId));
-	hPlayerInCrouchTrigger.GetValue(authId, value);
+	GetClientAuthId(client, AuthId_SteamID64, sAuthId, sizeof(sAuthId));
+	hPlayerInCrouchTrigger.GetValue(sAuthId, bResult);
 	
-	return value;
+	return bResult;
 }
