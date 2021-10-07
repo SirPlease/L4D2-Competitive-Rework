@@ -67,7 +67,7 @@ public Plugin myinfo =
 {
 	name = "L4D2 Slowdown Control",
 	author = "Visor, Sir, darkid, Forgetest, A1m`",
-	version = "2.6.6",
+	version = "2.7.0",
 	description = "Manages the water/gunfire slowdown for both teams",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
