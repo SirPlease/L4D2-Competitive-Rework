@@ -24,7 +24,7 @@ ConVar
 public Plugin myinfo = 
 {
 	name = "Dominators Control",
-	author = "vintik",	//update syntax A1m`, fixed work on windows
+	author = "vintik, A1m`",
 	description = "Changes bIsDominator flag for infected classes. Allows to have native-order quad-caps.",
 	version = "1.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
@@ -35,11 +35,12 @@ public void OnPluginStart()
 	CheckGame();
 	InitGameData();
 
-	g_hCvarDominators = CreateConVar(
-		"l4d2_dominators", 
-		"53",
-		"Which infected class is considered as dominator (bitmask: 1 - smoker, 2 - boomer, 4 - hunter, 8 - spitter, 16 - jockey, 32 - charger)", 
-		_, true, 0.0, true, 63.0); //32+16+8+4+2+1=63
+	g_hCvarDominators = CreateConVar( \
+		"l4d2_dominators", \
+		"53", \
+		"Which infected class is considered as dominator (bitmask: 1 - smoker, 2 - boomer, 4 - hunter, 8 - spitter, 16 - jockey, 32 - charger)", \
+		_, true, 0.0, true, 63.0 \
+	); //32 + 16 + 8 + 4 + 2 + 1 = 63
 
 	int iCvarValue = g_hCvarDominators.IntValue;
 	if (!IsValidCvarValue(iCvarValue)) {

@@ -22,7 +22,7 @@ ConVar
 public Plugin myinfo =
 {
 	name = "L4D2 No Tank Rush",
-	author = "Jahze, vintik, devilesk, Sir", //Add support sm1.11 - A1m`
+	author = "Jahze, vintik, devilesk, Sir",
 	version = "1.1.4",
 	description = "Stops distance points accumulating whilst the tank is alive, with the option of unfreezing distance on reaching the Saferoom"
 };

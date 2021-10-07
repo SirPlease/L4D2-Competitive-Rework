@@ -30,7 +30,7 @@ public int Native_GetTankSelection(Handle plugin, int numParams) { return getInf
 public Plugin myinfo = 
 {
     name = "L4D2 Tank Control",
-    author = "arti", //Add support sm1.11 - A1m`
+    author = "arti",
     description = "Distributes the role of the tank evenly throughout the team",
     version = "0.0.18",
     url = "https://github.com/alexberriman/l4d2-plugins/tree/master/l4d_tank_control"
