@@ -9,7 +9,7 @@
 #undef REQUIRE_PLUGIN
 #include <caster_system>
 
-#define PLUGIN_VERSION "9.3.8"
+#define PLUGIN_VERSION "9.3.9"
 
 public Plugin myinfo =
 {
@@ -821,12 +821,6 @@ void PrintCmd()
 
 void UpdatePanel()
 {
-	if (Game_IsVoteInProgress())
-	{
-		// Hide panel during game vote anyway
-		return;
-	}
-	
 	char survivorBuffer[800] = "";
 	char infectedBuffer[800] = "";
 	char casterBuffer[600] = "";
@@ -969,6 +963,15 @@ void UpdatePanel()
 			if (BuiltinVote_IsVoteInProgress() && IsClientInBuiltinVotePool(client))
 			{
 				continue;
+			}
+			
+			if (Game_IsVoteInProgress())
+			{
+				int voteteam = Game_GetVoteTeam();
+				if (voteteam == -1 || voteteam == GetClientTeam(client))
+				{
+					continue;
+				}
 			}
 			
 			menuPanel.Send(client, DummyHandler, 1);
