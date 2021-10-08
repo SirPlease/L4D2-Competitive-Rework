@@ -175,7 +175,6 @@ public void HookCrouchTriggers()
 	
 	// Hook trigger_multiple entities that are named "l4d2_slowdown_crouch_speed"
 	if (fCrouchSpeedMod != 1.0) {
-		
 		// Reset array
 		for (int i = 1; i <= MaxClients; i++) {
 			bPlayerInCrouchTrigger[i] = false;
