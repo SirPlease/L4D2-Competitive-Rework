@@ -64,10 +64,11 @@ float
 	fCrouchSpeedMod;
 
 bool
-	tankInPlay = false;
+	tankInPlay = false,
+	bFoundCrouchTrigger = false;
 
-StringMap
-	hPlayerInCrouchTrigger;
+int
+	iPlayerInCrouchTrigger[MAXPLAYERS + 1][1];
 
 public Plugin myinfo =
 {
@@ -114,8 +115,6 @@ public void OnPluginStart()
 	HookEvent("round_start", RoundStart, EventHookMode_PostNoCopy);
 	HookEvent("player_hurt", PlayerHurt);
 	HookEvent("player_death", TankDeath);
-	
-	hPlayerInCrouchTrigger = new StringMap();
 }
 
 public void OnConfigsExecuted()
@@ -169,12 +168,13 @@ public Action Timer_CheckTank(Handle timer)
 public Action RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	tankInPlay = false;
-	hPlayerInCrouchTrigger.Clear();
 	HookCrouchTriggers();
 }
 
 public void HookCrouchTriggers()
 {
+	bFoundCrouchTrigger = false;
+	
 	// Hook trigger_multiple entities that are named "l4d2_slowdown_crouch_speed"
 	if (fCrouchSpeedMod != 1.0) {
 		int iEntity = -1;
@@ -186,26 +186,29 @@ public void HookCrouchTriggers()
 			if (StrEqual(targetname, "l4d2_slowdown_crouch_speed", false)) {
 				HookSingleEntityOutput(iEntity, "OnStartTouch", CrouchSpeedStartTouch);
 				HookSingleEntityOutput(iEntity, "OnEndTouch", CrouchSpeedEndTouch);
+				
+				bFoundCrouchTrigger = true;
 			}
+		}
+	
+		// Reset array
+		for (int i = 0; i <= sizeof(iPlayerInCrouchTrigger); i++) {
+			iPlayerInCrouchTrigger[i][0] = 0;
 		}
 	}
 }
 
 public void CrouchSpeedStartTouch(const char[] output, int caller, int activator, float delay)
 {
-	if (activator >= 0 && activator <= MaxClients && IsClientInGame(activator) && IsPlayerAlive(activator)) {
-		char sAuthId[18];
-		GetClientAuthId(activator, AuthId_SteamID64, sAuthId, sizeof(sAuthId));
-		hPlayerInCrouchTrigger.SetValue(sAuthId, true);
+	if (0 < activator <= MaxClients && IsClientInGame(activator)) {
+		iPlayerInCrouchTrigger[activator][0] = 1;
 	}
 }
 
 public void CrouchSpeedEndTouch(const char[] output, int caller, int activator, float delay)
 {
-	if (activator >= 0 && activator <= MaxClients && IsClientInGame(activator) && IsPlayerAlive(activator)) {
-		char sAuthId[18];
-		GetClientAuthId(activator, AuthId_SteamID64, sAuthId, sizeof(sAuthId));
-		hPlayerInCrouchTrigger.SetValue(sAuthId, false);
+	if (0 < activator <= MaxClients && IsClientInGame(activator)) {
+		iPlayerInCrouchTrigger[activator][0] = 0;
 	}
 }
 
@@ -306,11 +309,7 @@ public Action L4D_OnGetRunTopSpeed(int client, float &retVal)
 **/
 public Action L4D_OnGetCrouchTopSpeed(int client, float &retVal)
 {
-	if (fCrouchSpeedMod == 1.0) {
-		return Plugin_Continue;
-	}
-	
-	if (!IsClientInGame(client)) { 
+	if (fCrouchSpeedMod == 1.0 || !bFoundCrouchTrigger || !IsClientInGame(client)) {
 		return Plugin_Continue;
 	}
 	
@@ -493,11 +492,11 @@ float fScaleFloat2(float inc, float low, float high)
 
 bool IsPlayerInCrouchTrigger(int client)
 {
-	bool bResult = false;
-	char sAuthId[18];
+	if (0 < client <= MaxClients && IsClientInGame(client) && IsPlayerAlive(client)){
+		if (iPlayerInCrouchTrigger[client][0] == 1) {
+			return true;
+		}
+	}
 	
-	GetClientAuthId(client, AuthId_SteamID64, sAuthId, sizeof(sAuthId));
-	hPlayerInCrouchTrigger.GetValue(sAuthId, bResult);
-	
-	return bResult;
+	return false;
 }
