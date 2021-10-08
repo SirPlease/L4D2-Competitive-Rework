@@ -65,10 +65,8 @@ float
 
 bool
 	tankInPlay = false,
-	bFoundCrouchTrigger = false;
-
-int
-	iPlayerInCrouchTrigger[MAXPLAYERS + 1][1];
+	bFoundCrouchTrigger = false,
+	bPlayerInCrouchTrigger[MAXPLAYERS + 1];
 
 public Plugin myinfo =
 {
@@ -177,6 +175,12 @@ public void HookCrouchTriggers()
 	
 	// Hook trigger_multiple entities that are named "l4d2_slowdown_crouch_speed"
 	if (fCrouchSpeedMod != 1.0) {
+		
+		// Reset array
+		for (int i = 1; i <= MaxClients; i++) {
+			bPlayerInCrouchTrigger[i] = false;
+		}
+		
 		int iEntity = -1;
 		char targetname[128];
 		
@@ -190,25 +194,20 @@ public void HookCrouchTriggers()
 				bFoundCrouchTrigger = true;
 			}
 		}
-	
-		// Reset array
-		for (int i = 0; i <= sizeof(iPlayerInCrouchTrigger); i++) {
-			iPlayerInCrouchTrigger[i][0] = 0;
-		}
 	}
 }
 
 public void CrouchSpeedStartTouch(const char[] output, int caller, int activator, float delay)
 {
 	if (0 < activator <= MaxClients && IsClientInGame(activator)) {
-		iPlayerInCrouchTrigger[activator][0] = 1;
+		bPlayerInCrouchTrigger[activator] = true;
 	}
 }
 
 public void CrouchSpeedEndTouch(const char[] output, int caller, int activator, float delay)
 {
 	if (0 < activator <= MaxClients && IsClientInGame(activator)) {
-		iPlayerInCrouchTrigger[activator][0] = 0;
+		bPlayerInCrouchTrigger[activator] = false;
 	}
 }
 
@@ -493,9 +492,7 @@ float fScaleFloat2(float inc, float low, float high)
 bool IsPlayerInCrouchTrigger(int client)
 {
 	if (0 < client <= MaxClients && IsClientInGame(client) && IsPlayerAlive(client)){
-		if (iPlayerInCrouchTrigger[client][0] == 1) {
-			return true;
-		}
+		return bPlayerInCrouchTrigger[client];
 	}
 	
 	return false;
