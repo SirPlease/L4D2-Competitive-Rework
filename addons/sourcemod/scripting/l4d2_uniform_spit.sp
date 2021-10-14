@@ -215,7 +215,7 @@ public Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, fl
 		}
 		
 		if (iVictimArray[iVictim][eCount] > g_iMaxTicks) {
-			AcceptEntityInput(iInflictor, "Kill");
+			KillEntity(iInflictor);
 		}
 		
 		return Plugin_Changed;
@@ -246,4 +246,13 @@ bool IsSurvivor(int iClient)
 		&& iClient <= MaxClients
 		&& IsClientInGame(iClient)
 		&& GetClientTeam(iClient) == TEAM_SURVIVOR);
+}
+
+void KillEntity(int iEntity)
+{
+#if SOURCEMOD_V_MINOR > 8
+	RemoveEntity(iEntity);
+#else
+	AcceptEntityInput(iEntity, "Kill");
+#endif
 }
