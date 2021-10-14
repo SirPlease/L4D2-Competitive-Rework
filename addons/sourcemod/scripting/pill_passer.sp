@@ -14,7 +14,7 @@ public Plugin myinfo =
 	name = "Easier Pill Passer",
 	author = "CanadaRox, A1m`",
 	description = "Lets players pass pills and adrenaline with +reload when they are holding one of those items",
-	version = "1.2",
+	version = "1.3",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -41,22 +41,14 @@ public Action OnPlayerRunCmd(int iClient, int &iButtons, int &iImpulse, float fV
 						// Remove item
 						int iGiverWeaponIndex = GetPlayerWeaponSlot(iClient, view_as<int>(L4D2WeaponSlot_LightHealthItem));
 						RemovePlayerItem(iClient, iGiverWeaponIndex);
-						
-						// Create and give item
-						int iEntity = CreateEntityByName(sWeaponName);
-						if (iEntity == -1) {
-							return Plugin_Continue;
-						}
-						
-						DispatchSpawn(iEntity);
-						EquipPlayerWeapon(iTarget, iEntity);
+						EquipPlayerWeapon(iTarget, iGiverWeaponIndex);
 						
 						// Call Event
 						Handle hFakeEvent = CreateEvent("weapon_given");
 						SetEventInt(hFakeEvent, "userid", GetClientUserId(iTarget));
 						SetEventInt(hFakeEvent, "giver", GetClientUserId(iClient));
 						SetEventInt(hFakeEvent, "weapon", view_as<int>(iWeapId));
-						SetEventInt(hFakeEvent, "weaponentid", iEntity);
+						SetEventInt(hFakeEvent, "weaponentid", iGiverWeaponIndex);
 						
 						FireEvent(hFakeEvent);
 					}
