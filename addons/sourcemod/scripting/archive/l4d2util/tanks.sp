@@ -127,7 +127,7 @@ public Action L4D2Util_Tanks_TankDeathDelay(Handle hTimer, any iOldTankClient)
 		Call_PushCell(iTankClient);
 		Call_PushCell(iOldTankClient);
 		Call_Finish();
-		return;
+		return Plugin_Stop;
 	}
 
 	Call_StartForward(hFwdOnTankDeath);
