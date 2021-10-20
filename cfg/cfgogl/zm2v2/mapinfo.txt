@@ -326,7 +326,7 @@
 		"start_extra_dist"	"264.157257"
 		"end_point"			"3001.944092 6272.879395 494.284149"
 		"end_dist"			"130.807541"
-		"max_distance"		"600"
+		"max_distance"		"500"
 	}
 	"c6m1_riverbank"
 	{
@@ -593,14 +593,7 @@
 		"start_extra_dist"	"206.287918"
 		"end_point"			"3276.041992 4504.324707 181.974670"
 		"end_dist"			"343.399078"
-		"tank_ban_flow"
-		{
-			"1"
-			{
-				"min"		"80"
-				"max"		"100"
-			}
-		}
+		"max_distance"		"500"
 	}
 	"c11m5_runway"
 	{
@@ -1295,7 +1288,6 @@
 		"start_extra_dist"	"357.132141"
 		"end_point"			"2948.021729 7602.731445 -604.782043"
 		"end_dist"			"142.267410"
-		"max_distance"		"400"
 	}
 	"l4d_dbd2dc_the_mall"
 	{
@@ -1322,7 +1314,6 @@
 		"start_extra_dist"	"188.167191"
 		"end_point"			"-7367.650391 8434.535156 -671.968750"
 		"end_dist"			"365.062012"
-		"max_distance"		"700"
 	}
 	"l4d_dbd2dc_new_dawn"
 	{
@@ -1331,7 +1322,7 @@
 		"start_extra_dist"	"306.183685"
 		"end_point"			"-463.786469 876.165771 -243.441345"
 		"end_dist"			"1558.433960"
-		"max_distance"		"800"
+		"max_distance"		"500"
 		"tank_ban_flow"
 		{
 			"1"
