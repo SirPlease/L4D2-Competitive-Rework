@@ -58,10 +58,10 @@ public void Event_WeaponFire(Event hEvent, const char[] sEventName, bool bDontBr
 	int iWeaponArrayIndex = -1;
 
 	switch (iWeaponId) {
-		case WEPID_PAIN_PILLS: {
+		case view_as<int>(WEPID_PAIN_PILLS): {
 			iWeaponArrayIndex = ePILL_INDEX;
 		}
-		case WEPID_ADRENALINE: {
+		case view_as<int>(WEPID_ADRENALINE): {
 			iWeaponArrayIndex = eADREN_INDEX;
 		}
 		default: {
@@ -105,12 +105,12 @@ void RestoreItems(int iClient, int iLeavingBot)
 		for (int i = 1; i <= g_iBotUsedCount[iLeavingBot][j]; i++) {
 			#if (SOURCEMOD_V_MINOR == 11) || USE_GIVEPLAYERITEM
 				if (iCurrentWeapon == -1) {
-					GivePlayerItem(iClient, (j == ePILL_INDEX) ? "weapon_pain_pills" : "weapon_adrenaline");
+					int iEntity = GivePlayerItem(iClient, (j == ePILL_INDEX) ? "weapon_pain_pills" : "weapon_adrenaline");
 					iCurrentWeapon = iEntity;
 					continue;
 				}
 
-				CreateEntityAtLocation(iClient, (j == ePILL_INDEX) ? "weapon_pain_pills" : "weapon_adrenaline")
+				CreateEntityAtLocation(iClient, (j == ePILL_INDEX) ? "weapon_pain_pills" : "weapon_adrenaline");
 			#else
 				int iEntity = CreateEntityAtLocation(iClient, (j == ePILL_INDEX) ? "weapon_pain_pills" : "weapon_adrenaline");
 
