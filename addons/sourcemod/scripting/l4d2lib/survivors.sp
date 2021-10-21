@@ -8,6 +8,12 @@ static int
 	g_iSurvivorIndex[MAXPLAYERS + 1] = {0, ...},
 	g_iSurvivorCount = 0;
 
+void Survivors_AskPluginLoad2()
+{
+	CreateNative("L4D2_GetSurvivorCount", _native_GetSurvivorCount); //never used
+	CreateNative("L4D2_GetSurvivorOfIndex", _native_GetSurvivorOfIndex); //never used
+}
+
 void Survivors_RebuildArray_Delay()
 {
 	CreateTimer(0.3, BuildArray_Timer);
@@ -36,12 +42,14 @@ void Survivors_RebuildArray()
 	}
 }
 
-stock int GetSurvivorCount()
+public int _native_GetSurvivorCount(Handle hPlugin, int iNumParams)
 {
 	return g_iSurvivorCount;
 }
 
-stock int GetSurvivorOfIndex(int index)
+public int _native_GetSurvivorOfIndex(Handle hPlugin, int iNumParams)
 {
-	return g_iSurvivorIndex[index];
+	int iClient = GetNativeCell(1);
+
+	return g_iSurvivorIndex[iClient];
 }

@@ -13,7 +13,7 @@ enum /*Saferoom*/
 	eSaferoom_Both = 3
 };
 
-KeyValues
+static KeyValues
 	g_hMIData = null;
 
 static bool
@@ -29,6 +29,22 @@ static float
 
 static int
 	g_iIsInEditMode[MAXPLAYERS + 1] = {0, ...};
+
+void MapInfo_AskPluginLoad2()
+{
+	CreateNative("L4D2_IsMapDataAvailable", _native_IsMapDataAvailable); //never used
+	CreateNative("L4D2_IsEntityInSaferoom", _native_IsEntityInSaferoom); //never used
+	CreateNative("L4D2_GetMapStartOrigin", _native_GetMapStartOrigin); //never used
+	CreateNative("L4D2_GetMapEndOrigin", _native_GetMapEndOrigin); //never used
+	CreateNative("L4D2_GetMapStartDistance", _native_GetMapStartDist); //never used
+	CreateNative("L4D2_GetMapStartExtraDistance", _native_GetMapStartExtraDist); //never used
+	CreateNative("L4D2_GetMapEndDistance", _native_GetMapEndDist); //never used
+	CreateNative("L4D2_GetMapValueInt", _native_GetMapValueInt); //scoremod2, eq2_scoremod, l4d2_horde_equaliser, witch_and_tankifier, l4d2_scoremod, l4d2_hybrid_scoremod_zone, l4d2_hybrid_scoremod
+	CreateNative("L4D2_GetMapValueFloat", _native_GetMapValueFloat); //never used
+	CreateNative("L4D2_GetMapValueVector", _native_GetMapValueVector); //never used
+	CreateNative("L4D2_GetMapValueString", _native_GetMapValueString); //never used
+	CreateNative("L4D2_CopyMapSubsection", _native_CopyMapSubsection); //witch_and_tankifier (rework version)
+}
 
 void MapInfo_Init()
 {
@@ -68,8 +84,7 @@ void MapInfo_Reload()
 void MapInfo_PlayerDisconnect_Event(Event hEvent)
 {
 	int iClient = GetClientOfUserId(hEvent.GetInt("userid"));
-
-	if (iClient > -1 && iClient <= MAXPLAYERS) {
+	if (iClient >= 0 && iClient <= MaxClients) {
 		g_iIsInEditMode[iClient] = 0;
 	}
 }
@@ -192,7 +207,7 @@ public Action MI_KV_CmdSaveLoc(int iClient, int iArgs)
 	return Plugin_Handled;
 }
 
-void MI_KV_Close()
+static void MI_KV_Close()
 {
 	if (g_hMIData != null) {
 		CloseHandle(g_hMIData);
@@ -200,7 +215,7 @@ void MI_KV_Close()
 	}
 }
 
-void MI_KV_Load()
+static void MI_KV_Load()
 {
 	char sNameBuff[PLATFORM_MAX_PATH];
 
@@ -218,7 +233,7 @@ void MI_KV_Load()
 	}
 }
 
-void MI_KV_UpdateMapInfo()
+static void MI_KV_UpdateMapInfo()
 {
 	char sCurMap[128];
 	GetCurrentMap(sCurMap, sizeof(sCurMap));
@@ -259,8 +274,8 @@ static float FindStartPointHeuristic(float fResult[3])
 	int iKitsCount = 0, iEntityTotalCount = GetEntityCount();
 	char sEntityName[128];
 
-	for (int iEntity = 1; iEntity <= iEntityTotalCount && iKitsCount < 4; iEntity++) {
-		if (!IsValidEdict(iEntity) || !IsValidEntity(iEntity)){
+	for (int iEntity = (MaxClients + 1); iEntity <= iEntityTotalCount && iKitsCount < 4; iEntity++) {
+		if (!IsValidEdict(iEntity)){
 			continue;
 		}
 
@@ -296,13 +311,6 @@ static float FindStartPointHeuristic(float fResult[3])
 	return fGreatestDist + 1.0;
 }
 
-/* NATIVE FUNCTIONS */
-// New Super Awesome Functions!!!
-stock bool IsMapDataAvailable()
-{
-	return g_bMapDataAvailable;
-}
-
 /**
  * Determines if an entity is in a start or end saferoom (based on mapinfo.txt or automatically generated info)
  *
@@ -312,7 +320,7 @@ stock bool IsMapDataAvailable()
  *						eSaferoom_End if it is in the ending saferoom
  *						eSaferoom_Start | eSaferoom_End if it is in both saferooms (probably won't happen)
  */
-stock int IsEntityInSaferoom(int iEntity)
+static int IsEntityInSaferoom(int iEntity)
 {
 	int iResult = eSaferoom_Neither;
 
@@ -330,55 +338,140 @@ stock int IsEntityInSaferoom(int iEntity)
 	return iResult;
 }
 
-stock int GetMapValueInt(const char[] sKey, const int iDefValue = 0)
+public int _native_IsMapDataAvailable(Handle hPlugin, int iNumParams)
 {
-	return KvGetNum(g_hMIData, sKey, iDefValue);
+	return g_bMapDataAvailable;
 }
 
-stock float GetMapValueFloat(const char[] sKey, const float fDefValue = 0.0)
+public int _native_IsEntityInSaferoom(Handle hPlugin, int iNumParams)
 {
-	return KvGetFloat(g_hMIData, sKey, fDefValue);
+	return IsEntityInSaferoom(GetNativeCell(1));
 }
 
-stock void GetMapValueVector(const char[] sKey, float fReturnVector[3], const float fDefValue[3] = NULL_VECTOR)
+public int _native_GetMapStartOrigin(Handle hPlugin, int iNumParams)
 {
-	KvGetVector(g_hMIData, sKey, fReturnVector, fDefValue);
+	float fOrigin[3];
+	GetNativeArray(1, fOrigin, sizeof(fOrigin));
+
+	for (int i = 0; i < sizeof(fOrigin); i++) {
+		fOrigin[i] = g_fStartPoint[i];
+	}
+	
+	SetNativeArray(1, fOrigin, sizeof(fOrigin));
 }
 
-stock void GetMapValueString(const char[] sKey, char[] sReturn, const int iMaxLength, const char[] sDefValue = "")
+public int _native_GetMapEndOrigin(Handle hPlugin, int iNumParams)
 {
-	KvGetString(g_hMIData, sKey, sReturn, iMaxLength, sDefValue);
+	float fOrigin[3];
+	GetNativeArray(1, fOrigin, sizeof(fOrigin));
+	
+	for (int i = 0; i < sizeof(fOrigin); i++) {
+		fOrigin[i] = g_fEndPoint[i];
+	}
+	
+	SetNativeArray(1, fOrigin, sizeof(fOrigin));
 }
 
-stock void CopyMapSubsection(Handle kv, const char[] sSectionName)
+public int _native_GetMapStartDist(Handle hPlugin, int iNumParams)
 {
-	if (KvJumpToKey(g_hMIData, sSectionName, false)) {
-		KvCopySubkeys(g_hMIData, kv);
+	return view_as<int>(g_fStartDist);
+}
+
+public int _native_GetMapStartExtraDist(Handle hPlugin, int iNumParams)
+{
+	return view_as<int>(g_fStartExtraDist);
+}
+
+public int _native_GetMapEndDist(Handle hPlugin, int iNumParams)
+{
+	return view_as<int>(g_fEndDist);
+}
+
+public int _native_GetMapValueInt(Handle hPlugin, int iNumParams)
+{
+	int iLen;
+	GetNativeStringLength(1, iLen);
+	
+	int iNewLen = iLen + 1;
+	char[] sKey = new char[iNewLen];
+	GetNativeString(1, sKey, iNewLen);
+
+	int iDefVal = GetNativeCell(2);
+	return KvGetNum(g_hMIData, sKey, iDefVal);
+}
+
+public int _native_GetMapValueFloat(Handle hPlugin, int iNumParams)
+{
+	int iLen;
+	GetNativeStringLength(1, iLen);
+	
+	int iNewLen = iLen + 1;
+	char[] sKey = new char[iNewLen];
+	GetNativeString(1, sKey, iNewLen);
+
+	float fDefVal = GetNativeCell(2);
+
+	return view_as<int>(KvGetFloat(g_hMIData, sKey, fDefVal));
+}
+
+public int _native_GetMapValueVector(Handle hPlugin, int iNumParams)
+{
+	int iLen;
+	GetNativeStringLength(1, iLen);
+	
+	int iNewLen = iLen + 1;
+	char[] sKey = new char[iNewLen];
+	GetNativeString(1, sKey, iNewLen);
+	
+	float fDefval[3], fValue[3];
+	GetNativeArray(3, fDefval, 3);
+
+	KvGetVector(g_hMIData, sKey, fValue, fDefval);
+	
+	SetNativeArray(2, fValue, 3);
+	return 1;
+}
+
+public int _native_GetMapValueString(Handle hPlugin, int iNumParams)
+{
+	int iLen;
+	GetNativeStringLength(1, iLen);
+	
+	int iNewLen = iLen + 1;
+	char[] sKey = new char[iNewLen];
+	GetNativeString(1, sKey, iNewLen);
+
+	GetNativeStringLength(4, iLen);
+	
+	iNewLen = iLen + 1;
+	char[] sDefVal = new char[iNewLen];
+	GetNativeString(4, sDefVal, iNewLen);
+
+	iLen = GetNativeCell(3);
+	iNewLen = iLen + 1;
+	char[] sBuf = new char[iNewLen];
+	
+	KvGetString(g_hMIData, sKey, sBuf, iNewLen, sDefVal);
+
+	SetNativeString(2, sBuf, iNewLen);
+	return 1;
+}
+
+public int _native_CopyMapSubsection(Handle hPlugin, int iNumParams)
+{
+	int iLen;
+	GetNativeStringLength(2, iLen);
+
+	int iNewLen = iLen + 1;
+	char[] sKey = new char[iNewLen];
+	GetNativeString(2, sKey, iNewLen);
+
+	KeyValues hKv = GetNativeCell(1);
+
+	if (KvJumpToKey(g_hMIData, sKey, false)) {
+		KvCopySubkeys(g_hMIData, hKv);
 		KvGoBack(g_hMIData);
 	}
-}
-
-stock void GetMapStartOrigin(float fOrigin[3])
-{
-	fOrigin = g_fStartPoint;
-}
-
-stock void GetMapEndOrigin(float fOrigin[3])
-{
-	fOrigin = g_fEndPoint;
-}
-
-stock float GetMapEndDist()
-{
-	return g_fEndDist;
-}
-
-stock float GetMapStartDist()
-{
-	return g_fStartDist;
-}
-
-stock float GetMapStartExtraDist()
-{
-	return g_fStartExtraDist;
+	
+	return 1;
 }
