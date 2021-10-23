@@ -901,7 +901,7 @@ public void ProcessShot(ArrayStack hStack)
 		
 		int iNewPelletCount = RoundFloat(fDamage);
 		for (int i = 0; i < iNewPelletCount; i++) {
-			SDKHooks_TakeDamage(iVictim, iAttacker, iAttacker, 1.0, DMG_PLASMA, iWeapon, NULL_VECTOR, NULL_VECTOR);
+			SDKHooks_TakeDamage(iVictim, iAttacker, iAttacker, 1.0, DMG_PLASMA, iWeapon);
 		}
 	}
 	
@@ -910,25 +910,26 @@ public void ProcessShot(ArrayStack hStack)
 	delete hStack;
 }
 
-bool IsT1Shotgun(int iWeapon)
+bool IsT1Shotgun(int iEntity)
 {
-	if (iWeapon > 0 && IsValidEntity(iWeapon) && IsValidEdict(iWeapon)) {
-		char sClassname[CLASSNAME_LENGTH];
-		GetEdictClassname(iWeapon, sClassname, sizeof(sClassname));
-		return (strcmp(sClassname, "weapon_pumpshotgun") == 0 || strcmp(sClassname, "weapon_shotgun_chrome") == 0);
+	if (iEntity <= MaxClients || !IsValidEdict(iEntity)) {
+		return false;
 	}
 	
-	return false;
+	char sClassname[CLASSNAME_LENGTH];
+	GetEdictClassname(iEntity, sClassname, sizeof(sClassname));
+	return (strcmp(sClassname, "weapon_pumpshotgun") == 0 || strcmp(sClassname, "weapon_shotgun_chrome") == 0);
 }
 
 bool IsTankRock(int iEntity)
 {
-	if (iEntity > 0 && IsValidEntity(iEntity) && IsValidEdict(iEntity)) {
-		char sClassname[CLASSNAME_LENGTH];
-		GetEdictClassname(iEntity, sClassname, sizeof(sClassname));
-		return (strcmp(sClassname, "tank_rock") == 0);
+	if (iEntity <= MaxClients || !IsValidEdict(iEntity)) {
+		return false;
 	}
-	return false;
+	
+	char sClassname[CLASSNAME_LENGTH];
+	GetEdictClassname(iEntity, sClassname, sizeof(sClassname));
+	return (strcmp(sClassname, "tank_rock") == 0);
 }
 
 // Natives
