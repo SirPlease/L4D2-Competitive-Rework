@@ -311,10 +311,10 @@ public Action L4D_OnGetCrouchTopSpeed(int client, float &retVal)
 		return Plugin_Continue;
 	}
 	
-	if (IsPlayerInCrouchTrigger(client)) {
-		bool bCrouched = (GetEntityFlags(client) & FL_DUCKING && GetEntityFlags(client) & FL_ONGROUND) ? true : false;
+	if (bPlayerInCrouchTrigger[client]) {
+		bool bGrounded = (GetEntityFlags(client) & FL_ONGROUND) ? true : false;
 		
-		if (bCrouched) {
+		if (bGrounded) {
 			retVal = retVal * fCrouchSpeedMod; // 75 * modifier
 			return Plugin_Handled;
 		}
@@ -485,14 +485,4 @@ float fScaleFloat2(float inc, float low, float high)
 	* #define SCALE2(%0,%1,%2) SCALE(%0*%0, %1*%1, %2*%2)
 	*/
 	return fScaleFloat((inc * inc), (low * low), (high * high));
-}
-
-
-bool IsPlayerInCrouchTrigger(int client)
-{
-	if (0 < client <= MaxClients && IsClientInGame(client) && IsPlayerAlive(client)){
-		return bPlayerInCrouchTrigger[client];
-	}
-	
-	return false;
 }
