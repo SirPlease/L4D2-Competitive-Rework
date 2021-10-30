@@ -2,17 +2,24 @@
 {
 	"left4dead2"
 	{
-		"Addresses"
+		"MemPatches"
 		{
-			"OnWindupFinished_Sig"
+			"ClawTargetScan"
 			{
+				"signature"		"CTankClaw::OnWindupFinished"
 				"linux"
 				{
-					"signature"	"CTankClaw::OnWindupFinished"
+					//jz loc_54E670 -> jmp loc_54E670, jump if zero -> unconditional jump to eyeangle check
+					"offset"	"277"
+					"verify"	"\x0F\x84"
+					"patch"		"\x90\xE9"
 				}
 				"windows"
 				{
-					"signature"	"CTankClaw::OnWindupFinished"
+					//jz short loc_103DF2D4 -> jmp short loc_103DF2D4, jump if zero -> unconditional jump to eyeangle check
+					"offset"	"265"
+					"verify"	"\x74"
+					"patch"		"\xEB"
 				}
 			}
 		}
@@ -27,23 +34,10 @@
 			*/
 			"CTankClaw::OnWindupFinished"
 			{
-				"library"	"server"
-				"linux"		"@_ZN9CTankClaw16OnWindupFinishedEv"
-				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\x53\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x33\x2A\x3B\x2A\x0F\x84\x2A\x2A\x2A\x2A\xD9"
+				"library"		"server"
+				"linux"			"@_ZN9CTankClaw16OnWindupFinishedEv"
+				"windows"		"\x55\x8B\x2A\x83\x2A\x2A\x53\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x33\x2A\x3B\x2A\x0F\x84\x2A\x2A\x2A\x2A\xD9"
 				/* 55 8B ? 83 ? ? 53 56 57 8B ? E8 ? ? ? ? 8B ? 33 ? 3B ? 0F 84 ? ? ? ? D9 */
-			}
-		}
-		"Offsets"
-		{
-			"ClawTargetScan"
-			{
-				"linux"		"277" //jz loc_54E670 -> jmp loc_54E670, jump if zero -> unconditional jump to eyeangle check
-				"windows"	"265" //jz short loc_103DF2D4 -> jmp short loc_103DF2D4, jump if zero -> unconditional jump to eyeangle check
-			}
-			"Platform"
-			{
-				"linux"		"0"
-				"windows"	"1"
 			}
 		}
 	}
