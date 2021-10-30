@@ -1,64 +1,61 @@
+#pragma semicolon 1
+#pragma newdecls required
+
 #include <sourcemod>
 #include <sdktools>
 #include <left4dhooks>
 
-public Plugin:myinfo = 
+ConVar
+	g_hCvarEnabled = null,
+	g_hCvarSkipStaticMaps = null;
+
+public Plugin myinfo =
 {
 	name = "Versus Boss Spawn Persuasion",
 	author = "ProdigySim",
 	description = "Makes Versus Boss Spawns obey cvars",
-	version = "1.2",
-	url = "http://compl4d2.com/"
+	version = "1.3",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
+};
+
+public void OnPluginStart()
+{
+	g_hCvarEnabled = CreateConVar("l4d_obey_boss_spawn_cvars", "1", "Enable forcing boss spawns to obey boss spawn cvars", _, true, 0.0, true, 1.0);
+	g_hCvarSkipStaticMaps = CreateConVar("l4d_obey_boss_spawn_except_static", "1", "Don't override boss spawning rules on Static Tank Spawn maps (c7m1, c13m2)", _, true, 0.0, true, 1.0);
 }
 
-new Handle:hCvarEnabled;
-new Handle:hCvarSkipStaticMaps;
-
-
-public OnPluginStart()
+public Action L4D_OnGetScriptValueInt(const char[] sKey, int &retVal)
 {
-	hCvarEnabled = CreateConVar("l4d_obey_boss_spawn_cvars", "1", "Enable forcing boss spawns to obey boss spawn cvars");
-	hCvarSkipStaticMaps = CreateConVar("l4d_obey_boss_spawn_except_static", "1", "Don't override boss spawning rules on Static Tank Spawn maps (c7m1, c13m2)");
-}
-
-
-public Action:L4D_OnGetScriptValueInt(const String:key[], &retVal)
-{
-	if(GetConVarBool(hCvarEnabled))
-	{
-		if(StrEqual(key, "DisallowThreatType"))
-		{
+	if (g_hCvarEnabled.BoolValue) {
+		if (strcmp(sKey, "DisallowThreatType") == 0) {
 			// Stop allowing threat types!
 			retVal = 0;
 			return Plugin_Handled;
 		}
-		
-		if(StrEqual(key, "ProhibitBosses"))
-		{
-			// Fuck that!
+
+		if (strcmp(sKey, "ProhibitBosses") == 0) {
 			retVal = 0;
-			return Plugin_Handled;		
+			return Plugin_Handled;
 		}
 	}
+
 	return Plugin_Continue;
-
-
 }
 
-public Action:L4D_OnGetMissionVSBossSpawning(&Float:spawn_pos_min, &Float:spawn_pos_max, &Float:tank_chance, &Float:witch_chance)
+public Action L4D_OnGetMissionVSBossSpawning(float &spawn_pos_min, float &spawn_pos_max, float &tank_chance, float &witch_chance)
 {
-	if(GetConVarBool(hCvarEnabled))
-	{
-		if(GetConVarBool(hCvarSkipStaticMaps))
-		{
-			decl String:mapbuf[32];
-			GetCurrentMap(mapbuf, sizeof(mapbuf));
-			if(StrEqual(mapbuf, "c7m1_docks") || StrEqual(mapbuf, "c13m2_southpinestream"))
-			{
+	if (g_hCvarEnabled.BoolValue) {
+		if (g_hCvarSkipStaticMaps.BoolValue) {
+			char sMapName[32];
+			GetCurrentMap(sMapName, sizeof(sMapName));
+
+			if (strcmp(sMapName, "c7m1_docks") == 0 || strcmp(sMapName, "c13m2_southpinestream") == 0) {
 				return Plugin_Continue;
 			}
 		}
+
 		return Plugin_Handled;
 	}
+
 	return Plugin_Continue;
 }

@@ -52,7 +52,7 @@ new bool:bTiebreakerEligibility[2];
 public Plugin:myinfo =
 {
 	name = "L4D2 Scoremod+",
-	author = "Visor", //Add support sm1.11 - A1m`
+	author = "Visor",
 	description = "The next generation scoring mod",
 	version = "2.2.4",
 	url = "https://github.com/Attano/L4D2-Competitive-Framework"

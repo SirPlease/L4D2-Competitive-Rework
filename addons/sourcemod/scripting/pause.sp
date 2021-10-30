@@ -33,7 +33,7 @@
 public Plugin myinfo =
 {
 	name = "Pause plugin",
-	author = "CanadaRox, Sir, Forgetest", //Add support sm1.11 - A1m`
+	author = "CanadaRox, Sir, Forgetest",
 	description = "Adds pause functionality without breaking pauses, also prevents SI from spawning because of the Pause.",
 	version = "6.6",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
