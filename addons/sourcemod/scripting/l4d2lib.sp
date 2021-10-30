@@ -1,311 +1,247 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
-#include "rounds.inc"
-#include "mapinfo.inc"
-#include "tanks.inc"
-#include "survivors.inc"
+#include <left4dhooks>
+#undef REQUIRE_PLUGIN
+#include <confogl>
+#define REQUIRE_PLUGIN
+#include <sdktools>
 
-#define LIBRARYNAME "l4d2lib"
+// A value of 0 will remove the module from the plugin assembly
+#define MODULE_ROUNDS 0
+#define MODULE_MAPINFO 1
+#define MODULE_TANKS 1
+#define MODULE_SURVIVORS 0
 
-new bool:g_bConfogl = false;
+// Modules
+#if MODULE_ROUNDS
+	#include "l4d2lib/rounds.sp"
+#endif
 
-public Plugin:myinfo = 
+#if MODULE_MAPINFO
+	bool g_bConfogl = false;
+
+	#include "l4d2lib/mapinfo.sp"
+#endif
+
+#if MODULE_TANKS
+	#include "l4d2lib/tanks.sp"
+#endif
+
+#if MODULE_SURVIVORS
+	#include "l4d2lib/survivors.sp"
+#endif
+
+public Plugin myinfo =
 {
 	name = "L4D2Lib",
 	author = "Confogl Team",
 	description = "Useful natives and fowards for L4D2 Plugins",
-	version = "1.0.1",
-	url = "https://bitbucket.org/ProdigySim/misc-sourcemod-plugins"
-}
+	version = "3.2",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
+};
 
-public OnPluginStart()
+public void OnPluginStart()
 {
+#if MODULE_ROUNDS || MODULE_TANKS || MODULE_SURVIVORS
 	HookEvent("round_start", RoundStart_Event, EventHookMode_PostNoCopy);
+#endif
+
+#if MODULE_ROUNDS
 	HookEvent("round_end", RoundEnd_Event, EventHookMode_PostNoCopy);
+#endif
+
+#if MODULE_TANKS
 	HookEvent("tank_spawn", TankSpawn_Event);
 	HookEvent("item_pickup", ItemPickup_Event);
+#endif
+
+#if MODULE_TANKS || MODULE_SURVIVORS
 	HookEvent("player_death", PlayerDeath_Event);
-	HookEvent("round_start", RoundStart_Event, EventHookMode_PostNoCopy);
-	HookEvent("player_spawn" , PlayerSpawn_Event, EventHookMode_PostNoCopy);
-	HookEvent("player_disconnect" , PlayerDisconnect_Event, EventHookMode_PostNoCopy);
-	HookEvent("player_bot_replace" , PlayerBotReplace_Event, EventHookMode_PostNoCopy);
-	HookEvent("bot_player_replace" , BotPlayerReplace_Event, EventHookMode_PostNoCopy);
-	HookEvent("defibrillator_used" , DefibrillatorUsed_Event, EventHookMode_PostNoCopy);
-	HookEvent("player_team" , PlayerTeam_Event, EventHookMode_PostNoCopy);
+#endif
+
+#if MODULE_SURVIVORS || MODULE_MAPINFO
+	HookEvent("player_disconnect", PlayerDisconnect_Event, EventHookMode_PostNoCopy);
+#endif
+
+#if MODULE_SURVIVORS
+	HookEvent("player_spawn", PlayerSpawn_Event, EventHookMode_PostNoCopy);
+	HookEvent("player_bot_replace", PlayerBotReplace_Event, EventHookMode_PostNoCopy);
+	HookEvent("bot_player_replace", BotPlayerReplace_Event, EventHookMode_PostNoCopy);
+	HookEvent("defibrillator_used", DefibrillatorUsed_Event, EventHookMode_PostNoCopy);
+	HookEvent("player_team", PlayerTeam_Event, EventHookMode_PostNoCopy);
+#endif
+
+#if MODULE_MAPINFO
+	MapInfo_Init();
+#endif
 }
 
-public OnPluginEnd()
+#if MODULE_MAPINFO
+public void OnPluginEnd()
 {
 	MapInfo_OnPluginEnd();
-
 }
+#endif
 
-public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
+public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErrMax)
 {
 	/* Plugin Native Declarations */
-	CreateNative("L4D2_GetCurrentRound", _native_GetCurrentRound);
-	CreateNative("L4D2_CurrentlyInRound", _native_CurrentlyInRound);
-	CreateNative("L4D2_GetSurvivorCount", _native_GetSurvivorCount);
-	CreateNative("L4D2_GetSurvivorOfIndex", _native_GetSurvivorOfIndex);
-	CreateNative("L4D2_IsMapDataAvailable", _native_IsMapDataAvailable);
-	CreateNative("L4D2_IsEntityInSaferoom", _native_IsEntityInSaferoom);
-	CreateNative("L4D2_GetMapStartOrigin", _native_GetMapStartOrigin);
-	CreateNative("L4D2_GetMapEndOrigin", _native_GetMapEndOrigin);
-	CreateNative("L4D2_GetMapStartDistance", _native_GetMapStartDist);
-	CreateNative("L4D2_GetMapStartExtraDistance", _native_GetMapStartExtraDist);
-	CreateNative("L4D2_GetMapEndDistance", _native_GetMapEndDist);
-	CreateNative("L4D2_GetMapValueInt", _native_GetMapValueInt);
-	CreateNative("L4D2_GetMapValueFloat", _native_GetMapValueFloat);
-	CreateNative("L4D2_GetMapValueVector", _native_GetMapValueVector);
-	CreateNative("L4D2_GetMapValueString", _native_GetMapValueString);
-	CreateNative("L4D2_CopyMapSubsection", _native_CopyMapSubsection);
-	
-	/* Plugin Forward Declarations */
-	hFwdRoundStart = CreateGlobalForward("L4D2_OnRealRoundStart", ET_Ignore, Param_Cell);
-	hFwdRoundEnd = CreateGlobalForward("L4D2_OnRealRoundEnd", ET_Ignore, Param_Cell);
-	hFwdFirstTankSpawn = CreateGlobalForward("L4D2_OnTankFirstSpawn", ET_Ignore, Param_Cell);
-	hFwdTankPassControl = CreateGlobalForward("L4D2_OnTankPassControl", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
-	hFwdTankDeath = CreateGlobalForward("L4D2_OnTankDeath", ET_Ignore, Param_Cell);
-	
+#if MODULE_ROUNDS
+	Rounds_AskPluginLoad2();
+#endif
+
+#if MODULE_MAPINFO
+	MapInfo_AskPluginLoad2();
+#endif
+
+#if MODULE_TANKS
+	Tanks_AskPluginLoad2();
+#endif
+
+#if MODULE_SURVIVORS
+	Survivors_AskPluginLoad2();
+#endif
+
 	/* Register our library */
-	RegPluginLibrary(LIBRARYNAME);
-	
+	RegPluginLibrary("l4d2lib");
 	return APLRes_Success;
 }
 
-public OnLibraryAdded(const String:name[])
+#if MODULE_MAPINFO
+public void OnLibraryAdded(const char[] sPluginName)
 {
-	if (StrEqual(name, "confogl"))
-	{
-		MapInfo_Init();
+	if (strcmp(sPluginName, "confogl", true) == 0) {
 		g_bConfogl = true;
+
+		MapInfo_Reload();
 	}
 }
 
-public OnLibraryRemoved(const String:name[])
+public void OnLibraryRemoved(const char[] sPluginName)
 {
-	if (StrEqual(name, "confogl"))
-	{
+	if (strcmp(sPluginName, "confogl", true) == 0) {
 		g_bConfogl = false;
+
+		MapInfo_Reload();
 	}
 }
+#endif
 
-public OnMapStart()
+#if MODULE_MAPINFO || MODULE_TANKS
+public void OnMapStart()
 {
-	if (g_bConfogl)
-	{
-		MapInfo_OnMapStart_Update();
-		Tanks_OnMapStart();
-	}
+#if MODULE_MAPINFO
+	MapInfo_OnMapStart_Update();
+#endif
+
+#if MODULE_TANKS
+	Tanks_OnMapStart();
+#endif
 }
+#endif
 
-public OnMapEnd()
+#if MODULE_MAPINFO || MODULE_ROUNDS
+public void OnMapEnd()
 {
+#if MODULE_MAPINFO
 	MapInfo_OnMapEnd_Update();
+#endif
+
+#if MODULE_ROUNDS
 	Rounds_OnMapEnd_Update();
+#endif
 }
+#endif
 
 /* Events */
-public Action:RoundEnd_Event(Handle:event, const String:name[], bool:dontBroadcast)
+#if MODULE_ROUNDS
+public void RoundEnd_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	Rounds_OnRoundEnd_Update();
 }
+#endif
 
-public Action:RoundStart_Event(Handle:event, const String:name[], bool:dontBroadcast)
+#if MODULE_ROUNDS || MODULE_TANKS || MODULE_SURVIVORS
+public void RoundStart_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
+#if MODULE_ROUNDS
 	Rounds_OnRoundStart_Update();
+#endif
+
+#if MODULE_TANKS
 	Tanks_RoundStart();
+#endif
+
+#if MODULE_SURVIVORS
+	Survivors_RebuildArray();
+#endif
+}
+#endif
+
+#if MODULE_TANKS
+public void TankSpawn_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+{
+	Tanks_TankSpawn(hEvent);
+}
+
+public void ItemPickup_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+{
+	Tanks_ItemPickup(hEvent);
+}
+#endif
+
+#if MODULE_TANKS || MODULE_SURVIVORS
+public void PlayerDeath_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+{
+#if MODULE_TANKS
+	Tanks_PlayerDeath(hEvent);
+#endif
+
+#if MODULE_SURVIVORS
+	Survivors_RebuildArray();
+#endif
+}
+#endif
+
+#if MODULE_SURVIVORS || MODULE_MAPINFO
+public void PlayerDisconnect_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+{
+#if MODULE_SURVIVORS
+	Survivors_RebuildArray();
+#endif
+
+#if MODULE_MAPINFO
+	MapInfo_PlayerDisconnect_Event(hEvent);
+#endif
+}
+#endif
+
+#if MODULE_SURVIVORS
+public void PlayerSpawn_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+{
 	Survivors_RebuildArray();
 }
 
-public Action:TankSpawn_Event(Handle:event, const String:name[], bool:dontBroadcast)
-{
-	Tanks_TankSpawn(event);
-}
-
-public Action:ItemPickup_Event(Handle:event, const String:name[], bool:dontBroadcast)
-{
-	Tanks_ItemPickup(event);
-}
-
-public Action:PlayerDeath_Event(Handle:event, const String:name[], bool:dontBroadcast)
-{
-	Tanks_PlayerDeath(event);
-	Survivors_RebuildArray();
-}
-
-public Action:PlayerSpawn_Event(Handle:event, const String:name[], bool:dontBroadcast)
+public void PlayerBotReplace_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	Survivors_RebuildArray();
 }
 
-public Action:PlayerDisconnect_Event(Handle:event, const String:name[], bool:dontBroadcast)
-{
-	Survivors_RebuildArray();
-	MapInfo_PlayerDisconnect_Event(event);
-}
-
-public Action:PlayerBotReplace_Event(Handle:event, const String:name[], bool:dontBroadcast)
+public void BotPlayerReplace_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	Survivors_RebuildArray();
 }
 
-public Action:BotPlayerReplace_Event(Handle:event, const String:name[], bool:dontBroadcast)
+public void DefibrillatorUsed_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	Survivors_RebuildArray();
 }
 
-public Action:DefibrillatorUsed_Event(Handle:event, const String:name[], bool:dontBroadcast)
-{
-	Survivors_RebuildArray();
-}
-
-public Action:PlayerTeam_Event(Handle:event, const String:name[], bool:dontBroadcast)
+public void PlayerTeam_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	Survivors_RebuildArray_Delay();
 }
+#endif
 
-
-/* Plugin Natives */
-public _native_GetCurrentRound(Handle:plugin, numParams)
-{
-	return GetCurrentRound();
-}
-
-public _native_CurrentlyInRound(Handle:plugin, numParams)
-{
-	return _:CurrentlyInRound();
-}
-
-public _native_GetSurvivorCount(Handle:plugin, numParams)
-{
-	return GetSurvivorCount();
-}
-
-public _native_GetSurvivorOfIndex(Handle:plugins, numParams)
-{
-	return GetSurvivorOfIndex(GetNativeCell(1));
-}
-
-public _native_IsMapDataAvailable(Handle:plugin, numParams)
-{
-	return IsMapDataAvailable();
-}
-
-public _native_IsEntityInSaferoom(Handle:plugin, numParams)
-{
-	return _:IsEntityInSaferoom(GetNativeCell(1));
-}
-
-public _native_GetMapStartOrigin(Handle:plugin, numParams)
-{
-	decl Float:origin[3];
-	GetNativeArray(1, origin, 3);
-	GetMapStartOrigin(origin);
-	SetNativeArray(1, origin, 3);
-}
-
-public _native_GetMapEndOrigin(Handle:plugin, numParams)
-{
-	decl Float:origin[3];
-	GetNativeArray(1, origin, 3);
-	GetMapEndOrigin(origin);
-	SetNativeArray(1, origin, 3);
-}
-
-public _native_GetMapStartDist(Handle:plugin, numParams)
-{
-	return _:GetMapStartDist();
-}
-
-public _native_GetMapStartExtraDist(Handle:plugin, numParams)
-{
-	return _:GetMapStartExtraDist();
-}
-
-public _native_GetMapEndDist(Handle:plugin, numParams)
-{
-	return _:GetMapEndDist();
-}
-
-public _native_GetMapValueInt(Handle:plugin, numParams)
-{
-	if (!g_bConfogl) return 0;
-
-	decl len, defval;
-	
-	GetNativeStringLength(1, len);
-	new String:key[len+1];
-	GetNativeString(1, key, len+1);
-	
-	defval = GetNativeCell(2);
-	
-	return GetMapValueInt(key, defval);
-}
-public _native_GetMapValueFloat(Handle:plugin, numParams)
-{
-	if (!g_bConfogl) return 0;
-
-	decl len, Float:defval;
-	
-	GetNativeStringLength(1, len);
-	new String:key[len+1];
-	GetNativeString(1, key, len+1);
-	
-	defval = GetNativeCell(2);
-	
-	return _:GetMapValueFloat(key, defval);
-}
-
-public _native_GetMapValueVector(Handle:plugin, numParams)
-{
-	if (!g_bConfogl) return;
-
-	decl len, Float:defval[3], Float:value[3];
-	
-	GetNativeStringLength(1, len);
-	new String:key[len+1];
-	GetNativeString(1, key, len+1);
-	
-	GetNativeArray(3, defval, 3);
-	
-	GetMapValueVector(key, value, defval);
-	
-	SetNativeArray(2, value, 3);
-}
-
-public _native_GetMapValueString(Handle:plugin, numParams)
-{
-	if (!g_bConfogl) return;
-
-	decl len;
-	GetNativeStringLength(1, len);
-	new String:key[len+1];
-	GetNativeString(1, key, len+1);
-	
-	GetNativeStringLength(4, len);
-	new String:defval[len+1];
-	GetNativeString(4, defval, len+1);
-	
-	len = GetNativeCell(3);
-	new String:buf[len+1];
-	
-	GetMapValueString(key, buf, len, defval);
-	
-	SetNativeString(2, buf, len);
-}
-
-public _native_CopyMapSubsection(Handle:plugin, numParams)
-{
-	if (!g_bConfogl) return;
-
-	decl len, Handle:kv;
-	GetNativeStringLength(2, len);
-	new String:key[len+1];
-	GetNativeString(2, key, len+1);
-	
-	kv = GetNativeCell(1);
-	
-	CopyMapSubsection(kv, key);
-}
