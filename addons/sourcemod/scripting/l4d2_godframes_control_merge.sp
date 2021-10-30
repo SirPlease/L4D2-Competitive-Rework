@@ -1,15 +1,16 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 /*
  * To-do:
  * Add flag cvar to control damage from different SI separately.
  * Add cvar to control whether tanks should reset frustration with hittable hits. Maybe.
  */
-
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
-#include <left4dhooks>
+#include <left4dhooks> //#include <l4d2_direct>
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 
 #define CLASSNAME_LENGTH 64
@@ -38,152 +39,121 @@
 #define FFTYPE_STUPIDBOTS 4
 #define FFTYPE_MELEEFLAG 0x8000
 
-// Macros for determining client validity
-#define IS_VALID_CLIENT(%1) (%1 > 0 && %1 <= MaxClients)
-#define IS_SURVIVOR(%1) (GetClientTeam(%1) == 2)
-#define IS_INFECTED(%1) (GetClientTeam(%1) == 3)
-#define IS_VALID_INGAME(%1) (IS_VALID_CLIENT(%1) && IsClientInGame(%1))
-#define IS_VALID_SURVIVOR(%1) (IS_VALID_INGAME(%1) && IS_SURVIVOR(%1))
-#define IS_VALID_INFECTED(%1) (IS_VALID_INGAME(%1) && IS_INFECTED(%1))
-#define IS_SURVIVOR_ALIVE(%1) (IS_VALID_SURVIVOR(%1) && IsPlayerAlive(%1))
-#define IS_INFECTED_ALIVE(%1) (IS_VALID_INFECTED(%1) && IsPlayerAlive(%1))
-
 //cvars
-new Handle: hRageRock = INVALID_HANDLE;
-new Handle: hRageHittables = INVALID_HANDLE;
-new Handle: hHittable = INVALID_HANDLE;
-new Handle: hWitch = INVALID_HANDLE;
-new Handle: hFF = INVALID_HANDLE;
-new Handle: hSpit = INVALID_HANDLE;
-new Handle: hCommon = INVALID_HANDLE;
-new Handle: hHunter = INVALID_HANDLE;
-new Handle: hSmoker = INVALID_HANDLE;
-new Handle: hJockey = INVALID_HANDLE;
-new Handle: hCharger = INVALID_HANDLE;
-new Handle: hSpitFlags = INVALID_HANDLE;
-new Handle: hCommonFlags = INVALID_HANDLE;
-new Handle: hGodframeGlows = INVALID_HANDLE;
-new Handle: hRock = INVALID_HANDLE;
+ConVar
+	g_hRageRock = null,
+	g_hRageHittables = null,
+	g_hHittable = null,
+	g_hWitch = null,
+	g_hFF = null,
+	g_hSpit = null,
+	g_hCommon = null,
+	g_hHunter = null,
+	g_hSmoker = null,
+	g_hJockey = null,
+	g_hCharger = null,
+	g_hSpitFlags = null,
+	g_hCommonFlags = null,
+	g_hGodframeGlows = null,
+	g_hRock = null;
 
 //shotgun ff stuff
-new Handle:hCvarEnableShotFF;
-new Handle:hCvarModifier;
-new Handle:hCvarMinFF;
-new Handle:hCvarMaxFF;
-new bool:bBuckshot[MAXPLAYERS + 1];
+ConVar
+	g_hCvarEnableShotFF = null,
+	g_hCvarModifier = null,
+	g_hCvarMinFF = null,
+	g_hCvarMaxFF = null;
+
+bool
+	g_bBuckshot[MAXPLAYERS + 1] = {false, ...};
 
 //undo ff
-new Handle:g_cvarEnable = INVALID_HANDLE;
-new Handle:g_cvarBlockZeroDmg = INVALID_HANDLE;
-new Handle:g_cvarPermDamageFraction = INVALID_HANDLE;
+ConVar
+	g_hCvarEnable = null,
+	g_hCvarBlockZeroDmg = null,
+	g_hCvarPermDamageFraction = null;
 
-new g_EnabledFlags;
-new g_BlockZeroDmg;
-new g_lastHealth[MAXPLAYERS+1][UNDO_SIZE][2];					// The Undo Damage array, with correlated arrays for holding the last revive count and current undo index
-new g_lastReviveCount[MAXPLAYERS+1] = { 0, ... };
-new g_currentUndo[MAXPLAYERS+1] = { 0, ... };
-new g_targetTempHealth[MAXPLAYERS+1] = { 0, ... };				// Healing is weird, so this keeps track of our target OR the target's temp health
-new g_lastPerm[MAXPLAYERS+1] = { 100, ... };					// The permanent damage fraction requires some coordination between OnTakeDamage and player_hurt
-new g_lastTemp[MAXPLAYERS+1] = { 0, ... };
+int
+	g_iEnabledFlags = 0,
+	g_iBlockZeroDmg = 0,
+	g_iLastHealth[MAXPLAYERS + 1][UNDO_SIZE][2],				// The Undo Damage array, with correlated arrays for holding the last revive count and current undo index
+	g_iLastReviveCount[MAXPLAYERS + 1] = {0, ... };
+	g_iCurrentUndo[MAXPLAYERS + 1] = {0, ... };
+	g_iTargetTempHealth[MAXPLAYERS + 1] = {0, ... };			// Healing is weird, so this keeps track of our target OR the target's temp health
+	g_iLastPerm[MAXPLAYERS + 1] = {100, ... };				// The permanent damage fraction requires some coordination between OnTakeDamage and player_hurt
+	g_iLastTemp[MAXPLAYERS + 1] = {0, ... };
 
-new Float:g_flPermFrac;
+float
+	g_fPermFrac = 0.0;
 
-new bool:g_chargerCarryNoFF[MAXPLAYERS+1] = { false, ... };		// Flags for knowing when to undo friendly fire
-new bool:g_stupidGuiltyBots[MAXPLAYERS+1] = { false, ... };
+bool
+	g_bChargerCarryNoFF[MAXPLAYERS + 1] = {false, ...},		// Flags for knowing when to undo friendly fire
+	g_bStupidGuiltyBots[MAXPLAYERS + 1] = {false, ...};
 
 //fake godframes
-new Float: fFakeGodframeEnd[MAXPLAYERS + 1];
-new iLastSI[MAXPLAYERS + 1];
+float
+	g_fFakeGodframeEnd[MAXPLAYERS + 1] = {0.0, ...};
 
-//shotgun ff
-new pelletsShot[MAXPLAYERS + 1][MAXPLAYERS + 1];
+int
+	g_iLastSI[MAXPLAYERS + 1] = {0, ...},
+	g_iPelletsShot[MAXPLAYERS + 1][MAXPLAYERS + 1],			//shotgun ff
+	g_iFrustrationOffset[MAXPLAYERS + 1] = {0, ...};			//frustration
 
-//frustration
-new frustrationOffset[MAXPLAYERS + 1];
+bool
+	g_bLateLoad = false; //late load
 
-//late load
-new bool:bLateLoad;
-
-public APLRes:AskPluginLoad2( Handle:plugin, bool:late, String:error[], errMax )
+public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErrMax)
 {
-	bLateLoad = late;
 	CreateNative("GiveClientGodFrames", Native_GiveClientGodFrames);
+	
 	RegPluginLibrary("l4d2_godframes_control_merge");
+	
+	g_bLateLoad = bLate;
 	return APLRes_Success;
 }
 
-public Plugin:myinfo =
+public Plugin myinfo =
 {
-	name = "L4D2 Godframes Control combined with FF Plugins", //Add support sm1.11 - A1m`
-	author = "Stabby, CircleSquared, Tabun, Visor, dcx, Sir, Spoon",
-	version = "0.6.2",
+	name = "L4D2 Godframes Control combined with FF Plugins",
+	author = "Stabby, CircleSquared, Tabun, Visor, dcx, Sir, Spoon, A1m`",
+	version = "0.6.5",
 	description = "Allows for control of what gets godframed and what doesnt along with integrated FF Support from l4d2_survivor_ff (by dcx and Visor) and l4d2_shotgun_ff (by Visor)"
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
-	hGodframeGlows = CreateConVar("gfc_godframe_glows", "1",
-									"Changes the rendering of survivors while godframed (red/transparent).",
-									0, true, 0.0, true, 1.0 );
-	hRageHittables = CreateConVar("gfc_hittable_rage_override", "1",
-									"Allow tank to gain rage from hittable hits. 0 blocks rage gain.",
-									0, true, 0.0, true, 1.0 );
-	hRageRock = CreateConVar(	"gfc_rock_rage_override", "1",
-									"Allow tank to gain rage from godframed hits. 0 blocks rage gain.",
-									0, true, 0.0, true, 1.0 );
-	hHittable = CreateConVar(	"gfc_hittable_override", "1",
-									"Allow hittables to always ignore godframes.",
-									0, true, 0.0, true, 1.0 );
-	hRock = CreateConVar(	"gfc_rock_override", "0",
-									"Allow hittables to always ignore godframes.",
-									0, true, 0.0, true, 1.0 );
-	hWitch = CreateConVar( 		"gfc_witch_override", "1",
-									"Allow witches to always ignore godframes.",
-									0, true, 0.0, true, 1.0 );
-	hFF = CreateConVar( 		"gfc_ff_min_time", "0.3",
-									"Minimum time before FF damage is allowed.",
-									0, true, 0.0, true, 3.0 );
-	hSpit = CreateConVar( 		"gfc_spit_extra_time", "0.7",
-									"Additional godframe time before spit damage is allowed.",
-									0, true, 0.0, true, 3.0 );
-	hCommon = CreateConVar( 	"gfc_common_extra_time", "0.0",
-									"Additional godframe time before common damage is allowed.",
-									0, true, 0.0, true, 3.0 );
-	hHunter = CreateConVar( 	"gfc_hunter_duration", "2.1",
-									"How long should godframes after a pounce last?",
-									0, true, 0.0, true, 3.0 );
-	hJockey = CreateConVar( 	"gfc_jockey_duration", "0.0",
-									"How long should godframes after a ride last?",
-									0, true, 0.0, true, 3.0 );
-	hSmoker = CreateConVar( 	"gfc_smoker_duration", "0.0",
-									"How long should godframes after a pull or choke last?",
-									0, true, 0.0, true, 3.0 );
-	hCharger = CreateConVar( 	"gfc_charger_duration", "2.1",
-									"How long should godframes after a pummel last?",
-									0, true, 0.0, true, 3.0 );
-	hSpitFlags = CreateConVar( 	"gfc_spit_zc_flags", "6",
-									"Which classes will be affected by extra spit protection time. 1 - Hunter. 2 - Smoker. 4 - Jockey. 8 - Charger.",
-									0, true, 0.0, true, 15.0 );
-	hCommonFlags= CreateConVar( "gfc_common_zc_flags", "0",
-									"Which classes will be affected by extra common protection time. 1 - Hunter. 2 - Smoker. 4 - Jockey. 8 - Charger.",
-									0, true, 0.0, true, 15.0 );
+	g_hGodframeGlows = CreateConVar("gfc_godframe_glows", "1", "Changes the rendering of survivors while godframed (red/transparent).", _, true, 0.0, true, 1.0);
+	g_hRageHittables = CreateConVar("gfc_hittable_rage_override", "1", "Allow tank to gain rage from hittable hits. 0 blocks rage gain.", _, true, 0.0, true, 1.0);
+	g_hRageRock = CreateConVar("gfc_rock_rage_override", "1", "Allow tank to gain rage from godframed hits. 0 blocks rage gain.", _, true, 0.0, true, 1.0);
+	g_hHittable = CreateConVar("gfc_hittable_override", "1", "Allow hittables to always ignore godframes.", _, true, 0.0, true, 1.0);
+	g_hRock = CreateConVar("gfc_rock_override", "0", "Allow hittables to always ignore godframes.", _, true, 0.0, true, 1.0);
+	g_hWitch = CreateConVar("gfc_witch_override", "1", "Allow witches to always ignore godframes.", _, true, 0.0, true, 1.0);
+	g_hFF = CreateConVar("gfc_ff_min_time", "0.3", "Minimum time before FF damage is allowed.", _, true, 0.0, true, 3.0);
+	g_hSpit = CreateConVar("gfc_spit_extra_time", "0.7", "Additional godframe time before spit damage is allowed.", 0, true, 0.0, true, 3.0);
+	g_hCommon = CreateConVar("gfc_common_extra_time", "0.0", "Additional godframe time before common damage is allowed.", 0, true, 0.0, true, 3.0);
+	g_hHunter = CreateConVar("gfc_hunter_duration", "2.1", "How long should godframes after a pounce last?", _, true, 0.0, true, 3.0);
+	g_hJockey = CreateConVar("gfc_jockey_duration", "0.0", "How long should godframes after a ride last?", _, true, 0.0, true, 3.0);
+	g_hSmoker = CreateConVar("gfc_smoker_duration", "0.0", "How long should godframes after a pull or choke last?", _, true, 0.0, true, 3.0);
+	g_hCharger = CreateConVar("gfc_charger_duration", "2.1", "How long should godframes after a pummel last?", _, true, 0.0, true, 3.0);
+	g_hSpitFlags = CreateConVar("gfc_spit_zc_flags", "6", "Which classes will be affected by extra spit protection time. 1 - Hunter. 2 - Smoker. 4 - Jockey. 8 - Charger.", _, true, 0.0, true, 15.0);
+	g_hCommonFlags= CreateConVar("gfc_common_zc_flags", "0", "Which classes will be affected by extra common protection time. 1 - Hunter. 2 - Smoker. 4 - Jockey. 8 - Charger.", _, true, 0.0, true, 15.0);
 
-	g_cvarEnable = 				CreateConVar("l4d2_undoff_enable", 		"7", 	"Bit flag: Enables plugin features (add together): 1=too close, 2=Charger carry, 4=guilty bots, 7=all, 0=off", FCVAR_NOTIFY);
-	g_cvarBlockZeroDmg =		CreateConVar("l4d2_undoff_blockzerodmg","7", 	"Bit flag: Block 0 damage friendly fire effects like recoil and vocalizations/stats (add together): 4=bot hits human block recoil, 2=block vocals/stats on ALL difficulties, 1=block vocals/stats on everything EXCEPT Easy (flag 2 has precedence), 0=off", FCVAR_NOTIFY);
-	g_cvarPermDamageFraction = 	CreateConVar("l4d2_undoff_permdmgfrac", "1.0", 	"Minimum fraction of damage applied to permanent health", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	g_hCvarEnable = CreateConVar("l4d2_undoff_enable", "7", "Bit flag: Enables plugin features (add together): 1=too close, 2=Charger carry, 4=guilty bots, 7=all, 0=off", FCVAR_NOTIFY);
+	g_hCvarBlockZeroDmg = CreateConVar("l4d2_undoff_blockzerodmg","7", "Bit flag: Block 0 damage friendly fire effects like recoil and vocalizations/stats (add together): 4=bot hits human block recoil, 2=block vocals/stats on ALL difficulties, 1=block vocals/stats on everything EXCEPT Easy (flag 2 has precedence), 0=off", FCVAR_NOTIFY);
+	g_hCvarPermDamageFraction = CreateConVar("l4d2_undoff_permdmgfrac", "1.0", "Minimum fraction of damage applied to permanent health", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
-	hCvarEnableShotFF = CreateConVar("l4d2_shotgun_ff_enable", "1", "Enable Shotgun FF Module?");
-	hCvarModifier = CreateConVar("l4d2_shotgun_ff_multi", "0.5", "Shotgun FF damage modifier value", 0, true, 0.0, true, 5.0);
-	hCvarMinFF = CreateConVar("l4d2_shotgun_ff_min", "1.0", "Minimum allowed shotgun FF damage; 0 for no limit", 0, true, 0.0);
-	hCvarMaxFF = CreateConVar("l4d2_shotgun_ff_max", "6.0", "Maximum allowed shotgun FF damage; 0 for no limit", 0, true, 0.0);
+	g_hCvarEnableShotFF = CreateConVar("l4d2_shotgun_ff_enable", "1", "Enable Shotgun FF Module?", _, true, 0.0, true, 5.0);
+	g_hCvarModifier = CreateConVar("l4d2_shotgun_ff_multi", "0.5", "Shotgun FF damage modifier value", _, true, 0.0, true, 5.0);
+	g_hCvarMinFF = CreateConVar("l4d2_shotgun_ff_min", "1.0", "Minimum allowed shotgun FF damage; 0 for no limit", _, true, 0.0);
+	g_hCvarMaxFF = CreateConVar("l4d2_shotgun_ff_max", "6.0", "Maximum allowed shotgun FF damage; 0 for no limit", _, true, 0.0);
 
-	HookConVarChange(g_cvarEnable, 				OnUndoFFEnableChanged);
-	HookConVarChange(g_cvarBlockZeroDmg, 		OnUndoFFBlockZeroDmgChanged);
-	HookConVarChange(g_cvarPermDamageFraction, 	OnPermFracChanged);
+	g_hCvarEnable.AddChangeHook(OnUndoFFEnableChanged);
+	g_hCvarBlockZeroDmg.AddChangeHook(OnUndoFFBlockZeroDmgChanged);
+	g_hCvarPermDamageFraction.AddChangeHook(OnPermFracChanged);
 
-	g_EnabledFlags = GetConVarInt(g_cvarEnable);
-	g_BlockZeroDmg = GetConVarInt(g_cvarBlockZeroDmg);
-	g_flPermFrac = GetConVarFloat(g_cvarPermDamageFraction);
+	g_iEnabledFlags = g_hCvarEnable.IntValue;
+	g_iBlockZeroDmg = g_hCvarBlockZeroDmg.IntValue;
+	g_fPermFrac = g_hCvarPermDamageFraction.FloatValue;
 
 	HookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);
 	HookEvent("friendly_fire", Event_FriendlyFire, EventHookMode_Pre);
@@ -199,147 +169,142 @@ public OnPluginStart()
 	HookEvent("pounce_end", PostSurvivorRelease);
 	HookEvent("jockey_ride_end", PostSurvivorRelease);
 	HookEvent("charger_pummel_end", PostSurvivorRelease);
-
-	if (bLateLoad) InitializeHooks();
-}
-
-public OnRoundStart() //l4d2util forward
-{
-	for (new i = 1; i <= MaxClients; i++) //clear both fake and real just because
-	{
-		fFakeGodframeEnd[i] = 0.0;
-		bBuckshot[i] = false;
+	
+	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
+	
+	if (g_bLateLoad) {
+		for (int i = 1; i <= MaxClients; i++) {
+			if (IsClientInGame(i)) {
+				SDKHook(i, SDKHook_OnTakeDamage, OnTakeDamage);
+				SDKHook(i, SDKHook_TraceAttack, TraceAttackUndoFF);
+				
+				g_bBuckshot[i] = false;
+			}
+			
+			for (int j = 0; j < UNDO_SIZE; j++) {
+				g_iLastHealth[i][j][UNDO_PERM] = 0;
+				g_iLastHealth[i][j][UNDO_TEMP] = 0;
+			}
+		}
 	}
 }
 
-public Native_GiveClientGodFrames(Handle:plugin, numParams)
+//public void OnRoundStart() //l4d2util forward
+public void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	new client = GetNativeCell(1);
-	new Float:godFrameTime = GetNativeCell(2);
-	new attackerClass = GetNativeCell(3);
-	
-	if (!IsClientAndInGame(client)) { return; } //just in case
-	
-	fFakeGodframeEnd[client] = GetGameTime() + godFrameTime;
-	iLastSI[client] = attackerClass;
-	
-	SetGodframedGlow(client);
-	CreateTimer(fFakeGodframeEnd[client] - GetGameTime(), Timed_ResetGlow, client);
+	for (int i = 1; i <= MaxClients; i++) { //clear both fake and real just because
+		g_fFakeGodframeEnd[i] = 0.0;
+		g_bBuckshot[i] = false;
+	}
 }
 
-public PostSurvivorRelease(Handle:event, const String:name[], bool:dontBroadcast)
+public void PostSurvivorRelease(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	new victim = GetClientOfUserId(GetEventInt(event,"victim"));
+	int iVictim = GetClientOfUserId(hEvent.GetInt("victim"));
 
-	if (!IsClientAndInGame(victim)) { return; } //just in case
+	if (iVictim < 1 || !IsClientInGame(iVictim) || !IsPlayerAlive(iVictim)) {
+		return; //just in case
+	}
 
+	float fNow = GetGameTime();
+	
 	//sets fake godframe time based on cvars for each ZC
-	if (StrContains(name, "tongue") != -1)
-	{
-		fFakeGodframeEnd[victim] = GetGameTime() + GetConVarFloat(hSmoker);
-		iLastSI[victim] = 2;
-	} else
-	if (StrContains(name, "pounce") != -1)
-	{
-		fFakeGodframeEnd[victim] = GetGameTime() + GetConVarFloat(hHunter);
-		iLastSI[victim] = 1;
-	} else
-	if (StrContains(name, "jockey") != -1)
-	{
-		fFakeGodframeEnd[victim] = GetGameTime() + GetConVarFloat(hJockey);
-		iLastSI[victim] = 4;
-	} else
-	if (StrContains(name, "charger") != -1)
-	{
-		fFakeGodframeEnd[victim] = GetGameTime() + GetConVarFloat(hCharger);
-		iLastSI[victim] = 8;
+	if (StrContains(sEventName, "tongue") != -1) {
+		g_fFakeGodframeEnd[iVictim] = fNow + g_hSmoker.FloatValue;
+		g_iLastSI[iVictim] = 2;
+	} else if (StrContains(sEventName, "pounce") != -1) {
+		g_fFakeGodframeEnd[iVictim] = fNow + g_hHunter.FloatValue;
+		g_iLastSI[iVictim] = 1;
+	} else if (StrContains(sEventName, "jockey") != -1) {
+		g_fFakeGodframeEnd[iVictim] = fNow + g_hJockey.FloatValue;
+		g_iLastSI[iVictim] = 4;
+	} else if (StrContains(sEventName, "charger") != -1) {
+		g_fFakeGodframeEnd[iVictim] = fNow + g_hCharger.FloatValue;
+		g_iLastSI[iVictim] = 8;
 	}
 	
-	if (fFakeGodframeEnd[victim] > GetGameTime() && GetConVarBool(hGodframeGlows)) {
-		SetGodframedGlow(victim);
-		CreateTimer(fFakeGodframeEnd[victim] - GetGameTime(), Timed_ResetGlow, victim);
+	if (g_fFakeGodframeEnd[iVictim] > fNow && g_hGodframeGlows.BoolValue) {
+		// make player transparent/red while godframed
+		SetEntityRenderMode(iVictim, RENDER_GLOW);
+		SetEntityRenderColor(iVictim, 255, 0, 0, 200);
+		
+		CreateTimer(g_fFakeGodframeEnd[iVictim] - fNow, Timed_ResetGlow, iVictim, TIMER_FLAG_NO_MAPCHANGE);
 	}
-
-	return;
 }
 
-public OnClientPutInServer(client)
+public void OnClientPutInServer(int iClient)
 {
-	InitializeHooks(client);
-}
-
-InitializeHooks(client = -1)
-{
-	for (new i = 1; i <= MaxClients; i++)
-	{
-		if (client > -1) i = client;
-		
-		if (IsClientInGame(i)) 
-		{
-			SDKHook(i, SDKHook_OnTakeDamage, OnTakeDamage);
-			SDKHook(i, SDKHook_TraceAttack, TraceAttackUndoFF);
-			bBuckshot[i] = false;
-		}
-		
-		for (new j = 0; j < UNDO_SIZE; j++)
-		{
-			g_lastHealth[i][j][UNDO_PERM] = 0;
-			g_lastHealth[i][j][UNDO_TEMP] = 0;
-		}
-		
-		if (client > -1) break;
+	SDKHook(iClient, SDKHook_OnTakeDamage, OnTakeDamage);
+	SDKHook(iClient, SDKHook_TraceAttack, TraceAttackUndoFF);
+	
+	g_bBuckshot[iClient] = false;
+	
+	for (int j = 0; j < UNDO_SIZE; j++) {
+		g_iLastHealth[iClient][j][UNDO_PERM] = 0;
+		g_iLastHealth[iClient][j][UNDO_TEMP] = 0;
 	}
 }
 
 /* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //																												   //
 //																												   //
-//                             --------------    Godframe Control      --------------							   //
+//								 --------------    Godframe Control      --------------							   //
 //																												   //
 //																												   //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
 
-public Action:Timed_SetFrustration(Handle:timer, any:client) {
-	if (IsClientConnected(client) && IsPlayerAlive(client) && GetClientTeam(client) == 3 && GetEntProp(client, Prop_Send, "m_zombieClass") == 8) {
-		new frust = GetEntProp(client, Prop_Send, "m_frustration");
-		frust += frustrationOffset[client];
+public Action Timed_SetFrustration(Handle hTimer, any iClient) {
+	if (IsTank(iClient) && IsPlayerAlive(iClient)) {
+		int iFrust = GetEntProp(iClient, Prop_Send, "m_frustration");
+		iFrust += g_iFrustrationOffset[iClient];
 		
-		if (frust > 100) frust = 100;
-		else if (frust < 0) frust = 0;
+		if (iFrust > 100) {
+			iFrust = 100;
+		} else if (iFrust < 0) {
+			iFrust = 0;
+		}
 		
-		SetEntProp(client, Prop_Send, "m_frustration", frust);
-		frustrationOffset[client] = 0;
+		SetEntProp(iClient, Prop_Send, "m_frustration", iFrust);
+		g_iFrustrationOffset[iClient] = 0;
 	}
 }
 
-public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damagetype, &weapon, Float:damageForce[3], Float:damagePosition[3])
+public Action OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, \
+								int &iDamagetype, int &iWeapon, float fDamageForce[3], float fDamagePosition[3])
 {
-	if (!IS_VALID_SURVIVOR(victim) || !IsValidEdict(attacker) || !IsValidEdict(inflictor)) { return Plugin_Continue; }
-
-	new CountdownTimer:cTimerGod = L4D2Direct_GetInvulnerabilityTimer(victim);
-	if (cTimerGod != CTimer_Null) { CTimer_Invalidate(cTimerGod); }
-
-	new String:sClassname[CLASSNAME_LENGTH];
-	GetEntityClassname(inflictor, sClassname, CLASSNAME_LENGTH);
-
-	new Float:fTimeLeft = fFakeGodframeEnd[victim] - GetGameTime();
-
-	if (StrEqual(sClassname, "infected") && (iLastSI[victim] & GetConVarInt(hCommonFlags))) //commons
-	{
-		fTimeLeft += GetConVarFloat(hCommon);
+	if (!IsValidSurvivor(iVictim) || !IsValidEdict(iAttacker) || !IsValidEdict(iInflictor)) { 
+		return Plugin_Continue; 
 	}
-	if (StrEqual(sClassname, "insect_swarm") && (iLastSI[victim] & GetConVarInt(hSpitFlags))) //spit
-	{
-		fTimeLeft += GetConVarFloat(hSpit);
+
+	CountdownTimer cTimerGod = L4D2Direct_GetInvulnerabilityTimer(iVictim); // left4dhooks
+	if (cTimerGod != CTimer_Null) {
+		CTimer_Invalidate(cTimerGod); //set m_timestamp - 0.0
 	}
-	if (IS_VALID_SURVIVOR(attacker)) //friendly fire
-	{	
+
+	char sClassname[CLASSNAME_LENGTH];
+	GetEntityClassname(iInflictor, sClassname, CLASSNAME_LENGTH);
+
+	float fTimeLeft = g_fFakeGodframeEnd[iVictim] - GetGameTime();
+
+	if (StrEqual(sClassname, "infected") && (g_iLastSI[iVictim] & g_hCommonFlags.IntValue)){ //commons
+		fTimeLeft += g_hCommon.FloatValue;
+	}
+	
+	if (StrEqual(sClassname, "insect_swarm") && (g_iLastSI[iVictim] & g_hSpitFlags.IntValue)) { //spit
+		fTimeLeft += g_hSpit.FloatValue;
+	}
+	
+	if (IsValidSurvivor(iAttacker)) { //friendly fire
 		//Block FF While Capped
-		if (IsSurvivorAttacked(victim)) return Plugin_Handled;
-
+		if (IsSurvivorAttacked(iVictim)) {
+			return Plugin_Handled;
+		}
+		
 		//Block AI FF
-		if (IsFakeClient(victim) && IsFakeClient(attacker)) return Plugin_Handled;
-
+		if (IsFakeClient(iVictim) && IsFakeClient(iAttacker)) {
+			return Plugin_Handled;
+		}
+		
 		/**
 		#define DMG_PLASMA	(1 << 24)	// < Shot by Cremator
 					
@@ -348,47 +313,40 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 		exotic damage flag that stands for a cut enemy from HL2
 		**/
 
-		if (damagetype == DMG_PLASMA) return Plugin_Continue;
+		if (iDamagetype == DMG_PLASMA) {
+			return Plugin_Continue;
+		}
+		
+		fTimeLeft += g_hFF.FloatValue;
 
-		fTimeLeft += GetConVarFloat(hFF);
-
-		if (g_EnabledFlags)
-		{
-			new bool:undone = false;
-			new dmg = RoundToFloor(damage);	// Damage to survivors is rounded down
+		if (g_iEnabledFlags) {
+			bool bUndone = false;
+			int iDmg = RoundToFloor(fDamage); // Damage to survivors is rounded down
 	
 			// Only check damage to survivors
 			// - if it is greater than 0, OR
 			// - if a human survivor did 0 damage (so we know when the engine forgives our friendly fire for us)
-			if (dmg > 0 && !IsFakeClient(attacker))
-			{
+			if (iDmg > 0 && !IsFakeClient(iAttacker)) {
 				// Remember health for undo
-				new victimPerm = GetClientHealth(victim);
-				new victimTemp = L4D_GetPlayerTempHealth(victim);
+				int iVictimPerm = GetClientHealth(iVictim);
+				int iVictimTemp = GetSurvivorTemporaryHealth(iVictim);
+				
 				// if attacker is not ourself, check for undo damage
-				if (attacker != victim)
-				{
-					decl String:weaponName[32];
-					GetSafeEntityName(weapon, weaponName, sizeof(weaponName));
-					new Float:Distance = GetClientsDistance(victim, attacker);
-					new Float:FFDist = GetWeaponFFDist(weaponName);
-
-					if ((g_EnabledFlags & FFTYPE_TOOCLOSE) && (Distance < FFDist))
-					{
-						undone = true;
-					}
-					else if ((g_EnabledFlags & FFTYPE_CHARGERCARRY) && (g_chargerCarryNoFF[victim]))
-					{
-						undone = true;
-					}
-					else if ((g_EnabledFlags & FFTYPE_STUPIDBOTS) && (g_stupidGuiltyBots[victim]))
-					{
-						undone = true;
-					}
-					else if (dmg == 0)
-					{
+				if (iAttacker != iVictim) {
+					char sWeaponName[CLASSNAME_LENGTH];
+					GetSafeEntityName(iWeapon, sWeaponName, sizeof(sWeaponName));
+					
+					float fDistance = GetClientsDistance(iVictim, iAttacker);
+					float FFDist = GetWeaponFFDist(sWeaponName);
+					if ((g_iEnabledFlags & FFTYPE_TOOCLOSE) && (fDistance < FFDist)) {
+						bUndone = true;
+					} else if ((g_iEnabledFlags & FFTYPE_CHARGERCARRY) && (g_bChargerCarryNoFF[iVictim])) {
+						bUndone = true;
+					} else if ((g_iEnabledFlags & FFTYPE_STUPIDBOTS) && (g_bStupidGuiltyBots[iVictim])) {
+						bUndone = true;
+					} else if (iDmg == 0) {
 						// In order to get here, you must be a human Survivor doing 0 damage to another Survivor
-						undone = (g_BlockZeroDmg & 0x02) || ((g_BlockZeroDmg & 0x01));
+						bUndone = ((g_iBlockZeroDmg & 0x02) || ((g_iBlockZeroDmg & 0x01)));
 					}
 				}
 		
@@ -398,175 +356,166 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 				// since we can't tell after-the-fact what the damage was applied to
 				// Unfortunately, not all calls to OnTakeDamage result in the player being hurt (e.g. damage during god frames)
 				// So we use player_hurt to know when OTD actually happened
-				if (!undone && dmg > 0)
-				{			
-					new PermDmg = RoundToCeil(g_flPermFrac * dmg);
-					if (PermDmg >= victimPerm)
+				if (!bUndone && iDmg > 0) {
+					int iPermDmg = RoundToCeil(g_fPermFrac * iDmg);
+					if (iPermDmg >= iVictimPerm)
 					{
 						// Perm damage won't reduce permanent health below 1 if there is sufficient temp health
-						PermDmg = victimPerm - 1;
+						iPermDmg = iVictimPerm - 1;
 					}
-					new TempDmg = dmg - PermDmg;
-					if (TempDmg > victimTemp)
-					{
+					
+					int iTempDmg = iDmg - iPermDmg;
+					if (iTempDmg > iVictimTemp) {
 						// If TempDmg exceeds current temp health, transfer the difference to perm damage
-						PermDmg += (TempDmg - victimTemp);
-						TempDmg = victimTemp;
+						iPermDmg += (iTempDmg - iVictimTemp);
+						iTempDmg = iVictimTemp;
 					}
 				
 					// Don't add to undo list if player is incapped
-					if (!L4D_IsPlayerIncapacitated(victim))
-					{
+					if (!IsIncapacitated(iVictim)) {
 						// point at next undo cell
-						new nextUndo = (g_currentUndo[victim] + 1) % UNDO_SIZE;
-							
-						if (PermDmg < victimPerm)
-						{
+						int iNextUndo = (g_iCurrentUndo[iVictim] + 1) % UNDO_SIZE;
+						
+						if (iPermDmg < iVictimPerm) {
 							// This will call player_hurt, so we should store the damage done so that it can be added back if it is undone
-							g_lastHealth[victim][nextUndo][UNDO_PERM] = PermDmg;
-							g_lastHealth[victim][nextUndo][UNDO_TEMP] = TempDmg;
+							g_iLastHealth[iVictim][iNextUndo][UNDO_PERM] = iPermDmg;
+							g_iLastHealth[iVictim][iNextUndo][UNDO_TEMP] = iTempDmg;
 							
 							// We need some way to tell player_hurt how much perm/temp health we expected the player to have after this attack
 							// This is used to implement the fractional damage to perm health
 							// We can't just set their health here because this attack might not actually do damage
-							g_lastPerm[victim] = victimPerm - PermDmg;
-							g_lastTemp[victim] = victimTemp - TempDmg;
-						}
-						else
-						{
+							g_iLastPerm[iVictim] = iVictimPerm - iPermDmg;
+							g_iLastTemp[iVictim] = iVictimTemp - iTempDmg;
+						} else {
 							// This will call player_incap_start, so we should store their exact health and incap count at the time of attack
 							// If the incap is undone, we will restore these settings instead of adding them
-							g_lastHealth[victim][nextUndo][UNDO_PERM] = victimPerm;
-							g_lastHealth[victim][nextUndo][UNDO_TEMP] = victimTemp;
+							g_iLastHealth[iVictim][iNextUndo][UNDO_PERM] = iVictimPerm;
+							g_iLastHealth[iVictim][iNextUndo][UNDO_TEMP] = iVictimTemp;
 							
 							// This is used to tell player_incap_start the exact amount of damage that was done by the attack
-							g_lastPerm[victim] = PermDmg;
-							g_lastTemp[victim] = TempDmg;
+							g_iLastPerm[iVictim] = iPermDmg;
+							g_iLastTemp[iVictim] = iTempDmg;
 							
 							// TODO: can we move to incapstart?
-							g_lastReviveCount[victim] = L4D_GetPlayerReviveCount(victim);
+							g_iLastReviveCount[iVictim] = GetEntProp(iVictim, Prop_Send, "m_currentReviveCount");
 						}
 					}
 				}
 			}
 			
-			if (undone) return Plugin_Handled;
+			if (bUndone) {
+				return Plugin_Handled;
+			}
 		}
 
-		if (GetConVarBool(hCvarEnableShotFF) && fTimeLeft <= 0.0 && IsT1Shotgun(weapon))
-		{	
-			pelletsShot[victim][attacker]++;
+		if (g_hCvarEnableShotFF.BoolValue && fTimeLeft <= 0.0 && IsT1Shotgun(iWeapon)) {
+			g_iPelletsShot[iVictim][iAttacker]++;
 
-			if (!bBuckshot[attacker])
-			{
-				bBuckshot[attacker] = true;
-				new Handle:stack = CreateStack(3);
-				PushStackCell(stack, weapon);
-				PushStackCell(stack, attacker);
-				PushStackCell(stack, victim);
-				RequestFrame(ProcessShot, stack);
+			if (!g_bBuckshot[iAttacker]) {
+				g_bBuckshot[iAttacker] = true;
+				
+				ArrayStack hStack = new ArrayStack(3);
+				hStack.Push(iWeapon);
+				hStack.Push(iAttacker);
+				hStack.Push(iVictim);
+				
+				RequestFrame(ProcessShot, hStack);
 			}
+			
 			return Plugin_Handled;
 		}
 	}
-
-	if (IsClientAndInGame(attacker) && GetClientTeam(attacker) == 3 && GetEntProp(attacker, Prop_Send, "m_zombieClass") == 8) {
-		if (StrEqual(sClassname, "prop_physics") || StrEqual(sClassname, "prop_car_alarm")) {
-			if (GetConVarBool(hRageHittables)) {
-				frustrationOffset[attacker] = -100;
+	
+	if (L4D2Util_IsValidClient(iAttacker) && IsTank(iAttacker)) {
+		if (strcmp(sClassname, "prop_physics") == 0|| strcmp(sClassname, "prop_car_alarm") == 0) {
+			if (g_hRageHittables.BoolValue) {
+				g_iFrustrationOffset[iAttacker] = -100;
 			} else {
-				frustrationOffset[attacker] = 0;
+				g_iFrustrationOffset[iAttacker] = 0;
 			}
-			CreateTimer(0.1, Timed_SetFrustration, attacker);
-		} else
-		if (weapon == 52) {	//tank rock
-			if (GetConVarBool(hRageRock)) {
-				frustrationOffset[attacker] = -100;
+			
+			CreateTimer(0.1, Timed_SetFrustration, iAttacker, TIMER_FLAG_NO_MAPCHANGE);
+		} else if (iWeapon == 52) { //tank rock
+			if (g_hRageRock.BoolValue) {
+				g_iFrustrationOffset[iAttacker] = -100;
 			} else {
-				frustrationOffset[attacker] = 0;
+				g_iFrustrationOffset[iAttacker] = 0;
 			}
-			CreateTimer(0.1, Timed_SetFrustration, attacker);
+			
+			CreateTimer(0.1, Timed_SetFrustration, iAttacker, TIMER_FLAG_NO_MAPCHANGE);
 		} 
 	}
 
-	if (fTimeLeft > 0) //means fake god frames are in effect
-	{
-		if (StrEqual(sClassname, "prop_physics") || StrEqual(sClassname, "prop_car_alarm")) //hittables
-		{
-			if (GetConVarBool(hHittable)) { return Plugin_Continue; }
+	if (fTimeLeft > 0) {//means fake god frames are in effect
+		if (strcmp(sClassname, "prop_physics") == 0 || strcmp(sClassname, "prop_car_alarm") == 0) { //hittables
+			if (g_hHittable.BoolValue) {
+				return Plugin_Continue; 
+			}
 		}
-		if (IsTankRock(inflictor)) //tank rock
-		{
-			if (GetConVarBool(hRock)) { return Plugin_Continue; }
+		
+		if (IsTankRock(iInflictor)) {//tank rock
+			if (g_hRock.BoolValue) {
+				return Plugin_Continue; 
+			}
 		}
-		if (StrEqual(sClassname, "witch")) //witches
-		{
-			if (GetConVarBool(hWitch)) { return Plugin_Continue; }
+		
+		if (strcmp(sClassname, "witch") == 0) {//witches 
+			if (g_hWitch.BoolValue) {
+				return Plugin_Continue;
+			}
 		}
+		
 		return Plugin_Handled;
+	} else {
+		g_iLastSI[iVictim] = 0;
 	}
-	else
-	{
-		iLastSI[victim] = 0;
-	}
+	
 	return Plugin_Continue;
 }
 
-stock IsClientAndInGame(client)
+public Action Timed_ResetGlow(Handle hTimer, any iClient)
 {
-	if (0 < client && client <= MaxClients)
-	{	
-		return IsClientInGame(client);
-	}
-	return false;
-}
-
-public Action:Timed_ResetGlow(Handle:timer, any:client) {
-	ResetGlow(client);
-}
-
-ResetGlow(client) {
-	if (IsClientAndInGame(client)) {
+	if (IsClientAndInGame(iClient)) {
 		// remove transparency/color
-		SetEntityRenderMode(client, RenderMode:0);
-		SetEntityRenderColor(client, 255,255,255,255);
+		SetEntityRenderMode(iClient, RENDER_NORMAL);
+		SetEntityRenderColor(iClient, 255, 255, 255, 255);
 	}
 }
 
-SetGodframedGlow(client) {	//there might be issues with realism
-	if (IsClientAndInGame(client) && IsPlayerAlive(client) && GetClientTeam(client) == 2) {
-		// make player transparent/red while godframed
-		SetEntityRenderMode( client, RenderMode:3 );
-		SetEntityRenderColor (client, 255,0,0,200 );
-	}
-}
-
-public OnMapStart() {
-	for (new i = 0; i <= MaxClients; i++) {
-		ResetGlow(i);
+public void OnMapStart()
+{
+	for (int i = 0; i <= MaxClients; i++) {
+		if (IsClientInGame(i)) {
+			// remove transparency/color
+			SetEntityRenderMode(i, RENDER_NORMAL);
+			SetEntityRenderColor(i, 255, 255, 255, 255);
+		}
 	}
 }
 
 /* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //																												   //
 //																												   //
-//                             --------------    JUST UNDO FF STUFF      --------------							   //
+//							--------------    JUST UNDO FF STUFF      --------------							   //
 //																												   //
 //																												   //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
 
 // The sole purpose of this hook is to prevent survivor bots from causing the vision of human survivors to recoil
-public Action:TraceAttackUndoFF(victim, &attacker, &inflictor, &Float:damage, &damagetype, &ammotype, hitbox, hitgroup)
+public Action TraceAttackUndoFF(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamagetype, int &iAmmotype, int iHitbox, int iHitgroup)
 {
 	// If none of the flags are enabled, don't do anything
-	if (!g_EnabledFlags) return Plugin_Continue;
+	if (!g_iEnabledFlags) {
+		return Plugin_Continue;
+	}
 	
 	// Only interested in Survivor victims
-	if (!IS_VALID_SURVIVOR(victim)) return Plugin_Continue;
+	if (!IsValidSurvivor(iVictim)) {
+		return Plugin_Continue;
+	}
 	
 	// If a valid survivor bot shoots a valid survivor human, block it to prevent survivor vision from getting experiencing recoil (it would have done 0 damage anyway)
-	if ((g_BlockZeroDmg & 0x04) && IS_VALID_SURVIVOR(attacker) && IsFakeClient(attacker) && IS_VALID_SURVIVOR(victim) && !IsFakeClient(victim))
-	{
+	if ((g_iBlockZeroDmg & 0x04) && IsValidSurvivor(iAttacker) && IsFakeClient(iAttacker) && IsValidSurvivor(iVictim) && !IsFakeClient(iVictim)) {
 		return Plugin_Handled;
 	}
 
@@ -575,52 +524,55 @@ public Action:TraceAttackUndoFF(victim, &attacker, &inflictor, &Float:damage, &d
 
 // Apply fractional permanent damage here
 // Also announce damage, and undo guilty bot damage
-public Action:Event_PlayerHurt(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	if (!g_EnabledFlags) return Plugin_Continue;
-
-	new victim = GetClientOfUserId(GetEventInt(event, "userid"));
-	if (!IS_VALID_SURVIVOR(victim)) return Plugin_Continue;
+	if (!g_iEnabledFlags) {
+		return Plugin_Continue;
+	}
 	
-	new attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
-	new dmg = GetEventInt(event, "dmg_health");
-	new currentPerm = GetEventInt(event, "health");
+	int iVictim = GetClientOfUserId(hEvent.GetInt("userid"));
+	if (iVictim < 1 || !IsSurvivor(iVictim)) {
+		return Plugin_Continue;
+	}
 	
-	decl String:weaponName[32];
-	GetEventString(event, "weapon", weaponName, sizeof(weaponName));
+	int iAttacker = GetClientOfUserId(hEvent.GetInt("attacker"));
+	int iDmg = hEvent.GetInt("dmg_health");
+	int iCurrentPerm = hEvent.GetInt("health");
+	
+	/*char sWeaponName[CLASSNAME_LENGTH];
+	hEvent.GetString("weapon", sWeaponName, sizeof(sWeaponName));*/
 	
 	// When incapped you continuously get hurt by the world, so we just ignore incaps altogether
-	if (dmg > 0 && !L4D_IsPlayerIncapacitated(victim))
-	{
+	if (iDmg > 0 && !IsIncapacitated(iVictim)) {
 		// Cycle the undo pointer when we have confirmed that the damage was actually taken
-		g_currentUndo[victim] = (g_currentUndo[victim] + 1) % UNDO_SIZE;
+		g_iCurrentUndo[iVictim] = (g_iCurrentUndo[iVictim] + 1) % UNDO_SIZE;
 		
 		// victim values are what OnTakeDamage expected us to have, current values are what the game gave us
-		new victimPerm = g_lastPerm[victim];
-		new victimTemp = g_lastTemp[victim];
-		new currentTemp = L4D_GetPlayerTempHealth(victim);
+		int iVictimPerm = g_iLastPerm[iVictim];
+		int iVictimTemp = g_iLastTemp[iVictim];
+		int iCurrentTemp = GetSurvivorTemporaryHealth(iVictim);
 
 		// If this feature is enabled, some portion of damage will be applied to the temp health
-		if (g_flPermFrac < 1.0 && victimPerm != currentPerm)
-		{
+		if (g_fPermFrac < 1.0 && iVictimPerm != iCurrentPerm) {
 			// make sure we don't give extra health
-			new totalHealthOld = currentPerm + currentTemp, totalHealthNew = victimPerm + victimTemp;
-			if (totalHealthOld == totalHealthNew)
-			{
-				SetEntityHealth(victim, victimPerm);
-				L4D_SetPlayerTempHealth(victim, victimTemp);
+			int iTotalHealthOld = iCurrentPerm + iCurrentTemp;
+			int iTotalHealthNew = iVictimPerm + iVictimTemp;
+			
+			if (iTotalHealthOld == iTotalHealthNew) {
+				SetEntityHealth(iVictim, iVictimPerm);
+
+				SetEntPropFloat(iVictim, Prop_Send, "m_healthBuffer", float(iVictimTemp));
+				SetEntPropFloat(iVictim, Prop_Send, "m_healthBufferTime", GetGameTime());
 			}
 		}
 	}
 	
 	// Announce damage, and check for guilty bots that slipped through OnTakeDamage
-	if (IS_VALID_SURVIVOR(attacker))
-	{
+	if (IsValidSurvivor(iAttacker)) {
 		// Unfortunately, the friendly fire event only fires *after* OnTakeDamage has been called so it can't be blocked in time
 		// So we must check here to see if the bots are guilty and undo the damage after-the-fact
-		if ((g_EnabledFlags & FFTYPE_STUPIDBOTS) && (g_stupidGuiltyBots[victim]))
-		{
-			UndoDamage(victim);
+		if ((g_iEnabledFlags & FFTYPE_STUPIDBOTS) && (g_bStupidGuiltyBots[iVictim])) {
+			UndoDamage(iVictim);
 		}
 	}
 
@@ -629,57 +581,60 @@ public Action:Event_PlayerHurt(Handle:event, const String:name[], bool:dontBroad
 
 // When a Survivor is incapped by damage, player_hurt will not fire
 // So you may notice that the code here has some similarities to the code for player_hurt
-public Action:Event_PlayerIncapStart(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_PlayerIncapStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	// Cycle the incap pointer, now that the damage has been confirmed
-	new victim = GetClientOfUserId(GetEventInt(event, "userid"));
+	int iVictim = GetClientOfUserId(hEvent.GetInt("userid"));
 	
 	// Cycle the undo pointer when we have confirmed that the damage was actually taken
-	g_currentUndo[victim] = (g_currentUndo[victim] + 1) % UNDO_SIZE;
+	g_iCurrentUndo[iVictim] = (g_iCurrentUndo[iVictim] + 1) % UNDO_SIZE;
 	
-	new attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
+	int iAttacker = GetClientOfUserId(hEvent.GetInt("attacker"));
  
 	// Announce damage, and check for guilty bots that slipped through OnTakeDamage
-	if (IS_VALID_SURVIVOR(attacker))
-	{
+	if (IsValidSurvivor(iAttacker)) {
 		// Unfortunately, the friendly fire event only fires *after* OnTakeDamage has been called so it can't be blocked in time
 		// So we must check here to see if the bots are guilty and undo the damage after-the-fact
-		if ((g_EnabledFlags & FFTYPE_STUPIDBOTS) && (g_stupidGuiltyBots[victim]))
-		{
-			UndoDamage(victim);
+		if ((g_iEnabledFlags & FFTYPE_STUPIDBOTS) && (g_bStupidGuiltyBots[iVictim])) {
+			UndoDamage(iVictim);
 		}
 	}
 }
 
 // If a bot is guilty of creating a friendly fire event, undo it
 // Also give the human some reaction time to realize the bot ran in front of them
-public Action:Event_FriendlyFire(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_FriendlyFire(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	if (!(g_EnabledFlags & FFTYPE_STUPIDBOTS)) return Plugin_Continue;
-
-	new client = GetClientOfUserId(GetEventInt(event, "guilty"));
-	if (IsFakeClient(client))
-	{
-		g_stupidGuiltyBots[client] = true;
-		CreateTimer(0.4, StupidGuiltyBotDelay, client);
+	if (!(g_iEnabledFlags & FFTYPE_STUPIDBOTS)) {
+		return Plugin_Continue;
 	}
+	
+	int iClient = GetClientOfUserId(hEvent.GetInt("guilty"));
+	if (IsFakeClient(iClient)) {
+		g_bStupidGuiltyBots[iClient] = true;
+		CreateTimer(0.4, StupidGuiltyBotDelay, iClient, TIMER_FLAG_NO_MAPCHANGE);
+	}
+	
 	return Plugin_Continue;
 }
 
-public Action:StupidGuiltyBotDelay(Handle:timer, any:client)
+public Action StupidGuiltyBotDelay(Handle hTimer, any iClient)
 {
-	g_stupidGuiltyBots[client] = false;
+	g_bStupidGuiltyBots[iClient] = false;
 }
 
 // While a Charger is carrying a Survivor, undo any friendly fire done to them
 // since they are effectively pinned and pinned survivors are normally immune to FF
-public Action:Event_ChargerCarryStart(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_ChargerCarryStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	if (!(g_EnabledFlags & FFTYPE_CHARGERCARRY)) return Plugin_Continue;
+	if (!(g_iEnabledFlags & FFTYPE_CHARGERCARRY)) {
+		return Plugin_Continue;
+	}
 	
-	new client = GetClientOfUserId(GetEventInt(event, "victim"));
+	int iClient = GetClientOfUserId(hEvent.GetInt("victim"));
 
-	g_chargerCarryNoFF[client] = true;
+	g_bChargerCarryNoFF[iClient] = true;
+
 	return Plugin_Continue;
 }
 
@@ -687,310 +642,321 @@ public Action:Event_ChargerCarryStart(Handle:event, const String:name[], bool:do
 // (there is some time between carryend and pummelbegin,
 // but pummelbegin does not always get called if the charger died first, so it is unreliable
 // and besides the survivor has natural FF immunity when pinned)
-public Action:Event_ChargerCarryEnd(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_ChargerCarryEnd(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	new client = GetClientOfUserId(GetEventInt(event, "victim"));
-	CreateTimer(1.0, ChargerCarryFFDelay, client);	
+	int iClient = GetClientOfUserId(hEvent.GetInt("victim"));
+	CreateTimer(1.0, ChargerCarryFFDelay, iClient, TIMER_FLAG_NO_MAPCHANGE);
+
 	return Plugin_Continue;
 }
 
-public Action:ChargerCarryFFDelay(Handle:timer, any:client)
+public Action ChargerCarryFFDelay(Handle hTimer, any iClient)
 {
-	g_chargerCarryNoFF[client] = false;
+	g_bChargerCarryNoFF[iClient] = false;
 }
 
 // For health kit undo, we must remember the target in HealBegin
-public Action:Event_HealBegin(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_HealBegin(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	if (!g_EnabledFlags) 			return Plugin_Continue;	// Not enabled?  Done
-
-	new subject = GetClientOfUserId(GetEventInt(event, "subject"));
-	new userid = GetClientOfUserId(GetEventInt(event, "userid"));
+	if (!g_iEnabledFlags) {
+		return Plugin_Continue; // Not enabled?  Done
+	}
 	
-	if (!IS_SURVIVOR_ALIVE(subject) || !IS_SURVIVOR_ALIVE(userid)) return Plugin_Continue;
+	int iSubject = GetClientOfUserId(hEvent.GetInt("subject"));
+
+	if (iSubject < 1 || !IsSurvivor(iSubject) || !IsPlayerAlive(iSubject)) {
+		return Plugin_Continue;
+	}
+	
+	int iClient = GetClientOfUserId(hEvent.GetInt("userid"));
+	if (iClient < 1 || !IsSurvivor(iClient) || !IsPlayerAlive(iClient)) {
+		return Plugin_Continue;
+	}
 	
 	// Remember the target for HealEnd, since that parameter is a lie for that event
-	g_targetTempHealth[userid] = subject;
+	g_iTargetTempHealth[iClient] = iSubject;
 
 	return Plugin_Continue;
 }
 
 // When healing ends, remember how much temp health the target had
 // This way it can be restored in UndoDamage
-public Action:Event_HealEnd(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_HealEnd(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	if (!g_EnabledFlags) 			return Plugin_Continue;	// Not enabled?  Done
-
-	new userid = GetClientOfUserId(GetEventInt(event, "userid"));
-	new subject = g_targetTempHealth[userid];	// this is used first to carry the subject...
-	new tempHealth;
+	if (!g_iEnabledFlags) {
+		return Plugin_Continue; // Not enabled?  Done
+	}
 	
-	if (!IS_SURVIVOR_ALIVE(subject))
-	{
-		PrintToServer("Who did you heal? (%d)", subject);	
+	int iClient = GetClientOfUserId(hEvent.GetInt("userid"));
+	int iSubject = g_iTargetTempHealth[iClient]; // this is used first to carry the subject...
+	
+	if (iSubject < 1 || !IsSurvivor(iSubject) || !IsPlayerAlive(iSubject)) {
+		PrintToServer("Who did you heal? (%d)", iSubject);
 		return Plugin_Continue;
 	}
 	
-	tempHealth =  L4D_GetPlayerTempHealth(subject);
-	if (tempHealth < 0) tempHealth = 0;
+	int iTempHealth =  GetSurvivorTemporaryHealth(iSubject);
+	if (iTempHealth < 0) {
+		iTempHealth = 0;
+	}
 	
 	// ...and second it is used to store the subject's temp health (since success knows the subject)
-	g_targetTempHealth[userid] = tempHealth;
-	
+	g_iTargetTempHealth[iClient] = iTempHealth;
 	return Plugin_Continue;
 }
 
 // Save the amount of health restored as negative so it can be undone
-public Action:Event_HealSuccess(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_HealSuccess(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	if (!g_EnabledFlags) return Plugin_Continue;	// Not enabled?  Done
+	if (!g_iEnabledFlags) {
+		return Plugin_Continue; // Not enabled?  Done
+	}
 	
-	new subject = GetClientOfUserId(GetEventInt(event, "subject"));
-	new userid = GetClientOfUserId(GetEventInt(event, "userid"));
-
-	if (!IS_SURVIVOR_ALIVE(subject)) return Plugin_Continue;
-
-	new nextUndo = (g_currentUndo[subject] + 1) % UNDO_SIZE;
-	g_lastHealth[subject][nextUndo][UNDO_PERM] = -GetEventInt(event, "health_restored");
-	g_lastHealth[subject][nextUndo][UNDO_TEMP] = g_targetTempHealth[userid];
-	g_currentUndo[subject] = nextUndo;
+	int iSubject = GetClientOfUserId(hEvent.GetInt("subject"));
+	if (iSubject < 1 || !IsSurvivor(iSubject) || !IsPlayerAlive(iSubject)) {
+		return Plugin_Continue;
+	}
+	
+	int iClient = GetClientOfUserId(hEvent.GetInt("userid"));
+	
+	int iNextUndo = (g_iCurrentUndo[iSubject] + 1) % UNDO_SIZE;
+	g_iLastHealth[iSubject][iNextUndo][UNDO_PERM] = -hEvent.GetInt("health_restored");
+	g_iLastHealth[iSubject][iNextUndo][UNDO_TEMP] = g_iTargetTempHealth[iClient];
+	g_iCurrentUndo[iSubject] = iNextUndo;
 
 	return Plugin_Continue;
 }
 
 // The magic behind Undo Damage
 // Cycles through the array, can also undo incapacitations
-UndoDamage(client)
+void UndoDamage(int iClient)
 {
-	if (IS_VALID_SURVIVOR(client))
-	{
-		new thisUndo = g_currentUndo[client];
-		new undoPerm = g_lastHealth[client][thisUndo][UNDO_PERM];
-		new undoTemp = g_lastHealth[client][thisUndo][UNDO_TEMP];
+	if (IsValidSurvivor(iClient)) {
+		int iThisUndo = g_iCurrentUndo[iClient];
+		int iUndoPerm = g_iLastHealth[iClient][iThisUndo][UNDO_PERM];
+		int iUndoTemp = g_iLastHealth[iClient][iThisUndo][UNDO_TEMP];
 
-		new newHealth, newTemp;
-		if (L4D_IsPlayerIncapacitated(client))
-		{
+		int iNewHealth, iNewTemp;
+		if (IsIncapacitated(iClient)) {
 			// If player is incapped, restore their previous health and incap count
-			newHealth = undoPerm;
-			newTemp = undoTemp;
+			iNewHealth = iUndoPerm;
+			iNewTemp = iUndoTemp;
 			
-			CheatCommand(client, "give", "health");
-			L4D_SetPlayerReviveCount(client, g_lastReviveCount[client]);
-		}
-		else
-		{
+			CheatCommand(iClient, "give", "health");
+			SetEntProp(iClient, Prop_Send, "m_currentReviveCount", g_iLastReviveCount[iClient]);
+		} else {
 			// add perm and temp health back to their existing health
-			newHealth = GetClientHealth(client) + undoPerm;
-			newTemp = undoTemp;
-			if (undoPerm >= 0)
-			{
+			iNewHealth = GetClientHealth(iClient) + iUndoPerm;
+			iNewTemp = iUndoTemp;
+			if (iUndoPerm >= 0) {
 				// undoing damage, so add current temp health do undoTemp
-				newTemp += L4D_GetPlayerTempHealth(client);
-			}
-			else
-			{
+				iNewTemp += GetSurvivorTemporaryHealth(iClient);
+			} else {
 				// undoPerm is negative when undoing healing, so don't add current temp health
 				// instead, give the health kit that was undone
-				CheatCommand(client, "give", "weapon_first_aid_kit");
+				CheatCommand(iClient, "give", "weapon_first_aid_kit");
 			}
 		}
-		if (newHealth > 100) newHealth = 100;						// prevent going over 100 health
-		if (newHealth + newTemp > 100) newTemp = 100 - newHealth;
-		SetEntityHealth(client, newHealth);
-		L4D_SetPlayerTempHealth(client, newTemp);
-
+		
+		if (iNewHealth > 100) {
+			iNewHealth = 100; // prevent going over 100 health
+		}
+		
+		if (iNewHealth + iNewTemp > 100) {
+			iNewTemp = 100 - iNewHealth;
+		}
+		
+		SetEntityHealth(iClient, iNewHealth);
+		SetEntPropFloat(iClient, Prop_Send, "m_healthBuffer", float(iNewTemp));
+		SetEntPropFloat(iClient, Prop_Send, "m_healthBufferTime", GetGameTime());
+	
 		// clear out the undo so it can't happen again
-		g_lastHealth[client][thisUndo][UNDO_PERM] = 0;
-		g_lastHealth[client][thisUndo][UNDO_TEMP] = 0;
+		g_iLastHealth[iClient][iThisUndo][UNDO_PERM] = 0;
+		g_iLastHealth[iClient][iThisUndo][UNDO_TEMP] = 0;
 		
 		// point to the previous undo
-		if (thisUndo <= 0) thisUndo = UNDO_SIZE;
-		thisUndo = thisUndo - 1;
-		g_currentUndo[client] = thisUndo;
+		if (iThisUndo <= 0) {
+			iThisUndo = UNDO_SIZE;
+		}
+		
+		iThisUndo = iThisUndo - 1;
+		g_iCurrentUndo[iClient] = iThisUndo;
 	}
 }
 
 // Gets the distance between two survivors
 // Accounting for any difference in height
-stock Float:GetClientsDistance(victim, attacker)
+float GetClientsDistance(int iVictim, int iAttacker)
 {
-	decl Float:attackerPos[3], Float:victimPos[3];
-	decl Float:mins[3], Float:maxs[3], Float:halfHeight;
-	GetClientMins(victim, mins);
-	GetClientMaxs(victim, maxs);
+	float fMins[3], fMaxs[3];
+	GetClientMins(iVictim, fMins);
+	GetClientMaxs(iVictim, fMaxs);
 	
-	halfHeight = maxs[2] - mins[2] + 10;
+	float fHalfHeight = fMaxs[2] - fMins[2] + 10;
 	
-	GetClientAbsOrigin(victim,victimPos);
-	GetClientAbsOrigin(attacker,attackerPos);
+	float fAttackerPos[3], fVictimPos[3];
+	GetClientAbsOrigin(iVictim, fVictimPos);
+	GetClientAbsOrigin(iAttacker, fAttackerPos);
 	
-	new Float:posHeightDiff = attackerPos[2] - victimPos[2];
+	float fPosHeightDiff = fAttackerPos[2] - fVictimPos[2];
 	
-	if (posHeightDiff > halfHeight)
-	{
-		attackerPos[2] -= halfHeight;
-	}
-	else if (posHeightDiff < (-1.0 * halfHeight))
-	{
-		victimPos[2] -= halfHeight;
-	}
-	else
-	{
-		attackerPos[2] = victimPos[2];
+	if (fPosHeightDiff > fHalfHeight) {
+		fAttackerPos[2] -= fHalfHeight;
+	} else if (fPosHeightDiff < (-1.0 * fHalfHeight)) {
+		fVictimPos[2] -= fHalfHeight;
+	} else {
+		fAttackerPos[2] = fVictimPos[2];
 	}
 	
-	return GetVectorDistance(victimPos ,attackerPos, false);
+	return GetVectorDistance(fVictimPos, fAttackerPos, false);
 }
 
 // Gets per-weapon friendly fire undo distances
-public Float:GetWeaponFFDist(String:weaponName[])
+float GetWeaponFFDist(char[] sWeaponName)
 {
-	if (StrEqual(weaponName, "weapon_melee") 
-		|| StrEqual(weaponName, "weapon_pistol"))
-	{
+	if (strcmp(sWeaponName, "weapon_melee") == 0
+		|| strcmp(sWeaponName, "weapon_pistol") == 0
+	) {
 		return 25.0;
-	}
-	else if (StrEqual(weaponName, "weapon_smg") 
-			|| StrEqual(weaponName, "weapon_smg_silenced") 
-			|| StrEqual(weaponName, "weapon_smg_mp5") 
-			|| StrEqual(weaponName, "weapon_pistol_magnum"))
-	{
+	} else if (strcmp(sWeaponName, "weapon_smg") == 0
+		|| strcmp(sWeaponName, "weapon_smg_silenced") == 0
+		|| strcmp(sWeaponName, "weapon_smg_mp5") == 0
+		|| strcmp(sWeaponName, "weapon_pistol_magnum") == 0
+	) {
 		return 30.0;
-	}
-	else if	(StrEqual(weaponName, "weapon_pumpshotgun")
-			|| StrEqual(weaponName, "weapon_shotgun_chrome") 
-			|| StrEqual(weaponName, "weapon_hunting_rifle") 
-			|| StrEqual(weaponName, "weapon_sniper_scout") 
-			|| StrEqual(weaponName, "weapon_sniper_awp"))
-	{
+	} else if (strcmp(sWeaponName, "weapon_pumpshotgun") == 0
+		|| strcmp(sWeaponName, "weapon_shotgun_chrome") == 0
+		|| strcmp(sWeaponName, "weapon_hunting_rifle") == 0
+		|| strcmp(sWeaponName, "weapon_sniper_scout") == 0
+		|| strcmp(sWeaponName, "weapon_sniper_awp") == 0
+	) {
 		return 37.0;
 	}
 
 	return 0.0;
 }
 
-stock GetSafeEntityName(entity, String:TheName[], TheNameSize)
+void GetSafeEntityName(int iEntity, char[] sName, const int iNameSize)
 {
-	if (entity > 0 && IsValidEntity(entity))
-	{
-		GetEntityClassname(entity, TheName, TheNameSize);
-	}
-	else
-	{
-		strcopy(TheName, TheNameSize, "Invalid");
-	}
-}
-
-// I believe this is from Mr. Zero's stocks?
-stock L4D_GetPlayerTempHealth(client)
-{
-	if (!IS_VALID_SURVIVOR(client)) return 0;
-	
-	static Handle:painPillsDecayCvar = INVALID_HANDLE;
-	if (painPillsDecayCvar == INVALID_HANDLE)
-	{
-		painPillsDecayCvar = FindConVar("pain_pills_decay_rate");
-		if (painPillsDecayCvar == INVALID_HANDLE)
-		{
-			return -1;
-		}
+	if (iEntity > 0 && IsValidEntity(iEntity)) {
+		GetEntityClassname(iEntity, sName, iNameSize);
+		return;
 	}
 
-	new tempHealth = RoundToCeil(GetEntPropFloat(client, Prop_Send, "m_healthBuffer") - ((GetGameTime() - GetEntPropFloat(client, Prop_Send, "m_healthBufferTime")) * GetConVarFloat(painPillsDecayCvar))) - 1;
-	return tempHealth < 0 ? 0 : tempHealth;
+	strcopy(sName, iNameSize, "Invalid");
 }
 
-stock L4D_SetPlayerTempHealth(client, tempHealth)
+void CheatCommand(int iClient, const char[] sCommand, const char[] sArguments)
 {
-	SetEntPropFloat(client, Prop_Send, "m_healthBuffer", float(tempHealth));
-	SetEntPropFloat(client, Prop_Send, "m_healthBufferTime", GetGameTime());
+	int flags = GetCommandFlags(sCommand);
+	SetCommandFlags(sCommand, flags & ~FCVAR_CHEAT);
+	FakeClientCommand(iClient, "%s %s", sCommand, sArguments);
+	SetCommandFlags(sCommand, flags);
 }
 
-stock L4D_GetPlayerReviveCount(client)
+bool IsClientAndInGame(int iClient)
 {
-	return GetEntProp(client, Prop_Send, "m_currentReviveCount");
+	return (iClient > 0 && iClient <= MaxClients && IsClientInGame(iClient));
 }
 
-stock L4D_SetPlayerReviveCount(client, any:count)
+// Cvars
+public void OnUndoFFEnableChanged(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
-	SetEntProp(client, Prop_Send, "m_currentReviveCount", count);
+	g_iEnabledFlags = StringToInt(sNewValue);
 }
 
-stock bool:L4D_IsPlayerIncapacitated(client)
+public void OnUndoFFBlockZeroDmgChanged(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
-	return bool:GetEntProp(client, Prop_Send, "m_isIncapacitated", 1);
+	g_iBlockZeroDmg = StringToInt(sNewValue);
 }
 
-stock CheatCommand(client, const String:command[], const String:arguments[])
+public void OnPermFracChanged(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
-			new flags = GetCommandFlags(command);
-			SetCommandFlags(command, flags & ~FCVAR_CHEAT);
-			FakeClientCommand(client, "%s %s", command, arguments);
-			SetCommandFlags(command, flags);
+	g_fPermFrac = StringToFloat(sNewValue);
 }
-
-public OnUndoFFEnableChanged(Handle:cvar, const String:oldVal[], const String:newVal[])
-	g_EnabledFlags = StringToInt(newVal);
-
-public OnUndoFFBlockZeroDmgChanged(Handle:cvar, const String:oldVal[], const String:newVal[])
-	g_BlockZeroDmg = StringToInt(newVal);
-
-public OnPermFracChanged(Handle:cvar, const String:oldVal[], const String:newVal[])
-	g_flPermFrac = StringToFloat(newVal);
 
 /* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //																												   //
 //																												   //
-//                             --------------    L4D2 Shotgun FF      --------------							   //
+//								--------------    L4D2 Shotgun FF      --------------							   //
 //																												   //
 //																												   //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
-
-bool:IsT1Shotgun(weapon)
+public void ProcessShot(ArrayStack hStack)
 {
-	if (!IsValidEdict(weapon)) return false;
-	decl String:classname[64];
-	GetEdictClassname(weapon, classname, sizeof(classname));
-	return (StrEqual(classname, "weapon_pumpshotgun") || StrEqual(classname, "weapon_shotgun_chrome"));
-}
-
-void ProcessShot(ArrayStack stack)
-{
-	static victim, attacker, weapon;
-	if (!IsStackEmpty(stack))
-	{
-		PopStackCell(stack, victim);
-		PopStackCell(stack, attacker);
-		PopStackCell(stack, weapon);
+	int iVictim = 0, iAttacker = 0, iWeapon = 0;
+	if (!hStack.Empty) {
+		iVictim = hStack.Pop();
+		iAttacker = hStack.Pop();
+		iWeapon = hStack.Pop();
 	}
 	
-	if (IS_VALID_INGAME(victim) && IS_VALID_INGAME(attacker))
-	{
+	if (IsClientAndInGame(iVictim) && IsClientAndInGame(iAttacker)) {
 		// Replicate natural behaviour
-		new Float:minFF = GetConVarFloat(hCvarMinFF);
-		new Float:maxFF = GetConVarFloat(hCvarMaxFF) <= 0.0 ? 99999.0 : GetConVarFloat(hCvarMaxFF);
-		new Float:damage = L4D2Util_GetMaxFloat(minFF, L4D2Util_GetMinFloat((pelletsShot[victim][attacker] * GetConVarFloat(hCvarModifier)), maxFF));
-		new newPelletCount = RoundFloat(damage);
-		pelletsShot[victim][attacker] = 0;
-		for (new i = 0; i < newPelletCount; i++)
-		{
-			SDKHooks_TakeDamage(victim, attacker, attacker, 1.0, DMG_PLASMA, weapon, NULL_VECTOR, NULL_VECTOR);
+		float fMinFF = g_hCvarMinFF.FloatValue;
+		float fMaxFFCvarValue = g_hCvarMaxFF.FloatValue;
+		float fMaxFF = fMaxFFCvarValue <= 0.0 ? 99999.0 : fMaxFFCvarValue;
+		float fDamage = L4D2Util_GetMaxFloat(fMinFF, L4D2Util_GetMinFloat((g_iPelletsShot[iVictim][iAttacker] * g_hCvarModifier.FloatValue), fMaxFF));
+		g_iPelletsShot[iVictim][iAttacker] = 0;
+		
+		int iNewPelletCount = RoundFloat(fDamage);
+		for (int i = 0; i < iNewPelletCount; i++) {
+			SDKHooks_TakeDamage(iVictim, iAttacker, iAttacker, 1.0, DMG_PLASMA, iWeapon);
 		}
 	}
 	
-	bBuckshot[attacker] = false;
+	g_bBuckshot[iAttacker] = false;
 
-	CloseHandle(stack);
+	delete hStack;
 }
 
-bool:IsTankRock(entity)
+bool IsT1Shotgun(int iEntity)
 {
-	if (entity > 0 && IsValidEntity(entity) && IsValidEdict(entity))
-	{
-		decl String:classname[64];
-		GetEdictClassname(entity, classname, sizeof(classname));
-		return StrEqual(classname, "tank_rock");
+	if (iEntity <= MaxClients || !IsValidEdict(iEntity)) {
+		return false;
 	}
-	return false;
+	
+	char sClassname[CLASSNAME_LENGTH];
+	GetEdictClassname(iEntity, sClassname, sizeof(sClassname));
+	return (strcmp(sClassname, "weapon_pumpshotgun") == 0 || strcmp(sClassname, "weapon_shotgun_chrome") == 0);
+}
+
+bool IsTankRock(int iEntity)
+{
+	if (iEntity <= MaxClients || !IsValidEdict(iEntity)) {
+		return false;
+	}
+	
+	char sClassname[CLASSNAME_LENGTH];
+	GetEdictClassname(iEntity, sClassname, sizeof(sClassname));
+	return (strcmp(sClassname, "tank_rock") == 0);
+}
+
+// Natives
+public int Native_GiveClientGodFrames(Handle hPlugin, int iNumParams)
+{
+	int iClient = GetNativeCell(1);
+	
+	if (!IsClientAndInGame(iClient)) {
+		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index or client is not in game (index %d)!", iClient);
+	}
+	
+	if (!IsPlayerAlive(iClient)) {
+		return ThrowNativeError(SP_ERROR_NATIVE, "The client is not alive (index %d)!", iClient);
+	}
+	
+	float fGodFrameTime = GetNativeCell(2);
+	int iAttackerClass = GetNativeCell(3);
+	
+	g_fFakeGodframeEnd[iClient] = GetGameTime() + fGodFrameTime; //godFrameTime
+	g_iLastSI[iClient] = iAttackerClass; //attackerClass
+	
+	// make player transparent/red while godframed
+	SetEntityRenderMode(iClient, RENDER_GLOW);
+	SetEntityRenderColor(iClient, 255, 0, 0, 200);
+
+	float fTimerTime = g_fFakeGodframeEnd[iClient] - GetGameTime();
+	CreateTimer(fTimerTime, Timed_ResetGlow, iClient, TIMER_FLAG_NO_MAPCHANGE);
+
+	return 1;
 }
