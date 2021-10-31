@@ -22,6 +22,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <sdktools>
 #include <left4dhooks>
 #include <l4d2util_stocks>
 
@@ -51,6 +52,7 @@ ConVar
 	hCvarSdInwaterDuringTank,
 	hCvarSurvivorLimpspeed,
 	hCvarTankSpeedVS,
+	hCvarCrouchSpeedMod,
 	hCvarJockeyMinMoundedSpeed;
 
 float
@@ -58,15 +60,18 @@ float
 	fSurvWaterSpeed,
 	fSurvWaterSpeedDuringTank,
 	fTankRunSpeed,
+	fCrouchSpeedMod,
 	fJockeyMinMountedSpeed;
 
 bool
-	tankInPlay = false;
+	tankInPlay = false,
+	bFoundCrouchTrigger = false,
+	bPlayerInCrouchTrigger[MAXPLAYERS + 1];
 
 public Plugin myinfo =
 {
 	name = "L4D2 Slowdown Control",
-	author = "Visor, Sir, darkid, Forgetest, A1m`",
+	author = "Visor, Sir, darkid, Forgetest, A1m`, Derpduck",
 	version = "2.7.0",
 	description = "Manages the water/gunfire slowdown for both teams",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
@@ -79,7 +84,8 @@ public void OnPluginStart()
 	hCvarSdInwaterTank = CreateConVar("l4d2_slowdown_water_tank", "-1", "Maximum tank speed in the water (-1: ignore setting; 0: default; 210: default Tank Speed)", _, true, -1.0);
 	hCvarSdInwaterSurvivor = CreateConVar("l4d2_slowdown_water_survivors", "-1", "Maximum survivor speed in the water outside of Tank fights (-1: ignore setting; 0: default; 220: default Survivor speed)", _, true, -1.0);
 	hCvarSdInwaterDuringTank = CreateConVar("l4d2_slowdown_water_survivors_during_tank", "0", "Maximum survivor speed in the water during Tank fights (0: ignore setting; 220: default Survivor speed)", _, true, 0.0);
-
+	hCvarCrouchSpeedMod = CreateConVar("l4d2_slowdown_crouch_speed_mod", "1.0", "Modifier of player crouch speed when inside a designated trigger, 75 is the defualt for everyone (1: default speed)", _, true, 0.0);
+	
 	hCvarSdPistolMod = CreateConVar("l4d2_slowdown_pistol_percent", "0.0", "Pistols cause this much slowdown * l4d2_slowdown_gunfire at maximum damage.");
 	hCvarSdDeagleMod = CreateConVar("l4d2_slowdown_deagle_percent", "0.1", "Deagles cause this much slowdown * l4d2_slowdown_gunfire at maximum damage.");
 	hCvarSdUziMod = CreateConVar("l4d2_slowdown_uzi_percent", "0.8", "Unsilenced uzis cause this much slowdown * l4d2_slowdown_gunfire at maximum damage.");
@@ -103,6 +109,7 @@ public void OnPluginStart()
 	hCvarSdInwaterDuringTank.AddChangeHook(OnConVarChanged);
 	hCvarTankSpeedVS.AddChangeHook(OnConVarChanged);
 	hCvarJockeyMinMoundedSpeed.AddChangeHook(OnConVarChanged);
+	hCvarCrouchSpeedMod.AddChangeHook(OnConVarChanged);
 
 	HookEvent("tank_spawn", TankSpawn, EventHookMode_PostNoCopy);
 	HookEvent("round_start", RoundStart, EventHookMode_PostNoCopy);
@@ -126,6 +133,7 @@ void CvarsToType()
 	fSurvWaterSpeed = hCvarSdInwaterSurvivor.FloatValue;
 	fSurvWaterSpeedDuringTank = hCvarSdInwaterDuringTank.FloatValue;
 	fTankRunSpeed = hCvarTankSpeedVS.FloatValue;
+	fCrouchSpeedMod = hCvarCrouchSpeedMod.FloatValue;
 	fJockeyMinMountedSpeed = hCvarJockeyMinMoundedSpeed.FloatValue;
 }
 
@@ -161,6 +169,46 @@ public Action Timer_CheckTank(Handle timer)
 public Action RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	tankInPlay = false;
+	HookCrouchTriggers();
+}
+
+// Hook trigger_multiple entities that are named "l4d2_slowdown_crouch_speed"
+public void HookCrouchTriggers()
+{
+	bFoundCrouchTrigger = false;
+
+	// Reset array
+	for (int i = 1; i <= MaxClients; i++) {
+		bPlayerInCrouchTrigger[i] = false;
+	}
+
+	int iEntity = -1;
+	char targetname[128];
+
+	while ((iEntity = FindEntityByClassname(iEntity, "trigger_multiple")) != -1) {
+		GetEntPropString(iEntity, Prop_Data, "m_iName", targetname, sizeof(targetname));
+
+		if (StrEqual(targetname, "l4d2_slowdown_crouch_speed", false)) {
+			HookSingleEntityOutput(iEntity, "OnStartTouch", CrouchSpeedStartTouch);
+			HookSingleEntityOutput(iEntity, "OnEndTouch", CrouchSpeedEndTouch);
+
+			bFoundCrouchTrigger = true;
+		}
+	}
+}
+
+public void CrouchSpeedStartTouch(const char[] output, int caller, int activator, float delay)
+{
+	if (0 < activator <= MaxClients && IsClientInGame(activator)) {
+		bPlayerInCrouchTrigger[activator] = true;
+	}
+}
+
+public void CrouchSpeedEndTouch(const char[] output, int caller, int activator, float delay)
+{
+	if (0 < activator <= MaxClients && IsClientInGame(activator)) {
+		bPlayerInCrouchTrigger[activator] = false;
+	}
 }
 
 /**
@@ -265,6 +313,29 @@ public Action L4D_OnGetRunTopSpeed(int client, float &retVal)
 		}
 	}
 	
+	return Plugin_Continue;
+}
+
+/**
+ *
+ * Slowdown from crouching: All players
+ *
+**/
+public Action L4D_OnGetCrouchTopSpeed(int client, float &retVal)
+{
+	if (fCrouchSpeedMod == 1.0 || !bFoundCrouchTrigger || !IsClientInGame(client)) {
+		return Plugin_Continue;
+	}
+
+	if (bPlayerInCrouchTrigger[client]) {
+		bool bGrounded = !!(GetEntityFlags(client) & FL_ONGROUND);
+
+		if (bGrounded) {
+			retVal *= fCrouchSpeedMod; // 75 * modifier
+			return Plugin_Handled;
+		}
+	}
+
 	return Plugin_Continue;
 }
 

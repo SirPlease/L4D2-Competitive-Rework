@@ -32,6 +32,9 @@ int
 bool
 	g_bHasTransitioned = false;
 
+Handle
+	g_hTransitionTimer;
+
 public Plugin myinfo =
 {
 	name = "Map Transitions",
@@ -84,11 +87,9 @@ void LoadSDK()
 //public void OnRoundEnd() //l4d2util forward was removed
 public void L4D2_OnEndVersusModeRound_Post() //left4dhooks
 {
-	int iIsSecondHalf = InSecondHalfOfRound();
-
 	//If map is in last half, attempt a transition
-	if (iIsSecondHalf == 1) {
-		CreateTimer(15.0, OnRoundEnd_Post);
+	if (InSecondHalfOfRound()) {
+		g_hTransitionTimer = CreateTimer(15.0, OnRoundEnd_Post);
 
 		#if DEBUG
 			PrintToChatAll("L4D2_OnEndVersusModeRound_Post");
@@ -98,9 +99,11 @@ public void L4D2_OnEndVersusModeRound_Post() //left4dhooks
 
 public Action OnRoundEnd_Post(Handle hTimer)
 {
+	g_hTransitionTimer = null;
+	
 	//Check if map has been registered for a map transition
 	char sCurrentMapName[MAP_NAME_MAX_LENGTH], sNextMapName[MAP_NAME_MAX_LENGTH];
-	GetCurrentMap(sCurrentMapName, sizeof(sCurrentMapName));
+	GetCurrentMapLower(sCurrentMapName, sizeof(sCurrentMapName));
 
 	//We have a map to transition to
 	if (g_hMapTransitionPair.GetString(sCurrentMapName, sNextMapName, sizeof(sNextMapName))) {
@@ -120,11 +123,20 @@ public Action OnRoundEnd_Post(Handle hTimer)
 	return Plugin_Stop;
 }
 
+public void OnMapEnd()
+{
+	//In case map is force-chenged before custom transition takes place
+	if (g_hTransitionTimer != null) {
+		g_bHasTransitioned = false;
+		delete g_hTransitionTimer;
+	}
+}
+
 public void OnMapStart()
 {
 	//Set scores after a modified transition
 	if (g_bHasTransitioned) {
-		CreateTimer(1.0, Timer_OnMapStartDelay); //Clients have issues connecting if team swap happens exactly on map start, so we delay it
+		CreateTimer(1.0, Timer_OnMapStartDelay, _, TIMER_FLAG_NO_MAPCHANGE); //Clients have issues connecting if team swap happens exactly on map start, so we delay it
 		g_bHasTransitioned = false;
 	}
 }
@@ -169,7 +181,16 @@ public Action AddMapTransition(int iArgs)
 	char sMapStart[MAP_NAME_MAX_LENGTH], sMapEnd[MAP_NAME_MAX_LENGTH];
 	GetCmdArg(1, sMapStart, sizeof(sMapStart));
 	GetCmdArg(2, sMapEnd, sizeof(sMapEnd));
+	String_ToLower(sMapStart, sizeof(sMapStart));
+	String_ToLower(sMapEnd, sizeof(sMapEnd));
 
 	g_hMapTransitionPair.SetString(sMapStart, sMapEnd, true);
 	return Plugin_Handled;
+}
+
+int GetCurrentMapLower(char[] buffer, int maxlength)
+{
+	int bytes = GetCurrentMap(buffer, maxlength);
+	if (bytes) String_ToLower(buffer, maxlength);
+	return bytes;
 }
