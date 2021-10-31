@@ -31,7 +31,7 @@ bool
 public Plugin myinfo =
 {
 	name		= "L4D2 M2 Control",
-	author		= "Jahze, Visor", //update syntax, minor fixes A1m`
+	author		= "Jahze, Visor, A1m`",
 	version		= "1.7",
 	description	= "Blocks instant repounces and gives m2 penalty after a shove/deadstop",
 	url 		= "https://github.com/SirPlease/L4D2-Competitive-Rework"

@@ -1,42 +1,41 @@
 #pragma semicolon 1
+#pragma newdecls required;
 
 #include <sourcemod>
 #include <left4dhooks>
 
-new bool:blockStumble = false;
+#define TEAM_INFECTED 3
+#define Z_TANK 8
 
-public Plugin:myinfo = 
+bool
+	g_bBlockStumble = false;
+
+public Plugin myinfo =
 {
-    name = "Tank Rock Stumble Block",
-    author = "Jacob",
-    description = "Fixes rocks disappearing if tank gets stumbled while throwing.",
-    version = "0.1",
-    url = "github.com/jacob404/myplugins"
+	name = "Tank Rock Stumble Block",
+	author = "Jacob",
+	description = "Fixes rocks disappearing if tank gets stumbled while throwing.",
+	version = "0.2",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
+};
+
+public Action L4D_OnCThrowActivate()
+{
+	g_bBlockStumble = true;
+	CreateTimer(2.0, UnblockStumble);
 }
 
-public Action:L4D_OnCThrowActivate()
+public Action UnblockStumble(Handle hTimer)
 {
-    blockStumble = true;
-    CreateTimer(2.0, UnblockStumble);
+	g_bBlockStumble = false;
 }
 
-public Action:UnblockStumble(Handle:timer)
+public Action L4D2_OnStagger(int iTarget)
 {
-    blockStumble = false;
+	return (IsTank(iTarget) && g_bBlockStumble) ? Plugin_Handled : Plugin_Continue;
 }
 
-public Action:L4D2_OnStagger(target)
+bool IsTank(int iClient)
 {
-    if (GetClientTeam(target) != 3) return Plugin_Continue;
-    if (GetInfectedClass(target) != 8 || !blockStumble) return Plugin_Continue;
-    return Plugin_Handled;
-}
-
-GetInfectedClass(client)
-{
-    if (client > 0 && client <= MaxClients && IsClientInGame(client))
-    {
-        return GetEntProp(client, Prop_Send, "m_zombieClass");
-    }
-    return -1;
+	return (GetClientTeam(iClient) == TEAM_INFECTED && GetEntProp(iClient, Prop_Send, "m_zombieClass") == Z_TANK);
 }

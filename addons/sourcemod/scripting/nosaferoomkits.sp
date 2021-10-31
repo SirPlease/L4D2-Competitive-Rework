@@ -11,7 +11,7 @@ float SurvivorStart[3];
 public Plugin myinfo = 
 {
 	name = "No Safe Room Medkits",
-	author = "Blade", //Update syntax add support sm1.11 - A1m`
+	author = "Blade",
 	description = "Removes Safe Room Medkits",
 	version = PLUGIN_VERSION,
 	url = "https://github.com/Attano/L4D2-Competitive-Framework"

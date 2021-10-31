@@ -20,7 +20,7 @@ ArrayList
 public Plugin myinfo = 
 {
 	name = "Code patcher",
-	author = "Jahze?", //new syntax A1m`, fix unload error
+	author = "Jahze?, A1m`",
 	version = "1.1",
 	description = "Code patcher",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework" 

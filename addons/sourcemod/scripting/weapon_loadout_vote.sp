@@ -9,6 +9,7 @@
 #undef REQUIRE_PLUGIN
 #include <readyup>
 
+#define USE_GIVEPLAYERITEM 0 // Works correctly only in the latest version of sourcemod 1.11 (GivePlayerItem sourcemod native)
 #define MAX_ENTITY_NAME_LENGTH 64
 
 enum
@@ -70,7 +71,7 @@ public Plugin myinfo =
 	name = "Weapon Loadout",
 	author = "Sir, A1m`",
 	description = "Allows the Players to choose which weapons to play the mode in.",
-	version = "2.2",
+	version = "2.3",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -78,11 +79,11 @@ public void OnPluginStart()
 {
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("player_team", Event_PlayerTeam);
-	
+
 	RegConsoleCmd("sm_mode", Cmd_VoteMode, "Opens the Voting menu");
-	
+
 	RegAdminCmd("sm_forcemode", Cmd_ForceVoteMode, ADMFLAG_ROOT, "Forces the Voting menu");
-	
+
 	InitMenu();
 }
 
@@ -108,20 +109,20 @@ public void Event_PlayerTeam(Event hEvent, char[] sEventName , bool bDontBroadca
 	if (g_iCurrentMode == eUndecided) {
 		return;
 	}
-	
+
 	// Only during Ready-up
 	if (!IsInReady()) {
 		return;
 	}
-	
+
 	int iTeam = hEvent.GetInt("team");
 	// Only care about Survivors (Team 2)
 	if (iTeam != view_as<int>(L4D2Team_Survivor)) {
 		return;
 	}
-	
+
 	int iUserId = hEvent.GetInt("userid");
-	CreateTimer(0.1, Timer_ChangeTeamDelay, iUserId, TIMER_FLAG_NO_MAPCHANGE);
+	CreateTimer(0.2, Timer_ChangeTeamDelay, iUserId, TIMER_FLAG_NO_MAPCHANGE);
 }
 
 public Action Timer_ChangeTeamDelay(Handle hTimer, any iUserId)
@@ -141,7 +142,7 @@ public void Event_RoundStart(Event hEvent, char[] sEventName, bool bDontBroadcas
 		CreateTimer(15.0, Timer_InformPlayers, _, TIMER_REPEAT);
 		return;
 	}
-	
+
 	GiveSurvivorsWeapons();
 }
 
@@ -151,7 +152,7 @@ public Action Cmd_VoteMode(int iClient, int iArgs)
 	if (iClient == 0 || GetClientTeam(iClient) < view_as<int>(L4D2Team_Survivor)) {
 		return Plugin_Handled;
 	}
-	
+
 	// We've already decided on a mode.
 	if (!IsInReady() || InSecondHalfOfRound()) {
 		CPrintToChat(iClient, "{blue}[{green}Zone{blue}]{default}: You can only call for the vote during the first ready-up of a round");
@@ -183,7 +184,7 @@ public Action Cmd_ForceVoteMode(int iClient, int iArgs)
 	if (iClient == 0) {
 		return Plugin_Handled;
 	}
-	
+
 	// This player understands what to do.
 	g_bVoteUnderstood[iClient] = true;
 
@@ -203,7 +204,7 @@ void ShowMenu(int iClient)
 	if (IsInReady()) {
 		FakeClientCommand(iClient, "sm_hide");
 	}
-	
+
 	g_hMenu.Display(iClient, MENU_TIME_FOREVER);
 }
 
@@ -230,7 +231,7 @@ public int Menu_VoteMenuHandler(Menu hMenu, MenuAction iAction, int iClient, int
 					if (!IsClientInGame(i) || IsFakeClient(i) || (GetClientTeam(i) == view_as<int>(L4D2Team_Spectator))) {
 						continue;
 					}
-					
+
 					iPlayers[iNumPlayers++] = i;
 				}
 
@@ -239,11 +240,11 @@ public int Menu_VoteMenuHandler(Menu hMenu, MenuAction iAction, int iClient, int
 				SetBuiltinVoteInitiator(g_hVote, iClient);
 				SetBuiltinVoteResultCallback(g_hVote, BV_VoteResultHandler);
 				DisplayBuiltinVote(g_hVote, iPlayers, iNumPlayers, 20);
-				
+
 				if (CheckCommandAccess(iClient, "sm_kick", ADMFLAG_KICK, false)) {
 					g_bIsAdminVote = true;
 				}
-				
+
 				FakeClientCommand(iClient, "Vote Yes");
 			}
 		}
@@ -271,7 +272,7 @@ public void BV_VoteActionHandler(Handle hVote, BuiltinVoteAction iAction, int iP
 public void BV_VoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
 {
 	ReturnReadyUpPanel();
-	
+
 	for (int i = 0; i < num_items; i++) {
 		if (item_info[i][BUILTINVOTEINFO_ITEM_INDEX] == BUILTINVOTES_VOTE_YES) {
 			if (item_info[i][BUILTINVOTEINFO_ITEM_VOTES] > (num_clients / 2)) {
@@ -282,7 +283,7 @@ public void BV_VoteResultHandler(Handle vote, int num_votes, int num_clients, co
 					CPrintToChatAll("{blue}[{green}Zone{blue}]{default}: Vote didn't pass before you left ready-up.");
 					return;
 				}
-				
+
 				g_bIsAdminVote = false;
 				DisplayBuiltinVotePass(vote, "Survivor Weapons Set!");
 				g_iCurrentMode = g_iVotingMode;
@@ -291,7 +292,7 @@ public void BV_VoteResultHandler(Handle vote, int num_votes, int num_clients, co
 			}
 		}
 	}
-	
+
 	g_bIsAdminVote = false;
 	// Vote Failed
 	DisplayBuiltinVoteFail(vote, BuiltinVoteFail_Loses);
@@ -303,25 +304,25 @@ public Action Timer_ClearMap(Handle hTimer)
 	// We only clear Chrome Shotguns because we need weaponrules to be loaded for pistols and deagles, so we converted everything to chromes in it. :D
 	// After the weaponrules timer, we strike.
 	// Surely you can do better than this Sir, get to this when you have time.
-	
+
 	char sEntityName[MAX_ENTITY_NAME_LENGTH];
 	int iOwner = -1, iEntity = INVALID_ENT_REFERENCE;
 
 	// Converted Weapons
 	while ((iEntity = FindEntityByClassname(iEntity, "weapon_*")) != INVALID_ENT_REFERENCE) {
-		if (iEntity < MaxClients || !IsValidEntity(iEntity)) {
+		if (iEntity <= MaxClients || !IsValidEntity(iEntity)) {
 			continue;
 		}
-		
+
 		GetEntityClassname(iEntity, sEntityName, sizeof(sEntityName));
 		for (int i = 0; i < sizeof(sRemoveWeaponNames); i++) {
 			// weapon_ - 7
 			if (strcmp(sEntityName[7], sRemoveWeaponNames[i]) == 0) {
 				iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
-				if (!IsValidOwner(iOwner)) {
+				if (iOwner == -1 || !IsClientInGame(iOwner)) {
 					KillEntity(iEntity);
 				}
-				
+
 				break;
 			}
 		}
@@ -337,11 +338,11 @@ int ReadyPlayers()
 {
 	int iPlayersCount = 0;
 	for (int i = 1; i <= MaxClients; i++) {
-		if (IsClientInGame(i) && GetClientTeam(i) > 1) {
+		if (IsClientInGame(i) && GetClientTeam(i) > view_as<int>(L4D2Team_Spectator)) {
 			iPlayersCount++;
 		}
 	}
-	
+
 	return iPlayersCount;
 }
 
@@ -351,18 +352,18 @@ void GiveSurvivorsWeapons(int iClient = 0, bool bOnlyIfSurvivorEmpty = false)
 	char sWeapon[MAX_ENTITY_NAME_LENGTH];
 
 	strcopy(sWeapon, sizeof(sWeapon), sGiveWeaponNames[g_iCurrentMode]);
-	
+
 	if (strlen(sWeapon) == 0) {
 		LogError("Failed to get the name of the weapon! Current mode: %d", g_iCurrentMode);
 		return;
 	}
-	
+
 	// Loop through Clients, clear their current primary weapons (if they have one)
 	if (iClient != 0) {
 		GiveAndRemovePlayerWeapon(iClient, sWeapon, bOnlyIfSurvivorEmpty);
 		return;
 	}
-	
+
 	for (int i = 1; i <= MaxClients; i++) {
 		GiveAndRemovePlayerWeapon(i, sWeapon, bOnlyIfSurvivorEmpty);
 	}
@@ -373,9 +374,9 @@ void GiveAndRemovePlayerWeapon(int iClient, const char[] sWeaponName, bool bOnly
 	if (!IsClientInGame(iClient) || GetClientTeam(iClient) != view_as<int>(L4D2Team_Survivor) || !IsPlayerAlive(iClient)) {
 		return;
 	}
-	
-	int iCurrMainWeapon = GetPlayerWeaponSlot(iClient, 0);
-	int iCurrSecondaryWeapon = GetPlayerWeaponSlot(iClient, 1);
+
+	int iCurrMainWeapon = GetPlayerWeaponSlot(iClient, view_as<int>(L4D2WeaponSlot_Primary));
+	int iCurrSecondaryWeapon = GetPlayerWeaponSlot(iClient, view_as<int>(L4D2WeaponSlot_Secondary));
 
 	// Does the player already have an item in this slot?
 	if (iCurrMainWeapon != -1) {
@@ -383,23 +384,35 @@ void GiveAndRemovePlayerWeapon(int iClient, const char[] sWeaponName, bool bOnly
 		if (bOnlyIfSurvivorEmpty) {
 			return;
 		}
-		
+
 		// Remove current Weapon.
 		RemovePlayerItem(iClient, iCurrMainWeapon);
+		KillEntity(iCurrMainWeapon);
 	}
-	
+
 	if (iCurrSecondaryWeapon != -1) {
 		// Remove current Weapon.
 		RemovePlayerItem(iClient, iCurrSecondaryWeapon);
+		KillEntity(iCurrSecondaryWeapon);
 	}
-	
-	GivePlayerWeaponByName(iClient, sWeaponName);
+
+#if (SOURCEMOD_V_MINOR == 11) || USE_GIVEPLAYERITEM
+	GivePlayerItem(iClient, sWeaponName); // Fixed only in the latest version of sourcemod 1.11
+#else
+	int iEntity = CreateEntityByName(sWeaponName);
+	if (iEntity == -1) {
+		return;
+	}
+
+	DispatchSpawn(iEntity);
+	EquipPlayerWeapon(iClient, iEntity);
+#endif
 }
 
 public Action Timer_InformPlayers(Handle hTimer)
 {
 	static int iNumPrinted = 0;
- 
+
 	// Don't annoy the players, remind them a maximum of 6 times.
 	if (iNumPrinted >= 6 || g_iCurrentMode != eUndecided) {
 		iNumPrinted = 0;
@@ -412,7 +425,7 @@ public Action Timer_InformPlayers(Handle hTimer)
 			CPrintToChat(i, "{blue}[{green}Zone{blue}]{default}: Type {olive}!mode {default}in chat to vote on weapons used.");
 		}
 	}
-	
+
 	iNumPrinted++;
 	return Plugin_Continue;
 }
@@ -436,11 +449,6 @@ bool InSecondHalfOfRound()
 	return view_as<bool>(GameRules_GetProp("m_bInSecondHalfOfRound", 1));
 }
 
-bool IsValidOwner(int iClient)
-{
-	return (iClient != -1 && IsClientInGame(iClient));
-}
-
 void KillEntity(int iEntity)
 {
 #if SOURCEMOD_V_MINOR > 8
@@ -448,15 +456,4 @@ void KillEntity(int iEntity)
 #else
 	AcceptEntityInput(iEntity, "Kill");
 #endif
-}
-
-void GivePlayerWeaponByName(int iClient, const char[] sWeaponName)
-{
-	int iEntity = CreateEntityByName(sWeaponName);
-	if (iEntity == -1) {
-		return;
-	}
-	
-	DispatchSpawn(iEntity);
-	EquipPlayerWeapon(iClient, iEntity);
 }
