@@ -11,7 +11,7 @@ Handle hCBaseAbility_OnOwnerTakeDamage;
 public Plugin myinfo =
 {
 	name		= "L4D2 Pounce Protect",
-	author		= "ProdigySim", //A1m` add new syntax, add new gamedata file
+	author		= "ProdigySim",
 	description	= "Prevent damage from blocking a hunter's ability to pounce",
 	version		= "1.1",
 	url			= "https://github.com/SirPlease/L4D2-Competitive-Rework"

@@ -71,7 +71,7 @@ public void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBr
 	
 	int iRemainingHealth = GetClientHealth(iAttacker);
 
-	// [1v1] A1m` (Hunter) had 250 health remaining!
+	// [1v1] Player (Hunter) had 250 health remaining!
 	// [1v1] AI (Hunter) had 250 health remaining!
 	
 	char sName[MAX_NAME_LENGTH];

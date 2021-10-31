@@ -1,96 +1,143 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdktools>
+#define L4D2UTIL_STOCKS_ONLY
+#include <l4d2util>
 
-#define WP_PAIN_PILLS 15
-#define WP_ADRENALINE 23
-#define PILL_INDEX 0
-#define ADREN_INDEX 1
+#define USE_GIVEPLAYERITEM 0 // Works correctly only in the latest version of sourcemod 1.11 (GivePlayerItem sourcemod native)
 
-new iBotUsedCount[2][MAXPLAYERS + 1];
+enum
+{
+	ePILL_INDEX = 0,
+	eADREN_INDEX,
 
-public Plugin:myinfo = 
+	eITEM_SIZE
+}
+
+int
+	g_iBotUsedCount[MAXPLAYERS + 1][eITEM_SIZE];
+
+public Plugin myinfo =
 {
 	name = "Simplified Bot Pop Stop",
 	author = "Stabby & CanadaRox",
 	description = "Removes pills from bots if they try to use them and restores them when a human takes over.",
-	version = "1.3",
-	url = "no url"
+	version = "1.4",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
+};
+
+public void OnPluginStart()
+{
+	HookEvent("weapon_fire", Event_WeaponFire);
+	HookEvent("bot_player_replace", Event_PlayerJoined);
+
+	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 }
 
-public OnPluginStart()
+public void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	HookEvent("weapon_fire",Event_WeaponFire);
-	HookEvent("bot_player_replace",Event_PlayerJoined);
-	HookEvent("round_start",Event_RoundStart,EventHookMode_PostNoCopy);
+	for (int j = 1; j <= MaxClients; j++) {
+		for (int i = 0; i < eITEM_SIZE; i++) {
+			g_iBotUsedCount[j][i] = 0;
+		}
+	}
 }
 
 // Take pills from the bot before they get used
-public Event_WeaponFire(Handle:event, const String:name[], bool:dontBroadcast)
+public void Event_WeaponFire(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	new client   = GetClientOfUserId(GetEventInt(event,"userid"));
-	new weaponid = GetEventInt(event,"weaponid");
+	int iClient = GetClientOfUserId(hEvent.GetInt("userid"));
 
-	if (IsFakeClient(client))
-	{
-		if (weaponid == WP_PAIN_PILLS)
-		{
-			iBotUsedCount[PILL_INDEX][client]++;
-			RemovePlayerItem(client, GetPlayerWeaponSlot(client,4));
+	if (!IsFakeClient(iClient)) {
+		return;
+	}
+
+	int iWeaponId = hEvent.GetInt("weaponid");
+	int iWeaponArrayIndex = -1;
+
+	switch (iWeaponId) {
+		case view_as<int>(WEPID_PAIN_PILLS): {
+			iWeaponArrayIndex = ePILL_INDEX;
 		}
-		else if (weaponid == WP_ADRENALINE)
-		{
-			iBotUsedCount[ADREN_INDEX][client]++;
-			RemovePlayerItem(client, GetPlayerWeaponSlot(client,4));
+		case view_as<int>(WEPID_ADRENALINE): {
+			iWeaponArrayIndex = eADREN_INDEX;
+		}
+		default: {
+			return;
 		}
 	}
+
+	g_iBotUsedCount[iClient][iWeaponArrayIndex]++;
+
+	int iEntity = GetPlayerWeaponSlot(iClient, view_as<int>(L4D2WeaponSlot_LightHealthItem));
+	RemovePlayerItem(iClient, iEntity);
+
+#if SOURCEMOD_V_MINOR > 8
+	RemoveEntity(iEntity);
+#else
+	AcceptEntityInput(iEntity, "Kill");
+#endif
 }
 
 // Give the human player the pills back when they join
-public Event_PlayerJoined(Handle:event, const String:name[], bool:dontBroadcast)
+public void Event_PlayerJoined(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	new leavingBot = GetClientOfUserId(GetEventInt(event,"bot"));
+	int iLeavingBot = GetClientOfUserId(hEvent.GetInt("bot"));
+	if (g_iBotUsedCount[iLeavingBot][ePILL_INDEX] < 1 && g_iBotUsedCount[iLeavingBot][eADREN_INDEX] < 1) {
+		return;
+	}
 
-	if (iBotUsedCount[PILL_INDEX][leavingBot] > 0 || iBotUsedCount[ADREN_INDEX][leavingBot] > 0)
-	{
-		RestoreItems(GetClientOfUserId(GetEventInt(event, "player")), leavingBot);
-		iBotUsedCount[PILL_INDEX][leavingBot] = 0;
-		iBotUsedCount[ADREN_INDEX][leavingBot] = 0;
+	int iPlayer = GetClientOfUserId(hEvent.GetInt("player"));
+	RestoreItems(iPlayer, iLeavingBot);
+}
+
+void RestoreItems(int iClient, int iLeavingBot)
+{
+	int iCurrentWeapon = GetPlayerWeaponSlot(iClient, view_as<int>(L4D2WeaponSlot_LightHealthItem));
+
+	for (int j = 0; j < eITEM_SIZE; j++) {
+		if (g_iBotUsedCount[iLeavingBot][j] < 1) {
+			continue;
+		}
+
+		for (int i = 1; i <= g_iBotUsedCount[iLeavingBot][j]; i++) {
+			#if (SOURCEMOD_V_MINOR == 11) || USE_GIVEPLAYERITEM
+				if (iCurrentWeapon == -1) {
+					int iEntity = GivePlayerItem(iClient, (j == ePILL_INDEX) ? "weapon_pain_pills" : "weapon_adrenaline");
+					iCurrentWeapon = iEntity;
+					continue;
+				}
+
+				CreateEntityAtLocation(iClient, (j == ePILL_INDEX) ? "weapon_pain_pills" : "weapon_adrenaline");
+			#else
+				int iEntity = CreateEntityAtLocation(iClient, (j == ePILL_INDEX) ? "weapon_pain_pills" : "weapon_adrenaline");
+
+				if (iEntity != -1 && iCurrentWeapon == -1) {
+					EquipPlayerWeapon(iClient, iEntity);
+					iCurrentWeapon = iEntity;
+				}
+			#endif
+		}
+
+		g_iBotUsedCount[iLeavingBot][j] = 0;
 	}
 }
 
-public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
+int CreateEntityAtLocation(int iClient, const char[] sEntityName)
 {
-	for (new i = 0; i < 2; i++)
-	{
-		for (new j = 0; j < MAXPLAYERS + 1; j++)
-		{
-			iBotUsedCount[i][j] = 0;
-		}
+	int iEntity = CreateEntityByName(sEntityName);
+	if (iEntity == -1) {
+		return -1;
 	}
-}
+	
+	float fClientOrigin[3];
+	GetClientAbsOrigin(iClient, fClientOrigin);
+	fClientOrigin[2] += 10.0;
+	TeleportEntity(iEntity, fClientOrigin, NULL_VECTOR, NULL_VECTOR);
 
-RestoreItems(client, leavingBot)
-{
-	// manually create entity and the equip it since GivePlayerItem() doesn't work in L4D2
-	decl entity;
-	decl Float:clientOrigin[3];
-	new currentWeapon = GetPlayerWeaponSlot(client, 4);
-	for (new i = 0; i < 2; i++)
-	{
-		for (new j = iBotUsedCount[i][leavingBot]; j > 0; j--)
-		{
-			entity = CreateEntityByName(i == PILL_INDEX ? "weapon_pain_pills" : "weapon_adrenaline");
-			GetClientAbsOrigin(client, clientOrigin);
-			clientOrigin[2] += 10.0;
-			TeleportEntity(entity, clientOrigin, NULL_VECTOR, NULL_VECTOR);
-			DispatchSpawn(entity);
-			if (currentWeapon == -1)
-			{
-				EquipPlayerWeapon(client, entity);
-				currentWeapon = entity;
-			}
-		}
-	}
+	DispatchSpawn(iEntity);
+
+	return iEntity;
 }

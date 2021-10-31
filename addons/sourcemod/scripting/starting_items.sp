@@ -1,43 +1,60 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdktools>
+#include <l4d2util_constants>
 #undef REQUIRE_PLUGIN
 #include <readyup>
-#define REQUIRE_PLUGIN
 
-#define HEALTH_FIRST_AID_KIT    (1 << 0)
-#define HEALTH_DEFIBRILLATOR    (1 << 1)
+#define DEBUG					0
+#define USE_GIVEPLAYERITEM		0 // Works correctly only in the latest version of sourcemod 1.11 (GivePlayerItem sourcemod native)
+#define ENTITY_NAME_MAX_SIZE	64
 
-#define HEALTH_PAIN_PILLS       (1 << 2)
-#define HEALTH_ADRENALINE       (1 << 3)
+enum
+{
+	//L4D2WeaponSlot_HeavyHealthItem
+	HEALTH_FIRST_AID_KIT	= (1 << 0), // 1
+	HEALTH_DEFIBRILLATOR	= (1 << 1), // 2
 
-#define THROWABLE_PIPE_BOMB     (1 << 4)
-#define THROWABLE_MOLOTOV       (1 << 5)
-#define THROWABLE_VOMITJAR      (1 << 6)
+	//L4D2WeaponSlot_LightHealthItem
+	HEALTH_PAIN_PILLS		= (1 << 2), // 4
+	HEALTH_ADRENALINE		= (1 << 3), // 8
 
-#define TEAM_SURV 2
-#define TEAM_INF  3
+	//L4D2WeaponSlot_Throwable
+	THROWABLE_PIPE_BOMB		= (1 << 4), // 16
+	THROWABLE_MOLOTOV		= (1 << 5), // 32
+	THROWABLE_VOMITJAR		= (1 << 6) // 64
+};
 
-#define WEAPON_NAME_MAX 32
+ConVar
+	g_hCvarItemType = null;
 
+bool
+	g_bReadyUpAvailable = false;
 
 public Plugin myinfo =
 {
 	name = "Starting Items",
-	author = "CircleSquared, Jacob, robex",
+	author = "CircleSquared, Jacob, A1m`",
 	description = "Gives health items and throwables to survivors at the start of each round",
-	version = "2.0",
+	version = "2.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
-}
-
-Handle hCvarItemType;
-bool g_bReadyUpAvailable = false;
+};
 
 public void OnPluginStart()
 {
-	hCvarItemType = CreateConVar("starting_item_flags", "0", "Item flags to give on leaving the saferoom (1: Kit, 2: Defib, 4: Pills, 8: Adren, 16: Pipebomb, 32: Molotov, 64: Bile)", FCVAR_NONE);
-	HookEvent("player_left_start_area", PlayerLeftStartArea);
+	g_hCvarItemType = CreateConVar("starting_item_flags", \
+		"0", \
+		"Item flags to give on leaving the saferoom (0: Disable, 1: Kit, 2: Defib, 4: Pills, 8: Adren, 16: Pipebomb, 32: Molotov, 64: Bile)", \
+		_, false, 0.0, true, 127.0 \
+	);
+
+	HookEvent("player_left_start_area", PlayerLeftStartArea, EventHookMode_PostNoCopy);
+
+#if DEBUG
+	RegAdminCmd("sm_give_starting_items", Cmd_GiveStartingItems, ADMFLAG_KICK);
+#endif
 }
 
 public void OnAllPluginsLoaded()
@@ -45,15 +62,16 @@ public void OnAllPluginsLoaded()
 	g_bReadyUpAvailable = LibraryExists("readyup");
 }
 
-public void OnLibraryRemoved(const char[] name)
+public void OnLibraryRemoved(const char[] sPluginName)
 {
-	if (StrEqual(name, "readyup")) {
+	if (strcmp(sPluginName, "readyup") == 0) {
 		g_bReadyUpAvailable = false;
 	}
 }
-public void OnLibraryAdded(const char[] name)
+
+public void OnLibraryAdded(const char[] sPluginName)
 {
-	if (StrEqual(name, "readyup")) {
+	if (strcmp(sPluginName, "readyup") == 0) {
 		g_bReadyUpAvailable = true;
 	}
 }
@@ -63,71 +81,100 @@ public void OnRoundIsLive()
 	DetermineItems();
 }
 
-public Action PlayerLeftStartArea(Handle event, const char[] name, bool dontBroadcast)
+public void PlayerLeftStartArea(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!g_bReadyUpAvailable) {
 		DetermineItems();
 	}
-	return Plugin_Continue;
-}	
+}
 
 void DetermineItems()
 {
-	int iItemFlags = GetConVarInt(hCvarItemType);
+	int iItemFlags = g_hCvarItemType.IntValue;
 
 	if (iItemFlags < 1) {
 		return;
 	}
 
-	ArrayList items = new ArrayList(ByteCountToCells(WEAPON_NAME_MAX));
+	StringMap hItemsStringMap = new StringMap();
 
 	if (iItemFlags & HEALTH_FIRST_AID_KIT) {
-		items.PushString("weapon_first_aid_kit");
+		hItemsStringMap.SetValue("weapon_first_aid_kit", view_as<int>(L4D2WeaponSlot_HeavyHealthItem));
 	} else if (iItemFlags & HEALTH_DEFIBRILLATOR) {
-		items.PushString("weapon_defibrillator");
+		hItemsStringMap.SetValue("weapon_defibrillator", view_as<int>(L4D2WeaponSlot_HeavyHealthItem));
 	}
 
 	if (iItemFlags & HEALTH_PAIN_PILLS) {
-		items.PushString("weapon_pain_pills");
+		hItemsStringMap.SetValue("weapon_pain_pills", view_as<int>(L4D2WeaponSlot_LightHealthItem));
 	} else if (iItemFlags & HEALTH_ADRENALINE) {
-		items.PushString("weapon_adrenaline");
+		hItemsStringMap.SetValue("weapon_adrenaline", view_as<int>(L4D2WeaponSlot_LightHealthItem));
 	}
 
 	if (iItemFlags & THROWABLE_PIPE_BOMB) {
-		items.PushString("weapon_pipe_bomb");
+		hItemsStringMap.SetValue("weapon_pipe_bomb", view_as<int>(L4D2WeaponSlot_Throwable));
 	} else if (iItemFlags & THROWABLE_MOLOTOV) {
-		items.PushString("weapon_molotov");
+		hItemsStringMap.SetValue("weapon_molotov", view_as<int>(L4D2WeaponSlot_Throwable));
 	} else if (iItemFlags & THROWABLE_VOMITJAR) {
-		items.PushString("weapon_vomitjar");
+		hItemsStringMap.SetValue("weapon_vomitjar", view_as<int>(L4D2WeaponSlot_Throwable));
 	}
 
-	if (items.Length > 0) {
-		giveStartingItems(items);
-	}
-	delete items;
+	GiveStartingItems(hItemsStringMap);
+
+	delete hItemsStringMap;
+	hItemsStringMap = null;
 }
 
-void giveStartingItems(ArrayList items)
+void GiveStartingItems(StringMap &hItemsStringMap)
 {
-	char itemName[WEAPON_NAME_MAX];
+	if (hItemsStringMap.Size < 1) {
+		return;
+	}
+
+	char sEntName[ENTITY_NAME_MAX_SIZE];
+	StringMapSnapshot hItemsSnapshot = hItemsStringMap.Snapshot();
+	int iSlotIndex, iSize = hItemsSnapshot.Length;
 
 	for (int i = 1; i <= MaxClients; i++) {
-		if (IsClientInGame(i) && GetClientTeam(i) == TEAM_SURV) {
-			for (int j = 0; j < items.Length; j++) {
-				items.GetString(j, itemName, WEAPON_NAME_MAX);
-				giveItem(i, itemName);
+		if (IsClientInGame(i) && GetClientTeam(i) == view_as<int>(L4D2Team_Survivor) && IsPlayerAlive(i)) {
+			for (int j = 0; j < iSize; j++) {
+				hItemsSnapshot.GetKey(j, sEntName, sizeof(sEntName));
+				hItemsStringMap.GetValue(sEntName, iSlotIndex);
+
+				if (GetPlayerWeaponSlot(i, iSlotIndex) == -1) {
+					GivePlayerWeaponByName(i, sEntName);
+				}
 			}
 		}
 	}
+
+	delete hItemsSnapshot;
+	hItemsSnapshot = null;
 }
 
-void giveItem(int client, char[] itemName)
+void GivePlayerWeaponByName(int iClient, const char[] sWeaponName)
 {
-	float clientOrigin[3];
+#if (SOURCEMOD_V_MINOR == 11) || USE_GIVEPLAYERITEM
+	GivePlayerItem(iClient, sWeaponName); // Fixed only in the latest version of sourcemod 1.11
+#else
+	int iEntity = CreateEntityByName(sWeaponName);
+	if (iEntity == -1) {
+		return;
+	}
 
-	int startingItem = CreateEntityByName(itemName);
-	GetClientAbsOrigin(client, clientOrigin);
-	TeleportEntity(startingItem, clientOrigin, NULL_VECTOR, NULL_VECTOR);
-	DispatchSpawn(startingItem);
-	EquipPlayerWeapon(client, startingItem);
+	/*float fClientOrigin[3];
+	GetClientAbsOrigin(client, fClientOrigin);
+	TeleportEntity(iEntity, fClientOrigin, NULL_VECTOR, NULL_VECTOR);*/
+	DispatchSpawn(iEntity);
+	EquipPlayerWeapon(iClient, iEntity);
+#endif
 }
+
+#if DEBUG
+public Action Cmd_GiveStartingItems(int iClient, int iArgs)
+{
+	DetermineItems();
+	PrintToChat(iClient, "DetermineItems()");
+
+	return Plugin_Handled;
+}
+#endif

@@ -39,7 +39,7 @@ int
 public Plugin myinfo =
 {
 	name = "L4D2 Weapon Rules",
-	author = "ProdigySim", //Update syntax and add support sm1.11 - A1m`
+	author = "ProdigySim",
 	version = "1.0.2",
 	description = "^",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"

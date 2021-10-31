@@ -22,7 +22,7 @@
 public Plugin:myinfo =
 {
 	name = "[L4D & L4D2] Engine Fix",
-	author = "raziEiL [disawar1]", //Add support sm 1.11 - A1m`
+	author = "raziEiL [disawar1]",
 	description = "Blocking ladder speed glitch, no fall damage bug, health boost glitch.",
 	version = PLUGIN_VERSION,
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"

@@ -57,7 +57,7 @@ public Plugin myinfo =
 	name = "L4D2 Uniform Spit",
 	author = "Visor, Sir, A1m`",
 	description = "Make the spit deal a set amount of DPS under all circumstances",
-	version = "1.4.8",
+	version = "1.5",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -215,7 +215,7 @@ public Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, fl
 		}
 		
 		if (iVictimArray[iVictim][eCount] > g_iMaxTicks) {
-			AcceptEntityInput(iInflictor, "Kill");
+			KillEntity(iInflictor);
 		}
 		
 		return Plugin_Changed;
@@ -231,12 +231,12 @@ float GetPuddleLifetime(int iPuddle)
 
 bool IsInsectSwarm(int iEntity)
 {
-	if (iEntity < 1 || !IsValidEntity(iEntity)) {
+	if (iEntity <= MaxClients || !IsValidEdict(iEntity)) {
 		return false;
 	}
 
 	char sClassName[MAX_ENTITY_NAME_SIZE];
-	GetEntityClassname(iEntity, sClassName, sizeof(sClassName));
+	GetEdictClassname(iEntity, sClassName, sizeof(sClassName));
 	return (strcmp(sClassName, "insect_swarm") == 0);
 }
 
@@ -246,4 +246,13 @@ bool IsSurvivor(int iClient)
 		&& iClient <= MaxClients
 		&& IsClientInGame(iClient)
 		&& GetClientTeam(iClient) == TEAM_SURVIVOR);
+}
+
+void KillEntity(int iEntity)
+{
+#if SOURCEMOD_V_MINOR > 8
+	RemoveEntity(iEntity);
+#else
+	AcceptEntityInput(iEntity, "Kill");
+#endif
 }

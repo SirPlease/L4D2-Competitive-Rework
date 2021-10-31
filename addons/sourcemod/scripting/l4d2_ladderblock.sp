@@ -1,5 +1,3 @@
-#define PLUGIN_VERSION 		"1.0"
-
 /*
 * ============================================================================
 *
@@ -35,17 +33,19 @@
 #include <sdktools>
 #include <sdkhooks>
 
+#define PLUGIN_VERSION		"1.2"
+
 int
-	g_iCvarFlags, 
-	g_iCvarImmune,
-	inCharge [MAXPLAYERS + 1];
-	
+	g_iCvarFlags = 0,
+	g_iCvarImmune = 0;
+
 ConVar
-	g_hFlags,
-	g_hImmune;
+	g_hFlags = null,
+	g_hImmune = null;
 
 bool
-	g_bLoadLate;
+	g_bLoadLate = false,
+	g_iInCharge[MAXPLAYERS + 1] = {0, ...};
 
 public Plugin myinfo =
 {
@@ -87,70 +87,69 @@ public void OnPluginStart()
 	}
 }
 
-public void OnClientPutInServer(int client)
+public void OnClientPutInServer(int iClient)
 {
-	inCharge[client] = 0;
+	g_iInCharge[iClient] = false;
+
 	if (g_iCvarFlags) {
-		SDKHook(client, SDKHook_Touch, SDKHook_cb_Touch);
+		SDKHook(iClient, SDKHook_Touch, SDKHook_cb_Touch);
 	}
 }
 
-public void Charging(Event hEvent, const char[] name, bool dontBroadcast)
+public void Charging(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	int charger = GetClientOfUserId(hEvent.GetInt("userid"));
-	inCharge[charger] = 1;
+	int iCharger = GetClientOfUserId(hEvent.GetInt("userid"));
+	g_iInCharge[iCharger] = true;
 }
 
-public void NotCharging(Event hEvent, const char[] name, bool dontBroadcast)
+public void NotCharging(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	int charger = GetClientOfUserId(hEvent.GetInt("userid"));
-	inCharge[charger] = 0;
+	int iCharger = GetClientOfUserId(hEvent.GetInt("userid"));
+	g_iInCharge[iCharger] = false;
 }
 
-public Action SDKHook_cb_Touch(int entity, int other)
+public Action SDKHook_cb_Touch(int iEntity, int iOther)
 {
-	if (other > MaxClients || other < 1) {
-		return;
+	if (iOther > MaxClients || iOther < 1) {
+		return Plugin_Continue;
 	}
 
-	if (IsGuyTroll(entity, other)) {
-		int iClass = GetEntProp(entity, Prop_Send, "m_zombieClass");
+	if (IsGuyTroll(iEntity, iOther)) {
+		int iClass = GetEntProp(iEntity, Prop_Send, "m_zombieClass");
 		
 		if (iClass != 5 && g_iCvarFlags & (1 << iClass)) {
 			// Tank AI and Witch have this skill but Valve method is sucks because ppl get STUCKS!
-			if (iClass == 8 && IsFakeClient(entity)) {
-				return;
+			if (iClass == 8 && IsFakeClient(iEntity)) {
+				return Plugin_Continue;
 			}
 			
-			iClass = GetEntProp(other, Prop_Send, "m_zombieClass");
+			iClass = GetEntProp(iOther, Prop_Send, "m_zombieClass");
 
 			/* @A1m`:
 			 * Can use netprop m_carryVictim, I'll do it later if I remember))
 			*/
-			if (g_iCvarImmune & (1 << iClass) || inCharge[other]) {
-				return;
+			if (g_iCvarImmune & (1 << iClass) || g_iInCharge[iOther]) {
+				return Plugin_Continue;
 			}
 			
-			if (IsOnLadder(other)) {
-				float vOrg[3];
-				GetClientAbsOrigin(other, vOrg);
-				vOrg[2] += 2.5;
-				TeleportEntity(other, vOrg, NULL_VECTOR, NULL_VECTOR);
+			if (GetEntityMoveType(iOther) == MOVETYPE_LADDER) {
+				float fOrigin[3];
+				GetClientAbsOrigin(iOther, fOrigin);
+				fOrigin[2] += 2.5;
+				TeleportEntity(iOther, fOrigin, NULL_VECTOR, NULL_VECTOR);
 			} else {
-				TeleportEntity(other, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 251.0}));
+				TeleportEntity(iOther, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 251.0}));
 			}
 		}
 	}
+	return Plugin_Continue;
 }
 
-bool IsGuyTroll(int victim, int troll)
+bool IsGuyTroll(int iVictim, int iTroll)
 {
-	return (IsOnLadder(victim) && GetClientTeam(victim) != GetClientTeam(troll) && GetEntPropFloat(victim, Prop_Send, "m_vecOrigin[2]") < GetEntPropFloat(troll, Prop_Send, "m_vecOrigin[2]"));
-}
-
-bool IsOnLadder(int entity)
-{
-	return (GetEntityMoveType(entity) == MOVETYPE_LADDER);
+	return (GetEntityMoveType(iVictim) == MOVETYPE_LADDER
+		&& GetClientTeam(iVictim) != GetClientTeam(iTroll)
+		&& GetEntPropFloat(iVictim, Prop_Send, "m_vecOrigin[2]") < GetEntPropFloat(iTroll, Prop_Send, "m_vecOrigin[2]"));
 }
 
 void ST_ToogleHook(bool bHook)
@@ -166,24 +165,24 @@ void ST_ToogleHook(bool bHook)
 	}
 }
 
-public void OnCvarChange_Flags(ConVar hConvar, const char[] oldValue, const char[] newValue)
+public void OnCvarChange_Flags(ConVar hConvar, const char[] sOldValue, const char[] sNewValue)
 {
-	if (StrEqual(oldValue, newValue)) {
+	if (strcmp(sOldValue, sNewValue) == 0) {
 		return;
 	}
 
 	g_iCvarFlags = g_hFlags.IntValue;
 
-	if (!StringToInt(oldValue)) {
+	if (!StringToInt(sOldValue)) {
 		ST_ToogleHook(true);
 	} else if (!g_iCvarFlags) {
 		ST_ToogleHook(false);
 	}
 }
 
-public void OnCvarChange_Immune(ConVar hConvar, const char[] oldValue, const char[] newValue)
+public void OnCvarChange_Immune(ConVar hConvar, const char[] sOldValue, const char[] sNewValue)
 {
-	if (!StrEqual(oldValue, newValue)) {
+	if (strcmp(sOldValue, sNewValue) != 0) {
 		g_iCvarImmune = g_hImmune.IntValue;
 	}
 }

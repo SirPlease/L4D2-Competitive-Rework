@@ -326,7 +326,7 @@
 		"start_extra_dist"	"264.157257"
 		"end_point"			"3001.944092 6272.879395 494.284149"
 		"end_dist"			"130.807541"
-		"max_distance"		"600"
+		"max_distance"		"500"
 	}
 	"c6m1_riverbank"
 	{
@@ -593,14 +593,7 @@
 		"start_extra_dist"	"206.287918"
 		"end_point"			"3276.041992 4504.324707 181.974670"
 		"end_dist"			"343.399078"
-		"tank_ban_flow"
-		{
-			"1"
-			{
-				"min"		"80"
-				"max"		"100"
-			}
-		}
+		"max_distance"		"500"
 	}
 	"c11m5_runway"
 	{
@@ -1295,7 +1288,6 @@
 		"start_extra_dist"	"357.132141"
 		"end_point"			"2948.021729 7602.731445 -604.782043"
 		"end_dist"			"142.267410"
-		"max_distance"		"400"
 	}
 	"l4d_dbd2dc_the_mall"
 	{
@@ -1322,7 +1314,6 @@
 		"start_extra_dist"	"188.167191"
 		"end_point"			"-7367.650391 8434.535156 -671.968750"
 		"end_dist"			"365.062012"
-		"max_distance"		"700"
 	}
 	"l4d_dbd2dc_new_dawn"
 	{
@@ -1331,7 +1322,7 @@
 		"start_extra_dist"	"306.183685"
 		"end_point"			"-463.786469 876.165771 -243.441345"
 		"end_dist"			"1558.433960"
-		"max_distance"		"800"
+		"max_distance"		"500"
 		"tank_ban_flow"
 		{
 			"1"
@@ -2090,5 +2081,43 @@
 				"max"		"99"
 			}
 		}
+	}
+	"uz_crash"
+	{
+		"start_point"		"1748.696289 1487.965332 123.687134"
+		"end_point"			"11419.204102 -614.855530 -349.968750"
+		"start_dist"		"100.000000"
+		"start_extra_dist"	"300.000000"
+		"end_dist"			"350.000000"
+	}
+	"uz_town"
+	{
+		"start_point"		"-1781.868042 2869.025879 -191.968750"
+		"end_point"			"-691.968750 -3947.666504 87.835098"
+		"start_dist"		"50.000000"
+		"start_extra_dist"	"350.000000"
+		"end_dist"			"400.000000"
+	}
+	"uz_desert"
+	{
+		"start_point"		"-11123.968750 3668.039795 -103.164902"
+		"end_point"			"-1646.750244 -1660.474121 -372.312866"
+		"start_dist"		"50.000000"
+		"start_extra_dist"	"400.000000"
+		"end_dist"			"250.000000"
+	}
+	"uz_bunker"
+	{
+		"start_point"		"-6091.701172 -1074.271240 483.687134"
+		"end_point"			"-2655.734131 4150.362793 1206.131226"
+		"start_dist"		"50.000000"
+		"start_extra_dist"	"250.000000"
+		"end_dist"			"500.000000"
+	}
+	"uz_escape"
+	{
+		"start_point"		"-3438.182129 310.360443 54.131248"
+		"start_dist"		"50.000000"
+		"start_extra_dist"	"500.000000"
 	}
 }

@@ -53,7 +53,7 @@ int
 public Plugin myinfo =
 {
 	name = "EQ2 Finale Tank Manager",
-	author = "Visor, Electr0", //Update syntax A1m`
+	author = "Visor, Electr0",
 	description = "Either two event tanks or one flow and one (second) event tank",
 	version = "2.5.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"

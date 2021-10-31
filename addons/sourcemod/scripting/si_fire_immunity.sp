@@ -22,7 +22,8 @@ static const char sEntityList[][] =
 {
 	"inferno",
 	"entityflame",
-	"fire_cracker_blast"
+	"fire_cracker_blast",
+	"trigger_hurt"
 };
 
 ConVar
