@@ -72,7 +72,7 @@ public Plugin myinfo =
 {
 	name = "L4D2 Slowdown Control",
 	author = "Visor, Sir, darkid, Forgetest, A1m`, Derpduck",
-	version = "2.7.0",
+	version = "2.7.1",
 	description = "Manages the water/gunfire slowdown for both teams",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
@@ -328,9 +328,7 @@ public Action L4D_OnGetCrouchTopSpeed(int client, float &retVal)
 	}
 
 	if (bPlayerInCrouchTrigger[client]) {
-		bool bGrounded = !!(GetEntityFlags(client) & FL_ONGROUND);
-
-		if (bGrounded) {
+		if (GetEntityFlags(client) & FL_ONGROUND) {
 			retVal *= fCrouchSpeedMod; // 75 * modifier
 			return Plugin_Handled;
 		}
