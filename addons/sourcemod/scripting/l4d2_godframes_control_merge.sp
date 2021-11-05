@@ -484,7 +484,7 @@ public Action Timed_ResetGlow(Handle hTimer, any iClient)
 
 public void OnMapStart()
 {
-	for (int i = 0; i <= MaxClients; i++) {
+	for (int i = 1; i <= MaxClients; i++) {
 		if (IsClientInGame(i)) {
 			// remove transparency/color
 			SetEntityRenderMode(i, RENDER_NORMAL);

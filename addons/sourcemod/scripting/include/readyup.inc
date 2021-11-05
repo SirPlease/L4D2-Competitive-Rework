@@ -24,6 +24,31 @@
 #define _readyup_included_
 
 /**
+ * Called before ready up is initiated
+ */
+forward void OnReadyUpInitiatePre();
+
+/**
+ * Called when ready up is initiated
+ */
+forward void OnReadyUpInitiate();
+
+/**
+ * Called before the live countdown starts
+ */
+forward void OnRoundLiveCountdownPre();
+
+/**
+ * Called when the live countdown starts
+ */
+forward void OnRoundLiveCountdown();
+
+/**
+ * Called before the live countdown ends and the round goes live
+ */
+forward void OnRoundIsLivePre();
+
+/**
  * Called when the live countdown ends and the round goes live
  */
 forward void OnRoundIsLive();
