@@ -55,6 +55,9 @@ ConVar
 	hCvarCrouchSpeedMod,
 	hCvarJockeyMinMoundedSpeed;
 
+int
+	iSurvLimpHealth;
+
 float
 	fTankWaterSpeed,
 	fSurvWaterSpeed,
@@ -107,6 +110,7 @@ public void OnPluginStart()
 	hCvarSdInwaterTank.AddChangeHook(OnConVarChanged);
 	hCvarSdInwaterSurvivor.AddChangeHook(OnConVarChanged);
 	hCvarSdInwaterDuringTank.AddChangeHook(OnConVarChanged);
+	hCvarSurvivorLimpspeed.AddChangeHook(OnConVarChanged);
 	hCvarTankSpeedVS.AddChangeHook(OnConVarChanged);
 	hCvarJockeyMinMoundedSpeed.AddChangeHook(OnConVarChanged);
 	hCvarCrouchSpeedMod.AddChangeHook(OnConVarChanged);
@@ -132,6 +136,7 @@ void CvarsToType()
 	fTankWaterSpeed = hCvarSdInwaterTank.FloatValue;
 	fSurvWaterSpeed = hCvarSdInwaterSurvivor.FloatValue;
 	fSurvWaterSpeedDuringTank = hCvarSdInwaterDuringTank.FloatValue;
+	iSurvLimpHealth = hCvarSurvivorLimpspeed.IntValue;
 	fTankRunSpeed = hCvarTankSpeedVS.FloatValue;
 	fCrouchSpeedMod = hCvarCrouchSpeedMod.FloatValue;
 	fJockeyMinMountedSpeed = hCvarJockeyMinMoundedSpeed.FloatValue;
@@ -247,18 +252,29 @@ public Action L4D_OnGetRunTopSpeed(int client, float &retVal)
 		return Plugin_Continue;
 	}
 	
+	if (~GetEntityFlags(client) & FL_INWATER) {
+		return Plugin_Continue;
+	}
+	
 	switch (GetClientTeam(client)) {
 		case TEAM_SURVIVORS: {
-			// Tongue victim, simulates game logics here.
+			// Speed of tongue victim isn't affected by water,
+			// only decided by ConVar "tongue_victim_max_speed".
 			if (GetEntPropEnt(client, Prop_Send, "m_tongueOwner") != -1) {
 				return Plugin_Continue;
 			}
 			
-			// Jockey victim, simulates game logics here.
+			float fHealth = L4D_GetTempHealth(client) + GetClientHealth(client);
+			
+			// Jockey victim gets slowdown by water, while we're not slowing down them.
 			if (GetEntPropEnt(client, Prop_Send, "m_jockeyAttacker") != -1) {
-				if (retVal == 115.0 && ((tankInPlay && fSurvWaterSpeedDuringTank > 0.0) || fSurvWaterSpeed != -1.0)) {
-					// TODO: As a reminder when we decide to normalize speed of jockeyed survivor
-					float fRate = GetSurvivorHealthRate(client);
+				// Additionally check for g_pGameRules->m_bWaterSlowdownEnabled?
+				// Perhaps unnecessary due to what's going to be done.
+				
+				if ((tankInPlay && fSurvWaterSpeedDuringTank != 0.0) || fSurvWaterSpeed != -1.0) {
+					// TODO: As a reminder when we decide to normalize speed of jockeyed survivors
+					// Speed = 220.0 * max(HP Rate, z_jockey_min_mounted_speed)
+					float fRate = fHealth / GetEntProp(client, Prop_Send, "m_iMaxHealth");
 					retVal = SURVIVOR_RUNSPEED * (fRate > fJockeyMinMountedSpeed ? fRate : fJockeyMinMountedSpeed);
 					return Plugin_Handled;
 				}
@@ -270,36 +286,33 @@ public Action L4D_OnGetRunTopSpeed(int client, float &retVal)
 			// Limping = 260 speed (both in water and on the ground)
 			// Healthy = 260 speed (both in water and on the ground)
 			bool bAdrenaline = !!GetEntProp(client, Prop_Send, "m_bAdrenalineActive");
-			if (bAdrenaline || IsLimping(client)) {
+			if (bAdrenaline || RoundToFloor(fHealth) < iSurvLimpHealth) {
 				return Plugin_Continue;
 			}
 			
-			// Only bother if survivor is in water and healthy
-			if (GetEntityFlags(client) & FL_INWATER) {
-				// speed of survivors in water during Tank fights
-				if (tankInPlay) {
-					if (fSurvWaterSpeedDuringTank == 0.0) {
-						return Plugin_Continue; // Vanilla YEEEEEEEEEEEEEEEs
-					} else {
-						retVal = fSurvWaterSpeedDuringTank;
-						return Plugin_Handled;
-					}
-				} else if (fSurvWaterSpeed != -1.0) { // speed of survivors in water outside of Tank fights
-					// slowdown off
-					if (fSurvWaterSpeed == 0.0) {
-						retVal = SURVIVOR_RUNSPEED;
-						return Plugin_Handled;
-					} else { // specific speed
-						retVal = fSurvWaterSpeed;
-						return Plugin_Handled;
-					}
+			// speed of survivors in water during Tank fights
+			if (tankInPlay) {
+				if (fSurvWaterSpeedDuringTank == 0.0) {
+					return Plugin_Continue; // Vanilla YEEEEEEEEEEEEEEEs
+				} else {
+					retVal = fSurvWaterSpeedDuringTank;
+					return Plugin_Handled;
+				}
+			} else if (fSurvWaterSpeed != -1.0) { // speed of survivors in water outside of Tank fights
+				// slowdown off
+				if (fSurvWaterSpeed == 0.0) {
+					retVal = SURVIVOR_RUNSPEED;
+					return Plugin_Handled;
+				} else { // specific speed
+					retVal = fSurvWaterSpeed;
+					return Plugin_Handled;
 				}
 			}
 		}
 		case TEAM_INFECTED: {
 			if (IsTank(client)) {
 				// Only bother the actual speed if player is a tank moving in water
-				if ((GetEntityFlags(client) & FL_INWATER) && fTankWaterSpeed != -1.0) {
+				if (fTankWaterSpeed != -1.0) {
 					// slowdown off
 					if (fTankWaterSpeed == 0.0) {
 						retVal = fTankRunSpeed;
@@ -335,12 +348,6 @@ public Action L4D_OnGetCrouchTopSpeed(int client, float &retVal)
 	}
 
 	return Plugin_Continue;
-}
-
-float GetSurvivorHealthRate(int client)
-{
-	float total = GetClientHealth(client) + L4D_GetTempHealth(client);
-	return total / 100.0;
 }
 
 // The old slowdown plugin's cvars weren't quite intuitive, so I'll try to fix it this time
@@ -463,15 +470,6 @@ bool IsInfected(int client)
 bool IsTank(int client)
 {
 	return (GetEntProp(client, Prop_Send, "m_zombieClass") == Z_TANK);
-}
-
-bool IsLimping(int client)
-{
-	// Assume Clientchecks and the like have been done already
-	int PermHealth = GetClientHealth(client);
-	float TempHealth = L4D_GetTempHealth(client);
-
-	return RoundToFloor(PermHealth + TempHealth) < hCvarSurvivorLimpspeed.IntValue;
 }
 
 float fScaleFloat(float inc, float low, float high)
