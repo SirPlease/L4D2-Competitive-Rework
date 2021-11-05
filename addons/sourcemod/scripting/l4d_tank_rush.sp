@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <left4dhooks>
 #include <colors>
-#define L4D2UTIL_STOCKS_ONLY
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 
 bool 
@@ -73,6 +73,8 @@ public Action L4D2_OnEndVersusModeRound(bool countSurvivors)
 	if (cvar_unfreezeSaferoom.IntValue == 1 && IsTankActuallyInPlay() && GetUprightSurvivors() > 0) {
 		UnFreezePoints(true, 2);
 	}
+
+	return Plugin_Continue;
 }
 
 void PluginDisable()
@@ -129,6 +131,8 @@ public Action CheckForTanksDelay(Handle timer)
 	if (!IsTankActuallyInPlay()) {
 		UnFreezePoints(true);
 	}
+
+	return Plugin_Stop;
 }
 
 void FreezePoints(bool show_message = false)

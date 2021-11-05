@@ -56,12 +56,12 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
             damage = float(RoundToCeil(float(GetConVarInt(g_hCvarCommonHealth)) / float(GetConVarInt(g_hCvarDamage))));
             return Plugin_Changed;
         }
-        return Plugin_Handled;		
+        return Plugin_Handled;
     }
     return Plugin_Continue;
 }
 
-stock bool:IsTank(client)
+bool:IsTank(client)
 {
     if (GetEntProp(client, Prop_Send, "m_zombieClass") == 8) return true;
     return false;
@@ -71,6 +71,5 @@ bool:IsValidClient(client)
 {
     if (client <= 0 || client > MaxClients) return false;
     if (!IsClientInGame(client)) return false;
-    if (IsClientSourceTV(client) || IsClientReplay(client)) return false;
     return true;
 }

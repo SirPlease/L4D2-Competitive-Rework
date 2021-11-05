@@ -15,11 +15,11 @@ enum
 
 enum
 {
-	eITEM_KILLABLE = 0,
-	eITEM_KILLABLE_HEALTH = (1 << 0), //1
-	eITEM_KILLABLE_WEAPON = (1 << 1), //2
-	eITEM_KILLABLE_MELEE = (1 << 2), //4
-	eITEM_KILLABLE_OTHER = (1 << 3) //8
+	eITEM_KILLABLE = 0,					// 0
+	eITEM_KILLABLE_HEALTH = (1 << 0),	// 1
+	eITEM_KILLABLE_WEAPON = (1 << 1),	// 2
+	eITEM_KILLABLE_MELEE = (1 << 2),	// 4
+	eITEM_KILLABLE_OTHER = (1 << 3)		// 8
 };
 
 ConVar
@@ -103,6 +103,7 @@ public Action Timer_DelayedOnRoundStart(Handle hTimer)
 	}
 
 	LogMessage("Removed %i saferoom item(s) (start: %i; end: %i).", iCountStart + iCountEnd, iCountStart, iCountEnd);
+	return Plugin_Stop;
 }
 
 void PrepareTrie()

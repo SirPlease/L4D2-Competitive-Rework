@@ -24,7 +24,7 @@
 
 #include <sourcemod>
 #include <left4dhooks>
-#define L4D2UTIL_STOCKS_ONLY
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 
 #define DEBUG 0

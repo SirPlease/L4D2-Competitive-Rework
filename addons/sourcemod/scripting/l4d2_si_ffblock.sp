@@ -104,7 +104,7 @@ public Action Hook_WitchOnTakeDamage(int iVictim, int &iAttacker, int &iInflicto
 							sClassName, iVictim, iAttacker, iAttacker, L4D2_InfectedNames[iZClass], iZClass, iInflictor, fDamage, iDamagetype);
 #endif
 
-	return (iZClass == view_as<int>(L4D2Infected_Tank)) ? Plugin_Continue : Plugin_Handled;
+	return (iZClass == L4D2Infected_Tank) ? Plugin_Continue : Plugin_Handled;
 }
 
 public void OnClientPutInServer(int iClient)
@@ -129,7 +129,7 @@ public Action Hook_PlayerOnTakeDamage(int iVictim, int &iAttacker, int &iInflict
 							iVictim, iVictim, iAttacker, iAttacker, L4D2_InfectedNames[iZClass], iZClass, iInflictor, fDamage, iDamagetype);
 #endif
 
-	return (iZClass == view_as<int>(L4D2Infected_Tank) && g_bAllowTankFF) ? Plugin_Continue : Plugin_Handled;
+	return (iZClass == L4D2Infected_Tank && g_bAllowTankFF) ? Plugin_Continue : Plugin_Handled;
 }
 
 bool IsInfected(int iClient)
@@ -137,7 +137,7 @@ bool IsInfected(int iClient)
 	return (iClient > 0
 		&& iClient <= MaxClients
 		&& IsClientInGame(iClient)
-		&& GetClientTeam(iClient) == view_as<int>(L4D2Team_Infected));
+		&& GetClientTeam(iClient) == L4D2Team_Infected);
 }
 
 bool IsWitch(int iEntity)

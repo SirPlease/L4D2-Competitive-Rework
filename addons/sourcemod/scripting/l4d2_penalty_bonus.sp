@@ -275,6 +275,8 @@ public Action L4D2_OnEndVersusModeRound(bool bCountSurvivors)
 	g_bSetSameChange = false;
 
 	SetBonus();
+
+	return Plugin_Continue;
 }
 
 // Bonus
@@ -405,6 +407,8 @@ public int Native_ResetRoundBonus(Handle hPlugin, int iNumParams)
 
 	g_iSameChange = 0;
 	g_bSetSameChange = true;
+
+	return 1;
 }
 
 public int Native_SetRoundBonus(Handle hPlugin, int iNumParams)
@@ -423,6 +427,8 @@ public int Native_SetRoundBonus(Handle hPlugin, int iNumParams)
 	if (g_hCvarReportChange.BoolValue) {
 		ReportChange(0, -1, true);
 	}
+
+	return 1;
 }
 
 public int Native_AddRoundBonus(Handle hPlugin, int iNumParams)
@@ -448,6 +454,8 @@ public int Native_AddRoundBonus(Handle hPlugin, int iNumParams)
 			ReportChange(iBonus);
 		}
 	}
+
+	return 1;
 }
 
 public int Native_GetDefibsUsed(Handle hPlugin, int iNumParams)
@@ -460,4 +468,6 @@ public int Native_SetDefibPenalty(Handle hPlugin, int iNumParams)
 	int iPenalty = GetNativeCell(1);
 
 	g_iOriginalPenalty = iPenalty;
+
+	return 1;
 }

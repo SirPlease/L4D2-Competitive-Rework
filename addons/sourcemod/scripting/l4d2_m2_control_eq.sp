@@ -2,7 +2,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
-#define L4D2UTIL_STOCKS_ONLY
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 #include <left4dhooks>
 
@@ -113,7 +113,7 @@ public Action ResetAbilityTimer(Handle hTimer, any shovee_userid)
 		
 		float timestamp, duration;
 		if (!GetInfectedAbilityTimer(shovee, timestamp, duration)) {
-			return;
+			return Plugin_Stop;
 		}
 
 		duration = GetGameTime() + recharge + STAGGER_TIME_EPS;
@@ -121,6 +121,8 @@ public Action ResetAbilityTimer(Handle hTimer, any shovee_userid)
 			SetInfectedAbilityTimer(shovee, duration, recharge);
 		}
 	}
+
+	return Plugin_Stop;
 }
 
 float CalcNextShoveTime(int currentPenalty, int maxPenalty)

@@ -121,7 +121,7 @@ public void L4D_OnEnterGhostState(int client)
     ChangeJockeyTimerStatus(client, false);
 }
 
-public Action PlayerSpawn_Event(Event event, const char[] name, bool dontBroadcast)
+public void PlayerSpawn_Event(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
 
@@ -142,7 +142,7 @@ public Action PlayerSpawn_Event(Event event, const char[] name, bool dontBroadca
     ChangeJockeyTimerStatus(client, true);
 }
 
-public Action PlayerDeath_Event(Event event, const char[] name, bool dontBroadcast)
+public void PlayerDeath_Event(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
 
@@ -154,7 +154,7 @@ public Action PlayerDeath_Event(Event event, const char[] name, bool dontBroadca
     ChangeJockeyTimerStatus(client, false);
 }
 
-public Action PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
+public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
 
@@ -166,7 +166,7 @@ public Action PlayerTeam_Event(Event event, const char[] name, bool dontBroadcas
     ChangeJockeyTimerStatus(client, false);
 }
 
-public Action JockeyRideStart_Event(Event event, const char[] name, bool dontBroadcast)
+public void JockeyRideStart_Event(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
 
@@ -174,7 +174,7 @@ public Action JockeyRideStart_Event(Event event, const char[] name, bool dontBro
     ChangeJockeyTimerStatus(client, false);
 }
 
-public Action JockeyRideEnd_Event(Event event, const char[] name, bool dontBroadcast)
+public void JockeyRideEnd_Event(Event event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(event.GetInt("userid"));
 
@@ -200,8 +200,10 @@ public void JockeyRideEnd_NextFrame(any userid)
 
 public Action delayedJockeySound(Handle timer, any client)
 {
-    int rndPick = GetRandomInt(0, MAX_JOCKEYSOUND);
-    EmitSoundToAll(sJockeySound[rndPick], client, SNDCHAN_VOICE);
+	int rndPick = GetRandomInt(0, MAX_JOCKEYSOUND);
+	EmitSoundToAll(sJockeySound[rndPick], client, SNDCHAN_VOICE);
+
+	return Plugin_Stop;
 }
 
 /* --------------------------------------

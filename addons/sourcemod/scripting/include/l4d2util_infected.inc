@@ -59,7 +59,7 @@ stock bool IsInfected(int client)
  */
 stock bool IsValidInfected(int client)
 {
-	return (L4D2Util_IsValidClient(client) && IsClientInGame(client) && GetClientTeam(client) == L4D2Team_Infected);
+	return (IsValidClientIndex(client) && IsClientInGame(client) && GetClientTeam(client) == L4D2Team_Infected);
 }
 
 /**

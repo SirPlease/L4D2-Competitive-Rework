@@ -47,6 +47,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("GetReadyUpFooterIndex", Native_GetReadyUpFooterIndex); 	// Used for other plugins to get the ready footer index of the boss percents
 	CreateNative("RefreshBossPercentReadyUp", Native_RefreshReadyUp); 		// Used for other plugins to refresh the boss percents on the ready up
 	CreateNative("IsDarkCarniRemix", Native_IsDarkCarniRemix); 				// Used for other plugins to check if the current map is Dark Carnival: Remix (It tends to break things when it comes to bosses)
+
 	RegPluginLibrary("l4d_boss_percent");
 	return APLRes_Success;
 }
@@ -136,6 +137,8 @@ void GetCvars()
 public int Native_UpdateBossPercents(Handle plugin, int numParams){
 	CreateTimer(0.1, GetBossPercents);
 	UpdateReadyUpFooter(0.2);
+
+	return 1;
 }
 
 // Used for other plugins to check if the current map is Dark Carnival: Remix (It tends to break things when it comes to bosses)
@@ -148,6 +151,8 @@ public int Native_IsDarkCarniRemix(Handle plugin, int numParams){
 public int Native_SetWitchDisabled(Handle plugin, int numParams){
 	g_bWitchDisabled = view_as<bool>(GetNativeCell(1));
 	UpdateReadyUpFooter();
+
+	return 1;
 }
 
 // Other plugins can use this to set the tank as "disabled" on the ready up, and when the !boss command is used
@@ -155,6 +160,8 @@ public int Native_SetWitchDisabled(Handle plugin, int numParams){
 public int Native_SetTankDisabled(Handle plugin, int numParams){
 	g_bTankDisabled = view_as<bool>(GetNativeCell(1));
 	UpdateReadyUpFooter();
+
+	return 1;
 }
 
 // Used for other plugins to get the stored witch percent
@@ -555,6 +562,7 @@ public Action GetBossPercents(Handle timer)
 	
 	// Finally build up our string for effiency, yea.
 	ProcessBossString();
+	return Plugin_Stop;
 }
 
 /* 
@@ -666,6 +674,8 @@ public Action Timer_UpdateReadyUpFooter(Handle timer)
 			g_bReadyUpFooterAdded = true;
 		}
 	}
+
+	return Plugin_Stop;
 }
 
 /* ========================================================
@@ -686,6 +696,8 @@ public Action BossCmd(int client, int args)
 		PrintBossPercents(client);
 		RequestFrame(PrintCurrent, GetClientUserId(client));
 	}
+
+	return Plugin_Handled;
 }
 
 public void PrintCurrent(int userid) {

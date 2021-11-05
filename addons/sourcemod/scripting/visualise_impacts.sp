@@ -87,6 +87,8 @@ public Action TimerDelayShowDecal(Handle hTimer, ArrayStack hStack)
 			SendDecal(client, pos);
 		}
 	}
+
+	return Plugin_Stop;
 }
 
 void SendDecal(int client, float pos[3])

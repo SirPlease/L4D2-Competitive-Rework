@@ -93,7 +93,7 @@ public MRESReturn CLeap_OnTouch(int ability, Handle hParams)
 
 bool IsAbilityActive(int ability)
 {
-	return view_as<bool>(GetEntProp(ability, Prop_Send, "m_isLeaping"));
+	return view_as<bool>(GetEntProp(ability, Prop_Send, "m_isLeaping", 1));
 }
 
 bool IsJockey(int client)
@@ -107,8 +107,8 @@ bool IsJockey(int client)
 
 bool IsSurvivor(int client)
 {
-	return (client > 0 
-		&& client <= MaxClients 
-		&& IsClientInGame(client) 
+	return (client > 0
+		&& client <= MaxClients
+		&& IsClientInGame(client)
 		&& GetClientTeam(client) == TEAM_SURVIVOR);
 }

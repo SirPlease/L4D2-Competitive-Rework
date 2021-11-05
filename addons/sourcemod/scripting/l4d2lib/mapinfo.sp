@@ -358,6 +358,8 @@ public int _native_GetMapStartOrigin(Handle hPlugin, int iNumParams)
 	}
 	
 	SetNativeArray(1, fOrigin, sizeof(fOrigin));
+
+	return 1;
 }
 
 public int _native_GetMapEndOrigin(Handle hPlugin, int iNumParams)
@@ -370,6 +372,8 @@ public int _native_GetMapEndOrigin(Handle hPlugin, int iNumParams)
 	}
 	
 	SetNativeArray(1, fOrigin, sizeof(fOrigin));
+
+	return 1;
 }
 
 public int _native_GetMapStartDist(Handle hPlugin, int iNumParams)

@@ -25,7 +25,7 @@
 #include <sourcemod>
 #include <colors>
 #include <builtinvotes>
-#define L4D2UTIL_STOCKS_ONLY
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 #undef REQUIRE_PLUGIN
 #include <readyup>
@@ -100,7 +100,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("IsInPause", Native_IsInPause);
 	pauseForward = CreateGlobalForward("OnPause", ET_Ignore);
 	unpauseForward = CreateGlobalForward("OnUnpause", ET_Ignore);
+
 	RegPluginLibrary("pause");
+	return APLRes_Success;
 }
 
 public void OnPluginStart()
@@ -282,6 +284,8 @@ public Action ForcePause_Cmd(int client, int args)
 		CPrintToChatAll("{default}[{green}!{default}] A {green}force pause {default}is issued by {blue}Admin {default}({olive}%N{default})", client);
 		Pause();
 	}
+
+	return Plugin_Handled;
 }
 
 public Action Unpause_Cmd(int client, int args)
@@ -328,6 +332,7 @@ public Action Unpause_Cmd(int client, int args)
 			}
 		}
 	}
+
 	return Plugin_Handled;
 }
 
@@ -369,6 +374,7 @@ public Action Unready_Cmd(int client, int args)
 			CancelFullReady(client);
 		}
 	}
+
 	return Plugin_Handled;
 }
 
@@ -380,12 +386,16 @@ public Action ForceUnpause_Cmd(int client, int args)
 		CPrintToChatAll("{default}[{green}!{default}] A {green}force unpause {default}is issued by {blue}Admin {default}({olive}%N{default})", client);
 		InitiateLiveCountdown();
 	}
+
+	return Plugin_Handled;
 }
 
 public Action ToggleReady_Cmd(int client, int args)
 {
 	int clientTeam = GetClientTeam(client);
 	teamReady[clientTeam] ? Unready_Cmd(client, 0) : Unpause_Cmd(client, 0);
+
+	return Plugin_Handled;
 }
 
 // ======================================
@@ -550,6 +560,8 @@ public Action Show_Cmd(int client, int args)
 		hiddenPanel[client] = false;
 		CPrintToChat(client, "[{olive}Pause{default}] Panel is now {blue}on{default}.");
 	}
+
+	return Plugin_Handled;
 }
 
 public Action Hide_Cmd(int client, int args)
@@ -559,6 +571,8 @@ public Action Hide_Cmd(int client, int args)
 		hiddenPanel[client] = true;
 		CPrintToChat(client, "[{olive}Pause{default}] Panel is now {red}off{default}.");
 	}
+
+	return Plugin_Handled;
 }
 
 public Action MenuRefresh_Timer(Handle timer)
@@ -571,7 +585,7 @@ public Action MenuRefresh_Timer(Handle timer)
 	return Plugin_Stop;
 }
 
-public int DummyHandler(Menu menu, MenuAction action, int param1, int param2) { }
+public int DummyHandler(Menu menu, MenuAction action, int param1, int param2) { return 1; }
 
 void UpdatePanel()
 {
@@ -706,6 +720,8 @@ public Action Spectate_Cmd(int client, int args)
 	}
 	
 	SpecTimer[client] = CreateTimer(3.0, SecureSpec, client);
+
+	return Plugin_Handled;
 }
 
 public Action SecureSpec(Handle timer, any client)

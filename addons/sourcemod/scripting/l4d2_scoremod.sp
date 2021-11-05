@@ -10,8 +10,7 @@
 
 #define DEBUG_SM	0
 
-
-public Plugin:myinfo =
+public Plugin myinfo =
 {
 	name = "L4D2 Scoremod",
 	author = "CanadaRox, ProdigySim",
@@ -65,7 +64,9 @@ new iDifference;
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	CreateNative("HealthBonus", _Native_HealthBonus);
+	
 	RegPluginLibrary("l4d2_scoremod");
+	return APLRes_Success;
 }
 
 public int _Native_HealthBonus(Handle plugin, int numParams)

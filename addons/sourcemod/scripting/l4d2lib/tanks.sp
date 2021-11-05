@@ -98,6 +98,8 @@ public Action TankDeath_Timer(Handle hTimer)
 	Call_Finish();
 
 	ResetStatus();
+
+	return Plugin_Stop;
 }
 
 static void ResetStatus()

@@ -50,4 +50,6 @@ public Action Timed_CheckAndKill(Handle hTimer, any iNewTank)
 	if (IsFakeClient(iNewTank) && IsPlayerAlive(iNewTank)) {
 		ForcePlayerSuicide(iNewTank);
 	}
+
+	return Plugin_Stop;
 }

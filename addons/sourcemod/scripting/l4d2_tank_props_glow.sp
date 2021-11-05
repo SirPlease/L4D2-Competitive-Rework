@@ -281,7 +281,7 @@ public void PD_ev_EntityKilled(Event hEvent, const char[] sEventName, bool bDont
 	}
 }
 
-public Action TankPropTankKilled(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+public void TankPropTankKilled(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!g_bTankSpawned) {
 		return;
@@ -299,11 +299,15 @@ public Action TankDeadCheck(Handle hTimer)
 		
 		g_bTankSpawned = false;
 	}
+
+	return Plugin_Stop;
 }
 
 public Action TankPropsBeGone(Handle hTimer)
 {
 	UnhookTankProps();
+
+	return Plugin_Stop;
 }
 
 public void PropDamaged(int iVictim, int iAttacker, int iInflictor, float fDamage, int iDamageType)

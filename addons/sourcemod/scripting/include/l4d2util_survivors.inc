@@ -54,7 +54,7 @@ stock bool IsSurvivor(int client)
  */
 stock bool IsValidSurvivor(int client)
 {
-	return (L4D2Util_IsValidClient(client) && IsSurvivor(client));
+	return (IsValidClientIndex(client) && IsSurvivor(client));
 }
 
 /**
@@ -65,7 +65,7 @@ stock bool IsValidSurvivor(int client)
  */
 stock bool IsIncapacitated(int client)
 {
-	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isIncapacitated"));
+	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isIncapacitated", 1));
 }
 
 /**
@@ -124,8 +124,8 @@ stock int GetSurvivorIncapCount(int client)
  */
 stock bool IsHangingFromLedge(int client)
 {
-	return (view_as<bool>(GetEntProp(client, Prop_Send, "m_isHangingFromLedge")) 
-		|| view_as<bool>(GetEntProp(client, Prop_Send, "m_isFallingFromLedge")));
+	return (view_as<bool>(GetEntProp(client, Prop_Send, "m_isHangingFromLedge", 1))
+		|| view_as<bool>(GetEntProp(client, Prop_Send, "m_isFallingFromLedge", 1)));
 }
 
 /**

@@ -25,7 +25,7 @@
 #include <sourcemod>
 #include <sdktools>
 #include <sdktools>
-#define L4D2UTIL_STOCKS_ONLY
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 
 #define DEBUG 0
@@ -96,6 +96,8 @@ public Action RoundStartDelay(Handle hTimer)
 	if (g_bConfigsExecuted) {
 		WeaponSearchLoop();
 	}
+
+	return Plugin_Stop;
 }
 
 public Action AddWeaponRuleCb(int args)

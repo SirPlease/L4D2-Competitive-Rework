@@ -24,7 +24,7 @@
 
 #include <sourcemod>
 #include <sdktools>
-#define L4D2UTIL_STOCKS_ONLY
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 
 #define TEAM_SURVIVOR 2
@@ -186,6 +186,7 @@ public Action CheckSurvivorState(Handle hTimer, ArrayStack hEventMembers)
 	// delete hEventMembers; // TIMER_HNDL_CLOSE, the timer will do for us
 	
 	g_hTongueParalyzeTimer = null;
+	return Plugin_Stop;
 }
 
 public void Event_SmokerAttackSecond(Event hEvent, const char[] sEventName, bool bDontBroadcast)

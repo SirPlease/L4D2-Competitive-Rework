@@ -6,7 +6,7 @@
 #include <builtinvotes>
 #include <left4dhooks>
 #include <colors>
-#define L4D2UTIL_STOCKS_ONLY
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 #undef REQUIRE_PLUGIN
 #include <readyup>
@@ -303,6 +303,8 @@ public Action SetMapFirstTankSpawningScheme(int args)
 	char mapname[64];
 	GetCmdArg(1, mapname, sizeof(mapname));
 	hFirstTankSpawningScheme.SetValue(mapname, true);
+
+	return Plugin_Handled;
 }
 
 public Action SetMapSecondTankSpawningScheme(int args)
@@ -310,6 +312,7 @@ public Action SetMapSecondTankSpawningScheme(int args)
 	char mapname[64];
 	GetCmdArg(1, mapname, sizeof(mapname));
 	hSecondTankSpawningScheme.SetValue(mapname, true);
+	return Plugin_Handled;
 }
 
 public Action SetFinaleExceptionMap(int args)
@@ -317,6 +320,7 @@ public Action SetFinaleExceptionMap(int args)
 	char mapname[64];
 	GetCmdArg(1, mapname, sizeof(mapname));
 	hFinaleExceptionMaps.SetValue(mapname, true);
+	return Plugin_Handled;
 }
 
 /**********************************************************************************************/
@@ -502,7 +506,7 @@ public int SortSurvArray(int elem1, int elem2, const int[] array, Handle hndl)
 public Action ToggleSpecHudCmd(int client, int args) 
 {
 	if (GetClientTeam(client) != L4D2Team_Spectator)
-		return;
+		return Plugin_Handled;
 	
 	if (bSpecHudActive[client])
 	{
@@ -536,13 +540,14 @@ public Action ToggleSpecHudCmd(int client, int args)
 	}
 	
 	CPrintToChat(client, "<{olive}HUD{default}> Spectator HUD is now %s.", (bSpecHudActive[client] ? "{blue}on{default}" : "{red}off{default}"));
+	return Plugin_Handled;
 }
 
 public Action ToggleTankHudCmd(int client, int args) 
 {
 	int team = GetClientTeam(client);
 	if (team == L4D2Team_Survivor)
-		return;
+		return Plugin_Handled;
 	
 	if (bTankHudActive[client])
 	{
@@ -565,6 +570,8 @@ public Action ToggleTankHudCmd(int client, int args)
 	}
 	
 	CPrintToChat(client, "<{olive}HUD{default}> Tank HUD is now %s.", (bTankHudActive[client] ? "{blue}on{default}" : "{red}off{default}"));
+
+	return Plugin_Handled;
 }
 
 /**********************************************************************************************/
@@ -630,8 +637,8 @@ public Action HudDrawTimer(Handle hTimer)
 	return Plugin_Continue;
 }
 
-public int DummySpecHudHandler(Menu hMenu, MenuAction action, int param1, int param2) {}
-public int DummyTankHudHandler(Menu hMenu, MenuAction action, int param1, int param2) {}
+public int DummySpecHudHandler(Menu hMenu, MenuAction action, int param1, int param2) { return 1; }
+public int DummyTankHudHandler(Menu hMenu, MenuAction action, int param1, int param2) { return 1; }
 
 /**********************************************************************************************/
 
@@ -706,7 +713,7 @@ void GetWeaponInfo(int client, char[] info, int length)
 		// show the melee full name.
 		if (activeWepId == WEPID_MELEE || activeWepId == WEPID_CHAINSAW)
 		{
-			MeleeWeaponId meleeWepId = IdentifyMeleeWeapon(activeWep);
+			int meleeWepId = IdentifyMeleeWeapon(activeWep);
 			GetLongMeleeWeaponName(meleeWepId, info, length);
 		}
 	}

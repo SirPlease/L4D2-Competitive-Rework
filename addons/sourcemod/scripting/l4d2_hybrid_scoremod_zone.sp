@@ -85,7 +85,7 @@ public OnPluginStart()
 	HookConVarChange(hCvarBonusPerSurvivorMultiplier, CvarChanged);
 	HookConVarChange(hCvarPermanentHealthProportion, CvarChanged);
 
-	HookEvent("round_start", EventHook:RoundStartEvent, EventHookMode_PostNoCopy);
+	HookEvent("round_start", RoundStartEvent, EventHookMode_PostNoCopy);
 	HookEvent("player_ledge_grab", OnPlayerLedgeGrab);
 	HookEvent("player_incapacitated", OnPlayerIncapped);
 	HookEvent("player_hurt", OnPlayerHurt);
@@ -165,7 +165,7 @@ public OnClientDisconnect(client)
 	SDKUnhook(client, SDKHook_OnTakeDamagePost, OnTakeDamagePost);
 }
 
-public RoundStartEvent()
+public void RoundStartEvent(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	for (new i = 0; i <= MAXPLAYERS; i++)
 	{
@@ -294,14 +294,18 @@ public OnPlayerIncapped(Handle:event, const String:name[], bool:dontBroadcast)
 	} 
 }
 
-public Action OnPlayerRevived(Handle:event, const String:name[], bool:dontBroadcast)
+public void OnPlayerRevived(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	bool bLedge = GetEventBool(event, "ledge_hang");
-	if (!bLedge) return;
-
+	if (!bLedge) {
+		return;
+	}
+	
 	int client = GetClientOfUserId(GetEventInt(event, "subject"));
-	if (!IsSurvivor(client)) return;
-
+	if (!IsSurvivor(client)) {
+		return;
+	}
+	
 	RequestFrame(Revival, client);
 }
 
@@ -428,6 +432,8 @@ public Action:PrintRoundEndStats(Handle:timer)
 			PrintToChatAll("%s\x05Teams have performed absolutely equal! Impossible to decide a clear round winner", PLUGIN_TAG);
 		}
 	}
+
+	return Plugin_Stop;
 }
 
 Float:GetSurvivorHealthBonus()

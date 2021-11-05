@@ -333,4 +333,6 @@ public Action TimerStart(Handle timer)
 			// DispatchSpawn(entity);
 		}
 	}
+
+	return Plugin_Stop;
 }

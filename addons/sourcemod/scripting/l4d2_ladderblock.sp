@@ -45,7 +45,7 @@ ConVar
 
 bool
 	g_bLoadLate = false,
-	g_iInCharge[MAXPLAYERS + 1] = {0, ...};
+	g_iInCharge[MAXPLAYERS + 1] = {false, ...};
 
 public Plugin myinfo =
 {

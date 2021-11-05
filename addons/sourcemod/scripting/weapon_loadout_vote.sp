@@ -131,6 +131,8 @@ public Action Timer_ChangeTeamDelay(Handle hTimer, any iUserId)
 	if (iPlayer > 0 && GetClientTeam(iPlayer) == L4D2Team_Survivor) {
 		GiveSurvivorsWeapons(iPlayer, true);
 	}
+
+	return Plugin_Stop;
 }
 
 public void Event_RoundStart(Event hEvent, char[] sEventName, bool bDontBroadcast)
@@ -327,6 +329,7 @@ public Action Timer_ClearMap(Handle hTimer)
 			}
 		}
 	}
+	return Plugin_Stop;
 }
 
 public void OnRoundIsLive()
@@ -338,7 +341,7 @@ int ReadyPlayers()
 {
 	int iPlayersCount = 0;
 	for (int i = 1; i <= MaxClients; i++) {
-		if (IsClientInGame(i) && GetClientTeam(i) > view_as<int>(L4D2Team_Spectator)) {
+		if (IsClientInGame(i) && GetClientTeam(i) > L4D2Team_Spectator) {
 			iPlayersCount++;
 		}
 	}
@@ -375,8 +378,8 @@ void GiveAndRemovePlayerWeapon(int iClient, const char[] sWeaponName, bool bOnly
 		return;
 	}
 
-	int iCurrMainWeapon = GetPlayerWeaponSlot(iClient, view_as<int>(L4D2WeaponSlot_Primary));
-	int iCurrSecondaryWeapon = GetPlayerWeaponSlot(iClient, view_as<int>(L4D2WeaponSlot_Secondary));
+	int iCurrMainWeapon = GetPlayerWeaponSlot(iClient, L4D2WeaponSlot_Primary);
+	int iCurrSecondaryWeapon = GetPlayerWeaponSlot(iClient, L4D2WeaponSlot_Secondary);
 
 	// Does the player already have an item in this slot?
 	if (iCurrMainWeapon != -1) {

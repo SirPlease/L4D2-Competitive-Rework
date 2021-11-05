@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
-#define L4D2UTIL_STOCKS_ONLY
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util> //#include <weapons>
 #include <colors>
 
@@ -144,7 +144,7 @@ public Action AddLimit_Cmd(int args)
 
 	for (int i = 3; i <= args; ++i) {
 		GetCmdArg(i, sTempBuff, sizeof(sTempBuff));
-		wepid = view_as<int>(WeaponNameToId(sTempBuff));
+		wepid = WeaponNameToId(sTempBuff);
 		newEntry.LAE_WeaponArray[wepid / 32] |= (1 << (wepid % 32));
 	}
 	
@@ -160,7 +160,7 @@ public Action AddLimit_Cmd(int args)
 
 	for (int i = 3; i <= args; ++i) {
 		GetCmdArg(i, sTempBuff, sizeof(sTempBuff));
-		wepid = view_as<int>(WeaponNameToId(sTempBuff));
+		wepid = WeaponNameToId(sTempBuff);
 		newEntry[LAE_WeaponArray][wepid / 32] |= (1 << (wepid % 32));
 	}
 	
@@ -177,6 +177,8 @@ public Action LockLimits_Cmd(int args)
 		bIsLocked = true;
 		PrintToServer("Weapon limits locked !");
 	}
+
+	return Plugin_Handled;
 }
 
 public Action ClearLimits_Cmd(int args)
@@ -186,6 +188,8 @@ public Action ClearLimits_Cmd(int args)
 		PrintToChatAll("[L4D Weapon Limits] Weapon limits cleared!");
 		ClearLimits();
 	}
+
+	return Plugin_Handled;
 }
 
 void ClearLimits()
@@ -223,7 +227,7 @@ public Action WeaponCanUse(int client, int weapon)
 			if (arrayEntry.LAE_WeaponArray[wepid / 32] & (1 << (wepid % 32)) && GetWeaponCount(arrayEntry.LAE_WeaponArray) >= arrayEntry.LAE_iLimit) {
 				if (!player_wepid || wepid == player_wepid || !(arrayEntry.LAE_WeaponArray[player_wepid / 32] & (1 << (player_wepid % 32)))) {
 					// Swap melee, np
-					if (player_wepid == view_as<int>(WEPID_MELEE) && wepid == view_as<int>(WEPID_MELEE)) {
+					if (player_wepid == WEPID_MELEE && wepid == WEPID_MELEE) {
 						return Plugin_Continue;
 					}
 					
@@ -241,7 +245,7 @@ public Action WeaponCanUse(int client, int weapon)
 			if (arrayEntry[LAE_WeaponArray][wepid / 32] & (1 << (wepid % 32)) && GetWeaponCount(arrayEntry[LAE_WeaponArray]) >= arrayEntry[LAE_iLimit]) {
 				if (!player_wepid || wepid == player_wepid || !(arrayEntry[LAE_WeaponArray][player_wepid / 32] & (1 << (player_wepid % 32)))) {
 					// Swap melee, np
-					if (player_wepid == view_as<int>(WEPID_MELEE) && wepid == view_as<int>(WEPID_MELEE)) {
+					if (player_wepid == WEPID_MELEE && wepid == WEPID_MELEE) {
 						return Plugin_Continue;
 					}
 					
@@ -306,13 +310,13 @@ public void OnPlayerReplacedBot(Event event, const char[] name, bool dontBroadca
 
 stock int GetWeaponCount(const int[] mask)
 {
-	bool queryMelee = view_as<bool>(mask[view_as<int>(WEPID_MELEE) / 32] & (1 << (view_as<int>(WEPID_MELEE) % 32)));
+	bool queryMelee = view_as<bool>(mask[WEPID_MELEE / 32] & (1 << (WEPID_MELEE % 32)));
 	
 	int count, wepid;
 	for (int i = 1; i <= MaxClients; i++) {
 		if (IsClientInGame(i) && GetClientTeam(i) == TEAM_SURVIVOR && IsPlayerAlive(i)) {
 			for (int j = 0; j < MAX_PLAYER_WEAPON_SLOTS; ++j) {
-				wepid = view_as<int>(IdentifyWeapon(GetPlayerWeaponSlot(i, j)));
+				wepid = IdentifyWeapon(GetPlayerWeaponSlot(i, j));
 				if (mask[wepid / 32] & (1 << (wepid % 32)) || (j == 1 && queryMelee && bIsIncappedWithMelee[i])) {
 					count++;
 				}

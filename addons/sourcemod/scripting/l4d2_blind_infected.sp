@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <sdkhooks>
 #include <sdktools>
-#define L4D2UTIL_STOCKS_ONLY
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 
 #define ENT_CHECK_INTERVAL 1.0
@@ -19,7 +19,7 @@ enum
 	eArray_Size
 };
 
-static const WeaponId g_iIdsToBlock[] =
+static const int g_iIdsToBlock[] =
 {
 	WEPID_PISTOL,
 	WEPID_SMG,
@@ -91,7 +91,7 @@ public Action Timer_EntCheck(Handle hTimer)
 			g_hBlockedEntities.SetArray(i, iCurrentEnt[0], sizeof(iCurrentEnt));
 		}
 	}
-	
+
 	return Plugin_Continue;
 }
 
@@ -104,7 +104,7 @@ public void RoundStart_Event(Event hEvent, const char[] sEventName, bool bDontBr
 
 public Action RoundStartDelay_Timer(Handle hTimer)
 {
-	WeaponId iWeapon;
+	int iWeapon;
 	int iBhTemp[eArray_Size], iEntityCount = GetEntityCount();
 
 	for (int i = (MaxClients + 1); i < iEntityCount; i++) {
@@ -124,11 +124,13 @@ public Action RoundStartDelay_Timer(Handle hTimer)
 			}
 		}
 	}
+
+	return Plugin_Stop;
 }
 
 public Action OnTransmit(int iEntity, int iClient)
 {
-	if (GetClientTeam(iClient) != view_as<int>(L4D2Team_Infected)) {
+	if (GetClientTeam(iClient) != L4D2Team_Infected) {
 		return Plugin_Continue;
 	}
 	
@@ -150,7 +152,7 @@ bool IsVisibleToSurvivors(int iEntity)
 	int iSurvCount = 0;
 
 	for (int i = 1; i <= MaxClients && iSurvCount < 4; i++) {
-		if (IsClientInGame(i) && GetClientTeam(i) == view_as<int>(L4D2Team_Survivor)) {
+		if (IsClientInGame(i) && GetClientTeam(i) == L4D2Team_Survivor) {
 			iSurvCount++;
 			
 			if (IsPlayerAlive(i) && IsVisibleTo(i, iEntity)) {

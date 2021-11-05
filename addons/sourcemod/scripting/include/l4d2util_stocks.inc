@@ -3,9 +3,11 @@
 #endif
 #define l4d2util_stocks_inc_
 
+#include <l4d2util_constants>
+
 //Author - A1m`
 
-stock bool L4D2Util_IsValidClient(int client)
+stock bool IsValidClientIndex(int client)
 {
 	return (client > 0 && client <= MaxClients);
 }
@@ -39,18 +41,6 @@ stock int L4D2Util_Clamp(int inc, int low, int high)
 {
 	return (inc > high) ? high : ((inc < low) ? low : inc);
 }
-
-/* Unsafe functions
-stock any L4D2Utill_GetMin(any a, any b)
-{
-	return (a < b) ? a : b;
-}
-
-stock any L4D2Utill_GetMax(any a, any b)
-{
-	return (a > b) ? a : b;
-}
-*/
 
 stock int L4D2Util_IntToPercentInt(int iVar, int iVarMax)
 {
@@ -107,4 +97,40 @@ stock void String_ToLower(char[] str, const int MaxSize)
 	}
 
 	str[iSize] = '\0';
+}
+
+stock void HitgroupToString(int iHitGroup, char[] sDestination, const int iMaxLength)
+{
+	char sBuffer[32] = "GENERIC";
+	switch (iHitGroup) {
+		case HITGROUP_GENERIC: { //0
+			sBuffer = "generic";
+		}
+		case HITGROUP_HEAD: { //1
+			sBuffer = "head";
+		}
+		case HITGROUP_CHEST: { //2
+			sBuffer = "chest";
+		}
+		case HITGROUP_STOMACH: { //3
+			sBuffer = "stomach";
+		}
+		case HITGROUP_LEFTARM: { //4
+			sBuffer = "left arm";
+		}
+		case HITGROUP_RIGHTARM: { //5
+			sBuffer = "right arm";
+		}
+		case HITGROUP_LEFTLEG: { //6
+			sBuffer = "left leg";
+		}
+		case HITGROUP_RIGHTLEG: { //7
+			sBuffer = "right leg";
+		}
+		case HITGROUP_GEAR: { //10
+			sBuffer = "gear";
+		}
+	}
+
+	strcopy(sDestination, iMaxLength, sBuffer);
 }

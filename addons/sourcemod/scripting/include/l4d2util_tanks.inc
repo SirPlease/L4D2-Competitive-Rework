@@ -15,7 +15,12 @@ stock bool IsTank(int client)
 {
 	return (IsClientInGame(client)
 		&& GetClientTeam(client) == L4D2Team_Infected
-		&& GetInfectedClass(client) == L4D2Infected_Tank);
+		&& GetEntProp(client, Prop_Send, "m_zombieClass") == L4D2Infected_Tank);
+}
+
+stock bool IsValidTank(int client)
+{
+	return (IsValidClientIndex(client) && IsTank(client));
 }
 
 /**

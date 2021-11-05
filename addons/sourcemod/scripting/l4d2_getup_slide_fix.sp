@@ -5,7 +5,7 @@
 #include <sdkhooks>
 #include <sdktools>
 #include <left4dhooks>
-#define L4D2UTIL_STOCKS_ONLY
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 
 static const int getUpAnimations[SurvivorCharacter_Size][5] = 
@@ -103,6 +103,8 @@ public Action HookOnThink(Handle hTimer, any client)
 	if (client && IsSurvivor(client)) {
 		SDKHook(client, SDKHook_PostThink, OnThink);
 	}
+
+	return Plugin_Stop;
 }
 
 public void OnThink(int client)
@@ -121,7 +123,7 @@ public void OnThink(int client)
 
 public Action L4D2_OnStagger(int target, int source)
 {
-	if (L4D2Util_IsValidClient(source) && IsInfected(source)) {
+	if (IsValidInfected(source)) {
 		int sourceClass = GetInfectedClass(source);
 		
 		if (sourceClass == L4D2Infected_Hunter || sourceClass == L4D2Infected_Jockey) {
@@ -141,7 +143,7 @@ public Action L4D2_OnStagger(int target, int source)
 
 public Action L4D2_OnPounceOrLeapStumble(int victim, int attacker)
 {
-	if (L4D2Util_IsValidClient(attacker) && IsInfected(attacker)) {
+	if (IsValidInfected(attacker)) {
 		int sourceClass = GetInfectedClass(attacker);
 		
 		if (sourceClass == L4D2Infected_Hunter || sourceClass == L4D2Infected_Jockey) {

@@ -86,38 +86,6 @@ public Action FixDragInterval(Handle hTimer, any userid)
 	return Plugin_Stop;
 }
 
-/* @A1m`:
- * It cannot be found using sourcemod, can only be found in the code:
- * 
- * Function 'CTerrorPlayer::OnGrabbedByTongue' below the middle:
- *
- *     v13 = dword_FDA87C;
- *     *((_DWORD *)this + 1535) = 0;
- *     v22 = *(float *)(v13 + 44);
- *     CountdownTimer::Now((CTerrorPlayer *)((char *)this + 13312)); //we need this line, this is the new offset
- *     v20 = a1;
- *     if ( (float)(v20 + v22) != *((float *)this + 3330) )
- *     {
- *       (*(void (__cdecl **)(char *, char *))(*((_DWORD *)this + 3328) + 4))((char *)this + 13312, (char *)this + 13320);
- *       *((float *)this + 3330) = v20 + v22;
- *     }
- *     if ( v22 != *((float *)this + 3329) )
- *     {
- *       (*(void (__cdecl **)(char *, char *))(*((_DWORD *)this + 3328) + 4))((char *)this + 13312, (char *)this + 13316);
- *       *((float *)this + 3329) = v22;
- *     }
- *     CBaseEntity::EmitSound(this, "SmokerZombie.TongueHit", 0.0, 0);
- *
- * How does it look:
- *
- * 13352 - 8 (m_timestamp) = 13344 (old offset) - what was previously written here.
- * New offset 13312, the plugin will add 8 more and we will get where we need to
- *
- * CountdownTimer m_tongueDragDamageTimer 13312 
- *       Member: m_duration (offset 4) (type float)
- *       Member: m_timestamp (offset 8) (type float) (bits 0) (NoScale)
- *
-*/
 void SetDragDamageInterval(int client)
 {
 	float fCvarValue = tongue_drag_damage_interval.FloatValue;

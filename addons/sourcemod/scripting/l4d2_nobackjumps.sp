@@ -69,7 +69,7 @@ public void ResetEvent(Event hEvent, const char[] eName, bool dontBroadcast)
 	}
 }
 
-public Action OnPlayerJump(Event hEvent, const char[] eName, bool dontBroadcast)
+public void OnPlayerJump(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("userid"));
 
@@ -92,7 +92,7 @@ public MRESReturn CLunge_ActivateAbility(int ability)
 bool IsOutwardJump(int client)
 {
 	bool IsGround = view_as<bool>(GetEntityFlags(client) & FL_ONGROUND);
-	bool IsAttemptingToPounce = view_as<bool>(GetEntProp(client, Prop_Send, "m_isAttemptingToPounce"));
+	bool IsAttemptingToPounce = view_as<bool>(GetEntProp(client, Prop_Send, "m_isAttemptingToPounce", 1));
 
 	return (!IsAttemptingToPounce && !IsGround);
 }
@@ -109,5 +109,5 @@ bool IsHunter(int client)
 
 bool IsGhost(int client)
 {
-	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isGhost"));
+	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isGhost", 1));
 }

@@ -31,7 +31,7 @@
 #include <sourcemod>
 #include <sdkhooks>
 //#include <sdktools>
-#define L4D2UTIL_STOCKS_ONLY
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util> //#include <weapons>
 #include <colors>
 
@@ -156,24 +156,32 @@ public Action DelayUse(Handle hTimer, any client)
 {
 	bTanked[client] = false;
 	hTanked[client] = null;
+
+	return Plugin_Stop;
 }
 
 public Action DelaySwitchHealth(Handle hTimer, any client)
 {
 	bCantSwitchHealth[client] = false;
 	hHealth[client] = null;
+
+	return Plugin_Stop;
 }
 
 public Action DelaySwitchSecondary(Handle hTimer, any client)
 {
 	bCantSwitchSecondary[client] = false;
 	hSecondary[client] = null;
+
+	return Plugin_Stop;
 }
 
 public Action DelayValveSwitch(Handle hTimer, any client)
 {
 	bPreventValveSwitch[client] = false;
 	hValveSwitch[client] = null;
+
+	return Plugin_Stop;
 }
 
 

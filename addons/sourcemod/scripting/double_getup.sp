@@ -36,7 +36,7 @@
 
 #include <sourcemod>
 #include <sdkhooks>
-#define L4D2UTIL_STOCKS_ONLY
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util> // Needed for IdentifySurvivor calls. I use survivor indices rather than client indices in case someone leaves while incapped (with a pending getup).
 #include <left4dhooks> // Needed for forcing players to have a getup animation.
 
@@ -83,7 +83,7 @@ int
 
 static const int
 	// Nick, Rochelle, Coach, Ellis, Bill, Zoey, Louis, Francis //correct order
-	tankFlyAnim[SurvivorCharacter_Size)] = {628, 636, 628, 633, 536, 545, 536, 539}; //correct order
+	tankFlyAnim[SurvivorCharacter_Size] = {628, 636, 628, 633, 536, 545, 536, 539}; //correct order
 
 ePlayerState
 	playerState[SurvivorCharacter_Size] = {eUPRIGHT, ...}; // Since there are multiple sequences for each animation, this acts as a simpler way to track a player's state.
