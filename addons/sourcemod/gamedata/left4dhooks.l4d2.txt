@@ -12,6 +12,72 @@
 		// ====================================================================================================
 		"Functions"
 		{
+			"CDeathFallCamera::Enable"
+			{
+				"signature"		"CDeathFallCamera::Enable"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
+				"arguments"
+				{
+					"player"
+					{
+						"type"		"cbaseentity"
+					}
+				}
+			}
+
+			"CTerrorPlayer::Fling"
+			{
+				"signature"		"CTerrorPlayer::Fling"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
+				"arguments"
+				{
+					"velocity"
+					{
+						"type"		"vectorptr"
+					}
+					"animation"
+					{
+						"type"		"int"
+					}
+					"charger"
+					{
+						"type"		"cbaseentity"
+					}
+					"viewDuration"
+					{
+						"type"		"float"
+					}
+				}
+			}
+
+			"CTerrorPlayer::OnFalling"
+			{
+				"signature"		"CTerrorPlayer::OnFalling"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
+			}
+
+			"Tank::EnterStasis"
+			{
+				"signature"		"Tank::EnterStasis"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
+			}
+
+			"Tank::LeaveStasis"
+			{
+				"signature"		"Tank::LeaveStasis"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
+			}
+
 			"GetRandomPZSpawnPosition"
 			{
 				"signature"		"GetRandomPZSpawnPosition"
@@ -951,6 +1017,22 @@
 					"signature" "ForceNextStageAddress"
 				}
 			}
+
+			// Used for dynamic searching of memory address for SDKCall
+			"Molotov_StrFind"
+			{
+				"signature"	"Molotov_StrFind"
+			}
+
+			"VomitJar_StrFind"
+			{
+				"signature"	"VomitJar_StrFind"
+			}
+
+			"GrenadeLauncher_StrFind"
+			{
+				"signature"	"GrenadeLauncher_StrFind"
+			}
 		}
 
 
@@ -1027,6 +1109,22 @@
 
 
 			// VARIOUS OFFSETS
+
+			// Offset to the "push" call: e.g. 68 14 D7 50 10				push	offset aMolotovProject_0 ; "Molotov projectile spawned at %f %f %f,"...
+			"Molotov_OffsetPush"
+			{
+				"windows"	"74"
+			}
+
+			"VomitJar_OffsetPush"
+			{
+				"windows"	"74"
+			}
+
+			"GrenadeLauncher_OffsetPush"
+			{
+				"windows"	"74"
+			}
 
 			// USING PTR BELOW INSTEAD
 			/* Offset into CDirector::AreWanderersAllowed */
@@ -1218,6 +1316,13 @@
 			{
 				"windows"	"332"
 				"linux"		"340"
+				// From "CTerrorPlayer::GetFlowDistance"
+			}
+			"m_chapter"
+			{
+				"windows"	"868"
+				"linux"		"876"
+				// From "Director::UpdateMapScores" before "CTerrorGameRules::GetTeamScore" call. // v5 = *((_DWORD *)this + 412);
 			}
 
 
@@ -1475,6 +1580,42 @@
 			}
 
 			/*
+			* KeyValues *CTerrorGameRules::GetMissionInfo(void)
+			*/
+			"CTerrorGameRules::GetMissionInfo"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules14GetMissionInfoEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x01\x8B\x50\x28\x56\xFF\xD2\x8B\x10\x8B\xC8\x8B\x42"
+				/* 2A 2A 2A 2A 2A 2A 2A 2A 2A 2A 8B 01 8B 50 28 56 FF D2 8B 10 8B C8 8B 42 */
+			}
+
+			/*
+			* Music::Play(Music *this, const char *, int, float, bool, bool)
+			*/
+			"Music::Play"
+			{
+				"library"	"server"
+				"linux"		"@_ZN5Music4PlayEPKcifbb"
+				"windows"	"\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x83\x2A\x2A\x00\x53\x8B\x2A\x2A\x56\x57"
+				/* 55 8B ? 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? A1 ? ? ? ? 83 ? ? 00 53 8B ? ? 56 57 */
+				/* Search "Invalid emit entity index: %i\n" */
+			}
+
+			/*
+			* Music::StopPlaying(Music *this, const char *, float, bool)
+			*/
+			"Music::StopPlaying"
+			{
+				"library"	"server"
+				"linux"		"@_ZN5Music11StopPlayingEPKcfb"
+				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x83\x2A\x2A\x00\x56\x8B\x2A\x89\x2A\x2A\x0F\x84\x2A\x01\x2A\x2A\x8B"
+				/* 55 8B ? 83 ? ? A1 ? ? ? ? 83 ? ? 00 56 8B ? 89 ? ? 0F 84 ? 01 ? ? 8B */
+				/* Search "checkpoint_0" call below. */
+				// Windows signature might break on updates.
+			}
+
+			/*
 			* CEntityDissolve::Create(CBaseEntity *pTarget, const char *pMaterialName, float flStartTime, int nDissolveType, bool *pRagdollCreated)
 			*/
 			"CEntityDissolve_Create"
@@ -1544,6 +1685,57 @@
 				"linux"		"@_ZN18CSpitterProjectile6CreateERK6VectorRK6QAngleS2_S2_P20CBaseCombatCharacter"
 				"windows"	"\x55\x8B\x2A\x8B\x2A\x2A\x8B\x2A\x2A\x53\x8B\x2A\x2A\x56\x57\x50\x51\x53\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xD9\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x8B\x2A\xD9\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57"
 				/* 55 8B ? 8B ? ? 8B ? ? 53 8B ? ? 56 57 50 51 53 68 ? ? ? ? E8 ? ? ? ? 8B ? ? ? ? ? 83 ? ? ? ? ? ? 8B ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? 68 ? ? ? ? E8 ? ? ? ? D9 ? ? ? ? ? 83 ? ? 8B ? D9 ? ? E8 ? ? ? ? 57 8B ? E8 ? ? ? ? 57 8B ? E8 ? ? ? ? ? ? ? 57 */
+			}
+
+			/*
+			*  CMolotovProjectile::Create(int, int, int, int, CBaseEntity *)
+			*  Search: "Molotov projectile spawned at %f %f %f"
+			*/
+			"MolotovProjectile_Create"
+			{
+				"library"	"server"
+				"linux"		"@_ZN18CMolotovProjectile6CreateERK6VectorRK6QAngleS2_S2_P20CBaseCombatCharacter"
+				/* Windows signature is extremely long to be unique without using bytes that may change in game updates. */
+			}
+			"Molotov_StrFind"
+			{
+				"library"		"server"
+				"windows"		"Molotov projectile"
+				/* Search for the literal string to then reverse bytes and search for that address. */
+			}
+
+			/*
+			*  VomitJarProjectile::Create(int, int, int, int, CBaseEntity *)
+			*  Search: "VomitJar projectile spawned at %f %f %f"
+			*/
+			"VomitJarProjectile_Create"
+			{
+				"library"	"server"
+				"linux"		"@_ZN19CVomitJarProjectile6CreateERK6VectorRK6QAngleS2_S2_P20CBaseCombatCharacter"
+				/* Windows signature is extremely long to be unique without using bytes that may change in game updates. */
+			}
+			"VomitJar_StrFind"
+			{
+				"library"		"server"
+				"windows"		"VomitJar projectile"
+				/* Search for the literal string to then reverse bytes and search for that address. */
+			}
+
+			/*
+			*  CGrenadeLauncher_Projectile::Create(int, int, int, int, CBaseEntity *, int)
+			*  Search: "VomitJar projectile spawned at %f %f %f"
+			*/
+			"GrenadeLauncher_Create"
+			{
+				"library"	"server"
+				"linux"		"@_ZN27CGrenadeLauncher_Projectile6CreateERK6VectorRK6QAngleS2_S2_P20CBaseCombatCharacteri"
+				/* Windows signature is extremely long to be unique without using bytes that may change in game updates. */
+			}
+			"GrenadeLauncher_StrFind"
+			{
+				"library"		"server"
+				"windows"		"CGrenadeLauncher_Projectile spawned"
+				/* Search for the literal string to then reverse bytes and search for that address. */
 			}
 
 			/*
@@ -1731,6 +1923,36 @@
 				"windows"	"\x53\x8B\x2A\x83\x2A\x08\x83\x2A\x2A\x83\x2A\x04\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x56"
 				/* 53 8B ? 83 ? 08 83 ? ? 83 ? 04 55 8B ? ? 89 ? ? ? 8B ? 83 ? ? A1 ? ? ? ? 33 ? 56 */
 				/* Search "Arguments: ( area, area, flMaxPathLengt". Go into 3rd sub above or 2nd in HexRays. Match against Linux function. At the bottom is a call to target function, which should contain "& 0xF9 | 9" a little above the middle of the script in Hexrays */
+			}
+
+			/* const char *KeyValues::GetString(const char *keyName, const char *defaultValue) */
+			"KeyValues::GetString"
+			{
+				"library"		"server"
+				"linux"			"@_ZN9KeyValues9GetStringEPKcS1_"
+				"windows"		"\x55\x8B\x2A\x81\x2A\x44\x02\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53"
+				/* 55 8B ? 81 ? 44 02 ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 */
+				/* Search: "WrongTeamMsg", call below is our function. */
+			}
+
+			/* CTerrorGameRules::GetNumChaptersForMissionAndMode(CTerrorGameRules *__hidden this) */
+			"GetNumChaptersForMissionAndMode"
+			{
+				"library"		"server"
+				"linux"			"@_ZN16CTerrorGameRules31GetNumChaptersForMissionAndModeEv"
+				"windows"		"\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x83\x2A\x2A\x2A\x2A\x2A\x2A\x75\x2A\x33"
+				/* 55 8B ? 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 83 ? ? ? ? ? ? 75 ? 33 */
+				/* Search: "Modes/%s". */
+			}
+
+			/* CDirector::GetGameModeBase(CDirector *__hidden this) */
+			"CDirector_GetGameModeBase"
+			{
+				"library"		"server"
+				"linux"			"@_ZN9CDirector15GetGameModeBaseEv"
+				"windows"		"\xF7\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x56\x74\x2A\xBE\x2A\x2A\x2A\x2A\xEB\x2A\xA1\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x85\x2A\x75\x2A\xBE\x2A\x2A\x2A\x2A\x8B"
+				/* F7 ? ? ? ? ? ? ? ? ? 56 74 ? BE ? ? ? ? EB ? A1 ? ? ? ? 8B ? ? 85 ? 75 ? BE ? ? ? ? 8B */
+				/* Search: "NumberOfTeamDead" call is 2 functions below this. */
 			}
 			// =========================
 
@@ -1989,6 +2211,110 @@
 				"linux"		"@_ZN16CTerrorGameRules32HasConfigurableDifficultySettingEv"
 				"windows"	"\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9\x75\x1B\xE8\x2A\x2A\x2A\x2A\x84"
 				/* 8B 0D ? ? ? ? 85 C9 75 1B E8 ? ? ? ? 84 */
+			}
+
+			/**
+			 * Thanks to "Psyk0tik" from: https://github.com/Psykotikism/L4D1-2_Signatures/blob/main/gamedata/l4d_signatures.txt
+			 * CTerrorGameRules::IsGenericCooperativeMode()
+			 *
+			 * How to find on Windows:
+			 * 1. Locate the "CTerrorGameRules::IsRealismMode" function.
+			 * 2. One of the functions that calls "CTerrorGameRules::IsRealismMode" should be this function.
+			 **/
+			"CTerrorGameRules::IsGenericCooperativeMode"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules24IsGenericCooperativeModeEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x75\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75\x2A\x33\xC0\xC3\xB8\x01\x00\x00\x00\xC3\xCC\xCC\xCC\xCC\xCC\x8B"
+				/* ? ? ? ? ? ? ? 75 ? E8 ? ? ? ? 84 C0 75 ? 33 C0 C3 B8 01 00 00 00 C3 CC CC CC CC CC 8B */
+			}
+
+			/**
+			 * Thanks to "Psyk0tik" from: https://github.com/Psykotikism/L4D1-2_Signatures/blob/main/gamedata/l4d_signatures.txt
+			 * CTerrorGameRules::IsRealismMode()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "realism" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
+			"CTerrorGameRules::IsRealismMode"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules13IsRealismModeEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x75\x2A\x32\x2A\xC3\xF7\x05\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x74\x2A\xB8\x10\x2A\x2A\x2A\xEB\x2A\xA1\xC4\x2A\x2A\x2A\x8B\x2A\x2A\x85\x2A\x75\x2A\xB8\x64\x2A\x2A\x2A\x8B\x2A\x50\x8B\x2A\x2A\xFF\x2A\x85\x2A\x74\x2A\x68\x5C"
+				/* ? ? ? ? ? ? 85 ? 75 ? 32 ? C3 F7 05 ? ? ? ? ? ? ? ? 74 ? B8 10 ? ? ? EB ? A1 C4 ? ? ? 8B ? ? 85 ? 75 ? B8 64 ? ? ? 8B ? 50 8B ? ? FF ? 85 ? 74 ? 68 5C */
+			}
+
+			/**
+			 * Thanks to "Psyk0tik" from: https://github.com/Psykotikism/L4D1-2_Signatures/blob/main/gamedata/l4d_signatures.txt
+			 * CTerrorPlayer::OnFalling()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "PlayerZombie.Fall" string.
+			 * 2. One of the functions that references that string should be this function.
+			 **/
+			"CTerrorPlayer::OnFalling"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer9OnFallingEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x0F"
+				/* ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 56 57 8B ? E8 ? ? ? ? 83 ? ? 0F */
+			}
+
+			/**
+			 * Thanks to "Psyk0tik" from: https://github.com/Psykotikism/L4D1-2_Signatures/blob/main/gamedata/l4d_signatures.txt
+			 * CDeathFallCamera::Enable(CBasePlayer*)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "SurvivorStandingOnCar" string.
+			 * 2. The string can only be found in "CTerrorPlayer::OnGroundChanged".
+			 * 3. Look for the "point_deathfall_camera" string in "CTerrorPlayer::OnGroundChanged".
+			 * 4. The first function call after that string's second reference should be "CBasePlayer::ClearZoomOwner".
+			 * 5. One of the functions that calls "CBasePlayer::ClearZoomOwner" should be this function.
+			 **/
+			"CDeathFallCamera::Enable"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CDeathFallCamera6EnableEP11CBasePlayer"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\x2A\x8B\x2A\x89\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x85"
+				/* ? ? ? ? ? ? ? ? 57 8B ? 8B ? 89 ? ? E8 ? ? ? ? 85 */
+			}
+
+			/**
+			 * Thanks to "Psyk0tik" from: https://github.com/Psykotikism/L4D1-2_Signatures/blob/main/gamedata/l4d_signatures.txt
+			 * Tank::EnterStasis()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for any of the following strings (they can each only be found in one function):
+			 * - "Tank offer: Starting the lottery\n"
+			 * - "Tank offer: Going to the only PZ\n"
+			 * - "Tank offer: making a bot, and giving him to nobody\n"
+			 * 2. This function should be referenced by a function that is two function calls above the "Tank offer: Starting the lottery\n" string.
+			 * 3. This function should be the last function call in that function.
+			 **/
+			"Tank::EnterStasis"
+			{
+				"library"	"server"
+				"linux"		"@_ZN4Tank11EnterStasisEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8D\xB7\x2A\x2A\x2A\x2A\x74\x2A\x8B\x86\x2A\x2A\x2A\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8D\x8E\x2A\x2A\x2A\x2A\x56\xFF\x2A\xC6\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x6A"
+				/* ? ? ? ? ? ? ? ? ? ? ? 8D B7 ? ? ? ? 74 ? 8B 86 ? ? ? ? 8B 90 ? ? ? ? 8D 8E ? ? ? ? 56 FF ? C6 ? ? 8B ? 8B 90 ? ? ? ? 6A */
+			}
+
+			/**
+			 * Thanks to "Psyk0tik" from: https://github.com/Psykotikism/L4D1-2_Signatures/blob/main/gamedata/l4d_signatures.txt
+			 * Tank::LeaveStasis()
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Tank committing suicide at %f %f %f\n" string.
+			 * 2. There should be two function calls above the string.
+			 * 2. The first function call should be this function.
+			 **/
+			"Tank::LeaveStasis"
+			{
+				"library"	"server"
+				"linux"		"@_ZN4Tank11LeaveStasisEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8D\xB7\x2A\x2A\x2A\x2A\x74\x2A\x8B\x86\x2A\x2A\x2A\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8D\x8E\x2A\x2A\x2A\x2A\x56\xFF\x2A\xC6\x2A\x2A\x8B\x2A\x8B\x90\x2A\x2A\x2A\x2A\x8B"
+				/* ? ? ? ? ? ? ? ? ? ? ? 8D B7 ? ? ? ? 74 ? 8B 86 ? ? ? ? 8B 90 ? ? ? ? 8D 8E ? ? ? ? 56 FF ? C6 ? ? 8B ? 8B 90 ? ? ? ? 8B */
 			}
 
 			/*
@@ -2303,8 +2629,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CDirector23RestartScenarioFromVoteEPKc"
-				"windows"	"\x55\x8B\xEC\x56\x8B\xF1\x8B\x0D\x2A\x2A\x2A\x2A\x57\x85"
-				/* 55 8B EC 56 8B F1 8B 0D ? ? ? ? 57 85 */
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x0D\x2A\x2A\x2A\x2A\x57\x85\x2A\x74\x2A\x6A"
+				/* ? ? ? ? ? ? 8B 0D ? ? ? ? 57 85 ? 74 ? 6A */
 			}
 
 			/*
@@ -2473,8 +2799,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer15OnHitByVomitJarEP20CBaseCombatCharacter"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2\x84\xC0\x0F"
-				/* 55 8B EC 83 EC ? 56 8B F1 E8 ? ? ? ? 84 C0 74 ? 8B 06 8B 90 ? ? ? ? 8B CE FF D2 84 C0 0F */
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2\x84\xC0\x0F"
+				/* ? ? ? ? ? ? 56 8B F1 E8 ? ? ? ? 84 C0 74 ? 8B 06 8B 90 ? ? ? ? 8B CE FF D2 84 C0 0F */
 			}
 
 			/*
@@ -2484,8 +2810,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN8Infected15OnHitByVomitJarEP20CBaseCombatCharacter"
-				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x56\x8B\xF1\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\xFF\xD2\x84\xC0\x0F\x2A\x2A\x2A\x2A\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2\x84\xC0\x75\x2A\x56\xE8\x2A\x2A\x2A\x2A\x8B\xC8\xE8"
-				/* 55 8B EC 83 EC ? 56 8B F1 8B 06 8B 90 ? ? ? ? FF D2 84 C0 0F ? ? ? ? ? 8B 06 8B 90 ? ? ? ? 8B CE FF D2 84 C0 75 ? 56 E8 ? ? ? ? 8B C8 E8 */
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\xF1\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\xFF\xD2\x84\xC0\x0F\x2A\x2A\x2A\x2A\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2\x84\xC0\x75\x2A\x56\xE8\x2A\x2A\x2A\x2A\x8B\xC8\xE8"
+				/* ? ? ? ? ? ? 56 8B F1 8B 06 8B 90 ? ? ? ? FF D2 84 C0 0F ? ? ? ? ? 8B 06 8B 90 ? ? ? ? 8B CE FF D2 84 C0 75 ? 56 E8 ? ? ? ? 8B C8 E8 */
 			}
 
 			/*
@@ -2496,12 +2822,12 @@
 			 *	Find via CCharge::HandleCustomCollision (strings) -> ThrowImpactedSurvivor (strings, structure) -> Fling (feel it out)
 			 *
 			 */
-			"CTerrorPlayer_Fling"
+			"CTerrorPlayer::Fling"
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer5FlingERK6Vector17PlayerAnimEvent_tP20CBaseCombatCharacterf"
-				"windows"	"\x53\x8B\xDC\x83\xEC\x2A\x83\xE4\x2A\x83\xC4\x2A\x55\x8B\x6B\x2A\x89\x6C\x2A\x2A\x8B\xEC\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\x2A\x8B\x43\x2A\x56\x8B\x73\x2A\x57\x6A\x2A\x8B\xF9\x89\x45"
-				/* 53 8B DC 83 EC ? 83 E4 ? 83 C4 ? 55 8B 6B ? 89 6C ? ? 8B EC 81 ? ? ? ? ? A1 ? ? ? ? 33 C5 89 45 ? 8B 43 ? 56 8B 73 ? 57 6A ? 8B F9 89 45 */
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\xE4\x2A\x83\xC4\x2A\x55\x8B\x6B\x2A\x89\x6C\x2A\x2A\x8B\xEC\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\x2A\x8B\x43\x2A\x56\x8B\x73\x2A\x57\x6A\x2A\x8B\xF9\x89\x45"
+				/* ? ? ? ? ? ? 83 E4 ? 83 C4 ? 55 8B 6B ? 89 6C ? ? 8B EC 81 ? ? ? ? ? A1 ? ? ? ? 33 C5 89 45 ? 8B 43 ? 56 8B 73 ? 57 6A ? 8B F9 89 45 */
 			}
 
 			/*
@@ -2757,7 +3083,7 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CDirector25UnregisterForbiddenTargetEP11CBaseEntity"
-                "windows"		"\x55\x8B\x2A\x56\x57\x8B\x7D\x08\x8B\xF1\x85\xFF\x74\x2A\x8B\x07\x8B\x50\x08\x8B\xCF\xFF\xD2\x8B\x00\x89\x45\x08"
+				"windows"	"\x55\x8B\x2A\x56\x57\x8B\x7D\x08\x8B\xF1\x85\xFF\x74\x2A\x8B\x07\x8B\x50\x08\x8B\xCF\xFF\xD2\x8B\x00\x89\x45\x08"
 				/* 55 8B ? 56 57 8B 7D 08 8B F1 85 FF 74 ? 8B 07 8B 50 08 8B CF FF D2 8B 00 89 45 08 */ // Found by "SilverShot" updated by "Crasher_3637"
 				/* Search "triggered_car_alarm" for "CCarProp::InputSurvivorStandingOnCar". Called in here. */
 			}
@@ -3314,17 +3640,6 @@
 				"linux"		"@_ZN11CBasePlayer9WaterMoveEv"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x60\x56\x8B\xF1\x80\xBE\x72\x01\x00\x00\x08"
 				/* 55 8B EC 83 EC 60 56 8B F1 80 BE 72 01 00 00 08 */
-			}
-
-			/*
-			* KeyValues *CTerrorGameRules::GetMissionInfo(void)
-			*/
-			"CTerrorGameRules__GetMissionInfo"
-			{
-				"library"	"server"
-				"linux"		"@_ZN16CTerrorGameRules14GetMissionInfoEv"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x01\x8B\x50\x28\x56\xFF\xD2\x8B\x10\x8B\xC8\x8B\x42"
-				/* 2A 2A 2A 2A 2A 2A 2A 2A 2A 2A 8B 01 8B 50 28 56 FF D2 8B 10 8B C8 8B 42 */
 			}
 
 			/*

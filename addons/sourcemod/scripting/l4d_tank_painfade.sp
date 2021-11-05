@@ -71,7 +71,7 @@ public OnClientDisconnect(client)
 {
     if (bEnabled && IsTank(client)) 
     {
-        CreateTimer(0.1, CheckForTanksDelay, TIMER_FLAG_NO_MAPCHANGE);
+        CreateTimer(0.1, CheckForTanksDelay, _, TIMER_FLAG_NO_MAPCHANGE);
     }
 }
 
@@ -90,7 +90,7 @@ public Action:PlayerDeath( Handle:event, const String:name[], bool:dontBroadcast
     new client = GetClientOfUserId(GetEventInt(event, "userid"));
     if (IsTank(client)) 
     {
-        CreateTimer(0.1, CheckForTanksDelay, TIMER_FLAG_NO_MAPCHANGE);
+        CreateTimer(0.1, CheckForTanksDelay, _, TIMER_FLAG_NO_MAPCHANGE);
     }
 }
 

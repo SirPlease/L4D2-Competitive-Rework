@@ -33,9 +33,9 @@
 public Plugin myinfo =
 {
 	name = "Pause plugin",
-	author = "CanadaRox, Sir, Forgetest", //Add support sm1.11 - A1m`
+	author = "CanadaRox, Sir, Forgetest",
 	description = "Adds pause functionality without breaking pauses, also prevents SI from spawning because of the Pause.",
-	version = "6.5",
+	version = "6.6",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -54,6 +54,7 @@ ConVar
 	pauseDelayCvar,
 	initiatorReadyCvar,
 	l4d_ready_delay,
+	pauseLimitCvar,
 	serverNamerCvar;
 
 // Pause Handle
@@ -66,6 +67,7 @@ int
 bool
 	isPaused,
 	RoundEnd,
+	isCedapug,
 	listened;
 
 // Pause Info
@@ -91,6 +93,8 @@ bool readyUpIsAvailable;
 // Pause Fix
 Handle SpecTimer[MAXPLAYERS+1];
 
+StringMap playerPauseCount;
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	CreateNative("IsInPause", Native_IsInPause);
@@ -103,8 +107,11 @@ public void OnPluginStart()
 {
 	pauseDelayCvar = CreateConVar("sm_pausedelay", "0", "Delay to apply before a pause happens.  Could be used to prevent Tactical Pauses", FCVAR_NONE, true, 0.0);
 	initiatorReadyCvar = CreateConVar("sm_initiatorready", "0", "Require or not the pause initiator should ready before unpausing the game", FCVAR_NONE, true, 0.0);
+	pauseLimitCvar = CreateConVar("sm_pauselimit", "1", "Limits the amount of pauses a player can do in a single game.", FCVAR_NONE, true, 0.0);
 	l4d_ready_delay = FindConVar("l4d_ready_delay");
 	
+	playerPauseCount = new StringMap();
+
 	FindServerNamer();
 	
 	sv_pausable = FindConVar("sv_pausable");
@@ -160,6 +167,11 @@ void FindServerNamer()
 // ======================================
 // Forwards
 // ======================================
+
+public void OnCedapugStarted(int regionArg)
+{
+    isCedapug = true;
+}
 
 public void OnClientPutInServer(int client)
 {
@@ -218,9 +230,12 @@ public Action Pause_Cmd(int client, int args)
 		
 	if (RoundEnd)
 		return Plugin_Continue;
-		
+
 	if (pauseDelay == 0 && !isPaused)
 	{
+		if (isCedapug && !AddPauseCount(client))
+			return Plugin_Continue;
+
 		initiatorId = GetClientUserId(client);
 		pauseTeam = view_as<L4D2_Team>(GetClientTeam(client));
 		GetClientName(client, initiatorName, sizeof(initiatorName));
@@ -237,6 +252,7 @@ public Action Pause_Cmd(int client, int args)
 			CreateTimer(1.0, PauseDelay_Timer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
+
 	return Plugin_Handled;
 }
 
@@ -375,6 +391,25 @@ public Action ToggleReady_Cmd(int client, int args)
 // ======================================
 // Pause Process
 // ======================================
+
+bool AddPauseCount(int client)
+{
+	char authId[18];
+	GetClientAuthId(client, AuthId_SteamID64, authId, 18, false);
+	int pauseCount = 0;
+	playerPauseCount.GetValue(authId, pauseCount);
+
+	if (pauseCount >= pauseLimitCvar.IntValue)
+	{
+		CPrintToChat(client, "{blue}[{green}!{blue}] {default}You have reached your pause limit.");
+		return false;
+	}
+
+	pauseCount++;
+	playerPauseCount.SetValue(authId, pauseCount);
+
+	return true;
+}
 
 void AttemptPause()
 {

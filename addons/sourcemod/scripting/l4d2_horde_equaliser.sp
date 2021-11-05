@@ -39,7 +39,7 @@ bool
 public Plugin myinfo = 
 {
 	name = "L4D2 Horde Equaliser",
-	author = "Visor (original idea by Sir)", //update syntax add gamedata A1m`
+	author = "Visor (original idea by Sir), A1m`",
 	description = "Make certain event hordes finite",
 	version = "3.0.9",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"

@@ -1,3 +1,5 @@
+//The problem was fixed after the update 'The Last Stand'.
+
 #pragma newdecls required
 #include <sourcemod>
 

@@ -876,4 +876,37 @@
 		"start_loc_a"	"78.61 -4791.03 907.94"
 		"start_loc_b"	"539.61 -4568.96 1118.83"
 	}
+	"uz_crash"
+	{
+		"start_loc_a"	"1664 1720 264"
+		"start_loc_b"	"2216 1104 88"
+		"end_loc_a"	"11200 -320 -216"
+		"end_loc_b"	"11792 -896 -368"
+	}
+	"uz_town"
+	{
+		"start_loc_a"	"-2000 3168 -48"
+		"start_loc_b"	"-1392 2592 -272"
+		"end_loc_a"	"-832 -3904 352"
+		"end_loc_b"	"-576 -4544 48"
+	}
+	"uz_desert"
+	{
+		"start_loc_a"	"-11264 3728 160"
+		"start_loc_b"	"-11008 3056 -144"
+		"end_loc_a"	"-1888 -1440 -240"
+		"end_loc_b"	"-1376 -1696 -448"
+	}
+	"uz_bunker"
+	{
+		"start_loc_a"	"-6336 -832 640"
+		"start_loc_b"	"-5824 -1152 416"
+		"end_loc_a"	"-2848 4480 1376"
+		"end_loc_b"	"-2144 4032 1152"
+	}
+	"uz_escape"
+	{
+		"start_loc_a"	"-3616 640 224"
+		"start_loc_b"	"-2912 192 0"
+	}
 }

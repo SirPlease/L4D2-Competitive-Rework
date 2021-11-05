@@ -29,20 +29,20 @@ static const char L4D2_SI_Victim_NetProps[][] = {
 	"",
 	"m_pounceVictim",	// Hunter
 	"",
-	"m_jockeyVictim",    // Jockey
-	"m_pummelVictim",    // Charger
+	"m_jockeyVictim",	// Jockey
+	"m_pummelVictim",	// Charger
 	"",
 	""
 };
 
-ConVar bot_kick_delay;
+ConVar g_hBotKickDelay = null;
 
 public Plugin myinfo = 
 {
 	name = "L4D2 No Second Chances",
 	author = "Visor, Jacob, A1m`",
 	description = "Previously human-controlled SI bots with a cap won't die",
-	version = "1.3",
+	version = "1.4",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -50,7 +50,7 @@ public void OnPluginStart()
 {
 	HookEvent("player_bot_replace", PlayerBotReplace);
 	
-	bot_kick_delay = CreateConVar("bot_kick_delay", "0", "How long should we wait before kicking infected bots?", _, true, 0.0, true, 30.0);
+	g_hBotKickDelay = CreateConVar("bot_kick_delay", "0", "How long should we wait before kicking infected bots?", _, true, 0.0, true, 30.0);
 }
 
 public void PlayerBotReplace(Event hEvent, const char[] eName, bool dontBroadcast)
@@ -59,9 +59,9 @@ public void PlayerBotReplace(Event hEvent, const char[] eName, bool dontBroadcas
 	int iBot = GetClientOfUserId(iUserID);
 
 	if (IsClientInGame(iBot) && GetClientTeam(iBot) == TEAM_INFECTED && IsFakeClient(iBot)) {
-		float delay = bot_kick_delay.FloatValue;
-		if (delay >= 1.0) {
-			CreateTimer(delay, KillBot, iUserID, TIMER_FLAG_NO_MAPCHANGE);
+		float fDelay = g_hBotKickDelay.FloatValue;
+		if (fDelay >= 1.0) {
+			CreateTimer(fDelay, Timer_KillBotDelay, iUserID, TIMER_FLAG_NO_MAPCHANGE);
 		} else if (ShouldBeKicked(iBot)) {
 			ForcePlayerSuicide(iBot);
 		}
@@ -83,11 +83,10 @@ bool ShouldBeKicked(int iBot)
 	return true;
 }
 
-public Action KillBot(Handle hTimer, any iUserID)
+public Action Timer_KillBotDelay(Handle hTimer, any iUserID)
 {
 	int iBot = GetClientOfUserId(iUserID);
-	if (iBot > 0 && ShouldBeKicked(iBot))
-	{
+	if (iBot > 0 && IsPlayerAlive(iBot) && ShouldBeKicked(iBot)) {
 		ForcePlayerSuicide(iBot);
 	}
 }

@@ -15,7 +15,7 @@ public Plugin myinfo =
 {
 	name = "L4D2 SMG Reload Speed Tweaker",
 	description = "Allows cvar'd control over the reload durations for both types of SMG",
-	author = "Visor", //update syntax A1m`, little fix
+	author = "Visor",
 	version = "1.1.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework/"
 };

@@ -9,12 +9,12 @@
 #undef REQUIRE_PLUGIN
 #include <caster_system>
 
-#define PLUGIN_VERSION "9.3.4"
+#define PLUGIN_VERSION "9.3.9"
 
 public Plugin myinfo =
 {
 	name = "L4D2 Ready-Up with convenience fixes",
-	author = "CanadaRox, Target", //Add support sm1.11 - A1m`
+	author = "CanadaRox, Target",
 	description = "New and improved ready-up plugin with optimal for convenience.",
 	version = PLUGIN_VERSION,
 	url = "https://github.com/Target5150/MoYu_Server_Stupid_Plugins"
@@ -41,7 +41,7 @@ public Plugin myinfo =
 
 #define TRANSLATION_READYUP "readyup.phrases"
 
-#define GAMEDATA_READYUP "readyup"
+#define GAMEDATA_READYUP "l4d2_cdirector"
 #define GAMEDATA_L4DH "left4dhooks.l4d2"
 
 #define READY_MODE_MANUAL 1
@@ -104,8 +104,6 @@ char
 	liveSound[PLATFORM_MAX_PATH];
 int
 	readyDelay;
-Handle
-	liveForward;
 
 // Auto Start
 bool
@@ -118,6 +116,15 @@ char
 int
 	autoStartDelay,
 	expireTime;
+
+// Forwards
+Handle
+	preInitiateForward,
+	initiateForward,
+	preCountdownForward,
+	countdownForward,
+	preLiveForward,
+	liveForward;
 
 //AFK?!
 float g_fButtonTime[MAXPLAYERS+1];
@@ -134,7 +141,9 @@ bool casterSystemAvailable;
 // CDirector::IsInTransition
 Handle g_hSDKCall_IsInTransition;
 Address g_pDirector;
-bool g_bTransitioning;
+
+// Delayed initiation
+bool g_bTransitioning = false;
 
 // Reason enum for Countdown cancelling
 enum disruptType
@@ -166,6 +175,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("GetFooterStringAtIndex",	Native_GetFooterStringAtIndex);
 	CreateNative("IsInReady",				Native_IsInReady);
 	CreateNative("ToggleReadyPanel",		Native_ToggleReadyPanel);
+	
+	preInitiateForward = CreateGlobalForward("OnReadyUpInitiatePre", ET_Ignore);
+	initiateForward = CreateGlobalForward("OnReadyUpInitiate", ET_Ignore);
+	preCountdownForward = CreateGlobalForward("OnRoundLiveCountdownPre", ET_Ignore);
+	countdownForward = CreateGlobalForward("OnRoundLiveCountdown", ET_Ignore);
+	preLiveForward = CreateGlobalForward("OnRoundIsLivePre", ET_Ignore);
 	liveForward = CreateGlobalForward("OnRoundIsLive", ET_Ignore);
 	RegPluginLibrary("readyup");
 	return APLRes_Success;
@@ -580,8 +595,17 @@ public Action Say_Callback(int client, const char[] command, int argc)
 public Action Vote_Callback(int client, const char[] command, int argc)
 {
 	// Fast ready / unready through default keybinds for voting
-	if (IsBuiltinVoteInProgress()) return;
 	if (!client) return;
+	if (BuiltinVote_IsVoteInProgress() && IsClientInBuiltinVotePool(client)) return;
+	
+	if (Game_IsVoteInProgress())
+	{
+		int voteteam = Game_GetVoteTeam();
+		if (voteteam == -1 || voteteam == GetClientTeam(client))
+		{
+			return;
+		}
+	}
 	
 	char sArg[8];
 	GetCmdArg(1, sArg, sizeof(sArg));
@@ -941,6 +965,15 @@ void UpdatePanel()
 				continue;
 			}
 			
+			if (Game_IsVoteInProgress())
+			{
+				int voteteam = Game_GetVoteTeam();
+				if (voteteam == -1 || voteteam == GetClientTeam(client))
+				{
+					continue;
+				}
+			}
+			
 			menuPanel.Send(client, DummyHandler, 1);
 		}
 	}
@@ -950,6 +983,9 @@ void UpdatePanel()
 
 void InitiateReadyUp()
 {
+	Call_StartForward(preInitiateForward);
+	Call_Finish();
+	
 	for (int i = 1; i <= MaxClients; i++)
 	{
 		isPlayerReady[i] = false;
@@ -996,10 +1032,19 @@ void InitiateReadyUp()
 		expireTime = l4d_ready_autostart_wait.IntValue;
 		CreateTimer(1.0, Timer_AutoStartHelper, _, TIMER_FLAG_NO_MAPCHANGE | TIMER_REPEAT);
 	}
+	
+	Call_StartForward(initiateForward);
+	Call_Finish();
 }
 
 void InitiateLive(bool real = true)
 {
+	if (real)
+	{
+		Call_StartForward(preLiveForward);
+		Call_Finish();
+	}
+	
 	inReadyUp = false;
 	inLiveCountdown = false;
 	isForceStart = false;
@@ -1015,18 +1060,18 @@ void InitiateLive(bool real = true)
 	god.Flags |= FCVAR_NOTIFY;
 	sb_stop.SetBool(false);
 	
-	CreateTimer(0.1, Timer_RestartCountdowns, true, TIMER_FLAG_NO_MAPCHANGE);
-	
-	for (int i = 0; i < 4; i++)
-	{
-		GameRules_SetProp("m_iVersusDistancePerSurvivor", 0, _,
-				i + 4 * GameRules_GetProp("m_bAreTeamsFlipped"));
-	}
-	
 	ToggleCommandListeners(false);
 
 	if (real)
 	{
+		CreateTimer(0.1, Timer_RestartCountdowns, true, TIMER_FLAG_NO_MAPCHANGE);
+	
+		for (int i = 0; i < 4; i++)
+		{
+			GameRules_SetProp("m_iVersusDistancePerSurvivor", 0, _,
+					i + 4 * GameRules_GetProp("m_bAreTeamsFlipped"));
+		}
+		
 		Call_StartForward(liveForward);
 		Call_Finish();
 	}
@@ -1107,12 +1152,18 @@ void InitiateLiveCountdown()
 {
 	if (readyCountdownTimer == null)
 	{
+		Call_StartForward(preCountdownForward);
+		Call_Finish();
+		
 		ReturnTeamToSaferoom(L4D2Team_Survivor);
 		PrintHintTextToAll("%t", "LiveCountdownBegin");
 		inLiveCountdown = true;
 		readyDelay = l4d_ready_delay.IntValue;
 		if (isForceStart) readyDelay += l4d_ready_force_extra.IntValue;
 		readyCountdownTimer = CreateTimer(1.0, ReadyCountdownDelay_Timer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+	
+		Call_StartForward(countdownForward);
+		Call_Finish();
 	}
 }
 

@@ -1,3 +1,5 @@
+//This plugin has been replaced by 'l4d2_tank_props_glow'
+
 #pragma newdecls required
 
 /******************************************************************

@@ -25,22 +25,20 @@
 *
 ******************************************************************/
 
-bool bIsBridge;		//for parish bridge cars
-bool bIsStadium;	//for suicide blitz finale hittables
+bool bIsGauntletFinale = false; //Gauntlet finales do reduced hittable damage
 float fOverkill[MAXPLAYERS + 1][2048]; // Overkill, prolly don't need this big of a global array, could also use adt_array.
 float fSpecialOverkill[MAXPLAYERS + 1][3]; // Dealing with breakable pieces that will cause multiple hits in a row (unintended behaviour)
 bool bLateLoad;   // Late load support!
 
 //cvars
-ConVar hBridgeCarDamage;
-ConVar hStadiumCarDamage;
+ConVar hGauntletFinaleMulti;
 ConVar hLogStandingDamage;
+ConVar hBHLogStandingDamage;
 ConVar hCarStandingDamage;
 ConVar hBumperCarStandingDamage;
 ConVar hHandtruckStandingDamage;
 ConVar hForkliftStandingDamage;
 ConVar hBrokenForkliftStandingDamage;
-ConVar hBHLogStandingDamage;
 ConVar hDumpsterStandingDamage;
 ConVar hHaybaleStandingDamage;
 ConVar hBaggageStandingDamage;
@@ -55,23 +53,21 @@ ConVar hStandardIncapDamage;
 ConVar hTankSelfDamage;
 ConVar hOverHitInterval;
 ConVar hOverHitDebug;
+ConVar hUnbreakableForklifts;
 
 public Plugin myinfo = 
 {
     name = "L4D2 Hittable Control",
     author = "Stabby, Visor, Sir, Derpduck",
-    version = "0.6.2",
+    version = "0.6.3",
     description = "Allows for customisation of hittable damage values (and debugging)"
 };
 
 public void OnPluginStart()
 {
-	hBridgeCarDamage		= CreateConVar( "hc_bridge_car_damage",			"25.0",
-											"Damage of cars in the parish bridge finale. Overrides standard incap damage on incapacitated players.",
-											FCVAR_NONE, true, 0.0, true, 300.0 );
-	hStadiumCarDamage		= CreateConVar( "hc_stadium_car_damage",			"25.0",
-											"Damage of cars and carts in the Suicide Blitz 2 finale. Overrides standard incap damage on incapacitated players.",
-											FCVAR_NONE, true, 0.0, true, 300.0 );
+	hGauntletFinaleMulti	= CreateConVar( "hc_gauntlet_finale_multiplier",		"0.25",
+											"Multiplier of damage that hittables deal on gauntlet finales.",
+											FCVAR_NONE, true, 0.0, true, 4.0 );
 	hLogStandingDamage		= CreateConVar( "hc_sflog_standing_damage",		"48.0",
 											"Damage of hittable swamp fever logs to non-incapped survivors.",
 											FCVAR_NONE, true, 0.0, true, 300.0 );
@@ -79,7 +75,7 @@ public void OnPluginStart()
 											"Damage of hittable blood harvest logs to non-incapped survivors.",
 											FCVAR_NONE, true, 0.0, true, 300.0 );
 	hCarStandingDamage		= CreateConVar( "hc_car_standing_damage",		"100.0",
-											"Damage of hittable non-parish-bridge cars to non-incapped survivors.",
+											"Damage of hittable cars to non-incapped survivors.",
 											FCVAR_NONE, true, 0.0, true, 300.0 );
 	hBumperCarStandingDamage= CreateConVar( "hc_bumpercar_standing_damage",	"100.0",
 											"Damage of hittable bumper cars to non-incapped survivors.",
@@ -87,10 +83,10 @@ public void OnPluginStart()
 	hHandtruckStandingDamage= CreateConVar( "hc_handtruck_standing_damage",	"8.0",
 											"Damage of hittable handtrucks (aka dollies) to non-incapped survivors.",
 											FCVAR_NONE, true, 0.0, true, 300.0 );
-	hForkliftStandingDamage= CreateConVar(  "hc_forklift_standing_damage",	"100.0",
+	hForkliftStandingDamage	= CreateConVar( "hc_forklift_standing_damage",	"100.0",
 											"Damage of hittable forklifts to non-incapped survivors.",
 											FCVAR_NONE, true, 0.0, true, 300.0 );
-	hBrokenForkliftStandingDamage= CreateConVar(  "hc_broken_forklift_standing_damage",	"100.0",
+	hBrokenForkliftStandingDamage= CreateConVar( "hc_broken_forklift_standing_damage",	"100.0",
 											"Damage of hittable broken forklifts to non-incapped survivors.",
 											FCVAR_NONE, true, 0.0, true, 300.0 );
 	hDumpsterStandingDamage	= CreateConVar( "hc_dumpster_standing_damage",	"100.0",
@@ -105,22 +101,22 @@ public void OnPluginStart()
 	hGeneratorTrailerStandingDamage	= CreateConVar( "hc_generator_trailer_standing_damage",	"48.0",
 											"Damage of hittable generator trailers to non-incapped survivors.",
 											FCVAR_NONE, true, 0.0, true, 300.0 );
-	hMilitiaRockStandingDamage	= CreateConVar( "hc_militia_rock_standing_damage",	"100.0",
+	hMilitiaRockStandingDamage= CreateConVar( "hc_militia_rock_standing_damage",	"100.0",
 											"Damage of hittable militia rocks to non-incapped survivors.",
 											FCVAR_NONE, true, 0.0, true, 300.0 );
-	hSofaChairStandingDamage	= CreateConVar( "hc_sofa_chair_standing_damage",	"100.0",
+	hSofaChairStandingDamage= CreateConVar( "hc_sofa_chair_standing_damage",	"100.0",
 											"Damage of hittable sofa chair on Blood Harvest finale to non-incapped survivors. Applies only to sofa chair with a targetname of 'hittable_chair_l4d1' to emulate L4D1 behaviour, the hittable chair from TLS update is parented to a bumper car.",
 											FCVAR_NONE, true, 0.0, true, 300.0 );
-	hAtlasBallDamage	= CreateConVar( "hc_atlas_ball_standing_damage",	"100.0",
+	hAtlasBallDamage		= CreateConVar( "hc_atlas_ball_standing_damage",	"100.0",
 											"Damage of hittable atlas balls to non-incapped survivors.",
 											FCVAR_NONE, true, 0.0, true, 300.0 );
-	hIBeamDamage	= CreateConVar( "hc_ibeam_standing_damage",	"48.0",
+	hIBeamDamage			= CreateConVar( "hc_ibeam_standing_damage",	"48.0",
 											"Damage of ibeams to non-incapped survivors.",
 											FCVAR_NONE, true, 0.0, true, 300.0 );
 	hDiescraperBallDamage	= CreateConVar( "hc_diescraper_ball_standing_damage",	"100.0",
 											"Damage of hittable ball statue on Diescraper finale to non-incapped survivors.",
 											FCVAR_NONE, true, 0.0, true, 300.0 );
-	hVanDamage	= CreateConVar( "hc_van_standing_damage",	"100.0",
+	hVanDamage				= CreateConVar( "hc_van_standing_damage",	"100.0",
 											"Damage of hittable van on Detour Ahead map 2 to non-incapped survivors.",
 											FCVAR_NONE, true, 0.0, true, 300.0 );
 	hStandardIncapDamage	= CreateConVar( "hc_incap_standard_damage",		"100",
@@ -135,6 +131,9 @@ public void OnPluginStart()
 	hOverHitDebug		    = CreateConVar( "hc_debug",				"0",
 											"0: Disable Debug - 1: Enable Debug",
 											FCVAR_NONE, true, 0.0, false );
+	hUnbreakableForklifts	= CreateConVar( "hc_unbreakable_forklifts",	"0",
+											"Prevents forklifts breaking into pieces when hit by a tank.",
+											FCVAR_NONE, true, 0.0, false );
 
 	if (bLateLoad)
 	{
@@ -146,31 +145,18 @@ public void OnPluginStart()
 	}
 
 	HookEvent("round_start", Event_RoundStart);
+	HookEvent("finale_radio_start", Event_FinaleStart);
+	
+	hUnbreakableForklifts.AddChangeHook(ConVarChanged_UnbreakableForklifts);
 }
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	bLateLoad = late;
+	CreateNative("AreForkliftsUnbreakable", Native_UnbreakableForklifts);
+	RegPluginLibrary("l4d2_hittable_control");
 	return APLRes_Success;
 }
-
-public void OnMapStart()
-{
-	char buffer[64];
-	GetCurrentMap(buffer, sizeof(buffer));
-	if (StrContains(buffer, "c5m5") != -1)	//so it works for darkparish. should probably find out what causes the changes to the cars though, this is ugly
-	  bIsBridge = true;
-
-	else if (StrContains(buffer, "l4d2_stadium5") != -1)	//suicide blitz finale
-	  bIsStadium = true;
-
-	else
-	{
-		bIsBridge = false;	//in case of map changes or something
-		bIsStadium = false;
-	}
-}
-
 public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
@@ -188,6 +174,87 @@ public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcas
 		fSpecialOverkill[i][0] = 0.0;
 		fSpecialOverkill[i][1] = 0.0;
 		fSpecialOverkill[i][2] = 0.0;
+	}
+	
+	bIsGauntletFinale = false;
+	
+	// Delay breakable forklift patch as it must run after vscripts
+	if (GetConVarBool(hUnbreakableForklifts))
+	{
+		CreateTimer(20.0, PatchBreakableForklifts);
+	}
+	else
+	{
+		CreateTimer(20.0, UnpatchBreakableForklifts);
+	}
+}
+
+public Action PatchBreakableForklifts(Handle timer)
+{
+	int forklift = -1;
+
+	while ((forklift = FindEntityByClassname(forklift, "prop_physics")) != -1)
+	{
+		char sModelName[PLATFORM_MAX_PATH];
+		GetEntPropString(forklift, Prop_Data, "m_ModelName", sModelName, sizeof(sModelName));
+		ReplaceString(sModelName, sizeof(sModelName), "\\", "/", false);
+		
+		if (StrEqual(sModelName, "models/props/cs_assault/forklift.mdl", false))
+		{
+			SetEntProp(forklift, Prop_Data, "m_iMinHealthDmg", 0);
+			SetEntProp(forklift, Prop_Data, "m_takedamage", 1);
+		}
+	}
+}
+
+public Action UnpatchBreakableForklifts(Handle timer)
+{
+	int forklift = -1;
+
+	while ((forklift = FindEntityByClassname(forklift, "prop_physics")) != -1)
+	{
+		char sModelName[PLATFORM_MAX_PATH];
+		GetEntPropString(forklift, Prop_Data, "m_ModelName", sModelName, sizeof(sModelName));
+		ReplaceString(sModelName, sizeof(sModelName), "\\", "/", false);
+		
+		if (StrEqual(sModelName, "models/props/cs_assault/forklift.mdl", false))
+		{
+			SetEntProp(forklift, Prop_Data, "m_iMinHealthDmg", 400);
+			SetEntProp(forklift, Prop_Data, "m_takedamage", 3);
+		}
+	}
+}
+
+public void ConVarChanged_UnbreakableForklifts(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+{
+	if (GetConVarBool(hUnbreakableForklifts))
+	{
+		CreateTimer(1.0, PatchBreakableForklifts);
+	}
+	else
+	{
+		CreateTimer(1.0, UnpatchBreakableForklifts);
+	}
+}
+
+
+public any Native_UnbreakableForklifts(Handle plugin, int numParams) {
+	return GetConVarBool(hUnbreakableForklifts);
+}
+
+public Action Event_FinaleStart(Event event, const char[] name, bool dontBroadcast)
+{
+	// Hittable damage is only reduced once the finale is triggered
+	int triggerFinale = -1;
+
+	while ((triggerFinale = FindEntityByClassname(triggerFinale, "trigger_finale")) != -1)
+	{
+		int finaleType;
+		finaleType = GetEntProp(triggerFinale, Prop_Data, "m_type");
+		if (finaleType == 1)
+		{
+			bIsGauntletFinale = true;
+		}
 	}
 }
 
@@ -242,11 +309,22 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		}
 		
 		float val = GetConVarFloat(hStandardIncapDamage);
+		float gauntletMulti = GetConVarFloat(hGauntletFinaleMulti);
 		if (GetEntProp(victim, Prop_Send, "m_isIncapacitated") 
 		&& val != -2) // Survivor is Incapped. (Damage)
 		{
 			if (val >= 0.0)
-				damage = val;
+			{
+				// Use standard damage on gauntlet finales
+				if (bIsGauntletFinale)
+				{
+					damage = val * 4.0 * gauntletMulti;
+				}
+				else
+				{
+					damage = val;
+				}
+			}
 
 			else return Plugin_Continue;
 		}
@@ -257,18 +335,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			|| StrContains(sModelName, "police_car", false) != -1
 			|| StrContains(sModelName, "utility_truck", false) != -1)
 			{
-				if (bIsBridge)
-				{
-					damage = 4.0*GetConVarFloat(hBridgeCarDamage);
-				}
-				else if (bIsStadium)
-				{
-					damage = 4.0*GetConVarFloat(hStadiumCarDamage);
-				}
-				else
-				{
-					damage = GetConVarFloat(hCarStandingDamage);
-				}
+				damage = GetConVarFloat(hCarStandingDamage);
 			}
 			else if (StrContains(sModelName, "dumpster", false) != -1)
 			{
@@ -341,17 +408,23 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 			}
 			else if (StrEqual(sModelName, "models/sblitz/field_equipment_cart.mdl", false))
 			{
-				damage = 4.0*GetConVarFloat(hStadiumCarDamage);
+				damage = GetConVarFloat(hBaggageStandingDamage);
+			}
+			
+			// Use standard damage on gauntlet finales
+			if (bIsGauntletFinale)
+			{
+				damage = damage * 4.0 * gauntletMulti;
 			}
 		}
-			
+		
 		if (interval >= 0.0)
 		{
 			fOverkill[victim][inflictor] = GetGameTime() + interval;	//standardise them bitchin over-hits
 		}
 		inflictor = 0; // We have to set set the inflictor to 0 or else it will sometimes just refuse to apply damage.
 
-		if (GetConVarBool(hOverHitDebug)) PrintToChatAll("[l4d2_hittable_control]: \x03%N \x01was hit by \x04%s \x01for \x03%i \x01damage", victim, sModelName, RoundToNearest(damage));
+		if (GetConVarBool(hOverHitDebug)) PrintToChatAll("[l4d2_hittable_control]: \x03%N \x01was hit by \x04%s \x01for \x03%i \x01damage. Gauntlet: %b", victim, sModelName, RoundToNearest(damage), bIsGauntletFinale);
 
 		return Plugin_Changed;
 	}

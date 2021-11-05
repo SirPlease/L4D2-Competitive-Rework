@@ -8,7 +8,7 @@ public Plugin myinfo =
 {
 	name = "Byebye Door",
 	description = "Time to kill Saferoom Doors.",
-	author = "Sir", //update syntax, little fix A1m`
+	author = "Sir",
 	version = "1.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };

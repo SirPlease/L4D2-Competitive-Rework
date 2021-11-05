@@ -7,39 +7,40 @@
 #define TEAM_SURVIVOR 2
 #define TEAM_INFECTED 3
 
-#define BOOMER_ZOMBIE_CLASS  2
-#define SPITTER_ZOMBIE_CLASS 4
+#define BOOMER_ZOMBIE_CLASS		2
+#define SPITTER_ZOMBIE_CLASS	4
 
-bool 
-	bLateLoad,
-	IsEnabled;
+bool
+	g_bLateLoad = false,
+	g_bIsEnabled = false;
 
-ConVar 
-	CbashKills;
+ConVar
+	g_hNoBashKills = null;
 
 public Plugin myinfo =
 {
 	name = "L4D2 Bash Kills",
 	author = "Jahze, A1m`",
-	version = "1.3",
+	version = "1.4",
 	description = "Stop special infected getting bashed to death",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
-public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErrMax)
 {
-	bLateLoad = late;
+	g_bLateLoad = bLate;
 	return APLRes_Success;
 }
 
 public void OnPluginStart()
 {
-	CbashKills = CreateConVar("l4d_no_bash_kills", "1", "Prevent special infected from getting bashed to death", _, true, 0.0, true, 1.0);
-	IsEnabled = CbashKills.BoolValue;
-	CbashKills.AddChangeHook(BashKills_Changed);
+	g_hNoBashKills = CreateConVar("l4d_no_bash_kills", "1", "Prevent special infected from getting bashed to death", _, true, 0.0, true, 1.0);
 
-	if (bLateLoad) {
-		for(int i = 1; i <= MaxClients; i++) {
+	g_bIsEnabled = g_hNoBashKills.BoolValue;
+	g_hNoBashKills.AddChangeHook(BashKills_Changed);
+
+	if (g_bLateLoad) {
+		for (int i = 1; i <= MaxClients; i++) {
 			if (IsClientInGame(i)) {
 				OnClientPutInServer(i);
 			}
@@ -47,49 +48,52 @@ public void OnPluginStart()
 	}
 }
 
-public void BashKills_Changed(ConVar Cvar, const char[] oldValue, const char[] newValue)
+public void BashKills_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
-	IsEnabled = Cvar.BoolValue;
+	g_bIsEnabled = hConVar.BoolValue;
 }
 
-public void OnClientPutInServer(int client)
+public void OnClientPutInServer(int iClient)
 {
-	SDKHook(client, SDKHook_OnTakeDamage, OnHurt);
+	SDKHook(iClient, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
 }
 
-public Action OnHurt(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& weapon, float damageForce[3], float damagePosition[3])
+public Action Hook_OnTakeDamage(int iVictim, int& iAttacker, int& iInflictor, float& fDamage, \
+									int& iDamageType, int& iWeapon, float fDamageForce[3], float fDamagePosition[3])
 {
-	if (!IsEnabled) {
+	if (!g_bIsEnabled) {
 		return Plugin_Continue;
 	}
-	
-	if (damagetype == DMG_CLUB && weapon == -1 && damage == 250.0) {
-		if (IsSurvivor(attacker) && IsValidSI(victim)) {
+
+	if (iDamageType == DMG_CLUB && iWeapon == -1 && fDamage == 250.0) {
+		if (IsSurvivor(iAttacker) && IsValidSI(iVictim)) {
 			return Plugin_Handled;
 		}
 	}
+	
 	return Plugin_Continue;
 }
 
-bool IsValidSI(int client)
+bool IsValidSI(int iClient)
 {
-	if (GetClientTeam(client) == TEAM_INFECTED && IsPlayerAlive(client)) {
-		int playerClass = GetEntProp(client, Prop_Send, "m_zombieClass");
+	if (GetClientTeam(iClient) == TEAM_INFECTED && IsPlayerAlive(iClient)) {
+		int iZClass = GetEntProp(iClient, Prop_Send, "m_zombieClass");
 		// Allow boomer and spitter m2 kills
-		if (playerClass == BOOMER_ZOMBIE_CLASS || playerClass == SPITTER_ZOMBIE_CLASS) {
+		if (iZClass == BOOMER_ZOMBIE_CLASS || iZClass == SPITTER_ZOMBIE_CLASS) {
 			return false;
 		}
+		
 		return true;
 	}
 
 	return false;
 }
 
-bool IsSurvivor(int client)
+bool IsSurvivor(int iClient)
 {
-	return (client > 0 
-	&& client <= MaxClients 
-	&& IsClientInGame(client) 
-	&& GetClientTeam(client) == TEAM_SURVIVOR 
-	/*&& IsPlayerAlive(client)*/);
+	return (iClient > 0
+		&& iClient <= MaxClients
+		&& IsClientInGame(iClient)
+		&& GetClientTeam(iClient) == TEAM_SURVIVOR
+		/*&& IsPlayerAlive(iClient)*/);
 }

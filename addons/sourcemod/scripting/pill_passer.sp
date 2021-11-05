@@ -4,56 +4,75 @@
 #include <sourcemod>
 #include <sdktools>
 #define L4D2UTIL_STOCKS_ONLY
-#include <l4d2util> //#include <weapons>
+#include <l4d2util>
 
-#define TEAM_SURVIVOR 2
-#define MAX_DIST_SQUARED 75076 /* 274^2 */
+#define ENTITY_MAX_NAME_LENGTH	64
+#define MAX_DIST_SQUARED		75076	// 274^2
+#define USE_GIVEPLAYERITEM		0		// Works correctly only in the latest version of sourcemod 1.11 (GivePlayerItem sourcemod native)
 
 public Plugin myinfo =
 {
 	name = "Easier Pill Passer",
-	author = "CanadaRox",
+	author = "CanadaRox, A1m`",
 	description = "Lets players pass pills and adrenaline with +reload when they are holding one of those items",
-	version = "0.3", //Update syntax A1m`
+	version = "1.4",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon, int &subtype, int &cmdnum, int &tickcount, int &seed, int mouse[2])
+public Action OnPlayerRunCmd(int iClient, int &iButtons, int &iImpulse, float fVel[3], float fAngles[3], \
+									int &iWeapon, int &iSubtype, int &iCmdNum, int &iTickCount, int &iSeed, int iMouse[2])
 {
-	if (buttons & IN_RELOAD && !(buttons & IN_USE)) {
-		char weapon_name[64];
-		GetClientWeapon(client, weapon_name, sizeof(weapon_name));
-		WeaponId wep = WeaponNameToId(weapon_name);
-		if (wep == WEPID_PAIN_PILLS || wep == WEPID_ADRENALINE) {
-			int target = GetClientAimTarget(client);
-			if (target != -1 && GetClientTeam(target) == TEAM_SURVIVOR && GetPlayerWeaponSlot(target, 4) == -1 && !IsPlayerIncap(target)) {
-				float clientOrigin[3], targetOrigin[3];
-				GetClientAbsOrigin(client, clientOrigin);
-				GetClientAbsOrigin(target, targetOrigin);
-				if (GetVectorDistance(clientOrigin, targetOrigin, true) < MAX_DIST_SQUARED) {
-					AcceptEntityInput(GetPlayerWeaponSlot(client, 4), "Kill");
-					int ent = CreateEntityByName(WeaponNames[wep]);
-					DispatchSpawn(ent);
-					EquipPlayerWeapon(target, ent);
+	if (iButtons & IN_RELOAD && !(iButtons & IN_USE)) {
+		char sWeaponName[ENTITY_MAX_NAME_LENGTH];
+		GetClientWeapon(iClient, sWeaponName, sizeof(sWeaponName));
+		
+		WeaponId iWeapId = WeaponNameToId(sWeaponName);
+		if (iWeapId == WEPID_PAIN_PILLS || iWeapId == WEPID_ADRENALINE) {
+			int iTarget = GetClientAimTarget(iClient, true);
+			
+			if (iTarget > 0 && GetClientTeam(iTarget) == view_as<int>(L4D2Team_Survivor) && !IsPlayerIncap(iTarget)) {
+				int iTargetWeaponIndex = GetPlayerWeaponSlot(iTarget, view_as<int>(L4D2WeaponSlot_LightHealthItem));
+				
+				if (iTargetWeaponIndex == -1) {
+					float fClientOrigin[3], fTargetOrigin[3];
+					GetClientAbsOrigin(iClient, fClientOrigin);
+					GetClientAbsOrigin(iTarget, fTargetOrigin);
 					
-					CallEvent(client, target, view_as<int>(wep), ent);
+					if (GetVectorDistance(fClientOrigin, fTargetOrigin, true) < MAX_DIST_SQUARED) {
+						// Remove item
+						int iGiverWeaponIndex = GetPlayerWeaponSlot(iClient, view_as<int>(L4D2WeaponSlot_LightHealthItem));
+						RemovePlayerItem(iClient, iGiverWeaponIndex);
+						
+						#if (SOURCEMOD_V_MINOR == 11) || USE_GIVEPLAYERITEM
+							RemoveEntity(iGiverWeaponIndex);
+							iGiverWeaponIndex = GivePlayerItem(iClient, sWeaponName); // Fixed only in the latest version of sourcemod 1.11
+							
+							// If the entity was not given to the player
+							if (iGiverWeaponIndex < 1) {
+								return Plugin_Continue;
+							}
+						#else
+							EquipPlayerWeapon(iTarget, iGiverWeaponIndex);
+						#endif
+						
+						// Call Event
+						Handle hFakeEvent = CreateEvent("weapon_given");
+						SetEventInt(hFakeEvent, "userid", GetClientUserId(iTarget));
+						SetEventInt(hFakeEvent, "giver", GetClientUserId(iClient));
+						SetEventInt(hFakeEvent, "weapon", view_as<int>(iWeapId));
+						SetEventInt(hFakeEvent, "weaponentid", iGiverWeaponIndex);
+						
+						FireEvent(hFakeEvent);
+					}
 				}
 			}
 		}
 	}
+
+	return Plugin_Continue;
 }
 
-void CallEvent(int client, int target, int wid, int weaponIndex)
+bool IsPlayerIncap(int iClient)
 {
-	Handle hFakeEvent = CreateEvent("weapon_given");
-	SetEventInt(hFakeEvent, "userid", GetClientUserId(target));
-	SetEventInt(hFakeEvent, "giver", GetClientUserId(client));
-	SetEventInt(hFakeEvent, "weapon", wid);
-	SetEventInt(hFakeEvent, "weaponentid", weaponIndex);
-	FireEvent(hFakeEvent);
-}
-
-bool IsPlayerIncap(int client)
-{
-	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isIncapacitated"));
+	return (GetEntProp(iClient, Prop_Send, "m_isIncapacitated", 1) == 1);
 }

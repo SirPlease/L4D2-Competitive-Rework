@@ -22,12 +22,11 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <sdktools>
 #include <left4dhooks>
 #include <l4d2util_stocks>
 
-#define SURVIVOR_RUNSPEED		220.0
-#define SURVIVOR_WATERSPEED_VS	170.0
-
+#define SURVIVOR_RUNSPEED 220.0
 #define TEAM_SURVIVORS 2
 #define TEAM_INFECTED 3
 #define Z_TANK 8
@@ -52,22 +51,31 @@ ConVar
 	hCvarSdInwaterSurvivor,
 	hCvarSdInwaterDuringTank,
 	hCvarSurvivorLimpspeed,
-	hCvarTankSpeedVS;
+	hCvarTankSpeedVS,
+	hCvarCrouchSpeedMod,
+	hCvarJockeyMinMoundedSpeed;
+
+int
+	iSurvLimpHealth;
 
 float
 	fTankWaterSpeed,
 	fSurvWaterSpeed,
 	fSurvWaterSpeedDuringTank,
-	fTankRunSpeed;
+	fTankRunSpeed,
+	fCrouchSpeedMod,
+	fJockeyMinMountedSpeed;
 
 bool
-	tankInPlay = false;
+	tankInPlay = false,
+	bFoundCrouchTrigger = false,
+	bPlayerInCrouchTrigger[MAXPLAYERS + 1];
 
 public Plugin myinfo =
 {
 	name = "L4D2 Slowdown Control",
-	author = "Visor, Sir, darkid, Forgetest, A1m`",
-	version = "2.6.6",
+	author = "Visor, Sir, darkid, Forgetest, A1m`, Derpduck",
+	version = "2.7.1",
 	description = "Manages the water/gunfire slowdown for both teams",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
@@ -79,7 +87,8 @@ public void OnPluginStart()
 	hCvarSdInwaterTank = CreateConVar("l4d2_slowdown_water_tank", "-1", "Maximum tank speed in the water (-1: ignore setting; 0: default; 210: default Tank Speed)", _, true, -1.0);
 	hCvarSdInwaterSurvivor = CreateConVar("l4d2_slowdown_water_survivors", "-1", "Maximum survivor speed in the water outside of Tank fights (-1: ignore setting; 0: default; 220: default Survivor speed)", _, true, -1.0);
 	hCvarSdInwaterDuringTank = CreateConVar("l4d2_slowdown_water_survivors_during_tank", "0", "Maximum survivor speed in the water during Tank fights (0: ignore setting; 220: default Survivor speed)", _, true, 0.0);
-
+	hCvarCrouchSpeedMod = CreateConVar("l4d2_slowdown_crouch_speed_mod", "1.0", "Modifier of player crouch speed when inside a designated trigger, 75 is the defualt for everyone (1: default speed)", _, true, 0.0);
+	
 	hCvarSdPistolMod = CreateConVar("l4d2_slowdown_pistol_percent", "0.0", "Pistols cause this much slowdown * l4d2_slowdown_gunfire at maximum damage.");
 	hCvarSdDeagleMod = CreateConVar("l4d2_slowdown_deagle_percent", "0.1", "Deagles cause this much slowdown * l4d2_slowdown_gunfire at maximum damage.");
 	hCvarSdUziMod = CreateConVar("l4d2_slowdown_uzi_percent", "0.8", "Unsilenced uzis cause this much slowdown * l4d2_slowdown_gunfire at maximum damage.");
@@ -96,11 +105,15 @@ public void OnPluginStart()
 
 	hCvarSurvivorLimpspeed = FindConVar("survivor_limp_health");
 	hCvarTankSpeedVS = FindConVar("z_tank_speed_vs");
+	hCvarJockeyMinMoundedSpeed = FindConVar("z_jockey_min_mounted_speed");
 	
 	hCvarSdInwaterTank.AddChangeHook(OnConVarChanged);
 	hCvarSdInwaterSurvivor.AddChangeHook(OnConVarChanged);
 	hCvarSdInwaterDuringTank.AddChangeHook(OnConVarChanged);
+	hCvarSurvivorLimpspeed.AddChangeHook(OnConVarChanged);
 	hCvarTankSpeedVS.AddChangeHook(OnConVarChanged);
+	hCvarJockeyMinMoundedSpeed.AddChangeHook(OnConVarChanged);
+	hCvarCrouchSpeedMod.AddChangeHook(OnConVarChanged);
 
 	HookEvent("tank_spawn", TankSpawn, EventHookMode_PostNoCopy);
 	HookEvent("round_start", RoundStart, EventHookMode_PostNoCopy);
@@ -123,7 +136,10 @@ void CvarsToType()
 	fTankWaterSpeed = hCvarSdInwaterTank.FloatValue;
 	fSurvWaterSpeed = hCvarSdInwaterSurvivor.FloatValue;
 	fSurvWaterSpeedDuringTank = hCvarSdInwaterDuringTank.FloatValue;
+	iSurvLimpHealth = hCvarSurvivorLimpspeed.IntValue;
 	fTankRunSpeed = hCvarTankSpeedVS.FloatValue;
+	fCrouchSpeedMod = hCvarCrouchSpeedMod.FloatValue;
+	fJockeyMinMountedSpeed = hCvarJockeyMinMoundedSpeed.FloatValue;
 }
 
 public Action TankSpawn(Event event, const char[] name, bool dontBroadcast) 
@@ -158,6 +174,46 @@ public Action Timer_CheckTank(Handle timer)
 public Action RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	tankInPlay = false;
+	HookCrouchTriggers();
+}
+
+// Hook trigger_multiple entities that are named "l4d2_slowdown_crouch_speed"
+public void HookCrouchTriggers()
+{
+	bFoundCrouchTrigger = false;
+
+	// Reset array
+	for (int i = 1; i <= MaxClients; i++) {
+		bPlayerInCrouchTrigger[i] = false;
+	}
+
+	int iEntity = -1;
+	char targetname[128];
+
+	while ((iEntity = FindEntityByClassname(iEntity, "trigger_multiple")) != -1) {
+		GetEntPropString(iEntity, Prop_Data, "m_iName", targetname, sizeof(targetname));
+
+		if (StrEqual(targetname, "l4d2_slowdown_crouch_speed", false)) {
+			HookSingleEntityOutput(iEntity, "OnStartTouch", CrouchSpeedStartTouch);
+			HookSingleEntityOutput(iEntity, "OnEndTouch", CrouchSpeedEndTouch);
+
+			bFoundCrouchTrigger = true;
+		}
+	}
+}
+
+public void CrouchSpeedStartTouch(const char[] output, int caller, int activator, float delay)
+{
+	if (0 < activator <= MaxClients && IsClientInGame(activator)) {
+		bPlayerInCrouchTrigger[activator] = true;
+	}
+}
+
+public void CrouchSpeedEndTouch(const char[] output, int caller, int activator, float delay)
+{
+	if (0 < activator <= MaxClients && IsClientInGame(activator)) {
+		bPlayerInCrouchTrigger[activator] = false;
+	}
 }
 
 /**
@@ -196,44 +252,67 @@ public Action L4D_OnGetRunTopSpeed(int client, float &retVal)
 		return Plugin_Continue;
 	}
 	
-	bool bInWater = (GetEntityFlags(client) & FL_INWATER) ? true : false;
+	if (~GetEntityFlags(client) & FL_INWATER) {
+		return Plugin_Continue;
+	}
 	
 	switch (GetClientTeam(client)) {
 		case TEAM_SURVIVORS: {
-			// Adrenaline = Don't care, don't mess with it.
-			// Limping = 260 speed (both in water and on the ground)
-			// Healthy = 260 speed (both in water and on the ground)
-			bool bAdrenaline = GetEntProp(client, Prop_Send, "m_bAdrenalineActive") ? true : false;
-			if (bAdrenaline) {
+			// Speed of tongue victim isn't affected by water,
+			// only decided by ConVar "tongue_victim_max_speed".
+			if (GetEntPropEnt(client, Prop_Send, "m_tongueOwner") != -1) {
 				return Plugin_Continue;
 			}
 			
-			// Only bother if survivor is in water and healthy
-			if (bInWater && !IsLimping(client)) {
-				// speed of survivors in water during Tank fights
-				if (tankInPlay) {
-					if (fSurvWaterSpeedDuringTank == 0.0) {
-						return Plugin_Continue; // Vanilla YEEEEEEEEEEEEEEEs
-					} else {
-						retVal = fSurvWaterSpeedDuringTank;
-						return Plugin_Handled;
-					}
-				} else if (fSurvWaterSpeed != -1.0) { // speed of survivors in water outside of Tank fights
-					// slowdown off
-					if (fSurvWaterSpeed == 0.0) {
-						retVal = SURVIVOR_RUNSPEED;
-						return Plugin_Handled;
-					} else { // specific speed
-						retVal = fSurvWaterSpeed;
-						return Plugin_Handled;
-					}
+			float fHealth = L4D_GetTempHealth(client) + GetClientHealth(client);
+			
+			// Jockey victim gets slowdown by water, while we're not slowing down them.
+			if (GetEntPropEnt(client, Prop_Send, "m_jockeyAttacker") != -1) {
+				// Additionally check for g_pGameRules->m_bWaterSlowdownEnabled?
+				// Perhaps unnecessary due to what's going to be done.
+				
+				if ((tankInPlay && fSurvWaterSpeedDuringTank != 0.0) || fSurvWaterSpeed != -1.0) {
+					// TODO: As a reminder when we decide to normalize speed of jockeyed survivors
+					// Speed = 220.0 * max(HP Rate, z_jockey_min_mounted_speed)
+					float fRate = fHealth / GetEntProp(client, Prop_Send, "m_iMaxHealth");
+					retVal = SURVIVOR_RUNSPEED * (fRate > fJockeyMinMountedSpeed ? fRate : fJockeyMinMountedSpeed);
+					return Plugin_Handled;
+				}
+				
+				return Plugin_Continue;
+			}
+			
+			// Adrenaline = Don't care, don't mess with it.
+			// Limping = 260 speed (both in water and on the ground)
+			// Healthy = 260 speed (both in water and on the ground)
+			bool bAdrenaline = !!GetEntProp(client, Prop_Send, "m_bAdrenalineActive");
+			if (bAdrenaline || RoundToFloor(fHealth) < iSurvLimpHealth) {
+				return Plugin_Continue;
+			}
+			
+			// speed of survivors in water during Tank fights
+			if (tankInPlay) {
+				if (fSurvWaterSpeedDuringTank == 0.0) {
+					return Plugin_Continue; // Vanilla YEEEEEEEEEEEEEEEs
+				} else {
+					retVal = fSurvWaterSpeedDuringTank;
+					return Plugin_Handled;
+				}
+			} else if (fSurvWaterSpeed != -1.0) { // speed of survivors in water outside of Tank fights
+				// slowdown off
+				if (fSurvWaterSpeed == 0.0) {
+					retVal = SURVIVOR_RUNSPEED;
+					return Plugin_Handled;
+				} else { // specific speed
+					retVal = fSurvWaterSpeed;
+					return Plugin_Handled;
 				}
 			}
 		}
 		case TEAM_INFECTED: {
 			if (IsTank(client)) {
 				// Only bother the actual speed if player is a tank moving in water
-				if (bInWater && fTankWaterSpeed != -1.0) {
+				if (fTankWaterSpeed != -1.0) {
 					// slowdown off
 					if (fTankWaterSpeed == 0.0) {
 						retVal = fTankRunSpeed;
@@ -247,6 +326,27 @@ public Action L4D_OnGetRunTopSpeed(int client, float &retVal)
 		}
 	}
 	
+	return Plugin_Continue;
+}
+
+/**
+ *
+ * Slowdown from crouching: All players
+ *
+**/
+public Action L4D_OnGetCrouchTopSpeed(int client, float &retVal)
+{
+	if (fCrouchSpeedMod == 1.0 || !bFoundCrouchTrigger || !IsClientInGame(client)) {
+		return Plugin_Continue;
+	}
+
+	if (bPlayerInCrouchTrigger[client]) {
+		if (GetEntityFlags(client) & FL_ONGROUND) {
+			retVal *= fCrouchSpeedMod; // 75 * modifier
+			return Plugin_Handled;
+		}
+	}
+
 	return Plugin_Continue;
 }
 
@@ -370,21 +470,6 @@ bool IsInfected(int client)
 bool IsTank(int client)
 {
 	return (GetEntProp(client, Prop_Send, "m_zombieClass") == Z_TANK);
-}
-
-bool IsLimping(int client)
-{
-	// Assume Clientchecks and the like have been done already
-	int PermHealth = GetClientHealth(client);
-
-	float buffer = GetEntPropFloat(client, Prop_Send, "m_healthBuffer");
-	float bleedTime = GetGameTime() - GetEntPropFloat(client, Prop_Send, "m_healthBufferTime");
-	float decay = GetConVarFloat(FindConVar("pain_pills_decay_rate"));
-	
-	float fCalculations = buffer - (bleedTime * decay);
-	float TempHealth = L4D2Util_ClampFloat(fCalculations, 0.0, 100.0); // buffer may be negative, also if pills bleed out then bleedTime may be too large.
-
-	return RoundToFloor(PermHealth + TempHealth) < hCvarSurvivorLimpspeed.IntValue;
 }
 
 float fScaleFloat(float inc, float low, float high)

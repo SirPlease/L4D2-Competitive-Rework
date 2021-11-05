@@ -11,7 +11,7 @@ ConVar hCommonLimit;
 public Plugin myinfo = 
 {
 	name = "Director-scripted common limit blocker",
-	author = "Tabun", //Update syntax A1m`
+	author = "Tabun",
 	description = "Prevents director scripted overrides of z_common_limit. Only affects scripted common limits higher than the cvar.",
 	version = "0.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
@@ -27,7 +27,7 @@ public void OnPluginStart()
 }
 
 public void Cvar_CommonLimitChange(ConVar hCvar, const char[] oldValue, const char[] newValue)
-{ 
+{
 	iCommonLimit = hCommonLimit.IntValue;
 }
 

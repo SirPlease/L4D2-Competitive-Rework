@@ -6,7 +6,7 @@
 public Plugin myinfo =
 {
 	name = "Mathack Block",
-	author = "Sir, Visor", //Update syntax add support sm1.11 - A1m`
+	author = "Sir, Visor",
 	description = "Kicks out clients who are potentially attempting to enable mathack",
 	version = "1.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
