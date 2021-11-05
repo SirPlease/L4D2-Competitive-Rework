@@ -11,7 +11,7 @@
 #include <l4d2_boss_percents>
 #include <witch_and_tankifier>
 
-#define PLUGIN_VERSION "3.2.5"
+#define PLUGIN_VERSION "3.2.6"
 
 public Plugin myinfo =
 {
@@ -142,14 +142,14 @@ public Action VoteBossCmd(int client, int args)
 	// Check if percent is within limits
 	if (bv_bTank && !IsTankPercentValid(bv_iTank))
 	{
+		bv_bTank = false;
 		CReplyToCommand(client, "{blue}<{green}BossVote{blue}>{default} Tank percentage is {blue}banned{default}.");
-		return;
 	}
 	
-	if (bv_bWitch && !IsWitchPercentValid(bv_iWitch))
+	if (bv_bWitch && !IsWitchPercentValid(bv_iWitch, true))
 	{
+		bv_bWitch = false;
 		CReplyToCommand(client, "{blue}<{green}BossVote{blue}>{default} Witch percentage is {blue}banned{default}.");
-		return;
 	}
 	
 	char bv_voteTitle[64];
@@ -258,17 +258,17 @@ public void BossVoteResultHandler(Handle vote, int num_votes, int num_clients, c
 					DisplayBuiltinVotePass(vote, "Setting Boss Disabled...");
 				}
 				
-				SetTankPercent(bv_iTank);
 				SetWitchPercent(bv_iWitch);
-				
-				if (bv_iTank == 0)
-				{
-					SetTankDisabled(true);
-				}
+				SetTankPercent(bv_iTank);
 				
 				if (bv_iWitch == 0)
 				{
 					SetWitchDisabled(true);
+				}
+				
+				if (bv_iTank == 0)
+				{
+					SetTankDisabled(true);
 				}
 				
 				// Update our shiz yo
