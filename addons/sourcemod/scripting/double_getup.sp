@@ -36,7 +36,7 @@
 
 #include <sourcemod>
 #include <sdkhooks>
-#define L4D2UTIL_STOCKS_ONLY
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util> // Needed for IdentifySurvivor calls. I use survivor indices rather than client indices in case someone leaves while incapped (with a pending getup).
 #include <left4dhooks> // Needed for forcing players to have a getup animation.
 
@@ -77,16 +77,16 @@ bool
 	lateLoad;
 
 int
-	pendingGetups[view_as<int>(SurvivorCharacter_Size)] = {0, ...}, // This is used to track the number of pending getups. The collective opinion is that you should have at most 1.
-	interrupt[view_as<int>(SurvivorCharacter_Size)] = {false, ...}, // If the player was getting up, and that getup is interrupted. This alows us to break out of the GetupTimer loop.
-	currentSequence[view_as<int>(SurvivorCharacter_Size)] = {0, ...}; // Kept to track when a player changes sequences, i.e. changes animations.
+	pendingGetups[SurvivorCharacter_Size] = {0, ...}, // This is used to track the number of pending getups. The collective opinion is that you should have at most 1.
+	interrupt[SurvivorCharacter_Size] = {false, ...}, // If the player was getting up, and that getup is interrupted. This alows us to break out of the GetupTimer loop.
+	currentSequence[SurvivorCharacter_Size] = {0, ...}; // Kept to track when a player changes sequences, i.e. changes animations.
 
 static const int
 	// Nick, Rochelle, Coach, Ellis, Bill, Zoey, Louis, Francis //correct order
-	tankFlyAnim[view_as<int>(SurvivorCharacter_Size)] = {628, 636, 628, 633, 536, 545, 536, 539}; //correct order
+	tankFlyAnim[SurvivorCharacter_Size] = {628, 636, 628, 633, 536, 545, 536, 539}; //correct order
 
 ePlayerState
-	playerState[view_as<int>(SurvivorCharacter_Size)] = {eUPRIGHT, ...}; // Since there are multiple sequences for each animation, this acts as a simpler way to track a player's state.
+	playerState[SurvivorCharacter_Size] = {eUPRIGHT, ...}; // Since there are multiple sequences for each animation, this acts as a simpler way to track a player's state.
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -132,7 +132,7 @@ public void OnClientPostAdminCheck(int client)
 
 public void round_start(Event hEvent, const char[] name, bool dontBroadcast)
 {
-	for (int survivor = 0; survivor < view_as<int>(SurvivorCharacter_Size); survivor++) {
+	for (int survivor = 0; survivor < SurvivorCharacter_Size; survivor++) {
 		playerState[survivor] = eUPRIGHT;
 	}
 }
@@ -141,7 +141,7 @@ public void round_start(Event hEvent, const char[] name, bool dontBroadcast)
 public void smoker_land(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("victim"));
-	SurvivorCharacter survivor = IdentifySurvivor(client);
+	int survivor = IdentifySurvivor(client);
 	if (survivor == SurvivorCharacter_Invalid) {
 		return;
 	}
@@ -154,7 +154,7 @@ public void smoker_land(Event hEvent, const char[] name, bool dontBroadcast)
 public void jockey_land(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("victim"));
-	SurvivorCharacter survivor = IdentifySurvivor(client);
+	int survivor = IdentifySurvivor(client);
 	if (survivor == SurvivorCharacter_Invalid) {
 		return;
 	}
@@ -165,7 +165,7 @@ public void jockey_land(Event hEvent, const char[] name, bool dontBroadcast)
 public void jockey_clear(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("victim"));
-	SurvivorCharacter survivor = IdentifySurvivor(client);
+	int survivor = IdentifySurvivor(client);
 	if (survivor == SurvivorCharacter_Invalid) {
 		return;
 	}
@@ -179,7 +179,7 @@ public void jockey_clear(Event hEvent, const char[] name, bool dontBroadcast)
 public void smoker_clear(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("victim"));
-	SurvivorCharacter survivor = IdentifySurvivor(client);
+	int survivor = IdentifySurvivor(client);
 	if (survivor == SurvivorCharacter_Invalid) {
 		return;
 	}
@@ -196,7 +196,7 @@ public void smoker_clear(Event hEvent, const char[] name, bool dontBroadcast)
 public void hunter_clear(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("victim"));
-	SurvivorCharacter survivor = IdentifySurvivor(client);
+	int survivor = IdentifySurvivor(client);
 	if (survivor == SurvivorCharacter_Invalid) {
 		return;
 	}
@@ -218,7 +218,7 @@ public void hunter_clear(Event hEvent, const char[] name, bool dontBroadcast)
 // If a player is impacted during a charged, they should have 1 getup.
 public void multi_charge(Event hEvent, const char[] name, bool dontBroadcast)
 {
-	SurvivorCharacter survivor = IdentifySurvivor(GetClientOfUserId(hEvent.GetInt("victim")));
+	int survivor = IdentifySurvivor(GetClientOfUserId(hEvent.GetInt("victim")));
 	if (survivor == SurvivorCharacter_Invalid) {
 		return;
 	}
@@ -233,7 +233,7 @@ public void multi_charge(Event hEvent, const char[] name, bool dontBroadcast)
 // If a player is cleared from a charger, they should have 1 getup.
 public void charger_land_instant(Event hEvent, const char[] name, bool dontBroadcast)
 {
-	SurvivorCharacter survivor = IdentifySurvivor(GetClientOfUserId(hEvent.GetInt("victim")));
+	int survivor = IdentifySurvivor(GetClientOfUserId(hEvent.GetInt("victim")));
 	if (survivor == SurvivorCharacter_Invalid) {
 		return;
 	}
@@ -249,7 +249,7 @@ public void charger_land_instant(Event hEvent, const char[] name, bool dontBroad
 // This event defines when a player transitions from being insta-charged to being pummeled.
 public void charger_land(Event hEvent, const char[] name, bool dontBroadcast)
 {
-	SurvivorCharacter survivor = IdentifySurvivor(GetClientOfUserId(hEvent.GetInt("victim")));
+	int survivor = IdentifySurvivor(GetClientOfUserId(hEvent.GetInt("victim")));
 	if (survivor == SurvivorCharacter_Invalid) {
 		return;
 	}
@@ -265,7 +265,7 @@ public void charger_land(Event hEvent, const char[] name, bool dontBroadcast)
 public void charger_clear(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("victim"));
-	SurvivorCharacter survivor = IdentifySurvivor(client);
+	int survivor = IdentifySurvivor(client);
 	if (survivor == SurvivorCharacter_Invalid) {
 		return;
 	}
@@ -281,7 +281,7 @@ public void charger_clear(Event hEvent, const char[] name, bool dontBroadcast)
 // If a player is incapped, mark that down. This will interrupt their animations, if they have any.
 public void player_incap(Event hEvent, const char[] name, bool dontBroadcast)
 {
-	SurvivorCharacter survivor = IdentifySurvivor(GetClientOfUserId(hEvent.GetInt("userid")));
+	int survivor = IdentifySurvivor(GetClientOfUserId(hEvent.GetInt("userid")));
 	if (survivor == SurvivorCharacter_Invalid) {
 		return;
 	}
@@ -298,7 +298,7 @@ public void player_incap(Event hEvent, const char[] name, bool dontBroadcast)
 public void player_revive(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("subject"));
-	SurvivorCharacter survivor = IdentifySurvivor(client);
+	int survivor = IdentifySurvivor(client);
 	if (survivor == SurvivorCharacter_Invalid) {
 		return;
 	}
@@ -310,7 +310,7 @@ public void player_revive(Event hEvent, const char[] name, bool dontBroadcast)
 // A catch-all to handle damage that is not associated with an event. I use this instead of player_hurt because it ignores godframes.
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	SurvivorCharacter survivor = IdentifySurvivor(victim);
+	int survivor = IdentifySurvivor(victim);
 	if (survivor == SurvivorCharacter_Invalid) {
 		return Plugin_Continue;
 	}
@@ -357,7 +357,7 @@ void _TankLandTimer(int client)
 
 public Action TankLandTimer(Handle hTimer, any client)
 {
-	SurvivorCharacter survivor = IdentifySurvivor(client);
+	int survivor = IdentifySurvivor(client);
 	if (survivor == SurvivorCharacter_Invalid) {
 		return Plugin_Stop;
 	}
@@ -369,7 +369,7 @@ public Action TankLandTimer(Handle hTimer, any client)
 		return Plugin_Continue;
 	}
 	
-	int iAnimation = (longerTankPunchGetup.BoolValue) ? view_as<int>(ANIM_SHOVED_BY_TEAMMATE) : view_as<int>(ANIM_TANK_PUNCH_GETUP); // 96 is the tank punch getup.
+	int iAnimation = (longerTankPunchGetup.BoolValue) ? ANIM_SHOVED_BY_TEAMMATE : ANIM_TANK_PUNCH_GETUP; // 96 is the tank punch getup.
 	
 	if (playerState[survivor] == eTANK_PUNCH_JOCKEY_FIX) {
 		// When punched out of a jockey, the player goes into land (fly+1) for an arbitrary number of frames, then enters land (fly+2) for an arbitrary number of frames. Once they're done "landing" we give them the getup they deserve.
@@ -402,7 +402,7 @@ void _GetupTimer(int client)
 
 public Action GetupTimer(Handle hTimer, any client)
 {
-	SurvivorCharacter survivor = IdentifySurvivor(client);
+	int survivor = IdentifySurvivor(client);
 	if (survivor == SurvivorCharacter_Invalid) {
 		return Plugin_Stop;
 	}
@@ -433,10 +433,10 @@ public Action GetupTimer(Handle hTimer, any client)
 		#endif
 		
 		if (longerTankPunchGetup.BoolValue) {
-			L4D2Direct_DoAnimationEvent(client, view_as<int>(ANIM_SHOVED_BY_TEAMMATE));
+			L4D2Direct_DoAnimationEvent(client, ANIM_SHOVED_BY_TEAMMATE);
 			playerState[survivor] = eCHARGER_GETUP;
 		} else {
-			L4D2Direct_DoAnimationEvent(client, view_as<int>(ANIM_TANK_PUNCH_GETUP)); // 96 is the tank punch getup.
+			L4D2Direct_DoAnimationEvent(client, ANIM_TANK_PUNCH_GETUP); // 96 is the tank punch getup.
 			playerState[survivor] = eTANK_PUNCH_GETUP;
 		}
 		
@@ -464,7 +464,7 @@ void _CancelGetup(int client)
 
 public Action CancelGetup(Handle hTimer, any client)
 {
-	SurvivorCharacter survivor = IdentifySurvivor(client);
+	int survivor = IdentifySurvivor(client);
 	if (survivor == SurvivorCharacter_Invalid) {
 		return Plugin_Stop;
 	}
@@ -485,7 +485,7 @@ public Action CancelGetup(Handle hTimer, any client)
 }
 
 // If the player is in any of the getup states.
-bool isGettingUp(SurvivorCharacter survivor)
+bool isGettingUp(int survivor)
 {
 	switch (playerState[survivor]) {
 		case (eHUNTER_GETUP): {

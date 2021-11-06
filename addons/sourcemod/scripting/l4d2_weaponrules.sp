@@ -25,13 +25,13 @@
 #include <sourcemod>
 #include <sdktools>
 #include <sdktools>
-#define L4D2UTIL_STOCKS_ONLY
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 
 #define DEBUG 0
 
 int
-	g_GlobalWeaponRules[view_as<int>(WEPID_SIZE)] = {-1, ...},
+	g_GlobalWeaponRules[WEPID_SIZE] = {-1, ...},
 	// state tracking for roundstart looping
 	g_bRoundStartHit,
 	g_bConfigsExecuted;
@@ -64,7 +64,7 @@ public Action ResetWeaponRulesCb(int args)
 
 void ResetWeaponRules()
 {
-	for (int i = 0; i < view_as<int>(WEPID_SIZE); i++) {
+	for (int i = 0; i < WEPID_SIZE; i++) {
 		g_GlobalWeaponRules[i] = -1;
 	}
 }
@@ -96,6 +96,8 @@ public Action RoundStartDelay(Handle hTimer)
 	if (g_bConfigsExecuted) {
 		WeaponSearchLoop();
 	}
+
+	return Plugin_Stop;
 }
 
 public Action AddWeaponRuleCb(int args)
@@ -108,20 +110,20 @@ public Action AddWeaponRuleCb(int args)
 	char weaponbuf[64];
 
 	GetCmdArg(1, weaponbuf, sizeof(weaponbuf));
-	WeaponId match = WeaponNameToId2(weaponbuf);
+	int match = WeaponNameToId2(weaponbuf);
 
 	GetCmdArg(2, weaponbuf, sizeof(weaponbuf));
-	WeaponId to = WeaponNameToId2(weaponbuf);
+	int to = WeaponNameToId2(weaponbuf);
 
-	AddWeaponRule(match, view_as<int>(to));
+	AddWeaponRule(match, to);
 
 	return Plugin_Handled;
 }
 
 
-void AddWeaponRule(WeaponId match, int to)
+void AddWeaponRule(int match, int to)
 {
-	if (IsValidWeaponId(match) && (to == -1 || IsValidWeaponId(view_as<WeaponId>(to)))) {
+	if (IsValidWeaponId(match) && (to == -1 || IsValidWeaponId(to))) {
 		g_GlobalWeaponRules[match] = to;
 		#if DEBUG
 		PrintToServer("Added weapon rule: %d to %d", match, to);
@@ -133,9 +135,9 @@ void WeaponSearchLoop()
 {
 	int entcnt = GetEntityCount();
 	for (int ent = 1; ent <= entcnt; ent++) {
-		WeaponId source = IdentifyWeapon(ent);
+		int source = IdentifyWeapon(ent);
 		if (source > WEPID_NONE && g_GlobalWeaponRules[source] != -1) {
-			if (g_GlobalWeaponRules[source] == view_as<int>(WEPID_NONE)) {
+			if (g_GlobalWeaponRules[source] == WEPID_NONE) {
 				AcceptEntityInput(ent, "kill");
 				#if DEBUG
 				PrintToServer("Found Weapon %d, killing", source);
@@ -144,7 +146,7 @@ void WeaponSearchLoop()
 				#if DEBUG
 				PrintToServer("Found Weapon %d, converting to %d", source, g_GlobalWeaponRules[source]);
 				#endif
-				ConvertWeaponSpawn(ent, view_as<WeaponId>(g_GlobalWeaponRules[source]));
+				ConvertWeaponSpawn(ent, g_GlobalWeaponRules[source]);
 			}
 		}
 	}
@@ -152,10 +154,10 @@ void WeaponSearchLoop()
 
 // Tries the given weapon name directly, and upon failure,
 // tries prepending "weapon_" to the given name
-WeaponId WeaponNameToId2(const char[] name)
+int WeaponNameToId2(const char[] name)
 {
-	static char namebuf[64] = "weapon_";
-	WeaponId wepid = WeaponNameToId(name);
+	char namebuf[64] = "weapon_";
+	int wepid = WeaponNameToId(name);
 	
 	if (wepid == WEPID_NONE) {
 		strcopy(namebuf[7], sizeof(namebuf) - 7, name);

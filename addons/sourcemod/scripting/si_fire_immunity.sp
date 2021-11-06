@@ -196,6 +196,8 @@ public Action ExtinguishDelay(Handle hTimer, any iUserID)
 	if (iClient > 0 && IsLiveInfected(iClient)) {
 		ExtinguishFire(iClient);
 	}
+
+	return Plugin_Stop;
 }
 
 bool IsLiveInfected(int iClient)

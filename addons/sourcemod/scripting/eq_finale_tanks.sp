@@ -7,6 +7,7 @@
 
 #define MAP_NAME_MAX_LENGTH 64
 
+#if !defined _l4dh_included
 // from https://developer.valvesoftware.com/wiki/L4D2_Director_Scripts
 enum
 {
@@ -29,6 +30,7 @@ enum
 	FINALE_GAUNTLET_BOSS = 16,
 	FINALE_GAUNTLET_ESCAPE = 17
 };
+#endif
 
 enum TankSpawningScheme
 {

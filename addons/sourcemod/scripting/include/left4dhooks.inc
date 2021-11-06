@@ -169,6 +169,7 @@ public void __pl_l4dh_SetNTVOptional()
 	MarkNativeAsOptional("L4D2_SpawnWitchBride");
 
 	// l4d2weapons.inc
+	MarkNativeAsOptional("L4D_GetWeaponID");
 	MarkNativeAsOptional("L4D2_IsValidWeapon");
 	MarkNativeAsOptional("L4D2_GetIntWeaponAttribute");
 	MarkNativeAsOptional("L4D2_GetFloatWeaponAttribute");
@@ -345,6 +346,30 @@ enum
     STATE_WAITING_FOR_RESCUE,
     STATE_GHOST,
     STATE_INTRO_CAMERA
+}
+
+// From: https://developer.valvesoftware.com/wiki/L4D2_Director_Scripts
+// For the "L4D2_ChangeFinaleStage" and "L4D2_GetCurrentFinaleStage" natives and "L4D2_OnChangeFinaleStage" forward.
+enum
+{
+	FINALE_GAUNTLET_1 = 0,
+	FINALE_HORDE_ATTACK_1 = 1,
+	FINALE_HALFTIME_BOSS = 2,
+	FINALE_GAUNTLET_2 = 3,
+	FINALE_HORDE_ATTACK_2 = 4,
+	FINALE_FINAL_BOSS = 5,
+	FINALE_HORDE_ESCAPE    = 6,
+	FINALE_CUSTOM_PANIC    = 7,
+	FINALE_CUSTOM_TANK    = 8,
+	FINALE_CUSTOM_SCRIPTED    = 9,
+	FINALE_CUSTOM_DELAY    = 10,
+	FINALE_CUSTOM_CLEAROUT = 11,
+	FINALE_GAUNTLET_START = 12,
+	FINALE_GAUNTLET_HORDE = 13,
+	FINALE_GAUNTLET_HORDE_BONUSTIME    = 14,
+	FINALE_GAUNTLET_BOSS_INCOMING = 15,
+	FINALE_GAUNTLET_BOSS = 16,
+	FINALE_GAUNTLET_ESCAPE = 17
 }
 
 
@@ -687,8 +712,107 @@ forward Action L4D_OnGetMissionVSBossSpawning(float &spawn_pos_min, float &spawn
  *
  * @param tank			the player who was a tank
  * @param newtank		a player who has become a new tank
+ *
+ * @noreturn
  */
 forward void L4D_OnReplaceTank(int tank, int newtank);
+
+/**
+ * @brief Called whenever CTankClaw::DoSwing(CTankClaw *this) is invoked
+ * @remarks When a tank is swinging to punch.
+ *
+ * @param tank			tank client index
+ * @param rock			the claw entity index
+ *
+ * @noreturn
+ */
+forward void L4D_TankClaw_DoSwing_Pre(int tank, int claw);
+
+/**
+ * @brief Called whenever CTankClaw::DoSwing(CTankClaw *this) is invoked
+ * @remarks When a tank is swinging to punch.
+ *
+ * @param tank			tank client index
+ * @param rock			the claw entity index
+ *
+ * @noreturn
+ */
+forward void L4D_TankClaw_DoSwing_Post(int tank, int claw);
+
+/**
+ * @brief Called whenever CTankClaw::GroundPound() is invoked
+ * @remarks When hitting the ground (maybe only when hitting an incapped player)
+ * @remarks The forwards "L4D_TankClaw_OnPlayerHit_Pre" and "L4D_TankClaw_OnPlayerHit_Post" trigger after this, allowing identification of victim
+ * @remarks The forwards "L4D_TankClaw_DoSwing_Pre" and "L4D_TankClaw_DoSwing_Post" can trigger after this
+ *
+ * @param tank			tank client index
+ * @param rock			the claw entity index
+ *
+ * @noreturn
+ */
+forward void L4D_TankClaw_GroundPound_Pre(int tank, int claw);
+
+/**
+ * @brief Called whenever CTankClaw::GroundPound() is invoked
+ * @remarks When hitting the ground (maybe only when hitting an incapped player)
+ * @remarks The forwards "L4D_TankClaw_OnPlayerHit_Pre" and "L4D_TankClaw_OnPlayerHit_Post" trigger before this
+ * @remarks The forwards "L4D_TankClaw_DoSwing_Pre" and "L4D_TankClaw_DoSwing_Post" can trigger after this
+ *
+ * @param tank			tank client index
+ * @param rock			the claw entity index
+ *
+ * @noreturn
+ */
+forward void L4D_TankClaw_GroundPound_Post(int tank, int claw);
+
+/**
+ * @brief Called whenever CTankClaw::OnPlayerHit(CTerrorPlayer*, bool) is invoked
+ * @remarks When a tank swings and punches a player.
+ *
+ * @param tank			tank client index
+ * @param rock			the claw entity index
+ *
+ * @return				Plugin_Handled to block the target player from being stumbled, Plugin_Continue otherwise.
+ */
+forward Action L4D_TankClaw_OnPlayerHit_Pre(int tank, int claw, int player);
+
+/**
+ * @brief Called whenever CTankClaw::OnPlayerHit(CTerrorPlayer*, bool) is invoked
+ * @remarks When a tank swings and punches a player.
+ *
+ * @param tank			tank client index
+ * @param rock			the claw entity index
+ * @param player		the player being hit
+ *
+ * @noreturn
+ */
+forward void L4D_TankClaw_OnPlayerHit_Post(int tank, int claw, int player);
+
+/**
+ * @brief Called whenever CTankRock::Detonate() is invoked
+ * @remarks When a tank rock hits something and explodes.
+ *
+ * @param tank			tank client index
+ * @param rock			the rock entity index
+ *
+ * @noreturn
+ */
+forward void L4D_TankRock_OnDetonate(int tank, int rock);
+
+/**
+ * @brief Called whenever CTankRock::OnRelease(Vector const&, QAngle const&, Vector const&, Vector const&) is invoked
+ * @remarks When a tank rock is thrown.
+ *
+ * @param tank			tank client index
+ * @param rock			the rock entity index
+ * @param vecPos		the position vector of the rock
+ * @param vecAng		the angle vector of the rock
+ * @param vecVel		the velocity vector of the rock
+ * @param vecRot		the rotation vector of the rock
+ *
+ * @return				Plugin_Changed to modify the vector values, Plugin_Continue otherwise.
+ */
+forward Action L4D_TankRock_OnRelease(int tank, int rock, float vecPos[3], float vecAng[3], float vecVel[3], float vecRot[3]);
 
 /**
  * @brief Called whenever CDirector::TryOfferingTankBot is invoked
@@ -768,6 +892,22 @@ forward Action L4D2_OnSelectTankAttack(int client, int &sequence);
 forward Action L4D_OnStartMeleeSwing(int client, bool boolean);
 
 /**
+ * @brief Called whenever CTerrorMeleeWeapon::GetDamageForVictim() is invoked
+ * @remarks Called to calculate the damage when a melee weapon hits something
+ * @remarks A headshot on Common Infected will still kill them.
+ * @remarks Could maybe set the weapon attribute "L4D2BoolMeleeWeapon_Decapitates" to avoid killing on headshot. Please report success if you try
+ *
+ * @param client	the client swinging the melee weapon
+ * @param weapon	the weapon entity index
+ * @param victim	the victim being hit by the melee weapon
+ * @param damage	the amount of damage to inflict on the victim
+ *
+ * @return			Plugin_Handled to block, Plugin_Changed to change damage, Plugin_Continue otherwise
+ */
+// L4D2 only.
+forward Action L4D2_MeleeGetDamageForVictim(int client, int weapon, int victim, float &damage);
+
+/**
  * @brief Called whenever CDirectorScriptedEventManager::SendInRescueVehicle(void) is invoked
  * @remarks Called when the last Finale stage is reached and the Rescue means becomes 'available'.
  *			Take note this forward WILL fire upon using the native of the same function.
@@ -779,11 +919,12 @@ forward Action L4D2_OnSendInRescueVehicle();
 
 /**
  * @brief Called whenever CDirectorScriptedEventManager::ChangeFinaleStage is invoked
- *
- * @param FinaleStageType	integer value
  * @remarks Called when the director stage changes
  * @remarks some values for FinaleStageType: 1 - Finale Started; 6 - Rescue Vehicle Ready; 7 - Zombie Hordes; 8 - Tank; 10 - Combat Respite (nothing spawns)
  * @remarks SendInRescueVehicle does not depend on Finale Stage being 6, that only signals endless Hordes/Tanks
+ * @remarks Can use the "FINALE_*" enums (search for them above) for the finaleType value.
+ *
+ * @param FinaleStageType	integer value
  *
  * @return			Plugin_Handled to block, Plugin_Changed to change finaleType, Plugin_Continue otherwise
  */
@@ -959,6 +1100,140 @@ forward Action L4D_OnMaterializeFromGhostPre(int client);
 forward Action L4D_OnMaterializeFromGhost(int client);
 
 /**
+ * @brief Called whenever CPipeBombProjectile::Create is invoked
+ * @remarks Called when a PipeBomb projectile is being created
+ *
+ * @param client			the client who is throwing the grenade (can be 0)
+ * @param vecPos			the position vector of the projectile
+ * @param vecAng			the angle vector of the projectile
+ * @param vecVel			the velocity vector of the projectile
+ * @param vecRot			the rotation vector of the projectile
+ *
+ * @return					Plugin_Handled to block the grenade creation, Plugin_Changed to modify the vector values, Plugin_Continue otherwise.
+ */
+forward Action L4D_PipeBombProjectile_Pre(int client, float vecPos[3], float vecAng[3], float vecVel[3], float vecRot[3]);
+
+/**
+ * @brief Called whenever CPipeBombProjectile::Create is invoked
+ * @remarks Called when a PipeBomb projectile has been created
+ *
+ * @param client			the client who is throwing the grenade (can be 0)
+ * @param projectile		the projectile entity index (can be 0 if blocked in the pre hook)
+ * @param vecPos			the position vector of the projectile
+ * @param vecAng			the angle vector of the projectile
+ * @param vecVel			the velocity vector of the projectile
+ * @param vecRot			the rotation vector of the projectile
+ *
+ * @noreturn
+ */
+forward void L4D_PipeBombProjectile_Post(int client, int projectile, float vecPos[3], float vecAng[3], float vecVel[3], float vecRot[3]);
+
+/**
+ * @brief Called whenever CTerrorPlayer::Extinguish() is invoked
+ * @remarks Called when a player (Survivor or Special Infected) is about to be extinguished
+ *
+ * @param client			the client who is about to be extinguished
+ *
+ * @return					Plugin_Handled to block extinguishing, Plugin_Continue otherwise
+ */
+forward Action L4D_PlayerExtinguish(int client);
+
+/**
+ * @brief Called whenever CBreakableProp::Break() is invoked
+ * @remarks Called when a physics prop is broken
+ * @note When a propanetank explodes, it will create and explode another prop_physics and the attacker entity will be 0. Maybe only L4D2 has this issue.
+ *
+ * @param prop				the physics entity index which broke
+ * @param entity			the client or entity who caused the prop to break (could be 0)
+ *
+ * @noreturn
+ */
+forward void L4D_CBreakableProp_Break(int prop, int entity);
+
+/**
+ * @brief Called whenever CGasCan::Event_Killed() is invoked
+ * @remarks Called when a gascan is broken
+ *
+ * @param gascan			the gascan entity index
+ *
+ * @noreturn
+ */
+ // L4D2 only.
+forward void L4D2_CGasCan_EventKilled(int gascan, int inflictor, int attacker);
+
+/**
+ * @brief Called whenever CGasCan::OnActionComplete() is invoked
+ * @remarks Called when someone completes pouring a gascan into a nozzle
+ *
+ * @param client			the client pouring
+ * @param gascan			the gascan entity index that is being consumed
+ * @param nozzle			the nozzle being poured into
+ *
+ * @return					Plugin_Handled to block adding to Scavenge score (see "Scavenge Score Fix" plugin for more details), Plugin_Continue otherwise
+ */
+ // L4D2 only.
+forward Action L4D2_CGasCan_ActionComplete(int client, int gascan, int nozzle);
+
+/**
+ * @brief Called whenever CInsectSwarm::CanHarm() is invoked
+ * @remarks Called when Spitter Acid is determining if a client or entity can be damaged
+ *
+ * @param acid				the acid entity index causing the damage
+ * @param spitter			the Spitter or client who created the acid (can be 0)
+ * @param entity			the client or entity index being checked if it can be damaged
+ *
+ * @return					Plugin_Handled to block allowing damage to an entity, Plugin_Continue otherwise
+ */
+ // L4D2 only.
+forward Action L4D2_CInsectSwarm_CanHarm(int acid, int spitter, int entity);
+
+/**
+ * @brief Called whenever CTerrorPlayer::OnPouncedOnSurvivor() is invoked
+ * @remarks Called when a Survivor player is about to be pounced on by a Hunter
+ *
+ * @param victim			the client who's being pounced
+ * @param attacker			the Hunter pouncing on someone
+ *
+ * @return					Plugin_Handled to block, Plugin_Continue otherwise
+ */
+forward Action L4D_OnPouncedOnSurvivor(int victim, int attacker);
+
+/**
+ * @brief Called whenever CTerrorPlayer::GrabVictimWithTongue() is invoked
+ * @remarks Called when a Survivor player is about to be grabbed by a Smoker
+ *
+ * @param victim			the client who's being grabbed
+ * @param attacker			the Smoker grabbing someone
+ *
+ * @return					Plugin_Handled to block, Plugin_Continue otherwise
+ */
+forward Action L4D_OnGrabWithTongue(int victim, int attacker);
+
+/**
+ * @brief Called whenever CTerrorPlayer::OnLeptOnSurvivor() is invoked
+ * @remarks Called when a Survivor player is about to be ridden by a Jockey
+ *
+ * @param victim			the client who's being grabbed
+ * @param attacker			the Jockey grabbing someone
+ *
+ * @return					Plugin_Handled to block, Plugin_Continue otherwise
+ */
+ // L4D2 only.
+forward Action L4D2_OnJockeyRide(int victim, int attacker);
+
+/**
+ * @brief Called whenever CTerrorPlayer::OnStartCarryingVictim() is invoked
+ * @remarks Called when a Survivor player is about to be carried by a Charger
+ *
+ * @param victim			the client who's being grabbed
+ * @param attacker			the Charger picking up someone
+ *
+ * @return					Plugin_Handled to block, Plugin_Continue otherwise
+ */
+ // L4D2 only.
+forward Action L4D2_OnStartCarryingVictim(int victim, int attacker);
+
+/**
  * @brief Called whenever CTerrorPlayer::OnVomitedUpon is invoked
  * @remarks Called when a Survivor player is covered in Boomer bile, or when using "Bile the World" plugin by "AtomicStryker"
  *
@@ -971,7 +1246,7 @@ forward Action L4D_OnVomitedUpon(int victim, int &attacker, bool &boomerExplosio
 
 /**
  * @brief Called whenever CTerrorPlayer::OnHitByVomitJar is invoked
- * @remarks Called a Special Infected is hit from a Bilejar explosion
+ * @remarks Called when a Special Infected is hit from a Bilejar explosion
  *
  * @param victim			the client who's now it
  * @param attacker			the attacker who caused the vomit
@@ -1026,7 +1301,7 @@ forward void L4D2_OnWaterMove(int client);
  *
  * @return	Current game mode.
  */
-forward Action L4D_OnGameModeChange(int gamemode);
+forward void L4D_OnGameModeChange(int gamemode);
 
 /**
  * @brief Called when CTerrorPlayer::Fling(Vector const&, PlayerAnimEvent_t, CBaseCombatCharacter*, float) is invoked.
@@ -1344,7 +1619,7 @@ native bool L4D_HasPlayerControlledZombies();
  * @remarks Does not attach the "Fuse" or "Light" particles, see the "left4dhooks_test" plugin for example on attaching these
  * @remarks Also used in the "PipeBomb Shove" plugin by Silvers
  *
- * @param client	Client id to attribute the projectile to for damage credit
+ * @param client	Client id to attribute the projectile to for damage credit. Passing 0 (world) is allowed
  * @param vecPos	Vector coordinate of the projectile on creation
  * @param vecAng	Vector velocity and direction of the projectile
  *
@@ -1355,7 +1630,7 @@ native int L4D_PipeBombPrj(int client, const float vecPos[3], const float vecAng
 /**
  * @brief Creates an activated Molotov projectile.
  *
- * @param client	Client id to attribute the projectile to for damage credit
+ * @param client	Client id to attribute the projectile to for damage credit Passing 0 (world) is allowed
  * @param vecPos	Vector coordinate of the projectile on creation
  * @param vecAng	Vector velocity and direction of the projectile
  *
@@ -1366,7 +1641,7 @@ native int L4D_MolotovPrj(int client, const float vecPos[3], const float vecAng[
 /**
  * @brief Creates an activated VomitJar projectile.
  *
- * @param client	Client id to attribute the projectile to for damage credit
+ * @param client	Client id to attribute the projectile to for damage credit Passing 0 (world) is allowed
  * @param vecPos	Vector coordinate of the projectile on creation
  * @param vecAng	Vector velocity and direction of the projectile
  *
@@ -1378,7 +1653,7 @@ native int L4D2_VomitJarPrj(int client, const float vecPos[3], const float vecAn
 /**
  * @brief Creates an activated Grenade Launcher projectile.
  *
- * @param client	Client id to attribute the projectile to for damage credit
+ * @param client	Client id to attribute the projectile to for damage credit Passing 0 (world) is allowed
  * @param vecPos	Vector coordinate of the projectile on creation
  * @param vecAng	Vector velocity and direction of the projectile
  *
@@ -1390,7 +1665,7 @@ native int L4D2_GrenadeLauncherPrj(int client, const float vecPos[3], const floa
 /**
  * @brief Creates a Spitter goo projectile.
  *
- * @param client	Client id to attribute the projectile to for damage credit
+ * @param client	Client id to attribute the projectile to for damage credit Passing 0 (world) is allowed
  * @param vecPos	Vector coordinate of the projectile on creation
  * @param vecAng	Vector velocity and direction of the projectile
  *
@@ -1462,6 +1737,7 @@ native bool L4D_IsFinaleEscapeInProgress();
  * @brief Returns the current Finale stage type.
  * @remarks some values for FinaleStageType: 1 - Finale Started; 6 - Rescue Vehicle Ready; 7 - Zombie Hordes; 8 - Tank; 10 - Combat Respite (nothing spawns)
  * @remarks Seems to return 18 for non-finale maps
+ * @remarks Can use the "FINALE_*" enums (search for them above) for the finaleType value.
  *
  * @return			finaleType stage value
  */
@@ -1807,6 +2083,7 @@ native void L4D2_SendInRescueVehicle();
  * @remarks Changes the Finale stage
  * @remarks some values for FinaleStageType: 1 - Finale Started; 6 - Rescue Vehicle Ready; 7 - Zombie Hordes; 8 - Tank; 10 - Combat Respite (nothing spawns)
  * @remarks will fire the forward of the same function
+ * @remarks Can use the "FINALE_*" enums (search for them above) for the finaleType value.
  *
  * @param FinaleStageType	integer value
  *
@@ -2206,7 +2483,7 @@ native float L4D2_ITimerGetElapsedTime(L4D2IntervalTimer timer);
  * 2020 Update2: Now works in Left4DHooks. Glitchy animation bug when reloading an already full weapon.
  * 2021 Update3: Fix plugin for modified ammo clips found here: https://forums.alliedmods.net/showthread.php?t=327105
 
-A note regarding Clipsize: Any nonstandard value will NOT be in effect at weapon pickup, which means the client
+A note regarding Clipsize: Any non-standard value will NOT be in effect at weapon pickup, which means the client
 has to reload once to achieve the modified value. To fix this, add a weapon pickup hook in your plugin (eg "player_use")
 and use something like this with a small timer delay of 0.1 seconds or more (dont you love this engine).
 
@@ -2270,6 +2547,16 @@ enum L4D2FloatMeleeWeaponAttributes
 
 
 /**
+ * @brief Returns the weapon ID for a specific classname
+ * @remarks Can specify either "rifle" or "weapon_rifle" for example
+ *
+ * @param weaponName 	Weapon classname to check up on
+ *
+ * @return				-1 if not found, otherwise returns weaponID
+ */
+native int L4D_GetWeaponID(const char[] weaponName);
+
+/**
  * @brief Checks for a given weapon string to exist in the WeaponInformationDatabase
  * @remarks Throws an error if Database is unavailable
  *
@@ -2277,7 +2564,6 @@ enum L4D2FloatMeleeWeaponAttributes
  *
  * @return				True if weapon is found, false if not
  */
-// L4D2 only.
 native bool L4D2_IsValidWeapon(const char[] weaponName);
 
 /**
@@ -2289,7 +2575,6 @@ native bool L4D2_IsValidWeapon(const char[] weaponName);
  *
  * @return				The value read.
  */
-// L4D2 only.
 native int L4D2_GetIntWeaponAttribute(const char[] weaponName, L4D2IntWeaponAttributes attr);
 
 /**
@@ -2301,7 +2586,6 @@ native int L4D2_GetIntWeaponAttribute(const char[] weaponName, L4D2IntWeaponAttr
  *
  * @return				The value read.
  */
-// L4D2 only.
 native float L4D2_GetFloatWeaponAttribute(const char[] weaponName, L4D2FloatWeaponAttributes attr);
 
 /**
@@ -2314,7 +2598,6 @@ native float L4D2_GetFloatWeaponAttribute(const char[] weaponName, L4D2FloatWeap
  *
  * @noreturn
  */
-// L4D2 only.
 native void L4D2_SetIntWeaponAttribute(const char[] weaponName, L4D2IntWeaponAttributes attr, int value);
 
 /**
@@ -2327,7 +2610,6 @@ native void L4D2_SetIntWeaponAttribute(const char[] weaponName, L4D2IntWeaponAtt
  *
  * @noreturn
  */
-// L4D2 only.
 native void L4D2_SetFloatWeaponAttribute(const char[] weaponName, L4D2FloatWeaponAttributes attr, float value);
 
 
@@ -3319,6 +3601,7 @@ native bool L4D_BecomeGhost(int client);
 /**
  * @brief Enter ghost/dead mode. Some state values may have different results. Unknown.
  * @remarks 6 and 8 are commonly used by the game.
+ * @remarks Can use the "STATE_*" enums (search for them above).
  *
  * @param client			Client ID of the player to affect
  *

@@ -43,7 +43,7 @@ stock bool IsSurvivorAttacked(int survivor)
  */
 stock bool IsSurvivor(int client)
 {
-	return (IsClientInGame(client) && GetClientTeam(client) == view_as<int>(L4D2Team_Survivor));
+	return (IsClientInGame(client) && GetClientTeam(client) == L4D2Team_Survivor);
 }
 
 /**
@@ -54,7 +54,7 @@ stock bool IsSurvivor(int client)
  */
 stock bool IsValidSurvivor(int client)
 {
-	return (L4D2Util_IsValidClient(client) && IsSurvivor(client));
+	return (IsValidClientIndex(client) && IsSurvivor(client));
 }
 
 /**
@@ -65,7 +65,7 @@ stock bool IsValidSurvivor(int client)
  */
 stock bool IsIncapacitated(int client)
 {
-	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isIncapacitated"));
+	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isIncapacitated", 1));
 }
 
 /**
@@ -124,8 +124,8 @@ stock int GetSurvivorIncapCount(int client)
  */
 stock bool IsHangingFromLedge(int client)
 {
-	return (view_as<bool>(GetEntProp(client, Prop_Send, "m_isHangingFromLedge")) 
-		|| view_as<bool>(GetEntProp(client, Prop_Send, "m_isFallingFromLedge")));
+	return (view_as<bool>(GetEntProp(client, Prop_Send, "m_isHangingFromLedge", 1))
+		|| view_as<bool>(GetEntProp(client, Prop_Send, "m_isFallingFromLedge", 1)));
 }
 
 /**
@@ -137,7 +137,7 @@ stock bool IsHangingFromLedge(int client)
 stock void InitSurvivorModelTrie()
 {
 	hSurvivorModelsTrie = new StringMap();
-	for (int i = 0; i < view_as<int>(SurvivorCharacter_Size); i++) {
+	for (int i = 0; i < SurvivorCharacter_Size; i++) {
 		hSurvivorModelsTrie.SetValue(SurvivorModels[i], i);
 	}
 }
@@ -147,9 +147,9 @@ stock void InitSurvivorModelTrie()
  * @remark SurvivorCharacter_Invalid on errors
  *
  * @param client                Survivor client to identify
- * @return SurvivorCharacter    index identifying the survivor, or SurvivorCharacter_Invalid if not identified.
+ * @return int    index identifying the survivor, or SurvivorCharacter_Invalid if not identified.
  */
-stock SurvivorCharacter IdentifySurvivor(int client)
+stock int IdentifySurvivor(int client)
 {
 	if (!client || !IsSurvivor(client)) {
 		return SurvivorCharacter_Invalid;
@@ -166,15 +166,15 @@ stock SurvivorCharacter IdentifySurvivor(int client)
  * @remark SurvivorCharacter_Invalid on errors, uses SurvivorModelTrie
  *
  * @param model                 Player model to identify
- * @return SurvivorCharacter    index identifying the model, or SurvivorCharacter_Invalid if not identified.
+ * @return int    index identifying the model, or SurvivorCharacter_Invalid if not identified.
  */
-stock SurvivorCharacter ClientModelToSC(const char[] model)
+stock int ClientModelToSC(const char[] model)
 {
 	if (hSurvivorModelsTrie == null) {
 		InitSurvivorModelTrie();
 	}
 	
-	SurvivorCharacter sc;
+	int sc;
 	if (hSurvivorModelsTrie.GetValue(model, sc)) {
 		return sc;
 	}
@@ -186,19 +186,19 @@ stock SurvivorCharacter ClientModelToSC(const char[] model)
  * Get the name of a survivor character. 
  * Will write to string 'None' in case of error.
  * 
- * @param character     SurvivorCharacter to get the name of
+ * @param character     int to get the name of
  * @param buffer        buffer to store name
  * @param length        length of buffer
  * @return bool         false if SurvivorCharacter_Invalid, otherwise true
  */
-stock bool GetSurvivorName(SurvivorCharacter character, char[] buffer, const int length)
+stock bool GetSurvivorName(int character, char[] buffer, const int length)
 {
 	if (character == SurvivorCharacter_Invalid) {
 		strcopy(buffer, length, "None");
 		return false;
 	}
 
-	strcopy(buffer, length, SurvivorNames[view_as<int>(character)]);
+	strcopy(buffer, length, SurvivorNames[character]);
 
 	return true;
 }
@@ -214,13 +214,13 @@ stock bool GetSurvivorName(SurvivorCharacter character, char[] buffer, const int
  */
 stock bool GetClientSurvivorName(int client, char[] buffer, const int length)
 {
-	SurvivorCharacter character = IdentifySurvivor(client);
+	int character = IdentifySurvivor(client);
 	if (character == SurvivorCharacter_Invalid) {
 		strcopy(buffer, length, "None");
 		return false;
 	}
 
-	strcopy(buffer, length, SurvivorNames[view_as<int>(character)]);
+	strcopy(buffer, length, SurvivorNames[character]);
 
 	return true;
 }

@@ -85,7 +85,7 @@ public Action CodePatchListCommand(int args)
 
 	if (iSize == 0) {
 		PrintToServer("No patches applied");
-		return;
+		return Plugin_Handled;
 	}
 
 	for (int i = 0; i < iSize; ++i) {
@@ -98,13 +98,15 @@ public Action CodePatchListCommand(int args)
 		
 		PrintToServer("%d. %s\t0x%x: %s", i+1, name, addr, formattedBytes);
 	}
+
+	return Plugin_Handled;
 }
 
 public Action CodePatchPatchCommand(int args)
 {
 	if (GetCmdArgs() != 1) {
 		PrintToServer("syntax: codepatch_patch <patch_name>");
-		return;
+		return Plugin_Handled;
 	}
 
 	char name[MAX_PATCH_NAME_LENGTH + 1];
@@ -114,7 +116,7 @@ public Action CodePatchPatchCommand(int args)
 
 	if (patchId != -1) {
 		PrintToServer("Patch '%s' is already loaded", name);
-		return;
+		return Plugin_Handled;
 	}
 
 	char key[MAX_PATCH_NAME_LENGTH + 32];
@@ -123,52 +125,52 @@ public Action CodePatchPatchCommand(int args)
 	Format(key, sizeof(key), "%s_signature", name);
 	if (!GameConfGetKeyValue(hGameConfig, key, value, sizeof(value))) {
 		PrintToServer("Could not find key '%s'", key);
-		return;
+		return Plugin_Handled;
 	}
 
 	Address addr = GameConfGetAddress(hGameConfig, value);
 	if (!addr) {
 		PrintToServer("Could not load signature '%s'", value);
-		return;
+		return Plugin_Handled;
 	}
 
 	Format(key, sizeof(key), "%s_offset", name);
 	if (!GameConfGetKeyValue(hGameConfig, key, value, sizeof(value))) {
 		PrintToServer("Could not find key '%s'", key);
-		return;
+		return Plugin_Handled;
 	}
 
 	int offset = GameConfGetOffset(hGameConfig, value);
 	if (offset == -1) {
 		PrintToServer("Could not load offset '%s'", value);
-		return;
+		return Plugin_Handled;
 	}
 
 	Format(key, sizeof(key), "%s_length_%s", name, (bIsWindows) ? "windows" : "linux");
 	if (!GameConfGetKeyValue(hGameConfig, key, value, sizeof(value))) {
 		PrintToServer("Could not find key '%s'", key);
-		return;
+		return Plugin_Handled;
 	}
 
 	int length = StringToInt(value);
 
 	if (length < 1 || length > MAX_PATCH_SIZE) {
 		PrintToServer("Too %s patch bytes for '%s'", (length < 1) ? "few" : "many", name);
-		return;
+		return Plugin_Handled;
 	}
 
 	Format(key, sizeof(key), "%s_bytes_%s", name, (bIsWindows) ? "windows" : "linux");
 	
 	if (!GameConfGetKeyValue(hGameConfig, key, value, sizeof(value))) {
 		PrintToServer("Could not find key '%s'", key);
-		return;
+		return Plugin_Handled;
 	}
 
 	char[] bytes = new char[length];
 	
 	if (!ParseBytes(value, bytes, length)) {
 		PrintToServer("Failed to parse patch bytes for '%s'", name);
-		return;
+		return Plugin_Handled;
 	}
 
 	addr += view_as<Address>(offset);
@@ -179,13 +181,14 @@ public Action CodePatchPatchCommand(int args)
 	FormatBytes(bytes, length, formattedBytes);
 
 	PrintToServer("Applied patch '%s' [ %s] at 0x%x", name, formattedBytes, addr);
+	return Plugin_Handled;
 }
 
 public Action CodePatchUnpatchCommand(int args)
 {
 	if (GetCmdArgs() != 1) {
 		PrintToServer("syntax: codepatch_unpatch <patch_name>");
-		return;
+		return Plugin_Handled;
 	}
 
 	char name[MAX_PATCH_NAME_LENGTH + 1];
@@ -195,12 +198,13 @@ public Action CodePatchUnpatchCommand(int args)
 
 	if (patchId == -1) {
 		PrintToServer("Patch '%s' is not loaded", name);
-		return;
+		return Plugin_Handled;
 	}
 
 	RevertPatch(name);
 
 	PrintToServer("Reverted patch '%s'", name);
+	return Plugin_Handled;
 }
 
 static int GetPackedByte(int cell, int i)

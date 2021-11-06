@@ -36,7 +36,7 @@ public Plugin myinfo =
 
 public void OnPluginStart() 
 {
-	HookEvent("round_start", Event_RoundStart);
+	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 	HookEvent("player_use", Event_OnPlayerUse, EventHookMode_Post);
 	HookEvent("player_death", Event_OnPlayerDeath, EventHookMode_Pre);
 
@@ -59,7 +59,7 @@ public void OnClientDisconnect(int client)
 	sMeleeScript[client] = MELEE_NONE;
 }
 
-public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; i++)
 	{
@@ -74,7 +74,7 @@ public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcas
 *                          THEIR SECONDARY AND MELEE SCRIPT
 *                  
 *****************************************************************************************/
-public Action Event_OnPlayerReplacedByBot(Event event, const char[] name, bool dontBroadcast)
+public void Event_OnPlayerReplacedByBot(Event event, const char[] name, bool dontBroadcast)
 {
 	int bot = GetClientOfUserId(event.GetInt("bot"))
 	int player = GetClientOfUserId(event.GetInt("player"))
@@ -87,7 +87,7 @@ public Action Event_OnPlayerReplacedByBot(Event event, const char[] name, bool d
 	if (bDebug) CPrintToChatAll("{green}[{olive}OnPlayerReplacedByBot{green}] {default}- {blue}BOT {default}replaced {blue}%N {default}({green}Secondary: {olive}%s{default})", player, sSecondary[bot]);
 }
 
-public Action Event_OnBotReplacedByPlayer(Event event, const char[] name, bool dontBroadcast)
+public void Event_OnBotReplacedByPlayer(Event event, const char[] name, bool dontBroadcast)
 {
 	int bot = GetClientOfUserId(event.GetInt("bot"))
 	int player = GetClientOfUserId(event.GetInt("player"))
@@ -105,7 +105,7 @@ public Action Event_OnBotReplacedByPlayer(Event event, const char[] name, bool d
 *                   THIS FIRES AND STORES A PLAYER'S SECONDARY
 *                  
 *****************************************************************************************/
-public Action Event_OnPlayerUse(Event event, const char[] name, bool dontBroadcast) 
+public void Event_OnPlayerUse(Event event, const char[] name, bool dontBroadcast) 
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	int targetid = event.GetInt("targetid");
@@ -151,6 +151,8 @@ public Action Event_OnPlayerDeath(Event event, const char[] name, bool dontBroad
 		if (bDebug) CPrintToChatAll("{green}[{olive}OnPlayerDeath{green}] {default}- {blue}%N {default}({green}Secondary: {olive}%s{default})", victim, sSecondary[victim]);
 		SpawnSecondary(victim);
 	}
+
+	return Plugin_Continue;
 }
 
 bool IsValidSurvivor(int client) 

@@ -3,7 +3,7 @@
 
 #include <sourcemod>
 #include <sdktools>
-#define L4D2UTIL_STOCKS_ONLY
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 
 #define USE_GIVEPLAYERITEM 0 // Works correctly only in the latest version of sourcemod 1.11 (GivePlayerItem sourcemod native)
@@ -58,10 +58,10 @@ public void Event_WeaponFire(Event hEvent, const char[] sEventName, bool bDontBr
 	int iWeaponArrayIndex = -1;
 
 	switch (iWeaponId) {
-		case view_as<int>(WEPID_PAIN_PILLS): {
+		case WEPID_PAIN_PILLS: {
 			iWeaponArrayIndex = ePILL_INDEX;
 		}
-		case view_as<int>(WEPID_ADRENALINE): {
+		case WEPID_ADRENALINE: {
 			iWeaponArrayIndex = eADREN_INDEX;
 		}
 		default: {
@@ -71,7 +71,7 @@ public void Event_WeaponFire(Event hEvent, const char[] sEventName, bool bDontBr
 
 	g_iBotUsedCount[iClient][iWeaponArrayIndex]++;
 
-	int iEntity = GetPlayerWeaponSlot(iClient, view_as<int>(L4D2WeaponSlot_LightHealthItem));
+	int iEntity = GetPlayerWeaponSlot(iClient, L4D2WeaponSlot_LightHealthItem);
 	RemovePlayerItem(iClient, iEntity);
 
 #if SOURCEMOD_V_MINOR > 8
@@ -95,7 +95,7 @@ public void Event_PlayerJoined(Event hEvent, const char[] sEventName, bool bDont
 
 void RestoreItems(int iClient, int iLeavingBot)
 {
-	int iCurrentWeapon = GetPlayerWeaponSlot(iClient, view_as<int>(L4D2WeaponSlot_LightHealthItem));
+	int iCurrentWeapon = GetPlayerWeaponSlot(iClient, L4D2WeaponSlot_LightHealthItem);
 
 	for (int j = 0; j < eITEM_SIZE; j++) {
 		if (g_iBotUsedCount[iLeavingBot][j] < 1) {

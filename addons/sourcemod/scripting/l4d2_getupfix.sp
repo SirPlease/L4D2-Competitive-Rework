@@ -7,15 +7,6 @@
 #include <l4d2util>
 #include <left4dhooks> //#include <l4d2_direct>
 
-public Plugin myinfo = 
-{
-	name = "L4D2 Get-Up Fix",
-	author = "Blade, ProdigySim, DieTeetasse, Stabby, Jahze, A1m`",
-	description = "Double/no/self-clear get-up fix.",
-	version = "1.7.4",
-	url = "https://github.com/SirPlease/L4D2-Competitive-Rework/"
-}
-
 #define ANIM_HUNTER_LENGTH 2.2					// frames: 64, fps: 30, length: 2.133
 #define ANIM_CHARGER_STANDARD_LENGTH 2.9		// frames: 85, fps 30, length: 2.833
 #define ANIM_CHARGER_SLAMMED_WALL_LENGTH 3.9	// frames 116 fps 30 = 3.867
@@ -48,7 +39,7 @@ int
 	bArClientAlreadyChecked[MAXPLAYERS + 1]; //in the rare event of it being a game with multiple chargers and 2+ getting cleared on slam
 
 static const int 
-	getUpAnimations[view_as<int>(SurvivorCharacter_Size)][view_as<int>(eINDEX_SIZE)] =
+	getUpAnimations[SurvivorCharacter_Size][eINDEX_SIZE] =
 	{
 		// l4d2 
 		// 0: Nick, 1: Rochelle, 2: Coach, 3: Ellis
@@ -65,7 +56,7 @@ static const int
 		{531, 762, 766, 767} //Francis
 	},
 	//incapped animations: 0 = single-pistol, 1 = dual pistols
-	incapAnimations[view_as<int>(SurvivorCharacter_Size)][view_as<int>(eINCAP_ANIMATIONS_SIZE)] =
+	incapAnimations[SurvivorCharacter_Size][eINCAP_ANIMATIONS_SIZE] =
 	{
 		// l4d2
 		// 0: Nick, 1: Rochelle, 2: Coach, 3: Ellis
@@ -81,6 +72,15 @@ static const int
 		{520, 521}, //Louis
 		{523, 524} //Francis
 	};
+
+public Plugin myinfo = 
+{
+	name = "L4D2 Get-Up Fix",
+	author = "Blade, ProdigySim, DieTeetasse, Stabby, Jahze, A1m`", //Add support sm1.11 - A1m`
+	description = "Double/no/self-clear get-up fix.",
+	version = "1.7.4",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework/"
+};
 
 public void OnPluginStart()
 {
@@ -105,7 +105,7 @@ public Action Timer_ProcessClient(Handle hTimer, any client)
 
 void ProcessClient(int client)
 {
-	SurvivorCharacter charIndex = IdentifySurvivor(client);
+	int charIndex = IdentifySurvivor(client);
 	if (charIndex == SurvivorCharacter_Invalid) {
 		return;
 	}
@@ -147,7 +147,7 @@ public Action Timer_CheckClient(Handle hTimer, ArrayStack tempStack)
 	int oldSequence = tempStack.Pop();
 	int client = tempStack.Pop();
 
-	SurvivorCharacter charIndex = IdentifySurvivor(client);
+	int charIndex = IdentifySurvivor(client);
 	if (charIndex == SurvivorCharacter_Invalid) {
 		return Plugin_Stop;
 	}
@@ -192,7 +192,7 @@ public Action GetupTimer(Handle hTimer, any attacker)
 	for (int i = 1; i <= MaxClients; i++) {
 		if (IsSurvivor(i) && !bArClientAlreadyChecked[i]) {
 			int seq = GetEntProp(i, Prop_Send, "m_nSequence");
-			SurvivorCharacter character = IdentifySurvivor(i);
+			int character = IdentifySurvivor(i);
 			
 			if (character == SurvivorCharacter_Invalid) {
 				return Plugin_Stop;

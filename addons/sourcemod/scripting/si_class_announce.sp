@@ -38,15 +38,15 @@ public Plugin myinfo =
 
 static const char g_csSIClassName[][] =
 {
-    "",
-    "Smoker",
-    "(Boomer)",
-    "Hunter",
-    "(Spitter)",
-    "Jockey",
-    "Charger",
-    "",
-    ""
+	"",
+	"Smoker",
+	"(Boomer)",
+	"Hunter",
+	"(Spitter)",
+	"Jockey",
+	"Charger",
+	"",
+	""
 };
 
 Handle
@@ -135,11 +135,13 @@ public Action UpdateReadyUpFooter(Handle timer)
 	g_hAddFooterTimer = null;
 	
 	if (!IsInfectedTeamFullAlive() || !g_bAllowFooter)
-		return;
+		return Plugin_Stop;
 	
 	char msg[65];
 	if (ProcessSIString(msg, sizeof(msg), true))
 		g_bAllowFooter = !(AddStringToReadyFooter(msg) != -1);
+
+	return Plugin_Stop;
 }
 
 public void OnRoundIsLive()
@@ -191,7 +193,7 @@ bool ProcessSIString(char[] msg, int maxlength, bool footer = false)
 	if (!iSpawns) {
 		return false;
 	}
-    
+
 	strcopy(msg, maxlength, footer ? "SI: " : "Special Infected: ");
 	
 	int printFlags = g_hCvarPrint.IntValue;
@@ -228,7 +230,7 @@ void AnnounceSIClasses(const char[] Message)
 
 		if (printFlags & CHAT_FLAG) CPrintToChat(i, Message);
 		if (printFlags & HINT_FLAG) PrintHintText(i, temp);
-    }
+	}
 }
 
 stock bool IsInfectedTeamFullAlive()

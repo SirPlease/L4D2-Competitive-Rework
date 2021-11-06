@@ -169,13 +169,13 @@ bool isPointIn2DBox(float x0, float y0, float x1, float y1, float x2, float y2)
 
 bool IsInsectSwarm(int iEntity)
 {
-	if (iEntity > 0 && IsValidEntity(iEntity)) {
-		char sClassName[MAX_ENTITY_NAME_SIZE];
-		GetEntityClassname(iEntity, sClassName, sizeof(sClassName));
-		return (strcmp(sClassName, "insect_swarm") == 0);
+	if (iEntity <= MaxClients || !IsValidEdict(iEntity)) {
+		return false;
 	}
 
-	return false;
+	char sClassName[MAX_ENTITY_NAME_SIZE];
+	GetEdictClassname(iEntity, sClassName, sizeof(sClassName));
+	return (strcmp(sClassName, "insect_swarm") == 0);
 }
 
 bool IsValidClient(int iClient)

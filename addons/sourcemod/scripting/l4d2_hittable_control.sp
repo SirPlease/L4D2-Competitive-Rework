@@ -144,8 +144,8 @@ public void OnPluginStart()
 		}
 	}
 
-	HookEvent("round_start", Event_RoundStart);
-	HookEvent("finale_radio_start", Event_FinaleStart);
+	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
+	HookEvent("finale_radio_start", Event_FinaleStart, EventHookMode_PostNoCopy);
 	
 	hUnbreakableForklifts.AddChangeHook(ConVarChanged_UnbreakableForklifts);
 }
@@ -157,12 +157,13 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	RegPluginLibrary("l4d2_hittable_control");
 	return APLRes_Success;
 }
+
 public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
-public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	// Reset everything to make sure we don't run into issues when a map is restarted (as GameTime resets)
 	for (int i = 1; i <= MaxClients; i++)
@@ -205,6 +206,8 @@ public Action PatchBreakableForklifts(Handle timer)
 			SetEntProp(forklift, Prop_Data, "m_takedamage", 1);
 		}
 	}
+
+	return Plugin_Stop;
 }
 
 public Action UnpatchBreakableForklifts(Handle timer)
@@ -223,6 +226,8 @@ public Action UnpatchBreakableForklifts(Handle timer)
 			SetEntProp(forklift, Prop_Data, "m_takedamage", 3);
 		}
 	}
+
+	return Plugin_Stop;
 }
 
 public void ConVarChanged_UnbreakableForklifts(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
@@ -238,11 +243,11 @@ public void ConVarChanged_UnbreakableForklifts(ConVar hConVar, const char[] sOld
 }
 
 
-public any Native_UnbreakableForklifts(Handle plugin, int numParams) {
+public int Native_UnbreakableForklifts(Handle plugin, int numParams) {
 	return GetConVarBool(hUnbreakableForklifts);
 }
 
-public Action Event_FinaleStart(Event event, const char[] name, bool dontBroadcast)
+public void Event_FinaleStart(Event event, const char[] name, bool dontBroadcast)
 {
 	// Hittable damage is only reduced once the finale is triggered
 	int triggerFinale = -1;

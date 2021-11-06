@@ -54,18 +54,18 @@ public void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBr
 	}
 	
 	int iAttacker = GetClientOfUserId(hEvent.GetInt("attacker"));
-	if (!IsClientAndInGame(iAttacker) || GetClientTeam(iAttacker) != view_as<int>(L4D2Team_Infected)) {
+	if (!IsClientAndInGame(iAttacker) || GetClientTeam(iAttacker) != L4D2Team_Infected) {
 		return;
 	}
 	
 	int iZclass = GetEntProp(iAttacker, Prop_Send, "m_zombieClass");
 	
-	if (iZclass < view_as<int>(L4D2Infected_Smoker) || iZclass > view_as<int>(L4D2Infected_Charger)) {
+	if (iZclass < L4D2Infected_Smoker || iZclass > L4D2Infected_Charger) {
 		return;
 	}
 	
 	int iVictim = GetClientOfUserId(hEvent.GetInt("userid"));
-	if (!IsClientAndInGame(iVictim) || GetClientTeam(iVictim) != view_as<int>(L4D2Team_Survivor)) {
+	if (!IsClientAndInGame(iVictim) || GetClientTeam(iVictim) != L4D2Team_Survivor) {
 		return;
 	}
 	

@@ -57,10 +57,10 @@ ConVar g_hChargeDuration;
 int ChargerTarget[MAXPLAYERS+1];
 bool bLateLoad, bWallSlamed[MAXPLAYERS+1], bInForcedGetUp[MAXPLAYERS+1], bIgnoreJockeyed[MAXPLAYERS+1];
 
-
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	bLateLoad = late;
+	return APLRes_Success;
 }
 
 public void OnPluginStart()
@@ -183,16 +183,25 @@ void CancelGetUpAnimation(int client)
 public Action Timer_Uncheck(Handle timer, int client)
 {
 	bWallSlamed[client] = false;
+
+	return Plugin_Stop;
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3])
 {
-	if (!inflictor || !IsValidEdict(victim) || !IsValidEdict(inflictor)) return;
-	if (!IsCharger(attacker) || !IsSurvivor(victim)) return;
+	if (!inflictor || !IsValidEdict(victim) || !IsValidEdict(inflictor)) {
+		return Plugin_Continue;
+	}
+
+	if (!IsCharger(attacker) || !IsSurvivor(victim)) {
+		return Plugin_Continue;
+	}
 	
-	static char classname[64];
+	char classname[64];
 	GetClientWeapon(attacker, classname, sizeof(classname));
-	if (strcmp(classname, "weapon_charger_claw") != 0) return;
+	if (strcmp(classname, "weapon_charger_claw") != 0) {
+		return Plugin_Continue;
+	}
 	
 	if (damage == 10.0 && GetVectorLength(damageForce) == 0.0)
 	{
@@ -203,6 +212,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		// (barely happen since charger cannot impact one in godframe)
 		CreateTimer(0.1, Timer_Uncheck, victim);
 	}
+	
+	return Plugin_Continue;
 }
 
 public void OnTakeDamagePost(int victim, int attacker, int inflictor, float damage, int damagetype)
@@ -379,6 +390,8 @@ public Action BlueMoonCaseCheck(Handle timer, int chargerClient)
 	
 	ResetChargerTarget(chargerClient);
 	ResetIgnoreJockeyed(survivorClient);
+
+	return Plugin_Stop;
 }
 
 public void Event_ChargeCarryStart(Event event, const char[] name, bool dontBroadcast)

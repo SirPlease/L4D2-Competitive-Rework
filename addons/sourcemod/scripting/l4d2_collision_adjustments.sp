@@ -7,7 +7,7 @@
 #define TEAM_SURVIVOR 2
 
 bool
-	isPulled[MAXPLAYERS + 1] = false,
+	isPulled[MAXPLAYERS + 1] = {false, ...},
 	bRockFix,
 	bPullThrough,
 	bRockThroughIncap;

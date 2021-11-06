@@ -19,6 +19,8 @@ float fTongueDelaySurvivor;
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	bLateLoad = late;
+
+	return APLRes_Success;
 }
 
 public Plugin myinfo = 
@@ -100,43 +102,38 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 //                    EVENTS
 //
 // ----------------------------------------------
-
-public Action Event_TongueGrab(Event event, const char[] name, bool dontBroadcast)
-{	
+public void Event_TongueGrab(Event event, const char[] name, bool dontBroadcast)
+{
 	int victim = GetClientOfUserId(event.GetInt("victim"));
 
-	if (IsValidClient(victim)
-	&& GetClientTeam(victim) == 2)
+	if (IsValidClient(victim) && GetClientTeam(victim) == 2)
 	{
 		bPlayerPulled[victim] = true;
 	}
 }
 
-public Action Event_TonguePullStopped(Event event, const char[] name, bool dontBroadcast)
+public void Event_TonguePullStopped(Event event, const char[] name, bool dontBroadcast)
 {
 	int victim = GetClientOfUserId(event.GetInt("victim"));
 	int smoker = GetClientOfUserId(event.GetInt("smoker"));
 
-	if (IsValidClient(victim)
-	&& IsValidAliveSmoker(smoker)
-	&& GetClientTeam(victim) == 2)
+	if (IsValidClient(victim) && IsValidAliveSmoker(smoker) && GetClientTeam(victim) == 2)
 	{
 		RequestFrame(OnSmokerSurvivorClear, smoker);
 	}
 }
 
-public Action Event_TongueRelease(Event event, const char[] name, bool dontBroadcast)
+public void Event_TongueRelease(Event event, const char[] name, bool dontBroadcast)
 {
 	int victim = GetClientOfUserId(event.GetInt("victim"))
 
-	if (IsValidClient(victim)
-	&& bPlayerPulled[victim])
+	if (IsValidClient(victim) && bPlayerPulled[victim])
 	{
 		RequestFrame(OnNextFrame, victim);
 	}
 }
 
-public Action Event_Replace(Event event, const char[] name, bool dontBroadcast)
+public void Event_Replace(Event event, const char[] name, bool dontBroadcast)
 {
 	int bot = GetClientOfUserId(event.GetInt("bot"));
 	int player = GetClientOfUserId(event.GetInt("player"));
@@ -166,8 +163,7 @@ public Action Event_Replace(Event event, const char[] name, bool dontBroadcast)
 // ----------------------------------------------
 void OnNextFrame(any victim)
 {
-	if (IsValidClient(victim)
-	&& bPlayerPulled[victim])
+	if (IsValidClient(victim) && bPlayerPulled[victim])
 	{
 		bPlayerPulled[victim] = false;
 	}
@@ -187,7 +183,6 @@ public void OnSmokerSurvivorClear(any smoker)
 		// Duration will be used as the new "m_timestamp"
 		// If the smoker's pull delay is already longer than what we want it to be, don't bother.
 		duration = time + fTongueDelaySurvivor;
-
 
 		if (duration > timestamp) 
 		{
@@ -212,21 +207,27 @@ public void ConvarChanged(ConVar convar, const char[] oldValue, const char[] new
 //                 STOCKS 
 //
 // ----------------------------------------------
-bool IsValidClient(int client) 
+bool IsValidClient(int client)
 { 
-	if (client <= 0 
-	|| client > MaxClients 
-	|| !IsClientInGame(client) 
-	|| !IsPlayerAlive(client)) return false;
+	if (client <= 0
+		|| client > MaxClients
+		|| !IsClientInGame(client)
+		|| !IsPlayerAlive(client)
+	) {
+		return false;
+	}
 	return true;
-} 
+}
 
-bool IsValidAliveSmoker(int client) 
-{ 
+bool IsValidAliveSmoker(int client)
+{
 	if (!IsValidClient(client)
-	|| GetClientTeam(client) != 3) return false; 
+		|| GetClientTeam(client) != 3
+	) {
+		return false; 
+	}
 	return GetEntProp(client, Prop_Send, "m_zombieClass") == 1; 
-} 
+}
 
 int FindSmoker()
 {

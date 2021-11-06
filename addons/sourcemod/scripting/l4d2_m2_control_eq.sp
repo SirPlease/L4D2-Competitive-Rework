@@ -2,7 +2,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
-#define L4D2UTIL_STOCKS_ONLY
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 #include <left4dhooks>
 
@@ -70,8 +70,7 @@ public void OutSkilled(Event hEvent, const char[] eName, bool dontBroadcast)
 		return;
 	}
 	
-	int penaltyIncrease;
-	L4D2_Infected zClass = GetInfectedClass(shovee);
+	int penaltyIncrease, zClass = GetInfectedClass(shovee);
 	switch (zClass) {
 		case L4D2Infected_Hunter: {
 			penaltyIncrease = hPenaltyIncreaseHunterCvar.IntValue;
@@ -98,8 +97,7 @@ public void OutSkilled(Event hEvent, const char[] eName, bool dontBroadcast)
 	L4D2Direct_SetShovePenalty(shover, penalty);
 	L4D2Direct_SetNextShoveTime(shover, CalcNextShoveTime(penalty, maxPenalty));
 
-	if (zClass == L4D2Infected_Smoker 
-	|| (zClass == L4D2Infected_Hunter && g_NoHunterM2)) {
+	if (zClass == L4D2Infected_Smoker || (zClass == L4D2Infected_Hunter && g_NoHunterM2)) {
 		return;
 	}
 	
@@ -115,7 +113,7 @@ public Action ResetAbilityTimer(Handle hTimer, any shovee_userid)
 		
 		float timestamp, duration;
 		if (!GetInfectedAbilityTimer(shovee, timestamp, duration)) {
-			return;
+			return Plugin_Stop;
 		}
 
 		duration = GetGameTime() + recharge + STAGGER_TIME_EPS;
@@ -123,6 +121,8 @@ public Action ResetAbilityTimer(Handle hTimer, any shovee_userid)
 			SetInfectedAbilityTimer(shovee, duration, recharge);
 		}
 	}
+
+	return Plugin_Stop;
 }
 
 float CalcNextShoveTime(int currentPenalty, int maxPenalty)

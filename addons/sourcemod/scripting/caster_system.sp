@@ -33,7 +33,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 {
 	CreateNative("IsClientCaster", Native_IsClientCaster);
 	CreateNative("IsIDCaster", Native_IsIDCaster);
+
 	RegPluginLibrary("caster_system");
+	return APLRes_Success;
 }
 
 public void OnPluginStart()
@@ -169,6 +171,8 @@ public Action Timer_ReconnectCasters(Handle timer, ArrayList aList)
 		int client = GetClientOfUserId(aList.Get(i));
 		if (client > 0) ReconnectClient(client);
 	}
+
+	return Plugin_Stop;
 }
 
 public Action L4D2_OnClientDisableAddons(const char[] SteamID)
@@ -194,6 +198,8 @@ public Action CasterCheck(Handle timer, int userid)
 		CPrintToChat(client, "%t", "CasterCheck2");
 		ChangeClientTeam(client, L4D2Team_Spectator);
 	}
+
+	return Plugin_Stop;
 }
 
 // ========================
@@ -312,6 +318,8 @@ public Action NotCasting_Cmd(int client, int args)
 public Action Reconnect(Handle timer, int client)
 {
 	if (IsClientConnected(client)) ReconnectClient(client);
+
+	return Plugin_Stop;
 }
 
 public Action ResetCaster_Cmd(int client, int args)
@@ -497,4 +505,6 @@ public Action Timer_KickSpecs(Handle timer)
 					
 		KickClient(i, "%t", "KickSpecsReason");
 	}
+
+	return Plugin_Stop;
 }

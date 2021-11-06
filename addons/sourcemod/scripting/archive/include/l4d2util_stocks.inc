@@ -5,7 +5,7 @@
 
 //Author - A1m`
 
-stock bool L4D2Util_IsValidClient(int client)
+stock bool IsValidClientIndex(int client)
 {
 	return (client > 0 && client <= MaxClients);
 }

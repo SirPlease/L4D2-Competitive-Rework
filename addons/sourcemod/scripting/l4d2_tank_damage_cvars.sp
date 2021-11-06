@@ -1,95 +1,94 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdkhooks>
+#define L4D2UTIL_STOCKS_ONLY 1
+#include <l4d2util>
 
-new Handle:vs_tank_pound_damage;
-new Handle:vs_tank_rock_damage;
+#define DEBUG 0
 
-new bool:lateLoad;
+ConVar
+	g_hCvarVsTankPoundDamage = null,
+	g_hCvarVsTankRockDamage = null;
 
-public APLRes:AskPluginLoad2(Handle:plugin, bool:late, String:error[], errMax) 
+bool
+	g_bLateLoad = false;
+
+public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErrMax)
 {
-	lateLoad = late;
-	return APLRes_Success;    
+	g_bLateLoad = bLate;
+	return APLRes_Success;
 }
 
-public Plugin:myinfo =
+public Plugin myinfo =
 {
 	name = "L4D2 Tank Damage Cvars",
-	author = "Visor",
+	author = "Visor, A1m`",
 	description = "Toggle Tank attack damage per type",
-	version = "1.1",
-	url = "https://github.com/Attano/Equilibrium"
+	version = "2.1",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
-	vs_tank_pound_damage = CreateConVar("vs_tank_pound_damage", "24", "Amount of damage done by a vs tank's melee attack on incapped survivors");
-	vs_tank_rock_damage = CreateConVar("vs_tank_rock_damage", "24", "Amount of damage done by a vs tank's rock");
-	
-	if (lateLoad) 
-	{
-		for (new i = 1; i <= MaxClients; i++) 
-		{
-			if (IsClientInGame(i)) 
-			{
+	g_hCvarVsTankPoundDamage = CreateConVar("vs_tank_pound_damage", "24.0", "Amount of damage done by a vs tank's melee attack on incapped survivors (a zero and negative value disables this).");
+	g_hCvarVsTankRockDamage = CreateConVar("vs_tank_rock_damage", "24.0", "Amount of damage done by a vs tank's rock (a zero and negative value disables this).");
+
+	if (g_bLateLoad) {
+		for (int i = 1; i <= MaxClients; i++) {
+			if (IsClientInGame(i)) {
 				OnClientPutInServer(i);
 			}
 		}
 	}
 }
 
-public OnClientPutInServer(client)
+public void OnClientPutInServer(int iClient)
 {
-	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	SDKHook(iClient, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
 }
 
-public OnClientDisconnect(client)
+public void OnClientDisconnect(int iClient)
 {
-	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
+	SDKUnhook(iClient, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
 }
 
-public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damageType, &weapon, Float:damageForce[3], Float:damagePosition[3]) 
+public Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamagetype)
 {
-	if (!IsSurvivor(victim) || !IsTank(attacker))
-	{
+	if (iDamagetype != DMG_CLUB) {
 		return Plugin_Continue;
 	}
-	
-	if (IsIncapped(victim) && IsTank(inflictor))
-	{
-		damage = GetConVarFloat(vs_tank_pound_damage);
+
+	if (!IsValidSurvivor(iVictim) || !IsValidTank(iAttacker)) {
+		return Plugin_Continue;
 	}
-	else if (IsTankRock(inflictor))
-	{
-		damage = GetConVarFloat(vs_tank_rock_damage);
+
+	if (iInflictor <= MaxClients || !IsValidEdict(iInflictor)) {
+		return Plugin_Continue;
 	}
-	return Plugin_Changed;
-}
 
-bool:IsIncapped(client)
-{
-	return bool:GetEntProp(client, Prop_Send, "m_isIncapacitated");
-}
+	char sClassName[ENTITY_MAX_NAME_LENGTH];
+	GetEdictClassname(iInflictor, sClassName, sizeof(sClassName));
 
-bool:IsSurvivor(client)
-{
-	return (client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2);
-}
+#if DEBUG
+	PrintToChatAll("iVictim: %N, iAttacker: %N, iInflictor, %s (%d), fDamage: %f, iDamagetype: %d", \
+							iVictim, iAttacker, sClassName, iInflictor, fDamage, iDamagetype);
+#endif
 
-bool:IsTank(client)
-{
-	return (client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 3 && GetEntProp(client, Prop_Send, "m_zombieClass") == 8 && IsPlayerAlive(client));
-}
+	if (strcmp("weapon_tank_claw", sClassName) == 0) {
+		if (IsIncapacitated(iVictim) && g_hCvarVsTankPoundDamage.FloatValue > 0) {
+			fDamage = g_hCvarVsTankPoundDamage.FloatValue;
 
-bool:IsTankRock(entity)
-{
-    if (entity > 0 && IsValidEntity(entity) && IsValidEdict(entity))
-    {
-        decl String:classname[64];
-        GetEdictClassname(entity, classname, sizeof(classname));
-        return StrEqual(classname, "tank_rock");
-    }
-    return false;
+			return Plugin_Changed;
+		}
+	} else if (strcmp("tank_rock", sClassName) == 0) {
+		if (g_hCvarVsTankRockDamage.FloatValue > 0) {
+			fDamage = g_hCvarVsTankRockDamage.FloatValue;
+		}
+
+		return Plugin_Changed;
+	}
+
+	return Plugin_Continue;
 }

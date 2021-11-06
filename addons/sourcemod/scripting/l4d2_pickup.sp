@@ -31,7 +31,7 @@
 #include <sourcemod>
 #include <sdkhooks>
 //#include <sdktools>
-#define L4D2UTIL_STOCKS_ONLY
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util> //#include <weapons>
 #include <colors>
 
@@ -156,24 +156,32 @@ public Action DelayUse(Handle hTimer, any client)
 {
 	bTanked[client] = false;
 	hTanked[client] = null;
+
+	return Plugin_Stop;
 }
 
 public Action DelaySwitchHealth(Handle hTimer, any client)
 {
 	bCantSwitchHealth[client] = false;
 	hHealth[client] = null;
+
+	return Plugin_Stop;
 }
 
 public Action DelaySwitchSecondary(Handle hTimer, any client)
 {
 	bCantSwitchSecondary[client] = false;
 	hSecondary[client] = null;
+
+	return Plugin_Stop;
 }
 
 public Action DelayValveSwitch(Handle hTimer, any client)
 {
 	bPreventValveSwitch[client] = false;
 	hValveSwitch[client] = null;
+
+	return Plugin_Stop;
 }
 
 
@@ -224,7 +232,7 @@ public Action WeaponCanSwitchTo(int client, int weapon)
 
 	char sWeapon[64];
 	GetEntityClassname(weapon, sWeapon, sizeof(sWeapon)); 
-	WeaponId wep = WeaponNameToId(sWeapon);
+	int wep = WeaponNameToId(sWeapon);
 
 	// Health Items.
 	if ((iSwitchFlags[client] & FLAGS_SWITCH_PILLS) && (wep == WEPID_PAIN_PILLS || wep == WEPID_ADRENALINE) && bCantSwitchHealth[client]) {
@@ -248,12 +256,12 @@ public Action WeaponEquip(int client, int weapon)
 	// Weapon Currently Using
 	char weapon_name[64];
 	GetClientWeapon(client, weapon_name, sizeof(weapon_name));
-	WeaponId wepname = WeaponNameToId(weapon_name);
+	int wepname = WeaponNameToId(weapon_name);
 
 	// New Weapon
 	char sWeapon[64]; 
 	GetEntityClassname(weapon, sWeapon, sizeof(sWeapon)); 
-	WeaponId wep = WeaponNameToId(sWeapon);
+	int wep = WeaponNameToId(sWeapon);
 
 	// Health Items.
 	if (wep == WEPID_PAIN_PILLS || wep == WEPID_ADRENALINE) {
@@ -274,6 +282,7 @@ public Action WeaponEquip(int client, int weapon)
 			hSecondary[client] = CreateTimer(0.1, DelaySwitchSecondary, client);
 		}
 	}
+	
 	return Plugin_Continue;
 }
 
@@ -282,10 +291,11 @@ public Action WeaponDrop(int client, int weapon)
 	if (!IsValidEntity(weapon)) {
 		return Plugin_Continue;
 	}
+	
 	// Weapon Currently Using
 	char weapon_name[64];
 	GetClientWeapon(client, weapon_name, sizeof(weapon_name));
-	WeaponId wepname = WeaponNameToId(weapon_name);
+	int wepname = WeaponNameToId(weapon_name);
 
 	// Secondary Weapon
 	//int Secondary = GetPlayerWeaponSlot(client, 1);
@@ -293,7 +303,7 @@ public Action WeaponDrop(int client, int weapon)
 	// Weapon Dropping
 	char sWeapon[64]; 
 	GetEntityClassname(weapon, sWeapon, sizeof(sWeapon)); 
-	WeaponId wep = WeaponNameToId(sWeapon);
+	int wep = WeaponNameToId(sWeapon);
 
 	// Check if Player is Alive/Incapped and just dropped his secondary for a different one
 	if (!IsPlayerIncapacitated(client) && IsPlayerAlive(client))  {

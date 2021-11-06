@@ -32,7 +32,7 @@
 #define ENTITY_MAX_NAME		64
 
 //Tracking
-enum DoorsTypeTracked
+enum /*DoorsTypeTracked*/
 {
 	DoorsTypeTracked_None = -1,
 	DoorsTypeTracked_Prop_Door_Rotating = 0,
@@ -48,7 +48,7 @@ static const char g_szDoors_Type_Tracked[][MAX_NAME_LENGTH] =
 #if SOURCEMOD_V_MINOR > 9
 enum struct DoorsData
 {
-	DoorsTypeTracked DoorsData_Type;
+	int DoorsData_Type;
 	float DoorsData_Speed;
 	bool DoorsData_ForceClose;
 }
@@ -59,7 +59,7 @@ DoorsData
 #else
 enum DoorsData
 {
-	DoorsTypeTracked:DoorsData_Type,
+	DoorsData_Type,
 	Float:DoorsData_Speed,
 	bool:DoorsData_ForceClose
 };
@@ -175,7 +175,7 @@ public void Hook_DoorSpawnPost(int iEntity)
 	// Save Original Settings.
 	for (int i = 0; i < sizeof(g_szDoors_Type_Tracked); i++) {
 		if (strcmp(sClassName, g_szDoors_Type_Tracked[i], false) == 0) {
-			Door_GetSettings(iEntity, view_as<DoorsTypeTracked>(i));
+			Door_GetSettings(iEntity, i);
 		}
 	}
 
@@ -343,14 +343,14 @@ void Door_GetSettingsAll()
 	
 	for (int i = 0;i < sizeof(g_szDoors_Type_Tracked); i++) {
 		while ((iEntity = FindEntityByClassname(iEntity, g_szDoors_Type_Tracked[i])) != INVALID_ENT_REFERENCE) {
-			Door_GetSettings(iEntity, view_as<DoorsTypeTracked>(i));
+			Door_GetSettings(iEntity, i);
 		}
 		
 		iEntity = -1;
 	}
 }
 
-void Door_GetSettings(int iEntity, DoorsTypeTracked iDoorType)
+void Door_GetSettings(int iEntity, int iDoorType)
 {
 #if SOURCEMOD_V_MINOR > 9
 	g_ddDoors[iEntity].DoorsData_Type = iDoorType;

@@ -22,12 +22,12 @@ public Plugin myinfo =
 	url = "https://github.com/spoon-l4d2"
 };
 
-GlobalForward
+Handle
 	g_forwardUpdateBosses;
 
 ConVar
 	g_hCvarBossVoting;
-	
+
 bool
 	bv_bTank,
 	bv_bWitch;
@@ -38,7 +38,7 @@ int
 
 public void OnPluginStart()
 {
-	g_forwardUpdateBosses = new GlobalForward("OnUpdateBosses", ET_Ignore, Param_Cell, Param_Cell);
+	g_forwardUpdateBosses = CreateGlobalForward("OnUpdateBosses", ET_Ignore, Param_Cell, Param_Cell);
 	
 	g_hCvarBossVoting = CreateConVar("l4d_boss_vote", "1", "Enable boss voting", FCVAR_NOTIFY, true, 0.0, true, 1.0); // Sets if boss voting is enabled or disabled
 	
@@ -81,13 +81,19 @@ bool RunVoteChecks(int client)
 
 public Action VoteBossCmd(int client, int args)
 {
-	if (!GetConVarBool(g_hCvarBossVoting)) return;
-	if (!RunVoteChecks(client)) return;
+	if (!GetConVarBool(g_hCvarBossVoting)) {
+		return Plugin_Handled;
+	}
+	
+	if (!RunVoteChecks(client)) {
+		return Plugin_Handled;
+	}
+
 	if (args != 2)
 	{
 		CReplyToCommand(client, "{blue}<{green}BossVote{blue}>{default} Usage: !voteboss {olive}<{default}tank{olive}> <{default}witch{olive}>{default}.");
 		CReplyToCommand(client, "{blue}<{green}BossVote{blue}>{default} Use {default}\"{blue}0{default}\" for {olive}No Spawn{default}, \"{blue}-1{default}\" for {olive}Ignorance.");
-		return;
+		return Plugin_Handled;
 	}
 	
 	// Get all non-spectating players
@@ -115,7 +121,7 @@ public Action VoteBossCmd(int client, int args)
 	if (!IsInteger(bv_sTank) || !IsInteger(bv_sWitch))
 	{
 		CReplyToCommand(client, "{blue}<{green}BossVote{blue}>{default} Percentages are {olive}invalid{default}.");
-		return;
+		return Plugin_Handled;
 	}
 	
 	// Check to make sure static bosses don't get changed
@@ -197,7 +203,7 @@ public Action VoteBossCmd(int client, int args)
 		}
 		else // Probably not.
 		{
-			return;
+			return Plugin_Handled;
 		}
 	}
 	
@@ -208,6 +214,8 @@ public Action VoteBossCmd(int client, int args)
 	SetBuiltinVoteResultCallback(bv_hVote, BossVoteResultHandler);
 	DisplayBuiltinVote(bv_hVote, iPlayers, iNumPlayers, 20);
 	FakeClientCommand(client, "Vote Yes");
+
+	return Plugin_Handled;
 }
 
 public void BossVoteActionHandler(Handle vote, BuiltinVoteAction action, int param1, int param2)
@@ -317,23 +325,26 @@ bool IsInteger(const char[] buffer)
 
 public Action ForceTankCommand(int client, int args)
 {
-	if (!GetConVarBool(g_hCvarBossVoting)) return;
+	if (!GetConVarBool(g_hCvarBossVoting)) {
+		return Plugin_Handled;
+	}
+	
 	if (IsDarkCarniRemix())
 	{
 		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Command not available on this map.");
-		return;
+		return Plugin_Handled;
 	}
 	
 	if (IsStaticTankMap())
 	{
 		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Tank spawn is static and can not be changed on this map.");
-		return;
+		return Plugin_Handled;
 	}
 	
 	if (!IsInReady())
 	{
 		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Command can only be used during ready up.");
-		return;
+		return Plugin_Handled;
 	}
 	
 	// Get Requested Tank Percent
@@ -342,7 +353,7 @@ public Action ForceTankCommand(int client, int args)
 	
 	// Make sure the cmd argument is a number
 	if (!IsInteger(bv_sTank))
-		return;
+		return Plugin_Handled;
 	
 	// Convert it to in int boy
 	int p_iRequestedPercent = StringToInt(bv_sTank);
@@ -350,14 +361,14 @@ public Action ForceTankCommand(int client, int args)
 	if (p_iRequestedPercent < 0)
 	{
 		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Percentage is {blue}invalid{default}.");
-		return;
+		return Plugin_Handled;
 	}
 	
 	// Check if percent is within limits
 	if (!IsTankPercentValid(p_iRequestedPercent))
 	{
 		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Percentage is {blue}banned{default}.");
-		return;
+		return Plugin_Handled;
 	}
 	
 	// Set the boss
@@ -376,27 +387,32 @@ public Action ForceTankCommand(int client, int args)
 	Call_PushCell(p_iRequestedPercent);
 	Call_PushCell(-1);
 	Call_Finish();
+
+	return Plugin_Handled;
 }
 
 public Action ForceWitchCommand(int client, int args)
 {
-	if (!GetConVarBool(g_hCvarBossVoting)) return;
+	if (!GetConVarBool(g_hCvarBossVoting)) {
+		return Plugin_Handled;
+	}
+	
 	if (IsDarkCarniRemix())
 	{
 		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Command not available on this map.");
-		return;
+		return Plugin_Handled;
 	}
 	
 	if (IsStaticWitchMap())
 	{
 		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Witch spawn is static and can not be changed on this map.");
-		return;
+		return Plugin_Handled;
 	}
 	
 	if (!IsInReady())
 	{
 		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Command can only be used during ready up.");
-		return;
+		return Plugin_Handled;
 	}
 	
 	// Get Requested Witch Percent
@@ -405,7 +421,7 @@ public Action ForceWitchCommand(int client, int args)
 	
 	// Make sure the cmd argument is a number
 	if (!IsInteger(bv_sWitch))
-		return;
+		return Plugin_Handled;
 	
 	// Convert it to in int boy
 	int p_iRequestedPercent = StringToInt(bv_sWitch);
@@ -413,14 +429,14 @@ public Action ForceWitchCommand(int client, int args)
 	if (p_iRequestedPercent < 0)
 	{
 		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Percentage is {blue}invalid{default}.");
-		return;
+		return Plugin_Handled;
 	}
 	
 	// Check if percent is within limits
 	if (!IsWitchPercentValid(p_iRequestedPercent))
 	{
 		CPrintToChat(client, "{blue}<{green}BossVote{blue}>{default} Percentage is {olive}banned{default}.");
-		return;
+		return Plugin_Handled;
 	}
 	
 	// Set the boss
@@ -439,4 +455,6 @@ public Action ForceWitchCommand(int client, int args)
 	Call_PushCell(-1);
 	Call_PushCell(p_iRequestedPercent);
 	Call_Finish();
+
+	return Plugin_Handled;
 }

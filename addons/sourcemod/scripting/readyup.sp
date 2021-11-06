@@ -51,6 +51,14 @@ public Plugin myinfo =
 
 #define DEBUG 0
 
+enum
+{
+	WL_NotInWater = 0,
+	WL_Feet,
+	WL_Waist,
+	WL_Eyes
+};
+
 // ========================
 //  Plugin Variables
 // ========================
@@ -442,9 +450,9 @@ public Action Timer_PlayerTeam(Handle timer, DataPack dp)
 	}
 	
 	g_hChangeTeamTimer[client] = null;
+
+	return Plugin_Stop;
 }
-
-
 
 // ========================
 //  Forwards
@@ -548,20 +556,15 @@ public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3
 			}
 			else
 			{
-				/* Check how much the player is submerged
-				- Possible states:
-			    WL_NotInWater=0,
-			    WL_Feet,
-			    WL_Waist,
-			    WL_Eyes 
-			    */
-				if (GetEntProp(client, Prop_Send, "m_nWaterLevel") == 3)
+				if (GetEntProp(client, Prop_Send, "m_nWaterLevel") == WL_Eyes)
 				{
 					ReturnPlayerToSaferoom(client, false);
 				}
 			}
 		}
 	}
+
+	return Plugin_Continue;
 }
 
 public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
@@ -579,6 +582,8 @@ public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
 public Action Timer_RestartMob(Handle timer)
 {
 	if (inReadyUp) RestartMobCountdown(false);
+
+	return Plugin_Stop;
 }
 
 
@@ -590,20 +595,22 @@ public Action Timer_RestartMob(Handle timer)
 public Action Say_Callback(int client, const char[] command, int argc)
 {
 	SetEngineTime(client);
+
+	return Plugin_Continue;
 }
 
 public Action Vote_Callback(int client, const char[] command, int argc)
 {
 	// Fast ready / unready through default keybinds for voting
-	if (!client) return;
-	if (BuiltinVote_IsVoteInProgress() && IsClientInBuiltinVotePool(client)) return;
+	if (!client) return Plugin_Continue;
+	if (BuiltinVote_IsVoteInProgress() && IsClientInBuiltinVotePool(client)) return Plugin_Continue;
 	
 	if (Game_IsVoteInProgress())
 	{
 		int voteteam = Game_GetVoteTeam();
 		if (voteteam == -1 || voteteam == GetClientTeam(client))
 		{
-			return;
+			return Plugin_Continue;
 		}
 	}
 	
@@ -613,6 +620,8 @@ public Action Vote_Callback(int client, const char[] command, int argc)
 		Ready_Cmd(client, 0);
 	else if (strcmp(sArg, "No", false) == 0)
 		Unready_Cmd(client, 0);
+
+	return Plugin_Continue;
 }
 
 
@@ -781,7 +790,7 @@ void ToggleCommandListeners(bool hook)
 	}
 }
 
-public int DummyHandler(Handle menu, MenuAction action, int param1, int param2) { }
+public int DummyHandler(Handle menu, MenuAction action, int param1, int param2) { return 1; }
 
 public Action MenuRefresh_Timer(Handle timer)
 {
@@ -1107,6 +1116,8 @@ public Action Timer_AutoStartHelper(Handle timer)
 public Action Timer_InitiateAutoStart(Handle timer)
 {
 	InitiateAutoStart();
+
+	return Plugin_Stop;
 }
 
 void InitiateAutoStart(bool real = true)
@@ -1253,7 +1264,9 @@ void CancelFullReady(int client, disruptType type)
 
 public Action Timer_RestartCountdowns(Handle timer, bool startOn)
 {
-	if (!inReadyUp && !startOn) return;
+	if (!inReadyUp && !startOn) {
+		return Plugin_Stop;
+	}
 	
 	if (IsScavenge())
 	{
@@ -1265,6 +1278,8 @@ public Action Timer_RestartCountdowns(Handle timer, bool startOn)
 	}
 	
 	RestartMobCountdown(startOn);
+
+	return Plugin_Stop;
 }
 
 void RestartVersusStartCountdown(bool startOn)
@@ -1379,6 +1394,7 @@ void DoSecrets(int client)
 public Action SecretSpamDelay(Handle timer, int client)
 {
 	blockSecretSpam[client] = null;
+	return Plugin_Stop;
 }
 
 public Action killParticle(Handle timer, int entRef)
@@ -1388,13 +1404,16 @@ public Action killParticle(Handle timer, int entRef)
 	{
 		AcceptEntityInput(entity, "Kill");
 	}
+	return Plugin_Stop;
 }
 
 public Action killSound(Handle timer)
 {
 	for (int i = 1; i <= MaxClients; i++)
-	if (IsClientInGame(i) && !IsFakeClient(i))
-	StopSound(i, SNDCHAN_AUTO, SECRET_SOUND);
+		if (IsClientInGame(i) && !IsFakeClient(i))
+			StopSound(i, SNDCHAN_AUTO, SECRET_SOUND);
+	
+	return Plugin_Stop;
 }
 
 
@@ -1473,7 +1492,10 @@ public int Native_GetFooterStringAtIndex(Handle plugin, int numParams)
 		}
 		
 		SetNativeString(2, buffer, maxlen, true);
+		return true;
 	}
+
+	return false;
 }
 
 public int Native_IsInReady(Handle plugin, int numParams)
@@ -1655,7 +1677,7 @@ stock void SetTeamFrozen(int team, bool freezeStatus)
 	}
 }
 
-stock int SetClientFrozen(int client, bool freeze)
+stock void SetClientFrozen(int client, bool freeze)
 {
 	SetEntityMoveType(client, freeze ? MOVETYPE_NONE : (GetClientTeam(client) == L4D2Team_Spectator ? MOVETYPE_NOCLIP : MOVETYPE_WALK));
 }

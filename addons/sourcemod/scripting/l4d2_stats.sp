@@ -76,7 +76,7 @@ public void Event_PlayerSpawn(Event hEvent, const char[] sEventName, bool bDontB
 	}
 	
 	if (GetClientTeam(client) == TEAM_INFECTED) {
-		L4D2_Infected zombieclass = GetInfectedClass(client);
+		int zombieclass = GetInfectedClass(client);
 		if (zombieclass == L4D2Infected_Tank) {
 			return;
 		}
@@ -164,7 +164,7 @@ public void Event_AbilityUse(Event hEvent, const char[] sEventName, bool bDontBr
 		return;
 	}
 	
-	L4D2_Infected zombieclass = GetInfectedClass(client);
+	int zombieclass = GetInfectedClass(client);
 	
 	if (zombieclass == L4D2Infected_Hunter) {
 		g_bIsPouncing[client] = true;
@@ -175,7 +175,7 @@ public void Event_AbilityUse(Event hEvent, const char[] sEventName, bool bDontBr
 public void Event_LungePounce(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int attacker = GetClientOfUserId(hEvent.GetInt("userid"));
-	L4D2_Infected zombieclass = GetInfectedClass(attacker);
+	int zombieclass = GetInfectedClass(attacker);
 	
 	if (zombieclass == L4D2Infected_Hunter) {
 		g_bIsPouncing[attacker] = false;
@@ -196,6 +196,7 @@ public Action Timer_GroundedCheck(Handle hTimer, any userid)
 public Action Timer_KillBoomer(Handle hTimer)
 {
 	BoomerKillTime += 0.1;
+	return Plugin_Continue;
 }
 
 public void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBroadcast)
@@ -215,7 +216,7 @@ public void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBr
 	}
 
 	if (GetClientTeam(attacker) == TEAM_SURVIVOR && GetClientTeam(victim) == TEAM_INFECTED) {
-		L4D2_Infected zombieclass = GetInfectedClass(victim);
+		int zombieclass = GetInfectedClass(victim);
 		if (zombieclass == L4D2Infected_Tank) {
 			return; // We don't care about tank damage
 		}
@@ -283,7 +284,7 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 	}
 	
 	if (GetClientTeam(attacker) == TEAM_SURVIVOR && GetClientTeam(victim) == TEAM_INFECTED) {
-		L4D2_Infected zombieclass = GetInfectedClass(victim);
+		int zombieclass = GetInfectedClass(victim);
 		if (zombieclass == L4D2Infected_Tank) {
 			return; // We don't care about tank damage
 		}
@@ -511,7 +512,7 @@ public void Event_PlayerShoved(Event hEvent, const char[] sEventName, bool bDont
 		return;
 	}
 	
-	L4D2_Infected zombieclass = GetInfectedClass(victim);
+	int zombieclass = GetInfectedClass(victim);
 	if (zombieclass == L4D2Infected_Boomer) {
 		if (g_hBoomerShoveTimer != null) {
 			DestroyTimer(g_hBoomerShoveTimer);
@@ -532,6 +533,8 @@ public Action Timer_BoomerShove(Handle hTimer)
 	// PrintToChatAll("[DEBUG] BoomerShove timer expired, credit for boomer shutdown is available to anyone at this point!");
 	g_hBoomerShoveTimer = null;
 	g_iBoomerShover = 0;
+
+	return Plugin_Stop;
 }
 
 public void Event_PlayerBoomed(Event hEvent, const char[] sEventName, bool bDontBroadcast)

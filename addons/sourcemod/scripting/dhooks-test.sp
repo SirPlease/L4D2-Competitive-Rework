@@ -187,6 +187,8 @@ public MRESReturn OnTakeDamage(int pThis, DHookReturn hReturn, DHookParam hParam
 		hParams.SetObjectVar(1, 48, ObjectValueType_Float, 0.0);
 		PrintToChat(pThis, "Pimping your hp");
 	}
+
+	return MRES_Ignored;
 }
 
 // int CBaseCombatCharacter::GiveAmmo(int, int, bool)

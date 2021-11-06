@@ -18,6 +18,7 @@
 	You should have received a copy of the GNU General Public License along
 	with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -142,7 +143,7 @@ void CvarsToType()
 	fJockeyMinMountedSpeed = hCvarJockeyMinMoundedSpeed.FloatValue;
 }
 
-public Action TankSpawn(Event event, const char[] name, bool dontBroadcast) 
+public void TankSpawn(Event event, const char[] name, bool dontBroadcast) 
 {
 	if (!tankInPlay) {
 		tankInPlay = true;
@@ -152,7 +153,7 @@ public Action TankSpawn(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public Action TankDeath(Event event, const char[] name, bool dontBroadcast)
+public void TankDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	if (client > 0 && IsInfected(client) && IsTank(client)) {
@@ -169,9 +170,11 @@ public Action Timer_CheckTank(Handle timer)
 			PrintToChatAll("\x05Water Slowdown\x01 has been restored to normal.");
 		}
 	}
+
+	return Plugin_Stop;
 }
 
-public Action RoundStart(Event event, const char[] name, bool dontBroadcast)
+public void RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	tankInPlay = false;
 	HookCrouchTriggers();
@@ -221,7 +224,7 @@ public void CrouchSpeedEndTouch(const char[] output, int caller, int activator, 
  * Slowdown from gunfire: Tank & SI
  *
 **/
-public Action PlayerHurt(Event event, const char[] name, bool dontBroadcast)
+public void PlayerHurt(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	if (client > 0 && IsInfected(client)) {
@@ -474,7 +477,7 @@ bool IsTank(int client)
 
 float fScaleFloat(float inc, float low, float high)
 {
-	/* @A1m:
+	/*
 	 * This macros has been removed because it is considered unsafe.
 	 * Besides, there are problems when assembling in sourcemod 1.11.
 	 * The compiler ignores the data type when assembling.
@@ -488,7 +491,7 @@ float fScaleFloat(float inc, float low, float high)
 
 float fScaleFloat2(float inc, float low, float high)
 {
-	/* @A1m:
+	/*
 	 * This macros has been removed because it is considered unsafe.
 	 * Besides, there are problems when assembling in sourcemod 1.11.
 	 * The compiler ignores the data type when assembling.

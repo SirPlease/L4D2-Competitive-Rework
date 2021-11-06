@@ -99,23 +99,23 @@ void DetermineItems()
 	StringMap hItemsStringMap = new StringMap();
 
 	if (iItemFlags & HEALTH_FIRST_AID_KIT) {
-		hItemsStringMap.SetValue("weapon_first_aid_kit", view_as<int>(L4D2WeaponSlot_HeavyHealthItem));
+		hItemsStringMap.SetValue("weapon_first_aid_kit", L4D2WeaponSlot_HeavyHealthItem);
 	} else if (iItemFlags & HEALTH_DEFIBRILLATOR) {
-		hItemsStringMap.SetValue("weapon_defibrillator", view_as<int>(L4D2WeaponSlot_HeavyHealthItem));
+		hItemsStringMap.SetValue("weapon_defibrillator", L4D2WeaponSlot_HeavyHealthItem);
 	}
 
 	if (iItemFlags & HEALTH_PAIN_PILLS) {
-		hItemsStringMap.SetValue("weapon_pain_pills", view_as<int>(L4D2WeaponSlot_LightHealthItem));
+		hItemsStringMap.SetValue("weapon_pain_pills", L4D2WeaponSlot_LightHealthItem);
 	} else if (iItemFlags & HEALTH_ADRENALINE) {
-		hItemsStringMap.SetValue("weapon_adrenaline", view_as<int>(L4D2WeaponSlot_LightHealthItem));
+		hItemsStringMap.SetValue("weapon_adrenaline", L4D2WeaponSlot_LightHealthItem);
 	}
 
 	if (iItemFlags & THROWABLE_PIPE_BOMB) {
-		hItemsStringMap.SetValue("weapon_pipe_bomb", view_as<int>(L4D2WeaponSlot_Throwable));
+		hItemsStringMap.SetValue("weapon_pipe_bomb", L4D2WeaponSlot_Throwable);
 	} else if (iItemFlags & THROWABLE_MOLOTOV) {
-		hItemsStringMap.SetValue("weapon_molotov", view_as<int>(L4D2WeaponSlot_Throwable));
+		hItemsStringMap.SetValue("weapon_molotov", L4D2WeaponSlot_Throwable);
 	} else if (iItemFlags & THROWABLE_VOMITJAR) {
-		hItemsStringMap.SetValue("weapon_vomitjar", view_as<int>(L4D2WeaponSlot_Throwable));
+		hItemsStringMap.SetValue("weapon_vomitjar", L4D2WeaponSlot_Throwable);
 	}
 
 	GiveStartingItems(hItemsStringMap);
@@ -135,7 +135,7 @@ void GiveStartingItems(StringMap &hItemsStringMap)
 	int iSlotIndex, iSize = hItemsSnapshot.Length;
 
 	for (int i = 1; i <= MaxClients; i++) {
-		if (IsClientInGame(i) && GetClientTeam(i) == view_as<int>(L4D2Team_Survivor) && IsPlayerAlive(i)) {
+		if (IsClientInGame(i) && GetClientTeam(i) == L4D2Team_Survivor && IsPlayerAlive(i)) {
 			for (int j = 0; j < iSize; j++) {
 				hItemsSnapshot.GetKey(j, sEntName, sizeof(sEntName));
 				hItemsStringMap.GetValue(sEntName, iSlotIndex);

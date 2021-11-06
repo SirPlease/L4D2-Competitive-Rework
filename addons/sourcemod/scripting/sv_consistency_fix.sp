@@ -108,6 +108,7 @@ public Action PrintWhitelist(Handle hTimer, any iUserId)
 		PrintToConsole(iClient, " ");
 		PrintToConsole(iClient, " ");
 	}
+	return Plugin_Stop;
 }
 
 public Action Cmd_ConsistencyCheck(int iClient, int iArgs)

@@ -24,10 +24,12 @@
 
 #include <sourcemod>
 #include <left4dhooks>
-#define L4D2UTIL_STOCKS_ONLY
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 
 #define DEBUG 0
+
+#define ENTITY_NAME_MAX_LENTH 64
 
 #define BLOCK_BOOMER	(1 << 0)
 #define BLOCK_CHARGER	(1 << 1)
@@ -82,7 +84,7 @@ public Action L4D2_OnStagger(int target, int source)
 		return Plugin_Continue;
 	}
 	
-	if (GetInfectedZClass(source) == view_as<int>(L4D2Infected_Boomer) && !(iActiveFlags & BLOCK_BOOMER)) { // Is the Boomer eligible?
+	if (GetInfectedZClass(source) == L4D2Infected_Boomer && !(iActiveFlags & BLOCK_BOOMER)) { // Is the Boomer eligible?
 		return Plugin_Continue;
 	}
 	
@@ -90,24 +92,24 @@ public Action L4D2_OnStagger(int target, int source)
 		return Plugin_Continue;
 	}
 	
-	if (GetClientTeam(target) == view_as<int>(L4D2Team_Survivor) && IsSurvivorAttacked(target)) { // Capped Survivors should not get staggered
+	if (GetClientTeam(target) == L4D2Team_Survivor && IsSurvivorAttacked(target)) { // Capped Survivors should not get staggered
 		return Plugin_Handled;
 	}
 	
-	if (GetClientTeam(target) != view_as<int>(L4D2Team_Infected)) { // We'll only need SI for the following checks
+	if (GetClientTeam(target) != L4D2Team_Infected) { // We'll only need SI for the following checks
 		return Plugin_Continue;
 	}
 	
-	if (source == -1 && GetInfectedZClass(target) != view_as<int>(L4D2Infected_Charger)) { // Allow Charger selfstaggers through
+	if (source == -1 && GetInfectedZClass(target) != L4D2Infected_Charger) { // Allow Charger selfstaggers through
 		return Plugin_Handled;
 	}
 	
-	if (source <= MaxClients && GetInfectedZClass(source) == view_as<int>(L4D2Infected_Boomer)) { // Cancel any staggers caused by a Boomer explosion
+	if (source <= MaxClients && GetInfectedZClass(source) == L4D2Infected_Boomer) { // Cancel any staggers caused by a Boomer explosion
 		return Plugin_Handled;
 	}
 	
 	if ((iActiveFlags & BLOCK_WITCH) && source != -1) { // Return early if we don't have a valid edict.
-		char classname[64];
+		char classname[ENTITY_NAME_MAX_LENTH];
 		GetEdictClassname(source, classname, sizeof(classname));
 		if (StrContains(classname, "witch") != -1) { // Cancel any staggers caused by a running Witch or Witch Bride(if eligible)
 			return Plugin_Handled;

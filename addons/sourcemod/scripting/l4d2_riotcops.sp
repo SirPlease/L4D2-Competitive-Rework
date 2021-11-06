@@ -24,7 +24,7 @@
 
 #include <sourcemod>
 #include <sdkhooks>
-#define L4D2UTIL_STOCKS_ONLY
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 
 #define PARISH_PREFIX "c5m"
@@ -75,7 +75,7 @@ public Action RiotCopTraceAttack(int iVictim, int &iAttacker, int &iInflictor, f
 		return Plugin_Continue;
 	}
 	
-	if (!L4D2Util_IsValidClient(iAttacker) || !IsSurvivor(iAttacker)) {
+	if (!IsValidSurvivor(iAttacker)) {
 		return Plugin_Continue;
 	}
 	
