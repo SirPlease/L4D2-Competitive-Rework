@@ -18,20 +18,6 @@
 					}
 				}
 			}
-			"CTerrorGun::Holster"
-			{
-				"signature"	"CTerrorGun::Holster"
-				"callconv"	"thiscall"
-				"return"	"int"
-				"this"		"entity"
-				"arguments"
-				{
-					"CBaseCombatWeapon"
-					{
-						"type"	"int"
-					}
-				}
-			}
 			"CTerrorGun::Reload"
 			{
 				"signature"	"CTerrorGun::Reload"
@@ -117,28 +103,8 @@
 				}
 			}
 		}
-		"Addresses"
-		{
-			"CTerrorPlayer::PreThink"
-			{
-				"linux"
-				{
-					"signature"		"CTerrorPlayer::PreThink"
-				}
-				"windows"
-				{
-					"signature"		"CTerrorPlayer::PreThink"
-				}
-			}
-		}
 		"Offsets"
 		{
-			"CTerrorPlayer::PreThink__SafeDropLogic"
-			{
-				"linux"		"181"
-				"windows"	"498"
-			}
-			
 			"CBaseCombatWeapon::AbortReload"
 			{
 				"linux"		"281"
@@ -208,6 +174,13 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x57\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x8B\xF8\x85\xFF\x0F\x84\x2A\x2A\x2A\x2A\x8B\x87\xB4\x1C\x00\x00"
 				/* ? ? ? ? ? ? 56 57 8B F1 E8 ? ? ? ? 8B F8 85 FF 0F 84 ? ? ? ? 8B 87 B4 1C 00 00 */
 				/* Signature provided by Lux & Crasher_3637 */
+			}
+			"CBaseShotgun::PlayReloadAnim"
+			{
+				"library"	"server"
+				"linux"		"@_ZN12CBaseShotgun14PlayReloadAnimE8Activity17PlayerAnimEvent_ti"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x8B\x2A\x8B"
+				/* ? ? ? ? ? ? ? E8 ? ? ? ? 8B ? 85 ? 0F 84 ? ? ? ? 8B ? ? 8B ? 8B */
 			}
 		}
 	}
