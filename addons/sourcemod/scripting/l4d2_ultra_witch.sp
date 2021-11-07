@@ -119,7 +119,7 @@ public Action OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &
 	fThrowForce[2] = 300.0;
 	
 	ApplyAbsVelocityImpulse(iVictim, fThrowForce);
-	L4D2Direct_DoAnimationEvent(iVictim, view_as<int>(ANIM_TANK_PUNCH_GETUP));
+	L4D2Direct_DoAnimationEvent(iVictim, ANIM_TANK_PUNCH_GETUP);
 	
 	fDamage = fWitchDamage;
 	

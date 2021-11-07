@@ -237,10 +237,12 @@ public OnRoundIsLive()
 
 public Action: L4D_OnFirstSurvivorLeftSafeArea( client )
 {
-    if ( !g_bReadyUpAvailable )
-    {
-        RoundReallyStarting();
-    }
+	if ( !g_bReadyUpAvailable )
+	{
+		RoundReallyStarting();
+	}
+
+	return Plugin_Continue;
 }
 
 // penalty_bonus: requesting final update before setting score, pass it the holdout bonus
@@ -259,25 +261,27 @@ public PBONUS_RequestFinalUpdate( &update )
 // this is not called before penalty_bonus, so useless
 public Action:L4D2_OnEndVersusModeRound(bool:countSurvivors)
 {
-    if ( g_bHoldoutThisRound )
-    {
-        if ( g_bHoldoutActive )
-        {
-            // game ended while holdout was active! wipe before they made it - apply partial bonus
-            HoldOutEnds();
-        }
-        
-        // display the puny bonus (if enabled)
-        new iReport = GetConVarInt(g_hCvarReportMode);
-        if (iReport && iReport != REPORT_ONLYEVENT && GetConVarBool(g_hCvarPointsMode) )
-        {
-            DisplayBonusToAll();
-        }
-    }
-    
-    g_bInRound = false;
-    g_bSecondHalf = true;
-    g_bPlayersLeftStart = false;
+	if ( g_bHoldoutThisRound )
+	{
+		if ( g_bHoldoutActive )
+		{
+			// game ended while holdout was active! wipe before they made it - apply partial bonus
+			HoldOutEnds();
+		}
+		
+		// display the puny bonus (if enabled)
+		new iReport = GetConVarInt(g_hCvarReportMode);
+		if (iReport && iReport != REPORT_ONLYEVENT && GetConVarBool(g_hCvarPointsMode) )
+		{
+			DisplayBonusToAll();
+		}
+	}
+
+	g_bInRound = false;
+	g_bSecondHalf = true;
+	g_bPlayersLeftStart = false;
+
+	return Plugin_Continue;
 }
 
 stock RoundReallyStarting()

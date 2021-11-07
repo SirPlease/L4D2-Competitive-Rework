@@ -61,5 +61,5 @@ public void JockeyRideEnd(Event hEvent, const char[] name, bool dontBroadcast)
 
 bool IsHangingFromLedge(int client)
 {
-	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isHangingFromLedge") || GetEntProp(client, Prop_Send, "m_isFallingFromLedge"));
+	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isHangingFromLedge", 1) || GetEntProp(client, Prop_Send, "m_isFallingFromLedge", 1));
 }

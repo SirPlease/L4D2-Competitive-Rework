@@ -59,6 +59,8 @@ public Action L4D_OnFirstSurvivorLeftSafeArea(int iClient)
 	if (!g_bReadyUpAvailable) {
 		EnableGhostHurt();
 	}
+
+	return Plugin_Continue;
 }
 
 public void OnMapStart()
@@ -75,6 +77,8 @@ public Action Cmd_ResetGhostHurt(int iArgs)
 {
 	DisableGhostHurt();
 	PrintToServer("DisableGhostHurt()");
+
+	return Plugin_Handled;
 }
 
 void DisableGhostHurt()

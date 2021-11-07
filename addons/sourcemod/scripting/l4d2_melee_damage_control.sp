@@ -148,7 +148,7 @@ public Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, fl
 	}
 	
 	int iZclass = GetEntProp(iVictim, Prop_Send, "m_zombieClass", 4);
-	if (iZclass <= view_as<int>(L4D2Infected_Jockey)) {
+	if (iZclass <= L4D2Infected_Jockey) {
 		if (g_bMeleeDmgFixEnable) {
 		
 			#if DEBUG
@@ -160,7 +160,7 @@ public Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, fl
 			fDamage = float(GetClientHealth(iVictim));
 			return Plugin_Changed;
 		}
-	} else if (iZclass == view_as<int>(L4D2Infected_Charger)) {
+	} else if (iZclass == L4D2Infected_Charger) {
 		if (g_fChargerMeleeDamage > 0.0) {
 			float fHealth = float(GetClientHealth(iVictim));
 			
@@ -174,7 +174,7 @@ public Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, fl
 			fDamage = (fHealth < g_fChargerMeleeDamage) ? fHealth : g_fChargerMeleeDamage; // Deal requested Damage to Chargers.
 			return Plugin_Changed;
 		}
-	} else if (iZclass == view_as<int>(L4D2Infected_Tank)) {
+	} else if (iZclass == L4D2Infected_Tank) {
 		if (g_fTankMeleeNerfDamage > 0.0) {
 		
 			#if DEBUG
@@ -213,7 +213,7 @@ bool IsSurvivor(int iClient)
 	return (iClient > 0
 		&& iClient <= MaxClients
 		&& IsClientInGame(iClient)
-		&& GetClientTeam(iClient) == view_as<int>(L4D2Team_Survivor));
+		&& GetClientTeam(iClient) == L4D2Team_Survivor);
 }
 
 bool IsInfected(int iClient)
@@ -221,5 +221,5 @@ bool IsInfected(int iClient)
 	return (iClient > 0
 		&& iClient <= MaxClients
 		&& IsClientInGame(iClient)
-		&& GetClientTeam(iClient) == view_as<int>(L4D2Team_Infected));
+		&& GetClientTeam(iClient) == L4D2Team_Infected);
 }

@@ -24,7 +24,7 @@
 
 #include <sourcemod>
 #include <sdktools>
-#define L4D2UTIL_STOCKS_ONLY
+#define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 
 #define TEAM_SURVIVOR 2
@@ -120,7 +120,7 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 		g_iDamage[i][iClient] = 0;
 	}
 
-	if (iZClass == view_as<int>(L4D2Infected_Smoker)) {
+	if (iZClass == L4D2Infected_Smoker) {
 		ClearTimer();
 	}
 }
@@ -186,6 +186,7 @@ public Action CheckSurvivorState(Handle hTimer, ArrayStack hEventMembers)
 	// delete hEventMembers; // TIMER_HNDL_CLOSE, the timer will do for us
 	
 	g_hTongueParalyzeTimer = null;
+	return Plugin_Stop;
 }
 
 public void Event_SmokerAttackSecond(Event hEvent, const char[] sEventName, bool bDontBroadcast)
@@ -235,14 +236,14 @@ void PrintInflictedDamage(int iSurvivor, int iInfected)
 
 int IsTargetedSi(int iClient)
 {
-	L4D2_Infected iZClass = view_as<L4D2_Infected>(GetEntProp(iClient, Prop_Send, "m_zombieClass"));
+	int iZClass = GetEntProp(iClient, Prop_Send, "m_zombieClass");
 
 	if (iZClass == L4D2Infected_Smoker
 		|| iZClass == L4D2Infected_Hunter
 		|| iZClass == L4D2Infected_Jockey
 		|| iZClass == L4D2Infected_Charger
 	) {
-		return view_as<int>(iZClass);
+		return iZClass;
 	}
 	
 	return -1;

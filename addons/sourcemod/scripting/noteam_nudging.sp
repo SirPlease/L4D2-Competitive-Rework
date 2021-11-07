@@ -18,7 +18,6 @@ public Plugin myinfo =
 	url = "-"
 };
 
-
 public void OnPluginStart()
 {
 	CreateConVar("noteam_nudging_version", PLUGIN_VERSION, "", FCVAR_NOTIFY|FCVAR_DONTRECORD);
@@ -40,4 +39,6 @@ public Action UpdateAvoid(Handle timer)
 		
 		SetEntPropFloat(i, Prop_Send, "m_noAvoidanceTimer", flTime + NOAVOID_ADDTIME, 1);
 	}
+
+	return Plugin_Continue;
 }

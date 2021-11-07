@@ -77,10 +77,10 @@ int
 	g_iEnabledFlags = 0,
 	g_iBlockZeroDmg = 0,
 	g_iLastHealth[MAXPLAYERS + 1][UNDO_SIZE][2],				// The Undo Damage array, with correlated arrays for holding the last revive count and current undo index
-	g_iLastReviveCount[MAXPLAYERS + 1] = {0, ... };
-	g_iCurrentUndo[MAXPLAYERS + 1] = {0, ... };
-	g_iTargetTempHealth[MAXPLAYERS + 1] = {0, ... };			// Healing is weird, so this keeps track of our target OR the target's temp health
-	g_iLastPerm[MAXPLAYERS + 1] = {100, ... };				// The permanent damage fraction requires some coordination between OnTakeDamage and player_hurt
+	g_iLastReviveCount[MAXPLAYERS + 1] = {0, ... },
+	g_iCurrentUndo[MAXPLAYERS + 1] = {0, ... },
+	g_iTargetTempHealth[MAXPLAYERS + 1] = {0, ... },			// Healing is weird, so this keeps track of our target OR the target's temp health
+	g_iLastPerm[MAXPLAYERS + 1] = {100, ... },				// The permanent damage fraction requires some coordination between OnTakeDamage and player_hurt
 	g_iLastTemp[MAXPLAYERS + 1] = {0, ... };
 
 float
@@ -253,7 +253,8 @@ public void OnClientPutInServer(int iClient)
 //																												   //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
 
-public Action Timed_SetFrustration(Handle hTimer, any iClient) {
+public Action Timed_SetFrustration(Handle hTimer, any iClient)
+{
 	if (IsTank(iClient) && IsPlayerAlive(iClient)) {
 		int iFrust = GetEntProp(iClient, Prop_Send, "m_frustration");
 		iFrust += g_iFrustrationOffset[iClient];
@@ -267,13 +268,15 @@ public Action Timed_SetFrustration(Handle hTimer, any iClient) {
 		SetEntProp(iClient, Prop_Send, "m_frustration", iFrust);
 		g_iFrustrationOffset[iClient] = 0;
 	}
+
+	return Plugin_Stop;
 }
 
 public Action OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, \
 								int &iDamagetype, int &iWeapon, float fDamageForce[3], float fDamagePosition[3])
 {
 	if (!IsValidSurvivor(iVictim) || !IsValidEdict(iAttacker) || !IsValidEdict(iInflictor)) { 
-		return Plugin_Continue; 
+		return Plugin_Continue;
 	}
 
 	CountdownTimer cTimerGod = L4D2Direct_GetInvulnerabilityTimer(iVictim); // left4dhooks
@@ -426,7 +429,7 @@ public Action OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &
 		}
 	}
 	
-	if (L4D2Util_IsValidClient(iAttacker) && IsTank(iAttacker)) {
+	if (IsValidClientIndex(iAttacker) && IsTank(iAttacker)) {
 		if (strcmp(sClassname, "prop_physics") == 0|| strcmp(sClassname, "prop_car_alarm") == 0) {
 			if (g_hRageHittables.BoolValue) {
 				g_iFrustrationOffset[iAttacker] = -100;
@@ -480,6 +483,8 @@ public Action Timed_ResetGlow(Handle hTimer, any iClient)
 		SetEntityRenderMode(iClient, RENDER_NORMAL);
 		SetEntityRenderColor(iClient, 255, 255, 255, 255);
 	}
+
+	return Plugin_Stop;
 }
 
 public void OnMapStart()
@@ -599,6 +604,8 @@ public Action Event_PlayerIncapStart(Event hEvent, const char[] sEventName, bool
 			UndoDamage(iVictim);
 		}
 	}
+
+	return Plugin_Continue;
 }
 
 // If a bot is guilty of creating a friendly fire event, undo it
@@ -621,6 +628,8 @@ public Action Event_FriendlyFire(Event hEvent, const char[] sEventName, bool bDo
 public Action StupidGuiltyBotDelay(Handle hTimer, any iClient)
 {
 	g_bStupidGuiltyBots[iClient] = false;
+
+	return Plugin_Stop;
 }
 
 // While a Charger is carrying a Survivor, undo any friendly fire done to them
@@ -653,6 +662,8 @@ public Action Event_ChargerCarryEnd(Event hEvent, const char[] sEventName, bool 
 public Action ChargerCarryFFDelay(Handle hTimer, any iClient)
 {
 	g_bChargerCarryNoFF[iClient] = false;
+
+	return Plugin_Stop;
 }
 
 // For health kit undo, we must remember the target in HealBegin

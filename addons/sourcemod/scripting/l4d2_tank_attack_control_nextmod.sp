@@ -220,11 +220,12 @@ public Action ResetJumpRockCooldown(Handle hTimer, any userid)
 	int client = GetClientOfUserId(userid);
 
 	if (client == 0) {
-		return;
+		return Plugin_Stop;
 	}
 	
 	JumpRockReady = true;
 	CPrintToChat(client, "<{red}JumpRock{default}> Jump Rock Is {olive}Ready!");
+	return Plugin_Stop;
 }
 
 public Action Timer_Countdown(Handle hTimer)

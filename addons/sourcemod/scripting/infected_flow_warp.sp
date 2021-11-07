@@ -1,16 +1,14 @@
 #pragma semicolon 1
-#pragma newdecls required;
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdktools>
 #include <left4dhooks>
-#include <l4d2util_stocks> //String_ToLower & L4D2Util_IsValidClient
+#define L4D2UTIL_STOCKS_ONLY 1
+#include <l4d2util> //String_ToLower & IsValidSurvivor
 
-#define TEAM_SURVIVOR 2
-#define TEAM_INFECTED 3
-
-StringMap 
-	hNameToCharIDTrie;
+StringMap
+	hNameToCharIDTrie = null;
 
 public Plugin myinfo =
 {
@@ -50,7 +48,7 @@ public Action WarpTo_Cmd(int client, int args)
 
 	if (args == 0) {
 		int fMaxFlowSurvivor = L4D_GetHighestFlowSurvivor(); //left4dhooks functional or left4downtown2 by A1m`
-		if (!L4D2Util_IsValidClient(fMaxFlowSurvivor) || !IsSurvivor(fMaxFlowSurvivor)) {
+		if (!IsValidSurvivor(fMaxFlowSurvivor)) {
 			PrintToChat(client, "No survivor player could be found!");
 			return Plugin_Handled;
 		}
@@ -95,16 +93,9 @@ int GetClientOfCharID(int characterID)
 	return 0;
 }
 
-bool IsSurvivor(int client)
-{
-	return (IsClientInGame(client)
-		&& GetClientTeam(client) == TEAM_SURVIVOR 
-		&& IsPlayerAlive(client));
-}
-
 bool IsGhostInfected(int client)
 {
-	return (GetClientTeam(client) == TEAM_INFECTED 
+	return (GetClientTeam(client) == L4D2Team_Infected
 		&& IsPlayerAlive(client) 
-		&& GetEntProp(client, Prop_Send, "m_isGhost"));
+		&& GetEntProp(client, Prop_Send, "m_isGhost", 1));
 }

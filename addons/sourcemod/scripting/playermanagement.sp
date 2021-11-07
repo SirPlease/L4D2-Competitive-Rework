@@ -195,6 +195,8 @@ public Action SecureSpec(Handle timer, any client)
 {
 	KillTimer(SpecTimer[client]);
 	SpecTimer[client] = INVALID_HANDLE;
+
+	return Plugin_Stop;
 }
 
 public Action RespecDelay_Timer(Handle timer, any client)
@@ -204,6 +206,8 @@ public Action RespecDelay_Timer(Handle timer, any client)
 		ChangeClientTeamEx(client, L4D2Team_Spectator, true);
 		blockVotes[client] = false;
 	}
+
+	return Plugin_Stop;
 }
 
 public Action Vote_Listener(int client, const char[] command, int argc)
@@ -242,7 +246,7 @@ public Action SwapTeams_Cmd(int client, int args)
 
 bool IsGhost(int client)
 {
-	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isGhost"));
+	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isGhost", 1));
 }
 
 public Action Swap_Cmd(int client, int args)

@@ -1,3 +1,5 @@
+#pragma semicolon 1
+
 #include <sourcemod>
 #include <left4dhooks>
 #include <colors>
@@ -39,14 +41,13 @@ public OnPluginStart()
 	g_hBlockJumpRock = CreateConVar("l4d2_block_jump_rock", "0", "Block tanks from jumping and throwing a rock at the same time");
 	hOverhandOnly = CreateConVar("tank_overhand_only", "0", "Force tank to only throw overhand rocks.");
 
-	HookEvent("round_start", EventHook:RoundStartEvent, EventHookMode_PostNoCopy);
+	HookEvent("round_start", RoundStartEvent, EventHookMode_PostNoCopy);
 	HookEvent("tank_spawn", TankSpawn_Event);
 }
 
-public RoundStartEvent()
+public void RoundStartEvent(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	for (new i = 1; i <= MaxClients; i++)
-	{
+	for (int i = 1; i <= MaxClients; i++) {
 		throwQueuedAt[i] = 0.0;
 	}
 }
@@ -56,18 +57,20 @@ public TankSpawn_Event(Handle:event, const String:name[], bool:dontBroadcast)
 	new tank = GetClientOfUserId(GetEventInt(event, "userid"));
 	if (IsFakeClient(tank)) return;
 
-	new bool:hidemessage = false;
-	decl String:buffer[3];
+	bool hidemessage = false;
+
+	char buffer[3];
 	if (GetClientInfo(tank, "rs_hidemessage", buffer, sizeof(buffer)))
 	{
 		hidemessage = bool:StringToInt(buffer);
 	}
+
 	if (!hidemessage && (GetConVarBool(hOverhandOnly) == false))
 	{
-        CPrintToChat(tank, "{blue}[{default}Tank Rock Selector{blue}]");
-        CPrintToChat(tank, "{olive}Reload {default}= {blue}2 Handed Overhand");
-        CPrintToChat(tank, "{olive}Use {default}= {blue}Underhand");
-        CPrintToChat(tank, "{olive}M2 {default}= {blue}1 Handed Overhand");
+		CPrintToChat(tank, "{blue}[{default}Tank Rock Selector{blue}]");
+		CPrintToChat(tank, "{olive}Reload {default}= {blue}2 Handed Overhand");
+		CPrintToChat(tank, "{olive}Use {default}= {blue}Underhand");
+		CPrintToChat(tank, "{olive}M2 {default}= {blue}1 Handed Overhand");
 	}
 }
 

@@ -32,7 +32,7 @@ new spitterlimit;
 new maxSI;
 
 /* These class numbers are the same ones used internally in L4D2 */
-enum SIClass
+enum /*SIClass*/
 {
 	SI_None=0,
 	SI_Smoker=1,
@@ -47,7 +47,7 @@ enum SIClass
 	SI_MAX_SIZE
 };
 
-stock const String:g_sSIClassNames[view_as<int>(SI_MAX_SIZE)][] = 
+stock const String:g_sSIClassNames[SI_MAX_SIZE][] = 
 {	"", "Smoker", "Boomer", "Hunter", "Spitter", "Jockey", "Charger", "Witch", "Tank" };
 
 public Plugin:myinfo = 
@@ -167,9 +167,11 @@ public Action:L4D_OnFirstSurvivorLeftSafeArea(client)
 		FillArray(g_SpawnsArray);
 		bLive = true;
 	}
+
+	return Plugin_Continue;
 }
 
-public L4D_OnEnterGhostState(client)
+public void L4D_OnEnterGhostState(client)
 {
 	// Is Game live?
 	// Is Valid Client?
@@ -203,9 +205,11 @@ public Action:L4D_OnTryOfferingTankBot(tank_index, &bool:enterStasis)
 		// This method will work, but it will only work with Configs/Server setups that use L4D Tank Control
 		CreateTimer(0.01, CheckTankie);
 	}
+
+	return Plugin_Continue;
 }
 
-public L4D2_OnTankPassControl(oldTank, newTank, passCount)
+public void L4D2_OnTankPassControl(oldTank, newTank, passCount)
 {
 	if (!IsFakeClient(newTank))
 	{
@@ -239,6 +243,8 @@ public Action:CheckTankie(Handle:timer)
 			}
 		}
 	}
+
+	return Plugin_Stop;
 }
 
 public cvarChanged(Handle:cvar, const String:oldValue[], const String:newValue[])

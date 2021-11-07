@@ -11,7 +11,7 @@
 #define UTIL_ARRAY_INDEX_TIMESTAMP 1
 
 // Internal array of strings for timer ability timer entity classnames
-stock const char L4D2_InfectedTimerEntities[view_as<int>(L4D2Infected_Size)][] =
+stock const char L4D2_InfectedTimerEntities[L4D2Infected_Size][] =
 {
 	"",
 	"ability_tongue", //Smoker
@@ -26,7 +26,7 @@ stock const char L4D2_InfectedTimerEntities[view_as<int>(L4D2Infected_Size)][] =
 };
 
 // Internal array of strings for Infected victim netprops
-stock const char L4D2_InfectedVictimNetprops[view_as<int>(L4D2Infected_Size)][] =
+stock const char L4D2_InfectedVictimNetprops[L4D2Infected_Size][] =
 {
 	"",
 	"m_tongueVictim", //Smoker
@@ -48,7 +48,7 @@ stock const char L4D2_InfectedVictimNetprops[view_as<int>(L4D2Infected_Size)][] 
  */
 stock bool IsInfected(int client)
 {
-	return (IsClientInGame(client) && GetClientTeam(client) == view_as<int>(L4D2Team_Infected));
+	return (IsClientInGame(client) && GetClientTeam(client) == L4D2Team_Infected);
 }
 
 /**
@@ -59,7 +59,7 @@ stock bool IsInfected(int client)
  */
 stock bool IsValidInfected(int client)
 {
-	return (L4D2Util_IsValidClient(client) && IsClientInGame(client) && GetClientTeam(client) == view_as<int>(L4D2Team_Infected));
+	return (IsValidClientIndex(client) && IsClientInGame(client) && GetClientTeam(client) == L4D2Team_Infected);
 }
 
 /**
@@ -69,9 +69,9 @@ stock bool IsValidInfected(int client)
  * @param client client ID
  * @return class ID
  */
-stock L4D2_Infected GetInfectedClass(int client)
+stock int GetInfectedClass(int client)
 {
-	return view_as<L4D2_Infected>(GetEntProp(client, Prop_Send, "m_zombieClass"));
+	return GetEntProp(client, Prop_Send, "m_zombieClass");
 }
 
 /**
@@ -82,7 +82,7 @@ stock L4D2_Infected GetInfectedClass(int client)
  */
 stock bool IsInfectedGhost(int client)
 {
-	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isGhost"));
+	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isGhost", 1));
 }
 
 /**
@@ -93,9 +93,9 @@ stock bool IsInfectedGhost(int client)
  * @param iBufLen size of sBuffer
  * @noreturn
  */
-stock void GetInfectedClassName(L4D2_Infected iClass, char[] sBuffer, const int iBufLen)
+stock void GetInfectedClassName(int iClass, char[] sBuffer, const int iBufLen)
 {
-	strcopy(sBuffer, iBufLen, L4D2_InfectedNames[view_as<int>(iClass)]);
+	strcopy(sBuffer, iBufLen, L4D2_InfectedNames[iClass]);
 }
 
 /**
@@ -120,8 +120,8 @@ stock int GetInfectedAbilityEntity(int owner)
  */
 stock bool GetInfectedAbilityTimer(int client, float &timestamp, float &duration)
 {
-	L4D2_Infected zClass = GetInfectedClass(client);
-	if (strlen(L4D2_InfectedTimerEntities[view_as<int>(zClass)]) == 0) {
+	int zClass = GetInfectedClass(client);
+	if (strlen(L4D2_InfectedTimerEntities[zClass]) == 0) {
 		return false;
 	}
 
@@ -151,9 +151,9 @@ stock bool GetInfectedAbilityTimer(int client, float &timestamp, float &duration
  */
 stock bool SetInfectedAbilityTimer(int client, float &timestamp, float &duration)
 {
-	L4D2_Infected zClass = GetInfectedClass(client);
+	int zClass = GetInfectedClass(client);
 
-	if (strlen(L4D2_InfectedTimerEntities[view_as<int>(zClass)]) == 0) {
+	if (strlen(L4D2_InfectedTimerEntities[zClass]) == 0) {
 		return false;
 	}
 
@@ -181,13 +181,13 @@ stock bool SetInfectedAbilityTimer(int client, float &timestamp, float &duration
  */
 stock int GetInfectedVictim(int client)
 {
-	L4D2_Infected zClass = GetInfectedClass(client);
+	int zClass = GetInfectedClass(client);
 
-	if (strlen(L4D2_InfectedVictimNetprops[view_as<int>(zClass)]) == 0) {
+	if (strlen(L4D2_InfectedVictimNetprops[zClass]) == 0) {
 		return -1;
 	}
 
-	return GetEntPropEnt(client, Prop_Send, L4D2_InfectedVictimNetprops[view_as<int>(zClass)]);
+	return GetEntPropEnt(client, Prop_Send, L4D2_InfectedVictimNetprops[zClass]);
 }
 
 /**
@@ -196,7 +196,7 @@ stock int GetInfectedVictim(int client)
  * @param entity
  * @return L4D_Gender
  */
-stock L4D2_Gender GetGender(int entity)
+stock int GetGender(int entity)
 {
-	return view_as<L4D2_Gender>(GetEntProp(entity, Prop_Send, "m_Gender"));
+	return GetEntProp(entity, Prop_Send, "m_Gender");
 }

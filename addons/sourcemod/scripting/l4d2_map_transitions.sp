@@ -144,6 +144,8 @@ public void OnMapStart()
 public Action Timer_OnMapStartDelay(Handle hTimer)
 {
 	SetScores();
+
+	return Plugin_Stop;
 }
 
 void SetScores()

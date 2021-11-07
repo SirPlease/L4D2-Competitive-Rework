@@ -869,6 +869,7 @@ public Action Timer_RoundStart(Handle hTimer)
 	ClearPlayerTeam(g_iCurTeam);
 
 	//PrintDebug(2, "Event_RoundStart (roundhalf: %i: survivor team: %i (cur survivor: %i))", (g_bSecondHalf) ? 1 : 0, g_iCurTeam, GetCurrentTeamSurvivor());
+	return Plugin_Stop;
 }
 
 public void Event_RoundEnd(Event hEvent, const char[] eName, bool dontBroadcast)
@@ -1098,6 +1099,8 @@ public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
 	if (!g_bReadyUpAvailable) {
 		RoundReallyStarting();
 	}
+
+	return Plugin_Continue;
 }
 
 void RoundReallyStarting()
@@ -1710,6 +1713,8 @@ public Action Timer_TeamChanged(Handle hTimer)
 {
 	g_bTeamChanged = false;
 	UpdatePlayerCurrentTeam();
+
+	return Plugin_Stop;
 }
 
 /*
@@ -1844,7 +1849,9 @@ public Action Event_PlayerHurt(Event hEvent, const char[] eName, bool dontBroadc
 			vicIndex = attIndex;
 		} else {
 			vicIndex = GetPlayerIndexForClient(victim);
-			if (vicIndex == -1) { return Plugin_Continue; }
+			if (vicIndex == -1) {
+				return Plugin_Continue;
+			}
 		}
 
 		// record amounts
@@ -2164,6 +2171,8 @@ public Action Timer_CheckTankDeath(Handle hTimer, any client_oldTank)
 			HandleTankTimeEnd();
 		}
 	}
+
+	return Plugin_Stop;
 }
 
 void HandleTankTimeEnd()
@@ -2801,6 +2810,8 @@ public Action Timer_ResetStats(Handle hTimer, any roundOnly)
 {
 	// reset stats (for current team)
 	ResetStats(view_as<bool>(roundOnly));
+
+	return Plugin_Stop;
 }
 
 // team -1 = clear both; failedround = campaign mode only
@@ -3306,7 +3317,7 @@ void DisplayStatsMVPChat(int client, bool bRound = true, bool bTeam = true, int 
 	char printBuffer[1024], tmpBuffer[512], strLines[8][192];
 	int i, j, x;
 
-	printBuffer = GetMVPChatString(bRound, bTeam, iTeam);
+	GetMVPChatString(printBuffer, sizeof(printBuffer), bRound, bTeam, iTeam);
 
 	// PrintToChatAll has a max length. Split it in to individual lines to output separately
 	int intPieces = ExplodeString(printBuffer, "\n", strLines, sizeof(strLines), sizeof(strLines[]));
@@ -3528,12 +3539,10 @@ void DisplayStatsMVPChat(int client, bool bRound = true, bool bTeam = true, int 
 	}
 }
 
-char GetMVPChatString(bool bRound = true, bool bTeam = true, int iTeam = -1)
+void GetMVPChatString(char[] printBuffer, const int iLen, bool bRound = true, bool bTeam = true, int iTeam = -1)
 {
-	char printBuffer[1024];
 	char tmpBuffer[512];
-
-	printBuffer = "";
+	printBuffer[0] = '\0';
 
 	// SI damage already sorted, sort CI and FF too
 	SortPlayersMVP(bRound, SORT_SI, bTeam, iTeam);
@@ -3576,7 +3585,7 @@ char GetMVPChatString(bool bRound = true, bool bTeam = true, int iTeam = -1)
 	// report
 	if (mvp_SI == -1 && mvp_Common == -1 && !(iBrevityFlags & BREV_SI && iBrevityFlags & BREV_CI)) {
 		Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s]: (not enough action yet)\n", (bRound) ? "" : " - Game");
-		StrCat(printBuffer, sizeof(printBuffer), tmpBuffer);
+		StrCat(printBuffer, iLen, tmpBuffer);
 	} else {
 		if (!(iBrevityFlags & BREV_SI)) {
 			if (mvp_SI > -1) {
@@ -3617,10 +3626,10 @@ char GetMVPChatString(bool bRound = true, bool bTeam = true, int iTeam = -1)
 					);
 				}
 				
-				StrCat(printBuffer, sizeof(printBuffer), tmpBuffer);
+				StrCat(printBuffer, iLen, tmpBuffer);
 			} else {
 				Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] SI: \x03(nobody)\x01\n", (bRound) ? "" : " - Game");
-				StrCat(printBuffer, sizeof(printBuffer), tmpBuffer);
+				StrCat(printBuffer, iLen, tmpBuffer);
 			}
 		}
 
@@ -3655,7 +3664,7 @@ char GetMVPChatString(bool bRound = true, bool bTeam = true, int iTeam = -1)
 					);
 				}
 
-				StrCat(printBuffer, sizeof(printBuffer), tmpBuffer);
+				StrCat(printBuffer, iLen, tmpBuffer);
 			}
 		}
 	}
@@ -3667,7 +3676,7 @@ char GetMVPChatString(bool bRound = true, bool bTeam = true, int iTeam = -1)
 					(bRound) ? "" : " - Game"
 			);
 			
-			StrCat(printBuffer, sizeof(printBuffer), tmpBuffer);
+			StrCat(printBuffer, iLen, tmpBuffer);
 		} else {
 			Format(tmpBuffer, sizeof(tmpBuffer), "[LVP%s] FF:\x03 %s \x01(\x05%d \x01dmg)\n",
 					(bRound) ? "" : " - Game",
@@ -3675,11 +3684,9 @@ char GetMVPChatString(bool bRound = true, bool bTeam = true, int iTeam = -1)
 					(bRound) ? g_strRoundPlayerData[mvp_FF][team][plyFFGiven] : g_strPlayerData[mvp_FF][plyFFGiven]
 			);
 			
-			StrCat(printBuffer, sizeof(printBuffer), tmpBuffer);
+			StrCat(printBuffer, iLen, tmpBuffer);
 		}
 	}
-
-	return printBuffer;
 }
 
 void DisplayStatsMVP(int client, bool bTank = false, bool bMore = false, bool bRound = true, bool bTeam = true, int iTeam = -1)
@@ -3897,7 +3904,7 @@ void DisplayStatsFunFactChat(int client, bool bRound = true, bool bTeam = true, 
 	char printBuffer[1024], strLines[8][192];
 	int i, j;
 
-	printBuffer = GetFunFactChatString(bRound, bTeam, iTeam);
+	GetFunFactChatString(printBuffer, sizeof(printBuffer), bRound, bTeam, iTeam);
 
 	// only print if we got something
 	if (!strlen(printBuffer)) { 
@@ -3931,22 +3938,18 @@ void DisplayStatsFunFactChat(int client, bool bRound = true, bool bTeam = true, 
 	}
 }
 
-char GetFunFactChatString(bool bRound = true, bool bTeam = true, int iTeam = -1)
+void GetFunFactChatString(char[] printBuffer, const int iLen, bool bRound = true, bool bTeam = true, int iTeam = -1)
 {
-	char printBuffer[1024];
-
-	printBuffer = "";
+	printBuffer[0] = '\0';
 
 	// use current survivor team -- or previous team in second half before starting
 	int team = (iTeam != -1) ? iTeam : ((g_bSecondHalf && !g_bPlayersLeftStart) ? ((g_iCurTeam) ? 0 : 1) : g_iCurTeam);
 
-	int i, j;
-	int wTotal = 0;
-	int wPicks[256];
+	int i, j, wTotal = 0, wPicks[256];
 
-	int wTypeHighPly[FFACT_MAXTYPES+1];
-	int wTypeHighVal[FFACT_MAXTYPES+1];
-	int wTypeHighTeam[FFACT_MAXTYPES+1];
+	int wTypeHighPly[FFACT_MAXTYPES + 1];
+	int wTypeHighVal[FFACT_MAXTYPES + 1];
+	int wTypeHighTeam[FFACT_MAXTYPES + 1];
 
 	// for each type, check whether / and how weighted
 	int wTmp = 0;
@@ -4099,7 +4102,7 @@ char GetFunFactChatString(bool bRound = true, bool bTeam = true, int iTeam = -1)
 	}
 
 	if (!wTotal) { 
-		return printBuffer; 
+		return;
 	}
 
 	// pick one, format it
@@ -4109,28 +4112,28 @@ char GetFunFactChatString(bool bRound = true, bool bTeam = true, int iTeam = -1)
 	switch (wPick)
 	{
 		case FFACT_TYPE_CROWN: {
-			Format(printBuffer, sizeof(printBuffer), "[%s fact] \x04%s \x01crowned \x05%d \x01witches.\n",
+			Format(printBuffer, iLen, "[%s fact] \x04%s \x01crowned \x05%d \x01witches.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_DRAWCROWN: {
-			Format(printBuffer, sizeof(printBuffer), "[%s fact] \x04%s \x01draw-crowned \x05%d \x01witches.\n",
+			Format(printBuffer, iLen, "[%s fact] \x04%s \x01draw-crowned \x05%d \x01witches.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_SKEETS: {
-			Format(printBuffer, sizeof(printBuffer), "[%s fact] \x04%s \x01skeeted \x05%d \x01hunters.\n",
+			Format(printBuffer, iLen, "[%s fact] \x04%s \x01skeeted \x05%d \x01hunters.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_MELEESKEETS: {
-			Format(printBuffer, sizeof(printBuffer), "[%s fact] \x04%s \x01skeeted \x05%d \x01hunter%s with a melee weapon.\n",
+			Format(printBuffer, iLen, "[%s fact] \x04%s \x01skeeted \x05%d \x01hunter%s with a melee weapon.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick],
@@ -4138,42 +4141,42 @@ char GetFunFactChatString(bool bRound = true, bool bTeam = true, int iTeam = -1)
 			);
 		}
 		case FFACT_TYPE_M2: {
-			Format(printBuffer, sizeof(printBuffer), "[%s fact] \x04%s \x01shoved \x05%d \x01special infected.\n",
+			Format(printBuffer, iLen, "[%s fact] \x04%s \x01shoved \x05%d \x01special infected.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_MELEETANK: {
-			Format(printBuffer, sizeof(printBuffer), "[%s fact] \x04%s \x01got \x05%d \x01melee swings on the tank.\n",
+			Format(printBuffer, iLen, "[%s fact] \x04%s \x01got \x05%d \x01melee swings on the tank.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_CUT: {
-			Format(printBuffer, sizeof(printBuffer), "[%s fact] \x04%s \x01cut \x05%d \x01tongue cuts.\n",
+			Format(printBuffer, iLen, "[%s fact] \x04%s \x01cut \x05%d \x01tongue cuts.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_POP: {
-			Format(printBuffer, sizeof(printBuffer), "[%s fact] \x04%s \x01popped \x05%d \x01boomers.\n",
+			Format(printBuffer, iLen, "[%s fact] \x04%s \x01popped \x05%d \x01boomers.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_DEADSTOP: {
-			Format(printBuffer, sizeof(printBuffer), "[%s fact] \x04%s \x01deadstopped \x05%d \x01hunters.\n",
+			Format(printBuffer, iLen, "[%s fact] \x04%s \x01deadstopped \x05%d \x01hunters.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_LEVELS: {
-			Format(printBuffer, sizeof(printBuffer), "[%s fact] \x04%s \x01fully leveled \x05%d \x01chargers.\n",
+			Format(printBuffer, iLen, "[%s fact] \x04%s \x01fully leveled \x05%d \x01chargers.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
@@ -4181,21 +4184,21 @@ char GetFunFactChatString(bool bRound = true, bool bTeam = true, int iTeam = -1)
 		}
 		// infected
 		case FFACT_TYPE_HUNTERDP: {
-			Format(printBuffer, sizeof(printBuffer), "[%s fact] \x04%s \x01landed \x05%d \x01highpounces with hunters.\n",
+			Format(printBuffer, iLen, "[%s fact] \x04%s \x01landed \x05%d \x01highpounces with hunters.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_JOCKEYDP: {
-			Format(printBuffer, sizeof(printBuffer), "[%s fact] \x04%s \x01landed \x05%d \x01highpounces with jockeys.\n",
+			Format(printBuffer, iLen, "[%s fact] \x04%s \x01landed \x05%d \x01highpounces with jockeys.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_DCHARGE: {
-			Format(printBuffer, sizeof(printBuffer), "[%s fact] \x04%s \x01death-charged \x05%d \x01 survivor%s.\n",
+			Format(printBuffer, iLen, "[%s fact] \x04%s \x01death-charged \x05%d \x01 survivor%s.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick],
@@ -4203,29 +4206,27 @@ char GetFunFactChatString(bool bRound = true, bool bTeam = true, int iTeam = -1)
 			);
 		}
 		case FFACT_TYPE_SCRATCH: {
-			Format(printBuffer, sizeof(printBuffer), "[%s fact] \x04%s \x01did a total of \x05%d \x01damage by scratching (standing) survivors.\n",
+			Format(printBuffer, iLen, "[%s fact] \x04%s \x01did a total of \x05%d \x01damage by scratching (standing) survivors.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_BOOMDMG: {
-			Format(printBuffer, sizeof(printBuffer), "[%s fact] \x04%s \x01got a total of \x05%d \x01damage by common hits on boomed (standing) survivors.\n",
+			Format(printBuffer, iLen, "[%s fact] \x04%s \x01got a total of \x05%d \x01damage by common hits on boomed (standing) survivors.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_SPITDMG: {
-			Format(printBuffer, sizeof(printBuffer), "[%s fact] \x04%s \x01did a total of \x05%d \x01spit-damage on (standing) survivors.\n",
+			Format(printBuffer, iLen, "[%s fact] \x04%s \x01did a total of \x05%d \x01spit-damage on (standing) survivors.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 	}
-
-	return printBuffer;
 }
 
 // display player accuracy stats: details => tank/si/etc
@@ -6547,6 +6548,8 @@ public Action Timer_AutomaticRoundEndPrint(Handle hTimer)
 			AutomaticPrintPerClient(g_iCookieValue[client], client);
 		}
 	}
+
+	return Plugin_Stop;
 }
 
 // set iTeam to -2 to force printing for all players (where possible) (-1 = current team) - setting client to -2 prints to file (and never needs a delay)
@@ -6865,6 +6868,8 @@ public Action Timer_DelayedPrint(Handle hTimer, Handle pack)
 
 	// send non-recursive print call ('first' true must be set for no further delays)
 	AutomaticPrintPerClient(flags, client, team, true, true, bSortedRound, bSortedGame);
+
+	return Plugin_Stop;
 }
 
 /*
@@ -7076,7 +7081,7 @@ bool IsPlayerIncapacitated(int client)
 
 bool IsHangingFromLedge(int client)
 {
-	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isHangingFromLedge") || GetEntProp(client, Prop_Send, "m_isFallingFromLedge"));
+	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isHangingFromLedge", 1) || GetEntProp(client, Prop_Send, "m_isFallingFromLedge", 1));
 }
 
 bool IsPlayerIncapacitatedAtAll(int client)
@@ -7125,6 +7130,8 @@ int GetUprightSurvivors()
 public Action Timer_WriteStats(Handle hTimer, any iTeam)
 {
 	WriteStatsToFile(iTeam, true);
+
+	return Plugin_Stop;
 }
 
 // write round stats to a text file

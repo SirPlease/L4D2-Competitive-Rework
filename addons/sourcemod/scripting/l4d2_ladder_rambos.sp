@@ -1,4 +1,4 @@
-#define PLUGIN_VERSION 		"2.4"
+#define PLUGIN_VERSION 		"3.0"
 
 /*
 *	Ladder Rambos Dhooks
@@ -42,21 +42,21 @@
 #define REQUIRE_EXTENSIONS
 #include <sourcescramble>
 
-#define GAMEDATA			"l4d2_ladderrambos"
+#define GAMEDATA            "l4d2_ladderrambos"
 
 // Setting up ConVar Handles
 ConVar	Cvar_Enabled;
 ConVar	Cvar_M2;
 ConVar	Cvar_Reload;
 ConVar	Cvar_SgReload;
-ConVar	Cvar_Debug;
+ConVar	Cvar_Switch;
 
 // ConVar Storage
 bool	bCvar_Enabled;
 bool	bCvar_M2;
 bool	bCvar_Reload;
 bool	bCvar_SgReload;
-bool	bCvar_Debug;
+int		iCvar_Switch;
 
 // Patching from [l4d2_cs_ladders] credit to Lux
 #define PLUGIN_NAME_KEY "[cs_ladders]"
@@ -72,7 +72,13 @@ MemoryPatch hPatch_OnLadderDismount;
 
 // Block shotgun reload
 Handle hSDKCall_AbortReload;
+Handle hSDKCall_PlayReloadAnim;
+
+// Block empty-clip gun being pulled out 
 Handle hSDKCall_Holster;
+
+// Temp storage for shove time
+float fSavedShoveTime[MAXPLAYERS+1];
 
 // ====================================================================================================
 // myinfo - Basic plugin information
@@ -97,40 +103,45 @@ public void OnPluginStart()
 	Cvar_Enabled	= CreateConVar(
 								"cssladders_enabled",
 								"1",
-								"Enable the Survivors to shoot from ladders? 1 to enable, 0 to disable.",
+								"Enable the Survivors to shoot from ladders?\n" ...
+								"1 to enable, 0 to disable.",
 								FCVAR_NOTIFY|FCVAR_SPONLY,
 								true, 0.0, true, 1.0);
 	Cvar_M2			= CreateConVar(
 								"cssladders_allow_m2",
 								"0",
-								"Allow shoving whilst on a ladder? 1 to allow, 0 to block.",
+								"Allow shoving whilst on a ladder?\n" ...
+								"1 to allow, 0 to block.",
 								FCVAR_NOTIFY|FCVAR_SPONLY,
 								true, 0.0, true, 1.0);
 	Cvar_Reload		= CreateConVar(
 								"cssladders_allow_reload",
 								"1",
-								"Allow reloading whilst on a ladder? 1 to allow, 0 to block.",
+								"Allow reloading whilst on a ladder?\n" ...
+								"1 to allow, 0 to block.",
 								FCVAR_NOTIFY|FCVAR_SPONLY,
 								true, 0.0, true, 1.0);
 	Cvar_SgReload	= CreateConVar(
 								"cssladders_allow_shotgun_reload",
 								"1",
-								"Allow shotgun reloading whilst on a ladder? 1 to allow, 0 to block.",
+								"Allow shotgun reloading whilst on a ladder?\n" ...
+								"1 to allow, 0 to block.",
 								FCVAR_NOTIFY|FCVAR_SPONLY,
 								true, 0.0, true, 1.0);
-	Cvar_Debug		= CreateConVar(
-								"cssladders_debug",
-								"0",
-								"On/Off switch to log debug messages",
-								FCVAR_HIDDEN,
-								true, 0.0, true, 1.0);
+	Cvar_Switch		= CreateConVar(
+								"cssladders_allow_switch",
+								"1",
+								"Allow switching to other inventory whilst on a ladder?" ...
+								"2 to allow all, 1 to allow only between guns, 0 to block.",
+								FCVAR_NOTIFY|FCVAR_SPONLY,
+								true, 0.0, true, 2.0);
 	
 	// Setup ConVars change hook
 	Cvar_Enabled.AddChangeHook(OnEnableDisable);
 	Cvar_M2.AddChangeHook(OnConVarChanged);
 	Cvar_Reload.AddChangeHook(OnConVarChanged);
 	Cvar_SgReload.AddChangeHook(OnConVarChanged);
-	Cvar_Debug.AddChangeHook(OnConVarChanged);
+	Cvar_Switch.AddChangeHook(OnConVarChanged);
 	
 	// ConVar Storage
 	GetCvars();
@@ -162,6 +173,18 @@ public void OnPluginStart()
 		hSDKCall_AbortReload = EndPrepSDKCall();
 		if (hSDKCall_AbortReload == null)
 			SetFailState("Failed to setup SDKCall \"CBaseCombatWeapon::AbortReload\"");
+	}
+	
+	StartPrepSDKCall(SDKCall_Entity);
+	if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CBaseShotgun::PlayReloadAnim")) {
+		SetFailState("Failed to find offset \"CBaseShotgun::PlayReloadAnim\"");
+	} else {
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		hSDKCall_PlayReloadAnim = EndPrepSDKCall();
+		if (hSDKCall_PlayReloadAnim == null)
+			SetFailState("Failed to setup SDKCall \"CBaseShotgun::PlayReloadAnim\"");
 	}
 	
 	StartPrepSDKCall(SDKCall_Entity);
@@ -207,6 +230,8 @@ public void OnPluginStart()
 	
 	// Apply our patch
 	ApplyPatch((bCvar_Enabled = Cvar_Enabled.BoolValue));
+	
+	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 }
 
 // ====================================================================================================
@@ -255,7 +280,26 @@ void GetCvars()
 	bCvar_M2 = Cvar_M2.BoolValue;
 	bCvar_Reload = Cvar_Reload.BoolValue;
 	bCvar_SgReload = Cvar_SgReload.BoolValue;
-	bCvar_Debug = Cvar_Debug.BoolValue;
+	iCvar_Switch = Cvar_Switch.IntValue;
+}
+
+// ====================================================================================================
+// OnClientPutInServer - Reset temp values
+// ====================================================================================================
+
+public void OnClientPutInServer(int client)
+{
+	fSavedShoveTime[client] = 0.0;
+}
+
+// ====================================================================================================
+// Event_RoundStart - Reset temp values
+// ====================================================================================================
+
+public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+{
+	for (int i = 1; i <= MaxClients; i++)
+		fSavedShoveTime[i] = 0.0;
 }
 
 // ====================================================================================================
@@ -264,51 +308,82 @@ void GetCvars()
 
 public MRESReturn Detour_CanDeployFor(int pThis, Handle hReturn)
 {
-	if(!bCvar_Enabled)
+	if (!bCvar_Enabled)
 		return MRES_Ignored;
 	
-	int client = GetEntPropEnt(pThis, Prop_Data, "m_hOwnerEntity");
+	int client = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
 	if (client == -1)
 		return MRES_Ignored;
 	
 	bool bIsOnLadder = GetEntityMoveType(client) == MOVETYPE_LADDER;
 	
-	if (bIsOnLadder)
+	if (!bIsOnLadder)
 	{
-		// Infected triggers this though, will be blocked
-		// v2.4: Forgot melees, block them
-		if (GetClientTeam(client) == 2 && !HasEntProp(pThis, Prop_Send, "m_bInMeleeSwing"))
+		if (fSavedShoveTime[client] > 0.0)
 		{
-			if(!bCvar_M2)
-				SetEntPropFloat(client, Prop_Send, "m_flNextShoveTime", GetGameTime() + 0.2);
-			
-			bool bEmptyClip = GetEntProp(pThis, Prop_Send, "m_iClip1") == 0;
-			bool bReloading = GetEntProp(pThis, Prop_Send, "m_bInReload") == 1;
-			
-			if (HasEntProp(pThis, Prop_Send, "m_reloadNumShells") ? (!bCvar_SgReload) : (!bCvar_Reload))
-			{
-				if (bReloading)
-				{
-					Weapon_AbortReload(pThis);
-				}
-				
-				if (bEmptyClip)
-				{
-					Weapon_Holster(pThis);
-					DHookSetReturn(hReturn, 0);
-					return MRES_Supercede;
-				}
-			}
-			
-			int weapon = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
-			if (weapon == pThis)
-				return MRES_Ignored;
-			
-			LogAcitivity("Function::Detour_CanDeployFor IsPlayerOnLadder: %d, %N", bIsOnLadder, client);
+			SetEntPropFloat(client, Prop_Send, "m_flNextShoveTime", fSavedShoveTime[client]);
+			fSavedShoveTime[client] = 0.0;
 		}
-		
+		return MRES_Ignored;
+	}
+	
+	// Infected triggers this though, will be blocked
+	if (GetClientTeam(client) != 2)
+	{
 		DHookSetReturn(hReturn, 0);
 		return MRES_Supercede;
+	}
+	
+	// v2.4: Forgot melees, block them
+	// v2.5: Forgot other inventories :(
+	if (iCvar_Switch < 2 && ( Weapon_IsMelee(pThis) || !Weapon_IsGun(pThis) ))
+	{
+		// Mimic how original ladder rambos performs
+		DHookSetReturn(hReturn, 0);
+		return MRES_Supercede;
+	}
+	
+	int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+	if (weapon != pThis && iCvar_Switch < 1)
+	{
+		DHookSetReturn(hReturn, 0);
+		return MRES_Supercede;
+	}
+	
+	if (!bCvar_M2)
+	{
+		if (fSavedShoveTime[client] == 0.0)
+		{
+			fSavedShoveTime[client] = GetEntPropFloat(client, Prop_Send, "m_flNextShoveTime");
+		}
+		SetEntPropFloat(client, Prop_Send, "m_flNextShoveTime", GetGameTime() + 0.2);
+	}
+	
+	bool bIsShotgun = Weapon_IsShotgun(pThis);
+	
+	if (bIsShotgun ? (!bCvar_SgReload) : (!bCvar_Reload))
+	{
+		if (GetEntProp(pThis, Prop_Send, "m_bInReload"))
+		{
+			Weapon_AbortReload(pThis);
+			
+			// 1418 = L4D2_ACT_VM_RELOAD_END	(see left4dhooks_anim.inc)
+			//    6 = ANIM_RELOAD_SHOTGUN_FINAL	(see l4d2util_constants.inc)
+			if (bIsShotgun) Shotgun_PlayReloadAnim(pThis, 1418, 6);
+		}
+		
+		if (GetEntProp(pThis, Prop_Send, "m_iClip1") == 0)
+		{
+			// TODO: Weapon clip empty check.
+			int secondary = GetPlayerWeaponSlot(client, 1);
+			if (iCvar_Switch == 0 || (iCvar_Switch == 1 && (secondary == -1 || Weapon_IsMelee(secondary))))
+			{
+				// Mimic how original ladder rambos performs
+				Weapon_Holster(pThis);
+				DHookSetReturn(hReturn, 0);
+				return MRES_Supercede;
+			}
+		}
 	}
 	
 	return MRES_Ignored;
@@ -320,11 +395,11 @@ public MRESReturn Detour_CanDeployFor(int pThis, Handle hReturn)
 
 public MRESReturn Detour_Reload(int pThis, Handle hReturn)
 {
-	int client = GetEntPropEnt(pThis, Prop_Data, "m_hOwnerEntity");
+	int client = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
 	bool bIsOnLadder = GetEntityMoveType(client) == MOVETYPE_LADDER;
-	if(!bCvar_Reload && bIsOnLadder)
+	
+	if (bIsOnLadder && !bCvar_Reload)
 	{
-		LogAcitivity("Function::Detour_Reload blocking reload for %d, %N", bIsOnLadder, client);
 		return MRES_Supercede;
 	}
 	
@@ -337,11 +412,10 @@ public MRESReturn Detour_Reload(int pThis, Handle hReturn)
 
 public MRESReturn Detour_ShotgunReload(int pThis, Handle hReturn)
 {
-	int client = GetEntPropEnt(pThis, Prop_Data, "m_hOwnerEntity");
-	bool bIsOnLadder = GetEntityMoveType(client) == MOVETYPE_LADDER;
-	if(!bCvar_SgReload && bIsOnLadder)
+	int client = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
+	
+	if (GetEntityMoveType(client) == MOVETYPE_LADDER && !bCvar_SgReload)
 	{
-		LogAcitivity("Function::Detour_ShotgunReload blocking reload for %d, %N", bIsOnLadder, client);
 		return MRES_Supercede;
 	}
 	
@@ -349,26 +423,39 @@ public MRESReturn Detour_ShotgunReload(int pThis, Handle hReturn)
 }
 
 // ====================================================================================================
-// LogAcitivity - Log debug messages
+// Weapon_IsMelee - Stock method to check if weapon is melee
 // ====================================================================================================
 
-stock void LogAcitivity(const char[] format, any ...)
+bool Weapon_IsMelee(int weapon)
 {
-	if(bCvar_Debug)
-	{
-		static char LogFilePath[PLATFORM_MAX_PATH];
-		
-		// Build LogFile path
-		if (LogFilePath[0] == '\0')
-		{
-			BuildPath(Path_SM, LogFilePath, sizeof(LogFilePath), "logs/l4d2_LadderRambos.txt");
-		}
+	return HasEntProp(weapon, Prop_Send, "m_bInMeleeSwing") || HasEntProp(weapon, Prop_Send, "m_bHitting");
+}
 
-		char buffer[512];
-		VFormat(buffer, sizeof(buffer), format, 2);
-		LogToFile(LogFilePath, buffer);
-		PrintToChatAll(buffer);
-	}
+// ====================================================================================================
+// Weapon_IsGun - Stock method to check if weapon is gun
+// ====================================================================================================
+
+bool Weapon_IsGun(int weapon)
+{
+	return HasEntProp(weapon, Prop_Send, "m_isDualWielding");
+}
+
+// ====================================================================================================
+// Weapon_IsShotgun - Stock method to check if weapon is shotgun
+// ====================================================================================================
+
+bool Weapon_IsShotgun(int weapon)
+{
+	return HasEntProp(weapon, Prop_Send, "m_reloadNumShells");
+}
+
+// ====================================================================================================
+// Shotgun_PlayReloadAnim - SDKCall to play specific shotgun reload animation
+// ====================================================================================================
+
+void Shotgun_PlayReloadAnim(int weapon, int activity, int event)
+{
+	SDKCall(hSDKCall_PlayReloadAnim, weapon, activity, event, 0);
 }
 
 // ====================================================================================================

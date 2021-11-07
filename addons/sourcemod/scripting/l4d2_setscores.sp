@@ -210,7 +210,7 @@ void SetScores(const int survScore, const int infectScore, const int iAdminIndex
 }
 
 //Handler for the vote
-public int VoteActionHandler(Handle vote, BuiltinVoteAction action, int param1, int param2) {
+public void VoteActionHandler(Handle vote, BuiltinVoteAction action, int param1, int param2) {
 	switch (action) {
 		case BuiltinVoteAction_End: {
 			voteHandler = null;

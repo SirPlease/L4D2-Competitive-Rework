@@ -101,7 +101,7 @@ public Action Timer_DoorCheck(Handle timer, int clientUserID)
 {
 	int client = GetClientOfUserId(clientUserID);
 	
-	if(client > 0 && IsClientInGame(client))
+	if (client > 0 && IsClientInGame(client))
 	{
 		float direction[3];
 		
@@ -112,6 +112,8 @@ public Action Timer_DoorCheck(Handle timer, int clientUserID)
 			SDKHooks_TakeDamage(result, client, client, 1200.0, DMG_CLUB, _, direction);
 		}
 	}
+
+	return Plugin_Stop;
 }
 
 public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)

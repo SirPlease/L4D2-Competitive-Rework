@@ -102,12 +102,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	g_hPluginEnabled = CreateConVar( \
-		"sm_uncinfblock_enabled", \
-		"1", \
-		"Enable uncommon blocker plugin?", \
-		_, true, 0.0, true, 1.0 \
-	);
+	g_hPluginEnabled = CreateConVar("sm_uncinfblock_enabled", "1", "Enable uncommon blocker plugin?", _, true, 0.0, true, 1.0 );
 
 	// 1 + 2 + 4 + 8 + 16 + 32 + 64 = 127 - Block all
 	// 55 - All except fallen survivor and Jimmy Gibbs
@@ -152,7 +147,7 @@ public void OnNextFrame(int iEntity)
 		return;
 	}
 
-	int iUncommonInfected = view_as<int>(GetGender(iEntity) - L4D2Gender_Ceda);
+	int iUncommonInfected = GetGender(iEntity) - L4D2Gender_Ceda;
 	bool bIsUncommonInfected = (iUncommonInfected >= 0 && iUncommonInfected < UNCOMMON_INFECTED_AMOUNT);
 
 	if (!bIsUncommonInfected) {

@@ -99,7 +99,8 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		}
 		CreateTimer(0.1, ResetDamageCounter, victim);
 	}
-	return Plugin_Continue;	
+
+	return Plugin_Continue;
 }
 
 public Action ResetDamageCounter(Handle hTimer, any jockey)
@@ -107,6 +108,8 @@ public Action ResetDamageCounter(Handle hTimer, any jockey)
 	for (int i = 1; i <= MaxClients; i++) {
 		inflictedDamage[jockey][i] = 0.0;
 	}
+
+	return Plugin_Stop;
 }
 
 bool IsSurvivor(int client)

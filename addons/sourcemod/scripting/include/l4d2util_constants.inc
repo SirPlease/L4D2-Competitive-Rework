@@ -3,7 +3,22 @@
 #endif
 #define l4d2util_constants_inc_
 
-enum L4D2_Team
+#define ENTITY_MAX_NAME_LENGTH 64
+
+enum
+{
+	HITGROUP_GENERIC		= 0,
+	HITGROUP_HEAD			= 1,
+	HITGROUP_CHEST			= 2,
+	HITGROUP_STOMACH		= 3,
+	HITGROUP_LEFTARM		= 4,
+	HITGROUP_RIGHTARM		= 5,
+	HITGROUP_LEFTLEG		= 6,
+	HITGROUP_RIGHTLEG		= 7,
+	HITGROUP_GEAR			= 10
+};
+
+enum /*L4D2_Team*/
 {
 	L4D2Team_None = 0,
 	L4D2Team_Spectator,
@@ -14,7 +29,7 @@ enum L4D2_Team
 };
 
 //The official order of characters in the game
-enum L4D2_Infected
+enum /*L4D2_Infected*/
 {
 	L4D2Infected_Common = 0,
 	L4D2Infected_Smoker = 1,
@@ -30,7 +45,7 @@ enum L4D2_Infected
 	L4D2Infected_Size //10 size
 };
 
-stock const char L4D2_InfectedNames[view_as<int>(L4D2Infected_Size)][] =
+stock const char L4D2_InfectedNames[L4D2Infected_Size][] =
 {
 	"Common",
 	"Smoker",
@@ -44,7 +59,7 @@ stock const char L4D2_InfectedNames[view_as<int>(L4D2Infected_Size)][] =
 	"Survivor"
 };
 
-stock const char L4D2_TeamName[view_as<int>(L4D2Team_Size)][] =
+stock const char L4D2_TeamName[L4D2Team_Size][] =
 {
 	"None",
 	"Spectator",
@@ -52,7 +67,7 @@ stock const char L4D2_TeamName[view_as<int>(L4D2Team_Size)][] =
 	"Infected"
 };
 
-enum L4D2_Gender
+enum /*L4D2_Gender*/
 {
 	L4D2Gender_Neutral			= 0,
 	L4D2Gender_Male				= 1,
@@ -67,7 +82,7 @@ enum L4D2_Gender
 	L4D2Gender_Mechanic			= 10, //Ellis
 	L4D2Gender_Ceda				= 11,
 	L4D2Gender_Crawler			= 12, //Mudman
-	L4D2Gender_Undistractable	= 13, //Workman
+	L4D2Gender_Undistractable	= 13, //Workman (class not reacting to the pipe bomb)
 	L4D2Gender_Fallen			= 14,
 	L4D2Gender_Riot_Control		= 15, //RiotCop
 	L4D2Gender_Clown			= 16,
@@ -81,7 +96,7 @@ enum L4D2_Gender
 	L4D2Gender_MaxSize //23 size
 };
 
-enum L4D2WeaponSlot
+enum /*L4D2WeaponSlot*/
 {
 	L4D2WeaponSlot_Primary,
 	L4D2WeaponSlot_Secondary,
@@ -95,7 +110,7 @@ enum L4D2WeaponSlot
 // Weapon ID enumerations.
 // These values are *NOT* arbitrary! 
 // They are used in game as the weaponid for weapon_spawn entities
-enum WeaponId
+enum /*WeaponId*/
 {
 	WEPID_NONE,             // 0
 	WEPID_PISTOL,           // 1
@@ -158,7 +173,7 @@ enum WeaponId
 };
 
 // These values are arbitrary
-enum MeleeWeaponId
+enum /*MeleeWeaponId*/
 {
 	WEPID_MELEE_NONE,
 	WEPID_KNIFE,
@@ -182,7 +197,7 @@ enum MeleeWeaponId
 };
 
 // Weapon names for each of the weapons, used in identification.
-stock const char WeaponNames[view_as<int>(WEPID_SIZE)][] =
+stock const char WeaponNames[WEPID_SIZE][] =
 {
 	"weapon_none", "weapon_pistol", "weapon_smg",                                            // 0
 	"weapon_pumpshotgun", "weapon_autoshotgun", "weapon_rifle",                              // 3
@@ -206,7 +221,7 @@ stock const char WeaponNames[view_as<int>(WEPID_SIZE)][] =
 };
 
 // Long weapon names
-stock const char LongWeaponNames[view_as<int>(WEPID_SIZE)][] = 
+stock const char LongWeaponNames[WEPID_SIZE][] = 
 {
 	"None", "Pistol", "Uzi", // 0
 	"Pump", "Autoshotgun", "M-16", // 3
@@ -230,7 +245,7 @@ stock const char LongWeaponNames[view_as<int>(WEPID_SIZE)][] =
 };
 
 // Internal names for melee weapons
-stock const char MeleeWeaponNames[view_as<int>(WEPID_MELEES_SIZE)][] =
+stock const char MeleeWeaponNames[WEPID_MELEES_SIZE][] =
 {
 	"",
 	"knife",
@@ -251,7 +266,7 @@ stock const char MeleeWeaponNames[view_as<int>(WEPID_MELEES_SIZE)][] =
 	"pitchfork"
 };
 
-stock const char LongMeleeWeaponNames[view_as<int>(WEPID_MELEES_SIZE)][] =
+stock const char LongMeleeWeaponNames[WEPID_MELEES_SIZE][] =
 {
 	"None",
 	"Knife",
@@ -274,7 +289,7 @@ stock const char LongMeleeWeaponNames[view_as<int>(WEPID_MELEES_SIZE)][] =
 
 // World weapon models for each of the weapons. Useful for making new weapon spawns.
 // Some models are left blank because no single model can be given, the model is known or none exist.
-stock const char WeaponModels[view_as<int>(WEPID_SIZE)][] =
+stock const char WeaponModels[WEPID_SIZE][] =
 {
 	"",
 	"/w_models/weapons/w_pistol_B.mdl",
@@ -347,7 +362,7 @@ stock const char WeaponModels[view_as<int>(WEPID_SIZE)][] =
 	""
 };
 
-stock const char MeleeWeaponModels[view_as<int>(WEPID_MELEES_SIZE)][] =
+stock const char MeleeWeaponModels[WEPID_MELEES_SIZE][] =
 {
 	"",
 	"/w_models/weapons/w_knife_t.mdl",
@@ -368,7 +383,7 @@ stock const char MeleeWeaponModels[view_as<int>(WEPID_MELEES_SIZE)][] =
 	"/weapons/melee/w_pitchfork.mdl"
 };
 
-stock const int WeaponSlots[view_as<int>(WEPID_SIZE)] =
+stock const int WeaponSlots[WEPID_SIZE] =
 {
 	-1, // WEPID_NONE
 	1,  // WEPID_PISTOL
@@ -433,7 +448,7 @@ stock const int WeaponSlots[view_as<int>(WEPID_SIZE)] =
  * this may work correctly with a netprop 'm_survivorCharacter'.
  * We need to find out the type of map l4d1 or l4d2...
 */
-enum SurvivorCharacter
+enum /*SurvivorCharacter*/
 {
 	SurvivorCharacter_Invalid = -1,
 
@@ -449,7 +464,7 @@ enum SurvivorCharacter
 	SurvivorCharacter_Size //8 size
 };
 
-stock const char SurvivorNames[view_as<int>(SurvivorCharacter_Size)][] =
+stock const char SurvivorNames[SurvivorCharacter_Size][] =
 {
 	"Nick",
 	"Rochelle",
@@ -462,7 +477,7 @@ stock const char SurvivorNames[view_as<int>(SurvivorCharacter_Size)][] =
 };
 
 // Models for each of the characters
-stock const char SurvivorModels[view_as<int>(SurvivorCharacter_Size)][] =
+stock const char SurvivorModels[SurvivorCharacter_Size][] =
 {
 	"models/survivors/survivor_gambler.mdl",	//MODEL_NICK
 	"models/survivors/survivor_producer.mdl",	//MODEL_ROCHELLE
@@ -476,7 +491,7 @@ stock const char SurvivorModels[view_as<int>(SurvivorCharacter_Size)][] =
 
 // Animation IDs used by CTerrorPlayer::DoAnimationEvent
 // Gaps do not mean the animation doesn't exist, just that I don't know what it maps to.
-enum Animation
+enum /*Animation*/
 {
 	ANIM_RELOAD_PISTOL_UZI_SNIPER = 4,
 	ANIM_RELOAD_SHOTGUN = 5,
@@ -526,5 +541,5 @@ enum Animation
 	ANIM_TANK_PUNCH_GETUP = 96,
 	ANIM_IDLE = 98,
 	
-	//ANIMATION_SIZE //99 size
+	ANIMATION_SIZE //99 size
 };

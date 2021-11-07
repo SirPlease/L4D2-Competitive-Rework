@@ -114,7 +114,7 @@ public void OnMapEnd()
 	fClearArrays();
 }
 
-public Action Event_Reset(Event hEvent, const char[] name, bool dontBroadcast)
+public void Event_Reset(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	fClearArrays();
 }

@@ -132,6 +132,8 @@ public Action Process(Handle hTimer, int userid)
 	if (client > 0 && GetClientTeam(client) > L4D_TEAM_SPECTATE) {
 		ProcessPlayerLerp(client);
 	}
+
+	return Plugin_Stop;
 }
 
 public void OnMapStart()
@@ -206,8 +208,10 @@ public Action Timer_RoundEndDelay(Handle hTimer)
 	isFirstHalf = false;
 	isTransfer = true;
 	isMatchLife = false;
-	
+
 	ArrLerpsCountChanges.Clear();
+
+	return Plugin_Stop;
 }
 
 public Action Lerps_Cmd(int client, int args)

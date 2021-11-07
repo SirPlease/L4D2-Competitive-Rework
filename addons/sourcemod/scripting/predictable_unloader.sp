@@ -109,17 +109,20 @@ public Action UnloadPlugins(int args)
 	// Using Timers because these are time crucial and ServerCommands aren't a 100% reliable in terms of execution order.
 	CreateTimer(0.1, RefreshPlugins);
 	CreateTimer(0.5, UnloadSelf);
+
+	return Plugin_Handled;
 }
 
 public Action RefreshPlugins(Handle timer)
 {
 	ServerCommand("sm plugins refresh");
+
+	return Plugin_Stop;
 }
 
 public Action UnloadSelf(Handle timer)
 {
-	ServerCommand("sm plugins unload %s", sPlugin)
+	ServerCommand("sm plugins unload %s", sPlugin);
+
+	return Plugin_Stop;
 }
-
-
-

@@ -117,7 +117,7 @@ public void Event_PlayerTeam(Event hEvent, char[] sEventName , bool bDontBroadca
 
 	int iTeam = hEvent.GetInt("team");
 	// Only care about Survivors (Team 2)
-	if (iTeam != view_as<int>(L4D2Team_Survivor)) {
+	if (iTeam != L4D2Team_Survivor) {
 		return;
 	}
 
@@ -128,9 +128,11 @@ public void Event_PlayerTeam(Event hEvent, char[] sEventName , bool bDontBroadca
 public Action Timer_ChangeTeamDelay(Handle hTimer, any iUserId)
 {
 	int iPlayer = GetClientOfUserId(iUserId);
-	if (iPlayer > 0 && GetClientTeam(iPlayer) == view_as<int>(L4D2Team_Survivor)) {
+	if (iPlayer > 0 && GetClientTeam(iPlayer) == L4D2Team_Survivor) {
 		GiveSurvivorsWeapons(iPlayer, true);
 	}
+
+	return Plugin_Stop;
 }
 
 public void Event_RoundStart(Event hEvent, char[] sEventName, bool bDontBroadcast)
@@ -149,7 +151,7 @@ public void Event_RoundStart(Event hEvent, char[] sEventName, bool bDontBroadcas
 public Action Cmd_VoteMode(int iClient, int iArgs)
 {
 	// Don't care about non-loaded players or Spectators.
-	if (iClient == 0 || GetClientTeam(iClient) < view_as<int>(L4D2Team_Survivor)) {
+	if (iClient == 0 || GetClientTeam(iClient) < L4D2Team_Survivor) {
 		return Plugin_Handled;
 	}
 
@@ -228,7 +230,7 @@ public int Menu_VoteMenuHandler(Menu hMenu, MenuAction iAction, int iClient, int
 				int[] iPlayers = new int[MaxClients];
 
 				for (int i = 1; i <= MaxClients; i++) {
-					if (!IsClientInGame(i) || IsFakeClient(i) || (GetClientTeam(i) == view_as<int>(L4D2Team_Spectator))) {
+					if (!IsClientInGame(i) || IsFakeClient(i) || (GetClientTeam(i) == L4D2Team_Spectator)) {
 						continue;
 					}
 
@@ -327,6 +329,7 @@ public Action Timer_ClearMap(Handle hTimer)
 			}
 		}
 	}
+	return Plugin_Stop;
 }
 
 public void OnRoundIsLive()
@@ -338,7 +341,7 @@ int ReadyPlayers()
 {
 	int iPlayersCount = 0;
 	for (int i = 1; i <= MaxClients; i++) {
-		if (IsClientInGame(i) && GetClientTeam(i) > view_as<int>(L4D2Team_Spectator)) {
+		if (IsClientInGame(i) && GetClientTeam(i) > L4D2Team_Spectator) {
 			iPlayersCount++;
 		}
 	}
@@ -371,12 +374,12 @@ void GiveSurvivorsWeapons(int iClient = 0, bool bOnlyIfSurvivorEmpty = false)
 
 void GiveAndRemovePlayerWeapon(int iClient, const char[] sWeaponName, bool bOnlyIfSurvivorEmpty = false)
 {
-	if (!IsClientInGame(iClient) || GetClientTeam(iClient) != view_as<int>(L4D2Team_Survivor) || !IsPlayerAlive(iClient)) {
+	if (!IsClientInGame(iClient) || GetClientTeam(iClient) != L4D2Team_Survivor || !IsPlayerAlive(iClient)) {
 		return;
 	}
 
-	int iCurrMainWeapon = GetPlayerWeaponSlot(iClient, view_as<int>(L4D2WeaponSlot_Primary));
-	int iCurrSecondaryWeapon = GetPlayerWeaponSlot(iClient, view_as<int>(L4D2WeaponSlot_Secondary));
+	int iCurrMainWeapon = GetPlayerWeaponSlot(iClient, L4D2WeaponSlot_Primary);
+	int iCurrSecondaryWeapon = GetPlayerWeaponSlot(iClient, L4D2WeaponSlot_Secondary);
 
 	// Does the player already have an item in this slot?
 	if (iCurrMainWeapon != -1) {
@@ -420,7 +423,7 @@ public Action Timer_InformPlayers(Handle hTimer)
 	}
 
 	for (int i = 1; i <= MaxClients; i++) {
-		if (IsClientInGame(i) && GetClientTeam(i) != view_as<int>(L4D2Team_Spectator) && !g_bVoteUnderstood[i]) {
+		if (IsClientInGame(i) && GetClientTeam(i) != L4D2Team_Spectator && !g_bVoteUnderstood[i]) {
 			CPrintToChat(i, "{blue}[{green}Zone{blue}]{default}: Welcome to {blue}Zone{green}Hunters{default}.");
 			CPrintToChat(i, "{blue}[{green}Zone{blue}]{default}: Type {olive}!mode {default}in chat to vote on weapons used.");
 		}
@@ -433,7 +436,7 @@ public Action Timer_InformPlayers(Handle hTimer)
 void ReturnReadyUpPanel()
 {
 	for (int i = 1; i <= MaxClients; i++) {
-		if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) > view_as<int>(L4D2Team_Spectator)) {
+		if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) > L4D2Team_Spectator) {
 			FakeClientCommand(i, "sm_show");
 		}
 	}

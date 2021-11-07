@@ -61,7 +61,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("IsWitchPercentBlockedForTank", Native_IsWitchPercentBlockedForTank);
 	CreateNative("SetTankPercent", Native_SetTankPercent);
 	CreateNative("SetWitchPercent", Native_SetWitchPercent);
+
 	RegPluginLibrary("witch_and_tankifier");
+	return APLRes_Success;
 }
 
 public void OnPluginStart() {
@@ -130,8 +132,10 @@ public void RoundStartEvent(Event event, const char[] name, bool dontBroadcast) 
 }
 
 public Action AdjustBossFlow(Handle timer) {
-	if (InSecondHalfOfRound()) return;
-
+	if (InSecondHalfOfRound()) {
+		return Plugin_Stop;
+	}
+	
 	hValidTankFlows.Clear();
 	hValidWitchFlows.Clear();
 	
@@ -242,6 +246,8 @@ public Action AdjustBossFlow(Handle timer) {
 	}
 	
 	PrintDebugInfoDump();
+
+	return Plugin_Stop;
 }
 
 // ======================================
@@ -335,8 +341,8 @@ void MergeIntervals(ArrayList merged) {
 	if (merged.Length < 2) return;
 	
 	ArrayList intervals = merged.Clone();
-	intervals.Sort(Sort_Ascending, Sort_Integer);
-	
+	SortADTArray(intervals, Sort_Ascending, Sort_Integer);
+
 	merged.Clear();
 	
 	int current[2];
@@ -407,6 +413,7 @@ public Action StaticTank_Command(int args) {
 #if DEBUG
 	PrintDebug("[StaticTank_Command] Added: %s", mapname);
 #endif
+	return Plugin_Handled;
 }
 
 public Action StaticWitch_Command(int args) {
@@ -417,11 +424,13 @@ public Action StaticWitch_Command(int args) {
 #if DEBUG
 	PrintDebug("[StaticWitch_Command] Added: %s", mapname);
 #endif
+	return Plugin_Handled;
 }
 
 public Action Reset_Command(int args) {
 	hStaticTankMaps.Clear();
 	hStaticWitchMaps.Clear();
+	return Plugin_Handled;
 }
 
 // ======================================
@@ -430,11 +439,14 @@ public Action Reset_Command(int args) {
 
 public Action Info_Cmd(int client, int args) {
 	PrintDebugInfoDump();
+	return Plugin_Handled;
 }
+
 #if DEBUG
 public Action Test_Cmd(int client, int args) {
 	PrintDebug("[Test_Cmd] Starting AdjustBossFlow timer...");
 	CreateTimer(0.5, AdjustBossFlow, _, TIMER_FLAG_NO_MAPCHANGE);
+	return Plugin_Handled;
 }
 
 public Action Profiler_Cmd(int client, int args) {
@@ -472,7 +484,7 @@ public Action Profiler_Cmd(int client, int args) {
 // Natives
 // ======================================
 
-public any Native_IsStaticTankMap(Handle plugin, int numParams) {
+public int Native_IsStaticTankMap(Handle plugin, int numParams) {
 	int bytes = 0;
 	
 	char mapname[64];
@@ -486,7 +498,7 @@ public any Native_IsStaticTankMap(Handle plugin, int numParams) {
 	}
 }
 
-public any Native_IsStaticWitchMap(Handle plugin, int numParams) {
+public int Native_IsStaticWitchMap(Handle plugin, int numParams) {
 	int bytes = 0;
 	
 	char mapname[64];
@@ -500,12 +512,12 @@ public any Native_IsStaticWitchMap(Handle plugin, int numParams) {
 	}
 }
 
-public any Native_IsTankPercentValid(Handle plugin, int numParams) {
+public int Native_IsTankPercentValid(Handle plugin, int numParams) {
 	int flow = GetNativeCell(1);
 	return IsTankPercentValid(flow);
 }
 
-public any Native_IsWitchPercentValid(Handle plugin, int numParams) {
+public int Native_IsWitchPercentValid(Handle plugin, int numParams) {
 	int flow = GetNativeCell(1);
 	bool ignoreBlock = GetNativeCell(2);
 	
@@ -531,16 +543,16 @@ public any Native_IsWitchPercentValid(Handle plugin, int numParams) {
 	}
 }
 
-public any Native_IsWitchPercentBlockedForTank(Handle plugin, int numParams) {
+public int Native_IsWitchPercentBlockedForTank(Handle plugin, int numParams) {
 	int interval[2];
 	if (GetTankAvoidInterval(interval) && IsValidInterval(interval)) {
 		int flow = GetNativeCell(1);
-		return interval[0] <= flow <= interval[1];
+		return (interval[0] <= flow <= interval[1]);
 	}
 	return false;
 }
 
-public any Native_SetTankPercent(Handle plugin, int numParams) {
+public int Native_SetTankPercent(Handle plugin, int numParams) {
 	int flow = GetNativeCell(1);
 	if (!IsTankPercentValid(flow)) return false;
 	DynamicAdjustWitchFlow(flow);
@@ -548,7 +560,7 @@ public any Native_SetTankPercent(Handle plugin, int numParams) {
 	return true;
 }
 
-public any Native_SetWitchPercent(Handle plugin, int numParams) {
+public int Native_SetWitchPercent(Handle plugin, int numParams) {
 	int flow = GetNativeCell(1);
 	if (!IsWitchPercentValid(flow)) return false;
 	SetWitchPercent(flow);

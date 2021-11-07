@@ -15,6 +15,7 @@
 	You should have received a copy of the GNU General Public License along
 	with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -89,4 +90,6 @@ public Action Timer_KillBotDelay(Handle hTimer, any iUserID)
 	if (iBot > 0 && IsPlayerAlive(iBot) && ShouldBeKicked(iBot)) {
 		ForcePlayerSuicide(iBot);
 	}
+
+	return Plugin_Stop;
 }

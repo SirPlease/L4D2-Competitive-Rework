@@ -23,46 +23,47 @@ public OnPluginStart()
 
 new bool:MeleeDelay[MAXPLAYERS+1];
 
-public Action:HookSound_Callback(Clients[64], &NumClients, String:StrSample[PLATFORM_MAX_PATH], &Entity)
+public Action HookSound_Callback(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, \
+				float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
 {
 	//to work only on melee sounds, its 'swish' or 'weaponswing'
-	if (StrContains(StrSample, "Swish", false) == -1) return Plugin_Continue;
+	if (StrContains(sample, "Swish", false) == -1) return Plugin_Continue;
 	//so the client has the melee sound playing. OMG HES MELEEING!
-	
-	if (Entity > MaxClients) return Plugin_Continue; // bugfix for some people on L4D2
-	
+
+	if (entity > MaxClients) return Plugin_Continue; // bugfix for some people on L4D2
+
 	//add in a 1 second delay so this doesnt fire every frame
-	if (MeleeDelay[Entity]) return Plugin_Continue; //note 'Entity' means 'client' here
-	MeleeDelay[Entity] = true;
-	CreateTimer(1.0, ResetMeleeDelay, Entity);
-	
+	if (MeleeDelay[entity]) return Plugin_Continue; //note 'Entity' means 'client' here
+	MeleeDelay[entity] = true;
+	CreateTimer(1.0, ResetMeleeDelay, entity);
+
 	#if DEBUG
 	PrintToChatAll("Melee detected via soundhook.");
 	#endif
-	
-	new entid = GetClientAimTarget(Entity, false);
+
+	new entid = GetClientAimTarget(entity, false);
 	if (entid <= 0) return Plugin_Continue;
-	
+
 	decl String:entclass[96];
 	GetEntityNetClass(entid, entclass, sizeof(entclass));
 	if (!StrEqual(entclass, "Infected")) return Plugin_Continue;
-	
+
 	decl Float:clientpos[3], Float:entpos[3];
 	GetEntityAbsOrigin(entid, entpos);
-	GetClientEyePosition(Entity, clientpos);
+	GetClientEyePosition(entity, clientpos);
 	if (GetVectorDistance(clientpos, entpos) < 50) return Plugin_Continue; //else you could 'jedi melee' Zombies from a distance
-	
+
 	#if DEBUG
 	PrintToChatAll("Youre meleeing and looking at Zombie id #%i", entid);
 	#endif
-	
+
 	//now to make this Zombie fire a event to be caught by the actual 'fix'
-	
+
 	new Handle:newEvent = CreateEvent("entity_shoved", true);
-	SetEventInt(newEvent, "attacker", Entity); //the client being called Entity is a bit unfortunate
+	SetEventInt(newEvent, "attacker", entity); //the client being called Entity is a bit unfortunate
 	SetEventInt(newEvent, "entityid", entid);
 	FireEvent(newEvent, true);
-	
+
 	return Plugin_Continue;
 }
 

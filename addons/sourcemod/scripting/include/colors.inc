@@ -647,7 +647,7 @@ stock void CShowActivity(int client, const char[] format, any ...)
 	
 	if (!value)
 	{
-		return 1;
+		return;
 	}
 	
 	for (int i = 1; i <= MaxClients; i++)
@@ -695,7 +695,7 @@ stock void CShowActivity(int client, const char[] format, any ...)
 		}
 	}
 	
-	return 1;
+	return;
 }
 
 /**
@@ -756,7 +756,7 @@ stock void CShowActivityEx(int client, const char[] tag, const char[] format, an
 	
 	if (!value)
 	{
-		return 1;
+		return;
 	}
 	
 	for (int i = 1; i <= MaxClients; i++)
@@ -803,7 +803,7 @@ stock void CShowActivityEx(int client, const char[] tag, const char[] format, an
 		}
 	}
 	
-	return 1;
+	return;
 }
 
 /**
@@ -874,7 +874,7 @@ stock void CShowActivity2(int client, const char[] tag, const char[] format, any
 	
 	if (!value)
 	{
-		return 1;
+		return;
 	}
 	
 	for (int i = 1; i <= MaxClients; i++)
@@ -921,5 +921,5 @@ stock void CShowActivity2(int client, const char[] tag, const char[] format, any
 		}
 	}
 	
-	return 1;	
+	return;
 }

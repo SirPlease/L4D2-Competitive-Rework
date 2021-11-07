@@ -162,37 +162,35 @@ public Action:SetVerticalIncrement_Cmd(client, args)
 
 public Action:OnPlayerRunCmd(client, &buttons)
 {
-    if (IsValidClient(client) && GetClientTeam(client) == 1)
-    {
-        if (buttons & IN_USE)
-        {
-            MoveUp(client, verticalIncrement[client]);
-        }
-        else if (buttons & IN_RELOAD)
-        {
-            MoveUp(client, -verticalIncrement[client]);
-        }
-    }
-}
-
-public bool IsSpeedValid(float speed)
-{
-    return speed >= 0 && speed <= MAX_SPEED;
-}
-
-stock MoveUp(client, Float:distance)
-{
-    decl Float:origin[3];
-    GetClientAbsOrigin(client, origin);
-    origin[2] += distance;
-    TeleportEntity(client, origin, NULL_VECTOR, NULL_VECTOR);
-}
-
-stock bool:IsValidClient(client)
-{ 
-	if (client <= 0 || client > MaxClients || !IsClientConnected(client))
+	if (IsValidClient(client) && GetClientTeam(client) == 1)
 	{
-		return false; 
+		if (buttons & IN_USE)
+		{
+			MoveUp(client, verticalIncrement[client]);
+		}
+		else if (buttons & IN_RELOAD)
+		{
+			MoveUp(client, -verticalIncrement[client]);
+		}
 	}
-	return IsClientInGame(client); 
+
+	return Plugin_Continue;
+}
+
+bool IsSpeedValid(float speed)
+{
+	return (speed >= 0 && speed <= MAX_SPEED);
+}
+
+void MoveUp(int client, float distance)
+{
+	float origin[3];
+	GetClientAbsOrigin(client, origin);
+	origin[2] += distance;
+	TeleportEntity(client, origin, NULL_VECTOR, NULL_VECTOR);
+}
+
+bool IsValidClient(int client)
+{
+	return (client > 0 && client <= MaxClients && IsClientInGame(client));
 }
