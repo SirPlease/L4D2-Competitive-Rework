@@ -1713,7 +1713,7 @@ public void OnPluginStart()
 	{
 		g_hCvar_VScriptBuffer = CreateConVar("l4d2_vscript_return", "", "Buffer used to return VScript values. Do not use.", FCVAR_DONTRECORD);
 		g_hCvar_AddonsEclipse = CreateConVar("l4d2_addons_eclipse", "-1", "Addons Manager (-1: use addonconfig; 0: disable addons; 1: enable addons.)", FCVAR_NOTIFY);
-		AutoExecConfig(true, "left4dhooks");
+		//AutoExecConfig(true, "left4dhooks");
 		g_hCvar_AddonsEclipse.AddChangeHook(ConVarChanged_Cvars);
 
 		g_hCvar_PillsHealth = FindConVar("pain_pills_health_value");
