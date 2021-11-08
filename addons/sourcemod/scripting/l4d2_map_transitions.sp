@@ -14,7 +14,7 @@
 #define DEBUG 0
 
 #define MAP_NAME_MAX_LENGTH 64
-#define SECTION_NAME "SetCampaignScores"
+#define SECTION_NAME "L4DD::CTerrorGameRules::SetCampaignScores"
 
 #define LEFT4FRAMEWORK_GAMEDATA "left4dhooks.l4d2"
 //#define LEFT4FRAMEWORK_GAMEDATA "left4downtown.l4d2"
@@ -100,7 +100,7 @@ public void L4D2_OnEndVersusModeRound_Post() //left4dhooks
 public Action OnRoundEnd_Post(Handle hTimer)
 {
 	g_hTransitionTimer = null;
-	
+
 	//Check if map has been registered for a map transition
 	char sCurrentMapName[MAP_NAME_MAX_LENGTH], sNextMapName[MAP_NAME_MAX_LENGTH];
 	GetCurrentMapLower(sCurrentMapName, sizeof(sCurrentMapName));

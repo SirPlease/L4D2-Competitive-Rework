@@ -6,7 +6,7 @@
 #define L4DBUILD 1
 
 #define LEFT4FRAMEWORK_GAMEDATA "left4dhooks.l4d2" // left4dhooks
-#define SECTION_NAME "GetRunTopSpeed" // left4dhooks
+#define SECTION_NAME "L4DD::CTerrorPlayer::GetRunTopSpeed" // left4dhooks
 
 //#define LEFT4FRAMEWORK_GAMEDATA "left4downtown.l4d2" // left4downtown
 //#define SECTION_NAME "CTerrorPlayer_GetRunTopSpeed" // left4downtown
@@ -48,14 +48,14 @@ void LoadSDK()
 	if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, SECTION_NAME)) {
 		SetFailState("Function '%s' not found", SECTION_NAME);
 	}
-	
+
 	PrepSDKCall_SetReturnInfo(SDKType_Float, SDKPass_Plain);
-	
+
 	g_hGetRunTopSpeed = EndPrepSDKCall();
 	if (g_hGetRunTopSpeed == null) {
 		SetFailState("Function '%s' found, but something went wrong", SECTION_NAME);
 	}
-	
+
 	delete hGameData;
 }
 
@@ -114,12 +114,12 @@ public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:ang
 	}
 
 	return Plugin_Continue;
-} 
+}
 
 stock bool:IsValidClient(client)
-{ 
+{
 	if (client <= 0 || client > MaxClients || !IsClientConnected(client)) {
-		return false; 
+		return false;
 	}
-	return IsClientInGame(client); 
+	return IsClientInGame(client);
 }

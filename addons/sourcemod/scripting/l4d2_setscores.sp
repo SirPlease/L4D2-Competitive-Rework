@@ -1,12 +1,12 @@
 /**
- * SetScores Left 4 Dead 2 plugin version 1.2. Allows players/admins to set the score for a match via the 
- * !setscores command in chat. Through the cvar setscore_allow_player_vote (default 1, enabled) server 
+ * SetScores Left 4 Dead 2 plugin version 1.2. Allows players/admins to set the score for a match via the
+ * !setscores command in chat. Through the cvar setscore_allow_player_vote (default 1, enabled) server
  * administrators may disable the vote functionality. The cvar setscore_force_admin_vote will force admins
- * to start a vote to change the score (default 0, vote not required). Additionally, the number of players 
+ * to start a vote to change the score (default 0, vote not required). Additionally, the number of players
  * required to initiate the vote may be configured by setscore_player_limit (default 2).
  *
  * Original Author: vintik
- * 
+ *
  * Contributors: purpletreefactory and Grego, added vote functionality and all chat messages
  *
  * Special Thanks: ProdigySim and Visor, code improvements and suggestions
@@ -24,6 +24,7 @@
 #define PLUGIN_VERSION "1.4"
 
 #define LEFT4FRAMEWORK_GAMEDATA "left4dhooks.l4d2"
+#define SECTION_NAME "L4DD::CTerrorGameRules::SetCampaignScores"
 
 public Plugin myinfo =
 {
@@ -36,20 +37,20 @@ public Plugin myinfo =
 
 #define L4D_TEAM_SPECTATE 1
 
-ConVar 
-	minimumPlayersForVote, 
-	allowPlayersToVote, 
+ConVar
+	minimumPlayersForVote,
+	allowPlayersToVote,
 	forceAdminsToVote;
-	
-Handle 
+
+Handle
 	voteHandler,
 	hSetCampaignScores;
-	
-int 
-	survivorScore, 
+
+int
+	survivorScore,
 	infectedScore;
-	
-bool 
+
+bool
 	inFirstReadyUpOfRound;
 
 //Beginning of our plugin, verifies the game is l4d2 and sets up our convars/command
@@ -57,11 +58,11 @@ public void OnPluginStart()
 {
 	CheckGame();
 	LoadSDK();
-	
+
 	minimumPlayersForVote = CreateConVar("setscore_player_limit", "2", "Minimum # of players in game to start the vote");
 	allowPlayersToVote = CreateConVar("setscore_allow_player_vote", "1", "Whether player initiated votes are allowed, 1 to allow (default), 0 to disallow.");
 	forceAdminsToVote = CreateConVar("setscore_force_admin_vote", "0", "Whether admin score changes require a vote, 1 vote required, 0 vote not required (default).");
-	
+
 	RegConsoleCmd("sm_setscores", Command_SetScores, "sm_setscores <survivor score> <infected score>");
 }
 
@@ -80,7 +81,7 @@ void LoadSDK()
 	}
 
 	StartPrepSDKCall(SDKCall_GameRules);
-	if (!PrepSDKCall_SetFromConf(conf, SDKConf_Signature, "SetCampaignScores")) {
+	if (!PrepSDKCall_SetFromConf(conf, SDKConf_Signature, SECTION_NAME)) {
 		SetFailState("Function 'SetCampaignScores' not found.");
 	}
 	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
@@ -89,7 +90,7 @@ void LoadSDK()
 	if (hSetCampaignScores == INVALID_HANDLE) {
 		SetFailState("Function 'SetCampaignScores' found, but something went wrong.");
 	}
-	
+
 	delete conf;
 }
 
@@ -101,12 +102,12 @@ public Action Command_SetScores(int client, int args)
 		ReplyToCommand(client, "Scores can only be changed during readyup before the round starts.");
 		return Plugin_Handled;
 	}
-	
+
 	if (args < 2) {
 		ReplyToCommand(client, "Usage: sm_setscores <survivor score> <infected score>");
 		return Plugin_Handled;
 	}
-	
+
 	char buffer[32];
 	//Retrieve and store the survivor score
 	GetCmdArg(1, buffer, sizeof(buffer));
@@ -114,9 +115,9 @@ public Action Command_SetScores(int client, int args)
 	//Retrieve and store the infected score
 	GetCmdArg(2, buffer, sizeof(buffer));
 	int tempInfectedScore = StringToInt(buffer);
-	
+
 	bool IsAdmin = false;
-	
+
 	//Determine whether the user is admin and what action to take
 	if (GetUserAdmin(client) != INVALID_ADMIN_ID) {
 		//If we are forcing admins to start votes, start a vote
@@ -124,15 +125,15 @@ public Action Command_SetScores(int client, int args)
 			SetScores(tempSurvivorScore, tempInfectedScore, client);
 			return Plugin_Handled;
 		}
-		
+
 		IsAdmin = true; //else, ignore setscore_allow_player_vote convar for admins
 	}
-	
+
 	if (IsAdmin || allowPlayersToVote.BoolValue) {
 		//If players are allowed to vote, start a vote
 		StartScoreVote(tempSurvivorScore, tempInfectedScore, client, IsAdmin);
 	}
-	
+
 	return Plugin_Handled;
 }
 
@@ -152,7 +153,7 @@ void StartScoreVote(const int survScore, const int infectScore, const int initia
 		for (int i = 1; i <= MaxClients; i++) {
 			if (!IsClientInGame(i) || IsFakeClient(i) || (GetClientTeam(i) == L4D_TEAM_SPECTATE))
 				continue;
-				
+
 			iPlayers[iNumPlayers++] = i;
 		}
 
@@ -161,21 +162,21 @@ void StartScoreVote(const int survScore, const int infectScore, const int initia
 			PrintToChat(initiator, "Score vote cannot be started. Not enough players.");
 			return;
 		}
-		
+
 		//The best place for this
-		survivorScore = survScore; 
+		survivorScore = survScore;
 		infectedScore = infectScore;
-		
+
 		//Create the vote
 		voteHandler = CreateBuiltinVote(VoteActionHandler, BuiltinVoteType_Custom_YesNo, BuiltinVoteAction_Cancel | BuiltinVoteAction_VoteEnd | BuiltinVoteAction_End);
-		
+
 		//Set the text for the vote, initiating client and handler
 		char sBuffer[64];
 		Format(sBuffer, sizeof(sBuffer), "Change scores to %d - %d?", survivorScore, infectedScore);
 		SetBuiltinVoteArgument(voteHandler, sBuffer);
 		SetBuiltinVoteInitiator(voteHandler, initiator);
 		SetBuiltinVoteResultCallback(voteHandler, ScoreVoteResultHandler);
-		
+
 		//Display the vote and make the initiator automatically vote yes
 		DisplayBuiltinVote(voteHandler, iPlayers, iNumPlayers, 20);
 		FakeClientCommand(initiator, "Vote Yes");
@@ -192,14 +193,14 @@ void SetScores(const int survScore, const int infectScore, const int iAdminIndex
 	bool bFlipped = L4D2_AreTeamsFlipped();
 	int SurvivorTeamIndex = bFlipped ? 1 : 0;
 	int InfectedTeamIndex = bFlipped ? 0 : 1;
-	
+
 	//Set the scores
 	SDKCall(hSetCampaignScores,
 				(bFlipped) ? infectScore : survScore,
 				(bFlipped) ? survScore : infectScore); //visible scores
 	L4D2Direct_SetVSCampaignScore(SurvivorTeamIndex, survScore); //real scores
 	L4D2Direct_SetVSCampaignScore(InfectedTeamIndex, infectScore);
-	
+
 	if (iAdminIndex != -1) { //This works well for an index '0' as well, if the initiator is CONSOLE
 		char client_name[32];
 		GetClientName(iAdminIndex, client_name, sizeof(client_name));
