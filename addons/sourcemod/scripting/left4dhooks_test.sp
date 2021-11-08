@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.69"
+#define PLUGIN_VERSION		"1.70"
 
 /*=======================================================================================
 	Plugin Info:
@@ -32,12 +32,16 @@
 ========================================================================================
 	Change Log:
 
+1.70 (07-Nov-2021)
+	- Added native "L4D_TankRockPrj" to create a Tank Rock projectile.
+	- Added native "L4D_DetonateProjectile" to detonate grenade projectiles.
+	- Added natives to L4D2: "L4D2_GetSurvivorSetMap" and "L4D2_GetSurvivorSetMod" to return the maps and modified Survivor set.
+	- Changed forwards "L4D_OnGetSurvivorSet" and "L4D_OnFastGetSurvivorSet" to post hooks to retrieve the correct value. Thanks to "Gabe Iggy" for reporting.
+
 1.69 (03-Nov-2021)
 	- Added forward "L4D_OnPouncedOnSurvivor" to notify when a Survivor is being pounced on by a Hunter.
 	- Added forward "L4D2_OnStartCarryingVictim" to L4D2 to notify when a Survivor is being grabbed by a Charger.
 	- Fixed some natives disabling the plugin if their signatures broke. Only their functionality will break.
-
-	- GameData files, include file and plugins updated.
 
 1.68 (02-Nov-2021)
 	- Added new forward "L4D_OnGrabWithTongue" to L4D2 to notify when someone is about to be grabbed by a Smoker Tongue. Requested by "Alexmy".
@@ -572,11 +576,13 @@ public Action sm_l4dd(int client, int args)
 
 	// =========================
 	// NATIVES - Mine
-	// =========================
+	// =========================	
 	/*
 	// WORKS
 	if( g_bLeft4Dead2 )
 	{
+		PrintToServer("L4D2_GetSurvivorSetMap: %d", L4D2_GetSurvivorSetMap());
+		PrintToServer("L4D2_GetSurvivorSetMod: %d", L4D2_GetSurvivorSetMod());
 		PrintToServer("L4D2_HasConfigurableDifficultySetting %d", L4D2_HasConfigurableDifficultySetting());
 		PrintToServer("L4D2_IsGenericCooperativeMode %d", L4D2_IsGenericCooperativeMode());
 		PrintToServer("L4D2_IsRealismMode %d", L4D2_IsRealismMode());
@@ -875,6 +881,22 @@ public Action sm_l4dd(int client, int args)
 		SetEntProp(projectile, Prop_Data, "m_iHammerID", 2467737); // Avoid conflict with "Flare Gun" plugin.
 		PrintToServer("L4D2_GrenadeLauncherPrj %d", projectile);
 	}
+
+
+
+	vAng = view_as<float>({ 0.0, 0.0, 500.0 }); // Shoot upwards
+	vPos[2] += 100.0; // Move projectile above player to avoid collision
+	projectile = L4D_TankRockPrj(client, vPos, vAng);
+	PrintToChatAll("L4D_TankRockPrj == %d", projectile);
+
+	// projectile = L4D_MolotovPrj(client, vPos, vAng);
+	if( g_bLeft4Dead2 )
+	{
+		// projectile = L4D2_VomitJarPrj(client, vPos, vAng);
+		// projectile = L4D2_SpitterPrj(client, vPos, vAng);
+		// projectile = L4D2_GrenadeLauncherPrj(client, vPos, vAng);
+	}
+	CreateTimer(1.0, TimerDetonate, EntIndexToEntRef(projectile));
 
 
 
@@ -1466,6 +1488,15 @@ public Action sm_l4dd(int client, int args)
 	// */
 
 	return Plugin_Handled;
+}
+
+public Action TimerDetonate(Handle timer, any entity)
+{
+	entity = EntRefToEntIndex(entity);
+	if( entity != INVALID_ENT_REFERENCE )
+	{
+		L4D_DetonateProjectile(entity);
+	}
 }
 
 

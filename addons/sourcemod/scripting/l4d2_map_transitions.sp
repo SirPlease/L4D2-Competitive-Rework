@@ -14,7 +14,7 @@
 #define DEBUG 0
 
 #define MAP_NAME_MAX_LENGTH 64
-#define SECTION_NAME "SetCampaignScores"
+#define SECTION_NAME "CTerrorGameRules::SetCampaignScores"
 
 #define LEFT4FRAMEWORK_GAMEDATA "left4dhooks.l4d2"
 //#define LEFT4FRAMEWORK_GAMEDATA "left4downtown.l4d2"
