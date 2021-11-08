@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.69"
+#define PLUGIN_VERSION		"1.71"
 
 #define DEBUG				0
 // #define DEBUG			1	// Prints addresses + detour info (only use for debugging, slows server down)
@@ -41,6 +41,20 @@
 
 ========================================================================================
 	Change Log:
+
+1.71 (07-Nov-2021)
+	- Fixed native "L4D2_GetSurvivorSetMod" not being restricted to L4D2. Thanks to "HarryPotter" for reporting.
+	- Plugin now loads about 1 second faster and no longer creates about 1 second delay on map changes.
+	- Changes to the "sm_l4dd_detours" and "sm_l4dhooks_detours" commands to prevent errors when using the DEBUG or DETOUR defines.
+
+1.70 (07-Nov-2021)
+	- Added native "L4D_TankRockPrj" to create a Tank Rock projectile.
+	- Added native "L4D_DetonateProjectile" to detonate grenade projectiles.
+	- Added natives to L4D2: "L4D2_GetSurvivorSetMap" and "L4D2_GetSurvivorSetMod" to return the maps and modified Survivor set.
+	- Changed forwards "L4D_OnGetSurvivorSet" and "L4D_OnFastGetSurvivorSet" to post hooks to retrieve the correct value. Thanks to "Gabe Iggy" for reporting.
+	- Fixed detours "OnShovedBySurvivor_Clone" and "OnStaggered_Clone" being broken on L4D1 linux. Thanks to "HarryPotter" for reporting.
+
+	- GameData files, include file and plugins updated.
 
 1.69a (04-Nov-2021)
 	- Added missing forwards "L4D_OnPouncedOnSurvivor" and "L4D2_OnStartCarryingVictim" to the include file. Thanks to "ProjectSky" for reporting.
@@ -338,7 +352,7 @@
 	- Removed "RoundRespawn" being used, was for private testing, maybe a future native. Thanks to "Ja-Forces" for reporting.
 
 1.36 (20-Apr-2021)
-	- Added optional forward "AP_OnPluginUpdate" from "Autoreload Plugins" by Dragokas, to rescan required detours when loaded plugins change.
+	- Added optional forward "AP_OnPluginUpdate" from "Autoreload Plugins" by "Dragokas", to rescan required detours when loaded plugins change.
 	- Fixed native "L4D2Direct_GetFlowDistance" sometimes returning -9999.0 when invalid, now returns 0.0;
 	- Fixed native "L4D_FindRandomSpot" from crashing Linux servers. Thanks to "Gold Fish" for reporting and fixing and "Marttt" for testing.
 	- Restricted native "L4D2_IsReachable" client index to Survivor bots only. Attempts to find a valid bot otherwise it will throw an error. Thanks to "Forgetest" for reporting.
@@ -787,7 +801,9 @@ ArrayList g_aForwardIndex;					// Stores Detour indexes
 ArrayList g_aForceDetours;					// Determines if a detour should be forced on without any forward using it
 int g_iCurrentIndex;						// Index for each detour while created
 bool g_bCreatedDetours;						// To determine first time creation of detours, or if enabling or disabling
+float g_fLoadTime;							// When the plugin was loaded, to ignore when "AP_OnPluginUpdate" fires
 Handle g_hThisPlugin;						// Ignore checking this plugin
+GameData g_hGameData;						// GameData file - to speed up loading
 
 
 
@@ -905,6 +921,7 @@ Handle g_hSDK_CTerrorPlayer_OnITExpired;
 Handle g_hSDK_CBaseEntity_ApplyLocalAngularVelocityImpulse;
 Handle g_hSDK_SurvivorBot_IsReachable;
 Handle g_hSDK_CTerrorGameRules_HasPlayerControlledZombies;
+Handle g_hSDK_CTerrorGameRules_GetSurvivorSet;
 Handle g_hSDK_CPipeBombProjectile_Create;
 Handle g_hSDK_CMolotovProjectile_Create;
 Handle g_hSDK_VomitJarProjectile_Create;
@@ -957,6 +974,7 @@ Handle g_hSDK_CTerrorGameRules_GetMissionInfo;
 Handle g_hSDK_CDirector_TryOfferingTankBot;
 Handle g_hSDK_CNavMesh_GetNavArea;
 Handle g_hSDK_CTerrorPlayer_GetFlowDistance;
+Handle g_hSDK_CBaseGrenade_Detonate;
 Handle g_hSDK_CTerrorPlayer_DoAnimationEvent;
 Handle g_hSDK_CTerrorGameRules_RecomputeTeamScores;
 Handle g_hSDK_CBaseServer_SetReservationCookie;
@@ -1219,8 +1237,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	// ====================================================================================================
 	//									NATIVES
-	// L4D1 = 24 [left4downtown] + 47 [l4d_direct] + 15 [l4d2addresses] + 37 [silvers - mine!] + 4 [anim] = 119
-	// L4D2 = 53 [left4downtown] + 61 [l4d_direct] + 26 [l4d2addresses] + 70 [silvers - mine!] + 4 [anim] = 203
+	// L4D1 = 24 [left4downtown] + 47 [l4d_direct] + 15 [l4d2addresses] + 39 [silvers - mine!] + 4 [anim] = 121
+	// L4D2 = 53 [left4downtown] + 61 [l4d_direct] + 26 [l4d2addresses] + 74 [silvers - mine!] + 4 [anim] = 207
 	// ====================================================================================================
 	// ANIMATION HOOK
 	CreateNative("AnimHookEnable",		 							Native_AnimHookEnable);
@@ -1233,16 +1251,18 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	// =========================
 	// Silvers Natives
 	// =========================
-	CreateNative("L4D_GetGameModeType",		 						Native_GetGameMode);
+	CreateNative("L4D_GetGameModeType",		 						Native_Internal_GetGameMode);
 	CreateNative("L4D2_IsGenericCooperativeMode",		 			Native_CTerrorGameRules_IsGenericCooperativeMode);
-	CreateNative("L4D_IsCoopMode",		 							Native_IsCoopMode);
-	CreateNative("L4D2_IsRealismMode",		 						Native_IsRealismMode);
-	CreateNative("L4D_IsSurvivalMode",		 						Native_IsSurvivalMode);
-	CreateNative("L4D2_IsScavengeMode",		 						Native_IsScavengeMode);
-	CreateNative("L4D_IsVersusMode",		 						Native_IsVersusMode);
+	CreateNative("L4D_IsCoopMode",		 							Native_Internal_IsCoopMode);
+	CreateNative("L4D2_IsRealismMode",		 						Native_Internal_IsRealismMode);
+	CreateNative("L4D_IsSurvivalMode",		 						Native_Internal_IsSurvivalMode);
+	CreateNative("L4D2_IsScavengeMode",		 						Native_Internal_IsScavengeMode);
+	CreateNative("L4D_IsVersusMode",		 						Native_Internal_IsVersusMode);
 	CreateNative("L4D2_HasConfigurableDifficultySetting",			Native_CTerrorGameRules_HasConfigurableDifficultySetting);
-	CreateNative("L4D_GetTempHealth",								Native_GetTempHealth);
-	CreateNative("L4D_SetTempHealth",								Native_SetTempHealth);
+	CreateNative("L4D2_GetSurvivorSetMap",							Native_CTerrorGameRules_GetSurvivorSetMap);
+	CreateNative("L4D2_GetSurvivorSetMod",							Native_CTerrorGameRules_GetSurvivorSetMod);
+	CreateNative("L4D_GetTempHealth",								Native_Internal_GetTempHealth);
+	CreateNative("L4D_SetTempHealth",								Native_Internal_SetTempHealth);
 	CreateNative("L4D_PlayMusic",		 							Native_PlayMusic);
 	CreateNative("L4D_StopMusic",		 							Native_StopMusic);
 	CreateNative("L4D_Deafen",		 								Native_CTerrorPlayer_Deafen);
@@ -1259,6 +1279,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("L4D_IsInFirstCheckpoint",		 					Native_IsInFirstCheckpoint);
 	CreateNative("L4D_IsInLastCheckpoint",		 					Native_IsInLastCheckpoint);
 	CreateNative("L4D_HasPlayerControlledZombies",		 			Native_CTerrorGameRules_HasPlayerControlledZombies);
+	CreateNative("L4D_DetonateProjectile",		 					Native_CBaseGrenade_Detonate);
+	CreateNative("L4D_TankRockPrj",		 							Native_CTankRock_Create);
 	CreateNative("L4D_PipeBombPrj",		 							Native_CPipeBombProjectile_Create);
 	CreateNative("L4D_MolotovPrj",		 							Native_CMolotovProjectile_Create);
 	CreateNative("L4D2_VomitJarPrj",		 						Native_VomitJarProjectile_Create);
@@ -1333,7 +1355,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	// l4d2weapons.inc
 	CreateNative("L4D_GetWeaponID",									Native_GetWeaponID);
-	CreateNative("L4D2_IsValidWeapon",								Native_IsValidWeapon);
+	CreateNative("L4D2_IsValidWeapon",								Native_Internal_IsValidWeapon);
 	CreateNative("L4D2_GetIntWeaponAttribute",						Native_GetIntWeaponAttribute);
 	CreateNative("L4D2_GetFloatWeaponAttribute",					Native_GetFloatWeaponAttribute);
 	CreateNative("L4D2_SetIntWeaponAttribute",						Native_SetIntWeaponAttribute);
@@ -1487,6 +1509,7 @@ public void OnPluginStart()
 	//									SETUP
 	// ====================================================================================================
 	g_iClassTank = g_bLeft4Dead2 ? 8 : 5;
+	g_fLoadTime = GetEngineTime();
 
 
 
@@ -1945,7 +1968,7 @@ void GetGameMode()
 	}
 }
 
-public int Native_GetGameMode(Handle plugin, int numParams)
+public int Native_Internal_GetGameMode(Handle plugin, int numParams)
 {
 	return g_iCurrentMode;
 }
@@ -1959,12 +1982,12 @@ public int Native_CTerrorGameRules_IsGenericCooperativeMode(Handle plugin, int n
 	return SDKCall(g_hSDK_CTerrorGameRules_IsGenericCooperativeMode, g_pGameRules);
 }
 
-public int Native_IsCoopMode(Handle plugin, int numParams)
+public int Native_Internal_IsCoopMode(Handle plugin, int numParams)
 {
 	return g_iCurrentMode == GAMEMODE_COOP;
 }
 
-public int Native_IsRealismMode(Handle plugin, int numParams)
+public int Native_Internal_IsRealismMode(Handle plugin, int numParams)
 {
 	ValidateAddress(g_pGameRules, "g_pGameRules");
 	ValidateNatives(g_hSDK_CTerrorGameRules_IsRealismMode, "CTerrorGameRules::IsRealismMode");
@@ -1973,19 +1996,19 @@ public int Native_IsRealismMode(Handle plugin, int numParams)
 	return SDKCall(g_hSDK_CTerrorGameRules_IsRealismMode, g_pGameRules);
 }
 
-public int Native_IsSurvivalMode(Handle plugin, int numParams)
+public int Native_Internal_IsSurvivalMode(Handle plugin, int numParams)
 {
 	return g_iCurrentMode == GAMEMODE_SURVIVAL;
 }
 
-public int Native_IsVersusMode(Handle plugin, int numParams)
-{
-	return g_iCurrentMode == GAMEMODE_VERSUS;
-}
-
-public int Native_IsScavengeMode(Handle plugin, int numParams)
+public int Native_Internal_IsScavengeMode(Handle plugin, int numParams)
 {
 	return g_iCurrentMode == GAMEMODE_SCAVENGE;
+}
+
+public int Native_Internal_IsVersusMode(Handle plugin, int numParams)
+{
+	return g_iCurrentMode == GAMEMODE_VERSUS;
 }
 
 
@@ -2553,12 +2576,11 @@ public MRESReturn DTR_AddonsDisabler(int pThis, Handle hReturn, Handle hParams)
 // ====================================================================================================
 //										DYNAMIC DETOURS SETUP
 // ====================================================================================================
-// Forward from "[DEV] Autoreload Plugins" by "Dragokas"
 public void AP_OnPluginUpdate(int pre) 
 {
-	if( pre == 0 )
+	if( pre == 0 && GetEngineTime() - g_fLoadTime > 5.0 )
 	{
-		CheckRequiredDetours();
+		CallCheckRequiredDetours();
 	}
 }
 
@@ -2570,8 +2592,29 @@ public Action CmdLobby(int client, int args)
 
 public Action CmdDetours(int client, int args)
 {
-	CheckRequiredDetours(client + 1);
+	CallCheckRequiredDetours(client + 1);
 	return Plugin_Handled;
+}
+
+void CallCheckRequiredDetours(int client = 0)
+{
+	#if DEBUG
+	g_vProf = CreateProfiler();
+	g_fProf = 0.0;
+	StartProfiling(g_vProf);
+	#endif
+
+	CheckRequiredDetours(client);
+
+	#if DEBUG
+	StopProfiling(g_vProf);
+	g_fProf += GetProfilerTime(g_vProf);
+	PrintToServer("");
+	PrintToServer("Dynamic Detours finished in %f seconds.", g_fProf);
+	PrintToServer("");
+	delete g_vProf;
+	#endif
+
 }
 
 public Action CmdReload(int client, int args)
@@ -2602,118 +2645,118 @@ void SetupDetours(GameData hGameData = null)
 
 	// Forwards listed here must match forward list in plugin start.
 	//			 GameData	DHookCallback PRE											DHookCallback POST									Signature Name														Forward Name							useLast index		forceOn detour
-	CreateDetour(hGameData, DTR_ZombieManager_SpawnTank,								INVALID_FUNCTION,									"L4DD::ZombieManager::SpawnTank",									"L4D_OnSpawnTank");
+	CreateDetour(hGameData, DTR_ZombieManager_SpawnTank,								INVALID_FUNCTION,									"ZombieManager::SpawnTank",									"L4D_OnSpawnTank");
 
 	if( !g_bLeft4Dead2 && g_bLinuxOS )
-		CreateDetour(hGameData, DTR_ZombieManager_SpawnWitch_Area,						INVALID_FUNCTION,									"L4DD::ZombieManager::SpawnWitch_Area",								"L4D_OnSpawnWitch");
-		// CreateDetour(hGameData, DTR_ZombieManager_SpawnWitch_AreaPre,					DTR_ZombieManager_SpawnWitch_Area,					"L4DD::ZombieManager::SpawnWitch_Area",											"L4D_OnSpawnWitch");
+		CreateDetour(hGameData, DTR_ZombieManager_SpawnWitch_Area,						INVALID_FUNCTION,									"ZombieManager::SpawnWitch_Area",								"L4D_OnSpawnWitch");
+		// CreateDetour(hGameData, DTR_ZombieManager_SpawnWitch_AreaPre,					DTR_ZombieManager_SpawnWitch_Area,					"ZombieManager::SpawnWitch_Area",											"L4D_OnSpawnWitch");
 
-	CreateDetour(hGameData, DTR_ZombieManager_SpawnWitch,								INVALID_FUNCTION,									"L4DD::ZombieManager::SpawnWitch",									"L4D_OnSpawnWitch");
-	CreateDetour(hGameData, DTR_CDirector_MobRushStart,									INVALID_FUNCTION,									"L4DD::CDirector::OnMobRushStart",									"L4D_OnMobRushStart");
-	CreateDetour(hGameData, DTR_ZombieManager_SpawnITMob,								INVALID_FUNCTION,									"L4DD::ZombieManager::SpawnITMob",									"L4D_OnSpawnITMob");
-	CreateDetour(hGameData, DTR_ZombieManager_SpawnMob,									INVALID_FUNCTION,									"L4DD::ZombieManager::SpawnMob",									"L4D_OnSpawnMob");
-	CreateDetour(hGameData, DTR_CTerrorPlayer_EnterGhostState_Pre,						DTR_CTerrorPlayer_EnterGhostState_Post,				"L4DD::CTerrorPlayer::OnEnterGhostState",							"L4D_OnEnterGhostState");
-	CreateDetour(hGameData, DTR_CTerrorPlayer_EnterGhostState_Pre,						DTR_CTerrorPlayer_EnterGhostState_Post,				"L4DD::CTerrorPlayer::OnEnterGhostState",							"L4D_OnEnterGhostStatePre",				true); // Different forwards, same detour as above - same index.
-	CreateDetour(hGameData, DTR_CDirector_IsTeamFull,									INVALID_FUNCTION,									"L4DD::CDirector::IsTeamFull",										"L4D_OnIsTeamFull");
-	CreateDetour(hGameData, DTR_CTerrorGameRules_ClearTeamScores,						INVALID_FUNCTION,									"L4DD::CTerrorGameRules::ClearTeamScores",							"L4D_OnClearTeamScores");
-	CreateDetour(hGameData, DTR_CTerrorGameRules_SetCampaignScores,						INVALID_FUNCTION,									"L4DD::CTerrorGameRules::SetCampaignScores",						"L4D_OnSetCampaignScores");
+	CreateDetour(hGameData, DTR_ZombieManager_SpawnWitch,								INVALID_FUNCTION,									"ZombieManager::SpawnWitch",									"L4D_OnSpawnWitch");
+	CreateDetour(hGameData, DTR_CDirector_MobRushStart,									INVALID_FUNCTION,									"CDirector::OnMobRushStart",									"L4D_OnMobRushStart");
+	CreateDetour(hGameData, DTR_ZombieManager_SpawnITMob,								INVALID_FUNCTION,									"ZombieManager::SpawnITMob",									"L4D_OnSpawnITMob");
+	CreateDetour(hGameData, DTR_ZombieManager_SpawnMob,									INVALID_FUNCTION,									"ZombieManager::SpawnMob",									"L4D_OnSpawnMob");
+	CreateDetour(hGameData, DTR_CTerrorPlayer_EnterGhostState_Pre,						DTR_CTerrorPlayer_EnterGhostState_Post,				"CTerrorPlayer::OnEnterGhostState",							"L4D_OnEnterGhostState");
+	CreateDetour(hGameData, DTR_CTerrorPlayer_EnterGhostState_Pre,						DTR_CTerrorPlayer_EnterGhostState_Post,				"CTerrorPlayer::OnEnterGhostState",							"L4D_OnEnterGhostStatePre",				true); // Different forwards, same detour as above - same index.
+	CreateDetour(hGameData, DTR_CDirector_IsTeamFull,									INVALID_FUNCTION,									"CDirector::IsTeamFull",										"L4D_OnIsTeamFull");
+	CreateDetour(hGameData, DTR_CTerrorGameRules_ClearTeamScores,						INVALID_FUNCTION,									"CTerrorGameRules::ClearTeamScores",							"L4D_OnClearTeamScores");
+	CreateDetour(hGameData, DTR_CTerrorGameRules_SetCampaignScores,						INVALID_FUNCTION,									"CTerrorGameRules::SetCampaignScores",						"L4D_OnSetCampaignScores");
 
 	if( !g_bLeft4Dead2 )
-		CreateDetour(hGameData, DTR_CTerrorPlayer_RecalculateVersusScore,				INVALID_FUNCTION,									"L4DD::CTerrorPlayer::RecalculateVersusScore",						"L4D_OnRecalculateVersusScore");
+		CreateDetour(hGameData, DTR_CTerrorPlayer_RecalculateVersusScore,				INVALID_FUNCTION,									"CTerrorPlayer::RecalculateVersusScore",						"L4D_OnRecalculateVersusScore");
 
-	CreateDetour(hGameData, DTR_CDirector_OnFirstSurvivorLeftSafeArea,					INVALID_FUNCTION,									"L4DD::CDirector::OnFirstSurvivorLeftSafeArea",						"L4D_OnFirstSurvivorLeftSafeArea");
-	CreateDetour(hGameData, DTR_CTerrorPlayer_GetCrouchTopSpeed_Pre,					DTR_CTerrorPlayer_GetCrouchTopSpeed_Post,			"L4DD::CTerrorPlayer::GetCrouchTopSpeed",							"L4D_OnGetCrouchTopSpeed");
-	CreateDetour(hGameData, DTR_CTerrorPlayer_GetRunTopSpeed_Pre,						DTR_CTerrorPlayer_GetRunTopSpeed_Post,				"L4DD::CTerrorPlayer::GetRunTopSpeed",								"L4D_OnGetRunTopSpeed");
-	CreateDetour(hGameData, DTR_CTerrorPlayer_GetWalkTopSpeed_Pre,						DTR_CTerrorPlayer_GetWalkTopSpeed_Post,				"L4DD::CTerrorPlayer::GetWalkTopSpeed",								"L4D_OnGetWalkTopSpeed");
-	CreateDetour(hGameData, DTR_CDirectorVersusMode_GetMissionVersusBossSpawning,		INVALID_FUNCTION,									"L4DD::CDirectorVersusMode::GetMissionVersusBossSpawning",			"L4D_OnGetMissionVSBossSpawning");
-	CreateDetour(hGameData, DTR_ZombieManager_ReplaceTank,								INVALID_FUNCTION,									"L4DD::ZombieManager::ReplaceTank",									"L4D_OnReplaceTank");
-	CreateDetour(hGameData, DTR_CTankClaw_DoSwing_Pre,									DTR_CTankClaw_DoSwing_Post,							"L4DD::CTankClaw::DoSwing",											"L4D_TankClaw_DoSwing_Pre");
-	CreateDetour(hGameData, DTR_CTankClaw_DoSwing_Pre,									DTR_CTankClaw_DoSwing_Post,							"L4DD::CTankClaw::DoSwing",											"L4D_TankClaw_DoSwing_Post",			true); // Different forwards, same detour as above - same index.
-	CreateDetour(hGameData, DTR_CTankClaw_GroundPound_Pre,								DTR_CTankClaw_GroundPound_Post,						"L4DD::CTankClaw::GroundPound",										"L4D_TankClaw_GroundPound_Pre");
-	CreateDetour(hGameData, DTR_CTankClaw_GroundPound_Pre,								DTR_CTankClaw_GroundPound_Post,						"L4DD::CTankClaw::GroundPound",										"L4D_TankClaw_GroundPound_Post",		true); // Different forwards, same detour as above - same index.
-	CreateDetour(hGameData, DTR_CTankClaw_OnPlayerHit_Pre,								DTR_CTankClaw_OnPlayerHit_Post,						"L4DD::CTankClaw::OnPlayerHit",										"L4D_TankClaw_OnPlayerHit_Pre");
-	CreateDetour(hGameData, DTR_CTankClaw_OnPlayerHit_Pre,								DTR_CTankClaw_OnPlayerHit_Post,						"L4DD::CTankClaw::OnPlayerHit",										"L4D_TankClaw_OnPlayerHit_Post",		true); // Different forwards, same detour as above - same index.
-	CreateDetour(hGameData, DTR_CTankRock_Detonate,										INVALID_FUNCTION,									"L4DD::CTankRock::Detonate",										"L4D_TankRock_OnDetonate");
-	CreateDetour(hGameData, DTR_CTankRock_OnRelease,									INVALID_FUNCTION,									"L4DD::CTankRock::OnRelease",										"L4D_TankRock_OnRelease");
-	CreateDetour(hGameData, DTR_CThrow_ActivateAbililty,								INVALID_FUNCTION,									"L4DD::CThrow::ActivateAbililty",									"L4D_OnCThrowActivate");
+	CreateDetour(hGameData, DTR_CDirector_OnFirstSurvivorLeftSafeArea,					INVALID_FUNCTION,									"CDirector::OnFirstSurvivorLeftSafeArea",						"L4D_OnFirstSurvivorLeftSafeArea");
+	CreateDetour(hGameData, DTR_CTerrorPlayer_GetCrouchTopSpeed_Pre,					DTR_CTerrorPlayer_GetCrouchTopSpeed_Post,			"CTerrorPlayer::GetCrouchTopSpeed",							"L4D_OnGetCrouchTopSpeed");
+	CreateDetour(hGameData, DTR_CTerrorPlayer_GetRunTopSpeed_Pre,						DTR_CTerrorPlayer_GetRunTopSpeed_Post,				"CTerrorPlayer::GetRunTopSpeed",								"L4D_OnGetRunTopSpeed");
+	CreateDetour(hGameData, DTR_CTerrorPlayer_GetWalkTopSpeed_Pre,						DTR_CTerrorPlayer_GetWalkTopSpeed_Post,				"CTerrorPlayer::GetWalkTopSpeed",								"L4D_OnGetWalkTopSpeed");
+	CreateDetour(hGameData, DTR_CDirectorVersusMode_GetMissionVersusBossSpawning,		INVALID_FUNCTION,									"CDirectorVersusMode::GetMissionVersusBossSpawning",			"L4D_OnGetMissionVSBossSpawning");
+	CreateDetour(hGameData, DTR_ZombieManager_ReplaceTank,								INVALID_FUNCTION,									"ZombieManager::ReplaceTank",									"L4D_OnReplaceTank");
+	CreateDetour(hGameData, DTR_CTankClaw_DoSwing_Pre,									DTR_CTankClaw_DoSwing_Post,							"CTankClaw::DoSwing",											"L4D_TankClaw_DoSwing_Pre");
+	CreateDetour(hGameData, DTR_CTankClaw_DoSwing_Pre,									DTR_CTankClaw_DoSwing_Post,							"CTankClaw::DoSwing",											"L4D_TankClaw_DoSwing_Post",			true); // Different forwards, same detour as above - same index.
+	CreateDetour(hGameData, DTR_CTankClaw_GroundPound_Pre,								DTR_CTankClaw_GroundPound_Post,						"CTankClaw::GroundPound",										"L4D_TankClaw_GroundPound_Pre");
+	CreateDetour(hGameData, DTR_CTankClaw_GroundPound_Pre,								DTR_CTankClaw_GroundPound_Post,						"CTankClaw::GroundPound",										"L4D_TankClaw_GroundPound_Post",		true); // Different forwards, same detour as above - same index.
+	CreateDetour(hGameData, DTR_CTankClaw_OnPlayerHit_Pre,								DTR_CTankClaw_OnPlayerHit_Post,						"CTankClaw::OnPlayerHit",										"L4D_TankClaw_OnPlayerHit_Pre");
+	CreateDetour(hGameData, DTR_CTankClaw_OnPlayerHit_Pre,								DTR_CTankClaw_OnPlayerHit_Post,						"CTankClaw::OnPlayerHit",										"L4D_TankClaw_OnPlayerHit_Post",		true); // Different forwards, same detour as above - same index.
+	CreateDetour(hGameData, DTR_CTankRock_Detonate,										INVALID_FUNCTION,									"CTankRock::Detonate",										"L4D_TankRock_OnDetonate");
+	CreateDetour(hGameData, DTR_CTankRock_OnRelease,									INVALID_FUNCTION,									"CTankRock::OnRelease",										"L4D_TankRock_OnRelease");
+	CreateDetour(hGameData, DTR_CThrow_ActivateAbililty,								INVALID_FUNCTION,									"CThrow::ActivateAbililty",									"L4D_OnCThrowActivate");
 	g_iAnimationDetourIndex = g_iCurrentIndex; // Animation Hook - detour index to enable when required.
-	CreateDetour(hGameData, DTR_CBaseAnimating_SelectWeightedSequence_Pre,				DTR_CBaseAnimating_SelectWeightedSequence_Post,		"L4DD::CBaseAnimating::SelectWeightedSequence",						"L4D2_OnSelectTankAttack"); // Animation Hook
-	CreateDetour(hGameData, DTR_CBaseAnimating_SelectWeightedSequence_Pre,				DTR_CBaseAnimating_SelectWeightedSequence_Post,		"L4DD::CBaseAnimating::SelectWeightedSequence",						"L4D2_OnSelectTankAttackPre",			true); // Animation Hook
-	CreateDetour(hGameData, DTR_CDirectorVersusMode_EndVersusModeRound_Pre,				DTR_CDirectorVersusMode_EndVersusModeRound_Post,	"L4DD::CDirectorVersusMode::EndVersusModeRound",					"L4D2_OnEndVersusModeRound");
-	CreateDetour(hGameData,	DTR_CDirectorVersusMode_EndVersusModeRound_Pre,				DTR_CDirectorVersusMode_EndVersusModeRound_Post,	"L4DD::CDirectorVersusMode::EndVersusModeRound",					"L4D2_OnEndVersusModeRound_Post",		true); // Different forwards, same detour as above - same index.
-	CreateDetour(hGameData, DTR_CTerrorPlayer_OnLedgeGrabbed,							INVALID_FUNCTION,									"L4DD::CTerrorPlayer::OnLedgeGrabbed",								"L4D_OnLedgeGrabbed");
-	CreateDetour(hGameData, DTR_CTerrorPlayer_OnRevived_Pre,							DTR_CTerrorPlayer_OnRevived_Post,					"L4DD::CTerrorPlayer::OnRevived",									"L4D2_OnRevived");
+	CreateDetour(hGameData, DTR_CBaseAnimating_SelectWeightedSequence_Pre,				DTR_CBaseAnimating_SelectWeightedSequence_Post,		"CBaseAnimating::SelectWeightedSequence",						"L4D2_OnSelectTankAttack"); // Animation Hook
+	CreateDetour(hGameData, DTR_CBaseAnimating_SelectWeightedSequence_Pre,				DTR_CBaseAnimating_SelectWeightedSequence_Post,		"CBaseAnimating::SelectWeightedSequence",						"L4D2_OnSelectTankAttackPre",			true); // Animation Hook
+	CreateDetour(hGameData, DTR_CDirectorVersusMode_EndVersusModeRound_Pre,				DTR_CDirectorVersusMode_EndVersusModeRound_Post,	"CDirectorVersusMode::EndVersusModeRound",					"L4D2_OnEndVersusModeRound");
+	CreateDetour(hGameData,	DTR_CDirectorVersusMode_EndVersusModeRound_Pre,				DTR_CDirectorVersusMode_EndVersusModeRound_Post,	"CDirectorVersusMode::EndVersusModeRound",					"L4D2_OnEndVersusModeRound_Post",		true); // Different forwards, same detour as above - same index.
+	CreateDetour(hGameData, DTR_CTerrorPlayer_OnLedgeGrabbed,							INVALID_FUNCTION,									"CTerrorPlayer::OnLedgeGrabbed",								"L4D_OnLedgeGrabbed");
+	CreateDetour(hGameData, DTR_CTerrorPlayer_OnRevived_Pre,							DTR_CTerrorPlayer_OnRevived_Post,					"CTerrorPlayer::OnRevived",									"L4D2_OnRevived");
 
 	if( !g_bLinuxOS ) // Blocked on Linux in L4D1/L4D2 to prevent crashes. Waiting for DHooks update to support object returns.
 	{
-		CreateDetour(hGameData, DTR_SurvivorBot_UseHealingItems,						INVALID_FUNCTION,									"L4DD::SurvivorBot::UseHealingItems",								"L4D2_OnUseHealingItems");
-		CreateDetour(hGameData, DTR_CDirectorScriptedEventManager_SendInRescueVehicle,	INVALID_FUNCTION,									"L4DD::CDirectorScriptedEventManager::SendInRescueVehicle",			"L4D2_OnSendInRescueVehicle");
+		CreateDetour(hGameData, DTR_SurvivorBot_UseHealingItems,						INVALID_FUNCTION,									"SurvivorBot::UseHealingItems",								"L4D2_OnUseHealingItems");
+		CreateDetour(hGameData, DTR_CDirectorScriptedEventManager_SendInRescueVehicle,	INVALID_FUNCTION,									"CDirectorScriptedEventManager::SendInRescueVehicle",			"L4D2_OnSendInRescueVehicle");
 	}
 
-	CreateDetour(hGameData, DTR_CDirector_TryOfferingTankBot,							INVALID_FUNCTION,									"L4DD::CDirector::TryOfferingTankBot",								"L4D_OnTryOfferingTankBot");
-	CreateDetour(hGameData, DTR_CTerrorPlayer_OnShovedBySurvivor,						INVALID_FUNCTION,									"L4DD::CTerrorPlayer::OnShovedBySurvivor",							"L4D_OnShovedBySurvivor");
-	CreateDetour(hGameData, DTR_CTerrorPlayer_OnStaggered,								INVALID_FUNCTION,									"L4DD::CTerrorPlayer::OnStaggered",									"L4D2_OnStagger");
+	CreateDetour(hGameData, DTR_CDirector_TryOfferingTankBot,							INVALID_FUNCTION,									"CDirector::TryOfferingTankBot",								"L4D_OnTryOfferingTankBot");
+	CreateDetour(hGameData, DTR_CTerrorPlayer_OnShovedBySurvivor,						INVALID_FUNCTION,									"CTerrorPlayer::OnShovedBySurvivor",							"L4D_OnShovedBySurvivor");
+	CreateDetour(hGameData, DTR_CTerrorPlayer_OnStaggered,								INVALID_FUNCTION,									"CTerrorPlayer::OnStaggered",									"L4D2_OnStagger");
 
 	if( !g_bLeft4Dead2 && g_bLinuxOS )
 	{
-		CreateDetour(hGameData, DTR_CDirector_TryOfferingTankBot_Clone,					INVALID_FUNCTION,									"L4DD::CDirector::TryOfferingTankBot_Clone",						"L4D_OnTryOfferingTankBot");
-		CreateDetour(hGameData, DTR_CTerrorPlayer_OnShovedBySurvivor_Clone,				INVALID_FUNCTION,									"L4DD::CTerrorPlayer::OnShovedBySurvivor_Clone",					"L4D_OnShovedBySurvivor");
-		CreateDetour(hGameData, DTR_CTerrorPlayer_OnStaggered_Clone,					INVALID_FUNCTION,									"L4DD::CTerrorPlayer::OnStaggered_Clone",							"L4D2_OnStagger");
+		CreateDetour(hGameData, DTR_CDirector_TryOfferingTankBot_Clone,					INVALID_FUNCTION,									"CDirector::TryOfferingTankBot_Clone",						"L4D_OnTryOfferingTankBot");
+		CreateDetour(hGameData, DTR_CTerrorPlayer_OnShovedBySurvivor_Clone,				INVALID_FUNCTION,									"CTerrorPlayer::OnShovedBySurvivor_Clone",					"L4D_OnShovedBySurvivor");
+		CreateDetour(hGameData, DTR_CTerrorPlayer_OnStaggered_Clone,					INVALID_FUNCTION,									"CTerrorPlayer::OnStaggered_Clone",							"L4D2_OnStagger");
 	}
 
-	CreateDetour(hGameData, DTR_CTerrorWeapon_OnHit,									INVALID_FUNCTION,									"L4DD::CTerrorWeapon::OnHit",										"L4D2_OnEntityShoved");
-	CreateDetour(hGameData, DTR_CTerrorPlayer_OnShovedByPounceLanding,					INVALID_FUNCTION,									"L4DD::CTerrorPlayer::OnShovedByPounceLanding",						"L4D2_OnPounceOrLeapStumble");
-	CreateDetour(hGameData, DTR_CDeathFallCamera_Enable,								INVALID_FUNCTION,									"L4DD::CDeathFallCamera::Enable",									"L4D_OnFatalFalling");
-	CreateDetour(hGameData, DTR_CTerrorPlayer_OnFalling_Pre,							DTR_CTerrorPlayer_OnFalling_Post,					"L4DD::CTerrorPlayer::OnFalling",									"L4D_OnFalling");
-	CreateDetour(hGameData, DTR_Tank_EnterStasis_Pre,									DTR_Tank_EnterStasis_Post,							"L4DD::Tank::EnterStasis",											"L4D_OnEnterStasis");
-	CreateDetour(hGameData, DTR_Tank_LeaveStasis_Pre,									DTR_Tank_LeaveStasis_Post,							"L4DD::Tank::LeaveStasis",											"L4D_OnLeaveStasis");
-	CreateDetour(hGameData, DTR_CInferno_Spread,										INVALID_FUNCTION,									"L4DD::CInferno::Spread",											"L4D2_OnSpitSpread");
-	CreateDetour(hGameData, DTR_SurvivorBot_FindScavengeItem_Pre,						DTR_SurvivorBot_FindScavengeItem_Post,				"L4DD::SurvivorBot::FindScavengeItem",								"L4D2_OnFindScavengeItem");
-	CreateDetour(hGameData, DTR_BossZombiePlayerBot_ChooseVictim_Pre,					DTR_BossZombiePlayerBot_ChooseVictim_Post,			"L4DD::BossZombiePlayerBot::ChooseVictim",							"L4D2_OnChooseVictim");
-	CreateDetour(hGameData, DTR_CTerrorPlayer_MaterializeFromGhost_Pre,					DTR_CTerrorPlayer_MaterializeFromGhost_Post,		"L4DD::CTerrorPlayer::MaterializeFromGhost",						"L4D_DTR_CTerrorPlayer_MaterializeFromGhostPre");
-	CreateDetour(hGameData, DTR_CTerrorPlayer_MaterializeFromGhost_Pre,					DTR_CTerrorPlayer_MaterializeFromGhost_Post,		"L4DD::CTerrorPlayer::MaterializeFromGhost",						"L4D_OnMaterializeFromGhost",			true); // Different forwards, same detour as above - same index.
-	CreateDetour(hGameData, DTR_CPipeBombProjectile_Create_Pre,							DTR_CPipeBombProjectile_Create_Post,				"L4DD::CPipeBombProjectile::Create",								"L4D_PipeBombProjectile_Pre");
-	CreateDetour(hGameData, DTR_CPipeBombProjectile_Create_Pre,							DTR_CPipeBombProjectile_Create_Post,				"L4DD::CPipeBombProjectile::Create",								"L4D_PipeBombProjectile_Post",			true); // Different forwards, same detour as above - same index.
-	CreateDetour(hGameData, DTR_CTerrorPlayer_Extinguish,								INVALID_FUNCTION,									"L4DD::CTerrorPlayer::Extinguish",									"L4D_PlayerExtinguish");
-	CreateDetour(hGameData, DTR_CBreakableProp_Break_Pre,								DTR_CBreakableProp_Break_Post,						"L4DD::CBreakableProp::Break",										"L4D_CBreakableProp_Break");
-	CreateDetour(hGameData, DTR_CTerrorPlayer_OnVomitedUpon,							INVALID_FUNCTION,									"L4DD::CTerrorPlayer::OnVomitedUpon",								"L4D_OnVomitedUpon");
-	CreateDetour(hGameData, DTR_CTerrorPlayer_OnPouncedOnSurvivor,						INVALID_FUNCTION,									"L4DD::CTerrorPlayer::OnPouncedOnSurvivor",							"L4D_OnPouncedOnSurvivor");
-	CreateDetour(hGameData, DTR_CTerrorPlayer_GrabVictimWithTongue,						INVALID_FUNCTION,									"L4DD::CTerrorPlayer::GrabVictimWithTongue",						"L4D_OnGrabWithTongue");
+	CreateDetour(hGameData, DTR_CTerrorWeapon_OnHit,									INVALID_FUNCTION,									"CTerrorWeapon::OnHit",										"L4D2_OnEntityShoved");
+	CreateDetour(hGameData, DTR_CTerrorPlayer_OnShovedByPounceLanding,					INVALID_FUNCTION,									"CTerrorPlayer::OnShovedByPounceLanding",						"L4D2_OnPounceOrLeapStumble");
+	CreateDetour(hGameData, DTR_CDeathFallCamera_Enable,								INVALID_FUNCTION,									"CDeathFallCamera::Enable",									"L4D_OnFatalFalling");
+	CreateDetour(hGameData, DTR_CTerrorPlayer_OnFalling_Pre,							DTR_CTerrorPlayer_OnFalling_Post,					"CTerrorPlayer::OnFalling",									"L4D_OnFalling");
+	CreateDetour(hGameData, DTR_Tank_EnterStasis_Pre,									DTR_Tank_EnterStasis_Post,							"Tank::EnterStasis",											"L4D_OnEnterStasis");
+	CreateDetour(hGameData, DTR_Tank_LeaveStasis_Pre,									DTR_Tank_LeaveStasis_Post,							"Tank::LeaveStasis",											"L4D_OnLeaveStasis");
+	CreateDetour(hGameData, DTR_CInferno_Spread,										INVALID_FUNCTION,									"CInferno::Spread",											"L4D2_OnSpitSpread");
+	CreateDetour(hGameData, DTR_SurvivorBot_FindScavengeItem_Pre,						DTR_SurvivorBot_FindScavengeItem_Post,				"SurvivorBot::FindScavengeItem",								"L4D2_OnFindScavengeItem");
+	CreateDetour(hGameData, DTR_BossZombiePlayerBot_ChooseVictim_Pre,					DTR_BossZombiePlayerBot_ChooseVictim_Post,			"BossZombiePlayerBot::ChooseVictim",							"L4D2_OnChooseVictim");
+	CreateDetour(hGameData, DTR_CTerrorPlayer_MaterializeFromGhost_Pre,					DTR_CTerrorPlayer_MaterializeFromGhost_Post,		"CTerrorPlayer::MaterializeFromGhost",						"L4D_OnMaterializeFromGhostPre");
+	CreateDetour(hGameData, DTR_CTerrorPlayer_MaterializeFromGhost_Pre,					DTR_CTerrorPlayer_MaterializeFromGhost_Post,		"CTerrorPlayer::MaterializeFromGhost",						"L4D_OnMaterializeFromGhost",			true); // Different forwards, same detour as above - same index.
+	CreateDetour(hGameData, DTR_CPipeBombProjectile_Create_Pre,							DTR_CPipeBombProjectile_Create_Post,				"CPipeBombProjectile::Create",								"L4D_PipeBombProjectile_Pre");
+	CreateDetour(hGameData, DTR_CPipeBombProjectile_Create_Pre,							DTR_CPipeBombProjectile_Create_Post,				"CPipeBombProjectile::Create",								"L4D_PipeBombProjectile_Post",			true); // Different forwards, same detour as above - same index.
+	CreateDetour(hGameData, DTR_CTerrorPlayer_Extinguish,								INVALID_FUNCTION,									"CTerrorPlayer::Extinguish",									"L4D_PlayerExtinguish");
+	CreateDetour(hGameData, DTR_CBreakableProp_Break_Pre,								DTR_CBreakableProp_Break_Post,						"CBreakableProp::Break",										"L4D_CBreakableProp_Break");
+	CreateDetour(hGameData, DTR_CTerrorPlayer_OnVomitedUpon,							INVALID_FUNCTION,									"CTerrorPlayer::OnVomitedUpon",								"L4D_OnVomitedUpon");
+	CreateDetour(hGameData, DTR_CTerrorPlayer_OnPouncedOnSurvivor,						INVALID_FUNCTION,									"CTerrorPlayer::OnPouncedOnSurvivor",							"L4D_OnPouncedOnSurvivor");
+	CreateDetour(hGameData, DTR_CTerrorPlayer_GrabVictimWithTongue,						INVALID_FUNCTION,									"CTerrorPlayer::GrabVictimWithTongue",						"L4D_OnGrabWithTongue");
 
 	if( !g_bLeft4Dead2 )
 	{
 		// Different detours, same forward (L4D_OnSpawnSpecial).
-		CreateDetour(hGameData, DTR_ZombieManager_SpawnHunter,							INVALID_FUNCTION,									"L4DD::ZombieManager::SpawnHunter",									"L4D_OnSpawnSpecial");
-		CreateDetour(hGameData, DTR_ZombieManager_SpawnBoomer,							INVALID_FUNCTION,									"L4DD::ZombieManager::SpawnBoomer",									"L4D_OnSpawnSpecial");
-		CreateDetour(hGameData, DTR_ZombieManager_SpawnSmoker,							INVALID_FUNCTION,									"L4DD::ZombieManager::SpawnSmoker",									"L4D_OnSpawnSpecial");
+		CreateDetour(hGameData, DTR_ZombieManager_SpawnHunter,							INVALID_FUNCTION,									"ZombieManager::SpawnHunter",									"L4D_OnSpawnSpecial");
+		CreateDetour(hGameData, DTR_ZombieManager_SpawnBoomer,							INVALID_FUNCTION,									"ZombieManager::SpawnBoomer",									"L4D_OnSpawnSpecial");
+		CreateDetour(hGameData, DTR_ZombieManager_SpawnSmoker,							INVALID_FUNCTION,									"ZombieManager::SpawnSmoker",									"L4D_OnSpawnSpecial");
 	}
 	else
 	{
-		CreateDetour(hGameData, DTR_CTerrorPlayer_OnLeptOnSurvivor,						INVALID_FUNCTION,									"L4DD::CTerrorPlayer::OnLeptOnSurvivor",							"L4D2_OnJockeyRide");
-		CreateDetour(hGameData, DTR_CTerrorPlayer_OnStartCarryingVictim,				INVALID_FUNCTION,									"L4DD::CTerrorPlayer::OnStartCarryingVictim",						"L4D2_OnStartCarryingVictim");
-		CreateDetour(hGameData, DTR_CGasCanEvent_Killed,								INVALID_FUNCTION,									"L4DD::CGasCan::Event_Killed",										"L4D2_CGasCan_EventKilled");
-		CreateDetour(hGameData, DTR_CGasCan_OnActionComplete,							INVALID_FUNCTION,									"L4DD::CGasCan::OnActionComplete",									"L4D2_CGasCan_ActionComplete");
-		CreateDetour(hGameData, DTR_CInsectSwarm_CanHarm,								INVALID_FUNCTION,									"L4DD::CInsectSwarm::CanHarm",										"L4D2_CInsectSwarm_CanHarm");
-		CreateDetour(hGameData, DTR_CTerrorPlayer_Fling,								INVALID_FUNCTION,									"L4DD::CTerrorPlayer::Fling",										"L4D2_OnPlayerFling");
-		CreateDetour(hGameData, DTR_CTerrorPlayer_OnHitByVomitJar,						INVALID_FUNCTION,									"L4DD::CTerrorPlayer::OnHitByVomitJar",								"L4D2_OnHitByVomitJar");
-		CreateDetour(hGameData, DTR_ZombieManager_SpawnSpecial,							INVALID_FUNCTION,									"L4DD::ZombieManager::SpawnSpecial",								"L4D_OnSpawnSpecial");
-		CreateDetour(hGameData, DTR_ZombieManager_SpawnWitchBride,						INVALID_FUNCTION,									"L4DD::ZombieManager::SpawnWitchBride",								"L4D2_OnSpawnWitchBride");
-		CreateDetour(hGameData, DTR_CDirector_GetScriptValueInt,						INVALID_FUNCTION,									"L4DD::CDirector::GetScriptValueInt",								"L4D_OnGetScriptValueInt");
-		CreateDetour(hGameData, DTR_CDirector_GetScriptValueFloat,						INVALID_FUNCTION,									"L4DD::CDirector::GetScriptValueFloat",								"L4D_OnGetScriptValueFloat");
-		CreateDetour(hGameData, DTR_CDirector_GetScriptValueString,						INVALID_FUNCTION,									"L4DD::CDirector::GetScriptValueString",							"L4D_OnGetScriptValueString");
-		CreateDetour(hGameData, DTR_CTerrorGameRules_HasConfigurableDifficultySetting,	INVALID_FUNCTION,									"L4DD::CTerrorGameRules::HasConfigurableDifficultySetting",			"L4D_OnHasConfigurableDifficulty");
-		CreateDetour(hGameData, DTR_CTerrorGameRules_GetSurvivorSet,					INVALID_FUNCTION,									"L4DD::CTerrorGameRules::GetSurvivorSet",							"L4D_OnGetSurvivorSet");
-		CreateDetour(hGameData, DTR_CTerrorGameRules_FastGetSurvivorSet,				INVALID_FUNCTION,									"L4DD::CTerrorGameRules::FastGetSurvivorSet",						"L4D_OnFastGetSurvivorSet");
-		CreateDetour(hGameData, DTR_CTerrorMeleeWeapon_StartMeleeSwing,					INVALID_FUNCTION,									"L4DD::CTerrorMeleeWeapon::StartMeleeSwing",						"L4D_OnStartMeleeSwing");
-		CreateDetour(hGameData, DTR_CTerrorMeleeWeapon_GetDamageForVictim_Pre,			DTR_CTerrorMeleeWeapon_GetDamageForVictim_Post,		"L4DD::CTerrorMeleeWeapon::GetDamageForVictim",						"L4D2_MeleeGetDamageForVictim");
-		CreateDetour(hGameData, DTR_CDirectorScriptedEventManager_ChangeFinaleStage,	INVALID_FUNCTION,									"L4DD::CDirectorScriptedEventManager::ChangeFinaleStage",			"L4D2_OnChangeFinaleStage");
-		CreateDetour(hGameData, DTR_AddonsDisabler,										INVALID_FUNCTION,									"L4DD::CBaseServer::FillServerInfo",								"L4D2_OnClientDisableAddons",			false,				true); // Force detour to enable.
+		CreateDetour(hGameData, DTR_CTerrorPlayer_OnLeptOnSurvivor,						INVALID_FUNCTION,									"CTerrorPlayer::OnLeptOnSurvivor",							"L4D2_OnJockeyRide");
+		CreateDetour(hGameData, DTR_CTerrorPlayer_OnStartCarryingVictim,				INVALID_FUNCTION,									"CTerrorPlayer::OnStartCarryingVictim",						"L4D2_OnStartCarryingVictim");
+		CreateDetour(hGameData, DTR_CGasCanEvent_Killed,								INVALID_FUNCTION,									"CGasCan::Event_Killed",										"L4D2_CGasCan_EventKilled");
+		CreateDetour(hGameData, DTR_CGasCan_OnActionComplete,							INVALID_FUNCTION,									"CGasCan::OnActionComplete",									"L4D2_CGasCan_ActionComplete");
+		CreateDetour(hGameData, DTR_CInsectSwarm_CanHarm,								INVALID_FUNCTION,									"CInsectSwarm::CanHarm",										"L4D2_CInsectSwarm_CanHarm");
+		CreateDetour(hGameData, DTR_CTerrorPlayer_Fling,								INVALID_FUNCTION,									"CTerrorPlayer::Fling",										"L4D2_OnPlayerFling");
+		CreateDetour(hGameData, DTR_CTerrorPlayer_OnHitByVomitJar,						INVALID_FUNCTION,									"CTerrorPlayer::OnHitByVomitJar",								"L4D2_OnHitByVomitJar");
+		CreateDetour(hGameData, DTR_ZombieManager_SpawnSpecial,							INVALID_FUNCTION,									"ZombieManager::SpawnSpecial",								"L4D_OnSpawnSpecial");
+		CreateDetour(hGameData, DTR_ZombieManager_SpawnWitchBride,						INVALID_FUNCTION,									"ZombieManager::SpawnWitchBride",								"L4D2_OnSpawnWitchBride");
+		CreateDetour(hGameData, DTR_CDirector_GetScriptValueInt,						INVALID_FUNCTION,									"CDirector::GetScriptValueInt",								"L4D_OnGetScriptValueInt");
+		CreateDetour(hGameData, DTR_CDirector_GetScriptValueFloat,						INVALID_FUNCTION,									"CDirector::GetScriptValueFloat",								"L4D_OnGetScriptValueFloat");
+		CreateDetour(hGameData, DTR_CDirector_GetScriptValueString,						INVALID_FUNCTION,									"CDirector::GetScriptValueString",							"L4D_OnGetScriptValueString");
+		CreateDetour(hGameData, DTR_CTerrorGameRules_HasConfigurableDifficultySetting,	INVALID_FUNCTION,									"CTerrorGameRules::HasConfigurableDifficultySetting",			"L4D_OnHasConfigurableDifficulty");
+		CreateDetour(hGameData, DTR_CTerrorGameRules_GetSurvivorSet_Pre,				DTR_CTerrorGameRules_GetSurvivorSet,				"CTerrorGameRules::GetSurvivorSet",							"L4D_OnGetSurvivorSet");
+		CreateDetour(hGameData, DTR_CTerrorGameRules_FastGetSurvivorSet_Pre,			DTR_CTerrorGameRules_FastGetSurvivorSet,			"CTerrorGameRules::FastGetSurvivorSet",						"L4D_OnFastGetSurvivorSet");
+		CreateDetour(hGameData, DTR_CTerrorMeleeWeapon_StartMeleeSwing,					INVALID_FUNCTION,									"CTerrorMeleeWeapon::StartMeleeSwing",						"L4D_OnStartMeleeSwing");
+		CreateDetour(hGameData, DTR_CTerrorMeleeWeapon_GetDamageForVictim_Pre,			DTR_CTerrorMeleeWeapon_GetDamageForVictim_Post,		"CTerrorMeleeWeapon::GetDamageForVictim",						"L4D2_MeleeGetDamageForVictim");
+		CreateDetour(hGameData, DTR_CDirectorScriptedEventManager_ChangeFinaleStage,	INVALID_FUNCTION,									"CDirectorScriptedEventManager::ChangeFinaleStage",			"L4D2_OnChangeFinaleStage");
+		CreateDetour(hGameData, DTR_AddonsDisabler,										INVALID_FUNCTION,									"CBaseServer::FillServerInfo",								"L4D2_OnClientDisableAddons",			false,				true); // Force detour to enable.
 	}
 
 	// Deprecated, unused or broken.
-	// CreateDetour(hGameData, DTR_ZombieManager_GetRandomPZSpawnPosition,					INVALID_FUNCTION,									"L4DD::ZombieManager::GetRandomPZSpawnPosition",					"L4D_OnGetRandomPZSpawnPosition");
-	// CreateDetour(hGameData, DTR_InfectedShoved_OnShoved,								INVALID_FUNCTION,									"L4DD::InfectedShoved::OnShoved",									"L4D_OnInfectedShoved"); // Missing signature
-	// CreateDetour(hGameData, DTR_CBasePlayer_WaterMove_Pre,								DTR_CBasePlayer_WaterMove_Post,						"L4DD::CBasePlayer::WaterMove",										"L4D2_OnWaterMove"); // Does not return water state. Use FL_INWATER instead.
+	// CreateDetour(hGameData, DTR_ZombieManager_GetRandomPZSpawnPosition,					INVALID_FUNCTION,									"ZombieManager::GetRandomPZSpawnPosition",					"L4D_OnGetRandomPZSpawnPosition");
+	// CreateDetour(hGameData, DTR_InfectedShoved_OnShoved,								INVALID_FUNCTION,									"InfectedShoved::OnShoved",									"L4D_OnInfectedShoved"); // Missing signature
+	// CreateDetour(hGameData, DTR_CBasePlayer_WaterMove_Pre,								DTR_CBasePlayer_WaterMove_Post,						"CBasePlayer::WaterMove",										"L4D2_OnWaterMove"); // Does not return water state. Use FL_INWATER instead.
 
 	g_bCreatedDetours = true;
 }
@@ -2812,8 +2855,8 @@ void CheckRequiredDetours(int client = 0)
 			// ToDo: When using extra-api.ext, we will check all plugins to gather total number using each forward and store in g_aDetoursHooked
 			if( aHand.FindValue(index) == -1 || useLast )
 			{
+			// PrintToServer("i %d", i);
 				// Only if not enabling all detours
-				#if !DETOUR_ALL
 
 				// Force detour on?
 				if( g_aForceDetours.Get(i) )
@@ -2832,14 +2875,14 @@ void CheckRequiredDetours(int client = 0)
 					{
 						StopProfiling(g_vProf);
 						g_fProf += GetProfilerTime(g_vProf);
-						PrintToServer("%2d %36s> %32s (%s)", count, "FORCED DETOUR", forwards, signatures);
+						PrintToServer("%2d %36s> %32s (%s)", count, "FORCED DETOUR", forwards, signatures[6]);
 						StartProfiling(g_vProf);
 					}
 					#endif
 
 					if( client > 0 )
 					{
-						ReplyToCommand(client - 1, "%2d %36s> %32s (%s)", count, "FORCED DETOUR", forwards, signatures);
+						ReplyToCommand(client - 1, "%2d %36s> %32s (%s)", count, "FORCED DETOUR", forwards, signatures[6]);
 					}
 				}
 				// Check if used
@@ -2848,7 +2891,10 @@ void CheckRequiredDetours(int client = 0)
 					// Get forward name
 					g_aForwardNames.GetString(i, forwards, sizeof(forwards));
 
+					#if !DETOUR_ALL
 					if( GetFunctionByName(hPlug, forwards) != INVALID_FUNCTION )
+					#else
+					if( aHand.FindValue(index) == -1 )
 					#endif
 					{
 						count++;
@@ -2869,7 +2915,7 @@ void CheckRequiredDetours(int client = 0)
 
 							StopProfiling(g_vProf);
 							g_fProf += GetProfilerTime(g_vProf);
-							PrintToServer("%2d %36s> %s (%s)", count, filename, forwards, signatures);
+							PrintToServer("%2d %36s> %32s (%s)", count, filename, forwards, signatures[6]);
 							StartProfiling(g_vProf);
 						}
 						#endif
@@ -2879,10 +2925,10 @@ void CheckRequiredDetours(int client = 0)
 							g_aGameDataSigs.GetString(i, signatures, sizeof(signatures));
 
 							#if DETOUR_ALL
-							ReplyToCommand(client - 1, "%2d %36s %32s (%s)", count, "FORCED DETOUR", forwards, signatures);
+							ReplyToCommand(client - 1, "%2d %36s> %32s (%s)", count, "THIS_PLUGIN_TEST", forwards, signatures[6]);
 							#else
 							GetPluginFilename(hPlug, filename, sizeof(filename));
-							ReplyToCommand(client - 1, "%2d %36s> %32s (%s)", count, filename, forwards, signatures);
+							ReplyToCommand(client - 1, "%2d %36s> %32s (%s)", count, filename, forwards, signatures[6]);
 							#endif
 						}
 					}
@@ -2931,7 +2977,7 @@ public void OnMapStart()
 
 
 	// Putting this here so g_pGameRules is valid. Changes for each map.
-	LoadGameDataRules();
+	LoadGameDataRules(g_hGameData);
 
 
 
@@ -2947,6 +2993,7 @@ public void OnMapStart()
 
 	#if DEBUG
 	StopProfiling(g_vProf);
+	g_fProf += GetProfilerTime(g_vProf);
 	PrintToServer("");
 	PrintToServer("Dynamic Detours finished in %f seconds.", g_fProf);
 	PrintToServer("");
@@ -2991,9 +3038,9 @@ public void OnMapStart()
 			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "SmokerLimit",			1);
 			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "BoomerLimit",			1);
 			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "HunterLimit",			1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "SpitterLimit",			1);
+			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "SpitterLimit",		1);
 			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "JockeyLimit",			1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "ChargerLimit",			1);
+			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "ChargerLimit",		1);
 			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "TankLimit",			1);
 			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "DominatorLimit",		1);
 			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "WitchLimit",			1);
@@ -3008,7 +3055,7 @@ public void OnMapStart()
 			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_SpitterLimit",		1);
 			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_JockeyLimit",		1);
 			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_ChargerLimit",		1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_TankLimit",			1);
+			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_TankLimit",		1);
 			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_DominatorLimit",	1);
 			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_WitchLimit",		1);
 			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_CommonLimit",		1);
@@ -3067,20 +3114,11 @@ public void OnMapStart()
 // ====================================================================================================
 //										LOAD GAMEDATA - (create natives, load offsets etc)
 // ====================================================================================================
-void LoadGameDataRules()
+void LoadGameDataRules(GameData hGameData)
 {
-	char sPath[PLATFORM_MAX_PATH];
-	BuildPath(Path_SM, sPath, sizeof(sPath), "gamedata/%s.txt", g_bLeft4Dead2 ? GAMEDATA_2 : GAMEDATA_1);
-	if( FileExists(sPath) == false ) SetFailState("\n==========\nMissing required file: \"%s\".\nRead installation instructions again.\n==========", sPath);
-
-	GameData hGameData = new GameData(g_bLeft4Dead2 ? GAMEDATA_2 : GAMEDATA_1);
-	if( hGameData == null ) SetFailState("Failed to load \"%s.txt\" gamedata.", g_bLeft4Dead2 ? GAMEDATA_2 : GAMEDATA_1);
-
 	// Map changes can modify the address
 	g_pGameRules = hGameData.GetAddress("GameRules");
 	ValidateAddress(g_pGameRules, "g_pGameRules", true);
-
-	delete hGameData;
 }
 
 void LoadGameData()
@@ -3308,6 +3346,20 @@ void LoadGameData()
 		g_hSDK_CTerrorGameRules_HasPlayerControlledZombies = EndPrepSDKCall();
 		if( g_hSDK_CTerrorGameRules_HasPlayerControlledZombies == null )
 			LogError("Failed to create SDKCall: CTerrorGameRules::HasPlayerControlledZombies");
+	}
+
+	if( g_bLeft4Dead2 )
+	{
+		StartPrepSDKCall(SDKCall_GameRules);
+		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorGameRules::GetSurvivorSet") == false )
+		{
+			LogError("Failed to find signature: CTerrorGameRules::GetSurvivorSet");
+		} else {
+			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+			g_hSDK_CTerrorGameRules_GetSurvivorSet = EndPrepSDKCall();
+			if( g_hSDK_CTerrorGameRules_GetSurvivorSet == null )
+				LogError("Failed to create SDKCall: CTerrorGameRules::GetSurvivorSet");
+		}
 	}
 
 	StartPrepSDKCall(SDKCall_Static);
@@ -3738,20 +3790,17 @@ void LoadGameData()
 			LogError("Failed to create SDKCall: CTerrorGameRules::IsMissionFinalMap");
 	}
 
-	if( !g_bLeft4Dead2 )
+	StartPrepSDKCall(SDKCall_Raw);
+	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "KeyValues::GetString") == false )
 	{
-		StartPrepSDKCall(SDKCall_Raw);
-		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "KeyValues::GetString") == false )
-		{
-			LogError("Could not load the \"KeyValues::GetString\" gamedata signature.");
-		} else {
-			PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
-			PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
-			PrepSDKCall_SetReturnInfo(SDKType_String, SDKPass_Pointer);
-			g_hSDK_KeyValues_GetString = EndPrepSDKCall();
-			if( g_hSDK_KeyValues_GetString == null )
-				LogError("Could not prep the \"KeyValues::GetString\" function.");
-		}
+		LogError("Could not load the \"KeyValues::GetString\" gamedata signature.");
+	} else {
+		PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
+		PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
+		PrepSDKCall_SetReturnInfo(SDKType_String, SDKPass_Pointer);
+		g_hSDK_KeyValues_GetString = EndPrepSDKCall();
+		if( g_hSDK_KeyValues_GetString == null )
+			LogError("Could not prep the \"KeyValues::GetString\" function.");
 	}
 
 	if( g_bLeft4Dead2 )
@@ -3958,6 +4007,16 @@ void LoadGameData()
 		g_hSDK_CTerrorPlayer_GetFlowDistance = EndPrepSDKCall();
 		if( g_hSDK_CTerrorPlayer_GetFlowDistance == null )
 			LogError("Failed to create SDKCall: CTerrorPlayer::GetFlowDistance");
+	}
+
+	StartPrepSDKCall(SDKCall_Entity);
+	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Virtual, "CBaseGrenade::Detonate") == false )
+	{
+		LogError("Failed to find signature: CBaseGrenade::Detonate");
+	} else {
+		g_hSDK_CBaseGrenade_Detonate = EndPrepSDKCall();
+		if( g_hSDK_CBaseGrenade_Detonate == null )
+			LogError("Failed to create SDKCall: CBaseGrenade::Detonate");
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
@@ -4567,7 +4626,7 @@ void LoadGameData()
 	#if DEBUG
 	if( g_bLateLoad )
 	{
-		LoadGameDataRules();
+		LoadGameDataRules(hGameData);
 	}
 
 	PrintToServer("Pointers:");
@@ -4802,9 +4861,10 @@ void LoadGameData()
 
 	// ====================================================================================================
 	//									END
-	// ====================================================================================================
+	// ====================================================================================================	
+	g_hGameData = hGameData;
+
 	delete hTempGameData;
-	delete hGameData;
 }
 
 
@@ -4887,13 +4947,38 @@ public int Native_CTerrorGameRules_HasConfigurableDifficultySetting(Handle plugi
 	return SDKCall(g_hSDK_CTerrorGameRules_HasConfigurableDifficultySetting, g_pGameRules);
 }
 
-public any Native_GetTempHealth(Handle plugin, int numParams)
+public int Native_CTerrorGameRules_GetSurvivorSetMap(Handle plugin, int numParams)
+{
+	if( !g_bLeft4Dead2 ) ThrowNativeError(SP_ERROR_NOT_RUNNABLE, NATIVE_UNSUPPORTED2);
+
+	ValidateNatives(g_hSDK_KeyValues_GetString, "KeyValues::GetString");
+	ValidateNatives(g_hSDK_CTerrorGameRules_GetMissionInfo, "CTerrorGameRules::GetMissionInfo");
+
+	char sTemp[8];
+	//PrintToServer("#### CALL g_hSDK_CTerrorGameRules_GetMissionInfo");
+	int infoPointer = SDKCall(g_hSDK_CTerrorGameRules_GetMissionInfo);
+
+	//PrintToServer("#### CALL g_hSDK_KeyValues_GetString");
+	SDKCall(g_hSDK_KeyValues_GetString, infoPointer, sTemp, sizeof(sTemp), "survivor_set", "2"); // Default set = 2
+
+	return StringToInt(sTemp);
+}
+
+public int Native_CTerrorGameRules_GetSurvivorSetMod(Handle plugin, int numParams)
+{
+	if( !g_bLeft4Dead2 ) ThrowNativeError(SP_ERROR_NOT_RUNNABLE, NATIVE_UNSUPPORTED2);
+
+	//PrintToServer("#### CALL g_hSDK_CTerrorGameRules_GetSurvivorSet");
+	return SDKCall(g_hSDK_CTerrorGameRules_GetSurvivorSet);
+}
+
+public any Native_Internal_GetTempHealth(Handle plugin, int numParams)
 {
 	int client = GetNativeCell(1);
 	return GetTempHealth(client);
 }
 
-public int Native_SetTempHealth(Handle plugin, int numParams)
+public int Native_Internal_SetTempHealth(Handle plugin, int numParams)
 {
 	int client = GetNativeCell(1);
 	float health = GetNativeCell(2);
@@ -5141,6 +5226,98 @@ public int Native_CTerrorGameRules_HasPlayerControlledZombies(Handle plugin, int
 	//PrintToServer("#### CALL g_hSDK_CTerrorGameRules_HasPlayerControlledZombies");
 	return SDKCall(g_hSDK_CTerrorGameRules_HasPlayerControlledZombies);
 }
+
+public int Native_CBaseGrenade_Detonate(Handle plugin, int numParams)
+{
+	ValidateNatives(g_hSDK_CBaseGrenade_Detonate, "CBaseGrenade::Detonate");
+
+	int entity = GetNativeCell(1);
+
+	//PrintToServer("#### CALL g_hSDK_CBaseGrenade_Detonate");
+	SDKCall(g_hSDK_CBaseGrenade_Detonate, entity);
+
+	return 0;
+}
+
+// ==================================================
+// TANK ROCK NATIVE
+// ==================================================
+// SDKCall method did not work as expected:
+// 1. The rock is attached to the client throwing.
+// 2. The Velocity is not applied.
+// 3. The rock does not detonate on impact.
+// So using this method to create, get entity index and apply owner.
+int g_iTankRockOwner;
+int g_iTankRockEntity;
+
+public int Native_CTankRock_Create(Handle plugin, int numParams)
+{
+	// Get client index and origin/angle to throw
+	float vPos[3], vAng[3];
+	int client = GetNativeCell(1);
+	GetNativeArray(2, vPos, 3);
+	GetNativeArray(3, vAng, 3);
+
+	// Create rock
+	int entity = CreateEntityByName("env_rock_launcher");
+	TeleportEntity(entity, vPos, vAng, NULL_VECTOR);
+	DispatchSpawn(entity);
+
+	// Watch for "tank_rock" entity index and to set owner
+	g_iTankRockEntity = 0;
+	g_iTankRockOwner = client > 0 && client <= MaxClients ? client : -1;
+	AcceptEntityInput(entity, "LaunchRock");
+	g_iTankRockOwner = 0;
+
+	// Delete and return rock index
+	RemoveEntity(entity);
+
+	entity = g_iTankRockEntity;
+	g_iTankRockEntity = 0;
+
+	return entity;
+}
+
+public void OnEntityCreated(int entity, const char[] classname)
+{
+	// Watch for this plugins native creating the "tank_rock" to return it's entity index and set owner if applicable
+	if( g_iTankRockOwner && strcmp(classname, "tank_rock") == 0 )
+	{
+		g_iTankRockEntity = entity;
+
+		// Must set owner on next frame after it's spawned
+		if( g_iTankRockOwner != -1 )
+		{
+			DataPack dPack = new DataPack();
+			dPack.WriteCell(EntIndexToEntRef(entity));
+			dPack.WriteCell(GetClientUserId(g_iTankRockOwner));
+			RequestFrame(OnFrameTankRock, dPack);
+		}
+
+		// Make the tank rock fully visible, otherwise it's semi-transparent (during pickup animation of Tank Rock).
+		SetEntityRenderColor(entity, 255, 255, 255, 255);
+	}
+}
+
+public void OnFrameTankRock(DataPack dPack)
+{
+	dPack.Reset();
+
+	int entity = dPack.ReadCell();
+	int client = dPack.ReadCell();
+	client = GetClientOfUserId(client);
+
+	delete dPack;
+
+	if( client && IsClientInGame(client) && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE )
+	{
+		SetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity", client);
+		SetEntPropEnt(entity, Prop_Data, "m_hOwnerEntity", client);
+		SetEntPropEnt(entity, Prop_Send, "m_hThrower", client);
+		SetEntPropEnt(entity, Prop_Data, "m_hThrower", client);
+	}
+}
+// ==================================================
 
 public int Native_CPipeBombProjectile_Create(Handle plugin, int numParams)
 {
@@ -5900,7 +6077,7 @@ public int Native_GetWeaponID(Handle plugin, int numParams)
 	return wepID;
 }
 
-public int Native_IsValidWeapon(Handle plugin, int numParams)
+public int Native_Internal_IsValidWeapon(Handle plugin, int numParams)
 {
 	return GetWeaponPointer() != -1;
 }
@@ -8393,10 +8570,22 @@ public MRESReturn DTR_CTerrorGameRules_HasConfigurableDifficultySetting(Handle h
 	return MRES_Ignored;
 }
 
+public MRESReturn DTR_CTerrorGameRules_GetSurvivorSet_Pre(Handle hReturn, Handle hParams)
+{
+	//PrintToServer(DTR_CTerrorGameRules_GetSurvivorSet_Pre);
+	return MRES_Ignored;
+}
+
 public MRESReturn DTR_CTerrorGameRules_GetSurvivorSet(Handle hReturn, Handle hParams)
 {
 	//PrintToServer("##### DTR_CTerrorGameRules_GetSurvivorSet");
 	return SurvivorSet(g_hFWD_CTerrorGameRules_GetSurvivorSet, hReturn);
+}
+
+public MRESReturn DTR_CTerrorGameRules_FastGetSurvivorSet_Pre(Handle hReturn, Handle hParams)
+{
+	//PrintToServer(DTR_CTerrorGameRules_FastGetSurvivorSet_Pre);
+	return MRES_Ignored;
 }
 
 public MRESReturn DTR_CTerrorGameRules_FastGetSurvivorSet(Handle hReturn, Handle hParams)

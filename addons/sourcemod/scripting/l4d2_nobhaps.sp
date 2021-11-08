@@ -6,7 +6,7 @@
 #define L4DBUILD 1
 
 #define LEFT4FRAMEWORK_GAMEDATA "left4dhooks.l4d2" // left4dhooks
-#define SECTION_NAME "GetRunTopSpeed" // left4dhooks
+#define SECTION_NAME "CTerrorPlayer::GetRunTopSpeed" // left4dhooks
 
 //#define LEFT4FRAMEWORK_GAMEDATA "left4downtown.l4d2" // left4downtown
 //#define SECTION_NAME "CTerrorPlayer_GetRunTopSpeed" // left4downtown

@@ -98,6 +98,8 @@ public void __pl_l4dh_SetNTVOptional()
 	MarkNativeAsOptional("L4D_IsInLastCheckpoint");
 	MarkNativeAsOptional("L4D2_IsReachable");
 	MarkNativeAsOptional("L4D_HasPlayerControlledZombies");
+	MarkNativeAsOptional("L4D_DetonateProjectile");
+	MarkNativeAsOptional("L4D_TankRockPrj");
 	MarkNativeAsOptional("L4D_PipeBombPrj");
 	MarkNativeAsOptional("L4D_MolotovPrj");
 	MarkNativeAsOptional("L4D2_VomitJarPrj");
@@ -117,6 +119,8 @@ public void __pl_l4dh_SetNTVOptional()
 	MarkNativeAsOptional("L4D2_IsTankInPlay");
 	MarkNativeAsOptional("L4D2_GetScriptValueInt");
 	MarkNativeAsOptional("L4D2_NavAreaTravelDistance");
+	MarkNativeAsOptional("L4D2_GetSurvivorSetMod");
+	MarkNativeAsOptional("L4D2_GetSurvivorSetMap");
 	MarkNativeAsOptional("L4D2_HasConfigurableDifficultySetting");
 	MarkNativeAsOptional("L4D2_IsGenericCooperativeMode");
 	MarkNativeAsOptional("L4D_IsCoopMode");
@@ -803,7 +807,7 @@ forward void L4D_TankRock_OnDetonate(int tank, int rock);
  * @brief Called whenever CTankRock::OnRelease(Vector const&, QAngle const&, Vector const&, Vector const&) is invoked
  * @remarks When a tank rock is thrown.
  *
- * @param tank			tank client index
+ * @param tank			tank client index (can be -1 if the rock was created by the native "L4D_TankRockPrj" or the "env_rock_launcher" entity)
  * @param rock			the rock entity index
  * @param vecPos		the position vector of the rock
  * @param vecAng		the angle vector of the rock
@@ -1615,6 +1619,30 @@ native bool L4D2_IsReachable(int client, const float vecPos[3]);
 native bool L4D_HasPlayerControlledZombies();
 
 /**
+ * @brief Detonates an active grenade projectile
+ * @remarks Can detonate in L4D1 & L4D2: "molotov_projectile", "pipebomb_projectile", "tank_rock"
+ * @remarks Can detonate in L4D2: "vomitjar_projectile", "grenadelauncher_projectile", "spitter_projectile"
+ *
+ * @param entity	The projectile entity to detonate
+ *
+ * @noreturn
+ */
+native int L4D_DetonateProjectile(int entity);
+
+/**
+ * @brief Creates an activated Tank Rock projectile.
+ * @remarks It seems when using a Survivor for the client index and hitting another Survivor, the victim will take 1.0 damage (maybe due to friendly fire settings).
+ * @remarks Suggest using an OnTakeDamage hook if you want to apply more damage.
+ *
+ * @param client	Client id to attribute the projectile to for damage credit. Passing 0 (world) is allowed
+ * @param vecPos	Vector coordinate of the projectile on creation
+ * @param vecAng	Vector direction of the projectile
+ *
+ * @return			Entity index of the projectile
+ */
+native int L4D_TankRockPrj(int client, const float vecPos[3], const float vecAng[3]);
+
+/**
  * @brief Creates an activated PipeBomb projectile.
  * @remarks Does not attach the "Fuse" or "Light" particles, see the "left4dhooks_test" plugin for example on attaching these
  * @remarks Also used in the "PipeBomb Shove" plugin by Silvers
@@ -1791,6 +1819,24 @@ native float L4D2_NavAreaTravelDistance(float startPos[3], float endPos[3], bool
  **/
 // L4D2 only.
 native bool L4D2_HasConfigurableDifficultySetting();
+
+/**
+ * @brief Returns the maps default Survivor set
+ * @brief Does not return the overridden value when changed from the "L4D_OnGetSurvivorSet" or "L4D_OnFastGetSurvivorSet" forwards.
+ *
+ * @return				Maps default survivor set
+ **/
+// L4D2 only.
+native int L4D2_GetSurvivorSetMap();
+
+/**
+ * @brief Returns the current Survivor set
+ * @brief Return the current set which may have been overridden if changed in the "L4D_OnGetSurvivorSet" or "L4D_OnFastGetSurvivorSet" forwards.
+ *
+ * @return				Maps default survivor set
+ **/
+// L4D2 only.
+native int L4D2_GetSurvivorSetMod();
 
 /**
  * @brief Returns if the current game mode is Coop/Realism mode.
