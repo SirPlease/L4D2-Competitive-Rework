@@ -21,9 +21,12 @@
 #include <left4dhooks>
 #include <builtinvotes>
 
+#define L4D_TEAM_SPECTATE 1
+
 #define PLUGIN_VERSION "1.4"
 
 #define LEFT4FRAMEWORK_GAMEDATA "left4dhooks.l4d2"
+#define SECTION_NAME "CTerrorGameRules::SetCampaignScores"
 
 public Plugin myinfo =
 {
@@ -32,9 +35,7 @@ public Plugin myinfo =
 	description = "Changes team scores.",
 	version = PLUGIN_VERSION,
 	url = "https://bitbucket.org/vintik/various-plugins"
-}
-
-#define L4D_TEAM_SPECTATE 1
+};
 
 ConVar 
 	minimumPlayersForVote, 
@@ -80,14 +81,14 @@ void LoadSDK()
 	}
 
 	StartPrepSDKCall(SDKCall_GameRules);
-	if (!PrepSDKCall_SetFromConf(conf, SDKConf_Signature, "SetCampaignScores")) {
-		SetFailState("Function 'SetCampaignScores' not found.");
+	if (!PrepSDKCall_SetFromConf(conf, SDKConf_Signature, SECTION_NAME)) {
+		SetFailState("Function '" ... SECTION_NAME ... "' not found.");
 	}
 	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 	hSetCampaignScores = EndPrepSDKCall();
 	if (hSetCampaignScores == INVALID_HANDLE) {
-		SetFailState("Function 'SetCampaignScores' found, but something went wrong.");
+		SetFailState("Function '" ... SECTION_NAME ... "' found, but something went wrong.");
 	}
 	
 	delete conf;
