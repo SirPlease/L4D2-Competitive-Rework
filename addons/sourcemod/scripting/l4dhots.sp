@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <left4dhooks_stocks>
 
-#define PLUGIN_VERSION "2.0"
+#define PLUGIN_VERSION "2.1"
 
 public Plugin myinfo = 
 {
@@ -72,8 +72,8 @@ public void OnPluginStart()
 
 public void OnPluginEnd()
 {
-	DisablePillHot();
-	if (g_bLeft4Dead2) DisableAdrenHot();
+	if (hCvarPillHot.BoolValue) DisablePillHot();
+	if (g_bLeft4Dead2 && hCvarAdrenHot.BoolValue) DisableAdrenHot();
 }
 
 public void Player_BotReplace_Event(Event event, const char[] name, bool dontBroadcast)
@@ -248,9 +248,8 @@ void EnablePillHot()
 	pain_pills_health_value.Flags &= ~FCVAR_REPLICATED;
 	pain_pills_health_value.IntValue = 0;
 	
-	SwitchEventHooks(true);
-	
-	HookEvent("pills_used", PillsUsed_Event);
+	SwitchGeneralEventHooks(true);
+	SwitchPillHotEventHook(true);
 }
 
 void EnableAdrenHot()
@@ -258,9 +257,8 @@ void EnableAdrenHot()
 	adrenaline_health_buffer.Flags &= ~FCVAR_REPLICATED;
 	adrenaline_health_buffer.IntValue = 0;
 	
-	SwitchEventHooks(true);
-	
-	HookEvent("adrenaline_used", AdrenalineUsed_Event);
+	SwitchGeneralEventHooks(true);
+	SwitchAdrenHotEventHook(true);
 }
 
 void DisablePillHot()
@@ -268,9 +266,8 @@ void DisablePillHot()
 	pain_pills_health_value.Flags &= FCVAR_REPLICATED;
 	pain_pills_health_value.RestoreDefault();
 	
-	SwitchEventHooks(hCvarAdrenHot.BoolValue);
-	
-	UnhookEvent("pills_used", PillsUsed_Event);
+	SwitchGeneralEventHooks(hCvarAdrenHot.BoolValue);
+	SwitchPillHotEventHook(true);
 }
 
 void DisableAdrenHot()
@@ -278,12 +275,43 @@ void DisableAdrenHot()
 	adrenaline_health_buffer.Flags &= FCVAR_REPLICATED;
 	adrenaline_health_buffer.RestoreDefault();
 	
-	SwitchEventHooks(hCvarPillHot.BoolValue);
-	
-	UnhookEvent("adrenaline_used", AdrenalineUsed_Event);
+	SwitchGeneralEventHooks(hCvarPillHot.BoolValue);
+	SwitchAdrenHotEventHook(true);
 }
 
-void SwitchEventHooks(bool hook)
+void SwitchPillHotEventHook(bool hook)
+{
+	static bool hooked = false;
+	
+	if (hook && !hooked)
+	{
+		HookEvent("pills_used", PillsUsed_Event);
+		hooked = true;
+	}
+	else if (!hook && hooked)
+	{
+		UnhookEvent("pills_used", PillsUsed_Event);
+		hooked = false;
+	}
+}
+
+void SwitchAdrenHotEventHook(bool hook)
+{
+	static bool hooked = false;
+	
+	if (hook && !hooked)
+	{
+		HookEvent("adrenaline_used", AdrenalineUsed_Event);
+		hooked = true;
+	}
+	else if (!hook && hooked)
+	{
+		UnhookEvent("adrenaline_used", AdrenalineUsed_Event);
+		hooked = false;
+	}
+}
+
+void SwitchGeneralEventHooks(bool hook)
 {
 	static bool hooked = false;
 	
