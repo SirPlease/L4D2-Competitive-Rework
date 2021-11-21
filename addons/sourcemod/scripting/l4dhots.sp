@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <left4dhooks_stocks>
 
-#define PLUGIN_VERSION "2.1"
+#define PLUGIN_VERSION "2.2"
 
 public Plugin myinfo = 
 {
@@ -12,25 +12,28 @@ public Plugin myinfo =
     author = "ProdigySim, CircleSquared, Forgetest",
     description = "Pills and Adrenaline heal over time",
     version = PLUGIN_VERSION,
-    url = "https://bitbucket.org/ProdigySim/misc-sourcemod-plugins"
+    url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
-int g_iReplaceClient[MAXPLAYERS+1];
-Handle g_hReplaceTimer[MAXPLAYERS+1];
+ArrayList
+	g_aReplacePair;
 
-bool g_bLeft4Dead2;
+bool
+	g_bLeft4Dead2;
 
-ConVar hCvarPillHot;
-ConVar hCvarPillInterval;
-ConVar hCvarPillIncrement;
-ConVar hCvarPillTotal;
-ConVar pain_pills_health_value;
+ConVar
+	hCvarPillHot,
+	hCvarPillInterval,
+	hCvarPillIncrement,
+	hCvarPillTotal,
+	pain_pills_health_value;
 
-ConVar hCvarAdrenHot;
-ConVar hCvarAdrenInterval;
-ConVar hCvarAdrenIncrement;
-ConVar hCvarAdrenTotal;
-ConVar adrenaline_health_buffer;
+ConVar
+	hCvarAdrenHot,
+	hCvarAdrenInterval,
+	hCvarAdrenIncrement,
+	hCvarAdrenTotal,
+	adrenaline_health_buffer;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -48,26 +51,33 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
+	char buffer[16];
 	pain_pills_health_value = FindConVar("pain_pills_health_value");
-	hCvarPillHot = CreateConVar("l4d_pills_hot", "0", "Pills heal over time");
-	hCvarPillInterval = CreateConVar("l4d_pills_hot_interval", "1.0", "Interval for pills hot");
-	hCvarPillIncrement = CreateConVar("l4d_pills_hot_increment", "10", "Increment amount for pills hot");
-	hCvarPillTotal = CreateConVar("l4d_pills_hot_total", "50", "Total amount for pills hot");
+	pain_pills_health_value.GetString(buffer, sizeof(buffer));
 	
-	if (hCvarPillHot.BoolValue) EnablePillHot();
+	hCvarPillHot =			CreateConVar("l4d_pills_hot",				"0",	"Pills heal over time",				FCVAR_NOTIFY|FCVAR_SPONLY, true, 0.0, true, 1.0);
+	hCvarPillInterval =		CreateConVar("l4d_pills_hot_interval",		"1.0",	"Interval for pills hot",			FCVAR_NOTIFY|FCVAR_SPONLY, true, 0.00001);
+	hCvarPillIncrement =	CreateConVar("l4d_pills_hot_increment",		"10",	"Increment amount for pills hot",	FCVAR_NOTIFY|FCVAR_SPONLY, true, 1.0);
+	hCvarPillTotal =		CreateConVar("l4d_pills_hot_total",			buffer,	"Total amount for pills hot",		FCVAR_NOTIFY|FCVAR_SPONLY, true, 0.0);
+	
+	if (hCvarPillHot.BoolValue) EnablePillHot();	
 	hCvarPillHot.AddChangeHook(PillHotChanged);
 	
 	if (g_bLeft4Dead2)
 	{
 		adrenaline_health_buffer = FindConVar("adrenaline_health_buffer");
-		hCvarAdrenHot = CreateConVar("l4d_adrenaline_hot", "0", "Adrenaline heals over time");
-		hCvarAdrenInterval = CreateConVar("l4d_adrenaline_hot_interval", "1.0", "Interval for adrenaline hot");
-		hCvarAdrenIncrement = CreateConVar("l4d_adrenaline_hot_increment", "15", "Increment amount for adrenaline hot");
-		hCvarAdrenTotal = CreateConVar("l4d_adrenaline_hot_total", "25", "Total amount for adrenaline hot");
+		adrenaline_health_buffer.GetString(buffer, sizeof(buffer));
+		
+		hCvarAdrenHot = 		CreateConVar("l4d_adrenaline_hot",				"0",	"Adrenaline heals over time",			FCVAR_NOTIFY|FCVAR_SPONLY, true, 0.0, true, 1.0);
+		hCvarAdrenInterval =	CreateConVar("l4d_adrenaline_hot_interval",		"1.0",	"Interval for adrenaline hot",			FCVAR_NOTIFY|FCVAR_SPONLY, true, 0.00001);
+		hCvarAdrenIncrement =	CreateConVar("l4d_adrenaline_hot_increment",	"15",	"Increment amount for adrenaline hot",	FCVAR_NOTIFY|FCVAR_SPONLY, true, 1.0);
+		hCvarAdrenTotal =		CreateConVar("l4d_adrenaline_hot_total",		buffer,	"Total amount for adrenaline hot",		FCVAR_NOTIFY|FCVAR_SPONLY, true, 0.0);
 		
 		if (hCvarAdrenHot.BoolValue) EnableAdrenHot();
 		hCvarAdrenHot.AddChangeHook(AdrenHotChanged);
 	}
+	
+	g_aReplacePair = new ArrayList(2);
 }
 
 public void OnPluginEnd()
@@ -76,36 +86,30 @@ public void OnPluginEnd()
 	if (g_bLeft4Dead2 && hCvarAdrenHot.BoolValue) DisableAdrenHot();
 }
 
+public void OnMapStart()
+{
+	g_aReplacePair.Clear();
+}
+
 public void Player_BotReplace_Event(Event event, const char[] name, bool dontBroadcast)
 {
-	int replacee = GetClientOfUserId(event.GetInt("player"));
-	int replacer = GetClientOfUserId(event.GetInt("bot"));
-	
-	g_iReplaceClient[replacee] = replacer;
-	if (g_hReplaceTimer[replacee])
-	{
-		delete g_hReplaceTimer[replacee];
-		g_hReplaceTimer[replacee] = CreateTimer(0.1, Timer_ResetReplace, replacee);
-	}
+	HandleSurvivorTakeover(event.GetInt("player"), event.GetInt("bot"));
 }
 
 public void Bot_PlayerReplace_Event(Event event, const char[] name, bool dontBroadcast)
 {
-	int replacee = GetClientOfUserId(event.GetInt("bot"));
-	int replacer = GetClientOfUserId(event.GetInt("player"));
-	
-	g_iReplaceClient[replacee] = replacer;
-	if (g_hReplaceTimer[replacee])
-	{
-		delete g_hReplaceTimer[replacee];
-		g_hReplaceTimer[replacee] = CreateTimer(0.1, Timer_ResetReplace, replacee);
-	}
+	HandleSurvivorTakeover(event.GetInt("bot"), event.GetInt("player"));
 }
 
-public Action Timer_ResetReplace(Handle timer, int client)
+void HandleSurvivorTakeover(int replacee, int replacer)
 {
-	g_hReplaceTimer[client] = null;
-	g_iReplaceClient[client] = 0;
+	// if the replacee happened to be a replacer, override it.
+	int index = g_aReplacePair.FindValue(replacee, 1);
+	if (index == -1)
+	{
+		index = g_aReplacePair.Push(replacee);
+	}
+	g_aReplacePair.Set(index, replacer, 1);
 }
 
 public void PillsUsed_Event(Event event, const char[] name, bool dontBroadcast)
@@ -138,16 +142,15 @@ void HealEntityOverTime(int userid, float interval, int increment, int total)
     
     if (increment >= total)
     {
-        HealTowardsMax(client, total, iMaxHP);
+        __HealTowardsMax(client, total, iMaxHP);
     }
     else
     {
-        HealTowardsMax(client, increment, iMaxHP);
+        __HealTowardsMax(client, increment, iMaxHP);
         DataPack myDP;
         CreateDataTimer(interval, __HOT_ACTION, myDP, 
             TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
         myDP.WriteCell(userid);
-        myDP.WriteCell(client);
         myDP.WriteCell(increment);
         myDP.WriteCell(total-increment);
         myDP.WriteCell(iMaxHP);
@@ -157,21 +160,24 @@ void HealEntityOverTime(int userid, float interval, int increment, int total)
 public Action __HOT_ACTION(Handle timer, DataPack pack)
 {
 	pack.Reset();
+	
 	DataPackPos pos = pack.Position;
 	int userid = pack.ReadCell();
-	int lastClient = pack.ReadCell();
 	int client = GetClientOfUserId(userid);
 	
 	if (!client || GetClientTeam(client) != 2)
 	{
-		if (g_iReplaceClient[lastClient])
+		int index = g_aReplacePair.FindValue(userid, 0);
+		if (index != -1)
 		{
-			client = g_iReplaceClient[lastClient];
-			userid = GetClientUserId(client);
+			userid = g_aReplacePair.Get(index, 1);
+			client = GetClientOfUserId(userid);
+			g_aReplacePair.Erase(index);
+			
+			if (!client) { return Plugin_Stop; }
 			
 			pack.Position = pos;
 			pack.WriteCell(userid);
-			pack.WriteCell(client);
 		}
 		else { return Plugin_Stop; }
 	}
@@ -191,25 +197,25 @@ public Action __HOT_ACTION(Handle timer, DataPack pack)
     
 	if (increment >= remaining)
 	{
-		HealTowardsMax(client, remaining, maxhp);
+		__HealTowardsMax(client, remaining, maxhp);
 		return Plugin_Stop;
 	}
-	HealTowardsMax(client, increment, maxhp);
+	__HealTowardsMax(client, increment, maxhp);
 	pack.Position = pos;
 	pack.WriteCell(remaining-increment);
 	
 	return Plugin_Continue;
 }
 
-void HealTowardsMax(int client, int amount, int max)
+void __HealTowardsMax(int client, int amount, int max)
 {
-	float hb = float(amount) + GetEntPropFloat(client, Prop_Send, "m_healthBuffer");
-	float overflow = (hb+GetClientHealth(client))-max;
+	int hb = amount + L4D_GetPlayerTempHealth(client);
+	int overflow = hb + GetClientHealth(client) - max;
 	if (overflow > 0)
 	{
 		hb -= overflow;
 	}
-	SetEntPropFloat(client, Prop_Send, "m_healthBuffer", hb);
+	L4D_SetPlayerTempHealth(client, hb);
 }
 
 
