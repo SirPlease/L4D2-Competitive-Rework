@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <left4dhooks_stocks>
 
-#define PLUGIN_VERSION "2.2"
+#define PLUGIN_VERSION "2.3"
 
 public Plugin myinfo = 
 {
@@ -51,6 +51,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
+	g_aReplacePair = new ArrayList(2);
+	
 	char buffer[16];
 	pain_pills_health_value = FindConVar("pain_pills_health_value");
 	pain_pills_health_value.GetString(buffer, sizeof(buffer));
@@ -63,21 +65,19 @@ public void OnPluginStart()
 	if (hCvarPillHot.BoolValue) EnablePillHot();	
 	hCvarPillHot.AddChangeHook(PillHotChanged);
 	
-	if (g_bLeft4Dead2)
-	{
-		adrenaline_health_buffer = FindConVar("adrenaline_health_buffer");
-		adrenaline_health_buffer.GetString(buffer, sizeof(buffer));
-		
-		hCvarAdrenHot = 		CreateConVar("l4d_adrenaline_hot",				"0",	"Adrenaline heals over time",			FCVAR_NOTIFY|FCVAR_SPONLY, true, 0.0, true, 1.0);
-		hCvarAdrenInterval =	CreateConVar("l4d_adrenaline_hot_interval",		"1.0",	"Interval for adrenaline hot",			FCVAR_NOTIFY|FCVAR_SPONLY, true, 0.00001);
-		hCvarAdrenIncrement =	CreateConVar("l4d_adrenaline_hot_increment",	"15",	"Increment amount for adrenaline hot",	FCVAR_NOTIFY|FCVAR_SPONLY, true, 1.0);
-		hCvarAdrenTotal =		CreateConVar("l4d_adrenaline_hot_total",		buffer,	"Total amount for adrenaline hot",		FCVAR_NOTIFY|FCVAR_SPONLY, true, 0.0);
-		
-		if (hCvarAdrenHot.BoolValue) EnableAdrenHot();
-		hCvarAdrenHot.AddChangeHook(AdrenHotChanged);
-	}
+	if (!g_bLeft4Dead2)
+		return;
 	
-	g_aReplacePair = new ArrayList(2);
+	adrenaline_health_buffer = FindConVar("adrenaline_health_buffer");
+	adrenaline_health_buffer.GetString(buffer, sizeof(buffer));
+	
+	hCvarAdrenHot = 		CreateConVar("l4d_adrenaline_hot",				"0",	"Adrenaline heals over time",			FCVAR_NOTIFY|FCVAR_SPONLY, true, 0.0, true, 1.0);
+	hCvarAdrenInterval =	CreateConVar("l4d_adrenaline_hot_interval",		"1.0",	"Interval for adrenaline hot",			FCVAR_NOTIFY|FCVAR_SPONLY, true, 0.00001);
+	hCvarAdrenIncrement =	CreateConVar("l4d_adrenaline_hot_increment",	"15",	"Increment amount for adrenaline hot",	FCVAR_NOTIFY|FCVAR_SPONLY, true, 1.0);
+	hCvarAdrenTotal =		CreateConVar("l4d_adrenaline_hot_total",		buffer,	"Total amount for adrenaline hot",		FCVAR_NOTIFY|FCVAR_SPONLY, true, 0.0);
+	
+	if (hCvarAdrenHot.BoolValue) EnableAdrenHot();
+	hCvarAdrenHot.AddChangeHook(AdrenHotChanged);
 }
 
 public void OnPluginEnd()
@@ -134,27 +134,27 @@ public void AdrenalineUsed_Event(Event event, const char[] name, bool dontBroadc
 
 void HealEntityOverTime(int userid, float interval, int increment, int total)
 {
-    int client = GetClientOfUserId(userid);
-    if (!client || !IsClientInGame(client) || !IsPlayerAlive(client))
-        return;
-    
-    int iMaxHP = GetEntProp(client, Prop_Send, "m_iMaxHealth", 2);
-    
-    if (increment >= total)
-    {
-        __HealTowardsMax(client, total, iMaxHP);
-    }
-    else
-    {
-        __HealTowardsMax(client, increment, iMaxHP);
-        DataPack myDP;
-        CreateDataTimer(interval, __HOT_ACTION, myDP, 
-            TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
-        myDP.WriteCell(userid);
-        myDP.WriteCell(increment);
-        myDP.WriteCell(total-increment);
-        myDP.WriteCell(iMaxHP);
-    }
+	int client = GetClientOfUserId(userid);
+	if (!client || !IsClientInGame(client) || !IsPlayerAlive(client))
+		return;
+	
+	int iMaxHP = GetEntProp(client, Prop_Send, "m_iMaxHealth", 2);
+	
+	if (increment >= total)
+	{
+		__HealTowardsMax(client, total, iMaxHP);
+	}
+	else
+	{
+		__HealTowardsMax(client, increment, iMaxHP);
+		DataPack myDP;
+		CreateDataTimer(interval, __HOT_ACTION, myDP,
+			TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+		myDP.WriteCell(userid);
+		myDP.WriteCell(increment);
+		myDP.WriteCell(total-increment);
+		myDP.WriteCell(iMaxHP);
+	}
 }
 
 public Action __HOT_ACTION(Handle timer, DataPack pack)
@@ -165,21 +165,25 @@ public Action __HOT_ACTION(Handle timer, DataPack pack)
 	int userid = pack.ReadCell();
 	int client = GetClientOfUserId(userid);
 	
+	// disconnection, team flipping or team changing
 	if (!client || GetClientTeam(client) != 2)
 	{
+		// search for any replacement
 		int index = g_aReplacePair.FindValue(userid, 0);
 		if (index != -1)
 		{
 			userid = g_aReplacePair.Get(index, 1);
-			client = GetClientOfUserId(userid);
 			g_aReplacePair.Erase(index);
-			
-			if (!client) { return Plugin_Stop; }
-			
 			pack.Position = pos;
 			pack.WriteCell(userid);
+			
+			client = GetClientOfUserId(userid);
 		}
-		else { return Plugin_Stop; }
+	}
+	
+	if (!client || !IsPlayerAlive(client) || L4D_IsPlayerIncapacitated(client) || L4D_IsPlayerHangingFromLedge(client))
+	{
+		return Plugin_Stop;
 	}
 	
 	int increment = pack.ReadCell();
@@ -189,12 +193,6 @@ public Action __HOT_ACTION(Handle timer, DataPack pack)
 	
 	//PrintToChatAll("HOT: %d %d %d %d", client, increment, remaining, maxhp);
 	
-	if (!IsPlayerAlive(client))
-		return Plugin_Stop;
-	
-	if (L4D_IsPlayerIncapacitated(client) || L4D_IsPlayerHangingFromLedge(client))
-		return Plugin_Stop;
-    
 	if (increment >= remaining)
 	{
 		__HealTowardsMax(client, remaining, maxhp);
@@ -209,13 +207,13 @@ public Action __HOT_ACTION(Handle timer, DataPack pack)
 
 void __HealTowardsMax(int client, int amount, int max)
 {
-	int hb = amount + L4D_GetPlayerTempHealth(client);
-	int overflow = hb + GetClientHealth(client) - max;
+	float hb = GetEntPropFloat(client, Prop_Send, "m_healthBuffer") + amount;
+	float overflow = hb + GetClientHealth(client) - max;
 	if (overflow > 0)
 	{
 		hb -= overflow;
 	}
-	L4D_SetPlayerTempHealth(client, hb);
+	SetEntPropFloat(client, Prop_Send, "m_healthBuffer", hb);
 }
 
 
