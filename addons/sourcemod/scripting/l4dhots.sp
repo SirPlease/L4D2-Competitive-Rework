@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <left4dhooks_stocks>
 
-#define PLUGIN_VERSION "2.3"
+#define PLUGIN_VERSION "2.4"
 
 public Plugin myinfo = 
 {
@@ -109,7 +109,23 @@ void HandleSurvivorTakeover(int replacee, int replacer)
 	{
 		index = g_aReplacePair.Push(replacee);
 	}
+	
+	// if the replacer retakes his character, let it go :)
+	else if (replacer == g_aReplacePair.Get(index, 0))
+	{
+		g_aReplacePair.Erase(index);
+		return;
+	}
+	
 	g_aReplacePair.Set(index, replacer, 1);
+	
+	CreateTimer(0.1, Timer_CleanUpLeftover, replacee, TIMER_FLAG_NO_MAPCHANGE);
+}
+
+public Action Timer_CleanUpLeftover(Handle timer, int userid)
+{
+	int index = g_aReplacePair.FindValue(userid, 0);
+	if (index != -1) g_aReplacePair.Erase(index);
 }
 
 public void PillsUsed_Event(Event event, const char[] name, bool dontBroadcast)
