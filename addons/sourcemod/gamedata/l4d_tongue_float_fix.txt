@@ -1,0 +1,55 @@
+"Games"
+{
+	"#default"
+	{
+		"Functions"
+		{
+			"UpdateAirChoke"
+			{
+				"signature"		"UpdateAirChoke"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
+			}
+		}
+	}
+	
+	"left4dead"
+	{
+		/* Windows sig:
+		 *
+		 * Search unique string "Tongue choke starting.", lead you to "CTerrorPlayer::OnStartHangingFromTongue".
+		 * It has 3 xrefs, generally should be the middle one.
+		 * Generate pseudocode to confirm by checking:
+		 *   if there're 3 float comparisons between -0.0099999998 and 0.0099999998.
+		*/
+		"Signatures"
+		{
+			"UpdateAirChoke"
+			{
+				"library"		"server"
+				"linux"			"@_ZN7CTongue14UpdateAirChokeEv"
+				"windows"		"\x83\x2A\x2A\x55\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\xFF\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x81\x2A\xFF\x0F\x00\x00\xC1\x2A\x04\x8D\x2A\x2A\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\xC1\x2A\x0C\x39\x2A\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B"
+				/* 83 ? ? 55 8B ? 8B ? ? ? ? ? 83 ? FF 0F 84 ? ? ? ? 8B ? ? ? ? ? 8B ? 81 ? FF 0F 00 00 C1 ? 04 8D ? ? ? 85 ? 0F 84 ? ? ? ? C1 ? 0C 39 ? ? 0F 85 ? ? ? ? 8B */
+			}
+		}
+	}
+	
+	"left4dead2"
+	{
+		/* Windows sig:
+		 *
+		 * The same as above.
+		*/
+		"Signatures"
+		{
+			"UpdateAirChoke"
+			{
+				"library"		"server"
+				"linux"			"@_ZN7CTongue14UpdateAirChokeEv"
+				"windows"		"\x55\x8B\xEC\x83\xEC\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x57\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\xFF\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x81\x2A\xFF\x0F\x00\x00\x03\x2A\x8D\x2A\x2A\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\xC1\x2A\x0C\x39\x2A\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B"
+				/* 55 8B EC 83 EC ? A1 ? ? ? ? 33 ? 89 ? ? 57 8B ? 8B ? ? ? ? ? 83 ? FF 0F 84 ? ? ? ? 8B ? ? ? ? ? 8B ? 81 ? FF 0F 00 00 03 ? 8D ? ? ? 85 ? 0F 84 ? ? ? ? C1 ? 0C 39 ? ? 0F 85 ? ? ? ? 8B */
+			}
+		}
+	}
+}
