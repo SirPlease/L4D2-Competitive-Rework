@@ -17,8 +17,8 @@
  * Left 4 Downtown 2 Extension updates
  * Copyright (C) 2017 "Accelerator74"
  *
- * Left 4 DHooks SourceMod plugin
- * Copyright (C) 2020 "SilverShot" / "Silvers"
+ * Left 4 DHooks Direct SourceMod plugin
+ * Copyright (C) 2021 "SilverShot" / "Silvers"
  *
  * =============================================================================
  *
@@ -52,6 +52,26 @@
 #define _l4dh_included
 
 #include <left4dhooks_anim>
+#include <left4dhooks_silver>
+#include <left4dhooks_lux_library>
+#include <left4dhooks_stocks>
+
+
+
+// Natives:
+// L4D1 = 24 [left4downtown] + 47 [l4d_direct] + 15 [l4d2addresses] + 44 [silvers - mine!] + 4 [anim] = 126
+// L4D2 = 53 [left4downtown] + 61 [l4d_direct] + 26 [l4d2addresses] + 79 [silvers - mine!] + 4 [anim] = 212
+
+// Forwards:
+// L4D1 = 61;
+// L4D2 = 78;
+
+// Stocks: (L4D1 = 106. L4D2 = 149)
+// left4dhooks_silver			37 stocks	(L4D2 = 4,		L4D1 = 0)
+// left4dhooks_stocks			82 stocks	(L4D2 = 39,		L4D1 = 4)
+// left4dhooks_lux_library		34 stocks	(L4D2 = 4,		L4D1 = 0)
+
+
 
 
 
@@ -105,6 +125,11 @@ public void __pl_l4dh_SetNTVOptional()
 	MarkNativeAsOptional("L4D2_VomitJarPrj");
 	MarkNativeAsOptional("L4D2_GrenadeLauncherPrj");
 
+	MarkNativeAsOptional("L4D_GetPointer");
+	MarkNativeAsOptional("L4D_GetClientFromAddress");
+	MarkNativeAsOptional("L4D_GetEntityFromAddress");
+	MarkNativeAsOptional("L4D_ReadMemoryString");
+	MarkNativeAsOptional("L4D_GetServerOS");
 	MarkNativeAsOptional("L4D2_ExecVScriptCode");
 	MarkNativeAsOptional("L4D2_GetVScriptOutput");
 	MarkNativeAsOptional("L4D2_SpitterPrj");
@@ -335,6 +360,21 @@ enum
 	GAMEMODE_SCAVENGE	= 8
 }
 
+// For the "L4D_GetPointer" native
+enum PointerType
+{
+	POINTER_DIRECTOR		= 1,	// @TheDirector
+	POINTER_SERVER			= 2,	// @sv
+	POINTER_GAMERULES		= 3,	// @g_pGameRules
+	POINTER_NAVMESH			= 4,	// @TheNavMesh
+	POINTER_ZOMBIEMANAGER	= 5,	// @TheZombieManager
+	POINTER_WEAPONINFO		= 6,	// @_ZL20m_WeaponInfoDatabase
+	POINTER_MELEEINFO		= 7,	// @g_MeleeWeaponInfoStore (L4D2 Only)
+	POINTER_EVENTMANAGER	= 8,	// pScriptedEventManager (L4D2 Only)
+	POINTER_SCAVENGEMODE	= 9,	// pScavengeMode (L4D2 Only)
+	POINTER_VERSUSMODE		= 10	// pVersusMode
+}
+
 // Provided by "BHaType":
 // For the "L4D_State_Transition" native.
 // X -> Y (means X state will become Y state on next frame or some seconds later)
@@ -467,6 +507,20 @@ native int AnimGetFromActivity(char[] activity);
 forward Action L4D_OnSpawnSpecial(int &zombieClass, const float vecPos[3], const float vecAng[3]);
 
 /**
+ * @brief Called whenever ZombieManager::SpawnSpecial(ZombieClassType,Vector&,QAngle&) is invoked
+ * @remarks Only used for bot special spawns (not players)
+ * @remarks zombieClass: 1=Smoker, 2=Boomer, 3=Hunter, 4=Spitter, 5=Jockey, 6=Charger
+ *
+ * @param client		The client index who spawned
+ * @param zombieClass	Zombie class that will be spawned.
+ * @param vecPos		Vector coordinate where special will be spawned
+ * @param vecAng		QAngle where spcial will be facing
+ *
+ * @noreturn
+ */
+forward void L4D_OnSpawnSpecial_Post(int client, int zombieClass, const float vecPos[3], const float vecAng[3]);
+
+/**
  * @brief Called whenever ZombieManager::SpawnTank(Vector&,QAngle&) is invoked
  * @remarks Not invoked if z_spawn tank is used and it gives a ghosted/dead player tank
  *
@@ -476,6 +530,18 @@ forward Action L4D_OnSpawnSpecial(int &zombieClass, const float vecPos[3], const
  * @return				Plugin_Handled to block tank from spawning, Plugin_Continue otherwise.
  */
 forward Action L4D_OnSpawnTank(const float vecPos[3], const float vecAng[3]);
+
+/**
+ * @brief Called whenever ZombieManager::SpawnTank(Vector&,QAngle&) is invoked
+ * @remarks Not invoked if z_spawn tank is used and it gives a ghosted/dead player tank
+ *
+ * @param client		The client index who spawned
+ * @param vecPos		Vector coordinate where tank is spawned
+ * @param vecAng		QAngle where tank will be facing
+ *
+ * @noreturn
+ */
+forward void L4D_OnSpawnTank_Post(int client, const float vecPos[3], const float vecAng[3]);
 
 /**
  * @brief Called whenever ZombieManager::SpawnWitch(Vector&,QAngle&) is invoked
@@ -489,6 +555,18 @@ forward Action L4D_OnSpawnTank(const float vecPos[3], const float vecAng[3]);
 forward Action L4D_OnSpawnWitch(const float vecPos[3], const float vecAng[3]);
 
 /**
+ * @brief Called whenever ZombieManager::SpawnWitch(Vector&,QAngle&) is invoked
+ * @brief Called when a Witch spawns
+ *
+ * @param entity		Entity index that spawned
+ * @param vecPos		Vector coordinate where witch is spawned
+ * @param vecAng		QAngle where witch will be facing
+ *
+ * @noreturn
+ */
+forward void L4D_OnSpawnWitch_Post(int entity, const float vecPos[3], const float vecAng[3]);
+
+/**
  * @brief Called whenever ZombieManager::SpawnWitchBride(Vector&,QAngle&) is invoked
  * @brief Called when a Witch Bride spawns
  *
@@ -499,6 +577,19 @@ forward Action L4D_OnSpawnWitch(const float vecPos[3], const float vecAng[3]);
  */
 // L4D2 only.
 forward Action L4D2_OnSpawnWitchBride(const float vecPos[3], const float vecAng[3]);
+
+/**
+ * @brief Called whenever ZombieManager::SpawnWitchBride(Vector&,QAngle&) is invoked
+ * @brief Called when a Witch Bride spawns
+ *
+ * @param entity		Entity index that spawned
+ * @param vecPos		Vector coordinate where witch is spawned
+ * @param vecAng		QAngle where witch will be facing
+ *
+ * @noreturn
+ */
+// L4D2 only.
+forward void L4D2_OnSpawnWitchBride_Post(int entity, const float vecPos[3], const float vecAng[3]);
 
 /**
  * @brief Called whenever CDirector::OnMobRushStart(void) is invoked
@@ -1242,7 +1333,7 @@ forward Action L4D2_OnStartCarryingVictim(int victim, int attacker);
  * @remarks Called when a Survivor player is covered in Boomer bile, or when using "Bile the World" plugin by "AtomicStryker"
  *
  * @param victim			the client who's now it
- * @param attacker			the attacker who caused the vomit
+ * @param attacker			the attacker who caused the vomit (can be 0)
  *
  * @return					Plugin_Handled to block, Plugin_Changed to use overwritten values from plugin, Plugin_Continue otherwise
  */
@@ -1253,7 +1344,7 @@ forward Action L4D_OnVomitedUpon(int victim, int &attacker, bool &boomerExplosio
  * @remarks Called when a Special Infected is hit from a Bilejar explosion
  *
  * @param victim			the client who's now it
- * @param attacker			the attacker who caused the vomit
+ * @param attacker			the attacker who caused the vomit (can be 0)
  * @param boomerExplosion	true if triggered by a boommer explosion
  *
  * @return					Plugin_Handled to block, Plugin_Changed to use overwritten values from plugin, Plugin_Continue otherwise
@@ -1377,6 +1468,49 @@ forward Action L4D_OnGetRandomPZSpawnPosition(int &client, int &zombieClass, int
 // ====================================================================================================
 // NATIVES - Silvers
 // ====================================================================================================
+/**
+ * @brief Returns the address pointer to various internal game objects
+ *
+ * @param	ptr_type		Using the PointerType enum to select which pointer to return
+ *
+ * @return	Address pointer or 0 on failure.
+ */
+native Address L4D_GetPointer(PointerType ptr_type);
+
+/**
+ * @brief Returns a client index from a memory address
+ *
+ * @param	addy		Address to check
+ *
+ * @return	Client index or 0 on failure.
+ */
+native int L4D_GetClientFromAddress(Address addy);
+
+/**
+ * @brief Returns an entity index from a memory address
+ *
+ * @param	addy		Address to check
+ *
+ * @return	Entity index or -1 on failure.
+ */
+native int L4D_GetEntityFromAddress(Address addy);
+
+/**
+ * @brief Returns an entity index from a memory address
+ *
+ * @param	addy		Address to check
+ *
+ * @return	Entity index or -1 on failure.
+ */
+native int L4D_ReadMemoryString(Address addy, char[] buffer, int maxlength);
+
+/**
+ * @brief Returns the servers operating system.
+ *
+ * @return	0=Windows. 1=Linux.
+ */
+native int L4D_GetServerOS();
+
 /**
 * @brief Runs a specified VScript code.
 * @remarks Saves having to create an entity. The entity can remain alive and used again...
