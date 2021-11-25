@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.70"
+#define PLUGIN_VERSION		"1.79"
 
 /*=======================================================================================
 	Plugin Info:
@@ -31,6 +31,38 @@
 
 ========================================================================================
 	Change Log:
+
+1.79 (23-Nov-2021)
+	- Changed forward "L4D_OnSpawnSpecial_Post" prototype to remove the reference variable.
+
+1.78 (23-Nov-2021)
+	- Added forwards "L4D_OnSpawnSpecial_Post", "L4D_OnSpawnTank_Post", "L4D_OnSpawnWitch_Post" and "L4D2_OnSpawnWitchBride_Post". Requested by "A1m".
+	- Added stocks "GetAnyRandomClient", "GetRandomSurvivor" and "GetRandomInfected" to the "left4dhooks_silver.inc" include file.
+
+1.74 (16-Nov-2021)
+	- Fixed releasing 1.73 with the wrong "left4dhooks_stocks.inc" include file version. Thanks to "moschinovac" for reporting.
+
+1.73 (15-Nov-2021)
+	- Added tons of new stocks! About 150!
+
+	- Added some new enums to the "left4dhooks_silver.inc" include file: "L4D_TEAM_*", "L4D_ZOMBIE_CLASS_*", "L4D2_ZOMBIE_CLASS_*" and "L4D_WEAPON_SLOT_*".
+	- Added new include file "left4dhooks_lux_library.inc" - various new stocks from "lux_library.inc". Thanks to "Lux" for the original file and allowing use.
+	- Added new include file "left4dhooks_silver.inc" - various new stocks. This will be updated over time to add new simple stock functions.
+	- Added new inclide file "left4dhooks_stocks.inc" - various new stocks from "l4d_stocks.inc". Thanks to "Mr. Zero" for the original files.
+	- This is also combined with the "l4d_weapon_stocks.inc" include file by "Mr. Zero".
+	- Only required to copy to the "scripting/include" directory when compiling, "left4dhooks.inc" will include these automatically.
+
+	- New GameData file "lux_library.txt" used for the "left4dhooks_lux_library.inc" include file. Thanks to "Lux" for providing these.
+
+	- Updated: Plugin, Test plugin, Include file.
+	- Added: New include files and GameData file.
+
+1.72 (10-Nov-2021)
+	- Added native "L4D_GetPointer" to return various pointer addresses.
+	- Added native "L4D_GetClientFromAddress" to return a client index from a memory address.
+	- Added native "L4D_GetEntityFromAddress" to return an entity index from a memory address.
+	- Added native "L4D_ReadMemoryString" to read a string from a memory address.
+	- Added native "L4D_GetServerOS" to return the current server OS.
 
 1.70 (07-Nov-2021)
 	- Added native "L4D_TankRockPrj" to create a Tank Rock projectile.
@@ -71,11 +103,11 @@
 
 	- Added new target filters:
 		"@deads" - Dead Survivors (all, bots)
-		"@deadsi" - Dead Special Infected (all, bots) 
-		"@deadsp" - Dead Survivors players (no bots) 
-		"@deadsip" - Dead Special Infected players (no bots)- 
-		"@deadsb" - Dead Survivors bots (no players) 
-		"@deadsib" - Dead Special Infected bots (no players)- 
+		"@deadsi" - Dead Special Infected (all, bots)
+		"@deadsp" - Dead Survivors players (no bots)
+		"@deadsip" - Dead Special Infected players (no bots)
+		"@deadsb" - Dead Survivors bots (no players)
+		"@deadsib" - Dead Special Infected bots (no players)
 		"@sp" - Survivors players (no bots)
 		"@isp" - Special Infected players (no bots)
 		"@isb" - Incapped Survivor Only Bots
@@ -345,9 +377,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	}
 
 	if( g_bLeft4Dead2 )
-		g_iForwardsMax = 74;
+		g_iForwardsMax = 78;
 	else
-		g_iForwardsMax = 57;
+		g_iForwardsMax = 61;
 
 	return APLRes_Success;
 }
@@ -509,8 +541,8 @@ Action OnAnimPost(int client, int &anim)
 			case 'b': { anim = 631; }	// gambler
 			case 'h': { anim = 636; }	// mechanic
 			case 'd': { anim = 639; }	// producer
-			case 'v': { anim = 539; }	// NamVet	
-			case 'e': { anim = 542; }	// Biker	
+			case 'v': { anim = 539; }	// NamVet
+			case 'e': { anim = 542; }	// Biker
 			case 'a': { anim = 539; }	// Manager
 			case 'n': { anim = 529; }	// TeenGirl
 		}
@@ -530,7 +562,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	if(
 		buttons & IN_FORWARD &&
 		GetEntProp(client, Prop_Send, "m_isIncapacitated", 1) &&
-		GetEntProp(client, Prop_Send, "m_isHangingFromLedge") == 0
+		GetEntProp(client, Prop_Send, "m_isHangingFromLedge", 1) == 0
 	)
 	{
 		if(
@@ -575,22 +607,378 @@ public Action sm_l4dd(int client, int args)
 
 
 	// =========================
+	// STOCKS - left4dhooks_silver
+	// =========================
+	/*
+	PrintToServer("GetAnyRandomClient = %d", GetAnyRandomClient());
+	PrintToServer("GetRandomSurvivor = %d", GetRandomSurvivor());
+	PrintToServer("GetRandomInfected = %d", GetRandomInfected());
+
+	int entity = FindEntityByClassname(-1, "prop_door*");
+	if( entity != INVALID_ENT_REFERENCE )
+	{
+		PrintToServer("L4D_EntityParent %d",				L4D_EntityParent(entity));
+		PrintToServer("L4D_GetDoorState %d",				L4D_GetDoorState(entity));
+		PrintToServer("L4D_GetDoorFlag %d",					L4D_GetDoorFlag(entity));
+	}
+
+	PrintToServer("L4D_IsEngineLeft4Dead %d",				L4D_IsEngineLeft4Dead());
+	PrintToServer("L4D_IsEngineLeft4Dead1 %d",				L4D_IsEngineLeft4Dead1());
+	PrintToServer("L4D_IsEngineLeft4Dead2 %d",				L4D_IsEngineLeft4Dead2());
+	PrintToServer("L4D_GetCommonsCount %d",					L4D_GetCommonsCount());
+	PrintToServer("L4D_GetPlayerCurrentWeapon %d",			L4D_GetPlayerCurrentWeapon(client));
+	PrintToServer("L4D_GetPlayerCustomAbility %d",			L4D_GetPlayerCustomAbility(client));
+	PrintToServer("L4D_GetPlayerUseTarget %d",				L4D_GetPlayerUseTarget(client));
+	PrintToServer("L4D_GetVictimHunter %d",					L4D_GetVictimHunter(client));
+	PrintToServer("L4D_GetVictimSmoker %d",					L4D_GetVictimSmoker(client));
+	PrintToServer("L4D_GetVictimCharger %d",				L4D_GetVictimCharger(client));
+	PrintToServer("L4D_GetVictimCarry %d",					L4D_GetVictimCarry(client));
+	PrintToServer("L4D_GetVictimJockey %d",					L4D_GetVictimJockey(client));
+	PrintToServer("L4D_GetAttackerHunter %d",				L4D_GetAttackerHunter(client));
+	PrintToServer("L4D_GetAttackerSmoker %d",				L4D_GetAttackerSmoker(client));
+	PrintToServer("L4D_GetAttackerCharger %d",				L4D_GetAttackerCharger(client));
+	PrintToServer("L4D_GetAttackerCarry %d",				L4D_GetAttackerCarry(client));
+	PrintToServer("L4D_GetAttackerJockey %d",				L4D_GetAttackerJockey(client));
+	PrintToServer("L4D_GetPinnedInfected %d",				L4D_GetPinnedInfected(client));
+	PrintToServer("L4D_IsPlayerPinned %d",					L4D_IsPlayerPinned(client));
+	PrintToServer("L4D_IsPlayerHangingFromLedge %d",		L4D_IsPlayerHangingFromLedge(client));
+	PrintToServer("L4D_CanPlayerLedgeHang %d"		,		L4D_CanPlayerLedgeHang(client));
+	PrintToServer("L4D_GetPlayerReviveTarget %d",			L4D_GetPlayerReviveTarget(client));
+	PrintToServer("L4D_GetPlayerReviveOwner %d",			L4D_GetPlayerReviveOwner(client));
+	// PrintToServer("L4D_IsPlayerIncapped %d",				L4D_IsPlayerIncapped(client)); // DEPRECATED
+
+	L4D_LedgeHangDisable(client);
+	L4D_LedgeHangEnable(client);
+	L4D_StopReviveAction(client);
+	L4D_SetPlayerIncappedDamage(client);
+	L4D_SetPlayerIncapped(client, false);
+	L4D_ForcePanicEvent();
+
+	float vPos[3];
+	GetClientAbsOrigin(client, vPos);
+	vPos[1] += 50.0;
+	L4D_SpawnCommonInfected(vPos);
+	// */
+
+
+
+
+
+	// =========================
+	// STOCKS - lux_library
+	// =========================
+	/*
+	float vPos[3];
+	float vAng[3];
+	GetClientAbsOrigin(client, vPos);
+
+	GetAbsOrigin(client, vPos);
+	PrintToServer("GetAbsOrigin (%0.1f %0.1f %0.1f)", vPos[0], vPos[1], vPos[2]);
+	vPos[2] += 10.0;
+	PrintToServer("SetAbsOrigin %d", SetAbsOrigin(client, vPos));
+	PrintToServer("SetAbsVelocity %d", SetAbsVelocity(client, view_as<float>({0.0, 0.0, 255.0})));
+	PrintToServer("SetAbsAngles %d", SetAbsAngles(client, view_as<float>({0.0, 0.0, 0.0})));
+	PrintToServer("GetAttachmentVectors %d", GetAttachmentVectors(client, "mouth", vPos, vAng));
+	PrintToServer("GetAttachmentVectors Pos:(%0.1f %0.1f %0.1f) Ang:(%0.1f %0.1f %0.1f)", vPos[0], vPos[1], vPos[2], vAng[0], vAng[1], vAng[2]);
+
+	PrintToServer("LookupAttachment %d", LookupAttachment(client, "mouth"));
+	PrintToServer("GetAttachment %d", GetAttachment(client, LookupAttachment(client, "mouth"), vPos, vAng));
+	PrintToServer("GetAttachment Pos:(%0.1f %0.1f %0.1f) Ang:(%0.1f %0.1f %0.1f)", vPos[0], vPos[1], vPos[2], vAng[0], vAng[1], vAng[2]);
+
+	GetClientAbsOrigin(client, vPos);
+	PrintToServer("IsPositionInWater %d", IsPositionInWater(vPos));
+
+	Terror_SetPendingDspEffect(client, 0.0, 11);
+
+	Terror_SetAdrenalineTime(client, 25.0);
+	PrintToServer("Terror_GetAdrenalineTime %f", Terror_GetAdrenalineTime(client));
+	PhysicsExplode(vPos, 64, 500.0, false);
+	TE_SetupExplodeForce(vPos, 500.0, 64.0);
+	TE_SendToAll();
+
+	TE_SetupPhysicsProp(vPos, PrecacheModel("models/props_junk/propanecanister001a.mdl"));
+	TE_SendToAll();
+
+	PrintToServer("TE_SetupDynamicLight %d", TE_SetupDynamicLight(vPos, {255, 0, 0}, 512.0, 10.0, 0.0, 5));
+	TE_SendToAll();
+
+	TE_SetupParticleAttachment(GetParticleIndex("weapon_pipebomb_fuse"), LookupAttachment(client, "mouth"), client, true);
+	TE_SendToAll();
+
+	vPos[2] += 20.0;
+	TE_SetupParticle(GetParticleIndex("weapon_pipebomb_fuse"), vPos);
+	TE_SendToAll();
+
+	TE_SetupParticleFollowEntity(GetParticleIndex("weapon_pipebomb_fuse"), client);
+	TE_SendToAll();
+
+	TE_SetupParticleFollowEntity_MaintainOffset(GetParticleIndex("weapon_pipebomb_fuse"), client, view_as<float>({0.0, 0.0, 0.0}));
+	TE_SendToAll();
+
+	TE_SetupParticle_ControlPoints(GetParticleIndex("smoker_tongue"), client, vPos);
+	TE_SendToAll();
+
+	PrintToServer("TE_SetupParticleFollowEntity_Name %d", TE_SetupParticleFollowEntity_Name("weapon_pipebomb_blinking_light", client));
+	TE_SendToAll();
+
+	PrintToServer("TE_SetupParticleFollowEntity_MaintainOffset_Name %d", TE_SetupParticleFollowEntity_MaintainOffset_Name("weapon_pipebomb_blinking_light", client, vPos));
+	TE_SendToAll();
+
+	PrintToServer("TE_SetupParticle_Name %d", TE_SetupParticle_Name("weapon_pipebomb_blinking_light", vPos));
+	TE_SendToAll();
+
+	PrintToServer("TE_SetupParticleAttachment_Names %d", TE_SetupParticleAttachment_Names("weapon_pipebomb_fuse", "mouth", client));
+	TE_SendToAll();
+
+	TE_SetupStopAllParticles(client);
+	TE_SendToAll();
+
+	float vEnd[3];
+	vEnd = vPos;
+	vEnd[1] += 50.0;
+	TE_SetupTracerSound(vPos, vEnd);
+	TE_SendToAll();
+
+	int decal = PrecacheDecal("decals/checkpoint01_black.vmt");
+	TE_SetupEntityDecal(vPos, vPos, GetClientAimTarget(client, false), 0, decal);
+	TE_SendToAll();
+
+	decal = PrecacheDecal("decals/helipad.vmt");
+	TE_SetupWorldDecal(vPos, decal);
+	TE_SendToAll();
+
+	GetClientEyePosition(client, vPos);
+	GetClientEyeAngles(client, vAng);
+	Handle trace = TR_TraceRayFilterEx(vPos, vAng, MASK_SHOT, RayType_Infinite, _TraceFilter);
+	PrintToServer("TE_SetupDecal_FromTrace %d", TE_SetupDecal_FromTrace(trace, "decals/checkpoint01_black.vmt"));
+	TE_SendToAll();
+
+	PrintToServer("GetDecalIndex %d", GetDecalIndex("decals/checkpoint01_black.vmt"));
+	PrintToServer("GetParticleIndex %d", GetParticleIndex("weapon_pipebomb_fuse"));
+	// PrintToServer("__FindStringIndex2 %d", __FindStringIndex2(int tableidx, const char[] str));
+	// PrintToServer("__PrecacheParticleSystem %d", __PrecacheParticleSystem(const char[] particleSystem));
+	// PrintToServer("Precache_Particle_System %d", Precache_Particle_System(const char[] particleSystem));
+
+	OS_Type OS = GetOSType();
+	PrintToServer("GetOSType = %s", OS == OS_windows ? "Windows" : OS == OS_linux ? "Linux" : "Other");
+	// */
+
+
+
+
+
+	// =========================
+	// STOCKS - left4dhooks_stocks
+	// =========================
+	/*
+	int entity = FindEntityByClassname(-1, "prop_dynamic");
+	// int weapon = FindEntityByClassname(-1, "weapon_pistol*");
+	int weapon = GetPlayerWeaponSlot(client, L4D_WEAPON_SLOT_PRIMARY);
+	int bot = GetAnyRandomBot();
+
+
+
+	PrintToServer("L4D1_GetPlayerZombieClass %d", L4D1_GetPlayerZombieClass(client));
+	L4D1_SetPlayerZombieClass(client, L4D1ZombieClass_Smoker);
+	PrintToServer("L4D2_GetPlayerZombieClass %d", L4D2_GetPlayerZombieClass(client));
+	L4D2_SetPlayerZombieClass(client, L4D2ZombieClass_Smoker);
+	PrintToServer("L4D_IsPlayerGhost %d", L4D_IsPlayerGhost(client));
+	L4D_SetPlayerGhostState(client, true);
+	PrintToServer("L4D_GetPlayerGhostSpawnState %d", L4D_GetPlayerGhostSpawnState(client));
+	L4D_SetPlayerGhostSpawnState(client, 1);
+	PrintToServer("L4D_IsPlayerCulling %d", L4D_IsPlayerCulling(client));
+	L4D_SetPlayerCullingState(client, true);
+	PrintToServer("L4D_IsPlayerIncapacitated %d", L4D_IsPlayerIncapacitated(client));
+	L4D_SetPlayerIncapacitatedState(client, true);
+	PrintToServer("L4D_GetPlayerShovePenalty %d", L4D_GetPlayerShovePenalty(client));
+	L4D_SetPlayerShovePenalty(client, 1);
+	PrintToServer("L4D_GetTankFrustration %d", L4D_GetTankFrustration(client));
+	L4D_SetTankFrustration(client, 1);
+	PrintToServer("L4D_IsPlayerIdle %d", L4D_IsPlayerIdle(client));
+	PrintToServer("L4D_GetBotOfIdlePlayer %d", L4D_GetBotOfIdlePlayer(client));
+	PrintToServer("L4D_GetIdlePlayerOfBot %d", L4D_GetIdlePlayerOfBot(bot));
+	PrintToServer("L4D_GetPlayerResourceData %d", L4D_GetPlayerResourceData(client, L4DResource_MaxHealth));
+	L4D_SetPlayerResourceData(client, L4DResource_MaxHealth, 150);
+	L4D_RemoveWeaponSlot(client, L4DWeaponSlot_Secondary);
+	L4D_RemoveAllWeapons(client);
+	PrintToServer("L4D_IsFinaleActive %d", L4D_IsFinaleActive());
+	PrintToServer("L4D_HasAnySurvivorLeftSafeArea %d", L4D_HasAnySurvivorLeftSafeArea());
+	PrintToServer("L4D_GetPendingTankPlayer %d", L4D_GetPendingTankPlayer());
+	L4D2_SetEntityGlow(entity, L4D2Glow_Constant, 1000, 1, {255, 0, 0}, true);
+	L4D2_SetEntityGlow_Type(entity, L4D2Glow_Constant);
+	L4D2_SetEntityGlow_Range(entity, 1000);
+	L4D2_SetEntityGlow_MinRange(entity,1);
+	L4D2_SetEntityGlow_Color(entity, {255, 0, 0});
+	L4D2_SetEntityGlow_Flashing(entity, true);
+	PrintToServer("L4D2_GetEntityGlow_Type %d", L4D2_GetEntityGlow_Type(entity));
+	PrintToServer("L4D2_GetEntityGlow_Range %d", L4D2_GetEntityGlow_Range(entity));
+	PrintToServer("L4D2_GetEntityGlow_MinRange %d", L4D2_GetEntityGlow_MinRange(entity));
+	PrintToServer("L4D2_GetEntityGlow_Flashing %d", L4D2_GetEntityGlow_Flashing(entity));
+	L4D2_RemoveEntityGlow(entity);
+	L4D2_RemoveEntityGlow_Color(entity);
+	PrintToServer("L4D2_IsPlayerSurvivorGlowEnable %d", L4D2_IsPlayerSurvivorGlowEnable(client));
+	L4D2_SetPlayerSurvivorGlowState(client, true);
+	PrintToServer("L4D_GetPlayerReviveCount %d", L4D_GetPlayerReviveCount(client));
+	L4D_SetPlayerReviveCount(client, 1);
+	PrintToServer("L4D_GetPlayerIntensity %d", L4D_GetPlayerIntensity(client));
+	PrintToServer("L4D_GetAvgSurvivorIntensity %d", L4D_GetAvgSurvivorIntensity());
+	L4D_SetPlayerIntensity(client, 0.0);
+	PrintToServer("L4D_IsPlayerCalm %d", L4D_IsPlayerCalm(client));
+	L4D_SetPlayerCalmState(client, true);
+	PrintToServer("L4D_HasVisibleThreats %d", L4D_HasVisibleThreats(client));
+	PrintToServer("L4D_IsPlayerOnThirdStrike %d", L4D_IsPlayerOnThirdStrike(client));
+	L4D_SetPlayerThirdStrikeState(client, true);
+	PrintToServer("L4D_IsPlayerGoingToDie %d", L4D_IsPlayerGoingToDie(client));
+	L4D_SetPlayerIsGoingToDie(client, true);
+	PrintToServer("L4D2_IsWeaponUpgradeCompatible %d", L4D2_IsWeaponUpgradeCompatible(weapon));
+	PrintToServer("L4D2_GetWeaponUpgradeAmmoCount %d", L4D2_GetWeaponUpgradeAmmoCount(weapon));
+	L4D2_SetWeaponUpgradeAmmoCount(weapon, 123);
+	PrintToServer("L4D2_GetWeaponUpgrades %d", L4D2_GetWeaponUpgrades(weapon));
+	L4D2_SetWeaponUpgrades(weapon, 2);
+	PrintToServer("L4D2_GetInfectedAttacker %d", L4D2_GetInfectedAttacker(client));
+	PrintToServer("L4D2_GetSurvivorVictim %d", L4D2_GetSurvivorVictim(client));
+	PrintToServer("L4D2_WasPresentAtSurvivalStart %d", L4D2_WasPresentAtSurvivalStart(client));
+	L4D2_SetPresentAtSurvivalStart(client, true);
+	PrintToServer("L4D_IsPlayerUsingMountedWeapon %d", L4D_IsPlayerUsingMountedWeapon(client));
+	PrintToServer("L4D_GetPlayerTempHealth %d", L4D_GetPlayerTempHealth(client));
+	L4D_SetPlayerTempHealth(client, 50);
+	PrintToServer("L4D2_GetPlayerUseAction %d", L4D2_GetPlayerUseAction(client));
+	PrintToServer("L4D2_GetPlayerUseActionTarget %d", L4D2_GetPlayerUseActionTarget(client));
+	PrintToServer("L4D2_GetPlayerUseActionOwner %d", L4D2_GetPlayerUseActionOwner(client));
+
+	L4D2_CreateInstructorHint("Test_Hint",
+		client,
+		"Test hint string",
+		{255, 0, 0},
+		"icon_alert_red",
+		"icon_alert_red",
+		"",
+		0.0,
+		0.0,
+		2,
+		true,
+		false,
+		false,
+		L4D2_IHFLAG_ALPHA_URGENT);
+
+	L4D2_StopInstructorHint("Test_Hint");
+
+	PrintToServer("L4D1_GetShotgunNeedPump %d", L4D1_GetShotgunNeedPump(weapon));
+	L4D1_SetShotgunNeedPump(weapon, true);
+	L4D2_SetCustomAbilityCooldown(client, 0.0);
+
+
+	char dest[64];
+
+	// =========================
+	// WEAPON STOCKS: l4d_weapon_stocks.inc
+	// =========================
+	PrintToServer("L4D2_IsValidWeaponId %d", L4D2_IsValidWeaponId(L4D2WeaponId_Pistol));
+	PrintToServer("L4D2_IsValidWeaponName %d", L4D2_IsValidWeaponName("weapon_pistol"));
+	PrintToServer("L4D2_HasValidWeaponWorldModel %d", L4D2_HasValidWeaponWorldModel(L4D2WeaponId_Pistol));
+	L4D2_GetWeaponModelByWeaponId(L4D2WeaponId_Pistol, dest, sizeof(dest));
+	PrintToServer("L4D2_GetWeaponModelByWeaponId %s", dest);
+	PrintToServer("L4D2_GetWeaponIdByWeaponModel %d", L4D2_GetWeaponIdByWeaponModel("/w_models/weapons/w_pistol_b.mdl"));
+	PrintToServer("L4D2_GetWeaponIdByWeaponName %d", L4D2_GetWeaponIdByWeaponName("weapon_pistol"));
+	L4D2_GetWeaponNameByWeaponId(L4D2WeaponId_Pistol, dest, sizeof(dest));
+	PrintToServer("L4D2_GetWeaponNameByWeaponId %s", dest);
+	PrintToServer("L4D2_GetWeaponId %d", L4D2_GetWeaponId(weapon));
+	L4D2_InitWeaponNameTrie();
+	// */
+
+
+
+	/*
+	if( g_bLeft4Dead2 )
+	{
+		// Method to detonate VomitJar. Must impact the ground, "L4D_DetonateProjectile" will make it detonate but no particles or smoke will appear. Only the affect within the area.
+		float vAng[3], vPos[3];
+		GetClientEyePosition(client, vPos);
+		vPos[2] += 50.0; // Move projectile above player to avoid collision
+		vAng = view_as<float>({ 0.0, 0.0, 500.0 }); // Shoot upwards
+
+		int projectile = L4D2_VomitJarPrj(client, vPos, vAng);
+		CreateTimer(1.0, TimerDetonateVomitjar, EntIndexToEntRef(projectile));
+	}
+	*/
+
+
+
+
+
+	// =========================
 	// NATIVES - Mine
-	// =========================	
+	// =========================
+	// Version 1.72 tests
+	/*
+	// TEST: L4D_GetPointer
+	PrintToServer("POINTER_DIRECTOR = %d",			L4D_GetPointer(POINTER_DIRECTOR));
+	PrintToServer("POINTER_SERVER = %d",			L4D_GetPointer(POINTER_SERVER));
+	PrintToServer("POINTER_GAMERULES = %d",			L4D_GetPointer(POINTER_GAMERULES));
+	PrintToServer("POINTER_NAVMESH = %d",			L4D_GetPointer(POINTER_NAVMESH));
+	PrintToServer("POINTER_ZOMBIEMANAGER = %d",		L4D_GetPointer(POINTER_ZOMBIEMANAGER));
+	PrintToServer("POINTER_WEAPONINFO = %d",		L4D_GetPointer(POINTER_WEAPONINFO));
+	PrintToServer("POINTER_MELEEINFO = %d",			L4D_GetPointer(POINTER_MELEEINFO));
+	PrintToServer("POINTER_EVENTMANAGER = %d",		L4D_GetPointer(POINTER_EVENTMANAGER));
+	PrintToServer("POINTER_SCAVENGEMODE = %d",		L4D_GetPointer(POINTER_SCAVENGEMODE));
+	PrintToServer("POINTER_VERSUSMODE = %d",		L4D_GetPointer(POINTER_VERSUSMODE));
+
+	// TEST: L4D_GetClientFromAddress + L4D_GetEntityFromAddress
+	int target = GetAnyRandomClient();
+	if( target )
+	{
+		PrintToServer("L4D_GetClientFromAddress %d (%d) == %d", target, GetEntityAddress(target), L4D_GetClientFromAddress(GetEntityAddress(target)));
+	}
+
+	int entity = FindEntityByClassname(-1, "prop_dynamic");
+	if( entity != INVALID_ENT_REFERENCE )
+	{
+		PrintToServer("L4D_GetEntityFromAddress %d (%d) == %d", entity, GetEntityAddress(entity), L4D_GetEntityFromAddress(GetEntityAddress(entity)));
+	}
+
+	// TEST: L4D_ReadMemoryString
+	if( target )
+	{
+		// OFFSET: (Hardcoded for demonstration)
+		// Search: "#Cstrike_Name_Change"
+		// Look for "CBasePlayer::SetPlayerName" near bottom of function. Offset inside.
+
+		char temp[32];
+		Address addy;
+		Address offs;
+		int os = L4D_GetServerOS();
+
+		if( g_bLeft4Dead2 && os == SERVER_OS_LINUX )			offs = 8361;
+		else if( g_bLeft4Dead2 && os == SERVER_OS_WINDOWS )		offs = 8365;
+		else if( !g_bLeft4Dead2 && os == SERVER_OS_LINUX )		offs = 3845;
+		else if( !g_bLeft4Dead2 && os == SERVER_OS_WINDOWS )	offs = 3825;
+
+		// Returns the players name, read from a memory address
+		addy = GetEntityAddress(target);
+		L4D_ReadMemoryString(addy + offs, temp, sizeof(temp));
+
+		PrintToServer("L4D_ReadMemoryString %N == [%s]", target, temp);
+	}
+	// */
+
+
+
 	/*
 	// WORKS
 	if( g_bLeft4Dead2 )
 	{
-		PrintToServer("L4D2_GetSurvivorSetMap: %d", L4D2_GetSurvivorSetMap());
-		PrintToServer("L4D2_GetSurvivorSetMod: %d", L4D2_GetSurvivorSetMod());
-		PrintToServer("L4D2_HasConfigurableDifficultySetting %d", L4D2_HasConfigurableDifficultySetting());
-		PrintToServer("L4D2_IsGenericCooperativeMode %d", L4D2_IsGenericCooperativeMode());
-		PrintToServer("L4D2_IsRealismMode %d", L4D2_IsRealismMode());
-		PrintToServer("L4D2_IsScavengeMode %d", L4D2_IsScavengeMode());
+		PrintToServer("L4D2_GetSurvivorSetMap: %d",					L4D2_GetSurvivorSetMap());
+		PrintToServer("L4D2_GetSurvivorSetMod: %d",					L4D2_GetSurvivorSetMod());
+		PrintToServer("L4D2_HasConfigurableDifficultySetting %d",	L4D2_HasConfigurableDifficultySetting());
+		PrintToServer("L4D2_AreWanderersAllowed %d",				L4D2_AreWanderersAllowed()); // WORKS?
+		PrintToServer("L4D2_IsGenericCooperativeMode %d",			L4D2_IsGenericCooperativeMode());
+		PrintToServer("L4D2_IsRealismMode %d",						L4D2_IsRealismMode());
+		PrintToServer("L4D2_IsScavengeMode %d",						L4D2_IsScavengeMode());
 	}
-	PrintToServer("L4D_IsCoopMode %d", L4D_IsCoopMode());
-	PrintToServer("L4D_IsSurvivalMode %d", L4D_IsSurvivalMode());
-	PrintToServer("L4D_IsVersusMode %d", L4D_IsVersusMode());
+
+	PrintToServer("L4D_IsCoopMode %d",								L4D_IsCoopMode());
+	PrintToServer("L4D_IsSurvivalMode %d",							L4D_IsSurvivalMode());
+	PrintToServer("L4D_IsVersusMode %d",							L4D_IsVersusMode());
 
 	// WORKS
 	// int iCurrentMode = L4D_GetGameModeType();
@@ -617,10 +1005,6 @@ public Action sm_l4dd(int client, int args)
 	// WORKS
 	PrintToServer("L4D_IsFinaleEscapeInProgress %d",				L4D_IsFinaleEscapeInProgress());
 	PrintToChatAll("L4D_IsFinaleEscapeInProgress %d",				L4D_IsFinaleEscapeInProgress());
-
-	// WORKS?
-	if( g_bLeft4Dead2 )
-		PrintToServer("L4D2_AreWanderersAllowed %d",				L4D2_AreWanderersAllowed());
 	// */
 
 
@@ -685,8 +1069,6 @@ public Action sm_l4dd(int client, int args)
 		}
 	}
 	// */
-
-
 
 
 
@@ -1157,7 +1539,7 @@ public Action sm_l4dd(int client, int args)
 	PrintToServer("");
 	// */
 
-	//DEPRECIATED
+	//DEPRECATED
 	// L4D_GetCampaignScores
 	// PrintToServer("L4D_LobbyUnreserve %d",					L4D_LobbyUnreserve()); // WORKING
 
@@ -1497,6 +1879,54 @@ public Action TimerDetonate(Handle timer, any entity)
 	{
 		L4D_DetonateProjectile(entity);
 	}
+
+	return Plugin_Continue;
+}
+
+public Action TimerDetonateVomitjar(Handle timer, any entity)
+{
+	entity = EntRefToEntIndex(entity);
+	if( entity != INVALID_ENT_REFERENCE )
+	{
+		float vPos[3];
+		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", vPos);
+		PrintToChatAll("DETON A (%0.0f %0.0f %0.0f)", vPos[0], vPos[1], vPos[2]);
+		GetGroundAngles(vPos);
+		PrintToChatAll("DETON B (%0.0f %0.0f %0.0f)", vPos[0], vPos[1], vPos[2]);
+		vPos[2] += 1.0;
+		TeleportEntity(entity, vPos, NULL_VECTOR, view_as<float>({ 0.0, 0.0, -1.0}));
+	}
+
+	return Plugin_Continue;
+}
+
+void GetGroundAngles(float vOrigin[3])
+{
+	float vAng[3], vLookAt[3], vTargetOrigin[3];
+
+	vTargetOrigin = vOrigin;
+	vTargetOrigin[2] -= 20.0; // Point to the floor
+	vOrigin[2] -= 5.0;
+	MakeVectorFromPoints(vOrigin, vTargetOrigin, vLookAt);
+	GetVectorAngles(vLookAt, vAng); // get angles from vector for trace
+
+	// Execute Trace
+	Handle trace = TR_TraceRayFilterEx(vOrigin, vAng, MASK_ALL, RayType_Infinite, _TraceFilter);
+
+	if( TR_DidHit(trace) )
+	{
+		TR_GetEndPosition(vOrigin, trace); // retrieve our trace endpoint
+		PrintToChatAll("trace B (%0.0f %0.0f %0.0f)", vOrigin[0], vOrigin[1], vOrigin[2]);
+	}
+
+	delete trace;
+}
+
+public bool _TraceFilter(int entity, int contentsMask)
+{
+	if( !entity || entity <= MaxClients || !IsValidEntity(entity) ) // dont let WORLD, or invalid entities be hit
+		return false;
+	return true;
 }
 
 
@@ -1523,6 +1953,18 @@ public Action L4D_OnSpawnSpecial(int &zombieClass, const float vector[3], const 
 	return Plugin_Continue;
 }
 
+public void L4D_OnSpawnSpecial_Post(int client, int zombieClass, const float vector[3], const float qangle[3])
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D_OnSpawnSpecial_Post\" %d. %d (%N). (%f %f %f). (%f %f %f)", zombieClass, client, client, vector[0], vector[1], vector[2], qangle[0], qangle[1], qangle[2]);
+	}
+}
+
 public Action L4D_OnSpawnTank(const float vector[3], const float qangle[3])
 {
 	static int called;
@@ -1537,6 +1979,18 @@ public Action L4D_OnSpawnTank(const float vector[3], const float qangle[3])
 	// return Plugin_Handled; // WORKS
 
 	return Plugin_Continue;
+}
+
+public void L4D_OnSpawnTank_Post(int client, const float vector[3], const float qangle[3])
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D_OnSpawnTank_Post\" %d (%N). (%f %f %f). (%f %f %f)", client, client, vector[0], vector[1], vector[2], qangle[0], qangle[1], qangle[2]);
+	}
 }
 
 public Action L4D_OnSpawnWitch(const float vector[3], const float qangle[3])
@@ -1555,6 +2009,18 @@ public Action L4D_OnSpawnWitch(const float vector[3], const float qangle[3])
 	return Plugin_Continue;
 }
 
+public void L4D_OnSpawnWitch_Post(int entity, const float vector[3], const float qangle[3])
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D_OnSpawnWitch_Post\" %d (%f %f %f). (%f %f %f)", entity, vector[0], vector[1], vector[2], qangle[0], qangle[1], qangle[2]);
+	}
+}
+
 public Action L4D2_OnSpawnWitchBride(const float vector[3], const float qangle[3])
 {
 	static int called;
@@ -1569,6 +2035,18 @@ public Action L4D2_OnSpawnWitchBride(const float vector[3], const float qangle[3
 	// return Plugin_Handled; // WORKS
 
 	return Plugin_Continue;
+}
+
+public void L4D2_OnSpawnWitchBride_Post(int entity, const float vector[3], const float qangle[3])
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D2_OnSpawnWitchBride_Post\" %d (%f %f %f). (%f %f %f)", entity, vector[0], vector[1], vector[2], qangle[0], qangle[1], qangle[2]);
+	}
 }
 
 public Action L4D_OnMobRushStart()
@@ -2913,124 +3391,4 @@ void ForwardCalled(const char[] format, any ...)
 	PrintToServer("----------");
 	PrintToServer("Forward %d/%d called %s", g_iForwards, g_iForwardsMax, buffer);
 	PrintToServer("----------");
-}
-
-stock int GetRandomSurvivor()
-{
-	int client;
-	for( int i = 1; i <= MaxClients; i++ )
-	{
-		if( IsClientInGame(i) && GetClientTeam(i) == 2 && IsFakeClient(i) == false )
-		{
-			client = i;
-			break;
-		}
-	}
-
-	if( !client )
-	{
-		for( int i = 1; i <= MaxClients; i++ )
-		{
-			if( IsClientInGame(i) && GetClientTeam(i) == 2 )
-			{
-				client = i;
-				break;
-			}
-		}
-	}
-
-	if( !client )
-	{
-		for( int i = 1; i <= MaxClients; i++ )
-		{
-			if( IsClientInGame(i) )
-			{
-				client = i;
-				break;
-			}
-		}
-	}
-
-	return client;
-}
-
-stock int GetRandomInfected()
-{
-	int client;
-	for( int i = 1; i <= MaxClients; i++ )
-	{
-		if( IsClientInGame(i) && GetClientTeam(i) == 3 && IsFakeClient(i) == false )
-		{
-			client = i;
-			break;
-		}
-	}
-
-	if( !client )
-	{
-		for( int i = 1; i <= MaxClients; i++ )
-		{
-			if( IsClientInGame(i) && GetClientTeam(i) == 3 )
-			{
-				client = i;
-				break;
-			}
-		}
-	}
-
-	if( !client )
-	{
-		for( int i = 1; i <= MaxClients; i++ )
-		{
-			if( IsClientInGame(i) )
-			{
-				client = i;
-				break;
-			}
-		}
-	}
-
-	return client;
-}
-
-stock int GetAnyRandomClient()
-{
-	int client;
-	ArrayList aClients = new ArrayList();
-
-	for( int i = 1; i <= MaxClients; i++ )
-	{
-		if( IsClientInGame(i) )
-		{
-			aClients.Push(i);
-		}
-	}
-
-	if( aClients.Length > 0 )
-		client = aClients.Get(GetRandomInt(0, aClients.Length - 1));
-
-	delete aClients;
-
-	return client;
-}
-
-stock int GetAnyRandomBot()
-{
-	int client;
-	ArrayList aClients = new ArrayList();
-
-	for( int i = 1; i <= MaxClients; i++ )
-	{
-		if( IsClientInGame(i) && IsFakeClient(i) && GetClientTeam(i) == 2 )
-		{
-			aClients.Push(i);
-		}
-	}
-
-	if( aClients.Length > 0 )
-		client = aClients.Get(GetRandomInt(0, aClients.Length - 1));
-
-	delete aClients;
-
-	return client;
 }

@@ -1,23 +1,18 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#define L4D2Team_Infected 3
+#define L4D2Infected_Tank 8
+
 #include <sourcemod>
 #include <sdktools_sound>
-#include <dhooks>
 #include <colors>
-#define L4D2UTIL_STOCKS_ONLY 1
-#include <l4d2util>
 #undef REQUIRE_PLUGIN
 #include <l4d_tank_control_eq>
-//#define REQUIRE_PLUGIN
+#define REQUIRE_PLUGIN
 
-#define LEFT4FRAMEWORK_GAMEDATA "left4dhooks.l4d2"
-#define SECTION_NAME "ZombieManager::SpawnTank"
-
-#define PLUGIN_VERSION "1.3b"
+#define PLUGIN_VERSION "1.4"
 #define DANG "ui/pickup_secret01.wav"
-
-Handle g_hDetour;
 
 public Plugin myinfo = 
 {
@@ -28,75 +23,70 @@ public Plugin myinfo =
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-public void OnPluginStart()
-{
-	Handle hGameData = LoadGameConfigFile(LEFT4FRAMEWORK_GAMEDATA);
-	if (hGameData == null) {
-		SetFailState("Missing gamedata \"%s\".", LEFT4FRAMEWORK_GAMEDATA);
-	}
-	
-	g_hDetour = DHookCreateFromConf(hGameData, SECTION_NAME);
-	if (g_hDetour == null) {
-		SetFailState("Failed to create detour '" ... SECTION_NAME ..."' from gamedata.");
-	}
-	
-	if (!DHookEnableDetour(g_hDetour, true, OnSpawnTank)) {
-		SetFailState("Failed to enable detour '" ... SECTION_NAME ... "'.");
-	}
-
-	delete hGameData;
-}
-
-public void OnPluginEnd()
-{
-	if (!DHookDisableDetour(g_hDetour, true, OnSpawnTank))
-		SetFailState("Failed to disable detour \"SpawnTank\".");
-}
-
 public void OnMapStart()
 {
 	PrecacheSound(DANG);
 }
 
-public MRESReturn OnSpawnTank(Handle hReturn, Handle hParams)
+public void L4D_OnSpawnTank_Post(int client, const float vecPos[3], const float vecAng[3])
 {
-	bool ret = DHookGetReturn(hReturn) != 0; // left4dhooks sets it 0 to disable tank spawns
-	
-	if (ret == true) {
-		RequestFrame(OnNextFrame, 0);	// seems it occurs often that prints with wrong teamcolors
-									// make a slight delay here to try fixing this
-	}
-	return MRES_Ignored;
-}
-
-public void OnNextFrame(any data)
-{
+	int tankClient = client;
 	char nameBuf[MAX_NAME_LENGTH];
-	if (IsTankSelection()) {
-		int tankClient = FindAliveTankClient();
 	
-		if (tankClient > 0 && !IsFakeClient(tankClient)) {
+	if (IsTankSelection())
+	{
+		if (IsTank(tankClient) && !IsFakeClient(tankClient)) 
+		{
 			FormatEx(nameBuf, sizeof(nameBuf), "%N", tankClient);
-		} else {
+		} 
+		else 
+		{
 			tankClient = GetTankSelection();
-			if (tankClient > 0 && IsClientInGame(tankClient)) {
+			if (tankClient > 0 
+			&& IsClientInGame(tankClient)) 
+			{
 				FormatEx(nameBuf, sizeof(nameBuf), "%N", tankClient);
-			} else {
+			} 
+			else 
+			{
 				FormatEx(nameBuf, sizeof(nameBuf), "AI");
 			}
 		}
-	} else {
-		int tankClient = FindAliveTankClient();
-		
-		if (tankClient > 0 && !IsFakeClient(tankClient)) {
-			FormatEx(nameBuf, sizeof(nameBuf), "%N", tankClient);
-		} else {
-			FormatEx(nameBuf, sizeof(nameBuf), "AI");
-		}
+	}
+	else
+	{
+		HookEvent("player_spawn", Event_PlayerSpawn);
+		return;
 	}
 	
-	CPrintToChatAll("{red}[{default}!{red}] {olive}Tank{default}({red}Control: %s{default}) has spawned!", nameBuf);
+	CPrintToChatAll("{red}[{default}!{red}] {olive}Tank {default}({red}Control: %s{default}) has spawned!", nameBuf);
 	EmitSoundToAll(DANG);
+}
+
+public void Event_PlayerSpawn(Event event, char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(event.GetInt("userid"));
+
+	// Tanky Client?
+	if (IsTank(client) && !IsFakeClient(client))
+	{
+		CPrintToChatAll("{red}[{default}!{red}] {olive}Tank {default}({red}Control: %N{default}) has spawned!", client);
+		EmitSoundToAll(DANG);
+		UnhookEvent("player_spawn", Event_PlayerSpawn);
+	}
+}
+
+/**
+ * Is the player the tank? 
+ *
+ * @param client client ID
+ * @return bool
+ */
+bool IsTank(int client)
+{
+	return (IsClientInGame(client)
+		&& GetClientTeam(client) == L4D2Team_Infected
+		&& GetEntProp(client, Prop_Send, "m_zombieClass") == L4D2Infected_Tank);
 }
 
 /*
