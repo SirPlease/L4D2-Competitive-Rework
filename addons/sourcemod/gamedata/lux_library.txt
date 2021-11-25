@@ -1,0 +1,97 @@
+"Games"
+{
+	"#default"
+	{
+		"Offsets"
+		{
+			"OS"
+			{
+				"windows"	"0"
+				"linux"		"1"
+				"mac"		"2"
+			}
+		}
+	}
+	"left4dead2"
+	{
+		"Signatures"
+		{
+			"CBaseEntity::SetAbsOrigin"
+			{
+				"library"	"server"
+				"linux"		"@_ZN11CBaseEntity12SetAbsOriginERK6Vector"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x57\x8B\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\xF3\x2A\x2A\x2A\x0F\x2E\x2A\x2A\x2A\x2A\x2A\x9F\xF6\x2A\x2A\x7A\x2A\xF3\x2A\x2A\x2A\x2A\x0F\x2E\x2A\x2A\x2A\x2A\x2A\x9F\xF6\x2A\x2A\x7A\x2A\xF3\x2A\x2A\x2A\x2A\x0F\x2E\x2A\x2A\x2A\x2A\x2A\x9F\xF6\x2A\x2A\x0F\x8B\x2A\x2A\x2A\x2A\x6A"
+						/* ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 56 57 8B ? ? 8B ? E8 ? ? ? ? F3 ? ? ? 0F 2E ? ? ? ? ? 9F F6 ? ? 7A ? F3 ? ? ? ? 0F 2E ? ? ? ? ? 9F F6 ? ? 7A ? F3 ? ? ? ? 0F 2E ? ? ? ? ? 9F F6 ? ? 0F 8B ? ? ? ? 6A */
+			}
+			"CBaseEntity::SetAbsVelocity"
+			{
+				"library"	"server"
+				"linux"		"@_ZN11CBaseEntity14SetAbsVelocityERK6Vector"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x2A\xF3\x2A\x2A\x2A\x57\x8B\x2A\x0F"
+						/* ? ? ? ? ? ? 56 8B ? ? F3 ? ? ? 57 8B ? 0F */
+			}
+			"CBaseEntity::SetAbsAngles"
+			{
+				"library"	"server"
+				"linux"		"@_ZN11CBaseEntity12SetAbsAnglesERK6QAngle"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x57\x8B\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\xF3\x2A\x2A\x2A\x0F\x2E\x2A\x2A\x2A\x2A\x2A\x9F\xF6\x2A\x2A\x7A\x2A\xF3\x2A\x2A\x2A\x2A\x0F\x2E\x2A\x2A\x2A\x2A\x2A\x9F\xF6\x2A\x2A\x7A\x2A\xF3\x2A\x2A\x2A\x2A\x0F\x2E\x2A\x2A\x2A\x2A\x2A\x9F\xF6\x2A\x2A\x0F\x8B\x2A\x2A\x2A\x2A\x53"
+						/* ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 56 57 8B ? ? 8B ? E8 ? ? ? ? F3 ? ? ? 0F 2E ? ? ? ? ? 9F F6 ? ? 7A ? F3 ? ? ? ? 0F 2E ? ? ? ? ? 9F F6 ? ? 7A ? F3 ? ? ? ? 0F 2E ? ? ? ? ? 9F F6 ? ? 0F 8B ? ? ? ? 53 */
+			}
+			"CBaseAnimating::LookupAttachment"
+			{
+				"library"	"server"
+				"linux"		"@_ZN14CBaseAnimating16LookupAttachmentEPKc"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\xBE\x2A\x2A\x2A\x2A\x2A\x75\x2A\xE8\x2A\x2A\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x86\x2A\x2A\x2A\x2A\x5E\x85\x2A\x74\x2A\x83\x2A\x2A\x75\x2A\x33\x2A\x5D\xC2\x2A\x2A\x8B\x2A\x2A\x51"
+						/* ? ? ? ? ? ? 83 BE ? ? ? ? ? 75 ? E8 ? ? ? ? 85 ? 74 ? 8B ? E8 ? ? ? ? 8B 86 ? ? ? ? 5E 85 ? 74 ? 83 ? ? 75 ? 33 ? 5D C2 ? ? 8B ? ? 51 */
+			}	
+			"CBaseAnimating::GetAttachment"
+			{
+				"library"	"server"
+				"linux"		"@_ZN14CBaseAnimating13GetAttachmentEiR6VectorR6QAngle"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x8B\x2A\x8B\x80\x2A\x2A\x2A\x2A\x53"
+						/* ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 8B ? 8B 80 ? ? ? ? 53 */
+			}
+		}
+	}
+	"left4dead"
+	{
+		"Signatures"
+		{
+			"CBaseEntity::SetAbsOrigin"
+			{
+				"library"	"server"
+				"linux"		"@_ZN11CBaseEntity12SetAbsOriginERK6Vector"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xD9\x86\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\xD8\x2A\xDF\x2A\xF6\x2A\x2A\x7A\x2A\xD9\x86\x2A\x2A\x2A\x2A\xD8\x2A\x2A\xDF\x2A\xF6\x2A\x2A\x7A\x2A\xD9\x86\x2A\x2A\x2A\x2A\xD8\x2A\x2A\xDF\x2A\xF6\x2A\x2A\x0F\x8B\x2A\x2A\x2A\x2A\x6A"
+						/* ? ? ? ? ? ? ? E8 ? ? ? ? D9 86 ? ? ? ? 8B ? ? ? D8 ? DF ? F6 ? ? 7A ? D9 86 ? ? ? ? D8 ? ? DF ? F6 ? ? 7A ? D9 86 ? ? ? ? D8 ? ? DF ? F6 ? ? 0F 8B ? ? ? ? 6A */
+			}
+			"CBaseEntity::SetAbsVelocity"
+			{
+				"library"	"server"
+				"linux"		"@_ZN11CBaseEntity14SetAbsVelocityERK6Vector"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\x2A\xD9\x87\x2A\x2A\x2A\x2A\xD8\x2A\xDF"
+						/* ? ? ? ? ? ? ? ? 57 8B ? D9 87 ? ? ? ? D8 ? DF */
+			}
+			"CBaseEntity::SetAbsAngles"
+			{
+				"library"	"server"
+				"linux"		"@_ZN11CBaseEntity12SetAbsAnglesERK6QAngle"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xD9\x86\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\xD8\x2A\xDF\x2A\xF6\x2A\x2A\x7A\x2A\xD9\x86\x2A\x2A\x2A\x2A\xD8\x2A\x2A\xDF\x2A\xF6\x2A\x2A\x7A\x2A\xD9\x86\x2A\x2A\x2A\x2A\xD8\x2A\x2A\xDF\x2A\xF6\x2A\x2A\x0F\x8B\x2A\x2A\x2A\x2A\x53"
+						/* ? ? ? ? ? ? ? E8 ? ? ? ? D9 86 ? ? ? ? 8B ? ? ? D8 ? DF ? F6 ? ? 7A ? D9 86 ? ? ? ? D8 ? ? DF ? F6 ? ? 7A ? D9 86 ? ? ? ? D8 ? ? DF ? F6 ? ? 0F 8B ? ? ? ? 53 */
+			}
+			"CBaseAnimating::LookupAttachment"
+			{
+				"library"	"server"
+				"linux"		"@_ZN14CBaseAnimating16LookupAttachmentEPKc"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x75\x2A\xE8\x2A\x2A\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x86\x2A\x2A\x2A\x2A\x85\x2A\x5E\x74\x2A\x83\x2A\x2A\x75\x2A\x33\x2A\xC2\x2A\x2A\x8B\x2A\x2A\x2A\x51"
+						/* ? ? ? ? ? ? ? ? ? ? 75 ? E8 ? ? ? ? 85 ? 74 ? 8B ? E8 ? ? ? ? 8B 86 ? ? ? ? 85 ? 5E 74 ? 83 ? ? 75 ? 33 ? C2 ? ? 8B ? ? ? 51 */
+			}	
+			"CBaseAnimating::GetAttachment"
+			{
+				"library"	"server"
+				"linux"		"@_ZN14CBaseAnimating13GetAttachmentEiR6VectorR6QAngle"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x53\x8D\x2A\x2A\x2A\x52\x8B"
+						/* ? ? ? ? ? ? ? ? 83 ? ? 53 8D ? ? ? 52 8B */
+			}
+		}
+	}
+}

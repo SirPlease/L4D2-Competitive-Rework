@@ -13,7 +13,7 @@
 		// ====================================================================================================
 		"Functions"
 		{
-			"CTankClaw::DoSwing"
+			"L4DD::CTankClaw::DoSwing"
 			{
 				"signature"		"CTankClaw::DoSwing"
 				"callconv"		"thiscall"
@@ -21,7 +21,7 @@
 				"this"			"entity"
 			}
 
-			"CTankClaw::GroundPound"
+			"L4DD::CTankClaw::GroundPound"
 			{
 				"signature"		"CTankClaw::GroundPound"
 				"callconv"		"thiscall"
@@ -29,7 +29,7 @@
 				"this"			"entity"
 			}
 
-			"CTankClaw::OnPlayerHit"
+			"L4DD::CTankClaw::OnPlayerHit"
 			{
 				"signature"		"CTankClaw::OnPlayerHit"
 				"callconv"		"thiscall"
@@ -48,7 +48,7 @@
 				}
 			}
 
-			"CTankRock::Detonate"
+			"L4DD::CTankRock::Detonate"
 			{
 				"signature"		"CTankRock::Detonate"
 				"callconv"		"thiscall"
@@ -56,7 +56,7 @@
 				"this"			"entity"
 			}
 
-			"CTankRock::OnRelease"
+			"L4DD::CTankRock::OnRelease"
 			{
 				"signature"		"CTankRock::OnRelease"
 				"callconv"		"thiscall"
@@ -83,7 +83,7 @@
 				}
 			}
 
-			"CDeathFallCamera::Enable"
+			"L4DD::CDeathFallCamera::Enable"
 			{
 				"signature"		"CDeathFallCamera::Enable"
 				"callconv"		"thiscall"
@@ -98,7 +98,7 @@
 				}
 			}
 
-			"CTerrorPlayer::Fling"
+			"L4DD::CTerrorPlayer::Fling"
 			{
 				"signature"		"CTerrorPlayer::Fling"
 				"callconv"		"thiscall"
@@ -125,7 +125,7 @@
 				}
 			}
 
-			"CTerrorPlayer::OnFalling"
+			"L4DD::CTerrorPlayer::OnFalling"
 			{
 				"signature"		"CTerrorPlayer::OnFalling"
 				"callconv"		"thiscall"
@@ -133,7 +133,7 @@
 				"this"			"entity"
 			}
 
-			"Tank::EnterStasis"
+			"L4DD::Tank::EnterStasis"
 			{
 				"signature"		"Tank::EnterStasis"
 				"callconv"		"thiscall"
@@ -141,7 +141,7 @@
 				"this"			"entity"
 			}
 
-			"Tank::LeaveStasis"
+			"L4DD::Tank::LeaveStasis"
 			{
 				"signature"		"Tank::LeaveStasis"
 				"callconv"		"thiscall"
@@ -149,7 +149,7 @@
 				"this"			"entity"
 			}
 
-			"ZombieManager::GetRandomPZSpawnPosition"
+			"L4DD::ZombieManager::GetRandomPZSpawnPosition"
 			{
 				"signature"		"ZombieManager::GetRandomPZSpawnPosition"
 				"callconv"		"thiscall"
@@ -176,11 +176,11 @@
 				}
 			}
 
-			"ZombieManager::SpawnSpecial"
+			"L4DD::ZombieManager::SpawnSpecial"
 			{
 				"signature"		"ZombieManager::SpawnSpecial"
 				"callconv"		"thiscall"
-				"return"		"int"
+				"return"		"cbaseentity"
 				"this"			"ignore"
 				"arguments"
 				{
@@ -199,11 +199,11 @@
 				}
 			}
 
-			"ZombieManager::SpawnTank"
+			"L4DD::ZombieManager::SpawnTank"
 			{
 				"signature"		"ZombieManager::SpawnTank"
 				"callconv"		"thiscall"
-				"return"		"int"
+				"return"		"cbaseentity"
 				"this"			"ignore"
 				"arguments"
 				{
@@ -218,11 +218,11 @@
 				}
 			}
 
-			"ZombieManager::SpawnWitch"
+			"L4DD::ZombieManager::SpawnWitch"
 			{
 				"signature"		"ZombieManager::SpawnWitch"
 				"callconv"		"thiscall"
-				"return"		"int"
+				"return"		"cbaseentity"
 				"this"			"ignore"
 				"arguments"
 				{
@@ -237,11 +237,11 @@
 				}
 			}
 
-			"ZombieManager::SpawnWitchBride"
+			"L4DD::ZombieManager::SpawnWitchBride"
 			{
 				"signature"		"ZombieManager::SpawnWitchBride"
 				"callconv"		"thiscall"
-				"return"		"int"
+				"return"		"cbaseentity"
 				"this"			"ignore"
 				"arguments"
 				{
@@ -256,7 +256,7 @@
 				}
 			}
 
-			"CDirector::OnMobRushStart"
+			"L4DD::CDirector::OnMobRushStart"
 			{
 				"signature"		"CDirector::OnMobRushStart"
 				"callconv"		"thiscall"
@@ -264,7 +264,7 @@
 				"this"			"ignore"
 			}
 
-			"ZombieManager::SpawnITMob"
+			"L4DD::ZombieManager::SpawnITMob"
 			{
 				"signature"		"ZombieManager::SpawnITMob"
 				"callconv"		"thiscall"
@@ -279,7 +279,7 @@
 				}
 			}
 
-			"ZombieManager::SpawnMob"
+			"L4DD::ZombieManager::SpawnMob"
 			{
 				"signature"		"ZombieManager::SpawnMob"
 				"callconv"		"thiscall"
@@ -294,7 +294,7 @@
 				}
 			}
 
-			"CTerrorPlayer::OnEnterGhostState"
+			"L4DD::CTerrorPlayer::OnEnterGhostState"
 			{
 				"signature"		"CTerrorPlayer::OnEnterGhostState"
 				"callconv"		"thiscall"
@@ -302,7 +302,7 @@
 				"this"			"entity"
 			}
 
-			"CDirector::IsTeamFull"
+			"L4DD::CDirector::IsTeamFull"
 			{
 				"signature"		"CDirector::IsTeamFull"
 				"callconv"		"thiscall"
@@ -320,7 +320,7 @@
 				}
 			}
 
-			"CTerrorGameRules::ClearTeamScores"
+			"L4DD::CTerrorGameRules::ClearTeamScores"
 			{
 				"signature"		"CTerrorGameRules::ClearTeamScores"
 				"callconv"		"thiscall"
@@ -335,7 +335,7 @@
 				}
 			}
 
-			"CTerrorGameRules::SetCampaignScores"
+			"L4DD::CTerrorGameRules::SetCampaignScores"
 			{
 				"signature"		"CTerrorGameRules::SetCampaignScores"
 				"callconv"		"thiscall"
@@ -354,7 +354,7 @@
 				}
 			}
 
-			"CDirector::OnFirstSurvivorLeftSafeArea"
+			"L4DD::CDirector::OnFirstSurvivorLeftSafeArea"
 			{
 				"signature"		"CDirector::OnFirstSurvivorLeftSafeArea"
 				"callconv"		"thiscall"
@@ -369,7 +369,7 @@
 				}
 			}
 
-			"CTerrorPlayer::GetCrouchTopSpeed"
+			"L4DD::CTerrorPlayer::GetCrouchTopSpeed"
 			{
 				"signature"		"CTerrorPlayer::GetCrouchTopSpeed"
 				"callconv"		"thiscall"
@@ -377,7 +377,7 @@
 				"this"			"entity"
 			}
 
-			"CTerrorPlayer::GetRunTopSpeed"
+			"L4DD::CTerrorPlayer::GetRunTopSpeed"
 			{
 				"signature"		"CTerrorPlayer::GetRunTopSpeed"
 				"callconv"		"thiscall"
@@ -385,7 +385,7 @@
 				"this"			"entity"
 			}
 
-			"CTerrorPlayer::GetWalkTopSpeed"
+			"L4DD::CTerrorPlayer::GetWalkTopSpeed"
 			{
 				"signature"		"CTerrorPlayer::GetWalkTopSpeed"
 				"callconv"		"thiscall"
@@ -393,7 +393,7 @@
 				"this"			"entity"
 			}
 
-			"CDirector::GetScriptValueInt"
+			"L4DD::CDirector::GetScriptValueInt"
 			{
 				"signature"		"CDirector::GetScriptValueInt"
 				"callconv"		"thiscall"
@@ -412,7 +412,7 @@
 				}
 			}
 
-			"CDirector::GetScriptValueFloat"
+			"L4DD::CDirector::GetScriptValueFloat"
 			{
 				"signature"		"CDirector::GetScriptValueFloat"
 				"callconv"		"thiscall"
@@ -431,7 +431,7 @@
 				}
 			}
 
-			"CDirector::GetScriptValueString"
+			"L4DD::CDirector::GetScriptValueString"
 			{
 				"signature"		"CDirector::GetScriptValueString"
 				"callconv"		"thiscall"
@@ -458,7 +458,7 @@
 				}
 			}
 
-			"CTerrorGameRules::HasConfigurableDifficultySetting"
+			"L4DD::CTerrorGameRules::HasConfigurableDifficultySetting"
 			{
 				"signature"		"CTerrorGameRules::HasConfigurableDifficultySetting"
 				"callconv"		"thiscall"
@@ -466,7 +466,7 @@
 				"this"			"ignore"
 			}
 
-			"CTerrorGameRules::GetSurvivorSet"
+			"L4DD::CTerrorGameRules::GetSurvivorSet"
 			{
 				"signature"		"CTerrorGameRules::GetSurvivorSet"
 				"callconv"		"thiscall"
@@ -474,7 +474,7 @@
 				"this"			"ignore"
 			}
 
-			"CTerrorGameRules::FastGetSurvivorSet"
+			"L4DD::CTerrorGameRules::FastGetSurvivorSet"
 			{
 				"signature"		"CTerrorGameRules::FastGetSurvivorSet"
 				"callconv"		"thiscall"
@@ -482,7 +482,7 @@
 				"this"			"ignore"
 			}
 
-			"CDirectorVersusMode::GetMissionVersusBossSpawning"
+			"L4DD::CDirectorVersusMode::GetMissionVersusBossSpawning"
 			{
 				"signature"		"CDirectorVersusMode::GetMissionVersusBossSpawning"
 				"callconv"		"thiscall"
@@ -513,7 +513,7 @@
 				}
 			}
 
-			"ZombieManager::ReplaceTank"
+			"L4DD::ZombieManager::ReplaceTank"
 			{
 				"signature"		"ZombieManager::ReplaceTank"
 				"callconv"		"thiscall"
@@ -532,7 +532,7 @@
 				}
 			}
 
-			"CDirector::TryOfferingTankBot"
+			"L4DD::CDirector::TryOfferingTankBot"
 			{
 				"signature"		"CDirector::TryOfferingTankBot"
 				"callconv"		"thiscall"
@@ -551,7 +551,7 @@
 				}
 			}
 
-			"CThrow::ActivateAbililty"
+			"L4DD::CThrow::ActivateAbililty"
 			{
 				"signature"		"CThrow::ActivateAbililty"
 				"callconv"		"thiscall"
@@ -559,7 +559,7 @@
 				"this"			"entity"
 			}
 
-			"CBaseAnimating::SelectWeightedSequence"
+			"L4DD::CBaseAnimating::SelectWeightedSequence"
 			{
 				"signature"		"CBaseAnimating::SelectWeightedSequence"
 				"callconv"		"thiscall"
@@ -574,7 +574,7 @@
 				}
 			}
 
-			"CTerrorMeleeWeapon::GetDamageForVictim"
+			"L4DD::CTerrorMeleeWeapon::GetDamageForVictim"
 			{
 				"signature"		"CTerrorMeleeWeapon::GetDamageForVictim"
 				"callconv"		"thiscall"
@@ -589,7 +589,7 @@
 				}
 			}
 
-			"CTerrorMeleeWeapon::StartMeleeSwing"
+			"L4DD::CTerrorMeleeWeapon::StartMeleeSwing"
 			{
 				"signature"		"CTerrorMeleeWeapon::StartMeleeSwing"
 				"callconv"		"thiscall"
@@ -609,7 +609,7 @@
 			}
 
 			/* Works for Linux L4D2 but not L4D1, currently leaving out
-			"CDirectorScriptedEventManager::SendInRescueVehicle"
+			"L4DD::CDirectorScriptedEventManager::SendInRescueVehicle"
 			{
 				"signature"		"CDirectorScriptedEventManager::SendInRescueVehicle"
 				"callconv"		"cdecl"
@@ -632,7 +632,7 @@
 				}
 			}
 			*/
-			"CDirectorScriptedEventManager::SendInRescueVehicle"
+			"L4DD::CDirectorScriptedEventManager::SendInRescueVehicle"
 			{
 				"signature"		"CDirectorScriptedEventManager::SendInRescueVehicle"
 				"callconv"		"thiscall"
@@ -640,7 +640,7 @@
 				"this"			"ignore"
 			}
 
-			"CDirectorScriptedEventManager::ChangeFinaleStage"
+			"L4DD::CDirectorScriptedEventManager::ChangeFinaleStage"
 			{
 				"signature"		"CDirectorScriptedEventManager::ChangeFinaleStage"
 				"callconv"		"thiscall"
@@ -659,7 +659,7 @@
 				}
 			}
 
-			"CDirectorVersusMode::EndVersusModeRound"
+			"L4DD::CDirectorVersusMode::EndVersusModeRound"
 			{
 				"signature"		"CDirectorVersusMode::EndVersusModeRound"
 				"callconv"		"thiscall"
@@ -674,7 +674,7 @@
 				}
 			}
 
-			"CTerrorPlayer::OnLedgeGrabbed"
+			"L4DD::CTerrorPlayer::OnLedgeGrabbed"
 			{
 				"signature"		"CTerrorPlayer::OnLedgeGrabbed"
 				"callconv"		"thiscall"
@@ -689,7 +689,7 @@
 				}
 			}
 
-			"CTerrorPlayer::OnRevived"
+			"L4DD::CTerrorPlayer::OnRevived"
 			{
 				"signature"		"CTerrorPlayer::OnRevived"
 				"callconv"		"thiscall"
@@ -697,7 +697,7 @@
 				"this"			"entity"
 			}
 
-			"CTerrorPlayer::OnStaggered"
+			"L4DD::CTerrorPlayer::OnStaggered"
 			{
 				"signature"		"CTerrorPlayer::OnStaggered"
 				"callconv"		"thiscall"
@@ -716,7 +716,7 @@
 				}
 			}
 
-			"CTerrorPlayer::OnShovedBySurvivor"
+			"L4DD::CTerrorPlayer::OnShovedBySurvivor"
 			{
 				"signature"		"CTerrorPlayer::OnShovedBySurvivor"
 				"callconv"		"thiscall"
@@ -735,7 +735,7 @@
 				}
 			}
 
-			"CTerrorWeapon::OnHit"
+			"L4DD::CTerrorWeapon::OnHit"
 			{
 				"signature"		"CTerrorWeapon::OnHit"
 				"callconv"		"thiscall"
@@ -758,7 +758,7 @@
 				}
 			}
 
-			"CTerrorPlayer::OnShovedByPounceLanding"
+			"L4DD::CTerrorPlayer::OnShovedByPounceLanding"
 			{
 				"signature"		"CTerrorPlayer::OnShovedByPounceLanding"
 				"callconv"		"thiscall"
@@ -777,7 +777,7 @@
 				}
 			}
 
-			"CInferno::Spread"
+			"L4DD::CInferno::Spread"
 			{
 				"signature"		"CInferno::Spread"
 				"callconv"		"thiscall"
@@ -792,7 +792,7 @@
 				}
 			}
 
-			"CPipeBombProjectile::Create"
+			"L4DD::CPipeBombProjectile::Create"
 			{
 				"signature"		"CPipeBombProjectile::Create"
 				"callconv"		"cdecl"
@@ -826,7 +826,7 @@
 				}
 			}
 
-			"CTerrorPlayer::Extinguish"
+			"L4DD::CTerrorPlayer::Extinguish"
 			{
 				"signature"		"CTerrorPlayer::Extinguish"
 				"callconv"		"thiscall"
@@ -834,7 +834,7 @@
 				"this"			"entity"
 			}
 
-			"CTerrorPlayer::OnPouncedOnSurvivor"
+			"L4DD::CTerrorPlayer::OnPouncedOnSurvivor"
 			{
 				"signature"		"CTerrorPlayer::OnPouncedOnSurvivor"
 				"callconv"		"thiscall"
@@ -849,7 +849,7 @@
 				}
 			}
 
-			"CTerrorPlayer::GrabVictimWithTongue"
+			"L4DD::CTerrorPlayer::GrabVictimWithTongue"
 			{
 				"signature"		"CTerrorPlayer::GrabVictimWithTongue"
 				"callconv"		"thiscall"
@@ -864,7 +864,7 @@
 				}
 			}
 
-			"CTerrorPlayer::OnLeptOnSurvivor"
+			"L4DD::CTerrorPlayer::OnLeptOnSurvivor"
 			{
 				"signature"		"CTerrorPlayer::OnLeptOnSurvivor"
 				"callconv"		"thiscall"
@@ -879,7 +879,7 @@
 				}
 			}
 
-			"CTerrorPlayer::OnStartCarryingVictim"
+			"L4DD::CTerrorPlayer::OnStartCarryingVictim"
 			{
 				"signature"		"CTerrorPlayer::OnStartCarryingVictim"
 				"callconv"		"thiscall"
@@ -894,7 +894,7 @@
 				}
 			}
 
-			"CTerrorPlayer::OnVomitedUpon"
+			"L4DD::CTerrorPlayer::OnVomitedUpon"
 			{
 				"signature"		"CTerrorPlayer::OnVomitedUpon"
 				"callconv"		"thiscall"
@@ -913,7 +913,7 @@
 				}
 			}
 
-			"CTerrorPlayer::OnHitByVomitJar"
+			"L4DD::CTerrorPlayer::OnHitByVomitJar"
 			{
 				"signature"		"CTerrorPlayer::OnHitByVomitJar"
 				"callconv"		"thiscall"
@@ -928,7 +928,7 @@
 				}
 			}
 
-			"CTerrorPlayer::MaterializeFromGhost"
+			"L4DD::CTerrorPlayer::MaterializeFromGhost"
 			{
 				"signature"		"CTerrorPlayer::MaterializeFromGhost"
 				"callconv"		"thiscall"
@@ -936,7 +936,7 @@
 				"this"			"entity"
 			}
 
-			"SurvivorBot::UseHealingItems"
+			"L4DD::SurvivorBot::UseHealingItems"
 			{
 				"signature"		"SurvivorBot::UseHealingItems"
 				"callconv"		"thiscall"
@@ -955,7 +955,7 @@
 				}
 			}
 
-			"SurvivorBot::FindScavengeItem"
+			"L4DD::SurvivorBot::FindScavengeItem"
 			{
 				"signature"		"SurvivorBot::FindScavengeItem"
 				"callconv"		"thiscall"
@@ -970,7 +970,7 @@
 				}
 			}
 
-			"BossZombiePlayerBot::ChooseVictim"
+			"L4DD::BossZombiePlayerBot::ChooseVictim"
 			{
 				"signature"		"BossZombiePlayerBot::ChooseVictim"
 				"callconv"		"thiscall"
@@ -993,7 +993,7 @@
 				}
 			}
 
-			"CInsectSwarm::CanHarm"
+			"L4DD::CInsectSwarm::CanHarm"
 			{
 				"signature"		"CInsectSwarm::CanHarm"
 				"callconv"		"thiscall"
@@ -1008,7 +1008,7 @@
 				}
 			}
 
-			"CBreakableProp::Break"
+			"L4DD::CBreakableProp::Break"
 			{
 				"signature"		"CBreakableProp::Break"
 				"callconv"		"thiscall"
@@ -1027,7 +1027,7 @@
 				}
 			}
 
-			"CGasCan::Event_Killed"
+			"L4DD::CGasCan::Event_Killed"
 			{
 				"signature"		"CGasCan::Event_Killed"
 				"callconv"		"thiscall"
@@ -1042,7 +1042,7 @@
 				}
 			}
 
-			"CGasCan::OnActionComplete"
+			"L4DD::CGasCan::OnActionComplete"
 			{
 				"signature"		"CGasCan::OnActionComplete"
 				"callconv"		"thiscall"
@@ -1061,7 +1061,7 @@
 				}
 			}
 
-			"OnVocalize"
+			"L4DD::OnVocalize"
 			{
 				"signature"		"Vocalize"
 				"callconv"		"thiscall"
@@ -1085,7 +1085,7 @@
 			}
 
 			// Addons Disabler
-			"CBaseServer::FillServerInfo"
+			"L4DD::CBaseServer::FillServerInfo"
 			{
 				"signature"		"CBaseServer::FillServerInfo"
 				"callconv"		"thiscall"
@@ -1103,7 +1103,7 @@
 
 
 			// UNUSED
-			"InfectedShoved::OnShoved"
+			"L4DD::InfectedShoved::OnShoved"
 			{
 				"signature"		"InfectedShoved::OnShoved"
 				"callconv"		"thiscall"
@@ -1122,7 +1122,7 @@
 				}
 			}
 
-			"CBasePlayer::WaterMove"
+			"L4DD::CBasePlayer::WaterMove"
 			{
 				"signature"		"CBasePlayer::WaterMove"
 				"callconv"		"thiscall"
@@ -1858,8 +1858,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN5Music4PlayEPKcifbb"
-				"windows"	"\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x83\x2A\x2A\x00\x53\x8B\x2A\x2A\x56\x57"
-				/* 55 8B ? 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? A1 ? ? ? ? 83 ? ? 00 53 8B ? ? 56 57 */
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x83\x2A\x2A\x00\x53\x8B\x2A\x2A\x56\x57"
+				/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? A1 ? ? ? ? 83 ? ? 00 53 8B ? ? 56 57 */
 				/* Search "Invalid emit entity index: %i\n" */
 			}
 
@@ -1966,10 +1966,10 @@
 			}
 
 			/*
-			*  VomitJarProjectile::Create(int, int, int, int, CBaseEntity *)
+			*  CVomitJarProjectile::Create(int, int, int, int, CBaseEntity *)
 			*  Search: "VomitJar projectile spawned at %f %f %f"
 			*/
-			"VomitJarProjectile::Create"
+			"CVomitJarProjectile::Create"
 			{
 				"library"	"server"
 				"linux"		"@_ZN19CVomitJarProjectile6CreateERK6VectorRK6QAngleS2_S2_P20CBaseCombatCharacter"
@@ -2303,8 +2303,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13ZombieManager9SpawnTankERK6VectorRK6QAngle"
-				"windows"	"\x55\x8B\xEC\x57\x8B\xF9\x8B\x0D\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x85\xC0\x78\x2A\x8B\x0D\x2A\x2A\x2A\x2A\x39"
-				/* 55 8B EC 57 8B F9 8B 0D ? ? ? ? E8 ? ? ? ? 85 C0 78 ? 8B 0D ? ? ? ? 39 */
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x0D\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x85\xC0\x78\x2A\x8B\x0D\x2A\x2A\x2A\x2A\x39\x2A\x2A\x2A\x2A\x2A\x7C\x2A\x33\x2A\x5F"
+				/* ? ? ? ? ? ? 8B 0D ? ? ? ? E8 ? ? ? ? 85 C0 78 ? 8B 0D ? ? ? ? 39 ? ? ? ? ? 7C ? 33 ? 5F */
 			}
 
 			/*
@@ -3651,17 +3651,6 @@
 				 * Function below is "CTerrorGameRules::TrackPlayerZombieDamage". This calls target.
 				 * Probably correct, Win looks different to Nix.
 				*/
-			}
-
-			/*
-			 * SurvivorBot::IsReachable(CBaseEntity *)const
-			 */
-			"SurvivorBot::IsReachable"
-			{
-				"library"	"server"
-				"linux"		"@_ZNK11SurvivorBot11IsReachableEP11CBaseEntity"
-				"windows"	"\xD9\x2A\x2A\x2A\x2A\x2A\x56\x6A\x2A\x6A\x2A\x6A\x2A\x51\x8B\xF1\xD9"
-				/* D9 ? ? ? ? ? 56 6A ? 6A ? 6A ? 51 8B F1 D9 */
 			}
 
 			/*
