@@ -2,7 +2,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
-#include <left4dhooks_stocks>
+#include <left4dhooks>
 
 #define PLUGIN_VERSION "2.4"
 
@@ -16,7 +16,7 @@ public Plugin myinfo =
 }
 
 ArrayList
-	g_aReplacePair;
+	g_aHOTPair;
 
 bool
 	g_bLeft4Dead2;
@@ -51,7 +51,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
-	g_aReplacePair = new ArrayList(2);
+	g_aHOTPair = new ArrayList(2);
 	
 	char buffer[16];
 	pain_pills_health_value = FindConVar("pain_pills_health_value");
@@ -88,7 +88,7 @@ public void OnPluginEnd()
 
 public void OnMapStart()
 {
-	g_aReplacePair.Clear();
+	g_aHOTPair.Clear();
 }
 
 public void Player_BotReplace_Event(Event event, const char[] name, bool dontBroadcast)
@@ -103,29 +103,20 @@ public void Bot_PlayerReplace_Event(Event event, const char[] name, bool dontBro
 
 void HandleSurvivorTakeover(int replacee, int replacer)
 {
-	// if the replacee happened to be a replacer, override it.
-	int index = g_aReplacePair.FindValue(replacee, 1);
-	if (index == -1)
+	// There can be multiple HOTs happening at the same time
+	// so cannot just use FindValue here.
+	int size = g_aHOTPair.Length;
+	for (int i = 0; i < size; ++i)
 	{
-		index = g_aReplacePair.Push(replacee);
+		if (replacee == g_aHOTPair.Get(i, 0))
+		{
+			g_aHOTPair.Set(i, replacer, 0);
+			
+			DataPack dp = g_aHOTPair.Get(i, 1);
+			dp.Reset();
+			dp.WriteCell(replacer);
+		}
 	}
-	
-	// if the replacer retakes his character, let it go :)
-	else if (replacer == g_aReplacePair.Get(index, 0))
-	{
-		g_aReplacePair.Erase(index);
-		return;
-	}
-	
-	g_aReplacePair.Set(index, replacer, 1);
-	
-	CreateTimer(0.1, Timer_CleanUpLeftover, replacee, TIMER_FLAG_NO_MAPCHANGE);
-}
-
-public Action Timer_CleanUpLeftover(Handle timer, int userid)
-{
-	int index = g_aReplacePair.FindValue(userid, 0);
-	if (index != -1) g_aReplacePair.Erase(index);
 }
 
 public void PillsUsed_Event(Event event, const char[] name, bool dontBroadcast)
@@ -170,6 +161,8 @@ void HealEntityOverTime(int userid, float interval, int increment, int total)
 		myDP.WriteCell(increment);
 		myDP.WriteCell(total-increment);
 		myDP.WriteCell(iMaxHP);
+		
+		g_aHOTPair.Set(g_aHOTPair.Push(userid), myDP, 1);
 	}
 }
 
@@ -177,59 +170,45 @@ public Action __HOT_ACTION(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	
-	DataPackPos pos = pack.Position;
 	int userid = pack.ReadCell();
 	int client = GetClientOfUserId(userid);
 	
-	// disconnection, team flipping or team changing
-	if (!client || GetClientTeam(client) != 2)
+	if (client && IsPlayerAlive(client) && !L4D_IsPlayerIncapacitated(client) && !L4D_IsPlayerHangingFromLedge(client))
 	{
-		// search for any replacement
-		int index = g_aReplacePair.FindValue(userid, 0);
-		if (index != -1)
+		int increment = pack.ReadCell();
+		DataPackPos pos = pack.Position;
+		int remaining = pack.ReadCell();
+		int maxhp = pack.ReadCell();
+		
+		//PrintToChatAll("HOT: %N %d %d %d", client, increment, remaining, maxhp);
+		
+		if (increment < remaining)
 		{
-			userid = g_aReplacePair.Get(index, 1);
-			g_aReplacePair.Erase(index);
+			__HealTowardsMax(client, increment, maxhp);
 			pack.Position = pos;
-			pack.WriteCell(userid);
+			pack.WriteCell(remaining-increment);
 			
-			client = GetClientOfUserId(userid);
+			return Plugin_Continue;
+		}
+		else
+		{
+			__HealTowardsMax(client, remaining, maxhp);
 		}
 	}
 	
-	if (!client || !IsPlayerAlive(client) || L4D_IsPlayerIncapacitated(client) || L4D_IsPlayerHangingFromLedge(client))
-	{
-		return Plugin_Stop;
-	}
-	
-	int increment = pack.ReadCell();
-	pos = pack.Position;
-	int remaining = pack.ReadCell();
-	int maxhp = pack.ReadCell();
-	
-	//PrintToChatAll("HOT: %d %d %d %d", client, increment, remaining, maxhp);
-	
-	if (increment >= remaining)
-	{
-		__HealTowardsMax(client, remaining, maxhp);
-		return Plugin_Stop;
-	}
-	__HealTowardsMax(client, increment, maxhp);
-	pack.Position = pos;
-	pack.WriteCell(remaining-increment);
-	
-	return Plugin_Continue;
+	g_aHOTPair.Erase(g_aHOTPair.FindValue(pack, 1));
+	return Plugin_Stop;
 }
 
 void __HealTowardsMax(int client, int amount, int max)
 {
-	float hb = GetEntPropFloat(client, Prop_Send, "m_healthBuffer") + amount;
+	float hb = L4D_GetTempHealth(client) + amount;
 	float overflow = hb + GetClientHealth(client) - max;
 	if (overflow > 0)
 	{
 		hb -= overflow;
 	}
-	SetEntPropFloat(client, Prop_Send, "m_healthBuffer", hb);
+	L4D_SetTempHealth(client, hb);
 }
 
 
