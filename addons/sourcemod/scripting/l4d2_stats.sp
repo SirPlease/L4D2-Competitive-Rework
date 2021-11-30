@@ -418,8 +418,8 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 					}
 				}*/
 				
-				CPrintToChatAll("{green}★ {olive}%N {default}teamskeeted {olive}%N {default}for {blue}%d damage {default}in {blue}%d {default}shot%c. Assisted by: {olive}%s", \
-															attacker, victim, damage, shots, plural, assister_string);
+				CPrintToChatAll("{green}★ {olive}%N {default}teamskeeted {olive}%N {default}for {blue}%d damage {default}in {blue}%d {default}shot%s. Assisted by: {olive}%s", \
+															attacker, victim, damage, shots, shots == 1 ? "" : "s", assister_string);
 			} else {
 				/*CPrintToChat(victim, "{green}★ {default}You were skeeted by {olive}%N {default}in {blue}%d shot%c", attacker, shots, plural);
 				
@@ -432,8 +432,8 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 					}
 				}*/
 				
-				CPrintToChatAll("{green}★ {olive}%N {default}skeeted {olive}%N {default}in {blue}%d {default}shot%c.", \
-															attacker, victim, shots, plural);
+				CPrintToChatAll("{green}★ {olive}%N {default}skeeted {olive}%N {default}in {blue}%d {default}shot%s", \
+															attacker, victim, shots, shots == 1 ? "" : "s");
 			}
 		}
 	}
