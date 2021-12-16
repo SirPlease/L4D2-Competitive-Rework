@@ -909,4 +909,37 @@
 		"start_loc_a"	"-3616 640 224"
 		"start_loc_b"	"-2912 192 0"
 	}
+	"dkr_m1_motel"
+	{
+		"start_loc_a"	"10152 -5260 -183"
+		"start_loc_b"	"11392 -3648 -664"
+		"end_loc_a"	"-8440 680 -876"
+		"end_loc_b"	"-8008 864 -1008"
+	}
+	"dkr_m2_carnival"
+	{
+		"start_loc_a"	"8841 424 18"
+		"start_loc_b"	"9273 608 -124"
+		"end_loc_a"	"-1572 6484 272"
+		"end_loc_b"	"-1284 7664 -72"
+	}
+	"dkr_m3_tunneloflove"
+	{
+		"start_loc_a"	"1168 -5608 220"
+		"start_loc_b"	"1456 -4428 -124"
+		"end_loc_a"	"-3696 5784 80"
+		"end_loc_b"	"-3180 5964 -60"
+	}
+	"dkr_m4_ferris"
+	{
+		"start_loc_a"	"-2703 -11132 206"
+		"start_loc_b"	"-2187 -10952 66"
+		"end_loc_a"	"-3968 3916 -20"
+		"end_loc_b"	"-3084 4720 -344"
+	}
+	"dkr_m5_stadium"
+	{
+		"start_loc_a"	"-3968 3916 -20"
+		"start_loc_b"	-3084 4720 -344"
+	}
 }
