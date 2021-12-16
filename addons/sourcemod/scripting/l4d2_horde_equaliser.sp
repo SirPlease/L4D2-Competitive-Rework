@@ -34,6 +34,7 @@ int
 
 bool
 	announcedInChat,
+	announcedEventEnd,
 	checkpointAnnounced[MAX_CHECKPOINTS];
 
 public Plugin myinfo = 
@@ -95,6 +96,7 @@ public void RoundStartEvent(Event hEvent, const char[] name, bool dontBroadcast)
 	commonTotal = 0;
 	lastCheckpoint = 0;
 	announcedInChat = false;
+	announcedEventEnd = false;
 	for (int i = 0; i < MAX_CHECKPOINTS; i++) {
 		checkpointAnnounced[i] = false;
 	}
@@ -111,6 +113,10 @@ public void OnEntityCreated(int entity, const char[] classname)
 		
 		// Our job here is done
 		if (commonTotal >= commonLimit) {
+			if (!announcedEventEnd){
+				CPrintToChatAll("<{olive}Horde{default}> {red}No {default}common remaining!");
+				announcedEventEnd = true;
+			}
 			return;
 		}
 		

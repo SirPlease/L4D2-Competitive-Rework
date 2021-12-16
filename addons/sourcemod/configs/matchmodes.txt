@@ -49,6 +49,25 @@
 			"name" "Promod Elite 1.1"
 		}
 	}
+	"Acemod Revised Configs"
+	{
+		"acemodr"
+		{
+			"name" "Acemod R-V1"
+		}
+		"acer3v3"
+		{
+			"name" "3v3 Acemod R"
+		}
+		"acer2v2"
+		{
+			"name" "2v2 Acemod R"
+		}
+		"acer1v1"
+		{
+			"name" "1v1 Acemod R"
+		}
+	}
 	"EQ Configs"
 	{
 		"eq"
