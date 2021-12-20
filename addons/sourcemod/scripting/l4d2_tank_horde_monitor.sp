@@ -173,6 +173,12 @@ public Action L4D_OnSpawnMob(int &amount)
 			fPushAmount = 1.0;
 		}
 
+		if (!announcedHordeMax && fPushAmount == 1.0){
+			CPrintToChatAll("<{olive}Horde{default}> Survivors have pushed too far, horde is now at {red}max{default}!");
+			announcedHordeMax = true;
+			return Plugin_Continue;
+		}
+
 		int iNewAmount = iNewAmount = RoundToNearest(amount * fPushAmount);
 
 		SetPendingMobCount(iNewAmount);
@@ -182,11 +188,6 @@ public Action L4D_OnSpawnMob(int &amount)
 			TimerCleanUp();
 			CPrintToChatAll("<{olive}Horde{default}> Survivors are pushing the tank, {green}ramping up{default} the horde as they push!");
 			announcedHordeResume = true;
-		}
-
-		if (!announcedHordeMax && fPushAmount == 1.0){
-			CPrintToChatAll("<{olive}Horde{default}> Survivors have pushed too far, horde is now at {red}max{default}!");
-			announcedHordeMax = true;
 		}
 
 		return Plugin_Handled;
