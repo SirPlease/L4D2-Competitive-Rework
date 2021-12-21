@@ -107,25 +107,25 @@ public void TankSpawn(Event event, const char[] name, bool dontBroadcast)
 {
 	if (!tankInPlay){
 		tankInPlay = true;
-	}
-	
-	// Is infinite event active
-	if (IsInfiniteHordeActive()){
-		// Find current highest flow, and where the bypass point is
-		fFurthestFlow = L4D2_GetFurthestSurvivorFlow();
-		fBypassFlow = fFurthestFlow + g_hBypassFlowDistance.FloatValue;
+		
+		// Is infinite event active
+		if (IsInfiniteHordeActive()){
+			// Find current highest flow, and where the bypass point is
+			fFurthestFlow = L4D2_GetFurthestSurvivorFlow();
+			fBypassFlow = fFurthestFlow + g_hBypassFlowDistance.FloatValue;
 
-		float fProgressFlowPercent = GetFlowUntilBypass(fFurthestFlow, fBypassFlow);
-		fLastWarningPrint = fProgressFlowPercent;
+			float fProgressFlowPercent = GetFlowUntilBypass(fFurthestFlow, fBypassFlow);
+			fLastWarningPrint = fProgressFlowPercent;
 
-		// Tell players that horde will stop
-		if (!announcedTankSpawn){
-			CPrintToChatAll("<{olive}Horde{default}> Horde has {blue}paused{default} due to tank in play! Progressing by {blue}%0.1f%%{default} will start the horde.", fProgressFlowPercent);
-			announcedTankSpawn = true;
+			// Tell players that horde will stop
+			if (!announcedTankSpawn){
+				CPrintToChatAll("<{olive}Horde{default}> Horde has {blue}paused{default} due to tank in play! Progressing by {blue}%0.1f%%{default} will start the horde.", fProgressFlowPercent);
+				announcedTankSpawn = true;
+			}
+
+			// Begin repeating flow checker
+			g_hFlowCheckTimer = CreateTimer(2.0, FlowCheckTimer, _, TIMER_REPEAT);
 		}
-
-		// Begin repeating flow checker
-		g_hFlowCheckTimer = CreateTimer(2.0, FlowCheckTimer, _, TIMER_REPEAT);
 	}
 }
 
