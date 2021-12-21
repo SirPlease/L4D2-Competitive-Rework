@@ -179,7 +179,7 @@ public Action L4D_OnSpawnMob(int &amount)
 			return Plugin_Continue;
 		}
 
-		int iNewAmount = iNewAmount = RoundToNearest(amount * fPushAmount);
+		int iNewAmount = RoundToNearest(amount * fPushAmount);
 
 		SetPendingMobCount(iNewAmount);
 		amount = iNewAmount;
