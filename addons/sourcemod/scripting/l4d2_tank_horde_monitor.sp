@@ -202,44 +202,49 @@ public Action L4D_OnSpawnMob(int &amount)
 	// - Not Called on z_spawn mob.
 	////////////////////////////////////
 
-	// If survivors start the event after tank has spawned, skip this section
-	if (tankInPlay && fFurthestFlow == 0.0){
-		return Plugin_Continue;
-	}
-	
-	// Adjust horde amount based on how far survivors have pushed the tank
-	// Scale original horde size as a percentage of highest achieved flow between director_tank_bypass_max_flow_travel and l4d2_tank_bypass_extra_flow
-	if (tankInPlay && IsInfiniteHordeActive()){
-		fFurthestFlow = L4D2_GetFurthestSurvivorFlow();
-		float fPushAmount = (fFurthestFlow - fBypassFlow) / (g_hBypassFlowDistance.FloatValue + g_hBypassExtraFlowDistance.FloatValue);
-
-		// Clamp values
-		if (fPushAmount < 0.0){
-			fPushAmount = 0.0;
-		} else if (fPushAmount > 1.0){
-			fPushAmount = 1.0;
-		}
-
-		// Have survivors have pushed past the extra distance we allow?
-		if (!announcedHordeMax && fPushAmount == 1.0){
-			CPrintToChatAll("<{olive}Horde{default}> Survivors have pushed too far, horde is now at {red}max{default}!");
-			announcedHordeMax = true;
+	if (tankInPlay){
+		// Use normal horde spawns if:
+		// Survivors start event after tank spawns
+		// Survivors have pushed past the extra bypass distance
+		if (fFurthestFlow == 0.0 || announcedHordeMax){
 			return Plugin_Continue;
 		}
+		
+		// Adjust horde amount based on how far survivors have pushed the tank
+		// Scale original horde size as a percentage of highest achieved flow between director_tank_bypass_max_flow_travel and l4d2_tank_bypass_extra_flow
+		if (IsInfiniteHordeActive()){
+			// Calculate how far survivors have pushed
+			fFurthestFlow = L4D2_GetFurthestSurvivorFlow();
+			float fPushAmount = (fFurthestFlow - fBypassFlow) / (g_hBypassFlowDistance.FloatValue + g_hBypassExtraFlowDistance.FloatValue);
 
-		// Have survivors pushed past the bypass point?
-		if (!announcedHordeResume){
-			CPrintToChatAll("<{olive}Horde{default}> Survivors are pushing the tank, {green}ramping up{default} the horde as they push!");
-			announcedHordeResume = true;
+			// Clamp values
+			if (fPushAmount < 0.0){
+				fPushAmount = 0.0;
+			} else if (fPushAmount > 1.0){
+				fPushAmount = 1.0;
+			}
+
+			// Have survivors pushed past the bypass point?
+			if (!announcedHordeResume){
+				CPrintToChatAll("<{olive}Horde{default}> Survivors are pushing the tank, {green}ramping up{default} the horde as they push!");
+				announcedHordeResume = true;
+			}
+
+			// Have survivors have pushed past the extra distance we allow?
+			if (!announcedHordeMax && fPushAmount == 1.0){
+				CPrintToChatAll("<{olive}Horde{default}> Survivors have pushed too far, horde is now at {red}max{default}!");
+				announcedHordeMax = true;
+				return Plugin_Continue;
+			}
+
+			// Scale amount of horde per mob with how far survivors have pushed
+			int iNewAmount = RoundToNearest(amount * fPushAmount);
+
+			SetPendingMobCount(iNewAmount);
+			amount = iNewAmount;
+
+			return Plugin_Handled;
 		}
-
-		// Scale amount of horde per mob with how far survivors have pushed
-		int iNewAmount = RoundToNearest(amount * fPushAmount);
-
-		SetPendingMobCount(iNewAmount);
-		amount = iNewAmount;
-
-		return Plugin_Handled;
 	}
 	
 	return Plugin_Continue;
