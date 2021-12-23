@@ -15,6 +15,7 @@ It will contain both much needed fixes that are simply unable to be implemented 
 * **Zonemod Retro 2.5**
 * **NextMod 1.0.5**
 * **Promod Elite 1.1**
+* **Acemod RV 1**
 * **Equilibrium 3.0c**
 * **Apex 1.1.2**
 
