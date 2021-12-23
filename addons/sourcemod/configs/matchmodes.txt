@@ -49,23 +49,23 @@
 			"name" "Promod Elite 1.1"
 		}
 	}
-	"Acemod Revised Configs"
+	"Acemod Revamped Configs"
 	{
-		"acemodr"
+		"acemodrv"
 		{
-			"name" "Acemod R-V1"
+			"name" "Acemod RV 1"
 		}
-		"amr3v3"
+		"amrv3v3"
 		{
-			"name" "3v3 Acemod R"
+			"name" "3v3 Acemod RV"
 		}
-		"amr2v2"
+		"amrv2v2"
 		{
-			"name" "2v2 Acemod R"
+			"name" "2v2 Acemod RV"
 		}
-		"amr1v1"
+		"amrv1v1"
 		{
-			"name" "1v1 Acemod R"
+			"name" "1v1 Acemod RV"
 		}
 	}
 	"EQ Configs"
