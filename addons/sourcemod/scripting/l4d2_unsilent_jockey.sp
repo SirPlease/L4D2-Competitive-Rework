@@ -172,7 +172,7 @@ public void JockeyRideEnd_NextFrame(any userid)
 
 public Action delayedJockeySound(Handle timer, any client)
 {
-	int rndPick = GetRandomInt(0, MAX_JOCKEYSOUND);
+	int rndPick = GetRandomInt(0, (sizeof(g_sJockeySound) - 1));
 	EmitSoundToAll(g_sJockeySound[rndPick], client, SNDCHAN_VOICE);
 
 	return Plugin_Continue;
