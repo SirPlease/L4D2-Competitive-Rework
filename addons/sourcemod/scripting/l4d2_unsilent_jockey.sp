@@ -36,13 +36,13 @@
 #define SNDCHAN_VOICE			2
 
 ConVar
-	hJockeyVoiceInterval;
+	hJockeyVoiceInterval = null;
 
 Handle
-	hJockeySoundTimer[MAXPLAYERS + 1];
+	hJockeySoundTimer[MAXPLAYERS + 1] = {null, ...};
 
 float
-	fJockeyVoiceInterval;
+	fJockeyVoiceInterval = 0.0;
 
 char sJockeySound[MAX_JOCKEYSOUND + 1][] =
 {
@@ -100,8 +100,7 @@ public void ConVar_Changed(ConVar convar, const char[] oldValue, const char[] ne
 public void OnMapStart()
 {
 	// Precache
-	for (int i = 0; i <= MAX_JOCKEYSOUND; i++)
-	{
+	for (int i = 0; i <= MAX_JOCKEYSOUND; i++) {
 		PrecacheSound(sJockeySound[i], true);
 	}
 }
@@ -120,17 +119,20 @@ public void PlayerSpawn_Event(Event event, const char[] name, bool dontBroadcast
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
 	// Valve
-	if (!IsClientAndInGame(client))
+	if (client < 1 || !IsClientInGame(client)) {
 		return;
+	}
 
 	// Kill the sound timer if it exists (this will also trigger if you switch to Tank)
 	ChangeJockeyTimerStatus(client, false);
 
-	if (!IsInfected(client))
+	if (GetClientTeam(client) != TEAM_INFECTED) {
 		return;
+	}
 
-	if (!IsJockey(client))
+	if (GetEntProp(client, Prop_Send, "m_zombieClass") != ZC_JOCKEY) {
 		return;
+	}
 
 	// Setup the sound interval
 	ChangeJockeyTimerStatus(client, true);
@@ -141,8 +143,9 @@ public void PlayerDeath_Event(Event event, const char[] name, bool dontBroadcast
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
 	// Valve
-	if (!IsClientAndInGame(client))
+	if (client < 1 || !IsClientInGame(client)) {
 		return;
+	}
 
 	// Kill the sound timer if it exists
 	ChangeJockeyTimerStatus(client, false);
@@ -153,8 +156,9 @@ public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
 	// Valve
-	if (!IsClientAndInGame(client))
+	if (client < 1 || !IsClientInGame(client)) {
 		return;
+	}
 
 	// Kill the sound timer if it exists
 	ChangeJockeyTimerStatus(client, false);
@@ -180,9 +184,7 @@ public void JockeyRideEnd_NextFrame(any userid)
 {
 	int client = GetClientOfUserId(userid);
 
-	if (IsClientAndInGame(client)
-		&& IsPlayerAlive(client)) {
-
+	if (client > 0 && IsClientInGame(client) && IsPlayerAlive(client)) {
 		// Resume our sound spam as the Jockey is still alive
 		ChangeJockeyTimerStatus(client, true);
 	}
@@ -197,24 +199,6 @@ public Action delayedJockeySound(Handle timer, any client)
 	EmitSoundToAll(sJockeySound[rndPick], client, SNDCHAN_VOICE);
 
 	return Plugin_Stop;
-}
-
-/* --------------------------------------
-*     Shared function(s)
-* -------------------------------------- */
-bool IsClientAndInGame(int index)
-{
-	return (index > 0 && index <= MaxClients && IsClientInGame(index));
-}
-
-bool IsInfected(int client)
-{
-	return GetClientTeam(client) == TEAM_INFECTED;
-}
-
-bool IsJockey(int client)
-{
-	return GetEntProp(client, Prop_Send, "m_zombieClass") == ZC_JOCKEY;
 }
 
 void ChangeJockeyTimerStatus(int client, bool bEnable)
