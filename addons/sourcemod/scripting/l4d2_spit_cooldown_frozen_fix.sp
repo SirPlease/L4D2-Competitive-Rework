@@ -3,13 +3,13 @@
 
 #include <sourcemod>
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1a"
 
 public Plugin myinfo = 
 {
-	name = "[L4D2] Spit Frozen Fix",
+	name = "[L4D2] Spit Cooldown Frozen Fix",
 	author = "Forgetest",
-	description = "Simple fix for spit activation being \"frozen\".",
+	description = "Simple fix for spit cooldown being \"frozen\".",
 	version = PLUGIN_VERSION,
 	url = "https://github.com/Target5150/MoYu_Server_Stupid_Plugins"
 };
@@ -29,7 +29,7 @@ void Event_AbilityUse(Event event, const char[] name, bool dontBroadcast)
 	event.GetString("ability", sAbility, sizeof(sAbility));
 	if (strcmp(sAbility[8], "spit") == 0)
 	{
-		// seems to vary from [1.160003, 1.190002] on 100t sv
+		// duration of spit animation seems to vary from [1.160003, 1.190002] on 100t sv
 		CreateTimer(1.2, Timer_CheckAbilityTimer, event.GetInt("userid"), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
