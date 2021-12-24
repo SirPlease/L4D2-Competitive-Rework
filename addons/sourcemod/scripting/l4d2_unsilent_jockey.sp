@@ -1,6 +1,4 @@
 /*
------------------------------------------------------------------------------------------------------------------------------------------------------
-
 	Changelog
 	---------
 		0.4 (Sir)
@@ -16,8 +14,6 @@
 		0.1a (Tabun)
 		- plays sound at set time after jockey spawns up
 		- but only if the jockey isn't already making noise
-
------------------------------------------------------------------------------------------------------------------------------------------------------
 */
 
 #pragma semicolon 1
@@ -33,6 +29,7 @@
 #define TEAM_INFECTED			3
 #define ZC_JOCKEY				5
 #define ZC_TANK					8
+
 #define SNDCHAN_VOICE			2
 
 ConVar
@@ -69,13 +66,10 @@ public Plugin myinfo =
 	name = "Unsilent Jockey",
 	author = "Tabun, robex, Sir",
 	description = "Makes jockeys emit sound constantly.",
-	version = "0.4",
+	version = "0.5",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-/* -------------------------------
-*      Init
-* ------------------------------- */
 public void OnPluginStart()
 {
 	// ConVars
@@ -105,9 +99,6 @@ public void OnMapStart()
 	}
 }
 
-/* -------------------------------
-*      Events
-* ------------------------------- */
 public void L4D_OnEnterGhostState(int client)
 {
 	// Simply disable the timer if the client enters ghost mode and has the timer set.
@@ -190,9 +181,6 @@ public void JockeyRideEnd_NextFrame(any userid)
 	}
 }
 
-/* -------------------------------
-*      Our Timer
-* ------------------------------- */
 public Action delayedJockeySound(Handle timer, any client)
 {
 	int rndPick = GetRandomInt(0, MAX_JOCKEYSOUND);
