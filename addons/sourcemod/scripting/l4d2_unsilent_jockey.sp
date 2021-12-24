@@ -1,19 +1,25 @@
 /*
 	Changelog
 	---------
+		0.6 (A1m`)
+			- Removed unnecessary comments, unnecessary functions and extra code.
+			- Fixed return value in repeat timer, timer must be called more than 1 time. Replaced return value from 'Plugin_Stop' to 'Plugin_Continue'.
+			- Fixed a possible problem when starting a new timer, the old one will always be deleted.
+		0.5 (A1m`)
+			-Fixed warnings when compiling a plugin on sourcemod 1.11.
 		0.4 (Sir)
-		- Refined the code a bit, simpler code.
-		- Fixes an issue with timers still existing on players.
+			- Refined the code a bit, simpler code.
+			- Fixes an issue with timers still existing on players.
 		0.3 (Sir)
-		- Updated the code to the latest syntax.
-		- Add additional checks/optimization to resolve potential and existing issues with 0.2-alpha.
+			- Updated the code to the latest syntax.
+			- Add additional checks/optimization to resolve potential and existing issues with 0.2-alpha.
 		0.2-alpha (robex)
-		- make sound always at a regular interval
+			- make sound always at a regular interval
 		0.1b (Tabun)
-		- fix error log spam
+			- fix error log spam
 		0.1a (Tabun)
-		- plays sound at set time after jockey spawns up
-		- but only if the jockey isn't already making noise
+			- plays sound at set time after jockey spawns up
+			- but only if the jockey isn't already making noise
 */
 
 #pragma semicolon 1
@@ -23,25 +29,16 @@
 #include <sdktools>
 #include <left4dhooks> // For checking respawns.
 
-#define MAX_SOUNDFILE_LENGTH	64
-#define MAX_JOCKEYSOUND			15
-
 #define TEAM_INFECTED			3
 #define ZC_JOCKEY				5
-#define ZC_TANK					8
-
-#define SNDCHAN_VOICE			2
 
 ConVar
-	hJockeyVoiceInterval = null;
+	g_hJockeyVoiceInterval = null;
 
 Handle
-	hJockeySoundTimer[MAXPLAYERS + 1] = {null, ...};
+	g_hJockeySoundTimer[MAXPLAYERS + 1] = {null, ...};
 
-float
-	fJockeyVoiceInterval = 0.0;
-
-char sJockeySound[MAX_JOCKEYSOUND + 1][] =
+public const char g_sJockeySound[][] =
 {
 	"player/jockey/voice/idle/jockey_recognize02.wav",
 	"player/jockey/voice/idle/jockey_recognize06.wav",
@@ -64,7 +61,7 @@ char sJockeySound[MAX_JOCKEYSOUND + 1][] =
 public Plugin myinfo =
 {
 	name = "Unsilent Jockey",
-	author = "Tabun, robex, Sir",
+	author = "Tabun, robex, Sir, A1m`",
 	description = "Makes jockeys emit sound constantly.",
 	version = "0.6",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
@@ -73,10 +70,7 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	// ConVars
-	hJockeyVoiceInterval = CreateConVar("sm_unsilentjockey_interval", "2.0", "Interval between forced jockey sounds.");
-
-	fJockeyVoiceInterval = hJockeyVoiceInterval.FloatValue;
-	hJockeyVoiceInterval.AddChangeHook(ConVar_Changed);
+	g_hJockeyVoiceInterval = CreateConVar("sm_unsilentjockey_interval", "2.0", "Interval between forced jockey sounds.");
 
 	// Events
 	HookEvent("player_spawn", PlayerSpawn_Event);
@@ -86,16 +80,11 @@ public void OnPluginStart()
 	HookEvent("jockey_ride_end", JockeyRideEnd_Event);
 }
 
-public void ConVar_Changed(ConVar convar, const char[] oldValue, const char[] newValue)
-{
-	fJockeyVoiceInterval = hJockeyVoiceInterval.FloatValue;
-}
-
 public void OnMapStart()
 {
 	// Precache
-	for (int i = 0; i <= MAX_JOCKEYSOUND; i++) {
-		PrecacheSound(sJockeySound[i], true);
+	for (int i = 0; i < sizeof(g_sJockeySound); i++) {
+		PrecacheSound(g_sJockeySound[i], true);
 	}
 }
 
@@ -184,19 +173,19 @@ public void JockeyRideEnd_NextFrame(any userid)
 public Action delayedJockeySound(Handle timer, any client)
 {
 	int rndPick = GetRandomInt(0, MAX_JOCKEYSOUND);
-	EmitSoundToAll(sJockeySound[rndPick], client, SNDCHAN_VOICE);
+	EmitSoundToAll(g_sJockeySound[rndPick], client, SNDCHAN_VOICE);
 
 	return Plugin_Continue;
 }
 
 void ChangeJockeyTimerStatus(int client, bool bEnable)
 {
-	if (hJockeySoundTimer[client] != null) {
-		KillTimer(hJockeySoundTimer[client], false);
-		hJockeySoundTimer[client] = null;
+	if (g_hJockeySoundTimer[client] != null) {
+		KillTimer(g_hJockeySoundTimer[client], false);
+		g_hJockeySoundTimer[client] = null;
 	}
 
 	if (bEnable) {
-		hJockeySoundTimer[client] = CreateTimer(fJockeyVoiceInterval, delayedJockeySound, client, TIMER_REPEAT);
+		g_hJockeySoundTimer[client] = CreateTimer(g_hJockeyVoiceInterval.FloatValue, delayedJockeySound, client, TIMER_REPEAT);
 	}
 }
