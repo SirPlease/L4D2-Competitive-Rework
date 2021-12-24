@@ -66,7 +66,7 @@ public Plugin myinfo =
 	name = "Unsilent Jockey",
 	author = "Tabun, robex, Sir",
 	description = "Makes jockeys emit sound constantly.",
-	version = "0.5",
+	version = "0.6",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -186,18 +186,17 @@ public Action delayedJockeySound(Handle timer, any client)
 	int rndPick = GetRandomInt(0, MAX_JOCKEYSOUND);
 	EmitSoundToAll(sJockeySound[rndPick], client, SNDCHAN_VOICE);
 
-	return Plugin_Stop;
+	return Plugin_Continue;
 }
 
 void ChangeJockeyTimerStatus(int client, bool bEnable)
 {
-	if (!bEnable)
-	{
-		if (hJockeySoundTimer[client] != null)
-		{
-			KillTimer(hJockeySoundTimer[client], false);
-			hJockeySoundTimer[client] = null;
-		}
+	if (hJockeySoundTimer[client] != null) {
+		KillTimer(hJockeySoundTimer[client], false);
+		hJockeySoundTimer[client] = null;
 	}
-	else hJockeySoundTimer[client] = CreateTimer(fJockeyVoiceInterval, delayedJockeySound, client, TIMER_REPEAT);
+
+	if (bEnable) {
+		hJockeySoundTimer[client] = CreateTimer(fJockeyVoiceInterval, delayedJockeySound, client, TIMER_REPEAT);
+	}
 }
