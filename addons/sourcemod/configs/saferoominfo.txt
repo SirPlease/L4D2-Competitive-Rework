@@ -940,6 +940,6 @@
 	"dkr_m5_stadium"
 	{
 		"start_loc_a"	"-3968 3916 -20"
-		"start_loc_b"	-3084 4720 -344"
+		"start_loc_b"	"-3084 4720 -344"
 	}
 }
