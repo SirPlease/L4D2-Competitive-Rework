@@ -41,7 +41,7 @@ public Plugin myinfo =
 	name = "L4D2 Tank Horde Monitor",
 	author = "Derpduck, Visor (l4d2_horde_equaliser)",
 	description = "Monitors and changes state of infinite hordes during tanks",
-	version = "1",
+	version = "1.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -100,6 +100,18 @@ public void RoundStartEvent(Event hEvent, const char[] name, bool dontBroadcast)
 public void RoundEndEvent(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	tankInPlay = false;
+	announcedTankSpawn = false;
+	announcedHordeResume = false;
+	announcedHordeMax = false;
+	TimerCleanUp();
+}
+
+public void OnMapEnd()
+{
+	tankInPlay = false;
+	announcedTankSpawn = false;
+	announcedHordeResume = false;
+	announcedHordeMax = false;
 	TimerCleanUp();
 }
 
@@ -160,9 +172,8 @@ public void AnnounceTankSpawn()
 
 public Action FlowCheckTimer(Handle hTimer)
 {
-	g_hFlowCheckTimer = null;
-	
 	if (!tankInPlay || announcedHordeResume){
+		g_hFlowCheckTimer = null;
 		return Plugin_Stop;
 	}
 
@@ -300,5 +311,6 @@ public void TimerCleanUp()
 {
 	if (g_hFlowCheckTimer != null){
 		delete g_hFlowCheckTimer;
+		g_hFlowCheckTimer = null;
 	}
 }
