@@ -3,7 +3,7 @@
 
 #include <sourcemod>
 
-#define PLUGIN_VERSION "1.1a"
+#define PLUGIN_VERSION "1.2"
 
 public Plugin myinfo = 
 {
@@ -15,12 +15,21 @@ public Plugin myinfo =
 };
 
 ConVar z_spit_interval;
+ArrayList g_hWaitList;
 
 public void OnPluginStart()
 {
 	z_spit_interval = FindConVar("z_spit_interval");
 	
+	g_hWaitList = new ArrayList(2);
+	
+	HookEvent("round_start", Event_RoundStart);
 	HookEvent("ability_use", Event_AbilityUse);
+}
+
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+{
+	g_hWaitList.Clear();
 }
 
 void Event_AbilityUse(Event event, const char[] name, bool dontBroadcast)
@@ -30,22 +39,31 @@ void Event_AbilityUse(Event event, const char[] name, bool dontBroadcast)
 	if (strcmp(sAbility[8], "spit") == 0)
 	{
 		// duration of spit animation seems to vary from [1.160003, 1.190002] on 100t sv
-		CreateTimer(1.2, Timer_CheckAbilityTimer, event.GetInt("userid"), TIMER_FLAG_NO_MAPCHANGE);
+		g_hWaitList.Set(g_hWaitList.Push(event.GetInt("userid")), GetGameTime() + 1.2, 1);
 	}
 }
 
-Action Timer_CheckAbilityTimer(Handle timer, any userid)
+public void OnGameFrame()
+{
+	while (g_hWaitList.Length && GetGameTime() >= g_hWaitList.Get(0, 1))
+	{
+		CheckSpitAbility(g_hWaitList.Get(0, 0));
+		g_hWaitList.Erase(0);
+	}
+}
+
+void CheckSpitAbility(int userid)
 {
 	int client = GetClientOfUserId(userid);
 	if (!client || GetEntProp(client, Prop_Send, "m_zombieClass") != 4 || !IsPlayerAlive(client))
 	{
-		return Plugin_Stop;
+		return;
 	}
 	
 	int ability = GetEntPropEnt(client, Prop_Send, "m_customAbility");
 	if (ability == -1)
 	{
-		return Plugin_Stop;
+		return;
 	}
 	
 	// potential freezing detected
@@ -56,6 +74,4 @@ Action Timer_CheckAbilityTimer(Handle timer, any userid)
 		SetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", GetGameTime() + interval, 1);
 		SetEntProp(ability, Prop_Send, "m_bHasBeenActivated", false);
 	}
-	
-	return Plugin_Stop;
 }
