@@ -129,9 +129,14 @@
 		"horde_limit"		"240"
 		"tank_ban_flow"
 		{
-			"Coaster"
+			"[ACEMOD] Coaster Start"
 			{
 				"min"		"56"
+				"max"		"65"
+			}
+			"[ACEMOD] Coaster End"
+			{
+				"min"		"75"
 				"max"		"100"
 			}
 		}
