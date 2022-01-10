@@ -221,8 +221,10 @@ public Action L4D_OnSpawnMob(int &amount)
 			}
 
 			// Have survivors pushed past the bypass point?
-			if (!announcedHordeResume && tankInPlayDelay && fPushAmount >= 0.1){
-				CPrintToChatAll("<{olive}Horde{default}> Horde has {green}resumed{default} at {green}10%% strength{default}, pushing will increase the horde.");
+			if (!announcedHordeResume && tankInPlayDelay && fPushAmount >= 0.05){
+				fPushWarningPercent = fPushAmount;
+				int iPushPercent = RoundToNearest(fPushAmount * 100.0);
+				CPrintToChatAll("<{olive}Horde{default}> Horde has {blue}resumed{default} at {green}%i%% strength{default}, pushing will increase the horde.", iPushPercent);
 				announcedHordeResume = true;
 			}
 
@@ -235,7 +237,7 @@ public Action L4D_OnSpawnMob(int &amount)
 
 			// Have survivors have pushed past the extra distance we allow?
 			if (fPushAmount == 1.0){
-				CPrintToChatAll("<{olive}Horde{default}> Survivors pushed too far, horde is at {green}100%% strength{default}!");
+				CPrintToChatAll("<{olive}Horde{default}> Survivors have pushed too far, horde is at {green}100%% strength{default}!");
 				announcedHordeMax = true;
 			}
 
@@ -325,5 +327,5 @@ public void ResetWarnings()
 	announcedTankSpawn = false;
 	announcedHordeResume = false;
 	announcedHordeMax = false;
-	fPushWarningPercent = 0.1;
+	fPushWarningPercent = 0.0;
 }
