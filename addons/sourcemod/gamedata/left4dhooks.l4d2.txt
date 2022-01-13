@@ -1668,7 +1668,9 @@
 				"linux"		"540"
 			}
 
-			// l4d2weapons.inc offsets - Offsets can be found in: "CTerrorWeaponInfo::Parse" and "CCSWeaponInfo::Parse" and "FileWeaponInfo_t::Parse"
+
+
+			// l4d2weapons.inc offsets - Offsets can be found in: "CTerrorWeaponInfo::Parse" - "CCSWeaponInfo::Parse" - "FileWeaponInfo_t::Parse" - "CTerrorGun::DoViewPunch"
 			// L4D2IntWeapon
 			"L4D2IntWeapon_Damage"
 			{
@@ -1684,6 +1686,16 @@
 			{
 				"windows"	"352"
 				"linux"		"352"
+			}
+			"L4D2IntWeapon_Bucket"
+			{
+				"windows"	"344"
+				"linux"		"344"
+			}
+			"L4D2IntWeapon_Tier"
+			{
+				"windows"	"3048"
+				"linux"		"3048"
 			}
 
 			// L4D2FloatWeapon
@@ -1771,6 +1783,16 @@
 			{
 				"windows"	"3120"
 				"linux"		"3120"
+			}
+			"L4D2FloatWeapon_VerticalPunch"
+			{
+				"windows"	"3076"
+				"linux"		"3076"
+			}
+			"L4D2FloatWeapon_HorizontalPunch"
+			{
+				"windows"	"3080"
+				"linux"		"3080"
 			}
 
 			// L4D2BoolMeleeWeapon
