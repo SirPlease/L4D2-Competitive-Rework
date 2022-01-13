@@ -25,7 +25,8 @@ Handle
 float
 	fFurthestFlow,
 	fBypassFlow,
-	fProgressFlowPercent;
+	fProgressFlowPercent,
+	fPushWarningPercent;
 
 int
 	m_nPendingMobCount;
@@ -42,7 +43,7 @@ public Plugin myinfo =
 	name = "L4D2 Tank Horde Monitor",
 	author = "Derpduck, Visor (l4d2_horde_equaliser)",
 	description = "Monitors and changes state of infinite hordes during tanks",
-	version = "1.2",
+	version = "1.3",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -219,20 +220,24 @@ public Action L4D_OnSpawnMob(int &amount)
 				fPushAmount = 1.0;
 			}
 
-			// Announce tank spawn (if tank spawned before the horde)
-			//if (!announcedTankSpawn){
-			//	AnnounceTankSpawn();
-			//}
-
 			// Have survivors pushed past the bypass point?
-			if (!announcedHordeResume && tankInPlayDelay){
-				CPrintToChatAll("<{olive}Horde{default}> Survivors are pushing the tank, {green}ramping up{default} the horde as they push!");
+			if (!announcedHordeResume && tankInPlayDelay && fPushAmount >= 0.05){
+				fPushWarningPercent = fPushAmount;
+				int iPushPercent = RoundToNearest(fPushAmount * 100.0);
+				CPrintToChatAll("<{olive}Horde{default}> Horde has {blue}resumed{default} at {green}%i%% strength{default}, pushing will increase the horde.", iPushPercent);
 				announcedHordeResume = true;
+			}
+
+			// Horde strength prints
+			if (fPushAmount - fPushWarningPercent >= 0.20 && fPushAmount != 1.0 && announcedHordeResume){
+				fPushWarningPercent = fPushAmount;
+				int iPushPercent = RoundToNearest(fPushAmount * 100.0);
+				CPrintToChatAll("<{olive}Horde{default}> Horde is at {green}%i%% strength{default}...", iPushPercent);
 			}
 
 			// Have survivors have pushed past the extra distance we allow?
 			if (fPushAmount == 1.0){
-				CPrintToChatAll("<{olive}Horde{default}> Survivors have pushed too far, horde is now at {red}max{default}!");
+				CPrintToChatAll("<{olive}Horde{default}> Survivors have pushed too far, horde is at {green}100%% strength{default}!");
 				announcedHordeMax = true;
 			}
 
@@ -322,4 +327,5 @@ public void ResetWarnings()
 	announcedTankSpawn = false;
 	announcedHordeResume = false;
 	announcedHordeMax = false;
+	fPushWarningPercent = 0.0;
 }
