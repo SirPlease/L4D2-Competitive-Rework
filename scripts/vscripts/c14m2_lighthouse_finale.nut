@@ -1,6 +1,6 @@
 Msg("Initiating c14m2_lighthouse_finale rework script\n");
 
-StageDelay <- 15
+StageDelay <- 10
 PreEscapeDelay <- 10
 
 //-----------------------------------------------------
@@ -15,7 +15,7 @@ DirectorOptions <-
 	A_CustomFinale_StageCount = 8
 	
 	A_CustomFinale1 		= PANIC
-	A_CustomFinaleValue1 	= 2
+	A_CustomFinaleValue1 	= 1
 	A_CustomFinale2 		= DELAY
 	A_CustomFinaleValue2 	= StageDelay
 	A_CustomFinale3 		= TANK

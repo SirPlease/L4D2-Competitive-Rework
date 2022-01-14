@@ -1,6 +1,6 @@
 /*
 *	Left 4 DHooks Direct
-*	Copyright (C) 2021 Silvers
+*	Copyright (C) 2022 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.80"
+#define PLUGIN_VERSION		"1.85"
 
 #define DEBUG				0
 // #define DEBUG			1	// Prints addresses + detour info (only use for debugging, slows server down)
@@ -41,6 +41,42 @@
 
 ========================================================================================
 	Change Log:
+
+1.85 (10-Jan-2022)
+	- Fixed "L4D2IWA_Bucket", "L4D2IWA_Tier", "L4D2FWA_VerticalPunch" and "L4D2FWA_HorizontalPunch" not reading offsets. Thanks to "DarklSide" for reporting.
+	- Fixed native "AnimHookDisable" removing all hooks when multiple identical hook callbacks are added from a single plugin. Thanks to "Eärendil" for reporting.
+
+1.84 (08-Jan-2022)
+	- Fixed forward "L4D_OnTryOfferingTankBot" detour returning the wrong value when using "Plugin_Changed". Thanks to "Nuki" for reporting.
+	- Fixed "Local_GetRandomClient" not processing alive or bots values correctly. Thanks to "Mrs cheng" for reporting.
+	- Now using a random seed when using functions that randomly select players. Requested by  "Mrs cheng".
+	- More error messages report the OS, game and plugin version.
+
+	- Updated: Plugin.
+	- Updated: "left4dhooks_silver.inc" Include file.
+
+1.83 (25-Dec-2021)
+	- Made error messages report the OS, game and plugin version.
+	- Wildcarded the "CDirector::RestartScenarioFromVote" signature for L4D1. Thanks to "Beatles" or reporting.
+
+	- Updated: Plugin.
+	- Updated: "left4dhooks.l4d1.txt" GameData file.
+
+1.82 (14-Dec-2021)
+	- Added new weapon attributes. Thanks to "iaNanaNana" for requesting and giving offsets.
+		- L4D2IntWeaponAttributes: "L4D2IWA_Bucket" (both games) and "L4D2IWA_Tier" (L4D2 only).
+		- L4D2FloatWeaponAttributes: "L4D2FWA_VerticalPunch" and "L4D2FWA_HorizontalPunch".
+
+	- Updated: Plugin.
+	- Updated: "left4dhooks.inc" Include file.
+	- Updated: "left4dhooks.l4d1.txt" and "left4dhooks.l4d2.txt" GameData files.
+
+1.81 (30-Nov-2021)
+	- Fixed forward "L4D_OnVomitedUpon" sometimes throwing errors about null pointer. Thanks to "Krufftys Killers" for reporting.
+	- Changed function "Local_GetRandomClient" in "left4dhooks_silver.inc" to be stock. Thanks to "A1m" for reporting.
+
+	- Updated: Plugin.
+	- Updated: "left4dhooks_silver.inc" Include file.
 
 1.80 (24-Nov-2021)
 	- Fixed forward "L4D_OnSpawnSpecial_Post" param error. Thanks to "fdxx" for reporting.
@@ -880,6 +916,7 @@ GameData g_hGameData;						// GameData file - to speed up loading
 // Animation Hook
 int g_iAnimationDetourIndex;
 ArrayList g_iAnimationHookedClients;
+ArrayList g_iAnimationHookedPlugins;
 ArrayList g_hAnimationActivityList;
 PrivateForward g_hAnimationCallbackPre;
 PrivateForward g_hAnimationCallbackPost;
@@ -1131,8 +1168,8 @@ int L4D2CountdownTimer_Offsets[9];
 int L4D2IntervalTimer_Offsets[6];
 
 // l4d2weapons.inc
-int L4D2IntWeapon_Offsets[3];
-int L4D2FloatWeapon_Offsets[17];
+int L4D2IntWeapon_Offsets[5];
+int L4D2FloatWeapon_Offsets[19];
 int L4D2BoolMeleeWeapon_Offsets[1];
 int L4D2IntMeleeWeapon_Offsets[2];
 int L4D2FloatMeleeWeapon_Offsets[3];
@@ -1157,6 +1194,7 @@ Address g_pWeaponInfoDatabase;
 int g_iCurrentMode;
 int g_iMaxChapters;
 int g_iClassTank;
+char g_sSystem[16];
 bool g_bLinuxOS;
 bool g_bLeft4Dead2;
 bool g_bMapStarted;
@@ -1599,6 +1637,7 @@ public void OnPluginStart()
 	ParseActivityConfig();
 
 	g_iAnimationHookedClients = new ArrayList();
+	g_iAnimationHookedPlugins = new ArrayList(2);
 	g_hAnimationCallbackPre = new PrivateForward(ET_Event, Param_Cell, Param_CellByRef);
 	g_hAnimationCallbackPost = new PrivateForward(ET_Event, Param_Cell, Param_CellByRef);
 
@@ -2089,7 +2128,11 @@ void MatchRandomClient(ArrayList clients, int index)
 		}
 	}
 
-	clients.Push(aList.Get(GetRandomInt(0, aList.Length - 1)));
+	if( aList.Length )
+	{
+		SetRandomSeed(GetGameTickCount());
+		clients.Push(aList.Get(GetRandomInt(0, aList.Length - 1)));
+	}
 
 	delete aList;
 }
@@ -2171,7 +2214,11 @@ void MatchVariousClients(ArrayList clients, int index)
 		}
 	}
 
-	clients.Push(aList.Get(GetRandomInt(0, aList.Length - 1)));
+	if( aList.Length )
+	{
+		SetRandomSeed(GetGameTickCount());
+		clients.Push(aList.Get(GetRandomInt(0, aList.Length - 1)));
+	}
 
 	delete aList;
 }
@@ -2403,6 +2450,7 @@ public void OnMapEnd()
 
 	// Reset hooks
 	g_iAnimationHookedClients.Clear();
+	g_iAnimationHookedPlugins.Clear();
 
 	// Remove all hooked functions from private forward
 	Handle hIter = GetPluginIterator();
@@ -2443,22 +2491,60 @@ public int Native_AnimHookEnable(Handle plugin, int numParams)
 	if( GetNativeFunction(3) != INVALID_FUNCTION ) g_hAnimationCallbackPost.AddFunction(plugin, GetNativeFunction(3));
 	g_iAnimationHookedClients.Push(GetClientUserId(client));
 
+	// Add multiple callbacks, validate by client
+	int index = g_iAnimationHookedPlugins.Push(plugin);
+	g_iAnimationHookedPlugins.Set(index, GetClientUserId(client), 1);
+
 	return true;
 }
 
 public int Native_AnimHookDisable(Handle plugin, int numParams)
 {
-	// Remove callback
-	if( GetNativeFunction(2) != INVALID_FUNCTION ) g_hAnimationCallbackPre.RemoveFunction(plugin, GetNativeFunction(2));
-	if( GetNativeFunction(3) != INVALID_FUNCTION ) g_hAnimationCallbackPost.RemoveFunction(plugin, GetNativeFunction(3));
+	int client = GetNativeCell(1);
+
+	// Remove callbacks, if required
+	Handle target;
+	bool keep;
+	int entity;
+
+	// Loop through all anim hooks
+	int length = g_iAnimationHookedPlugins.Length;
+	for( int i = 0; i < length; i++ )
+	{
+		// Get hooked plugin handle
+		target = g_iAnimationHookedPlugins.Get(i, 0);
+
+		// Match to plugin requesting unhook
+		if( target == plugin )
+		{
+			// Get hooked client from that plugin
+			entity = g_iAnimationHookedPlugins.Get(i, 1);
+			entity = GetClientOfUserId(entity);
+
+			// Verify client to unhook, or invalid client, else keep hooks
+			if( client == entity || !entity || IsClientInGame(entity) )
+			{
+				g_iAnimationHookedPlugins.Erase(i);
+				if( i > 0 ) i--;
+				length--;
+			} else {
+				keep = true;
+			}
+		}
+	}
+
+	// Delete callback, no more clients from target plugin using this hook
+	if( !keep )
+	{
+		if( GetNativeFunction(2) != INVALID_FUNCTION ) g_hAnimationCallbackPre.RemoveFunction(plugin, GetNativeFunction(2));
+		if( GetNativeFunction(3) != INVALID_FUNCTION ) g_hAnimationCallbackPost.RemoveFunction(plugin, GetNativeFunction(3));
+	}
 
 	// Validate client
-	int client = GetNativeCell(1);
 	if( !client || !IsClientInGame(client) ) return true; // Disconnected
-	client = GetClientUserId(client);
 
 	// Remove client from checking array
-	int index = g_iAnimationHookedClients.FindValue(client);
+	int index = g_iAnimationHookedClients.FindValue(GetClientUserId(client));
 	if( index != -1 )
 	{
 		g_iAnimationHookedClients.Erase(index);
@@ -2863,7 +2949,7 @@ void CreateDetour(GameData hGameData, DHookCallback fCallback, DHookCallback fPo
 		if( !useLast )
 		{
 			Handle hDetour = DHookCreateFromConf(hGameData, sName);
-			if( !hDetour ) LogError("Failed to load detour \"%s\" signature.", sName);
+			if( !hDetour ) LogError("Failed to load detour \"%s\" signature (%s).", sName, g_sSystem);
 
 			g_aDetoursHooked.Push(0);			// Default disabled
 			g_aDetourHandles.Push(hDetour);		// Store handle
@@ -2888,16 +2974,16 @@ void CreateDetour(GameData hGameData, DHookCallback fCallback, DHookCallback fPo
 						PrintToServer("Enabling detour %d %s", index, sName);
 						#endif
 
-						if( fCallback != INVALID_FUNCTION && !DHookEnableDetour(hDetour, false, fCallback) ) LogError("Failed to detour pre \"%s\".", sName);
-						if( fPostCallback != INVALID_FUNCTION && !DHookEnableDetour(hDetour, true, fPostCallback) ) LogError("Failed to detour post \"%s\".", sName);
+						if( fCallback != INVALID_FUNCTION && !DHookEnableDetour(hDetour, false, fCallback) ) LogError("Failed to detour pre \"%s\" (%s).", sName, g_sSystem);
+						if( fPostCallback != INVALID_FUNCTION && !DHookEnableDetour(hDetour, true, fPostCallback) ) LogError("Failed to detour post \"%s\" (%s).", sName, g_sSystem);
 					} else {
 						g_aDetoursHooked.Set(index, 0);
 						#if DEBUG
 						PrintToServer("Disabling detour %d %s", index, sName);
 						#endif
 
-						if( fCallback != INVALID_FUNCTION && !DHookDisableDetour(hDetour, false, fCallback) ) LogError("Failed to disable detour pre \"%s\".", sName);
-						if( fPostCallback != INVALID_FUNCTION && !DHookDisableDetour(hDetour, true, fPostCallback) ) LogError("Failed to disable detour post \"%s\".", sName);
+						if( fCallback != INVALID_FUNCTION && !DHookDisableDetour(hDetour, false, fCallback) ) LogError("Failed to disable detour pre \"%s\" (%s).", sName, g_sSystem);
+						if( fPostCallback != INVALID_FUNCTION && !DHookDisableDetour(hDetour, true, fPostCallback) ) LogError("Failed to disable detour post \"%s\" (%s).", sName, g_sSystem);
 					}
 				}
 			}
@@ -3219,6 +3305,7 @@ void LoadGameData()
 	#endif
 
 	g_bLinuxOS = hGameData.GetOffset("OS") == 1;
+	Format(g_sSystem, sizeof(g_sSystem), "%s/%d/%s", g_bLinuxOS ? "NIX" : "WIN", g_bLeft4Dead2 ? 2 : 1, PLUGIN_VERSION);
 
 
 
@@ -3229,24 +3316,24 @@ void LoadGameData()
 	StartPrepSDKCall(SDKCall_Static);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "GetWeaponInfo") == false )
 	{
-		LogError("Failed to find signature: GetWeaponInfo");
+		LogError("Failed to find signature: \"GetWeaponInfo\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 		g_hSDK_GetWeaponInfo = EndPrepSDKCall();
 		if( g_hSDK_GetWeaponInfo == null )
-			LogError("Failed to create SDKCall: GetWeaponInfo");
+			LogError("Failed to create SDKCall: \"GetWeaponInfo\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Static);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorGameRules::GetMissionInfo") == false )
 	{
-		LogError("Failed to find signature: CTerrorGameRules::GetMissionInfo");
+		LogError("Failed to find signature: \"CTerrorGameRules::GetMissionInfo\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 		g_hSDK_CTerrorGameRules_GetMissionInfo = EndPrepSDKCall();
 		if( g_hSDK_CTerrorGameRules_GetMissionInfo == null )
-			LogError("Failed to create SDKCall: CTerrorGameRules::GetMissionInfo");
+			LogError("Failed to create SDKCall: \"CTerrorGameRules::GetMissionInfo\" (%s)", g_sSystem);
 	}
 
 
@@ -3257,31 +3344,31 @@ void LoadGameData()
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Virtual, "CTerrorPlayer::GetLastKnownArea") == false )
 	{
-		LogError("Failed to find signature: CTerrorPlayer::GetLastKnownArea");
+		LogError("Failed to find signature: \"CTerrorPlayer::GetLastKnownArea\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 		g_hSDK_CTerrorPlayer_GetLastKnownArea = EndPrepSDKCall();
 		if( g_hSDK_CTerrorPlayer_GetLastKnownArea == null )
-			LogError("Failed to create SDKCall: CTerrorPlayer::GetLastKnownArea");
+			LogError("Failed to create SDKCall: \"CTerrorPlayer::GetLastKnownArea\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Virtual, "CTerrorPlayer::Deafen") == false )
 	{
-		LogError("Failed to find signature: CTerrorPlayer::Deafen");
+		LogError("Failed to find signature: \"CTerrorPlayer::Deafen\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
 		PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
 		PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
 		g_hSDK_CTerrorPlayer_Deafen = EndPrepSDKCall();
 		if( g_hSDK_CTerrorPlayer_Deafen == null )
-			LogError("Failed to create SDKCall: CTerrorPlayer::Deafen");
+			LogError("Failed to create SDKCall: \"CTerrorPlayer::Deafen\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "Music::Play") == false )
 	{
-		LogError("Failed to find signature: Music::Play");
+		LogError("Failed to find signature: \"Music::Play\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
 		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
@@ -3290,26 +3377,26 @@ void LoadGameData()
 		PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
 		g_hSDK_Music_Play = EndPrepSDKCall();
 		if( g_hSDK_Music_Play == null )
-			LogError("Failed to create SDKCall: Music::Play");
+			LogError("Failed to create SDKCall: \"Music::Play\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "Music::StopPlaying") == false )
 	{
-		LogError("Failed to find signature: Music::StopPlaying");
+		LogError("Failed to find signature: \"Music::StopPlaying\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
 		PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
 		PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
 		g_hSDK_Music_StopPlaying = EndPrepSDKCall();
 		if( g_hSDK_Music_StopPlaying == null )
-			LogError("Failed to create SDKCall: Music::StopPlaying");
+			LogError("Failed to create SDKCall: \"Music::StopPlaying\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Static);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CEntityDissolve::Create") == false )
 	{
-		LogError("Failed to find signature: CEntityDissolve::Create");
+		LogError("Failed to find signature: \"CEntityDissolve::Create\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
 		PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
@@ -3319,34 +3406,34 @@ void LoadGameData()
 		PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 		g_hSDK_CEntityDissolve_Create = EndPrepSDKCall();
 		if( g_hSDK_CEntityDissolve_Create == null )
-			LogError("Failed to create SDKCall: CEntityDissolve::Create");
+			LogError("Failed to create SDKCall: \"CEntityDissolve::Create\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::OnITExpired") == false )
 	{
-		LogError("Failed to find signature: CTerrorPlayer::OnITExpired");
+		LogError("Failed to find signature: \"CTerrorPlayer::OnITExpired\" (%s)", g_sSystem);
 	} else {
 		g_hSDK_CTerrorPlayer_OnITExpired = EndPrepSDKCall();
 		if( g_hSDK_CTerrorPlayer_OnITExpired == null )
-			LogError("Failed to create SDKCall: CTerrorPlayer::OnITExpired");
+			LogError("Failed to create SDKCall: \"CTerrorPlayer::OnITExpired\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Entity);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CBaseEntity::ApplyLocalAngularVelocityImpulse") == false )
 	{
-		LogError("Failed to find signature: CBaseEntity::ApplyLocalAngularVelocityImpulse");
+		LogError("Failed to find signature: \"CBaseEntity::ApplyLocalAngularVelocityImpulse\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 		g_hSDK_CBaseEntity_ApplyLocalAngularVelocityImpulse = EndPrepSDKCall();
 		if( g_hSDK_CBaseEntity_ApplyLocalAngularVelocityImpulse == null )
-			LogError("Failed to create SDKCall: CBaseEntity::ApplyLocalAngularVelocityImpulse");
+			LogError("Failed to create SDKCall: \"CBaseEntity::ApplyLocalAngularVelocityImpulse\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "ZombieManager::GetRandomPZSpawnPosition") == false )
 	{
-		LogError("Failed to find signature: ZombieManager::GetRandomPZSpawnPosition");
+		LogError("Failed to find signature: \"ZombieManager::GetRandomPZSpawnPosition\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
@@ -3355,13 +3442,13 @@ void LoadGameData()
 		PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
 		g_hSDK_ZombieManager_GetRandomPZSpawnPosition = EndPrepSDKCall();
 		if( g_hSDK_ZombieManager_GetRandomPZSpawnPosition == null )
-			LogError("Failed to create SDKCall: ZombieManager::GetRandomPZSpawnPosition");
+			LogError("Failed to create SDKCall: \"ZombieManager::GetRandomPZSpawnPosition\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CNavMesh::GetNearestNavArea") == false )
 	{
-		LogError("Failed to find signature: CNavMesh::GetNearestNavArea");
+		LogError("Failed to find signature: \"CNavMesh::GetNearestNavArea\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 		PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
@@ -3372,62 +3459,62 @@ void LoadGameData()
 		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 		g_hSDK_CNavMesh_GetNearestNavArea = EndPrepSDKCall();
 		if( g_hSDK_CNavMesh_GetNearestNavArea == null )
-			LogError("Failed to create SDKCall: CNavMesh::GetNearestNavArea");
+			LogError("Failed to create SDKCall: \"CNavMesh::GetNearestNavArea\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "TerrorNavArea::FindRandomSpot") == false )
 	{
-		LogError("Failed to find signature: TerrorNavArea::FindRandomSpot");
+		LogError("Failed to find signature: \"TerrorNavArea::FindRandomSpot\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_SetReturnInfo(SDKType_Vector, SDKPass_ByValue);
 		g_hSDK_TerrorNavArea_FindRandomSpot = EndPrepSDKCall();
 		if( g_hSDK_TerrorNavArea_FindRandomSpot == null )
-			LogError("Failed to create SDKCall: TerrorNavArea::FindRandomSpot");
+			LogError("Failed to create SDKCall: \"TerrorNavArea::FindRandomSpot\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::HasAnySurvivorLeftSafeArea") == false )
 	{
-		LogError("Failed to find signature: CDirector::HasAnySurvivorLeftSafeArea");
+		LogError("Failed to find signature: \"CDirector::HasAnySurvivorLeftSafeArea\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
 		g_hSDK_CDirector_HasAnySurvivorLeftSafeArea = EndPrepSDKCall();
 		if( g_hSDK_CDirector_HasAnySurvivorLeftSafeArea == null )
-			LogError("Failed to create SDKCall: CDirector::HasAnySurvivorLeftSafeArea");
+			LogError("Failed to create SDKCall: \"CDirector::HasAnySurvivorLeftSafeArea\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::IsAnySurvivorInStartArea") == false )
 	{
-		LogError("Failed to find signature: CDirector::IsAnySurvivorInStartArea");
+		LogError("Failed to find signature: \"CDirector::IsAnySurvivorInStartArea\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
 		g_hSDK_CDirector_IsAnySurvivorInStartArea = EndPrepSDKCall();
 		if( g_hSDK_CDirector_IsAnySurvivorInStartArea == null )
-			LogError("Failed to create SDKCall: CDirector::IsAnySurvivorInStartArea");
+			LogError("Failed to create SDKCall: \"CDirector::IsAnySurvivorInStartArea\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::IsAnySurvivorInExitCheckpoint") == false )
 	{
-		LogError("Failed to find signature: CDirector::IsAnySurvivorInExitCheckpoint");
+		LogError("Failed to find signature: \"CDirector::IsAnySurvivorInExitCheckpoint\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
 		g_hSDK_CDirector_IsAnySurvivorInExitCheckpoint = EndPrepSDKCall();
 		if( g_hSDK_CDirector_IsAnySurvivorInExitCheckpoint == null )
-			LogError("Failed to create SDKCall: CDirector::IsAnySurvivorInExitCheckpoint");
+			LogError("Failed to create SDKCall: \"CDirector::IsAnySurvivorInExitCheckpoint\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Static);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorGameRules::HasPlayerControlledZombies") == false )
 	{
-		LogError("Failed to find signature: CTerrorGameRules::HasPlayerControlledZombies");
+		LogError("Failed to find signature: \"CTerrorGameRules::HasPlayerControlledZombies\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
 		g_hSDK_CTerrorGameRules_HasPlayerControlledZombies = EndPrepSDKCall();
 		if( g_hSDK_CTerrorGameRules_HasPlayerControlledZombies == null )
-			LogError("Failed to create SDKCall: CTerrorGameRules::HasPlayerControlledZombies");
+			LogError("Failed to create SDKCall: \"CTerrorGameRules::HasPlayerControlledZombies\" (%s)", g_sSystem);
 	}
 
 	if( g_bLeft4Dead2 )
@@ -3435,19 +3522,19 @@ void LoadGameData()
 		StartPrepSDKCall(SDKCall_GameRules);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorGameRules::GetSurvivorSet") == false )
 		{
-			LogError("Failed to find signature: CTerrorGameRules::GetSurvivorSet");
+			LogError("Failed to find signature: \"CTerrorGameRules::GetSurvivorSet\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 			g_hSDK_CTerrorGameRules_GetSurvivorSet = EndPrepSDKCall();
 			if( g_hSDK_CTerrorGameRules_GetSurvivorSet == null )
-				LogError("Failed to create SDKCall: CTerrorGameRules::GetSurvivorSet");
+				LogError("Failed to create SDKCall: \"CTerrorGameRules::GetSurvivorSet\" (%s)", g_sSystem);
 		}
 	}
 
 	StartPrepSDKCall(SDKCall_Static);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CPipeBombProjectile::Create") == false )
 	{
-		LogError("Failed to find signature: CPipeBombProjectile::Create");
+		LogError("Failed to find signature: \"CPipeBombProjectile::Create\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
@@ -3458,7 +3545,7 @@ void LoadGameData()
 		PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 		g_hSDK_CPipeBombProjectile_Create = EndPrepSDKCall();
 		if( g_hSDK_CPipeBombProjectile_Create == null )
-			LogError("Failed to create SDKCall: CPipeBombProjectile::Create");
+			LogError("Failed to create SDKCall: \"CPipeBombProjectile::Create\" (%s)", g_sSystem);
 	}
 
 
@@ -3603,7 +3690,7 @@ void LoadGameData()
 	if( !g_bLinuxOS )
 	{
 		hTempGameData = LoadGameConfigFile(GAMEDATA_TEMP);
-		if( hTempGameData == null ) LogError("Failed to load \"%s.txt\" gamedata.", GAMEDATA_TEMP);
+		if( hTempGameData == null ) LogError("Failed to load \"%s.txt\" gamedata (%s).", GAMEDATA_TEMP, g_sSystem);
 	}
 
 
@@ -3611,7 +3698,7 @@ void LoadGameData()
 	StartPrepSDKCall(SDKCall_Static);
 	if( PrepSDKCall_SetFromConf(g_bLinuxOS ? hGameData : hTempGameData, SDKConf_Signature, g_bLinuxOS ? "CMolotovProjectile::Create" : "FindAddress_0") == false )
 	{
-		LogError("Failed to find signature: CMolotovProjectile::Create");
+		LogError("Failed to find signature: \"CMolotovProjectile::Create\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
@@ -3622,7 +3709,7 @@ void LoadGameData()
 		PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 		g_hSDK_CMolotovProjectile_Create = EndPrepSDKCall();
 		if( g_hSDK_CMolotovProjectile_Create == null )
-			LogError("Failed to create SDKCall: CMolotovProjectile::Create");
+			LogError("Failed to create SDKCall: \"CMolotovProjectile::Create\" (%s)", g_sSystem);
 	}
 
 	if( g_bLeft4Dead2 )
@@ -3630,7 +3717,7 @@ void LoadGameData()
 		StartPrepSDKCall(SDKCall_Static);
 		if( PrepSDKCall_SetFromConf(g_bLinuxOS ? hGameData : hTempGameData, SDKConf_Signature, g_bLinuxOS ? "CVomitJarProjectile::Create" : "FindAddress_1") == false )
 		{
-			LogError("Failed to find signature: CVomitJarProjectile::Create");
+			LogError("Failed to find signature: \"CVomitJarProjectile::Create\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
@@ -3641,13 +3728,13 @@ void LoadGameData()
 			PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 			g_hSDK_CVomitJarProjectile_Create = EndPrepSDKCall();
 			if( g_hSDK_CVomitJarProjectile_Create == null )
-				LogError("Failed to create SDKCall: CVomitJarProjectile::Create");
+				LogError("Failed to create SDKCall: \"CVomitJarProjectile::Create\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Static);
 		if( PrepSDKCall_SetFromConf(g_bLinuxOS ? hGameData : hTempGameData, SDKConf_Signature, g_bLinuxOS ? "CGrenadeLauncher_Projectile::Create" : "FindAddress_2") == false )
 		{
-			LogError("Failed to find signature: CGrenadeLauncher_Projectile::Create");
+			LogError("Failed to find signature: \"CGrenadeLauncher_Projectile::Create\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
@@ -3658,13 +3745,13 @@ void LoadGameData()
 			PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 			g_hSDK_CGrenadeLauncher_Projectile_Create = EndPrepSDKCall();
 			if( g_hSDK_CGrenadeLauncher_Projectile_Create == null )
-				LogError("Failed to create SDKCall: CGrenadeLauncher_Projectile::Create");
+				LogError("Failed to create SDKCall: \"CGrenadeLauncher_Projectile::Create\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Static);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CSpitterProjectile::Create") == false )
 		{
-			LogError("Failed to find signature: CSpitterProjectile::Create");
+			LogError("Failed to find signature: \"CSpitterProjectile::Create\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
@@ -3674,24 +3761,24 @@ void LoadGameData()
 			PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 			g_hSDK_CSpitterProjectile_Create = EndPrepSDKCall();
 			if( g_hSDK_CSpitterProjectile_Create == null )
-				LogError("Failed to create SDKCall: CSpitterProjectile::Create");
+				LogError("Failed to create SDKCall: \"CSpitterProjectile::Create\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_GameRules);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorGameRules::HasConfigurableDifficultySetting") == false )
 		{
-			LogError("Failed to find signature: CTerrorGameRules::HasConfigurableDifficultySetting");
+			LogError("Failed to find signature: \"CTerrorGameRules::HasConfigurableDifficultySetting\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 			g_hSDK_CTerrorGameRules_HasConfigurableDifficultySetting = EndPrepSDKCall();
 			if( g_hSDK_CTerrorGameRules_HasConfigurableDifficultySetting == null )
-				LogError("Failed to create SDKCall: CTerrorGameRules::HasConfigurableDifficultySetting");
+				LogError("Failed to create SDKCall: \"CTerrorGameRules::HasConfigurableDifficultySetting\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Static);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "NavAreaTravelDistance") == false )
 		{
-			LogError("Failed to find signature: NavAreaTravelDistance");
+			LogError("Failed to find signature: \"NavAreaTravelDistance\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
@@ -3699,18 +3786,18 @@ void LoadGameData()
 			PrepSDKCall_SetReturnInfo(SDKType_Float, SDKPass_Plain);
 			g_hSDK_NavAreaTravelDistance = EndPrepSDKCall();
 			if( g_hSDK_NavAreaTravelDistance == null )
-				LogError("Failed to create SDKCall: NavAreaTravelDistance");
+				LogError("Failed to create SDKCall: \"NavAreaTravelDistance\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Player);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::OnAdrenalineUsed") == false )
 		{
-			LogError("Failed to find signature: CTerrorPlayer::OnAdrenalineUsed");
+			LogError("Failed to find signature: \"CTerrorPlayer::OnAdrenalineUsed\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
 			g_hSDK_CTerrorPlayer_OnAdrenalineUsed = EndPrepSDKCall();
 			if( g_hSDK_CTerrorPlayer_OnAdrenalineUsed == null )
-				LogError("Failed to create SDKCall: CTerrorPlayer::OnAdrenalineUsed");
+				LogError("Failed to create SDKCall: \"CTerrorPlayer::OnAdrenalineUsed\" (%s)", g_sSystem);
 		}
 
 		// "ForceNextStage" is now found by getting the call address from another function, instead of trying to match such a small signature, which requires using an offset byte that changes in game updates
@@ -3723,59 +3810,59 @@ void LoadGameData()
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Address, "CDirector::ForceNextStage::Address") == false )
 		{
-			LogError("Failed to find signature: CDirector::ForceNextStage::Address");
+			LogError("Failed to find signature: \"CDirector::ForceNextStage::Address\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 			g_hSDK_CDirector_ForceNextStage = EndPrepSDKCall();
 			if( g_hSDK_CDirector_ForceNextStage == null )
-				LogError("Failed to create SDKCall: CDirector::ForceNextStage::Address");
+				LogError("Failed to create SDKCall: \"CDirector::ForceNextStage::Address\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::IsTankInPlay") == false )
 		{
-			LogError("Failed to find signature: CDirector::IsTankInPlay");
+			LogError("Failed to find signature: \"CDirector::IsTankInPlay\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
 			g_hSDK_CDirector_IsTankInPlay = EndPrepSDKCall();
 			if( g_hSDK_CDirector_IsTankInPlay == null )
-				LogError("Failed to create SDKCall: CDirector::IsTankInPlay");
+				LogError("Failed to create SDKCall: \"CDirector::IsTankInPlay\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Player);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "SurvivorBot::IsReachable") == false )
 		{
-			LogError("Failed to find signature: SurvivorBot::IsReachable");
+			LogError("Failed to find signature: \"SurvivorBot::IsReachable\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 			PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
 			g_hSDK_SurvivorBot_IsReachable = EndPrepSDKCall();
 			if( g_hSDK_SurvivorBot_IsReachable == null )
-				LogError("Failed to create SDKCall: SurvivorBot::IsReachable");
+				LogError("Failed to create SDKCall: \"SurvivorBot::IsReachable\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::GetFurthestSurvivorFlow") == false )
 		{
-			LogError("Failed to find signature: CDirector::GetFurthestSurvivorFlow");
+			LogError("Failed to find signature: \"CDirector::GetFurthestSurvivorFlow\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_SetReturnInfo(SDKType_Float, SDKPass_Plain);
 			g_hSDK_CDirector_GetFurthestSurvivorFlow = EndPrepSDKCall();
 			if( g_hSDK_CDirector_GetFurthestSurvivorFlow == null )
-				LogError("Failed to create SDKCall: CDirector::GetFurthestSurvivorFlow");
+				LogError("Failed to create SDKCall: \"CDirector::GetFurthestSurvivorFlow\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::GetScriptValueInt") == false )
 		{
-			LogError("Failed to find signature: CDirector::GetScriptValueInt");
+			LogError("Failed to find signature: \"CDirector::GetScriptValueInt\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
 			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 			g_hSDK_CDirector_GetScriptValueInt = EndPrepSDKCall();
 			if( g_hSDK_CDirector_GetScriptValueInt == null )
-					LogError("Failed to create SDKCall: CDirector::GetScriptValueInt");
+					LogError("Failed to create SDKCall: \"CDirector::GetScriptValueInt\" (%s)", g_sSystem);
 		}
 
 		/*
@@ -3783,28 +3870,28 @@ void LoadGameData()
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::GetScriptValueFloat") == false )
 		{
-			LogError("Failed to find signature: CDirector::GetScriptValueFloat");
+			LogError("Failed to find signature: \"CDirector::GetScriptValueFloat\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
 			PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
 			PrepSDKCall_SetReturnInfo(SDKType_Float, SDKPass_Plain);
 			g_hSDK_CDirector_GetScriptValueFloat = EndPrepSDKCall();
 			if( g_hSDK_CDirector_GetScriptValueFloat == null )
-					LogError("Failed to create SDKCall: CDirector::GetScriptValueFloat");
+					LogError("Failed to create SDKCall: \"CDirector::GetScriptValueFloat\" (%s)", g_sSystem);
 		}
 
 		// Not implemented, request if really required.
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::GetScriptValueString") == false )
 		{
-			LogError("Failed to find signature: CDirector::GetScriptValueString");
+			LogError("Failed to find signature: \"CDirector::GetScriptValueString\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
 			PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
 			PrepSDKCall_SetReturnInfo(SDKType_String, SDKPass_Pointer);
 			g_hSDK_CDirector_GetScriptValueString = EndPrepSDKCall();
 			if( g_hSDK_CDirector_GetScriptValueString == null )
-					LogError("Failed to create SDKCall: CDirector::GetScriptValueString");
+					LogError("Failed to create SDKCall: \"CDirector::GetScriptValueString\" (%s)", g_sSystem);
 		}
 		*/
 	}
@@ -3817,26 +3904,26 @@ void LoadGameData()
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::RestartScenarioFromVote") == false )
 	{
-		LogError("Failed to find signature: CDirector::RestartScenarioFromVote");
+		LogError("Failed to find signature: \"CDirector::RestartScenarioFromVote\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
 		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 		g_hSDK_CDirector_RestartScenarioFromVote = EndPrepSDKCall();
 		if( g_hSDK_CDirector_RestartScenarioFromVote == null )
-			LogError("Failed to create SDKCall: CDirector::RestartScenarioFromVote");
+			LogError("Failed to create SDKCall: \"CDirector::RestartScenarioFromVote\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_GameRules);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorGameRules::GetTeamScore") == false )
 	{
-		LogError("Failed to find signature: CTerrorGameRules::GetTeamScore");
+		LogError("Failed to find signature: \"CTerrorGameRules::GetTeamScore\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 		PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
 		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 		g_hSDK_CTerrorGameRules_GetTeamScore = EndPrepSDKCall();
 		if( g_hSDK_CTerrorGameRules_GetTeamScore == null )
-			LogError("Failed to create SDKCall: CTerrorGameRules::GetTeamScore");
+			LogError("Failed to create SDKCall: \"CTerrorGameRules::GetTeamScore\" (%s)", g_sSystem);
 	}
 
 	if( g_bLeft4Dead2 )
@@ -3847,7 +3934,7 @@ void LoadGameData()
 	}
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::IsFirstMapInScenario") == false )
 	{
-		LogError("Failed to find signature: CDirector::IsFirstMapInScenario");
+		LogError("Failed to find signature: \"CDirector::IsFirstMapInScenario\" (%s)", g_sSystem);
 	} else {
 		if( !g_bLeft4Dead2 )
 		{
@@ -3858,31 +3945,31 @@ void LoadGameData()
 		}
 		g_hSDK_CDirector_IsFirstMapInScenario = EndPrepSDKCall();
 		if( g_hSDK_CDirector_IsFirstMapInScenario == null )
-			LogError("Failed to create SDKCall: IsFirstMapInScenario");
+			LogError("Failed to create SDKCall: \"IsFirstMapInScenario\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_GameRules);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorGameRules::IsMissionFinalMap") == false )
 	{
-		LogError("Failed to find signature: CTerrorGameRules::IsMissionFinalMap");
+		LogError("Failed to find signature: \"CTerrorGameRules::IsMissionFinalMap\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
 		g_hSDK_CTerrorGameRules_IsMissionFinalMap = EndPrepSDKCall();
 		if( g_hSDK_CTerrorGameRules_IsMissionFinalMap == null )
-			LogError("Failed to create SDKCall: CTerrorGameRules::IsMissionFinalMap");
+			LogError("Failed to create SDKCall: \"CTerrorGameRules::IsMissionFinalMap\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "KeyValues::GetString") == false )
 	{
-		LogError("Could not load the \"KeyValues::GetString\" gamedata signature.");
+		LogError("Failed to find signature: \"KeyValues::GetString\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
 		PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
 		PrepSDKCall_SetReturnInfo(SDKType_String, SDKPass_Pointer);
 		g_hSDK_KeyValues_GetString = EndPrepSDKCall();
 		if( g_hSDK_KeyValues_GetString == null )
-			LogError("Could not prep the \"KeyValues::GetString\" function.");
+			LogError("Failed to create SDKCall: \"KeyValues::GetString\" (%s)", g_sSystem);
 	}
 
 	if( g_bLeft4Dead2 )
@@ -3890,227 +3977,227 @@ void LoadGameData()
 		StartPrepSDKCall(SDKCall_GameRules);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorGameRules::GetNumChaptersForMissionAndMode") == false )
 		{
-			LogError("Could not load the \"CTerrorGameRules::GetNumChaptersForMissionAndMode\" gamedata signature.");
+			LogError("Failed to find signature: \"CTerrorGameRules::GetNumChaptersForMissionAndMode\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 			g_hSDK_CTerrorGameRules_GetNumChaptersForMissionAndMode = EndPrepSDKCall();
 			if( g_hSDK_CTerrorGameRules_GetNumChaptersForMissionAndMode == null )
-				LogError("Could not prep the \"CTerrorGameRules::GetNumChaptersForMissionAndMode\" function.");
+				LogError("Failed to create SDKCall: \"CTerrorGameRules::GetNumChaptersForMissionAndMode\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::GetGameModeBase") == false )
 		{
-			LogError("Could not load the \"CDirector::GetGameModeBase\" gamedata signature.");
+			LogError("Failed to find signature: \"CDirector::GetGameModeBase\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_SetReturnInfo(SDKType_String, SDKPass_Pointer);
 			g_hSDK_CDirector_GetGameModeBase = EndPrepSDKCall();
 			if( g_hSDK_CDirector_GetGameModeBase == null )
-				LogError("Could not prep the \"CDirector::GetGameModeBase\" function.");
+				LogError("Failed to create SDKCall: \"CDirector::GetGameModeBase\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_GameRules);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorGameRules::IsRealismMode") == false )
 		{
-			LogError("Could not load the \"CTerrorGameRules::IsRealismMode\" gamedata signature.");
+			LogError("Failed to find signature: \"CTerrorGameRules::IsRealismMode\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 			g_hSDK_CTerrorGameRules_IsRealismMode = EndPrepSDKCall();
 			if( g_hSDK_CTerrorGameRules_IsRealismMode == null )
-				LogError("Could not prep the \"CTerrorGameRules::IsRealismMode\" function.");
+				LogError("Failed to create SDKCall: \"CTerrorGameRules::IsRealismMode\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_GameRules);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorGameRules::IsGenericCooperativeMode") == false )
 		{
-			LogError("Could not load the \"CTerrorGameRules::IsGenericCooperativeMode\" gamedata signature.");
+			LogError("Failed to find signature: \"CTerrorGameRules::IsGenericCooperativeMode\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 			g_hSDK_CTerrorGameRules_IsGenericCooperativeMode = EndPrepSDKCall();
 			if( g_hSDK_CTerrorGameRules_IsGenericCooperativeMode == null )
-				LogError("Could not prep the \"CTerrorGameRules::IsGenericCooperativeMode\" function.");
+				LogError("Failed to create SDKCall: \"CTerrorGameRules::IsGenericCooperativeMode\" (%s)", g_sSystem);
 		}
 	}
 
 	StartPrepSDKCall(SDKCall_GameRules);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CGameRulesProxy::NotifyNetworkStateChanged") == false )
 	{
-		LogError("Failed to find signature: CGameRulesProxy::NotifyNetworkStateChanged");
+		LogError("Failed to find signature: \"CGameRulesProxy::NotifyNetworkStateChanged\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 		g_hSDK_CGameRulesProxy_NotifyNetworkStateChanged = EndPrepSDKCall();
 		if( g_hSDK_CGameRulesProxy_NotifyNetworkStateChanged == null )
-			LogError("Failed to create SDKCall: CGameRulesProxy::NotifyNetworkStateChanged");
+			LogError("Failed to create SDKCall: \"CGameRulesProxy::NotifyNetworkStateChanged\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::OnStaggered") == false )
 	{
-		LogError("Failed to find signature: StaggerPlayer");
+		LogError("Failed to find signature: \"CTerrorPlayer::StaggerPlayer\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
 		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 		g_hSDK_CTerrorPlayer_OnStaggered = EndPrepSDKCall();
 		if( g_hSDK_CTerrorPlayer_OnStaggered == null )
-			LogError("Failed to create SDKCall: CTerrorPlayer::OnStaggered");
+			LogError("Failed to create SDKCall: \"CTerrorPlayer::OnStaggered\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirectorScriptedEventManager::SendInRescueVehicle") == false )
 	{
-		LogError("Failed to find signature: CDirectorScriptedEventManager::SendInRescueVehicle");
+		LogError("Failed to find signature: \"CDirectorScriptedEventManager::SendInRescueVehicle\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
 		g_hSDK_CDirectorScriptedEventManager_SendInRescueVehicle = EndPrepSDKCall();
 		if( g_hSDK_CDirectorScriptedEventManager_SendInRescueVehicle == null )
-			LogError("Failed to create SDKCall: CDirectorScriptedEventManager::SendInRescueVehicle");
+			LogError("Failed to create SDKCall: \"CDirectorScriptedEventManager::SendInRescueVehicle\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "ZombieManager::ReplaceTank") == false )
 	{
-		LogError("Failed to find signature: ZombieManager::ReplaceTank");
+		LogError("Failed to find signature: \"ZombieManager::ReplaceTank\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
 		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
 		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 		g_hSDK_ZombieManager_ReplaceTank = EndPrepSDKCall();
 		if( g_hSDK_ZombieManager_ReplaceTank == null )
-			LogError("Failed to create SDKCall: ZombieManager::ReplaceTank");
+			LogError("Failed to create SDKCall: \"ZombieManager::ReplaceTank\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "ZombieManager::SpawnTank") == false )
 	{
-		LogError("Failed to find signature: ZombieManager::SpawnTank");
+		LogError("Failed to find signature: \"ZombieManager::SpawnTank\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 		PrepSDKCall_AddParameter(SDKType_QAngle, SDKPass_ByRef);
 		PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 		g_hSDK_ZombieManager_SpawnTank = EndPrepSDKCall();
 		if( g_hSDK_ZombieManager_SpawnTank == null )
-			LogError("Failed to create SDKCall: ZombieManager::SpawnTank");
+			LogError("Failed to create SDKCall: \"ZombieManager::SpawnTank\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "ZombieManager::SpawnWitch") == false )
 	{
-		LogError("Failed to find signature: ZombieManager::SpawnWitch");
+		LogError("Failed to find signature: \"ZombieManager::SpawnWitch\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 		PrepSDKCall_AddParameter(SDKType_QAngle, SDKPass_ByRef);
 		PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 		g_hSDK_ZombieManager_SpawnWitch = EndPrepSDKCall();
 		if( g_hSDK_ZombieManager_SpawnWitch == null )
-			LogError("Failed to create SDKCall: ZombieManager::SpawnWitch");
+			LogError("Failed to create SDKCall: \"ZombieManager::SpawnWitch\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::IsFinaleEscapeInProgress") == false )
 	{
-		LogError("Failed to find signature: CDirector::IsFinaleEscapeInProgress");
+		LogError("Failed to find signature: \"CDirector::IsFinaleEscapeInProgress\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
 		g_hSDK_CDirector_IsFinaleEscapeInProgress = EndPrepSDKCall();
 		if( g_hSDK_CDirector_IsFinaleEscapeInProgress == null )
-			LogError("Failed to create SDKCall: CDirector::IsFinaleEscapeInProgress");
+			LogError("Failed to create SDKCall: \"CDirector::IsFinaleEscapeInProgress\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "SurvivorBot::SetHumanSpectator") == false )
 	{
-		LogError("Failed to find signature: SurvivorBot::SetHumanSpectator");
+		LogError("Failed to find signature: \"SurvivorBot::SetHumanSpectator\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
 		PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
 		g_hSDK_SurvivorBot_SetHumanSpectator = EndPrepSDKCall();
 		if( g_hSDK_SurvivorBot_SetHumanSpectator == null )
-			LogError("Failed to create SDKCall: SurvivorBot::SetHumanSpectator");
+			LogError("Failed to create SDKCall: \"SurvivorBot::SetHumanSpectator\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::TakeOverBot") == false )
 	{
-		LogError("Failed to find signature: CTerrorPlayer::TakeOverBot");
+		LogError("Failed to find signature: \"CTerrorPlayer::TakeOverBot\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
 		PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
 		g_hSDK_CTerrorPlayer_TakeOverBot = EndPrepSDKCall();
 		if( g_hSDK_CTerrorPlayer_TakeOverBot == null )
-			LogError("Failed to create SDKCall: CTerrorPlayer::TakeOverBot");
+			LogError("Failed to create SDKCall: \"CTerrorPlayer::TakeOverBot\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::CanBecomeGhost") == false )
 	{
-		LogError("Failed to find signature: CTerrorPlayer::CanBecomeGhost");
+		LogError("Failed to find signature: \"CTerrorPlayer::CanBecomeGhost\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
 		PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
 		g_hSDK_CTerrorPlayer_CanBecomeGhost = EndPrepSDKCall();
 		if( g_hSDK_CTerrorPlayer_CanBecomeGhost == null )
-			LogError("Failed to create SDKCall: CTerrorPlayer::CanBecomeGhost");
+			LogError("Failed to create SDKCall: \"CTerrorPlayer::CanBecomeGhost\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::TryOfferingTankBot") == false )
 	{
-		LogError("Failed to find signature: CDirector::TryOfferingTankBot");
+		LogError("Failed to find signature: \"CDirector::TryOfferingTankBot\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
 		PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
 		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 		g_hSDK_CDirector_TryOfferingTankBot = EndPrepSDKCall();
 		if( g_hSDK_CDirector_TryOfferingTankBot == null )
-			LogError("Failed to create SDKCall: CDirector::TryOfferingTankBot");
+			LogError("Failed to create SDKCall: \"CDirector::TryOfferingTankBot\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CNavMesh::GetNavArea") == false )
 	{
-		LogError("Failed to find signature: CNavMesh::GetNavArea");
+		LogError("Failed to find signature: \"CNavMesh::GetNavArea\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 		PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
 		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 		g_hSDK_CNavMesh_GetNavArea = EndPrepSDKCall();
 		if( g_hSDK_CNavMesh_GetNavArea == null )
-			LogError("Failed to create SDKCall: CNavMesh::GetNavArea");
+			LogError("Failed to create SDKCall: \"CNavMesh::GetNavArea\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::GetFlowDistance") == false )
 	{
-		LogError("Failed to find signature: CTerrorPlayer::GetFlowDistance");
+		LogError("Failed to find signature: \"CTerrorPlayer::GetFlowDistance\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 		PrepSDKCall_SetReturnInfo(SDKType_Float, SDKPass_Plain);
 		g_hSDK_CTerrorPlayer_GetFlowDistance = EndPrepSDKCall();
 		if( g_hSDK_CTerrorPlayer_GetFlowDistance == null )
-			LogError("Failed to create SDKCall: CTerrorPlayer::GetFlowDistance");
+			LogError("Failed to create SDKCall: \"CTerrorPlayer::GetFlowDistance\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Entity);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Virtual, "CBaseGrenade::Detonate") == false )
 	{
-		LogError("Failed to find signature: CBaseGrenade::Detonate");
+		LogError("Failed to find signature: \"CBaseGrenade::Detonate\" (%s)", g_sSystem);
 	} else {
 		g_hSDK_CBaseGrenade_Detonate = EndPrepSDKCall();
 		if( g_hSDK_CBaseGrenade_Detonate == null )
-			LogError("Failed to create SDKCall: CBaseGrenade::Detonate");
+			LogError("Failed to create SDKCall: \"CBaseGrenade::Detonate\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Virtual, "CTerrorPlayer::DoAnimationEvent") == false )
 	{
-		LogError("Failed to find signature: CTerrorPlayer::DoAnimationEvent");
+		LogError("Failed to find signature: \"CTerrorPlayer::DoAnimationEvent\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 		g_hSDK_CTerrorPlayer_DoAnimationEvent = EndPrepSDKCall();
 		if( g_hSDK_CTerrorPlayer_DoAnimationEvent == null )
-			LogError("Failed to create SDKCall: CTerrorPlayer::DoAnimationEvent");
+			LogError("Failed to create SDKCall: \"CTerrorPlayer::DoAnimationEvent\" (%s)", g_sSystem);
 	}
 
 	if( !g_bLeft4Dead2 )
@@ -4118,12 +4205,12 @@ void LoadGameData()
 		StartPrepSDKCall(SDKCall_GameRules);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorGameRules::RecomputeTeamScores") == false )
 		{
-			LogError("Failed to find signature: CTerrorGameRules::RecomputeTeamScores");
+			LogError("Failed to find signature: \"CTerrorGameRules::RecomputeTeamScores\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 			g_hSDK_CTerrorGameRules_RecomputeTeamScores = EndPrepSDKCall();
 			if( g_hSDK_CTerrorGameRules_RecomputeTeamScores == null )
-				LogError("Failed to create SDKCall: CTerrorGameRules::RecomputeTeamScores");
+				LogError("Failed to create SDKCall: \"CTerrorGameRules::RecomputeTeamScores\" (%s)", g_sSystem);
 		}
 	}
 
@@ -4134,42 +4221,42 @@ void LoadGameData()
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CMeleeWeaponInfoStore::GetMeleeWeaponInfo") == false )
 		{
-			LogError("Failed to find signature: CMeleeWeaponInfoStore::GetMeleeWeaponInfo");
+			LogError("Failed to find signature: \"CMeleeWeaponInfoStore::GetMeleeWeaponInfo\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 			g_hSDK_CMeleeWeaponInfoStore_GetMeleeWeaponInfo = EndPrepSDKCall();
 			if( g_hSDK_CMeleeWeaponInfoStore_GetMeleeWeaponInfo == null )
-				LogError("Failed to create SDKCall: CMeleeWeaponInfoStore::GetMeleeWeaponInfo");
+				LogError("Failed to create SDKCall: \"CMeleeWeaponInfoStore::GetMeleeWeaponInfo\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::ResetMobTimer") == false )
 		{
-			LogError("Failed to find signature: CDirector::ResetMobTimer");
+			LogError("Failed to find signature: \"CDirector::ResetMobTimer\" (%s)", g_sSystem);
 		} else {
 			g_hSDK_CDirector_ResetMobTimer = EndPrepSDKCall();
 			if( g_hSDK_CDirector_ResetMobTimer == null )
-				LogError("Failed to create SDKCall: CDirector::ResetMobTimer");
+				LogError("Failed to create SDKCall: \"CDirector::ResetMobTimer\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirectorScriptedEventManager::ChangeFinaleStage") == false )
 		{
-			LogError("Failed to find signature: CDirectorScriptedEventManager::ChangeFinaleStage");
+			LogError("Failed to find signature: \"CDirectorScriptedEventManager::ChangeFinaleStage\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 			PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 			g_hSDK_CDirectorScriptedEventManager_ChangeFinaleStage = EndPrepSDKCall();
 			if( g_hSDK_CDirectorScriptedEventManager_ChangeFinaleStage == null )
-				LogError("Failed to create SDKCall: CDirectorScriptedEventManager::ChangeFinaleStage");
+				LogError("Failed to create SDKCall: \"CDirectorScriptedEventManager::ChangeFinaleStage\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "ZombieManager::SpawnSpecial") == false )
 		{
-			LogError("Failed to find signature: ZombieManager::SpawnSpecial");
+			LogError("Failed to find signature: \"ZombieManager::SpawnSpecial\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
@@ -4177,71 +4264,71 @@ void LoadGameData()
 			PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 			g_hSDK_ZombieManager_SpawnSpecial = EndPrepSDKCall();
 			if( g_hSDK_ZombieManager_SpawnSpecial == null )
-				LogError("Failed to create SDKCall: ZombieManager::SpawnSpecial");
+				LogError("Failed to create SDKCall: \"ZombieManager::SpawnSpecial\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "ZombieManager::SpawnWitchBride") == false )
 		{
-			LogError("Failed to find signature: ZombieManager::SpawnWitchBride");
+			LogError("Failed to find signature: \"ZombieManager::SpawnWitchBride\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 			PrepSDKCall_AddParameter(SDKType_QAngle, SDKPass_ByRef);
 			PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 			g_hSDK_ZombieManager_SpawnWitchBride = EndPrepSDKCall();
 			if( g_hSDK_ZombieManager_SpawnWitchBride == null )
-				LogError("Failed to create SDKCall: ZombieManager::SpawnWitchBride");
+				LogError("Failed to create SDKCall: \"ZombieManager::SpawnWitchBride\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::AreWanderersAllowed") == false )
 		{
-			LogError("Failed to find signature: CDirector::AreWanderersAllowed");
+			LogError("Failed to find signature: \"CDirector::AreWanderersAllowed\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
 			g_hSDK_CDirector_AreWanderersAllowed = EndPrepSDKCall();
 			if( g_hSDK_CDirector_AreWanderersAllowed == null )
-				LogError("Failed to create SDKCall: CDirector::AreWanderersAllowed");
+				LogError("Failed to create SDKCall: \"CDirector::AreWanderersAllowed\" (%s)", g_sSystem);
 		}
 	} else {
 	// L4D1 only:
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "ZombieManager::SpawnHunter") == false )
 		{
-			LogError("Failed to find signature: ZombieManager::SpawnHunter");
+			LogError("Failed to find signature: \"ZombieManager::SpawnHunter\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 			PrepSDKCall_AddParameter(SDKType_QAngle, SDKPass_ByRef);
 			PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 			g_hSDK_ZombieManager_SpawnHunter = EndPrepSDKCall();
 			if( g_hSDK_ZombieManager_SpawnHunter == null )
-				LogError("Failed to create SDKCall: ZombieManager::SpawnHunter");
+				LogError("Failed to create SDKCall: \"ZombieManager::SpawnHunter\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "ZombieManager::SpawnBoomer") == false )
 		{
-			LogError("Failed to find signature: ZombieManager::SpawnBoomer");
+			LogError("Failed to find signature: \"ZombieManager::SpawnBoomer\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 			PrepSDKCall_AddParameter(SDKType_QAngle, SDKPass_ByRef);
 			PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 			g_hSDK_ZombieManager_SpawnBoomer = EndPrepSDKCall();
 			if( g_hSDK_ZombieManager_SpawnBoomer == null )
-				LogError("Failed to create SDKCall: ZombieManager::SpawnBoomer");
+				LogError("Failed to create SDKCall: \"ZombieManager::SpawnBoomer\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "ZombieManager::SpawnSmoker") == false )
 		{
-			LogError("Failed to find signature: ZombieManager::SpawnSmoker");
+			LogError("Failed to find signature: \"ZombieManager::SpawnSmoker\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 			PrepSDKCall_AddParameter(SDKType_QAngle, SDKPass_ByRef);
 			PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 			g_hSDK_ZombieManager_SpawnSmoker = EndPrepSDKCall();
 			if( g_hSDK_ZombieManager_SpawnSmoker == null )
-				LogError("Failed to create SDKCall: ZombieManager::SpawnSmoker");
+				LogError("Failed to create SDKCall: \"ZombieManager::SpawnSmoker\" (%s)", g_sSystem);
 		}
 	}
 
@@ -4253,149 +4340,149 @@ void LoadGameData()
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::OnVomitedUpon") == false )
 	{
-		LogError("Failed to find signature: CTerrorPlayer::OnVomitedUpon");
+		LogError("Failed to find signature: \"CTerrorPlayer::OnVomitedUpon\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
 		PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
 		g_hSDK_CTerrorPlayer_OnVomitedUpon = EndPrepSDKCall();
 		if( g_hSDK_CTerrorPlayer_OnVomitedUpon == null )
-			LogError("Failed to create SDKCall: CTerrorPlayer::OnVomitedUpon");
+			LogError("Failed to create SDKCall: \"CTerrorPlayer::OnVomitedUpon\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::CancelStagger") == false )
 	{
-		LogError("Failed to find signature: CTerrorPlayer::CancelStagger");
+		LogError("Failed to find signature: \"CTerrorPlayer::CancelStagger\" (%s)", g_sSystem);
 	} else {
 		g_hSDK_CTerrorPlayer_CancelStagger = EndPrepSDKCall();
 		if( g_hSDK_CTerrorPlayer_CancelStagger == null )
-			LogError("Failed to create SDKCall: CTerrorPlayer::CancelStagger");
+			LogError("Failed to create SDKCall: \"CTerrorPlayer::CancelStagger\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::RoundRespawn") == false )
 	{
-		LogError("Failed to find signature: CTerrorPlayer::RoundRespawn");
+		LogError("Failed to find signature: \"CTerrorPlayer::RoundRespawn\" (%s)", g_sSystem);
 	} else {
 		g_hSDK_CTerrorPlayer_RoundRespawn = EndPrepSDKCall();
 		if( g_hSDK_CTerrorPlayer_RoundRespawn == null )
-			LogError("Failed to create SDKCall: CTerrorPlayer::RoundRespawn");
+			LogError("Failed to create SDKCall: \"CTerrorPlayer::RoundRespawn\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::CreateRescuableSurvivors") == false )
 	{
-		LogError("Failed to find signature: CDirector::CreateRescuableSurvivors");
+		LogError("Failed to find signature: \"CDirector::CreateRescuableSurvivors\" (%s)", g_sSystem);
 	} else {
 		g_hSDK_CDirector_CreateRescuableSurvivors = EndPrepSDKCall();
 		if( g_hSDK_CDirector_CreateRescuableSurvivors == null )
-			LogError("Failed to create SDKCall: CDirector::CreateRescuableSurvivors");
+			LogError("Failed to create SDKCall: \"CDirector::CreateRescuableSurvivors\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::OnRevived") == false )
 	{
-		LogError("Failed to find signature: CTerrorPlayer::OnRevived");
+		LogError("Failed to find signature: \"CTerrorPlayer::OnRevived\" (%s)", g_sSystem);
 	} else {
 		g_hSDK_CTerrorPlayer_OnRevived = EndPrepSDKCall();
 		if( g_hSDK_CTerrorPlayer_OnRevived == null )
-			LogError("Failed to create SDKCall: CTerrorPlayer::OnRevived");
+			LogError("Failed to create SDKCall: \"CTerrorPlayer::OnRevived\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Static);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirectorTacticalServices::GetHighestFlowSurvivor") == false )
 	{
-		LogError("Failed to find signature: CDirectorTacticalServices::GetHighestFlowSurvivor");
+		LogError("Failed to find signature: \"CDirectorTacticalServices::GetHighestFlowSurvivor\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 		PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 		g_hSDK_CDirectorTacticalServices_GetHighestFlowSurvivor = EndPrepSDKCall();
 		if( g_hSDK_CDirectorTacticalServices_GetHighestFlowSurvivor == null )
-			LogError("Failed to create SDKCall: CDirectorTacticalServices::GetHighestFlowSurvivor");
+			LogError("Failed to create SDKCall: \"CDirectorTacticalServices::GetHighestFlowSurvivor\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Entity);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "Infected::GetFlowDistance") == false )
 	{
-		LogError("Failed to find signature: Infected::GetFlowDistance");
+		LogError("Failed to find signature: \"Infected::GetFlowDistance\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_SetReturnInfo(SDKType_Float, SDKPass_Plain);
 		g_hSDK_Infected_GetFlowDistance = EndPrepSDKCall();
 		if( g_hSDK_Infected_GetFlowDistance == null )
-			LogError("Failed to create SDKCall: Infected::GetFlowDistance");
+			LogError("Failed to create SDKCall: \"Infected::GetFlowDistance\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::TakeOverZombieBot") == false )
 	{
-		LogError("Failed to find signature: CTerrorPlayer::TakeOverZombieBot");
+		LogError("Failed to find signature: \"CTerrorPlayer::TakeOverZombieBot\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
 		g_hSDK_CTerrorPlayer_TakeOverZombieBot = EndPrepSDKCall();
 		if( g_hSDK_CTerrorPlayer_TakeOverZombieBot == null )
-			LogError("Failed to create SDKCall: CTerrorPlayer::TakeOverZombieBot");
+			LogError("Failed to create SDKCall: \"CTerrorPlayer::TakeOverZombieBot\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::ReplaceWithBot") == false )
 	{
-		LogError("Failed to find signature: CTerrorPlayer::ReplaceWithBot");
+		LogError("Failed to find signature: \"CTerrorPlayer::ReplaceWithBot\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
 		g_hSDK_CTerrorPlayer_ReplaceWithBot = EndPrepSDKCall();
 		if( g_hSDK_CTerrorPlayer_ReplaceWithBot == null )
-			LogError("Failed to create SDKCall: CTerrorPlayer::ReplaceWithBot");
+			LogError("Failed to create SDKCall: \"CTerrorPlayer::ReplaceWithBot\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::CullZombie") == false )
 	{
-		LogError("Failed to find signature: CTerrorPlayer::CullZombie");
+		LogError("Failed to find signature: \"CTerrorPlayer::CullZombie\" (%s)", g_sSystem);
 	} else {
 		g_hSDK_CTerrorPlayer_CullZombie = EndPrepSDKCall();
 		if( g_hSDK_CTerrorPlayer_CullZombie == null )
-			LogError("Failed to create SDKCall: CTerrorPlayer::CullZombie");
+			LogError("Failed to create SDKCall: \"CTerrorPlayer::CullZombie\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::SetClass") == false )
 	{
-		LogError("Failed to find signature: CTerrorPlayer::SetClass");
+		LogError("Failed to find signature: \"CTerrorPlayer::SetClass\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 		g_hSDK_CTerrorPlayer_SetClass = EndPrepSDKCall();
 		if( g_hSDK_CTerrorPlayer_SetClass == null )
-			LogError("Failed to create SDKCall: CTerrorPlayer::SetClass");
+			LogError("Failed to create SDKCall: \"CTerrorPlayer::SetClass\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Static);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CBaseAbility::CreateForPlayer") == false )
 	{
-		LogError("Failed to find signature: CBaseAbility::CreateForPlayer");
+		LogError("Failed to find signature: \"CBaseAbility::CreateForPlayer\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
 		PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 		g_hSDK_CBaseAbility_CreateForPlayer = EndPrepSDKCall();
 		if( g_hSDK_CBaseAbility_CreateForPlayer == null )
-			LogError("Failed to create SDKCall: CBaseAbility::CreateForPlayer");
+			LogError("Failed to create SDKCall: \"CBaseAbility::CreateForPlayer\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::MaterializeFromGhost") == false )
 	{
-		LogError("Failed to find signature: CTerrorPlayer::MaterializeFromGhost");
+		LogError("Failed to find signature: \"CTerrorPlayer::MaterializeFromGhost\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 		g_hSDK_CTerrorPlayer_MaterializeFromGhost = EndPrepSDKCall();
 		if( g_hSDK_CTerrorPlayer_MaterializeFromGhost == null )
-			LogError("Failed to create SDKCall: CTerrorPlayer::MaterializeFromGhost");
+			LogError("Failed to create SDKCall: \"CTerrorPlayer::MaterializeFromGhost\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::BecomeGhost") == false )
 	{
-		LogError("Failed to find signature: CTerrorPlayer::BecomeGhost");
+		LogError("Failed to find signature: \"CTerrorPlayer::BecomeGhost\" (%s)", g_sSystem);
 	} else {
 		if( g_bLeft4Dead2 )
 			PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
@@ -4407,41 +4494,41 @@ void LoadGameData()
 		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 		g_hSDK_CTerrorPlayer_BecomeGhost = EndPrepSDKCall();
 		if( g_hSDK_CTerrorPlayer_BecomeGhost == null )
-			LogError("Failed to create SDKCall: CTerrorPlayer::BecomeGhost");
+			LogError("Failed to create SDKCall: \"CTerrorPlayer::BecomeGhost\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CCSPlayer::State_Transition") == false )
 	{
-		LogError("Failed to find signature: CCSPlayer::State_Transition");
+		LogError("Failed to find signature: \"CCSPlayer::State_Transition\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 		g_hSDK_CCSPlayer_State_Transition = EndPrepSDKCall();
 		if( g_hSDK_CCSPlayer_State_Transition == null )
-			LogError("Failed to create SDKCall: CCSPlayer::State_Transition");
+			LogError("Failed to create SDKCall: \"CCSPlayer::State_Transition\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::RegisterForbiddenTarget") == false )
 	{
-		LogError("Failed to find signature: CDirector::RegisterForbiddenTarget");
+		LogError("Failed to find signature: \"CDirector::RegisterForbiddenTarget\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
 		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 		g_hSDK_CDirector_RegisterForbiddenTarget = EndPrepSDKCall();
 		if( g_hSDK_CDirector_RegisterForbiddenTarget == null )
-			LogError("Failed to create SDKCall: CDirector::RegisterForbiddenTarget");
+			LogError("Failed to create SDKCall: \"CDirector::RegisterForbiddenTarget\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::UnregisterForbiddenTarget") == false )
 	{
-		LogError("Failed to find signature: CDirector::UnregisterForbiddenTarget");
+		LogError("Failed to find signature: \"CDirector::UnregisterForbiddenTarget\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
 		g_hSDK_CDirector_UnregisterForbiddenTarget = EndPrepSDKCall();
 		if( g_hSDK_CDirector_UnregisterForbiddenTarget == null )
-			LogError("Failed to create SDKCall: CDirector::UnregisterForbiddenTarget");
+			LogError("Failed to create SDKCall: \"CDirector::UnregisterForbiddenTarget\" (%s)", g_sSystem);
 	}
 
 
@@ -4451,29 +4538,29 @@ void LoadGameData()
 		StartPrepSDKCall(SDKCall_Player);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::OnHitByVomitJar") == false )
 		{
-			LogError("Failed to find signature: CTerrorPlayer::OnHitByVomitJar");
+			LogError("Failed to find signature: \"CTerrorPlayer::OnHitByVomitJar\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
 			g_hSDK_CTerrorPlayer_OnHitByVomitJar = EndPrepSDKCall();
 			if( g_hSDK_CTerrorPlayer_OnHitByVomitJar == null )
-				LogError("Failed to create SDKCall: CTerrorPlayer::OnHitByVomitJar");
+				LogError("Failed to create SDKCall: \"CTerrorPlayer::OnHitByVomitJar\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Entity);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "Infected::OnHitByVomitJar") == false )
 		{
-			LogError("Failed to find signature: Infected::OnHitByVomitJar");
+			LogError("Failed to find signature: \"Infected::OnHitByVomitJar\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
 			g_hSDK_Infected_OnHitByVomitJar = EndPrepSDKCall();
 			if( g_hSDK_Infected_OnHitByVomitJar == null )
-				LogError("Failed to create SDKCall: Infected::OnHitByVomitJar");
+				LogError("Failed to create SDKCall: \"Infected::OnHitByVomitJar\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Player);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::Fling") == false )
 		{
-			LogError("Failed to find signature: CTerrorPlayer::Fling");
+			LogError("Failed to find signature: \"CTerrorPlayer::Fling\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
@@ -4481,98 +4568,98 @@ void LoadGameData()
 			PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
 			g_hSDK_CTerrorPlayer_Fling = EndPrepSDKCall();
 			if( g_hSDK_CTerrorPlayer_Fling == null )
-				LogError("Failed to create SDKCall: CTerrorPlayer::Fling");
+				LogError("Failed to create SDKCall: \"CTerrorPlayer::Fling\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorGameRules::GetVersusCompletion") == false )
 		{
-			LogError("Failed to find signature: CTerrorGameRules::GetVersusCompletion");
+			LogError("Failed to find signature: \"CTerrorGameRules::GetVersusCompletion\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 			g_hSDK_CTerrorGameRules_GetVersusCompletion = EndPrepSDKCall();
 			if( g_hSDK_CTerrorGameRules_GetVersusCompletion == null )
-				LogError("Failed to create SDKCall: CTerrorGameRules::GetVersusCompletion");
+				LogError("Failed to create SDKCall: \"CTerrorGameRules::GetVersusCompletion\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::SwapTeams") == false )
 		{
-			LogError("Failed to find signature: CDirector::SwapTeams");
+			LogError("Failed to find signature: \"CDirector::SwapTeams\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 			g_hSDK_CDirector_SwapTeams = EndPrepSDKCall();
 			if( g_hSDK_CDirector_SwapTeams == null )
-				LogError("Failed to create SDKCall: CDirector::SwapTeams");
+				LogError("Failed to create SDKCall: \"CDirector::SwapTeams\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::AreTeamsFlipped") == false )
 		{
-			LogError("Failed to find signature: CDirector::AreTeamsFlipped");
+			LogError("Failed to find signature: \"CDirector::AreTeamsFlipped\" (%s)", g_sSystem);
 		} else {
 			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 			g_hSDK_CDirector_AreTeamsFlipped = EndPrepSDKCall();
 			if( g_hSDK_CDirector_AreTeamsFlipped == null )
-				LogError("Failed to create SDKCall: CDirector::AreTeamsFlipped");
+				LogError("Failed to create SDKCall: \"CDirector::AreTeamsFlipped\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::StartRematchVote") == false )
 		{
-			LogError("Failed to find signature: CDirector::StartRematchVote");
+			LogError("Failed to find signature: \"CDirector::StartRematchVote\" (%s)", g_sSystem);
 		} else {
 			g_hSDK_CDirector_StartRematchVote = EndPrepSDKCall();
 			if( g_hSDK_CDirector_StartRematchVote == null )
-				LogError("Failed to create SDKCall: CDirector::StartRematchVote");
+				LogError("Failed to create SDKCall: \"CDirector::StartRematchVote\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::FullRestart") == false )
 		{
-			LogError("Failed to find signature: CDirector::FullRestart");
+			LogError("Failed to find signature: \"CDirector::FullRestart\" (%s)", g_sSystem);
 		} else {
 			g_hSDK_CDirector_FullRestart = EndPrepSDKCall();
 			if( g_hSDK_CDirector_FullRestart == null )
-				LogError("Failed to create SDKCall: CDirector::FullRestart");
+				LogError("Failed to create SDKCall: \"CDirector::FullRestart\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirectorVersusMode::HideScoreboardNonVirtual") == false )
 		{
-			LogError("Failed to find signature: CDirectorVersusMode::HideScoreboardNonVirtual");
+			LogError("Failed to find signature: \"CDirectorVersusMode::HideScoreboardNonVirtual\" (%s)", g_sSystem);
 		} else {
 			g_hSDK_CDirectorVersusMode_HideScoreboardNonVirtual = EndPrepSDKCall();
 			if( g_hSDK_CDirectorVersusMode_HideScoreboardNonVirtual == null )
-				LogError("Failed to create SDKCall: CDirectorVersusMode::HideScoreboardNonVirtual");
+				LogError("Failed to create SDKCall: \"CDirectorVersusMode::HideScoreboardNonVirtual\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirectorScavengeMode::HideScoreboardNonVirtual") == false )
 		{
-			LogError("Failed to find signature: CDirectorScavengeMode::HideScoreboardNonVirtual");
+			LogError("Failed to find signature: \"CDirectorScavengeMode::HideScoreboardNonVirtual\" (%s)", g_sSystem);
 		} else {
 			g_hSDK_CDirectorScavengeMode_HideScoreboardNonVirtual = EndPrepSDKCall();
 			if( g_hSDK_CDirectorScavengeMode_HideScoreboardNonVirtual == null )
-				LogError("Failed to create SDKCall: CDirectorScavengeMode::HideScoreboardNonVirtual");
+				LogError("Failed to create SDKCall: \"CDirectorScavengeMode::HideScoreboardNonVirtual\" (%s)", g_sSystem);
 		}
 
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::HideScoreboard") == false )
 		{
-			LogError("Failed to find signature: CDirectorHideScoreboard");
+			LogError("Failed to find signature: \"CDirector::CDirectorHideScoreboard\" (%s)", g_sSystem);
 		} else {
 			g_hSDK_CDirector_HideScoreboard = EndPrepSDKCall();
 			if( g_hSDK_CDirector_HideScoreboard == null )
-				LogError("Failed to create SDKCall: CDirector::HideScoreboard");
+				LogError("Failed to create SDKCall: \"CDirector::HideScoreboard\" (%s)", g_sSystem);
 		}
 	}
 
 	StartPrepSDKCall(SDKCall_Static);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CBaseServer::SetReservationCookie") == false )
 	{
-		LogError("Failed to find signature: CBaseServer::SetReservationCookie");
+		LogError("Failed to find signature: \"CBaseServer::SetReservationCookie\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
@@ -4580,7 +4667,7 @@ void LoadGameData()
 		PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
 		g_hSDK_CBaseServer_SetReservationCookie = EndPrepSDKCall();
 		if( g_hSDK_CBaseServer_SetReservationCookie == null )
-			LogError("Failed to create SDKCall: CBaseServer::SetReservationCookie");
+			LogError("Failed to create SDKCall: \"CBaseServer::SetReservationCookie\" (%s)", g_sSystem);
 	}
 
 
@@ -4590,14 +4677,14 @@ void LoadGameData()
 	StartPrepSDKCall(SDKCall_Static);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "GetCampaignScores") == false )
 	{
-		LogError("Failed to find signature: GetCampaignScores");
+		LogError("Failed to find signature: \"GetCampaignScores\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 		g_hSDK_GetCampaignScores = EndPrepSDKCall();
 		if( g_hSDK_GetCampaignScores == null )
-			LogError("Failed to create SDKCall: GetCampaignScores");
+			LogError("Failed to create SDKCall: \"GetCampaignScores\" (%s)", g_sSystem);
 	}
 	// */
 
@@ -4605,20 +4692,20 @@ void LoadGameData()
 	StartPrepSDKCall(SDKCall_Static);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "LobbyIsReserved") == false )
 	{
-		LogError("Failed to find signature: LobbyIsReserved");
+		LogError("Failed to find signature: \"LobbyIsReserved\" (%s)", g_sSystem);
 	} else {
 		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 		g_hSDK_LobbyIsReserved = EndPrepSDKCall();
 		if( g_hSDK_LobbyIsReserved == null )
-			LogError("Failed to create SDKCall: LobbyIsReserved");
+			LogError("Failed to create SDKCall: \"LobbyIsReserved\" (%s)", g_sSystem);
 	}
 	// */
 
 
 
 	// ====================================================================================================
-	//									Pointer Offsets
+	//									POINTER OFFSETS
 	// ====================================================================================================
 	if( g_bLeft4Dead2 )
 	{
@@ -4640,13 +4727,13 @@ void LoadGameData()
 		ValidateOffset(g_iOff_VanillaModeOffset, "VanillaModeOffset");
 	// } else {
 		// TeamScoresAddress = hGameData.GetAddress("CTerrorGameRules::ClearTeamScores");
-		// if( TeamScoresAddress == Address_Null ) LogError("Failed to find \"CTerrorGameRules::ClearTeamScores\" address.");
+		// if( TeamScoresAddress == Address_Null ) LogError("Failed to find address \"CTerrorGameRules::ClearTeamScores\" (%s)", g_sSystem);
 
 		// ClearTeamScore_A = hGameData.GetOffset("ClearTeamScore_A");
-		// if( ClearTeamScore_A == -1 ) LogError("Failed to find \"ClearTeamScore_A\" offset.");
+		// if( ClearTeamScore_A == -1 ) LogError("Failed to find \"ClearTeamScore_A\" offset (%s)", g_sSystem);
 
 		// ClearTeamScore_B = hGameData.GetOffset("ClearTeamScore_B");
-		// if( ClearTeamScore_B == -1 ) LogError("Failed to find \"ClearTeamScore_B\" offset.");
+		// if( ClearTeamScore_B == -1 ) LogError("Failed to find \"ClearTeamScore_B\" offset (%s)", g_sSystem);
 	}
 
 	#if DEBUG
@@ -4868,6 +4955,8 @@ void LoadGameData()
 	L4D2IntWeapon_Offsets[0] = hGameData.GetOffset("L4D2IntWeapon_Damage");
 	L4D2IntWeapon_Offsets[1] = hGameData.GetOffset("L4D2IntWeapon_Bullets");
 	L4D2IntWeapon_Offsets[2] = hGameData.GetOffset("L4D2IntWeapon_ClipSize");
+	L4D2IntWeapon_Offsets[3] = hGameData.GetOffset("L4D2IntWeapon_Bucket");
+	L4D2IntWeapon_Offsets[4] = hGameData.GetOffset("L4D2IntWeapon_Tier");
 	L4D2FloatWeapon_Offsets[0] = hGameData.GetOffset("L4D2FloatWeapon_MaxPlayerSpeed");
 	L4D2FloatWeapon_Offsets[1] = hGameData.GetOffset("L4D2FloatWeapon_SpreadPerShot");
 	L4D2FloatWeapon_Offsets[2] = hGameData.GetOffset("L4D2FloatWeapon_MaxSpread");
@@ -4885,6 +4974,8 @@ void LoadGameData()
 	L4D2FloatWeapon_Offsets[14] = hGameData.GetOffset("L4D2FloatWeapon_CycleTime");
 	L4D2FloatWeapon_Offsets[15] = hGameData.GetOffset("L4D2FloatWeapon_ScatterPitch");
 	L4D2FloatWeapon_Offsets[16] = hGameData.GetOffset("L4D2FloatWeapon_ScatterYaw");
+	L4D2FloatWeapon_Offsets[17] = hGameData.GetOffset("L4D2FloatWeapon_VerticalPunch");
+	L4D2FloatWeapon_Offsets[18] = hGameData.GetOffset("L4D2FloatWeapon_HorizontalPunch");
 
 
 
@@ -4958,8 +5049,8 @@ void ValidateAddress(any addr, const char[] name, bool check = false)
 {
 	if( addr == Address_Null )
 	{
-		if( check )		LogError("Failed to find \"%s\" address.", name);
-		else			ThrowNativeError(SP_ERROR_INVALID_ADDRESS, "%s not available.", name);
+		if( check )		LogError("Failed to find \"%s\" address (%s).", name, g_sSystem);
+		else			ThrowNativeError(SP_ERROR_INVALID_ADDRESS, "%s not available (%s).", name, g_sSystem);
 	}
 }
 
@@ -4967,7 +5058,7 @@ void ValidateNatives(Handle test, const char[] name)
 {
 	if( test == null )
 	{
-		ThrowNativeError(SP_ERROR_INVALID_ADDRESS, "%s not available.", name);
+		ThrowNativeError(SP_ERROR_INVALID_ADDRESS, "%s not available (%s).", name, g_sSystem);
 	}
 }
 
@@ -4975,8 +5066,8 @@ void ValidateOffset(int test, const char[] name, bool check = true)
 {
 	if( test == -1 )
 	{
-		if( check )		LogError("Failed to find \"%s\" offset.", name);
-		else			ThrowNativeError(SP_ERROR_INVALID_ADDRESS, "%s not available.", name);
+		if( check )		LogError("Failed to find \"%s\" offset (%s).", name, g_sSystem);
+		else			ThrowNativeError(SP_ERROR_INVALID_ADDRESS, "%s not available (%s).", name, g_sSystem);
 	}
 }
 
@@ -6620,6 +6711,9 @@ public int Native_GetIntWeaponAttribute(Handle plugin, int numParams)
 	if( attr >= view_as<int>(MAX_SIZE_L4D2IntWeaponAttributes) ) // view_as to avoid tag mismatch from enum "type"
 		ThrowNativeError(SP_ERROR_PARAM, "Invalid attribute id");
 
+	if( !g_bLeft4Dead2 && attr == view_as<int>(L4D2IWA_Tier) )
+		ThrowNativeError(SP_ERROR_PARAM, "Attribute \"L4D2IWA_Tier\" only exists in L4D2.");
+
 	int ptr = GetWeaponPointer();
 	if( ptr != -1 )
 	{
@@ -6651,6 +6745,9 @@ public int Native_SetIntWeaponAttribute(Handle plugin, int numParams)
 	int attr = GetNativeCell(2);
 	if( attr >= view_as<int>(MAX_SIZE_L4D2IntWeaponAttributes) ) // view_as to avoid tag mismatch from enum "type"
 		ThrowNativeError(SP_ERROR_PARAM, "Invalid attribute id");
+
+	if( !g_bLeft4Dead2 && attr == view_as<int>(L4D2IWA_Tier) )
+		ThrowNativeError(SP_ERROR_PARAM, "Attribute \"L4D2IWA_Tier\" only exists in L4D2.");
 
 	int ptr = GetWeaponPointer();
 	if( ptr != -1 )
@@ -9488,7 +9585,7 @@ public MRESReturn DTR_CDirector_TryOfferingTankBot(Handle hReturn, Handle hParam
 	if( aResult == Plugin_Changed )
 	{
 		DHookSetParam(hParams, 2, a2);
-		DHookSetReturn(hReturn, a2);
+		DHookSetReturn(hReturn, DHookGetReturn(hReturn));
 
 		return MRES_ChangedOverride;
 	}
@@ -10508,7 +10605,6 @@ public MRESReturn DTR_CTerrorPlayer_OnVomitedUpon(int client, Handle hReturn, Ha
 	if( !DHookIsNullParam(hParams, 1) )
 		a1 = DHookGetParam(hParams, 1);
 
-	a1 = DHookGetParam(hParams, 1);
 	int a2 = DHookGetParam(hParams, 2);
 
 	Action aResult = Plugin_Continue;

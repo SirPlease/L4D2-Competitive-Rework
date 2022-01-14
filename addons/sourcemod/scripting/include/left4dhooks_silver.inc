@@ -1,6 +1,6 @@
 /*
 *	Left 4 DHooks Direct - Stock Functions
-*	Copyright (C) 2021 Silvers
+*	Copyright (C) 2022 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -827,7 +827,10 @@ stock int GetAnyRandomClient()
 	}
 
 	if( aClients.Length > 0 )
+	{
+		SetRandomSeed(GetGameTickCount());
 		client = aClients.Get(GetRandomInt(0, aClients.Length - 1));
+	}
 
 	delete aClients;
 
@@ -860,13 +863,13 @@ stock int GetRandomInfected(int alive = -1, int bots = -1)
 	return Local_GetRandomClient(3, alive, bots);
 }
 
-int Local_GetRandomClient(int team, int alive = -1, int bots = -1)
+stock int Local_GetRandomClient(int team, int alive = -1, int bots = -1)
 {
 	ArrayList aClients = new ArrayList();
 
 	for( int i = 1; i <= MaxClients; i++ )
 	{
-		if( IsClientInGame(i) && GetClientTeam(i) == team && (alive == -1 || IsPlayerAlive(i) == view_as<bool>(alive)) && (bots == -1 || IsFakeClient(i) == view_as<bool>(alive)) )
+		if( IsClientInGame(i) && GetClientTeam(i) == team && (alive == -1 || IsPlayerAlive(i) == view_as<bool>(alive)) && (bots == -1 || IsFakeClient(i) == view_as<bool>(bots)) )
 		{
 			aClients.Push(i);
 		}
@@ -875,7 +878,10 @@ int Local_GetRandomClient(int team, int alive = -1, int bots = -1)
 	int client;
 
 	if( aClients.Length > 0 )
+	{
+		SetRandomSeed(GetGameTickCount());
 		client = aClients.Get(GetRandomInt(0, aClients.Length - 1));
+	}
 
 	delete aClients;
 

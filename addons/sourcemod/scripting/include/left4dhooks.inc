@@ -18,7 +18,7 @@
  * Copyright (C) 2017 "Accelerator74"
  *
  * Left 4 DHooks Direct SourceMod plugin
- * Copyright (C) 2021 "SilverShot" / "Silvers"
+ * Copyright (C) 2022 "SilverShot" / "Silvers"
  *
  * =============================================================================
  *
@@ -2663,9 +2663,9 @@ native float L4D2_ITimerGetElapsedTime(L4D2IntervalTimer timer);
  * 2020 Update2: Now works in Left4DHooks. Glitchy animation bug when reloading an already full weapon.
  * 2021 Update3: Fix plugin for modified ammo clips found here: https://forums.alliedmods.net/showthread.php?t=327105
 
-A note regarding Clipsize: Any non-standard value will NOT be in effect at weapon pickup, which means the client
-has to reload once to achieve the modified value. To fix this, add a weapon pickup hook in your plugin (eg "player_use")
-and use something like this with a small timer delay of 0.1 seconds or more (dont you love this engine).
+	A note regarding Clipsize: Any non-standard value will NOT be in effect at weapon pickup, which means the client
+	has to reload once to achieve the modified value. To fix this, add a weapon pickup hook in your plugin (eg "player_use")
+	and use something like this with a small timer delay of 0.1 seconds or more (dont you love this engine).
 
 	int weapon = GetPlayerWeaponSlot(client, 0);
 	if( weapon == INVALID_ENT_REFERENCE ) return;
@@ -2678,6 +2678,8 @@ enum L4D2IntWeaponAttributes
 	L4D2IWA_Damage,
 	L4D2IWA_Bullets,
 	L4D2IWA_ClipSize,
+	L4D2IWA_Bucket,
+	L4D2IWA_Tier, // L4D2 only
 	MAX_SIZE_L4D2IntWeaponAttributes
 };
 
@@ -2700,15 +2702,19 @@ enum L4D2FloatWeaponAttributes
 	L4D2FWA_CycleTime,
 	L4D2FWA_PelletScatterPitch,
 	L4D2FWA_PelletScatterYaw,
+	L4D2FWA_VerticalPunch,
+	L4D2FWA_HorizontalPunch, // Requires "z_gun_horiz_punch" cvar changed to "1".
 	MAX_SIZE_L4D2FloatWeaponAttributes
 };
 
+// L4D2 only
 enum L4D2BoolMeleeWeaponAttributes
 {
 	L4D2BMWA_Decapitates,
 	MAX_SIZE_L4D2BoolMeleeWeaponAttributes
 };
 
+// L4D2 only
 enum L4D2IntMeleeWeaponAttributes
 {
 	L4D2IMWA_DamageFlags,
@@ -2716,6 +2722,7 @@ enum L4D2IntMeleeWeaponAttributes
 	MAX_SIZE_L4D2IntMeleeWeaponAttributes
 };
 
+// L4D2 only
 enum L4D2FloatMeleeWeaponAttributes
 {
 	L4D2FMWA_Damage,
