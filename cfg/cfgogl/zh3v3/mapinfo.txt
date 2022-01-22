@@ -129,7 +129,7 @@
 		"horde_limit"		"240"
 		"tank_ban_flow"
 		{
-			"Coaster"
+			"Coaster Start"
 			{
 				"min"		"56"
 				"max"		"100"
@@ -633,7 +633,7 @@
 		"start_extra_dist"	"307.155029"
 		"end_point"			"1309.379883 -5479.276367 -26.821182"
 		"end_dist"			"324.451355"
-		"horde_limit"		"90"
+		"horde_limit"		"120"
 		"tank_ban_flow"
 		{
 			"Start of event"
