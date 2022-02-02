@@ -9,7 +9,7 @@
 #undef REQUIRE_PLUGIN
 #include <caster_system>
 
-#define PLUGIN_VERSION "9.3.9"
+#define PLUGIN_VERSION "9.3.11"
 
 public Plugin myinfo =
 {
@@ -146,10 +146,6 @@ Handle blockSecretSpam[MAXPLAYERS+1];
 // Caster System
 bool casterSystemAvailable;
 
-// CDirector::IsInTransition
-Handle g_hSDKCall_IsInTransition;
-Address g_pDirector;
-
 // Delayed initiation
 bool g_bTransitioning = false;
 
@@ -196,9 +192,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
-	LoadSDK(true);
-	
-	l4d_ready_enabled			= CreateConVar("l4d_ready_enabled", "1", "Enable this plugin. (Values: 1 = Manual ready, 2 = Auto start)", FCVAR_NOTIFY, true, 0.0, true, 2.0);
+	l4d_ready_enabled			= CreateConVar("l4d_ready_enabled", "1", "Enable this plugin. (Values: 0 = Disabled, 1 = Manual ready, 2 = Auto start)", FCVAR_NOTIFY, true, 0.0, true, 2.0);
 	l4d_ready_cfg_name			= CreateConVar("l4d_ready_cfg_name", "", "Configname to display on the ready-up panel", FCVAR_NOTIFY|FCVAR_PRINTABLEONLY);
 	l4d_ready_server_cvar		= CreateConVar("l4d_ready_server_cvar", "sn_main_name", "ConVar to retrieve the server name for displaying on the ready-up panel", FCVAR_NOTIFY|FCVAR_PRINTABLEONLY);
 	l4d_ready_disable_spawns	= CreateConVar("l4d_ready_disable_spawns", "0", "Prevent SI from having spawns during ready-up", FCVAR_NOTIFY, true, 0.0, true, 1.0);
@@ -260,53 +254,6 @@ public void OnPluginStart()
 public void OnPluginEnd()
 {
 	InitiateLive(false);
-}
-
-void LoadSDK(bool optional)
-{
-	Handle conf = LoadGameConfigFile(GAMEDATA_L4DH);
-	if (conf != null)
-	{
-		g_pDirector = GameConfGetAddress(conf, "CDirector");
-		if (g_pDirector == Address_Null)
-		{
-			if (optional) LogError("Failed to get address of \"CDirector\"");
-			else SetFailState("Failed to get address of \"CDirector\"");
-		}
-		delete conf;
-	}
-	else
-	{
-		if (optional) LogError("Missing gamedata \""... GAMEDATA_L4DH ... "\"");
-		else SetFailState("Missing gamedata \""... GAMEDATA_L4DH ... "\"");
-	}
-	
-	conf = LoadGameConfigFile(GAMEDATA_READYUP);
-	if (conf != null)
-	{
-		StartPrepSDKCall(SDKCall_Raw);
-		if (!PrepSDKCall_SetFromConf(conf, SDKConf_Signature, "CDirector_IsInTransition"))
-		{
-			if (optional) LogError("Failed to PrepSDKCall of \"CDirector_IsInTransition\"");
-			else SetFailState("Failed to PrepSDKCall of \"CDirector_IsInTransition\"");
-		}
-		else
-		{
-			PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
-			g_hSDKCall_IsInTransition = EndPrepSDKCall();
-			if (g_hSDKCall_IsInTransition == null)
-			{
-				if (optional) LogError("Failed to EndPrepSDKCall of \"CDirector_IsInTransition\"");
-				else SetFailState("Failed to EndPrepSDKCall of \"CDirector_IsInTransition\"");
-			}
-		}
-		delete conf;
-	}
-	else
-	{
-		if (optional) LogError("Missing gamedata \""... GAMEDATA_READYUP ... "\"");
-		else SetFailState("Missing gamedata \""... GAMEDATA_READYUP ... "\"");
-	}
 }
 
 public void OnAllPluginsLoaded()
@@ -375,11 +322,7 @@ public void ServerCvarChanged(ConVar convar, const char[] oldValue, const char[]
 
 public void OnConfigsExecuted()
 {
-	if (g_bTransitioning)
-	{
-		g_bTransitioning = false;
-		InitiateReadyUp();
-	}
+	if (g_bTransitioning) InitiateReadyUp();
 }
 
 public void RoundStart_Event(Event event, const char[] name, bool dontBroadcast)
@@ -389,6 +332,9 @@ public void RoundStart_Event(Event event, const char[] name, bool dontBroadcast)
 
 public void GameInstructorDraw_Event(Event event, const char[] name, bool dontBroadcast)
 {
+	// First map intro ended, absolutely after all players' being loaded in game
+	g_bTransitioning = false;
+	
 	// Workaround for restarting countdown after scavenge intro
 	CreateTimer(0.1, Timer_RestartCountdowns, false, TIMER_FLAG_NO_MAPCHANGE);
 }
@@ -983,6 +929,11 @@ void UpdatePanel()
 				}
 			}
 			
+			switch (GetClientMenu(client))
+			{
+				case MenuSource_External, MenuSource_Normal: continue;
+			}
+			
 			menuPanel.Send(client, DummyHandler, 1);
 		}
 	}
@@ -992,6 +943,8 @@ void UpdatePanel()
 
 void InitiateReadyUp()
 {
+	if (!l4d_ready_enabled.BoolValue) return;
+	
 	Call_StartForward(preInitiateForward);
 	Call_Finish();
 	
@@ -1074,12 +1027,7 @@ void InitiateLive(bool real = true)
 	if (real)
 	{
 		CreateTimer(0.1, Timer_RestartCountdowns, true, TIMER_FLAG_NO_MAPCHANGE);
-	
-		for (int i = 0; i < 4; i++)
-		{
-			GameRules_SetProp("m_iVersusDistancePerSurvivor", 0, _,
-					i + 4 * GameRules_GetProp("m_bAreTeamsFlipped"));
-		}
+		ClearSurvivorProgress();
 		
 		Call_StartForward(liveForward);
 		Call_Finish();
@@ -1092,7 +1040,7 @@ void InitiateLive(bool real = true)
 
 public Action Timer_AutoStartHelper(Handle timer)
 {
-	if (IsInTransition() || GetSeriousClientCount(true) == 0)
+	if (g_bTransitioning || GetSeriousClientCount(true) == 0)
 	{
 		// no player in game
 		expireTime = l4d_ready_autostart_wait.IntValue;
@@ -1537,11 +1485,13 @@ public int Native_ToggleReadyPanel(Handle plugin, int numParams)
 //  Helpers
 // ========================
 
-bool IsInTransition()
+void ClearSurvivorProgress()
 {
-	return g_pDirector != Address_Null
-		&& g_hSDKCall_IsInTransition != null
-		&& SDKCall(g_hSDKCall_IsInTransition, g_pDirector);
+	for (int i = 0; i < 4; i++)
+	{
+		GameRules_SetProp("m_iVersusDistancePerSurvivor", 0, _,
+				i + 4 * GameRules_GetProp("m_bAreTeamsFlipped"));
+	}
 }
 
 void SetEngineTime(int client)
@@ -1565,17 +1515,7 @@ stock void GetClientFixedName(int client, char[] name, int length)
 
 stock bool IsScavenge()
 {
-	static ConVar mp_gamemode;
-	
-	if (mp_gamemode == null)
-	{
-		mp_gamemode = FindConVar("mp_gamemode");
-	}
-	
-	char sGamemode[16];
-	mp_gamemode.GetString(sGamemode, sizeof(sGamemode));
-	
-	return strcmp(sGamemode, "scavenge") == 0;
+	return L4D2_IsScavengeMode();
 }
 
 stock bool IsEmptyString(const char[] str, int length)
