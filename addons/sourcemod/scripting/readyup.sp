@@ -9,7 +9,7 @@
 #undef REQUIRE_PLUGIN
 #include <caster_system>
 
-#define PLUGIN_VERSION "9.3.11"
+#define PLUGIN_VERSION "9.3.11a"
 
 public Plugin myinfo =
 {
@@ -40,9 +40,6 @@ public Plugin myinfo =
 #define DEFAULT_AUTOSTART_SOUND "ui/buttonrollover.wav"
 
 #define TRANSLATION_READYUP "readyup.phrases"
-
-#define GAMEDATA_READYUP "l4d2_cdirector"
-#define GAMEDATA_L4DH "left4dhooks.l4d2"
 
 #define READY_MODE_MANUAL 1
 #define READY_MODE_AUTOSTART 2
