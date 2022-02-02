@@ -19,7 +19,7 @@
 #include <lerpmonitor>
 #include <witch_and_tankifier>
 
-#define PLUGIN_VERSION	"3.5.9"
+#define PLUGIN_VERSION	"3.5.10"
 
 public Plugin myinfo = 
 {
@@ -470,12 +470,11 @@ stock void BuildPlayerArrays()
 			}
 			case L4D2Team_Survivor:
 			{
-				if (survivorCount < iSurvivorLimit)
-					iSurvivorArray[survivorCount++] = client;
+				iSurvivorArray[survivorCount++] = client;
 			}
 			case L4D2Team_Infected:
 			{
-				if (infectedCount < iMaxPlayerZombies)
+				if (!IsFakeClient(client) || IsPlayerAlive(client))
 					iInfectedArray[infectedCount++] = client;
 					
 				if (!IsFakeClient(client) && bTankHudActive[client])
