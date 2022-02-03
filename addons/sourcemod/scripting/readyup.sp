@@ -319,7 +319,11 @@ public void ServerCvarChanged(ConVar convar, const char[] oldValue, const char[]
 
 public void OnConfigsExecuted()
 {
-	if (g_bTransitioning) InitiateReadyUp();
+	if (g_bTransitioning)
+	{
+		if (!L4D_IsFirstMapInScenario()) g_bTransitioning = false;
+		InitiateReadyUp();
+	}
 }
 
 public void RoundStart_Event(Event event, const char[] name, bool dontBroadcast)
