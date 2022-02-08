@@ -420,7 +420,7 @@
 		"start_dist"		"50.000000"
 		"start_extra_dist"	"0.000000"
 		"end_dist"			"50.000000"
-		"max_distance"		"800"
+		"max_distance"		"700"
 		"horde_limit"		"150"
 		"tank_ban_flow"
 		{
@@ -450,7 +450,6 @@
 		"start_dist"		"75.000000"
 		"start_extra_dist"	"0.000000"
 		"end_dist"			"50.000000"
-		"max_distance"		"600"
 	}
 	"c7m2_barge"
 	{
