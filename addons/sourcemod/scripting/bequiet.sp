@@ -111,7 +111,7 @@ public void cvarChanged(Handle convar, const char[] oldValue, const char[] newVa
     bCvarChange = hCvarCvarChange.BoolValue;
     bNameChange = hCvarNameChange.BoolValue;
     bSpecNameChange = hCvarSpecNameChange.BoolValue;
-    bSpecSeeChat = hCvarSpecNameChange.BoolValue;
+    bSpecSeeChat = hCvarSpecSeeChat.BoolValue;
 }
 
 stock bool IsValidClient(int client)
