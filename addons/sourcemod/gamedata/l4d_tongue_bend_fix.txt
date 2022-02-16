@@ -1,0 +1,78 @@
+"Games"
+{
+	"left4dead"
+	{
+        "MemPatches"
+        {
+			"CTongue::OnUpdateAttachedToTargetState__UpdateBend_jump_patch"
+			{
+				"signature"		"CTongue::OnUpdateAttachedToTargetState"
+				"linux"
+				{
+					"offset"	"217h"
+					"verify"	"\x0F\x85"
+					"patch"		"\x90\x90\x90\x90\x90\x90"
+				}
+				"windows"
+				{
+					"offset"	"1EEh"
+					"verify"	"\x0F\x84"
+					"patch"		"\x90\xE9"
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			"CTongue::OnUpdateAttachedToTargetState"
+			{
+				"library"		"server"
+				"linux"			"@_ZN7CTongue29OnUpdateAttachedToTargetStateEv"
+				"windows"		"\x56\x8B\xF1\x8B\x86\x74\x03\x00\x00\x83\xF8\xFF\x0F\x84\x2A\x2A\x2A\x2A\x8B\x15\x2A\x2A\x2A\x2A\x8B\xC8\x81\xE1\xFF\x0F\x00\x00\xC1\xE1\x04\x8D\x4C\x11\x04\x85\xC9\x0F\x84\x2A\x2A\x2A\x2A\xC1\xE8\x0C\x39\x41\x04\x0F\x85\x2A\x2A\x2A\x2A\x57"
+				/*
+				 * Search string "Tongue dropping because it bent too many times."
+				 *
+				 * Signature for sub_102CE170:
+				 * 56 8B F1 8B 86 74 03 00 00 83 F8 FF 0F 84 ? ? ? ? 8B 15 ? ? ? ? 8B C8 81 E1 FF 0F 00 00 C1 E1 04 8D 4C 11 04 85 C9 0F 84 ? ? ? ? C1 E8 0C 39 41 04 0F 85 ? ? ? ? 57 
+				 */
+			}
+		}
+	}
+	
+    "left4dead2"
+    {
+        "MemPatches"
+        {
+			"CTongue::OnUpdateAttachedToTargetState__UpdateBend_jump_patch"
+			{
+				"signature"		"CTongue::OnUpdateAttachedToTargetState"
+				"linux"
+				{
+					"offset"	"1D8h"
+					"verify"	"\x0F\x85"
+					"patch"		"\x90\x90\x90\x90\x90\x90"
+				}
+				"windows"
+				{
+					"offset"	"2EEh"
+					"verify"	"\x0F\x84"
+					"patch"		"\x90\xE9"
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			"CTongue::OnUpdateAttachedToTargetState"
+			{
+				"library"		"server"
+				"linux"			"@_ZN7CTongue29OnUpdateAttachedToTargetStateEv"
+				"windows"		"\x55\x8B\xEC\x83\xEC\x2A\x56\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x03\x2A\x8D\x2A\x2A\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\xC1\x2A\x2A\x39\x2A\x2A\x0F\x85\x2A\x2A\x2A\x2A\x57"
+				/*
+				 * Search string "Tongue dropping because it bent too many times."
+				 */
+				/* 55 8B EC 83 EC ? 56 8B ? 8B ? ? ? ? ? 83 ? ? 0F 84 ? ? ? ? 8B ? ? ? ? ? 8B ? 81 ? ? ? ? ? 03 ? 8D ? ? ? 85 ? 0F 84 ? ? ? ? C1 ? ? 39 ? ? 0F 85 ? ? ? ? 57 */
+			}
+		}
+	}
+}
