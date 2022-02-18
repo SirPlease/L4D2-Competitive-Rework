@@ -32,7 +32,7 @@ public Plugin myinfo =
 {
 	name		= "L4D2 M2 Control",
 	author		= "Jahze, Visor, A1m`, Forgetest",
-	version		= "1.9",
+	version		= "1.10",
 	description	= "Blocks instant repounces and gives m2 penalty after a shove/deadstop",
 	url 		= "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
@@ -120,6 +120,13 @@ public void OutSkilled(Event hEvent, const char[] eName, bool dontBroadcast)
 	L4D2Direct_SetNextShoveTime(shover, CalcNextShoveTime(penalty, minPenalty, maxPenalty) - eps);
 	
 	if (zClass != L4D2Infected_Smoker) {
+		RequestFrame(OnNextFrame_ResetAbilityTimer, shovee_userid);
+	}
+}
+
+void OnNextFrame_ResetAbilityTimer(any shovee_userid)
+{
+	if (ResetAbilityTimer(null, shovee_userid) == Plugin_Continue) {
 		CreateTimer(0.1, ResetAbilityTimer, shovee_userid, TIMER_FLAG_NO_MAPCHANGE | TIMER_REPEAT);
 	}
 }
