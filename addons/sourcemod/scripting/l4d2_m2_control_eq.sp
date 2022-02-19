@@ -32,7 +32,7 @@ public Plugin myinfo =
 {
 	name		= "L4D2 M2 Control",
 	author		= "Jahze, Visor, A1m`, Forgetest",
-	version		= "1.10",
+	version		= "1.11",
 	description	= "Blocks instant repounces and gives m2 penalty after a shove/deadstop",
 	url 		= "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
@@ -106,7 +106,7 @@ public void OutSkilled(Event hEvent, const char[] eName, bool dontBroadcast)
 
 	int minPenalty = hMinShovePenaltyCvar.IntValue;
 	int maxPenalty = hMaxShovePenaltyCvar.IntValue;
-	int penalty = L4D2Direct_GetShovePenalty(shover);
+	int penalty = GetEntProp(shover, Prop_Send, "m_iShovePenalty");
 
 	penalty += penaltyIncrease;
 	if (penalty > maxPenalty) {
@@ -116,43 +116,39 @@ public void OutSkilled(Event hEvent, const char[] eName, bool dontBroadcast)
 	float fAttackStartTime = GetEntPropFloat(shover_weapon, Prop_Send, "m_attackTimer", 1) - GetEntPropFloat(shover_weapon, Prop_Send, "m_attackTimer", 0);
 	float eps = GetGameTime() - fAttackStartTime;
 	
-	L4D2Direct_SetShovePenalty(shover, penalty);
-	L4D2Direct_SetNextShoveTime(shover, CalcNextShoveTime(penalty, minPenalty, maxPenalty) - eps);
+	SetEntProp(shover, Prop_Send, "m_iShovePenalty", penalty);
+	SetEntPropFloat(shover, Prop_Send, "m_flNextShoveTime", CalcNextShoveTime(penalty, minPenalty, maxPenalty) - eps);
 	
 	if (zClass != L4D2Infected_Smoker) {
-		RequestFrame(OnNextFrame_ResetAbilityTimer, shovee_userid);
+		AnimHookDisable(shovee, AnimHook_Pre);
+		AnimHookEnable(shovee, AnimHook_Pre);
 	}
 }
 
-void OnNextFrame_ResetAbilityTimer(any shovee_userid)
+Action AnimHook_Pre(int client, int &sequence)
 {
-	if (ResetAbilityTimer(null, shovee_userid) == Plugin_Continue) {
-		CreateTimer(0.1, ResetAbilityTimer, shovee_userid, TIMER_FLAG_NO_MAPCHANGE | TIMER_REPEAT);
-	}
-}
-
-public Action ResetAbilityTimer(Handle hTimer, any shovee_userid)
-{
-	int shovee = GetClientOfUserId(shovee_userid);
-	if (shovee > 0 && GetInfectedAbilityEntity(shovee) != -1) {
-		float stagger_time = GetEntPropFloat(shovee, Prop_Send, "m_staggerTimer", 1);
-		if (stagger_time == -1.0) {
-			return Plugin_Continue;
+	if (GetClientTeam(client) == 3 && IsPlayerAlive(client) && !L4D_IsPlayerGhost(client)) {
+		switch (sequence) {
+			case L4D2_ACT_TERROR_SHOVED_FORWARD,
+				L4D2_ACT_TERROR_SHOVED_BACKWARD,
+				L4D2_ACT_TERROR_SHOVED_LEFTWARD,
+				L4D2_ACT_TERROR_SHOVED_RIGHTWARD: {
+				return Plugin_Continue;
+			}
 		}
 		
 		float timestamp, duration;
-		if (!GetInfectedAbilityTimer(shovee, timestamp, duration)) {
-			return Plugin_Stop;
-		}
-
-		float recharge = (GetInfectedClass(shovee) == L4D2Infected_Hunter) ? hPounceCrouchDelayCvar.FloatValue : hLeapIntervalCvar.FloatValue;
-		duration = stagger_time + recharge;
-		if (duration > timestamp) {
-			SetInfectedAbilityTimer(shovee, duration, recharge);
+		if (GetInfectedAbilityTimer(client, timestamp, duration)) {
+			float recharge = (GetInfectedClass(client) == L4D2Infected_Hunter) ? hPounceCrouchDelayCvar.FloatValue : hLeapIntervalCvar.FloatValue;
+			duration = GetGameTime() + recharge;
+			if (duration > timestamp) {
+				SetInfectedAbilityTimer(client, duration, recharge);
+			}
 		}
 	}
-
-	return Plugin_Stop;
+	
+	AnimHookDisable(client, AnimHook_Pre);
+	return Plugin_Continue;
 }
 
 float CalcNextShoveTime(int currentPenalty, int minPenalty, int maxPenalty)
