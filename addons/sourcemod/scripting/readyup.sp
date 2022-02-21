@@ -9,7 +9,7 @@
 #undef REQUIRE_PLUGIN
 #include <caster_system>
 
-#define PLUGIN_VERSION "9.3.11a"
+#define PLUGIN_VERSION "9.3.12"
 
 public Plugin myinfo =
 {
@@ -317,13 +317,14 @@ public void ServerCvarChanged(ConVar convar, const char[] oldValue, const char[]
 //  Events
 // ========================
 
+void EntO_OnGameplayStart(const char[] output, int caller, int activator, float delay)
+{
+	g_bTransitioning = false;
+}
+
 public void OnConfigsExecuted()
 {
-	if (g_bTransitioning)
-	{
-		if (!L4D_IsFirstMapInScenario()) g_bTransitioning = false;
-		InitiateReadyUp();
-	}
+	if (g_bTransitioning) InitiateReadyUp();
 }
 
 public void RoundStart_Event(Event event, const char[] name, bool dontBroadcast)
@@ -333,9 +334,6 @@ public void RoundStart_Event(Event event, const char[] name, bool dontBroadcast)
 
 public void GameInstructorDraw_Event(Event event, const char[] name, bool dontBroadcast)
 {
-	// First map intro ended, absolutely after all players' being loaded in game
-	g_bTransitioning = false;
-	
 	// Workaround for restarting countdown after scavenge intro
 	CreateTimer(0.1, Timer_RestartCountdowns, false, TIMER_FLAG_NO_MAPCHANGE);
 }
@@ -443,6 +441,8 @@ public void OnMapStart()
 		g_hChangeTeamTimer[client] = null;
 	}
 	readyCountdownTimer = null;
+	
+	HookEntityOutput("info_director", "OnGameplayStart", EntO_OnGameplayStart);
 }
 
 /* This ensures all cvars are reset if the map is changed during ready-up */
