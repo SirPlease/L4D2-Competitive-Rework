@@ -1,0 +1,194 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Functions"
+		{
+			"CSpitterProjectile::Detonate"
+			{
+				"signature"		"CSpitterProjectile::Detonate"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
+			}
+		}
+		
+		"MemPatches"
+		{
+			"CSpitterProjectile::Detonate__TraceFlag_patch"
+			{
+				"signature"		"CSpitterProjectile::Detonate"
+				"linux"
+				{
+					"offset"	"285h"
+					"verify"	"\x0B\x40\x00\x00"
+					"patch"		"\x0B\x40\x00\x02"
+				}
+				"windows"
+				{
+					"offset"	"12Bh"
+					"verify"	"\x0B\x40\x00\x00"
+					"patch"		"\x0B\x40\x00\x02"
+				}
+			}
+			
+			"CInferno::Spread__TraceFlag_patch"
+			{
+				"signature"		"CInferno::Spread"
+				"linux"
+				{
+					"offset"	"680h"
+					"verify"	"\x03\x40\x00\x00"
+					"patch"		"\x03\x40\x00\x02"
+				}
+				"windows"
+				{
+					"offset"	"6A9h"
+					"verify"	"\x03\x40\x00\x00"
+					"patch"		"\x03\x40\x00\x02"
+				}
+			}
+			
+			"CInferno::Spread__TraceFlag_patch2"
+			{
+				"signature"		"CInferno::Spread"
+				"linux"
+				{
+					"offset"	"997h"
+					"verify"	"\x03\x40\x00\x00"
+					"patch"		"\x03\x40\x00\x02"
+				}
+				"windows"
+				{
+					"offset"	"8D1h"
+					"verify"	"\x03\x40\x00\x00"
+					"patch"		"\x03\x40\x00\x02"
+				}
+			}
+			
+			"CInferno::Spread__PassEnt_patch"
+			{
+				"signature"		"CInferno::Spread"
+				"linux"
+				{
+					"offset"	"5C1h"
+					"verify"	"\xC7\x44\x24\x04\x00\x00\x00\x00"
+					"patch"		"\x89\x74\x24\x04\x90\x90\x90\x90" // mov [esp+4], esi ; this
+				}
+				"windows"
+				{
+					"offset"	"62Ch"
+					"verify"	"\x6A\x00"
+					"patch"		"\x90\x57" // nop + push edi ; this
+				}
+			}
+			
+			"CInferno::Spread__PassEnt_patch2"
+			{
+				"signature"		"CInferno::Spread"
+				"linux"
+				{
+					"offset"	"961h"
+					"verify"	"\xC7\x44\x24\x04\x00\x00\x00\x00"
+					"patch"		"\x89\x74\x24\x04\x90\x90\x90\x90" // mov [esp+4], esi ; this
+				}
+				"windows"
+				{
+					"offset"	"85Bh"
+					"verify"	"\x6A\x00"
+					"patch"		"\x90\x57" // nop + push edi ; this
+				}
+			}
+			
+			"CTerrorPlayer::Event_Killed__TraceHeight_patch"
+			{
+				"signature"		"CTerrorPlayer::Event_Killed"
+				"linux"
+				{
+					"offset"	"310Dh"
+					"verify"	"\xF3\x0F\x5C"
+					"preserve"	"\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
+					"patch"		"\x00\x00\x00\x00\x00\x00\x00\x00"
+				}
+				"windows"
+				{
+					"offset"	"249Eh"
+					"verify"	"\xF3\x0F\x5C"
+					"preserve"	"\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
+					"patch"		"\x00\x00\x00\x00\x00\x00\x00\x00"
+				}
+			}
+		}
+		
+		"Offsets"
+		{
+			"TerrorNavArea::m_spawnAttributes"
+			{
+				"linux"			"300"
+				"windows"		"296"
+			}
+		}
+		
+		"Signatures"
+		{
+			"CInferno::Spread"
+			{
+				"library"		"server"
+				"linux"			"@_ZN8CInferno6SpreadERK6Vector"
+				"windows"		"\x53\x8B\x2A\x83\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x8B\x2A\x2A\x56\x57\x8B\x2A\xF3"
+				/* 53 8B ? 83 ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 8B ? ? 56 57 8B ? F3 */
+			}
+			
+			/**
+			 * Big thanks to @Psykotikism
+			 *
+			 * CTerrorPlayer::Event_Killed(CTakeDamageInfo const&)
+			 *
+			 * How to find on Windows:
+			 * 1a. Search for any of the following strings (they can each only be found in this function):
+			 * - "charger_carry_kill"
+			 * - "blood_bleedout"
+			 * - "spitter_killed"
+			 * - "SubjectIsA:%s,Distance:%f"
+			 * - "DeadCharacter:"
+			 * - ",SubjectTeam:Survivor"
+			 * - "SurvivorDied"
+			 * - "pounce_attempt_stopped"
+			 * - "infected_explosive_barrel_kill"
+			 * - "mulletTongue"
+			 * - "charger_killed"
+			 * - "charging"
+			 * - "jockey_killed"
+			 * - "boomer_exploded"
+			 * - "splashedbile"
+			 *
+			 * 1b. Find the function's offsets with asherkin's VTable dump.
+			 * 2b. In IDA Pro, go to the ".rdata" section of the Windows binary.
+			 * 3b. Search for "CTerrorPlayer::`vftable'" to jump to the "CTerrorPlayer" vtable.
+			 * 4b. Compare your dump's offsets with asherkin's dump's offsets to find the target function.
+			 * 5b. Look for the target function in the Windows binary.
+			 **/
+			"CTerrorPlayer::Event_Killed"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer12Event_KilledERK15CTakeDamageInfo"
+				"mac"		"@_ZN13CTerrorPlayer12Event_KilledERK15CTakeDamageInfo"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x8B\x2A\x2A\x56\x8B\x2A\x8B\x2A\x89\x85\x2A\x2A\x2A\x2A\x8B\x82\x2A\x2A\x2A\x2A\x57\xFF\x2A\x8B\x2A\x8B"
+						/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 81 EC ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 8B ? ? 56 8B ? 8B ? 89 85 ? ? ? ? 8B 82 ? ? ? ? 57 FF ? 8B ? 8B */
+			}			
+			/* Windows sig:
+			 *	Search string "SpitProjectile.Bounce", only 2 of them reference to functions.
+			 *	Theoretically they are closed to each other, so you can choose anyone to look into.
+			 *	Find the one that has only 1 string, then go to the vtable of the function.
+			 *	The virtual function 2 offsets above is the sig.
+			**/
+			"CSpitterProjectile::Detonate"
+			{
+				"library"		"server"
+				"linux"			"@_ZN18CSpitterProjectile8DetonateEv"
+				"windows"		"\x55\x8B\xEC\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x8B\x2A\x57"
+				/* 55 8B EC 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 8B ? 57 */
+			}
+		}
+	}
+}
