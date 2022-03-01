@@ -15,7 +15,7 @@
 		
 		"MemPatches"
 		{
-			"CSpitterProjectile::Detonate__TraceFlag_patch"
+			"CSpitterProjectile::Detonate__TraceFlag_patch" // Add `CONTENTS_MONSTER` to the trace flags `MASK_SOLID_BRUSHONLY`
 			{
 				"signature"		"CSpitterProjectile::Detonate"
 				"linux"
@@ -32,7 +32,8 @@
 				}
 			}
 			
-			"CInferno::Spread__TraceFlag_patch"
+			/**< `CInferno::Spread` calls TraceRay twice to confirm a spread */
+			"CInferno::Spread__TraceFlag_patch" // Add `CONTENTS_MONSTER` to the trace flags `MASK_SHOT_PORTAL`
 			{
 				"signature"		"CInferno::Spread"
 				"linux"
@@ -49,7 +50,7 @@
 				}
 			}
 			
-			"CInferno::Spread__TraceFlag_patch2"
+			"CInferno::Spread__TraceFlag_patch2" // Add `CONTENTS_MONSTER` to the trace flags `MASK_SHOT_PORTAL`
 			{
 				"signature"		"CInferno::Spread"
 				"linux"
@@ -66,19 +67,20 @@
 				}
 			}
 			
+			/**< Set the trace filter to have pass entity so `PassServerEntityFilter` can be called. */
 			"CInferno::Spread__PassEnt_patch"
 			{
 				"signature"		"CInferno::Spread"
 				"linux"
 				{
 					"offset"	"5C1h"
-					"verify"	"\xC7\x44\x24\x04\x00\x00\x00\x00"
+					"verify"	"\xC7\x44\x24\x04\x00\x00\x00\x00" // mov dword ptr [esp+4], 0 ; almost certain `passEnt` is the first param
 					"patch"		"\x89\x74\x24\x04\x90\x90\x90\x90" // mov [esp+4], esi ; this
 				}
 				"windows"
 				{
 					"offset"	"62Ch"
-					"verify"	"\x6A\x00"
+					"verify"	"\x6A\x00" // push 0
 					"patch"		"\x90\x57" // nop + push edi ; this
 				}
 			}
@@ -89,31 +91,32 @@
 				"linux"
 				{
 					"offset"	"961h"
-					"verify"	"\xC7\x44\x24\x04\x00\x00\x00\x00"
+					"verify"	"\xC7\x44\x24\x04\x00\x00\x00\x00" // mov dword ptr [esp+4], 0 ; almost certain `passEnt` is the first param
 					"patch"		"\x89\x74\x24\x04\x90\x90\x90\x90" // mov [esp+4], esi ; this
 				}
 				"windows"
 				{
 					"offset"	"85Bh"
-					"verify"	"\x6A\x00"
+					"verify"	"\x6A\x00" // push 0
 					"patch"		"\x90\x57" // nop + push edi ; this
 				}
 			}
 			
-			"CTerrorPlayer::Event_Killed__TraceHeight_patch"
+			/**< The height death spit tries to trace within. */
+			"CTerrorPlayer::Event_Killed__TraceHeight_patch" // This patch only provides address and restores bytes automatically.
 			{
 				"signature"		"CTerrorPlayer::Event_Killed"
 				"linux"
 				{
 					"offset"	"310Dh"
-					"verify"	"\xF3\x0F\x5C"
+					"verify"	"\xF3\x0F\x5C" // subss xmm?, m32 ; address to a float pointer
 					"preserve"	"\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
 					"patch"		"\x00\x00\x00\x00\x00\x00\x00\x00"
 				}
 				"windows"
 				{
 					"offset"	"249Eh"
-					"verify"	"\xF3\x0F\x5C"
+					"verify"	"\xF3\x0F\x5C" // subss xmm?, m32 ; address to a float pointer
 					"preserve"	"\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
 					"patch"		"\x00\x00\x00\x00\x00\x00\x00\x00"
 				}
@@ -131,6 +134,12 @@
 		
 		"Signatures"
 		{
+			/** 
+			 * Windows sig:
+			 *	Search string "CInferno::InfernoThink (spread)" (binary search leads you to .rdata).
+			 *	Go to the only xref function `CInferno::InfernoThink` and generate pseudocodes.
+			 *  There you can easily find a function called inside profiling and that's it.
+			**/
 			"CInferno::Spread"
 			{
 				"library"		"server"
