@@ -32,7 +32,7 @@ public Plugin myinfo =
 {
 	name		= "L4D2 M2 Control",
 	author		= "Jahze, Visor, A1m`, Forgetest",
-	version		= "1.11",
+	version		= "1.12",
 	description	= "Blocks instant repounces and gives m2 penalty after a shove/deadstop",
 	url 		= "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
@@ -74,6 +74,10 @@ public void OutSkilled(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	int shover = GetClientOfUserId(hEvent.GetInt("attacker"));
 	if (!IsSurvivor(shover)) {
+		return;
+	}
+	
+	if (GetEntProp(shover, Prop_Send, "m_bAdrenalineActive")) {
 		return;
 	}
 	
