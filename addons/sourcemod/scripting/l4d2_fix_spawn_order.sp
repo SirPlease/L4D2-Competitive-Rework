@@ -48,6 +48,7 @@ public void OnPluginStart()
 {
 	// Events
 	HookEvent("round_start", Event_RoundStart);
+	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("player_team", Event_PlayerTeam);
 	HookEvent("player_death", Event_PlayerDeath);
 	HookEvent("tank_spawn", Event_TankSpawn);
@@ -88,6 +89,13 @@ public void OnConfigsExecuted()
 // Events
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
+	g_SpawnsArray.Clear();
+	bLive = false;
+}
+
+void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
+{
+	g_SpawnsArray.Clear();
 	bLive = false;
 }
 
@@ -212,8 +220,6 @@ int PopQueuedSI(int client)
 
 void FillQueue()
 {
-	g_SpawnsArray.Clear();
-	
 	int zombies[SI_MAX_SIZE] = {0};
 	CollectZombies(zombies);
 	
