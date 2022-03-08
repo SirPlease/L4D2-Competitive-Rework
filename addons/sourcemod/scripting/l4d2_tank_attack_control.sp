@@ -1,4 +1,5 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <left4dhooks>
@@ -11,25 +12,25 @@
 //50 - underhand (+use),
 //51 - 2handed overhand (+reload)
 
-new g_iQueuedThrow[MAXPLAYERS + 1];
-new Handle:g_hBlockPunchRock = INVALID_HANDLE;
-new Handle:g_hBlockJumpRock = INVALID_HANDLE;
-new Handle:hOverhandOnly;
+int g_iQueuedThrow[MAXPLAYERS + 1];
+ConVar g_hBlockPunchRock;
+ConVar g_hBlockJumpRock;
+ConVar hOverhandOnly;
 
-new Float:throwQueuedAt[MAXPLAYERS + 1];
+float throwQueuedAt[MAXPLAYERS + 1];
 
-public Plugin:myinfo = 
+public Plugin myinfo = 
 {
 	name = "Tank Attack Control", 
 	author = "vintik, CanadaRox, Jacob, Visor",
 	description = "",
-	version = "0.7.1",
-	url = "https://github.com/Attano/L4D2-Competitive-Framework"
+	version = "0.7.2",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
-public OnPluginStart()
+public void OnPluginStart()
 {
-	decl String:sGame[256];
+	char sGame[256];
 	GetGameFolderName(sGame, sizeof(sGame));
 	if (!StrEqual(sGame, "left4dead2", false))
 	{
@@ -52,20 +53,12 @@ public void RoundStartEvent(Event hEvent, const char[] sEventName, bool bDontBro
 	}
 }
 
-public TankSpawn_Event(Handle:event, const String:name[], bool:dontBroadcast)
+public void TankSpawn_Event(Event event, const char[] name, bool dontBroadcast)
 {
-	new tank = GetClientOfUserId(GetEventInt(event, "userid"));
+	int tank = GetClientOfUserId(GetEventInt(event, "userid"));
 	if (IsFakeClient(tank)) return;
 
-	bool hidemessage = false;
-
-	char buffer[3];
-	if (GetClientInfo(tank, "rs_hidemessage", buffer, sizeof(buffer)))
-	{
-		hidemessage = bool:StringToInt(buffer);
-	}
-
-	if (!hidemessage && (GetConVarBool(hOverhandOnly) == false))
+	if (GetConVarBool(hOverhandOnly) == false)
 	{
 		CPrintToChat(tank, "{blue}[{default}Tank Rock Selector{blue}]");
 		CPrintToChat(tank, "{olive}Reload {default}= {blue}2 Handed Overhand");
@@ -74,7 +67,7 @@ public TankSpawn_Event(Handle:event, const String:name[], bool:dontBroadcast)
 	}
 }
 
-public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:angles[3], &weapon)
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
 	if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != 3
 		|| GetEntProp(client, Prop_Send, "m_zombieClass") != 8)
@@ -111,14 +104,14 @@ public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:ang
 	return Plugin_Continue;
 }
 
-public Action:L4D_OnCThrowActivate(ability)
+public Action L4D_OnCThrowActivate(int ability)
 {
 	if (!IsValidEntity(ability))
 	{
 		LogMessage("Invalid 'ability_throw' index: %d. Continuing throwing.", ability);
 		return Plugin_Continue;
 	}
-	new client = GetEntPropEnt(ability, Prop_Data, "m_hOwnerEntity");
+	int client = GetEntPropEnt(ability, Prop_Data, "m_hOwnerEntity");
 	
 	if (GetClientButtons(client) & IN_ATTACK)
 	{
@@ -130,7 +123,7 @@ public Action:L4D_OnCThrowActivate(ability)
 	return Plugin_Continue;
 }
 
-public Action:L4D2_OnSelectTankAttack(client, &sequence)
+public Action L4D2_OnSelectTankAttack(int client, int &sequence)
 {
 	if (sequence > 48 && g_iQueuedThrow[client])
 	{
@@ -141,7 +134,7 @@ public Action:L4D2_OnSelectTankAttack(client, &sequence)
 	return Plugin_Continue;
 }
 
-bool:ShouldCancelJump(client)
+bool ShouldCancelJump(int client)
 {
 	if (!GetConVarBool(g_hBlockJumpRock))
 	{
