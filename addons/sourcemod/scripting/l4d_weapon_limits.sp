@@ -40,14 +40,16 @@ ArrayList
 
 bool
 	bIsLocked,
-	bIsIncappedWithMelee[MAXPLAYERS + 1];
+	bIsIncappedWithMelee[MAXPLAYERS + 1],
+	bIsPressingButtonUse[MAXPLAYERS + 1],
+	bIsHoldingButtonUse[MAXPLAYERS + 1];
 
 public Plugin myinfo =
 {
 	name = "L4D Weapon Limits",
 	author = "CanadaRox, Stabby, Forgetest, A1m`",
 	description = "Restrict weapons individually or together",
-	version = "1.3.7",
+	version = "1.4",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -105,16 +107,22 @@ public void ClearUp(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	for (int i = 1; i <= MAXPLAYERS; i++) {
 		bIsIncappedWithMelee[i] = false;
+		bIsPressingButtonUse[i] = false;
+		bIsHoldingButtonUse[i] = false;
 	}
 }
 
 public void OnClientPutInServer(int client)
 {
+	bIsPressingButtonUse[client] = false;
+	bIsHoldingButtonUse[client] = false;
 	SDKHook(client, SDKHook_WeaponCanUse, WeaponCanUse);
 }
 
 public void OnClientDisconnect(int client)
 {
+	bIsPressingButtonUse[client] = false;
+	bIsHoldingButtonUse[client] = false;
 	SDKUnhook(client, SDKHook_WeaponCanUse, WeaponCanUse);
 }
 
@@ -199,12 +207,24 @@ void ClearLimits()
 	}
 }
 
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon, int &subtype, int &cmdnum, int &tickcount, int &seed, int mouse[2])
+{
+	if (IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client))
+	{
+		bIsHoldingButtonUse[client] = bIsPressingButtonUse[client];
+		bIsPressingButtonUse[client] = !!(buttons & IN_USE);
+	}
+	else
+	{
+		bIsHoldingButtonUse[client] = false;
+		bIsPressingButtonUse[client] = false;
+	}
+	
+	return Plugin_Continue;
+}
+
 public Action WeaponCanUse(int client, int weapon)
 {
-	// TODO: There seems to be an issue that this hook will be constantly called
-	//       when client with no weapon on equivalent slot just eyes or walks on it.
-	//       If the weapon meets limit, client will have the warning spamming unexpectedly.
-	
 	if (GetClientTeam(client) != TEAM_SURVIVOR || !bIsLocked) {
 		return Plugin_Continue;
 	}
@@ -235,8 +255,14 @@ public Action WeaponCanUse(int client, int weapon)
 						GiveDefaultAmmo(client);
 					}
 					
-					CPrintToChat(client, "{blue}[{default}Weapon Limits{blue}]{default} This weapon group has reached its max of {green}%d", arrayEntry.LAE_iLimit);
-					EmitSoundToClient(client, "player/suit_denydevice.wav");
+					// Notify the client only when they are attempting to pick this up
+					// in which way spamming gets avoided due to auto-pick-up checking left since Counter:Strike.
+					if (bIsPressingButtonUse[client] && !bIsHoldingButtonUse[client])
+					{
+						bIsHoldingButtonUse[client] = true;
+						CPrintToChat(client, "{blue}[{default}Weapon Limits{blue}]{default} This weapon group has reached its max of {green}%d", arrayEntry.LAE_iLimit);
+						EmitSoundToClient(client, "player/suit_denydevice.wav");
+					}
 					return Plugin_Handled;
 				}
 			}
@@ -253,8 +279,14 @@ public Action WeaponCanUse(int client, int weapon)
 						GiveDefaultAmmo(client);
 					}
 					
-					CPrintToChat(client, "{blue}[{default}Weapon Limits{blue}]{default} This weapon group has reached its max of {green}%d", arrayEntry[LAE_iLimit]);
-					EmitSoundToClient(client, "player/suit_denydevice.wav");
+					// Notify the client only when they are attempting to pick this up
+					// in which way spamming gets avoided due to auto-pick up checking left since Counter:Strike.
+					if (bIsPressingButtonUse[client] && !bIsHoldingButtonUse[client])
+					{
+						bIsHoldingButtonUse[client] = true;
+						CPrintToChat(client, "{blue}[{default}Weapon Limits{blue}]{default} This weapon group has reached its max of {green}%d", arrayEntry.LAE_iLimit);
+						EmitSoundToClient(client, "player/suit_denydevice.wav");
+					}
 					return Plugin_Handled;
 				}
 			}
