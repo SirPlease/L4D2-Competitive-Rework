@@ -8,7 +8,7 @@
 #include <sourcescramble>
 #include <collisionhook>
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 
 public Plugin myinfo = 
 {
@@ -32,7 +32,7 @@ MemoryBlock g_hAlloc_TraceHeight;
 
 ConVar g_cvSaferoomSpread, g_cvTraceHeight;
 StringMap g_smNoSpreadMaps;
-bool g_bSaferoomSpread;
+int g_iSaferoomSpread;
 
 // TerrorNavArea
 // Bitflags for TerrorNavArea.SpawnAttributes
@@ -55,6 +55,16 @@ enum
 	TERROR_NAV_RESCUE_VEHICLE = 0x8000
 }
 int g_iOffs_SpawnAttributes;
+
+methodmap TerrorNavArea {
+	property int m_spawnAttributes {
+		public get() { return LoadFromAddress(view_as<Address>(this) + view_as<Address>(g_iOffs_SpawnAttributes), NumberType_Int32); }
+	}
+	property float m_flow {
+		public get() { return L4D2Direct_GetTerrorNavAreaFlow(view_as<Address>(this)); }
+	}
+}
+#define NULL_NAV_AREA view_as<TerrorNavArea>(0)
 
 public void OnPluginStart()
 {
@@ -98,7 +108,7 @@ public void OnPluginStart()
 							"l4d2_spit_spread_saferoom",
 							"1",
 							"Decides how the spit should spread in saferoom area.\n"
-						...	"0 = No spread, 1 = Spread on intro maps, 2 = Spread on every map.",
+						...	"0 = No spread, 1 = Spread on intro start area, 2 = Spread on every map.",
 							FCVAR_NOTIFY|FCVAR_SPONLY,
 							true, 0.0, true, 2.0);
 	
@@ -106,7 +116,7 @@ public void OnPluginStart()
 							"l4d2_deathspit_trace_height",
 							"240.0",
 							"Decides the height the game trace will try to test for death spits.\n"
-						...	"0 = No spread, 1 = Spread on intro maps, 2 = Spread on every map.",
+						...	"240.0 = Default trace length.",
 							FCVAR_NOTIFY|FCVAR_SPONLY,
 							true, 0.0);
 	
@@ -140,17 +150,17 @@ Action SetSaferoomSpitSpreadException(int args)
 
 public void OnMapStart()
 {
-	g_bSaferoomSpread = g_cvSaferoomSpread.IntValue > 0;
+	g_iSaferoomSpread = g_cvSaferoomSpread.IntValue;
 	
 	char sCurrentMap[64];
 	GetCurrentMapLower(sCurrentMap, sizeof(sCurrentMap));
-	g_smNoSpreadMaps.GetValue(sCurrentMap, g_bSaferoomSpread);
+	g_smNoSpreadMaps.GetValue(sCurrentMap, g_iSaferoomSpread);
 	
-	if (g_bSaferoomSpread)
+	if (g_iSaferoomSpread)
 	{
 		if (g_cvSaferoomSpread.IntValue == 1 && !L4D_IsFirstMapInScenario())
 		{
-			g_bSaferoomSpread = false;
+			g_iSaferoomSpread = 0;
 		}
 	}
 }
@@ -179,20 +189,24 @@ Action SDK_OnThink(int entity)
 	{
 		if (GetEntData(entity, m_fireSpread, 4) == 2) // 2 -> don't spread (likely)
 		{
-			if (!g_bSaferoomSpread)
+			float vPos[3];
+			GetEntPropVector(entity, Prop_Data, "m_vecAbsOrigin", vPos);
+			
+			TerrorNavArea nav = view_as<TerrorNavArea>(L4D_GetNearestNavArea(vPos));
+			
+			if (!g_iSaferoomSpread)
 			{
-				float vPos[3];
-				GetEntPropVector(entity, Prop_Data, "m_vecAbsOrigin", vPos);
-				
-				int nav = L4D_GetNearestNavArea(vPos);
-				if (nav == 0 || ~TerrorNavArea_GetSpawnAttributes(nav) & TERROR_NAV_CHECKPOINT)
+				if (nav == NULL_NAV_AREA || ~nav.m_spawnAttributes & TERROR_NAV_CHECKPOINT) // not saferoom
 				{
 					SetEntData(entity, m_fireSpread, 10, 4); // 10 -> spit spread (likely)
 				}
 			}
-			else
+			else // allow saferoom spread
 			{
-				SetEntData(entity, m_fireSpread, 10, 4); // 10 -> spit spread (likely)
+				if (g_iSaferoomSpread != 1 || nav.m_flow / L4D2Direct_GetMapMaxFlowDistance() < 0.1) // every map OR start saferoom
+				{
+					SetEntData(entity, m_fireSpread, 10, 4); // 10 -> spit spread (likely)
+				}
 			}
 		}
 	}
