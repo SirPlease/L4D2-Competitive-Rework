@@ -67,7 +67,7 @@
 				}
 			}
 			
-			/**< Set the trace filter to have pass entity so `PassServerEntityFilter` can be called. */
+			/**< Change the trace filter to have pass entity so `PassServerEntityFilter` can be called. */
 			"CInferno::Spread__PassEnt_patch"
 			{
 				"signature"		"CInferno::Spread"
@@ -109,14 +109,14 @@
 				"linux"
 				{
 					"offset"	"310Dh"
-					"verify"	"\xF3\x0F\x5C" // subss xmm?, m32 ; address to a float pointer
+					"verify"	"\xF3\x0F\x5C" // subss xmm?, m32 ; a float pointer
 					"preserve"	"\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
 					"patch"		"\x00\x00\x00\x00\x00\x00\x00\x00"
 				}
 				"windows"
 				{
 					"offset"	"249Eh"
-					"verify"	"\xF3\x0F\x5C" // subss xmm?, m32 ; address to a float pointer
+					"verify"	"\xF3\x0F\x5C" // subss xmm?, m32 ; a float pointer
 					"preserve"	"\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
 					"patch"		"\x00\x00\x00\x00\x00\x00\x00\x00"
 				}
@@ -138,7 +138,7 @@
 			 * Windows sig:
 			 *	Search string "CInferno::InfernoThink (spread)" (binary search leads you to .rdata).
 			 *	Go to the only xref function `CInferno::InfernoThink` and generate pseudocodes.
-			 *  There you can easily find a function called inside profiling and that's it.
+			 *	There you can easily find a function called inside profiling and that's it.
 			**/
 			"CInferno::Spread"
 			{
