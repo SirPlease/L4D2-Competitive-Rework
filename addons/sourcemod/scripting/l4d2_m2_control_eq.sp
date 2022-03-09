@@ -32,7 +32,7 @@ public Plugin myinfo =
 {
 	name		= "L4D2 M2 Control",
 	author		= "Jahze, Visor, A1m`, Forgetest",
-	version		= "1.12",
+	version		= "1.13",
 	description	= "Blocks instant repounces and gives m2 penalty after a shove/deadstop",
 	url 		= "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
@@ -131,7 +131,7 @@ public void OutSkilled(Event hEvent, const char[] eName, bool dontBroadcast)
 
 Action AnimHook_Pre(int client, int &sequence)
 {
-	if (GetClientTeam(client) == 3 && IsPlayerAlive(client) && !L4D_IsPlayerGhost(client)) {
+	if (IsInfected(client) && IsPlayerAlive(client) && GetInfectedClass(client) != L4D2Infected_Tank && !L4D_IsPlayerGhost(client)) {
 		switch (sequence) {
 			case L4D2_ACT_TERROR_SHOVED_FORWARD,
 				L4D2_ACT_TERROR_SHOVED_BACKWARD,
