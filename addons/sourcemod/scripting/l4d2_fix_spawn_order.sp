@@ -9,7 +9,7 @@ public Plugin myinfo =
 	name = "L4D2 Proper Sack Order",
 	author = "Sir, Forgetest",
 	description = "Finally fix that pesky spawn rotation not being reliable",
-	version = "2.0",
+	version = "2.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -143,10 +143,15 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 
 public void L4D_OnEnterGhostState(int client)
 {
-	int SI = PopQueuedSI(client);
-	if (SI != SI_None)
+	PrintDebug("L4D_OnEnterGhostState: IsGhost = %s", GetEntProp(client, Prop_Send, "m_isGhost") ? "true" : "false");
+	
+	if (GetEntProp(client, Prop_Send, "m_isGhost"))
 	{
-		L4D_SetClass(client, SI);
+		int SI = PopQueuedSI(client);
+		if (SI != SI_None)
+		{
+			L4D_SetClass(client, SI);
+		}
 	}
 }
 
