@@ -8,7 +8,7 @@
 #include <sourcescramble>
 #include <collisionhook>
 
-#define PLUGIN_VERSION "1.8"
+#define PLUGIN_VERSION "1.9"
 
 public Plugin myinfo = 
 {
@@ -234,6 +234,9 @@ Action SDK_OnThink(int entity)
 	}
 	else
 	{
+		// actually what l4d2_fix_deathspit does.
+		L4D2Direct_SetInfernoMaxFlames(entity, 1);
+		
 		float vPos[3];
 		GetEntPropVector(entity, Prop_Data, "m_vecAbsOrigin", vPos);
 		vPos[2] += 10.0;
