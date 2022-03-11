@@ -8,7 +8,7 @@
 #include <sourcescramble>
 #include <collisionhook>
 
-#define PLUGIN_VERSION "1.5"
+#define PLUGIN_VERSION "1.8"
 
 public Plugin myinfo = 
 {
@@ -66,6 +66,9 @@ methodmap TerrorNavArea {
 }
 #define NULL_NAV_AREA view_as<TerrorNavArea>(0)
 
+int g_iDetonateObj = -1;
+ArrayList g_aDetonatePuddles;
+
 public void OnPluginStart()
 {
 	GameData conf = new GameData(GAMEDATA_FILE);
@@ -102,6 +105,17 @@ public void OnPluginStart()
 	if (!hDetour.Enable(Hook_Post, DTR_OnDetonate_Post))
 		SetFailState("Failed to post-detour \""...KEY_DETONATE..."\"");
 	
+	g_smNoDetonatable = new StringMap();
+	
+	char buffer[64];
+	for( int i = 1;
+		Format(buffer, sizeof(buffer), "SpitFilterClass%i", i)
+		&& GameConfGetKeyValue(conf, buffer, buffer, sizeof(buffer));
+		++i )
+	{
+		g_smNoDetonatable.SetValue(buffer, 0);
+	}
+	
 	delete conf;
 	
 	g_cvSaferoomSpread = CreateConVar(
@@ -126,9 +140,9 @@ public void OnPluginStart()
 	g_smNoSpreadMaps = new StringMap();
 	RegServerCmd("spit_spread_saferoom_except", SetSaferoomSpitSpreadException);
 	
-	g_smNoDetonatable = new StringMap();
-	g_smNoDetonatable.SetValue("infected", 0);
-	g_smNoDetonatable.SetValue("trigger_finale", 0);
+	g_aDetonatePuddles = new ArrayList();
+	
+	HookEvent("round_start", Event_RoundStart);
 }
 
 void OnTraceHeightConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
@@ -169,6 +183,11 @@ public void OnMapStart()
 	}
 }
 
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+{
+	g_aDetonatePuddles.Clear();
+}
+
 public void OnEntityCreated(int entity, const char[] classname)
 {
 	if (classname[6] == '_' && strcmp(classname, "insect_swarm") == 0)
@@ -179,45 +198,44 @@ public void OnEntityCreated(int entity, const char[] classname)
 
 void SDK_OnSpawnPost(int entity)
 {
+	if (g_iDetonateObj != -1)
+	{
+		g_aDetonatePuddles.Push(EntIndexToEntRef(entity));
+	}
+	
 	SDKHook(entity, SDKHook_Think, SDK_OnThink);
 }
 
 Action SDK_OnThink(int entity)
 {
-	static int m_fireSpread = -1;
-	if (m_fireSpread == -1)
-		m_fireSpread = FindSendPropInfo("CInsectSwarm", "m_fireCount") + 356;
-	
-	int owner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
-	if (owner != -1 && GetEntProp(owner, Prop_Send, "m_zombieClass") == 4 && IsPlayerAlive(owner))
+	int index = g_aDetonatePuddles.FindValue(EntIndexToEntRef(entity));
+	if (index != -1)
 	{
-		if (GetEntData(entity, m_fireSpread, 4) == 2) // 2 -> don't spread (likely)
+		g_aDetonatePuddles.Erase(index);
+		if (L4D2Direct_GetInfernoMaxFlames(entity) == 2)
 		{
 			float vPos[3];
 			GetEntPropVector(entity, Prop_Data, "m_vecAbsOrigin", vPos);
 			
 			TerrorNavArea nav = view_as<TerrorNavArea>(L4D_GetNearestNavArea(vPos));
 			
-			if (!g_iSaferoomSpread)
+			if (nav != NULL_NAV_AREA && nav.m_spawnAttributes & TERROR_NAV_CHECKPOINT)
 			{
-				if (nav == NULL_NAV_AREA || ~nav.m_spawnAttributes & TERROR_NAV_CHECKPOINT) // not saferoom
+				if (g_iSaferoomSpread == 2 || (g_iSaferoomSpread == 1 && nav.m_flow / L4D2Direct_GetMapMaxFlowDistance() < 0.2))
 				{
-					SetEntData(entity, m_fireSpread, 10, 4); // 10 -> spit spread (likely)
+					L4D2Direct_SetInfernoMaxFlames(entity, 10);
 				}
 			}
-			else // allow saferoom spread
+			else
 			{
-				if (g_iSaferoomSpread != 1 || nav.m_flow / L4D2Direct_GetMapMaxFlowDistance() < 0.2) // every map OR start saferoom
-				{
-					SetEntData(entity, m_fireSpread, 10, 4); // 10 -> spit spread (likely)
-				}
+				L4D2Direct_SetInfernoMaxFlames(entity, 10);
 			}
 		}
 	}
 	else
 	{
 		float vPos[3];
-		GetEntPropVector(owner, Prop_Send, "m_vecOrigin", vPos);
+		GetEntPropVector(entity, Prop_Data, "m_vecAbsOrigin", vPos);
 		vPos[2] += 10.0;
 		
 		Handle tr = TR_TraceRayFilterEx(vPos, view_as<float>({90.0, 0.0, 0.0}), MASK_SHOT, RayType_Infinite, TraceRayFilter_NoPlayers, entity);
@@ -250,11 +268,10 @@ Action SDK_OnThink(int entity)
 			//
 			// So finally, I have to use `TeleportEntity` on the puddle to prevent this.
 			
-			if (vPos[2] - vEnd[2] >= g_cvTraceHeight.FloatValue + 46.0)
+			float fDist = vPos[2] - vEnd[2];
+			if (fDist >= 46.0)
 			{
-				// TODO: remove entity to avoid confusion due to sound?
-				SetEntProp(entity, Prop_Send, "m_fireCount", 1);
-				L4D2Direct_SetInfernoMaxFlames(entity, 1);
+				RemoveEntity(entity);
 			}
 			else
 			{
@@ -274,7 +291,6 @@ bool TraceRayFilter_NoPlayers(int entity, int contentsMask, any self)
 	return entity != self && (!entity || entity > MaxClients);
 }
 
-int g_iDetonateObj = -1;
 MRESReturn DTR_OnDetonate_Pre(int pThis)
 {
 	g_iDetonateObj = pThis;
@@ -296,13 +312,14 @@ public Action CH_PassFilter(int touch, int pass, bool &result)
 	// 3. (pass = insect_swarm): spit spread
 	
 	if( pass == g_iDetonateObj
-		|| (pass <= MaxClients && GetClientTeam(pass) == 3 && GetEntProp(pass, Prop_Send, "m_zombieClass") == 4 && !IsPlayerAlive(pass))
-		|| (GetEdictClassname(pass, cls, sizeof(cls)) && strcmp(cls, "insect_swarm") == 0) )
+		|| (pass <= MaxClients && !IsPlayerAlive(pass) && GetClientTeam(pass) == 3 && GetEntProp(pass, Prop_Send, "m_zombieClass") == 4)
+		|| (GetEdictClassname(pass, cls, sizeof(cls)) && cls[6] == '_' && strcmp(cls, "insect_swarm") == 0) )
 	{
 		if (touch > MaxClients)
 		{
 			GetEdictClassname(touch, touch_cls, sizeof(touch_cls));
-			if (!g_smNoDetonatable.ContainsKey(touch_cls))
+			if (!g_smNoDetonatable.GetValue(touch_cls, touch)
+				&& strncmp(touch_cls, "weapon_", 7) != 0)
 				return Plugin_Continue;
 		}
 		

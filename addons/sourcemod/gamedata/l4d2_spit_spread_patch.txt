@@ -2,6 +2,12 @@
 {
 	"left4dead2"
 	{
+		"Keys"
+		{
+			"SpitFilterClass1"	"infected"
+			"SpitFilterClass2"	"trigger_finale"
+		}
+		
 		"Functions"
 		{
 			"CSpitterProjectile::Detonate"
