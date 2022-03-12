@@ -6,6 +6,8 @@
 		{
 			"SpitFilterClass1"	"infected"
 			"SpitFilterClass2"	"trigger_finale"
+			
+			"SpreadFilterClass1"	"func_tracktrain"
 		}
 		
 		"Functions"
