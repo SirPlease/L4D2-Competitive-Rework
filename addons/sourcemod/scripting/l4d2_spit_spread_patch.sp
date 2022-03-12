@@ -8,7 +8,7 @@
 #include <sourcescramble>
 #include <collisionhook>
 
-#define PLUGIN_VERSION "1.11"
+#define PLUGIN_VERSION "1.12"
 
 public Plugin myinfo = 
 {
@@ -30,7 +30,7 @@ public Plugin myinfo =
 
 MemoryBlock g_hAlloc_TraceHeight;
 
-ConVar g_cvSaferoomSpread, g_cvTraceHeight;
+ConVar g_cvSaferoomSpread, g_cvTraceHeight, g_cvMaxFlames;
 StringMap g_smNoSpreadMaps;
 int g_iSaferoomSpread;
 
@@ -69,11 +69,6 @@ methodmap TerrorNavArea {
 int g_iDetonateObj = -1;
 ArrayList g_aDetonatePuddles;
 
-enum 
-{
-	FILTER_DETONATE,
-	FILTER_SPREAD
-}
 StringMap g_smFilterClasses;
 
 public void OnPluginStart()
@@ -114,21 +109,28 @@ public void OnPluginStart()
 	
 	g_smFilterClasses = new StringMap();
 	
-	char buffer[64];
+	char buffer[64], buffer2[64];
 	for( int i = 1;
-		Format(buffer, sizeof(buffer), "SpitFilterClass%i", i)
+		FormatEx(buffer, sizeof(buffer), "SpitFilterClass%i", i)
 		&& GameConfGetKeyValue(conf, buffer, buffer, sizeof(buffer));
 		++i )
 	{
-		g_smFilterClasses.SetValue(buffer, FILTER_DETONATE);
+		g_smFilterClasses.SetValue(buffer, 0);
+		PrintToServer("[SpitPatch] Read \"SpitFilterClass\" (%s)", buffer);
 	}
 	
+	int maxflames;
 	for( int i = 1;
-		Format(buffer, sizeof(buffer), "SpreadFilterClass%i", i)
-		&& GameConfGetKeyValue(conf, buffer, buffer, sizeof(buffer));
+		FormatEx(buffer, sizeof(buffer), "SpreadFilterClass%i", i)
+		&& GameConfGetKeyValue(conf, buffer, buffer, sizeof(buffer))
+		&& FormatEx(buffer2, sizeof(buffer2), "SpreadFilterClass%i_maxflames", i)
+		&& GameConfGetKeyValue(conf, buffer2, buffer2, sizeof(buffer2));
 		++i )
 	{
-		g_smFilterClasses.SetValue(buffer, FILTER_SPREAD);
+		maxflames = StringToInt(buffer2);
+		maxflames = maxflames >= 2 ? maxflames : 2;
+		g_smFilterClasses.SetValue(buffer, maxflames);
+		PrintToServer("[SpitPatch] Read \"SpreadFilterClass\" (%s) [maxflames = %i]", buffer, maxflames);
 	}
 	
 	delete conf;
@@ -148,6 +150,14 @@ public void OnPluginStart()
 						...	"240.0 = Default trace length.",
 							FCVAR_NOTIFY|FCVAR_SPONLY,
 							true, 0.0);
+	
+	g_cvMaxFlames = CreateConVar(
+							"l4d2_spit_max_flames",
+							"10",
+							"Decides the max puddles a normal spit will create.\n"
+						...	"Minimum = 2, Game default = 10.",
+							FCVAR_NOTIFY|FCVAR_SPONLY,
+							true, 2.0);
 	
 	g_cvTraceHeight.AddChangeHook(OnTraceHeightConVarChanged);
 	OnTraceHeightConVarChanged(g_cvTraceHeight, "", "");
@@ -178,6 +188,7 @@ Action SetSaferoomSpitSpreadException(int args)
 	String_ToLower(map, sizeof(map));
 	g_smNoSpreadMaps.SetValue(map, false);
 	
+	PrintToServer("[SpitPatch] Set spread exception on \"%s\"", map);
 	return Plugin_Handled;
 }
 
@@ -227,17 +238,19 @@ Action SDK_OnThink(int entity)
 	if (index != -1)
 	{
 		g_aDetonatePuddles.Erase(index);
+		
+		int maxflames = g_cvMaxFlames.IntValue;
+		
 		if (L4D2Direct_GetInfernoMaxFlames(entity) == 2)
 		{
-			// check if spread forbidden
+			// check if max flames customized
 			int parent = GetEntPropEnt(entity, Prop_Data, "m_pParent");
 			char cls[64];
 			if (parent != -1 && GetEdictClassname(parent, cls, sizeof(cls)))
 			{
-				if (g_smFilterClasses.GetValue(cls, parent) && parent == FILTER_SPREAD)
+				if (g_smFilterClasses.GetValue(cls, parent) && parent != 0)
 				{
-					SDKUnhook(entity, SDKHook_Think, SDK_OnThink);
-					return Plugin_Continue;
+					maxflames = parent <= maxflames ? parent : maxflames;
 				}
 			}
 			
@@ -248,20 +261,15 @@ Action SDK_OnThink(int entity)
 			
 			if (nav != NULL_NAV_AREA && nav.m_spawnAttributes & TERROR_NAV_CHECKPOINT)
 			{
-				if (g_iSaferoomSpread == 2 || (g_iSaferoomSpread == 1 && nav.m_flow / L4D2Direct_GetMapMaxFlowDistance() < 0.2))
+				if (g_iSaferoomSpread != 2 && (g_iSaferoomSpread != 1 || nav.m_flow / L4D2Direct_GetMapMaxFlowDistance() > 0.2))
 				{
-					L4D2Direct_SetInfernoMaxFlames(entity, 10);
-				}
-				else
-				{
+					maxflames = 2;
 					CreateTimer(0.3, Timer_RemoveInvisibleSpit, EntIndexToEntRef(entity), TIMER_FLAG_NO_MAPCHANGE);
 				}
 			}
-			else
-			{
-				L4D2Direct_SetInfernoMaxFlames(entity, 10);
-			}
 		}
+		
+		L4D2Direct_SetInfernoMaxFlames(entity, maxflames);
 	}
 	else
 	{
@@ -365,7 +373,7 @@ public Action CH_PassFilter(int touch, int pass, bool &result)
 		if (touch > MaxClients)
 		{
 			GetEdictClassname(touch, touch_cls, sizeof(touch_cls));
-			if ((!g_smFilterClasses.GetValue(touch_cls, touch) || touch != FILTER_DETONATE)
+			if ((!g_smFilterClasses.GetValue(touch_cls, touch) || touch != 0)
 				&& strncmp(touch_cls, "weapon_", 7) != 0)
 				return Plugin_Continue;
 		}

@@ -7,7 +7,10 @@
 			"SpitFilterClass1"	"infected"
 			"SpitFilterClass2"	"trigger_finale"
 			
-			"SpreadFilterClass1"	"func_tracktrain"
+			"SpreadFilterClass1"			"func_tracktrain"
+			"SpreadFilterClass1_maxflames"	"2"
+			"SpreadFilterClass2"			"func_elevator"
+			"SpreadFilterClass2_maxflames"	"6"
 		}
 		
 		"Functions"
