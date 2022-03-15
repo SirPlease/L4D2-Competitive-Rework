@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "2.2"
+#define PLUGIN_VERSION "2.3"
 
 public Plugin myinfo = 
 {
@@ -237,7 +237,8 @@ int PopQueuedSI(int skip_client)
 	int QueuedSI = g_SpawnsArray.Get(0);
 	
 	int loop_remain = size - 1; // prevent infinite loop
-	while (loop_remain > 0 && IsClassOverLimit(QueuedSI, skip_client))
+	bool refresh = true;
+	while (loop_remain > 0 && IsClassOverLimit(QueuedSI, skip_client, refresh))
 	{
 		PrintDebug("\x04[DEBUG] \x01Popping (\x05%s\x01) but \x03over limit", g_sSIClassNames[QueuedSI]);
 		g_SpawnsArray.Erase(0);
@@ -316,15 +317,19 @@ bool IsAbleToQueue(int SI, int skip_client)
  * NOTE:
  *   Dynamic limits used here.
  */
-bool IsClassOverLimit(int SI, int skip_client)
+bool IsClassOverLimit(int SI, int skip_client, bool &refresh)
 {
 	if (!hLimits[SI])
 		return false;
 	
-	int counts[SI_MAX_SIZE] = {0};
+	static int counts[SI_MAX_SIZE] = {0};
 	
-	// NOTE: We're checking after player actually spawns, it's necessary to ignore his class.
-	CollectZombies(counts, skip_client);
+	if (refresh)
+	{
+		refresh = false;
+		// NOTE: We're checking after player actually spawns, it's necessary to ignore his class.
+		CollectZombies(counts, skip_client);
+	}
 	
 	if (counts[SI] >= hLimits[SI].IntValue)
 		return true;
