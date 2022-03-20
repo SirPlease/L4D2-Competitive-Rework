@@ -1,0 +1,34 @@
+"Games"
+{	
+	"#default"
+	{
+		"Addresses"
+		{
+			"net_time"
+			{
+				"signature"	"net_time"
+				"windows" {
+					"read" "2"
+				}
+			}
+		}
+		"Signatures"
+		{
+			"NET_LagPacket"
+			{
+				"library" "engine"
+				"linux"   "@_Z13NET_LagPacketbP11netpacket_s"
+				"windows" "\x55\x8B\xEC\x51\x57\x8B\x7D\x2A\x8B\x4F\x2A"
+				/* 55 8B EC 51 57 8B 7D ? 8B 4F ? */
+			}
+
+			"net_time"
+			{
+				"library" "engine"
+				"linux" "@net_time"
+				"windows" "\xDD\x05\x2A\x2A\x2A\x2A\xDD\x5F\x2A"
+				/* DD 05 ? ? ? ? DD 5F ? */
+			}
+		}
+	}
+}
