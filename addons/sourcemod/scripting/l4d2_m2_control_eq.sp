@@ -32,14 +32,16 @@ public Plugin myinfo =
 {
 	name		= "L4D2 M2 Control",
 	author		= "Jahze, Visor, A1m`, Forgetest",
-	version		= "1.13",
+	version		= "1.14",
 	description	= "Blocks instant repounces and gives m2 penalty after a shove/deadstop",
 	url 		= "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
 public void OnPluginStart()
 {
-	HookEvent("player_shoved", OutSkilled);
+	HookEvent("player_shoved", Event_PlayerShoved);
+	HookEvent("player_death", Event_PlayerDeath);
+	HookEvent("player_team", Event_PlayerTeam);
 	
 	L4D_OnGameModeChange(L4D_GetGameModeType());
 	
@@ -70,7 +72,25 @@ public void L4D_OnGameModeChange(int gamemode)
 	}
 }
 
-public void OutSkilled(Event hEvent, const char[] eName, bool dontBroadcast)
+void Event_PlayerDeath(Event hEvent, const char[] eName, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(hEvent.GetInt("userid"));
+	if (client && IsInfected(client))
+	{
+		AnimHookDisable(client, AnimHook_Pre);
+	}
+}
+
+void Event_PlayerTeam(Event hEvent, const char[] eName, bool dontBroadcast)
+{
+	if (hEvent.GetInt("oldteam") == 3)
+	{
+		int client = GetClientOfUserId(hEvent.GetInt("userid"));
+		if (client) AnimHookDisable(client, AnimHook_Pre);
+	}
+}
+
+void Event_PlayerShoved(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	int shover = GetClientOfUserId(hEvent.GetInt("attacker"));
 	if (!IsSurvivor(shover)) {
@@ -131,22 +151,39 @@ public void OutSkilled(Event hEvent, const char[] eName, bool dontBroadcast)
 
 Action AnimHook_Pre(int client, int &sequence)
 {
-	if (IsInfected(client) && IsPlayerAlive(client) && GetInfectedClass(client) != L4D2Infected_Tank && !L4D_IsPlayerGhost(client)) {
-		switch (sequence) {
-			case L4D2_ACT_TERROR_SHOVED_FORWARD,
-				L4D2_ACT_TERROR_SHOVED_BACKWARD,
-				L4D2_ACT_TERROR_SHOVED_LEFTWARD,
-				L4D2_ACT_TERROR_SHOVED_RIGHTWARD: {
-				return Plugin_Continue;
+	if (IsInfected(client) && IsPlayerAlive(client) && !L4D_IsPlayerGhost(client))
+	{
+		float recharge = -1.0;
+		bool bAttacking = false;
+		switch (GetInfectedClass(client))
+		{
+			case L4D2Infected_Hunter: {
+				recharge = hPounceCrouchDelayCvar.FloatValue;
+				bAttacking = GetEntPropEnt(client, Prop_Send, "m_pounceVictim") != -1;
+			}
+			case L4D2Infected_Jockey: {
+				recharge = hLeapIntervalCvar.FloatValue;
+				bAttacking = GetEntPropEnt(client, Prop_Send, "m_jockeyVictim") != -1;
 			}
 		}
 		
-		float timestamp, duration;
-		if (GetInfectedAbilityTimer(client, timestamp, duration)) {
-			float recharge = (GetInfectedClass(client) == L4D2Infected_Hunter) ? hPounceCrouchDelayCvar.FloatValue : hLeapIntervalCvar.FloatValue;
-			duration = GetGameTime() + recharge;
-			if (duration > timestamp) {
-				SetInfectedAbilityTimer(client, duration, recharge);
+		if (recharge != -1.0 && !bAttacking)
+		{
+			switch (sequence)
+			{
+				case L4D2_ACT_TERROR_SHOVED_FORWARD,
+						L4D2_ACT_TERROR_SHOVED_BACKWARD,
+						L4D2_ACT_TERROR_SHOVED_LEFTWARD,
+						L4D2_ACT_TERROR_SHOVED_RIGHTWARD:
+					return Plugin_Continue;
+			}
+		
+			float timestamp, duration;
+			if (GetInfectedAbilityTimer(client, timestamp, duration))
+			{
+				duration = GetGameTime() + recharge;
+				if (duration > timestamp)
+					SetInfectedAbilityTimer(client, duration, recharge);
 			}
 		}
 	}
