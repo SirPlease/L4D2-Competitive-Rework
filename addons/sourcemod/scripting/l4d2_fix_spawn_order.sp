@@ -80,8 +80,7 @@ public void OnPluginStart()
 	char buffer[64];
 	for (int i = SI_Smoker; i <= SI_Charger; ++i)
 	{
-		FormatEx(buffer, sizeof(buffer), "%c%s", CharToLower(g_sSIClassNames[i][0]), g_sSIClassNames[i][1]);
-		Format(buffer, sizeof(buffer), "z_versus_%s_limit", buffer);
+		FormatEx(buffer, sizeof(buffer), "z_versus_%c%s_limit", CharToLower(g_sSIClassNames[i][0]), g_sSIClassNames[i][1]);
 		hLimits[i] = FindConVar(buffer);
 	}
 }
@@ -193,6 +192,11 @@ void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
  */
 public void L4D_OnEnterGhostState(int client)
 {
+	// [SM] Exception reported: Property "m_bIsAlive" not found (entity 39/terror_player_manager)
+	// ?
+	if (client <= 0 || client > MaxClients)
+		return;
+	
 	// 1. Actually becoming ghost (can be false if the pre function blocks)
 	// 2. Not respawning
 	if (GetEntProp(client, Prop_Send, "m_isGhost") && !g_Resource.WasAlive(client)) 
@@ -237,8 +241,7 @@ int PopQueuedSI(int skip_client)
 	int QueuedSI = g_SpawnsArray.Get(0);
 	
 	int loop_remain = size - 1; // prevent infinite loop
-	bool refresh = true;
-	while (loop_remain > 0 && IsClassOverLimit(QueuedSI, skip_client, refresh))
+	while (loop_remain > 0 && IsClassOverLimit(QueuedSI, skip_client))
 	{
 		PrintDebug("\x04[DEBUG] \x01Popping (\x05%s\x01) but \x03over limit", g_sSIClassNames[QueuedSI]);
 		g_SpawnsArray.Erase(0);
@@ -317,19 +320,15 @@ bool IsAbleToQueue(int SI, int skip_client)
  * NOTE:
  *   Dynamic limits used here.
  */
-bool IsClassOverLimit(int SI, int skip_client, bool &refresh)
+bool IsClassOverLimit(int SI, int skip_client)
 {
 	if (!hLimits[SI])
 		return false;
 	
 	static int counts[SI_MAX_SIZE] = {0};
 	
-	if (refresh)
-	{
-		refresh = false;
-		// NOTE: We're checking after player actually spawns, it's necessary to ignore his class.
-		CollectZombies(counts, skip_client);
-	}
+	// NOTE: We're checking after player actually spawns, it's necessary to ignore his class.
+	CollectZombies(counts, skip_client);
 	
 	if (counts[SI] >= hLimits[SI].IntValue)
 		return true;
