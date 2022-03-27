@@ -93,6 +93,9 @@ Example: **/etc/init.d/srcds1 restart
 /etc/init.d/srcds1 start  
 /etc/init.d/srcds1 stop**
 
+>If you receive "-bash: /etc/init.d/srcds1: /bin/sh^M: bad interpreter: No such file or directory" error, it means you have dos line ending file
+>You can use dos2unix command on srcds1 file, or use any other method to have this file in unix format
+
 - - - -
 # < 2 > | **F.A.Q.**
 
