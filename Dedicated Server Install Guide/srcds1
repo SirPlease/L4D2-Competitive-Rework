@@ -7,7 +7,7 @@ SRCDS_USER="steam"
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
 
 # The path to the game, only change this if you have a different installation path than in the guide.
-DIR=/home/steam/Steam/steamapps/common/l4d2
+DIR=/home/$SRCDS_USER/Steam/steamapps/common/l4d2
 DAEMON="$DIR/srcds_run"
 
 # Change all Parameters to your needs.
