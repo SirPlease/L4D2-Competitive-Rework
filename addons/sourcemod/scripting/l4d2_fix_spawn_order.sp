@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "2.3"
+#define PLUGIN_VERSION "2.4"
 
 public Plugin myinfo = 
 {
@@ -14,18 +14,6 @@ public Plugin myinfo =
 	version = PLUGIN_VERSION,
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
-
-// Array
-ArrayList g_SpawnsArray;
-
-bool bLive;
-
-// Get dem Cvars
-ConVar hLimits[SI_MAX_SIZE];
-int iLimits[SI_MAX_SIZE];
-int dominators;
-
-ConVar hDebug;
 
 /* These class numbers are the same ones used internally in L4D2 */
 enum /*SIClass*/
@@ -46,6 +34,18 @@ enum /*SIClass*/
 stock const char g_sSIClassNames[SI_MAX_SIZE][] = 
 {	"", "Smoker", "Boomer", "Hunter", "Spitter", "Jockey", "Charger", "Witch", "Tank" };
 
+// Array
+ArrayList g_SpawnsArray;
+
+bool bLive;
+
+// Get dem Cvars
+ConVar hLimits[SI_MAX_SIZE];
+int iLimits[SI_MAX_SIZE];
+int dominators;
+
+ConVar hDebug;
+
 methodmap PlayerResource {
 	public PlayerResource() {
 		return view_as<PlayerResource>(L4D_GetResourceEntity());
@@ -57,7 +57,7 @@ methodmap PlayerResource {
 		return !!GetEntProp(view_as<int>(this), Prop_Send, "m_isGhost", _, client);
 	}
 	public bool WasAlive(int client) {
-		return !!GetEntProp(view_as<int>(this), Prop_Send, "m_bIsAlive", _, client);
+		return !!GetEntProp(view_as<int>(this), Prop_Send, "m_bAlive", _, client);
 	}
 }
 PlayerResource g_Resource;
@@ -192,11 +192,6 @@ void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
  */
 public void L4D_OnEnterGhostState(int client)
 {
-	// [SM] Exception reported: Property "m_bIsAlive" not found (entity 39/terror_player_manager)
-	// ?
-	if (client <= 0 || client > MaxClients)
-		return;
-	
 	// 1. Actually becoming ghost (can be false if the pre function blocks)
 	// 2. Not respawning
 	if (GetEntProp(client, Prop_Send, "m_isGhost") && !g_Resource.WasAlive(client)) 
