@@ -17,7 +17,7 @@ public Plugin myinfo =
 	description = "Slots Voter",
 	author = "Sir",
 	version = "",
-	url = ""
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework/"
 };
 
 public void OnPluginStart()
