@@ -23,6 +23,13 @@
 			"name" "1v1 ZoneMod"
 		}
 	}
+	"NeoMod Configs"
+	{
+		"neomod"
+		{
+			"name" "NeoMod Tourney 0.2a"
+		}
+	}
 	"NextMod Configs"
 	{
 		"nextmod"
