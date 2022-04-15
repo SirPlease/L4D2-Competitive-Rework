@@ -27,7 +27,7 @@
 	{
 		"neomod"
 		{
-			"name" "NeoMod Tourney 0.2a"
+			"name" "NeoMod Tourney 0.3a"
 		}
 	}
 	"NextMod Configs"
