@@ -116,7 +116,7 @@ void Event_PlayerLeftStartArea(Event event, const char[] name, bool dontBroadcas
 //
 // Basic strategy:
 //   1. Zombie classes is handled by a queue: pop the beginning, push to the end.
-//   2. If return SI, based on the player state: ghost to the beginning, materialized to the end.
+//   2. Return zombie class, based on the player state: ghost to the beginning, materialized to the end.
 //
 
 /**
@@ -194,7 +194,14 @@ public void L4D_OnEnterGhostState(int client)
 {
 	// 1. Actually becoming ghost (can be false if the pre function blocks)
 	// 2. Not respawning
-	if (GetEntProp(client, Prop_Send, "m_isGhost") && !g_Resource.WasAlive(client)) 
+	
+	// NOTE:
+	// Left4DHooks 1.94 blocks post forwards if pre-hook superceded.
+	// The following check will be unnecessary post-update.
+	if (!GetEntProp(client, Prop_Send, "m_isGhost"))
+		return;
+	
+	if (!g_Resource.WasAlive(client)) 
 	{
 		int SI = PopQueuedSI(client);
 		if (SI != SI_None)
@@ -259,7 +266,7 @@ int PopQueuedSI(int skip_client)
  * TODO:
  *   Ensure it begins with remaining first hit classes in case the Infected Team isn't full?
  * NOTE:
- *   Vanilla selects a random index as the first hit beginning class
+ *   Vanilla selects a random index as the beginning class of first hit
  *   (i.e. if random = 4  then first hit = Spitter,Jockey,Charger,Smoker)
  */
 void FillQueue()
@@ -310,7 +317,10 @@ bool IsAbleToQueue(int SI, int skip_client)
 
 /**
  * Check if specific class is over limit based on limit convars and dominator flags.
- * (below class limit, not dominator OR is dominator AND dominator sum less than 3)
+ *  1.	< class limit
+ *  2a.	not dominator
+ *  2b.	is dominator
+ *  3b.	total dominators < 3
  *
  * NOTE:
  *   Dynamic limits used here.
@@ -347,7 +357,7 @@ bool IsDominator(int SI)
 }
 
 /**
- * Collect zombie classes recorded by resource entity.
+ * Collect zombie classes.
  */
 int CollectZombies(int zombies[SI_MAX_SIZE], int skip_client = -1)
 {
