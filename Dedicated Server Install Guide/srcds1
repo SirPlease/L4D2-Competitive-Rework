@@ -49,12 +49,12 @@ DESC="L4D2 Dedicated Server #$SVNUM on port $PORT"
 
 case "$1" in
 	start)
-		echo "Starting $DESC: $NAME"
-		if [ -e $DIR ]; then
+		if su $SRCDS_USER -l -c "screen -ls" |grep $NAME; then
+			echo -n "$DESC: $NAME already started!"
+		else
+			echo "Starting $DESC: $NAME"
 			cd $DIR
 			su $SRCDS_USER -l -c "screen -d -m -S $NAME $DAEMON $PARAMS"
-		else
-			echo "No such directory: $DIR!"
 		fi
 		;;
 
