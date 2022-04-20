@@ -1,0 +1,59 @@
+"Games"
+{
+    "left4dead2"
+    {
+		"Functions"
+		{
+			"OnGetMissionInfo"
+			{
+				"signature"		"CTerrorGameRules::GetMissionInfo"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+			}
+		}
+		"Signatures"
+		{
+			// =========================
+			// SILVERS SIGS
+			// =========================
+			/* KeyValues::FindKey(const char *keyName, bool bCreate) */
+			"KeyValues::FindKey"
+			{
+				"library"		"server"
+				"linux"			"@_ZN9KeyValues7FindKeyEPKcb"
+				"windows"		"\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x8B\x2A\x8A\x2A\x2A\x56"
+				/* 55 8B ? 81 ? ? ? ? ? ? ? ? ? ? 33 ? 89 ? ? 8B ? 8A ? ? 56 */
+				/* Search: "CfgFile" - above is call */
+			}
+
+			/* const char *KeyValues::GetString(const char *keyName, const char *defaultValue) */
+			"KeyValues::GetString"
+			{
+				"library"		"server"
+				"linux"			"@_ZN9KeyValues9GetStringEPKcS1_"
+				"windows"		"\x55\x8B\x2A\x81\x2A\x44\x02\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53"
+				/* 55 8B ? 81 ? 44 02 ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 */
+				/* Search: "WrongTeamMsg", call below is our function. */
+			}
+			
+			/* void KeyValues::SetString(const char *keyName, const char *value) */
+			"KeyValues::SetString"
+			{
+				"library"		"server"
+				"linux"			"@_ZN9KeyValues9SetStringEPKcS1_"
+				"windows"		"\x55\x8B\x2A\x8B\x2A\x2A\x56\x6A\x01\x50\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x74\x2A\x8B\x2A\x2A\x53\x57\x51\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x52\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x83\x2A\x2A\xC7\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x75\x2A\xBB\x2A\x2A\x2A\x2A\x53"
+				/* 55 8B ? 8B ? ? 56 6A 01 50 E8 ? ? ? ? 8B ? 85 ? 74 ? 8B ? ? 53 57 51 E8 ? ? ? ? 8B ? ? 52 E8 ? ? ? ? 8B ? ? 83 ? ? C7 ? ? ? ? ? ? 85 ? 75 ? BB ? ? ? ? 53 */
+				/* Search: "victimname" - below is call */
+			}
+			
+			"CTerrorGameRules::GetMissionInfo" // Found by V10
+			{
+				"library"		"server"
+				"linux"			"@_ZN16CTerrorGameRules14GetMissionInfoEv"
+				"windows"		"\x55\x8B\xEC\x51\x8B\x0D\x2A\x2A\x2A\x2A\x8B\x01\x8B\x50\x2A\x56\xFF\xD2\x8B\x10\x8B\xC8\x8B\x42\x2A\x6A\x00\xFF\xD0\x8B\xF0\x85\xF6\x75\x2A\x5E\x8B\xE5\x5D\xC3"
+				/* 55 8B EC 51 8B 0D ? ? ? ? 8B 01 8B 50 ? 56 FF D2 8B 10 8B C8 8B 42 ? 6A 00 FF D0 8B F0 85 F6 75 ? 5E 8B E5 5D C3 */
+			}
+		}
+	}
+}
