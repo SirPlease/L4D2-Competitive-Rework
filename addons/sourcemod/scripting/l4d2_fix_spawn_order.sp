@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "2.4"
+#define PLUGIN_VERSION "2.5"
 
 public Plugin myinfo = 
 {
@@ -52,6 +52,9 @@ methodmap PlayerResource {
 	}
 	public int QueryZombieClass(int client) {
 		return GetEntProp(view_as<int>(this), Prop_Send, "m_zombieClass", _, client);
+	}
+	public int QueryTeamNum(int client) {
+		return GetEntProp(view_as<int>(this), Prop_Send, "m_iTeam", _, client);
 	}
 	public bool WasGhost(int client) {
 		return !!GetEntProp(view_as<int>(this), Prop_Send, "m_isGhost", _, client);
@@ -192,16 +195,17 @@ void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
  */
 public void L4D_OnEnterGhostState(int client)
 {
-	// 1. Actually becoming ghost (can be false if the pre function blocks)
-	// 2. Not respawning
-	
 	// NOTE:
-	// Left4DHooks 1.94 blocks post forwards if pre-hook superceded.
+	// Left4DHooks 1.94 blocks post forwards if pre-hooks get superceded.
 	// The following check will be unnecessary post-update.
 	if (!GetEntProp(client, Prop_Send, "m_isGhost"))
 		return;
 	
-	if (!g_Resource.WasAlive(client)) 
+	// 1. Not respawning
+	// 2. Weird exception that instant spawn is offered if:
+	//	   - First switch to Survivors during respawn count-down.
+	//	   - Then switch back when the count-down expires.
+	if (!g_Resource.WasAlive(client) || g_Resource.QueryTeamNum(client) == 2)
 	{
 		int SI = PopQueuedSI(client);
 		if (SI != SI_None)
@@ -240,24 +244,24 @@ int PopQueuedSI(int skip_client)
 	if (!size)
 		return SI_None;
 	
-	int QueuedSI = g_SpawnsArray.Get(0);
-	
-	int loop_remain = size - 1; // prevent infinite loop
-	while (loop_remain > 0 && IsClassOverLimit(QueuedSI, skip_client))
+	// Loop through queue to get a valid class.
+	for (int i = 0; i < size; ++i)
 	{
-		PrintDebug("\x04[DEBUG] \x01Popping (\x05%s\x01) but \x03over limit", g_sSIClassNames[QueuedSI]);
-		g_SpawnsArray.Erase(0);
-		QueueSI(QueuedSI, false);
-		
-		QueuedSI = g_SpawnsArray.Get(0);
-		
-		--loop_remain;
+		int QueuedSI = g_SpawnsArray.Get(i);
+		if (!IsClassOverLimit(QueuedSI, skip_client))
+		{
+			g_SpawnsArray.Erase(i);
+			PrintDebug("\x04[DEBUG] \x01Popped (\x05%s\x01) after \x04%i \x01tries", g_sSIClassNames[QueuedSI], i+1);
+			return QueuedSI;
+		}
+		else
+		{
+			PrintDebug("\x04[DEBUG] \x01Popping (\x05%s\x01) but \x03over limit", g_sSIClassNames[QueuedSI]);
+		}
 	}
 	
-	PrintDebug("\x04[DEBUG] \x01Popped (\x05%s\x01) after \x04%i \x01tries", g_sSIClassNames[QueuedSI], size - loop_remain);
-	
-	g_SpawnsArray.Erase(0);
-	return QueuedSI;
+	PrintDebug("\x04[DEBUG] \x04Failed to pop queued SI! \x01(size = \x05%i\x01)", size);
+	return SI_None;
 }
 
 /**
@@ -324,13 +328,16 @@ bool IsAbleToQueue(int SI, int skip_client)
  *
  * NOTE:
  *   Dynamic limits used here.
+ *
+ * TODO: 
+ *   No more redundant collecting zombies in the same frame?
  */
 bool IsClassOverLimit(int SI, int skip_client)
 {
 	if (!hLimits[SI])
 		return false;
 	
-	static int counts[SI_MAX_SIZE] = {0};
+	int counts[SI_MAX_SIZE] = {0};
 	
 	// NOTE: We're checking after player actually spawns, it's necessary to ignore his class.
 	CollectZombies(counts, skip_client);
