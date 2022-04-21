@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "2.5"
+#define PLUGIN_VERSION "2.6"
 
 public Plugin myinfo = 
 {
@@ -224,7 +224,7 @@ void QueueSI(int SI, bool front)
 {
 	if (front)
 	{
-		g_SpawnsArray.ShiftUp(0);
+		if (g_SpawnsArray.Length) g_SpawnsArray.ShiftUp(0);
 		g_SpawnsArray.Set(0, SI);
 	}
 	else
