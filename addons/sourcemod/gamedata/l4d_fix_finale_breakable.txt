@@ -1,0 +1,74 @@
+"Games"
+{
+	"left4dead"
+	{
+		"MemPatches"
+		{
+			"CBreakableProp::OnTakeDamage__IsFinale_force_jump"
+			{
+				"signature"		"CBreakableProp::OnTakeDamage"
+				"linux"
+				{
+					"offset"	"2CEh"
+					"verify"	"\x75"
+					"patch"		"\xEB"
+				}
+				"windows"
+				{
+					"offset"	"20Fh"
+					"verify"	"\x0F\x85"
+					"patch"		"\x90\xE9"
+				}
+			}
+		}
+		
+		
+		"Signatures"
+		{
+			/**< CBreakableProp::OnTakeDamage(CTakeDamageInfo const&) */
+			"CBreakableProp::OnTakeDamage"
+			{
+				"library"		"server"
+				"linux"			"@_ZN14CBreakableProp12OnTakeDamageERK15CTakeDamageInfo"
+				"windows"		"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x53\x8D\x2A\x2A\x2A\xE8"
+								/* ? ? ? ? ? ? ? ? 56 8B ? 53 8D ? ? ? E8 */
+			}
+		}
+	}
+	
+	"left4dead2"
+	{
+		"MemPatches"
+		{
+			"CBreakableProp::OnTakeDamage__IsFinale_force_jump"
+			{
+				"signature"		"CBreakableProp::OnTakeDamage"
+				"linux"
+				{
+					"offset"	"227h"
+					"verify"	"\x0F\x85"
+					"patch"		"\x90\xE9"
+				}
+				"windows"
+				{
+					"offset"	"290h"
+					"verify"	"\x0F\x85"
+					"patch"		"\x90\xE9"
+				}
+			}
+		}
+		
+		
+		"Signatures"
+		{
+			/**< CBreakableProp::OnTakeDamage(CTakeDamageInfo const&) */
+			"CBreakableProp::OnTakeDamage"
+			{
+				"library"		"server"
+				"linux"			"@_ZN14CBreakableProp12OnTakeDamageERK15CTakeDamageInfo"
+				"windows"		"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x81\x2A\x2A\x2A\x2A\x2A\x56\x57"
+								/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 8B ? ? 81 ? ? ? ? ? 56 57 */
+			}
+		}
+	}
+}
