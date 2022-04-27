@@ -408,7 +408,7 @@ public Action ProcessRockHitboxes(Event event, const char[] name,
 /*
  * Apply damage on rock depending on weapon and distance.
  */
-public void ApplyDamageOnRock(rockIndex, client, float[3] eyePos, float[3] c, Event event,
+public void ApplyDamageOnRock(rockIndex, client, float eyePos[3], float c[3], Event event,
 		rockEntity)
 {
 	new String:weaponName[MAX_STR_LEN]; 
@@ -598,7 +598,7 @@ CTankRock__Detonate(rock)
  * Vector functions
  */
 
-public void Vector_Print(float[3] v)
+public void Vector_Print(float v[3])
 {
 	PrintToChatAll("(%.2f, %.2f, %.2f)", v[0],v[1],v[2]);
 }
