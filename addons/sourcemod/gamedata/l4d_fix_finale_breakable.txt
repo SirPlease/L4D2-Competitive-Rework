@@ -20,8 +20,24 @@
 					"patch"		"\x90\xE9"
 				}
 			}
+			
+			"CBreakable::OnTakeDamage__IsFinale_force_jump"
+			{
+				"signature"		"CBreakable::OnTakeDamage"
+				"linux"
+				{
+					"offset"	"FBh"
+					"verify"	"\x0F\x85"
+					"patch"		"\x90\xE9"
+				}
+				"windows"
+				{
+					"offset"	"C7h"
+					"verify"	"\x0F\x85"
+					"patch"		"\x90\xE9"
+				}
+			}
 		}
-		
 		
 		"Signatures"
 		{
@@ -32,6 +48,15 @@
 				"linux"			"@_ZN14CBreakableProp12OnTakeDamageERK15CTakeDamageInfo"
 				"windows"		"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x53\x8D\x2A\x2A\x2A\xE8"
 								/* ? ? ? ? ? ? ? ? 56 8B ? 53 8D ? ? ? E8 */
+			}
+			
+			/**< CBreakable::OnTakeDamage(CTakeDamageInfo const&) */
+			"CBreakable::OnTakeDamage"
+			{
+				"library"		"server"
+				"linux"			"@_ZN10CBreakable12OnTakeDamageERK15CTakeDamageInfo"
+				"windows"		"\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x2A\x55\x8B\x2A\x2A\x2A\x56"
+								/* ? ? ? ? ? 83 ? ? 83 ? ? ? 55 8B ? ? ? 56 */
 			}
 		}
 	}
@@ -56,8 +81,24 @@
 					"patch"		"\x90\xE9"
 				}
 			}
+			
+			"CBreakable::OnTakeDamage__IsFinale_force_jump"
+			{
+				"signature"		"CBreakable::OnTakeDamage"
+				"linux"
+				{
+					"offset"	"15Fh"
+					"verify"	"\x0F\x84"
+					"patch"		"\x90\x90\x90\x90\x90\x90"
+				}
+				"windows"
+				{
+					"offset"	"19Ch"
+					"verify"	"\x0F\x85"
+					"patch"		"\x90\xE9"
+				}
+			}
 		}
-		
 		
 		"Signatures"
 		{
@@ -68,6 +109,15 @@
 				"linux"			"@_ZN14CBreakableProp12OnTakeDamageERK15CTakeDamageInfo"
 				"windows"		"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x81\x2A\x2A\x2A\x2A\x2A\x56\x57"
 								/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 8B ? ? 81 ? ? ? ? ? 56 57 */
+			}
+			
+			/**< CBreakable::OnTakeDamage(CTakeDamageInfo const&) */
+			"CBreakable::OnTakeDamage"
+			{
+				"library"		"server"
+				"linux"			"@_ZN10CBreakable12OnTakeDamageERK15CTakeDamageInfo"
+				"windows"		"\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x53\x56\x8B\x2A\x57"
+								/* ? ? ? ? ? ? A1 ? ? ? ? 83 ? ? ? 53 56 8B ? 57 */
 			}
 		}
 	}

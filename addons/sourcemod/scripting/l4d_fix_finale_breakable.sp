@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <sourcescramble>
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 
 public Plugin myinfo = 
 {
@@ -23,6 +23,9 @@ public void OnPluginStart()
 	
 	if (!MemoryPatch.CreateFromConf(conf, "CBreakableProp::OnTakeDamage__IsFinale_force_jump").Enable())
 		SetFailState("Failed to patch \"CBreakableProp::OnTakeDamage__IsFinale_force_jump\"");
+	
+	if (!MemoryPatch.CreateFromConf(conf, "CBreakable::OnTakeDamage__IsFinale_force_jump").Enable())
+		SetFailState("Failed to patch \"CBreakable::OnTakeDamage__IsFinale_force_jump\"");
 	
 	delete conf;
 }
