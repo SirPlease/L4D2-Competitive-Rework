@@ -9,7 +9,7 @@
 #undef REQUIRE_PLUGIN
 #include <caster_system>
 
-#define PLUGIN_VERSION "9.3.12"
+#define PLUGIN_VERSION "9.3.14"
 
 public Plugin myinfo =
 {
@@ -320,6 +320,7 @@ public void ServerCvarChanged(ConVar convar, const char[] oldValue, const char[]
 void EntO_OnGameplayStart(const char[] output, int caller, int activator, float delay)
 {
 	g_bTransitioning = false;
+	Timer_RestartCountdowns(null, false);
 }
 
 public void OnConfigsExecuted()
@@ -1220,6 +1221,7 @@ public Action Timer_RestartCountdowns(Handle timer, bool startOn)
 	if (IsScavenge())
 	{
 		RestartScvngSetupCountdown(startOn);
+		ResetAccumulatedTime();
 	}
 	else
 	{
@@ -1229,6 +1231,16 @@ public Action Timer_RestartCountdowns(Handle timer, bool startOn)
 	RestartMobCountdown(startOn);
 
 	return Plugin_Stop;
+}
+
+void ResetAccumulatedTime()
+{
+	static ConVar scavenge_round_initial_time = null;
+	if (scavenge_round_initial_time == null)
+		scavenge_round_initial_time = FindConVar("scavenge_round_initial_time");
+	
+	L4D_NotifyNetworkStateChanged();
+	GameRules_SetPropFloat("m_flAccumulatedTime", scavenge_round_initial_time.FloatValue);
 }
 
 void RestartVersusStartCountdown(bool startOn)
