@@ -1,17 +1,37 @@
 /**
- * Documentations
+ * Documentation
  *
  * =========================================================================================================
  * 
- * Fundamental methods via `AnimState` (peeks into `CTerrorPlayer`):
- *    [1]. `ClearAnimationState()`: Clears all animation in play and therefore resets to normal state.
- *    [2]. `RestartMainSequence()`: Restarts the animation in play.
- *    [3]. `ResetMainActivity()`: Seems like the same as [2].
+ * Methods of `CTerrorPlayerAnimState` (peeks into `CTerrorPlayer`):
+ *    [1]. `ResetMainActivity()`: Invoke recalculation of animation to be played.
+ *
+ * Flags of `CTerrorPlayerAnimState`:
+ *    See `AnimStateFlag` for an incomplete list.
  * 
  * =========================================================================================================
  * 
  * Fixes for cappers respectively:
- *    (to be done...)
+ *
+ *    Jockey:
+ *      1) No get-up if forced off by any other capper.					(Event_JockeyRideEnd)
+ *      2) Bowling get-up keeps playing during ride.					(Event_JockeyRide)
+ *    
+ *    Hunter:
+ *      1) Get-up replayed after smoker drag.							(Event_TongueGrab)
+ *      2) Double get-up when pounce on charger victims.				(Event_ChargerKilled)
+ *    
+ *    Charger:
+ *      1) [DISABLED] Get-up keeps playing during smoker drag.			(Event_TongueGrab)
+ *      2) Prevent get-up for self-clears.								(Event_ChargerKilled)
+ *      3) Fix no godframe for long get-up.								(Event_ChargerKilled)
+ *      4) Long get-up is dismissed.									(Event_ChargerKilled)
+ *    
+ *    Tank:
+ *      1) Double get-up if punch/rock on chargers with victims to die.	(OnPlayerHit_Post OnKnockedDown_Post)
+ *         Do not play punch/rock get-up to keep consistency.
+ *      2) No get-up if do rock-punch combo.							(OnPlayerHit_Post OnKnockedDown_Post)
+ *      3) Double get-up if punch/rock on survivors in bowling.			(OnPlayerHit_Post OnKnockedDown_Post)
  */
 
 
@@ -22,8 +42,9 @@
 #include <sdktools>
 #include <sdkhooks>
 #include <left4dhooks>
+#include <godframecontrol>
 
-#define PLUGIN_VERSION "4.1"
+#define PLUGIN_VERSION "4.2"
 
 public Plugin myinfo = 
 {
@@ -83,6 +104,7 @@ int
 	g_iChargeAttacker[MAXPLAYERS+1] = {-1, ...};
 
 ConVar 
+	g_hChargeDuration,
 	longerTankPunchGetup;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -119,6 +141,7 @@ public void OnPluginStart()
 {
 	LoadSDK();
 	
+	g_hChargeDuration = FindConVar("gfc_charger_duration");
 	longerTankPunchGetup = CreateConVar("longer_tank_punch_getup", "0", "When a tank punches someone give them a slightly longer getup.", _, true, 0.0, true, 1.0);
 	
 	HookEvent("round_start", Event_RoundStart);
@@ -205,6 +228,8 @@ void Event_ReviveSuccess(Event event, const char[] name, bool dontBroadcast)
 	if (client)
 	{
 		AnimState hAnim = AnimState(client);
+		hAnim.SetFlag(ASF_GroundSlammed, false);
+		hAnim.SetFlag(ASF_WallSlammed, false);
 		hAnim.SetFlag(ASF_Pounded, false);
 		hAnim.SetFlag(ASF_Pounced, false);
 	}
@@ -220,8 +245,14 @@ void Event_TongueGrab(Event event, const char[] name, bool dontBroadcast)
 	if (client)
 	{
 		AnimState hAnim = AnimState(client);
-		hAnim.SetFlag(ASF_Pounded, false);
+		
+		// Fix double get-up
 		hAnim.SetFlag(ASF_Pounced, false);
+		
+		// Commented to keep consistency with game
+		//hAnim.SetFlag(ASF_TankPunched, false);
+		//hAnim.SetFlag(ASF_Pounded, false);
+		//hAnim.SetFlag(ASF_Charged, false);
 	}
 }
 
@@ -234,7 +265,11 @@ void Event_LungePounce(Event event, const char[] name, bool dontBroadcast)
 	int client = GetClientOfUserId(event.GetInt("victim"));
 	if (client)
 	{
-		AnimState(client).SetFlag(ASF_TankPunched, false);
+		AnimState hAnim = AnimState(client);
+		
+		// Fix get-up keeps playing
+		hAnim.SetFlag(ASF_TankPunched, false);
+		hAnim.SetFlag(ASF_Pounded, false);
 	}
 }
 
@@ -247,6 +282,7 @@ void Event_JockeyRide(Event event, const char[] name, bool dontBroadcast)
 	int client = GetClientOfUserId(event.GetInt("victim"));
 	if (client)
 	{
+		// Fix get-up keeps playing
 		AnimState(client).SetFlag(ASF_Charged, false);
 	}
 }
@@ -256,6 +292,7 @@ void Event_JockeyRideEnd(Event event, const char[] name, bool dontBroadcast)
 	int client = GetClientOfUserId(event.GetInt("victim"));
 	if (client)
 	{
+		// Fix no get-up
 		AnimState(client).SetFlag(ASF_RiddenByJockey, false);
 	}
 }
@@ -282,20 +319,28 @@ void Event_ChargerKilled(Event event, const char[] name, bool dontBroadcast)
 				{
 					if (!L4D_IsPlayerIncapacitated(victim))
 					{
+						// No self-clear get-up
 						hAnim.SetFlag(ASF_GroundSlammed, false);
 						hAnim.SetFlag(ASF_WallSlammed, false);
 					}
 				}
 				else
 				{
-					//PrintToChatAll("Event_ChargerKilled: fix");
+					// Fix double get-up
 					hAnim.SetFlag(ASF_TankPunched, false);
 					hAnim.SetFlag(ASF_Pounced, false);
+					
+					// long charged get-up
+					if (hAnim.GetFlag(ASF_GroundSlammed) || hAnim.GetFlag(ASF_WallSlammed))
+					{
+						GiveClientGodFrames(victim, g_hChargeDuration.FloatValue, 6);
+					}
 					L4D2Direct_DoAnimationEvent(victim, 78);
 				}
 			}
 			else
 			{
+				// Fix double get-up
 				hAnim.SetFlag(ASF_GroundSlammed, false);
 				hAnim.SetFlag(ASF_WallSlammed, false);
 			}
@@ -336,25 +381,32 @@ public void L4D_TankClaw_OnPlayerHit_Post(int tank, int claw, int player)
 {
 	if (GetClientTeam(player) == 2)
 	{
-		//PrintToChatAll("L4D_TankClaw_OnPlayerHit_Post");
 		if (GetEntPropEnt(player, Prop_Send, "m_pummelAttacker") != -1)
 		{
-			//PrintToChatAll("L4D_TankClaw_OnPlayerHit_Post: block");
 			return;
 		}
 		
 		AnimState hAnim = AnimState(player);
-		if (hAnim.GetFlag(ASF_Pounded))
+		
+		// Fix double get-up
+		hAnim.SetFlag(ASF_Charged, false);
+		
+		// Fix double get-up when punching charger with victim to die
+		// Keep in mind that do not mess up later attacks on the survivor so "m_flCycle" is checked
+		// FIXME: "m_flCycle" should be around 0.0 now, but somehow it doesn't.
+		if (hAnim.GetFlag(ASF_Pounded) && GetEntPropFloat(player, Prop_Send, "m_flCycle") <= 0.1)
 		{
-			//PrintToChatAll("ASF_Pounded");
 			hAnim.SetFlag(ASF_TankPunched, false);
 		}
 		else
 		{
-			//PrintToChatAll("OnPlayerHit - ResetMainActivity");
+			// Remove charger get-up that doesn't pass the "m_flCycle" check above
+			//hAnim.SetFlag(ASF_GroundSlammed, false);
+			//hAnim.SetFlag(ASF_WallSlammed, false);
+			hAnim.SetFlag(ASF_Pounded, false);
+			
 			if (longerTankPunchGetup.BoolValue)
 			{
-				//hAnim.SetFlag(ASF_TankPunched, false);
 				L4D2Direct_DoAnimationEvent(player, 57); // ANIM_SHOVED_BY_TEAMMATE
 			}
 			hAnim.ResetMainActivity();
@@ -362,3 +414,35 @@ public void L4D_TankClaw_OnPlayerHit_Post(int tank, int claw, int player)
 	}
 }
 
+public void L4D_OnKnockedDown_Post(int client, int reason)
+{
+	if (reason == KNOCKDOWN_TANK && GetClientTeam(client) == 2)
+	{
+		if (GetEntPropEnt(client, Prop_Send, "m_pummelAttacker") != -1)
+		{
+			return;
+		}
+		
+		AnimState hAnim = AnimState(client);
+		
+		// Fix double get-up
+		hAnim.SetFlag(ASF_Charged, false);
+		
+		// Fix double get-up when punching charger with victim to die
+		// Keep in mind that do not mess up later attacks on the survivor so "m_flCycle" is checked
+		// FIXME: "m_flCycle" should be around 0.0 now, but somehow it doesn't.
+		if (hAnim.GetFlag(ASF_Pounded) && GetEntPropFloat(client, Prop_Send, "m_flCycle") <= 0.1)
+		{
+			hAnim.SetFlag(ASF_TankPunched, false);
+		}
+		else
+		{
+			// Remove charger get-up that doesn't pass the "m_flCycle" check above
+			//hAnim.SetFlag(ASF_GroundSlammed, false);
+			//hAnim.SetFlag(ASF_WallSlammed, false);
+			hAnim.SetFlag(ASF_Pounded, false);
+			
+			hAnim.ResetMainActivity();
+		}
+	}
+}
