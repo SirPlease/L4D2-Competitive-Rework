@@ -44,7 +44,7 @@
 #include <left4dhooks>
 #include <godframecontrol>
 
-#define PLUGIN_VERSION "4.2"
+#define PLUGIN_VERSION "4.3"
 
 public Plugin myinfo = 
 {
@@ -303,7 +303,8 @@ void Event_JockeyRideEnd(Event event, const char[] name, bool dontBroadcast)
  */
 void Event_ChargerKilled(Event event, const char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(event.GetInt("userid"));
+	int userid = event.GetInt("userid");
+	int client = GetClientOfUserId(userid);
 	if (client)
 	{
 		int victim = g_iChargeVictim[client];
@@ -345,10 +346,24 @@ void Event_ChargerKilled(Event event, const char[] name, bool dontBroadcast)
 				hAnim.SetFlag(ASF_WallSlammed, false);
 			}
 			
-			g_iChargeAttacker[victim] = -1;
-			g_iChargeVictim[client] = -1;
+			// We're creating timers only for later punch/rock hits
+			// because somehow "m_flCycle" doesn't serve reliably.
+			CreateTimer(0.1, Timer_ClearChargeInfo, userid, TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
+}
+
+Action Timer_ClearChargeInfo(Handle timer, int userid)
+{
+	int client = GetClientOfUserId(userid);
+	if (client 
+		&& g_iChargeVictim[client] != -1) // In case team swaps
+	{
+		g_iChargeAttacker[g_iChargeVictim[client]] = -1;
+		g_iChargeVictim[client] = -1;
+	}
+	
+	return Plugin_Stop;
 }
 
 Action SDK_OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3])
@@ -392,15 +407,14 @@ public void L4D_TankClaw_OnPlayerHit_Post(int tank, int claw, int player)
 		hAnim.SetFlag(ASF_Charged, false);
 		
 		// Fix double get-up when punching charger with victim to die
-		// Keep in mind that do not mess up later attacks on the survivor so "m_flCycle" is checked
-		// FIXME: "m_flCycle" should be around 0.0 now, but somehow it doesn't.
-		if (hAnim.GetFlag(ASF_Pounded) && GetEntPropFloat(player, Prop_Send, "m_flCycle") <= 0.1)
+		// Keep in mind that do not mess up with later attacks to the survivor
+		if (hAnim.GetFlag(ASF_Pounded) && g_iChargeAttacker[player] != -1)
 		{
 			hAnim.SetFlag(ASF_TankPunched, false);
 		}
 		else
 		{
-			// Remove charger get-up that doesn't pass the "m_flCycle" check above
+			// Remove charger get-up that doesn't pass the check above
 			//hAnim.SetFlag(ASF_GroundSlammed, false);
 			//hAnim.SetFlag(ASF_WallSlammed, false);
 			hAnim.SetFlag(ASF_Pounded, false);
@@ -429,15 +443,14 @@ public void L4D_OnKnockedDown_Post(int client, int reason)
 		hAnim.SetFlag(ASF_Charged, false);
 		
 		// Fix double get-up when punching charger with victim to die
-		// Keep in mind that do not mess up later attacks on the survivor so "m_flCycle" is checked
-		// FIXME: "m_flCycle" should be around 0.0 now, but somehow it doesn't.
-		if (hAnim.GetFlag(ASF_Pounded) && GetEntPropFloat(client, Prop_Send, "m_flCycle") <= 0.1)
+		// Keep in mind that do not mess up with later attacks to the survivor
+		if (hAnim.GetFlag(ASF_Pounded) && g_iChargeAttacker[client] != -1)
 		{
 			hAnim.SetFlag(ASF_TankPunched, false);
 		}
 		else
 		{
-			// Remove charger get-up that doesn't pass the "m_flCycle" check above
+			// Remove charger get-up that doesn't pass the check above
 			//hAnim.SetFlag(ASF_GroundSlammed, false);
 			//hAnim.SetFlag(ASF_WallSlammed, false);
 			hAnim.SetFlag(ASF_Pounded, false);
