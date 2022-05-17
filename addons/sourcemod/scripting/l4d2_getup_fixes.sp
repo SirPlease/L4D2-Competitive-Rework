@@ -13,19 +13,21 @@
  * 
  * Fixes for cappers respectively:
  *
+ *    Smoker:
+ *      1) [DISABLED] Charged get-ups keep playing during pull.			(Event_TongueGrab)
+ *      2) [DISABLED] Punch/Rock get-up keeps playing during pull.		(Event_TongueGrab)
+ *      3) Hunter get-up replayed when pull released.					(Event_TongueGrab)
+ *
  *    Jockey:
  *      1) No get-up if forced off by any other capper.					(Event_JockeyRideEnd)
  *      2) Bowling get-up keeps playing during ride.					(Event_JockeyRide)
  *    
  *    Hunter:
- *      1) Get-up replayed after smoker drag.							(Event_TongueGrab)
- *      2) Double get-up when pounce on charger victims.				(Event_ChargerKilled)
+ *      1) Double get-up when pounce on charger victims.				(Event_ChargerKilled)
  *    
  *    Charger:
- *      1) [DISABLED] Get-up keeps playing during smoker drag.			(Event_TongueGrab)
- *      2) Prevent get-up for self-clears.								(Event_ChargerKilled)
- *      3) Fix no godframe for long get-up.								(Event_ChargerKilled)
- *      4) Long get-up is dismissed.									(Event_ChargerKilled)
+ *      1) Prevent get-up for self-clears.								(Event_ChargerKilled)
+ *      2) Fix no godframe for long get-up.								(Event_ChargerKilled)
  *    
  *    Tank:
  *      1) Double get-up if punch/rock on chargers with victims to die.	(OnPlayerHit_Post OnKnockedDown_Post)
@@ -44,7 +46,7 @@
 #include <left4dhooks>
 #include <godframecontrol>
 
-#define PLUGIN_VERSION "4.3"
+#define PLUGIN_VERSION "4.4"
 
 public Plugin myinfo = 
 {
@@ -105,7 +107,10 @@ int
 
 ConVar 
 	g_hChargeDuration,
-	longerTankPunchGetup;
+	g_hLongChargeDuration,
+	longerTankPunchGetup,
+	cvar_keepWallSlamLongGetUp,
+	cvar_keepLongChargeLongGetUp;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -142,7 +147,12 @@ public void OnPluginStart()
 	LoadSDK();
 	
 	g_hChargeDuration = FindConVar("gfc_charger_duration");
+	g_hLongChargeDuration = CreateConVar("gfc_long_charger_duration", "2.2", "God frame duration for long charger getup animations");
+	
 	longerTankPunchGetup = CreateConVar("longer_tank_punch_getup", "0", "When a tank punches someone give them a slightly longer getup.", _, true, 0.0, true, 1.0);
+	
+	cvar_keepWallSlamLongGetUp = CreateConVar("charger_keep_wall_charge_animation", "1", "Enable the long wall slam animation (with god frames)");
+	cvar_keepLongChargeLongGetUp = CreateConVar("charger_keep_far_charge_animation", "0", "Enable the long 'far' slam animation (with god frames)");
 	
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("player_bot_replace", Event_PlayerBotReplace);
@@ -152,6 +162,7 @@ public void OnPluginStart()
 	HookEvent("lunge_pounce", Event_LungePounce);
 	HookEvent("jockey_ride", Event_JockeyRide);
 	HookEvent("jockey_ride_end", Event_JockeyRideEnd);
+	HookEvent("charger_pummel_start", Event_ChargerPummelStart);
 	HookEvent("charger_killed", Event_ChargerKilled);
 	
 	if (g_bLateLoad)
@@ -250,6 +261,8 @@ void Event_TongueGrab(Event event, const char[] name, bool dontBroadcast)
 		hAnim.SetFlag(ASF_Pounced, false);
 		
 		// Commented to keep consistency with game
+		//hAnim.SetFlag(ASF_GroundSlammed, false);
+		//hAnim.SetFlag(ASF_WallSlammed, false);
 		//hAnim.SetFlag(ASF_TankPunched, false);
 		//hAnim.SetFlag(ASF_Pounded, false);
 		//hAnim.SetFlag(ASF_Charged, false);
@@ -301,6 +314,18 @@ void Event_JockeyRideEnd(Event event, const char[] name, bool dontBroadcast)
 /**
  * Charger
  */
+// Pounces on survivors being carried will invoke this instantly.
+void Event_ChargerPummelStart(Event event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	int victim = GetClientOfUserId(event.GetInt("victim"));
+	if (client && victim)
+	{
+		g_iChargeVictim[client] = victim;
+		g_iChargeAttacker[victim] = client;
+	}
+}
+
 void Event_ChargerKilled(Event event, const char[] name, bool dontBroadcast)
 {
 	int userid = event.GetInt("userid");
@@ -332,11 +357,19 @@ void Event_ChargerKilled(Event event, const char[] name, bool dontBroadcast)
 					hAnim.SetFlag(ASF_Pounced, false);
 					
 					// long charged get-up
-					if (hAnim.GetFlag(ASF_GroundSlammed) || hAnim.GetFlag(ASF_WallSlammed))
+					if ((hAnim.GetFlag(ASF_GroundSlammed) && cvar_keepLongChargeLongGetUp.BoolValue)
+						|| (hAnim.GetFlag(ASF_WallSlammed) && cvar_keepWallSlamLongGetUp.BoolValue))
 					{
-						GiveClientGodFrames(victim, g_hChargeDuration.FloatValue, 6);
+						GiveClientGodFrames(victim, g_hLongChargeDuration.FloatValue, 6);
 					}
-					L4D2Direct_DoAnimationEvent(victim, 78);
+					else
+					{
+						if (hAnim.GetFlag(ASF_GroundSlammed) || hAnim.GetFlag(ASF_WallSlammed))
+						{
+							GiveClientGodFrames(victim, g_hChargeDuration.FloatValue, 6);
+						}
+						L4D2Direct_DoAnimationEvent(victim, 78);
+					}
 				}
 			}
 			else
@@ -408,20 +441,22 @@ public void L4D_TankClaw_OnPlayerHit_Post(int tank, int claw, int player)
 		
 		// Fix double get-up when punching charger with victim to die
 		// Keep in mind that do not mess up with later attacks to the survivor
-		if (hAnim.GetFlag(ASF_Pounded) && g_iChargeAttacker[player] != -1)
+		if (g_iChargeAttacker[player] != -1)
 		{
 			hAnim.SetFlag(ASF_TankPunched, false);
 		}
 		else
 		{
 			// Remove charger get-up that doesn't pass the check above
-			//hAnim.SetFlag(ASF_GroundSlammed, false);
-			//hAnim.SetFlag(ASF_WallSlammed, false);
+			hAnim.SetFlag(ASF_GroundSlammed, false);
+			hAnim.SetFlag(ASF_WallSlammed, false);
 			hAnim.SetFlag(ASF_Pounded, false);
 			
 			if (longerTankPunchGetup.BoolValue)
 			{
-				L4D2Direct_DoAnimationEvent(player, 57); // ANIM_SHOVED_BY_TEAMMATE
+				// TODO: Does not extend the get-up.
+				// Fixable, though I'd wonder if it's actually needed.
+				//L4D2Direct_DoAnimationEvent(player, 57); // ANIM_SHOVED_BY_TEAMMATE
 			}
 			hAnim.ResetMainActivity();
 		}
@@ -444,15 +479,15 @@ public void L4D_OnKnockedDown_Post(int client, int reason)
 		
 		// Fix double get-up when punching charger with victim to die
 		// Keep in mind that do not mess up with later attacks to the survivor
-		if (hAnim.GetFlag(ASF_Pounded) && g_iChargeAttacker[client] != -1)
+		if (g_iChargeAttacker[client] != -1)
 		{
 			hAnim.SetFlag(ASF_TankPunched, false);
 		}
 		else
 		{
 			// Remove charger get-up that doesn't pass the check above
-			//hAnim.SetFlag(ASF_GroundSlammed, false);
-			//hAnim.SetFlag(ASF_WallSlammed, false);
+			hAnim.SetFlag(ASF_GroundSlammed, false);
+			hAnim.SetFlag(ASF_WallSlammed, false);
 			hAnim.SetFlag(ASF_Pounded, false);
 			
 			hAnim.ResetMainActivity();
