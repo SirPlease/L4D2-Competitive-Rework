@@ -23,7 +23,8 @@ public Plugin myinfo =
 	name = "L4D2 Remove Cans",
 	author = "Jahze, Sir, A1m`",
 	version = "1.0",
-	description = "Provides the ability to remove Gascans, Propane, Oxygen Tanks and Fireworks"
+	description = "Provides the ability to remove Gascans, Propane, Oxygen Tanks and Fireworks",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public void OnPluginStart()
