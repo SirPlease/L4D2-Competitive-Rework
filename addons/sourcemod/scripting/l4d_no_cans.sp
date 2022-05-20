@@ -19,24 +19,26 @@ ConVar
 public Plugin myinfo =
 {
 	name = "L4D2 Remove Cans",
-	author = "Jahze, Sir",
-	version = "0.9",
+	author = "Jahze, Sir, A1m`",
+	version = "1.0",
 	description = "Provides the ability to remove Gascans, Propane, Oxygen Tanks and Fireworks"
 };
 
 public void OnPluginStart()
 {
-	g_hCvarNoCans = CreateConVar("l4d_no_cans", "1", "Remove Gascans?", FCVAR_NONE);
-	g_hCvarNoPropane = CreateConVar("l4d_no_propane", "1", "Remove Propane Tanks?", FCVAR_NONE);
-	g_hCvarNoOxygen = CreateConVar("l4d_no_oxygen", "1", "Remove Oxygen Tanks?", FCVAR_NONE);
-	g_hCvarNoFireworks = CreateConVar("l4d_no_fireworks", "1", "Remove Fireworks?", FCVAR_NONE);
+	g_hCvarNoCans = CreateConVar("l4d_no_cans", "1", "Remove Gascans?", _, true, 0.0, true, 1.0);
+	g_hCvarNoPropane = CreateConVar("l4d_no_propane", "1", "Remove Propane Tanks?", _, true, 0.0, true, 1.0);
+	g_hCvarNoOxygen = CreateConVar("l4d_no_oxygen", "1", "Remove Oxygen Tanks?", _, true, 0.0, true, 1.0);
+	g_hCvarNoFireworks = CreateConVar("l4d_no_fireworks", "1", "Remove Fireworks?", _, true, 0.0, true, 1.0);
 
-	HookEvent("round_start", Event_RoundStart, EventHookMode_Post);
+	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 }
 
 public void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	CreateTimer(1.0, Timer_RoundStartDelay, _, TIMER_FLAG_NO_MAPCHANGE);
+	// Some canisters will spawn much later. For example a map c2m1_highway
+	CreateTimer(10.0, Timer_RoundStartDelay, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
 public Action Timer_RoundStartDelay(Handle hTimer)
@@ -44,14 +46,11 @@ public Action Timer_RoundStartDelay(Handle hTimer)
 	int iEntity = -1;
 
 	while ((iEntity = FindEntityByClassname(iEntity, "prop_physics")) != -1) {
-		if (!IsValidEdict(iEntity)) {
+		if (!IsValidEdict(iEntity) || !IsCan(iEntity)) {
 			continue;
 		}
 
-		// Let's see what we got here!
-		if (IsCan(iEntity)) {
-			AcceptEntityInput(iEntity, "Kill");
-		}
+		RemoveEntity(iEntity);
 	}
 
 	return Plugin_Stop;
@@ -59,19 +58,21 @@ public Action Timer_RoundStartDelay(Handle hTimer)
 
 bool IsCan(int iEntity)
 {
-	char sModelName[128];
+	if (GetEntProp(iEntity, Prop_Send, "m_isCarryable", 1) < 1) {
+		return false;
+	}
+
+	char sModelName[PLATFORM_MAX_PATH];
 	GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModelName, sizeof(sModelName));
 
-	if (view_as<bool>(GetEntProp(iEntity, Prop_Send, "m_isCarryable", 1))) {
-		if (strcmp(sModelName, CAN_GASCAN, false) == 0) {
-			return (g_hCvarNoCans.BoolValue);
-		} else if (strcmp(sModelName, CAN_PROPANE, false) == 0) {
-			return (g_hCvarNoPropane.BoolValue);
-		} else if (strcmp(sModelName, CAN_OXYGEN, false) == 0) {
-			return (g_hCvarNoOxygen.BoolValue);
-		} else if (strcmp(sModelName, CAN_FIREWORKS, false) == 0) {
-			return (g_hCvarNoFireworks.BoolValue);
-		}
+	if (strcmp(sModelName, CAN_GASCAN, false) == 0) {
+		return (g_hCvarNoCans.BoolValue);
+	} else if (strcmp(sModelName, CAN_PROPANE, false) == 0) {
+		return (g_hCvarNoPropane.BoolValue);
+	} else if (strcmp(sModelName, CAN_OXYGEN, false) == 0) {
+		return (g_hCvarNoOxygen.BoolValue);
+	} else if (strcmp(sModelName, CAN_FIREWORKS, false) == 0) {
+		return (g_hCvarNoFireworks.BoolValue);
 	}
 
 	return false;
