@@ -26,7 +26,7 @@ public Plugin myinfo =
 {
 	name = "L4D2 Remove Cans",
 	author = "Jahze, Sir",
-	version = "0.6",
+	version = "0.7",
 	description = "Provides the ability to remove Gascans, Propane, Oxygen Tanks and Fireworks"
 };
 
@@ -91,7 +91,7 @@ public Action Timer_RoundStartDelay(Handle hTimer)
 	int iEntity = -1;
 
 	while ((iEntity = FindEntityByClassname(iEntity, "prop_physics")) != -1) {
-		if (!IsValidEdict(iEntity) || !IsValidEntity(iEntity)) {
+		if (!IsValidEdict(iEntity)) {
 			continue;
 		}
 
