@@ -4,6 +4,8 @@
 #include <sourcemod>
 #include <sdktools>
 
+#define DEBUG 0
+
 public const char
 	CAN_GASCAN[] = "models/props_junk/gascan001a.mdl",
 	CAN_PROPANE[] = "models/props_junk/propanecanister001a.mdl",
@@ -64,6 +66,12 @@ bool IsCan(int iEntity)
 
 	char sModelName[PLATFORM_MAX_PATH];
 	GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModelName, sizeof(sModelName));
+
+#if DEBUG
+	char sEntityName[64];
+	GetEdictClassname(iEntity, sEntityName, sizeof(sEntityName));
+	PrintToChatAll("iEntity: %d (%s), model: %s", iEntity, sEntityName, sModelName);
+#endif
 
 	if (strcmp(sModelName, CAN_GASCAN, false) == 0) {
 		return (g_hCvarNoCans.BoolValue);
