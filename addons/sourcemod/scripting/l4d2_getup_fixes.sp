@@ -23,7 +23,9 @@
  *      2) Bowling get-up keeps playing during ride.					(Event_JockeyRide)
  *    
  *    Hunter:
- *      1) Double get-up when pounce on charger victims.				(Event_ChargerKilled)
+ *      1) Double get-up when pounce on charger victims.				(Event_ChargerPummelStart Event_ChargerKilled)
+ *      2) Multi-charged/Pummel get-up keeps playing when pounced.		(Event_LungePounce)
+ *      3) Punch/Rock get-up keeps playing when pounced.				(Event_LungePounce)
  *    
  *    Charger:
  *      1) Prevent get-up for self-clears.								(Event_ChargerKilled)
@@ -46,7 +48,7 @@
 #include <left4dhooks>
 #include <godframecontrol>
 
-#define PLUGIN_VERSION "4.4"
+#define PLUGIN_VERSION "4.5"
 
 public Plugin myinfo = 
 {
@@ -71,10 +73,10 @@ int
 
 methodmap AnimState
 {
-	public AnimState(int player) {
-		int ptr = GetEntData(player, m_hAnimState, 4);
+	public AnimState(int client) {
+		int ptr = GetEntData(client, m_hAnimState, 4);
 		if (ptr == 0)
-			ThrowError("Invalid pointer to \"CTerrorPlayer::CTerrorPlayerAnimState\".");
+			ThrowError("Invalid pointer to \"CTerrorPlayer::CTerrorPlayerAnimState\" (client %d).", client);
 		return view_as<AnimState>(ptr);
 	}
 	public void ResetMainActivity() { SDKCall(g_hSDKCall_ResetMainActivity, this); }
@@ -88,14 +90,13 @@ methodmap AnimState
 
 enum AnimStateFlag // start from m_bCharged
 {
-	ASF_Charged			= 0,
-	ASF_Pummeled		= 1,
-	ASF_WallSlammed		= 2,
-	ASF_GroundSlammed	= 3,
-	ASF_Pounded			= 5,
-	ASF_TankPunched		= 7,
-	ASF_Pounced			= 9,
-	ASF_RiddenByJockey	= 14
+	AnimState_Charged			= 0, // aka multi-charged
+	AnimState_WallSlammed		= 2,
+	AnimState_GroundSlammed		= 3,
+	AnimState_Pounded			= 5, // Pummel get-up
+	AnimState_TankPunched		= 7, // Rock get-up shares this
+	AnimState_Pounced			= 9,
+	AnimState_RiddenByJockey	= 14
 }
 
 bool
@@ -238,11 +239,12 @@ void Event_ReviveSuccess(Event event, const char[] name, bool dontBroadcast)
 	int client = GetClientOfUserId(event.GetInt("subject"));
 	if (client)
 	{
+		// Clear all get-up flags
 		AnimState hAnim = AnimState(client);
-		hAnim.SetFlag(ASF_GroundSlammed, false);
-		hAnim.SetFlag(ASF_WallSlammed, false);
-		hAnim.SetFlag(ASF_Pounded, false);
-		hAnim.SetFlag(ASF_Pounced, false);
+		hAnim.SetFlag(AnimState_GroundSlammed, false);
+		hAnim.SetFlag(AnimState_WallSlammed, false);
+		hAnim.SetFlag(AnimState_Pounded, false); // probably no need
+		hAnim.SetFlag(AnimState_Pounced, false); // probably no need
 	}
 }
 
@@ -258,14 +260,16 @@ void Event_TongueGrab(Event event, const char[] name, bool dontBroadcast)
 		AnimState hAnim = AnimState(client);
 		
 		// Fix double get-up
-		hAnim.SetFlag(ASF_Pounced, false);
+		hAnim.SetFlag(AnimState_Pounced, false);
 		
-		// Commented to keep consistency with game
-		//hAnim.SetFlag(ASF_GroundSlammed, false);
-		//hAnim.SetFlag(ASF_WallSlammed, false);
-		//hAnim.SetFlag(ASF_TankPunched, false);
-		//hAnim.SetFlag(ASF_Pounded, false);
-		//hAnim.SetFlag(ASF_Charged, false);
+		// Commented to prevent unexpected buff
+		
+		// Fix get-up keeps playing
+		//hAnim.SetFlag(AnimState_GroundSlammed, false);
+		//hAnim.SetFlag(AnimState_WallSlammed, false);
+		//hAnim.SetFlag(AnimState_TankPunched, false);
+		//hAnim.SetFlag(AnimState_Pounded, false);
+		//hAnim.SetFlag(AnimState_Charged, false);
 	}
 }
 
@@ -281,8 +285,9 @@ void Event_LungePounce(Event event, const char[] name, bool dontBroadcast)
 		AnimState hAnim = AnimState(client);
 		
 		// Fix get-up keeps playing
-		hAnim.SetFlag(ASF_TankPunched, false);
-		hAnim.SetFlag(ASF_Pounded, false);
+		hAnim.SetFlag(AnimState_TankPunched, false);
+		hAnim.SetFlag(AnimState_Charged, false);
+		hAnim.SetFlag(AnimState_Pounded, false);
 	}
 }
 
@@ -296,7 +301,7 @@ void Event_JockeyRide(Event event, const char[] name, bool dontBroadcast)
 	if (client)
 	{
 		// Fix get-up keeps playing
-		AnimState(client).SetFlag(ASF_Charged, false);
+		AnimState(client).SetFlag(AnimState_Charged, false);
 	}
 }
 
@@ -306,7 +311,7 @@ void Event_JockeyRideEnd(Event event, const char[] name, bool dontBroadcast)
 	if (client)
 	{
 		// Fix no get-up
-		AnimState(client).SetFlag(ASF_RiddenByJockey, false);
+		AnimState(client).SetFlag(AnimState_RiddenByJockey, false);
 	}
 }
 
@@ -346,25 +351,25 @@ void Event_ChargerKilled(Event event, const char[] name, bool dontBroadcast)
 					if (!L4D_IsPlayerIncapacitated(victim))
 					{
 						// No self-clear get-up
-						hAnim.SetFlag(ASF_GroundSlammed, false);
-						hAnim.SetFlag(ASF_WallSlammed, false);
+						hAnim.SetFlag(AnimState_GroundSlammed, false);
+						hAnim.SetFlag(AnimState_WallSlammed, false);
 					}
 				}
 				else
 				{
 					// Fix double get-up
-					hAnim.SetFlag(ASF_TankPunched, false);
-					hAnim.SetFlag(ASF_Pounced, false);
+					hAnim.SetFlag(AnimState_TankPunched, false);
+					hAnim.SetFlag(AnimState_Pounced, false);
 					
 					// long charged get-up
-					if ((hAnim.GetFlag(ASF_GroundSlammed) && cvar_keepLongChargeLongGetUp.BoolValue)
-						|| (hAnim.GetFlag(ASF_WallSlammed) && cvar_keepWallSlamLongGetUp.BoolValue))
+					if ((hAnim.GetFlag(AnimState_GroundSlammed) && cvar_keepLongChargeLongGetUp.BoolValue)
+						|| (hAnim.GetFlag(AnimState_WallSlammed) && cvar_keepWallSlamLongGetUp.BoolValue))
 					{
 						GiveClientGodFrames(victim, g_hLongChargeDuration.FloatValue, 6);
 					}
 					else
 					{
-						if (hAnim.GetFlag(ASF_GroundSlammed) || hAnim.GetFlag(ASF_WallSlammed))
+						if (hAnim.GetFlag(AnimState_GroundSlammed) || hAnim.GetFlag(AnimState_WallSlammed))
 						{
 							GiveClientGodFrames(victim, g_hChargeDuration.FloatValue, 6);
 						}
@@ -375,8 +380,8 @@ void Event_ChargerKilled(Event event, const char[] name, bool dontBroadcast)
 			else
 			{
 				// Fix double get-up
-				hAnim.SetFlag(ASF_GroundSlammed, false);
-				hAnim.SetFlag(ASF_WallSlammed, false);
+				hAnim.SetFlag(AnimState_GroundSlammed, false);
+				hAnim.SetFlag(AnimState_WallSlammed, false);
 			}
 			
 			// We're creating timers only for later punch/rock hits
@@ -437,20 +442,20 @@ public void L4D_TankClaw_OnPlayerHit_Post(int tank, int claw, int player)
 		AnimState hAnim = AnimState(player);
 		
 		// Fix double get-up
-		hAnim.SetFlag(ASF_Charged, false);
+		hAnim.SetFlag(AnimState_Charged, false);
 		
 		// Fix double get-up when punching charger with victim to die
 		// Keep in mind that do not mess up with later attacks to the survivor
 		if (g_iChargeAttacker[player] != -1)
 		{
-			hAnim.SetFlag(ASF_TankPunched, false);
+			hAnim.SetFlag(AnimState_TankPunched, false);
 		}
 		else
 		{
 			// Remove charger get-up that doesn't pass the check above
-			hAnim.SetFlag(ASF_GroundSlammed, false);
-			hAnim.SetFlag(ASF_WallSlammed, false);
-			hAnim.SetFlag(ASF_Pounded, false);
+			hAnim.SetFlag(AnimState_GroundSlammed, false);
+			hAnim.SetFlag(AnimState_WallSlammed, false);
+			hAnim.SetFlag(AnimState_Pounded, false);
 			
 			if (longerTankPunchGetup.BoolValue)
 			{
@@ -475,20 +480,20 @@ public void L4D_OnKnockedDown_Post(int client, int reason)
 		AnimState hAnim = AnimState(client);
 		
 		// Fix double get-up
-		hAnim.SetFlag(ASF_Charged, false);
+		hAnim.SetFlag(AnimState_Charged, false);
 		
 		// Fix double get-up when punching charger with victim to die
 		// Keep in mind that do not mess up with later attacks to the survivor
 		if (g_iChargeAttacker[client] != -1)
 		{
-			hAnim.SetFlag(ASF_TankPunched, false);
+			hAnim.SetFlag(AnimState_TankPunched, false);
 		}
 		else
 		{
 			// Remove charger get-up that doesn't pass the check above
-			hAnim.SetFlag(ASF_GroundSlammed, false);
-			hAnim.SetFlag(ASF_WallSlammed, false);
-			hAnim.SetFlag(ASF_Pounded, false);
+			hAnim.SetFlag(AnimState_GroundSlammed, false);
+			hAnim.SetFlag(AnimState_WallSlammed, false);
+			hAnim.SetFlag(AnimState_Pounded, false);
 			
 			hAnim.ResetMainActivity();
 		}
