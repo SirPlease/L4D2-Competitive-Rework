@@ -2,9 +2,9 @@
 #pragma newdecls required
 
 #include <sourcemod>
-#include <sourcescramble>
+#include <dhooks>
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "3.0"
 
 public Plugin myinfo =
 {
@@ -16,17 +16,28 @@ public Plugin myinfo =
 }
 
 #define GAMEDATA_FILE "l4d_tongue_bend_fix"
-#define PATCH_KEY "CTongue::OnUpdateAttachedToTargetState__UpdateBend_jump_patch"
+#define KEY_UPDATEBEND "CTongue::UpdateBend"
 
 public void OnPluginStart()
 {
 	Handle conf = LoadGameConfigFile(GAMEDATA_FILE);
 	if (!conf) SetFailState("Missing gamedata \""...GAMEDATA_FILE..."\"");
 	
-	MemoryPatch hPatch = MemoryPatch.CreateFromConf(conf, PATCH_KEY);
-	if (!hPatch.Validate()) SetFailState("Failed to validate patch \""...PATCH_KEY..."\"");
+	DynamicDetour hDetour = DynamicDetour.FromConf(conf, KEY_UPDATEBEND);
+	if (!hDetour) SetFailState("Missing signature \""...KEY_UPDATEBEND..."\"");
+	if (!hDetour.Enable(Hook_Pre, DTR_OnUpdateBend)) SetFailState("Failed to pre-detour \""...KEY_UPDATEBEND..."\"");
 	
 	delete conf;
+}
+
+MRESReturn DTR_OnUpdateBend(int pThis, DHookReturn hReturn)
+{
+	if (GetEntProp(pThis, Prop_Send, "m_bendPointCount") > 9)
+	{
+		// should be bugged, ignore now.
+		hReturn.Value = 0;
+		return MRES_Supercede;
+	}
 	
-	if (!hPatch.Enable()) SetFailState("Failed to enable patch \""...PATCH_KEY..."\"");
+	return MRES_Ignored;
 }
