@@ -114,6 +114,7 @@ public playerTeam(Handle:event, const String:name[], bool:dontBroadcast) {
 public playerDisconnect(Handle:event, const String:name[], bool:dontBroadcast) {
     new client = GetClientOfUserId(GetEventInt(event, "userid"));
     if (client <= 0 || client > MaxClients) return;
+    if (GetClientTeam(client) <= 1) return;
     decl String:steamId[64];
     GetClientAuthId(client, AuthId_Steam2, steamId, sizeof(steamId));
     if (strcmp(steamId, "BOT") == 0) return;
