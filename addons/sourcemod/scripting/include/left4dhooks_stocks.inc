@@ -155,6 +155,29 @@ enum L4DResourceType
 	L4DResource_TankTickets2
 }
 
+stock const char L4D1ZombieClassname[6][] =
+{
+	"smoker",
+	"boomer",
+	"hunter",
+	"witch",
+	"tank",
+	"error_bad_L4D1ZombieClassType"
+};
+
+stock const char L4D2ZombieClassname[9][] =
+{
+	"smoker",
+	"boomer",
+	"hunter",
+	"spitter",
+	"jockey",
+	"charger",
+	"witch",
+	"tank",
+	"error_bad_L4D2ZombieClassType"
+};
+
 static const char L4DResourceName[L4DResourceType][] =
 {
 	"m_iPing",
@@ -165,6 +188,19 @@ static const char L4DResourceName[L4DResourceType][] =
 	"m_wantsToPlay",
 	"m_tankTickets"
 };
+
+/**
+ * Returns the clients team using L4DTeam.
+ *
+ * @param client		Player's index.
+ * @return				Current L4DTeam of player.
+ * @error				Invalid client index.
+ */
+stock L4DTeam L4D_GetClientTeam(int client)
+{
+	int team = GetClientTeam(client);
+	return view_as<L4DTeam>(team);
+}
 
 /**
  * Returns zombie player L4D1 zombie class.
