@@ -942,4 +942,37 @@
 		"start_loc_a"	"-3968 3916 -20"
 		"start_loc_b"	"-3084 4720 -344"
 	}
+	"dprm1_milltown_a"
+	{
+		"start_loc_a"	"-7216 8656 239"
+		"start_loc_b"	"-6348 7408 75"
+		"end_loc_a"	"3744 -1440 360"
+		"end_loc_b"	"4224 -1844 104"
+	}
+	"dprm2_sugarmill_a"
+	{
+		"start_loc_a"	"3744 -1440 360"
+		"start_loc_b"	"4224 -1844 104"
+		"end_loc_a"	"-1919 -13584 258"
+		"end_loc_b"	"-1663 -13840 130"
+	}
+	"dprm3_sugarmill_b"
+	{
+		"start_loc_a"	"-1919 -13584 258"
+		"start_loc_b"	"-1663 -13840 130"
+		"end_loc_a"	"3744 -1440 360"
+		"end_loc_b"	"4224 -1844 104"
+	}
+	"dprm4_milltown_b"
+	{
+		"start_loc_a"	"3744 -1440 360"
+		"start_loc_b"	"4224 -1844 104"
+		"end_loc_a"	"-3968 3916 -20"
+		"end_loc_b"	"-3084 4720 -344"
+	}
+	"dprm5_milltown_escape"
+	{
+		"start_loc_a"	"-3682 8060 281"
+		"start_loc_b"	"-2850 7644 119"
+	}
 }

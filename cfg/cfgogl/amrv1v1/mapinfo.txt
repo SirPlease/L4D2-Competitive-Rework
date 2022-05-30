@@ -2260,7 +2260,6 @@
 		"start_dist"		"100.000000"
 		"start_extra_dist"	"300.000000"
 		"end_dist"			"500.000000"
-		"max_distance"		"500"
 		"horde_limit"		"150"
 	}
 	"dkr_m5_stadium"
@@ -2270,6 +2269,50 @@
 		"start_dist"		"200.000000"
 		"start_extra_dist"	"500.000000"
 		"end_dist"			"150.000000"
+		"ItemLimits"
+		{
+			"pain_pills"	"4"
+		}
+	}
+	"dprm1_milltown_a"
+	{
+		"start_point"		"-6588.341797 7675.165527 96.038345"
+		"end_point"			"3935.251953 -1573.986206 232.281250"
+		"start_dist"		"200.000000"
+		"start_extra_dist"	"200.000000"
+		"end_dist"			"300.000000"
+	}
+	"dprm2_sugarmill_a"
+	{
+		"start_point"		"3735.611084 -1667.831177 232.031250"
+		"end_point"			"-1797.393066 -13707.108398 130.031250"
+		"start_dist"		"300.000000"
+		"start_extra_dist"	"0.000000"
+		"end_dist"			"200.000000"
+	}
+	"dprm3_sugarmill_b"
+	{
+		"start_point"		"-1788.631592 -13717.489258 130.031250"
+		"end_point"			"3730.589844 -1674.089966 232.031250"
+		"start_dist"		"200.000000"
+		"start_extra_dist"	"000.000000"
+		"end_dist"			"300.000000"
+	}
+	"dprm4_milltown_b"
+	{
+		"start_point"		"3953.058594 -1562.972290 232.281250"
+		"end_point"			"-3217.998291 7792.274902 120.031250"
+		"start_dist"		"300.000000"
+		"start_extra_dist"	"100.000000"
+		"end_dist"			"500.000000"
+	}
+	"dprm5_milltown_escape"
+	{
+		"start_point"		"-3455.657471 7796.145020 120.031250"
+		"end_point"			"-6443.983887 6488.218262 100.031250"
+		"start_dist"		"500.000000"
+		"start_extra_dist"	"200.000000"
+		"end_dist"			"100.000000"
 		"ItemLimits"
 		{
 			"pain_pills"	"4"

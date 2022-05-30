@@ -4,11 +4,11 @@
 	{
 		"zonemod"
 		{
-			"name" "ZoneMod 2.6.5"
+			"name" "ZoneMod 2.6.6"
 		}
 		"zoneretro"
 		{
-			"name" "ZoneMod Retro 2.6.5"
+			"name" "ZoneMod Retro 2.6.6"
 		}
 		"zm3v3"
 		{
@@ -60,7 +60,7 @@
 	{
 		"acemodrv"
 		{
-			"name" "Acemod RV 1.1"
+			"name" "Acemod RV 1.2"
 		}
 		"amrv3v3"
 		{
@@ -105,7 +105,7 @@
 	{
 		"zonehunters"
 		{
-			"name" "ZoneHunters 2.6.5"
+			"name" "ZoneHunters 2.6.6"
 		}
 		"zh3v3"
 		{
