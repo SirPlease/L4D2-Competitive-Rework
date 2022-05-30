@@ -2,6 +2,11 @@
 {
 	"#default"
 	{
+		"Keys"
+		{
+			"BendExceptionClass1"	"prop_door_rotating"
+		}
+		
 		"Functions"
 		{
 			"CTongue::UpdateBend"
