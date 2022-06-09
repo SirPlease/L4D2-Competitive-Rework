@@ -5,7 +5,7 @@
 #include <sdktools>
 #include <dhooks>
 
-#define PLUGIN_VERSION "3.1"
+#define PLUGIN_VERSION "3.2"
 
 public Plugin myinfo =
 {
@@ -59,8 +59,13 @@ MRESReturn DTR_OnUpdateBend_Post(int pThis, DHookReturn hReturn)
 		GetAbsOrigin(victim, vVictimPos, true);
 		
 		float vFirstBendPos[3], vLastBendPos[3];
-		GetEntPropVector(pThis, Prop_Send, "m_bendPositions", vFirstBendPos, 0);
-		GetEntPropVector(pThis, Prop_Send, "m_bendPositions", vLastBendPos, 9);
+		static int iOffs_m_BendPositions = -1;
+		if (iOffs_m_BendPositions == -1)
+		{
+			iOffs_m_BendPositions = FindSendPropInfo("CTongue", "m_bendPositions");
+		}
+		GetEntDataVector(pThis, iOffs_m_BendPositions, vFirstBendPos);
+		GetEntDataVector(pThis, iOffs_m_BendPositions + 9 * 12, vLastBendPos);
 		
 		if (TestBendOnException(vTonguePos, vFirstBendPos)
 			|| TestBendOnException(vLastBendPos, vVictimPos)
