@@ -50,7 +50,7 @@
 #include <left4dhooks>
 #include <godframecontrol>
 
-#define PLUGIN_VERSION "4.6"
+#define PLUGIN_VERSION "4.7"
 
 public Plugin myinfo = 
 {
@@ -203,14 +203,14 @@ void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 void Event_PlayerBotReplace(Event event, const char[] name, bool dontBroadcast)
 {
 	int replacer = GetClientOfUserId(event.GetInt("bot"));
-	int replacee = GetClientOfUserId(event.GetInt("userid"));
+	int replacee = GetClientOfUserId(event.GetInt("player"));
 	if (replacer && replacee)
 		HandlePlayerReplace(replacer, replacee);
 }
 
 void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
 {
-	int replacer = GetClientOfUserId(event.GetInt("userid"));
+	int replacer = GetClientOfUserId(event.GetInt("player"));
 	int replacee = GetClientOfUserId(event.GetInt("bot"));
 	if (replacer && replacee)
 		HandlePlayerReplace(replacer, replacee);
@@ -335,8 +335,17 @@ void Event_ChargerCarryStart(Event event, const char[] name, bool dontBroadcast)
 	if (victim)
 	{
 		AnimState hAnim = AnimState(victim);
-		hAnim.SetFlag(AnimState_Charged, false);
+		
+		// Fix get-up keeps playing
 		hAnim.SetFlag(AnimState_TankPunched, false);
+		
+		/**
+		 * FIXME:
+		 * Tiny workaround for multiple chargers, but still glitchy.
+		 * I would think charging victims away from other chargers
+		 * is really an undefined behavior, better block it.
+		 */
+		hAnim.SetFlag(AnimState_Charged, false);
 		hAnim.SetFlag(AnimState_Pounded, false);
 		hAnim.SetFlag(AnimState_GroundSlammed, false);
 		hAnim.SetFlag(AnimState_WallSlammed, false);
@@ -513,6 +522,7 @@ public void L4D_OnKnockedDown_Post(int client, int reason)
 			hAnim.SetFlag(AnimState_WallSlammed, false);
 			hAnim.SetFlag(AnimState_Pounded, false);
 			
+			// Restart the get-up sequence if already playing
 			hAnim.ResetMainActivity();
 		}
 	}
