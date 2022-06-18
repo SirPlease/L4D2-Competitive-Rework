@@ -279,9 +279,15 @@ public Action ForcePause_Cmd(int client, int args)
 	if (!isPaused)
 	{
 		adminPause = true;
-		initiatorId = GetClientUserId(client);
-		GetClientName(client, initiatorName, sizeof(initiatorName));
-		CPrintToChatAll("{default}[{green}!{default}] A {green}force pause {default}is issued by {blue}Admin {default}({olive}%N{default})", client);
+		if (!client) {
+			initiatorId = 0;
+			CPrintToChatAll("{default}[{green}!{default}] {olive}Game {default}was {green}force paused {default}because a player has {blue}crashed{default}.");
+		}
+		else {
+			initiatorId = GetClientUserId(client);
+			GetClientName(client, initiatorName, sizeof(initiatorName));
+			CPrintToChatAll("{default}[{green}!{default}] A {green}force pause {default}is issued by {blue}Admin {default}({olive}%N{default})", client);
+		}
 		Pause();
 	}
 
@@ -322,7 +328,7 @@ public Action Unpause_Cmd(int client, int args)
 		teamReady[clientTeam] = true;
 		if (CheckFullReady())
 		{
-			if (!adminPause || initiatorId < 1)
+			if (!adminPause || !initiatorId)
 			{
 				InitiateLiveCountdown();
 			}
@@ -369,7 +375,7 @@ public Action Unready_Cmd(int client, int args)
 		}
 		teamReady[clientTeam] = false;
 		
-		if (!adminPause)
+		if (!adminPause || (adminPause && !initiatorId))
 		{
 			CancelFullReady(client);
 		}
@@ -633,7 +639,7 @@ void UpdatePanel()
 
 	if (adminPause)
 	{
-		if (initiatorId < 1) Format(info, sizeof(info), "▸ Forced AutoPause -> Crash");
+		if (!initiatorId) Format(info, sizeof(info), "▸ Forced AutoPause -> Crash");
 		else Format(info, sizeof(info), "▸ Force Pause -> %s (Admin)", strlen(name) ? name : initiatorName);
 	}
 	else
@@ -702,7 +708,7 @@ bool CheckFullReady()
 
 void CancelFullReady(int client)
 {
-	if (readyCountdownTimer != null && !adminPause)
+	if (readyCountdownTimer != null)
 	{
 		delete readyCountdownTimer;
 		CPrintToChatAll("{default}[{green}!{default}] {olive}%N {default}cancelled the countdown!", client);
