@@ -23,6 +23,24 @@
 			}
 		}
 		
+		"Functions"
+		{
+			"CTankRock::BounceTouch"
+			{
+				"offset"		"CTankRock::BounceTouch"
+				"hooktype"		"entity"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"cbaseentity"
+					}
+				}
+			}
+		}
+		
 		"Offsets"
 		{
 			"CTankRock::BounceTouch"
