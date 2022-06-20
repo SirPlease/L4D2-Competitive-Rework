@@ -9,7 +9,7 @@
 #undef REQUIRE_PLUGIN
 #include <caster_system>
 
-#define PLUGIN_VERSION "9.3.14"
+#define PLUGIN_VERSION "9.3.15"
 
 public Plugin myinfo =
 {
@@ -1601,6 +1601,7 @@ stock void ReturnPlayerToSaferoom(int client, bool flagsSet = true)
 	}
 	
 	TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, NULL_VELOCITY);
+	SetEntPropFloat(client, Prop_Send, "m_flFallVelocity", 0.0);
 }
 
 stock void ReturnTeamToSaferoom(int team)
