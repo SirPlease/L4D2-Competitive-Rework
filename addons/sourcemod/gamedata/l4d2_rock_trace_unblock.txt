@@ -1,0 +1,64 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"MemPatches"
+		{
+			// Skip the `ForEachPlayer<ProximityThink>` call as the plugin does it all.
+			"CTankRock::ProximityThink__No_ForEachPlayer"
+			{
+				"signature"		"CTankRock::ProximityThink"
+				"linux"
+				{
+					"offset"	"169h"
+					"verify"	"\x8D\x2A\x2A\x89\x2A\x2A\x89\x2A\x2A\xE8"
+					"patch"		"\xEB\x14"
+				}
+				"windows"
+				{
+					"offset"	"20Bh"
+					"verify"	"\x8D\x2A\x2A\x52\x89\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x84\x2A\x75"
+					"patch"		"\xEB\x0F\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\xEB"
+				}
+			}
+		}
+		
+		"Functions"
+		{
+			"CTankRock::BounceTouch"
+			{
+				"offset"		"CTankRock::BounceTouch"
+				"hooktype"		"entity"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"cbaseentity"
+					}
+				}
+			}
+		}
+		
+		"Offsets"
+		{
+			"CTankRock::BounceTouch"
+			{
+				"linux"			"346"
+				"windows"		"345"
+			}
+		}
+		
+		"Signatures"
+		{
+			"CTankRock::ProximityThink"
+			{
+				"library"		"server"
+				"linux"			"@_ZN9CTankRock14ProximityThinkEv"
+				"windows"		"\x55\x8B\xEC\x83\xEC\x34\xA1\x2A\x2A\x2A\x2A\x53\x56\x57\x33\xFF\x89\x7D\xF4\x89\x7D\xF8\x8B\xF1"
+				/* 55 8B EC 83 EC 34 A1 ? ? ? ? 53 56 57 33 FF 89 7D F4 89 7D F8 8B F1  */
+			}
+		}
+	}
+}
