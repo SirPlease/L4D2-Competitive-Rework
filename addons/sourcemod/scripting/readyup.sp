@@ -9,7 +9,7 @@
 #undef REQUIRE_PLUGIN
 #include <caster_system>
 
-#define PLUGIN_VERSION "9.3.9"
+#define PLUGIN_VERSION "9.4.0"
 
 public Plugin myinfo =
 {
@@ -62,6 +62,10 @@ enum
 // ========================
 //  Plugin Variables
 // ========================
+// Forwards
+GlobalForward playerReadyForward;
+GlobalForward playerUnreadyForward;
+
 // Game Cvars
 ConVar
 	director_no_specials,
@@ -190,6 +194,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	countdownForward = CreateGlobalForward("OnRoundLiveCountdown", ET_Ignore);
 	preLiveForward = CreateGlobalForward("OnRoundIsLivePre", ET_Ignore);
 	liveForward = CreateGlobalForward("OnRoundIsLive", ET_Ignore);
+	playerReadyForward = new GlobalForward("OnPlayerReady", ET_Event, Param_Cell);
+	playerUnreadyForward = new GlobalForward("OnPlayerUnready", ET_Event, Param_Cell);
+
 	RegPluginLibrary("readyup");
 	return APLRes_Success;
 }
@@ -373,6 +380,32 @@ public void ServerCvarChanged(ConVar convar, const char[] oldValue, const char[]
 //  Events
 // ========================
 
+void CallOnPlayerReady(int client)
+{
+    Action result;
+    Call_StartForward(playerReadyForward);
+    Call_PushCell(client);
+    Call_Finish(result);
+}
+
+void CallOnPlayerUnready(int client)
+{
+    Action result;
+    Call_StartForward(playerUnreadyForward);
+    Call_PushCell(client);
+    Call_Finish(result);
+}
+
+public void OnPlayerReady(int client)
+{
+	isPlayerReady[client] = true;
+}
+
+public void OnPlayerUnready(int client)
+{
+	isPlayerReady[client] = false;
+}
+
 public void OnConfigsExecuted()
 {
 	if (g_bTransitioning)
@@ -400,7 +433,7 @@ public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 	if (!client || IsFakeClient(client))
 		return;
 	
-	isPlayerReady[client] = false;
+	CallOnPlayerUnready(client);
 	SetEngineTime(client);
 	
 	if (!inReadyUp) return;
@@ -520,7 +553,7 @@ public void OnClientPostAdminCheck(int client)
 public void OnClientDisconnect(int client)
 {
 	hiddenPanel[client] = false;
-	isPlayerReady[client] = false;
+	CallOnPlayerUnready(client);
 	g_fButtonTime[client] = 0.0;
 	g_hChangeTeamTimer[client] = null;
 }
@@ -634,7 +667,8 @@ public Action Ready_Cmd(int client, int args)
 {
 	if (inReadyUp && IsPlayer(client))
 	{
-		isPlayerReady[client] = true;
+		CallOnPlayerReady(client);
+
 		if (l4d_ready_secret.BoolValue)
 			DoSecrets(client);
 		if (!inAutoStart && CheckFullReady())
@@ -662,7 +696,7 @@ public Action Unready_Cmd(int client, int args)
 			if (IsPlayer(client))
 			{
 				SetEngineTime(client);
-				isPlayerReady[client] = false;
+				CallOnPlayerUnready(client);
 			}
 			else if (!hasflag)
 			{
@@ -997,7 +1031,7 @@ void InitiateReadyUp()
 	
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		isPlayerReady[i] = false;
+		CallOnPlayerUnready(i);
 	}
 
 	UpdatePanel();
