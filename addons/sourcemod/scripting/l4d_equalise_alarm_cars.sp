@@ -19,209 +19,328 @@
 	with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdktools>
+#undef REQUIRE_PLUGIN
+#include <readyup>
 
-public Plugin:myinfo =
+#define PLUGIN_VERSION "3.3"
+
+public Plugin myinfo =
 {
-    name        = "L4D2 Equalise Alarm Cars",
-    author      = "Jahze",
-    version     = "1.2",
-    description = "Make the alarmed car spawns the same for each team in versus"
+	name		= "L4D2 Equalise Alarm Cars",
+	author		= "Jahze, Forgetest",
+	version		= PLUGIN_VERSION,
+	description	= "Make the alarmed car and its color spawns the same for each team in versus"
 };
 
-new bool:bHooked = false;
-new bool:bActivated = false;
-new bool:bSecondRound = false;
-new bool:bPatched = false;
+StringMap g_smCarNameMap;
 
-new Handle:hFirstRoundCars;
-new Handle:hSecondRoundCars;
+enum alarmArray
+{
+	ENTRY_RELAY_ON,
+	ENTRY_RELAY_OFF,
+	ENTRY_START_STATE,
+	ENTRY_ALARM_CAR,
+	ENTRY_COLOR,
+	
+	alarmArray_SIZE
+}
+static const int NULL_ALARMARRAY[alarmArray_SIZE] = {-1, ...};
+ArrayList g_aAlarmArray;
 
-new Handle:hCvarEqAlarmCars;
+ConVar g_cvStartDisabled;
 
-public OnPluginStart() {
-    hCvarEqAlarmCars = CreateConVar("l4d_equalise_alarm_cars", "1", "Makes alarmed cars spawn in the same way for both teams", FCVAR_NONE);
-    HookConVarChange(hCvarEqAlarmCars, EqAlarmCarsChange);
-    
-    hFirstRoundCars = CreateArray(128);
-    hSecondRoundCars = CreateArray(128);
-    
-    HookEvents();
+bool g_bRoundIsLive;
+bool g_bIsSecondHalf;
+
+static const int g_iOffColors[] =
+{
+//	R				G				B				A
+	(99 << 24)		+ (135 << 16)	+ (157 << 8)	+ 255,
+	(52 << 24)		+ (46 << 16)	+ (46 << 8)		+ 255,
+	(173 << 24)		+ (186 << 16)	+ (172 << 8)	+ 255,
+	(52 << 24)		+ (70 << 16)	+ (114 << 8)	+ 255,
+	(9 << 24)		+ (41 << 16)	+ (138 << 8)	+ 255,
+	(68 << 24)		+ (91 << 16)	+ (183 << 8)	+ 255
+};
+
+int GetRandomOffColor()
+{
+	return g_iOffColors[GetRandomInt(0, sizeof(g_iOffColors)-1)];
 }
 
-public OnPluginStop() {
-    UnhookEvents();
+public void OnPluginStart()
+{
+	g_cvStartDisabled = CreateConVar("l4d_equalise_alarm_start_disabled", "1", "Makes alarmed cars spawn disabled before game goes live.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	
+	g_smCarNameMap = new StringMap();
+	g_aAlarmArray = new ArrayList(alarmArray_SIZE);
+	
+	HookEvent("round_start", Event_RoundStart);
+	HookEvent("player_left_start_area", Event_PlayerLeftStartArea);
 }
 
-public OnMapStart() {
-    bActivated = false;
-    bSecondRound = false;
-    bPatched = false;
-    
-    ClearArray(hFirstRoundCars);
-    ClearArray(hSecondRoundCars);
+public void OnMapStart()
+{
+	g_smCarNameMap.Clear();
+	g_aAlarmArray.Clear();
 }
 
-HookEvents() {
-    if ( !bHooked ) {
-        HookEvent("round_start", RoundStart);
-        HookEvent("round_end", RoundEnd);
-        bHooked = true;
-    }
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+{
+	g_bRoundIsLive = false;
+	CreateTimer(0.1, Timer_RoundStartDelay, _, TIMER_FLAG_NO_MAPCHANGE);
+	CreateTimer(3.0, Timer_InitiateCars, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-UnhookEvents() {
-    if ( bHooked ) {
-        UnhookEvent("round_start", RoundStart);
-        UnhookEvent("round_end", RoundEnd);
-        bHooked = false;
-    }
+Action Timer_RoundStartDelay(Handle timer)
+{
+	g_bIsSecondHalf = !!GameRules_GetProp("m_bInSecondHalfOfRound");
+	
+	char sKey[64], sName[128];
+	
+	int ent = MaxClients+1;
+	while ((ent = FindEntityByClassname(ent, "prop_car_alarm")) != INVALID_ENT_REFERENCE)
+	{
+		GetEntityName(ent, sName, sizeof(sName));
+		if (ExtractCarName(sName, "caralarm_car1", sKey, sizeof(sKey)) != 0)
+		{
+			if (!g_bIsSecondHalf) // creates a new entry, filled with -1
+			{
+				int entry = g_aAlarmArray.PushArray(NULL_ALARMARRAY);
+				g_smCarNameMap.SetValue(sKey, entry);
+				g_aAlarmArray.Set(entry, EntIndexToEntRef(ent), ENTRY_ALARM_CAR);
+			}
+			else // updates the alarm car index
+			{
+				int entry = -1;
+				if (g_smCarNameMap.GetValue(sKey, entry))
+				{
+					g_aAlarmArray.Set(entry, EntIndexToEntRef(ent), ENTRY_ALARM_CAR);
+				}
+			}
+		}
+	}
+	
+	ent = MaxClients+1;
+	while ((ent = FindEntityByClassname(ent, "logic_relay")) != INVALID_ENT_REFERENCE)
+	{
+		GetEntityName(ent, sName, sizeof(sName));
+		
+		int entry = -1;
+		if ((entry = StrContains(sName, "relay_caralarm_o")) != -1)
+		{
+			bool type = (sName[entry+16] == 'n');
+			
+			ExtractCarName(sName,
+							type ? "relay_caralarm_on" : "relay_caralarm_off",
+							sKey, sizeof(sKey));
+			
+			if (g_smCarNameMap.GetValue(sKey, entry))
+			{
+				g_aAlarmArray.Set(entry,
+									ent,
+									type ? ENTRY_RELAY_ON : ENTRY_RELAY_OFF);
+				
+				HookSingleEntityOutput(ent,
+										"OnTrigger",
+										type ? EntO_AlarmRelayOnTriggered : EntO_AlarmRelayOffTriggered);
+			}
+		}
+	}
+	
+	return Plugin_Stop;
 }
 
-public EqAlarmCarsChange( Handle:cvar, const String:oldValue[], const String:newValue[] ) {
-    if ( StringToInt(newValue) == 1 ) {
-        HookEvents();
-    }
-    else {
-        UnhookEvents();
-    }
+Action Timer_InitiateCars(Handle timer)
+{
+	if (!g_bIsSecondHalf && g_cvStartDisabled.BoolValue)
+	{
+		DisableCars();
+	}
+	
+	return Plugin_Stop;
 }
 
-public Action:RoundStart( Handle:event, const String:name[], bool:dontBroadcast ) {
-    CreateTimer(0.1, RoundStartDelay);
+void EntO_AlarmRelayOnTriggered(const char[] output, int caller, int activator, float delay)
+{
+	int entry = g_aAlarmArray.FindValue(caller, ENTRY_RELAY_ON);
+	if (entry == -1)
+	{
+		// this should not happen...
+		ThrowEntryError(ENTRY_RELAY_ON, caller);
+	}
+	
+	int alarmCar = EntRefToEntIndex(g_aAlarmArray.Get(entry, ENTRY_ALARM_CAR));
+	
+	if (IsValidEntity(activator))
+	{
+		RequestFrame(ResetCarColor, entry); 
+		return;
+	}
+	
+	if (!g_bIsSecondHalf)
+	{
+		g_aAlarmArray.Set(entry, true, ENTRY_START_STATE);
+		
+		int color = GetEntityRenderColorEx(alarmCar);
+		g_aAlarmArray.Set(entry, color, ENTRY_COLOR);
+	}
+	else if (!g_aAlarmArray.Get(entry, ENTRY_START_STATE) || g_cvStartDisabled.BoolValue)
+	{
+		int relayOff = g_aAlarmArray.Get(entry, ENTRY_RELAY_OFF);
+		RequestFrame(SafeRelayTrigger, relayOff);
+	}
 }
 
-public Action:RoundEnd( Handle:event, const String:name[], bool:dontBroadcast ) {
-    if ( !bSecondRound ) {
-        bSecondRound = true;
-    }
+void EntO_AlarmRelayOffTriggered(const char[] output, int caller, int activator, float delay)
+{
+	int entry = g_aAlarmArray.FindValue(caller, ENTRY_RELAY_OFF);
+	if (entry == -1)
+	{
+		// this should not happen...
+		ThrowEntryError(ENTRY_RELAY_OFF, caller);
+	}
+	
+	int alarmCar = EntRefToEntIndex(g_aAlarmArray.Get(entry, ENTRY_ALARM_CAR));
+	
+	// If a car is turned off because of a tank punch or because it was
+	// triggered the activator is the car itself. When the cars get
+	// randomised the activator is the player who entered the trigger area.
+	if (IsValidEntity(activator) && (!activator || activator == alarmCar))
+	{
+		RequestFrame(ResetCarColor, entry); // Prevent overriding color
+		return;
+	}
+	
+	if (!g_bIsSecondHalf)
+	{
+		g_aAlarmArray.Set(entry, false, ENTRY_START_STATE);
+		
+		g_aAlarmArray.Set(entry, GetRandomOffColor(), ENTRY_COLOR);
+		RequestFrame(ResetCarColor, entry);
+	}
+	else if (g_aAlarmArray.Get(entry, ENTRY_START_STATE))
+	{
+		int relayOn = g_aAlarmArray.Get(entry, ENTRY_RELAY_ON);
+		RequestFrame(SafeRelayTrigger, relayOn);
+	}
 }
 
-public Action:RoundStartDelay( Handle:timer ) {
-    new iEntity = -1;
-    decl String:sTargetName[128];
-    
-    if ( bSecondRound && !bActivated ) {
-        return;
-    }
-    
-    while ( (iEntity = FindEntityByClassname(iEntity, "logic_relay")) != -1 ) {
-        GetEntityName(iEntity, sTargetName, sizeof(sTargetName));
-        
-        if ( StrContains(sTargetName, "-relay_caralarm_off") == -1 ) {
-            continue;
-        }
-        
-        HookSingleEntityOutput(iEntity, "OnTrigger", CarAlarmLogicRelayTriggered);
-    }
+public void OnRoundIsLive()
+{
+	g_bRoundIsLive = true;
+	EnableCars();
 }
 
-public CarAlarmLogicRelayTriggered( const String:output[], caller, activator, Float:delay ) {
-    decl String:sTargetName[128];
-    GetEntityName(caller, sTargetName, sizeof(sTargetName));
-    
-    if (IsValidEntity(activator)) {
-        decl String:sClassName[128];
-        GetEntityClassname(activator, sClassName, sizeof(sClassName));
-        
-        // If a car is turned off because of a tank punch or because it was
-        // triggered the activator is the car itself. When the cars get
-        // randomised the activator is the player who entered the trigger area.
-        if ( StrEqual(sClassName, "prop_car_alarm") ) {
-            return;
-        }
-    }
-        
-    if ( !bSecondRound ) {
-        bActivated = true;
-        PushArrayString(hFirstRoundCars, sTargetName);
-    }
-    else {
-        PushArrayString(hSecondRoundCars, sTargetName);
-        if ( !bPatched ) {
-            CreateTimer(1.0, PatchAlarmedCars);
-            bPatched = true;
-        }
-    }
+void Event_PlayerLeftStartArea(Event event, const char[] name, bool dontBroadcast)
+{
+	if (!g_bRoundIsLive)
+	{
+		g_bRoundIsLive = true;
+		EnableCars();
+	}
 }
 
-public Action:PatchAlarmedCars( Handle:timer ) {
-    decl String:sEntName[128];
-    
-    for ( new i = 0; i < GetArraySize(hFirstRoundCars); i++ ) {
-        GetArrayString(hFirstRoundCars, i, sEntName, sizeof(sEntName));
-        
-        if ( FindStringInArray(hSecondRoundCars, sEntName) == -1 ) {
-            DisableCar(sEntName);
-        }
-    }
-    
-    for ( new i = 0; i < GetArraySize(hSecondRoundCars); i++ ) {
-        GetArrayString(hSecondRoundCars, i, sEntName, sizeof(sEntName));
-        
-        if ( FindStringInArray(hFirstRoundCars, sEntName) == -1 ) {
-            EnableCar(sEntName);
-        }
-    }
+void EnableCars()
+{
+	for (int i = 0; i < g_aAlarmArray.Length; ++i)
+	{
+		int relayOn = g_aAlarmArray.Get(i, ENTRY_RELAY_ON);
+		
+		if (relayOn != -1 && g_aAlarmArray.Get(i, ENTRY_START_STATE))
+		{
+			SafeRelayTrigger(relayOn);
+			
+			int alarmCar = EntRefToEntIndex(g_aAlarmArray.Get(i, ENTRY_ALARM_CAR));
+			SetEntityRenderColorEx(alarmCar, g_aAlarmArray.Get(i, ENTRY_COLOR));
+		}
+	}
 }
 
-bool:ExtractCarName( const String:sName[], String:sBuffer[], iSize ) {
-    return (SplitString(sName, "-", sBuffer, iSize) != -1);
+stock void DisableCars()
+{
+	for (int i = 0; i < g_aAlarmArray.Length; ++i)
+	{
+		int relayOff = g_aAlarmArray.Get(i, ENTRY_RELAY_OFF);
+		
+		if (relayOff != -1 && g_aAlarmArray.Get(i, ENTRY_START_STATE))
+		{
+			SafeRelayTrigger(relayOff);
+			
+			int alarmCar = EntRefToEntIndex(g_aAlarmArray.Get(i, ENTRY_ALARM_CAR));
+			SetEntityRenderColorEx(alarmCar, g_aAlarmArray.Get(i, ENTRY_COLOR));
+		}
+	}
 }
 
-DisableCar( const String:sName[] ) {
-    TriggerCarRelay(sName, false);
+void ResetCarColor(int entry)
+{
+	int alarmCar = EntRefToEntIndex(g_aAlarmArray.Get(entry, ENTRY_ALARM_CAR));
+	SetEntityRenderColorEx(alarmCar, g_aAlarmArray.Get(entry, ENTRY_COLOR));
 }
 
-EnableCar( const String:sName[] ) {
-    TriggerCarRelay(sName, true);
+int ExtractCarName(const char[] sName, const char[] sCompare, char[] sBuffer, int iSize)
+{
+	int index = SplitString(sName, "-", sBuffer, iSize);
+	if (index == -1) {
+		// Spilt delimiter doesn't exist.
+		return 0;
+	}
+	
+	if (strcmp(sName[index], sCompare)) {
+		// Compare string is before spilt delimiter.
+		strcopy(sBuffer, iSize, sName[index]);
+		return -1;
+	}
+	
+	// Compare string is after spilt delimiter.
+	return 1;
 }
 
-TriggerCarRelay( const String:sName[], bool:bOn ) {
-    decl String:sCarName[128];
-    new iEntity;
-    
-    if ( !ExtractCarName(sName, sCarName, sizeof(sCarName)) ) {
-        return;
-    }
-    
-    StrCat(sCarName, sizeof(sCarName), "-relay_caralarm_");
-    
-    if ( bOn ) {
-        StrCat(sCarName, sizeof(sCarName), "on");
-    }
-    else {
-        StrCat(sCarName, sizeof(sCarName), "off");
-    }
-    
-    iEntity = FindEntityByName(sCarName, "logic_relay");
-    
-    if ( iEntity != -1 ) {
-        AcceptEntityInput(iEntity, "Trigger");
-    }
+void SafeRelayTrigger(int relay)
+{
+	if (relay == -1)
+		return;
+	
+	AcceptEntityInput(relay, "Trigger", 0);
 }
 
-FindEntityByName( const String:sName[], const String:sClassName[] ) {
-    new iEntity = -1;
-    decl String:sEntName[128];
-    
-    while ( (iEntity = FindEntityByClassname(iEntity, sClassName)) != -1 ) {
-        if ( !IsValidEntity(iEntity) ) {
-            continue;
-        }
-        
-        GetEntityName(iEntity, sEntName, sizeof(sEntName));
-        
-        if ( StrEqual(sEntName, sName) ) {
-            return iEntity;
-        }
-    }
-    
-    return -1;
+void GetEntityName(int entity, char[] buffer, int maxlen)
+{
+	GetEntPropString(entity, Prop_Data, "m_iName", buffer, maxlen);
 }
 
-GetEntityName( iEntity, String:sTargetName[], iSize ) {
-    GetEntPropString(iEntity, Prop_Data, "m_iName", sTargetName, iSize);
+int GetEntityRenderColorEx(int entity)
+{
+	int r, g, b, a;
+	GetEntityRenderColor(entity, r, g, b, a);
+	return (r << 24) + (g << 16) + (b << 8) + a;
+}
+
+void SetEntityRenderColorEx(int entity, int color)
+{
+	int r, g, b, a;
+	r = (color & 0xFF000000) >> 24;
+	g = (color & 0x00FF0000) >> 16;
+	b = (color & 0x0000FF00) >> 8;
+	a = (color & 0x000000FF);
+	SetEntityRenderColor(entity, r, g, b, a);
+}
+
+stock void ThrowEntryError(alarmArray entry, int entity)
+{
+	char sName[128];
+	GetEntityName(entity, sName, sizeof(sName));
+	ThrowError("Fatal: Could not find entry (#%i) for %s", entry, sName);
+}
+
+stock void ThrowEmptyError(alarmArray entry, int entity)
+{
+	char sName[128];
+	GetEntityName(entity, sName, sizeof(sName));
+	ThrowError("Fatal: Could not get data (#%i) for %s", entry, sName);
 }
