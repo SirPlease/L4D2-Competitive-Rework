@@ -50,7 +50,7 @@
 #include <left4dhooks>
 #include <godframecontrol>
 
-#define PLUGIN_VERSION "4.7"
+#define PLUGIN_VERSION "4.8"
 
 public Plugin myinfo = 
 {
@@ -73,6 +73,17 @@ int
 	m_hAnimState,
 	m_bCharged;
 
+enum AnimStateFlag // start from m_bCharged
+{
+	AnimState_Charged			= 0, // aka multi-charged
+	AnimState_WallSlammed		= 2,
+	AnimState_GroundSlammed		= 3,
+	AnimState_Pounded			= 5, // Pummel get-up
+	AnimState_TankPunched		= 7, // Rock get-up shares this
+	AnimState_Pounced			= 9,
+	AnimState_RiddenByJockey	= 14
+}
+
 methodmap AnimState
 {
 	public AnimState(int client) {
@@ -88,17 +99,6 @@ methodmap AnimState
 	public void SetFlag(AnimStateFlag flag, bool val) {
 		StoreToAddress(view_as<Address>(this) + view_as<Address>(m_bCharged) + view_as<Address>(flag), view_as<int>(val), NumberType_Int8);
 	}
-}
-
-enum AnimStateFlag // start from m_bCharged
-{
-	AnimState_Charged			= 0, // aka multi-charged
-	AnimState_WallSlammed		= 2,
-	AnimState_GroundSlammed		= 3,
-	AnimState_Pounded			= 5, // Pummel get-up
-	AnimState_TankPunched		= 7, // Rock get-up shares this
-	AnimState_Pounced			= 9,
-	AnimState_RiddenByJockey	= 14
 }
 
 bool
@@ -459,7 +459,7 @@ Action SDK_OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage
  */
 public void L4D_TankClaw_OnPlayerHit_Post(int tank, int claw, int player)
 {
-	if (GetClientTeam(player) == 2)
+	if (GetClientTeam(player) == 2 && !L4D_IsPlayerIncapacitated(player))
 	{
 		if (GetEntPropEnt(player, Prop_Send, "m_pummelAttacker") != -1)
 		{
