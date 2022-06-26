@@ -254,9 +254,7 @@ void EnableCars()
 		if (relayOn != -1 && g_aAlarmArray.Get(i, ENTRY_START_STATE))
 		{
 			SafeRelayTrigger(relayOn);
-			
-			int alarmCar = EntRefToEntIndex(g_aAlarmArray.Get(i, ENTRY_ALARM_CAR));
-			SetEntityRenderColorEx(alarmCar, g_aAlarmArray.Get(i, ENTRY_COLOR));
+			ResetCarColor(i);
 		}
 	}
 }
@@ -270,9 +268,7 @@ stock void DisableCars()
 		if (relayOff != -1 && g_aAlarmArray.Get(i, ENTRY_START_STATE))
 		{
 			SafeRelayTrigger(relayOff);
-			
-			int alarmCar = EntRefToEntIndex(g_aAlarmArray.Get(i, ENTRY_ALARM_CAR));
-			SetEntityRenderColorEx(alarmCar, g_aAlarmArray.Get(i, ENTRY_COLOR));
+			ResetCarColor(i);
 		}
 	}
 }
