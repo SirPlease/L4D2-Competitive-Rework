@@ -7,7 +7,7 @@
 #include <dhooks>
 #include <sourcescramble>
 
-#define PLUGIN_VERSION "1.3"
+#define PLUGIN_VERSION "1.5"
 
 public Plugin myinfo = 
 {
@@ -74,9 +74,9 @@ public void OnPluginStart()
 					"l4d2_rock_trace_unblock_flag",
 					"5",
 					"Prevent SI from blocking the rock radius check.\n"\
-				...	"1 = Unblock from all standing SI, 2 = Unblock from pounced, 4 = Unblock from jockeyed, 7 = All, 0 = Disable.",
+				...	"1 = Unblock from all standing SI, 2 = Unblock from pounced, 4 = Unblock from jockeyed, 8 = Unblock from pummelled, 15 = All, 0 = Disable.",
 					FCVAR_NOTIFY|FCVAR_SPONLY,
-					true, 0.0, true, 7.0);
+					true, 0.0, true, 15.0);
 	
 	g_cvJockeyFix = CreateConVar(
 					"l4d2_rock_jockey_dismount",
@@ -89,7 +89,6 @@ public void OnPluginStart()
 	z_tank_rock_radius = FindConVar("z_tank_rock_radius");
 	z_tank_rock_radius.AddChangeHook(OnConVarChanged);
 	g_cvFlags.AddChangeHook(OnConVarChanged);
-	GetCvars();
 }
 
 public void OnConfigsExecuted()
@@ -108,7 +107,7 @@ void GetCvars()
 	ApplyPatch(g_iFlags > 0);
 	
 	g_fRockRadiusSquared = z_tank_rock_radius.FloatValue * z_tank_rock_radius.FloatValue;
-	if (L4D2_HasConfigurableDifficultySetting())
+	//if (L4D2_HasConfigurableDifficultySetting())
 	{
 		static ConVar z_difficulty = null;
 		if (z_difficulty == null)
@@ -117,7 +116,7 @@ void GetCvars()
 		char buffer[16];
 		z_difficulty.GetString(buffer, sizeof(buffer));
 		if (strcmp(buffer, "Easy", false) == 0)
-			g_fRockRadiusSquared *= 0.75;
+			g_fRockRadiusSquared *= 0.5625; // 0.75 ^ 2
 	}
 }
 
@@ -129,15 +128,13 @@ void ApplyPatch(bool patch)
 		g_hPatch_ForEachPlayer.Disable();
 }
 
-public Action L4D_TankRock_OnRelease(int tank, int rock, float vecPos[3], float vecAng[3], float vecVel[3], float vecRot[3])
+public void L4D_TankRock_OnRelease_Post(int tank, int rock, const float vecPos[3], const float vecAng[3], const float vecVel[3], const float vecRot[3])
 {
 	if (g_iFlags)
 		SDKHook(rock, SDKHook_Think, SDK_OnThink);
 	
 	if (g_cvJockeyFix.BoolValue)
 		g_hDHook_BounceTouch.HookEntity(Hook_Post, rock, DHook_OnBounceTouch_Post);
-	
-	return Plugin_Continue;
 }
 
 Action SDK_OnThink(int entity)
@@ -277,6 +274,13 @@ bool ProximityThink_TraceFilterList(int entity, int contentsMask, DataPack dp)
 				if (GetEntPropEnt(entity, Prop_Send, "m_jockeyVictim") != -1)
 				{
 					return !(g_iFlags & 4);
+				}
+			}
+			case 6:
+			{
+				if (GetEntPropEnt(entity, Prop_Send, "m_pummelVictim") != -1)
+				{
+					return !(g_iFlags & 8);
 				}
 			}
 		}
