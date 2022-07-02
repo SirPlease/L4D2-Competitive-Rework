@@ -5,7 +5,7 @@
 #include <sdktools_engine>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "1.4"
+#define PLUGIN_VERSION "1.5"
 
 public Plugin myinfo = 
 {
@@ -87,6 +87,9 @@ Action Timer_ReleaseView(Handle timer, any userid)
 
 public Action L4D_OnFatalFalling(int client, int camera)
 {
+	if (!AllowDamage())
+		return Plugin_Handled;
+	
 	if (GetClientTeam(client) == 2 && !IsFakeClient(client) && IsPlayerAlive(client))
 	{
 		// keep deathcam for a period until the player dies
@@ -146,4 +149,16 @@ void UTIL_ReleaseAllExceptSurv()
 	for (int i = 1; i <= MaxClients; ++i)
 		if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != 2)
 			ReleaseFromViewControl(_, i);
+}
+
+bool AllowDamage()
+{
+	static ConVar god = null;
+	if (god == null)
+		god = FindConVar("god");
+	
+	if (god.BoolValue)
+		return false;
+	
+	return true;
 }
