@@ -5,7 +5,7 @@
 #include <sdktools_engine>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "1.5"
+#define PLUGIN_VERSION "1.6"
 
 public Plugin myinfo = 
 {
@@ -132,7 +132,7 @@ stock void ReleaseFromViewControl(int userid = 0, int client = 0)
 	SetViewEntity(client, -1);
 	
 	if (GetClientTeam(client) == 1)
-		SetEntProp(client, Prop_Send, "m_iHideHUD", HIDEHUD_BONUS_PROGRESS & HIDEHUD_HEALTH);
+		SetEntProp(client, Prop_Send, "m_iHideHUD", HIDEHUD_BONUS_PROGRESS | HIDEHUD_HEALTH);
 	else
 		SetEntProp(client, Prop_Send, "m_iHideHUD", HIDEHUD_BONUS_PROGRESS);
 			
