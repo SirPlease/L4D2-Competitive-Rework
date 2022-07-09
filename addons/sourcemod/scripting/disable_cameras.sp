@@ -18,7 +18,7 @@ public void Event_round_start_pre_entity(Event event, const char[] name, bool do
 
 public void OnClientDisconnect(int client)
 {
-    if (!IsClientInGame(client)) {
+    if (!IsClientConnected(client)) {
         return;
     }
     
