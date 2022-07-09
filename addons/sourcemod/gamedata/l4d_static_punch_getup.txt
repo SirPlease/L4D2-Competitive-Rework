@@ -1,0 +1,128 @@
+"Games"
+{
+	"left4dead"
+	{
+		"MemPatches"
+		{
+			"HandleActivity_PunchedByTank__ignore_buttons"
+			{
+				"signature"		"CTerrorPlayer::UpdateSurvivorMainActivity"
+				"linux"
+				{
+					"offset"	"3BDh"
+					"verify"	"\x0F\x45\xF8" // cmovnz  edi, eax
+					"patch"		"\x90\x89\xC7" // nop + mov  edi, eax
+				}
+				"windows"
+				{
+					"offset"	"1EDh"
+					"verify"	"\x0F\x85"
+					"patch"		"\x90\xE9"
+				}
+			}
+			
+			"HandleActivity_PunchedByTank__early_exit_percent"
+			{
+				"signature"		"CTerrorPlayer::UpdateSurvivorMainActivity"
+				"linux"
+				{
+					"offset"	"396h"
+					"verify"	"\xD9\x83"					// fld  dword ptr [ebx+offs]
+					"preserve"	"\x00\x00\xFF\xFF\xFF\xFF"
+					"patch"		"\xD9\x05\x90\x90\x90\x90"	// fld  ds:my_float
+				}
+				"windows"
+				{
+					"offset"	"1C7h"
+					"verify"	"\xD9\x05"
+					"preserve"	"\xFF\xFF\xFF\xFF\xFF\xFF"
+					"patch"		"\x90\x90\x90\x90\x90\x90"
+				}
+			}
+		}
+		
+		"Offsets"
+		{
+			"early_exit_percent__opcode_size"
+			{
+				"linux"			"2"
+				"windows"		"2"
+			}
+		}
+		
+		"Signatures"
+		{
+			"CTerrorPlayer::UpdateSurvivorMainActivity"
+			{
+				"library"		"server"
+				"linux"			"@_ZN13CTerrorPlayer26UpdateSurvivorMainActivityE8Activity"
+				"windows"		"\x55\x8B\x2A\x83\x2A\x2A\x83\x2A\x2A\x53\x56\x8B\x2A\xD9\x2A\x2A\x2A\x2A\x2A\x57"
+								/* 55 8B ? 83 ? ? 83 ? ? 53 56 8B ? D9 ? ? ? ? ? 57 */
+			}
+		}
+	}
+	
+	"left4dead2"
+	{
+		"MemPatches"
+		{
+			"HandleActivity_PunchedByTank__ignore_buttons"
+			{
+				"signature"		"CTerrorPlayerAnimState::HandleActivity_PunchedByTank"
+				"linux"
+				{
+					"offset"	"1BCh"
+					"verify"	"\x0F\x84"
+					"patch"		"\x90\x90\x90\x90\x90\x90"
+				}
+				"windows"
+				{
+					"offset"	"45h"
+					"verify"	"\x75"
+					"patch"		"\xEB"
+				}
+			}
+			
+			"HandleActivity_PunchedByTank__early_exit_percent"
+			{
+				"signature"		"CTerrorPlayerAnimState::HandleActivity_PunchedByTank"
+				"linux"
+				{
+					"offset"	"197h"
+					"verify"	"\x0F\x2F\x05"
+					"preserve"	"\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
+					"patch"		"\x90\x90\x90\x90\x90\x90\x90"
+				}
+				"windows"
+				{
+					"offset"	"23h"
+					"verify"	"\x0F\x2F\x05"
+					"preserve"	"\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
+					"patch"		"\x90\x90\x90\x90\x90\x90\x90"
+				}
+			}
+		}
+		
+		"Offsets"
+		{
+			"early_exit_percent__opcode_size"
+			{
+				"linux"			"3"
+				"windows"		"3"
+			}
+		}
+		
+		"Signatures"
+		{
+			"CTerrorPlayerAnimState::HandleActivity_PunchedByTank"
+			{
+				"library"		"server"
+				"linux"			"@_ZN22CTerrorPlayerAnimState28HandleActivity_PunchedByTankEv"
+				"windows"		"\xE8\x2A\x2A\x2A\x2A\x3D\x2A\x2A\x2A\x2A\x75\x2A\x80\x2A\x2A\x2A\x2A\x2A\x2A\x75\x2A\x8B"
+								/* E8 ? ? ? ? 3D ? ? ? ? 75 ? 80 ? ? ? ? ? ? 75 ? 8B */
+								/* NOT FUNCTION SIGNATURE because it's too long */
+								/* matching a code block of `if`: loc_1033BF90 */
+			}
+		}
+	}
+}
