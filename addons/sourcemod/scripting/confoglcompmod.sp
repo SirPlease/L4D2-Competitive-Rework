@@ -29,7 +29,7 @@
 #include "modules/GhostTank.sp"
 #include "modules/WaterSlowdown.sp"
 #include "modules/UnreserveLobby.sp"
-#include "modules/GhostWarp.sp"
+//#include "modules/GhostWarp.sp"
 #include "modules/UnprohibitBosses.sp"
 #include "modules/PasswordSystem.sp"
 #include "modules/BotKick.sp"
@@ -67,7 +67,7 @@ public OnPluginStart()
 	UL_OnModuleStart();
 	
 	//ER_OnModuleStart();
-	GW_OnModuleStart();
+	//GW_OnModuleStart();
 	WS_OnModuleStart();
 	GT_OnModuleStart();
 	UB_OnModuleStart();
@@ -146,7 +146,7 @@ public OnClientPutInServer(client)
 	PS_OnClientPutInServer(client);
 }
 
-public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:angles[3], &weapon)
+/*public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:angles[3], &weapon)
 {
 	if(GW_OnPlayerRunCmd(client, buttons))
 	{
@@ -154,4 +154,4 @@ public Action:OnPlayerRunCmd(client, &buttons, &impulse, Float:vel[3], Float:ang
 	}
 	
 	return Plugin_Continue;
-}
+}*/
