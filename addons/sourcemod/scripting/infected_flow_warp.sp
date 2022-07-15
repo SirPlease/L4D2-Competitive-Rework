@@ -4,88 +4,190 @@
 #include <sourcemod>
 #include <sdktools>
 #include <left4dhooks>
-#define L4D2UTIL_STOCKS_ONLY 1
-#include <l4d2util> //String_ToLower & IsValidSurvivor
+#include <l4d2util_constants>
+
+#define PLUGIN_TAG					"[GhostWarp]"
+#define PLUGIN_TAG_COLOR			"\x01[\x03GhostWarp\x01]"
+
+#define SPAWNFLAG_READY				0
+#define SPAWNFLAG_CANSPAWN			(0 << 0)
+#define SPAWNFLAG_DISABLED			(1 << 0)
+#define SPAWNFLAG_WAITFORSURVIVORS	(1 << 1)
+#define SPAWNFLAG_WAITFORFINALE		(1 << 2)
+#define SPAWNFLAG_WAITFORTANKTODIE	(1 << 3)
+#define SPAWNFLAG_SURVIVORESCAPED	(1 << 4)
+#define SPAWNFLAG_DIRECTORTIMEOUT	(1 << 5)
+#define SPAWNFLAG_WAITFORNEXTWAVE	(1 << 6)
+#define SPAWNFLAG_CANBESEEN			(1 << 7)
+#define SPAWNFLAG_TOOCLOSE			(1 << 8)
+#define SPAWNFLAG_RESTRICTEDAREA	(1 << 9)
+#define SPAWNFLAG_BLOCKED			(1 << 10)
+
+#if SOURCEMOD_V_MINOR > 9
+enum struct eSurvFlow
+{
+	int eiSurvivorIndex;
+	float efSurvivorFlow;
+}
+#else
+enum eSurvFlow
+{
+	eiSurvivorIndex,
+	Float:efSurvivorFlow
+};
+#endif
 
 StringMap
-	hNameToCharIDTrie = null;
+	g_hTrieNameToGenderIndex = null;
+
+ConVar
+	g_hCvarSurvivorLimit = null;
 
 public Plugin myinfo =
 {
 	name = "Infected Flow Warp",
 	author = "CanadaRox, A1m`",
 	description = "Allows infected to warp to survivors based on their flow",
-	version = "1.4",
+	version = "2.0",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public void OnPluginStart()
 {
-	SaveCharacter();
+	InitTrie();
+
+	g_hCvarSurvivorLimit = FindConVar("survivor_limit");
 
 	RegConsoleCmd("sm_warpto", WarpTo_Cmd, "Warps to the specified survivor");
 }
 
-void SaveCharacter()
+void InitTrie()
 {
-	hNameToCharIDTrie = new StringMap();
-	hNameToCharIDTrie.SetValue("bill", 0);
-	hNameToCharIDTrie.SetValue("zoey", 1);
-	hNameToCharIDTrie.SetValue("louis", 2);
-	hNameToCharIDTrie.SetValue("francis", 3);
-	
-	hNameToCharIDTrie.SetValue("nick", 0);
-	hNameToCharIDTrie.SetValue("rochelle", 1);
-	hNameToCharIDTrie.SetValue("coach", 2);
-	hNameToCharIDTrie.SetValue("ellis", 3);
+	g_hTrieNameToGenderIndex = new StringMap();
+
+	g_hTrieNameToGenderIndex.SetValue("nick", L4D2Gender_Gambler);
+	g_hTrieNameToGenderIndex.SetValue("rochelle", L4D2Gender_Producer);
+	g_hTrieNameToGenderIndex.SetValue("coach", L4D2Gender_Coach);
+	g_hTrieNameToGenderIndex.SetValue("ellis", L4D2Gender_Mechanic);
+
+	g_hTrieNameToGenderIndex.SetValue("bill", L4D2Gender_Nanvet);
+	g_hTrieNameToGenderIndex.SetValue("zoey", L4D2Gender_TeenGirl);
+	g_hTrieNameToGenderIndex.SetValue("louis", L4D2Gender_Manager);
+	g_hTrieNameToGenderIndex.SetValue("francis", L4D2Gender_Biker);
 }
 
-public Action WarpTo_Cmd(int client, int args)
+public Action WarpTo_Cmd(int iClient, int iArgs)
 {
-	if (client == 0 || !IsGhostInfected(client)) {
+	if (iClient == 0) {
+		ReplyToCommand(iClient, "%s This command is not available for the server!", PLUGIN_TAG);
 		return Plugin_Handled;
 	}
 
-	if (args == 0) {
-		int fMaxFlowSurvivor = L4D_GetHighestFlowSurvivor(); //left4dhooks functional or left4downtown2 by A1m`
-		if (!IsValidSurvivor(fMaxFlowSurvivor)) {
-			PrintToChat(client, "No survivor player could be found!");
+	if (GetClientTeam(iClient) != L4D2Team_Infected
+		|| GetEntProp(iClient, Prop_Send, "m_isGhost", 1) < 1
+		|| !IsPlayerAlive(iClient)
+	) {
+		PrintToChat(iClient, "%s This command is only available for \x04infected\x01 ghosts.", PLUGIN_TAG_COLOR);
+		return Plugin_Handled;
+	}
+
+	if (iArgs != 1) {
+		// Left4Dhooks functional or Left4Downtown2 by A1m`
+		int fMaxFlowSurvivor = L4D_GetHighestFlowSurvivor();
+
+		if (fMaxFlowSurvivor < 1
+			|| fMaxFlowSurvivor > MaxClients
+			|| GetClientTeam(fMaxFlowSurvivor) != L4D2Team_Survivor
+			|| !IsPlayerAlive(fMaxFlowSurvivor)
+		) {
+			PrintToChat(iClient, "%s No \x04survivor\x01 player could be found!", PLUGIN_TAG_COLOR);
 			return Plugin_Handled;
 		}
-		
-		TeleportToClient(client, fMaxFlowSurvivor);
+
+		TeleportToSurvivor(iClient, fMaxFlowSurvivor);
 		return Plugin_Handled;
 	}
 
-	char arg[12];
-	GetCmdArg(1, arg, sizeof(arg));
-	StripQuotes(arg);
-	String_ToLower(arg, sizeof(arg));
-	
-	int characterID;
-	if (GetTrieValue(hNameToCharIDTrie, arg, characterID)) {
-		int target = GetClientOfCharID(characterID);
-		if (target > 0) {
-			TeleportToClient(client, target);
+	char sBuffer[9];
+	GetCmdArg(1, sBuffer, sizeof(sBuffer));
+
+	if (IsStringNumeric(sBuffer, sizeof(sBuffer))) {
+		int iSurvivorFlowRank = StringToInt(sBuffer);
+
+		if (iSurvivorFlowRank > 0 && iSurvivorFlowRank <= g_hCvarSurvivorLimit.IntValue) {
+			int iSurvivorIndex = GetSurvivorOfFlowRank(iSurvivorFlowRank);
+
+			if (iSurvivorIndex == 0) {
+				PrintToChat(iClient, "%s No \x04survivor\x01 player could be found!", PLUGIN_TAG_COLOR);
+
+				return Plugin_Handled;
+			}
+
+			TeleportToSurvivor(iClient, iSurvivorIndex);
+
+			return Plugin_Handled;
 		}
+
+		char sCmdName[18];
+		GetCmdArg(0, sCmdName, sizeof(sCmdName));
+
+		PrintToChat(iClient, "%s You entered an \x04invalid\x01 survivor index!", PLUGIN_TAG_COLOR);
+		PrintToChat(iClient, "%s Usage: \x04%s\x01 <1 - %d>", PLUGIN_TAG_COLOR, sCmdName, g_hCvarSurvivorLimit.IntValue);
+
+		return Plugin_Handled;
 	}
+
+	int iGender = 0;
+	String_ToLower(sBuffer, sizeof(sBuffer));
+
+	if (!g_hTrieNameToGenderIndex.GetValue(sBuffer, iGender)) {
+		char sCmdName[18];
+		GetCmdArg(0, sCmdName, sizeof(sCmdName));
+
+		PrintToChat(iClient, "%s You entered the \x04wrong\x01 survivor name!", PLUGIN_TAG_COLOR);
+		PrintToChat(iClient, "%s Usage: \x04%s\x01 <survivor name> ", PLUGIN_TAG_COLOR, sCmdName);
+
+		return Plugin_Handled;
+	}
+
+	int iSurvivorCount = 0;
+	int iSurvivorIndex = GetGenderOfSurvivor(iGender, iSurvivorCount);
+
+	if (iSurvivorCount == 0) {
+		PrintToChat(iClient, "%s No \x04survivor\x01 player could be found!", PLUGIN_TAG_COLOR);
+		return Plugin_Handled;
+	}
+
+	if (iSurvivorIndex == 0) {
+		PrintToChat(iClient, "%s The \x04survivor\x01 you specified was \x04not found\x01!", PLUGIN_TAG_COLOR);
+		return Plugin_Handled;
+	}
+
+	TeleportToSurvivor(iClient, iSurvivorIndex);
 
 	return Plugin_Handled;
 }
 
-void TeleportToClient(int client, int target)
+void TeleportToSurvivor(int iInfected, int iSurvivor)
 {
-	float origin[3];
-	GetClientAbsOrigin(target, origin);
-	TeleportEntity(client, origin, NULL_VECTOR, NULL_VECTOR);
+	//~Prevent people from spawning and then warp to survivor
+	SetEntProp(iInfected, Prop_Send, "m_ghostSpawnState", SPAWNFLAG_TOOCLOSE);
+
+	float fPosition[3], fAnglestarget[3];
+	GetClientAbsOrigin(iSurvivor, fPosition);
+	GetClientAbsAngles(iSurvivor, fAnglestarget);
+
+	TeleportEntity(iInfected, fPosition, fAnglestarget, NULL_VECTOR);
 }
 
-int GetClientOfCharID(int characterID)
+int GetGenderOfSurvivor(int iGender, int &iSurvivorCount)
 {
-	for (int client = 1; client <= MaxClients; client++) {
-		if (IsSurvivor(client)) {
-			if (GetEntProp(client, Prop_Send, "m_survivorCharacter") == characterID) {
-				return client;
+	for (int iClient = 1; iClient <= MaxClients; iClient++) {
+		if (IsClientInGame(iClient) && GetClientTeam(iClient) == L4D2Team_Survivor && IsPlayerAlive(iClient)) {
+			iSurvivorCount++;
+
+			if (GetEntProp(iClient, Prop_Send, "m_Gender") == iGender) {
+				return iClient;
 			}
 		}
 	}
@@ -93,9 +195,135 @@ int GetClientOfCharID(int characterID)
 	return 0;
 }
 
-bool IsGhostInfected(int client)
+#if SOURCEMOD_V_MINOR > 9
+int GetSurvivorOfFlowRank(int iRank)
 {
-	return (GetClientTeam(client) == L4D2Team_Infected
-		&& IsPlayerAlive(client) 
-		&& GetEntProp(client, Prop_Send, "m_isGhost", 1));
+	int iArrayIndex = iRank - 1;
+
+	eSurvFlow strSurvArray;
+	ArrayList hFlowArray = new ArrayList(sizeof(strSurvArray));
+
+	for (int iClient = 1; iClient <= MaxClients; iClient++) {
+		if (IsClientInGame(iClient) && GetClientTeam(iClient) == L4D2Team_Survivor && IsPlayerAlive(iClient)) {
+			strSurvArray.eiSurvivorIndex = iClient;
+			strSurvArray.efSurvivorFlow = L4D2Direct_GetFlowDistance(iClient);
+
+			hFlowArray.PushArray(strSurvArray, sizeof(strSurvArray));
+		}
+	}
+
+	int iArraySize = hFlowArray.Length;
+	if (iArraySize < 1) {
+		return 0;
+	}
+
+	hFlowArray.SortCustom(sortFunc);
+
+	if (iArrayIndex >= iArraySize) {
+		iArrayIndex = iArraySize - 1;
+	}
+
+	hFlowArray.GetArray(iArrayIndex, strSurvArray, sizeof(strSurvArray));
+
+	hFlowArray.Clear();
+	delete hFlowArray;
+
+	return strSurvArray.eiSurvivorIndex;
+}
+
+public int sortFunc(int iIndex1, int iIndex2, Handle hArray, Handle hndl)
+{
+	eSurvFlow strSurvArray1;
+	eSurvFlow strSurvArray2;
+
+	GetArrayArray(hArray, iIndex1, strSurvArray1, sizeof(strSurvArray1));
+	GetArrayArray(hArray, iIndex2, strSurvArray2, sizeof(strSurvArray2));
+
+	if (strSurvArray1.efSurvivorFlow > strSurvArray2.efSurvivorFlow) {
+		return -1;
+	} else if (strSurvArray1.efSurvivorFlow < strSurvArray2.efSurvivorFlow) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+#else
+int GetSurvivorOfFlowRank(int iRank)
+{
+	int iArrayIndex = iRank - 1;
+
+	eSurvFlow strSurvArray[eSurvFlow];
+	ArrayList hFlowArray = new ArrayList(sizeof(strSurvArray));
+
+	for (int iClient = 1; iClient <= MaxClients; iClient++) {
+		if (IsClientInGame(iClient) && GetClientTeam(iClient) == L4D2Team_Survivor && IsPlayerAlive(iClient)) {
+			strSurvArray[eiSurvivorIndex] = iClient;
+			strSurvArray[efSurvivorFlow] = L4D2Direct_GetFlowDistance(iClient);
+
+			hFlowArray.PushArray(strSurvArray[0], sizeof(strSurvArray));
+		}
+	}
+
+	int iArraySize = hFlowArray.Length;
+	if (iArraySize < 1) {
+		return 0;
+	}
+
+	SortADTArrayCustom(hFlowArray, sortFunc);
+
+	if (iArrayIndex >= iArraySize) {
+		iArrayIndex = iArraySize - 1;
+	}
+
+	hFlowArray.GetArray(iArrayIndex, strSurvArray[0], sizeof(strSurvArray));
+
+	hFlowArray.Clear();
+	delete hFlowArray;
+
+	return strSurvArray[eiSurvivorIndex];
+}
+
+public int sortFunc(int iIndex1, int iIndex2, Handle hArray, Handle hndl)
+{
+	eSurvFlow strSurvArray1[eSurvFlow];
+	eSurvFlow strSurvArray2[eSurvFlow];
+
+	GetArrayArray(hArray, iIndex1, strSurvArray1[0], sizeof(strSurvArray1));
+	GetArrayArray(hArray, iIndex2, strSurvArray2[0], sizeof(strSurvArray2));
+
+	if (strSurvArray1[efSurvivorFlow] > strSurvArray2[efSurvivorFlow]) {
+		return -1;
+	} else if (strSurvArray1[efSurvivorFlow] < strSurvArray2[efSurvivorFlow]) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+#endif
+
+bool IsStringNumeric(const char[] sString, const int MaxSize)
+{
+	int iSize = strlen(sString); //Сounts string length to zero terminator
+
+	for (int i = 0; i < iSize && i < MaxSize; i++) { //more security, so that the cycle is not endless
+		if (sString[i] < '0' || sString[i] > '9') {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+void String_ToLower(char[] str, const int MaxSize)
+{
+	int iSize = strlen(str); //Сounts string length to zero terminator
+
+	for (int i = 0; i < iSize && i < MaxSize; i++) { //more security, so that the cycle is not endless
+		if (IsCharUpper(str[i])) {
+			str[i] = CharToLower(str[i]);
+		}
+	}
+
+	str[iSize] = '\0';
 }
