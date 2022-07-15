@@ -9,20 +9,6 @@
 #define PLUGIN_TAG					"[GhostWarp]"
 #define PLUGIN_TAG_COLOR			"\x01[\x03GhostWarp\x01]"
 
-#define SPAWNFLAG_READY				0
-#define SPAWNFLAG_CANSPAWN			(0 << 0)
-#define SPAWNFLAG_DISABLED			(1 << 0)
-#define SPAWNFLAG_WAITFORSURVIVORS	(1 << 1)
-#define SPAWNFLAG_WAITFORFINALE		(1 << 2)
-#define SPAWNFLAG_WAITFORTANKTODIE	(1 << 3)
-#define SPAWNFLAG_SURVIVORESCAPED	(1 << 4)
-#define SPAWNFLAG_DIRECTORTIMEOUT	(1 << 5)
-#define SPAWNFLAG_WAITFORNEXTWAVE	(1 << 6)
-#define SPAWNFLAG_CANBESEEN			(1 << 7)
-#define SPAWNFLAG_TOOCLOSE			(1 << 8)
-#define SPAWNFLAG_RESTRICTEDAREA	(1 << 9)
-#define SPAWNFLAG_BLOCKED			(1 << 10)
-
 #if SOURCEMOD_V_MINOR > 9
 enum struct eSurvFlow
 {

@@ -10,23 +10,6 @@
 #define PLUGIN_TAG					"[GhostWarp]"
 #define PLUGIN_TAG_COLOR			"\x01[\x03GhostWarp\x01]"
 
-#define TEAM_SURVIVOR				2
-#define TEAM_INFECTED				3
-
-#define SPAWNFLAG_READY				0
-#define SPAWNFLAG_CANSPAWN			(0 << 0)
-#define SPAWNFLAG_DISABLED			(1 << 0)
-#define SPAWNFLAG_WAITFORSURVIVORS	(1 << 1)
-#define SPAWNFLAG_WAITFORFINALE		(1 << 2)
-#define SPAWNFLAG_WAITFORTANKTODIE	(1 << 3)
-#define SPAWNFLAG_SURVIVORESCAPED	(1 << 4)
-#define SPAWNFLAG_DIRECTORTIMEOUT	(1 << 5)
-#define SPAWNFLAG_WAITFORNEXTWAVE	(1 << 6)
-#define SPAWNFLAG_CANBESEEN			(1 << 7)
-#define SPAWNFLAG_TOOCLOSE			(1 << 8)
-#define SPAWNFLAG_RESTRICTEDAREA	(1 << 9)
-#define SPAWNFLAG_BLOCKED			(1 << 10)
-
 #if SOURCEMOD_V_MINOR > 9
 enum struct eSurvFlow
 {
@@ -137,7 +120,7 @@ public Action Cmd_WarpToSurvivor(int iClient, int iArgs)
 		return Plugin_Handled;
 	}
 
-	if (GetClientTeam(iClient) != TEAM_INFECTED
+	if (GetClientTeam(iClient) != L4D2Team_Infected
 		|| GetEntProp(iClient, Prop_Send, "m_isGhost", 1) < 1
 		|| !IsPlayerAlive(iClient)
 	) {
@@ -251,7 +234,7 @@ public void Hook_OnPostThinkPost(int iClient)
 		return;
 	}
 
-	if (GetClientTeam(iClient) != TEAM_INFECTED
+	if (GetClientTeam(iClient) != L4D2Team_Infected
 		|| GetEntProp(iClient, Prop_Send, "m_isGhost", 1) < 1
 		|| !IsPlayerAlive(iClient)
 	) {
@@ -286,7 +269,7 @@ int GetRandomSurvivor(int iExceptSurvivor = 0)
 	int iSurvivorIndex[MAXPLAYERS + 1], iSuvivorCount = 0, iSuvivorTotalCount = 0;
 
 	for (int i = 1; i <= MaxClients; i++) {
-		if (IsClientInGame(i) && GetClientTeam(i) == TEAM_SURVIVOR && IsPlayerAlive(i)) {
+		if (IsClientInGame(i) && GetClientTeam(i) == L4D2Team_Survivor && IsPlayerAlive(i)) {
 			iSuvivorTotalCount++;
 
 			if (iExceptSurvivor > 0 && iExceptSurvivor == i) {
@@ -329,7 +312,7 @@ void TeleportToSurvivor(int iInfected, int iSurvivor)
 int GetGenderOfSurvivor(int iGender, int &iSurvivorCount)
 {
 	for (int iClient = 1; iClient <= MaxClients; iClient++) {
-		if (IsClientInGame(iClient) && GetClientTeam(iClient) == TEAM_SURVIVOR && IsPlayerAlive(iClient)) {
+		if (IsClientInGame(iClient) && GetClientTeam(iClient) == L4D2Team_Survivor && IsPlayerAlive(iClient)) {
 			iSurvivorCount++;
 
 			if (GetEntProp(iClient, Prop_Send, "m_Gender") == iGender) {
@@ -350,7 +333,7 @@ int GetSurvivorOfFlowRank(int iRank)
 	ArrayList hFlowArray = new ArrayList(sizeof(strSurvArray));
 
 	for (int iClient = 1; iClient <= MaxClients; iClient++) {
-		if (IsClientInGame(iClient) && GetClientTeam(iClient) == TEAM_SURVIVOR && IsPlayerAlive(iClient)) {
+		if (IsClientInGame(iClient) && GetClientTeam(iClient) == L4D2Team_Survivor && IsPlayerAlive(iClient)) {
 			strSurvArray.eiSurvivorIndex = iClient;
 			strSurvArray.efSurvivorFlow = L4D2Direct_GetFlowDistance(iClient);
 
@@ -402,7 +385,7 @@ int GetSurvivorOfFlowRank(int iRank)
 	ArrayList hFlowArray = new ArrayList(sizeof(strSurvArray));
 
 	for (int iClient = 1; iClient <= MaxClients; iClient++) {
-		if (IsClientInGame(iClient) && GetClientTeam(iClient) == TEAM_SURVIVOR && IsPlayerAlive(iClient)) {
+		if (IsClientInGame(iClient) && GetClientTeam(iClient) == L4D2Team_Survivor && IsPlayerAlive(iClient)) {
 			strSurvArray[eiSurvivorIndex] = iClient;
 			strSurvArray[efSurvivorFlow] = L4D2Direct_GetFlowDistance(iClient);
 
