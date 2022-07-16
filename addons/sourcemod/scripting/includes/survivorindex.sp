@@ -84,7 +84,7 @@ GetSurvivorIndex(index)
 	return iSurvivorIndex[index];
 }
 
-bool:IsAnySurvivorsAlive()
+stock bool:IsAnySurvivorsAlive()
 {
 	for(new index = 0;index < NUM_OF_SURVIVORS; index++)
 	{
