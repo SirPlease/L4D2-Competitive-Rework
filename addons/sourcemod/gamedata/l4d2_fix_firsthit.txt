@@ -1,0 +1,14 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			"CDirector::m_nFirstClassIndex"
+			{
+				"linux"		"1080"
+				"windows"	"1080"
+			}
+		}
+	}
+}

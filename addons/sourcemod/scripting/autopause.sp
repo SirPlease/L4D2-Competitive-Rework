@@ -30,7 +30,7 @@ public Plugin:myinfo =
     name = "L4D2 Auto-pause",
     author = "Darkid, Griffin",
     description = "When a player disconnects due to crash, automatically pause the game. When they rejoin, give them a correct spawn timer.",
-    version = "1.9",
+    version = "2.0",
     url = "https://github.com/jbzdarkid/AutoPause"
 }
 
@@ -39,6 +39,7 @@ new Handle:force;
 new Handle:apdebug;
 new Handle:crashedPlayers;
 new Handle:infectedPlayers;
+new Handle:survivorPlayers;
 new bool:readyUpIsAvailable;
 new bool:RoundEnd;
 
@@ -50,6 +51,7 @@ public OnPluginStart() {
 
     crashedPlayers = CreateTrie();
     infectedPlayers = CreateArray(64);
+    survivorPlayers = CreateArray(64);
 
     HookEvent("round_start", round_start);
     HookEvent("round_end", round_end);
@@ -75,6 +77,7 @@ public OnLibraryAdded(const String:name[])
 public round_start(Handle:event, const String:name[], bool:dontBroadcast) {
     ClearTrie(crashedPlayers);
     ClearArray(infectedPlayers);
+    ClearArray(survivorPlayers);
     RoundEnd = false;
 }
 
@@ -93,9 +96,14 @@ public playerTeam(Handle:event, const String:name[], bool:dontBroadcast) {
     new newTeam = GetEventInt(event, "team");
 
     new index = FindStringInArray(infectedPlayers, steamId);
+    new survindex = FindStringInArray(infectedPlayers, steamId);
     if (oldTeam == 3) {
         if (index != -1) RemoveFromArray(infectedPlayers, index);
         if (GetConVarBool(apdebug)) LogMessage("[AutoPause] Removed player %s from infected team.", steamId);
+    }
+    else if (oldTeam == 2) {
+        if (survindex != -1) RemoveFromArray(survivorPlayers, survindex);
+        if (GetConVarBool(apdebug)) LogMessage("[AutoPause] Removed player %s from survivor team.", steamId);
     }
     if (newTeam == 3) {
         decl Float:spawnTime;
@@ -109,6 +117,10 @@ public playerTeam(Handle:event, const String:name[], bool:dontBroadcast) {
             if (GetConVarBool(apdebug)) LogMessage("[AutoPause] Added player %s to infected team.", steamId);
         }
     }
+    else if (newTeam == 2 && survindex == -1) {
+        PushArrayString(survivorPlayers, steamId);
+        if (GetConVarBool(apdebug)) LogMessage("[AutoPause] Added player %s to survivor team.", steamId);
+    }
 }
 
 public playerDisconnect(Handle:event, const String:name[], bool:dontBroadcast) {
@@ -117,6 +129,9 @@ public playerDisconnect(Handle:event, const String:name[], bool:dontBroadcast) {
     decl String:steamId[64];
     GetClientAuthId(client, AuthId_Steam2, steamId, sizeof(steamId));
     if (strcmp(steamId, "BOT") == 0) return;
+
+    // Player wasn't actually a gamer, ignore
+    if (FindStringInArray(infectedPlayers, steamId) == -1 && FindStringInArray(survivorPlayers, steamId) == -1) return;
 
     decl String:reason[128];
     GetEventString(event, "reason", reason, sizeof(reason));

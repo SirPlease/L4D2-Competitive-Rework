@@ -6,7 +6,7 @@
 #include <collisionhook>
 #include <left4dhooks_lux_library>
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.2"
 
 public Plugin myinfo = 
 {
@@ -21,6 +21,23 @@ public Plugin myinfo =
 #define KEY_SWEEPFIST "CTankClaw::SweepFist"
 #define KEY_PATCH_SURFIX "__AddEntityToIgnore_dummypatch"
 #define KEY_SETPASSENTITY "CTraceFilterSimple::SetPassEntity"
+
+int g_iTankClass;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	switch (GetEngineVersion())
+	{
+		case Engine_Left4Dead: g_iTankClass = 5;
+		case Engine_Left4Dead2: g_iTankClass = 8;
+		default:
+		{
+			strcopy(error, err_max, "Plugin supports Left 4 Dead & 2 only.");
+			return APLRes_SilentFailure;
+		}
+	}
+	return APLRes_Success;
+}
 
 public void OnPluginStart()
 {
@@ -58,7 +75,10 @@ public Action CH_PassFilter(int touch, int pass, bool &result)
 	if (pass > MaxClients || touch <= MaxClients)
 		return Plugin_Continue;
 	
-	if (GetClientTeam(pass) != 3 || GetEntProp(pass, Prop_Send, "m_zombieClass") != 8)
+	if (!IsClientInGame(pass))
+		return Plugin_Continue;
+	
+	if (GetClientTeam(pass) != 3 || GetEntProp(pass, Prop_Send, "m_zombieClass") != g_iTankClass)
 		return Plugin_Continue;
 	
 	static char cls[64];

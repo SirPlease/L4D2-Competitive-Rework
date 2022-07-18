@@ -4,11 +4,11 @@
 	{
 		"zonemod"
 		{
-			"name" "ZoneMod 2.6.4"
+			"name" "ZoneMod 2.7"
 		}
 		"zoneretro"
 		{
-			"name" "ZoneMod Retro 2.6.4"
+			"name" "ZoneMod Retro 2.7"
 		}
 		"zm3v3"
 		{
@@ -21,6 +21,13 @@
 		"zm1v1"
 		{
 			"name" "1v1 ZoneMod"
+		}
+	}
+	"NeoMod Configs"
+	{
+		"neomod"
+		{
+			"name" "NeoMod Tourney 0.4a"
 		}
 	}
 	"NextMod Configs"
@@ -53,7 +60,7 @@
 	{
 		"acemodrv"
 		{
-			"name" "Acemod RV 1.1"
+			"name" "Acemod RV 1.2"
 		}
 		"amrv3v3"
 		{
@@ -98,7 +105,7 @@
 	{
 		"zonehunters"
 		{
-			"name" "ZoneHunters 2.6.4"
+			"name" "ZoneHunters 2.7"
 		}
 		"zh3v3"
 		{

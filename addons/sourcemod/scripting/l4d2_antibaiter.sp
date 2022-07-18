@@ -46,7 +46,8 @@ Address
 ConVar
 	hCvarTimerStartDelay,
 	hCvarHordeCountdown,
-	hCvarMinProgressThreshold;
+	hCvarMinProgressThreshold,
+	hCvarStopTimerOnBile;
 
 bool
 	IsRoundIsActive,
@@ -70,7 +71,7 @@ public Plugin myinfo =
 	name = "L4D2 Antibaiter",
 	author = "Visor, Sir (assisted by Devilesk), A1m`",
 	description = "Makes you think twice before attempting to bait that shit",
-	version = "1.3.4",
+	version = "1.3.5",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -81,8 +82,10 @@ public void OnPluginStart()
 	hCvarTimerStartDelay = CreateConVar("l4d2_antibaiter_delay", "20", "Delay in seconds before the antibait algorithm kicks in");
 	hCvarHordeCountdown = CreateConVar("l4d2_antibaiter_horde_timer", "60", "Countdown in seconds to the panic horde");
 	hCvarMinProgressThreshold = CreateConVar("l4d2_antibaiter_progress", "0.03", "Minimum progress the survivors must make to reset the antibaiter timer");
+	hCvarStopTimerOnBile = CreateConVar("l4d2_antibaiter_bile_stop", "0", "Stop timer when a player is biled?");
 
 	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
+	HookEvent("player_now_it", Event_PlayerBiled, EventHookMode_PostNoCopy);
 	HookEvent("round_end", Event_RoundEnd, EventHookMode_PostNoCopy);
 	HookEvent("player_left_start_area", Event_RoundGoesLive, EventHookMode_PostNoCopy);
 	
@@ -145,6 +148,19 @@ public void Event_RoundGoesLive(Event hEvent, const char[] name, bool dontBroadc
 	//This event works great in different game modes: versus, coop, scavenge and etc
 
 	StartRound();
+}
+
+public void Event_PlayerBiled(Event hEvent, const char[] name, bool dontBroadcast)
+{
+	bool byBoom = hEvent.GetBool("by_boomer");
+	if (byBoom && hCvarStopTimerOnBile.BoolValue)
+	{
+		hordeDelayChecks = 0;
+		if (IsCountdownRunning()) {
+			HideCountdown();
+			StopCountdown();
+		}
+	}
 }
 
 public void OnRoundIsLive()
