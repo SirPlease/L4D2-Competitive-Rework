@@ -27,29 +27,29 @@
 		"#format"	"{1:d}"
 		"en"		"[{olive}Readyup{default}] Wait for another {blue}{1}s {default}to call a vote."
 	}
-
-	"DisruptReadyStatus"
+	
+	"Player marked unready"
 	{
 		"#format"	"{1:N}"
 		"en"		"{default}[{green}!{default}] {green}Countdown Cancelled! {default}({teamcolor}{1} {green}marked unready{default})"
 	}
 	
-	"DisruptTeamShuffle"
+	"Player switched team"
 	{
 		"#format"	"{1:N}"
 		"en"		"{default}[{green}!{default}] {green}Countdown Cancelled! {default}({teamcolor}{1} {olive}switched team{default})"
 	}
 	
-	"DisruptPlayerDisc"
+	"Player disconnected"
 	{
 		"#format"	"{1:N}"
 		"en"		"{default}[{green}!{default}] {green}Countdown Cancelled! {default}({teamcolor}{1} {green}disconnected{default})"
 	}
 	
-	"DisruptForceStartAbort"
+	"Admin aborted"
 	{
 		"#format"	"{1:N}"
-		"en"		"{default}[{green}!{default}] {green}Force Start Aborted! {default}({olive}{1} {green}confirmed{default})"
+		"en"		"{default}[{green}!{default}] {green}Force Start Aborted! {default}({olive}{1} {green}issued{default})"
 	}
 	
 	
@@ -92,11 +92,17 @@
 	
 	"AutoStartCountdown"
 	{
-		"en"		"Game starts in: %i"
+		"#format"	"{1:d}"
+		"en"		"Game starts in: {1}"
 	}
 	
 	"AutoStartWaiting"
 	{
 		"en"		"Waiting for loading players..."
+	}
+	
+	"AutoStartNotEnoughPlayers"
+	{
+		"en"		"More players are required..."
 	}
 }
