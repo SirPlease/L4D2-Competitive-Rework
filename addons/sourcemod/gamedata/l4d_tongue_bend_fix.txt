@@ -1,0 +1,49 @@
+"Games"
+{
+	"#default"
+	{
+		"Keys"
+		{
+			"BendExceptionClass1"	"prop_door_rotating"
+		}
+		
+		"Functions"
+		{
+			"CTongue::UpdateBend"
+			{
+				"signature"		"CTongue::UpdateBend"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+			}
+		}
+	}
+	
+	"left4dead"
+	{
+		"Signatures"
+		{
+			"CTongue::UpdateBend"
+			{
+				"library"		"server"
+				"linux"			"@_ZN7CTongue10UpdateBendEv"
+				"windows"		"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x74\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xC1\x2A\x2A\x8D\x2A\x2A\x2A\x85\x2A\x74\x2A\xC1\x2A\x2A\x39\x2A\x2A\x75\x2A\x8B\x2A\x85\x2A\x75\x2A\xB0"
+				/* ? ? ? ? ? ? 56 8B ? 8B ? ? ? ? ? 83 ? ? 74 ? 8B ? ? ? ? ? 8B ? 81 ? ? ? ? ? C1 ? ? 8D ? ? ? 85 ? 74 ? C1 ? ? 39 ? ? 75 ? 8B ? 85 ? 75 ? B0 */
+			}
+		}
+	}
+	
+    "left4dead2"
+    {
+		"Signatures"
+		{
+			"CTongue::UpdateBend"
+			{
+				"library"		"server"
+				"linux"			"@_ZN7CTongue10UpdateBendEv"
+				"windows"		"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x74\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x03\x2A\x8D\x2A\x2A\x2A\x85\x2A\x74\x2A\xC1\x2A\x2A\x39\x2A\x2A\x75\x2A\x8B"
+				/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 56 8B ? 8B ? ? ? ? ? 83 ? ? 74 ? 8B ? ? ? ? ? 8B ? 81 ? ? ? ? ? 03 ? 8D ? ? ? 85 ? 74 ? C1 ? ? 39 ? ? 75 ? 8B */
+			}
+		}
+	}
+}

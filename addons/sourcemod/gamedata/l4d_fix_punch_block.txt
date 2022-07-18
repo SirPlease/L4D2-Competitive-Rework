@@ -1,0 +1,167 @@
+"Games"
+{
+	/**
+	 * We're doing the patch here to replace original "CTraceFilterList::AddEntityToIgnore"
+	 * with "CTraceFilterSimple::SetPassEntity", so `PassServerEntityFilter` can be called.
+	 */
+	"#default"
+	{
+		"Offsets"
+		{
+			"OS"
+			{
+				"linux"			"1"
+				"windows"		"0"
+			}
+		}
+		
+		/**
+		 * Everything in this section should be as clear as they read.
+		 */
+		"Addresses"
+		{
+			"CTraceFilterSimple::SetPassEntity"
+			{
+				"linux"
+				{
+					"signature"	"CTraceFilterSimple::SetPassEntity"
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			"CTraceFilterSimple::SetPassEntity"
+			{
+				"library"		"server"
+				"linux"			"@_ZN18CTraceFilterSimple13SetPassEntityEPK13IHandleEntity"
+			}
+		}
+	}
+	
+	"left4dead"
+	{
+		"MemPatches"
+		{
+			"CTankClaw::SweepFist__AddEntityToIgnore_dummypatch"
+			{
+				"signature"		"CTankClaw::SweepFist"
+				"linux"
+				{
+					"offset"	"B9h"
+					"verify"	"\xE8"
+					"preserve"	"\xFF\xFF\xFF\xFF\xFF"
+					"patch"		"\x90\x90\x90\x90\x90"
+				}
+				"windows"
+				{
+					"offset"	"76h"
+					"verify"	"\xE8"
+					"preserve"	"\xFF\xFF\xFF\xFF\xFF"
+					"patch"		"\x90\x90\x90\x90\x90"
+				}
+			}
+		}
+		
+		"Addresses"
+		{
+			/**
+			 * Obviously with all bytes of function "CTraceFilterSimple::SetPassEntity" it cannot be unique still.
+			 * The following is a way making use of the vtable.
+			 *
+			 * The "read" offset leads into the virtual pointer to "CTraceFilterSimpleListNoGhosts::ShouldHitEntity",
+			 * and the "offset" added to the pointer address advances to "CTraceFilterSimple::SetPassEntity".
+			 */
+			"CTraceFilterSimple::SetPassEntity"
+			{
+				"windows"
+				{
+					"signature"	"CTankClaw::SweepFist"
+					"read"		"110"
+					"offset"	"8"
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			/**
+			 * CTankClaw::SweepFist(Vector const&, Vector const&)
+			 *
+			 * How to find on Windows:
+			 * 1. Locate the "CTankClaw::DoSwing" function.
+			 * 2. The last function call should be this function.
+			 **/
+			"CTankClaw::SweepFist"
+			{
+				"library"		"server"
+				"linux"			"@_ZN9CTankClaw9SweepFistERK6VectorS2_"
+				"windows"		"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x8B\x2A\x2A\x56\x57\x8B\x2A\x2A\x89\x8D"
+								/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 81 EC ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 8B ? ? 56 57 8B ? ? 89 8D */
+			}
+		}
+	}
+	
+	"left4dead2"
+	{
+		"MemPatches"
+		{
+			"CTankClaw::SweepFist__AddEntityToIgnore_dummypatch"
+			{
+				"signature"		"CTankClaw::SweepFist"
+				"linux"
+				{
+					"offset"	"C8h"
+					"verify"	"\xE8"
+					"preserve"	"\xFF\xFF\xFF\xFF\xFF"
+					"patch"		"\x90\x90\x90\x90\x90"
+				}
+				"windows"
+				{
+					"offset"	"D1h"
+					"verify"	"\xE8"
+					"preserve"	"\xFF\xFF\xFF\xFF\xFF"
+					"patch"		"\x90\x90\x90\x90\x90"
+				}
+			}
+		}
+		
+		"Addresses"
+		{
+			/**
+			 * Obviously with all bytes of function "CTraceFilterSimple::SetPassEntity" it cannot be unique still.
+			 * The following is a way making use of the vtable.
+			 *
+			 * The "read" offset leads into the virtual pointer to "CTraceFilterSimpleListNoGhosts::ShouldHitEntity",
+			 * and the "offset" added to the pointer address advances to "CTraceFilterSimple::SetPassEntity".
+			 */
+			"CTraceFilterSimple::SetPassEntity"
+			{
+				"windows"
+				{
+					"signature"	"CTankClaw::SweepFist"
+					"read"		"205"
+					"offset"	"8"
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			/**
+			 * CTankClaw::SweepFist(Vector const&, Vector const&)
+			 *
+			 * How to find on Windows:
+			 * 1. Locate the "CTankClaw::DoSwing" function.
+			 * 2. The last function call should be this function.
+			 **/
+			"CTankClaw::SweepFist"
+			{
+				"library"		"server"
+				"linux"			"@_ZN9CTankClaw9SweepFistERK6VectorS2_"
+				"windows"		"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x8B\x2A\x2A\x56\x57\x8B\x2A\x2A\x89\x8D"
+								/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 81 EC ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 8B ? ? 56 57 8B ? ? 89 8D */
+			}
+		}
+	}
+}

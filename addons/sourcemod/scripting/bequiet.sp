@@ -41,6 +41,8 @@ public void OnPluginStart()
     hCvarNameChange.AddChangeHook(cvarChanged);
     hCvarSpecNameChange.AddChangeHook(cvarChanged);
     hCvarSpecSeeChat.AddChangeHook(cvarChanged);
+
+    AutoExecConfig(true);
 }
 
 public Action Say_Callback(int client, char[] command, int args)
@@ -111,7 +113,7 @@ public void cvarChanged(Handle convar, const char[] oldValue, const char[] newVa
     bCvarChange = hCvarCvarChange.BoolValue;
     bNameChange = hCvarNameChange.BoolValue;
     bSpecNameChange = hCvarSpecNameChange.BoolValue;
-    bSpecSeeChat = hCvarSpecNameChange.BoolValue;
+    bSpecSeeChat = hCvarSpecSeeChat.BoolValue;
 }
 
 stock bool IsValidClient(int client)

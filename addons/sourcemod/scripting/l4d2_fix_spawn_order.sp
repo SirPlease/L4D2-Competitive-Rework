@@ -1,35 +1,19 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <left4dhooks>
-#include <colors>
 
-#undef REQUIRE_PLUGIN
-#include "readyup"
+#define PLUGIN_VERSION "2.6"
 
-// Spawn Storage
-new bool:PlayerSpawned[MAXPLAYERS + 1];
-new bool:bRespawning[MAXPLAYERS + 1];
-new storedClass[MAXPLAYERS + 1];
-
-// Small Timer to Fix AI Tank pass
-new Float:fTankPls[MAXPLAYERS + 1];
-new bool:bKeepChecking[MAXPLAYERS + 1];
-
-// Array
-new Handle:g_SpawnsArray;
-
-// Ready-up
-new bool:readyUpIsAvailable;
-new bool:bLive;
-
-// Get dem Cvars
-new Handle:hDominators;
-new Handle:hSpitterLimit;
-new Handle:hMaxSI;
-new dominators;
-new spitterlimit;
-new maxSI;
+public Plugin myinfo = 
+{
+	name = "L4D2 Proper Sack Order",
+	author = "Sir, Forgetest",
+	description = "Finally fix that pesky spawn rotation not being reliable",
+	version = PLUGIN_VERSION,
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
+};
 
 /* These class numbers are the same ones used internally in L4D2 */
 enum /*SIClass*/
@@ -47,392 +31,386 @@ enum /*SIClass*/
 	SI_MAX_SIZE
 };
 
-stock const String:g_sSIClassNames[SI_MAX_SIZE][] = 
+stock const char g_sSIClassNames[SI_MAX_SIZE][] = 
 {	"", "Smoker", "Boomer", "Hunter", "Spitter", "Jockey", "Charger", "Witch", "Tank" };
 
-public Plugin:myinfo = 
-{
-	name = "L4D2 Proper Sack Order",
-	author = "Sir",
-	description = "Finally fix that pesky spawn rotation not being reliable",
-	version = "1.3",
-	url = "nah"
-};
+// Array
+ArrayList g_SpawnsArray;
 
-public OnPluginStart()
+bool bLive;
+
+// Get dem Cvars
+ConVar hLimits[SI_MAX_SIZE];
+int iLimits[SI_MAX_SIZE];
+int dominators;
+
+ConVar hDebug;
+
+methodmap PlayerResource {
+	public PlayerResource() {
+		return view_as<PlayerResource>(L4D_GetResourceEntity());
+	}
+	public int QueryZombieClass(int client) {
+		return GetEntProp(view_as<int>(this), Prop_Send, "m_zombieClass", _, client);
+	}
+	public int QueryTeamNum(int client) {
+		return GetEntProp(view_as<int>(this), Prop_Send, "m_iTeam", _, client);
+	}
+	public bool WasGhost(int client) {
+		return !!GetEntProp(view_as<int>(this), Prop_Send, "m_isGhost", _, client);
+	}
+	public bool WasAlive(int client) {
+		return !!GetEntProp(view_as<int>(this), Prop_Send, "m_bAlive", _, client);
+	}
+}
+PlayerResource g_Resource;
+
+public void OnPluginStart()
 {
 	// Events
-	HookEvent("round_start", CleanUp);
-	HookEvent("round_end", CleanUp);
-	HookEvent("player_team", PlayerTeam);
-	HookEvent("player_spawn", PlayerSpawn);
-	HookEvent("player_death", PlayerDeath);
+	HookEvent("round_start", Event_RoundStart);
+	HookEvent("round_end", Event_RoundEnd);
+	HookEvent("player_team", Event_PlayerTeam);
+	HookEvent("player_death", Event_PlayerDeath);
+	HookEvent("tank_spawn", Event_TankSpawn);
+	HookEvent("player_left_start_area", Event_PlayerLeftStartArea);
+
+	hDebug = CreateConVar("sackorder_debug", "0", "Debuggin the plugin.", FCVAR_SPONLY|FCVAR_HIDDEN, true, 0.0, true, 1.0);
 
 	// Array
-	g_SpawnsArray = CreateArray(16);
+	g_SpawnsArray = new ArrayList();
 
-	hMaxSI = FindConVar("z_max_player_zombies");
-	maxSI = GetConVarInt(hMaxSI);
-
-	hSpitterLimit = FindConVar("z_versus_spitter_limit");
-	spitterlimit = GetConVarInt(hSpitterLimit);
-
-	HookConVarChange(hMaxSI, cvarChanged);
-	HookConVarChange(hSpitterLimit, cvarChanged);
+	char buffer[64];
+	for (int i = SI_Smoker; i <= SI_Charger; ++i)
+	{
+		FormatEx(buffer, sizeof(buffer), "z_versus_%c%s_limit", CharToLower(g_sSIClassNames[i][0]), g_sSIClassNames[i][1]);
+		hLimits[i] = FindConVar(buffer);
+	}
 }
 
-// Ready-up Checks
-public OnAllPluginsLoaded() { readyUpIsAvailable = LibraryExists("readyup"); }
-public OnLibraryRemoved(const String:name[]){ if (StrEqual(name, "readyup")) readyUpIsAvailable = false; }
-public OnLibraryAdded(const String:name[]) { if (StrEqual(name, "readyup")) readyUpIsAvailable = true; }
-public OnConfigsExecuted() 
+public void OnConfigsExecuted()
 {
 	dominators = 53;
-	hDominators = FindConVar("l4d2_dominators");
-	if (hDominators != INVALID_HANDLE) dominators = GetConVarInt(hDominators);
+	ConVar hDominators = FindConVar("l4d2_dominators");
+	if (hDominators != null) dominators = hDominators.IntValue;
 }
 
-// Events
-public CleanUp(Handle:event, const String:name[], bool:dontBroadcast) { CleanSlate(); }
-
-public PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast)
+// Clean slates
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	// Check if the Player is Valid and Infected.
-	// Triggered when a Player actually spawns in (Players spawn out of Ghost Mode, AI Takes over existing Spawn)
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
-	if (!IsValidClient(client) || IsFakeClient(client) || GetClientTeam(client) != 3 || !bLive || GetEntProp(client, Prop_Send, "m_zombieClass") == _:SI_Tank) return;
-
-	PlayerSpawned[client] = true;
-	bRespawning[client] = false;
+	g_Resource = PlayerResource();
+	g_SpawnsArray.Clear();
+	bLive = false;
 }
 
-public PlayerTeam(Handle:event, const String:name[], bool:dontBroadcast)
+void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
-	new oldteam = GetEventInt(event, "oldteam");
-
-	// 1.3 Notes: Investigate if I did these because they have issues, considering I didn't document this anywhere.
-	//--------------------------------------------------------------------------------------------------------------
-	// - Why am I checking for Tank here if we only care about Ghost Infected? 
-	// - Why not reset stats on players regardless (for safety) prior to the Ghost/Tank check?
-	//--------------------------------------------------------------------------------------------------------------
-	if (!IsValidClient(client) || oldteam != 3 || !bLive || GetEntProp(client, Prop_Send, "m_isGhost") < 1 || GetEntProp(client, Prop_Send, "m_zombieClass") == _:SI_Tank) return;
-
-	PlayerSpawned[client] = false;
-	bRespawning[client] = false;
-	storedClass[client] = 0;
-
-	if (GetArraySize(g_SpawnsArray) > 0) ShiftArrayUp(g_SpawnsArray, 0);
-	SetArrayCell(g_SpawnsArray, 0, GetEntProp(client, Prop_Send, "m_zombieClass"));
+	g_SpawnsArray.Clear();
+	bLive = false;
 }
 
-public OnClientDisconnect(client)
+void Event_PlayerLeftStartArea(Event event, const char[] name, bool dontBroadcast)
 {
-	if (!IsValidClient(client) || IsFakeClient(client)) return;
-	else 
-	{
-		PlayerSpawned[client] = false;
-		bRespawning[client] = false;
-	}
+	FillQueue();
+	bLive = true;
 }
 
-public PlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
+//--------------------------------------------------------------------------------- Player Actions
+//
+// Basic strategy:
+//   1. Zombie classes is handled by a queue: pop the beginning, push to the end.
+//   2. Return zombie class, based on the player state: ghost to the beginning, materialized to the end.
+//
+
+/**
+ * Queue the class of whom switched team alive, to the front if ghost, to the end if materialized.
+ */
+void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 {
-	// Check if the Player is Valid and Infected.
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
-	if (!IsValidClient(client) || GetClientTeam(client) != 3 || !bLive) return;
-
-	// Don't want Tanks in our Array.. do we?!
-	// Also includes a tiny Fix.
-	new SI = GetEntProp(client, Prop_Send, "m_zombieClass");
-	if (SI != _:SI_Tank && fTankPls[client] < GetGameTime()) 
-	{
-		if (storedClass[client] == 0) PushArrayCell(g_SpawnsArray, GetEntProp(client, Prop_Send, "m_zombieClass"));
-	}
-
-	if (SI == _:SI_Tank) storedClass[client] = 0;
-
-	if (!IsFakeClient(client)) PlayerSpawned[client] = false;
-}
-
-public Action:L4D_OnFirstSurvivorLeftSafeArea(client)
-{
-	// Is the Game actually live?
-	if (readyUpIsAvailable && IsInReady()) bLive = false;
-	else 
-	{
-		// Clear Array here.
-		// Fill Array with existing spawns (from lowest SI Class to Highest, ie. 2 Hunters, if available, will be spawned before a Spitter as they're SI Class 3 and a Spitter is 4)
-		ClearArray(g_SpawnsArray);
-		FillArray(g_SpawnsArray);
-		bLive = true;
-	}
-
-	return Plugin_Continue;
-}
-
-public void L4D_OnEnterGhostState(client)
-{
-	// Is Game live?
-	// Is Valid Client?
-	// Is Infected?
-	// Instant spawn after passing Tank to AI? (Gets slain) - NOTE: We don't need to reset fTankPls thanks to nodeathcamskip.smx
-	if (!bLive || !IsValidClient(client) || GetClientTeam(client) != 3 || fTankPls[client] > GetGameTime()) return;
-
-	// Is Player Respawning?
-	if (PlayerSpawned[client]) 
-	{
-		bRespawning[client] = true; 
+	if (!bLive)
 		return;
-	}
-
-	// Switch Class and Pass Client Info as he will already be counted in the total.
-	// If for some reason the returned SI is invalid or if the Array isn't filled up yet: allow Director to continue.
-	new SI = ReturnNextSIInQueue(client);
-	if (SI > 0) L4D_SetClass(client, SI);
-	if (bKeepChecking[client]) 
+	
+	int oldteam = event.GetInt("oldteam");
+	if (oldteam != 3 || oldteam == event.GetInt("team"))
+		return;
+	
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	if (!client || IsFakeClient(client))
+		return;
+	
+	if (!IsPlayerAlive(client))
+		return;
+	
+	int SI = GetEntProp(client, Prop_Send, "m_zombieClass");
+	if (IsAbleToQueue(SI, client))
 	{
-		storedClass[client] = SI;
-		bKeepChecking[client] = false;
+		QueueSI(SI, !!GetEntProp(client, Prop_Send, "m_isGhost"));
 	}
 }
 
-public Action:L4D_OnTryOfferingTankBot(tank_index, &bool:enterStasis)
+/**
+ * Queue the class of whom died to the end.
+ */
+void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
-	if (IsFakeClient(tank_index))
+	if (!bLive)
+		return;
+	
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	if (!client || IsFakeClient(client))
+		return;
+	
+	if (GetClientTeam(client) != 3)
+		return;
+	
+	int SI = GetEntProp(client, Prop_Send, "m_zombieClass");
+	if (IsAbleToQueue(SI, client))
 	{
-		// Because Tank Control sets the Tank Tickets as well.
-		// This method will work, but it will only work with Configs/Server setups that use L4D Tank Control
-		CreateTimer(0.01, CheckTankie);
+		QueueSI(SI, false);
 	}
-
-	return Plugin_Continue;
 }
 
-public void L4D2_OnTankPassControl(oldTank, newTank, passCount)
+/**
+ * Save the class of whom becomes the tank, to the front if ghost, to the end if materialized.
+ */
+void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-	if (!IsFakeClient(newTank))
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	if (client && !IsFakeClient(client) && GetClientTeam(client) == 3)
 	{
-		if (storedClass[newTank] > 0)
+		// Looks like resource data updates post changes happen, good.
+		if (g_Resource.WasAlive(client))
 		{
-			if (!PlayerSpawned[newTank] || bRespawning[newTank]) 
+			int SI = g_Resource.QueryZombieClass(client);
+			if (IsAbleToQueue(SI, client))
 			{
-				PushArrayCell(g_SpawnsArray, storedClass[newTank]);
-				bRespawning[newTank] = false;
+				QueueSI(SI, g_Resource.WasGhost(client));
 			}
 		}
-		bKeepChecking[newTank] = false;
-	}
-	else 
-	{
-		fTankPls[oldTank] = GetGameTime() + 2.0;
-		storedClass[oldTank] = 0;
 	}
 }
 
-public Action:CheckTankie(Handle:timer)
+/**
+ * Give spawned player an SI from queue.
+ */
+public void L4D_OnEnterGhostState(int client)
 {
-	for (new i = 1; i <= MaxClients; i++)
+	// NOTE:
+	// Left4DHooks 1.94 blocks post forwards if pre-hooks get superceded.
+	// The following check will be unnecessary post-update.
+	if (!GetEntProp(client, Prop_Send, "m_isGhost"))
+		return;
+	
+	// 1. Not respawning
+	// 2. Weird exception that instant spawn is offered if:
+	//	   - First switch to Survivors during respawn count-down.
+	//	   - Then switch back when the count-down expires.
+	if (!g_Resource.WasAlive(client) || g_Resource.QueryTeamNum(client) == 2)
 	{
-		if (IsValidClient(i) && !IsFakeClient(i) && GetClientTeam(i) == 3)
+		int SI = PopQueuedSI(client);
+		if (SI != SI_None)
 		{
-			if (L4D2Direct_GetTankTickets(i) == 20000)
-			{
-				if (GetEntProp(i, Prop_Send, "m_isGhost") > 0) storedClass[i] = GetEntProp(i, Prop_Send, "m_zombieClass");
-				else bKeepChecking[i] = true;
-			}
+			L4D_SetClass(client, SI);
 		}
 	}
-
-	return Plugin_Stop;
-}
-
-public cvarChanged(Handle:cvar, const String:oldValue[], const String:newValue[])
-{
-	maxSI = GetConVarInt(hMaxSI);
-	spitterlimit = GetConVarInt(hSpitterLimit);
 }
 
 //--------------------------------------------------------------------------------- Stocks & Such
 
-stock ReturnNextSIInQueue(client)
+/**
+ * Queue an SI to the front/end.
+ */
+void QueueSI(int SI, bool front)
 {
-	new QueuedSI = _:SI_None;
-	new QueuedIndex = 0;
-	new ArraySize = GetArraySize(g_SpawnsArray);
-	
-	// Do we have Spawns in our Array yet?
-	if (ArraySize > 0)
+	if (front)
 	{
-		// Check if we actually need a "Support" SI at this time.
-		// Requirements:
-		// - No Quadcap Plugin.
-		// - No Tank Alive.
-		// - A Full Infected Team (4 Players)
-		// - No "Support" SI Alive.
-		if (dominators != 0 && !IsTankInPlay() && !IsSupportSIAlive(client) && IsInfectedTeamFull() && IsInfectedTeamAlive() >= (maxSI - 1))
-		{
-			// Look for the Boomer's position in the Array.
-			QueuedSI = _:SI_Boomer;
-			QueuedIndex = FindValueInArray(g_SpawnsArray, 2);
-		
-			// Look for the Spitter's position in the Array.
-			new iTempIndex = FindValueInArray(g_SpawnsArray, 4);
+		if (g_SpawnsArray.Length) g_SpawnsArray.ShiftUp(0);
+		g_SpawnsArray.Set(0, SI);
+	}
+	else
+	{
+		g_SpawnsArray.Push(SI);
+	}
+	
+	PrintDebug("\x04[DEBUG] \x01Queuing (\x05%s\x01) to \x04%s", g_sSIClassNames[SI], front ? "the front" : "the end");
+}
 
-			// Check if the Spitter should be selected for Spawning (because she died before the Boomer did)
-			//
-			// Additional Check:
-			// -----------------
-			// If the Boomer position returns -1 (it shouldn't, considering we've checked for any Support SI being alive)
-			// Perhaps a non-Boomer config? :D
-			if (QueuedIndex > iTempIndex || QueuedIndex == -1 ) 
-			{ 
-				QueuedSI = _:SI_Spitter; 
-				QueuedIndex = iTempIndex; 
-			}		
+/**
+ * Pop an SI from queue that is under limit.
+ */
+int PopQueuedSI(int skip_client)
+{
+	int size = g_SpawnsArray.Length;
+	if (!size)
+		return SI_None;
+	
+	// Loop through queue to get a valid class.
+	for (int i = 0; i < size; ++i)
+	{
+		int QueuedSI = g_SpawnsArray.Get(i);
+		if (!IsClassOverLimit(QueuedSI, skip_client))
+		{
+			g_SpawnsArray.Erase(i);
+			PrintDebug("\x04[DEBUG] \x01Popped (\x05%s\x01) after \x04%i \x01tries", g_sSIClassNames[QueuedSI], i+1);
+			return QueuedSI;
 		}
-		// We get to enforce the first available Spawn in the Array!
 		else
 		{
-			// Simple, just take the Array's very first Index value.
-			QueuedSI = GetArrayCell(g_SpawnsArray, 0);
-
-			// Hold up, no spitters when Tank is up!
-			// Luckily all the plugin does is change the spitter limit to 0, so we can easily track it.
-			if (QueuedSI == _:SI_Spitter && spitterlimit == 0)
-			{
-				// Let's take the next SI in the array then.
-				QueuedSI = GetArrayCell(g_SpawnsArray, 1);
-				QueuedIndex = 1;
-			}
+			PrintDebug("\x04[DEBUG] \x01Popping (\x05%s\x01) but \x03over limit", g_sSIClassNames[QueuedSI]);
 		}
-
-		// Remove SI from Array.
-		if (QueuedSI != _:SI_None) RemoveFromArray(g_SpawnsArray, QueuedIndex);
 	}
-
-	// return Queued SI to function caller.
-	return QueuedSI;
+	
+	PrintDebug("\x04[DEBUG] \x04Failed to pop queued SI! \x01(size = \x05%i\x01)", size);
+	return SI_None;
 }
 
-stock CleanSlate()
+/**
+ * Fill up the spawn queue with available SIs.
+ *
+ * TODO:
+ *   Ensure it begins with remaining first hit classes in case the Infected Team isn't full?
+ * NOTE:
+ *   Vanilla selects a random index as the beginning class of first hit
+ *   (i.e. if random = 4  then first hit = Spitter,Jockey,Charger,Smoker)
+ */
+void FillQueue()
 {
-	// Clear Bool.
-	bLive = false;
-
-	//Clear Spawn Storage
-	for(new i = 1; i <= MAXPLAYERS; i++)
+	int zombies[SI_MAX_SIZE] = {0};
+	CollectZombies(zombies);
+	
+	char classString[255] = "";
+	for (int i = SI_Smoker; i <= SI_Charger; ++i)
 	{
-		PlayerSpawned[i] = false;
-		fTankPls[i] = 0.0;
-		storedClass[i] = 0;
-		bKeepChecking[i] = false;
-		bRespawning[i] = false;
+		for (int j = 0; j < (iLimits[i] = hLimits[i].IntValue) - zombies[i]; ++j)
+		{
+			g_SpawnsArray.Push(i);
+			StrCat(classString, sizeof(classString), g_sSIClassNames[i]);
+			StrCat(classString, sizeof(classString), ", ");
+		}
 	}
+	
+	int idx = strlen(classString) - 2;
+	if (idx < 0) idx = 0;
+	classString[idx] = '\0';
+	PrintDebug("\x04[DEBUG] \x01Filled queue (%s)", classString);
 }
 
-stock bool:IsTankInPlay() 
+/**
+ * Check if specific class can be queued based on initial SI pool.
+ *
+ * NOTE:
+ *   Static limits used here.
+ */
+bool IsAbleToQueue(int SI, int skip_client)
 {
-	for(new i = 1; i <= MaxClients; i++)
+	if (SI >= SI_Smoker && SI <= SI_Charger)
 	{
-		if (IsValidClient(i) && GetClientTeam(i) == 3 && IsPlayerAlive(i) && !IsFakeClient(i) && IsTank(i)) return true;
+		int counts[SI_MAX_SIZE] = {0};
+		
+		// NOTE: We're checking after player actually spawns, it's necessary to ignore his class.
+		CollectZombies(counts, skip_client);
+		CollectQueuedZombies(counts);
+		
+		if (counts[SI] < iLimits[SI])
+			return true;
 	}
+	
+	PrintDebug("\x04[DEBUG] \x04Unexpected class \x01(\x05%s\x01)", SI == -1 ? "INVALID" : g_sSIClassNames[SI]);
 	return false;
 }
 
-stock bool:IsInfectedTeamFull()
+/**
+ * Check if specific class is over limit based on limit convars and dominator flags.
+ *  1.	< class limit
+ *  2a.	not dominator
+ *  2b.	is dominator
+ *  3b.	total dominators < 3
+ *
+ * NOTE:
+ *   Dynamic limits used here.
+ *
+ * TODO: 
+ *   No more redundant collecting zombies in the same frame?
+ */
+bool IsClassOverLimit(int SI, int skip_client)
 {
-	new SI;
-	for(new i = 1; i <= MaxClients; i++)
+	if (!hLimits[SI])
+		return false;
+	
+	int counts[SI_MAX_SIZE] = {0};
+	
+	// NOTE: We're checking after player actually spawns, it's necessary to ignore his class.
+	CollectZombies(counts, skip_client);
+	
+	if (counts[SI] >= hLimits[SI].IntValue)
+		return true;
+	
+	if (!IsDominator(SI))
+		return false;
+	
+	int dominatorCount = 0;
+	for (int i = SI_Smoker; i <= SI_Charger; ++i)
+		if (IsDominator(i)) dominatorCount += counts[i];
+	
+	return dominatorCount > 2;
+}
+
+/**
+ * Check if specific class is customized dominator.
+ */
+bool IsDominator(int SI)
+{
+	return !!(dominators & (1 << (SI-1)));
+}
+
+/**
+ * Collect zombie classes.
+ */
+int CollectZombies(int zombies[SI_MAX_SIZE], int skip_client = -1)
+{
+	int count = 0;
+	
+	char classString[255] = "";
+	for (int i = 1; i <= MaxClients; ++i)
 	{
-		if (IsValidClient(i) && !IsFakeClient(i) && GetClientTeam(i) == 3)
+		if (i != skip_client && IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) == 3 && IsPlayerAlive(i))
 		{
-			SI++;
+			++zombies[GetEntProp(i, Prop_Send, "m_zombieClass")];
+			++count;
+			StrCat(classString, sizeof(classString), g_sSIClassNames[GetEntProp(i, Prop_Send, "m_zombieClass")]);
+			StrCat(classString, sizeof(classString), ", ");
 		}
 	}
-
-	if (SI >= maxSI) return true;
-	return false;
+	
+	int idx = strlen(classString) - 2;
+	if (idx < 0) idx = 0;
+	classString[idx] = '\0';
+	PrintDebug("\x04[DEBUG] \x01Collect zombies (%s)", classString);
+	
+	return count;
 }
 
-IsInfectedTeamAlive()
+/**
+ * Collect queued SI classes.
+ */
+int CollectQueuedZombies(int zombies[SI_MAX_SIZE])
 {
-	new SI;
-	for(new i = 1; i <= MaxClients; i++)
+	int size = g_SpawnsArray.Length;
+	
+	for (int i = 0; i < size; ++i)
 	{
-		if (IsValidClient(i) &&
-		!IsFakeClient(i) &&
-		GetClientTeam(i) == 3 && 
-		IsPlayerAlive(i))
-		{
-			SI++;
-		}
+		++zombies[g_SpawnsArray.Get(i)];
 	}
-
-	return SI;
+	
+	return size;
 }
 
-stock bool:IsSupportSIAlive(client)
+stock void PrintDebug(const char[] format, any ...)
 {
-	for(new i = 1; i <= MaxClients; i++)
+	if (hDebug.BoolValue)
 	{
-		if (IsValidClient(i) && 
-		GetClientTeam(i) == 3 && 
-		IsPlayerAlive(i) 
-		&& i != client)
-		{
-			if (IsSupport(i)) return true;
-		}
+		char msg[255];
+		VFormat(msg, sizeof(msg), format, 2);
+		PrintToChatAll("%s", msg);
 	}
-
-	// No Support SI Alive, send back-up!
-	return false;
 }
-
-stock bool:IsSupport(client) 
-{
-	new ZClass = GetEntProp(client, Prop_Send, "m_zombieClass");
-	return (ZClass == _:SI_Boomer || ZClass == _:SI_Spitter);
-}
-
-stock FillArray(Handle:array)
-{
-	new smokers = GetConVarInt(FindConVar("z_versus_smoker_limit"));
-	new boomers = GetConVarInt(FindConVar("z_versus_boomer_limit"));
-	new hunters = GetConVarInt(FindConVar("z_versus_hunter_limit"));
-	new spitters = GetConVarInt(FindConVar("z_versus_spitter_limit"));
-	new jockeys = GetConVarInt(FindConVar("z_versus_jockey_limit"));
-	new chargers = GetConVarInt(FindConVar("z_versus_charger_limit"));
-
-	for(new i = 1; i <= MaxClients; i++)
-	{
-		if (IsValidClient(i) && !IsFakeClient(i) && GetClientTeam(i) == 3)
-		{
-			new SI = GetEntProp(i, Prop_Send, "m_zombieClass");
-			switch (SI)
-			{
-				case 1: smokers--;
-				case 2: boomers--;
-				case 3: hunters--;
-				case 4: spitters--;
-				case 5: jockeys--;
-				case 6: chargers--;
-			}
-		}
-	}
-
-	while (smokers > 0) { smokers--; PushArrayCell(array, _:SI_Smoker); }
-	while (boomers > 0) { boomers--; PushArrayCell(array, _:SI_Boomer); }
-	while (hunters > 0) { hunters--; PushArrayCell(array, _:SI_Hunter); }
-	while (spitters > 0) { spitters--; PushArrayCell(array, _:SI_Spitter); }
-	while (jockeys > 0) { jockeys--; PushArrayCell(array, _:SI_Jockey); }
-	while (chargers > 0) { chargers--; PushArrayCell(array, _:SI_Charger); }
-}
-
-bool:IsTank(client) { return GetEntProp(client, Prop_Send, "m_zombieClass") == _:SI_Tank; }
-
-bool:IsValidClient(client) { 
-    if (client <= 0 || client > MaxClients || !IsClientConnected(client)) return false;
-    return (IsClientInGame(client)); 
-}
-

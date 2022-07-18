@@ -1,3 +1,11 @@
+// Changelog:
+//
+// 2.0 (robex):
+//     - Code rework, cleaned up old sourcemod functions
+//     - Allow limiting individual melees, to limit them with l4d_wlimits_add
+//       use names in MeleeWeaponNames array (l4d2util_constants.inc)
+//
+
 #pragma semicolon 1
 #pragma newdecls required
 
@@ -16,21 +24,13 @@
 
 #define TEAM_SURVIVOR 2
 
-#if SOURCEMOD_V_MINOR > 9
 enum struct LimitArrayEntry
 {
 	int LAE_iLimit;
 	int LAE_iGiveAmmo;
 	int LAE_WeaponArray[WEPID_SIZE / 32 + 1];
+	int LAE_MeleeArray[WEPID_MELEES_SIZE / 32 + 1];
 }
-#else
-enum LimitArrayEntry
-{
-	LAE_iLimit,
-	LAE_iGiveAmmo,
-	LAE_WeaponArray[WEPID_SIZE / 32 + 1]
-};
-#endif
 
 Handle
 	hSDKGiveDefaultAmmo;
@@ -40,14 +40,18 @@ ArrayList
 
 bool
 	bIsLocked,
-	bIsIncappedWithMelee[MAXPLAYERS + 1];
+	bIsIncappedWithMelee[MAXPLAYERS + 1],
+	bIsPressingButtonUse[MAXPLAYERS + 1],
+	bIsHoldingButtonUse[MAXPLAYERS + 1];
+
+StringMap hMeleeWeaponNamesTrie = null;
 
 public Plugin myinfo =
 {
 	name = "L4D Weapon Limits",
-	author = "CanadaRox, Stabby, Forgetest, A1m`",
+	author = "CanadaRox, Stabby, Forgetest, A1m`, robex",
 	description = "Restrict weapons individually or together",
-	version = "1.3.7",
+	version = "2.0",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -55,11 +59,7 @@ public void OnPluginStart()
 {
 	L4D2Weapons_Init();
 
-#if SOURCEMOD_V_MINOR > 9
 	hLimitArray = new ArrayList(sizeof(LimitArrayEntry));
-#else
-	hLimitArray = new ArrayList(view_as<int>(LimitArrayEntry));
-#endif
 
 	/* Preparing SDK Call */
 	Handle conf = LoadGameConfigFile(GAMEDATA_FILE);
@@ -81,6 +81,13 @@ public void OnPluginStart()
 	if (hSDKGiveDefaultAmmo == null) {
 		SetFailState("Failed to finish SDKCall setup: %s", GAMEDATA_USE_AMMO);
 	}
+
+	hMeleeWeaponNamesTrie = new StringMap();
+
+	for (int i = 0; i < WEPID_MELEES_SIZE; i++) {
+		hMeleeWeaponNamesTrie.SetValue(MeleeWeaponNames[i], i);
+	}
+
 
 	RegServerCmd("l4d_wlimits_add", AddLimit_Cmd, "Add a weapon limit");
 	RegServerCmd("l4d_wlimits_lock", LockLimits_Cmd, "Locks the limits to improve search speeds");
@@ -105,16 +112,22 @@ public void ClearUp(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	for (int i = 1; i <= MAXPLAYERS; i++) {
 		bIsIncappedWithMelee[i] = false;
+		bIsPressingButtonUse[i] = false;
+		bIsHoldingButtonUse[i] = false;
 	}
 }
 
 public void OnClientPutInServer(int client)
 {
+	bIsPressingButtonUse[client] = false;
+	bIsHoldingButtonUse[client] = false;
 	SDKHook(client, SDKHook_WeaponCanUse, WeaponCanUse);
 }
 
 public void OnClientDisconnect(int client)
 {
+	bIsPressingButtonUse[client] = false;
+	bIsHoldingButtonUse[client] = false;
 	SDKUnhook(client, SDKHook_WeaponCanUse, WeaponCanUse);
 }
 
@@ -132,40 +145,28 @@ public Action AddLimit_Cmd(int args)
 	GetCmdArg(1, sTempBuff, sizeof(sTempBuff));
 	
 	int wepid;
+	int meleeid;
 
-#if SOURCEMOD_V_MINOR > 9
 	LimitArrayEntry newEntry;
 
 	newEntry.LAE_iLimit = StringToInt(sTempBuff);
-
 	GetCmdArg(2, sTempBuff, sizeof(sTempBuff));
-
 	newEntry.LAE_iGiveAmmo = StringToInt(sTempBuff);
 
 	for (int i = 3; i <= args; ++i) {
 		GetCmdArg(i, sTempBuff, sizeof(sTempBuff));
 		wepid = WeaponNameToId(sTempBuff);
 		newEntry.LAE_WeaponArray[wepid / 32] |= (1 << (wepid % 32));
+
+		// assume it might be a melee
+		if (wepid == WEPID_NONE) {
+			if (hMeleeWeaponNamesTrie.GetValue(sTempBuff, meleeid)) {
+				newEntry.LAE_MeleeArray[meleeid / 32] |= (1 << (meleeid % 32));
+			}
+		}
 	}
 	
 	hLimitArray.PushArray(newEntry, sizeof(LimitArrayEntry));
-#else
-	LimitArrayEntry newEntry[LimitArrayEntry];
-	
-	newEntry[LAE_iLimit] = StringToInt(sTempBuff);
-
-	GetCmdArg(2, sTempBuff, sizeof(sTempBuff));
-	
-	newEntry[LAE_iGiveAmmo] = StringToInt(sTempBuff);
-
-	for (int i = 3; i <= args; ++i) {
-		GetCmdArg(i, sTempBuff, sizeof(sTempBuff));
-		wepid = WeaponNameToId(sTempBuff);
-		newEntry[LAE_WeaponArray][wepid / 32] |= (1 << (wepid % 32));
-	}
-	
-	hLimitArray.PushArray(newEntry[0], view_as<int>(LimitArrayEntry));
-#endif
 	return Plugin_Handled;
 }
 
@@ -199,66 +200,95 @@ void ClearLimits()
 	}
 }
 
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon, int &subtype, int &cmdnum, int &tickcount, int &seed, int mouse[2])
+{
+	if (IsClientInGame(client) && GetClientTeam(client) == 2 && IsPlayerAlive(client)) {
+		bIsHoldingButtonUse[client] = bIsPressingButtonUse[client];
+		bIsPressingButtonUse[client] = !!(buttons & IN_USE);
+	} else {
+		bIsHoldingButtonUse[client] = false;
+		bIsPressingButtonUse[client] = false;
+	}
+	
+	return Plugin_Continue;
+}
+
+int isWeaponLimited(const int[] mask, int wepid)
+{
+	return mask[wepid / 32] & (1 << (wepid % 32));
+}
+
+void denyWeapon(int wep_slot, LimitArrayEntry arrayEntry, int client)
+{
+	if ((wep_slot == 0 && arrayEntry.LAE_iGiveAmmo == -1) || arrayEntry.LAE_iGiveAmmo != 0) {
+		GiveDefaultAmmo(client);
+	}
+
+	// Notify the client only when they are attempting to pick this up
+	// in which way spamming gets avoided due to auto-pick-up checking left since Counter:Strike.
+	if (bIsPressingButtonUse[client] && !bIsHoldingButtonUse[client])
+	{
+		bIsHoldingButtonUse[client] = true;
+		CPrintToChat(client, "{blue}[{default}Weapon Limits{blue}]{default} This weapon group has reached its max of {green}%d", arrayEntry.LAE_iLimit);
+		EmitSoundToClient(client, "player/suit_denydevice.wav");
+	}
+}
+
 public Action WeaponCanUse(int client, int weapon)
 {
-	// TODO: There seems to be an issue that this hook will be constantly called
-	//       when client with no weapon on equivalent slot just eyes or walks on it.
-	//       If the weapon meets limit, client will have the warning spamming unexpectedly.
-	
 	if (GetClientTeam(client) != TEAM_SURVIVOR || !bIsLocked) {
 		return Plugin_Continue;
 	}
 	
 	int wepid = IdentifyWeapon(weapon);
+	int is_melee = (wepid == WEPID_MELEE);
+	int meleeid = 0;
+	if (is_melee) {
+		meleeid = IdentifyMeleeWeapon(weapon);
+	}
 	int wep_slot = GetSlotFromWeaponId(wepid);
+
 	int player_weapon = GetPlayerWeaponSlot(client, wep_slot);
 	int player_wepid = IdentifyWeapon(player_weapon);
+	int player_meleeid = 0;
+	if (player_wepid == WEPID_MELEE) {
+		player_meleeid = IdentifyMeleeWeapon(player_weapon);
+	}
 
-#if SOURCEMOD_V_MINOR > 9
 	LimitArrayEntry arrayEntry;
-#else
-	LimitArrayEntry arrayEntry[LimitArrayEntry];
-#endif
 
 	int iSize = hLimitArray.Length;
 	for (int i = 0; i < iSize; i++) {
-		#if SOURCEMOD_V_MINOR > 9
-			hLimitArray.GetArray(i, arrayEntry, sizeof(LimitArrayEntry));
-			if (arrayEntry.LAE_WeaponArray[wepid / 32] & (1 << (wepid % 32)) && GetWeaponCount(arrayEntry.LAE_WeaponArray) >= arrayEntry.LAE_iLimit) {
-				if (!player_wepid || wepid == player_wepid || !(arrayEntry.LAE_WeaponArray[player_wepid / 32] & (1 << (player_wepid % 32)))) {
-					// Swap melee, np
-					if (player_wepid == WEPID_MELEE && wepid == WEPID_MELEE) {
-						return Plugin_Continue;
-					}
-					
-					if ((wep_slot == 0 && arrayEntry.LAE_iGiveAmmo == -1) || arrayEntry.LAE_iGiveAmmo != 0) {
-						GiveDefaultAmmo(client);
-					}
-					
-					CPrintToChat(client, "{blue}[{default}Weapon Limits{blue}]{default} This weapon group has reached its max of {green}%d", arrayEntry.LAE_iLimit);
-					EmitSoundToClient(client, "player/suit_denydevice.wav");
+		hLimitArray.GetArray(i, arrayEntry, sizeof(LimitArrayEntry));
+		if (is_melee) {
+			int specificMeleeCount = GetMeleeCount(arrayEntry.LAE_MeleeArray);
+			int allMeleeCount = GetWeaponCount(arrayEntry.LAE_WeaponArray);
+
+			int isSpecificMeleeLimited = isWeaponLimited(arrayEntry.LAE_MeleeArray, meleeid);
+			int isAllMeleeLimited = isWeaponLimited(arrayEntry.LAE_WeaponArray, wepid);
+
+			if (isSpecificMeleeLimited && specificMeleeCount >= arrayEntry.LAE_iLimit) {
+				denyWeapon(wep_slot, arrayEntry, client);
+				return Plugin_Handled;
+			}
+
+			if (isAllMeleeLimited && allMeleeCount >= arrayEntry.LAE_iLimit) {
+				// dont deny swapping melees when theres only a limit on global melees
+				if (player_wepid != WEPID_MELEE) {
+					denyWeapon(wep_slot, arrayEntry, client);
 					return Plugin_Handled;
 				}
 			}
-		#else
-			hLimitArray.GetArray(i, arrayEntry[0], view_as<int>(LimitArrayEntry));
-			if (arrayEntry[LAE_WeaponArray][wepid / 32] & (1 << (wepid % 32)) && GetWeaponCount(arrayEntry[LAE_WeaponArray]) >= arrayEntry[LAE_iLimit]) {
-				if (!player_wepid || wepid == player_wepid || !(arrayEntry[LAE_WeaponArray][player_wepid / 32] & (1 << (player_wepid % 32)))) {
-					// Swap melee, np
-					if (player_wepid == WEPID_MELEE && wepid == WEPID_MELEE) {
-						return Plugin_Continue;
-					}
-					
-					if ((wep_slot == 0 && arrayEntry[LAE_iGiveAmmo] == -1) || arrayEntry[LAE_iGiveAmmo] != 0) {
-						GiveDefaultAmmo(client);
-					}
-					
-					CPrintToChat(client, "{blue}[{default}Weapon Limits{blue}]{default} This weapon group has reached its max of {green}%d", arrayEntry[LAE_iLimit]);
-					EmitSoundToClient(client, "player/suit_denydevice.wav");
+		} else {
+			// is weapon about to be picked up limited and over the limit?
+			if (isWeaponLimited(arrayEntry.LAE_WeaponArray, wepid) && GetWeaponCount(arrayEntry.LAE_WeaponArray) >= arrayEntry.LAE_iLimit) {
+				// is currently held weapon limited?
+				if (!player_wepid || wepid == player_wepid || !isWeaponLimited(arrayEntry.LAE_WeaponArray, player_wepid)) {
+					denyWeapon(wep_slot, arrayEntry, client);
 					return Plugin_Handled;
 				}
 			}
-		#endif
+		}
 	}
 
 	return Plugin_Continue;
@@ -311,13 +341,13 @@ public void OnPlayerReplacedBot(Event event, const char[] name, bool dontBroadca
 stock int GetWeaponCount(const int[] mask)
 {
 	bool queryMelee = view_as<bool>(mask[WEPID_MELEE / 32] & (1 << (WEPID_MELEE % 32)));
-	
+
 	int count, wepid;
 	for (int i = 1; i <= MaxClients; i++) {
 		if (IsClientInGame(i) && GetClientTeam(i) == TEAM_SURVIVOR && IsPlayerAlive(i)) {
 			for (int j = 0; j < MAX_PLAYER_WEAPON_SLOTS; ++j) {
 				wepid = IdentifyWeapon(GetPlayerWeaponSlot(i, j));
-				if (mask[wepid / 32] & (1 << (wepid % 32)) || (j == 1 && queryMelee && bIsIncappedWithMelee[i])) {
+				if (isWeaponLimited(mask, wepid) || (j == 1 && queryMelee && bIsIncappedWithMelee[i])) {
 					count++;
 				}
 			}
@@ -327,33 +357,25 @@ stock int GetWeaponCount(const int[] mask)
 	return count;
 }
 
+stock int GetMeleeCount(const int[] mask)
+{
+	int count, meleeid;
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsClientInGame(i) && GetClientTeam(i) == TEAM_SURVIVOR && IsPlayerAlive(i)) {
+			meleeid = IdentifyMeleeWeapon(GetPlayerWeaponSlot(i, L4D2WeaponSlot_Secondary));
+			if (meleeid == WEPID_MELEE_NONE)
+				continue;
+
+			if (isWeaponLimited(mask, meleeid) || bIsIncappedWithMelee[i]) {
+				count++;
+			}
+		}
+	}
+
+	return count;
+}
+
 stock void GiveDefaultAmmo(int client)
 {
-	// NOTE:
-	// Previously the plugin seems to cache an index of one ammo pile in current map, and is supposed to use it here.
-	// For some reason, the caching never runs, and the code is completely wrong either.
-	// Therefore, it has been consistently using an SDKCall like below ('0' should be the index of ammo pile).
-	// However, since it actually has worked without error and crash for a long time, I would decide to leave it still.
-	// If your server suffers from this, please try making use of the functions commented below.
-	
 	SDKCall(hSDKGiveDefaultAmmo, 0, client);
 }
-
-/*stock int FindAmmoSpawn()
-{
-	int entity = FindEntityByClassname(MaxClients+1, "weapon_ammo_spawn");
-	if (entity != -1)
-	{
-		return entity;
-	}
-	//We have to make an ammo pile!
-	return MakeAmmoPile();
-}
-
-stock int MakeAmmoPile()
-{
-	int ammo = CreateEntityByName("weapon_ammo_spawn");
-	DispatchSpawn(ammo);
-	LogMessage("No ammo pile found, creating one: %d", iAmmoPile);
-	return ammo;
-}*/

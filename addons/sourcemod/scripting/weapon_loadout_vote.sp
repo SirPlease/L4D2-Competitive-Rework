@@ -114,7 +114,7 @@ public void Event_PlayerTeam(Event hEvent, char[] sEventName , bool bDontBroadca
 	if (!IsInReady()) {
 		return;
 	}
-
+	
 	int iTeam = hEvent.GetInt("team");
 	// Only care about Survivors (Team 2)
 	if (iTeam != L4D2Team_Survivor) {
@@ -145,7 +145,8 @@ public void Event_RoundStart(Event hEvent, char[] sEventName, bool bDontBroadcas
 		return;
 	}
 
-	GiveSurvivorsWeapons();
+	// Workaround for not receiving guns on second half.
+	CreateTimer(2.0, Timer_GiveWeapons, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
 public Action Cmd_VoteMode(int iClient, int iArgs)
@@ -303,10 +304,6 @@ public void BV_VoteResultHandler(Handle vote, int num_votes, int num_clients, co
 
 public Action Timer_ClearMap(Handle hTimer)
 {
-	// We only clear Chrome Shotguns because we need weaponrules to be loaded for pistols and deagles, so we converted everything to chromes in it. :D
-	// After the weaponrules timer, we strike.
-	// Surely you can do better than this Sir, get to this when you have time.
-
 	char sEntityName[MAX_ENTITY_NAME_LENGTH];
 	int iOwner = -1, iEntity = INVALID_ENT_REFERENCE;
 
@@ -329,6 +326,11 @@ public Action Timer_ClearMap(Handle hTimer)
 			}
 		}
 	}
+	return Plugin_Stop;
+}
+
+public Action Timer_GiveWeapons(Handle hTimer) {
+	GiveSurvivorsWeapons();
 	return Plugin_Stop;
 }
 

@@ -9,7 +9,7 @@
 #undef REQUIRE_PLUGIN
 #include <caster_system>
 
-#define PLUGIN_VERSION "9.3.15"
+#define PLUGIN_VERSION "9.4.0"
 
 public Plugin myinfo =
 {
@@ -41,6 +41,9 @@ public Plugin myinfo =
 
 #define TRANSLATION_READYUP "readyup.phrases"
 
+#define GAMEDATA_READYUP "l4d2_cdirector"
+#define GAMEDATA_L4DH "left4dhooks.l4d2"
+
 #define READY_MODE_MANUAL 1
 #define READY_MODE_AUTOSTART 2
 
@@ -59,6 +62,10 @@ enum
 // ========================
 //  Plugin Variables
 // ========================
+// Forwards
+GlobalForward playerReadyForward;
+GlobalForward playerUnreadyForward;
+
 // Game Cvars
 ConVar
 	director_no_specials,
@@ -143,6 +150,10 @@ Handle blockSecretSpam[MAXPLAYERS+1];
 // Caster System
 bool casterSystemAvailable;
 
+// CDirector::IsInTransition
+Handle g_hSDKCall_IsInTransition;
+Address g_pDirector;
+
 // Delayed initiation
 bool g_bTransitioning = false;
 
@@ -183,13 +194,18 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	countdownForward = CreateGlobalForward("OnRoundLiveCountdown", ET_Ignore);
 	preLiveForward = CreateGlobalForward("OnRoundIsLivePre", ET_Ignore);
 	liveForward = CreateGlobalForward("OnRoundIsLive", ET_Ignore);
+	playerReadyForward = new GlobalForward("OnPlayerReady", ET_Event, Param_Cell);
+	playerUnreadyForward = new GlobalForward("OnPlayerUnready", ET_Event, Param_Cell);
+
 	RegPluginLibrary("readyup");
 	return APLRes_Success;
 }
 
 public void OnPluginStart()
 {
-	l4d_ready_enabled			= CreateConVar("l4d_ready_enabled", "1", "Enable this plugin. (Values: 0 = Disabled, 1 = Manual ready, 2 = Auto start)", FCVAR_NOTIFY, true, 0.0, true, 2.0);
+	LoadSDK(true);
+	
+	l4d_ready_enabled			= CreateConVar("l4d_ready_enabled", "1", "Enable this plugin. (Values: 1 = Manual ready, 2 = Auto start)", FCVAR_NOTIFY, true, 0.0, true, 2.0);
 	l4d_ready_cfg_name			= CreateConVar("l4d_ready_cfg_name", "", "Configname to display on the ready-up panel", FCVAR_NOTIFY|FCVAR_PRINTABLEONLY);
 	l4d_ready_server_cvar		= CreateConVar("l4d_ready_server_cvar", "sn_main_name", "ConVar to retrieve the server name for displaying on the ready-up panel", FCVAR_NOTIFY|FCVAR_PRINTABLEONLY);
 	l4d_ready_disable_spawns	= CreateConVar("l4d_ready_disable_spawns", "0", "Prevent SI from having spawns during ready-up", FCVAR_NOTIFY, true, 0.0, true, 1.0);
@@ -251,6 +267,53 @@ public void OnPluginStart()
 public void OnPluginEnd()
 {
 	InitiateLive(false);
+}
+
+void LoadSDK(bool optional)
+{
+	Handle conf = LoadGameConfigFile(GAMEDATA_L4DH);
+	if (conf != null)
+	{
+		g_pDirector = GameConfGetAddress(conf, "CDirector");
+		if (g_pDirector == Address_Null)
+		{
+			if (optional) LogError("Failed to get address of \"CDirector\"");
+			else SetFailState("Failed to get address of \"CDirector\"");
+		}
+		delete conf;
+	}
+	else
+	{
+		if (optional) LogError("Missing gamedata \""... GAMEDATA_L4DH ... "\"");
+		else SetFailState("Missing gamedata \""... GAMEDATA_L4DH ... "\"");
+	}
+	
+	conf = LoadGameConfigFile(GAMEDATA_READYUP);
+	if (conf != null)
+	{
+		StartPrepSDKCall(SDKCall_Raw);
+		if (!PrepSDKCall_SetFromConf(conf, SDKConf_Signature, "CDirector_IsInTransition"))
+		{
+			if (optional) LogError("Failed to PrepSDKCall of \"CDirector_IsInTransition\"");
+			else SetFailState("Failed to PrepSDKCall of \"CDirector_IsInTransition\"");
+		}
+		else
+		{
+			PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
+			g_hSDKCall_IsInTransition = EndPrepSDKCall();
+			if (g_hSDKCall_IsInTransition == null)
+			{
+				if (optional) LogError("Failed to EndPrepSDKCall of \"CDirector_IsInTransition\"");
+				else SetFailState("Failed to EndPrepSDKCall of \"CDirector_IsInTransition\"");
+			}
+		}
+		delete conf;
+	}
+	else
+	{
+		if (optional) LogError("Missing gamedata \""... GAMEDATA_READYUP ... "\"");
+		else SetFailState("Missing gamedata \""... GAMEDATA_READYUP ... "\"");
+	}
 }
 
 public void OnAllPluginsLoaded()
@@ -317,15 +380,39 @@ public void ServerCvarChanged(ConVar convar, const char[] oldValue, const char[]
 //  Events
 // ========================
 
-void EntO_OnGameplayStart(const char[] output, int caller, int activator, float delay)
+void CallOnPlayerReady(int client)
 {
-	g_bTransitioning = false;
-	Timer_RestartCountdowns(null, false);
+    Action result;
+    Call_StartForward(playerReadyForward);
+    Call_PushCell(client);
+    Call_Finish(result);
+}
+
+void CallOnPlayerUnready(int client)
+{
+    Action result;
+    Call_StartForward(playerUnreadyForward);
+    Call_PushCell(client);
+    Call_Finish(result);
+}
+
+public void OnPlayerReady(int client)
+{
+	isPlayerReady[client] = true;
+}
+
+public void OnPlayerUnready(int client)
+{
+	isPlayerReady[client] = false;
 }
 
 public void OnConfigsExecuted()
 {
-	if (g_bTransitioning) InitiateReadyUp();
+	if (g_bTransitioning)
+	{
+		g_bTransitioning = false;
+		InitiateReadyUp();
+	}
 }
 
 public void RoundStart_Event(Event event, const char[] name, bool dontBroadcast)
@@ -346,7 +433,7 @@ public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 	if (!client || IsFakeClient(client))
 		return;
 	
-	isPlayerReady[client] = false;
+	CallOnPlayerUnready(client);
 	SetEngineTime(client);
 	
 	if (!inReadyUp) return;
@@ -442,8 +529,6 @@ public void OnMapStart()
 		g_hChangeTeamTimer[client] = null;
 	}
 	readyCountdownTimer = null;
-	
-	HookEntityOutput("info_director", "OnGameplayStart", EntO_OnGameplayStart);
 }
 
 /* This ensures all cvars are reset if the map is changed during ready-up */
@@ -468,7 +553,7 @@ public void OnClientPostAdminCheck(int client)
 public void OnClientDisconnect(int client)
 {
 	hiddenPanel[client] = false;
-	isPlayerReady[client] = false;
+	CallOnPlayerUnready(client);
 	g_fButtonTime[client] = 0.0;
 	g_hChangeTeamTimer[client] = null;
 }
@@ -582,7 +667,8 @@ public Action Ready_Cmd(int client, int args)
 {
 	if (inReadyUp && IsPlayer(client))
 	{
-		isPlayerReady[client] = true;
+		CallOnPlayerReady(client);
+
 		if (l4d_ready_secret.BoolValue)
 			DoSecrets(client);
 		if (!inAutoStart && CheckFullReady())
@@ -610,7 +696,7 @@ public Action Unready_Cmd(int client, int args)
 			if (IsPlayer(client))
 			{
 				SetEngineTime(client);
-				isPlayerReady[client] = false;
+				CallOnPlayerUnready(client);
 			}
 			else if (!hasflag)
 			{
@@ -931,11 +1017,6 @@ void UpdatePanel()
 				}
 			}
 			
-			switch (GetClientMenu(client))
-			{
-				case MenuSource_External, MenuSource_Normal: continue;
-			}
-			
 			menuPanel.Send(client, DummyHandler, 1);
 		}
 	}
@@ -945,14 +1026,12 @@ void UpdatePanel()
 
 void InitiateReadyUp()
 {
-	if (!l4d_ready_enabled.BoolValue) return;
-	
 	Call_StartForward(preInitiateForward);
 	Call_Finish();
 	
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		isPlayerReady[i] = false;
+		CallOnPlayerUnready(i);
 	}
 
 	UpdatePanel();
@@ -1029,7 +1108,12 @@ void InitiateLive(bool real = true)
 	if (real)
 	{
 		CreateTimer(0.1, Timer_RestartCountdowns, true, TIMER_FLAG_NO_MAPCHANGE);
-		ClearSurvivorProgress();
+	
+		for (int i = 0; i < 4; i++)
+		{
+			GameRules_SetProp("m_iVersusDistancePerSurvivor", 0, _,
+					i + 4 * GameRules_GetProp("m_bAreTeamsFlipped"));
+		}
 		
 		Call_StartForward(liveForward);
 		Call_Finish();
@@ -1042,7 +1126,7 @@ void InitiateLive(bool real = true)
 
 public Action Timer_AutoStartHelper(Handle timer)
 {
-	if (g_bTransitioning || GetSeriousClientCount(true) == 0)
+	if (IsInTransition() || GetSeriousClientCount(true) == 0)
 	{
 		// no player in game
 		expireTime = l4d_ready_autostart_wait.IntValue;
@@ -1221,7 +1305,6 @@ public Action Timer_RestartCountdowns(Handle timer, bool startOn)
 	if (IsScavenge())
 	{
 		RestartScvngSetupCountdown(startOn);
-		ResetAccumulatedTime();
 	}
 	else
 	{
@@ -1231,16 +1314,6 @@ public Action Timer_RestartCountdowns(Handle timer, bool startOn)
 	RestartMobCountdown(startOn);
 
 	return Plugin_Stop;
-}
-
-void ResetAccumulatedTime()
-{
-	static ConVar scavenge_round_initial_time = null;
-	if (scavenge_round_initial_time == null)
-		scavenge_round_initial_time = FindConVar("scavenge_round_initial_time");
-	
-	L4D_NotifyNetworkStateChanged();
-	GameRules_SetPropFloat("m_flAccumulatedTime", scavenge_round_initial_time.FloatValue);
 }
 
 void RestartVersusStartCountdown(bool startOn)
@@ -1498,13 +1571,11 @@ public int Native_ToggleReadyPanel(Handle plugin, int numParams)
 //  Helpers
 // ========================
 
-void ClearSurvivorProgress()
+bool IsInTransition()
 {
-	for (int i = 0; i < 4; i++)
-	{
-		GameRules_SetProp("m_iVersusDistancePerSurvivor", 0, _,
-				i + 4 * GameRules_GetProp("m_bAreTeamsFlipped"));
-	}
+	return g_pDirector != Address_Null
+		&& g_hSDKCall_IsInTransition != null
+		&& SDKCall(g_hSDKCall_IsInTransition, g_pDirector);
 }
 
 void SetEngineTime(int client)
@@ -1528,7 +1599,17 @@ stock void GetClientFixedName(int client, char[] name, int length)
 
 stock bool IsScavenge()
 {
-	return L4D2_IsScavengeMode();
+	static ConVar mp_gamemode;
+	
+	if (mp_gamemode == null)
+	{
+		mp_gamemode = FindConVar("mp_gamemode");
+	}
+	
+	char sGamemode[16];
+	mp_gamemode.GetString(sGamemode, sizeof(sGamemode));
+	
+	return strcmp(sGamemode, "scavenge") == 0;
 }
 
 stock bool IsEmptyString(const char[] str, int length)
@@ -1601,7 +1682,6 @@ stock void ReturnPlayerToSaferoom(int client, bool flagsSet = true)
 	}
 	
 	TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, NULL_VELOCITY);
-	SetEntPropFloat(client, Prop_Send, "m_flFallVelocity", 0.0);
 }
 
 stock void ReturnTeamToSaferoom(int team)

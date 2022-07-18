@@ -7,7 +7,7 @@ SRCDS_USER="steam"
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
 
 # The path to the game, only change this if you have a different installation path than in the guide.
-DIR=/home/steam/Steam/steamapps/common/l4d2
+DIR=/home/$SRCDS_USER/Steam/steamapps/common/l4d2
 DAEMON="$DIR/srcds_run"
 
 # Change all Parameters to your needs.
@@ -49,12 +49,12 @@ DESC="L4D2 Dedicated Server #$SVNUM on port $PORT"
 
 case "$1" in
 	start)
-		echo "Starting $DESC: $NAME"
-		if [ -e $DIR ]; then
+		if su $SRCDS_USER -l -c "screen -ls" |grep $NAME; then
+			echo -n "$DESC: $NAME already started!"
+		else
+			echo "Starting $DESC: $NAME"
 			cd $DIR
 			su $SRCDS_USER -l -c "screen -d -m -S $NAME $DAEMON $PARAMS"
-		else
-			echo "No such directory: $DIR!"
 		fi
 		;;
 
