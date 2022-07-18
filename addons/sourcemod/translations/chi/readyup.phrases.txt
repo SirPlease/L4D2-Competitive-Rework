@@ -27,29 +27,29 @@
 		"#format"	"{1:d}"
 		"chi"		"[{olive}Readyup{default}] 请等待 {blue}{1}秒 {default}以发起下一轮投票"
 	}
-	
-	"Player marked unready"
+
+	"DisruptReadyStatus"
 	{
 		"#format"	"{1:N}"
 		"chi"		"{default}[{green}!{default}] {green}倒数中止！ {default}({teamcolor}{1} {green}取消了准备{default})"
 	}
 	
-	"Player switched team"
+	"DisruptTeamShuffle"
 	{
 		"#format"	"{1:N}"
 		"chi"		"{default}[{green}!{default}] {green}倒数中止！ {default}({teamcolor}{1} {olive}切换了阵营{default})"
 	}
 	
-	"Player disconnected"
+	"DisruptPlayerDisc"
 	{
 		"#format"	"{1:N}"
 		"chi"		"{default}[{green}!{default}] {green}倒数中止！ {default}({teamcolor}{1} {green}离开了游戏{default})"
 	}
 	
-	"Admin aborted"
+	"DisruptForceStartAbort"
 	{
 		"#format"	"{1:N}"
-		"chi"		"{default}[{green}!{default}] {green}叫停强制开始！ {default}({green}由 {olive}{1} {green}发起{default})"
+		"chi"		"{default}[{green}!{default}] {green}叫停强制开始！ {default}({green}由 {olive}{1} {green}负责{default})"
 	}
 	
 	
@@ -92,17 +92,11 @@
 	
 	"AutoStartCountdown"
 	{
-		"#format"	"{1:d}"
-		"chi"		"游戏开始于：{1}"
+		"chi"		"游戏开始于：%i"
 	}
 	
 	"AutoStartWaiting"
 	{
-		"chi"		"等待玩家加入..."
-	}
-	
-	"AutoStartNotEnoughPlayers"
-	{
-		"chi"		"玩家数量不足..."
+		"chi"		"等待玩家加入 ..."
 	}
 }

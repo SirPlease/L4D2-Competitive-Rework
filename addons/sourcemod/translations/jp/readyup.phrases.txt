@@ -28,25 +28,25 @@
 		"jp"		"[{olive}Readyup{default}] 他の投票が行われており、残り {blue}{1}秒 {default}で投票が行えます。"
 	}
 
-	"Player marked unready"
+	"DisruptReadyStatus"
 	{
 		"#format"	"{1:N}"
 		"jp"		"{default}[{green}!{default}] {green}カウントダウンがキャンセルされました！ {default}({teamcolor}{1} {green}が準備を解除しました{default})"
 	}
 	
-	"Player switched team"
+	"DisruptTeamShuffle"
 	{
 		"#format"	"{1:N}"
 		"jp"		"{default}[{green}!{default}] {green}カウントダウンがキャンセルされました！ {default}({teamcolor}{1} {olive}がチームを移動しました{default})"
 	}
 	
-	"Player disconnected"
+	"DisruptPlayerDisc"
 	{
 		"#format"	"{1:N}"
 		"jp"		"{default}[{green}!{default}] {green}カウントダウンがキャンセルされました！ {default}({teamcolor}{1} {green}がサーバーから退室しました{default})"
 	}
 	
-	"Admin aborted"
+	"DisruptForceStartAbort"
 	{
 		"#format"	"{1:N}"
 		"jp"		"{default}[{green}!{default}] {green}ラウンドの強制スタートがストップされました！ {default}({olive}{1} {green}がストップさせました{default})"
@@ -92,8 +92,7 @@
 	
 	"AutoStartCountdown"
 	{
-		"#format"	"{1:d}"
-		"jp"		"ゲーム開始まで: {1}"
+		"jp"		"ゲーム開始まで: %i"
 	}
 	
 	"AutoStartWaiting"
