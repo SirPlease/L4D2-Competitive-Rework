@@ -2,6 +2,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <sdkhooks>
 #define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 #include <left4dhooks>
@@ -32,7 +33,7 @@ public Plugin myinfo =
 {
 	name		= "L4D2 M2 Control",
 	author		= "Jahze, Visor, A1m`, Forgetest",
-	version		= "1.14",
+	version		= "1.15",
 	description	= "Blocks instant repounces and gives m2 penalty after a shove/deadstop",
 	url 		= "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
@@ -77,7 +78,7 @@ void Event_PlayerDeath(Event hEvent, const char[] eName, bool dontBroadcast)
 	int client = GetClientOfUserId(hEvent.GetInt("userid"));
 	if (client && IsInfected(client))
 	{
-		AnimHookDisable(client, AnimHook_Pre);
+		SDKUnhook(client, SDKHook_PostThinkPost, SDK_OnPostThink_Post);
 	}
 }
 
@@ -86,7 +87,7 @@ void Event_PlayerTeam(Event hEvent, const char[] eName, bool dontBroadcast)
 	if (hEvent.GetInt("oldteam") == 3)
 	{
 		int client = GetClientOfUserId(hEvent.GetInt("userid"));
-		if (client) AnimHookDisable(client, AnimHook_Pre);
+		if (client) SDKUnhook(client, SDKHook_PostThinkPost, SDK_OnPostThink_Post);
 	}
 }
 
@@ -112,13 +113,17 @@ void Event_PlayerShoved(Event hEvent, const char[] eName, bool dontBroadcast)
 		return;
 	}
 	
-	int penaltyIncrease, zClass = GetInfectedClass(shovee);
-	switch (zClass) {
+	SDKUnhook(shovee, SDKHook_PostThinkPost, SDK_OnPostThink_Post);
+	
+	int penaltyIncrease;
+	switch (GetInfectedClass(shovee)) {
 		case L4D2Infected_Hunter: {
 			penaltyIncrease = hPenaltyIncreaseHunterCvar.IntValue;
+			SDKHook(shovee, SDKHook_PostThinkPost, SDK_OnPostThink_Post);
 		}
 		case L4D2Infected_Jockey: {
 			penaltyIncrease = hPenaltyIncreaseJockeyCvar.IntValue;
+			SDKHook(shovee, SDKHook_PostThinkPost, SDK_OnPostThink_Post);
 		}
 		case L4D2Infected_Smoker: {
 			penaltyIncrease = hPenaltyIncreaseSmokerCvar.IntValue;
@@ -142,14 +147,9 @@ void Event_PlayerShoved(Event hEvent, const char[] eName, bool dontBroadcast)
 	
 	SetEntProp(shover, Prop_Send, "m_iShovePenalty", penalty);
 	SetEntPropFloat(shover, Prop_Send, "m_flNextShoveTime", CalcNextShoveTime(penalty, minPenalty, maxPenalty) - eps);
-	
-	if (zClass != L4D2Infected_Smoker) {
-		AnimHookDisable(shovee, AnimHook_Pre);
-		AnimHookEnable(shovee, AnimHook_Pre);
-	}
 }
 
-Action AnimHook_Pre(int client, int &sequence)
+void SDK_OnPostThink_Post(int client)
 {
 	if (IsInfected(client) && IsPlayerAlive(client) && !L4D_IsPlayerGhost(client))
 	{
@@ -169,27 +169,22 @@ Action AnimHook_Pre(int client, int &sequence)
 		
 		if (recharge != -1.0 && !bAttacking)
 		{
-			switch (sequence)
-			{
-				case L4D2_ACT_TERROR_SHOVED_FORWARD,
-						L4D2_ACT_TERROR_SHOVED_BACKWARD,
-						L4D2_ACT_TERROR_SHOVED_LEFTWARD,
-						L4D2_ACT_TERROR_SHOVED_RIGHTWARD:
-					return Plugin_Continue;
-			}
-		
-			float timestamp, duration;
-			if (GetInfectedAbilityTimer(client, timestamp, duration))
-			{
-				duration = GetGameTime() + recharge;
-				if (duration > timestamp)
-					SetInfectedAbilityTimer(client, duration, recharge);
+			if (L4D_IsPlayerStaggering(client))
+				return;
+			
+			int ability = GetInfectedAbilityEntity(client);
+			if (ability != -1) {
+				float fNext = GetGameTime() + recharge;
+				float timestamp = GetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", 1);
+				if (fNext > timestamp) {
+					SetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", recharge, 0);
+					SetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", fNext, 1);
+				}
 			}
 		}
 	}
 	
-	AnimHookDisable(client, AnimHook_Pre);
-	return Plugin_Continue;
+	SDKUnhook(client, SDKHook_PostThinkPost, SDK_OnPostThink_Post);
 }
 
 float CalcNextShoveTime(int currentPenalty, int minPenalty, int maxPenalty)
