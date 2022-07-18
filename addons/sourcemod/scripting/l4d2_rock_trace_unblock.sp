@@ -7,7 +7,7 @@
 #include <dhooks>
 #include <sourcescramble>
 
-#define PLUGIN_VERSION "1.7"
+#define PLUGIN_VERSION "1.8"
 
 public Plugin myinfo = 
 {
@@ -250,7 +250,7 @@ bool ComputeClosestPoint(const float vLeft[3], const float vRight[3], const floa
 		}
 		else // Too far from T
 		{
-			result = vPos;
+			result = vRight;
 			return false;
 		}
 	}
