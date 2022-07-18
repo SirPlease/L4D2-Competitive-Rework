@@ -28,25 +28,25 @@
 		"ko"		"[{olive}Readyup{default}]{blue}{1}초 {default}후 투표를 시작할 수 있습니다."
 	}
 
-	"DisruptReadyStatus"
+	"Player marked unready"
 	{
 		"#format"	"{1:N}"
 		"ko"		"{default}[{green}!{default}] {green}카운트다운 취소됨! {default}({teamcolor}{1} {green}이 준비되지않음{default})"
 	}
 	
-	"DisruptTeamShuffle"
+	"Player switched team"
 	{
 		"#format"	"{1:N}"
 		"ko"		"{default}[{green}!{default}] {green}카운트다운 취소됨! {default}({teamcolor}{1} {olive}의 팀이 바뀜{default})"
 	}
 	
-	"DisruptPlayerDisc"
+	"Player disconnected"
 	{
 		"#format"	"{1:N}"
 		"ko"		"{default}[{green}!{default}] {green}카운트다운 취소됨! {default}({teamcolor}{1} {green}의 연결이 종료됨{default})"
 	}
 	
-	"DisruptForceStartAbort"
+	"Admin aborted"
 	{
 		"#format"	"{1:N}"
 		"ko"		"{default}[{green}!{default}] {green}강제시작 알림! {default}({olive}{1} {green}이 승인함{default})"
@@ -92,7 +92,8 @@
 	
 	"AutoStartCountdown"
 	{
-		"ko"		"%i 초 후 게임시작"
+		"#format"	"{1:d}"
+		"ko"		"{1} 초 후 게임시작"
 	}
 	
 	"AutoStartWaiting"
