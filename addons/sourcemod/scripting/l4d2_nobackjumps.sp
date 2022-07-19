@@ -31,7 +31,7 @@ public Plugin myinfo =
 	name = "L4D2 No Backjump",
 	author = "Visor, A1m`, Forgetest",
 	description = "Look at the title",
-	version = "1.3",
+	version = "1.4",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -109,8 +109,10 @@ void SDK_OnPostThink_Post(int client)
 		return;
 	}
 	
-	if (IsGhost(client))
+	if (IsGhost(client)) {
+		g_fFixedNextActivation[client] = -1.0;
 		return;
+	}
 	
 	if (GetEntProp(ability, Prop_Send, "m_isLunging")) {
 		g_fFixedNextActivation[client] = -1.0;
