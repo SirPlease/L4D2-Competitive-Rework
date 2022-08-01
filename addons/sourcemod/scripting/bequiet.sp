@@ -67,6 +67,11 @@ public void OnPluginStart()
 
 public Action Say_Callback(int client, char[] command, int args)
 {
+	if (!IsValidClient(client))
+	{
+		return Plugin_Handled;
+	}
+
 	char sayWord[MAX_NAME_LENGTH];
 	GetCmdArg(1, sayWord, sizeof(sayWord));
 
