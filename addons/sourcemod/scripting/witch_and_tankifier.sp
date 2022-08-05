@@ -1,7 +1,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#define DEBUG 1
+#define DEBUG 0
 #define DEBUG_PROFILING 0
 
 #include <sourcemod>
