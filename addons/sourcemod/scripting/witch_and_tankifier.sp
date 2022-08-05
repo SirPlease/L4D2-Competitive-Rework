@@ -1,7 +1,8 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#define DEBUG 0
+#define DEBUG 1
+#define DEBUG_PROFILING 0
 
 #include <sourcemod>
 #include <sdktools>
@@ -10,14 +11,14 @@
 #define L4D2UTIL_STOCKS_ONLY
 #include <l4d2util_rounds>
 
-#if DEBUG
+#if DEBUG_PROFILING
 #include <profiler>
 #endif
 
 public Plugin myinfo = {
 	name = "Tank and Witch ifier!",
 	author = "CanadaRox, Sir, devilesk, Derpduck, Forgetest",
-	version = "2.4.1",
+	version = "2.4.2",
 	description = "Sets a tank spawn and has the option to remove the witch spawn point on every map",
 	url = "https://github.com/devilesk/rl4d2l-plugins"
 };
@@ -30,22 +31,28 @@ ConVar
 	g_hVsBossBuffer,
 	g_hVsBossFlowMax,
 	g_hVsBossFlowMin;
-	
+
 StringMap
 	hStaticTankMaps,
 	hStaticWitchMaps;
-	
+
 ConVar
 	g_hCvarDebug = null,
 	g_hCvarTankCanSpawn = null,
 	g_hCvarWitchCanSpawn = null,
 	g_hCvarWitchAvoidTank = null;
-	
+
 char
 	g_sCurrentMap[64];
-	
+
+int 
+	g_iCvarMinFlow,
+	g_iCvarMaxFlow;
+
 ArrayList
+	hBannedTankFlows,
 	hValidTankFlows,
+	hBannedWitchFlows,
 	hValidWitchFlows;
 
 // ======================================
@@ -79,7 +86,9 @@ public void OnPluginStart() {
 	hStaticTankMaps = new StringMap();
 	hStaticWitchMaps = new StringMap();
 
+	hBannedTankFlows = new ArrayList(2);
 	hValidTankFlows = new ArrayList(2);
+	hBannedWitchFlows = new ArrayList(2);
 	hValidWitchFlows = new ArrayList(2);
 
 	HookEvent("round_start", RoundStartEvent, EventHookMode_PostNoCopy);
@@ -92,6 +101,8 @@ public void OnPluginStart() {
 	
 #if DEBUG
 	RegConsoleCmd("sm_tank_witch_debug_test", Test_Cmd);
+#endif
+#if DEBUG_PROFILING
 	RegConsoleCmd("sm_tank_witch_debug_profiler", Profiler_Cmd);
 #endif
 }
@@ -127,54 +138,43 @@ public void OnMapStart() {
 // Flow Handling
 // ======================================
 
-public void RoundStartEvent(Event event, const char[] name, bool dontBroadcast) {
+void RoundStartEvent(Event event, const char[] name, bool dontBroadcast) {
 	CreateTimer(0.5, AdjustBossFlow, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action AdjustBossFlow(Handle timer) {
+Action AdjustBossFlow(Handle timer) {
 	if (InSecondHalfOfRound()) {
 		return Plugin_Stop;
 	}
 	
-	hValidTankFlows.Clear();
-	hValidWitchFlows.Clear();
-	
-	int iCvarMinFlow = RoundToCeil(g_hVsBossFlowMin.FloatValue * 100);
-	int iCvarMaxFlow = RoundToFloor(g_hVsBossFlowMax.FloatValue * 100);
+	g_iCvarMinFlow = RoundToCeil(g_hVsBossFlowMin.FloatValue * 100);
+	g_iCvarMaxFlow = RoundToFloor(g_hVsBossFlowMax.FloatValue * 100);
 	
 	// mapinfo override
-	iCvarMinFlow = L4D2_GetMapValueInt("versus_boss_flow_min", iCvarMinFlow);
-	iCvarMaxFlow = L4D2_GetMapValueInt("versus_boss_flow_max", iCvarMaxFlow);
-	PrintDebug("[AdjustBossFlow] flow: (%i, %i).", iCvarMinFlow, iCvarMaxFlow);
+	g_iCvarMinFlow = L4D2_GetMapValueInt("versus_boss_flow_min", g_iCvarMinFlow);
+	g_iCvarMaxFlow = L4D2_GetMapValueInt("versus_boss_flow_max", g_iCvarMaxFlow);
+	PrintDebug("[AdjustBossFlow] flow: (%i, %i).", g_iCvarMinFlow, g_iCvarMaxFlow);
 	
+	ProcessTankFlow();
+	ProcessWitchFlow();
+	
+	PrintDebugInfoDump();
+	return Plugin_Stop;
+}
+
+void ProcessTankFlow(bool bInit = true) {
 	if (!IsStaticTankMap(g_sCurrentMap) && g_hCvarTankCanSpawn.BoolValue) {
 		PrintDebug("[AdjustBossFlow] Not static tank map. Flow tank enabled.");
 		
-		ArrayList hBannedFlows = new ArrayList(2);
-		
-		int interval[2];
-		interval[0] = 0, interval[1] = iCvarMinFlow - 1;
-		if (IsValidInterval(interval)) hBannedFlows.PushArray(interval);
-		interval[0] = iCvarMaxFlow + 1, interval[1] = 100;
-		if (IsValidInterval(interval)) hBannedFlows.PushArray(interval);
-	
-		KeyValues kv = new KeyValues("tank_ban_flow");
-		L4D2_CopyMapSubsection(kv, "tank_ban_flow");
-		
-		if (kv.GotoFirstSubKey()) {
-			do {
-				interval[0] = kv.GetNum("min", -1);
-				interval[1] = kv.GetNum("max", -1);
-				PrintDebug("[AdjustBossFlow] ban (%i, %i).", interval[0], interval[1]);
-				if (IsValidInterval(interval)) hBannedFlows.PushArray(interval);
-			} while (kv.GotoNextKey());
+		if (bInit) {
+			hValidTankFlows.Clear();
+			hBannedTankFlows.Clear();
+			
+			SharedBannedFlows(hBannedTankFlows, "tank_ban_flow");
+			MergeIntervals(hBannedTankFlows, hBannedTankFlows);
 		}
-		delete kv;
 		
-		MergeIntervals(hBannedFlows);
-		MakeComplementaryIntervals(hBannedFlows, hValidTankFlows);
-		
-		delete hBannedFlows;
+		MakeComplementaryIntervals(hBannedTankFlows, hValidTankFlows);
 		
 		// check each array index to see if it is within a ban range
 		int iValidSpawnTotal = hValidTankFlows.Length;
@@ -184,49 +184,42 @@ public Action AdjustBossFlow(Handle timer) {
 		}
 		else {
 			int iTankFlow = GetRandomIntervalNum(hValidTankFlows);
-			PrintDebug("[AdjustBossFlow] iTankFlow: %i. iValidSpawnTotal: %i", iTankFlow, iValidSpawnTotal);
 			SetTankPercent(iTankFlow);
+			PrintDebug("[AdjustBossFlow] iTankFlow: %i. iValidSpawnTotal: %i", iTankFlow, iValidSpawnTotal);
 		}
 	}
 	else {
 		SetTankPercent(0);
 		PrintDebug("[AdjustBossFlow] Static tank map. Flow tank disabled.");
 	}
-	
+}
+
+void ProcessWitchFlow(bool bInit = true) {
 	if (!IsStaticWitchMap(g_sCurrentMap) && g_hCvarWitchCanSpawn.BoolValue) {
 		PrintDebug("[AdjustBossFlow] Not static witch map. Flow witch enabled.");
-
-		ArrayList hBannedFlows = new ArrayList(2);
 		
+		if (bInit) {
+			hValidWitchFlows.Clear();
+			hBannedWitchFlows.Clear();
+			
+			SharedBannedFlows(hBannedWitchFlows, "witch_ban_flow");
+			MergeIntervals(hBannedWitchFlows, hBannedWitchFlows);
+		}
+		
+		// Support for "ignoreBlock"
+		ArrayList aTemp = hBannedWitchFlows.Clone();
+		
+		// Avoid within a range of tank percent
 		int interval[2];
-		interval[0] = 0, interval[1] = iCvarMinFlow - 1;
-		if (IsValidInterval(interval)) hBannedFlows.PushArray(interval);
-		interval[0] = iCvarMaxFlow + 1, interval[1] = 100;
-		if (IsValidInterval(interval)) hBannedFlows.PushArray(interval);
-	
-		KeyValues kv = new KeyValues("witch_ban_flow");
-		L4D2_CopyMapSubsection(kv, "witch_ban_flow");
-		
-		if (kv.GotoFirstSubKey()) {
-			do {
-				interval[0] = kv.GetNum("min", -1);
-				interval[1] = kv.GetNum("max", -1);
-				PrintDebug("[AdjustBossFlow] ban (%i, %i).", interval[0], interval[1]);
-				if (IsValidInterval(interval)) hBannedFlows.PushArray(interval);
-			} while (kv.GotoNextKey());
-		}
-		delete kv;
-		
-		if (GetTankAvoidInterval(interval))
-		{
+		if (GetTankAvoidInterval(interval) && IsValidInterval(interval)) {
+			aTemp.PushArray(interval);
 			PrintDebug("[AdjustBossFlow] tank avoid (%i, %i)", interval[0], interval[1]);
-			if (IsValidInterval(interval)) hBannedFlows.PushArray(interval);
 		}
 		
-		MergeIntervals(hBannedFlows);
-		MakeComplementaryIntervals(hBannedFlows, hValidWitchFlows);
+		MergeIntervals(aTemp, aTemp);
+		MakeComplementaryIntervals(aTemp, hValidWitchFlows);
 		
-		delete hBannedFlows;
+		delete aTemp;
 		
 		// check each array index to see if it is within a ban range
 		int iValidSpawnTotal = hValidWitchFlows.Length;
@@ -236,75 +229,46 @@ public Action AdjustBossFlow(Handle timer) {
 		}
 		else {
 			int iWitchFlow = GetRandomIntervalNum(hValidWitchFlows);
-			PrintDebug("[AdjustBossFlow] iWitchFlow: %i. iValidSpawnTotal: %i", iWitchFlow, iValidSpawnTotal);
 			SetWitchPercent(iWitchFlow);
+			PrintDebug("[AdjustBossFlow] iWitchFlow: %i. iValidSpawnTotal: %i", iWitchFlow, iValidSpawnTotal);
 		}
 	}
 	else {
 		SetWitchPercent(0);
 		PrintDebug("[AdjustBossFlow] Static witch map or witch not enabled. Flow witch disabled.");
 	}
-	
-	PrintDebugInfoDump();
+}
 
-	return Plugin_Stop;
+void SharedBannedFlows(ArrayList hBannedFlows, const char[] sMapinfoKey) {
+	int interval[2];
+	interval[0] = 0, interval[1] = g_iCvarMinFlow - 1;
+	if (IsValidInterval(interval)) hBannedFlows.PushArray(interval);
+	interval[0] = g_iCvarMaxFlow + 1, interval[1] = 100;
+	if (IsValidInterval(interval)) hBannedFlows.PushArray(interval);
+	
+	KeyValues kv = new KeyValues(sMapinfoKey);
+	L4D2_CopyMapSubsection(kv, sMapinfoKey);
+	
+	if (kv.GotoFirstSubKey()) {
+		do {
+			interval[0] = kv.GetNum("min", -1);
+			interval[1] = kv.GetNum("max", -1);
+			PrintDebug("[AdjustBossFlow] ban (%i, %i).", interval[0], interval[1]);
+			if (IsValidInterval(interval)) hBannedFlows.PushArray(interval);
+		} while (kv.GotoNextKey());
+	}
+	delete kv;
 }
 
 // ======================================
 // Dynamic Adjust Witch
 // ======================================
 
-// Must be called before tank flow is changed
-void DynamicAdjustWitchFlow(int iNewTankFlow) {
-	if (g_hCvarWitchCanSpawn.BoolValue == false) return;
-		
-	int interval[2];
-	if (!GetTankAvoidInterval(interval)) return;
-	if (!IsValidInterval(interval)) return;
-	
-	// Restore the avoidance flow
-	hValidWitchFlows.PushArray(interval);
-	MergeIntervals(hValidWitchFlows);
-	
-	// Convert valid flows into banned flows
-	ArrayList hBannedFlows = new ArrayList(2);
-	MakeComplementaryIntervals(hValidWitchFlows, hBannedFlows);
-	
-	// New avoidance flow
-	interval[0] = RoundToFloor(iNewTankFlow - (g_hCvarWitchAvoidTank.FloatValue / 2));
-	interval[1] = RoundToCeil(iNewTankFlow + (g_hCvarWitchAvoidTank.FloatValue / 2));
-	PrintDebug("[DynamicAdjustWitchFlow] new tank avoid (%i, %i)", interval[0], interval[1]);
-	if (IsValidInterval(interval)) hBannedFlows.PushArray(interval);
-	
-	// Convert it back
-	MakeComplementaryIntervals(hBannedFlows, hValidWitchFlows);
-	
-	// You're done here
-	delete hBannedFlows;
-	
-	// Sanity checks
-	int iValidSpawnTotal = hValidWitchFlows.Length;
-	if (iValidSpawnTotal == 0) {
-		SetWitchPercent(0);
-		PrintDebug("[DynamicAdjustWitchFlow] Ban range covers entire flow range. Flow witch disabled.");
-	}
-	else {
-		// Check if old witch flow is banned this time
-		int iWitchFlow = RoundFloat(L4D2Direct_GetVSWitchFlowPercent(0) * 100);
-		if (interval[0] <= iWitchFlow <= interval[1]) {
-			// Change it next to the borders first
-			if (
-				!IsWitchPercentValid((iWitchFlow = interval[1] + 1))
-				&& !IsWitchPercentValid((iWitchFlow = interval[0] - 1))
-			) {
-				// Move onto a random flow otherwise
-				iWitchFlow = GetRandomIntervalNum(hValidWitchFlows);
-			}
-			
-			// Just do it
-			PrintDebug("[DynamicAdjustWitchFlow] iWitchFlow: %i. iValidSpawnTotal: %i", iWitchFlow, iValidSpawnTotal);
-			SetWitchPercent(iWitchFlow);
-		}
+// Adjust the witch percent when the tank percent is changed.
+void DynamicAdjustWitchFlow() {
+	int percent = GetWitchPercent();
+	if (IsWitchPercentBlockedForTank(percent)) {
+		ProcessWitchFlow(false);
 	}
 }
 
@@ -313,17 +277,20 @@ void DynamicAdjustWitchFlow(int iNewTankFlow) {
 // ======================================
 
 bool GetTankAvoidInterval(int interval[2]) {
-	if (g_hCvarWitchAvoidTank.FloatValue == 0.0) {
+	int iAvoid = g_hCvarWitchAvoidTank.IntValue;
+	if (iAvoid == 0) {
 		return false;
 	}
 	
-	float flow = L4D2Direct_GetVSTankFlowPercent(0);
-	if (flow == 0.0) {
+	int percent = GetTankPercent();
+	if (percent == 0) {
 		return false;
 	}
 	
-	interval[0] = RoundToFloor((flow * 100) - (g_hCvarWitchAvoidTank.FloatValue / 2));
-	interval[1] = RoundToCeil((flow * 100) + (g_hCvarWitchAvoidTank.FloatValue / 2));
+	interval[0] = percent - iAvoid / 2;
+	if (interval[0] < g_iCvarMinFlow) interval[0] = g_iCvarMinFlow;
+	interval[1] = percent + iAvoid / 2;
+	if (interval[1] > g_iCvarMaxFlow) interval[1] = g_iCvarMaxFlow;
 	
 	return true;
 }
@@ -331,52 +298,112 @@ bool GetTankAvoidInterval(int interval[2]) {
 // ======================================
 // Interval Methods
 //   - based on ArrayList and int[2]
+//   - all intervals are closed within [0, 100]
 // ======================================
 
+/**
+ * Validate the interval and check within a valid range.
+ *
+ * @param interval		Interval input.
+ *
+ * @return bool
+ */
 bool IsValidInterval(int interval[2]) {
-	return interval[0] > -1 && interval[1] >= interval[0];
+	return interval[1] >= interval[0] && interval[0] > -1 && interval[1] <= 100;
 }
 
-void MergeIntervals(ArrayList merged) {
-	if (merged.Length < 2) return;
+/**
+ * Merge intervals from source and load to dest.
+ * i.e. Input [0, 30] and [25, 45] -> Output [0, 45]
+ * NOTE: The input ArrayList can be the same as the output ArrayList.
+ *
+ * @param src			Intervals input.
+ * @param dest			Merged intervals output.
+ *
+ * @noreturn
+ */
+void MergeIntervals(ArrayList src, ArrayList dest) {
+	if (src.Length < 2) return;
 	
-	ArrayList intervals = merged.Clone();
-	SortADTArray(intervals, Sort_Ascending, Sort_Integer);
-
-	merged.Clear();
+	ArrayList intervals = src.Clone();
+	intervals.Sort(Sort_Ascending, Sort_Integer);
+	
+	dest.Clear();
 	
 	int current[2];
 	intervals.GetArray(0, current);
-	merged.PushArray(current);
+	dest.PushArray(current);
 	
 	int intv_size = intervals.Length;
 	for (int i = 1; i < intv_size; ++i) {
 		intervals.GetArray(i, current);
 		
-		int back_index = merged.Length - 1;
-		int back_R = merged.Get(back_index, 1);
+		int back_index = dest.Length - 1;
+		int back_R = dest.Get(back_index, 1);
 		
-		if (back_R < current[0]) { // not coincide
-			merged.PushArray(current);
+		if (back_R < current[0] - 1) { // not connect-able
+			#if DEBUG && !DEBUG_PROFILING
+				PrintDebug("\x05[MergeIntv] Try merging [%i, %i] with [%i, %i] but not connect-able", dest.Get(back_index, 0), back_R, current[0], current[1]);
+			#endif
+			dest.PushArray(current);
 		} else {
+			#if DEBUG && !DEBUG_PROFILING
+				PrintDebug("\x05[MergeIntv] Merging [%i, %i] with [%i, %i]", dest.Get(back_index, 0), back_R, current[0], current[1]);
+			#endif
 			back_R = (back_R > current[1] ? back_R : current[1]); // override the right value with maximum
-			merged.Set(back_index, back_R, 1);
+			dest.Set(back_index, back_R, 1);
 		}
 	}
 	
 	delete intervals;
 }
 
-void MakeComplementaryIntervals(ArrayList intervals, ArrayList dest) {
-	int intv_size = intervals.Length;
+/**
+ * Fill the gaps of intervals from source and load to dest.
+ * NOTE: The input ArrayList can be the same as the output ArrayList.
+ *
+ * @param src			Intervals input.
+ * @param dest			Complementary intervals output.
+ *
+ * @noreturn
+ */
+void MakeComplementaryIntervals(ArrayList src, ArrayList dest) {
+	int intv_size = src.Length;
 	if (intv_size < 2) return;
 	
+	ArrayList intervals = src.Clone();
+	
+	dest.Clear();
+	
 	int intv[2];
+	
+	// left border
+	intv[0] = 0;
+	intv[1] = intervals.Get(0, 0) - 1;
+	#if DEBUG && !DEBUG_PROFILING
+		PrintDebug("\x05[Complementary] left border [%i, %i] valid = %s", intv[0], intv[1], IsValidInterval(intv) ? "true" : "false");
+	#endif
+	if (IsValidInterval(intv)) dest.PushArray(intv);
+	
+	// right border
+	intv[0] = intervals.Get(intv_size - 1, 1) + 1;
+	intv[1] = 100;
+	#if DEBUG && !DEBUG_PROFILING
+		PrintDebug("\x05[Complementary] right border [%i, %i] valid = %s", intv[0], intv[1], IsValidInterval(intv) ? "true" : "false");
+	#endif
+	if (IsValidInterval(intv)) dest.PushArray(intv);
+	
+	// between intervals
 	for (int i = 1; i < intv_size; ++i) {
 		intv[0] = intervals.Get(i-1, 1) + 1;
 		intv[1] = intervals.Get(i, 0) - 1;
+		#if DEBUG && !DEBUG_PROFILING
+			PrintDebug("\x05[Complementary] between intervals [%i, %i] valid = %s", intv[0], intv[1], IsValidInterval(intv) ? "true" : "false");
+		#endif
 		if (IsValidInterval(intv)) dest.PushArray(intv);
 	}
+	
+	delete intervals;
 }
 
 int GetRandomIntervalNum(ArrayList aList) {
@@ -389,7 +416,9 @@ int GetRandomIntervalNum(ArrayList aList) {
 	
 	int random = Math_GetRandomInt(0, total_length-1);
 	
-	PrintDebug("GetRandomIntervalNum - random: %i, total_length: %i", random, total_length);
+	#if DEBUG && !DEBUG_PROFILING
+		PrintDebug("GetRandomIntervalNum - random: %i, total_length: %i", random, total_length);
+	#endif
 	
 	for (int i = 0; i < size; ++i) {
 		if (random < arrLength[i]) {
@@ -405,7 +434,7 @@ int GetRandomIntervalNum(ArrayList aList) {
 // Boss Spawn Scheme Commands
 // ======================================
 
-public Action StaticTank_Command(int args) {
+Action StaticTank_Command(int args) {
 	char mapname[64];
 	GetCmdArg(1, mapname, sizeof(mapname));
 	StrToLower(mapname);
@@ -416,7 +445,7 @@ public Action StaticTank_Command(int args) {
 	return Plugin_Handled;
 }
 
-public Action StaticWitch_Command(int args) {
+Action StaticWitch_Command(int args) {
 	char mapname[64];
 	GetCmdArg(1, mapname, sizeof(mapname));
 	StrToLower(mapname);
@@ -427,7 +456,7 @@ public Action StaticWitch_Command(int args) {
 	return Plugin_Handled;
 }
 
-public Action Reset_Command(int args) {
+Action Reset_Command(int args) {
 	hStaticTankMaps.Clear();
 	hStaticWitchMaps.Clear();
 	return Plugin_Handled;
@@ -437,19 +466,21 @@ public Action Reset_Command(int args) {
 // Debug Commands
 // ======================================
 
-public Action Info_Cmd(int client, int args) {
+Action Info_Cmd(int client, int args) {
 	PrintDebugInfoDump();
 	return Plugin_Handled;
 }
 
 #if DEBUG
-public Action Test_Cmd(int client, int args) {
+Action Test_Cmd(int client, int args) {
 	PrintDebug("[Test_Cmd] Starting AdjustBossFlow timer...");
 	CreateTimer(0.5, AdjustBossFlow, _, TIMER_FLAG_NO_MAPCHANGE);
 	return Plugin_Handled;
 }
+#endif
 
-public Action Profiler_Cmd(int client, int args) {
+#if DEBUG_PROFILING
+Action Profiler_Cmd(int client, int args) {
 	if (args != 1) {
 		ReplyToCommand(client, "[SM] Usage: sm_tank_witch_debug_profiler <times>");
 		return Plugin_Handled;
@@ -465,11 +496,11 @@ public Action Profiler_Cmd(int client, int args) {
 	g_hCvarDebug.BoolValue = false;
 	
 	Profiler profiler = new Profiler();
+	
 	profiler.Start();
 	for (int i = 0; i < times; ++i) {
 		AdjustBossFlow(null);
 	}
-	
 	profiler.Stop();
 	
 	g_hCvarDebug.BoolValue = temp;
@@ -484,11 +515,11 @@ public Action Profiler_Cmd(int client, int args) {
 // Natives
 // ======================================
 
-public int Native_IsStaticTankMap(Handle plugin, int numParams) {
+any Native_IsStaticTankMap(Handle plugin, int numParams) {
 	int bytes = 0;
 	
 	char mapname[64];
-	GetNativeString(1, mapname, sizeof mapname, bytes);
+	GetNativeString(1, mapname, sizeof(mapname), bytes);
 	
 	if (bytes) {
 		StrToLower(mapname);
@@ -498,11 +529,11 @@ public int Native_IsStaticTankMap(Handle plugin, int numParams) {
 	}
 }
 
-public int Native_IsStaticWitchMap(Handle plugin, int numParams) {
+any Native_IsStaticWitchMap(Handle plugin, int numParams) {
 	int bytes = 0;
 	
 	char mapname[64];
-	GetNativeString(1, mapname, sizeof mapname, bytes);
+	GetNativeString(1, mapname, sizeof(mapname), bytes);
 	
 	if (bytes) {
 		StrToLower(mapname);
@@ -512,55 +543,39 @@ public int Native_IsStaticWitchMap(Handle plugin, int numParams) {
 	}
 }
 
-public int Native_IsTankPercentValid(Handle plugin, int numParams) {
+any Native_IsTankPercentValid(Handle plugin, int numParams) {
 	int flow = GetNativeCell(1);
 	return IsTankPercentValid(flow);
 }
 
-public int Native_IsWitchPercentValid(Handle plugin, int numParams) {
+any Native_IsWitchPercentValid(Handle plugin, int numParams) {
 	int flow = GetNativeCell(1);
-	bool ignoreBlock = GetNativeCell(2);
+	if (!IsWitchPercentValid(flow)) {
+		return false;
+	}
 	
-	if (ignoreBlock) {
-		ArrayList p_hValidFlows = hValidWitchFlows.Clone(), p_hTemp = hValidWitchFlows;
-		
-		int interval[2];
-		if (GetTankAvoidInterval(interval) && IsValidInterval(interval)) {
-			// Restore the avoidance flow
-			p_hValidFlows.PushArray(interval);
-			MergeIntervals(p_hValidFlows);
-			hValidWitchFlows = p_hValidFlows;
-		}
-		
-		bool result = IsWitchPercentValid(flow);
-		
-		hValidWitchFlows = p_hTemp;
-		delete p_hValidFlows;
-		
-		return result;
-	} else {
-		return IsWitchPercentValid(flow);
+	bool ignoreBlock = GetNativeCell(2);
+	if (!ignoreBlock) {
+		return !IsWitchPercentBlockedForTank(flow);
 	}
-}
-
-public int Native_IsWitchPercentBlockedForTank(Handle plugin, int numParams) {
-	int interval[2];
-	if (GetTankAvoidInterval(interval) && IsValidInterval(interval)) {
-		int flow = GetNativeCell(1);
-		return (interval[0] <= flow <= interval[1]);
-	}
-	return false;
-}
-
-public int Native_SetTankPercent(Handle plugin, int numParams) {
-	int flow = GetNativeCell(1);
-	if (!IsTankPercentValid(flow)) return false;
-	DynamicAdjustWitchFlow(flow);
-	SetTankPercent(flow);
+		
 	return true;
 }
 
-public int Native_SetWitchPercent(Handle plugin, int numParams) {
+any Native_IsWitchPercentBlockedForTank(Handle plugin, int numParams) {
+	int flow = GetNativeCell(1);
+	return IsWitchPercentBlockedForTank(flow);
+}
+
+any Native_SetTankPercent(Handle plugin, int numParams) {
+	int flow = GetNativeCell(1);
+	if (!IsTankPercentValid(flow)) return false;
+	SetTankPercent(flow);
+	DynamicAdjustWitchFlow();
+	return true;
+}
+
+any Native_SetWitchPercent(Handle plugin, int numParams) {
 	int flow = GetNativeCell(1);
 	if (!IsWitchPercentValid(flow)) return false;
 	SetWitchPercent(flow);
@@ -585,40 +600,38 @@ bool IsTankPercentValid(int flow) {
 	if (flow == 0) {
 		return true;
 	}
-	int size = hValidTankFlows.Length;
+	int size = hBannedTankFlows.Length;
 	if (!size) {
-		return false;
-	}
-	if (flow > hValidTankFlows.Get(size-1, 1)
-		|| flow < hValidTankFlows.Get(0, 0)
-	){ // out of bounds
-		return false;
+		return true;
 	}
 	for (int i = 0; i < size; ++i) {
-		if (flow <= hValidTankFlows.Get(i, 1)) {
-			return flow >= hValidTankFlows.Get(i, 0);
+		if (flow <= hBannedTankFlows.Get(i, 1)) {
+			return flow < hBannedTankFlows.Get(i, 0);
+		}
+	}
+	return true;
+}
+
+bool IsWitchPercentValid(int flow) {
+	if (flow == 0) {
+		return true;
+	}
+	int size = hBannedWitchFlows.Length;
+	if (!size) {
+		return true;
+	}
+	for (int i = 0; i < size; ++i) {
+		if (flow <= hBannedWitchFlows.Get(i, 1)) {
+			return flow < hBannedWitchFlows.Get(i, 0);
 		}
 	}
 	return false;
 }
 
-bool IsWitchPercentValid(int flow){
-	if (flow == 0) {
-		return true;
-	}
-	int size = hValidWitchFlows.Length;
-	if (!size) {
-		return false;
-	}
-	if (flow > hValidWitchFlows.Get(size-1, 1)
-		|| flow < hValidWitchFlows.Get(0, 0)
-	){ // out of bounds
-		return false;
-	}
-	for (int i = 0; i < size; ++i) {
-		if (flow <= hValidWitchFlows.Get(i, 1)) {
-			return flow >= hValidWitchFlows.Get(i, 0);
-		}
+bool IsWitchPercentBlockedForTank(int flow) {
+	int interval[2];
+	if (GetTankAvoidInterval(interval) && IsValidInterval(interval)) {
+		return interval[0] <= flow && flow <= interval[1];
 	}
 	return false;
 }
@@ -657,22 +670,38 @@ void SetWitchPercent(int percent) {
 // Stock Functions
 // ======================================
 
-stock float GetTankProgressFlow(int round) {
-	return L4D2Direct_GetVSTankFlowPercent(round) - GetBossBuffer();
+stock int GetTankPercent() {
+	return RoundFloat(L4D2Direct_GetVSTankFlowPercent(0) * 100.0);
 }
 
-stock float GetWitchProgressFlow(int round) {
-	return L4D2Direct_GetVSWitchFlowPercent(round) - GetBossBuffer();
+stock int GetWitchPercent() {
+	return RoundFloat(L4D2Direct_GetVSWitchFlowPercent(0) * 100.0);
 }
 
-stock float GetBossBuffer() {
+stock float GetTankProgressPercent(int round) {
+	return L4D2Direct_GetVSTankFlowPercent(round) - GetBossBufferPercent();
+}
+
+stock float GetWitchProgressPercent(int round) {
+	return L4D2Direct_GetVSWitchFlowPercent(round) - GetBossBufferPercent();
+}
+
+stock float GetBossBufferPercent() {
 	return g_hVsBossBuffer.FloatValue / L4D2Direct_GetMapMaxFlowDistance();
 }
 
 stock void PrintDebugInfoDump() {
 	if (g_hCvarDebug.BoolValue) {
-		PrintDebug("[Round 1] tank enabled: %i, tank flow: %f, display: %f, witch enabled: %i, witch flow: %f, display: %f", L4D2Direct_GetVSTankToSpawnThisRound(0), L4D2Direct_GetVSTankFlowPercent(0), GetTankProgressFlow(0), L4D2Direct_GetVSWitchToSpawnThisRound(0), L4D2Direct_GetVSWitchFlowPercent(0), GetWitchProgressFlow(0));
-		PrintDebug("[Round 2] tank enabled: %i, tank flow: %f, display: %f, witch enabled: %i, witch flow: %f, display: %f", L4D2Direct_GetVSTankToSpawnThisRound(1), L4D2Direct_GetVSTankFlowPercent(1), GetTankProgressFlow(1), L4D2Direct_GetVSWitchToSpawnThisRound(1), L4D2Direct_GetVSWitchFlowPercent(1), GetWitchProgressFlow(0));
+		for (int i = 0; i < 2; ++i) {
+			PrintDebug("[Round %i] tank enabled: %i, tank flow: %f, display: %f, witch enabled: %i, witch flow: %f, display: %f",
+					i + 1,
+					L4D2Direct_GetVSTankToSpawnThisRound(i),
+					L4D2Direct_GetVSTankFlowPercent(i),
+					GetTankProgressPercent(i),
+					L4D2Direct_GetVSWitchToSpawnThisRound(i),
+					L4D2Direct_GetVSWitchFlowPercent(i),
+					GetWitchProgressPercent(i));
+		}
 		
 		char buffer[256] = "Valid Tank Intervals: ";
 		
