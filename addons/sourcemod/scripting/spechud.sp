@@ -19,12 +19,12 @@
 #include <lerpmonitor>
 #include <witch_and_tankifier>
 
-#define PLUGIN_VERSION	"3.5.9"
+#define PLUGIN_VERSION	"3.5.10"
 
 public Plugin myinfo = 
 {
 	name = "Hyper-V HUD Manager",
-	author = "Visor, Forgetest",
+	author = "Visor, Forgetest, Krevik, StarterX4",
 	description = "Provides different HUDs for spectators",
 	version = PLUGIN_VERSION,
 	url = "https://github.com/Target5150/MoYu_Server_Stupid_Plugins"
@@ -89,6 +89,15 @@ bool bStaticTank, bStaticWitch;
 bool bSpecHudActive[MAXPLAYERS+1], bTankHudActive[MAXPLAYERS+1];
 bool bSpecHudHintShown[MAXPLAYERS+1], bTankHudHintShown[MAXPLAYERS+1];
 
+//extended tankhud cvars
+char Tank_UpTime[20];
+int UpTime;
+int punch_connected;
+int rock_connected;
+int prop_connected;
+int damage_connected;
+bool g_bIsTankInPlay = false;            // Whether or not the tank is active
+bool g_bAnnounceTankDamage = false;            // Whether or not tank damage should be announced
 /**********************************************************************************************/
 
 // ======================================================================
@@ -120,7 +129,9 @@ public void OnPluginStart()
 	HookEvent("player_death",		Event_PlayerDeath,		EventHookMode_Post);
 	HookEvent("witch_killed",		Event_WitchDeath,		EventHookMode_PostNoCopy);
 	HookEvent("player_team",		Event_PlayerTeam,		EventHookMode_Post);
-	
+	HookEvent("tank_spawn", 		Event_TankSpawn);							//to calculate tank spawn time
+	HookEvent("player_hurt", 		Event_PlayerHurt, 		EventHookMode_Pre); //to get punch, rock, prop, totaldamage
+
 	for (int i = 1; i <= MaxClients; ++i)
 	{
 		bSpecHudActive[i] = false;
@@ -133,7 +144,9 @@ public void OnPluginStart()
 	hTankHudViewers = new ArrayList();
 	
 	bPendingArrayRefresh = true;
-	
+	g_bIsTankInPlay = false;
+	ClearTankDamage();
+	g_bAnnounceTankDamage = false;
 	CreateTimer(SPECHUD_DRAW_INTERVAL, HudDrawTimer, _, TIMER_REPEAT);
 }
 
@@ -398,11 +411,43 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	bRoundLive = false;
 	bPendingArrayRefresh = true;
+	UpTime = GetTime();
+	punch_connected = 0;
+	rock_connected = 0;
+	prop_connected = 0;
+	damage_connected = 0;
 }
 
 public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	bRoundLive = false;
+	PrintTankDamage();
+}
+
+public void PrintTankDamage()
+{
+	CreateTimer(4.0, delayedTankStatsPrint);
+}
+
+public void OnTankDeath()
+{
+	PrintTankDamage();
+}
+
+public Action delayedTankStatsPrint(Handle timer)
+{
+	if(g_bAnnounceTankDamage){
+		UpdateTankUpTime();
+		if(damage_connected > 0.0){
+			CPrintToChatAll( "[{olive}Tank Report{default}] Time: {olive}%s{default} | Damage: {olive}%d{default}, with: {olive}%d{default} rocks, {olive}%d{default} punches, {olive}%d{default} object hits.", Tank_UpTime, damage_connected, rock_connected, punch_connected, prop_connected );
+		}
+		else{
+			CPrintToChatAll( "[{olive}Tank Report{default}] Tank was alive for a total time of: {olive}%s{default}.", Tank_UpTime );
+		}
+		g_bAnnounceTankDamage = false;
+		g_bIsTankInPlay = false;
+	}
+	return Plugin_Continue;
 }
 
 public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
@@ -415,6 +460,53 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 		if (iTankCount > 0) iTankCount--;
 		if (!RoundHasFlowTank()) bFlowTankActive = false;
 	}
+}
+
+public Action Event_TankSpawn(Handle event, const char[] name, bool dontBroadcast) {
+	if (g_bIsTankInPlay) return; // Tank passed
+	UpTime = GetTime();
+	punch_connected = 0;
+	rock_connected = 0;
+	prop_connected = 0;
+	damage_connected = 0;
+	g_bAnnounceTankDamage = true;
+	// New tank, damage has not been announced
+	g_bIsTankInPlay = true;
+}
+
+public Action Event_PlayerHurt(Handle event, const char[] name, bool dontBroadcast) {
+    int attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
+    int victim = GetClientOfUserId(GetEventInt(event, "userid"));
+
+    if (!attacker) {
+        return Plugin_Continue;
+    }
+	
+    if (victim == attacker) {
+        return Plugin_Continue;
+    }
+
+    char weapon[16];
+    GetEventString(event, "weapon", weapon, sizeof(weapon));
+    if (GetEntProp(attacker, Prop_Send, "m_zombieClass") == 8 && GetClientTeam(victim) == 2) {
+		damage_connected = damage_connected + GetEventInt(event, "dmg_health");
+		if(damage_connected > 1){
+			if (StrEqual(weapon, "tank_claw")) {
+				punch_connected = punch_connected + 1;
+			} else if (StrEqual(weapon, "tank_rock")) {
+				rock_connected = rock_connected + 1;
+			} else {
+				prop_connected = prop_connected + 1;
+			}
+		}
+    }
+	
+    return Plugin_Continue;
+}
+
+void ClearTankDamage()
+{
+	g_bAnnounceTankDamage = false;
 }
 
 public void Event_WitchDeath(Event event, const char[] name, bool dontBroadcast)
@@ -1062,6 +1154,18 @@ void FillInfectedInfo(Panel &hSpecHud)
 	}
 }
 
+stock void UpdateTankUpTime() {
+    char str_uptime_temp[8];
+    int Current_UpTime = GetTime() - UpTime;
+    int Days = RoundToFloor(Current_UpTime / 86400.0);
+    Current_UpTime -= Days * 86400;
+    Tank_UpTime = "";
+    int Hours = RoundToFloor(Current_UpTime / 3600.0);
+    Current_UpTime -= Hours * 3600;
+    FormatTime(str_uptime_temp, sizeof(str_uptime_temp), "%M:%S", Current_UpTime);
+    StrCat(view_as < char > (Tank_UpTime), sizeof(Tank_UpTime), str_uptime_temp);
+}
+
 bool FillTankInfo(Panel &hSpecHud, bool bTankHUD = false)
 {
 	int tank = FindTankClient(-1);
@@ -1078,6 +1182,10 @@ bool FillTankInfo(Panel &hSpecHud, bool bTankHUD = false)
 		
 		int len = strlen(info);
 		for (int i = 0; i < len; ++i) info[i] = '_';
+		DrawPanelText(hSpecHud, info);
+		Format(info, sizeof(info), "Punches: %i | Rocks: %i | Objects: %i", punch_connected, rock_connected, prop_connected);
+		DrawPanelText(hSpecHud, info);
+		Format(info, sizeof(info), "Total Damage: %i", damage_connected);
 		DrawPanelText(hSpecHud, info);
 	}
 	else
@@ -1132,6 +1240,11 @@ bool FillTankInfo(Panel &hSpecHud, bool bTankHUD = false)
 	{
 		info = "Frustr.  : AI";
 	}
+	DrawPanelText(hSpecHud, info);
+
+    //Draw Spawn Time
+	UpdateTankUpTime();
+	Format(info, sizeof(info), "Spawn: (%s)", Tank_UpTime);
 	DrawPanelText(hSpecHud, info);
 
 	// Draw network
