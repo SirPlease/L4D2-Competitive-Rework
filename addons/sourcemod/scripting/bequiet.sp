@@ -85,23 +85,22 @@ public Action Say_Callback(int client, char[] command, int args)
 		char sChat[256];
 		GetCmdArgString(sChat, 256);
 		StripQuotes(sChat);
-		int ClientTeam = GetClientTeam(client);
-		int i = 1;
-		while (i <= MaxClients)
+		int L4D_TEAM_CLIENT = GetClientTeam(client);
+
+		for (int CLIENT_INDEX = 1; CLIENT_INDEX <= MaxClients; CLIENT_INDEX++)
 		{
-			if (IsValidClient(i) && IsClientSourceTV(i))    // Chat from STV
+			if (IsValidClient(CLIENT_INDEX) && IsClientSourceTV(CLIENT_INDEX))    // Chat from STV
 			{
-				switch (ClientTeam)
+				switch (L4D_TEAM_CLIENT)
 				{
 					case L4D_TEAM_SPECTATOR:
-						CPrintToChat(i, "{default}*SPEC* %N : %s", client, sChat);
+						CPrintToChat(CLIENT_INDEX, "{default}*SPEC* %N : %s", client, sChat);
 					case L4D_TEAM_SURVIVOR:
-						CPrintToChat(i, "{blue}%N {default}: %s", client, sChat);
+						CPrintToChat(CLIENT_INDEX, "{blue}%N {default}: %s", client, sChat);
 					case L4D_TEAM_INFECTED:
-						CPrintToChat(i, "{red}%N {default}: %s", client, sChat);
+						CPrintToChat(CLIENT_INDEX, "{red}%N {default}: %s", client, sChat);
 				}
 			}
-			i++;
 		}
 	}
 	return Plugin_Continue;
@@ -122,33 +121,36 @@ public Action TeamSay_Callback(int client, char[] command, int args)
 		char sChat[256];
 		GetCmdArgString(sChat, 256);
 		StripQuotes(sChat);
-		int ClientTeam = GetClientTeam(client);
-		int i          = 1;
-		while (i <= MaxClients)
+		int L4D_TEAM_CLIENT	= GetClientTeam(client);
+		
+		for (int CLIENT_INDEX = 1; CLIENT_INDEX <= MaxClients; CLIENT_INDEX++)
 		{
-			if (bCvarSTVSeeTChat && IsValidClient(i) && IsClientSourceTV(i))    // TeamChat from STV
+			int L4D_TEAM_INDEX = GetClientTeam(CLIENT_INDEX);
+			if(IsValidClient(CLIENT_INDEX))
 			{
-				switch (ClientTeam)
+				if (bCvarSTVSeeTChat && IsClientSourceTV(CLIENT_INDEX))    // TeamChat from STV
 				{
-					case L4D_TEAM_SPECTATOR:
-						CPrintToChat(i, "{default}(Spected) %N : %s", client, sChat);
-					case L4D_TEAM_SURVIVOR:
-						CPrintToChat(i, "{default}(Survivor) {blue}%N {default}: %s", client, sChat);
-					case L4D_TEAM_INFECTED:
-						CPrintToChat(i, "{default}(Infected) {red}%N {default}: %s", client, sChat);
+					switch (L4D_TEAM_CLIENT)
+					{
+						case L4D_TEAM_SPECTATOR:
+							CPrintToChat(CLIENT_INDEX, "{default}(Spected) %N : %s", client, sChat);
+						case L4D_TEAM_SURVIVOR:
+							CPrintToChat(CLIENT_INDEX, "{default}(Survivor) {blue}%N {default}: %s", client, sChat);
+						case L4D_TEAM_INFECTED:
+							CPrintToChat(CLIENT_INDEX, "{default}(Infected) {red}%N {default}: %s", client, sChat);
+					}
+				}
+				if (L4D_TEAM_INDEX == L4D_TEAM_SPECTATOR && L4D_TEAM_CLIENT != L4D_TEAM_SPECTATOR && !IsClientSourceTV(CLIENT_INDEX))	// TeamChat for Spect
+				{
+					switch (L4D_TEAM_CLIENT)
+					{
+						case L4D_TEAM_SURVIVOR:
+							CPrintToChat(CLIENT_INDEX, "{default}(Survivor) {blue}%N {default}: %s", client, sChat);
+						case L4D_TEAM_INFECTED:
+							CPrintToChat(CLIENT_INDEX, "{default}(Infected) {red}%N {default}: %s", client, sChat);
+					}
 				}
 			}
-			if (IsValidClient(i) && GetClientTeam(i) == L4D_TEAM_SPECTATOR && GetClientTeam(client) != L4D_TEAM_SPECTATOR && !IsClientSourceTV(i))    // TeamChat for Spect
-			{
-				switch (ClientTeam)
-				{
-					case L4D_TEAM_SURVIVOR:
-						CPrintToChat(i, "{default}(Survivor) {blue}%N {default}: %s", client, sChat);
-					case L4D_TEAM_INFECTED:
-						CPrintToChat(i, "{default}(Infected) {red}%N {default}: %s", client, sChat);
-				}
-			}
-			i++;
 		}
 	}
 	return Plugin_Continue;
@@ -162,12 +164,12 @@ public Action Event_ServerConVar(Event event, const char[] name, bool dontBroadc
 
 public Action Event_NameChange(Event event, const char[] name, bool dontBroadcast)
 {
-	int clientid = event.GetInt("userid");
-	int client   = GetClientOfUserId(clientid);
-
+	int clientid 		= event.GetInt("userid");
+	int client   		= GetClientOfUserId(clientid);
+	int L4D_TEAM_CLIENT = GetClientTeam(client);
 	if (IsValidClient(client))
 	{
-		if (GetClientTeam(client) == L4D_TEAM_SPECTATOR && bSpecNameChange)
+		if (L4D_TEAM_CLIENT == L4D_TEAM_SPECTATOR && bSpecNameChange)
 		{
 			return Plugin_Handled;
 		}
