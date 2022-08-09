@@ -2,8 +2,8 @@
 
 #pragma newdecls required
 #include <colors>
-#include <l4d2util>
-#include <left4dhooks>
+#include <l4d2util_stocks>
+#include <left4dhooks_silver>
 #include <sourcemod>
 
 ConVar
@@ -67,38 +67,36 @@ public void OnPluginStart()
 
 public Action Say_Callback(int client, char[] command, int args)
 {
-	if (!IsValidClient(client))
+	if (client != 0)
 	{
-		return Plugin_Handled;
-	}
-
-	char sayWord[MAX_NAME_LENGTH];
-	GetCmdArg(1, sayWord, sizeof(sayWord));
-
-	if (sayWord[0] == '!' || sayWord[0] == '/')
-	{
-		return Plugin_Handled;
-	}
-
-	if (bCvarSTVSeeChat)
-	{
-		char sChat[256];
-		GetCmdArgString(sChat, 256);
-		StripQuotes(sChat);
-		int L4D_TEAM_CLIENT = GetClientTeam(client);
-
-		for (int CLIENT_INDEX = 1; CLIENT_INDEX <= MaxClients; CLIENT_INDEX++)
+		char sayWord[MAX_NAME_LENGTH];
+		GetCmdArg(1, sayWord, sizeof(sayWord));
+	
+		if (sayWord[0] == '!' || sayWord[0] == '/')
 		{
-			if (IsValidClient(CLIENT_INDEX) && IsClientSourceTV(CLIENT_INDEX))    // Chat from STV
+			return Plugin_Handled;
+		}
+	
+		if (bCvarSTVSeeChat)
+		{
+			char sChat[256];
+			GetCmdArgString(sChat, 256);
+			StripQuotes(sChat);
+			int l4d_team_client = GetClientTeam(client);
+	
+			for (int client_index = 1; client_index <= MaxClients; client_index++)
 			{
-				switch (L4D_TEAM_CLIENT)
+				if (IsValidClient(client_index) && IsClientSourceTV(client_index))    // Chat from STV
 				{
-					case L4D_TEAM_SPECTATOR:
-						CPrintToChat(CLIENT_INDEX, "{default}*SPEC* %N : %s", client, sChat);
-					case L4D_TEAM_SURVIVOR:
-						CPrintToChat(CLIENT_INDEX, "{blue}%N {default}: %s", client, sChat);
-					case L4D_TEAM_INFECTED:
-						CPrintToChat(CLIENT_INDEX, "{red}%N {default}: %s", client, sChat);
+					switch (l4d_team_client)
+					{
+						case L4D_TEAM_SPECTATOR:
+							CPrintToChat(client_index, "{default}*SPEC* %N : %s", client, sChat);
+						case L4D_TEAM_SURVIVOR:
+							CPrintToChat(client_index, "{blue}%N {default}: %s", client, sChat);
+						case L4D_TEAM_INFECTED:
+							CPrintToChat(client_index, "{red}%N {default}: %s", client, sChat);
+					}
 				}
 			}
 		}
@@ -121,33 +119,33 @@ public Action TeamSay_Callback(int client, char[] command, int args)
 		char sChat[256];
 		GetCmdArgString(sChat, 256);
 		StripQuotes(sChat);
-		int L4D_TEAM_CLIENT	= GetClientTeam(client);
+		int l4d_team_client	= GetClientTeam(client);
 		
-		for (int CLIENT_INDEX = 1; CLIENT_INDEX <= MaxClients; CLIENT_INDEX++)
+		for (int client_index = 1; client_index <= MaxClients; client_index++)
 		{
-			int L4D_TEAM_INDEX = GetClientTeam(CLIENT_INDEX);
-			if(IsValidClient(CLIENT_INDEX))
+			int l4d_team_index = GetClientTeam(client_index);
+			if(IsValidClient(client_index))
 			{
-				if (bCvarSTVSeeTChat && IsClientSourceTV(CLIENT_INDEX))    // TeamChat from STV
+				if (bCvarSTVSeeTChat && IsClientSourceTV(client_index))    // TeamChat from STV
 				{
-					switch (L4D_TEAM_CLIENT)
+					switch (l4d_team_client)
 					{
 						case L4D_TEAM_SPECTATOR:
-							CPrintToChat(CLIENT_INDEX, "{default}(Spected) %N : %s", client, sChat);
+							CPrintToChat(client_index, "{default}(Spected) %N : %s", client, sChat);
 						case L4D_TEAM_SURVIVOR:
-							CPrintToChat(CLIENT_INDEX, "{default}(Survivor) {blue}%N {default}: %s", client, sChat);
+							CPrintToChat(client_index, "{default}(Survivor) {blue}%N {default}: %s", client, sChat);
 						case L4D_TEAM_INFECTED:
-							CPrintToChat(CLIENT_INDEX, "{default}(Infected) {red}%N {default}: %s", client, sChat);
+							CPrintToChat(client_index, "{default}(Infected) {red}%N {default}: %s", client, sChat);
 					}
 				}
-				if (L4D_TEAM_INDEX == L4D_TEAM_SPECTATOR && L4D_TEAM_CLIENT != L4D_TEAM_SPECTATOR && !IsClientSourceTV(CLIENT_INDEX))	// TeamChat for Spect
+				if (l4d_team_index == L4D_TEAM_SPECTATOR && l4d_team_client != L4D_TEAM_SPECTATOR && !IsClientSourceTV(client_index))	// TeamChat for Spect
 				{
-					switch (L4D_TEAM_CLIENT)
+					switch (l4d_team_client)
 					{
 						case L4D_TEAM_SURVIVOR:
-							CPrintToChat(CLIENT_INDEX, "{default}(Survivor) {blue}%N {default}: %s", client, sChat);
+							CPrintToChat(client_index, "{default}(Survivor) {blue}%N {default}: %s", client, sChat);
 						case L4D_TEAM_INFECTED:
-							CPrintToChat(CLIENT_INDEX, "{default}(Infected) {red}%N {default}: %s", client, sChat);
+							CPrintToChat(client_index, "{default}(Infected) {red}%N {default}: %s", client, sChat);
 					}
 				}
 			}
@@ -166,10 +164,10 @@ public Action Event_NameChange(Event event, const char[] name, bool dontBroadcas
 {
 	int clientid 		= event.GetInt("userid");
 	int client   		= GetClientOfUserId(clientid);
-	int L4D_TEAM_CLIENT = GetClientTeam(client);
+	int l4d_team_client = GetClientTeam(client);
 	if (IsValidClient(client))
 	{
-		if (L4D_TEAM_CLIENT == L4D_TEAM_SPECTATOR && bSpecNameChange)
+		if (l4d_team_client == L4D_TEAM_SPECTATOR && bSpecNameChange)
 		{
 			return Plugin_Handled;
 		}
