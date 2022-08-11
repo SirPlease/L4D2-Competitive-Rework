@@ -14,10 +14,8 @@ methodmap Footer < ArrayList {
 		
 	}*/
 	
-	public int Add(const char[] format, int c = 1) {
-		char buffer[MAX_FOOTER_LEN];
-		FormatEx(buffer, sizeof(buffer), format, c);
-		if (!IsEmptyString(buffer, sizeof(buffer))) {
+	public int Add(const char[] buffer) {
+		if (!IsEmptyString(buffer, MAX_FOOTER_LEN)) {
 			return this.PushString(buffer);
 		}
 		

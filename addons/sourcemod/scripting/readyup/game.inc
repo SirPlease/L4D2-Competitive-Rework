@@ -32,7 +32,8 @@ void ResetAccumulatedTime()
 {
 	static ConVar scavenge_round_initial_time = null;
 	if (scavenge_round_initial_time == null)
-		scavenge_round_initial_time = FindConVar("scavenge_round_initial_time");
+		if ((scavenge_round_initial_time = FindConVar("scavenge_round_initial_time")) == null)
+			return;
 	
 	L4D_NotifyNetworkStateChanged();
 	GameRules_SetPropFloat("m_flAccumulatedTime", scavenge_round_initial_time.FloatValue);
@@ -40,60 +41,45 @@ void ResetAccumulatedTime()
 
 void RestartVersusStartCountdown(bool startOn)
 {
-	static float fDuration = 0.0;
+	static ConVar s_cv = null;
+	if (s_cv == null)
+		if ((s_cv = FindConVar("versus_force_start_time")) == null)
+			return;
 	
-	if (startOn)
-	{
-		if (fDuration != 0.0) L4D2_CTimerStart(L4D2CT_VersusStartTimer, fDuration);
-	}
-	else
-	{
-		float temp = L4D2_CTimerGetCountdownDuration(L4D2CT_VersusStartTimer);
-		if (temp != 0.0 && temp >= 3600.0)
-		{
-			fDuration = temp;
-			L4D2_CTimerStart(L4D2CT_VersusStartTimer, 3600.0);
-		}
-	}
+	L4D2_CTimerStart(L4D2CT_VersusStartTimer, startOn ? s_cv.FloatValue : 99999.9);
 }
 
 void RestartMobCountdown(bool startOn)
 {
-	static float fDuration = 0.0;
+	static float fDuration = -1.0;
 	
 	if (startOn)
 	{
-		if (fDuration != 0.0) L4D2_CTimerStart(L4D2CT_MobSpawnTimer, fDuration);
+		if (fDuration != -1.0) L4D2_CTimerStart(L4D2CT_MobSpawnTimer, fDuration);
 	}
 	else
 	{
-		float temp = L4D2_CTimerGetCountdownDuration(L4D2CT_MobSpawnTimer);
-		if (temp != 0.0 && temp >= 3600.0)
+		float fTemp = L4D2_CTimerGetCountdownDuration(L4D2CT_MobSpawnTimer);
+		if (fTemp != -1.0 && fTemp < 99999.9)
 		{
-			fDuration = temp;
-			L4D2_CTimerStart(L4D2CT_MobSpawnTimer, 3600.0);
+			fDuration = fTemp;
+			L4D2_CTimerStart(L4D2CT_MobSpawnTimer, 99999.9);
 		}
 	}
 }
 
 void RestartScvngSetupCountdown(bool startOn)
 {
-	static float fDuration = 0.0;
+	static ConVar s_cv = null;
+	if (s_cv == null)
+		if ((s_cv = FindConVar("scavenge_round_setup_time")) == null)
+			return;
 	
-	if (startOn)
-	{
-		if (fDuration != 0.0) CTimer_Start(L4D2Direct_GetScavengeRoundSetupTimer(), fDuration);
-	}
-	else
-	{
-		float temp = CTimer_GetCountdownDuration(L4D2Direct_GetScavengeRoundSetupTimer());
-		if (temp != 0.0 && temp >= 99999.0)
-		{
-			fDuration = temp;
-			CTimer_Start(L4D2Direct_GetScavengeRoundSetupTimer(), 99999.0);
-		}
-	}
+	CountdownTimer timer = L4D2Direct_GetScavengeRoundSetupTimer();
+	if (timer == CTimer_Null)
+		return;
 	
+	CTimer_Start(timer, startOn ? s_cv.FloatValue : 99999.9);
 	ToggleCountdownPanel(startOn);
 }
 

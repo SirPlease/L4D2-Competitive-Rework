@@ -40,11 +40,14 @@ void UTIL_WrapperForward(GlobalForward fw)
 
 bool IsEmptyString(const char[] str, int maxlength)
 {
-	int len = strlen(str) < maxlength;
+	int len = strlen(str);
+	if (len == 0)
+		return true;
 	
-	for (int i = 0;
-			i < len < maxlength ? len : maxlength;
-			++i)
+	if (len > maxlength)
+		len = maxlength;
+	
+	for (int i = 0; i < len; ++i)
 	{
 		if (IsCharSpace(str[i]))
 			continue;

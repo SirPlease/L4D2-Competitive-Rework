@@ -9,7 +9,7 @@
 #undef REQUIRE_PLUGIN
 #include <caster_system>
 
-#define PLUGIN_VERSION "10.1"
+#define PLUGIN_VERSION "10.2"
 
 public Plugin myinfo =
 {
@@ -273,7 +273,7 @@ void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public Action Timer_PlayerTeam(Handle timer, DataPack dp)
+Action Timer_PlayerTeam(Handle timer, DataPack dp)
 {
 	dp.Reset();
 	
@@ -386,7 +386,7 @@ public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
 {
 	if (inReadyUp)
 	{
-		RestartCountdowns(false);
+		CreateTimer(0.1, Timer_RestartCountdowns, false, TIMER_FLAG_NO_MAPCHANGE);
 		ReturnPlayerToSaferoom(client, false);
 		return Plugin_Handled;
 	}
