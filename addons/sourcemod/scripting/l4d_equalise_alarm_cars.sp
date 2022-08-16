@@ -24,7 +24,7 @@
 #include <sourcemod>
 #include <sdktools>
 
-#define PLUGIN_VERSION "3.6"
+#define PLUGIN_VERSION "3.7"
 
 public Plugin myinfo =
 {
@@ -45,7 +45,15 @@ enum alarmArray
 	
 	alarmArray_SIZE
 }
-static const int NULL_ALARMARRAY[alarmArray_SIZE] = {-1, ...};
+static const int 
+	NULL_ALARMARRAY[alarmArray_SIZE] = {
+		INVALID_ENT_REFERENCE,
+		INVALID_ENT_REFERENCE,
+		false,
+		INVALID_ENT_REFERENCE,
+		0
+	};
+
 ArrayList
 	g_aAlarmArray;
 
@@ -212,8 +220,7 @@ void EntO_AlarmRelayOnTriggered(const char[] output, int caller, int activator, 
 	else if (!g_aAlarmArray.Get(entry, ENTRY_START_STATE) || (g_cvStartDisabled.BoolValue && !g_bRoundIsLive))
 	{
 		// second half, but differs from first half / needs start disabled
-		int relayOff = g_aAlarmArray.Get(entry, ENTRY_RELAY_OFF);
-		CreateTimer(delay + 0.1, Timer_SafeRelayTrigger, relayOff, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(delay + 0.1, Timer_DisableCar, entry, TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else
 	{
@@ -252,8 +259,7 @@ void EntO_AlarmRelayOffTriggered(const char[] output, int caller, int activator,
 	else if (g_aAlarmArray.Get(entry, ENTRY_START_STATE) && (!g_cvStartDisabled.BoolValue || g_bRoundIsLive))
 	{
 		// second half, but differs from first half, and not start disabled
-		int relayOn = g_aAlarmArray.Get(entry, ENTRY_RELAY_ON);
-		CreateTimer(delay + 0.1, Timer_SafeRelayTrigger, relayOn, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(delay + 0.1, Timer_EnableCar, entry, TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else
 	{
@@ -275,26 +281,42 @@ void EnableCars()
 {
 	for (int i = 0; i < g_aAlarmArray.Length; ++i)
 	{
-		int relayOn = g_aAlarmArray.Get(i, ENTRY_RELAY_ON);
-		
-		if (relayOn != -1 && g_aAlarmArray.Get(i, ENTRY_START_STATE))
+		if (g_aAlarmArray.Get(i, ENTRY_START_STATE))
 		{
-			Timer_SafeRelayTrigger(null, relayOn);
+			Timer_EnableCar(null, i);
 		}
 	}
 }
 
-stock void DisableCars()
+void DisableCars()
 {
 	for (int i = 0; i < g_aAlarmArray.Length; ++i)
 	{
-		int relayOff = g_aAlarmArray.Get(i, ENTRY_RELAY_OFF);
-		
-		if (relayOff != -1 && g_aAlarmArray.Get(i, ENTRY_START_STATE))
+		if (g_aAlarmArray.Get(i, ENTRY_START_STATE))
 		{
-			Timer_SafeRelayTrigger(null, relayOff);
+			Timer_DisableCar(null, i);
 		}
 	}
+}
+
+Action Timer_EnableCar(Handle timer, int entry)
+{
+	// if there's no way back...
+	if (!IsValidEntity(g_aAlarmArray.Get(entry, ENTRY_RELAY_OFF)))
+		return Plugin_Stop;
+	
+	SafeRelayTrigger(g_aAlarmArray.Get(entry, ENTRY_RELAY_ON));
+	return Plugin_Stop;
+}
+
+Action Timer_DisableCar(Handle timer, int entry)
+{
+	// if there's no way back...
+	if (!IsValidEntity(g_aAlarmArray.Get(entry, ENTRY_RELAY_ON)))
+		return Plugin_Stop;
+	
+	SafeRelayTrigger(g_aAlarmArray.Get(entry, ENTRY_RELAY_OFF));
+	return Plugin_Stop;
 }
 
 void RecordCarColor(int entry)
@@ -309,13 +331,12 @@ void ResetCarColor(int entry)
 	SetEntityRenderColorEx(alarmCar, g_aAlarmArray.Get(entry, ENTRY_COLOR));
 }
 
-Action Timer_SafeRelayTrigger(Handle timer, int relay)
+void SafeRelayTrigger(int relay)
 {
-	if (relay == -1)
-		return Plugin_Stop;
+	if (!IsValidEntity(relay))
+		return;
 	
 	AcceptEntityInput(relay, "Trigger", 0);
-	return Plugin_Stop;
 }
 
 int ExtractCarName(const char[] sName, const char[] sCompare, char[] sBuffer, int iSize)
