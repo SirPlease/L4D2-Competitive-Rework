@@ -1,38 +1,43 @@
 #pragma semicolon 1
-
 #pragma newdecls required
+
 #include <colors>
-#include <l4d2util_stocks>
-#include <left4dhooks_silver>
 #include <sourcemod>
+
+enum
+{
+	//	L4D_TEAM_UNASSIGNED			= 0,
+	L4D_TEAM_SPECTATOR = 1,
+	L4D_TEAM_SURVIVOR  = 2,
+	L4D_TEAM_INFECTED  = 3,
+	//	L4D_TEAM_FOUR				= 4
+}
 
 ConVar
 	hCvarCvarChange,
 	hCvarNameChange,
 	hCvarSpecNameChange,
-	hCvarSpecSeeChat,
-	hCvarSTVSeeChat,
-	hCvarSTVSeeTChat;
+	hCvarSpecSeeChat;
 bool
 	bCvarChange,
 	bNameChange,
 	bSpecNameChange,
-	bSpecSeeChat,
-	bCvarSTVSeeChat,
-	bCvarSTVSeeTChat;
+	bSpecSeeChat;
 
 public Plugin myinfo =
 {
 	name        = "BeQuiet",
 	author      = "Sir",
 	description = "Please be Quiet!",
-	version     = "1.4",
+	version     = "1.33.8",
 	url         = "https://github.com/SirPlease/SirCoding"
+
 
 }
 
 public void OnPluginStart()
 {
+	LoadTranslations("bequiet.phrases");
 	AddCommandListener(Say_Callback, "say");
 	AddCommandListener(TeamSay_Callback, "say_team");
 
@@ -45,62 +50,35 @@ public void OnPluginStart()
 	hCvarNameChange     = CreateConVar("bq_name_change_suppress", "1", "Silence Player name Changes.");
 	hCvarSpecNameChange = CreateConVar("bq_name_change_spec_suppress", "1", "Silence Spectating Player name Changes.");
 	hCvarSpecSeeChat    = CreateConVar("bq_show_player_team_chat_spec", "1", "Show Spectators Team chat?");
-	hCvarSTVSeeChat     = CreateConVar("bq_show_player_chat_stv", "0", "Show SourceTV General chat?");
-	hCvarSTVSeeTChat    = CreateConVar("bq_show_player_team_chat_stv", "0", "Show SourceTV Team chat?");
 
-	bCvarChange      = GetConVarBool(hCvarCvarChange);
-	bNameChange      = GetConVarBool(hCvarNameChange);
-	bSpecNameChange  = GetConVarBool(hCvarSpecNameChange);
-	bSpecSeeChat     = GetConVarBool(hCvarSpecSeeChat);
-	bCvarSTVSeeChat  = GetConVarBool(hCvarSTVSeeChat);
-	bCvarSTVSeeTChat = GetConVarBool(hCvarSTVSeeTChat);
+	bCvarChange     = GetConVarBool(hCvarCvarChange);
+	bNameChange     = GetConVarBool(hCvarNameChange);
+	bSpecNameChange = GetConVarBool(hCvarSpecNameChange);
+	bSpecSeeChat    = GetConVarBool(hCvarSpecSeeChat);
 
 	hCvarCvarChange.AddChangeHook(cvarChanged);
 	hCvarNameChange.AddChangeHook(cvarChanged);
 	hCvarSpecNameChange.AddChangeHook(cvarChanged);
 	hCvarSpecSeeChat.AddChangeHook(cvarChanged);
-	hCvarSTVSeeChat.AddChangeHook(cvarChanged);
-	hCvarSTVSeeTChat.AddChangeHook(cvarChanged);
 
 	AutoExecConfig(true, "bequiet");
 }
 
 public Action Say_Callback(int client, char[] command, int args)
 {
-	if (client != 0)
+	char sayWord[MAX_NAME_LENGTH];
+	GetCmdArg(1, sayWord, sizeof(sayWord));
+
+	if (sayWord[0] == '!' || sayWord[0] == '/')
 	{
-		char sayWord[MAX_NAME_LENGTH];
-		GetCmdArg(1, sayWord, sizeof(sayWord));
-	
-		if (sayWord[0] == '!' || sayWord[0] == '/')
-		{
-			return Plugin_Handled;
-		}
-	
-		if (bCvarSTVSeeChat)
-		{
-			char sChat[256];
-			GetCmdArgString(sChat, 256);
-			StripQuotes(sChat);
-			int l4d_team_client = GetClientTeam(client);
-	
-			for (int client_index = 1; client_index <= MaxClients; client_index++)
-			{
-				if (IsValidClient(client_index) && IsClientSourceTV(client_index))    // Chat from STV
-				{
-					switch (l4d_team_client)
-					{
-						case L4D_TEAM_SPECTATOR:
-							CPrintToChat(client_index, "{default}*SPEC* %N : %s", client, sChat);
-						case L4D_TEAM_SURVIVOR:
-							CPrintToChat(client_index, "{blue}%N {default}: %s", client, sChat);
-						case L4D_TEAM_INFECTED:
-							CPrintToChat(client_index, "{red}%N {default}: %s", client, sChat);
-					}
-				}
-			}
-		}
+		return Plugin_Handled;
 	}
+
+	if (IsClientSourceTV(client))
+	{
+		return Plugin_Handled;
+	}
+
 	return Plugin_Continue;
 }
 
@@ -119,33 +97,20 @@ public Action TeamSay_Callback(int client, char[] command, int args)
 		char sChat[256];
 		GetCmdArgString(sChat, 256);
 		StripQuotes(sChat);
-		int l4d_team_client	= GetClientTeam(client);
-		
-		for (int client_index = 1; client_index <= MaxClients; client_index++)
+		int ClientTeam = GetClientTeam(client);
+
+		if (ClientTeam != L4D_TEAM_SPECTATOR)
 		{
-			int l4d_team_index = GetClientTeam(client_index);
-			if(IsValidClient(client_index))
+			for (int ClientIndex = 1; ClientIndex <= MaxClients; ClientIndex++)
 			{
-				if (bCvarSTVSeeTChat && IsClientSourceTV(client_index))    // TeamChat from STV
+				if (IsValidClient(ClientIndex) && GetClientTeam(ClientIndex) == L4D_TEAM_SPECTATOR && !IsClientSourceTV(ClientIndex))    // TeamChat for Spect
 				{
-					switch (l4d_team_client)
-					{
-						case L4D_TEAM_SPECTATOR:
-							CPrintToChat(client_index, "{default}(Spected) %N : %s", client, sChat);
-						case L4D_TEAM_SURVIVOR:
-							CPrintToChat(client_index, "{default}(Survivor) {blue}%N {default}: %s", client, sChat);
-						case L4D_TEAM_INFECTED:
-							CPrintToChat(client_index, "{default}(Infected) {red}%N {default}: %s", client, sChat);
-					}
-				}
-				if (l4d_team_index == L4D_TEAM_SPECTATOR && l4d_team_client != L4D_TEAM_SPECTATOR && !IsClientSourceTV(client_index))	// TeamChat for Spect
-				{
-					switch (l4d_team_client)
+					switch (ClientTeam)
 					{
 						case L4D_TEAM_SURVIVOR:
-							CPrintToChat(client_index, "{default}(Survivor) {blue}%N {default}: %s", client, sChat);
+							CPrintToChat(ClientIndex, "%t", "Survivor", client, sChat);
 						case L4D_TEAM_INFECTED:
-							CPrintToChat(client_index, "{default}(Infected) {red}%N {default}: %s", client, sChat);
+							CPrintToChat(ClientIndex, "%t", "Infected", client, sChat);
 					}
 				}
 			}
@@ -162,12 +127,11 @@ public Action Event_ServerConVar(Event event, const char[] name, bool dontBroadc
 
 public Action Event_NameChange(Event event, const char[] name, bool dontBroadcast)
 {
-	int clientid 		= event.GetInt("userid");
-	int client   		= GetClientOfUserId(clientid);
-	int l4d_team_client = GetClientTeam(client);
+	int clientid = event.GetInt("userid");
+	int client   = GetClientOfUserId(clientid);
 	if (IsValidClient(client))
 	{
-		if (l4d_team_client == L4D_TEAM_SPECTATOR && bSpecNameChange)
+		if (bSpecNameChange && GetClientTeam(client) == L4D_TEAM_SPECTATOR)
 		{
 			return Plugin_Handled;
 		}
@@ -176,25 +140,22 @@ public Action Event_NameChange(Event event, const char[] name, bool dontBroadcas
 			return Plugin_Handled;
 		}
 	}
-
 	return Plugin_Continue;
 }
 
 public void cvarChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	bCvarChange      = hCvarCvarChange.BoolValue;
-	bNameChange      = hCvarNameChange.BoolValue;
-	bSpecNameChange  = hCvarSpecNameChange.BoolValue;
-	bSpecSeeChat     = hCvarSpecSeeChat.BoolValue;
-	bCvarSTVSeeChat  = hCvarSTVSeeChat.BoolValue;
-	bCvarSTVSeeTChat = hCvarSTVSeeTChat.BoolValue;
+	bCvarChange     = hCvarCvarChange.BoolValue;
+	bNameChange     = hCvarNameChange.BoolValue;
+	bSpecNameChange = hCvarSpecNameChange.BoolValue;
+	bSpecSeeChat    = hCvarSpecSeeChat.BoolValue;
 }
 
 stock bool IsValidClient(int client)
 {
-	if (!IsValidClientIndex(client) || !IsClientInGame(client) || !IsClientConnected(client))
+	if ((client > 0 && client <= MaxClients) && IsClientInGame(client) && IsClientConnected(client))
 	{
-		return false;
+		return true;
 	}
-	return true;
+	return false;
 }

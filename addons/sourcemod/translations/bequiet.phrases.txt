@@ -1,0 +1,13 @@
+"Phrases"
+{
+	"Survivor"
+	{
+		"en"	"(Survivor) {blue}%N {default}: %s"
+		"es"	"(Superviviente) {blue}%N {default}: %s"
+	}
+	"Infected"
+	{
+		"en"	"(Infected) {red}%N {default}: %s"
+		"es"	"(Infectado) {red}%N {default}: %s"
+	}
+}
