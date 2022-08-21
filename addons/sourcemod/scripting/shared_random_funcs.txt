@@ -1,0 +1,63 @@
+"Games"
+{
+	"#default"
+	{
+		"Functions"
+		{
+      /**
+      https://github.com/ValveSoftware/source-sdk-2013/blob/master/mp/src/game/shared/util_shared.h#L57-L68
+      **/
+			"SharedRandomFloat"
+			{
+				"signature"		"SharedRandomFloat"
+				"callconv"		"cdecl"
+				"return"		"float"
+        "arguments"
+				{
+					"sharedname"
+					{
+						"type"		"charptr"
+					}
+					"flMinVal"
+					{
+						"type"		"float"
+					}
+					"flMaxVal"
+					{
+						"type"		"float"
+					}
+					"additionalSeed"
+					{
+						"type"		"int"
+					}
+				}
+			}
+		}
+	}
+	
+	"left4dead"
+	{
+		"Signatures"
+		{
+			"SharedRandomFloat"
+			{
+				"library"		"server"
+				"linux"			"@_Z17SharedRandomFloatPKcffi"
+				"windows"		""
+			}
+		}
+	}
+	
+	"left4dead2"
+	{
+		"Signatures"
+		{
+			"SharedRandomFloat"
+			{
+				"library"		"server"
+				"linux"			"@_Z17SharedRandomFloatPKcffi"
+				"windows"		""
+			}
+		}
+	}
+}
