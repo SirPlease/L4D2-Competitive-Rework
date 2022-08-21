@@ -89,6 +89,7 @@ public MRESReturn SharedRandomFloat(Handle hReturn, Handle hParams)
 	float overrideValue = 0.0;
 	if (OverrideSharedRandom(sharedname, flMinVal, flMaxVal, additionalSeed, overrideValue))
 	{
+		DHookSetReturn(hReturn, overrideValue);
 		return MRES_Override;
 	}
 	return MRES_Ignored;
