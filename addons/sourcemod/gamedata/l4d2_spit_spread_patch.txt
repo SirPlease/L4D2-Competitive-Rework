@@ -26,55 +26,58 @@
 		
 		"MemPatches"
 		{
-			"CSpitterProjectile::Detonate__TraceFlag_patch" // Add `CONTENTS_MONSTER` to the trace flags `MASK_SOLID_BRUSHONLY`
+			"CSpitterProjectile::Detonate__TraceFlag_patch"	// Add `CONTENTS_MONSTER` to the trace flags `MASK_SOLID_BRUSHONLY`
+															// v1.15: Add `CONTENTS_WATER` and `CONTENTS_SLIME`
 			{
 				"signature"		"CSpitterProjectile::Detonate"
 				"linux"
 				{
 					"offset"	"285h"
 					"verify"	"\x0B\x40\x00\x00"
-					"patch"		"\x0B\x40\x00\x02"
+					"patch"		"\x3B\x40\x00\x02"
 				}
 				"windows"
 				{
 					"offset"	"12Bh"
 					"verify"	"\x0B\x40\x00\x00"
-					"patch"		"\x0B\x40\x00\x02"
+					"patch"		"\x3B\x40\x00\x02"
 				}
 			}
 			
 			/**< `CInferno::Spread` calls TraceRay twice to confirm a spread */
-			"CInferno::Spread__TraceFlag_patch" // Add `CONTENTS_MONSTER` to the trace flags `MASK_SHOT_PORTAL`
+			"CInferno::Spread__TraceFlag_patch"		// Add `CONTENTS_MONSTER` to the trace flags `MASK_SHOT_PORTAL`
+													// v1.15: Add `CONTENTS_WATER` and `CONTENTS_SLIME`
 			{
 				"signature"		"CInferno::Spread"
 				"linux"
 				{
 					"offset"	"680h"
 					"verify"	"\x03\x40\x00\x00"
-					"patch"		"\x03\x40\x00\x02"
+					"patch"		"\x33\x40\x00\x02"
 				}
 				"windows"
 				{
 					"offset"	"6A9h"
 					"verify"	"\x03\x40\x00\x00"
-					"patch"		"\x03\x40\x00\x02"
+					"patch"		"\x33\x40\x00\x02"
 				}
 			}
 			
-			"CInferno::Spread__TraceFlag_patch2" // Add `CONTENTS_MONSTER` to the trace flags `MASK_SHOT_PORTAL`
+			"CInferno::Spread__TraceFlag_patch2"	// Add `CONTENTS_MONSTER` to the trace flags `MASK_SHOT_PORTAL`
+													// v1.15: Add `CONTENTS_WATER` and `CONTENTS_SLIME`
 			{
 				"signature"		"CInferno::Spread"
 				"linux"
 				{
 					"offset"	"997h"
 					"verify"	"\x03\x40\x00\x00"
-					"patch"		"\x03\x40\x00\x02"
+					"patch"		"\x33\x40\x00\x02"
 				}
 				"windows"
 				{
 					"offset"	"8D1h"
 					"verify"	"\x03\x40\x00\x00"
-					"patch"		"\x03\x40\x00\x02"
+					"patch"		"\x33\x40\x00\x02"
 				}
 			}
 			
