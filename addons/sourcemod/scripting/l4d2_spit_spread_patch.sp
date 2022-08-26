@@ -8,7 +8,7 @@
 #include <sourcescramble>
 #include <collisionhook>
 
-#define PLUGIN_VERSION "1.16"
+#define PLUGIN_VERSION "1.16.1"
 
 public Plugin myinfo = 
 {
@@ -305,32 +305,30 @@ Action SDK_OnThink(int entity)
 	{
 		float vPos[3];
 		GetEntPropVector(entity, Prop_Data, "m_vecAbsOrigin", vPos);
+		vPos[2] += 0.1; // raise a bit to prevent issues
 		
-		Handle tr;
-		float fHeight;
+		float vEnd[3];
+		vEnd[0] = vPos[0];
+		vEnd[1] = vPos[1];
+		vEnd[2] = vPos[2] + 500.0;
 		
-		// Hacky workaround for spitter being in water, don't feel like holding data of dead player.
-		// It's barely possible the player stuck with his head exposed.
-		// Settle with this until issues reported.
-		for (float test = 71.0; test > 0.1; test -= 35.45) // Test at player vecMaxs, half that, and 0.1 above origin. From head to feet.
+		// Check if in water first
+		Handle tr = TR_TraceRayFilterEx(vPos, vEnd, MASK_WATER, RayType_EndPoint, TraceRayFilter_NoPlayers, entity);
+		
+		if (TR_StartSolid(tr))
 		{
-			vPos[2] += test;
-			tr = TR_TraceRayFilterEx(vPos, view_as<float>({90.0, 0.0, 0.0}), MASK_SHOT|MASK_WATER, RayType_Infinite, TraceRayFilter_NoPlayers, entity);
-			
-			if (!TR_StartSolid(tr))
-			{
-				fHeight = test;
-				break;
-			}
-			
-			vPos[2] -= test;
-			delete tr;
+			vEnd[2] = vPos[2] - 0.1 + 500.0 * TR_GetFractionLeftSolid(tr); // eventually at the water surface 
+			TeleportEntity(entity, vEnd, NULL_VECTOR, NULL_VECTOR);
 		}
-		
-		if (TR_DidHit(tr))
+		else // Check if invisbile spit
 		{
-			float vEnd[3];
-			TR_GetEndPosition(vEnd, tr);
+			delete tr;
+			
+			vEnd[0] = vPos[0];
+			vEnd[1] = vPos[1];
+			vEnd[2] = vPos[2] - 46.1;
+			
+			tr = TR_TraceRayFilterEx(vPos, vEnd, MASK_SHOT|MASK_WATER, RayType_EndPoint, TraceRayFilter_NoPlayers, entity);
 			
 			// NOTE:
 			//
@@ -354,13 +352,13 @@ Action SDK_OnThink(int entity)
 			//
 			// So finally, I have to use `TeleportEntity` on the puddle to prevent this.
 			
-			float fDist = vPos[2] - vEnd[2];
-			if (fDist >= 46.0 + fHeight)
+			if (!TR_DidHit(tr))
 			{
 				RemoveEntity(entity);
 			}
 			else
 			{
+				TR_GetEndPosition(vEnd, tr);
 				TeleportEntity(entity, vEnd, NULL_VECTOR, NULL_VECTOR);
 				CreateTimer(0.3, Timer_FixInvisibleSpit, EntIndexToEntRef(entity), TIMER_FLAG_NO_MAPCHANGE);
 			}
