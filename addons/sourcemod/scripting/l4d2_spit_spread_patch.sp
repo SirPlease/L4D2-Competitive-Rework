@@ -8,7 +8,7 @@
 #include <sourcescramble>
 #include <collisionhook>
 
-#define PLUGIN_VERSION "1.15.1"
+#define PLUGIN_VERSION "1.16"
 
 public Plugin myinfo = 
 {
@@ -305,9 +305,28 @@ Action SDK_OnThink(int entity)
 	{
 		float vPos[3];
 		GetEntPropVector(entity, Prop_Data, "m_vecAbsOrigin", vPos);
-		vPos[2] += 0.1; // raise a bit to prevent issues
 		
-		Handle tr = TR_TraceRayFilterEx(vPos, view_as<float>({90.0, 0.0, 0.0}), MASK_SHOT, RayType_Infinite, TraceRayFilter_NoPlayers, entity);
+		Handle tr;
+		float fHeight;
+		
+		// Hacky workaround for spitter being in water, don't feel like holding data of dead player.
+		// It's barely possible the player stuck with his head exposed.
+		// Settle with this until issues reported.
+		for (float test = 71.0; test > 0.1; test -= 35.45) // Test at player vecMaxs, half that, and 0.1 above origin. From head to feet.
+		{
+			vPos[2] += test;
+			tr = TR_TraceRayFilterEx(vPos, view_as<float>({90.0, 0.0, 0.0}), MASK_SHOT|MASK_WATER, RayType_Infinite, TraceRayFilter_NoPlayers, entity);
+			
+			if (!TR_StartSolid(tr))
+			{
+				fHeight = test;
+				break;
+			}
+			
+			vPos[2] -= test;
+			delete tr;
+		}
+		
 		if (TR_DidHit(tr))
 		{
 			float vEnd[3];
@@ -336,7 +355,7 @@ Action SDK_OnThink(int entity)
 			// So finally, I have to use `TeleportEntity` on the puddle to prevent this.
 			
 			float fDist = vPos[2] - vEnd[2];
-			if (fDist >= 46.0 + 0.1)
+			if (fDist >= 46.0 + fHeight)
 			{
 				RemoveEntity(entity);
 			}
