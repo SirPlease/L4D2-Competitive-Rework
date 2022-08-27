@@ -8,7 +8,7 @@
 #include <sourcescramble>
 #include <collisionhook>
 
-#define PLUGIN_VERSION "1.16.1"
+#define PLUGIN_VERSION "1.17"
 
 public Plugin myinfo = 
 {
@@ -319,6 +319,7 @@ Action SDK_OnThink(int entity)
 		{
 			vEnd[2] = vPos[2] - 0.1 + 500.0 * TR_GetFractionLeftSolid(tr); // eventually at the water surface 
 			TeleportEntity(entity, vEnd, NULL_VECTOR, NULL_VECTOR);
+			CreateTimer(0.3, Timer_FixInvisibleSpit, EntIndexToEntRef(entity), TIMER_FLAG_NO_MAPCHANGE);
 		}
 		else // Check if invisbile spit
 		{
