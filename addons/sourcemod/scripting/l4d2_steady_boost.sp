@@ -18,7 +18,6 @@ public Plugin myinfo =
 #define GAMEDATA_FILE "l4d2_steady_boost"
 
 int g_iFlags;
-int g_iReminder[MAXPLAYERS+1];
 
 void AssertFail(bool test, const char[] error)
 {
@@ -33,12 +32,6 @@ public void OnPluginStart()
 	DynamicDetour hDetour = DynamicDetour.FromConf(conf, "CTerrorGameMovement::CheckStacking");
 	AssertFail(hDetour != null && hDetour.Enable(Hook_Pre, DTR_OnCheckStacking),
 			"Failed to detour \""..."CTerrorGameMovement::CheckStacking"..."\"");
-	
-	delete hDetour;
-	
-	hDetour = DynamicDetour.FromConf(conf, "CBaseEntity::SetGroundEntity");
-	AssertFail(hDetour != null && hDetour.Enable(Hook_Pre, DTR_OnSetGroundEntity),
-			"Failed to detour \""..."CBaseEntity::SetGroundEntity"..."\"");
 	
 	delete hDetour;
 	delete conf;
@@ -56,11 +49,6 @@ public void OnPluginStart()
 void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	g_iFlags = convar.IntValue;
-}
-
-public void OnClientDisconnect(int client)
-{
-	g_iReminder[client] = 0;
 }
 
 // TODO: Client prediction fix
@@ -84,54 +72,5 @@ MRESReturn DTR_OnCheckStacking(DHookParam hParams)
 	if (GetClientTeam(ground) == team) // do we need this?
 		return MRES_Ignored;
 	
-	SetEntPropEnt(client, Prop_Send, "m_hGroundEntity", 0);
-	SetEntityMoveType(client, MOVETYPE_LADDER);
-	
-	if (!g_iReminder[client])
-	{
-		PrintToChat(client, "(CheckStacking) on %N", ground);
-	}
-	
-	g_iReminder[client] = GetClientUserId(ground);
-	
 	return MRES_Supercede;
-}
-
-MRESReturn DTR_OnSetGroundEntity(int entity, DHookParam hParams)
-{
-	if (entity <= 0 || entity > MaxClients)
-		return MRES_Ignored;
-	
-	if (!g_iReminder[entity])
-		return MRES_Ignored;
-	
-	int ground = -1;
-	
-	if (!hParams.IsNull(1))
-		ground = hParams.Get(1);
-	
-	if (ground == 0 || ground > MaxClients)
-		return MRES_Ignored;
-	
-	char cls[64];
-	int prev = GetEntPropEnt(entity, Prop_Send, "m_hGroundEntity");
-	if (prev > 0 && prev <= MaxClients)
-		GetClientName(prev, cls, sizeof(cls));
-	else
-		GetEdictClassname(prev, cls, sizeof(cls));
-	PrintToChat(entity, "(SetGroundEntity) %N <- %s", ground, cls);
-	
-	if (ground != -1)
-	{
-		return MRES_Supercede;
-	}
-	
-	if (g_iReminder[entity])
-	{
-		PrintToChat(entity, "(SetGroundEntity) going off ground", entity);
-	}
-	
-	g_iReminder[entity] = 0;
-	SetEntityMoveType(entity, MOVETYPE_WALK);
-	return MRES_Ignored;
 }

@@ -22,21 +22,6 @@
 					}
 				}
 			}
-			
-			"CBaseEntity::SetGroundEntity"
-			{
-				"signature"		"CBaseEntity::SetGroundEntity"
-				"callconv"		"thiscall"
-				"return"		"void"
-				"this"			"entity"
-				"arguments"
-				{
-					"a1"
-					{
-						"type"	"cbaseentity"
-					}
-				}
-			}
 		}
 		
 		"Signatures"
@@ -47,11 +32,6 @@
 				"linux"			"@_ZN19CTerrorGameMovement13CheckStackingEv"
 				"windows"		"\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\x53\x56\x8B\xF1\x8B\x86\x2A\x2A\x2A\x2A\x33\xDB"
 								/* 55 8B EC 81 EC ? ? ? ? 53 56 8B F1 8B 86 ? ? ? ? 33 DB */
-			}
-			
-			"CBaseEntity::SetGroundEntity"
-			{
-				"linux"			"@_ZN11CBaseEntity15SetGroundEntityEPS_"
 			}
 		}
 	}
