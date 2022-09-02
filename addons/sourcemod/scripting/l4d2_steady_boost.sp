@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <dhooks>
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 
 public Plugin myinfo = 
 {
@@ -29,9 +29,9 @@ public void OnPluginStart()
 	GameData conf = new GameData(GAMEDATA_FILE);
 	AssertFail(conf != null, "Missing gamedata \""...GAMEDATA_FILE..."\"");
 	
-	DynamicDetour hDetour = DynamicDetour.FromConf(conf, "CTerrorGameMovement::CheckStacking");
-	AssertFail(hDetour != null && hDetour.Enable(Hook_Pre, DTR_OnCheckStacking),
-			"Failed to detour \""..."CTerrorGameMovement::CheckStacking"..."\"");
+	DynamicDetour hDetour = DynamicDetour.FromConf(conf, "CBaseEntity::SetGroundEntity");
+	AssertFail(hDetour != null && hDetour.Enable(Hook_Pre, DTR_OnSetGroundEntity),
+			"Failed to detour \""..."CBaseEntity::SetGroundEntity"..."\"");
 	
 	delete hDetour;
 	delete conf;
@@ -52,25 +52,28 @@ void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue
 }
 
 // TODO: Client prediction fix
-MRESReturn DTR_OnCheckStacking(DHookParam hParams)
+MRESReturn DTR_OnSetGroundEntity(int entity, DHookParam hParams)
 {
 	if (!g_iFlags)
 		return MRES_Ignored;
 	
-	int client = hParams.GetObjectVar(1, 2064, ObjectValueType_CBaseEntityPtr);
-	if (client == -1 || !IsClientInGame(client))
+	if (entity <= 0 || entity > MaxClients || !IsClientInGame(entity))
 		return MRES_Ignored;
 	
-	int team = GetClientTeam(client);
+	int team = GetClientTeam(entity);
 	if ((team - 1) & ~g_iFlags)
 		return MRES_Ignored;
 	
-	int ground = GetEntPropEnt(client, Prop_Send, "m_hGroundEntity");
+	int ground = -1;
+	if (!hParams.IsNull(1))
+		ground = hParams.Get(1);
+	
 	if (ground <= 0 || ground > MaxClients)
 		return MRES_Ignored;
 	
 	if (GetClientTeam(ground) == team) // do we need this?
 		return MRES_Ignored;
 	
+	SetEntPropEnt(entity, Prop_Send, "m_hGroundEntity", 0);
 	return MRES_Supercede;
 }
