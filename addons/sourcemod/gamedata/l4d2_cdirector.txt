@@ -42,6 +42,12 @@
 				"linux"		"300"
 				"windows"	"300"
 			}
+			
+			"CDirector::m_PanicTimer"
+			{
+				"linux"		"872"
+				"windows"	"872"
+			}
 		}
 		"Signatures"
 		{
