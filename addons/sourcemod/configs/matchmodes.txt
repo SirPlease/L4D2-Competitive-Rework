@@ -60,7 +60,7 @@
 	{
 		"acemodrv"
 		{
-			"name" "Acemod RV 1.2"
+			"name" "Acemod RV 1.3"
 		}
 		"amrv3v3"
 		{
