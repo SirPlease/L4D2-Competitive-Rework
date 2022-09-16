@@ -1,5 +1,37 @@
 "Games"
 {
+	"left4dead"
+	{
+		"Functions"
+		{
+			"CBaseEntity::SetGroundEntity"
+			{
+				"signature"		"CBaseEntity::SetGroundEntity"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"cbaseentity"
+					}
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			"CBaseEntity::SetGroundEntity"
+			{
+				"library"		"server"
+				"linux"			"@_ZN11CBaseEntity15SetGroundEntityEPS_"
+				"windows"		"\x53\x55\x8B\xD9\x8B\x83\x2A\x2A\x2A\x2A\x83\xF8\x2A\x8D\xAB\x2A\x2A\x2A\x2A\x56\x74\x2A\x8B"
+								/* 53 55 8B D9 8B 83 ? ? ? ? 83 F8 ? 8D AB ? ? ? ? 56 74 ? 8B */
+			}
+		}
+	}
+	
 	"left4dead2"
 	{
 		"Functions"
