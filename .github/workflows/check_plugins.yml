@@ -1,0 +1,48 @@
+name: Check all plugins
+
+on:
+  pull_request:
+    paths:
+      - 'addons/sourcemod/scripting/*.sp'
+      - 'addons/sourcemod/scripting/*.inc'
+    branches:
+      - main
+  push:
+    paths:
+      - 'addons/sourcemod/scripting/*.sp'
+      - 'addons/sourcemod/scripting/*.inc'
+    branches:
+      - main
+
+jobs:
+  build:
+    name: build with sm${{ matrix.sm_version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        sm_version:
+          #- "1.9"
+          - "1.10"
+          - "1.11"
+          - "1.12"
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set environment variables
+        run: |
+          echo "SCRIPTS_PATH=$GITHUB_WORKSPACE/addons/sourcemod/scripting" >> $GITHUB_ENV
+
+      - name: Setup SourcePawn Compiler ${{ matrix.SM_VERSION }}
+        uses: rumblefrog/setup-sp@master
+        with:
+          version: ${{ matrix.SM_VERSION }}
+
+      - name: Compile plugins
+        run: |
+          for file in *.sp
+          do
+            echo -e "\nCompiling $file..."
+            spcomp -E -w234 -O2 -v2 -i $SCRIPTS_PATH/include $file
+          done
+        working-directory: ${{ env.SCRIPTS_PATH }}/
