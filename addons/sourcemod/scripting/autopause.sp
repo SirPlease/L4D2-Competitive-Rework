@@ -34,9 +34,10 @@ public Plugin:myinfo =
     url = "https://github.com/jbzdarkid/AutoPause"
 }
 
-new Handle:enabled;
-new Handle:force;
-new Handle:apdebug;
+new Handle:g_hCvarEnabled;
+new Handle:g_hCvarForce;
+new Handle:g_hCvarApdebug;
+
 new Handle:crashedPlayers;
 new Handle:infectedPlayers;
 new Handle:survivorPlayers;
@@ -45,9 +46,9 @@ new bool:RoundEnd;
 
 public OnPluginStart() {
     // Suggestion by Nati: Disable for any 1v1
-    enabled = CreateConVar("autopause_enable", "1", "Whether or not to automatically pause when a player crashes.");
-    force = CreateConVar("autopause_force", "0", "Whether or not to force pause when a player crashes.");
-    apdebug = CreateConVar("autopause_apdebug", "0", "Whether or not to debug information.");
+    g_hCvarEnabled = CreateConVar("autopause_enable", "1", "Whether or not to automatically pause when a player crashes.");
+    g_hCvarForce = CreateConVar("autopause_force", "0", "Whether or not to force pause when a player crashes.");
+    g_hCvarApdebug = CreateConVar("autopause_apdebug", "0", "Whether or not to debug information.");
 
     crashedPlayers = CreateTrie();
     infectedPlayers = CreateArray(64);
@@ -99,11 +100,11 @@ public playerTeam(Handle:event, const String:name[], bool:dontBroadcast) {
     new survindex = FindStringInArray(infectedPlayers, steamId);
     if (oldTeam == 3) {
         if (index != -1) RemoveFromArray(infectedPlayers, index);
-        if (GetConVarBool(apdebug)) LogMessage("[AutoPause] Removed player %s from infected team.", steamId);
+        if (GetConVarBool(g_hCvarApdebug)) LogMessage("[AutoPause] Removed player %s from infected team.", steamId);
     }
     else if (oldTeam == 2) {
         if (survindex != -1) RemoveFromArray(survivorPlayers, survindex);
-        if (GetConVarBool(apdebug)) LogMessage("[AutoPause] Removed player %s from survivor team.", steamId);
+        if (GetConVarBool(g_hCvarApdebug)) LogMessage("[AutoPause] Removed player %s from survivor team.", steamId);
     }
     if (newTeam == 3) {
         decl Float:spawnTime;
@@ -114,12 +115,12 @@ public playerTeam(Handle:event, const String:name[], bool:dontBroadcast) {
             LogMessage("[AutoPause] Player %s rejoined, set spawn timer to %f.", steamId, spawnTime);
         } else if (index == -1) {
             PushArrayString(infectedPlayers, steamId);
-            if (GetConVarBool(apdebug)) LogMessage("[AutoPause] Added player %s to infected team.", steamId);
+            if (GetConVarBool(g_hCvarApdebug)) LogMessage("[AutoPause] Added player %s to infected team.", steamId);
         }
     }
     else if (newTeam == 2 && survindex == -1) {
         PushArrayString(survivorPlayers, steamId);
-        if (GetConVarBool(apdebug)) LogMessage("[AutoPause] Added player %s to survivor team.", steamId);
+        if (GetConVarBool(g_hCvarApdebug)) LogMessage("[AutoPause] Added player %s to survivor team.", steamId);
     }
 }
 
@@ -140,14 +141,14 @@ public playerDisconnect(Handle:event, const String:name[], bool:dontBroadcast) {
     decl String:timedOut[256];
     Format(timedOut, sizeof(timedOut), "%s timed out", playerName);
 
-    if (GetConVarBool(apdebug)) LogMessage("[AutoPause] Player %s (%s) left the game: %s", playerName, steamId, reason);
+    if (GetConVarBool(g_hCvarApdebug)) LogMessage("[AutoPause] Player %s (%s) left the game: %s", playerName, steamId, reason);
 
     // If the leaving player crashed, pause.
     if (strcmp(reason, timedOut) == 0 || strcmp(reason, "No Steam logon") == 0)
     {
-        if ((!readyUpIsAvailable || !IsInReady()) && !RoundEnd && GetConVarBool(enabled)) 
+        if ((!readyUpIsAvailable || !IsInReady()) && !RoundEnd && GetConVarBool(g_hCvarEnabled)) 
         {
-            if (GetConVarBool(force)) 
+            if (GetConVarBool(g_hCvarForce)) 
             {
                 ServerCommand("sm_forcepause");
             } 
