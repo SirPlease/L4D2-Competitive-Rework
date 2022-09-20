@@ -14,7 +14,7 @@
 #define MODULE_CVARSETTINGS			1 //CvarSettings
 #define MODULE_GHOSTTANK			1 //GhostTank
 #define MODULE_UNRESERVELOBBY		1 //UnreserveLobby
-#define MODULE_GHOSTWARP			1 //GhostWarp
+#define MODULE_GHOSTWARP			0 //GhostWarp (plugin l4d2_ghost_warp replaces this functionality)
 #define MODULE_PASSWORDSYSTEM		1 //PasswordSystem
 #define MODULE_BOTKICK				1 //BotKick
 #define MODULE_SCOREMOD				1 //ScoreMod
