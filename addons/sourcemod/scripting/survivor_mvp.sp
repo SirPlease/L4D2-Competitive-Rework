@@ -131,7 +131,7 @@ new                tankSpawned = false;                        // When tank is s
 new                 commonKilledDuringTank[MAXPLAYERS + 1];     // Common killed during the tank
 new                 ttlCommonKilledDuringTank = 0;              // Common killed during the tank
 new                 siDmgDuringTank[MAXPLAYERS + 1];            // SI killed during the tank
-new                 ttlSiDmgDuringTank = 0;                     // Total SI killed during the tank
+//new                 ttlSiDmgDuringTank = 0;                     // Total SI killed during the tank
 new                tankThrow;                                  // Whether or not the tank has thrown a rock
 new                 rocksEaten[MAXPLAYERS + 1];                 // The amount of rocks a player 'ate'.
 new                 rockIndex;                                  // The index of the rock (to detect how many times we were rocked)
@@ -431,7 +431,7 @@ public void ScavRoundStart(Handle:event, const String:name[], bool:dontBroadcast
     //iTotalDamageWitch = 0;
     iTotalDamageAll = 0;
     iTotalFF = 0;
-    ttlSiDmgDuringTank = 0;
+    //ttlSiDmgDuringTank = 0;
     ttlCommonKilledDuringTank = 0;
     tankThrow = false;
     
@@ -480,7 +480,7 @@ public RoundStart_Event(Handle:event, const String:name[], bool:dontBroadcast)
     //iTotalDamage = 0;
     iTotalDamageAll = 0;
     iTotalFF = 0;
-    ttlSiDmgDuringTank = 0;
+    //ttlSiDmgDuringTank = 0;
     ttlCommonKilledDuringTank = 0;
     //iTotalDamageTank = 0;
     tankThrow = false;
@@ -872,7 +872,7 @@ public PlayerHurt_Event(Handle:event, const String:name[], bool:dontBroadcast)
                 // If the tank is up, let's store separately
                 if (tankSpawned) {
                     siDmgDuringTank[attacker] += damageDone;
-                    ttlSiDmgDuringTank += damageDone;
+                    //ttlSiDmgDuringTank += damageDone;
                 }
                 
                 iDidDamage[attacker] += damageDone;
