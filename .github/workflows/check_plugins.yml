@@ -6,13 +6,13 @@ on:
       - 'addons/sourcemod/scripting/*.sp'
       - 'addons/sourcemod/scripting/*.inc'
     branches:
-      - main
+      - master
   push:
     paths:
       - 'addons/sourcemod/scripting/*.sp'
       - 'addons/sourcemod/scripting/*.inc'
     branches:
-      - main
+      - master
 
 jobs:
   build:
