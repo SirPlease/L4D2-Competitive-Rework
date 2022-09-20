@@ -59,7 +59,7 @@ public void OnPluginStart()
 	
 	if (offs == 0) // windows
 	{
-		addr = LoadFromAddress(addr, NumberType_Int32);
+		addr = view_as<Address>(LoadFromAddress(addr, NumberType_Int32));
 		if (addr == Address_Null)
 			SetFailState("Failed to deref pointer to \""...KEY_SETPASSENTITY..."\"");
 	}
