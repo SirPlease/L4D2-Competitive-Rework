@@ -26,14 +26,15 @@ char
 
 bool
 	g_bIsConfoglAvailable = false,
-	g_bOnSet = false;
+	g_bOnSet = false,
+	g_bCedaGame = false;
 
 public Plugin myinfo =
 {
 	name = "Match Vote",
 	author = "vintik, Sir",
 	description = "!match !rmatch - Change Hostname and Slots while you're at it!",
-	version = "1.2",
+	version = "1.2.1",
 	url = "https://github.com/L4D-Community/L4D2-Competitive-Framework"
 };
 
@@ -93,6 +94,14 @@ public void OnLibraryAdded(const char[] sPluginName)
 	if (strcmp(sPluginName, "confogl") == 0) {
 		g_bIsConfoglAvailable = true;
 	}
+}
+
+public void OnCedapugStarted() {
+	g_bCedaGame = true;
+}
+
+public void OnCedapugEnded() {
+	g_bCedaGame = false;
 }
 
 public Action MatchRequest(int iClient, int iArgs)
@@ -291,6 +300,10 @@ public void MatchVoteResultHandler(Handle vote, int num_votes, int num_clients, 
 public Action MatchReset(int iClient, int iArgs)
 {
 	if (iClient == 0 || !g_bIsConfoglAvailable) {
+		return Plugin_Handled;
+	}
+
+	if (g_bCedaGame) {
 		return Plugin_Handled;
 	}
 
