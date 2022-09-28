@@ -24,7 +24,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public any Ntv_ReleaseFromViewControl(Handle plugin, int numParams)
 {
-	return ReleaseFromViewControl(_, GetNativeCell(1));
+	ReleaseFromViewControl(_, GetNativeCell(1));
+
+	return 1;
 }
 
 ArrayList g_aDeathFallClients;

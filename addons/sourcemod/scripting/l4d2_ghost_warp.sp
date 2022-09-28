@@ -253,7 +253,7 @@ public void Hook_OnPostThinkPost(int iClient)
 
 bool WarpToRandomSurvivor(int iInfected, int iLastWarpSurvivor)
 {
-	int iRandomSurvivor = GetRandomSurvivor(iLastWarpSurvivor);
+	int iRandomSurvivor = GetRandSurvivor(iLastWarpSurvivor);
 
 	if (iRandomSurvivor == 0) {
 		return false;
@@ -264,7 +264,7 @@ bool WarpToRandomSurvivor(int iInfected, int iLastWarpSurvivor)
 	return true;
 }
 
-int GetRandomSurvivor(int iExceptSurvivor = 0)
+int GetRandSurvivor(int iExceptSurvivor = 0)
 {
 	int iSurvivorIndex[MAXPLAYERS + 1], iSuvivorCount = 0, iSuvivorTotalCount = 0;
 

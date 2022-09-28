@@ -66,7 +66,7 @@ public void OnPluginStart()
 
 public MRESReturn DH_OnGetMissionInfo(Handle hReturn)
 {
-	if(GetGameTime() > 5.0) return
+	if(GetGameTime() > 5.0) return MRES_Ignored;
 	char t[255], s[255], f[255], m[64]
 	int i = DHookGetReturn(hReturn)
 	GetConVarString(FindConVar("mp_gamemode"), m, 64)
@@ -89,7 +89,7 @@ public MRESReturn DH_OnGetMissionInfo(Handle hReturn)
 	{
 		SDKCall(hKvGetString, i, s, 255, "meleeweapons", "");
 		if(!StrEqual(s, t)) SDKCall(hKvSetString, i, "meleeweapons", t);
-		return
+		return MRES_Ignored;
 	}
 	ReplaceString(t, 255, ";", ",")
 	if(!s[0]) s = t
@@ -108,7 +108,9 @@ public MRESReturn DH_OnGetMissionInfo(Handle hReturn)
 	{
 		if(sAdded[l][0] != 0) Format(s, 255, "%s,%s", s,sAdded[l])
 	}
-	if(StrEqual(s, t)) return // If melee spawn setting same as the mission info, then return
+	if(StrEqual(s, t)) return MRES_Ignored; // If melee spawn setting same as the mission info, then return
 	ReplaceString(s, 255, ",", ";")
 	SDKCall(hKvSetString, i, "meleeweapons", s);
+
+	return MRES_Ignored;
 }

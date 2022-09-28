@@ -24,7 +24,7 @@
 #include <sourcemod>
 #include <sdktools>
 
-#define PLUGIN_VERSION "3.7"
+#define PLUGIN_VERSION "3.7.1"
 
 public Plugin myinfo =
 {
@@ -35,16 +35,17 @@ public Plugin myinfo =
 	url			= "https://github.com/Target5150/MoYu_Server_Stupid_Plugins"
 };
 
-enum alarmArray
+enum /*alarmArray*/
 {
 	ENTRY_RELAY_ON,
 	ENTRY_RELAY_OFF,
 	ENTRY_START_STATE,
 	ENTRY_ALARM_CAR,
 	ENTRY_COLOR,
-	
+
 	alarmArray_SIZE
 }
+
 static const int 
 	NULL_ALARMARRAY[alarmArray_SIZE] = {
 		INVALID_ENT_REFERENCE,
@@ -127,7 +128,7 @@ Action Timer_RoundStartDelay(Handle timer)
 			int entry = -1;
 			if (!g_smCarNameMap.GetValue(sKey, entry)) // creates a new entry
 			{
-				entry = g_aAlarmArray.PushArray(NULL_ALARMARRAY);
+				entry = g_aAlarmArray.PushArray(NULL_ALARMARRAY[0], sizeof(NULL_ALARMARRAY));
 				g_smCarNameMap.SetValue(sKey, entry);
 				g_aAlarmArray.Set(entry, EntIndexToEntRef(ent), ENTRY_ALARM_CAR);
 			}
@@ -422,14 +423,14 @@ stock void ExtractColorBytes(int color, int &r, int &g, int &b, int &a)
 	a = (color & 0x000000FF);
 }
 
-stock void ThrowEntryError(alarmArray entry, int entity)
+stock void ThrowEntryError(int entry, int entity)
 {
 	char sName[128];
 	GetEntityName(entity, sName, sizeof(sName));
 	ThrowError("Fatal: Could not find entry (#%i) for %s", entry, sName);
 }
 
-stock void ThrowEmptyError(alarmArray entry, int entity)
+stock void ThrowEmptyError(int entry, int entity)
 {
 	char sName[128];
 	GetEntityName(entity, sName, sizeof(sName));

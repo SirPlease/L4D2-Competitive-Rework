@@ -332,7 +332,7 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 			int damage = g_iDamageDealt[victim][attacker];
 			int shots = g_iShotsDealt[victim][attacker];
 			
-			char plural = (shots == 1) ? 0 : 's';
+			//char plural = (shots == 1) ? 0 : 's';
 			
 			for (i = 1; i <= MaxClients; i++) {
 				if (i == attacker) {

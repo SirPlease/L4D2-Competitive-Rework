@@ -172,7 +172,7 @@ void OnNextFrame(any victim)
 
 public void OnSmokerSurvivorClear(any smoker)
 {
-	if (IsValidAliveSmoker)
+	if (IsValidAliveSmoker(smoker))
 	{
 		float time = GetGameTime();
 		float timestamp;
