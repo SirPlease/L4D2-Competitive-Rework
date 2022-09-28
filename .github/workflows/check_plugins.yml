@@ -14,12 +14,11 @@ on:
     branches:
       - master
   workflow_dispatch:
-      paths:
+    paths:
       - 'addons/sourcemod/scripting/*.sp'
       - 'addons/sourcemod/scripting/*.inc'
     branches:
       - master
-  
 
 jobs:
   build:
