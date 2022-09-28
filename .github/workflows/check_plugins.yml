@@ -13,6 +13,13 @@ on:
       - 'addons/sourcemod/scripting/*.inc'
     branches:
       - master
+  workflow_dispatch:
+      paths:
+      - 'addons/sourcemod/scripting/*.sp'
+      - 'addons/sourcemod/scripting/*.inc'
+    branches:
+      - master
+  
 
 jobs:
   build:
