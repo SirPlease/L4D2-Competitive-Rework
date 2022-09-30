@@ -1,0 +1,51 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Addresses"
+		{
+			"CCarProp::InputSurvivorStandingOnCar"
+			{
+				"windows"
+				{
+					"signature"	"CCarProp::InputSurvivorStandingOnCar"			
+				}
+				"linux"
+				{
+					"signature"	"CCarProp::InputSurvivorStandingOnCar"
+				}
+			}
+		}
+
+		"Offsets"
+		{
+			"InputSurvivorStandingOnCar_Offset"
+			{
+				"windows"		"227" // 0xE3
+				"linux"			"260" // 0x104
+			}
+			"InputSurvivorStandingOnCar_Byte"
+			{
+				"windows"		"116" // 0x74
+				"linux"			"15" // 0x0F
+			}
+			"InputSurvivorStandingOnCar_Count"
+			{
+				"windows"		"1"
+				"linux"			"6"
+			}
+		}
+
+		"Signatures"
+		{
+			"CCarProp::InputSurvivorStandingOnCar"
+			{
+				"library"		"server"
+				"linux"			"@_ZN8CCarProp26InputSurvivorStandingOnCarER11inputdata_t"
+				"windows"		"\x55\x8B\x2A\x83\x2A\x2A\x56\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x85\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x85\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x85"
+				/* 55 8B ? 83 ? ? 56 8B ? ? ? ? ? ? ? ? 0F 85 ? ? ? ? ? ? ? ? ? ? ? 0F 85 ? ? ? ? ? ? ? ? ? ? ? 0F 85 */
+				/* Search: "triggered_car_alarm" */
+			}
+		}
+	}
+}
