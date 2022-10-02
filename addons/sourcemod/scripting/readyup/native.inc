@@ -54,6 +54,22 @@ any Native_IsInReady(Handle plugin, int numParams)
 	return inReadyUp;
 }
 
+any Native_IsReady(Handle plugin, int numParams)
+{
+	int client = GetNativeCell(1);
+	if (client < 1 || client > MaxClients)
+	{
+		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index %d", client);
+	}
+	
+	if (!IsClientInGame(client))
+	{
+		return ThrowNativeError(SP_ERROR_NATIVE, "Client %d is not in game", client);
+	}
+	
+	return IsPlayerReady(client);
+}
+
 any Native_ToggleReadyPanel(Handle plugin, int numParams)
 {
 	if (inReadyUp)

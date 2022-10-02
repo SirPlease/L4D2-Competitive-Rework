@@ -100,6 +100,14 @@ native int AddStringToReadyFooter(const char[] footer);
 native bool IsInReady();
 
 /**
+ * Whether or not the player is currently readied up
+ *
+ * @param client    Client to check.
+ * @return          True if the game is currently in the ready-up phase.
+ */
+native bool IsReady(int client);
+
+/**
  * @brief Toggle ready panel of one target or all clients.
  * @remarks Always return false if currently not in ready-up phase.
  *
@@ -126,6 +134,7 @@ public void __pl_readyup_SetNTVOptional()
 	MarkNativeAsOptional("EditFooterStringAtIndex");
 	MarkNativeAsOptional("AddStringToReadyFooter");
 	MarkNativeAsOptional("IsInReady");
+	MarkNativeAsOptional("IsReady");
 	MarkNativeAsOptional("ToggleReadyPanel");
 }
 #endif
