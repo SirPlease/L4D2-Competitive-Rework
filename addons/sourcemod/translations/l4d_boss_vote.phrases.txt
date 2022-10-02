@@ -1,0 +1,142 @@
+"Phrases"
+{
+    "Tag"
+    {
+        "en"        "{blue}<{green}BossVote{blue}>{default}"
+    }
+    // RunVoteChecks
+    "NotAvailable"
+    {
+        "en"        "Boss voting is not available on this map."
+    }
+    "Available"
+    {
+        "en"        "Boss voting is only available during ready up."
+    }
+    "FirstRound"
+    {
+        "en"        "Boss voting is only available during the first round of a map."
+    }
+    "NotAvailableForSpec"
+    {
+        "en"        "Boss voting is not available for spectators."
+    }
+    "CannotBeCalled"
+    {
+        "en"        "Boss Vote cannot be called right now..."
+    }
+    // VoteBossCmd
+    "Usage"
+    {
+        "en"        "Usage: !voteboss {olive}<{default}tank{olive}> <{default}witch{olive}>{default}."
+    }
+    "Usage2"
+    {
+        "en"        "Use {default}\"{blue}0{default}\" for {olive}No Spawn{default}, \"{blue}-1{default}\" for {olive}Ignorance."
+    }
+    "Invalid"
+    {
+        "en"        "Percentages are {olive}invalid{default}."
+    }
+    "TankStatic"
+    {
+        "en"        "Tank spawn is static and can not be changed on this map."
+    }
+    "WitchStatic"
+    {
+        "en"        "Witch spawn is static and can not be changed on this map."
+    }
+    "TankBanned"
+    {
+        "en"        "Tank percentage is {blue}banned{default}."
+    }
+    "WitchBanned"
+    {
+        "en"        "Witch percentage is {blue}banned{default}."
+    }
+    "SetBosses"
+    {
+        "en"        "Set Tank to: %s and Witch to: %s?"
+    }
+    "SetTank"
+    {
+        "en"        "Set Tank to: %s and Witch to: Disabled?"
+    }
+    "SetOnlyTank"
+    {
+        "en"        "Set Tank to: %s?"
+    }
+    "SetWitch"
+    {
+        "en"        "Set Tank to: Disabled and Witch to: %s?"
+    }
+    "SetOnlyWitch"
+    {
+        "en"        "Set Witch to: %s?"
+    }
+    "SetBossesDisabled"
+    {
+        "en"        "Set Bosses to: Disabled?"
+    }
+    "SetTankDisabled"
+    {
+        "en"        "Set Tank to: Disabled?"
+    }
+    "SetWitchDisabled"
+    {
+        "en"        "Set Witch to: Disabled?"
+    }
+    // BossVoteResultHandler
+    "OnlyReadyUp"
+    {
+        "en"        "Spawns can only be set during ready up."
+    }
+    "SettingBoss"
+    {
+        "en"        "Setting Boss Spawns..."
+    }
+    "SettingTank"
+    {
+        "en"        "Setting Tank Spawn..."
+    }
+    "SettingWitch"
+    {
+        "en"        "Setting Witch Spawn..."
+    }
+    "SettingBossDisabled"
+    {
+        "en"        "Setting Boss Disabled..."
+    }
+    // ForceTankCommand
+    "CommandNotAvailable"
+    {
+        "en"        "Command not available on this map."
+    }
+    "TankSpawnStatic"
+    {
+        "en"        "Tank spawn is static and can not be changed on this map."
+    }
+    "PercentageInvalid"
+    {
+        "en"        "Percentage is {blue}invalid{default}."
+    }
+    "Percentagebanned"
+    {
+        "en"        "Percentage is {blue}banned{default}."
+    }
+    "TankSpawnAdmin"
+    {
+		"#format"   "{1:i},{2:s}" // 1:p_iRequestedPercent 2:clientName
+        "en"        "Tank spawn set to {olive}{1}%{default} by Admin {blue}{2}{default}."
+    }
+    // ForceWitchCommand
+    "WitchSpawnStatic"
+    {
+        "en"        "Witch spawn is static and can not be changed on this map."
+    }
+    "WitchSpawnAdmin"
+    {
+		"#format"   "{1:i},{2:s}" // 1:p_iRequestedPercent 2:clientName
+        "en"        "Witch spawn set to {olive}{1}%{default} by Admin {blue}{2}{default}."
+    }
+}

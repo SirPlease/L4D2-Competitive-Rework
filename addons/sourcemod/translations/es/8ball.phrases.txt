@@ -1,0 +1,35 @@
+"Phrases"
+{
+	"Usage"
+	{
+		"es"		"Uso: !8ball <pregunta>"
+	}
+	"Asked"
+	{
+		"es"		"{teamcolor}%N{default} Preguntó: {olive}%s{default}"
+	}
+	"WithYes"
+	{
+		"es"		"Voy con un {olive}Sí{default}!"
+	}
+	"WithNo"
+	{
+		"es"		"Voy con un {red}No{default}!"
+	}
+	"Yikes"
+	{
+		"es"		"Uff. {red}No{default}!"
+	}
+	"Sure"
+	{
+		"es"		"Uhhhhh... {olive}Por Supuesto{default}?"
+	}
+	"AbsolutelyNot"
+	{
+		"es"		"LOL {red}Absolutamente No{default}!"
+	}
+	"Yeah"
+	{
+		"es"		"¿Sabes que? {olive}Sí{default}!"
+	}
+}

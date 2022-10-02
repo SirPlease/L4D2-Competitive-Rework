@@ -23,6 +23,11 @@ public Plugin myinfo =
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
+public void OnPluginStart()
+{
+	LoadTranslations("l4d2_tank_announce.phrases");
+}
+
 public void OnMapStart()
 {
 	PrecacheSound(DANG);
@@ -59,7 +64,7 @@ public void L4D_OnSpawnTank_Post(int client, const float vecPos[3], const float 
 		return;
 	}
 	
-	CPrintToChatAll("{red}[{default}!{red}] {olive}Tank {default}({red}Control: %s{default}) has spawned!", nameBuf);
+	CPrintToChatAll("%t", "Spawned", nameBuf);
 	EmitSoundToAll(DANG);
 }
 
@@ -70,7 +75,7 @@ public void Event_PlayerSpawn(Event event, char[] name, bool dontBroadcast)
 	// Tanky Client?
 	if (IsTank(client) && !IsFakeClient(client))
 	{
-		CPrintToChatAll("{red}[{default}!{red}] {olive}Tank {default}({red}Control: %N{default}) has spawned!", client);
+		CPrintToChatAll("%t", "Spawned2", client);
 		EmitSoundToAll(DANG);
 		UnhookEvent("player_spawn", Event_PlayerSpawn);
 	}

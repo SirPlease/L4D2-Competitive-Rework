@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"Spawned"
+	{
+    	"es"	"¡Se ha generado un {olive}Tank {default}({red}Control: %s{default})!"
+	}
+	"Spawned2"
+	{
+		"es"	"¡Se ha generado un {olive}Tank {default}({red}Control: %N{default})!"
+	}
+}

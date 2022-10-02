@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Title"
+	{
+		"en"	"{blue}[{default}Tank Rock Selector{blue}]"
+	}
+	"Reload"
+	{
+		"en"	"{olive}Reload{default} = {blue}2 Handed Overhand{default}"
+	}
+	"Use"
+	{
+		"en"	"{olive}Use{default} = {blue}Underhand{default}"
+	}
+	"M2"
+	{
+		"en"	"{olive}M2{default} = {blue}1 Handed Overhand{default}"
+	}
+}

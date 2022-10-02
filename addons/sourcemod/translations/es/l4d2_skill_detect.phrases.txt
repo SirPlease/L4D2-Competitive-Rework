@@ -1,0 +1,253 @@
+"Phrases"
+{
+	// boomer pop
+	"Popped"
+	{
+        "#format"   "{1:N},{2:N}" // 1:attacker 2:victim
+		"es"		"{olive}{2}{default} fue {blue}popped{default} por {olive}{1}{default}."
+	}
+	"PoppedBot"
+	{
+		"es"		"Un boomer fue {blue}popped{default} por {olive}%N{default}."
+	}
+    // charger level
+	"Leveled"
+	{
+        "#format"   "{1:N},{2:N}" // 1:attacker, 2:victim
+        "es"		"{olive}{1}{default} realizo un {blue}level{default} a {olive}{2}{default}"
+	}
+	"LeveledBot"
+	{
+        "es"		"{olive}%N{default} realizo un {blue}level{default} a un {olive}Charger{default}"
+	}
+    // charger level hurt
+	"LeveledHurt"
+	{
+        "#format"   "{1:N},{2:N},{3:i}" // 1:attacker 2:victim 3:damage
+		"es"		"{olive}{1}{default} realizo un {blue}chip-leveled{default} a {olive}{2}{default} ({blue}{3} dmg{default})"
+	}
+	"LeveledHurtBot"
+	{
+        "#format"   "{1:N},{2:i}" // 1:attacker 2:damage
+		"es"		"{olive}{1}{default} realizo un {blue}chip-leveled{default} a un Charger ({blue}{2} dmg{default})"
+	}
+    // deadstops
+	"Deadstopped"
+	{
+        "#format"   "{1:N},{2:N}" // 1:attacker 2:victim
+		"es"		"{olive}{1}{default} realizo un {blue}deadstopped{default} a {olive}{2}{default}"
+	}
+	"DeadstoppedBot"
+	{
+		"es"		"{olive}%N{default} realizo un {blue}deadstopped{default} a un {olive}hunter{default}"
+	}
+	// shove
+	"Shoved"
+	{
+        "#format"   "{1:N},{2:N}" // 1:attacker 2:victim
+		"es"		"{olive}{1}{default} {blue}empujo{default} a {olive}{2}{default}."
+	}
+	"ShovedBot"
+	{
+		"es"		"{olive}%N{default} {blue}empujo{default} a un {olive}Infectado{default}."
+	}
+    // real skeet
+	"TeamSkeeted"
+	{
+		"es"		"{olive}%N{default} fue {blue}skeeted{default} en equipo."
+	}
+	"TeamSkeetedBot"
+	{
+		"es"		"Un {olive}hunter{default} fue {blue}skeeted{default} en equipo."
+	}
+	"Skeeted"
+	{
+        "#format"   "{1:N},{2:s},{3:N}" // 1:attacker 2:(bMelee) ? "melee-": ((bSniper) ? "headshot-" : ((bGL) ? "grenade-" : "") ) 3:victim
+		"es"		"{olive}{1}{default} realizo un {blue}{2}skeet{default} a {olive}{3}{default}."
+	}
+	"SkeetedBot"
+	{
+        "#format"   "{1:N},{2:s}" // 1:attacker 2:(bMelee) ? "melee-": ((bSniper) ? "headshot-" : ((bGL) ? "grenade-" : "") )
+		"es"		"{olive}{1}{default} realizo un {blue}{2}skeet{default} a un {olive}hunter{default}."
+	}
+    // hurt skeet / non-skeet
+	"HurtSkeet"
+	{
+        "#format"   "{1:N},{2:i},{3:s}" // 1:victim 2:damage 3:(bOverKill) ? buffer : ""
+		"es"		"{olive}{1}{default} {green}no{default} murio por skeeted ({blue}{2}{default} daño).{3}"
+	}
+	"HurtSkeetBot"
+	{
+        "#format"   "{1:i},{2:s}" // 1:damage 2:(bOverKill) ? buffer : ""
+		"es"		"{olive}Hunter{default} {green}not{default} murio por skeeted ({blue}{1}{default} daño).{2}"
+	}
+	"Unchipped"
+	{
+		"es"		"(Hubiera sido skeeted no estuviera herido)"
+	}
+    // crown
+	"CrownedWitch"
+	{
+        "#format"   "{1:N},{2:i}" // 1:attacker 2:damage
+		"es"		"{olive}{1}{default} realizo un crowned a la witch ({blue}{2}{default} damage)."
+	}
+	"CrownedWitch2"
+	{
+		"es"		"La witch fue {blue}crowned{default}."
+	}
+    // drawcrown
+	"DrawCrowned"
+	{
+        "#format"   "{1:N},{2:i},{3:i}" // 1:attacker 2:damage 3:chipdamage
+		"es"		"{olive}{1}{default} realizo un draw-crowned a la witch ({blue}{2}{default} daño, {olive}{3}{default} chip)."
+	}
+	"DrawCrowned2"
+	{
+        "#format"   "{1:i},{2:i}" // 1:damage 2:chipdamage
+		"es"		"La witch fue draw-crowned ({blue}{1}{default} daño, {olive}{2}{default} chip)."
+	}
+    // smoker clears
+	"CutTongue"
+	{
+        "#format"   "{1:N},{2:N}" // 1:attacker 2:victim
+		"es"		"{olive}{1}{default} {blue}Corto la lengua{default} de {olive}{2}{default}"
+	}
+	"CutTongueBot"
+	{
+		"es"		"{olive}%N{default} {blue}Corto la lengua{default} del smoker"
+	}
+	"SelfClearedTongue"
+	{
+        "#format"   "{1:N},{2:N},{3:s}" // 1:attacker 2:victim 3:(withShove) ? Buffer : ""
+		"es"		"{olive}{1}{default} se {blue}autolimpio{default} la lengua de {olive}{2}{default} {blue}{3}{default}"
+	}
+	"SelfClearedTongueBot"
+	{
+        "#format"   "{1:N},{2:s}" // 1:attacker 2:(withShove) ? Buffer : ""
+		"es"		"{olive}{1}{default} se {blue}autolimpio{default} la lengua de un Smoker {blue}{2}{default}"
+	}
+	"Shoving"
+	{
+		"es"		" por un empujón"
+	}
+    // rocks
+	"SkeetedRock"
+	{
+        "#format"   "{1:N},{2:N}" // 1:attacker 2:victim
+		"es"		"{olive}{1}{default} realizo un {blue}skeet{default} a la roca de {olive}{2}{default}."
+	}
+	"SkeetedRockBot"
+	{
+		"es"		"{olive}%N{default} realizo un {blue}skeet{default} a la roca del Tank"
+	}
+    // highpounces
+	"HunterHP"
+	{
+        "#format"   "{1:N},{2:N},{3:i},{4:i}" // 1:attacker 2:victim 3:RoundFloat(calculatedDamage) 4:RoundFloat(height)
+		"es"		"{olive}{1}{default} realizo un {red}high-pounce{default} a {olive}{2}{default} ({red}{3}{default} daño, altura: {red}{4}{default})"
+	}
+	"HunterHPBot"
+	{
+        "#format"   "{1:N},{2:i},{3:i}" // 1:victim 2:RoundFloat(calculatedDamage) 3:RoundFloat(height)
+		"es"		"Un {olive}Hunter{default} realizo un {red}high-pounce{default} a {olive}{1}{default} ({red}{2}{default} daño, altura: {red}{3}{default})"
+	}
+	"JockeyHP"
+	{
+        "#format"   "{1:N},{2:N},{3:i}" // 1:attacker 2:victim 3:RoundFloat(height)
+		"es"		"{olive}{1}{default} realizo un {red}high-pounce{default} a {olive}{2}{default} ({red}altura{default}: {red}{3}{default})"
+	}
+	"JockeyHPBot"
+	{
+	    "#format"   "{1:N},{2:i}" // 1:victim 2:RoundFloat(height)
+		"es"		"Un {olive}Jockey{default} realizo un {red}high-pounce{default} a {olive}{1}{default} ({red}altura{default}: {red}{2}{default})"
+	}
+    // deathcharges
+	"DeathCharged"
+	{
+        "#format"   "{1:N},{2:N},{3:s},{4:i}" // 1:attacker 2:victim 3:(bCarried) ? "" : Buffer 4:RoundFloat(height)
+		"es"		"{olive}{1}{default} elimino a {olive}{2}{default} usando el {red}Charger{default} {3}({red}altura{default}: {red}{4}{default})"
+	}
+	"DeathChargedBot"
+	{
+        "#format"   "{1:N},{2:s},{3:i}" // 1:victim 2:(bCarried) ? "" : Buffer 3:RoundFloat(height)
+		"es"		"Un {olive}charger{default} elimino a {olive}{1}{default} {2}({red}height{default}: {red}{3}{default})"
+	}
+	"Bowling"
+	{
+		"es"		"por colisión"
+	}
+    // SI clears    (cleartimeA = pummel/pounce/ride/choke, cleartimeB = tongue drag, charger carry)
+	"SIClear"
+	{
+        "#format"   "{1:N},{2:N},{3:N},{4:s},{5:.2f}" // 1:attacker 2:pinVictim 3:victim 4:g_csSIClassName[zombieClass] 5:fClearTime
+		"es"		"{olive}{1}{default} a {blue}limpiado al instante{default} a {olive}{2}{default} de un {olive}{3}{default} {4} ({blue}{5} {default}segundos)"
+	}
+	"SIClearTeammate"
+	{
+        "#format"   "{1:N},{2:N},{3:s},{4:.2f}" // 1:attacker 2:victim 3:g_csSIClassName[zombieClass] 4:fClearTime
+		"es"		"{olive}{1}{default} a {blue}limpiado al instante{default} a {olive}un compañero{default} de un {olive}{2}{default} {3} ({blue}{4} {default}segundos)"
+	}
+	"SIClearBot"
+	{
+        "#format"   "{1:N},{2:N},{3:s},{4:.2f}" // 1:attacker 2:pinVictim 3:g_csSIClassName[zombieClass] 4:fClearTime
+		"es"		"{olive}{1}{default} a {blue}limpiado al instante{default} a {olive}{2}{default} de un {3} ({blue}{4} {default}segundos)"
+	}
+	"SIClearTeammateBot"
+	{
+        "#format"   "{1:N},{2:s},{3:.2f}" // 1:attacker 2:g_csSIClassName[zombieClass] 3:fClearTime)
+		"es"		"{olive}{1}{default} a {blue}limpiado al instante{default} a {olive}un compañero{default} de un {2} ({blue}{3} {default}segundos)"
+	}
+    // bhaps
+	"BunnyHop"
+	{
+        "#format"   "{1:i},{2:s},{3:.1f}" // 1:streak 2:(streak > 1) ? "s" : "" 3:maxVelocity
+		"es"		"{olive}Usted{default} obtuvo {blue}{1} BunnyHop{2}{default} consecutivos ({blue}velocidad máxima{default}: {olive}{3}{default})"
+	}
+    // car alarms
+	"CalarmHit"
+	{
+		"es"		"{olive}%N{default} activó una alarma con un disparo."
+	}
+	"CalarmTouched"
+	{
+        "#format"   "{1:N},{2:N}" // 1:infected 2:survivor
+		"es"		"{olive}{1}{default} obligo a {olive}{2}{default} a activar una alarma."
+	}
+	"CalarmTouchedHunter"
+	{
+		"es"		"Un {olive}hunter{default} obligo a {olive}%N{default} a activar una alarma."
+	}
+	"CalarmTouchedJockey"
+	{	
+		"es"		"Un {olive}jockey{default} obligo a {olive}%N{default} a activar una alarma."
+	}
+	"CalarmTouchedCharger"
+	{
+		"es"		"Un {olive}charger{default} obligo a {olive}%N{default} a activar una alarma."
+	}
+	"CalarmTouchedInfected"
+	{
+		"es"		"Un {olive}infectado bot{default} obligo a {olive}%N{default} a activar una alarma."
+	}
+	"CalarmTouchedBot"
+	{
+		"es"		"{olive}%N{default} tocó un automovil con alarma."
+	}
+	"CalarmExplosion"
+	{
+		"es"		"{olive}%N{default} activó una alarma con una explosión."
+	}
+	"CalarmBoomer"
+	{
+        "#format"   "{1:N},{2:N}" // 1:infected 2:survivor
+		"es"		"{olive}{1}{default} activó una alarma matando al boomer de {olive}{2}{default}."
+	}
+	"CalarmBoomerBot"
+	{
+		"es"		"{olive}%N{default} activó una alarma matando a un {olive}boomer{default}."
+	}
+	"Calarm"
+	{
+		"es"		"{olive}%N{default} activó una alarma."
+	}
+}

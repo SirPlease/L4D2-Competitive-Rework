@@ -1,0 +1,16 @@
+"Phrases"
+{
+	"HealthRemaining"
+	{
+		"#format"   "{1:s},{2:s},{3:d}" // 1:sName 2:L4D2_InfectedNames[iZclass] 3:iRemainingHealth
+		"es"		"¡{red}{1}{default} ({green}{2}{default}) tenía {olive}{3}{default} de vida restante!"
+	}
+	"AI"
+	{
+		"es"		"IA"
+	}
+	"UMad"
+	{
+		"es"		"No deberías enojarte..."
+	}
+}

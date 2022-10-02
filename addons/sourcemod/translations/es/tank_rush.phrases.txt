@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"freeze"
+	{
+		"es"		"{red}El Tank {default}ha aparecido. ¡{olive}Congelando {default}el puntaje!"
+	}
+	"unfreeze"
+	{
+		"es"		"{red}El Tank {default}esta muerto. ¡{olive}Descongelando {default}el puntaje!"
+	}
+	"saferoom"
+	{
+		"es"		"{red}Los supervivientes {default}llegaron al refugio. ¡{olive}Descongelando {default}el puntaje!"
+	}
+}

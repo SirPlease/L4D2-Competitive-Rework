@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Title"
+	{
+        "es"	"{blue}[{default}Selector de Roca del Tank{blue}]{default}"
+	}
+	"Reload"
+	{
+        "es"	"{olive}(R)Recarga{default} = {blue}2 Manos por encima de la cabeza{default}"
+	}
+	"Use"
+	{
+        "es"	"{olive}(E)Usar{default} = {blue}Lateral{default}"
+	}
+	"M2"
+	{
+        "es"	"{olive}M2{default} = {blue}1 Mano por encima de la cabeza{default}"
+	}
+}

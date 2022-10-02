@@ -1,86 +1,89 @@
 /*
-	SourcePawn is Copyright (C) 2006-2015 AlliedModders LLC.  All rights reserved.
-	SourceMod is Copyright (C) 2006-2015 AlliedModders LLC.  All rights reserved.
-	Pawn and SMALL are Copyright (C) 1997-2015 ITB CompuPhase.
-	Source is Copyright (C) Valve Corporation.
-	All trademarks are property of their respective owners.
+    SourcePawn is Copyright (C) 2006-2015 AlliedModders LLC.  All rights reserved.
+    SourceMod is Copyright (C) 2006-2015 AlliedModders LLC.  All rights reserved.
+    Pawn and SMALL are Copyright (C) 1997-2015 ITB CompuPhase.
+    Source is Copyright (C) Valve Corporation.
+    All trademarks are property of their respective owners.
 
-	This program is free software: you can redistribute it and/or modify it
-	under the terms of the GNU General Public License as published by the
-	Free Software Foundation, either version 3 of the License, or (at your
-	option) any later version.
+    This program is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by the
+    Free Software Foundation, either version 3 of the License, or (at your
+    option) any later version.
 
-	This program is distributed in the hope that it will be useful, but
-	WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	General Public License for more details.
+    This program is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    General Public License for more details.
 
-	You should have received a copy of the GNU General Public License along
-	with this program.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU General Public License along
+    with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#pragma semicolon 1
+#pragma newdecls required
+
+#include <colors>
 #include <sourcemod>
 
-public Plugin:myinfo =
+#define L4D_TEAM_SPECTATOR 1
+
+public Plugin myinfo =
 {
-	name = "Block Trolls",
+	name        = "Block Trolls",
 	description = "Prevents calling votes while others are loading",
-	author = "ProdigySim, CanadaRox, darkid",
-	version = "2.0.1.0",
-	url = "https://github.com/jacob404/Pro-Mod-4.0/releases/latest"
+	author      = "ProdigySim, CanadaRox, darkid",
+	version     = "2.0.1.1",
+	url         = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
-new bool:g_bBlockCallvote;
-new loadedPlayers = 0;
 
-enum L4D2Team
-{
-	L4D2Team_None = 0,
-	L4D2Team_Spectator,
-	L4D2Team_Survivor,
-	L4D2Team_Infected
-}
+bool g_bBlockCallvote;
+int  loadedPlayers = 0;
 
-public OnPluginStart()
+public void OnPluginStart()
 {
+	LoadTranslations("blocktrolls.phrases");
 	AddCommandListener(Vote_Listener, "callvote");
 	AddCommandListener(Vote_Listener, "vote");
 	HookEvent("player_team", OnPlayerJoin);
 }
 
-public OnMapStart()
+public void OnMapStart()
 {
 	g_bBlockCallvote = true;
-	loadedPlayers = 0;
+	loadedPlayers    = 0;
 	CreateTimer(40.0, EnableCallvoteTimer);
 }
 
-public OnPlayerJoin(Handle:event, String:name[], bool:dontBroadcast)
+public void OnPlayerJoin(Handle event, char[] name, bool dontBroadcast)
 {
-	if (GetEventInt(event, "oldteam") == 0) {
+	if (GetEventInt(event, "oldteam") == 0)
+	{
 		loadedPlayers++;
 		if (loadedPlayers == 6) g_bBlockCallvote = false;
 	}
 }
 
-public Action:Vote_Listener(client, const String:command[], argc)
+public Action Vote_Listener(int client, const char[] command, int argc)
 {
 	if (g_bBlockCallvote)
 	{
-		ReplyToCommand(client,
-				"[SM] Voting is not enabled until 60s into the round");
+		CPrintToChat(client, "%t %t", "Tag", "VotingNotEnabled");
 		return Plugin_Handled;
 	}
-	new L4D2Team:team = L4D2Team:GetClientTeam(client);
-	if (client && IsClientInGame(client) &&
-			(team == L4D2Team_Survivor || team == L4D2Team_Infected))
+	else if (client == 0)
 	{
-		return Plugin_Continue;
+		ReplyToCommand(client, "%T", "NotConsoleVote", LANG_SERVER);
+		return Plugin_Handled;
 	}
-	ReplyToCommand(client,
-			"[SM] You must be ingame and not a spectator to vote");
-	return Plugin_Handled;
+	else if (IsClientInGame(client) && GetClientTeam(client) == L4D_TEAM_SPECTATOR)
+	{
+		CPrintToChat(client, "%t %t", "Tag", "NotSpectatorVote");
+		return Plugin_Handled;
+	}
+
+	return Plugin_Continue;
 }
 
-public Action:CallvoteCallback(client, args)
+public Action CallvoteCallback(int client, int args)
 {
 	if (g_bBlockCallvote)
 	{
@@ -89,7 +92,7 @@ public Action:CallvoteCallback(client, args)
 	return Plugin_Continue;
 }
 
-public Action:EnableCallvoteTimer(Handle:timer)
+public Action EnableCallvoteTimer(Handle timer)
 {
 	g_bBlockCallvote = false;
 	return Plugin_Stop;
