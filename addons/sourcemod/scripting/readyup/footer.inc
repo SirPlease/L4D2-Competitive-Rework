@@ -35,15 +35,20 @@ methodmap Footer < ArrayList {
 		return this.FindString(str);
 	}
 	
-	public char[] Get(int index) {
-		static char buffer[MAX_FOOTER_LEN];
-		if (this.Length > index) {
-			this.GetString(index, buffer, sizeof(buffer));
-			return buffer;
-		} else {
-			buffer[0] = '\0';
-		}
-		
+	/*public char[] Get(int index) {
+		return FooterGet(this, index);
+	}*/
+}
+
+char[] FooterGet(Footer footer, int index)
+{
+	static char buffer[MAX_FOOTER_LEN];
+	if (footer.Length > index) {
+		footer.GetString(index, buffer, sizeof(buffer));
 		return buffer;
+	} else {
+		buffer[0] = '\0';
 	}
+	
+	return buffer;
 }

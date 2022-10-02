@@ -3,7 +3,7 @@
 #endif
 #define _readyup_setup_included
 
-#include "sound.inc" // Default sound samples
+#include "readyup/sound.inc"
 
 #define TRANSLATION_READYUP "readyup.phrases"
 

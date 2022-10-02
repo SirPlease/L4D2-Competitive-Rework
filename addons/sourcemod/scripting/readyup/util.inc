@@ -3,8 +3,6 @@
 #endif
 #define _readyup_util_included
 
-#include "player.inc"
-
 int GetMaxAllowedPlayers()
 {
 	int survLimit = survivor_limit.IntValue;
