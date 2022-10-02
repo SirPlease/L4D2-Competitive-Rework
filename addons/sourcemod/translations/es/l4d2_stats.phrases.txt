@@ -1,0 +1,34 @@
+"Phrases"
+{
+	"MeleeSkeeted"
+	{
+        "#format"   "{1:N},{2:N}" // 1:victim 2:attacker
+		"es"	    "{olive}{2}{default} realizó un {blue}melee{default}-skeeted a {olive}{1}{default}"
+	}
+	"Headshotted"
+	{
+        "#format"   "{1:N},{2:N}" // 1:victim 2:attacker
+		"es"	    "{olive}{2}{default} realizó un {blue}headshot{default} a {olive}{1}{default}"
+	}
+	"TeamSkeeted"
+	{
+       "#format"	"{1:N},{2:N},{3:d},{4:d},{5:s},{6:s}" // 1:attacker 2:victim 3:damage 4:shots 5:shots == 1 ? "" : "s" 6:assister_string
+		"es"		"{olive}{1}{default} realizó un {blue}skeeted{default} en equipo a {olive}{2}{default} por {blue}{3} de daño{default} en {blue}{4}{default} disparo{5}. Asistido por: {olive}{6}{default}"
+	}
+	"Skeeted"
+	{
+       "#format"	"{1:N},{2:N},{3:d},{4:s}" // 1:attacker 2:victim 3:shots 4:shots == 1 ? "" : "s"
+		"es"		"{olive}{1}{default} realizó un {blue}skeet{default} a {olive}{2}{default} en {blue}{3}{default} disparo{4}"
+	}
+	"ShutBoomer"
+	{
+       "#format"	"{1:N},{2:s},{3:.1f}" //  1:g_iBoomerKiller 2:Boomer 3:BoomerKillTime
+		"es"		"{olive}{1}{default} mando a dormir al boomer de {olive}{2}{default} en {blue}{3}{default}"
+	}
+	"AlarmedCar"
+	{
+		"es"		"{olive}%N{default} activó un {olive}Automóvil con alarma{default}"
+	}
+}
+
+

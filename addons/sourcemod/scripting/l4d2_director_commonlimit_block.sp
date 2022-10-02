@@ -13,7 +13,7 @@ public Plugin myinfo =
 	name = "Director-scripted common limit blocker",
 	author = "Tabun",
 	description = "Prevents director scripted overrides of z_common_limit. Only affects scripted common limits higher than the cvar.",
-	version = "0.3",
+	version = "0.4",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
@@ -34,7 +34,7 @@ public void Cvar_CommonLimitChange(ConVar hCvar, const char[] oldValue, const ch
 public Action L4D_OnGetScriptValueInt(const char[] key, int &retVal)
 {
 	if (strcmp(key, "CommonLimit") == 0) {
-		if (retVal > iCommonLimit) {
+		if (retVal >= iCommonLimit) {
 			retVal = iCommonLimit;
 			return Plugin_Handled;
 		}

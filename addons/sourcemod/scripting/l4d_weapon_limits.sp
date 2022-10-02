@@ -250,10 +250,10 @@ public Action WeaponCanUse(int client, int weapon)
 
 	int player_weapon = GetPlayerWeaponSlot(client, wep_slot);
 	int player_wepid = IdentifyWeapon(player_weapon);
-	int player_meleeid = 0;
+	/*int player_meleeid = 0;
 	if (player_wepid == WEPID_MELEE) {
 		player_meleeid = IdentifyMeleeWeapon(player_weapon);
-	}
+	}*/
 
 	LimitArrayEntry arrayEntry;
 

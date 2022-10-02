@@ -34,14 +34,11 @@
 
 #define CDIRECTOR_GAMEDATA "l4d2_cdirector" //m_PostMobDelayTimer offset
 
-#define LEFT4FRAMEWORK_GAMEDATA "left4dhooks.l4d2" //left4dhooks gamedata
-#define CDIRECTORSCRIPTEDEVENTMANAGER "ScriptedEventManagerPtr" //left4dhooks gamedata
+//#define LEFT4FRAMEWORK_GAMEDATA "left4dhooks.l4d2" //left4dhooks gamedata
+//#define CDIRECTORSCRIPTEDEVENTMANAGER "ScriptedEventManagerPtr" //left4dhooks gamedata
 
 //#define LEFT4FRAMEWORK_GAMEDATA "l4d2_direct" //l4d2_direct gamedata
 //#define CDIRECTORSCRIPTEDEVENTMANAGER "CDirectorScriptedEventManager" //l4d2_direct gamedata
-
-Address
-	pScriptedEventManager = Address_Null;
 
 ConVar
 	hCvarTimerStartDelay,
@@ -62,6 +59,7 @@ float
 
 int
 	m_PostMobDelayTimerOffset,
+	m_PanicTimerOffset,
 	z_max_player_zombies,
 	hordeDelayChecks,
 	zombieclass[MAXPLAYERS + 1];
@@ -71,7 +69,7 @@ public Plugin myinfo =
 	name = "L4D2 Antibaiter",
 	author = "Visor, Sir (assisted by Devilesk), A1m`",
 	description = "Makes you think twice before attempting to bait that shit",
-	version = "1.3.5",
+	version = "1.3.6",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -98,29 +96,14 @@ public void OnPluginStart()
 
 void InitGameData()
 {
-	Handle hGamedata = LoadGameConfigFile(LEFT4FRAMEWORK_GAMEDATA);
-	if (!hGamedata) {
-		SetFailState("Gamedata '%s' missing or corrupt", LEFT4FRAMEWORK_GAMEDATA);
-	}
-	
-	Address TheDirector = GameConfGetAddress(hGamedata, "CDirector");
-	if (!TheDirector) {
-		SetFailState("Couldn't find the 'CDirector' address.");
-	}
-	
-	int iScriptedEventManagerOffset = GameConfGetOffset(hGamedata, CDIRECTORSCRIPTEDEVENTMANAGER);
-	if (iScriptedEventManagerOffset == -1) {
-		SetFailState("Invalid offset '%s'.", CDIRECTORSCRIPTEDEVENTMANAGER);
-	}
-	
-	pScriptedEventManager = view_as<Address>(LoadFromAddress(TheDirector + view_as<Address>(iScriptedEventManagerOffset), NumberType_Int32));
-	if (!pScriptedEventManager) {
-		SetFailState("Couldn't find the 'CDirectorScriptedEventManager' address.");
-	}
-	
 	Handle hGamedata2 = LoadGameConfigFile(CDIRECTOR_GAMEDATA);
 	if (!hGamedata2) {
 		SetFailState("Gamedata '%s' missing or corrupt", CDIRECTOR_GAMEDATA);
+	}
+	
+	m_PanicTimerOffset = GameConfGetOffset(hGamedata2, "CDirector::m_PanicTimer");
+	if (m_PanicTimerOffset == -1) {
+		SetFailState("Invalid offset '%s'.", "CDirector::m_PanicTimer");
 	}
 	
 	m_PostMobDelayTimerOffset = GameConfGetOffset(hGamedata2, "CDirectorScriptedEventManager->m_PostMobDelayTimer");
@@ -128,7 +111,6 @@ void InitGameData()
 		SetFailState("Invalid offset '%s'.", "CDirectorScriptedEventManager->m_PostMobDelayTimer");
 	}
 	
-	delete hGamedata;
 	delete hGamedata2;
 }
 
@@ -172,6 +154,7 @@ public void OnRoundIsLive()
 public Action RegisterSI(int client, int args)
 {
 	StartRound();
+	return Plugin_Handled;
 }
 #endif
 
@@ -375,17 +358,35 @@ void LaunchHorde()
 		}
 	}
 
-	if (client != -1) {
-		int flags = GetCommandFlags("director_force_panic_event");
-		SetCommandFlags("director_force_panic_event", flags & ~FCVAR_CHEAT);
-		FakeClientCommand(client, "director_force_panic_event");
-		SetCommandFlags("director_force_panic_event", flags);
+	if (client == -1) {
+		return;
 	}
+	
+	#if DEBUG
+	PrintToChatAll("m_PanicTimer - duration: %f, timestamp: %f", CTimer_GetDuration(PanicTimer()), CTimer_GetTimestamp(PanicTimer()));
+	#endif
+	
+	CTimer_Invalidate(PanicTimer());
+	
+	int flags = GetCommandFlags("director_force_panic_event");
+	SetCommandFlags("director_force_panic_event", flags & ~FCVAR_CHEAT);
+	FakeClientCommand(client, "director_force_panic_event");
+	SetCommandFlags("director_force_panic_event", flags);
 }
 
 CountdownTimer CountdownPointer()
 {
 	return L4D2Direct_GetScavengeRoundSetupTimer();
+}
+
+CountdownTimer PanicTimer()
+{
+	return view_as<CountdownTimer>(L4D_GetPointer(POINTER_DIRECTOR) + view_as<Address>(m_PanicTimerOffset));
+}
+
+CountdownTimer PostMobDelayTimer()
+{
+	return view_as<CountdownTimer>(L4D_GetPointer(POINTER_EVENTMANAGER) + view_as<Address>(m_PostMobDelayTimerOffset));
 }
 
 /************/
@@ -408,7 +409,7 @@ float GetMaxSurvivorCompletion()
 // director_force_panic_event & car alarms etc.
 bool IsPanicEventInProgress()
 {
-	CountdownTimer pPanicCountdown = view_as<CountdownTimer>(pScriptedEventManager + view_as<Address>(m_PostMobDelayTimerOffset));
+	CountdownTimer pPanicCountdown = PostMobDelayTimer();
 	
 	#if DEBUG
 	PrintToChatAll("m_PostMobDelay - duration: %f, timestamp: %f", CTimer_GetDuration(pPanicCountdown), CTimer_GetTimestamp(pPanicCountdown));

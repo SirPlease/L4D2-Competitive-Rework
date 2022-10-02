@@ -24,7 +24,7 @@
  *    
  *    Hunter:
  *      1) Double get-up when pounce on charger victims.				(Event_ChargerPummelStart Event_ChargerKilled)
- *      2) Multi-charged/Pummel get-up keeps playing when pounced.		(Event_LungePounce)
+ *      2) Bowling/Pummel/Slammed get-up keeps playing when pounced.	(Event_LungePounce)
  *      3) Punch/Rock get-up keeps playing when pounced.				(Event_LungePounce)
  *    
  *    Charger:
@@ -50,7 +50,7 @@
 #include <left4dhooks>
 #include <godframecontrol>
 
-#define PLUGIN_VERSION "4.8"
+#define PLUGIN_VERSION "4.9"
 
 public Plugin myinfo = 
 {
@@ -296,6 +296,7 @@ void Event_LungePounce(Event event, const char[] name, bool dontBroadcast)
 		hAnim.SetFlag(AnimState_TankPunched, false);
 		hAnim.SetFlag(AnimState_Charged, false);
 		hAnim.SetFlag(AnimState_Pounded, false);
+		hAnim.SetFlag(AnimState_WallSlammed, false);
 	}
 }
 

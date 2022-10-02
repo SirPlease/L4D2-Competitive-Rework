@@ -7,7 +7,7 @@
 #include <dhooks>
 #include <sourcescramble>
 
-#define PLUGIN_VERSION "1.5"
+#define PLUGIN_VERSION "1.8"
 
 public Plugin myinfo = 
 {
@@ -27,7 +27,8 @@ float g_fRockRadiusSquared;
 
 ConVar
 	g_cvFlags,
-	g_cvJockeyFix;
+	g_cvJockeyFix,
+	g_cvHurtCapper;
 
 int
 	g_iFlags;
@@ -85,6 +86,14 @@ public void OnPluginStart()
 				...	"1 = Enable, 0 = Disable.",
 					FCVAR_NOTIFY|FCVAR_SPONLY,
 					true, 0.0, true, 1.0);
+	
+	g_cvHurtCapper = CreateConVar(
+					"l4d2_rock_hurt_capper",
+					"5",
+					"Hurt cappers before landing their victims.\n"\
+				...	"1 = Hurt hunter, 2 = Hurt jockey, 4 = Hurt charger, 7 = All, 0 = Disable.",
+					FCVAR_NOTIFY|FCVAR_SPONLY,
+					true, 0.0, true, 7.0);
 	
 	z_tank_rock_radius = FindConVar("z_tank_rock_radius");
 	z_tank_rock_radius.AddChangeHook(OnConVarChanged);
@@ -179,12 +188,10 @@ Action SDK_OnThink(int entity)
 				// Maybe "TeleportEntity" does the same, let it be.
 				SetAbsOrigin(entity, vOrigin);
 				
-				// For consistency with game, hunters on them are killed first.
-				int hunter = GetEntPropEnt(i, Prop_Send, "m_pounceAttacker");
-				if (hunter != -1)
-				{
-					BounceTouch(entity, hunter);
-				}
+				// Hurt attackers first, based on flag setting
+				HurtCappers(entity, i);
+				
+				// Confirm landing
 				BounceTouch(entity, i);
 				
 				// Radius check succeeded in landing someone, exit the loop.
@@ -202,42 +209,54 @@ Action SDK_OnThink(int entity)
 }
 
 /**
- * @brief Valve's built-in function to get the closest point to potential rock victims.
+ * @brief Valve's built-in function to compute close point to potential rock victims.
  *
- * @param vLastPos		Last recorded position of moving object.
- * @param vPos			Current position of moving object.
- * @param vTargetPos	Target position to test.
+ * @param vLeft			Last recorded position of moving object.
+ * @param vRight		Current position of moving object.
+ * @param vPos			Target position to test.
  * @param result		Vector to store the result.
  * 
- * @return				True if the closest point (for this moment), false otherwise.
+ * @return				True if the closest point, false otherwise.
  */
 
-bool ComputeClosestPoint(const float vLastPos[3], const float vPos[3], const float vTargetPos[3], float result[3])
+bool ComputeClosestPoint(const float vLeft[3], const float vRight[3], const float vPos[3], float result[3])
 {
-	float vLastToTarget[3], vLastToPos[3];
-	MakeVectorFromPoints(vLastPos, vTargetPos, vLastToTarget);
-	MakeVectorFromPoints(vLastPos, vPos, vLastToPos);
+	static float vLTarget[3], vLine[3];
+	MakeVectorFromPoints(vLeft, vPos, vLTarget);
+	MakeVectorFromPoints(vLeft, vRight, vLine);
 	
-	float fSpeed = NormalizeVector(vLastToPos, vLastToPos);
-	float fDot = GetVectorDotProduct(vLastToTarget, vLastToPos);
+	static float fLength, fDot;
+	fLength = NormalizeVector(vLine, vLine);
+	fDot = GetVectorDotProduct(vLTarget, vLine);
 	
-	if (fDot >= 0.0)
+	/**
+	 *       * (T)
+	 *      /|
+	 *     / |
+	 *    L==P====R
+	 *
+	 *  L, R -> Line
+	 *  T -> Target
+	 *  P -> result point
+	 */
+	
+	if (fDot >= 0.0) // (-pi/2 < θ < pi/2)
 	{
-		if (fDot <= fSpeed)
+		if (fDot <= fLength) // We can find a P on the line
 		{
-			ScaleVector(vLastToPos, fDot);
-			AddVectors(vLastPos, vLastToPos, result);
+			ScaleVector(vLine, fDot);
+			AddVectors(vLeft, vLine, result);
 			return true;
 		}
-		else
+		else // Too far from T
 		{
-			result = vPos;
+			result = vRight;
 			return false;
 		}
 	}
 	else // seems to potentially risk a hit, for tiny performance?
 	{
-		result = vLastPos;
+		result = vLeft;
 		return false;
 	}
 }
@@ -248,13 +267,20 @@ bool ProximityThink_TraceFilterList(int entity, int contentsMask, DataPack dp)
 	if (entity == dp.ReadCell() || entity == dp.ReadCell())
 		return false;
 	
-	if (entity > 0 && entity <= MaxClients)
+	if (entity > 0 && entity <= MaxClients && IsClientInGame(entity))
 	{
-		// This should not be possible. Radius check runs every think
-		// and survivor in between must be the first victim.
-		// The only exception is that multiple survivors are coinciding
-		// (like at a corner), and this trace will end up with an "obstracle".
-		// Treated as a bug here, no options.
+		/**
+		 * NOTE:
+		 *
+		 * This should not be possible as radius check runs every think
+		 * and survivors in between must be prior to be targeted.
+		 *
+		 * As far as I know, the only exception is that multiple survivors
+		 * are coinciding (like at a corner), and obstracle tracing ends up
+		 * with "true", kinda false positive.
+		 *
+		 * Treated as a bug here, no options.
+		 */
 		if (GetClientTeam(entity) == 2)
 		{
 			return false;
@@ -312,6 +338,41 @@ MRESReturn DHook_OnBounceTouch_Post(int pThis, DHookReturn hReturn, DHookParam h
 	}
 	
 	return MRES_Ignored;
+}
+
+void HurtCappers(int rock, int client)
+{
+	int flag = g_cvHurtCapper.IntValue;
+	
+	if (flag & 1) // hunter
+	{
+		int hunter = GetEntPropEnt(client, Prop_Send, "m_pounceAttacker");
+		if (hunter != -1)
+		{
+			BounceTouch(rock, hunter);
+			return;
+		}
+	}
+	
+	if (flag & 2) // jockey
+	{
+		int jockey = GetEntPropEnt(client, Prop_Send, "m_jockeyAttacker");
+		if (jockey != -1)
+		{
+			BounceTouch(rock, jockey);
+			return;
+		}
+	}
+	
+	if (flag & 4) // charger
+	{
+		int charger = GetEntPropEnt(client, Prop_Send, "m_pummelAttacker");
+		if (charger != -1)
+		{
+			BounceTouch(rock, charger);
+			return;
+		}
+	}
 }
 
 void BounceTouch(int rock, int client)

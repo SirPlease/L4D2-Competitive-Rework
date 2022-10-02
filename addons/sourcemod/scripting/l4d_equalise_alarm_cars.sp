@@ -24,35 +24,50 @@
 #include <sourcemod>
 #include <sdktools>
 
-#define PLUGIN_VERSION "3.5"
+#define PLUGIN_VERSION "3.7.1"
 
 public Plugin myinfo =
 {
 	name		= "L4D2 Equalise Alarm Cars",
 	author		= "Jahze, Forgetest",
 	version		= PLUGIN_VERSION,
-	description	= "Make the alarmed car and its color spawns the same for each team in versus"
+	description	= "Make the alarmed car and its color spawns the same for each team in versus",
+	url			= "https://github.com/Target5150/MoYu_Server_Stupid_Plugins"
 };
 
-StringMap g_smCarNameMap;
-
-enum alarmArray
+enum /*alarmArray*/
 {
 	ENTRY_RELAY_ON,
 	ENTRY_RELAY_OFF,
 	ENTRY_START_STATE,
 	ENTRY_ALARM_CAR,
 	ENTRY_COLOR,
-	
+
 	alarmArray_SIZE
 }
-static const int NULL_ALARMARRAY[alarmArray_SIZE] = {-1, ...};
-ArrayList g_aAlarmArray;
 
-ConVar g_cvStartDisabled;
+static const int 
+	NULL_ALARMARRAY[alarmArray_SIZE] = {
+		INVALID_ENT_REFERENCE,
+		INVALID_ENT_REFERENCE,
+		false,
+		INVALID_ENT_REFERENCE,
+		0
+	};
 
-bool g_bRoundIsLive;
-bool g_bIsSecondHalf;
+ArrayList
+	g_aAlarmArray;
+
+StringMap
+	g_smCarNameMap;
+
+ConVar
+	g_cvStartDisabled,
+	g_cvDebug;
+
+bool
+	g_bRoundIsLive,
+	g_bIsSecondHalf;
 
 #define RGBA_INT(%0,%1,%2,%3) (((%0)<<24) + ((%1)<<16) + ((%2)<<8) + (%3))
 static const int g_iOffColors[] =
@@ -76,6 +91,7 @@ int GetRandomOffColor()
 public void OnPluginStart()
 {
 	g_cvStartDisabled = CreateConVar("l4d_equalise_alarm_start_disabled", "1", "Makes alarmed cars spawn disabled before game goes live.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	g_cvDebug = CreateConVar("l4d_equalise_alarm_debug", "0", "Debug info for alarm stuff.", FCVAR_HIDDEN|FCVAR_SPONLY|FCVAR_CHEAT|FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
 	g_smCarNameMap = new StringMap();
 	g_aAlarmArray = new ArrayList(alarmArray_SIZE);
@@ -112,7 +128,7 @@ Action Timer_RoundStartDelay(Handle timer)
 			int entry = -1;
 			if (!g_smCarNameMap.GetValue(sKey, entry)) // creates a new entry
 			{
-				entry = g_aAlarmArray.PushArray(NULL_ALARMARRAY);
+				entry = g_aAlarmArray.PushArray(NULL_ALARMARRAY[0], sizeof(NULL_ALARMARRAY));
 				g_smCarNameMap.SetValue(sKey, entry);
 				g_aAlarmArray.Set(entry, EntIndexToEntRef(ent), ENTRY_ALARM_CAR);
 			}
@@ -150,6 +166,22 @@ Action Timer_RoundStartDelay(Handle timer)
 		}
 	}
 	
+	ent = MaxClients+1;
+	while ((ent = FindEntityByClassname(ent, "logic_case")) != INVALID_ENT_REFERENCE)
+	{
+		GetEntityName(ent, sName, sizeof(sName));
+		if (ExtractCarName(sName, "case_car_color_off", sKey, sizeof(sKey)) != 0)
+		{
+			int entry = -1;
+			if (g_smCarNameMap.GetValue(sKey, entry))
+			{
+				RemoveEntity(ent);
+			}
+		}
+	}
+	
+	CreateTimer(g_bIsSecondHalf ? 3.0 : 20.0, Timer_DebugPrints, _, TIMER_FLAG_NO_MAPCHANGE);
+	
 	return Plugin_Stop;
 }
 
@@ -172,9 +204,11 @@ void EntO_AlarmRelayOnTriggered(const char[] output, int caller, int activator, 
 		ThrowEntryError(ENTRY_RELAY_ON, caller);
 	}
 	
+	PrintDebug("\x03(ALARM) #%i: relay_on [activator: %i | delay: %.2f]", entry, activator, delay);
+	
 	if (IsValidEntity(activator) && !activator)
 	{
-		CreateTimer(delay + 0.1, Timer_ResetCarColor, entry, TIMER_FLAG_NO_MAPCHANGE);
+		RequestFrame(ResetCarColor, entry);
 		return;
 	}
 	
@@ -182,18 +216,17 @@ void EntO_AlarmRelayOnTriggered(const char[] output, int caller, int activator, 
 	{
 		// first half, record
 		g_aAlarmArray.Set(entry, true, ENTRY_START_STATE);
-		CreateTimer(delay + 0.1, Timer_RecordCarColor, entry, TIMER_FLAG_NO_MAPCHANGE);
+		RequestFrame(RecordCarColor, entry);
 	}
 	else if (!g_aAlarmArray.Get(entry, ENTRY_START_STATE) || (g_cvStartDisabled.BoolValue && !g_bRoundIsLive))
 	{
 		// second half, but differs from first half / needs start disabled
-		int relayOff = g_aAlarmArray.Get(entry, ENTRY_RELAY_OFF);
-		CreateTimer(delay + 0.1, Timer_SafeRelayTrigger, relayOff, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(delay + 0.1, Timer_DisableCar, entry, TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else
 	{
 		// second half, the same as first half
-		CreateTimer(delay + 0.1, Timer_ResetCarColor, entry, TIMER_FLAG_NO_MAPCHANGE);
+		RequestFrame(ResetCarColor, entry);
 	}
 }
 
@@ -206,12 +239,14 @@ void EntO_AlarmRelayOffTriggered(const char[] output, int caller, int activator,
 		ThrowEntryError(ENTRY_RELAY_OFF, caller);
 	}
 	
+	PrintDebug("\x05(ALARM) #%i: relay_off [activator: %i | delay: %.2f]", entry, activator, delay);
+	
 	// If a car is turned off because of a tank punch or because it was
 	// triggered the activator is the car itself. When the cars get
 	// randomised the activator is the player who entered the trigger area.
 	if (IsValidEntity(activator) && (!activator || activator > MaxClients))
 	{
-		CreateTimer(delay + 0.1, Timer_ResetCarColor, entry, TIMER_FLAG_NO_MAPCHANGE);
+		RequestFrame(ResetCarColor, entry);
 		return;
 	}
 	
@@ -220,18 +255,17 @@ void EntO_AlarmRelayOffTriggered(const char[] output, int caller, int activator,
 		// first half, record
 		g_aAlarmArray.Set(entry, false, ENTRY_START_STATE);
 		g_aAlarmArray.Set(entry, GetRandomOffColor(), ENTRY_COLOR);
-		CreateTimer(delay + 0.1, Timer_ResetCarColor, entry, TIMER_FLAG_NO_MAPCHANGE);
+		RequestFrame(ResetCarColor, entry);
 	}
 	else if (g_aAlarmArray.Get(entry, ENTRY_START_STATE) && (!g_cvStartDisabled.BoolValue || g_bRoundIsLive))
 	{
 		// second half, but differs from first half, and not start disabled
-		int relayOn = g_aAlarmArray.Get(entry, ENTRY_RELAY_ON);
-		CreateTimer(delay + 0.1, Timer_SafeRelayTrigger, relayOn, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(delay + 0.1, Timer_EnableCar, entry, TIMER_FLAG_NO_MAPCHANGE);
 	}
 	else
 	{
 		// second half, the same as first half
-		CreateTimer(delay + 0.1, Timer_ResetCarColor, entry, TIMER_FLAG_NO_MAPCHANGE);
+		RequestFrame(ResetCarColor, entry);
 	}
 }
 
@@ -248,49 +282,62 @@ void EnableCars()
 {
 	for (int i = 0; i < g_aAlarmArray.Length; ++i)
 	{
-		int relayOn = g_aAlarmArray.Get(i, ENTRY_RELAY_ON);
-		
-		if (relayOn != -1 && g_aAlarmArray.Get(i, ENTRY_START_STATE))
+		if (g_aAlarmArray.Get(i, ENTRY_START_STATE))
 		{
-			Timer_SafeRelayTrigger(null, relayOn);
+			Timer_EnableCar(null, i);
 		}
 	}
 }
 
-stock void DisableCars()
+void DisableCars()
 {
 	for (int i = 0; i < g_aAlarmArray.Length; ++i)
 	{
-		int relayOff = g_aAlarmArray.Get(i, ENTRY_RELAY_OFF);
-		
-		if (relayOff != -1 && g_aAlarmArray.Get(i, ENTRY_START_STATE))
+		if (g_aAlarmArray.Get(i, ENTRY_START_STATE))
 		{
-			Timer_SafeRelayTrigger(null, relayOff);
+			Timer_DisableCar(null, i);
 		}
 	}
 }
 
-Action Timer_RecordCarColor(Handle timer, int entry)
+Action Timer_EnableCar(Handle timer, int entry)
+{
+	// if there's no way back...
+	if (!IsValidEntity(g_aAlarmArray.Get(entry, ENTRY_RELAY_OFF)))
+		return Plugin_Stop;
+	
+	SafeRelayTrigger(g_aAlarmArray.Get(entry, ENTRY_RELAY_ON));
+	return Plugin_Stop;
+}
+
+Action Timer_DisableCar(Handle timer, int entry)
+{
+	// if there's no way back...
+	if (!IsValidEntity(g_aAlarmArray.Get(entry, ENTRY_RELAY_ON)))
+		return Plugin_Stop;
+	
+	SafeRelayTrigger(g_aAlarmArray.Get(entry, ENTRY_RELAY_OFF));
+	return Plugin_Stop;
+}
+
+void RecordCarColor(int entry)
 {
 	int alarmCar = EntRefToEntIndex(g_aAlarmArray.Get(entry, ENTRY_ALARM_CAR));
 	g_aAlarmArray.Set(entry, GetEntityRenderColorEx(alarmCar), ENTRY_COLOR);
-	return Plugin_Stop;
 }
 
-Action Timer_ResetCarColor(Handle timer, int entry)
+void ResetCarColor(int entry)
 {
 	int alarmCar = EntRefToEntIndex(g_aAlarmArray.Get(entry, ENTRY_ALARM_CAR));
 	SetEntityRenderColorEx(alarmCar, g_aAlarmArray.Get(entry, ENTRY_COLOR));
-	return Plugin_Stop;
 }
 
-Action Timer_SafeRelayTrigger(Handle timer, int relay)
+void SafeRelayTrigger(int relay)
 {
-	if (relay == -1)
-		return Plugin_Stop;
+	if (!IsValidEntity(relay))
+		return;
 	
 	AcceptEntityInput(relay, "Trigger", 0);
-	return Plugin_Stop;
 }
 
 int ExtractCarName(const char[] sName, const char[] sCompare, char[] sBuffer, int iSize)
@@ -326,21 +373,64 @@ int GetEntityRenderColorEx(int entity)
 void SetEntityRenderColorEx(int entity, int color)
 {
 	int r, g, b, a;
+	ExtractColorBytes(color, r, g, b, a);
+	SetEntityRenderColor(entity, r, g, b, a);
+}
+
+Action Timer_DebugPrints(Handle timer)
+{
+	StringMapSnapshot ss = g_smCarNameMap.Snapshot();
+	char sName[128];
+	int entry;
+	
+	for (int i = 0; i < ss.Length; ++i)
+	{
+		ss.GetKey(i, sName, sizeof(sName));
+		g_smCarNameMap.GetValue(sName, entry);
+		
+		int r, g, b, a;
+		ExtractColorBytes(g_aAlarmArray.Get(entry, ENTRY_COLOR), r, g, b, a);
+		
+		PrintDebug("\x04(ALARM) #%i [ %s | %s | %s | %s | %i %i %i ]",
+					entry,
+					g_aAlarmArray.Get(entry, ENTRY_RELAY_ON) == -1 ? "null" : "valid",
+					g_aAlarmArray.Get(entry, ENTRY_RELAY_OFF) == -1 ? "null" : "valid",
+					g_aAlarmArray.Get(entry, ENTRY_START_STATE) ? "On" : "Off",
+					g_aAlarmArray.Get(entry, ENTRY_ALARM_CAR) == -1 ? "null" : "valid",
+					r, g, b);
+	}
+	
+	delete ss;
+	
+	return Plugin_Stop;
+}
+
+void PrintDebug(const char[] format, any ...)
+{
+	if (g_cvDebug.BoolValue)
+	{
+		char msg[256];
+		VFormat(msg, sizeof(msg), format, 2);
+		PrintToChatAll("%s", msg);
+	}
+}
+
+stock void ExtractColorBytes(int color, int &r, int &g, int &b, int &a)
+{
 	r = (color & 0xFF000000) >> 24;
 	g = (color & 0x00FF0000) >> 16;
 	b = (color & 0x0000FF00) >> 8;
 	a = (color & 0x000000FF);
-	SetEntityRenderColor(entity, r, g, b, a);
 }
 
-stock void ThrowEntryError(alarmArray entry, int entity)
+stock void ThrowEntryError(int entry, int entity)
 {
 	char sName[128];
 	GetEntityName(entity, sName, sizeof(sName));
 	ThrowError("Fatal: Could not find entry (#%i) for %s", entry, sName);
 }
 
-stock void ThrowEmptyError(alarmArray entry, int entity)
+stock void ThrowEmptyError(int entry, int entity)
 {
 	char sName[128];
 	GetEntityName(entity, sName, sizeof(sName));

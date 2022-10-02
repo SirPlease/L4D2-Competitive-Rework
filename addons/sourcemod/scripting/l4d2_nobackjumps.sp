@@ -2,6 +2,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <sdkhooks>
 #include <dhooks>
 
 #define Z_HUNTER 3
@@ -10,20 +11,27 @@
 #define GAMEDATA "l4d2_si_ability"
 
 int
+	iOffs_BlockBounce,
 	LungeActivateAbilityOffset;
 
-Handle
+DynamicHook
 	hCLunge_ActivateAbility;
 
-float
-	fSuspectedBackjump[MAXPLAYERS + 1];
+ConVar 
+	z_pounce_crouch_delay;
+
+bool
+	g_bWasLunging[MAXPLAYERS+1];
+
+float 
+	g_fFixedNextActivation[MAXPLAYERS+1];
 
 public Plugin myinfo =
 {
 	name = "L4D2 No Backjump",
-	author = "Visor, A1m`",
+	author = "Visor, A1m`, Forgetest",
 	description = "Look at the title",
-	version = "1.2.3",
+	version = "1.4",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -31,12 +39,10 @@ public void OnPluginStart()
 {
 	InitGameData();
 	
-	hCLunge_ActivateAbility = DHookCreate(LungeActivateAbilityOffset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, CLunge_ActivateAbility);
-
-	HookEvent("round_start", ResetEvent, EventHookMode_PostNoCopy);
-	HookEvent("round_end",  ResetEvent, EventHookMode_PostNoCopy);
+	iOffs_BlockBounce = FindSendPropInfo("CLunge", "m_isLunging") + 16;
+	hCLunge_ActivateAbility = new DynamicHook(LungeActivateAbilityOffset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity);
 	
-	HookEvent("player_jump", OnPlayerJump, EventHookMode_Post);
+	z_pounce_crouch_delay = FindConVar("z_pounce_crouch_delay");
 }
 
 void InitGameData()
@@ -58,51 +64,94 @@ void InitGameData()
 public void OnEntityCreated(int entity, const char[] classname)
 {
 	if (strcmp(classname, "ability_lunge") == 0) {
-		DHookEntity(hCLunge_ActivateAbility, false, entity); 
+		SDKHook(entity, SDKHook_SpawnPost, SDK_OnSpawn_Post);
+		hCLunge_ActivateAbility.HookEntity(Hook_Pre, entity, CLunge_ActivateAbility);
 	}
 }
 
-public void ResetEvent(Event hEvent, const char[] eName, bool dontBroadcast)
+void SDK_OnSpawn_Post(int entity)
 {
-	for (int i = 0; i <= MAXPLAYERS; i++) {
-		fSuspectedBackjump[i] = 0.0;
+	int owner = GetEntPropEnt(entity, Prop_Data, "m_hOwnerEntity");
+	if (owner != -1) {
+		g_bWasLunging[owner] = false;
+		g_fFixedNextActivation[owner] = -1.0;
+		SDKHook(owner, SDKHook_PostThinkPost, SDK_OnPostThink_Post);
 	}
+	
+	SDKUnhook(entity, SDKHook_SpawnPost, SDK_OnSpawn_Post);
 }
 
-public void OnPlayerJump(Event hEvent, const char[] eName, bool dontBroadcast)
+// take care ladder case
+MRESReturn CLunge_ActivateAbility(int ability)
 {
-	int client = GetClientOfUserId(hEvent.GetInt("userid"));
-
-	if (IsHunter(client) && !IsGhost(client) && IsOutwardJump(client)) {
-		fSuspectedBackjump[client] = GetGameTime();
-	}
+	int owner = GetEntPropEnt(ability, Prop_Send, "m_owner");
+	if (owner == -1)
+		return MRES_Ignored;
+	
+	if (GetEntityMoveType(owner) != MOVETYPE_LADDER)
+		return MRES_Ignored;
+	
+	// only allow if crouched and fully charged
+	if (g_fFixedNextActivation[owner] != -1.0 && GetGameTime() >= g_fFixedNextActivation[owner])
+		return MRES_Ignored;
+	
+	return MRES_Supercede;
 }
 
-public MRESReturn CLunge_ActivateAbility(int ability)
+void SDK_OnPostThink_Post(int client)
 {
-	int client = GetEntPropEnt(ability, Prop_Send, "m_owner");
-	if (fSuspectedBackjump[client] + 1.5 > GetGameTime()) {
-		//PrintToChat(client, "\x01[SM] No \x03backjumps\x01, sorry");
-		return MRES_Supercede;
+	if (!IsClientInGame(client))
+		return;
+	
+	int ability = GetEntPropEnt(client, Prop_Send, "m_customAbility");
+	if (ability == -1 || !IsHunter(client)) {
+		SDKUnhook(client, SDKHook_PostThinkPost, SDK_OnPostThink_Post);
+		return;
 	}
-
-	return MRES_Ignored;
-}
-
-bool IsOutwardJump(int client)
-{
-	bool IsGround = view_as<bool>(GetEntityFlags(client) & FL_ONGROUND);
-	bool IsAttemptingToPounce = view_as<bool>(GetEntProp(client, Prop_Send, "m_isAttemptingToPounce", 1));
-
-	return (!IsAttemptingToPounce && !IsGround);
+	
+	if (IsGhost(client)) {
+		g_fFixedNextActivation[client] = -1.0;
+		return;
+	}
+	
+	if (GetEntProp(ability, Prop_Send, "m_isLunging")) {
+		g_fFixedNextActivation[client] = -1.0;
+		g_bWasLunging[client] = true;
+		return;
+	}
+	
+	// Ducking, set our own timer for next pounce
+	if (GetClientButtons(client) & IN_DUCK) {
+		if (g_fFixedNextActivation[client] == -1.0) {
+			// assumes hunter was bouncing
+			float fNow = GetGameTime();
+			g_fFixedNextActivation[client] = fNow;
+			
+			// 1. not bouncing
+			// 2. starts on ground, or pounce not landing ladder
+			if( fNow > GetEntPropFloat(ability, Prop_Send, "m_lungeAgainTimer", 1)
+				&& (!g_bWasLunging[client] || GetEntityMoveType(client) != MOVETYPE_LADDER)
+			) {
+				g_fFixedNextActivation[client] += z_pounce_crouch_delay.FloatValue;
+			}
+		}
+	} else { // not ducking
+		g_fFixedNextActivation[client] = -1.0;
+	}
+	
+	g_bWasLunging[client] = false;
+	
+	// A flag to block hunter back jumping,
+	// which is set whenever hunter has touched survivors
+	if (GetEntData(ability, iOffs_BlockBounce, 1))
+		return;
+	
+	SetEntData(ability, iOffs_BlockBounce, 1, 1);
 }
 
 bool IsHunter(int client)
 {
-	return (client > 0 
-		/*&& client <= MaxClients*/ //GetClientOfUserId return 0, if not found
-		&& IsClientInGame(client)
-		&& IsPlayerAlive(client)
+	return (IsPlayerAlive(client)
 		&& GetClientTeam(client) == TEAM_INFECTED
 		&& GetEntProp(client, Prop_Send, "m_zombieClass") == Z_HUNTER);
 }

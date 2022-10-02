@@ -1,0 +1,40 @@
+"Phrases"
+{
+	"NotConsoleVote"
+	{
+		"es"		"[Slots] Debes estar dentro del juego."
+	}
+	"LimitSlotsAbove"
+	{
+		"es"		"No puede limitar los espacios por encima de {olive}%i{default} en este servidor."
+	}
+	"LimitedSlotsTo"
+	{
+		"#format"   "{1:s},{2:i}" // 1:sName 2:Int
+		"es"		"{olive}{1}{default} ha limitado los espacios a {blue}{2}{default}"
+	}
+	"RequiredPlayers"
+	{
+		"es"		"No se pueden limitar los espacios por debajo de los jugadores requeridos."
+	}
+	"SlotsUsage"
+	{
+		"es"		"Uso: {olive}!slots{default} <{olive}numero{default}> {blue}|{default} Ejemplo: {olive}!slots 8{default}"
+	}
+	"Spectators"
+	{
+		"es"		"El voto no está permitido para los espectadores."
+	}
+	"LimitSlots"
+	{
+		"es"		"¿Limitar los espacios a '%s'?"
+	}
+	"CannotBeStarted"
+	{
+		"es"		"La votación no puede iniciarse ahora."
+	}
+	"LimitingSlots"
+	{
+		"es"		"Limitando los espacios..."
+	}
+}
