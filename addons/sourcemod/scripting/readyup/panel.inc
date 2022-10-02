@@ -94,7 +94,7 @@ void UpdatePanel()
 	
 	menuPanel.DrawText(" ");
 	menuPanel.DrawText("▸ Commands:");
-	menuPanel.DrawText(cmdFooter.Get(curCmd));
+	menuPanel.DrawText(FooterGet(cmdFooter, curCmd));
 	menuPanel.DrawText(" ");
 	
 	char nameBuf[64];
@@ -204,7 +204,7 @@ void UpdatePanel()
 		menuPanel.DrawText(" ");
 		for (int i = 0; i < nativeFooter.Length; i++)
 		{
-			menuPanel.DrawText(nativeFooter.Get(i));
+			menuPanel.DrawText(FooterGet(nativeFooter, i));
 		}
 	}
 
