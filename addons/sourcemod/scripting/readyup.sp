@@ -9,7 +9,7 @@
 #undef REQUIRE_PLUGIN
 #include <caster_system>
 
-#define PLUGIN_VERSION "10.2"
+#define PLUGIN_VERSION "10.2.1"
 
 public Plugin myinfo =
 {
@@ -87,6 +87,7 @@ ConVar
 	g_cvServerNamer;
 
 // Ready Panel
+#include "readyup/footer.inc" // sm 1.10 conpile fix
 Footer
 	nativeFooter;
 float
@@ -128,10 +129,9 @@ char g_sDisruptReason[disruptType_SIZE][] =
 	"Admin aborted"
 };
 
-// Sub modules is included here
+// Sub modules are included here
 #include "readyup/action.inc"
 #include "readyup/command.inc"
-#include "readyup/footer.inc"
 #include "readyup/game.inc"
 #include "readyup/native.inc"
 #include "readyup/panel.inc"

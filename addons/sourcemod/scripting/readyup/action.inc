@@ -3,8 +3,6 @@
 #endif
 #define _readyup_action_included
 
-#include "sound.inc"
-
 static int
 	s_readyDelay,
 	s_autoStartDelay,

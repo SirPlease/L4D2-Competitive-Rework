@@ -3,9 +3,6 @@
 #endif
 #define _readyup_native_included
 
-#include "footer.inc" // MAX_FOOTER_LEN
-//#include "player.inc" // compiled in main script, whatever
-
 any Native_AddStringToReadyFooter(Handle plugin, int numParams)
 {
 	if (inReadyUp)
@@ -45,7 +42,7 @@ any Native_GetFooterStringAtIndex(Handle plugin, int numParams)
 	if (inReadyUp)
 	{
 		int index = GetNativeCell(1), maxlen = GetNativeCell(3);
-		SetNativeString(2, nativeFooter.Get(index), maxlen, true);
+		SetNativeString(2, FooterGet(nativeFooter, index), maxlen, true);
 		return true;
 	}
 
