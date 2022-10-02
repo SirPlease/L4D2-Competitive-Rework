@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"VotingNotEnabled"
+	{
+		"es"	"La votación no está habilitada hasta los {olive}40s{default} segundos en la ronda."
+	}
+	"NotConsoleVote"
+	{
+		"es"	"[!] Debes estar dentro del juego para votar."
+	}
+	"NotSpectatorVote"
+	{
+		"es"	"Los {olive}espectadores{default} no pueden votar"
+	}
+}

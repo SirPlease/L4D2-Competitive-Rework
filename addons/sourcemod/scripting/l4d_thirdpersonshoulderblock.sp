@@ -1,78 +1,87 @@
-
-#define PLUGIN_VERSION "1.4"
-
 #pragma semicolon 1
+#pragma newdecls required
 
+#include <colors>
 #include <sourcemod>
+#define PLUGIN_VERSION "1.5"
 
-public Plugin:myinfo =
+#define L4D_TEAM_SPECTATOR 1
+
+ConVar cvar_enabled;
+
+public Plugin myinfo =
 {
-	name = "Thirdpersonshoulder Block",
-	author = "Don",
+	name        = "Thirdpersonshoulder Block",
+	author      = "Don",
 	description = "Kicks clients who enable the thirdpersonshoulder mode on L4D1/2 to prevent them from looking around corners, through walls etc.",
-	version = PLUGIN_VERSION,
-	url = "http://forums.alliedmods.net/showthread.php?t=159582"
+	version     = PLUGIN_VERSION,
+	url         = "http://forums.alliedmods.net/showthread.php?t=159582"
+
+
 }
 
-public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	decl String:sGame[12];
-	GetGameFolderName(sGame, sizeof(sGame));
-	if (StrEqual(sGame, "left4dead") || StrEqual(sGame, "left4dead2"))	/* Only load the plugin if the server is running Left 4 Dead or Left 4 Dead 2.
-										 * Loading the plugin on Counter-Strike: Source or Team Fortress 2 would cause all clients to get kicked,
-										 * because the thirdpersonshoulder mode and the corresponding ConVar that we check do not exist there.
-										 */
+	/* Only load the plugin if the server is running Left 4 Dead or Left 4 Dead 2.
+	 * Loading the plugin on Counter-Strike: Source or Team Fortress 2 would cause all clients to get kicked,
+	 * because the thirdpersonshoulder mode and the corresponding ConVar that we check do not exist there.
+	 */
+	EngineVersion g_iEngine = GetEngineVersion();
+	if (g_iEngine != Engine_Left4Dead && g_iEngine != Engine_Left4Dead2)
 	{
-		return APLRes_Success;
+		strcopy(error, err_max, "Plugin only supports Left 4 Dead 1 & 2.");
+		return APLRes_SilentFailure;
 	}
-	else
-	{
-		strcopy(error, err_max, "Plugin only supports L4D1/2");
-		return APLRes_Failure;
-	}
+	return APLRes_Success;
 }
 
-public OnPluginStart()
+public void OnPluginStart()
 {
-	CreateConVar("l4d_tpsblock_version", PLUGIN_VERSION, "Version of the Thirdpersonshoulder Block plugin", FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	LoadTranslations("tpsblock.phrases");
+	CreateConVar("l4d_tpsblock_version", PLUGIN_VERSION, "Version of the Thirdpersonshoulder Block plugin", FCVAR_NOTIFY | FCVAR_DONTRECORD);
+
+	cvar_enabled = CreateConVar("l4d_tpsblock_enabled", "1", "Enable Thirdpersonshoulder Block", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	CreateTimer(GetRandomFloat(2.5, 3.5), CheckClients, _, TIMER_REPEAT);
 }
 
-public Action:CheckClients(Handle:timer)
+public Action CheckClients(Handle timer)
 {
-	for (new iClientIndex = 1; iClientIndex <= MaxClients; iClientIndex++)
+	if (GetConVarBool(cvar_enabled))
 	{
-		if (IsClientInGame(iClientIndex) && !IsFakeClient(iClientIndex))
+		for (int iClientIndex = 1; iClientIndex <= MaxClients; iClientIndex++)
 		{
-			if (GetClientTeam(iClientIndex) == 2 || GetClientTeam(iClientIndex) == 3)	// Only query clients on survivor or infected team, ignore spectators.
-			{
-				QueryClientConVar(iClientIndex, "c_thirdpersonshoulder", QueryClientConVarCallback);
+			if (IsClientInGame(iClientIndex) && !IsFakeClient(iClientIndex))
+			{	// Only query clients on survivor or infected team, ignore spectators.
+				if (GetClientTeam(iClientIndex) != L4D_TEAM_SPECTATOR)
+				{
+					QueryClientConVar(iClientIndex, "c_thirdpersonshoulder", QueryClientConVarCallback);
+				}
 			}
 		}
-	}	
+	}
+	return Plugin_Handled;
 }
 
-public QueryClientConVarCallback(QueryCookie:cookie, client, ConVarQueryResult:result, const String:cvarName[], const String:cvarValue[])
+public void QueryClientConVarCallback(QueryCookie cookie, int client, ConVarQueryResult result, char[] cvarName, char[] cvarValue)
 {
 	if (IsClientInGame(client) && !IsClientInKickQueue(client))
 	{
-		if (result != ConVarQuery_Okay)		/* If the ConVar was somehow not found on the client, is not valid or is protected, kick the client.
-							 * The ConVar should always be readable unless the client is trying to prevent it from being read out.
-							 */
+		/* If the ConVar was somehow not found on the client, is not valid or is protected, kick the client.
+		 * The ConVar should always be readable unless the client is trying to prevent it from being read out.
+		 */
+		if (result != ConVarQuery_Okay)
+
 		{
-			new String:sName[MAX_NAME_LENGTH];
-			GetClientName(client, sName, sizeof(sName));
-			ChangeClientTeam(client, 1);
-			PrintToChatAll("\x01\x03%s\x01 spectated due to \x04c_thirdpersonshoulder\x01 not valid or protected!", sName);
+			ChangeClientTeam(client, L4D_TEAM_SPECTATOR);
+			CPrintToChat(client, "%t %t", "Tag", "Cvar_Invalid");
 		}
-		else if (!StrEqual(cvarValue, "false") && !StrEqual(cvarValue, "0"))	/* If the ConVar was found on the client, but is not set to either "false" or "0",
-											 * kick the client as well, as he might be using thirdpersonshoulder.
-											 */
+		/* If the ConVar was found on the client, but is not set to either "false" or "0",
+		 * kick the client as well, as he might be using thirdpersonshoulder.
+		 */
+		else if (!StrEqual(cvarValue, "false") && !StrEqual(cvarValue, "0"))
 		{
-			new String:sName[MAX_NAME_LENGTH];
-			GetClientName(client, sName, sizeof(sName));
-			ChangeClientTeam(client, 1);
-			PrintToChatAll("\x01\x03%s\x01 spectated due to \x04c_thirdpersonshoulder\x01, set at\x05 0\x01 to play!", sName);
+			ChangeClientTeam(client, L4D_TEAM_SPECTATOR);
+			CPrintToChat(client, "%t %t", "Tag", "Cvar_Value1");
 		}
 	}
 }

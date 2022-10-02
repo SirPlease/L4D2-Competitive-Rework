@@ -5,6 +5,9 @@
 #include <left4dhooks>
 #include <colors>
 
+#define L4D2Team_Infected 3
+#define L4D2Infected_Tank 8
+
 //throw sequences:
 //48 - (not used unless tank_rock_overhead_percent is changed)
 
@@ -30,6 +33,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_tank_attack_control.phrases");
 	char sGame[256];
 	GetGameFolderName(sGame, sizeof(sGame));
 	if (!StrEqual(sGame, "left4dead2", false))
@@ -60,17 +64,17 @@ public void TankSpawn_Event(Event event, const char[] name, bool dontBroadcast)
 
 	if (GetConVarBool(hOverhandOnly) == false)
 	{
-		CPrintToChat(tank, "{blue}[{default}Tank Rock Selector{blue}]");
-		CPrintToChat(tank, "{olive}Reload {default}= {blue}2 Handed Overhand");
-		CPrintToChat(tank, "{olive}Use {default}= {blue}Underhand");
-		CPrintToChat(tank, "{olive}M2 {default}= {blue}1 Handed Overhand");
+		CPrintToChat(tank, "%t", "Title");
+		CPrintToChat(tank, "%t", "Reload");
+		CPrintToChat(tank, "%t", "Use");
+		CPrintToChat(tank, "%t", "M2");
 	}
 }
 
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != 3
-		|| GetEntProp(client, Prop_Send, "m_zombieClass") != 8)
+	if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != L4D2Team_Infected
+		|| GetEntProp(client, Prop_Send, "m_zombieClass") != L4D2Infected_Tank)
 			return Plugin_Continue;
 	
 	//if tank

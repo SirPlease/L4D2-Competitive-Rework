@@ -41,6 +41,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("1v1.phrases");
 	g_hCvarDmgThreshold = CreateConVar("sm_1v1_dmgthreshold", "24", "Amount of damage done (at once) before SI suicides.", _, true, 1.0);
 
 	HookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);
@@ -76,17 +77,17 @@ public void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBr
 	
 	char sName[MAX_NAME_LENGTH];
 	if (IsFakeClient(iAttacker)) {
-		Format(sName, sizeof(sName), "AI");
+		Format(sName, sizeof(sName), "%t", "AI");
 	} else {
 		GetClientName(iAttacker, sName, sizeof(sName));
 	}
 	
-	CPrintToChatAll("[{olive}1v1{default}] {red}%s{default} ({green}%s{default}) had {olive}%d{default} health remaining!", sName, L4D2_InfectedNames[iZclass], iRemainingHealth);
+	CPrintToChatAll("%t %t", "Tag", "HealthRemaining", sName, L4D2_InfectedNames[iZclass], iRemainingHealth);
 	
 	ForcePlayerSuicide(iAttacker);
 	
 	if (iRemainingHealth == 1) {
-		CPrintToChat(iVictim, "You don't have to be mad...");
+		CPrintToChat(iVictim, "%t", "UMad");
 	}
 }
 
