@@ -67,7 +67,6 @@ int
 bool
 	isPaused,
 	RoundEnd,
-	isCedapug,
 	listened;
 
 // Pause Info
@@ -170,12 +169,6 @@ void FindServerNamer()
 // ======================================
 // Forwards
 // ======================================
-
-public void OnCedapugStarted(int regionArg)
-{
-    isCedapug = true;
-}
-
 public void OnClientPutInServer(int client)
 {
 	if (isPaused)
@@ -236,7 +229,7 @@ public Action Pause_Cmd(int client, int args)
 
 	if (pauseDelay == 0 && !isPaused)
 	{
-		if (isCedapug && !AddPauseCount(client))
+		if (!AddPauseCount(client))
 			return Plugin_Continue;
 
 		initiatorId = GetClientUserId(client);
