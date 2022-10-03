@@ -237,7 +237,7 @@ stock void L4D1_SetPlayerZombieClass(int client, L4D1ZombieClassType class)
  * @error				Invalid client index.
  */
 // L4D2 only.
-stock L4D2ZombieClassType L4D2_GetPlayerZombieClass(int client)
+stock any L4D2_GetPlayerZombieClass(int client)
 {
 	return view_as<L4D2ZombieClassType>(GetEntProp(client, Prop_Send, "m_zombieClass"));
 }
