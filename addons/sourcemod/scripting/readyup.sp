@@ -9,7 +9,7 @@
 #undef REQUIRE_PLUGIN
 #include <caster_system>
 
-#define PLUGIN_VERSION "10.2.2"
+#define PLUGIN_VERSION "10.2.3"
 
 public Plugin myinfo =
 {
@@ -223,14 +223,9 @@ void CvarChg_ServerCvar(ConVar convar, const char[] oldValue, const char[] newVa
 //  Events
 // ========================
 
-void EntO_OnGameplayStart(const char[] output, int caller, int activator, float delay)
-{
-	InitiateReadyUp();
-}
-
 void RoundStart_Event(Event event, const char[] name, bool dontBroadcast)
 {
-	InitiateReadyUp(false);
+	InitiateReadyUp();
 }
 
 void GameInstructorDraw_Event(Event event, const char[] name, bool dontBroadcast)
@@ -313,8 +308,6 @@ public void OnMapStart()
 	{
 		g_hChangeTeamTimer[client] = null;
 	}
-	
-	HookEntityOutput("info_director", "OnGameplayStart", EntO_OnGameplayStart);
 }
 
 /* This ensures all cvars are reset if the map is changed during ready-up */

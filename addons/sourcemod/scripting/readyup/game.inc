@@ -49,23 +49,57 @@ void RestartVersusStartCountdown(bool startOn)
 	L4D2_CTimerStart(L4D2CT_VersusStartTimer, startOn ? s_cv.FloatValue : 99999.9);
 }
 
-void RestartMobCountdown(bool startOn)
+// TODO: Implement script override
+static float GetRandomMobSpawnInterval()
 {
-	static float fDuration = -1.0;
+	static ConVar s_cvMinInterval, s_cvMaxInterval;
 	
-	if (startOn)
+	static ConVar z_difficulty;
+	static char s_sDifficulty[10] = "normal";
+	
+	if (L4D2_HasConfigurableDifficultySetting())
 	{
-		if (fDuration != -1.0) L4D2_CTimerStart(L4D2CT_MobSpawnTimer, fDuration);
-	}
-	else
-	{
-		float fTemp = L4D2_CTimerGetCountdownDuration(L4D2CT_MobSpawnTimer);
-		if (fTemp != -1.0 && fTemp < 99999.9)
+		if (z_difficulty == null)
+			z_difficulty = FindConVar("z_difficulty");
+		
+		char buffer[10];
+		z_difficulty.GetString(buffer, sizeof(buffer));
+		String_ToLower(buffer, sizeof(buffer));
+		
+		if (strcmp(buffer, "impossible") == 0)
+			strcopy(buffer, sizeof(buffer), "expert");
+		
+		if (strcmp(buffer, s_sDifficulty) != 0)
 		{
-			fDuration = fTemp;
-			L4D2_CTimerStart(L4D2CT_MobSpawnTimer, 99999.9);
+			strcopy(s_sDifficulty, sizeof(s_sDifficulty), buffer);
+			
+			s_cvMinInterval = null;
+			s_cvMaxInterval = null;
 		}
 	}
+	
+	if (s_cvMinInterval == null)
+	{
+		char buffer[64];
+		FormatEx(buffer, sizeof(buffer), "z_mob_spawn_min_interval_%s", s_sDifficulty);
+		s_cvMinInterval = FindConVar(buffer);
+		FormatEx(buffer, sizeof(buffer), "z_mob_spawn_max_interval_%s", s_sDifficulty);
+		s_cvMaxInterval = FindConVar(buffer);
+	}
+	
+	if (s_cvMinInterval == null || s_cvMaxInterval == null)
+	{
+		ThrowError("Missing convars for mob spawn interval!");
+	}
+	
+	SetRandomSeed(GetTime());
+	return GetRandomFloat(s_cvMinInterval.FloatValue, s_cvMaxInterval.FloatValue);
+}
+
+void RestartMobCountdown(bool startOn)
+{
+	float fDuration = startOn ? GetRandomMobSpawnInterval() : 99999.9;
+	L4D2_CTimerStart(L4D2CT_MobSpawnTimer, fDuration);
 }
 
 void RestartScvngSetupCountdown(bool startOn)
@@ -110,4 +144,18 @@ void ClearSurvivorProgress()
 void SetAllowSpawns(bool allow)
 {
 	director_no_specials.BoolValue = allow;
+}
+
+// l4d2util_stocks
+stock void String_ToLower(char[] str, const int MaxSize)
+{
+	int iSize = strlen(str); //Сounts string length to zero terminator
+
+	for (int i = 0; i < iSize && i < MaxSize; i++) { //more security, so that the cycle is not endless
+		if (IsCharUpper(str[i])) {
+			str[i] = CharToLower(str[i]);
+		}
+	}
+
+	str[iSize] = '\0';
 }
