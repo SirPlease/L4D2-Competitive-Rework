@@ -103,7 +103,7 @@ native bool IsInReady();
  * Whether or not the player is currently readied up
  *
  * @param client    Client to check.
- * @return          True if the game is currently in the ready-up phase.
+ * @return          True if the player is ready.
  */
 native bool IsReady(int client);
 
