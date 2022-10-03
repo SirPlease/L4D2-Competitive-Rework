@@ -93,11 +93,11 @@ void PlayAutoStartSound()
 	}
 }
 
-void PlayNotifySound()
+void PlayNotifySound(int client)
 {
 	if (l4d_ready_enable_sound.BoolValue)
 	{
-		EmitSoundToAll(s_notifySound);
+		EmitSoundToClient(client, s_notifySound);
 	}
 }
 

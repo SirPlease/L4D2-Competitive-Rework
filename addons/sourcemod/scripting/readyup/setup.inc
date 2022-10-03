@@ -57,7 +57,7 @@ void SetupConVars()
 	
 	// sound
 	l4d_ready_enable_sound		= CreateConVar("l4d_ready_enable_sound", "1", "Enable sounds played to clients", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	l4d_ready_notify_sound		= CreateConVar("l4d_ready_notify_sound", "", "The sound that plays when a round goes on countdown");	
+	l4d_ready_notify_sound		= CreateConVar("l4d_ready_notify_sound", DEFAULT_NOTIFY_SOUND, "The sound that plays when a round goes on countdown");	
 	l4d_ready_countdown_sound	= CreateConVar("l4d_ready_countdown_sound", DEFAULT_COUNTDOWN_SOUND, "The sound that plays when a round goes on countdown");	
 	l4d_ready_live_sound		= CreateConVar("l4d_ready_live_sound", DEFAULT_LIVE_SOUND, "The sound that plays when a round goes live");
 	l4d_ready_autostart_sound	= CreateConVar("l4d_ready_autostart_sound", DEFAULT_AUTOSTART_SOUND, "The sound that plays when auto-start goes on countdown");

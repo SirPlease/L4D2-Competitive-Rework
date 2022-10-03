@@ -27,7 +27,7 @@ Action Ready_Cmd(int client, int args)
 	if (inReadyUp && IsPlayer(client))
 	{
 		if (!SetPlayerReady(client, true))
-			PlayNotifySound();
+			PlayNotifySound(client);
 		if (l4d_ready_secret.BoolValue)
 			DoSecrets(client);
 		if (CheckFullReady())
@@ -56,7 +56,7 @@ Action Unready_Cmd(int client, int args)
 			{
 				SetButtonTime(client);
 				if (SetPlayerReady(client, false))
-					PlayNotifySound();
+					PlayNotifySound(client);
 			}
 			else if (!hasflag)
 			{

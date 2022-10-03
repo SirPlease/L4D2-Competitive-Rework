@@ -87,7 +87,7 @@ ConVar
 	g_cvServerNamer;
 
 // Ready Panel
-#include "readyup/footer.inc" // sm 1.10 conpile fix
+#include "readyup/footer.inc" // sm 1.10 compile fix
 Footer
 	nativeFooter;
 float
