@@ -51,6 +51,7 @@ Handle
 
 // Plugin ConVar
 ConVar
+    onlyEnableForce,
     pauseDelayCvar,
     initiatorReadyCvar,
     l4d_ready_delay,
@@ -107,6 +108,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 public void OnPluginStart()
 {
     LoadTranslations("pause.phrases");
+    onlyEnableForce = CreateConVar("sm_onlyforce", "0", "Only allow for force pause and unpause functionality");
     pauseDelayCvar = CreateConVar("sm_pausedelay", "0", "Delay to apply before a pause happens.  Could be used to prevent Tactical Pauses", FCVAR_NONE, true, 0.0);
     initiatorReadyCvar = CreateConVar("sm_initiatorready", "0", "Require or not the pause initiator should ready before unpausing the game", FCVAR_NONE, true, 0.0);
     pauseLimitCvar = CreateConVar("sm_pauselimit", "0", "Limits the amount of pauses a player can do in a single game. Set to 0 to disable.", FCVAR_NONE, true, 0.0);
@@ -218,6 +220,9 @@ public void RoundStart_Event(Event event, const char[] name, bool dontBroadcast)
 
 public Action Pause_Cmd(int client, int args)
 {
+    if (onlyEnableForce.BoolValue)
+        return Plugin_Continue;
+
     if (readyUpIsAvailable && IsInReady())
         return Plugin_Continue;
 	
@@ -289,6 +294,9 @@ public Action ForcePause_Cmd(int client, int args)
 
 public Action Unpause_Cmd(int client, int args)
 {
+    if (onlyEnableForce.BoolValue)
+        return Plugin_Continue;
+
     if (isPaused && IsPlayer(client))
     {
         int clientTeam = GetClientTeam(client);
@@ -337,6 +345,9 @@ public Action Unpause_Cmd(int client, int args)
 
 public Action Unready_Cmd(int client, int args)
 {
+    if (onlyEnableForce.BoolValue)
+        return Plugin_Continue;
+
     if (isPaused && IsPlayer(client))
     {
         int initiator = GetClientOfUserId(initiatorId);
@@ -390,6 +401,9 @@ public Action ForceUnpause_Cmd(int client, int args)
 
 public Action ToggleReady_Cmd(int client, int args)
 {
+    if (onlyEnableForce.BoolValue)
+        return Plugin_Continue;
+
     int clientTeam = GetClientTeam(client);
     teamReady[clientTeam] ? Unready_Cmd(client, 0) : Unpause_Cmd(client, 0);
 
