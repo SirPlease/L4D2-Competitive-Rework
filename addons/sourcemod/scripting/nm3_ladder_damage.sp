@@ -69,7 +69,7 @@ public void OnMapStart()
 	g_bIsSewers = (strcmp(sMapName, "c8m3_sewers") == 0);
 }
 
-public void OnClientPostAdminCheck(int iClient)
+public void OnClientPutInServer(int iClient)
 {
 	SDKHook(iClient, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
 }
