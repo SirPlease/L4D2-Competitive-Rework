@@ -28,16 +28,38 @@
 
 #define TEAM_SURVIVOR 2
 
-bool g_bIsSewers = false;
+bool
+	g_bIsSewers = false,
+	g_bLateLoad = false;
 
 public Plugin myinfo = 
 {
 	name = "No Mercy 3 Ladder Fix",
 	author = "Jacob",
 	description = "Blocks players getting incapped from full hp on the ladder.",
-	version = "1.2",
-	url = "github.com/jacob404/myplugins"
+	version = "1.3",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
+
+public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErrMax)
+{
+	g_bLateLoad = bLate;
+
+	return APLRes_Success;
+}
+
+public void OnPluginStart()
+{
+	if (!g_bLateLoad) {
+		return;
+	}
+
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsClientInGame(i)) {
+			OnClientPutInServer(i);
+		}
+	}
+}
 
 public void OnMapStart()
 {
