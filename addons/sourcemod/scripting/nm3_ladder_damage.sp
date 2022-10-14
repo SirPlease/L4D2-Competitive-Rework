@@ -33,25 +33,25 @@ new bool:g_bIsSewers = false;
 
 public Plugin:myinfo = 
 {
-    name = "No Mercy 3 Ladder Fix",
-    author = "Jacob",
-    description = "Blocks players getting incapped from full hp on the ladder.",
-    version = "1.0",
-    url = "github.com/jacob404/myplugins"
+	name = "No Mercy 3 Ladder Fix",
+	author = "Jacob",
+	description = "Blocks players getting incapped from full hp on the ladder.",
+	version = "1.0",
+	url = "github.com/jacob404/myplugins"
 }
 
 public OnMapStart()
 {
-    decl String:mapname[64];
-    GetCurrentMap(mapname, sizeof(mapname));
-    if(StrEqual(mapname, "c8m3_sewers"))
-    {
-        g_bIsSewers = true;
-    }
-    else
-    {
-        g_bIsSewers = false;
-    }
+	decl String:mapname[64];
+	GetCurrentMap(mapname, sizeof(mapname));
+	if(StrEqual(mapname, "c8m3_sewers"))
+	{
+		g_bIsSewers = true;
+	}
+	else
+	{
+		g_bIsSewers = false;
+	}
 }
 
 public OnClientPostAdminCheck(client)
