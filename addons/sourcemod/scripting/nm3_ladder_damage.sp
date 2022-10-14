@@ -26,10 +26,7 @@
 #include <sdktools>
 #include <sdkhooks>
 
-#define IS_VALID_CLIENT(%1)     (%1 > 0 && %1 <= MaxClients)
-#define IS_SURVIVOR(%1)         (GetClientTeam(%1) == 2)
-#define IS_VALID_INGAME(%1)     (IS_VALID_CLIENT(%1) && IsClientInGame(%1))
-#define IS_VALID_SURVIVOR(%1)   (IS_VALID_INGAME(%1) && IS_SURVIVOR(%1))
+#define TEAM_SURVIVOR 2
 
 bool g_bIsSewers = false;
 
@@ -38,7 +35,7 @@ public Plugin myinfo =
 	name = "No Mercy 3 Ladder Fix",
 	author = "Jacob",
 	description = "Blocks players getting incapped from full hp on the ladder.",
-	version = "1.1",
+	version = "1.2",
 	url = "github.com/jacob404/myplugins"
 };
 
@@ -55,28 +52,28 @@ public void OnClientPostAdminCheck(int iClient)
 	SDKHook(iClient, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
 }
 
-public void OnClientDisconnect(int iClient)
+/*public void OnClientDisconnect(int iClient)
 {
 	SDKUnhook(iClient, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
-}
+}*/
 
 public Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamagetype)
 {
-	int iPounceVictim = GetEntProp(iVictim, Prop_Send, "m_pounceAttacker");
-	int iJockeyVictim = GetEntProp(iVictim, Prop_Send, "m_jockeyAttacker");
-
-	if (iPounceVictim <= 0 && iJockeyVictim <= 0) {
+	if (iDamagetype != DMG_FALL || !g_bIsSewers || fDamage <= 30.0) {
 		return Plugin_Continue;
 	}
 
-	if (!g_bIsSewers) {
+	if (iVictim < 1 || iVictim > MaxClients || GetClientTeam(iVictim) != TEAM_SURVIVOR) {
 		return Plugin_Continue;
 	}
 
-	if(IS_VALID_SURVIVOR(iVictim) && fDamage > 30.0 && iDamagetype == DMG_FALL) {
-		fDamage = 30.0;
-		return Plugin_Changed;
+	int iPounceVictim = GetEntPropEnt(iVictim, Prop_Send, "m_pounceAttacker");
+	int iJockeyVictim = GetEntPropEnt(iVictim, Prop_Send, "m_jockeyAttacker");
+
+	if (iPounceVictim < 1 && iJockeyVictim < 1) {
+		return Plugin_Continue;
 	}
 
-	return Plugin_Continue;
+	fDamage = 30.0;
+	return Plugin_Changed;
 }
