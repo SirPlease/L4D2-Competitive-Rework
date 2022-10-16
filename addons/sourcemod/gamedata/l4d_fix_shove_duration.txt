@@ -1,0 +1,105 @@
+"Games"
+{
+	"left4dead"
+	{
+		"Functions"
+		{
+			"CTerrorPlayer::OnShovedByLunge"
+			{
+				"signature"		"CTerrorPlayer::OnShovedByLunge"
+				"linux"
+				{
+					"callconv"		"cdecl"
+				}
+				"windows"
+				{
+					"callconv"		"stdcall"
+				}
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"pVictim"
+					{
+						"type"	"cbaseentity"
+						"linux"
+						{
+							"register"	"eax"
+						}
+						"windows"
+						{
+							"register"	"ecx"
+						}
+					}
+					"pAttacker"
+					{
+						"type"	"cbaseentity"
+						"linux"
+						{
+							"register"	"edx"
+						}
+					}
+					"bLungePush"
+					{
+						"type"	"bool"
+					}
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			"CTerrorPlayer::OnShovedByLunge"
+			{
+				"library"		"server"
+				"linux"			"@_ZN13CTerrorPlayer15OnShovedByLungeEPS_b.part.825"
+				"windows"		"\x83\xEC\x2A\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x0F\x85\x2A\x2A\x2A\x2A\x55\x8B"
+								/* 83 EC ? 56 8B F1 E8 ? ? ? ? 84 C0 0F 85 ? ? ? ? 55 8B */
+			}
+		}
+	}
+	
+	"left4dead2"
+	{
+		"Functions"
+		{
+			"CTerrorPlayer::OnShovedByLunge"
+			{
+				"signature"		"CTerrorPlayer::OnShovedByLunge"
+				"callconv"		"cdecl"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"pVictim"
+					{
+						"type"	"cbaseentity"
+						"windows"
+						{
+							"register"	"ecx"
+						}
+					}
+					"pAttacker"
+					{
+						"type"	"cbaseentity"
+					}
+					"bLungePush"
+					{
+						"type"	"bool"
+					}
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			"CTerrorPlayer::OnShovedByLunge"
+			{
+				"library"		"server"
+				"linux"			"@_ZN13CTerrorPlayer15OnShovedByLungeEPS_b"
+				"windows"		"\x53\x8B\xDC\x83\xEC\x08\x83\xE4\xF0\x83\xC4\x04\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x83\xEC\x38\x56\x57\x8B\xF1"
+								/* 53 8B DC 83 EC 08 83 E4 F0 83 C4 04 55 8B 6B 04 89 6C 24 04 8B EC 83 EC 38 56 57 8B F1 */
+			}
+		}
+	}
+}
