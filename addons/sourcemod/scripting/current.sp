@@ -1,8 +1,9 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#include <sourcemod>
+#include <colors>
 #include <left4dhooks>
+#include <sourcemod>
 
 #define TEAM_SURVIVORS 2
 
@@ -10,15 +11,16 @@ ConVar g_hVsBossBuffer;
 
 public Plugin myinfo =
 {
-	name = "L4D2 Survivor Progress",
-	author = "CanadaRox, Visor",
+	name        = "L4D2 Survivor Progress",
+	author      = "CanadaRox, Visor",
 	description = "Print survivor progress in flow percents ",
-	version = "2.0.2",
-	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
+	version     = "2.0.2",
+	url         = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public void OnPluginStart()
 {
+	LoadTranslations("current.phrases");
 	g_hVsBossBuffer = FindConVar("versus_boss_buffer");
 
 	RegConsoleCmd("sm_cur", CurrentCmd);
@@ -28,7 +30,7 @@ public void OnPluginStart()
 public Action CurrentCmd(int client, int args)
 {
 	int boss_proximity = RoundToNearest(GetBossProximity() * 100.0);
-	PrintToChat(client, "\x01Current: \x04%d%%", boss_proximity);
+	CPrintToChat(client, "%t", "Current", boss_proximity);
 	return Plugin_Handled;
 }
 
@@ -41,15 +43,18 @@ float GetBossProximity()
 
 float GetMaxSurvivorCompletion()
 {
-	float flow = 0.0, tmp_flow = 0.0, origin[3];
+	float   flow = 0.0, tmp_flow = 0.0, origin[3];
 	Address pNavArea;
-	for (int i = 1; i <= MaxClients; i++) {
-		if (IsClientInGame(i) && GetClientTeam(i) == TEAM_SURVIVORS) {
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (IsClientInGame(i) && GetClientTeam(i) == TEAM_SURVIVORS)
+		{
 			GetClientAbsOrigin(i, origin);
 			pNavArea = L4D2Direct_GetTerrorNavArea(origin);
-			if (pNavArea != Address_Null) {
+			if (pNavArea != Address_Null)
+			{
 				tmp_flow = L4D2Direct_GetTerrorNavAreaFlow(pNavArea);
-				flow = (flow > tmp_flow) ? flow : tmp_flow;
+				flow     = (flow > tmp_flow) ? flow : tmp_flow;
 			}
 		}
 	}

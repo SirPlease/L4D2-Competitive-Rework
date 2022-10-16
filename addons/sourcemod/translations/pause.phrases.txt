@@ -6,11 +6,11 @@
 	}
 	"ClientFullyLoaded"
 	{
-		"en"	"{olive}%N {default}has fully loaded"
+		"en"	"{olive}%N {default}has fully loaded."
 	}
 	"PauseCommand"
 	{
-		"en"	"{olive}%N {blue}Paused{default}."
+		"en"	"{olive}%N {blue}Paused{default}%s"
 	}
 	// PauseDelay_Timer
 	"PauseAction"
@@ -19,7 +19,7 @@
 	}
 	"PauseDelay"
 	{
-		"en"	"{blue}Pausing in{default}: {olive}%d"
+		"en"	"{blue}Pausing in{default}: {olive}%d{default}."
 	}
 	// ForcePause_Cmd
 	"Crashed"
@@ -73,7 +73,7 @@
 	// AddPauseCount
 	"PauseLimit"
 	{
-		"en"	"You have reached your pause limit."
+		"en"	"You have reached your pause limit ({green}%d{default})."
 	}
 	// AttemptPause
 	"PauseDeferred"
@@ -83,7 +83,7 @@
 	// Pause
 	"PausePreventSpawn"
 	{
-		"en"	"{default}Your {red}Spawn {default}has been prevented because of the Pause"
+		"en"	"{default}Your {red}Spawn {default}has been prevented because of the Pause."
 	}
 	// Show_Cmd
 	"PanelShow"

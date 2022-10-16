@@ -240,8 +240,14 @@ public Action Pause_Cmd(int client, int args)
         initiatorId = GetClientUserId(client);
         pauseTeam = GetClientTeam(client);
         GetClientName(client, initiatorName, sizeof(initiatorName));
-		
-        CPrintToChatAll("%t %t", "Tag", "PauseCommand", client);
+        
+        char sbuffer[64] = ".";
+        if(pauseLimitCvar.IntValue > 0)
+        {
+            Format(sbuffer, sizeof(sbuffer), " ({green}%d{default}/{green}%d{default}).", PauseCount(client), pauseLimitCvar.IntValue);
+        }
+
+        CPrintToChatAll("%t %t", "Tag", "PauseCommand", client, sbuffer);
 		
         pauseDelay = pauseDelayCvar.IntValue;
         if (pauseDelay == 0)
@@ -424,7 +430,7 @@ bool AddPauseCount(int client)
 
     if (pauseLimit > 0 && pauseCount >= pauseLimit)
     {
-        CPrintToChat(client, "%t %t", "Tag", "PauseLimit");
+        CPrintToChat(client, "%t %t", "Tag", "PauseLimit", pauseLimit);
         return false;
     }
 
@@ -432,6 +438,16 @@ bool AddPauseCount(int client)
     playerPauseCount.SetValue(authId, pauseCount);
 
     return true;
+}
+
+int PauseCount(int client)
+{
+    char authId[18];
+    GetClientAuthId(client, AuthId_SteamID64, authId, 18, false);
+    int pauseCount = 0;
+    playerPauseCount.GetValue(authId, pauseCount);
+
+    return pauseCount;
 }
 
 void AttemptPause()

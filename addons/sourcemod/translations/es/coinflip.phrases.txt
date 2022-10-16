@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"Heads"
+	{
+		"es"		"¡{lightgreen}%s{default} tiró una moneda!\n¡Es {green}Cara{default}!"
+	}
+	"Tails"
+	{
+		"es"		"¡{lightgreen}%s{default} tiró una moneda!\n¡Es {green}Cruz{default}!"
+	}
+	"rolled"
+	{
+		"es"		"!{lightgreen}%s{default} eligió un número del 1 al {teamcolor}%d{default}!\n¡Es {green}%d{default}!"
+	}
+}

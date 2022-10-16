@@ -1,0 +1,8 @@
+"Phrases"
+{
+	"Current"
+	{
+		"en"		"Current: {green}%d%%{default}"
+		"es"		"Progreso: {green}%d%%{default}"
+	}
+}

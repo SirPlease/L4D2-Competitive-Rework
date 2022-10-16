@@ -2,11 +2,11 @@
 {
 	"ClientFullyLoaded"
 	{
-		"es"	"{olive}%N {default}ha cargado totalmente"
+		"es"	"{olive}%N{default} ha cargado totalmente."
 	}
 	"PauseCommand"
 	{
-		"es"	"{olive}%N {default}a {blue} Pausado{default}."
+		"es"	"{olive}%N{default} a {blue}Pausado{default}%s"
 	}
 	// PauseDelay_Timer
 	"PauseAction"
@@ -15,80 +15,80 @@
 	}
 	"PauseDelay"
 	{
-		"es"	"{blue}Pausa en{default}: {olive}%d"
+		"es"	"{blue}Pausa en{default}: {olive}%d{default}."
 	}
 	// ForcePause_Cmd
 	"Crashed"
 	{
-		"es"	"{olive}El juego {default}se ha {green}puesto en pausa {default}porque un jugador se le ha {blue}cerrado{default}."
+		"es"	"{olive}El juego {default}se ha {green}Pausado{default}, un jugador {blue}no responde{default}."
 	}
 	"ForcePause"
 	{
-		"es"	"Una pausa forzada {green}es emitida por {blue}Admin {default}({olive}%N{default})"
+		"es"	"Una pausa forzada {green}emitida{default} por el(la) {blue}Admin{default} ({olive}%N{default})"
 	}
 	// Unpause_Cmd
 	"UnpauseSurvivors"
 	{
-		"es"	"{olive}%N %s{default}a marcado como {blue}%s {default}listo."
+		"es"	"{olive}%N %s{default} marco que los {blue}%s{default} estan preparados."
 	}
 	"UnpauseInfected"
 	{
-		"es"	"{olive}%N %s{default}a marcado como {red}%s {default}listo."
+		"es"	"{olive}%N %s{default} marco que los {red}%s{default} estan preparados."
 	}
 	"UnpauseInitiator"
 	{
-		"es"	"{olive}%N {default}a marcado como {green}Initiator {default}listo."
+		"es"	"El jugador que {green}pauso{default}({olive}%N{default}) marco que está preparado."
 	}
 	"UnpauseAdminConfirm"
 	{
-		"es"	"{olive}Los equipos {default}están listos. Espere a que {blue}Administrador {default} {green}confirme{default}."
+		"es"	"{olive}Los equipos{default} están listos. Espere a que el {blue}Administrador{default} {green}confirme{default}."
 	}
 	// Unready_Cmd
 	"UnreadySurvivors"
 	{
-		"es"	"{olive}%N %s{default}marcado {blue}%s {default}no listo."
+		"es"	"{olive}%N %s{default} marco que los {blue}%s{default} no estan preparados."
 	}
 	"UnreadyInfected"
 	{
-		"es"	"{olive}%N %s{default}marcado {red}%s {default}no listo."
+		"es"	"{olive}%N %s{default} marco que los {red}%s{default} no preparados."
 	}
 	"UnreadyInitiator"
 	{
-		"es"	"{olive}%N {default}marcó {green}Iniciador {default}no listo."
+		"es"	"El jugador que {green}pauso{default}({olive}%N{default}) marco que no está preparado."
 	}
 	// void AsInitiator()
 	"AsInitiator"
 	{
-		"es"	"{default}como {green}Iniciador "
+		"es"	"{default}como{green} Iniciador"
 	}
 	// ForceUnpause_Cmd
 	"ForceUnpause"
 	{
-		"es"	"Un {green}forzar reanudación {default} es emitido por {blue}Administrador {default}({olive}%N{default})"
+		"es"	"El {blue}Administrador{default}({olive}%N{default}) {green}forzo la reanudación{default}."
 	}
 	// AddPauseCount
 	"PauseLimit"
 	{
-		"es"	"Has alcanzado tu límite de pausa."
+		"es"	"Has alcanzado tu límite de pausas ({green}%d{default})."
 	}
 	// AttemptPause
 	"PauseDeferred"
 	{
-		"es"	"{red}La pausa se ha retrasado debido a que un sobreviviente se está levantando."
+		"es"	"{red}La pausa se ha retrasado debido a que un sobreviviente se está levantando{default}."
 	}
 	// Pause
 	"PausePreventSpawn"
 	{
-		"es"	"{default}Tu {red}reaparición {default}ha sido impedido debido a la Pausa"
+		"es"	"{default}Tu{red} reaparición {default} fue impedida debido a la Pausa{default}."
 	}
 	// Show_Cmd
 	"PanelShow"
 	{
-		"es"	"El panel ahora está {azul} activado {default}."
+		"es"	"El panel ahora está {azul}activado{default}."
 	}
 	"PanelHide"
 	{
-		"es"	"El panel ahora está {rojo}desactivado{predeterminado}."
+		"es"	"El panel ahora está {red}desactivado{predeterminado}."
 	}
 	// UpdatePanel
 	"PanelSlots"
@@ -146,7 +146,7 @@
 	// InitiateLiveCountdown
 	"CountdownCancelNotify"
 	{
-		"es"		"Escriba {olive}!unready {default}para cancelar"
+		"es"		"Escriba {olive}!unready{default} para cancelar"
 	}
 	"GameisLive"
 	{
@@ -159,7 +159,7 @@
 	// CancelFullReady
 	"CountdownCancelled"
 	{
-		"es"		"{olive}%N {default}canceló la cuenta regresiva!"
+		"es"		"{olive}%N{default} canceló la cuenta regresiva!"
 	}
 	// Callvote_Callback
 	"CallvoteNoSpec"

@@ -2,10 +2,10 @@
 {
 	"LoseFrustration"
 	{
-        "es"	"El {red}Tank{default} {green}aún perderá{default} la frustración mientras los sobrevivientes estén en la {olive}habitación segura{default}."
+        "es"	"El {red}Tank{default} {green}perderá{default} el control mientras los sobrevivientes estén en la {olive}habitación segura{default}."
 	}
 	"KeepFrustration"
 	{
-        "es"	"El {red}Tank{default} {green}no perderá{default} la frustración mientras los sobrevivientes estén en la {olive}habitación segura{default}."
+        "es"	"El {red}Tank{default} {green}no perderá{default} el control mientras los sobrevivientes estén en la {olive}habitación segura{default}."
 	}
 }
