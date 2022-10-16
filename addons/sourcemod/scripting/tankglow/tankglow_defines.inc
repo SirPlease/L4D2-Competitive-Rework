@@ -53,10 +53,14 @@ CEscapeRoute TheEscapeRoute()
 	}
 }*/
 
+#define NULL_NAV_AREA view_as<TerrorNavArea>(0)
 methodmap TerrorNavArea
 {
 	public TerrorNavArea(float vPos[3]) {
 		return view_as<TerrorNavArea>(L4D2Direct_GetTerrorNavArea(vPos, 120.0));
+	}
+	public bool Valid() {
+		return this != NULL_NAV_AREA;
 	}
 	public TerrorNavArea GetNextEscapeStep(int &traverse_type = 0) {
 		return SDKCall(s_hSDKCall_GetNextEscapeStep, this, traverse_type);
@@ -81,7 +85,6 @@ methodmap TerrorNavArea
 		}
 	}*/
 }
-#define NULL_NAV_AREA view_as<TerrorNavArea>(0)
 
 methodmap CZombieManager 
 {
