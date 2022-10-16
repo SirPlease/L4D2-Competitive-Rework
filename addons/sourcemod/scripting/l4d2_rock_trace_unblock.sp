@@ -7,7 +7,7 @@
 #include <dhooks>
 #include <sourcescramble>
 
-#define PLUGIN_VERSION "1.8"
+#define PLUGIN_VERSION "1.9"
 
 public Plugin myinfo = 
 {
@@ -75,9 +75,9 @@ public void OnPluginStart()
 					"l4d2_rock_trace_unblock_flag",
 					"5",
 					"Prevent SI from blocking the rock radius check.\n"\
-				...	"1 = Unblock from all standing SI, 2 = Unblock from pounced, 4 = Unblock from jockeyed, 8 = Unblock from pummelled, 15 = All, 0 = Disable.",
+				...	"1 = Unblock from all standing SI, 2 = Unblock from pounced, 4 = Unblock from jockeyed, 8 = Unblock from pummelled, 16 = Unblock from thrower (Tank), 31 = All, 0 = Disable.",
 					FCVAR_NOTIFY|FCVAR_SPONLY,
-					true, 0.0, true, 15.0);
+					true, 0.0, true, 31.0);
 	
 	g_cvJockeyFix = CreateConVar(
 					"l4d2_rock_jockey_dismount",
@@ -148,8 +148,8 @@ public void L4D_TankRock_OnRelease_Post(int tank, int rock, const float vecPos[3
 
 Action SDK_OnThink(int entity)
 {
-	static float vOrigin[3], vLastOrigin[3], vPos[3];
-	GetEntPropVector(entity, Prop_Send, "m_vecOrigin", vOrigin);
+	static float vOrigin[3], vLastOrigin[3], vPos[3], vClosestPos[3];
+	GetEntPropVector(entity, Prop_Data, "m_vecAbsOrigin", vOrigin);
 	
 	static int m_vLastPosition = -1;
 	if (m_vLastPosition == -1)
@@ -157,13 +157,8 @@ Action SDK_OnThink(int entity)
 	
 	GetEntDataVector(entity, m_vLastPosition, vLastOrigin);
 	
-	static Handle tr;
-	static DataPack dp;
-	
-	// Serves as a List for ignored entities in traces
-	dp = new DataPack();
-	dp.WriteCell(entity); // always self-ignored
-	DataPackPos pos = dp.Position;
+	float flMinDistSqr = g_fRockRadiusSquared;
+	int iClosestSurvivor = -1;
 	
 	for (int i = 1; i <= MaxClients; ++i)
 	{
@@ -175,35 +170,45 @@ Action SDK_OnThink(int entity)
 		
 		GetAbsOrigin(i, vPos, true);
 		ComputeClosestPoint(vLastOrigin, vOrigin, vPos, vOrigin);
-		if (GetVectorDistance(vOrigin, vPos, true) < g_fRockRadiusSquared)
+		
+		float flDistSqr = GetVectorDistance(vOrigin, vPos, true);
+		if (flDistSqr < flMinDistSqr)
 		{
-			dp.Position = pos;
-			dp.WriteCell(i);
-			
-			// See if there's any obstracle in the way
-			tr = TR_TraceRayFilterEx(vOrigin, vPos, MASK_SOLID, RayType_EndPoint, ProximityThink_TraceFilterList, dp);
-			
-			if (!TR_DidHit(tr) && TR_GetFraction(tr) >= 1.0)
-			{
-				// Maybe "TeleportEntity" does the same, let it be.
-				SetAbsOrigin(entity, vOrigin);
-				
-				// Hurt attackers first, based on flag setting
-				HurtCappers(entity, i);
-				
-				// Confirm landing
-				BounceTouch(entity, i);
-				
-				// Radius check succeeded in landing someone, exit the loop.
-				delete tr;
-				break;
-			}
-			
-			delete tr;
+			flMinDistSqr = flDistSqr;
+			iClosestSurvivor = i;
+			vClosestPos[0] = vOrigin[0];
+			vClosestPos[1] = vOrigin[1];
+			vClosestPos[2] = vOrigin[2];
 		}
 	}
 	
-	delete dp;
+	if (iClosestSurvivor != -1)
+	{
+		// Serves as a List for ignored entities in traces
+		DataPack dp = new DataPack();
+		dp.WriteCell(entity); // always self-ignored
+		dp.WriteCell(iClosestSurvivor);
+		dp.WriteCell(GetEntPropEnt(entity, Prop_Send, "m_hThrower"));
+		
+		// See if there's any obstracle in the way
+		GetAbsOrigin(iClosestSurvivor, vPos, true);
+		Handle tr = TR_TraceRayFilterEx(vClosestPos, vPos, MASK_SOLID, RayType_EndPoint, ProximityThink_TraceFilter, dp);
+		
+		if (!TR_DidHit(tr) && TR_GetFraction(tr) >= 1.0)
+		{
+			// Maybe "TeleportEntity" does the same, let it be.
+			SetAbsOrigin(entity, vOrigin);
+			
+			// Hurt attackers first, based on flag setting
+			HurtCappers(entity, iClosestSurvivor);
+			
+			// Confirm landing
+			BounceTouch(entity, iClosestSurvivor);
+		}
+		
+		delete tr;
+		delete dp;
+	}
 	
 	return Plugin_Continue;
 }
@@ -222,8 +227,8 @@ Action SDK_OnThink(int entity)
 bool ComputeClosestPoint(const float vLeft[3], const float vRight[3], const float vPos[3], float result[3])
 {
 	static float vLTarget[3], vLine[3];
-	MakeVectorFromPoints(vLeft, vPos, vLTarget);
-	MakeVectorFromPoints(vLeft, vRight, vLine);
+	SubtractVectors(vPos, vLeft, vLTarget);
+	SubtractVectors(vRight, vLeft, vLine);
 	
 	static float fLength, fDot;
 	fLength = NormalizeVector(vLine, vLine);
@@ -261,28 +266,38 @@ bool ComputeClosestPoint(const float vLeft[3], const float vRight[3], const floa
 	}
 }
 
-bool ProximityThink_TraceFilterList(int entity, int contentsMask, DataPack dp)
+bool ProximityThink_TraceFilter(int entity, int contentsMask, DataPack dp)
 {
 	dp.Reset();
+	
+	/**
+	 * dp[0] = rock
+	 * dp[1] = survivor
+	 * dp[2] = tank
+	 */
+	
 	if (entity == dp.ReadCell() || entity == dp.ReadCell())
 		return false;
 	
+	if (entity == dp.ReadCell())
+		return !(g_iFlags & 16);
+	
 	if (entity > 0 && entity <= MaxClients && IsClientInGame(entity))
 	{
-		/**
-		 * NOTE:
-		 *
-		 * This should not be possible as radius check runs every think
-		 * and survivors in between must be prior to be targeted.
-		 *
-		 * As far as I know, the only exception is that multiple survivors
-		 * are coinciding (like at a corner), and obstracle tracing ends up
-		 * with "true", kinda false positive.
-		 *
-		 * Treated as a bug here, no options.
-		 */
 		if (GetClientTeam(entity) == 2)
 		{
+			/**
+			 * NOTE:
+			 *
+			 * This should not be possible as radius check runs every think
+			 * and survivors in between must be prior to be targeted.
+			 *
+			 * As far as I know, the only exception is that multiple survivors
+			 * are coinciding (like at a corner), and obstracle tracing ends up
+			 * with "true", kinda false positive.
+			 *
+			 * Treated as a bug here, no options.
+			 */
 			return false;
 		}
 		
