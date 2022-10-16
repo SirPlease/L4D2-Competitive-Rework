@@ -8,9 +8,7 @@
 #include <l4d_boss_vote>
 #define REQUIRE_PLUGIN
 
-#tryinclude <l4d_info_editor>
-
-#define PLUGIN_VERSION "1.4"
+#define PLUGIN_VERSION "1.4.1"
 
 public Plugin myinfo = 
 {
@@ -46,6 +44,9 @@ float g_vModelPos[3], g_vModelAng[3];
 ConVar g_cvTeleport;
 
 //=========================================================================================================
+
+// !!! remove this line if you want to include info_editor
+native void InfoEditor_GetString(int pThis, const char[] keyname, char[] dest, int destLen);
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
