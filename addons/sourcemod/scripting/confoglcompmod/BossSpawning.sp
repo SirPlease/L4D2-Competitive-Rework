@@ -17,8 +17,7 @@ static bool
 	BS_bEnabled = true,
 	BS_bIsFirstRound = true,
 	BS_bDeleteWitches = false,
-	BS_bFinaleStarted = false,
-	BS_bExpectTankSpawn = false;
+	BS_bFinaleStarted = false;
 
 static int
 	BS_iTankCount[ROUND_MAX_COUNT] = {0, ...},
@@ -49,7 +48,6 @@ void BS_OnMapStart()
 {
 	BS_bIsFirstRound = true;
 	BS_bFinaleStarted = false;
-	BS_bExpectTankSpawn = false;
 
 	for (int i = 0; i < ROUND_MAX_COUNT; i++) {
 		BS_iTankCount[i] = 0;
@@ -108,13 +106,6 @@ void BS_OnTankSpawnPost_Forward(int iTankClient)
 	if (BS_bFinaleStarted) {
 		return;
 	}
-
-	// Stop if this isn't the first tank_spawn for this tank
-	if (!BS_bExpectTankSpawn) {
-		return;
-	}
-
-	BS_bExpectTankSpawn = false;
 
 	// Don't track tank spawns on c5m5 or tank can spawn behind other team.
 	if (strcmp(BS_sMap, "c5m5_bridge") == 0) {
