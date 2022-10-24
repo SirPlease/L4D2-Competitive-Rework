@@ -38,7 +38,6 @@ void BS_OnModuleStart()
 	BS_bEnabled = BS_hEnabled.BoolValue;
 	BS_hEnabled.AddChangeHook(BS_ConVarChange);
 
-	HookEvent("tank_spawn", BS_TankSpawn);
 	HookEvent("witch_spawn", BS_WitchSpawn);
 	HookEvent("round_end", BS_RoundEnd, EventHookMode_PostNoCopy);
 	HookEvent("finale_start", BS_FinaleStart, EventHookMode_PostNoCopy);
@@ -99,14 +98,7 @@ public void BS_WitchSpawn(Event hEvent, const char[] sEventName, bool bDontBroad
 	}
 }
 
-void BS_OnTankSpawnPost_Forward()
-{
-	if (BS_bEnabled && IsPluginEnabled()) {
-		BS_bExpectTankSpawn = true;
-	}
-}
-
-public void BS_TankSpawn(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void BS_OnTankSpawnPost_Forward(int iTankClient)
 {
 	if (!BS_bEnabled || !IsPluginEnabled()) {
 		return;
@@ -128,8 +120,6 @@ public void BS_TankSpawn(Event hEvent, const char[] sEventName, bool bDontBroadc
 	if (strcmp(BS_sMap, "c5m5_bridge") == 0) {
 		return;
 	}
-
-	int iTankClient = GetClientOfUserId(hEvent.GetInt("userid"));
 
 	if (GetMapValueInt("tank_z_fix")) {
 		FixZDistance(iTankClient); // fix stuck tank spawns, ex c1m1

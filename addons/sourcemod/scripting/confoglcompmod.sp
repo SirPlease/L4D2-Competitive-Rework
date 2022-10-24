@@ -3,7 +3,7 @@
 
 #define DEBUG_ALL					0
 
-#define PLUGIN_VERSION				"2.3.1"
+#define PLUGIN_VERSION				"2.3.2"
 
 // Using these macros, you can disable unnecessary modules,
 // and they will not be included in the plugin at compile time,
@@ -414,7 +414,7 @@ public Action L4D_OnSpawnTank(const float vector[3], const float qangle[3])
 public void L4D_OnSpawnTank_Post(int client, const float vecPos[3], const float vecAng[3])
 {
 	//Modules
-	BS_OnTankSpawnPost_Forward(); //BossSpawning
+	BS_OnTankSpawnPost_Forward(client); //BossSpawning
 }
 #endif
 
