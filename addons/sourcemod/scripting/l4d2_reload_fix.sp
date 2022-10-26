@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION 		"1.2"
+#define PLUGIN_VERSION 		"1.3"
 
 /*======================================================================================
 	Plugin Info:
@@ -31,6 +31,9 @@
 
 ========================================================================================
 	Change Log:
+
+1.3 (26-Oct-2022)
+	- Use dynamic offset remove hardcode offset
 
 1.2 (06-Jul-2021)
 	- Fixed throwing errors about invalid entity. Thanks to "HarryPotter" for reporting.
@@ -48,12 +51,11 @@
 
 #include <sourcemod>
 #include <sdkhooks>
+#include <sdktools>
 
-StringMap g_hWeaponOffsets;
 int g_iClipAmmo[MAXPLAYERS+1];
 int g_iOffsetAmmo;
 bool g_bLateLoad;
-
 
 
 // ====================================================================================================
@@ -62,7 +64,7 @@ bool g_bLateLoad;
 public Plugin myinfo =
 {
 	name = "[L4D2] No Reload Animation Fix - Picking Up Same Weapon",
-	author = "SilverShot",
+	author = "SilverShot, ProjectSky",
 	description = "Prevent filling the clip and skipping the reload animation when taking the same weapon.",
 	version = PLUGIN_VERSION,
 	url = "https://forums.alliedmods.net/showthread.php?t=333100"
@@ -71,7 +73,7 @@ public Plugin myinfo =
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion test = GetEngineVersion();
-	if( test != Engine_Left4Dead2 )
+	if (test != Engine_Left4Dead2)
 	{
 		strcopy(error, err_max, "Plugin only supports Left 4 Dead 2.");
 		return APLRes_SilentFailure;
@@ -85,11 +87,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 public void OnPluginStart()
 {
 	// Lateload
-	if( g_bLateLoad )
+	if (g_bLateLoad)
 	{
-		for( int i = 1; i <= MaxClients; i++ )
+		for (int i = 1; i <= MaxClients; i++)
 		{
-			if( IsClientInGame(i) )
+			if (IsClientInGame(i))
 			{
 				SDKHook(i, SDKHook_WeaponCanUsePost, WeaponCanUse);
 			}
@@ -99,28 +101,6 @@ public void OnPluginStart()
 	// Offsets to setting reserve ammo
 	g_iOffsetAmmo = FindSendPropInfo("CTerrorPlayer", "m_iAmmo");
 
-	g_hWeaponOffsets = new StringMap();
-	g_hWeaponOffsets.SetValue("weapon_rifle", 12);
-	g_hWeaponOffsets.SetValue("weapon_smg", 20);
-	g_hWeaponOffsets.SetValue("weapon_pumpshotgun", 28);
-	g_hWeaponOffsets.SetValue("weapon_shotgun_chrome", 28);
-	g_hWeaponOffsets.SetValue("weapon_autoshotgun", 32);
-	g_hWeaponOffsets.SetValue("weapon_hunting_rifle", 36);
-
-	// if( g_bLeft4Dead2 )
-	// {
-	g_hWeaponOffsets.SetValue("weapon_rifle_sg552", 12);
-	g_hWeaponOffsets.SetValue("weapon_rifle_desert", 12);
-	g_hWeaponOffsets.SetValue("weapon_rifle_ak47", 12);
-	g_hWeaponOffsets.SetValue("weapon_smg_silenced", 20);
-	g_hWeaponOffsets.SetValue("weapon_smg_mp5", 20);
-	g_hWeaponOffsets.SetValue("weapon_shotgun_spas", 32);
-	g_hWeaponOffsets.SetValue("weapon_sniper_scout", 40);
-	g_hWeaponOffsets.SetValue("weapon_sniper_military", 40);
-	g_hWeaponOffsets.SetValue("weapon_sniper_awp", 40);
-	g_hWeaponOffsets.SetValue("weapon_grenade_launcher", 68);
-	// }
-
 	CreateConVar("l4d2_reload_fix_version", PLUGIN_VERSION, "No Reload Animation Fix plugin version.", FCVAR_NOTIFY|FCVAR_DONTRECORD);
 }
 
@@ -129,25 +109,25 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_WeaponCanUsePost, WeaponCanUse);
 }
 
-public void WeaponCanUse(int client, int weapon)
+void WeaponCanUse(int client, int weapon)
 {
 	g_iClipAmmo[client] = -1;
 
-	if( weapon == -1 ) return;
+	if (weapon == -1) return;
 
 	// Validate team
-	if( GetClientTeam(client) == 2 )
+	if (GetClientTeam(client) == 2)
 	{
-		// Validate weapon
-		int current = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-		if( current == -1 ) return;
+		// only primary weapon
+		int current = GetPlayerWeaponSlot(client, 0);
+		if (current == -1) return;
 
 		static char class1[32], class2[32];
 		GetEdictClassname(current, class1, sizeof(class1));
 		GetEdictClassname(weapon, class2, sizeof(class2));
 
 		// Match same weapon
-		if( strcmp(class1, class2) == 0 )
+		if (strcmp(class1, class2) == 0)
 		{
 			// Store clip size
 			g_iClipAmmo[client] = GetEntProp(current, Prop_Send, "m_iClip1");
@@ -161,13 +141,13 @@ public void WeaponCanUse(int client, int weapon)
 	}
 }
 
-public void OnFrame(DataPack dPack)
+void OnFrame(DataPack dPack)
 {
 	dPack.Reset();
 
 	int client = dPack.ReadCell();
 	client = GetClientOfUserId(client);
-	if( !client || !IsClientInGame(client) || g_iClipAmmo[client] == -1 )
+	if (!client || !IsClientInGame(client) || g_iClipAmmo[client] == -1)
 	{
 		delete dPack;
 		return;
@@ -175,7 +155,7 @@ public void OnFrame(DataPack dPack)
 	
 	int weapon = dPack.ReadCell();
 	weapon = EntRefToEntIndex(weapon);
-	if( weapon == INVALID_ENT_REFERENCE )
+	if (weapon == INVALID_ENT_REFERENCE)
 	{
 		delete dPack;
 		return;
@@ -184,7 +164,7 @@ public void OnFrame(DataPack dPack)
 	delete dPack;
 
 	// Validate weapon
-	if( weapon == GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon") )
+	if (weapon == GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon"))
 	{
 		int clip = GetEntProp(weapon, Prop_Send, "m_iClip1");
 
@@ -200,17 +180,10 @@ public void OnFrame(DataPack dPack)
 // Reserve ammo
 int GetOrSetPlayerAmmo(int client, int iWeapon, int iAmmo = -1)
 {
-	static char sWeapon[32];
-	GetEdictClassname(iWeapon, sWeapon, sizeof(sWeapon));
+	// dynamic offset calculate
+	int offset = g_iOffsetAmmo + (GetEntProp(iWeapon, Prop_Data, "m_iPrimaryAmmoType") * 4);
 
-	int offset;
-	g_hWeaponOffsets.GetValue(sWeapon, offset);
-
-	if( offset )
-	{
-		if( iAmmo != -1 ) SetEntData(client, g_iOffsetAmmo + offset, iAmmo);
-		else return GetEntData(client, g_iOffsetAmmo + offset);
-	}
-
+	if (iAmmo != -1) SetEntData(client, offset, iAmmo);
+	else return GetEntData(client, offset);
 	return 0;
 }
