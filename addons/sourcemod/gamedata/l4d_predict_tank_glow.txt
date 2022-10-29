@@ -1,0 +1,193 @@
+"Games"
+{
+	"left4dead"
+	{
+		"Offsets"
+		{
+			"CNavArea::m_vecCenter"
+			{
+				"linux"			"44"
+				"windows"		"44"
+			}
+			
+			"TerrorNavArea::m_bIsUnderwater"
+			{
+				"linux"			"160"
+				"windows"		"160"
+			}
+			
+			"TerrorNavArea::m_activeSurvivors"
+			{
+				"linux"			"376"
+				"windows"		"376"
+			}
+		}
+		
+		"Addresses"
+		{
+			"TheEscapeRoute"
+			{
+				"linux"
+				{
+					"signature"	"g_spawnPath"
+				}
+				"windows"
+				{
+					"signature"	"CEntityFactory<CEscapeRoute>::Create"
+					"read"		"41"
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			"g_spawnPath"
+			{
+				"library"		"server"
+				"linux"			"@g_spawnPath"
+			}
+			
+			"CEntityFactory<CEscapeRoute>::Create"
+			{
+				"library"		"server"
+				"windows"		"\x56\x68\x74\x33\x00\x00\xE8"
+								/* 56 68 74 33 00 00 E8 */
+			}
+			
+			/**< CEscapeRoute::GetPositionOnPath(Vector const&) */
+			"CEscapeRoute::GetPositionOnPath"
+			{
+				"library"		"server"
+				"linux"			"@_ZNK12CEscapeRoute17GetPositionOnPathEfP6Vector"
+				"windows"		"\x55\x8B\xEC\x83\x2A\x2A\xD9\xEE\x83\x2A\x2A\xD9\x2A\x2A\xD8\x2A\xDF\x2A\xDD\x2A\xF6\x2A\x41\x7A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83"
+								/* 55 8B EC 83 ? ? D9 EE 83 ? ? D9 ? ? D8 ? DF ? DD ? F6 ? 41 7A ? 8B ? ? ? ? ? 83 */
+			}
+			
+			/**< TerrorNavArea::IsValidForWanderingPopulation(TerrorNavArea *__hidden this) */
+			"TerrorNavArea::IsValidForWanderingPopulation"
+			{
+				"library"		"server"
+				"linux"			"@_ZNK13TerrorNavArea29IsValidForWanderingPopulationEv"
+				"windows"		"\x56\x8B\x2A\xF6\x2A\x2A\x03\x75\x2A\x6A\x2A\x6A\x2A\xE8"
+								/* 56 8B ? F6 ? ? 03 75 ? 6A ? 6A ? E8 */
+			}
+			
+			/**< ZombieManager::IsSpaceForZombieHere(Vector const&)const */
+			"ZombieManager::IsSpaceForZombieHere"
+			{
+				"library"		"server"
+				"linux"			"@_ZNK13ZombieManager20IsSpaceForZombieHereERK6Vector"
+				"windows"		"\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\x8D\x2A\x2A\x50\x8B\x2A\x2A\x6A\x2A\x6A\x2A\x68"
+								/* 8B ? ? ? ? ? 8B ? 83 ? ? 8D ? ? 50 8B ? ? 6A ? 6A ? 68 */
+			}
+			
+			/**< TerrorNavArea::GetNextEscapeStep(NavTraverseType *)const */
+			"TerrorNavArea::GetNextEscapeStep"
+			{
+				"library"		"server"
+				"linux"			"@_ZNK13TerrorNavArea17GetNextEscapeStepEP15NavTraverseType"
+				"windows"		"\x55\x8B\x2A\x83\x2A\x2A\x83\x2A\x2A\xD9\x05\x2A\x2A\x2A\x2A\x53\x33\x2A\xD9\x5C\x2A\x2A\x56\x33\x2A\x33\x2A\x89\x2A\x2A\x2A\x83\x2A\x2A\x57"
+								/* 55 8B ? 83 ? ? 83 ? ? D9 05 ? ? ? ? 53 33 ? D9 5C ? ? 56 33 ? 33 ? 89 ? ? ? 83 ? ? 57 */
+			}
+		}
+	}
+	
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			"CNavArea::m_vecCenter"
+			{
+				"linux"			"44"
+				"windows"		"44"
+			}
+			
+			"TerrorNavArea::m_bIsUnderwater"
+			{
+				"linux"			"164"
+				"windows"		"164"
+			}
+			
+			"TerrorNavArea::m_activeSurvivors"
+			{
+				"linux"			"125"
+				"windows"		"125"
+			}
+			
+			"CNavArea::m_connect"
+			{
+				"linux"			"88"
+				"windows"		"88"
+			}
+		}
+		
+		"Addresses"
+		{
+			"TheEscapeRoute"
+			{
+				"linux"
+				{
+					"signature"	"g_spawnPath"
+				}
+				"windows"
+				{
+					"signature"	"CEntityFactory<CEscapeRoute>::Create"
+					"read"		"40"
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			/**< TheEscapeRoute() */
+			"g_spawnPath"
+			{
+				"library"		"server"
+				"linux"			"@g_spawnPath"
+			}
+			
+			"CEntityFactory<CEscapeRoute>::Create"
+			{
+				"library"		"server"
+				"windows"		"\x55\x8B\xEC\x56\x68\x38\x34\x00\x00"
+								/* 55 8B EC 56 68 38 34 00 00 */
+			}
+			
+			/**< CEscapeRoute::GetPositionOnPath(Vector const&) */
+			"CEscapeRoute::GetPositionOnPath"
+			{
+				"library"		"server"
+				"linux"			"@_ZNK12CEscapeRoute17GetPositionOnPathEfP6Vector"
+				"windows"		"\x53\x8B\x2A\x83\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x0F\x57\x2A\xF3\x0F\x10"
+								/* 53 8B ? 83 ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 0F 57 ? F3 0F 10 */
+			}
+			
+			/**< TerrorNavArea::IsValidForWanderingPopulation(TerrorNavArea *__hidden this) */
+			"TerrorNavArea::IsValidForWanderingPopulation"
+			{
+				"library"		"server"
+				"linux"			"@_ZNK13TerrorNavArea29IsValidForWanderingPopulationEv"
+				"windows"		"\x56\x8B\x2A\xF6\x2A\x2A\x03\x75\x2A\x6A\x2A\x6A\x2A\xE8"
+								/* 56 8B ? F6 ? ? 03 75 ? 6A ? 6A ? E8 */
+			}
+			
+			/**< ZombieManager::IsSpaceForZombieHere(Vector const&)const */
+			"ZombieManager::IsSpaceForZombieHere"
+			{
+				"library"		"server"
+				"linux"			"@_ZNK13ZombieManager20IsSpaceForZombieHereERK6Vector"
+				"windows"		"\x55\x8B\xEC\x83\xEC\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x56\x8B\x2A\x2A\x8D\x2A\x2A\x50"
+								/* 55 8B EC 83 EC ? A1 ? ? ? ? 33 ? 89 ? ? 8B ? ? ? ? ? 8B ? 56 8B ? ? 8D ? ? 50 */
+			}
+			
+			/**< TerrorNavArea::GetNextEscapeStep(NavTraverseType *)const */
+			"TerrorNavArea::GetNextEscapeStep"
+			{
+				"library"		"server"
+				"linux"			"@_ZNK13TerrorNavArea17GetNextEscapeStepEP15NavTraverseType"
+				"windows"		"\x55\x8B\xEC\x83\xEC\x2A\xF3\x0F\x10\x2A\x2A\x2A\x2A\x2A\x53\x56\x33\x2A\x89\x2A\x2A\x83\x2A\x58"
+								/* 55 8B EC 83 EC ? F3 0F 10 ? ? ? ? ? 53 56 33 ? 89 ? ? 83 ? 58 */
+			}
+		}
+	}
+}

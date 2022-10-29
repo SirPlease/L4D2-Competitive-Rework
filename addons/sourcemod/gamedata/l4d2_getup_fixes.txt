@@ -15,7 +15,7 @@
 			 * 2. See the "mov" instruction below the highlighted "call".
 			 */
 			
-			"CTerrorPlayer::m_hAnimState"
+			"CTerrorPlayer::m_PlayerAnimState"
 			{
 				"linux"		"10512"
 				"windows"	"10524"

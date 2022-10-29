@@ -17,8 +17,7 @@ static bool
 	BS_bEnabled = true,
 	BS_bIsFirstRound = true,
 	BS_bDeleteWitches = false,
-	BS_bFinaleStarted = false,
-	BS_bExpectTankSpawn = false;
+	BS_bFinaleStarted = false;
 
 static int
 	BS_iTankCount[ROUND_MAX_COUNT] = {0, ...},
@@ -38,7 +37,6 @@ void BS_OnModuleStart()
 	BS_bEnabled = BS_hEnabled.BoolValue;
 	BS_hEnabled.AddChangeHook(BS_ConVarChange);
 
-	HookEvent("tank_spawn", BS_TankSpawn);
 	HookEvent("witch_spawn", BS_WitchSpawn);
 	HookEvent("round_end", BS_RoundEnd, EventHookMode_PostNoCopy);
 	HookEvent("finale_start", BS_FinaleStart, EventHookMode_PostNoCopy);
@@ -50,7 +48,6 @@ void BS_OnMapStart()
 {
 	BS_bIsFirstRound = true;
 	BS_bFinaleStarted = false;
-	BS_bExpectTankSpawn = false;
 
 	for (int i = 0; i < ROUND_MAX_COUNT; i++) {
 		BS_iTankCount[i] = 0;
@@ -99,14 +96,7 @@ public void BS_WitchSpawn(Event hEvent, const char[] sEventName, bool bDontBroad
 	}
 }
 
-void BS_OnTankSpawnPost_Forward()
-{
-	if (BS_bEnabled && IsPluginEnabled()) {
-		BS_bExpectTankSpawn = true;
-	}
-}
-
-public void BS_TankSpawn(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void BS_OnTankSpawnPost_Forward(int iTankClient)
 {
 	if (!BS_bEnabled || !IsPluginEnabled()) {
 		return;
@@ -117,19 +107,10 @@ public void BS_TankSpawn(Event hEvent, const char[] sEventName, bool bDontBroadc
 		return;
 	}
 
-	// Stop if this isn't the first tank_spawn for this tank
-	if (!BS_bExpectTankSpawn) {
-		return;
-	}
-
-	BS_bExpectTankSpawn = false;
-
 	// Don't track tank spawns on c5m5 or tank can spawn behind other team.
 	if (strcmp(BS_sMap, "c5m5_bridge") == 0) {
 		return;
 	}
-
-	int iTankClient = GetClientOfUserId(hEvent.GetInt("userid"));
 
 	if (GetMapValueInt("tank_z_fix")) {
 		FixZDistance(iTankClient); // fix stuck tank spawns, ex c1m1
