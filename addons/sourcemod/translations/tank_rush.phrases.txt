@@ -10,7 +10,7 @@
 	}
 	"unfreeze"
 	{
-		"en"		"{red}Tank {default}spawned. {olive}Freezing {default}distance points!"
+		"en"		"{red}Tank {default}spawned. {olive}Unfreezing {default}distance points!"
 	}
 	"saferoom"
 	{
