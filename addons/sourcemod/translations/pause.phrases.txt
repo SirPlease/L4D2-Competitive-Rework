@@ -2,159 +2,166 @@
 {
 	"Tag"
 	{
-		"en"	"{default}[{green}!{default}]"
+		"en"		"[{green}!{default}]"
 	}
 	"ClientFullyLoaded"
 	{
-		"en"	"{olive}%N {default}has fully loaded."
+		"en"		"{olive}%N{default} has fully loaded."
+	}
+	"PauseCountFormat"
+	{
+		"#format"   "{1:d},{2:d}" // 1:PauseCount(client), 2:pauseLimitCvar.IntValue
+		"en"		" [{green}{1}{default}/{green}{2}{default}]."
 	}
 	"PauseCommand"
 	{
-		"en"	"{olive}%N {blue}Paused{default}%s"
+		"#format"   "{1:N},{2:s}" // 1:client, 2:sPauseCount
+		"en"		"{olive}{1}{default} {blue}Paused{default}{2}"
 	}
 	// PauseDelay_Timer
 	"PauseAction"
 	{
-		"en"	"{red}PAUSED"
+		"en"		"{red}PAUSED{default}"
 	}
 	"PauseDelay"
 	{
-		"en"	"{blue}Pausing in{default}: {olive}%d{default}."
+		"en"		"{blue}Pausing in{default}: {olive}%d{default}."
 	}
 	// ForcePause_Cmd
 	"Crashed"
 	{
-		"en"	"{olive}Game {default}was {green}force paused {default}because a player has {blue}crashed{default}."
+		"en"		"{olive}Game{default} was {green}force paused{default} because a player has {blue}crashed{default}."
 	}
 	"ForcePause"
 	{
-		"en"	"A {green}force pause {default}is issued by {blue}Admin {default}({olive}%N{default})"
+		"en"		"A {green}force pause{default} is issued by {blue}Admin{default} ({olive}%N{default})"
 	}
 	// Unpause_Cmd
 	"UnpauseSurvivors"
 	{
-		"en"	"{olive}%N %s{default}marked {blue}%s {default}ready."
+		"#format"   "{1:N},{2:s},{3:s}" // 1:client, :2(initiatorReady && client == initiator) ? AsInitiator() : "", 3:L4D2_TeamName[clientTeam]
+		"en"		"{olive}{1} {2}{default} marked {blue}{3}{default} ready."
 	}
 	"UnpauseInfected"
 	{
-		"en"	"{olive}%N %s{default}marked {red}%s {default}ready."
+		"#format"   "{1:N},{2:s},{3:s}" // 1:client, :2(initiatorReady && client == initiator) ? AsInitiator() : "", 3:L4D2_TeamName[clientTeam]
+		"en"		"{olive}{1} {2}{default} marked {red}{3}{default} ready."
 	}
 	"UnpauseInitiator"
 	{
-		"en"	"{olive}%N {default}marked {green}Initiator {default}ready."
+		"en"		"{olive}%N{default} marked {green}Initiator{default} ready."
 	}
 	"UnpauseAdminConfirm"
 	{
-		"en"	"{olive}Teams {default}are ready. Wait for {blue}Admin {default}to {green}confirm{default}."
+		"en"		"{olive}Teams{default} are ready. Wait for {blue}Admin{default} to {green}confirm{default}."
 	}
 	// Unready_Cmd
 	"UnreadySurvivors"
 	{
-		"en"	"{olive}%N %s{default}marked {blue}%s {default}not ready."
+		"#format"   "{1:N},{2:s},{3:s}" // 1:client, 2:(initiatorReady && client == initiator) ? AsInitiator() : "", 3:L4D2_TeamName[clientTeam]
+		"en"		"{olive}{1} {2}{default} marked {blue}{3}{default} not ready."
 	}
 	"UnreadyInfected"
 	{
-		"en"	"{olive}%N %s{default}marked {red}%s {default}not ready."
+		"#format"   "{1:N},{2:s},{3:s}" // 1:client, 2:(initiatorReady && client == initiator) ? AsInitiator() : "", 3:L4D2_TeamName[clientTeam]
+		"en"		"{olive}{1} {2}{default} marked {red}{3}{default} not ready."
 	}
 	"UnreadyInitiator"
 	{
-		"en"	"{olive}%N {default}marked {green}Initiator {default}not ready."
+		"en"		"{olive}%N{default} marked {green}Initiator{default} not ready."
 	}
 	// void AsInitiator()
 	"AsInitiator"
 	{
-		"en"		"{default}as {green}Initiator "
+		"en"		"as {green}Initiator{default} "
 	}
 	// ForceUnpause_Cmd
 	"ForceUnpause"
 	{
-		"en"	"A {green}force unpause {default}is issued by {blue}Admin {default}({olive}%N{default})"
+		"en"		"A {green}force unpause{default} is issued by {blue}Admin{default} ({olive}%N{default})"
 	}
 	// AddPauseCount
 	"PauseLimit"
 	{
-		"en"	"You have reached your pause limit ({green}%d{default})."
+		"en"		"You have reached your {red}pause limit{default} [{green}%d{default}]."
 	}
 	// AttemptPause
 	"PauseDeferred"
 	{
-		"en"	"{red}Pause has been delayed due to a pick-up in progress!"
+		"en"		"{red}Pause has been delayed due to a pick-up in progress!"
 	}
 	// Pause
 	"PausePreventSpawn"
 	{
-		"en"	"{default}Your {red}Spawn {default}has been prevented because of the Pause."
+		"en"		"Your {red}Spawn{default} has been prevented because of the Pause."
 	}
 	// Show_Cmd
 	"PanelShow"
 	{
-		"en"	"Panel is now {blue}on{default}."
+		"en"		"Panel is now {blue}on{default}."
 	}
 	"PanelHide"
 	{
-		"en"	"Panel is now {red}off{default}."
+		"en"		"Panel is now {red}off{default}."
 	}
 	// UpdatePanel
 	"PanelSlots"
 	{
-		"en"	"▸ Server: %s\n▸ Slots: %d/%d"
-	}
-	"PanelDate"
-	{
-		"en"	"▸ %m/%d/%Y - %I:%M%p"
+		"#format"   "{1:s},{2:d},{3:d}" // 1:info, 2:GetSeriousClientCount(), 3:FindConVar("sv_maxplayers").IntValue
+		"en"		"▸ Server: {1}\n▸ Slots: {2}/{3}"
 	}
 	"PanelTitle"
 	{
-		"en"	"▸ Ready Status"
+		"en"		"▸ Ready Status"
 	}
 	"RequireAdmin"
 	{
-		"en"	"->0. Require Admin to Unpause"
+		"en"		"->0. Require Admin to Unpause"
 	}
 	"SurvivorUnPaused"
 	{
-		"en"	"->1. Survivors: [√]"
+		"en"		"->1. Survivors: [√]"
 	}
 	"SurvivorPaused"
 	{
-		"en"	"->1. Survivors: [X]"
+		"en"		"->1. Survivors: [X]"
 	}
 	"InfectedUnPaused"
 	{
-		"en"	"->2. Infected: [√]"
+		"en"		"->2. Infected: [√]"
 	}
 	"InfectedPaused"
 	{
-		"en"	"->2. Infected: [X]"
+		"en"		"->2. Infected: [X]"
 	}
 	"InitiatorUnPaused"
 	{
-		"en"	"->0. Initiator: [√]"
+		"en"		"->0. Initiator: [√]"
 	}
 	"InitiatorPaused"
 	{
-		"en"	"->0. Initiator: [X]"
+		"en"		"->0. Initiator: [X]"
 	}
 	"AutoPauseCrash"
 	{
-		"en"	"▸ Forced AutoPause -> Crash"
+		"en"		"▸ Forced AutoPause -> Crash"
 	}
 	"ForcePauseAdmin"
 	{
-		"en"	"▸ Force Pause -> %s (Admin)"
+		"en"		"▸ Force Pause -> %s (Admin)"
 	}
 	"InitiatorPause"
 	{
-		"en"	"▸ Initiator -> %s (%s)"
+		"en"		"▸ Initiator -> %s (%s)"
 	}
 	"DurationPause"
 	{
-		"en"	"▸ Duration: %02d:%02d"
+		"en"		"▸ Duration: %02d:%02d"
 	}
 	// InitiateLiveCountdown
 	"CountdownCancelNotify"
 	{
-		"en"		"Say {olive}!unready {default}to cancel"
+		"en"		"Say {olive}!unready{default} to cancel"
 	}
 	"GameisLive"
 	{
@@ -167,7 +174,7 @@
 	// CancelFullReady
 	"CountdownCancelled"
 	{
-		"en"		"{olive}%N {default}cancelled the countdown!"
+		"en"		"{olive}%N{default} cancelled the countdown!"
 	}
 	// Callvote_Callback
 	"CallvoteNoSpec"

@@ -241,13 +241,13 @@ public Action Pause_Cmd(int client, int args)
         pauseTeam = GetClientTeam(client);
         GetClientName(client, initiatorName, sizeof(initiatorName));
         
-        char sbuffer[64] = ".";
+        char sPauseCount[64] = ".";
         if(pauseLimitCvar.IntValue > 0)
         {
-            Format(sbuffer, sizeof(sbuffer), " ({green}%d{default}/{green}%d{default}).", PauseCount(client), pauseLimitCvar.IntValue);
+            Format(sPauseCount, sizeof(sPauseCount), "%t", "PauseCountFormat", PauseCount(client), pauseLimitCvar.IntValue);
         }
 
-        CPrintToChatAll("%t %t", "Tag", "PauseCommand", client, sbuffer);
+        CPrintToChatAll("%t %t", "Tag", "PauseCommand", client, sPauseCount);
 		
         pauseDelay = pauseDelayCvar.IntValue;
         if (pauseDelay == 0)
