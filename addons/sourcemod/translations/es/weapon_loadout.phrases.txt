@@ -1,0 +1,35 @@
+"Phrases"
+{
+	"OnlyFirstReadyup"
+	{
+		"es"		"Solo puede llamar a votación durante la primer ready-up de una ronda."
+	}
+	"CannotCalled"
+	{
+		"es"		"No se puede convocar una votación en este momento, inténtelo de nuevo en un segundo o cinco."
+	}
+	"NeedFull"
+	{
+		"es"		"Ambos equipos necesitan estar completos."
+	}
+	"SurvivorsGet"
+	{
+		"es"		"Los supervivientes obtienen %s?"
+	}
+	"BeforeReadyup"
+	{
+		"es"		"La votación no pasó antes del ready-up."
+	}
+	"WeaponsSet"
+	{
+		"es"		"¡Los supervivientes obtuvieron sus armas!"
+	}
+	"Welcome"
+	{
+		"es"		"Bienvenido a {blue}Zone{green}Hunters{default}."
+	}
+	"Type"
+	{
+		"es"		"Escribe {olive}!mode{default} en el chat para votar que armas se usaran."
+	}
+}

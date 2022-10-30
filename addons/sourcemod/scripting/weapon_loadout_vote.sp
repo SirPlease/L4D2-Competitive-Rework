@@ -71,12 +71,13 @@ public Plugin myinfo =
 	name = "Weapon Loadout",
 	author = "Sir, A1m`",
 	description = "Allows the Players to choose which weapons to play the mode in.",
-	version = "2.3",
+	version = "2.4",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public void OnPluginStart()
 {
+	LoadTranslation("weapon_loadout.phrases");
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("player_team", Event_PlayerTeam);
 
@@ -85,6 +86,21 @@ public void OnPluginStart()
 	RegAdminCmd("sm_forcemode", Cmd_ForceVoteMode, ADMFLAG_ROOT, "Forces the Voting menu");
 
 	InitMenu();
+}
+
+void LoadTranslation(char[] sTranslation)
+{
+	char 
+		sPath[PLATFORM_MAX_PATH],
+		sName[64];
+
+	Format(sName, sizeof(sName), "translations/%s.txt", sTranslation);
+	BuildPath(Path_SM, sPath, sizeof(sPath), sName);
+	if (!FileExists(sPath))
+	{
+		SetFailState("Missing translation file %s.txt", sTranslation);
+	}
+	LoadTranslations(sTranslation);
 }
 
 void InitMenu()
@@ -158,7 +174,7 @@ public Action Cmd_VoteMode(int iClient, int iArgs)
 
 	// We've already decided on a mode.
 	if (!IsInReady() || InSecondHalfOfRound()) {
-		CPrintToChat(iClient, "{blue}[{green}Zone{blue}]{default}: You can only call for the vote during the first ready-up of a round");
+		CPrintToChat(iClient, "%t %t", "Tag", "OnlyFirstReadyup");
 		return Plugin_Handled;
 	}
 
@@ -167,13 +183,13 @@ public Action Cmd_VoteMode(int iClient, int iArgs)
 
 	// Is a new vote allowed?
 	if (!IsNewBuiltinVoteAllowed()) {
-		CPrintToChat(iClient, "A vote cannot be called at this moment, try again in a second or five.");
+		CPrintToChat(iClient, "%t", "CannotCalled");
 		return Plugin_Handled;
 	}
 
 	// Check if all players are present, if not.. tell them about it.
 	if (ReadyPlayers() != GetMaxPlayers()) {
-		CPrintToChat(iClient, "{blue}[{green}Zone{blue}]{default}: Both teams need to be full.");
+		CPrintToChat(iClient, "%t %t", "Tag", "NeedFull");
 		return Plugin_Handled;
 	}
 
@@ -193,7 +209,7 @@ public Action Cmd_ForceVoteMode(int iClient, int iArgs)
 
 	// Is a new vote allowed?
 	if (!IsNewBuiltinVoteAllowed()) {
-		CPrintToChat(iClient, "A vote cannot be called at this moment, try again in a second or five.");
+		CPrintToChat(iClient, "%t", "CannotCalled");
 		return Plugin_Handled;
 	}
 
@@ -204,10 +220,6 @@ public Action Cmd_ForceVoteMode(int iClient, int iArgs)
 
 void ShowMenu(int iClient)
 {
-	if (IsInReady()) {
-		FakeClientCommand(iClient, "sm_hide");
-	}
-
 	g_hMenu.Display(iClient, MENU_TIME_FOREVER);
 }
 
@@ -217,13 +229,13 @@ public int Menu_VoteMenuHandler(Menu hMenu, MenuAction iAction, int iClient, int
 		case MenuAction_Select: {
 			// Is a new vote allowed?
 			if (!IsNewBuiltinVoteAllowed()) {
-				CPrintToChat(iClient, "A vote cannot be called at this moment, try again in a second or five.");
+				CPrintToChat(iClient, "%t", "CannotCalled");
 				return 0;
 			}
 
 			char sInfo[32], sVoteTitle[64];
 			if (hMenu.GetItem(iIndex, sInfo, sizeof(sInfo))) {
-				Format(sVoteTitle, sizeof(sVoteTitle), "Survivors get %s?", sInfo);
+				Format(sVoteTitle, sizeof(sVoteTitle), "%t", "SurvivorsGet", sInfo);
 				g_iVotingMode = iIndex + 1;
 
 				// Get all non-spectating players
@@ -251,9 +263,6 @@ public int Menu_VoteMenuHandler(Menu hMenu, MenuAction iAction, int iClient, int
 				FakeClientCommand(iClient, "Vote Yes");
 			}
 		}
-		case MenuAction_Cancel: {
-			FakeClientCommand(iClient, "sm_show");
-		}
 	}
 
 	return 0;
@@ -274,7 +283,6 @@ public void BV_VoteActionHandler(Handle hVote, BuiltinVoteAction iAction, int iP
 
 public void BV_VoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
 {
-	ReturnReadyUpPanel();
 
 	for (int i = 0; i < num_items; i++) {
 		if (item_info[i][BUILTINVOTEINFO_ITEM_INDEX] == BUILTINVOTES_VOTE_YES) {
@@ -283,12 +291,14 @@ public void BV_VoteResultHandler(Handle vote, int num_votes, int num_clients, co
 				// Allow Admins though
 				if (!IsInReady() && g_iCurrentMode != eUndecided && !g_bIsAdminVote) {
 					DisplayBuiltinVoteFail(vote, BuiltinVoteFail_Loses);
-					CPrintToChatAll("{blue}[{green}Zone{blue}]{default}: Vote didn't pass before you left ready-up.");
+					CPrintToChatAll("%t %t", "Tag", "BeforeReadyup");
 					return;
 				}
 
 				g_bIsAdminVote = false;
-				DisplayBuiltinVotePass(vote, "Survivor Weapons Set!");
+				char sBuffer[64];
+				Format(sBuffer, sizeof(sBuffer), "%t", "WeaponsSet");
+				DisplayBuiltinVotePass(vote, sBuffer);
 				g_iCurrentMode = g_iVotingMode;
 				GiveSurvivorsWeapons();
 				return;
@@ -426,22 +436,13 @@ public Action Timer_InformPlayers(Handle hTimer)
 
 	for (int i = 1; i <= MaxClients; i++) {
 		if (IsClientInGame(i) && GetClientTeam(i) != L4D2Team_Spectator && !g_bVoteUnderstood[i]) {
-			CPrintToChat(i, "{blue}[{green}Zone{blue}]{default}: Welcome to {blue}Zone{green}Hunters{default}.");
-			CPrintToChat(i, "{blue}[{green}Zone{blue}]{default}: Type {olive}!mode {default}in chat to vote on weapons used.");
+			CPrintToChat(i, "%t %t", "Tag", "Welcome");
+			CPrintToChat(i, "%t %t", "Tag", "Type");
 		}
 	}
 
 	iNumPrinted++;
 	return Plugin_Continue;
-}
-
-void ReturnReadyUpPanel()
-{
-	for (int i = 1; i <= MaxClients; i++) {
-		if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) > L4D2Team_Spectator) {
-			FakeClientCommand(i, "sm_show");
-		}
-	}
 }
 
 int GetMaxPlayers()
