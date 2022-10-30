@@ -232,16 +232,43 @@ void CancelFullReady(int client, disruptType type)
 	
 	if (s_readyCountdownTimer != null)
 	{
-		delete s_readyCountdownTimer;
-		InitiateReadyUp(false);
 		
-		SetTeamFrozen(L4D2Team_Survivor, l4d_ready_survivor_freeze.BoolValue);
-		if (type == teamShuffle) // fix spectating
-			SetClientFrozen(client, false);
-		
-		PrintHintTextToAll("%t", "LiveCountdownCancelled");
-		CPrintToChatAllEx(client, "%t", g_sDisruptReason[type], client);
-		
+		if(l4d_ready_unready_limit.IntValue > 0 && type == readyStatus)
+		{
+			if (!AddUnReadyCount(client))
+				return;
+
+			delete s_readyCountdownTimer;
+			InitiateReadyUp(false);
+			
+			SetTeamFrozen(L4D2Team_Survivor, l4d_ready_survivor_freeze.BoolValue);
+			if (type == teamShuffle) // fix spectating
+				SetClientFrozen(client, false);
+
+			char sbuffer[64] = "";
+			Format(sbuffer, sizeof(sbuffer), "%t", "CountUnReady", GetUnReadyCount(client), l4d_ready_unready_limit.IntValue);
+			PrintHintTextToAll("%t", "LiveCountdownCancelled");
+			CPrintToChatAllEx(client, "%t %t", "Tag", g_sDisruptReason[type], client, sbuffer);
+		}
+		else
+		{
+			delete s_readyCountdownTimer;
+			InitiateReadyUp(false);
+			
+			SetTeamFrozen(L4D2Team_Survivor, l4d_ready_survivor_freeze.BoolValue);
+			if (type == teamShuffle) // fix spectating
+				SetClientFrozen(client, false);
+			
+			PrintHintTextToAll("%t", "LiveCountdownCancelled");
+			if(type == readyStatus)
+			{
+				CPrintToChatAllEx(client, "%t %t", "Tag", g_sDisruptReason[type], client, "");
+			}
+			else
+			{
+				CPrintToChatAllEx(client, "%t %t", "Tag", g_sDisruptReason[type], client);
+			}
+		}
 		if (g_hCountdownCancelledForward.FunctionCount)
 		{
 			Call_StartForward(g_hCountdownCancelledForward);
@@ -249,5 +276,36 @@ void CancelFullReady(int client, disruptType type)
 			Call_PushString(g_sDisruptReason[type]);
 			Call_Finish();
 		}
+
 	}
+}
+
+bool AddUnReadyCount(int client)
+{
+	char authId[18];
+	GetClientAuthId(client, AuthId_SteamID64, authId, 18, false);
+	int unReadyCount = 0;
+	int unReadyLimit = l4d_ready_unready_limit.IntValue;
+	playerunReadyCount.GetValue(authId, unReadyCount);
+
+	if (unReadyLimit > 0 && unReadyCount >= unReadyLimit)
+	{
+		CPrintToChat(client, "%t %t", "Tag", "UnReadyLimit", unReadyLimit);
+		return false;
+    }
+
+	unReadyCount++;
+	playerunReadyCount.SetValue(authId, unReadyCount);
+
+	return true;
+}
+
+int GetUnReadyCount(int client)
+{
+    char authId[18];
+    GetClientAuthId(client, AuthId_SteamID64, authId, 18, false);
+    int unReadyCount = 0;
+    playerunReadyCount.GetValue(authId, unReadyCount);
+
+    return unReadyCount;
 }

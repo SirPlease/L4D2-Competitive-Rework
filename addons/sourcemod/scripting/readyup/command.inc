@@ -92,7 +92,7 @@ Action ForceStart_Cmd(int client, int args)
 		{
 			isForceStart = true;
 			InitiateLiveCountdown();
-			CPrintToChatAll("%t", "ForceStartAdmin", client);
+			CPrintToChatAll("%t %t", "Tag", "ForceStartAdmin", client);
 			return Plugin_Handled;
 		}
 	}
@@ -108,7 +108,7 @@ Action Hide_Cmd(int client, int args)
 	if (inReadyUp)
 	{
 		SetPlayerHiddenPanel(client, true);
-		CPrintToChat(client, "%t", "PanelHide");
+		CPrintToChat(client, "%t %t", "Tag", "PanelHide");
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
@@ -119,7 +119,7 @@ Action Show_Cmd(int client, int args)
 	if (inReadyUp)
 	{
 		SetPlayerHiddenPanel(client, false);
-		CPrintToChat(client, "%t", "PanelShow");
+		CPrintToChat(client, "%t %t", "Tag", "PanelShow");
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;

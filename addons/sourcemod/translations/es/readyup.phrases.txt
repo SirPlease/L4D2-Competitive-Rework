@@ -1,0 +1,124 @@
+"Phrases"
+{
+	// readyup/action.inc
+	"LiveCountdownBegin"
+	{
+		"es"		"¡Iniciando!\n ────────── \nPresiona F2|!nr para cancelar"
+	}
+	"RoundIsLive"
+	{
+		"es"		"¡La ronda a comenzado!"
+	}
+	"LiveCountdown"
+	{
+		"#format"	"{1:d}"
+		"es"		"Iniciando en: {1}\nPresiona F2|!nr para cancelar"
+	}
+	"AutoStartNotEnoughPlayers"
+	{
+		"es"		"Se requieren más jugadores..."
+	}
+	"AutoStartWaiting"
+	{
+		"es"		"Esperando a los jugadores..."
+	}
+	"InitiateAutoStart"
+	{
+		"es"		"¡El juego comenzara automaticamente!"
+	}
+	"AutoStartCountdown"
+	{
+		"#format"	"{1:d}"
+		"es"		"El juego comienza en: {1}"
+	}
+	"LiveCountdownCancelled"
+	{
+		"es"		"¡Cuenta regresiva cancelada!"
+	}
+	"CountUnReady"
+	{
+		"#format"	"{1:d}{2:d}"	// 1:GetUnReadyCount(client), 2:l4d_ready_unready_limit.IntValue
+		"en"		" [{green}{1}{default}/{green}{2}{default}]"
+	}
+	"UnReadyLimit"
+	{
+		"en"	"Has alcanzado tu {red}límite de cancelaciones{default} [{green}%d{default}]"
+	}
+	// readyup/command.inc
+	"ForceStartAdmin"
+	{
+		"#format"	"{1:N}"
+		"es"		"El {blue}inicio del juego{default} es {green}forzado{default} por el {blue}Admin{default} ({olive}{1}{default})"
+	}
+	"PanelHide"
+	{
+		"es"		"El panel ahora esta {red}desactivado{default}"
+	}
+	"PanelShow"
+	{
+		"es"		"El panel ahora esta {blue}activado{default}"
+	}
+	// readyup/panel.inc
+	"HintReady"
+	{
+		"es"		"Estás preparado\n ────────── \nPresiona F2|!nr para cancelar"
+	}
+	"HintUnready"
+	{
+		"es"		"No estás preparado\n ────────── \nPresiona F1|!r para confirmar"
+	}
+	"PanelSlots"
+	{
+		"#format"	"{1:s},{2:d},{3:d},{4:s}"	// 1:ServerName, 2:GetSeriousClientCount(), 3:FindConVar("sv_maxplayers").IntValue, 4:cfgName
+		"es"		"▸ Servidor: {1} \n▸ Espacios: {2}/{3}\n▸ Config: {4}"
+	}
+	"PanelCommands"
+	{
+		"es"		"▸ Comandos:"
+	}
+	"PanelSurvivors"
+	{
+		"#format"	"{1:d},{2:s}"	// 1:++textCount, 2:isTeamReadyMode ? teamReadySymbol[survivorReady] : ""
+		"es"		"->{1}. Superviviente{2}"
+	}
+	"PanelInfected"
+	{
+		"#format"	"{1:d},{2:s}"	// 1:++textCount, 2:isTeamReadyMode ? teamReadySymbol[survivorReady] : ""
+		"es"		"->{1}. Infectado{2}"
+	}
+	"PanelCaster"
+	{
+		"#format"	"{1:d},{2:s}"	// 1:++textCount, 2:casterCount > 1 ? "s" : ""
+		"es"		"->{1}. Comentador{2}"
+	}
+	"PanelSpectator"
+	{
+		"#format"	"{1:d},{2:s}"	// 1:++textCount, 2:specCount > 1 ? "s" : ""
+		"es"		"->{1}. Espectador{2}"
+	}
+	"PanelMany"
+	{
+		"es"		"**Muchos** (%d)"
+	}
+	// g_sDisruptReason[]
+	"Player marked unready"
+	{
+		"#format"	"{1:N}{2:s}"
+		"es"		"{green}¡Cuenta regresiva cancelada!{default} ({teamcolor}{1}{default}){2}"
+	}
+	"Player switched team"
+	{
+		"#format"	"{1:N}"
+		"es"		"{green}¡Cuenta regresiva cancelada!{default} ({teamcolor}{1} {olive}se cambio de equipo{default})"
+	}
+	"Player disconnected"
+	{
+		"#format"	"{1:N}"
+		"es"		"{green}¡Cuenta regresiva cancelada!{default} ({teamcolor}{1} {green}se a desconectado{default})"
+	}
+	"Admin aborted"
+	{
+		"#format"	"{1:N}"
+		"es"		"{green}¡El inicio forzado fue cancelado!{default} ({olive}{1}{default})"
+	}
+}

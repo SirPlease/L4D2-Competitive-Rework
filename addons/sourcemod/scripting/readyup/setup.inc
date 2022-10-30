@@ -32,15 +32,15 @@ void SetupNatives()
 
 void SetupForwards()
 {
-	g_hPreInitiateForward = new GlobalForward("OnReadyUpInitiatePre", ET_Ignore);
-	g_hInitiateForward = new GlobalForward("OnReadyUpInitiate", ET_Ignore);
-	g_hPreCountdownForward = new GlobalForward("OnRoundLiveCountdownPre", ET_Ignore);
-	g_hCountdownForward = new GlobalForward("OnRoundLiveCountdown", ET_Ignore);
-	g_hPreLiveForward = new GlobalForward("OnRoundIsLivePre", ET_Ignore);
-	g_hLiveForward = new GlobalForward("OnRoundIsLive", ET_Ignore);
-	g_hCountdownCancelledForward = new GlobalForward("OnReadyCountdownCancelled", ET_Ignore, Param_Cell, Param_String);
-	g_hPlayerReadyForward = new GlobalForward("OnPlayerReady", ET_Ignore, Param_Cell);
-	g_hPlayerUnreadyForward = new GlobalForward("OnPlayerUnready", ET_Ignore, Param_Cell);
+	g_hPreInitiateForward 			= new GlobalForward("OnReadyUpInitiatePre", ET_Ignore);
+	g_hInitiateForward 				= new GlobalForward("OnReadyUpInitiate", ET_Ignore);
+	g_hPreCountdownForward 			= new GlobalForward("OnRoundLiveCountdownPre", ET_Ignore);
+	g_hCountdownForward 			= new GlobalForward("OnRoundLiveCountdown", ET_Ignore);
+	g_hPreLiveForward 				= new GlobalForward("OnRoundIsLivePre", ET_Ignore);
+	g_hLiveForward					= new GlobalForward("OnRoundIsLive", ET_Ignore);
+	g_hCountdownCancelledForward	= new GlobalForward("OnReadyCountdownCancelled", ET_Ignore, Param_Cell, Param_String);
+	g_hPlayerReadyForward			= new GlobalForward("OnPlayerReady", ET_Ignore, Param_Cell);
+	g_hPlayerUnreadyForward			= new GlobalForward("OnPlayerUnready", ET_Ignore, Param_Cell);
 }
 
 void SetupConVars()
@@ -72,14 +72,15 @@ void SetupConVars()
 	l4d_ready_autostart_min		= CreateConVar("l4d_ready_autostart_min", "0.25", "Percent of max players (Versus = 8) in game to allow auto-start to proceed.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	l4d_ready_unbalanced_start	= CreateConVar("l4d_ready_unbalanced_start", "0", "Allow game to go live when teams are not full.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	l4d_ready_unbalanced_min	= CreateConVar("l4d_ready_unbalanced_min", "2", "Minimum of players in each team to allow a unbalanced start.", FCVAR_NOTIFY, true, 0.0);
+	l4d_ready_unready_limit		= CreateConVar("l4d_ready_unready_limit", "0", "Limits the amount of unready a player can do in a single game. Set to 0 to disable.", FCVAR_NOTIFY, true, 0.0);
 	
 	// game convars
-	director_no_specials = FindConVar("director_no_specials");
-	god = FindConVar("god");
-	sb_stop = FindConVar("sb_stop");
-	survivor_limit = FindConVar("survivor_limit");
-	z_max_player_zombies = FindConVar("z_max_player_zombies");
-	sv_infinite_primary_ammo = FindConVar("sv_infinite_primary_ammo");
+	director_no_specials 		= FindConVar("director_no_specials");
+	god 						= FindConVar("god");
+	sb_stop 					= FindConVar("sb_stop");
+	survivor_limit 				= FindConVar("survivor_limit");
+	z_max_player_zombies		= FindConVar("z_max_player_zombies");
+	sv_infinite_primary_ammo	= FindConVar("sv_infinite_primary_ammo");
 }
 
 void SetupCommands()

@@ -1,108 +1,128 @@
 "Phrases"
 {
-// The following uses bracket style color tags (see colors.inc)
-	"PanelHide"
+	"Tag"
 	{
-		"en"		"[{olive}Readyup{default}] Panel is now {red}off{default}"
+		"en"		"[{green}!{default}]"
 	}
-	
-	"PanelShow"
-	{
-		"en"		"[{olive}Readyup{default}] Panel is now {blue}on{default}"
-	}
-	
-	"ForceStartAdmin"
-	{
-		"#format"	"{1:N}"
-		"en"		"[{green}!{default}] {blue}Game {default}start is {green}forced {default}by {blue}Admin {default}({olive}{1}{default})"
-	}
-	
-	"VoteInProgress"
-	{
-		"en"		"[{olive}Readyup{default}] There's {olive}a vote {green}in progress{default}."
-	}
-	
-	"VoteDelay"
-	{
-		"#format"	"{1:d}"
-		"en"		"[{olive}Readyup{default}] Wait for another {blue}{1}s {default}to call a vote."
-	}
-	
-	"Player marked unready"
-	{
-		"#format"	"{1:N}"
-		"en"		"{default}[{green}!{default}] {green}Countdown Cancelled! {default}({teamcolor}{1} {green}marked unready{default})"
-	}
-	
-	"Player switched team"
-	{
-		"#format"	"{1:N}"
-		"en"		"{default}[{green}!{default}] {green}Countdown Cancelled! {default}({teamcolor}{1} {olive}switched team{default})"
-	}
-	
-	"Player disconnected"
-	{
-		"#format"	"{1:N}"
-		"en"		"{default}[{green}!{default}] {green}Countdown Cancelled! {default}({teamcolor}{1} {green}disconnected{default})"
-	}
-	
-	"Admin aborted"
-	{
-		"#format"	"{1:N}"
-		"en"		"{default}[{green}!{default}] {green}Force Start Aborted! {default}({olive}{1} {green}issued{default})"
-	}
-	
-	
-// The following are not allowed to use any color tag
-	"HintReady"
-	{
-		"en"		"You are ready.\nSay !unready / Press F2 to unready."
-	}
-	
-	"HintUnready"
-	{
-		"en"		"You are not ready.\nSay !ready / Press F1 to ready up."
-	}
-	
+	// readyup/action.inc
 	"LiveCountdownBegin"
 	{
 		"en"		"Going live!\nSay !unready / Press F2 to cancel"
 	}
-	
+	"RoundIsLive"
+	{
+		"en"		"Round is live!"
+	}
 	"LiveCountdown"
 	{
 		"#format"	"{1:d}"
 		"en"		"Live in: {1}\nSay !unready / Press F2 to cancel"
 	}
-	
-	"LiveCountdownCancelled"
+	"AutoStartNotEnoughPlayers"
 	{
-		"en"		"Countdown Cancelled!"
+		"en"		"More players are required..."
 	}
-	
-	"RoundIsLive"
+	"AutoStartWaiting"
 	{
-		"en"		"Round is live!"
+		"en"		"Waiting for loading players..."
 	}
-	
 	"InitiateAutoStart"
 	{
 		"en"		"Game will automatically start!"
 	}
-	
 	"AutoStartCountdown"
 	{
 		"#format"	"{1:d}"
 		"en"		"Game starts in: {1}"
 	}
-	
-	"AutoStartWaiting"
+	"LiveCountdownCancelled"
 	{
-		"en"		"Waiting for loading players..."
+		"en"		"Countdown Cancelled!"
 	}
-	
-	"AutoStartNotEnoughPlayers"
+	"CountUnReady"
 	{
-		"en"		"More players are required..."
+		"#format"	"{1:d}{2:d}"	// 1:GetUnReadyCount(client), 2:l4d_ready_unready_limit.IntValue
+		"en"		" [{green}{1}{default}/{green}{2}{default}]"
+	}
+	"UnReadyLimit"
+	{
+		"en"		"You have reached your {red}unready limit{default} [{green}%d{default}]"
+	}
+	// readyup/command.inc
+	"ForceStartAdmin"
+	{
+		"#format"	"{1:N}"
+		"en"		"{blue}Game{default} start is {green}forced{default} by {blue}Admin{default} ({olive}{1}{default})"
+	}
+	"PanelHide"
+	{
+		"en"		"Panel is now {red}off{default}"
+	}
+	"PanelShow"
+	{
+		"en"		"Panel is now {blue}on{default}"
+	}
+	// readyup/panel.inc
+	"HintReady"
+	{
+		"en"		"You are ready.\nSay !unready / Press F2 to unready."
+	}
+	"HintUnready"
+	{
+		"en"		"You are not ready.\nSay !ready / Press F1 to ready up."
+	}
+	"PanelSlots"
+	{
+		"#format"	"{1:s},{2:d},{3:d},{4:s}"	// 1:ServerName, 2:GetSeriousClientCount(), 3:FindConVar("sv_maxplayers").IntValue, 4:cfgName
+		"en"		"▸ Server: {1} \n▸ Slots: {2}/{3}\n▸ Config: {4}"
+	}
+	"PanelCommands"
+	{
+		"en"		"▸ Commands:"
+	}
+	"PanelSurvivors"
+	{
+		"#format"	"{1:d},{2:s}"	// 1:++textCount, 2:isTeamReadyMode ? teamReadySymbol[survivorReady] : ""
+		"en"		"->{1}. Survivors{2}"
+	}
+	"PanelInfected"
+	{
+		"#format"	"{1:d},{2:s}"	// 1:++textCount, 2:isTeamReadyMode ? teamReadySymbol[survivorReady] : ""
+		"en"		"->{1}. Infected{2}"
+	}
+	"PanelCaster"
+	{
+		"#format"	"{1:d},{2:s}"	// 1:++textCount, 2:casterCount > 1 ? "s" : ""
+		"en"		"->{1}. Caster{2}"
+	}
+	"PanelSpectator"
+	{
+		"#format"	"{1:d},{2:s}"	// 1:++textCount, 2:specCount > 1 ? "s" : ""
+		"en"		"->{1}. Spectator{2}"
+	}
+	"PanelMany"
+	{
+		"en"		"**Many** (%d)"
+	}
+	// g_sDisruptReason[]
+	"Player marked unready"
+	{
+		"#format"	"{1:N}{2:s}"
+		"en"		"{green}Countdown Cancelled!{default} ({teamcolor}{1}{green} marked unready{default}){2}"
+	}
+	"Player switched team"
+	{
+		"#format"	"{1:N}"
+		"en"		"{green}Countdown Cancelled!{default} ({teamcolor}{1}{olive} switched team{default})"
+	}
+	"Player disconnected"
+	{
+		"#format"	"{1:N}"
+		"en"		"{green}Countdown Cancelled!{default} ({teamcolor}{1}{green} disconnected{default})"
+	}
+	"Admin aborted"
+	{
+		"#format"	"{1:N}"
+		"en"		"{green}Force Start Aborted!{default} ({olive}{1}{green} issued{default})"
 	}
 }

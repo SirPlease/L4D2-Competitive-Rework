@@ -9,7 +9,7 @@
 #undef REQUIRE_PLUGIN
 #include <caster_system>
 
-#define PLUGIN_VERSION "10.2.3"
+#define PLUGIN_VERSION "10.2.4"
 
 public Plugin myinfo =
 {
@@ -80,7 +80,7 @@ ConVar
 	// sound
 	l4d_ready_enable_sound, l4d_ready_notify_sound, l4d_ready_countdown_sound, l4d_ready_live_sound, l4d_ready_autostart_sound, l4d_ready_chuckle, l4d_ready_secret,
 	// action
-	l4d_ready_delay, l4d_ready_force_extra, l4d_ready_autostart_delay, l4d_ready_autostart_wait, l4d_ready_autostart_min, l4d_ready_unbalanced_start, l4d_ready_unbalanced_min;
+	l4d_ready_delay, l4d_ready_force_extra, l4d_ready_autostart_delay, l4d_ready_autostart_wait, l4d_ready_autostart_min, l4d_ready_unbalanced_start, l4d_ready_unbalanced_min, l4d_ready_unready_limit;
 
 // Server Name
 ConVar
@@ -129,6 +129,9 @@ char g_sDisruptReason[disruptType_SIZE][] =
 	"Admin aborted"
 };
 
+// Limit Cancel Ready
+StringMap playerunReadyCount;
+
 // Sub modules are included here
 #include "readyup/action.inc"
 #include "readyup/command.inc"
@@ -158,6 +161,7 @@ public void OnPluginStart()
 	SetupConVars();
 	SetupCommands();
 	
+	playerunReadyCount = new StringMap();
 	nativeFooter = new Footer();
 	
 	readySurvFreeze = l4d_ready_survivor_freeze.BoolValue;
@@ -382,6 +386,13 @@ public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
 		CreateTimer(0.1, Timer_RestartCountdowns, false, TIMER_FLAG_NO_MAPCHANGE);
 		ReturnPlayerToSaferoom(client, false);
 		return Plugin_Handled;
+	}
+	else
+	{
+		if(l4d_ready_unready_limit.IntValue > 0)
+		{
+			playerunReadyCount.Clear();
+		}
 	}
 	return Plugin_Continue;
 }
