@@ -1,0 +1,75 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"en"		"{blue}[{default}MVP{blue}]{default}"
+	}
+	"YourRankSI"
+	{
+		"en"		"{blue}Rank {green}SI: {olive}#%d {blue}({default}%d {green}dmg {blue}[{default}%.0f%%{blue}]{default}, %d {green}kills {blue}[{default}%.0f%%{blue}])"
+	}
+	"YourRankCI"
+	{
+		"en"		"{blue}Rank {green}CI: {olive}#%d {blue}({default}%d {green}common {blue}[{default}%.0f%%{blue}])"
+	}
+	"YourRankFF"
+	{
+		"en"		"{blue}Rank {green}FF: {olive}#%d {blue}({default}%d {green}friendly fire {blue}[{default}%.0f%%{blue}])"
+	}
+	"BotName"
+	{
+		"en"		"[BOT]"
+	}
+	"NobodyName"
+	{
+		"en"		"{blue}({default}nobody{blue})"
+	}
+	"NotEnoughAction"
+	{
+		"en"		"{blue}({default}not enough action yet{blue})"
+	}
+	"ReportSI_Absolute"
+	{
+		"en"		"{green}SI: {olive}%s {blue}({default}%d {green}dmg{default}, %d {green}kills{blue})"
+	}
+	"ReportSI_Percent"
+	{
+		"en"		"{green}SI: {olive}%s {blue}({green}dmg {blue}[{default}%.0f%%{blue}]{default}, {green}kills {blue}[{default}%.0f%%{blue}])"
+	}
+	"ReportSI_Full"
+	{
+		"en"		"{green}SI: {olive}%s {blue}({default}%d {green}dmg {blue}[{default}%.0f%%{blue}]{default}, %d {green}kills {blue}[{default}%.0f%%{blue}])"
+	}
+	"ReportSI_Nobody"
+	{
+		"en"		"{green}SI: {blue}({default}Nobody{blue})"
+	}
+	"ReportCI_Absolute"
+	{
+		"en"		"{green}CI: {olive}%s {blue}({default}%d {green}common{blue})"
+	}
+	"ReportCI_Percent"
+	{
+		"en"		"{green}CI: {olive}%s {blue}({green}common {blue}[{default}%.0f%%{blue}])"
+	}
+	"ReportCI_Full"
+	{
+		"en"		"{green}CI: {olive}%s {blue}({default}%d {green}common {blue}[{default}%.0f%%{blue}])"
+	}
+	"NoFF"
+	{
+		"en"		"{blue}({default}No friendly fire at all!{blue})" 
+	}
+	"ReportFF_Absolute"
+	{
+		"en"		"{green}FF: {olive}%s {blue}({default}%d {green}friendly fire{blue})"
+	}
+	"ReportFF_Percent"
+	{
+		"en"		"{green}FF: {olive}%s {blue}({green}friendly fire {blue}[{default}%.0f%%{blue}])"
+	}
+	"ReportFF_Full"
+	{
+		"en"		"{green}FF: {olive}%s {blue}({default}%d {green}friendly fire {blue}[{default}%.0f%%{blue}])"
+	}
+}
