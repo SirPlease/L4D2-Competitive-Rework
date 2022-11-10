@@ -10,8 +10,11 @@
 #define TEAM_INFECTED				3
 #define TANK_ZOMBIE_CLASS			8
 
-#define PLUGIN_WEAPON_MAX_ATTRS		21
-#define GAME_WEAPON_MAX_ATTRS		(PLUGIN_WEAPON_MAX_ATTRS - 1) // Excluding: tankdamagemult(Tank damage multiplier), the plugin is responsible for this attribute
+#define INT_WEAPON_MAX_ATTRS		sizeof(iIntWeaponAttributes)
+#define FLOAT_WEAPON_MAX_ATTRS		sizeof(iFloatWeaponAttributes)
+
+#define PLUGIN_WEAPON_MAX_ATTRS		(GAME_WEAPON_MAX_ATTRS + 1) // Including: tankdamagemult(Tank damage multiplier), the plugin is responsible for this attribute
+#define GAME_WEAPON_MAX_ATTRS		(INT_WEAPON_MAX_ATTRS + FLOAT_WEAPON_MAX_ATTRS)
 
 #define MAX_ATTRS_NAME_LENGTH		32
 #define MAX_WEAPON_NAME_LENGTH		64
@@ -31,14 +34,16 @@ enum MessageTypeFlag
 	eLogError =		(1 << 2)
 };
 
-static const L4D2IntWeaponAttributes iIntWeaponAttributes[3] =
+static const L4D2IntWeaponAttributes iIntWeaponAttributes[] =
 {
 	L4D2IWA_Damage,
 	L4D2IWA_Bullets,
-	L4D2IWA_ClipSize
+	L4D2IWA_ClipSize,
+	L4D2IWA_Bucket,
+	L4D2IWA_Tier // L4D2 only
 };
 
-static const L4D2FloatWeaponAttributes iFloatWeaponAttributes[17] =
+static const L4D2FloatWeaponAttributes iFloatWeaponAttributes[] =
 {
 	L4D2FWA_MaxPlayerSpeed,
 	L4D2FWA_SpreadPerShot,
@@ -56,7 +61,11 @@ static const L4D2FloatWeaponAttributes iFloatWeaponAttributes[17] =
 	L4D2FWA_RangeModifier,
 	L4D2FWA_CycleTime,
 	L4D2FWA_PelletScatterPitch,
-	L4D2FWA_PelletScatterYaw
+	L4D2FWA_PelletScatterYaw,
+	L4D2FWA_VerticalPunch,
+	L4D2FWA_HorizontalPunch, // Requires "z_gun_horiz_punch" cvar changed to "1".
+	L4D2FWA_GainRange,
+	L4D2FWA_ReloadDuration
 };
 
 static const char sWeaponAttrNames[PLUGIN_WEAPON_MAX_ATTRS][MAX_ATTRS_NAME_LENGTH] = 
@@ -64,6 +73,8 @@ static const char sWeaponAttrNames[PLUGIN_WEAPON_MAX_ATTRS][MAX_ATTRS_NAME_LENGT
 	"Damage",
 	"Bullets",
 	"Clip Size",
+	"Bucket",
+	"Tier",
 	"Max player speed",
 	"Spread per shot",
 	"Max spread",
@@ -81,6 +92,10 @@ static const char sWeaponAttrNames[PLUGIN_WEAPON_MAX_ATTRS][MAX_ATTRS_NAME_LENGT
 	"Cycle time",
 	"Pellet scatter pitch",
 	"Pellet scatter yaw",
+	"Vertical punch",
+	"Horizontal punch",
+	"Gain range",
+	"Reload duration",
 	"Tank damage multiplier"
 };
 
@@ -89,6 +104,8 @@ static const char sWeaponAttrShortName[PLUGIN_WEAPON_MAX_ATTRS][MAX_ATTRS_NAME_L
 	"damage",
 	"bullets",
 	"clipsize",
+	"bucket",
+	"tier",
 	"speed",
 	"spreadpershot",
 	"maxspread",
@@ -106,6 +123,10 @@ static const char sWeaponAttrShortName[PLUGIN_WEAPON_MAX_ATTRS][MAX_ATTRS_NAME_L
 	"cycletime",
 	"scatterpitch",
 	"scatteryaw",
+	"verticalpunch",
+	"horizpunch",
+	"gainrange",
+	"reloadduration",
 	"tankdamagemult"
 };
 
@@ -113,24 +134,17 @@ ConVar
 	hHideWeaponAttributes = null;
 
 bool
-	bTankDamageEnableAttri = false,
-	bLateLoad = false;
+	bTankDamageEnableAttri = false;
 
 StringMap
 	hTankDamageAttri = null,
 	hDefaultWeaponAttributes[GAME_WEAPON_MAX_ATTRS] = {null, ...};
 
-public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
-{
-	bLateLoad = late;
-	return APLRes_Success;
-}
-
 public Plugin myinfo =
 {
 	name = "L4D2 Weapon Attributes",
-	author = "Jahze, A1m`",
-	version = "2.5",
+	author = "Jahze, A1m`, Forgetest",
+	version = "2.6",
 	description = "Allowing tweaking of the attributes of all weapons"
 };
 
@@ -154,43 +168,39 @@ public void OnPluginStart()
 	RegServerCmd("sm_weapon_attributes_reset", Cmd_WeaponAttributesReset);
 	
 	RegConsoleCmd("sm_weapon_attributes", Cmd_WeaponAttributes);
-	
-	if (bLateLoad) {
-		for (int i = 1; i <= MaxClients; i++) {
-			if (IsClientInGame(i)) {
-				OnClientPutInServer(i);
-			}
-		}
-	}
 }
 
 public void OnPluginEnd()
 {
-	bTankDamageEnableAttri = false;
-
-	for (int i = 1; i <= MaxClients; i++) {
-		if (IsClientInGame(i)) {
-			OnClientDisconnect(i);
-		}
-	}
-	
-	DeleteStringMap(hTankDamageAttri);
-
 	ResetWeaponAttributes(true);
-
-	for (int iAtrriIndex = 0; iAtrriIndex < GAME_WEAPON_MAX_ATTRS; iAtrriIndex++) {
-		DeleteStringMap(hDefaultWeaponAttributes[iAtrriIndex]);
-	}
 }
 
 public void OnClientPutInServer(int client)
 {
-	SDKHook(client, SDKHook_OnTakeDamage, DamageBuffVsTank);
+	if (bTankDamageEnableAttri)
+		SDKHook(client, SDKHook_OnTakeDamage, DamageBuffVsTank);
 }
 
-public void OnClientDisconnect(int client)
+void OnTankDamageEnableAttriChanged(bool newValue)
 {
-	SDKUnhook(client, SDKHook_OnTakeDamage, DamageBuffVsTank);
+	if (!bTankDamageEnableAttri && newValue)
+	{
+		for (int i = 1; i <= MaxClients; i++)
+		{
+			if (IsClientInGame(i))
+				SDKHook(i, SDKHook_OnTakeDamage, DamageBuffVsTank);
+		}
+	}
+	else if (bTankDamageEnableAttri && !newValue)
+	{
+		for (int i = 1; i <= MaxClients; i++)
+		{
+			if (IsClientInGame(i))
+				SDKUnhook(i, SDKHook_OnTakeDamage, DamageBuffVsTank);
+		}
+	}
+	
+	bTankDamageEnableAttri = newValue;
 }
 
 public Action Cmd_Weapon(int args)
@@ -225,7 +235,7 @@ public Action Cmd_Weapon(int args)
 	char sAttrValue[MAX_ATTRS_VALUE_LENGTH];
 	GetCmdArg(3, sAttrValue, sizeof(sAttrValue));
 	
-	if (iAttrIdx < 3) {
+	if (iAttrIdx < INT_WEAPON_MAX_ATTRS) {
 		int iValue = StringToInt(sAttrValue);
 		SetWeaponAttributeInt(sWeaponName, iAttrIdx, iValue);
 		PrintToServer("%s for %s set to %d.", sWeaponAttrNames[iAttrIdx], sWeaponName, iValue);
@@ -242,11 +252,11 @@ public Action Cmd_Weapon(int args)
 				}
 				
 				PrintToServer("Tank Damage Multiplier (tankdamagemult) attribute reset for %s weapon!", sWeaponName);
-				bTankDamageEnableAttri = (hTankDamageAttri.Size != 0);
+				OnTankDamageEnableAttriChanged(hTankDamageAttri.Size != 0);
 				return Plugin_Handled;
 			}
 			
-			bTankDamageEnableAttri = true;
+			OnTankDamageEnableAttriChanged(true);
 			hTankDamageAttri.SetValue(sWeaponName, fValue);
 			PrintToServer("%s for %s set to %.2f", sWeaponAttrNames[iAttrIdx], sWeaponName, fValue);
 		}
@@ -286,7 +296,7 @@ public Action Cmd_WeaponAttributes(int client, int args)
 	ReplyToCommand(client, "Weapon stats for %s:", sWeaponName);
 
 	for (int iAtrriIndex = 0; iAtrriIndex < GAME_WEAPON_MAX_ATTRS; iAtrriIndex++) {
-		if (iAtrriIndex < 3) {
+		if (iAtrriIndex < INT_WEAPON_MAX_ATTRS) {
 			int iValue = GetWeaponAttributeInt(sWeaponName, iAtrriIndex);
 			ReplyToCommand(client, "%s: %d.", sWeaponAttrNames[iAtrriIndex], iValue);
 		} else {
@@ -305,7 +315,7 @@ public Action Cmd_WeaponAttributes(int client, int args)
 
 public Action Cmd_WeaponAttributesReset(int args)
 {
-	bTankDamageEnableAttri = false;
+	OnTankDamageEnableAttriChanged(false);
 	
 	bool IsReset = (hTankDamageAttri.Size > 0);
 	hTankDamageAttri.Clear();
@@ -335,7 +345,7 @@ bool __cdecl CDirector::IsTankInPlay(CDirector *this)
 */
 public Action DamageBuffVsTank(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
-	if (!bTankDamageEnableAttri || !(damagetype & DMG_BULLET)) {
+	if (!(damagetype & DMG_BULLET)) {
 		return Plugin_Continue;
 	}
 	
@@ -382,7 +392,7 @@ int GetWeaponAttributeInt(const char[] sWeaponName, int iAtrriIndex)
 
 float GetWeaponAttributeFloat(const char[] sWeaponName, int iAtrriIndex)
 {
-	return L4D2_GetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[iAtrriIndex - 3]);
+	return L4D2_GetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[iAtrriIndex - INT_WEAPON_MAX_ATTRS]);
 }
 
 void SetWeaponAttributeInt(const char[] sWeaponName, int iAtrriIndex, int iSetValue, bool bIsSaveDefValue = true)
@@ -420,7 +430,7 @@ void SetWeaponAttributeFloat(const char[] sWeaponName, int iAtrriIndex, float fS
 		}
 	}
 
-	L4D2_SetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[iAtrriIndex - 3], fSetValue);
+	L4D2_SetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[iAtrriIndex - INT_WEAPON_MAX_ATTRS], fSetValue);
 
 #if DEBUG
 	PrintDebug(eLogError|eServerPrint|ePrintChatAll, "Weapon attribute float set. %s - Trying to set: %f, was set: %f.", sWeaponName, fSetValue, GetWeaponAttributeFloat(sWeaponName, iAtrriIndex));
@@ -442,7 +452,7 @@ int ResetWeaponAttributes(bool bIsClearArray = false)
 		
 		for (int i = 0; i < iSize; i++) {
 			hTrieSnapshot.GetKey(i, sWeaponName, sizeof(sWeaponName));
-			if (iAtrriIndex < 3) {
+			if (iAtrriIndex < INT_WEAPON_MAX_ATTRS) {
 				hDefaultWeaponAttributes[iAtrriIndex].GetValue(sWeaponName, iDefValue);
 				
 				iCurValue = GetWeaponAttributeInt(sWeaponName, iAtrriIndex);
@@ -514,14 +524,5 @@ void PrintDebug(MessageTypeFlag iType, const char[] Message, any ...)
 	
 	if (iType & eLogError) {
 		LogError(DebugBuff);
-	}
-}
-
-// This only works by ref =)
-void DeleteStringMap(StringMap &hMap)
-{
-	if (hMap != null) {
-		delete hMap;
-		hMap = null;
 	}
 }
