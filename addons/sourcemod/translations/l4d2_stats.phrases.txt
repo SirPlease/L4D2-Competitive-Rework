@@ -25,7 +25,7 @@
 	"TeamSkeeted"
 	{
        "#format"	"{1:N},{2:N},{3:d},{4:d},{5:s},{6:s}" // 1:attacker 2:victim 3:damage 4:shots 5:shots == 1 ? "" : "s" 6:assister_string
-		"en"    	"{olive}{1}{default} teamskeeted {olive}{2}{default} for {blue}{3} damage{default} in {blue}{4}{default} shot{5}. Asistido por: {olive}{6}{default}"
+		"en"    	"{olive}{1}{default} teamskeeted {olive}{2}{default} for {blue}{3} damage{default} in {blue}{4}{default} shot{5}. Assisted by: {olive}{6}{default}"
 	}
 	"Skeeted"
 	{
