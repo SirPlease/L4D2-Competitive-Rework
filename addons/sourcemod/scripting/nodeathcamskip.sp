@@ -38,7 +38,7 @@ public Action Listener_Join(int client, const char[] command, int argc) {
         char sJoin[32];
         GetCmdArg(1, sJoin, sizeof(sJoin));
 
-        if (strncmp(sJoin, "i", 1, false) || StringToInt(sJoin) == 3) {
+        if (strncmp(sJoin, "i", 1, false) == 0 || StringToInt(sJoin) == 3) {
 
             // Full.
             if (GetInfectedPlayers() == (FindConVar("z_max_player_zombies")).IntValue) { return Plugin_Handled; }
