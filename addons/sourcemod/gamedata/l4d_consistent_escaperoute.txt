@@ -1,0 +1,174 @@
+"Games"
+{
+	"left4dead"
+	{
+		"Offsets"
+		{
+			"CEscapeRoute::m_nMainPathAreaCount"
+			{
+				"linux"			"7036"
+				"windows"		"7016"
+			}
+			
+			"CNavArea::m_id"
+			{
+				"linux"			"136"
+				"windows"		"136"
+			}
+		}
+		
+		"Addresses"
+		{
+			"TheEscapeRoute"
+			{
+				"linux"
+				{
+					"signature"	"g_spawnPath"
+				}
+				"windows"
+				{
+					"signature"	"CEntityFactory<CEscapeRoute>::Create"
+					"read"		"41"
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			/**< TheEscapeRoute() */
+			"g_spawnPath"
+			{
+				"library"		"server"
+				"linux"			"@g_spawnPath"
+			}
+			
+			"CEntityFactory<CEscapeRoute>::Create"
+			{
+				"library"		"server"
+				"windows"		"\x56\x68\x74\x33\x00\x00\xE8"
+								/* 56 68 74 33 00 00 E8 */
+			}
+			
+			// Search string "ERROR: BuildEscapeRoute failed. The start or end area was NULL\n"
+			// "CEscapeRoute::ResetPath", "CEscapeRoute::AddArea" and "CEscapeRoute::FinishPath" can be found there.
+			"CEscapeRoute::ResetPath"
+			{
+				"library"		"server"
+				"linux"			"@_ZN12CEscapeRoute9ResetPathEv"
+				"windows"		"\xD9\xEE\x33\xC0\xD9\x99"
+								/* D9 EE 33 C0 D9 99 */
+			}
+			
+			"CEscapeRoute::AddArea"
+			{
+				"library"		"server"
+				"linux"			"@_ZN12CEscapeRoute7AddAreaEP13TerrorNavArea"
+				"windows"		"\x55\x8B\xEC\x83\xE4\xF0\x83\xEC\x28\x56\x8B\xF1\x8B\x86\x2A\x2A\x2A\x2A\x3D"
+								/* 55 8B EC 83 E4 F0 83 EC 28 56 8B F1 8B 86 ? ? ? ? 3D */
+			}
+			
+			"CEscapeRoute::FinishPath"
+			{
+				"library"		"server"
+				"linux"			"@_ZN12CEscapeRoute10FinishPathEv"
+				"windows"		"\x8B\x81\x2A\x2A\x2A\x2A\x3D\x00\x02\x00\x00\x7C\x2A\x68"
+								/* 8B 81 ? ? ? ? 3D 00 02 00 00 7C ? 68 */
+			}
+			
+			// Search string "Computed lighting for %d/%d areas\n", there's a function call above.
+			"CNavMesh::GetNavAreaByID"
+			{
+				"library"		"server"
+				"linux"			"@_ZNK8CNavMesh14GetNavAreaByIDEj"
+				"windows"		"\x8B\x54\x24\x04\x85\xD2\x74\x2A\x8B\xC2"
+								/* 8B 54 24 04 85 D2 74 ? 8B C2 */
+			}
+		}
+	}
+	
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			"CEscapeRoute::m_nMainPathAreaCount"
+			{
+				"linux"			"7232"
+				"windows"		"7212"
+			}
+			
+			"CNavArea::m_id"
+			{
+				"linux"			"140"
+				"windows"		"140"
+			}
+		}
+		
+		"Addresses"
+		{
+			"TheEscapeRoute"
+			{
+				"linux"
+				{
+					"signature"	"g_spawnPath"
+				}
+				"windows"
+				{
+					"signature"	"CEntityFactory<CEscapeRoute>::Create"
+					"read"		"40"
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			/**< TheEscapeRoute() */
+			"g_spawnPath"
+			{
+				"library"		"server"
+				"linux"			"@g_spawnPath"
+			}
+			
+			"CEntityFactory<CEscapeRoute>::Create"
+			{
+				"library"		"server"
+				"windows"		"\x55\x8B\xEC\x56\x68\x38\x34\x00\x00"
+								/* 55 8B EC 56 68 38 34 00 00 */
+			}
+			
+			// Search string "ERROR: BuildEscapeRoute failed. No path from start to end. zeroFlowArea = #%d, endArea = #%d.\n"
+			// "CEscapeRoute::ResetPath", "CEscapeRoute::AddArea" and "CEscapeRoute::FinishPath" can be found there.
+			"CEscapeRoute::ResetPath"
+			{
+				"library"		"server"
+				"linux"			"@_ZN12CEscapeRoute9ResetPathEv"
+				"windows"		"\x0F\x57\xC0\x33\xC0\x89\x81\x2A\x2A\x2A\x2A\x89\x81\x2A\x2A\x2A\x2A\xF3\x0F"
+								/* 0F 57 C0 33 C0 89 81 ? ? ? ? 89 81 ? ? ? ? F3 0F */
+			}
+			
+			"CEscapeRoute::AddArea"
+			{
+				"library"		"server"
+				"linux"			"@_ZN12CEscapeRoute7AddAreaEP13TerrorNavArea"
+				"windows"		"\x53\x8B\xDC\x83\xEC\x08\x83\xE4\xF0\x83\xC4\x04\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x83\xEC\x28\x56\x8B\xF1\x8B\x86\x2A\x2A\x2A\x2A\x57\x3D\x00\x02\x00\x00\x7C"
+								/* 53 8B DC 83 EC 08 83 E4 F0 83 C4 04 55 8B 6B 04 89 6C 24 04 8B EC 83 EC 28 56 8B F1 8B 86 ? ? ? ? 57 3D 00 02 00 00 7C */
+			}
+			
+			"CEscapeRoute::FinishPath"
+			{
+				"library"		"server"
+				"linux"			"@_ZN12CEscapeRoute10FinishPathEv"
+				"windows"		"\x8B\x81\x2A\x2A\x2A\x2A\x3D\x00\x02\x00\x00\x7C\x2A\x68"
+								/* 8B 81 ? ? ? ? 3D 00 02 00 00 7C ? 68 */
+			}
+			
+			// Search string "Computed lighting for %d/%d areas\n", there's a function call above.
+			"CNavMesh::GetNavAreaByID"
+			{
+				"library"		"server"
+				"linux"			"@_ZNK8CNavMesh14GetNavAreaByIDEj"
+				"windows"		"\x55\x8B\xEC\x8B\x55\x08\x85\xD2\x74\x2A\x8B\xC2"
+								/* 55 8B EC 8B 55 08 85 D2 74 ? 8B C2 */
+			}
+		}
+	}
+}
