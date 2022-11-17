@@ -15,6 +15,18 @@
 				"linux"			"136"
 				"windows"		"136"
 			}
+			
+			"TerrorNavArea::m_flowToGoal"
+			{
+				"linux"			"348"
+				"windows"		"340"
+			}
+			
+			"TerrorNavMesh::m_flMapMaxFlowDistance"
+			{
+				"windows"		"1444"
+				"linux"			"1444"
+			}
 		}
 		
 		"Addresses"
@@ -29,6 +41,19 @@
 				{
 					"signature"	"CEntityFactory<CEscapeRoute>::Create"
 					"read"		"41"
+				}
+			}
+			
+			"TheNavAreas"
+			{
+				"linux"
+				{
+					"signature"	"TheNavAreas"
+				}
+				"windows"
+				{
+					"signature"	"nav_update_lighting"
+					"read"		"82"
 				}
 			}
 		}
@@ -47,6 +72,19 @@
 				"library"		"server"
 				"windows"		"\x56\x68\x74\x33\x00\x00\xE8"
 								/* 56 68 74 33 00 00 E8 */
+			}
+			
+			"TheNavAreas"
+			{
+				"library"		"server"
+				"linux"			"@TheNavAreas"
+			}
+			
+			"nav_update_lighting"
+			{
+				"library"		"server"
+				"windows"		"\x8B\x44\x24\x04\x57\x33\xFF\x83"
+								/* 8B 44 24 04 57 33 FF 83 */
 			}
 			
 			// Search string "ERROR: BuildEscapeRoute failed. The start or end area was NULL\n"
@@ -101,6 +139,19 @@
 				"linux"			"140"
 				"windows"		"140"
 			}
+			
+			"TerrorNavArea::m_flowToGoal"
+			{
+				"linux"			"340"
+				"windows"		"332"
+			}
+			
+			"TerrorNavMesh::m_flMapMaxFlowDistance"
+			{
+				"windows"		"1528"
+				"linux"			"1524"
+				// Compared against inside of the current_flow_distance ccommand.
+			}
 		}
 		
 		"Addresses"
@@ -115,6 +166,19 @@
 				{
 					"signature"	"CEntityFactory<CEscapeRoute>::Create"
 					"read"		"40"
+				}
+			}
+			
+			"TheNavAreas"
+			{
+				"linux"
+				{
+					"signature"	"TheNavAreas"
+				}
+				"windows"
+				{
+					"signature"	"nav_update_lighting"
+					"read"		"82"
 				}
 			}
 		}
@@ -133,6 +197,19 @@
 				"library"		"server"
 				"windows"		"\x55\x8B\xEC\x56\x68\x38\x34\x00\x00"
 								/* 55 8B EC 56 68 38 34 00 00 */
+			}
+			
+			"TheNavAreas"
+			{
+				"library"		"server"
+				"linux"			"@TheNavAreas"
+			}
+			
+			"nav_update_lighting"
+			{
+				"library"		"server"
+				"windows"		"\x55\x8B\xEC\x8B\x45\x08\x57\x33\xFF\x83"
+								/* 55 8B EC 8B 45 08 57 33 FF 83 */
 			}
 			
 			// Search string "ERROR: BuildEscapeRoute failed. No path from start to end. zeroFlowArea = #%d, endArea = #%d.\n"
