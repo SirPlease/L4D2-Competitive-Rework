@@ -124,7 +124,6 @@ public Action Cmd_WarpToSurvivor(int iClient, int iArgs)
 		|| GetEntProp(iClient, Prop_Send, "m_isGhost", 1) < 1
 		|| !IsPlayerAlive(iClient)
 	) {
-		PrintToChat(iClient, "%s This command is only available for \x04infected\x01 ghosts.", PLUGIN_TAG_COLOR);
 		return Plugin_Handled;
 	}
 
