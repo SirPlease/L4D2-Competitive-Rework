@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"AI"
+	{
+		"es"		"IA"
+	}
+	"HealthRemaining"
+	{
+		"es"		"{blue}Tank{default} ({olive}%s{default}) tiene {green}%d{default} salud restante"
+	}
+	"DealtToTank"
+	{
+		"es"		"{blue}Daño{default} infligido al {blue}Tank{default} ({olive}%s{default})"
+	}
+	"PercentDamage"
+	{
+		"es"		"{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N"
+	}
+}

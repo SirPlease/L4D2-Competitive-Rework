@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"en"		"[{green}!{default}]"
+	}
+	"AI"
+	{
+		"en"		"AI"
+	}
+	"HealthRemaining"
+	{
+		"en"		"{blue}Tank{default} ({olive}%s{default}) had {green}%d{default} health remaining"
+	}
+	"DealtToTank"
+	{
+		"en"		"{blue}Damage{default} dealt to {blue}Tank{default} ({olive}%s{default})"
+	}
+	"PercentDamage"
+	{
+		"en"		"{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N"
+	}
+}

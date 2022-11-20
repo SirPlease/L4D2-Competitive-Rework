@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"en"		"{red}[{default}Exploit{red}]{default}"
+	}
+	"DeathTimer"
+	{
+		"en"		"{olive}%N{default} tried skipping the Death Timer."
+	}
+	"UnableToJoin"
+	{
+		"en"		"You will be unable to join the Team for {red}%.1f{default} Seconds."
+	}
+	"Moved"
+	{
+		"en"		"You will be moved automatically."
+	}
+	"SlotsReserved"
+	{
+		"en"		"This team currently has slots {olive}reserved{default}."
+	}
+}

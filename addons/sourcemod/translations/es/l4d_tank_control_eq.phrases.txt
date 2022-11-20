@@ -1,0 +1,35 @@
+"Phrases"
+{
+	"Tag_Selecion"
+	{
+		"es"		"{red}<{default}Selección de Tank{red}>{default}"
+	}
+	"Tag_Rage"
+	{
+		"es"		"{red}<{default}Ira del Tank{red}>{default}"
+	}
+	"YouBecomeTank"
+	{
+		"es"		"¡{green}Tu{default} te convertirás en el {red}Tank{default}!"
+	}
+	"BecomeTank"
+	{
+		"es"		"{olive}%s{default} se convertirá en el {red}Tank{default}!"
+	}
+	"UnableGiveTank"
+	{
+		"es"		"[{olive}SM{default}] %s no es infectado. No se puede dar el Tank"
+	}
+	"Hit_RageMeterRefilled"
+	{
+		"es"		"Medidor de ira Recargado"
+	}
+	"YouRageMeterRefilled"
+	{
+		"es"		"{olive}Medidor de ira {red}Recargado{default}"
+	}
+	"RageMeterRefilled"
+	{
+		"es"		"({green}%N{default}'s) {olive}Medidor de ira {red}Recargado"
+	}
+}

@@ -270,10 +270,10 @@ public void OnPluginStart()
 	hTrackFF          = CreateConVar("sm_survivor_mvp_showff", "1", "Track Friendly-fire stat.");
 	hBrevityFlags     = CreateConVar("sm_survivor_mvp_brevity", "0", "Flags for setting brevity of MVP report (hide 1:SI, 2:CI, 4:FF, 8:rank, 32:perc, 64:abs).");
 
-	bCountTankDamage  = GetConVarBool(hCountTankDamage);
-	bCountWitchDamage = GetConVarBool(hCountWitchDamage);
-	bTrackFF          = GetConVarBool(hTrackFF);
-	iBrevityFlags     = GetConVarInt(hBrevityFlags);
+	bCountTankDamage  = hCountTankDamage.BoolValue;
+	bCountWitchDamage = hCountWitchDamage.BoolValue;
+	bTrackFF          = hTrackFF.BoolValue;
+	iBrevityFlags     = hBrevityFlags.IntValue;
 
 	// for now, force FF tracking on:
 	bTrackFF = true;

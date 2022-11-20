@@ -428,13 +428,12 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 				int  assist_shots = g_iShotsDealt[victim][assisters[0][0]];
 
 				// Construct assisters string
-				Format(assister_string, sizeof(assister_string), "%N (%d/%d shot%s)",
-				       assisters[0][0], assisters[0][1], g_iShotsDealt[victim][assisters[0][0]], assist_shots == 1 ? "" : "s");
+				Format(assister_string, sizeof(assister_string), "%t", "assister", assisters[0][0], assisters[0][1], g_iShotsDealt[victim][assisters[0][0]], assist_shots == 1 ? AssistShotsSingular() : AssistShotsPlural());
 
 				for (i = 1; i < assister_count; i++)
 				{
 					assist_shots = g_iShotsDealt[victim][assisters[i][0]];
-					Format(buf, sizeof(buf), ", %N (%d/%d shot%s)", assisters[i][0], assisters[i][1], assist_shots, assist_shots == 1 ? "" : "s");
+					Format(buf, sizeof(buf), ", %t", "assister", assisters[i][0], assisters[i][1], assist_shots, assist_shots == 1 ? AssistShotsSingular() : AssistShotsPlural());
 
 					StrCat(assister_string, sizeof(assister_string), buf);
 				}
@@ -702,3 +701,17 @@ bool IsValidClient(int client)
 	return (client > 0 && client <= MaxClients && IsClientInGame(client));
 }
 ////
+
+stock char[] AssistShotsSingular()
+{
+    char buffer[8];
+    Format(buffer, sizeof(buffer), "%t", "AssistShotsSingular");
+    return buffer;
+}
+
+stock char[] AssistShotsPlural()
+{
+    char buffer[8];
+    Format(buffer, sizeof(buffer), "%t", "AssistShotsPlural");
+    return buffer;
+}

@@ -10,7 +10,7 @@
 	}
 	"YourRankFF"
 	{
-		"es"		"{blue}Rango {green}FuegoAmigo: {olive}#%d {blue}({default}%d {green}fuego amigo {blue}[{default}%.0f%%{blue}])"
+		"es"		"{blue}Rango {green}Fuego Amigo: {olive}#%d {blue}({default}%d {green}fuego amigo {blue}[{default}%.0f%%{blue}])"
 	}
 	"BotName"
 	{
@@ -66,6 +66,6 @@
 	}
 	"ReportFF_Full"
 	{
-		"es"		"{green}FuegoAmigo: {olive}%s {blue}({default}%d {green}daño {blue}[{default}%.0f%%{blue}])"
+		"es"		"{green}Fuego Amigo: {olive}%s {blue}({default}%d {green}daño {blue}[{default}%.0f%%{blue}])"
 	}
 }
