@@ -378,7 +378,7 @@ stock void GetMapValueString(const char[] key, char[] value, const int maxlength
 stock void CopyMapSubsection(KeyValues kv, const char[] section) //ItemTracking
 {
 	if (kMIData.JumpToKey(section, false)) {
-		kMIData.Import(kv); // KvCopySubkeys(kMIData, kv);
+		kv.Import(kMIData); // KvCopySubkeys(kMIData, kv);
 		kMIData.GoBack();
 	}
 }
