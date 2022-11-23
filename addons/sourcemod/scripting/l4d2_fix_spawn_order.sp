@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "2.6"
+#define PLUGIN_VERSION "2.6.1"
 
 public Plugin myinfo = 
 {
@@ -222,9 +222,9 @@ public void L4D_OnEnterGhostState(int client)
  */
 void QueueSI(int SI, bool front)
 {
-	if (front)
+	if (front && g_SpawnsArray.Length)
 	{
-		if (g_SpawnsArray.Length) g_SpawnsArray.ShiftUp(0);
+		g_SpawnsArray.ShiftUp(0);
 		g_SpawnsArray.Set(0, SI);
 	}
 	else
