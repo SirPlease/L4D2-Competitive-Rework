@@ -129,10 +129,11 @@ public Action UnblockTimer(Handle timer, any client)
             Blocked[client] = false;
             fSavedTime[client] = 0.0;
 
-            if (bSkipPrint[client] && GetClientTeam(client) == 1)
-              FakeClientCommand(client, "jointeam infected");
+            if (bSkipPrint[client] && GetClientTeam(client) == 1) {
+                bSkipPrint[client] = false;
+                FakeClientCommand(client, "jointeam infected");
+            }
 
-            bSkipPrint[client] = false;
             return Plugin_Stop;
         }
         return Plugin_Continue;
