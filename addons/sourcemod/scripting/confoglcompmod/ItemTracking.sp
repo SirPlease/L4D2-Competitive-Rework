@@ -76,7 +76,7 @@ static const char g_sItemNames[ItemList_Size][ItemNames_Size][] =
 		"adrenaline",
 		"adrenaline shots",
 		"adrenaline",
-		"pipebomb"
+		"adrenaline"
 	},
 	/*{
 		"kits",
