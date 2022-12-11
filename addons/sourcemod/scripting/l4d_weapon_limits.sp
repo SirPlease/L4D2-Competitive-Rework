@@ -67,17 +67,17 @@ public void OnPluginStart()
 	if (conf == null) {
 		SetFailState("Gamedata missing: %s", GAMEDATA_FILE);
 	}
-	
+
 	StartPrepSDKCall(SDKCall_Entity);
 
 	if (!PrepSDKCall_SetFromConf(conf, SDKConf_Signature, GAMEDATA_USE_AMMO)) {
 		SetFailState("Gamedata missing signature: %s", GAMEDATA_USE_AMMO);
 	}
-	
+
 	// Client that used the ammo spawn
 	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
 	hSDKGiveDefaultAmmo = EndPrepSDKCall();
-	
+
 	if (hSDKGiveDefaultAmmo == null) {
 		SetFailState("Failed to finish SDKCall setup: %s", GAMEDATA_USE_AMMO);
 	}
@@ -99,7 +99,7 @@ public void OnPluginStart()
 	HookEvent("player_death", OnDeath);
 	HookEvent("player_bot_replace", OnBotReplacedPlayer);
 	HookEvent("bot_player_replace", OnPlayerReplacedBot);
-	
+
 	delete conf;
 }
 
@@ -143,7 +143,7 @@ public Action AddLimit_Cmd(int args)
 
 	char sTempBuff[MAX_WEAPON_NAME_LENGTH];
 	GetCmdArg(1, sTempBuff, sizeof(sTempBuff));
-	
+
 	int wepid;
 	int meleeid;
 
@@ -165,7 +165,7 @@ public Action AddLimit_Cmd(int args)
 			}
 		}
 	}
-	
+
 	hLimitArray.PushArray(newEntry, sizeof(LimitArrayEntry));
 	return Plugin_Handled;
 }
@@ -209,7 +209,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		bIsHoldingButtonUse[client] = false;
 		bIsPressingButtonUse[client] = false;
 	}
-	
+
 	return Plugin_Continue;
 }
 
@@ -239,7 +239,7 @@ public Action WeaponCanUse(int client, int weapon)
 	if (GetClientTeam(client) != TEAM_SURVIVOR || !bIsLocked) {
 		return Plugin_Continue;
 	}
-	
+
 	int wepid = IdentifyWeapon(weapon);
 	int is_melee = (wepid == WEPID_MELEE);
 	int meleeid = 0;
