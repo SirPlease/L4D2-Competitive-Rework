@@ -371,8 +371,9 @@ void denyWeapon(int wep_slot, LimitArrayEntry arrayEntry, int weapon, int client
 	//g_iLastPrintTickCount - sometimes there is a double seal in one frame because the player touches the weapon and presses a use key
 	int iWeaponRef = EntIndexToEntRef(weapon);
 	int iLastTick = GetGameTickCount();
+	int iButtonPressed = GetEntProp(client, Prop_Data, "m_afButtonPressed");
 
-	if ((g_iWeaponAlreadyGiven[client][weapon] != iWeaponRef || IsButtonPressed(client, IN_USE))
+	if ((g_iWeaponAlreadyGiven[client][weapon] != iWeaponRef || iButtonPressed & IN_USE)
 		&& g_iLastPrintTickCount[client] != iLastTick
 	) {
 		//CPrintToChat(client, "{blue}[{default}Weapon Limits{blue}]{default} This weapon group has reached its max of {green}%d", arrayEntry.LAE_iLimit);
@@ -439,20 +440,6 @@ void GiveDefaultAmmo(int client)
 	// If your server suffers from this, please try making use of the functions commented below.
 
 	SDKCall(hSDKGiveDefaultAmmo, 0, client);
-}
-
-int IsButtonPressed(int iClient, int iButtons)
-{
-	static int iButtonPressedOffset = -1;
-	if (iButtonPressedOffset == -1) {
-		iButtonPressedOffset = FindDataMapInfo(iClient, "m_afButtonPressed");
-
-		if (iButtonPressedOffset == -1) {
-			ThrowError("Unable to look up an offset of property \"m_afButtonPressed\" (entity #%d)", iClient);
-		}
-	}
-
-	return (GetEntData(iClient, iButtonPressedOffset) & iButtons);
 }
 
 /*stock int FindAmmoSpawn()
