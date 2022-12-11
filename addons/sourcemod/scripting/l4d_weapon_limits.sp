@@ -14,7 +14,7 @@
 #include <sdkhooks>
 #define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
-#include <colors>
+//#include <colors>
 
 #define MAX_WEAPON_NAME_LENGTH		32
 #define GAMEDATA_FILE				"l4d_wlimits"
@@ -366,7 +366,9 @@ void denyWeapon(int wep_slot, LimitArrayEntry arrayEntry, int client)
 	// in which way spamming gets avoided due to auto-pick-up checking left since Counter:Strike.
 	if (bIsPressingButtonUse[client] && !bIsHoldingButtonUse[client]) {
 		bIsHoldingButtonUse[client] = true;
-		CPrintToChat(client, "{blue}[{default}Weapon Limits{blue}]{default} This weapon group has reached its max of {green}%d", arrayEntry.LAE_iLimit);
+
+		//CPrintToChat(client, "{blue}[{default}Weapon Limits{blue}]{default} This weapon group has reached its max of {green}%d", arrayEntry.LAE_iLimit);
+		PrintToChat(client, "\x01[\x05Weapon Limits\x01] This weapon group has reached its max of \x04%d\x01!", arrayEntry.LAE_iLimit);
 		EmitSoundToClient(client, SOUND_NAME);
 	}
 }
