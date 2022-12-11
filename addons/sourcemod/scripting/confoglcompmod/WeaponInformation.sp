@@ -1046,7 +1046,11 @@ static void WI_ReplaceExtra(int iEntity, int iWeaponIndex)
 	} else if (fStartDistance <= Weapon_fMapDist_StartExtra) {
 		bIsInStartSaferoomExtra = true;
 	} else if (GetVectorDistance(Weapon_fMapOrigin_End, fOrigin) <= Weapon_fMapDist_End) {
-		bIsInFinaleArea = (L4D_IsMissionFinalMap());
+		if (L4D_IsMissionFinalMap()) {
+			bIsInFinaleArea = true;
+		} else {
+			bIsInEndSaferoom = true;
+		}
 	}
 
 	if (Weapon_bRemoveExtraItems &&
