@@ -45,7 +45,7 @@ public Plugin myinfo =
 {
 	name = "L4D2 Tank Hittable Glow",
 	author = "Harry Potter, Sir, A1m`, Derpduck",
-	version = "2.4",
+	version = "2.5",
 	description = "Stop tank props from fading whilst the tank is alive + add Hittable Glow."
 };
 
@@ -242,12 +242,16 @@ void PluginDisable()
 
 public void OnMapEnd()
 {
+	DHookRemoveEntityListener(ListenType_Created, PossibleTankPropCreated);
+
 	g_hTankProps.Clear();
 	g_hTankPropsHit.Clear();
 }
 
 public void TankPropRoundReset(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
+	DHookRemoveEntityListener(ListenType_Created, PossibleTankPropCreated);
+
 	g_bTankSpawned = false;
 
 	UnhookTankProps();
@@ -256,16 +260,18 @@ public void TankPropRoundReset(Event hEvent, const char[] sEventName, bool bDont
 
 public void TankPropTankSpawn(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	if (!g_bTankSpawned) {
-		UnhookTankProps();
-		g_hTankPropsHit.Clear();
-
-		HookTankProps();
-
-		DHookAddEntityListener(ListenType_Created, PossibleTankPropCreated);
-
-		g_bTankSpawned = true;
+	if (g_bTankSpawned) {
+		return;
 	}
+
+	UnhookTankProps();
+	g_hTankPropsHit.Clear();
+
+	HookTankProps();
+
+	DHookAddEntityListener(ListenType_Created, PossibleTankPropCreated);
+
+	g_bTankSpawned = true;
 }
 
 public void PD_ev_EntityKilled(Event hEvent, const char[] sEventName, bool bDontBroadcast)
@@ -556,14 +562,14 @@ bool IsAliveTank(int iClient)
 
 bool IsTank(int iClient)
 {
-	return (GetEntProp(iClient, Prop_Send, "m_zombieClass", 8) == Z_TANK && IsPlayerAlive(iClient));
+	return (GetEntProp(iClient, Prop_Send, "m_zombieClass") == Z_TANK && IsPlayerAlive(iClient));
 }
 
 void KillEntity(int iEntity)
 {
-	#if SOURCEMOD_V_MINOR > 8
-		RemoveEntity(iEntity);
-	#else
-		AcceptEntityInput(iEntity, "Kill");
-	#endif
+#if SOURCEMOD_V_MINOR > 8
+	RemoveEntity(iEntity);
+#else
+	AcceptEntityInput(iEntity, "Kill");
+#endif
 }
