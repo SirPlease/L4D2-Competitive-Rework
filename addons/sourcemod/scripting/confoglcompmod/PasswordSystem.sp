@@ -63,18 +63,18 @@ void PS_OnModuleEnd()
 
 static void PS_CheckPassword(int client)
 {
-	if (!PS_bIsPassworded || !IsPluginEnabled()) {
+	if (!PS_bIsPassworded || !IsPluginEnabled() || IsFakeClient(client)) {
 		return;
 	}
 
 	CreateTimer(0.1, PS_CheckPassword_Timer, GetClientUserId(client), TIMER_REPEAT);
 }
 
-public Action PS_CheckPassword_Timer(Handle hTimer, any userid)
+public Action PS_CheckPassword_Timer(Handle hTimer, int userid)
 {
 	int client = GetClientOfUserId(userid);
-	
-	if (!client || IsFakeClient(client)) {
+
+	if (client < 1) {
 		return Plugin_Stop;
 	}
 
@@ -87,7 +87,7 @@ public Action PS_CheckPassword_Timer(Handle hTimer, any userid)
 	return Plugin_Stop;
 }
 
-public void PS_ConVarDone(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue, any userid)
+public void PS_ConVarDone(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue, int userid)
 {
 	if (result == ConVarQuery_Okay) {
 		char buffer[128];
@@ -98,9 +98,9 @@ public void PS_ConVarDone(QueryCookie cookie, int client, ConVarQueryResult resu
 		}
 	}
 
-	if (client == GetClientOfUserId(userid) && IsClientInGame(client))
-	{
+	if (client == GetClientOfUserId(userid) && IsClientConnected(client)) {
 		PS_bSuppress = true;
+
 		KickClient(client, "Bad password");
 	}
 }
