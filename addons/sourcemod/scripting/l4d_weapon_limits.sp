@@ -21,7 +21,6 @@
 #define GAMEDATA_FILE				"l4d_wlimits"
 #define GAMEDATA_USE_AMMO			"CWeaponAmmoSpawn_Use"
 #define MAX_PLAYER_WEAPON_SLOTS		5
-#define TEAM_SURVIVOR				2
 #define SOUND_NAME					"player/suit_denydevice.wav"
 
 enum struct LimitArrayEntry
@@ -223,7 +222,7 @@ public Action Hook_WeaponCanUse(int client, int weapon)
 	//       when client with no weapon on equivalent slot just eyes or walks on it.
 	//       If the weapon meets limit, client will have the warning spamming unexpectedly.
 
-	if (GetClientTeam(client) != TEAM_SURVIVOR || !bIsLocked) {
+	if (GetClientTeam(client) != L4D2Team_Survivor || !bIsLocked) {
 		return Plugin_Continue;
 	}
 
@@ -287,7 +286,7 @@ public void OnIncap(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
-	if (client < 1 || GetClientTeam(client) != TEAM_SURVIVOR) {
+	if (client < 1 || GetClientTeam(client) != L4D2Team_Survivor) {
 		return;
 	}
 
@@ -313,7 +312,7 @@ public void OnDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
-	if (client < 1 || GetClientTeam(client) != TEAM_SURVIVOR || !bIsIncappedWithMelee[client]) {
+	if (client < 1 || GetClientTeam(client) != L4D2Team_Survivor || !bIsIncappedWithMelee[client]) {
 		return;
 	}
 
@@ -324,7 +323,7 @@ public void OnBotReplacedPlayer(Event event, const char[] name, bool dontBroadca
 {
 	int bot = GetClientOfUserId(event.GetInt("bot"));
 
-	if (bot < 1 || GetClientTeam(bot) != TEAM_SURVIVOR) {
+	if (bot < 1 || GetClientTeam(bot) != L4D2Team_Survivor) {
 		return;
 	}
 
@@ -338,7 +337,7 @@ public void OnPlayerReplacedBot(Event event, const char[] name, bool dontBroadca
 {
 	int player = GetClientOfUserId(event.GetInt("player"));
 
-	if (player < 1 || GetClientTeam(player) != TEAM_SURVIVOR) {
+	if (player < 1 || GetClientTeam(player) != L4D2Team_Survivor) {
 		return;
 	}
 
@@ -392,7 +391,7 @@ int GetWeaponCount(const int[] mask)
 	int count, wepid;
 
 	for (int i = 1; i <= MaxClients; i++) {
-		if (!IsClientInGame(i) || GetClientTeam(i) != TEAM_SURVIVOR || !IsPlayerAlive(i)) {
+		if (!IsClientInGame(i) || GetClientTeam(i) != L4D2Team_Survivor || !IsPlayerAlive(i)) {
 			continue;
 		}
 
@@ -413,7 +412,7 @@ int GetMeleeCount(const int[] mask)
 	int count, meleeid;
 
 	for (int i = 1; i <= MaxClients; i++) {
-		if (!IsClientInGame(i) || GetClientTeam(i) != TEAM_SURVIVOR || !IsPlayerAlive(i)) {
+		if (!IsClientInGame(i) || GetClientTeam(i) != L4D2Team_Survivor || !IsPlayerAlive(i)) {
 			continue;
 		}
 
