@@ -59,10 +59,11 @@ void RM_OnModuleStart()
 	RM_hSbAllBotGame = FindConVar("sb_all_bot_game");
 
 	RM_hReloaded = FindConVarEx("match_reloaded");
-	RM_hChangeMap = FindConVarEx("match_map");
 	if (RM_hReloaded == null) {
 		RM_hReloaded = CreateConVarEx("match_reloaded", "0", "DONT TOUCH THIS CVAR! This is to prevent match feature keep looping, however the plugin takes care of it. Don't change it!", FCVAR_DONTRECORD|FCVAR_UNLOGGED);
 	}
+
+	RM_hChangeMap = FindConVarEx("match_map");
 	if (RM_hChangeMap == null) {
 		RM_hChangeMap = CreateConVarEx("match_map", "", "DONT TOUCH THIS CVAR! This is to store the map that we'll be changing to", FCVAR_DONTRECORD|FCVAR_UNLOGGED);
 	}
@@ -165,22 +166,21 @@ static void RM_Match_Load()
 	CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} Match mode loaded!");
 
 	if (!RM_bIsMapRestarted && RM_hDoRestart.BoolValue) {
-		
-		DataPack dp;
-		CreateDataTimer(MAPRESTARTTIME, RM_Match_MapRestart_Timer, dp);
-
-		char sMap[64];
+		char sMap[PLATFORM_MAX_PATH];
 		RM_hChangeMap.GetString(sMap, sizeof(sMap));
 
-		if (strlen(sMap) > 0)
-		  CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} Changing map to {green}%s{default}!", sMap);
-
-		else {
+		if (strlen(sMap) > 0) {
+			CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} Changing map to {green}%s{default}!", sMap);
+		} else {
 			GetCurrentMap(sMap, sizeof(sMap));
+
+			//PrintToChatAll("\x01[\x05Confogl\x01] Restarting map!");
 			CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} Restarting map!");
 		}
 
-		dp.WriteString(sMap);
+		DataPack hDp;
+		CreateDataTimer(MAPRESTARTTIME, RM_Match_MapRestart_Timer, hDp);
+		hDp.WriteString(sMap);
 	}
 
 	if (RM_DEBUG || IsDebugEnabled()) {
@@ -232,7 +232,7 @@ static void RM_Match_Unload(bool bForced = false)
 	}
 }
 
-public Action RM_Match_MapRestart_Timer(Handle hTimer, DataPack dp)
+public Action RM_Match_MapRestart_Timer(Handle hTimer, DataPack hDp)
 {
 	ServerCommand("sm plugins load_lock"); //rework
 
@@ -240,11 +240,12 @@ public Action RM_Match_MapRestart_Timer(Handle hTimer, DataPack dp)
 		LogMessage("[%s] Restarting map...", RM_MODULE_NAME);
 	}
 
-	char map[PLATFORM_MAX_PATH];
-	dp.Reset();
-	dp.ReadString(map, sizeof(map));
+	char sMap[PLATFORM_MAX_PATH];
+	hDp.Reset();
+	hDp.ReadString(sMap, sizeof(sMap));
 
-	ServerCommand("changelevel %s", map);
+	ServerCommand("changelevel %s", sMap);
+
 	RM_bIsMapRestarted = true;
 
 	return Plugin_Stop;
@@ -310,18 +311,18 @@ public Action RM_Cmd_ForceMatch(int client, int args)
 		return Plugin_Handled;
 	}
 
-	char map[PLATFORM_MAX_PATH];
-	char displayName[PLATFORM_MAX_PATH];
+	char sMap[PLATFORM_MAX_PATH], sDisplayName[PLATFORM_MAX_PATH];
 
-	if (args == 2)
-	{
-		GetCmdArg(2, map, sizeof(map));
-		if (FindMap(map, displayName, sizeof(displayName)) == FindMap_NotFound) {
-			CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Map '{olive}%s{default}' not found!", map);
+	if (args == 2) {
+		GetCmdArg(2, sMap, sizeof(sMap));
+
+		if (FindMap(sMap, sDisplayName, sizeof(sDisplayName)) == FindMap_NotFound) {
+			CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Map '{olive}%s{default}' not found!", sMap);
 			return Plugin_Handled;
 		}
-		GetMapDisplayName(displayName, displayName, sizeof(displayName));
-		RM_hChangeMap.SetString(displayName);
+
+		GetMapDisplayName(sDisplayName, sDisplayName, sizeof(sDisplayName));
+		RM_hChangeMap.SetString(sDisplayName);
 	}
 
 	RM_Match_Load();
