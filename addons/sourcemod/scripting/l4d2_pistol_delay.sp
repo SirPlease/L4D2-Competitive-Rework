@@ -5,14 +5,9 @@
 #include <dhooks>
 #include <sdkhooks> //OnEntityCreated
 #include <left4downtown>
+#include <l4d2util_constants>
 
 #define DEBUG						0
-
-#define MAX_EDICTS					(1 << 11) //2048
-#define WEAPON_PISTOL				1
-#define TEAM_SURVIVOR				2
-#define ENTITY_NAME_MAX_LENGTH		64
-#define LIFE_ALIVE					0
 
 #define GAMEDATA_FILE				"l4d2_pistol_delay"
 #define RATE_OF_FIRE_OFFSET_NAME	"CTerrorGun::GetRateOfFire"
@@ -268,12 +263,12 @@ public MRESReturn CPistol_OnGetRiteOfFire(int iWeapon, DHookReturn hReturn)
 
 public void Event_WeaponFire(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	if (hEvent.GetInt("weaponid") != WEAPON_PISTOL) {
+	if (hEvent.GetInt("weaponid") != WEPID_PISTOL) {
 		return;
 	}
 
 	int iClient = GetClientOfUserId(hEvent.GetInt("userid"));
-	if (iClient < 1 || GetClientTeam(iClient) != TEAM_SURVIVOR) {
+	if (iClient < 1 || GetClientTeam(iClient) != L4D2Team_Survivor) {
 		return;
 	}
 
@@ -285,7 +280,7 @@ public void Event_WeaponFire(Event hEvent, const char[] sEventName, bool bDontBr
 	float fNow = GetGameTime();
 	float fOldValue = g_fOldFireRate[iClient][iActiveWeapon];
 
-	char sEntityName[ENTITY_NAME_MAX_LENGTH];
+	char sEntityName[ENTITY_MAX_NAME_LENGTH];
 	GetEdictClassname(iActiveWeapon, sEntityName, sizeof(sEntityName));
 
 	PrintToChat(iClient, "Weapon: %s (%d), old fire time: %f, current fire time: %f, Diff: %f", \
