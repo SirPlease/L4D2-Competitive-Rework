@@ -6,11 +6,11 @@
 	}
 	"freeze"
 	{
-		"en"		"{red}Tank {default}spawned. {olive}Freezing {default}distance points!"
+		"en"		"{red}Tank {default}has spawned. {olive}Freezing {default}distance points!"
 	}
 	"unfreeze"
 	{
-		"en"		"{red}Tank {default}spawned. {olive}Freezing {default}distance points!"
+		"en"		"{red}Tank {default}is dead. {olive}Unfreezing {default}distance points!"
 	}
 	"saferoom"
 	{
