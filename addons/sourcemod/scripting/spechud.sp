@@ -19,7 +19,7 @@
 #include <lerpmonitor>
 #include <witch_and_tankifier>
 
-#define PLUGIN_VERSION	"3.7.3"
+#define PLUGIN_VERSION	"3.8"
 
 public Plugin myinfo = 
 {
@@ -664,6 +664,16 @@ void GetWeaponInfo(int client, char[] info, int length)
 	}
 }
 
+int SortSurvByCharacter(int elem1, int elem2, const int[] array, Handle hndl)
+{
+	int sc1 = IdentifySurvivor(elem1);
+	int sc2 = IdentifySurvivor(elem2);
+
+	if (sc1 > sc2) { return 1; }
+	else if (sc1 < sc2) { return -1; }
+	else { return 0; }
+}
+
 void FillSurvivorInfo(Panel hSpecHud)
 {
 	static char info[100];
@@ -696,10 +706,21 @@ void FillSurvivorInfo(Panel hSpecHud)
 	DrawPanelText(hSpecHud, " ");
 	DrawPanelText(hSpecHud, info);
 	
-	for (int client = 0; client <= MaxClients; ++client)
+	int total = 0;
+	int[] clients = new int[MaxClients];
+	for (int i = 0; i <= MaxClients; ++i)
 	{
-		if (!IsClientInGame(client) || GetClientTeam(client) != 2)
+		if (!IsClientInGame(i) || GetClientTeam(i) != 2)
 			continue;
+		
+		clients[total++] = i;
+	}
+	
+	SortCustom1D(clients, total, SortSurvByCharacter);
+	
+	for (int i = 0; i < total; ++total)
+	{
+		int client = clients[i];
 		
 		GetClientFixedName(client, name, sizeof(name));
 		if (!IsPlayerAlive(client))
