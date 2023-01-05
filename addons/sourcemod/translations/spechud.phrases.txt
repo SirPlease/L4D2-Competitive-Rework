@@ -1,0 +1,34 @@
+"Phrases"
+{
+	"on"
+	{
+		"en"		"{blue}on{default}"
+	}
+	
+	"off"
+	{
+		"en"		"{red}off{default}"
+	}
+	
+	"Notify_SpechudState"
+	{
+		"#format"	"{1:t}"
+		"en"		"<{olive}HUD{default}> Spectator HUD is now {1}"
+	}
+	
+	"Notify_TankhudState"
+	{
+		"#format"	"{1:t}"
+		"en"		"<{olive}HUD{default}> Tank HUD is now {1}"
+	}
+	
+	"Notify_SpechudUsage"
+	{
+		"en"		"<{olive}HUD{default}> Type {green}!spechud{default} into chat to toggle the {blue}Spectator HUD"
+	}
+	
+	"Notify_TankhudUsage"
+	{
+		"en"		"<{olive}HUD{default}> Type {green}!tankhud{default} into chat to toggle the {red}Tank HUD"
+	}
+}
