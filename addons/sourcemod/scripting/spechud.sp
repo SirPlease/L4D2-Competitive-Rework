@@ -19,7 +19,7 @@
 #include <lerpmonitor>
 #include <witch_and_tankifier>
 
-#define PLUGIN_VERSION	"3.8"
+#define PLUGIN_VERSION	"3.8.3"
 
 public Plugin myinfo = 
 {
@@ -708,7 +708,7 @@ void FillSurvivorInfo(Panel hSpecHud)
 	
 	int total = 0;
 	int[] clients = new int[MaxClients];
-	for (int i = 0; i <= MaxClients; ++i)
+	for (int i = 1; i <= MaxClients; ++i)
 	{
 		if (!IsClientInGame(i) || GetClientTeam(i) != 2)
 			continue;
@@ -718,7 +718,7 @@ void FillSurvivorInfo(Panel hSpecHud)
 	
 	SortCustom1D(clients, total, SortSurvByCharacter);
 	
-	for (int i = 0; i < total; ++total)
+	for (int i = 0; i < total; ++i)
 	{
 		int client = clients[i];
 		
@@ -914,9 +914,9 @@ void FillInfectedInfo(Panel hSpecHud)
 	DrawPanelText(hSpecHud, info);
 
 	int infectedCount = 0;
-	for (int client = 0; client <= MaxClients; ++client)
+	for (int client = 1; client <= MaxClients; ++client)
 	{
-		if (!IsClientInGame(client) || GetClientTeam(client) != 2)
+		if (!IsClientInGame(client) || GetClientTeam(client) != 3)
 			continue;
 		
 		GetClientFixedName(client, name, sizeof(name));
@@ -1272,7 +1272,7 @@ stock bool ValvePanel_ShiftInvalidString(char[] str, int maxlen)
 			strcopy(str[1], maxlen-1, temp);
 			str[0] = ' ';
 			
-			str[maxlen < termIndex ? maxlen : termIndex] = '0';
+			str[maxlen < termIndex ? maxlen : termIndex] = '\0';
 			
 			return true;
 		}
