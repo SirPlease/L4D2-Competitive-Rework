@@ -19,7 +19,7 @@
 #include <lerpmonitor>
 #include <witch_and_tankifier>
 
-#define PLUGIN_VERSION	"3.8.3"
+#define PLUGIN_VERSION	"3.8.4"
 
 public Plugin myinfo = 
 {
@@ -1267,12 +1267,12 @@ stock bool ValvePanel_ShiftInvalidString(char[] str, int maxlen)
 	case '[':
 		{
 			char[] temp = new char[maxlen];
-			int termIndex = strcopy(temp, maxlen, str) + 1;
+			strcopy(temp, maxlen, str) + 1;
 			
-			strcopy(str[1], maxlen-1, temp);
+			int size = strcopy(str[1], maxlen-1, temp) + 1;
+			
 			str[0] = ' ';
-			
-			str[maxlen < termIndex ? maxlen : termIndex] = '\0';
+			str[size < maxlen ? size : maxlen-1] = '\0';
 			
 			return true;
 		}
