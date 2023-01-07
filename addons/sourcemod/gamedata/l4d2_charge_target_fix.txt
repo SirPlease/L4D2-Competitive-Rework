@@ -1,0 +1,51 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Functions"
+		{
+			"CCharge::HandleCustomCollision"
+			{
+				"signature"		"CCharge::HandleCustomCollision"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"pOther"
+					{
+						"type"	"cbaseentity"
+					}
+					"vecTouch"
+					{
+						"type"	"vectorptr"
+					}
+					"vecDirection"
+					{
+						"type"	"vectorptr"
+					}
+					"pTrace"
+					{
+						"type"	"objectptr"
+					}
+					"pMoveData"
+					{
+						"type"	"objectptr"
+					}
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			// Search string "ChargerZombie.HitPerson"
+			"CCharge::HandleCustomCollision"
+			{
+				"library"		"server"
+				"linux"			"@_ZN7CCharge21HandleCustomCollisionEP11CBaseEntityRK6VectorS4_P10CGameTraceP9CMoveData"
+				"windows"		"\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x8B\x2A\x2A\x53\x8B\x2A\x89\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x56\x8B"
+								/* 55 8B ? 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 8B ? ? 53 8B ? 89 ? ? 8B ? ? ? ? ? 56 8B */
+			}
+		}
+	}
+}
