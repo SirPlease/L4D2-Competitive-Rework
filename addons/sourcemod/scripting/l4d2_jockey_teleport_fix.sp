@@ -8,7 +8,7 @@
 
 float fPreviousOrigin[MAXPLAYERS + 1][3];
 
-#define MAX_SINGLE_FRAME_UNITS 1000.0
+#define MAX_SINGLE_FRAME_UNITS 400.0
 #define DEBUG 0
 
 public Plugin myinfo = 
@@ -16,7 +16,7 @@ public Plugin myinfo =
     name = "[L4D2] Jockey Teleport Fix", 
     author = "Sir", 
     description = "A fix for Jockeys teleporting (whether done maliciously with cheats, or caused by a glitch)", 
-    version = "1.0", 
+    version = "1.1", 
     url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
