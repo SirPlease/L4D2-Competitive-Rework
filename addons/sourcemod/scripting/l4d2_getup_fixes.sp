@@ -51,7 +51,7 @@
 #undef REQUIRE_PLUGIN
 #include <godframecontrol>
 
-#define PLUGIN_VERSION "4.15"
+#define PLUGIN_VERSION "4.16"
 
 public Plugin myinfo = 
 {
@@ -497,7 +497,7 @@ void SetInvulnerableForSlammed(int client, float duration)
 {
 	if (g_bGodframeControl)
 	{
-		GiveClientGodFrames(client, duration, 6);
+		GiveClientGodFrames(client, duration, 8); // 1 - Hunter. 2 - Smoker. 4 - Jockey. 8 - Charger. fk u
 	}
 	else
 	{
