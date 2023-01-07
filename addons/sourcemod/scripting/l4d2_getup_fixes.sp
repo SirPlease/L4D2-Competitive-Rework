@@ -51,7 +51,7 @@
 #undef REQUIRE_PLUGIN
 #include <godframecontrol>
 
-#define PLUGIN_VERSION "4.14"
+#define PLUGIN_VERSION "4.15"
 
 public Plugin myinfo = 
 {
@@ -435,12 +435,13 @@ void Event_ChargerKilled(Event event, const char[] name, bool dontBroadcast)
 				}
 				L4D2Direct_DoAnimationEvent(victim, ANIM_CHARGER_GETUP);
 			}
+			
+			g_fLastChargedEndTime[victim] = GetGameTime();
 		}
 	}
 	
 	g_iChargeVictim[client] = -1;
 	g_iChargeAttacker[victim] = -1;
-	g_fLastChargedEndTime[victim] = GetGameTime();
 }
 
 // Pounces on survivors being carried will invoke this instantly.
