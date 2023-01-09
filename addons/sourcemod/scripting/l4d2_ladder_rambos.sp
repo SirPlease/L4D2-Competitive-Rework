@@ -1,4 +1,4 @@
-#define PLUGIN_VERSION 		"4.1"
+#define PLUGIN_VERSION 		"4.2"
 
 /*
 *	Ladder Rambos Dhooks
@@ -282,6 +282,7 @@ public MRESReturn Detour_CanDeployFor(int pThis, Handle hReturn)
 	if (client == -1 || !IsClientInGame(client))
 		return MRES_Ignored;
 	
+	int clientFlags = GetEntityFlags(client);
 	bool bIsOnLadder = GetEntityMoveType(client) == MOVETYPE_LADDER;
 	
 	if (!bIsOnLadder)
@@ -294,6 +295,10 @@ public MRESReturn Detour_CanDeployFor(int pThis, Handle hReturn)
 		if (bLadderMounted[client]) bLadderMounted[client] = false;
 		if (bBlockDeploy[client]) bBlockDeploy[client] = false;
 		
+		if ((clientFlags & FL_ONGROUND) && GetEntPropEnt(client, Prop_Send, "m_hGroundEntity") == -1)
+		{
+			SetEntityFlags(client, clientFlags & ~FL_ONGROUND);
+		}
 		return MRES_Ignored;
 	}
 	
@@ -368,8 +373,10 @@ public MRESReturn Detour_CanDeployFor(int pThis, Handle hReturn)
 		}
 	}
 	
-	if (bCvar_Recoil && Weapon_IsGun(pThis))
-		SetEntityFlags(client, GetEntityFlags(client) | FL_ONGROUND);
+	if (bCvar_Recoil && (~clientFlags & FL_ONGROUND))
+	{
+		SetEntityFlags(client, clientFlags | FL_ONGROUND);
+	}
 	
 	return MRES_Ignored;
 }
