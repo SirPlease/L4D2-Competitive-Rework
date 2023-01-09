@@ -46,13 +46,12 @@
 
 #include <sourcemod>
 #include <sdktools>
-#include <sdkhooks>
 #include <left4dhooks>
 #include <l4d2util_constants>
 #undef REQUIRE_PLUGIN
 #include <godframecontrol>
 
-#define PLUGIN_VERSION "4.12.1"
+#define PLUGIN_VERSION "4.16"
 
 public Plugin myinfo = 
 {
@@ -211,8 +210,6 @@ public void OnClientPutInServer(int client)
 	g_iChargeVictim[client] = -1;
 	g_iChargeAttacker[client] = -1;
 	g_fLastChargedEndTime[client] = 0.0;
-		
-	SDKHook(client, SDKHook_OnTakeDamage, SDK_OnTakeDamage);
 }
 
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -416,7 +413,14 @@ void Event_ChargerKilled(Event event, const char[] name, bool dontBroadcast)
 			if ((pAnim.GetFlag(AnimState_GroundSlammed) && cvar_keepLongChargeLongGetUp.BoolValue)
 				|| (pAnim.GetFlag(AnimState_WallSlammed) && cvar_keepWallSlamLongGetUp.BoolValue))
 			{
-				SetInvulnerableForSlammed(victim, g_hLongChargeDuration.FloatValue);
+				float flElaspedAnimTime = 0.0;
+				if (pAnim.GetFlag(AnimState_WallSlammed)) // no issue for ground slam
+				{
+					// ACT_TERROR_SLAMMED_WALL
+					// frames: 116, fps: 30
+					flElaspedAnimTime = GetEntPropFloat(victim, Prop_Send, "m_flCycle") * 116 / 30.0;
+				}
+				SetInvulnerableForSlammed(victim, g_hLongChargeDuration.FloatValue - flElaspedAnimTime);
 			}
 			else
 			{
@@ -431,12 +435,13 @@ void Event_ChargerKilled(Event event, const char[] name, bool dontBroadcast)
 				}
 				L4D2Direct_DoAnimationEvent(victim, ANIM_CHARGER_GETUP);
 			}
+			
+			g_fLastChargedEndTime[victim] = GetGameTime();
 		}
 	}
 	
 	g_iChargeVictim[client] = -1;
 	g_iChargeAttacker[victim] = -1;
-	g_fLastChargedEndTime[victim] = GetGameTime();
 }
 
 // Pounces on survivors being carried will invoke this instantly.
@@ -470,31 +475,19 @@ void Event_ChargerPummelEnd(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-Action SDK_OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3])
+public Action L4D2_OnSlammedSurvivor(int victim, int attacker, bool &bWallSlam, bool &bDeadlyCharge)
 {
-	if (!attacker || attacker > MaxClients)
-		return Plugin_Continue;
-	
-	if (GetClientTeam(victim) != 2 || GetClientTeam(attacker) != 3)
-		return Plugin_Continue;
-	
-	switch (GetEntProp(attacker, Prop_Send, "m_zombieClass"))
+	if (victim > 0)
 	{
-		case 6:
-		{
-			if (RoundToFloor(damage) == 10 && GetVectorLength(damageForce) == 0.0)
-			{
-				g_iChargeVictim[attacker] = victim;
-				g_iChargeAttacker[victim] = attacker;
-				
-				AnimState pAnim = AnimState(victim);
-				pAnim.SetFlag(AnimState_Pounded, false);
-				pAnim.SetFlag(AnimState_Charged, false);
-				pAnim.SetFlag(AnimState_TankPunched, false);
-				pAnim.SetFlag(AnimState_Pounced, false);
-				pAnim.ResetMainActivity();
-			}
-		}
+		g_iChargeVictim[attacker] = victim;
+		g_iChargeAttacker[victim] = attacker;
+		
+		AnimState pAnim = AnimState(victim);
+		pAnim.SetFlag(AnimState_Pounded, false);
+		pAnim.SetFlag(AnimState_Charged, false);
+		pAnim.SetFlag(AnimState_TankPunched, false);
+		pAnim.SetFlag(AnimState_Pounced, false);
+		pAnim.ResetMainActivity();
 	}
 	
 	return Plugin_Continue;
@@ -504,7 +497,7 @@ void SetInvulnerableForSlammed(int client, float duration)
 {
 	if (g_bGodframeControl)
 	{
-		GiveClientGodFrames(client, duration, 6);
+		GiveClientGodFrames(client, duration, 8); // 1 - Hunter. 2 - Smoker. 4 - Jockey. 8 - Charger. fk u
 	}
 	else
 	{

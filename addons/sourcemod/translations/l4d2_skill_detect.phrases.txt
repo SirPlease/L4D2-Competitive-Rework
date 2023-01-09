@@ -144,7 +144,7 @@
 	}
 	"Shoving"
 	{
-		"en"		" by shoving"
+		"en"		"by shoving"
 	}
     // rocks
 	"SkeetedRock"
