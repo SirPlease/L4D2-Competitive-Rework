@@ -1,28 +1,98 @@
-1.118 (03-Oct-2022)
-	- Fixed forward "L4D_OnReleaseSurvivorPositions" not being detected when used. Thanks to "gabuch2" for reporting.
+1.127 (07-Jan-2023)
+	- Added more Charger stocks to the "left4dhooks_silver.inc" include file. Thanks to "Forgetest" for providing.
+	- Added some more "L4D2UseAction" enum values to the "left4dhooks_stocks.inc" include file. Thanks to "Marttt" for reporting.
+	- Changed natives "L4D_IsPositionIn*" to use a wider search area to the nearest NavArea position, from 300.0 to 1000.0. Suggested by "ProjectSky".
+	- Added missing post handled forwards to the include file. Thanks to "Forgetest" for reporting.
+		- "L4D_OnStartMeleeSwing_PostHandled", "L4D2_OnChangeFinaleStage_PostHandled", "L4D2_CGasCan_ShouldStartAction_PostHandled",
+		- "L4D2_OnHitByVomitJar_PostHandled", "L4D2_CGasCan_ActionComplete_PostHandled", "L4D2_OnJockeyRide_PostHandled" and "L4D2_OnStartCarryingVictim_PostHandled".
+	- Added forward "L4D2_OnSlammedSurvivor_PostHandled" when the pre hook is being blocked. Requested by "Forgetest".
+	- Changed forward "L4D2_OnSlammedSurvivor" to allow blocking the forward.
+	- Changed forward "L4D_OnFatalFalling" to return client index 0 when the client is not available.
+	- Fixed forward "L4D_OnFatalFalling" throwing errors when client index is 0. Thanks to "Beatles" for reporting.
+	- Fixed forwards "L4D_TankRock_OnRelease" and "L4D_TankRock_OnRelease_Post" crashing on L4D1 Linux not giving a vecAng. Thanks to "Forgetest" for fixing.
+	- Deprecated native: "L4D2_AreTeamsFlipped" in favor of using: GameRules_GetProp("m_bAreTeamsFlipped"); - Suggested by "A1m`".
 
 	- Updated: Plugin and test plugin.
+	- Updated: "left4dhooks.inc" Include file.
+	- Updated: "left4dhooks_silver.inc" Include file.
+	- Updated: "left4dhooks_stocks.inc" Include file.
+	- Updated: "left4dhooks.l4d1.txt" GameData file.
+	- Updated: "left4dhooks.l4d2.txt" GameData file.
 	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_gamedata.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_setup.sp" project file.
+
+1.126 (21-Dec-2022)
+	- Added weapon attribute "L4D2IWA_DefaultSize" for the "L4D2_GetIntWeaponAttribute" and "L4D2_SetIntWeaponAttribute" natives to get a weapons default clip size. Thanks to "iaNanaNana" for adding.
+	- Added natives "L4D_IsPositionInFirstCheckpoint" and "L4D_IsPositionInLastCheckpoint" to check if a given vector is within a checkpoint area. Thanks to "Forgetest" for the code.
+	- Added native "L4D_GetEntityWorldSpaceCenter" to get an entities worldspace center. Requested by "A1m`".
+	- Added forwards "L4D_OnCancelStagger", "L4D_OnCancelStagger_Post" and "L4D_OnCancelStagger_PostHandled" to notify when a players stagger is being cancelled. Requested by "Forgetest".
+	- Fixed native "L4D_IsInLastCheckpoint" teleporting players in the final. Thanks to "HarryPotter" for reporting.
+	- L4D1: Fixed forward "L4D_OnReleaseSurvivorPositions" crashing Windows servers by fixing the GameData signature.
+
+	- Changed natives: "L4D2Direct_GetNextShoveTime" and "L4D2Direct_SetNextShoveTime" method. Please report any issues.
+	- Deprecated natives: "L4D2Direct_GetShovePenalty" and "L4D2Direct_SetShovePenalty" in favor of using the "m_iShovePenalty" Prop_Send GetEntProp/SetEntProp natives.
+
+1.125 (07-Dec-2022)
+	- Fixed update 1.124 breaking "L4D2_OnEndVersusModeRound". Thanks to "Forgetest" for reporting.
+	- Fixed update 1.124 errors on Windows L4D1. Thanks to "HarryPotter" for reporting.
+	- Fixed native "L4D_SetBecomeGhostAt" not working on Windows L4D1.
+
+1.124 (07-Dec-2022)
+	- Fixed natives "L4D2_SetIntMeleeAttribute" and "L4D2_GetIntMeleeAttribute" using Int32 instead of Int16. Thanks to "NoroHime" for reporting.
+	- Fixed natives "L4D_IsInFirstCheckpoint" and "L4D_IsInLastCheckpoint" to use SDKCalls for accuracy instead of events. Thanks to "BHaType" for reporting.
+	- Changed native "L4D_IsAnySurvivorInStartArea" to also use the "L4D_IsInFirstCheckpoint" method, since it often incorrectly reported false.
+
+1.123 (03-Dec-2022)
+	- Added native "L4D_SetBecomeGhostAt" to set when a dead Special Infected player will transition into ghost state. Requested by "sorallll".
+	- L4D2: Fixed native "L4D_GetPlayerSpawnTime" on Windows reporting the wrong value.
+
+1.122 (15-Nov-2022)
+	- Added native "Left4DHooks_Version" to get the Left4DHooks plugin version.
+	- Fixed native "L4D2_SpitterPrj" not playing any acid damage sounds if the attacker index was 0.
+	- Fixed forwards "L4D_OnGetCrouchTopSpeed", "L4D_OnGetWalkTopSpeed" and "L4D_OnGetRunTopSpeed" from throwing client not in game errors. Thanks to "Eärendil" for reporting.
+
+1.121 (06-Nov-2022)
+	- Added native "L4D_AreAllSurvivorsInFinaleArea". Requested by "Eärendil".
+	- Fixed native "L4D2_SpitterPrj" to not emit duplicate sounds from regular Spitter projectiles and playback at about the same volume as default.
+	- L4D2: Added forwards "L4D2_OnSlammedSurvivor" and "L4D2_OnSlammedSurvivor_Post" when a Survivor is carried by a Charger and slammed into a wall. Thanks to "Forgetest" for adding.
+	- L4D2: Added stocks "L4D2_GetQueuedPummelStartTime", "L4D2_IsInQueuedPummel", "L4D2_GetQueuedPummelAttacker" and "L4D2_GetQueuedPummelVictim" to the "left4dhooks_silver.inc" include file.
+	- L4D1: Fixed trying to load the "IsVisibleToPlayer" signature. Thanks to "HarryPotter" for reporting.
+	- Fixed stocks "IsUsingMinigun" and "StopUsingMinigun" throwing errors from the "left4dhooks_silver.inc" include file. Plugins must recompile to fix this error. Thanks to "HarryPotter" for reporting.
+
+1.120 (20-Oct-2022)
+	- Update for L4D2.
+
+	- Added native "L4D2_CommandABot" to command a bots actions.
+	- Added native "L4D2_GetScriptScope" to get an entities script ID. Thanks to "Forgetest" for help.
+	- Added native "L4D2_GetVScriptEntity" to get a VScript "logic_script" entity index.
+	- Added native "L4D2_IsVisibleToPlayer" to get a VScript "logic_script" entity index. Requested by "morzlee", thanks to "fdxx" and "Psyk0tik" for the code and gamedata.
+	- Fixed native "ITimer_GetTimestamp" using the wrong stock and returning the wrong values. Thanks to "Forgetest" for reporting.
+	- L4D2: Fixed forward "L4D2_OnGetScriptValueVector" not returning a vector value and not setting the value when changed.
+	- Fixed forwards "L4D2_OnGetScriptValue*" not working after map change. Thanks to "Forgetest" for reporting.
+
+1.119 (15-Oct-2022)
+	- L4D2: Added a new pointer "POINTER_SCRIPTVM" to the "L4D_GetPointer" native.
+	- L4D2: Added native "L4D2_GetDirectorScriptScope" to get the directors script scope.
+	- L4D2: Added forwards "L4D2_OnGetScriptValueInt", "L4D2_OnGetScriptValueFloat", "L4D2_OnGetScriptValueVector" and "L4D2_OnGetScriptValueVoid" to use a new system of detecting script values. Thanks to "Forgetest" for coding.
+	- L4D2: Added forward "L4D_OnForceSurvivorPositions_Pre" - pre relative to "L4D_OnForceSurvivorPositions" forward. Requested by "gabuch2".
+	- L4D2: Changed native "L4D2_UseAdrenaline" to fire the event even when not healing. Thanks to "HarryPotter" for reporting.
+	- L4D1 Linux: fixed forward "L4D_OnReleaseSurvivorPositions" using the wrong signature. Thanks to "HarryPotter" for reporting.
+	- Added stocks "IsUsingMinigun" and "StopUsingMinigun" in the "left4dhooks_silver.inc" include file. Requested by "knifeeeee".
+	- Added native "L4D_CleanupPlayerState" to clean up a players state. Requested by "knifeeeee".
+
+1.118 (03-Oct-2022)
+	- Fixed forward "L4D_OnReleaseSurvivorPositions" not being detected when used. Thanks to "gabuch2" for reporting.
 
 1.117 (30-Sep-2022)
 	- Added forward "L4D_OnReleaseSurvivorPositions" to trigger after round start when Survivors are released from starting positions, usually first map and finale escape start, not all maps. Requested by "gabuch2".
 	- Added forwards "L4D_OnSpeakResponseConcept_Pre" and "L4D_OnSpeakResponseConcept_Post" to trigger when a talker response is triggered. Requested by "gabuch2".
 	- Added some details for the "*_Detonate*" forwards in the "left4dhooks.inc" include file
 
-	- Updated: Plugin and test plugin.
-	- Updated: "left4dhooks.inc" Include file.
-	- Updated: "left4dhooks.l4d1.txt" GameData file.
-	- Updated: "left4dhooks.l4d2.txt" GameData file.
-	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_setup.sp" project file.
-
 1.116 (21-Sep-2022)
 	- L4D1: Fixed GameData missing the "L4D_Molotov_Detonate" and "L4D_PipeBomb_Detonate" forwards data.
 	- L4D2: Fixed native "L4D2_SpitterPrj" crashing the server when playing damage sounds. Thanks to "Marttt" for fixing.
-
-	- Updated: Plugin.
-	- Updated: "left4dhooks.l4d1.txt" GameData file.
-	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
 
 1.115 (20-Sep-2022)
 	- Added forward "L4D_OnForceSurvivorPositions" Triggers after round start when Survivors are forced into starting positions, usually first map and finale escape start, not all maps. Requested by "gabuch2".
@@ -30,16 +100,6 @@
 	- L4D2: Fixed native "L4D2_SpitterPrj" not causing damage sounds when the projectile is not connected with a player from the Special Infected team. Thanks to "Marttt" for reporting.
 	- L4D2: Fixed native "L4D2_UseAdrenaline" to use the "adrenaline_health_buffer" cvar value instead of "pain_pills_health_value" for healing and prevent over-healing. Thanks to "HarryPotter" for fixing.
 	- Fixed stock "L4D_StopReviveAction" from "left4dhooks_silver.inc" include file from throwing errors. Thanks to "Red Flame" for reporting.
-
-	- Updated: Plugin and test plugin.
-	- Updated: "left4dhooks.inc" Include file.
-	- Updated: "left4dhooks_silver.inc" Include file.
-	- Updated: "left4dhooks.l4d1.txt" GameData file.
-	- Updated: "left4dhooks.l4d2.txt" GameData file.
-	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_setup.sp" project file.
 
 1.114 (01-Sep-2022)
 	- Added forwards "L4D_OnPlayerCough", "L4D_OnPlayerCough_Post" and "L4D_OnPlayerCough_PostHandled" when a player is coughing from a Smoker Cloud.
@@ -53,15 +113,6 @@
 	- Changes to some forwards information in the include file.
 	- Changes to prevent errors throwing from some forwards in the test plugin.
 
-	- Updated: Plugin and test plugin.
-	- Updated: "left4dhooks.inc" Include file.
-	- Updated: "left4dhooks.l4d1.txt" GameData file.
-	- Updated: "left4dhooks.l4d2.txt" GameData file.
-	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_gamedata.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_setup.sp" project file.
-
 1.113 (16-Aug-2022)
 	- Fixed the natives "L4D_GetCheckpointFirst" and "L4D_GetCheckpointLast" not always finding the saferoom door. Thanks to "azureblue" for reporting.
 
@@ -73,15 +124,6 @@
 	- Thanks to "Forgetest" for help coding and testing.
 	- Wildcarded the "SurvivorBot::UseHealingItems" signature to prevent conflicts with other plugins.
 
-	- Updated: Plugin and test plugin.
-	- Updated: "left4dhooks.inc" Include file.
-	- Updated: "left4dhooks.l4d1.txt" GameData file.
-	- Updated: "left4dhooks.l4d2.txt" GameData file.
-	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_gamedata.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_setup.sp" project file.
-
 1.111 (30-Jul-2022)
 	- Fixed native "L4D_GetNearestNavArea" additional params not being backwards compatible with plugins compiled against older versions of left4dhooks. Thanks to "Mr. Man" for reporting.
 
@@ -90,11 +132,6 @@
 	- Changed native "L4D_GetNearestNavArea" to accept some more parameters. Suggested by "Forgetest".
 
 	- Various minor code changes to adjust for splitting the project (cleaner comments and better error handling when compiling the split project files). Thanks to "Psyk0tik" for some help.
-
-	- Updated: Plugin and test plugin.
-	- Updated: "left4dhooks.inc" Include file.
-	- Updated: "left4dhooks.l4d2.txt" GameData file.
-	- Updated: all "/scripting/l4dd/" project files.
 
 1.109 (05-Jul-2022)
 	- Plugin now requires SourceMod 1.11. Utilizing some fixes from the new SourceMod and changed code to use new methodmaps.
@@ -105,17 +142,11 @@
 	- Fixed forwards: "L4D_OnTryOfferingTankBot", "L4D_OnSpawnSpecial", "L4D_OnSpawnTank", "L4D_OnSpawnWitch", "L4D2_OnSpawnWitchBride", "L4D_PipeBombProjectile_Pre" and "L4D2_OnFindScavengeItem"
 		to return -1 instead of 0 when blocking the functions. Thanks to "Forgetest" for reporting.
 
-	- Updated: Plugin.
-	- Updated: "left4dhooks.l4d1.txt" and "left4dhooks.l4d2.txt" GameData files.
 	- New project files located in "scripting/l4dd/"
 
 1.108 (20-Jun-2022)
 	- Added support for the "Updater" plugin by "GoD-Tony" to auto-update Left4DHooks. Can change the "ALLOW_UPDATER" define value for various options.
 	- L4D2: Added native "L4D2_Jockey_EndRide" to stop a Jockey riding a Survivor. Requested by "Eyal282".
-
-	- Updated: Plugin.
-	- Updated: "left4dhooks.inc" Include file.
-	- Updated: "left4dhooks.l4d2.txt" GameData file.
 
 1.107 (08-Jun-2022)
 	- Fixed memory leak when players disconnect. Thanks to "hefiwhfcds2" for reporting.
@@ -128,9 +159,6 @@
 	- Added stock "L4D_HasReachedSmoker" to return if a Survivor has reached the Smoker. Requested by "Nuki".
 	- Plugin now warns if Left4DHooks is already running, to avoid duplicate plugins.
 	- Reverted accidental debug logging from the last update. Thanks to "Hawkins" for reporting.
-
-	- Updated: Plugin and test plugin.
-	- Updated: "left4dhooks_silver.inc" Include files.
 
 1.105 (01-Jun-2022)
 	- L4D1: Fixed native "L4D2_GetTankCount" not reporting the correct value. Thanks to "Alexmy" for reporting.
@@ -153,10 +181,6 @@
 
 	- When recompiling plugins changes maybe required to align with these fixes.
 
-	- Updated: Plugin and test plugin.
-	- Updated: "left4dhooks.inc" and "left4dhooks_stocks.inc" Include files.
-	- Updated: "left4dhooks.l4d2.txt" GameData file.
-
 1.102 (16-May-2022)
 	- Added various post hook forwards that will trigger even when the relative pre hook has been blocked with return Plugin_Handled. This is since the changes in Left4DHooks version 1.94.
 
@@ -169,7 +193,6 @@
 
 1.101 (10-May-2022)
 	- Added natives "L4D_GetCheckpointFirst" and "L4D_GetCheckpointLast" to get the first and last saferoom door entities.
-	- Updated: "left4dhooks.inc" Include file.
 
 1.100 (28-Apr-2022)
 	- Fixed forward "L4D2_OnStagger_Post" throwing errors. Thanks to "Eyal282" for reporting.
@@ -184,10 +207,6 @@
 		"L4D_OnPouncedOnSurvivor_Post", "L4D_OnStartMeleeSwing_Post" and "L4D2_OnChangeFinaleStage_Post"
 
 	- Fixed native "L4D2Direct_SetNextShoveTime" not working when setting the shove time earlier than the current value. Thanks to "Eyal282" for reporting and helping fix.
-
-	- Updated: Plugin and test plugin.
-	- Updated: "left4dhooks.inc" Include file.
-	- Updated: "left4dhooks.l4d1.txt" and "left4dhooks.l4d2.txt" GameData files.
 
 1.97 (15-Apr-2022)
 	- Fixed removing animation detours in the same frame as the detour callback, crashing the server. Thanks to "Red Flame" and "fdxx" for reporting and helping.
@@ -208,10 +227,6 @@
 	- Fixed forward "L4D2_OnPummelVictim" bugging out the victim when blocking the pummel.
 	- Fixed some description errors in the "left4dhooks.inc" include file. Thanks to "Eyal282" for reporting.
 	- Fixed a compile warning in 1.11 from the "left4dhooks_silver.inc" include file.
-
-	- Updated: Plugin and test plugin.
-	- Updated: "left4dhooks.inc" and "left4dhooks_silver.inc" Include files.
-	- Updated: "left4dhooks.l4d1.txt" and "left4dhooks.l4d2.txt" GameData files.
 
 1.94 (29-Mar-2022)
 	- Added natives "L4D_GetReserveAmmo" and "L4D_SetReserveAmmo" to get and set a players weapons reserve ammo.
@@ -248,10 +263,6 @@
 	- Fixed forward "L4D2_CGasCan_ShouldStartAction" crashing. Thanks to "Eyal282" for reporting.
 	- Fixed native "L4D_GetCurrentChapter" sometimes reporting the wrong chapter number.
 
-	- Updated: Plugin and test plugin.
-	- Updated: "left4dhooks.inc" and "left4dhooks_silver.inc" Include files.
-	- Updated: "left4dhooks.l4d2.txt" GameData file.
-
 1.90 (20-Mar-2022)
 	- Added forwards "L4D_OnKnockedDown" and "L4D_OnKnockedDown_Post" to trigger when a Survivor is being thrown by a Tank rock or Hunter lung.
 	- Added forwards "L4D2_OnThrowImpactedSurvivor" and "L4D2_OnThrowImpactedSurvivor_Post" to trigger when a Survivor is impacted by a Charger.
@@ -260,10 +271,6 @@
 	- Added stocks "L4D_GetPinnedSurvivor" and "L4D2_IsMultiCharged" in the "left4dhooks_silver.inc" include file. Requested by "Eyal282".
 	- Changed stock "L4D_IsPlayerStaggering" in the "left4dhooks_silver.inc" include file to add better thanks. Thanks to "HarryPotter" for modifying.
 	- Changed forward "L4D_OnMaterializeFromGhost" from "Action" type to "void". Thanks to "Eyal282" for reporting.
-
-	- Updated: Plugin and test plugin.
-	- Updated: "left4dhooks.inc" and "left4dhooks_silver.inc" Include files.
-	- Updated: "left4dhooks.l4d1.txt" and "left4dhooks.l4d2.txt" GameData files.
 
 1.89 (02-Mar-2022)
 	- Fixed various @ targeting from only selecting 1 player. Thanks to "Eyal282" for reporting.
@@ -294,11 +301,6 @@
 	- Thanks to "Forgetest" and "vikingo12" for reporting and possible solutions.
 	- Requires re-compiling with SourceMod 1.11 to take affect.
 
-	- Updated: Plugin and test plugin.
-	- Updated: "left4dhooks.inc" Include file.
-	- Updated: "left4dhooks_silver.inc" Include file.
-	- Updated: "left4dhooks_stocks.inc" Include file.
-	- Updated: "left4dhooks.l4d1.txt" and "left4dhooks.l4d2.txt" GameData files.
 	- Plugins using these stocks should recompile their plugin if the relative stock mentioned above has been updated.
 
 1.87 (06-Feb-2022)
@@ -311,20 +313,12 @@
 
 	- L4D2: now dynamically generates the "CTerrorGameRules::IsRealism" signature to future proof against updates breaking the signature.
 
-	- Updated: Plugin.
-	- Updated: "left4dhooks.inc" Include file.
-	- Updated: "left4dhooks.l4d1.txt" and "left4dhooks.l4d2.txt" GameData files.
-
 1.86 (02-Feb-2022)
 	- Added forward "L4D_OnServerHibernationUpdate" to report when server hibernation status changes. Requested by ProjectSky".
 	- Added new weapon attribute. Requested by "A1m".
 		- L4D2FloatWeaponAttributes: "L4D2FWA_GainRange".
 
 	- Fixed broken signatures in L4D1 and L4D2 due to game updates.
-
-	- Updated: Plugin.
-	- Updated: "left4dhooks.inc" Include file.
-	- Updated: "left4dhooks.l4d1.txt" and "left4dhooks.l4d2.txt" GameData files.
 
 1.85 (10-Jan-2022)
 	- Fixed "L4D2IWA_Bucket", "L4D2IWA_Tier", "L4D2FWA_VerticalPunch" and "L4D2FWA_HorizontalPunch" not reading offsets. Thanks to "DarklSide" for reporting.
@@ -336,31 +330,18 @@
 	- Now using a random seed when using functions that randomly select players. Requested by "Mrs cheng".
 	- More error messages report the OS, game and plugin version.
 
-	- Updated: Plugin.
-	- Updated: "left4dhooks_silver.inc" Include file.
-
 1.83 (25-Dec-2021)
 	- Made error messages report the OS, game and plugin version.
 	- Wildcarded the "CDirector::RestartScenarioFromVote" signature for L4D1. Thanks to "Beatles" or reporting.
-
-	- Updated: Plugin.
-	- Updated: "left4dhooks.l4d1.txt" GameData file.
 
 1.82 (14-Dec-2021)
 	- Added new weapon attributes. Thanks to "iaNanaNana" for requesting and giving offsets.
 		- L4D2IntWeaponAttributes: "L4D2IWA_Bucket" (both games) and "L4D2IWA_Tier" (L4D2 only).
 		- L4D2FloatWeaponAttributes: "L4D2FWA_VerticalPunch" and "L4D2FWA_HorizontalPunch".
 
-	- Updated: Plugin.
-	- Updated: "left4dhooks.inc" Include file.
-	- Updated: "left4dhooks.l4d1.txt" and "left4dhooks.l4d2.txt" GameData files.
-
 1.81 (30-Nov-2021)
 	- Fixed forward "L4D_OnVomitedUpon" sometimes throwing errors about null pointer. Thanks to "Krufftys Killers" for reporting.
 	- Changed function "Local_GetRandomClient" in "left4dhooks_silver.inc" to be stock. Thanks to "A1m" for reporting.
-
-	- Updated: Plugin.
-	- Updated: "left4dhooks_silver.inc" Include file.
 
 1.80 (24-Nov-2021)
 	- Fixed forward "L4D_OnSpawnSpecial_Post" param error. Thanks to "fdxx" for reporting.
@@ -368,16 +349,9 @@
 1.79 (23-Nov-2021)
 	- Changed forward "L4D_OnSpawnSpecial_Post" prototype to remove the reference variable.
 
-	- Updated: Plugin and Test plugin.
-	- Updated: "left4dhooks.inc" Include file.
-
 1.78 (23-Nov-2021)
 	- Added forwards "L4D_OnSpawnSpecial_Post", "L4D_OnSpawnTank_Post", "L4D_OnSpawnWitch_Post" and "L4D2_OnSpawnWitchBride_Post". Requested by "A1m".
 	- Added stocks "GetAnyRandomClient", "GetRandomSurvivor" and "GetRandomInfected" to the "left4dhooks_silver.inc" include file.
-
-	- Updated: Plugin and Test plugin.
-	- Updated: "left4dhooks.l4d1" and "left4dhooks.l4d2" GameData files.
-	- Updated: "left4dhooks.inc" and "left4dhooks_silver.inc" Include files.
 
 1.77 (21-Nov-2021)
 	- Fixed not detouring some functions when only 1 detour was used instead of both pre and post. Thanks to "fdxx" for reporting.
@@ -415,13 +389,12 @@
 	- Added some new enums to the "left4dhooks_silver.inc" include file: "L4D_TEAM_*", "L4D_ZOMBIE_CLASS_*", "L4D2_ZOMBIE_CLASS_*" and "L4D_WEAPON_SLOT_*".
 	- Added new include file "left4dhooks_lux_library.inc" - various new stocks from "lux_library.inc". Thanks to "Lux" for the original file and allowing use.
 	- Added new include file "left4dhooks_silver.inc" - various new stocks. This will be updated over time to add new simple stock functions.
-	- Added new inclide file "left4dhooks_stocks.inc" - various new stocks from "l4d_stocks.inc". Thanks to "Mr. Zero" for the original files.
+	- Added new include file "left4dhooks_stocks.inc" - various new stocks from "l4d_stocks.inc". Thanks to "Mr. Zero" for the original files.
 	- This is also combined with the "l4d_weapon_stocks.inc" include file by "Mr. Zero".
 	- Only required to copy to the "scripting/include" directory when compiling, "left4dhooks.inc" will include these automatically.
 
 	- New GameData file "lux_library.txt" used for the "left4dhooks_lux_library.inc" include file. Thanks to "Lux" for providing these.
 
-	- Updated: Plugin, Test plugin, Include file.
 	- Added: New include files and GameData file.
 
 1.72 (10-Nov-2021)
@@ -477,8 +450,6 @@
 	- Changed forward "L4D2_CGasCan_EventKilled" params to show the inflictor and attacker.
 	- Thanks to "ProjectSky" for reminding me.
 
-	- Plugins and include file updated.
-
 1.64 (20-Oct-2021)
 	- Added 1 new forward to L4D1 and L4D2:
 		- "L4D_CBreakableProp_Break" - When a physics prop is broken.
@@ -499,7 +470,7 @@
 		- "L4D2IntWeaponAttributes" enums - ("L4D2IWA_Bullets", "L4D2IWA_Damage", "L4D2IWA_ClipSize")
 		- "L4D2FloatWeaponAttributes" enums - ("L4D2FWA_MaxPlayerSpeed", "L4D2FWA_SpreadPerShot", "L4D2FWA_MaxSpread", "L4D2FWA_Range", etc)
 
-	- Added new target filters:
+	- Added new target filters (requested by Tonblader):
 		"@deads" - Dead Survivors (all, bots)
 		"@deadsi" - Dead Special Infected (all, bots)
 		"@deadsp" - Dead Survivors players (no bots)
@@ -511,7 +482,7 @@
 		"@isb" - Incapped Survivor Only Bots
 		"@isp" - Incapped Survivor Only Players
 
-	- Changed target filter names:
+	- Changed target filter names (requested by Tonblader):
 		"@incappedsurvivorbot" to "@rincappedsurvivorbot"
 		"@isb" to "@risb"
 		"@survivorbot" to "@rsurvivorbot"
@@ -607,7 +578,6 @@
 
 1.55 (12-Sep-2021)
 	- Fixed native "L4D2Direct_TryOfferingTankBot" not working for L4D1 Linux due to the last update. Thanks to "Forgetest" for reporting.
-	- L4D1 gamedata file updated only.
 
 1.54 (12-Sep-2021)
 	- Big thanks to "Forgetest" and "HarryPotter" for helping fix and test this release.
@@ -654,7 +624,6 @@
 
 1.49 (13-Jul-2021)
 	- L4D2: Fixed the "SpawnTimer" offset being wrong. Thanks to "Forgetest" for reporting.
-	- L4D2: GameData file updated.
 
 1.48 (13-Jul-2021)
 	- Fixed "Param is not a pointer" in the "L4D_OnVomitedUpon" forward. Thanks to "ddd123" for reporting.
@@ -689,8 +658,6 @@
 
 	- Added missing "ACT_ITEM2_VM_LOWERED_TO_IDLE" to the "data/left4dhooks.l4d2.cfg" config.
 
-	- Updated: Plugin, Test plugin, Include file, GameData files and "data/left4dhooks.l4d2.cfg" config.
-
 1.42 (23-Jun-2021)
 	- L4D1 & L4D2 update:
 	- Added forward "L4D_OnVomitedUpon" when client is covered in vomit.
@@ -717,22 +684,18 @@
 		"L4D2_VScriptWrapper_NavAreaBuildPath"
 		"L4D2_VScriptWrapper_NavAreaTravelDistance" // Added as a demonstration and test, SDKCall is available, use "L4D2_NavAreaTravelDistance" instead.
 
-	- Updated: Plugin, Test plugin, GameData and Include file. Both L4D1 and L4D2.
 	- Thanks to "Eärendil" for showing me how to call some VScript functions.
 
 1.41 (18-Jun-2021)
 	- L4D2: Fixed "InvulnerabilityTimer" offset. Thanks to "Nuki" for helping.
-	- GameData .txt file updated.
 
 1.40 (16-Jun-2021)
 	- L4D2: Fixed various offsets breaking from "2.2.1.3" game update. Thanks to "Nuki" for reporting and helping.
-	- GameData .txt file updated.
 
 1.39 (16-Jun-2021)
 	- Changed command "sm_l4dd_detours" results displayed to be read easier.
 	- L4D2: Fixed signatures breaking from "2.2.1.3" game update. Thanks to "Psyk0tik" for fixing.
 	- L4D2: Fixed "VanillaModeOffset" in Linux breaking from "2.2.1.3" game update. Thanks to "Accelerator74" for fixing.
-	- GameData .txt file updated.
 
 1.38 (28-Apr-2021)
 	- Changed native "L4D2_IsReachable" to allow using team 2 and team 4.
@@ -747,11 +710,6 @@
 	- Restricted native "L4D2_IsReachable" client index to Survivor bots only. Attempts to find a valid bot otherwise it will throw an error. Thanks to "Forgetest" for reporting.
 	- Signatures compatibility with plugins detouring them. L4D1: "OnLedgeGrabbed", "OnRevived" and L4D2: "OnLedgeGrabbed". Thanks to "Dragokas" for providing.
 
-	- Updated: L4D1 GameData file.
-	- Updated: L4D2 GameData file.
-	- Updated: Plugin and Include file.
-	- Updated: Test plugin to reflect above changes.
-
 1.35 (10-Apr-2021)
 	- Fixed native "L4D_GetTeamScore" error message when using the wrong team values. Thanks to "BHaType" for reporting.
 	- Restricted native "L4D2_IsReachable" client index to bots only. Attempts to find a valid bot otherwise it will throw an error. Thanks to "Forgetest" for reporting.
@@ -760,11 +718,6 @@
 	- Added native "L4D_HasPlayerControlledZombies" to return if players can control infected. Thanks to "Spirit_12" for requesting.
 	- Thanks to "Psyk0tik" for the L4D1 signature.
 	- Fixed Linux detection accidentally being broken from version 1.17 update.
-
-	- Updated: L4D1 GameData file.
-	- Updated: L4D2 GameData file.
-	- Updated: Plugin and Include file.
-	- Updated: Test plugin to reflect above changes.
 
 1.33a (04-Mar-2021)
 	- L4D1 GameData updated. Changes fixing "L4D2_OnEntityShoved" were missing from the previous update.
@@ -800,9 +753,6 @@
 	- Fixed native "L4D_IsFirstMapInScenario" call with SDKCall_Raw returned error in SM 1.11, L4D1. Thanks to "Crasher" for reporting, and "Rostu" for help.
 	- Fixed "ForceNextStage" signature (WIN).
 
-	- Updated: L4D2 GameData file.
-	- Updated: Plugin.
-
 1.29 (10-Oct-2020)
 	- Fixed "L4D_StaggerPlayer" not working with NULL_VECTOR. Thanks to "Zippeli" for reporting.
 
@@ -818,8 +768,8 @@
 	- L4D2: Fixed the new target filters not working correctly, now matches by modelname for Survivors instead of character netprop.
 
 1.25 (01-Oct-2020)
-	- Added survivor specific target filters:	@nick, @rochelle, @coach, @ellis, @bill, @zoey, @francis, @louis
-	- Added special infected target filters:	@smokers, @boomers, @hunters, @spitters, @jockeys, @chargers
+	- Added survivor specific target filters: @nick, @rochelle, @coach, @ellis, @bill, @zoey, @francis, @louis
+	- Added special infected target filters: @smokers, @boomers, @hunters, @spitters, @jockeys, @chargers
 	- Changed native "L4D2_GetMeleeWeaponIndex" to return -1 instead of throwing an error, due to melee being unavailable.
 	- Fixed melee weapon IDs being incorrect depending on which are enabled. Thanks to "iaNanaNana" for reporting.
 	- Updated the "data/left4dhooks.l4d2.cfg" config with latest "ACT_*" animation numbers.
@@ -835,7 +785,6 @@
 
 1.23 (27-Sep-2020)
 	- Update by "ProdigySim" to fix Addons Eclipse. Thank you!
-	- Updated: L4D2 GameData file.
 
 1.22 (24-Sep-2020)
 	- Compatibility update for L4D2's "The Last Stand" update.
@@ -872,20 +821,12 @@
 	- Fixed native "L4D_GetHighestFlowSurvivor" throwing errors in 1.11. Thanks to "yuzumi" for reporting.
 	- Removed some useless "view_as" code. Might remove more in the future.
 
-	- Updated: L4D2 GameData file.
-	- Updated: Plugin and Include file.
-	- Updated: Test plugin to reflect above changes.
-
 1.16a (16-Jun-2020)
 	- Fixed using the wrong offset for "m_PendingMobCount". Thanks to "fbef0102" for reporting.
-	- Updated: GameData file for L4D2 Linux only.
 
 1.16 (05-Jun-2020)
 	- Added native "L4D_LobbyUnreserve" finally, to support "Remove Lobby Reservation (When Full)" plugin.
 	- Huge thanks to "GAMMACASE" and "Deathreus" for helping figure why the native was crashing.
-
-	- Updated: L4D1 GameData file.
-	- Updated: Plugin and Include file.
 
 1.15 (15-May-2020)
 	- Added a valid entity check for "L4D2_OnFindScavengeItem" due to so many plugins passing bad entities and throwing errors.
@@ -903,17 +844,11 @@
 	- Fixed "L4D_OnTryOfferingTankBot" not returning a valid client index.
 	- Thanks to "Mis" for requesting changes and reporting bugs.
 
-	- Updated: Plugin and Include file.
-	- Updated: Test plugin to reflect above changes.
-
 1.13 (05-May-2020)
 	- Added better error log message when gamedata file is missing.
 	- Fixed "L4D2_OnEntityShoved" not detecting the last client. Thanks to "Addie" for reporting.
 	- Made all natives optional from the include file. Thanks to "Psyk0tik" for requesting.
 	- Optional natives can be set by plugins with "#undef REQUIRE_PLUGIN" before "#include <left4dhooks>" and "#define REQUIRE_PLUGIN" after.
-
-	- Updated: Plugin and Include file.
-	- Updated: Test plugin to reflect above changes.
 
 1.12 (09-Apr-2020)
 	- Added commands "sm_l4dd_detours" and "sm_l4dd_reload" as wrappers to "sm_l4dhooks_detours" and "sm_l4dhooks_reload".
@@ -926,9 +861,6 @@
 	- Optimized native "L4D2_GetVScriptOutput" to reuse the same entity for multiple calls in the same frame.
 	- Maximum native "L4D2_GetVScriptOutput" code allowed seems to be 1006 characters.
 
-	- Updated: Plugin, Include and GameData files.
-	- Updated: Test plugin to reflect above changes.
-
 1.10 (14-Mar-2020)
 	- Added natives (L4D1 & L4D2): "L4D_IsAnySurvivorInStartArea", "L4D_IsInFirstCheckpoint" and "L4D_IsInLastCheckpoint".
 	- Added native (L4D2 only): "L4D2_GetCurrentFinaleStage".
@@ -936,9 +868,6 @@
 
 	- Fixed missing "L4D2IWA_ClipSize" offset. Now this works: L4D2_SetIntWeaponAttribute("weapon_rifle", L4D2IWA_ClipSize, 100);
 	- See include for details.
-
-	- Updated: Plugin, Include and GameData files.
-	- Updated: Test plugin to reflect above changes.
 
 1.9 (10-Mar-2020)
 	- Added native (L4D2 only): "L4D2_GetVScriptOutput" to execute VScript code and get return data.
@@ -949,24 +878,16 @@
 	- See the "NATIVES - Silvers" section inside the include file for details.
 	- Thanks to "Nuki" for requesting.
 
-	- Updated: Plugin, Include and GameData files.
-	- Updated: Test plugin to reflect above changes.
-
 1.8 (08-Mar-2020)
 	- Added AutoExecConfig to generate a cvars config saved to "cfgs/sourcemod/left4dhooks.cfg".
 	- Loads signatures in "OnPluginStart" except "g_pGameRules" which can only load in "OnMapStart".
 	- Thanks to "Accelerator74" for requesting and testing.
 	- Fixed some wrong return types in the include file.
 
-	- Updated: Plugin and Include file.
-
 1.7 (04-Mar-2020)
 	- Added natives "L4D_GetNearestNavArea" and "L4D_FindRandomSpot" to get a random spawn position.
 	- Fixed native "L4D2Direct_GetFlowDistance" sometimes causing server crashes.
 	- Fixed natives "L4D_IsFirstMapInScenario" and "L4D_IsMissionFinalMap" sometimes returning incorrect values. Thanks to "Accelerator74".
-
-	- Updated: Plugin, Include and GameData files.
-	- Updated: Test plugin to reflect above changes.
 
 1.6 (02-Mar-2020)
 	- Fixed the animation hook throwing an "Exception reported: Client is not connected" error.
@@ -993,9 +914,6 @@
 	- Fixed native "L4D_CreateRescuableSurvivors" from not working. Now spawns all dead survivors into rescuable rooms.
 	- Removed "L4D_OnGetRandomPZSpawnPosition" forward due to spawning specials at 0,0,0 when modifying any value.
 
-	- Updated: Plugin, Include and GameData files.
-	- Updated: Test plugin to reflect above changes.
-
 1.4 (28-Feb-2020)
 	- AnimHooks no longer affect the same client index if the previous user disconnected and someone else connected.
 	- Clarified AnimHooks details in the include file. All AnimHooks are removed on map change.
@@ -1012,9 +930,6 @@
 	- Existing plugins using "L4D2_OnSelectTankAttack" no longer need to change anything.
 	- Existing plugins with the new "AnimHook" hook can now use normal model "m_nSequence" sequence numbers in the post hook.
 	- Thanks to "Accelerator74" for reporting the fix.
-
-	- Updated: Plugin, Include and GameData files.
-	- Updated: Test plugin to demonstrate each change.
 
 1.2 (27-Feb-2020)
 	- Wildcarded the following signatures to be compatible with 3rd party plugin detours:
@@ -1035,8 +950,6 @@
 	- Fixed not forwarding some Director Variables that were initialized too early. Thanks to "hoanganh81097" for reporting.
 	- Thanks to "Spirit_12" for ideas with the Director Variables fix.
 	- Removed unused actions from some forwards.
-
-	- Updated: Plugin, Include and GameData files.
 
 1.0 (24-Feb-2020)
 	- Initial release.

@@ -59,11 +59,26 @@
 			"L4DD::CTankRock::OnRelease"
 			{
 				"signature"		"CTankRock::OnRelease"
-				"callconv"		"thiscall"
+				"linux"
+				{
+					"callconv"	"cdecl"
+				}
+				"windows"
+				{
+					"callconv"	"stdcall"
+				}
 				"return"		"void"
-				"this"			"entity"
+				"this"			"ignore"
 				"arguments"
 				{
+					"pThis"
+					{
+						"type"		"cbaseentity"
+						"windows"
+						{
+							"register"	"ecx"
+						}
+					}
 					"vec"
 					{
 						"type"		"vectorptr"
@@ -128,6 +143,29 @@
 				}
 			}
 
+			"L4DD::CTerrorPlayer::OnSlammedSurvivor"
+			{
+				"signature"		"CTerrorPlayer::OnSlammedSurvivor"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
+				"arguments"
+				{
+					"pVictim"
+					{
+						"type"	"cbaseentity"
+					}
+					"bWallSlam"
+					{
+						"type"	"bool"
+					}
+					"bDeadlyCharge"
+					{
+						"type"	"bool"
+					}
+				}
+			}
+
 			"L4DD::CTerrorPlayer::QueuePummelVictim"
 			{
 				"signature"		"CTerrorPlayer::QueuePummelVictim"
@@ -170,6 +208,29 @@
 					"damage"
 					{
 						"type"		"bool"
+					}
+				}
+			}
+
+			"L4DD::CTerrorPlayer::CancelStagger"
+			{
+				"signature"		"CTerrorPlayer::CancelStagger"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
+			}
+
+			"L4DD::CTerrorPlayer::IsMotionControlledXY"
+			{
+				"signature"		"CTerrorPlayer::IsMotionControlledXY"
+				"callconv"		"thiscall"
+				"return"		"bool"
+				"this"			"entity"
+				"arguments"
+				{
+					"activity"
+					{
+						"type"		"int"
 					}
 				}
 			}
@@ -606,26 +667,26 @@
 				"this"			"ignore"
 				"arguments"
 				{
-                    "ret"
-                    {
-                        "type"    "vectorptr"
-                    }
+					"ret"
+					{
+						"type"	"vectorptr"
+					}
 					"a2"
 					{
 						"type"	"charptr"
 					}
-                    "a3"
-                    {
-                        "type"    "float"
-                    }
-                    "a4"
-                    {
-                        "type"    "float"
-                    }
-                    "a5"
-                    {
-                        "type"    "float"
-                    }
+					"a3"
+					{
+						"type"	"float"
+					}
+					"a4"
+					{
+						"type"	"float"
+					}
+					"a5"
+					{
+						"type"	"float"
+					}
 				}
 			}
 
@@ -656,11 +717,34 @@
 				}
 			}
 
+			"CSquirrelVM::GetValue"
+			{
+				"offset"		"CSquirrelVM::GetValue"
+				"hooktype"		"raw"
+				"return"		"bool"
+				"this"			"ignore"
+				"arguments"
+				{
+					"hScope"
+					{
+						"type"	"int"
+					}
+					"pszKey"
+					{
+						"type"	"charptr"
+					}
+					"pValue"
+					{
+						"type"	"objectptr"
+					}
+				}
+			}
+
 			"L4DD::CTerrorGameRules::HasConfigurableDifficultySetting"
 			{
 				"signature"		"CTerrorGameRules::HasConfigurableDifficultySetting"
 				"callconv"		"thiscall"
-				"return"		"int"
+				"return"		"bool"
 				"this"			"ignore"
 			}
 
@@ -1503,6 +1587,20 @@
 				"read" "0"
 			}
 
+			"L4DD::ScriptVM"
+			{
+				"windows"
+				{
+					"signature" "CDirector::GetScriptValueFloat"
+					"read" "19"
+				}
+				"linux"
+				{
+					"signature" "g_pScriptVM"
+				}
+				"read" "0"
+			}
+
 			"VanillaModeAddress"
 			{
 				"windows"
@@ -1538,6 +1636,18 @@
 				"linux"
 				{
 					"signature" "CDirector::ForceNextStage"
+				}
+			}
+
+			"CTerrorPlayer::CanBecomeGhost::Address"
+			{
+				"windows"
+				{
+					"signature" "CTerrorPlayer::CanBecomeGhost"
+				}
+				"linux"
+				{
+					"signature" "CTerrorPlayer::CanBecomeGhost"
 				}
 			}
 
@@ -1697,13 +1807,25 @@
 				"linux"		"1400"
 			}
 
-			/* Offset into CTerrorPlayer
-			 * Is this right? How do we find it?
-			 */
+			"CSquirrelVM::GetValue"
+			{
+				"windows"	"37"
+				"linux"		"36"
+			}
+
+			// Can be found in "CTerrorPlayer::SetBecomeGhostAt": *((float *)this + 2816) = s2;
+			// 2816 * 4 - 8
 			"SpawnTimer"
 			{
-				"windows"	"11308"
+				"windows"	"11276"
 				"linux"		"11256"
+			}
+
+			// Can be found from "CDirector::GetScriptScope(CDirector::ScriptLevels_t)"
+			"m_iszScriptId"
+			{
+				"windows"	"968"
+				"linux"		"968"
 			}
 
 			"m_rescueCheckTimer"
@@ -1716,6 +1838,22 @@
 			{
 				"windows"	"528"
 				"linux"		"528"
+			}
+
+			"CTerrorPlayer::CanBecomeGhost::Offset"
+			{
+				"windows"	"2375"
+				"linux"		"1585"
+			}
+			"CTerrorPlayer::CanBecomeGhost::Bytes"
+			{
+				"windows"	"232" // 0xE8
+				"linux"		"232" // 0xE8
+			}
+			"CTerrorPlayer::CanBecomeGhost::Count"
+			{
+				"windows"	"5"
+				"linux"		"5"
 			}
 
 			"MobSpawnTimer"
@@ -1986,6 +2124,11 @@
 				"windows"	"352"
 				"linux"		"352"
 			}
+			"L4D2IntWeapon_DefaultSize"
+			{
+				"windows"	"360"
+				"linux"		"360"
+			}
 			"L4D2IntWeapon_Bucket"
 			{
 				"windows"	"344"
@@ -2230,6 +2373,18 @@
 				/* 56 57 8B ? F3 ? ? ? ? ? ? ? 0F ? ? ? ? ? ? 8D ? ? ? ? ? 9F F6 ? ? 7B ? 8B ? ? 8B ? 8D ? ? 56 FF ? F3 ? ? ? ? ? ? ? F3 ? ? ? 8B ? 6A */
 				/* Search: "PlayerVomitExpired" */
 				// Search: "Spitter projectile spawned at %f %f %f, velocity %f %f %f"
+			}
+
+			/*
+			 * CBaseEntity::WorldSpaceCenter(CBaseEntity *this)
+			 */
+			"CBaseEntity::WorldSpaceCenter"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK11CBaseEntity16WorldSpaceCenterEv"
+				"windows"	"\x56\x57\x8D\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\xF3"
+				/* 56 57 8D ? ? ? ? ? E8 ? ? ? ? 8B ? E8 ? ? ? ? F3 */
+				/* Search: "%sCallChain <- CSimpleCallChainer(\"%s\", self.GetScriptScope().weakref(), true)" use VTable to count up (about 38 entries). */
 			}
 
 			/*
@@ -2568,6 +2723,24 @@
 				/* Search "Couldn't find a %s Spawn position in %d tries\n", some calls below */
 			}
 
+			/**
+			* IsVisibleToPlayer(Vector const&, CBasePlayer *, int, int, float, CBaseEntity const*, TerrorNavArea **, bool *)
+			*
+			* Thanks Psyk0tik help
+			* How to find on Windows:
+			* 1. Search for the "Tank/Witch threat spawn: No non-visible valid areas between threat area and goal area! Choosing random area.\n" string.
+			* 2. The string can only be found in "CDirector::OnThreatEncountered".
+			* 3. The function "CDirector::OnThreatEncountered" calls "CDirectorTacticalServices::IsSpawnLocationVisibleToTeam" with the values "2" and "3" passed to it.
+			* 4. The last function call in "CDirectorTacticalServices::IsSpawnLocationVisibleToTeam" should be this function.
+			**/
+			"IsVisibleToPlayer"
+			{
+				"library"	"server"
+				"linux"		"@_Z17IsVisibleToPlayerRK6VectorP11CBasePlayeriifPK11CBaseEntityPP13TerrorNavAreaPb"
+				"windows"	"\x55\x8B\x2A\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x8B\x2A\x2A\x8B\x2A\x2A\x53\x8B\x2A\x2A\x56\x8B\x2A\x2A\xC6"
+				/* 55 8B ? 81 EC ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 8B ? ? 8B ? ? 53 8B ? ? 56 8B ? ? C6 */
+			}
+
 			/*
 			*  CDirector::HasAnySurvivorLeftSafeArea(CDirector *this)
 			*/
@@ -2662,6 +2835,18 @@
 				"windows"	"\x55\x8B\x2A\x51\x8D\x2A\x2A\x50\x66\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8A\x2A\x2A\x83"
 				/* 55 8B ? 51 8D ? ? 50 66 ? ? ? ? ? E8 ? ? ? ? 8A ? ? 83 */
 				/* Search "tank_frustrated", below "HasAnySurvivorLeftSafeArea" call */
+			}
+
+			/*
+			 * CDirector::AreAllSurvivorsInFinaleArea(CDirector *__hidden this)
+			 */
+			"CDirector::AreAllSurvivorsInFinaleArea"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK9CDirector27AreAllSurvivorsInFinaleAreaEv"
+				"windows"	"\x55\x8B\x2A\x51\x8D\x2A\x2A\x50\x66\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x8B"
+				/* 55 8B ? 51 8D ? ? 50 66 ? ? ? ? ? E8 ? ? ? ? 83 ? ? 8B */
+				/* Search "AreAllSurvivorsInFinaleArea" target call is below */
 			}
 
 			/*
@@ -2993,8 +3178,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CDirector14GetScriptValueEPKci"
-				"windows"	"\x55\x8B\xEC\x8B\x81\x2A\x2A\x2A\x2A\x83\xEC\x10\x83\xF8\xFF\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x45\x2A\x8B"
-				/* 55 8B EC 8B 81 ? ? ? ? 83 EC 10 83 F8 FF ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? 8B 45 ? 8B */
+				"windows"	"\x55\x8B\xEC\x8B\x81\x2A\x2A\x2A\x2A\x83\xEC\x10\x83\xF8\xFF\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x8B\x2A\x5D"
+				/* 55 8B EC 8B 81 ? ? ? ? 83 EC 10 83 F8 FF ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? 8B ? ? 8B ? 5D */
 			}
 
 			/*
@@ -3031,6 +3216,13 @@
 				"linux"		"@_ZN9CDirector14GetScriptValueEPKcS1_Pci"
 				"windows"	"\x55\x8B\xEC\x8B\x81\x2A\x2A\x2A\x2A\x83\xEC\x2A\x56\x8B"
 				/* 55 8B EC 8B 81 ? ? ? ? 83 EC ? 56 8B */
+			}
+
+			// The g_pScriptVM pointer
+			"g_pScriptVM"
+			{
+				"library"	"server"
+				"linux"		"@g_pScriptVM"
 			}
 
 			/*
@@ -3854,6 +4046,19 @@
 			}
 
 			/*
+			 * CTerrorPlayer::SetBecomeGhostAt(CTerrorPlayer *this, float s2)
+			 * unique string "ghost_spawn_time"
+			 */
+			"CTerrorPlayer::SetBecomeGhostAt"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer16SetBecomeGhostAtEf"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x56\x6A\x2A\x68\x2A\x2A\x2A\x2A\x8B\x2A\x68\x2A\x2A\x2A\x2A\xF3"
+				/* ? ? ? ? ? ? ? ? 56 6A ? 68 ? ? ? ? 8B ? 68 ? ? ? ? F3 */
+				/* Search: "ghost_spawn_time" target is called is above */
+			}
+
+			/*
 			 * CTerrorPlayer::CanBecomeGhost(bool areSpawnsDisabled)
 			 * unique string "ghost_spawn_time"
 			 */
@@ -3861,8 +4066,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer14CanBecomeGhostEb"
-				"windows"	"\x53\x8B\xDC\x83\xEC\x08\x83\xE4\xF0\x83\xC4\x04\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x83\xEC\x78\x56\x57\x8B\xF1"
-				/* 53 8B DC 83 EC ? 83 E4 F0 83 C4 ? 55 8B 6B 04 89 6C 24 ? 8B EC 83 EC 78 56 57 8B F1 */
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\xE4\xF0\x83\xC4\x04\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x83\xEC\x78\x56\x57\x8B\xF1"
+				/* ? ? ? ? ? ? 83 E4 F0 83 C4 ? 55 8B 6B 04 89 6C 24 ? 8B EC 83 EC 78 56 57 8B F1 */
 			}
 
 			/*
@@ -3964,10 +4169,22 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer13CancelStaggerEv"
-				"windows"	"\x56\x8B\x2A\xF3\x2A\x2A\x2A\x0C\x2A\x2A\x2A\x0F\x2A\x2A\x2A\x2A\x2A\x2A\x57"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x0C\x2A\x2A\x2A\x0F\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8D"
 				/* Sig may break, using offsets to make unique */
-				/* 56 8B ? F3 ? ? ? 0C ? ? ? 0F ? ? ? ? ? ? 57 */
+				/* ? ? ? ? ? ? ? 0C ? ? ? 0F ? ? ? ? ? ? 57 8D */
 				/* Search "SurvivorWasPounced" - few calls above. */ // Found by "SilverShot" updated by "Crasher_3637".
+			}
+
+			/*
+			 * CTerrorPlayer::IsMotionControlledXY(Activity)const
+			 */
+			"CTerrorPlayer::IsMotionControlledXY"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK13CTerrorPlayer20IsMotionControlledXYE8Activity"
+				"windows"	"\x55\x8B\x2A\x8B\x2A\x2A\x05\x2A\x2A\x2A\x2A\x3D\x2A\x2A\x2A\x2A\x77"
+				/* 55 8B ? 8B ? ? 05 ? ? ? ? 3D ? ? ? ? 77 */
+				/* Search "Motion controlled animation" - few calls above. */ // Found by "SilverShot"
 			}
 
 			/*
@@ -3980,6 +4197,15 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x6A\x00\x6A\x00\x68\x2A\x2A\x2A\x2A\xFF\x2A\x8B\x2A\x85\x2A\x74\x2A\x8B\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x50\x8B\x2A\x2A\xFF\x2A\x8B\x2A\x50\x8B\x2A\x2A\x68\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x8B\x2A\x2A\x8B"
 				/* ? ? ? ? ? ? 8B ? 8B ? ? ? ? ? 8B ? 8B ? ? 6A 00 6A 00 68 ? ? ? ? FF ? 8B ? 85 ? 74 ? 8B ? ? 8B ? ? ? ? ? 8B ? 50 8B ? ? FF ? 8B ? 50 8B ? ? 68 ? ? ? ? 8B ? FF ? 8B ? ? 8B */
 				/* Search: "charger_carry_start" */ // Found by "SilverShot".
+			}
+
+			"CTerrorPlayer::OnSlammedSurvivor"
+			{
+				"library"		"server"
+				"linux"			"@_ZN13CTerrorPlayer17OnSlammedSurvivorEPS_bb"
+				"windows"		"\x2A\x2A\x2A\x2A\x2A\x2A\xD9\xEE\x56\x57\x6A\x00\x51\xD9\x2A\x24\x68\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\xF3\x0F"
+				/* ? ? ? ? ? ? D9 EE 56 57 6A 00 51 D9 ? 24 68 ? ? ? ? 8B ? E8 ? ? ? ? F3 0F */
+				/* Search "ChargerZombie.ImpactHard" */ // Found by "Forgetest"
 			}
 
 			/*
@@ -4104,6 +4330,18 @@
 				"linux"		"@_ZN13CTerrorPlayer10CullZombieEv"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x56\x8B\xF1\x8B\x0D\x2A\x2A\x2A\x2A\x57\x56\xE8"
 				/* 55 8B EC 83 EC ? 56 8B F1 8B 0D ? ? ? ? 57 56 E8 */
+			}
+
+			/*
+			* CTerrorPlayer::CleanupPlayerState(CTerrorPlayer *this)
+			*/
+			"CTerrorPlayer::CleanupPlayerState"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer18CleanupPlayerStateEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x0F\x2A\x2A\x83\x2A\x2A\x56\x8B\x2A\xC7"
+				/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 0F ? ? 83 ? ? 56 8B ? C7 */
+				/* Search "Tongue letting go on death." the function with "Player.Heartbeat" at the bottom */
 			}
 
 			/*
@@ -4273,18 +4511,6 @@
 
 
 			// UNUSED / BROKEN
-
-			/*
-			 * CTerrorPlayer::OnSlammedSurvivor(CTerrorPlayer*, bool, bool) - Charger hit Survivor function call
-			 */
-			"CTerrorPlayer::OnSlammedSurvivor"
-			{
-				"library"	"server"
-				"linux"		"@_ZN13CTerrorPlayer17OnSlammedSurvivorEPS_bb"
-				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\xD9\x2A\x56\x57\x6A\x2A\x51\xD9\x2A\x2A\x68\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\xF3"
-				/* 55 8B ? 83 ? ? D9 ? 56 57 6A ? 51 D9 ? ? 68 ? ? ? ? 8B ? E8 ? ? ? ? F3 */ // Found by "SilverShot".
-				/* Search "ChargerZombie.ImpactHard" */
-			}
 
 			/*
 			 * CTerrorGameRules::ClearScavengeScores(bool)
