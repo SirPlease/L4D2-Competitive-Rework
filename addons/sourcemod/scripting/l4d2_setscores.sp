@@ -190,7 +190,7 @@ void StartScoreVote(const int survScore, const int infectScore, const int initia
 void SetScores(const int survScore, const int infectScore, const int iAdminIndex)
 {
 	//Determine which teams are which
-	bool bFlipped = L4D2_AreTeamsFlipped();
+	bool bFlipped = !!GameRules_GetProp("m_bAreTeamsFlipped");
 	int SurvivorTeamIndex = bFlipped ? 1 : 0;
 	int InfectedTeamIndex = bFlipped ? 0 : 1;
 	
