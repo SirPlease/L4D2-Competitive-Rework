@@ -240,6 +240,39 @@
 					"signature"	"SpamPatch_Sig21"
 				}
 			}
+			"SpamPatch_Sig22"
+			{
+				"windows"
+				{
+					"signature"	"SpamPatch_Sig22"
+				}
+				"linux"
+				{
+					"signature"	"SpamPatch_Sig22"
+				}
+			}
+			"SpamPatch_Sig23"
+			{
+				"windows"
+				{
+					"signature"	"SpamPatch_Sig23"
+				}
+				"linux"
+				{
+					"signature"	"SpamPatch_Sig23"
+				}
+			}
+			"SpamPatch_Sig24"
+			{
+				"windows"
+				{
+					"signature"	"SpamPatch_Sig24"
+				}
+				"linux"
+				{
+					"signature"	"SpamPatch_Sig24"
+				}
+			}
 		}
 		"Signatures"
 		{
@@ -324,14 +357,14 @@
 			"SpamPatch_Sig14"
 			{
 				"library"		"server"
-				"windows"		">>>REMATCH Stats"
-				"linux"			">>>REMATCH Stats"
+				"windows"		">>>REMATCH Stats START\n"
+				"linux"			">>>REMATCH Stats START\n"
 			}
 			"SpamPatch_Sig15"
 			{
 				"library"		"server"
-				"windows"		">>REMATCH Stats"
-				"linux"			">>REMATCH Stats"
+				"windows"		">>>>REMATCH Stats END\n"
+				"linux"			">>>>REMATCH Stats END\n"
 			}
 			"SpamPatch_Sig16"
 			{
@@ -368,6 +401,24 @@
 				"library" 		"engine"
 				"windows"		"Entity %d (class '%s') reported ENTITY_CHANGE_NONE but '%s' changed."
 				"linux"			"Entity %d (class '%s') reported ENTITY_CHANGE_NONE but '%s' changed."
+			}
+			"SpamPatch_Sig22"
+			{
+				"library" 		"server"
+				"windows"		"Spitter %d mover is STUCK"
+				"linux"			"Spitter %d mover is STUCK"
+			}
+			"SpamPatch_Sig23"
+			{
+				"library" 		"server"
+				"windows"		"SURVIVORBOT (%s, [%f %f %f]) will not help incap (%s,[%f %f %f]): UNREACHABLE via NAV"
+				"linux"			"SURVIVORBOT (%s, [%f %f %f]) will not help incap (%s,[%f %f %f]): UNREACHABLE via NAV"
+			}
+			"SpamPatch_Sig24"
+			{
+				"library" 		"engine"
+				"windows"		"Can't call GetGuidForLastSoundEmitted from server\n"
+				"linux"			"Can't call GetGuidForLastSoundEmitted from server\n"
 			}
 		}
 	}
