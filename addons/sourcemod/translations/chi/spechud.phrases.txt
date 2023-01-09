@@ -1,0 +1,34 @@
+"Phrases"
+{
+	"on"
+	{
+		"chi"		"{blue}开启{default}"
+	}
+	
+	"off"
+	{
+		"chi"		"{red}关闭{default}"
+	}
+	
+	"Notify_SpechudState"
+	{
+		"#format"	"{1:t}"
+		"chi"		"<{olive}HUD{default}> 旁观面板已 {1}"
+	}
+	
+	"Notify_TankhudState"
+	{
+		"#format"	"{1:t}"
+		"chi"		"<{olive}HUD{default}> 坦克HUD现在为 {1}"
+	}
+	
+	"Notify_SpechudUsage"
+	{
+		"chi"		"<{olive}HUD{default}> 聊天输入 {green}!spechud{default} 切换 {blue}旁观面板开关"
+	}
+	
+	"Notify_TankhudUsage"
+	{
+		"chi"		"<{olive}HUD{default}> 聊天输入 {green}!tankhud{default} 切换 {red}Tank 面板开关"
+	}
+}
