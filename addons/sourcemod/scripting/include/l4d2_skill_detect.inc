@@ -8,11 +8,24 @@
  */
 enum CarAlarmTriggerReason
 {
-	CarAlarmTrigger_Unknown,
-	CarAlarmTrigger_Hit,
-	CarAlarmTrigger_Touched,
-	CarAlarmTrigger_Explosion,
-	CarAlarmTrigger_Boomer
+	CarAlarmTrigger_Unknown	  = 0,
+	CarAlarmTrigger_Hit		  = 1,
+	CarAlarmTrigger_Touched	  = 2,
+	CarAlarmTrigger_Explosion = 3,
+	CarAlarmTrigger_Boomer	  = 4,
+
+	CarAlarmTrigger_Size	  = 5
+};
+
+/**
+ *  CarAlarmTriggerReason: the name of the 'reason' in OnCarAlarmTriggered() forward
+ */
+char sCarAlarmTriggerReason[CarAlarmTrigger_Size][] = {
+	"unknown",
+	"hit",
+	"touched",
+	"explosion",
+	"boomer"
 };
 
 /**
@@ -66,7 +79,7 @@ forward void OnSkeetHurt(int survivor, int hunter, int damage, bool isOverkill);
  *  @param  int     hunter      the infected client that underwent it
  *  @param  int     damage      damage done in the killing hit
  *  @param  bool    isOverKill  true if it would've been a skeet if the hunter hadn't been chipped
- */  
+ */
 forward void OnSkeetMeleeHurt(int survivor, int hunter, int damage, bool isOverkill);
 
 /**
@@ -77,7 +90,7 @@ forward void OnSkeetMeleeHurt(int survivor, int hunter, int damage, bool isOverk
  *  @param  int     hunter      the infected client that underwent it
  *  @param  int     damage      damage done in the killing hit
  *  @param  bool    isOverKill  true if it would've been a skeet if the hunter hadn't been chipped
- */  
+ */
 forward void OnSkeetSniperHurt(int survivor, int hunter, int damage, bool isOverkill);
 
 /**
@@ -85,7 +98,7 @@ forward void OnSkeetSniperHurt(int survivor, int hunter, int damage, bool isOver
  *
  *  @param  int     survivor    the survivor client that performed the feat
  *  @param  int     hunter      the infected client that underwent it
- */  
+ */
 forward void OnHunterDeadstop(int survivor, int hunter);
 
 /**
@@ -96,9 +109,9 @@ forward void OnHunterDeadstop(int survivor, int hunter);
  *  @param  int     boomer      the infected client that got popped
  *  @param  int     shoveCount  the amount of times the boomer got shoved, if any
  *  @param  Float   timeAlive   the time, in seconds, that the boomer lived
- */  
+ */
 forward void OnBoomerPop(int survivor, int boomer, int shoveCount, float timeAlive);
-  
+
 /**
  *  Called whenever a charger is fully melee-leveled (no chip).
  *  This is also called when the melee hit would've leveled if not chipped!
@@ -190,22 +203,22 @@ forward void OnHunterHighPounce(int hunter, int survivor, int actualDamage, floa
 
 /**
  *  Called whenever a jockey lands a high-pounce on a survivor.
- * 
+ *
  *  Note: due to the nature of the tracking, it only gets the height right if a jockey actually
  *  jumped or pounced from his perch. If they simple walk off and land, it may be incorrect.
  *
- *  @param  int     jockey          the infected client that performed the feat
  *  @param  int     survivor        the survivor client that underwent it
+ *  @param  int     jockey          the infected client that performed the feat
  *  @param  Float   height          the vertical distance between the pounce origin and its landing
  *  @param  bool    reportedHigh    whether skill_detect considers it a high pounce for reporting purposes
  */
-forward void OnJockeyHighPounce(int jockey, int victim, float height, bool reportedHigh);
+forward void OnJockeyHighPounce(int survivor, int jockey, float height, bool reportedHigh);
 
 /**
  *  Called whenever a charger lands a death-charge on a survivor.
  *  This is called for killing the grabbed survivor, but also the ones that get impact-bumped
  *  and fall to their deaths.
- * 
+ *
  *  Note: due to the nature of the tracking, there may be places that are technically death-
  *  charge spots, but not detected by the plugin. Example: the sidewalk next to the fence near
  *  the lower roof on Dead Air 1; the Death Toll 4 out-of-map deathcharge near the start
@@ -221,12 +234,12 @@ forward void OnDeathCharge(int charger, int survivor, float height, float distan
 
 /**
  *  Called whenever a survivor clears a teammate from a special infected pin.
- * 
+ *
  *  Note: timeB is only appliccable for smokers and chargers. For smokers it shows the
  *  time from the tongue connecting to the clear. For chargers from the charge-grab to
  *  the clear. For jockeys and hunters, timeB will always be -1.0.
  *
- *  timeA is the time, for charger, from start of pummeling till clear (-1.0 if they 
+ *  timeA is the time, for charger, from start of pummeling till clear (-1.0 if they
  *  never started pummeling). For smokers, this is the time from the survivor being
  *  fully reigned in to the smoker (-1.0 if the tongue was broken before that).
  *
@@ -279,8 +292,7 @@ forward void OnBunnyHopStreak(int survivor, int streak, float maxVelocity);
  */
 forward void OnCarAlarmTriggered(int survivor, int infected, CarAlarmTriggerReason reason);
 
-public SharedPlugin __pl_skilldetect =
-{
+public SharedPlugin __pl_skilldetect = {
 	name = "skill_detect",
 	file = "l4d2_skill_detect.smx",
 #if defined REQUIRE_PLUGIN
