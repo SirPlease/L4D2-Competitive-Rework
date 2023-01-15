@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "3.0"
+#define PLUGIN_VERSION "3.1"
 
 public Plugin myinfo = 
 {
@@ -165,7 +165,7 @@ void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
 		return;
 	
 	int client = GetClientOfUserId(event.GetInt("player"));
-	if (client && !IsFakeClient(client) && GetClientTeam(client) == 3)
+	if (client && IsClientInGame(client) && GetClientTeam(client) == 3)
 	{
 		QueuePlayerSI(client);
 	}
@@ -177,7 +177,7 @@ void Event_PlayerBotReplace(Event event, const char[] name, bool dontBroadcast)
 		return;
 	
 	int client = GetClientOfUserId(event.GetInt("player"));
-	if (client && !IsFakeClient(client) && GetClientTeam(client) == 3)
+	if (client && IsClientInGame(client) && GetClientTeam(client) == 3)
 	{
 		QueuePlayerSI(client);
 	}
