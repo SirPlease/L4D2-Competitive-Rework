@@ -1,4 +1,4 @@
-#define PLUGIN_VERSION 		"3.0"
+#define PLUGIN_VERSION 		"4.2"
 
 /*
 *	Ladder Rambos Dhooks
@@ -50,6 +50,7 @@ ConVar	Cvar_M2;
 ConVar	Cvar_Reload;
 ConVar	Cvar_SgReload;
 ConVar	Cvar_Switch;
+ConVar	Cvar_Recoil;
 
 // ConVar Storage
 bool	bCvar_Enabled;
@@ -57,6 +58,12 @@ bool	bCvar_M2;
 bool	bCvar_Reload;
 bool	bCvar_SgReload;
 int		iCvar_Switch;
+bool	bCvar_Recoil;
+
+// Detour Handles
+Handle hDetour_CanDeployFor;
+Handle hDetour_Reload;
+Handle hDetour_ShotgunReload;
 
 // Patching from [l4d2_cs_ladders] credit to Lux
 #define PLUGIN_NAME_KEY "[cs_ladders]"
@@ -79,6 +86,10 @@ Handle hSDKCall_Holster;
 
 // Temp storage for shove time
 float fSavedShoveTime[MAXPLAYERS+1];
+
+// Temp storage for block unwanted deploy
+bool bLadderMounted[MAXPLAYERS+1];
+bool bBlockDeploy[MAXPLAYERS+1];
 
 // ====================================================================================================
 // myinfo - Basic plugin information
@@ -131,10 +142,17 @@ public void OnPluginStart()
 	Cvar_Switch		= CreateConVar(
 								"cssladders_allow_switch",
 								"1",
-								"Allow switching to other inventory whilst on a ladder?" ...
+								"Allow switching to other inventory whilst on a ladder?\n" ...
 								"2 to allow all, 1 to allow only between guns, 0 to block.",
 								FCVAR_NOTIFY|FCVAR_SPONLY,
 								true, 0.0, true, 2.0);
+	Cvar_Recoil		= CreateConVar(
+								"cssladders_reduce_recoil",
+								"0",
+								"Allow reducing recoil whilst shooting on a ladder?\n" ...
+								"1 to allow, 0 to block.",
+								FCVAR_NOTIFY|FCVAR_SPONLY,
+								true, 0.0, true, 1.0);
 	
 	// Setup ConVars change hook
 	Cvar_Enabled.AddChangeHook(OnEnableDisable);
@@ -142,6 +160,7 @@ public void OnPluginStart()
 	Cvar_Reload.AddChangeHook(OnConVarChanged);
 	Cvar_SgReload.AddChangeHook(OnConVarChanged);
 	Cvar_Switch.AddChangeHook(OnConVarChanged);
+	Cvar_Recoil.AddChangeHook(OnConVarChanged);
 	
 	// ConVar Storage
 	GetCvars();
@@ -151,82 +170,23 @@ public void OnPluginStart()
 	if( hGameData == null ) 
 		SetFailState("Failed to load \"%s.txt\" gamedata.", GAMEDATA);
 	
-	//Get signature for CanDeployFor.
-	Handle hDetour_CanDeployFor = DHookCreateFromConf(hGameData, "CTerrorWeapon::CanDeployFor");
-	if( !hDetour_CanDeployFor )
-		SetFailState("Failed to setup detour for hDetour_CanDeployFor");
-	
-	// Get signature for reload weapon.
-	Handle hDetour_Reload = DHookCreateFromConf(hGameData, "CTerrorGun::Reload");
-	if( !hDetour_Reload )
-		SetFailState("Failed to setup detour for hDetour_Reload");
-
-	// Get signature for reload shotgun specific
-	Handle hDetour_ShotgunReload = DHookCreateFromConf(hGameData, "CBaseShotgun::Reload");
-	if( !hDetour_ShotgunReload )
-		SetFailState("Failed to setup detour for hDetour_ShotgunReload");
-	
-	StartPrepSDKCall(SDKCall_Entity);
-	if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Virtual, "CBaseCombatWeapon::AbortReload")) {
-		SetFailState("Failed to find offset \"CBaseCombatWeapon::AbortReload\"");
-	} else {
-		hSDKCall_AbortReload = EndPrepSDKCall();
-		if (hSDKCall_AbortReload == null)
-			SetFailState("Failed to setup SDKCall \"CBaseCombatWeapon::AbortReload\"");
-	}
-	
-	StartPrepSDKCall(SDKCall_Entity);
-	if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CBaseShotgun::PlayReloadAnim")) {
-		SetFailState("Failed to find offset \"CBaseShotgun::PlayReloadAnim\"");
-	} else {
-		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-		hSDKCall_PlayReloadAnim = EndPrepSDKCall();
-		if (hSDKCall_PlayReloadAnim == null)
-			SetFailState("Failed to setup SDKCall \"CBaseShotgun::PlayReloadAnim\"");
-	}
-	
-	StartPrepSDKCall(SDKCall_Entity);
-	if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Virtual, "CBaseCombatWeapon::Holster")) {
-		SetFailState("Failed to find offset \"CBaseCombatWeapon::Holster\"");
-	} else {
-		PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_ByValue);
-		hSDKCall_Holster = EndPrepSDKCall();
-		if (hSDKCall_Holster == null)
-			SetFailState("Failed to setup SDKCall \"CBaseCombatWeapon::Holster\"");
-	}
-	
-	hPatch_CanDeployFor = MemoryPatch.CreateFromConf(hGameData, TERROR_CAN_DEPLOY_FOR_KEY);
-	if(!hPatch_CanDeployFor.Validate())
-		SetFailState("%s Failed to validate patch \"%s\"", PLUGIN_NAME_KEY, TERROR_CAN_DEPLOY_FOR_KEY);
-	
-	hPatch_PreThink = MemoryPatch.CreateFromConf(hGameData, TERROR_PRE_THINK_KEY);
-	if(!hPatch_PreThink.Validate())
-		SetFailState("%s Failed to validate patch \"%s\"", PLUGIN_NAME_KEY, TERROR_PRE_THINK_KEY);
-	
-	// not as important as first 2 patches, can still function enough to be good enough.
-	hPatch_OnLadderMount = MemoryPatch.CreateFromConf(hGameData, TERROR_ON_LADDER_MOUNT_KEY);
-	if(!hPatch_OnLadderMount.Validate())
-		LogError("%s Failed to validate patch \"%s\"", PLUGIN_NAME_KEY, TERROR_ON_LADDER_MOUNT_KEY);
-	
-	hPatch_OnLadderDismount = MemoryPatch.CreateFromConf(hGameData, TERROR_ON_LADDER_DISMOUNT_KEY);
-	if(!hPatch_OnLadderDismount.Validate())
-		LogError("%s Failed to validate patch \"%s\"", PLUGIN_NAME_KEY, TERROR_ON_LADDER_DISMOUNT_KEY);
+	SetupDetours(hGameData);
+	SetupSDKCalls(hGameData);
+	SetupMemPatches(hGameData);
 	
 	delete hGameData;
 	
 	// And a pre hook for CTerrorWeapon::CanDeployFor.
 	if (!DHookEnableDetour(hDetour_CanDeployFor, false, Detour_CanDeployFor))
-		SetFailState("Failed to detour CTerrorWeapon::CanDeployFor post.");
+		SetFailState("Failed to detour CTerrorWeapon::CanDeployFor.");
 	
 	// And a pre hook for CTerrorGun::Reload.
 	if (!DHookEnableDetour(hDetour_Reload, false, Detour_Reload))
-		SetFailState("Failed to detour CTerrorGun::Reload post.");
+		SetFailState("Failed to detour CTerrorGun::Reload.");
 	
 	// And a pre hook for CBaseShotgun::Reload.
 	if (!DHookEnableDetour(hDetour_ShotgunReload, false, Detour_ShotgunReload))
-		SetFailState("Failed to detour CBaseShotgun::Reload post.");
+		SetFailState("Failed to detour CBaseShotgun::Reload.");
 	
 	// Apply our patch
 	ApplyPatch((bCvar_Enabled = Cvar_Enabled.BoolValue));
@@ -281,6 +241,7 @@ void GetCvars()
 	bCvar_Reload = Cvar_Reload.BoolValue;
 	bCvar_SgReload = Cvar_SgReload.BoolValue;
 	iCvar_Switch = Cvar_Switch.IntValue;
+	bCvar_Recoil = Cvar_Recoil.BoolValue;
 }
 
 // ====================================================================================================
@@ -290,6 +251,8 @@ void GetCvars()
 public void OnClientPutInServer(int client)
 {
 	fSavedShoveTime[client] = 0.0;
+	bLadderMounted[client] = false;
+	bBlockDeploy[client] = false;
 }
 
 // ====================================================================================================
@@ -299,7 +262,11 @@ public void OnClientPutInServer(int client)
 public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; i++)
+	{
 		fSavedShoveTime[i] = 0.0;
+		bLadderMounted[i] = false;
+		bBlockDeploy[i] = false;
+	}
 }
 
 // ====================================================================================================
@@ -312,9 +279,10 @@ public MRESReturn Detour_CanDeployFor(int pThis, Handle hReturn)
 		return MRES_Ignored;
 	
 	int client = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
-	if (client == -1)
+	if (client == -1 || !IsClientInGame(client))
 		return MRES_Ignored;
 	
+	int clientFlags = GetEntityFlags(client);
 	bool bIsOnLadder = GetEntityMoveType(client) == MOVETYPE_LADDER;
 	
 	if (!bIsOnLadder)
@@ -323,6 +291,13 @@ public MRESReturn Detour_CanDeployFor(int pThis, Handle hReturn)
 		{
 			SetEntPropFloat(client, Prop_Send, "m_flNextShoveTime", fSavedShoveTime[client]);
 			fSavedShoveTime[client] = 0.0;
+		}
+		if (bLadderMounted[client]) bLadderMounted[client] = false;
+		if (bBlockDeploy[client]) bBlockDeploy[client] = false;
+		
+		if ((clientFlags & FL_ONGROUND) && GetEntPropEnt(client, Prop_Send, "m_hGroundEntity") == -1)
+		{
+			SetEntityFlags(client, clientFlags & ~FL_ONGROUND);
 		}
 		return MRES_Ignored;
 	}
@@ -334,11 +309,23 @@ public MRESReturn Detour_CanDeployFor(int pThis, Handle hReturn)
 		return MRES_Supercede;
 	}
 	
+	if (bBlockDeploy[client])
+	{
+		DHookSetReturn(hReturn, 0);
+		return MRES_Supercede;
+	}
+	
+	bool bFirstTimeOfMount = !bLadderMounted[client];
+	if (bFirstTimeOfMount)
+		bLadderMounted[client] = true;
+	
 	// v2.4: Forgot melees, block them
 	// v2.5: Forgot other inventories :(
-	if (iCvar_Switch < 2 && ( Weapon_IsMelee(pThis) || !Weapon_IsGun(pThis) ))
+	// v4.2: Fixed carry items getting thrown out if switch == 1
+	if (iCvar_Switch < 2 && ( Weapon_IsCarryItem(pThis) || Weapon_IsMelee(pThis) || !Weapon_IsGun(pThis) ))
 	{
 		// Mimic how original ladder rambos performs
+		if (bFirstTimeOfMount) bBlockDeploy[client] = true;
 		DHookSetReturn(hReturn, 0);
 		return MRES_Supercede;
 	}
@@ -386,6 +373,11 @@ public MRESReturn Detour_CanDeployFor(int pThis, Handle hReturn)
 		}
 	}
 	
+	if (bCvar_Recoil && (~clientFlags & FL_ONGROUND))
+	{
+		SetEntityFlags(client, clientFlags | FL_ONGROUND);
+	}
+	
 	return MRES_Ignored;
 }
 
@@ -420,6 +412,33 @@ public MRESReturn Detour_ShotgunReload(int pThis, Handle hReturn)
 	}
 	
 	return MRES_Ignored;
+}
+
+// ====================================================================================================
+// Weapon_IsCarryItem - Stock method to check if weapon is carried item
+// ====================================================================================================
+
+bool Weapon_IsCarryItem(int weapon)
+{
+	static StringMap hCarryItemsMap = null;
+	if (hCarryItemsMap == null)
+	{
+		hCarryItemsMap = new StringMap();
+		hCarryItemsMap.SetValue("weapon_gascan", 1);
+		hCarryItemsMap.SetValue("weapon_propanetank", 1);
+		hCarryItemsMap.SetValue("weapon_oxygentank", 1);
+		hCarryItemsMap.SetValue("weapon_fireworkcrate", 1);
+		hCarryItemsMap.SetValue("weapon_gnome", 1);
+		hCarryItemsMap.SetValue("weapon_cola_bottles", 1);
+	}
+	
+	static char clsname[64];
+	if (GetEdictClassname(weapon, clsname, sizeof(clsname)))
+	{
+		return hCarryItemsMap.ContainsKey(clsname);
+	}
+	
+	return false;
 }
 
 // ====================================================================================================
@@ -474,6 +493,82 @@ void Weapon_AbortReload(int weapon)
 void Weapon_Holster(int weapon)
 {
 	SDKCall(hSDKCall_Holster, weapon, 0);
+}
+
+// ====================================================================================================
+// Setup* - Setup everything
+// ====================================================================================================
+
+void SetupDetours(Handle hGameData)
+{
+	//Get signature for CanDeployFor.
+	hDetour_CanDeployFor = DHookCreateFromConf(hGameData, "CTerrorWeapon::CanDeployFor");
+	if( !hDetour_CanDeployFor )
+		SetFailState("Failed to setup detour for \"CBaseShotgun::Reload\"");
+	
+	// Get signature for reload weapon.
+	hDetour_Reload = DHookCreateFromConf(hGameData, "CTerrorGun::Reload");
+	if( !hDetour_Reload )
+		SetFailState("Failed to setup detour for \"CBaseShotgun::Reload\"");
+	
+	// Get signature for reload shotgun specific
+	hDetour_ShotgunReload = DHookCreateFromConf(hGameData, "CBaseShotgun::Reload");
+	if( !hDetour_ShotgunReload )
+		SetFailState("Failed to setup detour for \"CBaseShotgun::Reload\"");
+}
+
+void SetupSDKCalls(Handle hGameData)
+{
+	StartPrepSDKCall(SDKCall_Entity);
+	if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Virtual, "CBaseCombatWeapon::AbortReload")) {
+		SetFailState("Failed to find offset \"CBaseCombatWeapon::AbortReload\"");
+	} else {
+		hSDKCall_AbortReload = EndPrepSDKCall();
+		if (hSDKCall_AbortReload == null)
+			SetFailState("Failed to setup SDKCall \"CBaseCombatWeapon::AbortReload\"");
+	}
+	
+	StartPrepSDKCall(SDKCall_Entity);
+	if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CBaseShotgun::PlayReloadAnim")) {
+		SetFailState("Failed to find offset \"CBaseShotgun::PlayReloadAnim\"");
+	} else {
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		hSDKCall_PlayReloadAnim = EndPrepSDKCall();
+		if (hSDKCall_PlayReloadAnim == null)
+			SetFailState("Failed to setup SDKCall \"CBaseShotgun::PlayReloadAnim\"");
+	}
+	
+	StartPrepSDKCall(SDKCall_Entity);
+	if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Virtual, "CBaseCombatWeapon::Holster")) {
+		SetFailState("Failed to find offset \"CBaseCombatWeapon::Holster\"");
+	} else {
+		PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_ByValue);
+		hSDKCall_Holster = EndPrepSDKCall();
+		if (hSDKCall_Holster == null)
+			SetFailState("Failed to setup SDKCall \"CBaseCombatWeapon::Holster\"");
+	}
+}
+
+void SetupMemPatches(Handle hGameData)
+{
+	hPatch_CanDeployFor = MemoryPatch.CreateFromConf(hGameData, TERROR_CAN_DEPLOY_FOR_KEY);
+	if(!hPatch_CanDeployFor.Validate())
+		SetFailState("%s Failed to validate patch \"%s\"", PLUGIN_NAME_KEY, TERROR_CAN_DEPLOY_FOR_KEY);
+	
+	hPatch_PreThink = MemoryPatch.CreateFromConf(hGameData, TERROR_PRE_THINK_KEY);
+	if(!hPatch_PreThink.Validate())
+		SetFailState("%s Failed to validate patch \"%s\"", PLUGIN_NAME_KEY, TERROR_PRE_THINK_KEY);
+	
+	// not as important as first 2 patches, can still function enough to be good enough.
+	hPatch_OnLadderMount = MemoryPatch.CreateFromConf(hGameData, TERROR_ON_LADDER_MOUNT_KEY);
+	if(!hPatch_OnLadderMount.Validate())
+		LogError("%s Failed to validate patch \"%s\"", PLUGIN_NAME_KEY, TERROR_ON_LADDER_MOUNT_KEY);
+	
+	hPatch_OnLadderDismount = MemoryPatch.CreateFromConf(hGameData, TERROR_ON_LADDER_DISMOUNT_KEY);
+	if(!hPatch_OnLadderDismount.Validate())
+		LogError("%s Failed to validate patch \"%s\"", PLUGIN_NAME_KEY, TERROR_ON_LADDER_DISMOUNT_KEY);
 }
 
 // ====================================================================================================
