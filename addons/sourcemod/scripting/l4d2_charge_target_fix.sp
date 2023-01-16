@@ -5,7 +5,7 @@
 #include <dhooks>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "1.5"
+#define PLUGIN_VERSION "1.5.1a"
 
 public Plugin myinfo = 
 {
@@ -234,7 +234,7 @@ void Event_ChargerPummelEnd(Event event, const char[] name, bool dontBroadcast)
 	
 	if (~g_iChargerCollision & CHARGER_COLLISION_GETUP)
 	{
-		KnockdownPlayer(client, KNOCKDOWN_CHARGER);
+		KnockdownPlayer(victim, KNOCKDOWN_CHARGER);
 		ExtendKnockdown(victim, false);
 	}
 	
@@ -262,7 +262,7 @@ void Event_ChargerKilled(Event event, const char[] name, bool dontBroadcast)
 	
 	if (~g_iChargerCollision & CHARGER_COLLISION_GETUP)
 	{
-		KnockdownPlayer(client, KNOCKDOWN_CHARGER);
+		KnockdownPlayer(victim, KNOCKDOWN_CHARGER);
 		
 		// a small delay to be compatible with `l4d2_getup_fixes`
 		RequestFrame(OnNextFrame_LongChargeKnockdown, GetClientUserId(victim));
@@ -402,7 +402,6 @@ public void L4D2_OnStartCarryingVictim_Post(int victim, int attacker)
 	
 	g_iChargeVictim[attacker] = victim;
 	g_iChargeAttacker[victim] = attacker;
-	TeleportEntity(victim, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
 }
 
 public void L4D2_OnSlammedSurvivor_Post(int victim, int attacker, bool bWallSlam, bool bDeadlyCharge)
@@ -415,7 +414,6 @@ public void L4D2_OnSlammedSurvivor_Post(int victim, int attacker, bool bWallSlam
 	
 	g_iChargeVictim[attacker] = victim;
 	g_iChargeAttacker[victim] = attacker;
-	TeleportEntity(victim, NULL_VECTOR, NULL_VECTOR, view_as<float>({0.0, 0.0, 0.0}));
 	
 	if (~g_iChargerCollision & CHARGER_COLLISION_PUMMEL)
 	{
