@@ -36,6 +36,32 @@
 			}
 		}
 		
+		"Offsets"
+		{
+			/* Windows offset:
+			 *
+			 * Search string "PlayerLedgeHangMiddle", which will lead you to "CTerrorPlayerAnimState::HandleActivity_Incapacitated".
+			 * Go to its only xref function, and again, then you are at vtable of "CTerrorPlayerAnimState".
+			 * Double click on the first virtual function "CTerrorPlayerAnimState::ClearAnimationState".
+			 * Go to its function xref 3 times, and you will meet with an enormous constructor function.
+			 * 
+			 * 1. Generate pseudocode and you can easily find the offset where the cursor is.
+			 * 2. See the "mov" instruction below the highlighted "call".
+			 */
+			
+			"CTerrorPlayer::m_PlayerAnimState"
+			{
+				"linux"		"10512"
+				"windows"	"10524"
+			}
+			
+			"CTerrorPlayerAnimState::m_bCharged"
+			{
+				"linux"		"344"
+				"windows"	"344"
+			}
+		}
+		
 		"Signatures"
 		{
 			// Search string "ChargerZombie.HitPerson"
