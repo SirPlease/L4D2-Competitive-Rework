@@ -2,7 +2,6 @@
 #pragma newdecls required
 
 #include <sourcemod>
-#include <sdkhooks>
 #define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 #include <left4dhooks>
@@ -33,7 +32,7 @@ public Plugin myinfo =
 {
 	name		= "L4D2 M2 Control",
 	author		= "Jahze, Visor, A1m`, Forgetest",
-	version		= "1.15",
+	version		= "1.16",
 	description	= "Blocks instant repounces and gives m2 penalty after a shove/deadstop",
 	url 		= "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
@@ -41,8 +40,6 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	HookEvent("player_shoved", Event_PlayerShoved);
-	HookEvent("player_death", Event_PlayerDeath);
-	HookEvent("player_team", Event_PlayerTeam);
 	
 	L4D_OnGameModeChange(L4D_GetGameModeType());
 	
@@ -73,24 +70,6 @@ public void L4D_OnGameModeChange(int gamemode)
 	}
 }
 
-void Event_PlayerDeath(Event hEvent, const char[] eName, bool dontBroadcast)
-{
-	int client = GetClientOfUserId(hEvent.GetInt("userid"));
-	if (client && IsInfected(client))
-	{
-		SDKUnhook(client, SDKHook_PostThinkPost, SDK_OnPostThink_Post);
-	}
-}
-
-void Event_PlayerTeam(Event hEvent, const char[] eName, bool dontBroadcast)
-{
-	if (hEvent.GetInt("oldteam") == 3)
-	{
-		int client = GetClientOfUserId(hEvent.GetInt("userid"));
-		if (client) SDKUnhook(client, SDKHook_PostThinkPost, SDK_OnPostThink_Post);
-	}
-}
-
 void Event_PlayerShoved(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	int shover = GetClientOfUserId(hEvent.GetInt("attacker"));
@@ -113,17 +92,13 @@ void Event_PlayerShoved(Event hEvent, const char[] eName, bool dontBroadcast)
 		return;
 	}
 	
-	SDKUnhook(shovee, SDKHook_PostThinkPost, SDK_OnPostThink_Post);
-	
 	int penaltyIncrease;
 	switch (GetInfectedClass(shovee)) {
 		case L4D2Infected_Hunter: {
 			penaltyIncrease = hPenaltyIncreaseHunterCvar.IntValue;
-			SDKHook(shovee, SDKHook_PostThinkPost, SDK_OnPostThink_Post);
 		}
 		case L4D2Infected_Jockey: {
 			penaltyIncrease = hPenaltyIncreaseJockeyCvar.IntValue;
-			SDKHook(shovee, SDKHook_PostThinkPost, SDK_OnPostThink_Post);
 		}
 		case L4D2Infected_Smoker: {
 			penaltyIncrease = hPenaltyIncreaseSmokerCvar.IntValue;
@@ -149,7 +124,7 @@ void Event_PlayerShoved(Event hEvent, const char[] eName, bool dontBroadcast)
 	SetEntPropFloat(shover, Prop_Send, "m_flNextShoveTime", CalcNextShoveTime(penalty, minPenalty, maxPenalty) - eps);
 }
 
-void SDK_OnPostThink_Post(int client)
+public void L4D_OnCancelStagger_Post(int client)
 {
 	if (IsInfected(client) && IsPlayerAlive(client) && !L4D_IsPlayerGhost(client))
 	{
@@ -165,13 +140,13 @@ void SDK_OnPostThink_Post(int client)
 				recharge = hLeapIntervalCvar.FloatValue;
 				bAttacking = GetEntPropEnt(client, Prop_Send, "m_jockeyVictim") != -1;
 			}
+			default: {
+				return;
+			}
 		}
 		
 		if (recharge != -1.0 && !bAttacking)
 		{
-			if (L4D_IsPlayerStaggering(client))
-				return;
-			
 			int ability = GetInfectedAbilityEntity(client);
 			if (ability != -1) {
 				float fNext = GetGameTime() + recharge;
@@ -183,8 +158,6 @@ void SDK_OnPostThink_Post(int client)
 			}
 		}
 	}
-	
-	SDKUnhook(client, SDKHook_PostThinkPost, SDK_OnPostThink_Post);
 }
 
 float CalcNextShoveTime(int currentPenalty, int minPenalty, int maxPenalty)
