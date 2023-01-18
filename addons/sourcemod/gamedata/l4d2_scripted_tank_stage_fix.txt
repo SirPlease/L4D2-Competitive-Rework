@@ -1,0 +1,75 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Functions"
+		{
+			"CDirectorScriptedEventManager::UpdateScriptedTankStage"
+			{
+				"signature"		"CDirectorScriptedEventManager::UpdateScriptedTankStage"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"address"
+				"arguments"
+				{
+					"count"
+					{
+						"type"	"int"
+						"flags"	"byref"
+					}
+				}
+			}
+			
+			"ZombieManager::ReplaceTank"
+			{
+				"signature"		"ZombieManager::ReplaceTank"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"cbaseentity"
+					}
+					"a2"
+					{
+						"type"	"cbaseentity"
+					}
+				}
+			}
+		}
+		
+		"Offsets"
+		{
+			"CDirectorScriptedEventManager::m_tankSpawned"
+			{
+				"linux"			"139"
+				"windows"		"139"
+			}
+		}
+		
+		"Signatures"
+		{
+			"CDirectorScriptedEventManager::UpdateScriptedTankStage"
+			{
+				"library"		"server"
+				"linux"			"@_ZN29CDirectorScriptedEventManager23UpdateScriptedTankStageERi"
+				"windows"		"\x55\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x2A\x2A\x0F\x8E"
+			}
+			
+			/*
+			 * ZombieManager::ReplaceTank(CTerrorPlayer *, CTerrorPlayer *)
+			 *
+			 * for finding: in CDirector::UpdateTankSpawns, easily findable in graph view from ReplaceWithBot
+			 */
+			"ZombieManager::ReplaceTank"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13ZombieManager11ReplaceTankEP13CTerrorPlayerS1_"
+				"windows"	"\x55\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\xFF"
+				/* 55 ? ? ? ? ? ? ? 8B ? ? 8B ? 8B ? ? ? ? ? ? 8B ? 8B ? FF */
+			}
+		}
+	}
+}
