@@ -42,7 +42,7 @@
 		
 		"Offsets"
 		{
-			"CDirectorScriptedEventManager::m_tankSpawned"
+			"CDirectorScriptedEventManager::m_tankSpawning"
 			{
 				"linux"			"139"
 				"windows"		"139"
@@ -51,11 +51,13 @@
 		
 		"Signatures"
 		{
+			// Search string "Failed to create tank during custom tank finale phase.\n"
 			"CDirectorScriptedEventManager::UpdateScriptedTankStage"
 			{
 				"library"		"server"
 				"linux"			"@_ZN29CDirectorScriptedEventManager23UpdateScriptedTankStageERi"
 				"windows"		"\x55\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x2A\x2A\x2A\x0F\x8E"
+				/* 55 ? ? 8B ? ? ? ? ? 83 ? ? ? ? ? 0F 8E */
 			}
 			
 			/*

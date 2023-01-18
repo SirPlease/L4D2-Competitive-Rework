@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <dhooks>
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 
 public Plugin myinfo = 
 {
@@ -18,9 +18,9 @@ public Plugin myinfo =
 #define GAMEDATA_FILE "l4d2_scripted_tank_stage_fix"
 #define FUNCTION_NAME "CDirectorScriptedEventManager::UpdateScriptedTankStage"
 #define FUNCTION2_NAME "ZombieManager::ReplaceTank"
-#define OFFSET_SPAWN "CDirectorScriptedEventManager::m_tankSpawned"
+#define OFFSET_SPAWN "CDirectorScriptedEventManager::m_tankSpawning"
 
-int g_iOffs_m_tankSpawned;
+int g_iOffs_m_tankSpawning;
 
 methodmap EventManager
 {
@@ -28,12 +28,12 @@ methodmap EventManager
 		return view_as<EventManager>(ptr);
 	}
 	
-	property bool m_tankSpawned {
+	property bool m_tankSpawning {
 		public get() {
-			return LoadFromAddress(view_as<Address>(this) + view_as<Address>(g_iOffs_m_tankSpawned), NumberType_Int8);
+			return LoadFromAddress(view_as<Address>(this) + view_as<Address>(g_iOffs_m_tankSpawning), NumberType_Int8);
 		}
 		public set(bool val) {
-			StoreToAddress(view_as<Address>(this) + view_as<Address>(g_iOffs_m_tankSpawned), val, NumberType_Int8);
+			StoreToAddress(view_as<Address>(this) + view_as<Address>(g_iOffs_m_tankSpawning), val, NumberType_Int8);
 		}
 	}
 };
@@ -46,8 +46,8 @@ public void OnPluginStart()
 	if (!gd)
 		SetFailState("Missing gamedata \""...GAMEDATA_FILE..."\"");
 	
-	g_iOffs_m_tankSpawned = gd.GetOffset(OFFSET_SPAWN);
-	if (g_iOffs_m_tankSpawned == -1)
+	g_iOffs_m_tankSpawning = gd.GetOffset(OFFSET_SPAWN);
+	if (g_iOffs_m_tankSpawning == -1)
 		SetFailState("Missing offset \""...OFFSET_SPAWN..."\"");
 	
 	DynamicDetour hDetour = DynamicDetour.FromConf(gd, FUNCTION_NAME);
@@ -55,6 +55,8 @@ public void OnPluginStart()
 		SetFailState("Missing detour setup \""...FUNCTION_NAME..."\"");
 	if (!hDetour.Enable(Hook_Pre, DTR_UpdateScriptedTankStage) || !hDetour.Enable(Hook_Post, DTR_UpdateScriptedTankStage_Post))
 		SetFailState("Failed to detour \""...FUNCTION_NAME..."\"");
+	
+	delete hDetour;
 	
 	hDetour = DynamicDetour.FromConf(gd, FUNCTION2_NAME);
 	if (!hDetour)
@@ -116,7 +118,7 @@ MRESReturn DTR_UpdateScriptedTankStage_Post(Address pEventManager, DHookReturn h
 	int count = hParams.Get(1);
 	if (spawnCount == count + 1)
 	{
-		if (!eventMgr.m_tankSpawned)
+		if (!eventMgr.m_tankSpawning)
 		{
 			hParams.Set(1, spawnCount);
 			return MRES_ChangedHandled;
