@@ -70,6 +70,18 @@
         "#format"   "{1:N},{2:s}" // 1:attacker 2:(bMelee) ? "melee-": ((bSniper) ? "headshot-" : ((bGL) ? "grenade-" : "") )
 		"es"		"{olive}{1}{default} realizo un {blue}{2}skeet{default} a un {olive}hunter{default}."
 	}
+	"Melee"
+	{
+		"es"		"melee-"
+	}
+	"HeadShot"
+	{
+		"es"		"headshot-"
+	}
+	"Grenade"
+	{
+		"es"		"grenade-"
+	}
     // hurt skeet / non-skeet
 	"HurtSkeet"
 	{
@@ -202,6 +214,10 @@
 	{
         "#format"   "{1:i},{2:s},{3:.1f}" // 1:streak 2:(streak > 1) ? "s" : "" 3:maxVelocity
 		"es"		"{olive}Usted{default} obtuvo {blue}{1} BunnyHop{2}{default} consecutivos ({blue}velocidad máxima{default}: {olive}{3}{default})"
+	}
+	"PluralCount"
+	{
+		"es"		"s"
 	}
     // car alarms
 	"CalarmHit"
