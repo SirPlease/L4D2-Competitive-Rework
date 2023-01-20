@@ -5,7 +5,7 @@
 #include <dhooks>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "1.5.1a"
+#define PLUGIN_VERSION "1.6"
 
 public Plugin myinfo = 
 {
@@ -116,18 +116,18 @@ MRESReturn DTR_CCharge__HandleCustomCollision(int ability, DHookReturn hReturn, 
 	if (!GetEntProp(ability, Prop_Send, "m_hasBeenUsed"))
 		return MRES_Ignored;
 	
-	int attacker = GetEntPropEnt(ability, Prop_Send, "m_owner");
-	if (attacker == -1)
+	int charger = GetEntPropEnt(ability, Prop_Send, "m_owner");
+	if (charger == -1)
 		return MRES_Ignored;
 	
-	int victim = hParams.Get(1);
-	if (!victim || victim > MaxClients)
+	int touch = hParams.Get(1);
+	if (!touch || touch > MaxClients)
 		return MRES_Ignored;
 	
-	if (g_iChargeAttacker[victim] == -1) // free for attacks
+	if (g_iChargeAttacker[touch] == -1) // free for attacks
 		return MRES_Ignored;
 	
-	if (g_iChargeAttacker[victim] == attacker) // about to slam my victim
+	if (g_iChargeAttacker[touch] == charger) // about to slam my victim
 		return MRES_Ignored;
 	
 	// basically invalid calls at here, block
@@ -430,6 +430,12 @@ public void L4D2_OnSlammedSurvivor_Post(int victim, int attacker, bool bWallSlam
 		
 		event.Cancel();
 	}
+	
+	int jockey = GetEntPropEnt(victim, Prop_Send, "m_jockeyAttacker");
+	if (jockey != -1)
+	{
+		Dismount(jockey);
+	}
 }
 
 Action Timer_KnockdownRepeat(Handle timer, int userid)
@@ -466,6 +472,14 @@ void SetPlayerSolid(int client, bool solid)
 {
 	int flags = GetEntProp(client, Prop_Data, "m_usSolidFlags");
 	SetEntProp(client, Prop_Data, "m_usSolidFlags", solid ? (flags & ~FSOLID_NOT_SOLID) : (flags | FSOLID_NOT_SOLID));
+}
+
+void Dismount(int client)
+{
+	int flags = GetCommandFlags("dismount");
+	SetCommandFlags("dismount", flags & ~FCVAR_CHEAT);
+	FakeClientCommand(client, "dismount");
+	SetCommandFlags("dismount", flags);
 }
 
 ConVar CreateConVarHook(const char[] name,
