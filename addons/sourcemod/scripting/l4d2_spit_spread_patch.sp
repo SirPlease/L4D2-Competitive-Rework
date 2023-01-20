@@ -8,7 +8,7 @@
 #include <sourcescramble>
 #include <collisionhook>
 
-#define PLUGIN_VERSION "1.18"
+#define PLUGIN_VERSION "1.19.2"
 
 public Plugin myinfo = 
 {
@@ -31,8 +31,6 @@ public Plugin myinfo =
 #define KEY_SPREAD_FLAG_PATCH "CInferno::Spread__TraceFlag_patch"
 #define KEY_SPREAD_PASS_PATCH "CInferno::Spread__PassEnt_patch"
 #define KEY_TRACEHEIGHT_PATCH "CTerrorPlayer::Event_Killed__TraceHeight_patch"
-
-MemoryBlock g_hAlloc_TraceHeight;
 
 //======================================================================================================
 // clean methodmap
@@ -64,9 +62,18 @@ ArrayList g_aDetonatePuddles;
 // spread configuration
 //======================================================================================================
 
-ConVar g_cvSaferoomSpread, g_cvTraceHeight, g_cvMaxFlames, g_cvWaterCollision;
+enum
+{
+	SAFEROOM_SPREAD_OFF,
+	SAFEROOM_SPREAD_INTRO,
+	SAFEROOM_SPREAD_ALL
+};
+
+int g_iCvarSaferoomSpread, g_iSaferoomSpread, g_iMaxFlames;
+bool g_bWaterCollision;
+float g_flTraceHeight;
+
 StringMap g_smNoSpreadMaps;
-int g_iSaferoomSpread;
 
 StringMap g_smFilterClasses;
 
@@ -86,11 +93,8 @@ void LoadSDK()
 	MemoryPatch hPatch = MemoryPatch.CreateFromConf(conf, KEY_TRACEHEIGHT_PATCH);
 	if (!hPatch.Enable()) SetFailState("Failed to enable patch \""...KEY_TRACEHEIGHT_PATCH..."\"");
 	
-	g_hAlloc_TraceHeight = new MemoryBlock(4); // sizeof(float)
-	// store original height
-	g_hAlloc_TraceHeight.StoreToOffset(0, LoadFromAddress(hPatch.Address + view_as<Address>(4), NumberType_Int32), NumberType_Int32);
 	// replace with custom memory
-	StoreToAddress(hPatch.Address + view_as<Address>(4), view_as<int>(g_hAlloc_TraceHeight.Address), NumberType_Int32);
+	StoreToAddress(hPatch.Address + view_as<Address>(4), GetAddressOfCell(g_flTraceHeight), NumberType_Int32);
 	
 	DynamicDetour hDetour = DynamicDetour.FromConf(conf, KEY_DETONATE);
 	if (!hDetour)
@@ -111,10 +115,9 @@ void LoadSDK()
 	delete hDetour;
 	
 	/**
-	 * Spread configuration: class
+	 * Spit configuration: class
 	 * 
-	 * (== 0)	-> No spread (2 flames)
-	 * (>= 2)	-> Custom flames
+	 * Trace doesn't touch these classes.
 	 */
 	g_smFilterClasses = new StringMap();
 	
@@ -128,6 +131,12 @@ void LoadSDK()
 		PrintToServer("[SpitPatch] Read \"SpitFilterClass\" (%s)", buffer);
 	}
 	
+	/**
+	 * Spread configuration: class
+	 * 
+	 * (== 0)	-> No spread (2 flames)
+	 * (>= 2)	-> Custom flames
+	 */
 	int maxflames;
 	for( int i = 1;
 		FormatEx(buffer, sizeof(buffer), "SpreadFilterClass%i", i)
@@ -149,40 +158,37 @@ public void OnPluginStart()
 {
 	LoadSDK();
 	
-	g_cvSaferoomSpread = CreateConVar(
-							"l4d2_spit_spread_saferoom",
-							"0",
-							"Decides how the spit should spread in saferoom area.\n"
-						...	"0 = No spread, 1 = Spread on intro start area, 2 = Spread on every map.",
-							FCVAR_NOTIFY|FCVAR_SPONLY,
-							true, 0.0, true, 2.0);
+	CreateConVarHook("l4d2_spit_spread_saferoom",
+					"0",
+					"Decides how the spit should spread in saferoom area.\n"
+				...	"0 = No spread, 1 = Spread on intro start area, 2 = Spread on every map.",
+					FCVAR_NOTIFY|FCVAR_SPONLY,
+					true, 0.0, true, 2.0,
+					CvarChange_SaferoomSpread);
 	
-	g_cvTraceHeight = CreateConVar(
-							"l4d2_deathspit_trace_height",
-							"240.0",
-							"Decides the height the game trace will try to test for death spits.\n"
-						...	"240.0 = Default trace length.",
-							FCVAR_NOTIFY|FCVAR_SPONLY,
-							true, 0.0);
+	CreateConVarHook("l4d2_deathspit_trace_height",
+					"240.0",
+					"Decides the height the game trace will try to test for death spits.\n"
+				...	"240.0 = Default trace length.",
+					FCVAR_NOTIFY|FCVAR_SPONLY,
+					true, 0.0, false, 0.0,
+					CvarChange_TraceHeight);
 	
-	g_cvMaxFlames = CreateConVar(
-							"l4d2_spit_max_flames",
-							"10",
-							"Decides the max puddles a normal spit will create.\n"
-						...	"Minimum = 2, Game default = 10.",
-							FCVAR_NOTIFY|FCVAR_SPONLY,
-							true, 2.0);
+	CreateConVarHook("l4d2_spit_max_flames",
+					"10",
+					"Decides the max puddles a normal spit will create.\n"
+				...	"Minimum = 2, Game default = 10.",
+					FCVAR_NOTIFY|FCVAR_SPONLY,
+					true, 2.0, false, 0.0,
+					CvarChange_MaxFlames);
 	
-	g_cvWaterCollision = CreateConVar(
-							"l4d2_spit_water_collision",
-							"0",
-							"Decides whether the spit projectile will collide with water.\n"
-						...	"0 = No collision, 1 = Enable collision.",
-							FCVAR_NOTIFY|FCVAR_SPONLY,
-							true, 0.0, true, 1.0);
-	
-	g_cvTraceHeight.AddChangeHook(CvarChange_TraceHeight);
-	CvarChange_TraceHeight(g_cvTraceHeight, "", "");
+	CreateConVarHook("l4d2_spit_water_collision",
+					"0",
+					"Decides whether the spit projectile will collide with water.\n"
+				...	"0 = No collision, 1 = Enable collision.",
+					FCVAR_NOTIFY|FCVAR_SPONLY,
+					true, 0.0, true, 1.0,
+					CvarChange_WaterCollision);
 	
 	g_smNoSpreadMaps = new StringMap();
 	RegServerCmd("spit_spread_saferoom_except", Cmd_SetSaferoomSpitSpreadException);
@@ -192,9 +198,25 @@ public void OnPluginStart()
 	HookEvent("round_start", Event_RoundStart);
 }
 
+void CvarChange_SaferoomSpread(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	g_iCvarSaferoomSpread = convar.IntValue;
+	OnMapStart();
+}
+
 void CvarChange_TraceHeight(ConVar convar, const char[] oldValue, const char[] newValue)
 {
-	g_hAlloc_TraceHeight.StoreToOffset(0, view_as<int>(convar.FloatValue), NumberType_Int32);
+	g_flTraceHeight = convar.FloatValue;
+}
+
+void CvarChange_MaxFlames(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	g_iMaxFlames = convar.IntValue;
+}
+
+void CvarChange_WaterCollision(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	g_bWaterCollision = convar.BoolValue;
 }
 
 Action Cmd_SetSaferoomSpitSpreadException(int args)
@@ -218,7 +240,7 @@ Action Cmd_SetSaferoomSpitSpreadException(int args)
 
 public void OnMapStart()
 {
-	g_iSaferoomSpread = g_cvSaferoomSpread.IntValue; // global default
+	g_iSaferoomSpread = g_iCvarSaferoomSpread; // global default
 	
 	char sCurrentMap[64];
 	GetCurrentMapLower(sCurrentMap, sizeof(sCurrentMap));
@@ -226,9 +248,9 @@ public void OnMapStart()
 	
 	if (g_iSaferoomSpread)
 	{
-		if (g_cvSaferoomSpread.IntValue == 1 && !L4D_IsFirstMapInScenario()) // intro map
+		if (g_iCvarSaferoomSpread == SAFEROOM_SPREAD_INTRO && !L4D_IsFirstMapInScenario()) // intro map
 		{
-			g_iSaferoomSpread = 0;
+			g_iSaferoomSpread = SAFEROOM_SPREAD_OFF;
 		}
 	}
 }
@@ -242,7 +264,7 @@ void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 
 public void OnEntityCreated(int entity, const char[] classname)
 {
-	if (strcmp(classname, "insect_swarm") == 0)
+	if (classname[0] == 'i' && strcmp(classname, "insect_swarm") == 0)
 	{
 		SDKHook(entity, SDKHook_SpawnPost, SDK_OnSpawnPost);
 	}
@@ -276,7 +298,7 @@ Action SDK_OnThink(int entity)
 	{
 		g_aDetonatePuddles.Erase(index);
 		
-		int maxflames = g_cvMaxFlames.IntValue;
+		int maxflames = g_iMaxFlames;
 		if (L4D2Direct_GetInfernoMaxFlames(entity) == 2)
 		{
 			// check if max flames customized
@@ -406,9 +428,15 @@ float GetDepthBeneathWater(const float vecStart[3])
 bool IsSaferoomSpreadAllowed(bool isStartSaferoom)
 {
 	if (L4D2_IsScavengeMode() || L4D_IsSurvivalMode())
-		return g_iSaferoomSpread > 0;
+		return g_iSaferoomSpread != SAFEROOM_SPREAD_OFF;
 	
-	return g_iSaferoomSpread == 2 || (g_iSaferoomSpread == 1 && isStartSaferoom);
+	if (g_iSaferoomSpread == SAFEROOM_SPREAD_ALL)
+		return true;
+	
+	if (g_iSaferoomSpread == SAFEROOM_SPREAD_INTRO && isStartSaferoom)
+		return true;
+	
+	return false;
 }
 
 //======================================================================================================
@@ -429,39 +457,86 @@ public Action CH_PassFilter(int touch, int pass, bool &result)
 {
 	static char cls[64], touch_cls[64];
 	
-	// 1. (pass = projectile): detonate
-	// 2. (pass = spitter): death spit
-	// 3. (pass = insect_swarm): spit spread
-	
-	if( pass == g_iDetonateObj
-		|| (pass <= MaxClients && IsClientInGame(pass) && !IsPlayerAlive(pass) && GetClientTeam(pass) == 3 && GetEntProp(pass, Prop_Send, "m_zombieClass") == 4)
-		|| (GetEdictClassname(pass, cls, sizeof(cls)) && strcmp(cls, "insect_swarm") == 0) )
+	if (pass > MaxClients)
 	{
-		if (touch > MaxClients)
+		// (pass = projectile): detonate
+		if (pass != g_iDetonateObj) 
 		{
-			GetEdictClassname(touch, touch_cls, sizeof(touch_cls));
-			if ((!g_smFilterClasses.GetValue(touch_cls, touch) || touch != 0)
-				&& strncmp(touch_cls, "weapon_", 7) != 0)
+			// (pass = insect_swarm): spit spread
+			if (!GetEdictClassname(pass, cls, sizeof(cls)) || strcmp(cls, "insect_swarm") != 0)
 				return Plugin_Continue;
 		}
+	}
+	else if (pass > 0)
+	{
+		// (pass = spitter): death spit
+		if (!IsClientInGame(pass))
+			return Plugin_Continue;
 		
-		result = false;
-		return Plugin_Handled;
+		if (IsPlayerAlive(pass))
+			return Plugin_Continue;
+		
+		if (GetClientTeam(pass) != 3)
+			return Plugin_Continue;
+		
+		if (GetEntProp(pass, Prop_Send, "m_zombieClass") != 4)
+			return Plugin_Continue;
+	}
+	else // world, always collide
+	{
+		return Plugin_Continue;
 	}
 	
-	return Plugin_Continue;
+	if (touch > MaxClients) // check for filter classes
+	{
+		GetEdictClassname(touch, touch_cls, sizeof(touch_cls));
+		
+		// non-filtered or a spread configuration
+		if (!g_smFilterClasses.GetValue(touch_cls, touch) || touch != 0)
+		{
+			// don't spread on weapons
+			if (strncmp(touch_cls, "weapon_", 7) != 0)
+				return Plugin_Continue;
+		}
+	}
+	
+	result = false;
+	return Plugin_Handled;
 }
 
 //======================================================================================================
 
 MRESReturn DTR_OnPhysicsSolidMaskForEntity_Post(DHookReturn hReturn)
 {
-	hReturn.Value |= (g_cvWaterCollision.BoolValue ? MASK_WATER : 0);
+	if (!g_bWaterCollision)
+		return MRES_Ignored;
 	
+	hReturn.Value |= MASK_WATER;
 	return MRES_Supercede;
 }
 
 //======================================================================================================
+
+ConVar CreateConVarHook(const char[] name,
+	const char[] defaultValue,
+	const char[] description="",
+	int flags=0,
+	bool hasMin=false, float min=0.0,
+	bool hasMax=false, float max=0.0,
+	ConVarChanged callback)
+{
+	ConVar cv = CreateConVar(name, defaultValue, description, flags, hasMin, min, hasMax, max);
+	
+	Call_StartFunction(INVALID_HANDLE, callback);
+	Call_PushCell(cv);
+	Call_PushNullString();
+	Call_PushNullString();
+	Call_Finish();
+	
+	cv.AddChangeHook(callback);
+	
+	return cv;
+}
 
 stock int GetCurrentMapLower(char[] buffer, int maxlength)
 {
