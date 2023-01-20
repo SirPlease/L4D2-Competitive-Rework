@@ -4,7 +4,6 @@
 #include <sourcemod>
 #include <dhooks>
 #include <sdkhooks> //OnEntityCreated
-#include <left4downtown>
 #include <l4d2util_constants>
 
 #define DEBUG						0
@@ -17,15 +16,14 @@
 #define MAX_RATE_OF_FIRE			15.0
 
 #define DEF_RITE_OF_FIRE_SINGLE		0.175
-#define DEF_RITE_OF_FIRE_DUALIES	0.075	//	Look at function 'CPistol::GetRateOfFire'
+#define DEF_RITE_OF_FIRE_DUALIES	0.075	// Look at function 'CPistol::GetRateOfFire'
 #define DEF_RITE_OF_FIRE_INCAP		0.3		// Equals cvar 'survivor_incapacitated_cycle_time'
 
 bool
-	g_bInitCvars = false,
-	g_bLateLoad = false,
-	g_bChangeValue = false;
+	g_bLateLoad = false;
 
 float
+	g_fPistolDelaySingle = DEF_RITE_OF_FIRE_SINGLE,
 	//g_fPistolDelayIncap = DEF_RITE_OF_FIRE_INCAP,
 	g_fPistolDelayDualies = DEF_RITE_OF_FIRE_DUALIES; // def value
 
@@ -52,8 +50,8 @@ public Plugin myinfo =
 {
 	name = "L4D2 pistol delay",
 	author = "A1m`",
-	version = "1.1",
-	description = "Allows you to adjust the rate of fire of pistols.",
+	version = "1.2",
+	description = "Allows you to adjust the rate of fire of pistols (with a high tickrate, the rate of fire of dual pistols is very high).",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -113,8 +111,9 @@ public void OnPluginStart()
 		true, MIN_RATE_OF_FIRE, true, MAX_RATE_OF_FIRE \
 	);*/
 
-	// 'L4D2_GetFloatWeaponAttribute' causes an error when the plugin is loaded early
-	//Cvars_Changed(null, "", "");
+	g_fPistolDelaySingle = ClampFloat(g_hPistolDelaySingle.FloatValue, MIN_RATE_OF_FIRE, MAX_RATE_OF_FIRE);
+	g_fPistolDelayDualies = ClampFloat(g_hPistolDelayDualies.FloatValue, MIN_RATE_OF_FIRE, MAX_RATE_OF_FIRE);
+	//g_fPistolDelayIncap = ClampFloat(g_hPistolDelayIncapped.FloatValue, MIN_RATE_OF_FIRE, MAX_RATE_OF_FIRE);
 
 	g_hPistolDelayDualies.AddChangeHook(Cvars_Changed);
 	g_hPistolDelaySingle.AddChangeHook(Cvars_Changed);
@@ -171,49 +170,11 @@ void LateLoad()
 	}
 }
 
-public void OnConfigsExecuted()
+void Cvars_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
-	if (g_bInitCvars) {
-		return;
-	}
-
-	// 'L4D2_GetFloatWeaponAttribute' causes an error when the plugin is loaded early
-	Cvars_Changed(null, "", "");
-
-	g_bInitCvars = true;
-}
-
-public void OnPluginEnd()
-{
-	if (!g_bChangeValue) {
-		return;
-	}
-
-	L4D2_SetFloatWeaponAttribute("weapon_pistol", L4D2FWA_CycleTime, DEF_RITE_OF_FIRE_SINGLE);
-}
-
-public void Cvars_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
-{
+	g_fPistolDelaySingle = ClampFloat(g_hPistolDelaySingle.FloatValue, MIN_RATE_OF_FIRE, MAX_RATE_OF_FIRE);
 	g_fPistolDelayDualies = ClampFloat(g_hPistolDelayDualies.FloatValue, MIN_RATE_OF_FIRE, MAX_RATE_OF_FIRE);
 	//g_fPistolDelayIncap = ClampFloat(g_hPistolDelayIncapped.FloatValue, MIN_RATE_OF_FIRE, MAX_RATE_OF_FIRE);
-
-	float fTempValue = L4D2_GetFloatWeaponAttribute("weapon_pistol", L4D2FWA_CycleTime);
-	float fCvarValue = ClampFloat(g_hPistolDelaySingle.FloatValue, MIN_RATE_OF_FIRE, MAX_RATE_OF_FIRE);
-
-	if (fTempValue != fCvarValue) {
-		L4D2_SetFloatWeaponAttribute("weapon_pistol", L4D2FWA_CycleTime, fCvarValue);
-
-		if (!g_bChangeValue) {
-			if (fTempValue != DEF_RITE_OF_FIRE_SINGLE) {
-				PrintToServer("[Warning] Cycle time for 'weapon_pistol' is different from the default value! Current: %f, default: %f!", \
-								fTempValue, DEF_RITE_OF_FIRE_SINGLE);
-				LogError("[Warning] Cycle time for 'weapon_pistol' is different from the default value! Current: %f, default: %f!", \
-								fTempValue, DEF_RITE_OF_FIRE_SINGLE);
-			}
-		}
-
-		g_bChangeValue = true;
-	}
 }
 
 public void OnEntityCreated(int iEntity, const char[] sEntityName)
@@ -231,10 +192,6 @@ public void OnEntityCreated(int iEntity, const char[] sEntityName)
 
 public MRESReturn CPistol_OnGetRiteOfFire(int iWeapon, DHookReturn hReturn)
 {
-	if (GetEntProp(iWeapon, Prop_Send, "m_isDualWielding", 1) < 1) {
-		return MRES_Ignored;
-	}
-
 	int iOwner = GetEntPropEnt(iWeapon, Prop_Send, "m_hOwner");
 
 	if (iOwner != -1 && IsIncapacitated(iOwner)) {
@@ -242,6 +199,12 @@ public MRESReturn CPistol_OnGetRiteOfFire(int iWeapon, DHookReturn hReturn)
 		//return MRES_Supercede;
 
 		return MRES_Ignored;
+	}
+
+	if (GetEntProp(iWeapon, Prop_Send, "m_isDualWielding", 1) < 1) {
+		hReturn.Value = (GetEntProp(iWeapon, Prop_Send, "m_iClip1") <= 0) ? 1.5 * g_fPistolDelaySingle : g_fPistolDelaySingle;
+
+		return MRES_Supercede;
 	}
 
 	hReturn.Value = (GetEntProp(iWeapon, Prop_Send, "m_iClip1") <= 0) ? 0.2 : g_fPistolDelayDualies;
