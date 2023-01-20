@@ -13,7 +13,7 @@
 #define IS_FULLY_AUTO_OFFSET_NAME	"CTerrorGun::IsFullyAutomatic" // funny
 
 #define MIN_RATE_OF_FIRE			0.001
-#define MAX_RATE_OF_FIRE			15.0
+#define MAX_RATE_OF_FIRE			5.0
 
 #define DEF_RITE_OF_FIRE_SINGLE		0.175
 #define DEF_RITE_OF_FIRE_DUALIES	0.075	// Look at function 'CPistol::GetRateOfFire'
@@ -50,7 +50,7 @@ public Plugin myinfo =
 {
 	name = "L4D2 pistol delay",
 	author = "A1m`",
-	version = "1.2",
+	version = "1.3",
 	description = "Allows you to adjust the rate of fire of pistols (with a high tickrate, the rate of fire of dual pistols is very high).",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
@@ -186,11 +186,13 @@ public void OnEntityCreated(int iEntity, const char[] sEntityName)
 	g_hRateOfFire.HookEntity(Hook_Pre, iEntity, CPistol_OnGetRiteOfFire);
 
 #if DEBUG
+	PrintToChatAll("[OnEntityCreated] iEntity: %s (%d)", sEntityName, iEntity);
+
 	g_hIsFullyAutomatic.HookEntity(Hook_Pre, iEntity, CPistol_OnFullyAutomatic);
 #endif
 }
 
-public MRESReturn CPistol_OnGetRiteOfFire(int iWeapon, DHookReturn hReturn)
+MRESReturn CPistol_OnGetRiteOfFire(int iWeapon, DHookReturn hReturn)
 {
 	int iOwner = GetEntPropEnt(iWeapon, Prop_Send, "m_hOwner");
 
@@ -218,13 +220,13 @@ public MRESReturn CPistol_OnGetRiteOfFire(int iWeapon, DHookReturn hReturn)
 	{
 		"local"		"1"		// don't network this, its way too spammy
 		"userid"	"short"
-		"weapon"	"string" 	// used weapon name
+		"weapon"	"string"	// used weapon name
 		"weaponid"	"short"		// used weapon ID
 		"count"		"short"		// number of bullets
 	}
 */
 
-public void Event_WeaponFire(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_WeaponFire(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (hEvent.GetInt("weaponid") != WEPID_PISTOL) {
 		return;
@@ -252,7 +254,7 @@ public void Event_WeaponFire(Event hEvent, const char[] sEventName, bool bDontBr
 	g_fOldFireRate[iClient][iActiveWeapon] = fNow;
 }
 
-public MRESReturn CPistol_OnFullyAutomatic(int iWeapon, DHookReturn hReturn)
+MRESReturn CPistol_OnFullyAutomatic(int iWeapon, DHookReturn hReturn)
 {
 	hReturn.Value = g_hAutomaticPistol.BoolValue;
 
