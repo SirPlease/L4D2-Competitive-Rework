@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <dhooks>
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 
 public Plugin myinfo = 
 {
@@ -107,7 +107,7 @@ Action Timer_ResetReplaceStatus(Handle timer)
 int spawnCount = 0;
 MRESReturn DTR_UpdateScriptedTankStage(Address pEventManager, DHookReturn hReturn, DHookParam hParams)
 {
-	spawnCount = hParams.Get(1);
+	spawnCount = LoadFromAddress(hParams.Get(1), NumberType_Int32);
 	return MRES_Ignored;
 }
 
@@ -115,13 +115,14 @@ MRESReturn DTR_UpdateScriptedTankStage_Post(Address pEventManager, DHookReturn h
 {
 	EventManager eventMgr = EventManager(pEventManager);
 	
-	int count = hParams.Get(1);
+	Address pCount = hParams.Get(1);
+	
+	int count = LoadFromAddress(pCount, NumberType_Int32);
 	if (spawnCount == count + 1)
 	{
 		if (!eventMgr.m_tankSpawning)
 		{
-			hParams.Set(1, spawnCount);
-			return MRES_ChangedHandled;
+			StoreToAddress(pCount, spawnCount, NumberType_Int32);
 		}
 		
 		return MRES_Ignored;
