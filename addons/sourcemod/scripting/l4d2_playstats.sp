@@ -2749,7 +2749,7 @@ public void OnHunterHighPounce(int attacker, int victim, int actualDamage, float
 	g_strRoundPlayerInfData[index][g_iCurTeam][infHunterDPDmg] += RoundToFloor(damage);
 }
 
-public void OnJockeyHighPounce(int attacker, int victim, float height, bool bReportedHigh)
+public void OnJockeyHighPounce(int victim, int attacker, float height, bool bReportedHigh)
 {
 	if (!bReportedHigh) { 
 		return; 
