@@ -14,13 +14,9 @@
 #include <sdkhooks>
 #define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
-//#include <colors>
 
-#define MAX_EDICTS					2048 //(1 << 11)
-#define MAX_WEAPON_NAME_LENGTH		32
 #define GAMEDATA_FILE				"l4d_wlimits"
 #define GAMEDATA_USE_AMMO			"CWeaponAmmoSpawn_Use"
-#define MAX_PLAYER_WEAPON_SLOTS		5
 #define SOUND_NAME					"player/suit_denydevice.wav"
 
 enum struct LimitArrayEntry
@@ -53,7 +49,7 @@ public Plugin myinfo =
 	name = "L4D Weapon Limits",
 	author = "CanadaRox, Stabby, Forgetest, A1m`, robex",
 	description = "Restrict weapons individually or together",
-	version = "2.2",
+	version = "2.2.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -156,7 +152,7 @@ public Action AddLimit_Cmd(int args)
 		return Plugin_Handled;
 	}
 
-	char sTempBuff[MAX_WEAPON_NAME_LENGTH];
+	char sTempBuff[ENTITY_MAX_NAME_LENGTH];
 	GetCmdArg(1, sTempBuff, sizeof(sTempBuff));
 
 	int wepid, meleeid;
@@ -396,7 +392,7 @@ int GetWeaponCount(const int[] mask)
 			continue;
 		}
 
-		for (int j = 0; j < MAX_PLAYER_WEAPON_SLOTS; ++j) {
+		for (int j = 0; j < L4D2WeaponSlot_Size; ++j) {
 			wepid = IdentifyWeapon(GetPlayerWeaponSlot(i, j));
 
 			if (isWeaponLimited(mask, wepid) || (j == 1 && queryMelee && bIsIncappedWithMelee[i])) {
