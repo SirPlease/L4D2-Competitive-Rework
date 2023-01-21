@@ -123,18 +123,20 @@ public void OnThink(int client)
 
 public Action L4D2_OnStagger(int target, int source)
 {
-	if (IsValidInfected(source)) {
-		int sourceClass = GetInfectedClass(source);
-		
-		if (sourceClass == L4D2Infected_Hunter || sourceClass == L4D2Infected_Jockey) {
-			int charIndex = IdentifySurvivor(target);
-			if (charIndex == SurvivorCharacter_Invalid) {
-				return Plugin_Continue;
-			}
-			
-			if (isSurvivorStaggerBlocked[charIndex]) {
-				return Plugin_Handled;
-			}
+	if (!IsValidInfected(source)) {
+		return Plugin_Continue;
+	}
+
+	int sourceClass = GetInfectedClass(source);
+
+	if (sourceClass == L4D2Infected_Hunter || sourceClass == L4D2Infected_Jockey) {
+		int charIndex = IdentifySurvivor(target);
+		if (charIndex == SurvivorCharacter_Invalid) {
+			return Plugin_Continue;
+		}
+
+		if (isSurvivorStaggerBlocked[charIndex]) {
+			return Plugin_Handled;
 		}
 	}
 
@@ -143,21 +145,23 @@ public Action L4D2_OnStagger(int target, int source)
 
 public Action L4D2_OnPounceOrLeapStumble(int victim, int attacker)
 {
-	if (IsValidInfected(attacker)) {
-		int sourceClass = GetInfectedClass(attacker);
+	if (!IsValidInfected(attacker)) {
+		return Plugin_Continue;
+	}
+
+	int sourceClass = GetInfectedClass(attacker);
+	
+	if (sourceClass == L4D2Infected_Hunter || sourceClass == L4D2Infected_Jockey) {
+		int charIndex = IdentifySurvivor(victim);
+		if (charIndex == SurvivorCharacter_Invalid) {
+			return Plugin_Continue;
+		}
 		
-		if (sourceClass == L4D2Infected_Hunter || sourceClass == L4D2Infected_Jockey) {
-			int charIndex = IdentifySurvivor(victim);
-			if (charIndex == SurvivorCharacter_Invalid) {
-				return Plugin_Continue;
-			}
-			
-			if (isSurvivorStaggerBlocked[charIndex]) {
-				return Plugin_Handled;
-			}
+		if (isSurvivorStaggerBlocked[charIndex]) {
+			return Plugin_Handled;
 		}
 	}
-	
+
 	return Plugin_Continue;
 }
 

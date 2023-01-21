@@ -38,8 +38,9 @@ enum /*L4D2_Team*/
 	L4D2Team_Spectator,
 	L4D2Team_Survivor,
 	L4D2Team_Infected,
-	
-	L4D2Team_Size //4 size
+	L4D2Team_L4D1_Survivor, // Probably for maps that contain survivors from the first part and from part 2
+
+	L4D2Team_Size // 5 size
 };
 
 //The official order of characters in the game
@@ -78,7 +79,8 @@ stock const char L4D2_TeamName[L4D2Team_Size][] =
 	"None",
 	"Spectator",
 	"Survivors",
-	"Infected"
+	"Infected",
+	"L4D1_Survivor"
 };
 
 enum /*L4D2_Gender*/
@@ -464,8 +466,6 @@ stock const int WeaponSlots[WEPID_SIZE] =
 */
 enum /*SurvivorCharacter*/
 {
-	SurvivorCharacter_Invalid = -1,
-
 	SurvivorCharacter_Nick = 0,
 	SurvivorCharacter_Rochelle,
 	SurvivorCharacter_Coach,
@@ -474,11 +474,13 @@ enum /*SurvivorCharacter*/
 	SurvivorCharacter_Zoey,
 	SurvivorCharacter_Louis,
 	SurvivorCharacter_Francis,
+	SurvivorCharacter_Invalid, // 8
 
-	SurvivorCharacter_Size //8 size
+	SurvivorCharacter_Size // 9 size
 };
 
-stock const char SurvivorNames[SurvivorCharacter_Size][] =
+// Structure matches netprop 'm_survivorCharacter'
+stock const char g_sSurvivorNames[SurvivorCharacter_Size][] =
 {
 	"Nick",
 	"Rochelle",
@@ -487,20 +489,21 @@ stock const char SurvivorNames[SurvivorCharacter_Size][] =
 	"Bill",
 	"Zoey",
 	"Louis",
-	"Francis"
+	"Francis",
+	"Invalid"
 };
 
 // Models for each of the characters
-stock const char SurvivorModels[SurvivorCharacter_Size][] =
+stock const char g_sSurvivorModels[SurvivorCharacter_Size - 1][] =
 {
-	"models/survivors/survivor_gambler.mdl",	//MODEL_NICK
-	"models/survivors/survivor_producer.mdl",	//MODEL_ROCHELLE
-	"models/survivors/survivor_coach.mdl",		//MODEL_COACH
-	"models/survivors/survivor_mechanic.mdl",	//MODEL_ELLIS
-	"models/survivors/survivor_namvet.mdl",		//MODEL_BILL
-	"models/survivors/survivor_teenangst.mdl",	//MODEL_ZOEY
-	"models/survivors/survivor_manager.mdl",	//MODEL_LOUIS
-	"models/survivors/survivor_biker.mdl"		//MODEL_FRANCIS
+	"models/survivors/survivor_gambler.mdl",	// MODEL_NICK
+	"models/survivors/survivor_producer.mdl",	// MODEL_ROCHELLE
+	"models/survivors/survivor_coach.mdl",		// MODEL_COACH
+	"models/survivors/survivor_mechanic.mdl",	// MODEL_ELLIS
+	"models/survivors/survivor_namvet.mdl",		// MODEL_BILL
+	"models/survivors/survivor_teenangst.mdl",	// MODEL_ZOEY
+	"models/survivors/survivor_manager.mdl",	// MODEL_LOUIS
+	"models/survivors/survivor_biker.mdl",		// MODEL_FRANCIS
 };
 
 // Animation IDs used by CTerrorPlayer::DoAnimationEvent

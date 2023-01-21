@@ -7,7 +7,7 @@
 #include <l4d2util_constants>
 #include <l4d2util_stocks>
 
-stock static StringMap hSurvivorModelsTrie = null;
+stock static StringMap g_hSurvivorModelsTrie = null;
 
 stock const char L4D2_AttackerNetProps[][] =
 {
@@ -136,9 +136,10 @@ stock bool IsHangingFromLedge(int client)
  */
 stock void InitSurvivorModelTrie()
 {
-	hSurvivorModelsTrie = new StringMap();
-	for (int i = 0; i < SurvivorCharacter_Size; i++) {
-		hSurvivorModelsTrie.SetValue(SurvivorModels[i], i);
+	g_hSurvivorModelsTrie = new StringMap();
+
+	for (int i = 0; i < (SurvivorCharacter_Size - 1); i++) {
+		g_hSurvivorModelsTrie.SetValue(g_sSurvivorModels[i], i);
 	}
 }
 
@@ -155,7 +156,7 @@ stock int IdentifySurvivor(int client)
 		return SurvivorCharacter_Invalid;
 	}
 
-	char clientModel[42];
+	char clientModel[PLATFORM_MAX_PATH];
 	GetClientModel(client, clientModel, sizeof(clientModel));
 
 	return ClientModelToSC(clientModel);
@@ -170,12 +171,12 @@ stock int IdentifySurvivor(int client)
  */
 stock int ClientModelToSC(const char[] model)
 {
-	if (hSurvivorModelsTrie == null) {
+	if (g_hSurvivorModelsTrie == null) {
 		InitSurvivorModelTrie();
 	}
-	
+
 	int sc;
-	if (hSurvivorModelsTrie.GetValue(model, sc)) {
+	if (g_hSurvivorModelsTrie.GetValue(model, sc)) {
 		return sc;
 	}
 
@@ -193,14 +194,17 @@ stock int ClientModelToSC(const char[] model)
  */
 stock bool GetSurvivorName(int character, char[] buffer, const int length)
 {
-	if (character == SurvivorCharacter_Invalid) {
-		strcopy(buffer, length, "None");
+	if (character < SurvivorCharacter_Nick || character > SurvivorCharacter_Invalid) {
+		strcopy(buffer, length, g_sSurvivorNames[SurvivorCharacter_Invalid]);
+
+		LogError("[GetSurvivorName] Invalid survivor character index passed!");
+
 		return false;
 	}
 
-	strcopy(buffer, length, SurvivorNames[character]);
+	strcopy(buffer, length, g_sSurvivorNames[character]);
 
-	return true;
+	return (character == SurvivorCharacter_Invalid) ? false : true;
 }
 
 /**
@@ -215,12 +219,8 @@ stock bool GetSurvivorName(int character, char[] buffer, const int length)
 stock bool GetClientSurvivorName(int client, char[] buffer, const int length)
 {
 	int character = IdentifySurvivor(client);
-	if (character == SurvivorCharacter_Invalid) {
-		strcopy(buffer, length, "None");
-		return false;
-	}
 
-	strcopy(buffer, length, SurvivorNames[character]);
+	strcopy(buffer, length, g_sSurvivorNames[character]);
 
 	return true;
 }
