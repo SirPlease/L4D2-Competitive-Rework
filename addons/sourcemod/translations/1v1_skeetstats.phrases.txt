@@ -41,15 +41,15 @@
 	//  3. accuracy
 	"ACC_AllShots"
 	{
-		"en"		"all shots ({blue}%3.0f%%{default})"
+		"en"		"all shots ({blue}%.0f%%{default})"
 	}
 	"ACC_BuckShot"
 	{
-		"en"		"| buckshot ({blue}%3.0f%%{default})"
+		"en"		" | buckshot ({blue}%.0f%%{default})"
 	}
 	"ACC_Melee"
 	{
-		"en"		"| melee ({blue}%3.0f%%{default})"
+		"en"		" | melee ({blue}%.0f%%{default})"
 	}
 	"ACC_NoShotsFired"
 	{

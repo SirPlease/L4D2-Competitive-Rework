@@ -2,7 +2,6 @@
 
 **IMPORTANT NOTES** - **DON'T IGNORE THESE!**
 * The goal for this repo is to work on **Linux**, specifically Ubuntu/Debian.
-> We are still seeing issues with releases post Ubuntu 18.04 (Jockey teleporting)
 > There is Windows support in this repo, but not everything is, you are of course welcome to contribute to get Windows fully up to date! 
 * This repository only supports Sourcemod **1.11** and up.
 
@@ -12,7 +11,7 @@ This is mainly a project that focuses on reworking the very outdated platform fo
 It will contain both much needed fixes that are simply unable to be implemented on the older sourcemod versions as well as incompatible and outdated files being updated to working versions.
 
 > **Included Matchmodes:**
-* **Zonemod 2.7.1**
+* **Zonemod 2.8**
 * **Zonemod Hunters**
 * **Zonemod Retro**
 * **NeoMod 0.4a** 

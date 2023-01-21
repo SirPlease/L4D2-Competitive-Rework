@@ -1,0 +1,77 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Functions"
+		{
+			"CCharge::HandleCustomCollision"
+			{
+				"signature"		"CCharge::HandleCustomCollision"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"pOther"
+					{
+						"type"	"cbaseentity"
+					}
+					"vecTouch"
+					{
+						"type"	"vectorptr"
+					}
+					"vecDirection"
+					{
+						"type"	"vectorptr"
+					}
+					"pTrace"
+					{
+						"type"	"objectptr"
+					}
+					"pMoveData"
+					{
+						"type"	"objectptr"
+					}
+				}
+			}
+		}
+		
+		"Offsets"
+		{
+			/* Windows offset:
+			 *
+			 * Search string "PlayerLedgeHangMiddle", which will lead you to "CTerrorPlayerAnimState::HandleActivity_Incapacitated".
+			 * Go to its only xref function, and again, then you are at vtable of "CTerrorPlayerAnimState".
+			 * Double click on the first virtual function "CTerrorPlayerAnimState::ClearAnimationState".
+			 * Go to its function xref 3 times, and you will meet with an enormous constructor function.
+			 * 
+			 * 1. Generate pseudocode and you can easily find the offset where the cursor is.
+			 * 2. See the "mov" instruction below the highlighted "call".
+			 */
+			
+			"CTerrorPlayer::m_PlayerAnimState"
+			{
+				"linux"		"10512"
+				"windows"	"10524"
+			}
+			
+			"CTerrorPlayerAnimState::m_bCharged"
+			{
+				"linux"		"344"
+				"windows"	"344"
+			}
+		}
+		
+		"Signatures"
+		{
+			// Search string "ChargerZombie.HitPerson"
+			"CCharge::HandleCustomCollision"
+			{
+				"library"		"server"
+				"linux"			"@_ZN7CCharge21HandleCustomCollisionEP11CBaseEntityRK6VectorS4_P10CGameTraceP9CMoveData"
+				"windows"		"\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x8B\x2A\x2A\x53\x8B\x2A\x89\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x56\x8B"
+								/* 55 8B ? 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 8B ? ? 53 8B ? 89 ? ? 8B ? ? ? ? ? 56 8B */
+			}
+		}
+	}
+}

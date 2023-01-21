@@ -3,7 +3,21 @@
 #endif
 #define l4d2util_constants_inc_
 
-#define ENTITY_MAX_NAME_LENGTH 64
+#define ENTITY_MAX_NAME_LENGTH		64
+#define MAX_MAP_NAME				64	
+#define	MAX_NETWORKID_LENGTH		64  // num chars for a network (i.e steam) ID
+
+// How many bits to use to encode an edict.
+#define	MAX_EDICT_BITS				11			// # of bits needed to represent max edicts
+// Max # of edicts in a level
+#define	MAX_EDICTS					(1 << MAX_EDICT_BITS)
+
+// m_lifeState values
+#define	LIFE_ALIVE					0 // alive
+#define	LIFE_DYING					1 // playing death animation or still falling off of a ledge waiting to hit ground
+#define	LIFE_DEAD					2 // dead. lying still.
+#define LIFE_RESPAWNABLE			3
+#define LIFE_DISCARDBODY			4
 
 #define SPAWNFLAG_READY				0
 #define SPAWNFLAG_CANSPAWN			(0 << 0)

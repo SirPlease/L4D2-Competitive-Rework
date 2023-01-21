@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "2.6.1"
+#define PLUGIN_VERSION "3.1"
 
 public Plugin myinfo = 
 {
@@ -37,33 +37,17 @@ stock const char g_sSIClassNames[SI_MAX_SIZE][] =
 // Array
 ArrayList g_SpawnsArray;
 
-bool bLive;
+bool g_isLive;
 
 // Get dem Cvars
-ConVar hLimits[SI_MAX_SIZE];
-int iLimits[SI_MAX_SIZE];
-int dominators;
+ConVar g_cvSILimits[SI_MAX_SIZE];
+int g_iInitialSILimits[SI_MAX_SIZE];
+int g_Dominators;
 
-ConVar hDebug;
+int g_iStoredClass[MAXPLAYERS+1];
+bool g_bPlayerSpawned[MAXPLAYERS+1];
 
-methodmap PlayerResource {
-	public PlayerResource() {
-		return view_as<PlayerResource>(L4D_GetResourceEntity());
-	}
-	public int QueryZombieClass(int client) {
-		return GetEntProp(view_as<int>(this), Prop_Send, "m_zombieClass", _, client);
-	}
-	public int QueryTeamNum(int client) {
-		return GetEntProp(view_as<int>(this), Prop_Send, "m_iTeam", _, client);
-	}
-	public bool WasGhost(int client) {
-		return !!GetEntProp(view_as<int>(this), Prop_Send, "m_isGhost", _, client);
-	}
-	public bool WasAlive(int client) {
-		return !!GetEntProp(view_as<int>(this), Prop_Send, "m_bAlive", _, client);
-	}
-}
-PlayerResource g_Resource;
+ConVar g_cvDebug;
 
 public void OnPluginStart()
 {
@@ -72,10 +56,11 @@ public void OnPluginStart()
 	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("player_team", Event_PlayerTeam);
 	HookEvent("player_death", Event_PlayerDeath);
-	HookEvent("tank_spawn", Event_TankSpawn);
+	HookEvent("bot_player_replace", Event_BotPlayerReplace);
+	HookEvent("player_bot_replace", Event_PlayerBotReplace);
 	HookEvent("player_left_start_area", Event_PlayerLeftStartArea);
 
-	hDebug = CreateConVar("sackorder_debug", "0", "Debuggin the plugin.", FCVAR_SPONLY|FCVAR_HIDDEN, true, 0.0, true, 1.0);
+	g_cvDebug = CreateConVar("sackorder_debug", "0", "Debuggin the plugin.", FCVAR_SPONLY|FCVAR_HIDDEN, true, 0.0, true, 1.0);
 
 	// Array
 	g_SpawnsArray = new ArrayList();
@@ -84,35 +69,34 @@ public void OnPluginStart()
 	for (int i = SI_Smoker; i <= SI_Charger; ++i)
 	{
 		FormatEx(buffer, sizeof(buffer), "z_versus_%c%s_limit", CharToLower(g_sSIClassNames[i][0]), g_sSIClassNames[i][1]);
-		hLimits[i] = FindConVar(buffer);
+		g_cvSILimits[i] = FindConVar(buffer);
 	}
 }
 
 public void OnConfigsExecuted()
 {
-	dominators = 53;
+	g_Dominators = 53;
 	ConVar hDominators = FindConVar("l4d2_dominators");
-	if (hDominators != null) dominators = hDominators.IntValue;
+	if (hDominators != null) g_Dominators = hDominators.IntValue;
 }
 
 // Clean slates
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	g_Resource = PlayerResource();
 	g_SpawnsArray.Clear();
-	bLive = false;
+	g_isLive = false;
 }
 
 void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	g_SpawnsArray.Clear();
-	bLive = false;
+	g_isLive = false;
 }
 
 void Event_PlayerLeftStartArea(Event event, const char[] name, bool dontBroadcast)
 {
 	FillQueue();
-	bLive = true;
+	g_isLive = true;
 }
 
 //--------------------------------------------------------------------------------- Player Actions
@@ -122,12 +106,19 @@ void Event_PlayerLeftStartArea(Event event, const char[] name, bool dontBroadcas
 //   2. Return zombie class, based on the player state: ghost to the beginning, materialized to the end.
 //
 
+public void L4D_OnMaterializeFromGhost(int client)
+{
+	PrintDebug("\x04[DEBUG] \x01%N \x05materialized \x01as (\x04%s\x01)", client, g_sSIClassNames[GetEntProp(client, Prop_Send, "m_zombieClass")]);
+	
+	g_bPlayerSpawned[client] = true;
+}
+
 /**
  * Queue the class of whom switched team alive, to the front if ghost, to the end if materialized.
  */
 void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 {
-	if (!bLive)
+	if (!g_isLive)
 		return;
 	
 	int oldteam = event.GetInt("oldteam");
@@ -135,17 +126,16 @@ void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 		return;
 	
 	int client = GetClientOfUserId(event.GetInt("userid"));
-	if (!client || IsFakeClient(client))
+	if (!client || !IsClientInGame(client))
 		return;
 	
-	if (!IsPlayerAlive(client))
+	if (IsFakeClient(client))
 		return;
 	
-	int SI = GetEntProp(client, Prop_Send, "m_zombieClass");
-	if (IsAbleToQueue(SI, client))
-	{
-		QueueSI(SI, !!GetEntProp(client, Prop_Send, "m_isGhost"));
-	}
+	if (!IsPlayerAlive(client)) // ghost only
+		return;
+	
+	QueuePlayerSI(client);
 }
 
 /**
@@ -153,7 +143,7 @@ void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
  */
 void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
-	if (!bLive)
+	if (!g_isLive)
 		return;
 	
 	int client = GetClientOfUserId(event.GetInt("userid"));
@@ -163,59 +153,92 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 	if (GetClientTeam(client) != 3)
 		return;
 	
-	int SI = GetEntProp(client, Prop_Send, "m_zombieClass");
-	if (IsAbleToQueue(SI, client))
-	{
-		QueueSI(SI, false);
-	}
+	QueuePlayerSI(client);
 }
 
 /**
  * Save the class of whom becomes the tank, to the front if ghost, to the end if materialized.
  */
-void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
+void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(event.GetInt("userid"));
-	if (client && !IsFakeClient(client) && GetClientTeam(client) == 3)
+	if (!g_isLive)
+		return;
+	
+	int client = GetClientOfUserId(event.GetInt("player"));
+	if (client && IsClientInGame(client) && GetClientTeam(client) == 3)
 	{
-		// Looks like resource data updates post changes happen, good.
-		if (g_Resource.WasAlive(client))
-		{
-			int SI = g_Resource.QueryZombieClass(client);
-			if (IsAbleToQueue(SI, client))
-			{
-				QueueSI(SI, g_Resource.WasGhost(client));
-			}
-		}
+		QueuePlayerSI(client);
 	}
+}
+
+void Event_PlayerBotReplace(Event event, const char[] name, bool dontBroadcast)
+{
+	if (!g_isLive)
+		return;
+	
+	int client = GetClientOfUserId(event.GetInt("player"));
+	if (client && IsClientInGame(client) && GetClientTeam(client) == 3)
+	{
+		QueuePlayerSI(client);
+	}
+}
+
+public void L4D_OnReplaceTank(int tank, int newtank)
+{
+	if (GetClientTeam(newtank) != 3)
+		return;
+	
+	if (!IsPlayerAlive(newtank))
+		return;
+	
+	QueuePlayerSI(newtank);
 }
 
 /**
  * Give spawned player an SI from queue.
  */
+bool isCulling = false;
+public Action L4D_OnEnterGhostStatePre(int client)
+{
+	isCulling = GetEntProp(client, Prop_Send, "m_isCulling") != 0;
+	
+	return Plugin_Continue;
+}
+
 public void L4D_OnEnterGhostState(int client)
 {
-	// NOTE:
-	// Left4DHooks 1.94 blocks post forwards if pre-hooks get superceded.
-	// The following check will be unnecessary post-update.
-	if (!GetEntProp(client, Prop_Send, "m_isGhost"))
-		return;
+	int SI = GetEntProp(client, Prop_Send, "m_zombieClass");
 	
-	// 1. Not respawning
-	// 2. Weird exception that instant spawn is offered if:
-	//	   - First switch to Survivors during respawn count-down.
-	//	   - Then switch back when the count-down expires.
-	if (!g_Resource.WasAlive(client) || g_Resource.QueryTeamNum(client) == 2)
+	// Don't mess up when player despawns or round restarts.
+	if (!isCulling && g_isLive)
 	{
-		int SI = PopQueuedSI(client);
-		if (SI != SI_None)
+		int temp = PopQueuedSI(client);
+		if (temp != SI_None)
 		{
+			SI = temp;
 			L4D_SetClass(client, SI);
 		}
 	}
+	
+	PrintDebug("\x04[DEBUG] \x01%N %s \x01as (\x04%s\x01)", client, isCulling ? "\x05respawned" : "\x01spawned", g_sSIClassNames[SI]);
+	
+	g_iStoredClass[client] = SI;
+	g_bPlayerSpawned[client] = false;
 }
 
 //--------------------------------------------------------------------------------- Stocks & Such
+
+void QueuePlayerSI(int client)
+{
+	int SI = g_iStoredClass[client];
+	if (IsAbleToQueue(SI, client))
+	{
+		QueueSI(SI, !g_bPlayerSpawned[client]);
+	}
+	
+	g_iStoredClass[client] = SI_None;
+	g_bPlayerSpawned[client] = false;
+}
 
 /**
  * Queue an SI to the front/end.
@@ -281,7 +304,7 @@ void FillQueue()
 	char classString[255] = "";
 	for (int i = SI_Smoker; i <= SI_Charger; ++i)
 	{
-		for (int j = 0; j < (iLimits[i] = hLimits[i].IntValue) - zombies[i]; ++j)
+		for (int j = 0; j < (g_iInitialSILimits[i] = g_cvSILimits[i].IntValue) - zombies[i]; ++j)
 		{
 			g_SpawnsArray.Push(i);
 			StrCat(classString, sizeof(classString), g_sSIClassNames[i]);
@@ -311,7 +334,7 @@ bool IsAbleToQueue(int SI, int skip_client)
 		CollectZombies(counts, skip_client);
 		CollectQueuedZombies(counts);
 		
-		if (counts[SI] < iLimits[SI])
+		if (counts[SI] < g_iInitialSILimits[SI])
 			return true;
 	}
 	
@@ -334,7 +357,7 @@ bool IsAbleToQueue(int SI, int skip_client)
  */
 bool IsClassOverLimit(int SI, int skip_client)
 {
-	if (!hLimits[SI])
+	if (!g_cvSILimits[SI])
 		return false;
 	
 	int counts[SI_MAX_SIZE] = {0};
@@ -342,7 +365,7 @@ bool IsClassOverLimit(int SI, int skip_client)
 	// NOTE: We're checking after player actually spawns, it's necessary to ignore his class.
 	CollectZombies(counts, skip_client);
 	
-	if (counts[SI] >= hLimits[SI].IntValue)
+	if (counts[SI] >= g_cvSILimits[SI].IntValue)
 		return true;
 	
 	if (!IsDominator(SI))
@@ -360,7 +383,7 @@ bool IsClassOverLimit(int SI, int skip_client)
  */
 bool IsDominator(int SI)
 {
-	return !!(dominators & (1 << (SI-1)));
+	return !!(g_Dominators & (1 << (SI-1)));
 }
 
 /**
@@ -397,17 +420,25 @@ int CollectQueuedZombies(int zombies[SI_MAX_SIZE])
 {
 	int size = g_SpawnsArray.Length;
 	
+	char classString[255] = "";
 	for (int i = 0; i < size; ++i)
 	{
 		++zombies[g_SpawnsArray.Get(i)];
+		StrCat(classString, sizeof(classString), g_sSIClassNames[g_SpawnsArray.Get(i)]);
+		StrCat(classString, sizeof(classString), ", ");
 	}
+	
+	int idx = strlen(classString) - 2;
+	if (idx < 0) idx = 0;
+	classString[idx] = '\0';
+	PrintDebug("\x04[DEBUG] \x01Collect queued zombies (%s)", classString);
 	
 	return size;
 }
 
 stock void PrintDebug(const char[] format, any ...)
 {
-	if (hDebug.BoolValue)
+	if (g_cvDebug.BoolValue)
 	{
 		char msg[255];
 		VFormat(msg, sizeof(msg), format, 2);
