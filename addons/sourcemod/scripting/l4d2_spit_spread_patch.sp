@@ -8,7 +8,7 @@
 #include <sourcescramble>
 #include <collisionhook>
 
-#define PLUGIN_VERSION "1.19.2"
+#define PLUGIN_VERSION "1.19.3"
 
 public Plugin myinfo = 
 {
@@ -201,7 +201,7 @@ public void OnPluginStart()
 void CvarChange_SaferoomSpread(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	g_iCvarSaferoomSpread = convar.IntValue;
-	OnMapStart();
+	RequestFrame(OnMapStart);
 }
 
 void CvarChange_TraceHeight(ConVar convar, const char[] oldValue, const char[] newValue)
