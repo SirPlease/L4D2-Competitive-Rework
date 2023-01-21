@@ -8,7 +8,7 @@
 #define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 
-static const int getUpAnimations[SurvivorCharacter_Size][5] = 
+static const int getUpAnimations[SurvivorCharacter_Size - 1][5] = 
 {
 	//l4d2
 	// 0: Nick, 1: Rochelle, 2: Coach, 3: Ellis
@@ -27,7 +27,7 @@ static const int getUpAnimations[SurvivorCharacter_Size][5] =
 };
 
 bool
-	isSurvivorStaggerBlocked[SurvivorCharacter_Size];
+	isSurvivorStaggerBlocked[SurvivorCharacter_Size - 1];
 
 public Plugin myinfo =
 {
@@ -167,7 +167,7 @@ public Action L4D2_OnPounceOrLeapStumble(int victim, int attacker)
 
 void ResetStaggerBlocked()
 {
-	for (int i = 0; i < SurvivorCharacter_Size; i++) {
+	for (int i = 0; i < (SurvivorCharacter_Size - 1); i++) {
 		isSurvivorStaggerBlocked[i] = false;
 	}
 }
