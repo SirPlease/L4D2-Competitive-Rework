@@ -5,7 +5,7 @@
 #include <dhooks>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "1.6"
+#define PLUGIN_VERSION "1.6.1"
 
 public Plugin myinfo = 
 {
@@ -150,6 +150,11 @@ void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; ++i)
 	{
+		// clear our stuff
+		g_bNotSolid[i] = false;
+		g_iChargeVictim[i] = -1;
+		g_iChargeAttacker[i] = -1;
+		
 		if (IsClientInGame(i))
 		{
 			// ~ CDirector::RestartScenario()
@@ -166,11 +171,6 @@ void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 			L4D2_SetQueuedPummelStartTime(i, -1.0);
 			L4D2_SetQueuedPummelVictim(i, -1);
 			L4D2_SetQueuedPummelAttacker(i, -1);
-			
-			// clear our stuff
-			g_bNotSolid[i] = false;
-			g_iChargeVictim[i] = -1;
-			g_iChargeAttacker[i] = -1;
 		}
 	}
 }
@@ -200,6 +200,7 @@ void Event_PlayerIncap(Event event, const char[] name, bool dontBroadcast)
 	g_bNotSolid[client] = true;
 }
 
+// Clear arrays if the victim dies to slams
 void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
@@ -341,6 +342,9 @@ void HandlePlayerReplace(int replacer, int replacee)
 {
 	if (!replacer || !IsClientInGame(replacer))
 		return;
+	
+	if (!replacee)
+		replacee = -1;
 	
 	if (GetClientTeam(replacer) == 3)
 	{
