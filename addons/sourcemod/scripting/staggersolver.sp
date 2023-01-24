@@ -7,10 +7,19 @@
 public Plugin myinfo =
 {
 	name = "Super Stagger Solver",
-	author = "CanadaRox, A1m (fix), Sir (rework)",
-	description = "Blocks all button presses during stumbles",
-	version = "1.2",
+	author = "CanadaRox, A1m (fix), Sir (rework), Forgetest",
+	description = "Blocks all button presses and restarts animations during stumbles",
+	version = "2.0",
 };
+
+public void L4D_OnShovedBySurvivor_Post(int client, int victim, const float vecDir[3])
+{
+	if (L4D_IsPlayerStaggering(victim))
+	{
+		SetEntPropFloat(victim, Prop_Send, "m_fServerAnimStartTime", GetGameTime());
+		SetEntPropFloat(victim, Prop_Send, "m_flCycle", 0.0);
+	}
+}
 
 public Action OnPlayerRunCmd(int client, int &buttons)
 {
