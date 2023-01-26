@@ -150,9 +150,13 @@ stock void InitSurvivorModelTrie()
  * @param client                Survivor client to identify
  * @return int    index identifying the survivor, or SurvivorCharacter_Invalid if not identified.
  */
-stock int IdentifySurvivor(int client)
+stock int IdentifySurvivor(int iClient)
 {
-	if (!client || !IsSurvivor(client)) {
+	if (iClient < 1 || !IsClientInGame(iClient)) {
+		return SurvivorCharacter_Invalid;
+	}
+
+	if (GetClientTeam(iClient) != TEAM_SURVIVOR) {
 		return SurvivorCharacter_Invalid;
 	}
 
@@ -184,43 +188,86 @@ stock int ClientModelToSC(const char[] model)
 }
 
 /**
- * Get the name of a survivor character. 
- * Will write to string 'None' in case of error.
+ * Get the display name of a survivor character. 
+ * Will write to string 'Invalid' in case of error.
  * 
  * @param character     int to get the name of
  * @param buffer        buffer to store name
  * @param length        length of buffer
+ *
  * @return bool         false if SurvivorCharacter_Invalid, otherwise true
  */
-stock bool GetSurvivorName(int character, char[] buffer, const int length)
+stock bool GetSurvivorDisplayName(int iCharacter, char[] sBuffer, const int iLength)
 {
-	if (character < SurvivorCharacter_Nick || character > SurvivorCharacter_Invalid) {
-		strcopy(buffer, length, g_sSurvivorNames[SurvivorCharacter_Invalid]);
+	if (iCharacter < SurvivorCharacter_Nick || iCharacter > SurvivorCharacter_Invalid) {
+		strcopy(sBuffer, iLength, g_sSurvivorDisplayName[SurvivorCharacter_Invalid]);
 
 		LogError("[GetSurvivorName] Invalid survivor character index passed!");
 
 		return false;
 	}
 
-	strcopy(buffer, length, g_sSurvivorNames[character]);
+	strcopy(sBuffer, iLength, g_sSurvivorDisplayName[iCharacter]);
 
 	return (character == SurvivorCharacter_Invalid) ? false : true;
 }
 
 /**
- * Get the name of a survivor character through client index.
- * Will write to string 'None' in case of error.
+ * Get the name of a survivor character.
+ * Will write to string 'Invalid' in case of error.
+ * 
+ * @param character     int to get the name of
+ * @param buffer        buffer to store name
+ * @param length        length of buffer
+ * @return bool         false if SurvivorCharacter_Invalid, otherwise true
+ */
+stock bool GetSurvivorName(int iCharacter, char[] sBuffer, const int iLength)
+{
+	if (iCharacter < SurvivorCharacter_Nick || iCharacter > SurvivorCharacter_Invalid) {
+		strcopy(sBuffer, iLength, g_sSurvivorName[SurvivorCharacter_Invalid]);
+
+		LogError("[GetSurvivorName] Invalid survivor character index passed!");
+
+		return false;
+	}
+
+	strcopy(sBuffer, iLength, g_sSurvivorName[iCharacter]);
+
+	return (iCharacter == SurvivorCharacter_Invalid) ? false : true;
+}
+
+/**
+ * Get the display name of a survivor character through client index.
+ * Will write to string 'Invalid' in case of error.
  *
  * @param client        client index
  * @param buffer        buffer to store name
  * @param length        length of buffer
  * @return bool         false if SurvivorCharacter_Invalid, otherwise true
  */
-stock bool GetClientSurvivorName(int client, char[] buffer, const int length)
+stock bool GetClientSurvivorDisplayName(int iClient, char[] sBuffer, const int iLength)
 {
-	int character = IdentifySurvivor(client);
+	int iCharacter = IdentifySurvivor(iClient);
 
-	strcopy(buffer, length, g_sSurvivorNames[character]);
+	strcopy(sBuffer, iLength, g_sSurvivorDisplayName[iCharacter]);
+
+	return true;
+}
+
+/**
+ * Get the name of a survivor character through client index.
+ * Will write to string 'Invalid' in case of error.
+ *
+ * @param client        client index
+ * @param buffer        buffer to store name
+ * @param length        length of buffer
+ * @return bool         false if SurvivorCharacter_Invalid, otherwise true
+ */
+stock bool GetClientSurvivorName(int iClient, char[] sBuffer, const int iLength)
+{
+	int iCharacter = IdentifySurvivor(iClient);
+
+	strcopy(sBuffer, iLength, g_sSurvivorName[iCharacter]);
 
 	return true;
 }
