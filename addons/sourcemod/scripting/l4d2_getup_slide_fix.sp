@@ -8,7 +8,7 @@
 #define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 
-stock const int getUpAnimations[SurvivorCharacter_Size - 1][5] = 
+stock const int getUpAnimations[SurvivorCharacter_Size - 1][5] =
 {
 	// l4d2
 	// 0: Nick, 1: Rochelle, 2: Coach, 3: Ellis
@@ -22,8 +22,8 @@ stock const int getUpAnimations[SurvivorCharacter_Size - 1][5] =
 	// 4: Bill, 5: Zoey, 6: Francis, 7: Louis
 	{528, 759, 763, 764, 537}, // Bill
 	{537, 819, 823, 824, 546}, // Zoey
-	{531, 762, 766, 767, 540} // Francis
-	{528, 759, 763, 764, 537}, // Louis
+	{531, 762, 766, 767, 540}, // Francis
+	{528, 759, 763, 764, 537} // Louis
 };
 
 bool
