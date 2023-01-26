@@ -161,7 +161,7 @@ stock int IdentifySurvivor(int iClient)
 	}
 
 	char clientModel[PLATFORM_MAX_PATH];
-	GetClientModel(client, clientModel, sizeof(clientModel));
+	GetClientModel(iClient, clientModel, sizeof(clientModel));
 
 	return ClientModelToSC(clientModel);
 }
@@ -209,7 +209,7 @@ stock bool GetSurvivorDisplayName(int iCharacter, char[] sBuffer, const int iLen
 
 	strcopy(sBuffer, iLength, g_sSurvivorDisplayName[iCharacter]);
 
-	return (character == SurvivorCharacter_Invalid) ? false : true;
+	return (iCharacter == SurvivorCharacter_Invalid) ? false : true;
 }
 
 /**
