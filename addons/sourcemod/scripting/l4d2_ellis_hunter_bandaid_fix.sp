@@ -34,7 +34,11 @@ public void OnPluginStart()
 void Event_PounceEnd(Event event, char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("victim"));
-	int charIndex = IdentifySurvivor(client); // Already contains checks inside
+	if (client < 1 || !IsClientInGame(client)) {
+		return;
+	}
+
+	int charIndex = IdentifySurvivorFast(client); // Already contains checks inside
 
 	if (charIndex == SurvivorCharacter_Ellis) {
 		AnimHookEnable(client, INVALID_FUNCTION, EllisPostPounce);

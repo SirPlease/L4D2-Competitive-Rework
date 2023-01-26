@@ -296,7 +296,7 @@ stock bool GetSurvivorDisplayName(int iClient, char[] sBuffer, const int iLength
 
 	strcopy(sBuffer, iLength, g_sSurvivorDisplayName[iCharacter]);
 
-	return true;
+	return (iCharacter == SurvivorCharacter_Invalid) ? false : true;
 }
 
 /**
