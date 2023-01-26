@@ -484,7 +484,8 @@ stock const int WeaponSlots[WEPID_SIZE] =
 
 /* @A1m`:
  * Original order of survivors in the game code.
- * To use this to get survivor names we need left4dhooks or left4downtown,
+ *
+ * ~~~To use this to get survivor names we need left4dhooks or left4downtown,
  * we need to know the 'survival_set' value from the mission info,
  * this can be found by calling 'CTerrorGameRules::FastGetSurvivorSet'
  * (this function stores the value from 'CTerrorGameRules: :GetSurvivorSet'', it used for optimization) 
@@ -493,7 +494,9 @@ stock const int WeaponSlots[WEPID_SIZE] =
  * If the player is not a survivor, then m_survivorCharacter netprop is set to 8.
  *
  * This damn code l4d2 :D, the order of the survivors on the l4d1 maps is changing,
- * after louis should be francis.
+ * after Louis should be Francis.~~~
+ *
+ * Or is it easier to get the survivor character index using netprop 'm_Gender'.
 */
 enum /*SurvivorCharacterType*/
 {

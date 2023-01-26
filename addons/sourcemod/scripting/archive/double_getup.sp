@@ -93,7 +93,7 @@ public Plugin myinfo =
 	name = "L4D2 Get-Up Fix",
 	author = "Darkid, Jacob",
 	description = "Fixes the problem when, after completing a getup animation, you have another one.",
-	version = "3.8",
+	version = "3.8.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
@@ -122,9 +122,7 @@ public void OnPluginStart()
 	HookEvent("player_incapacitated", player_incap);
 	HookEvent("revive_success", player_revive);
 
-	InitSurvivorModelTrie(); // Not necessary, but speeds up IdentifySurvivor() calls.
-
-	if(lateLoad) {
+	if (lateLoad) {
 		for (int i = 1; i <= MaxClients; i++) {
 			if (IsClientInGame(i)) {
 				OnClientPostAdminCheck(i);
