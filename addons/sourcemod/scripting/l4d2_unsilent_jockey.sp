@@ -182,8 +182,11 @@ Action delayedJockeySound(Handle timer, any client)
 
 void ChangeJockeyTimerStatus(int client, bool bEnable)
 {
-	delete g_hJockeySoundTimer[client];
-
+	if (g_hJockeySoundTimer[client] != null) {
+		KillTimer(g_hJockeySoundTimer[client], false);
+		g_hJockeySoundTimer[client] = null;
+	}
+	
 	if (bEnable) {
 		g_hJockeySoundTimer[client] = CreateTimer(g_hJockeyVoiceInterval.FloatValue, delayedJockeySound, client, TIMER_REPEAT);
 	}
