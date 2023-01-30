@@ -1,5 +1,12 @@
 "MatchModes"
 {
+	"VanillaMod Configs"
+	{
+		"vanillamod"
+		{
+			"name" "VanillaMod 2.8"
+		}
+	}
 	"ZoneMod Configs"
 	{
 		"zonemod"
