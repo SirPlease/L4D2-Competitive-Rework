@@ -63,7 +63,7 @@ public Plugin myinfo =
 	name = "Unsilent Jockey",
 	author = "Tabun, robex, Sir, A1m`",
 	description = "Makes jockeys emit sound constantly.",
-	version = "0.6",
+	version = "0.7",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -115,7 +115,7 @@ public void PlayerSpawn_Event(Event event, const char[] name, bool dontBroadcast
 	}
 
 	// Setup the sound interval
-	ChangeJockeyTimerStatus(client, true);
+	RequestFrame(JockeyRideEnd_NextFrame, GetClientUserId(client));
 }
 
 public void PlayerDeath_Event(Event event, const char[] name, bool dontBroadcast)
@@ -160,17 +160,19 @@ public void JockeyRideEnd_Event(Event event, const char[] name, bool dontBroadca
 	RequestFrame(JockeyRideEnd_NextFrame, GetClientUserId(client));
 }
 
-public void JockeyRideEnd_NextFrame(any userid)
+void JockeyRideEnd_NextFrame(any userid)
 {
 	int client = GetClientOfUserId(userid);
 
-	if (client > 0 && IsClientInGame(client) && IsPlayerAlive(client)) {
+	if (client > 0 && IsClientInGame(client) && IsPlayerAlive(client) && !GetEntProp(client, Prop_Send, "m_isGhost")) {
 		// Resume our sound spam as the Jockey is still alive
-		ChangeJockeyTimerStatus(client, true);
+		if (GetClientTeam(client) == TEAM_INFECTED && GetEntProp(client, Prop_Send, "m_zombieClass") == ZC_JOCKEY) {
+			ChangeJockeyTimerStatus(client, true);
+		}
 	}
 }
 
-public Action delayedJockeySound(Handle timer, any client)
+Action delayedJockeySound(Handle timer, any client)
 {
 	int rndPick = GetRandomInt(0, (sizeof(g_sJockeySound) - 1));
 	EmitSoundToAll(g_sJockeySound[rndPick], client, SNDCHAN_VOICE);
@@ -184,7 +186,7 @@ void ChangeJockeyTimerStatus(int client, bool bEnable)
 		KillTimer(g_hJockeySoundTimer[client], false);
 		g_hJockeySoundTimer[client] = null;
 	}
-
+	
 	if (bEnable) {
 		g_hJockeySoundTimer[client] = CreateTimer(g_hJockeyVoiceInterval.FloatValue, delayedJockeySound, client, TIMER_REPEAT);
 	}
