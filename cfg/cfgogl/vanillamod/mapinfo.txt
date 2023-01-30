@@ -509,6 +509,14 @@
 		"start_extra_dist"	"605.247620"
 		"end_point"			"2883.220703 2962.613037 -204.742737"
 		"end_dist"			"336.442200"
+		"tank_ban_flow"
+		{
+			"Early spawns"
+			{
+				"min"		"0"
+				"max"		"80"
+			}
+		}
 	}
 	"c8m2_subway"
 	{
