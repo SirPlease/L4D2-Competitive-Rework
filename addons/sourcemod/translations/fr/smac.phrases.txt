@@ -1,0 +1,135 @@
+"Phrases"
+{
+	"SMAC_Tag"
+	{
+		"fr"		"[SMAC] "
+	}
+	
+	"SMAC_Banned"
+	{
+		"fr"		"Vous avez été banni pour avoir triché"
+	}
+	
+	"SMAC_GlobalBanned"
+	{
+		"#format"	"{1:s},{2:s}"
+		"fr"		"Vous êtes listé sur la {1} Global Ban List. Regardez {2} pour plus d'informations"
+	}
+	
+	"SMAC_CommandSpamKick"
+	{
+		"fr"		"Vous avez été expulsé pour spam de commandes"
+	}
+	
+	"SMAC_IllegalDefuse"
+	{
+		"fr"		"Vous ne pouvez pas désamorcer à travers les murs."
+	}
+	
+	"SMAC_PleaseWait"
+	{
+		"fr"		"Veuillez attendre une minute avant d'essayer de vous reconnecter"
+	}
+	
+	"SMAC_FailedToReply"
+	{
+		"fr"		"Votre client n'a pas répondu à temps à une requête. Veuillez vous reconnecter ou relancer votre jeu"
+	}
+	
+	"SMAC_FailedAuth"
+	{
+		"fr"		"Votre client n'a pas été autorisé à temps. Veuillez vous reconnecter ou relancer votre jeu"
+	}
+	
+	"SMAC_Muted"
+	{
+		"#format"	"{1:N}"
+		"fr"		"{1} a été rendu muet par SourceMod Anti-Cheat."
+	}
+	
+	"SMAC_CvarViolation"
+	{
+		"#format"	"{1:N},{2:s}"
+		"fr"		"{1} a retourné une mauvaise valeur sur {2}."
+	}
+	
+	"SMAC_ShouldEqual"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"fr"		"Votre convar {1} devrait être égale à {2} mais elle est définie sur {3}. Veuillez la corriger avant de revenir"
+	}
+	
+	"SMAC_ShouldBeGreater"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"fr"		"Votre convar {1} devrait être supérieure ou égale à {2} mais elle est définie sur {3}. Veuillez la corriger avant de revenir"
+	}
+	
+	"SMAC_ShouldBeLess"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"fr"		"Votre convar {1} devrait être inférieure ou égale à {2} mais elle est définie sur {3}. Veuillez la corriger avant de revenir"
+	}
+	
+	"SMAC_ShouldBeBetween"
+	{
+		"#format"	"{1:s},{2:s},{3:s},{4:s}"
+		"fr"		"Votre convar {1} devrait être comprise entre {2} et {3} mais elle est définie sur {4}. Veuillez la corriger avant de revenir"
+	}
+	
+	"SMAC_ShouldBeOutside"
+	{
+		"#format"	"{1:s},{2:s},{3:s},{4:s}"
+		"fr"		"Votre convar {1} ne doit pas être comprise entre {2} et {3} mais elle est définie sur {4}. Veuillez la corriger avant de revenir"
+	}
+	
+	"SMAC_ChangeName"
+	{
+		"fr"		"Veuillez changer votre nom"
+	}
+	
+	"SMAC_CmdBanned"
+	{
+		"fr"		"Vous avez été banni pour une violation d'utilisation de commande"
+	}
+	
+	"SMAC_SayBlock"
+	{
+		"fr"		"Votre message a été bloqué à cause d'un caractère invalide."
+	}
+	
+	"SMAC_AimbotDetected"
+	{
+		"#format"	"{1:N},{2:i},{3:.0f},{4:s}"
+		"fr"		"{1} est soupçonné d'utiliser un aimbot. (Detection #{2} | Deviation: {3}° | Arme: {4})"
+	}
+	
+	"SMAC_AutoTriggerDetected"
+	{
+		"#format"	"{1:N},{2:s}"
+		"fr"		"{1} est soupçonné d'utiliser un auto-trigger: {2}"
+	}
+	
+	"SMAC_SpinhackDetected"
+	{
+		"#format"	"{1:N}"
+		"fr"		"{1} est soupçonné d'utiliser un spinhack."
+	}
+	
+	"SMAC_SpeedhackDetected"
+	{
+		"#format"	"{1:N}"
+		"fr"		"{1} est soupçonné d'utiliser un speedhack."
+	}
+	
+	"SMAC_EyetestDetected"
+	{
+		"#format"	"{1:N}"
+		"fr"		"{1} est soupçonné de tricher avec son champ de vision."
+	}
+	
+	"SMAC_WelcomeMsg"
+	{
+		"fr"		"Ce serveur est protégé par SourceMod Anti-Cheat."
+	}
+}

@@ -1,0 +1,117 @@
+"Phrases"
+{
+	"SMAC_Banned"
+	{
+		"da"		"Du er blevet udelukket på grund af brud på reglerne"
+	}
+	
+	"SMAC_GlobalBanned"
+	{
+		"da"		"Du er blevet opført i {1} globale Ban Liste. Se {2} for mere information"
+	}
+	
+	"SMAC_CommandSpamKick"
+	{
+		"da"		"Du er blevet smidt ud på grund af kommando spam"
+	}
+	
+	"SMAC_IllegalDefuse"
+	{
+		"da"		"Du kan ikke demontere bomben gennem vægge."
+	}
+	
+	"SMAC_PleaseWait"
+	{
+		"da"		"Vent et minut, før du forsøger at genoprette forbindelsen"
+	}
+	
+	"SMAC_FailedToReply"
+	{
+		"da"		"Din klient har ikke reageret på serverens forespørgsel. Venligst log in igen eller genstart dit spil"
+	}
+	
+	"SMAC_FailedAuth"
+	{
+		"da"		"Din klient har undladt at godkende i tide. Venligst igen eller genstarte dit spil"
+	}
+	
+	"SMAC_Muted"
+	{
+		"da"		"{1} er blevet dæmpet af SourceMod Anti-Cheat."
+	}
+	
+	"SMAC_CvarViolation"
+	{
+		"da"		"{1} gav ringe værdi {2}."
+	}
+	
+	"SMAC_ShouldEqual"
+	{
+		"da"		"Din convar {1} burde være {2}, men er {3}. Ret venligst dette, før du tilslutter igen."
+	}
+	
+	"SMAC_ShouldBeGreater"
+	{
+		"da"		"Din convar {1} skal være større end eller lig med {2}, men det blev sat til {3}. Ret venligst dette, før du tilslutter igen."
+	}
+	
+	"SMAC_ShouldBeLess"
+	{
+		"da"		"Din convar {1} skal være mindre end eller lig med {2}, men det blev sat til {3}. Ret venligst dette, før du tilslutter igen."
+	}
+	
+	"SMAC_ShouldBeBetween"
+	{
+		"da"		"Din convar {1} skal være mellem {2} og {3}, men det blev sat til {4}. Ret venligst dette, før du tilslutter igen."
+	}
+	
+	"SMAC_ShouldBeOutside"
+	{
+		"da"		"Din convar {1} må ikke være mellem {2} og {3}, men det blev sat til {4}. Ret venligst dette, før du tilslutter igen."
+	}
+	
+	"SMAC_ChangeName"
+	{
+		"da"		"Vær venlig at ændre dit navn"
+	}
+	
+	"SMAC_CmdBanned"
+	{
+		"da"		"Du er blevet udelukket for brug af misbrug kommandoer"
+	}
+	
+	"SMAC_SayBlock"
+	{
+		"da"		"Din besked er blevet blokeret på grund af et ugyldigt tegn."
+	}
+	
+	"SMAC_AimbotDetected"
+	{
+		"da"		"{1} er mistænkt for at bruge aimbot. (Detection #{2} | Afvigelse: {3}° | Våben: {4})"
+	}
+	
+	"SMAC_AutoTriggerDetected"
+	{
+		"da"		"{1} er mistænkt for at auto-trigger cheat: {2}"
+	}
+	
+	"SMAC_SpinhackDetected"
+	{
+		"da"		"{1} er mistænkt for at bruge spinhack."
+	}
+	
+	"SMAC_SpeedhackDetected"
+	{
+		"da"		"{1} er mistænkt for at bruge speedhack."
+	}
+	
+	"SMAC_EyetestDetected"
+	{
+		"da"		"{1} er mistænkt for at snyde med deres syn."
+	}
+	
+	"SMAC_WelcomeMsg"
+	{
+		"da"		"Denne server er beskyttet af SourceMod Anti-Cheat."
+	}
+}

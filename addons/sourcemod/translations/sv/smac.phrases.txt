@@ -1,0 +1,117 @@
+"Phrases"
+{
+	"SMAC_Banned"
+	{
+		"sv"		"Du har blivit bannad för en otillåten överträdelse"
+	}
+	
+	"SMAC_GlobalBanned"
+	{
+		"sv"		"Du har blivit listad på {1} globala ban lista. Se {2} för mer information"
+	}
+	
+	"SMAC_CommandSpamKick"
+	{
+		"sv"		"Du har blivit utslängd för spam kommandon"
+	}
+	
+	"SMAC_IllegalDefuse"
+	{
+		"sv"		"Du kan inte desarmera bomben genom väggar."
+	}
+	
+	"SMAC_PleaseWait"
+	{
+		"sv"		"Vänta en minut innan du försöker ansluta igen"
+	}
+	
+	"SMAC_FailedToReply"
+	{
+		"sv"		"Din klient har inte svarat på servern i tid. Vänligen återansluta eller starta ditt spel"
+	}
+	
+	"SMAC_FailedAuth"
+	{
+		"sv"		"Din klient har misslyckats att godkännas i tid. vänligen återanslut eller starta om ditt spel"
+	}
+	
+	"SMAC_Muted"
+	{
+		"sv"		"{1} har blivit dämpad av SourceMod Anti-Cheat."
+	}
+	
+	"SMAC_CvarViolation"
+	{
+		"sv"		"{1} gav dålig värde på {2}."
+	}
+	
+	"SMAC_ShouldEqual"
+	{
+		"sv"		"Din convar {1} ska vara lika {2} men det var satt till {3}. Vänligen korrigera detta innan du ansluter igen."
+	}
+	
+	"SMAC_ShouldBeGreater"
+	{
+		"sv"		"Din convar {1} ska vara större än eller lika med {2} men det var satt till {3}. Vänligen korrigera detta innan du ansluter igen."
+	}
+	
+	"SMAC_ShouldBeLess"
+	{
+		"sv"		"Din convar {1} bör vara mindre än eller lika med {2} men det var satt till {3}. Vänligen korrigera detta innan du ansluter igen."
+	}
+	
+	"SMAC_ShouldBeBetween"
+	{
+		"sv"		"Din convar {1} bör vara mellan {2} och {3} men det var satt till {4}. Vänligen korrigera detta innan du ansluter igen."
+	}
+	
+	"SMAC_ShouldBeOutside"
+	{
+		"sv"		"Din convar {1} bör inte vara mellan {2} och {3} men det var satt till {4}. Vänligen korrigera detta innan du ansluter igen."
+	}
+	
+	"SMAC_ChangeName"
+	{
+		"sv"		"Vänligen ändra ditt namn"
+	}
+	
+	"SMAC_CmdBanned"
+	{
+		"sv"		"Du har blivit bannad för användning av kränkande kommandon"
+	}
+	
+	"SMAC_SayBlock"
+	{
+		"sv"		"Ditt meddelande har blockerats på grund av ett ogiltigt tecken."
+	}
+	
+	"SMAC_AimbotDetected"
+	{
+		"sv"		"{1} är misstänkt för att använda en aimbot. (Detektion #{2} | Avvikelse: {3}° | Vapen: {4})"
+	}
+	
+	"SMAC_AutoTriggerDetected"
+	{
+		"sv"		"{1} är misstänkt för att använda en auto-trigger cheat: {2}"
+	}
+	
+	"SMAC_SpinhackDetected"
+	{
+		"sv"		"{1} är misstänkt för att använda en spinhack."
+	}
+	
+	"SMAC_SpeedhackDetected"
+	{
+		"sv"		"{1} är misstänkt för att använda en speedhack."
+	}
+	
+	"SMAC_EyetestDetected"
+	{
+		"sv"		"{1} är misstänks för fusk med deras synfält."
+	}
+	
+	"SMAC_WelcomeMsg"
+	{
+		"sv"		"Denna server är skyddat av SourceMod Anti-Cheat."
+	}
+}

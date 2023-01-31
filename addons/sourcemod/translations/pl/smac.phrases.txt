@@ -1,0 +1,117 @@
+"Phrases"
+{
+	"SMAC_Banned"
+	{
+		"pl"		"Zostałeś zbanowany za oszukiwanie"
+	}
+	
+	"SMAC_GlobalBanned"
+	{
+		"pl"		"Jesteś na liście {1} Global Ban List. Odwiedź {2} po więcej informacji"
+	}
+	
+	"SMAC_CommandSpamKick"
+	{
+		"pl"		"Zostałeś wyrzucony za spamowanie komendami"
+	}
+	
+	"SMAC_IllegalDefuse"
+	{
+		"pl"		"Nie możesz rozbroić bombę przez ściany."
+	}
+	
+	"SMAC_PleaseWait"
+	{
+		"pl"		"Proszę poczekaj minute zanim zrobisz reconnect"
+	}
+	
+	"SMAC_FailedToReply"
+	{
+		"pl"		"Twój klient nie może odpowiedzieć na zapytanie. Proszę o reconnect lub ponownie uruchomić grę"
+	}
+	
+	"SMAC_FailedAuth"
+	{
+		"pl"		"Twój klient nie może zostać autoryzowany. Proszę o reconnect lub ponownie uruchomić grę"
+	}
+	
+	"SMAC_Muted"
+	{
+		"pl"		"{1} został zmutowany przez SourceMod Anti-Cheat."
+	}
+	
+	"SMAC_CvarViolation"
+	{
+		"pl"		"{1} zwrócił złą wartość {2}."
+	}
+	
+	"SMAC_ShouldEqual"
+	{
+		"pl"		"Twoja wartość {1} powinna być równa {2} ,ale został ustawiony na {3}. Proszę poprawić to przed dołączeniem"
+	}
+	
+	"SMAC_ShouldBeGreater"
+	{
+		"pl"		"Twoja wartość  {1} powinna być większa niż lub równa {2} ,ale jest ustawiony na {3}. Proszę poprawić to przed dołączeniem"
+	}
+	
+	"SMAC_ShouldBeLess"
+	{
+		"pl"		"Twoja wartość {1} powinna być mniejsza niż lub równa {2} ,ale jest ustawiony na {3}. Proszę poprawić to przed dołączeniem"
+	}
+	
+	"SMAC_ShouldBeBetween"
+	{
+		"pl"		"Twoja wartość {1} powinna wynosić od {2} do {3} ,ale jest ustawiony na {4}. Proszę poprawić to przed dołączeniem"
+	}
+	
+	"SMAC_ShouldBeOutside"
+	{
+		"pl"		"Twoja wartość {1} powinna wynosić od {2} do {3} ,ale jest ustawiony na {4}. Proszę poprawić to przed dołączeniem"
+	}
+	
+	"SMAC_ChangeName"
+	{
+		"pl"		"Proszę zmienić nick"
+	}
+	
+	"SMAC_CmdBanned"
+	{
+		"pl"		"Zostałeś zbanowany za używanie niedozwolonych komend"
+	}
+	
+	"SMAC_SayBlock"
+	{
+		"pl"		"Twoja wiadomość została zablokowana z powodu nieprawidłowych znaków"
+	}
+	
+	"SMAC_AimbotDetected"
+	{
+		"pl"		"{1} jest podejrzany o używanie aimbota. (Wykrywanie #{2} | Deviation: {3}° | Broń: {4})"
+	}
+	
+	"SMAC_AutoTriggerDetected"
+	{
+		"pl"		"{1} jest podejrzany o używanie auto-trigger cheat: {2}"
+	}
+	
+	"SMAC_SpinhackDetected"
+	{
+		"pl"		"{1} jest podejrzany o używanie spinhack."
+	}
+	
+	"SMAC_SpeedhackDetected"
+	{
+		"pl"		"{1} jest podejrzany o używanie speedhack."
+	}
+	
+	"SMAC_EyetestDetected"
+	{
+		"pl"		"{1} jest podejrzany o używanie cheating their eye angles."
+	}
+	
+	"SMAC_WelcomeMsg"
+	{
+		"pl"		"Ten serwer jest chroniony przez SourceMod Anti-Cheat."
+	}
+}

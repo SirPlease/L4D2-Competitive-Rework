@@ -1,0 +1,117 @@
+"Phrases"
+{
+	"SMAC_Banned"
+	{
+		"hu"		"Csalás miatt ki lettél tiltva erről a szerverről"
+	}
+	
+	"SMAC_GlobalBanned"
+	{
+		"hu"		"Steam ID-d szerepel a(z) {1} Global Ban Listán. Infó: {2}"
+	}
+	
+	"SMAC_CommandSpamKick"
+	{
+		"hu"		"Ki lettél rugva szerverparancs spammelés miatt"
+	}
+	
+	"SMAC_IllegalDefuse"
+	{
+		"hu"		"Nem lehet falon át hatástalanítani a bombát."
+	}
+	
+	"SMAC_PleaseWait"
+	{
+		"hu"		"Kérlek várj egy percet, mielőtt újra csatlakozni próbálnál"
+	}
+	
+	"SMAC_FailedToReply"
+	{
+		"hu"		"A kliensed nem válaszolt időben a szervernek. Csatlakozz újra, vagy indítsd újra a játékod"
+	}
+	
+	"SMAC_FailedAuth"
+	{
+		"hu"		"A kliensed nem azonosította magát időben. Csatlakozz újra, vagy indítsd újra a játékod"
+	}
+	
+	"SMAC_Muted"
+	{
+		"hu"		"{1} automatikusan le lett némítva"
+	}
+	
+	"SMAC_CvarViolation"
+	{
+		"hu"		"{1} rossz értékkel válaszolt {2}."
+	}
+	
+	"SMAC_ShouldEqual"
+	{
+		"hu"		"{1} cvar értéke ennyi kell legyen {2} de ez van beállítva {3}. Javítsd"
+	}
+	
+	"SMAC_ShouldBeGreater"
+	{
+		"hu"		"Cvarod: {1} értéke nem lehet kisebb mint: {2}, de neked ez van beállítva {3}. Javítsd"
+	}
+	
+	"SMAC_ShouldBeLess"
+	{
+		"hu"		"Ez a cvarod {1} nem lehet nagyobb mint: {2}, de neked ez van beállítva: {3}. Javítsd"
+	}
+	
+	"SMAC_ShouldBeBetween"
+	{
+		"hu"		"{1} cvarod értéke {2} és {3} között kellene legyen, de neked ennyi: {4}. Javítsd"
+	}
+	
+	"SMAC_ShouldBeOutside"
+	{
+		"hu"		"{1} cvarod értéke {2} és {3} között ne legyen, de neked ennyi: {4}. Javítsd"
+	}
+	
+	"SMAC_ChangeName"
+	{
+		"hu"		"Kérlek változtass nevet (illegális karakter a nevedben)"
+	}
+	
+	"SMAC_CmdBanned"
+	{
+		"hu"		"Ki lettél innen tiltva jogosulatlan szerverparancs használata miatt"
+	}
+	
+	"SMAC_SayBlock"
+	{
+		"hu"		"Üzeneted blokkolva lett, mert illegális karaktert tartalmazott"
+	}
+	
+	"SMAC_AimbotDetected"
+	{
+		"hu"		"{1} -nél célzó robot észlelve (Érzékelve: #{2} | Eltérés: {3}° | Fegyver: {4})"
+	}
+	
+	"SMAC_AutoTriggerDetected"
+	{
+		"hu"		"{1} -nél lövő robot észlelve: {2}"
+	}
+	
+	"SMAC_SpinhackDetected"
+	{
+		"hu"		"{1} -nél pörgető robot észlelve"
+	}
+	
+	"SMAC_SpeedhackDetected"
+	{
+		"hu"		"{1} -nél sebesség növelő robot észlelve"
+	}
+	
+	"SMAC_EyetestDetected"
+	{
+		"hu"		"{1} -nél szem szög csalás észlelve"
+	}
+	
+	"SMAC_WelcomeMsg"
+	{
+		"hu"		"Ezt a szervert a SourceMod Anti-Cheat védi a csalóktól"
+	}
+}

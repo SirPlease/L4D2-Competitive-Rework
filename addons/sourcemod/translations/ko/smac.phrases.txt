@@ -1,0 +1,117 @@
+"Phrases"
+{
+	"SMAC_Banned"
+	{
+		"ko"		"당신은 부정행위를 한 것으로 간주되어 서버로부터 차단되었습니다."
+	}
+	
+	"SMAC_GlobalBanned"
+	{
+		"ko"		"당신은 {1} 글로벌 밴 목록에 올라있습니다. 자세한 정보를 보려면, {2} 에서 확인하세요."
+	}
+	
+	"SMAC_CommandSpamKick"
+	{
+		"ko"		"광고성 명령어를 사용하여 서버로부터 추방되었습니다."
+	}
+	
+	"SMAC_IllegalDefuse"
+	{
+		"ko"		"벽을 통과하여 폭탄을 제거할 수 없습니다."
+	}
+	
+	"SMAC_PleaseWait"
+	{
+		"ko"		"다시 연결하기 전에 잠시 기다려주십시오."
+	}
+	
+	"SMAC_FailedToReply"
+	{
+		"ko"		"게임 클라이언트가 시간 내에 쿼리와 응답하는데 실패했습니다. 다시 접속하거나 게임을 다시 시작해주세요."
+	}
+	
+	"SMAC_FailedAuth"
+	{
+		"ko"		"게임 클라이언트가 시간 내에 승인받는데 실패했습니다. 다시 접속하거나 게임을 다시 시작해주세요."
+	}
+	
+	"SMAC_Muted"
+	{
+		"ko"		"{1} 님이 SourceMod Anti-Cheat 에 의해 음성 사용이 금지되었습니다."
+	}
+	
+	"SMAC_CvarViolation"
+	{
+		"ko"		"{1} 플러그인이 {2} 에서 잘못된 값을 리턴했습니다."
+	}
+	
+	"SMAC_ShouldEqual"
+	{
+		"ko"		"CVar {1} 값이 {2} 와 같아야 합니다 (현재 값: {3}). 재접속하기 전에 수정해주세요."
+	}
+	
+	"SMAC_ShouldBeGreater"
+	{
+		"ko"		"CVar {1} 값이 {2} 이상이어야 합니다 (현재 값: {3}). 재접속하기 전에 수정해주세요."
+	}
+	
+	"SMAC_ShouldBeLess"
+	{
+		"ko"		"CVar {1} 값이 {2} 이하여야 합니다 (현재 값: {3}). 재접속하기 전에 수정해주세요."
+	}
+	
+	"SMAC_ShouldBeBetween"
+	{
+		"ko"		"CVar {1} 값이 {2} 와 {3} 사이여야 합니다 (현재 값: {4}). 재접속하기 전에 수정해주세요."
+	}
+	
+	"SMAC_ShouldBeOutside"
+	{
+		"ko"		"CVar {1} 값이 {2} 와 {3} 사이에 아니어야합니다 (현재 값: {4}). 재접속하기 전에 수정해주세요."
+	}
+	
+	"SMAC_ChangeName"
+	{
+		"ko"		"닉네임을 바꿔주세요."
+	}
+	
+	"SMAC_CmdBanned"
+	{
+		"ko"		"당신은 명령어 사용법 위반으로 서버로부터 차단되었습니다."
+	}
+	
+	"SMAC_SayBlock"
+	{
+		"ko"		"메세지가 잘못된 문자열로 인해 서버로부터 차단되었습니다."
+	}
+	
+	"SMAC_AimbotDetected"
+	{
+		"ko"		"{1} 님이 에임봇을 사용하는 것으로 의심됩니다. (탐지 #{2} | 편차: {3}° | 무기: {4})"
+	}
+	
+	"SMAC_AutoTriggerDetected"
+	{
+		"ko"		"{1} 님이 자동 트리거 치트를 사용하는 것으로 의심됩니다: {2}"
+	}
+	
+	"SMAC_SpinhackDetected"
+	{
+		"ko"		"{1} 님이 스핀핵을 사용하는 것으로 의심됩니다."
+	}
+	
+	"SMAC_SpeedhackDetected"
+	{
+		"ko"		"{1} 님이 스피드핵을 사용하는 것으로 의심됩니다."
+	}
+	
+	"SMAC_EyetestDetected"
+	{
+		"ko"		"{1} 님이 시야 각도를 이용한 부정행위를 하는것으로 의심됩니다."
+	}
+	
+	"SMAC_WelcomeMsg"
+	{
+		"ko"		"현재 서버는 SourceMod Anti-Cheat 에 의해 보호되고 있습니다."
+	}
+}

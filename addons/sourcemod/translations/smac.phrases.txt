@@ -1,0 +1,135 @@
+"Phrases"
+{
+	"SMAC_Tag"
+	{
+		"en"		"[SMAC] "
+	}
+	
+	"SMAC_Banned"
+	{
+		"en"		"You have been banned for a cheating infraction!"
+	}
+	
+	"SMAC_GlobalBanned"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"		"You are listed on the {1} Global Ban List! See {2} for more information."
+	}
+	
+	"SMAC_CommandSpamKick"
+	{
+		"en"		"You have been kicked for command spamming!"
+	}
+	
+	"SMAC_IllegalDefuse"
+	{
+		"en"		"You cannot defuse through walls!"
+	}
+	
+	"SMAC_PleaseWait"
+	{
+		"en"		"Please wait a minute before attempting to reconnect."
+	}
+	
+	"SMAC_FailedToReply"
+	{
+		"en"		"Your client has failed to reply to a query in time! Please reconnect or restart your game."
+	}
+	
+	"SMAC_FailedAuth"
+	{
+		"en"		"Your client has failed to authorize in time! Please reconnect or restart your game."
+	}
+	
+	"SMAC_Muted"
+	{
+		"#format"	"{1:N}"
+		"en"		"{1} has been muted by SourceMod Anti-Cheat."
+	}
+	
+	"SMAC_CvarViolation"
+	{
+		"#format"	"{1:N},{2:s}"
+		"en"		"{1} returned a bad value on {2}."
+	}
+	
+	"SMAC_ShouldEqual"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"en"		"Your convar {1} should equal {2}, but it was set to {3}! Please correct this before rejoining."
+	}
+	
+	"SMAC_ShouldBeGreater"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"en"		"Your convar {1} should be greater than or equal to {2}, but was set to {3}! Please correct this before rejoining."
+	}
+	
+	"SMAC_ShouldBeLess"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"en"		"Your convar {1} should be less than or equal to {2}, but was set to {3}! Please correct this before rejoining."
+	}
+	
+	"SMAC_ShouldBeBetween"
+	{
+		"#format"	"{1:s},{2:s},{3:s},{4:s}"
+		"en"		"Your convar {1} should be between {2} and {3}, but was set to {4}! Please correct this before rejoining."
+	}
+	
+	"SMAC_ShouldBeOutside"
+	{
+		"#format"	"{1:s},{2:s},{3:s},{4:s}"
+		"en"		"Your convar {1} should not be between {2} and {3}, but was set to {4}! Please correct this before rejoining."
+	}
+	
+	"SMAC_ChangeName"
+	{
+		"en"		"Please change your name!"
+	}
+	
+	"SMAC_CmdBanned"
+	{
+		"en"		"You have been banned for a command usage violation!"
+	}
+	
+	"SMAC_SayBlock"
+	{
+		"en"		"Your message has been blocked due to an invalid character!"
+	}
+	
+	"SMAC_AimbotDetected"
+	{
+		"#format"	"{1:N},{2:i},{3:.0f},{4:s}"
+		"en"		"{1} is suspected of using an aimbot! (Detection #{2} | Deviation: {3}° | Weapon: {4})"
+	}
+	
+	"SMAC_AutoTriggerDetected"
+	{
+		"#format"	"{1:N},{2:s}"
+		"en"		"{1} is suspected of using auto-trigger cheat: {2}."
+	}
+	
+	"SMAC_SpinhackDetected"
+	{
+		"#format"	"{1:N}"
+		"en"		"{1} is suspected of using a spinhack."
+	}
+	
+	"SMAC_SpeedhackDetected"
+	{
+		"#format"	"{1:N}"
+		"en"		"{1} is suspected of using a speedhack."
+	}
+	
+	"SMAC_EyetestDetected"
+	{
+		"#format"	"{1:N}"
+		"en"		"{1} is suspected of cheating with their eye angles."
+	}
+	
+	"SMAC_WelcomeMsg"
+	{
+		"en"		"This server is protected by SourceMod Anti-Cheat."
+	}
+}
