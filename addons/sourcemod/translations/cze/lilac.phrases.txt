@@ -1,0 +1,60 @@
+"Phrases"
+{
+	"welcome_msg"
+	{
+		"#format"	"{1:s}"
+		"cze"		"Tento server je chráněn Little Anti-Cheat {1}"
+	}
+
+	"kick_query_failure"
+	{
+		"cze"		"Error: Selhnání odpovědi na dotaz, restartujte hru pokud problém nadále přetrvává"
+	}
+
+	"kick_interp_exploit"
+	{
+		"#format"	"{1:.0f},{2:d},{3:.3f}"
+		"cze"		"Detekováno neférové zneužití: Interp je příliš velký. ({1}ms / {2}ms max). Prosím nastavte svůj cl_interp na hodnotu {3} či méně"
+	}
+
+	"tban_ping_high"
+	{
+		"#format"	"{1:.0f},{2:d}"
+		"cze"		"Váš ping je příliš vysoký ({1} / {2} max)"
+	}
+
+	"kick_ban_generic"
+	{
+		"cze"		"Byl jste zabanován z tohoto serveru"
+	}
+
+	"ban_angle"
+	{
+		"cze"		"Angle-Cheats detekován"
+	}
+
+	"ban_chat_clear"
+	{
+		"cze"		"Chat-Clear detekován"
+	}
+
+	"ban_convar"
+	{
+		"cze"		"Nalezen špatný ConVar"
+	}
+
+	"ban_bhop"
+	{
+		"cze"		"Bhop detekován"
+	}
+
+	"ban_aimbot"
+	{
+		"cze"		"Aimbot detekován"
+	}
+
+	"ban_aimlock"
+	{
+		"cze"		"Aimlock detekován"
+	}
+}
