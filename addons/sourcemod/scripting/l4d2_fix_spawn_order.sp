@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "4.1"
+#define PLUGIN_VERSION "4.2"
 
 public Plugin myinfo = 
 {
@@ -181,6 +181,9 @@ void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 	
 	if (team == 3)
 	{
+		if (!director_allow_infected_bots.BoolValue)
+			return;
+		
 		if (IsFakeClient(client))
 			return;
 		
@@ -199,17 +202,27 @@ void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 			if (GetClientTeam(i) != 3)
 				continue;
 			
+			if (GetZombieClass(i) == SI_Tank)
+				continue;
+			
 			int userid = GetClientUserId(i);
 			if (lastUserId < userid)
 				lastUserId = userid;
 		}
 		
+		PrintDebug("\x04[DEBUG] \x01Infected Team is \x04going over capacity \x01after \x05%N \x01joined", client);
+		
 		if (lastUserId > 0)
-			ForcePlayerSuicide(GetClientOfUserId(lastUserId));
+		{
+			int lastBot = GetClientOfUserId(lastUserId);
+			
+			PrintDebug("\x04[DEBUG] \x01Selected and killing \x05%N", lastBot);
+			ForcePlayerSuicide(lastBot);
+		}
 	}
 	else if (oldteam == 3)
 	{
-		if (!IsPlayerAlive(client)) // ghost only
+		if (!IsPlayerAlive(client))
 			return;
 		
 		PrintDebug("\x04[DEBUG] \x05%N \x01left Infected Team \x01as (\x04%s\x01)", client, g_sSIClassNames[GetZombieClass(client)]);
