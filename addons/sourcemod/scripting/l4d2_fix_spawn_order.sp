@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "4.0"
+#define PLUGIN_VERSION "4.1"
 
 public Plugin myinfo = 
 {
@@ -63,7 +63,7 @@ int g_iStoredClass[MAXPLAYERS+1];
 bool g_bPlayerSpawned[MAXPLAYERS+1];
 
 ConVar g_cvDebug;
-ConVar director_allow_infected_bots;
+ConVar director_allow_infected_bots, z_max_player_zombies;
 
 public void OnPluginStart()
 {
@@ -77,6 +77,7 @@ public void OnPluginStart()
 	g_cvDebug = CreateConVar("sackorder_debug", "0", "Debuggin the plugin.", FCVAR_SPONLY|FCVAR_HIDDEN, true, 0.0, true, 1.0);
 	
 	director_allow_infected_bots = FindConVar("director_allow_infected_bots");
+	z_max_player_zombies = FindConVar("z_max_player_zombies");
 	
 	g_SpawnsArray = new ArrayList();
 }
@@ -169,20 +170,52 @@ public void L4D_OnMaterializeFromGhost(int client)
 
 void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 {
+	int team = event.GetInt("team");
 	int oldteam = event.GetInt("oldteam");
-	if (oldteam != 3 || oldteam == event.GetInt("team"))
+	if (team == oldteam)
 		return;
 	
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if (!client || !IsClientInGame(client))
 		return;
 	
-	if (!IsPlayerAlive(client)) // ghost only
-		return;
-	
-	PrintDebug("\x04[DEBUG] \x05%N \x01left Infected Team \x01as (\x04%s\x01)", client, g_sSIClassNames[GetZombieClass(client)]);
-	
-	QueuePlayerSI(client);
+	if (team == 3)
+	{
+		if (IsFakeClient(client))
+			return;
+		
+		if (GetSICount(false) + 1 <= z_max_player_zombies.IntValue)
+			return;
+		
+		int lastUserId = 0;
+		for (int i = 1; i <= MaxClients; ++i)
+		{
+			if (!IsClientInGame(i) || !IsPlayerAlive(i))
+				continue;
+			
+			if (!IsFakeClient(i))
+				continue;
+			
+			if (GetClientTeam(i) != 3)
+				continue;
+			
+			int userid = GetClientUserId(i);
+			if (lastUserId < userid)
+				lastUserId = userid;
+		}
+		
+		if (lastUserId > 0)
+			ForcePlayerSuicide(GetClientOfUserId(lastUserId));
+	}
+	else if (oldteam == 3)
+	{
+		if (!IsPlayerAlive(client)) // ghost only
+			return;
+		
+		PrintDebug("\x04[DEBUG] \x05%N \x01left Infected Team \x01as (\x04%s\x01)", client, g_sSIClassNames[GetZombieClass(client)]);
+		
+		QueuePlayerSI(client);
+	}
 }
 
 void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
@@ -221,6 +254,12 @@ void HandlePlayerReplace(int replacer, int replacee)
 		return;
 	
 	PrintDebug("\x04[DEBUG] \x05%N \x01replaced \x05%N \x01as (\x04%s\x01)", replacer, replacee, g_sSIClassNames[GetZombieClass(replacer)]);
+	
+	if (GetZombieClass(replacer) == SI_Tank && !IsFakeClient(replacer))
+	{
+		QueuePlayerSI(replacer);
+		return;
+	}
 	
 	g_iStoredClass[replacer] = g_iStoredClass[replacee];
 	g_bPlayerSpawned[replacer] = g_bPlayerSpawned[replacee]; // what if replacing ghost? :(
@@ -299,9 +338,18 @@ public Action L4D_OnSpawnSpecial(int &zombieClass, const float vecPos[3], const 
 	if (!director_allow_infected_bots.BoolValue)
 		return Plugin_Continue;
 	
+	if (GetSICount(false) + 1 > z_max_player_zombies.IntValue)
+	{
+		PrintDebug("\x04[DEBUG] \x01Blocking director spawn for \x03going over player limit\x01.");
+		return Plugin_Handled;
+	}
+	
 	g_ZombieClass = PopQueuedSI(-1);
 	if (g_ZombieClass == SI_None)
-		return Plugin_Continue;
+	{
+		PrintDebug("\x04[DEBUG] \x01Blocking director spawn for running out of available SI.", g_sSIClassNames[g_ZombieClass]);
+		return Plugin_Handled;
+	}
 	
 	zombieClass = g_ZombieClass;
 	PrintDebug("\x04[DEBUG] \x01Overridden to (\x04%s\x01)", g_sSIClassNames[g_ZombieClass]);
@@ -545,6 +593,35 @@ int CollectQueuedZombies(int zombies[SI_MAX_SIZE])
 	PrintDebug("\x04[DEBUG] \x01Collect queued zombies (%s)", classString);
 	
 	return size;
+}
+
+int GetSICount(bool isHumanOnly = true)
+{
+	int count = 0;
+	for (int i = 1; i <= MaxClients; ++i)
+	{
+		if (!IsClientInGame(i))
+			continue;
+		
+		if (GetClientTeam(i) != 3)
+			continue;
+		
+		if (IsFakeClient(i))
+		{
+			if (isHumanOnly)
+				continue;
+			
+			if (GetZombieClass(i) == SI_Tank)
+				continue;
+			
+			if (!IsPlayerAlive(i))
+				continue;
+		}
+		
+		count++;
+	}
+	
+	return count;
 }
 
 int GetZombieClass(int client)
