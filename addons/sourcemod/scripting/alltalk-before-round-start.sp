@@ -35,8 +35,6 @@ public Action OnMapStartTimer(Handle timer)
 
 public void EnableAlltalkIfFirstMap()
 {
-    PrintToChatAll("EnableAlltalkIfFirstMap");
-
     char currentMap[64];
     GetCurrentMap(currentMap, sizeof(currentMap));
 
