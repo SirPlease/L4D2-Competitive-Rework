@@ -47,10 +47,7 @@ public Action:Timer_SpawnMelee( Handle:timer )
         
         SpawnEntity("weapon_pumpshotgun", SpawnPosition, SpawnAngle);
         SpawnEntity("weapon_shotgun_chrome", SpawnPosition, SpawnAngle);
-        SpawnEntity("weapon_shotgun_chrome", SpawnPosition, SpawnAngle);
-
         SpawnEntity("weapon_smg", SpawnPosition, SpawnAngle);
-        SpawnEntity("weapon_smg_silenced", SpawnPosition, SpawnAngle);
         SpawnEntity("weapon_smg_silenced", SpawnPosition, SpawnAngle);
         
         g_bSpawnedMelee = true;
