@@ -23,6 +23,20 @@ public void OnRoundIsLive()
 
 public void OnMapStart()
 {
+    CreateTimer(10.0, OnMapStartTimer);
+}
+
+public Action OnMapStartTimer(Handle timer)
+{
+	EnableAlltalkIfFirstMap();
+
+	return Plugin_Continue;
+}
+
+public void EnableAlltalkIfFirstMap()
+{
+    PrintToChatAll("EnableAlltalkIfFirstMap");
+
     char currentMap[64];
     GetCurrentMap(currentMap, sizeof(currentMap));
 
