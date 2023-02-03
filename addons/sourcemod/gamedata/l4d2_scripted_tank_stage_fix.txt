@@ -1,24 +1,9 @@
 "Games"
 {
-	"left4dead2"
+	"#default"
 	{
 		"Functions"
 		{
-			"CDirectorScriptedEventManager::UpdateScriptedTankStage"
-			{
-				"signature"		"CDirectorScriptedEventManager::UpdateScriptedTankStage"
-				"callconv"		"thiscall"
-				"return"		"int"
-				"this"			"address"
-				"arguments"
-				{
-					"count"
-					{
-						"type"	"int"
-					}
-				}
-			}
-			
 			"ZombieManager::ReplaceTank"
 			{
 				"signature"		"ZombieManager::ReplaceTank"
@@ -38,6 +23,57 @@
 				}
 			}
 		}
+	}
+	
+	// From left4dhooks thanks to Silvers
+	"left4dead"
+	{
+		"Offsets"
+		{
+			"m_iTankCount" // Found in "Director::UpdateVersusBossSpawning"
+			{
+				"linux"			"524"
+				"windows"		"528"
+			}
+		}
+		
+		"Signatures"
+		{
+			/*
+			 * ZombieManager::ReplaceTank(CTerrorPlayer *, CTerrorPlayer *)
+			 *
+			 * Search "TANK OFFER: Looking for players" for "Director::CreateTanks".
+			 * Called by this function near bottom.
+			 */
+			"ZombieManager::ReplaceTank"
+			{
+				"library"		"server"
+				"linux"			"@_ZN13ZombieManager11ReplaceTankEP13CTerrorPlayerS1_"
+				"windows" 		"\x83\x2A\x2A\x55\x56\x8B\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x57\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83\x2A\x03"
+				/* 83 ? ? 55 56 8B ? ? ? 8B ? 8B ? ? ? ? ? 8B ? 57 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? E8 ? ? ? ? 83 ? 03 */
+			}
+		}
+	}
+	
+	"left4dead2"
+	{
+		"Functions"
+		{
+			"CDirectorScriptedEventManager::UpdateScriptedTankStage"
+			{
+				"signature"		"CDirectorScriptedEventManager::UpdateScriptedTankStage"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"address"
+				"arguments"
+				{
+					"count"
+					{
+						"type"	"int"
+					}
+				}
+			}
+		}
 		
 		"Offsets"
 		{
@@ -45,6 +81,13 @@
 			{
 				"linux"			"139"
 				"windows"		"139"
+			}
+			
+			// From left4dhooks thanks to Silvers
+			"m_iTankCount"
+			{
+				"linux"			"256"
+				"windows"		"256"
 			}
 		}
 		
@@ -66,9 +109,9 @@
 			 */
 			"ZombieManager::ReplaceTank"
 			{
-				"library"	"server"
-				"linux"		"@_ZN13ZombieManager11ReplaceTankEP13CTerrorPlayerS1_"
-				"windows"	"\x55\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\xFF"
+				"library"		"server"
+				"linux"			"@_ZN13ZombieManager11ReplaceTankEP13CTerrorPlayerS1_"
+				"windows"		"\x55\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\xFF"
 				/* 55 ? ? ? ? ? ? ? 8B ? ? 8B ? 8B ? ? ? ? ? ? 8B ? 8B ? FF */
 			}
 		}
