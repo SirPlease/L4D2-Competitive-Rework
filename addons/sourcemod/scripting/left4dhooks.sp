@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.127"
+#define PLUGIN_VERSION		"1.127-CompetitiveRework"
 #define PLUGIN_VERLONG		1127
 
 #define DEBUG				0
