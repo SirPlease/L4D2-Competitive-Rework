@@ -13,5 +13,118 @@
 		{
 			"name" "ZoneMod 2.8"
 		}
+		"zoneretro"
+		{
+			"name" "ZoneMod Retro 2.8"
+		}
+		"zm3v3"
+		{
+			"name" "3v3 ZoneMod"
+		}
+		"zm2v2"
+		{
+			"name" "2v2 ZoneMod"
+		}
+		"zm1v1"
+		{
+			"name" "1v1 ZoneMod"
+		}
+	}
+	"NeoMod Configs"
+	{
+		"neomod"
+		{
+			"name" "NeoMod Tourney 0.4a"
+		}
+	}
+	"NextMod Configs"
+	{
+		"nextmod"
+		{
+			"name" "NextMod 1.0.5"
+		}
+		"nextmod3v3"
+		{
+			"name" "3v3 NextMod"
+		}
+		"nextmod2v2"
+		{
+			"name" "2v2 NextMod"
+		}
+		"nextmod1v1"
+		{
+			"name" "1v1 NextMod"
+		}
+	}
+	"Promod Configs"
+	{
+		"pmelite"
+		{
+			"name" "Promod Elite 1.1"
+		}
+	}
+	"Acemod Revamped Configs"
+	{
+		"acemodrv"
+		{
+			"name" "Acemod RV 1.3"
+		}
+		"amrv3v3"
+		{
+			"name" "3v3 Acemod RV"
+		}
+		"amrv2v2"
+		{
+			"name" "2v2 Acemod RV"
+		}
+		"amrv1v1"
+		{
+			"name" "1v1 Acemod RV"
+		}
+	}
+	"EQ Configs"
+	{
+		"eq"
+		{
+			"name" "Equilibrium 3.0c"
+		}
+		"eq3v3"
+		{
+			"name" "3v3 EQ"
+		}
+		"eq2v2"
+		{
+			"name" "2v2 EQ"
+		}
+		"eq1v1"
+		{
+			"name" "1v1 EQ"
+		}
+	}
+	"Apex Configs"
+	{
+		"apex"
+		{
+			"name" "Apex 1.1.2"
+		}
+	}
+	"Hunters Configs"
+	{
+		"zonehunters"
+		{
+			"name" "ZoneHunters 2.8"
+		}
+		"zh3v3"
+		{
+			"name" "3v3 ZoneHunters"
+		}
+		"zh2v2"
+		{
+			"name" "2v2 ZoneHunters"
+		}
+		"zh1v1"
+		{
+			"name" "1v1 ZoneHunters"
+		}
 	}
 }
