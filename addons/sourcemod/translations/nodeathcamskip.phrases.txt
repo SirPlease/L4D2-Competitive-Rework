@@ -1,0 +1,8 @@
+"Phrases"
+{
+	"WarnExploiting"
+	{
+		"#format"	"{1:N}"
+		"en"		"{red}[{default}Exploit{red}] {olive}{1} {default}tried skipping the Death Timer."
+	}
+}

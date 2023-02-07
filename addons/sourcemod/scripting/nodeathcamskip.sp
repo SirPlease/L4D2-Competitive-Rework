@@ -3,26 +3,46 @@
 
 #include <sourcemod>
 #include <left4dhooks>
+#include <colors>
 
-float fSavedTime[MAXPLAYERS + 1] = {0.0, ...};
+#define PLUGIN_VERSION "2.1"
 
-public Plugin myinfo = {
+public Plugin myinfo =
+{
 	name = "Death Cam Skip Fix",
 	author = "Jacob, Sir, Forgetest",
 	description = "Blocks players skipping their death time by going spec",
-	version = "2.0",
+	version = PLUGIN_VERSION,
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
+float g_flSavedTime[MAXPLAYERS + 1] = {0.0, ...};
+bool g_bSkipPrint[MAXPLAYERS + 1];
+ConVar g_cvExploitAnnounce;
+
 public void OnPluginStart()
 {
+	LoadPluginTranslations("nodeathcamskip.phrases");
+	
 	HookEvent("player_death", Event_PlayerDeath);
 	HookEvent("player_team", Event_PlayerTeam);
+	
+	g_cvExploitAnnounce = CreateConVar("deathcam_skip_announce", "1", "Print a message when someone exploits.", FCVAR_SPONLY, true, 0.0, true, 1.0);
 }
 
 public void OnClientPutInServer(int client)
 {
-	fSavedTime[client] = 0.0;
+	g_flSavedTime[client] = 0.0;
+	g_bSkipPrint[client] = false;
+}
+
+void Event_PlayerDeath(Event event, char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	if (!IsValidInfected(client))
+		return;
+	
+	SetExploiter(client);
 }
 
 void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
@@ -41,7 +61,7 @@ void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 	{
 		if (IsPlayerAlive(client) && !GetEntProp(client, Prop_Send, "m_isGhost"))
 		{
-			fSavedTime[client] = GetGameTime();
+			SetExploiter(client);
 		}
 	}
 	else if (team == 3)
@@ -56,24 +76,45 @@ void OnNextFrame_PlayerTeam(int userid)
 	if (!IsValidInfected(client))
 		return;
 	
-	if (fSavedTime[client] == 0.0)
+	if (g_flSavedTime[client] == 0.0)
 		return;
 	
-	if (GetGameTime() - fSavedTime[client] >= 6.0)
+	if (GetGameTime() - g_flSavedTime[client] >= 6.0)
 		return;
 	
 	L4D_State_Transition(client, STATE_DEATH_ANIM);
-	SetEntPropFloat(client, Prop_Send, "m_flDeathTime", fSavedTime[client]);
+	SetEntPropFloat(client, Prop_Send, "m_flDeathTime", g_flSavedTime[client]);
+	
+	WarnExploiting(client);
 }
 
-void Event_PlayerDeath(Event event, char[] name, bool dontBroadcast)
+void WarnExploiting(int client)
 {
-	int client = GetClientOfUserId(event.GetInt("userid"));
+	if (!g_cvExploitAnnounce.BoolValue)
+		return;
+	
+	if (g_bSkipPrint[client])
+		return;
+	
+	CPrintToChatAll("%t", "WarnExploiting", client);
+	g_bSkipPrint[client] = true;
+}
 
-	if (IsValidInfected(client))
+void SetExploiter(int client)
+{
+	g_flSavedTime[client] = GetGameTime();
+	g_bSkipPrint[client] = false;
+}
+
+void LoadPluginTranslations(const char[] translation)
+{
+	char sPath[PLATFORM_MAX_PATH];
+	BuildPath(Path_SM, sPath, sizeof(sPath), "translations/%s.txt", translation);
+	if (!FileExists(sPath))
 	{
-		fSavedTime[client] = GetGameTime();
+		SetFailState("Missing translations \"%s\"", translation);
 	}
+	LoadTranslations(translation);
 }
 
 stock bool IsValidInfected(int client)
