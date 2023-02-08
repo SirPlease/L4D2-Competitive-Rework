@@ -116,7 +116,7 @@ public Plugin myinfo =
 {
 	name = "L4D2 Godframes Control combined with FF Plugins",
 	author = "Stabby, CircleSquared, Tabun, Visor, dcx, Sir, Spoon, A1m`",
-	version = "0.6.6",
+	version = "0.6.7",
 	description = "Allows for control of what gets godframed and what doesnt along with integrated FF Support from l4d2_survivor_ff (by dcx and Visor) and l4d2_shotgun_ff (by Visor)"
 };
 
@@ -314,9 +314,9 @@ public Action OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &
 		exotic damage flag that stands for a cut enemy from HL2
 		**/
 
-		if (iDamagetype == DMG_PLASMA) {
-			return Plugin_Continue;
-		}
+		//if (iDamagetype == DMG_PLASMA) {
+		//	return Plugin_Continue;
+		//}
 		
 		fTimeLeft += g_hFF.FloatValue;
 
@@ -910,7 +910,7 @@ public void ProcessShot(ArrayStack hStack)
 		
 		int iNewPelletCount = RoundFloat(fDamage);
 		for (int i = 0; i < iNewPelletCount; i++) {
-			SDKHooks_TakeDamage(iVictim, iAttacker, iAttacker, 1.0, DMG_PLASMA, iWeapon);
+			SDKHooks_TakeDamage(iVictim, iAttacker, iAttacker, 1.0, DMG_BUCKSHOT, iWeapon, .bypassHooks = true);
 		}
 	}
 	
