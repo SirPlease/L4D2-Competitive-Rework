@@ -5,7 +5,7 @@
 #include <sdktools_gamerules>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "2.1"
+#define PLUGIN_VERSION "2.2"
 
 public Plugin myinfo =
 {
@@ -52,29 +52,42 @@ public void OnPluginStart()
 							FCVAR_NOTIFY|FCVAR_SPONLY,
 							true, 0.0, true, 2.0);
 	
+	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("player_team", Event_PlayerTeam);
 	HookEvent("player_transitioned", Event_PlayerTransitioned);
 	HookEvent("scavenge_round_finished", Event_ScavengeRoundFinished, EventHookMode_PostNoCopy);
 	HookEvent("scavenge_match_finished", Event_ScavengeNatchFinished, EventHookMode_PostNoCopy);
 }
 
+void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
+{
+	for (int i = 1; i <= MaxClients; ++i)
+	{
+		if (IsClientInGame(i) && !IsFakeClient(i))
+			ResetClassSpawnSystem(i);
+	}
+}
+
 void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 {
+	int team = event.GetInt("team");
+	if (team != 3 || team == event.GetInt("oldteam"))
+		return;
+	
 	int client = GetClientOfUserId(event.GetInt("userid"));
-	if (client)
-	{
-		int team = event.GetInt("team");
-		if (team == 3 && team != event.GetInt("oldteam"))
-		{
-			ResetClassSpawnSystem(client);
-		}
-	}
+	if (!client || !IsClientInGame(client))
+		return;
+	
+	ResetClassSpawnSystem(client);
 }
 
 void Event_PlayerTransitioned(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
-	if (client) ResetClassSpawnSystem(client);
+	if (!client || !IsClientInGame(client))
+		return;
+	
+	ResetClassSpawnSystem(client);
 }
 
 void Event_ScavengeRoundFinished(Event event, const char[] name, bool dontBroadcast)
