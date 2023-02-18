@@ -1,0 +1,20 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			"CTerrorGun::GetRateOfFire"
+			{
+				"linux"		"454"
+				"windows"	"452"
+			}
+
+			"CTerrorGun::IsFullyAutomatic"
+			{
+				"linux"		"448"
+				"windows"	"446"
+			}
+		}
+	}
+}

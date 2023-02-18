@@ -839,7 +839,6 @@ MRESReturn DTR_ZombieManager_SpawnSpecial_Post(DHookReturn hReturn, DHookParam h
 {
 	//PrintToServer("##### DTR_ZombieManager_SpawnSpecial_Post");
 	int client = hReturn.Value;
-	if( client == -1 ) return MRES_Ignored;
 
 	float a1[3], a2[3];
 	int class = hParams.Get(1);
@@ -1107,7 +1106,6 @@ MRESReturn Spawn_TankWitch(Handle hForward, DHookReturn hReturn, DHookParam hPar
 MRESReturn Spawn_TankWitch_Post(Handle hForward, Handle hForward2, DHookReturn hReturn, DHookParam hParams)
 {
 	int entity = hReturn.Value;
-	if( entity == -1 ) return MRES_Ignored;
 
 	float a1[3], a2[3];
 	hParams.GetVector(1, a1);

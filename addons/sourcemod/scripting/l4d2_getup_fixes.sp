@@ -51,7 +51,7 @@
 #undef REQUIRE_PLUGIN
 #include <godframecontrol>
 
-#define PLUGIN_VERSION "4.16"
+#define PLUGIN_VERSION "4.19"
 
 public Plugin myinfo = 
 {
@@ -166,6 +166,7 @@ public void OnPluginStart()
 	HookEvent("lunge_pounce", Event_LungePounce);
 	HookEvent("jockey_ride", Event_JockeyRide);
 	HookEvent("jockey_ride_end", Event_JockeyRideEnd);
+	HookEvent("player_death", Event_PlayerDeath);
 	HookEvent("charger_carry_start", Event_ChargerCarryStart);
 	HookEvent("charger_pummel_start", Event_ChargerPummelStart);
 	HookEvent("charger_pummel_end", Event_ChargerPummelEnd);
@@ -352,6 +353,20 @@ void Event_JockeyRideEnd(Event event, const char[] name, bool dontBroadcast)
 /**
  * Charger
  */
+void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	if (!client || !IsClientInGame(client))
+		return;
+	
+	int attacker = g_iChargeAttacker[client];
+	if (attacker == -1)
+		return;
+	
+	g_iChargeVictim[attacker] = -1;
+	g_iChargeAttacker[client] = -1;
+}
+
 void Event_ChargerCarryStart(Event event, const char[] name, bool dontBroadcast)
 {
 	int victim = GetClientOfUserId(event.GetInt("victim"));
@@ -410,16 +425,17 @@ void Event_ChargerKilled(Event event, const char[] name, bool dontBroadcast)
 		else
 		{
 			// long charged get-up
-			if ((pAnim.GetFlag(AnimState_GroundSlammed) && cvar_keepLongChargeLongGetUp.BoolValue)
-				|| (pAnim.GetFlag(AnimState_WallSlammed) && cvar_keepWallSlamLongGetUp.BoolValue))
-			{
-				float flElaspedAnimTime = 0.0;
-				if (pAnim.GetFlag(AnimState_WallSlammed)) // no issue for ground slam
-				{
-					// ACT_TERROR_SLAMMED_WALL
-					// frames: 116, fps: 30
-					flElaspedAnimTime = GetEntPropFloat(victim, Prop_Send, "m_flCycle") * 116 / 30.0;
-				}
+			float flElaspedAnimTime = 0.0;
+			if (
+				(pAnim.GetFlag(AnimState_GroundSlammed)
+			  && ((flElaspedAnimTime = 119 / 30.0), // ACT_TERROR_SLAMMED_GROUND - frames: 119, fps: 30
+					cvar_keepLongChargeLongGetUp.BoolValue))
+			||
+				(pAnim.GetFlag(AnimState_WallSlammed)
+			  && ((flElaspedAnimTime = 116 / 30.0), // ACT_TERROR_SLAMMED_WALL - frames: 116, fps: 30
+					cvar_keepWallSlamLongGetUp.BoolValue))
+			) {
+				flElaspedAnimTime *= GetEntPropFloat(victim, Prop_Send, "m_flCycle");
 				SetInvulnerableForSlammed(victim, g_hLongChargeDuration.FloatValue - flElaspedAnimTime);
 			}
 			else
@@ -475,26 +491,40 @@ void Event_ChargerPummelEnd(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public Action L4D2_OnSlammedSurvivor(int victim, int attacker, bool &bWallSlam, bool &bDeadlyCharge)
+public void L4D2_OnSlammedSurvivor_Post(int victim, int attacker, bool bWallSlam, bool bDeadlyCharge)
 {
-	if (victim > 0)
-	{
-		g_iChargeVictim[attacker] = victim;
-		g_iChargeAttacker[victim] = attacker;
-		
-		AnimState pAnim = AnimState(victim);
-		pAnim.SetFlag(AnimState_Pounded, false);
-		pAnim.SetFlag(AnimState_Charged, false);
-		pAnim.SetFlag(AnimState_TankPunched, false);
-		pAnim.SetFlag(AnimState_Pounced, false);
-		pAnim.ResetMainActivity();
-	}
+	if (!victim || !IsClientInGame(victim))
+		return;
 	
-	return Plugin_Continue;
+	if (!IsPlayerAlive(victim))
+		return;
+	
+	g_iChargeVictim[attacker] = victim;
+	g_iChargeAttacker[victim] = attacker;
+	
+	AnimState pAnim = AnimState(victim);
+	pAnim.SetFlag(AnimState_Pounded, false);
+	pAnim.SetFlag(AnimState_Charged, false);
+	pAnim.SetFlag(AnimState_TankPunched, false);
+	pAnim.SetFlag(AnimState_Pounced, false);
+	pAnim.ResetMainActivity();
+	
+	if (!IsPlayerAlive(attacker)) // compatibility with competitive 1v1
+	{
+		Event event = CreateEvent("charger_killed");
+		event.SetInt("userid", GetClientUserId(attacker));
+		
+		Event_ChargerKilled(event, "charger_killed", false);
+		
+		event.Cancel();
+	}
 }
 
 void SetInvulnerableForSlammed(int client, float duration)
 {
+	if (!IsPlayerAlive(client))
+		return;
+	
 	if (g_bGodframeControl)
 	{
 		GiveClientGodFrames(client, duration, 8); // 1 - Hunter. 2 - Smoker. 4 - Jockey. 8 - Charger. fk u
