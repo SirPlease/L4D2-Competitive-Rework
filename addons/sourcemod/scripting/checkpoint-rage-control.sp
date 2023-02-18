@@ -33,10 +33,11 @@ int
 	ORIGINAL_BYTES[5];
 Address g_pPatchTarget;
 bool    g_bIsPatched;
+ConVar
+	g_cvarAllMaps,
+	g_cvarDebug;
 
-Handle
-	hAllMaps,
-	hSaferoomFrustrationTickdownMaps;
+Handle hSaferoomFrustrationTickdownMaps;
 
 public Plugin myinfo =
 {
@@ -49,8 +50,7 @@ public Plugin myinfo =
 
 }
 
-public void
-	OnPluginStart()
+public void OnPluginStart()
 {
 	LoadTranslations("checkpoint-rage-control.phrases");
 	Handle hGamedata = LoadGameConfigFile("checkpoint-rage-control");
@@ -59,10 +59,10 @@ public void
 
 	g_pPatchTarget = FindPatchTarget(hGamedata);
 	CloseHandle(hGamedata);
-
 	hSaferoomFrustrationTickdownMaps = CreateTrie();
 
-	hAllMaps = CreateConVar("crc_global", "0", "Remove saferoom frustration preservation mechanic on all maps by default");
+	g_cvarAllMaps 	= CreateConVar("crc_global", "0", "Remove saferoom frustration preservation mechanic on all maps by default");
+	g_cvarDebug 	= CreateConVar("crc_debug", "0", "Whether or not to debug.", FCVAR_NONE, true, 0.0, true, 1.0);
 
 	RegServerCmd("saferoom_frustration_tickdown", SetSaferoomFrustrationTickdown);
 }
@@ -82,7 +82,7 @@ public void OnPluginEnd()
 
 public void OnMapStart()
 {
-	if (GetConVarBool(hAllMaps))
+	if (g_cvarAllMaps.BoolValue)
 	{
 		Patch();
 		return;
@@ -93,35 +93,55 @@ public void OnMapStart()
 
 	int dummy;
 	if (GetTrieValue(hSaferoomFrustrationTickdownMaps, mapname, dummy))
-	{
 		Patch();
-	}
 	else
-	{
 		Unpatch();
-	}
 }
 
 public void L4D_OnSpawnTank_Post(int client, const float vecPos[3], const float vecAng[3])
 {
 	HookEvent("player_entered_start_area", Event_EnteredStartArea);
+	HookEvent("round_end", Event_RoundEndEvent);
+	HookEvent("tank_killed", Event_TankKilled);
+	if(g_cvarDebug.BoolValue)
+		CPrintToChatAll("%t Prepared Hook", "Tag");
+
 }
 
-public void Event_EnteredStartArea(Event hEvent, const char[] eName, bool dontBroadcast)
+public void Event_EnteredStartArea(Event hEvent, const char[] sName, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 	if (IsValidSurvivor(client))
 	{
-		if (GetConVarBool(hAllMaps))
-		{
+		if (g_cvarAllMaps.BoolValue)
 			CPrintToChatAll("%t %t", "Tag", "LoseFrustration");
-		}
 		else
-		{
 			CPrintToChatAll("%t %t", "Tag", "KeepFrustration");
-		}
+		if(g_cvarDebug.BoolValue)
+			CPrintToChatAll("%t Unhook from player_entered_start_area hook", "Tag");
+		UnhookAll();
 	}
+}
+
+public void Event_RoundEndEvent(Event hEvent, const char[] sName, bool dontBroadcast)
+{
+	if(g_cvarDebug.BoolValue)
+		CPrintToChatAll("%t Unhook from round_end hook", "Tag");
+	UnhookAll();
+}
+
+public void Event_TankKilled(Event hEvent, const char[] sName, bool dontBroadcast)
+{
+	if(g_cvarDebug.BoolValue)
+		CPrintToChatAll("%t Unhook from tank_killed hook", "Tag");
+	UnhookAll();
+}
+
+public void UnhookAll()
+{
 	UnhookEvent("player_entered_start_area", Event_EnteredStartArea);
+	UnhookEvent("round_end", Event_RoundEndEvent);
+	UnhookEvent("tank_killed", Event_TankKilled);
 }
 
 bool IsPatched()
