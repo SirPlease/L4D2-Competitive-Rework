@@ -24,18 +24,11 @@ public void OnPluginStart()
 	RegAdminCmd("sm_syncstats", SyncStats, ADMFLAG_BAN);
 
 	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
-	HookEvent("scavenge_round_start", Event_RoundStart, EventHookMode_PostNoCopy);
-	HookEvent("round_end", Event_RoundEnd, EventHookMode_PostNoCopy);
 
 	CreateTimer(75.0, DisplayStatsUrlTick, _, TIMER_REPEAT);
 }
 
 public void Event_RoundStart(Event hEvent, const char[] eName, bool dontBroadcast)
-{
-	Sync();
-}
-
-public void Event_RoundEnd(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	Sync();
 }
