@@ -21,11 +21,12 @@ public void OnPluginStart()
 	cvar_playstats_server = CreateConVar("playstats_server", "", "vanilla4mod", FCVAR_PROTECTED);
 	cvar_playstats_access_token = CreateConVar("playstats_access_token", "", "Play Stats Access Token", FCVAR_PROTECTED);
 
-	RegAdminCmd("sm_syncstats", SyncStats, ADMFLAG_BAN);
+	RegAdminCmd("sm_syncstats", SyncStatsCmd, ADMFLAG_BAN);
+	RegConsoleCmd("sm_ranking", ShowRankingCmd);
 
 	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 
-	CreateTimer(150.0, DisplayStatsUrlTick, _, TIMER_REPEAT);
+	CreateTimer(120.0, DisplayStatsUrlTick, _, TIMER_REPEAT);
 }
 
 public void Event_RoundStart(Event hEvent, const char[] eName, bool dontBroadcast)
@@ -33,9 +34,16 @@ public void Event_RoundStart(Event hEvent, const char[] eName, bool dontBroadcas
 	Sync();
 }
 
-public Action:SyncStats(client, args)
+public Action SyncStatsCmd(int client, int args)
 {
 	Sync();
+	return Plugin_Handled;
+}
+
+public Action ShowRankingCmd(int client, int args)
+{
+	ShowRanking(client);
+	return Plugin_Handled;
 }
 
 public Action DisplayStatsUrlTick(Handle timer)
@@ -45,6 +53,7 @@ public Action DisplayStatsUrlTick(Handle timer)
 
 	PrintToChatAll("Estatísticas/ranking disponível em:");
 	PrintToChatAll("\x03https://l4d2-playstats.azurewebsites.net/server/%s", server);
+	PrintToChatAll("\x01Use \x03!ranking \x01para consultar sua posição");
 
 	return Plugin_Continue;
 }
@@ -108,6 +117,51 @@ void SyncFileResponse(HTTPResponse httpResponse, any value)
 	BuildPath(Path_SM, filePath, PLATFORM_MAX_PATH, filePath);
 
 	DeleteFile(filePath);
+}
+
+public void ShowRanking(int client)
+{
+	new String:server[100];
+	GetConVarString(cvar_playstats_server, server, sizeof(server));
+
+	new String:communityId[25];
+	GetClientAuthId(client, AuthId_SteamID64, communityId, sizeof(communityId));
+
+	char path[128];
+	FormatEx(path, sizeof(path), "/api/ranking/%s/place/%s", server, communityId);
+
+	HTTPRequest request = BuildHTTPRequest(path);
+	request.Get(ShowRankingResponse, client);
+}
+
+void ShowRankingResponse(HTTPResponse httpResponse, int client)
+{
+	if (httpResponse.Status != HTTPStatus_OK)
+		return;
+
+	JSONObject response = view_as<JSONObject>(httpResponse.Data);
+	JSONArray top3 = view_as<JSONArray>(response.Get("top3"));
+	JSONObject me = view_as<JSONObject>(response.Get("me"));
+
+	for (int i = 0; i < top3.Length; i++)
+	{
+		JSONObject player = view_as<JSONObject>(top3.Get(i));
+		PrintPlayerInfo(player, client);
+	}
+
+	if (me.GetInt("position") >= 4)
+		PrintPlayerInfo(me, client);
+}
+
+void PrintPlayerInfo(JSONObject player, int client)
+{
+	int position = player.GetInt("position");
+
+	char name[256];
+	player.GetString("name", name, sizeof(name));
+
+	float points = player.GetFloat("points");
+	PrintToChat(client, "\x04%dº \x01%s \x03%.0f pts", position, name, points);
 }
 
 HTTPRequest BuildHTTPRequest(char[] path)
