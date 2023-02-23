@@ -25,7 +25,7 @@ public void OnPluginStart()
 
 	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 
-	CreateTimer(75.0, DisplayStatsUrlTick, _, TIMER_REPEAT);
+	CreateTimer(150.0, DisplayStatsUrlTick, _, TIMER_REPEAT);
 }
 
 public void Event_RoundStart(Event hEvent, const char[] eName, bool dontBroadcast)
