@@ -23,10 +23,11 @@ public void OnPluginStart()
 
 	RegAdminCmd("sm_syncstats", SyncStatsCmd, ADMFLAG_BAN);
 	RegConsoleCmd("sm_ranking", ShowRankingCmd);
+	RegConsoleCmd("sm_lastmatch", LastMatchCmd);
 
 	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 
-	CreateTimer(120.0, DisplayStatsUrlTick, _, TIMER_REPEAT);
+	CreateTimer(130.0, DisplayStatsUrlTick, _, TIMER_REPEAT);
 }
 
 public void Event_RoundStart(Event hEvent, const char[] eName, bool dontBroadcast)
@@ -46,6 +47,12 @@ public Action ShowRankingCmd(int client, int args)
 	return Plugin_Handled;
 }
 
+public Action LastMatchCmd(int client, int args)
+{
+	LastMatch(client);
+	return Plugin_Handled;
+}
+
 public Action DisplayStatsUrlTick(Handle timer)
 {
 	new String:server[100];
@@ -53,7 +60,7 @@ public Action DisplayStatsUrlTick(Handle timer)
 
 	PrintToChatAll("Estatísticas/ranking disponível em:");
 	PrintToChatAll("\x03https://l4d2-playstats.azurewebsites.net/server/%s", server);
-	PrintToChatAll("\x01Use \x03!ranking \x01para consultar sua posição");
+	PrintToChatAll("\x01Use \x04!ranking \x01para consultar sua posição");
 
 	return Plugin_Continue;
 }
@@ -151,17 +158,67 @@ void ShowRankingResponse(HTTPResponse httpResponse, int client)
 
 	if (me.GetInt("position") >= 4)
 		PrintPlayerInfo(me, client);
+
+	PrintToChatAll("\x01Use \x04!lastmatch \x01para visualizar os resultados do último jogo");
 }
 
 void PrintPlayerInfo(JSONObject player, int client)
 {
 	int position = player.GetInt("position");
+	float points = player.GetFloat("points");
+	float lastMatchPoints = player.GetFloat("lastMatchPoints");
 
 	char name[256];
 	player.GetString("name", name, sizeof(name));
 
-	float points = player.GetFloat("points");
-	PrintToChat(client, "\x04%dº \x01%s \x03%.0f pts", position, name, points);
+	if (lastMatchPoints == 0)
+		PrintToChat(client, "\x04%dº \x01%s \x03%.0f pts", position, name, points);
+	else
+		PrintToChat(client, "\x04%dº \x01%s \x03%.0f pts \x04(+%.0f)", position, name, points, lastMatchPoints);
+}
+
+public void LastMatch(int client)
+{
+	new String:server[100];
+	GetConVarString(cvar_playstats_server, server, sizeof(server));
+
+	char path[128];
+	FormatEx(path, sizeof(path), "/api/ranking/%s/last-match", server);
+
+	HTTPRequest request = BuildHTTPRequest(path);
+	request.Get(LastMatchResponse, client);
+}
+
+void LastMatchResponse(HTTPResponse httpResponse, int client)
+{
+	if (httpResponse.Status != HTTPStatus_OK)
+		return;
+
+	JSONObject response = view_as<JSONObject>(httpResponse.Data);
+	JSONObject match = view_as<JSONObject>(response.Get("match"));
+	JSONArray players = view_as<JSONArray>(response.Get("players"));
+
+	char campaign[128];
+	match.GetString("campaign", campaign, sizeof(campaign));
+
+	char matchElapsed[16];
+	match.GetString("matchElapsed", matchElapsed, sizeof(matchElapsed));
+
+	PrintToChat(client, "\x01Campanha: \x04%s", campaign);
+	PrintToChat(client, "\x01Duração: \x04%s", matchElapsed);
+
+	for (int i = 0; i < players.Length; i++)
+	{
+		JSONObject player = view_as<JSONObject>(players.Get(i));
+
+		int position = player.GetInt("position");
+		float lastMatchPoints = player.GetFloat("lastMatchPoints");
+
+		char name[256];
+		player.GetString("name", name, sizeof(name));
+
+		PrintToChat(client, "\x04%dº \x01%s \x03+%.0f pts", position, name, lastMatchPoints);
+	}
 }
 
 HTTPRequest BuildHTTPRequest(char[] path)
