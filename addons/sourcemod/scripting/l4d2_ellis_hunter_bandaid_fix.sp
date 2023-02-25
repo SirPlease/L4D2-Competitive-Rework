@@ -19,11 +19,11 @@
 
 public Plugin myinfo =
 {
-    name = "L4D2 Ellis Hunter Band aid Fix",
-    author = "Sir (with pointers from Rena)",
-    description = "Band-aid fix for Ellis' getup not matching the other Survivors",
-    version = "1.0",
-    url = "URL"
+	name = "L4D2 Ellis Hunter Band aid Fix",
+	author = "Sir (with pointers from Rena)",
+	description = "Band-aid fix for Ellis' getup not matching the other Survivors",
+	version = "1.1",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public void OnPluginStart()
@@ -31,14 +31,17 @@ public void OnPluginStart()
 	HookEvent("pounce_end", Event_PounceEnd);
 }
 
-public void Event_PounceEnd(Event event, char[] name, bool dontBroadcast)
+void Event_PounceEnd(Event event, char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("victim"));
-	if (client > 0 && IsClientInGame(client)) 
-	{
-		int charIndex = IdentifySurvivor(client);
-		if (charIndex == SurvivorCharacter_Ellis) 
-		  AnimHookEnable(client, INVALID_FUNCTION, EllisPostPounce);
+	if (client < 1 || !IsClientInGame(client)) {
+		return;
+	}
+
+	int charIndex = IdentifySurvivorFast(client); // Already contains checks inside
+
+	if (charIndex == SurvivorCharacter_Ellis) {
+		AnimHookEnable(client, INVALID_FUNCTION, EllisPostPounce);
 	}
 }
 
@@ -46,20 +49,24 @@ void UpdateThink(int client)
 {
 	// We can assume client is valid as SDKUnhook is called automatically on disconnect.
 	// Check the team and sequence, should suffice.
-	if (GetClientTeam(client) == 2 && GetEntProp(client, Prop_Send, "m_nSequence") == ANIM_ELLIS_HUNTER_GETUP)
-	{
+	int iSequence = GetEntProp(client, Prop_Send, "m_nSequence");
+
+	if (GetClientTeam(client) == L4D2Team_Survivor && iSequence == ANIM_ELLIS_HUNTER_GETUP) {
 		SetEntPropFloat(client, Prop_Send, "m_flPlaybackRate", ANIM_PLAYBACK_RATE_MULTIPLIER);
+		return;
 	}
-	else SDKUnhook(client, SDKHook_PostThinkPost, UpdateThink);
+
+	SDKUnhook(client, SDKHook_PostThinkPost, UpdateThink);
 }
 
 Action EllisPostPounce(int client, int &sequence)
 {
 	// Ellis Hunter get up animation?
-	if (sequence == ANIM_ELLIS_HUNTER_GETUP)
-	{
+	if (sequence == ANIM_ELLIS_HUNTER_GETUP) {
 		SDKHook(client, SDKHook_PostThinkPost, UpdateThink);
+	
 		AnimHookDisable(client, INVALID_FUNCTION, EllisPostPounce);
 	}
+
 	return Plugin_Continue;
 }
