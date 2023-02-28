@@ -43,34 +43,34 @@ static const int
 	{
 		// l4d2 
 		// 0: Nick, 1: Rochelle, 2: Coach, 3: Ellis
-		{620, 667, 671, 672}, //Nick
-		{629, 674, 678, 679}, //Rochelle
-		{621, 656, 660, 661}, //Coach
-		{625, 671, 675, 676}, //Ellis
+		{620, 667, 671, 672}, // Nick
+		{629, 674, 678, 679}, // Rochelle
+		{621, 656, 660, 661}, // Coach
+		{625, 671, 675, 676}, // Ellis
 		
 		// l4d1
-		// 4: Bill, 5: Zoey, 6: Louis, 7: Francis
-		{528, 759, 763, 764}, //Bill
-		{537, 819, 823, 824}, //Zoey
-		{528, 759, 763, 764}, //Louis
-		{531, 762, 766, 767} //Francis
+		// 4: Bill, 5: Zoey, 6: Francis, 7: Louis
+		{528, 759, 763, 764}, // Bill
+		{537, 819, 823, 824}, // Zoey
+		{531, 762, 766, 767}, // Francis
+		{528, 759, 763, 764}  // Louis
 	},
 	//incapped animations: 0 = single-pistol, 1 = dual pistols
 	incapAnimations[SurvivorCharacter_Size][eINCAP_ANIMATIONS_SIZE] =
 	{
 		// l4d2
 		// 0: Nick, 1: Rochelle, 2: Coach, 3: Ellis
-		{612, 613}, //Nick
-		{621, 622}, //Rochelle
-		{613, 614}, //Coach
-		{617, 618}, //Ellis
+		{612, 613}, // Nick
+		{621, 622}, // Rochelle
+		{613, 614}, // Coach
+		{617, 618}, // Ellis
 		
 		// l4d1
-		// 4: Bill, 5: Zoey, 6: Louis, 7: Francis
-		{520, 521}, //Bill
-		{525, 526}, //Zoey
-		{520, 521}, //Louis
-		{523, 524} //Francis
+		// 4: Bill, 5: Zoey, 6: Francis, 7: Louis
+		{520, 521}, // Bill
+		{525, 526}, // Zoey
+		{523, 524}, // Francis
+		{520, 521}  // Louis
 	};
 
 public Plugin myinfo = 
@@ -78,7 +78,7 @@ public Plugin myinfo =
 	name = "L4D2 Get-Up Fix",
 	author = "Blade, ProdigySim, DieTeetasse, Stabby, Jahze, A1m`", //Add support sm1.11 - A1m`
 	description = "Double/no/self-clear get-up fix.",
-	version = "1.7.4",
+	version = "1.7.5",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework/"
 };
 
