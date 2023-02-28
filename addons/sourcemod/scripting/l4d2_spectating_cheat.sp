@@ -30,15 +30,10 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success; 
 }
 
-ConVar g_hCvarColorGhost, g_hCvarColorAlive, g_hCommandAccess, g_hDefaultValue;
+ConVar g_hCvarColorGhost, g_hCvarColorAlive;
 
 int g_iCvarColorGhost, g_iCvarColorAlive;
-bool g_bDefaultValue;
-
-char g_sCommandAccesslvl[16];
-
 bool g_bMapStarted;
-static bool bSpecCheatActive[MAXPLAYERS + 1]; //spectatpr open watch
 int g_iModelIndex[MAXPLAYERS+1];			// Player Model entity reference
 
 public Plugin myinfo = 
@@ -54,17 +49,11 @@ public void OnPluginStart()
 {
 	g_hCvarColorGhost =	CreateConVar(	"l4d2_specting_cheat_ghost_color",		"255 255 255",		"Ghost SI glow color, Three values between 0-255 separated by spaces. RGB Color255 - Red Green Blue.", FCVAR_NOTIFY);
 	g_hCvarColorAlive =	CreateConVar(	"l4d2_specting_cheat_alive_color",		"255 0 0",			"Alive SI glow color, Three values between 0-255 separated by spaces. RGB Color255 - Red Green Blue.", FCVAR_NOTIFY);
-	g_hCommandAccess = 	CreateConVar(	"l4d2_specting_cheat_use_command_flag", "z", 				"Players with these flags have access to use command to toggle Speatator watching cheat. (Empty = Everyone, -1: Nobody)", FCVAR_NOTIFY);
-	g_hDefaultValue = 	CreateConVar(	"l4d2_specting_cheat_default_value", 	"0", 				"Enable Speatator watching cheat for spectators default? [1-Enable/0-Disable]", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 
 	GetCvars();
+
 	g_hCvarColorGhost.AddChangeHook(ConVarChanged_Glow_Ghost);
 	g_hCvarColorAlive.AddChangeHook(ConVarChanged_Glow_Alive);
-	g_hCommandAccess.AddChangeHook(ConVarChanged_Access);
-	g_hDefaultValue.AddChangeHook(ConVarChanged_Cvars);
-
-	//Autoconfig for plugin
-	AutoExecConfig(true, "l4d2_specting_cheat");
 
 	HookEvent("tank_spawn", Event_TankSpawn);
 	HookEvent("player_spawn", Event_PlayerSpawn);
@@ -75,24 +64,7 @@ public void OnPluginStart()
 	HookEvent("mission_lost", Event_RoundEnd, EventHookMode_PostNoCopy); //戰役模式下滅團重來該關卡的時候 (之後有觸發round_end)
 	HookEvent("finale_vehicle_leaving", Event_RoundEnd, EventHookMode_PostNoCopy); //救援載具離開之時  (沒有觸發round_end)
 	
-	HookEvent("player_disconnect", Event_PlayerDisconnect);
 	HookEvent("tank_frustrated", OnTankFrustrated, EventHookMode_Post);
-	
-	RegConsoleCmd("sm_speccheat", ToggleSpecCheatCmd, "Toggle Speatator watching cheat");
-	RegConsoleCmd("sm_watchcheat", ToggleSpecCheatCmd, "Toggle Speatator watching cheat");
-	RegConsoleCmd("sm_lookcheat", ToggleSpecCheatCmd, "Toggle Speatator watching cheat");
-	RegConsoleCmd("sm_seecheat", ToggleSpecCheatCmd, "Toggle Speatator watching cheat");
-	RegConsoleCmd("sm_meetcheat", ToggleSpecCheatCmd, "Toggle Speatator watching cheat");
-	RegConsoleCmd("sm_starecheat", ToggleSpecCheatCmd, "Toggle Speatator watching cheat");
-	RegConsoleCmd("sm_hellocheat", ToggleSpecCheatCmd, "Toggle Speatator watching cheat");
-	RegConsoleCmd("sm_areyoucheat", ToggleSpecCheatCmd, "Toggle Speatator watching cheat");
-	RegConsoleCmd("sm_fuckyoucheat", ToggleSpecCheatCmd, "Toggle Speatator watching cheat");
-	RegConsoleCmd("sm_zzz", ToggleSpecCheatCmd, "Toggle Speatator watching cheat");
-
-	for(int i = 1; i <= MaxClients; i++)
-	{
-		bSpecCheatActive[i] = g_bDefaultValue;
-	}
 	
 	if(g_bLateLoad)
 	{
@@ -120,37 +92,6 @@ public void OnClientDisconnect(int client)
 {
     RemoveInfectedModelGlow(client);
 } 
-
-public Action ToggleSpecCheatCmd(int client, int args) 
-{
-	if(client == 0 || GetClientTeam(client)!= L4D_TEAM_SPECTATOR)
-		return Plugin_Handled;
-	
-	if(HasAccess(client, g_sCommandAccesslvl))
-	{
-		bSpecCheatActive[client] = !bSpecCheatActive[client];
-		PrintToChat(client, "\x01[\x04WatchMode\x01]\x03 Watch Cheater Mode \x01 is now \x05%s\x01.", (bSpecCheatActive[client] ? "On" : "Off"));
-		
-		if(bSpecCheatActive[client] == false)
-		{
-			RemoveAllModelGlow();
-			CreateAllModelGlow();
-		}
-	}
-	else
-	{
-		PrintToChat(client, "\x01[\x04WatchMode\x01]\x03 You don't have access.");
-	}
-
-	return Plugin_Handled;
-}
-
-public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast)
-{
-	int client = GetClientOfUserId(event.GetInt("userid"));
-	
-	bSpecCheatActive[client] = g_bDefaultValue;
-}
 
 void OnTankFrustrated(Event event, const char[] name, bool dontBroadcast)
 {
@@ -195,7 +136,7 @@ public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 	
 	RemoveInfectedModelGlow(client);
 	
-	if(client && IsClientInGame(client) && !IsFakeClient(client) && oldteam == L4D_TEAM_SPECTATOR && bSpecCheatActive[client])
+	if(client && IsClientInGame(client) && !IsFakeClient(client) && oldteam == L4D_TEAM_SPECTATOR)
 	{
 		RemoveAllModelGlow();
 		CreateAllModelGlow();
@@ -279,7 +220,7 @@ void RemoveInfectedModelGlow(int client)
 
 public Action Hook_SetTransmit(int entity, int client)
 {
-	if( bSpecCheatActive[client] && GetClientTeam(client) == L4D_TEAM_SPECTATOR)
+	if(GetClientTeam(client) == L4D_TEAM_SPECTATOR)
 		return Plugin_Continue;
 	
 	return Plugin_Handled;
@@ -339,26 +280,6 @@ public void ConVarChanged_Glow_Alive(Handle convar, const char[] oldValue, const
 	}
 }
 
-public void ConVarChanged_Access(Handle convar, const char[] oldValue, const char[] newValue) {
-	GetCvars();
-
-	for(int i = 1; i <= MaxClients; i++)
-	{
-		if(IsClientInGame(i) && !IsFakeClient(i))
-		{
-			if(HasAccess(i, g_sCommandAccesslvl) == false) bSpecCheatActive[i] = false;
-			
-			
-			RemoveAllModelGlow();
-			CreateAllModelGlow();
-		}
-	}
-}
-
-public void ConVarChanged_Cvars(Handle convar, const char[] oldValue, const char[] newValue) {
-	GetCvars();
-}
-
 void GetCvars()
 {
 	char sColor[16],sColor2[16];
@@ -366,8 +287,6 @@ void GetCvars()
 	g_iCvarColorGhost = GetColor(sColor);
 	g_hCvarColorAlive.GetString(sColor2, sizeof(sColor2));
 	g_iCvarColorAlive = GetColor(sColor2);
-	g_hCommandAccess.GetString(g_sCommandAccesslvl,sizeof(g_sCommandAccesslvl));
-	g_bDefaultValue = g_hDefaultValue.BoolValue;
 }
 
 bool IsPlayerGhost(int client)
@@ -426,24 +345,6 @@ bool CheckIfEntityMax(int entity)
 		return false;
 	}
 	return true;
-}
-
-bool HasAccess(int client, char[] g_sAcclvl)
-{
-	// no permissions set
-	if (strlen(g_sAcclvl) == 0)
-		return true;
-
-	else if (StrEqual(g_sAcclvl, "-1"))
-		return false;
-
-	// check permissions
-	if ( GetUserFlagBits(client) & ReadFlagString(g_sAcclvl) )
-	{
-		return true;
-	}
-
-	return false;
 }
 
 int GetZombieClass(int client) 
