@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "4.3"
+#define PLUGIN_VERSION "4.4"
 
 public Plugin myinfo = 
 {
@@ -309,7 +309,11 @@ public void L4D_OnReplaceTank(int tank, int newtank)
 bool isCulling = false;
 public Action L4D_OnEnterGhostStatePre(int client)
 {
-	isCulling = GetEntProp(client, Prop_Send, "m_isCulling") != 0;
+	static int s_iOffs_m_bPZAbortedControl = -1;
+	if (s_iOffs_m_bPZAbortedControl == -1)
+		s_iOffs_m_bPZAbortedControl = FindSendPropInfo("CTerrorPlayer", "m_bSurvivorGlowEnabled") + 1;
+	
+	isCulling = GetEntData(client, s_iOffs_m_bPZAbortedControl, 1) != 0;
 	
 	return Plugin_Continue;
 }
