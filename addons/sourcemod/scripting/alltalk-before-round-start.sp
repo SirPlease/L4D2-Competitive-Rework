@@ -1,4 +1,5 @@
 #include <sourcemod>
+#include <left4dhooks>
 
 public Plugin myinfo =
 {
@@ -35,11 +36,10 @@ public Action OnMapStartTimer(Handle timer)
 
 public void EnableAlltalkIfFirstMap()
 {
-    char currentMap[64];
-    GetCurrentMap(currentMap, sizeof(currentMap));
+    int teamAScore = L4D2Direct_GetVSCampaignScore(0);
+    int teamBScore = L4D2Direct_GetVSCampaignScore(1);
 
-    bool firstMap = StrContains(currentMap, "m1_", true) != -1;
-    SetAllTalk(firstMap);
+    SetAllTalk(teamAScore == 0 && teamBScore == 0);
 }
 
 public void SetAllTalk(bool allTalk)
