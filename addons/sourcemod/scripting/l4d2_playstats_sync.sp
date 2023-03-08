@@ -263,7 +263,7 @@ void RankingMix(int client)
 
 	if (!CanRunMix(client))
 	{
-		PrintToChatAll("\x03%N \x01quer iniciar um mix baseado no ranking, digite \x05!rmix \x01 para iniciar", client);
+		PrintToChatAll("\x03%N \x01quer iniciar um mix baseado no ranking, digite \x04!rmix \x01 para iniciar", client);
 		return;
 	}
 
@@ -317,8 +317,10 @@ void RankingMixResponse(HTTPResponse httpResponse, int any)
 
 		for (int i = 0; !found && i < survivors.Length; i++)
 		{
+			JSONObject survivor = view_as<JSONObject>(survivors.Get(i));
+
 			new String:communityId[25];
-			survivors.GetString(i, communityId, sizeof(communityId));
+			survivor.GetString("communityId", communityId, sizeof(communityId));
 
 			if(!StrEqual(communityId, clientCommunityId))
 				continue;
@@ -329,8 +331,10 @@ void RankingMixResponse(HTTPResponse httpResponse, int any)
 
 		for (int i = 0; !found && i < infecteds.Length; i++)
 		{
+			JSONObject infected = view_as<JSONObject>(infecteds.Get(i));
+
 			new String:communityId[25];
-			infecteds.GetString(i, communityId, sizeof(communityId));
+			infected.GetString("communityId", communityId, sizeof(communityId));
 
 			if(!StrEqual(communityId, clientCommunityId))
 				continue;
@@ -340,7 +344,43 @@ void RankingMixResponse(HTTPResponse httpResponse, int any)
 		}
 	}
 
-	PrintToChatAll("\x05Mix realizado!");
+	char survivorTeam[256];
+
+	for (int i = 0; i < survivors.Length; i++)
+	{
+		JSONObject survivor = view_as<JSONObject>(survivors.Get(i));
+
+		int position = survivor.GetInt("position");
+
+		char name[256];
+		survivor.GetString("name", name, sizeof(name));
+
+		if(strlen(survivorTeam) == 0)
+			FormatEx(survivorTeam, sizeof(survivorTeam), "\x04#%d \x01%s", position, name);
+		else
+			FormatEx(survivorTeam, sizeof(survivorTeam), "%s \x03| \x04#%d \x01%s", survivorTeam, position, name);
+	}
+
+	char infectedTeam[256];
+
+	for (int i = 0; i < infecteds.Length; i++)
+	{
+		JSONObject infected = view_as<JSONObject>(infecteds.Get(i));
+
+		int position = infected.GetInt("position");
+
+		char name[256];
+		infected.GetString("name", name, sizeof(name));
+
+		if(strlen(infectedTeam) == 0)
+			FormatEx(infectedTeam, sizeof(infectedTeam), "\x04#%d \x01%s", position, name);
+		else
+			FormatEx(infectedTeam, sizeof(infectedTeam), "%s \x03| \x04#%d \x01%s", infectedTeam, position, name);
+	}
+
+	PrintToChatAll(survivorTeam);
+	PrintToChatAll("\x04---VS---");
+	PrintToChatAll(infectedTeam);
 }
 
 public void MoveAllPlayersToSpectated()
