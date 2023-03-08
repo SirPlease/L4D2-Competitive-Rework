@@ -1,6 +1,12 @@
 #include <ripext>
 #include <regex>
 #include <sourcemod>
+#include <left4dhooks>
+
+#define NEEDED_FOR_THE_MIX 2
+#define L4D2_TEAM_SPECTATOR 1
+#define L4D2_TEAM_SURVIVOR 2
+#define L4D2_TEAM_INFECTED 3
 
 public Plugin myinfo =
 {
@@ -15,6 +21,9 @@ ConVar cvar_playstats_endpoint;
 ConVar cvar_playstats_server;
 ConVar cvar_playstats_access_token;
 
+int mixVotes = 0;
+bool mixBlocked = false;
+
 public void OnPluginStart()
 {
 	cvar_playstats_endpoint = CreateConVar("playstats_endpoint", "https://l4d2-playstats-api.azurewebsites.net", "Play Stats endpoint", FCVAR_PROTECTED);
@@ -24,6 +33,7 @@ public void OnPluginStart()
 	RegAdminCmd("sm_syncstats", SyncStatsCmd, ADMFLAG_BAN);
 	RegConsoleCmd("sm_ranking", ShowRankingCmd);
 	RegConsoleCmd("sm_lastmatch", LastMatchCmd);
+	RegConsoleCmd("sm_rmix", RankingMixCmd);
 
 	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 
@@ -32,7 +42,18 @@ public void OnPluginStart()
 
 public void Event_RoundStart(Event hEvent, const char[] eName, bool dontBroadcast)
 {
+	ClearMixVotes();
 	Sync();
+}
+
+public void OnRoundIsLive()
+{
+	BlockMixVotes();
+}
+
+public void OnMapStart()
+{
+	ClearMixVotes();
 }
 
 public Action SyncStatsCmd(int client, int args)
@@ -50,6 +71,12 @@ public Action ShowRankingCmd(int client, int args)
 public Action LastMatchCmd(int client, int args)
 {
 	LastMatch(client);
+	return Plugin_Handled;
+}
+
+public Action RankingMixCmd(int client, int args)
+{
+	RankingMix(client);
 	return Plugin_Handled;
 }
 
@@ -219,6 +246,194 @@ void LastMatchResponse(HTTPResponse httpResponse, int client)
 
 		PrintToChat(client, "\x04%dº \x01%s \x03+%.0f pts", position, name, lastMatchPoints);
 	}
+}
+
+void RankingMix(int client)
+{
+	if (mixBlocked || !SurvivorOrInfected(client) || GameInProgress())
+		return;
+
+	if (NumberOfPlayersInTeams() != 8)
+	{
+		PrintToChat(client, "\x01É necessário \x048 jogadores \x01para iniciar o mix");
+		return;
+	}
+
+	mixVotes++;
+
+	if (!CanRunMix(client))
+	{
+		PrintToChatAll("\x03%N \x01quer iniciar um mix baseado no ranking, digite \x05!rmix \x01 para iniciar", client);
+		return;
+	}
+
+	ClearMixVotes();
+	PrintToChatAll("\x01Iniciando mix baseado no ranking...");
+
+	JSONObject command = new JSONObject();
+
+	int player = 1
+	for (int iClient = 1; iClient <= MaxClients; iClient++)
+	{
+		if (!IsClientInGame(iClient) || IsFakeClient(iClient) || !SurvivorOrInfected(iClient))
+			continue;
+
+		char property[8];
+		FormatEx(property, sizeof(property), "player%d", player++);
+
+		new String:communityId[25];
+		GetClientAuthId(iClient, AuthId_SteamID64, communityId, sizeof(communityId));
+
+		command.SetString(property, communityId);
+	}
+
+	HTTPRequest request = BuildHTTPRequest("/api/mix");
+	request.Post(command, RankingMixResponse);
+}
+
+void RankingMixResponse(HTTPResponse httpResponse, int any)
+{
+	if (httpResponse.Status != HTTPStatus_OK)
+	{
+		PrintToChatAll("\x04Não foi possível gerar o mix baseado no ranking");
+		return;
+	}
+
+	MoveAllPlayersToSpectated();
+
+	JSONObject response = view_as<JSONObject>(httpResponse.Data);
+	JSONArray survivors = view_as<JSONArray>(response.Get("survivors"));
+	JSONArray infecteds = view_as<JSONArray>(response.Get("infecteds"));
+
+	for (int client = 1; client <= MaxClients; client++)
+	{
+		if (!IsClientInGame(client) || IsFakeClient(client))
+			continue;
+
+		new String:clientCommunityId[25];
+		GetClientAuthId(client, AuthId_SteamID64, clientCommunityId, sizeof(clientCommunityId));
+
+		bool found = false;
+
+		for (int i = 0; !found && i < survivors.Length; i++)
+		{
+			new String:communityId[25];
+			survivors.GetString(i, communityId, sizeof(communityId));
+
+			if(!StrEqual(communityId, clientCommunityId))
+				continue;
+
+			MovePlayerToSurvivor(client);
+			found = true;
+		}
+
+		for (int i = 0; !found && i < infecteds.Length; i++)
+		{
+			new String:communityId[25];
+			infecteds.GetString(i, communityId, sizeof(communityId));
+
+			if(!StrEqual(communityId, clientCommunityId))
+				continue;
+
+			MovePlayerToInfected(client);
+			found = true;
+		}
+	}
+
+	PrintToChatAll("\x05Mix realizado!");
+}
+
+public void MoveAllPlayersToSpectated()
+{
+	for (int client = 1; client <= MaxClients; client++)
+	{
+		if (!IsClientInGame(client) || IsFakeClient(client) || !SurvivorOrInfected(client))
+			continue;
+
+		MovePlayerToSpectator(client);
+	}
+}
+
+public void MovePlayerToSpectator(int client)
+{
+	ChangeClientTeam(client, L4D2_TEAM_SPECTATOR);
+}
+
+public void MovePlayerToSurvivor(int client)
+{
+	int bot = FindSurvivorBot();
+	if (bot <= 0)
+		return;
+
+	int flags = GetCommandFlags("sb_takecontrol");
+	SetCommandFlags("sb_takecontrol", flags & ~FCVAR_CHEAT);
+	FakeClientCommand(client, "sb_takecontrol");
+	SetCommandFlags("sb_takecontrol", flags);
+}
+
+public void MovePlayerToInfected(int client)
+{
+	ChangeClientTeam(client, L4D2_TEAM_INFECTED);
+}
+
+public int FindSurvivorBot()
+{
+	for (int client = 1; client <= MaxClients; client++)
+		if(IsClientInGame(client) && IsFakeClient(client) && GetClientTeam(client) == L4D2_TEAM_SURVIVOR)
+			return client;
+
+	return -1;
+}
+
+public bool SurvivorOrInfected(int client)
+{
+	int clientTeam = GetClientTeam(client);
+	
+	return clientTeam == L4D2_TEAM_SURVIVOR || clientTeam == L4D2_TEAM_INFECTED;
+}
+
+public bool GameInProgress()
+{
+	int teamAScore = L4D2Direct_GetVSCampaignScore(0);
+	int teamBScore = L4D2Direct_GetVSCampaignScore(1);
+	
+	return teamAScore != 0 || teamBScore != 0;
+}
+
+public int NumberOfPlayersInTeams()
+{
+	int count = 0;
+		
+	for (int client = 1; client <= MaxClients; client++)
+	{
+		if (!IsClientInGame(client) || IsFakeClient(client) || !SurvivorOrInfected(client))
+			continue;
+
+		count++;
+	}
+
+	return count;
+}
+
+public bool CanRunMix(int client)
+{
+	bool admin = GetAdminFlag(GetUserAdmin(client), Admin_Changemap);
+	if (admin)
+		return true;
+
+	return mixVotes >= NEEDED_FOR_THE_MIX;
+}
+
+public void ClearMixVotes()
+{
+	mixVotes = 0;
+	mixBlocked = false;
+}
+
+public void BlockMixVotes()
+{
+	mixVotes = 0;
+	mixBlocked = true;
 }
 
 HTTPRequest BuildHTTPRequest(char[] path)
