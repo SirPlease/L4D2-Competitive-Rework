@@ -1,5 +1,8 @@
 #include <sourcemod>
 #include <sdktools>
+#include <left4dhooks>
+
+#define L4D2_TEAM_SURVIVOR 2
 
 new bool:g_bSpawnedMelee;
 new g_iRound = 2;
@@ -16,6 +19,11 @@ public Plugin:myinfo =
 public OnPluginStart()
 {
     HookEvent("round_start", Event_RoundStart);
+}
+
+public void OnRoundIsLive()
+{
+    ReloadAllWeapons();
 }
 
 public Action:Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
@@ -91,4 +99,25 @@ stock bool:IsVersus()
     GetConVarString( FindConVar( "mp_gamemode" ), GameMode, 32 );
     if( StrContains( GameMode, "versus", false ) != -1 ) return true;
     return false;
+}
+
+public ReloadAllWeapons()
+{
+    for (int client = 1; client <= MaxClients; client++)
+    {
+        if (!IsClientInGame(client) || IsFakeClient(client) || !SurvivorTeam(client))
+            continue;
+
+        new flags = GetCommandFlags("give");
+        SetCommandFlags("give", flags ^ FCVAR_CHEAT);
+        FakeClientCommand(client, "give ammo");
+        SetCommandFlags("give", flags);
+	}
+}
+
+public bool SurvivorTeam(int client)
+{
+	int clientTeam = GetClientTeam(client);
+	
+	return clientTeam == L4D2_TEAM_SURVIVOR;
 }
