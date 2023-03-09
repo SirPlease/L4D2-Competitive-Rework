@@ -293,9 +293,20 @@ void RankingMix(int client)
 
 void RankingMixResponse(HTTPResponse httpResponse, int any)
 {
+	if (httpResponse.Status == HTTPStatus_BadRequest)
+	{
+		JSONObject response = view_as<JSONObject>(httpResponse.Data);
+		
+		new String:message[256];
+		response.GetString("message", message, sizeof(message));
+
+		PrintToChatAll("\x04Erro: \x01%s", message);
+		return;
+	}
+
 	if (httpResponse.Status != HTTPStatus_OK)
 	{
-		PrintToChatAll("\x04Não foi possível gerar o mix baseado no ranking");
+		PrintToChatAll("\x04Erro ao gerar o mix");
 		return;
 	}
 
