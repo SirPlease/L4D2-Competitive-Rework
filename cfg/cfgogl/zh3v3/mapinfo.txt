@@ -1090,6 +1090,14 @@
 		"start_extra_dist"	"263.341949"
 		"end_point"			"3271.968750 7977.582031 -2256.968750"
 		"end_dist"			"335.011475"
+		"tank_ban_flow"
+		{
+			"1"
+			{
+				"min"		"70"
+				"max"		"100"
+			}
+		}
 	}
 	"l4d_ihm04_lumberyard"
 	{
@@ -1099,6 +1107,14 @@
 		"end_point"			"2004.079468 1037.415161 -188.618408"
 		"end_dist"			"304.708099"
 		"max_distance"		"600"
+		"tank_ban_flow"
+		{
+			"1"
+			{
+				"min"		"25"
+				"max"		"100"
+			}
+		}
 	}
 	"l4d_ihm05_lakeside"
 	{
@@ -2325,7 +2341,7 @@
 			"Early spawn"
 			{
 				"min"		"0"
-				"max"		"34"
+				"max"		"36"
 			}
 		}
 	}
@@ -2341,7 +2357,7 @@
 			"Early spawn"
 			{
 				"min"		"0"
-				"max"		"24"
+				"max"		"26"
 			}
 		}
 	}
@@ -2357,7 +2373,7 @@
 			"Early spawn"
 			{
 				"min"		"0"
-				"max"		"24"
+				"max"		"26"
 			}
 		}
 	}
@@ -2374,6 +2390,11 @@
 			{
 				"min"		"0"
 				"max"		"20"
+			}
+			"Elevator"
+			{
+				"min"		"40"
+				"max"		"68"
 			}
 		}
 	}
@@ -2397,7 +2418,7 @@
 			}
 			"Late spawn"
 			{
-				"min"		"80"
+				"min"		"76"
 				"max"		"100"
 			}
 		}

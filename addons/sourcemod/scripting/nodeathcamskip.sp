@@ -5,7 +5,7 @@
 #include <left4dhooks>
 #include <colors>
 
-#define PLUGIN_VERSION "2.1"
+#define PLUGIN_VERSION "2.2"
 
 public Plugin myinfo =
 {
@@ -24,6 +24,7 @@ public void OnPluginStart()
 {
 	LoadPluginTranslations("nodeathcamskip.phrases");
 	
+	HookEvent("round_start", Event_RoundStart);
 	HookEvent("player_death", Event_PlayerDeath);
 	HookEvent("player_team", Event_PlayerTeam);
 	
@@ -34,6 +35,15 @@ public void OnClientPutInServer(int client)
 {
 	g_flSavedTime[client] = 0.0;
 	g_bSkipPrint[client] = false;
+}
+
+void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
+{
+	for (int i = 1; i <= MaxClients; ++i)
+	{
+		g_flSavedTime[i] = 0.0;
+		g_bSkipPrint[i] = false;
+	}
 }
 
 void Event_PlayerDeath(Event event, char[] name, bool dontBroadcast)
