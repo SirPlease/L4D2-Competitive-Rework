@@ -25,8 +25,9 @@ enum L4D2Team
 	L4D2Team_Spectator,
 	L4D2Team_Survivor,
 	L4D2Team_Infected,
-	
-	L4D2Team_Size //4 size
+	L4D2Team_L4D1_Survivor, // Probably for maps that contain survivors from the first part and from part 2
+
+	L4D2Team_Size // 5 size
 }
 
 static const L4D2Team oppositeTeamMap[view_as<int>(L4D2Team_Size)] =
@@ -34,7 +35,8 @@ static const L4D2Team oppositeTeamMap[view_as<int>(L4D2Team_Size)] =
 	L4D2Team_None,
 	L4D2Team_Spectator,
 	L4D2Team_Infected,
-	L4D2Team_Survivor
+	L4D2Team_Survivor,
+	L4D2Team_L4D1_Survivor
 };
 
 ConVar survivor_limit;
@@ -56,6 +58,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
+	LoadGamedata();
+
 	LoadTranslations("common.phrases");
 
 	RegAdminCmd("sm_swap", Swap_Cmd, ADMFLAG_KICK, "sm_swap <player1> [player2] ... [playerN] - swap all listed players to opposite teams");
@@ -74,8 +78,10 @@ public void OnPluginStart()
 	z_max_player_zombies = FindConVar("z_max_player_zombies");
 
 	l4d_pm_supress_spectate = CreateConVar("l4d_pm_supress_spectate", "0", "Don't print messages when players spectate");
-	
-	
+}
+
+void LoadGamedata()
+{
 	Handle hGamedata = LoadGameConfigFile(GAMEDATA);
 
 	if (!hGamedata) {
@@ -247,7 +253,7 @@ public Action SwapTeams_Cmd(int client, int args)
 
 bool IsGhost(int client)
 {
-	return !!GetEntProp(client, Prop_Send, "m_isGhost");
+	return !!GetEntProp(client, Prop_Send, "m_isGhost", 1);
 }
 
 public Action Swap_Cmd(int client, int args)

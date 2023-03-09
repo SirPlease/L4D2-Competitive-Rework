@@ -30,8 +30,9 @@ enum
 	L4D2Team_Spectator,
 	L4D2Team_Survivor,
 	L4D2Team_Infected,
-	
-	L4D2Team_Size //4 size
+	L4D2Team_L4D1_Survivor, // Probably for maps that contain survivors from the first part and from part 2
+
+	L4D2Team_Size // 5 size
 };
 
 enum

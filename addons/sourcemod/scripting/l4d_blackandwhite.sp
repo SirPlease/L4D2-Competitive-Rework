@@ -62,7 +62,7 @@ public EventReviveSuccess(Handle:event, const String:name[], bool:dontBroadcast)
 	{
 		new target = GetClientOfUserId(GetEventInt(event, "subject"));
 		decl String:targetName[64];
-		decl String:targetModel[128]; 
+		decl String:targetModel[PLATFORM_MAX_PATH]; 
 		decl String:charName[32];
 		
 		if(target == 0) return;
@@ -166,7 +166,7 @@ public EventHealSuccess(Handle:event, const String:name[], bool:dontBroadcast)
 	
 	if(healee == 0) return;
 	
-	decl String:healeeModel[128]; 
+	decl String:healeeModel[PLATFORM_MAX_PATH]; 
 	GetClientModel(healee, healeeModel, sizeof(healeeModel));
 	
 	if(bandw_glow)
@@ -219,7 +219,7 @@ public EventPlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
 	
 	if(dead == 0) return;
 	
-	decl String:deadModel[128]; 
+	decl String:deadModel[PLATFORM_MAX_PATH]; 
 	GetClientModel(dead, deadModel, sizeof(deadModel));
 	
 	//fill string with character names

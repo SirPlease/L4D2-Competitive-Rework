@@ -42,15 +42,6 @@
 
 #define DEBUG 0
 
-public Plugin myinfo =
-{
-	name = "L4D2 Get-Up Fix",
-	author = "Darkid, Jacob",
-	description = "Fixes the problem when, after completing a getup animation, you have another one.",
-	version = "3.7",
-	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
-}
-
 enum ePlayerState
 {
 	eUPRIGHT = 0,
@@ -69,6 +60,19 @@ enum ePlayerState
 	eTANK_PUNCH_JOCKEY_FIX
 }
 
+stock const int tankFlyAnim[SurvivorCharacter_Size - 1] =
+{
+	628, // Nick
+	636, // Rochelle
+	628, // Coach
+	633, // Ellis
+	536, // Bill
+	545, // Zoey
+	539, // Francis
+	536, // Louis
+	539 // Francis
+};
+
 ConVar
 	rockPunchFix,
 	longerTankPunchGetup;
@@ -77,16 +81,21 @@ bool
 	lateLoad;
 
 int
-	pendingGetups[SurvivorCharacter_Size] = {0, ...}, // This is used to track the number of pending getups. The collective opinion is that you should have at most 1.
-	interrupt[SurvivorCharacter_Size] = {false, ...}, // If the player was getting up, and that getup is interrupted. This alows us to break out of the GetupTimer loop.
-	currentSequence[SurvivorCharacter_Size] = {0, ...}; // Kept to track when a player changes sequences, i.e. changes animations.
-
-static const int
-	// Nick, Rochelle, Coach, Ellis, Bill, Zoey, Louis, Francis //correct order
-	tankFlyAnim[SurvivorCharacter_Size] = {628, 636, 628, 633, 536, 545, 536, 539}; //correct order
+	pendingGetups[SurvivorCharacter_Size - 1] = {0, ...}, // This is used to track the number of pending getups. The collective opinion is that you should have at most 1.
+	interrupt[SurvivorCharacter_Size - 1] = {false, ...}, // If the player was getting up, and that getup is interrupted. This alows us to break out of the GetupTimer loop.
+	currentSequence[SurvivorCharacter_Size - 1] = {0, ...}; // Kept to track when a player changes sequences, i.e. changes animations.
 
 ePlayerState
 	playerState[SurvivorCharacter_Size] = {eUPRIGHT, ...}; // Since there are multiple sequences for each animation, this acts as a simpler way to track a player's state.
+
+public Plugin myinfo =
+{
+	name = "L4D2 Get-Up Fix",
+	author = "Darkid, Jacob",
+	description = "Fixes the problem when, after completing a getup animation, you have another one.",
+	version = "3.8.1",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
+}
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -113,9 +122,7 @@ public void OnPluginStart()
 	HookEvent("player_incapacitated", player_incap);
 	HookEvent("revive_success", player_revive);
 
-	InitSurvivorModelTrie(); // Not necessary, but speeds up IdentifySurvivor() calls.
-
-	if(lateLoad) {
+	if (lateLoad) {
 		for (int i = 1; i <= MaxClients; i++) {
 			if (IsClientInGame(i)) {
 				OnClientPostAdminCheck(i);
