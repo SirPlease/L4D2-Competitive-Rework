@@ -102,11 +102,9 @@ public void L4D_OnSpawnTank_Post(int client, const float vecPos[3], const float 
 {
 	HookEvent("player_entered_start_area", Event_EnteredStartArea);
 	HookEvent("round_end", Event_RoundEndEvent);
-	HookEvent("tank_killed", Event_TankKilled);
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("player_death", Event_PlayerDeath);
-	if(g_cvarDebug.BoolValue)
-		CPrintToChatAll("%t Prepared Hook", "Tag");
+	DebugPrint("Prepared hooks");
 
 }
 
@@ -119,23 +117,14 @@ public void Event_EnteredStartArea(Event hEvent, const char[] sName, bool dontBr
 			CPrintToChatAll("%t %t", "Tag", "LoseFrustration");
 		else
 			CPrintToChatAll("%t %t", "Tag", "KeepFrustration");
-		if(g_cvarDebug.BoolValue)
-			CPrintToChatAll("%t Unhook from player_entered_start_area hook", "Tag");
+		DebugPrint("Unhook from Survivor entered start area");
 		UnHookAll();
 	}
 }
 
 public void Event_RoundEndEvent(Event hEvent, const char[] sName, bool dontBroadcast)
 {
-	if(g_cvarDebug.BoolValue)
-		CPrintToChatAll("%t Unhook from round_end hook", "Tag");
-	UnHookAll();
-}
-
-public void Event_TankKilled(Event hEvent, const char[] sName, bool dontBroadcast)
-{
-	if(g_cvarDebug.BoolValue)
-		CPrintToChatAll("%t Unhook from tank_killed hook", "Tag");
+	DebugPrint("Unhook from round_end");
 	UnHookAll();
 }
 
@@ -143,11 +132,15 @@ public void Event_PlayerDeath(Event hEvent, const char[] name, bool dontBroadcas
 {
 	int client = GetClientOfUserId(hEvent.GetInt("userid"));
 	if (client > 0 && IsTank(client))
+	{
+		DebugPrint("Unhook from player_death");
 		UnHookAll();
+	}
 }
 
 public void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
 {
+	DebugPrint("Unhook from round_start");
 	UnHookAll();
 }
 
@@ -155,7 +148,6 @@ public void UnHookAll()
 {
 	UnhookEvent("player_entered_start_area", Event_EnteredStartArea);
 	UnhookEvent("round_end", Event_RoundEndEvent);
-	UnhookEvent("tank_killed", Event_TankKilled);
 	UnhookEvent("round_start", Event_RoundStart);
 	UnhookEvent("player_death", Event_PlayerDeath);
 }
@@ -250,4 +242,11 @@ stock bool IsTank(int client)
 	return (IsClientInGame(client)
 		&& GetClientTeam(client) == L4D2Team_Infected
 		&& GetEntProp(client, Prop_Send, "m_zombieClass") == L4D2Infected_Tank);
+}
+
+void DebugPrint(char[] sMsg)
+{
+	if (!g_cvarDebug.BoolValue)
+		return;
+	CPrintToChatAll("%t %s", "Tag", sMsg);
 }
