@@ -1081,6 +1081,14 @@
 		"start_extra_dist"	"259.126312"
 		"end_point"			"-8466.472656 7044.023438 -334.468750"
 		"end_dist"			"642.662781"
+		"max_distance"		"600"
+		{
+			"1"
+			{
+				"min"		"75"
+				"max"		"100"
+			}
+		}
 	}
 	"l4d2_stadium5_stadium"
 	{
