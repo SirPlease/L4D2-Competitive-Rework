@@ -2016,7 +2016,7 @@
 		"end_dist"			"100.000000"
 		"ItemLimits"
 		{
-			"pain_pills"	"4"
+			"pain_pills"	"0"
 		}
 		"tank_ban_flow"
 		{
