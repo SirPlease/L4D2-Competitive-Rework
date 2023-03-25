@@ -1,0 +1,56 @@
+"Games" 
+{
+	"left4dead2"
+	{
+		"Functions"
+		{
+			"CDirector::AllowWitchesInCheckpoints"
+			{
+				"signature"  "CDirector::AllowWitchesInCheckpoints"
+				"callconv"  "thiscall"
+				"return"  "bool"
+				"this"  "ignore"
+			}
+		}
+		"Signatures"
+		{
+			"CDirector::AllowWitchesInCheckpoints"
+			{
+				"library"		"server"
+				"linux"			"@_ZNK9CDirector25AllowWitchesInCheckpointsEv"
+				"windows"		"\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75\x2A\xE8"
+								/* 56 8B F1 E8 ? ? ? ? 84 C0 75 ? E8 */
+				
+			}
+		}
+	}
+	"left4dead" 
+	{ 
+		"Functions" 
+		{ 
+			"WitchLocomotion::IsAreaTraversable" 
+			{ 
+				"signature"  "WitchLocomotion::IsAreaTraversable" 
+				"callconv"  "thiscall" 
+				"return"  "bool" 
+				"this"  "ignore" 
+				"arguments" 
+				{ 
+					"NavArea" 
+					{ 
+						"type"    "int" 
+					} 
+				} 
+			} 
+		}  
+		"Signatures" 
+		{ 
+			"WitchLocomotion::IsAreaTraversable" 
+			{ 
+				"library"		"server" 
+				"linux"			"@_ZNK15WitchLocomotion17IsAreaTraversableEPK8CNavArea" 
+				"windows"		"\x56\x57\x8B\x7C\x24\x0C\x6A\x00\x8B\xF1" 
+			}    				/*56 57 8B 7C 24 0C 6A 00 8B F1 */ 
+		} 
+	} 
+}
