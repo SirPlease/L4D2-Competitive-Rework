@@ -29,7 +29,7 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 	if (admin)
 		return Plugin_Continue;
 
-	PrintToChat(client, "\x04[Blocked message] \x01Spectators cannot send public messages during games");
+	PrintToChat(client, "\x01Spectators can only send public messages before \x04!ready\x01 or during \x04!pause\x01");
 
 	return Plugin_Stop;
 }

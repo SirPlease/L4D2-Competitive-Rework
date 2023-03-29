@@ -15,6 +15,8 @@
 #define IS_VALID_INFECTED(%1)   (IS_VALID_INGAME(%1) && IS_INFECTED(%1))
 #define IS_VALID_CASTER(%1)     (IS_VALID_INGAME(%1) && casterSystemAvailable && IsClientCaster(%1))
 
+#define TANK_VOTE_TIMEOUT       20
+
 ArrayList h_whosHadTank;
 ArrayList h_tankVotes;
 ArrayList h_tankVotesClientIds;
@@ -166,7 +168,7 @@ public void ShowTankVoteMenu()
         }
 
         SetMenuExitButton(menu, false);
-        DisplayMenu(menu, client, 19);
+        DisplayMenu(menu, client, TANK_VOTE_TIMEOUT);
 
         tankVoteInProgress = true;
         remainingVotes++;
@@ -174,7 +176,9 @@ public void ShowTankVoteMenu()
 
     delete infectedPool;
 
-    CreateTimer(20.0, Timer_ChooseTank);
+    CreateTimer(TANK_VOTE_TIMEOUT + 0.5, Timer_ChooseTank);
+
+    PrintToInfected("{red}[Tank Vote] {default}Choose who will be the tank, you have \x04%d {default}seconds to vote", TANK_VOTE_TIMEOUT);
 }
 
 public int TankVoteMenuHandler(Handle menu, MenuAction action, int client, int option)
