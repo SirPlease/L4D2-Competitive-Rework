@@ -174,7 +174,7 @@ public void ShowTankVoteMenu()
     CreateTimer(22.0, Timer_ChooseTank);
 }
 
-public int TankVoteMenuHandler(Handle menu, MenuAction action, int param1, int option)
+public int TankVoteMenuHandler(Handle menu, MenuAction action, int client, int option)
 {
     switch(action)
     {
@@ -183,8 +183,8 @@ public int TankVoteMenuHandler(Handle menu, MenuAction action, int param1, int o
             char steamId[64];
             GetMenuItem(menu, option, steamId, sizeof(steamId));
 
-            int client = getInfectedPlayerBySteamId(steamId);
-            RegisterTankVote(client);
+            int target = getInfectedPlayerBySteamId(steamId);
+            RegisterTankVote(client, target);
         }
 
         case MenuAction_End:
@@ -196,17 +196,25 @@ public int TankVoteMenuHandler(Handle menu, MenuAction action, int param1, int o
     return 0;
 }
 
-public void RegisterTankVote(int client)
+public void RegisterTankVote(int client, int target)
 {    
-    int index = FindinHandle(h_tankVotesClientIds, client);
+    int index = FindinHandle(h_tankVotesClientIds, target);
     
     if (index == -1)
     {
-        PushArrayCell(h_tankVotesClientIds, client);
+        PushArrayCell(h_tankVotesClientIds, target);
         PushArrayCell(h_tankVotes, 1);
     }
     else 
         SetArrayCell(h_tankVotes, index, GetArrayCell(h_tankVotes, index) + 1);
+
+    char clientName[64];
+    GetClientName(client, clientName, sizeof(clientName));
+    
+    char targetName[64];
+    GetClientName(target, targetName, sizeof(targetName));
+
+    PrintToInfected("{red}[Tank Vote] {default}{olive}%s {default}has voted for {olive}%s", clientName, targetName);
 
     remainingVotes--;
 
@@ -240,6 +248,7 @@ public Action Timer_ChooseTank(Handle timer)
     ChooseTankByVotes();
 
     tankVoteInProgress = false;
+    remainingVotes = 0;
 
     h_tankVotes.Clear();
     h_tankVotesClientIds.Clear();
