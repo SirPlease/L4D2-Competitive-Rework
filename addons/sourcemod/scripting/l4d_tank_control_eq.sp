@@ -143,8 +143,6 @@ public void ShowTankVoteMenu()
     if (GetArraySize(infectedPool) == 0)
         addTeamSteamIdsToArray(infectedPool, L4D2Team_Infected);
 
-    tankVoteInProgress = true;
-
     for (int client = 1; client <= MaxClients; client++)
 	{
         if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != 3)
@@ -168,8 +166,12 @@ public void ShowTankVoteMenu()
 
         SetMenuExitButton(menu, false);
         DisplayMenu(menu, client, 20);
+
+        tankVoteInProgress = true;
         remainingVotes++;
 	}
+
+    delete infectedPool;
 
     CreateTimer(22.0, Timer_ChooseTank);
 }
@@ -198,6 +200,9 @@ public int TankVoteMenuHandler(Handle menu, MenuAction action, int client, int o
 
 public void RegisterTankVote(int client, int target)
 {    
+    if (!tankVoteInProgress)
+        return;
+
     int index = FindinHandle(h_tankVotesClientIds, target);
     
     if (index == -1)
