@@ -25,7 +25,11 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 	if (!spec)
 		return Plugin_Continue;
 
-	PrintToChat(client, "\x04[blocked message] \x01Spectators cannot send public messages during games");
+	bool admin = GetAdminFlag(GetUserAdmin(client), Admin_Changemap);
+	if (admin)
+		return Plugin_Continue;
+
+	PrintToChat(client, "\x04[Blocked message] \x01Spectators cannot send public messages during games");
 
 	return Plugin_Stop;
 }
