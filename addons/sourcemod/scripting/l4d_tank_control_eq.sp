@@ -25,6 +25,7 @@ ConVar hTankPrint, hTankDebug;
 bool casterSystemAvailable;
 bool tankVoteInProgress;
 bool tankSelectedByVotes;
+int remainingVotes;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -123,6 +124,7 @@ public void ShowTankVoteMenu()
 {
     tankVoteInProgress = false;
     tankSelectedByVotes = false;
+    remainingVotes = 0;
 
     h_tankVotes.Clear();
     h_tankVotesClientIds.Clear();
@@ -166,6 +168,7 @@ public void ShowTankVoteMenu()
 
         SetMenuExitButton(menu, false);
         DisplayMenu(menu, client, 20);
+        remainingVotes++;
 	}
 
     CreateTimer(22.0, Timer_ChooseTank);
@@ -205,7 +208,19 @@ public void RegisterTankVote(int client)
     else 
         SetArrayCell(h_tankVotes, index, GetArrayCell(h_tankVotes, index) + 1);
 
+    remainingVotes--;
+
     ChooseTankByVotes();
+
+    if (remainingVotes > 0)
+        return;
+
+    tankVoteInProgress = false;
+
+    h_tankVotes.Clear();
+    h_tankVotesClientIds.Clear();
+
+    outputTankToAll(0);
 }
 
 public int FindinHandle(Handle sourceHandle, int searchValue)
@@ -219,6 +234,9 @@ public int FindinHandle(Handle sourceHandle, int searchValue)
 
 public Action Timer_ChooseTank(Handle timer)
 {
+    if (!tankVoteInProgress)
+        return Plugin_Continue;
+
     ChooseTankByVotes();
 
     tankVoteInProgress = false;
