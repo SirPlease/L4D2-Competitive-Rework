@@ -247,7 +247,7 @@ public int FindinHandle(Handle sourceHandle, int searchValue)
 
 public Action Timer_ChooseTank(Handle timer)
 {
-    if (!tankVoteInProgress)
+    if (!tankVoteInProgress || tankSelectedByVotes)
         return Plugin_Continue;
 
     ChooseTankByVotes();
@@ -347,6 +347,9 @@ public void RoundEnd_Event(Event hEvent, const char[] eName, bool dontBroadcast)
  
 public void PlayerLeftStartArea_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
+    if (tankVoteInProgress || tankSelectedByVotes)
+        return;
+
     chooseTank(0);
     outputTankToAll(0);
 }
