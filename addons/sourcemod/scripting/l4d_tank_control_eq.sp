@@ -85,6 +85,7 @@ public void OnPluginStart()
 
     tankVoteInProgress = false;
     tankSelectedByVotes = false;
+    remainingVotes = 0;
 
     // Admin commands
     RegAdminCmd("sm_tankshuffle", TankShuffle_Cmd, ADMFLAG_SLAY, "Re-picks at random someone to become tank.");
