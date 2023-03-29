@@ -549,6 +549,11 @@
 		"max_distance"		"500"
 		"tank_ban_flow"
 		{
+			"Early spawns"
+			{
+				"min"		"0"
+				"max"		"27"
+			}
 			"Before elevator (bugged spawn)"
 			{
 				"min"		"42"
