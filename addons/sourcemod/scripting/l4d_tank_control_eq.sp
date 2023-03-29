@@ -166,7 +166,7 @@ public void ShowTankVoteMenu()
         }
 
         SetMenuExitButton(menu, false);
-        DisplayMenu(menu, client, 30);
+        DisplayMenu(menu, client, 19);
 
         tankVoteInProgress = true;
         remainingVotes++;
@@ -174,7 +174,7 @@ public void ShowTankVoteMenu()
 
     delete infectedPool;
 
-    CreateTimer(32.0, Timer_ChooseTank);
+    CreateTimer(20.0, Timer_ChooseTank);
 }
 
 public int TankVoteMenuHandler(Handle menu, MenuAction action, int client, int option)
@@ -348,11 +348,10 @@ public void RoundEnd_Event(Event hEvent, const char[] eName, bool dontBroadcast)
  
 public void PlayerLeftStartArea_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
-    if (tankVoteInProgress || tankSelectedByVotes)
-        return;
-
     chooseTank(0);
-    outputTankToAll(0);
+
+    if (!tankVoteInProgress && !tankSelectedByVotes)
+        outputTankToAll(0);
 }
 
 /**
