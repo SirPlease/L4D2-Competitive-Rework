@@ -248,7 +248,7 @@ public int FindinHandle(Handle sourceHandle, int searchValue)
 
 public Action Timer_ChooseTank(Handle timer)
 {
-    if (!tankVoteInProgress || tankSelectedByVotes)
+    if (!tankVoteInProgress)
         return Plugin_Continue;
 
     ChooseTankByVotes();
