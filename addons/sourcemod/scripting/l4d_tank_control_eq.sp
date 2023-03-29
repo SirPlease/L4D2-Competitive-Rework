@@ -166,7 +166,7 @@ public void ShowTankVoteMenu()
         }
 
         SetMenuExitButton(menu, false);
-        DisplayMenu(menu, client, 20);
+        DisplayMenu(menu, client, 30);
 
         tankVoteInProgress = true;
         remainingVotes++;
@@ -174,7 +174,7 @@ public void ShowTankVoteMenu()
 
     delete infectedPool;
 
-    CreateTimer(22.0, Timer_ChooseTank);
+    CreateTimer(32.0, Timer_ChooseTank);
 }
 
 public int TankVoteMenuHandler(Handle menu, MenuAction action, int client, int option)
