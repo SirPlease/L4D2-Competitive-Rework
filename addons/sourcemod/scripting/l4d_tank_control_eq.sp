@@ -16,9 +16,15 @@
 #define IS_VALID_CASTER(%1)     (IS_VALID_INGAME(%1) && casterSystemAvailable && IsClientCaster(%1))
 
 ArrayList h_whosHadTank;
+ArrayList h_tankVotes;
+ArrayList h_tankVotesClientIds;
+
 char queuedTankSteamId[64];
 ConVar hTankPrint, hTankDebug;
+
 bool casterSystemAvailable;
+bool tankVoteInProgress;
+bool tankSelectedByVotes;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -73,7 +79,12 @@ public void OnPluginStart()
     
     // Initialise the tank arrays/data values
     h_whosHadTank = new ArrayList(ByteCountToCells(64));
-    
+    h_tankVotes = CreateArray(64);
+    h_tankVotesClientIds = CreateArray(64);
+
+    tankVoteInProgress = false;
+    tankSelectedByVotes = false;
+
     // Admin commands
     RegAdminCmd("sm_tankshuffle", TankShuffle_Cmd, ADMFLAG_SLAY, "Re-picks at random someone to become tank.");
     RegAdminCmd("sm_givetank", GiveTank_Cmd, ADMFLAG_SLAY, "Gives the tank to a selected player");
@@ -103,6 +114,151 @@ public void OnLibraryRemoved(const char[] name)
 	if (StrEqual(name, "caster_system")) casterSystemAvailable = false;
 }
 
+public void OnRoundIsLive()
+{
+    ShowTankVoteMenu();
+}
+
+public void ShowTankVoteMenu()
+{
+    tankVoteInProgress = false;
+    tankSelectedByVotes = false;
+
+    h_tankVotes.Clear();
+    h_tankVotesClientIds.Clear();
+
+    ArrayList infectedPool = new ArrayList(ByteCountToCells(64));
+    addTeamSteamIdsToArray(infectedPool, L4D2Team_Infected);
+
+    if (GetArraySize(infectedPool) == 0)
+    {
+        delete infectedPool;
+        return;
+    }
+
+    removeTanksFromPool(infectedPool, h_whosHadTank);
+
+    if (GetArraySize(infectedPool) == 0)
+        addTeamSteamIdsToArray(infectedPool, L4D2Team_Infected);
+
+    tankVoteInProgress = true;
+
+    for (int client = 1; client <= MaxClients; client++)
+	{
+        if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != 3)
+            continue;
+
+        Handle menu = CreateMenu(TankVoteMenuHandler, MENU_ACTIONS_DEFAULT);
+        SetMenuTitle(menu, "Who should be the tank?");
+
+        for (int i = 0; i < GetArraySize(infectedPool); i++)
+        {
+            char steamId[64];
+            GetArrayString(infectedPool, i, steamId, sizeof(steamId));
+            
+            int clientId = getInfectedPlayerBySteamId(steamId);
+            
+            char name[64];  
+            GetClientName(clientId, name, sizeof(name));
+
+            AddMenuItem(menu, steamId, name);
+        }
+
+        SetMenuExitButton(menu, false);
+        DisplayMenu(menu, client, 20);
+	}
+
+    CreateTimer(22.0, Timer_ChooseTank);
+}
+
+public int TankVoteMenuHandler(Handle menu, MenuAction action, int param1, int option)
+{
+    switch(action)
+    {
+        case MenuAction_Select:
+        {
+            char steamId[64];
+            GetMenuItem(menu, option, steamId, sizeof(steamId));
+
+            int client = getInfectedPlayerBySteamId(steamId);
+            RegisterTankVote(client);
+        }
+
+        case MenuAction_End:
+        {
+            CloseHandle(menu);
+        }
+     }
+
+    return 0;
+}
+
+public void RegisterTankVote(int client)
+{    
+    int index = FindinHandle(h_tankVotesClientIds, client);
+    
+    if (index == -1)
+    {
+        PushArrayCell(h_tankVotesClientIds, client);
+        PushArrayCell(h_tankVotes, 1);
+    }
+    else 
+        SetArrayCell(h_tankVotes, index, GetArrayCell(h_tankVotes, index) + 1);
+
+    ChooseTankByVotes();
+}
+
+public int FindinHandle(Handle sourceHandle, int searchValue)
+{
+    for (int i = 0; i < GetArraySize(sourceHandle); i++)
+        if (GetArrayCell(sourceHandle, i) == searchValue)
+            return i;
+
+    return -1;
+}
+
+public Action Timer_ChooseTank(Handle timer)
+{
+    ChooseTankByVotes();
+
+    tankVoteInProgress = false;
+
+    h_tankVotes.Clear();
+    h_tankVotesClientIds.Clear();
+
+    outputTankToAll(0);
+
+    return Plugin_Continue;
+}
+
+public void ChooseTankByVotes()
+{
+    if (GetArraySize(h_tankVotes) == 0)
+        return;
+
+    int mostVotes = -1;
+    int mostVotesIndex = 0;
+
+    for (int i = 0; i < GetArraySize(h_tankVotes); i++)
+    {
+        int votes = GetArrayCell(h_tankVotes, i);
+
+        if (votes > mostVotes)
+        {
+            mostVotes = votes;
+            mostVotesIndex = i;
+        }
+    }
+
+    int clientId = GetArrayCell(h_tankVotesClientIds, mostVotesIndex);
+
+    char steamId[64];
+    GetClientAuthId(clientId, AuthId_Steam2, steamId, sizeof(steamId));
+    strcopy(queuedTankSteamId, sizeof(queuedTankSteamId), steamId);
+
+    tankSelectedByVotes = true;
+}
+
 /*public void OnClientDisconnect(int client) 
 {
     char tmpSteamId[64];
@@ -124,6 +280,8 @@ public void OnLibraryRemoved(const char[] name)
  
 public void RoundStart_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
+    tankVoteInProgress = false;
+    tankSelectedByVotes = false;
     CreateTimer(10.0, newGame);
 }
 
@@ -311,6 +469,9 @@ public Action GiveTank_Cmd(int client, int args)
  
 public void chooseTank(any data)
 {
+    if (tankSelectedByVotes)
+        return;
+
     // Create our pool of players to choose from
     ArrayList infectedPool = new ArrayList(ByteCountToCells(64));
     addTeamSteamIdsToArray(infectedPool, L4D2Team_Infected);
@@ -413,6 +574,9 @@ public void setTankTickets(const char[] steamId, int tickets)
  
 public void outputTankToAll(any data)
 {
+    if (tankVoteInProgress)
+        return;
+
     char tankClientName[MAX_NAME_LENGTH];
     int tankClientId = getInfectedPlayerBySteamId(queuedTankSteamId);
     
