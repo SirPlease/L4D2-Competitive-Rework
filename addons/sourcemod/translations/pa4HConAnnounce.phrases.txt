@@ -1,0 +1,30 @@
+"Phrases"
+{
+	"PREFIX"
+	{
+		"en"			"[PEZDOX]"	
+	}
+	"PlayerLoading"
+	{
+	    "#format"	    "{1:s},{2:s}"
+		"en"			"Player {lightgreen}{2} {default}is connecting..."	
+		"ru"			"Игрок {lightgreen}{2} {default}присоединяется..."
+	}
+	"PlayerJoin"
+	{
+		"#format"	    "{1:s},{2:s},{3:s},{4:s},{5:s}"
+		"en"			"Player {lightgreen}{2} {default}({green}{3}, {4}{default}) connected! {green}{5}{default}h"	
+		"ru"			"Игрок {lightgreen}{2} {default}({green}{3}, {4}{default}) подключился! {green}{5}{default}ч"
+	}
+	"PlayerDisconnect"
+	{
+		"#format"	   	"{1:s},{2:s},{3:s}"
+		"en"			"Player {lightgreen}{2} {default}disconnected ({3})"	
+		"ru"			"Игрок {lightgreen}{2} {default}отключился ({3})"
+	}
+	"Player"
+	{
+		"en"			"Player"
+		"ru"			"Игрок"
+	}
+}
