@@ -30,7 +30,7 @@ public OnPluginStart() {
 	g_hSteamAPI_Key = CreateConVar("SteamAPI_Key", "", "Your SteamAPI Key. Can get it on https://steamcommunity.com/dev/apikey", FCVAR_CHEAT);
 	GetConVarString(g_hSteamAPI_Key, keyAPI, sizeof(keyAPI)); // И сразу его читаем
 	HookConVarChange(g_hSteamAPI_Key, OnConVarChange);
-	LoadTranslations("pa4HConAnnounce.phrases");
+	LoadTranslations("l4d2_connect_announce.phrases");
 	
 	//AutoExecConfig(true, "SteamAPI_Hours"); // Создаем .cfg файл в cfg/sourcemod
 	FormatEx(PREFIX, sizeof(PREFIX), "%t", "PREFIX"); // Сразу помещаем префикс в переменную
