@@ -3,20 +3,7 @@
 	"PlayerLoading"
 	{
 	    "#format"	    "{1:s}"
-		"en"			"Player {lightgreen}{1} {default}is connecting..."	
-	}
-	"PlayerJoin"
-	{
-		"#format"	    "{1:s}"
-		"en"			"Player ({green}{1}{default}) connected!"	
-	}
-	"PlayerDisconnect"
-	{
-		"#format"	   	"{1:s},{2:s}"
-		"en"			"Player {lightgreen}{1} {default}disconnected ({2})"	
-	}
-	"Player"
-	{
-		"en"			"Player"
+		"en"			"{lightgreen}{1} {default}is connecting..."
+		"pt"			"{lightgreen}{1} {default}esta conectando..."
 	}
 }

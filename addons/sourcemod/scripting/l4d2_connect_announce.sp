@@ -15,7 +15,6 @@ public Plugin:myinfo =  {
 
 public OnPluginStart()
 {
-	HookEvent("player_disconnect", PlayerDisconnect_Event, EventHookMode_Pre);
 	LoadTranslations("l4d2_connect_announce.phrases");
 
 	early = true;
@@ -43,44 +42,4 @@ public OnClientAuthorized(client)
 	
 	FormatEx(txtBufer, sizeof(txtBufer), "%t", "PlayerLoading", clientName);
 	CPrintToChatAll(txtBufer);
-}
-
-public Action PlayerDisconnect_Event(Handle event, const char[] param, bool dontBroadcast)
-{
-	if (early)
-		return Plugin_Handled;
-
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
-	
-	if (!IsValidClient(client)) 
-		return Plugin_Handled;
-
-	char name[64]; 
-	GetEventString(event, "name", name, sizeof(name));
-	
-	char reason[64];
-	GetEventString(event, "reason", reason, sizeof(reason));
-	ReplaceString(reason, sizeof(reason), ".", "")
-	
-	FormatEx(txtBufer, sizeof(txtBufer), "%t", "PlayerDisconnect", name, reason);
-	CPrintToChatAll(txtBufer);
-
-	return Plugin_Handled;
-}
-
-public OnClientPutInServer(client)
-{
-	if (early || IsFakeClient(client))
-		return;
-
-	char clientName[64]; 
-	GetClientName(client, clientName, sizeof(clientName));
-
-	FormatEx(txtBufer, sizeof(txtBufer), "%t", "PlayerJoin", clientName);
-	CPrintToChatAll(txtBufer);
-}
-
-stock bool IsValidClient(client)
-{
-	return client > 0 && client <= MaxClients && IsClientConnected(client) && !IsFakeClient(client);
 }
