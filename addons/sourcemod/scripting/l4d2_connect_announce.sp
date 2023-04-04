@@ -3,6 +3,7 @@
 #include <colors>
 
 char txtBufer[256];
+bool early;
 
 public Plugin:myinfo =  {
 	name = "Connect Announce", 
@@ -16,11 +17,25 @@ public OnPluginStart()
 {
 	HookEvent("player_disconnect", PlayerDisconnect_Event, EventHookMode_Pre);
 	LoadTranslations("l4d2_connect_announce.phrases");
+
+	early = true;
+}
+
+public void OnMapStart()
+{
+	early = true;
+	CreateTimer(30.0, EarlyTimer);
+}
+
+public Action EarlyTimer(Handle timer)
+{
+	early = false;
+	return Plugin_Stop;
 }
 
 public OnClientAuthorized(client)
 {
-	if (IsFakeClient(client))
+	if (early || IsFakeClient(client))
 		return;
 
 	char clientName[64]; 
@@ -32,6 +47,9 @@ public OnClientAuthorized(client)
 
 public Action PlayerDisconnect_Event(Handle event, const char[] param, bool dontBroadcast)
 {
+	if (early)
+		return Plugin_Handled;
+
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	
 	if (!IsValidClient(client)) 
@@ -52,7 +70,7 @@ public Action PlayerDisconnect_Event(Handle event, const char[] param, bool dont
 
 public OnClientPutInServer(client)
 {
-	if (IsFakeClient(client))
+	if (early || IsFakeClient(client))
 		return;
 
 	char clientName[64]; 
