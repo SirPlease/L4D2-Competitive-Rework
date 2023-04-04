@@ -24,7 +24,7 @@ public OnPluginStart()
 public void OnMapStart()
 {
 	early = true;
-	CreateTimer(30.0, EarlyTimer);
+	CreateTimer(25.0, EarlyTimer);
 }
 
 public Action EarlyTimer(Handle timer)
