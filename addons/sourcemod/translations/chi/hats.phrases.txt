@@ -1,0 +1,143 @@
+"Phrases"
+{
+	"Hat_Wearing"
+	{
+		"#format"		"{1:s}"
+		"chi"			"您正在配戴{ORANGE}{1}{DEFAULT}。"
+	}
+	"Hat_Changed"
+	{
+		"#format"		"{1:s}"
+		"chi"			"您正在配戴{ORANGE}{1}{DEFAULT}。"
+	}
+	"Hat_No_Index"
+	{
+		"#format"		"{1:d}{2:d}"
+		"chi"			"无法找到编号为{ORANGE}{1}{DEFAULT}的帽子。 (应在{ORANGE}1{DEFAULT}至{ORANGE}{2}{DEFAULT}内)"
+	}
+	"Hat_Not_Found"
+	{
+		"#format"		"{1:s}"
+		"chi"			"无法找到帽子{ORANGE}{1}{DEFAULT}。"
+	}
+	"Hat_Invalid"
+	{
+		"chi"			"无效的玩家。"
+	}
+	"Hat_Unblocked"
+	{
+		"#format"		"{1:s}"
+		"chi"			"Unblocked hats for {ORANGE}{1}{DEFAULT}."
+	}
+	"Hat_Blocked"
+	{
+		"#format"		"{1:s}"
+		"chi"			"Blocked hats for {ORANGE}{1}{DEFAULT}."
+	}
+	"Hat_View"
+	{
+		"#format"		"{1:s}"
+		"chi"			"您已{ORANGE}{1}{DEFAULT}第一人称可见状态。"
+	}
+	"Hat_Ability"
+	{
+		"#format"		"{1:s}"
+		"chi"			"您已{ORANGE}{1}{DEFAULT}帽子穿戴功能。"
+	}
+	"Hat_On"
+	{
+		"chi"			"启用"
+	}
+	"Hat_Off"
+	{
+		"chi"			"停用"
+	}
+	"Hat_Menu_Title"
+	{
+		"chi"			"选择帽子:"
+	}
+	"Hat_Missing"
+	{
+		"chi"			"无法配戴帽子。"
+	}
+
+	"HAT_SYSTEM"
+	{
+		"chi"			"{GREEN}[帽子]{DEFAULT} "
+	}
+	"HAT_NOT_RIGHT_NOW"
+	{
+		"chi"			"暂时无法使用。"
+	}
+	"ADMIN_DISABLE_HAT"
+	{
+		"chi"			"选择玩家停用帽子:"
+	}
+	"ADMIN_CHANGE_HAT"
+	{
+		"chi"			"选择玩家更换帽子:"
+	}
+	"ADMIN_VISIBILITY"
+	{
+		"chi"			"Select player to set hat visibility:"
+	}
+	"HAT_SET_ANGLE"
+	{
+		"chi"			"选择帽子角度:"
+	}
+	"HAT_SET_POSITION"
+	{
+		"chi"			"选择帽子位置:"
+	}
+	"HAT_SET_SIZE"
+	{
+		"chi"			"选择帽子大细:"
+	}
+	"HAT_MAIN"
+	{
+		"chi"			"选择动作:"
+	}
+	"HAT_MENU"
+	{
+		"chi"			"打开帽子选单"
+	}
+	"HAT_WORE"
+	{
+		"chi"			"穿戴状态"
+	}
+	"HAT_VIEWABLE"
+	{
+		"chi"			"第一人称可见状态"
+	}
+	"HAT_ENABLED"
+	{
+		"chi"			"已启用"
+	}
+	"HAT_DISABLED"
+	{
+		"chi"			"己停用"
+	}
+	"HAT_VIEWABLE_TP"
+	{
+		"chi"			"第三人称可见状态"
+	}
+	"HAT_VISIBILITY"
+	{
+		"chi"			"颢示其他玩家的帽子"
+	}
+	"Hat_ViewTP"
+	{
+		"#format"		"{1:s}"
+		"chi"			"您已{ORANGE}{1}{DEFAULT}第三人称可见状态"
+	}
+	"Hat_ViewSet"
+	{
+		"#format"		"{1:s}{2:s}"
+		"chi"			"{ORANGE}{2}{DEFAULT}玩家{ORANGE}{1}{DEFAULT}颢示其他玩家的帽子"
+	}
+	"Hat_Visibility_Set"
+	{
+		"#format"		"{1:s}"
+		"chi"			"显示其他玩家的帽子:{ORANGE}{1}{DEFAULT}"
+	}
+}
