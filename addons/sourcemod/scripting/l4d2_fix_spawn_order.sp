@@ -5,7 +5,7 @@
 #include <left4dhooks>
 #include <l4d2util_infected>
 
-#define PLUGIN_VERSION "4.4.1"
+#define PLUGIN_VERSION "4.4.2"
 
 public Plugin myinfo = 
 {
@@ -32,7 +32,7 @@ stock const char g_sOverLimitReason[MAX_OverLimitReason][] = {
 /* These class numbers are the same ones used internally in L4D2 */
 
 #define SI_GENERIC_BEGIN L4D2Infected_Smoker
-#define SI_GENERIC_END L4D2Infected_Charger
+#define SI_GENERIC_END L4D2Infected_Witch
 #define SI_MAX_SIZE L4D2Infected_Size
 #define SI_None L4D2Infected_Common
 
@@ -527,7 +527,7 @@ int IsClassOverLimit(int SI, int skip_client)
 		return OverLimit_OK;
 	
 	int dominatorCount = 0;
-	for (int i = SI_GENERIC_BEGIN; i <= SI_GENERIC_END; ++i)
+	for (int i = SI_GENERIC_BEGIN; i < SI_GENERIC_END; ++i)
 		if (IsDominator(i)) dominatorCount += counts[i];
 	
 	if (dominatorCount >= 3)
