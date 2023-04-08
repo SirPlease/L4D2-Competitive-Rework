@@ -2,6 +2,7 @@
 #include <regex>
 #include <sourcemod>
 #include <left4dhooks>
+#include <readyup>
 
 #define NEEDED_FOR_THE_MIX 2
 #define L4D2_TEAM_SPECTATOR 1
@@ -82,6 +83,9 @@ public Action RankingMixCmd(int client, int args)
 
 public Action DisplayStatsUrlTick(Handle timer)
 {
+	if (!IsInReady())
+		return Plugin_Continue;
+
 	new String:server[100];
 	GetConVarString(cvar_playstats_server, server, sizeof(server));
 
