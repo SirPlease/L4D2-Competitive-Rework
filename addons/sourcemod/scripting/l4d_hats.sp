@@ -297,6 +297,7 @@
 #include <sdktools>
 #include <sdkhooks>
 #include <clientprefs>
+#include <left4dhooks>
 
 #define CVAR_FLAGS			FCVAR_NOTIFY
 #define CONFIG_SPAWNS		"data/l4d_hats.cfg"
@@ -374,6 +375,27 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	MarkNativeAsOptional("ToggleReadyPanel");
 
 	return APLRes_Success;
+}
+
+public void EnableHatsFirstMap()
+{
+	int teamAScore = L4D2Direct_GetVSCampaignScore(0);
+	int teamBScore = L4D2Direct_GetVSCampaignScore(1);
+
+	SetAllowHats(teamAScore == 0 && teamBScore == 0);
+}
+
+public void OnRoundIsLive()
+{
+    SetAllowHats(false);
+}
+
+public void SetAllowHats(bool allowHats)
+{
+    if (allowHats == GetConVarBool(g_hCvarAllow))
+        return;
+
+    SetConVarBool(g_hCvarAllow, allowHats);
 }
 
 public void OnAllPluginsLoaded()
@@ -514,14 +536,6 @@ public void OnPluginStart()
 
 
 	// Commands
-	RegConsoleCmd("sm_hats",		CmdHatMain,							"Displays a menu to customize various settings for hats.");
-	RegConsoleCmd("sm_hat",			CmdHat,								"Displays a menu of hats allowing players to change what they are wearing. Optional args: [0 - 128 or hat name or \"random\"]");
-	RegConsoleCmd("sm_hatoff",		CmdHatOff,							"Toggle to turn on or off the ability of wearing hats.");
-	RegConsoleCmd("sm_hatshow",		CmdHatShow,							"Toggle to see or hide your own hat. Applies to first person view or third person using the optional command argument \"tp\" e.g. \"sm_hatshow tp\"");
-	RegConsoleCmd("sm_hatview",		CmdHatShow,							"Toggle to see or hide your own hat. Applies to first person view or third person using the optional command argument \"tp\" e.g. \"sm_hatview tp\"");
-	RegConsoleCmd("sm_hatshowon",	CmdHatShowOn,						"See your own hat. Applies to first person view or third person using the optional command argument \"tp\" e.g. \"sm_hatshowon tp\"");
-	RegConsoleCmd("sm_hatshowoff",	CmdHatShowOff,						"Hide your own hat. Applies to first person view or third person using the optional command argument \"tp\" e.g. \"sm_hatshowoff tp\"");
-	RegConsoleCmd("sm_hatall",		CmdHatsToggle,						"Toggles the visibility of everyone's hats.");
 	RegAdminCmd("sm_hatclient",		CmdHatClient,		ADMFLAG_ROOT,	"Set a clients hat. Usage: sm_hatclient <#userid|name> [hat name or hat index: 0-128 (MAX_HATS)].");
 	RegAdminCmd("sm_hatoffc",		CmdHatOffTarget,	ADMFLAG_ROOT,	"Toggle the ability of wearing hats on specific players.");
 	RegAdminCmd("sm_hatallc",		CmdHatAllTarget,	ADMFLAG_ROOT,	"Toggle the visibility of all hats on specific players.");
@@ -741,6 +755,8 @@ void OnGamemode(const char[] output, int caller, int activator, float delay)
 // ====================================================================================================
 public void OnMapStart()
 {
+	EnableHatsFirstMap();
+
 	g_bMapStarted = true;
 	g_bValidMap = true;
 
@@ -1692,20 +1708,6 @@ Action CmdHatOff(int client, int args)
 // ====================================================================================================
 //					sm_hatshow
 // ====================================================================================================
-Action CmdHatShowOn(int client, int args)
-{
-	g_bHatView[client] = false;
-	CmdHatShow(client, args);
-	return Plugin_Handled;
-}
-
-Action CmdHatShowOff(int client, int args)
-{
-	g_bHatView[client] = true;
-	CmdHatShow(client, args);
-	return Plugin_Handled;
-}
-
 Action CmdHatShow(int client, int args)
 {
 	if( !g_bCvarAllow || g_bBlocked[client] )
