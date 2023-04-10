@@ -3,8 +3,9 @@
 
 #include <sourcemod>
 #include <left4dhooks>
+#include <l4d2util_infected>
 
-#define PLUGIN_VERSION "4.4"
+#define PLUGIN_VERSION "4.4.2"
 
 public Plugin myinfo = 
 {
@@ -29,27 +30,11 @@ stock const char g_sOverLimitReason[MAX_OverLimitReason][] = {
 };
 
 /* These class numbers are the same ones used internally in L4D2 */
-enum /*SIClass*/
-{
-	SI_None = 0,
-	
-	SI_GENERIC_BEGIN,
-	SI_Smoker = 1,
-	SI_Boomer,
-	SI_Hunter,
-	SI_Spitter,
-	SI_Jockey,
-	SI_Charger,
-	SI_GENERIC_END,
-	
-	SI_Witch = 7,
-	SI_Tank,
-	
-	SI_MAX_SIZE
-};
 
-stock const char g_sSIClassNames[SI_MAX_SIZE][] = 
-{	"", "Smoker", "Boomer", "Hunter", "Spitter", "Jockey", "Charger", "Witch", "Tank" };
+#define SI_GENERIC_BEGIN L4D2Infected_Smoker
+#define SI_GENERIC_END L4D2Infected_Witch
+#define SI_MAX_SIZE L4D2Infected_Size
+#define SI_None L4D2Infected_Common
 
 ArrayList g_SpawnsArray;
 
@@ -87,7 +72,7 @@ void InitSILimits()
 	char buffer[64];
 	for (int i = SI_GENERIC_BEGIN; i < SI_GENERIC_END; ++i)
 	{
-		FormatEx(buffer, sizeof(buffer), "z_versus_%c%s_limit", CharToLower(g_sSIClassNames[i][0]), g_sSIClassNames[i][1]);
+		FormatEx(buffer, sizeof(buffer), "z_versus_%c%s_limit", CharToLower(L4D2_InfectedNames[i][0]), L4D2_InfectedNames[i][1]);
 		g_cvSILimits[i] = FindConVar(buffer);
 	}
 }
@@ -162,7 +147,7 @@ void ToggleEvents(bool isEnable)
 
 public void L4D_OnMaterializeFromGhost(int client)
 {
-	PrintDebug("\x05%N \x05materialized \x01as (\x04%s\x01)", client, g_sSIClassNames[GetZombieClass(client)]);
+	PrintDebug("\x05%N \x05materialized \x01as (\x04%s\x01)", client, L4D2_InfectedNames[GetInfectedClass(client)]);
 	
 	g_bPlayerSpawned[client] = true;
 }
@@ -203,7 +188,7 @@ void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 			if (GetClientTeam(i) != 3)
 				continue;
 			
-			if (GetZombieClass(i) == SI_Tank)
+			if (GetInfectedClass(i) == L4D2Infected_Tank)
 				continue;
 			
 			int userid = GetClientUserId(i);
@@ -224,7 +209,7 @@ void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 		if (!IsPlayerAlive(client))
 			return;
 		
-		PrintDebug("\x05%N \x01left Infected Team \x01as (\x04%s\x01)", client, g_sSIClassNames[GetZombieClass(client)]);
+		PrintDebug("\x05%N \x01left Infected Team \x01as (\x04%s\x01)", client, L4D2_InfectedNames[GetInfectedClass(client)]);
 		
 		QueuePlayerSI(client);
 	}
@@ -239,7 +224,7 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 	if (GetClientTeam(client) != 3)
 		return;
 	
-	PrintDebug("\x05%N \x01died \x01as (\x04%s\x01)", client, g_sSIClassNames[GetZombieClass(client)]);
+	PrintDebug("\x05%N \x01died \x01as (\x04%s\x01)", client, L4D2_InfectedNames[GetInfectedClass(client)]);
 	
 	QueuePlayerSI(client);
 }
@@ -264,11 +249,11 @@ void HandlePlayerReplace(int replacer, int replacee)
 	if (GetClientTeam(replacer) != 3)
 		return;
 	
-	PrintDebug("\x05%N \x01replaced \x05%N \x01as (\x04%s\x01)", replacer, replacee, g_sSIClassNames[GetZombieClass(replacer)]);
+	PrintDebug("\x05%N \x01replaced \x05%N \x01as (\x04%s\x01)", replacer, replacee, L4D2_InfectedNames[GetInfectedClass(replacer)]);
 	
-	if (GetZombieClass(replacer) == SI_Tank && !IsFakeClient(replacer))
+	if (GetInfectedClass(replacer) == L4D2Infected_Tank && !IsFakeClient(replacer))
 	{
-		PrintDebug("\x05%N \x01(\x04%s\x01) \x01replaced an \x04AI Tank", replacer, g_sSIClassNames[g_iStoredClass[replacer]]);
+		PrintDebug("\x05%N \x01(\x04%s\x01) \x01replaced an \x04AI Tank", replacer, L4D2_InfectedNames[g_iStoredClass[replacer]]);
 		
 		QueuePlayerSI(replacer);
 		return;
@@ -298,7 +283,7 @@ public void L4D_OnReplaceTank(int tank, int newtank)
 	if (GetClientTeam(newtank) != 3)
 		return;
 	
-	PrintDebug("\x05%N \x01(\x04%s\x01) \x01is going to replace \x05%N\x01's \x04Tank", newtank, g_sSIClassNames[GetZombieClass(newtank)], tank);
+	PrintDebug("\x05%N \x01(\x04%s\x01) \x01is going to replace \x05%N\x01's \x04Tank", newtank, L4D2_InfectedNames[GetInfectedClass(newtank)], tank);
 	
 	QueuePlayerSI(newtank);
 }
@@ -323,7 +308,7 @@ public Action L4D_OnEnterGhostStatePre(int client)
  */
 public void L4D_OnEnterGhostState(int client)
 {
-	int SI = GetZombieClass(client);
+	int SI = GetInfectedClass(client);
 	
 	// Don't mess up when player despawns or round restarts.
 	if (!isCulling && g_isLive)
@@ -336,7 +321,7 @@ public void L4D_OnEnterGhostState(int client)
 		}
 	}
 	
-	PrintDebug("%N %s \x01as (\x04%s\x01)", client, isCulling ? "\x05respawned" : "\x01spawned", g_sSIClassNames[SI]);
+	PrintDebug("%N %s \x01as (\x04%s\x01)", client, isCulling ? "\x05respawned" : "\x01spawned", L4D2_InfectedNames[SI]);
 	
 	g_iStoredClass[client] = SI;
 	g_bPlayerSpawned[client] = false;
@@ -350,7 +335,7 @@ public void L4D_OnEnterGhostState(int client)
 int g_ZombieClass = SI_None;
 public Action L4D_OnSpawnSpecial(int &zombieClass, const float vecPos[3], const float vecAng[3])
 {
-	PrintDebug("Director attempting to spawn (\x04%s\x01)", g_sSIClassNames[zombieClass]);
+	PrintDebug("Director attempting to spawn (\x04%s\x01)", L4D2_InfectedNames[zombieClass]);
 	
 	if (!director_allow_infected_bots.BoolValue)
 		return Plugin_Continue;
@@ -369,14 +354,14 @@ public Action L4D_OnSpawnSpecial(int &zombieClass, const float vecPos[3], const 
 	}
 	
 	zombieClass = g_ZombieClass;
-	PrintDebug("Overriding director spawn to (\x04%s\x01)", g_sSIClassNames[g_ZombieClass]);
+	PrintDebug("Overriding director spawn to (\x04%s\x01)", L4D2_InfectedNames[g_ZombieClass]);
 	
 	return Plugin_Changed;
 }
 
 public void L4D_OnSpawnSpecial_Post(int client, int zombieClass, const float vecPos[3], const float vecAng[3])
 {
-	PrintDebug("Director spawned a bot (expected \x05%s\x01, got %s%s\x01)", g_sSIClassNames[g_ZombieClass], g_ZombieClass == zombieClass ? "\x05" : "\x04", g_sSIClassNames[zombieClass]);
+	PrintDebug("Director spawned a bot (expected \x05%s\x01, got %s%s\x01)", L4D2_InfectedNames[g_ZombieClass], g_ZombieClass == zombieClass ? "\x05" : "\x04", L4D2_InfectedNames[zombieClass]);
 	
 	if (!director_allow_infected_bots.BoolValue)
 		return;
@@ -388,7 +373,7 @@ public void L4D_OnSpawnSpecial_Post(int client, int zombieClass, const float vec
 
 public void L4D_OnSpawnSpecial_PostHandled(int client, int zombieClass, const float vecPos[3], const float vecAng[3])
 {
-	PrintDebug("Director's spawn was \x04blocked \x01(expected \x05%s\x01, got %s%s\x01)", g_sSIClassNames[g_ZombieClass], g_ZombieClass == zombieClass ? "\x05" : "\x04", g_sSIClassNames[zombieClass]);
+	PrintDebug("Director's spawn was \x04blocked \x01(expected \x05%s\x01, got %s%s\x01)", L4D2_InfectedNames[g_ZombieClass], g_ZombieClass == zombieClass ? "\x05" : "\x04", L4D2_InfectedNames[zombieClass]);
 	
 	if (!director_allow_infected_bots.BoolValue)
 		return;
@@ -426,7 +411,7 @@ void QueueSI(int SI, bool front)
 		g_SpawnsArray.Push(SI);
 	}
 	
-	PrintDebug("Queuing (\x05%s\x01) to \x04%s", g_sSIClassNames[SI], front ? "the front" : "the end");
+	PrintDebug("Queuing (\x05%s\x01) to \x04%s", L4D2_InfectedNames[SI], front ? "the front" : "the end");
 }
 
 int PopQueuedSI(int skip_client)
@@ -443,12 +428,12 @@ int PopQueuedSI(int skip_client)
 		if (status == OverLimit_OK)
 		{
 			g_SpawnsArray.Erase(i);
-			PrintDebug("Popped (\x05%s\x01) after \x04%i \x01%s", g_sSIClassNames[QueuedSI], i+1, i+1 > 1 ? "tries" : "try");
+			PrintDebug("Popped (\x05%s\x01) after \x04%i \x01%s", L4D2_InfectedNames[QueuedSI], i+1, i+1 > 1 ? "tries" : "try");
 			return QueuedSI;
 		}
 		else
 		{
-			PrintDebug("Popping (\x05%s\x01) but \x03over limit \x01(\x03reason: %s\x01)", g_sSIClassNames[QueuedSI], g_sOverLimitReason[status]);
+			PrintDebug("Popping (\x05%s\x01) but \x03over limit \x01(\x03reason: %s\x01)", L4D2_InfectedNames[QueuedSI], g_sOverLimitReason[status]);
 		}
 	}
 	
@@ -477,7 +462,7 @@ void FillQueue()
 		{
 			g_SpawnsArray.Push(SI);
 			
-			StrCat(classString, sizeof(classString), g_sSIClassNames[SI]);
+			StrCat(classString, sizeof(classString), L4D2_InfectedNames[SI]);
 			StrCat(classString, sizeof(classString), ", ");
 		}
 	}
@@ -508,7 +493,7 @@ bool IsAbleToQueue(int SI, int skip_client)
 			return true;
 	}
 	
-	PrintDebug("\x04Unexpected class \x01(\x05%s\x01)", SI == -1 ? "INVALID" : g_sSIClassNames[SI]);
+	PrintDebug("\x04Unexpected class \x01(\x05%s\x01)", SI == -1 ? "INVALID" : L4D2_InfectedNames[SI]);
 	return false;
 }
 
@@ -542,7 +527,7 @@ int IsClassOverLimit(int SI, int skip_client)
 		return OverLimit_OK;
 	
 	int dominatorCount = 0;
-	for (int i = SI_Smoker; i <= SI_Charger; ++i)
+	for (int i = SI_GENERIC_BEGIN; i < SI_GENERIC_END; ++i)
 		if (IsDominator(i)) dominatorCount += counts[i];
 	
 	if (dominatorCount >= 3)
@@ -578,7 +563,7 @@ int CollectZombies(int zombies[SI_MAX_SIZE], int skip_client = -1)
 		
 		++zombies[SI];
 		++count;
-		StrCat(classString, sizeof(classString), g_sSIClassNames[SI]);
+		StrCat(classString, sizeof(classString), L4D2_InfectedNames[SI]);
 		StrCat(classString, sizeof(classString), ", ");
 	}
 	
@@ -600,7 +585,7 @@ int CollectQueuedZombies(int zombies[SI_MAX_SIZE])
 		int SI = g_SpawnsArray.Get(i);
 		
 		++zombies[SI];
-		StrCat(classString, sizeof(classString), g_sSIClassNames[SI]);
+		StrCat(classString, sizeof(classString), L4D2_InfectedNames[SI]);
 		StrCat(classString, sizeof(classString), ", ");
 	}
 	
@@ -628,7 +613,7 @@ int GetSICount(bool isHumanOnly = true)
 			if (isHumanOnly)
 				continue;
 			
-			if (GetZombieClass(i) == SI_Tank)
+			if (GetInfectedClass(i) == L4D2Infected_Tank)
 				continue;
 			
 			if (!IsPlayerAlive(i))
@@ -639,11 +624,6 @@ int GetSICount(bool isHumanOnly = true)
 	}
 	
 	return count;
-}
-
-int GetZombieClass(int client)
-{
-	return GetEntProp(client, Prop_Send, "m_zombieClass");
 }
 
 stock void PrintDebug(const char[] format, any ...)
