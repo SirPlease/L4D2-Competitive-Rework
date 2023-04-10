@@ -5,7 +5,7 @@
 #include <dhooks>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "1.6.1"
+#define PLUGIN_VERSION "1.7"
 
 public Plugin myinfo = 
 {
@@ -210,6 +210,13 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 	int attacker = g_iChargeAttacker[client];
 	if (attacker == -1)
 		return;
+	
+	if (L4D2_IsInQueuedPummel(attacker) && L4D2_GetQueuedPummelVictim(attacker) == client)
+	{
+		int ability = GetEntPropEnt(attacker, Prop_Send, "m_customAbility");
+		SetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", 0.2, 0);
+		SetEntPropFloat(ability, Prop_Send, "m_nextActivationTimer", L4D2_GetQueuedPummelStartTime(attacker) + 0.2, 1);
+	}
 	
 	if (g_bNotSolid[client])
 	{
