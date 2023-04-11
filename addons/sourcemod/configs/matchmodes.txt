@@ -30,13 +30,6 @@
 			"name" "1v1 ZoneMod"
 		}
 	}
-	"PureMod Configs"
-	{
-		"puremod"
-		{
-			"name" "PureMod 2.8"
-		}
-	}
 	"NeoMod Configs"
 	{
 		"neomod"
