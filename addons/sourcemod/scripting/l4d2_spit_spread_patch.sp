@@ -8,7 +8,7 @@
 #include <sourcescramble>
 #include <collisionhook>
 
-#define PLUGIN_VERSION "1.19.3"
+#define PLUGIN_VERSION "1.20"
 
 public Plugin myinfo = 
 {
@@ -71,7 +71,7 @@ enum
 
 int g_iCvarSaferoomSpread, g_iSaferoomSpread, g_iMaxFlames;
 bool g_bWaterCollision;
-float g_flTraceHeight;
+float g_flTraceHeight, g_flPropDamage;
 
 StringMap g_smNoSpreadMaps;
 
@@ -190,6 +190,14 @@ public void OnPluginStart()
 					true, 0.0, true, 1.0,
 					CvarChange_WaterCollision);
 	
+	CreateConVarHook("l4d2_spit_prop_damage",
+					"10.0",
+					"Amount of damage done to props that projectile bounces on.\n"
+				...	"0 = No damage.",
+					FCVAR_NOTIFY|FCVAR_SPONLY,
+					true, 0.0, false, 0.0,
+					CvarChange_PropDamage);
+	
 	g_smNoSpreadMaps = new StringMap();
 	RegServerCmd("spit_spread_saferoom_except", Cmd_SetSaferoomSpitSpreadException);
 	
@@ -217,6 +225,11 @@ void CvarChange_MaxFlames(ConVar convar, const char[] oldValue, const char[] new
 void CvarChange_WaterCollision(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	g_bWaterCollision = convar.BoolValue;
+}
+
+void CvarChange_PropDamage(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	g_flPropDamage = convar.FloatValue;
 }
 
 Action Cmd_SetSaferoomSpitSpreadException(int args)
@@ -268,6 +281,10 @@ public void OnEntityCreated(int entity, const char[] classname)
 	{
 		SDKHook(entity, SDKHook_SpawnPost, SDK_OnSpawnPost);
 	}
+	else if (classname[0] == 's' && strcmp(classname, "spitter_projectile") == 0)
+	{
+		SDKHook(entity, SDKHook_SpawnPost, SDK_OnSpawnPost_Projectile);
+	}
 }
 
 void SDK_OnSpawnPost(int entity)
@@ -278,6 +295,23 @@ void SDK_OnSpawnPost(int entity)
 	}
 	
 	SDKHook(entity, SDKHook_Think, SDK_OnThink);
+}
+
+void SDK_OnSpawnPost_Projectile(int entity)
+{
+	SDKHook(entity, SDKHook_Touch, SDK_OnTouch);
+}
+
+Action SDK_OnTouch(int entity, int other)
+{
+	if (g_flPropDamage == 0.0)
+		return Plugin_Continue;
+	
+	if (other <= MaxClients)
+		return Plugin_Continue;
+	
+	SDKHooks_TakeDamage(other, entity, GetEntPropEnt(entity, Prop_Send, "m_hThrower"), g_flPropDamage, DMG_CLUB);
+	return Plugin_Continue;
 }
 
 Action SDK_OnThink(int entity)
