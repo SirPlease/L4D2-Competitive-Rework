@@ -75,6 +75,10 @@
 		"start_extra_dist"	"150.000000"
 		"end_dist"			"150.000000"
 		"max_distance"		"800"
+		"ItemLimits"
+		{
+			"pain_pills"	"0"
+		}
 		"horde_tank"		"1"
 	}
 	"c2m1_highway"
@@ -173,6 +177,10 @@
 		"start_dist"		"100.000000"
 		"start_extra_dist"	"300.000000"
 		"end_dist"			"150.000000"
+		"ItemLimits"
+		{
+			"pain_pills"	"0"
+		}
 	}
 	"c3m1_plankcountry"
 	{
@@ -215,6 +223,10 @@
 		"start_dist"		"50.000000"
 		"start_extra_dist"	"200.000000"
 		"end_dist"			"200.000000"
+		"ItemLimits"
+		{
+			"pain_pills"	"0"
+		}
 	}
 	"c4m1_milltown_a"
 	{
@@ -308,6 +320,10 @@
 		"start_extra_dist"	"350.000000"
 		"end_dist"			"100.000000"
 		"max_distance"		"400"
+		"ItemLimits"
+		{
+			"pain_pills"	"0"
+		}
 	}
 	"c5m1_waterfront"
 	{
@@ -430,6 +446,10 @@
 		"start_dist"		"50.000000"
 		"start_extra_dist"	"0.000000"
 		"end_dist"			"50.000000"
+		"ItemLimits"
+		{
+			"pain_pills"	"0"
+		}
 	}
 	"c7m1_docks"
 	{
@@ -477,6 +497,10 @@
 		"start_extra_dist"	"0.000000"
 		"end_dist"			"75.000000"
 		"max_distance"		"700"
+		"ItemLimits"
+		{
+			"pain_pills"	"0"
+		}
 	}
 	"c8m1_apartment"
 	{
@@ -568,6 +592,10 @@
 		"start_extra_dist"	"421.803650"
 		"end_point"			"5675.121582 8443.446289 6142.031250"
 		"end_dist"			"100.000000"
+		"ItemLimits"
+		{
+			"pain_pills"	"0"
+		}
 		"tank_ban_flow"
 		{
 			"Early spawn"
@@ -594,6 +622,10 @@
 		"end_point"			"7095.529297 6474.146484 45.645901"
 		"end_dist"			"1387.183838"
 		"max_distance"		"800"
+		"ItemLimits"
+		{
+			"pain_pills"	"0"
+		}
 	}
 	"c10m1_caves"
 	{
@@ -651,6 +683,10 @@
 		"start_extra_dist"	"317.183868"
 		"end_point"			"3805.135254 -4660.525391 -151.968750"
 		"end_dist"			"795.922058"
+		"ItemLimits"
+		{
+			"pain_pills"	"0"
+		}
 	}
 	"c11m1_greenhouse"
 	{
@@ -701,6 +737,10 @@
 		"start_extra_dist"	"344.831299"
 		"end_point"			"-5196.772949 9229.695312 -191.968750"
 		"end_dist"			"538.437988"
+		"ItemLimits"
+		{
+			"pain_pills"	"0"
+		}
 	}
 	"c12m1_hilltop"
 	{
@@ -771,6 +811,10 @@
 		"start_extra_dist"	"315.198547"
 		"end_point"			"6972.038086 1354.824463 274.312256"
 		"end_dist"			"183.031281"
+		"ItemLimits"
+		{
+			"pain_pills"	"0"
+		}
 		"tank_ban_flow"
 		{
 			"After one way drop"
@@ -854,6 +898,10 @@
 		"start_extra_dist"	"350.000000"
 		"end_point"			"-4318.968750 3638.318115 872.031250"
 		"end_dist"			"500.000000"
+		"ItemLimits"
+		{
+			"pain_pills"	"0"
+		}
 		"tank_ban_flow"
 		{
 			"Early spawns"
@@ -1048,6 +1096,10 @@
 		"start_point"		"-2383.999756 -2986.743652 88.031250"
 		"start_dist"		"185.257492"
 		"start_extra_dist"	"194.090973"
+		"ItemLimits"
+		{
+			"pain_pills"	"0"
+		}
 	}
 	"l4d_ihm01_forest"
 	{
@@ -1105,6 +1157,10 @@
 		"start_extra_dist"	"346.297455"
 		"end_point"			"5840.246094 9788.924805 60.349205"
 		"end_dist"			"540.438049"
+		"ItemLimits"
+		{
+			"pain_pills"	"0"
+		}
 	}
 	"bloodtracks_01"
 	{
@@ -1137,6 +1193,10 @@
 		"start_extra_dist"	"216.522690"
 		"end_point"			"4238.532715 -11658.243164 -2224.328857"
 		"end_dist"			"1521.507202"
+		"ItemLimits"
+		{
+			"pain_pills"	"0"
+		}
 	}
 	"cwm1_intro"
 	{
@@ -1315,6 +1375,10 @@
 		"start_extra_dist"	"103.749420"
 		"end_point"			"12230.234375 8827.060547 -551.968750"
 		"end_dist"			"2195.812500"
+		"ItemLimits"
+		{
+			"pain_pills"	"0"
+		}
 	}
 	"hf01_theforest"
 	{
@@ -1372,6 +1436,10 @@
 		"start_extra_dist"	"122.307701"
 		"end_point"			"1241.002563 4694.170898 1920.031250"
 		"end_dist"			"1227.881958"
+		"ItemLimits"
+		{
+			"pain_pills"	"0"
+		}
 	}
 	"l4d_dbd2dc_anna_is_gone"
 	{
@@ -1527,6 +1595,10 @@
 		"start_extra_dist"	"391.300476"
 		"end_point"			"8174.469238 -8135.983887 -2077.968750"
 		"end_dist"			"1143.486694"
+		"ItemLimits"
+		{
+			"pain_pills"	"0"
+		}
 	}
 	"eu01_residential_b16"
 	{
@@ -1575,6 +1647,10 @@
 		"start_extra_dist"	"183.146271"
 		"end_point"			"-2326.152588 -481.388062 -391.968750"
 		"end_dist"			"1371.141602"
+		"ItemLimits"
+		{
+			"pain_pills"	"0"
+		}
 	}
 	"srocchurch"
 	{
@@ -2373,7 +2449,7 @@
 		"end_dist"			"100.000000"
 		"ItemLimits"
 		{
-			"pain_pills"	"4"
+			"pain_pills"	"0"
 		}
 		"tank_ban_flow"
 		{
