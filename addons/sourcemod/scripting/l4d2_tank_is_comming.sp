@@ -53,7 +53,7 @@ public Action MapProgressTick(Handle timer)
 	if(remaining <= 0 || remaining > ALERT_MIN_INTERVAL || !mustAlert[remaining])
 		return Plugin_Continue;
 
-	PrintToChatAll("\x01Tank in: \x04%d%%", remaining);
+	PrintToChatAll("\x01Tank in: \x03%d%%", remaining);
 
 	for (int i = ALERT_MIN_INTERVAL; i >= remaining; i--)
 		mustAlert[i] = false;
