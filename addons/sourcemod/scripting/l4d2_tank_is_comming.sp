@@ -25,6 +25,8 @@ public void OnPluginStart()
 {
 	g_hVsBossBuffer = FindConVar("versus_boss_buffer");
 
+	HookEvent("tank_spawn", TankSpawn, EventHookMode_PostNoCopy);
+
 	ClearAlerts();
 
 	CreateTimer(1.0, MapProgressTick, _, TIMER_REPEAT);
@@ -33,6 +35,12 @@ public void OnPluginStart()
 public void OnRoundIsLive()
 {
 	ClearAlerts();
+}
+
+public void TankSpawn(Event hEvent, const char[] eName, bool dontBroadcast)
+{
+	for (int i = 0; i <= ALERT_MIN_INTERVAL; i++)
+    	mustAlert[i] = false;
 }
 
 public Action MapProgressTick(Handle timer)
