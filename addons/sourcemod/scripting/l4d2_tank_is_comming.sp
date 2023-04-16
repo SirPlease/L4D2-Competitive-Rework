@@ -1,8 +1,8 @@
 #include <sourcemod>
 #include <sdktools>
+#include <left4dhooks>
 #include <readyup>
 #include <pause>
-#include <left4dhooks>
 #include <l4d2_boss_percents>
 
 #define TEAM_SURVIVORS 2
@@ -10,6 +10,7 @@
 
 ConVar g_hVsBossBuffer;
 
+bool alertsOff;
 bool mustAlert[ALERT_MIN_INTERVAL + 1];
 
 public Plugin myinfo =
@@ -27,25 +28,24 @@ public void OnPluginStart()
 
 	HookEvent("tank_spawn", TankSpawn, EventHookMode_PostNoCopy);
 
-	ClearAlerts();
+	ResetAlerts();
 
 	CreateTimer(1.0, MapProgressTick, _, TIMER_REPEAT);
 }
 
 public void OnRoundIsLive()
 {
-	ClearAlerts();
+	ResetAlerts();
 }
 
 public void TankSpawn(Event hEvent, const char[] eName, bool dontBroadcast)
 {
-	for (int i = 0; i <= ALERT_MIN_INTERVAL; i++)
-    	mustAlert[i] = false;
+	DisableAllAlerts();
 }
 
 public Action MapProgressTick(Handle timer)
 {
-	if (IsInReady() || IsInPause())
+	if (alertsOff || IsInReady() || IsInPause())
 		return Plugin_Continue;
 
 	int current = GetCurrentProgress();
@@ -69,10 +69,20 @@ public Action MapProgressTick(Handle timer)
 	return Plugin_Continue;
 }
 
-public void ClearAlerts()
+public void ResetAlerts()
 {
+	alertsOff = false;
+	
 	for (int i = 0; i <= ALERT_MIN_INTERVAL; i++)
-    	mustAlert[i] = i <= 5 || i % 5 == 0;
+    	mustAlert[i] = i < 5 || i % 5 == 0;
+}
+
+public void DisableAllAlerts()
+{
+	alertsOff = true;
+
+	for (int i = 0; i <= ALERT_MIN_INTERVAL; i++)
+    	mustAlert[i] = false;
 }
 
 // *****************************************************
