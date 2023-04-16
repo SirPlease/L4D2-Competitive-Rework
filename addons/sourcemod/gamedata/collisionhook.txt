@@ -1,71 +1,19 @@
+
+/*
+ * quack
+*/
+
 "Games"
 {
 	"#default"
 	{
 		"Signatures"
 		{
-			/* @Crasher_3637 Thanks!
-			 * How to find on windows:
-			 * https://forums.alliedmods.net/showpost.php?p=2737146&postcount=119
-			*/
-			"PassServerEntityFilter"
-			{
-				"library"		"server"
-
-				"windows"		"\x55\x8b\xec\x57\x8b\x7d\x0c\x85\xff\x75\x2a\xb0\x01\x5f\x5d\xc3\x56\x8b\x75"
-				"linux"			"@_Z22PassServerEntityFilterPK13IHandleEntityS1_"
-				"mac"			"@_Z22PassServerEntityFilterPK13IHandleEntityS1_"
-			}
-		}
-	}
-
-	"left4dead"
-	{
-		"Signatures"
-		{
-			/* PassServerEntityFilter(IHandleEntity const*, IHandleEntity const*)
-			 *
-			 * How to find on Windows:
-			 * 1. Search for the "RagdollImpact" string.
-			 * 2. One of the functions that references that string should be "CBaseEntity::FireBullets".
-			 * 3. Click on the first function call below the string to go to "Pickup_ForcePlayerToDropThisObject".
-			 * 4. Check the references for "Pickup_ForcePlayerToDropThisObject".
-			 * 5. One of the functions that calls "Pickup_ForcePlayerToDropThisObject" should be "CTraceFilterMelee::ShouldHitEntity".
-			 * 6. The second function call in "CTraceFilterMelee::ShouldHitEntity" should be this function.
-			 **/
 			"PassServerEntityFilter"
 			{
 				"library"	"server"
-
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x75\x2A\xB0\x2A\x5F\xC3\x56"
-							/* ? ? ? ? ? ? ? 75 ? B0 ? 5F C3 56 */
-			}
-		}
-	}
-
-	"csgo"
-	{
-		"Signatures"
-		{
-			"PassServerEntityFilter"
-			{
-				"library"	"server"
-
-				"windows"	"\x56\x8B\xF2\x57\x8B\xF9\x85\xF6\x74\x2A\x3B\xFE"
-				"linux"		"\x55\xB8\x01\x00\x00\x00\x89\xE5\x83\xEC\x38\x89\x5D\xF4"
-			}
-		}
-	}
-
-	"tf"
-	{
-		"Signatures"
-		{
-			"PassServerEntityFilter"
-			{
-				"library"	"server"
-
-				"windows"	"\x55\x8B\xEC\x56\x8B\x75\x0C\x85\xF6\x75\x05"
+				"windows"	"\x55\x8b\xec\x57\x8b\x7d\x0c\x85\xff\x74\x2a\x8B\x0D\x88\xF3\xA0\x10\x56\x57"
+				"linux"		"@_Z22PassServerEntityFilterPK13IHandleEntityS1_"
 			}
 		}
 	}

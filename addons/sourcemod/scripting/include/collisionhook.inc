@@ -3,6 +3,7 @@
 #endif
 #define _collisionhook_included
 
+
 // called when the game is performing vphysics collision checks between entities
 // return something other than Plugin_Continue to have the game use the result parameter
 forward Action CH_ShouldCollide(int ent1, int ent2, bool &result);
@@ -12,11 +13,12 @@ forward Action CH_ShouldCollide(int ent1, int ent2, bool &result);
 // note: any code in this forward should be very performant, the game will use many filtered traces per player per game frame
 forward Action CH_PassFilter(int ent1, int ent2, bool &result);
 
-public Extension __ext_collisionhook =
+
+public Extension __ext_collisionhook = 
 {
 	name = "CollisionHook",
 	file = "collisionhook.ext",
-
+	
 #if defined AUTOLOAD_EXTENSIONS
 	autoload = 1,
 #else
@@ -27,4 +29,5 @@ public Extension __ext_collisionhook =
 #else
 	required = 0,
 #endif
+	
 };
