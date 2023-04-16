@@ -1,0 +1,274 @@
+"Games"
+{
+	"#default"
+	{
+		"Offsets"
+		{
+			"OS"
+			{
+				"linux"			"1"
+				"windows"		"0"
+			}
+		}
+		
+		"Functions"
+		{
+			"CTongue::UpdateTongueTarget"
+			{
+				"signature"		"CTongue::UpdateTongueTarget"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
+			}
+		}
+		
+		/**
+		 * Everything in this section should be as clear as they read.
+		 */
+		"Addresses"
+		{
+			"CTraceFilterSimple::SetPassEntity"
+			{
+				"linux"
+				{
+					"signature"	"CTraceFilterSimple::SetPassEntity"
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			"CTraceFilterSimple::SetPassEntity"
+			{
+				"library"		"server"
+				"linux"			"@_ZN18CTraceFilterSimple13SetPassEntityEPK13IHandleEntity"
+			}
+		}
+	}
+		
+	"left4dead"
+	{
+		"MemPatches"
+		{
+			"TongueTargetScan<CTerrorPlayer>::IsTargetVisible__AddEntityToIgnore_dummypatch"
+			{
+				"signature"		"TongueTargetScan<CTerrorPlayer>::IsTargetVisible"
+				"linux"
+				{
+					"offset"	"336h"
+					"verify"	"\xE8"
+					"preserve"	"\xFF\xFF\xFF\xFF\xFF"
+					"patch"		"\x90\x90\x90\x90\x90"
+				}
+				"windows"
+				{
+					"offset"	"5Ah"
+					"verify"	"\xE8"
+					"preserve"	"\xFF\xFF\xFF\xFF\xFF"
+					"patch"		"\x90\x90\x90\x90\x90"
+				}
+			}
+			
+			"CTongue::OnUpdateExtendingState__TraceFilterTongue_passentpatch"
+			{
+				"signature"		"CTongue::OnUpdateExtendingState"
+				"linux"
+				{
+					"offset"	"47Eh"
+					"verify"	"\xC7\x44\x24\x04"					// mov  dword ptr [esp+04h], 0
+					"patch"		"\x89\x74\x24\x04\x90\x90\x90\x90"	// mov  [esp+04h], esi ; this
+				}
+				"windows"
+				{
+					"offset"	"240h"
+					"verify"	"\x6A"		// push  0
+					"patch"		"\x57\x90"	// push  edi ; this
+				}
+			}
+			
+			"CTongue::OnUpdateExtendingState__AddEntityToIgnore_argpatch"
+			{
+				"signature"		"CTongue::OnUpdateExtendingState"
+				"linux"
+				{
+					"offset"	"1C2h"
+					"verify"	"\x8B\x54\x24"		// mov  edx, [esp+30h] ; this->m_owner
+					"patch"		"\x89\xF2\x90\x90"	// mov  edx, esi ; this
+				}
+				"windows"
+				{
+					"offset"	"10Eh"
+					"verify"	"\x56"	// push  esi ; this->m_owner
+					"patch"		"\x57"	// push  edi ; this
+				}
+			}
+			
+			"CTongue::OnUpdateExtendingState__AddEntityToIgnore_dummypatch"
+			{
+				"signature"		"CTongue::OnUpdateExtendingState"
+				"linux"
+				{
+					"offset"	"1D4h"
+					"verify"	"\xE8"
+					"preserve"	"\xFF\xFF\xFF\xFF\xFF"
+					"patch"		"\x90\x90\x90\x90\x90"
+				}
+				"windows"
+				{
+					"offset"	"113h"
+					"verify"	"\xE8"
+					"preserve"	"\xFF\xFF\xFF\xFF\xFF"
+					"patch"		"\x90\x90\x90\x90\x90"
+				}
+			}
+		}
+		
+		"Addresses"
+		{
+			/**
+			 * Obviously with all bytes of function "CTraceFilterSimple::SetPassEntity" it cannot be unique still.
+			 * The following is a way making use of the vtable.
+			 *
+			 * The "read" offset leads into the virtual pointer to "CTraceFilterSimpleListNoGhosts::ShouldHitEntity",
+			 * and the "offset" added to the pointer address advances to "CTraceFilterSimple::SetPassEntity".
+			 */
+			"CTraceFilterSimple::SetPassEntity"
+			{
+				"windows"
+				{
+					"signature"	"CTongue::OnUpdateExtendingState"
+					"read"		"235"
+					"offset"	"8"
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			"CTongue::OnUpdateExtendingState"
+			{
+				"library"		"server"
+				"linux"			"@_ZN7CTongue22OnUpdateExtendingStateEv"
+				"windows"		"\x81\x2A\x2A\x2A\x2A\x2A\x57\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x0F\x84"
+								/* 81 ? ? ? ? ? 57 8B ? 8B ? ? ? ? ? 83 ? ? 0F 84 */
+								/* Search "Tongue dropping because we tried to grab through a closed checkpoint door." */
+			}
+			
+			"TongueTargetScan<CTerrorPlayer>::IsTargetVisible"
+			{
+				"library"		"server"
+				"linux"			"@_ZNK16TongueTargetScanI13CTerrorPlayerE15IsTargetVisibleEPS0_"
+				"windows"		"\x81\x2A\x2A\x2A\x2A\x2A\x53\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x56\x8B"
+								/* 81 ? ? ? ? ? 53 8B ? ? ? ? ? 8B ? 8B ? ? 56 8B */
+								/* Search "target %s - range: %.1f - dot: %.3f \n" and go to vtable xref */
+			}
+			
+			"CTongue::UpdateTongueTarget"
+			{
+				"library"		"server"
+				"linux"			"@_ZN7CTongue18UpdateTongueTargetEv"
+				"windows"		"\x83\x2A\x2A\x55\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x89\x2A\x2A\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B"
+								/* 83 ? ? 55 8B ? 8B ? ? ? ? ? 83 ? ? 89 ? ? ? 0F 84 ? ? ? ? 8B ? ? ? ? ? 8B */
+								/* Search "Tongue targeting new victim." */
+			}
+		}
+	}
+	
+	"left4dead2"
+	{
+		"MemPatches"
+		{
+			"CTongue::OnUpdateExtendingState__TraceFilterTongue_passentpatch"
+			{
+				"signature"		"CTongue::OnUpdateExtendingState"
+				"linux"
+				{
+					"offset"	"3D0h"
+					"verify"	"\xC7\x44\x24\x04"	// mov  dword ptr [esp+04h], 0
+					"patch"		"\x89\x5C\x24\x04\x90\x90\x90\x90"	// mov  [esp+04h], ebx ; this
+				}
+				"windows"
+				{
+					"offset"	"29Eh"
+					"verify"	"\x6A"		// push  0
+					"patch"		"\x57\x90"	// push  [esp+04h], ebx ; this
+				}
+			}
+			
+			"CTongue::OnUpdateExtendingState__AddEntityToIgnore_argpatch"
+			{
+				"signature"		"CTongue::OnUpdateExtendingState"
+				"linux"
+				{
+					"offset"	"171h"
+					"verify"	"\x89\x44\x24\x04"	// mov  [esp+04h], eax ; this->m_owner
+					"patch"		"\x89\x5C\x24\x04"	// mov  [esp+04h], ebx ; this
+				}
+				"windows"
+				{
+					"offset"	"122h"
+					"verify"	"\x51"	// push  ecx ; this->m_owner
+					"patch"		"\x57"	// push  edi ; this
+				}
+			}
+			
+			"CTongue::OnUpdateExtendingState__AddEntityToIgnore_dummypatch"
+			{
+				"signature"		"CTongue::OnUpdateExtendingState"
+				"linux"
+				{
+					"offset"	"184h"
+					"verify"	"\xE8"
+					"preserve"	"\xFF\xFF\xFF\xFF\xFF"
+					"patch"		"\x90\x90\x90\x90\x90"
+				}
+				"windows"
+				{
+					"offset"	"129h"
+					"verify"	"\xE8"
+					"preserve"	"\xFF\xFF\xFF\xFF\xFF"
+					"patch"		"\x90\x90\x90\x90\x90"
+				}
+			}
+		}
+		
+		"Addresses"
+		{
+			/**
+			 * Obviously with all bytes of function "CTraceFilterSimple::SetPassEntity" it cannot be unique still.
+			 * The following is a way making use of the vtable.
+			 *
+			 * The "read" offset leads into the virtual pointer to "CTraceFilterSimpleListNoGhosts::ShouldHitEntity",
+			 * and the "offset" added to the pointer address advances to "CTraceFilterSimple::SetPassEntity".
+			 */
+			"CTraceFilterSimple::SetPassEntity"
+			{
+				"windows"
+				{
+					"signature"	"CTongue::OnUpdateExtendingState"
+					"read"		"259"
+					"offset"	"8"
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			"CTongue::OnUpdateExtendingState"
+			{
+				"library"		"server"
+				"linux"			"@_ZN7CTongue22OnUpdateExtendingStateEv"
+				"windows"		"\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x57\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B"
+								/* 55 8B ? 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 57 8B ? 8B ? ? ? ? ? 83 ? ? 0F 84 ? ? ? ? 8B ? ? ? ? ? 8B */
+			}
+			
+			"CTongue::UpdateTongueTarget"
+			{
+				"library"		"server"
+				"linux"			"@_ZN7CTongue18UpdateTongueTargetEv"
+				"windows"		"\x55\x8B\x2A\x83\x2A\x2A\x53\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x89\x2A\x2A\x83\x2A\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B"
+								/* 55 8B ? 83 ? ? 53 8B ? 8B ? ? ? ? ? 89 ? ? 83 ? ? 0F 84 ? ? ? ? 8B ? ? ? ? ? 8B */
+			}
+		}
+	}
+}
