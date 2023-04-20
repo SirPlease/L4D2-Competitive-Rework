@@ -3,7 +3,7 @@
 	"PlayerLoading"
 	{
 	    "#format"	    "{1:s}"
-		"en"			"{lightgreen}{1} {default}is connecting..."
+		"en"			"{lightgreen}{1} {default}esta conectando..."
 		"pt"			"{lightgreen}{1} {default}esta conectando..."
 	}
 }
