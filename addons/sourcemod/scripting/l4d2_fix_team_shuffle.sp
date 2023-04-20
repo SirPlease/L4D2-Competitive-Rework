@@ -51,7 +51,17 @@ public void RoundStart_Event(Handle event, const char[] name, bool dontBroadcast
 
 public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 {
+	if (!fixTeam)
+		return;
+
+	CreateTimer(1.0, FixTeam_Timer);
+}
+
+public Action FixTeam_Timer(Handle timer)
+{
 	FixTeams();
+
+	return Plugin_Continue;
 }
 
 public Action EnableFixTeam_Timer(Handle timer)
@@ -110,6 +120,8 @@ public void FixTeams()
 	if (!fixTeam)
 		return;
 
+	DisableFixTeam();
+
 	int flipped = GameRules_GetProp("m_bAreTeamsFlipped");
 
 	int survivorIndex = flipped ? 1 : 0;
@@ -134,6 +146,8 @@ public void FixTeams()
 		MoveSpectatorsToTheCorrectTeam(winners, L4D2_TEAM_INFECTED);
 		MoveSpectatorsToTheCorrectTeam(losers, L4D2_TEAM_SURVIVOR);
 	}
+
+	EnableFixTeam();
 }
 
 public void MoveToSpectatorWhoIsNotInTheTeam(ArrayList arrayList, int team)
