@@ -82,15 +82,7 @@ public Action DisableFixTeam_Timer(Handle timer)
 
 public void SaveTeams()
 {
-	int flipped = GameRules_GetProp("m_bAreTeamsFlipped");
-
-	int survivorIndex = flipped ? 1 : 0;
-	int infectedIndex = flipped ? 0 : 1;
-
-	int survivorScore = L4D2Direct_GetVSCampaignScore(survivorIndex);
-	int infectedScore = L4D2Direct_GetVSCampaignScore(infectedIndex);
-
-	if (survivorScore > infectedScore)
+	if (SurvivorsAreWinning())
 	{
 		CopySteamIdsToArray(winners, L4D2_TEAM_SURVIVOR);
 		CopySteamIdsToArray(losers, L4D2_TEAM_INFECTED);
@@ -122,15 +114,7 @@ public void FixTeams()
 
 	DisableFixTeam();
 
-	int flipped = GameRules_GetProp("m_bAreTeamsFlipped");
-
-	int survivorIndex = flipped ? 1 : 0;
-	int infectedIndex = flipped ? 0 : 1;
-
-	int survivorScore = L4D2Direct_GetVSCampaignScore(survivorIndex);
-	int infectedScore = L4D2Direct_GetVSCampaignScore(infectedIndex);
-
-	if (survivorScore > infectedScore)
+	if (SurvivorsAreWinning())
 	{
 		MoveToSpectatorWhoIsNotInTheTeam(winners, L4D2_TEAM_SURVIVOR);
 		MoveToSpectatorWhoIsNotInTheTeam(losers, L4D2_TEAM_INFECTED);
@@ -189,6 +173,19 @@ public void MoveSpectatorsToTheCorrectTeam(ArrayList arrayList, int team)
 		else if (team == L4D2_TEAM_INFECTED)
 			MovePlayerToInfected(client);
 	}
+}
+
+public bool SurvivorsAreWinning()
+{
+	int flipped = GameRules_GetProp("m_bAreTeamsFlipped");
+
+	int survivorIndex = flipped ? 1 : 0;
+	int infectedIndex = flipped ? 0 : 1;
+
+	int survivorScore = L4D2Direct_GetVSCampaignScore(survivorIndex);
+	int infectedScore = L4D2Direct_GetVSCampaignScore(infectedIndex);
+
+	return survivorScore > infectedScore;
 }
 
 public void EnableFixTeam()
