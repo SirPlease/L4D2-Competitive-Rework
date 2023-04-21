@@ -82,16 +82,10 @@ public Action DisableFixTeam_Timer(Handle timer)
 
 public void SaveTeams()
 {
-	if (SurvivorsAreWinning())
-	{
-		CopySteamIdsToArray(winners, L4D2_TEAM_SURVIVOR);
-		CopySteamIdsToArray(losers, L4D2_TEAM_INFECTED);
-	}
-	else
-	{
-		CopySteamIdsToArray(winners, L4D2_TEAM_INFECTED);
-		CopySteamIdsToArray(losers, L4D2_TEAM_SURVIVOR);
-	}
+	bool survivorsAreWinning = SurvivorsAreWinning();
+
+	CopySteamIdsToArray(winners, survivorsAreWinning ? L4D2_TEAM_SURVIVOR : L4D2_TEAM_INFECTED);
+	CopySteamIdsToArray(losers, survivorsAreWinning ? L4D2_TEAM_INFECTED : L4D2_TEAM_SURVIVOR);
 }
 
 public void CopySteamIdsToArray(ArrayList arrayList, int team)
@@ -114,22 +108,13 @@ public void FixTeams()
 
 	DisableFixTeam();
 
-	if (SurvivorsAreWinning())
-	{
-		MoveToSpectatorWhoIsNotInTheTeam(winners, L4D2_TEAM_SURVIVOR);
-		MoveToSpectatorWhoIsNotInTheTeam(losers, L4D2_TEAM_INFECTED);
+	bool survivorsAreWinning = SurvivorsAreWinning();
 
-		MoveSpectatorsToTheCorrectTeam(winners, L4D2_TEAM_SURVIVOR);
-		MoveSpectatorsToTheCorrectTeam(losers, L4D2_TEAM_INFECTED);
-	}
-	else
-	{
-		MoveToSpectatorWhoIsNotInTheTeam(winners, L4D2_TEAM_INFECTED);
-		MoveToSpectatorWhoIsNotInTheTeam(losers, L4D2_TEAM_SURVIVOR);
+	MoveToSpectatorWhoIsNotInTheTeam(winners, survivorsAreWinning ? L4D2_TEAM_SURVIVOR : L4D2_TEAM_INFECTED);
+	MoveToSpectatorWhoIsNotInTheTeam(losers, survivorsAreWinning ? L4D2_TEAM_INFECTED : L4D2_TEAM_SURVIVOR);
 
-		MoveSpectatorsToTheCorrectTeam(winners, L4D2_TEAM_INFECTED);
-		MoveSpectatorsToTheCorrectTeam(losers, L4D2_TEAM_SURVIVOR);
-	}
+	MoveSpectatorsToTheCorrectTeam(winners, survivorsAreWinning ? L4D2_TEAM_SURVIVOR : L4D2_TEAM_INFECTED);
+	MoveSpectatorsToTheCorrectTeam(losers, survivorsAreWinning ? L4D2_TEAM_INFECTED : L4D2_TEAM_SURVIVOR);
 
 	EnableFixTeam();
 }
