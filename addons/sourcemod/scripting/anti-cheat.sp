@@ -24,12 +24,13 @@ public void OnPluginStart()
 	cvar_anti_cheat_access_token = CreateConVar("anti_cheat_access_token", "", "Anti-cheat Access Token", FCVAR_PROTECTED);
 
 	RegAdminCmd("sm_addsusp", AddSuspected, ADMFLAG_BAN);
+	RegAdminCmd("sm_addallsusp", AddAllSuspected, ADMFLAG_BAN);
 	RegAdminCmd("sm_remsusp", RemoveSuspected, ADMFLAG_BAN);
 
 	HookEvent("player_team", PlayerTeam_Event);
 
 	CreateTimer(30.0, RefreshSuspectsListTick, _, TIMER_REPEAT);
-	CreateTimer(2.0, MoveToSpectatedPlayersWithoutAntiCheatTick, _, TIMER_REPEAT);
+	CreateTimer(4.0, MoveToSpectatedPlayersWithoutAntiCheatTick, _, TIMER_REPEAT);
 	CreateTimer(60.0, ServerPingTick, _, TIMER_REPEAT);
 	
 	RefreshSuspectsList();
@@ -52,6 +53,28 @@ public Action:AddSuspected(client, args)
 
 	HTTPRequest request = BuildHTTPRequest("/api/suspected-players");
 	request.Post(command, AddSuspectedResponse);
+}
+
+public Action:AddAllSuspected(param1, args)
+{
+	for (int client = 1; client <= MaxClients; client++)
+	{
+		if (!IsClientInGame(client) || IsFakeClient(client))
+			continue;
+
+		int clientTeam = GetClientTeam(client);
+		if (clientTeam != 2 && clientTeam != 3)
+			continue;
+
+		new String:communityId[25];
+		GetClientAuthId(client, AuthId_SteamID64, communityId, sizeof(communityId));
+
+		JSONObject command = new JSONObject();
+		command.SetString("account", communityId);
+
+		HTTPRequest request = BuildHTTPRequest("/api/suspected-players");
+		request.Post(command, AddSuspectedResponse);
+	}
 }
 
 void AddSuspectedResponse(HTTPResponse httpResponse, any value)
