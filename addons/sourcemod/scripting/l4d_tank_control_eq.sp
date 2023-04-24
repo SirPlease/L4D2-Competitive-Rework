@@ -146,6 +146,19 @@ public void ShowTankVoteMenu()
     if (GetArraySize(infectedPool) == 0)
         addTeamSteamIdsToArray(infectedPool, L4D2Team_Infected);
 
+    if (GetArraySize(infectedPool) == 1)
+    {
+        char steamId[64];
+        GetArrayString(infectedPool, 0, steamId, sizeof(steamId));
+        strcopy(queuedTankSteamId, sizeof(queuedTankSteamId), steamId);
+
+        tankSelectedByVotes = true;
+
+        outputTankToAll(0);
+
+        return;
+    }
+
     for (int client = 1; client <= MaxClients; client++)
 	{
         if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != 3)
