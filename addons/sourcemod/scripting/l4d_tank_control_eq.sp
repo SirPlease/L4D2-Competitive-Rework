@@ -152,6 +152,7 @@ public void ShowTankVoteMenu()
         GetArrayString(infectedPool, 0, steamId, sizeof(steamId));
         strcopy(queuedTankSteamId, sizeof(queuedTankSteamId), steamId);
 
+        delete infectedPool;
         tankSelectedByVotes = true;
 
         outputTankToAll(0);
