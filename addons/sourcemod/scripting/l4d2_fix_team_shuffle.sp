@@ -32,6 +32,7 @@ public void OnPluginStart()
 public void OnRoundIsLive()
 {
 	DisableFixTeam();
+	ClearTeamsData();
 }
 
 public void L4D2_OnEndVersusModeRound_Post()
@@ -82,6 +83,8 @@ public Action DisableFixTeam_Timer(Handle timer)
 
 public void SaveTeams()
 {
+	ClearTeamsData();
+
 	bool survivorsAreWinning = SurvivorsAreWinning();
 
 	CopySteamIdsToArray(winners, survivorsAreWinning ? L4D2_TEAM_SURVIVOR : L4D2_TEAM_INFECTED);
@@ -90,8 +93,6 @@ public void SaveTeams()
 
 public void CopySteamIdsToArray(ArrayList arrayList, int team)
 {
-	arrayList.Clear();
-
 	for (int client = 1; client <= MaxClients; client++)
 	{
 		if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != team)
@@ -104,6 +105,9 @@ public void CopySteamIdsToArray(ArrayList arrayList, int team)
 public void FixTeams()
 {
 	if (!fixTeam)
+		return;
+
+	if (GetArraySize(winners) == 0 && GetArraySize(losers) == 0)
 		return;
 
 	DisableFixTeam();
@@ -181,6 +185,12 @@ public void EnableFixTeam()
 public void DisableFixTeam()
 {
 	fixTeam = false;
+}
+
+public void ClearTeamsData()
+{
+	winners.Clear();
+	losers.Clear();
 }
 
 public bool IsNewGame()
