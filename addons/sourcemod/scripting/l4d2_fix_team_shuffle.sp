@@ -55,6 +55,14 @@ public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 	if (!fixTeam)
 		return;
 
+	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	if (!IsClientInGame(client) || IsFakeClient(client))
+		return;
+
+	int team = GetEventInt(event, "team");
+	if (team == L4D2_TEAM_SPECTATOR)
+		return;
+
 	CreateTimer(1.0, FixTeam_Timer);
 }
 
@@ -211,14 +219,7 @@ public void MovePlayerToSurvivor(int client)
 	if (NumberOfPlayersInTheTeam(L4D2_TEAM_SURVIVOR) >= TeamSize())
 		return;
 
-	int bot = FindSurvivorBot();
-	if (bot <= 0)
-		return;
-
-	int flags = GetCommandFlags("sb_takecontrol");
-	SetCommandFlags("sb_takecontrol", flags & ~FCVAR_CHEAT);
-	FakeClientCommand(client, "sb_takecontrol");
-	SetCommandFlags("sb_takecontrol", flags);
+	FakeClientCommand(client, "jointeam 2");
 }
 
 public void MovePlayerToInfected(int client)
@@ -247,13 +248,4 @@ public int NumberOfPlayersInTheTeam(int team)
 public int TeamSize()
 {
 	return GetConVarInt(FindConVar("survivor_limit"));
-}
-
-public int FindSurvivorBot()
-{
-	for (int client = 1; client <= MaxClients; client++)
-		if(IsClientInGame(client) && IsFakeClient(client) && GetClientTeam(client) == L4D2_TEAM_SURVIVOR)
-			return client;
-
-	return -1;
 }
