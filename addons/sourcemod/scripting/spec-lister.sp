@@ -38,16 +38,16 @@ public PanelHandler1(Handle:menu, MenuAction:action, param1, param2)
 		if(param2==1)
 			{
 			SetClientListeningFlags(param1, VOICE_LISTENALL);
-			PrintToChat(param1,"\x04[listen]\x03enable" );
+			PrintToChat(param1,"\x04[Ouvir]\x03Habilitado" );
 			}
 		else
 			{
 			SetClientListeningFlags(param1, VOICE_NORMAL);
-			PrintToChat(param1,"\x04[listen]\x03disable" );
+			PrintToChat(param1,"\x04[Ouvir]\x03Desabilitado" );
 			}
 		
 	} else if (action == MenuAction_Cancel) {
-		PrintToServer("Client %d's menu was cancelled.  Reason: %d", param1, param2);
+		PrintToServer("Client %d's menu foi cancelado.  Reason: %d", param1, param2);
 	}
 }
 
@@ -57,9 +57,9 @@ public Action:Panel_hear(client,args)
 	if(GetClientTeam(client)!=TEAM_SPEC)
 		return Plugin_Handled;
 	new Handle:panel = CreatePanel();
-	SetPanelTitle(panel, "Enable listen mode ?");
-	DrawPanelItem(panel, "yes");
-	DrawPanelItem(panel, "no");
+	SetPanelTitle(panel, "Deseja ouvir os jogadores?");
+	DrawPanelItem(panel, "Sim");
+	DrawPanelItem(panel, "NÃ£o");
  
 	SendPanelToClient(panel, client, PanelHandler1, 20);
  
@@ -77,7 +77,7 @@ CreateTimer(40.0, TimerAnnounce, client);
 public Action:TimerAnnounce(Handle:timer, any:client)
 {
 if (IsClientInGame(client))
-	PrintToChat(client,"\x04[listen]enable for spector only¡G\03!hear" );
+	PrintToChat(client,"\x04[Ouvir]Para ouvir os jogadores digite: \03!hear" );
 }
 
 public Event_PlayerChangeTeam(Handle:event, const String:name[], bool:dontBroadcast)
