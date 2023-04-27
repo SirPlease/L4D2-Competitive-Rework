@@ -16,40 +16,42 @@ public Plugin:myinfo =
 	url = "http://forums.alliedmods.net/showthread.php?t=95474"
 }
 
-
- public OnPluginStart()
+public OnPluginStart()
 {
-	HookEvent("player_team",Event_PlayerChangeTeam);
+	HookEvent("player_team", Event_PlayerChangeTeam);
 	RegConsoleCmd("hear", Panel_hear);
-
 }
+
 public PanelHandler1(Handle:menu, MenuAction:action, param1, param2)
 {
 	if (action == MenuAction_Select)
 	{
 		PrintToConsole(param1, "You selected item: %d", param2)
-		if(param2==1)
-			{
+
+		if(param2 == 1)
+		{
 			SetClientListeningFlags(param1, VOICE_LISTENALL);
-			PrintToChat(param1,"\x04[Ouvir]\x03Habilitado" );
-			}
+			PrintToChat(param1,"\x04[Ouvir]\x03Habilitado");
+		}
 		else
-			{
+		{
 			SetClientListeningFlags(param1, VOICE_NORMAL);
-			PrintToChat(param1,"\x04[Ouvir]\x03Desabilitado" );
-			}
-		
-	} else if (action == MenuAction_Cancel) {
+			PrintToChat(param1,"\x04[Ouvir]\x03Desabilitado");
+		}
+	} 
+	else if (action == MenuAction_Cancel) 
+	{
 		PrintToServer("Client %d's menu foi cancelado.  Reason: %d", param1, param2);
 	}
 }
 
-
 public Action:Panel_hear(client,args)
 {
-	if(GetClientTeam(client)!=TEAM_SPEC)
+	if(GetClientTeam(client) != TEAM_SPEC)
 		return Plugin_Handled;
+
 	new Handle:panel = CreatePanel();
+
 	SetPanelTitle(panel, "Deseja ouvir os jogadores?");
 	DrawPanelItem(panel, "Sim");
 	DrawPanelItem(panel, "Não");
@@ -59,39 +61,34 @@ public Action:Panel_hear(client,args)
 	CloseHandle(panel);
  
 	return Plugin_Handled;
-
 }
 
 public OnClientPutInServer(client)
 {
-CreateTimer(40.0, TimerAnnounce, client);
+	CreateTimer(40.0, TimerAnnounce, client);
 }
 
 public Action:TimerAnnounce(Handle:timer, any:client)
 {
-if (IsClientInGame(client))
-	PrintToChat(client,"\x04[Ouvir]Para ouvir os jogadores digite: \03!hear" );
+	if (IsClientInGame(client))
+		PrintToChat(client,"\x04[Ouvir]Para ouvir os jogadores digite: \03!hear");
 }
 
 public Event_PlayerChangeTeam(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	new userID = GetClientOfUserId(GetEventInt(event, "userid"));
 	new userTeam = GetEventInt(event, "team");
-	if(userID==0)
+	if(userID == 0)
 		return ;
 
-	//PrintToChat(userID,"\x02X02 \x03X03 \x04X04 \x05X05 ");\\ \x02:color:default \x03:lightgreen \x04:orange \x05:darkgreen
-	
-	if(userTeam==TEAM_SPEC)
+	if(userTeam == TEAM_SPEC)
 	{
 		SetClientListeningFlags(userID, VOICE_LISTENALL);
-		PrintToChat(userID,"\x04[listen]\x03enable" )
-		
+		PrintToChat(userID, "\x04[listen]\x03enable")
 	}
 	else
 	{
 		SetClientListeningFlags(userID, VOICE_NORMAL);
-		PrintToChat(userID,"\x04[listen]\x03disable" )
+		PrintToChat(userID, "\x04[listen]\x03disable")
 	}
 }
-	
