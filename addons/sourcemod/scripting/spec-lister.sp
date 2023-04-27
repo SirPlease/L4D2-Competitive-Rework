@@ -1,19 +1,12 @@
 #include <sourcemod>
 #include <sdktools>
 
-#define VOICE_NORMAL	0	/**< Allow the client to listen and speak normally. */
-#define VOICE_MUTED		1	/**< Mutes the client from speaking to everyone. */
-#define VOICE_SPEAKALL	2	/**< Allow the client to speak to everyone. */
-#define VOICE_LISTENALL	4	/**< Allow the client to listen to everyone. */
-#define VOICE_TEAM		8	/**< Allow the client to always speak to team, even when dead. */
-#define VOICE_LISTENTEAM	16	/**< Allow the client to always hear teammates, including dead ones. */
-
+#define VOICE_NORMAL	0	
+#define VOICE_SPEAKALL	2	
+#define VOICE_LISTENALL	4	
 #define TEAM_SPEC 1
-#define TEAM_SURVIVOR 2
-#define TEAM_INFECTED 3
-
-
 #define PLUGIN_VERSION "1.0"
+
 public Plugin:myinfo = 
 {
 	name = "SpecLister",
