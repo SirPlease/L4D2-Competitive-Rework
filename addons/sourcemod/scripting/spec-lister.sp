@@ -18,33 +18,29 @@ public Plugin:myinfo =
 
 public OnPluginStart()
 {
-	RegConsoleCmd("hear", Panel_hear);
+	RegConsoleCmd("hear", PanelCommand);
 }
 
-public PanelHandler1(Handle:menu, MenuAction:action, param1, param2)
+public PanelHandler(Handle:menu, MenuAction:action, client, selectedValue)
 {
 	if (action == MenuAction_Select)
 	{
-		PrintToConsole(param1, "You selected item: %d", param2)
+		PrintToConsole(client, "You selected item: %d", selectedValue)
 
-		if(param2 == 1)
+		if(selectedValue == 1)
 		{
-			SetClientListeningFlags(param1, VOICE_LISTENALL);
-			PrintToChat(param1,"\x04[Ouvir]\x03Habilitado");
+			SetClientListeningFlags(client, VOICE_LISTENALL);
+			PrintToChat(client,"\x04[Ouvir] \x03Habilitado");
 		}
 		else
 		{
-			SetClientListeningFlags(param1, VOICE_NORMAL);
-			PrintToChat(param1,"\x04[Ouvir]\x03Desabilitado");
+			SetClientListeningFlags(client, VOICE_NORMAL);
+			PrintToChat(client,"\x04[Ouvir] \x03Desabilitado");
 		}
 	} 
-	else if (action == MenuAction_Cancel) 
-	{
-		PrintToServer("Client %d's menu foi cancelado.  Reason: %d", param1, param2);
-	}
 }
 
-public Action:Panel_hear(client,args)
+public Action:PanelCommand(client,args)
 {
 	if(GetClientTeam(client) != TEAM_SPEC)
 		return Plugin_Handled;
@@ -55,7 +51,7 @@ public Action:Panel_hear(client,args)
 	DrawPanelItem(panel, "Sim");
 	DrawPanelItem(panel, "Não");
  
-	SendPanelToClient(panel, client, PanelHandler1, 20);
+	SendPanelToClient(panel, client, PanelHandler, 20);
  
 	CloseHandle(panel);
  
@@ -70,5 +66,5 @@ public OnClientPutInServer(client)
 public Action:TimerAnnounce(Handle:timer, any:client)
 {
 	if (IsClientInGame(client))
-		PrintToChat(client,"\x04[Ouvir]Para ouvir os jogadores digite: \03!hear");
+		PrintToChat(client,"\x04[Ouvir] Para ouvir os jogadores digite: \03!hear");
 }
