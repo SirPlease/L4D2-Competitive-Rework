@@ -18,6 +18,7 @@ public Plugin:myinfo =
 
 public OnPluginStart()
 {
+	HookEvent("player_team",Event_PlayerChangeTeam);
 	RegConsoleCmd("hear", PanelCommand);
 }
 
@@ -25,7 +26,7 @@ public PanelHandler(Handle:menu, MenuAction:action, client, selectedValue)
 {
 	if (action == MenuAction_Select)
 	{
-		PrintToConsole(client, "You selected item: %d", selectedValue)
+		PrintToConsole(client, "Você escolheu a opção: %d", selectedValue)
 
 		if(selectedValue == 1)
 		{
@@ -67,4 +68,22 @@ public Action:TimerAnnounce(Handle:timer, any:client)
 {
 	if (IsClientInGame(client))
 		PrintToChat(client,"\x04[Ouvir] Para ouvir os jogadores digite: \03!hear");
+}
+
+public Event_PlayerChangeTeam(Handle:event, const String:name[], bool:dontBroadcast)
+{
+	new userID = GetClientOfUserId(GetEventInt(event, "userid"));
+	new userTeam = GetEventInt(event, "team");
+	
+	if(userID==0)
+		return ;
+
+	if(userTeam==TEAM_SPEC)
+	{
+		SetClientListeningFlags(userID, VOICE_LISTENALL);
+	}
+	else
+	{
+		SetClientListeningFlags(userID, VOICE_NORMAL);
+	}
 }
