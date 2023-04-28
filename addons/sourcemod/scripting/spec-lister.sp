@@ -18,7 +18,6 @@ public Plugin:myinfo =
 
 public OnPluginStart()
 {
-	HookEvent("player_team", Event_PlayerChangeTeam);
 	RegConsoleCmd("hear", Panel_hear);
 }
 
@@ -72,23 +71,4 @@ public Action:TimerAnnounce(Handle:timer, any:client)
 {
 	if (IsClientInGame(client))
 		PrintToChat(client,"\x04[Ouvir]Para ouvir os jogadores digite: \03!hear");
-}
-
-public Event_PlayerChangeTeam(Handle:event, const String:name[], bool:dontBroadcast)
-{
-	new userID = GetClientOfUserId(GetEventInt(event, "userid"));
-	new userTeam = GetEventInt(event, "team");
-	if(userID == 0)
-		return ;
-
-	if(userTeam == TEAM_SPEC)
-	{
-		SetClientListeningFlags(userID, VOICE_LISTENALL);
-		PrintToChat(userID, "\x04[listen]\x03enable")
-	}
-	else
-	{
-		SetClientListeningFlags(userID, VOICE_NORMAL);
-		PrintToChat(userID, "\x04[listen]\x03disable")
-	}
 }
