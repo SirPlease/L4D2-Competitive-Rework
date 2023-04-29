@@ -1,5 +1,11 @@
 #include <sourcemod>
+#include <sdktools>
+#include <sdkhooks>
 #include <left4dhooks>
+
+#undef REQUIRE_PLUGIN
+#include <readyup>
+#define REQUIRE_PLUGIN
 
 public Plugin myinfo =
 {
@@ -18,6 +24,16 @@ public void OnPluginStart()
 }
 
 public void OnRoundIsLive()
+{
+    SetAllTalk(false);
+}
+
+public OnPause()
+{
+    SetAllTalk(true);
+}
+
+public OnUnpause()
 {
     SetAllTalk(false);
 }
