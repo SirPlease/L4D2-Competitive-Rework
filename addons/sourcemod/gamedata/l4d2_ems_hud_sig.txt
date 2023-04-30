@@ -1,0 +1,58 @@
+"Games"
+{
+	"left4dead2" 
+	{
+		"MemPatches"
+		{
+			"CScriptHud::HUDFrameUpdate::Ptach1"
+			{
+				"signature"		"CScriptHud::HUDFrameUpdate"
+
+				"linux"
+				{
+					"offset"	"2E9h"
+					"verify"	"\x75"
+					"patch"		"\xEB"
+				}
+				
+				"windows"
+				{
+					"offset"	"1E5h"
+					"verify"	"\x75"
+					"patch"		"\xEB"
+				}
+			}
+
+			"CScriptHud::HUDFrameUpdate::Ptach2"
+			{
+				"signature"		"CScriptHud::HUDFrameUpdate"
+
+				"linux"
+				{
+					"offset"	"2DEh"
+					"verify"	"\x0F\x84"
+					"patch"		"\x90\xE9"
+				}
+				
+				"windows"
+				{
+					"offset"	"220h"
+					"verify"	"\x7C\xBE"
+					"patch"		"\x90\x90"
+				}
+			}
+		}
+
+		"Signatures"
+		{
+			/* CScriptHud::HUDFrameUpdate(CScriptHud *__hidden this) */
+			"CScriptHud::HUDFrameUpdate"
+			{
+				"library"	"server"
+				"linux"		"@_ZN10CScriptHud14HUDFrameUpdateEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x8B\x2A\x83\x2A\x2A\x89"
+				/* ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 56 8B ? 83 ? ? 89 */
+			}
+		}
+	}
+}

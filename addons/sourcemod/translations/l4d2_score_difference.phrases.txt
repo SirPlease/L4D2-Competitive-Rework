@@ -1,0 +1,46 @@
+"Phrases"
+{
+	"Announce_Chapter"
+	{
+		"#format"	"{1:d}"
+		"en"		"{default}[{green}!{default}] {default}Chapter difference: {green}{1}"
+	}
+	
+	"Announce_Total"
+	{
+		"#format"	"{1:d}"
+		"en"		"{default}[{olive}!{default}] {default}Total difference: {olive}{1}"
+	}
+	
+	"Announce_ElseChapter"
+	{
+		"#format"	"{1:d}"
+		"en"		"{default}[{lightgreen}!{default}] {default}Difference: {lightgreen}{1}"
+	}
+	
+	// The following translations are made optional
+	
+	"Announce_Survivor"
+	{
+		"#format"	"{1:d}"
+		"en"		"{default}[{blue}!{default}] Survivor score: {blue}{1}"
+	}
+	
+	"Announce_Infected"
+	{
+		"#format"	"{1:d}"
+		"en"		"{default}[{red}!{default}] Infected score: {red}{1}"
+	}
+	
+	"Announce_ComebackWithDistance"
+	{
+		"#format"	"{1:d}"
+		"en"		"{default}[{green}!{default}] Comeback with: {olive}{1}"
+	}
+	
+	"Announce_ComebackWithBonus"
+	{
+		"#format"	"{1:d},{2:d}"
+		"en"		"{default}[{green}!{default}] Comeback with: {olive}{1} {default}+ {green}{2}"
+	}
+}

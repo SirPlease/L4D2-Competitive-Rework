@@ -1,0 +1,28 @@
+/**
+ * Source Scramble basic patch loader configuration file.
+ * 
+ * `sourcescramble_manager.smx` reads this file on startup, reading keys as gamedata files and
+ * values as corresponding patch names, creating a MemoryPatch handle and enabling it.
+ * 
+ * For example, with a key/value pair inside the "Patches" section like the following:
+ * 
+ * "tf2.some_gameconfig"		"Function()::Patch"
+ * 
+ * The plugin will load the "tf2.some_gameconfig" gamedata file and enable a patch named
+ * "Function()::Patch".
+ * 
+ * Memory patches remain applied until the plugin or extension is unloaded.
+ *
+ * To disable a patch comment(//) it out or remove the line.
+ */
+
+"Patches"
+{
+	"aggresive_specials_patch"	"CDirector::SpecialsShouldAdvanceOnSurvivors::HasPlayerControlledZombiesCondition"
+	//"aggresive_specials_patch"	"SmokerBehavior::InitialContainedAction::SpecialsShouldAssaultCondition"
+	"aggresive_specials_patch"	"BoomerBehavior::InitialContainedAction::SpecialsShouldAssaultCondition"
+	"aggresive_specials_patch"	"HunterBehavior::InitialContainedAction::SpecialsShouldAssaultCondition"
+	"aggresive_specials_patch"	"SpitterBehavior::InitialContainedAction::SpecialsShouldAssaultCondition"
+	"aggresive_specials_patch"	"JockeyBehavior::InitialContainedAction::SpecialsShouldAssaultCondition"
+	"aggresive_specials_patch"	"ChargerBehavior::InitialContainedAction::SpecialsShouldAssaultCondition"
+}

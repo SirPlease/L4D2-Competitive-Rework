@@ -1,0 +1,35 @@
+"Games"
+{
+    "left4dead2"
+    {
+		"Functions"
+		{
+			"DD::CBasePlayer::SetPunchAngle"
+			{
+				"signature"	"CBasePlayer::SetPunchAngle"
+				"callconv"	"thiscall"
+				"return"	"int"
+				"this"		"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"vectorptr"
+					}
+				}
+			}
+		}
+
+		"Signatures"
+		{
+			/* CBasePlayer::SetPunchAngle(QAngle const&) */
+			"CBasePlayer::SetPunchAngle"
+			{
+				"library"	"server"
+				"linux"		"@_ZN11CBasePlayer13SetPunchAngleERK6QAngle"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xF3\x0F\x2A\x2A\x56\x57\x8B\x2A\x0F"
+				/* ? ? ? ? ? ? ? ? F3 0F ? ? 56 57 8B ? 0F */
+			}
+		}
+	}
+}

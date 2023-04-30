@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Title"
+	{
+		"chi"	"{blue}[{default}Tank 石头选择器{blue}]"
+	}
+	"Reload"
+	{
+		"chi"	"{olive}装弹{default} = {blue}高抛砖{default}"
+	}
+	"Use"
+	{
+		"chi"	"{olive}使用键{default} = {blue}低抛砖{default}"
+	}
+	"M2"
+	{
+		"chi"	"{olive}鼠标右键{default} = {blue}右键砖{default}"
+	}
+}

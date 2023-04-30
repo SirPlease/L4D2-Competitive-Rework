@@ -1,0 +1,171 @@
+"Phrases" 
+{
+	"L4D2C1"
+	{
+		"en" "Dead Center"
+	}
+	"L4D2C2"
+	{
+		"en" "Dark Carnival"
+	}
+	"L4D2C3"
+	{
+		"en" "Swamp Fever"
+	}
+	"L4D2C4"
+	{
+		"en" "Hard Rain"
+	}
+	"L4D2C5"
+	{
+		"en" "The Parish"
+	}
+	"L4D2C6"
+	{
+		"en" "The Passing"
+	}
+	"L4D2C7"
+	{
+		"en" "The Sacrifice"
+	}
+	"L4D2C8"
+	{
+		"en" "No Mercy"
+	}
+	"L4D2C9"
+	{
+		"en" "Crash Course"
+	}
+	"L4D2C10"
+	{
+		"en" "Death Toll"
+	}
+	"L4D2C11"
+	{
+		"en" "Dead Air"
+	}
+	"L4D2C12"
+	{
+		"en" "Blood Harvest"
+	}
+	"L4D2C13"
+	{
+		"en" "Cold Stream"
+	}
+	"L4D2C14"
+	{
+		"en" "The Last Stand"
+	}
+	"QuestionableEthics"
+	{
+		"en" "Questionable Ethics 1"
+	}
+	"QuestionableEthicsAlphaTest"
+	{
+		"en" "Questionable Ethics 2"
+	}
+	"CrashBandicootTheReturn"
+	{
+		"en" "CrashBandicoot 1"
+	}
+	"l4d2CrashBandicoot2"
+	{
+		"en" "CrashBandicoot 2"
+	}
+	"TanksPlayground"
+	{
+		"en" "Tanks Playground"
+	}
+	"WhiteForest"
+	{
+		"en" "White Forest"
+	}
+	"YamaMSE"
+	{
+		"en" "Yama"
+	}
+	"ddntr1"
+	{
+		"en" "Deadenator"
+	}
+	"Diescraper36"
+	{
+		"en" "Diescraper"
+	}
+	"SaltHellPark"
+	{
+		"en" "Salt Hell Park"
+	}
+	"TheBloodyMoors"
+	{
+		"en" "The Bloody Moors"
+	}
+	"FarewellChenming"
+	{
+		"en" "Farewell Chenming"
+	}
+	"darkwood"
+	{
+		"en" "Dark Wood"
+	}
+	"DevilMountain"
+	{
+		"en" "Devil Mountain"
+	}
+	"fallen"
+	{
+		"en" "Fallen"
+	}
+	"Cure2"
+	{
+		"en" "Cure 2"
+	}
+	"deadvacation2"
+	{
+		"en" "Dead Vacation 2"
+	}
+	"Derailed"
+	{
+		"en" "Derailed"
+	}
+	"hauntedforest"
+	{
+		"en" "Haunted Forest"
+	}
+	"TheCure"
+	{
+		"en" "The Cure"
+	}
+	"2evileyes"
+	{
+		"en" "Evil Eyes"
+	}
+	"BloodTracks"
+	{
+		"en" "Blood Tracks"
+	}
+	"drdegov21"
+	{
+		"en" "Drop Dead Gorges"
+	}
+	"DeadSeries"
+	{
+		"en" "Dead Series"
+	}
+	"HighwayToHell"
+	{
+		"en" "Highway To Hell"
+	}
+	"ihatemountains2"
+	{
+		"en" "I Hate Moutains 2"
+	}
+	"JourneyToSplashMountain"
+	{
+		"en" "Journey To Splash Mountain"
+	}
+	"undeadzone"
+	{
+		"en" "Undead Zone"
+	}
+}

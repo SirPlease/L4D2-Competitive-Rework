@@ -1,0 +1,192 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"[{green}!{default}]"
+	}
+	"ClientFullyLoaded"
+	{
+		"chi"	"{olive}%N {default}已经完全载入"
+	}
+	"PauseCountFormat"
+	{
+		"#format"   "{1:d},{2:d}" // 1:PauseCount(client), 2:pauseLimitCvar.IntValue
+		"chi"		" [{green}{1}{default}/{green}{2}{default}]."
+	}
+	"PauseCommand"
+	{
+		"#format"   "{1:N},{2:s}" // 1:client, 2:sPauseCount
+		"chi"		"{olive}{1}{default} {blue}暂停游戏{default}{2}"
+	}
+	// PauseDelay_Timer
+	"PauseAction"
+	{
+		"chi"	"{red}暂停游戏{default}"
+	}
+	"PauseDelay"
+	{
+		"chi"	"{olive}%d 秒后 {blue}将暂停游戏{default}"
+	}
+	// ForcePause_Cmd
+	"Crashed"
+	{
+		"chi"	"{olive}游戏 {default} 因为一个玩家客户端{blue}崩溃{default} 所以被 {green}强行暂停."
+	}
+	"ForcePause"
+	{
+		"chi"	"{blue}管理员 {default}({olive}%N{default})  {green}强行暂停游戏 {default}. "
+	}
+	// Unpause_Cmd
+	"UnpauseSurvivors"
+	{
+		"#format"   "{1:N},{2:s},{3:s}" // 1:client, :2(initiatorReady && client == initiator) ? AsInitiator() : "", 3:L4D2_TeamName[clientTeam]
+		"chi"		"{olive}{1} {2}{default} 表示 {blue}{3}{default} 准备完毕."
+	}
+	"UnpauseInfected"
+	{
+		"#format"   "{1:N},{2:s},{3:s}" // 1:client, :2(initiatorReady && client == initiator) ? AsInitiator() : "", 3:L4D2_TeamName[clientTeam]
+		"chi"		"{olive}{1} {2}{default} 表示 {red}{3}{default} 准备完毕."
+	}
+	"UnpauseInitiator"
+	{
+		"chi"	"{olive}%N {default}表示 {green}发起者 {default}准备完毕."
+	}
+	"UnpauseAdminConfirm"
+	{
+		"chi"	"{olive}双方团队 {default}都已准备. 等待 {blue}管理员 {green}确认开始{default}."
+	}
+	// Unready_Cmd
+	"UnreadySurvivors"
+	{
+		"#format"   "{1:N},{2:s},{3:s}" // 1:client, 2:(initiatorReady && client == initiator) ? AsInitiator() : "", 3:L4D2_TeamName[clientTeam]
+		"chi"		"{olive}{1} {2}{default} 表示 {blue}{3}{default} 还未准备完毕."
+	}
+	"UnreadyInfected"
+	{
+		"#format"   "{1:N},{2:s},{3:s}" // 1:client, 2:(initiatorReady && client == initiator) ? AsInitiator() : "", 3:L4D2_TeamName[clientTeam]
+		"chi"		"{olive}{1} {2}{default} 表示 {red}{3}{default} 还未准备完毕."
+	}
+	"UnreadyInitiator"
+	{
+		"chi"	"{olive}%N {default}表示 {green}发起者 {default}还未准备完毕."
+	}
+	// void AsInitiator()
+	"AsInitiator"
+	{
+		"chi"		"{default}作为 {green}发起者 "
+	}
+	// ForceUnpause_Cmd
+	"ForceUnpause"
+	{
+		"chi"	"{blue}管理员 {default}({olive}%N{default})  {green}强行解除暂停游戏 {default}."
+	}
+	// AddPauseCount
+	"PauseLimit"
+	{
+		"chi"		"你已经达到你的 {red}暂停上限{default} [{green}%d{default}]."
+	}
+	// AttemptPause
+	"PauseDeferred"
+	{
+		"chi"	"{red}暂停由于生还者正在拉人被推迟了!"
+	}
+	// Pause
+	"PausePreventSpawn"
+	{
+		"chi"	"{default}你因为暂停被阻止{red}生成"
+	}
+	// Show_Cmd
+	"PanelShow"
+	{
+		"chi"	"准备面板： [{blue}开启{default}]."
+	}
+	"PanelHide"
+	{
+		"chi"	"准备面板： [{red}关闭{default}]."
+	}
+	// UpdatePanel
+	"PanelSlots"
+	{
+		"#format"   "{1:s},{2:d},{3:d}" // 1:info, 2:GetSeriousClientCount(), 3:FindConVar("sv_maxplayers").IntValue
+		"chi"		"▸ 服务器: {1}\n▸ 位置: {2}/{3}"
+	}
+	"PanelTitle"
+	{
+		"chi"	"▸ 准备状态"
+	}
+	"RequireAdmin"
+	{
+		"chi"	"->0. 需要管理员解除暂停"
+	}
+	"SurvivorUnPaused"
+	{
+		"chi"	"->1. 生还者: [√]"
+	}
+	"SurvivorPaused"
+	{
+		"chi"	"->1. 生还者: [X]"
+	}
+	"InfectedUnPaused"
+	{
+		"chi"	"->2. 感染者: [√]"
+	}
+	"InfectedPaused"
+	{
+		"chi"	"->2. 感染者: [X]"
+	}
+	"InitiatorUnPaused"
+	{
+		"chi"	"->0. 发起者: [√]"
+	}
+	"InitiatorPaused"
+	{
+		"chi"	"->0. 发起者: [X]"
+	}
+	"AutoPauseCrash"
+	{
+		"chi"	"▸ 强行暂停原因 -> 客户端崩溃"
+	}
+	"ForcePauseAdmin"
+	{
+		"chi"	"▸ 强行暂停原因 -> %s (管理员暂停)"
+	}
+	"InitiatorPause"
+	{
+		"chi"	"▸ 发起者 -> %s (%s)"
+	}
+	"DurationPause"
+	{
+		"chi"	"▸ 暂停持续时间: %02d:%02d"
+	}
+	// InitiateLiveCountdown
+	"CountdownCancelNotify"
+	{
+		"chi"		"输入 {olive}!unready {default}取消倒计时"
+	}
+	"GameisLive"
+	{
+		"chi"		"游戏继续开始!"
+	}
+	"CountdownReadyDelay"
+	{
+		"chi"		"{blue}游戏开始倒计时{default}: {olive}%d{default}..."
+	}
+	// CancelFullReady
+	"CountdownCancelled"
+	{
+		"chi"		"{olive}%N {default}取消此次倒计时!"
+	}
+	// Callvote_Callback
+	"CallvoteNoSpec"
+	{
+		"chi"		"你作为旁观无法发起暂停."
+	}
+	"CallvoteNoExploit"
+	{
+		"chi"		"你刚刚换队, 暂时无法进行投票."
+	}
+	"CallvoteCannotTargetAdmin"
+	{
+		"chi"		"你可能不能踢出管理员..."
+	}
+}

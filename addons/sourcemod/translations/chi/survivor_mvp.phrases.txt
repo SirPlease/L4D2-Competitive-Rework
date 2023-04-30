@@ -1,0 +1,75 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"{blue}[{default}MVP{blue}]{default}"
+	}
+	"YourRankSI"
+	{
+		"chi"		"{green}特感{blue}排名: {olive}#%d {blue}({default}%d {green}伤害 {blue}[{default}%.0f%%{blue}]{default}, %d {green}击杀 {blue}[{default}%.0f%%{blue}])"
+	}
+	"YourRankCI"
+	{
+		"chi"		"{green}丧尸{blue}排名: {olive}#%d {blue}({default}%d {green}丧尸 {blue}[{default}%.0f%%{blue}])"
+	}
+	"YourRankFF"
+	{
+		"chi"		"{green}黑枪{blue}排名: {olive}#%d {blue}({default}%d {green}友伤 {blue}[{default}%.0f%%{blue}])"
+	}
+	"BotName"
+	{
+		"chi"		"[BOT]"
+	}
+	"NobodyName"
+	{
+		"chi"		"{blue}({default}没有人{blue})"
+	}
+	"NotEnoughAction"
+	{
+		"chi"		"{blue}({default}还没有足够多的操作{blue})"
+	}
+	"ReportSI_Absolute"
+	{
+		"chi"		"{green}特感: {olive}%s {blue}({default}%d {green}伤害{default}, %d {green}击杀{blue})"
+	}
+	"ReportSI_Percent"
+	{
+		"chi"		"{green}特感: {olive}%s {blue}({green}伤害 {blue}[{default}%.0f%%{blue}]{default}, {green}击杀 {blue}[{default}%.0f%%{blue}])"
+	}
+	"ReportSI_Full"
+	{
+		"chi"		"{green}特感: {olive}%s {blue}({default}%d {green}伤害 {blue}[{default}%.0f%%{blue}]{default}, %d {green}击杀 {blue}[{default}%.0f%%{blue}])"
+	}
+	"ReportSI_Nobody"
+	{
+		"chi"		"{green}特感: {blue}({default}无{blue})"
+	}
+	"ReportCI_Absolute"
+	{
+		"chi"		"{green}丧尸: {olive}%s {blue}({default}%d {green}丧尸{blue})"
+	}
+	"ReportCI_Percent"
+	{
+		"chi"		"{green}丧尸: {olive}%s {blue}({green}丧尸 {blue}[{default}%.0f%%{blue}])"
+	}
+	"ReportCI_Full"
+	{
+		"chi"		"{green}丧尸: {olive}%s {blue}({default}%d {green}丧尸 {blue}[{default}%.0f%%{blue}])"
+	}
+	"NoFF"
+	{
+		"chi"		"{blue}({default}完全没有黑枪!{blue})" 
+	}
+	"ReportFF_Absolute"
+	{
+		"chi"		"{green}友伤: {olive}%s {blue}({default}%d {green}友伤{blue})"
+	}
+	"ReportFF_Percent"
+	{
+		"chi"		"{green}友伤: {olive}%s {blue}({green}友伤 {blue}[{default}%.0f%%{blue}])"
+	}
+	"ReportFF_Full"
+	{
+		"chi"		"{green}友伤: {olive}%s {blue}({default}%d {green}友伤 {blue}[{default}%.0f%%{blue}])"
+	}
+}

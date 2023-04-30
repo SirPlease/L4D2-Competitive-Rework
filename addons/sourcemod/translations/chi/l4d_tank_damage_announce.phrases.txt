@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"[{green}!{default}]"
+	}
+	"AI"
+	{
+		"chi"		"AI"
+	}
+	"HealthRemaining"
+	{
+		"chi"		"{blue}Tank{default} ({olive}%s{default}) 剩余 {green}%d{default} 点血量"
+	}
+	"DealtToTank"
+	{
+		"chi"		"对{blue}Tank{default} ({olive}%s{default}) 造成的{blue}伤害"
+	}
+	"PercentDamage"
+	{
+		"chi"		"{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N"
+	}
+}

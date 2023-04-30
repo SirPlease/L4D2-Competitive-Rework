@@ -1,0 +1,178 @@
+"Games"
+{
+	"left4dead"
+	{
+		"MemPatches"
+		{
+			"BotHealing_FirstAid_A"
+			{
+				"signature"		"SurvivorBot::UseHealingItems"
+				"windows"
+				{
+					"offset"	"25Eh"
+					"verify"	"\xD8\x1D"
+					"patch"		"\xD8\x1D\x90\x90\x90\x90"
+				}
+				"linux"
+				{
+					"offset"	"35Bh"
+					"verify"	"\xD9\x83"
+					"patch"		"\xD9\x05\x90\x90\x90\x90"
+				}
+			}
+			"BotHealing_FirstAid_B"
+			{
+				"signature"		"SurvivorBot::UseHealingItems"
+				"windows"
+				{
+					"offset"	"3F0h"
+					"verify"	"\xD9\x05"
+					"patch"		"\xD9\x05\x90\x90\x90\x90"
+				}
+				"linux"
+				{
+					"offset"	"3E3h"
+					"verify"	"\xD9\x83"
+					"patch"		"\xD9\x05\x90\x90\x90\x90"
+				}
+			}
+
+			"BotHealing_Pills_A"
+			{
+				"signature"		"SurvivorBot::UseHealingItems"
+				"windows"
+				{
+					"offset"	"236h"
+					"verify"	"\xD9\x05"
+					"patch"		"\xD8\x1D\x90\x90\x90\x90"
+				}
+				"linux"
+				{
+					"offset"	"341h"
+					"verify"	"\xD9\x83"
+					"patch"		"\xD9\x05\x90\x90\x90\x90"
+				}
+			}
+			"BotHealing_Pills_B"
+			{
+				"signature"		"SurvivorBot::UseHealingItems"
+				"windows"
+				{
+					"offset"	"43Dh"
+					"verify"	"\xD8\x1D"
+					"patch"		"\xD8\x1D\x90\x90\x90\x90"
+				}
+				"linux"
+				{
+					"offset"	"421h"
+					"verify"	"\xD9\x83"
+					"patch"		"\xD9\x05\x90\x90\x90\x90"
+				}
+			}
+		}
+
+		"Signatures"
+		{
+			/*
+			* SurvivorBot::UseHealingItems(Action<SurvivorBot> *)
+			* Called by the game when deciding whether the bots should use any healing items
+			* unique string "Trying to heal a friend"
+			*/
+			"SurvivorBot::UseHealingItems"
+			{
+				"library"	"server"
+				"linux"		"@_ZN11SurvivorBot15UseHealingItemsEP6ActionIS_E"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8D\x2A\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\xD8\x2A\x2A\xDF\x2A\xF6\x2A\x2A\x74\x2A\x8B\x2A\x2A\x2A\x33"
+				/* ? ? ? ? ? 8B ? 8D ? ? ? ? ? 8B ? E8 ? ? ? ? D8 ? ? DF ? F6 ? ? 74 ? 8B ? ? ? 33 */
+			}
+		}
+	}
+
+	"left4dead2"
+	{
+		"MemPatches"
+		{
+			"BotHealing_FirstAid_A"
+			{
+				"signature"		"SurvivorBot::UseHealingItems"
+				"windows"
+				{
+					"offset"	"23Bh"
+					"verify"	"\x10\x05"
+					"patch"		"\x10\x05\x90\x90\x90\x90"
+				}
+				"linux"
+				{
+					"offset"	"20Ah"
+					"verify"	"\x2F\x25"
+					"patch"		"\x2F\x25\x90\x90\x90\x90"
+				}
+			}
+			"BotHealing_FirstAid_B"
+			{
+				"signature"		"SurvivorBot::UseHealingItems"
+				"windows"
+				{
+					"offset"	"3D8h"
+					"verify"	"\x10\x05"
+					"patch"		"\x10\x05\x90\x90\x90\x90"
+				}
+				"linux"
+				{
+					"offset"	"588h"
+					"verify"	"\x10\x05"
+					"patch"		"\x10\x05\x90\x90\x90\x90"
+				}
+			}
+
+			"BotHealing_Pills_A"
+			{
+				"signature"		"SurvivorBot::UseHealingItems"
+				"windows"
+				{
+					"offset"	"211h"
+					"verify"	"\xD9\x05"
+					"patch"		"\xD9\x05\x90\x90\x90\x90"
+				}
+				"linux"
+				{
+					"offset"	"428h"
+					"verify"	"\x10\x0D"
+					"patch"		"\x10\x0D\x90\x90\x90\x90"
+				}
+			}
+			"BotHealing_Pills_B"
+			{
+				"signature"		"SurvivorBot::UseHealingItems"
+				"windows"
+				{
+					"offset"	"457h"
+					"verify"	"\xD9\x05"
+					"patch"		"\xD9\x05\x90\x90\x90\x90"
+				}
+				"linux"
+				{
+					"offset"	"552h"
+					"verify"	"\x10\x15"
+					"patch"		"\x10\x15\x90\x90\x90\x90"
+				}
+			}
+		}
+
+		"Signatures"
+		{
+			/*
+			* SurvivorBot::UseHealingItems(Action<SurvivorBot> *)
+			* Called by the game when deciding whether the bots should use any healing items
+			* unique string "Trying to heal a friend"
+			*/
+			"SurvivorBot::UseHealingItems"
+			{
+				"library"	"server"
+				"linux"		"@_ZN11SurvivorBot15UseHealingItemsEP6ActionIS_E"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x57\x8B\x2A\x8D\x2A\x2A\x2A\x2A\x2A\x8D\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xD9\x2A\xD9\x2A\xDF\x2A\xDD"
+				/* ? ? ? ? ? ? 53 56 57 8B ? 8D ? ? ? ? ? 8D ? ? ? ? ? E8 ? ? ? ? D9 ? D9 ? DF ? DD */
+			}
+		}
+	}
+}

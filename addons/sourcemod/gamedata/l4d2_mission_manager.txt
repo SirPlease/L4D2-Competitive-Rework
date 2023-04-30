@@ -1,0 +1,21 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Signatures"
+		{
+			/* 	Copied from l4d2downtown2
+				Uses campaign mission file to determine if the current map 
+				is a Final(e) map.
+				Called from CDirectorVersusMode::EndVersusModeRound(), look near string "versus_match_finished"
+				*/
+			"CTerrorGameRules::IsMissionFinalMap"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules17IsMissionFinalMapEv"
+				"windows"	"\x8B\x0D\x2A\x2A\x2A\x2A\x8B\x01\x8B\x50\x28\x56\xFF\xD2\x8B\x10\x8B\xC8\x8B\x42\x04\x6A\x00\xFF\xD0\x8B\xF0\x85\xF6\x75\x04\xB0" 
+							/* 8B 0D ? ? ? ? 8B 01 8B 50 28 56 FF D2 8B 10 8B C8 8B 42 04 6A 00 FF D0 8B F0 85 F6 75 04 B0 */
+			}
+		}
+	}
+}

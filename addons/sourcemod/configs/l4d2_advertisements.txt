@@ -1,0 +1,14 @@
+"Advertisements"
+{
+	"1"
+	{
+		"type"	"S"
+		"text"	"{GREEN}[公告]{TEAM}欢迎加入玩家联机群,QQ群号:{GREEN}620707089"
+	}
+	"2"
+	{
+		"type"	"S"
+		"text"	"{GREEN}[提示]{GREEN}!votes{TEAM}投票，{GREEN}!vm{TEAM}禁止玩家语音投票，{GREEN}!vg{TEAM}禁止玩家聊天投票，{GREEN}!ready{TEAM}准备，{GREEN}!unready{TEAM}取消准备"
+	}
+
+}

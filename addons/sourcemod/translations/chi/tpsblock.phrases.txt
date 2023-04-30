@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"[{green}!{default}]"
+	}
+	"Cvar_Invalid"
+	{
+		"chi"		"命令 {olive}c_thirdpersonshoulder{default} 是无效或者被保护的."
+	}
+	"Cvar_Value1"
+	{
+		"chi"		"服务器不允许开启第三人称， 为了正常游玩，请在控制台输入 {olive}c_thirdpersonshoulder 0{default}."
+	}
+}

@@ -1,0 +1,201 @@
+/*
+	Following named colors are supported:
+	 - {white}	(use instead of \x01 )
+	 - {cyan}	(use instead of \x03 )
+	 - {orange}	(use instead of \x04 )
+	 - {green}	(use instead of \x05 )
+*/
+
+"Phrases"
+{
+	"Player To Mute"
+	{
+		"en"			"Select player to mute/unmute:"
+		"ru"			"Кому отключить/включить микрофон:"
+		"chi"			"选择要禁止/解禁语音的玩家:"
+	}
+	"Player To Gag"
+	{
+		"en"			"Select player to gag/ungag:"
+		"ru"			"Кому отключить/включить чат:"
+		"chi"			"选择要禁止/解禁聊天的玩家:"
+	}
+	"not_enough_players"
+	{
+		"#format"	"{1:i}"
+		"en"		"{orange}Not enough players to start the vote. {cyan}Required minimum: {1}"
+		"ru"		"{orange}Слишком мало игроков для голосования. {cyan}Нужно минимум: {1}"
+		"chi"		"{orange}玩家数量不足!至少需要 {1} 名玩家才能发起投票!"
+	}
+	"not_in_game"
+	{
+		"en"		"{orange}Client is already disconnected."
+		"ru"		"{orange}Клиент уже отключился."
+		"chi"		"{orange}客户端已断开连接."
+	}
+	"no_access_mute"
+	{
+		"en"		"{green}%N {orange}tried to disable micro of {green}%N{orange}, but has no access."
+		"ru"		"{green}%N {orange}пытается отключить микрофон у {green}%N{orange}, но не имеет доступа."
+		"chi"		"{green}%N {orange}试图禁止 {green}%N{orange} 语音, 但他权限不足."
+	}
+	"no_access_unmute"
+	{
+		"en"		"{green}%N {orange}tried to enable micro of {green}%N{orange}, but has no access."
+		"ru"		"{green}%N {orange}пытается включить микрофон у {green}%N{orange}, но не имеет доступа."
+		"chi"		"{green}%N {orange}试图解禁 {green}%N{orange} 语音, 但他权限不足."
+	}
+	"no_access_gag"
+	{
+		"en"		"{green}%N {orange}tried to disable chat of {green}%N{orange}, but has no access."
+		"ru"		"{green}%N {orange}пытается отключить чат у {green}%N{orange}, но не имеет доступа."
+		"chi"		"{green}%N {orange}试图禁止 {green}%N{orange} 聊天, 但他权限不足."
+	}
+	"no_access_ungag"
+	{
+		"en"		"{green}%N {orange}tried to enable chat of {green}%N{orange}, but has no access."
+		"ru"		"{green}%N {orange}пытается включить чат у {green}%N{orange}, но не имеет доступа."
+		"chi"		"{green}%N {orange}试图解禁 {green}%N{orange} 聊天, 但他权限不足."
+	}
+	"other_vote"
+	{
+		"en"		"{orange}Other vote is still not over!"
+		"ru"		"{orange}Другое голосование ещё не закончилось!"
+		"chi"		"{orange}其他投票还没有结束!"
+	}
+	"vote_started_mute_announce"
+	{
+		"#format"	"{1:s}"
+		"en"		"Do you want to mute: {1} ?"
+		"ru"		"Отключить микрофон у: {1} ?"
+		"chi"		"你想要禁止 {1} 语音吗?"
+	}
+	"vote_started_unmute_announce"
+	{
+		"#format"	"{1:s}"
+		"en"		"Do you want to unmute: {1} ?"
+		"ru"		"Включить микрофон у: {1} ?"
+		"chi"		"你想要解禁 {1} 语音吗?"
+	}
+	"vote_started_gag_announce"
+	{
+		"#format"	"{1:s}"
+		"en"		"Do you want to gag: {1} ?"
+		"ru"		"Отключить чат у: {1} ?"
+		"chi"		"你想要禁止 {1} 聊天吗?"
+	}
+	"vote_started_ungag_announce"
+	{
+		"#format"	"{1:s}"
+		"en"		"Do you want to ungag: {1} ?"
+		"ru"		"Включить чат у: {1} ?"
+		"chi"		"你想要解禁 {1} 聊天吗?"
+	}
+	"vote_started_mute"
+	{
+		"en"		"{green}%N {orange}is started vote for mute: {cyan}%N"
+		"ru"		"{green}%N {orange}начал голосование за мут: {cyan}%N"
+		"chi"		"{green}%N {orange}发起了一个禁止{cyan} %N {orange}语音的投票"
+	}
+	"vote_started_unmute"
+	{
+		"en"		"{green}%N {orange}is started vote for unmute: {cyan}%N"
+		"ru"		"{green}%N {orange}начал голосование за снятие мута: {cyan}%N"
+		"chi"		"{green}%N {orange}发起了一个解禁{cyan} %N {orange}语音的投票"
+	}
+	"vote_started_gag"
+	{
+		"en"		"{green}%N {orange}is started vote for disabling chat: {cyan}%N"
+		"ru"		"{green}%N {orange}начал голосование за отключение чата: {cyan}%N"
+		"chi"		"{green}%N {orange}发起了一个禁止{cyan} %N {orange}发言的投票"
+	}
+	"vote_started_ungag"
+	{
+		"en"		"{green}%N {orange}is started vote for enabling chat: {cyan}%N"
+		"ru"		"{green}%N {orange}начал голосование за включение чата: {cyan}%N"
+		"chi"		"{green}%N {orange}发起了一个解禁{cyan} %N {orange}发言的投票"
+	}	
+	"Yes"
+	{
+		"en"		"Yes"
+		"ru"		"Да"
+		"en"		"是"
+	}
+	"No"
+	{
+		"en"		"No"
+		"ru"		"Нет"
+		"chi"		"否"
+	}
+	"too_often"
+	{
+		"en"		"{orange}You can't vote too often!"
+		"ru"		"{orange}Вы не можете голосовать слишком часто!"
+		"chi"		"{orange}你不能经常投票!"
+	}
+	"veto"
+	{
+		"en"		"{orange}Current vote is vetoed by {green}%N"
+		"ru"		"{green}%N {orange}наложил вето на голосование"
+		"chi"		"{orange}目前投票被{green} %N {orange}否决了"
+	}
+	"votepass"
+	{
+		"en"		"{cyan}Current vote is passed by {green}%N"
+		"ru"		"{green}%N {cyan}принудительно продвинул голосование"
+		"chi"		"{orange}目前投票被{green} %N {orange}强制通过了"
+	}
+	"vote_failed_mute"
+	{
+		"en"		"{cyan}Vote for mute {orange}is failed."
+		"ru"		"{cyan}Голосование за мут {orange}провалилось."
+		"chi"		"{cyan}禁止玩家语音投票 {orange}未通过"
+	}
+	"vote_failed_unmute"
+	{
+		"en"		"{cyan}Vote for unmute {orange}is failed."
+		"ru"		"{cyan}Голосование за снятие мута {orange}провалилось."
+		"chi"		"{cyan}解禁玩家语音投票 {orange}未通过"
+	}
+	"vote_failed_gag"
+	{
+		"en"		"{cyan}Vote for gag {orange}is failed."
+		"ru"		"{cyan}Голосование за блокировку чата {orange}провалилось."
+		"chi"		"{cyan}禁止玩家发言投票 {orange}未通过."
+	}
+	"vote_failed_ungag"
+	{
+		"en"		"{cyan}Vote for ungag {orange}is failed."
+		"ru"		"{cyan}Голосование за снятие блокировки чата {orange}провалилось."
+		"chi"		"{cyan}解禁玩家发言投票 {orange}未通过."
+	}
+	"vote_success_mute"
+	{
+		"#format"	"{1:s}"
+		"en"		"{green}{1} {orange} microphone is disabled"
+		"ru"		"Микрофон {green}{1} {orange} был отключён"
+		"chi"		"{cyan}投票禁止玩家语音 {orange}功能被禁用"
+		"chi"		"{orange}已禁止{green}{1}{orange}语音"
+	}
+	"vote_success_unmute"
+	{
+		"#format"	"{1:s}"
+		"en"		"{green}{1} {orange} microphone is enabled"
+		"ru"		"Микрофон {green}{1} {orange} был включён"
+		"chi"		"{orange}已恢复{green}{1}{orange}语音"
+	}
+	"vote_success_gag"
+	{
+		"#format"	"{1:s}"
+		"en"		"{green}{1} {orange} chat is disabled"
+		"ru"		"Чат {green}{1} {orange} был отключён"
+		"chi"		"{orange}已禁止{green}{1}{orange}发言"
+	}
+	"vote_success_ungag"
+	{
+		"#format"	"{1:s}"
+		"en"		"{green}{1} {orange} chat is enabled"
+		"ru"		"Чат {green}{1} {orange} был включён"
+		"chi"		"{orange}已恢复{green}{1}{orange}发言"
+	}
+}

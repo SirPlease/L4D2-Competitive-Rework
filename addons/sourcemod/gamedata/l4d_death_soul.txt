@@ -1,0 +1,33 @@
+"Games"
+{
+	"left4dead"
+	{
+		"Signatures"
+		{
+			/*
+			*	CEntityDissolve::Create(CBaseEntity *pTarget, const char *pMaterialName, float flStartTime, int nDissolveType, bool *pRagdollCreated)
+			*	Search: "sprites/blueglow1.vmt"
+			*/
+			"CEntityDissolve_Create"
+			{
+				"library"		"server"
+				"linux"			"@_ZN15CEntityDissolve6CreateEP11CBaseEntityPKcfiPb"
+				"windows"		"\x8B\x44\x24\x14\x81\xEC\x94\x00\x00\x00"
+				/* 8B 44 24 14 81 EC 94 00 00 00 */
+			}
+		}
+	}
+	"left4dead2"
+	{
+		"Signatures"
+		{
+			"CEntityDissolve_Create"
+			{
+				"library"		"server"
+				"linux"			"@_ZN15CEntityDissolve6CreateEP11CBaseEntityPKcfiPb"
+				"windows"		"\x55\x8B\xEC\x8B\x45\x18\x81\xEC\xC0\x00\x00\x00"
+				/* 55 8B EC 8B 45 18 81 EC C0 00 00 00 */
+			}
+		}
+	}
+}

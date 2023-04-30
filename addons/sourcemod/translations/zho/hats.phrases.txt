@@ -1,0 +1,143 @@
+"Phrases"
+{
+	"Hat_Wearing"
+	{
+		"#format"		"{1:s}"
+		"zho"			"您正在配戴{ORANGE}{1}{DEFAULT}。"
+	}
+	"Hat_Changed"
+	{
+		"#format"		"{1:s}"
+		"zho"			"您正在配戴{ORANGE}{1}{DEFAULT}。"
+	}
+	"Hat_No_Index"
+	{
+		"#format"		"{1:d}{2:d}"
+		"zho"			"無法找到編號為{ORANGE}{1}{DEFAULT}的帽子。 (應在{ORANGE}1{DEFAULT}至{ORANGE}{2}{DEFAULT}內)"
+	}
+	"Hat_Not_Found"
+	{
+		"#format"		"{1:s}"
+		"zho"			"無法找到帽子{ORANGE}{1}{DEFAULT}。"
+	}
+	"Hat_Invalid"
+	{
+		"zho"			"無效的玩家。"
+	}
+	"Hat_Unblocked"
+	{
+		"#format"		"{1:s}"
+		"zho"			"Unblocked hats for {ORANGE}{1}{DEFAULT}."
+	}
+	"Hat_Blocked"
+	{
+		"#format"		"{1:s}"
+		"zho"			"Blocked hats for {ORANGE}{1}{DEFAULT}."
+	}
+	"Hat_View"
+	{
+		"#format"		"{1:s}"
+		"zho"			"您已{ORANGE}{1}{DEFAULT}第一人稱可見狀態。"
+	}
+	"Hat_Ability"
+	{
+		"#format"		"{1:s}"
+		"zho"			"您已{ORANGE}{1}{DEFAULT}帽子穿戴功能。"
+	}
+	"Hat_On"
+	{
+		"zho"			"啟用"
+	}
+	"Hat_Off"
+	{
+		"zho"			"停用"
+	}
+	"Hat_Menu_Title"
+	{
+		"zho"			"選擇帽子:"
+	}
+	"Hat_Missing"
+	{
+		"zho"			"無法配戴帽子。"
+	}
+
+	"HAT_SYSTEM"
+	{
+		"zho"			"{GREEN}[帽子]{DEFAULT} "
+	}
+	"HAT_NOT_RIGHT_NOW"
+	{
+		"zho"			"暫時無法使用。"
+	}
+	"ADMIN_DISABLE_HAT"
+	{
+		"zho"			"選擇玩家停用帽子:"
+	}
+	"ADMIN_CHANGE_HAT"
+	{
+		"zho"			"選擇玩家更換帽子:"
+	}
+	"ADMIN_VISIBILITY"
+	{
+		"zho"			"Select player to set hat visibility:"
+	}
+	"HAT_SET_ANGLE"
+	{
+		"zho"			"選擇帽子角度:"
+	}
+	"HAT_SET_POSITION"
+	{
+		"zho"			"選擇帽子位置:"
+	}
+	"HAT_SET_SIZE"
+	{
+		"zho"			"選擇帽子大細:"
+	}
+	"HAT_MAIN"
+	{
+		"zho"			"選擇動作:"
+	}
+	"HAT_MENU"
+	{
+		"zho"			"打開帽子選單"
+	}
+	"HAT_WORE"
+	{
+		"zho"			"穿戴狀態"
+	}
+	"HAT_VIEWABLE"
+	{
+		"zho"			"第一人稱可見狀態"
+	}
+	"HAT_ENABLED"
+	{
+		"zho"			"已啟用"
+	}
+	"HAT_DISABLED"
+	{
+		"zho"			"己停用"
+	}
+	"HAT_VIEWABLE_TP"
+	{
+		"zho"			"第三人稱可見狀態"
+	}
+	"HAT_VISIBILITY"
+	{
+		"zho"			"顥示其他玩家的帽子"
+	}
+	"Hat_ViewTP"
+	{
+		"#format"		"{1:s}"
+		"zho"			"您已{ORANGE}{1}{DEFAULT}第三人稱可見狀態"
+	}
+	"Hat_ViewSet"
+	{
+		"#format"		"{1:s}{2:s}"
+		"zho"			"{ORANGE}{2}{DEFAULT}玩家{ORANGE}{1}{DEFAULT}顥示其他玩家的帽子"
+	}
+	"Hat_Visibility_Set"
+	{
+		"#format"		"{1:s}"
+		"zho"			"顯示其他玩家的帽子:{ORANGE}{1}{DEFAULT}"
+	}
+}

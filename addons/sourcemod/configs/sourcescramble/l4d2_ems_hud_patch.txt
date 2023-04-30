@@ -1,0 +1,23 @@
+/**
+ * Source Scramble basic patch loader configuration file.
+ * 
+ * `sourcescramble_manager.smx` reads this file on startup, reading keys as gamedata files and
+ * values as corresponding patch names, creating a MemoryPatch handle and enabling it.
+ * 
+ * For example, with a key/value pair inside the "Patches" section like the following:
+ * 
+ * "tf2.some_gameconfig"		"Function()::Patch"
+ * 
+ * The plugin will load the "tf2.some_gameconfig" gamedata file and enable a patch named
+ * "Function()::Patch".
+ * 
+ * Memory patches remain applied until the plugin or extension is unloaded.
+ *
+ * To disable a patch comment(//) it out or remove the line.
+ */
+
+"Patches"
+{
+	"l4d2_ems_hud_sig"	"CScriptHud::HUDFrameUpdate::Ptach1"
+	"l4d2_ems_hud_sig"	"CScriptHud::HUDFrameUpdate::Ptach2"
+}

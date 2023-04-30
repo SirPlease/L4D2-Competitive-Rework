@@ -1,0 +1,59 @@
+// English by StarterX4
+// Traditional Chinese by HarryPotter
+// Simplified Chinese by HarryPotter
+
+"Phrases"
+{
+	"You're spectating. Join any team to play."
+	{
+		"en"	"You're spectating. Join any team to play."
+		"zho"	"按 M 加入遊戲..."
+		"chi"	"按 M 加入游戏..."
+		"hu"	"Néző vagy. Csatlakozz bármelyik csapathoz, hogy játszhass. !join"
+	}	
+	"[AFK] Inactivity detected! 1"
+	{
+		"#format"		"{1:d}"
+		"en"	"[AFK] Inactivity detected! You'll be moved to spectators in {1} seconds!"
+		"zho"	"[AFK] 偵測閒置! 你將於 {1} 秒後強制旁觀."
+		"chi"	"[AFK] 检测到闲置! 你将在 {1} 秒后强制旁观."
+		"hu"	"[AFK] Inaktivitás észlelve! {1} másodperc múlva átkerülsz a nézők közé!"
+	}
+	"[AFK] Inactivity detected! 2"
+	{
+		"en"	"[AFK] Inactivity detected! You'll be moved to spectators as soon as your teammates leave the safe area."
+		"zho"	"[AFK] 偵測閒置! 一旦有人離開安全區域你將強制旁觀."
+		"chi"	"[AFK] 检测到闲置! 一旦有人离开安全区域你将强制旁观."
+		"hu"	"[AFK] Inaktivitás észlelve! Amint csapattársaid elhagyják a biztonságos területet, a nézők közé kerülsz."
+	}
+	"[AFK] Inactivity detected! 3"
+	{
+		"#format"		"{1:d}"
+		"en"	"[AFK] Inactivity detected! Join any team to play.\n Otherwise you'll be kicked from server in {1} seconds."
+		"zho"	"[AFK] 偵測旁觀閒置! 輸入!join加入遊戲\n 否則你將於 {1} 秒後踢出伺服器."
+		"chi"	"[AFK] 检测到旁观闲置! 输入!join加入游戏\n 否则你将于 {1} 秒后踢出服务器."
+		"hu"	"[AFK] Inaktivitás észlelve! Csatlakozz bármelyik csapathoz.\n (!join) Ellenkező esetben {1} másodperc múlva kirúgunk a szerverről."
+	}
+	"[AFK] Inactivity detected! 4"
+	{
+		"en"	"[AFK] Inactivity detected! Join any team to play.\n Otherwise you'll be kicked from server."
+		"zho"	"[AFK] 偵測旁觀閒置! 按 M 加入遊戲\n 一旦有人離開安全區域你將踢出伺服器."
+		"chi"	"[AFK] 检测到旁观闲置! 按 M 加入游戏\n 一旦有人离开安全区域你将踢出服务器."
+		"hu"	"[AFK] Inaktivitás észlelve! Csatlakozz bármelyik csapathoz, hogy játszhass.\n (!join) Ellenkező esetben kirúgunk a szerverről."
+	}
+	"have been kicked from server due to inactivity"
+	{
+		"#format"		"{1:s}"
+		"en"	"[AFK] {lightgreen}{1} have been kicked from server due to inactivity."
+		"zho"	"[AFK] {lightgreen}{1} 旁觀閒置太久被踢出伺服器."
+		"chi"	"[AFK] {lightgreen}{1} 因旁观闲置太久而被踢出服务器."
+		"hu"	"[AFK] {lightgreen}{1} Inaktivitás miatt kirúgtak a szerverről."
+	}	
+	"afkForceSpectate"
+	{
+		"en"	"[AFK] You has been switched to {lightgreen}Spectators"
+		"zho"	"[AFK] 你已被轉換到 {lightgreen}旁觀者"
+		"chi"	"[AFK] 你已被移动到 {lightgreen}旁观"
+	}	
+}
+

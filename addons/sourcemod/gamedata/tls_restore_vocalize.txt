@@ -1,0 +1,58 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Functions"
+		{
+			"CDirector::GetGameModeBase"
+			{
+				"signature"			"CDirector::GetGameModeBase"
+				"callconv"			"thiscall"
+				"return"			"charptr"
+				"this"				"address"
+			}
+			
+			/**
+			 * Credit to cravenge
+			 * https://forums.alliedmods.net/showthread.php?p=2768109
+			 */
+			"CTerrorPlayer::ModifyOrAppendCriteria"
+			{
+				"signature"			"CTerrorPlayer::ModifyOrAppendCriteria"
+				"callconv"			"thiscall"
+				"return"			"int"
+				"this"				"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"		"int"
+					}
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			"CDirector::GetGameModeBase"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector15GetGameModeBaseEv"
+				"windows"	"\xF7\x05\x2A\x2A\x2A\x2A\x00\x10\x00\x00\x56\x74\x2A\xBE\x2A\x2A\x2A\x2A\xEB\x2A\xA1\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x85\x2A\x75\x2A\xBE\x2A\x2A\x2A\x2A\x8B"
+				/* F7 05 ? ? ? ? 00 10 00 00 56 74 ? BE ? ? ? ? EB ? A1 ? ? ? ? 8B ? ? 85 ? 75 ? BE ? ? ? ? 8B */
+			}
+			
+			/**
+			 * Credit to cravenge
+			 * https://forums.alliedmods.net/showthread.php?p=2768109
+			 */
+			"CTerrorPlayer::ModifyOrAppendCriteria"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer22ModifyOrAppendCriteriaER14AI_CriteriaSet"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x8B\x2A\x2A\x33"
+				/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 56 8B ? ? 33 */
+			}
+		}
+	}
+}

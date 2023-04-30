@@ -1,0 +1,171 @@
+﻿"Phrases" 
+{
+	"L4D2C1"
+	{
+		"chi" "死亡中心"
+	}
+	"L4D2C2"
+	{
+		"chi" "黑暗嘉年华"
+	}
+	"L4D2C3"
+	{
+		"chi" "沼泽激战"
+	}
+	"L4D2C4"
+	{
+		"chi" "暴风骤雨"
+	}
+	"L4D2C5"
+	{
+		"chi" "教区"
+	}
+	"L4D2C6"
+	{
+		"chi" "短暂时刻"
+	}
+	"L4D2C7"
+	{
+		"chi" "牺牲"
+	}
+	"L4D2C8"
+	{
+		"chi" "毫不留情"
+	}
+	"L4D2C9"
+	{
+		"chi" "坠机险途"
+	}
+	"L4D2C10"
+	{
+		"chi" "死亡丧钟"
+	}
+	"L4D2C11"
+	{
+		"chi" "静寂时分"
+	}
+	"L4D2C12"
+	{
+		"chi" "血腥收获"
+	}
+	"L4D2C13"
+	{
+		"chi" "刺骨寒溪"
+	}
+	"L4D2C14"
+	{
+		"chi" "最后一战"
+	}
+	"QuestionableEthics"
+	{
+		"chi" "伦理问题1"
+	}
+	"QuestionableEthicsAlphaTest"
+	{
+		"chi" "伦理问题2"
+	}
+	"CrashBandicootTheReturn"
+	{
+		"chi" "崩溃的博士1"
+	}
+	"l4d2CrashBandicoot2"
+	{
+		"chi" "崩溃的博士2"
+	}
+	"TanksPlayground"
+	{
+		"chi" "坦克游乐场"
+	}
+	"WhiteForest"
+	{
+		"chi" "白森林"
+	}
+	"YamaMSE"
+	{
+		"chi" "摩耶山危机"
+	}
+	"ddntr1"
+	{
+		"chi" "死亡陷阱"
+	}
+	"Diescraper36"
+	{
+		"chi" "喋血蜃楼"
+	}
+	"SaltHellPark"
+	{
+		"chi" "盐井地狱公园"
+	}
+	"TheBloodyMoors"
+	{
+		"chi" "血腥荒野"
+	}
+	"FarewellChenming"
+	{
+		"chi" "再见了晨茗"
+	}
+	"darkwood"
+	{
+		"chi" "阴暗森林"
+	}
+	"DevilMountain"
+	{
+		"chi" "魔鬼山"
+	}
+	"fallen"
+	{
+		"chi" "坠落"
+	}
+	"Cure2"
+	{
+		"chi" "治愈2"
+	}
+	"deadvacation2"
+	{
+		"chi" "死亡度假2"
+	}
+	"Derailed"
+	{
+		"chi" "脱轨"
+	}
+	"hauntedforest"
+	{
+		"chi" "颤栗森林"
+	}
+	"TheCure"
+	{
+		"chi" "治愈"
+	}
+	"2evileyes"
+	{
+		"chi" "双邪眼"
+	}
+	"BloodTracks"
+	{
+		"chi" "血之轨迹"
+	}
+	"drdegov21"
+	{
+		"chi" "暴毙峡谷"
+	}
+	"DeadSeries"
+	{
+		"chi" "连续死亡"
+	}
+	"HighwayToHell"
+	{
+		"chi" "地狱之路"
+	}
+	"ihatemountains2"
+	{
+		"chi" "我恨山2"
+	}
+	"JourneyToSplashMountain"
+	{
+		"chi" "飞溅山之旅"
+	}
+	"undeadzone"
+	{
+		"chi" "亡灵区"
+	}
+}

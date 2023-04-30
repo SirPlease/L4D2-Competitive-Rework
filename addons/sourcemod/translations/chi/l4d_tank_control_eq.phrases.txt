@@ -1,0 +1,35 @@
+"Phrases"
+{
+	"Tag_Selecion"
+	{
+		"chi"		"{red}<{default}Tank 选择系统{red}>{default}"
+	}
+	"Tag_Rage"
+	{
+		"chi"		"{red}<{default}Tank 控制权{red}>{default}"
+	}
+	"YouBecomeTank"
+	{
+		"chi"		"{green}You{default} 将会成为 {red}Tank{default}!"
+	}
+	"BecomeTank"
+	{
+		"chi"		"{olive}%s{default} 将会成为 {red}Tank{default}!"
+	}
+	"UnableGiveTank"
+	{
+		"chi"		"[{olive}SM{default}] %s 不是感染者. 无法给予Tank"
+	}
+	"Hit_RageMeterRefilled"
+	{
+		"chi"		"第一次控制权结束，第二次控制权开始"
+	}
+	"YouRageMeterRefilled"
+	{
+		"chi"		"{olive}第一次控制权结束， {red}第二次控制权开始{default}"
+	}
+	"RageMeterRefilled"
+	{
+		"chi"		"({green}%N{default}) {olive}第一次控制权结束， {red}第二次控制权开始"
+	}
+}

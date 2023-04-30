@@ -1,0 +1,103 @@
+﻿"Phrases"
+{
+	"Change map advertise"
+	{
+		"#format"		"{1:s}"
+		"en"			"Type {1} in chat to initiate a vote for the next campaign."
+	}
+	"Map vote advertise"
+	{
+		"#format"		"{1:s},{2:s}"
+		"en"			"To vote for the next map, type: {1}\n           To see all the votes, type: {2}"
+	}	
+	
+	"Choose a Map"
+	{
+		"en"			"Choose the Next Map"
+	}
+	"Choose a Mission"
+	{
+		"en"			"Choose the Next Campaign"
+	}
+	"I dont care" {
+		"en"			"I Don't Care"
+	}
+	"All maps" {
+		"en"			"All maps"
+	}
+	
+	"Campaign finished"
+	{
+		"#format"		"{1:s}"
+		"en"			"Campaign {1} finished"
+	}
+	"Switching campaign to"
+	{
+		"#format"		"{1:s}"
+		"en"			"Switching campaign to {1}."
+	}
+	"Switching map to"
+	{
+		"#format"		"{1:s}"
+		"en"			"Switching map to {1}."
+	}	
+	"Switching to the vote winner"
+	{
+		"#format"		"{1:s}"
+		"en"			"Switching to the vote winner: {1}."
+	}
+	
+	"Map is now winning the vote"
+	{
+		"#format"		"{1:s}"
+		"en"			"Map {1} is now winning the vote"
+	}
+	"Mission is now winning the vote"
+	{
+		"#format"		"{1:s}"
+		"en"			"Campaign {1} is now winning the vote"
+	}
+	"No one has voted yet" {
+		"en"			"No one has voted yet."
+	}
+	"Voting is disable" {
+		"en"			"Voting has been disabled on this server."
+	}
+	"Voting is not available" {
+		"en"			"Voting is only enabled on a Scavenge or finale map."
+	}
+	"Votes" {
+		"en"			"votes"
+	}
+	"You did not vote" {
+		"#format"		"{1:s}"
+		"en"			"You did not vote.\nTo vote, type: {1}"
+	}
+	"You voted for" {
+		"#format"		"{1:s},{2:s},{3:s}"
+		"en"			"You voted for {1}.\n- To change your vote, type: {2}\n- To see all the votes, type: {3}"	
+	}
+	
+	
+	"The next map is currently"
+	{
+		"#format"		"{1:s}"
+		"en"			"The next map is currently: {1}."
+	}
+	"The next campaign is currently"
+	{
+		"#format"		"{1:s}"
+		"en"			"The next campaign is currently: {1}."
+	}
+
+	"The next map will be one of"
+	{
+		"#format"		"{1:s}"
+		"en"			"The next map will be one of: {1}."
+	}
+	"The next campaign will be one of"
+	{
+		"#format"		"{1:s}"
+		"en"			"The next campaign will be one of: {1}."
+	}
+}

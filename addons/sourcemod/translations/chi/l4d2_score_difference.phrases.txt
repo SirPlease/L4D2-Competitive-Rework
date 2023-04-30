@@ -1,0 +1,46 @@
+"Phrases"
+{
+	"Announce_Chapter"
+	{
+		"#format"	"{1:d}"
+		"chi"		"{default}[{green}!{default}] {default}此章节分差: {green}{1}"
+	}
+	
+	"Announce_Total"
+	{
+		"#format"	"{1:d}"
+		"chi"		"{default}[{olive}!{default}] {default}总分差: {olive}{1}"
+	}
+	
+	"Announce_ElseChapter"
+	{
+		"#format"	"{1:d}"
+		"chi"		"{default}[{lightgreen}!{default}] {default}分差: {lightgreen}{1}"
+	}
+	
+	// The following translations are made optional
+	
+	"Announce_Survivor"
+	{
+		"#format"	"{1:d}"
+		"chi"		"{default}[{blue}!{default}] 生还者分数: {blue}{1}"
+	}
+	
+	"Announce_Infected"
+	{
+		"#format"	"{1:d}"
+		"chi"		"{default}[{red}!{default}] 感染者分数: {red}{1}"
+	}
+	
+	"Announce_ComebackWithDistance"
+	{
+		"#format"	"{1:d}"
+		"chi"		"{default}[{green}!{default}] 超分需要: {olive}{1}"
+	}
+	
+	"Announce_ComebackWithBonus"
+	{
+		"#format"	"{1:d},{2:d}"
+		"chi"		"{default}[{green}!{default}] 超分需要: {olive}{1} {default}+ {green}{2}"
+	}
+}

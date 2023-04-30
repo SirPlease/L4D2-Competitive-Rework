@@ -1,0 +1,669 @@
+"Phrases"
+{
+	"All4Dead Commands"
+	{
+		"en"			"All4Dead Commands"
+		"chi"			"All4DeadD指令"
+		"zho"			"All4DeadD指令"
+	}
+	"Director Commands"
+	{
+		"en"			"Director Commands"
+		"chi"			"导演系统指令"
+		"zho"			"導演系統指令"
+	}
+	"Spawn Special Infected"
+	{
+		"en"			"Spawn Special Infected"
+		"chi"			"生成特殊感染者"
+		"zho"			"生成特殊感染者"
+	}
+	"Spawn Uncommon Infected"
+	{
+		"en"			"Spawn Uncommon Infected"
+		"chi"			"生成特殊丧尸"
+		"zho"			"生成特殊一般感染者"
+	}
+	"Spawn Melee Weapons"
+	{
+		"en"			"Spawn Melee Weapons"
+		"chi"			"生成近战武器"
+		"zho"			"生成近戰武器"
+	}
+	"Spawn Weapons"
+	{
+		"en"			"Spawn Weapons"
+		"chi"			"生成武器"
+		"zho"			"生成武器"
+	}
+	"Spawn Items"
+	{
+		"en"			"Spawn Items"
+		"chi"			"生成物品"
+		"zho"			"生成物品"
+	}
+	"Configuration Options"
+	{
+		"en"			"Configuration Options"
+		"chi"			"配置选项"
+		"zho"			"配置選項"
+	}
+	"Configuration Commands"
+	{
+		"en"			"Configuration Commands"
+		"chi"			"配置指令"
+		"zho"			"配置指令"
+	}
+	"Disable automatic placement"
+	{
+		"en"			"Disable automatic placement"
+		"chi"			"关闭自动放置"
+		"zho"			"關閉自動放置"
+	}
+	"Enable automatic placement"
+	{
+		"en"			"Enable automatic placement"
+		"chi"			"开启自动放置"
+		"zho"			"開啟自動放置"
+	}
+	"Spawn a tank"
+	{
+		"en"			"Spawn a tank"
+		"chi"			"Tank"
+		"zho"			"Tank"
+	}
+	"Spawn a witch"
+	{
+		"en"			"Spawn a witch"
+		"chi"			"Witch"
+		"zho"			"Witch"
+	}
+	"Spawn a boomer"
+	{
+		"en"			"Spawn a boomer"
+		"chi"			"Boomer"
+		"zho"			"Boomer"
+	}
+	"Spawn a hunter"
+	{
+		"en"			"Spawn a hunter"
+		"chi"			"Hunter"
+		"zho"			"Hunter"
+	}
+	"Spawn a smoker"
+	{
+		"en"			"Spawn a smoker"
+		"chi"			"Smoker"
+		"zho"			"Smoker"
+	}
+	"Spawn a spitter"
+	{
+		"en"			"Spawn a spitter"
+		"chi"			"Spitter"
+		"zho"			"Spitter"
+	}
+	"Spawn a jockey"
+	{
+		"en"			"Spawn a jockey"
+		"chi"			"Jockey"
+		"zho"			"Jockey"
+	}
+	"Spawn a charger"
+	{
+		"en"			"Spawn a charger"
+		"chi"			"Charger"
+		"zho"			"Charger"
+	}
+	"Spawn a mob"
+	{
+		"en"			"Spawn a mob"
+		"chi"			"尸潮"
+		"zho"			"屍潮"
+	}
+	"Spawn a riot zombie"
+	{
+		"en"			"Spawn a riot zombie"
+		"chi"			"防暴警察"
+		"zho"			"防暴警察"
+	}
+	"Spawn a ceda zombie"
+	{
+		"en"			"Spawn a ceda zombie"
+		"chi"			"防疫人员"
+		"zho"			"防疫人员"
+	}
+	"Spawn a clown zombie"
+	{
+		"en"			"Spawn a clown zombie"
+		"chi"			"小丑"
+		"zho"			"小丑"
+	}
+	"Spawn a mudmen zombie"
+	{
+		"en"			"Spawn a mudmen zombie"
+		"chi"			"泥人"
+		"zho"			"泥人"
+	}
+	"Spawn a roadworker zombie"
+	{
+		"en"			"Spawn a roadworker zombie"
+		"chi"			"道路工人"
+		"zho"			"道路工人"
+	}
+	"Spawn a jimmie gibbs zombie"
+	{
+		"en"			"Spawn a jimmie gibbs zombie"
+		"chi"			"吉米吉布斯(很强)"
+		"zho"			"吉米賽車手(很强)"
+	}
+	"Spawn a fallen survivor zombie"
+	{
+		"en"			"Spawn a fallen survivor zombie"
+		"chi"			"堕落幸存者(掉落物资)"
+		"zho"			"墮落生還者(掉落物資)"
+	}
+	"Spawn a defibrillator"
+	{
+		"en"			"Spawn a defibrillator"
+		"chi"			"电击器"
+		"zho"			"電擊器"
+	}
+	"Spawn a medkit"
+	{
+		"en"			"Spawn a medkit"
+		"chi"			"急救包"
+		"zho"			"急救包"
+	}
+	"Spawn some pills"
+	{
+		"en"			"Spawn some pills"
+		"chi"			"药丸"
+		"zho"			"藥丸"
+	}
+	"Spawn some adrenaline"
+	{
+		"en"			"Spawn some adrenaline"
+		"chi"			"肾上腺素"
+		"zho"			"腎上腺素"
+	}
+	"Spawn a molotov"
+	{
+		"en"			"Spawn a molotov"
+		"chi"			"燃烧瓶"
+		"zho"			"燃燒瓶"
+	}
+	"Spawn a pipe bomb"
+	{
+		"en"			"Spawn a pipe bomb"
+		"chi"			"土制炸弹"
+		"zho"			"土製炸彈"
+	}
+	"Spawn a bile jar"
+	{
+		"en"			"Spawn a bile jar"
+		"chi"			"胆汁瓶"
+		"zho"			"膽汁瓶"
+	}
+	"Spawn a gas tank"
+	{
+		"en"			"Spawn a gas tank"
+		"chi"			"油桶"
+		"zho"			"油桶"
+	}
+	"Spawn a firework"
+	{
+		"en"			"Spawn a firework"
+		"chi"			"烟花"
+		"zho"			"煙火盒"
+	}
+	"Spawn a propane tank"
+	{
+		"en"			"Spawn a propane tank"
+		"chi"			"煤气罐"
+		"zho"			"煤氣罐"
+	}
+	"Spawn an oxygen tank"
+	{
+		"en"			"Spawn an oxygen tank"
+		"chi"			"氧气瓶"
+		"zho"			"氧氣瓶"
+	}
+	"Spawn an ammo pile"
+	{
+		"en"			"Spawn an ammo pile"
+		"chi"			"子弹堆"
+		"zho"			"子彈堆"
+	}
+	"Spawn laser sight pack"
+	{
+		"en"			"Spawn laser sight pack"
+		"chi"			"激光瞄准器"
+		"zho"			"雷射裝置"
+	}
+	"Spawn incendiary ammo"
+	{
+		"en"			"Spawn incendiary ammo"
+		"chi"			"燃烧子弹"
+		"zho"			"燃燒子彈"
+	}
+	"Spawn explosive ammo"
+	{
+		"en"			"Spawn explosive ammo"
+		"chi"			"高爆子弹"
+		"zho"			"高爆子彈"
+	}
+	"Spawn a gnome"
+	{
+		"en"			"Spawn a gnome"
+		"chi"			"矮人玩具"
+		"zho"			"精靈小矮人"
+	}
+	"Spawn cola bottles"
+	{
+		"en"			"Spawn cola bottles"
+		"chi"			"可乐瓶"
+		"zho"			"可樂瓶"
+	}
+	"Spawn a pistol"
+	{
+		"en"			"Spawn a pistol"
+		"chi"			"手枪"
+		"zho"			"手槍"
+	}
+	"Spawn a magnum"
+	{
+		"en"			"Spawn a magnum"
+		"chi"			"马格南手枪"
+		"zho"			"馬格南手槍"
+	}
+	"Spawn a pumpshotgun"
+	{
+		"en"			"pawn a pumpshotgun"
+		"chi"			"pump霰弹枪"
+		"zho"			"pump霰彈槍"
+	}
+	"Spawn a shotgun chrome"
+	{
+		"en"			"Spawn a shotgun chrome"
+		"chi"			"chrome霰弹枪"
+		"zho"			"chrome霰彈槍"
+	}
+	"Spawn a sub machine gun"
+	{
+		"en"			"Spawn a sub machine gun"
+		"chi"			"冲锋枪"
+		"zho"			"沖鋒槍"
+	}
+	"Spawn a silenced smg"
+	{
+		"en"			"Spawn a silenced smg"
+		"chi"			"静音冲锋枪"
+		"zho"			"靜音沖鋒槍"
+	}
+	"Spawn a mp5"
+	{
+		"en"			"Spawn a mp5"
+		"chi"			"MP5冲锋枪"
+		"zho"			"MP5沖鋒槍"
+	}
+	"Spawn an assault rifle"
+	{
+		"en"			"Spawn an assault rifle"
+		"chi"			"M16步枪"
+		"zho"			"M16步槍"
+	}
+	"Spawn a sg552 rifle"
+	{
+		"en"			"Spawn a sg552 rifle"
+		"chi"			"SG552步枪"
+		"zho"			"SG552步槍"
+	}
+	"Spawn an AK74"
+	{
+		"en"			"Spawn an AK74"
+		"chi"			"AK74步枪"
+		"zho"			"AK74步槍"
+	}
+	"Spawn a desert rifle"
+	{
+		"en"			"Spawn a desert rifle"
+		"chi"			"三连发沙漠步枪"
+		"zho"			"三連發沙漠步槍"
+	}
+	"Spawn a shotgun spas"
+	{
+		"en"			"Spawn a shotgun spas"
+		"chi"			"SPAS连发霰弹枪"
+		"zho"			"SPAS連發霰彈槍"
+	}
+	"Spawn an auto shotgun"
+	{
+		"en"			"Spawn an auto shotgun"
+		"chi"			"战术连发霰弹枪"
+		"zho"			"戰術連發霰彈槍"
+	}
+	"Spawn a hunting rifle"
+	{
+		"en"			"Spawn a hunting rifle"
+		"chi"			"狩猎狙击枪"
+		"zho"			"狩獵狙擊槍"
+	}
+	"Spawn a military sniper"
+	{
+		"en"			"Spawn a military sniper"
+		"chi"			"军用狙击枪"
+		"zho"			"軍用狙擊槍"
+	}
+	"Spawn a scout"
+	{
+		"en"			"Spawn a scout"
+		"chi"			"Scout狙击枪"
+		"zho"			"Scout狙擊槍"
+	}
+	"Spawn an awp"
+	{
+		"en"			"Spawn an awp"
+		"chi"			"AWP狙击枪"
+		"zho"			"AWP狙擊槍"
+	}
+	"Spawn a grenade launcher"
+	{
+		"en"			"Spawn a grenade launcher"
+		"chi"			"榴弹发射器"
+		"zho"			"榴彈發射器"
+	}
+	"Spawn a m60"
+	{
+		"en"			"Spawn a m60"
+		"chi"			"M60机关枪"
+		"zho"			"M60機關槍"
+	}
+	"Spawn a baseball bat"
+	{
+		"en"			"Spawn a baseball bat"
+		"chi"			"棒球棍"
+		"zho"			"棒球棍"
+	}
+	"Spawn a chainsaw"
+	{
+		"en"			"Spawn a chainsaw"
+		"chi"			"燃油链锯"
+		"zho"			"電鋸"
+	}
+	"Spawn a cricket bat"
+	{
+		"en"			"Spawn a cricket bat"
+		"chi"			"板球球棍"
+		"zho"			"板球球棍"
+	}
+	"Spawn a crowbar"
+	{
+		"en"			"Spawn a crowbar"
+		"chi"			"撬棍"
+		"zho"			"鐵撬"
+	}
+	"Spawn an electric guitar"
+	{
+		"en"			"Spawn an electric guitar"
+		"chi"			"电吉他"
+		"zho"			"電吉他"
+	}
+	"Spawn a fire axe"
+	{
+		"en"			"Spawn a fire axe"
+		"chi"			"消防斧头"
+		"zho"			"消防斧頭"
+	}
+	"Spawn a frying pan"
+	{
+		"en"			"Spawn a frying pan"
+		"chi"			"平底锅"
+		"zho"			"平底鍋"
+	}
+	"Spawn a katana"
+	{
+		"en"			"Spawn a katana"
+		"chi"			"武士刀"
+		"zho"			"武士刀"
+	}
+	"Spawn a machete"
+	{
+		"en"			"Spawn a machete"
+		"chi"			"砍刀"
+		"zho"			"開山刀"
+	}
+	"Spawn a police baton"
+	{
+		"en"			"Spawn a police baton"
+		"chi"			"警棍"
+		"zho"			"警棍"
+	}
+	"Spawn a knife"
+	{
+		"en"			"Spawn a knife"
+		"chi"			"CS小刀"
+		"zho"			"CS小刀"
+	}
+	"Spawn a golf club"
+	{
+		"en"			"Spawn a golf club"
+		"chi"			"高尔夫球棍"
+		"zho"			"高爾夫球棍"
+	}
+	"Spawn a pitchfork"
+	{
+		"en"			"Spawn a pitchfork"
+		"chi"			"草叉"
+		"zho"			"草叉"
+	}
+	"Spawn a shovel"
+	{
+		"en"			"Spawn a shovel"
+		"chi"			"铲子"
+		"zho"			"鏟子"
+	}
+	"End non-stop panic events"
+	{
+		"en"			"End non-stop panic events"
+		"chi"			"停止无尽尸潮"
+		"zho"			"停止無限屍潮"
+	}
+	"Force non-stop panic events"
+	{
+		"en"			"Force non-stop panic events"
+		"chi"			"开始无尽尸潮"
+		"zho"			"開始無限屍潮"
+	}
+	"Director controls if a tank spawns this round"
+	{
+		"en"			"Director controls if a tank spawns this round"
+		"chi"			"导演系统控制生成Tank"
+		"zho"			"導演系統控制生成Tank"
+	}
+	"Force a tank to spawn this round"
+	{
+		"en"			"Force a tank to spawn this round"
+		"chi"			"当前回合强制生成Tank"
+		"zho"			"當前回合強制生成Tank"
+	}
+	"Director controls if a witch spawns this round"
+	{
+		"en"			"Director controls if a witch spawns this round"
+		"chi"			"导演系统控制生成Tank"
+		"zho"			"導演系統控制生成Tank"
+	}
+	"Force a witch to spawn this round"
+	{
+		"en"			"Force a witch to spawn this round"
+		"chi"			"当前回合强制生成Witch"
+		"zho"			"當前回合強制生成Witch"
+	}
+	"Stop bosses spawning continuously"
+	{
+		"en"			"Stop bosses spawning continuously"
+		"chi"			"停止持续生成Tank和Witch"
+		"zho"			"停止持續生成Tank和Witch"
+	}
+	"Force bosses to spawn continuously"
+	{
+		"en"			"Configuration Commands"
+		"chi"			"开始持续生成Tank和Witch"
+		"zho"			"開始持續生成Tank和Witch"
+	}
+	"Add more zombies to the horde"
+	{
+		"en"			"Add more zombies to the horde"
+		"chi"			"增加尸潮数量"
+		"zho"			"增加屍潮數量"
+	}
+	"Disable player notifications"
+	{
+		"en"			"Disable player notifications"
+		"chi"			"停止通知玩家"
+		"zho"			"停止通知玩家"
+	}
+	"Enable player notifications"
+	{
+		"en"			"Enable player notifications"
+		"chi"			"开启通知玩家"
+		"zho"			"開啟通知玩家"
+	}
+	"Restore all settings to game defaults now"
+	{
+		"en"			"Restore all settings to game defaults now"
+		"chi"			"恢复默认设置"
+		"zho"			"恢復默認設置"
+	}
+	"Force a panic event to start"
+	{
+		"en"			"Force a panic event to start"
+		"chi"			"强制生成一波尸潮"
+		"zho"			"強製生成一波屍潮"
+	}
+	"has been spawned"
+	{
+		"en"			"{green}%s{lightgreen} has been spawned"
+		"chi"			"{green}%s{lightgreen} 已经生成"
+		"zho"			"{green}%s{lightgreen} 已經生成"
+	}
+	"auto"
+	{
+		"en"			"auto"
+		"chi"			"自动"
+		"zho"			"自動"
+	}
+	"Automatic placement of spawned infected has been enabled"
+	{
+		"en"			"{lightgreen} Automatic placement of spawned infected has been enabled"
+		"chi"			"{lightgreen} 开启自动放置生成感染者功能"
+		"zho"			"{lightgreen} 開啟自動放置生成感染者功能"
+	}
+	"Automatic placement of spawned infected has been disabled"
+	{
+		"en"			"{lightgreen} Automatic placement of spawned infected has been disabled"
+		"chi"			"{lightgreen} 关闭自动放置生成感染者功能"
+		"zho"			"{lightgreen} 关闭自动放置生成感染者功能"
+	}
+	"Bosses will now spawn continuously"
+	{
+		"en"			"{lightgreen} Bosses will now spawn continuously"
+		"chi"			"{lightgreen} 开始持续生成Tank和Witch"
+		"zho"			"{lightgreen} 開始持續生成Tank和Witch"
+	}
+	"Bosses will no longer spawn continuously"
+	{
+		"en"			"{lightgreen} Bosses will no longer spawn continuously"
+		"chi"			"{lightgreen} 停止持续生成Tank和Witch"
+		"zho"			"{lightgreen} 停止持續生成Tank和Witch"
+	}
+	"Endless panic events have started"
+	{
+		"en"			"{lightgreen} Endless panic events have started"
+		"chi"			"{lightgreen} 开始无尽尸潮"
+		"zho"			"{lightgreen} 開始無限屍潮"
+	}
+	"Endless panic events have ended"
+	{
+		"en"			"{lightgreen} Automatic placement of spawned infected has been disabled"
+		"chi"			"{lightgreen} 停止无尽尸潮"
+		"zho"			"{lightgreen} 停止無限屍潮"
+	}
+	"A tank is guaranteed to spawn this round"
+	{
+		"en"			"{lightgreen} A tank is guaranteed to spawn this round"
+		"chi"			"{lightgreen} 当前回合Tank固定生成"
+		"zho"			"{lightgreen} 當前回合Tank固定生成"
+	}
+	"A tank is no longer guaranteed to spawn this round"
+	{
+		"en"			"{lightgreen} A tank is no longer guaranteed to spawn this round"
+		"chi"			"{lightgreen} 当前回合Tank生成恢复原样"
+		"zho"			"{lightgreen} 當前回合Tank生成恢復原樣"
+	}
+	"A witch is guaranteed to spawn this round"
+	{
+		"en"			"{lightgreen} Automatic placement of spawned infected has been disabled"
+		"chi"			"{lightgreen} 当前回合witch固定生成"
+		"zho"			"{lightgreen} 當前回合witch固定生成"
+	}
+	"A witch is no longer guaranteed to spawn this round"
+	{
+		"en"			"{lightgreen} Automatic placement of spawned infected has been disabled"
+		"chi"			"{lightgreen} 当前回合witch生成恢复原样"
+		"zho"			"{lightgreen} 當前回合witch生成恢復原樣"
+	}
+	"The horde grows larger"
+	{
+		"en"			"{lightgreen} The horde grows larger"
+		"chi"			"{lightgreen} 尸潮数量已增加"
+		"zho"			"{lightgreen} 屍潮數量已增加"
+	}
+	"Player notifications have now been enabled"
+	{
+		"en"			"{lightgreen} Player notifications have now been enabled"
+		"chi"			"{lightgreen} 玩家提醒功能已开启"
+		"zho"			"{lightgreen} 玩家提醒功能已開啟"
+	}
+	"Restored the default settings"
+	{
+		"en"			"{lightgreen} Restored the default settings"
+		"chi"			"{lightgreen} 恢复默认设置"
+		"zho"			"{lightgreen} 恢復默認設置"
+	}
+	"Allowing an all bot survivor team"
+	{
+		"en"			"Allowing an all bot survivor team"
+		"chi"			"允许全BOT幸存者队伍"
+		"zho"			"允許全BOT幸存者隊伍"
+	}
+	"We now require at least one human survivor before the game can start"
+	{
+		"en"			"We now require at least one human survivor before the game can start"
+		"chi"			"禁止全BOT幸存者队伍(至少需要一个玩家开始游戏)"
+		"zho"			"禁止全BOT幸存者隊伍(至少需要一個玩家開始遊戲)"
+	}
+	"The zombies are coming!"
+	{
+		"en"			"{lightgreen} The zombies are coming!"
+		"chi"			"{lightgreen} 尸潮来了!"
+		"zho"			"{lightgreen} 屍潮來了!"
+	}
+	"Could not find a valid spawn position for S.I. in 5 tries"
+	{
+		"en"			"Couldn't find a valid spawn position for S.I. in 5 tries."
+		"chi"			"尝试5次后无法为此特殊感染者找到有效的生成位置"
+		"zho"			"嘗試5次後無法爲此特殊感染者找到有效的生成位置"
+	}
+	"Can not spawn, please try again"
+	{
+		"en"			"Can not spawn, please try again."
+		"chi"			"无法生成, 请再次尝试"
+		"zho"			"無法生成, 請再次嘗試"
+	}
+	"Can not spawn witch in tries at this moment"
+	{
+		"en"			"Can't spawn witch in %d tries at this moment."
+		"chi"			"尝试%d次后无法为此witch找到有效的生成位置"
+		"zho"			"嘗試%d次後無法爲此witch找到有效的生成位置"
+	}
+}

@@ -1,0 +1,142 @@
+"Phrases"
+{
+	"Hat_Wearing"
+	{
+		"#format"		"{1:s}"
+		"ru"			"Вы надели шляпу: {ORANGE}[{1}] {DEFAULT}"
+	}
+	"Hat_Changed"
+	{
+		"#format"		"{1:s}"
+		"ru"			"Шапка заменена у {ORANGE}{1}{DEFAULT}."
+	}
+	"Hat_No_Index"
+	{
+		"#format"		"{1:d}{2:d}"
+		"ru"			"Не могу найти индекс шапки {ORANGE}{1}{DEFAULT}, значения между {ORANGE}1{DEFAULT} и {ORANGE}{2}{DEFAULT}."
+	}
+	"Hat_Not_Found"
+	{
+		"#format"		"{1:s}"
+		"ru"			"Не могу найти шапку {ORANGE}{1}{DEFAULT}."
+	}
+	"Hat_Invalid"
+	{
+		"ru"			"Выбран неверный игрок."
+	}
+	"Hat_Unblocked"
+	{
+		"#format"		"{1:s}"
+		"ru"			"Разблокированы шапки для {ORANGE}{1}{DEFAULT}."
+	}
+	"Hat_Blocked"
+	{
+		"#format"		"{1:s}"
+		"ru"			"Заблокированы шапки для {ORANGE}{1}{DEFAULT}."
+	}
+	"Hat_View"
+	{
+		"#format"		"{1:s}"
+		"ru"			"{DEFAULT}Возможность видеть свою шапку: {ORANGE}{1}."
+	}
+	"Hat_Ability"
+	{
+		"#format"		"{1:s}"
+		"ru"			"{DEFAULT}Возможность надевать шапки: {ORANGE}{1}."
+	}
+	"Hat_On"
+	{
+		"ru"			"включена"
+	}
+	"Hat_Off"
+	{
+		"ru"			"отключена"
+	}
+	"Hat_Menu_Title"
+	{
+		"ru"			"Выберите свою шляпу."
+	}
+	"Hat_Missing"
+	{
+		"ru"			"На вас не одета шляпа!"
+	}
+	"HAT_SYSTEM"
+	{
+		"ru"			"{GREEN}[Шляпа]{DEFAULT} "
+	}
+	"HAT_NOT_RIGHT_NOW"
+	{
+		"ru"			"Нельзя использовать эту команду в данный момент."
+	}
+	"ADMIN_DISABLE_HAT"
+	{
+		"ru"			"Выберите игрока для отключения шапки:"
+	}
+	"ADMIN_CHANGE_HAT"
+	{
+		"ru"			"Выберите игрока для изменения шапки:"
+	}
+	"ADMIN_VISIBILITY"
+	{
+		"ru"			"Выберите игрока для установки видимости шапки:"
+	}
+	"HAT_SET_ANGLE"
+	{
+		"ru"			"Задать угол:"
+	}
+	"HAT_SET_POSITION"
+	{
+		"ru"			"Задать позицию:"
+	}
+	"HAT_SET_SIZE"
+	{
+		"ru"			"Задать размер:"
+	}
+	"HAT_MAIN"
+	{
+		"ru"			"Настройки шапки:"
+	}
+	"HAT_MENU"
+	{
+		"ru"			"Открыть меню шапок"
+	}
+	"HAT_WORE"
+	{
+		"ru"			"Надевание шапки"
+	}
+	"HAT_VIEWABLE"
+	{
+		"ru"			"Вид шапки от 1-го лица"
+	}
+	"HAT_ENABLED"
+	{
+		"ru"			"Включено"
+	}
+	"HAT_DISABLED"
+	{
+		"ru"			"Отключено"
+	}
+	"HAT_VIEWABLE_TP"
+	{
+		"ru"			"Вид шапки от 3-го лица"
+	}
+	"HAT_VISIBILITY"
+	{
+		"ru"			"Общая видимость шапки"
+	}
+	"Hat_ViewTP"
+	{
+		"#format"		"{1:s}"
+		"ru"			"Вид шапки от 3-го лица был {ORANGE}{1}{DEFAULT}."
+	}
+	"Hat_ViewSet"
+	{
+		"#format"		"{1:s}{2:s}"
+		"ru"			"Общий вид шапки для {ORANGE}{1}{DEFAULT} был {ORANGE}{2}{DEFAULT}."
+	}
+	"Hat_Visibility_Set"
+	{
+		"#format"		"{1:s}"
+		"ru"			"Видимость шапки теперь {ORANGE}{1}{DEFAULT}."
+	}
+}

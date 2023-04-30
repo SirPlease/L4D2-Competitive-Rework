@@ -1,0 +1,56 @@
+"Phrases"
+{
+	"CA Admin"
+	{
+		"ru"			"Администратор"
+	}
+	"CA Public"
+	{
+		"ru"			"Игрок"
+	}
+	"LAN City Desc"
+	{
+		"ru"			"IP-адрес"
+	}
+	"LAN Region Desc"
+	{
+		"ru"			"Локальная подсеть"
+	}
+	"LAN Country Desc"
+	{
+		"ru"			"Локальная сеть"
+	}
+
+	"LAN Country Short"
+	{
+		"ru"			"ЛОК."
+	}
+
+	"LAN Country Short 3"
+	{
+		"ru"			"ЛОК."
+	}
+
+	"Unknown City Desc"
+	{
+		"ru"			"Где-то"
+	}
+	"Unknown Region Desc"
+	{
+		"ru"			"Неизвестный регион"
+	}
+	"Unknown Country Desc"
+	{
+		"ru"			"Неизвестная страна"
+	}
+
+	"Unknown Country Short"
+	{
+		"ru"			"??"
+	}
+
+	"Unknown Country Short 3"
+	{
+		"ru"			"???"
+	}
+}

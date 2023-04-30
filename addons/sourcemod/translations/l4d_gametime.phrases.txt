@@ -1,0 +1,39 @@
+// support {white} {default} or {cyan} {lightgreen} or {orange} {olive} or {green}
+
+"Phrases"
+{
+	"GameTime"
+	{
+		"#format"	"{1:N},{2:d},{3:d},{4:t}"
+		"en"		"{olive}{1} {lightgreen}{4} GameTime is {olive}{2} Hours {3} Minutes"
+		"chi"		"{lightgreen}[提示]{default}{olive}{1} {lightgreen}{4}的游玩时长为{olive}{2}小时{3}分钟"
+	}
+	"Profile"
+	{
+		"en"		"Profile"
+		"chi"		"记录在案资料"
+	}
+	"AchievementStats"
+	{
+		"en"		"Achievement Stats"
+		"chi"		"成就数据记录"
+	}
+	"UnknownGameTime"
+	{
+		"#format"	"{1:N},{2:t}"
+		"en"		"{olive}{1} {lightgreen}Unkown GameTime in {2}"
+		"chi"		"{lightgreen}[提示]{default}{olive}{1} {lightgreen}未知的{2}游玩时长"
+	}
+	"Requesting"
+	{
+		"#format"	"{1:N},{2:t}"
+		"en"		"Requesting {2} Data for {1}"
+		"chi"		"{lightgreen}[提示]{default}正在为 {1} 请求{2}数据"
+	}
+	"NoData"
+	{
+		"#format"	"{1:N},{2:t}"
+		"en"		"Couldnt Fetch {2} GameTime of {1}"
+		"chi"		"{lightgreen}[提示]{default}无法获取{1}的{2}游玩时长"
+	}
+}

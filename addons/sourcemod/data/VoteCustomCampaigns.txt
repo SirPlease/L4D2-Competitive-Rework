@@ -1,0 +1,8 @@
+"VoteCustomCampaigns"
+{
+	"1"
+	{
+		"mapinfo"		"msd1_town"
+		"mapname"		"再见了晨茗"
+	}
+}

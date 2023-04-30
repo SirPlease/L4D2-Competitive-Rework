@@ -1,0 +1,210 @@
+"Games"
+{
+	"#default"
+	{
+		"#supported"
+		{
+			"engine"	"orangebox_valve"
+			"engine"	"css"
+			"engine"	"csgo"
+		}
+		
+		"Addresses"
+		{
+			"CBaseServer"
+			{
+				"windows"
+				{
+					"signature"	"CVEngineServer::CreateFakeClient"				
+					"read"		"8"
+				}
+				"linux"
+				{
+					"signature"	"sv"
+				}
+				"mac"
+				{
+					"signature"	"sv"
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			"CVEngineServer::CreateFakeClient"
+			{
+				"library"	"engine"
+				"windows"	"\x55\x8B\xEC\x56\xFF\x2A\x2A\xB9\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B"
+			}
+			
+			"sv"
+			{
+				"library"	"engine"
+				"linux"		"@sv"
+				"mac"		"@sv"
+			}
+		}
+	}
+	
+	"#default"
+	{
+		"#supported"
+		{
+			"engine"	"orangebox"
+			"engine"	"left4dead"
+			"engine"	"left4dead2"
+		}
+		
+		"Addresses"
+		{
+			"CBaseServer"
+			{
+				"windows"
+				{
+					"signature"	"CVEngineServer::CreateFakeClient"				
+					"read"		"6"
+				}
+				"linux"
+				{
+					"signature"	"sv"
+				}
+				"mac"
+				{
+					"signature"	"sv"
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			"CVEngineServer::CreateFakeClient"
+			{
+				"library"	"engine"
+				"windows"	"\x8B\x44\x24\x04\x50\xB9\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x85\xC0"
+			}
+			
+			"sv"
+			{
+				"library"	"engine"
+				"linux"		"@sv"
+				"mac"		"@sv"
+			}
+		}
+	}
+	
+	"#default"
+	{
+		"#supported"
+		{
+			"engine"	"orangebox"
+			"engine"	"orangebox_valve"
+			"engine"	"css"
+		}
+		
+		"Offsets"
+		{
+			"CBaseServer::GetClient"
+			{
+				"windows"	"6"
+				"linux"		"7"
+				"mac"		"7"
+			}
+			
+			"CBaseClient::GetPlayerSlot"
+			{
+				"windows"	"14"
+				"linux"		"15"
+				"mac"		"15"
+			}
+			
+			"CGameClient::ProcessVoiceData"
+			{
+				"windows"	"7"
+				"linux"		"8"
+				"mac"		"8"
+			}
+		}
+	}
+	
+	"#default"
+	{
+		"#supported"
+		{
+			"engine"	"left4dead"
+			"engine"	"left4dead2"
+			"engine"	"csgo"
+		}
+		
+		"Offsets"
+		{
+			"CBaseServer::GetClient"
+			{
+				"windows"	"6"
+				"linux"		"7"
+				"mac"		"7"
+			}
+			
+			"CBaseClient::GetPlayerSlot"
+			{
+				"windows"	"14"
+				"linux"		"15"
+				"mac"		"15"
+			}
+			
+			"CGameClient::ProcessVoiceData"
+			{
+				"windows"	"8"
+				"linux"		"9"
+				"mac"		"9"
+			}
+		}
+	}
+	"csgo"
+	{		
+		"Offsets"
+		{
+			"OnVoiceTransmit"
+			{
+				"windows"	"523"
+				"linux"		"524"
+				"mac"		"524"
+			}
+		}
+	}
+	"left4dead"
+	{		
+		"Offsets"
+		{
+			"OnVoiceTransmit"
+			{
+				"windows"	"461"
+				"linux"		"462"
+				"mac"		"462"
+			}
+		}
+	}
+	"left4dead2"
+	{		
+		"Offsets"
+		{
+			"OnVoiceTransmit"
+			{
+				"windows"	"485"
+				"linux"		"486"
+				"mac"		"486"
+			}
+		}
+	}
+	"insurgency"
+	{		
+		"Offsets"
+		{
+			"OnVoiceTransmit"
+			{
+				"windows"	"505"
+				"linux"		"506"
+				"mac"		"506"
+			}
+		}
+	}
+}

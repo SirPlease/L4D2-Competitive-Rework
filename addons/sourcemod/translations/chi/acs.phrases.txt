@@ -1,0 +1,108 @@
+"Phrases"
+{
+	"Change map advertise"
+	{
+		"#format"		"{1:s}"
+		"chi"			"聊天窗输入指令{1}投票换图."
+	}
+	"Change chmap advertise"
+	{
+		"#format"		"{1:s}"
+		"chi"			"投票换图指令{1}没有启用."
+	}
+	"Map vote advertise"
+	{
+		"#format"		"{1:s},{2:s}"
+		"chi"			"输入{1}投票预选地图,输入{2}查看投票信息."
+	}	
+	"Choose a Map"
+	{
+		"chi"			"请选择下一张地图"
+	}
+	"Choose a Mission"
+	{
+		"chi"			"请选择下一张地图"
+	}
+	"I dont care"
+	{
+		"chi"			"弃票投票"
+	}
+	"All maps"
+	{
+		"chi"			"所有地图"
+	}
+	"Campaign finished"
+	{
+		"#format"		"{1:s}"
+		"chi"			"{1}已通关."
+	}
+	"Switching campaign to"
+	{
+		"#format"		"{1:s}"
+		"chi"			"正在切换到{1}."
+	}
+	"Switching map to"
+	{
+		"#format"		"{1:s}"
+		"chi"			"正在切换到{1}."
+	}	
+	"Switching to the vote winner"
+	{
+		"#format"		"{1:s}"
+		"chi"			"正在切换到投票胜出的地图:{1}."
+	}
+	
+	"Map is now winning the vote"
+	{
+		"#format"		"{1:s}"
+		"chi"			"{1}目前选票最多,是下一张地图"
+	}
+	"Mission is now winning the vote"
+	{
+		"#format"		"{1:s}"
+		"chi"			"{1}目前选票最多,是下一张地图"
+	}
+	"No one has voted yet" {
+		"chi"			"目前没有人投票."
+	}
+	"Voting is disable" {
+		"chi"			"下一张地图的投票已经在服务器上被禁止."
+	}
+	"Voting is not available" {
+		"chi"			"下一张地图的投票只在战役的救援关和清道夫模式可用."
+	}
+	"Votes" {
+		"chi"			"票"
+	}
+	"You did not vote" {
+		"#format"		"{1:s}"
+		"chi"			"你还没有投票.\n在聊天框中输入{1}来投票."
+	}
+	"You voted for" {
+		"#format"		"{1:s},{2:s},{3:s}"
+		"chi"			"你投票给了{1}.\n-在聊天框中输入{2}来修改选票.\n-输入{3}来查看投票情况."	
+	}
+	
+	
+	"The next map is currently"
+	{
+		"#format"		"{1:s}"
+		"chi"			"下一张地图目前是:{1}."
+	}
+	"The next campaign is currently"
+	{
+		"#format"		"{1:s}"
+		"chi"			"下一张地图目前是:{1}."
+	}
+
+	"The next map will be one of"
+	{
+		"#format"		"{1:s}"
+		"chi"			"下一张地图可能是:{1}."
+	}
+	"The next campaign will be one of"
+	{
+		"#format"		"{1:s}"
+		"chi"			"下一张地图可能是:{1}."
+	}
+}
