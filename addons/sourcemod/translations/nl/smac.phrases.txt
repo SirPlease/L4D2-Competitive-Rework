@@ -1,0 +1,117 @@
+"Phrases"
+{
+	"SMAC_Banned"
+	{
+		"nl"		"Je bent verbannen voor een valsspeel-infractie."
+	}
+	
+	"SMAC_GlobalBanned"
+	{
+		"nl"		"Je bent vermeld op de {1} Globale Verban Lijst. Zie {2} voor meer informatie"
+	}
+	
+	"SMAC_CommandSpamKick"
+	{
+		"nl"		"Je bent gekickt voor commando spammen."
+	}
+	
+	"SMAC_IllegalDefuse"
+	{
+		"nl"		"Je kunt de bom onschadelijk te maken niet door muren."
+	}
+	
+	"SMAC_PleaseWait"
+	{
+		"nl"		"Wacht een minuut voordat u opnieuw"
+	}
+	
+	"SMAC_FailedToReply"
+	{
+		"nl"		"Je client kon niet op tijd antwoorden op een query. Herstart je spel of herconnecteer, alstublieft."
+	}
+	
+	"SMAC_FailedAuth"
+	{
+		"nl"		"Je client kon zich niet op tijd authoriseren. Herstart je spel of herconnecteer, alstublieft."
+	}
+	
+	"SMAC_Muted"
+	{
+		"nl"		"{1} zijn stem is gedempt door SourceMod Anti-Cheat."
+	}
+	
+	"SMAC_CvarViolation"
+	{
+		"nl"		"{1} antwoordde een slechte waarde op {2}."
+	}
+	
+	"SMAC_ShouldEqual"
+	{
+		"nl"		"Je convar {1} hoort gelijk te zijn aan {2} maar was op {3} gezet. Pas dit aan vooraleer nog eens te bezoeken"
+	}
+	
+	"SMAC_ShouldBeGreater"
+	{
+		"nl"		"Je convar {1} hoort gelijk of groter te zijn dan {2} maar was op {3} gezet. Pas dit aan vooraleer nog eens te bezoeken"
+	}
+	
+	"SMAC_ShouldBeLess"
+	{
+		"nl"		"Je convar {1} hoort gelijk of minder te zijn dan {2} maar was op {3} gezet. Pas dit aan vooraleer nog eens te bezoeken"
+	}
+	
+	"SMAC_ShouldBeBetween"
+	{
+		"nl"		"Je convar {1} hoort tussen {2} en {3} te zijn, maar was op {4} gezet. Pas dit aan vooraleer nog eens te bezoeken"
+	}
+	
+	"SMAC_ShouldBeOutside"
+	{
+		"nl"		"Je convar {1} hoort tussen {2} en {3} te zijn, maar was op {4} gezet. Pas dit aan vooraleer nog eens te bezoeken"
+	}
+	
+	"SMAC_ChangeName"
+	{
+		"nl"		"Verander je naam, astublieft."
+	}
+	
+	"SMAC_CmdBanned"
+	{
+		"nl"		"Je bent verbannen voor het misbruiken van een commando."
+	}
+	
+	"SMAC_SayBlock"
+	{
+		"nl"		"Je bericht werd geblokkeert vanwege een ongeldig karakter."
+	}
+	
+	"SMAC_AimbotDetected"
+	{
+		"nl"		"{1} is er van verdacht een aimbot te gebruiken. (Detectie #{2} | Afwijking: {3}° | Wapen: {4})"
+	}
+	
+	"SMAC_AutoTriggerDetected"
+	{
+		"nl"		"{1} is er van verdacht een auto-trigger cheat te gebruiken: {2}"
+	}
+	
+	"SMAC_SpinhackDetected"
+	{
+		"nl"		"{1} is er van verdacht een spinhack te gebruiken."
+	}
+	
+	"SMAC_SpeedhackDetected"
+	{
+		"nl"		"{1} is er van verdacht een speedhack te gebruiken."
+	}
+	
+	"SMAC_EyetestDetected"
+	{
+		"nl"		"{1} is er van verdacht vals te spelen met zijn hoeken."
+	}
+	
+	"SMAC_WelcomeMsg"
+	{
+		"nl"		"Deze server is beschermd door SourceMod Anti-Cheat."
+	}
+}

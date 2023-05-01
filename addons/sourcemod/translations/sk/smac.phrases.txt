@@ -1,0 +1,117 @@
+"Phrases"
+{
+	"SMAC_Banned"
+	{
+		"sk"		"Bol si zabanovaný za podvádzanie"
+	}
+	
+	"SMAC_GlobalBanned"
+	{
+		"sk"		"Si uvedený na {1} Global Ban List. Pozri {2} pre viac informácií"
+	}
+	
+	"SMAC_CommandSpamKick"
+	{
+		"sk"		"Bol si vyhodený za spamovaniu príkazov"
+	}
+	
+	"SMAC_IllegalDefuse"
+	{
+		"sk"		"Nemôžete zneškodniť bombu skrz steny."
+	}
+	
+	"SMAC_PleaseWait"
+	{
+		"sk"		"Počkajte minútu, než sa pokúsite znova pripojiť"
+	}
+	
+	"SMAC_FailedToReply"
+	{
+		"sk"		"Vášmu klientovi sa nepodarilo odpovedať na otázku v čas. Prosim, pripojte sa znova, alebo reštartujte hru"
+	}
+	
+	"SMAC_FailedAuth"
+	{
+		"sk"		"Váš klient sa neschválil včas. Prosim, pripojte sa znova, alebo reštartujte hru"
+	}
+	
+	"SMAC_Muted"
+	{
+		"sk"		"{1} bol stlmený od SourceMod Anti-Cheat."
+	}
+	
+	"SMAC_CvarViolation"
+	{
+		"sk"		"{1} vrátil zlú hodnotu na {2}."
+	}
+	
+	"SMAC_ShouldEqual"
+	{
+		"sk"		"Váš convar {1} by sa mal rovnať {2}, ale je nastavený na {3}. Prosím, opravte to, ako sa pripojíte"
+	}
+	
+	"SMAC_ShouldBeGreater"
+	{
+		"sk"		"Váš convar {1} mal byť väčší, alebo rovný s {2}, ale bol nastavený na {3}. Prosím, opravte to, ako sa pripojíte"
+	}
+	
+	"SMAC_ShouldBeLess"
+	{
+		"sk"		"Váš convar {1} by mal byť menší, alebo rovný s {2}, ale bol nastavený na {3}. Prosím, opravte to, ako sa pripojíte"
+	}
+	
+	"SMAC_ShouldBeBetween"
+	{
+		"sk"		"Váš convar {1} mal byť medzi {2} a {3}, ale bol nastavený na {4}. Prosím, opravte to, ako sa pripojíte"
+	}
+	
+	"SMAC_ShouldBeOutside"
+	{
+		"sk"		"Váš convar {1} by nemal byť medzi {2} a {3}, ale bol nastavený na {4}. Prosím, opravte to, ako sa pripojíte"
+	}
+	
+	"SMAC_ChangeName"
+	{
+		"sk"		"Prosím, zmeňte si svoje meno"
+	}
+	
+	"SMAC_CmdBanned"
+	{
+		"sk"		"Bol ste zabanovaný za využívanie príkazu"
+	}
+	
+	"SMAC_SayBlock"
+	{
+		"sk"		"Vaša správa bola zablokovaná kvôli neplatnému znaku."
+	}
+	
+	"SMAC_AimbotDetected"
+	{
+		"sk"		"{1} je podozrivý za používané Aimbot. (Detekcia # {2} | Odchýlka: {3} ° | Zbraň: {4})"
+	}
+	
+	"SMAC_AutoTriggerDetected"
+	{
+		"sk"		"{1} je podozrivý za používané auto-trigger cheatu: {2}"
+	}
+	
+	"SMAC_SpinhackDetected"
+	{
+		"sk"		"{1} je podozrivý za používanie spinhacku."
+	}
+	
+	"SMAC_SpeedhackDetected"
+	{
+		"sk"		"{1} je podozrivý za používanie speedhack."
+	}
+	
+	"SMAC_EyetestDetected"
+	{
+		"sk"		"{1} je podozrivý za podvádzanie s očnými uhly."
+	}
+	
+	"SMAC_WelcomeMsg"
+	{
+		"sk"		"Tento server je chránený s SourceMod Anti-Cheat."
+	}
+}
