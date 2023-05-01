@@ -265,6 +265,16 @@ public void OnClientPutInServer(int client)
 		SDKHook(client, SDKHook_OnTakeDamage, DamageBuffVsTank);
 }
 
+public void OnConfigsExecuted()
+{
+	// Weapon info may get reloaded, and supported melees
+	// are different between campaigns.
+	// Here we are reloading all the attributes set by our own.
+	
+	ResetWeaponAttributes(false);
+	ResetMeleeAttributes(false);
+}
+
 void OnTankDamageEnableAttriChanged(bool newValue)
 {
 	if (bTankDamageEnableAttri != newValue) {
@@ -634,13 +644,14 @@ float GetWeaponAttributeFloat(const char[] sWeaponName, int iAtrriIndex)
 void SetWeaponAttributeInt(const char[] sWeaponName, int iAtrriIndex, int iSetValue, bool bIsSaveDefValue = true)
 {
 	Resetable value;
-	hDefaultWeaponAttributes[iAtrriIndex].GetArray(sWeaponName, value, sizeof(value));
-	if (bIsSaveDefValue) {
-		value.defVal = GetWeaponAttributeInt(sWeaponName, iAtrriIndex);
-	
-		#if DEBUG
-			PrintDebug(eLogError|eServerPrint|ePrintChatAll, "The default int value '%d' of the attribute for the weapon '%s' is saved! Attributes index: %d.", value.defVal, sWeaponName, iAtrriIndex);
-		#endif
+	if (!hDefaultMeleeAttributes[iAtrriIndex].GetArray(sWeaponName, value, sizeof(value))) {
+		if (bIsSaveDefValue) {
+			value.defVal = GetWeaponAttributeInt(sWeaponName, iAtrriIndex);
+		
+			#if DEBUG
+				PrintDebug(eLogError|eServerPrint|ePrintChatAll, "The default int value '%d' of the attribute for the weapon '%s' is saved! Attributes index: %d.", value.defVal, sWeaponName, iAtrriIndex);
+			#endif
+		}
 	}
 	
 	L4D2_SetIntWeaponAttribute(sWeaponName, iIntWeaponAttributes[iAtrriIndex], iSetValue);
@@ -656,13 +667,14 @@ void SetWeaponAttributeInt(const char[] sWeaponName, int iAtrriIndex, int iSetVa
 void SetWeaponAttributeFloat(const char[] sWeaponName, int iAtrriIndex, float fSetValue, bool bIsSaveDefValue = true)
 {
 	Resetable value;
-	hDefaultWeaponAttributes[iAtrriIndex].GetArray(sWeaponName, value, sizeof(value));
-	if (bIsSaveDefValue) {
-		value.defVal = GetWeaponAttributeFloat(sWeaponName, iAtrriIndex);
-		
-		#if DEBUG
-			PrintDebug(eLogError|eServerPrint|ePrintChatAll, "The default float value '%f' of the attribute for the weapon '%s' is saved! Attributes index: %d.", value.defVal, sWeaponName, iAtrriIndex);
-		#endif
+	if (!hDefaultMeleeAttributes[iAtrriIndex].GetArray(sWeaponName, value, sizeof(value))) {
+		if (bIsSaveDefValue) {
+			value.defVal = GetWeaponAttributeFloat(sWeaponName, iAtrriIndex);
+			
+			#if DEBUG
+				PrintDebug(eLogError|eServerPrint|ePrintChatAll, "The default float value '%f' of the attribute for the weapon '%s' is saved! Attributes index: %d.", value.defVal, sWeaponName, iAtrriIndex);
+			#endif
+		}
 	}
 
 	L4D2_SetFloatWeaponAttribute(sWeaponName, iFloatWeaponAttributes[iAtrriIndex - INT_WEAPON_MAX_ATTRS], fSetValue);
@@ -722,13 +734,14 @@ float GetMeleeAttributeFloat(const char[] sMeleeName, int iAtrriIndex)
 void SetMeleeAttributeInt(const char[] sMeleeName, int iAtrriIndex, int iSetValue, bool bIsSaveDefValue = true)
 {
 	Resetable value;
-	hDefaultMeleeAttributes[iAtrriIndex].GetArray(sMeleeName, value, sizeof(value));
-	if (bIsSaveDefValue) {
-		value.defVal = GetMeleeAttributeInt(sMeleeName, iAtrriIndex);
-	
-		#if DEBUG
-			PrintDebug(eLogError|eServerPrint|ePrintChatAll, "The default int value '%d' of the attribute for the melee '%s' is saved! Attributes index: %d.", value.defVal, sMeleeName, iAtrriIndex);
-		#endif
+	if (!hDefaultMeleeAttributes[iAtrriIndex].GetArray(sMeleeName, value, sizeof(value))) {
+		if (bIsSaveDefValue) {
+			value.defVal = GetMeleeAttributeInt(sMeleeName, iAtrriIndex);
+		
+			#if DEBUG
+				PrintDebug(eLogError|eServerPrint|ePrintChatAll, "The default int value '%d' of the attribute for the melee '%s' is saved! Attributes index: %d.", value.defVal, sMeleeName, iAtrriIndex);
+			#endif
+		}
 	}
 	
 	int idx = L4D2_GetMeleeWeaponIndex(sMeleeName);
@@ -747,13 +760,14 @@ void SetMeleeAttributeInt(const char[] sMeleeName, int iAtrriIndex, int iSetValu
 void SetMeleeAttributeBool(const char[] sMeleeName, int iAtrriIndex, bool bSetValue, bool bIsSaveDefValue = true)
 {
 	Resetable value;
-	hDefaultMeleeAttributes[iAtrriIndex].GetArray(sMeleeName, value, sizeof(value));
-	if (bIsSaveDefValue) {
-		value.defVal = GetMeleeAttributeBool(sMeleeName, iAtrriIndex);
-	
-		#if DEBUG
-			PrintDebug(eLogError|eServerPrint|ePrintChatAll, "The default int value '%d' of the attribute for the melee '%s' is saved! Attributes index: %d.", value.defVal, sMeleeName, iAtrriIndex);
-		#endif
+	if (!hDefaultMeleeAttributes[iAtrriIndex].GetArray(sMeleeName, value, sizeof(value))) {
+		if (bIsSaveDefValue) {
+			value.defVal = GetMeleeAttributeBool(sMeleeName, iAtrriIndex);
+		
+			#if DEBUG
+				PrintDebug(eLogError|eServerPrint|ePrintChatAll, "The default int value '%d' of the attribute for the melee '%s' is saved! Attributes index: %d.", value.defVal, sMeleeName, iAtrriIndex);
+			#endif
+		}
 	}
 	
 	int idx = L4D2_GetMeleeWeaponIndex(sMeleeName);
@@ -772,13 +786,14 @@ void SetMeleeAttributeBool(const char[] sMeleeName, int iAtrriIndex, bool bSetVa
 void SetMeleeAttributeFloat(const char[] sMeleeName, int iAtrriIndex, float fSetValue, bool bIsSaveDefValue = true)
 {
 	Resetable value;
-	hDefaultMeleeAttributes[iAtrriIndex].GetArray(sMeleeName, value, sizeof(value));
-	if (bIsSaveDefValue) {
-		value.defVal = GetMeleeAttributeFloat(sMeleeName, iAtrriIndex);
-	
-		#if DEBUG
-			PrintDebug(eLogError|eServerPrint|ePrintChatAll, "The default int value '%f' of the attribute for the melee '%s' is saved! Attributes index: %d.", value.defVal, sMeleeName, iAtrriIndex);
-		#endif
+	if (!hDefaultMeleeAttributes[iAtrriIndex].GetArray(sMeleeName, value, sizeof(value))) {
+		if (bIsSaveDefValue) {
+			value.defVal = GetMeleeAttributeFloat(sMeleeName, iAtrriIndex);
+		
+			#if DEBUG
+				PrintDebug(eLogError|eServerPrint|ePrintChatAll, "The default int value '%f' of the attribute for the melee '%s' is saved! Attributes index: %d.", value.defVal, sMeleeName, iAtrriIndex);
+			#endif
+		}
 	}
 	
 	int idx = L4D2_GetMeleeWeaponIndex(sMeleeName);
@@ -839,8 +854,6 @@ int ResetWeaponAttributes(bool bResetDefault = false)
 			}
 		}
 		
-		hDefaultWeaponAttributes[iAtrriIndex].Clear();
-	
 		delete hTrieSnapshot;
 		hTrieSnapshot = null;
 	}
@@ -911,8 +924,6 @@ int ResetMeleeAttributes(bool bResetDefault = false)
 			}
 		}
 		
-		hDefaultMeleeAttributes[iAtrriIndex].Clear();
-	
 		delete hTrieSnapshot;
 		hTrieSnapshot = null;
 	}
