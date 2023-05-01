@@ -3,7 +3,7 @@
 	"Announce_Title"
 	{
 		"#format"	"{1:s}"
-		"chi"		"[{green}!{default}] {blue}Tank {default}({olive}{1}{default} 造成的{blue}伤害{default}统计"
+		"chi"		"[{green}!{default}] {blue}Tank {default} ({olive}{1}{default}) 造成的{blue}伤害{default}统计"
 	}
 	
 	// CSayText appears to be async or via text stream?, whatever it costs random amount of time.
