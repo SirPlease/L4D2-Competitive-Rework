@@ -5,6 +5,7 @@
 #include <sdkhooks>
 #include <left4dhooks> //#include <left4downtown>
 #include <dhooks>
+#include <colors>
 
 #define DEBUG						0
 
@@ -250,6 +251,7 @@ public void OnPluginStart()
 	RegServerCmd("sm_weapon", Cmd_Weapon);
 	RegServerCmd("sm_weapon_attributes_reset", Cmd_WeaponAttributesReset);
 	
+	RegConsoleCmd("sm_weaponstats", Cmd_WeaponAttributes);
 	RegConsoleCmd("sm_weapon_attributes", Cmd_WeaponAttributes);
 }
 
@@ -440,7 +442,13 @@ public Action Cmd_WeaponAttributes(int client, int args)
 	if (args == 1) {
 		GetCmdArg(1, sWeaponName, sizeof(sWeaponName));
 	} else if (client > 0) {
-		GetClientWeapon(client, sWeaponName, sizeof(sWeaponName));
+		int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+		if (weapon != -1) {
+			GetEdictClassname(weapon, sWeaponName, sizeof(sWeaponName));
+			if (strcmp(sWeaponName, "weapon_melee") == 0) {
+				GetEntPropString(weapon, Prop_Data, "m_strMapSetScriptName", sWeaponName, sizeof(sWeaponName));
+			}
+		}
 	}
 	
 	if (strncmp(sWeaponName, "weapon_", 7) == 0) {
@@ -448,46 +456,46 @@ public Action Cmd_WeaponAttributes(int client, int args)
 	}
 	
 	if (IsSupportedMelee(sWeaponName)) {
-		ReplyToCommand(client, "Melee stats for %s:", sWeaponName);
+		CReplyToCommand(client, "{blue}[{default}Melee stats for {green}%s{blue}]", sWeaponName);
 	
 		for (int iAtrriIndex = 0; iAtrriIndex < GAME_MELEE_MAX_ATTRS; iAtrriIndex++) {
 			if (iAtrriIndex < INT_MELEE_MAX_ATTRS) {
 				int iValue = GetMeleeAttributeInt(sWeaponName, iAtrriIndex);
-				ReplyToCommand(client, "%s: %d.", sMeleeAttrNames[iAtrriIndex], iValue);
+				CReplyToCommand(client, "- {lightgreen}%s{default}: {olive}%d", sMeleeAttrNames[iAtrriIndex], iValue);
 			} else if (iAtrriIndex < INT_MELEE_MAX_ATTRS + BOOL_MELEE_MAX_ATTRS) {
 				bool bValue = GetMeleeAttributeBool(sWeaponName, iAtrriIndex);
-				ReplyToCommand(client, "%s: %s.", sMeleeAttrNames[iAtrriIndex], bValue ? "true" : "false");
+				CReplyToCommand(client, "- {lightgreen}%s{default}: {olive}%s", sMeleeAttrNames[iAtrriIndex], bValue ? "true" : "false");
 			} else {
 				float fValue = GetMeleeAttributeFloat(sWeaponName, iAtrriIndex);
-				ReplyToCommand(client, "%s: %.2f.", sMeleeAttrNames[iAtrriIndex], fValue);
+				CReplyToCommand(client, "- {lightgreen}%s{default}: {olive}%.2f", sMeleeAttrNames[iAtrriIndex], fValue);
 			}
 		}
 		
 		float fBuff = 0.0;
 		if (hTankDamageAttri.GetValue(sWeaponName, fBuff)) {
-			ReplyToCommand(client, "%s: %.2f.", sMeleeAttrNames[GAME_MELEE_MAX_ATTRS], fBuff);
+			CReplyToCommand(client, "- {lightgreen}%s{default}: {olive}%.2f", sMeleeAttrNames[GAME_MELEE_MAX_ATTRS], fBuff);
 		}
 	} else if (L4D2_IsValidWeapon(sWeaponName)) {
-		ReplyToCommand(client, "Weapon stats for %s:", sWeaponName);
+		CReplyToCommand(client, "{blue}[{default}Weapon stats for {green}%s{blue}]", sWeaponName);
 	
 		for (int iAtrriIndex = 0; iAtrriIndex < GAME_WEAPON_MAX_ATTRS; iAtrriIndex++) {
 			if (iAtrriIndex < INT_WEAPON_MAX_ATTRS) {
 				int iValue = GetWeaponAttributeInt(sWeaponName, iAtrriIndex);
-				ReplyToCommand(client, "%s: %d.", sWeaponAttrNames[iAtrriIndex], iValue);
+				CReplyToCommand(client, "- {lightgreen}%s{default}: {olive}%d", sWeaponAttrNames[iAtrriIndex], iValue);
 			} else {
 				float fValue = GetWeaponAttributeFloat(sWeaponName, iAtrriIndex);
-				ReplyToCommand(client, "%s: %.2f.", sWeaponAttrNames[iAtrriIndex], fValue);
+				CReplyToCommand(client, "- {lightgreen}%s{default}: {olive}%.2f", sWeaponAttrNames[iAtrriIndex], fValue);
 			}
 		}
 		
 		float fBuff = 0.0;
 		if (hTankDamageAttri.GetValue(sWeaponName, fBuff)) {
-			ReplyToCommand(client, "%s: %.2f.", sWeaponAttrNames[GAME_WEAPON_MAX_ATTRS], fBuff);
+			CReplyToCommand(client, "- {lightgreen}%s{default}: {olive}%.2f", sWeaponAttrNames[GAME_WEAPON_MAX_ATTRS], fBuff);
 		}
 		
 		fBuff = 0.0;
 		if (hReloadDurationAttri.GetValue(sWeaponName, fBuff)) {
-			ReplyToCommand(client, "%s: %.2f.", sWeaponAttrNames[GAME_WEAPON_MAX_ATTRS+1], fBuff);
+			CReplyToCommand(client, "- {lightgreen}%s{default}: {olive}%.2f", sWeaponAttrNames[GAME_WEAPON_MAX_ATTRS+1], fBuff);
 		}
 	} else {
 		ReplyToCommand(client, "Bad weapon name: %s.", sWeaponName);
