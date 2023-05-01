@@ -644,7 +644,7 @@ float GetWeaponAttributeFloat(const char[] sWeaponName, int iAtrriIndex)
 void SetWeaponAttributeInt(const char[] sWeaponName, int iAtrriIndex, int iSetValue, bool bIsSaveDefValue = true)
 {
 	Resetable value;
-	if (!hDefaultMeleeAttributes[iAtrriIndex].GetArray(sWeaponName, value, sizeof(value))) {
+	if (!hDefaultWeaponAttributes[iAtrriIndex].GetArray(sWeaponName, value, sizeof(value))) {
 		if (bIsSaveDefValue) {
 			value.defVal = GetWeaponAttributeInt(sWeaponName, iAtrriIndex);
 		
@@ -667,7 +667,7 @@ void SetWeaponAttributeInt(const char[] sWeaponName, int iAtrriIndex, int iSetVa
 void SetWeaponAttributeFloat(const char[] sWeaponName, int iAtrriIndex, float fSetValue, bool bIsSaveDefValue = true)
 {
 	Resetable value;
-	if (!hDefaultMeleeAttributes[iAtrriIndex].GetArray(sWeaponName, value, sizeof(value))) {
+	if (!hDefaultWeaponAttributes[iAtrriIndex].GetArray(sWeaponName, value, sizeof(value))) {
 		if (bIsSaveDefValue) {
 			value.defVal = GetWeaponAttributeFloat(sWeaponName, iAtrriIndex);
 			
