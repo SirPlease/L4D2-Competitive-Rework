@@ -197,16 +197,16 @@ void ShowRankingResponse(HTTPResponse httpResponse, int client)
 void PrintPlayerInfo(JSONObject player, int client)
 {
 	int position = player.GetInt("position");
-	float points = player.GetFloat("points");
-	float lastMatchPoints = player.GetFloat("lastMatchPoints");
+	int points = player.GetInt("points");
+	int lastMatchPoints = player.GetInt("lastMatchPoints");
 
 	char name[256];
 	player.GetString("name", name, sizeof(name));
 
 	if (lastMatchPoints == 0)
-		PrintToChat(client, "\x04%dº \x01%s \x03%.0f pts", position, name, points);
+		PrintToChat(client, "\x04%dº \x01%s \x03%d pts", position, name, points);
 	else
-		PrintToChat(client, "\x04%dº \x01%s \x03%.0f pts \x04(+%.0f)", position, name, points, lastMatchPoints);
+		PrintToChat(client, "\x04%dº \x01%s \x03%d pts \x04(+%d)", position, name, points, lastMatchPoints);
 }
 
 public void LastMatch(int client)
@@ -244,12 +244,12 @@ void LastMatchResponse(HTTPResponse httpResponse, int client)
 		JSONObject player = view_as<JSONObject>(players.Get(i));
 
 		int position = player.GetInt("position");
-		float lastMatchPoints = player.GetFloat("lastMatchPoints");
+		int lastMatchPoints = player.GetInt("lastMatchPoints");
 
 		char name[256];
 		player.GetString("name", name, sizeof(name));
 
-		PrintToChat(client, "\x04%dº \x01%s \x03+%.0f pts", position, name, lastMatchPoints);
+		PrintToChat(client, "\x04%dº \x01%s \x03+%d pts", position, name, lastMatchPoints);
 	}
 }
 
