@@ -1,0 +1,27 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Functions"
+		{
+			"CBaseShotgun::GetReloadDurationModifier"
+			{
+				"signature"		"CBaseShotgun::GetReloadDurationModifier"
+				"callconv"		"thiscall"
+				"return"		"float"
+				"this"			"entity"
+			}
+		}
+		
+		"Signatures"
+		{
+			"CBaseShotgun::GetReloadDurationModifier"
+			{
+				"library"		"server"
+				"linux"			"@_ZN12CBaseShotgun25GetReloadDurationModifierEv"
+				"windows"		"\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x85\xC0\x75\x2A\x8B\xCE"
+									/* 56 8B F1 E8 ? ? ? ? 85 C0 75 ? 8B CE */
+			}
+		}
+	}
+}
