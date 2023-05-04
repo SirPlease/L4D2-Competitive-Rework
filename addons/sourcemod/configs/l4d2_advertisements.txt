@@ -8,7 +8,31 @@
 	"2"
 	{
 		"type"	"S"
-		"text"	"{GREEN}[提示]{GREEN}!votes{TEAM}投票，{GREEN}!vm{TEAM}禁止玩家语音投票，{GREEN}!vg{TEAM}禁止玩家聊天投票，{GREEN}!ready{TEAM}准备，{GREEN}!unready{TEAM}取消准备"
+		"text"	"{GREEN}[提示]{GREEN}!votes{TEAM}投票，{GREEN}!vm{TEAM}禁止玩家语音投票，{GREEN}!vg{TEAM}禁止玩家聊天投票，{GREEN}!ready{TEAM}准备，{GREEN}!unready{TEAM}取消准备 {GREEN}生还Z键{TEAM}标记物品或者标记地点 {GREEN}换弹键{TEAM}可以给药包雷给队友 {GREEN}!drop{TEAM}扔武器"
 	}
-
+	"3"
+	{
+		"type"	"S"
+		"text"	"{GREEN}[公告]{TEAM}医疗包有限 请优先用药或者针"
+	}
+	"4"
+	{
+		"type"	"S"
+		"text"	"{GREEN}[公告]{TEAM}本服禁止第三人称 请关闭第三人称再按M加入游戏"
+	}
+	"5"
+	{
+		"type"	"S"
+		"text"	"{GREEN}[公告]{TEAM}新手请观看VT CHINA再游玩对抗 否则别怪队友对你不友好"
+	}
+	"6"
+	{
+		"type"	"S"
+		"text"	"{GREEN}[公告]{TEAM}想要插件包或者想了解怎么改出你想要的对抗配置？来看看这个:github.com/apples1949/applemod"
+	}
+	"7"
+	{
+		"type"	"S"
+		"text"	"{GREEN}[公告]{TEAM}AI特感已经加强过了。但生还加强特感没法玩。所以建议生还齐了再出门开始游戏。"
+	}
 }
