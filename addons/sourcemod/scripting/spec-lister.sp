@@ -2,9 +2,12 @@
 #include <sdktools>
 
 #define VOICE_NORMAL 0	
+#define VOICE_MUTED 1
 #define VOICE_SPEAKALL 2	
-#define VOICE_LISTENALL 4	
+#define VOICE_LISTENALL 4
+
 #define TEAM_SPEC 1
+#define PLUGIN_VERSION "1.0"
 
 public Plugin:myinfo = 
 {
@@ -41,9 +44,10 @@ public Action:PanelCommand(client,args)
 
 	new Handle:panel = CreatePanel();
 
-	SetPanelTitle(panel, "Deseja ouvir os jogadores?");
-	DrawPanelItem(panel, "Sim");
-	DrawPanelItem(panel, "Não");
+	SetPanelTitle(panel, "O que você deseja fazer?");
+	DrawPanelItem(panel, "Ouvir todos os jogadores");
+	DrawPanelItem(panel, "Ouvir apenas os espectadores");
+	DrawPanelItem(panel, "Mutar todos");
  
 	SendPanelToClient(panel, client, PanelHandler, 20);
  
@@ -60,12 +64,17 @@ public PanelHandler(Handle:menu, MenuAction:action, client, selectedValue)
 	if(selectedValue == 1)
 	{
 		SetClientListeningFlags(client, VOICE_LISTENALL);
-		PrintToChat(client,"\x04[Ouvir] \x03Habilitado");
+		PrintToChat(client,"\x04[Ouvir] \x03Ouvindo jogadores e espectadores...");
 	}
-	else
+	else if(selectedValue == 2)
 	{
 		SetClientListeningFlags(client, VOICE_NORMAL);
-		PrintToChat(client,"\x04[Ouvir] \x03Desabilitado");
+		PrintToChat(client,"\x04[Ouvir] \x03Ouvindo apenas espectadores...");
+	}
+	else if(selectedValue == 3)
+	{
+		SetClientListeningFlags(client, VOICE_MUTED);
+		PrintToChat(client, "\x04[Silêncio] \x03Você mutou todos...");
 	}
 }
 
@@ -79,5 +88,6 @@ public Action:TimerAnnounce(Handle:timer, any:client)
 	if (!IsClientInGame(client))
 		return;
 
-	PrintToChat(client, "\x04[Ouvir] \x01Para ouvir os jogadores digite: \03!hear");
+	if (GetClientTeam(client) == TEAM_SPEC)
+		PrintToChat(client, "\x04[Ouvir/Mutar] \x01Para ouvir ou mutar os jogadores digite: \03!hear");
 }
