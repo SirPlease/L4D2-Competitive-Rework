@@ -1,0 +1,59 @@
+﻿"Phrases"
+{
+	"Gave"
+	{
+		"#format"		"{1:s},{2:s},{3:s}"
+		"ru"			"{1} отдал {2} {3}"
+	}
+	"Grabbed"
+	{
+		"#format"		"{1:s},{2:s},{3:s}"
+		"ru"			"{1} grabbed {2} от {3}"
+	}
+	"BotGrabbed"
+	{
+		"#format"		"{1:s},{2:s}"
+		"ru"			"{1} получил {2}"
+	}
+	"Switched"
+	{
+		"#format"		"{1:s},{2:s},{3:s}"
+		"ru"			"{1} обменял {2} у {3}"
+	}
+	"weapon_molotov"
+	{
+		"ru"			"молотов"
+	}
+	"weapon_pipe_bomb"
+	{
+		"ru"			"бомбу"
+	}
+	"weapon_vomitjar"
+	{
+		"ru"			"желчь толстяка"
+	}
+	"weapon_first_aid_kit"
+	{
+		"ru"			"аптечку"
+	}
+	"weapon_pain_pills"
+	{
+		"ru"			"таблетки"
+	}
+	"weapon_adrenaline"
+	{
+		"ru"			"адреналин"
+	}
+	"weapon_upgradepack_explosive"
+	{
+		"ru"			"разрывные патроны"
+	}
+	"weapon_upgradepack_incendiary"
+	{
+		"ru"			"зажигательные патроны"
+	}
+	"weapon_defibrillator"
+	{
+		"ru"			"дефибриллятор"
+	}
+}

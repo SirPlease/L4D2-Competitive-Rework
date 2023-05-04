@@ -1,0 +1,59 @@
+﻿"Phrases"
+{
+	"Gave"
+	{
+		"#format"		"{1:s},{2:s},{3:s}"
+		"de"			"{1} gibt {2} an {3}"
+	}
+	"Grabbed"
+	{
+		"#format"		"{1:s},{2:s},{3:s}"
+		"de"			"{1} nimmt {2} von {3}"
+	}
+	"BotGrabbed"
+	{
+		"#format"		"{1:s},{2:s}"
+		"de"			"{1} nimmt {2}"
+	}
+	"Switched"
+	{
+		"#format"		"{1:s},{2:s},{3:s}"
+		"de"			"{1} wechselt {2} mit {3}"
+	}
+	"weapon_molotov"
+	{
+		"de"	"ein Molotowcocktail"
+	}
+	"weapon_pipe_bomb"
+	{
+		"de"	"eine Rohrbombe"
+	}
+	"weapon_vomitjar"
+	{
+		"de"	"einen Behälter mit Galle"
+	}
+	"weapon_first_aid_kit"
+	{
+		"de"	"das Verbandszeug"
+	}
+	"weapon_pain_pills"
+	{
+		"de"	"Schmerzmittel"
+	}
+	"weapon_adrenaline"
+	{
+		"de"	"Adrenalin"
+	}
+	"weapon_upgradepack_explosive"
+	{
+		"de"	"Explosivmunition"
+	}
+	"weapon_upgradepack_incendiary"
+	{
+		"de"	"Brandmunition"
+	}
+	"weapon_defibrillator"
+	{
+		"de"	"ein Defibrillator"
+	}
+}

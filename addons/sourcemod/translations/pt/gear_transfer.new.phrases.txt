@@ -1,0 +1,59 @@
+"Phrases"
+{
+	"Gave"
+	{
+		"#format"		"{1:s},{2:s},{3:s}"
+		"pt"			"{1} deu {2} para {3}"
+	}
+	"Grabbed"
+	{
+		"#format"		"{1:s},{2:s},{3:s}"
+		"pt"			"{1} levou {2} de {3}"
+	}
+	"BotGrabbed"
+	{
+		"#format"		"{1:s},{2:s}"
+		"pt"			"{1} levou {2}"
+	}
+	"Switched"
+	{
+		"#format"		"{1:s},{2:s},{3:s}"
+		"pt"			"{1} trocou {2} com {3}"
+	}
+	"weapon_molotov"
+	{
+		"pt"			"um molotov"
+	}
+	"weapon_pipe_bomb"
+	{
+		"pt"			"um pipebomb"
+	}
+	"weapon_vomitjar"
+	{
+		"pt"			"um vomitjar"
+	}
+	"weapon_first_aid_kit"
+	{
+		"pt"			"um medkit"
+	}
+	"weapon_pain_pills"
+	{
+		"pt"			"pain pills"
+	}
+	"weapon_adrenaline"
+	{
+		"pt"			"adrenaline"
+	}
+	"weapon_upgradepack_explosive"
+	{
+		"pt"			"explosive ammo"
+	}
+	"weapon_upgradepack_incendiary"
+	{
+		"pt"			"incendiary ammo"
+	}
+	"weapon_defibrillator"
+	{
+		"pt"			"um defibrillator"
+	}
+}

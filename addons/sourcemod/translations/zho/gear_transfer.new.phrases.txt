@@ -1,0 +1,59 @@
+"Phrases"
+{
+	"Gave"
+	{
+		"#format"		"{1:s},{2:s},{3:s}"
+		"zho"			"{1} 給了 {3} {2}"
+	}
+	"Grabbed"
+	{
+		"#format"		"{1:s},{2:s},{3:s}"
+		"zho"			"{1} 拿了 {3} 的 {2}"
+	}
+	"BotGrabbed"
+	{
+		"#format"		"{1:s},{2:s}"
+		"zho"			"{1} 拿了 {2}"
+	}
+	"Switched"
+	{
+		"#format"		"{1:s},{2:s},{3:s}"
+		"zho"			"{1} 拿 {2} 與 {3} 交換"
+	}
+	"weapon_molotov"
+	{
+		"zho"			"燃燒瓶"
+	}
+	"weapon_pipe_bomb"
+	{
+		"zho"			"土制炸彈"
+	}
+	"weapon_vomitjar"
+	{
+		"zho"			"膽汁罐"
+	}
+	"weapon_first_aid_kit"
+	{
+		"zho"			"急救包"
+	}
+	"weapon_pain_pills"
+	{
+		"zho"			"止痛藥"
+	}
+	"weapon_adrenaline"
+	{
+		"zho"			"腎上腺素"
+	}
+	"weapon_upgradepack_explosive"
+	{
+		"zho"			"高爆彈藥包"
+	}
+	"weapon_upgradepack_incendiary"
+	{
+		"zho"			"燃燒彈藥包"
+	}
+	"weapon_defibrillator"
+	{
+		"zho"			"電擊器"
+	}
+}

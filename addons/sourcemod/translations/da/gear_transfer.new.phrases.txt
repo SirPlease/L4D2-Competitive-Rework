@@ -1,0 +1,59 @@
+﻿"Phrases"
+{
+	"Gave"
+	{
+		"#format"		"{1:s},{2:s},{3:s}"
+		"da"			"{1} gav {2} til {3}"
+	}
+	"Grabbed"
+	{
+		"#format"		"{1:s},{2:s},{3:s}"
+		"da"			"{1} tog {2} fra {3}"
+	}
+	"BotGrabbed"
+	{
+		"#format"		"{1:s},{2:s}"
+		"da"			"{1} tog {2}"
+	}
+	"Switched"
+	{
+		"#format"		"{1:s},{2:s},{3:s}"
+		"da"			"{1} skiftede {2} med {3}"
+	}
+	"weapon_molotov"
+	{
+		"da"			"en molotov cocktail"
+	}
+	"weapon_pipe_bomb"
+	{
+		"da"			"en rørbombe"
+	}
+	"weapon_vomitjar"
+	{
+		"da"			"et brækglas"
+	}
+	"weapon_first_aid_kit"
+	{
+		"da"			"et førstehjælps sæt"
+	}
+	"weapon_pain_pills"
+	{
+		"da"			"smertestillende piller"
+	}
+	"weapon_adrenaline"
+	{
+		"da"			"adrenalin"
+	}
+	"weapon_upgradepack_explosive"
+	{
+		"da"			"explosivt ammunition"
+	}
+	"weapon_upgradepack_incendiary"
+	{
+		"da"			"brændbar ammunition"
+	}
+	"weapon_defibrillator"
+	{
+		"da"			"en hjertestarter"
+	}
+}

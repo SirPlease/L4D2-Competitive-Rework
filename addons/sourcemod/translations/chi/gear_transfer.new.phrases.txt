@@ -1,0 +1,59 @@
+"Phrases"
+{
+	"Gave"
+	{
+		"#format"		"{1:s},{2:s},{3:s}"
+		"chi"			"{1} 给了 {3} {2}"
+	}
+	"Grabbed"
+	{
+		"#format"		"{1:s},{2:s},{3:s}"
+		"chi"			"{1} 拿了 {3} 的 {2}"
+	}
+	"BotGrabbed"
+	{
+		"#format"		"{1:s},{2:s}"
+		"chi"			"{1} 拿了 {2}"
+	}
+	"Switched"
+	{
+		"#format"		"{1:s},{2:s},{3:s}"
+		"chi"			"{1} 将 {2} 与 {3} 交换"
+	}
+	"weapon_molotov"
+	{
+		"chi"			"燃烧瓶"
+	}
+	"weapon_pipe_bomb"
+	{
+		"chi"			"土质炸弹"
+	}
+	"weapon_vomitjar"
+	{
+		"chi"			"胆汁"
+	}
+	"weapon_first_aid_kit"
+	{
+		"chi"			"急救包"
+	}
+	"weapon_pain_pills"
+	{
+		"chi"			"止痛药"
+	}
+	"weapon_adrenaline"
+	{
+		"chi"			"肾上腺素"
+	}
+	"weapon_upgradepack_explosive"
+	{
+		"chi"			"高爆弹药包"
+	}
+	"weapon_upgradepack_incendiary"
+	{
+		"chi"			"燃烧弹药包"
+	}
+	"weapon_defibrillator"
+	{
+		"chi"			"电击器"
+	}
+}

@@ -13,15 +13,20 @@
 		"max_distance"		"400"
 		"tank_ban_flow"
 		{
-			"Before elevator exit"
-			{
-				"min"		"38"
-				"max"		"79"
-			}
-			"Early spawns"
+//			"Before elevator exit"
+//			{
+//				"min"		"38"
+//				"max"		"79"
+//			}
+//			"Early spawns"
+//			{
+//				"min"		"0"
+//				"max"		"24"
+//			}
+			"可怜不会走路的"
 			{
 				"min"		"0"
-				"max"		"24"
+				"max"		"79"
 			}
 		}
 	}

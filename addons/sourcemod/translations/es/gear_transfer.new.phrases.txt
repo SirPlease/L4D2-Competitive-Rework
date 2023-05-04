@@ -1,0 +1,59 @@
+﻿"Phrases"
+{
+	"Gave"
+	{
+		"#format"		"{1:s},{2:s},{3:s}"
+		"es"			"{1} dió {2} a {3}"
+	}
+	"Grabbed"
+	{
+		"#format"		"{1:s},{2:s},{3:s}"
+		"es"			"{1} cogió {2} de {3}"
+	}
+	"BotGrabbed"
+	{
+		"#format"		"{1:s},{2:s}"
+		"es"			"{1} cogió {2}"
+	}
+	"Switched"
+	{
+		"#format"		"{1:s},{2:s},{3:s}"
+		"es"			"{1} cambió {2} con {3}"
+	}
+	"weapon_molotov"
+	{
+		"es"			"un molotov"
+	}
+	"weapon_pipe_bomb"
+	{
+		"es"			"una bomba"
+	}
+	"weapon_vomitjar"
+	{
+		"es"			"vómito"
+	}
+	"weapon_first_aid_kit"
+	{
+		"es"			"un kit médico"
+	}
+	"weapon_pain_pills"
+	{
+		"es"			"pastillas"
+	}
+	"weapon_adrenaline"
+	{
+		"es"			"adrenalina"
+	}
+	"weapon_upgradepack_explosive"
+	{
+		"es"			"munición explosiva"
+	}
+	"weapon_upgradepack_incendiary"
+	{
+		"es"			"munición incendiaria"
+	}
+	"weapon_defibrillator"
+	{
+		"es"			"un desfibrilador"
+	}
+}
