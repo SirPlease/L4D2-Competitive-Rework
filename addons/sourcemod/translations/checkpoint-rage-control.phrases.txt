@@ -6,10 +6,10 @@
 	}
 	"LoseFrustration"
 	{
-		"en"	"{red}Tank{default} will {green}still lose{default} frustration while survivors are in {olive}saferoom{default}."
+		"en"	"O {red}Tank{default} irá {green}perder{default} o controle mesmo se os sobreviventes estiverem na {olive}safe{default}."
 	}
 	"KeepFrustration"
 	{
-		"en"	"{red}Tank{default} will {green}not lose{default} frustration while survivors are in {olive}saferoom{default}."
+		"en"	"O {red}Tank{default} não irá {green}perder{default} o controle se os sobreviventes estiverem na {olive}safe{default}."
 	}
 }
