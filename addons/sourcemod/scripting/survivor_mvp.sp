@@ -234,7 +234,7 @@ public OnPluginStart()
 {
     // Round triggers
     //HookEvent("door_close", DoorClose_Event);
-    //HookEvent("finale_vehicle_leaving", FinaleVehicleLeaving_Event, EventHookMode_PostNoCopy);
+    HookEvent("finale_vehicle_leaving", FinaleEnd_Event, EventHookMode_PostNoCopy);
     HookEvent("round_start", RoundStart_Event, EventHookMode_PostNoCopy);
     HookEvent("round_end", RoundEnd_Event, EventHookMode_PostNoCopy);
     HookEvent("map_transition", RoundEnd_Event, EventHookMode_PostNoCopy);
@@ -487,6 +487,33 @@ public RoundStart_Event(Handle:event, const String:name[], bool:dontBroadcast)
     
     tankSpawned = false;
 }
+
+public FinaleEnd_Event(Handle:event, const String:name[], bool:dontBroadcast)
+{
+    if (StrEqual(sGameMode, "coop", false))
+    {
+        if (bInRound)
+        {
+            if (GetConVarBool(hPluginEnabled))
+                CreateTimer(8.0, delayedMVPPrint);   // shorter delay for scavenge.
+            bInRound = false;
+        }
+    }
+    else
+    {
+        // versus or other
+        if (bInRound && !StrEqual(name, "map_transition", false))
+        {
+            // only show / log stuff when the round is done "the first time"
+            if (GetConVarBool(hPluginEnabled))
+                CreateTimer(2.0, delayedMVPPrint);
+            bInRound = false;
+        }
+    }
+    
+    tankSpawned = false;
+}
+
 
 public RoundEnd_Event(Handle:event, const String:name[], bool:dontBroadcast)
 {
