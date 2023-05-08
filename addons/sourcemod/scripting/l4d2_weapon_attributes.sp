@@ -214,7 +214,7 @@ public Plugin myinfo =
 {
 	name = "L4D2 Weapon Attributes",
 	author = "Jahze, A1m`, Forgetest",
-	version = "3.0",
+	version = "3.0.1",
 	description = "Allowing tweaking of the attributes of all weapons"
 };
 
@@ -378,7 +378,7 @@ public Action Cmd_Weapon(int args)
 			if (iAttrIdx < GAME_WEAPON_MAX_ATTRS) {
 				SetWeaponAttributeFloat(sWeaponName, iAttrIdx, fValue);
 				PrintToServer("%s for %s set to %.2f.", sWeaponAttrNames[iAttrIdx], sWeaponName, fValue);
-			} else if (iAttrIdx < PLUGIN_MELEE_MAX_ATTRS - 1) {
+			} else if (iAttrIdx < PLUGIN_WEAPON_MAX_ATTRS - 1) {
 				if (fValue <= 0.0) {
 					if (!hTankDamageAttri.Remove(sWeaponName)) {
 						PrintDebug(eLogError|eServerPrint, "Сheck weapon attribute '%s' value, cannot be set below zero or zero. Set the value: %f!", sAttrName, fValue);
