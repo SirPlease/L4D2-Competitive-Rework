@@ -13,11 +13,11 @@ ArrayList losers;
 
 public Plugin myinfo =
 {
-	name		= "L4D2 - Fix team shuffle",
-	author		= "Altair Sossai",
+	name = "L4D2 - Fix team shuffle",
+	author = "Altair Sossai",
 	description = "Fix teams shuffling during map switching",
-	version		= "1.0.0",
-	url			= "https://github.com/altair-sossai/l4d2-zone-server"
+	version = "1.0.0",
+	url = "https://github.com/altair-sossai/l4d2-zone-server"
 };
 
 public void OnPluginStart()
@@ -45,7 +45,10 @@ public void RoundStart_Event(Handle event, const char[] name, bool dontBroadcast
 	DisableFixTeam();
 
 	if (IsNewGame())
+	{
+		ClearTeamsData();
 		return;
+	}
 
 	CreateTimer(1.0, EnableFixTeam_Timer);
 }
@@ -54,6 +57,13 @@ public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 {
 	if (!fixTeam)
 		return;
+
+	if (IsNewGame())
+	{
+		DisableFixTeam();
+		ClearTeamsData();
+		return;
+	}
 
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	if (!IsClientInGame(client) || IsFakeClient(client))
@@ -77,7 +87,7 @@ public Action EnableFixTeam_Timer(Handle timer)
 {
 	EnableFixTeam();
 	FixTeams();
-	CreateTimer(30.0, DisableFixTeam_Timer);
+	CreateTimer(15.0, DisableFixTeam_Timer);
 
 	return Plugin_Continue;
 }
@@ -95,11 +105,11 @@ public void SaveTeams()
 
 	bool survivorsAreWinning = SurvivorsAreWinning();
 
-	CopySteamIdsToArray(winners, survivorsAreWinning ? L4D2_TEAM_SURVIVOR : L4D2_TEAM_INFECTED);
-	CopySteamIdsToArray(losers, survivorsAreWinning ? L4D2_TEAM_INFECTED : L4D2_TEAM_SURVIVOR);
+	CopyClientsToArray(winners, survivorsAreWinning ? L4D2_TEAM_SURVIVOR : L4D2_TEAM_INFECTED);
+	CopyClientsToArray(losers, survivorsAreWinning ? L4D2_TEAM_INFECTED : L4D2_TEAM_SURVIVOR);
 }
 
-public void CopySteamIdsToArray(ArrayList arrayList, int team)
+public void CopyClientsToArray(ArrayList arrayList, int team)
 {
 	for (int client = 1; client <= MaxClients; client++)
 	{
@@ -121,18 +131,26 @@ public void FixTeams()
 	DisableFixTeam();
 
 	bool survivorsAreWinning = SurvivorsAreWinning();
+	
+	int swaps = MoveToSpectatorWhoIsNotInTheTeam(winners, survivorsAreWinning ? L4D2_TEAM_SURVIVOR : L4D2_TEAM_INFECTED)
+	+ MoveToSpectatorWhoIsNotInTheTeam(losers, survivorsAreWinning ? L4D2_TEAM_INFECTED : L4D2_TEAM_SURVIVOR)
+	+ MoveSpectatorsToTheCorrectTeam(winners, survivorsAreWinning ? L4D2_TEAM_SURVIVOR : L4D2_TEAM_INFECTED)
+	+ MoveSpectatorsToTheCorrectTeam(losers, survivorsAreWinning ? L4D2_TEAM_INFECTED : L4D2_TEAM_SURVIVOR);
 
-	MoveToSpectatorWhoIsNotInTheTeam(winners, survivorsAreWinning ? L4D2_TEAM_SURVIVOR : L4D2_TEAM_INFECTED);
-	MoveToSpectatorWhoIsNotInTheTeam(losers, survivorsAreWinning ? L4D2_TEAM_INFECTED : L4D2_TEAM_SURVIVOR);
+	int teamSize = TeamSize();
 
-	MoveSpectatorsToTheCorrectTeam(winners, survivorsAreWinning ? L4D2_TEAM_SURVIVOR : L4D2_TEAM_INFECTED);
-	MoveSpectatorsToTheCorrectTeam(losers, survivorsAreWinning ? L4D2_TEAM_INFECTED : L4D2_TEAM_SURVIVOR);
+	if (swaps == 0
+	 && NumberOfPlayersInTheTeam(L4D2_TEAM_SURVIVOR) >= teamSize
+	 && NumberOfPlayersInTheTeam(L4D2_TEAM_INFECTED) >= teamSize)
+	 	return;
 
 	EnableFixTeam();
 }
 
-public void MoveToSpectatorWhoIsNotInTheTeam(ArrayList arrayList, int team)
+public int MoveToSpectatorWhoIsNotInTheTeam(ArrayList arrayList, int team)
 {
+	int swaps = 0;
+
 	for (int client = 1; client <= MaxClients; client++)
 	{
 		if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != team)
@@ -144,13 +162,20 @@ public void MoveToSpectatorWhoIsNotInTheTeam(ArrayList arrayList, int team)
 		for (int i = 0; !correctTeam && i < arraySize; i++)
 			correctTeam = GetArrayCell(arrayList, i) == client;
 
-		if (!correctTeam)
-			MovePlayerToSpectator(client);
+		if (correctTeam)
+			continue;
+		
+		MovePlayerToSpectator(client);
+		swaps++;
 	}
+
+	return swaps;
 }
 
-public void MoveSpectatorsToTheCorrectTeam(ArrayList arrayList, int team)
+public int MoveSpectatorsToTheCorrectTeam(ArrayList arrayList, int team)
 {
+	int swaps = 0;
+
 	for (int client = 1; client <= MaxClients; client++)
 	{
 		if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != L4D2_TEAM_SPECTATOR)
@@ -166,10 +191,18 @@ public void MoveSpectatorsToTheCorrectTeam(ArrayList arrayList, int team)
 			continue;
 
 		if (team == L4D2_TEAM_SURVIVOR)
+		{
 			MovePlayerToSurvivor(client);
+			swaps++;
+		}
 		else if (team == L4D2_TEAM_INFECTED)
+		{
 			MovePlayerToInfected(client);
+			swaps++;
+		}
 	}
+
+	return swaps;
 }
 
 public bool SurvivorsAreWinning()
