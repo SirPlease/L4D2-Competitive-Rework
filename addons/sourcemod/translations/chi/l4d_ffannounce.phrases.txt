@@ -1,0 +1,65 @@
+"Phrases"
+{
+	// Used in sentences printed to attackers to replace the tag {GUILTY}.
+	"You"
+	{
+		"chi"		"{green}你"
+	}
+	
+	/**
+	 * Message that will be sent to every victim.
+	 *
+	 * Parameters in message:
+	 *   {1:N} : The attacker name
+	 *   {2:d} : The damage as integer done to the victim.
+	 */
+	"FFAnnounceToVictim"
+	{
+		"#format"	"{1:N},{2:d}"
+		"chi"		"* {olive}{1} {blue}误伤了 {green}你 {default}@ {green}{2}HP"
+	}
+	
+	/**
+	 * Message that will be sent to every attacker right after detailed info.
+	 *
+	 * Parameters in message:
+	 *   {1:d} : The total damage as integer done to all victims.
+	 */
+	"FFAnnounceToGuiltyTotal"
+	{
+		"#format"	"{1:d}"
+		"chi"		"* 伤害总计: {green}{1}"
+	}
+	
+	/**
+	 * Message containing detailed info that will be sent to every attacker.
+	 *
+	 * Tags in message:
+	 *   {GUILTY} : The attacker name
+	 *   {VICTIM*_NAME} : The victims' name, '*' right after "VICTIM" indicates the order for different victims.
+	 *   {VICTIM*_DMG} : The damage as integer done to every individual victim.
+	 *
+	 * Regular expressions to save your time (Notepad++):
+	 *   {VICTIM([0-9])_NAME}	-> to replace:	{VICTIM$1_NAME}
+	 *   {VICTIM([0-9])_DMG}	-> to replace:	{VICTIM$1_DMG}
+	 */
+	"FFAnnounceToGuilty1"
+	{
+		"chi"		"* {olive}{GUILTY} {blue}误伤了 {olive}{VICTIM1_NAME} {default}@ {green}{VICTIM1_DMG}HP"
+	}
+	
+	"FFAnnounceToGuilty2"
+	{
+		"chi"		"* {olive}{GUILTY} {blue}误伤了 {olive}{VICTIM1_NAME} {default}@ {green}{VICTIM1_DMG}HP{default}, {olive}{VICTIM2_NAME} {default}@ {green}{VICTIM2_DMG}HP"
+	}
+	
+	"FFAnnounceToGuilty3"
+	{
+		"chi"		"* {olive}{GUILTY} {blue}误伤了 {olive}{VICTIM1_NAME} {default}@ {green}{VICTIM1_DMG}HP{default}, {olive}{VICTIM2_NAME} {default}@ {green}{VICTIM2_DMG}HP{default}, {olive}{VICTIM3_NAME} {default}@ {green}{VICTIM3_DMG}HP"
+	}
+	
+	"FFAnnounceToGuilty4"
+	{
+		"chi"		"* {olive}{GUILTY} {blue}误伤了 {olive}{VICTIM1_NAME} {default}@ {green}{VICTIM1_DMG}HP{default}, {olive}{VICTIM2_NAME} {default}@ {green}{VICTIM2_DMG}HP{default}, {olive}{VICTIM3_NAME} {default}@ {green}{VICTIM3_DMG}HP{default}, {olive}{VICTIM4_NAME} {default}@ {green}{VICTIM4_DMG}HP"
+	}
+}
