@@ -4,7 +4,7 @@
 	{
 		"vanillamod"
 		{
-			"name" "VanillaMod 2.8.1"
+			"name" "VanillaMod 2.8.2"
 		}
 	}
 	"ZoneMod Configs"
@@ -34,7 +34,7 @@
 	{
 		"puremod"
 		{
-			"name" "PureMod 2.8.1"
+			"name" "PureMod 2.8.2"
 		}
 	}
 	"NeoMod Configs"
