@@ -55,7 +55,7 @@ public void RoundStart_Event(Handle event, const char[] name, bool dontBroadcast
 
 public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 {
-	if (!fixTeam)
+	if (!fixTeam || TeamsDataIsEmpty())
 		return;
 
 	if (IsNewGame())
@@ -122,10 +122,7 @@ public void CopyClientsToArray(ArrayList arrayList, int team)
 
 public void FixTeams()
 {
-	if (!fixTeam)
-		return;
-
-	if (GetArraySize(winners) == 0 && GetArraySize(losers) == 0)
+	if (!fixTeam || TeamsDataIsEmpty())
 		return;
 
 	DisableFixTeam();
@@ -232,6 +229,11 @@ public void ClearTeamsData()
 {
 	winners.Clear();
 	losers.Clear();
+}
+
+public bool TeamsDataIsEmpty()
+{
+	return GetArraySize(winners) == 0 && GetArraySize(losers) == 0;
 }
 
 public bool IsNewGame()
