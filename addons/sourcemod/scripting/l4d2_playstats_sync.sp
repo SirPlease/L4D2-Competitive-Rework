@@ -205,8 +205,10 @@ void PrintPlayerInfo(JSONObject player, int client)
 
 	if (lastMatchPoints == 0)
 		PrintToChat(client, "\x04%dº \x01%s \x03%d pts", position, name, points);
-	else
+	else if (lastMatchPoints > 0)
 		PrintToChat(client, "\x04%dº \x01%s \x03%d pts \x04(+%d)", position, name, points, lastMatchPoints);
+	else
+		PrintToChat(client, "\x04%dº \x01%s \x03%d pts \x04(%d)", position, name, points, lastMatchPoints);
 }
 
 public void LastMatch(int client)
@@ -249,7 +251,10 @@ void LastMatchResponse(HTTPResponse httpResponse, int client)
 		char name[256];
 		player.GetString("name", name, sizeof(name));
 
-		PrintToChat(client, "\x04%dº \x01%s \x03+%d pts", position, name, lastMatchPoints);
+		if (lastMatchPoints >= 0)
+			PrintToChat(client, "\x04%dº \x01%s \x03+%d pts", position, name, lastMatchPoints);
+		else
+			PrintToChat(client, "\x04%dº \x01%s \x03%d pts", position, name, lastMatchPoints);
 	}
 }
 
