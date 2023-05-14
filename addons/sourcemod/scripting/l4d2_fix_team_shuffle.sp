@@ -6,8 +6,6 @@
 #define L4D2_TEAM_SURVIVOR 2
 #define L4D2_TEAM_INFECTED 3
 
-ConVar cvar_l4d2_fix_team_shuffle_enabled;
-
 bool fixTeam = false;
 
 ArrayList winners;
@@ -24,8 +22,6 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	cvar_l4d2_fix_team_shuffle_enabled = CreateConVar("l4d2_fix_team_shuffle_enabled", "1", "Fixes teams when changing maps, preventing players from being switched");
-
 	HookEvent("round_start", RoundStart_Event);
 	HookEvent("player_team", PlayerTeam_Event, EventHookMode_Post);
 
@@ -217,9 +213,7 @@ public bool SurvivorsAreWinning()
 
 public bool MustFixTheTeams()
 {
-	return GetConVarBool(cvar_l4d2_fix_team_shuffle_enabled)
-	&& fixTeam
-	&& !TeamsDataIsEmpty();
+	return fixTeam && IsVersus() && !TeamsDataIsEmpty();
 }
 
 public void EnableFixTeam()
@@ -290,4 +284,12 @@ public int NumberOfPlayersInTheTeam(int team)
 public int TeamSize()
 {
 	return GetConVarInt(FindConVar("survivor_limit"));
+}
+
+public bool IsVersus()
+{
+	char gamemode[32];
+	GetConVarString(FindConVar("mp_gamemode"), gamemode, sizeof(gamemode));
+
+	return StrContains(gamemode, "versus", false) != -1;
 }
