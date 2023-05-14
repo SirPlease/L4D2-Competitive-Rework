@@ -126,13 +126,16 @@ public void FixTeams()
 
 	bool survivorsAreWinning = SurvivorsAreWinning();
 	
-	MoveToSpectatorWhoIsNotInTheTeam(winners, survivorsAreWinning ? L4D2_TEAM_SURVIVOR : L4D2_TEAM_INFECTED);
-	MoveToSpectatorWhoIsNotInTheTeam(losers, survivorsAreWinning ? L4D2_TEAM_INFECTED : L4D2_TEAM_SURVIVOR);
-	MoveSpectatorsToTheCorrectTeam(winners, survivorsAreWinning ? L4D2_TEAM_SURVIVOR : L4D2_TEAM_INFECTED);
-	MoveSpectatorsToTheCorrectTeam(losers, survivorsAreWinning ? L4D2_TEAM_INFECTED : L4D2_TEAM_SURVIVOR);
+	int winnerTeam = survivorsAreWinning ? L4D2_TEAM_SURVIVOR : L4D2_TEAM_INFECTED;
+	int losersTeam = survivorsAreWinning ? L4D2_TEAM_INFECTED : L4D2_TEAM_SURVIVOR;
 
-	bool winnersInCorrectTeam = PlayersInCorrectTeam(winners, survivorsAreWinning ? L4D2_TEAM_SURVIVOR : L4D2_TEAM_INFECTED);
-	bool losersInCorrectTeam = PlayersInCorrectTeam(losers, survivorsAreWinning ? L4D2_TEAM_INFECTED : L4D2_TEAM_SURVIVOR);
+	MoveToSpectatorWhoIsNotInTheTeam(winners, winnerTeam);
+	MoveToSpectatorWhoIsNotInTheTeam(losers, losersTeam);
+	MoveSpectatorsToTheCorrectTeam(winners, winnerTeam);
+	MoveSpectatorsToTheCorrectTeam(losers, losersTeam);
+
+	bool winnersInCorrectTeam = PlayersInCorrectTeam(winners, winnerTeam);
+	bool losersInCorrectTeam = PlayersInCorrectTeam(losers, losersTeam);
 	
 	if (winnersInCorrectTeam && losersInCorrectTeam)
 		return;
