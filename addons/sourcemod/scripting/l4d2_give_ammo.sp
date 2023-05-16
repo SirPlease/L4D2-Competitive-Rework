@@ -15,10 +15,17 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	HookEvent("player_left_start_area", PlayerLeftStartArea_Event, EventHookMode_PostNoCopy);
+
 	RegAdminCmd("sm_giveammo", GiveAmmoCmd, ADMFLAG_BAN);
 }
 
 public void OnRoundIsLive()
+{
+    GiveAmmo();
+}
+
+public void PlayerLeftStartArea_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
     GiveAmmo();
 }
