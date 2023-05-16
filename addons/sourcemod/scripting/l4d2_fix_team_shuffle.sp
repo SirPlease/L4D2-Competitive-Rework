@@ -102,8 +102,11 @@ public void SaveTeams()
 
 	bool survivorsAreWinning = SurvivorsAreWinning();
 
-	CopyClientsToArray(winners, survivorsAreWinning ? L4D2_TEAM_SURVIVOR : L4D2_TEAM_INFECTED);
-	CopyClientsToArray(losers, survivorsAreWinning ? L4D2_TEAM_INFECTED : L4D2_TEAM_SURVIVOR);
+	int winnerTeam = survivorsAreWinning ? L4D2_TEAM_SURVIVOR : L4D2_TEAM_INFECTED;
+	int losersTeam = survivorsAreWinning ? L4D2_TEAM_INFECTED : L4D2_TEAM_SURVIVOR;
+
+	CopyClientsToArray(winners, winnerTeam);
+	CopyClientsToArray(losers, losersTeam);
 }
 
 public void CopyClientsToArray(ArrayList arrayList, int team)
@@ -211,12 +214,12 @@ public bool SurvivorsAreWinning()
 	int survivorScore = L4D2Direct_GetVSCampaignScore(survivorIndex);
 	int infectedScore = L4D2Direct_GetVSCampaignScore(infectedIndex);
 
-	return survivorScore > infectedScore;
+	return survivorScore >= infectedScore;
 }
 
 public bool MustFixTheTeams()
 {
-	return fixTeam && IsVersus() && !TeamsDataIsEmpty();
+	return fixTeam && !TeamsDataIsEmpty();
 }
 
 public void EnableFixTeam()
@@ -287,12 +290,4 @@ public int NumberOfPlayersInTheTeam(int team)
 public int TeamSize()
 {
 	return GetConVarInt(FindConVar("survivor_limit"));
-}
-
-public bool IsVersus()
-{
-	char gamemode[32];
-	GetConVarString(FindConVar("mp_gamemode"), gamemode, sizeof(gamemode));
-
-	return StrContains(gamemode, "versus", false) != -1;
 }
