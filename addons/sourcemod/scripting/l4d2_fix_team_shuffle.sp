@@ -134,6 +134,7 @@ public void FixTeams()
 
 	MoveToSpectatorWhoIsNotInTheTeam(winners, winnerTeam);
 	MoveToSpectatorWhoIsNotInTheTeam(losers, losersTeam);
+
 	MoveSpectatorsToTheCorrectTeam(winners, winnerTeam);
 	MoveSpectatorsToTheCorrectTeam(losers, losersTeam);
 
@@ -148,45 +149,26 @@ public void FixTeams()
 
 public void MoveToSpectatorWhoIsNotInTheTeam(ArrayList arrayList, int team)
 {
-	for (int client = 1; client <= MaxClients; client++)
-	{
-		if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != team)
-			continue;
-
-		bool correctTeam = false;
-		int arraySize = GetArraySize(arrayList);
-
-		for (int i = 0; !correctTeam && i < arraySize; i++)
-			correctTeam = GetArrayCell(arrayList, i) == client;
-
-		if (correctTeam)
-			continue;
+    for (int client = 1; client <= MaxClients; client++)
+    {
+        if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != team)
+            continue;
 		
-		MovePlayerToSpectator(client);
-	}
+        if (FindValueInArray(arrayList, client) == -1)
+            MovePlayerToTeam(client, L4D2_TEAM_SPECTATOR);
+    }
 }
 
 public void MoveSpectatorsToTheCorrectTeam(ArrayList arrayList, int team)
 {
-	for (int client = 1; client <= MaxClients; client++)
-	{
-		if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != L4D2_TEAM_SPECTATOR)
-			continue;
+    for (int client = 1; client <= MaxClients; client++)
+    {
+        if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != L4D2_TEAM_SPECTATOR)
+            continue;
 
-		bool wasOnTheTeam = false;
-		int arraySize = GetArraySize(arrayList);
-
-		for (int i = 0; !wasOnTheTeam && i < arraySize; i++)
-			wasOnTheTeam = GetArrayCell(arrayList, i) == client;
-
-		if (!wasOnTheTeam)
-			continue;
-
-		if (team == L4D2_TEAM_SURVIVOR)
-			MovePlayerToSurvivor(client);
-		else if (team == L4D2_TEAM_INFECTED)
-			MovePlayerToInfected(client);
-	}
+        if (FindValueInArray(arrayList, client) != -1)
+            MovePlayerToTeam(client, team);
+    }
 }
 
 public bool PlayersInCorrectTeam(ArrayList arrayList, int team)
@@ -251,25 +233,23 @@ public bool IsNewGame()
 	return teamAScore == 0 && teamBScore == 0;
 }
 
-public void MovePlayerToSpectator(int client)
+public void MovePlayerToTeam(int client, int team)
 {
-	ChangeClientTeam(client, L4D2_TEAM_SPECTATOR);
-}
+    // No need to check multiple times if we're trying to move a player to a possibly full team.
+    if (team != L4D2_TEAM_SPECTATOR && NumberOfPlayersInTheTeam(team) >= TeamSize())
+        return;
 
-public void MovePlayerToSurvivor(int client)
-{
-	if (NumberOfPlayersInTheTeam(L4D2_TEAM_SURVIVOR) >= TeamSize())
-		return;
+    switch (team)
+    {
+        case L4D2_TEAM_SPECTATOR:
+            ChangeClientTeam(client, L4D2_TEAM_SPECTATOR); 
 
-	FakeClientCommand(client, "jointeam 2");
-}
+        case L4D2_TEAM_SURVIVOR:
+            FakeClientCommand(client, "jointeam 2");
 
-public void MovePlayerToInfected(int client)
-{
-	if (NumberOfPlayersInTheTeam(L4D2_TEAM_INFECTED) >= TeamSize())
-		return;
-
-	ChangeClientTeam(client, L4D2_TEAM_INFECTED);
+        case L4D2_TEAM_INFECTED:
+            ChangeClientTeam(client, L4D2_TEAM_INFECTED);
+    }
 }
 
 public int NumberOfPlayersInTheTeam(int team)
