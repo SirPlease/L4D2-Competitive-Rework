@@ -1,0 +1,44 @@
+"Phrases"
+{
+	"Menu_Notice"
+	{
+		"en"	" {olive}<TankSwap>{default} You can surrender Tank Control during the next {olive}%i {default}seconds to one of your teammates by typing {orange}!tankpass"
+		"chi"	" {olive}<TankSwap>{default} 你可以在 {olive}%i {default}秒内输入 {orange}!tankpass 来将Tank的控制权转让给你的队友！"
+	}
+
+	"Time_Over"
+	{
+		"en"	" {olive}<TankSwap>{default} Time is up! You can not surrender Tank now! "
+		"chi"	"{olive}<TankSwap>{default} 你已错过转让时间，无法转让！"
+	}
+
+	"Menu_Title"
+	{
+		"en"	" Who shall be tank instead? "
+		"chi"	"- 谁来玩Tank？-"
+	}
+
+	"Stay_Me"
+	{
+		"en"	"I want to stay Tank!"
+		"chi"	"我自己玩！"
+	}
+
+	"Anyone_But_Me"
+	{
+		"en"	"Anyone but me!"
+		"chi"	"除了我，谁都行！"
+	}
+
+	"Random_Surrend"
+	{
+		"en"	"{olive}<TankSwap>{default} Tank Control was surrendered randomly to: {orange}%N"
+		"chi"	"{olive}<TankSwap>{default} Tank控制权被随机转让给：{orange}%N"
+	}
+
+	"Surrend"
+	{
+		"en"	"{olive}<TankSwap>{default} Tank Control was surrendered to: {orange}%N"
+		"chi"	"{olive}<TankSwap>{default} Tank控制权被转让给：{orange}%N"
+	}
+}
