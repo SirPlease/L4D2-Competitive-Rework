@@ -70,10 +70,10 @@ public void OnClientDisconnect(int client)
 	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
-public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon,
-							float damageForce[3], float damagePosition[3], int damagecustom)
+public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon,float damageForce[3], float damagePosition[3], int damagecustom)
 {
-	if (!IsJockey(victim) || !IsSurvivor(attacker) || IsFakeClient(attacker) || !IsValidEdict(weapon)) {
+	if (!IsJockey(victim) || !IsSurvivor(attacker) || IsFakeClient(attacker) || !IsValidEdict(weapon))
+	{
 		return Plugin_Continue;
 	}
 	
@@ -81,15 +81,43 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 		inflictedDamage[victim][attacker] += damage;
 		if (inflictedDamage[victim][attacker] >= jockeySkeetDmg) {
 			if (reportJockeySkeets) {
-				CPrintToChat(victim, "{green}★★{default} You were {blue}skeeted{default} by {olive}%N{default}.", attacker);
-				CPrintToChat(attacker, "{green}★★{default} You {blue}skeeted {olive}%N{default}'s Jockey.", victim);
+				//CPrintToChat(victim, "{green}★★{default} You were {blue}skeeted{default} by {olive}%N{default}.", attacker);
+				//CPrintToChat(attacker, "{green}★★{default} You {blue}skeeted {olive}%N{default}'s Jockey.", victim);
 				
-				for (int i = 1; i <= MaxClients; i++)  {
-					if (i == victim || i == attacker)
-						continue;
-
-					if (IsClientInGame(i) && !IsFakeClient(i)) {
-						CPrintToChat(i, "{green}★★{default} {olive}%N{default}'s Jockey was {blue}skeeted{default} by {olive}%N{default}.", victim, attacker);
+				if (IsShotgun(weapon))
+				{
+					if(IsClientInGame(victim) && !IsFakeClient(victim))
+					{
+						CPrintToChatAll("{green}★★ {olive}%N {default}skeeted {red}%N{default}'s Jockey", attacker, victim);
+					}
+					
+					else if (IsClientInGame(victim))
+					{
+						CPrintToChatAll("{green}★★ {olive}%N {default}skeeted {red}Jockey", attacker);
+					}
+				}
+				else if (IsSniper(weapon))
+				{
+					if(IsClientInGame(victim) && !IsFakeClient(victim))
+					{
+						CPrintToChatAll("{green}★★ {red}%N{default}'s Jockey {default}was headshot-skeeted by Sniper-Player: {olive}%N", victim, attacker);
+					}
+					
+					else if (IsClientInGame(victim))
+					{
+						CPrintToChatAll("{green}★★ {red}Jockey {default}was headshot-skeeted by Sniper-Player: {olive}%N", attacker);
+					}
+				}
+				else if (IsMelee(weapon))
+				{
+					if (IsClientInGame(victim) && !IsFakeClient(victim))
+					{
+						CPrintToChatAll("{green}★★ {red}%N{default}'s Jockey {default}was melee-skeeted by {olive}%N", victim, attacker);
+					}
+					
+					else if (IsClientInGame(victim))
+					{
+						CPrintToChatAll("{green}★★ {red}Jockey {default}was melee-skeeted by {olive}%N", attacker);
 					}
 				}
 			}
@@ -148,6 +176,19 @@ bool IsShotgun(int weapon)
 {
 	char classname[64];
 	GetEdictClassname(weapon, classname, sizeof(classname));
-	return (StrEqual(classname, "weapon_pumpshotgun") || StrEqual(classname, "weapon_shotgun_chrome")
-		/*|| StrEqual(classname, "weapon_autoshotgun") || StrEqual(classname, "weapon_shotgun_spas")*/); //visor code need?
+	return (StrEqual(classname, "weapon_pumpshotgun") || StrEqual(classname, "weapon_shotgun_chrome"));
+}
+
+bool IsSniper(int weapon)
+{
+    char classname[64];
+    GetEdictClassname(weapon, classname, sizeof(classname));
+    return (StrEqual(classname, "weapon_sniper_scout") || StrEqual(classname, "weapon_sniper_awp") || StrEqual(classname, "weapon_hunting_rifle") || StrEqual(classname, "weapon_sniper_military"));
+}
+
+bool IsMelee(int weapon)
+{
+    char classname[64];
+    GetEdictClassname(weapon, classname, sizeof(classname));
+    return (StrEqual(classname, "weapon_melee"));
 }
