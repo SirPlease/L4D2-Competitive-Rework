@@ -32,7 +32,7 @@ DirectorOptions <-
 	//-----------------------------------------------------
 	PreferredMobDirection = SPAWN_IN_FRONT_OF_SURVIVORS // 7
 
-	ZombieSpawnRange = 2000  // 3000
+	ZombieSpawnRange = 3000
 
 }
 
