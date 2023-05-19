@@ -1884,8 +1884,8 @@
 			// Can be found in "CDirector::OnMapLoaded" - *((_DWORD *)v13 + 270) = RandomInt((char *)&n + 1, 6);
 			"CDirector::m_nFirstClassIndex"
 			{
-				"linux"		"1080"
-				"windows"	"1080"
+				"linux"		"1272"
+				"windows"	"1272"
 			}
 
 			"CTerrorPlayer::CanBecomeGhost::Offset"
