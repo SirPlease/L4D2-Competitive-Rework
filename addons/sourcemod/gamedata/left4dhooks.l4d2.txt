@@ -477,6 +477,21 @@
 				"this"			"entity"
 			}
 
+			"L4DD::CTerrorPlayer::TakeOverBot"
+			{
+				"signature"		"CTerrorPlayer::TakeOverBot"
+				"callconv"		"thiscall"
+				"return"		"bool"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"bool"
+					}
+				}
+			}
+
 			"L4DD::CDirector::IsTeamFull"
 			{
 				"signature"		"CDirector::IsTeamFull"
@@ -850,6 +865,25 @@
 				"arguments"
 				{
 					"a1"
+					{
+						"type"	"int"
+					}
+				}
+			}
+
+			"L4DD::CTerrorPlayer::DoAnimationEvent"
+			{
+				"signature"		"CTerrorPlayer::DoAnimationEvent"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
+				"arguments"
+				{
+					"event"
+					{
+						"type"	"int"
+					}
+					"variant"
 					{
 						"type"	"int"
 					}
@@ -1573,6 +1607,19 @@
 				}
 			}
 
+			"TheNavAreas"
+			{
+				"windows"
+				{
+					"signature" "nav_update_lighting"
+					"read" "82"
+				}
+				"linux"
+				{
+					"signature" "TheNavAreas"
+				}
+			}
+
 			"TerrorNavMesh"
 			{
 				"windows"
@@ -1733,12 +1780,6 @@
 				"linux"		"347"
 			}
 
-			"CTerrorPlayer::DoAnimationEvent"
-			{
-				"windows"	"510"
-				"linux"		"511"
-			}
-
 			/*
 			* CTerrorPlayer::Deafen(float,float,float)
 			*/
@@ -1791,20 +1832,20 @@
 			// }
 			"ScavengeModePtr"
 			{
-				"windows"	"1412"
-				"linux"		"1412"
+				"windows"	"1604"
+				"linux"		"1604"
 			}
 
 			"VersusModePtr"
 			{
-				"windows"	"1404"
-				"linux"		"1404"
+				"windows"	"1596"
+				"linux"		"1596"
 			}
 
 			"ScriptedEventManagerPtr"
 			{
-				"windows"	"1400"
-				"linux"		"1400"
+				"windows"	"1592"
+				"linux"		"1592"
 			}
 
 			"CSquirrelVM::GetValue"
@@ -1821,7 +1862,7 @@
 				"linux"		"11256"
 			}
 
-			// Can be found from "CDirector::GetScriptScope(CDirector::ScriptLevels_t)"
+			// Can be found in "CDirector::GetScriptScope(CDirector::ScriptLevels_t)"
 			"m_iszScriptId"
 			{
 				"windows"	"968"
@@ -1838,6 +1879,13 @@
 			{
 				"windows"	"528"
 				"linux"		"528"
+			}
+
+			// Can be found in "CDirector::OnMapLoaded" - *((_DWORD *)v13 + 270) = RandomInt((char *)&n + 1, 6);
+			"CDirector::m_nFirstClassIndex"
+			{
+				"linux"		"1080"
+				"windows"	"1080"
 			}
 
 			"CTerrorPlayer::CanBecomeGhost::Offset"
@@ -1858,8 +1906,8 @@
 
 			"MobSpawnTimer"
 			{
-				"windows"	"468"
-				"linux"		"468"
+				"windows"	"660"
+				"linux"		"660"
 			}
 
 			"OnBeginRoundSetupTime"
@@ -1902,13 +1950,13 @@
 			// VARIOUS OFFSETS
 			"m_iWitchCount"
 			{
-				"linux"		"252"
-				"windows"	"252"
+				"linux"		"444"
+				"windows"	"444"
 			}
 			"m_iTankCount"
 			{
-				"linux"		"256"
-				"windows"	"256"
+				"linux"		"448"
+				"windows"	"448"
 			}
 			"m_iCampaignScores"
 			{
@@ -1931,8 +1979,8 @@
 			// l4d_direct.inc
 			"m_iTankPassedCount"
 			{
-				"windows"	"88"
-				"linux"		"88"
+				"windows"	"280"
+				"linux"		"280"
 			}
 			"m_bTankThisRound"
 			{
@@ -2029,38 +2077,38 @@
 			// L4D2CountdownTimer
 			"L4D2CountdownTimer_MobSpawnTimer"
 			{
-				"windows"	"468"
-				"linux"		"468"
+				"windows"	"660"
+				"linux"		"660"
 			}
 			"L4D2CountdownTimer_SmokerSpawnTimer"
 			{
-				"windows"	"564"
-				"linux"		"564"
+				"windows"	"756"
+				"linux"		"756"
 			}
 			"L4D2CountdownTimer_BoomerSpawnTimer"
 			{
-				"windows"	"576"
-				"linux"		"576"
+				"windows"	"768"
+				"linux"		"768"
 			}
 			"L4D2CountdownTimer_HunterSpawnTimer"
 			{
-				"windows"	"588"
-				"linux"		"588"
+				"windows"	"780"
+				"linux"		"780"
 			}
 			"L4D2CountdownTimer_SpitterSpawnTimer"
 			{
-				"windows"	"600"
-				"linux"		"600"
+				"windows"	"792"
+				"linux"		"792"
 			}
 			"L4D2CountdownTimer_JockeySpawnTimer"
 			{
-				"windows"	"612"
-				"linux"		"612"
+				"windows"	"804"
+				"linux"		"804"
 			}
 			"L4D2CountdownTimer_ChargerSpawnTimer"
 			{
-				"windows"	"624"
-				"linux"		"624"
+				"windows"	"816"
+				"linux"		"816"
 			}
 			"L4D2CountdownTimer_VersusStartTimer"
 			{
@@ -2670,8 +2718,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZNK9CDirector12IsTankInPlayEv"
-				"windows"	"\x33\x2A\x39\x2A\x00\x2A\x2A\x2A\x0F\x9F\x2A\xC3"
-				/* 33 ? 39 ? 00 ? ? ? 0F 9F ? C3 */
+				"windows"	"\x33\xC0\x39\x81\xC0\x2A\x2A\x2A\x0F\x9F\xC0\xC3"
+				/* 33 C0 39 81 C0 ?? ?? ?? 0F 9F C0 C3 */
 				/* Search "IsTankInPlay" call below */
 			}
 
@@ -2682,8 +2730,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZNK9CDirector23GetFurthestSurvivorFlowEv"
-				"windows"	"\xD9\x2A\x8C\x01\x00\x00\xC3"
-				/* D9 ? 8C 01 00 00 C3 */
+				"windows"	"\xD9\x2A\x4C\x02\x2A\x2A\xC3"
+				/* D9 ?? 4C 02 ?? ?? C3 */
 				/* Search "GetFurthestSurvivorFlow" call below */
 			}
 
@@ -2723,6 +2771,17 @@
 				/* Search "Couldn't find a %s Spawn position in %d tries\n", some calls below */
 			}
 
+			"CTerrorPlayer::WarpToValidPositionIfStuck"
+			{
+				"library"	"server"
+				//"linux"		"@_ZN13CTerrorPlayer26WarpToValidPositionIfStuckEv.part.198"
+				"linux"		"\x55\x89\xE5\x57\x56\x8D\xB5\x2A\x2A\x2A\x2A\x53\x89\xC3\x81\x2A\x2A\x2A\x2A\x2A\x8B\x00\xC7\x44\x2A\x2A\x2A\x2A\x2A\x2A\x89\x1C\x24\xFF"
+				/*55 89 E5 57 56 8D B5 ?? ?? ?? ?? 53 89 C3 81 ?? ?? ?? ?? ?? 8B 00 C7 44 ?? ?? ?? ?? ?? ?? 89 1C 24 FF*/
+				"windows"	"\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x8B\x2A\x80\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x53\x57"
+				/* 55 8B ? 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 56 8B ? 80 ? ? ? ? ? ? 0F 85 ? ? ? ? 8B ? 8B ? ? ? ? ? 53 57 */
+				/* Search: "unsticking %s from %.1f %.1f %.1f to %.1f %.1f %.1f\n" */
+			}
+
 			/**
 			* IsVisibleToPlayer(Vector const&, CBasePlayer *, int, int, float, CBaseEntity const*, TerrorNavArea **, bool *)
 			*
@@ -2748,8 +2807,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CDirector26HasAnySurvivorLeftSafeAreaEv"
-				"windows"	"\x8A\x2A\xA0\x00\x00\x00\xC3"
-				/* 8A ? A0 00 00 00 C3 */
+				"windows"	"\x8A\x81\x60\x01\x00\x00\xC3"
+				/* 8A 81 60 01 00 00 C3 */
 				/* Search "I've walked out of the checkpoint" call below */
 			}
 
@@ -3178,8 +3237,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CDirector14GetScriptValueEPKci"
-				"windows"	"\x55\x8B\xEC\x8B\x81\x2A\x2A\x2A\x2A\x83\xEC\x10\x83\xF8\xFF\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x8B\x2A\x5D"
-				/* 55 8B EC 8B 81 ? ? ? ? 83 EC 10 83 F8 FF ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? 8B ? ? 8B ? 5D */
+				"windows"	"\x55\x8B\xEC\x8B\x81\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x74\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x85\xC9\x74\x2A\x56\x33\xD2\x8D\x75\x2A\x56\x8B\x75\x2A\x66\x89\x2A\x2A\x66\x89\x2A\x2A\x89\x55\x2A\x8B\x11\x56\x50\x8B\x82\x2A\x2A\x2A\x2A\xFF\xD0\x5E\x84\xC0\x74\x2A\x8D\x4D\x2A\x51\x8D\x4D\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x11\x8B\x92\x2A\x2A\x2A\x2A\x8D\x45\x2A\x50\xFF\xD2\xF6\x45\x2A\x2A\x74\x2A\xA1\x2A\x2A\x2A\x2A\x8B\x08\x8B\x11\x8B\x45\x2A\x8B\x52\x2A\x50\xFF\xD2\x8B\x45\x2A\x8B\xE5\x5D\xC2"
+				/* 55 8B EC 8B 81 ?? ?? ?? ?? 83 ?? ?? 83 ?? ?? 74 ?? 8B ?? ?? ?? ?? ?? 85 C9 74 ?? 56 33 D2 8D 75 ?? 56 8B 75 ?? 66 89 ?? ?? 66 89 ?? ?? 89 55 ?? 8B 11 56 50 8B 82 ?? ?? ?? ?? FF D0 5E 84 C0 74 ?? 8D 4D ?? 51 8D 4D ?? E8 ?? ?? ?? ?? 84 C0 75 ?? 8B ?? ?? ?? ?? ?? 8B 11 8B 92 ?? ?? ?? ?? 8D 45 ?? 50 FF D2 F6 45 ?? ?? 74 ?? A1 ?? ?? ?? ?? 8B 08 8B 11 8B 45 ?? 8B 52 ?? 50 FF D2 8B 45 ?? 8B E5 5D C2 */
 			}
 
 			/*
@@ -3190,8 +3249,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CDirector14GetScriptValueEPKcf"
-				"windows"	"\x55\x8B\xEC\x8B\x81\x2A\x2A\x2A\x2A\x83\xEC\x10\x83\xF8\xFF\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xD9"
-				/* 55 8B EC 8B 81 ? ? ? ? 83 EC 10 83 F8 FF ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? D9 */
+				"windows"	"\x55\x8B\xEC\x8B\x81\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x74\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x85\xC9\x74\x2A\x56\x33\xD2\x8D\x75\x2A\x56\x8B\x75\x2A\x66\x89\x2A\x2A\x66\x89\x2A\x2A\x89\x55\x2A\x8B\x11\x56\x50\x8B\x82\x2A\x2A\x2A\x2A\xFF\xD0\x5E\x84\xC0\x74\x2A\x8D\x4D\x2A\x51\x8D\x4D\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x11\x8B\x92\x2A\x2A\x2A\x2A\x8D\x45\x2A\x50\xFF\xD2\xF6\x45\x2A\x2A\x74\x2A\xA1\x2A\x2A\x2A\x2A\x8B\x08\x8B\x11\x8B\x45\x2A\x8B\x52\x2A\x50\xFF\xD2\xD9"
+				/* 55 8B EC 8B 81 ?? ?? ?? ?? 83 ?? ?? 83 ?? ?? 74 ?? 8B ?? ?? ?? ?? ?? 85 C9 74 ?? 56 33 D2 8D 75 ?? 56 8B 75 ?? 66 89 ?? ?? 66 89 ?? ?? 89 55 ?? 8B 11 56 50 8B 82 ?? ?? ?? ?? FF D0 5E 84 C0 74 ?? 8D 4D ?? 51 8D 4D ?? E8 ?? ?? ?? ?? 84 C0 75 ?? 8B ?? ?? ?? ?? ?? 8B 11 8B 92 ?? ?? ?? ?? 8D 45 ?? 50 FF D2 F6 45 ?? ?? 74 ?? A1 ?? ?? ?? ?? 8B 08 8B 11 8B 45 ?? 8B 52 ?? 50 FF D2 D9 */
 			}
 
 			/*
@@ -3570,6 +3629,18 @@
 				"linux"		"@_ZN14CBaseAnimating22SelectWeightedSequenceE8Activity"
 				"windows"	"\x55\x8B\xEC\x56\x8B\xF1\x83\xBE\x2A\x2A\x2A\x2A\x00\x57\x8B\xBE"
 				/* 55 8B EC 56 8B F1 83 BE ? ? ? ? 00 57 8B BE */
+			}
+
+			/*
+			 * CTerrorPlayer::DoAnimationEvent(PlayerAnimEvent_t, int)
+			 */
+			"CTerrorPlayer::DoAnimationEvent"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer16DoAnimationEventE17PlayerAnimEvent_ti"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x57\x8B\x2A\x83\x2A\x2A\x74\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x53"
+				/* ? ? ? ? ? ? ? 57 8B ? 83 ? ? 74 ? 8B ? ? ? ? ? 8B ? 8B ? ? 53 */
+				/* Search "NULL Ent in GiveNamedItem!\n" (function with "weapon_shield" inside) - xref to last VTable call, couple entries down */
 			}
 
 			/* Thanks to "Lux" for the signature */
@@ -4028,8 +4099,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer11TakeOverBotEb"
-				"windows"	"\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x56\x8D\x85"
-				/* 55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 33 C5 89 45 FC 53 56 8D 85 */
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x56\x8D\x85"
+				/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 C5 89 45 FC 53 56 8D 85 */
 			}
 
 			/*
@@ -4405,8 +4476,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CDirector9SwapTeamsEv"
-				"windows"	"\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\x53\x56\x8B\xF1\x8B\x8E\x2A\x2A\x2A\x2A\x57\x89\x75\x2A\xC6\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B"
-				/* 55 8B EC 81 EC ? ? ? ? 53 56 8B F1 8B 8E ? ? ? ? 57 89 75 ? C6 ? ? ? E8 ? ? ? ? 8B */
+				"windows"	"\x55\x8B\xEC\x81\x2A\x2A\x2A\x2A\x2A\x53\x56\x8B\xF1\x8B\x8E\x2A\x2A\x2A\x2A\x57"
+				/* 55 8B EC 81 ?? ?? ?? ?? ?? 53 56 8B F1 8B 8E ?? ?? ?? ?? 57 */
 			}
 
 			/*
@@ -4490,9 +4561,9 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN9CDirector23RegisterForbiddenTargetEP11CBaseEntity"
-				"windows"	"\x55\x8B\x2A\x53\x56\x57\x8B\x7D\x08\x83\xCB\xFF\x8B\xF1\x85\xFF\x74\x2A\x8B\x07\x8B\x50\x08\x8B\xCF\xFF\xD2\x8B\x00\x89\x45\x08\xEB\x2A\x89\x5D\x08\x8D\x4D\x08\x51\x8D\x8E\xB4\x03\x00\x00"
+				"windows"	"\x55\x8B\xEC\x53\x56\x57\x8B\x7D\x2A\x83\x2A\x2A\x8B\xF1\x85\xFF\x74\x2A\x8B\x07\x8B\x50\x2A\x8B\xCF\xFF\xD2\x8B\x00\x89\x45\x2A\xEB\x2A\x89\x5D\x2A\x8D\x4D\x2A\x51\x8D\x8E\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x85\xC0\x79\x2A\x85\xFF\x74\x2A\x8B\x17\x8B\x42\x2A\x8B\xCF\xFF\xD0"
 				/* Sig may break, using offsets to make unique */
-				/* 55 8B ? 53 56 57 8B 7D 08 83 CB FF 8B F1 85 FF 74 ? 8B 07 8B 50 08 8B CF FF D2 8B 00 89 45 08 EB ? 89 5D 08 8D 4D 08 51 8D 8E B4 03 00 00 */ // Found by "SilverShot" updated by "Crasher_3637"
+				/* 55 8B EC 53 56 57 8B 7D ?? 83 ?? ?? 8B F1 85 FF 74 ?? 8B 07 8B 50 ?? 8B CF FF D2 8B 00 89 45 ?? EB ?? 89 5D ?? 8D 4D ?? 51 8D 8E ?? ?? ?? ?? E8 ?? ?? ?? ?? 85 C0 79 ?? 85 FF 74 ?? 8B 17 8B 42 ?? 8B CF FF D0 */ // Found by "SilverShot" updated by "Crasher_3637"
 				/* Search: "prop %s at %.0f %.0f %0.f missing model" for "CBaseProp::Spawn". XRef called by "CBreakableProp::Spawn" (largest function) which calls target function */
 			}
 
@@ -4730,6 +4801,21 @@
 				"library"	"server"
 				"windows"	"\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x8B\x45\x14\x53\x8B\x5D\x08"
 					/* 55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 33 C5 89 45 FC 8B 45 14 53 8B 5D 08 */
+			}
+
+			"nav_update_lighting"
+			{
+				"library"	"server"
+				"linux"		"@_ZL19nav_update_lightingRK8CCommand"
+				"windows"	"\x55\x8B\x2A\x8B\x2A\x2A\x57\x33\x2A\x83\x2A\x2A\x75"
+				/* 55 8B ? 8B ? ? 57 33 ? 83 ? ? 75 */
+				/* Search: "Computed lighting for %d/%d areas\n" */
+			}
+
+			"TheNavAreas"
+			{
+				"library"	"server"
+				"linux"		"@TheNavAreas"
 			}
 
 			"TheNavMesh"

@@ -6,8 +6,8 @@
 		{
 			"CDirector::m_nFirstClassIndex"
 			{
-				"linux"		"1080"
-				"windows"	"1080"
+				"linux"		"1272"
+				"windows"	"1272"
 			}
 		}
 	}

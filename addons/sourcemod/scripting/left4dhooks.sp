@@ -18,8 +18,8 @@
 
 
 
-#define PLUGIN_VERSION		"1.127-CompetitiveRework"
-#define PLUGIN_VERLONG		1127
+#define PLUGIN_VERSION		"1.130"
+#define PLUGIN_VERLONG		1130
 
 #define DEBUG				0
 // #define DEBUG			1	// Prints addresses + detour info (only use for debugging, slows server down)
@@ -221,6 +221,8 @@ float g_fLoadTime;							// When the plugin was loaded, to ignore when "AP_OnPlu
 Handle g_hThisPlugin;						// Ignore checking this plugin
 GameData g_hGameData;						// GameData file - to speed up loading
 int g_iScriptVMDetourIndex;
+float g_fCvar_Adrenaline, g_fCvar_PillsDecay;
+int g_iCvar_AddonsEclipse, g_iCvar_RescueDeadTime;
 
 
 
@@ -278,10 +280,12 @@ int g_iOff_m_preIncapacitatedHealthBuffer;
 int g_iOff_m_maxFlames;
 int g_iOff_m_flow;
 int g_iOff_m_PendingMobCount;
+int g_iOff_m_nFirstClassIndex;
 int g_iOff_m_fMapMaxFlowDistance;
 int g_iOff_m_chapter;
 int g_iOff_m_attributeFlags;
 int g_iOff_m_spawnAttributes;
+int g_iOff_NavAreaID;
 // int g_iOff_m_iClrRender; // NULL PTR - METHOD (kept for demonstration)
 // int ClearTeamScore_A;
 // int ClearTeamScore_B;
@@ -307,6 +311,9 @@ int g_pScavengeMode;
 Address g_pServer;
 Address g_pDirector;
 Address g_pGameRules;
+Address g_pTheNavAreas;
+Address g_pTheNavAreas_List;
+Address g_pTheNavAreas_Size;
 Address g_pNavMesh;
 Address g_pZombieManager;
 Address g_pMeleeWeaponInfoStore;
@@ -553,7 +560,7 @@ public void OnPluginStart()
 	// ====================================================================================================
 	//									ANIMMATION HOOK
 	// ====================================================================================================
-	g_hAnimationActivityList = new ArrayList(ByteCountToCells(64));
+	g_hAnimationActivityList = new ArrayList(ByteCountToCells(48));
 	ParseActivityConfig();
 
 	g_iAnimationHookedClients = new ArrayList();
@@ -683,15 +690,25 @@ public void OnPluginStart()
 	{
 		g_hCvar_VScriptBuffer = CreateConVar("l4d2_vscript_return", "", "Buffer used to return VScript values. Do not use.", FCVAR_DONTRECORD);
 		g_hCvar_AddonsEclipse = CreateConVar("l4d2_addons_eclipse", "-1", "Addons Manager (-1: use addonconfig; 0: disable addons; 1: enable addons.)", FCVAR_NOTIFY);
-		g_hCvar_AddonsEclipse.AddChangeHook(ConVarChanged_Cvars);
+
+		g_hCvar_AddonsEclipse.AddChangeHook(ConVarChanged_Addons);
+		g_iCvar_AddonsEclipse = g_hCvar_AddonsEclipse.IntValue;
 
 		g_hCvar_Adrenaline = FindConVar("adrenaline_health_buffer");
+		g_hCvar_Adrenaline.AddChangeHook(ConVarChanged_Cvars);
+		g_fCvar_Adrenaline = g_hCvar_Adrenaline.FloatValue;
 	} else {
 		g_hCvar_Revives = FindConVar("survivor_max_incapacitated_count");
 	}
 
 	g_hCvar_PillsDecay = FindConVar("pain_pills_decay_rate");
+	g_hCvar_PillsDecay.AddChangeHook(ConVarChanged_Cvars);
+	g_fCvar_PillsDecay = g_hCvar_PillsDecay.FloatValue;
+
 	g_hCvar_RescueDeadTime = FindConVar("rescue_min_dead_time");
+	g_hCvar_RescueDeadTime.AddChangeHook(ConVarChanged_Cvars);
+	g_iCvar_RescueDeadTime = g_hCvar_RescueDeadTime.IntValue;
+
 	g_hCvar_MPGameMode = FindConVar("mp_gamemode");
 	g_hCvar_MPGameMode.AddChangeHook(ConVarChanged_Mode);
 
@@ -1200,14 +1217,26 @@ void ColorConfig_End(SMCParser parser, bool halted, bool failed)
 public void OnConfigsExecuted()
 {
 	if( g_bLeft4Dead2 )
-		ConVarChanged_Cvars(null, "", "");
+		ConVarChanged_Addons(null, "", "");
+
+	ConVarChanged_Cvars(null, "", "");
 }
 
 bool g_bAddonsPatched;
 
 void ConVarChanged_Cvars(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if( g_hCvar_AddonsEclipse.IntValue > -1 )
+	if( g_bLeft4Dead2 )
+		g_fCvar_Adrenaline = g_hCvar_Adrenaline.FloatValue;
+	g_fCvar_PillsDecay = g_hCvar_PillsDecay.FloatValue;
+	g_iCvar_RescueDeadTime = g_hCvar_RescueDeadTime.IntValue;
+}
+
+void ConVarChanged_Addons(Handle convar, const char[] oldValue, const char[] newValue)
+{
+	g_iCvar_AddonsEclipse = g_hCvar_AddonsEclipse.IntValue;
+
+	if( g_iCvar_AddonsEclipse > -1 )
 		AddonsDisabler_Patch();
 	else
 		AddonsDisabler_Unpatch();
@@ -1255,7 +1284,7 @@ MRESReturn DTR_AddonsDisabler(int pThis, Handle hReturn, DHookParam hParams) // 
 	PrintToServer("##### DTR_AddonsDisabler");
 	#endif
 
-	int cvar = g_hCvar_AddonsEclipse.IntValue;
+	int cvar = g_iCvar_AddonsEclipse;
 	if( cvar != -1 )
 	{
 		int ptr = hParams.Get(1);
@@ -1521,7 +1550,7 @@ float GetTempHealth(int client)
 	float fGameTime = GetGameTime();
 	float fHealthTime = GetEntPropFloat(client, Prop_Send, "m_healthBufferTime");
 	float fHealth = GetEntPropFloat(client, Prop_Send, "m_healthBuffer");
-	fHealth -= (fGameTime - fHealthTime) * g_hCvar_PillsDecay.FloatValue;
+	fHealth -= (fGameTime - fHealthTime) * g_fCvar_PillsDecay;
 	return fHealth < 0.0 ? 0.0 : fHealth;
 }
 
