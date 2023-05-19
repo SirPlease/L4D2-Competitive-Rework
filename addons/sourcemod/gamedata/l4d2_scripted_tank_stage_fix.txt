@@ -86,8 +86,8 @@
 			// From left4dhooks thanks to Silvers
 			"m_iTankCount"
 			{
-				"linux"			"256"
-				"windows"		"256"
+				"linux"			"448"
+				"windows"		"448"
 			}
 		}
 		
