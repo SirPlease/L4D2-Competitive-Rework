@@ -1906,8 +1906,8 @@
 
 			"MobSpawnTimer"
 			{
-				"windows"	"468"
-				"linux"		"468"
+				"windows"	"660"
+				"linux"		"660"
 			}
 
 			"OnBeginRoundSetupTime"
@@ -1950,13 +1950,13 @@
 			// VARIOUS OFFSETS
 			"m_iWitchCount"
 			{
-				"linux"		"252"
-				"windows"	"252"
+				"linux"		"444"
+				"windows"	"444"
 			}
 			"m_iTankCount"
 			{
-				"linux"		"256"
-				"windows"	"256"
+				"linux"		"448"
+				"windows"	"448"
 			}
 			"m_iCampaignScores"
 			{
@@ -1979,8 +1979,8 @@
 			// l4d_direct.inc
 			"m_iTankPassedCount"
 			{
-				"windows"	"88"
-				"linux"		"88"
+				"windows"	"280"
+				"linux"		"280"
 			}
 			"m_bTankThisRound"
 			{
@@ -2077,38 +2077,38 @@
 			// L4D2CountdownTimer
 			"L4D2CountdownTimer_MobSpawnTimer"
 			{
-				"windows"	"468"
-				"linux"		"468"
+				"windows"	"660"
+				"linux"		"660"
 			}
 			"L4D2CountdownTimer_SmokerSpawnTimer"
 			{
-				"windows"	"564"
-				"linux"		"564"
+				"windows"	"756"
+				"linux"		"756"
 			}
 			"L4D2CountdownTimer_BoomerSpawnTimer"
 			{
-				"windows"	"576"
-				"linux"		"576"
+				"windows"	"768"
+				"linux"		"768"
 			}
 			"L4D2CountdownTimer_HunterSpawnTimer"
 			{
-				"windows"	"588"
-				"linux"		"588"
+				"windows"	"780"
+				"linux"		"780"
 			}
 			"L4D2CountdownTimer_SpitterSpawnTimer"
 			{
-				"windows"	"600"
-				"linux"		"600"
+				"windows"	"792"
+				"linux"		"792"
 			}
 			"L4D2CountdownTimer_JockeySpawnTimer"
 			{
-				"windows"	"612"
-				"linux"		"612"
+				"windows"	"804"
+				"linux"		"804"
 			}
 			"L4D2CountdownTimer_ChargerSpawnTimer"
 			{
-				"windows"	"624"
-				"linux"		"624"
+				"windows"	"816"
+				"linux"		"816"
 			}
 			"L4D2CountdownTimer_VersusStartTimer"
 			{
