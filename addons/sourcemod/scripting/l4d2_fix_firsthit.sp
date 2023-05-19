@@ -2,10 +2,11 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <sdkhooks>
 #include <sdktools_gamerules>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "2.2"
+#define PLUGIN_VERSION "2.4"
 
 public Plugin myinfo =
 {
@@ -16,35 +17,10 @@ public Plugin myinfo =
 	url = "https://github.com/Target5150/MoYu_Server_Stupid_Plugins"
 }
 
-int g_iOffs_FirstClassIndex;
 ConVar g_cvAllow;
-
-methodmap CDirector
-{
-	property int m_nFirstClassIndex {
-		public get() { return LoadFromAddress(L4D_GetPointer(POINTER_DIRECTOR) + view_as<Address>(g_iOffs_FirstClassIndex), NumberType_Int32); }
-		public set(int index) { StoreToAddress(L4D_GetPointer(POINTER_DIRECTOR) + view_as<Address>(g_iOffs_FirstClassIndex), index, NumberType_Int32); }
-	}
-}
-CDirector TheDirector;
-
-#define GAMEDATA_FILE "l4d2_fix_firsthit"
-#define OFFS_FIRSTCLS "CDirector::m_nFirstClassIndex"
-void LoadSDK()
-{
-	Handle conf = LoadGameConfigFile(GAMEDATA_FILE);
-	if (!conf) SetFailState("Missing gamedata \""...GAMEDATA_FILE..."\"");
-	
-	g_iOffs_FirstClassIndex = GameConfGetOffset(conf, OFFS_FIRSTCLS);
-	if (g_iOffs_FirstClassIndex == -1) SetFailState("Missing offset \""...OFFS_FIRSTCLS..."\"");
-	
-	delete conf;
-}
 
 public void OnPluginStart()
 {
-	LoadSDK();
-	
 	g_cvAllow = CreateConVar("l4d2_scvng_firsthit_shuffle",
 							"0",
 							"Shuffle first hit classes. Affects only Scavenge mode.\n"
@@ -78,7 +54,60 @@ void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 	if (!client || !IsClientInGame(client))
 		return;
 	
+	/**
+	 * NOTE:
+	 *
+	 * Shoutout to elias (Solaris admin) for reporting, testing
+	 * and a lot of his time for further info to help address this!
+	 *
+	 * `CDirector::SwapTeams` always fills the Survivor Team with 4 bots
+	 * regardless of the limit. Extra bots might be moved to Infected Team
+	 * when the limit is below 4, as a result human who is swapped to Infected
+	 * may get incorrect SI of the first lineup.
+	 *
+	 * -----------------------------------------------------------
+	 *
+	 * if ( !(unsigned __int8)CDirector::NoSurvivorBots(this) )
+	 * {
+	 *   v22 = GetGlobalTeam(2);
+	 *   v23 = v22;
+	 *   if ( v22 )
+	 *   {
+	 *     if ( (*(int (__cdecl **)(int))(*(_DWORD *)v22 + 852))(v22) <= 3 )
+	 *     {
+	 *       v24 = 4 - (*(int (__cdecl **)(int))(*(_DWORD *)v23 + 852))(v23);
+	 *       if ( v24 > 0 )
+	 *       {
+	 *         for ( j = 0; j != v24; ++j )
+	 *         {
+	 *           CDirector::AddSurvivorBot(this, 8);
+	 *           Msg("Adding a survivor bot to fill out Survivor team\n");
+	 *         }
+	 *       }
+	 *     }
+	 *   }
+	 * }
+	 */
+	if (IsFakeClient(client))
+	{
+		char netclass[64];
+		GetEntityNetClass(client, netclass, sizeof(netclass));
+		if (strcmp(netclass, "SurvivorBot") == 0)
+		{
+			SDKHook(client, SDKHook_SpawnPost, SDK_OnSpawn_Post);
+			return;
+		}
+	}
+	
 	ResetClassSpawnSystem(client);
+}
+
+void SDK_OnSpawn_Post(int client)
+{
+	if (IsClientInGame(client))
+	{
+		SetEntProp(client, Prop_Send, "m_zombieClass", 9);
+	}
 }
 
 void Event_PlayerTransitioned(Event event, const char[] name, bool dontBroadcast)
@@ -94,8 +123,7 @@ void Event_ScavengeRoundFinished(Event event, const char[] name, bool dontBroadc
 {
 	if (g_cvAllow.IntValue == 1 && GameRules_GetProp("m_bInSecondHalfOfRound", 1))
 	{
-		SetRandomSeed(GetTime());
-		TheDirector.m_nFirstClassIndex = GetRandomInt(1, 6);
+		ResetFirstSpawnClass();
 	}
 }
 
@@ -103,9 +131,14 @@ void Event_ScavengeNatchFinished(Event event, const char[] name, bool dontBroadc
 {
 	if (g_cvAllow.IntValue > 0)
 	{
-		SetRandomSeed(GetTime());
-		TheDirector.m_nFirstClassIndex = GetRandomInt(1, 6);
+		ResetFirstSpawnClass();
 	}
+}
+
+void ResetFirstSpawnClass()
+{
+	SetRandomSeed(GetTime());
+	L4D2_SetFirstSpawnClass(GetRandomInt(1, 6));
 }
 
 void ResetClassSpawnSystem(int client)

@@ -42,27 +42,6 @@
 				"linux"		"300"
 				"windows"	"300"
 			}
-			
-			"CDirector::m_PanicTimer"
-			{
-				"linux"		"872"
-				"windows"	"872"
-			}
-		}
-		"Signatures"
-		{
-			"CDirector_IsInTransition"
-			{
-				"library"		"server"
-				"linux"			"@_ZNK9CDirector14IsInTransitionEv"
-				"windows"		"\x80\x3D\x2A\x2A\x2A\x2A\x00\x75\x2A\x80\xB9\x2A\x2A\x2A\x2A\x00"
-				/* 80 3D ? ? ? ? 00 75 ? 80 B9 ? ? ? ? 00 */
-				/* sub_102589D0 */
-				/*	Search for "CheckpointRespawn for %s\n" */
-				/*	Generate pseudocode, there's a 'if' line consisting of 2 condition checks like below: */
-				/*		`if ( (unsigned __int8)sub_102589F0(dword_10826DD0) && (unsigned __int8)sub_102589C0(dword_10826DD0) )` */
-				/*	The first function is what we find. */
-			}
 		}
 	}
 }
