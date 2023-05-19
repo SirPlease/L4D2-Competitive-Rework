@@ -59,7 +59,6 @@ float
 
 int
 	m_PostMobDelayTimerOffset,
-	m_PanicTimerOffset,
 	z_max_player_zombies,
 	hordeDelayChecks,
 	zombieclass[MAXPLAYERS + 1];
@@ -99,11 +98,6 @@ void InitGameData()
 	Handle hGamedata2 = LoadGameConfigFile(CDIRECTOR_GAMEDATA);
 	if (!hGamedata2) {
 		SetFailState("Gamedata '%s' missing or corrupt", CDIRECTOR_GAMEDATA);
-	}
-	
-	m_PanicTimerOffset = GameConfGetOffset(hGamedata2, "CDirector::m_PanicTimer");
-	if (m_PanicTimerOffset == -1) {
-		SetFailState("Invalid offset '%s'.", "CDirector::m_PanicTimer");
 	}
 	
 	m_PostMobDelayTimerOffset = GameConfGetOffset(hGamedata2, "CDirectorScriptedEventManager->m_PostMobDelayTimer");
@@ -366,22 +360,16 @@ void LaunchHorde()
 	PrintToChatAll("m_PanicTimer - duration: %f, timestamp: %f", CTimer_GetDuration(PanicTimer()), CTimer_GetTimestamp(PanicTimer()));
 	#endif
 	
-	CTimer_Invalidate(PanicTimer());
-	
-	int flags = GetCommandFlags("director_force_panic_event");
-	SetCommandFlags("director_force_panic_event", flags & ~FCVAR_CHEAT);
-	FakeClientCommand(client, "director_force_panic_event");
-	SetCommandFlags("director_force_panic_event", flags);
+	int info_director = MaxClients+1;
+	if ((info_director = FindEntityByClassname(info_director, "info_director")) != INVALID_ENT_REFERENCE)
+	{
+		AcceptEntityInput(info_director, "ForcePanicEvent");
+	}
 }
 
 CountdownTimer CountdownPointer()
 {
 	return L4D2Direct_GetScavengeRoundSetupTimer();
-}
-
-CountdownTimer PanicTimer()
-{
-	return view_as<CountdownTimer>(L4D_GetPointer(POINTER_DIRECTOR) + view_as<Address>(m_PanicTimerOffset));
 }
 
 CountdownTimer PostMobDelayTimer()
