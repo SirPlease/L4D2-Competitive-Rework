@@ -51,6 +51,13 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x8B\x2A\x8B\x80\x2A\x2A\x2A\x2A\x53"
 						/* ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 8B ? 8B 80 ? ? ? ? 53 */
 			}
+			"CTerrorPlayer::OnRevivedByDefibrillator"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer24OnRevivedByDefibrillatorEPS_P19CSurvivorDeathModel"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x8B\xF1\x8A\x86\xE1\x3F\x00\x00"
+						/* ? ? ? ? ? ? 53 56 8B F1 8A 86 E1 3F 00 00 */
+			}
 		}
 	}
 	"left4dead"

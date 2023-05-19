@@ -1,3 +1,37 @@
+1.130 (01-May-2023)
+	- Changed native "L4D2_NavAreaTravelDistance" to support L4D1. Thanks to "Eärendil" for reporting, and "Psyk0tik" for the signature.
+	- Changed forward "L4D2_CGasCan_EventKilled" to an Action instead of Void forward to allow blocking detonation. Requested by "Mystik Spiral".
+	- Added forwards "L4D2_CGasCan_EventKilled_Post" and "L4D2_CGasCan_EventKilled_PostHandled" to pair with the changed forward.
+	- Added a check to validate the "CTerrorGameRules::GetMissionInfo" address. Thanks to "yezi" for reporting.
+
+	- Updated: Plugin and test plugin.
+    - Updated: "/gamedata/left4dhooks.l4d1.txt" GameData file.
+    - Updated: "scripting/include/left4dhooks.inc" Include file.
+	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_gamedata.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_setup.sp" project file.
+
+1.129 (31-Mar-2023)
+	- Added native "L4D_WarpToValidPositionIfStuck" to teleport a stuck player. Requested by "ioioio".
+	- Added forwards "L4D_OnTakeOverBot", "L4D_OnTakeOverBot_Post" and "L4D_OnTakeOverBot_PostHandled" that triggers when a client takes over a bot.
+	- Updated "left4dhooks_lux_library" include file to version "0.5.7".
+
+1.128 (06-Feb-2023)
+	- Added forwards "L4D_OnDoAnimationEvent", "L4D_OnDoAnimationEvent_Post" and "L4D_OnDoAnimationEvent_PostHandled" to trigger on certain animation events. Requested by "Forgetest".
+	- Added native "L4D_GetAllNavAreas" to return an ArrayList of all "TheNavAreas" addresses. Requested by "Marttt". Thanks to "HarryPotter" and "Forgetest" for help.
+	- Added natives "L4D_GetNavAreaPos" and "L4D_GetNavAreaSize" to return the origin and size of a NavArea.
+	- Added natives "L4D_GetNavAreaID" and "L4D_GetNavAreaByID" to return the ID from a NavArea address, and an address from a NavArea ID.
+	- Added natives "L4D2_GetFirstSpawnClass" and "L4D2_SetFirstSpawnClass" to get and set the first Special Infected class that will spawn. L4D2 only. Thanks to "Forgetest" providing.
+	- Added more stocks to the "left4dhooks_silver.inc" include file. Thanks to "knifeeeee" for providing.
+	- Added enum "POINTER_THENAVAREAS" for the "L4D_GetPointer" native to return the "TheNavAreas" pointer.
+	- Added enum list "PLAYERANIMEVENT_*" used by the "L4D2Direct_DoAnimationEvent" native and "L4D_OnDoAnimationEvent*" forwards. Thanks to "A1m`" for providing.
+	- Changed native "L4D2Direct_DoAnimationEvent" to expose the variant param. Requested by "Forgetest".
+	- Fixed natives "L4D_IsInFirstCheckpoint" and "L4D_IsPositionInFirstCheckpoint" sometimes incorrectly reporting false positives. Thanks to "Voevoda" for reporting.
+	- Fixed forward "L4D2_OnEntityShoved_Post*" param "bIsHighPounce" to be more reliable, although it may still not report accurately. Thanks to "Forgetest" for changes.
+	- Fixed forwards "L4D_OnSpawnSpecial_*", "L4D2_OnSpawnWitchBride_*" and "L4D_OnSpawnTank_Post*" to allow returning -1 as client index. Thanks to "Forgetest" for reporting.
+	- Prevented forwards "L4D_OnTryOfferingTankBot*" from triggering when the client index was 0. Thanks to "Forgetest" for reporting.
+
 1.127 (07-Jan-2023)
 	- Added more Charger stocks to the "left4dhooks_silver.inc" include file. Thanks to "Forgetest" for providing.
 	- Added some more "L4D2UseAction" enum values to the "left4dhooks_stocks.inc" include file. Thanks to "Marttt" for reporting.
@@ -11,17 +45,6 @@
 	- Fixed forward "L4D_OnFatalFalling" throwing errors when client index is 0. Thanks to "Beatles" for reporting.
 	- Fixed forwards "L4D_TankRock_OnRelease" and "L4D_TankRock_OnRelease_Post" crashing on L4D1 Linux not giving a vecAng. Thanks to "Forgetest" for fixing.
 	- Deprecated native: "L4D2_AreTeamsFlipped" in favor of using: GameRules_GetProp("m_bAreTeamsFlipped"); - Suggested by "A1m`".
-
-	- Updated: Plugin and test plugin.
-	- Updated: "left4dhooks.inc" Include file.
-	- Updated: "left4dhooks_silver.inc" Include file.
-	- Updated: "left4dhooks_stocks.inc" Include file.
-	- Updated: "left4dhooks.l4d1.txt" GameData file.
-	- Updated: "left4dhooks.l4d2.txt" GameData file.
-	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_gamedata.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_setup.sp" project file.
 
 1.126 (21-Dec-2022)
 	- Added weapon attribute "L4D2IWA_DefaultSize" for the "L4D2_GetIntWeaponAttribute" and "L4D2_SetIntWeaponAttribute" natives to get a weapons default clip size. Thanks to "iaNanaNana" for adding.
