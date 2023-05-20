@@ -1,5 +1,5 @@
 /**
-* Copyright (C) 2022  LuxLuma
+* Copyright (C) 2023  LuxLuma
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 #tryinclude <left4dhooks_silver>
 #tryinclude <left4dhooks_stocks>
 
-#define LUX_LIBRARY_VERSION "0.5.5"
+#define LUX_LIBRARY_VERSION "0.5.7"
 
 #define GIMMEDATA "lux_library"
 
@@ -395,16 +395,57 @@ stock float Terror_GetAdrenalineTime(int iClient)
 }
 
 /**
- * Create a physics explosion that does not affect players and don't check for line of sight and no force fall-off.
+ * Calls CTerrorPlayer::OnRevivedByDefibrillator()
+ *
+ * @param iRevivee 		Client index be revived.
+ * @param iReviver		Client index who revived can be same as revivee.
+ * @param iDeathModel		Death model index, dead survivor model (survivor_death_model).
+ *
+ * @return			True if revive was successful false otherwise.
+ * @error			Invalid entity index or invalid attachment name,
+ *					signature for function not found, or SDKCall failed.
+ **/
+stock bool Terror_ReviveDeathModel(int iRevivee, int iReviver, int iDeathModel)
+{
+	static Handle hSDKCall;
+	if(hSDKCall == null)
+	{
+		Handle hGamedata;
+		GetGameData(hGamedata);
+		
+		StartPrepSDKCall(SDKCall_Player);
+		if(PrepSDKCall_SetFromConf(hGamedata, SDKConf_Signature, "CTerrorPlayer::OnRevivedByDefibrillator"))
+		{
+			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+			PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+			hSDKCall = EndPrepSDKCall();
+			if(hSDKCall == null)
+				LogError("Unable to prep 'CTerrorPlayer::OnRevivedByDefibrillator'");
+		}
+		else
+		{
+			LogError("Error finding the 'CTerrorPlayer::OnRevivedByDefibrillator' signature.");
+		}
+		delete hGamedata;
+		if(hSDKCall == null)
+			return false;
+	}
+	SDKCall(hSDKCall, iRevivee, iReviver, iDeathModel);
+	return true;
+}
+
+/**
+ * Create a physics explosion that does not affect players.
  *
  * @param vecOrigin		Origin of the explosion.
- * @param iMagnitude		Magnitude of the explosion.
+ * @param iMagnitude		Magnitude of the explosion limit of 100, explode more than once for more power.
  * @param flRadius		Radius of the explosion.
  * @param bDamage		True to damage props, false otherwise.
+ * @param flInnerRadius		If not zero, the LOS is calculated from a point intersecting this sphere.
  *
  * @error			Failed to create explosion.
  **/
-stock void PhysicsExplode(float vecOrigin[3], int iMagnitude, float flRadius, bool bDamage=false)
+stock void PhysicsExplode(float vecOrigin[3], int iMagnitude, float flRadius, bool bDamage=false, float flInnerRadius=0.0)
 {
 	static int iBoom = INVALID_ENT_REFERENCE;
 	
@@ -420,11 +461,11 @@ stock void PhysicsExplode(float vecOrigin[3], int iMagnitude, float flRadius, bo
 	
 	if(bDamage)
 	{
-		DispatchKeyValue(iBoom, "spawnflags", "0");
+		DispatchKeyValue(iBoom, "spawnflags", "8");
 	}
 	else
 	{
-		DispatchKeyValue(iBoom, "spawnflags", "1");
+		DispatchKeyValue(iBoom, "spawnflags", "9");
 	}
 	
 	char sBuf[32];
@@ -433,7 +474,7 @@ stock void PhysicsExplode(float vecOrigin[3], int iMagnitude, float flRadius, bo
 	
 	IntToString(RoundFloat(flRadius), sBuf, sizeof(sBuf));
 	DispatchKeyValue(iBoom, "radius", sBuf);
-	DispatchKeyValueFloat(iBoom, "inner_radius", flRadius);
+	DispatchKeyValueFloat(iBoom, "inner_radius", flInnerRadius);
 
 	TeleportEntity(iBoom, vecOrigin, NULL_VECTOR, NULL_VECTOR);
 
@@ -523,15 +564,8 @@ stock void TE_SetupPhysicsProp(float vecModelOrigin[3],
  *
  * @return			True on success, false on failure.
  **/
-stock bool TE_SetupDynamicLight(float vecOrigin[3], int RGB[3], float flRadius, float flTime, float flDecay=0.0, int exponent=0)
+stock void TE_SetupDynamicLight(float vecOrigin[3], int RGB[3], float flRadius, float flTime, float flDecay=0.0, int exponent=0)
 {
-	static int iLastTick;
-	int iCurrentTick = GetGameTickCount();
-	
-	if(iLastTick == iCurrentTick)
-		return false;
-	iLastTick = iCurrentTick;
-	
 	TE_Start("Dynamic Light");
 	
 	TE_WriteVector("m_vecOrigin", vecOrigin);
@@ -542,8 +576,6 @@ stock bool TE_SetupDynamicLight(float vecOrigin[3], int RGB[3], float flRadius, 
 	TE_WriteFloat("m_fRadius", flRadius);
 	TE_WriteFloat("m_fTime", flTime);
 	TE_WriteFloat("m_fDecay", flDecay);
-	
-	return true;
 }
 
 /**
@@ -1250,3 +1282,434 @@ stock void GetAbsOrigin(int iEntity, float vecOrigin[3], bool bCenter=false)
 		vecOrigin[2] += (vecMins[2] + vecMaxs[2]) * 0.5;
 	}
 }
+
+
+///////////////////////////////////////Sound
+
+
+/**
+ * level boost in some games maybe clamed, e.g. l4d max seems to be 150
+ * pitch is clamed between 1-200, this maybe different between games.
+ * sndChannel static sound wont be replaced, however if overflowed it wont play any sound until static sounds have finished.
+ *
+ * @param sample		sound file path.
+ * @param origin		origin to emit sound from.
+ * @param entity		entity to emit sound from.
+ * @param level		sound level attenuation, the wav sound it's self matters.
+ * @param pitch		sound pitch.
+ * @param sndChannel		sound channel.
+ * @param rangeMin		players within the min range sound wont be mixed.
+ * @param rangeCurve		range curve until max mix can be achieved.
+ * @param levelBoost		add level boost to mixed sounds max rangeCurve will apply levelBoost, half will apply half levelBoost.
+ * @param exponent		exponent value to multiply, logarithmic.
+ *
+ * @error			Invalid client index.
+ **/
+stock void EmitMixedAmbientSoundToAll(const char[] sample,
+				 const float origin[3] = NULL_VECTOR,
+				 int entity = SOUND_FROM_PLAYER,
+				 int level = SNDLEVEL_NORMAL,
+				 int pitch = SNDPITCH_NORMAL,
+				 int sndChannel = SNDCHAN_AUTO,
+				 float rangeMin,
+				 float rangeCurve=1500.0,
+				 int levelBoost=0,
+				 float exponent=1.0)
+{
+	for(int i = 1; i <= MaxClients; ++i)
+	{
+		if(!IsClientInGame(i) || IsFakeClient(i))
+			continue;
+		
+		EmitMixedAmbientSound(i, sample, origin, entity, level, pitch, sndChannel, rangeMin, rangeCurve, levelBoost, exponent);
+	}
+}
+
+/**
+ * level boost in some games maybe clamed, e.g. l4d max seems to be 150
+ * pitch is clamed between 1-200, this maybe different between games.
+ * sndChannel static sound wont be replaced, however if overflowed it wont play any sound until static sounds have finished.
+ *
+ * @param sample		sound file path.
+ * @param origin		origin to emit sound from.
+ * @param entity		entity to emit sound from.
+ * @param level		sound level attenuation, the wav sound it's self matters.
+ * @param pitch		sound pitch.
+ * @param sndChannel		sound channel.
+ * @param rangeMin		players within the min range sound wont be mixed.
+ * @param rangeCurve		range curve until max mix can be achieved, sample2 is played when 2x this value.
+ * @param levelBoost		add level boost to mixed sounds max rangeCurve will apply levelBoost, half will apply half levelBoost.
+ * @param exponent		exponent value to multiply, logarithmic.
+ * @param sample2		sound file path.
+ * @param level2		sound level attenuation.
+ * @param pitch2		sound pitch.
+ *
+ * @error			Invalid client index.
+ **/
+stock void EmitMixedAmbientSoundToAll_FallBack(const char[] sample,
+				 const float origin[3] = NULL_VECTOR,
+				 int entity = SOUND_FROM_PLAYER,
+				 int level = SNDLEVEL_NORMAL,
+				 int pitch = SNDPITCH_NORMAL,
+				 int sndChannel = SNDCHAN_AUTO,
+				 float rangeMin,
+				 float rangeCurve=1500.0,
+				 int levelBoost=0,
+				 float exponent=1.0,
+				 const char[] sample2,
+				 int level2 = SNDLEVEL_NORMAL,
+				 int pitch2 = SNDPITCH_NORMAL)
+{
+	for(int i = 1; i <= MaxClients; ++i)
+	{
+		if(!IsClientInGame(i) || IsFakeClient(i))
+			continue;
+		
+		EmitMixedAmbientSound_FallBack(i, sample, origin, entity, level, pitch, sndChannel, rangeMin, rangeCurve, levelBoost, exponent, sample2, level2, pitch2);
+	}
+}
+
+/**
+ * level boost in some games maybe clamed, e.g. l4d max seems to be 150
+ * pitch is clamed between 1-200, this maybe different between games.
+ * sndChannel static sound wont be replaced, however if overflowed it wont play any sound until static sounds have finished.
+ *
+ * @param client		client index.
+ * @param sample		sound file path.
+ * @param origin		origin to emit sound from.
+ * @param entity		entity to emit sound from.
+ * @param level		sound level attenuation, the wav sound it's self matters.
+ * @param pitch		sound pitch.
+ * @param sndChannel		sound channel.
+ * @param rangeMin		players within the min range sound wont be mixed.
+ * @param rangeCurve		range curve until max mix can be achieved.
+ * @param levelBoost		add level boost to mixed sounds max rangeCurve will apply levelBoost, half will apply half levelBoost.
+ * @param exponent		exponent value to multiply, logarithmic.
+ *
+ * @error			Invalid client index.
+ **/
+stock void EmitMixedAmbientSound(int client, const char[] sample,
+				 const float origin[3] = NULL_VECTOR,
+				 int entity = SOUND_FROM_PLAYER,
+				 int level = SNDLEVEL_NORMAL,
+				 int pitch = SNDPITCH_NORMAL,
+				 int sndChannel = SNDCHAN_AUTO,
+				 float rangeMin,
+				 float rangeCurve=1500.0,
+				 int levelBoost=0,
+				 float exponent=1.0)
+{
+	static float vecEyePos[3];
+	int newPitch;
+	float flDist;
+	float flDistPercent;
+	float flDistMulti;
+	int DistLevelBoost;
+	int viewEnt = -1;
+	
+	viewEnt = GetEntPropEnt(client, Prop_Send, "m_hViewEntity");
+	if(viewEnt > 0)
+	{
+		GetAbsOrigin(viewEnt, vecEyePos);
+	}
+	else
+	{
+		GetClientEyePosition(client, vecEyePos);
+	}
+	flDist = GetVectorDistance(origin, vecEyePos);
+	
+	if(rangeCurve == 0.0)
+	{
+		LogError("RangeCurve == 0.0");
+		return;
+	}
+	
+	flDist = (flDist - rangeMin < 0.0 ? 0.0 : flDist - rangeMin);
+	flDistPercent = (flDist / rangeCurve);
+	flDistMulti = (flDistPercent * 2) * exponent;
+	newPitch = pitch;
+	
+	if(flDistMulti > 1.0)
+	{
+		newPitch = FloatToInt(newPitch / (flDistMulti > 2.0 ? 2.0 : flDistMulti));
+	}
+	
+	DistLevelBoost = FloatToInt((flDistPercent * exponent) * levelBoost);
+	if(DistLevelBoost > levelBoost)
+		DistLevelBoost = levelBoost;
+	
+	EmitSoundToClient(client, sample, entity, sndChannel, level + DistLevelBoost, _, _, newPitch, _, origin);
+}
+
+/**
+ * level boost in some games maybe clamed, e.g. l4d max seems to be 150
+ * pitch is clamed between 1-200, this maybe different between games.
+ * sndChannel static sound wont be replaced, however if overflowed it wont play any sound until static sounds have finished.
+ *
+ * @param client		client index.
+ * @param sample		sound file path.
+ * @param origin		origin to emit sound from.
+ * @param entity		entity to emit sound from.
+ * @param level		sound level attenuation, the wav sound it's self matters.
+ * @param pitch		sound pitch.
+ * @param sndChannel		sound channel.
+ * @param rangeMin		players within the min range sound wont be mixed.
+ * @param rangeCurve		range curve until max mix can be achieved, sample2 is played when 2x this value.
+ * @param levelBoost		add level boost to mixed sounds max rangeCurve will apply levelBoost, half will apply half levelBoost.
+ * @param exponent		exponent value to multiply, logarithmic.
+ * @param sample2		sound file path.
+ * @param level2		sound level attenuation.
+ * @param pitch2		sound pitch.
+ *
+ * @error			Invalid client index.
+ **/
+stock void EmitMixedAmbientSound_FallBack(int client, const char[] sample,
+				 const float origin[3] = NULL_VECTOR,
+				 int entity = SOUND_FROM_PLAYER,
+				 int level = SNDLEVEL_NORMAL,
+				 int pitch = SNDPITCH_NORMAL,
+				 int sndChannel = SNDCHAN_AUTO,
+				 float rangeMin,
+				 float rangeCurve=1500.0,
+				 int levelBoost=0,
+				 float exponent=1.0,
+				 const char[] sample2,
+				 int level2 = SNDLEVEL_NORMAL,
+				 int pitch2 = SNDPITCH_NORMAL)
+{
+	static float vecEyePos[3];
+	int newPitch;
+	float flDist;
+	float flDistPercent;
+	float flDistMulti;
+	int DistLevelBoost;
+	int viewEnt = -1;
+
+	viewEnt = GetEntPropEnt(client, Prop_Send, "m_hViewEntity");
+	if(viewEnt > 0)
+	{
+		GetAbsOrigin(viewEnt, vecEyePos);
+	}
+	else
+	{
+		GetClientEyePosition(client, vecEyePos);
+	}
+	flDist = GetVectorDistance(origin, vecEyePos);
+	
+	if(rangeCurve == 0.0)
+	{
+		LogError("RangeCurve == 0.0");
+		return;
+	}
+	
+	flDist = (flDist - rangeMin < 0.0 ? 0.0 : flDist - rangeMin);
+	flDistPercent = (flDist / rangeCurve);
+	flDistMulti = (flDistPercent * 2) * exponent;
+	
+	if(flDistMulti >= 2.0)
+	{
+		EmitSoundToClient(client, sample2, entity, sndChannel, level2, _, _, pitch2, _, origin);
+		return;
+	}
+	
+	newPitch = pitch;
+	if(flDistMulti > 1.0)
+	{
+		newPitch = FloatToInt(newPitch / (flDistMulti > 2.0 ? 2.0 : flDistMulti));
+	}
+	
+	DistLevelBoost = FloatToInt((flDistPercent * exponent) * levelBoost);
+	if(DistLevelBoost > levelBoost)
+		DistLevelBoost = levelBoost;
+	
+	EmitSoundToClient(client, sample, entity, sndChannel, level + DistLevelBoost, _, _, newPitch, _, origin);
+}
+
+int FloatToInt(float val)
+{
+	return RoundFloat(val);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////Legacy Particle Stock///////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Creates a tempent particle.
+ *
+ * @param iParticleIndex	Particle index location in the "ParticleEffectNames" stringtable.
+ * @param iEntIndex		Entity index to attach particle to.
+ * @param fDelay		Delay for the TE_SendToAll function.
+ * @param SendToAll		True to send to all clients, false otherwise. You must call the send function yourself if sending to specific clients.
+ * @param sParticleName		Name of the particle to find the index with. Only used if the particle index is invalid.
+ * @param iAttachmentIndex	Attachment index of the particle. Decompile the model to retrieve this value.
+ * @param fParticleAngles	Angles of the particle. Usually effects particles that have no gravity.
+ * @param iFlags		Flags of the particle. Note: A value of "1" is required for attachment points and damage types.
+ * @param iDamageType		The damage type of the particle. (Used in impact effect dispatches and attachment points need to be set to use.)
+ * @param fMagnitude		The magnitude of the particle. (Needs testing; used in pipe bomb blast.)
+ * @param fScale		The scale of the particle (doesn't apply to most particles). (Needs testing.)
+ *
+ * @return			True on success, false on failure.
+ * @error			Invalid effect index or invalid particle stringtable index.
+ **/
+#pragma deprecated Used for backwards compatibility.
+stock bool L4D_TE_Create_Particle(float fParticleStartPos[3]={0.0, 0.0, 0.0}, 
+								float fParticleEndPos[3]={0.0, 0.0, 0.0}, 
+								int iParticleIndex=-1, 
+								int iEntIndex=0,
+								float fDelay=0.0,
+								bool SendToAll=true,
+								char sParticleName[64]="",
+								int iAttachmentIndex=0,
+								float fParticleAngles[3]={0.0, 0.0, 0.0}, 
+								int iFlags=0,
+								int iDamageType=0,
+								float fMagnitude=0.0,
+								float fScale=1.0,
+								float fRadius=0.0)
+{
+	TE_Start("EffectDispatch");
+	
+	static EngineVersion IsEngine;
+	if(IsEngine == Engine_Unknown)
+		IsEngine = GetEngineVersion();
+	
+	TE_WriteFloat(IsEngine == Engine_Left4Dead2 ? "m_vOrigin.x"	:"m_vOrigin[0]", fParticleStartPos[0]);
+	TE_WriteFloat(IsEngine == Engine_Left4Dead2 ? "m_vOrigin.y"	:"m_vOrigin[1]", fParticleStartPos[1]);
+	TE_WriteFloat(IsEngine == Engine_Left4Dead2 ? "m_vOrigin.z"	:"m_vOrigin[2]", fParticleStartPos[2]);
+	TE_WriteFloat(IsEngine == Engine_Left4Dead2 ? "m_vStart.x"	:"m_vStart[0]", fParticleEndPos[0]);//end point usually for bulletparticles or ropes
+	TE_WriteFloat(IsEngine == Engine_Left4Dead2 ? "m_vStart.y"	:"m_vStart[1]", fParticleEndPos[1]);
+	TE_WriteFloat(IsEngine == Engine_Left4Dead2 ? "m_vStart.z"	:"m_vStart[2]", fParticleEndPos[2]);
+	
+	static int iEffectIndex = INVALID_STRING_INDEX;
+	if(iEffectIndex < 0)
+	{
+		iEffectIndex = __FindStringIndex2(FindStringTable("EffectDispatch"), "ParticleEffect");
+		if(iEffectIndex == INVALID_STRING_INDEX)
+			SetFailState("Unable to find EffectDispatch/ParticleEffect indexes");
+		
+	}
+	
+	TE_WriteNum("m_iEffectName", iEffectIndex);
+	
+	if(iParticleIndex < 0)
+	{
+		static int iParticleStringIndex = INVALID_STRING_INDEX;
+		iParticleStringIndex = __FindStringIndex2(FindStringTable("ParticleEffectNames"), sParticleName);
+		if(iParticleStringIndex == INVALID_STRING_INDEX)
+			return false;
+		
+		TE_WriteNum("m_nHitBox", iParticleStringIndex);
+	}
+	else
+		TE_WriteNum("m_nHitBox", iParticleIndex);
+	
+	TE_WriteNum("entindex", iEntIndex);
+	TE_WriteNum("m_nAttachmentIndex", iAttachmentIndex);
+	
+	TE_WriteVector("m_vAngles", fParticleAngles);
+	
+	TE_WriteNum("m_fFlags", iFlags);
+	TE_WriteFloat("m_flMagnitude", fMagnitude);// saw this being used in pipebomb needs testing what it does probs shaking screen?
+	TE_WriteFloat("m_flScale", fScale);
+	TE_WriteFloat("m_flRadius", fRadius);// saw this being used in pipebomb needs testing what it does probs shaking screen?
+	TE_WriteNum("m_nDamageType", iDamageType);// this shit is required dunno why for attachpoint emitting valve probs named it wrong
+	
+	if(SendToAll)
+		TE_SendToAll(fDelay);
+	
+	return true;
+}
+
+/**
+ * Stops a tempent particle.
+ *
+ * @param fParticleStartPos	Starting position of the particle.
+ * @param fParticleEndPos	Ending position of the particle.
+ * @param iParticleIndex	Particle index location in the "ParticleEffectNames" stringtable.
+ * @param iEntIndex		Entity index to attach particle to.
+ * @param fDelay		Delay for the TE_SendToAll function.
+ * @param SendToAll		True to send to all clients, false otherwise. You must call the send function yourself if sending to specific clients.
+ * @param sParticleName		Name of the particle to find the index with. Only used if the particle index is invalid.
+ * @param iAttachmentIndex	Attachment index of the particle. Decompile the model to retrieve this value.
+ * @param fParticleAngles	Angles of the particle. Usually effects particles that have no gravity.
+ * @param iFlags		Flags of the particle.
+ * @param iDamageType		The damage type of the particle. (Used in impact effect dispatches and attachment points need to be set to use.)
+ * @param fMagnitude		The magnitude of the particle. (Needs testing; used in pipe bomb blast.)
+ * @param fScale		The scale of the particle (doesn't apply to most particles). (Needs testing.)
+ * @param fRadius		The radius of the particle.
+ *
+ * @return			True on success, false on failure.
+ * @error			Invalid effect index or invalid particle stringtable index.
+ **/
+#pragma deprecated Used only for backwards compatibility.
+stock bool L4D_TE_Stop_Particle(float fParticleStartPos[3]={0.0, 0.0, 0.0},
+								float fParticleEndPos[3]={0.0, 0.0, 0.0},
+								int iParticleIndex=-1,
+								int iEntIndex=0,
+								float fDelay=0.0,
+								bool SendToAll=true,
+								char sParticleName[64]="",
+								int iAttachmentIndex=0,
+								float fParticleAngles[3]={0.0, 0.0, 0.0},
+								int iFlags=0,
+								int iDamageType=0,
+								float fMagnitude=0.0,
+								float fScale=1.0,
+								float fRadius=0.0)
+{
+	TE_Start("EffectDispatch");
+	
+	static EngineVersion IsEngine;
+	if(IsEngine == Engine_Unknown)
+		IsEngine = GetEngineVersion();
+	
+	TE_WriteFloat(IsEngine == Engine_Left4Dead2 ? "m_vOrigin.x"	:"m_vStart[0]", fParticleStartPos[0]);
+	TE_WriteFloat(IsEngine == Engine_Left4Dead2 ? "m_vOrigin.y"	:"m_vStart[1]", fParticleStartPos[1]);
+	TE_WriteFloat(IsEngine == Engine_Left4Dead2 ? "m_vOrigin.z"	:"m_vStart[2]", fParticleStartPos[2]);
+	TE_WriteFloat(IsEngine == Engine_Left4Dead2 ? "m_vStart.x"	:"m_vOrigin[0]", fParticleEndPos[0]);//end point usually for bulletparticles or ropes
+	TE_WriteFloat(IsEngine == Engine_Left4Dead2 ? "m_vStart.y"	:"m_vOrigin[1]", fParticleEndPos[1]);
+	TE_WriteFloat(IsEngine == Engine_Left4Dead2 ? "m_vStart.z"	:"m_vOrigin[2]", fParticleEndPos[2]);
+
+	static int iEffectIndex = INVALID_STRING_INDEX;
+	if(iEffectIndex < 0)
+	{
+		iEffectIndex = __FindStringIndex2(FindStringTable("EffectDispatch"), "ParticleEffectStop");
+		if(iEffectIndex == INVALID_STRING_INDEX)
+			SetFailState("Unable to find EffectDispatch/ParticleEffectStop indexes");
+
+	}
+
+	TE_WriteNum("m_iEffectName", iEffectIndex);
+
+	if(iParticleIndex < 0)
+	{
+		static int iParticleStringIndex = INVALID_STRING_INDEX;
+		iParticleStringIndex = __FindStringIndex2(FindStringTable("ParticleEffectNames"), sParticleName);
+		if(iParticleStringIndex == INVALID_STRING_INDEX)
+			return false;
+
+		TE_WriteNum("m_nHitBox", iParticleStringIndex);
+	}
+	else
+		TE_WriteNum("m_nHitBox", iParticleIndex);
+
+	TE_WriteNum("entindex", iEntIndex);
+	TE_WriteNum("m_nAttachmentIndex", iAttachmentIndex);
+
+	TE_WriteVector("m_vAngles", fParticleAngles);
+
+	TE_WriteNum("m_fFlags", iFlags);
+	TE_WriteFloat("m_flMagnitude", fMagnitude);// saw this being used in pipebomb needs testing what it does probs shaking screen?
+	TE_WriteFloat("m_flScale", fScale);
+	TE_WriteFloat("m_flRadius", fRadius);// saw this being used in pipebomb needs testing what it does probs shaking screen?
+	TE_WriteNum("m_nDamageType", iDamageType);// this shit is required dunno why for attachpoint emitting valve probs named it wrong
+
+	if(SendToAll)
+		TE_SendToAll(fDelay);
+
+	return true;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

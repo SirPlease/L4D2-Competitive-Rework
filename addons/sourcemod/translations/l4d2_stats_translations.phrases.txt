@@ -1,0 +1,59 @@
+"Phrases"
+{
+	"Tag+"
+	{
+		"en"	"{green}★{default}"
+	}
+	"Tag++"
+	{
+		"en"    "{green}★★{default}"
+	}
+	"Tag+++"
+	{
+		"en"	"{green}★★★{default}"
+	}
+	"MeleeSkeeted"
+	{
+        "#format"   "{1:N},{2:N}" // 1:victim 2:attacker
+		"en"    	"{olive}{1}{default} was {blue}melee{default}-skeeted{default} by {olive}{2}{default}"
+	}
+	"Headshotted"
+	{
+       "#format"	"{1:N},{2:N}" // 1:victim 2:attacker
+		"en"    	"{olive}{1}{default} was {blue}headshotted{default} by {olive}{2}{default}"
+	}
+	"assister"
+	{
+        "#format"   "{1:N},{2:d},{3:d},{4:s}" // 1:assisters[0][0], 2:assisters[0][1], 3:g_iShotsDealt[victim][assisters[0][0]], 4:assist_shots == 1 ? AssistShotsSingular:AssistShotsPlural
+		"en"		"{1} ({2}/{3} shot{4})"
+	}
+	"AssistShotsSingular"
+	{
+		"en"		""
+	}
+	"AssistShotsPlural"
+	{
+		"en"		"s"
+	}
+	"TeamSkeeted"
+	{
+       "#format"	"{1:N},{2:N},{3:d},{4:d},{5:s},{6:s}" // 1:attacker 2:victim 3:damage 4:shots 5:shots == 1 ? "" : "s" 6:assister_string
+		"en"    	"{olive}{1}{default} teamskeeted {olive}{2}{default} for {blue}{3} damage{default} in {blue}{4}{default} shot{5}. Assisted by: {olive}{6}{default}"
+	}
+	"Skeeted"
+	{
+       "#format"	"{1:N},{2:N},{3:d},{4:s}" // 1:attacker 2:victim 3:shots 4:shots == 1 ? "" : "s"
+		"en"    	"{olive}{1}{default} skeeted {olive}{2}{default} in {blue}{3}{default} shot{4}"
+	}
+	"ShutBoomer"
+	{
+       "#format"	"{1:N},{2:s},{3:.1f}" // 1:g_iBoomerKiller 2:Boomer 3:BoomerKillTime
+		"en"    	"{olive}{1}{default} has shutdown {olive}{2}{default}'s Boomer in {blue}{3}{default}"
+	}
+	"AlarmedCar"
+	{
+		"en"		"{olive}%N{default} triggered an {olive}Alarmed Car{default}"
+	}
+}
+
+

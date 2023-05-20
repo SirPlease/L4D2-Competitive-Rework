@@ -283,6 +283,10 @@
 				{
 					"read" "27"
 				}
+				"windows"
+				{
+					"read" "32"
+				}
 			}
 			
 			"ChargerIntention::Reset"
@@ -292,6 +296,10 @@
 				"linux"
 				{
 					"read" "27"
+				}
+				"windows"
+				{
+					"read" "32"
 				}
 			}
 			
@@ -303,6 +311,10 @@
 				{
 					"read" "27"
 				}
+				"windows"
+				{
+					"read" "32"
+				}
 			}
 			
 			"JockeyIntention::Reset"
@@ -312,6 +324,10 @@
 				"linux"
 				{
 					"read" "27"
+				}
+				"windows"
+				{
+					"read" "32"
 				}
 			}
 			
@@ -323,6 +339,10 @@
 				{
 					"read" "27"
 				}
+				"windows"
+				{
+					"read" "32"
+				}
 			}
 			
 			"SpitterIntention::Reset"
@@ -332,6 +352,10 @@
 				"linux"
 				{
 					"read" "27"
+				}
+				"windows"
+				{
+					"read" "32"
 				}
 			}
 			
@@ -343,6 +367,10 @@
 				{
 					"read" "27"
 				}
+				"windows"
+				{
+					"read" "32"
+				}
 			}
 			
 			"InfectedIntention::Reset"
@@ -352,6 +380,10 @@
 				"linux"
 				{
 					"read" "27"
+				}
+				"windows"
+				{
+					"read" "8"
 				}
 			}
 			
@@ -363,6 +395,10 @@
 				{
 					"read" "27"
 				}
+				"windows"
+				{
+					"read" "26"
+				}
 			}
 			
 			"WitchIntention::Reset"
@@ -373,6 +409,10 @@
 				{
 					"read" "132"
 				}
+				"windows"
+				{
+					"read" "158"
+				}
 			}
 		}
 		
@@ -381,61 +421,61 @@
 			"BoomerIntention::Reset"
 			{
 				"linux" "@_ZN15BoomerIntentionC2EP8INextBot"
-				"windows" "\x20\x30\x2A\x2A\x00\x2D\x2A\x2A\x40\x76"
+				"windows" "\x55\x8B\xEC\x8B\x45\x08\x56\x50\x8B\xF1\xE8\x51\x5E\x2A\x2A\xC7\x46\x14\x2A\x2A\x2A\x2A\x33\xC0\x89\x46\x18\x89\x46\x1C\xC7\x06\x2A\x2A\x2A\x2A\xC7\x46\x14\x2A\x2A\x2A\x2A\x8B\xC6\x5E\x5D\xC2\x04\x00"
 			}
 	
 			"ChargerIntention::Reset"
 			{
 				"linux" "@_ZN16ChargerIntentionC2EP8INextBot"
-				"windows" "\xD0\xDF\x2A\x2A\xB0\xDC\x2A\x2A\x40\x76"
+				"windows" "\x55\x8B\xEC\x8B\x45\x08\x56\x50\x8B\xF1\xE8\x81\xAE"
 			}
 			
 			"HunterIntention::Reset"
 			{
 				"linux" "@_ZN15HunterIntentionC2EP8INextBot"
-				"windows" "\x90\x92\x2A\x2A\x70\x8F\x2A\x2A\x40"
+				"windows" "\x55\x8B\xEC\x8B\x45\x08\x56\x50\x8B\xF1\xE8\xC1\xFB"
 			}
 			
 			"JockeyIntention::Reset"
 			{
 				"linux" "@_ZN15JockeyIntentionC2EP8INextBot"
-				"windows" "\x2A\x2A\x2A\x2A\x20\x40\x2A\x2A\x40\x76\x2A\x2A\x2A\x2A\x2A\x2A\x50\x5E\x2A\x2A\x90\x5E\x2A\x2A\xD0"
+				"windows" "\x55\x8B\xEC\x8B\x45\x08\x56\x50\x8B\xF1\xE8\x01\x4B"
 			}
 			
 			"SmokerIntention::Reset"
 			{
 				"linux" "@_ZN15SmokerIntentionC2EP8INextBot"
-				"windows" "\x20\x06\x2A\x2A\x00\x03\x2A\x2A\x40\x76\x2A\x2A\xC0\xBE"
+				"windows" "\x55\x8B\xEC\x8B\x45\x08\x56\x50\x8B\xF1\xE8\x31\x88"
 			}
 			
 			"SpitterIntention::Reset"
 			{
 				"linux" "@_ZN16SpitterIntentionC2EP8INextBot"
-				"windows" "\xA0\xC0\x2A\x2A\x80\xBD\x2A\x2A\x40\x76\x2A\x2A\xC0\xBE"
+				"windows" "\x55\x8B\xEC\x8B\x45\x08\x56\x50\x8B\xF1\xE8\xC1\xCD"
 			}
 			
 			"TankIntention::Reset"
 			{
 				"linux" "@_ZN13TankIntentionC2EP8INextBot"
-				"windows" "\x10\x6E\x2A\x2A\xF0\x6A\x2A\x2A\x40\x76"
+				"windows" "\x55\x8B\xEC\x8B\x45\x08\x56\x50\x8B\xF1\xE8\x51\x20"
 			}
 			
 			"InfectedIntention::Reset"
 			{
 				"linux" "@_ZN17InfectedIntentionC2EP8INextBot"
-				"windows" "\x20\x31\x2A\x2A\xE0\x2F\x2A\x2A\xF0\x2F"
+				"windows" "\x56\x8B\xF1\x8B\x4E\x1C\xC7\x06\x2A\x2A\x2A\x2A\xC7\x46\x14\x2A\x2A\x2A\x2A\x85\xC9\x74\x2A\x8B\x01\x8B\x10\x6A\x01\xFF\xD2\xC7\x06"
 			}
 			
 			"SurvivorIntention::Reset"
 			{	
 				"linux" "@_ZN17SurvivorIntentionC2EP8INextBot"
-				"windows" "\xE0\xE7\x2A\x2A\x30\xE6\x2A\x2A\x40\xE6\x2A\x2A\xC0\xBE"
+				"windows" "\x55\x8B\xEC\x8B\x45\x08\x56\x50\x8B\xF1\xE8\x2A\x2A\x2A\x2A\xC7\x46\x14\x2A\x2A\x2A\x2A\x33\xC0\xC7\x06\x2A\x2A\x2A\x2A"
 			}
 			
 			"WitchIntention::Reset"
 			{	
 				"linux" "@_ZN5Witch16CreateComponentsEv"
-				"windows" "\xA0\x78\x2A\x2A\xE0\x2F\x2A\x2A\xF0\x2F"
+				"windows" "\x56\x57\x68\x54\x01\x00\x00"
 			}
 		}
 	}

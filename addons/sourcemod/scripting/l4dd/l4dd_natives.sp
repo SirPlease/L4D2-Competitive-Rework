@@ -1,6 +1,6 @@
 /*
 *	Left 4 DHooks Direct
-*	Copyright (C) 2022 Silvers
+*	Copyright (C) 2023 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -77,6 +77,7 @@ Handle g_hSDK_ZombieManager_GetRandomPZSpawnPosition;
 Handle g_hSDK_NavAreaBuildPath_ShortestPathCost;
 Handle g_hSDK_CNavMesh_GetNearestNavArea;
 Handle g_hSDK_TerrorNavArea_FindRandomSpot;
+Handle g_hSDK_CTerrorPlayer_WarpToValidPositionIfStuck;
 Handle g_hSDK_IsVisibleToPlayer;
 Handle g_hSDK_CDirector_HasAnySurvivorLeftSafeArea;
 // Handle g_hSDK_CDirector_IsAnySurvivorInExitCheckpoint;
@@ -213,6 +214,7 @@ any Native_GetPointer(Handle plugin, int numParams) // Native "L4D_GetPointer"
 		case POINTER_SCAVENGEMODE:		return g_pScavengeMode;
 		case POINTER_VERSUSMODE:		return g_pVersusMode;
 		case POINTER_SCRIPTVM:			return g_pScriptVM;
+		case POINTER_THENAVAREAS:		return g_pTheNavAreas;
 	}
 
 	return 0;
@@ -725,6 +727,7 @@ int Native_CTerrorGameRules_GetSurvivorSetMap(Handle plugin, int numParams) // N
 	char sTemp[8];
 	//PrintToServer("#### CALL g_hSDK_CTerrorGameRules_GetMissionInfo");
 	int infoPointer = SDKCall(g_hSDK_CTerrorGameRules_GetMissionInfo);
+	ValidateAddress(infoPointer, "CTerrorGameRules::GetMissionInfo");
 
 	//PrintToServer("#### CALL g_hSDK_KeyValues_GetString");
 	SDKCall(g_hSDK_KeyValues_GetString, infoPointer, sTemp, sizeof(sTemp), "survivor_set", "2"); // Default set = 2
@@ -986,6 +989,18 @@ int Native_TerrorNavArea_FindRandomSpot(Handle plugin, int numParams) // Native 
 	return 0;
 }
 
+int Native_CTerrorPlayer_WarpToValidPositionIfStuck(Handle plugin, int numParams) // Native "L4D_FindRandomSpot"
+{
+	ValidateNatives(g_hSDK_CTerrorPlayer_WarpToValidPositionIfStuck, "CTerrorPlayer::WarpToValidPositionIfStuck");
+
+	int client = GetNativeCell(1);
+
+	//PrintToServer("#### CALL g_hSDK_CTerrorPlayer_WarpToValidPositionIfStuck");
+	SDKCall(g_hSDK_CTerrorPlayer_WarpToValidPositionIfStuck, client);
+
+	return 0;
+}
+
 int Native_IsVisibleToPlayer(Handle plugin, int numParams) // Native "L4D2_IsVisibleToPlayer"
 {
 	ValidateNatives(g_hSDK_IsVisibleToPlayer, "IsVisibleToPlayer");
@@ -1100,26 +1115,33 @@ int Native_IsInFirstCheckpoint(Handle plugin, int numParams) // Native "L4D_IsIn
 	return IsInFirstCheckpoint(client);
 }
 
+#define FIRST_RANGE_TOLLERANCE 2500.0 // Guess max distance to first saferoom
+
 bool IsInFirstCheckpoint(int client)
 {
 	if( g_bLeft4Dead2 )
 	{
 		//PrintToServer("#### CALL g_hSDK_CTerrorPlayer_GetLastKnownArea");
-		int area = SDKCall(g_hSDK_CTerrorPlayer_GetLastKnownArea, client);
-		if( area == 0 ) return false;
+		Address nav = SDKCall(g_hSDK_CTerrorPlayer_GetLastKnownArea, client);
+		if( nav == Address_Null ) return false;
 
-		//PrintToServer("#### CALL g_hSDK_TerrorNavMesh_GetInitialCheckpoint");
-		int nav1 = SDKCall(g_hSDK_TerrorNavMesh_GetInitialCheckpoint, g_pNavMesh);
-		if( nav1 )
+		if( GetTerrorNavAreaFlow(nav) < FIRST_RANGE_TOLLERANCE )
 		{
-			//PrintToServer("#### CALL g_hSDK_Checkpoint_ContainsArea");
-			if( SDKCall(g_hSDK_Checkpoint_ContainsArea, nav1, area) )
-				return true;
-		}
+			//PrintToServer("#### CALL g_hSDK_TerrorNavMesh_GetInitialCheckpoint");
+			int nav1 = SDKCall(g_hSDK_TerrorNavMesh_GetInitialCheckpoint, g_pNavMesh);
+			if( nav1 )
+			{
+				//PrintToServer("#### CALL g_hSDK_Checkpoint_ContainsArea");
+				if( SDKCall(g_hSDK_Checkpoint_ContainsArea, nav1, nav) )
+					return true;
+			}
 
-		//PrintToServer("#### g_hSDK_TerrorNavMesh_IsInInitialCheckpoint_NoLandmark");
-		if( SDKCall(g_hSDK_TerrorNavMesh_IsInInitialCheckpoint_NoLandmark, g_pNavMesh, area) )
-			return true;
+			//PrintToServer("#### g_hSDK_TerrorNavMesh_IsInInitialCheckpoint_NoLandmark");
+			if( SDKCall(g_hSDK_TerrorNavMesh_IsInInitialCheckpoint_NoLandmark, g_pNavMesh, nav) )
+			{
+				return true;
+			}
+		}
 	}
 	else
 	{
@@ -1191,20 +1213,24 @@ int Native_IsPositionInLastCheckpoint(Handle plugin, int numParams) // Native "L
 
 bool IsPositionInSaferoom(float vecPos[3], bool bStartSaferoom)
 {
-    Address nav = L4D_GetNearestNavArea(vecPos, 1000.0, _, true);
-    if( nav != Address_Null )
-    {
-        int spawnAttributes = GetTerrorNavArea_Attributes(nav);
-        if( spawnAttributes & NAV_SPAWN_CHECKPOINT && !(spawnAttributes & NAV_SPAWN_FINALE) )
-        {
-            return bStartSaferoom != GetTerrorNavAreaFlow(nav) > 2500.0;
-        }
-    }
-    
-    return false;
+	Address nav = L4D_GetNearestNavArea(vecPos, 1000.0, _, _, true);
+	if( nav != Address_Null )
+	{
+		int spawnAttributes = GetTerrorNavArea_Attributes(nav);
+		if( spawnAttributes & NAV_SPAWN_CHECKPOINT && !(spawnAttributes & NAV_SPAWN_FINALE) )
+		{
+			float range = GetTerrorNavAreaFlow(nav);
+			if( (bStartSaferoom && range < FIRST_RANGE_TOLLERANCE) || (!bStartSaferoom && range > FIRST_RANGE_TOLLERANCE) )
+			{
+				return bStartSaferoom != GetTerrorNavAreaFlow(nav) > FIRST_RANGE_TOLLERANCE;
+			}
+		}
+	}
+
+	return false;
 }
 
-#define DOOR_RANGE_TOLLERANCE 2000.0
+#define DOOR_RANGE_TOLLERANCE 2000.0 // Guess distance from start of map to first saferoom door
 
 int Native_GetCheckpointFirst(Handle plugin, int numParams) // Native "L4D_GetCheckpointFirst"
 {
@@ -1240,7 +1266,7 @@ int GetCheckpointFirst()
 			if( area )
 			{
 				val = view_as<float>(LoadFromAddress(area + view_as<Address>(g_iOff_m_flow), NumberType_Int32));
-				if( val < DOOR_RANGE_TOLLERANCE && val < pos ) // DOOR_RANGE_TOLLERANCE, guess distance from start of map to first saferoom door
+				if( val < DOOR_RANGE_TOLLERANCE && val < pos )
 				{
 					pos = val;
 					target = entity;
@@ -1629,7 +1655,6 @@ void OnAcidDamage(int victim, int attacker, int inflictor, float damage, int dam
 			EmitSoundToAll(g_sAcidSounds[GetRandomInt(0, sizeof(g_sAcidSounds) - 1)], _, SNDCHAN_AUTO, 85, _, 0.55, GetRandomInt(95, 105), _, vPos);
 		}
 	}
-	
 }
 
 // When acid entity is destroyed, and no more active, unhook
@@ -1684,7 +1709,7 @@ int Native_CTerrorPlayer_OnAdrenalineUsed(Handle plugin, int numParams) // Nativ
 		float fClientHealth = iHealth + fHealth;
 		if( fClientHealth < 100.0 ) // Some plugin allows survivor HP > 100
 		{
-			fClientHealth = fClientHealth + g_hCvar_Adrenaline.FloatValue;
+			fClientHealth = fClientHealth + g_fCvar_Adrenaline;
 			if( fClientHealth > 100.0 )
 			{
 				SetTempHealth(client, 100.0 - iHealth);
@@ -1830,10 +1855,33 @@ any Native_CDirector_GetFurthestSurvivorFlow(Handle plugin, int numParams) // Na
 	return SDKCall(g_hSDK_CDirector_GetFurthestSurvivorFlow, g_pDirector);
 }
 
-int Native_NavAreaTravelDistance(Handle plugin, int numParams) // Native "L4D2_NavAreaTravelDistance"
+int Native_GetFirstSpawnClass(Handle plugin, int numParams) // Native "L4D2_GetFirstSpawnClass"
 {
 	if( !g_bLeft4Dead2 ) ThrowNativeError(SP_ERROR_NOT_RUNNABLE, NATIVE_UNSUPPORTED2);
 
+	ValidateAddress(g_pDirector, "g_pDirector");
+	ValidateAddress(g_iOff_m_nFirstClassIndex, "m_nFirstClassIndex");
+
+	return LoadFromAddress(g_pDirector + view_as<Address>(g_iOff_m_nFirstClassIndex), NumberType_Int32);
+}
+
+int Native_SetFirstSpawnClass(Handle plugin, int numParams) // Native "L4D2_SetFirstSpawnClass"
+{
+	if( !g_bLeft4Dead2 ) ThrowNativeError(SP_ERROR_NOT_RUNNABLE, NATIVE_UNSUPPORTED2);
+
+	ValidateAddress(g_pDirector, "g_pDirector");
+	ValidateAddress(g_iOff_m_nFirstClassIndex, "m_nFirstClassIndex");
+
+	int index = GetNativeCell(1);
+	if( index < 1 || index > 6 ) ThrowError("Invalid index %d, must be 1-6.", index);
+
+	StoreToAddress(g_pDirector + view_as<Address>(g_iOff_m_nFirstClassIndex), index, NumberType_Int32);
+
+	return 0;
+}
+
+int Native_NavAreaTravelDistance(Handle plugin, int numParams) // Native "L4D2_NavAreaTravelDistance"
+{
 	ValidateNatives(g_hSDK_NavAreaTravelDistance, "NavAreaTravelDistance");
 
 	float vPos[3], vEnd[3];
@@ -1843,7 +1891,10 @@ int Native_NavAreaTravelDistance(Handle plugin, int numParams) // Native "L4D2_N
 	int a3 = GetNativeCell(3);
 
 	//PrintToServer("#### CALL g_hSDK_NavAreaTravelDistance");
-	return SDKCall(g_hSDK_NavAreaTravelDistance, vPos, vEnd, a3);
+	if( g_bLeft4Dead2 )
+		return SDKCall(g_hSDK_NavAreaTravelDistance, vPos, vEnd, a3);
+
+	return SDKCall(g_hSDK_NavAreaTravelDistance, vPos, vEnd);
 }
 
 int Native_NavAreaBuildPath(Handle plugin, int numParams) // Native "L4D2_NavAreaBuildPath"
@@ -2994,6 +3045,92 @@ int Native_GetCurrentChapter(Handle plugin, int numParams) // Native "L4D_GetCur
 	return LoadFromAddress(g_pDirector + view_as<Address>(g_iOff_m_chapter), NumberType_Int32) + 1;
 }
 
+int Native_GetAllNavAreas(Handle plugin, int numParams) // Native "L4D_GetAllNavAreas"
+{
+	ValidateAddress(g_pTheNavAreas_List, "g_pTheNavAreas_List");
+	ValidateAddress(g_pTheNavAreas_Size, "g_pTheNavAreas_Size");
+
+	ArrayList aList = GetNativeCell(1);
+
+	int size = LoadFromAddress(g_pTheNavAreas_Size, NumberType_Int32);
+
+	if( aList )
+	{
+		for( int i = 0; i < size; i++ )
+		{
+			aList.Push(LoadFromAddress(g_pTheNavAreas_List + view_as<Address>(i * 4), NumberType_Int32));
+		}
+	}
+
+	return 0;
+}
+
+int Native_GetNavAreaID(Handle plugin, int numParams) // Native "L4D_GetNavAreaID"
+{
+	Address area = GetNativeCell(1);
+
+	return LoadFromAddress(area + view_as<Address>(g_iOff_NavAreaID), NumberType_Int32);
+}
+
+any Native_GetNavAreaByID(Handle plugin, int numParams) // Native "L4D_GetNavAreaByID"
+{
+	ValidateAddress(g_pTheNavAreas_List, "g_pTheNavAreas_List");
+	ValidateAddress(g_pTheNavAreas_Size, "g_pTheNavAreas_Size");
+
+	int area = GetNativeCell(1);
+
+	Address test;
+
+	int size = LoadFromAddress(g_pTheNavAreas_Size, NumberType_Int32);
+
+	for( int i = 0; i < size; i++ )
+	{
+		test = LoadFromAddress(g_pTheNavAreas_List + view_as<Address>(i * 4), NumberType_Int32);
+		if( LoadFromAddress(test + view_as<Address>(g_iOff_NavAreaID), NumberType_Int32) == area )
+		{
+			return test;
+		}
+	}
+
+	return Address_Null;
+}
+
+int Native_GetNavAreaPos(Handle plugin, int numParams) // Native "L4D_GetNavAreaPos"
+{
+	Address area = GetNativeCell(1);
+
+	float vPos[3];
+
+	vPos[0] = view_as<float>(LoadFromAddress(area + view_as<Address>(4), NumberType_Int32));
+	vPos[1] = view_as<float>(LoadFromAddress(area + view_as<Address>(8), NumberType_Int32));
+	vPos[2] = view_as<float>(LoadFromAddress(area + view_as<Address>(12), NumberType_Int32));
+
+	SetNativeArray(2, vPos, sizeof(vPos));
+
+	return 0;
+}
+
+int Native_GetNavAreaSize(Handle plugin, int numParams) // Native "L4D_GetNavAreaSize"
+{
+	Address area = GetNativeCell(1);
+
+	float vPos[3];
+
+	vPos[0] = view_as<float>(LoadFromAddress(area + view_as<Address>(4), NumberType_Int32));
+	vPos[1] = view_as<float>(LoadFromAddress(area + view_as<Address>(8), NumberType_Int32));
+	vPos[2] = view_as<float>(LoadFromAddress(area + view_as<Address>(12), NumberType_Int32));
+
+	float vSize[3];
+
+	vSize[0] = view_as<float>(LoadFromAddress(area + view_as<Address>(16), NumberType_Int32)) - vPos[0];
+	vSize[1] = view_as<float>(LoadFromAddress(area + view_as<Address>(20), NumberType_Int32)) - vPos[1];
+	vSize[2] = view_as<float>(LoadFromAddress(area + view_as<Address>(24), NumberType_Int32)) - vPos[2];
+
+	SetNativeArray(2, vSize, sizeof(vSize));
+
+	return 0;
+}
+
 int Native_GetTerrorNavArea_Attributes(Handle plugin, int numParams) // Native "L4D_GetNavArea_SpawnAttributes"
 {
 	int area = GetNativeCell(1);
@@ -3056,6 +3193,7 @@ int Native_CTerrorGameRules_GetNumChaptersForMissionAndMode(Handle plugin, int n
 
 			//PrintToServer("#### CALL g_hSDK_CTerrorGameRules_GetMissionInfo");
 			int infoPointer = SDKCall(g_hSDK_CTerrorGameRules_GetMissionInfo);
+			ValidateAddress(infoPointer, "CTerrorGameRules::GetMissionInfo");
 
 			char sMode[64];
 			char sTemp[64];
@@ -4462,7 +4600,7 @@ void RespawnRescue()
 {
 	StoreToAddress(g_pDirector + view_as<Address>(g_iOff_m_rescueCheckTimer + 8), view_as<int>(0.0), NumberType_Int32, false);
 
-	int time = g_hCvar_RescueDeadTime.IntValue;
+	int time = g_iCvar_RescueDeadTime;
 	g_hCvar_RescueDeadTime.SetInt(0);
 
 	//PrintToServer("#### CALL g_hSDK_CDirector_CreateRescuableSurvivors");

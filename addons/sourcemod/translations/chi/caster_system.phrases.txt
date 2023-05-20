@@ -13,7 +13,7 @@
 
 	"SelfCast2"
 	{
-		"chi"		"{blue}[{default}Cast{blue}] 重连服务器以加载 MOD"
+		"chi"		"{blue}[{default}Cast{blue}] 重连服务器来加载 MOD"
 	}
 
 	"RegCasterTarget"
