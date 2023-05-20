@@ -51,6 +51,24 @@ void ClosePort()
 	StrCat(endpoint, sizeof(endpoint), "/close-port");
 
 	JSONObject command = new JSONObject();
+	JSONArray allowedIps = new JSONArray();
+
+	for (int client = 1; client <= MaxClients; client++)
+	{
+		if (!IsClientInGame(client) || IsFakeClient(client))
+			continue;
+
+		int clientTeam = GetClientTeam(client);
+		if (clientTeam != 1 && clientTeam != 2 && clientTeam != 3)
+			continue;
+
+		new String:allowedIp[32];
+		GetClientIP(client, allowedIp, sizeof(allowedIp));
+
+		allowedIps.PushString(allowedIp);
+	}
+
+	command.Set("allowedIps", allowedIps);
 
 	HTTPRequest request = BuildHTTPRequest(endpoint);
 	request.Put(command, ClosePortResponse);
@@ -76,9 +94,8 @@ void OpenPort()
 	StrCat(endpoint, sizeof(endpoint), "/open-port");
 
 	JSONObject command = new JSONObject();
-	command.SetString("ranges", "*");
-
 	HTTPRequest request = BuildHTTPRequest(endpoint);
+
 	request.Put(command, OpenPortResponse);
 }
 
@@ -99,10 +116,29 @@ void OpenPortIP(char[] ip)
 
 	new String:endpoint[255] = "/api/server/";
 	StrCat(endpoint, sizeof(endpoint), port);
-	StrCat(endpoint, sizeof(endpoint), "/open-port");
+	StrCat(endpoint, sizeof(endpoint), "/close-port");
 
 	JSONObject command = new JSONObject();
-	command.SetString("ranges", ip);
+	JSONArray allowedIps = new JSONArray();
+
+	for (int client = 1; client <= MaxClients; client++)
+	{
+		if (!IsClientInGame(client) || IsFakeClient(client))
+			continue;
+
+		int clientTeam = GetClientTeam(client);
+		if (clientTeam != 1 && clientTeam != 2 && clientTeam != 3)
+			continue;
+
+		new String:allowedIp[32];
+		GetClientIP(client, allowedIp, sizeof(allowedIp));
+
+		allowedIps.PushString(allowedIp);
+	}
+
+	allowedIps.PushString(ip);
+
+	command.Set("allowedIps", allowedIps);
 
 	HTTPRequest request = BuildHTTPRequest(endpoint);
 	request.Put(command, OpenPortIPResponse);
