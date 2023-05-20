@@ -33,7 +33,7 @@
 	}
 	"AssistShotsPlural"
 	{
-		"chi"		"s"
+		"chi"		""
 	}
 	"TeamSkeeted"
 	{
