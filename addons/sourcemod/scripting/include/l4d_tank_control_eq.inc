@@ -10,6 +10,9 @@
  */
 native int GetTankSelection();
 
+forward void TankControl_OnTryOfferingTankBot(char sQueuedTank[64]);
+forward void TankControl_OnTankSelection(char sQueuedTank[64]);
+
 public SharedPlugin __pl_l4d_tank_control_eq =
 {
 	name = "l4d_tank_control_eq",
