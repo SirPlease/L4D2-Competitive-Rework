@@ -29,11 +29,17 @@ bool tankVoteInProgress;
 bool tankSelectedByVotes;
 int remainingVotes;
 
+Handle hForwardOnTryOfferingTankBot;
+Handle hForwardOnTankSelection;
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	CreateNative("GetTankSelection", Native_GetTankSelection);
+    CreateNative("GetTankSelection", Native_GetTankSelection);
 
-	return APLRes_Success;
+    hForwardOnTryOfferingTankBot = CreateGlobalForward("TankControl_OnTryOfferingTankBot", ET_Ignore, Param_String);
+    hForwardOnTankSelection = CreateGlobalForward("TankControl_OnTankSelection", ET_Ignore, Param_String);
+
+    return APLRes_Success;
 }
 
 public int Native_GetTankSelection(Handle plugin, int numParams) { return getInfectedPlayerBySteamId(queuedTankSteamId); }
@@ -43,7 +49,7 @@ public Plugin myinfo =
     name = "L4D2 Tank Control",
     author = "arti",
     description = "Distributes the role of the tank evenly throughout the team",
-    version = "0.0.18",
+    version = "0.0.19",
     url = "https://github.com/alexberriman/l4d2-plugins/tree/master/l4d_tank_control"
 }
 
@@ -105,17 +111,17 @@ public void OnPluginStart()
 
 public void OnAllPluginsLoaded()
 {
-	casterSystemAvailable = LibraryExists("caster_system");
+    casterSystemAvailable = LibraryExists("caster_system");
 }
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (StrEqual(name, "caster_system")) casterSystemAvailable = true;
+    if (StrEqual(name, "caster_system")) casterSystemAvailable = true;
 }
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (StrEqual(name, "caster_system")) casterSystemAvailable = false;
+    if (StrEqual(name, "caster_system")) casterSystemAvailable = false;
 }
 
 public void OnRoundIsLive()
@@ -338,17 +344,17 @@ public void RoundStart_Event(Event hEvent, const char[] eName, bool dontBroadcas
 
 public Action newGame(Handle timer)
 {
-	int teamAScore = L4D2Direct_GetVSCampaignScore(0);
-	int teamBScore = L4D2Direct_GetVSCampaignScore(1);
+    int teamAScore = L4D2Direct_GetVSCampaignScore(0);
+    int teamBScore = L4D2Direct_GetVSCampaignScore(1);
 
-	// If it's a new game, reset the tank pool
-	if (teamAScore == 0 && teamBScore == 0)
-	{
-		h_whosHadTank.Clear();
-		queuedTankSteamId = "";
-	}
+    // If it's a new game, reset the tank pool
+    if (teamAScore == 0 && teamBScore == 0)
+    {
+        h_whosHadTank.Clear();
+        queuedTankSteamId = "";
+    }
 
-	return Plugin_Stop;
+    return Plugin_Stop;
 }
 
 /**
@@ -378,19 +384,19 @@ public void PlayerLeftStartArea_Event(Event hEvent, const char[] eName, bool don
  
 public void PlayerTeam_Event(Event hEvent, const char[] name, bool dontBroadcast)
 {
-	L4D2Team oldTeam = view_as<L4D2Team>(hEvent.GetInt("oldteam"));
-	int client = GetClientOfUserId(hEvent.GetInt("userid"));
-	char tmpSteamId[64];
+    L4D2Team oldTeam = view_as<L4D2Team>(hEvent.GetInt("oldteam"));
+    int client = GetClientOfUserId(hEvent.GetInt("userid"));
+    char tmpSteamId[64];
 
-	if (client && oldTeam == view_as<L4D2Team>(L4D2Team_Infected))
-	{
-		GetClientAuthId(client, AuthId_Steam2, tmpSteamId, sizeof(tmpSteamId));
-		if (strcmp(queuedTankSteamId, tmpSteamId) == 0)
-		{
-			RequestFrame(chooseTank, 0);
-			RequestFrame(outputTankToAll, 0);
-		}
-	}
+    if (client && oldTeam == view_as<L4D2Team>(L4D2Team_Infected))
+    {
+        GetClientAuthId(client, AuthId_Steam2, tmpSteamId, sizeof(tmpSteamId));
+        if (strcmp(queuedTankSteamId, tmpSteamId) == 0)
+        {
+            RequestFrame(chooseTank, 0);
+            RequestFrame(outputTankToAll, 0);
+        }
+    }
 }
 
 /**
@@ -525,44 +531,56 @@ public void chooseTank(any data)
     if (tankSelectedByVotes)
         return;
 
-    // Create our pool of players to choose from
-    ArrayList infectedPool = new ArrayList(ByteCountToCells(64));
-    addTeamSteamIdsToArray(infectedPool, L4D2Team_Infected);
-    
-    // If there is nobody on the infected team, return (otherwise we'd be stuck trying to select forever)
-    if (GetArraySize(infectedPool) == 0)
-    {
-        delete infectedPool;
-        return;
-    }
+    //Let other plugins to override tank selection
+    char sOverrideTank[64];
+    sOverrideTank[0] = '\0';
+    Call_StartForward(hForwardOnTankSelection);
+    Call_PushStringEx(sOverrideTank, sizeof(sOverrideTank), SM_PARAM_STRING_UTF8, SM_PARAM_COPYBACK);
+    Call_Finish();
 
-    // Remove players who've already had tank from the pool.
-    removeTanksFromPool(infectedPool, h_whosHadTank);
-    
-    // If the infected pool is empty, remove infected players from pool
-    if (GetArraySize(infectedPool) == 0) // (when nobody on infected ,error)
+    if (StrEqual(sOverrideTank, ""))
     {
-        ArrayList infectedTeam = new ArrayList(ByteCountToCells(64));
-        addTeamSteamIdsToArray(infectedTeam, L4D2Team_Infected);
-        if (GetArraySize(infectedTeam) > 1)
+        // Create our pool of players to choose from
+        ArrayList infectedPool = new ArrayList(ByteCountToCells(64));
+        addTeamSteamIdsToArray(infectedPool, L4D2Team_Infected);
+        
+        // If there is nobody on the infected team, return (otherwise we'd be stuck trying to select forever)
+        if (GetArraySize(infectedPool) == 0)
         {
-            removeTanksFromPool(h_whosHadTank, infectedTeam);
-            chooseTank(0);
+            delete infectedPool;
+            return;
         }
-        else
+
+        // Remove players who've already had tank from the pool.
+        removeTanksFromPool(infectedPool, h_whosHadTank);
+        
+        // If the infected pool is empty, remove infected players from pool
+        if (GetArraySize(infectedPool) == 0) // (when nobody on infected ,error)
         {
-            queuedTankSteamId = "";
+            ArrayList infectedTeam = new ArrayList(ByteCountToCells(64));
+            addTeamSteamIdsToArray(infectedTeam, L4D2Team_Infected);
+            if (GetArraySize(infectedTeam) > 1)
+            {
+                removeTanksFromPool(h_whosHadTank, infectedTeam);
+                chooseTank(0);
+            }
+            else
+            {
+                queuedTankSteamId = "";
+            }
+            
+            delete infectedTeam;
+            delete infectedPool;
+            return;
         }
         
-        delete infectedTeam;
+        // Select a random person to become tank
+        int rndIndex = GetRandomInt(0, GetArraySize(infectedPool) - 1);
+        GetArrayString(infectedPool, rndIndex, queuedTankSteamId, sizeof(queuedTankSteamId));
         delete infectedPool;
-        return;
+    } else {
+        strcopy(queuedTankSteamId, sizeof(queuedTankSteamId), sOverrideTank);
     }
-    
-    // Select a random person to become tank
-    int rndIndex = GetRandomInt(0, GetArraySize(infectedPool) - 1);
-    GetArrayString(infectedPool, rndIndex, queuedTankSteamId, sizeof(queuedTankSteamId));
-    delete infectedPool;
 }
 
 /**
@@ -589,6 +607,11 @@ public Action L4D_OnTryOfferingTankBot(int tank_index, bool &enterStatis)
         
         return Plugin_Handled;
     }
+
+    //Allow third party plugins to override tank selection
+    Call_StartForward(hForwardOnTryOfferingTankBot);
+    Call_PushStringEx(queuedTankSteamId, sizeof(queuedTankSteamId), SM_PARAM_STRING_UTF8, SM_PARAM_COPYBACK);
+    Call_Finish();
     
     // If we don't have a queued tank, choose one
     if (! strcmp(queuedTankSteamId, ""))
