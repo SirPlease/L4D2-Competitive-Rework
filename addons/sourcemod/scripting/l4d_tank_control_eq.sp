@@ -394,9 +394,14 @@ public Action L4D_OnTryOfferingTankBot(int tank_index, bool &enterStatis)
     }
 
     //Allow third party plugins to override tank selection
+    char sOverrideTank[64];
+    sOverrideTank[0] = '\0';
     Call_StartForward(hForwardOnTryOfferingTankBot);
-    Call_PushStringEx(queuedTankSteamId, sizeof(queuedTankSteamId), SM_PARAM_STRING_UTF8, SM_PARAM_COPYBACK);
+    Call_PushStringEx(sOverrideTank, sizeof(sOverrideTank), SM_PARAM_STRING_UTF8, SM_PARAM_COPYBACK);
     Call_Finish();
+    if (!StrEqual(sOverrideTank, "")) {
+        strcopy(queuedTankSteamId, sizeof(queuedTankSteamId), sOverrideTank);
+    }
     
     // If we don't have a queued tank, choose one
     if (! strcmp(queuedTankSteamId, ""))
