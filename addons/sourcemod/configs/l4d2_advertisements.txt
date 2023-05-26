@@ -18,7 +18,7 @@
 	"4"
 	{
 		"type"	"S"
-		"text"	"{GREEN}[公告]{TEAM}本服禁止第三人称 请关闭第三人称再按M加入游戏"
+		"text"	"{GREEN}[公告]{TEAM}如果一直没法匹配来人请!rmatch再!match重启配置"
 	}
 	"5"
 	{
