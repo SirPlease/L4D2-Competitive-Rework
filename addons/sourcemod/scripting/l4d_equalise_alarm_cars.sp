@@ -42,7 +42,7 @@ enum /*alarmArray*/
 	ENTRY_START_STATE,
 	ENTRY_ALARM_CAR,
 	ENTRY_COLOR,
-	
+
 	alarmArray_SIZE
 }
 static const int 
@@ -127,7 +127,7 @@ Action Timer_RoundStartDelay(Handle timer)
 			int entry = -1;
 			if (!g_smCarNameMap.GetValue(sKey, entry)) // creates a new entry
 			{
-				entry = g_aAlarmArray.PushArray(NULL_ALARMARRAY);
+				entry = g_aAlarmArray.PushArray(NULL_ALARMARRAY[0], sizeof(NULL_ALARMARRAY));
 				g_smCarNameMap.SetValue(sKey, entry);
 				g_aAlarmArray.Set(entry, EntIndexToEntRef(ent), ENTRY_ALARM_CAR);
 			}
