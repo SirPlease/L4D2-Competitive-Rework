@@ -24,7 +24,7 @@
 #include <sourcemod>
 #include <sdktools>
 
-#define PLUGIN_VERSION "3.7.1"
+#define PLUGIN_VERSION "3.8"
 
 public Plugin myinfo =
 {
@@ -35,17 +35,16 @@ public Plugin myinfo =
 	url			= "https://github.com/Target5150/MoYu_Server_Stupid_Plugins"
 };
 
-enum /*alarmArray*/
+enum alarmArray
 {
 	ENTRY_RELAY_ON,
 	ENTRY_RELAY_OFF,
 	ENTRY_START_STATE,
 	ENTRY_ALARM_CAR,
 	ENTRY_COLOR,
-
+	
 	alarmArray_SIZE
 }
-
 static const int 
 	NULL_ALARMARRAY[alarmArray_SIZE] = {
 		INVALID_ENT_REFERENCE,
@@ -128,7 +127,7 @@ Action Timer_RoundStartDelay(Handle timer)
 			int entry = -1;
 			if (!g_smCarNameMap.GetValue(sKey, entry)) // creates a new entry
 			{
-				entry = g_aAlarmArray.PushArray(NULL_ALARMARRAY[0], sizeof(NULL_ALARMARRAY));
+				entry = g_aAlarmArray.PushArray(NULL_ALARMARRAY);
 				g_smCarNameMap.SetValue(sKey, entry);
 				g_aAlarmArray.Set(entry, EntIndexToEntRef(ent), ENTRY_ALARM_CAR);
 			}
@@ -342,20 +341,42 @@ void SafeRelayTrigger(int relay)
 
 int ExtractCarName(const char[] sName, const char[] sCompare, char[] sBuffer, int iSize)
 {
-	int index = SplitString(sName, "-", sBuffer, iSize);
+	int index = StrContains(sName, sCompare);
 	if (index == -1) {
-		// Spilt delimiter doesn't exist.
+		// Identifier for alarm members doesn't exist.
 		return 0;
 	}
 	
-	if (strcmp(sName[index], sCompare)) {
-		// Compare string is before spilt delimiter.
-		strcopy(sBuffer, iSize, sName[index]);
+	// Formats of alarm car names:
+	// -
+	// 1. {name}-{sCompare}
+	// 2. {sCompare}-{name}
+	// 3. {sCompare}
+	
+	if (index > 0) { // Format 1:
+		int nameLen = index-1;
+		
+		if (sName[nameLen] != '-') {
+			// Not formatted, but should not happen.
+			return 0;
+		}
+		
+		// Compare string is after spilt delimiter.
+		strcopy(sBuffer, iSize < nameLen ? iSize : nameLen, sName);
 		return -1;
 	}
 	
-	// Compare string is after spilt delimiter.
-	return 1;
+	int identLen = strlen(sCompare);
+	
+	if (sName[identLen] == '-') { // Format 2:
+		// Compare string is before spilt delimiter.
+		strcopy(sBuffer, iSize, sName[identLen+1]);
+		return 1;
+	}
+	
+	// Format 3:
+	strcopy(sBuffer, iSize, "<DUDE>");
+	return 2;
 }
 
 void GetEntityName(int entity, char[] buffer, int maxlen)
@@ -417,20 +438,20 @@ void PrintDebug(const char[] format, any ...)
 
 stock void ExtractColorBytes(int color, int &r, int &g, int &b, int &a)
 {
-	r = (color & 0xFF000000) >> 24;
-	g = (color & 0x00FF0000) >> 16;
-	b = (color & 0x0000FF00) >> 8;
-	a = (color & 0x000000FF);
+	r = (color >> 24) & 0xFF;
+	g = (color >> 16) & 0xFF;
+	b = (color >> 8) & 0xFF;
+	a = (color >> 0) & 0xFF;
 }
 
-stock void ThrowEntryError(int entry, int entity)
+stock void ThrowEntryError(alarmArray entry, int entity)
 {
 	char sName[128];
 	GetEntityName(entity, sName, sizeof(sName));
 	ThrowError("Fatal: Could not find entry (#%i) for %s", entry, sName);
 }
 
-stock void ThrowEmptyError(int entry, int entity)
+stock void ThrowEmptyError(alarmArray entry, int entity)
 {
 	char sName[128];
 	GetEntityName(entity, sName, sizeof(sName));
