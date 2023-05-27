@@ -35,7 +35,7 @@ public Plugin myinfo =
 	url			= "https://github.com/Target5150/MoYu_Server_Stupid_Plugins"
 };
 
-enum alarmArray
+enum /*alarmArray*/
 {
 	ENTRY_RELAY_ON,
 	ENTRY_RELAY_OFF,
@@ -444,14 +444,14 @@ stock void ExtractColorBytes(int color, int &r, int &g, int &b, int &a)
 	a = (color >> 0) & 0xFF;
 }
 
-stock void ThrowEntryError(alarmArray entry, int entity)
+stock void ThrowEntryError(int entry, int entity)
 {
 	char sName[128];
 	GetEntityName(entity, sName, sizeof(sName));
 	ThrowError("Fatal: Could not find entry (#%i) for %s", entry, sName);
 }
 
-stock void ThrowEmptyError(alarmArray entry, int entity)
+stock void ThrowEmptyError(int entry, int entity)
 {
 	char sName[128];
 	GetEntityName(entity, sName, sizeof(sName));
