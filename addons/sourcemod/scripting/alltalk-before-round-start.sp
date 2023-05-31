@@ -28,16 +28,6 @@ public void OnRoundIsLive()
     SetAllTalk(false);
 }
 
-public OnPause()
-{
-    SetAllTalk(true);
-}
-
-public OnUnpause()
-{
-    SetAllTalk(false);
-}
-
 public void OnMapStart()
 {
     CreateTimer(10.0, OnMapStartTimer);
