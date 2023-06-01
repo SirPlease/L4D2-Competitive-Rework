@@ -1,0 +1,65 @@
+// support {white} {default} or {cyan} {lightgreen} or {orange} {olive} or {green}
+
+"Phrases"
+{
+	"MapLeft"
+	{
+		"en"		"{cyan}Map Resource Left - "
+		"chi"		"{cyan}地图资源剩余 - "
+	}
+	"Infinity"
+	{
+		"en"		"∞"
+		// "en"		"Infinity"
+		// "chi"		"无限"
+	}
+	"VomitJar"
+	{
+		"#format"	"{1:s}"
+		"en"		" {orange}Vomit Jar{default}*{green}{1}"
+		"chi"		" {orange}胆汁罐{default}*{green}{1}"
+	}
+	"PipeBomb"
+	{
+		"#format"	"{1:s}"
+		"en"		" {orange}Pipe Bomb{default}*{green}{1}"
+		"chi"		" {orange}土质炸药{default}*{green}{1}"
+	}
+	"Molotov"
+	{
+		"#format"	"{1:s}"
+		"en"		" {orange}Molotov{default}*{green}{1}"
+		"chi"		" {orange}燃烧瓶{default}*{green}{1}"
+	}
+	"FirstAid"
+	{
+		"#format"	"{1:s}"
+		"en"		" {orange}First Aid{default}*{green}{1}"
+		"chi"		" {orange}急救包{default}*{green}{1}"
+	}
+	"Defibrillator"
+	{
+		"#format"	"{1:s}"
+		"en"		" {orange}Defibrillator{default}*{green}{1}"
+		"chi"		" {orange}起搏器{default}*{green}{1}"
+	}
+	"Adrenaline"
+	{
+		"#format"	"{1:s}"
+		"en"		" {orange}Adrenaline{default}*{green}{1}"
+		"chi"		" {orange}肾上腺素{default}*{green}{1}"
+	}
+	"PainPills"
+	{
+		"#format"	"{1:s}"
+		"en"		" {orange}Pain Pills{default}*{green}{1}"
+		"chi"		" {orange}止痛药{default}*{green}{1}"
+	}
+	"LaserSight"
+	{
+		"#format"	"{1:s}"
+		"en"		" {orange}Laser Sights{default}*{green}{1}"
+		"chi"		" {orange}激光瞄准器盒{default}*{green}{1}"
+	}
+	
+}
