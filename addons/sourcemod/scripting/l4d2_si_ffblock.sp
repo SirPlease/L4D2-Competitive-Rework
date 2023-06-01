@@ -13,12 +13,14 @@ bool
 	g_bLateLoad = false,
 	g_bFFBlock = false,
 	g_bAllowTankFF = false,
-	g_bBlockWitchFF = false;
+	g_bBlockWitchFF = false,
+	g_bTankCanKillWitch = true;
 
 ConVar
 	g_hCvarFFBlock = null,
 	g_hCvarAllowTankFF = null,
-	g_hCvarBlockWitchFF = null;
+	g_hCvarBlockWitchFF = null,
+	g_hCvarTankCanKillWitch = null;
 
 public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErrMax)
 {
@@ -40,12 +42,14 @@ public void OnPluginStart()
 	g_hCvarFFBlock = CreateConVar("l4d2_block_infected_ff", "1", "Disable SI->SI friendly fire", _, true, 0.0, true, 1.0);
 	g_hCvarAllowTankFF = CreateConVar("l4d2_infected_ff_allow_tank", "1", "Do not disable friendly fire for tanks on other SI", _, true, 0.0, true, 1.0);
 	g_hCvarBlockWitchFF = CreateConVar("l4d2_infected_ff_block_witch", "0", "Disable FF towards witches", _, true, 0.0, true, 1.0);
+	g_hCvarTankCanKillWitch = CreateConVar("l4d2_tank_can_kill_witch", "1", "Tank can kill Witch", _, true, 0.0, true, 1.0);
 	
 	CvarsToType();
 	
 	g_hCvarFFBlock.AddChangeHook(Cvars_Changed);
 	g_hCvarAllowTankFF.AddChangeHook(Cvars_Changed);
 	g_hCvarBlockWitchFF.AddChangeHook(Cvars_Changed);
+	g_hCvarTankCanKillWitch.AddChangeHook(Cvars_Changed);
 
 	HookEvent("witch_spawn", Event_WitchSpawn, EventHookMode_Post);
 
@@ -76,6 +80,7 @@ void CvarsToType()
 	g_bFFBlock = g_hCvarFFBlock.BoolValue;
 	g_bAllowTankFF = g_hCvarAllowTankFF.BoolValue;
 	g_bBlockWitchFF = g_hCvarBlockWitchFF.BoolValue;
+	g_bTankCanKillWitch = g_hCvarTankCanKillWitch.BoolValue;
 }
 
 public void Event_WitchSpawn(Event hEvent, const char[] sEventName, bool bDontBroadcast)
@@ -87,10 +92,10 @@ public void Event_WitchSpawn(Event hEvent, const char[] sEventName, bool bDontBr
 
 public Action Hook_WitchOnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamagetype)
 {
-	if (!(iDamagetype & DMG_CLUB) || !g_bBlockWitchFF) {
+	if (!(iDamagetype & DMG_CLUB)) {
 		return Plugin_Continue;
 	}
-	
+
 	if (!IsWitch(iVictim) || !IsInfected(iAttacker)) {
 		return Plugin_Continue;
 	}
@@ -103,6 +108,12 @@ public Action Hook_WitchOnTakeDamage(int iVictim, int &iAttacker, int &iInflicto
 	PrintToChatAll("Hook_WitchOnTakeDamage. iVictim: %s (%d), iAttacker: %N (%d), ZClass: %s (%d), iInflictor: %d, fDamage: %f, iDamagetype: %d", \
 							sClassName, iVictim, iAttacker, iAttacker, L4D2_InfectedNames[iZClass], iZClass, iInflictor, fDamage, iDamagetype);
 #endif
+	
+	if (iZClass == L4D2Infected_Tank && !g_bTankCanKillWitch)
+		return Plugin_Handled;
+
+	if (!g_bBlockWitchFF)
+		return Plugin_Continue;
 
 	return (iZClass == L4D2Infected_Tank) ? Plugin_Continue : Plugin_Handled;
 }
