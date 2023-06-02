@@ -1,6 +1,6 @@
 /*
 *	Bot Healing Values
-*	Copyright (C) 2022 Silvers
+*	Copyright (C) 2023 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION 		"2.1"
+#define PLUGIN_VERSION 		"2.2"
 
 /*======================================================================================
 	Plugin Info:
@@ -31,6 +31,10 @@
 
 ========================================================================================
 	Change Log:
+
+2.2 (25-May-2023)
+	- Fixed invalid client errors. Thanks to "Mystik Spiral" for reporting and "BHaType" for information.
+	- Client could be 0 but hooking would still be valid, so removing team check works fine and is valid.
 
 2.1 (20-Aug-2022)
 	- Fixed the plugin not working on L4D2 Linux. GameData file has been updated.
@@ -72,8 +76,8 @@
 
 
 bool g_bLeft4Dead2;
-ConVar g_hCvarMaxIncap, g_hCvarFirst, g_hCvarPills, g_hCvarDieFirst, g_hCvarDiePills;
-float g_fCvarFirst, g_fCvarPills;
+ConVar g_hCvarPainPillsDecay, g_hCvarMaxIncap, g_hCvarFirst, g_hCvarPills, g_hCvarDieFirst, g_hCvarDiePills;
+float g_fCvarPainPillsDecay, g_fCvarFirst, g_fCvarPills;
 bool g_bCvarDieFirst, g_bCvarDiePills;
 int g_iCvarMaxIncap;
 
@@ -210,11 +214,13 @@ public void OnPluginStart()
 
 	g_hCvarDieFirst = CreateConVar("l4d_bot_healing_die_first", "0", "0=游戏默认 1=只允许自己或目标是黑白状态时打包(需要'Actions'扩展)", CVAR_FLAGS);
 	g_hCvarDiePills = CreateConVar("l4d_bot_healing_die_pills", "0", "0=游戏默认 1=只允许自己或目标是黑白状态时打包或给药(需要'Actions'扩展)", CVAR_FLAGS);
-	g_hCvarFirst = CreateConVar("l4d_bot_healing_first", g_bLeft4Dead2 ? "15.0" : "15.0", "当bot血量低于此值时，允许其打包(求生2设置值:求生1设置值)", CVAR_FLAGS);
-	g_hCvarPills = CreateConVar("l4d_bot_healing_pills", g_bLeft4Dead2 ? "39.0" : "39.0", "当bot血量低于此值时，允许其吃药(求生2设置值:求生1设置值)", CVAR_FLAGS);
+	g_hCvarFirst = CreateConVar("l4d_bot_healing_first", g_bLeft4Dead2 ? "15.0" : "15.0", "当bot血量低于此值时，允许其打包", CVAR_FLAGS);
+	g_hCvarPills = CreateConVar("l4d_bot_healing_pills", g_bLeft4Dead2 ? "39.0" : "39.0", "当bot血量低于此值时，允许其吃药", CVAR_FLAGS);
 	CreateConVar("l4d_bot_healing_version", PLUGIN_VERSION, "Bot Healing Values plugin version.", FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	AutoExecConfig(true, "l4d_bot_healing");
 
+	g_hCvarPainPillsDecay = FindConVar("pain_pills_decay_rate");
+	g_hCvarPainPillsDecay.AddChangeHook(ConVarChanged_Cvars);
 	g_hCvarFirst.AddChangeHook(ConVarChanged_Cvars);
 	g_hCvarPills.AddChangeHook(ConVarChanged_Cvars);
 	g_hCvarDieFirst.AddChangeHook(ConVarChanged_Cvars);
@@ -252,6 +258,8 @@ void GetCvars()
 
 	g_fCvarFirst = g_hCvarFirst.FloatValue;
 	g_fCvarPills = g_hCvarPills.FloatValue;
+
+	g_fCvarPainPillsDecay = g_hCvarPainPillsDecay.FloatValue;
 }
 
 
@@ -261,11 +269,8 @@ void GetCvars()
 // ====================================================================================================
 public void OnActionCreated(BehaviorAction action, int actor, const char[] name)
 {
-    // Validate actor
-	if( actor > MaxClients || (!g_bCvarDieFirst && !g_bCvarDiePills) )
-		return;
-
-	if( GetClientTeam(actor) != 2 )
+    // Validate allowed
+	if( !g_bCvarDieFirst && !g_bCvarDiePills )
 		return;
 
 	if( strncmp(name, "Survivor", 8) == 0 )
@@ -341,16 +346,6 @@ public Action OnFriendActionPills(BehaviorAction action, int actor, BehaviorActi
 // ====================================================================================================
 stock int L4D_GetPlayerTempHealth(int client)
 {
-	static ConVar painPillsDecayCvar;
-	if( painPillsDecayCvar == null )
-	{
-		painPillsDecayCvar = FindConVar("pain_pills_decay_rate");
-		if( painPillsDecayCvar == null )
-		{
-			return -1;
-		}
-	}
-
-	int tempHealth = RoundToCeil(GetEntPropFloat(client, Prop_Send, "m_healthBuffer") - ((GetGameTime() - GetEntPropFloat(client, Prop_Send, "m_healthBufferTime")) * painPillsDecayCvar.FloatValue)) - 1;
+	int tempHealth = RoundToCeil(GetEntPropFloat(client, Prop_Send, "m_healthBuffer") - ((GetGameTime() - GetEntPropFloat(client, Prop_Send, "m_healthBufferTime")) * g_fCvarPainPillsDecay)) - 1;
 	return tempHealth < 0 ? 0 : tempHealth;
 }

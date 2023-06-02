@@ -6,15 +6,17 @@
 #define PLUGIN_NAME				"L4D 1/2 Remove Lobby Reservation"
 #define PLUGIN_AUTHOR			"Downtown1, Anime4000, sorallll"
 #define PLUGIN_DESCRIPTION		"Removes lobby reservation when server is full"
-#define PLUGIN_VERSION			"2.0.1"
+#define PLUGIN_VERSION			"2.0.3"
 #define PLUGIN_URL				"http://forums.alliedmods.net/showthread.php?t=87759"
 
 ConVar
+	g_cvGameMode,
 	g_cvUnreserve,
 	g_cvAutoLobby,
 	g_cvSvAllowLobbyCo;
 
 bool
+	g_bManually,
 	g_bUnreserve,
 	g_bAutoLobby;
 
@@ -30,9 +32,10 @@ public Plugin myinfo = {
 };
 
 public void OnPluginStart() {
-	CreateConVar("l4d_unreserve_version", PLUGIN_VERSION, "Version of the Lobby Unreserve plugin.", FCVAR_NOTIFY|FCVAR_DONTRECORD);
-	g_cvUnreserve =			CreateConVar("l4d_unreserve_full",	"1",	"Automatically unreserve server after a full lobby joins", FCVAR_SPONLY|FCVAR_NOTIFY);
-	g_cvAutoLobby =			CreateConVar("l4d_autolobby",		"1",	"Automatically adjust sv_allow_lobby_connect_only. When lobby full it set to 0, when server empty it set to 1", FCVAR_SPONLY|FCVAR_NOTIFY);
+	CreateConVar("l4d_unreserve_version", PLUGIN_VERSION, "动态大厅插件的版本.", FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	g_cvUnreserve =			CreateConVar("l4d_unreserve_full",	"1",	"玩家加入游戏后自动删除大厅匹配(短时间里还是有匹配,因为游戏里删除大厅后还是匹配优先级最高). 0=禁用,1=启用.", FCVAR_SPONLY|FCVAR_NOTIFY);
+	g_cvAutoLobby =			CreateConVar("l4d_autolobby",		"1",	"自动设置 sv_allow_lobby_connect_only 参数,删除大厅匹配后自动设置为:0,开启大厅匹配后自动设置参数值为:1. 0=禁用,1=启用.", FCVAR_SPONLY|FCVAR_NOTIFY);
+	g_cvGameMode = 			FindConVar("mp_gamemode");
 	g_cvSvAllowLobbyCo =	FindConVar("sv_allow_lobby_connect_only");
 
 	g_cvUnreserve.AddChangeHook(CvarChanged);
@@ -41,6 +44,8 @@ public void OnPluginStart() {
 	HookEvent("player_disconnect", Event_PlayerDisconnect, EventHookMode_Pre);
 
 	RegAdminCmd("sm_unreserve", cmdUnreserve, ADMFLAG_BAN, "sm_unreserve - manually force removes the lobby reservation");
+
+	AutoExecConfig(true, "l4d2_unreservelobby");//生成指定文件名的CFG.
 }
 
 Action cmdUnreserve(int client, int args) {
@@ -49,7 +54,8 @@ Action cmdUnreserve(int client, int args) {
 
 	L4D_LobbyUnreserve();
 	SetAllowLobby(0);
-	ReplyToCommand(client, "[UL] Lobby reservation has been removed.");
+	g_bManually = true;
+	ReplyToCommand(client, "[提示]当前服务器已删除大厅匹配.");
 	return Plugin_Handled;
 }
 
@@ -66,14 +72,17 @@ void GetCvars() {
 	g_bAutoLobby = g_cvAutoLobby.BoolValue;
 }
 
-public void OnClientPutInServer(int client) {
+public void OnClientConnected(int client) {
+	if (g_bManually)
+		return;
+
 	if (!g_bUnreserve)
 		return;
 
 	if (IsFakeClient(client))
 		return;
 
-	if (!IsServerLobbyFull(-1))
+	if (!IsSessionFull(-1))
 		return;
 
 	if (!g_sReservation[0] && L4D_LobbyIsReserved())
@@ -85,6 +94,9 @@ public void OnClientPutInServer(int client) {
 
 //OnClientDisconnect will fired when changing map, issued by gH0sTy at http://docs.sourcemod.net/api/index.php?fastload=show&id=390&
 void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast) {
+	if (g_bManually)
+		return;
+
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if (!client)
 		return;
@@ -92,7 +104,7 @@ void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast) 
 	if (IsFakeClient(client))
 		return;
 
-	if (IsServerLobbyFull(client))
+	if (IsSessionFull(client))
 		return;
 
 	if (g_sReservation[0])
@@ -101,12 +113,15 @@ void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast) 
 	SetAllowLobby(1);
 }
 
-bool IsServerLobbyFull(int client) {
-	return GetConnectedPlayer(client) >= numSlots();
+bool IsSessionFull(int client) {
+	return GetConnectedPlayer(client) >= SessionSlots();
 }
 
-int numSlots() {
-	return LoadFromAddress(L4D_GetPointer(POINTER_SERVER) + view_as<Address>(L4D_GetServerOS() ? 380 : 384), NumberType_Int32);
+// https://developer.valvesoftware.com/wiki/Mutation_Gametype_(L4D2)
+int SessionSlots() {
+	char sGameMode[32];
+	g_cvGameMode.GetString(sGameMode, sizeof sGameMode);
+	return (StrContains(sGameMode, "versus") > -1 || StrContains(sGameMode, "scavenge") > -1) ? 8 : 4/*LoadFromAddress(L4D_GetPointer(POINTER_SERVER) + view_as<Address>(L4D_GetServerOS() ? 380 : 384), NumberType_Int32)*/;
 }
 
 int GetConnectedPlayer(int client) {

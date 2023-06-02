@@ -1,10 +1,10 @@
-#define PLUGIN_VERSION		"2.0"
+#define PLUGIN_VERSION		"2.0.2"
 #define PLUGIN_PREFIX		"l4d_"
 #define PLUGIN_NAME			"gametime"
 #define PLUGIN_NAME_FULL	"[L4D & L4D2] GameTime Announcer <fork>"
 #define PLUGIN_DESCRIPTION	"announce profile game time for every player"
 #define PLUGIN_AUTHOR		"NoroHime"
-#define PLUGIN_LINK			"haha no"
+#define PLUGIN_LINK			"https://forums.alliedmods.net/showthread.php?t=341707"
 
 /**
  *	v2.0 (Start at 26-January-2023, Released at 8-February-2023)
@@ -24,6 +24,10 @@
  *		- sm_gametime [override *_prefer] display all of players gametime
  *		- command support console view all data
  *		- optional request failure actions
+ *	 v2.0.1 (8-March-2023)
+ *	 	- fix delay authorization cause gametime display not work
+ *	 v2.0.2 (28-May-2023)
+ *	 	- fix RESTInPawn extension not load automatically, thanks to Silvers
  */
 
 #pragma newdecls required
@@ -148,8 +152,8 @@ void ApplyCvars() {
 void LateLoad() {
 
 	for(int i = 1; i <= MaxClients; i++)
-		if(IsClientAuthorized(i))
-			OnClientAuthorized(i);
+		if(IsClientAuthorized(i) && IsClientInGame(i))
+			OnClientPostAdminCheck(i);
 
 	bLateLoad = false;
 }
@@ -204,7 +208,7 @@ enum {
 	// FAILURE_RETRY =		(1 << 3)
 }
 
-public void OnClientAuthorized(int client) {
+public void OnClientPostAdminCheck(int client) {
 
 	if (IsFakeClient(client))
 		return;
@@ -406,18 +410,19 @@ enum {
 	TARGET_INFECTEDS =	-32,
 	TARGET_SURVIVORS,
 	TARGET_ALL,
-	TARGET_SERVER,
+	TARGET_SERVER = LANG_SERVER,
 }
 
 enum {
 	MSG_CONSOLE =		(1 << 0),
 	MSG_CHAT =			(1 << 1),
 	MSG_CENTER =		(1 << 2),
+	MSG_HINT =			(1 << 3),
 }
 
 void Announce(int target, int type, const char[] format, any ...) {
 
-	if (!hasTranslations || !type)
+	if (!type)
 		return;
 
 	static ArrayList targets;
@@ -491,7 +496,7 @@ void Announce(int target, int type, const char[] format, any ...) {
 			if (type & MSG_CENTER)
 				PrintCenterText(client, "%s", message);
 
-			if (type & MSG_CHAT)
+			if (type & MSG_HINT)
 				PrintHintText(client, "%s", message);
 		}
 	}
@@ -629,4 +634,13 @@ methodmap JSONArray < JSON
 	property int Length {
 		public native get();
 	}
+};
+
+// mark as extension autoload
+public Extension __ext_rip =
+{
+	name = "REST in Pawn",
+	file = "rip.ext",
+	autoload = 1,
+	required = 1,
 };

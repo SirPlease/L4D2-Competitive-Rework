@@ -38,15 +38,16 @@ bool g_bDefaultValue;
 char g_sCommandAccesslvl[16];
 
 bool g_bMapStarted;
-static bool bSpecCheatActive[MAXPLAYERS + 1]; //spectatpr open watch
+static bool g_bSpecCheatActive[MAXPLAYERS + 1]; //spectatpr open watch
 int g_iModelIndex[MAXPLAYERS+1];			// Player Model entity reference
+Handle DelayWatchGlow_Timer[MAXPLAYERS+1] ; //prepare to disable player spec glow
 
 public Plugin myinfo = 
 {
     name = "l4d2 specating cheat",
     author = "Harry Potter",
     description = "A spectator who watching the survivor at first person view would see the infected model glows though the wall",
-    version = "2.6",
+    version = "2.7",
     url = "https://steamcommunity.com/profiles/76561198026784913"
 }
 
@@ -91,7 +92,7 @@ public void OnPluginStart()
 
 	for(int i = 1; i <= MaxClients; i++)
 	{
-		bSpecCheatActive[i] = g_bDefaultValue;
+		g_bSpecCheatActive[i] = g_bDefaultValue;
 	}
 	
 	if(g_bLateLoad)
@@ -104,6 +105,7 @@ public void OnPluginStart()
 public void OnPluginEnd() //unload插件的時候
 {
 	RemoveAllModelGlow();
+	ResetTimer();
 }
 
 public void OnMapStart()
@@ -114,27 +116,35 @@ public void OnMapStart()
 public void OnMapEnd()
 {
 	g_bMapStarted = false;
+	ResetTimer();
 }
 
 public void OnClientDisconnect(int client)
 {
-    RemoveInfectedModelGlow(client);
+	RemoveInfectedModelGlow(client);
+
+	delete DelayWatchGlow_Timer[client];
 } 
 
-public Action ToggleSpecCheatCmd(int client, int args) 
+Action ToggleSpecCheatCmd(int client, int args) 
 {
 	if(client == 0 || GetClientTeam(client)!= L4D_TEAM_SPECTATOR)
 		return Plugin_Handled;
 	
 	if(HasAccess(client, g_sCommandAccesslvl))
 	{
-		bSpecCheatActive[client] = !bSpecCheatActive[client];
-		PrintToChat(client, "\x01[\x04WatchMode\x01]\x03旁观透视系统已\x05%s\x01.", (bSpecCheatActive[client] ? "开启" : "关闭"));
-		
-		if(bSpecCheatActive[client] == false)
+		if(g_bSpecCheatActive[client])
 		{
-			RemoveAllModelGlow();
-			CreateAllModelGlow();
+			g_bSpecCheatActive[client] = false;
+			PrintToChat(client, "\x01[\x04WatchMode\x01]\x03旁观透视系统\x01已\x05关闭\x01.");
+			StopAllModelGlow();
+			delete DelayWatchGlow_Timer[client];
+			DelayWatchGlow_Timer[client] = CreateTimer(0.1, Timer_StopGlowTransmit, client);
+		}
+		else
+		{
+			g_bSpecCheatActive[client] = true;
+			PrintToChat(client, "\x01[\x04WatchMode\x01]\x03旁观透视系统\x01已\x05启动\x01.");
 		}
 	}
 	else
@@ -145,16 +155,28 @@ public Action ToggleSpecCheatCmd(int client, int args)
 	return Plugin_Handled;
 }
 
-public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast)
+Action Timer_StopGlowTransmit(Handle timer, int client)
+{
+	StartAllModelGlow();
+
+	DelayWatchGlow_Timer[client] = null;
+	return Plugin_Continue;
+}
+
+void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	
-	bSpecCheatActive[client] = g_bDefaultValue;
+	g_bSpecCheatActive[client] = g_bDefaultValue;
 }
 
+//Tank玩家失去控制權，換人或變成AI
+//有插件會將Tank失去控制權時不會換人重新獲得100%控制權，譬如zonemod second pass
 void OnTankFrustrated(Event event, const char[] name, bool dontBroadcast)
 {
-	RemoveInfectedModelGlow(GetClientOfUserId(event.GetInt("userid"))); //Tank玩家變成AI
+	int userid = event.GetInt("userid");
+	RemoveInfectedModelGlow(GetClientOfUserId(userid));
+	RequestFrame(OnNextFrame, userid);
 }
 
 public void L4D_OnEnterGhostState(int client)
@@ -163,7 +185,7 @@ public void L4D_OnEnterGhostState(int client)
 }
 
 //有插件在此事件把Tank變成靈魂克的時候不會觸發後續的player_spawn事件，譬如使用confoglcompmod
-public void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
+void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
 { 
 	int userid = event.GetInt("userid");
 	int client = GetClientOfUserId(userid);
@@ -172,7 +194,7 @@ public void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
 	RequestFrame(OnNextFrame, userid);
 }
 
-public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
+void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 { 
 	int userid = event.GetInt("userid");
 	int client = GetClientOfUserId(userid);
@@ -181,30 +203,37 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 	RequestFrame(OnNextFrame, userid);
 }
 
-public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
+void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 { 
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	
 	RemoveInfectedModelGlow(client);
 }
 
-public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
+void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	int oldteam = event.GetInt("oldteam");
 	
 	RemoveInfectedModelGlow(client);
 	
-	if(client && IsClientInGame(client) && !IsFakeClient(client) && oldteam == L4D_TEAM_SPECTATOR && bSpecCheatActive[client])
+	if(client && IsClientInGame(client) && !IsFakeClient(client) && oldteam == L4D_TEAM_SPECTATOR && g_bSpecCheatActive[client])
 	{
-		RemoveAllModelGlow();
-		CreateAllModelGlow();
+		StopAllModelGlow();
+		delete DelayWatchGlow_Timer[client];
+		DelayWatchGlow_Timer[client] = CreateTimer(0.1, Timer_StopGlowTransmit, client);
 	}
 }
 
-public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
+void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	RemoveAllModelGlow();
+	ResetTimer();
+}
+
+void OnNextFrame(int userid)
+{
+	CreateInfectedModelGlow(GetClientOfUserId(userid));
 }
 
 void CreateInfectedModelGlow(int client)
@@ -277,10 +306,14 @@ void RemoveInfectedModelGlow(int client)
 		AcceptEntityInput(entity, "kill");
 }
 
-public Action Hook_SetTransmit(int entity, int client)
+Action Hook_SetTransmit(int entity, int client)
 {
-	if( bSpecCheatActive[client] && GetClientTeam(client) == L4D_TEAM_SPECTATOR)
-		return Plugin_Continue;
+	if(DelayWatchGlow_Timer[client] != null) return Plugin_Continue;
+
+	if( g_bSpecCheatActive[client] && GetClientTeam(client) == L4D_TEAM_SPECTATOR)
+	{
+	 	return Plugin_Continue;
+	}
 	
 	return Plugin_Handled;
 }
@@ -303,7 +336,7 @@ int GetColor(char[] sTemp)
 	return color;
 }
 
-public void ConVarChanged_Glow_Ghost(Handle convar, const char[] oldValue, const char[] newValue) {
+void ConVarChanged_Glow_Ghost(Handle convar, const char[] oldValue, const char[] newValue) {
 	GetCvars();
 
 	int entity;
@@ -321,7 +354,7 @@ public void ConVarChanged_Glow_Ghost(Handle convar, const char[] oldValue, const
 	}
 }
 
-public void ConVarChanged_Glow_Alive(Handle convar, const char[] oldValue, const char[] newValue) {
+void ConVarChanged_Glow_Alive(Handle convar, const char[] oldValue, const char[] newValue) {
 	GetCvars();
 	
 	int entity;
@@ -339,14 +372,14 @@ public void ConVarChanged_Glow_Alive(Handle convar, const char[] oldValue, const
 	}
 }
 
-public void ConVarChanged_Access(Handle convar, const char[] oldValue, const char[] newValue) {
+void ConVarChanged_Access(Handle convar, const char[] oldValue, const char[] newValue) {
 	GetCvars();
 
 	for(int i = 1; i <= MaxClients; i++)
 	{
 		if(IsClientInGame(i) && !IsFakeClient(i))
 		{
-			if(HasAccess(i, g_sCommandAccesslvl) == false) bSpecCheatActive[i] = false;
+			if(HasAccess(i, g_sCommandAccesslvl) == false) g_bSpecCheatActive[i] = false;
 			
 			
 			RemoveAllModelGlow();
@@ -355,7 +388,7 @@ public void ConVarChanged_Access(Handle convar, const char[] oldValue, const cha
 	}
 }
 
-public void ConVarChanged_Cvars(Handle convar, const char[] oldValue, const char[] newValue) {
+void ConVarChanged_Cvars(Handle convar, const char[] oldValue, const char[] newValue) {
 	GetCvars();
 }
 
@@ -402,11 +435,6 @@ void CreateAllModelGlow()
 	}
 }
 
-void OnNextFrame(int userid)
-{
-	CreateInfectedModelGlow(GetClientOfUserId(userid));
-}
-
 Action Timer_CheckGhostTank(Handle timer, int userid)
 {
 	int tank = GetClientOfUserId(userid);
@@ -414,6 +442,32 @@ Action Timer_CheckGhostTank(Handle timer, int userid)
 	CreateInfectedModelGlow(tank);
 
 	return Plugin_Continue;
+}
+
+void StopAllModelGlow()
+{
+	int glow;
+	for (int i = 1; i <= MaxClients; i++) 
+	{
+		glow = g_iModelIndex[i];
+		if( IsValidEntRef(glow) )
+		{
+			AcceptEntityInput(glow, "StopGlowing");
+		}
+	}
+}
+
+void StartAllModelGlow()
+{
+	int glow;
+	for (int i = 1; i <= MaxClients; i++) 
+	{
+		glow = g_iModelIndex[i];
+		if( IsValidEntRef(glow) )
+		{
+			AcceptEntityInput(glow, "StartGlowing");
+		}
+	}
 }
 
 bool CheckIfEntityMax(int entity)
@@ -438,7 +492,8 @@ bool HasAccess(int client, char[] g_sAcclvl)
 		return false;
 
 	// check permissions
-	if ( GetUserFlagBits(client) & ReadFlagString(g_sAcclvl) )
+	int userFlags = GetUserFlagBits(client);
+	if ( (userFlags & ReadFlagString(g_sAcclvl)) || (userFlags & ADMFLAG_ROOT))
 	{
 		return true;
 	}
@@ -451,6 +506,17 @@ int GetZombieClass(int client)
 	return GetEntProp(client, Prop_Send, "m_zombieClass");
 }
 
+void ResetTimer()
+{
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		delete DelayWatchGlow_Timer[i];
+	}
+}
+
+//-------------------------------Other API Forward-------------------------------
+
+// https://github.com/fbef0102/Game-Private_Plugin/tree/main/Plugin_%E6%8F%92%E4%BB%B6/Versus_%E5%B0%8D%E6%8A%97%E6%A8%A1%E5%BC%8F/l4d_zcs
 // from l4d_zcs.smx by Harry, player can change Zombie Class during ghost state
 public void L4D2_OnClientChangeZombieClass(int client, int new_zombieclass)
 {

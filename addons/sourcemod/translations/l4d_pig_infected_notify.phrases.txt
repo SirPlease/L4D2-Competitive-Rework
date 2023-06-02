@@ -1,0 +1,214 @@
+"Phrases"
+{
+	"killed by fire"
+	{
+		"en"	"killed by fire"
+		"zho"	"玩火自焚"
+		"chi"	"玩火自焚"
+	}
+	"killed by map"
+	{
+		"en"	"killed by map"
+		"zho"	"自爆"
+		"chi"	"自爆"
+	}
+	"killed himself"
+	{
+		"en"	"killed himself"
+		"zho"	"自我爆☆殺"
+		"chi"	"自杀"
+	}
+	"killed by toy"
+	{
+		"en"	"killed by toy"
+		"zho"	"玩車自爆"
+		"chi"	"玩车自爆"
+	}
+	"killed by boom"
+	{
+		"en"	"killed by toy"
+		"zho"	"被炸死"
+		"chi"	"被炸死"
+	}
+	"killed by server"
+	{
+		"en"	"killed by server"
+		"zho"	"自我了斷"
+		"chi"	"被天谴"
+	}
+	"One-Punch"
+	{
+		"en"	"One-Punch"
+		"zho"	"一拳超人"
+		"chi"	"一拳超人"
+	}
+	"Rock-Stone"
+	{
+		"en"	"Rock-Stone"
+		"zho"	"玉石俱焚"
+		"chi"	"玉石俱焚"
+	}
+	"Toy"
+	{
+		"en"	"Toy"
+		"zho"	"玩車殺"
+		"chi"	"玩车杀"
+	}
+	"Alarm-Car"
+	{
+		"en"	"Alarm-Car"
+		"zho"	"玩警報車殺"
+		"chi"	"玩警报车杀"
+	}
+	"Tank is killed by something"
+	{
+		"#format"	"{1:t}"
+		"en"	"{green}[SM] {green}Tank is {olive}{1}{default}."
+		"zho"	"{green}[提示] {green}Tank {olive}{1}{default}了."
+		"chi"	"{green}[提示] {green}坦克 {olive}{1}{default}了。"
+	}
+	"Player is killed by something"
+	{
+		"#format"	"{1:N},{2:t}"
+		"en"	"{green}[SM] {red}{1}{default} is {olive}{2}{default}."
+		"zho"	"{green}[提示] {red}{1}{default} {olive}{2}{default}了."
+		"chi"	"{green}[提示] {red}{1}{default} {olive}{2}{default}了。"
+	}
+	"Tank Kill Witch"
+	{
+		"#format"	"{1:t}"
+		"en"	"{green}[SM] {green}Tank {default}uses {olive}{1}{default} to terminate {red}Witch{default}."
+		"zho"	"{green}[提示] {green}Tank {default}使用 {olive}{1}{default} 星爆氣流斬 {red}Witch{default}."
+		"chi"	"{green}[提示] {green}坦克 {default}使用 {olive}{1}{default} 星爆氣流斬 {red}妹子{default}."
+	}
+	"punches"
+	{
+		"en"	"punches"
+		"zho"	"拍"
+		"chi"	"拍"
+	}
+	"smashes"
+	{
+		"en"	"smashes"
+		"zho"	"砸"
+		"chi"	"砸"
+	}
+	"plays toy to kill"
+	{
+		"en"	"plays toy to kill"
+		"zho"	"玩車殺"
+		"chi"	"玩车杀"
+	}
+	"plays alarm car to kill"
+	{
+		"en"	"plays alarm car to kill"
+		"zho"	"玩警報車殺"
+		"chi"	"玩警报车杀"
+	}
+	"Tank kill teammate"
+	{
+		"#format"	"{1:t},{2:s}"
+		"en"	"{green}[SM] {green}Tank {olive}{1}{default} {2}teammate."
+		"zho"	"{green}[提示] {green}Tank {olive}{1}死{default} {2}隊友."
+		"chi"	"{green}[提示] {green}坦克 {olive}{1}死{default} {2}队友。"
+	}
+	"Tank kill Tank"
+	{
+		"#format"	"{1:t}"
+		"en"	"{green}[SM] {green}Tank {olive}{1}{default} {2}another Tank."
+		"zho"	"{green}[提示] {green}Tank {olive}{1}死{default} 另一隻Tank."
+		"chi"	"{green}[提示] {green}坦克 {olive}{1}死{default} 另一只Tank。"
+	}
+	"l4d_pig_infected1"
+	{
+		"en"	"{green}[SM] {green}Tank{default} get stumble by the door."
+		"zho"	"{green}[提示] {green}Tank{default} 被門暈眩."
+		"chi"	"{green}[提示] {green}Tank{default} 被门晕眩."
+	}
+	"l4d_pig_infected2"
+	{
+		"en"	"{green}[SM] {red}Witch{default} killed teammate."
+		"zho"	"{green}[提示] {red}妹子{default} 使出 {olive}天馬流星拳 {default}打死隊友."
+		"chi"	"{green}[提示] {red}妹子{default} 使出 {olive}天马流星拳 {default}打死队友。"
+	}
+	"l4d_pig_infected3"
+	{
+		"en"	"{green}[SM] {red}Witch{default} killed AI teammate."
+		"zho"	"{green}[提示] {red}妹子{default} 使出 {olive}北斗神拳 {default}打死AI隊友."
+		"chi"	"{green}[提示] {red}妹子{default} 使出 {olive}北斗神拳 {default}打死AI队友。"
+	}
+	"l4d_pig_infected4"
+	{
+		"en"	"{green}[SM] {red}Witch{default} {olive}gone{default}."
+		"zho"	"{green}[提示] {red}妹子{default} {olive}歸天{default}了."
+		"chi"	"{green}[提示] {red}妹子{default} {olive}狗带{default}了。"
+	}
+	"l4d_pig_infected5"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"	"{green}[SM] {olive}{1}{default} kills {red}{2}{default}'s Boomer to stumble {green}Tank{default}."
+		"zho"	"{green}[提示] {olive}{1}{default} 殺死 {red}{2}{default}'s Boomer 炸暈 {green}Tank{default}."
+		"chi"	"{green}[提示] {olive}{1}{default} 杀死 {red}{2}{default}'s Boomer 炸晕 {green}坦克{default}。"
+	}
+	"l4d_pig_infected6"
+	{
+		"#format"	"{1:N}"
+		"en"	"{green}[SM] {olive}{1}{default} kills {red}AI{default} Boomer to stumble {green}Tank{default}."
+		"zho"	"{green}[提示] {olive}{1}{default} 殺死 {red}AI{default} Boomer 炸暈 {green}Tank{default}."
+		"chi"	"{green}[提示] {olive}{1}{default} 杀死 {red}AI{default} Boomer 炸晕 {green}坦克{default}。"
+	}
+	"l4d_pig_infected7"
+	{
+		"#format"	"{1:t},{2:N}"
+		"en"	"{green}[SM] {green}Tank {olive}{1} {red}{2}{default}'s Boomer to stumble himself."
+		"zho"	"{green}[提示] {green}Tank {olive}死{1} {red}{2}{default}'s Boomer 炸暈自己."
+		"chi"	"{green}[提示] {green}坦克 {olive}死{1} {red}{2}{default}'s Boomer 炸晕自己。"
+	}
+	"l4d_pig_infected8"
+	{
+		"#format"	"{1:t}"
+		"en"	"{green}[SM] {green}Tank {olive}{1} {red}AI{default} Boomer to stumble {default}himself."
+		"zho"	"{green}[提示] {green}Tank {olive}{1}死 {red}AI{default} Boomer 炸暈自己."
+		"chi"	"{green}[提示] {green}坦克 {olive}{1}死 {red}AI{default} Boomer 炸晕自己。"
+	}
+	"l4d_pig_infected9"
+	{
+		"#format"	"{1:t},{2:N}"
+		"en"	"{green}[SM] {green}Tank {olive}{1} {red}{2}{default}'s Boomer."
+		"zho"	"{green}[提示] {green}Tank {olive}{1}死 {red}{2}{default}'s Boomer"
+		"chi"	"{green}[提示] {green}坦克 {olive}{1}死 {red}{2}{default}'s Boomer。"
+	}
+	"l4d_pig_infected10"
+	{
+		"#format"	"{1:t}"
+		"en"	"{green}[SM] {green}Tank {olive}{1} {red}AI{default} Boomer"
+		"zho"	"{green}[提示] {green}Tank {olive}{1}死 {red}AI{default} Boomer"
+		"chi"	"{green}[提示] {green}坦克 {olive}{1}死 {red}AI{default} Boomer。"
+	}
+	"l4d_pig_infected11"
+	{
+		"#format"	"{1:N}"
+		"en"	"{green}[SM] {red}{1}{default}'s Boomer exploded."
+		"zho"	"{green}[提示] {red}{1}{default}'s Boomer 爆炸啦."
+		"chi"	"{green}[提示] {red}{1}{default}'s Boomer 爆炸啦。"
+	}
+	"l4d_pig_infected12"
+	{
+		"en"	"{green}[SM] {red}AI{default} Boomer exploded."
+		"zho"	"{green}[提示] {red}AI{default} Boomer 爆炸啦."
+		"chi"	"{green}[提示] {red}AI{default} Boomer 爆炸啦。"
+	}
+	"l4d_pig_infected13"
+	{
+		"#format"	"{1:N}"
+		"en"	"{green}[SM] {red}{1}{default}'s Boomer stumbles {green}Tank{default}."
+		"zho"	"{green}[提示] {default}神隊友 {red}{1}{default}'s Boomer 炸暈 {green}Tank{default}."
+		"chi"	"{green}[提示] {default}神队友 {red}{1}{default}'s Boomer 炸晕 {green}坦克{default}。"
+	}
+	"l4d_pig_infected14"
+	{
+		"en"	"{green}[SM] {red}AI{default} Boomer stumbles {green}Tank{default}."
+		"zho"	"{green}[提示] {red}AI{default}'s Boomer 炸暈 {green}Tank{default}."
+		"chi"	"{green}[提示] {red}AI{default}'s Boomer 炸晕 {green}坦克{default}。"
+	}
+}
