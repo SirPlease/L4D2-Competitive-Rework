@@ -442,12 +442,12 @@
 		{
 			"Sewer Drop"
 			{
-				"min"		"56"
-				"max"		"66"
+				"min"		"58"
+				"max"		"68"
 			}
 			"Event (bugged spawn)"
 			{
-				"min"		"72"
+				"min"		"73"
 				"max"		"100"
 			}
 		}
@@ -479,7 +479,7 @@
 		"start_dist"		"75.000000"
 		"start_extra_dist"	"0.000000"
 		"end_dist"			"50.000000"
-		"max_distance"		"700"
+		"max_distance"		"600"
 		"tank_ban_flow"
 		{
 			"Event (bugged spawn)"
@@ -2422,8 +2422,8 @@
 			}
 			"Elevator"
 			{
-				"min"		"40"
-				"max"		"68"
+				"min"		"36"
+				"max"		"72"
 			}
 		}
 	}

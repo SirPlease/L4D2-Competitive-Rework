@@ -105,6 +105,14 @@
 		"start_extra_dist"	"0.000000"
 		"end_dist"			"150.000000"
 		"horde_limit"		"120"
+		"tank_ban_flow"
+		{
+			"Alley choke to up top"
+			{
+				"min"		"56"
+				"max"		"68"
+			}
+		}
 		"witch_ban_flow"
 		{
 			"Ladder"
@@ -439,12 +447,12 @@
 		{
 			"Sewer Drop"
 			{
-				"min"		"56"
-				"max"		"66"
+				"min"		"58"
+				"max"		"68"
 			}
 			"Event (bugged spawn)"
 			{
-				"min"		"72"
+				"min"		"73"
 				"max"		"100"
 			}
 		}
@@ -476,7 +484,7 @@
 		"start_dist"		"75.000000"
 		"start_extra_dist"	"0.000000"
 		"end_dist"			"50.000000"
-		"max_distance"		"700"
+		"max_distance"		"600"
 		"tank_ban_flow"
 		{
 			"Event (bugged spawn)"
@@ -1108,6 +1116,14 @@
 		"start_extra_dist"	"263.341949"
 		"end_point"			"3271.968750 7977.582031 -2256.968750"
 		"end_dist"			"335.011475"
+		"tank_ban_flow"
+		{
+			"1"
+			{
+				"min"		"70"
+				"max"		"100"
+			}
+		}
 	}
 	"l4d_ihm04_lumberyard"
 	{
@@ -1117,6 +1133,14 @@
 		"end_point"			"2004.079468 1037.415161 -188.618408"
 		"end_dist"			"304.708099"
 		"max_distance"		"600"
+		"tank_ban_flow"
+		{
+			"1"
+			{
+				"min"		"25"
+				"max"		"100"
+			}
+		}
 	}
 	"l4d_ihm05_lakeside"
 	{
@@ -2403,8 +2427,8 @@
 			}
 			"Elevator"
 			{
-				"min"		"40"
-				"max"		"68"
+				"min"		"36"
+				"max"		"72"
 			}
 		}
 	}
