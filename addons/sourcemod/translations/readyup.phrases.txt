@@ -105,4 +105,40 @@
 	{
 		"en"		"More players are required..."
 	}
+
+	"PanelSections"
+	{
+		//1: ServerName, 2: Players Count, 3: sv_maxplayers, 4: Config name
+		"en"		"▸ Server: %s \n▸ Slots: %d/%d\n▸ Config: %s"
+	}
+
+	"PanelCmds"
+	{
+		"en"		"▸ Commands:"
+	}
+
+	"PanelSurv"
+	{
+		"en"		"->%d. Survivors%s"//%s = team ready symbol
+	}
+
+	"PanelInf"
+	{
+		"en"		"->%d. Infected%s"
+	}
+
+	"PanelCast"
+	{
+		"en"		"->%d. Caster%s" //%s += "s" if more than one
+	}
+
+	"PanelSpec"
+	{
+		"en"		"->%d. Spectator%s"//%s += "s" if more than one
+	}
+
+	"PSMany"
+	{
+		"en"		"**Many** (%d)"//%d = num o specs
+	}
 }

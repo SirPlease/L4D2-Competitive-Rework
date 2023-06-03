@@ -1,0 +1,144 @@
+"Phrases"
+{
+// The following uses bracket style color tags (see colors.inc)
+	"PanelHide"
+	{
+		"pl"		"[{olive}Readyup{default}] Panel został {red}wyłączony{default}"
+	}
+	
+	"PanelShow"
+	{
+		"pl"		"[{olive}Readyup{default}] Panel został {blue}włączony{default}"
+	}
+	
+	"ForceStartAdmin"
+	{
+		"#format"	"{1:N}"
+		"pl"		"[{green}!{default}] Start {blue}Gry {default}został {green}wymuszony {default}przez {blue}Admina {default}({olive}{1}{default})"
+	}
+	
+	"VoteInProgress"
+	{
+		"pl"		"[{olive}Readyup{default}] {green}W trakcie {olive}głosowania{default}."
+	}
+	
+	"VoteDelay"
+	{
+		"#format"	"{1:d}"
+		"pl"		"[{olive}Readyup{default}] Poczekaj następne {blue}{1}s {default}zwołać głosowanie."
+	}
+	
+	"Player marked unready"
+	{
+		"#format"	"{1:N}"
+		"pl"		"{default}[{green}!{default}] {green}Odliczanie Odwołane! {default}({teamcolor}{1} {green}oznaczył się niegotowym{default})"
+	}
+	
+	"Player switched team"
+	{
+		"#format"	"{1:N}"
+		"pl"		"{default}[{green}!{default}] {green}Odliczanie Odwołane! {default}({teamcolor}{1} {olive}zmienił drużynę{default})"
+	}
+	
+	"Player disconnected"
+	{
+		"#format"	"{1:N}"
+		"pl"		"{default}[{green}!{default}] {green}Odliczanie Odwołane! {default}({teamcolor}{1} {green}wyszedł{default})"
+	}
+	
+	"Admin aborted"
+	{
+		"#format"	"{1:N}"
+		"pl"		"{default}[{green}!{default}] {green}Wymuszony Start Przerwany! {default}({green}przez {olive}{1}{default})"
+	}
+	
+	
+// The following are not allowed to use any color tag
+	"HintReady"
+	{
+		"pl"		"Jesteś gotowy.\nWpisz !unready / Wciśnij F2 by być niegotowym."
+	}
+	
+	"HintUnready"
+	{
+		"pl"		"Jesteś niegotowy.\nWpisz !ready / Wciśnij F1 by być gotowym."
+	}
+	
+	"LiveCountdownBegin"
+	{
+		"pl"		"Ruszamy na żywo!\nWpisz !unready / Wciśnij F2 by anulować"
+	}
+	
+	"LiveCountdown"
+	{
+		"#format"	"{1:d}"
+		"pl"		"Na żywo w: {1}\nWpisz !unready / Wciśnij F2 by anulować"
+	}
+	
+	"LiveCountdownCancelled"
+	{
+		"pl"		"Odliczanie Zatrzymane!"
+	}
+	
+	"RoundIsLive"
+	{
+		"pl"		"Runda na żywo!"
+	}
+	
+	"InitiateAutoStart"
+	{
+		"pl"		"Gra rozpocznie się automatycznie!"
+	}
+	
+	"AutoStartCountdown"
+	{
+		"#format"	"{1:d}"
+		"pl"		"Gra rozpocznie się za: {1}"
+	}
+	
+	"AutoStartWaiting"
+	{
+		"pl"		"Oczekiwanie na załadowanie się graczy..."
+	}
+	
+	"AutoStartNotEnoughPlayers"
+	{
+		"pl"		"Potrzeba więcej graczy..."
+	}
+
+	"PanelSections"
+	{
+		//1: ServerName, 2: Players Count, 3: sv_maxplayers, 4: Config name
+		"pl"		"▸ Serwer: %s \n▸ Sloty: %d/%d\n▸ Konfig: %s"
+	}
+
+	"PanelCmds"
+	{
+		"pl"		"▸ Komendy:"
+	}
+
+	"PanelSurv"
+	{
+		"pl"		"->%d. Ocalali%s"//%s = team ready symbol
+	}
+
+	"PanelInf"
+	{
+		"pl"		"->%d. Zarażeni%s"
+	}
+
+	"PanelCast"
+	{
+		"pl"		"->%d. Kasterzy" //%s += "s" if more than one
+	}
+
+	"PanelSpec"
+	{
+		"pl"		"->%d. Widzowie"//%s += "s" if more than one
+	}
+
+	"PSMany"
+	{
+		"pl"		"**Sporo** (%d)"//%d = num of specs
+	}
+}
