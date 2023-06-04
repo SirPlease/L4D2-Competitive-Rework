@@ -318,6 +318,7 @@ static int    g_iHUD1Flags;
 static int    g_iHUD2Flags;
 static int    g_iHUD3Flags;
 static int    g_iHUD4Flags;
+static int    g_iPlayerNum;
 
 // ====================================================================================================
 // float - Plugin Variables
@@ -676,7 +677,24 @@ public void OnLibraryRemoved(const char[] name)
 {
     if ( StrEqual(name, "witch_and_tankifier") ) { g_bWitchAndTankSystemAvailable = true; }
 }
+//玩家连接
+public void OnClientConnected(int client)
+{
+	if (!IsFakeClient(client))
+		g_iPlayerNum += 1;
+}
 
+//玩家离开.
+public void OnClientDisconnect(int client)
+{
+	if (!IsFakeClient(client))
+		g_iPlayerNum -= 1;
+}
+//地图开始
+public void OnMapStart()
+{
+	g_iPlayerNum = 0;
+}
 /****************************************************************************************************/
 
 public void OnConfigsExecuted()
@@ -1511,7 +1529,7 @@ void GetHUD2_Text(char[] output, int size)
 	int PlayerLimit = GetConVarInt(FindConVar("sv_maxplayers"));
 	char hostname[64];
  	FindConVar("hostname").GetString(hostname,sizeof(hostname));   
- 	FormatEx(output, size, "%s(%d/%d)",  hostname, GetPlayerNumber(), PlayerLimit);
+ 	FormatEx(output, size, "%s(%d/%d/%d)",  hostname, GetPlayerNumber(), g_iPlayerNum, PlayerLimit);
 }
 
 /****************************************************************************************************/
