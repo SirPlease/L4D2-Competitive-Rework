@@ -429,6 +429,9 @@ public void TankKilled_Event(Event hEvent, const char[] eName, bool dontBroadcas
     {
         PrintToConsoleAll("[TC] Tank died(2), choosing a new tank");
     }
+
+    tankSelectedByVotes = false;
+
     chooseTank(0);
 }
 
