@@ -1,10 +1,14 @@
 "MatchModes"
 {
-	"AppleMod Configs"
+	"Configs"
 	{
 		"appleMod"
 		{
 			"name" "AppleMod 0.3"
+		}
+		"zonemodedi"
+		{
+			"name" "Zonemod混野 2.8.3"
 		}
 	}
 }
