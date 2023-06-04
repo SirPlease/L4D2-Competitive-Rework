@@ -79,14 +79,6 @@
 		{
 			"pain_pills"	"0"
 		}
-		"tank_ban_flow"
-		{
-			"Prevent tank spawn"
-			{
-				"min"		"0"
-				"max"		"100"
-			}
-		}
 		"horde_tank"		"1"
 	}
 	"c2m1_highway"
@@ -189,14 +181,6 @@
 		{
 			"pain_pills"	"0"
 		}
-		"tank_ban_flow"
-		{
-			"Prevent tank spawn"
-			{
-				"min"		"0"
-				"max"		"100"
-			}
-		}
 	}
 	"c3m1_plankcountry"
 	{
@@ -242,14 +226,6 @@
 		"ItemLimits"
 		{
 			"pain_pills"	"0"
-		}
-		"tank_ban_flow"
-		{
-			"Prevent tank spawn"
-			{
-				"min"		"0"
-				"max"		"100"
-			}
 		}
 	}
 	"c4m1_milltown_a"
@@ -348,14 +324,6 @@
 		{
 			"pain_pills"	"0"
 		}
-		"tank_ban_flow"
-		{
-			"Prevent tank spawn"
-			{
-				"min"		"0"
-				"max"		"100"
-			}
-		}
 	}
 	"c5m1_waterfront"
 	{
@@ -444,14 +412,6 @@
 		"end_point"			"3001.944092 6272.879395 494.284149"
 		"end_dist"			"130.807541"
 		"max_distance"		"500"
-		"tank_ban_flow"
-		{
-			"Prevent tank spawn"
-			{
-				"min"		"0"
-				"max"		"100"
-			}
-		}
 	}
 	"c6m1_riverbank"
 	{
@@ -499,14 +459,6 @@
 		"start_dist"		"50.000000"
 		"start_extra_dist"	"0.000000"
 		"end_dist"			"50.000000"
-		"tank_ban_flow"
-		{
-			"Prevent tank spawn"
-			{
-				"min"		"0"
-				"max"		"100"
-			}
-		}
 		"ItemLimits"
 		{
 			"pain_pills"	"0"
@@ -548,14 +500,6 @@
 		"ItemLimits"
 		{
 			"pain_pills"	"0"
-		}
-		"tank_ban_flow"
-		{
-			"Prevent tank spawn"
-			{
-				"min"		"0"
-				"max"		"100"
-			}
 		}
 	}
 	"c8m1_apartment"
@@ -654,10 +598,10 @@
 		}
 		"tank_ban_flow"
 		{
-			"Prevent tank spawn"
+			"Early spawn"
 			{
 				"min"		"0"
-				"max"		"100"
+				"max"		"45"
 			}
 		}
 	}
@@ -681,14 +625,6 @@
 		"ItemLimits"
 		{
 			"pain_pills"	"0"
-		}
-		"tank_ban_flow"
-		{
-			"Prevent tank spawn"
-			{
-				"min"		"0"
-				"max"		"100"
-			}
 		}
 	}
 	"c10m1_caves"
@@ -751,14 +687,6 @@
 		{
 			"pain_pills"	"0"
 		}
-		"tank_ban_flow"
-		{
-			"Prevent tank spawn"
-			{
-				"min"		"0"
-				"max"		"100"
-			}
-		}
 	}
 	"c11m1_greenhouse"
 	{
@@ -812,14 +740,6 @@
 		"ItemLimits"
 		{
 			"pain_pills"	"0"
-		}
-		"tank_ban_flow"
-		{
-			"Prevent tank spawn"
-			{
-				"min"		"0"
-				"max"		"100"
-			}
 		}
 	}
 	"c12m1_hilltop"
@@ -897,9 +817,9 @@
 		}
 		"tank_ban_flow"
 		{
-			"Prevent tank spawn"
+			"After one way drop"
 			{
-				"min"		"0"
+				"min"		"80"
 				"max"		"100"
 			}
 		}
@@ -962,14 +882,6 @@
 		"end_point"			"-1823.846191 -1815.961670 -250.417389"
 		"end_dist"			"254.989624"
 		"max_distance"		"600"
-		"tank_ban_flow"
-		{
-			"Prevent tank spawn"
-			{
-				"min"		"0"
-				"max"		"100"
-			}
-		}
 	}
 	"c14m1_junkyard"
 	{
@@ -992,10 +904,10 @@
 		}
 		"tank_ban_flow"
 		{
-			"Prevent tank spawn"
+			"Early spawns"
 			{
 				"min"		"0"
-				"max"		"100"
+				"max"		"30"
 			}
 		}
 	}
@@ -1065,14 +977,6 @@
 		"end_point"			"3015.024414 6265.400391 494.284149"
 		"end_dist"			"149.938278"
 		"max_distance"		"500"
-		"tank_ban_flow"
-		{
-			"Prevent tank spawn"
-			{
-				"min"		"0"
-				"max"		"100"
-			}
-		}
 	}
 	"cdta_01detour"
 	{
