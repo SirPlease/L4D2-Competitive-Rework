@@ -23,6 +23,7 @@ public OnPluginStart()
 	HookEvent("player_team", PlayerChangeTeamEvent);
 
 	RegConsoleCmd("hear", PanelCommand);
+	RegConsoleCmd("muteall", MuteAllCommand);
 }
 
 public PlayerChangeTeamEvent(Handle:event, const String:name[], bool:dontBroadcast)
@@ -37,7 +38,7 @@ public PlayerChangeTeamEvent(Handle:event, const String:name[], bool:dontBroadca
 	SetClientListeningFlags(client, team == TEAM_SPEC ? VOICE_LISTENALL : VOICE_NORMAL);
 }
 
-public Action:PanelCommand(client,args)
+public Action:PanelCommand(client, args)
 {
 	if(GetClientTeam(client) != TEAM_SPEC)
 		return Plugin_Handled;
@@ -54,6 +55,15 @@ public Action:PanelCommand(client,args)
 	CloseHandle(panel);
  
 	return Plugin_Handled;
+}
+
+public Action:MuteAllCommand(client, args)
+{
+	if(GetClientTeam(client) != TEAM_SPEC)
+		return Plugin_Handled;
+
+	SetClientListeningFlags(client, VOICE_MUTED);
+	PrintToChat(client, "\x04[Silêncio] \x03Você mutou todos...");
 }
 
 public PanelHandler(Handle:menu, MenuAction:action, client, selectedValue)
