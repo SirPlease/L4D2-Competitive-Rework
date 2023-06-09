@@ -1,0 +1,33 @@
+# Docker
+# Build a Docker image
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- main
+
+resources:
+- repo: self
+
+stages:
+- stage: Build
+  displayName: Build and Push image
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: Docker@2
+      displayName: Build an image
+      inputs:
+        command: build
+        repository: 'altairsossai/l4d2-zone-server'
+        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+        tags: 'latest'
+    - task: Docker@2
+      displayName: Push an image
+      inputs:
+        command: 'push'
+        containerRegistry: 'Docker Hub'
+        repository: 'altairsossai/l4d2-zone-server'
+        tags: 'latest'
