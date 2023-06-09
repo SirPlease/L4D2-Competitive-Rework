@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  l4d2-zone-server-36290:
+    container_name: l4d2-zone-server-36290
+    image: altairsossai/l4d2-zone-server:latest
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.5'  # 50% of CPU
+          memory: 2G
+      placement:
+        constraints:
+          - node.role == worker
+    ports:
+      - '36290:27015/tcp'
+      - '36290:27015/udp'
+
+  l4d2-zone-server-36291:
+    container_name: l4d2-zone-server-36291
+    image: altairsossai/l4d2-zone-server:latest
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.5'  # 50% of CPU
+          memory: 2G
+      placement:
+        constraints:
+          - node.role == worker
+    ports:
+      - '36291:27015/tcp'
+      - '36291:27015/udp'
