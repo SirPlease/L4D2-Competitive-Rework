@@ -52,7 +52,7 @@ This command will build the image based on the Dockerfile in the current directo
 To run the container, use the following command:
 
 ```
-docker run -p 27025:27015/tcp -p 27025:27015/udp -e MAP_NAME=c2m1_highway --name l4d2-zone-server l4d2-zone-server:latest
+docker run -p 27025:27015/tcp -p 27025:27015/udp --name l4d2-zone-server l4d2-zone-server:latest
 ```
 
 This command will start a container named `l4d2-zone-server` based on the `l4d2-zone-server:latest` image. It maps the TCP and UDP ports from the host to the container, allowing connections to the Left 4 Dead 2 Zone Server.
