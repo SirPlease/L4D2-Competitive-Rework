@@ -32,7 +32,39 @@ It will contain both much needed fixes that are simply unable to be implemented 
     * **NOTE:** Plugin load locking and unlocking is no longer handled by the Configs themselves, so if you're using this project do **NOT** define plugin load locks/unlocks within the configs you're adding manually.
 
 ---
-	
+
+# Left 4 Dead 2 Zone Server Docker Image
+
+This Docker image allows you to run a Left 4 Dead 2 Zone Server in a containerized environment.
+
+## Build the Image
+
+To build the Docker image, use the following command:
+
+```
+docker build -t l4d2-zone-server:latest .
+```
+
+This command will build the image based on the Dockerfile in the current directory and tag it as `l4d2-zone-server:latest`.
+
+## Run the Container
+
+To run the container, use the following command:
+
+```
+docker run -p 27025:27015/tcp -p 27025:27015/udp -e MAP_NAME=c2m1_highway --name l4d2-zone-server l4d2-zone-server:latest
+```
+
+This command will start a container named `l4d2-zone-server` based on the `l4d2-zone-server:latest` image. It maps the TCP and UDP ports from the host to the container, allowing connections to the Left 4 Dead 2 Zone Server.
+
+Make sure that the required ports (27025 TCP and UDP) are available on the host system before running the container.
+
+Note: You can adjust the host port numbers (`27025` in the example) if necessary. Ensure that the ports are not already in use by other processes on the host.
+
+After running the container, the Left 4 Dead 2 Zone Server should be accessible through the specified ports on the host machine.
+
+---
+
 ## **Credits:**
 
 > **Foundation/Advanced Work:**

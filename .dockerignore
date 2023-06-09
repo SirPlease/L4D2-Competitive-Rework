@@ -1,0 +1,11 @@
+.git/
+.github/
+.local/
+.vscode/
+assets/
+.dockerignore
+.gitattributes
+.gitignore
+Dockerfile
+LICENSE
+README.md
