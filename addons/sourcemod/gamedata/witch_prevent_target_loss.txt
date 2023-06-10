@@ -1,0 +1,69 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Addresses"
+		{
+			"WitchAttack::OnMoveToFailure"
+			{
+				"signature"	"WitchAttack::OnMoveToFailure"
+			}
+		}
+		"Offsets"
+		{
+			"WitchAttack::OnMoveToFailure_1"
+			{
+				"linux"		"19"	//0x74
+				"windows"	"9"		//0x74
+			}
+			"WitchAttack::OnMoveToFailure_2"
+			{
+				"linux"		"24"	//0x75
+				"windows"	"14"	//0x75
+			}
+		}
+		"Signatures"
+		{
+			"WitchAttack::OnMoveToFailure"
+			{
+				"library"		"server"
+				"linux"			"@_ZN11WitchAttack15OnMoveToFailureEP8InfectedPK4Path17MoveToFailureType"
+				"windows"		"\x55\x8B\xEC\x8B\x45\x14\x83\xE8\x00"
+								/* 55 8B EC 8B 45 14 83 E8 00 */
+			}
+		}
+	}
+	"left4dead"
+	{
+		"Addresses"
+		{
+			"WitchAttack::OnMoveToFailure"
+			{
+				"signature"	"WitchAttack::OnMoveToFailure"
+			}
+		}
+		"Offsets"
+		{
+			"WitchAttack::OnMoveToFailure_1"
+			{
+				"linux"		"31"	//0x75
+				"windows"	"7"		//0x74
+			}
+			"WitchAttack::OnMoveToFailure_2"
+			{
+				"linux"		"93"	//0x74
+				"windows"	"12"	//0x75
+			}
+		}
+		"Signatures"
+		{
+			"WitchAttack::OnMoveToFailure"
+			{
+				"library"		"server"
+				"linux"			"@_ZN11WitchAttack15OnMoveToFailureEP8InfectedPK4Path17MoveToFailureType"
+				"windows"		"\x8B\x2A\x2A\x2A\x83\x2A\x00\x74\x2A\x83\x2A\x02"
+								/* 8B ? ? ? 83 ? 00 74 ? 83 ? 02 */
+			}
+		}
+	}
+}
