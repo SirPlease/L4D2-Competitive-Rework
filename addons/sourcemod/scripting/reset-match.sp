@@ -43,7 +43,7 @@ public void RoundStart_Event(Handle event, const char[] name, bool dontBroadcast
 	if (!GetConVarBool(cvar_reset_match_enabled) || savedScore == 0)
 		return;
 
-	CreateTimer(15.0, ResetMatch_Timer);
+	CreateTimer(30.0, ResetMatch_Timer);
 }
 
 public Action ResetMatch_Timer(Handle timer)
