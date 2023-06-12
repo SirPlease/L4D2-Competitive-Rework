@@ -2,7 +2,7 @@
  *                                                                        *
  *                       Colored Chat Functions                           *
  *                   Author: exvel, Editor: Popoklopsi, Powerlord, Bara   *
- *                           Version: 1.3.1                               *
+ *                           Version: 1.3.2                               *
  *                                                                        *
  **************************************************************************/
 
@@ -11,12 +11,14 @@
 #endif
 #define _colors_included
 
-#define MAX_MESSAGE_LENGTH 250
-#define MAX_COLORS 12
+#define CSOURCETV				1 // Enable print for SourceTV
 
-#define SERVER_INDEX 0
-#define NO_INDEX -1
-#define NO_PLAYER -2
+#define MAX_MESSAGE_LENGTH		250
+#define MAX_COLORS				12
+
+#define SERVER_INDEX			0
+#define NO_INDEX				-1
+#define NO_PLAYER				-2
 
 enum Colors
 {
@@ -233,7 +235,14 @@ stock void CPrintToChatAll(const char[] szMessage, any ...)
 	char szBuffer[MAX_MESSAGE_LENGTH];
 
 	for (int i = 1; i <= MaxClients; i++) {
-		if (IsClientInGame(i) && !IsFakeClient(i) && !CSkipList[i]) {
+		if (IsClientInGame(i)
+		#if CSOURCETV
+			&& (!IsFakeClient(i) || IsClientSourceTV(i))
+		#else
+			&& !IsFakeClient(i)
+		#endif
+			&& !CSkipList[i]
+		) {
 			SetGlobalTransTarget(i);
 			VFormat(szBuffer, sizeof(szBuffer), szMessage, 2);
 
@@ -311,7 +320,14 @@ stock void CPrintToChatAllEx(int author, const char[] szMessage, any ...)
 	char szBuffer[MAX_MESSAGE_LENGTH];
 
 	for (int i = 1; i <= MaxClients; i++) {
-		if (IsClientInGame(i) && !IsFakeClient(i) && !CSkipList[i]) {
+		if (IsClientInGame(i)
+		#if CSOURCETV
+			&& (!IsFakeClient(i) || IsClientSourceTV(i))
+		#else
+			&& !IsFakeClient(i)
+		#endif
+			&& !CSkipList[i]
+		) {
 			SetGlobalTransTarget(i);
 			VFormat(szBuffer, sizeof(szBuffer), szMessage, 3);
 
@@ -447,11 +463,13 @@ stock int CFormat(char[] szMessage, int maxlength, int author = NO_INDEX)
 
 		if (!CProfile_Colors[i]) { /* If tag is not supported by game replace it with green tag */
 			ReplaceString(szMessage, maxlength, CTag[i], CTagCode[Color_Green], false);
+
 			continue;
 		}
 
 		if (!CTagReqSayText2[i]) { /* If tag doesn't need saytext2 simply replace */
 			ReplaceString(szMessage, maxlength, CTag[i], CTagCode[i], false);
+
 			continue;
 		}
 
@@ -459,6 +477,7 @@ stock int CFormat(char[] szMessage, int maxlength, int author = NO_INDEX)
 		/* If saytext2 is not supported by game replace tag with green tag */
 		if (!CProfile_SayText2) {
 			ReplaceString(szMessage, maxlength, CTag[i], CTagCode[Color_Green], false);
+
 			continue;
 		}
 
@@ -737,7 +756,14 @@ stock void CShowActivity(int client, const char[] format, any ...)
 	}
 
 	for (int i = 1; i <= MaxClients; i++) {
-		if (!IsClientInGame(i) || IsFakeClient(i) || (display_in_chat && i == client)) {
+		if (!IsClientInGame(i)
+		#if CSOURCETV
+			|| (IsFakeClient(i) && !IsClientSourceTV(i))
+		#else
+			|| IsFakeClient(i)
+		#endif
+			|| (display_in_chat && i == client)
+		) {
 			continue;
 		}
 
@@ -838,7 +864,14 @@ stock void CShowActivityEx(int client, const char[] tag, const char[] format, an
 	}
 
 	for (int i = 1; i <= MaxClients; i++) {
-		if (!IsClientInGame(i) || IsFakeClient(i) || (display_in_chat && i == client)) {
+		if (!IsClientInGame(i)
+		#if CSOURCETV
+			|| (IsFakeClient(i) && !IsClientSourceTV(i))
+		#else
+			|| IsFakeClient(i)
+		#endif
+			|| (display_in_chat && i == client)
+		) {
 			continue;
 		}
 
@@ -948,7 +981,14 @@ stock void CShowActivity2(int client, const char[] tag, const char[] format, any
 	}
 
 	for (int i = 1; i <= MaxClients; i++) {
-		if (!IsClientInGame(i) || IsFakeClient(i) || i == client) {
+		if (!IsClientInGame(i)
+		#if CSOURCETV
+			|| (IsFakeClient(i) && !IsClientSourceTV(i))
+		#else
+			|| IsFakeClient(i)
+		#endif
+			|| i == client
+		) {
 			continue;
 		}
 
