@@ -23,7 +23,6 @@
 
 	"ServerCommands"
 	{
-		"item"		"sm_map"
 		"item"		"sm_execcfg"
 		"item"		"sm_reloadadmins"
 	}
