@@ -113,9 +113,17 @@ void AlertAndCrash()
 
 Action AlertAndCrash_Timer(Handle timer)
 {
+	KickAll();
 	Crash();
 
 	return Plugin_Continue;
+}
+
+void KickAll()
+{
+	for( int i = 1; i <= MaxClients; i++ )
+		if(IsClientInGame(i))
+			KickClient(i, "The server has been restarted, see the IP in your game console");
 }
 
 void Crash()
