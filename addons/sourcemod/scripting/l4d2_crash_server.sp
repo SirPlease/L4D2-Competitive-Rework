@@ -4,6 +4,7 @@
 #include <sdktools>
 #include <left4dhooks>
 #include <regex>
+#include <ripext>
 
 bool g_bEnabled = false;
 int g_iNumberOfGamesUntilCrash = 3;
@@ -12,6 +13,11 @@ ConVar
 	g_hCvarEnabled = null,
 	g_hCvarNumberOfGamesUntilCrash = null;
 
+ConVar cvar_crash_server_matchname;
+ConVar cvar_crash_server_endpoint;
+ConVar cvar_crash_server_access_token;
+
+char port[6];
 int numberOfGamesPlayed = 0;
 int previousScore = 0;
 
@@ -29,10 +35,16 @@ public void OnPluginStart()
 	g_hCvarEnabled = CreateConVar("l4d2_crash_server_enabled", "0", "Enabled crash server");
 	g_hCvarNumberOfGamesUntilCrash = CreateConVar("l4d2_crash_server_number_of_games", "3", "Number of games until crash");
 	
+	cvar_crash_server_matchname	  = CreateConVar("l4d2_crash_server_matchname", "", "Match name", FCVAR_PROTECTED);
+	cvar_crash_server_endpoint	  = CreateConVar("l4d2_crash_server_endpoint", "https://l4d2-server-manager-api.azurewebsites.net", "API endpoint", FCVAR_PROTECTED);
+	cvar_crash_server_access_token = CreateConVar("l4d2_crash_server_access_token", "", "API Access Token", FCVAR_PROTECTED);
+
 	CvarsToType();
 	
 	g_hCvarEnabled.AddChangeHook(Cvars_Changed);
 	g_hCvarNumberOfGamesUntilCrash.AddChangeHook(Cvars_Changed);
+
+	IntToString(GetConVarInt(FindConVar("hostport")), port, sizeof(port));
 
 	HookEvent("round_start", RoundStart_Event);
 
@@ -128,6 +140,7 @@ void KickAll()
 
 void Crash()
 {
+	ReloadMatch();
 	UnloadAccelerator();
 	CreateTimer(0.1, Crash_Timer);
 }
@@ -153,10 +166,46 @@ void UnloadAccelerator()
 	delete regex;
 }
 
+public void ReloadMatch()
+{
+	char endpoint[255] = "/api/server/";
+	StrCat(endpoint, sizeof(endpoint), port);
+	StrCat(endpoint, sizeof(endpoint), "/match");
+
+	JSONObject command = new JSONObject();
+
+	char matchName[255];
+	GetConVarString(cvar_crash_server_matchname, matchName, sizeof(matchName));
+	command.SetString("matchName", matchName);
+
+	HTTPRequest request = BuildHTTPRequest(endpoint);
+
+	request.Put(command, ReloadMatchResponse);
+}
+
+void ReloadMatchResponse(HTTPResponse httpResponse, any value)
+{
+}
+
 Action Crash_Timer(Handle timer)
 {
 	SetCommandFlags("crash", GetCommandFlags("crash") &~ FCVAR_CHEAT);
 	ServerCommand("crash");
 
 	return Plugin_Continue;
+}
+
+HTTPRequest BuildHTTPRequest(char[] path)
+{
+	char endpoint[255];
+	GetConVarString(cvar_crash_server_endpoint, endpoint, sizeof(endpoint));
+	StrCat(endpoint, sizeof(endpoint), path);
+
+	char access_token[100];
+	GetConVarString(cvar_crash_server_access_token, access_token, sizeof(access_token));
+
+	HTTPRequest request = new HTTPRequest(endpoint);
+	request.SetHeader("Authorization", access_token);
+
+	return request;
 }
