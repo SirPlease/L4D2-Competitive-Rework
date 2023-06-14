@@ -230,6 +230,7 @@ void LastMatchResponse(HTTPResponse httpResponse, int client)
 
 	JSONObject response = view_as<JSONObject>(httpResponse.Data);
 	JSONObject match = view_as<JSONObject>(response.Get("match"));
+	JSONArray teams = view_as<JSONArray>(match.Get("teams"));
 	JSONArray players = view_as<JSONArray>(response.Get("players"));
 
 	char campaign[128];
@@ -238,9 +239,62 @@ void LastMatchResponse(HTTPResponse httpResponse, int client)
 	char matchElapsed[16];
 	match.GetString("matchElapsed", matchElapsed, sizeof(matchElapsed));
 
+	PrintDivider(client);
 	PrintToChat(client, "\x01Campanha: \x04%s", campaign);
 	PrintToChat(client, "\x01Duração: \x04%s", matchElapsed);
 
+	if (teams.Length == 2)
+	{
+		JSONObject teamA = view_as<JSONObject>(teams.Get(0));
+		JSONObject teamB = view_as<JSONObject>(teams.Get(1));
+
+		int scoreTeamA = teamA.GetInt("score");
+		int scoreTeamB = teamB.GetInt("score");
+
+		if (scoreTeamA > scoreTeamB)
+			PrintToChat(client, "\x01Equipe A \x03%d \x01x \x04%d \x01Equipe B", scoreTeamA, scoreTeamB);
+		else if (scoreTeamB > scoreTeamA)
+			PrintToChat(client, "\x01Equipe A \x04%d \x01x \x03%d \x01Equipe B", scoreTeamA, scoreTeamB);
+		else
+			PrintToChat(client, "\x01Equipe A \x04%d \x01x \x04%d \x01Equipe B", scoreTeamA, scoreTeamB);
+
+		JSONArray playersTeamA = view_as<JSONArray>(teamA.Get("players"));
+		JSONArray playersTeamB = view_as<JSONArray>(teamB.Get("players"));
+
+		PrintDivider(client);
+		PrintToChat(client, "\x01Equipe A (\x04MVP SI\x03 | \x04MVP CM\x03 | \x04LVP FF\x01):");
+		for (int i = 0; i < playersTeamA.Length; i++)
+		{
+			JSONObject player = view_as<JSONObject>(playersTeamA.Get(i));
+
+			char name[256];
+			player.GetString("name", name, sizeof(name));
+
+			int mvpSiDamage = player.GetInt("mvpSiDamage");
+			int mvpCommon = player.GetInt("mvpCommon");
+			int lvpFfGiven = player.GetInt("lvpFfGiven");
+
+			PrintToChat(client, "\x01[\x04%d\x03 | \x04%d\x03 | \x04%d\x01] - \x01%s", mvpSiDamage, mvpCommon, lvpFfGiven, name);
+		}
+
+		PrintDivider(client);
+		PrintToChat(client, "\x01Equipe B (\x04MVP SI\x03 | \x04MVP CM\x03 | \x04LVP FF\x01):");
+		for (int i = 0; i < playersTeamB.Length; i++)
+		{
+			JSONObject player = view_as<JSONObject>(playersTeamB.Get(i));
+
+			char name[256];
+			player.GetString("name", name, sizeof(name));
+
+			int mvpSiDamage = player.GetInt("mvpSiDamage");
+			int mvpCommon = player.GetInt("mvpCommon");
+			int lvpFfGiven = player.GetInt("lvpFfGiven");
+
+			PrintToChat(client, "\x01[\x04%d\x03 | \x04%d\x03 | \x04%d\x01] - \x01%s", mvpSiDamage, mvpCommon, lvpFfGiven, name);
+		}
+	}
+
+	PrintDivider(client);
 	for (int i = 0; i < players.Length; i++)
 	{
 		JSONObject player = view_as<JSONObject>(players.Get(i));
@@ -256,6 +310,11 @@ void LastMatchResponse(HTTPResponse httpResponse, int client)
 		else
 			PrintToChat(client, "\x04%dº \x01%s: \x04%d pts", position, name, lastMatchPoints);
 	}
+}
+
+void PrintDivider(int client)
+{
+	PrintToChat(client, "_________________");
 }
 
 void RankingMix(int client)
