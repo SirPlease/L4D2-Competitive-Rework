@@ -25,3 +25,4 @@ $RECYCLE.BIN/
 .local
 cfg/server_secret.cfg
 addons/sourcemod/logs/
+cvars_secret.cfg
