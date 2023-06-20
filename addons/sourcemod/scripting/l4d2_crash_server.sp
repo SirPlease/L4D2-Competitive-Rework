@@ -74,7 +74,7 @@ public void RoundStart_Event(Handle event, const char[] name, bool dontBroadcast
 	if (!g_bEnabled)
 		return;
 
-	CreateTimer(30.0, RoundStart_Timer);
+	CreateTimer(45.0, RoundStart_Timer);
 }
 
 public Action RoundStart_Timer(Handle timer)
