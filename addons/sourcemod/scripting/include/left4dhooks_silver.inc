@@ -306,6 +306,34 @@ stock bool L4D_IsPlayerBurning(int client)
 	return (fBurning > 0.0) ? true : false;
 }
 
+/**
+ * @brief Returns true if a physics object or alarmed car can be moved by the tank
+ *
+ * @param entity			Entity index to check
+ *
+ * @return true if it can be moved, false otherwise
+ */
+stock bool L4D_IsTankProp(int entity)
+{
+	static char classname[16];
+
+	GetEdictClassname(entity, classname, sizeof(classname));
+
+	if( strcmp(classname, "prop_physics") == 0 )
+	{
+		if( GetEntProp(entity, Prop_Send, "m_hasTankGlow") )
+		{
+			return true;
+		}
+	}
+	else if( strcmp(classname, "prop_car_alarm") == 0 )
+	{
+		return true;
+	}
+
+	return false;
+}
+
 
 
 // ==================================================
