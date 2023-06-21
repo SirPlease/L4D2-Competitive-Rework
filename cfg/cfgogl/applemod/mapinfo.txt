@@ -425,6 +425,14 @@
 		"start_dist"		"50.000000"
 		"start_extra_dist"	"0.000000"
 		"end_dist"			"50.000000"
+		"tank_ban_flow"
+		{
+			"Late Alley"
+			{
+				"min"		"58"
+				"max"		"70"
+			}
+		}
 	}
 	"c6m2_bedlam"
 	{
@@ -437,9 +445,14 @@
 		"horde_limit"		"150"
 		"tank_ban_flow"
 		{
+			"Sewer Drop"
+			{
+				"min"		"58"
+				"max"		"68"
+			}
 			"Event (bugged spawn)"
 			{
-				"min"		"74"
+				"min"		"73"
 				"max"		"100"
 			}
 		}
@@ -463,19 +476,6 @@
 		"start_dist"		"75.000000"
 		"start_extra_dist"	"0.000000"
 		"end_dist"			"50.000000"
-		"tank_ban_flow"
-		{
-			"Early to past Event"
-			{
-				"min"		"0"
-				"max"		"64"
-			}
-			"Block End"
-			{
-				"min"		"68"
-				"max"		"100"
-			}
-		}
 	}
 	"c7m2_barge"
 	{
@@ -484,12 +484,12 @@
 		"start_dist"		"75.000000"
 		"start_extra_dist"	"0.000000"
 		"end_dist"			"50.000000"
-		"max_distance"		"700"
+		"max_distance"		"600"
 		"tank_ban_flow"
 		{
 			"Event (bugged spawn)"
 			{
-				"min"		"72"
+				"min"		"70"
 				"max"		"78"
 			}
 		}

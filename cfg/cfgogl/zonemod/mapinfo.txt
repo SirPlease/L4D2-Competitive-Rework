@@ -442,12 +442,12 @@
 		{
 			"Sewer Drop"
 			{
-				"min"		"56"
-				"max"		"66"
+				"min"		"58"
+				"max"		"68"
 			}
 			"Event (bugged spawn)"
 			{
-				"min"		"72"
+				"min"		"73"
 				"max"		"100"
 			}
 		}
@@ -479,7 +479,7 @@
 		"start_dist"		"75.000000"
 		"start_extra_dist"	"0.000000"
 		"end_dist"			"50.000000"
-		"max_distance"		"700"
+		"max_distance"		"600"
 		"tank_ban_flow"
 		{
 			"Event (bugged spawn)"
@@ -2370,7 +2370,7 @@
 			"Early spawn"
 			{
 				"min"		"0"
-				"max"		"36"
+				"max"		"56"
 			}
 		}
 	}
@@ -2393,7 +2393,7 @@
 	"nmrm3_sewers"
 	{
 		"start_point"		"10936.943359 4650.031250 90.761696"
-		"end_point"			"12288.031250 12235.729492 78.031250"
+		"end_point"			"12629 12565 78.031250"
 		"start_dist"		"50.000000"
 		"start_extra_dist"	"0.000000"
 		"end_dist"			"75.000000"
@@ -2402,15 +2402,15 @@
 			"Early spawn"
 			{
 				"min"		"0"
-				"max"		"26"
+				"max"		"31"
 			}
 		}
 	}
 	"nmrm4_hospital"
 	{
-		"start_point"		"12297.031250 12247.379883 16.031250"
+		"start_point"		"12629 12565 78.031250"
 		"start_dist"		"165.464249"
-		"start_extra_dist"	"409.338440"
+		"start_extra_dist"	"250"
 		"end_point"			"11459.563477 15087.968750 5565.974609"
 		"end_dist"			"332.486664"
 		"tank_ban_flow"
@@ -2422,8 +2422,8 @@
 			}
 			"Elevator"
 			{
-				"min"		"40"
-				"max"		"68"
+				"min"		"36"
+				"max"		"72"
 			}
 		}
 	}
@@ -2452,4 +2452,60 @@
 			}
 		}
 	}
+	"pr1_waterfront_f"
+	{
+		"start_point"		"735.921692 730.683960 -437.968750"
+		"end_point"			"-4333.118164 -1132.782837 -281.968750"
+		"start_dist"		"75.000000"
+		"start_extra_dist"	"0.000000"
+		"end_dist"			"250.000000"
+	}
+	"pr2_park_f"
+	{
+		"start_point"		"-4333.118164 -1132.782837 -281.968750"
+		"end_point"			"-6024.643555 -8038.492676 -185.968750"
+		"start_dist"		"75.000000"
+		"start_extra_dist"	"0.000000"
+		"end_dist"			"250.000000"
+	}
+	"pr3_highway_f"
+	{
+		"start_point"       "10383.161133 8264.652344 87.791550"
+		"end_point"         "7953.651367 -4068.622070 217.136597"
+		"start_dist"		"250.000000"
+		"start_extra_dist"	"0.000000"
+		"end_dist"			"50.000000"
+		"tank_ban_flow"
+		{
+			"Unfair spawn"
+			{
+				"min"		"27"
+				"max"		"37"
+			}
+		}
+	}
+	"pr4_quarter_f"
+	{
+		"start_point"       "-2379.359863 10833.366211 409.579590"
+		"end_point"         "-3739.969238 -63.853954 126.031250"
+		"start_dist"		"50.000000"
+		"start_extra_dist"	"0.000000"
+		"end_dist"			"150.000000"
+		"tank_ban_flow"
+		{
+			"Unfair spawn"
+			{
+				"min"		"55"
+				"max"		"63"
+			}
+		}
+	}
+	"pr5_bridge_f"
+	{
+		"start_point"       "-11323.872070 -1008.784912 197.848251"
+		"end_point"         "1438.854370 -6413.000000 266.521240"
+		"start_dist"		"50.000000"
+		"start_extra_dist"	"0.000000"
+		"end_dist"			"50.000000"
+	}	
 }

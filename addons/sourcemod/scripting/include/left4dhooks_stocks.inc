@@ -433,7 +433,7 @@ stock int L4D_GetBotOfIdlePlayer(int client)
 {
 	int idleClient;
 	int offset;
-	char netclass[128];
+	char netclass[64];
 
 	for (int bot = 1; bot <= MaxClients; bot++)
 	{
@@ -474,7 +474,7 @@ stock int L4D_GetBotOfIdlePlayer(int client)
  */
 stock int L4D_GetIdlePlayerOfBot(int bot)
 {
-	char netclass[128];
+	char netclass[64];
 	GetEntityNetClass(bot, netclass, sizeof(netclass));
 	int offset = FindSendPropInfo(netclass, "m_humanSpectatorUserID");
 
@@ -672,7 +672,7 @@ stock bool L4D2_SetEntityGlow(int entity, L4D2GlowType type, int range, int minR
 		return false;
 	}
 
-	char netclass[128];
+	char netclass[64];
 	GetEntityNetClass(entity, netclass, sizeof(netclass));
 
 	int offset = FindSendPropInfo(netclass, "m_iGlowType");
@@ -1065,9 +1065,10 @@ stock void L4D_SetPlayerIsGoingToDie(int client, bool isGoingToDie)
  */
 stock bool L4D2_IsWeaponUpgradeCompatible(int weapon)
 {
-	char netclass[128];
-	GetEntityNetClass(weapon, netclass, sizeof(netclass));
-	return FindSendPropInfo(netclass, "m_upgradeBitVec") > 0;
+	if( HasEntProp(weapon, Prop_Send, "m_upgradeBitVec") )
+		return true;
+
+	return false;
 }
 
 /**
@@ -1080,7 +1081,10 @@ stock bool L4D2_IsWeaponUpgradeCompatible(int weapon)
 // L4D2 only.
 stock int L4D2_GetWeaponUpgradeAmmoCount(int weapon)
 {
-	return HasEntProp(weapon, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded") && GetEntProp(weapon, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded");
+	if( HasEntProp(weapon, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded") )
+		return GetEntProp(weapon, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded");
+
+	return 0;
 }
 
 /**
@@ -1095,9 +1099,7 @@ stock int L4D2_GetWeaponUpgradeAmmoCount(int weapon)
 stock void L4D2_SetWeaponUpgradeAmmoCount(int weapon, int count)
 {
 	if( HasEntProp(weapon, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded") )
-	{
 		SetEntProp(weapon, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded", count);
-	}
 }
 
 /**
@@ -1110,7 +1112,10 @@ stock void L4D2_SetWeaponUpgradeAmmoCount(int weapon, int count)
 // L4D2 only.
 stock int L4D2_GetWeaponUpgrades(int weapon)
 {
-	return HasEntProp(weapon, Prop_Send, "m_upgradeBitVec") && GetEntProp(weapon, Prop_Send, "m_upgradeBitVec");
+	if( HasEntProp(weapon, Prop_Send, "m_upgradeBitVec") )
+		return GetEntProp(weapon, Prop_Send, "m_upgradeBitVec");
+
+	return 0;
 }
 
 /**
