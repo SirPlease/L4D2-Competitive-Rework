@@ -42,7 +42,6 @@ bool g_bNoOneInServer;
 
 public void OnPluginStart()
 {
-	RegAdminCmd("sm_restart", Cmd_RestartServer, ADMFLAG_ROOT);
 	g_hConVarHibernate = FindConVar("sv_hibernate_when_empty");
 	g_hConVarHibernate.AddChangeHook(ConVarChanged_Hibernate);
 
@@ -123,21 +122,8 @@ Action COLD_DOWN(Handle timer, any client)
 		return Plugin_Continue;
 	}
 	
-	LogMessage("玩家全部离开服务器，现在重启服务器");
-	PrintToServer("玩家全部离开服务器，现在重启服务器");
-
-	UnloadAccelerator();
-
-	CreateTimer(0.1, Timer_RestartServer);
-
-	COLD_DOWN_Timer = null;
-	return Plugin_Continue;
-}
-
-Action Cmd_RestartServer(int client, int args)
-{
-	LogMessage("现在重启服务器");
-	PrintToServer("现在重启服务器");
+	LogMessage("Last one player left the server, Restart server now");
+	PrintToServer("Last one player left the server, Restart server now");
 
 	UnloadAccelerator();
 

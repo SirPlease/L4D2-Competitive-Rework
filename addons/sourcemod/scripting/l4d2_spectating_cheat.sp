@@ -41,13 +41,14 @@ bool g_bMapStarted;
 static bool g_bSpecCheatActive[MAXPLAYERS + 1]; //spectatpr open watch
 int g_iModelIndex[MAXPLAYERS+1];			// Player Model entity reference
 Handle DelayWatchGlow_Timer[MAXPLAYERS+1] ; //prepare to disable player spec glow
+int g_iRoundStart, g_iPlayerSpawn;
 
 public Plugin myinfo = 
 {
     name = "l4d2 specating cheat",
     author = "Harry Potter",
     description = "A spectator who watching the survivor at first person view would see the infected model glows though the wall",
-    version = "2.7",
+    version = "2.8-2023/6/19",
     url = "https://steamcommunity.com/profiles/76561198026784913"
 }
 
@@ -67,15 +68,16 @@ public void OnPluginStart()
 	//Autoconfig for plugin
 	AutoExecConfig(true, "l4d2_specting_cheat");
 
+	HookEvent("round_start",            Event_RoundStart, EventHookMode_PostNoCopy);
+	HookEvent("player_spawn", 			Event_PlayerSpawn);
+	HookEvent("round_end",				Event_RoundEnd, EventHookMode_PostNoCopy);
+	HookEvent("map_transition", 		Event_RoundEnd, EventHookMode_PostNoCopy); //戰役模式下過關到下一關的時候 (沒有觸發round_end)
+	HookEvent("mission_lost", 			Event_RoundEnd, EventHookMode_PostNoCopy); //戰役模式下滅團重來該關卡的時候 (之後有觸發round_end)
+	HookEvent("finale_vehicle_leaving", Event_RoundEnd, EventHookMode_PostNoCopy); //救援載具離開之時  (沒有觸發round_end)
 	HookEvent("tank_spawn", Event_TankSpawn);
-	HookEvent("player_spawn", Event_PlayerSpawn);
 	HookEvent("player_death", Event_PlayerDeath);
 	HookEvent("player_team",	Event_PlayerTeam);
-	HookEvent("round_end",			Event_RoundEnd, EventHookMode_PostNoCopy);
-	HookEvent("map_transition", Event_RoundEnd, EventHookMode_PostNoCopy); //戰役模式下過關到下一關的時候 (沒有觸發round_end)
-	HookEvent("mission_lost", Event_RoundEnd, EventHookMode_PostNoCopy); //戰役模式下滅團重來該關卡的時候 (之後有觸發round_end)
-	HookEvent("finale_vehicle_leaving", Event_RoundEnd, EventHookMode_PostNoCopy); //救援載具離開之時  (沒有觸發round_end)
-	
+
 	HookEvent("player_disconnect", Event_PlayerDisconnect);
 	HookEvent("tank_frustrated", OnTankFrustrated, EventHookMode_Post);
 	
@@ -106,6 +108,7 @@ public void OnPluginEnd() //unload插件的時候
 {
 	RemoveAllModelGlow();
 	ResetTimer();
+	ClearDefault();
 }
 
 public void OnMapStart()
@@ -117,6 +120,7 @@ public void OnMapEnd()
 {
 	g_bMapStarted = false;
 	ResetTimer();
+	ClearDefault();
 }
 
 public void OnClientDisconnect(int client)
@@ -140,6 +144,9 @@ Action ToggleSpecCheatCmd(int client, int args)
 			StopAllModelGlow();
 			delete DelayWatchGlow_Timer[client];
 			DelayWatchGlow_Timer[client] = CreateTimer(0.1, Timer_StopGlowTransmit, client);
+
+			delete DelayWatchGlow_Timer[0];
+			DelayWatchGlow_Timer[0] = CreateTimer(0.2, Timer_StartAllGlow);
 		}
 		else
 		{
@@ -157,9 +164,15 @@ Action ToggleSpecCheatCmd(int client, int args)
 
 Action Timer_StopGlowTransmit(Handle timer, int client)
 {
+	DelayWatchGlow_Timer[client] = null;
+	return Plugin_Continue;
+}
+
+Action Timer_StartAllGlow(Handle timer)
+{
 	StartAllModelGlow();
 
-	DelayWatchGlow_Timer[client] = null;
+	DelayWatchGlow_Timer[0] = null;
 	return Plugin_Continue;
 }
 
@@ -194,11 +207,32 @@ void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
 	RequestFrame(OnNextFrame, userid);
 }
 
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast) 
+{
+	if( g_iPlayerSpawn == 1 && g_iRoundStart == 0 )
+		CreateTimer(1.2, Timer_PluginStart, _, TIMER_FLAG_NO_MAPCHANGE);
+	g_iRoundStart = 1;
+}
+
+Action Timer_PluginStart(Handle timer)
+{
+	ClearDefault();
+
+	RemoveAllModelGlow();
+	CreateAllModelGlow();
+
+	return Plugin_Continue;
+}
+
 void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 { 
+	if( g_iPlayerSpawn == 0 && g_iRoundStart == 1 )
+		CreateTimer(1.2, Timer_PluginStart, _, TIMER_FLAG_NO_MAPCHANGE);
+	g_iPlayerSpawn = 1;	
+
 	int userid = event.GetInt("userid");
 	int client = GetClientOfUserId(userid);
-	
+
 	RemoveInfectedModelGlow(client); //有可能特感變成坦克復活
 	RequestFrame(OnNextFrame, userid);
 }
@@ -222,6 +256,9 @@ void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 		StopAllModelGlow();
 		delete DelayWatchGlow_Timer[client];
 		DelayWatchGlow_Timer[client] = CreateTimer(0.1, Timer_StopGlowTransmit, client);
+
+		delete DelayWatchGlow_Timer[0];
+		DelayWatchGlow_Timer[0] = CreateTimer(0.2, Timer_StartAllGlow);
 	}
 }
 
@@ -229,6 +266,7 @@ void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	RemoveAllModelGlow();
 	ResetTimer();
+	ClearDefault();
 }
 
 void OnNextFrame(int userid)
@@ -278,7 +316,15 @@ void CreateInfectedModelGlow(int client)
 		SetEntProp(entity, Prop_Send, "m_glowColorOverride", g_iCvarColorGhost);
 	else
 		SetEntProp(entity, Prop_Send, "m_glowColorOverride", g_iCvarColorAlive);
-	AcceptEntityInput(entity, "StartGlowing");
+
+	if(DelayWatchGlow_Timer[0] != null)
+	{
+		AcceptEntityInput(entity, "StopGlowing");
+	}
+	else
+	{
+		AcceptEntityInput(entity, "StartGlowing");
+	}
 
 	// Set model invisible
 	SetEntityRenderMode(entity, RENDER_TRANSCOLOR);
@@ -508,10 +554,16 @@ int GetZombieClass(int client)
 
 void ResetTimer()
 {
-	for (int i = 1; i <= MaxClients; i++)
+	for (int i = 0; i <= MaxClients; i++)
 	{
 		delete DelayWatchGlow_Timer[i];
 	}
+}
+
+void ClearDefault()
+{
+	g_iRoundStart = 0;
+	g_iPlayerSpawn = 0;
 }
 
 //-------------------------------Other API Forward-------------------------------
