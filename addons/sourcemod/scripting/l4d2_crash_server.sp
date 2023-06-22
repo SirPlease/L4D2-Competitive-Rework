@@ -74,7 +74,7 @@ public void RoundStart_Event(Handle event, const char[] name, bool dontBroadcast
 	if (!g_bEnabled)
 		return;
 
-	CreateTimer(45.0, RoundStart_Timer);
+	CreateTimer(120.0, RoundStart_Timer);
 }
 
 public Action RoundStart_Timer(Handle timer)
@@ -115,12 +115,12 @@ void AlertAndCrash()
 	regex.Match(status);
 	regex.GetSubString(1, ip, sizeof(ip));
 	
-	PrintToChatAll("\x01The server will be restarted in \x0315\x01 seconds, use the \x04IP\x01 below to reconnect");
+	PrintToChatAll("\x01The server will be restarted in \x0320\x01 seconds, use the \x04IP\x01 below to reconnect");
 
 	for (int i = 0; i < 3; i++)
 		PrintToChatAll("\x04connect %s", ip);
 
-	CreateTimer(15.0, AlertAndCrash_Timer);
+	CreateTimer(20.0, AlertAndCrash_Timer);
 }
 
 Action AlertAndCrash_Timer(Handle timer)
