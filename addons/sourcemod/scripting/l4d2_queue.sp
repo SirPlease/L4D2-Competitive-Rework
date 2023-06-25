@@ -129,6 +129,10 @@ void PrintQueue(int client)
 		if (!IsClientInGame(currentClient) || IsFakeClient(currentClient))
 			continue;
 
+		int team = GetClientTeam(currentClient);
+		if (team == L4D2_TEAM_SURVIVOR || team == L4D2_TEAM_INFECTED)
+			continue;
+
 		if (first)
 		{
 			FormatEx(output, sizeof(output), "\x04Fila: \x03%dº \x01%N", i + 1, currentClient);
