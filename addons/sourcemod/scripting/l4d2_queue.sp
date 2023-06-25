@@ -120,9 +120,8 @@ void PrintQueue(int client)
 		return;
 
 	char output[1024];
-	bool first = true;
 
-	for (int i = 0; i < queue.Length; i++)
+	for (int i = 0, position = 1; i < queue.Length; i++)
 	{
 		int currentClient = queue.Get(i);
 
@@ -133,13 +132,12 @@ void PrintQueue(int client)
 		if (team == L4D2_TEAM_SURVIVOR || team == L4D2_TEAM_INFECTED)
 			continue;
 
-		if (first)
-		{
-			FormatEx(output, sizeof(output), "\x04Fila: \x03%dº \x01%N", i + 1, currentClient);
-			first = false;
-		}
+		if (position == 1)
+			FormatEx(output, sizeof(output), "\x04Fila: \x03%dº \x01%N", position, currentClient);
 		else
-			Format(output, sizeof(output), "%s\x01, \x03%dº \x01%N", output, i + 1, currentClient);
+			Format(output, sizeof(output), "%s\x01, \x03%dº \x01%N", output, position, currentClient);
+
+		position++
 	}
 
 	if (client == 0)
