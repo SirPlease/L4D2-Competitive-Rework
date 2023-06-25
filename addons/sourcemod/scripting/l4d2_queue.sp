@@ -30,57 +30,28 @@ public Action PrintQueueCmd(int client, int args)
 	return Plugin_Handled;
 }
 
-public void OnRoundIsLive()
-{
-    SyncQueue();
-}
-
-public void L4D2_OnEndVersusModeRound_Post()
-{
-	SyncQueue();
-	PrintQueue(0);
-}
-
 public OnClientPutInServer(client)
 {
 	AddToQueue(client);
 }
 
-public void OnClientDisconnect(int client)
+public void OnClientDisconnect_Post(int client)
 {
 	RemoveFromQueue(client);
 }
 
-void SyncQueue()
+public void OnRoundIsLive()
 {
-	AddToTheEndOfQueueWhoIsNotInTheQueue();
-	RemoveFromTheQueueWhoIsNotOnTheServer();
-	RemoveFromQueueWhoIsInTheTeams();
+    MovePlayersToTheEndOfTheQueue();
 }
 
-void AddToTheEndOfQueueWhoIsNotInTheQueue()
+public void L4D2_OnEndVersusModeRound_Post()
 {
-	for (int client = 1; client <= MaxClients; client++)
-		AddToQueue(client);
+	MovePlayersToTheEndOfTheQueue();
+	PrintQueue(0);
 }
 
-void RemoveFromTheQueueWhoIsNotOnTheServer()
-{
-	for (int i = 0; i < queue.Length; )
-	{
-		int client = queue.Get(i);
-
-		if (!IsClientInGame(client) || IsFakeClient(client))
-		{
-			queue.Erase(i);
-			continue;
-		}
-
-		i++;
-	}
-}
-
-void RemoveFromQueueWhoIsInTheTeams()
+void MovePlayersToTheEndOfTheQueue()
 {
 	for (int client = 1; client <= MaxClients; client++)
 	{
@@ -89,11 +60,17 @@ void RemoveFromQueueWhoIsInTheTeams()
 
 		int index = queue.FindValue(client);
 		if (index == -1)
+		{
+			queue.Push(client);
 			continue;
+		}
 
 		int team = GetClientTeam(client);
 		if (team == L4D2_TEAM_SURVIVOR || team == L4D2_TEAM_INFECTED)
+		{
 			queue.Erase(index);
+			queue.Push(client);
+		}
 	}
 }
 
