@@ -30,7 +30,7 @@ public Action PrintQueueCmd(int client, int args)
 	return Plugin_Handled;
 }
 
-public OnClientPutInServer(client)
+public OnClientPutInServer(int client)
 {
 	AddToQueue(client);
 }
