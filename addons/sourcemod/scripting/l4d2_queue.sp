@@ -14,13 +14,30 @@ public Plugin myinfo =
 	url = "https://github.com/altair-sossai/l4d2-zone-server"
 };
 
+bool disabled = true;
+
 ArrayList queue;
 
 public void OnPluginStart()
 {
 	queue = CreateArray(64);
 
+	HookEvent("round_start", RoundStart_Event);
+
 	RegConsoleCmd("sm_fila", PrintQueueCmd);
+}
+
+public void RoundStart_Event(Handle event, const char[] name, bool dontBroadcast)
+{
+	DisableQueue();
+	CreateTimer(2.0, RoundStart_Timer);
+}
+
+public Action RoundStart_Timer(Handle timer)
+{
+	EnableQueue();
+
+	return Plugin_Continue;
 }
 
 public Action PrintQueueCmd(int client, int args)
@@ -30,40 +47,54 @@ public Action PrintQueueCmd(int client, int args)
 	return Plugin_Handled;
 }
 
-public OnClientPutInServer(int client)
+public OnClientAuthorized(int client)
 {
+	if (disabled || IsInReady())
+		return;
+
 	AddToQueue(client);
 }
 
 public void OnClientDisconnect_Post(int client)
 {
+	if (disabled || IsInReady())
+		return;
+
 	RemoveFromQueue(client);
 }
 
 public void OnRoundIsLive()
 {
-    MovePlayersToTheEndOfTheQueue();
+	EnableQueue();
+	AddMissingToQueue();
+	MovePlayersToTheEndOfTheQueue();
 }
 
 public void L4D2_OnEndVersusModeRound_Post()
 {
+	DisableQueue();
+	RemoveWhoIsNotOnTheServer();
+	AddMissingToQueue();
 	MovePlayersToTheEndOfTheQueue();
 	PrintQueue(0);
+}
+
+void AddMissingToQueue()
+{
+	for (int client = 1; client <= MaxClients; client++)
+		AddToQueue(client);
 }
 
 void MovePlayersToTheEndOfTheQueue()
 {
 	for (int client = 1; client <= MaxClients; client++)
 	{
-		if (!IsClientInGame(client) || IsFakeClient(client))
+		if (!IsClientInGame(client) || IsFakeClient(client) || IsBot(client))
 			continue;
 
 		int index = queue.FindValue(client);
 		if (index == -1)
-		{
-			queue.Push(client);
 			continue;
-		}
 
 		int team = GetClientTeam(client);
 		if (team == L4D2_TEAM_SURVIVOR || team == L4D2_TEAM_INFECTED)
@@ -74,9 +105,25 @@ void MovePlayersToTheEndOfTheQueue()
 	}
 }
 
+void RemoveWhoIsNotOnTheServer()
+{
+	for (int i = 0; i < queue.Length; )
+	{
+		int client = queue.Get(i);
+
+		if (!IsClientInGame(client) || IsFakeClient(client) || IsBot(client))
+		{
+			queue.Erase(i);
+			continue;
+		}
+
+		i++;
+	}
+}
+
 void AddToQueue(int client)
 {
-	if (!IsClientInGame(client) || IsFakeClient(client) || queue.FindValue(client) != -1)
+	if (!IsClientInGame(client) || IsFakeClient(client) || IsBot(client) || queue.FindValue(client) != -1)
 		return;
 
 	queue.Push(client);
@@ -102,7 +149,7 @@ void PrintQueue(int client)
 	{
 		int currentClient = queue.Get(i);
 
-		if (!IsClientInGame(currentClient) || IsFakeClient(currentClient))
+		if (!IsClientInGame(currentClient) || IsFakeClient(currentClient) || IsBot(client))
 			continue;
 
 		int team = GetClientTeam(currentClient);
@@ -121,4 +168,22 @@ void PrintQueue(int client)
 		PrintToChatAll(output);
 	else
 		PrintToChat(client, output);
+}
+
+bool IsBot(int client)
+{
+	char steamId[64];
+	GetClientAuthId(client, AuthId_Steam2, steamId, sizeof(steamId));
+
+	return strcmp(steamId, "BOT") == 0;
+}
+
+void EnableQueue()
+{
+	disabled = false;
+}
+
+void DisableQueue()
+{
+	disabled = true;
 }
