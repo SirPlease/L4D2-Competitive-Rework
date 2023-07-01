@@ -620,8 +620,9 @@
 		"start_extra_dist"	"344.831299"
 		"end_point"			"-5196.772949 9229.695312 -191.968750"
 		"end_dist"			"538.437988"
-		"ItemLimits"		"max_distance"
-		"700"
+		"max_distance"		"700"
+		"ItemLimits"		
+
 		{
 			"pain_pills"	"0"
 		}
