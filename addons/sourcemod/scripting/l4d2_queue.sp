@@ -158,7 +158,7 @@ void PrintQueue(int target)
 		else
 			Format(output, sizeof(output), "%s\x01, \x03%dº \x01%N", output, position, client);
 
-		position++
+		position++;
 	}
 
 	if (target == 0)
