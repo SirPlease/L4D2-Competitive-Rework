@@ -38,6 +38,7 @@ public void OnClientPutInServer(int client)
 public void OnRoundIsLive()
 {
 	UnqueuePlayers();
+	RequeuePlayers();
 }
 
 public void L4D2_OnEndVersusModeRound_Post(int client)
@@ -90,6 +91,12 @@ void UnqueuePlayers()
 	}
 }
 
+void RequeuePlayers()
+{
+	for (int client = 1; client <= MaxClients; client++) 
+		Enqueue(client);
+}
+
 void UnqueueAllDisconnected()
 {
 	char steamId[64];
@@ -98,13 +105,13 @@ void UnqueueAllDisconnected()
 	{
 		queue.GetString(i, steamId, sizeof(steamId));
 
-		if (GetClientUsingSteamId(steamId) == -1)
+		if (GetClientUsingSteamId(steamId) != -1)
 		{
-			queue.Erase(i);
+			i++;
 			continue;
 		}
 
-		i++;
+		queue.Erase(i);
 	}
 }
 
@@ -126,7 +133,7 @@ int GetClientUsingSteamId(const char[] steamId)
     return -1;
 }
 
-void PrintQueue(int client)
+void PrintQueue(int target)
 {
 	if (queue.Length == 0)
 		return;
@@ -138,24 +145,24 @@ void PrintQueue(int client)
 	{
 		queue.GetString(i, steamId, sizeof(steamId));
 
-		int currentClient = GetClientUsingSteamId(steamId);
-		if (currentClient == -1)
+		int client = GetClientUsingSteamId(steamId);
+		if (client == -1)
 			continue;
 
-		int team = GetClientTeam(currentClient);
+		int team = GetClientTeam(client);
 		if (team == L4D2_TEAM_SURVIVOR || team == L4D2_TEAM_INFECTED)
 			continue;
 
 		if (position == 1)
-			FormatEx(output, sizeof(output), "\x04Fila: \x03%dº \x01%N", position, currentClient);
+			FormatEx(output, sizeof(output), "\x04Fila: \x03%dº \x01%N", position, client);
 		else
-			Format(output, sizeof(output), "%s\x01, \x03%dº \x01%N", output, position, currentClient);
+			Format(output, sizeof(output), "%s\x01, \x03%dº \x01%N", output, position, client);
 
 		position++
 	}
 
-	if (client == 0)
+	if (target == 0)
 		PrintToChatAll(output);
 	else
-		PrintToChat(client, output);
+		PrintToChat(target, output);
 }
