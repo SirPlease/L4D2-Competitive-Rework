@@ -37,13 +37,13 @@ public void OnClientPutInServer(int client)
 
 public void OnRoundIsLive()
 {
-	UnqueuePlayers();
 	RequeuePlayers();
 }
 
 public void L4D2_OnEndVersusModeRound_Post(int client)
 {
 	UnqueueAllDisconnected();
+	RequeuePlayers();
 	PrintQueue(0);
 }
 
@@ -65,7 +65,7 @@ void Enqueue(int client)
 	queue.PushString(steamId);
 }
 
-void UnqueuePlayers()
+void RequeuePlayers()
 {
 	char steamId[64];
 
@@ -89,10 +89,7 @@ void UnqueuePlayers()
 
 		queue.Erase(i);
 	}
-}
 
-void RequeuePlayers()
-{
 	for (int client = 1; client <= MaxClients; client++) 
 		Enqueue(client);
 }
