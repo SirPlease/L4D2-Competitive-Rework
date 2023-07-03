@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "2.0.1"
+#define PLUGIN_VERSION "2.1"
 
 public Plugin myinfo = 
 {
@@ -34,11 +34,7 @@ void Event_JockeyRide(Event event, const char[] name, bool dontBroadcast)
 	if (!victim || !IsClientInGame(victim))
 		return;
 	
-	// Fix bounding box
-	if (GetEntityFlags(victim) & FL_DUCKING)
-	{
-		SetEntityFlags(victim, GetEntityFlags(victim) & ~FL_DUCKING);
-	}
+	SDKHook(victim, SDKHook_PostThinkPost, SDK_OnPostThink_Post);
 	
 	int attacker = GetClientOfUserId(event.GetInt("userid"));
 	if (!attacker || !IsClientInGame(attacker))
@@ -53,6 +49,36 @@ void Event_JockeyRide(Event event, const char[] name, bool dontBroadcast)
 	
 	float flModelScale = GetCharacterScale(character);
 	SetEstIkOffset(attacker, HumanHeight * (flModelScale - 1.0));
+}
+
+void SDK_OnPostThink_Post(int client)
+{
+	if (!IsClientInGame(client))
+		return;
+	
+	if (!FixBoundingBox(client))
+	{
+		SDKUnhook(client, SDKHook_PostThinkPost, SDK_OnPostThink_Post);
+	}
+}
+
+bool FixBoundingBox(int client)
+{
+	if (GetClientTeam(client) != 2)
+		return false;
+	
+	// in all circumstances this should make sure the client is being jockeyed
+	if (GetEntPropEnt(client, Prop_Send, "m_jockeyAttacker") == -1)
+		return false;
+	
+	// Fix bounding box
+	int flags = GetEntityFlags(client);
+	if (flags & FL_DUCKING)
+	{
+		SetEntityFlags(client, flags & ~FL_DUCKING);
+	}
+	
+	return true;
 }
 
 void Event_JockeyRideEnd(Event event, const char[] name, bool dontBroadcast)
