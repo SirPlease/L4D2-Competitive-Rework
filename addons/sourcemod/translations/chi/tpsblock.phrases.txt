@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"[{green}!{default}]"
+	}
+	"Cvar_Invalid"
+	{
+		"chi"		"控制台第三人称指令 {olive}c_thirdpersonshoulder{default} 已被禁用."
+	}
+	"Cvar_Value1"
+	{
+		"chi"		"请在控制台输入 {olive}c_thirdpersonshoulder 0{default}, 否则无法加入队伍."
+	}
+}

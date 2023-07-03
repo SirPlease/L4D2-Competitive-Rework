@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"    "[{green}!{default}]"
+	}
+	"VotingNotEnabled"
+	{
+		"chi"	"在本轮比赛进行到 {olive}40秒{default} 时才启用投票功能."
+	}
+	"NotConsoleVote"
+	{
+		"chi"	"[!] 你必须在游戏中才能投票."
+	}
+	"NotSpectatorVote"
+	{
+		"chi"	"{olive}旁观者{default} 不能投票."
+	}
+}

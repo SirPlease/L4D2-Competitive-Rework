@@ -1,0 +1,142 @@
+"Phrases"
+{
+    "Tag"
+    {
+        "chi"        "{blue}<{green}Boss投票{blue}>{default}"
+    }
+    // RunVoteChecks
+    "NotAvailable"
+    {
+        "chi"        "此地图无法启用Boss投票."
+    }
+    "Available"
+    {
+        "chi"        "Boss投票只能在准备期间进行."
+    }
+    "FirstRound"
+    {
+        "chi"        "Boss投票只能在地图的第一轮中可用."
+    }
+    "NotAvailableForSpec"
+    {
+        "chi"        "旁观者无法使用Boss投票."
+    }
+    "CannotBeCalled"
+    {
+        "chi"        "现在无法发起Boss投票..."
+    }
+    // VoteBossCmd
+    "Usage"
+    {
+        "chi"        "使用方法: !voteboss {olive}<{default}tank进度{olive}> <{default}witch进度{olive}>{default}."
+    }
+    "Usage2"
+    {
+        "chi"        "输入 {default}\"{blue}0{default}\" 以 {olive}禁用生成{default}, \"{blue}-1{default}\" 以 {olive}随机生成."
+    }
+    "Invalid"
+    {
+        "chi"        "输入的百分比无效{default}."
+    }
+    "TankStatic"
+    {
+        "chi"        "Tank 的生成在此地图上是静态的, 无法变更."
+    }
+    "WitchStatic"
+    {
+        "chi"        "Witch 的生成在此地图上是静态的, 无法变更."
+    }
+    "TankBanned"
+    {
+        "chi"        "Tank 的百分比已被{blue}禁止{default}."
+    }
+    "WitchBanned"
+    {
+        "chi"        "Witch  的百分比已被{blue}禁止{default}."
+    }
+    "SetBosses"
+    {
+        "chi"        "设置Tank生成在: %s, Witch生成在: %s?"
+    }
+    "SetTank"
+    {
+        "chi"        "设置Tank生成在: %s, 设置Witch为: 禁用?"
+    }
+    "SetOnlyTank"
+    {
+        "chi"        "设置Tank生成在: %s?"
+    }
+    "SetWitch"
+    {
+        "chi"        "设置Tank: 禁用, Witch生成在: %s?"
+    }
+    "SetOnlyWitch"
+    {
+        "chi"        "设置Witch生成在: %s?"
+    }
+    "SetBossesDisabled"
+    {
+        "chi"        "设置Boss生成为: 禁用?"
+    }
+    "SetTankDisabled"
+    {
+        "chi"        "设置Tank为: 禁用?"
+    }
+    "SetWitchDisabled"
+    {
+        "chi"        "设置Witch为: 禁用?"
+    }
+    // BossVoteResultHandler
+    "OnlyReadyUp"
+    {
+        "chi"        "Boss的生成只能在准备阶段设置."
+    }
+    "SettingBoss"
+    {
+        "chi"        "正在设置Boss的生成..."
+    }
+    "SettingTank"
+    {
+        "chi"        "正在设置Tank的生成..."
+    }
+    "SettingWitch"
+    {
+        "chi"        "正在设置Witch的生成..."
+    }
+    "SettingBossDisabled"
+    {
+        "chi"        "正在设置Boss的生成为禁用..."
+    }
+    // ForceTankCommand
+    "CommandNotAvailable"
+    {
+        "chi"        "此地图无法使用该指令."
+    }
+    "TankSpawnStatic"
+    {
+        "chi"        "Tank 的生成在此地图上是静态的, 无法变更."
+    }
+    "PercentageInvalid"
+    {
+        "chi"        "此百分比是{blue}无效的{default}."
+    }
+    "Percentagebanned"
+    {
+        "chi"        "此百分比是{blue}禁止的{default}."
+    }
+    "TankSpawnAdmin"
+    {
+		"#format"   "{1:i},{2:s}" // 1:p_iRequestedPercent 2:clientName
+        "chi"        "管理员 ({blue}{2}{default})将 Tank 的生成设置在 {olive}{1}%{default}."
+    }
+    // ForceWitchCommand
+    "WitchSpawnStatic"
+    {
+        "chi"        "Witch 的生成在此地图上是静态的, 无法变更."
+    }
+    "WitchSpawnAdmin"
+    {
+		"#format"   "{1:i},{2:s}" // 1:p_iRequestedPercent 2:clientName
+        "chi"        "管理员 ({blue}{2}{default})将 Witch 的生成设置在 {olive}{1}%{default}."
+    }
+}

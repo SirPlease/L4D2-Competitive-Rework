@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"{default}[{grechi}8Ball{default}]"
+	}
+	"Usage"
+	{
+		"chi"		"使用方法: !8ball <问题>"
+	}
+	"Asked"
+	{
+		"chi"		"{teamcolor}%N{default} 提问: {olive}%s{default}"
+	}
+	"WithYes"
+	{
+		"chi"		"选择 {olive}是{default}!"
+	}
+	"WithNo"
+	{
+		"chi"		"选择 {red}否{default}!"
+	}
+	"Yikes"
+	{
+		"chi"		"呀. {red}错{default}!"
+	}
+	"Sure"
+	{
+		"chi"		"呃... {olive}确定{default}?"
+	}
+	"AbsolutelyNot"
+	{
+		"chi"		"哈哈哈 {red}绝对不是{default}!"
+	}
+	"Yeah"
+	{
+		"chi"		"你知道吗? {olive}正确{default}!"
+	}
+}

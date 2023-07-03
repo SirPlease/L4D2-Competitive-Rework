@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Title"
+	{
+		"chi"	"{blue}[{default}投石指南{blue}]"
+	}
+	"Reload"
+	{
+		"chi"	"{olive}装弹键{default} = {blue}头顶投石{default}"
+	}
+	"Use"
+	{
+		"chi"	"{olive}使用键{default} = {blue}低抛投石{default}"
+	}
+	"M2"
+	{
+		"chi"	"{olive}鼠标右键{default} = {blue}过肩投石{default}"
+	}
+}

@@ -1,0 +1,44 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"    	"{blue}[{default}Slots{blue}]{default}"
+	}
+	"NotConsoleVote"
+	{
+		"chi"		"[Slots] 你必须在游戏中."
+	}
+	"LimitSlotsAbove"
+	{
+		"chi"		"在这个服务器上, 你不能限制超过{olive}%i{default}个位置."
+	}
+	"LimitedSlotsTo"
+	{
+		"#format"   "{1:s},{2:i}" // 1:sName 2:Int
+		"chi"		"{olive}{1}{default} 已将服务器位置数调整为 {blue}{2}{default}"
+	}
+	"RequiredPlayers"
+	{
+		"chi"		"你不能限制位置数低于所需的人数."
+	}
+	"SlotsUsage"
+	{
+		"chi"		"使用方法: {olive}!slots{default} <{olive}数字{default}> {blue}|{default} 示例: {olive}!slots 8{default}"
+	}
+	"Spectators"
+	{
+		"chi"		"旁观者不允许投票."
+	}
+	"LimitSlots"
+	{
+		"chi"		"将位置数限制到 '%s'?"
+	}
+	"CannotBeStarted"
+	{
+		"chi"		"现在无法发起投票."
+	}
+	"LimitingSlots"
+	{
+		"chi"		"正在调整位置数..."
+	}
+}

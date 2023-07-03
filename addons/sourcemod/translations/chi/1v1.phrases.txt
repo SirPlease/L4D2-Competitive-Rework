@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"[{olive}1v1{default}]"
+	}
+	"HealthRemaining"
+	{
+		"chi"		"{red}{1}{default} ({green}{2}{default}) 还剩 {olive}{3}{default} 点血量!"
+	}
+	"AI"
+	{
+		"chi"		"AI"
+	}
+	"UMad"
+	{
+		"chi"		"别生气..."
+	}
+}
