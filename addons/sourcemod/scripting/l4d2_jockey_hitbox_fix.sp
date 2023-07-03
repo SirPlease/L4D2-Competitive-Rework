@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "2.0"
+#define PLUGIN_VERSION "2.0.1"
 
 public Plugin myinfo = 
 {
@@ -81,7 +81,7 @@ float GetCharacterScale(int survivorCharacter)
 	
 	int index = ConvertToExternalCharacter(survivorCharacter) - 1;
 	
-	return (index >= 0 && index <= sizeof(s_flScales)) ? s_flScales[index] : 1.0;
+	return (index >= 0 && index < sizeof(s_flScales)) ? s_flScales[index] : 1.0;
 }
 
 int ConvertToExternalCharacter(int survivorCharacter)
