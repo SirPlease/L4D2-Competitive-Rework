@@ -18,7 +18,7 @@ public Plugin myinfo =
 	name = "Easier Pill Passer",
 	author = "CanadaRox, A1m`, Forgetest",
 	description = "Lets players pass pills and adrenaline with +reload when they are holding one of those items",
-	version = "1.5",
+	version = "1.5.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -49,7 +49,8 @@ public void OnPluginStart()
 
 public void OnClientPutInServer(int client)
 {
-	SDKHook(client, SDKHook_PostThink, SDK_OnPostThink);
+	if (!IsFakeClient(client))
+		SDKHook(client, SDKHook_PostThink, SDK_OnPostThink);
 }
 
 Action SDK_OnPostThink(int iClient)
