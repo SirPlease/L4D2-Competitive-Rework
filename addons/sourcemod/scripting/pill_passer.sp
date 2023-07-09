@@ -3,8 +3,11 @@
 
 #include <sourcemod>
 #include <sdktools>
+#include <sdkhooks>
 #define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
+#undef REQUIRE_PLUGIN
+#include <l4d2_lagcomp_manager>
 
 #define ENTITY_MAX_NAME_LENGTH	64
 #define MAX_DIST_SQUARED		75076	// 274^2
@@ -13,16 +16,47 @@
 public Plugin myinfo =
 {
 	name = "Easier Pill Passer",
-	author = "CanadaRox, A1m`",
+	author = "CanadaRox, A1m`, Forgetest",
 	description = "Lets players pass pills and adrenaline with +reload when they are holding one of those items",
-	version = "1.4",
+	version = "1.5.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-public Action OnPlayerRunCmd(int iClient, int &iButtons, int &iImpulse, float fVel[3], float fAngles[3], \
-									int &iWeapon, int &iSubtype, int &iCmdNum, int &iTickCount, int &iSeed, int iMouse[2])
+bool g_bLateLoad;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if (iButtons & IN_RELOAD && !(iButtons & IN_USE)) {
+	if (GetEngineVersion() != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "Plugin supports L4D2 only");
+		return APLRes_SilentFailure;
+	}
+	
+	g_bLateLoad = late;
+	return APLRes_Success;
+}
+
+public void OnPluginStart()
+{
+	if (g_bLateLoad)
+	{
+		for (int i = 1; i <= MaxClients; ++i)
+		{
+			if (IsClientInGame(i)) OnClientPutInServer(i);
+		}
+	}
+}
+
+public void OnClientPutInServer(int client)
+{
+	if (!IsFakeClient(client))
+		SDKHook(client, SDKHook_PostThink, SDK_OnPostThink);
+}
+
+Action SDK_OnPostThink(int iClient)
+{
+	int buttons = GetClientButtons(iClient);
+	if (buttons & IN_RELOAD && !(buttons & IN_USE)) {
 		char sWeaponName[ENTITY_MAX_NAME_LENGTH];
 		GetClientWeapon(iClient, sWeaponName, sizeof(sWeaponName));
 		
@@ -34,6 +68,8 @@ public Action OnPlayerRunCmd(int iClient, int &iButtons, int &iImpulse, float fV
 				int iTargetWeaponIndex = GetPlayerWeaponSlot(iTarget, L4D2WeaponSlot_LightHealthItem);
 				
 				if (iTargetWeaponIndex == -1) {
+					L4D2_LagComp_StartLagCompensation(iClient, LAG_COMPENSATE_BOUNDS);
+					
 					float fClientOrigin[3], fTargetOrigin[3];
 					GetClientAbsOrigin(iClient, fClientOrigin);
 					GetClientAbsOrigin(iTarget, fTargetOrigin);
@@ -45,25 +81,25 @@ public Action OnPlayerRunCmd(int iClient, int &iButtons, int &iImpulse, float fV
 						
 						#if (SOURCEMOD_V_MINOR == 11) || USE_GIVEPLAYERITEM
 							RemoveEntity(iGiverWeaponIndex);
-							iGiverWeaponIndex = GivePlayerItem(iClient, sWeaponName); // Fixed only in the latest version of sourcemod 1.11
-							
-							// If the entity was not given to the player
-							if (iGiverWeaponIndex < 1) {
-								return Plugin_Continue;
-							}
+							iGiverWeaponIndex = GivePlayerItem(iTarget, sWeaponName); // Fixed only in the latest version of sourcemod 1.11
 						#else
 							EquipPlayerWeapon(iTarget, iGiverWeaponIndex);
 						#endif
 						
-						// Call Event
-						Handle hFakeEvent = CreateEvent("weapon_given");
-						SetEventInt(hFakeEvent, "userid", GetClientUserId(iTarget));
-						SetEventInt(hFakeEvent, "giver", GetClientUserId(iClient));
-						SetEventInt(hFakeEvent, "weapon", iWeapId);
-						SetEventInt(hFakeEvent, "weaponentid", iGiverWeaponIndex);
-						
-						FireEvent(hFakeEvent);
+						// If the entity was sucessfully given to the player
+						if (iGiverWeaponIndex > 0) {
+							// Call Event
+							Handle hFakeEvent = CreateEvent("weapon_given");
+							SetEventInt(hFakeEvent, "userid", GetClientUserId(iTarget));
+							SetEventInt(hFakeEvent, "giver", GetClientUserId(iClient));
+							SetEventInt(hFakeEvent, "weapon", iWeapId);
+							SetEventInt(hFakeEvent, "weaponentid", iGiverWeaponIndex);
+							
+							FireEvent(hFakeEvent);
+						}
 					}
+					
+					L4D2_LagComp_FinishLagCompensation(iClient);
 				}
 			}
 		}
