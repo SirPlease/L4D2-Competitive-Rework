@@ -17,6 +17,12 @@
 				"linux"			"88"
 				"windows"		"76"
 			}
+			
+			"sizeof(CUserCmd)"
+			{
+				"linux"			"88"
+				"windows"		"88"
+			}
 		}
 		"Addresses"
 		{
@@ -36,6 +42,36 @@
 		}
 		"Signatures"
 		{
+			/*
+			 * CLagCompensationManager::StartLagCompensation(CBasePlayer *,LagCompensationType,Vector const&,QAngle const&,float)
+			 *
+			 * How to find in windows:
+			 * Can be found by string "CLagCompensationManager::StartLagCompensation with NULL CUserCmd!!!".
+			 * sub_10187A70 - vesion 2.2.2.7
+			*/
+			"CLagCompensationManager_StartLagCompensation"
+			{
+				"library"		"server"
+				"linux"			"@_ZN23CLagCompensationManager20StartLagCompensationEP11CBasePlayer19LagCompensationTypeRK6VectorRK6QAnglef"
+				"windows"		"\x55\x8B\x2A\x2A\x2A\x2A\x2A\x33\x2A\x2A\x89\x2A\x2A\x2A\x83"
+								/* 55 8B ? ? ? ? ? 33 ? ? 89 ? ? ? 83 */
+			}
+			
+			/*
+			 * CLagCompensationManager::FinishLagCompensation(CBasePlayer *)
+			 *
+			 * How to find in windows:
+			 * Can be found by string "FinishLagCompensation".
+			 * sub_101881B0 - vesion 2.2.2.7
+			*/
+			"CLagCompensationManager_FinishLagCompensation"
+			{
+				"library"		"server"
+				"linux"			"@_ZN23CLagCompensationManager21FinishLagCompensationEP11CBasePlayer"
+				"windows"		"\x55\x8B\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8D\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x0F"
+								/* 55 8B ? ? ? ? A1 ? ? ? ? ? ? 8B ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? 8D ? ? E8 ? ? ? ? 0F */
+			}
+			
 			/* @A1m:
 			 * How to find in windows:
 			 * Can be found by string "FrameUpdatePostEntityThink", this will point to the function

@@ -5,6 +5,7 @@
 
 #include <sourcemod>
 #include <sdktools>
+#include <l4d2_lagcomp_manager>
 
 #if DEBUG
 // 'l4d2_lagcompmanager_test' extension is required for debugging
@@ -16,6 +17,9 @@
 
 #define MAX_ENTITY_NAME_SIZE 64
 
+int 
+	g_iCUserCmdSize = -1;
+
 ConVar
 	g_hSvUnlag = null;
 
@@ -24,16 +28,79 @@ Address
 
 Handle
 	g_hLagCompAddEntity = null,
-	g_hLagCompRemoveEntity = null;
+	g_hLagCompRemoveEntity = null,
+	g_hStartLagComp = null,
+	g_hFinishLagComp = null;
 
 public Plugin myinfo =
 {
 	name = "L4D2 Lag Compensation Manager",
-	author = "ProdigySim, A1m`",
+	author = "ProdigySim, A1m`, Forgetest",
 	description = "Provides lag compensation for entities in left 4 dead 2 (required enable sv_unlag).",
-	version = "1.1.1",
+	version = "1.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	switch (GetEngineVersion())
+	{
+		case Engine_Left4Dead2: { }
+		default:
+		{
+			strcopy(error, err_max, "Plugin supports L4D2 only.");
+			return APLRes_SilentFailure;
+		}
+	}
+	
+	CreateNative("L4D2_LagComp_StartLagCompensation", Ntv_StartLagCompensation);
+	CreateNative("L4D2_LagComp_FinishLagCompensation", Ntv_FinishLagCompensation);
+	CreateNative("L4D2_LagComp_AddAdditionalEntity", Ntv_AddAdditionalEntity);
+	CreateNative("L4D2_LagComp_RemoveAdditionalEntity", Ntv_RemoveAdditionalEntity);
+	
+	return APLRes_Success;
+}
+
+any Ntv_StartLagCompensation(Handle plugin, int numParams)
+{
+	int player = GetNativeCell(1);
+	LagCompensationType lagCompensationType = GetNativeCell(2);
+	
+	float weaponPos[3], weaponAngles[3];
+	
+	GetNativeArray(3, weaponPos, sizeof(weaponPos));
+	GetNativeArray(4, weaponAngles, sizeof(weaponAngles));
+	
+	float weaponRange = GetNativeCell(5);
+	
+	if (!LagComp_StartLagCompensation(player, lagCompensationType, weaponPos, weaponAngles, weaponRange))
+	{
+		ThrowNativeError(SP_ERROR_NATIVE, "CLagCompensationManager::StartLagCompensation with NULL CUserCmd!!!");
+	}
+	
+	return 1;
+}
+
+any Ntv_FinishLagCompensation(Handle plugin, int numParams)
+{
+	int player = GetNativeCell(1);
+	LagComp_FinishLagCompensation(player);
+	return 1;
+}
+
+any Ntv_AddAdditionalEntity(Handle plugin, int numParams)
+{
+	int entity = GetNativeCell(1);
+	LagComp_AddAdditionalEntity(entity);
+	return 1;
+}
+
+any Ntv_RemoveAdditionalEntity(Handle plugin, int numParams)
+{
+	int entity = GetNativeCell(1);
+	LagComp_RemoveAdditionalEntity(entity);
+	return 1;
+}
 
 public void OnPluginStart()
 {
@@ -54,9 +121,29 @@ public void OnPluginStart()
 	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
 	g_hLagCompRemoveEntity = EndPrepSDKCall();
 
-	if (g_aLagCompensation == Address_Null || g_hLagCompAddEntity == null || g_hLagCompRemoveEntity == null) {
-		SetFailState("Failed to find LagComp addresses: 0x%08x, %08x, %08x", g_aLagCompensation, g_hLagCompAddEntity, g_hLagCompRemoveEntity);
+	StartPrepSDKCall(SDKCall_Raw);
+	PrepSDKCall_SetFromConf(hGameConf, SDKConf_Signature, "CLagCompensationManager_StartLagCompensation");
+	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+	PrepSDKCall_AddParameter(SDKType_QAngle, SDKPass_ByRef);
+	PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+	g_hStartLagComp = EndPrepSDKCall();
+
+	StartPrepSDKCall(SDKCall_Raw);
+	PrepSDKCall_SetFromConf(hGameConf, SDKConf_Signature, "CLagCompensationManager_FinishLagCompensation");
+	PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+	g_hFinishLagComp = EndPrepSDKCall();
+
+	if (g_aLagCompensation == Address_Null || g_hLagCompAddEntity == null || g_hLagCompRemoveEntity == null || g_hStartLagComp == null || g_hFinishLagComp == null) {
+		SetFailState("Failed to find LagComp addresses: 0x%08x, %08x, %08x, %08x, %08x", g_aLagCompensation, g_hLagCompAddEntity, g_hLagCompRemoveEntity, g_hStartLagComp, g_hFinishLagComp);
 	}
+	
+	g_iCUserCmdSize = GameConfGetOffset(hGameConf, "sizeof(CUserCmd)");
+	if (g_iCUserCmdSize == -1)
+		SetFailState("Missing offset \"sizeof(CUserCmd)\"");
+	
+	delete hGameConf;
 	
 	#if DEBUG
 		RegConsoleCmd("sm_show_lagcomp_list", Cmd_ShowLagCompList, "Basically this lagcomp array is always empty, so don't be surprised you won't see anything in the console");
@@ -91,7 +178,7 @@ public void OnEntityCreated(int iEntity, const char[] sClassName)
 	}
 	
 	if (strcmp(sClassName, "tank_rock") == 0) {
-		SDKCall(g_hLagCompAddEntity, g_aLagCompensation, iEntity);
+		LagComp_AddAdditionalEntity(iEntity);
 		
 		#if DEBUG
 			if (IsFindEntity(iEntity)) {
@@ -110,7 +197,7 @@ public void OnEntityDestroyed(int iEntity)
 			bool IsFind = IsFindEntity(iEntity);
 		#endif
 		
-		SDKCall(g_hLagCompRemoveEntity, g_aLagCompensation, iEntity);
+		LagComp_RemoveAdditionalEntity(iEntity);
 		
 		#if DEBUG
 			char sClassName[MAX_ENTITY_NAME_SIZE];
@@ -127,6 +214,59 @@ public void OnEntityDestroyed(int iEntity)
 			}
 		#endif
 	}
+}
+
+void LagComp_AddAdditionalEntity(int entity)
+{
+	SDKCall(g_hLagCompAddEntity, g_aLagCompensation, entity);
+}
+
+void LagComp_RemoveAdditionalEntity(int entity)
+{
+	SDKCall(g_hLagCompRemoveEntity, g_aLagCompensation, entity);
+}
+
+bool LagComp_StartLagCompensation(
+	int player,
+	LagCompensationType lagCompensationType,
+	const float weaponPos[3] = NULL_VECTOR,
+	const float weaponAngles[3] = NULL_VECTOR,
+	float weaponRange = 0.0 )
+{
+	if (GetPlayerCurrentCommand(player) == Address_Null)
+		return false;
+	
+	static float origin[3], angle[3];
+	
+	if (IsNullVector(weaponPos))
+		origin = view_as<float>({0.0, 0.0, 0.0});
+	else
+		origin = weaponPos;
+	
+	if (IsNullVector(weaponAngles))
+		angle = view_as<float>({0.0, 0.0, 0.0});
+	else
+		angle = weaponAngles;
+	
+	SDKCall(g_hStartLagComp, g_aLagCompensation, player, lagCompensationType, origin, angle, weaponRange);
+
+	return true;
+}
+
+void LagComp_FinishLagCompensation(int player)
+{
+	SDKCall(g_hFinishLagComp, g_aLagCompensation, player);
+}
+
+Address GetPlayerCurrentCommand(int player)
+{
+	static int s_iOffs_m_pCurrentCommand = -1;
+	if (s_iOffs_m_pCurrentCommand == -1)
+		s_iOffs_m_pCurrentCommand = FindDataMapInfo(player, "m_hViewModel")
+									+ 4*2 /* CHandle<CBaseViewModel> * MAX_VIEWMODELS */
+									+ g_iCUserCmdSize /* m_LastCmd */;
+	
+	return view_as<Address>(GetEntData(player, s_iOffs_m_pCurrentCommand, 4));
 }
 
 bool IsRock(int iEntity)
