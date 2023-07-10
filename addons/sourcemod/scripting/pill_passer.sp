@@ -17,7 +17,7 @@ public Plugin myinfo =
 	name = "Easier Pill Passer",
 	author = "CanadaRox, A1m`, Forgetest",
 	description = "Lets players pass pills and adrenaline with +reload when they are holding one of those items",
-	version = "1.6",
+	version = "1.6.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -108,10 +108,13 @@ public Action L4D2_LagComp_OnWantsLagCompensationOnEntity(int client, int entity
 	if (client != g_iPasser)
 		return Plugin_Continue;
 	
-	if (entity <= 0 || entity > MaxClients)
+	if (entity <= 0 || entity > MaxClients || !IsClientInGame(entity))
 		return Plugin_Continue;
 	
 	if (GetClientTeam(entity) != 2)
+		return Plugin_Continue;
+	
+	if (!IsPlayerAlive(entity))
 		return Plugin_Continue;
 	
 	result = true;
