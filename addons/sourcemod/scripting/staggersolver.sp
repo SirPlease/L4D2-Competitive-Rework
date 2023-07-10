@@ -9,7 +9,7 @@ public Plugin myinfo =
 	name = "Super Stagger Solver",
 	author = "CanadaRox, A1m (fix), Sir (rework), Forgetest",
 	description = "Blocks all button presses and restarts animations during stumbles",
-	version = "2.1",
+	version = "2.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -21,6 +21,21 @@ public void L4D_OnShovedBySurvivor_Post(int client, int victim, const float vecD
 		{
 			SetEntPropFloat(victim, Prop_Send, "m_fServerAnimStartTime", GetGameTime());
 			SetEntPropFloat(victim, Prop_Send, "m_flCycle", 0.0);
+		}
+	}
+}
+
+public void L4D2_OnEntityShoved_Post(int client, int entity, int weapon, const float vecDir[3], bool bIsHighPounce)
+{
+	if( entity > 0 && entity <= MaxClients && IsClientInGame(entity) && GetClientTeam(entity) == 3)
+	{
+		if (L4D_IsPlayerStaggering(entity))
+		{
+			if (!FixSpitter(entity))
+			{
+				SetEntPropFloat(entity, Prop_Send, "m_fServerAnimStartTime", GetGameTime());
+				SetEntPropFloat(entity, Prop_Send, "m_flCycle", 0.0);
+			}
 		}
 	}
 }
