@@ -75,6 +75,14 @@
 	{
 		"en"	"You have reached your pause limit."
 	}
+	"PauseLimitPerTeam"
+	{
+		"en"	"You have reached your pause limit per team."
+	}
+	"PausesUsed"
+	{
+		"en"	"Pauses used: {red}%d / %d"
+	}
 	// AttemptPause
 	"PauseDeferred"
 	{
