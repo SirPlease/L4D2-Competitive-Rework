@@ -2,6 +2,32 @@
 {
 	"left4dead2"
 	{
+		"Functions"
+		{
+			/* CTerrorPlayer::WantsLagCompensationOnEntity(CBaseEntity const*, CUserCmd const*, CBitVec<2048> const*) */
+			"CTerrorPlayer::WantsLagCompensationOnEntity"
+			{
+				"signature"		"CTerrorPlayer::WantsLagCompensationOnEntity"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"cbaseentity"
+					}
+					"a2"
+					{
+						"type"	"objectptr"
+					}
+					"a3"
+					{
+						"type"	"objectptr"
+					}
+				}
+			}
+		}
 		"Offsets"
 		{
 			/* @A1m:
@@ -117,6 +143,15 @@
 				"library"		"server"
 				"windows"		"\x55\x8B\xEC\x83\xEC\x14\x53\x56\x8B\xF1\xC6\x05\x2A\x2A\x2A\x2A\x01"
 								/* 55 8B EC 83 EC 14 53 56 8B F1 C6 05 ? ? ? ? 01 */
+			}
+			
+			/* CTerrorPlayer::WantsLagCompensationOnEntity(CBaseEntity const*, CUserCmd const*, CBitVec<2048> const*) */
+			"CTerrorPlayer::WantsLagCompensationOnEntity"
+			{
+				"library"		"server"
+				"linux"			"@_ZNK13CTerrorPlayer28WantsLagCompensationOnEntityEPK11CBaseEntityPK8CUserCmdPK7CBitVecILi2048EE"
+				"windows"		"\x55\x8B\x2A\x2A\x2A\x8B\x2A\x2A\xF6\x2A\x2A\x2A\x8B"
+								/* 55 8B ? ? ? 8B ? ? F6 ? ? ? 8B */
 			}
 		}
 	}
