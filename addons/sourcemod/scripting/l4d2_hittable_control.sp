@@ -58,8 +58,8 @@ ConVar hUnbreakableForklifts;
 public Plugin myinfo = 
 {
     name = "L4D2 Hittable Control",
-    author = "Stabby, Visor, Sir, Derpduck",
-    version = "0.6.3",
+    author = "Stabby, Visor, Sir, Derpduck, Forgetest",
+    version = "0.7",
     description = "Allows for customisation of hittable damage values (and debugging)"
 };
 
@@ -140,12 +140,12 @@ public void OnPluginStart()
 		for (int i = 1; i <= MaxClients; i++)
 		{
 			if(IsClientInGame(i))
-			  SDKHook(i, SDKHook_OnTakeDamage, OnTakeDamage);
+			  OnClientPutInServer(i);
 		}
 	}
 
 	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
-	HookEvent("finale_radio_start", Event_FinaleStart, EventHookMode_PostNoCopy);
+	HookEvent("gauntlet_finale_start", Event_GauntletFinaleStart, EventHookMode_PostNoCopy);
 	
 	hUnbreakableForklifts.AddChangeHook(ConVarChanged_UnbreakableForklifts);
 }
@@ -168,7 +168,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 	// Reset everything to make sure we don't run into issues when a map is restarted (as GameTime resets)
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		for (int e = 0; e++ <= 2047; e++)
+		for (int e = 0; e < sizeof(fOverkill[]); e++)
 		{
 			fOverkill[i][e] = 0.0;
 		}
@@ -180,7 +180,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 	bIsGauntletFinale = false;
 	
 	// Delay breakable forklift patch as it must run after vscripts
-	if (GetConVarBool(hUnbreakableForklifts))
+	if (hUnbreakableForklifts.BoolValue)
 	{
 		CreateTimer(20.0, PatchBreakableForklifts);
 	}
@@ -232,7 +232,7 @@ public Action UnpatchBreakableForklifts(Handle timer)
 
 public void ConVarChanged_UnbreakableForklifts(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
-	if (GetConVarBool(hUnbreakableForklifts))
+	if (hUnbreakableForklifts.BoolValue)
 	{
 		CreateTimer(1.0, PatchBreakableForklifts);
 	}
@@ -242,25 +242,137 @@ public void ConVarChanged_UnbreakableForklifts(ConVar hConVar, const char[] sOld
 	}
 }
 
-
 public int Native_UnbreakableForklifts(Handle plugin, int numParams) {
-	return GetConVarBool(hUnbreakableForklifts);
+	return hUnbreakableForklifts.BoolValue;
 }
 
-public void Event_FinaleStart(Event event, const char[] name, bool dontBroadcast)
+public void Event_GauntletFinaleStart(Event event, const char[] name, bool dontBroadcast)
 {
-	// Hittable damage is only reduced once the finale is triggered
-	int triggerFinale = -1;
+	bIsGauntletFinale = true;
+}
 
-	while ((triggerFinale = FindEntityByClassname(triggerFinale, "trigger_finale")) != -1)
+bool ProcessSpecialHittables(int victim, int &attacker, int &inflictor, float &damage)
+{
+	char sModelName[PLATFORM_MAX_PATH];
+	GetEntityModel(inflictor, sModelName, sizeof(sModelName));
+	
+	// Special Overkill section
+	if (StrContains(sModelName, "brickpallets_break", false) != -1) // [0]
 	{
-		int finaleType;
-		finaleType = GetEntProp(triggerFinale, Prop_Data, "m_type");
-		if (finaleType == 1)
+		if (fSpecialOverkill[victim][0] - GetGameTime() > 0) return true;
+		fSpecialOverkill[victim][0] = GetGameTime() + hOverHitInterval.FloatValue;
+		damage = 13.0;
+		attacker = FindTank();
+	}
+	else if (StrContains(sModelName, "boat_smash_break", false) != -1) // [1]
+	{
+		if (fSpecialOverkill[victim][1] - GetGameTime() > 0) return true;
+		fSpecialOverkill[victim][1] = GetGameTime() + hOverHitInterval.FloatValue;
+		damage = 23.0;
+		attacker = FindTank();
+	}
+	else if (StrContains(sModelName, "concretepiller01_dm01", false) != -1) // [2]
+	{
+		if (fSpecialOverkill[victim][2] - GetGameTime() > 0) return true;
+		fSpecialOverkill[victim][2] = GetGameTime() + hOverHitInterval.FloatValue;
+		damage = 8.0;
+		attacker = FindTank();
+	}
+	
+	return false;
+}
+
+bool GetHittableDamage(int entity, float &damage)
+{
+	char sModelName[PLATFORM_MAX_PATH];
+	GetEntityModel(entity, sModelName, sizeof(sModelName));
+	
+	if (StrContains(sModelName, "cara_", false) != -1 
+	|| StrContains(sModelName, "taxi_", false) != -1 
+	|| StrContains(sModelName, "police_car", false) != -1
+	|| StrContains(sModelName, "utility_truck", false) != -1)
+	{
+		damage = hCarStandingDamage.FloatValue;
+	}
+	else if (StrContains(sModelName, "dumpster", false) != -1)
+	{
+		damage = hDumpsterStandingDamage.FloatValue;
+	}
+	else if (StrEqual(sModelName, "models/props/cs_assault/forklift.mdl", false))
+	{
+		damage = hForkliftStandingDamage.FloatValue;
+	}
+	else if (StrContains(sModelName, "forklift_brokenlift", false) != -1)
+	{
+		damage = hBrokenForkliftStandingDamage.FloatValue;
+	}		
+	else if (StrEqual(sModelName, "models/props_vehicles/airport_baggage_cart2.mdl", false))
+	{
+		damage = hBaggageStandingDamage.FloatValue;
+	}
+	else if (StrEqual(sModelName, "models/props_unique/haybails_single.mdl", false))
+	{
+		damage = hHaybaleStandingDamage.FloatValue;
+	}
+	else if (StrEqual(sModelName, "models/props_foliage/swamp_fallentree01_bare.mdl", false))
+	{
+		damage = hLogStandingDamage.FloatValue;
+	}
+	else if (StrEqual(sModelName, "models/props_foliage/tree_trunk_fallen.mdl", false))
+	{
+		damage = hBHLogStandingDamage.FloatValue;
+	}
+	else if (StrEqual(sModelName, "models/props_fairgrounds/bumpercar.mdl", false))
+	{
+		damage = hBumperCarStandingDamage.FloatValue;
+	}
+	else if (StrEqual(sModelName, "models/props/cs_assault/handtruck.mdl", false))
+	{
+		damage = hHandtruckStandingDamage.FloatValue;
+	}
+	else if (StrEqual(sModelName, "models/props_vehicles/generatortrailer01.mdl", false))
+	{
+		damage = hGeneratorTrailerStandingDamage.FloatValue;
+	}
+	else if (StrEqual(sModelName, "models/props/cs_militia/militiarock01.mdl", false))
+	{
+		damage = hMilitiaRockStandingDamage.FloatValue;
+	}
+	else if (StrEqual(sModelName, "models/props_interiors/sofa_chair02.mdl", false))
+	{
+		char targetname[128];
+		GetEntPropString(entity, Prop_Data, "m_iName", targetname, 128);
+		if (StrEqual(targetname, "hittable_chair_l4d1", false))
 		{
-			bIsGauntletFinale = true;
+			damage = hSofaChairStandingDamage.FloatValue;
 		}
 	}
+	else if (StrEqual(sModelName, "models/props_vehicles/van.mdl", false))
+	{
+		damage = hVanDamage.FloatValue;
+	}
+	else if (StrContains(sModelName, "atlas_break_ball.mdl", false) != -1)
+	{
+		damage = hAtlasBallDamage.FloatValue;
+	}
+	else if (StrContains(sModelName, "ibeam_breakable01", false) != -1)
+	{
+		damage = hIBeamDamage.FloatValue;
+	}
+	else if (StrEqual(sModelName, "models/props_diescraper/statue_break_ball.mdl", false))
+	{
+		damage = hDiescraperBallDamage.FloatValue;
+	}
+	else if (StrEqual(sModelName, "models/sblitz/field_equipment_cart.mdl", false))
+	{
+		damage = hBaggageStandingDamage.FloatValue;
+	}
+	else
+	{
+		return false;
+	}
+	
+	return true;
 }
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
@@ -274,179 +386,86 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	char sClass[64];
 	GetEdictClassname(inflictor, sClass, sizeof(sClass));
 
-	if (StrEqual(sClass,"prop_physics") || StrEqual(sClass,"prop_car_alarm"))
+	if (!StrEqual(sClass,"prop_physics") && !StrEqual(sClass,"prop_car_alarm"))
+		return Plugin_Continue;
+	
+	if (fOverkill[victim][inflictor] - GetGameTime() > 0.0)
+		return Plugin_Handled; // Overkill on this Hittable.
+
+	if (IsTank(victim) && hTankSelfDamage.BoolValue)
+		return Plugin_Handled; // Tank is hitting himself with the Hittable (+added usecase when the Tank would be hit by a hittable that he punched a hittable against before it hit him)
+
+	if (GetClientTeam(victim) != 2)
+		return Plugin_Continue; // Victim is not a Survivor.
+	
+	if (ProcessSpecialHittables(victim, attacker, inflictor, damage))
+		return Plugin_Handled;
+	
+	float val = hStandardIncapDamage.FloatValue;
+	if (GetEntProp(victim, Prop_Send, "m_isIncapacitated") 
+	&& val != -2) // Survivor is Incapped. (Damage)
 	{
-		if (fOverkill[victim][inflictor] - GetGameTime() > 0.0)
-			return Plugin_Handled; // Overkill on this Hittable.
-
-		if (victim == FindTank() && GetConVarBool(hTankSelfDamage))
-			return Plugin_Handled; // Tank is hitting himself with the Hittable (+added usecase when the Tank would be hit by a hittable that he punched a hittable against before it hit him)
-
-		if (GetClientTeam(victim) != 2)
-			return Plugin_Continue; // Victim is not a Survivor.
-		
-		char sModelName[PLATFORM_MAX_PATH];
-		GetEntPropString(inflictor, Prop_Data, "m_ModelName", sModelName, sizeof(sModelName));
-		ReplaceString(sModelName, sizeof(sModelName), "\\", "/", false);
-		float interval = GetConVarFloat(hOverHitInterval);
-
-		// Special Overkill section
-		if (StrContains(sModelName, "brickpallets_break", false) != -1) // [0]
+		if (val >= 0.0)
 		{
-			if (fSpecialOverkill[victim][0] - GetGameTime() > 0) return Plugin_Handled;
-			fSpecialOverkill[victim][0] = GetGameTime() + interval;
-			damage = 13.0;
-			attacker = FindTank();
+			damage = val;
 		}
-		else if (StrContains(sModelName, "boat_smash_break", false) != -1) // [1]
-		{
-			if (fSpecialOverkill[victim][1] - GetGameTime() > 0) return Plugin_Handled;
-			fSpecialOverkill[victim][1] = GetGameTime() + interval;
-			damage = 23.0;
-			attacker = FindTank();
-		}
-		else if (StrContains(sModelName, "concretepiller01_dm01", false) != -1) // [2]
-		{
-			if (fSpecialOverkill[victim][2] - GetGameTime() > 0) return Plugin_Handled;
-			fSpecialOverkill[victim][2] = GetGameTime() + interval;
-			damage = 8.0;
-			attacker = FindTank();
-		}
-		
-		float val = GetConVarFloat(hStandardIncapDamage);
-		float gauntletMulti = GetConVarFloat(hGauntletFinaleMulti);
-		if (GetEntProp(victim, Prop_Send, "m_isIncapacitated") 
-		&& val != -2) // Survivor is Incapped. (Damage)
-		{
-			if (val >= 0.0)
-			{
-				// Use standard damage on gauntlet finales
-				if (bIsGauntletFinale)
-				{
-					damage = val * 4.0 * gauntletMulti;
-				}
-				else
-				{
-					damage = val;
-				}
-			}
-
-			else return Plugin_Continue;
-		}
-		else 
-		{
-			if (StrContains(sModelName, "cara_", false) != -1 
-			|| StrContains(sModelName, "taxi_", false) != -1 
-			|| StrContains(sModelName, "police_car", false) != -1
-			|| StrContains(sModelName, "utility_truck", false) != -1)
-			{
-				damage = GetConVarFloat(hCarStandingDamage);
-			}
-			else if (StrContains(sModelName, "dumpster", false) != -1)
-			{
-				damage = GetConVarFloat(hDumpsterStandingDamage);
-			}
-			else if (StrEqual(sModelName, "models/props/cs_assault/forklift.mdl", false))
-			{
-				damage = GetConVarFloat(hForkliftStandingDamage);
-			}
-			else if (StrContains(sModelName, "forklift_brokenlift", false) != -1)
-			{
-				damage = GetConVarFloat(hBrokenForkliftStandingDamage);
-			}		
-			else if (StrEqual(sModelName, "models/props_vehicles/airport_baggage_cart2.mdl", false))
-			{
-				damage = GetConVarFloat(hBaggageStandingDamage);
-			}
-			else if (StrEqual(sModelName, "models/props_unique/haybails_single.mdl", false))
-			{
-				damage = GetConVarFloat(hHaybaleStandingDamage);
-			}
-			else if (StrEqual(sModelName, "models/props_foliage/swamp_fallentree01_bare.mdl", false))
-			{
-				damage = GetConVarFloat(hLogStandingDamage);
-			}
-			else if (StrEqual(sModelName, "models/props_foliage/tree_trunk_fallen.mdl", false))
-			{
-				damage = GetConVarFloat(hBHLogStandingDamage);
-			}
-			else if (StrEqual(sModelName, "models/props_fairgrounds/bumpercar.mdl", false))
-			{
-				damage = GetConVarFloat(hBumperCarStandingDamage);
-			}
-			else if (StrEqual(sModelName, "models/props/cs_assault/handtruck.mdl", false))
-			{
-				damage = GetConVarFloat(hHandtruckStandingDamage);
-			}
-			else if (StrEqual(sModelName, "models/props_vehicles/generatortrailer01.mdl", false))
-			{
-				damage = GetConVarFloat(hGeneratorTrailerStandingDamage);
-			}
-			else if (StrEqual(sModelName, "models/props/cs_militia/militiarock01.mdl", false))
-			{
-				damage = GetConVarFloat(hMilitiaRockStandingDamage);
-			}
-			else if (StrEqual(sModelName, "models/props_interiors/sofa_chair02.mdl", false))
-			{
-				char targetname[128];
-				GetEntPropString(inflictor, Prop_Data, "m_iName", targetname, 128);
-				if (StrEqual(targetname, "hittable_chair_l4d1", false))
-				{
-					damage = GetConVarFloat(hSofaChairStandingDamage);
-				}
-			}
-			else if (StrEqual(sModelName, "models/props_vehicles/van.mdl", false))
-			{
-				damage = GetConVarFloat(hVanDamage);
-			}
-			else if (StrContains(sModelName, "atlas_break_ball.mdl", false) != -1)
-			{
-				damage = GetConVarFloat(hAtlasBallDamage);
-			}
-			else if (StrContains(sModelName, "ibeam_breakable01", false) != -1)
-			{
-				damage = GetConVarFloat(hIBeamDamage);
-			}
-			else if (StrEqual(sModelName, "models/props_diescraper/statue_break_ball.mdl", false))
-			{
-				damage = GetConVarFloat(hDiescraperBallDamage);
-			}
-			else if (StrEqual(sModelName, "models/sblitz/field_equipment_cart.mdl", false))
-			{
-				damage = GetConVarFloat(hBaggageStandingDamage);
-			}
-			
-			// Use standard damage on gauntlet finales
-			if (bIsGauntletFinale)
-			{
-				damage = damage * 4.0 * gauntletMulti;
-			}
-		}
-		
-		if (interval >= 0.0)
-		{
-			fOverkill[victim][inflictor] = GetGameTime() + interval;	//standardise them bitchin over-hits
-		}
-		inflictor = 0; // We have to set set the inflictor to 0 or else it will sometimes just refuse to apply damage.
-
-		if (GetConVarBool(hOverHitDebug)) PrintToChatAll("[l4d2_hittable_control]: \x03%N \x01was hit by \x04%s \x01for \x03%i \x01damage. Gauntlet: %b", victim, sModelName, RoundToNearest(damage), bIsGauntletFinale);
-
-		return Plugin_Changed;
+		else return Plugin_Continue;
+	}
+	else 
+	{
+		GetHittableDamage(inflictor, damage);
 	}
 	
-	return Plugin_Continue;
+	// Use standard damage on gauntlet finales
+	if (bIsGauntletFinale)
+	{
+		damage = damage * 4.0 * hGauntletFinaleMulti.FloatValue;
+	}
+	
+	fOverkill[victim][inflictor] = GetGameTime() + hOverHitInterval.FloatValue;	//standardise them bitchin over-hits
+	
+	// inflictor = 0; // We have to set set the inflictor to 0 or else it will sometimes just refuse to apply damage.
+	InvalidatePhysOverhitTimer(victim);
+	
+	if (hOverHitDebug.BoolValue) 
+	{
+		char sModelName[PLATFORM_MAX_PATH];
+		GetEntityModel(inflictor, sModelName, sizeof(sModelName));
+		PrintToChatAll("[l4d2_hittable_control]: \x03%N \x01was hit by \x04%s \x01for \x03%i \x01damage. Gauntlet: %b", victim, sModelName, RoundToNearest(damage), bIsGauntletFinale);
+	}
+	
+	return Plugin_Changed;
+}
+
+void GetEntityModel(int entity, char[] buffer, int maxlength)
+{
+	GetEntPropString(entity, Prop_Data, "m_ModelName", buffer, maxlength);
+	ReplaceString(buffer, maxlength, "\\", "/", false);
+}
+
+void InvalidatePhysOverhitTimer(int client)
+{
+	static int s_iOffs_m_physOverhitTimer = -1;
+	if (s_iOffs_m_physOverhitTimer == -1)
+		s_iOffs_m_physOverhitTimer = FindSendPropInfo("CTerrorPlayer", "m_knockdownTimer") + 32;
+	
+	SetEntDataFloat(client, s_iOffs_m_physOverhitTimer + 8, -1.0);
 }
 
 int FindTank()
 {
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (IsClientInGame(i)
-		&& GetClientTeam(i) == 3
-		&& GetEntProp(i, Prop_Send, "m_zombieClass") == 8)
+		if (IsClientInGame(i) && IsTank(i))
 		{
 			return i;
 		}
 	}
 	return 0;
+}
+
+bool IsTank(int client)
+{
+	return GetClientTeam(client) == 3
+		&& GetEntProp(client, Prop_Send, "m_zombieClass") == 8;
 }
