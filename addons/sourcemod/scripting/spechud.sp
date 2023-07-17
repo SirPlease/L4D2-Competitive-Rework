@@ -44,7 +44,7 @@ int g_Gamemode;
 //int storedClass[MAXPLAYERS+1];
 
 // Game Var
-ConVar survivor_limit, versus_boss_buffer, mp_roundlimit, sv_maxplayers, tank_burn_duration;
+ConVar survivor_limit, versus_boss_buffer, sv_maxplayers, tank_burn_duration;
 int iSurvivorLimit, iMaxPlayers, iRoundLimit;
 float fVersusBossBuffer, fTankBurnDuration;
 
@@ -92,7 +92,6 @@ public void OnPluginStart()
 	
 	(	survivor_limit			= FindConVar("survivor_limit")			).AddChangeHook(GameConVarChanged);
 	(	versus_boss_buffer		= FindConVar("versus_boss_buffer")		).AddChangeHook(GameConVarChanged);
-	(	mp_roundlimit			= FindConVar("mp_roundlimit")			).AddChangeHook(GameConVarChanged);
 	(	sv_maxplayers			= FindConVar("sv_maxplayers")			).AddChangeHook(GameConVarChanged);
 	(	tank_burn_duration		= FindConVar("tank_burn_duration")		).AddChangeHook(GameConVarChanged);
 
@@ -133,7 +132,7 @@ void GetGameCvars()
 {
 	iSurvivorLimit		= survivor_limit.IntValue;
 	fVersusBossBuffer	= versus_boss_buffer.FloatValue;
-	iRoundLimit			= L4D2Util_Clamp(mp_roundlimit.IntValue, 1, 5);
+	iRoundLimit			= GameRules_GetProp("m_nRoundLimit");
 	iMaxPlayers			= sv_maxplayers.IntValue;
 	fTankBurnDuration	= tank_burn_duration.FloatValue;
 }
