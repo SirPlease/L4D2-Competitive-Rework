@@ -44,8 +44,8 @@ int g_Gamemode;
 //int storedClass[MAXPLAYERS+1];
 
 // Game Var
-ConVar survivor_limit, versus_boss_buffer, mp_roundlimit, sv_maxplayers, tank_burn_duration;
-int iSurvivorLimit, iMaxPlayers, iRoundLimit;
+ConVar survivor_limit, versus_boss_buffer, sv_maxplayers, tank_burn_duration;
+int iSurvivorLimit, iMaxPlayers;
 float fVersusBossBuffer, fTankBurnDuration;
 
 // Plugin Cvar
@@ -92,7 +92,6 @@ public void OnPluginStart()
 	
 	(	survivor_limit			= FindConVar("survivor_limit")			).AddChangeHook(GameConVarChanged);
 	(	versus_boss_buffer		= FindConVar("versus_boss_buffer")		).AddChangeHook(GameConVarChanged);
-	(	mp_roundlimit			= FindConVar("mp_roundlimit")			).AddChangeHook(GameConVarChanged);
 	(	sv_maxplayers			= FindConVar("sv_maxplayers")			).AddChangeHook(GameConVarChanged);
 	(	tank_burn_duration		= FindConVar("tank_burn_duration")		).AddChangeHook(GameConVarChanged);
 
@@ -133,7 +132,6 @@ void GetGameCvars()
 {
 	iSurvivorLimit		= survivor_limit.IntValue;
 	fVersusBossBuffer	= versus_boss_buffer.FloatValue;
-	iRoundLimit			= L4D2Util_Clamp(mp_roundlimit.IntValue, 1, 5);
 	iMaxPlayers			= sv_maxplayers.IntValue;
 	fTankBurnDuration	= tank_burn_duration.FloatValue;
 }
@@ -686,7 +684,7 @@ void FillSurvivorInfo(Panel hSpecHud)
 		case GAMEMODE_SCAVENGE:
 		{
 			int score = GetScavengeMatchScore(SurvivorTeamIndex);
-			FormatEx(info, sizeof(info), "->1. Survivors [%d of %d]", score, iRoundLimit);
+			FormatEx(info, sizeof(info), "->1. Survivors [%d of %d]", score, GetScavengeRoundLimit());
 		}
 		case GAMEMODE_VERSUS:
 		{
@@ -901,7 +899,7 @@ void FillInfectedInfo(Panel hSpecHud)
 		case GAMEMODE_SCAVENGE:
 		{
 			int score = GetScavengeMatchScore(InfectedTeamIndex);
-			FormatEx(info, sizeof(info), "->2. Infected [%d of %d]", score, iRoundLimit);
+			FormatEx(info, sizeof(info), "->2. Infected [%d of %d]", score, GetScavengeRoundLimit());
 		}
 		case GAMEMODE_VERSUS:
 		{
@@ -1119,7 +1117,7 @@ void FillGameInfo(Panel hSpecHud)
 			DrawPanelText(hSpecHud, " ");
 			DrawPanelText(hSpecHud, info);
 			
-			FormatEx(info, sizeof(info), "Best of %i", iRoundLimit);
+			FormatEx(info, sizeof(info), "Best of %i", GetScavengeRoundLimit());
 			DrawPanelText(hSpecHud, info);
 		}
 		
@@ -1311,7 +1309,7 @@ stock int GetVersusProgressDistance(int teamIndex)
  */
 stock void FillScavengeScores(int arr[2][5])
 {
-	for (int i = 1; i <= iRoundLimit; ++i)
+	for (int i = 1; i <= GetScavengeRoundLimit(); ++i)
 	{
 		arr[0][i-1] = GetScavengeTeamScore(0, i);
 		arr[1][i-1] = GetScavengeTeamScore(1, i);
@@ -1361,6 +1359,11 @@ stock int GetScavengeMatchScore(int teamIndex)
 stock int GetScavengeRoundNumber()
 {
 	return GameRules_GetProp("m_nRoundNumber");
+}
+
+stock int GetScavengeRoundLimit()
+{
+	return GameRules_GetProp("m_nRoundLimit");
 }
 
 stock int GetFurthestSurvivorFlow()
