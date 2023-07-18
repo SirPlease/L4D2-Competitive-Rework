@@ -322,6 +322,24 @@ Action sm_l4dd(int client, int args)
 
 
 
+	// L4D_EndVersusModeRound(false); // WORKS
+	// L4D2_SpawnAllScavengeItems(); // WORKS
+	// L4D2_StartRematchVote(); // WORKS
+	// L4D2_Rematch(); // WORKS
+
+
+
+	// L4D_SetPlayerTempHealthFloat(client, 500.0); // WORKS
+
+
+
+	// PrintToServer("L4D2CT_SurvivalSetupTimer = %f",		L4D2_CTimerGetElapsedTime(L4D2CT_SurvivalSetupTimer));
+	// PrintToServer("L4D2_GetSurvivalStartTime A %d", L4D2_GetSurvivalStartTime());
+	// L4D2_GetSurvivalStartTime(30);
+	// PrintToServer("L4D2_GetSurvivalStartTime B %d", L4D2_GetSurvivalStartTime());
+
+
+
 	/*
 	int victim, attacker;
 	victim = GetRandomSurvivor(1, -1);
@@ -1071,6 +1089,8 @@ Action sm_l4dd(int client, int args)
 	PrintToServer("POINTER_EVENTMANAGER = %d",		L4D_GetPointer(POINTER_EVENTMANAGER));
 	PrintToServer("POINTER_SCAVENGEMODE = %d",		L4D_GetPointer(POINTER_SCAVENGEMODE));
 	PrintToServer("POINTER_VERSUSMODE = %d",		L4D_GetPointer(POINTER_VERSUSMODE));
+	PrintToServer("POINTER_MISSIONINFO = %d",		L4D_GetPointer(POINTER_MISSIONINFO));
+	PrintToServer("POINTER_SURVIVALMODE = %d",		L4D_GetPointer(POINTER_SURVIVALMODE));
 
 	// TEST: L4D_GetClientFromAddress + L4D_GetEntityFromAddress
 	int target = GetAnyRandomClient();
@@ -2123,8 +2143,6 @@ Action sm_l4dd(int client, int args)
 
 		PrintToServer("L4D2_AreTeamsFlipped %d",							L4D2_AreTeamsFlipped()); // WORKS
 
-		PrintToServer("L4D2_StartRematchVote",								L4D2_StartRematchVote()); // WORKS
-
 		PrintToServer("L4D2_FullRestart",									L4D2_FullRestart()); // WORKS
 
 		PrintToServer("L4D2_HideVersusScoreboard",							L4D2_HideVersusScoreboard()); // WORKS
@@ -3013,6 +3031,53 @@ public void L4D_TankRock_OnRelease_Post(int tank, int rock, const float vecPos[3
 	}
 }
 
+public Action L4D_TankRock_BounceTouch(int tank, int rock, int entity)
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		if( tank == -1 ) tank = 0;
+
+		ForwardCalled("\"L4D_TankRock_BounceTouch\" %d (%N) (Rock = %d) (Touched = %d)", tank, tank, rock, entity);
+	}
+
+	// WORKS
+	// return Plugin_Handled;
+
+	return Plugin_Continue;
+}
+
+public void L4D_TankRock_BounceTouch_Post(int tank, int rock, int entity)
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		if( tank == -1 ) tank = 0;
+
+		ForwardCalled("\"L4D_TankRock_BounceTouch_Post\" %d (%N) (Rock = %d) (Touched = %d)", tank, tank, rock, entity);
+	}
+}
+
+public void L4D_TankRock_BounceTouch_PostHandled(int tank, int rock, int entity)
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		if( tank == -1 ) tank = 0;
+
+		ForwardCalled("\"L4D_TankRock_BounceTouch_PostHandled\" %d (%N) (Rock = %d) (Touched = %d)", tank, tank, rock, entity);
+	}
+}
+
 public Action L4D_OnTryOfferingTankBot(int tank_index, bool &enterStasis)
 {
 	static int called;
@@ -3243,6 +3308,49 @@ public void L4D2_OnEndVersusModeRound_PostHandled()
 		ForwardCalled("\"L4D2_OnEndVersusModeRound_PostHandled\"");
 	}
 }
+
+/*
+public Action L4D_OnEndScenario(int reason)
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D_OnEndScenario\" Reason: %d", reason);
+	}
+
+	// DOESN'T STOP THE ROUND ENDING
+	// return Plugin_Handled;
+
+	return Plugin_Continue;
+}
+
+public void L4D_OnEndScenario_Post(int reason)
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D_OnEndScenario_Post\" Reason: %d", reason);
+	}
+}
+
+public void L4D_OnEndScenario_PostHandled(int reason)
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D_OnEndScenario_PostHandled\" Reason: %d", reason);
+	}
+}
+*/
 
 public Action L4D_OnRecalculateVersusScore(int client)
 {

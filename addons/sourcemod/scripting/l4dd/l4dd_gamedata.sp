@@ -1326,6 +1326,16 @@ void LoadGameData()
 		}
 
 		StartPrepSDKCall(SDKCall_Raw);
+		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::SpawnAllScavengeItems") == false )
+		{
+			LogError("Failed to find signature: \"CDirector::SpawnAllScavengeItems\" (%s)", g_sSystem);
+		} else {
+			g_hSDK_CDirector_SpawnAllScavengeItems = EndPrepSDKCall();
+			if( g_hSDK_CDirector_SpawnAllScavengeItems == null )
+				LogError("Failed to create SDKCall: \"CDirector::SpawnAllScavengeItems\" (%s)", g_sSystem);
+		}
+
+		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirectorScriptedEventManager::ChangeFinaleStage") == false )
 		{
 			LogError("Failed to find signature: \"CDirectorScriptedEventManager::ChangeFinaleStage\" (%s)", g_sSystem);
@@ -1738,6 +1748,18 @@ void LoadGameData()
 			LogError("Failed to create SDKCall: \"CDirector::UnregisterForbiddenTarget\" (%s)", g_sSystem);
 	}
 
+	StartPrepSDKCall(SDKCall_Raw);
+	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirectorVersusMode::EndVersusModeRound") == false )
+	{
+	LogError("Failed to find signature: \"CDirectorVersusMode::EndVersusModeRound\"");
+	} else {
+		PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
+		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+		g_hSDK_CDirectorVersusMode_EndVersusModeRound = EndPrepSDKCall();
+		if( g_hSDK_CDirectorVersusMode_EndVersusModeRound == null )
+			LogError("Failed to create SDKCall: \"CDirectorVersusMode::EndVersusModeRound\"");
+	}
+
 
 
 	if( g_bLeft4Dead2 )
@@ -1813,6 +1835,16 @@ void LoadGameData()
 				LogError("Failed to create SDKCall: \"CDirector::AreTeamsFlipped\" (%s)", g_sSystem);
 		}
 		*/
+
+		StartPrepSDKCall(SDKCall_Raw);
+		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::Rematch") == false )
+		{
+			LogError("Failed to find signature: \"CDirector::Rematch\" (%s)", g_sSystem);
+		} else {
+			g_hSDK_CDirector_Rematch = EndPrepSDKCall();
+			if( g_hSDK_CDirector_Rematch == null )
+				LogError("Failed to create SDKCall: \"CDirector::Rematch\" (%s)", g_sSystem);
+		}
 
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::StartRematchVote") == false )
@@ -1924,6 +1956,9 @@ void LoadGameData()
 		g_pVersusMode = hGameData.GetOffset("VersusModePtr");
 		ValidateOffset(g_pVersusMode, "VersusModePtr");
 
+		g_pSurvivalMode = hGameData.GetOffset("SurvivalModePtr");
+		ValidateOffset(g_pSurvivalMode, "SurvivalModePtr");
+
 		g_pScriptedEventManager = hGameData.GetOffset("ScriptedEventManagerPtr");
 		ValidateOffset(g_pScriptedEventManager, "ScriptedEventManagerPtr");
 
@@ -2004,9 +2039,14 @@ void LoadGameData()
 
 		g_pScavengeMode =					LoadFromAddress(g_pDirector + view_as<Address>(g_pScavengeMode), NumberType_Int32);
 		ValidateAddress(g_pScavengeMode, "ScavengeModePtr", true);
+
+		g_pSurvivalMode = LoadFromAddress(g_pDirector + view_as<Address>(g_pSurvivalMode), NumberType_Int32);
+		ValidateAddress(g_pSurvivalMode, "g_pSurvivalMode", true);
 	} else {
 		// L4D1: g_pDirector is also g_pVersusMode.
 		g_pVersusMode = view_as<int>(g_pDirector);
+
+		g_pSurvivalMode = view_as<int>(g_pDirector);
 	}
 
 	#if defined DEBUG
@@ -2082,6 +2122,9 @@ void LoadGameData()
 	{
 		g_iOff_m_nFirstClassIndex = hGameData.GetOffset("CDirector::m_nFirstClassIndex");
 		ValidateOffset(g_iOff_m_nFirstClassIndex, "CDirector::m_nFirstClassIndex");
+
+		g_iOff_m_iSetupNotifyTime = hGameData.GetOffset("CDirectorSurvivalMode::m_iSetupNotifyTime");
+		ValidateOffset(g_iOff_m_iSetupNotifyTime, "CDirectorSurvivalMode::m_iSetupNotifyTime");
 	}
 
 	g_iOff_m_flow = hGameData.GetOffset("m_flow");
@@ -2196,6 +2239,7 @@ void LoadGameData()
 		L4D2CountdownTimer_Offsets[6] = hGameData.GetOffset("L4D2CountdownTimer_ChargerSpawnTimer") + view_as<int>(g_pDirector);
 		L4D2CountdownTimer_Offsets[7] = hGameData.GetOffset("L4D2CountdownTimer_VersusStartTimer") + g_pVersusMode;
 		L4D2CountdownTimer_Offsets[8] = hGameData.GetOffset("L4D2CountdownTimer_UpdateMarkersTimer") + view_as<int>(g_pDirector);
+		L4D2CountdownTimer_Offsets[9] = hGameData.GetOffset("L4D2CountdownTimer_SurvivalSetupTimer") + g_pSurvivalMode;
 		L4D2IntervalTimer_Offsets[0] = hGameData.GetOffset("L4D2IntervalTimer_SmokerDeathTimer") + view_as<int>(g_pDirector);
 		L4D2IntervalTimer_Offsets[1] = hGameData.GetOffset("L4D2IntervalTimer_BoomerDeathTimer") + view_as<int>(g_pDirector);
 		L4D2IntervalTimer_Offsets[2] = hGameData.GetOffset("L4D2IntervalTimer_HunterDeathTimer") + view_as<int>(g_pDirector);
@@ -2270,6 +2314,7 @@ void LoadGameData()
 	PrintToServer("VersusMaxCompletionScore = %d", g_iOff_VersusMaxCompletionScore);
 	PrintToServer("m_iTankCount = %d", g_iOff_m_iTankCount);
 	PrintToServer("MobSpawnTimer = %d", g_iOff_MobSpawnTimer);
+	PrintToServer("SetupNotifyTime = %d", g_iOff_m_iSetupNotifyTime);
 
 	for( int i = 0; i < sizeof(L4D2CountdownTimer_Offsets); i++ )		PrintToServer("L4D2CountdownTimer_Offsets[%d] == %d", i, L4D2CountdownTimer_Offsets[i]);
 	for( int i = 0; i < sizeof(L4D2IntervalTimer_Offsets); i++ )		PrintToServer("L4D2IntervalTimer_Offsets[%d] == %d", i, L4D2IntervalTimer_Offsets[i]);

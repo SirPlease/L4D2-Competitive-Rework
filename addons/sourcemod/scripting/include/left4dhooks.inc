@@ -59,16 +59,16 @@
 
 
 // Natives: 256 (including 3 for L4D1 only)
-// L4D1 = 31 [left4downtown] + 47 [l4d_direct] + 16 [l4d2addresses] + 65 [silvers - mine!] + 4 [anim] = 164
-// L4D2 = 61 [left4downtown] + 59 [l4d_direct] + 31 [l4d2addresses] + 105 [silvers - mine!] + 4 [anim] = 260
+// L4D1 = 31 [left4downtown] + 47 [l4d_direct] + 16 [l4d2addresses] + 66 [silvers - mine!] + 4 [anim] = 165
+// L4D2 = 61 [left4downtown] + 59 [l4d_direct] + 31 [l4d2addresses] + 110 [silvers - mine!] + 4 [anim] = 265
 
-// Forwards: 195 (including 5 for L4D1 only)
-// L4D1 = 135
-// L4D2 = 190
+// Forwards: 198 (including 5 for L4D1 only)
+// L4D1 = 138
+// L4D2 = 193
 
-// Stocks: 169 (L4D1 = 112, L4D2 = 165)
+// Stocks: 169 (L4D1 = 114, L4D2 = 167)
 // left4dhooks_silver			46 stocks	(L4D1 = 39,		L4D2 = 53)
-// left4dhooks_stocks			83 stocks	(L4D1 = 44,		L4D2 = 79)
+// left4dhooks_stocks			84 stocks	(L4D1 = 45,		L4D2 = 80)
 // left4dhooks_lux_library		34 stocks	(L4D1 = 30,		L4D2 = 34)
 
 
@@ -155,6 +155,8 @@ public void __pl_l4dh_SetNTVOptional()
 	MarkNativeAsOptional("L4D2_AreWanderersAllowed");
 	MarkNativeAsOptional("L4D2_GetCurrentFinaleStage");
 	MarkNativeAsOptional("L4D2_ForceNextStage");
+	MarkNativeAsOptional("L4D2_GetSurvivalStartTime");
+	MarkNativeAsOptional("L4D2_SetSurvivalStartTime");
 	MarkNativeAsOptional("L4D_ForceVersusStart");
 	MarkNativeAsOptional("L4D_ForceSurvivalStart");
 	MarkNativeAsOptional("L4D2_ForceScavengeStart");
@@ -219,6 +221,7 @@ public void __pl_l4dh_SetNTVOptional()
 	MarkNativeAsOptional("L4D_GetNavArea_AttributeFlags");
 	MarkNativeAsOptional("L4D_SetNavArea_AttributeFlags");
 	MarkNativeAsOptional("L4D_ScavengeBeginRoundSetupTime");
+	MarkNativeAsOptional("L4D2_SpawnAllScavengeItems");
 	MarkNativeAsOptional("L4D_ResetMobTimer");
 	MarkNativeAsOptional("L4D_GetPlayerSpawnTime");
 	MarkNativeAsOptional("L4D_SetPlayerSpawnTime");
@@ -382,7 +385,9 @@ public void __pl_l4dh_SetNTVOptional()
 	MarkNativeAsOptional("L4D2_GetVersusCompletionPlayer");
 	MarkNativeAsOptional("L4D2_SwapTeams");
 	MarkNativeAsOptional("L4D2_AreTeamsFlipped");
+	MarkNativeAsOptional("L4D_EndVersusModeRound");
 	MarkNativeAsOptional("L4D2_StartRematchVote");
+	MarkNativeAsOptional("L4D2_Rematch");
 	MarkNativeAsOptional("L4D2_FullRestart");
 	MarkNativeAsOptional("L4D2_HideVersusScoreboard");
 	MarkNativeAsOptional("L4D2_HideScavengeScoreboard");
@@ -423,7 +428,8 @@ enum PointerType
 	POINTER_VERSUSMODE		= 10,	// pVersusMode
 	POINTER_SCRIPTVM		= 11,	// @g_pScriptVM (L4D2 Only)
 	POINTER_THENAVAREAS		= 12,	// @TheNavAreas
-	POINTER_MISSIONINFO		= 13	// MissionInfo pointer
+	POINTER_MISSIONINFO		= 13,	// MissionInfo pointer
+	POINTER_SURVIVALMODE	= 14	// pSurvivalMode pointer (assuming this is the same as pVersusMode in L4D1 and also TheDirector)
 };
 
 // Provided by "BHaType":
@@ -1674,6 +1680,44 @@ forward Action L4D_TankRock_OnRelease(int tank, int rock, float vecPos[3], float
 forward void L4D_TankRock_OnRelease_Post(int tank, int rock, const float vecPos[3], const float vecAng[3], const float vecVel[3], const float vecRot[3]);
 
 /**
+ * @brief Called whenever CTankRock::BounceTouch is invoked
+ * @remarks When a tank rock touches an entity to bounce
+ *
+ * @param tank			tank client index (can be -1 if the rock was created by the native "L4D_TankRockPrj" or the "env_rock_launcher" entity)
+ * @param rock			the rock entity index
+ * @param entity		the entity index it touched (can be 0 for world)
+ *
+ * @return				Plugin_Handled to prevent exploding/hitting(?) - this will cause the rock to float in position and call L4D_TankRock_BounceTouch over and over, manually teleport to bounce off an object, Plugin_Continue otherwise
+ */
+forward Action L4D_TankRock_BounceTouch(int tank, int rock, int entity);
+
+/**
+ * @brief Called whenever CTankRock::BounceTouch is invoked
+ * @remarks When a tank rock touches an entity to bounce
+ * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @param tank			tank client index (can be -1 if the rock was created by the native "L4D_TankRockPrj" or the "env_rock_launcher" entity)
+ * @param rock			the rock entity index
+ * @param entity		the entity index it touched (can be 0 for world)
+ *
+ * @noreturn
+ */
+forward void L4D_TankRock_BounceTouch_Post(int tank, int rock, int entity);
+
+/**
+ * @brief Called whenever CTankRock::BounceTouch is invoked
+ * @remarks When a tank rock touches an entity to bounce
+ * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @param tank			tank client index (can be -1 if the rock was created by the native "L4D_TankRockPrj" or the "env_rock_launcher" entity)
+ * @param rock			the rock entity index
+ * @param entity		the entity index it touched (can be 0 for world)
+ *
+ * @noreturn
+ */
+forward void L4D_TankRock_BounceTouch_PostHandled(int tank, int rock, int entity);
+
+/**
  * @brief Called whenever CDirector::TryOfferingTankBot is invoked
  * @remarks Is used for displaying the "X gets Tank" window and transferring Tank control
  *
@@ -1925,6 +1969,8 @@ forward void L4D2_OnChangeFinaleStage_PostHandled(int finaleType, const char[] a
  * @remarks Not sure what bool does exactly yet. Just monitor it. If true, survivors will be counted for multiplier. If false, survival multiplier will be set to 0
  * @remarks A lot of Score calculations happen on this function, and the round-end scoreboard comes up doing this. Don't block unless you're sure you can reproduce this logic
  *
+ * @param countSurvivors		False = Survivors didn't make it to saferoom. True = Survivors made to the saferoom
+ *
  * @return			Plugin_Handled to block, Plugin_Continue otherwise
  */
 forward Action L4D2_OnEndVersusModeRound(bool countSurvivors);
@@ -1948,6 +1994,40 @@ forward void L4D2_OnEndVersusModeRound_Post();
  * @noreturn
  */
 forward void L4D2_OnEndVersusModeRound_PostHandled();
+
+/**
+ * @brief Called whenever CDirector::EndScenario(ScenarioRestartReason) [clone] is invoked
+ * @remarks Called before when a round is about to end
+ *
+ * @param reason	The reason for ending, please provide a list of known reason numbers
+ *
+ * @return			Plugin_Handled to block, Plugin_Continue otherwise
+ */
+
+#pragma deprecated This is for private testing and not released for public usage yet
+forward Action L4D_OnEndScenario(int reason);
+
+/**
+ * @brief Called whenever CDirector::EndScenario(ScenarioRestartReason) [clone] is invoked
+ * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @param reason	The reason for ending, please provide a list of known reason numbers
+ *
+ * @noreturn
+ */
+#pragma deprecated This is for private testing and not released for public usage yet
+forward void L4D_OnEndScenario_Post(int reason);
+
+/**
+ * @brief Called whenever CDirector::EndScenario(ScenarioRestartReason) [clone] is invoked
+ * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @param reason	The reason for ending, please provide a list of known reason numbers
+ *
+ * @noreturn
+ */
+#pragma deprecated This is for private testing and not released for public usage yet
+forward void L4D_OnEndScenario_PostHandled(int reason);
 
 /**
  * @brief Called whenever CTerrorPlayer::OnLedgeGrabbed(CTerrorPlayer *this, const Vector *) is invoked
@@ -3028,7 +3108,7 @@ forward void L4D1_FirstAidKit_StartHealing_PostHandled(int client, int entity);
  *
  * @param client			the client performing the action
  * @param entity			the medkit entity they are using
- * @param type				the weapon type ID. Can be found as L4D2WeaponId in the left4dhooks_stocks include file.
+ * @param type				the weapon type ID. Can be found as L4D2WeaponId in the left4dhooks_stocks include file
  *
  * @return					Plugin_Handled to block healing, Plugin_Continue otherwise
  */
@@ -3050,7 +3130,7 @@ forward Action L4D2_BackpackItem_StartAction(int client, int entity, any type);
  *
  * @param client			the client performing the action
  * @param entity			the medkit entity they are using
- * @param type				the weapon type ID. Can be found as L4D2WeaponId in the left4dhooks_stocks include file.
+ * @param type				the weapon type ID. Can be found as L4D2WeaponId in the left4dhooks_stocks include file
  *
  * @noreturn
  */
@@ -3072,7 +3152,7 @@ forward void L4D2_BackpackItem_StartAction_Post(int client, int entity, any type
  *
  * @param client			the client performing the action
  * @param entity			the medkit entity they are using
- * @param type				the weapon type ID. Can be found as L4D2WeaponId in the left4dhooks_stocks include file.
+ * @param type				the weapon type ID. Can be found as L4D2WeaponId in the left4dhooks_stocks include file
  *
  * @noreturn
  */
@@ -3977,6 +4057,23 @@ native any L4D2_GetCurrentFinaleStage();
 native void L4D2_ForceNextStage();
 
 /**
+ * @brief Returns the Survival setup countdown time before start (director_survival_setup_time must be non-0)
+ * @remarks Shows the time as 140/130/120 seconds, which is related to the chat messages shown as "SPAWNING STARTS IN 130 SECONDS"
+ *
+ * @return			Seconds until start, or 0 if director_survival_setup_time is 0
+ */
+// L4D2 only
+native int L4D2_GetSurvivalStartTime();
+
+/**
+ * @brief Sets the Survival countdown time before start
+ *
+ * @noreturn
+ */
+// L4D2 only
+native void L4D2_SetSurvivalStartTime(int time);
+
+/**
  * @brief Forces the game to start in Versus
  *
  * @noreturn
@@ -4259,6 +4356,18 @@ native float L4D2_VScriptWrapper_NavAreaTravelDistance(const float startPos[3], 
  */
 // L4D2 only
 native int L4D_ScavengeBeginRoundSetupTime();
+
+/**
+ * @brief Spawns all Scavenge gascans in the map
+ * @remarks	Requires the Director to be available--map must be started
+ * @remarks Enables to fix https://github.com/ValveSoftware/Source-1-Games/issues/1616
+ * @remarks Spawns them even if they exist already
+ *
+ * @noreturn
+ */
+// L4D2 only
+native void L4D2_SpawnAllScavengeItems();
+
 
 /**
  * @brief Resets the natural mob (horde) timer
@@ -4753,7 +4862,8 @@ enum L4D2CountdownTimer
 	L4D2CT_JockeySpawnTimer,
 	L4D2CT_ChargerSpawnTimer,
 	L4D2CT_VersusStartTimer,
-	L4D2CT_UpdateMarkersTimer
+	L4D2CT_UpdateMarkersTimer,
+	L4D2CT_SurvivalSetupTimer
 };
 
 enum L4D2IntervalTimer
@@ -5943,7 +6053,7 @@ native void L4D_CancelStagger(int client);
 
 /**
  * @brief Finds the Use client/entity if available
- * @remarks See the "L4D1_FirstAidKit_StartHealing" and "L4D2_BackpackItem_StartAction" pre hook forwards for examples of usage and games range values.
+ * @remarks See the "L4D1_FirstAidKit_StartHealing" and "L4D2_BackpackItem_StartAction" pre hook forwards for examples of usage and games range values
  *
  * @param client			Client ID of the person to check
  * @param players			True = only search for players, false = search for any use entity
@@ -6218,6 +6328,16 @@ native void L4D2_SwapTeams();
 native bool L4D2_AreTeamsFlipped();
 
 /**
+ * @brief Ends a Versus round
+ * @remarks This will only end the first round, calculating scores and swapping players to the other team
+ *
+ * @param countSurvivors		False = Survivors didn't make it to saferoom. True = Survivors made to the saferoom
+ *
+ * @noreturn
+ */
+native void L4D_EndVersusModeRound(bool countSurvivors);
+
+/**
  * @brief Starts a Versus rematch vote like end of game before credits roll
  * @remarks Failing a successful vote players are kicked back to lobby
  *
@@ -6225,6 +6345,16 @@ native bool L4D2_AreTeamsFlipped();
  */
 // L4D2 only
 native void L4D2_StartRematchVote();
+
+/**
+ * @brief Passes a Versus rematch vote like end of game before credits roll
+ * @remarks A failed vote would have kicked players back to lobby
+ * @remarks Do not use this in conjunction with "L4D2_StartRematchVote"
+ *
+ * @noreturn
+ */
+// L4D2 only
+native void L4D2_Rematch();
 
 /**
  * @brief Seems to restart the chapter like "mp_restartgame". In Versus the teams flip
