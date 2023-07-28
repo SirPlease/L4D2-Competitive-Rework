@@ -98,6 +98,21 @@
 				}
 			}
 
+			"L4DD::CTankRock::BounceTouch"
+			{
+				"signature"		"CTankRock::BounceTouch"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"cbaseentity"
+					}
+				}
+			}
+
 			"L4DD::CDeathFallCamera::Enable"
 			{
 				"signature"		"CDeathFallCamera::Enable"
@@ -986,6 +1001,21 @@
 					"a1"
 					{
 						"type"	"bool"
+					}
+				}
+			}
+
+			"L4DD::CDirector::EndScenario"
+			{
+				"signature"		"CDirector::EndScenario"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"address"
+				"arguments"
+				{
+					"keyvalues"
+					{
+						"type"		"int"
 					}
 				}
 			}
@@ -1882,6 +1912,12 @@
 				"linux"		"1596"
 			}
 
+			"SurvivalModePtr"
+			{
+				"windows"	"1600"
+				"linux"		"1600"
+			}
+
 			"ScriptedEventManagerPtr"
 			{
 				"windows"	"1592"
@@ -1921,11 +1957,11 @@
 				"linux"		"528"
 			}
 
-			// Can be found in "CDirector::OnMapLoaded" - *((_DWORD *)v13 + 270) = RandomInt((char *)&n + 1, 6);
+			// Can be found in "CDirector::OnMapLoaded" - *((_DWORD *)v13 + 318) = RandomInt((char *)&n + 1, 6);
 			"CDirector::m_nFirstClassIndex"
 			{
-				"linux"		"1080"
-				"windows"	"1080"
+				"linux"		"1272"
+				"windows"	"1272"
 			}
 
 			"CTerrorPlayer::CanBecomeGhost::Offset"
@@ -2159,6 +2195,33 @@
 			{
 				"windows"	"80"
 				"linux"		"80"
+			}
+
+			/**
+			 * Search string "#Survival_Spawn_Start_Warning"
+			 * Used in-game to count down till holdout starts
+			 *
+			 * CountdownTimer::Now((CDirectorSurvivalMode *)((char *)this + 68));
+			 */
+			"L4D2CountdownTimer_SurvivalSetupTimer"
+			{
+				"windows"	"68"
+				"linux"		"68"
+			}
+
+			/**
+			 * Search string "#Survival_Spawn_Start_Warning"
+			 * Used in-game to notify players the remaining time before holdout starts
+			 * 
+			 * Vscript entry: "DirectorOptions.SurvivalSetupTime"
+			 * ConVar: "director_survival_setup_time"
+			 *
+			 * .text:008AF615   sub     dword ptr [ebx+9Ch], 0Ah
+			 */
+			"CDirectorSurvivalMode::m_iSetupNotifyTime" // integer
+			{
+				"windows"		"156"
+				"linux"			"156"
 			}
 
 			// L4D2IntervalTimer
@@ -3596,6 +3659,17 @@
 						/* ? ? ? ? ? ? 57 C6 86 ? ? ? ? ? C7 */
 			}
 
+			/**
+			* Search string "HulkZombie.ThrownProjectileHit"
+			*/
+			"CTankRock::BounceTouch"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTankRock11BounceTouchEP11CBaseEntity"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x2A\x0F\xB7"
+				/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? ? ? 89 ? ? ? 8B ? ? 0F B7 */
+			}
+
 			/*
 			 * CTerrorGameRules::GetSurvivorSet(void)
 			 *
@@ -3764,6 +3838,18 @@
 				"linux"		"@_ZN19CDirectorVersusMode18EndVersusModeRoundEb"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x2A\x57\x8B\xF9\xE8\x2A\x2A\x2A\x2A\x84\xC0\x0F\x84"
 				/* 55 8B EC 83 EC ? 57 8B F9 E8 ? ? ? ? 84 C0 0F 84 */
+			}
+
+			/*
+			 * CDirector::EndScenario(ScenarioRestartReason) [clone]
+			 */
+			"CDirector::EndScenario"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector11EndScenarioE21ScenarioRestartReason.part.398"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x2A\x2A\x83\x2A\x2A\x0F\x2A\x2A\x0F\x87\x2A\x2A\x2A\x2A\x56"
+				/* ? ? ? ? ? ? ? ? ? ? ? 0F ? ? 83 ? ? 0F ? ? 0F 87 ? ? ? ? 56 */
+				/* Search: "round_end" */
 			}
 
 			/*
@@ -4648,6 +4734,18 @@
 			}
 
 			/*
+			 * CDirector::Rematch(void)
+			 */
+			"CDirector::Rematch"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector7RematchEv"
+				"windows"    "\x55\x8B\x2A\x51\x56\x8B\x2A\x57\x8D\x2A\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\xD9\x2A\x2A\xD9\x2A\x2A\x83\x2A\x2A\xDF\x2A\xDD\x2A\x9F\xF6\x2A\x2A\x7B\x2A\x8B\x2A\x2A\x8B\x2A\x8D\x2A\x2A\x57\xFF\x2A\xF3\x2A\x2A\x2A\x2A\xF3\x2A\x2A\x2A\x0F\x2A\x2A\x8D\x2A\x2A\x2A\x2A\x2A\xF3\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xF3\x2A\x2A\x2A\x0F\x2E\x2A\x2A\x2A\x2A\x2A\x9F\xF6\x2A\x2A\x7B\x2A\x8B\x2A\x2A\x8B\x2A\x8D\x2A\x2A\x57\xFF\x2A\xF3\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xF3\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x85\x2A\x74\x2A\x6A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x85\x2A\x74\x2A\x6A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x6A\x2A\xE8\x2A\x2A\x2A\x2A\x66\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B"
+				/* 55 8B ? 51 56 8B ? 57 8D ? ? ? ? ? 8B ? E8 ? ? ? ? D9 ? ? D9 ? ? 83 ? ? DF ? DD ? 9F F6 ? ? 7B ? 8B ? ? 8B ? 8D ? ? 57 FF ? F3 ? ? ? ? F3 ? ? ? 0F ? ? 8D ? ? ? ? ? F3 ? ? ? ? ? ? ? F3 ? ? ? 0F 2E ? ? ? ? ? 9F F6 ? ? 7B ? 8B ? ? 8B ? 8D ? ? 57 FF ? F3 ? ? ? ? ? ? ? F3 ? ? ? 8B ? ? ? ? ? 85 ? 74 ? 6A ? E8 ? ? ? ? 8B ? ? ? ? ? 85 ? 74 ? 6A ? E8 ? ? ? ? 8B ? ? ? ? ? E8 ? ? ? ? 8B ? ? ? ? ? 6A ? E8 ? ? ? ? 66 ? ? ? ? ? ? ? ? 8B */
+				/* Search: "PZEndGamePanelMsg" - xref this function, the function checking "if == 1" at the bottom, probably the first call, calls our target within that if statement, the first call if == 1 */
+			}
+
+			/*
 			 * CDirector::FullRestart(void)
 			 */
 			"CDirector::FullRestart"
@@ -5195,6 +5293,18 @@
 				"windows"	"\x55\x8B\xEC\x56\x8B\xF1\xF3\x0F\x10\x86\x2A\x2A\x2A\x2A\x0F\x2E\x45\x08\x9F\x57"
 				/* 55 8B EC 56 8B F1 F3 0F 10 86 ? ? ? ? 0F 2E 45 08 9F 57 */
 			}
+
+			/*
+			 * CDirector::SpawnAllScavengeItems(void)
+			 */
+			"CDirector::SpawnAllScavengeItems"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CDirector21SpawnAllScavengeItemsEv"
+				"windows"	"\x55\x8B\x2A\x83\x2A\x2A\x57\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x89"
+				/* 55 8B ? 83 ? ? 57 8B ? 8B ? ? ? ? ? E8 ? ? ? ? 89 */
+				// Search string is "weapon_scavenge_item_spawn"
+			 }
 
 			/*
 			 * CDirector::IsFinale(void)const

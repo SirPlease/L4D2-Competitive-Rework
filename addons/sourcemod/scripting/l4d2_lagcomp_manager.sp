@@ -5,6 +5,7 @@
 
 #include <sourcemod>
 #include <sdktools>
+#include <dhooks>
 #include <l4d2_lagcomp_manager>
 
 #if DEBUG
@@ -32,12 +33,15 @@ Handle
 	g_hStartLagComp = null,
 	g_hFinishLagComp = null;
 
+GlobalForward
+	g_fwdWantsLagCompensationOnEntity = null;
+
 public Plugin myinfo =
 {
 	name = "L4D2 Lag Compensation Manager",
 	author = "ProdigySim, A1m`, Forgetest",
 	description = "Provides lag compensation for entities in left 4 dead 2 (required enable sv_unlag).",
-	version = "1.2",
+	version = "1.3",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -57,6 +61,17 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("L4D2_LagComp_FinishLagCompensation", Ntv_FinishLagCompensation);
 	CreateNative("L4D2_LagComp_AddAdditionalEntity", Ntv_AddAdditionalEntity);
 	CreateNative("L4D2_LagComp_RemoveAdditionalEntity", Ntv_RemoveAdditionalEntity);
+	
+	/* forward Action L4D2_LagComp_OnWantsLagCompensationOnEntity(int client, int entity, bool &result, int buttons, int impulse); */
+	g_fwdWantsLagCompensationOnEntity = new GlobalForward("L4D2_LagComp_OnWantsLagCompensationOnEntity",
+											ET_Event,
+											Param_Cell,
+											Param_Cell,
+											Param_CellByRef,
+											Param_Cell,
+											Param_Cell);
+	
+	RegPluginLibrary("l4d2_lagcomp_manager");
 	
 	return APLRes_Success;
 }
@@ -143,6 +158,14 @@ public void OnPluginStart()
 	if (g_iCUserCmdSize == -1)
 		SetFailState("Missing offset \"sizeof(CUserCmd)\"");
 	
+	DynamicDetour hDetour = DynamicDetour.FromConf(hGameConf, "CTerrorPlayer::WantsLagCompensationOnEntity");
+	if (!hDetour)
+		SetFailState("Missing detour setup \"CTerrorPlayer::WantsLagCompensationOnEntity\"");
+	if (!hDetour.Enable(Hook_Post, DTR__CTerrorPlayer__WantsLagCompensationOnEntity_Post))
+		SetFailState("Failed to detour \"CTerrorPlayer::WantsLagCompensationOnEntity\"");
+	
+	delete hDetour;
+	
 	delete hGameConf;
 	
 	#if DEBUG
@@ -169,6 +192,35 @@ void CheckCvar()
 		PrintToServer("[%s] This plugin can only work with 'sv_unlag' cvar enabled!", GAMEDATA);
 		LogError("This plugin can only work with 'sv_unlag' cvar enabled!");
 	}
+}
+
+MRESReturn DTR__CTerrorPlayer__WantsLagCompensationOnEntity_Post(int client, DHookReturn hReturn, DHookParam hParams)
+{
+	if (g_fwdWantsLagCompensationOnEntity.FunctionCount == 0)
+		return MRES_Ignored;
+	
+	int entity = hParams.Get(1);
+	bool result = hReturn.Value != 0;
+	int buttons = hParams.GetObjectVar(2, 36, ObjectValueType_Int);
+	int impulse = hParams.GetObjectVar(2, 40, ObjectValueType_Int) & 0x000000FF;
+	
+	Action ret = Plugin_Continue;
+	
+	Call_StartForward(g_fwdWantsLagCompensationOnEntity);
+	Call_PushCell(client);
+	Call_PushCell(entity);
+	Call_PushCellRef(result);
+	Call_PushCell(buttons);
+	Call_PushCell(impulse);
+	Call_Finish(ret);
+	
+	if (ret == Plugin_Handled)
+	{
+		hReturn.Value = result ? 1 : 0;
+		return MRES_Override;
+	}
+	
+	return MRES_Ignored;
 }
 
 public void OnEntityCreated(int iEntity, const char[] sClassName)

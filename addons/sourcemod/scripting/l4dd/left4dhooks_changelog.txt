@@ -1,3 +1,26 @@
+1.134 (10-Jul-2023)
+	- Added "POINTER_SURVIVALMODE" enum for the "L4D_GetPointer" native to return the SurvivalMode pointer.
+	- Added "L4D2CT_SurvivalSetupTimer" to the "L4D2CountdownTimer" enum for use with the "L4D2_CTimer*" natives.
+	- Added stock "L4D_SetPlayerTempHealthFloat" to the "left4dhooks_stocks.inc" include file to set a players temporary health above 200 HP. Thanks to "Eyal282" for the code.
+	- Added forwards "L4D_TankRock_BounceTouch", "L4D_TankRock_BounceTouch_Post" and "L4D_TankRock_BounceTouch_PostHandled" when a tank rock collides with something. Thanks to "Forgetest" for the code.
+	- Added natives "L4D2_GetSurvivalStartTime" and "L4D2_SetSurvivalStartTime" to get and set the Survival start time. Requested by "Forgetest".
+	- Added native "L4D2_SpawnAllScavengeItems" to spawn all Scavenge items. Thanks to "Eyal282" for some of the code and changes.
+	- Added native "L4D2_Rematch" to restart a Versus game. Thanks to "Eyal282" for some of the code and changes.
+	- Added native "L4D_EndVersusModeRound" to end the Versus round. Thanks to "Spirit_12" for some of the code and changes.
+	- Fixed native "L4D2_Charger_StartCarryingVictim" removing teleporting and placement position bug. Thanks to "HarryPotter" for reporting.
+	- Fixed L4D2 GameData offset for "L4D2_GetFirstSpawnClass" and "L4D2_SetFirstSpawnClass" natives. Thanks to "Forgetest" for reporting the new offset.
+	- Errors about using natives before OnMapStart will now show the plugin causing it.
+
+	- Updated: Plugin and test plugin.
+	- Updated: "/scripting/gamedata/left4dhooks.l4d1.txt" GameData file.
+	- Updated: "/scripting/gamedata/left4dhooks.l4d2.txt" GameData file.
+	- Updated: "/scripting/include/left4dhooks.inc" Include file.
+	- Updated: "/scripting/include/left4dhooks_stocks.inc" Include file.
+	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_gamedata.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_setup.sp" project file.
+
 1.133 (19-Jun-2023)
 	- Added details to some natives explaining they can only be used 1 frame after "OnMapStart" due to pointers being unavailable before. Thanks to "HarryPotter" for reporting.
 	- Added an error log when certain natives are used before before "OnMapStart" instead of an ambiguous error about invalid offsets.
@@ -14,16 +37,6 @@
 	- Fixed native "L4D2Direct_GetSIClassDeathTimer" returning the timer for the wrong Special Infected and errors when checking Chargers. Thanks to "PencilMario" for reporting.
 
 	- Updated "left4dhooks_lux_library" include file, fixing the "Terror_GetAdrenalineTime" stock to check for adrenaline being active. Thanks to "Lux" for changes and "Eyal282" for reporting.
-
-	- Updated: Plugin and test plugin.
-	- Updated: "/scripting/gamedata/left4dhooks.l4d1.txt" GameData file.
-	- Updated: "/scripting/gamedata/left4dhooks.l4d2.txt" GameData file.
-	- Updated: "/scripting/include/left4dhooks.inc" Include file.
-	- Updated: "/scripting/include/left4dhooks_lux_library.inc" Include file.
-	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_gamedata.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_setup.sp" project file.
 
 1.132 (25-May-2023)
 	- Added forwards "L4D1_FirstAidKit_StartHealing", "L4D1_FirstAidKit_StartHealing_Post" and "L4D1_FirstAidKit_StartHealing_PostHandled" to control first aid kit duration.

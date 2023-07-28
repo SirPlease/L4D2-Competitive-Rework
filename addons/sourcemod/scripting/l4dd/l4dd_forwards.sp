@@ -82,6 +82,9 @@ GlobalForward g_hFWD_CTankClaw_OnPlayerHit_PostHandled;
 GlobalForward g_hFWD_CTankRock_Detonate;
 GlobalForward g_hFWD_CTankRock_OnRelease;
 GlobalForward g_hFWD_CTankRock_OnRelease_Post;
+GlobalForward g_hFWD_CTankRock_BounceTouch;
+GlobalForward g_hFWD_CTankRock_BounceTouch_Post;
+GlobalForward g_hFWD_CTankRock_BounceTouch_PostHandled;
 GlobalForward g_hFWD_CDirector_TryOfferingTankBot;
 GlobalForward g_hFWD_CDirector_TryOfferingTankBot_Post;
 GlobalForward g_hFWD_CDirector_TryOfferingTankBot_PostHandled;
@@ -122,6 +125,9 @@ GlobalForward g_hFWD_CDirectorScriptedEventManager_ChangeFinaleStage_PostPost;
 GlobalForward g_hFWD_CDirectorVersusMode_EndVersusModeRound_Pre;
 GlobalForward g_hFWD_CDirectorVersusMode_EndVersusModeRound_Post;
 GlobalForward g_hFWD_CDirectorVersusMode_EndVersusModeRound_PostHandled;
+// GlobalForward g_hFWD_CDirector_EndScenario_Pre;
+// GlobalForward g_hFWD_CDirector_EndScenario_Post;
+// GlobalForward g_hFWD_CDirector_EndScenario_PostHandled;
 GlobalForward g_hFWD_CBaseAnimating_SelectWeightedSequence_Pre;
 GlobalForward g_hFWD_CBaseAnimating_SelectWeightedSequence_Post;
 GlobalForward g_hFWD_CTerrorPlayer_DoAnimationEvent;
@@ -301,6 +307,14 @@ void SetupDetours(GameData hGameData = null)
 		CreateDetour(hGameData,		DTR_CTerrorPlayer_RecalculateVersusScore,					DTR_CTerrorPlayer_RecalculateVersusScore_Post,				"L4DD::CTerrorPlayer::RecalculateVersusScore",						"L4D_OnRecalculateVersusScore");
 		CreateDetour(hGameData,		DTR_CTerrorPlayer_RecalculateVersusScore,					DTR_CTerrorPlayer_RecalculateVersusScore_Post,				"L4DD::CTerrorPlayer::RecalculateVersusScore",						"L4D_OnRecalculateVersusScore_Post",			true);
 	}
+/*
+	else
+	{
+		CreateDetour(hGameData,			DTR_CDirector_EndScenario_Pre,								DTR_CDirector_EndScenario_Post,								"L4DD::CDirector::EndScenario",										"L4D_OnEndScenario");
+		CreateDetour(hGameData,			DTR_CDirector_EndScenario_Pre,								DTR_CDirector_EndScenario_Post,								"L4DD::CDirector::EndScenario",										"L4D_OnEndScenario_Post",						true);
+		CreateDetour(hGameData,			DTR_CDirector_EndScenario_Pre,								DTR_CDirector_EndScenario_Post,								"L4DD::CDirector::EndScenario",										"L4D_OnEndScenario_PostHandled",				true);
+	}
+*/
 
 	CreateDetour(hGameData,			DTR_CDirector_OnFirstSurvivorLeftSafeArea,					DTR_CDirector_OnFirstSurvivorLeftSafeArea_Post,				"L4DD::CDirector::OnFirstSurvivorLeftSafeArea",						"L4D_OnFirstSurvivorLeftSafeArea");
 	CreateDetour(hGameData,			DTR_CDirector_OnFirstSurvivorLeftSafeArea,					DTR_CDirector_OnFirstSurvivorLeftSafeArea_Post,				"L4DD::CDirector::OnFirstSurvivorLeftSafeArea",						"L4D_OnFirstSurvivorLeftSafeArea_Post",			true);
@@ -327,6 +341,9 @@ void SetupDetours(GameData hGameData = null)
 	CreateDetour(hGameData,			DTR_CTankRock_Detonate,										INVALID_FUNCTION,											"L4DD::CTankRock::Detonate",										"L4D_TankRock_OnDetonate");
 	CreateDetour(hGameData,			DTR_CTankRock_OnRelease,									DTR_CTankRock_OnRelease_Post,								"L4DD::CTankRock::OnRelease",										"L4D_TankRock_OnRelease");
 	CreateDetour(hGameData,			DTR_CTankRock_OnRelease,									DTR_CTankRock_OnRelease_Post,								"L4DD::CTankRock::OnRelease",										"L4D_TankRock_OnRelease_Post",					true);
+	CreateDetour(hGameData,			DTR_CTankRock_BounceTouch,									DTR_CTankRock_BounceTouch_Post,								"L4DD::CTankRock::BounceTouch",										"L4D_TankRock_BounceTouch");
+	CreateDetour(hGameData,			DTR_CTankRock_BounceTouch,									DTR_CTankRock_BounceTouch_Post,								"L4DD::CTankRock::BounceTouch",										"L4D_TankRock_BounceTouch_Post",				true);
+	CreateDetour(hGameData,			DTR_CTankRock_BounceTouch,									DTR_CTankRock_BounceTouch_Post,								"L4DD::CTankRock::BounceTouch",										"L4D_TankRock_BounceTouch_PostHandled",			true);
 	CreateDetour(hGameData,			DTR_CThrow_ActivateAbililty,								DTR_CThrow_ActivateAbililty_Post,							"L4DD::CThrow::ActivateAbililty",									"L4D_OnCThrowActivate");
 	CreateDetour(hGameData,			DTR_CThrow_ActivateAbililty,								DTR_CThrow_ActivateAbililty_Post,							"L4DD::CThrow::ActivateAbililty",									"L4D_OnCThrowActivate_Post",					true);
 	CreateDetour(hGameData,			DTR_CThrow_ActivateAbililty,								DTR_CThrow_ActivateAbililty_Post,							"L4DD::CThrow::ActivateAbililty",									"L4D_OnCThrowActivate_PostHandled",				true);
@@ -2061,6 +2078,56 @@ MRESReturn DTR_CTankRock_OnRelease_Post(DHookParam hParams) // Forward "L4D_Tank
 	return MRES_Ignored;
 }
 
+bool g_bBlock_CTankRock_BounceTouch;
+MRESReturn DTR_CTankRock_BounceTouch(int pThis, DHookReturn hReturn, DHookParam hParams) // Forward "L4D_TankRock_BounceTouch"
+{
+	//PrintToServer("##### DTR_CTankRock_BounceTouch");
+	int a1;
+
+	if( !hParams.IsNull(1) )
+		a1 = hParams.Get(1);
+
+	int client = GetEntPropEnt(pThis, Prop_Send, "m_hOwnerEntity");
+
+	Action aResult = Plugin_Continue;
+	Call_StartForward(g_hFWD_CTankRock_BounceTouch);
+	Call_PushCell(client);
+	Call_PushCell(pThis);
+	Call_PushCell(a1);
+	Call_Finish(aResult);
+
+	if( aResult == Plugin_Handled )
+	{
+		g_bBlock_CTankRock_BounceTouch = true;
+
+		hReturn.Value = 0;
+		return MRES_Supercede;
+	}
+
+	g_bBlock_CTankRock_BounceTouch = false;
+
+	return MRES_Ignored;
+}
+
+MRESReturn DTR_CTankRock_BounceTouch_Post(int pThis, DHookReturn hReturn, DHookParam hParams) // Forward "L4D_TankRock_BounceTouch_Post" and "L4D_TankRock_BounceTouch_PostHandled"
+{
+	//PrintToServer("##### DTR_CTankRock_BounceTouch_Post");
+	int a1;
+
+	if( !hParams.IsNull(1) )
+		a1 = hParams.Get(1);
+
+	int client = GetEntPropEnt(pThis, Prop_Send, "m_hOwnerEntity");
+
+	Call_StartForward(g_bBlock_CTankRock_BounceTouch ? g_hFWD_CTankRock_BounceTouch_PostHandled : g_hFWD_CTankRock_BounceTouch_Post);
+	Call_PushCell(client);
+	Call_PushCell(pThis);
+	Call_PushCell(a1);
+	Call_Finish();
+
+	return MRES_Ignored;
+}
+
 bool g_bBlock_CDirector_TryOfferingTankBot;
 MRESReturn DTR_CDirector_TryOfferingTankBot(DHookReturn hReturn, DHookParam hParams) // Forward "L4D_OnTryOfferingTankBot"
 {
@@ -2562,6 +2629,48 @@ MRESReturn DTR_CDirectorVersusMode_EndVersusModeRound_Post(DHookReturn hReturn, 
 
 	return MRES_Ignored;
 }
+
+/*
+bool g_bBlock_CDirector_EndScenario;
+MRESReturn DTR_CDirector_EndScenario_Pre(int pThis, DHookParam hParams) // Forward "L4D_OnEndScenario"
+{
+	//PrintToServer("##### DTR_CDirector_EndScenario_Pre");
+	if( g_bRoundEnded ) return MRES_Ignored;
+
+	int a1 = hParams.Get(1);
+
+	Action aResult = Plugin_Continue;
+	Call_StartForward(g_hFWD_CDirector_EndScenario_Pre);
+	Call_PushCell(a1);
+	Call_Finish(aResult);
+
+	if( aResult == Plugin_Handled )
+	{
+		g_bBlock_CDirector_EndScenario = true;
+
+		return MRES_Supercede;
+	}
+
+	g_bBlock_CDirector_EndScenario = false;
+
+	return MRES_Ignored;
+}
+
+MRESReturn DTR_CDirector_EndScenario_Post(int pThis, DHookParam hParams) // Forward "L4D_OnEndScenario_Post" and "L4D_OnEndScenario_PostHandled"
+{
+	//PrintToServer("##### DTR_CDirector_EndScenario_Post");
+	if( g_bRoundEnded ) return MRES_Ignored;
+	g_bRoundEnded = true;
+
+	int a1 = hParams.Get(1);
+
+	Call_StartForward(g_bBlock_CDirector_EndScenario ? g_hFWD_CDirector_EndScenario_PostHandled : g_hFWD_CDirector_EndScenario_Post);
+	Call_PushCell(a1);
+	Call_Finish();
+
+	return MRES_Ignored;
+}
+*/
 
 bool g_bBlock_CTerrorPlayer_OnLedgeGrabbed;
 MRESReturn DTR_CTerrorPlayer_OnLedgeGrabbed(int pThis, DHookReturn hReturn, DHookParam hParams) // Forward "L4D_OnLedgeGrabbed"
