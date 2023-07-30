@@ -59,7 +59,6 @@ bool SetCustomCfg(const char[] cfgname)
 		return true;
 	}
 
-	strcopy(customCfgName, sizeof(customCfgName), cfgname);
 	Format(customCfgPath, sizeof(customCfgPath), "%s%s%c%s", cfgPath, customCfgDir, DirSeparator, cfgname);
 	if (!DirExists(customCfgPath)) {
 		Debug_LogError(CONFIGS_MODULE_NAME, "Custom config directory %s does not exist!", customCfgPath);
@@ -78,6 +77,7 @@ bool SetCustomCfg(const char[] cfgname)
 		return false;
 	}
 
+	strcopy(customCfgName, sizeof(customCfgName), cfgname);
 	hCustomConfig.SetString(cfgname);
 
 	return true;
