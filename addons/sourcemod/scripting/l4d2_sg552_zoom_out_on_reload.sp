@@ -33,6 +33,8 @@ public void WeaponReload_Event(Event hEvent, const char[] eName, bool dontBroadc
 	if (!bZoom[client] || !UsingTheGunSG552(client))
 		return;
 
+	bZoom[client] = false;
+
 	SetEntPropFloat(client, Prop_Send, "m_flFOVTime", 0.0);
 	SetEntPropFloat(client, Prop_Send, "m_flFOVRate", 0.0);
 	SetEntProp(client, Prop_Send, "m_iFOV", 0);
