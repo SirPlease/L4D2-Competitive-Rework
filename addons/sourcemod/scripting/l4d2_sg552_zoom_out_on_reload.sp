@@ -30,10 +30,13 @@ public void WeaponReload_Event(Event hEvent, const char[] eName, bool dontBroadc
 	int userid = GetEventInt(hEvent, "userid");
 	int client = GetClientOfUserId(userid);
 
-	if (!bZoom[client] || !UsingTheGunSG552(client))
+	if (!bZoom[client])
 		return;
 
 	bZoom[client] = false;
+
+	if (!UsingTheGunSG552(client))
+		return;
 
 	SetEntPropFloat(client, Prop_Send, "m_flFOVTime", 0.0);
 	SetEntPropFloat(client, Prop_Send, "m_flFOVRate", 0.0);
