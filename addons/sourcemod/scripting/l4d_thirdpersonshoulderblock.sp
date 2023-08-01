@@ -8,6 +8,7 @@
 #define L4D_TEAM_SPECTATOR 1
 
 ConVar cvar_enabled;
+ConVar cvar_action;
 
 public Plugin myinfo =
 {
@@ -41,6 +42,7 @@ public void OnPluginStart()
 	CreateConVar("l4d_tpsblock_version", PLUGIN_VERSION, "Version of the Thirdpersonshoulder Block plugin", FCVAR_NOTIFY | FCVAR_DONTRECORD);
 
 	cvar_enabled = CreateConVar("l4d_tpsblock_enabled", "1", "Enable Thirdpersonshoulder Block", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	cvar_action = CreateConVar("l4d_tpsblock_action", "1", "What to do with a player if he has thirdperson enabled? 1 - move to spectators, 0 - kick from server", _, true, 0.0, true, 1.0);
 	CreateTimer(GetRandomFloat(2.5, 3.5), CheckClients, _, TIMER_REPEAT);
 }
 
@@ -72,16 +74,24 @@ public void QueryClientConVarCallback(QueryCookie cookie, int client, ConVarQuer
 		if (result != ConVarQuery_Okay)
 
 		{
-			ChangeClientTeam(client, L4D_TEAM_SPECTATOR);
-			CPrintToChat(client, "%t %t", "Tag", "Cvar_Invalid");
+			if (cvar_action.IntValue == 0) {
+				KickClient(client, "%t", "Cvar_Invalid_Nocolor");
+			} else {
+				ChangeClientTeam(client, L4D_TEAM_SPECTATOR);
+				CPrintToChat(client, "%t %t", "Tag", "Cvar_Invalid");
+			}
 		}
 		/* If the ConVar was found on the client, but is not set to either "false" or "0",
 		 * kick the client as well, as he might be using thirdpersonshoulder.
 		 */
 		else if (!StrEqual(cvarValue, "false") && !StrEqual(cvarValue, "0"))
 		{
-			ChangeClientTeam(client, L4D_TEAM_SPECTATOR);
-			CPrintToChat(client, "%t %t", "Tag", "Cvar_Value1");
+			if (cvar_action.IntValue == 0) {
+				KickClient(client, "%t", "Cvar_Value1_Nocolor");
+			} else {
+				ChangeClientTeam(client, L4D_TEAM_SPECTATOR);
+				CPrintToChat(client, "%t %t", "Tag", "Cvar_Value1");
+			}
 		}
 	}
 }

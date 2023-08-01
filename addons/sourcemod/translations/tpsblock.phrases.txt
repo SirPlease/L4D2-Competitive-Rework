@@ -12,4 +12,12 @@
 	{
 		"en"		"In order to play enter {olive}c_thirdpersonshoulder 0{default} on your console."
 	}
+	"Cvar_Invalid_Nocolor"
+	{
+		"en"		"The command c_thirdpersonshoulder be invalid or protected."
+	}
+	"Cvar_Value1_Nocolor"
+	{
+		"en"		"In order to play enter c_thirdpersonshoulder 0 on your console."
+	}
 }

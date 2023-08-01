@@ -17,6 +17,7 @@ KeyValues
 	g_hModesKV = null;
 
 ConVar
+	g_hEnabled = null,
 	g_hCvarPlayerLimit = null,
 	g_hMaxPlayers = null,
 	g_hSvMaxPlayers = null;
@@ -59,6 +60,7 @@ public void OnPluginStart()
 		SetFailState("Couldn't load matchmodes.txt!");
 	}
 
+	g_hEnabled = CreateConVar("sm_match_vote_enabled", "1", "Plugin enabled", _, true, 0.0, true, 1.0);
 	g_hMaxPlayers = CreateConVar("mv_maxplayers", "30", "How many slots would you like the Server to be at Config Load/Unload?", _, true, 1.0, true, 32.0);
 	g_hCvarPlayerLimit = CreateConVar("sm_match_player_limit", "1", "Minimum # of players in game to start the vote", _, true, 1.0, true, 32.0);
 
@@ -106,7 +108,7 @@ public void OnCedapugEnded() {
 
 public Action MatchRequest(int iClient, int iArgs)
 {
-	if (iClient == 0 || !g_bIsConfoglAvailable) {
+	if (!g_hEnabled.BoolValue || iClient == 0 || !g_bIsConfoglAvailable) {
 		return Plugin_Handled;
 	}
 
@@ -299,7 +301,7 @@ public void MatchVoteResultHandler(Handle vote, int num_votes, int num_clients, 
 
 public Action MatchReset(int iClient, int iArgs)
 {
-	if (iClient == 0 || !g_bIsConfoglAvailable) {
+	if (!g_hEnabled.BoolValue || iClient == 0 || !g_bIsConfoglAvailable) {
 		return Plugin_Handled;
 	}
 
