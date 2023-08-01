@@ -17,6 +17,7 @@ ConVar
 	cVarReadyUpLerpChanges = null,
 	cVarAllowedLerpChanges = null,
 	cVarLerpChangeSpec = null,
+	cVarBadLerpAction = null,
 	cVarMinLerp = null,
 	cVarMaxLerp = null,
 	cVarMinUpdateRate = null,
@@ -87,6 +88,7 @@ public void OnPluginStart()
 {
 	cVarAllowedLerpChanges = CreateConVar("sm_allowed_lerp_changes", "4", "Allowed number of lerp changes for a half", _, true, 0.0, true, 20.0);
 	cVarLerpChangeSpec = CreateConVar("sm_lerp_change_spec", "1", "Move to spectators on exceeding lerp changes count?", _, true, 0.0, true, 1.0);
+	cVarBadLerpAction = CreateConVar("sm_bad_lerp_action", "1", "What to do with a player if he is out of allowed lerp range? 1 - move to spectators, 0 - kick from server", _, true, 0.0, true, 1.0);
 	cVarReadyUpLerpChanges = CreateConVar("sm_readyup_lerp_changes", "1", "Allow lerp changes during ready-up", _, true, 0.0, true, 1.0);
 	cVarShowLerpTeamChange = CreateConVar("sm_show_lerp_team_changes", "1", "show a message about the player's lerp if he changes the team", _, true, 0.0, true, 1.0);
 	cVarMinLerp = CreateConVar("sm_min_lerp", "0.000", "Minimum allowed lerp value", _, true, 0.000, true, 0.500);
@@ -278,14 +280,23 @@ void ProcessPlayerLerp(int client, bool load = false, bool team = false)
 			float currentLerpTime = 0.0;
 			if (ArrLerpsValue.GetValue(steamID, currentLerpTime)) {
 				if (currentLerpTime == newLerpTime) { // no change?
-					ChangeClientTeam(client, L4D_TEAM_SPECTATE); 
+					if (cVarBadLerpAction.IntValue == 1) {
+						ChangeClientTeam(client, L4D_TEAM_SPECTATE); 
+					} else {
+						KickClient(client, "Illegal lerp value (min: %.01f, max: %.01f)", cVarMinLerp.FloatValue * 1000, cVarMaxLerp.FloatValue * 1000);
+					}
 					return;
 				}
 			}
 			
-			CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}was moved to spectators for lerp {teamcolor}%.01f", client, newLerpTime * 1000);
-			ChangeClientTeam(client, L4D_TEAM_SPECTATE);
-			CPrintToChatEx(client, client, "{default}<{olive}Lerp{default}> Illegal lerp value (min: {teamcolor}%.01f{default}, max: {teamcolor}%.01f{default})", cVarMinLerp.FloatValue * 1000, cVarMaxLerp.FloatValue * 1000);
+			if (cVarBadLerpAction.IntValue == 1) {
+				CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}was moved to spectators for lerp {teamcolor}%.01f", client, newLerpTime * 1000);
+				CPrintToChatEx(client, client, "{default}<{olive}Lerp{default}> Illegal lerp value (min: {teamcolor}%.01f{default}, max: {teamcolor}%.01f{default})", cVarMinLerp.FloatValue * 1000, cVarMaxLerp.FloatValue * 1000);
+				ChangeClientTeam(client, L4D_TEAM_SPECTATE);
+			} else {
+				CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}was kicked for lerp {teamcolor}%.01f", client, newLerpTime * 1000);
+				KickClient(client, "Illegal lerp value (min: %.01f, max: %.01f)", cVarMinLerp.FloatValue * 1000, cVarMaxLerp.FloatValue * 1000);
+			}
 		}
 		
 		// nothing else to do
