@@ -41,6 +41,7 @@ static const L4D2Team oppositeTeamMap[view_as<int>(L4D2Team_Size)] =
 
 ConVar survivor_limit;
 ConVar z_max_player_zombies;
+ConVar sm_allow_spectate_command;
 
 L4D2Team pendingSwaps[MAXPLAYERS+1];
 bool blockVotes[MAXPLAYERS+1];
@@ -69,6 +70,8 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_spectate", Spectate_Cmd, "Moves you to the spectator team");
 	RegConsoleCmd("sm_spec", Spectate_Cmd, "Moves you to the spectator team");
 	RegConsoleCmd("sm_s", Spectate_Cmd, "Moves you to the spectator team");
+
+	sm_allow_spectate_command = CreateConVar("sm_allow_spectate_command", "1", "Allow players to use !spectate/!spec/!s");
 
 	AddCommandListener(TeamChange_Listener, "jointeam");
 
@@ -150,6 +153,10 @@ void survivor_limitChanged(ConVar convar, const char[] oldValue, const char[] ne
 
 public Action Spectate_Cmd(int client, int args)
 {
+	if (!sm_allow_spectate_command.BoolValue)
+	{
+		return Plugin_Handled;
+	}
 	L4D2Team team = GetClientTeamEx(client);
 	if (team == L4D2Team_Survivor)
 	{

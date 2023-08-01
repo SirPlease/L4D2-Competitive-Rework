@@ -8,4 +8,12 @@
 	{
 		"es"		"Para poder jugar ingrese {olive}c_thirdpersonshoulder 0{default} en su consola."
 	}
+	"Cvar_Invalid_Nocolor"
+	{
+		"es"		"El comando c_thirdpersonshoulder es inválido o esta protegido."
+	}
+	"Cvar_Value1_Nocolor"
+	{
+		"es"		"Para poder jugar ingrese c_thirdpersonshoulder 0 en su consola."
+	}
 }

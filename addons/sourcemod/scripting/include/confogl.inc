@@ -63,6 +63,12 @@ forward void LGO_OnMatchModeUnloaded();
 native bool LGO_IsMatchModeLoaded();
 
 /**
+ * @brief Get current match name
+ * @remarks Same name as the folder name in cfgogl/
+ */
+native void LGO_GetConfigName(char[] sConfigName, iSize);
+
+/**
  * @brief Build a filepath relative to the current running config.
  * @remarks Should produce a path in cfg/cfgogl/CONFIG/ or addons/sourcemod/configs/confogl
  *
@@ -178,6 +184,7 @@ public void __pl_confogl_SetNTVOptional()
 	MarkNativeAsOptional("LGO_GetMapValueString");
 	MarkNativeAsOptional("LGO_CopyMapSubsection");
 	MarkNativeAsOptional("LGO_IsMatchModeLoaded");
+	MarkNativeAsOptional("LGO_GetConfigName");
 	MarkNativeAsOptional("LGO_IsScoremodEnabled");
 	MarkNativeAsOptional("LGO_GetHealthScore");
 }
