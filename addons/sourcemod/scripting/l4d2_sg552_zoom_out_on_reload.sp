@@ -23,6 +23,9 @@ public void WeaponZoom_Event(Event hEvent, const char[] eName, bool dontBroadcas
 	int client = GetClientOfUserId(userid);
 
 	bZoom[client] = UsingTheGunSG552(client);
+
+	if (bZoom[client] && GetEntProp(client, Prop_Send, "m_hZoomOwner") == -1)
+		UnZoom(client);
 }
 
 public void WeaponReload_Event(Event hEvent, const char[] eName, bool dontBroadcast)
@@ -38,6 +41,11 @@ public void WeaponReload_Event(Event hEvent, const char[] eName, bool dontBroadc
 	if (!UsingTheGunSG552(client))
 		return;
 
+	UnZoom(client);
+}
+
+stock void UnZoom(int client)
+{
 	SetEntPropFloat(client, Prop_Send, "m_flFOVTime", 0.0);
 	SetEntPropFloat(client, Prop_Send, "m_flFOVRate", 0.0);
 	SetEntProp(client, Prop_Send, "m_iFOV", 0);
