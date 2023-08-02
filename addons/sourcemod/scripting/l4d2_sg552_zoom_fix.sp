@@ -2,10 +2,10 @@
 
 public Plugin:myinfo = 
 {
-	name = "[L4D2] SG552 - Zoom out on reload",
+	name = "[L4D2] SG552 - Zoom fix",
 	author = "Altair Sossai",
-	description = "Remove zoom from the SG552 weapon when reloading, preventing the player's camera from getting stuck",
-	version = "1.1",
+	description = "Fix SG552 zoom, preventing the player's camera from getting stuck",
+	version = "1.0",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
