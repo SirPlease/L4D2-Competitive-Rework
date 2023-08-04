@@ -1,0 +1,61 @@
+/*
+	******************************************************************************************************************************************************
+
+	You can display phrases in chat with color using any of the methods below:
+
+	Using color codes:
+		•  // Default (use instead of \x01), Alt + 01 Keyboard Shortcut
+		•  // Light Green (use instead of \x03), Alt + 03 Keyboard Shortcut
+		•  // Orange (use instead of \x04), Alt + 04 Keyboard Shortcut
+		•  // Olive (use instead of \x05), Alt + 05 Keyboard Shortcut
+
+	or
+
+	Using color tags:
+		• {default} // Default (use instead of \x01)
+		• {lightgreen} // Light Green (use instead of \x03)
+		• {orange} // Orange (use instead of \x04)
+		• {olive} // Green (use instead of \x05)
+
+	******************************************************************************************************************************************************
+*/
+
+"Phrases"
+{
+	"Intro"
+	{
+		"en"			"{olive}Press {orange}SHIFT + E {lightgreen}to mark a spot on the map at your crosshair"
+		"es"			"{lightgreen}Presiona {orange}SHIFT + E {lightgreen}para marcar una ubicación en el mapa a la que apunta"
+		"hu"			"{olive}Nyomj {orange}SHIFT + E-t {lightgreen}hogy létrehozz egy jelölőt a pályán a célkereszted előtt"
+		"pt"			"{lightgreen}Pressione {orange}SHIFT + E {lightgreen}para marcar um local no mapa onde estiver mirando"
+		"pt_p"			"{lightgreen}Pressione {orange}SHIFT + E {lightgreen}para marcar um local no mapa onde estiver mirando"
+		"ro"			"{olive}Apasa {orange}SHIFT + E {lightgreen}pentru a marca locul pe harta folosind tinta"
+		"chi"			"{olive}按 {orange}SHIFT + E {lightgreen}在准星处生成标记"
+		"zho"			"{olive}按 {orange}SHIFT + E {lightgreen}在準心指向的位置生成標記"
+	}
+
+	"Skill Ready"
+	{
+		"en"			"{olive}Your {orange}spot marker{olive} is {lightgreen}ready"
+		"es"			"{olive}Tu {orange}marcador de local {olive}está {lightgreen}lista"
+		"hu"			"{olive}A {orange}jelölőd {olive}készen {lightgreen}áll"
+		"pt"			"{olive}Seu {orange}marcador de local {olive}esta {lightgreen}pronto"
+		"pt_p"			"{olive}Seu {orange}marcador de local {olive}esta {lightgreen}pronto"
+		"ro" 			"{olive}Locul {orange}facut{olive} este {lightgreen}gata"
+		"chi"			"{olive}你的 {orange}标记{olive} 已{lightgreen}准备好"
+		"zho"			"{olive}你的 {orange}標記{olive }已{lightgreen}準備好"
+	}
+
+	"Spot Marked"
+	{
+		"#format"		"{1:N}"
+		"en"			"{orange}{1} {lightgreen}has marked a spot on the map"
+		"es"			"{orange}{1} {lightgreen}marcó una ubicación en el mapa"
+		"hu"			"{orange}{1} {lightgreen}megjelölt egy részt a pályán"
+		"pt"			"{orange}{1} {lightgreen}marcou um local no mapa"
+		"pt_p"			"{orange}{1} {lightgreen}marcou um local no mapa"
+		"ro"			"{orange}{1} {lightgreen}a marcat un loc pe harta"
+		"chi"			"{orange}{1} {lightgreen}已标记一个位置于地图上"
+		"zho"			"{orange}{1} {lightgreen}已標記一個位置於地圖上"
+	}
+}
