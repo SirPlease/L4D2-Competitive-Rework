@@ -137,6 +137,7 @@ ConVar g_hCvar_SpriteFadeDistance;
 ConVar g_hCvar_SpriteSpeed;
 ConVar g_hCvar_SpriteMinMax;
 ConVar g_hCvar_SyncRandomColor;
+ConVar g_hCvar_ColorPerClient;
 ConVar g_hCvar_Intro;
 ConVar g_hCvar_IntroMsg;
 ConVar g_hCvar_SkillReadyMsg;
@@ -157,6 +158,7 @@ bool g_bCvar_RandomSpriteColor;
 bool g_bCvar_SpriteSpeed;
 bool g_bCvar_SpriteMinMax;
 bool g_bCvar_SyncRandomColor;
+bool g_bCvar_ColorPerClient;
 bool g_bCvar_Intro;
 
 // ====================================================================================================
@@ -209,6 +211,9 @@ char g_sKillInput[50];
 // client - Plugin Variables
 // ====================================================================================================
 float gc_fLastTime[MAXPLAYERS+1];
+int gc_iClientColorR[MAXPLAYERS+1];
+int gc_iClientColorG[MAXPLAYERS+1];
+int gc_iClientColorB[MAXPLAYERS+1];
 
 // ====================================================================================================
 // entity - Plugin Variables
@@ -271,6 +276,7 @@ public void OnPluginStart()
     g_hCvar_SpriteSpeed        = CreateConVar("l4d_spot_marker_sprite_speed", "1.0", "Speed that the sprite will move at the Z axis.\n0 = OFF.", CVAR_FLAGS, true, 0.0);
     g_hCvar_SpriteMinMax       = CreateConVar("l4d_spot_marker_sprite_min_max", "4.0", "Minimum/Maximum distance between the original position that the sprite should reach before inverting the vertical direction.\n0 = OFF.", CVAR_FLAGS, true, 0.0);
     g_hCvar_SyncRandomColor    = CreateConVar("l4d_spot_marker_sync_random_color", "1", "Apply the same random color for both field and sprite.\n0 = OFF, 1 = ON.", CVAR_FLAGS, true, 0.0, true, 1.0);
+    g_hCvar_ColorPerClient     = CreateConVar("l4d_spot_marker_color_per_client", "1", "Preserve random color per player.\n0 = OFF, 1 = ON.", CVAR_FLAGS, true, 0.0, true, 1.0);
     g_hCvar_Intro              = CreateConVar("l4d_spot_marker_intro", "60.0", "Show intro message in chat this many seconds after a client joins.\n0 = OFF.", CVAR_FLAGS, true, 0.0);
     g_hCvar_IntroMsg           = CreateConVar("l4d_spot_marker_intro_msg", "1", "Display type for the \"Intro\" message.\n0 = OFF, 1 = CHAT, 2 = HINT.\nAdd numbers greater than 0 for multiple options.\nExample: \"3\", displays the message in CHAT and as a HINT.", CVAR_FLAGS, true, 0.0, true, 3.0);
     g_hCvar_SkillReadyMsg      = CreateConVar("l4d_spot_marker_skill_ready_msg", "1", "Display type for the \"Skill Ready\" message.\n0 = OFF, 1 = CHAT, 2 = HINT.\nAdd numbers greater than 0 for multiple options.\nExample: \"3\", displays the message in CHAT and as a HINT.", CVAR_FLAGS, true, 0.0, true, 3.0);
@@ -427,6 +433,7 @@ void GetCvars()
     g_fCvar_SpriteMinMax = g_hCvar_SpriteMinMax.FloatValue;
     g_bCvar_SpriteMinMax = (g_fCvar_SpriteMinMax > 0.0);
     g_bCvar_SyncRandomColor = g_hCvar_SyncRandomColor.BoolValue;
+    g_bCvar_ColorPerClient = g_hCvar_ColorPerClient.BoolValue;
     g_fCvar_Intro = g_hCvar_Intro.FloatValue;
     g_bCvar_Intro = (g_fCvar_Intro > 0.0);
     g_iCvar_IntroMsg = g_hCvar_IntroMsg.IntValue;
@@ -457,6 +464,10 @@ public void OnClientPutInServer(int client)
 
     if (g_bCvar_Intro)
         CreateTimer(g_fCvar_Intro, TimerIntro, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+
+    gc_iClientColorR[client] = GetRandomInt(0, 255);
+    gc_iClientColorG[client] = GetRandomInt(0, 255);
+    gc_iClientColorB[client] = GetRandomInt(0, 255);
 }
 
 /****************************************************************************************************/
@@ -580,6 +591,13 @@ void CreateSpotMarker(int client)
         randomColor[0] = GetRandomInt(0, 255);
         randomColor[1] = GetRandomInt(0, 255);
         randomColor[2] = GetRandomInt(0, 255);
+    }
+
+    if (g_bCvar_ColorPerClient)
+    {
+        randomColor[0] = gc_iClientColorR[client];
+        randomColor[1] = gc_iClientColorG[client];
+        randomColor[2] = gc_iClientColorB[client];
     }
 
     if (g_bCvar_Field)
@@ -999,6 +1017,7 @@ Action CmdPrintCvars(int client, int args)
     PrintToConsole(client, "l4d_spot_marker_sprite_speed : %.1f (%s)", g_fCvar_SpriteSpeed, g_bCvar_SpriteSpeed ? "true" : "false");
     PrintToConsole(client, "l4d_spot_marker_sprite_min_max : %.1f (%s)", g_fCvar_SpriteMinMax, g_bCvar_SpriteMinMax ? "true" : "false");
     PrintToConsole(client, "l4d_spot_marker_sync_random_color : %b (%s)", g_bCvar_SyncRandomColor, g_bCvar_SyncRandomColor ? "true" : "false");
+    PrintToConsole(client, "l4d_spot_marker_color_per_client : %b (%s)", g_bCvar_ColorPerClient, g_bCvar_ColorPerClient ? "true" : "false");
     PrintToConsole(client, "l4d_spot_marker_intro : %.1f (%s)", g_fCvar_Intro, g_bCvar_Intro ? "true" : "false");
     PrintToConsole(client, "l4d_spot_marker_intro_msg : %i (CHAT: %s | HINT: %s)", g_iCvar_IntroMsg, g_iCvar_IntroMsg & FLAG_MSG_DISPLAY_CHAT ? "ON" : "OFF", g_iCvar_IntroMsg & FLAG_MSG_DISPLAY_HINT ? "ON" : "OFF");
     PrintToConsole(client, "l4d_spot_marker_skill_ready_msg : %i (CHAT: %s | HINT: %s)", g_iCvar_SkillReadyMsg, g_iCvar_SkillReadyMsg & FLAG_MSG_DISPLAY_CHAT ? "ON" : "OFF", g_iCvar_SkillReadyMsg & FLAG_MSG_DISPLAY_HINT ? "ON" : "OFF");
