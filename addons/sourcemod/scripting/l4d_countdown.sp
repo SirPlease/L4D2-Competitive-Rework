@@ -64,7 +64,7 @@ public Action CountdownCmd(int client, int args)
     counts[index] = count;
     requesters[index] = client;
     
-    PrintToChat(client, "\x03Contagem iniciada!");
+    PrintStart(team);
     CreateTimer(interval / 1000.0, CountdownTimer, team, TIMER_REPEAT);
 
     return Plugin_Handled;
@@ -83,6 +83,17 @@ public Action CountdownTimer(Handle timer, int team)
     counts[index] = count - 1;
 
     return Plugin_Continue;
+}
+
+stock void PrintStart(int team)
+{
+    for (int client = 1; client <= MaxClients; client++)
+    {
+        if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != team)
+            continue;
+
+        PrintToChat(client, "\x03Contagem iniciada!!!");
+    }
 }
 
 stock void PrintCount(int team, int count)
