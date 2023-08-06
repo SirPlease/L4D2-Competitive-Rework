@@ -55,9 +55,9 @@ public Action CountdownCmd(int client, int args)
 
     if (!IsValidCount(count) || !IsValidInterval(interval))
     {
-        PrintToChat(client, "Usage: !countdown \x03<count> <interval>");
-        PrintToChat(client, "\x03<count>\x01: between %d - %d", MIN_COUNT, MAX_COUNT);
-        PrintToChat(client, "\x03<interval>\x01: between %f - %f", MIN_INTERVAL, MAX_INTERVAL);
+        PrintToChat(client, "\x03Usage:\x01 !countdown \x03<count> <interval>");
+        PrintToChat(client, "\x03<count>:\x01 between %d - %d", MIN_COUNT, MAX_COUNT);
+        PrintToChat(client, "\x03<interval>:\x01 between %f - %f", MIN_INTERVAL, MAX_INTERVAL);
         return Plugin_Handled;
     }
 
