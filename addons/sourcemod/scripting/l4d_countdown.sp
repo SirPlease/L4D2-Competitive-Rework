@@ -7,12 +7,11 @@
 #define MIN_COUNT 3
 #define MAX_COUNT 5
 
-#define DEFAULT_INTERVAL 600.0
+#define DEFAULT_INTERVAL 850.0
 #define MIN_INTERVAL 250.0
 #define MAX_INTERVAL 2000.0
 
 int counts[2];
-int requesters[2];
 
 public Plugin:myinfo = 
 {
@@ -49,22 +48,21 @@ public Action CountdownCmd(int client, int args)
     if (args >= 2)
     {
         char intervalArg[32];
-        GetCmdArg(1, intervalArg, sizeof(intervalArg));
+        GetCmdArg(2, intervalArg, sizeof(intervalArg));
         interval = StringToFloat(intervalArg)
     }
 
     if (!IsValidCount(count) || !IsValidInterval(interval))
     {
-        PrintToChat(client, "\x03Usage:\x01 !countdown \x03<count> <interval>");
-        PrintToChat(client, "\x03<count>:\x01 between %d - %d", MIN_COUNT, MAX_COUNT);
-        PrintToChat(client, "\x03<interval>:\x01 between %f - %f", MIN_INTERVAL, MAX_INTERVAL);
+        PrintToChat(client, "\x04Usage:\x01 !countdown \x04<count> <interval>");
+        PrintToChat(client, "\x04<count>:\x01 between %d - %d", MIN_COUNT, MAX_COUNT);
+        PrintToChat(client, "\x04<interval>:\x01 between %.0f - %.0f", MIN_INTERVAL, MAX_INTERVAL);
         return Plugin_Handled;
     }
 
     counts[index] = count;
-    requesters[index] = client;
     
-    PrintStart(team);
+    PrintStart(team, client);
     CreateTimer(interval / 1000.0, CountdownTimer, team, TIMER_REPEAT);
 
     return Plugin_Handled;
@@ -85,31 +83,31 @@ public Action CountdownTimer(Handle timer, int team)
     return Plugin_Continue;
 }
 
-stock void PrintStart(int team)
+stock void PrintStart(int team, int requester)
 {
+    char name[64];  
+    GetClientName(requester, name, sizeof(name));
+
     for (int client = 1; client <= MaxClients; client++)
     {
         if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != team)
             continue;
 
-        PrintToChat(client, "\x03Contagem iniciada!!!");
+        PrintToChat(client, "\x04%s\x01 started a countdown!", name);
     }
 }
 
 stock void PrintCount(int team, int count)
 {
-    char name[64];  
-    GetClientName(requesters[team - 2], name, sizeof(name));
-
     for (int client = 1; client <= MaxClients; client++)
     {
         if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != team)
             continue;
 
         if (count == 0)
-            PrintToChat(client, "\x04%s\x01: \x03Agora!!!", name);
+            PrintToChat(client, "\x04NOW!!!");
         else
-            PrintToChat(client, "\x04%s\x01: %d...", name, count);
+            PrintToChat(client, "\x01%d...", count);
     }
 }
 
