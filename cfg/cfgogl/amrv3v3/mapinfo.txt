@@ -1028,10 +1028,10 @@
 		"end_dist"			"276.152161"
 		"tank_ban_flow"
 		{
-			"Valley one way drop"
+			"Valley one way drop until house"
 			{
-				"min"		"35"
-				"max"		"50"
+				"min"		"34"
+				"max"		"63"
 			}
 			"Late spawns"
 			{
