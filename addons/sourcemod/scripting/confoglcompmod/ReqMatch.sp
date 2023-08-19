@@ -55,6 +55,8 @@ void RM_OnModuleStart()
 	RegAdminCmd("sm_forcematch", RM_Cmd_ForceMatch, ADMFLAG_CONFIG, "Forces the game to use match mode");
 	RegAdminCmd("sm_fm", RM_Cmd_ForceMatch, ADMFLAG_CONFIG, "Forces the game to use match mode");
 	RegAdminCmd("sm_resetmatch", RM_Cmd_ResetMatch, ADMFLAG_CONFIG, "Forces match mode to turn off REGRADLESS for always on or forced match");
+	RegAdminCmd("sm_forcechangematch", RM_CMD_ChangeMatch, ADMFLAG_CONFIG, "Forces the match to be changed");
+	RegAdminCmd("sm_fchmatch", RM_CMD_ChangeMatch, ADMFLAG_CONFIG, "Forces the match to be changed");
 
 	RM_hSbAllBotGame = FindConVar("sb_all_bot_game");
 
@@ -387,6 +389,87 @@ public Action RM_Cmd_ResetMatch(int client, int args)
 	}
 
 	RM_Match_Unload(true);
+
+	return Plugin_Handled;
+}
+
+public Action RM_CMD_ChangeMatch(int client, int args)
+{
+	if (args < 1)
+	{
+		if (client == 0)
+		{
+			PrintToServer("[Confogl] Please specify a config to load.");
+		}
+		else {
+			CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Please specify a {olive}config{default} to load.");
+		}
+		return Plugin_Handled;
+	}
+
+	char sBuffer[128];
+	GetCmdArg(1, sBuffer, sizeof(sBuffer));
+
+	if (!RM_UpdateCfgOn(sBuffer, false))
+	{
+		if (client == 0)
+		{
+			PrintToServer("[Confogl] Config %s not found!", sBuffer);
+		}
+		else {
+			CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Config '{olive}%s{default}' not found!", sBuffer);
+		}
+
+		return Plugin_Handled;
+	}
+
+	char sMap[PLATFORM_MAX_PATH], sDisplayName[PLATFORM_MAX_PATH];
+
+	if (args == 2)
+	{
+		GetCmdArg(2, sMap, sizeof(sMap));
+
+		if (FindMap(sMap, sDisplayName, sizeof(sDisplayName)) == FindMap_NotFound)
+		{
+			if (client == 0)
+			{
+				PrintToServer("[Confogl] Map %s not found!", sMap);
+			}
+			else {
+				CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Map '{olive}%s{default}' not found!", sMap);
+			}
+			return Plugin_Handled;
+		}
+
+		GetMapDisplayName(sDisplayName, sDisplayName, sizeof(sDisplayName));
+		RM_hChangeMap.SetString(sDisplayName);
+	}
+
+	// Unload
+	if (!RM_bIsMatchModeLoaded)
+	{
+		return Plugin_Handled;
+	}
+
+	if (RM_DEBUG || IsDebugEnabled())
+	{
+		LogMessage("[%s] Match mode forced to unload! [Change in this case!]", RM_MODULE_NAME);
+	}
+
+	RM_Match_Unload(true);
+
+	// Load
+	if (RM_bIsMatchModeLoaded)
+	{
+		return Plugin_Handled;
+	}
+
+	if (RM_DEBUG || IsDebugEnabled())
+	{
+		LogMessage("[%s] Match mode forced to load! [Change in this case!]", RM_MODULE_NAME);
+	}
+
+	RM_Match_Load();
 
 	return Plugin_Handled;
 }
