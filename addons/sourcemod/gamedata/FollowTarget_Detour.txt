@@ -25,8 +25,8 @@
 			}
 			"g_pEntityList_Opcode_Offset" // offset from "CMoveableCamera::FollowTarget" sig
 			{
-				"linux"			"17" // mov ecx, g_pEntityList
-				"windows"		"21" // mov edx, g_pEntityList
+				"linux"			"15" // mov ecx, g_pEntityList
+				"windows"		"20" // mov edx, g_pEntityList
 			}
 			"g_pEntityList_Relative_Offset" // offset from opcode offset to g_pEntityList address itself
 			{
