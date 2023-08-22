@@ -70,13 +70,13 @@
 				"signature"		"CBreakableProp::OnTakeDamage"
 				"linux"
 				{
-					"offset"	"227h"
+					"offset"	"2B7h"
 					"verify"	"\x0F\x85"
 					"patch"		"\x90\xE9"
 				}
 				"windows"
 				{
-					"offset"	"290h"
+					"offset"	"291h"
 					"verify"	"\x0F\x85"
 					"patch"		"\x90\xE9"
 				}

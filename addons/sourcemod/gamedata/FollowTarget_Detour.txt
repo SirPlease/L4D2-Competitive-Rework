@@ -25,8 +25,8 @@
 			}
 			"g_pEntityList_Opcode_Offset" // offset from "CMoveableCamera::FollowTarget" sig
 			{
-				"linux"			"17" // mov ecx, g_pEntityList
-				"windows"		"21" // mov edx, g_pEntityList
+				"linux"			"15" // mov ecx, g_pEntityList
+				"windows"		"20" // mov edx, g_pEntityList
 			}
 			"g_pEntityList_Relative_Offset" // offset from opcode offset to g_pEntityList address itself
 			{
@@ -55,9 +55,10 @@
 			{
 				"library"		"server"
 				"linux"			"@_ZN15CMoveableCamera12FollowTargetEv"
-				"windows"		"\x55\x8B\xEC\x83\xEC\x64\x56\x8B\xF1\x8B\x86\x50\x04\x00\x00\x57\x83\xF8\xFF"
-				/* 55 8B EC 83 EC 64 56 8B F1 8B 86 50 04 00 00 57 83 F8 FF */
+				"windows"		"\x55\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x74\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x25\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x85\x2A\x74"
+				/* 55 8B ? ? ? ? ? 8B ? 8B ? ? ? ? ? 83 ? ? 74 ? 8B ? ? ? ? ? 8B ? 25 ? ? ? ? ? ? ? ? ? ? 85 ? 74 */
 				/* Found by crash address ^^  */
+				/* Update (2.2.2.8) */
 			}
 		}
 	}
