@@ -8,7 +8,7 @@
 #include <sourcescramble>
 #include <collisionhook>
 
-#define PLUGIN_VERSION "1.20"
+#define PLUGIN_VERSION "1.21"
 
 public Plugin myinfo = 
 {
@@ -453,8 +453,20 @@ float GetDepthBeneathWater(const float vecStart[3])
 	if (TR_StartSolid(tr))
 	{
 		flFraction = TR_GetFractionLeftSolid(tr);
+		TR_GetEndPosition(vecEnd, tr);
 	}
 	delete tr;
+	
+	if (flFraction > 0.0)
+	{
+		// simple check for false positives
+		tr = TR_TraceRayFilterEx(vecEnd, vecStart, MASK_SOLID, RayType_EndPoint, TraceRayFilter_NoPlayers, -1);
+		if (TR_DidHit(tr))
+		{
+			flFraction = 0.0;
+		}
+		delete tr;
+	}
 	
 	return flFraction * MAX_WATER_DEPTH;
 }
