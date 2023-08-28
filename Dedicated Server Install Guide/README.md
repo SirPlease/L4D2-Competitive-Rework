@@ -58,8 +58,8 @@ apt-get install screen**
 **wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz  
 tar -xvzf steamcmd_linux.tar.gz  
 ./steamcmd.sh  
-login anonymous  
 force_install_dir ./Steam/steamapps/common/l4d2  
+login anonymous  
 app_update 222860 validate  
 quit**
 
