@@ -207,6 +207,14 @@ public void _IT_RoundStartEvent(Event hEvent, const char[] sEventName, bool bDon
     g_iSaferoomCount[START_SAFEROOM - 1] = 0;
     g_iSaferoomCount[END_SAFEROOM - 1] = 0;
 
+    // Since OnMapStart only happens once on scavenge mode, g_bIsRound1Over can only be once false because 
+    // evey round_end event will turn it to true. This casues items spawning at the same position during the whole scavenge match.
+    if (IsScavengeMode()) {
+        if (!InSecondHalfOfRound()) {
+            g_bIsRound1Over = false;
+        }
+    }
+
     // Mapstart happens after round_start most of the time, so we need to wait for g_bIsRound1Over.
     // Plus, we don't want to have conflicts with EntityRemover.
     CreateTimer(1.0, IT_RoundStartTimer, _, TIMER_FLAG_NO_MAPCHANGE);
@@ -616,4 +624,20 @@ static int GetItemIndexFromEntity(int entity)
 static bool IsModuleEnabled()
 {
     return (IsPluginEnabled() && g_hCvarEnabled.BoolValue);
+}
+
+stock bool IsScavengeMode()
+{
+	char   sCurGameMode[64];
+	ConVar hCurGameMode = FindConVar("mp_gamemode");
+	hCurGameMode.GetString(sCurGameMode, sizeof(sCurGameMode));
+	if (strcmp(sCurGameMode, "scavenge") == 0)
+		return true;
+	else
+		return false;
+}
+
+stock bool InSecondHalfOfRound()
+{
+	return view_as<bool>(GameRules_GetProp("m_bInSecondHalfOfRound"));
 }
