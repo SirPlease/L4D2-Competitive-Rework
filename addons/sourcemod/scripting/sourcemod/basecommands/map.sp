@@ -30,7 +30,7 @@
  *
  * Version: $Id$
  */
- 
+
 public int MenuHandler_ChangeMap(Menu menu, MenuAction action, int param1, int param2)
 {
 	if (action == MenuAction_Cancel)
@@ -43,9 +43,9 @@ public int MenuHandler_ChangeMap(Menu menu, MenuAction action, int param1, int p
 	else if (action == MenuAction_Select)
 	{
 		char map[PLATFORM_MAX_PATH];
-		
-		menu.GetItem(param2, map, sizeof(map));
 	
+		menu.GetItem(param2, map, sizeof(map));
+
 		ShowActivity2(param1, "[SM] ", "%t", "Changing map", map);
 
 		LogAction(param1, -1, "\"%L\" changed map to \"%s\"", param1, map);
@@ -67,11 +67,11 @@ public int MenuHandler_ChangeMap(Menu menu, MenuAction action, int param1, int p
 }
 
 public void AdminMenu_Map(TopMenu topmenu, 
-							  TopMenuAction action,
-							  TopMenuObject object_id,
-							  int param,
-							  char[] buffer,
-							  int maxlength)
+								TopMenuAction action,
+								TopMenuObject object_id,
+								int param,
+								char[] buffer,
+								int maxlength)
 {
 	if (action == TopMenuAction_DisplayOption)
 	{
@@ -128,7 +128,8 @@ public Action Timer_ChangeMap(Handle timer, DataPack dp)
 	dp.Reset();
 	dp.ReadString(map, sizeof(map));
 
-	ForceChangeLevel(map, "sm_map Command");
+	if (L4D2ChangeLevelActive) L4D2_ChangeLevel(map);
+	else ForceChangeLevel(map, "sm_map Command");
 
 	return Plugin_Stop;
 }
@@ -139,7 +140,7 @@ int g_map_serial = -1;
 int LoadMapList(Menu menu)
 {
 	Handle map_array;
-	
+
 	if ((map_array = ReadMapList(g_map_array,
 			g_map_serial,
 			"sm_map menu",
@@ -148,17 +149,17 @@ int LoadMapList(Menu menu)
 	{
 		g_map_array = map_array;
 	}
-	
+
 	if (g_map_array == null)
 	{
 		return 0;
 	}
-	
+
 	menu.RemoveAllItems();
-	
+
 	char map_name[PLATFORM_MAX_PATH];
 	int map_count = GetArraySize(g_map_array);
-	
+
 	for (int i = 0; i < map_count; i++)
 	{
 		char displayName[PLATFORM_MAX_PATH];
@@ -166,6 +167,6 @@ int LoadMapList(Menu menu)
 		GetMapDisplayName(map_name, displayName, sizeof(displayName));
 		menu.AddItem(map_name, displayName);
 	}
-	
+
 	return map_count;
 }

@@ -1,5 +1,3 @@
-// Not used now
-
 /*  
 *    Fixes for gamebreaking bugs and stupid gameplay aspects
 *    Copyright (C) 2019  LuxLuma		acceliacat@gmail.com

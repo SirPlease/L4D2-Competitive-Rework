@@ -32,7 +32,8 @@
 #include <sdkhooks>
 #include <left4dhooks>
 #include <colors>
-//#undef REQUIRE_PLUGIN
+#undef REQUIRE_PLUGIN
+#include <l4d2_changelevel>
 //#include <l4d2lib> //ItemTracking (commented out)
 
 #include "confoglcompmod/includes/constants.sp"
