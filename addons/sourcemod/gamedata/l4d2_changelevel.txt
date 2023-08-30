@@ -1,0 +1,52 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Addresses"
+		{
+			"CDirector"
+			{
+				"windows"
+				{
+					"signature" "DirectorMusicBanks_OnRoundStart"				
+					"read" "12"					
+				}
+				"linux"
+				{
+					"signature" "TheDirector"
+				}
+				"read" "0"
+			}
+		}
+		"Signatures"
+		{
+			"CDirector::OnChangeChapterVote"
+			{
+				"library"		"server"
+				"linux"			"@_ZN9CDirector19OnChangeChapterVoteEPKc"
+				"windows"		"\x55\x8B\xEC\x56\x8B\xF1\x8B\x0D\x2A\x2A\x2A\x2A\x8B\x01\x8B\x50\x04"
+								/* 55 8B EC 56 8B F1 8B 0D ? ? ? ? 57 85 C9 */
+			}
+			/* Used solely to get the offset for TheDirector*/
+			"DirectorMusicBanks_OnRoundStart"
+			{
+				"library"		"server"
+				/* https://github.com/Accelerator74/Left4Downtown2/blob/master/gamedata/left4downtown.l4d2.txt#L250-L260 credit to Accelerator for sig */
+				"windows"       "\x55\x8B\xEC\x83\xEC\x2A\x56\x57\x8B\xF9\x8B\x0D\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84"
+				/* 55 8B EC 83 EC ? 56 57 8B F9 8B 0D ? ? ? ? E8 ? ? ? ? 84 */
+			}
+			"TheDirector"
+			{
+				"library"	"server"
+				"linux"		"@TheDirector"
+			}
+			"CDirector::ClearTeamScores"
+			{
+				"library"		"server"
+				"linux"			"@_ZN9CDirector15ClearTeamScoresEb"
+				"windows"		"\x55\x8B\xEC\x56\x8B\x75\x08\x57\x8B\xF9\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9"
+								/* 55 8B EC 56 8B 75 08 57 8B F9 8B 0D ? ? ? ? 85 C9 */
+			}
+		}
+	}
+}
