@@ -10,7 +10,7 @@
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, version 3.0, as published by the
  * Free Software Foundation.
- *
+ * 
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
@@ -30,6 +30,7 @@
  *
  * Version: $Id$
  */
+
 public int MenuHandler_ChangeMap(Menu menu, MenuAction action, int param1, int param2)
 {
 	if (action == MenuAction_Cancel)
@@ -42,7 +43,7 @@ public int MenuHandler_ChangeMap(Menu menu, MenuAction action, int param1, int p
 	else if (action == MenuAction_Select)
 	{
 		char map[PLATFORM_MAX_PATH];
-
+	
 		menu.GetItem(param2, map, sizeof(map));
 
 		ShowActivity2(param1, "[SM] ", "%t", "Changing map", map);
@@ -65,12 +66,12 @@ public int MenuHandler_ChangeMap(Menu menu, MenuAction action, int param1, int p
 	return 0;
 }
 
-public void AdminMenu_Map(TopMenu		 topmenu,
-				   TopMenuAction action,
-				   TopMenuObject object_id,
-				   int			 param,
-				   char[] buffer,
-				   int maxlength)
+public void AdminMenu_Map(TopMenu topmenu, 
+								TopMenuAction action,
+								TopMenuObject object_id,
+								int param,
+								char[] buffer,
+								int maxlength)
 {
 	if (action == TopMenuAction_DisplayOption)
 	{
@@ -91,7 +92,7 @@ public Action Command_Map(int client, int args)
 			g_MapList.SetTitle("%T", "Choose Map", client);
 			g_MapList.Display(client, MENU_TIME_FOREVER);
 		}
-		else
+		else 
 		{
 			ReplyToCommand(client, "[SM] Usage: sm_map <map>");
 		}
@@ -133,17 +134,17 @@ public Action Timer_ChangeMap(Handle timer, DataPack dp)
 	return Plugin_Stop;
 }
 
-Handle g_map_array	= null;
-int	   g_map_serial = -1;
+Handle g_map_array = null;
+int g_map_serial = -1;
 
-int	   LoadMapList(Menu menu)
+int LoadMapList(Menu menu)
 {
 	Handle map_array;
 
 	if ((map_array = ReadMapList(g_map_array,
-								 g_map_serial,
-								 "sm_map menu",
-								 MAPLIST_FLAG_CLEARARRAY | MAPLIST_FLAG_MAPSFOLDER))
+			g_map_serial,
+			"sm_map menu",
+			MAPLIST_FLAG_CLEARARRAY|MAPLIST_FLAG_MAPSFOLDER))
 		!= null)
 	{
 		g_map_array = map_array;
@@ -157,7 +158,7 @@ int	   LoadMapList(Menu menu)
 	menu.RemoveAllItems();
 
 	char map_name[PLATFORM_MAX_PATH];
-	int	 map_count = GetArraySize(g_map_array);
+	int map_count = GetArraySize(g_map_array);
 
 	for (int i = 0; i < map_count; i++)
 	{
