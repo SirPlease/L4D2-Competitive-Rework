@@ -21,6 +21,8 @@ ConVar hTankPrint, hTankDebug;
 bool casterSystemAvailable;
 Handle hForwardOnTryOfferingTankBot;
 Handle hForwardOnTankSelection;
+int dcedTankFrustration = -1;
+float fTankGrace;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -39,7 +41,7 @@ public Plugin myinfo =
     name = "L4D2 Tank Control",
     author = "arti",
     description = "Distributes the role of the tank evenly throughout the team",
-    version = "0.0.19",
+    version = "0.0.20",
     url = "https://github.com/alexberriman/l4d2-plugins/tree/master/l4d_tank_control"
 }
 
@@ -108,20 +110,20 @@ public void OnLibraryRemoved(const char[] name)
     if (StrEqual(name, "caster_system")) casterSystemAvailable = false;
 }
 
-/*public void OnClientDisconnect(int client) 
+public void L4D2_OnTankPassControl(int iOldTank, int iNewTank, int iPassCount)
 {
-    char tmpSteamId[64];
-    
-    if (client)
+    /*
+    * As the Player switches to AI on disconnect/team switch, we have to make sure we're only checking this if the old Tank was AI.
+    * Then apply the previous' Tank's Frustration and Grace Period (if it still had Grace)
+    * We'll also be keeping the same Tank pass, which resolves Tanks that dc on 1st pass resulting into the Tank instantly going to 2nd pass.
+    */
+    if (dcedTankFrustration != -1 && IsFakeClient(iOldTank))
     {
-        GetClientAuthId(client, AuthId_Steam2, tmpSteamId, sizeof(tmpSteamId));
-        if (strcmp(queuedTankSteamId, tmpSteamId) == 0)
-        {
-            chooseTank(0);
-            outputTankToAll(0);
-        }
+        SetTankFrustration(iNewTank, dcedTankFrustration);
+        CTimer_Start(GetFrustrationTimer(iNewTank), fTankGrace);
+        L4D2Direct_SetTankPassedCount(L4D2Direct_GetTankPassedCount() - 1);
     }
-}*/
+}
 
 /**
  * When a new game starts, reset the tank pool.
@@ -130,6 +132,7 @@ public void OnLibraryRemoved(const char[] name)
 public void RoundStart_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
     CreateTimer(10.0, newGame);
+    dcedTankFrustration = -1;
 }
 
 public Action newGame(Handle timer)
@@ -178,6 +181,24 @@ public void PlayerTeam_Event(Event hEvent, const char[] name, bool dontBroadcast
 
     if (client && oldTeam == view_as<L4D2Team>(L4D2Team_Infected))
     {
+        /*
+        * Triggers for disconnects as well as forced-swaps and whatnot.
+        * Allows us to always reliably detect when the current Tank player loses control due to unnatural reasons.
+        */
+        if (!IsFakeClient(client))
+        {
+            int zombieClass = GetEntProp(client, Prop_Send, "m_zombieClass");
+            if (view_as<ZClass>(zombieClass) == ZClass_Tank)
+            {
+                dcedTankFrustration = GetTankFrustration(client);
+                fTankGrace = CTimer_GetRemainingTime(GetFrustrationTimer(client));
+
+                // Slight fix due to the timer seemingly always getting stuck between 0.5s~1.2s even after Grace period has passed.
+                // CTimer_IsElapsed still returns false as well.
+                if (fTankGrace < 0.0 || dcedTankFrustration < 100) fTankGrace = 0.0;
+            }
+        }
+
         GetClientAuthId(client, AuthId_Steam2, tmpSteamId, sizeof(tmpSteamId));
         if (strcmp(queuedTankSteamId, tmpSteamId) == 0)
         {
@@ -218,6 +239,7 @@ public void TankKilled_Event(Event hEvent, const char[] eName, bool dontBroadcas
         PrintToConsoleAll("[TC] Tank died(2), choosing a new tank");
     }
     chooseTank(0);
+    dcedTankFrustration = -1;
 }
 
 /**
@@ -389,7 +411,7 @@ public Action L4D_OnTryOfferingTankBot(int tank_index, bool &enterStatis)
         
         SetTankFrustration(tank_index, 100);
         L4D2Direct_SetTankPassedCount(L4D2Direct_GetTankPassedCount() + 1);
-        
+
         return Plugin_Handled;
     }
 
@@ -572,3 +594,17 @@ void SetTankFrustration(int iTankClient, int iFrustration) {
     
     SetEntProp(iTankClient, Prop_Send, "m_frustration", 100-iFrustration);
 }
+
+int GetTankFrustration(int iTankClient) {
+    return 100 - GetEntProp(iTankClient, Prop_Send, "m_frustration");
+}
+
+CountdownTimer GetFrustrationTimer(int client)
+{
+    static int s_iOffs_m_frustrationTimer = -1;
+    if (s_iOffs_m_frustrationTimer == -1)
+        s_iOffs_m_frustrationTimer = FindSendPropInfo("CTerrorPlayer", "m_frustration") + 4;
+    
+    return view_as<CountdownTimer>(GetEntityAddress(client) + view_as<Address>(s_iOffs_m_frustrationTimer));
+}
+
