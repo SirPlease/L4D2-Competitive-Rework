@@ -1,0 +1,107 @@
+"Phrases"
+{
+	"welcome_msg"
+	{
+		"pt"		"Este servidor é protegido pelo Little Anti-Cheat {1}"
+	}
+
+	"kick_query_failure"
+	{
+		"pt"		"Erro: o seu cliente falhou ao responder o pedido. Reinicie o seu jogo caso este problema persista"
+	}
+
+	"kick_interp_exploit"
+	{
+		"pt"		"Brecha detectada: a sua interpolação está muito alta ({1}ms / máx. {2}ms). Defina a variável do console \"cl_interp\" de volta para {3} ou um valor menor"
+	}
+
+	"tban_ping_high"
+	{
+		"pt"		"A sua latência está muito alta ({1} / máx. {2})"
+	}
+
+	"kick_ban_generic"
+	{
+		"pt"		"Você foi banido(a) deste servidor"
+	}
+
+	"ban_angle"
+	{
+		"pt"		"Trapaças relacionadas a ângulos detectadas"
+	}
+
+	"ban_chat_clear"
+	{
+		"pt"		"Limpador da janela de conversa detectado"
+	}
+
+	"ban_convar"
+	{
+		"pt"		"Variável do console inválida detectada"
+	}
+	
+	"ban_nolerp"
+	{
+		"pt"		"Anulação de interpolação detectada"
+	}
+
+	"ban_bhop"
+	{
+		"pt"		"Bunny hop detectado"
+	}
+
+	"ban_aimbot"
+	{
+		"pt"		"Auxílio de mira (aimbot) detectado"
+	}
+
+	"ban_aimlock"
+	{
+		"pt"		"Auxílio de mira (aimlock) detectado"
+	}
+	
+	"ban_anti_duck_delay"
+	{
+		"pt" 		"Remoção do atraso para agachar detectado"
+	}
+
+	"ban_noisemaker"
+	{
+		"pt" 		"Brinquedo Barulhento infinito detectado"
+	}
+
+	"ban_macro"
+	{
+		"pt"		"Macro detectado"
+	}
+
+	"kick_macro"
+	{
+		"pt"		"O macro do tipo \"{1}\" não é permitido neste servidor"
+	}
+
+	"chat_invalid_characters"
+	{
+		"pt" 		"A sua mensagem na janela de conversa foi bloqueada por conter caracteres inválidos."
+	}
+
+	"chat_wide_char_spam"
+	{
+		"pt"		"A sua mensagem na janela de conversa foi bloqueada por conter caracteres de spam espaçosos."
+	}
+
+	"kick_bad_name"
+	{
+		"pt"		"O seu nome contém caracteres inválidos. Altere-o"
+	}
+
+	"ban_name_newline"
+	{
+		"pt"		"Nome com quebras de linha detectado"
+	}
+
+	"admin_chat_warning_generic"
+	{
+		"pt"		"{1} possivelmente está usando \"{2}\". (Nº de detecções: {3}.)"
+	}
+}

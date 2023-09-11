@@ -1,0 +1,70 @@
+"Phrases"
+{
+	"welcome_msg"
+	{
+		"#format"	"{1:s}"
+		"nl"		"Deze server is beveiligd met Little Anti-Cheat {1}"
+	}
+
+	"kick_query_failure"
+	{
+		"nl"		"Error: Fout bij opvragen van antwoord, start je game opnieuw als dit probleem zich blijft voordoen"
+	}
+
+	"kick_interp_exploit"
+	{
+		"#format"	"{1:.0f},{2:d},{3:.3f}"
+		"nl"		"Exploit gedetecteerd: Je interp is te hoog ({1}ms / {2}ms max). Zet cl_interp terug naar {3} of lager"
+	}
+
+	"tban_ping_high"
+	{
+		"#format"	"{1:.0f},{2:d}"
+		"nl"		"Je ping is te hoog ({1} / {2} max)"
+	}
+
+	"kick_ban_generic"
+	{
+		"nl"		"Je bent verbannen van deze server"
+	}
+
+	"ban_angle"
+	{
+		"nl"		"Ongeldige kijkrichting gedetecteerd"
+	}
+
+	"ban_chat_clear"
+	{
+		"nl"		"Verwijdering van chat gedetecteerd"
+	}
+
+	"ban_convar"
+	{
+		"nl"		"Ongeldige ConVar gedetecteerd"
+	}
+
+	"ban_bhop"
+	{
+		"nl"		"Bhop gedetecteerd"
+	}
+
+	"ban_aimbot"
+	{
+		"nl"		"Aimbot gedetecteerd"
+	}
+
+	"ban_aimlock"
+	{
+		"nl"		"Aimlock gedetecteerd"
+	}
+
+	"ban_anti_duck_delay"
+	{
+		"nl"		"Snelle squat gedetecteerd"
+	}
+
+	"ban_noisemaker"
+	{
+		"nl"		"Oneindige noisemaker gedetecteerd"
+	}
+}

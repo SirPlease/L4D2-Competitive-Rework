@@ -1,0 +1,112 @@
+"Phrases"
+{
+	"welcome_msg"
+	{
+		"#format"	"{1:s}"
+		"en"		"This server is protected by Little Anti-Cheat {1}"
+	}
+
+	"kick_query_failure"
+	{
+		"en"		"Error: Query response failure, please restart your game if this issue persists"
+	}
+
+	"kick_interp_exploit"
+	{
+		"#format"	"{1:.0f},{2:d},{3:.3f}"
+		"en"		"Exploit detected: Your interp is too high ({1}ms / {2}ms max). Please set your cl_interp back to {3} or lower"
+	}
+
+	"tban_ping_high"
+	{
+		"#format"	"{1:.0f},{2:d}"
+		"en"		"Your ping is too high ({1} / {2} max)"
+	}
+
+	"kick_ban_generic"
+	{
+		"en"		"You have been banned from this server"
+	}
+
+	"ban_angle"
+	{
+		"en"		"Angle-Cheats Detected"
+	}
+
+	"ban_chat_clear"
+	{
+		"en"		"Chat-Clear Detected"
+	}
+
+	"ban_convar"
+	{
+		"en"		"Invalid ConVar Detected"
+	}
+
+	"ban_nolerp"
+	{
+		"en"		"NoLerp Detected"
+	}
+
+	"ban_bhop"
+	{
+		"en"		"Bhop Detected"
+	}
+
+	"ban_aimbot"
+	{
+		"en"		"Aimbot Detected"
+	}
+
+	"ban_aimlock"
+	{
+		"en"		"Aimlock Detected"
+	}
+
+	"ban_anti_duck_delay"
+	{
+		"en" 		"Anti-Duck-Delay Detected"
+	}
+
+	"ban_noisemaker"
+	{
+		"en" 		"Infinite Noise Maker Detected"
+	}
+
+	"ban_macro"
+	{
+		"en"		"Macro Detected"
+	}
+
+	"kick_macro"
+	{
+		"#format"	"{1:s}"
+		"en"		"{1} Macro is not allowed on this server"
+	}
+
+	"chat_invalid_characters"
+	{
+		"en" 		"Your chat message has been blocked (Reason: Invalid Characters)."
+	}
+
+	"chat_wide_char_spam"
+	{
+		"en"		"Your chat message has been blocked (Reason: Wide-Char Spam)."
+	}
+
+	"kick_bad_name"
+	{
+		"en"		"Your name contains invalid characters, please change your name"
+	}
+
+	"ban_name_newline"
+	{
+		"en"		"Name Newlines Detected"
+	}
+
+	"admin_chat_warning_generic"
+	{
+		"#format"	"{1:s},{2:s},{3:d}"
+		"en"		"{1} is suspected of using '{2}' (Detections: {3})"
+	}
+}
