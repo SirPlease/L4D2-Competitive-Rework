@@ -184,7 +184,7 @@ void CreateInfectedModelGlow(int client)
 	// Set outline glow color
 	SetEntProp(entity, Prop_Send, "m_CollisionGroup", 0);
 	SetEntProp(entity, Prop_Send, "m_nSolidType", 0);
-	SetEntProp(entity, Prop_Send, "m_nGlowRange", 4500);
+	// SetEntProp(entity, Prop_Send, "m_nGlowRange", 4500);
 	SetEntProp(entity, Prop_Send, "m_iGlowType", 3);
 	if(IsPlayerGhost(client))
 		SetEntProp(entity, Prop_Send, "m_glowColorOverride", g_iCvarColorGhost);
@@ -207,6 +207,22 @@ void CreateInfectedModelGlow(int client)
 		
 	//model 只能給誰看?
 	SDKHook(entity, SDKHook_SetTransmit, Hook_SetTransmit);
+	
+	// Fixes glow issues inside walls (by Mart)
+	SetEdictFlags(client, GetEdictFlags(client) | FL_EDICT_ALWAYS); 
+	RequestFrame(Frame_ResetEdictFlag, GetClientOfUserId(client)); 
+}
+
+void Frame_ResetEdictFlag(int userid)
+{
+	int client = GetClientOfUserId(userid);
+	
+	if (!client)
+		return;
+	
+	int clientFlags = GetEdictFlags(client);
+	clientFlags &= ~FL_EDICT_ALWAYS;
+	SetEdictFlags(client, clientFlags);
 }
 
 void RemoveInfectedModelGlow(int client)
