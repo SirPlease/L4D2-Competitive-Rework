@@ -38,7 +38,7 @@ public Plugin myinfo =
 	author = "Harry Potter",
 	description = "A spectator who watching the survivor at first person view would see the infected model glows though the wall",
 	version = "2.6",
-	url = "https:// steamcommunity.com/profiles/76561198026784913"
+	url = "https://steamcommunity.com/profiles/76561198026784913"
 }
 
 public void OnPluginStart()
@@ -61,7 +61,6 @@ public void OnPluginStart()
 	HookEvent("finale_vehicle_leaving", Event_RoundEnd, EventHookMode_PostNoCopy); // 救援載具離開之時  (沒有觸發round_end)
 	HookEvent("tank_frustrated", OnTankFrustrated, EventHookMode_Post);
 	HookEvent("player_bot_replace", Event_BotReplacePlayer);
-	// HookEvent("player_bot_replace", Event_BotReplacePlayer);
 
 	if (g_bLateLoad)
 	{
@@ -160,7 +159,7 @@ void CreateInfectedModelGlow(int client)
 	if (IsPlayerGhost(client) && GetZombieClass(client) == ZC_TANK)
 		CreateTimer(0.25, Timer_CheckGhostTank, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 
-	// // // /設定發光物件// // // // // 
+	///////設定發光物件////////// 
 	// Spawn dynamic prop entity
 	int entity = CreateEntityByName("prop_dynamic_ornament");
 
@@ -197,7 +196,7 @@ void CreateInfectedModelGlow(int client)
 	AcceptEntityInput(entity, "SetParent", client);
 	SetVariantString("!activator");
 	AcceptEntityInput(entity, "SetAttached", client);
-	// // // /發光物件完成// // // // // 
+	///////發光物件完成////////// 
 
 	g_iModelIndex[client] = EntIndexToEntRef(entity);
 
@@ -243,7 +242,8 @@ public Action Hook_SetTransmit(int entity, int client)
 
 	if (g_fLastTimeBotReplacePlayer[client] != 0.0)
 	{
-		if (GetGameTime() - g_fLastTimeBotReplacePlayer[client] < 0.3) // Fix players being able to see glows while toggling to IDLE state (by Mart)
+		// Fix players being able to see glows while toggling to IDLE state (by Mart)
+		if (GetGameTime() - g_fLastTimeBotReplacePlayer[client] < 0.3)
 			return Plugin_Handled;
 		else
 			g_fLastTimeBotReplacePlayer[client] = 0.0;
