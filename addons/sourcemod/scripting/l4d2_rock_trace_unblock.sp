@@ -7,7 +7,7 @@
 #include <dhooks>
 #include <sourcescramble>
 
-#define PLUGIN_VERSION "1.9"
+#define PLUGIN_VERSION "1.10"
 
 public Plugin myinfo = 
 {
@@ -76,7 +76,7 @@ public void OnPluginStart()
 					"5",
 					"Prevent SI from blocking the rock radius check.\n"\
 				...	"1 = Unblock from all standing SI, 2 = Unblock from pounced, 4 = Unblock from jockeyed, 8 = Unblock from pummelled, 16 = Unblock from thrower (Tank), 31 = All, 0 = Disable.",
-					FCVAR_NOTIFY|FCVAR_SPONLY,
+					FCVAR_CHEAT,
 					true, 0.0, true, 31.0);
 	
 	g_cvJockeyFix = CreateConVar(
@@ -84,7 +84,7 @@ public void OnPluginStart()
 					"1",
 					"Force jockey to dismount the survivor who eats rock.\n"\
 				...	"1 = Enable, 0 = Disable.",
-					FCVAR_NOTIFY|FCVAR_SPONLY,
+					FCVAR_CHEAT,
 					true, 0.0, true, 1.0);
 	
 	g_cvHurtCapper = CreateConVar(
@@ -92,7 +92,7 @@ public void OnPluginStart()
 					"5",
 					"Hurt cappers before landing their victims.\n"\
 				...	"1 = Hurt hunter, 2 = Hurt jockey, 4 = Hurt charger, 7 = All, 0 = Disable.",
-					FCVAR_NOTIFY|FCVAR_SPONLY,
+					FCVAR_CHEAT,
 					true, 0.0, true, 7.0);
 	
 	z_tank_rock_radius = FindConVar("z_tank_rock_radius");
@@ -160,6 +160,12 @@ Action SDK_OnThink(int entity)
 	float flMinDistSqr = g_fRockRadiusSquared;
 	int iClosestSurvivor = -1;
 	
+	// Serves as a List for ignored entities in traces
+	DataPack dp = new DataPack();
+	dp.WriteCell(entity); // always self-ignored
+	dp.WriteCell(GetEntPropEnt(entity, Prop_Send, "m_hThrower"));
+	DataPackPos pos = dp.Position;
+	
 	for (int i = 1; i <= MaxClients; ++i)
 	{
 		if (!IsClientInGame(i) || GetClientTeam(i) != 2 || !IsPlayerAlive(i))
@@ -168,46 +174,52 @@ Action SDK_OnThink(int entity)
 		if (L4D_IsPlayerIncapacitated(i) || L4D_IsPlayerHangingFromLedge(i))
 			continue;
 		
-		GetAbsOrigin(i, vPos, true);
+		L4D_GetEntityWorldSpaceCenter(i, vPos);
 		ComputeClosestPoint(vLastOrigin, vOrigin, vPos, vOrigin);
 		
 		float flDistSqr = GetVectorDistance(vOrigin, vPos, true);
 		if (flDistSqr < flMinDistSqr)
 		{
-			flMinDistSqr = flDistSqr;
-			iClosestSurvivor = i;
-			vClosestPos[0] = vOrigin[0];
-			vClosestPos[1] = vOrigin[1];
-			vClosestPos[2] = vOrigin[2];
+			// See if there's any obstracle in the way
+			dp.Position = pos;
+			dp.WriteCell(i);
+			
+			Handle tr = TR_TraceRayFilterEx(vOrigin, vPos, MASK_SOLID, RayType_EndPoint, ProximityThink_TraceFilter, dp);
+			
+			if (!TR_DidHit(tr) && TR_GetFraction(tr) >= 1.0)
+			{
+				flMinDistSqr = flDistSqr;
+				iClosestSurvivor = i;
+				vClosestPos = vOrigin;
+			}
+			
+			delete tr;
+			
+			// Keep in mind that rock finds multiple targets basically only around the moment the Tank releases it.
+			// Exit the loop if we are really gonna search for nothing.
+			if (iClosestSurvivor != -1)
+			{
+				IntervalTimer it = CTankRock__GetReleaseTimer(entity);
+				if (ITimer_GetElapsedTime(it) >= 0.1)
+				{
+					break;
+				}
+			}
 		}
 	}
 	
+	delete dp;
+	
 	if (iClosestSurvivor != -1)
 	{
-		// Serves as a List for ignored entities in traces
-		DataPack dp = new DataPack();
-		dp.WriteCell(entity); // always self-ignored
-		dp.WriteCell(iClosestSurvivor);
-		dp.WriteCell(GetEntPropEnt(entity, Prop_Send, "m_hThrower"));
+		// Maybe "TeleportEntity" does the same, let it be.
+		SetAbsOrigin(entity, vClosestPos);
 		
-		// See if there's any obstracle in the way
-		GetAbsOrigin(iClosestSurvivor, vPos, true);
-		Handle tr = TR_TraceRayFilterEx(vClosestPos, vPos, MASK_SOLID, RayType_EndPoint, ProximityThink_TraceFilter, dp);
+		// Hurt attackers first, based on flag setting
+		HurtCappers(entity, iClosestSurvivor);
 		
-		if (!TR_DidHit(tr) && TR_GetFraction(tr) >= 1.0)
-		{
-			// Maybe "TeleportEntity" does the same, let it be.
-			SetAbsOrigin(entity, vOrigin);
-			
-			// Hurt attackers first, based on flag setting
-			HurtCappers(entity, iClosestSurvivor);
-			
-			// Confirm landing
-			BounceTouch(entity, iClosestSurvivor);
-		}
-		
-		delete tr;
-		delete dp;
+		// Confirm landing
+		BounceTouch(entity, iClosestSurvivor);
 	}
 	
 	return Plugin_Continue;
@@ -272,15 +284,18 @@ bool ProximityThink_TraceFilter(int entity, int contentsMask, DataPack dp)
 	
 	/**
 	 * dp[0] = rock
-	 * dp[1] = survivor
-	 * dp[2] = tank
+	 * dp[1] = tank
+	 * dp[2] = survivor
 	 */
 	
-	if (entity == dp.ReadCell() || entity == dp.ReadCell())
+	if (entity == dp.ReadCell())
 		return false;
 	
 	if (entity == dp.ReadCell())
 		return !(g_iFlags & 16);
+	
+	if (entity == dp.ReadCell())
+		return false;
 	
 	if (entity > 0 && entity <= MaxClients && IsClientInGame(entity))
 	{
@@ -401,4 +416,13 @@ void Dismount(int client)
 	SetCommandFlags("dismount", flags & ~FCVAR_CHEAT);
 	FakeClientCommand(client, "dismount");
 	SetCommandFlags("dismount", flags);
+}
+
+IntervalTimer CTankRock__GetReleaseTimer(int rock)
+{
+	static int s_iOffs_m_releaseTimer = -1;
+	if (s_iOffs_m_releaseTimer == -1)
+		s_iOffs_m_releaseTimer = FindSendPropInfo("CBaseCSGrenadeProjectile", "m_vInitialVelocity") + 36;
+	
+	return view_as<IntervalTimer>(GetEntityAddress(rock) + view_as<Address>(s_iOffs_m_releaseTimer));
 }
