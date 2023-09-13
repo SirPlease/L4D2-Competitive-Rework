@@ -1,0 +1,14 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			"CWeaponSpawn::GiveItem"
+			{
+				"linux"		"247"
+				"windows"	"244"
+			}
+		}
+	}
+}
