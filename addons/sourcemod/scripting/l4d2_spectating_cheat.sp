@@ -6,7 +6,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#define ENTITY_SAFE_LIMIT 2000 // don't create model glow when entity index is above this
+#define ENTITY_SAFE_LIMIT 2000 // Don't create model glow when entity index is above this
 
 bool g_bLateLoad;
 int ZC_TANK;
@@ -69,7 +69,7 @@ public void OnPluginStart()
 	}
 }
 
-public void OnPluginEnd() // unload插件的時候
+public void OnPluginEnd()
 {
 	RemoveAllModelGlow();
 }
@@ -159,7 +159,7 @@ void CreateInfectedModelGlow(int client)
 	if (IsPlayerGhost(client) && GetZombieClass(client) == ZC_TANK)
 		CreateTimer(0.25, Timer_CheckGhostTank, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 
-	///////設定發光物件////////// 
+	////////// 設定發光物件 //////////
 	// Spawn dynamic prop entity
 	int entity = CreateEntityByName("prop_dynamic_ornament");
 
@@ -172,17 +172,14 @@ void CreateInfectedModelGlow(int client)
 	// Get Client Model
 	char sModelName[64];
 	GetEntPropString(client, Prop_Data, "m_ModelName", sModelName, sizeof(sModelName));
-	// PrintToChatAll("%N: %s",client,sModelName);
 
 	// Set new fake model
-	// PrecacheModel(sModelName);
 	SetEntityModel(entity, sModelName);
 	DispatchSpawn(entity);
 
 	// Set outline glow color
 	SetEntProp(entity, Prop_Send, "m_CollisionGroup", 0);
 	SetEntProp(entity, Prop_Send, "m_nSolidType", 0);
-	// SetEntProp(entity, Prop_Send, "m_nGlowRange", 4500);
 	SetEntProp(entity, Prop_Send, "m_iGlowType", 3);
 	SetEntProp(entity, Prop_Send, "m_glowColorOverride", IsPlayerGhost(client) ? g_iCvarColorGhost : g_iCvarColorAlive);
 	AcceptEntityInput(entity, "StartGlowing");
@@ -196,31 +193,15 @@ void CreateInfectedModelGlow(int client)
 	AcceptEntityInput(entity, "SetParent", client);
 	SetVariantString("!activator");
 	AcceptEntityInput(entity, "SetAttached", client);
-	///////發光物件完成////////// 
+	////////// 發光物件完成 //////////
 
 	g_iModelIndex[client] = EntIndexToEntRef(entity);
 
-	// model 只能給誰看?
+	// Model 只能給誰看?
 	SDKHook(entity, SDKHook_SetTransmit, Hook_SetTransmit);
 
 	// Fix PVS glow issues while inside walls (by Mart)
-	int clientFlags = GetEdictFlags(client);
-	if (!(clientFlags & FL_EDICT_ALWAYS))
-	{
-		SetEdictFlags(client, GetEdictFlags(client) | FL_EDICT_ALWAYS);
-		RequestFrame(Frame_ResetEdictFlag, GetClientUserId(client));
-	}
-}
-
-void Frame_ResetEdictFlag(int userid)
-{
-	int client = GetClientOfUserId(userid);
-
-	if (!client) return;
-
-	int clientFlags = GetEdictFlags(client);
-	clientFlags &= ~FL_EDICT_ALWAYS;
-	SetEdictFlags(client, clientFlags);
+	SetEdictFlags(client, GetEdictFlags(client) | FL_EDICT_ALWAYS);
 }
 
 void RemoveInfectedModelGlow(int client)
@@ -229,7 +210,7 @@ void RemoveInfectedModelGlow(int client)
 	g_iModelIndex[client] = 0;
 
 	if (IsValidEntRef(entity))
-		AcceptEntityInput(entity, "kill");
+		AcceptEntityInput(entity, "Kill");
 }
 
 public Action Hook_SetTransmit(int entity, int client)
@@ -378,7 +359,7 @@ int GetZombieClass(int client)
 	return GetEntProp(client, Prop_Send, "m_zombieClass");
 }
 
-// from l4d_zcs.smx by Harry, player can change Zombie Class during ghost state
+// From l4d_zcs.smx by Harry, player can change Zombie Class during ghost state
 public void L4D2_OnClientChangeZombieClass(int client, int new_zombieclass)
 {
 	RequestFrame(OnNextFrame, GetClientUserId(client));
