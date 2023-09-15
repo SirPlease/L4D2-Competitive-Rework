@@ -251,7 +251,7 @@ public void L4D2_OnStagger_Post(int client, int source)
 		if (g_fFakeChargeGodframeEnd[client] > fNow)
 			fNow = g_fFakeChargeGodframeEnd[client];
 
-		g_fFakeChargeGodframeEnd[client] = fNow += g_hChargerStagger.FloatValue;
+		g_fFakeChargeGodframeEnd[client] = fNow + g_hChargerStagger.FloatValue;
 	}
 }
 
@@ -327,8 +327,10 @@ public Action OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &
 
 	float fTimeLeft = g_fFakeGodframeEnd[iVictim] - GetGameTime();
 
-	if (StrEqual(sClassname, "infected") && (g_iLastSI[iVictim] & g_hCommonFlags.IntValue)) { //commons
-		fTimeLeft += g_hCommon.FloatValue;
+	// Common
+	if (StrEqual(sClassname, "infected")) {
+		if (g_iLastSI[iVictim] & g_hCommonFlags.IntValue)
+			fTimeLeft += g_hCommon.FloatValue;
 
 		if (1 & g_hChargerFlags.IntValue && fTimeLeft <= 0.0) {
 			float charginTime = g_fFakeChargeGodframeEnd[iVictim] - GetGameTime();
@@ -336,8 +338,10 @@ public Action OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &
 		}
 	}
 	
-	if (StrEqual(sClassname, "insect_swarm") && (g_iLastSI[iVictim] & g_hSpitFlags.IntValue)) { //spit
-		fTimeLeft += g_hSpit.FloatValue;
+	// Spit
+	if (StrEqual(sClassname, "insect_swarm")) {
+		if (g_iLastSI[iVictim] & g_hSpitFlags.IntValue)
+			fTimeLeft += g_hSpit.FloatValue;
 
 		if (2 & g_hChargerFlags.IntValue && fTimeLeft <= 0.0) {
 			float charginTime = g_fFakeChargeGodframeEnd[iVictim] - GetGameTime();
@@ -531,7 +535,7 @@ public Action Timed_ResetGlow(Handle hTimer, any iClient)
 		SetEntityRenderMode(iClient, RENDER_NORMAL);
 		SetEntityRenderColor(iClient, 255, 255, 255, 255);
 	}
-
+	g_hTimer[iClient] = null;
 	return Plugin_Stop;
 }
 
@@ -1034,6 +1038,6 @@ void SetGodFrameGlows(int client)
 		if (g_hTimer[client] != null) 
 			delete g_hTimer[client];
 
-		g_hTimer[client] = CreateTimer(g_fFakeGodframeEnd[client] - fNow, Timed_ResetGlow, client, TIMER_FLAG_NO_MAPCHANGE);
+		g_hTimer[client] = CreateTimer(g_fFakeGodframeEnd[client] - fNow, Timed_ResetGlow, client);
 	}
 }
