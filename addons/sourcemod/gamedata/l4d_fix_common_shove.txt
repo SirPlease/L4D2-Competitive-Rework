@@ -1,0 +1,48 @@
+"Games"
+{
+	"left4dead"
+	{
+		"Offsets"
+		{
+			"Infected::m_body"
+			{
+				"linux"			"3472"
+				"windows"		"3452"
+			}
+		}
+		
+		"Signatures"
+		{
+			"ZombieBotBody::SetDesiredPosture"
+			{
+				"library"		"server"
+				"linux"			"@_ZN13ZombieBotBody17SetDesiredPostureEN5IBody11PostureTypeE"
+				"windows"		"\x83\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x8B"
+								/* 83 ? ? ? ? 8B ? ? ? ? 8B ? E8 ? ? ? ? 83 ? ? 8B */
+			}
+		}
+	}
+	
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			"Infected::m_body"
+			{
+				"linux"			"7328"
+				"windows"		"7332"
+			}
+		}
+		
+		"Signatures"
+		{
+			"ZombieBotBody::SetDesiredPosture"
+			{
+				"library"		"server"
+				"linux"			"@_ZN13ZombieBotBody17SetDesiredPostureEN5IBody11PostureTypeE"
+				"windows"		"\x55\x8B\x2A\x83\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x83\x2A\x2A\x74"
+								/* 55 8B ? 83 ? ? ? 8B ? ? ? ? 8B ? E8 ? ? ? ? 8B ? 8B ? 83 ? ? 74 */
+			}
+		}
+	}
+}
