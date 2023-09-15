@@ -52,6 +52,8 @@ ConVar
 	g_hSmoker = null,
 	g_hJockey = null,
 	g_hCharger = null,
+	g_hChargerStagger = null,
+	g_hChargerFlags = null,
 	g_hSpitFlags = null,
 	g_hCommonFlags = null,
 	g_hGodframeGlows = null,
@@ -92,7 +94,11 @@ bool
 
 //fake godframes
 float
-	g_fFakeGodframeEnd[MAXPLAYERS + 1] = {0.0, ...};
+	g_fFakeGodframeEnd[MAXPLAYERS + 1] = {0.0, ...},
+	g_fFakeChargeGodframeEnd[MAXPLAYERS + 1] = {0.0, ...};
+
+Handle
+	g_hTimer[MAXPLAYERS + 1] = {null, ...};
 
 int
 	g_iLastSI[MAXPLAYERS + 1] = {0, ...},
@@ -115,8 +121,8 @@ public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErr
 public Plugin myinfo =
 {
 	name = "L4D2 Godframes Control combined with FF Plugins",
-	author = "Stabby, CircleSquared, Tabun, Visor, dcx, Sir, Spoon, A1m`",
-	version = "0.6.8",
+	author = "Stabby, CircleSquared, Tabun, Visor, dcx, Sir, Spoon, A1m`, Sir",
+	version = "0.6.9",
 	description = "Allows for control of what gets godframed and what doesnt along with integrated FF Support from l4d2_survivor_ff (by dcx and Visor) and l4d2_shotgun_ff (by Visor)"
 };
 
@@ -135,6 +141,8 @@ public void OnPluginStart()
 	g_hJockey = CreateConVar("gfc_jockey_duration", "0.0", "How long should godframes after a ride last?", _, true, 0.0, true, 3.0);
 	g_hSmoker = CreateConVar("gfc_smoker_duration", "0.0", "How long should godframes after a pull or choke last?", _, true, 0.0, true, 3.0);
 	g_hCharger = CreateConVar("gfc_charger_duration", "2.1", "How long should godframes after a pummel last?", _, true, 0.0, true, 3.0);
+	g_hChargerStagger = CreateConVar("gfc_charger_stagger_extra_time", "0.0", "Additional godframe time before damage from ChargerFlags is allowed.", _, true, 0.0, true, 3.0);
+	g_hChargerFlags = CreateConVar("gfc_charger_stagger_flags", "0", "What will be affected by extra charger stagger protection time. 1 - Common. 2 - Spit.", _, true, 0.0, true, 3.0);
 	g_hSpitFlags = CreateConVar("gfc_spit_zc_flags", "6", "Which classes will be affected by extra spit protection time. 1 - Hunter. 2 - Smoker. 4 - Jockey. 8 - Charger.", _, true, 0.0, true, 15.0);
 	g_hCommonFlags= CreateConVar("gfc_common_zc_flags", "0", "Which classes will be affected by extra common protection time. 1 - Hunter. 2 - Smoker. 4 - Jockey. 8 - Charger.", _, true, 0.0, true, 15.0);
 
@@ -169,6 +177,10 @@ public void OnPluginStart()
 	HookEvent("pounce_end", PostSurvivorRelease);
 	HookEvent("jockey_ride_end", PostSurvivorRelease);
 	HookEvent("charger_pummel_end", PostSurvivorRelease);
+
+	//Pass over stuff on passover to and from bots
+	HookEvent("bot_player_replace", Event_Replaced);
+	HookEvent("player_bot_replace", Event_Replaced);
 	
 	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 	
@@ -194,7 +206,9 @@ public void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBr
 {
 	for (int i = 1; i <= MaxClients; i++) { //clear both fake and real just because
 		g_fFakeGodframeEnd[i] = 0.0;
+		g_fFakeChargeGodframeEnd[i] = 0.0;
 		g_bBuckshot[i] = false;
+		if (g_hTimer[i] != null) delete g_hTimer[i];
 	}
 }
 
@@ -223,13 +237,39 @@ public void PostSurvivorRelease(Event hEvent, const char[] sEventName, bool bDon
 		g_iLastSI[iVictim] = 8;
 	}
 	
-	if (g_fFakeGodframeEnd[iVictim] > fNow && g_hGodframeGlows.BoolValue) {
-		// make player transparent/red while godframed
-		SetEntityRenderMode(iVictim, RENDER_GLOW);
-		SetEntityRenderColor(iVictim, 255, 0, 0, 200);
-		
-		CreateTimer(g_fFakeGodframeEnd[iVictim] - fNow, Timed_ResetGlow, iVictim, TIMER_FLAG_NO_MAPCHANGE);
+	SetGodFrameGlows(iVictim);
+}
+
+public void L4D2_OnStagger_Post(int client, int source)
+{
+	// Charger Impact handling, source is always null.
+	if (IsValidSurvivor(client) && source == -1 && g_hChargerStagger.FloatValue > 0.0)
+	{	
+		float fNow = GetGameTime();
+
+		// In case of multi-charger configs/modes.
+		if (g_fFakeChargeGodframeEnd[client] > fNow)
+			fNow = g_fFakeChargeGodframeEnd[client];
+
+		g_fFakeChargeGodframeEnd[client] = fNow += g_hChargerStagger.FloatValue;
 	}
+}
+
+public void Event_Replaced(Event hEvent, char[] name, bool dontBroadcast) 
+{
+	bool bBotReplaced = (!strncmp(name, "b", 1));
+	int replaced = bBotReplaced ? GetClientOfUserId(hEvent.GetInt("bot")) : GetClientOfUserId(hEvent.GetInt("player"));
+	int replacer = bBotReplaced ? GetClientOfUserId(hEvent.GetInt("player")) : GetClientOfUserId(hEvent.GetInt("bot"));
+
+	g_fFakeGodframeEnd[replacer] = g_fFakeGodframeEnd[replaced];
+	g_fFakeChargeGodframeEnd[replacer] = g_fFakeChargeGodframeEnd[replaced];
+	g_iLastSI[replacer] = g_iLastSI[replaced];
+
+	// Use 500 IQ to re-create 'accurate' timer on the replacer.
+	if (g_hTimer[replaced] != null) delete g_hTimer[replaced];
+	float fRemainingFakeGodFrames = g_fFakeGodframeEnd[replacer] - GetGameTime();
+	if (fRemainingFakeGodFrames > 0.0)
+		SetGodFrameGlows(replacer);
 }
 
 public void OnClientPutInServer(int iClient)
@@ -287,12 +327,22 @@ public Action OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &
 
 	float fTimeLeft = g_fFakeGodframeEnd[iVictim] - GetGameTime();
 
-	if (StrEqual(sClassname, "infected") && (g_iLastSI[iVictim] & g_hCommonFlags.IntValue)){ //commons
+	if (StrEqual(sClassname, "infected") && (g_iLastSI[iVictim] & g_hCommonFlags.IntValue)) { //commons
 		fTimeLeft += g_hCommon.FloatValue;
+
+		if (1 & g_hChargerFlags.IntValue && fTimeLeft <= 0.0) {
+			float charginTime = g_fFakeChargeGodframeEnd[iVictim] - GetGameTime();
+			fTimeLeft = charginTime > 0.0 ? charginTime : fTimeLeft;
+		}
 	}
 	
 	if (StrEqual(sClassname, "insect_swarm") && (g_iLastSI[iVictim] & g_hSpitFlags.IntValue)) { //spit
 		fTimeLeft += g_hSpit.FloatValue;
+
+		if (2 & g_hChargerFlags.IntValue && fTimeLeft <= 0.0) {
+			float charginTime = g_fFakeChargeGodframeEnd[iVictim] - GetGameTime();
+			fTimeLeft = charginTime > 0.0 ? charginTime : fTimeLeft;
+		}
 	}
 	
 	if (IsValidSurvivor(iAttacker)) { //friendly fire
@@ -967,13 +1017,23 @@ public int Native_GiveClientGodFrames(Handle hPlugin, int iNumParams)
 	g_fFakeGodframeEnd[iClient] = fNow + fGodFrameTime; //godFrameTime
 	g_iLastSI[iClient] = iAttackerClass; //attackerClass
 	
-	if (g_fFakeGodframeEnd[iClient] > fNow && g_hGodframeGlows.BoolValue) {
-		// make player transparent/red while godframed
-		SetEntityRenderMode(iClient, RENDER_GLOW);
-		SetEntityRenderColor(iClient, 255, 0, 0, 200);
-		
-		CreateTimer(g_fFakeGodframeEnd[iClient] - fNow, Timed_ResetGlow, iClient, TIMER_FLAG_NO_MAPCHANGE);
-	}
+	SetGodFrameGlows(iClient);
 	
 	return 1;
+}
+
+void SetGodFrameGlows(int client)
+{
+	float fNow = GetGameTime();
+	if (g_fFakeGodframeEnd[client] > fNow && g_hGodframeGlows.BoolValue)
+	{
+		// make player transparent/red while godframed
+		SetEntityRenderMode(client, RENDER_GLOW);
+		SetEntityRenderColor(client, 255, 0, 0, 200);
+		
+		if (g_hTimer[client] != null) 
+			delete g_hTimer[client];
+
+		g_hTimer[client] = CreateTimer(g_fFakeGodframeEnd[client] - fNow, Timed_ResetGlow, client, TIMER_FLAG_NO_MAPCHANGE);
+	}
 }
