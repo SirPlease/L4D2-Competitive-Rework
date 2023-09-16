@@ -20,7 +20,7 @@ public Plugin myinfo =
 	name = "Magnum incap remover",
 	author = "robex",
 	description = "Replace magnum with regular pistols when incapped.",
-	version = "0.2",
+	version = "0.3",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -39,10 +39,12 @@ public Action PlayerIncap_Event(Handle event, const char[] name, bool bDontBroad
 	}
 
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+
+	// This also fires on Tank Death, so check for client team to prevent issues down the line.
+	if (GetClientTeam(client) != 2) { return Plugin_Continue; }
+
 	int playerIndex = GetPlayerCharacter(client);
-
 	char sWeaponName[ENTITY_MAX_NAME_LENGTH];
-
 	int secWeaponIndex = GetPlayerWeaponSlot(client, L4D2WeaponSlot_Secondary);
 	GetEdictClassname(secWeaponIndex, sWeaponName, sizeof(sWeaponName));
 
