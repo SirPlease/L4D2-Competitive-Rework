@@ -1,0 +1,41 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"MemPatches"
+		{
+			"CLagCompensationManager::StartLagCompensation"
+			{
+				"signature"	"CLagCompensationManager::StartLagCompensation"
+
+				// if (!cmd) jump to the return branch.
+
+				"linux"
+				{
+					"offset"	"6CEh"
+					"verify"	"\xC7"
+					"patch"		"\xE9\x32\xFC\xFF\xFF\x90\x90"
+				}
+
+				"windows"
+				{
+					"offset"	"477h"
+					"verify"	"\x68"
+					"patch"		"\xE9\x96\x02\x00\x00"
+				}
+			}
+		}
+
+		"Signatures"
+		{
+			"CLagCompensationManager::StartLagCompensation"
+			{
+				"library"	"server"
+				"linux"		"@_ZN23CLagCompensationManager20StartLagCompensationEP11CBasePlayer19LagCompensationTypeRK6VectorRK6QAnglef"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x64\x53\x33\xC0"
+				/* 55 8B EC 83 EC 64 53 33 C0 */
+			}
+		}
+	}
+}
+
