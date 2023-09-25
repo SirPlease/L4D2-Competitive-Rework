@@ -3,7 +3,9 @@
 #include <readyup>
 #include <pause>
 
-ConVar cvar_l4d2_spec_silence_enabled;
+ConVar hCvarSpecSilence;
+
+bool bSpecSilence = false;
 
 public Plugin myinfo =
 {
@@ -16,7 +18,9 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	cvar_l4d2_spec_silence_enabled = CreateConVar("l4d2_spec_silence_enabled", "1", "Does not allow spected to send public messages during games");
+	hCvarSpecSilence = CreateConVar("l4d2_spec_silence_enabled", "1", "Does not allow spected to send public messages during games");
+
+	bSpecSilence = GetConVarBool(hCvarSpecSilence);
 
 	RegAdminCmd("sm_specsilence", SpecSilenceCommand, ADMFLAG_BAN);
 }
@@ -30,7 +34,7 @@ public Action SpecSilenceCommand(int client, int args)
 
 public Action OnClientSayCommand(int client, const char[] command, const char[] args)
 {
-	if (!GetConVarBool(cvar_l4d2_spec_silence_enabled) || !IsClientInGame(client) || IsFakeClient(client) || IsInReady() || IsInPause())
+	if (!bSpecSilence || !IsClientInGame(client) || IsFakeClient(client) || IsInReady() || IsInPause())
 		return Plugin_Continue;
 		
 	bool say = strcmp(command, "say", false) == 0;
@@ -52,18 +56,18 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 
 public void ToggleSpecSilence()
 {
-	SetSpecSilence(!GetConVarBool(cvar_l4d2_spec_silence_enabled));
+	SetSpecSilence(!bSpecSilence);
 }
 
 public void SetSpecSilence(bool enabled)
 {
-    if (enabled == GetConVarBool(cvar_l4d2_spec_silence_enabled))
-        return;
+	if (enabled == bSpecSilence)
+		return;
 
-    SetConVarBool(cvar_l4d2_spec_silence_enabled, enabled);
+	bSpecSilence = enabled;
 
-    if (enabled)
-        PrintToChatAll("\x01SPEC silence: \x04ON");
-    else
-        PrintToChatAll("\x01SPEC silence: \x04OFF");
+	if (enabled)
+		PrintToChatAll("\x01SPEC silence: \x04ON");
+	else
+		PrintToChatAll("\x01SPEC silence: \x04OFF");
 }
