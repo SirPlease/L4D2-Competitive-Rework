@@ -1,0 +1,101 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			"CBaseEntity::m_vecAbsOrigin"
+			{
+				"windows" "716"
+				"linux" "736"
+			}
+			
+			"Infected::m_vecNeighbors"
+			{
+				"windows" "7468"
+				"linux" "7464"
+			}
+			
+			"MyInfectedPointer"
+			{
+				"windows" "82"
+				"linux" "83"
+			}
+			
+			"MyCombatCharacterPointer"
+			{
+				"windows" "80"
+				"linux" "81"
+			}
+			
+			"MyNextBotPointer"
+			{
+				"windows" "81"
+				"linux" "82"
+			}
+			
+			"CBaseEntity::Touch"
+			{
+				"windows" "108"
+				"linux" "109"
+			}
+			
+			"CBaseEntity::IsPlayer"
+			{
+				"windows" "90"
+				"linux" "91"
+			}
+			
+			"CBaseEntity::IsAlive"
+			{
+				"windows" "74"
+				"linux" "75"
+			}
+		}
+		
+		"Signatures"
+		{
+			"NextBotGroundLocomotion::ResolveZombieCollisions"
+			{
+				"library"		"server"
+				"linux"			"@_ZN19ZombieBotLocomotion23ResolveZombieCollisionsERK6Vector"
+				"windows"		"\x55\x8B\xEC\x83\xEC\x3C\x8B\x45\x0C"
+			}
+			
+			"NextBotGroundLocomotion::ResolveCollision"
+			{
+				"library"		"server"
+				"linux"			"@_ZN19ZombieBotLocomotion16ResolveCollisionERK6VectorS2_i"
+				"windows"		"\x53\x8B\xDC\x83\xEC\x08\x83\xE4\xF0\x83\xC4\x04\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x81\xEC\xB8\x01\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x8B\x43\x08"
+			}
+			
+			"CTraceFilterSimple::ShouldHitEntity"
+			{
+				"library"		"server"
+				"linux"			"@_ZN18CTraceFilterSimple15ShouldHitEntityEP13IHandleEntityi"
+				"windows"		"\x55\x8B\xEC\x53\x8B\x5D\x0C\x56\x8B\x75\x08\x57\x53\x56\x8B\xF9\xE8\x2A\x2A\x2A\x2A\x83\xC4\x08"
+			}
+			
+			"ZombieBotCollisionTraceFilter::ShouldHitEntity"
+			{
+				"library"		"server"
+				"linux"			"@_ZN29ZombieBotCollisionTraceFilter15ShouldHitEntityEP13IHandleEntityi"
+				"windows"		"\x55\x8B\xEC\x8B\x45\x0C\x56\x8B\x75\x08\x50\x56\xE8\x2A\x2A\x2A\x2A\x84\xC0\x74\x2A\x8B\x0D\x2A\x2A\x2A\x2A\x8B\x11\x8B\x42\x0C\x56\xFF\xD0\x84\xC0\x75\x2A\x85\xF6\x74\x2A\x8B\x16\x8B\x82\x68\x01\x00\x00\x8B\xCE\xFF\xD0\x84\xC0\x74\x2A\x8B\x16\x8B\x82\x54\x05\x00\x00\x8B\xCE\xFF\xD0\x84\xC0\x75\x2A\x8B\xCE"
+			}
+
+			"CBaseEntity::TakeDamage"
+			{
+				"library"		"server"
+				"linux"			"@_ZN11CBaseEntity10TakeDamageERK15CTakeDamageInfo"
+				"windows"		"\x55\x8B\xEC\x83\xEC\x6C\x57\x8B\xF9\x8B\x0D"
+			}
+			
+			"CalculateExplosiveDamageForce"
+			{
+				"library"		"server"
+				"linux"			"@_Z29CalculateExplosiveDamageForceP15CTakeDamageInfoRK6VectorS3_f"
+				"windows"		"\x55\x8B\xEC\x8B\x45\x10\xD9\x00\x83\xEC\x0C\x56\x8B\x75\x08\xD9\x5E\x0C\xD9\x40\x04\xD9\x5E\x10\xD9\x40\x08\xD9\x5E\x14\xF3\x0F\x10\x46\x44\x0F\x2E\x05\x2A\x2A\x2A\x2A\x9F\xF6\xC4\x44\x7A\x2A\xF3\x0F\x10\x46\x3C\xF3\x0F\x59\x05"
+			}
+		}
+	}
+}
