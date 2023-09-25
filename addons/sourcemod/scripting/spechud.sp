@@ -48,12 +48,15 @@ ConVar survivor_limit, versus_boss_buffer, sv_maxplayers, tank_burn_duration;
 int iSurvivorLimit, iMaxPlayers;
 float fVersusBossBuffer, fTankBurnDuration;
 
+// Plugin Handlers
+Handle g_hCvarWitchHealth = INVALID_HANDLE;
+
 // Plugin Cvar
 ConVar l4d_tank_percent, l4d_witch_percent, hServerNamer, l4d_ready_cfg_name;
 
 // Plugin Var
 char sReadyCfgName[64], sHostname[64];
-bool bRoundLive;
+bool bRoundLive, bWitchSpawned;
 
 // Boss Spawn Scheme
 StringMap hFirstTankSpawningScheme, hSecondTankSpawningScheme;		// eq_finale_tanks (Zonemod, Acemod, etc.)
@@ -64,6 +67,9 @@ StringMap hCustomTankScriptMaps;									// Handled by this plugin
 int iTankCount, iWitchCount;
 int iTankFlow, iWitchFlow;
 bool bRoundHasFlowTank, bRoundHasFlowWitch, bFlowTankActive, bCustomBossSys;
+
+//Witch's Standard health
+float g_fWitchHealth = 1000.0;    
 
 // Score & Scoremod
 //int iFirstHalfScore;
@@ -106,6 +112,8 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_spechud", ToggleSpecHudCmd);
 	RegConsoleCmd("sm_tankhud", ToggleTankHudCmd);
 	
+	g_hCvarWitchHealth = FindConVar("z_witch_health");
+
 	HookEvent("round_start",		Event_RoundStart,		EventHookMode_PostNoCopy);
 	HookEvent("round_end",			Event_RoundEnd,			EventHookMode_PostNoCopy);
 	HookEvent("player_death",		Event_PlayerDeath,		EventHookMode_Post);
@@ -383,6 +391,15 @@ public void OnRoundIsLive()
 	}
 }
 
+public void OnEntityCreated(int entity, const char[] classname)
+{
+	if (StrEqual(classname, "witch", false))
+	{
+		bWitchSpawned = true;
+		g_fWitchHealth = GetConVarFloat(g_hCvarWitchHealth);
+	}
+}
+
 //public void L4D2_OnEndVersusModeRound_Post() { if (!InSecondHalfOfRound()) iFirstHalfScore = L4D_GetTeamScore(GetRealTeam(0) + 1); }
 
 // ======================================================================
@@ -391,11 +408,13 @@ public void OnRoundIsLive()
 public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	bRoundLive = false;
+	bWitchSpawned = false;
 }
 
 public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	bRoundLive = false;
+	bWitchSpawned = false;
 }
 
 public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
@@ -412,7 +431,10 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 
 public void Event_WitchDeath(Event event, const char[] name, bool dontBroadcast)
 {
-	if (iWitchCount > 0) iWitchCount--;
+	if (iWitchCount > 0) 
+		iWitchCount--;
+	
+	bWitchSpawned = false;
 }
 
 public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
@@ -511,8 +533,11 @@ public Action HudDrawTimer(Handle hTimer)
 		FillSurvivorInfo(specHud);
 		FillScoreInfo(specHud);
 		FillInfectedInfo(specHud);
+
 		if (!FillTankInfo(specHud))
 			FillGameInfo(specHud);
+
+		FillWitchInfo(specHud);
 
 		for (int i = 0; i < specHud_total; ++i)
 		{
@@ -1100,6 +1125,27 @@ bool FillTankInfo(Panel hSpecHud, bool bTankHUD = false)
 	}
 	
 	return true;
+}
+
+void FillWitchInfo(Panel hSpecHud)
+{
+	if (!bWitchSpawned)
+		return;
+
+	DrawPanelText(hSpecHud, " ");
+	DrawPanelText(hSpecHud, "->4. Witch");
+
+	int health = 1000;
+	float healthPercent = L4D2Util_IntToPercentFloat(health, FloatToInt(g_fWitchHealth));
+
+	static char info[64];
+
+	if (health <= 0)
+		info = "Health  : Dead";
+	else
+		FormatEx(info, sizeof(info), "Health  : %i / %i%%", health, L4D2Util_GetMax(1, RoundFloat(healthPercent)));
+
+	DrawPanelText(hSpecHud, info);
 }
 
 void FillGameInfo(Panel hSpecHud)
