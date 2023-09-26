@@ -69,7 +69,7 @@ int iTankFlow, iWitchFlow;
 bool bRoundHasFlowTank, bRoundHasFlowWitch, bFlowTankActive, bCustomBossSys;
 
 //Witch's Standard health
-float g_fWitchHealth = 1000.0;    
+float g_fWitchHealth = 1000.0, g_fDamageWitchTotal = 0.0;
 
 // Score & Scoremod
 //int iFirstHalfScore;
@@ -117,6 +117,7 @@ public void OnPluginStart()
 	HookEvent("round_start",		Event_RoundStart,		EventHookMode_PostNoCopy);
 	HookEvent("round_end",			Event_RoundEnd,			EventHookMode_PostNoCopy);
 	HookEvent("player_death",		Event_PlayerDeath,		EventHookMode_Post);
+	HookEvent("infected_hurt",      Event_InfectedHurt,     EventHookMode_Post);
 	HookEvent("witch_killed",		Event_WitchDeath,		EventHookMode_PostNoCopy);
 	HookEvent("player_team",		Event_PlayerTeam,		EventHookMode_Post);
 	
@@ -396,6 +397,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 	if (StrEqual(classname, "witch", false))
 	{
 		bWitchSpawned = true;
+		g_fDamageWitchTotal = 0.0;
 		g_fWitchHealth = GetConVarFloat(g_hCvarWitchHealth);
 	}
 }
@@ -427,6 +429,14 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 		if (iTankCount > 0) iTankCount--;
 		if (!RoundHasFlowTank()) bFlowTankActive = false;
 	}
+}
+
+public void Event_InfectedHurt(Event event, const char[] name, bool dontBroadcast)
+{
+	int entityId = GetEventInt(event, "entityid");
+
+	if (IsWitch(entityId))
+		g_fDamageWitchTotal += GetEventInt(event, "amount");
 }
 
 public void Event_WitchDeath(Event event, const char[] name, bool dontBroadcast)
@@ -1132,19 +1142,16 @@ void FillWitchInfo(Panel hSpecHud)
 	if (!bWitchSpawned)
 		return;
 
-	DrawPanelText(hSpecHud, " ");
-	DrawPanelText(hSpecHud, "->4. Witch");
-
-	int health = 1000;
-	float healthPercent = L4D2Util_IntToPercentFloat(health, FloatToInt(g_fWitchHealth));
+	int health = FloatToInt(g_fWitchHealth - g_fDamageWitchTotal);
+	if (health <= 0)
+		return;
 
 	static char info[64];
+	float healthPercent = L4D2Util_IntToPercentFloat(health, FloatToInt(g_fWitchHealth));
+	FormatEx(info, sizeof(info), "Health  : %i / %i%%", health, L4D2Util_GetMax(1, RoundFloat(healthPercent)));
 
-	if (health <= 0)
-		info = "Health  : Dead";
-	else
-		FormatEx(info, sizeof(info), "Health  : %i / %i%%", health, L4D2Util_GetMax(1, RoundFloat(healthPercent)));
-
+	DrawPanelText(hSpecHud, " ");
+	DrawPanelText(hSpecHud, "->4. Witch");
 	DrawPanelText(hSpecHud, info);
 }
 
@@ -1453,4 +1460,16 @@ stock bool RoundHasFlowTank()
 stock bool RoundHasFlowWitch()
 {
 	return L4D2Direct_GetVSWitchToSpawnThisRound(InSecondHalfOfRound());
+}
+
+stock bool IsWitch(int entity)
+{
+	if(entity > 0 && IsValidEntity(entity) && IsValidEdict(entity))
+	{
+		char className[64];
+		GetEdictClassname(entity, className, sizeof(className));
+		return StrEqual(className, "witch");
+	}
+
+	return false;
 }
