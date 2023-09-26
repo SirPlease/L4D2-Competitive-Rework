@@ -56,7 +56,7 @@ ConVar l4d_tank_percent, l4d_witch_percent, hServerNamer, l4d_ready_cfg_name;
 
 // Plugin Var
 char sReadyCfgName[64], sHostname[64];
-bool bRoundLive, bWitchSpawned;
+bool bRoundLive, bWitchSpawned, bWitchDead;
 
 // Boss Spawn Scheme
 StringMap hFirstTankSpawningScheme, hSecondTankSpawningScheme;		// eq_finale_tanks (Zonemod, Acemod, etc.)
@@ -397,6 +397,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 	if (StrEqual(classname, "witch", false))
 	{
 		bWitchSpawned = true;
+		bWitchDead = false;
 		g_fDamageWitchTotal = 0.0;
 		g_fWitchHealth = GetConVarFloat(g_hCvarWitchHealth);
 	}
@@ -411,12 +412,14 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	bRoundLive = false;
 	bWitchSpawned = false;
+	bWitchDead = false;
 }
 
 public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	bRoundLive = false;
 	bWitchSpawned = false;
+	bWitchDead = false;
 }
 
 public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
@@ -444,7 +447,17 @@ public void Event_WitchDeath(Event event, const char[] name, bool dontBroadcast)
 	if (iWitchCount > 0) 
 		iWitchCount--;
 	
+	bWitchDead = true;
+
+	CreateTimer(1.0, WitchDeath_Timer);
+}
+
+public Action WitchDeath_Timer(Handle timer)
+{
 	bWitchSpawned = false;
+	bWitchDead = false;
+
+	return Plugin_Continue;
 }
 
 public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
@@ -571,7 +584,11 @@ public Action HudDrawTimer(Handle hTimer)
 	if (!tankHud_total) return Plugin_Continue;
 	
 	Panel tankHud = new Panel();
-	if (FillTankInfo(tankHud, true)) // No tank -- no HUD
+
+	bool fillTankInfo = FillTankInfo(tankHud, true);
+	bool fillWitchInfo = FillWitchInfo(tankHud, true);
+
+	if (fillTankInfo || fillWitchInfo) // No tank -- no HUD
 	{
 		for (int i = 0; i < tankHud_total; ++i)
 		{
@@ -1137,22 +1154,39 @@ bool FillTankInfo(Panel hSpecHud, bool bTankHUD = false)
 	return true;
 }
 
-void FillWitchInfo(Panel hSpecHud)
+bool FillWitchInfo(Panel hSpecHud, bool bTankHUD = false)
 {
 	if (!bWitchSpawned)
-		return;
+		return false;
 
 	int health = FloatToInt(g_fWitchHealth - g_fDamageWitchTotal);
-	if (health <= 0)
-		return;
-
-	static char info[64];
-	float healthPercent = L4D2Util_IntToPercentFloat(health, FloatToInt(g_fWitchHealth));
-	FormatEx(info, sizeof(info), "Health  : %i / %i%%", health, L4D2Util_GetMax(1, RoundFloat(healthPercent)));
-
 	DrawPanelText(hSpecHud, " ");
-	DrawPanelText(hSpecHud, "->4. Witch");
+	static char info[64];
+
+	if (bTankHUD)
+	{
+		FormatEx(info, sizeof(info), "%s :: Witch HUD", sReadyCfgName);
+		ValvePanel_ShiftInvalidString(info, sizeof(info));
+		DrawPanelText(hSpecHud, info);
+		
+		int len = strlen(info);
+		for (int i = 0; i < len; ++i) info[i] = '_';
+		DrawPanelText(hSpecHud, info);
+	}
+	else
+		DrawPanelText(hSpecHud, "->4. Witch");
+
+	if (bWitchDead || health <= 0.0)
+		info = "Health  : Dead";
+	else
+	{
+		float healthPercent = L4D2Util_IntToPercentFloat(health, FloatToInt(g_fWitchHealth));
+		FormatEx(info, sizeof(info), "Health  : %i / %i%%", health, L4D2Util_GetMax(1, RoundFloat(healthPercent)));
+	}
+
 	DrawPanelText(hSpecHud, info);
+
+	return true;
 }
 
 void FillGameInfo(Panel hSpecHud)
