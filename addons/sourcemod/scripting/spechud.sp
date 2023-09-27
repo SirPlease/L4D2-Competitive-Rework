@@ -57,6 +57,7 @@ ConVar l4d_tank_percent, l4d_witch_percent, hServerNamer, l4d_ready_cfg_name;
 // Plugin Var
 char sReadyCfgName[64], sHostname[64];
 bool bRoundLive, bWitchSpawned, bWitchDead;
+int iWitchId;
 
 // Boss Spawn Scheme
 StringMap hFirstTankSpawningScheme, hSecondTankSpawningScheme;		// eq_finale_tanks (Zonemod, Acemod, etc.)
@@ -118,6 +119,7 @@ public void OnPluginStart()
 	HookEvent("round_end",			Event_RoundEnd,			EventHookMode_PostNoCopy);
 	HookEvent("player_death",		Event_PlayerDeath,		EventHookMode_Post);
 	HookEvent("infected_hurt",      Event_InfectedHurt,     EventHookMode_Post);
+	HookEvent("witch_spawn",		Event_WitchSpawn,		EventHookMode_PostNoCopy);
 	HookEvent("witch_killed",		Event_WitchDeath,		EventHookMode_PostNoCopy);
 	HookEvent("player_team",		Event_PlayerTeam,		EventHookMode_Post);
 	
@@ -392,17 +394,6 @@ public void OnRoundIsLive()
 	}
 }
 
-public void OnEntityCreated(int entity, const char[] classname)
-{
-	if (StrEqual(classname, "witch", false))
-	{
-		bWitchSpawned = true;
-		bWitchDead = false;
-		g_fDamageWitchTotal = 0.0;
-		g_fWitchHealth = GetConVarFloat(g_hCvarWitchHealth);
-	}
-}
-
 //public void L4D2_OnEndVersusModeRound_Post() { if (!InSecondHalfOfRound()) iFirstHalfScore = L4D_GetTeamScore(GetRealTeam(0) + 1); }
 
 // ======================================================================
@@ -440,6 +431,15 @@ public void Event_InfectedHurt(Event event, const char[] name, bool dontBroadcas
 
 	if (IsWitch(entityId))
 		g_fDamageWitchTotal += GetEventInt(event, "amount");
+}
+
+public void Event_WitchSpawn(Event event, const char[] name, bool dontBroadcast)
+{
+	bWitchSpawned = true;
+	bWitchDead = false;
+	iWitchId = GetEventInt(event, "witchid");
+	g_fDamageWitchTotal = 0.0;
+	g_fWitchHealth = GetConVarFloat(g_hCvarWitchHealth);
 }
 
 public void Event_WitchDeath(Event event, const char[] name, bool dontBroadcast)
@@ -1183,6 +1183,17 @@ bool FillWitchInfo(Panel hSpecHud, bool bTankHUD = false)
 		float healthPercent = L4D2Util_IntToPercentFloat(health, FloatToInt(g_fWitchHealth));
 		FormatEx(info, sizeof(info), "Health  : %i / %i%%", health, L4D2Util_GetMax(1, RoundFloat(healthPercent)));
 	}
+
+	DrawPanelText(hSpecHud, info);
+
+	float rage = GetEntPropFloat(iWitchId, Prop_Send, "m_rage");
+
+	if (rage <= 0.0)
+		info = "Rage  : Totally calm";
+	else if (rage >= 1.0)
+		info = "Rage  : Full pistola";
+	else
+		FormatEx(info, sizeof(info), "Rage  : %i%%", FloatToInt(rage * 100.0));
 
 	DrawPanelText(hSpecHud, info);
 
