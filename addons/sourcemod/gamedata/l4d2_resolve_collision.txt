@@ -3,13 +3,7 @@
 	"left4dead2"
 	{
 		"Offsets"
-		{
-			"CBaseEntity::m_vecAbsOrigin"
-			{
-				"windows" "716"
-				"linux" "736"
-			}
-			
+		{	
 			"Infected::m_vecNeighbors"
 			{
 				"windows" "7468"
@@ -30,8 +24,8 @@
 			
 			"MyNextBotPointer"
 			{
-				"windows" "81"
-				"linux" "82"
+				"windows" "71"
+				"linux" "72"
 			}
 			
 			"CBaseEntity::Touch"
@@ -55,6 +49,13 @@
 		
 		"Signatures"
 		{
+			"NextBotGroundLocomotion::ClimbUpToLedge"
+			{
+				"library"		"server"
+				"linux"			"@_ZN19ZombieBotLocomotion14ClimbUpToLedgeERK6VectorS2_PK11CBaseEntity"
+				"windows"		"\x53\x8B\xDC\x83\xEC\x08\x83\xE4\xF0\x83\xC4\x04\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x81\xEC\xE8\x01\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x8B\x43\x0C\x56\x8B\xF1"
+			}
+			
 			"NextBotGroundLocomotion::ResolveZombieCollisions"
 			{
 				"library"		"server"
@@ -95,6 +96,27 @@
 				"library"		"server"
 				"linux"			"@_Z29CalculateExplosiveDamageForceP15CTakeDamageInfoRK6VectorS3_f"
 				"windows"		"\x55\x8B\xEC\x8B\x45\x10\xD9\x00\x83\xEC\x0C\x56\x8B\x75\x08\xD9\x5E\x0C\xD9\x40\x04\xD9\x5E\x10\xD9\x40\x08\xD9\x5E\x14\xF3\x0F\x10\x46\x44\x0F\x2E\x05\x2A\x2A\x2A\x2A\x9F\xF6\xC4\x44\x7A\x2A\xF3\x0F\x10\x46\x3C\xF3\x0F\x59\x05"
+			}
+			
+			"CBaseEntity::SetAbsAngles"
+			{
+				"library"		"server"
+				"linux"			"@_ZN11CBaseEntity12SetAbsAnglesERK6QAngle"
+				"windows"		"\x55\x8B\xEC\x83\xEC\x74\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x56\x57"
+			}
+			
+			"ZombieBotLocomotion::UpdateGroundConstraint"
+			{
+				"library"		"server"
+				"linux"			"@_ZN19ZombieBotLocomotion22UpdateGroundConstraintEv"
+				"windows"		"\x53\x8B\xDC\x83\xEC\x08\x83\xE4\xF0\x83\xC4\x04\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x81\xEC\x38\x01\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\xA1"
+			}
+			
+			"CBaseEntity::SetGroundEntity"
+			{
+				"library"		"server"
+				"linux"			"@_ZN11CBaseEntity15SetGroundEntityEPS_"
+				"windows"		"\x55\x8B\xEC\x53\x8B\xD9\x8B\x83\x44\x02\x00\x00"
 			}
 		}
 	}
