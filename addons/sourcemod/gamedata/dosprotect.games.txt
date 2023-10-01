@@ -1,0 +1,108 @@
+"Games"
+{
+	"#default"
+	{
+		"Offsets"
+		{
+			"CSteamSocketMgr::recvfrom"
+			{
+				"windows"	"6"
+			}
+		}
+	}
+	"csgo"
+	{
+		"Addresses"
+		{
+			"SteamSocketMgr"
+			{
+				"windows"
+				{
+					"signature"	"NET_InitiateSteamConnectionInternal"
+					"read"		"9"
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			"NET_InitiateSteamConnectionInternal"
+			{
+				"library"	"engine"
+				"windows"	"\x55\x8B\xEC\x51\x56\xFF\x75\x2A\xB9\x2A\x2A\x2A\x2A\xFF"
+				/* 55 8B EC 51 56 FF 75 ? B9 ? ? ? ? FF */
+			}
+		}
+	}
+	"left4dead"
+	{
+		"Addresses"
+		{
+			"SteamSocketMgr"
+			{
+				"windows"
+				{
+					"signature"	"NET_InitiateSteamConnection"
+					"read"		"313"
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			"NET_InitiateSteamConnection"
+			{
+				"library"	"engine"
+				"windows"	"\x81\xEC\x2A\x2A\x2A\x2A\x56\x57\x6A\x00\x8D\x2A\x2A\x2A\xE8"
+				/* 81 EC ? ? ? ? 56 57 6A 00 8D ? ? ? E8 */
+			}
+		}
+	}
+	"nucleardawn"
+	{
+		"Addresses"
+		{
+			"SteamSocketMgr"
+			{
+				"windows"
+				{
+					"signature"	"net_steamcnx_status"
+					"read"		"1"
+				}
+			}
+		}
+		"Signatures"
+		{
+			"net_steamcnx_status"
+			{
+				"library"	"engine"
+				"windows"	"\xB9\x2A\x2A\x2A\x2A\xE9\x2A\x2A\x2A\x2A\xCC\xCC\xCC\xCC\xCC\xCC\x55\x8B\xEC\x83\xEC\x2A\xA1"
+				/* B9 ? ? ? ? E9 ? ? ? ? CC CC CC CC CC CC 55 8B EC 83 EC ? A1 */
+			}
+		}
+	}
+	"left4dead2"
+	{
+		"Addresses"
+		{
+			"SteamSocketMgr"
+			{
+				"windows"
+				{
+					"signature"	"NET_InitiateSteamConnection"
+					"read"		"493"
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			"NET_InitiateSteamConnection"
+			{
+				"library"	"engine"
+				"windows"	"\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\x2A\x8B\x45\x2A\x53\x56\x8B\x75\x2A\x57\x6A"
+				/* 55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 33 C5 89 45 ? 8B 45 ? 53 56 8B 75 ? 57 6A */
+			}
+		}
+	}
+}
