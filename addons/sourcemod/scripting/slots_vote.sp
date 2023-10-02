@@ -24,7 +24,10 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	LoadTranslations("slots_vote.phrases");
+
 	RegConsoleCmd("sm_slots", SlotsRequest);
+	RegAdminCmd("sm_fslots", FSlotsRequest, ADMFLAG_CONFIG, "Forces set slots");
+
 	hMaxSlots = CreateConVar("slots_max_slots", "30", "Maximum amount of slots you wish players to be able to vote for? (DON'T GO HIGHER THAN 30)");
 	MaxSlots  = hMaxSlots.IntValue;
 	HookConVarChange(hMaxSlots, CVarChanged);
@@ -71,6 +74,22 @@ public Action SlotsRequest(int client, int args)
 	{
 		CPrintToChat(client, "%t %t", "Tag", "SlotsUsage");
 	}
+	return Plugin_Handled;
+}
+
+public Action FSlotsRequest(int client, int args)
+{
+	if (args != 1)
+		return Plugin_Handled;
+
+	char slots[64];
+	GetCmdArg(1, slots, sizeof(slots));
+	int count = StringToInt(slots);
+	if (count > MaxSlots || count <= 0)
+		return Plugin_Handled;
+
+	SetConVarInt(FindConVar("sv_maxplayers"), count);
+
 	return Plugin_Handled;
 }
 
