@@ -24,8 +24,8 @@
 			
 			"MyNextBotPointer"
 			{
-				"windows" "71"
-				"linux" "72"
+				"windows" "81"
+				"linux" "82"
 			}
 			
 			"CBaseEntity::Touch"
