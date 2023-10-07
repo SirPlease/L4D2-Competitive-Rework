@@ -127,6 +127,24 @@ void LoadGameData()
 
 
 	// =========================
+	// ANIMATION NATIVES
+	// =========================
+	if( g_bLeft4Dead2 )
+	{
+		StartPrepSDKCall(SDKCall_Raw);
+		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CMultiPlayerAnimState::ResetMainActivity") == false )
+		{
+			LogError("Failed to find signature: \"CMultiPlayerAnimState::ResetMainActivity\" (%s)", g_sSystem);
+		} else {
+			g_hSDK_CMultiPlayerAnimState_ResetMainActivity = EndPrepSDKCall();
+			if( g_hSDK_CMultiPlayerAnimState_ResetMainActivity == null )
+				LogError("Failed to create SDKCall: \"CMultiPlayerAnimState::ResetMainActivity\" (%s)", g_sSystem);
+		}
+	}
+
+
+
+	// =========================
 	// SILVERS NATIVES
 	// =========================
 	StartPrepSDKCall(SDKCall_Player);
@@ -2079,13 +2097,28 @@ void LoadGameData()
 	// ====================================================================================================
 	//									OFFSETS
 	// ====================================================================================================
-	// Various
 	#if defined DEBUG
 	#if DEBUG
 	PrintToServer("Various Offsets:");
 	#endif
 	#endif
 
+	// Animation offsets
+	if( g_bLeft4Dead2 )
+	{
+		g_iOff_m_PlayerAnimState = hGameData.GetOffset("CTerrorPlayer::m_PlayerAnimState");
+		ValidateOffset(g_iOff_m_PlayerAnimState, "CTerrorPlayer::m_PlayerAnimState");
+
+		g_iOff_m_eCurrentMainSequenceActivity = hGameData.GetOffset("CMultiPlayerAnimState::m_eCurrentMainSequenceActivity");
+		ValidateOffset(g_iOff_m_eCurrentMainSequenceActivity, "CMultiPlayerAnimState::m_eCurrentMainSequenceActivity");
+
+		g_iOff_m_bIsCustomSequence = hGameData.GetOffset("CTerrorPlayerAnimState::m_bIsCustomSequence");
+		ValidateOffset(g_iOff_m_bIsCustomSequence, "CTerrorPlayerAnimState::m_bIsCustomSequence");
+	}
+
+
+
+	// Various offsets
 	g_iOff_m_iCampaignScores = hGameData.GetOffset("m_iCampaignScores");
 	ValidateOffset(g_iOff_m_iCampaignScores, "m_iCampaignScores");
 
@@ -2339,6 +2372,10 @@ void LoadGameData()
 		PrintToServer("m_preIncapacitatedHealth = %d", g_iOff_m_preIncapacitatedHealth);
 		PrintToServer("m_preIncapacitatedHealthBuffer = %d", g_iOff_m_preIncapacitatedHealthBuffer);
 		PrintToServer("m_maxFlames = %d", g_iOff_m_maxFlames);
+		PrintToServer("");
+		PrintToServer("g_iOff_m_PlayerAnimState = %d", g_iOff_m_PlayerAnimState);
+		PrintToServer("g_iOff_m_eCurrentMainSequenceActivity = %d", g_iOff_m_eCurrentMainSequenceActivity);
+		PrintToServer("g_iOff_m_bIsCustomSequence = %d", g_iOff_m_bIsCustomSequence);
 		PrintToServer("");
 	}
 	#endif

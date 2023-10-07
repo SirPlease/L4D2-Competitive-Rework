@@ -1005,21 +1005,6 @@
 				}
 			}
 
-			"L4DD::CDirector::EndScenario"
-			{
-				"signature"		"CDirector::EndScenario"
-				"callconv"		"thiscall"
-				"return"		"void"
-				"this"			"address"
-				"arguments"
-				{
-					"keyvalues"
-					{
-						"type"		"int"
-					}
-				}
-			}
-
 			"L4DD::CTerrorPlayer::OnLedgeGrabbed"
 			{
 				"signature"		"CTerrorPlayer::OnLedgeGrabbed"
@@ -1116,7 +1101,7 @@
 			{
 				"signature"		"CTerrorPlayer::OnShovedByPounceLanding"
 				"callconv"		"thiscall"
-				"return"		"float"
+				"return"		"void"
 				"this"			"entity"
 				"arguments"
 				{
@@ -1314,6 +1299,21 @@
 				}
 			}
 
+			"L4DD::Infected::OnHitByVomitJar"
+			{
+				"signature"		"Infected::OnHitByVomitJar"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"cbaseentity"
+					}
+				}
+			}
+
 			"L4DD::CTerrorPlayer::MaterializeFromGhost"
 			{
 				"signature"		"CTerrorPlayer::MaterializeFromGhost"
@@ -1409,6 +1409,21 @@
 					"a3"
 					{
 						"type"	"int"
+					}
+				}
+			}
+
+			"L4DD::CPhysicsProp::OnTakeDamage"
+			{
+				"signature"		"CPhysicsProp::OnTakeDamage"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"entity"
+					{
+						"type"	"objectptr"
 					}
 				}
 			}
@@ -2433,6 +2448,37 @@
 				"windows"	"3148"
 				"linux"		"3148"
 			}
+
+
+
+			// Animation offsets:
+			/* Windows offset:
+			 *
+			 * Search string "PlayerLedgeHangMiddle", which will lead you to "CTerrorPlayerAnimState::HandleActivity_Incapacitated".
+			 * Go to its only xref function, and again, then you are at vtable of "CTerrorPlayerAnimState".
+			 * Double click on the first virtual function "CTerrorPlayerAnimState::ClearAnimationState".
+			 * Go to its function xref 3 times, and you will meet with an enormous constructor function.
+			 * 
+			 * 1. Generate pseudocode and you can easily find the offset where the cursor is.
+			 * 2. See the "mov" instruction below the highlighted "call".
+			 */
+			"CTerrorPlayer::m_PlayerAnimState"
+			{
+				"linux"		"10512"
+				"windows"	"10524"
+			}
+
+			"CMultiPlayerAnimState::m_eCurrentMainSequenceActivity"
+			{
+				"linux"		"276"
+				"windows"	"276"
+			}
+
+			"CTerrorPlayerAnimState::m_bIsCustomSequence"
+			{
+				"linux"		"340"
+				"windows"	"340"
+			}
 		}
 
 
@@ -3095,6 +3141,17 @@
 				/* Search: "NumberOfTeamDead" call is 2 functions below this. */
 			}
 			// =========================
+
+
+
+			// Animation signatures:
+			"CMultiPlayerAnimState::ResetMainActivity"
+			{
+				"library"		"server"
+				"linux"			"@_ZN21CMultiPlayerAnimState17ResetMainActivityEv"
+				"windows"		"\x56\x8B\x2A\x8B\x2A\x8B\x2A\x2A\xC7\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xFF"
+								/* 56 8B ? 8B ? 8B ? ? C7 ? ? ? ? ? ? ? ? ? FF */
+			}
 
 
 
@@ -3841,18 +3898,6 @@
 			}
 
 			/*
-			 * CDirector::EndScenario(ScenarioRestartReason) [clone]
-			 */
-			"CDirector::EndScenario"
-			{
-				"library"	"server"
-				"linux"		"@_ZN9CDirector11EndScenarioE21ScenarioRestartReason.part.398"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x2A\x2A\x83\x2A\x2A\x0F\x2A\x2A\x0F\x87\x2A\x2A\x2A\x2A\x56"
-				/* ? ? ? ? ? ? ? ? ? ? ? 0F ? ? 83 ? ? 0F ? ? 0F 87 ? ? ? ? 56 */
-				/* Search: "round_end" */
-			}
-
-			/*
 			 * void CTerrorPlayer::OnLedgeGrabbed(CTerrorPlayer *this, const Vector *)
 			 * Search: "%s grabs a ledge - last standing at %s."
 			 */
@@ -4004,6 +4049,16 @@
 				"windows"		"\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x8B\x2A\x2A\x53\x8B\x2A\x2A\x56\x8B\x2A\x8B\x2A\x8B\x2A\x2A\x89"
 				/* 55 8B ? 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 8B ? ? 53 8B ? ? 56 8B ? 8B ? 8B ? ? 89 */
 				/* Search: "Fire prop detonated %.0f,%.0f,%.0f.  Breaker:%s. Attacker:%s.\n" */
+			}
+
+			/* CPhysicsProp::OnTakeDamage(CPhysicsProp *this, const CTakeDamageInfo) */
+			"CPhysicsProp::OnTakeDamage"
+			{
+				"library"		"server"
+				"linux"			"@_ZN12CPhysicsProp12OnTakeDamageERK15CTakeDamageInfo"
+				"windows"		"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x57\x8B\x2A\x2A\x8B\x2A\x57\x8D"
+				/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 56 57 8B ? ? 8B ? 57 8D */
+				/* Search: "prop_fuel_barrel" - There are 2 functions that have this string twice, one of them only contain this string, at the bottom of that one is the target call */
 			}
 
 			/* CGasCan::Event_Killed(CGasCan *this, const CTakeDamageInfo *) */

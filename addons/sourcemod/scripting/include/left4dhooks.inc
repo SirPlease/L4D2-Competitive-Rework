@@ -51,6 +51,8 @@
 #endif
 #define _l4dh_included
 
+#pragma newdecls required
+
 #include <left4dhooks_anim>
 #include <left4dhooks_silver>
 #include <left4dhooks_lux_library>
@@ -58,13 +60,13 @@
 
 
 
-// Natives: 256 (including 3 for L4D1 only)
-// L4D1 = 31 [left4downtown] + 47 [l4d_direct] + 16 [l4d2addresses] + 66 [silvers - mine!] + 4 [anim] = 165
-// L4D2 = 61 [left4downtown] + 59 [l4d_direct] + 31 [l4d2addresses] + 110 [silvers - mine!] + 4 [anim] = 265
+// Natives: 257 (including 3 for L4D1 only)
+// L4D1 = 31 [left4downtown] + 47 [l4d_direct] + 16 [l4d2addresses] + 67 [silvers - mine!] + 4 [anim] = 166
+// L4D2 = 61 [left4downtown] + 59 [l4d_direct] + 31 [l4d2addresses] + 111 [silvers - mine!] + 4 [anim] = 266
 
-// Forwards: 198 (including 5 for L4D1 only)
+// Forwards: 201 (including 5 for L4D1 only)
 // L4D1 = 138
-// L4D2 = 193
+// L4D2 = 196
 
 // Stocks: 169 (L4D1 = 114, L4D2 = 167)
 // left4dhooks_silver			46 stocks	(L4D1 = 39,		L4D2 = 53)
@@ -141,6 +143,7 @@ public void __pl_l4dh_SetNTVOptional()
 	MarkNativeAsOptional("L4D_ReadMemoryString");
 	MarkNativeAsOptional("L4D_GetServerOS");
 	MarkNativeAsOptional("Left4DHooks_Version");
+	MarkNativeAsOptional("L4D_HasMapStarted");
 	MarkNativeAsOptional("L4D2_GetScriptScope");
 	MarkNativeAsOptional("L4D2_GetVScriptEntity");
 	MarkNativeAsOptional("L4D2_ExecVScriptCode");
@@ -392,8 +395,188 @@ public void __pl_l4dh_SetNTVOptional()
 	MarkNativeAsOptional("L4D2_HideVersusScoreboard");
 	MarkNativeAsOptional("L4D2_HideScavengeScoreboard");
 	MarkNativeAsOptional("L4D2_HideScoreboard");
+
+	PlayerAnimState_MarkNativeAsOptional();
+}
+
+// ANIMATION NATIVES
+void PlayerAnimState_MarkNativeAsOptional()
+{
+	MarkNativeAsOptional("PlayerAnimState.FromPlayer");
+	MarkNativeAsOptional("PlayerAnimState.GetMainActivity");
+	MarkNativeAsOptional("PlayerAnimState.ResetMainActivity");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsCustomSequence.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsCustomSequence.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsDead.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsDead.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsHealing.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsHealing.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsResurrection.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsResurrection.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsHitByCharger.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsHitByCharger.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsPummeled.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsPummeled.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsSlammedIntoWall.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsSlammedIntoWall.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsSlammedIntoGround.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsSlammedIntoGround.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsStartPummel.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsStartPummel.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsPounded.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsPounded.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsCarriedByCharger.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsCarriedByCharger.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsPunchedByTank.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsPunchedByTank.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsSpitting.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsSpitting.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsPouncedOn.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsPouncedOn.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsTongueAttacked.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsTongueAttacked.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsStartChainsaw.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsStartChainsaw.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsIsPouncing.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsIsPouncing.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsRiding.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsRiding.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsJockeyRidden.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsJockeyRidden.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsTonguing.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsTonguing.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsCharging.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsCharging.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsPummeling.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsPummeling.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsPounding.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsPounding.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsTongueReelingIn.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsTongueReelingIn.set");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsTongueAttacking.get");
+	MarkNativeAsOptional("PlayerAnimState.m_bIsTongueAttacking.set");
 }
 #endif
+
+
+
+
+
+// ====================================================================================================
+// ANIMATION NATIVES
+// ====================================================================================================
+methodmap PlayerAnimState {
+	// Get the PlayerAnimState instance of a player.
+	public static native PlayerAnimState FromPlayer(int client);
+	
+	// Main activity of player's animation, matching enums in "left4dhooks_anim.inc".
+	public native int GetMainActivity();
+	
+	// Restart and recalculate the main activity.
+	public native void ResetMainActivity();
+	
+	// All booleans (or flags) that used for animation events.
+	property bool m_bIsCustomSequence { // True only after "CTerrorPlayerAnimState::SetCustomSequence".
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsDead {
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsHealing {
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsResurrection {
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsHitByCharger { // aka multi-charged, bowling.
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsPummeled {
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsSlammedIntoWall {
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsSlammedIntoGround {
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsStartPummel { // Something to do with charger pummel animation, not sure about the name.
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsPounded { // Pummel get-up
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsCarriedByCharger {
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsPunchedByTank { // Rock get-up shares this
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsSpitting {
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsPouncedOn {
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsTongueAttacked {
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsStartChainsaw {
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsIsPouncing {
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsRiding {
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsJockeyRidden {
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsTonguing {
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsCharging {
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsPummeling {
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsPounding {
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsTongueReelingIn {
+		public native get();
+		public native set(bool value);
+	}
+	property bool m_bIsTongueAttacking {
+		public native get();
+		public native set(bool value);
+	}
+}
 
 
 
@@ -562,6 +745,7 @@ enum
 // Some constants from 'l4d2util_contants.inc'
 // These are used by the "L4D2Direct_DoAnimationEvent" native and "L4D_OnDoAnimationEvent*" forwards
 // L4D1 seems to only have 35 animation events, the names may not be relative to those listed here
+// For L4D1: See below the enum.
 enum PlayerAnimEvent_t
 {
 	// Made by A1m`
@@ -574,9 +758,7 @@ enum PlayerAnimEvent_t
 	PLAYERANIMEVENT_RELOAD_END = 6, //CMultiPlayerAnimState::DoAnimationEvent, CBaseShotgun::CheckReload->PlayReloadAnim, CTerrorGun::AbortReload
 	PLAYERANIMEVENT_JUMP = 7, // CMultiPlayerAnimState::DoAnimationEvent, CTerrorGameMovement::DoJump, CCSGameMovement::CheckJumpButton
 	PLAYERANIMEVENT_LAND = 8, // CTerrorGameMovement::PlayerRoughLandingEffects
-
 	PLAYERANIMEVENT_SWIM = 9, // Not sure, not used in the game anyway
-
 	PLAYERANIMEVENT_DIE = 10, // CMultiPlayerAnimState::DoAnimationEvent, CTerrorPlayer::StartSurvivorDeathAnim, CTerrorPlayer::OnIncapacitatedAsTank
 	PLAYERANIMEVENT_FLINCH_CHEST = 11, // CMultiPlayerAnimState::DoAnimationEvent
 	PLAYERANIMEVENT_FLINCH_HEAD = 12, // CMultiPlayerAnimState::DoAnimationEvent
@@ -584,19 +766,14 @@ enum PlayerAnimEvent_t
 	PLAYERANIMEVENT_FLINCH_RIGHTARM = 14, // CMultiPlayerAnimState::DoAnimationEvent
 	PLAYERANIMEVENT_FLINCH_LEFTLEG = 15, // CMultiPlayerAnimState::DoAnimationEvent
 	PLAYERANIMEVENT_FLINCH_RIGHTLEG = 16, // CMultiPlayerAnimState::DoAnimationEvent
-
 	PLAYERANIMEVENT_DOUBLEJUMP = 17, // Not sure, not used in the game anyway
-
 	PLAYERANIMEVENT_CANCEL_GESTURE_ATTACK_AND_RELOAD = 18, // CTerrorPlayer::OnShovedByPounceLanding, CTerrorPlayer::OnShovedBySurvivor, CTerrorPlayer::OnRideEnded, CTerrorPlayer::OnPounceEnded
-
 	PLAYERANIMEVENT_CANCEL = 19, // Not sure, not used in the game anyway
-
 	PLAYERANIMEVENT_SPAWN = 20, // CMultiPlayerAnimState::DoAnimationEvent
 	PLAYERANIMEVENT_SNAP_YAW = 21, // CMultiPlayerAnimState::DoAnimationEvent
 	PLAYERANIMEVENT_CUSTOM = 22, // CMultiPlayerAnimState::DoAnimationEvent
 	PLAYERANIMEVENT_CUSTOM_GESTURE = 23, // CMultiPlayerAnimState::DoAnimationEvent
 	PLAYERANIMEVENT_CUSTOM_SEQUENCE = 24, // CMultiPlayerAnimState::DoAnimationEvent
-
 	PLAYERANIMEVENT_CUSTOM_GESTURE_SEQUENCE = 25, // Not sure, not used in the game anyway
 
 	// TF Specific. Here until there's a derived game solution to this
@@ -607,7 +784,6 @@ enum PlayerAnimEvent_t
 	PLAYERANIMEVENT_GRENADE1_THROW = 30, // Not sure, not used in the game anyway
 	PLAYERANIMEVENT_GRENADE2_THROW = 31, // Not sure, not used in the game anyway
 	PLAYERANIMEVENT_VOICE_COMMAND_GESTURE = 32, // Not sure, not used in the game?. CTerrorPlayerAnimState::DoAnimationEvent
-
 	PLAYERANIMEVENT_HAND_ATTACK = 33, // CClaw::OnSwingStart, CTerrorPlayer::UpdateTankEffects, CTankClaw::OnSwingStart
 	PLAYERANIMEVENT_HAND_LOW_ATTACK = 34, // CTankClaw::OnSwingStart, CTerrorWeapon::OnSwingStart
 	PLAYERANIMEVENT_SHOVE_COMMON = 35, // CTerrorWeapon::OnSwingStart
@@ -635,17 +811,13 @@ enum PlayerAnimEvent_t
 	PLAYERANIMEVENT_FLINCH_EVENT_SHOVED_BY_TEAMMATE = 57, // CTerrorPlayer::OnTakeDamageInternal->GetFlinchEvent, CTerrorPlayer::OnTakeDamage_Alive->GetFlinchEvent, CTerrorWeapon::OnHit->GetFlinchEvent
 	PLAYERANIMEVENT_FLINCH_EVENT_TAKE_DAMAGE = 58, // CTerrorPlayer::GetFlinchEvent
 	PLAYERANIMEVENT_THROW_ITEM_START = 59, // CBaseCSGrenade::PrimaryAttack
-
 	PLAYERANIMEVENT_ROLL_GRENADE = 60, // Not sure, not used in the game anyway
-
 	PLAYERANIMEVENT_THROW_ITEM_FINISH = 61, // CBaseCSGrenade::ItemPostFrame
 	PLAYERANIMEVENT_THROW_GRENADE = 62, // CCSPlayer::DoAnimationEvent
 	PLAYERANIMEVENT_THROW_ITEM_HOLSTER = 63, // CBaseCSGrenade::Holster
 	PLAYERANIMEVENT_PLAYER_USE = 64, // CTerrorPlayer::OnUseEntity
 	PLAYERANIMEVENT_CHANGE_SLOT = 65, // CWeaponCSBase::DefaultDeploy
-
 	PLAYERANIMEVENT_UNKNOWN_START_GESTURE = 66, // Don't know. Not used in the game? Something like option 32? CTerrorPlayerAnimState::DoAnimationEvent
-
 	PLAYERANIMEVENT_TUG_HANGING_PLAYER = 67, // CTerrorPlayer::StartTug
 	PLAYERANIMEVENT_STUMBLE = 68, // CTerrorPlayer::UpdateStagger, CTerrorPlayer::OnShovedByPounceLanding, CTerrorPlayer::OnStaggered, CTerrorPlayer::UpdateStagger, CTerrorPlayer::OnShovedBySurvivor
 	PLAYERANIMEVENT_POUNCE_VICTIM_END = 69,
@@ -682,6 +854,35 @@ enum PlayerAnimEvent_t
 	PLAYERANIMEVENT_COUNT // Total size 99. Function 'CTerrorPlayer::DoAnimationEvent'
 };
 
+// L4D1 anim values appear to be related to these below. Thanks to "Dragokas" for gathering a list of them:
+/*
+1 - Primary Attack
+2 - Unused
+3 - Aiming
+4 - Reload Reserved Ammo
+5 - Chambering Of A Cartridge (No Sound)
+6 - Chambering Of A Cartridge (With Sound)
+7 - Shotgun Reload (With Sound)
+8 - Shotgun Reload (No Sound)
+9 - Shove (Side)
+10 - Shove (Forward)
+11 - Shove (Right Arm)
+12 - Stomp
+13 - Heal Myself
+14 - Heal Teammate1
+15 - Pick Up Incapped Player
+16 - Heal Teammate2
+21 - Headbutt
+22 - Headbutt2
+23 - Pick Up Item From Ground
+24 - Take Item From Teammate
+25 - Change Weapon
+26 - Weapon Reload Fast
+27 - Weapon Recoil + Reload
+28 - Weapon Recoil + Reload (same)
+29... - Seems unused (Same for 2, 17-20).
+*/
+
 
 
 
@@ -698,7 +899,7 @@ typeset AnimHookCallback
 	 * @param client		Client triggering
 	 * @param sequence		The animation "activity" (pre-hook) or "m_nSequence" (post-hook) sequence number being used
 	 *
-	 * @return				Plugin_Changed to change animation, Plugin_Continue otherwise
+	 * @return				Plugin_Changed to change the animation sequence, Plugin_Continue otherwise
 	 */
 	function Action(int client, int &sequence);
 }
@@ -1995,39 +2196,6 @@ forward void L4D2_OnEndVersusModeRound_Post();
  */
 forward void L4D2_OnEndVersusModeRound_PostHandled();
 
-/**
- * @brief Called whenever CDirector::EndScenario(ScenarioRestartReason) [clone] is invoked
- * @remarks Called before when a round is about to end
- *
- * @param reason	The reason for ending, please provide a list of known reason numbers
- *
- * @return			Plugin_Handled to block, Plugin_Continue otherwise
- */
-
-#pragma deprecated This is for private testing and not released for public usage yet
-forward Action L4D_OnEndScenario(int reason);
-
-/**
- * @brief Called whenever CDirector::EndScenario(ScenarioRestartReason) [clone] is invoked
- * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
- *
- * @param reason	The reason for ending, please provide a list of known reason numbers
- *
- * @noreturn
- */
-#pragma deprecated This is for private testing and not released for public usage yet
-forward void L4D_OnEndScenario_Post(int reason);
-
-/**
- * @brief Called whenever CDirector::EndScenario(ScenarioRestartReason) [clone] is invoked
- * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
- *
- * @param reason	The reason for ending, please provide a list of known reason numbers
- *
- * @noreturn
- */
-#pragma deprecated This is for private testing and not released for public usage yet
-forward void L4D_OnEndScenario_PostHandled(int reason);
 
 /**
  * @brief Called whenever CTerrorPlayer::OnLedgeGrabbed(CTerrorPlayer *this, const Vector *) is invoked
@@ -2842,6 +3010,41 @@ forward void L4D2_OnHitByVomitJar_Post(int victim, int attacker);
 forward void L4D2_OnHitByVomitJar_PostHandled(int victim, int attacker);
 
 /**
+ * @brief Called whenever Infected::OnHitByVomitJar is invoked
+ * @remarks Called when a common infected or Witch is about to be hit from a Bilejar explosion and possibly boomer explosion
+ *
+ * @param victim			the common who's now it
+ * @param attacker			the attacker who caused the vomit (can be 0)
+ *
+ * @return					Plugin_Handled to block, Plugin_Changed to use overwritten values from plugin, Plugin_Continue otherwise
+ */
+forward Action L4D2_Infected_HitByVomitJar(int victim, int &attacker);
+
+/**
+ * @brief Called whenever Infected::OnHitByVomitJar is invoked
+ * @remarks Called when a common infected or Witch is hit from a Bilejar explosion and possibly boomer explosion
+ * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @param victim			the common who's now it
+ * @param attacker			the attacker who caused the vomit (can be 0)
+ *
+ * @noreturn
+ */
+forward void L4D2_Infected_HitByVomitJar_Post(int victim, int attacker);
+
+/**
+ * @brief Called whenever Infected::OnHitByVomitJar is invoked
+ * @remarks Called when a common infected or Witch is hit from a Bilejar explosion and possibly boomer explosion
+ * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @param victim			the common who's now it
+ * @param attacker			the attacker who caused the vomit (can be 0)
+ *
+ * @noreturn
+ */
+forward void L4D2_Infected_HitByVomitJar_PostHandled(int victim, int attacker);
+
+/**
  * @brief Called whenever CPipeBombProjectile::Create is invoked
  * @remarks Called when a PipeBomb projectile is being created
  *
@@ -3054,6 +3257,7 @@ forward void L4D_CBreakableProp_Break(int prop, int entity);
  * @note: Detouring as a pre-hook for changing "first_aid_heal_percent" per player before healing finishes
  * @note: Detouring as a post-hook for changing "first_aid_heal_percent" back to default value after healing finishes
  * @note: This does not change the animation speed
+ * @note: To find the use entity that is being targeted, use the native: "L4D_FindUseEntity"
  *
  * @param client			the client performing the action
  * @param entity			the medkit entity they are using
@@ -3069,6 +3273,7 @@ forward Action L4D1_FirstAidKit_StartHealing(int client, int entity);
  * @note: Detouring as a pre-hook for changing "first_aid_heal_percent" per player before healing finishes
  * @note: Detouring as a post-hook for changing "first_aid_heal_percent" back to default value after healing finishes
  * @note: This does not change the animation speed
+ * @note: To find the use entity that is being targeted, use the native: "L4D_FindUseEntity"
  *
  * @param client			the client performing the action
  * @param entity			the medkit entity they are using
@@ -3084,6 +3289,7 @@ forward void L4D1_FirstAidKit_StartHealing_Post(int client, int entity);
  * @note: Detouring as a pre-hook for changing "first_aid_heal_percent" per player before healing finishes
  * @note: Detouring as a post-hook for changing "first_aid_heal_percent" back to default value after healing finishes
  * @note: This does not change the animation speed
+ * @note: To find the use entity that is being targeted, use the native: "L4D_FindUseEntity"
  *
  * @param client			the client performing the action
  * @param entity			the medkit entity they are using
@@ -3105,6 +3311,7 @@ forward void L4D1_FirstAidKit_StartHealing_PostHandled(int client, int entity);
  * - "gas_can_use_duration"
  * - "upgrade_pack_use_duration"
  * @note: Detouring as a post-hook for changing the above back to default values after starting any actions
+ * @note: To find the use entity that is being targeted, use the native: "L4D_FindUseEntity"
  *
  * @param client			the client performing the action
  * @param entity			the medkit entity they are using
@@ -3127,6 +3334,7 @@ forward Action L4D2_BackpackItem_StartAction(int client, int entity, any type);
  * - "gas_can_use_duration"
  * - "upgrade_pack_use_duration"
  * @note: Detouring as a post-hook for changing the above back to default values after starting any actions
+ * @note: To find the use entity that is being targeted, use the native: "L4D_FindUseEntity"
  *
  * @param client			the client performing the action
  * @param entity			the medkit entity they are using
@@ -3149,6 +3357,7 @@ forward void L4D2_BackpackItem_StartAction_Post(int client, int entity, any type
  * - "gas_can_use_duration"
  * - "upgrade_pack_use_duration"
  * @note: Detouring as a post-hook for changing the above back to default values after starting any actions
+ * @note: To find the use entity that is being targeted, use the native: "L4D_FindUseEntity"
  *
  * @param client			the client performing the action
  * @param entity			the medkit entity they are using
@@ -3412,6 +3621,13 @@ native int L4D_GetServerOS();
  * @return	Version number
  */
 native int Left4DHooks_Version();
+
+/**
+ * @brief Checks if the map and addresses are loaded that some natives rely on
+ *
+ * @return	True if the map has started and addresses are loaded, false otherwise
+ */
+native bool L4D_HasMapStarted();
 
 /**
 * @brief Returns an entities script scope (HSCRIPT)

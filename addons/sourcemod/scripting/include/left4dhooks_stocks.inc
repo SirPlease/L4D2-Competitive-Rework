@@ -32,6 +32,8 @@
 #endif
 #define _l4d_stocks_included
 
+#pragma newdecls required
+
 #tryinclude <left4dhooks_anim>
 #tryinclude <left4dhooks_silver>
 #tryinclude <left4dhooks_lux_library>
@@ -665,7 +667,7 @@ stock int L4D_GetPendingTankPlayer()
  * @return				True if glow was set, false if entity does not support glow.
  */
 // L4D2 only.
-stock bool L4D2_SetEntityGlow(int entity, L4D2GlowType type, int range, int minRange, colorOverride[3], bool flashing)
+stock bool L4D2_SetEntityGlow(int entity, L4D2GlowType type, int range, int minRange, int colorOverride[3], bool flashing)
 {
 	if (!IsValidEntity(entity))
 	{

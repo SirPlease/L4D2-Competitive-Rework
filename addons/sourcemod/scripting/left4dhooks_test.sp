@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.133"
+#define PLUGIN_VERSION		"1.137"
 
 /*=======================================================================================
 	Plugin Info:
@@ -121,6 +121,34 @@ public void OnPluginStart()
 }
 
 
+
+// ====================================================================================================
+// ADDRESSES - Demonstrating when addresses are valid for use with certain natives (documented in left4dhooks.inc)
+// ====================================================================================================
+/*
+public void OnMapStart()
+{
+	// "L4D_HasMapStarted" native is only available in left4dhooks version 1.135+ this just checks if the version being used would allow calling the native, you could just require 1.135 instead of adding these extra checks
+	if( GetFeatureStatus(FeatureType_Native, "Left4DHooks_Version") != FeatureStatus_Available || Left4DHooks_Version() < 1135 || !L4D_HasMapStarted() )
+	{
+		RequestFrame(OnFrameStart);
+	}
+	else
+	{
+		OnFrameStart();
+	}
+}
+
+void OnFrameStart()
+{
+	// Basically depending on plugin load order, OnMapStart might fire before or after Left4DHooks
+	// If it's after then everything should be fine, but before would cause problems as some natives are not ready to be called by then
+	// So using RequestFrame would fix the issue, but this way you could call the native either in OnMapStart or 1 frame later if it's not ready yet
+	// The native "L4D2_GetSurvivorSetMap" is one of those which need the addresses to be loaded first
+	// If you search for "OnMapStart" in the include file you will see all the other natives that require this method if used early on
+	bool g_bIsL4D1 = L4D2_GetSurvivorSetMap() == 2 ? false : true;
+}
+// */
 
 
 
@@ -319,6 +347,68 @@ Action sm_l4dd(int client, int args)
 		Uncomment the things you want to test. All disabled by default.
 		Must test individual sections on their own otherwise you'll receive errors about symbols already defined..
 	*/
+
+
+
+	// PrintToServer("L4D_HasMapStarted %d", L4D_HasMapStarted()); // WORKS
+
+
+
+	/*
+	if( client > 0 )
+	{
+		PlayerAnimState anim = PlayerAnimState.FromPlayer(client);
+
+		// Not gonna show the right number until next frame of a new animation event (the following)
+		PrintToChat(client, "Activity = %d", anim.GetMainActivity());
+
+		// Should be true if in intro sequence
+		PrintToChat(client, "m_bIsCustomSequence = %s", anim.m_bIsCustomSequence ? "true" : "false");
+
+		if( !anim.m_bIsCustomSequence )
+		{
+			static bool time_to_restart = false;
+			
+			if( time_to_restart )
+			{
+				anim.ResetMainActivity();
+				time_to_restart = false;
+
+				PrintToChat(client, "ResetMainActivity");
+			}
+			else
+			{
+				static int step = 0;
+				static const int max_step = 2;
+
+				switch( step )
+				{
+					case 0:
+					{
+						L4D2Direct_DoAnimationEvent(client, view_as<int>(PLAYERANIMEVENT_PLAYERHIT_BY_TANK));
+
+						// Should be true after "L4D2Direct_DoAnimationEvent" above
+						PrintToChat(client, "m_bIsPunchedByTank = %s", anim.m_bIsPunchedByTank ? "true" : "false");
+					}
+					case 1:
+					{
+						L4D2_CTerrorPlayer_Fling(client, client, view_as<float>({0.0, 0.0, 0.0}));
+
+						// Should be true after "L4D2_CTerrorPlayer_Fling" above
+						PrintToChat(client, "m_bIsHitByCharger = %s", anim.m_bIsHitByCharger ? "true" : "false");
+					}
+				}
+
+				step++;
+				time_to_restart = true;
+				if( step >= max_step )
+					step = 0;
+			}
+		}
+
+		// There are more bits, but regarding how these natives are implemented, it's promised the rest be working.
+	}
+	// */
 
 
 
@@ -3309,49 +3399,6 @@ public void L4D2_OnEndVersusModeRound_PostHandled()
 	}
 }
 
-/*
-public Action L4D_OnEndScenario(int reason)
-{
-	static int called;
-	if( called < MAX_CALLS )
-	{
-		if( called == 0 ) g_iForwards++;
-		called++;
-
-		ForwardCalled("\"L4D_OnEndScenario\" Reason: %d", reason);
-	}
-
-	// DOESN'T STOP THE ROUND ENDING
-	// return Plugin_Handled;
-
-	return Plugin_Continue;
-}
-
-public void L4D_OnEndScenario_Post(int reason)
-{
-	static int called;
-	if( called < MAX_CALLS )
-	{
-		if( called == 0 ) g_iForwards++;
-		called++;
-
-		ForwardCalled("\"L4D_OnEndScenario_Post\" Reason: %d", reason);
-	}
-}
-
-public void L4D_OnEndScenario_PostHandled(int reason)
-{
-	static int called;
-	if( called < MAX_CALLS )
-	{
-		if( called == 0 ) g_iForwards++;
-		called++;
-
-		ForwardCalled("\"L4D_OnEndScenario_PostHandled\" Reason: %d", reason);
-	}
-}
-*/
-
 public Action L4D_OnRecalculateVersusScore(int client)
 {
 	static int called;
@@ -3915,7 +3962,7 @@ public Action L4D2_OnHitByVomitJar(int victim, int &attacker)
 		if( called == 0 ) g_iForwards++;
 		called++;
 
-		ForwardCalled("\"L4D2_OnHitByVomitJar\" %d > %d)", victim, attacker);
+		ForwardCalled("\"L4D2_OnHitByVomitJar\" %d > %d", victim, attacker);
 	}
 
 	// attacker = victim;
@@ -3935,7 +3982,7 @@ public void L4D2_OnHitByVomitJar_Post(int victim, int attacker)
 		if( called == 0 ) g_iForwards++;
 		called++;
 
-		ForwardCalled("\"L4D2_OnHitByVomitJar_Post\" %d > %d)", victim, attacker);
+		ForwardCalled("\"L4D2_OnHitByVomitJar_Post\" %d > %d", victim, attacker);
 	}
 }
 
@@ -3947,7 +3994,51 @@ public void L4D2_OnHitByVomitJar_PostHandled(int victim, int attacker)
 		if( called == 0 ) g_iForwards++;
 		called++;
 
-		ForwardCalled("\"L4D2_OnHitByVomitJar_PostHandled\" %d > %d)", victim, attacker);
+		ForwardCalled("\"L4D2_OnHitByVomitJar_PostHandled\" %d > %d", victim, attacker);
+	}
+}
+
+public Action L4D2_Infected_HitByVomitJar(int victim, int &attacker)
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D2_Infected_HitByVomitJar\" %d > %d", victim, attacker);
+	}
+
+	// attacker = victim;
+	// return Plugin_Changed;
+
+	// WORKS
+	// return Plugin_Handled;
+
+	return Plugin_Continue;
+}
+
+public void L4D2_Infected_HitByVomitJar_Post(int victim, int attacker)
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D2_Infected_HitByVomitJar_Post\" %d > %d", victim, attacker);
+	}
+}
+
+public void L4D2_Infected_HitByVomitJar_PostHandled(int victim, int attacker)
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D2_Infected_HitByVomitJar_PostHandled\" %d > %d", victim, attacker);
 	}
 }
 
@@ -4227,6 +4318,9 @@ public Action L4D1_FirstAidKit_StartHealing(int client, int entity)
 		int target = L4D_FindUseEntity(client, true, range); // "m_healTarget" is not set at this point, must call this native if you wish to identify the target before healing
 		if( target < 0 || target > MaxClients ) target = 0;
 
+		if( GetClientButtons(client) & IN_ATTACK )
+			target = client;
+
 		ForwardCalled("\"L4D1_FirstAidKit_StartHealing\" %d (%N) - MedKit = %d. Healing: %d (%N)", client, client, entity, target, target);
 	}
 
@@ -4306,7 +4400,10 @@ public Action L4D2_BackpackItem_StartAction(int client, int entity, any type)
 
 		if( type == L4D2WeaponId_FirstAidKit || type == L4D2WeaponId_Defibrillator )
 		{
-			if( target < 0 || target > MaxClients ) target = 0;
+			if( GetClientButtons(client) & IN_ATTACK )
+				target = client;
+			else
+				if( target < 1 || target > MaxClients ) target = client;
 		}
 		else
 		{
@@ -5518,7 +5615,7 @@ void ForwardCalled(const char[] format, any ...)
 	// LogAction(0, -1, "Forward %d/%d called %s", g_iForwards, g_iForwardsMax, buffer);
 
 	// PrintToServer("----------");
-	PrintToServer("L4DD: %s", buffer);
+	PrintToServer(" > L4DD: %s", buffer);
 	// PrintToServer("----------");
 }
 

@@ -114,6 +114,7 @@ Handle g_hSDK_ZombieManager_SpawnWitchBride;
 Handle g_hSDK_GetWeaponInfo;
 Handle g_hSDK_CMeleeWeaponInfoStore_GetMeleeWeaponInfo;
 Handle g_hSDK_CTerrorGameRules_GetMissionInfo;
+Handle g_hSDK_CMultiPlayerAnimState_ResetMainActivity;
 Handle g_hSDK_CDirector_TryOfferingTankBot;
 Handle g_hSDK_CNavMesh_GetNavArea;
 Handle g_hSDK_CNavArea_IsConnected;
@@ -264,6 +265,11 @@ int Native_GetServerOS(Handle plugin, int numParams) // Native "L4D_GetServerOS"
 int Native_Left4DHooks_Version(Handle plugin, int numParams) // Native "Left4DHooks_Version"
 {
 	return PLUGIN_VERLONG;
+}
+
+int Native_HasMapStarted(Handle plugin, int numParams) // Native "L4D_HasMapStarted"
+{
+	return g_bMapStarted;
 }
 
 
@@ -1642,6 +1648,25 @@ int Native_CGrenadeLauncher_Projectile_Create(Handle plugin, int numParams) // N
 	// return entity;
 }
 
+
+
+// ====================================================================================================
+// Spitter acid projectile damage
+// ====================================================================================================
+bool g_bAcidWatch;
+int g_iAcidEntity[2048];
+
+// Sounds are based on "PlayerZombie.AttackHit" from "game_sounds_infected_special.txt"
+char g_sAcidSounds[6][] =
+{
+	"player/PZ/hit/zombie_slice_1.wav",
+	"player/PZ/hit/zombie_slice_2.wav",
+	"player/PZ/hit/zombie_slice_3.wav",
+	"player/PZ/hit/zombie_slice_4.wav",
+	"player/PZ/hit/zombie_slice_5.wav",
+	"player/PZ/hit/zombie_slice_6.wav"
+};
+
 int Native_CSpitterProjectile_Create(Handle plugin, int numParams) // Native "L4D2_SpitterPrj"
 {
 	if( !g_bLeft4Dead2 ) ThrowNativeError(SP_ERROR_NOT_RUNNABLE, NATIVE_UNSUPPORTED2);
@@ -1657,14 +1682,20 @@ int Native_CSpitterProjectile_Create(Handle plugin, int numParams) // Native "L4
 	int entity = SDKCall(g_hSDK_CSpitterProjectile_Create, vPos, vAng, vAng, vAng, client);
 	// SetEntPropFloat(entity, Prop_Data, "m_flCreateTime", GetGameTime());
 
+	AcidDamageTest(client, entity);
+
+	return entity;
+}
+
+void AcidDamageTest(int client, int entity)
+{
 	// Not watching for acid damage
 	if( !g_bAcidWatch )
 	{
 		// Verify client is not team 3, which causes sound bug
-		if( !client || GetClientTeam(client) != 3 )
+		if( !client || GetClientTeam(client) != 3 || !IsClientInGame(client) )
 		{
 			g_bAcidWatch = true;
-			g_iAcidEntity[entity] = EntIndexToEntRef(entity);
 
 			// Hook clients damage
 			for( int i = 1; i <= MaxClients; i++ )
@@ -1677,7 +1708,7 @@ int Native_CSpitterProjectile_Create(Handle plugin, int numParams) // Native "L4
 		}
 	}
 
-	return entity;
+	g_iAcidEntity[entity] = EntIndexToEntRef(entity);
 }
 
 void OnAcidDamage(int victim, int attacker, int inflictor, float damage, int damagetype)
@@ -1687,9 +1718,18 @@ void OnAcidDamage(int victim, int attacker, int inflictor, float damage, int dam
 	{
 		if( ((damagetype == (DMG_ENERGYBEAM|DMG_RADIATION) && attacker > 0 && attacker <= MaxClients && IsClientInGame(attacker) && GetClientTeam(attacker) != 3)) || (damagetype == (DMG_ENERGYBEAM|DMG_RADIATION|DMG_PREVENT_PHYSICS_FORCE) && attacker > MaxClients) )
 		{
-			float vPos[3];
-			GetClientAbsOrigin(victim, vPos);
-			EmitSoundToAll(g_sAcidSounds[GetRandomInt(0, sizeof(g_sAcidSounds) - 1)], _, SNDCHAN_AUTO, 85, _, 0.55, GetRandomInt(95, 105), _, vPos);
+			EmitSoundToAll(g_sAcidSounds[GetRandomInt(0, sizeof(g_sAcidSounds) - 1)], inflictor, SNDCHAN_AUTO, 85, _, 0.55, GetRandomInt(95, 105));
+
+			// Red flash when taking damage
+			Handle msg = StartMessageOne("Fade", victim);
+			BfWriteShort(msg, 256);
+			BfWriteShort(msg, 0);		// Duration
+			BfWriteShort(msg, 1);		// Type
+			BfWriteByte(msg, 255);		// Red
+			BfWriteByte(msg, 0);		// Green
+			BfWriteByte(msg, 0);		// Blue
+			BfWriteByte(msg, 30);		// Alpha
+			EndMessage();
 		}
 	}
 }
@@ -1727,6 +1767,9 @@ public void OnEntityDestroyed(int entity)
 		}
 	}
 }
+// ====================================================================================================
+
+
 
 int Native_CTerrorPlayer_OnAdrenalineUsed(Handle plugin, int numParams) // Native "L4D2_UseAdrenaline"
 {
@@ -5202,5 +5245,344 @@ int Native_CDirector_UnregisterForbiddenTarget(Handle plugin, int numParams) // 
 	//PrintToServer("#### CALL g_hSDK_CDirector_UnregisterForbiddenTarget");
 	SDKCall(g_hSDK_CDirector_UnregisterForbiddenTarget, g_pDirector, entity);
 
+	return 0;
+}
+
+
+
+
+
+// ====================================================================================================
+//										ANIMATION NATIVES
+// Thanks for "Forgetest" and "A1m`" for providing.
+// ====================================================================================================
+void PlayerAnimState_CreateNatives()
+{
+	CreateNative("PlayerAnimState.FromPlayer", Native_PlayerAnimState_FromPlayer);
+	CreateNative("PlayerAnimState.GetMainActivity", Native_PlayerAnimState_GetMainActivity);
+	CreateNative("PlayerAnimState.ResetMainActivity", Native_PlayerAnimState_ResetMainActivity);
+	CreateNative("PlayerAnimState.m_bIsCustomSequence.get", Native_PlayerAnimState_m_bIsCustomSequence_get);
+	CreateNative("PlayerAnimState.m_bIsCustomSequence.set", Native_PlayerAnimState_m_bIsCustomSequence_set);
+	CreateNative("PlayerAnimState.m_bIsDead.get", Native_PlayerAnimState_m_bIsDead_get);
+	CreateNative("PlayerAnimState.m_bIsDead.set", Native_PlayerAnimState_m_bIsDead_set);
+	CreateNative("PlayerAnimState.m_bIsHealing.get", Native_PlayerAnimState_m_bIsHealing_get);
+	CreateNative("PlayerAnimState.m_bIsHealing.set", Native_PlayerAnimState_m_bIsHealing_set);
+	CreateNative("PlayerAnimState.m_bIsResurrection.get", Native_PlayerAnimState_m_bIsResurrection_get);
+	CreateNative("PlayerAnimState.m_bIsResurrection.set", Native_PlayerAnimState_m_bIsResurrection_set);
+	CreateNative("PlayerAnimState.m_bIsHitByCharger.get", Native_PlayerAnimState_m_bIsHitByCharger_get);
+	CreateNative("PlayerAnimState.m_bIsHitByCharger.set", Native_PlayerAnimState_m_bIsHitByCharger_set);
+	CreateNative("PlayerAnimState.m_bIsPummeled.get", Native_PlayerAnimState_m_bIsPummeled_get);
+	CreateNative("PlayerAnimState.m_bIsPummeled.set", Native_PlayerAnimState_m_bIsPummeled_set);
+	CreateNative("PlayerAnimState.m_bIsSlammedIntoWall.get", Native_PlayerAnimState_m_bIsSlammedIntoWall_get);
+	CreateNative("PlayerAnimState.m_bIsSlammedIntoWall.set", Native_PlayerAnimState_m_bIsSlammedIntoWall_set);
+	CreateNative("PlayerAnimState.m_bIsSlammedIntoGround.get", Native_PlayerAnimState_m_bIsSlammedIntoGround_get);
+	CreateNative("PlayerAnimState.m_bIsSlammedIntoGround.set", Native_PlayerAnimState_m_bIsSlammedIntoGround_set);
+	CreateNative("PlayerAnimState.m_bIsStartPummel.get", Native_PlayerAnimState_m_bIsStartPummel_get);
+	CreateNative("PlayerAnimState.m_bIsStartPummel.set", Native_PlayerAnimState_m_bIsStartPummel_set);
+	CreateNative("PlayerAnimState.m_bIsPounded.get", Native_PlayerAnimState_m_bIsPounded_get);
+	CreateNative("PlayerAnimState.m_bIsPounded.set", Native_PlayerAnimState_m_bIsPounded_set);
+	CreateNative("PlayerAnimState.m_bIsCarriedByCharger.get", Native_PlayerAnimState_m_bIsCarriedByCharger_get);
+	CreateNative("PlayerAnimState.m_bIsCarriedByCharger.set", Native_PlayerAnimState_m_bIsCarriedByCharger_set);
+	CreateNative("PlayerAnimState.m_bIsPunchedByTank.get", Native_PlayerAnimState_m_bIsPunchedByTank_get);
+	CreateNative("PlayerAnimState.m_bIsPunchedByTank.set", Native_PlayerAnimState_m_bIsPunchedByTank_set);
+	CreateNative("PlayerAnimState.m_bIsSpitting.get", Native_PlayerAnimState_m_bIsSpitting_get);
+	CreateNative("PlayerAnimState.m_bIsSpitting.set", Native_PlayerAnimState_m_bIsSpitting_set);
+	CreateNative("PlayerAnimState.m_bIsPouncedOn.get", Native_PlayerAnimState_m_bIsPouncedOn_get);
+	CreateNative("PlayerAnimState.m_bIsPouncedOn.set", Native_PlayerAnimState_m_bIsPouncedOn_set);
+	CreateNative("PlayerAnimState.m_bIsTongueAttacked.get", Native_PlayerAnimState_m_bIsTongueAttacked_get);
+	CreateNative("PlayerAnimState.m_bIsTongueAttacked.set", Native_PlayerAnimState_m_bIsTongueAttacked_set);
+	CreateNative("PlayerAnimState.m_bIsStartChainsaw.get", Native_PlayerAnimState_m_bIsStartChainsaw_get);
+	CreateNative("PlayerAnimState.m_bIsStartChainsaw.set", Native_PlayerAnimState_m_bIsStartChainsaw_set);
+	CreateNative("PlayerAnimState.m_bIsIsPouncing.get", Native_PlayerAnimState_m_bIsIsPouncing_get);
+	CreateNative("PlayerAnimState.m_bIsIsPouncing.set", Native_PlayerAnimState_m_bIsIsPouncing_set);
+	CreateNative("PlayerAnimState.m_bIsRiding.get", Native_PlayerAnimState_m_bIsRiding_get);
+	CreateNative("PlayerAnimState.m_bIsRiding.set", Native_PlayerAnimState_m_bIsRiding_set);
+	CreateNative("PlayerAnimState.m_bIsJockeyRidden.get", Native_PlayerAnimState_m_bIsJockeyRidden_get);
+	CreateNative("PlayerAnimState.m_bIsJockeyRidden.set", Native_PlayerAnimState_m_bIsJockeyRidden_set);
+	CreateNative("PlayerAnimState.m_bIsTonguing.get", Native_PlayerAnimState_m_bIsTonguing_get);
+	CreateNative("PlayerAnimState.m_bIsTonguing.set", Native_PlayerAnimState_m_bIsTonguing_set);
+	CreateNative("PlayerAnimState.m_bIsCharging.get", Native_PlayerAnimState_m_bIsCharging_get);
+	CreateNative("PlayerAnimState.m_bIsCharging.set", Native_PlayerAnimState_m_bIsCharging_set);
+	CreateNative("PlayerAnimState.m_bIsPummeling.get", Native_PlayerAnimState_m_bIsPummeling_get);
+	CreateNative("PlayerAnimState.m_bIsPummeling.set", Native_PlayerAnimState_m_bIsPummeling_set);
+	CreateNative("PlayerAnimState.m_bIsPounding.get", Native_PlayerAnimState_m_bIsPounding_get);
+	CreateNative("PlayerAnimState.m_bIsPounding.set", Native_PlayerAnimState_m_bIsPounding_set);
+	CreateNative("PlayerAnimState.m_bIsTongueReelingIn.get", Native_PlayerAnimState_m_bIsTongueReelingIn_get);
+	CreateNative("PlayerAnimState.m_bIsTongueReelingIn.set", Native_PlayerAnimState_m_bIsTongueReelingIn_set);
+	CreateNative("PlayerAnimState.m_bIsTongueAttacking.get", Native_PlayerAnimState_m_bIsTongueAttacking_get);
+	CreateNative("PlayerAnimState.m_bIsTongueAttacking.set", Native_PlayerAnimState_m_bIsTongueAttacking_set);
+}
+
+any Native_PlayerAnimState_FromPlayer(Handle plugin, int numParams)
+{
+	ValidateOffset(g_iOff_m_PlayerAnimState, "CTerrorPlayer::m_PlayerAnimState");
+	
+	int client = GetNativeCell(1);
+	Address anim = view_as<Address>(GetEntData(client, g_iOff_m_PlayerAnimState));
+	// null check? 
+	
+	return anim;
+}
+
+any Native_PlayerAnimState_GetMainActivity(Handle plugin, int numParams)
+{
+	ValidateOffset(g_iOff_m_eCurrentMainSequenceActivity, "CMultiPlayerAnimState::m_eCurrentMainSequenceActivity");
+	
+	Address anim = GetNativeCell(1);
+	
+	return LoadFromAddress(anim + view_as<Address>(g_iOff_m_eCurrentMainSequenceActivity), NumberType_Int32);
+}
+
+any Native_PlayerAnimState_ResetMainActivity(Handle plugin, int numParams)
+{
+	ValidateNatives(g_hSDK_CMultiPlayerAnimState_ResetMainActivity, "CMultiPlayerAnimState::ResetMainActivity");
+	
+	Address anim = GetNativeCell(1);
+	SDKCall(g_hSDK_CMultiPlayerAnimState_ResetMainActivity, anim);
+	
+	return 0;
+}
+
+// relOffset = relative offset to "m_bIsCustomSequence"
+// for booleans from "m_bIsCustomSequence" all the way to "m_bIsTongueAttacking"
+
+bool PlayerAnimState_GetFlag(int relOffset)
+{
+	ValidateOffset(g_iOff_m_bIsCustomSequence, "CTerrorPlayerAnimState::m_bIsCustomSequence");
+	Address anim = GetNativeCell(1);
+	return LoadFromAddress(anim + view_as<Address>(g_iOff_m_bIsCustomSequence + relOffset), NumberType_Int8);
+}
+
+void PlayerAnimState_SetFlag(int relOffset)
+{
+	ValidateOffset(g_iOff_m_bIsCustomSequence, "CTerrorPlayerAnimState::m_bIsCustomSequence");
+	Address anim = GetNativeCell(1);
+	bool val = GetNativeCell(2);
+	StoreToAddress(anim + view_as<Address>(g_iOff_m_bIsCustomSequence + relOffset), val, NumberType_Int8);
+}
+
+any Native_PlayerAnimState_m_bIsCustomSequence_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(0);
+}
+any Native_PlayerAnimState_m_bIsCustomSequence_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(0);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsDead_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(1);
+}
+any Native_PlayerAnimState_m_bIsDead_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(1);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsHealing_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(2);
+}
+any Native_PlayerAnimState_m_bIsHealing_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(2);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsResurrection_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(3);
+}
+any Native_PlayerAnimState_m_bIsResurrection_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(3);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsHitByCharger_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(4);
+}
+any Native_PlayerAnimState_m_bIsHitByCharger_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(4);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsPummeled_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(5);
+}
+any Native_PlayerAnimState_m_bIsPummeled_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(5);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsSlammedIntoWall_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(6);
+}
+any Native_PlayerAnimState_m_bIsSlammedIntoWall_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(6);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsSlammedIntoGround_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(7);
+}
+any Native_PlayerAnimState_m_bIsSlammedIntoGround_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(7);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsStartPummel_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(8);
+}
+any Native_PlayerAnimState_m_bIsStartPummel_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(8);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsPounded_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(9);
+}
+any Native_PlayerAnimState_m_bIsPounded_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(9);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsCarriedByCharger_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(10);
+}
+any Native_PlayerAnimState_m_bIsCarriedByCharger_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(10);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsPunchedByTank_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(11);
+}
+any Native_PlayerAnimState_m_bIsPunchedByTank_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(11);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsSpitting_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(12);
+}
+any Native_PlayerAnimState_m_bIsSpitting_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(12);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsPouncedOn_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(13);
+}
+any Native_PlayerAnimState_m_bIsPouncedOn_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(13);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsTongueAttacked_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(14);
+}
+any Native_PlayerAnimState_m_bIsTongueAttacked_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(14);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsStartChainsaw_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(15);
+}
+any Native_PlayerAnimState_m_bIsStartChainsaw_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(15);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsIsPouncing_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(16);
+}
+any Native_PlayerAnimState_m_bIsIsPouncing_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(16);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsRiding_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(17);
+}
+any Native_PlayerAnimState_m_bIsRiding_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(17);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsJockeyRidden_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(18);
+}
+any Native_PlayerAnimState_m_bIsJockeyRidden_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(18);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsTonguing_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(19);
+}
+any Native_PlayerAnimState_m_bIsTonguing_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(19);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsCharging_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(20);
+}
+any Native_PlayerAnimState_m_bIsCharging_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(20);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsPummeling_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(21);
+}
+any Native_PlayerAnimState_m_bIsPummeling_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(21);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsPounding_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(22);
+}
+any Native_PlayerAnimState_m_bIsPounding_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(22);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsTongueReelingIn_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(23);
+}
+any Native_PlayerAnimState_m_bIsTongueReelingIn_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(23);
+	return 0;
+}
+any Native_PlayerAnimState_m_bIsTongueAttacking_get(Handle plugin, int numParams)
+{
+	return PlayerAnimState_GetFlag(24);
+}
+any Native_PlayerAnimState_m_bIsTongueAttacking_set(Handle plugin, int numParams)
+{
+	PlayerAnimState_SetFlag(24);
 	return 0;
 }

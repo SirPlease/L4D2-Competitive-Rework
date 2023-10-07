@@ -21,6 +21,8 @@
 #endif
 #define _l4d_silver_included
 
+#pragma newdecls required
+
 #include <sdktools>
 #include <sdkhooks>
 

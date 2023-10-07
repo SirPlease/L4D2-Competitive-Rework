@@ -114,9 +114,6 @@ void SetupForwardsNatives()
 	g_hFWD_CDirectorVersusMode_EndVersusModeRound_Pre						= new GlobalForward("L4D2_OnEndVersusModeRound",						ET_Event, Param_Cell);
 	g_hFWD_CDirectorVersusMode_EndVersusModeRound_Post						= new GlobalForward("L4D2_OnEndVersusModeRound_Post",					ET_Event);
 	g_hFWD_CDirectorVersusMode_EndVersusModeRound_PostHandled				= new GlobalForward("L4D2_OnEndVersusModeRound_PostHandled",			ET_Event);
-	// g_hFWD_CDirector_EndScenario_Pre										= new GlobalForward("L4D_OnEndScenario",								ET_Event, Param_Cell);
-	// g_hFWD_CDirector_EndScenario_Post										= new GlobalForward("L4D_OnEndScenario_Post",							ET_Event, Param_Cell);
-	// g_hFWD_CDirector_EndScenario_PostHandled								= new GlobalForward("L4D_OnEndScenario_PostHandled",					ET_Event, Param_Cell);
 	g_hFWD_CServerGameDLL_ServerHibernationUpdate							= new GlobalForward("L4D_OnServerHibernationUpdate",					ET_Event, Param_Cell);
 	g_hFWD_CTerrorPlayer_OnLedgeGrabbed										= new GlobalForward("L4D_OnLedgeGrabbed",								ET_Event, Param_Cell);
 	g_hFWD_CTerrorPlayer_OnLedgeGrabbed_Post								= new GlobalForward("L4D_OnLedgeGrabbed_Post",							ET_Event, Param_Cell);
@@ -229,6 +226,9 @@ void SetupForwardsNatives()
 		g_hFWD_CTerrorPlayer_OnHitByVomitJar								= new GlobalForward("L4D2_OnHitByVomitJar",								ET_Event, Param_Cell, Param_CellByRef);
 		g_hFWD_CTerrorPlayer_OnHitByVomitJar_Post							= new GlobalForward("L4D2_OnHitByVomitJar_Post",						ET_Event, Param_Cell, Param_Cell);
 		g_hFWD_CTerrorPlayer_OnHitByVomitJar_PostHandled					= new GlobalForward("L4D2_OnHitByVomitJar_PostHandled",					ET_Event, Param_Cell, Param_Cell);
+		g_hFWD_Infected_OnHitByVomitJar										= new GlobalForward("L4D2_Infected_HitByVomitJar",						ET_Event, Param_Cell, Param_CellByRef);
+		g_hFWD_Infected_OnHitByVomitJar_Post								= new GlobalForward("L4D2_Infected_HitByVomitJar_Post",					ET_Event, Param_Cell, Param_Cell);
+		g_hFWD_Infected_OnHitByVomitJar_PostHandled							= new GlobalForward("L4D2_Infected_HitByVomitJar_PostHandled",			ET_Event, Param_Cell, Param_Cell);
 		g_hFWD_CDirector_GetScriptValueInt									= new GlobalForward("L4D_OnGetScriptValueInt",							ET_Event, Param_String, Param_CellByRef);
 		g_hFWD_CDirector_GetScriptValueFloat								= new GlobalForward("L4D_OnGetScriptValueFloat",						ET_Event, Param_String, Param_FloatByRef);
 		// g_hFWD_CDirector_GetScriptValueVector								= new GlobalForward("L4D_OnGetScriptValueVector",						ET_Event, Param_String, Param_Array);
@@ -256,6 +256,8 @@ void SetupForwardsNatives()
 	// ====================================================================================================
 	//									NATIVES
 	// ====================================================================================================
+	PlayerAnimState_CreateNatives();
+
 	// ANIMATION HOOK
 	CreateNative("AnimHookEnable",		 							Native_AnimHookEnable);
 	CreateNative("AnimHookDisable",		 							Native_AnimHookDisable);
@@ -273,6 +275,7 @@ void SetupForwardsNatives()
 	CreateNative("L4D_ReadMemoryString",		 					Native_ReadMemoryString);
 	CreateNative("L4D_GetServerOS",		 							Native_GetServerOS);
 	CreateNative("Left4DHooks_Version",		 						Native_Left4DHooks_Version);
+	CreateNative("L4D_HasMapStarted",		 						Native_HasMapStarted);
 	CreateNative("L4D_GetGameModeType",		 						Native_Internal_GetGameMode);
 	CreateNative("L4D2_IsGenericCooperativeMode",		 			Native_CTerrorGameRules_IsGenericCooperativeMode);
 	CreateNative("L4D_IsCoopMode",		 							Native_Internal_IsCoopMode);

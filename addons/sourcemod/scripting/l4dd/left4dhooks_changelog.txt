@@ -1,3 +1,30 @@
+1.138 (25-Sep-2023)
+	- Fixed the "L4D2_CGasCan_EventKilled*" forwards not triggering when a gascan had not been picked up. Thanks to "Mystik Spiral" for reporting.
+
+	- Updated: Plugin and test plugin.
+	- Updated: "/gamedata/left4dhooks.l4d2.txt" GameData file.
+	- Updated: "/scripting/include/left4dhooks.inc" Include file.
+	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
+
+1.137 (23-Sep-2023)
+	- Added forwards "L4D2_Infected_HitByVomitJar", "L4D2_Infected_HitByVomitJar_Post" and "L4D2_Infected_HitByVomitJar_PostHandled" to trigger when common infected are hit with a VomitJar. Requested by "Eyal282".
+	- Incorporated the Spitter Acid no sound fix for when clients disconnected. Thanks to "Marttt" for reporting.
+	- Now also flashes red like the game should when taking damage from this bugged entity. Thanks to "Marttt" for reporting.
+	- Updated to the latest version of the "lux_library" include file. Thanks to "Lux" for reporting.
+
+1.136 (05-Sep-2023)
+	- Fixed the last update logging an error in L4D1. Thanks to "HarryPotter" for reporting.
+	- Fixed forward "L4D_TankClaw_DoSwing_Post" having the wrong name and not activating. Thanks to "Forgetest" for reporting.
+
+1.135 (18-Aug-2023)
+	- Added a ton of natives for "PlayerAnimState" in L4D2 only. See the "methodmap PlayerAnimState" section of the "left4dhooks.inc" include file. Thanks to "Forgetest" for the code and "A1m`" for various stuff.
+	- Added native "L4D_HasMapStarted" to check if game addresses have been loaded in OnMapStart. For use with some natives that require being called only after OnMapStart.
+	- Added an example to the test plugin for use with "L4D_HasMapStarted" and natives that require waiting after OnMapStart. See the first OnMapStart section that is commented out.
+	- Fixed forward "L4D2_OnPounceOrLeapStumble" detour to potentially fix rare random crashes. Thanks to "A1m`" and "Forgetest" for reporting.
+	- Fixed stock "L4D2_SetEntityGlow" to use the newdecls. Thanks to "Dragokas" for reporting.
+	- Fixed the test plugin examples for "L4D1_FirstAidKit_StartHealing" and "L4D2_BackpackItem_StartAction". Thanks to "Mystik Spiral" for reporting.
+
 1.134 (10-Jul-2023)
 	- Added "POINTER_SURVIVALMODE" enum for the "L4D_GetPointer" native to return the SurvivalMode pointer.
 	- Added "L4D2CT_SurvivalSetupTimer" to the "L4D2CountdownTimer" enum for use with the "L4D2_CTimer*" natives.
@@ -10,16 +37,6 @@
 	- Fixed native "L4D2_Charger_StartCarryingVictim" removing teleporting and placement position bug. Thanks to "HarryPotter" for reporting.
 	- Fixed L4D2 GameData offset for "L4D2_GetFirstSpawnClass" and "L4D2_SetFirstSpawnClass" natives. Thanks to "Forgetest" for reporting the new offset.
 	- Errors about using natives before OnMapStart will now show the plugin causing it.
-
-	- Updated: Plugin and test plugin.
-	- Updated: "/scripting/gamedata/left4dhooks.l4d1.txt" GameData file.
-	- Updated: "/scripting/gamedata/left4dhooks.l4d2.txt" GameData file.
-	- Updated: "/scripting/include/left4dhooks.inc" Include file.
-	- Updated: "/scripting/include/left4dhooks_stocks.inc" Include file.
-	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_gamedata.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_setup.sp" project file.
 
 1.133 (19-Jun-2023)
 	- Added details to some natives explaining they can only be used 1 frame after "OnMapStart" due to pointers being unavailable before. Thanks to "HarryPotter" for reporting.
@@ -422,7 +439,7 @@
 
 1.81 (30-Nov-2021)
 	- Fixed forward "L4D_OnVomitedUpon" sometimes throwing errors about null pointer. Thanks to "Krufftys Killers" for reporting.
-	- Changed function "Local_GetRandomClient" in "left4dhooks_silver.inc" to be stock. Thanks to "A1m1" for reporting.
+	- Changed function "Local_GetRandomClient" in "left4dhooks_silver.inc" to be stock. Thanks to "A1m`" for reporting.
 
 1.80 (24-Nov-2021)
 	- Fixed forward "L4D_OnSpawnSpecial_Post" param error. Thanks to "fdxx" for reporting.

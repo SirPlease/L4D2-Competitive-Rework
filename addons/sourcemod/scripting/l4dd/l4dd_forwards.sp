@@ -125,9 +125,6 @@ GlobalForward g_hFWD_CDirectorScriptedEventManager_ChangeFinaleStage_PostPost;
 GlobalForward g_hFWD_CDirectorVersusMode_EndVersusModeRound_Pre;
 GlobalForward g_hFWD_CDirectorVersusMode_EndVersusModeRound_Post;
 GlobalForward g_hFWD_CDirectorVersusMode_EndVersusModeRound_PostHandled;
-// GlobalForward g_hFWD_CDirector_EndScenario_Pre;
-// GlobalForward g_hFWD_CDirector_EndScenario_Post;
-// GlobalForward g_hFWD_CDirector_EndScenario_PostHandled;
 GlobalForward g_hFWD_CBaseAnimating_SelectWeightedSequence_Pre;
 GlobalForward g_hFWD_CBaseAnimating_SelectWeightedSequence_Post;
 GlobalForward g_hFWD_CTerrorPlayer_DoAnimationEvent;
@@ -150,6 +147,9 @@ GlobalForward g_hFWD_CTerrorPlayer_OnVomitedUpon_PostHandled;
 GlobalForward g_hFWD_CTerrorPlayer_OnHitByVomitJar;
 GlobalForward g_hFWD_CTerrorPlayer_OnHitByVomitJar_Post;
 GlobalForward g_hFWD_CTerrorPlayer_OnHitByVomitJar_PostHandled;
+GlobalForward g_hFWD_Infected_OnHitByVomitJar;
+GlobalForward g_hFWD_Infected_OnHitByVomitJar_Post;
+GlobalForward g_hFWD_Infected_OnHitByVomitJar_PostHandled;
 GlobalForward g_hFWD_CBreakableProp_Break_Post;
 GlobalForward g_hFWD_CGasCanEvent_Killed;
 GlobalForward g_hFWD_CGasCanEvent_Killed_Post;
@@ -307,14 +307,6 @@ void SetupDetours(GameData hGameData = null)
 		CreateDetour(hGameData,		DTR_CTerrorPlayer_RecalculateVersusScore,					DTR_CTerrorPlayer_RecalculateVersusScore_Post,				"L4DD::CTerrorPlayer::RecalculateVersusScore",						"L4D_OnRecalculateVersusScore");
 		CreateDetour(hGameData,		DTR_CTerrorPlayer_RecalculateVersusScore,					DTR_CTerrorPlayer_RecalculateVersusScore_Post,				"L4DD::CTerrorPlayer::RecalculateVersusScore",						"L4D_OnRecalculateVersusScore_Post",			true);
 	}
-/*
-	else
-	{
-		CreateDetour(hGameData,			DTR_CDirector_EndScenario_Pre,								DTR_CDirector_EndScenario_Post,								"L4DD::CDirector::EndScenario",										"L4D_OnEndScenario");
-		CreateDetour(hGameData,			DTR_CDirector_EndScenario_Pre,								DTR_CDirector_EndScenario_Post,								"L4DD::CDirector::EndScenario",										"L4D_OnEndScenario_Post",						true);
-		CreateDetour(hGameData,			DTR_CDirector_EndScenario_Pre,								DTR_CDirector_EndScenario_Post,								"L4DD::CDirector::EndScenario",										"L4D_OnEndScenario_PostHandled",				true);
-	}
-*/
 
 	CreateDetour(hGameData,			DTR_CDirector_OnFirstSurvivorLeftSafeArea,					DTR_CDirector_OnFirstSurvivorLeftSafeArea_Post,				"L4DD::CDirector::OnFirstSurvivorLeftSafeArea",						"L4D_OnFirstSurvivorLeftSafeArea");
 	CreateDetour(hGameData,			DTR_CDirector_OnFirstSurvivorLeftSafeArea,					DTR_CDirector_OnFirstSurvivorLeftSafeArea_Post,				"L4DD::CDirector::OnFirstSurvivorLeftSafeArea",						"L4D_OnFirstSurvivorLeftSafeArea_Post",			true);
@@ -332,7 +324,7 @@ void SetupDetours(GameData hGameData = null)
 	CreateDetour(hGameData,			DTR_CDirectorVersusMode_GetMissionVersusBossSpawning,		DTR_CDirectorVersusMode_GetMissionVersusBossSpawning_Post,	"L4DD::CDirectorVersusMode::GetMissionVersusBossSpawning",			"L4D_OnGetMissionVSBossSpawning_PostHandled",	true);
 	CreateDetour(hGameData,			DTR_ZombieManager_ReplaceTank,								INVALID_FUNCTION,											"L4DD::ZombieManager::ReplaceTank",									"L4D_OnReplaceTank");
 	CreateDetour(hGameData,			DTR_CTankClaw_DoSwing_Pre,									DTR_CTankClaw_DoSwing_Post,									"L4DD::CTankClaw::DoSwing",											"L4D_TankClaw_DoSwing_Pre");
-	CreateDetour(hGameData,			DTR_CTankClaw_DoSwing_Pre,									DTR_CTankClaw_DoSwing_Post,									"L4DD::CTankClaw::DoSwing",											"L4D_TankClaw_DoSwing_Post3",					true);
+	CreateDetour(hGameData,			DTR_CTankClaw_DoSwing_Pre,									DTR_CTankClaw_DoSwing_Post,									"L4DD::CTankClaw::DoSwing",											"L4D_TankClaw_DoSwing_Post",					true);
 	CreateDetour(hGameData,			DTR_CTankClaw_GroundPound_Pre,								DTR_CTankClaw_GroundPound_Post,								"L4DD::CTankClaw::GroundPound",										"L4D_TankClaw_GroundPound_Pre");
 	CreateDetour(hGameData,			DTR_CTankClaw_GroundPound_Pre,								DTR_CTankClaw_GroundPound_Post,								"L4DD::CTankClaw::GroundPound",										"L4D_TankClaw_GroundPound_Post",				true);
 	CreateDetour(hGameData,			DTR_CTankClaw_OnPlayerHit_Pre,								DTR_CTankClaw_OnPlayerHit_Post,								"L4DD::CTankClaw::OnPlayerHit",										"L4D_TankClaw_OnPlayerHit_Pre");
@@ -484,6 +476,9 @@ void SetupDetours(GameData hGameData = null)
 		CreateDetour(hGameData,		DTR_CGasCanEvent_Killed,									DTR_CGasCanEvent_Killed_Post,								"L4DD::CGasCan::Event_Killed",										"L4D2_CGasCan_EventKilled");
 		CreateDetour(hGameData,		DTR_CGasCanEvent_Killed,									DTR_CGasCanEvent_Killed_Post,								"L4DD::CGasCan::Event_Killed",										"L4D2_CGasCan_EventKilled_Post",				true);
 		CreateDetour(hGameData,		DTR_CGasCanEvent_Killed,									DTR_CGasCanEvent_Killed_Post,								"L4DD::CGasCan::Event_Killed",										"L4D2_CGasCan_EventKilled_PostHandled",			true);
+		CreateDetour(hGameData,		DTR_CPhysicsProp_OnTakeDamage,								DTR_CPhysicsProp_OnTakeDamage_Post,							"L4DD::CPhysicsProp::OnTakeDamage",									"L4D2_CGasCan_EventKilled");
+		CreateDetour(hGameData,		DTR_CPhysicsProp_OnTakeDamage,								DTR_CPhysicsProp_OnTakeDamage_Post,							"L4DD::CPhysicsProp::OnTakeDamage",									"L4D2_CGasCan_EventKilled_Post",				true);
+		CreateDetour(hGameData,		DTR_CPhysicsProp_OnTakeDamage,								DTR_CPhysicsProp_OnTakeDamage_Post,							"L4DD::CPhysicsProp::OnTakeDamage",									"L4D2_CGasCan_EventKilled_PostHandled",			true);
 		CreateDetour(hGameData,		DTR_CGasCan_ShouldStartAction,								DTR_CGasCan_ShouldStartAction_Post,							"L4DD::CGasCan::ShouldStartAction",									"L4D2_CGasCan_ShouldStartAction");
 		CreateDetour(hGameData,		DTR_CGasCan_ShouldStartAction,								DTR_CGasCan_ShouldStartAction_Post,							"L4DD::CGasCan::ShouldStartAction",									"L4D2_CGasCan_ShouldStartAction_Post",			true);
 		CreateDetour(hGameData,		DTR_CGasCan_ShouldStartAction,								DTR_CGasCan_ShouldStartAction_Post,							"L4DD::CGasCan::ShouldStartAction",									"L4D2_CGasCan_ShouldStartAction_PostHandled",	true);
@@ -514,6 +509,9 @@ void SetupDetours(GameData hGameData = null)
 		CreateDetour(hGameData,		DTR_CTerrorPlayer_OnHitByVomitJar,							DTR_CTerrorPlayer_OnHitByVomitJar_Post,						"L4DD::CTerrorPlayer::OnHitByVomitJar",								"L4D2_OnHitByVomitJar");
 		CreateDetour(hGameData,		DTR_CTerrorPlayer_OnHitByVomitJar,							DTR_CTerrorPlayer_OnHitByVomitJar_Post,						"L4DD::CTerrorPlayer::OnHitByVomitJar",								"L4D2_OnHitByVomitJar_Post",					true);
 		CreateDetour(hGameData,		DTR_CTerrorPlayer_OnHitByVomitJar,							DTR_CTerrorPlayer_OnHitByVomitJar_Post,						"L4DD::CTerrorPlayer::OnHitByVomitJar",								"L4D2_OnHitByVomitJar_PostHandled",				true);
+		CreateDetour(hGameData,		DTR_Infected_OnHitByVomitJar,								DTR_Infected_OnHitByVomitJar_Post,							"L4DD::Infected::OnHitByVomitJar",									"L4D2_Infected_HitByVomitJar");
+		CreateDetour(hGameData,		DTR_Infected_OnHitByVomitJar,								DTR_Infected_OnHitByVomitJar_Post,							"L4DD::Infected::OnHitByVomitJar",									"L4D2_Infected_HitByVomitJar_Post",				true);
+		CreateDetour(hGameData,		DTR_Infected_OnHitByVomitJar,								DTR_Infected_OnHitByVomitJar_Post,							"L4DD::Infected::OnHitByVomitJar",									"L4D2_Infected_HitByVomitJar_PostHandled",		true);
 		CreateDetour(hGameData,		DTR_ZombieManager_SpawnWitchBride,							DTR_ZombieManager_SpawnWitchBride_Post,						"L4DD::ZombieManager::SpawnWitchBride",								"L4D2_OnSpawnWitchBride");
 		CreateDetour(hGameData,		DTR_ZombieManager_SpawnWitchBride,							DTR_ZombieManager_SpawnWitchBride_Post,						"L4DD::ZombieManager::SpawnWitchBride",								"L4D2_OnSpawnWitchBride_Post",					true);
 		CreateDetour(hGameData,		DTR_ZombieManager_SpawnWitchBride,							DTR_ZombieManager_SpawnWitchBride_Post,						"L4DD::ZombieManager::SpawnWitchBride",								"L4D2_OnSpawnWitchBride_PostHandled",			true);
@@ -2630,48 +2628,6 @@ MRESReturn DTR_CDirectorVersusMode_EndVersusModeRound_Post(DHookReturn hReturn, 
 	return MRES_Ignored;
 }
 
-/*
-bool g_bBlock_CDirector_EndScenario;
-MRESReturn DTR_CDirector_EndScenario_Pre(int pThis, DHookParam hParams) // Forward "L4D_OnEndScenario"
-{
-	//PrintToServer("##### DTR_CDirector_EndScenario_Pre");
-	if( g_bRoundEnded ) return MRES_Ignored;
-
-	int a1 = hParams.Get(1);
-
-	Action aResult = Plugin_Continue;
-	Call_StartForward(g_hFWD_CDirector_EndScenario_Pre);
-	Call_PushCell(a1);
-	Call_Finish(aResult);
-
-	if( aResult == Plugin_Handled )
-	{
-		g_bBlock_CDirector_EndScenario = true;
-
-		return MRES_Supercede;
-	}
-
-	g_bBlock_CDirector_EndScenario = false;
-
-	return MRES_Ignored;
-}
-
-MRESReturn DTR_CDirector_EndScenario_Post(int pThis, DHookParam hParams) // Forward "L4D_OnEndScenario_Post" and "L4D_OnEndScenario_PostHandled"
-{
-	//PrintToServer("##### DTR_CDirector_EndScenario_Post");
-	if( g_bRoundEnded ) return MRES_Ignored;
-	g_bRoundEnded = true;
-
-	int a1 = hParams.Get(1);
-
-	Call_StartForward(g_bBlock_CDirector_EndScenario ? g_hFWD_CDirector_EndScenario_PostHandled : g_hFWD_CDirector_EndScenario_Post);
-	Call_PushCell(a1);
-	Call_Finish();
-
-	return MRES_Ignored;
-}
-*/
-
 bool g_bBlock_CTerrorPlayer_OnLedgeGrabbed;
 MRESReturn DTR_CTerrorPlayer_OnLedgeGrabbed(int pThis, DHookReturn hReturn, DHookParam hParams) // Forward "L4D_OnLedgeGrabbed"
 {
@@ -3024,7 +2980,7 @@ MRESReturn DTR_CTerrorWeapon_OnHit_Post(int weapon, DHookReturn hReturn, DHookPa
 }
 
 bool g_bBlock_CTerrorPlayer_OnShovedByPounceLanding;
-MRESReturn DTR_CTerrorPlayer_OnShovedByPounceLanding(int pThis, DHookReturn hReturn, DHookParam hParams) // Forward "L4D2_OnPounceOrLeapStumble"
+MRESReturn DTR_CTerrorPlayer_OnShovedByPounceLanding(int pThis, DHookParam hParams) // Forward "L4D2_OnPounceOrLeapStumble"
 {
 	//PrintToServer("##### DTR_CTerrorPlayer_OnShovedByPounceLanding");
 	int a1 = hParams.Get(1);
@@ -3039,7 +2995,6 @@ MRESReturn DTR_CTerrorPlayer_OnShovedByPounceLanding(int pThis, DHookReturn hRet
 	{
 		g_bBlock_CTerrorPlayer_OnShovedByPounceLanding = true;
 
-		hReturn.Value = 0.0;
 		return MRES_Supercede;
 	}
 
@@ -3048,7 +3003,7 @@ MRESReturn DTR_CTerrorPlayer_OnShovedByPounceLanding(int pThis, DHookReturn hRet
 	return MRES_Ignored;
 }
 
-MRESReturn DTR_CTerrorPlayer_OnShovedByPounceLanding_Post(int pThis, DHookReturn hReturn, DHookParam hParams) // Forward "L4D2_OnPounceOrLeapStumble_Post" and "L4D2_OnPounceOrLeapStumble_PostHandled"
+MRESReturn DTR_CTerrorPlayer_OnShovedByPounceLanding_Post(int pThis, DHookParam hParams) // Forward "L4D2_OnPounceOrLeapStumble_Post" and "L4D2_OnPounceOrLeapStumble_PostHandled"
 {
 	//PrintToServer("##### DTR_CTerrorPlayer_OnShovedByPounceLanding_Post");
 	int a1 = hParams.Get(1);
@@ -3964,6 +3919,60 @@ MRESReturn DTR_CGasCanEvent_Killed_Post(int pThis, DHookReturn hReturn, DHookPar
 	return MRES_Ignored;
 }
 
+MRESReturn DTR_CPhysicsProp_OnTakeDamage(int pThis, DHookReturn hReturn, DHookParam hParams) // Forward "L4D2_CGasCan_EventKilled"
+{
+	if( GetEntProp(pThis, Prop_Data, "m_nModelIndex") != g_iGasCanModel ) return MRES_Ignored; // Verify "weapon_gascan" type
+
+	//PrintToServer("##### DTR_CPhysicsProp_OnTakeDamage");
+
+	int a1 = hParams.GetObjectVar(1, 48, ObjectValueType_EhandlePtr);
+	int a2 = hParams.GetObjectVar(1, 52, ObjectValueType_EhandlePtr);
+
+	Action aResult = Plugin_Continue;
+	Call_StartForward(g_hFWD_CGasCanEvent_Killed);
+	Call_PushCell(pThis);
+	Call_PushCellRef(a1);
+	Call_PushCellRef(a2);
+	Call_Finish(aResult);
+
+	if( aResult == Plugin_Handled )
+	{
+		g_bBlock_CGasCanEvent_Killed = true;
+
+		hReturn.Value = 0;
+		return MRES_Supercede;
+	}
+
+	if( aResult == Plugin_Changed )
+	{
+		hParams.SetObjectVar(1, 48, ObjectValueType_EhandlePtr, a1);
+		hParams.SetObjectVar(1, 52, ObjectValueType_EhandlePtr, a2);
+		return MRES_ChangedHandled;
+	}
+
+	g_bBlock_CGasCanEvent_Killed = false;
+
+	return MRES_Ignored;
+}
+
+MRESReturn DTR_CPhysicsProp_OnTakeDamage_Post(int pThis, DHookReturn hReturn, DHookParam hParams) // Forward "L4D2_CGasCan_EventKilled_Post" and "L4D2_CGasCan_EventKilled_PostHandled"
+{
+	if( GetEntProp(pThis, Prop_Data, "m_nModelIndex") != g_iGasCanModel ) return MRES_Ignored; // Verify "weapon_gascan" type
+
+	//PrintToServer("##### DTR_CPhysicsProp_OnTakeDamage");
+
+	int a1 = hParams.GetObjectVar(1, 48, ObjectValueType_EhandlePtr);
+	int a2 = hParams.GetObjectVar(1, 52, ObjectValueType_EhandlePtr);
+
+	Call_StartForward(g_bBlock_CGasCanEvent_Killed ? g_hFWD_CGasCanEvent_Killed_PostHandled : g_hFWD_CGasCanEvent_Killed_Post);
+	Call_PushCell(pThis);
+	Call_PushCell(a1);
+	Call_PushCell(a2);
+	Call_Finish();
+
+	return MRES_Ignored;
+}
+
 bool g_bBlock_CGasCan_ShouldStartAction;
 MRESReturn DTR_CGasCan_ShouldStartAction(DHookReturn hReturn, DHookParam hParams) // Forward "L4D2_CGasCan_ShouldStartAction"
 {
@@ -4592,6 +4601,58 @@ MRESReturn DTR_CTerrorPlayer_OnHitByVomitJar_Post(int client, DHookReturn hRetur
 		a1 = hParams.Get(1);
 
 	Call_StartForward(g_bBlock_CTerrorPlayer_OnHitByVomitJar ? g_hFWD_CTerrorPlayer_OnHitByVomitJar_PostHandled : g_hFWD_CTerrorPlayer_OnHitByVomitJar_Post);
+	Call_PushCell(client);
+	Call_PushCell(a1);
+	Call_Finish();
+
+	return MRES_Ignored;
+}
+
+bool g_bBlock_Infected_OnHitByVomitJar;
+MRESReturn DTR_Infected_OnHitByVomitJar(int client, DHookReturn hReturn, DHookParam hParams) // Forward "L4D2_Infected_HitByVomitJar"
+{
+	//PrintToServer("##### DTR_Infected_OnHitByVomitJar");
+
+	int a1;
+
+	if( !hParams.IsNull(1) )
+		a1 = hParams.Get(1);
+
+	Action aResult = Plugin_Continue;
+	Call_StartForward(g_hFWD_Infected_OnHitByVomitJar);
+	Call_PushCell(client);
+	Call_PushCellRef(a1);
+	Call_Finish(aResult);
+
+	if( aResult == Plugin_Handled )
+	{
+		g_bBlock_Infected_OnHitByVomitJar = true;
+
+		hReturn.Value = 0;
+		return MRES_Supercede;
+	}
+
+	g_bBlock_Infected_OnHitByVomitJar = false;
+
+	if( aResult == Plugin_Changed )
+	{
+		hParams.Set(1, a1);
+		return MRES_ChangedHandled;
+	}
+
+	return MRES_Ignored;
+}
+
+MRESReturn DTR_Infected_OnHitByVomitJar_Post(int client, DHookReturn hReturn, DHookParam hParams) // Forward "L4D2_Infected_HitByVomitJar_Post" and "L4D2_Infected_HitByVomitJar_PostHandled"
+{
+	//PrintToServer("##### DTR_Infected_OnHitByVomitJar_Post");
+
+	int a1;
+
+	if( !hParams.IsNull(1) )
+		a1 = hParams.Get(1);
+
+	Call_StartForward(g_bBlock_Infected_OnHitByVomitJar ? g_hFWD_Infected_OnHitByVomitJar_PostHandled : g_hFWD_Infected_OnHitByVomitJar_Post);
 	Call_PushCell(client);
 	Call_PushCell(a1);
 	Call_Finish();
