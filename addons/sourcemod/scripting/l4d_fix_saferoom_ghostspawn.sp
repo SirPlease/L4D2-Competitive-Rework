@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "2.0"
+#define PLUGIN_VERSION "2.0.1"
 
 public Plugin myinfo =
 {
@@ -16,6 +16,7 @@ public Plugin myinfo =
 };
 
 int g_iOffs_LastSurvivorLeftStartArea;
+Address gpTheDirector;
 
 public void OnPluginStart()
 {
@@ -39,6 +40,11 @@ void LateLoad()
 		if (IsClientInGame(i) && GetClientTeam(i) == 3 && L4D_IsPlayerGhost(i))
 			L4D_OnEnterGhostState(i);
 	}
+}
+
+public void OnAllPluginsLoaded()
+{
+	gpTheDirector = L4D_GetPointer(POINTER_DIRECTOR);
 }
 
 public void L4D_OnEnterGhostState(int client)
@@ -105,7 +111,7 @@ void SDK_OnPreThink_Post(int client)
 
 bool HasLastSurvivorLeftStartArea()
 {
-	return LoadFromAddress(L4D_GetPointer(POINTER_DIRECTOR) + view_as<Address>(g_iOffs_LastSurvivorLeftStartArea), NumberType_Int8);
+	return LoadFromAddress(gpTheDirector + view_as<Address>(g_iOffs_LastSurvivorLeftStartArea), NumberType_Int8);
 }
 
 bool NavArea_IsOverlapping(Address area, const float pos[3], float tolerance = 100.0)
