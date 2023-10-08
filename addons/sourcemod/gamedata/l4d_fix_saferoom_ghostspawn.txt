@@ -2,71 +2,24 @@
 {
 	"left4dead"
 	{
-		"MemPatches"
+		"Offsets"
 		{
-			"CTerrorPlayer::OnPreThinkGhostState__IsOverlapping_conditional_move"
+			"CDirector::m_bLastSurvivorLeftStartArea"
 			{
-				"signature"		"CTerrorPlayer::OnPreThinkGhostState"
-				"linux"
-				{
-					"offset"	"2F7h"
-					"verify"	"\x89\x44\x24"		// mov     [esp+19Ch+var_150], eax
-					"patch"		"\x90\x90\x90\x90"
-				}
-				"windows"
-				{
-					"offset"	"15Fh"
-					"verify"	"\x75"				// jnz     short loc_102AA293
-													// xor     edi, edi
-					"patch"		"\xEB"
-				}
-			}
-		}
-		
-		"Signatures"
-		{
-			"CTerrorPlayer::OnPreThinkGhostState"
-			{
-				"library"		"server"
-				"linux"			"@_ZN13CTerrorPlayer20OnPreThinkGhostStateEv.part.837"
-				"windows"		"\x55\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84"
-				/* 55 ? ? ? ? ? ? ? ? ? ? ? ? ? 8B ? ? ? ? ? ? ? ? E8 ? ? ? ? 84 */
+				"windows"		"361"
+				"linux"			"357"
 			}
 		}
 	}
 	
 	"left4dead2"
 	{
-		"MemPatches"
+		"Offsets"
 		{
-			"CTerrorPlayer::OnPreThinkGhostState__IsOverlapping_conditional_move"
+			"CDirector::m_bLastSurvivorLeftStartArea"
 			{
-				"signature"		"CTerrorPlayer::OnPreThinkGhostState"
-				"linux"
-				{
-					"offset"	"2E7h"
-					"verify"	"\x0F\x44"		// cmovz   esi, eax
-					"patch"		"\x90\x90\x90"
-				}
-				"windows"
-				{
-					"offset"	"525h"
-					"verify"	"\x75"			// jnz     short loc_10332011
-												// mov     dword ptr [ebp-68h], 0
-												// mov     edi, [ebp-68h]
-					"patch"		"\xEB"
-				}
-			}
-		}
-		
-		"Signatures"
-		{
-			"CTerrorPlayer::OnPreThinkGhostState"
-			{
-				"library"		"server"
-				"linux"			"@_ZN13CTerrorPlayer20OnPreThinkGhostStateEv"
-				"windows"		"\x53\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x55\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84"
-				/* 53 ? ? ? ? ? ? ? ? ? ? ? 55 8B ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? 8B ? 8B ? ? ? ? ? ? E8 ? ? ? ? 84 */
+				"windows"		"353"
+				"linux"			"353"
 			}
 		}
 	}
