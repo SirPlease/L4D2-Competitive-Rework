@@ -5,7 +5,7 @@
 #include <dhooks>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "1.7"
+#define PLUGIN_VERSION "1.8"
 
 public Plugin myinfo = 
 {
@@ -446,6 +446,12 @@ public void L4D2_OnSlammedSurvivor_Post(int victim, int attacker, bool bWallSlam
 	if (jockey != -1)
 	{
 		Dismount(jockey);
+	}
+	
+	int smoker = GetEntPropEnt(victim, Prop_Send, "m_tongueOwner");
+	if (smoker != -1)
+	{
+		L4D_Smoker_ReleaseVictim(victim, smoker);
 	}
 }
 
