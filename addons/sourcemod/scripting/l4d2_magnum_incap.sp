@@ -2,25 +2,22 @@
 #pragma newdecls required
 
 #include <sourcemod>
-#include <colors>
 
 #define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 
-#define MAX_SURVIVORS 4
 #define ENTITY_MAX_NAME_LENGTH 64
 #define DEBUG 0
 
-
 ConVar g_hReplaceMagnum = null;
-int g_hasDeagle[MAX_SURVIVORS];
+bool g_bHasDeagle[MAXPLAYERS + 1];
 
 public Plugin myinfo =
 {
 	name = "Magnum incap remover",
-	author = "robex",
+	author = "robex, Sir",
 	description = "Replace magnum with regular pistols when incapped.",
-	version = "0.3",
+	version = "0.4",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -30,28 +27,43 @@ public void OnPluginStart()
 
 	HookEvent("player_incapacitated", PlayerIncap_Event);
 	HookEvent("revive_success", ReviveSuccess_Event);
+	HookEvent("round_start", RoundStart_Event);
+	HookEvent("bot_player_replace", Replaced_Event);
+	HookEvent("player_bot_replace", Replaced_Event);
 }
 
-public Action PlayerIncap_Event(Handle event, const char[] name, bool bDontBroadcast)
+void RoundStart_Event(Event hEvent, char[] name, bool dontBroadcast)
 {
-	if (GetConVarInt(g_hReplaceMagnum) < 1) {
-		return Plugin_Continue;
+	for (int i = 1; i <= MaxClients; i++) 
+	{
+		g_bHasDeagle[i] = false;
 	}
+}
 
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+void Replaced_Event(Event hEvent, char[] name, bool dontBroadcast) 
+{
+	bool bBotReplaced = (!strncmp(name, "b", 1));
+	int replaced = bBotReplaced ? GetClientOfUserId(hEvent.GetInt("bot")) : GetClientOfUserId(hEvent.GetInt("player"));
+	int replacer = bBotReplaced ? GetClientOfUserId(hEvent.GetInt("player")) : GetClientOfUserId(hEvent.GetInt("bot"));
+
+	g_bHasDeagle[replacer] = g_bHasDeagle[replaced];
+}
+
+void PlayerIncap_Event(Event hEvent, char[] name, bool dontBroadcast) 
+{
+	if (GetConVarInt(g_hReplaceMagnum) < 1) { return; }
+
+	int client = GetClientOfUserId(hEvent.GetInt("userid"));
 
 	// This also fires on Tank Death, so check for client team to prevent issues down the line.
-	if (GetClientTeam(client) != 2) { return Plugin_Continue; }
+	if (GetClientTeam(client) != 2) { return; }
 
-	int playerIndex = GetPlayerCharacter(client);
 	char sWeaponName[ENTITY_MAX_NAME_LENGTH];
 	int secWeaponIndex = GetPlayerWeaponSlot(client, L4D2WeaponSlot_Secondary);
 	GetEdictClassname(secWeaponIndex, sWeaponName, sizeof(sWeaponName));
 
-
 #if DEBUG
-	PrintToChatAll("client %d, player index %d", client, playerIndex);
-	CPrintToChatAll("client %d -> weapon %s", client, sWeaponName);
+	PrintToChatAll("client %d -> weapon %s", client, sWeaponName);
 #endif
 
 	int secWeapId = WeaponNameToId(sWeaponName);
@@ -63,68 +75,29 @@ public Action PlayerIncap_Event(Handle event, const char[] name, bool bDontBroad
 		if (GetConVarInt(g_hReplaceMagnum) > 1) {
 			GivePlayerItem(client, "weapon_pistol");
 		}
-		g_hasDeagle[playerIndex] = 1;
+		g_bHasDeagle[client] = true;
 	} else {
-		g_hasDeagle[playerIndex] = 0;
+		g_bHasDeagle[client] = false;
 	}
-
-	return Plugin_Continue;
 }
 
-public Action ReviveSuccess_Event(Handle event, const char[] name, bool bDontBroadcast)
+void ReviveSuccess_Event(Event hEvent, char[] name, bool dontBroadcast) 
 {
-	if (GetConVarInt(g_hReplaceMagnum) < 1) {
-		return Plugin_Continue;
-	}
+	if (GetConVarInt(g_hReplaceMagnum) < 1) { return; }
 
-	int client = GetClientOfUserId(GetEventInt(event, "subject"));
-	int playerIndex = GetPlayerCharacter(client);
+	int client = GetClientOfUserId(hEvent.GetInt("subject"));
 
 #if DEBUG
-	CPrintToChatAll("client %d revived, player index %d, g_hasDeagle %d", client, playerIndex, g_hasDeagle[client]);
+	PrintToChatAll("client %d revived, g_bHasDeagle: %s", client, g_bHasDeagle[client] ? "True" : "False");
 #endif
 
-	if (g_hasDeagle[playerIndex]) {
+	if (g_bHasDeagle[client]) {
 		int secWeaponIndex = GetPlayerWeaponSlot(client, L4D2WeaponSlot_Secondary);
 
 		RemovePlayerItem(client, secWeaponIndex);
 		RemoveEntity(secWeaponIndex);
 
 		GivePlayerItem(client, "weapon_pistol_magnum");
+		g_bHasDeagle[client] = false; // Gets set on incap anywoo.
 	}
-
-	return Plugin_Continue;
-}
-
-int GetPlayerCharacter(int client)
-{
-	int tmpChr = GetEntProp(client, Prop_Send, "m_survivorCharacter");
-
-	// use models when incorrect character returned
-	if (tmpChr < 0 || tmpChr >= MAX_SURVIVORS) {
-		char model[256];
-		GetEntPropString(client, Prop_Data, "m_ModelName", model, sizeof(model));
-
-		if (StrContains(model, "gambler") != -1) {
-			tmpChr = 0;
-		} else if (StrContains(model, "coach") != -1) {
-			tmpChr = 2;
-		} else if (StrContains(model, "mechanic") != -1) {
-			tmpChr = 3;
-		} else if (StrContains(model, "producer") != -1) {
-			tmpChr = 1;
-		} else if (StrContains(model, "namvet") != -1) {
-			tmpChr = 0;
-		} else if (StrContains(model, "teengirl") != -1) {
-			tmpChr = 1;
-		} else if (StrContains(model, "biker") != -1) {
-			tmpChr = 3;
-		} else if (StrContains(model, "manager") != -1) {
-			tmpChr = 2;
-		} else {
-			tmpChr = 0;
-		}
-	}
-
-	return tmpChr;
 }
