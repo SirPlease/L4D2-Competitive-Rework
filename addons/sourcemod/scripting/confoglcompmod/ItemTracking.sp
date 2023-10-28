@@ -313,7 +313,7 @@ static void KillRegisteredItems()
                 // Exception for if the item is in a player's inventory.
                 if (bKeepPlayerItems && HasEntProp(i, Prop_Send, "m_hOwner") && GetEntPropEnt(i, Prop_Send, "m_hOwner") > 0)
                   continue;
-				
+                
                 KillEntity(i);
                 /*if (!AcceptEntityInput(i, "kill")) {
                     Debug_LogError(IT_MODULE_NAME, "Error killing instance of item %s", g_sItemNames[itemindex][IN_longname]);
@@ -628,16 +628,16 @@ static bool IsModuleEnabled()
 
 stock bool IsScavengeMode()
 {
-	char   sCurGameMode[64];
-	ConVar hCurGameMode = FindConVar("mp_gamemode");
-	hCurGameMode.GetString(sCurGameMode, sizeof(sCurGameMode));
-	if (strcmp(sCurGameMode, "scavenge") == 0)
-		return true;
-	else
-		return false;
+    char   sCurGameMode[64];
+    ConVar hCurGameMode = FindConVar("mp_gamemode");
+    hCurGameMode.GetString(sCurGameMode, sizeof(sCurGameMode));
+    if (strcmp(sCurGameMode, "scavenge") == 0)
+        return true;
+    else
+        return false;
 }
 
 stock bool InSecondHalfOfRound()
 {
-	return view_as<bool>(GameRules_GetProp("m_bInSecondHalfOfRound"));
+    return view_as<bool>(GameRules_GetProp("m_bInSecondHalfOfRound"));
 }
