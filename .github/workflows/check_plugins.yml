@@ -49,6 +49,6 @@ jobs:
           for file in *.sp
           do
             echo -e "\nCompiling $file..."
-            spcomp -E -w234 -O2 -v2 -i $SCRIPTS_PATH/include $file
+            spcomp -E -w234 -w217 -O2 -v2 -i $SCRIPTS_PATH/include $file
           done
         working-directory: ${{ env.SCRIPTS_PATH }}/
