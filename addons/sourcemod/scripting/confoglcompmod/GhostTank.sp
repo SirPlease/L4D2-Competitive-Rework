@@ -62,6 +62,7 @@ void GT_OnModuleStart()
 	HookEvent("item_pickup", GT_ItemPickup);
 	HookEvent("player_incapacitated", GT_PlayerIncap);
 	HookEvent("finale_vehicle_incoming", GT_FinaleVehicleIncoming, EventHookMode_PostNoCopy);
+	HookEvent("finale_vehicle_ready", GT_FinaleVehicleIncoming, EventHookMode_PostNoCopy);
 }
 
 Action GT_OnTankSpawn_Forward()
