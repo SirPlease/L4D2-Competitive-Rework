@@ -18,8 +18,8 @@
 
 
 
-#define PLUGIN_VERSION		"1.138"
-#define PLUGIN_VERLONG		1138
+#define PLUGIN_VERSION		"1.139"
+#define PLUGIN_VERLONG		1139
 
 #define DEBUG				0
 // #define DEBUG			1	// Prints addresses + detour info (only use for debugging, slows server down).
@@ -184,6 +184,10 @@ float g_fProf;
 // GasCan model for damage hook
 #define MODEL_GASCAN						"models/props_junk/gascan001a.mdl"
 
+// PipeBomb particles
+#define PARTICLE_FUSE						"weapon_pipebomb_fuse"
+#define PARTICLE_LIGHT						"weapon_pipebomb_blinking_light"
+
 
 
 // Precache models for spawning
@@ -306,7 +310,7 @@ int L4D2CountdownTimer_Offsets[10];
 int L4D2IntervalTimer_Offsets[6];
 
 // l4d2weapons.inc
-int L4D2IntWeapon_Offsets[6];
+int L4D2IntWeapon_Offsets[7];
 int L4D2FloatWeapon_Offsets[21];
 int L4D2BoolMeleeWeapon_Offsets[1];
 int L4D2IntMeleeWeapon_Offsets[2];
@@ -823,7 +827,7 @@ void GetGameMode() // Forward "L4D_OnGameModeChange"
 {
 	g_iCurrentMode = 0;
 
-	static char sMode[12];
+	static char sMode[10];
 
 	if( g_bLeft4Dead2 )
 	{
@@ -968,6 +972,8 @@ public void OnClientDisconnect(int client)
 	g_bCheckpointFirst[client] = false;
 	g_bCheckpointLast[client] = false;
 
+
+
 	// Remove client from hooked list
 	int index = g_iAnimationHookedClients.FindValue(client);
 	if( index != -1 )
@@ -988,6 +994,8 @@ public void OnClientDisconnect(int client)
 
 		delete hIter;
 	}
+
+
 
 	// Loop through all anim hooks for specific client
 	int length = g_iAnimationHookedPlugins.Length;
@@ -1480,6 +1488,10 @@ public void OnMapStart()
 		}
 
 		g_iGasCanModel = PrecacheModel(MODEL_GASCAN);
+
+		// PipeBomb projectile
+		PrecacheParticle(PARTICLE_FUSE);
+		PrecacheParticle(PARTICLE_LIGHT);
 
 
 

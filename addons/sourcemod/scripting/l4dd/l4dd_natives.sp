@@ -209,6 +209,58 @@ void ValidateOffset(int test, const char[] name, bool check = true)
 // ====================================================================================================
 //										SILVERS NATIVES
 // ====================================================================================================
+int Native_PrecacheParticle(Handle plugin, int numParams) // Native "L4D_PrecacheParticle"
+{
+	int maxlength;
+	GetNativeStringLength(1, maxlength);
+	maxlength += 1;
+
+	char[] sEffectName = new char[maxlength];
+	GetNativeString(1, sEffectName, maxlength);
+
+	PrecacheParticle(sEffectName);
+
+	return 0;
+}
+
+void PrecacheParticle(const char[] sEffectName)
+{
+	static int table = INVALID_STRING_TABLE;
+	if( table == INVALID_STRING_TABLE )
+	{
+		table = FindStringTable("ParticleEffectNames");
+	}
+
+	if( FindStringIndex(table, sEffectName) == INVALID_STRING_INDEX )
+	{
+		bool save = LockStringTables(false);
+		AddToStringTable(table, sEffectName);
+		LockStringTables(save);
+	}
+}
+
+int Native_RemoveEntityDelay(Handle plugin, int numParams) // Native "L4D_RemoveEntityDelay"
+{
+	int entity = GetNativeCell(1);
+	float time = GetNativeCell(2);
+	int user = GetNativeCell(3);
+
+	static char sTemp[64];
+	FormatEx(sTemp, sizeof(sTemp), "OnUser%d !self:Kill::%f:-1", user, time);
+	SetVariantString(sTemp);
+	AcceptEntityInput(entity, "AddOutput");
+
+	switch( user )
+	{
+		case 1: AcceptEntityInput(entity, "FireUser1");
+		case 2: AcceptEntityInput(entity, "FireUser2");
+		case 3: AcceptEntityInput(entity, "FireUser3");
+		case 4: AcceptEntityInput(entity, "FireUser4");
+	}
+
+	return 0;
+}
+
 any Native_GetPointer(Handle plugin, int numParams) // Native "L4D_GetPointer"
 {
 	PointerType ptr_type = GetNativeCell(1);
@@ -253,6 +305,21 @@ int Native_ReadMemoryString(Handle plugin, int numParams) // Native "L4D_ReadMem
 	ReadMemoryString(view_as<Address>(addy), buffer, maxlength);
 
 	SetNativeString(2, buffer, maxlength);
+
+	return 0;
+}
+
+int Native_WriteMemoryString(Handle plugin, int numParams) // Native "L4D_WriteMemoryString"
+{
+	int addy = GetNativeCell(1);
+
+	int maxlength;
+	GetNativeStringLength(2, maxlength) + 1;
+	char[] buffer = new char[maxlength];
+
+	GetNativeString(2, buffer, maxlength);
+
+	WriteMemoryString(view_as<Address>(addy), buffer);
 
 	return 0;
 }
@@ -306,6 +373,15 @@ void ReadMemoryString(Address addr, char[] buffer, int size)
 			return;
 
 	buffer[i] = '\0';
+}
+
+void WriteMemoryString(Address addr, char[] buffer)
+{
+	int max = strlen(buffer);
+
+	int i = 0;
+	for( ; i <= max; i++ )
+		StoreToAddress(addr + view_as<Address>(i), buffer[i], NumberType_Int8);
 }
 
 void ReverseAddress(const char[] sBytes, char sReturn[32])
@@ -1169,7 +1245,7 @@ bool IsInFirstCheckpoint(int client)
 					return true;
 			}
 
-			//PrintToServer("#### g_hSDK_TerrorNavMesh_IsInInitialCheckpoint_NoLandmark");
+			//PrintToServer("#### CALL g_hSDK_TerrorNavMesh_IsInInitialCheckpoint_NoLandmark");
 			if( SDKCall(g_hSDK_TerrorNavMesh_IsInInitialCheckpoint_NoLandmark, g_pNavMesh, nav) )
 			{
 				return true;
@@ -1194,7 +1270,7 @@ bool IsInLastCheckpoint(int client)
 {
 	ValidateNatives(g_hSDK_CTerrorGameRules_IsMissionFinalMap, "CTerrorGameRules::IsMissionFinalMap");
 
-	// PrintToServer("#### g_hSDK_CTerrorGameRules_IsMissionFinalMap");
+	// PrintToServer("#### CALL g_hSDK_CTerrorGameRules_IsMissionFinalMap");
 	if( SDKCall(g_hSDK_CTerrorGameRules_IsMissionFinalMap) ) return false;
 
 	if( HasFinaleStats() ) return false;
@@ -1210,20 +1286,20 @@ bool IsInLastCheckpoint(int client)
 		ValidateNatives(g_hSDK_TerrorNavMesh_GetLastCheckpoint, "TerrorNavMesh::GetLastCheckpoint");
 		ValidateNatives(g_hSDK_TerrorNavMesh_IsInExitCheckpoint_NoLandmark, "TerrorNavMesh::IsInExitCheckpoint_NoLandmark");
 
-		//PrintToServer("#### g_hSDK_CTerrorPlayer_GetLastKnownArea");
+		//PrintToServer("#### CALL g_hSDK_CTerrorPlayer_GetLastKnownArea");
 		int area = SDKCall(g_hSDK_CTerrorPlayer_GetLastKnownArea, client);
 		if( area == 0 ) return false;
 
-		//PrintToServer("#### g_hSDK_TerrorNavMesh_GetLastCheckpoint");
+		//PrintToServer("#### CALL g_hSDK_TerrorNavMesh_GetLastCheckpoint");
 		int nav1 = SDKCall(g_hSDK_TerrorNavMesh_GetLastCheckpoint, g_pNavMesh);
 		if( nav1 )
 		{
-			//PrintToServer("#### g_hSDK_Checkpoint_ContainsArea");
+			//PrintToServer("#### CALL g_hSDK_Checkpoint_ContainsArea");
 			if( SDKCall(g_hSDK_Checkpoint_ContainsArea, nav1, area) )
 				return true;
 		}
 
-		//PrintToServer("#### g_hSDK_TerrorNavMesh_IsInExitCheckpoint_NoLandmark");
+		//PrintToServer("#### CALL g_hSDK_TerrorNavMesh_IsInExitCheckpoint_NoLandmark");
 		if( SDKCall(g_hSDK_TerrorNavMesh_IsInExitCheckpoint_NoLandmark, g_pNavMesh, area) )
 			return true;
 		*/
@@ -1300,7 +1376,7 @@ int GetCheckpointFirst()
 		{
 			GetEntPropVector(entity, Prop_Send, "m_vecOrigin", vPos);
 
-			//PrintToServer("#### g_hSDK_CNavMesh_GetNearestNavArea");
+			//PrintToServer("#### CALL g_hSDK_CNavMesh_GetNearestNavArea");
 			Address area = view_as<Address>(SDKCall(g_hSDK_CNavMesh_GetNearestNavArea, g_pNavMesh, vPos, 0, 1000.0, 0, 0, 0));
 			if( area )
 			{
@@ -1355,7 +1431,7 @@ int GetCheckpointLast()
 		{
 			GetEntPropVector(entity, Prop_Send, "m_vecOrigin", vPos);
 
-			//PrintToServer("#### g_hSDK_CNavMesh_GetNearestNavArea");
+			//PrintToServer("#### CALL g_hSDK_CNavMesh_GetNearestNavArea");
 			Address area = view_as<Address>(SDKCall(g_hSDK_CNavMesh_GetNearestNavArea, g_pNavMesh, vPos, 0, 1000.0, 0, 0, 0));
 			if( area )
 			{
@@ -1586,11 +1662,37 @@ int Native_CPipeBombProjectile_Create(Handle plugin, int numParams) // Native "L
 	GetNativeArray(3, vAng, sizeof(vAng));
 
 	//PrintToServer("#### CALL g_hSDK_CPipeBombProjectile_Create");
-	return SDKCall(g_hSDK_CPipeBombProjectile_Create, vPos, vAng, vAng, vAng, client, 2.0);
+	int entity = SDKCall(g_hSDK_CPipeBombProjectile_Create, vPos, vAng, vAng, vAng, client, 2.0);
+
+	if( numParams == 4 && GetNativeCell(4) )
+	{
+		CreatePipeParticle(entity, 0);
+		CreatePipeParticle(entity, 1);
+	}
+
+	return entity;
 
 	// int entity = SDKCall(g_hSDK_CPipeBombProjectile_Create, vPos, vAng, vAng, vAng, client, 2.0);
 	// SetEntPropFloat(entity, Prop_Data, "m_flCreateTime", GetGameTime());
 	// return entity;
+}
+
+void CreatePipeParticle(int target, int type)
+{
+	int entity = CreateEntityByName("info_particle_system");
+	if( type == 0 )	DispatchKeyValue(entity, "effect_name", PARTICLE_FUSE);
+	else			DispatchKeyValue(entity, "effect_name", PARTICLE_LIGHT);
+
+	DispatchSpawn(entity);
+	ActivateEntity(entity);
+	AcceptEntityInput(entity, "Start");
+
+	SetVariantString("!activator");
+	AcceptEntityInput(entity, "SetParent", target);
+
+	if( type == 0 )	SetVariantString("fuse");
+	else			SetVariantString("pipebomb_light");
+	AcceptEntityInput(entity, "SetParentAttachment", target);
 }
 
 int Native_CMolotovProjectile_Create(Handle plugin, int numParams) // Native "L4D_MolotovPrj"
@@ -2627,9 +2729,9 @@ int Native_GetLobbyReservation(Handle plugin, int numParams) // Native "L4D_GetL
 	char sTemp[20];
 
 	if( val1 )
-		Format(sTemp, sizeof(sTemp), "%X%08X", val1, val2);
+		FormatEx(sTemp, sizeof(sTemp), "%X%08X", val1, val2);
 	else
-		Format(sTemp, sizeof(sTemp), "%X", val2);
+		FormatEx(sTemp, sizeof(sTemp), "%X", val2);
 
 	int maxlength = GetNativeCell(2);
 	SetNativeString(1, sTemp, maxlength);

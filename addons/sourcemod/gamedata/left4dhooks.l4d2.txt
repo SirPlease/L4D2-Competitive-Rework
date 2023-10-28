@@ -1028,6 +1028,14 @@
 				"this"			"entity"
 			}
 
+			"L4DD::CDirector::CreateRescuableSurvivors"
+			{
+				"signature"		"CDirector::CreateRescuableSurvivors"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+			}
+
 			"L4DD::CTerrorPlayer::OnStaggered"
 			{
 				"signature"		"CTerrorPlayer::OnStaggered"
@@ -1116,6 +1124,21 @@
 				}
 			}
 
+			"L4DD::CTerrorPlayer::DropWeapons"
+			{
+				"signature"		"CTerrorPlayer::DropWeapons"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"bool"
+					}
+				}
+			}
+
 			"L4DD::CInferno::Spread"
 			{
 				"signature"		"CInferno::Spread"
@@ -1187,6 +1210,25 @@
 				"callconv"		"thiscall"
 				"return"		"int"
 				"this"			"entity"
+			}
+
+			"L4DD::CGrenadeLauncher_Projectile::Explode"
+			{
+				"signature"		"CGrenadeLauncher_Projectile::Explode"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"cbaseentity"
+					}
+					"a2"
+					{
+						"type"	"int"
+					}
+				}
 			}
 
 			"L4DD::CTerrorPlayer::Extinguish"
@@ -2305,6 +2347,11 @@
 				"windows"	"3048"
 				"linux"		"3048"
 			}
+			"L4D2IntWeapon_Type" // Search: "WeaponType" for offset
+			{
+				"windows"	"2196"
+				"linux"		"2196"
+			}
 
 			// L4D2FloatWeapon
 			"L4D2FloatWeapon_MaxPlayerSpeed"
@@ -2728,6 +2775,18 @@
 				"linux"		"@_ZN19CVomitJarProjectile8DetonateEv"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\xF6\x2A\x2A\x2A\x0F\x85"
 				/* ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 56 57 8B ? E8 ? ? ? ? 8B ? F6 ? ? ? 0F 85 */
+			}
+
+			/*
+			*  CGrenadeLauncher_Projectile::Explode(CGrenadeLauncher_Projectile *this, CGameTrace *a2, int a3)
+			*  Search: "weapon_grenadelauncher_water"
+			*/
+			"CGrenadeLauncher_Projectile::Explode"
+			{
+				"library"	"server"
+				"linux"		"@_ZN27CGrenadeLauncher_Projectile12ExplodeTouchEP11CBaseEntity"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x8B\x2A\x2A\x53\x56\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\xC1\x2A\x2A\x57"
+				/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 8B ? ? 53 56 8B ? 8B ? ? ? ? ? C1 ? ? 57 */
 			}
 
 			/*
@@ -3986,6 +4045,18 @@
 				/* Search: "pounced on %s, %d damage interrupts".
 				 * Several calls from here to target function, visual match with nix code.
 				 */
+			}
+
+			/*
+			* CTerrorPlayer::DropWeapons(CTerrorPlayer *this, bool a2)
+			*/
+			"CTerrorPlayer::DropWeapons"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer11DropWeaponsEb"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x74\x2A\x56\x57\x8D"
+				/* ? ? ? ? ? ? ? E8 ? ? ? ? 83 ? ? 74 ? 56 57 8D */
+				/* Search: "Survivor %s changed model from %s to %s via SetModelFromClass". Xref to VTable. 2 entries down. */
 			}
 
 			/*

@@ -159,6 +159,7 @@ void SetupForwardsNatives()
 	g_hFWD_Witch_SetHarasser												= new GlobalForward("L4D_OnWitchSetHarasser",							ET_Event, Param_Cell, Param_Cell);
 	g_hFWD_Tank_EnterStasis_Post											= new GlobalForward("L4D_OnEnterStasis",								ET_Event, Param_Cell);
 	g_hFWD_Tank_LeaveStasis_Post											= new GlobalForward("L4D_OnLeaveStasis",								ET_Event, Param_Cell);
+	g_hFWD_CTerrorPlayer_DropWeapons										= new GlobalForward("L4D_OnDeathDroppedWeapons",						ET_Event, Param_Cell, Param_Array);
 	g_hFWD_CInferno_Spread													= new GlobalForward("L4D2_OnSpitSpread",								ET_Event, Param_Cell, Param_Cell, Param_FloatByRef, Param_FloatByRef, Param_FloatByRef);
 	g_hFWD_SurvivorBot_UseHealingItems										= new GlobalForward("L4D2_OnUseHealingItems",							ET_Event, Param_Cell);
 	g_hFWD_SurvivorBot_FindScavengeItem_Post								= new GlobalForward("L4D2_OnFindScavengeItem",							ET_Event, Param_Cell, Param_CellByRef);
@@ -198,6 +199,9 @@ void SetupForwardsNatives()
 		g_hFWD_CVomitJarProjectile_Detonate									= new GlobalForward("L4D2_VomitJar_Detonate",							ET_Event, Param_Cell, Param_Cell);
 		g_hFWD_CVomitJarProjectile_Detonate_Post							= new GlobalForward("L4D2_VomitJar_Detonate_Post",						ET_Event, Param_Cell, Param_Cell);
 		g_hFWD_CVomitJarProjectile_Detonate_PostHandled						= new GlobalForward("L4D2_VomitJar_Detonate_PostHandled",				ET_Event, Param_Cell, Param_Cell);
+		g_hFWD_CGrenadeLauncher_Projectile_Explode							= new GlobalForward("L4D2_GrenadeLauncher_Detonate",					ET_Event, Param_Cell, Param_Cell);
+		g_hFWD_CGrenadeLauncher_Projectile_Explode_Post						= new GlobalForward("L4D2_GrenadeLauncher_Detonate_Post",				ET_Event, Param_Cell, Param_Cell);
+		g_hFWD_CGrenadeLauncher_Projectile_Explode_PostHandled				= new GlobalForward("L4D2_GrenadeLauncher_Detonate_PostHandled",		ET_Event, Param_Cell, Param_Cell);
 		g_hFWD_ZombieManager_SpawnWitchBride								= new GlobalForward("L4D2_OnSpawnWitchBride",							ET_Event, Param_Array, Param_Array);
 		g_hFWD_ZombieManager_SpawnWitchBride_Post							= new GlobalForward("L4D2_OnSpawnWitchBride_Post",						ET_Event, Param_Cell, Param_Array, Param_Array);
 		g_hFWD_ZombieManager_SpawnWitchBride_PostHandled					= new GlobalForward("L4D2_OnSpawnWitchBride_PostHandled",				ET_Event, Param_Cell, Param_Array, Param_Array);
@@ -269,10 +273,13 @@ void SetupForwardsNatives()
 	// =========================
 	// Silvers Natives
 	// =========================
+	CreateNative("L4D_PrecacheParticle",							Native_PrecacheParticle);
+	CreateNative("L4D_RemoveEntityDelay",							Native_RemoveEntityDelay);
 	CreateNative("L4D_GetPointer",		 							Native_GetPointer);
 	CreateNative("L4D_GetClientFromAddress",		 				Native_GetClientFromAddress);
 	CreateNative("L4D_GetEntityFromAddress",		 				Native_GetEntityFromAddress);
 	CreateNative("L4D_ReadMemoryString",		 					Native_ReadMemoryString);
+	CreateNative("L4D_WriteMemoryString",		 					Native_WriteMemoryString);
 	CreateNative("L4D_GetServerOS",		 							Native_GetServerOS);
 	CreateNative("Left4DHooks_Version",		 						Native_Left4DHooks_Version);
 	CreateNative("L4D_HasMapStarted",		 						Native_HasMapStarted);

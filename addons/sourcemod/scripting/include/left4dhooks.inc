@@ -60,13 +60,13 @@
 
 
 
-// Natives: 257 (including 3 for L4D1 only)
-// L4D1 = 31 [left4downtown] + 47 [l4d_direct] + 16 [l4d2addresses] + 67 [silvers - mine!] + 4 [anim] = 166
-// L4D2 = 61 [left4downtown] + 59 [l4d_direct] + 31 [l4d2addresses] + 111 [silvers - mine!] + 4 [anim] = 266
+// Natives: 260 (including 3 for L4D1 only)
+// L4D1 = 31 [left4downtown] + 47 [l4d_direct] + 16 [l4d2addresses] + 70 [silvers - mine!] + 4 [anim] = 169
+// L4D2 = 61 [left4downtown] + 59 [l4d_direct] + 31 [l4d2addresses] + 114 [silvers - mine!] + 4 [anim] = 269
 
-// Forwards: 201 (including 5 for L4D1 only)
-// L4D1 = 138
-// L4D2 = 196
+// Forwards: 204 (including 5 for L4D1 only)
+// L4D1 = 139
+// L4D2 = 199
 
 // Stocks: 169 (L4D1 = 114, L4D2 = 167)
 // left4dhooks_silver			46 stocks	(L4D1 = 39,		L4D2 = 53)
@@ -137,10 +137,13 @@ public void __pl_l4dh_SetNTVOptional()
 	MarkNativeAsOptional("L4D_MolotovPrj");
 	MarkNativeAsOptional("L4D2_VomitJarPrj");
 	MarkNativeAsOptional("L4D2_GrenadeLauncherPrj");
+	MarkNativeAsOptional("L4D_PrecacheParticle");
+	MarkNativeAsOptional("L4D_RemoveEntityDelay");
 	MarkNativeAsOptional("L4D_GetPointer");
 	MarkNativeAsOptional("L4D_GetClientFromAddress");
 	MarkNativeAsOptional("L4D_GetEntityFromAddress");
 	MarkNativeAsOptional("L4D_ReadMemoryString");
+	MarkNativeAsOptional("L4D_WriteMemoryString");
 	MarkNativeAsOptional("L4D_GetServerOS");
 	MarkNativeAsOptional("Left4DHooks_Version");
 	MarkNativeAsOptional("L4D_HasMapStarted");
@@ -653,7 +656,8 @@ enum
 	FINALE_GAUNTLET_HORDE_BONUSTIME = 14,
 	FINALE_GAUNTLET_BOSS_INCOMING = 15,
 	FINALE_GAUNTLET_BOSS = 16,
-	FINALE_GAUNTLET_ESCAPE = 17
+	FINALE_GAUNTLET_ESCAPE = 17,
+	FINALE_NONE = 18
 };
 
 // Used as the "reason" by the "L4D_OnKnockedDown*" forwards
@@ -882,6 +886,49 @@ enum PlayerAnimEvent_t
 28 - Weapon Recoil + Reload (same)
 29... - Seems unused (Same for 2, 17-20).
 */
+
+enum WeaponType
+{
+	WEAPONTYPE_PISTOL,
+	WEAPONTYPE_SMG,
+	WEAPONTYPE_RIFLE,
+	WEAPONTYPE_SHOTGUN,
+	WEAPONTYPE_SNIPERRIFLE,
+	WEAPONTYPE_MACHINEGUN,
+
+	WEAPONTYPE_GRENADE = 7,
+	WEAPONTYPE_HEALING,
+	WEAPONTYPE_REVIVING,
+	WEAPONTYPE_MELEE,
+	WEAPONTYPE_CHAINSAW,
+	WEAPONTYPE_GRENADELAUNCHER,
+	WEAPONTYPE_CARRIEDPROP,
+	WEAPONTYPE_CLAW,
+	WEAPONTYPE_UPGRADEPACK,
+
+	WEAPONTYPE_UNKNOWN
+};
+
+stock const char g_sWeaponTypes[WeaponType][] =
+{
+	"pistol",
+	"smg",
+	"rifle",
+	"shotgun",
+	"sniperrifle",
+	"machinegun",
+	"",
+	"grenade",
+	"healing",
+	"reviving",
+	"melee",
+	"chainsaw",
+	"grenadelauncher",
+	"carriedprop",
+	"claw",
+	"upgradepack",
+	""
+};
 
 
 
@@ -2455,14 +2502,12 @@ forward void L4D2_OnPlayerFling_PostHandled(int client, int attacker, const floa
  * @brief Called when CTerrorPlayer::IsMotionControlledXY is invoked
  * @remarks Called when a player is staggering or a Hunter has been knocked off someone
  * @remarks Blocking this will allow the player to fall with gravity instead of floating in the air
- * @remarks Pre-public release: various bugs surrounding this method. To be addressed later
  *
  * @param client		Client index of the player
- * @param activity		The activity sequence playing that has overridden gravity
+ * @param activity		The activity sequence playing that has a fixed set of motions
  *
  * @return				Plugin_Handled to block, Plugin_Continue otherwise
  **/
-#pragma deprecated This is for private testing and not released for public usage yet
 forward Action L4D_OnMotionControlledXY(int client, int activity);
 
 /**
@@ -2501,7 +2546,7 @@ forward void L4D2_OnPounceOrLeapStumble_PostHandled(int victim, int attacker);
  * @brief Called when CTerrorPlayer::OnKnockedDown(CTerrorPlayer*) is invoked
  * @remarks Called when someone is about to be hit by a Tank rock or lunged by a Hunter
  * @remarks You can use the "KNOCKDOWN_*" enum values for the reason
- * @remarks Called multiple times when someone is about to be has been pounced by a Hunter
+ * @remarks Called multiple times when someone is about to be pounced by a Hunter
  *
  * @param victim		Client index of the victim
  * @param reason		The Knockdown reason type. 1=Hunter lunge, 2=Tank rock, 3=Charger impact
@@ -2513,12 +2558,12 @@ forward Action L4D_OnKnockedDown(int client, int reason);
 /**
  * @brief Called when CTerrorPlayer::OnKnockedDown(CTerrorPlayer*) is invoked
  * @remarks Called when someone is about to be hit by a Tank rock or lunged by a Hunter
- * @remarks Called multiple times when someone is about to be has been pounced by a Hunter
+ * @remarks Called multiple times when someone is about to be pounced by a Hunter
  * @remarks You can use the "KNOCKDOWN_*" enum values for the reason
  * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
  *
  * @param victim		Client index of the victim
- * @param reason		The Knockdown reason type. 1=Hunter lunge, 2=Tank rock
+ * @param reason		The Knockdown reason type. 1=Hunter lunge, 2=Tank rock, 3=Charger impact
  *
  * @noreturn
  **/
@@ -2527,12 +2572,12 @@ forward void L4D_OnKnockedDown_Post(int client, int reason);
 /**
  * @brief Called when CTerrorPlayer::OnKnockedDown(CTerrorPlayer*) is invoked
  * @remarks Called when someone is about to be hit by a Tank rock or lunged by a Hunter
- * @remarks Called multiple times when someone is about to be has been pounced by a Hunter
+ * @remarks Called multiple times when someone is about to be pounced by a Hunter
  * @remarks You can use the "KNOCKDOWN_*" enum values for the reason
  * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
  *
  * @param victim		Client index of the victim
- * @param reason		The Knockdown reason type. 1=Hunter lunge, 2=Tank rock
+ * @param reason		The Knockdown reason type. 1=Hunter lunge, 2=Tank rock, 3=Charger impact
  *
  * @noreturn
  **/
@@ -2631,6 +2676,24 @@ forward void L4D_OnPlayerCough_Post(int client, int attacker);
  * @noreturn
  **/
 forward void L4D_OnPlayerCough_PostHandled(int client, int attacker);
+
+/**
+ * @brief Called when CTerrorPlayer::DropWeapons() is invoked
+ * @remarks Called when a player dies, listing their currently held weapons and objects that are being dropped
+ * @remarks Array index is as follows:
+ * @remarks [0] = L4DWeaponSlot_Primary
+ * @remarks [1] = L4DWeaponSlot_Secondary
+ * @remarks [2] = L4DWeaponSlot_Grenade
+ * @remarks [3] = L4DWeaponSlot_FirstAid
+ * @remarks [4] = L4DWeaponSlot_Pills
+ * @remarks [5] = Held item (e.g. weapon_gascan, weapon_gnome etc)
+ *
+ * @param client		Client index of the player who died
+ * @param weapons		Array of weapons dropped, valid entity index or -1 if empty
+ *
+ * @noreturn
+ **/
+forward void L4D_OnDeathDroppedWeapons(int client, int weapons[6]);
 
 /**
  * @brief Called whenever CInferno::Spread(Vector const&) is invoked (only for spitters -- ignores fire)
@@ -3199,6 +3262,44 @@ forward void L4D2_VomitJar_Detonate_Post(int entity, int client);
 forward void L4D2_VomitJar_Detonate_PostHandled(int entity, int client);
 
 /**
+ * @brief Called whenever CGrenadeLauncher_Projectile::Explode is invoked
+ * @remarks Called when a Grenade Launcher projectile is about to explode
+ *
+ * @param entity			the entity that exploded
+ * @param client			the client who shot the grenade, can be -1
+ *
+ * @return					Plugin_Handled to block explosion which will cause the Grenade Launcher projectile to bounce and remain active, Plugin_Continue otherwise
+ */
+// L4D2 only
+forward Action L4D2_GrenadeLauncher_Detonate(int entity, int client);
+
+/**
+ * @brief Called whenever CGrenadeLauncher_Projectile::Explode is invoked
+ * @remarks Called when a Grenade Launcher projectile is about to explode
+ * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @param entity			the entity that exploded
+ * @param client			the client who shot the grenade, can be -1
+ *
+ * @noreturn
+ */
+// L4D2 only
+forward void L4D2_GrenadeLauncher_Detonate_Post(int entity, int client);
+
+/**
+ * @brief Called whenever CGrenadeLauncher_Projectile::Explode is invoked
+ * @remarks Called when a Grenade Launcher projectile is about to explode
+ * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @param entity			the entity that exploded
+ * @param client			the client who shot the grenade, can be -1
+ *
+ * @noreturn
+ */
+// L4D2 only
+forward void L4D2_GrenadeLauncher_Detonate_PostHandled(int entity, int client);
+
+/**
  * @brief Called whenever CInsectSwarm::CanHarm() is invoked
  * @remarks Called when Spitter Acid is determining if a client or entity can be damaged
  *
@@ -3562,6 +3663,27 @@ forward Action L4D_OnGetRandomPZSpawnPosition(int &client, int &zombieClass, int
 // NATIVES - Silvers
 // ====================================================================================================
 /**
+ * @brief Precaches a particle effect
+ *
+ * @param	sEffectName		String of the particle name e.g. "fuse" or "fire_small_02" etc
+ *
+ * @noreturn
+ */
+native void L4D_PrecacheParticle(const char[] sEffectName);
+
+/**
+ * @brief Kills an entity of X seconds using the FireUser input/output
+ * @remarks This triggers OnUser1 and FireUser1 etc using the AcceptEntityInput method to "Kill" an entity
+ *
+ * @param	entity		The entity to kill
+ * @param	time		After how long to kill the entity
+ * @param	user		Which user input/output to use. Valid values 1-4 only.
+ *
+ * @noreturn
+ */
+native void L4D_RemoveEntityDelay(int entity, float time, int user = 4);
+
+/**
  * @brief Returns the address pointer to various internal game objects
  *
  * @param	ptr_type		Using the PointerType enum to select which pointer to return
@@ -3591,11 +3713,21 @@ native int L4D_GetEntityFromAddress(Address addy);
 /**
  * @brief Returns a string read from a memory address
  *
- * @param	addy		Address to check
+ * @param	addy		Address to read from
  *
  * @return	Entity index or -1 on failure
  */
 native int L4D_ReadMemoryString(Address addy, char[] buffer, int maxlength);
+
+/**
+ * @brief Writes a string to a memory address
+ *
+ * @param	addy		Address to write to
+ * @param	buffer		String to write
+ *
+ * @noreturn
+ */
+native void L4D_WriteMemoryString(Address addy, const char[] buffer);
 
 /**
  * @brief Returns the servers operating system
@@ -4110,16 +4242,16 @@ native int L4D_TankRockPrj(int client, const float vecPos[3], const float vecAng
 
 /**
  * @brief Creates an activated PipeBomb projectile
- * @remarks Does not attach the "Fuse" or "Light" particles, see the "left4dhooks_test" plugin for example on attaching these
- * @remarks Also used in the "PipeBomb Shove" plugin by Silvers
+ * @remarks Example use in the "PipeBomb Shove" plugin by Silvers
  *
  * @param client	Client id to attribute the projectile to for damage credit. Passing 0 (world) is allowed
  * @param vecPos	Vector coordinate of the projectile on creation
  * @param vecAng	Vector velocity and direction of the projectile
+ * @param effects	True = create fuse/light particles. False = don't create (default before 1.139 update)
  *
  * @return			Entity index of the projectile
  */
-native int L4D_PipeBombPrj(int client, const float vecPos[3], const float vecAng[3]);
+native int L4D_PipeBombPrj(int client, const float vecPos[3], const float vecAng[3], bool effects = false);
 
 /**
  * @brief Creates an activated Molotov projectile
@@ -5262,6 +5394,7 @@ enum L4D2IntWeaponAttributes
 	L4D2IWA_Bucket,
 	L4D2IWA_Tier, // L4D2 only
 	L4D2IWA_DefaultSize, // Default weapon clip size
+	L4D2IWA_WeaponType, // Can use with the "WeaponType" enum
 	MAX_SIZE_L4D2IntWeaponAttributes
 };
 
@@ -5346,7 +5479,7 @@ native bool L4D2_IsValidWeapon(const char[] weaponName);
  *
  * @return				The value read
  */
-native int L4D2_GetIntWeaponAttribute(const char[] weaponName, L4D2IntWeaponAttributes attr);
+native any L4D2_GetIntWeaponAttribute(const char[] weaponName, L4D2IntWeaponAttributes attr);
 
 /**
  * @brief Read a float-typed attribute for a given weapon from the WeaponInformationDatabase
@@ -5980,7 +6113,7 @@ native float L4D2Direct_GetFlowDistance(int client);
  *
  * @noreturn
  */
-native void L4D2Direct_DoAnimationEvent(int client, int event, int variant_param = 0);
+native void L4D2Direct_DoAnimationEvent(int client, any event, int variant_param = 0);
 
 /**
  * Get the clients health bonus
