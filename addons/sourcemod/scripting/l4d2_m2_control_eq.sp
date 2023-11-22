@@ -124,6 +124,16 @@ void Event_PlayerShoved(Event hEvent, const char[] eName, bool dontBroadcast)
 	SetEntPropFloat(shover, Prop_Send, "m_flNextShoveTime", CalcNextShoveTime(penalty, minPenalty, maxPenalty) - eps);
 }
 
+float g_flStaggerEndTime;
+public Action L4D_OnCancelStagger(int client)
+{
+	g_flStaggerEndTime = GetEntPropFloat(client, Prop_Send, "m_staggerTimer", 1);
+	if (g_flStaggerEndTime <= 0.0 || g_flStaggerEndTime <= GetGameTime())
+		g_flStaggerEndTime = -1.0;
+	
+	return Plugin_Continue;
+}
+
 public void L4D_OnCancelStagger_Post(int client)
 {
 	if (IsInfected(client) && IsPlayerAlive(client) && !L4D_IsPlayerGhost(client))
@@ -139,6 +149,9 @@ public void L4D_OnCancelStagger_Post(int client)
 			case L4D2Infected_Jockey: {
 				recharge = hLeapIntervalCvar.FloatValue;
 				bAttacking = GetEntPropEnt(client, Prop_Send, "m_jockeyVictim") != -1;
+
+				if (g_flStaggerEndTime != -1.0)
+					recharge += g_flStaggerEndTime - GetGameTime();
 			}
 			default: {
 				return;
