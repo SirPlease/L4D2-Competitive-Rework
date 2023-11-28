@@ -122,7 +122,7 @@ public Plugin myinfo =
 {
 	name = "L4D2 Godframes Control combined with FF Plugins",
 	author = "Stabby, CircleSquared, Tabun, Visor, dcx, Sir, Spoon, A1m`, Sir",
-	version = "0.6.9",
+	version = "0.6.10",
 	description = "Allows for control of what gets godframed and what doesnt along with integrated FF Support from l4d2_survivor_ff (by dcx and Visor) and l4d2_shotgun_ff (by Visor)"
 };
 
@@ -1028,16 +1028,23 @@ public int Native_GiveClientGodFrames(Handle hPlugin, int iNumParams)
 
 void SetGodFrameGlows(int client)
 {
+	if (g_hTimer[client])
+		delete g_hTimer[client];
+	
 	float fNow = GetGameTime();
-	if (g_fFakeGodframeEnd[client] > fNow && g_hGodframeGlows.BoolValue)
+	
+	if (g_fFakeGodframeEnd[client] <= fNow)
+	{
+		Timed_ResetGlow(null, client);
+		return;
+	}
+	
+	if (g_hGodframeGlows.BoolValue)
 	{
 		// make player transparent/red while godframed
 		SetEntityRenderMode(client, RENDER_GLOW);
 		SetEntityRenderColor(client, 255, 0, 0, 200);
 		
-		if (g_hTimer[client] != null) 
-			delete g_hTimer[client];
-
 		g_hTimer[client] = CreateTimer(g_fFakeGodframeEnd[client] - fNow, Timed_ResetGlow, client);
 	}
 }
