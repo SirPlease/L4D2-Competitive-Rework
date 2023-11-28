@@ -10,12 +10,6 @@
 				"windows"		"7016"
 			}
 			
-			"CNavArea::m_id"
-			{
-				"linux"			"136"
-				"windows"		"136"
-			}
-			
 			"TerrorNavArea::m_flowToGoal"
 			{
 				"linux"			"348"
@@ -29,64 +23,8 @@
 			}
 		}
 		
-		"Addresses"
-		{
-			"TheEscapeRoute"
-			{
-				"linux"
-				{
-					"signature"	"g_spawnPath"
-				}
-				"windows"
-				{
-					"signature"	"CEntityFactory<CEscapeRoute>::Create"
-					"read"		"41"
-				}
-			}
-			
-			"TheNavAreas"
-			{
-				"linux"
-				{
-					"signature"	"TheNavAreas"
-				}
-				"windows"
-				{
-					"signature"	"nav_update_lighting"
-					"read"		"82"
-				}
-			}
-		}
-		
 		"Signatures"
 		{
-			/**< TheEscapeRoute() */
-			"g_spawnPath"
-			{
-				"library"		"server"
-				"linux"			"@g_spawnPath"
-			}
-			
-			"CEntityFactory<CEscapeRoute>::Create"
-			{
-				"library"		"server"
-				"windows"		"\x56\x68\x74\x33\x00\x00\xE8"
-								/* 56 68 74 33 00 00 E8 */
-			}
-			
-			"TheNavAreas"
-			{
-				"library"		"server"
-				"linux"			"@TheNavAreas"
-			}
-			
-			"nav_update_lighting"
-			{
-				"library"		"server"
-				"windows"		"\x8B\x44\x24\x04\x57\x33\xFF\x83"
-								/* 8B 44 24 04 57 33 FF 83 */
-			}
-			
 			// Search string "ERROR: BuildEscapeRoute failed. The start or end area was NULL\n"
 			// "CEscapeRoute::ResetPath", "CEscapeRoute::AddArea" and "CEscapeRoute::FinishPath" can be found there.
 			"CEscapeRoute::ResetPath"
@@ -112,15 +50,6 @@
 				"windows"		"\x8B\x81\x2A\x2A\x2A\x2A\x3D\x00\x02\x00\x00\x7C\x2A\x68"
 								/* 8B 81 ? ? ? ? 3D 00 02 00 00 7C ? 68 */
 			}
-			
-			// Search string "Computed lighting for %d/%d areas\n", there's a function call above.
-			"CNavMesh::GetNavAreaByID"
-			{
-				"library"		"server"
-				"linux"			"@_ZNK8CNavMesh14GetNavAreaByIDEj"
-				"windows"		"\x8B\x54\x24\x04\x85\xD2\x74\x2A\x8B\xC2"
-								/* 8B 54 24 04 85 D2 74 ? 8B C2 */
-			}
 		}
 	}
 	
@@ -132,12 +61,6 @@
 			{
 				"linux"			"7232"
 				"windows"		"7212"
-			}
-			
-			"CNavArea::m_id"
-			{
-				"linux"			"140"
-				"windows"		"140"
 			}
 			
 			"TerrorNavArea::m_flowToGoal"
@@ -154,64 +77,8 @@
 			}
 		}
 		
-		"Addresses"
-		{
-			"TheEscapeRoute"
-			{
-				"linux"
-				{
-					"signature"	"g_spawnPath"
-				}
-				"windows"
-				{
-					"signature"	"CEntityFactory<CEscapeRoute>::Create"
-					"read"		"40"
-				}
-			}
-			
-			"TheNavAreas"
-			{
-				"linux"
-				{
-					"signature"	"TheNavAreas"
-				}
-				"windows"
-				{
-					"signature"	"nav_update_lighting"
-					"read"		"82"
-				}
-			}
-		}
-		
 		"Signatures"
 		{
-			/**< TheEscapeRoute() */
-			"g_spawnPath"
-			{
-				"library"		"server"
-				"linux"			"@g_spawnPath"
-			}
-			
-			"CEntityFactory<CEscapeRoute>::Create"
-			{
-				"library"		"server"
-				"windows"		"\x55\x8B\xEC\x56\x68\x38\x34\x00\x00"
-								/* 55 8B EC 56 68 38 34 00 00 */
-			}
-			
-			"TheNavAreas"
-			{
-				"library"		"server"
-				"linux"			"@TheNavAreas"
-			}
-			
-			"nav_update_lighting"
-			{
-				"library"		"server"
-				"windows"		"\x55\x8B\xEC\x8B\x45\x08\x57\x33\xFF\x83"
-								/* 55 8B EC 8B 45 08 57 33 FF 83 */
-			}
-			
 			// Search string "ERROR: BuildEscapeRoute failed. No path from start to end. zeroFlowArea = #%d, endArea = #%d.\n"
 			// "CEscapeRoute::ResetPath", "CEscapeRoute::AddArea" and "CEscapeRoute::FinishPath" can be found there.
 			"CEscapeRoute::ResetPath"
@@ -236,15 +103,6 @@
 				"linux"			"@_ZN12CEscapeRoute10FinishPathEv"
 				"windows"		"\x8B\x81\x2A\x2A\x2A\x2A\x3D\x00\x02\x00\x00\x7C\x2A\x68"
 								/* 8B 81 ? ? ? ? 3D 00 02 00 00 7C ? 68 */
-			}
-			
-			// Search string "Computed lighting for %d/%d areas\n", there's a function call above.
-			"CNavMesh::GetNavAreaByID"
-			{
-				"library"		"server"
-				"linux"			"@_ZNK8CNavMesh14GetNavAreaByIDEj"
-				"windows"		"\x55\x8B\xEC\x8B\x55\x08\x85\xD2\x74\x2A\x8B\xC2"
-								/* 55 8B EC 8B 55 08 85 D2 74 ? 8B C2 */
 			}
 		}
 	}
