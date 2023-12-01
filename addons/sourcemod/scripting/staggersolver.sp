@@ -20,6 +20,12 @@ public void L4D_OnShovedBySurvivor_Post(int client, int victim, const float vecD
 
 public void L4D2_OnStagger_Post(int client, int source)
 {
+	// Interesting to note is that this might not be needed.
+	// Issues might be caused by other plugins messing with the current stagger/anim prior to Post.
+	// Do with this information what you want.
+	if (GetClientTeam(client) != 3)
+		return;
+
 	if (!L4D_IsPlayerStaggering(client))
 		return;
 	
