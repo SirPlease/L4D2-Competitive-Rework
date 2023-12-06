@@ -85,14 +85,8 @@ bool IsTankThrowingRock(int client)
 
 bool IsTank(int client)
 {
-	static int s_iTankClass = -1;
-	if (s_iTankClass == -1)
-	{
-		s_iTankClass = L4D_IsEngineLeft4Dead() ? 5 : 8;
-	}
-	
 	return GetClientTeam(client) == 3
-		&& GetEntProp(client, Prop_Send, "m_zombieClass") == s_iTankClass;
+		&& GetEntProp(client, Prop_Send, "m_zombieClass") == 8;
 }
 
 bool CThrow__IsActive(int ability)
@@ -117,9 +111,6 @@ CountdownTimer CThrow__GetThrowTimer(int ability)
 
 bool CThrow__SelectingTankAttack(int ability)
 {
-	if (L4D_IsEngineLeft4Dead())
-		return false;
-	
 	static int s_iOffs_m_bSelectingAttack = -1;
 	if (s_iOffs_m_bSelectingAttack == -1)
 		s_iOffs_m_bSelectingAttack = FindSendPropInfo("CThrow", "m_hasBeenUsed") + 28;
