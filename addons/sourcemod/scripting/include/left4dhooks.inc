@@ -60,13 +60,13 @@
 
 
 
-// Natives: 260 (including 3 for L4D1 only)
+// Natives: 272 (including 3 for L4D1 only)
 // L4D1 = 31 [left4downtown] + 47 [l4d_direct] + 16 [l4d2addresses] + 70 [silvers - mine!] + 4 [anim] = 169
 // L4D2 = 61 [left4downtown] + 59 [l4d_direct] + 31 [l4d2addresses] + 114 [silvers - mine!] + 4 [anim] = 269
 
-// Forwards: 204 (including 5 for L4D1 only)
-// L4D1 = 139
-// L4D2 = 199
+// Forwards: 207 (including 5 for L4D1 only)
+// L4D1 = 142
+// L4D2 = 202
 
 // Stocks: 169 (L4D1 = 114, L4D2 = 167)
 // left4dhooks_silver			46 stocks	(L4D1 = 39,		L4D2 = 53)
@@ -2676,6 +2676,50 @@ forward void L4D_OnPlayerCough_Post(int client, int attacker);
  * @noreturn
  **/
 forward void L4D_OnPlayerCough_PostHandled(int client, int attacker);
+
+/**
+ * @brief Called when CTerrorPlayer::OnIncapacitatedAsSurvivor() is invoked
+ * @remarks Called when a player is about to be incapacitated
+ *
+ * @param client		Client index of the player affected
+ * @param inflictor		The inflictor entity index
+ * @param attacker		The attacker entity index
+ * @param damage		Amount of damage being caused
+ * @param damagetype	Type of damage being caused
+ *
+ * @return				return Plugin_Handled to block, Plugin_Changed to modify values, Plugin_Continue otherwise
+ **/
+forward Action L4D_OnIncapacitated(int client, int &inflictor, int &attacker, float &damage, int &damagetype);
+
+/**
+ * @brief Called when CTerrorPlayer::OnIncapacitatedAsSurvivor() is invoked
+ * @remarks Called when a player is about to be incapacitated
+ * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @param client		Client index of the player affected
+ * @param inflictor		The inflictor entity index
+ * @param attacker		The attacker entity index
+ * @param damage		Amount of damage being caused
+ * @param damagetype	Type of damage being caused
+ *
+ * @noreturn
+ **/
+forward void L4D_OnIncapacitated_Post(int client, int inflictor, int attacker, float damage, int damagetype);
+
+/**
+ * @brief Called when CTerrorPlayer::OnIncapacitatedAsSurvivor() is invoked
+ * @remarks Called when a player is about to be incapacitated
+ * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @param client		Client index of the player affected
+ * @param inflictor		The inflictor entity index
+ * @param attacker		The attacker entity index
+ * @param damage		Amount of damage being caused
+ * @param damagetype	Type of damage being caused
+ *
+ * @noreturn
+ **/
+forward void L4D_OnIncapacitated_PostHandled(int client, int inflictor, int attacker, float damage, int damagetype);
 
 /**
  * @brief Called when CTerrorPlayer::DropWeapons() is invoked

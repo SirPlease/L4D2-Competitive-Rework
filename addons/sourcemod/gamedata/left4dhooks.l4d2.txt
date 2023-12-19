@@ -143,6 +143,21 @@
 				}
 			}
 
+			"L4DD::CTerrorPlayer::OnIncapacitatedAsSurvivor"
+			{
+				"signature"		"CTerrorPlayer::OnIncapacitatedAsSurvivor"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"		"objectptr"
+					}
+				}
+			}
+
 			"L4DD::CTerrorPlayer::OnKnockedDown"
 			{
 				"signature"		"CTerrorPlayer::OnKnockedDown"
@@ -1448,7 +1463,7 @@
 					{
 						"type"	"cbaseentity"
 					}
-					"a3"
+					"a2"
 					{
 						"type"	"int"
 					}
@@ -3626,6 +3641,16 @@
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x50\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x80\x2A\x2A\x2A\x2A\x2A\x2A\x57"
 				/* ? ? ? ? ? ? ? E8 ? ? ? ? 50 E8 ? ? ? ? 83 ? ? 84 ? 0F 84 ? ? ? ? 80 ? ? ? ? ? ? 57 */
 				/* Search "#L4D_idle_spectator" xref to VTable, target is function above. */
+			}
+
+			/* CTerrorPlayer::OnIncapacitatedAsSurvivor(CTerrorPlayer *this, const CTakeDamageInfo *) */
+			"CTerrorPlayer::OnIncapacitatedAsSurvivor"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer25OnIncapacitatedAsSurvivorERK15CTakeDamageInfo"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x57\x8B\x2A\x2A\x6A\x2A\x8B"
+				/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 56 57 8B ? ? 6A ? 8B */
+				/* Search "PlayerIncapacitated" */
 			}
 
 			/**

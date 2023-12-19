@@ -156,6 +156,9 @@ void SetupForwardsNatives()
 	g_hFWD_CTerrorPlayer_Cough												= new GlobalForward("L4D_OnPlayerCough",								ET_Event, Param_Cell, Param_Cell);
 	g_hFWD_CTerrorPlayer_Cough_Post											= new GlobalForward("L4D_OnPlayerCough_Post",							ET_Event, Param_Cell, Param_Cell);
 	g_hFWD_CTerrorPlayer_Cough_PostHandled									= new GlobalForward("L4D_OnPlayerCough_PostHandled",					ET_Event, Param_Cell, Param_Cell);
+	g_hFWD_CTerrorPlayer_OnIncapacitatedAsSurvivor							= new GlobalForward("L4D_OnIncapacitated",								ET_Event, Param_Cell, Param_CellByRef, Param_CellByRef, Param_FloatByRef, Param_CellByRef);
+	g_hFWD_CTerrorPlayer_OnIncapacitatedAsSurvivor_Post						= new GlobalForward("L4D_OnIncapacitated_Post",							ET_Event, Param_Cell, Param_Cell, Param_Cell, Param_Float, Param_Cell);
+	g_hFWD_CTerrorPlayer_OnIncapacitatedAsSurvivor_PostHandled				= new GlobalForward("L4D_OnIncapacitated_PostHandled",					ET_Event, Param_Cell, Param_Cell, Param_Cell, Param_Float, Param_Cell);
 	g_hFWD_Witch_SetHarasser												= new GlobalForward("L4D_OnWitchSetHarasser",							ET_Event, Param_Cell, Param_Cell);
 	g_hFWD_Tank_EnterStasis_Post											= new GlobalForward("L4D_OnEnterStasis",								ET_Event, Param_Cell);
 	g_hFWD_Tank_LeaveStasis_Post											= new GlobalForward("L4D_OnLeaveStasis",								ET_Event, Param_Cell);

@@ -233,6 +233,9 @@ GlobalForward g_hFWD_CTerrorPlayer_OnFalling_Post;
 GlobalForward g_hFWD_CTerrorPlayer_Cough;
 GlobalForward g_hFWD_CTerrorPlayer_Cough_Post;
 GlobalForward g_hFWD_CTerrorPlayer_Cough_PostHandled;
+GlobalForward g_hFWD_CTerrorPlayer_OnIncapacitatedAsSurvivor;
+GlobalForward g_hFWD_CTerrorPlayer_OnIncapacitatedAsSurvivor_Post;
+GlobalForward g_hFWD_CTerrorPlayer_OnIncapacitatedAsSurvivor_PostHandled;
 GlobalForward g_hFWD_Witch_SetHarasser;
 GlobalForward g_hFWD_Tank_EnterStasis_Post;
 GlobalForward g_hFWD_Tank_LeaveStasis_Post;
@@ -399,6 +402,9 @@ void SetupDetours(GameData hGameData = null)
 	CreateDetour(hGameData,			DTR_CTerrorPlayer_Cough,									DTR_CTerrorPlayer_Cough_Post,								"L4DD::CTerrorPlayer::Cough",										"L4D_OnPlayerCough");
 	CreateDetour(hGameData,			DTR_CTerrorPlayer_Cough,									DTR_CTerrorPlayer_Cough_Post,								"L4DD::CTerrorPlayer::Cough",										"L4D_OnPlayerCough_Post",						true);
 	CreateDetour(hGameData,			DTR_CTerrorPlayer_Cough,									DTR_CTerrorPlayer_Cough_Post,								"L4DD::CTerrorPlayer::Cough",										"L4D_OnPlayerCough_PostHandled",				true);
+	CreateDetour(hGameData,			DTR_CTerrorPlayer_OnIncapacitatedAsSurvivor,				DTR_CTerrorPlayer_OnIncapacitatedAsSurvivor_Post,			"L4DD::CTerrorPlayer::OnIncapacitatedAsSurvivor",					"L4D_OnIncapacitated");
+	CreateDetour(hGameData,			DTR_CTerrorPlayer_OnIncapacitatedAsSurvivor,				DTR_CTerrorPlayer_OnIncapacitatedAsSurvivor_Post,			"L4DD::CTerrorPlayer::OnIncapacitatedAsSurvivor",					"L4D_OnIncapacitated_Post",						true);
+	CreateDetour(hGameData,			DTR_CTerrorPlayer_OnIncapacitatedAsSurvivor,				DTR_CTerrorPlayer_OnIncapacitatedAsSurvivor_Post,			"L4DD::CTerrorPlayer::OnIncapacitatedAsSurvivor",					"L4D_OnIncapacitated_PostHandled",				true);
 	CreateDetour(hGameData,			DTR_Witch_SetHarasser,										INVALID_FUNCTION,											"L4DD::Witch::SetHarasser",											"L4D_OnWitchSetHarasser");
 	CreateDetour(hGameData,			DTR_Tank_EnterStasis_Pre,									DTR_Tank_EnterStasis_Post,									"L4DD::Tank::EnterStasis",											"L4D_OnEnterStasis");
 	CreateDetour(hGameData,			DTR_Tank_LeaveStasis_Pre,									DTR_Tank_LeaveStasis_Post,									"L4DD::Tank::LeaveStasis",											"L4D_OnLeaveStasis");
@@ -2984,7 +2990,7 @@ MRESReturn DTR_CTerrorWeapon_OnHit_Post(int weapon, DHookReturn hReturn, DHookPa
 bool g_bBlock_CTerrorPlayer_OnShovedByPounceLanding;
 MRESReturn DTR_CTerrorPlayer_OnShovedByPounceLanding(int pThis, DHookParam hParams) // Forward "L4D2_OnPounceOrLeapStumble"
 {
-	//PrintToServer("##### DTR_CTerrorPlayer_OnShovedByPounceLanding");
+	// PrintToServer("##### DTR_CTerrorPlayer_OnShovedByPounceLanding");
 	int a1 = hParams.Get(1);
 
 	Action aResult = Plugin_Continue;
@@ -3421,6 +3427,64 @@ MRESReturn DTR_CTerrorPlayer_Cough_Post(int pThis, DHookReturn hReturn, DHookPar
 	return MRES_Ignored;
 }
 
+bool g_bBlock_CTerrorPlayer_OnIncapacitatedAsSurvivor;
+MRESReturn DTR_CTerrorPlayer_OnIncapacitatedAsSurvivor(int pThis, DHookReturn hReturn, DHookParam hParams) // Forward "L4D_OnIncapacitated"
+{
+	//PrintToServer("##### DTR_CTerrorPlayer_OnIncapacitatedAsSurvivor");
+	int inflictor = hParams.GetObjectVar(1, 48, ObjectValueType_EhandlePtr);
+	int attacker = hParams.GetObjectVar(1, 52, ObjectValueType_EhandlePtr);
+	float damage = hParams.GetObjectVar(1, 60, ObjectValueType_Float);
+	int damagetype = hParams.GetObjectVar(1, 72, ObjectValueType_Int);
+
+	Action aResult = Plugin_Continue;
+	Call_StartForward(g_hFWD_CTerrorPlayer_OnIncapacitatedAsSurvivor);
+	Call_PushCell(pThis);
+	Call_PushCellRef(inflictor);
+	Call_PushCellRef(attacker);
+	Call_PushFloatRef(damage);
+	Call_PushCellRef(damagetype);
+	Call_Finish(aResult);
+
+	if( aResult == Plugin_Handled )
+	{
+		g_bBlock_CTerrorPlayer_OnIncapacitatedAsSurvivor = true;
+
+		hReturn.Value = -1;
+		return MRES_Supercede;
+	}
+
+	if( aResult == Plugin_Changed )
+	{
+		hParams.SetObjectVar(1, 48, ObjectValueType_EhandlePtr, inflictor);
+		hParams.SetObjectVar(1, 52, ObjectValueType_EhandlePtr, attacker);
+		hParams.SetObjectVar(1, 60, ObjectValueType_Float, damage);
+		hParams.SetObjectVar(1, 72, ObjectValueType_Int, damagetype);
+		return MRES_ChangedHandled;
+	}
+
+	g_bBlock_CTerrorPlayer_OnIncapacitatedAsSurvivor = false;
+
+	return MRES_Ignored;
+}
+
+MRESReturn DTR_CTerrorPlayer_OnIncapacitatedAsSurvivor_Post(int pThis, DHookReturn hReturn, DHookParam hParams) // Forward "L4D_OnIncapacitated_Post" abd "L4D_OnIncapacitated_PostHandled"
+{
+	int inflictor = hParams.GetObjectVar(1, 48, ObjectValueType_EhandlePtr);
+	int attacker = hParams.GetObjectVar(1, 52, ObjectValueType_EhandlePtr);
+	float damage = hParams.GetObjectVar(1, 60, ObjectValueType_Float);
+	int damagetype = hParams.GetObjectVar(1, 72, ObjectValueType_Int);
+
+	Call_StartForward(g_bBlock_CTerrorPlayer_OnIncapacitatedAsSurvivor ? g_hFWD_CTerrorPlayer_OnIncapacitatedAsSurvivor_PostHandled : g_hFWD_CTerrorPlayer_OnIncapacitatedAsSurvivor_Post);
+	Call_PushCell(pThis);
+	Call_PushCell(inflictor);
+	Call_PushCell(attacker);
+	Call_PushFloat(damage);
+	Call_PushCell(damagetype);
+	Call_Finish();
+
+	return MRES_Ignored;
+}
+
 MRESReturn DTR_CTerrorPlayer_DropWeapons(int pThis, DHookReturn hReturn) // Forward "L4D_OnDeathDroppedWeapons"
 {
 	//PrintToServer("##### DTR_CTerrorPlayer_DropWeapons");
@@ -3435,7 +3499,7 @@ MRESReturn DTR_CTerrorPlayer_DropWeapons(int pThis, DHookReturn hReturn) // Forw
 	for( int i = 0; i < 5; i++ )
 	{
 		weapons[i] = GetPlayerWeaponSlot(pThis, i);
-		if( weapons[i] == weapon ) weapon = 0;
+		// if( weapons[i] == weapon ) weapon = -1;
 	}
 
 	weapons[5] = weapon; // Held weapon
