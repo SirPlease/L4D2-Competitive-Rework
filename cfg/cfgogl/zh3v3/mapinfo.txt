@@ -16,7 +16,7 @@
 			"Instant spawns"
 			{
 				"min"		"0"
-				"max"		"20"
+				"max"		"25"
 			}
 			"Before elevator top, after elevator bottom"
 			{
@@ -2522,6 +2522,73 @@
 			}
 		}
 	}
+	"noecho_m1"
+	{
+		"tank_ban_flow"
+		{
+			"early"
+			{
+				"min" "0"
+				"max" "33"
+			}
+			"late"
+			{
+				"min" "60"
+				"max" "100"
+			}
+		}
+	}
+	"noecho_m2"
+	{
+		"tank_ban_flow"
+		{
+			"early"
+			{
+				"min" "0"
+				"max" "33"
+			}
+		}
+		"ItemLimits"
+		{
+			"pain_pills" "3"
+		}
+	}
+	"noecho_m3"
+	{
+		"horde_limit" "60"
+		"tank_ban_flow"
+		{
+			"early"
+			{
+				"min" "0"
+				"max" "38"
+			}
+			"late"
+			{
+				"min" "66"
+				"max" "100"
+			}
+		}
+		"ItemLimits"
+		{
+			"pain_pills" "3"
+		}
+	}
+	"noecho_m4"
+	{
+		"tank_ban_flow"
+		{
+			"early"
+			{
+				"min" "54"
+				"max" "100"
+			}
+		}
+		"ItemLimits"
+		{
+			"pain_pills" "4"
+		}
+	}
 	"pr1_waterfront_f"
 	{
 		"start_point"		"735.921692 730.683960 -437.968750"
@@ -2577,5 +2644,20 @@
 		"start_dist"		"50.000000"
 		"start_extra_dist"	"0.000000"
 		"end_dist"			"50.000000"
+	}
+	"tripday_new_m4"
+	{
+		"tank_ban_flow"
+		{
+			"early"
+			{
+				"min"        "0"
+				"max"        "32"
+			}
+		}
+		"ItemLimits"
+		{
+			"pain_pills"    "4"
+		}
 	}
 }

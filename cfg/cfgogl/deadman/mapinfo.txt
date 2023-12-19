@@ -2287,4 +2287,142 @@
             }
         }
     }
+	"noecho_m1"
+	{
+		"tank_ban_flow"
+		{
+			"early"
+			{
+				"min" "0"
+				"max" "33"
+			}
+			"late"
+			{
+				"min" "60"
+				"max" "100"
+			}
+		}
+	}
+	"noecho_m2"
+	{
+		"tank_ban_flow"
+		{
+			"early"
+			{
+				"min" "0"
+				"max" "33"
+			}
+		}
+		"ItemLimits"
+		{
+			"pain_pills" "1"
+		}
+	}
+	"noecho_m3"
+	{
+		"horde_limit" "20"
+		"tank_ban_flow"
+		{
+			"early"
+			{
+				"min" "0"
+				"max" "38"
+			}
+			"late"
+			{
+				"min" "66"
+				"max" "100"
+			}
+		}
+		"ItemLimits"
+		{
+			"pain_pills" "1"
+		}
+	}
+	"noecho_m4"
+	{
+		"tank_ban_flow"
+		{
+			"early"
+			{
+				"min" "54"
+				"max" "100"
+			}
+		}
+		"ItemLimits"
+		{
+			"pain_pills" "2"
+		}
+	}
+	"pr1_waterfront_f"
+	{
+		"start_point"		"735.921692 730.683960 -437.968750"
+		"end_point"			"-4333.118164 -1132.782837 -281.968750"
+		"start_dist"		"75.000000"
+		"start_extra_dist"	"0.000000"
+		"end_dist"			"250.000000"
+	}
+	"pr2_park_f"
+	{
+		"start_point"		"-4333.118164 -1132.782837 -281.968750"
+		"end_point"			"-6024.643555 -8038.492676 -185.968750"
+		"start_dist"		"75.000000"
+		"start_extra_dist"	"0.000000"
+		"end_dist"			"250.000000"
+	}
+	"pr3_highway_f"
+	{
+		"start_point"       "10383.161133 8264.652344 87.791550"
+		"end_point"         "7953.651367 -4068.622070 217.136597"
+		"start_dist"		"250.000000"
+		"start_extra_dist"	"0.000000"
+		"end_dist"			"50.000000"
+		"tank_ban_flow"
+		{
+			"Unfair spawn"
+			{
+				"min"		"27"
+				"max"		"37"
+			}
+		}
+	}
+	"pr4_quarter_f"
+	{
+		"start_point"       "-2379.359863 10833.366211 409.579590"
+		"end_point"         "-3739.969238 -63.853954 126.031250"
+		"start_dist"		"50.000000"
+		"start_extra_dist"	"0.000000"
+		"end_dist"			"150.000000"
+		"tank_ban_flow"
+		{
+			"Unfair spawn"
+			{
+				"min"		"55"
+				"max"		"63"
+			}
+		}
+	}
+	"pr5_bridge_f"
+	{
+		"start_point"       "-11323.872070 -1008.784912 197.848251"
+		"end_point"         "1438.854370 -6413.000000 266.521240"
+		"start_dist"		"50.000000"
+		"start_extra_dist"	"0.000000"
+		"end_dist"			"50.000000"
+	}
+	"tripday_new_m4"
+	{
+		"tank_ban_flow"
+		{
+			"early"
+			{
+				"min"        "0"
+				"max"        "32"
+			}
+		}
+		"ItemLimits"
+		{
+			"pain_pills"    "2"
+		}
+	}
 }
