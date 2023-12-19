@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.139"
+#define PLUGIN_VERSION		"1.140"
 
 /*=======================================================================================
 	Plugin Info:
@@ -5605,6 +5605,48 @@ public void L4D_OnPlayerCough_PostHandled(int client, int attacker)
 		ForwardCalled("\"L4D_OnPlayerCough_PostHandled\" %d (%N). Caused by %d (%N)", client, client, attacker, attacker);
 	}
 }
+
+public Action L4D_OnIncapacitated(int client, int &inflictor, int &attacker, float &damage, int &damagetype)
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D_OnIncapacitated\" %d (%N). Inflictor: (Inf=%d) (Att=%d). Dmg: %f. DmgType: %d", client, client, inflictor, attacker, damage, damagetype);
+	}
+
+	// WORKS - Block player being incapacitated
+	// return Plugin_Handled;
+
+	return Plugin_Continue;
+}
+
+public void L4D_OnIncapacitated_Post(int client, int inflictor, int attacker, float damage, int damagetype)
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D_OnIncapacitated_Post\" %d (%N). Inflictor: (Inf=%d) (Att=%d). Dmg: %f. DmgType: %d", client, client, inflictor, attacker, damage, damagetype);
+	}
+}
+
+public void L4D_OnIncapacitated_PostHandled(int client, int inflictor, int attacker, float damage, int damagetype)
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D_OnIncapacitated_PostHandled\" %d (%N). Inflictor: (Inf=%d) (Att=%d). Dmg: %f. DmgType: %d", client, client, inflictor, attacker, damage, damagetype);
+	}
+}
+
 
 public void L4D_OnDeathDroppedWeapons(int client, int weapons[6])
 {

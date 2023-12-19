@@ -1,3 +1,16 @@
+1.140 (03-Dec-2023)
+	- Added forwards "L4D_OnIncapacitated", "L4D_OnIncapacitated_Post" and "L4D_OnIncapacitated_PostHandled" to trigger when a Survivor is incapacitated. Requested by "HarryPotter".
+	- Fixed forwards "L4D2_OnPounceOrLeapStumble*" in L4D1 from throwing errors. Thanks to "HarryPotter" for reporting.
+	- Increased the Spitter Acid bug fix volume. Thanks to "Marttt" and "KadabraZz" for reporting.
+
+	- Updated: Plugin and test plugin.
+	- Updated: "/scripting/gamedata/left4dhooks.l4d1.txt" GaneData file.
+	- Updated: "/scripting/gamedata/left4dhooks.l4d2.txt" GaneData file.
+	- Updated: "/scripting/include/left4dhooks.inc" Include file.
+	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_setup.sp" project file.
+
 1.139 (25-Oct-2023)
 	- Added new attribute "L4D2IWA_WeaponType" for use with the "L4D2_GetIntWeaponAttribute" native. Thanks to "Forgetest" for providing.
 	- Added new enum "WeaponType" for use with the "L4D2IWA_WeaponType" attribute. Thanks to "Forgetest" for providing.
@@ -13,15 +26,6 @@
 	- Changed native "L4D_PipeBombPrj" to optionally create the PipeBomb fuse/light particles. Requested by "Eyal282".
 	- Fixed native "L4D2_IsRealismMode" from returning values other than 0 and 1. Thanks to "Eyal282" for reporting.
 	- Fixed forward "L4D2_OnFindScavengeItem*" to stop passing invalid entities. Thanks to "kochiurun119" for reporting.
-
-	- Updated: Plugin and test plugin.
-	- Updated: "/scripting/gamedata/left4dhooks.l4d1.txt" GaneData file.
-	- Updated: "/scripting/gamedata/left4dhooks.l4d2.txt" GaneData file.
-	- Updated: "/scripting/include/left4dhooks.inc" Include file.
-	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_gamedata.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_setup.sp" project file.
 
 1.138 (25-Sep-2023)
 	- Fixed the "L4D2_CGasCan_EventKilled*" forwards not triggering when a gascan had not been picked up. Thanks to "Mystik Spiral" for reporting.

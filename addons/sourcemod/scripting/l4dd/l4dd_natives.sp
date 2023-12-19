@@ -833,12 +833,12 @@ int Native_CTerrorGameRules_GetSurvivorSetMap(Handle plugin, int numParams) // N
 	ValidateNatives(g_hSDK_KeyValues_GetString, "KeyValues::GetString");
 	ValidateNatives(g_hSDK_CTerrorGameRules_GetMissionInfo, "CTerrorGameRules::GetMissionInfo");
 
-	char sTemp[8];
 	//PrintToServer("#### CALL g_hSDK_CTerrorGameRules_GetMissionInfo");
 	int infoPointer = SDKCall(g_hSDK_CTerrorGameRules_GetMissionInfo);
 	ValidateAddress(infoPointer, "CTerrorGameRules::GetMissionInfo");
 
 	//PrintToServer("#### CALL g_hSDK_KeyValues_GetString");
+	char sTemp[8];
 	SDKCall(g_hSDK_KeyValues_GetString, infoPointer, sTemp, sizeof(sTemp), "survivor_set", "2"); // Default set = 2
 
 	return StringToInt(sTemp);
@@ -1820,7 +1820,7 @@ void OnAcidDamage(int victim, int attacker, int inflictor, float damage, int dam
 	{
 		if( ((damagetype == (DMG_ENERGYBEAM|DMG_RADIATION) && attacker > 0 && attacker <= MaxClients && IsClientInGame(attacker) && GetClientTeam(attacker) != 3)) || (damagetype == (DMG_ENERGYBEAM|DMG_RADIATION|DMG_PREVENT_PHYSICS_FORCE) && attacker > MaxClients) )
 		{
-			EmitSoundToAll(g_sAcidSounds[GetRandomInt(0, sizeof(g_sAcidSounds) - 1)], inflictor, SNDCHAN_AUTO, 85, _, 0.55, GetRandomInt(95, 105));
+			EmitSoundToAll(g_sAcidSounds[GetRandomInt(0, sizeof(g_sAcidSounds) - 1)], inflictor, SNDCHAN_AUTO, 85, _, 0.7, GetRandomInt(95, 105));
 
 			// Red flash when taking damage
 			Handle msg = StartMessageOne("Fade", victim);
