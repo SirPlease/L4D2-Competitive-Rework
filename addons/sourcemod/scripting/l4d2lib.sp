@@ -38,7 +38,7 @@ public Plugin myinfo =
 	name = "L4D2Lib",
 	author = "Confogl Team",
 	description = "Useful natives and fowards for L4D2 Plugins",
-	version = "3.2",
+	version = "3.2.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -53,16 +53,16 @@ public void OnPluginStart()
 #endif
 
 #if MODULE_TANKS
-	HookEvent("tank_spawn", TankSpawn_Event);
-	HookEvent("item_pickup", ItemPickup_Event);
+	HookEvent("tank_spawn", TankSpawn_Event, EventHookMode_Post);
+	HookEvent("item_pickup", ItemPickup_Event, EventHookMode_Post);
 #endif
 
 #if MODULE_TANKS || MODULE_SURVIVORS
-	HookEvent("player_death", PlayerDeath_Event);
+	HookEvent("player_death", PlayerDeath_Event, EventHookMode_Post);
 #endif
 
 #if MODULE_SURVIVORS || MODULE_MAPINFO
-	HookEvent("player_disconnect", PlayerDisconnect_Event, EventHookMode_PostNoCopy);
+	HookEvent("player_disconnect", PlayerDisconnect_Event, EventHookMode_Post);
 #endif
 
 #if MODULE_SURVIVORS
