@@ -32,17 +32,15 @@ Action Ready_Cmd(int client, int args)
 			DoSecrets(client);
 		if (CheckFullReady())
 			InitiateLiveCountdown();
-		return Plugin_Handled;
 	}
-	return Plugin_Continue;
+	return Plugin_Handled;
 }
 
 Action Unready_Cmd(int client, int args)
 {
 	if (inReadyUp && client)
 	{
-		AdminId id = GetUserAdmin(client);
-		bool hasflag = (id != INVALID_ADMIN_ID && GetAdminFlag(id, Admin_Ban)); // Check for specific admin flag
+		bool hasflag = CheckCommandAccess(client, "sm_ban", ADMFLAG_BAN); // Check for specific admin flag
 		
 		if (isForceStart)
 		{
@@ -64,9 +62,8 @@ Action Unready_Cmd(int client, int args)
 			}
 			CancelFullReady(client, readyStatus);
 		}
-		return Plugin_Handled;
 	}
-	return Plugin_Continue;
+	return Plugin_Handled;
 }
 
 Action ToggleReady_Cmd(int client, int args)
@@ -75,7 +72,7 @@ Action ToggleReady_Cmd(int client, int args)
 	{
 		return IsPlayerReady(client) ? Unready_Cmd(client, 0) : Ready_Cmd(client, 0);
 	}
-	return Plugin_Continue;
+	return Plugin_Handled;
 }
 
 // ========================
@@ -87,16 +84,14 @@ Action ForceStart_Cmd(int client, int args)
 	if (inReadyUp && readyUpMode != ReadyMode_AutoStart)
 	{
 		// Check if admin always allowed to do so
-		AdminId id = GetUserAdmin(client);
-		if (id != INVALID_ADMIN_ID && GetAdminFlag(id, Admin_Ban)) // Check for specific admin flag
+		if (CheckCommandAccess(client, "sm_ban", ADMFLAG_BAN)) // Check for specific admin flag
 		{
 			isForceStart = true;
 			InitiateLiveCountdown();
 			CPrintToChatAll("%t", "ForceStartAdmin", client);
-			return Plugin_Handled;
 		}
 	}
-	return Plugin_Continue;
+	return Plugin_Handled;
 }
 
 // ========================
@@ -109,9 +104,8 @@ Action Hide_Cmd(int client, int args)
 	{
 		SetPlayerHiddenPanel(client, true);
 		CPrintToChat(client, "%t", "PanelHide");
-		return Plugin_Handled;
 	}
-	return Plugin_Continue;
+	return Plugin_Handled;
 }
 
 Action Show_Cmd(int client, int args)
@@ -120,9 +114,8 @@ Action Show_Cmd(int client, int args)
 	{
 		SetPlayerHiddenPanel(client, false);
 		CPrintToChat(client, "%t", "PanelShow");
-		return Plugin_Handled;
 	}
-	return Plugin_Continue;
+	return Plugin_Handled;
 }
 
 Action Return_Cmd(int client, int args)
@@ -132,7 +125,6 @@ Action Return_Cmd(int client, int args)
 			&& GetClientTeam(client) == L4D2Team_Survivor)
 	{
 		ReturnPlayerToSaferoom(client, false);
-		return Plugin_Handled;
 	}
-	return Plugin_Continue;
+	return Plugin_Handled;
 }
