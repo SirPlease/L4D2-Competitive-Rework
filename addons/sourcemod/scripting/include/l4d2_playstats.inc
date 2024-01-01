@@ -6,7 +6,7 @@
 native void PLAYSTATS_BroadcastRoundStats();
 native void PLAYSTATS_BroadcastGameStats();
 
-public SharedPlugin __pl_l4d2lib =
+public SharedPlugin __pl_l4d2playstats =
 {
 	name = "l4d2_playstats",
 	file = "l4d2_playstats.smx",
@@ -18,7 +18,7 @@ public SharedPlugin __pl_l4d2lib =
 };
 
 #if !defined REQUIRE_PLUGIN
-public void __pl_l4d2lib_SetNTVOptional()
+public void __pl_l4d2playstats_SetNTVOptional()
 {
 	MarkNativeAsOptional("PLAYSTATS_BroadcastRoundStats");
 	MarkNativeAsOptional("PLAYSTATS_BroadcastGameStats");
