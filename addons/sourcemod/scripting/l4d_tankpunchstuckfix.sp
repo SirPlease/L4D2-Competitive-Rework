@@ -27,5 +27,6 @@ public void L4D_TankClaw_OnPlayerHit_Post(int tank, int claw, int player)
 
 public void L4D_TankClaw_DoSwing_Post(int tank, int claw)
 {
-	sv_lagcompensationforcerestore.BoolValue = true;
+	if (!sv_lagcompensationforcerestore.BoolValue)
+		sv_lagcompensationforcerestore.BoolValue = true;
 }
