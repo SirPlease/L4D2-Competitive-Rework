@@ -2128,11 +2128,11 @@
 			"early"
 			{
 				"min" "0"
-				"max" "38"
+				"max" "33"
 			}
 			"late"
 			{
-				"min" "66"
+				"min" "70"
 				"max" "100"
 			}
 		}
@@ -2143,14 +2143,6 @@
 	}
 	"noecho_m4"
 	{
-		"tank_ban_flow"
-		{
-			"early"
-			{
-				"min" "54"
-				"max" "100"
-			}
-		}
 		"ItemLimits"
 		{
 			"pain_pills" "2"
@@ -2211,6 +2203,32 @@
 		"start_dist"		"50.000000"
 		"start_extra_dist"	"0.000000"
 		"end_dist"			"50.000000"
+	}
+	"tripday_new_m2"
+	{
+		"tank_ban_flow"
+		{
+			"cornfield"
+			{
+				"min"		"45"
+				"max"		"64"
+			}
+		}
+	}
+	"tripday_new_m3"
+	{
+		"tank_ban_flow"
+		{
+			"near_building"
+			{
+				"min"		"72"
+				"max"		"100"
+			}
+		}
+		"ItemLimits"
+		{
+			"pain_pills"	"1"
+		}
 	}
 	"tripday_new_m4"
 	{
