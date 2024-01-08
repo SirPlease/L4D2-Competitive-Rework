@@ -1499,6 +1499,11 @@
 		"end_dist"			"142.267410"
 		"tank_ban_flow"
 		{
+			"Early Tank awkward spawn"
+			{
+				"min"       "0"
+				"max"       "44"
+			}
 			"Alarm car to one way drop"
 			{
 				"min"		"50"
@@ -1523,6 +1528,14 @@
 		"end_point"			"-2060.603027 6556.208496 -671.968750"
 		"end_dist"			"286.359802"
 		"max_distance"		"700"
+		"tank_ban_flow"
+		{
+			"Early Tank awkward spawn all the way up to vent spawn"
+			{
+				"min"       "24"
+				"max"       "45"
+			}
+		}
 	}
 	"l4d_dbd2dc_undead_center"
 	{
