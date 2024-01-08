@@ -1,17 +1,19 @@
 # **L4D2 Competitive Rework**
 
 **IMPORTANT NOTES** - **DON'T IGNORE THESE!**
-* The goal for this repo is to work on **Linux**, specifically Ubuntu/Debian.
-> There is Windows support in this repo, but not everything is, you are of course welcome to contribute to get Windows fully up to date! 
+* The goal for this repo is to work on **Linux**, but Windows support is available.
+> While Windows is supported by the repository, there may be things that don't fully function on Windows that we may have missed.
+> Please report any issues you run into!
 * This repository only supports Sourcemod **1.11** and up.
 
 ## **About:**
 
-This is mainly a project that focuses on reworking the very outdated platform for competitive L4D2 for **Linux** Servers.
-It will contain both much needed fixes that are simply unable to be implemented on the older sourcemod versions as well as incompatible and outdated files being updated to working versions.
+This project started off with a focus on reworking the very outdated platform for competitive L4D2.
+In its current state it allows anyone to host their own up to date competitive L4D2 servers.
+This project is **Actively Developed**.
 
 > **Included Matchmodes:**
-* **Zonemod 2.8.7**
+* **Zonemod 2.8.8**
 * **Zonemod Hunters**
 * **Zonemod Retro**
 * **NeoMod 0.4a** 
@@ -50,7 +52,6 @@ It will contain both much needed fixes that are simply unable to be implemented 
 
 > **Additional Plugins/Extensions:**
 * Accelerator74
-* 
 * Arti 
 * AtomicStryker 
 * Backwards
