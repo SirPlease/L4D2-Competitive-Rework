@@ -4,10 +4,16 @@
 	{
 		"Offsets"
 		{
-			"Infected::m_body"
+			"CBaseEntity::MyNextBotPointer"
 			{
-				"linux"			"3472"
-				"windows"		"3452"
+				"linux"			"72"
+				"windows"		"71"
+			}
+
+			"INextBot::GetBodyInterface"
+			{
+				"linux"			"44"
+				"windows"		"43"
 			}
 		}
 		
@@ -27,10 +33,16 @@
 	{
 		"Offsets"
 		{
-			"Infected::m_body"
+			"CBaseEntity::MyNextBotPointer"
 			{
-				"linux"			"7328"
-				"windows"		"7332"
+				"linux"			"82"
+				"windows"		"81"
+			}
+
+			"INextBot::GetBodyInterface"
+			{
+				"linux"			"49"
+				"windows"		"48"
 			}
 		}
 		
