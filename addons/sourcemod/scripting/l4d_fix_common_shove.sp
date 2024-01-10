@@ -7,7 +7,7 @@
 #include <left4dhooks_anim>
 #include <actions>
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 
 public Plugin myinfo = 
 {
@@ -20,7 +20,8 @@ public Plugin myinfo =
 
 #define GAMEDATA_FILE "l4d_fix_common_shove"
 
-int g_iOffs_Infected__m_body;
+Handle g_hCall_MyNextBotPointer;
+Handle g_hCall_GetBodyInterface;
 Handle g_hCall_SetDesiredPosture;
 
 enum ActivityType 
@@ -41,15 +42,24 @@ enum PostureType
 	LIE
 };
 
-methodmap IBody
+INextBot MyNextBotPointer(int entity)
+{
+	return SDKCall(g_hCall_MyNextBotPointer, entity);
+}
+
+methodmap INextBot
+{
+	public ZombieBotBody GetBodyInterface() {
+		return SDKCall(g_hCall_GetBodyInterface, this);
+	}
+}
+
+methodmap ZombieBotBody
 {
 	public void SetDesiredPosture(PostureType posture) {
 		SDKCall(g_hCall_SetDesiredPosture, this, posture);
 	}
-}
 
-methodmap ZombieBotBody < IBody
-{
 	property int m_activity {
 		public get() { return LoadFromAddress(view_as<Address>(this) + view_as<Address>(80), NumberType_Int32); }
 		public set(int act) { StoreToAddress(view_as<Address>(this) + view_as<Address>(80), act, NumberType_Int32); }
@@ -156,9 +166,17 @@ public void OnPluginStart()
 	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 	g_hCall_SetDesiredPosture = EndPrepSDKCall();
 	
-	g_iOffs_Infected__m_body = gd.GetOffset("Infected::m_body");
-	if (g_iOffs_Infected__m_body == -1)
-		SetFailState("Missing offset \"Infected::m_body\"");
+	StartPrepSDKCall(SDKCall_Entity);
+	if (!PrepSDKCall_SetFromConf(gd, SDKConf_Virtual, "CBaseEntity::MyNextBotPointer"))
+		SetFailState("Missing signature \"CBaseEntity::MyNextBotPointer\"");
+	PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+	g_hCall_MyNextBotPointer = EndPrepSDKCall();
+	
+	StartPrepSDKCall(SDKCall_Raw);
+	if (!PrepSDKCall_SetFromConf(gd, SDKConf_Virtual, "INextBot::GetBodyInterface"))
+		SetFailState("Missing signature \"INextBot::GetBodyInterface\"");
+	PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+	g_hCall_GetBodyInterface = EndPrepSDKCall();
 	
 	delete gd;
 	
@@ -201,7 +219,7 @@ public void OnActionCreated(BehaviorAction action, int actor, const char[] name)
 
 Action InfectedShoved_OnStart(BehaviorAction action, int actor, any priorAction, ActionResult result)
 {
-	if (GetEntPropEnt(actor, Prop_Data, "m_hGroundEntity") == -1) // falling check
+	if (MyNextBotPointer(actor).GetBodyInterface().m_activity == L4D2_ACT_TERROR_FALL) // falling check
 	{
 		if (g_iShoveFlag & SHOVE_FALLING)
 		{
@@ -227,7 +245,7 @@ Action InfectedShoved_OnStart(BehaviorAction action, int actor, any priorAction,
 	
 	if (g_iShoveFlag & SHOVE_CROUCHING)
 	{
-		Infected__GetBodyInterface(actor).SetDesiredPosture(STAND); // force standing to activate shoves
+		MyNextBotPointer(actor).GetBodyInterface().SetDesiredPosture(STAND); // force standing to activate shoves
 	}
 	
 	if (g_iShoveFlag & SHOVE_LANDING
@@ -259,7 +277,7 @@ Action InfectedShoved_OnShoved(BehaviorAction action, int actor, int entity, Act
 	{
 		if (g_iShoveFlag & SHOVE_CROUCHING)
 		{
-			Infected__GetBodyInterface(actor).SetDesiredPosture(STAND); // force standing to activate shoves
+			MyNextBotPointer(actor).GetBodyInterface().SetDesiredPosture(STAND); // force standing to activate shoves
 		}
 	}
 	
@@ -281,26 +299,33 @@ Action InfectedShoved_OnLandOnGroundPost(BehaviorAction action, int actor, int e
 
 bool ForceActivityInterruptible(int infected)
 {
-	ZombieBotBody body = Infected__GetBodyInterface(infected);
+	ZombieBotBody body = MyNextBotPointer(infected).GetBodyInterface();
 	
-	switch (body.m_activity) // perhaps unnecessary
+	if (L4D_IsEngineLeft4Dead1()) // perhaps unnecessary
 	{
-		case L4D2_ACT_TERROR_JUMP_LANDING,
-			L4D2_ACT_TERROR_JUMP_LANDING_HARD,
-			L4D2_ACT_TERROR_JUMP_LANDING_NEUTRAL,
-			L4D2_ACT_TERROR_JUMP_LANDING_HARD_NEUTRAL:
+		switch (body.m_activity)
 		{
-			body.m_activityType &= ~ACTIVITY_UNINTERRUPTIBLE;
-			return true;
+			case L4D1_ACT_TERROR_JUMP_LANDING,
+				L4D1_ACT_TERROR_JUMP_LANDING_HARD,
+				L4D1_ACT_TERROR_JUMP_LANDING_NEUTRAL,
+				L4D1_ACT_TERROR_JUMP_LANDING_HARD_NEUTRAL: { }
+			default: { return false; }
+		}
+	}
+	else
+	{
+		switch (body.m_activity)
+		{
+			case L4D2_ACT_TERROR_JUMP_LANDING,
+				L4D2_ACT_TERROR_JUMP_LANDING_HARD,
+				L4D2_ACT_TERROR_JUMP_LANDING_NEUTRAL,
+				L4D2_ACT_TERROR_JUMP_LANDING_HARD_NEUTRAL: { }
+			default: { return false; }
 		}
 	}
 	
-	return false;
-}
-
-ZombieBotBody Infected__GetBodyInterface(int infected)
-{
-	return view_as<ZombieBotBody>(GetEntData(infected, g_iOffs_Infected__m_body, 4));
+	body.m_activityType &= ~ACTIVITY_UNINTERRUPTIBLE;
+	return true;
 }
 
 stock bool IsInfected(int entity)
