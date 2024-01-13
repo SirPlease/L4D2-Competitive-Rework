@@ -1,6 +1,6 @@
 /*
 *	Left 4 DHooks Direct
-*	Copyright (C) 2023 Silvers
+*	Copyright (C) 2024 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -18,8 +18,8 @@
 
 
 
-#define PLUGIN_VERSION		"1.140"
-#define PLUGIN_VERLONG		1140
+#define PLUGIN_VERSION		"1.142"
+#define PLUGIN_VERLONG		1142
 
 #define DEBUG				0
 // #define DEBUG			1	// Prints addresses + detour info (only use for debugging, slows server down).
@@ -230,6 +230,7 @@ bool g_bCreatedDetours;						// To determine first time creation of detours, or 
 float g_fLoadTime;							// When the plugin was loaded, to ignore when "AP_OnPluginUpdate" fires
 Handle g_hThisPlugin;						// Ignore checking this plugin
 GameData g_hGameData;						// GameData file - to speed up loading
+GameData g_hTempGameData;					// TempGameData file
 int g_iScriptVMDetourIndex;
 float g_fCvar_Adrenaline, g_fCvar_PillsDecay;
 int g_iCvar_AddonsEclipse, g_iCvar_RescueDeadTime;
@@ -324,6 +325,7 @@ int g_pVersusMode;
 int g_pSurvivalMode;
 int g_pScavengeMode;
 Address g_pServer;
+Address g_pAmmoDef;
 Address g_pDirector;
 Address g_pGameRules;
 Address g_pTheNavAreas;
@@ -347,7 +349,6 @@ int g_iCanBecomeGhostOffset;
 // Other
 Address g_pScriptId;
 int g_iPlayerResourceRef;
-int g_iAttackTimer;
 int g_iOffsetAmmo;
 int g_iPrimaryAmmoType;
 int g_iCurrentMode;
@@ -516,8 +517,6 @@ public void OnPluginStart()
 
 	g_hCanBecomeGhost = new ArrayList();
 
-	if( g_bLeft4Dead2 )
-		g_iAttackTimer = FindSendPropInfo("CTerrorWeapon", "m_attackTimer");
 	g_iOffsetAmmo = FindSendPropInfo("CTerrorPlayer", "m_iAmmo");
 	g_iPrimaryAmmoType = FindSendPropInfo("CBaseCombatWeapon", "m_iPrimaryAmmoType");
 

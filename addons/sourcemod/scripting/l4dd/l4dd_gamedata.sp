@@ -1,6 +1,6 @@
 /*
 *	Left 4 DHooks Direct
-*	Copyright (C) 2023 Silvers
+*	Copyright (C) 2024 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -537,7 +537,7 @@ void LoadGameData()
 		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer, VDECODE_FLAG_ALLOWWORLD);
+		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer, VDECODE_FLAG_ALLOWWORLD|VDECODE_FLAG_ALLOWNULL);
 		PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
 		PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 		g_hSDK_CPipeBombProjectile_Create = EndPrepSDKCall();
@@ -578,18 +578,127 @@ void LoadGameData()
 			patches[3] = hGameData.GetAddress("Realism_StrFind");
 		}
 
-
 		// Write custom gamedata with found addresses from literal strings
 		BuildPath(Path_SM, sPath, sizeof(sPath), "gamedata/%s.txt", GAMEDATA_TEMP);
 		File hFile = OpenFile(sPath, "w", false);
+		if( hFile == null )
+		{
+			SetFailState("Failed to create file: \"%s\". Check your folder permissions allow writing.", sPath);
+		}
 
 		char sAddress[512];
 		char sHexAddr[32];
 
+		// Dynamically generated projectile Create detours:
 		hFile.WriteLine("\"Games\"");
 		hFile.WriteLine("{");
 		hFile.WriteLine("	\"#default\"");
 		hFile.WriteLine("	{");
+		hFile.WriteLine("		\"Functions\"");
+		hFile.WriteLine("		{");
+		hFile.WriteLine("			\"L4DD::CMolotovProjectile::Create\"");
+		hFile.WriteLine("			{");
+		hFile.WriteLine("				\"signature\"		\"FindAddress_0\"");
+		hFile.WriteLine("				\"callconv\"		\"cdecl\"");
+		hFile.WriteLine("				\"return\"		\"cbaseentity\"");
+		hFile.WriteLine("				\"arguments\"");
+		hFile.WriteLine("				{");
+		hFile.WriteLine("					\"origin\"");
+		hFile.WriteLine("					{");
+		hFile.WriteLine("						\"type\"		\"vectorptr\"");
+		hFile.WriteLine("					}");
+		hFile.WriteLine("					\"angles\"");
+		hFile.WriteLine("					{");
+		hFile.WriteLine("						\"type\"		\"vectorptr\"");
+		hFile.WriteLine("					}");
+		hFile.WriteLine("					\"velocity\"");
+		hFile.WriteLine("					{");
+		hFile.WriteLine("						\"type\"		\"vectorptr\"");
+		hFile.WriteLine("					}");
+		hFile.WriteLine("					\"rotation\"");
+		hFile.WriteLine("					{");
+		hFile.WriteLine("						\"type\"		\"vectorptr\"");
+		hFile.WriteLine("					}");
+		hFile.WriteLine("					\"owner\"");
+		hFile.WriteLine("					{");
+		hFile.WriteLine("						\"type\"		\"cbaseentity\"");
+		hFile.WriteLine("					}");
+		hFile.WriteLine("					\"duration\"");
+		hFile.WriteLine("					{");
+		hFile.WriteLine("						\"type\"		\"float\"");
+		hFile.WriteLine("					}");
+		hFile.WriteLine("				}");
+		hFile.WriteLine("			}");
+		hFile.WriteLine("			\"L4DD::CVomitJarProjectile::Create\"");
+		hFile.WriteLine("			{");
+		hFile.WriteLine("				\"signature\"		\"FindAddress_1\"");
+		hFile.WriteLine("				\"callconv\"		\"cdecl\"");
+		hFile.WriteLine("				\"return\"		\"cbaseentity\"");
+		hFile.WriteLine("				\"arguments\"");
+		hFile.WriteLine("				{");
+		hFile.WriteLine("					\"origin\"");
+		hFile.WriteLine("					{");
+		hFile.WriteLine("						\"type\"		\"vectorptr\"");
+		hFile.WriteLine("					}");
+		hFile.WriteLine("					\"angles\"");
+		hFile.WriteLine("					{");
+		hFile.WriteLine("						\"type\"		\"vectorptr\"");
+		hFile.WriteLine("					}");
+		hFile.WriteLine("					\"velocity\"");
+		hFile.WriteLine("					{");
+		hFile.WriteLine("						\"type\"		\"vectorptr\"");
+		hFile.WriteLine("					}");
+		hFile.WriteLine("					\"rotation\"");
+		hFile.WriteLine("					{");
+		hFile.WriteLine("						\"type\"		\"vectorptr\"");
+		hFile.WriteLine("					}");
+		hFile.WriteLine("					\"owner\"");
+		hFile.WriteLine("					{");
+		hFile.WriteLine("						\"type\"		\"cbaseentity\"");
+		hFile.WriteLine("					}");
+		hFile.WriteLine("					\"duration\"");
+		hFile.WriteLine("					{");
+		hFile.WriteLine("						\"type\"		\"float\"");
+		hFile.WriteLine("					}");
+		hFile.WriteLine("				}");
+		hFile.WriteLine("			}");
+		hFile.WriteLine("			\"L4DD::CGrenadeLauncher_Projectile::Create\"");
+		hFile.WriteLine("			{");
+		hFile.WriteLine("				\"signature\"		\"FindAddress_2\"");
+		hFile.WriteLine("				\"callconv\"		\"cdecl\"");
+		hFile.WriteLine("				\"return\"		\"cbaseentity\"");
+		hFile.WriteLine("				\"arguments\"");
+		hFile.WriteLine("				{");
+		hFile.WriteLine("					\"origin\"");
+		hFile.WriteLine("					{");
+		hFile.WriteLine("						\"type\"		\"vectorptr\"");
+		hFile.WriteLine("					}");
+		hFile.WriteLine("					\"angles\"");
+		hFile.WriteLine("					{");
+		hFile.WriteLine("						\"type\"		\"vectorptr\"");
+		hFile.WriteLine("					}");
+		hFile.WriteLine("					\"velocity\"");
+		hFile.WriteLine("					{");
+		hFile.WriteLine("						\"type\"		\"vectorptr\"");
+		hFile.WriteLine("					}");
+		hFile.WriteLine("					\"rotation\"");
+		hFile.WriteLine("					{");
+		hFile.WriteLine("						\"type\"		\"vectorptr\"");
+		hFile.WriteLine("					}");
+		hFile.WriteLine("					\"owner\"");
+		hFile.WriteLine("					{");
+		hFile.WriteLine("						\"type\"		\"cbaseentity\"");
+		hFile.WriteLine("					}");
+		hFile.WriteLine("					\"bIncendiary\"");
+		hFile.WriteLine("					{");
+		hFile.WriteLine("						\"type\"		\"int\"");
+		hFile.WriteLine("					}");
+		hFile.WriteLine("				}");
+		hFile.WriteLine("			}");
+		hFile.WriteLine("		}");
+
+		// Dynamically generated addresses
+		hFile.WriteLine("");
 		hFile.WriteLine("		\"Addresses\"");
 		hFile.WriteLine("		{");
 
@@ -619,6 +728,8 @@ void LoadGameData()
 
 		hFile.WriteLine("		}");
 		hFile.WriteLine("");
+
+		// Dynamically generated signatures
 		hFile.WriteLine("		\"Signatures\"");
 		hFile.WriteLine("		{");
 
@@ -664,11 +775,10 @@ void LoadGameData()
 				StrCat(sAddress, sizeof(sAddress), sHexAddr);
 				if( i == 3 ) StrCat(sAddress, sizeof(sAddress), "\\x68"); // Match byte after for "CTerrorGameRules::IsRealismMode", otherwise its not unique signature
 
-
 				// Write lines
 				hFile.WriteLine("			\"FindAddress_%d\"", i);
 				hFile.WriteLine("			{");
-				// hFile.WriteLine("				\"library\"	\"server\""); // Server is default.
+				hFile.WriteLine("				\"library\"	\"server\""); // Server is default.
 				if( g_bLinuxOS )
 				{
 					hFile.WriteLine("				\"linux\"	\"%s\"", sAddress);
@@ -720,8 +830,9 @@ void LoadGameData()
 		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer, VDECODE_FLAG_ALLOWWORLD);
-		PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer, VDECODE_FLAG_ALLOWWORLD|VDECODE_FLAG_ALLOWNULL);
+		if( !g_bLeft4Dead2 )
+			PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
 		PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 		g_hSDK_CMolotovProjectile_Create = EndPrepSDKCall();
 		if( g_hSDK_CMolotovProjectile_Create == null )
@@ -739,8 +850,7 @@ void LoadGameData()
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-			PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer, VDECODE_FLAG_ALLOWWORLD);
-			PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+			PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer, VDECODE_FLAG_ALLOWWORLD|VDECODE_FLAG_ALLOWNULL);
 			PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 			g_hSDK_CVomitJarProjectile_Create = EndPrepSDKCall();
 			if( g_hSDK_CVomitJarProjectile_Create == null )
@@ -756,8 +866,8 @@ void LoadGameData()
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
 			PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-			PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer, VDECODE_FLAG_ALLOWWORLD);
-			PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+			PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer, VDECODE_FLAG_ALLOWWORLD|VDECODE_FLAG_ALLOWNULL);
+			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
 			PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
 			g_hSDK_CGrenadeLauncher_Projectile_Create = EndPrepSDKCall();
 			if( g_hSDK_CGrenadeLauncher_Projectile_Create == null )
@@ -2027,6 +2137,9 @@ void LoadGameData()
 	g_iOff_LobbyReservation = hGameData.GetOffset("LobbyReservationOffset");
 	ValidateOffset(g_iOff_LobbyReservation, "LobbyReservationOffset");
 
+	g_pAmmoDef = hGameData.GetAddress("ammoDef");
+	ValidateAddress(g_pAmmoDef, "AmmoDef", true);
+
 	g_pDirector = hGameData.GetAddress("CDirector");
 	ValidateAddress(g_pDirector, "CDirector", true);
 
@@ -2388,6 +2501,5 @@ void LoadGameData()
 	//									END
 	// ====================================================================================================
 	g_hGameData = hGameData;
-
-	delete hTempGameData;
+	g_hTempGameData = hTempGameData;
 }

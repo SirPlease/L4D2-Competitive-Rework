@@ -1,7 +1,7 @@
 /**
  * =============================================================================
  * Left 4 Dead Stocks Library (C)2011-2012 Buster "Mr. Zero" Nielsen
- * Syntax Update and merge into "Left 4 DHooks Direct" (C) 2023 "SilverShot"
+ * Syntax Update and merge into "Left 4 DHooks Direct" (C) 2024 "SilverShot"
  * =============================================================================
  *
  * This program is free software; you can redistribute it and/or modify it

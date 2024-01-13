@@ -1,6 +1,6 @@
 /*
 *	Left 4 DHooks Direct - TESTER
-*	Copyright (C) 2023 Silvers
+*	Copyright (C) 2024 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.140"
+#define PLUGIN_VERSION		"1.141"
 
 /*=======================================================================================
 	Plugin Info:
@@ -354,6 +354,75 @@ Action sm_l4dd(int client, int args)
 
 
 
+	// PrintToServer("L4D_IsPlayerStaggering %d", L4D_IsPlayerStaggering(client));
+
+
+
+	/* GRENADES TEST:
+	// Throws in direction player is looking
+	float vPos[3];
+	float vAng[3];
+	float vVel[3];
+	float vRot[3];
+
+	GetClientEyeAngles(client, vAng);
+	GetClientEyePosition(client, vPos);
+	vPos[2] -= 5.0;
+
+	// Set velocity
+	GetAngleVectors(vAng, vVel, NULL_VECTOR, NULL_VECTOR);
+	NormalizeVector(vVel, vVel);
+	ScaleVector(vVel, 10.0); // Scale to ~ 250+ for projectiles other than the Grenade Launcher
+
+	// Random spin
+	vRot[0] = GetRandomFloat(300.0, 500.0);
+	vRot[1] = GetRandomFloat(300.0, 500.0);
+	vRot[2] = GetRandomFloat(-500.0, 500.0);
+
+	// int entity = L4D_PipeBombPrj(client, vPos, vAng, true, vVel, vRot); // With particles
+	// int entity = L4D_PipeBombPrj(client, vPos, vAng, false); // Without particles
+	// int entity = L4D_PipeBombPrj(client, vPos, vAng, true, vVel, vRot);
+	// int entity = L4D_MolotovPrj(client, vPos, vAng, vVel, vRot);
+	// int entity = L4D2_VomitJarPrj(client, vPos, vAng, vVel, vRot);
+	// int entity = L4D2_SpitterPrj(client, vPos, vAng, vVel, vRot);
+	int entity = L4D2_GrenadeLauncherPrj(client, vPos, vAng, vVel, vRot);
+
+	L4D_RemoveEntityDelay(entity, 5.0);
+	// */
+
+
+
+	/*
+	int target = GetRandomSurvivor(1, -1);
+	if( target )
+	{
+		int weapon = GetPlayerWeaponSlot(client, L4D_WEAPON_SLOT_PRIMARY);
+		if( weapon != -1 )
+		{
+			char sClass[32];
+			GetEdictClassname(weapon, sClass, sizeof(sClass));
+
+			// Get max ammo
+			int ammoType = GetEntProp(weapon, Prop_Send, "m_iPrimaryAmmoType");
+			Ammo_t ammo = AmmoDef.GetAmmoOfIndex(ammoType);
+
+			PrintToServer("MAX AMMO BEFORE: (%s) %d %d", sClass, AmmoDef.MaxCarry(ammoType), ammo.pMaxCarry);
+
+			ammo.pMaxCarry = -1;
+			PrintToServer("MAX AMMO AFTER: (%s) %d %d", sClass, AmmoDef.MaxCarry(ammoType), ammo.pMaxCarry);
+
+			ammo.pMaxCarryCVar.GetSMHandle().IntValue = 727;
+			PrintToServer("MAX AMMO AFTER CVAR: (%s) %d %d", sClass, AmmoDef.MaxCarry(ammoType), ammo.pMaxCarry);
+
+			// Change weapon damage type to fire bullets
+			PrintToServer("DamageType Before: (%s) %d", sClass, AmmoDef.DamageType(ammoType));
+
+			ammo.nDamageType = 8;
+			PrintToServer("DamageType After: (%s) %d", sClass, AmmoDef.DamageType(ammoType));
+		}
+	}
+	// */
+
 
 
 	/*
@@ -364,7 +433,7 @@ Action sm_l4dd(int client, int args)
 
 	type = L4D2_GetIntWeaponAttribute("weapon_rifle", L4D2IWA_WeaponType);
 	PrintToServer("L4D2_GetIntWeaponAttribute weapon_rifle (Weapon Type): %d %s", type, g_sWeaponTypes[type]);
-	*/
+	// */
 
 
 
@@ -376,25 +445,28 @@ Action sm_l4dd(int client, int args)
 	// Throws in direction player is looking
 	float vPos[3];
 	float vAng[3];
+	float vVel[3];
+	float vRot[3];
 
 	GetClientEyeAngles(client, vAng);
 	GetClientEyePosition(client, vPos);
 	vPos[2] -= 5.0;
 
-	// int entity = L4D_PipeBombPrj(client, vPos, NULL_VECTOR); // No fuse/light particles
-	int entity = L4D_PipeBombPrj(client, vPos, vAng, true); // With particles
-
 	// Set velocity
-	GetAngleVectors(vAng, vAng, NULL_VECTOR, NULL_VECTOR);
-	NormalizeVector(vAng, vAng);
-	ScaleVector(vAng, 750.0);
-	TeleportEntity(entity, NULL_VECTOR, NULL_VECTOR, vAng);
+	GetAngleVectors(vAng, vVel, NULL_VECTOR, NULL_VECTOR);
+	NormalizeVector(vVel, vVel);
+	ScaleVector(vVel, 750.0);
 
 	// Random spin
-	vAng[0] = GetRandomFloat(300.0, 500.0);
-	vAng[1] = GetRandomFloat(300.0, 500.0);
-	vAng[2] = GetRandomFloat(-500.0, 500.0);
-	L4D_AngularVelocity(entity, vAng);
+	vRot[0] = GetRandomFloat(300.0, 500.0);
+	vRot[1] = GetRandomFloat(300.0, 500.0);
+	vRot[2] = GetRandomFloat(-500.0, 500.0);
+
+	// int entity = L4D_PipeBombPrj(client, vPos, NULL_VECTOR); // No fuse/light particles
+	int entity = L4D_PipeBombPrj(client, vPos, vAng, true, vVel, vRot); // With particles
+
+	// TeleportEntity(entity, NULL_VECTOR, NULL_VECTOR, vAng);
+	// L4D_AngularVelocity(entity, vAng);
 
 	L4D_RemoveEntityDelay(entity, 5.0); // WORKS
 	// */
@@ -419,7 +491,7 @@ Action sm_l4dd(int client, int args)
 		if( !anim.m_bIsCustomSequence )
 		{
 			static bool time_to_restart = false;
-			
+
 			if( time_to_restart )
 			{
 				anim.ResetMainActivity();
@@ -4144,7 +4216,7 @@ public Action L4D_PipeBombProjectile_Pre(int client, float vecPos[3], float vecA
 		if( called == 0 ) g_iForwards++;
 		called++;
 
-		ForwardCalled("\"L4D_PipeBombProjectile_Pre\" %d", client);
+		ForwardCalled("\"L4D_PipeBombProjectile_Pre\" %d pos(%0.1f %0.1f %0.1f) ang(%0.1f %0.1f %0.1f) vel(%0.1f %0.1f %0.1f) rot(%0.1f %0.1f %0.1f)", client, vecPos[0], vecPos[1], vecPos[2], vecAng[0], vecAng[1], vecAng[2], vecVel[0], vecVel[1], vecVel[2], vecRot[0], vecRot[1], vecRot[2]);
 	}
 
 
@@ -4202,6 +4274,139 @@ public void L4D_PipeBombProjectile_PostHandled(int client, int projectile, const
 		called++;
 
 		ForwardCalled("\"L4D_PipeBombProjectile_PostHandled\" %d (Grenade = %d) pos(%0.1f %0.1f %0.1f) ang(%0.1f %0.1f %0.1f) vel(%0.1f %0.1f %0.1f) rot(%0.1f %0.1f %0.1f)", client, projectile, vecPos[0], vecPos[1], vecPos[2], vecAng[0], vecAng[1], vecAng[2], vecVel[0], vecVel[1], vecVel[2], vecRot[0], vecRot[1], vecRot[2]);
+	}
+}
+
+public Action L4D_MolotovProjectile_Pre(int client, float vecPos[3], float vecAng[3], float vecVel[3], float vecRot[3])
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D_MolotovProjectile_Pre\" %d pos(%0.1f %0.1f %0.1f) ang(%0.1f %0.1f %0.1f) vel(%0.1f %0.1f %0.1f) rot(%0.1f %0.1f %0.1f)", client, vecPos[0], vecPos[1], vecPos[2], vecAng[0], vecAng[1], vecAng[2], vecVel[0], vecVel[1], vecVel[2], vecRot[0], vecRot[1], vecRot[2]);
+	}
+
+	// See the "L4D_PipeBombProjectile_Pre" forward for details on changing params.
+
+	// WORKS - Blocks grenade creation
+	// return Plugin_Handled;
+
+	return Plugin_Continue;
+}
+
+public void L4D_MolotovProjectile_Post(int client, int projectile, const float vecPos[3], const float vecAng[3], const float vecVel[3], const float vecRot[3])
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D_MolotovProjectile_Post\" %d (Grenade = %d) pos(%0.1f %0.1f %0.1f) ang(%0.1f %0.1f %0.1f) vel(%0.1f %0.1f %0.1f) rot(%0.1f %0.1f %0.1f)", client, projectile, vecPos[0], vecPos[1], vecPos[2], vecAng[0], vecAng[1], vecAng[2], vecVel[0], vecVel[1], vecVel[2], vecRot[0], vecRot[1], vecRot[2]);
+	}
+}
+
+public void L4D_MolotovProjectile_PostHandled(int client, int projectile, const float vecPos[3], const float vecAng[3], const float vecVel[3], const float vecRot[3])
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D_MolotovProjectile_PostHandled\" %d (Grenade = %d) pos(%0.1f %0.1f %0.1f) ang(%0.1f %0.1f %0.1f) vel(%0.1f %0.1f %0.1f) rot(%0.1f %0.1f %0.1f)", client, projectile, vecPos[0], vecPos[1], vecPos[2], vecAng[0], vecAng[1], vecAng[2], vecVel[0], vecVel[1], vecVel[2], vecRot[0], vecRot[1], vecRot[2]);
+	}
+}
+
+public Action L4D2_VomitJarProjectile_Pre(int client, float vecPos[3], float vecAng[3], float vecVel[3], float vecRot[3])
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D2_VomitJarProjectile_Pre\" %d pos(%0.1f %0.1f %0.1f) ang(%0.1f %0.1f %0.1f) vel(%0.1f %0.1f %0.1f) rot(%0.1f %0.1f %0.1f)", client, vecPos[0], vecPos[1], vecPos[2], vecAng[0], vecAng[1], vecAng[2], vecVel[0], vecVel[1], vecVel[2], vecRot[0], vecRot[1], vecRot[2]);
+	}
+
+	// See the "L4D_PipeBombProjectile_Pre" forward for details on changing params.
+
+	// WORKS - Blocks grenade creation
+	// return Plugin_Handled;
+
+	return Plugin_Continue;
+}
+
+public void L4D2_VomitJarProjectile_Post(int client, int projectile, const float vecPos[3], const float vecAng[3], const float vecVel[3], const float vecRot[3])
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D2_VomitJarProjectile_Post\" %d (Grenade = %d) pos(%0.1f %0.1f %0.1f) ang(%0.1f %0.1f %0.1f) vel(%0.1f %0.1f %0.1f) rot(%0.1f %0.1f %0.1f)", client, projectile, vecPos[0], vecPos[1], vecPos[2], vecAng[0], vecAng[1], vecAng[2], vecVel[0], vecVel[1], vecVel[2], vecRot[0], vecRot[1], vecRot[2]);
+	}
+}
+
+public void L4D2_VomitJarProjectile_PostHandled(int client, int projectile, const float vecPos[3], const float vecAng[3], const float vecVel[3], const float vecRot[3])
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D2_VomitJarProjectile_PostHandled\" %d (Grenade = %d) pos(%0.1f %0.1f %0.1f) ang(%0.1f %0.1f %0.1f) vel(%0.1f %0.1f %0.1f) rot(%0.1f %0.1f %0.1f)", client, projectile, vecPos[0], vecPos[1], vecPos[2], vecAng[0], vecAng[1], vecAng[2], vecVel[0], vecVel[1], vecVel[2], vecRot[0], vecRot[1], vecRot[2]);
+	}
+}
+
+public Action L4D2_GrenadeLauncherProjectile_Pre(int client, float vecPos[3], float vecAng[3], float vecVel[3], float vecRot[3], bool &bIncendiary)
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D2_GrenadeLauncherProjectile_Pre\" %d pos(%0.1f %0.1f %0.1f) ang(%0.1f %0.1f %0.1f) vel(%0.1f %0.1f %0.1f) rot(%0.1f %0.1f %0.1f) Incendiary: %d", client, vecPos[0], vecPos[1], vecPos[2], vecAng[0], vecAng[1], vecAng[2], vecVel[0], vecVel[1], vecVel[2], vecRot[0], vecRot[1], vecRot[2], bIncendiary);
+	}
+
+	// See the "L4D_PipeBombProjectile_Pre" forward for details on changing params.
+
+	// WORKS - Adds incendiary ammo type to last
+	// bIncendiary = true;
+	// return Plugin_Changed;
+
+	// WORKS - Blocks grenade creation
+	// return Plugin_Handled;
+
+	return Plugin_Continue;
+}
+
+public void L4D2_GrenadeLauncherProjectile_Post(int client, int projectile, const float vecPos[3], const float vecAng[3], const float vecVel[3], const float vecRot[3], bool bIncendiary)
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D2_GrenadeLauncherProjectile_Post\" %d (Grenade = %d) pos(%0.1f %0.1f %0.1f) ang(%0.1f %0.1f %0.1f) vel(%0.1f %0.1f %0.1f) rot(%0.1f %0.1f %0.1f). Incendiary: %d", client, projectile, vecPos[0], vecPos[1], vecPos[2], vecAng[0], vecAng[1], vecAng[2], vecVel[0], vecVel[1], vecVel[2], vecRot[0], vecRot[1], vecRot[2], bIncendiary);
+	}
+}
+
+public void L4D2_GrenadeLauncherProjectile_PostHandled(int client, int projectile, const float vecPos[3], const float vecAng[3], const float vecVel[3], const float vecRot[3], bool bIncendiary)
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D2_GrenadeLauncherProjectile_PostHandled\" %d (Grenade = %d) pos(%0.1f %0.1f %0.1f) ang(%0.1f %0.1f %0.1f) vel(%0.1f %0.1f %0.1f) rot(%0.1f %0.1f %0.1f). Incendiary: %d", client, projectile, vecPos[0], vecPos[1], vecPos[2], vecAng[0], vecAng[1], vecAng[2], vecVel[0], vecVel[1], vecVel[2], vecRot[0], vecRot[1], vecRot[2], bIncendiary);
 	}
 }
 
@@ -4540,7 +4745,7 @@ public Action L4D2_BackpackItem_StartAction(int client, int entity, any type)
 		case L4D2WeaponId_IncendiaryAmmo:		FindConVar("upgrade_pack_use_duration").FloatValue = 5.0;
 		case L4D2WeaponId_ColaBottles:			FindConVar("cola_bottles_use_duration").FloatValue = 5.0;
 		case L4D2WeaponId_Gascan:				FindConVar("gas_can_use_duration").FloatValue = 5.0;
-	}					
+	}
 	// */
 
 	return Plugin_Continue;
@@ -4783,6 +4988,33 @@ public void L4D2_CInsectSwarm_CanHarm_Post(int acid, int spitter, int entity)
 	}
 }
 
+// public Action L4D2_OnChooseVictim_Pre(int specialInfected, int &lastTarget, int &targetScanFlags, int &ignoreTarget) // For a future update
+public Action L4D2_OnChooseVictim_Pre(int specialInfected, int &lastTarget)
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D2_OnChooseVictim_Pre\" %d > %d", specialInfected, lastTarget);
+	}
+
+	/* For a future update:
+	lastTarget = 0;
+	ignoreTarget = 1;
+	return Plugin_Changed;
+	// */
+
+	// lastTarget = 2;
+	// return Plugin_Changed;
+
+	// No target - the special will stand still.
+	return Plugin_Handled;
+
+	return Plugin_Continue;
+}
+
 public Action L4D2_OnChooseVictim(int specialInfected, int &curTarget)
 {
 	static int called;
@@ -4798,7 +5030,7 @@ public Action L4D2_OnChooseVictim(int specialInfected, int &curTarget)
 	// curTarget = 2; // Must be valid client index, 0 = crash.
 	// return Plugin_Changed;
 
-	// ATTACK THEMSELVES (no target) - the special will stand still.
+	// No target - the special will stand still.
 	// return Plugin_Handled;
 
 	return Plugin_Continue;
@@ -5646,7 +5878,6 @@ public void L4D_OnIncapacitated_PostHandled(int client, int inflictor, int attac
 		ForwardCalled("\"L4D_OnIncapacitated_PostHandled\" %d (%N). Inflictor: (Inf=%d) (Att=%d). Dmg: %f. DmgType: %d", client, client, inflictor, attacker, damage, damagetype);
 	}
 }
-
 
 public void L4D_OnDeathDroppedWeapons(int client, int weapons[6])
 {

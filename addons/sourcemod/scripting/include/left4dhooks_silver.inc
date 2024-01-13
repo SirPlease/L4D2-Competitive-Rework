@@ -1,6 +1,6 @@
 /*
 *	Left 4 DHooks Direct - Stock Functions
-*	Copyright (C) 2023 Silvers
+*	Copyright (C) 2024 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -951,6 +951,72 @@ stock void L4D_LedgeHangDisable(int client)
  *
  * @return Returns true if player is staggering, false otherwise
  */
+// Updated more accurate version thanks to "HarryPotter" for providing.
+stock bool L4D_IsPlayerStaggering(int client)
+{
+	static int Activity = -1;
+
+	if( L4D_IsEngineLeft4Dead2() )
+	{
+		Activity = PlayerAnimState.FromPlayer(client).GetMainActivity();
+
+		switch( Activity )
+		{
+			case L4D2_ACT_TERROR_SHOVED_FORWARD_MELEE, // 633, 634, 635, 636: stumble
+				L4D2_ACT_TERROR_SHOVED_BACKWARD_MELEE,
+				L4D2_ACT_TERROR_SHOVED_LEFTWARD_MELEE,
+				L4D2_ACT_TERROR_SHOVED_RIGHTWARD_MELEE:
+					return true;
+		}
+	}
+	else
+	{
+		Activity = L4D1_GetMainActivity(client);
+
+		switch( Activity )
+		{
+			case L4D1_ACT_TERROR_SHOVED_FORWARD, // 1145, 1146, 1147, 1148: stumble
+				L4D1_ACT_TERROR_SHOVED_BACKWARD,
+				L4D1_ACT_TERROR_SHOVED_LEFTWARD,
+				L4D1_ACT_TERROR_SHOVED_RIGHTWARD:
+					return true;
+		}
+	}
+
+	static int m_iQueuedStaggerType = -1;
+	if( m_iQueuedStaggerType == -1 )
+		m_iQueuedStaggerType = FindSendPropInfo("CTerrorPlayer", "m_staggerDist") + 4;
+
+	if( GetEntData(client, m_iQueuedStaggerType, 4) == -1 )
+	{
+		if( GetGameTime() >= GetEntPropFloat(client, Prop_Send, "m_staggerTimer", 1) )
+		{
+			return false;
+		}
+
+		static float vStgDist[3], vOrigin[3];
+		GetEntPropVector(client, Prop_Send, "m_staggerStart", vStgDist);
+		GetEntPropVector(client, Prop_Send, "m_vecOrigin", vOrigin);
+
+		static float fStgDist2;
+		fStgDist2 = GetEntPropFloat(client, Prop_Send, "m_staggerDist");
+
+		return GetVectorDistance(vStgDist, vOrigin) <= fStgDist2;
+	}
+
+	return true;
+}
+
+stock int L4D1_GetMainActivity(int client)
+{
+	static int s_iOffs_m_eCurrentMainSequenceActivity = -1;
+	if( s_iOffs_m_eCurrentMainSequenceActivity == -1 )
+		s_iOffs_m_eCurrentMainSequenceActivity = FindSendPropInfo("CTerrorPlayer", "m_iProgressBarDuration") + 476;
+
+	return LoadFromAddress(GetEntityAddress(client) + view_as<Address>(s_iOffs_m_eCurrentMainSequenceActivity), NumberType_Int32);
+}
+
+/* OLD VERSION (Before being updated by "HarryPotter")
 stock bool L4D_IsPlayerStaggering(int client)
 {
 	static int m_iQueuedStaggerType = -1;
@@ -976,6 +1042,7 @@ stock bool L4D_IsPlayerStaggering(int client)
 
 	return true;
 }
+*/
 
 
 

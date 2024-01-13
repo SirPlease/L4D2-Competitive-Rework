@@ -1,6 +1,6 @@
 /*
 *	Left 4 DHooks Direct
-*	Copyright (C) 2023 Silvers
+*	Copyright (C) 2024 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -281,6 +281,7 @@ any Native_GetPointer(Handle plugin, int numParams) // Native "L4D_GetPointer"
 		case POINTER_THENAVAREAS:		return g_pTheNavAreas;
 		case POINTER_MISSIONINFO:		return SDKCall(g_hSDK_CTerrorGameRules_GetMissionInfo);
 		case POINTER_SURVIVALMODE:		return g_pSurvivalMode;
+		case POINTER_AMMODEF:			return g_pAmmoDef;
 	}
 
 	return 0;
@@ -1566,7 +1567,7 @@ int Native_CInferno_StartBurning(Handle plugin, int numParams) // Native "L4D_St
 	GetNativeArray(3, vNorm, sizeof(vNorm));
 	GetNativeArray(4, vVel, sizeof(vVel));
 
-	PrintToChatAll("#### CALL g_hSDK_CInferno_StartBurning [%d] %f", entity, vPos[1]);
+	//PrintToServer("#### CALL g_hSDK_CInferno_StartBurning [%d] %f", entity, vPos[1]);
 	SDKCall(g_hSDK_CInferno_StartBurning, entity, vPos, vNorm, vVel, 1);
 	return 0;
 }
@@ -1586,14 +1587,16 @@ int g_iTankRockEntity;
 int Native_CTankRock_Create(Handle plugin, int numParams) // Native "L4D_TankRockPrj"
 {
 	// Get client index and origin/angle to throw
-	float vPos[3], vAng[3];
+	float vPos[3], vAng[3], vVel[3];
 	int client = GetNativeCell(1);
 	GetNativeArray(2, vPos, sizeof(vPos));
 	GetNativeArray(3, vAng, sizeof(vAng));
+	if( numParams >= 4 && !IsNativeParamNullVector(4) )
+		GetNativeArray(4, vVel, sizeof(vVel));
 
 	// Create rock
 	int entity = CreateEntityByName("env_rock_launcher");
-	TeleportEntity(entity, vPos, vAng, NULL_VECTOR);
+	TeleportEntity(entity, vPos, vAng, vVel);
 	DispatchSpawn(entity);
 
 	// Watch for "tank_rock" entity index and to set owner
@@ -1645,9 +1648,9 @@ void OnFrameTankRock(DataPack dPack)
 	if( client && IsClientInGame(client) && EntRefToEntIndex(entity) != INVALID_ENT_REFERENCE )
 	{
 		SetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity", client);
-		SetEntPropEnt(entity, Prop_Data, "m_hOwnerEntity", client);
+		// SetEntPropEnt(entity, Prop_Data, "m_hOwnerEntity", client);
 		SetEntPropEnt(entity, Prop_Send, "m_hThrower", client);
-		SetEntPropEnt(entity, Prop_Data, "m_hThrower", client);
+		// SetEntPropEnt(entity, Prop_Data, "m_hThrower", client);
 	}
 }
 // ==================================================
@@ -1656,15 +1659,25 @@ int Native_CPipeBombProjectile_Create(Handle plugin, int numParams) // Native "L
 {
 	ValidateNatives(g_hSDK_CPipeBombProjectile_Create, "CPipeBombProjectile::Create");
 
-	float vPos[3], vAng[3];
+	float vPos[3], vAng[3], vVel[3], vRot[3];
 	int client = GetNativeCell(1);
 	GetNativeArray(2, vPos, sizeof(vPos));
 	GetNativeArray(3, vAng, sizeof(vAng));
 
-	//PrintToServer("#### CALL g_hSDK_CPipeBombProjectile_Create");
-	int entity = SDKCall(g_hSDK_CPipeBombProjectile_Create, vPos, vAng, vAng, vAng, client, 2.0);
+	if( numParams >= 5 && !IsNativeParamNullVector(5) )
+		GetNativeArray(5, vVel, sizeof(vVel));
+	else
+		vVel = vAng;
 
-	if( numParams == 4 && GetNativeCell(4) )
+	if( numParams >= 6 && !IsNativeParamNullVector(6) )
+		GetNativeArray(6, vRot, sizeof(vRot));
+	else
+		vRot = vAng;
+
+	//PrintToServer("#### CALL g_hSDK_CPipeBombProjectile_Create");
+	int entity = SDKCall(g_hSDK_CPipeBombProjectile_Create, vPos, vAng, vVel, vRot, client, 3.0);
+
+	if( numParams >= 4 && GetNativeCell(4) )
 	{
 		CreatePipeParticle(entity, 0);
 		CreatePipeParticle(entity, 1);
@@ -1699,13 +1712,26 @@ int Native_CMolotovProjectile_Create(Handle plugin, int numParams) // Native "L4
 {
 	ValidateNatives(g_hSDK_CMolotovProjectile_Create, "CMolotovProjectile::Create");
 
-	float vPos[3], vAng[3];
+	float vPos[3], vAng[3], vVel[3], vRot[3];
 	int client = GetNativeCell(1);
 	GetNativeArray(2, vPos, sizeof(vPos));
 	GetNativeArray(3, vAng, sizeof(vAng));
 
+	if( numParams >= 4 && !IsNativeParamNullVector(4) )
+		GetNativeArray(4, vVel, sizeof(vVel));
+	else
+		vVel = vAng;
+
+	if( numParams >= 5 && !IsNativeParamNullVector(5) )
+		GetNativeArray(5, vRot, sizeof(vRot));
+	else
+		vRot = vAng;
+
 	//PrintToServer("#### CALL g_hSDK_CMolotovProjectile_Create");
-	return SDKCall(g_hSDK_CMolotovProjectile_Create, vPos, vAng, vAng, vAng, client, 2.0);
+	if( g_bLeft4Dead2 )
+		return SDKCall(g_hSDK_CMolotovProjectile_Create, vPos, vAng, vVel, vRot, client);
+	else
+		return SDKCall(g_hSDK_CMolotovProjectile_Create, vPos, vAng, vVel, vRot, client, 2.0);
 
 	// int entity = SDKCall(g_hSDK_CMolotovProjectile_Create, vPos, vAng, vAng, vAng, client, 2.0);
 	// SetEntPropFloat(entity, Prop_Data, "m_flCreateTime", GetGameTime());
@@ -1718,13 +1744,23 @@ int Native_CVomitJarProjectile_Create(Handle plugin, int numParams) // Native "L
 
 	ValidateNatives(g_hSDK_CVomitJarProjectile_Create, "CVomitJarProjectile::Create");
 
-	float vPos[3], vAng[3];
+	float vPos[3], vAng[3], vVel[3], vRot[3];
 	int client = GetNativeCell(1);
 	GetNativeArray(2, vPos, sizeof(vPos));
 	GetNativeArray(3, vAng, sizeof(vAng));
 
+	if( numParams >= 4 && !IsNativeParamNullVector(4) )
+		GetNativeArray(4, vVel, sizeof(vVel));
+	else
+		vVel = vAng;
+
+	if( numParams >= 5 && !IsNativeParamNullVector(5) )
+		GetNativeArray(5, vRot, sizeof(vRot));
+	else
+		vRot = vAng;
+
 	//PrintToServer("#### CALL g_hSDK_CVomitJarProjectile_Create");
-	return SDKCall(g_hSDK_CVomitJarProjectile_Create, vPos, vAng, vAng, vAng, client, 2.0);
+	return SDKCall(g_hSDK_CVomitJarProjectile_Create, vPos, vAng, vVel, vRot, client);
 
 	// int entity = SDKCall(g_hSDK_CVomitJarProjectile_Create, vPos, vAng, vAng, vAng, client, 2.0);
 	// SetEntPropFloat(entity, Prop_Data, "m_flCreateTime", GetGameTime());
@@ -1737,13 +1773,29 @@ int Native_CGrenadeLauncher_Projectile_Create(Handle plugin, int numParams) // N
 
 	ValidateNatives(g_hSDK_CGrenadeLauncher_Projectile_Create, "CGrenadeLauncher_Projectile::Create");
 
-	float vPos[3], vAng[3];
+	float vPos[3], vAng[3], vVel[3], vRot[3];
+	int additionalDamageType = DMG_GENERIC;
 	int client = GetNativeCell(1);
+
 	GetNativeArray(2, vPos, sizeof(vPos));
 	GetNativeArray(3, vAng, sizeof(vAng));
 
+	if( numParams >= 4 && !IsNativeParamNullVector(4) )
+		GetNativeArray(4, vVel, sizeof(vVel));
+	else
+		vVel = vAng;
+
+	if( numParams >= 5 && !IsNativeParamNullVector(5) )
+		GetNativeArray(5, vRot, sizeof(vRot));
+	else
+		vRot = vAng;
+
+	if( numParams >= 6 && GetNativeCell(6) )
+		additionalDamageType |= DMG_BURN;
+
 	//PrintToServer("#### CALL g_hSDK_CGrenadeLauncher_Projectile_Create");
-	return SDKCall(g_hSDK_CGrenadeLauncher_Projectile_Create, vPos, vAng, vAng, vAng, client, 2.0);
+	return SDKCall(g_hSDK_CGrenadeLauncher_Projectile_Create, vPos, vAng, vVel, vRot, client, additionalDamageType);
+	// return SDKCall(g_hSDK_CGrenadeLauncher_Projectile_Create, vPos, vAng, vAng, vAng, client, additionalDamageType);
 
 	// int entity = SDKCall(g_hSDK_CGrenadeLauncher_Projectile_Create, vPos, vAng, vAng, vAng, client, 2.0);
 	// SetEntPropFloat(entity, Prop_Data, "m_flCreateTime", GetGameTime());
@@ -1775,13 +1827,23 @@ int Native_CSpitterProjectile_Create(Handle plugin, int numParams) // Native "L4
 
 	ValidateNatives(g_hSDK_CSpitterProjectile_Create, "CSpitterProjectile::Create");
 
-	float vPos[3], vAng[3];
+	float vPos[3], vAng[3], vVel[3], vRot[3];
 	int client = GetNativeCell(1);
 	GetNativeArray(2, vPos, sizeof(vPos));
 	GetNativeArray(3, vAng, sizeof(vAng));
 
+	if( numParams >= 4 && !IsNativeParamNullVector(4) )
+		GetNativeArray(4, vVel, sizeof(vVel));
+	else
+		vVel = vAng;
+
+	if( numParams >= 5 && !IsNativeParamNullVector(5) )
+		GetNativeArray(5, vRot, sizeof(vRot));
+	else
+		vRot = vAng;
+
 	//PrintToServer("#### CALL g_hSDK_CSpitterProjectile_Create");
-	int entity = SDKCall(g_hSDK_CSpitterProjectile_Create, vPos, vAng, vAng, vAng, client);
+	int entity = SDKCall(g_hSDK_CSpitterProjectile_Create, vPos, vAng, vVel, vRot, client);
 	// SetEntPropFloat(entity, Prop_Data, "m_flCreateTime", GetGameTime());
 
 	AcidDamageTest(client, entity);
@@ -4119,9 +4181,8 @@ int Direct_SetNextShoveTime(Handle plugin, int numParams) // Native "L4D2Direct_
 	{
 		float time = GetNativeCell(2);
 
-		SetEntData(weapon, g_iAttackTimer + 4, 0.0);
-		SetEntData(weapon, g_iAttackTimer + 8, time);
-
+		SetEntPropFloat(weapon, Prop_Send, "m_attackTimer", time, 0);
+		SetEntPropFloat(weapon, Prop_Send, "m_attackTimer", time, 1);
 		SetEntPropFloat(client, Prop_Send, "m_flNextShoveTime", time);
 		SetEntPropFloat(weapon, Prop_Send, "m_flNextSecondaryAttack", time);
 
@@ -5418,30 +5479,30 @@ void PlayerAnimState_CreateNatives()
 any Native_PlayerAnimState_FromPlayer(Handle plugin, int numParams)
 {
 	ValidateOffset(g_iOff_m_PlayerAnimState, "CTerrorPlayer::m_PlayerAnimState");
-	
+
 	int client = GetNativeCell(1);
 	Address anim = view_as<Address>(GetEntData(client, g_iOff_m_PlayerAnimState));
-	// null check? 
-	
+	// null check?
+
 	return anim;
 }
 
 any Native_PlayerAnimState_GetMainActivity(Handle plugin, int numParams)
 {
 	ValidateOffset(g_iOff_m_eCurrentMainSequenceActivity, "CMultiPlayerAnimState::m_eCurrentMainSequenceActivity");
-	
+
 	Address anim = GetNativeCell(1);
-	
+
 	return LoadFromAddress(anim + view_as<Address>(g_iOff_m_eCurrentMainSequenceActivity), NumberType_Int32);
 }
 
 any Native_PlayerAnimState_ResetMainActivity(Handle plugin, int numParams)
 {
 	ValidateNatives(g_hSDK_CMultiPlayerAnimState_ResetMainActivity, "CMultiPlayerAnimState::ResetMainActivity");
-	
+
 	Address anim = GetNativeCell(1);
 	SDKCall(g_hSDK_CMultiPlayerAnimState_ResetMainActivity, anim);
-	
+
 	return 0;
 }
 
@@ -5687,4 +5748,395 @@ any Native_PlayerAnimState_m_bIsTongueAttacking_set(Handle plugin, int numParams
 {
 	PlayerAnimState_SetFlag(24);
 	return 0;
+}
+
+
+
+
+
+// ====================================================================================================
+//										AMMO NATIVES
+// Thanks for "Forgetest" for providing.
+// ====================================================================================================
+void Ammo_t_CreateNatives()
+{
+	CreateNative("Ammo_t.GetName", Native_Ammo_t_GetName);
+	CreateNative("Ammo_t.nDamageType.get", Native_Ammo_t_nDamageType_get);
+	CreateNative("Ammo_t.nDamageType.set", Native_Ammo_t_nDamageType_set);
+	CreateNative("Ammo_t.eTracerType.get", Native_Ammo_t_eTracerType_get);
+	CreateNative("Ammo_t.eTracerType.set", Native_Ammo_t_eTracerType_set);
+	CreateNative("Ammo_t.physicsForceImpulse.get", Native_Ammo_t_physicsForceImpulse_get);
+	CreateNative("Ammo_t.physicsForceImpulse.set", Native_Ammo_t_physicsForceImpulse_set);
+	CreateNative("Ammo_t.nMinSplashSize.get", Native_Ammo_t_nMinSplashSize_get);
+	CreateNative("Ammo_t.nMinSplashSize.set", Native_Ammo_t_nMinSplashSize_set);
+	CreateNative("Ammo_t.nMaxSplashSize.get", Native_Ammo_t_nMaxSplashSize_get);
+	CreateNative("Ammo_t.nMaxSplashSize.set", Native_Ammo_t_nMaxSplashSize_set);
+	CreateNative("Ammo_t.nFlags.get", Native_Ammo_t_nFlags_get);
+	CreateNative("Ammo_t.nFlags.set", Native_Ammo_t_nFlags_set);
+	CreateNative("Ammo_t.pPlrDmg.get", Native_Ammo_t_pPlrDmg_get);
+	CreateNative("Ammo_t.pPlrDmg.set", Native_Ammo_t_pPlrDmg_set);
+	CreateNative("Ammo_t.pNPCDmg.get", Native_Ammo_t_pNPCDmg_get);
+	CreateNative("Ammo_t.pNPCDmg.set", Native_Ammo_t_pNPCDmg_set);
+	CreateNative("Ammo_t.pMaxCarry.get", Native_Ammo_t_pMaxCarry_get);
+	CreateNative("Ammo_t.pMaxCarry.set", Native_Ammo_t_pMaxCarry_set);
+	CreateNative("Ammo_t.pPlrDmgCVar.get", Native_Ammo_t_pPlrDmgCVar_get);
+	CreateNative("Ammo_t.pNPCDmgCVar.get", Native_Ammo_t_pNPCDmgCVar_get);
+	CreateNative("Ammo_t.pMaxCarryCVar.get", Native_Ammo_t_pMaxCarryCVar_get);
+}
+
+any Native_Ammo_t_GetName(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+
+	char name[MAX_NAME_LENGTH];
+	L4D_ReadMemoryString(pThis, name, sizeof(name));
+
+	SetNativeString(2, name, GetNativeCell(3));
+	return 0;
+}
+
+any Native_Ammo_t_nDamageType_get(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+	return LoadFromAddress(pThis + view_as<Address>(4), NumberType_Int32);
+}
+
+any Native_Ammo_t_nDamageType_set(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+	int nDamageType = GetNativeCell(2);
+
+	StoreToAddress(pThis + view_as<Address>(4), nDamageType, NumberType_Int32);
+	return 0;
+}
+
+any Native_Ammo_t_eTracerType_get(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+
+	return LoadFromAddress(pThis + view_as<Address>(8), NumberType_Int32);
+}
+
+any Native_Ammo_t_eTracerType_set(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+	int eTracerType = GetNativeCell(2);
+
+	StoreToAddress(pThis + view_as<Address>(8), eTracerType, NumberType_Int32);
+	return 0;
+}
+
+any Native_Ammo_t_physicsForceImpulse_get(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+
+	return LoadFromAddress(pThis + view_as<Address>(12), NumberType_Int32);
+}
+
+any Native_Ammo_t_physicsForceImpulse_set(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+	int physicsForceImpulse = GetNativeCell(2);
+
+	StoreToAddress(pThis + view_as<Address>(12), physicsForceImpulse, NumberType_Int32);
+	return 0;
+}
+
+any Native_Ammo_t_nMinSplashSize_get(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+
+	return LoadFromAddress(pThis + view_as<Address>(16), NumberType_Int32);
+}
+
+any Native_Ammo_t_nMinSplashSize_set(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+	int physicsForceImpulse = GetNativeCell(2);
+
+	StoreToAddress(pThis + view_as<Address>(16), physicsForceImpulse, NumberType_Int32);
+	return 0;
+}
+
+any Native_Ammo_t_nMaxSplashSize_get(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+
+	return LoadFromAddress(pThis + view_as<Address>(20), NumberType_Int32);
+}
+
+any Native_Ammo_t_nMaxSplashSize_set(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+	int nMaxSplashSize = GetNativeCell(2);
+
+	StoreToAddress(pThis + view_as<Address>(20), nMaxSplashSize, NumberType_Int32);
+	return 0;
+}
+
+any Native_Ammo_t_nFlags_get(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+
+	return LoadFromAddress(pThis + view_as<Address>(24), NumberType_Int32);
+}
+
+any Native_Ammo_t_nFlags_set(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+	int nFlags = GetNativeCell(2);
+
+	StoreToAddress(pThis + view_as<Address>(24), nFlags, NumberType_Int32);
+	return 0;
+}
+
+any Native_Ammo_t_pPlrDmg_get(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+
+	return LoadFromAddress(pThis + view_as<Address>(28), NumberType_Int32);
+}
+
+any Native_Ammo_t_pPlrDmg_set(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+	int pPlrDmg = GetNativeCell(2);
+
+	StoreToAddress(pThis + view_as<Address>(28), pPlrDmg, NumberType_Int32);
+	return 0;
+}
+
+any Native_Ammo_t_pNPCDmg_get(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+
+	return LoadFromAddress(pThis + view_as<Address>(32), NumberType_Int32);
+}
+
+any Native_Ammo_t_pNPCDmg_set(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+	int pNPCDmg = GetNativeCell(2);
+
+	StoreToAddress(pThis + view_as<Address>(32), pNPCDmg, NumberType_Int32);
+	return 0;
+}
+
+any Native_Ammo_t_pMaxCarry_get(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+
+	return LoadFromAddress(pThis + view_as<Address>(36), NumberType_Int32);
+}
+
+any Native_Ammo_t_pMaxCarry_set(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+	int pMaxCarry = GetNativeCell(2);
+
+	StoreToAddress(pThis + view_as<Address>(36), pMaxCarry, NumberType_Int32);
+	return 0;
+}
+
+any Native_Ammo_t_pPlrDmgCVar_get(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+
+	return LoadFromAddress(pThis + view_as<Address>(40), NumberType_Int32);
+}
+
+any Native_Ammo_t_pNPCDmgCVar_get(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+
+	return LoadFromAddress(pThis + view_as<Address>(44), NumberType_Int32);
+}
+
+any Native_Ammo_t_pMaxCarryCVar_get(Handle plugin, int numParams)
+{
+	Address pThis = GetNativeCell(1);
+
+	return LoadFromAddress(pThis + view_as<Address>(48), NumberType_Int32);
+}
+
+void AmmoDef_CreateNatives()
+{
+	CreateNative("AmmoDef.GetAmmoOfIndex", Native_AmmoDef_GetAmmoOfIndex);
+	CreateNative("AmmoDef.Index", Native_AmmoDef_Index);
+	CreateNative("AmmoDef.PlrDamage", Native_AmmoDef_PlrDamage);
+	CreateNative("AmmoDef.NPCDamage", Native_AmmoDef_NPCDamage);
+	CreateNative("AmmoDef.MaxCarry", Native_AmmoDef_MaxCarry);
+	CreateNative("AmmoDef.DamageType", Native_AmmoDef_DamageType);
+	CreateNative("AmmoDef.Flags", Native_AmmoDef_Flags);
+	CreateNative("AmmoDef.MinSplashSize", Native_AmmoDef_MinSplashSize);
+	CreateNative("AmmoDef.MaxSplashSize", Native_AmmoDef_MaxSplashSize);
+	CreateNative("AmmoDef.TracerType", Native_AmmoDef_TracerType);
+	CreateNative("AmmoDef.DamageForce", Native_AmmoDef_DamageForce);
+	CreateNative("AmmoDef.GetAmmoIndex", Native_AmmoDef_GetAmmoIndex);
+}
+
+int AmmoDef_m_nAmmoIndex()
+{
+	return LoadFromAddress(view_as<Address>(g_pAmmoDef) + view_as<Address>(4), NumberType_Int32);
+}
+
+Ammo_t AmmoDef_m_AmmoType(int i)
+{
+	static const int sizeof_Ammo_t = 52;
+	return view_as<Ammo_t>(view_as<Address>(g_pAmmoDef) + view_as<Address>(i * sizeof_Ammo_t) + view_as<Address>(8));
+}
+
+any Native_AmmoDef_GetAmmoOfIndex(Handle plugin, int numParams)
+{
+	int nAmmoIndex = GetNativeCell(1);
+
+	if ( nAmmoIndex >= AmmoDef_m_nAmmoIndex() )
+		return view_as<Ammo_t>(Address_Null);
+
+	return AmmoDef_m_AmmoType(nAmmoIndex);
+}
+
+any Native_AmmoDef_Index(Handle plugin, int numParams)
+{
+	char psz[64];
+	GetNativeString(1, psz, sizeof(psz));
+
+	char name[64];
+	for (int i = 1; i < AmmoDef_m_nAmmoIndex(); ++i)
+	{
+		AmmoDef_m_AmmoType(i).GetName(name, sizeof(name));
+
+		if (strcmp(name, psz, false) == 0)
+			return i;
+	}
+	return -1;
+}
+
+any Native_AmmoDef_PlrDamage(Handle plugin, int numParams)
+{
+	int nAmmoIndex = GetNativeCell(1);
+
+	if ( nAmmoIndex < 1 || nAmmoIndex >= AmmoDef_m_nAmmoIndex() )
+		return 0;
+
+	if ( AmmoDef_m_AmmoType(nAmmoIndex).pPlrDmg == USE_CVAR )
+	{
+		if ( AmmoDef_m_AmmoType(nAmmoIndex).pPlrDmgCVar )
+		{
+			return AmmoDef_m_AmmoType(nAmmoIndex).pPlrDmgCVar.GetInt();
+		}
+
+		return 0;
+	}
+	else
+	{
+		return AmmoDef_m_AmmoType(nAmmoIndex).pPlrDmg;
+	}
+}
+
+any Native_AmmoDef_NPCDamage(Handle plugin, int numParams)
+{
+	int nAmmoIndex = GetNativeCell(1);
+
+	if ( nAmmoIndex < 1 || nAmmoIndex >= AmmoDef_m_nAmmoIndex() )
+		return 0;
+
+	if ( AmmoDef_m_AmmoType(nAmmoIndex).pNPCDmg == USE_CVAR )
+	{
+		if ( AmmoDef_m_AmmoType(nAmmoIndex).pNPCDmgCVar )
+		{
+			return AmmoDef_m_AmmoType(nAmmoIndex).pNPCDmgCVar.GetInt();
+		}
+
+		return 0;
+	}
+	else
+	{
+		return AmmoDef_m_AmmoType(nAmmoIndex).pNPCDmg;
+	}
+}
+
+any Native_AmmoDef_MaxCarry(Handle plugin, int numParams)
+{
+	int nAmmoIndex = GetNativeCell(1);
+
+	if ( nAmmoIndex < 1 || nAmmoIndex >= AmmoDef_m_nAmmoIndex() )
+		return 0;
+
+	if ( AmmoDef_m_AmmoType(nAmmoIndex).pMaxCarry == USE_CVAR )
+	{
+		if ( AmmoDef_m_AmmoType(nAmmoIndex).pMaxCarryCVar )
+			return AmmoDef_m_AmmoType(nAmmoIndex).pMaxCarryCVar.GetInt();
+
+		return 0;
+	}
+	else
+	{
+		return AmmoDef_m_AmmoType(nAmmoIndex).pMaxCarry;
+	}
+}
+
+any Native_AmmoDef_DamageType(Handle plugin, int numParams)
+{
+	int nAmmoIndex = GetNativeCell(1);
+
+	if (nAmmoIndex < 1 || nAmmoIndex >= AmmoDef_m_nAmmoIndex())
+		return 0;
+
+	return AmmoDef_m_AmmoType(nAmmoIndex).nDamageType;
+}
+
+any Native_AmmoDef_Flags(Handle plugin, int numParams)
+{
+	int nAmmoIndex = GetNativeCell(1);
+
+	if (nAmmoIndex < 1 || nAmmoIndex >= AmmoDef_m_nAmmoIndex())
+		return 0;
+
+	return AmmoDef_m_AmmoType(nAmmoIndex).nFlags;
+}
+
+any Native_AmmoDef_MinSplashSize(Handle plugin, int numParams)
+{
+	int nAmmoIndex = GetNativeCell(1);
+
+	if (nAmmoIndex < 1 || nAmmoIndex >= AmmoDef_m_nAmmoIndex())
+		return 4;
+
+	return AmmoDef_m_AmmoType(nAmmoIndex).nMinSplashSize;
+}
+
+any Native_AmmoDef_MaxSplashSize(Handle plugin, int numParams)
+{
+	int nAmmoIndex = GetNativeCell(1);
+
+	if (nAmmoIndex < 1 || nAmmoIndex >= AmmoDef_m_nAmmoIndex())
+		return 8;
+
+	return AmmoDef_m_AmmoType(nAmmoIndex).nMaxSplashSize;
+}
+
+any Native_AmmoDef_TracerType(Handle plugin, int numParams)
+{
+	int nAmmoIndex = GetNativeCell(1);
+
+	if (nAmmoIndex < 1 || nAmmoIndex >= AmmoDef_m_nAmmoIndex())
+		return 0;
+
+	return AmmoDef_m_AmmoType(nAmmoIndex).eTracerType;
+}
+
+any Native_AmmoDef_DamageForce(Handle plugin, int numParams)
+{
+	int nAmmoIndex = GetNativeCell(1);
+
+	if ( nAmmoIndex < 1 || nAmmoIndex >= AmmoDef_m_nAmmoIndex() )
+		return 0.0;
+
+	return AmmoDef_m_AmmoType(nAmmoIndex).physicsForceImpulse;
+}
+
+any Native_AmmoDef_GetAmmoIndex(Handle plugin, int numParams)
+{
+	return AmmoDef_m_nAmmoIndex();
 }
