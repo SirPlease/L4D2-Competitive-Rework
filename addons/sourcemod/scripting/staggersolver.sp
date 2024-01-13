@@ -9,7 +9,7 @@ public Plugin myinfo =
 	name = "Super Stagger Solver",
 	author = "CanadaRox, A1m (fix), Sir (rework), Forgetest",
 	description = "Blocks all button presses and restarts animations during stumbles",
-	version = "2.3",
+	version = "2.4",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -29,28 +29,56 @@ public void L4D2_OnStagger_Post(int client, int source)
 	if (!L4D_IsPlayerStaggering(client))
 		return;
 	
-	if (IsTankThrowingRock(client)) // handled by plugin "rock_stumble_block"
-		return;
-	
 	PlayerAnimState anim = PlayerAnimState.FromPlayer(client);
-	
-	switch (anim.GetMainActivity())
+	if(IsTank(client))
 	{
-		case L4D2_ACT_TERROR_HULK_VICTORY,
-			L4D2_ACT_TERROR_HULK_VICTORY_B,
-			L4D2_ACT_TERROR_RAGE_AT_ENEMY,
-			L4D2_ACT_TERROR_RAGE_AT_KNOCKDOWN:
+		if (IsTankThrowingRock(client)) // handled by plugin "rock_stumble_block"
+			return;
+
+		switch (anim.GetMainActivity())
 		{
-			SetEntPropFloat(client, Prop_Send, "m_flCycle", 1.0);
+			case L4D2_ACT_TERROR_HULK_VICTORY,
+				L4D2_ACT_TERROR_HULK_VICTORY_B,
+				L4D2_ACT_TERROR_RAGE_AT_ENEMY,
+				L4D2_ACT_TERROR_RAGE_AT_KNOCKDOWN:
+			{
+				SetEntPropFloat(client, Prop_Send, "m_flCycle", 1.0);
+			}
+			case L4D2_ACT_TERROR_CLIMB_24_FROM_STAND,
+				L4D2_ACT_TERROR_CLIMB_36_FROM_STAND,
+				L4D2_ACT_TERROR_CLIMB_48_FROM_STAND,
+				L4D2_ACT_TERROR_CLIMB_50_FROM_STAND,
+				L4D2_ACT_TERROR_CLIMB_60_FROM_STAND,
+				L4D2_ACT_TERROR_CLIMB_70_FROM_STAND,
+				L4D2_ACT_TERROR_CLIMB_72_FROM_STAND,
+				L4D2_ACT_TERROR_CLIMB_84_FROM_STAND,
+				L4D2_ACT_TERROR_CLIMB_96_FROM_STAND,
+				L4D2_ACT_TERROR_CLIMB_108_FROM_STAND,
+				L4D2_ACT_TERROR_CLIMB_115_FROM_STAND,
+				L4D2_ACT_TERROR_CLIMB_120_FROM_STAND,
+				L4D2_ACT_TERROR_CLIMB_130_FROM_STAND,
+				L4D2_ACT_TERROR_CLIMB_132_FROM_STAND,
+				L4D2_ACT_TERROR_CLIMB_144_FROM_STAND,
+				L4D2_ACT_TERROR_CLIMB_150_FROM_STAND,
+				L4D2_ACT_TERROR_CLIMB_156_FROM_STAND,
+				L4D2_ACT_TERROR_CLIMB_166_FROM_STAND,
+				L4D2_ACT_TERROR_CLIMB_168_FROM_STAND:
+			{
+				return;
+			}
+			default:
+			{
+				anim.ResetMainActivity();
+			}
 		}
-		default:
-		{
-			anim.m_bIsTonguing = false;
-			anim.m_bIsSpitting = false;
-			
-			anim.ResetMainActivity();
-		}
+
+		return;
 	}
+	
+	anim.m_bIsTonguing = false;
+	anim.m_bIsSpitting = false;
+			
+	anim.ResetMainActivity();
 }
 
 public Action OnPlayerRunCmd(int client, int &buttons)
@@ -73,9 +101,6 @@ public Action OnPlayerRunCmd(int client, int &buttons)
 
 bool IsTankThrowingRock(int client)
 {
-	if (!IsTank(client))
-		return false;
-	
 	int ability = GetEntPropEnt(client, Prop_Send, "m_customAbility");
 	if (ability == -1)
 		return false;
@@ -85,14 +110,7 @@ bool IsTankThrowingRock(int client)
 
 bool IsTank(int client)
 {
-	static int s_iTankClass = -1;
-	if (s_iTankClass == -1)
-	{
-		s_iTankClass = L4D_IsEngineLeft4Dead() ? 5 : 8;
-	}
-	
-	return GetClientTeam(client) == 3
-		&& GetEntProp(client, Prop_Send, "m_zombieClass") == s_iTankClass;
+	return GetEntProp(client, Prop_Send, "m_zombieClass") == 8;
 }
 
 bool CThrow__IsActive(int ability)
@@ -117,9 +135,6 @@ CountdownTimer CThrow__GetThrowTimer(int ability)
 
 bool CThrow__SelectingTankAttack(int ability)
 {
-	if (L4D_IsEngineLeft4Dead())
-		return false;
-	
 	static int s_iOffs_m_bSelectingAttack = -1;
 	if (s_iOffs_m_bSelectingAttack == -1)
 		s_iOffs_m_bSelectingAttack = FindSendPropInfo("CThrow", "m_hasBeenUsed") + 28;
