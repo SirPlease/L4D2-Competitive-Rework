@@ -52,9 +52,9 @@ new bool:bTiebreakerEligibility[2];
 public Plugin:myinfo =
 {
 	name = "L4D2 Scoremod+",
-	author = "Visor",
+	author = "Visor, Sir",
 	description = "The next generation scoring mod",
-	version = "2.2.4",
+	version = "2.2.5",
 	url = "https://github.com/Attano/L4D2-Competitive-Framework"
 };
 
@@ -90,6 +90,7 @@ public OnPluginStart()
 	HookEvent("player_incapacitated", OnPlayerIncapped);
 	HookEvent("player_hurt", OnPlayerHurt);
 	HookEvent("revive_success", OnPlayerRevived, EventHookMode_Post);
+	HookEvent("player_death", OnPlayerDeath);
 
 	RegConsoleCmd("sm_health", CmdBonus);
 	RegConsoleCmd("sm_damage", CmdBonus);
@@ -283,6 +284,28 @@ public OnPlayerLedgeGrab(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	new client = GetClientOfUserId(GetEventInt(event, "userid"));
 	iLostTempHealth[InSecondHalfOfRound()] += L4D2Direct_GetPreIncapHealthBuffer(client);
+}
+
+public OnPlayerDeath(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+{
+	int victim = GetClientOfUserId(hEvent.GetInt("userid"));
+	if (IsSurvivor(victim) && !bRoundOver)
+	{
+		int incaps = GetEntProp(victim, Prop_Send, "m_currentReviveCount");
+		int standardPenalty = RoundToFloor((fMapDamageBonus / 100.0) * 5.0 / fTempHpWorth);
+		int penalty = 0;
+
+		for (int loops = 2 - incaps; loops > 0; loops--)
+		{
+			penalty += standardPenalty + 30;
+		}
+
+		iLostTempHealth[InSecondHalfOfRound()] += penalty;
+		
+		#if SM2_DEBUG
+			PrintToChatAll("\x04[\x01Valid Death\x04] \x03%N \x01had \x03%i \x01incaps and the total penalty is now \x03%i", victim, incaps, penalty);
+		#endif
+	}
 }
 
 public OnPlayerIncapped(Handle:event, const String:name[], bool:dontBroadcast)
