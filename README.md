@@ -13,7 +13,7 @@ In its current state it allows anyone to host their own up to date competitive L
 This project is **Actively Developed**.
 
 > **Included Matchmodes:**
-* **Zonemod 2.8.8**
+* **Zonemod 2.8.9**
 * **Zonemod Hunters**
 * **Zonemod Retro**
 * **NeoMod 0.4a** 
@@ -96,6 +96,7 @@ This project is **Actively Developed**.
 
 
 > **Competitive Mapping Rework:**
+* Aiden
 * Derpduck
 
 > **Testing/Issue Reporting:**
