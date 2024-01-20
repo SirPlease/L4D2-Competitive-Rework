@@ -3,7 +3,7 @@
 #endif
 #define __item_tracking_included
 
-#define IT_MODULE_NAME			"ItemTracking"
+#define IT_MODULE_NAME          "ItemTracking"
 
 // Item lists for tracking/decoding/etc
 enum /*ItemList*/
@@ -207,7 +207,7 @@ public void _IT_RoundStartEvent(Event hEvent, const char[] sEventName, bool bDon
     g_iSaferoomCount[START_SAFEROOM - 1] = 0;
     g_iSaferoomCount[END_SAFEROOM - 1] = 0;
 
-    // Since OnMapStart only happens once on scavenge mode, g_bIsRound1Over can only be once false because 
+    // Since OnMapStart only happens once on scavenge mode, g_bIsRound1Over can only be once false because
     // evey round_end event will turn it to true. This casues items spawning at the same position during the whole scavenge match.
     if (IsScavengeMode()) {
         if (!InSecondHalfOfRound()) {
@@ -275,7 +275,7 @@ static void GenerateStoredSpawns()
 }*/
 
 // Produces the lookup trie for weapon spawn entities
-//		to translate to our ADT array of spawns
+//      to translate to our ADT array of spawns
 static void CreateItemListTrie()
 {
     g_hItemListTrie = new StringMap();
@@ -313,7 +313,7 @@ static void KillRegisteredItems()
                 // Exception for if the item is in a player's inventory.
                 if (bKeepPlayerItems && HasEntProp(i, Prop_Send, "m_hOwner") && GetEntPropEnt(i, Prop_Send, "m_hOwner") > 0)
                   continue;
-                
+
                 KillEntity(i);
                 /*if (!AcceptEntityInput(i, "kill")) {
                     Debug_LogError(IT_MODULE_NAME, "Error killing instance of item %s", g_sItemNames[itemindex][IN_longname]);
