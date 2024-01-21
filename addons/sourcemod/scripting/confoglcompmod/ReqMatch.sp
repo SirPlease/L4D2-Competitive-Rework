@@ -16,7 +16,7 @@ static bool
     RM_bIsPluginsLoaded   = false,
     RM_bIsMapRestarted    = false;
     RM_bIsChangeLevelAvailable = false;
-    RM_bIsChmatchRequest = false;
+    // RM_bIsChmatchRequest = false;
 
 static Handle
     RM_hFwdMatchLoad   = null,
@@ -27,6 +27,7 @@ static ConVar
     RM_hDoRestart          = null,
     // RM_hAllowVoting = null,
     RM_hReloaded           = null,
+    RM_hUnloaded           = null,
     RM_hChangeMap          = null,
     RM_hAutoLoad           = null,
     RM_hAutoCfg            = null,
@@ -73,8 +74,8 @@ void RM_OnModuleStart()
     RegAdminCmd("sm_forcematch", RM_Cmd_ForceMatch, ADMFLAG_CONFIG, "Forces the game to use match mode");
     RegAdminCmd("sm_fm", RM_Cmd_ForceMatch, ADMFLAG_CONFIG, "Forces the game to use match mode");
     RegAdminCmd("sm_resetmatch", RM_Cmd_ResetMatch, ADMFLAG_CONFIG, "Forces match mode to turn off REGRADLESS for always on or forced match");
-    RegAdminCmd("sm_forcechangematch", RM_CMD_ChangeMatch, ADMFLAG_CONFIG, "Forces the match to be changed");
-    RegAdminCmd("sm_fchmatch", RM_CMD_ChangeMatch, ADMFLAG_CONFIG, "Forces the match to be changed");
+    // RegAdminCmd("sm_forcechangematch", RM_CMD_ChangeMatch, ADMFLAG_CONFIG, "Forces the match to be changed");
+    // RegAdminCmd("sm_fchmatch", RM_CMD_ChangeMatch, ADMFLAG_CONFIG, "Forces the match to be changed");
 
     RM_hSbAllBotGame = FindConVar("sb_all_bot_game");
 
@@ -98,8 +99,34 @@ void RM_OnModuleStart()
         }
 
         RM_bIsPluginsLoaded = true;
-        RM_hReloaded.SetInt(0);
+        RM_hReloaded.BoolValue = false;
         RM_Match_Load();
+    }
+
+    RM_hUnloaded     = FindConVarEx("match_unloaded");
+    if (RM_hUnloaded == null)
+    {
+        RM_hUnloaded = CreateConVarEx("match_unloaded", "0", "DONT TOUCH THIS CVAR! This is to prevent match feature keep looping, however the plugin takes care of it. Don't change it!", FCVAR_DONTRECORD | FCVAR_UNLOGGED);
+    }
+
+    if (RM_hUnloaded.BoolValue)
+    {
+        if (RM_DEBUG || IsDebugEnabled())
+        {
+            LogMessage("[%s] Plugin was reloaded from resetting match mode, executing match unload", RM_MODULE_NAME);
+        }
+
+        if (!RM_bIsMapRestarted && RM_hDoRestart.BoolValue)
+        {
+            CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} Restarting map!");
+            char sMap[PLATFORM_MAX_PATH];
+            GetCurrentMap(sMap, sizeof(sMap));
+
+            DataPack hDp;
+            CreateDataTimer(MAPRESTARTTIME, RM_Match_MapRestart_Timer, hDp);
+            hDp.WriteString(sMap);
+            RM_hUnloaded.BoolValue = false;
+        }
     }
 
     // ChangeLevel
@@ -160,23 +187,24 @@ static void RM_Match_Load()
             LogMessage("[%s] Loading plugins and reload self", RM_MODULE_NAME);
         }
 
-        RM_hReloaded.SetInt(1);
+        RM_hReloaded.BoolValue = true;
         RM_hConfigFile_Plugins.GetString(sBuffer, sizeof(sBuffer));
+        ExecuteCfg(sBuffer); //original
 
-        // ExecuteCfg(sBuffer); //original
         // rework
-        char sPieces[32][256];
-        int  iNumPieces = ExplodeString(sBuffer, ";", sPieces, sizeof(sPieces), sizeof(sPieces[]));
+        // char sPieces[32][256];
+        // int  iNumPieces = ExplodeString(sBuffer, ";", sPieces, sizeof(sPieces), sizeof(sPieces[]));
 
         // Unlocking and Unloading Plugins.
-        ServerCommand("sm plugins load_unlock");
-        ServerCommand("sm plugins unload_all");
+        // It is bette to it manually
+        // ServerCommand("sm plugins load_unlock");
+        // ServerCommand("sm plugins unload_all");
 
         // Loading Plugins.
-        for (int i = 0; i < iNumPieces; i++)
-        {
-            ExecuteCfg(sPieces[i]);
-        }
+        // for (int i = 0; i < iNumPieces; i++)
+        // {
+            // ExecuteCfg(sPieces[i]);
+        // }
         // rework end
 
         return;
@@ -190,9 +218,21 @@ static void RM_Match_Load()
         LogMessage("[%s] Match config executed", RM_MODULE_NAME);
     }
 
+    // if (RM_bIsMatchModeLoaded)
+    // {
+        // return;
+    // }
+
     if (RM_bIsMatchModeLoaded)
     {
-        return;
+        IsPluginEnabled(true, false);
+        RM_bIsMatchModeLoaded = false;
+        RM_bIsMapRestarted    = false;
+        RM_bIsPluginsLoaded   = false;
+        ClearAllSettings();
+        ClearAllCvars();
+        Call_StartForward(RM_hFwdMatchUnload);
+        Call_Finish();
     }
 
     if (RM_DEBUG || IsDebugEnabled())
@@ -232,7 +272,7 @@ static void RM_Match_Load()
         LogMessage("[%s] Match mode loaded!", RM_MODULE_NAME);
     }
 
-    RM_bIsChmatchRequest = false;
+    // RM_bIsChmatchRequest = false;
 
     Call_StartForward(RM_hFwdMatchLoad);
     Call_Finish();
@@ -268,6 +308,7 @@ static void RM_Match_Unload(bool bForced = false)
     IsPluginEnabled(true, false);
     RM_bIsMapRestarted  = false;
     RM_bIsPluginsLoaded = false;
+    RM_hUnloaded.BoolValue = true;
 
     Call_StartForward(RM_hFwdMatchUnload);
     Call_Finish();
@@ -276,19 +317,20 @@ static void RM_Match_Unload(bool bForced = false)
     CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} Match mode unloaded!");
 
     RM_hConfigFile_Off.GetString(sBuffer, sizeof(sBuffer));
+    ExecuteCfg(sBuffer);
 
-    if (!RM_bIsChmatchRequest)
-    {
-        ExecuteCfg(sBuffer);
-    }
-    else
-    {
+    // if (!RM_bIsChmatchRequest)
+    // {
+        // ExecuteCfg(sBuffer);
+    // }
+    // else
+    // {
         // if we are using chmatch, don't let predictable_unloader unload confogl itself.
         // all plugins will be unload and load when the new config excuted.
-        ServerCommand("sm plugins load_unlock");
-        ServerCommand("sm plugins unload optional/predictable_unloader.smx");
-        ExecuteCfg(sBuffer);
-    }
+        // ServerCommand("sm plugins load_unlock");
+        // ServerCommand("sm plugins unload optional/predictable_unloader.smx");
+        // ExecuteCfg(sBuffer);
+    // }
 
     if (RM_DEBUG || IsDebugEnabled())
     {
@@ -298,7 +340,7 @@ static void RM_Match_Unload(bool bForced = false)
 
 public Action RM_Match_MapRestart_Timer(Handle hTimer, DataPack hDp)
 {
-    ServerCommand("sm plugins load_lock");    // rework
+    // ServerCommand("sm plugins load_lock");    // rework // elias: please don't
 
     if (RM_DEBUG || IsDebugEnabled())
     {
@@ -432,6 +474,7 @@ public Action RM_Cmd_ResetMatch(int client, int args)
     return Plugin_Handled;
 }
 
+/** Nah, we do it our way
 public Action RM_CMD_ChangeMatch(int client, int args)
 {
     if (args < 1)
@@ -500,7 +543,7 @@ public Action RM_CMD_ChangeMatch(int client, int args)
     RM_Match_Unload(true);
 
     // give time to fully finish unloading.
-    CreateTimer(1.0, Timer_DelayToLoadMatchMode);
+    CreateTimer(1.0, Timer_DelayToLoadMatchMode); // what?
 
     return Plugin_Handled;
 }
@@ -522,6 +565,7 @@ public Action Timer_DelayToLoadMatchMode(Handle timer)
 
     return Plugin_Handled;
 }
+**/
 
 /*public Action RM_Cmd_Match(int client, int args)
 {

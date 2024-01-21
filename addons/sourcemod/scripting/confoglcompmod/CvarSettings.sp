@@ -240,7 +240,7 @@ public Action CVS_CvarDiff_Cmd(int client, int args)
     return Plugin_Handled;
 }
 
-static void ClearAllSettings()
+void ClearAllCvars()
 {
     bTrackingStarted = false;
     int iSize = CvarSettingsArray.Length;

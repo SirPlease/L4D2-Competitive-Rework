@@ -60,7 +60,7 @@ void CLS_OnModuleStart()
     RegServerCmd("confogl_startclientchecking", _StartClientChecking_Cmd, "Start checking and enforcing client cvars tracked by this plugin");
 }
 
-static void ClearAllSettings()
+void ClearAllSettings()
 {
     ClientSettingsArray.Clear();
 }
