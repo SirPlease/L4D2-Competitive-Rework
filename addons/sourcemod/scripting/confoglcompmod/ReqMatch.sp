@@ -33,10 +33,8 @@ static ConVar
     RM_hAutoCfg            = null,
     RM_hConfigFile_On      = null,
     RM_hConfigFile_Plugins = null,
-    RM_hConfigFile_Off     = null;
-
-static char
-    RM_sMatchName[32];
+    RM_hConfigFile_Off     = null,
+    RM_hMatchName          = null;
 
 void RM_APL()
 {
@@ -130,6 +128,12 @@ void RM_OnModuleStart()
             hDp.WriteString(sMap);
             RM_hUnloaded.BoolValue = false;
         }
+    }
+
+    RM_hMatchName     = FindConVarEx("match_name");
+    if (RM_hMatchName == null)
+    {
+        RM_hMatchName = CreateConVarEx("match_name", "", "DONT TOUCH THIS CVAR! This is to make it possible to see in error logs which confogl config has troubles!", FCVAR_DONTRECORD | FCVAR_UNLOGGED);
     }
 
     // ChangeLevel
@@ -353,7 +357,7 @@ static bool RM_UpdateCfgOn(const char[] cfgfile, bool bIsPrint = true)
     {
         // PrintToChatAll("\x01[\x05Confogl\x01] Using \"\x04%s\x01\" config.", cfgfile);
         CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} Loading '{olive}%s{default}'.", cfgfile);
-        strcopy(RM_sMatchName, sizeof(RM_sMatchName), cfgfile);
+        RM_hMatchName.SetString(cfgfile);
 
         if (RM_DEBUG || IsDebugEnabled())
         {
@@ -648,7 +652,7 @@ stock bool IsAMatchActive()
 
 stock void GetMatchName(char[] sBuffer, int iLen)
 {
-    strcopy(sBuffer, iLen, RM_sMatchName);
+    RM_hMatchName.GetString(sBuffer, iLen);
 }
 
 public int native_IsMatchModeLoaded(Handle plugin, int numParams)
