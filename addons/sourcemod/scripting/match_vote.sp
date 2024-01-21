@@ -81,7 +81,8 @@ public void OnConfigsExecuted()
 
 public void OnPluginEnd()
 {
-	g_hSvMaxPlayers.SetInt(g_hMaxPlayers.IntValue);
+    if (g_hSvMaxPlayers != null)
+        g_hSvMaxPlayers.SetInt(g_hMaxPlayers.IntValue);
 }
 
 public void OnLibraryRemoved(const char[] sPluginName)
