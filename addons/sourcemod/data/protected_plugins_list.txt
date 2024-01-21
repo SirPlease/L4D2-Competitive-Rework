@@ -1,0 +1,22 @@
+//------------------------
+// Sourcemod Basic Plugins
+//------------------------
+basebans.smx
+basecommands.smx
+basecomm.smx
+admin-flatfile.smx
+adminhelp.smx
+adminmenu.smx
+funcommands.smx
+playercommands.smx
+
+//------------------------
+// Core Plugins
+//------------------------
+left4dhooks.smx
+l4d2lib.smx
+
+//------------------------
+// General Fixes
+//------------------------
+l4d_pause_message.smx
