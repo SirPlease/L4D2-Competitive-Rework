@@ -295,21 +295,21 @@ static void RM_Match_Unload(bool bForced = false)
         LogMessage("[%s] Unloading match mode...", RM_MODULE_NAME);
     }
 
-    char sBuffer[128];
-    RM_bIsMatchModeLoaded = false;
-    IsPluginEnabled(true, false);
-    RM_bIsMapRestarted  = false;
-    RM_bIsPluginsLoaded = false;
-    RM_hUnloaded.BoolValue = true;
-
     Call_StartForward(RM_hFwdMatchUnload);
     Call_Finish();
 
     // PrintToChatAll("\x01[\x05Confogl\x01] Match mode unloaded!");
     CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} Match mode unloaded!");
 
+    char sBuffer[128];
     RM_hConfigFile_Off.GetString(sBuffer, sizeof(sBuffer));
     ExecuteCfg(sBuffer);
+
+    RM_bIsMatchModeLoaded = false;
+    IsPluginEnabled(true, false);
+    RM_bIsMapRestarted  = false;
+    RM_bIsPluginsLoaded = false;
+    RM_hUnloaded.BoolValue = true;
 
     // if (!RM_bIsChmatchRequest)
     // {
