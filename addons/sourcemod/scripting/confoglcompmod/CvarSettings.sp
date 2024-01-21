@@ -50,7 +50,7 @@ void CVS_OnModuleStart()
 
 void CVS_OnModuleEnd()
 {
-    ClearAllSettings();
+    ClearAllCvars();
 }
 
 void CVS_OnConfigsExecuted()
@@ -111,7 +111,7 @@ public Action CVS_ResetCvars_Cmd(int args)
         return Plugin_Handled;
     }
 
-    ClearAllSettings();
+    ClearAllCvars();
     PrintToServer("Server CVar Tracking Information Reset!");
 
     return Plugin_Handled;

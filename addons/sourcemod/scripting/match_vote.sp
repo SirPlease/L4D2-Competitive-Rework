@@ -81,7 +81,8 @@ public void OnConfigsExecuted()
 
 public void OnPluginEnd()
 {
-    if (g_hSvMaxPlayers != null)
+    // TODO: FIX Exception reported: Invalid convar handle 2c0002bc (error 3)
+    if (g_hSvMaxPlayers != null) // Didn't help
         g_hSvMaxPlayers.SetInt(g_hMaxPlayers.IntValue);
 }
 
