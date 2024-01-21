@@ -35,6 +35,9 @@ static ConVar
     RM_hConfigFile_Plugins = null,
     RM_hConfigFile_Off     = null;
 
+static char
+    RM_sMatchName[32];
+
 void RM_APL()
 {
     RM_hFwdMatchLoad   = CreateGlobalForward("LGO_OnMatchModeLoaded", ET_Ignore);
@@ -66,8 +69,8 @@ void RM_OnModuleStart()
     RM_hAutoLoad           = CreateConVarEx("match_autoload", "0", "Has match mode start up automatically when a player connects and the server is not in match mode", _, true, 0.0, true, 1.0);
     RM_hAutoCfg            = CreateConVarEx("match_autoconfig", "", "Specify which config to load if the autoloader is enabled");
     RM_hConfigFile_On      = CreateConVarEx("match_execcfg_on", "confogl.cfg", "Execute this config file upon match mode starts and every map after that.");
-    // RM_hConfigFile_Plugins = CreateConVarEx("match_execcfg_plugins", "confogl_plugins.cfg", "Execute this config file upon match mode starts. This will only get executed once and meant for plugins that needs to be loaded."); //original
-    RM_hConfigFile_Plugins = CreateConVarEx("match_execcfg_plugins", "generalfixes.cfg;confogl_plugins.cfg;sharedplugins.cfg", "Execute this config file upon match mode starts. This will only get executed once and meant for plugins that needs to be loaded.");    // rework
+    RM_hConfigFile_Plugins = CreateConVarEx("match_execcfg_plugins", "confogl_plugins.cfg", "Execute this config file upon match mode starts. This will only get executed once and meant for plugins that needs to be loaded."); //original
+    // RM_hConfigFile_Plugins = CreateConVarEx("match_execcfg_plugins", "generalfixes.cfg;confogl_plugins.cfg;sharedplugins.cfg", "Execute this config file upon match mode starts. This will only get executed once and meant for plugins that needs to be loaded.");    // rework
     RM_hConfigFile_Off     = CreateConVarEx("match_execcfg_off", "confogl_off.cfg", "Execute this config file upon match mode ends.");
 
     // RegConsoleCmd("sm_match", RM_Cmd_Match);
@@ -172,10 +175,7 @@ static void RM_Match_Load()
         LogMessage("[%s] Match Load", RM_MODULE_NAME);
     }
 
-    if (!RM_bIsAMatchActive)
-    {
-        RM_bIsAMatchActive = true;
-    }
+    RM_bIsAMatchActive = true;
 
     RM_hSbAllBotGame.SetInt(1);
     char sBuffer[128];
@@ -218,21 +218,9 @@ static void RM_Match_Load()
         LogMessage("[%s] Match config executed", RM_MODULE_NAME);
     }
 
-    // if (RM_bIsMatchModeLoaded)
-    // {
-        // return;
-    // }
-
     if (RM_bIsMatchModeLoaded)
     {
-        IsPluginEnabled(true, false);
-        RM_bIsMatchModeLoaded = false;
-        RM_bIsMapRestarted    = false;
-        RM_bIsPluginsLoaded   = false;
-        ClearAllSettings();
-        ClearAllCvars();
-        Call_StartForward(RM_hFwdMatchUnload);
-        Call_Finish();
+        return;
     }
 
     if (RM_DEBUG || IsDebugEnabled())
@@ -365,6 +353,7 @@ static bool RM_UpdateCfgOn(const char[] cfgfile, bool bIsPrint = true)
     {
         // PrintToChatAll("\x01[\x05Confogl\x01] Using \"\x04%s\x01\" config.", cfgfile);
         CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} Loading '{olive}%s{default}'.", cfgfile);
+        strcopy(RM_sMatchName, sizeof(RM_sMatchName), cfgfile);
 
         if (RM_DEBUG || IsDebugEnabled())
         {
@@ -385,11 +374,6 @@ static bool RM_UpdateCfgOn(const char[] cfgfile, bool bIsPrint = true)
 
 public Action RM_Cmd_ForceMatch(int client, int args)
 {
-    if (RM_bIsMatchModeLoaded)
-    {
-        return Plugin_Handled;
-    }
-
     if (RM_DEBUG || IsDebugEnabled())
     {
         LogMessage("[%s] Match mode forced to load!", RM_MODULE_NAME);
@@ -408,6 +392,7 @@ public Action RM_Cmd_ForceMatch(int client, int args)
             // PrintToChat(client, "\x01[\x05Confogl\x01] Please specify a \x04config\x01 to load.");
             CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Please specify a {olive}config{default} to load.");
         }
+
         return Plugin_Handled;
     }
 
@@ -442,14 +427,33 @@ public Action RM_Cmd_ForceMatch(int client, int args)
             {
                 PrintToServer("[Confogl] Map %s not found!", sMap);
             }
-            else {
+            else
+            {
                 CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Map '{olive}%s{default}' not found!", sMap);
             }
+
             return Plugin_Handled;
         }
 
         GetMapDisplayName(sDisplayName, sDisplayName, sizeof(sDisplayName));
         RM_hChangeMap.SetString(sDisplayName);
+    }
+
+    if (RM_bIsMatchModeLoaded)
+    {
+        if (RM_DEBUG || IsDebugEnabled())
+        {
+            LogMessage("[%s] Match already loaded, resetting...", RM_MODULE_NAME);
+        }
+
+        IsPluginEnabled(true, false);
+        RM_bIsMatchModeLoaded = false;
+        RM_bIsMapRestarted    = false;
+        RM_bIsPluginsLoaded   = false;
+        ClearAllSettings();
+        ClearAllCvars();
+        Call_StartForward(RM_hFwdMatchUnload);
+        Call_Finish();
     }
 
     RM_Match_Load();
@@ -640,6 +644,11 @@ public Action RM_MatchResetTimer(Handle hTimer)
 stock bool IsAMatchActive()
 {
     return RM_bIsAMatchActive;
+}
+
+stock void GetMatchName(char[] sBuffer, int iLen)
+{
+    strcopy(sBuffer, iLen, RM_sMatchName);
 }
 
 public int native_IsMatchModeLoaded(Handle plugin, int numParams)

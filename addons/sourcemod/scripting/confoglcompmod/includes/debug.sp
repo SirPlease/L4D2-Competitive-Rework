@@ -63,7 +63,10 @@ stock void Debug_LogError(const char[] sModuleName, const char[] sMessage, any .
     static char sMap[64];
     GetCurrentMap(sMap, sizeof(sMap));
 
-    Format(sFormat, sizeof(sFormat), "[%s] [%s] %s", sModuleName, sMap, sFormat);
+    static char sMatchName[32];
+    GetMatchName(sMatchName, sizeof(sMatchName));
+
+    Format(sFormat, sizeof(sFormat), "[%s] [%s] [%s] %s", sModuleName, sMatchName, sMap, sFormat);
 
     if (!g_hCvarCustomErrorLog.BoolValue) {
         // L 12/16/2021 - 12:10:15: [confoglcompmod.smx] [CvarSettings] [c4m1_milltown_a] Could not find CVar specified (l4d2_meleecontrol_enable)
