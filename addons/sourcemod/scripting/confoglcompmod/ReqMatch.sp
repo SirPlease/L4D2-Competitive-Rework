@@ -15,8 +15,8 @@ static bool
 	RM_bIsMatchModeLoaded = false,
 	RM_bIsAMatchActive	  = false,
 	RM_bIsPluginsLoaded	  = false,
-	RM_bIsMapRestarted	  = false;
-	RM_bIsChangeLevelAvailable = false;
+	RM_bIsMapRestarted	  = false,
+	RM_bIsChangeLevelAvailable = false,
 	RM_bIsChmatchRequest = false;
 
 static Handle
@@ -104,10 +104,7 @@ void RM_OnModuleStart()
 	}
 
 	// ChangeLevel
-	if (LibraryExists("l4d2_changelevel"))
-	{
-		RM_bIsChangeLevelAvailable = true;
-	}
+	RM_bIsChangeLevelAvailable = LibraryExists("l4d2_changelevel");
 }
 
 void RM_OnMapStart()
@@ -297,7 +294,7 @@ static void RM_Match_Unload(bool bForced = false)
 	}
 }
 
-public Action RM_Match_MapRestart_Timer(Handle hTimer, DataPack hDp)
+static Action RM_Match_MapRestart_Timer(Handle hTimer, DataPack hDp)
 {
 	ServerCommand("sm plugins load_lock");	  // rework
 
@@ -342,7 +339,7 @@ static bool RM_UpdateCfgOn(const char[] cfgfile, bool bIsPrint = true)
 	return false;
 }
 
-public Action RM_Cmd_ForceMatch(int client, int args)
+static Action RM_Cmd_ForceMatch(int client, int args)
 {
 	if (RM_bIsMatchModeLoaded)
 	{
@@ -416,7 +413,7 @@ public Action RM_Cmd_ForceMatch(int client, int args)
 	return Plugin_Handled;
 }
 
-public Action RM_Cmd_ResetMatch(int client, int args)
+static Action RM_Cmd_ResetMatch(int client, int args)
 {
 	if (!RM_bIsMatchModeLoaded)
 	{
@@ -433,7 +430,7 @@ public Action RM_Cmd_ResetMatch(int client, int args)
 	return Plugin_Handled;
 }
 
-public Action RM_CMD_ChangeMatch(int client, int args)
+static Action RM_CMD_ChangeMatch(int client, int args)
 {
 	if (args < 1)
 	{
@@ -506,7 +503,7 @@ public Action RM_CMD_ChangeMatch(int client, int args)
 	return Plugin_Handled;
 }
 
-public Action Timer_DelayToLoadMatchMode(Handle timer)
+static Action Timer_DelayToLoadMatchMode(Handle timer)
 {
 	// Load
 	if (RM_bIsMatchModeLoaded)
@@ -524,7 +521,7 @@ public Action Timer_DelayToLoadMatchMode(Handle timer)
 	return Plugin_Handled;
 }
 
-/*public Action RM_Cmd_Match(int client, int args)
+/*static Action RM_Cmd_Match(int client, int args)
 {
 	if (RM_bIsMatchModeLoaded || (!IsVersus() && !IsScavenge()) || !RM_hAllowVoting.BoolValue) {
 		return Plugin_Handled;
@@ -562,7 +559,7 @@ public Action Timer_DelayToLoadMatchMode(Handle timer)
 	return Plugin_Handled;
 }
 
-public Action RM_MatchRequestTimeout(Handle hTimer)
+static Action RM_MatchRequestTimeout(Handle hTimer)
 {
 	RM_ResetMatchRequest();
 
@@ -579,7 +576,7 @@ void RM_OnClientDisconnect(int client)
 	CreateTimer(RESETMINTIME, RM_MatchResetTimer);
 }
 
-public Action RM_MatchResetTimer(Handle hTimer)
+static Action RM_MatchResetTimer(Handle hTimer)
 {
 	RM_Match_Unload();
 
@@ -599,7 +596,7 @@ stock bool IsAMatchActive()
 	return RM_bIsAMatchActive;
 }
 
-public int native_IsMatchModeLoaded(Handle plugin, int numParams)
+static int native_IsMatchModeLoaded(Handle plugin, int numParams)
 {
 	return RM_bIsMatchModeLoaded;
 }

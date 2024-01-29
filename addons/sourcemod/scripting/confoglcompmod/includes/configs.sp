@@ -146,7 +146,7 @@ void ExecuteCfg(const char[] sFileName)
 	}
 }
 
-public int _native_BuildConfigPath(Handle plugin, int numParams)
+static int _native_BuildConfigPath(Handle plugin, int numParams)
 {
 	int iLen = 0;
 	GetNativeStringLength(3, iLen);
@@ -164,7 +164,7 @@ public int _native_BuildConfigPath(Handle plugin, int numParams)
 	return 1;
 }
 
-public int _native_ExecConfigCfg(Handle plugin, int numParams)
+static int _native_ExecConfigCfg(Handle plugin, int numParams)
 {
 	int iLen = 0;
 	GetNativeStringLength(1, iLen);
@@ -178,7 +178,7 @@ public int _native_ExecConfigCfg(Handle plugin, int numParams)
 	return 1;
 }
 
-public int _native_GetConfigName(Handle plugin, int numParams)
+static int _native_GetConfigName(Handle plugin, int numParams)
 {
 	SetNativeString(1, customCfgName, GetNativeCell(2), true);
 	return 1;

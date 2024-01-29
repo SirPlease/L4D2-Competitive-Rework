@@ -19,7 +19,7 @@ void UB_OnModuleStart()
 	UB_hEnable.AddChangeHook(UB_ConVarChange);
 }
 
-public void UB_ConVarChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+static void UB_ConVarChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	UB_bEnabled = UB_hEnable.BoolValue;
 }

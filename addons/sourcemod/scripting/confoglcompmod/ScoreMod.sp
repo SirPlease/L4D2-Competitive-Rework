@@ -137,7 +137,7 @@ void SM_OnMapStart()
 	SM_fTempMulti[2] = SM_hTempMulti2.FloatValue;
 }
 
-public void SM_ConVarChanged_Enable(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+static void SM_ConVarChanged_Enable(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	if (StringToInt(sNewValue) == 0) {
 		PluginDisable();
@@ -148,32 +148,32 @@ public void SM_ConVarChanged_Enable(ConVar hConVar, const char[] sOldValue, cons
 	}
 }
 
-public void SM_ConVarChanged_TempMulti0(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+static void SM_ConVarChanged_TempMulti0(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	SM_fTempMulti[0] = StringToFloat(sNewValue);
 }
 
-public void SM_ConVarChanged_TempMulti1(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+static void SM_ConVarChanged_TempMulti1(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	SM_fTempMulti[1] = StringToFloat(sNewValue);
 }
 
-public void SM_ConVarChanged_TempMulti2(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+static void SM_ConVarChanged_TempMulti2(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	SM_fTempMulti[2] = StringToFloat(sNewValue);
 }
 
-public void SM_CVChanged_HealthBonusRatio(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+static void SM_CVChanged_HealthBonusRatio(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	SM_fHBRatio = StringToFloat(sNewValue);
 }
 
-public void SM_CVChanged_SurvivalBonusRatio(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+static void SM_CVChanged_SurvivalBonusRatio(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	SM_fSurvivalBonusRatio = StringToFloat(sNewValue);
 }
 
-public void SM_ConVarChanged_Health(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+static void SM_ConVarChanged_Health(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	SM_fHealPercent = SM_hHealPercent.FloatValue;
 	SM_iPillPercent = SM_hPillPercent.IntValue;
@@ -241,7 +241,7 @@ static void PluginDisable(bool unhook = true)
 	SM_bHooked = false;
 }
 
-public void SM_DoorClose_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void SM_DoorClose_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!SM_bModuleIsEnabled || !IsPluginEnabled() || !hEvent.GetBool("checkpoint")) {
 		return;
@@ -250,7 +250,7 @@ public void SM_DoorClose_Event(Event hEvent, const char[] sEventName, bool bDont
 	SM_hSurvivalBonus.SetInt(SM_CalculateSurvivalBonus());
 }
 
-public void SM_PlayerDeath_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void SM_PlayerDeath_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!SM_bModuleIsEnabled || !IsPluginEnabled()) {
 		return;
@@ -264,7 +264,7 @@ public void SM_PlayerDeath_Event(Event hEvent, const char[] sEventName, bool bDo
 	}
 }
 
-public void SM_RoundEnd_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void SM_RoundEnd_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!SM_bModuleIsEnabled || !IsPluginEnabled()) {
 		return;
@@ -307,7 +307,7 @@ public void SM_RoundEnd_Event(Event hEvent, const char[] sEventName, bool bDontB
 	}
 }
 
-public void SM_RoundStart_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void SM_RoundStart_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!SM_bModuleIsEnabled || !IsPluginEnabled() || !SM_bIsFirstRoundOver) {
 		return;
@@ -317,7 +317,7 @@ public void SM_RoundStart_Event(Event hEvent, const char[] sEventName, bool bDon
 	SM_bIsSecondRoundStarted = true;
 }
 
-public void SM_FinaleVehicleLeaving_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void SM_FinaleVehicleLeaving_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!SM_bModuleIsEnabled || !IsPluginEnabled()) {
 		return;
@@ -326,7 +326,7 @@ public void SM_FinaleVehicleLeaving_Event(Event hEvent, const char[] sEventName,
 	SM_hSurvivalBonus.SetInt(SM_CalculateSurvivalBonus());
 }
 
-public Action SM_Cmd_Health(int client, int args)
+static Action SM_Cmd_Health(int client, int args)
 {
 	if (!SM_bModuleIsEnabled || !IsPluginEnabled()) {
 		return Plugin_Handled;
@@ -472,7 +472,7 @@ static float SM_CalculateAvgHealth(int &iAliveCount = 0)
 	return fAvgHealth;
 }
 
-/*public Action SM_Command_Say(int iClient, const char[] sCommand, int iArgc)
+/*static Action SM_Command_Say(int iClient, const char[] sCommand, int iArgc)
 {
 	if (iClient == 0 || !SM_bModuleIsEnabled || !IsPluginEnabled()) {
 		return Plugin_Continue;
@@ -501,12 +501,12 @@ static int SM_CalculateScore()
 	return RoundToFloor(fScore * SM_fMapMulti * SM_fHBRatio + 400 * SM_fMapMulti * SM_fSurvivalBonusRatio) * iAliveCount;
 }
 
-public int Native_IsScoremodEnabled(Handle plugin, int numParams)
+static int Native_IsScoremodEnabled(Handle plugin, int numParams)
 {
 	return (SM_bModuleIsEnabled && IsPluginEnabled());
 }
 
-public int Native_GetScoremodBonus(Handle plugin, int numParams)
+static int Native_GetScoremodBonus(Handle plugin, int numParams)
 {
 	if (!SM_bModuleIsEnabled || !IsPluginEnabled()) {
 		return -1;

@@ -58,12 +58,12 @@ void BS_OnMapStart()
 	GetCurrentMap(BS_sMap, sizeof(BS_sMap));
 }
 
-public void BS_ConVarChange(ConVar convar, const char[] oldValue, const char[] newValue)
+static void BS_ConVarChange(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	BS_bEnabled = BS_hEnabled.BoolValue;
 }
 
-public void BS_WitchSpawn(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void BS_WitchSpawn(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!BS_bEnabled || !IsPluginEnabled()) {
 		return;
@@ -151,7 +151,7 @@ void BS_OnTankSpawnPost_Forward(int iTankClient)
 	}
 }
 
-public void BS_RoundEnd(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void BS_RoundEnd(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	BS_bIsFirstRound = false;
 	BS_bFinaleStarted = false;
@@ -165,12 +165,12 @@ public void BS_RoundEnd(Event hEvent, const char[] sEventName, bool bDontBroadca
 	}
 }
 
-public void BS_FinaleStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void BS_FinaleStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	BS_bFinaleStarted = true;
 }
 
-public Action BS_WitchTimerReset(Handle hTimer)
+static Action BS_WitchTimerReset(Handle hTimer)
 {
 	BS_bDeleteWitches = false;
 

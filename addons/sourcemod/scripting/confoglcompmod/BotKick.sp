@@ -40,7 +40,7 @@ void BK_OnModuleStart()
 	HookEvent("player_bot_replace", BK_PlayerBotReplace);
 }
 
-public void BK_ConVarChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+static void BK_ConVarChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	BK_iEnable = BK_hEnable.IntValue;
 }
@@ -68,7 +68,7 @@ bool BK_OnClientConnect(int iClient)
 	return false;
 }
 
-public Action BK_CheckInfBotReplace_Timer(Handle hTimer, any iClient)
+static Action BK_CheckInfBotReplace_Timer(Handle hTimer, any iClient)
 {
 	if (iClient != BK_lastvalidbot && IsClientInGame(iClient) && IsFakeClient(iClient)) {
 		KickClient(iClient, "[Confogl] Kicking late infected bot...");
@@ -79,7 +79,7 @@ public Action BK_CheckInfBotReplace_Timer(Handle hTimer, any iClient)
 	return Plugin_Stop;
 }
 
-public void BK_PlayerBotReplace(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void BK_PlayerBotReplace(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!GT_IsTankInPlay()) {
 		return;
@@ -93,7 +93,7 @@ public void BK_PlayerBotReplace(Event hEvent, const char[] sEventName, bool bDon
 	}
 }
 
-public Action BK_CancelValidBot_Timer(Handle hTimer)
+static Action BK_CancelValidBot_Timer(Handle hTimer)
 {
 	BK_lastvalidbot = -1;
 

@@ -60,19 +60,19 @@ static void SI_BuildIndex()
 	}
 }
 
-public void SI_BuildIndexDelay_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void SI_BuildIndexDelay_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	CreateTimer(0.3, SI_BuildIndex_Timer, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action SI_BuildIndex_Timer(Handle hTimer)
+static Action SI_BuildIndex_Timer(Handle hTimer)
 {
 	SI_BuildIndex();
 
 	return Plugin_Stop;
 }
 
-public void SI_BuildIndex_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void SI_BuildIndex_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	SI_BuildIndex();
 }

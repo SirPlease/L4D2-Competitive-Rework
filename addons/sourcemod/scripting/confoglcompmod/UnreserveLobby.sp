@@ -27,7 +27,7 @@ void UL_OnClientPutInServer()
 	L4D_LobbyUnreserve();
 }
 
-public Action UL_KillLobbyRes(int client, int args)
+static Action UL_KillLobbyRes(int client, int args)
 {
 	L4D_LobbyUnreserve();
 	ReplyToCommand(client, "[Confogl] Removed lobby reservation.");

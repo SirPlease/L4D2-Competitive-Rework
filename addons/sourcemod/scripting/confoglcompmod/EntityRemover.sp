@@ -5,7 +5,7 @@
 
 #define ER_MODULE_NAME				"EntityRemover"
 
-#define DEBUG_ER					0
+#define DEBUG_ER					false
 
 #define ER_KV_ACTION_KILL			1
 
@@ -55,7 +55,7 @@ void ER_OnModuleStart()
 	HookEvent("round_start", ER_RoundStart_Event, EventHookMode_PostNoCopy);
 }
 
-public void ER_ConVarChange(ConVar hConvar, const char[] sOldValue, const char[] sNewValue)
+static void ER_ConVarChange(ConVar hConvar, const char[] sOldValue, const char[] sNewValue)
 {
 	ER_bKillParachutist = ER_hKillParachutist.BoolValue;
 	ER_bReplaceGhostHurt = ER_hReplaceGhostHurt.BoolValue;
@@ -121,7 +121,7 @@ static void ER_KV_Load()
 	kERData.Rewind();
 }
 
-public Action ER_KV_CmdReload(int client, int args)
+static Action ER_KV_CmdReload(int client, int args)
 {
 	if (!IsPluginEnabled()) {
 		return Plugin_Continue;
@@ -348,7 +348,7 @@ static bool ER_ReplaceTriggerHurtGhost(int ent)
 	return false;
 }
 
-public void ER_RoundStart_Event(Event hEvent, const char[] sEventName, bool bdontBroadcast)
+static void ER_RoundStart_Event(Event hEvent, const char[] sEventName, bool bdontBroadcast)
 {
 	if (!IsPluginEnabled()) {
 		return;
@@ -357,7 +357,7 @@ public void ER_RoundStart_Event(Event hEvent, const char[] sEventName, bool bdon
 	CreateTimer(0.3, ER_RoundStart_Timer, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action ER_RoundStart_Timer(Handle hTimer)
+static Action ER_RoundStart_Timer(Handle hTimer)
 {
 	char sBuffer[MAX_ENTITY_NAME_LENGTH];
 	if (ER_bDebugEnabled || IsDebugEnabled()) {

@@ -36,12 +36,12 @@ void WC_OnModuleStart()
 	HookEvent("weapon_drop", WC_WeaponDrop_Event);
 }
 
-public void WC_ConVarChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+static void WC_ConVarChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	WC_iLimitCount = WC_hLimitCount.IntValue;
 }
 
-public void WC_WeaponDrop_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void WC_WeaponDrop_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!IsPluginEnabled()) {
 		return;
@@ -52,7 +52,7 @@ public void WC_WeaponDrop_Event(Event hEvent, const char[] sEventName, bool bDon
 	hEvent.GetString("item", WC_sLastWeapon, sizeof(WC_sLastWeapon));
 }
 
-public void WC_PlayerUse_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void WC_PlayerUse_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!IsPluginEnabled()) {
 		return;

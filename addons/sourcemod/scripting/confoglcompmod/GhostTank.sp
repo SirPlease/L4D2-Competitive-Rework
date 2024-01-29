@@ -140,7 +140,7 @@ Action GT_OnTryOfferingTankBot(bool &enterStasis)
 	return Plugin_Continue;
 }
 
-public void GT_FinaleVehicleIncoming(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void GT_FinaleVehicleIncoming(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	g_bGT_FinaleVehicleIncoming = true;
 
@@ -150,7 +150,7 @@ public void GT_FinaleVehicleIncoming(Event hEvent, const char[] sEventName, bool
 	}
 }
 
-public void GT_ItemPickup(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void GT_ItemPickup(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!g_bGT_TankIsInPlay) {
 		return;
@@ -171,13 +171,13 @@ public void GT_ItemPickup(Event hEvent, const char[] sEventName, bool bDontBroad
 	}
 }
 
-public void GT_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void GT_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	g_bGT_FinaleVehicleIncoming = false;
 	GT_Reset();
 }
 
-public void GT_TankKilled(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void GT_TankKilled(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!g_bGT_TankIsInPlay) {
 		return;
@@ -191,7 +191,7 @@ public void GT_TankKilled(Event hEvent, const char[] sEventName, bool bDontBroad
 	g_hGT_TankDeathTimer = CreateTimer(1.0, GT_TankKilled_Timer);
 }
 
-public void GT_TankSpawn(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void GT_TankSpawn(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("userid"));
 	g_iGT_TankClient = client;
@@ -222,7 +222,7 @@ public void GT_TankSpawn(Event hEvent, const char[] sEventName, bool bDontBroadc
 	CreateTimer(fFireImmunityTime, GT_FireImmunityTimer);
 }
 
-public void GT_TankOnFire(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void GT_TankOnFire(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int dmgtype = hEvent.GetInt("type");
 
@@ -245,7 +245,7 @@ public void GT_TankOnFire(Event hEvent, const char[] sEventName, bool bDontBroad
 	SetEntityHealth(client, iSetHealth);
 }
 
-public void GT_PlayerIncap(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void GT_PlayerIncap(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!g_bGT_TankIsInPlay || !IsPluginEnabled() || !g_hGT_Enabled.BoolValue) {
 		return;
@@ -270,7 +270,7 @@ public void GT_PlayerIncap(Event hEvent, const char[] sEventName, bool bDontBroa
 	CreateTimer(0.4, GT_IncapTimer, userid, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action GT_IncapTimer(Handle hTimer, int userid)
+static Action GT_IncapTimer(Handle hTimer, int userid)
 {
 	int client = GetClientOfUserId(userid);
 	if (client > 0) {
@@ -281,14 +281,14 @@ public Action GT_IncapTimer(Handle hTimer, int userid)
 	return Plugin_Stop;
 }
 
-public Action GT_ResumeTankTimer(Handle hTimer)
+static Action GT_ResumeTankTimer(Handle hTimer)
 {
 	GT_ResumeTank();
 
 	return Plugin_Stop;
 }
 
-public Action GT_FireImmunityTimer(Handle hTimer)
+static Action GT_FireImmunityTimer(Handle hTimer)
 {
 	g_bGT_TankHasFireImmunity = false;
 
@@ -332,7 +332,7 @@ static void GT_Reset()
 	g_bGT_TankHasFireImmunity = true;
 }
 
-public Action GT_TankKilled_Timer(Handle hTimer)
+static Action GT_TankKilled_Timer(Handle hTimer)
 {
 	GT_Reset();
 

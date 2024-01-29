@@ -87,7 +87,7 @@ stock void RemoveCustomServerTag(const char[] tag)
 	sv_tags.Flags = flags;
 }
 
-public void OnTagsChanged(ConVar hConvar, const char[] sOldValue, const char[] sNewValue)
+static void OnTagsChanged(ConVar hConvar, const char[] sOldValue, const char[] sNewValue)
 {
 	if (ignore_next_change) {
 		// we fired this callback, no need to reapply tags
