@@ -3,7 +3,7 @@
 #endif
 #define __map_info_included
 
-#define DEBUG_MI				0
+#define DEBUG_MI				false
 #define MI_MODULE_NAME			"MapInfo"
 
 static int
@@ -11,6 +11,7 @@ static int
 	iIsInEditMode[MAXPLAYERS + 1] = {0, ...};
 
 static bool
+	MI_bDebugEnabled = DEBUG_MI,
 	MapDataAvailable = false;
 
 static float
@@ -194,7 +195,7 @@ static void MI_KV_Load()
 {
 	char sNameBuff[PLATFORM_MAX_PATH];
 
-	if (DEBUG_MI || IsDebugEnabled()) {
+	if (MI_bDebugEnabled || IsDebugEnabled()) {
 		LogMessage("[%s] Loading MapInfo KeyValues", MI_MODULE_NAME);
 	}
 

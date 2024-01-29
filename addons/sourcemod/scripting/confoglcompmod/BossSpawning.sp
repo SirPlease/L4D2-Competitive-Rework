@@ -3,7 +3,7 @@
 #endif
 #define __boss_spawning_included
 
-#define DEBUG_BS			0
+#define DEBUG_BS			false
 #define BS_MODULE_NAME		"BossSpawning"
 
 #define MAX_TANKS			5
@@ -14,6 +14,7 @@ static char
 	BS_sMap[64] = "\0";
 
 static bool
+	BS_bDebugEnabled = DEBUG_BS,
 	BS_bEnabled = true,
 	BS_bIsFirstRound = true,
 	BS_bDeleteWitches = false,
@@ -123,13 +124,13 @@ void BS_OnTankSpawnPost_Forward(int iTankClient)
 		return;
 	}
 
-	if (DEBUG_BS || IsDebugEnabled()) {
+	if (BS_bDebugEnabled || IsDebugEnabled()) {
 		LogMessage("[%s] Tracking this tank spawn. Currently, %d tanks", BS_MODULE_NAME, BS_iTankCount[view_as<int>(!BS_bIsFirstRound)]);
 	}
 
 	if (BS_bIsFirstRound) {
 		GetClientAbsOrigin(iTankClient, BS_fTankSpawn[BS_iTankCount[0]]);
-		if (DEBUG_BS || IsDebugEnabled()) {
+		if (BS_bDebugEnabled || IsDebugEnabled()) {
 			LogMessage("[%s] Saving tank at %f %f %f", \
 							BS_MODULE_NAME, BS_fTankSpawn[BS_iTankCount[0]][0], BS_fTankSpawn[BS_iTankCount[0]][1], BS_fTankSpawn[BS_iTankCount[0]][2]);
 		}
@@ -138,13 +139,13 @@ void BS_OnTankSpawnPost_Forward(int iTankClient)
 	} else if (BS_iTankCount[0] > BS_iTankCount[1]) {
 		TeleportEntity(iTankClient, BS_fTankSpawn[BS_iTankCount[1]], NULL_VECTOR, NULL_VECTOR);
 
-		if (DEBUG_BS || IsDebugEnabled()) {
+		if (BS_bDebugEnabled || IsDebugEnabled()) {
 			LogMessage("[%s] Teleporting tank to tank at %f %f %f", \
 							BS_MODULE_NAME, BS_fTankSpawn[BS_iTankCount[1]][0], BS_fTankSpawn[BS_iTankCount[1]][1], BS_fTankSpawn[BS_iTankCount[1]][2]);
 		}
 
 		BS_iTankCount[1]++;
-	} else if (DEBUG_BS || IsDebugEnabled()) {
+	} else if (BS_bDebugEnabled || IsDebugEnabled()) {
 		LogMessage("[%s] Not first round and not acceptable tank", BS_MODULE_NAME);
 		LogMessage("[%s] IsFirstRound: %d  R1Count: %d R2Count: %d", BS_MODULE_NAME, BS_bIsFirstRound, BS_iTankCount[0], BS_iTankCount[1]);
 	}
@@ -183,7 +184,7 @@ static void FixZDistance(int iTankClient)
 	float WarpToLocation[3], TankLocation[3], TempSurvivorLocation[3];
 	GetClientAbsOrigin(iTankClient, TankLocation);
 
-	if (DEBUG_BS || IsDebugEnabled()) {
+	if (BS_bDebugEnabled || IsDebugEnabled()) {
 		LogMessage("[%s] tank z spawn check... Map: %s, Tank Location: %f, %f, %f", BS_MODULE_NAME, BS_sMap, TankLocation[0], TankLocation[1], TankLocation[2]);
 	}
 
@@ -194,7 +195,7 @@ static void FixZDistance(int iTankClient)
 		if (index != 0 && IsValidEntity(index)) {
 			GetClientAbsOrigin(index, TempSurvivorLocation);
 
-			if (DEBUG_BS || IsDebugEnabled()) {
+			if (BS_bDebugEnabled || IsDebugEnabled()) {
 				LogMessage("[%s] Survivor %d Location: %f, %f, %f", BS_MODULE_NAME, i, TempSurvivorLocation[0], TempSurvivorLocation[1], TempSurvivorLocation[2]);
 			}
 

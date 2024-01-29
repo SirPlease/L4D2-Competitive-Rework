@@ -3,7 +3,7 @@
 #endif
 #define __scoremod_included
 
-#define DEBUG_SM			0
+#define DEBUG_SM			false
 #define SM_MODULE_NAME		"ScoreMod"
 
 static int
@@ -21,6 +21,7 @@ static float
 	SM_fTempMulti[3] = {0.0, ...};
 
 static bool
+	SM_bDebugEnabled = DEBUG_SM,
 	SM_bEventsHooked = false,
 	SM_bModuleIsEnabled = false,
 	SM_bHooked = false,
@@ -348,7 +349,7 @@ public Action SM_Cmd_Health(int client, int args)
 
 	int iScore = RoundToFloor(fAvgHealth * SM_fMapMulti * SM_fHBRatio) * iAliveCount;
 
-	if (DEBUG_SM || IsDebugEnabled()) {
+	if (SM_bDebugEnabled || IsDebugEnabled()) {
 		LogMessage("[%s] CalcScore: %d MapMulti: %.02f Multiplier %.02f", SM_MODULE_NAME, iScore, SM_fMapMulti, SM_fHBRatio);
 	}
 
@@ -462,11 +463,11 @@ static float SM_CalculateAvgHealth(int &iAliveCount = 0)
 
 	// return Average Health Points
 	float fAvgHealth = (iTotalHealth + fTotalAdjustedTempHealth) / iSurvCount;
-
-#if DEBUG_SM
-	LogMessage("[%s] TotalPerm: %d TotalAdjustedTemp: %.02f SurvCount: %d AliveCount: %d AvgHealth: %.02f", \
-					SM_MODULE_NAME, iTotalHealth, fTotalAdjustedTempHealth, iSurvCount, iAliveCount, fAvgHealth);
-#endif
+	
+	if (SM_bDebugEnabled || IsDebugEnabled()) {
+		LogMessage("[%s] TotalPerm: %d TotalAdjustedTemp: %.02f SurvCount: %d AliveCount: %d AvgHealth: %.02f", \
+						SM_MODULE_NAME, iTotalHealth, fTotalAdjustedTempHealth, iSurvCount, iAliveCount, fAvgHealth);
+	}
 
 	return fAvgHealth;
 }
