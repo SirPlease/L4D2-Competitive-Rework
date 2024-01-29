@@ -4,10 +4,10 @@
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
-#include <left4dhooks_anim>
+#include <left4dhooks>
 #include <actions>
 
-#define PLUGIN_VERSION "1.3"
+#define PLUGIN_VERSION "1.3.1"
 
 public Plugin myinfo = 
 {

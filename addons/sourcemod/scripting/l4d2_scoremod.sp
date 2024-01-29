@@ -5,8 +5,8 @@
 #include <left4dhooks>
 #undef REQUIRE_PLUGIN
 #include <l4d2lib>
-#include <colors>
 #define REQUIRE_PLUGIN
+#include <colors>
 
 #define DEBUG_SM	0
 
@@ -15,7 +15,7 @@ public Plugin myinfo =
 	name = "L4D2 Scoremod",
 	author = "CanadaRox, ProdigySim",
 	description = "L4D2 Custom Scoring System (Health Bonus)",
-	version = "1.1.1",
+	version = "1.1.2",
 	url = "https://bitbucket.org/CanadaRox/random-sourcemod-stuff"
 };
 
@@ -124,16 +124,14 @@ public OnPluginStart()
 	SM_iAdrenPercent = GetConVarInt(SM_hAdrenPercent);
 	
 	RegConsoleCmd("sm_health", SM_Cmd_Health);
-}
-
-public OnAllPluginsLoaded()
-{
+	
 	l4d2lib_available = LibraryExists("l4d2lib");
+	
 }
  
 public OnLibraryRemoved(const String:name[])
 {
-	if (StrEqual(name, "l4d2lib"))
+	if (strcmp(name, "l4d2lib") == 0)
 	{
 		l4d2lib_available = false;
 	}
@@ -141,7 +139,7 @@ public OnLibraryRemoved(const String:name[])
  
 public OnLibraryAdded(const String:name[])
 {
-	if (StrEqual(name, "l4d2lib"))
+	if (strcmp(name, "l4d2lib") == 0)
 	{
 		l4d2lib_available = true;
 	}
@@ -184,20 +182,37 @@ public SM_ConVarChanged_Enable(Handle:convar, const String:oldValue[], const Str
 	{
 		PluginDisable();
 		SM_bModuleIsEnabled = false;
+		return;
 	}
-	else
-	{
-		PluginEnable();
-		SM_bModuleIsEnabled = true;
-	}
+
+	PluginEnable();
+	SM_bModuleIsEnabled = true;
 }
 
-public SM_ConVarChanged_TempMulti0(Handle:convar, const String:oldValue[], const String:newValue[]) SM_fTempMulti[0] = StringToFloat(newValue);
-public SM_ConVarChanged_TempMulti1(Handle:convar, const String:oldValue[], const String:newValue[]) SM_fTempMulti[1] = StringToFloat(newValue);
-public SM_ConVarChanged_TempMulti2(Handle:convar, const String:oldValue[], const String:newValue[]) SM_fTempMulti[2] = StringToFloat(newValue);
+public SM_ConVarChanged_TempMulti0(Handle:convar, const String:oldValue[], const String:newValue[])
+{
+	SM_fTempMulti[0] = StringToFloat(newValue);
+}
 
-public SM_CVChanged_HealthBonusRatio(Handle:convar, const String:oldValue[], const String:newValue[]) SM_fHBRatio = StringToFloat(newValue);
-public SM_CVChanged_SurvivalBonusRatio(Handle:convar, const String:oldValue[], const String:newValue[]) SM_fSurvivalBonusRatio = StringToFloat(newValue);
+public SM_ConVarChanged_TempMulti1(Handle:convar, const String:oldValue[], const String:newValue[])
+{
+	SM_fTempMulti[1] = StringToFloat(newValue);
+}
+
+public SM_ConVarChanged_TempMulti2(Handle:convar, const String:oldValue[], const String:newValue[])
+{
+	SM_fTempMulti[2] = StringToFloat(newValue);
+}
+
+public SM_CVChanged_HealthBonusRatio(Handle:convar, const String:oldValue[], const String:newValue[])
+{
+	SM_fHBRatio = StringToFloat(newValue);
+}
+
+public SM_CVChanged_SurvivalBonusRatio(Handle:convar, const String:oldValue[], const String:newValue[])
+{
+	SM_fSurvivalBonusRatio = StringToFloat(newValue);
+}
 
 public SM_ConVarChanged_Health(Handle:convar, const String:oldValue[], const String:newValue[])
 {
@@ -303,7 +318,10 @@ public Action:SM_FinaleVehicleLeaving_Event(Handle:event, const String:name[], b
 	SetConVarInt(SM_hSurvivalBonus, SM_CalculateSurvivalBonus());
 }
 
-SM_IsPlayerIncap(client) return GetEntProp(client, Prop_Send, "m_isIncapacitated");
+bool:SM_IsPlayerIncap(client) 
+{
+	return (GetEntProp(client, Prop_Send, "m_isIncapacitated", 1) > 0);
+}
 
 public Action:SM_Cmd_Health(client, args)
 {

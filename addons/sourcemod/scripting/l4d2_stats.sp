@@ -3,12 +3,8 @@
 
 #include <sourcemod>
 #define L4D2UTIL_STOCKS_ONLY 1
-#include <colors>
 #include <l4d2util>
-
-#define TEAM_SPECTATOR 1
-#define TEAM_SURVIVOR  2
-#define TEAM_INFECTED  3
+#include <colors>
 
 #define BOOMER_STAGGER_TIME 4.0    // Amount of time after a boomer has been meleed that we consider the meleer the person who
 // shut down the boomer, this is just a guess value..
@@ -45,7 +41,7 @@ public Plugin myinfo =
 	name        = "L4D2 Realtime Stats",
 	author      = "Griffin, Philogl, Sir, A1m`",
 	description = "Display Skeets/Etc to Chat to clients",
-	version     = "1.2.2",
+	version     = "1.2.3",
 	url         = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 
 }
@@ -77,7 +73,7 @@ public void Event_PlayerSpawn(Event hEvent, const char[] sEventName, bool bDontB
 		return;
 	}
 
-	if (GetClientTeam(client) == TEAM_INFECTED)
+	if (GetClientTeam(client) == TEAM_ZOMBIE)
 	{
 		int zombieclass = GetInfectedClass(client);
 		if (zombieclass == L4D2Infected_Tank)
@@ -170,7 +166,7 @@ public void Event_AbilityUse(Event hEvent, const char[] sEventName, bool bDontBr
 	int userid = hEvent.GetInt("userid");
 	int client = GetClientOfUserId(userid);
 
-	if (!IsClientInGame(client) || GetClientTeam(client) != TEAM_INFECTED)
+	if (!IsClientInGame(client) || GetClientTeam(client) != TEAM_ZOMBIE)
 	{
 		return;
 	}
@@ -232,7 +228,7 @@ public void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBr
 		return;
 	}
 
-	if (GetClientTeam(attacker) == TEAM_SURVIVOR && GetClientTeam(victim) == TEAM_INFECTED)
+	if (GetClientTeam(attacker) == TEAM_SURVIVOR && GetClientTeam(victim) == TEAM_ZOMBIE)
 	{
 		int zombieclass = GetInfectedClass(victim);
 		if (zombieclass == L4D2Infected_Tank)
@@ -300,7 +296,7 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 
 	if (!IsClientInGame(attacker))
 	{
-		if (GetClientTeam(victim) == TEAM_INFECTED)
+		if (GetClientTeam(victim) == TEAM_ZOMBIE)
 		{
 			ClearDamage(victim);
 		}
@@ -308,7 +304,7 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 		return;
 	}
 
-	if (GetClientTeam(attacker) == TEAM_SURVIVOR && GetClientTeam(victim) == TEAM_INFECTED)
+	if (GetClientTeam(attacker) == TEAM_SURVIVOR && GetClientTeam(victim) == TEAM_ZOMBIE)
 	{
 		int zombieclass = GetInfectedClass(victim);
 		if (zombieclass == L4D2Infected_Tank)
@@ -481,7 +477,7 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 		}
 	}
 
-	if (GetClientTeam(victim) == TEAM_INFECTED)
+	if (GetClientTeam(victim) == TEAM_ZOMBIE)
 	{
 		ClearDamage(victim);
 	}
@@ -553,7 +549,7 @@ public void Event_PlayerShoved(Event hEvent, const char[] sEventName, bool bDont
 	}
 
 	int victim = GetClientOfUserId(hEvent.GetInt("userid"));
-	if (victim == 0 || !IsClientInGame(victim) || GetClientTeam(victim) != TEAM_INFECTED)
+	if (victim == 0 || !IsClientInGame(victim) || GetClientTeam(victim) != TEAM_ZOMBIE)
 	{
 		return;
 	}

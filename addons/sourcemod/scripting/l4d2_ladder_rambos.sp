@@ -1,4 +1,4 @@
-#define PLUGIN_VERSION 		"4.2"
+#define PLUGIN_VERSION 		"4.2.1"
 
 /*
 *	Ladder Rambos Dhooks
@@ -38,8 +38,6 @@
 #include <sourcemod>
 #include <sdktools>
 #include <dhooks>
-
-#define REQUIRE_EXTENSIONS
 #include <sourcescramble>
 
 #define GAMEDATA            "l4d2_ladderrambos"

@@ -27,8 +27,6 @@
 #define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 
-#define TEAM_SURVIVOR 2
-#define TEAM_INFECTED 3
 #define ARRAY_INDEX_TIMESTAMP 0 //DT_IntervalTimer
 
 ConVar
@@ -48,7 +46,7 @@ public Plugin myinfo =
 {
 	name = "L4D2 Display Infected HP",
 	author = "Visor, A1m`",
-	version = "1.5.2",
+	version = "1.5.3",
 	description = "Survivors receive damage reports after they get capped",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
@@ -85,7 +83,7 @@ public void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBr
 	int iVictim = GetClientOfUserId(hEvent.GetInt("userid"));
 	if (iVictim > 0
 		&& IsClientInGame(iVictim)
-		&& GetClientTeam(iVictim) == TEAM_INFECTED
+		&& GetClientTeam(iVictim) == TEAM_ZOMBIE
 		&& IsTargetedSi(iVictim) > 0
 	) {
 		
@@ -106,7 +104,7 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 	int iClient = GetClientOfUserId(hEvent.GetInt("userid"));
 	if (iClient == 0 
 		|| !IsClientInGame(iClient) 
-		|| GetClientTeam(iClient) != TEAM_INFECTED
+		|| GetClientTeam(iClient) != TEAM_ZOMBIE
 	) {
 		return;
 	}
@@ -130,7 +128,7 @@ public void Event_CHJ_Attack(Event hEvent, const char[] sEventName, bool bDontBr
 	int iAttacker = GetClientOfUserId(hEvent.GetInt("userid"));
 	if (iAttacker == 0 
 		|| !IsClientInGame(iAttacker) 
-		|| GetClientTeam(iAttacker) != TEAM_INFECTED 
+		|| GetClientTeam(iAttacker) != TEAM_ZOMBIE 
 		|| !IsPlayerAlive(iAttacker)
 	) {
 		return;

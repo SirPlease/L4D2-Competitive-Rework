@@ -6,7 +6,6 @@
 #define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 
-#define ENTITY_MAX_NAME_LENGTH 64
 #define DEBUG 0
 
 ConVar g_hReplaceMagnum = null;
@@ -17,7 +16,7 @@ public Plugin myinfo =
 	name = "Magnum incap remover",
 	author = "robex, Sir",
 	description = "Replace magnum with regular pistols when incapped.",
-	version = "0.4",
+	version = "0.4.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 

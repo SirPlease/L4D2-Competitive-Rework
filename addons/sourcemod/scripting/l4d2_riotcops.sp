@@ -28,7 +28,6 @@
 #include <l4d2util>
 
 #define PARISH_PREFIX "c5m"
-#define HITGROUP_HEAD 1
 
 bool
 	g_bPluginActive = false;
@@ -37,7 +36,7 @@ public Plugin myinfo =
 {
 	name		= "L4D2 Riot Cops",
 	author		= "Jahze, Visor, A1m`",
-	version		= "1.6",
+	version		= "1.6.1",
 	description	= "Allow riot cops to be killed by a headshot"
 }
 

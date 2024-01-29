@@ -9,7 +9,6 @@
 
 #define ENT_CHECK_INTERVAL 1.0
 #define TRACE_TOLERANCE 75.0
-#define ENTITY_MAX_NAME_LENGTH 64
 
 enum
 {
@@ -61,7 +60,7 @@ public Plugin myinfo =
 	name = "Blind Infected",
 	author = "CanadaRox, ProdigySim, A1m`",
 	description = "Hides specified weapons from the infected team until they are (possibly) visible to one of the survivors to prevent SI scouting the map",
-	version = "1.2.1",
+	version = "1.2.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
