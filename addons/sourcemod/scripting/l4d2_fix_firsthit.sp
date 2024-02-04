@@ -4,9 +4,10 @@
 #include <sourcemod>
 #include <sdkhooks>
 #include <sdktools_gamerules>
+#include <dhooks>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "2.4"
+#define PLUGIN_VERSION "2.5"
 
 public Plugin myinfo =
 {
@@ -21,18 +22,43 @@ ConVar g_cvAllow;
 
 public void OnPluginStart()
 {
+	GameData gd = new GameData("left4dhooks.l4d2");
+	if (!gd)
+		SetFailState("Missing gamedata \"left4dhooks.l4d2\"");
+
+	DynamicDetour hDetour = new DynamicDetour(Address_Null, CallConv_THISCALL, ReturnType_Void, ThisPointer_Ignore);
+	if (!hDetour.SetFromConf(gd, SDKConf_Signature, "CDirector::SwapTeams"))
+		SetFailState("Missing signature \"CDirector::SwapTeams\"");
+
+	if (!hDetour.Enable(Hook_Pre, DTR_SwapTeams))
+		SetFailState("Failed to detour \"CDirector::SwapTeams\"");
+
+	delete hDetour;
+	delete gd;
+
 	g_cvAllow = CreateConVar("l4d2_scvng_firsthit_shuffle",
 							"0",
 							"Shuffle first hit classes. Affects only Scavenge mode.\n"
 						...	"Value: 1 = Shuffle every round, 2 = Shuffle every match, 0 = Disable.",
 							FCVAR_NOTIFY|FCVAR_SPONLY,
 							true, 0.0, true, 2.0);
-	
+
 	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("player_team", Event_PlayerTeam);
 	HookEvent("player_transitioned", Event_PlayerTransitioned);
 	HookEvent("scavenge_round_finished", Event_ScavengeRoundFinished, EventHookMode_PostNoCopy);
 	HookEvent("scavenge_match_finished", Event_ScavengeNatchFinished, EventHookMode_PostNoCopy);
+}
+
+MRESReturn DTR_SwapTeams()
+{
+	for (int i = 1; i <= MaxClients; ++i)
+	{
+		if (IsClientInGame(i) && IsFakeClient(i) && GetClientTeam(i) == 3)
+			ChangeClientTeam(i, 0);
+	}
+
+	return MRES_Ignored;
 }
 
 void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
@@ -49,11 +75,11 @@ void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 	int team = event.GetInt("team");
 	if (team != 3 || team == event.GetInt("oldteam"))
 		return;
-	
+
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if (!client || !IsClientInGame(client))
 		return;
-	
+
 	/**
 	 * NOTE:
 	 *
@@ -98,7 +124,7 @@ void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 			return;
 		}
 	}
-	
+
 	ResetClassSpawnSystem(client);
 }
 
@@ -115,7 +141,7 @@ void Event_PlayerTransitioned(Event event, const char[] name, bool dontBroadcast
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if (!client || !IsClientInGame(client))
 		return;
-	
+
 	ResetClassSpawnSystem(client);
 }
 
@@ -149,7 +175,7 @@ void ResetClassSpawnSystem(int client)
 		s_iOffs_Count = FindSendPropInfo("CTerrorPlayer", "m_classSpawnCount");
 		s_iOffs_Time = s_iOffs_Count - 9 * 4;
 	}
-	
+
 	float fNow = GetGameTime();
 	for (int i = 0; i <= 8; ++i)
 	{
