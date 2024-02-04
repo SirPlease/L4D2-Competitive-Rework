@@ -7,7 +7,7 @@
 #include <dhooks>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "2.5"
+#define PLUGIN_VERSION "2.5.1"
 
 public Plugin myinfo =
 {
@@ -55,7 +55,7 @@ MRESReturn DTR_SwapTeams()
 	for (int i = 1; i <= MaxClients; ++i)
 	{
 		if (IsClientInGame(i) && IsFakeClient(i) && GetClientTeam(i) == 3)
-			ChangeClientTeam(i, 0);
+			ChangeClientTeam(i, 1);
 	}
 
 	return MRES_Ignored;
