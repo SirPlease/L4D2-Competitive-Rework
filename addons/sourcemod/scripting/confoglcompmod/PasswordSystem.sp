@@ -70,7 +70,7 @@ static void PS_CheckPassword(int client)
 	CreateTimer(0.1, PS_CheckPassword_Timer, GetClientUserId(client), TIMER_REPEAT);
 }
 
-public Action PS_CheckPassword_Timer(Handle hTimer, int userid)
+static Action PS_CheckPassword_Timer(Handle hTimer, int userid)
 {
 	int client = GetClientOfUserId(userid);
 
@@ -87,7 +87,7 @@ public Action PS_CheckPassword_Timer(Handle hTimer, int userid)
 	return Plugin_Stop;
 }
 
-public void PS_ConVarDone(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue, int userid)
+static void PS_ConVarDone(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue, int userid)
 {
 	if (result == ConVarQuery_Okay) {
 		char buffer[128];
@@ -105,7 +105,7 @@ public void PS_ConVarDone(QueryCookie cookie, int client, ConVarQueryResult resu
 	}
 }
 
-public void PS_ConVarChange(ConVar convar, const char[] oldValue, const char[] newValue)
+static void PS_ConVarChange(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	PS_hPassword.GetString(PS_sPassword, sizeof(PS_sPassword));
 
@@ -117,7 +117,7 @@ public void PS_ConVarChange(ConVar convar, const char[] oldValue, const char[] n
 	}
 }
 
-public Action PS_SuppressDisconnectMsg(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static Action PS_SuppressDisconnectMsg(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (bDontBroadcast || !PS_bSuppress) {
 		return Plugin_Continue;

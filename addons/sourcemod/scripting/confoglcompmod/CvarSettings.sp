@@ -60,7 +60,7 @@ void CVS_OnConfigsExecuted()
 	}
 }
 
-public Action CVS_SetCvars_Cmd(int args)
+static Action CVS_SetCvars_Cmd(int args)
 {
 	if (!IsPluginEnabled()) {
 		return Plugin_Handled;
@@ -81,7 +81,7 @@ public Action CVS_SetCvars_Cmd(int args)
 	return Plugin_Handled;
 }
 
-public Action CVS_AddCvar_Cmd(int args)
+static Action CVS_AddCvar_Cmd(int args)
 {
 	if (args != 2) {
 		PrintToServer("Usage: confogl_addcvar <cvar> <newValue>");
@@ -104,7 +104,7 @@ public Action CVS_AddCvar_Cmd(int args)
 	return Plugin_Handled;
 }
 
-public Action CVS_ResetCvars_Cmd(int args)
+static Action CVS_ResetCvars_Cmd(int args)
 {
 	if (IsPluginEnabled()) {
 		PrintToServer("Can't reset tracking in the middle of a match");
@@ -117,7 +117,7 @@ public Action CVS_ResetCvars_Cmd(int args)
 	return Plugin_Handled;
 }
 
-public Action CVS_CvarSettings_Cmd(int client, int args)
+static Action CVS_CvarSettings_Cmd(int client, int args)
 {
 	if (!IsPluginEnabled()) {
 		return Plugin_Handled;
@@ -176,7 +176,7 @@ public Action CVS_CvarSettings_Cmd(int client, int args)
 	return Plugin_Handled;
 }
 
-public Action CVS_CvarDiff_Cmd(int client, int args)
+static Action CVS_CvarDiff_Cmd(int client, int args)
 {
 	if (!IsPluginEnabled()) {
 		return Plugin_Handled;
@@ -389,7 +389,7 @@ static void AddCvar(const char[] cvar, const char[] newval)
 #endif
 }
 
-public void CVS_ConVarChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+static void CVS_ConVarChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	if (bTrackingStarted) {
 		char sName[CVS_CVAR_MAXLEN];

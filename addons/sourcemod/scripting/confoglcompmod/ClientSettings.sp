@@ -85,7 +85,7 @@ static void ClearCLSEntry(CLSEntry entry[CLSEntry])
 }
 #endif*/
 
-public Action _CheckClientSettings_Timer(Handle hTimer)
+static Action _CheckClientSettings_Timer(Handle hTimer)
 {
 	if (!IsPluginEnabled()) {
 		if (IsDebugEnabled()) {
@@ -129,7 +129,7 @@ static void EnforceCliSettings(int client)
 #endif
 }
 
-public void _EnforceCliSettings_QueryReply(QueryCookie cookie, int client, ConVarQueryResult result, \
+static void _EnforceCliSettings_QueryReply(QueryCookie cookie, int client, ConVarQueryResult result, \
 												const char[] cvarName, const char[] cvarValue, any value)
 {
 	if (!IsClientConnected(client) || !IsClientInGame(client) || IsClientInKickQueue(client)) {
@@ -225,7 +225,7 @@ public void _EnforceCliSettings_QueryReply(QueryCookie cookie, int client, ConVa
 #endif
 }
 
-public Action _ClientSettings_Cmd(int client, int args)
+static Action _ClientSettings_Cmd(int client, int args)
 {
 	int iSize = ClientSettingsArray.Length;
 	ReplyToCommand(client, "[Confogl] Tracked Client CVars (Total %d)", iSize);
@@ -290,7 +290,7 @@ public Action _ClientSettings_Cmd(int client, int args)
 	return Plugin_Handled;
 }
 
-public Action _TrackClientCvar_Cmd(int args)
+static Action _TrackClientCvar_Cmd(int args)
 {
 	if (args < 3 || args == 4) {
 		PrintToServer("Usage: confogl_trackclientcvar <cvar> <hasMin> <min> [<hasMax> <max> [<action>]]");
@@ -347,7 +347,7 @@ public Action _TrackClientCvar_Cmd(int args)
 	return Plugin_Handled;
 }
 
-public Action _ResetTracking_Cmd(int args)
+static Action _ResetTracking_Cmd(int args)
 {
 	if (ClientSettingsCheckTimer != null) {
 		PrintToServer("Can't reset tracking in the middle of a match");
@@ -360,7 +360,7 @@ public Action _ResetTracking_Cmd(int args)
 	return Plugin_Handled;
 }
 
-public Action _StartClientChecking_Cmd(int args)
+static Action _StartClientChecking_Cmd(int args)
 {
 	_StartTracking();
 

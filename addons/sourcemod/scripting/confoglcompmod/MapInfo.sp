@@ -3,7 +3,7 @@
 #endif
 #define __map_info_included
 
-#define DEBUG_MI				0
+#define DEBUG_MI				false
 #define MI_MODULE_NAME			"MapInfo"
 
 static int
@@ -11,6 +11,7 @@ static int
 	iIsInEditMode[MAXPLAYERS + 1] = {0, ...};
 
 static bool
+	MI_bDebugEnabled = DEBUG_MI,
 	MapDataAvailable = false;
 
 static float
@@ -67,7 +68,7 @@ void MI_OnModuleEnd()
 	MI_KV_Close();
 }
 
-public void PlayerDisconnect_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void PlayerDisconnect_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("userid"));
 	if (client > 0 && client <= MaxClients) {
@@ -75,7 +76,7 @@ public void PlayerDisconnect_Event(Event hEvent, const char[] sEventName, bool b
 	}
 }
 
-public Action MI_KV_CmdSave(int client, int args)
+static Action MI_KV_CmdSave(int client, int args)
 {
 	char sCurMap[128];
 	GetCurrentMap(sCurMap, sizeof(sCurMap));
@@ -97,7 +98,7 @@ public Action MI_KV_CmdSave(int client, int args)
 	return Plugin_Handled;
 }
 
-public Action MI_KV_CmdSaveLoc(int client, int args)
+static Action MI_KV_CmdSaveLoc(int client, int args)
 {
 	bool updateinfo = false;
 	char sCurMap[128];
@@ -194,7 +195,7 @@ static void MI_KV_Load()
 {
 	char sNameBuff[PLATFORM_MAX_PATH];
 
-	if (DEBUG_MI || IsDebugEnabled()) {
+	if (MI_bDebugEnabled || IsDebugEnabled()) {
 		LogMessage("[%s] Loading MapInfo KeyValues", MI_MODULE_NAME);
 	}
 
@@ -413,12 +414,12 @@ stock float GetMapStartExtraDist() //WeaponInformation use it
 }
 
 // Natives
-public int _native_IsMapDataAvailable(Handle plugin, int numParams)
+static int _native_IsMapDataAvailable(Handle plugin, int numParams)
 {
 	return IsMapDataAvailable();
 }
 
-public int _native_GetMapValueInt(Handle plugin, int numParams)
+static int _native_GetMapValueInt(Handle plugin, int numParams)
 {
 	int iLen = 0;
 	GetNativeStringLength(1, iLen);
@@ -432,9 +433,9 @@ public int _native_GetMapValueInt(Handle plugin, int numParams)
 }
 
 #if SOURCEMOD_V_MINOR > 9
-public any _native_GetMapValueFloat(Handle plugin, int numParams)
+static any _native_GetMapValueFloat(Handle plugin, int numParams)
 #else
-public int _native_GetMapValueFloat(Handle plugin, int numParams)
+static int _native_GetMapValueFloat(Handle plugin, int numParams)
 #endif
 {
 	int iLen = 0;
@@ -453,7 +454,7 @@ public int _native_GetMapValueFloat(Handle plugin, int numParams)
 #endif
 }
 
-public int _native_GetMapValueVector(Handle plugin, int numParams)
+static int _native_GetMapValueVector(Handle plugin, int numParams)
 {
 	int iLen = 0;
 	GetNativeStringLength(1, iLen);
@@ -470,7 +471,7 @@ public int _native_GetMapValueVector(Handle plugin, int numParams)
 	return 1;
 }
 
-public int _native_GetMapValueString(Handle plugin, int numParams)
+static int _native_GetMapValueString(Handle plugin, int numParams)
 {
 	int iLen = 0;
 	GetNativeStringLength(1, iLen);
@@ -495,7 +496,7 @@ public int _native_GetMapValueString(Handle plugin, int numParams)
 	return 1;
 }
 
-public int _native_CopyMapSubsection(Handle plugin, int numParams)
+static int _native_CopyMapSubsection(Handle plugin, int numParams)
 {
 	int iLen = 0;
 	GetNativeStringLength(2, iLen);

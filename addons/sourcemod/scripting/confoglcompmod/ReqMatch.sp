@@ -3,19 +3,20 @@
 #endif
 #define __reg_match_included
 
-#define RM_DEBUG	   0
+#define RM_DEBUG	   false
 #define RM_MODULE_NAME "ReqMatch"
 
 #define MAPRESTARTTIME 3.0
 #define RESETMINTIME   60.0
 
 static bool
+	RM_bDebugEnabled = RM_DEBUG,
 	// RM_bMatchRequest[2] = {false, ...},
 	RM_bIsMatchModeLoaded = false,
 	RM_bIsAMatchActive	  = false,
 	RM_bIsPluginsLoaded	  = false,
-	RM_bIsMapRestarted	  = false;
-	RM_bIsChangeLevelAvailable = false;
+	RM_bIsMapRestarted	  = false,
+	RM_bIsChangeLevelAvailable = false,
 	RM_bIsChmatchRequest = false;
 
 static Handle
@@ -92,7 +93,7 @@ void RM_OnModuleStart()
 
 	if (RM_hReloaded.BoolValue)
 	{
-		if (RM_DEBUG || IsDebugEnabled())
+		if (RM_bDebugEnabled || IsDebugEnabled())
 		{
 			LogMessage("[%s] Plugin was reloaded from match mode, executing match load", RM_MODULE_NAME);
 		}
@@ -103,10 +104,7 @@ void RM_OnModuleStart()
 	}
 
 	// ChangeLevel
-	if (LibraryExists("l4d2_changelevel"))
-	{
-		RM_bIsChangeLevelAvailable = true;
-	}
+	RM_bIsChangeLevelAvailable = LibraryExists("l4d2_changelevel");
 }
 
 void RM_OnMapStart()
@@ -116,7 +114,7 @@ void RM_OnMapStart()
 		return;
 	}
 
-	if (RM_DEBUG || IsDebugEnabled())
+	if (RM_bDebugEnabled || IsDebugEnabled())
 	{
 		LogMessage("[%s] New map, executing match config...", RM_MODULE_NAME);
 	}
@@ -140,7 +138,7 @@ void RM_OnClientPutInServer()
 
 static void RM_Match_Load()
 {
-	if (RM_DEBUG || IsDebugEnabled())
+	if (RM_bDebugEnabled || IsDebugEnabled())
 	{
 		LogMessage("[%s] Match Load", RM_MODULE_NAME);
 	}
@@ -155,7 +153,7 @@ static void RM_Match_Load()
 
 	if (!RM_bIsPluginsLoaded)
 	{
-		if (RM_DEBUG || IsDebugEnabled())
+		if (RM_bDebugEnabled || IsDebugEnabled())
 		{
 			LogMessage("[%s] Loading plugins and reload self", RM_MODULE_NAME);
 		}
@@ -185,7 +183,7 @@ static void RM_Match_Load()
 	RM_hConfigFile_On.GetString(sBuffer, sizeof(sBuffer));
 	ExecuteCfg(sBuffer);
 
-	if (RM_DEBUG || IsDebugEnabled())
+	if (RM_bDebugEnabled || IsDebugEnabled())
 	{
 		LogMessage("[%s] Match config executed", RM_MODULE_NAME);
 	}
@@ -195,7 +193,7 @@ static void RM_Match_Load()
 		return;
 	}
 
-	if (RM_DEBUG || IsDebugEnabled())
+	if (RM_bDebugEnabled || IsDebugEnabled())
 	{
 		LogMessage("[%s] Setting match mode active", RM_MODULE_NAME);
 	}
@@ -227,7 +225,7 @@ static void RM_Match_Load()
 		hDp.WriteString(sMap);
 	}
 
-	if (RM_DEBUG || IsDebugEnabled())
+	if (RM_bDebugEnabled || IsDebugEnabled())
 	{
 		LogMessage("[%s] Match mode loaded!", RM_MODULE_NAME);
 	}
@@ -244,7 +242,7 @@ static void RM_Match_Unload(bool bForced = false)
 
 	if (!bIsHumansOnServer || bForced)
 	{
-		if (RM_DEBUG || IsDebugEnabled())
+		if (RM_bDebugEnabled || IsDebugEnabled())
 		{
 			LogMessage("[%s] Match is no longer active, sb_all_bot_game reset to 0, IsHumansOnServer %b, bForced %b", RM_MODULE_NAME, bIsHumansOnServer, bForced);
 		}
@@ -258,7 +256,7 @@ static void RM_Match_Unload(bool bForced = false)
 		return;
 	}
 
-	if (RM_DEBUG || IsDebugEnabled())
+	if (RM_bDebugEnabled || IsDebugEnabled())
 	{
 		LogMessage("[%s] Unloading match mode...", RM_MODULE_NAME);
 	}
@@ -290,17 +288,17 @@ static void RM_Match_Unload(bool bForced = false)
 		ExecuteCfg(sBuffer);
 	}
 
-	if (RM_DEBUG || IsDebugEnabled())
+	if (RM_bDebugEnabled || IsDebugEnabled())
 	{
 		LogMessage("[%s] Match mode unloaded!", RM_MODULE_NAME);
 	}
 }
 
-public Action RM_Match_MapRestart_Timer(Handle hTimer, DataPack hDp)
+static Action RM_Match_MapRestart_Timer(Handle hTimer, DataPack hDp)
 {
 	ServerCommand("sm plugins load_lock");	  // rework
 
-	if (RM_DEBUG || IsDebugEnabled())
+	if (RM_bDebugEnabled || IsDebugEnabled())
 	{
 		LogMessage("[%s] Restarting map...", RM_MODULE_NAME);
 	}
@@ -324,7 +322,7 @@ static bool RM_UpdateCfgOn(const char[] cfgfile, bool bIsPrint = true)
 		// PrintToChatAll("\x01[\x05Confogl\x01] Using \"\x04%s\x01\" config.", cfgfile);
 		CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} Loading '{olive}%s{default}'.", cfgfile);
 
-		if (RM_DEBUG || IsDebugEnabled())
+		if (RM_bDebugEnabled || IsDebugEnabled())
 		{
 			LogMessage("[%s] Starting match on config %s", RM_MODULE_NAME, cfgfile);
 		}
@@ -341,14 +339,14 @@ static bool RM_UpdateCfgOn(const char[] cfgfile, bool bIsPrint = true)
 	return false;
 }
 
-public Action RM_Cmd_ForceMatch(int client, int args)
+static Action RM_Cmd_ForceMatch(int client, int args)
 {
 	if (RM_bIsMatchModeLoaded)
 	{
 		return Plugin_Handled;
 	}
 
-	if (RM_DEBUG || IsDebugEnabled())
+	if (RM_bDebugEnabled || IsDebugEnabled())
 	{
 		LogMessage("[%s] Match mode forced to load!", RM_MODULE_NAME);
 	}
@@ -415,14 +413,14 @@ public Action RM_Cmd_ForceMatch(int client, int args)
 	return Plugin_Handled;
 }
 
-public Action RM_Cmd_ResetMatch(int client, int args)
+static Action RM_Cmd_ResetMatch(int client, int args)
 {
 	if (!RM_bIsMatchModeLoaded)
 	{
 		return Plugin_Handled;
 	}
 
-	if (RM_DEBUG || IsDebugEnabled())
+	if (RM_bDebugEnabled || IsDebugEnabled())
 	{
 		LogMessage("[%s] Match mode forced to unload!", RM_MODULE_NAME);
 	}
@@ -432,7 +430,7 @@ public Action RM_Cmd_ResetMatch(int client, int args)
 	return Plugin_Handled;
 }
 
-public Action RM_CMD_ChangeMatch(int client, int args)
+static Action RM_CMD_ChangeMatch(int client, int args)
 {
 	if (args < 1)
 	{
@@ -490,7 +488,7 @@ public Action RM_CMD_ChangeMatch(int client, int args)
 		return Plugin_Handled;
 	}
 
-	if (RM_DEBUG || IsDebugEnabled())
+	if (RM_bDebugEnabled || IsDebugEnabled())
 	{
 		LogMessage("[%s] Match mode forced to unload! [Change in this case!]", RM_MODULE_NAME);
 	}
@@ -505,7 +503,7 @@ public Action RM_CMD_ChangeMatch(int client, int args)
 	return Plugin_Handled;
 }
 
-public Action Timer_DelayToLoadMatchMode(Handle timer)
+static Action Timer_DelayToLoadMatchMode(Handle timer)
 {
 	// Load
 	if (RM_bIsMatchModeLoaded)
@@ -513,7 +511,7 @@ public Action Timer_DelayToLoadMatchMode(Handle timer)
 		return Plugin_Handled;
 	}
 
-	if (RM_DEBUG || IsDebugEnabled())
+	if (RM_bDebugEnabled || IsDebugEnabled())
 	{
 		LogMessage("[%s] Match mode forced to load! [Change in this case!]", RM_MODULE_NAME);
 	}
@@ -523,7 +521,7 @@ public Action Timer_DelayToLoadMatchMode(Handle timer)
 	return Plugin_Handled;
 }
 
-/*public Action RM_Cmd_Match(int client, int args)
+/*static Action RM_Cmd_Match(int client, int args)
 {
 	if (RM_bIsMatchModeLoaded || (!IsVersus() && !IsScavenge()) || !RM_hAllowVoting.BoolValue) {
 		return Plugin_Handled;
@@ -561,7 +559,7 @@ public Action Timer_DelayToLoadMatchMode(Handle timer)
 	return Plugin_Handled;
 }
 
-public Action RM_MatchRequestTimeout(Handle hTimer)
+static Action RM_MatchRequestTimeout(Handle hTimer)
 {
 	RM_ResetMatchRequest();
 
@@ -578,7 +576,7 @@ void RM_OnClientDisconnect(int client)
 	CreateTimer(RESETMINTIME, RM_MatchResetTimer);
 }
 
-public Action RM_MatchResetTimer(Handle hTimer)
+static Action RM_MatchResetTimer(Handle hTimer)
 {
 	RM_Match_Unload();
 
@@ -598,7 +596,7 @@ stock bool IsAMatchActive()
 	return RM_bIsAMatchActive;
 }
 
-public int native_IsMatchModeLoaded(Handle plugin, int numParams)
+static int native_IsMatchModeLoaded(Handle plugin, int numParams)
 {
 	return RM_bIsMatchModeLoaded;
 }

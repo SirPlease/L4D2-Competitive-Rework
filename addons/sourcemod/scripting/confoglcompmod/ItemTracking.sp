@@ -197,12 +197,12 @@ void IT_OnMapStart()
     g_bIsRound1Over = false;
 }
 
-public void _IT_RoundEndEvent(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void _IT_RoundEndEvent(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
     g_bIsRound1Over = true;
 }
 
-public void _IT_RoundStartEvent(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+static void _IT_RoundStartEvent(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
     g_iSaferoomCount[START_SAFEROOM - 1] = 0;
     g_iSaferoomCount[END_SAFEROOM - 1] = 0;
@@ -220,7 +220,7 @@ public void _IT_RoundStartEvent(Event hEvent, const char[] sEventName, bool bDon
     CreateTimer(1.0, IT_RoundStartTimer, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action IT_RoundStartTimer(Handle hTimer)
+static Action IT_RoundStartTimer(Handle hTimer)
 {
     if (!g_bIsRound1Over) {
         // Round1

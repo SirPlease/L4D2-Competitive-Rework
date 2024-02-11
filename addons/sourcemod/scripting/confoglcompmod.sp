@@ -3,7 +3,7 @@
 
 #define DEBUG_ALL				   0
 
-#define PLUGIN_VERSION			   "2.4.3"
+#define PLUGIN_VERSION			   "2.4.5"
 
 // Using these macros, you can disable unnecessary modules,
 // and they will not be included in the plugin at compile time,
@@ -500,7 +500,7 @@ public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
 	return Plugin_Continue;
 }
 
-public Action OFSLA_ForceMobSpawnTimer(Handle hTimer)
+static Action OFSLA_ForceMobSpawnTimer(Handle hTimer)
 {
 	// Workaround to make tank horde blocking always work
 	// Makes the first horde always start 100s after survivors leave saferoom
