@@ -5010,8 +5010,6 @@ public Action L4D2_OnChooseVictim_Pre(int specialInfected, int &lastTarget)
 	// return Plugin_Changed;
 
 	// No target - the special will stand still.
-	return Plugin_Handled;
-
 	return Plugin_Continue;
 }
 

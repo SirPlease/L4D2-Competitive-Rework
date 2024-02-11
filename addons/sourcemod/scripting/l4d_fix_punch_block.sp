@@ -4,9 +4,9 @@
 #include <sourcemod>
 #include <sourcescramble>
 #include <collisionhook>
-#include <left4dhooks_lux_library>
+#include <left4dhooks>
 
-#define PLUGIN_VERSION "1.2.1"
+#define PLUGIN_VERSION "1.2.2"
 
 public Plugin myinfo = 
 {

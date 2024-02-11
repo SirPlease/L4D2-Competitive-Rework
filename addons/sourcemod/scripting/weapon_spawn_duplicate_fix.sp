@@ -1,8 +1,9 @@
+#pragma semicolon 1
+#pragma newdecls required
+
 #include <sourcemod>
 #include <sdkhooks>
 #include <sdktools_functions>
-
-#define REQUIRE_EXTENSIONS
 #include <dhooks>
 
 // Fixed issues:
@@ -108,6 +109,6 @@ public Plugin myinfo =
 	name = "[L4D2] Weapon Duplicate Fix",
 	author = "shqke",
 	description = "Prevents a weapon to be taken from weapon spawn if its item counter has hit a zero",
-	version = "1.1",
+	version = "1.1.1",
 	url = "https://github.com/shqke/sp_public"
 };

@@ -42,9 +42,6 @@
 #define FLAGS_INCAP_TANKPUNCH             2
 #define FLAGS_INCAP_TANKROCK              4
 
-#define TEAM_SURVIVOR                     2
-#define TEAM_INFECTED                     3
-
 bool
 	bLateLoad,
 	bTanked[MAXPLAYERS + 1],
@@ -72,7 +69,7 @@ public Plugin myinfo =
 	name = "L4D2 Pick-up Changes",
 	author = "Sir, A1m`",
 	description = "Alters a few things regarding picking up/giving items and incapped Players.",
-	version = "1.2.2",
+	version = "1.2.3",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework/"
 }
 

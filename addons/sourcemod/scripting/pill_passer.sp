@@ -9,7 +9,6 @@
 #undef REQUIRE_PLUGIN
 #include <l4d2_lagcomp_manager>
 
-#define ENTITY_MAX_NAME_LENGTH	64
 #define USE_GIVEPLAYERITEM		0		// Works correctly only in the latest version of sourcemod 1.11 (GivePlayerItem sourcemod native)
 
 public Plugin myinfo =
@@ -17,7 +16,7 @@ public Plugin myinfo =
 	name = "Easier Pill Passer",
 	author = "CanadaRox, A1m`, Forgetest",
 	description = "Lets players pass pills and adrenaline with +reload when they are holding one of those items",
-	version = "1.6.1",
+	version = "1.6.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
