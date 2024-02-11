@@ -2300,6 +2300,17 @@
 		"end_dist"			"150.000000"
 		"max_distance"		"800"
 	}
+	"l4d2_ff03_highway"
+	{
+		"tank_ban_flow"
+		{
+			"Elevator"
+			{
+				"min"		"55"
+				"max"		"75"
+			}
+		}
+	}
 	"l4d2_ff04_plant"
 	{
 		"horde_limit"		"200"
