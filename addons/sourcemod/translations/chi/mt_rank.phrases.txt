@@ -1,0 +1,18 @@
+"Phrases"
+{
+	"VOTE_DISPLAY_MSG"
+	{
+		"chi"			"开始进行mix（Versus Stat排名选人）"
+	}
+
+	"VOTE_END_MSG"
+	{
+		"chi"			"即将进行mix..."
+	}
+
+	"NO_RANK"
+	{
+		"#format"		"{1:N}"
+		"chi"			"mix成员{olive}{1} {default}没有排名. {olive}Mix 回滚"
+	}
+}

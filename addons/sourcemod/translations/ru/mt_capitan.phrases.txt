@@ -1,0 +1,45 @@
+"Phrases"
+{
+	"NEW_FIRST_CAPITAN"
+	{
+		"#format"		"{1:N},{2:d}"
+		"ru"			"Капитан команды {olive}выживших {green}{1} {default}(Голосов {2})"
+	}
+
+	"NEW_SECOND_CAPITAN"
+	{
+		"#format"		"{1:N},{2:d}"
+		"ru"			"Капитан команды {olive}заражённых {green}{1} {default}(Голосов {2})"
+	}
+
+	"PICK_TEAM"
+	{
+		"#format"		"{1:N},{2:N}"
+		"ru"			"Капитан {olive}{1} {default}выбрал игрока {green}{2}"
+	}
+
+	"VOTE_DISPLAY_MSG"
+	{
+		"ru"			"Начать микс с участием капитанов"
+	}
+
+	"VOTE_END_MSG"
+	{
+		"ru"			"Выполняется микс команд с участием капитанов"
+	}
+
+	"MENU_TITLE_FIRST_CAPITAN"
+	{
+		"ru"			"Выберите первого капитана"
+	}
+
+	"MENU_TITLE_SECOND_CAPITAN"
+	{
+		"ru"			"Выберите второго капитана"
+	}
+
+	"MENU_TITLE_PICK_TEAMS"
+	{
+		"ru"			"Выберите союзника"
+	}
+}

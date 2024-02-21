@@ -17,7 +17,6 @@ KeyValues
 	g_hModesKV = null;
 
 ConVar
-	g_hEnabled = null,
 	g_hCvarPlayerLimit = null,
 	g_hMaxPlayers = null,
 	g_hSvMaxPlayers = null;
@@ -30,12 +29,15 @@ bool
 	g_bOnSet = false,
 	g_bCedaGame = false;
 
+//Handle
+	//g_ForceMatch[];
+
 public Plugin myinfo =
 {
 	name = "Match Vote",
-	author = "vintik, Sir, StarterX4",
-	description = "!match !rmatch !chmatch - Change Hostname and Slots while you're at it!",
-	version = "1.3",
+	author = "vintik, Sir, modified by 东, blueblur",
+	description = "!match !rmatch - Change Hostname and Slots while you're at it!",
+	version = "1.2.1",
 	url = "https://github.com/L4D-Community/L4D2-Competitive-Framework"
 };
 
@@ -55,17 +57,15 @@ public void OnPluginStart()
 	char sBuffer[PLATFORM_MAX_PATH ];
 	g_hModesKV = new KeyValues("MatchModes");
 	BuildPath(Path_SM, sBuffer, sizeof(sBuffer), MATCHMODES_PATH);
-
+	LoadTranslations("match_vote.phrases");
 	if (!g_hModesKV.ImportFromFile(sBuffer)) {
 		SetFailState("Couldn't load matchmodes.txt!");
 	}
 
-	g_hEnabled = CreateConVar("sm_match_vote_enabled", "1", "Plugin enabled", _, true, 0.0, true, 1.0);
 	g_hMaxPlayers = CreateConVar("mv_maxplayers", "30", "How many slots would you like the Server to be at Config Load/Unload?", _, true, 1.0, true, 32.0);
 	g_hCvarPlayerLimit = CreateConVar("sm_match_player_limit", "1", "Minimum # of players in game to start the vote", _, true, 1.0, true, 32.0);
 
 	RegConsoleCmd("sm_match", MatchRequest);
-	RegConsoleCmd("sm_chmatch", ChangeMatchRequest);
 	RegConsoleCmd("sm_rmatch", MatchReset);
 
 	g_hSvMaxPlayers = FindConVar("sv_maxplayers");
@@ -109,7 +109,7 @@ public void OnCedapugEnded() {
 
 public Action MatchRequest(int iClient, int iArgs)
 {
-	if (!g_hEnabled.BoolValue || iClient == 0 || !g_bIsConfoglAvailable) {
+	if (iClient == 0 || !g_bIsConfoglAvailable) {
 		return Plugin_Handled;
 	}
 
@@ -154,7 +154,7 @@ bool FindConfigName(const char[] sConfig, char[] sName, const int iMaxLength)
 void MatchModeMenu(int iClient)
 {
 	Menu hMenu = new Menu(MatchModeMenuHandler);
-	hMenu.SetTitle("Select match mode:");
+	hMenu.SetTitle("%t", "SelectFirstCategory");		//选择要玩的模式:
 
 	char sBuffer[64];
 	g_hModesKV.Rewind();
@@ -182,7 +182,7 @@ public int MatchModeMenuHandler(Menu menu, MenuAction action, int param1, int pa
 		if (g_hModesKV.JumpToKey(sInfo) && g_hModesKV.GotoFirstSubKey()) {
 			Menu hMenu = new Menu(ConfigsMenuHandler);
 
-			FormatEx(sBuffer, sizeof(sBuffer), "Select %s config:", sInfo);
+			FormatEx(sBuffer, sizeof(sBuffer), "%t", "SelectSecondCategory", sInfo);			//选择 %s 配置:
 			hMenu.SetTitle(sBuffer);
 
 			do {
@@ -194,7 +194,7 @@ public int MatchModeMenuHandler(Menu menu, MenuAction action, int param1, int pa
 
 			hMenu.Display(param1, 20);
 		} else {
-			CPrintToChat(param1, "{blue}[{default}Match{blue}] {default}No configs for such mode were found.");
+			CPrintToChat(param1, "%t", "NoMatchModeFound");		//{blue}[{default}Match{blue}] {default}没有找到这个模式.
 			MatchModeMenu(param1);
 		}
 	}
@@ -227,12 +227,12 @@ public int ConfigsMenuHandler(Menu menu, MenuAction action, int param1, int para
 bool StartMatchVote(int iClient, const char[] sCfgName)
 {
 	if (GetClientTeam(iClient) <= TEAM_SPECTATE) {
-		CPrintToChat(iClient, "{blue}[{default}Match{blue}] {default}Match voting isn't allowed for spectators.");
+		CPrintToChat(iClient, "%t", "NoSpecVote");		//{blue}[{default}Match{blue}] {default}旁观者不允许投票更改游戏模式.
 		return false;
 	}
 
 	if (LGO_IsMatchModeLoaded()) {
-		CPrintToChat(iClient, "{blue}[{default}Match{blue}] {default}Matchmode already loaded!");
+		CPrintToChat(iClient, "%t", "AlreadyLoaded");		//{blue}[{default}Match{blue}] {default}模式已经加载，请先使用!rmatch卸载配置
 		return false;
 	}
 
@@ -250,12 +250,12 @@ bool StartMatchVote(int iClient, const char[] sCfgName)
 		}
 
 		if (iNumPlayers < g_hCvarPlayerLimit.IntValue) {
-			CPrintToChat(iClient, "{blue}[{default}Match{blue}] {default}Match vote cannot be started. Not enough players.");
+			CPrintToChat(iClient, "%t", "PlayersNumRequire");			//{blue}[{default}Match{blue}] {default}没有足够多的玩家来发起模式更改投票
 			return false;
 		}
 
 		char sBuffer[64];
-		FormatEx(sBuffer, sizeof(sBuffer), "Load confogl '%s' config?", sCfgName);
+		FormatEx(sBuffer, sizeof(sBuffer), "%t", "IsLoadConfogl", sCfgName);			//加载 confogl '%s' 模式?
 
 		g_hVote = CreateBuiltinVote(VoteActionHandler, BuiltinVoteType_Custom_YesNo, BuiltinVoteAction_Cancel | BuiltinVoteAction_VoteEnd | BuiltinVoteAction_End);
 		SetBuiltinVoteArgument(g_hVote, sBuffer);
@@ -266,7 +266,7 @@ bool StartMatchVote(int iClient, const char[] sCfgName)
 		return true;
 	}
 
-	CPrintToChat(iClient, "{blue}[{default}Match{blue}] {default}Match vote cannot be started now.");
+	CPrintToChat(iClient, "%t", "MatchVoteUnavailable");			//{blue}[{default}Match{blue}] {default}模式更改投票暂不可用.
 	return false;
 }
 
@@ -286,12 +286,14 @@ public void VoteActionHandler(Handle vote, BuiltinVoteAction action, int param1,
 public void MatchVoteResultHandler(Handle vote, int num_votes, int num_clients, \
 										const int[][] client_info, int num_items, const int[][] item_info)
 {
+	char buffer[1024];
 	for (int i = 0; i < num_items; i++) {
 		if (item_info[i][BUILTINVOTEINFO_ITEM_INDEX] == BUILTINVOTES_VOTE_YES) {
 			if (item_info[i][BUILTINVOTEINFO_ITEM_VOTES] > (num_votes / 2)) {
-				DisplayBuiltinVotePass(vote, "Matchmode Loaded");
+				Format(buffer, sizeof(buffer), "%t", "Loaded");
+				DisplayBuiltinVotePass(vote, buffer);
+				//PrintToConsoleAll("%s", g_sCfg);
 				ServerCommand("sm_forcematch %s", g_sCfg);
-
 				return;
 			}
 		}
@@ -302,7 +304,7 @@ public void MatchVoteResultHandler(Handle vote, int num_votes, int num_clients, 
 
 public Action MatchReset(int iClient, int iArgs)
 {
-	if (!g_hEnabled.BoolValue || iClient == 0 || !g_bIsConfoglAvailable) {
+	if (iClient == 0 || !g_bIsConfoglAvailable) {
 		return Plugin_Handled;
 	}
 
@@ -318,12 +320,12 @@ public Action MatchReset(int iClient, int iArgs)
 bool StartResetMatchVote(int iClient)
 {
 	if (GetClientTeam(iClient) <= TEAM_SPECTATE) {
-		CPrintToChat(iClient, "{blue}[{default}Match{blue}] {default}Resetmatch voting isn't allowed for spectators.");
+		CPrintToChat(iClient, "%t", "NoSpecVoteReset");		//{blue}[{default}Match{blue}] {default}旁观者不允许投票重赛.
 		return false;
 	}
 
 	if (!LGO_IsMatchModeLoaded()) {
-		CPrintToChat(iClient, "{blue}[{default}Match{blue}] {default}No matchmode loaded.");
+		CPrintToChat(iClient, "%t", "NoConfigLoaded");		//{blue}[{default}Match{blue}] {default}当前无比赛模式加载.
 		return false;
 	}
 
@@ -344,12 +346,14 @@ bool StartResetMatchVote(int iClient)
 		}
 
 		if (iConnectedCount > 0) {
-			CPrintToChat(iClient, "{blue}[{default}Match{blue}] {default}Resetmatch vote cannot be started. Players are connecting");
+			CPrintToChat(iClient, "%t", "WaitConnecting");			//{blue}[{default}Match{blue}] {default}重赛投票暂不可用，有玩家正在连接
 			return false;
 		}
 
+		char buffer[1024];
 		g_hVote = CreateBuiltinVote(VoteActionHandler, BuiltinVoteType_Custom_YesNo, BuiltinVoteAction_Cancel | BuiltinVoteAction_VoteEnd | BuiltinVoteAction_End);
-		SetBuiltinVoteArgument(g_hVote, "Turn off confogl?");
+		Format(buffer, sizeof(buffer), "%t", "TurnOff");
+		SetBuiltinVoteArgument(g_hVote, buffer);		//Turn off confogl?
 		SetBuiltinVoteInitiator(g_hVote, iClient);
 		SetBuiltinVoteResultCallback(g_hVote, ResetMatchVoteResultHandler);
 		DisplayBuiltinVote(g_hVote, iPlayers, iNumPlayers, 20);
@@ -358,186 +362,21 @@ bool StartResetMatchVote(int iClient)
 		return true;
 	}
 
-	CPrintToChat(iClient, "{blue}[{default}Match{blue}] {default}Resetmatch vote cannot be started now.");
+	CPrintToChat(iClient, "%t", "ResetMatchUnavailable");		//{blue}[{default}Match{blue}] {default}重赛投票暂不可用.
 	return false;
 }
 
 public void ResetMatchVoteResultHandler(Handle vote, int num_votes, int num_clients, \
 										const int[][] client_info, int num_items, const int[][] item_info)
 {
+	char buffer[1024];
 	for (int i = 0; i < num_items; i++) {
 		if (item_info[i][BUILTINVOTEINFO_ITEM_INDEX] == BUILTINVOTES_VOTE_YES) {
-			if (item_info[i][BUILTINVOTEINFO_ITEM_VOTES] > (num_votes / 2)) {
-				DisplayBuiltinVotePass(vote, "Confogl is unloading...");
+			if (item_info[i][BUILTINVOTEINFO_ITEM_VOTES] > (num_votes / 2)) 
+			{
+				Format(buffer, sizeof(buffer), "%t", "Unloading");
+				DisplayBuiltinVotePass(vote, buffer);			//Confogl is unloading...
 				ServerCommand("sm_resetmatch");
-
-				return;
-			}
-		}
-	}
-
-	DisplayBuiltinVoteFail(vote, BuiltinVoteFail_Loses);
-}
-
-public Action ChangeMatchRequest(int iClient, int iArgs)
-{
-	if (!g_hEnabled.BoolValue || iClient == 0 || !g_bIsConfoglAvailable) {
-		return Plugin_Handled;
-	}
-
-	if (iArgs > 0) {
-		//config specified
-		char sCfg[64], sName[64];
-		GetCmdArg(1, sCfg, sizeof(sCfg));
-		if (FindConfigName(sCfg, sName, sizeof(sName))) {
-			if (StartChMatchVote(iClient, sName)) {
-				strcopy(g_sCfg, sizeof(g_sCfg), sCfg);
-
-				//caller is voting for
-				FakeClientCommand(iClient, "Vote Yes");
-			}
-			return Plugin_Handled;
-		}
-	}
-
-	//show main menu
-	ChMatchModeMenu(iClient);
-	return Plugin_Handled;
-}
-
-void ChMatchModeMenu(int iClient)
-{
-	Menu hMenu = new Menu(ChMatchModeMenuHandler);
-	hMenu.SetTitle("Select match mode:");
-
-	char sBuffer[64];
-	g_hModesKV.Rewind();
-
-	if (g_hModesKV.GotoFirstSubKey()) {
-		do {
-			g_hModesKV.GetSectionName(sBuffer, sizeof(sBuffer));
-			hMenu.AddItem(sBuffer, sBuffer);
-		} while (g_hModesKV.GotoNextKey(false));
-	}
-
-	hMenu.Display(iClient, 20);
-}
-
-public int ChMatchModeMenuHandler(Menu menu, MenuAction action, int param1, int param2)
-{
-	if (action == MenuAction_End) {
-		delete menu;
-	} else if (action == MenuAction_Select) {
-		char sInfo[64], sBuffer[64];
-		menu.GetItem(param2, sInfo, sizeof(sInfo));
-
-		g_hModesKV.Rewind();
-
-		if (g_hModesKV.JumpToKey(sInfo) && g_hModesKV.GotoFirstSubKey()) {
-			Menu hMenu = new Menu(ChConfigsMenuHandler);
-
-			FormatEx(sBuffer, sizeof(sBuffer), "Select %s config:", sInfo);
-			hMenu.SetTitle(sBuffer);
-
-			do {
-				g_hModesKV.GetSectionName(sInfo, sizeof(sInfo));
-				g_hModesKV.GetString("name", sBuffer, sizeof(sBuffer));
-
-				hMenu.AddItem(sInfo, sBuffer);
-			} while (g_hModesKV.GotoNextKey());
-
-			hMenu.Display(param1, 20);
-		} else {
-			CPrintToChat(param1, "{blue}[{default}Match{blue}] {default}No configs for such mode were found.");
-			ChMatchModeMenu(param1);
-		}
-	}
-
-	return 0;
-}
-
-public int ChConfigsMenuHandler(Menu menu, MenuAction action, int param1, int param2)
-{
-	if (action == MenuAction_End) {
-		delete menu;
-	} else if (action == MenuAction_Cancel) {
-		ChMatchModeMenu(param1);
-	} else if (action == MenuAction_Select) {
-		char sInfo[64], sBuffer[64];
-		menu.GetItem(param2, sInfo, sizeof(sInfo), _, sBuffer, sizeof(sBuffer));
-
-		if (StartChMatchVote(param1, sBuffer)) {
-			strcopy(g_sCfg, sizeof(g_sCfg), sInfo);
-			//caller is voting for
-			FakeClientCommand(param1, "Vote Yes");
-		} else {
-			ChMatchModeMenu(param1);
-		}
-	}
-
-	return 0;
-}
-
-bool StartChMatchVote(int iClient, const char[] sCfgName)
-{
-	if (GetClientTeam(iClient) <= TEAM_SPECTATE) {
-		CPrintToChat(iClient, "{blue}[{default}Match{blue}] {default}Match voting isn't allowed for spectators.");
-		return false;
-	}
-
-	if (!LGO_IsMatchModeLoaded()) {
-		CPrintToChat(iClient, "{blue}[{default}Match{blue}] {default}Matchmode isn't already loaded! Use !match instead!");
-		return false;
-	}
-
-	if (IsNewBuiltinVoteAllowed() || !IsBuiltinVoteInProgress()) {
-		int iNumPlayers = 0, iConnectedCount = 0;
-		int[] iPlayers = new int[MaxClients];
-
-		//list of non-spectators players
-		for (int i = 1; i <= MaxClients; i++) {
-			if (!IsClientInGame(i) || IsFakeClient(i) || GetClientTeam(i) <= TEAM_SPECTATE) {
-				continue;
-			}
-
-			iPlayers[iNumPlayers++] = i;
-		}
-
-		if (iNumPlayers < g_hCvarPlayerLimit.IntValue) {
-			CPrintToChat(iClient, "{blue}[{default}Match{blue}] {default}Match vote cannot be started. Not enough players.");
-			return false;
-		}
-
-		if (iConnectedCount > 0) {
-			CPrintToChat(iClient, "{blue}[{default}Match{blue}] {default}Changematch vote cannot be started. Players are connecting");
-			return false;
-		}
-
-		char sBuffer[64];
-		FormatEx(sBuffer, sizeof(sBuffer), "Change confogl config to '%s'?", sCfgName);
-
-		g_hVote = CreateBuiltinVote(VoteActionHandler, BuiltinVoteType_Custom_YesNo, BuiltinVoteAction_Cancel | BuiltinVoteAction_VoteEnd | BuiltinVoteAction_End);
-		SetBuiltinVoteArgument(g_hVote, sBuffer);
-		SetBuiltinVoteInitiator(g_hVote, iClient);
-		SetBuiltinVoteResultCallback(g_hVote, ChMatchVoteResultHandler);
-		DisplayBuiltinVote(g_hVote, iPlayers, iNumPlayers, 20);
-
-		return true;
-	}
-
-	CPrintToChat(iClient, "{blue}[{default}Match{blue}] {default}Match vote cannot be started now.");
-	return false;
-}
-
-public void ChMatchVoteResultHandler(Handle vote, int num_votes, int num_clients, \
-										const int[][] client_info, int num_items, const int[][] item_info)
-{
-	for (int i = 0; i < num_items; i++) {
-		if (item_info[i][BUILTINVOTEINFO_ITEM_INDEX] == BUILTINVOTES_VOTE_YES) {
-			if (item_info[i][BUILTINVOTEINFO_ITEM_VOTES] > (num_votes / 2)) {
-				DisplayBuiltinVotePass(vote, "Matchmode Changed");
-				ServerCommand("sm_forcechangematch %s", g_sCfg);
-
 				return;
 			}
 		}

@@ -1,0 +1,7 @@
+"Phrases"
+{
+	// Format:	"c1m1_hotel" <- File name of the map
+	//		{
+	//			"en"	"Localized Name" <- Language code, and the localized name
+	//		}
+}

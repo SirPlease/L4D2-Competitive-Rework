@@ -4,6 +4,7 @@
 #include <sdktools>
 #include <sdkhooks>
 #include <left4dhooks>
+#include <colors>
 #include <l4d2_penalty_bonus>
 #undef REQUIRE_PLUGIN
 #include <readyup>
@@ -159,6 +160,9 @@ public OnPluginStart()
     
     // commands:
     RegConsoleCmd( "sm_hbonus", Cmd_DisplayBonus, "Shows current holdout bonus" );
+
+    // translations
+    LoadTranslations("holdout_bonus.phrases");
     
 }
 
@@ -388,7 +392,8 @@ public HoldOutStarts ( const String:output[], caller, activator, Float:delay )
     new iReport = GetConVarInt(g_hCvarReportMode);
     if ( iReport > 2 && iReport != REPORT_ONLYEVENT )
     {
-        PrintToChatAll( "\x01Holdout event starts... (\x04%i\x01 bonus over \x05%i\x01 seconds)", g_iPointsBonus, g_iHoldoutTime );
+        CPrintToChatAll("%t", "HoldoutStarts", g_iPointsBonus, g_iHoldoutTime );
+        //\x01Holdout event starts... (\x04%i\x01 bonus over \x05%i\x01 seconds)
     }
     
     Call_StartForward(g_hForwardStart);
@@ -577,32 +582,36 @@ public Action: Cmd_DisplayBonus (client, args)
     // build message: current / round's bonus
     if ( !g_bHoldoutThisRound )
     {
-        Format( sMsg, sizeof(sMsg), "no holdout event this round." );
+        Format( sMsg, sizeof(sMsg), "%t", "NoHoldout");       //no holdout event this round.
     }
     else
     {
         if ( g_bHoldoutActive )
         {
-            Format( sMsg, sizeof(sMsg), "\x04%i\x01 out of \x05%i\x01 [\x04%i\x01/\x05%i\x01 sec].", CalculateHoldOutBonus(), g_iPointsBonus, g_iProgress, g_iHoldoutTime );
+            Format( sMsg, sizeof(sMsg), "%t", "InHoldout", CalculateHoldOutBonus(), g_iPointsBonus, g_iProgress, g_iHoldoutTime );
+            //\x04%i\x01 out of \x05%i\x01 [\x04%i\x01/\x05%i\x01 sec].
         }
         else if ( g_iActualBonus )
         {
-            Format( sMsg, sizeof(sMsg), "\x04%i\x01 out of \x05%i\x01 [event over].", g_iActualBonus, g_iPointsBonus );
+            Format( sMsg, sizeof(sMsg), "%t", "HoldoutOver", g_iActualBonus, g_iPointsBonus );
+            //\x04%i\x01 out of \x05%i\x01 [event over].
         }
         else
         {
-            Format( sMsg, sizeof(sMsg), "\x04%i\x01 out of \x05%i\x01 [not started yet].", g_iActualBonus, g_iPointsBonus );
+            Format( sMsg, sizeof(sMsg), "%t", "AboutToHoldout", g_iActualBonus, g_iPointsBonus );
+            //\x04%i\x01 out of \x05%i\x01 [not started yet].
         }
     }
     
     // display message
     if ( IS_VALID_INGAME(client) )
     {
-        PrintToChat( client, "\x01Holdout Bonus: %s", sMsg );
+        CPrintToChat( client, "%t", "HoldoutBonus", sMsg );
+        //\x01Holdout Bonus: %s
     }
     else
     {
-        PrintToServer( "\x01Holdout Bonus: %s", sMsg );
+        PrintToServer("Holdout Bonus: %s", sMsg );
     }
 }
 
@@ -610,7 +619,8 @@ stock DisplayBonusToAll()
 {
     if ( g_iActualBonus )
     {
-        PrintToChatAll( "\x01Holdout Bonus: \x04%i\x01 out of \x05%i\x01.", g_iActualBonus, g_iPointsBonus );
+        CPrintToChatAll( "%t", "DisplayHoldoutBonus", g_iActualBonus, g_iPointsBonus );
+        //\x01Holdout Bonus: \x04%i\x01 out of \x05%i\x01.
     }
 }
 

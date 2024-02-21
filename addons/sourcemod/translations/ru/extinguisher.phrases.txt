@@ -1,0 +1,107 @@
+"Phrases"
+{
+	"Ext_ChatTagExtinguisher"
+	{
+		"ru"	"{olive}[Огнетушитель] {default}"
+	}
+	"Ext_ChatTagFlamethrower"
+	{
+		"ru"	"{olive}[Огнемет] {default}"
+	}
+	"Ext_ChatTagFreezerspray"
+	{
+		"ru"	"{olive}[Криопушка-гель] {default}"
+	}
+	"Ext_ChatTagBlastpushback"
+	{
+		"ru"	"{olive}[Пси-пушка] {default}"
+	}
+	"Ext_WeaponName"
+	{
+		"ru"	"SMG"
+	}
+	"Ext_Blocked"
+	{
+		"ru"	"Вы можете использовать огнетушители, только если экипированы '{olive}<WEAPON>{default}'."
+	}
+	"Ext_Broken"
+	{
+		"ru"	"сломал {olive}<NAME>{default}."
+	}
+	"Ext_EquipFull"
+	{
+		"ru"	"Слишком много игроков используют огнетушитель."
+	}
+	"Ext_EquipHasCheck"
+	{
+		"ru"	"Уже экипировано! Требуется '{olive}<WEAPON>{default}' чтобы использовать."
+	}
+	"Ext_EquipHasCombo"
+	{
+		"ru"	"Уже экипировано! Огнемет (primary attack key), Огнетушитель (zoom key) и Пси-пушка (walk + zoom keys)."
+	}
+	"Ext_EquipCombo"
+	{
+		"ru"	"экипировано. Огнемет (primary attack key) и Огнетушитель (zoom key). {olive}R{default} чтобы бросить или {olive}!dropext{default} в чат."
+	}
+	"Ext_EquipUseExtinguisher"
+	{
+		"ru"	"экипировано. Тушите пламя, а так же взрывы от фейерверков. R чтобы бросить или {olive}!dropext{default} в чат."
+	}
+	"Ext_EquipUseFlamethrower"
+	{
+		"ru"	"экипировано. Жгите врагов и воспламеняйте prop_physics. {olive}R{default} чтобы бросить или {olive}!dropext{default} в чат."
+	}
+	"Ext_EquipUseFreezerspray"
+	{
+		"ru"	"экипировано. Замедляйте ваших врагов. {olive}R{default} чтобы бросить или {olive}!dropext{default} в чат."
+	}
+	"Ext_EquipUseBlastpushback"
+	{
+		"ru"	"экипировано. Толкайте подальше от вас выживших и зараженных. R чтобы бросить или {olive}!dropext{default} в чат."
+	}
+	"Ext_EmptyExtinguisher"
+	{
+		"ru"	"Огнетушитель Топливо: Закончилось!"
+	}
+	"Ext_EmptyFlamethrower"
+	{
+		"ru"	"Огнемет Топливо: Закончилось!"
+	}
+	"Ext_EmptyFreezerspray"
+	{
+		"ru"	"Криопушка-гель Топливо: Закончилось!"
+	}
+	"Ext_EmptyBlastpushback"
+	{
+		"ru"	"Пси-пушка Топливо: Закончилось!"
+	}
+	"Ext_FuelExtinguisher"
+	{
+		"ru"	"Огнетушитель Топливо:"
+	}
+	"Ext_FuelFlamethrower"
+	{
+		"ru"	"Огнемет Топливо:"
+	}
+	"Ext_FuelFreezerspray"
+	{
+		"ru"	"Криопушка-гель Топливо:"
+	}
+	"Ext_FuelBlastpushback"
+	{
+		"ru"	"Пси-пушка Топливо:"
+	}
+	"Ext_Incapped"
+	{
+		"ru"	"Вы можете использовать огнетушитель, когда сбиты с ног. {olive}R{default} чтобы бросить или {olive}!dropext{default} в чат."
+	}
+	"Ext_Refuel"
+	{
+		"ru"	"Вы можете заправить Огнетушитель с помощью канистры, нажав MOUSE1 возле нее. {olive}R{default} чтобы бросить."
+	}
+	"Ext_Refueled"
+	{
+		"ru"	"Был заправлен!"
+	}
+}

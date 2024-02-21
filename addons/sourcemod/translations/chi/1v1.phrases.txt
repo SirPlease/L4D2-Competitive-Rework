@@ -1,0 +1,36 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"[{olive}1v1{default}]"
+	}
+	"TagPvE"
+	{
+		"chi"		"[{olive}伤害报告{default}]"
+	}
+	"HealthRemaining"
+	{
+		"#format"   "{1:s},{2:s},{3:d}" // 1:sName 2:L4D2_InfectedNames[iZclass] 3:iRemainingHealth
+		"chi"		"{red}{1}{default} ({green}{2}{default}) 还剩余 {olive}{3}{default} 血量!"
+	}
+	"AI"
+	{
+		"chi"		"AI"
+	}
+	"UMad"
+	{
+		"chi"		"不需生气，下次记得瞄准头部..."
+	}
+	"Sad"
+	{
+		"chi"		"你看起来很沮丧...."
+	}
+	"Close"
+	{
+		"chi"		"接近了!"
+	}
+	"NBad"
+	{
+		"chi"		"还不错."
+	}
+}

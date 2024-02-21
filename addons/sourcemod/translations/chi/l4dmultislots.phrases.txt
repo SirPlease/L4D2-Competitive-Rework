@@ -1,0 +1,49 @@
+//简体中文 by Target
+
+"Phrases"
+{
+	"A surviving Bot was added."
+	{
+		"chi" "已生成一个生还者Bot."
+	}
+	"Impossible to generate a bot at the moment."
+	{
+		"chi" "这时候无法生成一个生还者Bot."
+	}
+	"Please wait to be revived or rescued"
+	{
+		"chi" "请等待救援或复活."
+	}
+	"You are idle. press the left mouse button to join the survivors!"
+	{
+		"chi" "你正在闲置. 请按鼠标左键加入生还者!"
+	}
+	"You are already on the team of survivors."
+	{
+		"chi" "你已在生还者队伍."
+	}
+	"Type in chat !join To join the survivors"
+	{
+		"chi" "聊天窗口输入 {olive}!join{default} 来加入生还者队伍."
+	}
+	"The survivors has started the game, please wait to be resurrected or rescued"
+	{
+		"chi" "生还者已开始游戏一段时间，请等待救援或复活"
+	}
+	"No Bots for replacement."
+	{
+		"chi" "没有生还者Bot能控制."
+	}
+	"No Second Chance"
+	{
+		"chi" "你已于当前回合当过{blue}生还者队伍{default}. 给予 {green}死亡{default} Bot."
+	}
+	"Sorry! No survivor slots"
+	{
+		"chi" "抱歉! 生还者数量已达上限!"
+	}
+	"Too many survivors, unbalance"
+	{
+		"chi" "抱歉! 队伍目前不平衡, 太多玩家在生还者队伍!"
+	}
+}

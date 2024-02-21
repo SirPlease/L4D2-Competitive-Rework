@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.141"
+#define PLUGIN_VERSION		"1.143"
 
 /*=======================================================================================
 	Plugin Info:
@@ -54,6 +54,7 @@ bool g_bLibraryActive;
 bool g_bTestForwards =		true;	// To enable forwards testing
 int g_iForwardsMax;					// Total forwards we expect to see
 int g_iForwards;
+float g_fPipeBomb[2048];
 
 
 
@@ -4263,6 +4264,8 @@ public void L4D_PipeBombProjectile_Post(int client, int projectile, const float 
 
 		ForwardCalled("\"L4D_PipeBombProjectile_Post\" %d (Grenade = %d) pos(%0.1f %0.1f %0.1f) ang(%0.1f %0.1f %0.1f) vel(%0.1f %0.1f %0.1f) rot(%0.1f %0.1f %0.1f)", client, projectile, vecPos[0], vecPos[1], vecPos[2], vecAng[0], vecAng[1], vecAng[2], vecVel[0], vecVel[1], vecVel[2], vecRot[0], vecRot[1], vecRot[2]);
 	}
+
+	g_fPipeBomb[projectile] = GetGameTime(); // Used to track if the forwards "L4D_PipeBomb_Detonate*" are triggered from an actual PipeBomb or from a breakable prop (propane tank, oxygen tank etc)
 }
 
 public void L4D_PipeBombProjectile_PostHandled(int client, int projectile, const float vecPos[3], const float vecAng[3], const float vecVel[3], const float vecRot[3])
@@ -4462,6 +4465,24 @@ public Action L4D_PipeBomb_Detonate(int entity, int client)
 		ForwardCalled("\"L4D_PipeBomb_Detonate\" %d (%N) (Grenade = %d)", client, client > 0 && client <= MaxClients ? client : 0, entity);
 	}
 
+
+
+	// Detect if a PipeBomb or breakable prop (propane tank, oxygen tank etc) has exploded
+	// /*
+	if( g_fPipeBomb[entity] + 0.1 >= GetGameTime() ) // Matching the time with == is probably fine, but in case of rare moments when detonation happens slightly later, we can do this with 0.1 seconds leeway
+	{
+		// Breakable prop detonating
+		PrintToServer(" > L4DD: \"L4D_PipeBomb_Detonate\" %d (%N) (Grenade = %d) - Breakable Prop explosion", client, client > 0 && client <= MaxClients ? client : 0, entity);
+	}
+	else
+	{
+		PrintToServer(" > L4DD: \"L4D_PipeBomb_Detonate\" %d (%N) (Grenade = %d) - PipeBomb explosion", client, client > 0 && client <= MaxClients ? client : 0, entity);
+		// Grenade detonating
+	}
+	// */
+
+
+
 	// WORKS - block grenade detonating
 	// return Plugin_Handled;
 
@@ -4478,6 +4499,24 @@ public void L4D_PipeBomb_Detonate_Post(int entity, int client)
 
 		ForwardCalled("\"L4D_PipeBomb_Detonate_Post\" %d (%N) (Grenade = %d)", client, client > 0 && client <= MaxClients ? client : 0, entity);
 	}
+
+
+
+	// Detect if a PipeBomb or breakable prop (propane tank, oxygen tank etc) has exploded
+	// /*
+	if( g_fPipeBomb[entity] + 0.1 >= GetGameTime() ) // Matching the time with == is probably fine, but in case of rare moments when detonation happens slightly later, we can do this with 0.1 seconds leeway
+	{
+		// Breakable prop detonating
+		PrintToServer(" > L4DD: \"L4D_PipeBomb_Detonate_Post\" %d (%N) (Grenade = %d) - Breakable Prop explosion", client, client > 0 && client <= MaxClients ? client : 0, entity);
+	}
+	else
+	{
+		PrintToServer(" > L4DD: \"L4D_PipeBomb_Detonate_Post\" %d (%N) (Grenade = %d) - PipeBomb explosion", client, client > 0 && client <= MaxClients ? client : 0, entity);
+		// Grenade detonating
+	}
+
+	g_fPipeBomb[entity] = 0.0;
+	// */
 }
 
 public void L4D_PipeBomb_Detonate_PostHandled(int entity, int client)
@@ -4490,6 +4529,24 @@ public void L4D_PipeBomb_Detonate_PostHandled(int entity, int client)
 
 		ForwardCalled("\"L4D_PipeBomb_Detonate_PostHandled\" %d (%N) (Grenade = %d)", client, client > 0 && client <= MaxClients ? client : 0, entity);
 	}
+
+
+
+	// Detect if a PipeBomb or breakable prop (propane tank, oxygen tank etc) has exploded
+	// /*
+	if( g_fPipeBomb[entity] + 0.1 >= GetGameTime() ) // Matching the time with == is probably fine, but in case of rare moments when detonation happens slightly later, we can do this with 0.1 seconds leeway
+	{
+		// Breakable prop detonating
+		PrintToServer(" > L4DD: \"L4D_PipeBomb_Detonate_PostHandled\" %d (%N) (Grenade = %d) - Breakable Prop explosion", client, client > 0 && client <= MaxClients ? client : 0, entity);
+	}
+	else
+	{
+		PrintToServer(" > L4DD: \"L4D_PipeBomb_Detonate_PostHandled\" %d (%N) (Grenade = %d) - PipeBomb explosion", client, client > 0 && client <= MaxClients ? client : 0, entity);
+		// Grenade detonating
+	}
+
+	g_fPipeBomb[entity] = 0.0;
+	// */
 }
 
 public Action L4D2_VomitJar_Detonate(int entity, int client)
@@ -5010,6 +5067,8 @@ public Action L4D2_OnChooseVictim_Pre(int specialInfected, int &lastTarget)
 	// return Plugin_Changed;
 
 	// No target - the special will stand still.
+	// return Plugin_Handled;
+
 	return Plugin_Continue;
 }
 

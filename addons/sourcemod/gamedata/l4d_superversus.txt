@@ -1,0 +1,75 @@
+"Games"
+{
+    "left4dead"
+    {
+		"Signatures"
+		{
+			/* CTerrorPlayer::RoundRespawn */
+			"RoundRespawn"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
+				"windows"	"\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75"
+				/* 56 8B F1 E8 ? ? ? ? E8 ? ? ? ? 84 C0 75	*/
+				/* previous function in vtable has a string */
+			}
+			"SetHumanSpec"
+			{
+				"library"	"server"
+				"linux" "@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
+				"windows" "\x53\x8B\xD9\x83\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8D\x2A\x2A\x2A\x2A\x2A\x7E\x07\x5E\x32\xC0\x5B\xC2\x04\x00"
+			}
+			"TakeOverBot"
+			{
+				"library"	"server"
+				"linux"	"@_ZN13CTerrorPlayer11TakeOverBotEb"
+				"windows" "\x81\x2A\x2A\x2A\x2A\x2A\x53\x55\x56\x57\x8D\x2A\x2A\x2A\x8B\xF9\x33\xDB\x50"
+			}
+		}
+    }
+    "left4dead2"
+    {
+		"Signatures"
+		{
+			/* CTerrorPlayer::RoundRespawn */
+			"RoundRespawn"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
+				"windows"	"\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75"
+				/* 56 8B F1 E8 ? ? ? ? E8 ? ? ? ? 84 C0 75	*/
+				/* previous function in vtable has a string */
+			}
+			/* CTerrorPlayer::BecomeGhost(bool) is (float) in Windows Binary? Strange */
+			"BecomeGhost"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer11BecomeGhostEb"
+				"windows"	"\x8B\x44\x24\x04\x56\x50\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75\x2A\x83\xBE\x2A\x2A\x00\x00\x06\x0F\x84\x2A\x2A\x00\x00\x6A\x06\x8B\xCE\xE8"
+				/*	8B 44 24 04 56 50 8B F1 E8 ? ? ? ? 84 C0 75 ? 83 BE ? ? 00 00 06 0F 84 ? ? 00 00 6A 06 8B CE E8	*/
+			}
+			/* CCSPlayer::State_Transition(CSPlayerState) - Sig is not unique in Windows but Functions appear similar */
+			"State_Transition"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CCSPlayer16State_TransitionE13CSPlayerState"
+				"windows"	"\x53\x8B\x5C\x24\x08\x56\x8B\xF1\x39\x9E\x2A\x2A\x00\x00\x74\x2A\x80\x7E\x2A\x00\x74\x2A\x80\x4E\x2A\x01\xEB"
+				/*	53 8B 5C 24 08 56 8B F1 39 9E ? ? 00 00 74 ? 80 7E ? 00 74 ? 80 4E ? 01 EB	*/
+			}
+			"SetHumanSpec"
+			{
+				"library" "server"
+				"linux" "@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
+				"windows" "\x55\x8B\xEC\x56\x8B\xF1\x83\xBE\x44\x43\x00\x00\x00\x7E\x07\x32\xC0\x5E\x5D\xC2\x04"
+				/* 55 8B EC 56 8B F1 83 BE 44 43 00 00 00 7E 07 32 C0 5E 5D C2 04 */
+			}
+			"TakeOverBot"
+			{
+				"library"  "server"
+				"linux"    "@_ZN13CTerrorPlayer11TakeOverBotEb"
+				"windows"  "\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x8D\x85"
+				/* 55 8B EC 81 EC ? ? ? ? ? ? ? ? ? ? ? ? ? ? 53 56 8D 85 */
+			}  
+		}
+    }
+}

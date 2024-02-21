@@ -1,0 +1,56 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"en"		"[{olive}SpecListener{default}]"
+	}
+	"OnlySpec"
+	{
+		"en"		"Only spectator can listen."
+		"chi"		"只有旁观者可以听."
+	}
+	"PanelTitle"
+	{
+		"en"		"SpecListener"
+	}
+	"PanelEnable"
+	{
+		"en"		"Enable"
+		"chi"		"开启"
+	}
+	"PanelDisable"
+	{
+		"en"		"Disable"
+		"chi"		"关闭"
+	}
+	"PanelStatus"
+	{
+		"en"		"Status"
+		"chi"		"状态"
+	}
+	"Enable"
+	{
+		"en"		"{green}Enable{default}"
+		"chi"		"{green}开启{default}"
+	}
+	"Disable"
+	{
+		"en"		"{green}Disable{default}"
+		"chi"		"{green}关闭{default}"
+	}
+	"Usage"
+	{
+		"en"		"Usage: sm_listen <enable/disable/status>"
+		"chi"		"用法: sm_listen <enable/disable/status>"
+	}
+	"ErrorFlags"
+	{
+		"en"		"Error: section voice flags."
+		"chi"		"错误: section voice flags"
+	}
+	"ErrorCookie"
+	{
+		"en"		"Error: cookie not cached yet (try again in a bit)."
+		"chi"		"错误: cookie 还没有缓存 (请过会再进行尝试)."
+	}
+}

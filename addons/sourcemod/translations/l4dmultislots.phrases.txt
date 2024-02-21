@@ -1,0 +1,49 @@
+//English by Mi.Cura
+
+"Phrases"
+{
+	"A surviving Bot was added."
+	{
+		"en" "A survivor bot was added to the team!"
+	}
+	"Impossible to generate a bot at the moment."
+	{
+		"en" "A survivor bot can't be spawned right now."
+	}
+	"Please wait to be revived or rescued"
+	{
+		"en" "Please wait to be revived or rescued."
+	}
+	"You are idle. press the left mouse button to join the survivors!"
+	{
+		"en" "Press left mouse button to join survivors!"
+	}
+	"You are already on the team of survivors."
+	{
+		"en" "You are already on the survivor team!"
+	}
+	"Type in chat !join To join the survivors"
+	{
+		"en" "Type {olive}!join{default} to join the survivors!"
+	}
+	"The survivors has started the game, please wait to be resurrected or rescued"
+	{
+		"en" "Your team already started the map.\nYou need reviving or rescuing."
+	}
+	"No Bots for replacement."
+	{
+		"en" "There are no bots to takeover right now."
+	}
+	"No Second Chance"
+	{
+		"en" "You already played on the {blue}Survivor Team{default} this round. You will spawn {green}dead{default}."
+	}
+	"Sorry! No survivor slots"
+	{
+		"en" "Sorry! Numbers of survivor has reached limit!"
+	}
+	"Too many survivors, unbalance"
+	{
+		"en" "Sorry! Team is unbalance, too many players in survivor team!"
+	}
+}

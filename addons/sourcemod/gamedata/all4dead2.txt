@@ -1,0 +1,74 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Addresses"
+		{
+			"NextBotCreatePlayerBot.jumptable"
+			{
+				"windows"
+				{
+					"signature"	"CTerrorPlayer::ReplaceWithBot.jumptable"
+					"offset"	"7"
+				}
+			}
+		}
+		"Signatures"
+		{
+			"CTerrorPlayer::ReplaceWithBot.jumptable"
+			{
+				"library"	"server"
+				// Switch jump with a bunch of cases matching...
+				// PUSH rel32
+				// CALL rel32
+				// JUMP rel8
+				// There are acutally 2 matches of this in the windows binary, 
+				// but they appear to be the same functionality--so it doesn't matter which we get.
+				/* FF 24 85 ? ? ? ? 68 ? ? ? ? E8 ? ? ? ? EB ? 68 ? ? ? ? E8 ? ? ? ? EB ? 68 ? ? ? ? E8 ? ? ? ? EB ? 68 ? ? ? ? E8 ? ? ? ? EB ? 68 ? ? ? ? E8 ? ? ? ? EB ? 68 ? ? ? ? E8 ? ? ? ? EB ? 68 ? ? ? ? E8 */
+				"windows"	"\xFF\x24\x85\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xEB\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xEB\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xEB\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xEB\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xEB\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xEB\x2A\x68\x2A\x2A\x2A\x2A\xE8"
+			}
+			"NextBotCreatePlayerBot<Smoker>"
+			{
+				"library"	"server"
+				"linux"	"@_Z22NextBotCreatePlayerBotI6SmokerEPT_PKc"
+				"mac"		"@_Z22NextBotCreatePlayerBotI6SmokerEPT_PKc"
+			}
+			"NextBotCreatePlayerBot<Boomer>"
+			{
+				"library"	"server"
+				"linux"	"@_Z22NextBotCreatePlayerBotI6BoomerEPT_PKc"
+				"mac"		"@_Z22NextBotCreatePlayerBotI6BoomerEPT_PKc"
+			}
+			"NextBotCreatePlayerBot<Hunter>"
+			{
+				"library"	"server"
+				"linux"	"@_Z22NextBotCreatePlayerBotI6HunterEPT_PKc"
+				"mac"		"@_Z22NextBotCreatePlayerBotI6HunterEPT_PKc"
+			}
+			"NextBotCreatePlayerBot<Spitter>"
+			{
+				"library"	"server"
+				"linux"	"@_Z22NextBotCreatePlayerBotI7SpitterEPT_PKc"
+				"mac"		"@_Z22NextBotCreatePlayerBotI7SpitterEPT_PKc"
+			}
+			"NextBotCreatePlayerBot<Jockey>"
+			{
+				"library"	"server"
+				"linux"	"@_Z22NextBotCreatePlayerBotI6JockeyEPT_PKc"
+				"mac"		"@_Z22NextBotCreatePlayerBotI6JockeyEPT_PKc"
+			}
+			"NextBotCreatePlayerBot<Charger>"
+			{
+				"library"	"server"
+				"linux"	"@_Z22NextBotCreatePlayerBotI7ChargerEPT_PKc"
+				"mac"		"@_Z22NextBotCreatePlayerBotI7ChargerEPT_PKc"
+			}
+			"NextBotCreatePlayerBot<Tank>"
+			{
+				"library"	"server"
+				"linux"	"@_Z22NextBotCreatePlayerBotI4TankEPT_PKc"
+				"mac"		"@_Z22NextBotCreatePlayerBotI4TankEPT_PKc"
+			}
+		}
+	}
+}

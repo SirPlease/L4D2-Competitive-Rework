@@ -1,0 +1,45 @@
+"Phrases"
+{
+	"NEW_FIRST_CAPITAN"
+	{
+		"#format"		"{1:N},{2:d}"
+		"chi"			"[{green}!{default}] {olive}生还者 {default}队长 {green}{1} {default}({2} 票)"
+	}
+
+	"NEW_SECOND_CAPITAN"
+	{
+		"#format"		"{1:N},{2:d}"
+		"chi"			"[{green}!{default}] {olive}感染者 {olive}队长 {green}{1} {default}({2} 票)"
+	}
+
+	"PICK_TEAM"
+	{
+		"#format"		"{1:N},{2:N}"
+		"chi"			"[{green}!{default}] 队长 {olive}{1} {default}选择了玩家 {green}{2}"
+	}
+
+	"VOTE_DISPLAY_MSG"
+	{
+		"chi"			"开始进行mix（队长选人）"
+	}
+
+	"VOTE_END_MSG"
+	{
+		"chi"			"即将开始mix..."
+	}
+
+	"MENU_TITLE_FIRST_CAPITAN"
+	{
+		"chi"			"选择第一个队长"
+	}
+
+	"MENU_TITLE_SECOND_CAPITAN"
+	{
+		"chi"			"选择第二个队长"
+	}
+
+	"MENU_TITLE_PICK_TEAMS"
+	{
+		"chi"			"选择一个队友"
+	}
+}

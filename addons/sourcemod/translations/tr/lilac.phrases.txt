@@ -1,0 +1,106 @@
+"Phrases"
+{
+	"welcome_msg"
+	{
+		"#format"	"{1:s}"
+		"tr"		"Bu sunucu Little Anti-Cheat {1} tarafından korunmaktadır"
+	}
+
+	"kick_query_failure"
+	{
+		"tr"		"Hata: Query yanıtı hatası, bu sorun devam ederse lütfen oyununuzu yeniden başlatın"
+	}
+
+	"kick_interp_exploit"
+	{
+		"#format"	"{1:.0f},{2:d},{3:.3f}"
+		"tr"		"Exploit Algılandı: Interp çok yüksek (en fazla {1}ms / {2}ms). Lütfen cl_interp değerinizi {3} veya daha düşük bir değere ayarlayın"
+	}
+
+	"tban_ping_high"
+	{
+		"#format"	"{1:.0f},{2:d}"
+		"tr"		"Pinginiz çok yüksek (en fazla {1} / {2})"
+	}
+
+	"kick_ban_generic"
+	{
+		"tr"		"Bu sunucudan yasaklandınız"
+	}
+
+	"ban_angle"
+	{
+		"tr"		"Angle-Cheats Algılandı"
+	}
+
+	"ban_chat_clear"
+	{
+		"tr"		"Chat-Clear Algılandı"
+	}
+
+	"ban_convar"
+	{
+		"tr"		"Geçersiz ConVar Tespit Edildi"
+	}
+
+	"ban_nolerp"
+	{
+		"tr"		"NoLerp Algılandı"
+	}
+
+	"ban_bhop"
+	{
+		"tr"		"Bhop Algılandı"
+	}
+
+	"ban_aimbot"
+	{
+		"tr"		"Aimbot Algılandı"
+	}
+
+	"ban_aimlock"
+	{
+		"tr"		"Aimlock Algılandı"
+	}
+
+	"ban_anti_duck_delay"
+	{
+		"tr" 		"FastDuck Algılandı"
+	}
+
+	"ban_noisemaker"
+	{
+		"tr" 		"Sonsuz Gürültücü Tespit Edildi"
+	}
+
+	"ban_macro"
+	{
+		"tr"		"Makro Algılandı"
+	}
+
+	"kick_macro"
+	{
+		"#format"	"{1:s}"
+		"tr"		"{1} Bu sunucuda makroya izin verilmiyor"
+	}
+
+	"chat_invalid_characters"
+	{
+		"tr" 		"Sohbet mesajınız engellendi (Nedeni: Geçersiz Karakterler)."
+	}
+
+	"chat_wide_char_spam"
+	{
+		"tr"		"Sohbet mesajınız engellendi (Nedeni: Geniş Karakterli Spam)."
+	}
+
+	"kick_bad_name"
+	{
+		"tr"		"Adınız geçersiz karakterler içeriyor, lütfen adınızı değiştirin"
+	}
+
+	"ban_name_newline"
+	{
+		"tr"		"Adınızda Yeni Satır Algılandı"
+	}
+}

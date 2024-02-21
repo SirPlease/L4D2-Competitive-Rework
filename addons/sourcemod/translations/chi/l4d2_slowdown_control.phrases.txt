@@ -1,0 +1,12 @@
+﻿"Phrases"
+{
+	"Print_WaterSlowDown_TankSpawn"
+	{
+		"chi"		"Tank局中 {olive}水中减速{default} 效果将被减弱。"
+	}
+
+	"Print_WaterSlowDown_TankDeath"
+	{
+		"chi"		"{olive}水中减速{default} 效果已恢复到正常水平。"
+	}
+}

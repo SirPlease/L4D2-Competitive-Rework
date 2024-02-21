@@ -12,8 +12,7 @@ static char
 	DirSeparator = '\0',
 	configsPath[PLATFORM_MAX_PATH] = "\0",
 	cfgPath[PLATFORM_MAX_PATH] = "\0",
-	customCfgPath[PLATFORM_MAX_PATH] = "\0",
-	customCfgName[PLATFORM_MAX_PATH] = "\0";
+	customCfgPath[PLATFORM_MAX_PATH] = "\0";
 
 static ConVar
 	hCustomConfig = null;
@@ -22,7 +21,6 @@ void Configs_APL()
 {
 	CreateNative("LGO_BuildConfigPath", _native_BuildConfigPath);
 	CreateNative("LGO_ExecuteConfigCfg", _native_ExecConfigCfg);
-	CreateNative("LGO_GetConfigName", _native_GetConfigName);
 }
 
 void Configs_OnModuleStart()
@@ -77,7 +75,6 @@ bool SetCustomCfg(const char[] cfgname)
 		return false;
 	}
 
-	strcopy(customCfgName, sizeof(customCfgName), cfgname);
 	hCustomConfig.SetString(cfgname);
 
 	return true;
@@ -146,7 +143,7 @@ void ExecuteCfg(const char[] sFileName)
 	}
 }
 
-static int _native_BuildConfigPath(Handle plugin, int numParams)
+public int _native_BuildConfigPath(Handle plugin, int numParams)
 {
 	int iLen = 0;
 	GetNativeStringLength(3, iLen);
@@ -164,7 +161,7 @@ static int _native_BuildConfigPath(Handle plugin, int numParams)
 	return 1;
 }
 
-static int _native_ExecConfigCfg(Handle plugin, int numParams)
+public int _native_ExecConfigCfg(Handle plugin, int numParams)
 {
 	int iLen = 0;
 	GetNativeStringLength(1, iLen);
@@ -175,11 +172,5 @@ static int _native_ExecConfigCfg(Handle plugin, int numParams)
 
 	ExecuteCfg(sFileName);
 
-	return 1;
-}
-
-static int _native_GetConfigName(Handle plugin, int numParams)
-{
-	SetNativeString(1, customCfgName, GetNativeCell(2), true);
 	return 1;
 }

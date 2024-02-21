@@ -1,0 +1,107 @@
+"Phrases"
+{
+	"Ext_ChatTagExtinguisher"
+	{
+		"da"	"{olive}[Brandslukker] {default}"
+	}
+	"Ext_ChatTagFlamethrower"
+	{
+		"da"	"{olive}[Brandskuller] {default}"
+	}
+	"Ext_ChatTagFreezerspray"
+	{
+		"da"	"{olive}[Frysestråle {default}"
+	}
+	"Ext_ChatTagBlastpushback"
+	{
+		"da"	"{olive}[Højtryk blæser] {default}"
+	}
+	"Ext_WeaponName"
+	{
+		"da"	"en Maskinpistol"
+	}
+	"Ext_Blocked"
+	{
+		"da"	"Du kan kun bruge en brandslukker hvis du bære '{olive}<WEAPON>{default}'."
+	}
+	"Ext_Broken"
+	{
+		"da"	"var ødelagt af {olive}<NAME>{default}."
+	}
+	"Ext_EquipFull"
+	{
+		"da"	"Der er alt for mange der bruger brandslukkeren lige nu."
+	}
+	"Ext_EquipHasCheck"
+	{
+		"da"	"Du bære den allerede. Du skal have en '{olive}<WEAPON>{default}' for at bruge den"
+	}
+	"Ext_EquipHasCombo"
+	{
+		"da"	"Du bære den allerede! Flammekaster (primær angrebs knap), Brandslukker (zoom-knapen) og Højtryk-blæser (Langsomt gå + zoom knappen). Genlad for at smide den (eller skriv {olive}!dropext{default} i chatten)."
+	}
+	"Ext_EquipCombo"
+	{
+		"da"	"båret. Flammekaster (primær angrebs-knap) og Brandslukker (zoom-knappen). Genlad for at smide den (eller skriv {olive}!dropext{default} i chatten)."
+	}
+	"Ext_EquipUseExtinguisher"
+	{
+		"da"	"båret. Sluk molotov cocktail og fyrværkeri. Genlad for at smide den (eller skriv {olive}!dropext{default} i chatten)."
+	}
+	"Ext_EquipUseFlamethrower"
+	{
+		"da"	"båret. Brænd fjender og sæt ild til physike genstande. Genlad for at smide den (eller skriv {olive}!dropext{default} i chatten)."
+	}
+	"Ext_EquipUseFreezerspray"
+	{
+		"da"	"båret. Spray og skub fjender for at gøre dem langsommere. Genlad for at smide den (eller skriv {olive}!dropext{default} i chatten)."
+	}
+	"Ext_EquipUseBlastpushback"
+	{
+		"da"	"båret. Blæser overlevende og specielle inficerede væk fra dig."
+	}
+	"Ext_EmptyExtinguisher"
+	{
+		"da"	"Brandslukker benzin: Tømt!"
+	}
+	"Ext_EmptyFlamethrower"
+	{
+		"da"	"Flammekaster benzin: Tømt!"
+	}
+	"Ext_EmptyFreezerspray"
+	{
+		"da"	"Frysestråle benzin: Tømt!"
+	}
+	"Ext_EmptyBlastpushback"
+	{
+		"da"	"Blæser benzin: Tømt!"
+	}
+	"Ext_FuelExtinguisher"
+	{
+		"da"	"Brandslukker benzin:"
+	}
+	"Ext_FuelFlamethrower"
+	{
+		"da"	"Flammekaster benzin:"
+	}
+	"Ext_FuelFreezerspray"
+	{
+		"da"	"Frysende benzin:"
+	}
+	"Ext_FuelBlastpushback"
+	{
+		"da"	"Blæser benzin:"
+	}
+	"Ext_Incapped"
+	{
+		"da"	"Du kan bruge ildslukkeren mens du er nede. Tryk på genladsknappen (eller {olive}!dropext{default} i chatten)."
+	}
+	"Ext_Refuel"
+	{
+		"da"	"Du kan genopfylde ildslukkere der er blevet smidt mens du holder en benzin dunk. Sigt på ildslukkeren og hold SKYD (venstre mus). Genlad for at smide den (eller skriv {olive}!dropext{default} i chatten)."
+	}
+	"Ext_Refueled"
+	{
+		"da"	"Er blevet fyldt op igen!"
+	}
+}

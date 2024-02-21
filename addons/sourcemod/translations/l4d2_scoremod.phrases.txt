@@ -1,0 +1,38 @@
+"Phrases"
+{
+	"RoundOneBonus"
+	{
+		"en"		"{blue}[{default}!{blue}] {default}Round {blue}1 {default}Bonus: {olive}%d"
+		"chi"		"{blue}[{default}!{blue}] {default}回合 {blue}1 {default}奖励分: {olive}%d"
+	}
+
+	"RoundTowBonus"
+	{
+		"en"		"{blue}[{default}!{blue}] {default}Round {blue}2 {default}Bonus: {olive}%d"
+		"chi"		"{blue}[{default}!{blue}] {default}回合 {blue}2 {default}奖励分: {olive}%d"
+	}
+
+	"Difference"
+	{
+		"en"		"{red}[{default}!{red}] {default}Difference: {olive}%d"
+		"chi"		"{red}[{default}!{red}] {default}分差: {olive}%d"
+	}
+
+	"CustomDistanceBonus"
+	{
+		"en"		"{blue}[{default}!{blue}] {default}Custom Max Distance: {olive}%d"
+		"chi"		"{blue}[{default}!{blue}] {default}自定义最大路程分: {olive}%d"
+	}
+
+	"RoundOneBonus_Difference"
+	{
+		"en"		"{blue}[{default}!{blue}] {default}Round {blue}1 {default}Bonus: {olive}%d {default}({green}Difference: {olive}%d{default})"
+		"chi"		"{blue}[{default}!{blue}] {default}回合 {blue}1 {default}奖励分: {olive}%d {default}({green}分差: {olive}%d{default})"
+	}
+
+	"HealthBonus"
+	{
+		"en"		"{blue}[{default}!{blue}] {default}Health Bonus: {olive}%d"
+		"chi"		"{blue}[{default}!{blue}] {default}血量: {olive}%d"
+	}
+}

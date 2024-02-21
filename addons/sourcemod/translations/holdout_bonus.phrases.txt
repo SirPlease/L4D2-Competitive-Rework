@@ -1,0 +1,44 @@
+"Phrases"
+{
+	"HoldoutStarts"
+	{
+		"en"		"{default}Holdout event starts... ({orange}%i{default} bonus over {olive}%i{default} seconds)"
+		"chi"		"{default}坚守事件开始... (在 {olive}%i{default} 秒内有 {orange}%i{default} 点奖励分)"
+	}
+
+	"NoHoldout"
+	{
+		"en"		"no holdout event this round."
+		"chi"		"这一轮没有坚守事件."
+	}
+
+	"InHoldout"
+	{
+		"en"		"{orange}%i{default} out of {olive}%i{default} [{orange}%i{default}/{olive}%i{default} sec]."
+		"chi"		"{default}事件总分 {olive}%i{default} 中已得实际总分 {orange}%i{default} [{orange}%i{default}/{olive}%i{default} 秒]."
+	}
+
+	"HoldoutOver"
+	{
+		"en"		"{orange}%i{default} out of {olive}%i{default} [event over]."
+		"chi"		"{default}事件总分 {olive}%i{default} 中得实际总分 {orange}%i{default} [事件结束]."
+	}
+
+	"AboutToHoldout"
+	{
+		"en"		"{orange}%i{default} out of {olive}%i{default} [not started yet]."
+		"chi"		"{default}事件总分 {olive}%i{default} 中已得实际总分 {orange}%i{default} [还未开始]."
+	}
+
+	"HoldoutBonus"
+	{
+		"en"		"{default}Holdout Bonus: %s"
+		"chi"		"{default}坚守奖励分: %s"
+	}
+
+	"DisplayHoldoutBonus"
+	{
+		"en"		"{default}Holdout Bonus: {orange}%i{default} out of {olive}%i{default}."
+		"chi"		"{default}坚守奖励分: {default}事件总分 {olive}%i{default} 中得实际总分 {orange}%i{default}."
+	}
+}

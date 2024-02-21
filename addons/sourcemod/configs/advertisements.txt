@@ -1,0 +1,58 @@
+// Advertisements 2.1
+// by Tsunami
+//
+// Types
+// -----
+// center: Center message
+// chat: Chat message
+// hint: Hint message
+// menu: Menu message
+// top: Top message
+//
+// Flags (optional)
+// -----
+// Accepts flags of admins that will not see the advertisement.
+// When omitted everyone will see the advertisement.
+// When left empty only admins will see the advertisement.
+
+"Advertisements"
+{
+    "1"
+    {
+        "chat"      "{green}❀ /matach 加载竞赛配置 /rmatch 卸载竞赛配置"
+    }
+    "2"
+    {
+        "chat"      "{green}❀ /servers 查看其他服务器"
+    }
+    "3"
+    {
+        "chat"      "{green}❀ 投票菜单 /votemenu"
+    }
+    "4"
+    {
+        "chat"      "{green}❀ 有4控制Tank Fight和6v6和常规配置!"
+    }
+    "5"
+    {
+        "chat"      "{green}❀ 有马内了再扩大服务器规模!"
+    }
+    "6"
+    {
+        "chat"      "{green}❀ 禁100lerp,请改至67以下"
+    }
+    "7"
+    {
+        "chat"      "{green}❀ 好!开摆! 寄~寄~ 寄摸~寄摸~ 米骑诺~ 寄摸西~"
+    }
+    "8"
+    {
+        "chat"      "{green}❀ 4万英尺高射AIM120,2马赫创塔台,来了."
+    }
+    "9"
+    {
+        "chat"      "{green}❀ 实力差距过大,建议重新分队."
+    }
+
+}
+

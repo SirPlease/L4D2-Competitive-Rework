@@ -3,8 +3,17 @@
 #endif
 #define __confogl_debug_included
 
+#if DEBUG_ALL
+	#define DEBUG_DEFAULT "1"
+#else
+	#define DEBUG_DEFAULT "0"
+#endif
+
 static char
 	g_sLogAction[256];
+
+static bool
+	g_bConfoglDebug = false;
 
 static ConVar
 	g_hCvarCustomErrorLog = null,
@@ -12,7 +21,8 @@ static ConVar
 
 void Debug_OnModuleStart()
 {
-	g_hCvarDebugConVar = CreateConVarEx("debug", "0", "Turn on debug logging in all confogl modules", _, true, 0.0, true, 1.0);
+	g_hCvarDebugConVar = CreateConVarEx("debug", DEBUG_DEFAULT, "Turn on Debug Logging in all Confogl Modules", _, true, 0.0, true, 1.0);
+
 	//confogl_custom_error_logs
 	g_hCvarCustomErrorLog = CreateConVarEx( \
 		"custom_error_logs", \
@@ -21,9 +31,8 @@ void Debug_OnModuleStart()
 		_, true, 0.0, true, 1.0 \
 	);
 
-#if DEBUG_ALL
-	g_hCvarDebugConVar.BoolValue = true;
-#endif
+	g_bConfoglDebug = g_hCvarDebugConVar.BoolValue;
+	g_hCvarDebugConVar.AddChangeHook(Debug_ConVarChange);
 
 	char sTime[64], sBuffer[64];
 	FormatTime(sTime, sizeof(sTime), "%Y%m%d");
@@ -36,9 +45,14 @@ void Debug_OnModuleStart()
 	}
 }
 
+public void Debug_ConVarChange(ConVar hConvar, const char[] sOldValue, const char[] sNewValue)
+{
+	g_bConfoglDebug = hConvar.BoolValue;
+}
+
 stock bool IsDebugEnabled()
 {
-	return (g_hCvarDebugConVar.BoolValue);
+	return (g_bConfoglDebug || DEBUG_ALL);
 }
 
 stock void Debug_LogError(const char[] sModuleName, const char[] sMessage, any ...)

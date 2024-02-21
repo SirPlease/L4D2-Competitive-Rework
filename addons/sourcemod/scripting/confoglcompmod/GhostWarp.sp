@@ -36,7 +36,7 @@ void GW_OnModuleStart()
 	HookEvent("round_start", GW_RoundStart);
 }
 
-static void GW_ConVarsChanged(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+public void GW_ConVarsChanged(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	GW_bEnabled = GW_hGhostWarp.BoolValue;
 	GW_bReload = GW_hGhostWarpReload.BoolValue;
@@ -67,7 +67,7 @@ bool GW_OnPlayerRunCmd(int iClient, int iButtons)
 	return true;
 }
 
-static void GW_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+public void GW_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; i++) {
 		GW_bDelay[i] = false;
@@ -75,21 +75,21 @@ static void GW_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroad
 	}
 }
 
-static void GW_PlayerDeath_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+public void GW_PlayerDeath_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iClient = GetClientOfUserId(hEvent.GetInt("userid"));
 
 	GW_iLastTarget[iClient] = -1;
 }
 
-static Action GW_ResetDelay(Handle hTimer, any iClient)
+public Action GW_ResetDelay(Handle hTimer, any iClient)
 {
 	GW_bDelay[iClient] = false;
 
 	return Plugin_Stop;
 }
 
-static Action GW_Cmd_WarpToSurvivor(int iClient, int iArgs)
+public Action GW_Cmd_WarpToSurvivor(int iClient, int iArgs)
 {
 	if (iClient < 1 || iArgs != 1) {
 		return Plugin_Handled;

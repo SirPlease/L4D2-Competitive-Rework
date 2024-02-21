@@ -1,0 +1,98 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Addresses"
+		{
+			"TheCount"
+			{
+				"linux"
+				{
+					"signature"	"nav_update_lighting"
+					"read"		"17"
+				}
+				"windows"
+				{
+					"signature"	"nav_update_lighting"
+					"read"		"70"
+				}
+			}
+		}
+
+		"Offsets"
+		{
+			/* CTerrorPlayer::GetFlowDistance(TerrorNavArea::FlowType)const */
+			"m_flow"
+			{
+				"linux"		"340"
+				"windows"	"332"
+			}
+		}
+	
+		"Signatures"
+		{
+			/* nav_update_lighting(const CCommand *) */
+			"nav_update_lighting"
+			{
+				"library"	"server"
+				"linux"		"@_ZL19nav_update_lightingRK8CCommand"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x57\x33\x2A\x83\x2A\x2A\x75"
+				/* ? ? ? ? ? ? 57 33 ? 83 ? ? 75 */
+			}
+
+			/* CTerrorPlayer::CleanupPlayerState(void) */
+			"CTerrorPlayer::CleanupPlayerState"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer18CleanupPlayerStateEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x0F\x2A\x2A\x83\x2A\x2A\x56\x8B\x2A\xC7"
+				/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 0F ? ? 83 ? ? 56 8B ? C7 */
+			}
+
+			/* Checkpoint::GetLargestArea(Checkpoint *__hidden this) */
+			"Checkpoint::GetLargestArea"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK10Checkpoint14GetLargestAreaEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x53\x8B\x2A\x2A\x33\x2A\x33\x2A\x89\x2A\x2A\x83"
+				/* ? ? ? ? ? ? ? 8B ? 53 8B ? ? 33 ? 33 ? 89 ? ? 83 */
+			}
+
+			/* TerrorNavMesh::GetLastCheckpoint(TerrorNavMesh *__hidden this) */
+			"TerrorNavMesh::GetLastCheckpoint"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK13TerrorNavMesh17GetLastCheckpointEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x33\x2A\x57\x85\x2A\x7E\x2A\x8B\xB1\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
+				/* ? ? ? ? ? ? 56 33 ? 57 85 ? 7E ? 8B B1 ? ? ? ? 8B ? 8B */
+			}
+
+			/* Checkpoint::ContainsArea(TerrorNavArea *)const */
+			"Checkpoint::ContainsArea"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK10Checkpoint12ContainsAreaEP13TerrorNavArea"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x33\x2A\x56\x85\x2A\x7E\x2A\x8B\x2A\x8B"
+				/* ? ? ? ? ? ? 33 ? 56 85 ? 7E ? 8B ? 8B */
+			}
+
+			/* CDirectorChallengeMode::FindRescueAreaTrigger(void) */
+			"CDirectorChallengeMode::FindRescueAreaTrigger"
+			{
+				"library"	"server"
+				"linux"		"@_ZN22CDirectorChallengeMode21FindRescueAreaTriggerEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x53\x57\x8B\xB8"
+				/* ? ? ? ? ? ? ? ? 83 ? ? 53 57 8B B8 */
+			}
+
+			/* CBaseTrigger::IsTouching(CBaseTrigger *__hidden this, CBaseEntity *) */
+			"CBaseTrigger::IsTouching"
+			{
+				"library"	"server"
+				"linux"		"@_ZN12CBaseTrigger10IsTouchingEP11CBaseEntity"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\x8B\x2A\x2A\xFF\x2A\x8B\x2A\x89\x2A\x2A\xEB\x2A\xC7\x45\x2A\x2A\x2A\x2A\x2A\x8D\x2A\x2A\x51\x8D\x8E\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x33"
+				/* ? ? ? ? ? ? 8B ? ? 85 ? 74 ? 8B ? 8B ? ? FF ? 8B ? 89 ? ? EB ? C7 45 ? ? ? ? ? 8D ? ? 51 8D 8E ? ? ? ? E8 ? ? ? ? 33 */
+			}
+		}
+	}
+}

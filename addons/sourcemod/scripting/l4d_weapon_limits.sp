@@ -14,6 +14,7 @@
 #include <sdkhooks>
 #define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
+#include <colors>
 
 #define GAMEDATA_FILE				"l4d_wlimits"
 #define GAMEDATA_USE_AMMO			"CWeaponAmmoSpawn_Use"
@@ -78,6 +79,8 @@ public void OnPluginStart()
 	HookEvent("player_death", OnDeath);
 	HookEvent("player_bot_replace", OnBotReplacedPlayer);
 	HookEvent("bot_player_replace", OnPlayerReplacedBot);
+
+	LoadTranslations("l4d_weapon_limits.phrases");
 
 	// For debug
 	/*for (int i = 1; i <= MaxClients; i++) {
@@ -203,7 +206,7 @@ public Action ClearLimits_Cmd(int args)
 
 	bIsLocked = false;
 
-	PrintToChatAll("[L4D Weapon Limits] Weapon limits cleared!");
+	CPrintToChatAll("%t", "LimitsCleared");		//[L4D Weapon Limits] Weapon limits cleared!
 
 	if (hLimitArray != null) {
 		hLimitArray.Clear();
@@ -373,7 +376,7 @@ void denyWeapon(int wep_slot, LimitArrayEntry arrayEntry, int weapon, int client
 		&& g_iLastPrintTickCount[client] != iLastTick
 	) {
 		//CPrintToChat(client, "{blue}[{default}Weapon Limits{blue}]{default} This weapon group has reached its max of {green}%d", arrayEntry.LAE_iLimit);
-		PrintToChat(client, "\x01[\x05Weapon Limits\x01] This weapon group has reached its max of \x04%d\x01!", arrayEntry.LAE_iLimit);
+		CPrintToChat(client, "%t", "ReachedLimits", arrayEntry.LAE_iLimit);		//\x01[\x05Weapon Limits\x01] This weapon group has reached its max of \x04%d\x01!
 		EmitSoundToClient(client, SOUND_NAME);
 
 		g_iWeaponAlreadyGiven[client][weapon] = iWeaponRef;

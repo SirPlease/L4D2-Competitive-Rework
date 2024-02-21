@@ -1,0 +1,27 @@
+"Phrases"
+{
+	"VOTE_TITLE"
+	{
+		"chi"			"开始随机地图"
+	}
+    "VOTE_MESSAGE"
+	{
+		"chi"			"正在随机地图中..."
+	}
+	"ANNOUNCE_MIXMAP_PREFIX"
+	{
+		"chi"			"[{red}!{default}] mix地图序列: "
+	}
+	"HINT_SHOW_MAP_QUEUE"
+	{
+		"chi"			"[{red}!{default}]使用{olive}!mixmaps{default}来再次展示地图序列!"
+	}
+	"QUEUE_NO_MAP"
+	{
+		"chi"  			"[{red}!{default}]mixmap没有地图!"
+	}
+	"CHANGE_TO_FIRST_MAP"
+	{
+		"chi"			"[{red}!{default}]将于5秒后切换到第一张图..."
+	}
+}

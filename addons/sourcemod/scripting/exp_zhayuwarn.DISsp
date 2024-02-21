@@ -1,0 +1,27 @@
+#pragma semicolon               1
+#pragma newdecls                required
+#include <sourcemod>
+#include <colors>
+#include <l4d2util_constants>
+#include <exp_interface>
+
+/*
+public void L4D2_OnGetExp(int client, int exp){
+    int count = 0;
+    int totalexp = 0;
+    for (int i = 1; i <= MaxClients; i++){
+        if (IsClientInGame(i)){
+            if (GetClientTeam(i) == L4D2Team_Infected || GetClientTeam(i) == L4D2Team_Survivor){
+                if (i != client){
+                    count++;
+                    totalexp += L4D2_GetClientExp(i);
+                }
+            }
+        }
+    }
+    float avgexp = float(totalexp) / float(count);
+    float per = float(exp) / avgexp;
+    if (per > 2.0){
+        PrintToChatAll("有炸鱼的来了！");
+    }
+    }*/

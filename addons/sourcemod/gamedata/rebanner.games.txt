@@ -1,0 +1,85 @@
+"Games"
+{
+    "left4dead2"
+    {
+        "Signatures"
+        {
+            "CBaseClient::SendServerInfo" //  " CBaseClient::SendServerInfo"
+            {
+                "library"       "engine"
+                "windows"       "\x55\x8B\xEC\xB8\x8C\x18\x00\x00"
+                "linux"         "@_ZN11CBaseClient14SendServerInfoEv"
+            }
+            "Host_BuildConVarUpdateMessage" // "Engine only supports 255 ConVars marked %i\n"
+            {
+                "library"       "engine"
+                "windows"       "\x55\x8B\xEC\x81\xEC\x0C\x02\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x8B\x45\x10"
+                "linux"         "@_Z29Host_BuildConVarUpdateMessageR10CUtlVectorI16NetMessageCvar_t10CUtlMemoryIS0_iEEib"
+            }
+        }
+        "Offsets"
+        {
+            "CBaseClient::GetPlayerSlot"
+            {
+                "linux"     "15"
+                "windows"   "14"
+            }
+        }
+    }
+
+
+    "tf"
+    {
+        "Signatures"
+        {
+            "CBaseClient::SendServerInfo" //  " CBaseClient::SendServerInfo: %s  :  %d"
+            {
+                "library"        "engine"
+                "windows"        "\x55\x8B\xEC\xB8\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x53\x56\x8B\x2A\x2A\x2A\x2A\x2A\x8B\xD9\x68"
+                "linux"            "@_ZN11CBaseClient14SendServerInfoEv"
+            }
+            "Host_BuildConVarUpdateMessage" // "Engine only supports 255 ConVars marked %i\n"
+            {
+                "library"        "engine"
+                "windows"        "\x55\x8B\xEC\x81\xEC\x08\x02\x00\x00\x53\xFF\x75\x10\x8B\x5D\x0C\x53\xE8"
+                "linux"            "@_Z29Host_BuildConVarUpdateMessageP13NET_SetConVarib"
+            }
+        }
+        "Offsets"
+        {
+            "CBaseClient::GetPlayerSlot"
+            {
+                "linux"     "15"
+                "windows"   "14"
+            }
+        }
+    }
+
+
+    "csgo"
+    {
+        "Signatures"
+        {
+            "CBaseClient::SendServerInfo" //  " CBaseClient::SendServerInfo: %s  :  %d"
+            {
+                "library"        "engine"
+                "windows"        "\x55\x8B\xEC\x83\xE4\xF8\x81\xEC\x2A\x2A\x2A\x2A\x53\x8B\xD9\x8B\x0D\x2A\x2A\x2A\x2A\x56\x57\x89"
+                "linux"            "\x55\x89\xE5\x57\x56\x53\x81\xEC\x2C\x09\x00\x00\x8B\x2A\x2A\x89"
+            }
+            "Host_BuildConVarUpdateMessage" // "Engine only supports 255 ConVars marked %i\n", string near the top of the subroutine in asm (there are two references to the str)
+            {
+                "library"        "engine"
+                "windows"        "\x55\x8B\xEC\x83\xEC\x08\x53\x56\x89\x2A\x2A\xB2\x01\x57"
+                "linux"            "\x55\x89\xE5\x57\x56\x53\x83\xEC\x34\x8B\x2A\x2A\x8B\x2A\x2A\x89\xC1\x89\x2A\x2A\x8B\x2A\x2A\x88\x2A\x2A\x0F\xB6\xC0"
+            }
+        }
+        "Offsets"
+        {
+            "CBaseClient::GetPlayerSlot"
+            {
+                "windows"   "16"
+                "linux"     "17"
+            }
+        }
+    }
+}

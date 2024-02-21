@@ -1,0 +1,79 @@
+"Phrases"
+{
+	"BAD_ARGUMENT"
+	{
+		"#format"		"{1:s}"
+		"en"			"Bad argument {1} for mix. Use: {olive}!mix <type>"
+	}
+
+	"ARGUMENT_EXAMPLE"
+	{
+		"#format"		"{1:s}"
+		"en"			"> {olive}!mix {1}"
+	}
+	
+	"NO_ARGUMENT"
+	{
+		"en"			"No arguments for mix. Use: {olive}!mix <type>"
+	}
+
+	"CANT_CHANGE_TEAM"
+	{
+		"en"			"You cannot change the team {olive}during the mix"
+	}
+
+	"BAD_TEAM_SIZE"
+	{
+		"#format"		"{1:d}"
+		"en"			"There are not enough players in the game. {olive}Need {1} players"
+	}
+
+	"LEFT_READYUP"
+	{
+		"en"			"Impossible to mix: {olive}only available during ready-up"
+	}
+
+	"VOTE_COULDOWN"
+	{
+		"#format"		"{1:d}"
+		"en"			"A vote cannot be called at this moment, try again in a {1} second"
+	}
+	
+	"SECOND_HALF_OF_ROUND"
+	{
+		"en"			"Impossible to mix: {olive}now the second half of the round"
+	}
+
+	"ROUND_LIVE"
+	{
+		"en"			"Impossible to mix: {olive}the round has already begun"
+	}
+
+	"CLIENT_LEAVE"
+	{
+		"#format"		"{1:N}"
+		"en"			"Mix member {olive}{1} {default}left. {olive}Mix rollback"
+	}
+
+	"CANCEL_MIX_SUCCESS"
+	{
+		"#format"		"{1:N}"
+		"en"			"Mix member {olive}{1} {default}interrupted the mix"
+	}
+
+	"CANCEL_MIX_FAIL"
+	{
+		"#format"		"{1:d}"
+		"en"			"The mix cannot be interrupted at at this moment, try again in {1} seconds"
+	}
+
+	"ALREADY_IN_PROGRESS"
+	{
+		"en"			"A mix session is in progress!"
+	}
+
+	"UNSUPPORTED"
+	{
+		"en" 			"This poll type is not supported!"
+	}
+}

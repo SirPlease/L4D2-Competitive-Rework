@@ -1,0 +1,38 @@
+"Games"
+{
+	"left4dead"
+	{
+		"Signatures"
+		{
+			/*
+			*  CTerrorPlayer::OnITExpired(void)
+			*/
+			"CTerrorPlayer::OnITExpired"
+			{
+				"library"		"server"
+				"linux"			"@_ZN13CTerrorPlayer11OnITExpiredEv"
+				"windows"		"\xD9\x05\x2A\x2A\x2A\x2A\x56\x57\x8B\xF9\xD8\x9F\x2A\x2A\x00\x00\x8D\xB7\x2A\x2A\x00\x00\xDF\xE0\xF6\xC4\x2A\x7B\x13\x8B\x46\xF8\x8B\x10\x8D\x4E\xF8\x56\xFF\xD2\xD9\x2A\x2A\x2A\x2A\x2A\xD9\x1E\x8B\x37\x6A"
+				/* D9 05 ? ? ? ? 56 57 8B F9 D8 9F ? ? 00 00 8D B7 ? ? 00 00 DF E0 F6 C4 ? 7B 13 8B 46 F8 8B 10 8D 4E F8 56 FF D2 D9 ? ? ? ? ? D9 1E 8B 37 6A */
+				/* Search: "PlayerVomitExpired" */
+			}
+		}
+	}
+	"left4dead2"
+	{
+		"Signatures"
+		{
+			/*
+			*  CTerrorPlayer::OnITExpired(void)
+			*/
+			"CTerrorPlayer::OnITExpired"
+			{
+				"library"		"server"
+				"linux"			"@_ZN13CTerrorPlayer11OnITExpiredEv"
+				"windows"		"\x56\x57\x8B\x2A\xF3\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x2A\x2A\x2A\x2A\x2A\x2A\x8D\x2A\x2A\x2A\x2A\x2A\x9F\xF6\x2A\x2A\x7B\x2A\x8B\x2A\x2A\x8B\x2A\x8D\x2A\x2A\x56\xFF\x2A\xF3\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xF3\x2A\x2A\x2A\x8B\x2A\x6A"
+				/* 56 57 8B ? F3 ? ? ? ? ? ? ? 0F ? ? ? ? ? ? 8D ? ? ? ? ? 9F F6 ? ? 7B ? 8B ? ? 8B ? 8D ? ? 56 FF ? F3 ? ? ? ? ? ? ? F3 ? ? ? 8B ? 6A */
+				/* Search: "PlayerVomitExpired" */
+			}
+		}
+	}
+}
+

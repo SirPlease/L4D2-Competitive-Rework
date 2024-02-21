@@ -1,0 +1,56 @@
+"Phrases"
+{
+	"CA Admin"
+	{
+		"en"			"Admin"
+	}
+	"CA Public"
+	{
+		"en"			"Player"
+	}
+	"LAN City Desc"
+	{
+		"en"			"an IP Address"
+	}
+	"LAN Region Desc"
+	{
+		"en"			"a Local Subnet"
+	}
+	"LAN Country Desc"
+	{
+		"en"			"a Local Area Network"
+	}
+	
+	"LAN Country Short"
+	{
+		"en"			"LN"
+	}
+	
+	"LAN Country Short 3"
+	{
+		"en"			"LAN"
+	}
+	
+	"Unknown City Desc"
+	{
+		"en"			"Somewhere"
+	}
+	"Unknown Region Desc"
+	{
+		"en"			"an Unknown Region"
+	}
+	"Unknown Country Desc"
+	{
+		"en"			"an Unknown Country"
+	}
+	
+	"Unknown Country Short"
+	{
+		"en"			"??"
+	}
+	
+	"Unknown Country Short 3"
+	{
+		"en"			"???"
+	}
+}

@@ -1,0 +1,43 @@
+//
+// RESLISTFIXES_XBOX.XSC
+//
+// Prevent or load specific resources
+// Syntax: <-/+> <resourcepath>
+// - Removes
+// + Adds
+//
+
+// pass 1
+// - "sound\physics\glass\glass_sheet_break2.wav"
+// - "sound\physics\surfaces\underwater_impact_bullet1.wav"
+// - "sound\physics\surfaces\underwater_impact_bullet2.wav"
+// - "sound\physics\surfaces\underwater_impact_bullet3.wav"
+// - "sound\player\hunter\voice\attack\hunter_attackmix_01.wav"
+// - "sound\weapons\molotov\fire_ignite_3.wav"
+// - "sound\weapons\molotov\molotov_detonate_4.wav"
+// - "sound\weapons\molotov\molotov_detonate_1.wav"
+// - "sound\weapons\molotov\molotov_detonate_2.wav"
+// - "sound\weapons\hegrenade\explode5.wav"
+// - "sound\weapons\hegrenade\explode4.wav"
+
+// pass 2
+// - "sound\player\boomer\voice\attack\zombie10_growl3.wav"
+// - "sound\player\death1.wav"
+// - "sound\player\death2.wav"
+// - "sound\player\death3.wav"
+// - "sound\player\death4.wav"
+// - "sound\player\death5.wav"
+// - "sound\player\death6.wav"
+// - "sound\player\pz\voice\die\zombiedog_death1.wav"
+// - "sound\player\pz\voice\die\zombiedog_death2.wav"
+// - "sound\player\pz\voice\hurt\zombiedog_hurt2.wav"
+// - "sound\player\pz\voice\hurt\zombiedog_hurt3.wav"
+// - "sound\player\pz\voice\idle\zombiedog_growl1.wav"
+// - "sound\player\pz\voice\idle\zombiedog_growl2.wav"
+// - "sound\player\pz\voice\idle\zombiedog_growl3.wav"
+// - "sound\player\pz\voice\idle\zombiedog_growl4.wav"
+
+// always needs to be there, some finale maps do dynamic spawning
+// these resource are getting incorrectly culled
++ "materials\models\infected\common\l4d2\ci_shadowbuild.vmt"
+

@@ -1,0 +1,92 @@
+﻿"Phrases"
+{
+	"Change map advertise"
+	{
+		"#format"		"{1:s}"
+		"fr"			"Taper {1} dans le chat pour lancer un vote pour une nouvelle campagne."
+	}
+	"Map vote advertise"
+	{
+		"#format"		"{1:s},{2:s}"
+		"fr"			"Pour voter pour la carte suivante, tapez: {1}\n           Pour voir tous les votes, tapez: {2}"
+	}	
+	
+	"Choose a Map"
+	{
+		"fr"			"Choisissez une carte"
+	}
+	"Choose a Mission"
+	{
+		"fr"			"Choisissez une campagne"
+	}
+	"I dont care" {
+		"fr"			"Je m'en fiche"
+	}
+	"All maps" {
+		"fr"			"Toutes les cartes"
+	}
+	
+	"Campaign finished"
+	{
+		"#format"		"{1:s}"
+		"fr"			"Campagne {1} fini"
+	}
+	"Switching campaign to"
+	{
+		"#format"		"{1:s}"
+		"fr"			"Changer de campagne pour {1}."
+	}
+	"Switching map to"
+	{
+		"#format"		"{1:s}"
+		"fr"			"Change de carte pour {1}."
+	}	
+	"Switching to the vote winner"
+	{
+		"#format"		"{1:s}"
+		"fr"			"Changement pour le vote gagnant: {1}."
+	}
+	
+	"Map is now winning the vote"
+	{
+		"#format"		"{1:s}"
+		"fr"			"Map {1} gagne maintenant le vote"
+	}
+	"Mission is now winning the vote"
+	{
+		"#format"		"{1:s}"
+		"fr"			"Campagne {1} gagne maintenant le vote"
+	}
+	"No one has voted yet" {
+		"fr"			"Personne n'a encore voté."
+	}
+	"Voting is disable" {
+		"fr"			"Le vote a été désactivé sur ce serveur."
+	}
+	"Voting is not available" {
+		"fr"			"Le vote n'est activé que sur une carte de Scavenge, où la map finale."
+	}
+	"Votes" {
+		"fr"			"votes"
+	}
+	"You did not vote" {
+		"#format"		"{1:s}"
+		"fr"			"Vous n'avez pas voté.\nPour voter, taper: {1}"
+	}
+	"You voted for" {
+		"#format"		"{1:s},{2:s},{3:s}"	
+		"fr"			"Vous avez voté pour {1}.\n- Pour changer votre vote, tapez: {2}\n- Pour voir tous les votes, tapez: {3}"
+	}
+	
+	
+	"The next map is currently"
+	{
+		"#format"		"{1:s}"
+		"fr"			"La prochaine map est : {1}."
+	}
+	"The next campaign is currently"
+	{
+		"#format"		"{1:s}"
+		"fr"			"La prochaine campagne est : {1}."
+	}
+}

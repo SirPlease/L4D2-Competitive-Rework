@@ -33,12 +33,12 @@ void WS_OnModuleStart()
 	HookEvent("jockey_ride_end", WS_JockeyRideEnd);
 }
 
-static void WS_FactorConVarChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+public void WS_FactorConVarChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	WS_fSlowdownFactor = WS_hFactor.FloatValue;
 }
 
-static void WS_ConVarChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+public void WS_ConVarChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	WS_SetStatus();
 }
@@ -84,12 +84,12 @@ void WS_OnGameFrame()
 	}
 }
 
-static void WS_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+public void WS_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	WS_SetStatus();
 }
 
-static void WS_JockeyRide(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+public void WS_JockeyRide(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int victim = GetClientOfUserId(hEvent.GetInt("victim"));
 	int jockey = GetClientOfUserId(hEvent.GetInt("userid"));
@@ -103,7 +103,7 @@ static void WS_JockeyRide(Event hEvent, const char[] sEventName, bool bDontBroad
 	}
 }
 
-static void WS_JockeyRideEnd(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+public void WS_JockeyRideEnd(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int jockey = GetClientOfUserId(hEvent.GetInt("userid"));
 

@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"{blue}[{green}Zone{blue}]{default}:"
+	}
+	"OnlyFirstReadyup"
+	{
+		"chi"		"你只能在第一回合Readyup前使用这个命令."
+	}
+	"CannotCalled"
+	{
+		"chi"		"暂时无法发起一个投票，请稍等几秒钟..."
+	}
+	"NeedFull"
+	{
+		"chi"		"所有队伍需要满人."
+	}
+	"SurvivorsGet"
+	{
+		"chi"		"生还者获得 %s?"
+	}
+	"BeforeReadyup"
+	{
+		"chi"		"准备完毕后无法使用."
+	}
+	"WeaponsSet"
+	{
+		"chi"		"生还者武器设置完成!"
+	}
+	"Welcome"
+	{
+		"chi"		"欢迎来到 {blue}Zone{green}Hunters模式{default}."
+	}
+	"Type"
+	{
+		"chi"		"在聊天栏输入 {olive}!mode{default} 来投票选取武器的使用."
+	}
+}

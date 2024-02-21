@@ -1,0 +1,68 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"en"		"{default}<{olive}Lerp{default}>"
+		"chi"		"{default}<{olive}Lerp{default}>"
+	}
+
+	"LerpSettingList"
+	{
+		"en"		"[!] Lerp setting list:"
+		"chi"		"[!] Lerp设置列表:"
+	}
+
+	"Format"		//%N: name %s: SteamID %.01f: lerp
+	{
+		"en"		"%N [%s]: %.01f"
+		"chi"		"%N [%s]: %.01f"
+	}
+
+	"Nothing"
+	{
+		"en"		"There is nothing here!"
+		"chi"		"这儿什么都没有!"
+	}
+
+	"Spec_Lerp"
+	{
+		"en"		"{teamcolor}%N {default}was moved to spectators for lerp {teamcolor}%.01f."
+		"chi"		"{teamcolor}%N {default}因lerp {teamcolor}%.01f{default} 而被移动至旁观者."
+	}
+
+	"IllegalLerp"
+	{
+		"en"		"Illegal lerp value (min: {teamcolor}%.01f{default}, max: {teamcolor}%.01f{default})"
+		"chi"		"非法lerp值 (最小: {teamcolor}%.01f{default}, 最大: {teamcolor}%.01f{default})"
+	}
+
+	"Lerp"		//%N: name %.01f: lerp
+	{
+		"en"		"{teamcolor}%N {default}@ {teamcolor}%.01f"
+		"chi"		"{teamcolor}%N {default}@ {teamcolor}%.01f"
+	}
+
+	"LerpChange"
+	{
+		"en"		"{teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {green}%.01f {default}[%s%d{default}/%d {olive}changes]"
+		"chi"		"{teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {green}%.01f {default}[%s%d{default}/%d {olive}次改变]"
+	}
+
+	"Spec_ChangeLerp"
+	{
+		"en"		"{teamcolor}%N {default}was moved to spectators (illegal lerp change)!"
+		"chi"		"{teamcolor}%N {default}被移动至旁观者 (非法lerp改变次数)!"
+	}
+
+	"NoMidChange"
+	{
+		"en"		"Illegal change of Lerp midgame! Change it back to {teamcolor}%.01f."
+		"chi"		"非法的中途lerp改变! 请将lerp改变回 {teamcolor}%.01f."
+	}
+
+	"ChangedBack"
+	{
+		"en"		"{teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {green}%.01f"
+		"chi"		"{teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {green}%.01f"
+	}
+}

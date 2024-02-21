@@ -1,0 +1,115 @@
+"Phrases"
+{
+	"srvcln_version"
+	{
+		"en"	"Server Clean Up version."
+	}
+	"srvcln_enable"
+	{
+		"en"	"Enable automatic server clean up (1 - enable, 0 - disable, manual clean up command only)."
+	}
+	"srvcln_logs"
+	{
+		"en"	"Clean up regular server logs."
+	}
+	"srvcln_logging_mode"
+	{
+		"en"	"Log what Server Clean Up deletes."
+	}
+	"srvcln_smlogs"
+	{
+		"en"	"Clean up SourceMod server logs."
+	}
+	"srvcln_sprays"
+	{
+		"en"	"Clean up uploaded sprays."
+	}
+	"srvcln_demos"
+	{
+		"en"	"Clean up automatically recorded demo files."
+	}
+	"srvcln_replays"
+	{
+		"en"	"Clean up generated replay files."
+	}
+	"srvcln_roundbackups"
+	{
+		"en"	"Clean up CS:GO round backup files (note: only if none of the naming options have been changed from default settings for round backups)."
+	}
+	"srvcln_demos_archives"
+	{
+		"en"	"Include archives when deleting old demos (if your server automatically compresses them, detects: bz2, zip, rar and 7z)."
+	}
+	"srvcln_replays_archives"
+	{
+		"en"	"Include archives when deleting old replays (if your server automatically compresses them, detects: bz2, zip, rar and 7z)."
+	}
+	"srvcln_smlogs_type"
+	{
+		"en"	"What type of logs to delete from the SM logs folder (0 - just normal logs, 1 - normal logs and error logs, 2 - all logs)."
+	}
+	"srvcln_logs_time"
+	{
+		"en"	"Time (in hours) to keep regular server logs (default is one week, minimum value is 12 hours, set to -1 to keep current day only)."
+	}
+	"srvcln_replays_time"
+	{
+		"en"	"Time (in hours) to keep generated replay files (default is one week, minimum value is 12 hours, set to -1 to keep current day only)."
+	}
+	"srvcln_roundbackups_time"
+	{
+		"en"	"Time (in hours) to keep round backup's in CS:GO (default is one week, minimum value is 12 hours, set to -1 to keep current day only)."
+	}
+	"srvcln_sprays_time"
+	{
+		"en"	"Time (in hours) to keep uploaded sprays (default is one week, minimum value is 12 hours, set to -1 to keep current day only)."
+	}
+	"srvcln_smlogs_time"
+	{
+		"en"	"Time (in hours) to keep SourceMod server logs (default is one week, minimum value is 12 hours, set to -1 to keep current day only)."
+	}
+	"srvcln_demos_time"
+	{
+		"en"	"Time (in hours) to keep demo files (default is one week, minimum value is 12 hours, set to -1 to keep current day only)."
+	}
+	"srvcln_demos_path"
+	{
+		"en"	"Optional directory path to your demo files if you are manually saving them elsewhere."
+	}
+	"srvcln_now"
+	{
+		"en"	"Runs server clean up manually."
+	}
+	"Command Now Start"
+	{
+		"en"	"[SM] Starting server clean up."
+	}
+	"Command Now End"
+	{
+		"en"	"[SM] Server clean up finished."
+	}
+	"Command Now Log"
+	{
+		"en"	"Manually ran a server clean up."
+	}
+	"CL Error TS"
+	{
+		"#format"		"{1:s}"
+		"en"	"Fatal error reading timestamp for \"{1}\"."
+	}
+	"CL Error Del"
+	{
+		"#format"		"{1:s}"
+		"en"	"Unable to delete \"{1}\", please check permissions."
+	}
+	"CL Deleted File"
+	{
+		"#format"		"{1:s}"
+		"en"	"Deleted file \"{1}\""
+	}
+	"CL Deleted Folder"
+	{
+		"#format"		"{1:s}"
+		"en"	"Deleted folder \"{1}\""
+	}
+}

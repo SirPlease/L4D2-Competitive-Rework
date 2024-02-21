@@ -1,0 +1,114 @@
+"Games"
+{
+	"#default"
+	{
+		"Offsets"
+		{
+			"OS"
+			{
+				"windows"	"1"
+				"linux"		"2"
+			}
+		}
+	}
+	
+	"left4dead"
+	{
+		"Addresses"
+		{
+			"NextBotCreatePlayerBot<SurvivorBot>"
+			{
+				"signature" "NextBotCreatePlayerBot<SurvivorBot>"
+			}
+		}
+	
+		"Signatures" // Found by Dragokas
+		{
+			/*  HexRays:			int RestoreTransitionedSurvivorBots()
+			*	Search string:		"CreatePlayerBot: Could not Instance()" => multiple instance of NextBotCreatePlayerBot*, but, <SurvivorBot> is the only have 7 Xref
+			*	Search string:		"Attempting to spawn a survivor bot" => RestoreTransitionedSurvivorBots - has Ref. to NextBotCreatePlayerBot<SurvivorBot>
+			*	Version:  			No ver. info (16-Jul-2019)
+			 
+			*	Where call this function: RestoreTransitionedSurvivorBots(void);	CDirector::AddSurvivorBot(SurvivorCharacterType)
+			*
+			*/
+			"NextBotCreatePlayerBot<SurvivorBot>"
+			{	
+				"library"	"server"
+				"linux"		"@_Z22NextBotCreatePlayerBotI11SurvivorBotEPT_PKc"
+				"windows"	"\xE8\x2A\x2A\x2A\x2A\x8B\xF8\x83\xC4\x08\x3B\xFD\x74\x2A\x8B\x37"
+				/* E8 ? ? ? ? 8B F8 83 C4 08 3B FD 74 ? 8B 37 */
+				/* (addr+5) + *(addr+1) = call function addr -> this  signature into <CDirector::AddSurvivorBot> */
+				/* Sig. should point to "call" opcode E8, not to the func. start */
+			}
+			
+			/* 	HexRays:			int __cdecl CTerrorPlayer::RoundRespawn(CTerrorPlayer *this)
+				Version:  			No ver. info (16-Jul-2019)
+			*/
+			"CTerrorPlayer::RoundRespawn"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
+				"windows"	"\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75"
+				/* 56 8B F1 E8 ? ? ? ? E8 ? ? ? ? 84 C0 75	*/
+				/* previous function in vtable has a string */
+			}
+		}
+	}
+	
+	"left4dead2"
+	{
+		"Addresses"
+		{
+			"NextBotCreatePlayerBot<SurvivorBot>"
+			{
+				"signature" "NextBotCreatePlayerBot<SurvivorBot>"
+			}
+		}
+	
+		"Signatures" // Found by MicroLeo
+		{
+			/*  C++ Function:	CBaseEntity* __cdecl NextBotCreatePlayerBotSurvivorBot(const char *src) */
+			/* Search string:	 CreatePlayerBot: Could not Instance() from the bot edict */
+			/* Windows signature:	 (so crazy->to long)55 8B EC 83 EC 28 A1 ?? ?? ?? ?? 33 C5 89 45 FC 56 57 8B 7D 08 68 ?? ?? ?? ?? E8 ?? ?? ?? ?? 8B 0D ?? ?? ?? ?? 8B 01 8B 90 DC 00 00 00 83 C4 04 57 FF D2 6A 00 8B F0 E8 ?? ?? ?? ?? 83 C4 04 85 F6 75 21 57 */
+			/* Windows signature2: 	33 C0 6A 00 68 FC ?? ?? ?? 68 ?? ?? ?? ?? 6A 00 50 E8 ?? ?? ?? ?? 8B F0 83 C4 14 85 F6 75 20 68 ?? ?? ?? ?? FF 15 */
+			/* Windows signature3:  E8 ?? ?? ?? ?? 83 C4 08 85 C0 74 1C 8B 10 8B 92  this  signature into <CDirector::AddSurvivorBot> */
+			/* Finally:	 33 C0 6A 00 68 FC (warning:0xFC may be change when next game version) */
+			/* Version: 	2209 */
+			/* 
+			*	Where call this function: 
+			*	RestoreTransitionedSurvivorBots(void);	CDirector::AddSurvivorBot(SurvivorCharacterType)
+			*/
+			"NextBotCreatePlayerBot<SurvivorBot>"
+			{	
+				"library"	"server"
+				"linux"		"@_Z22NextBotCreatePlayerBotI11SurvivorBotEPT_PKc"
+				"windows"	"\xE8****\x83\xC4\x08\x85\xC0\x74\x1C\x8B\x10\x8B"
+				/* E8 ? ? ? ? 83 C4 08 85 C0 74 1C 8B 10 8B */
+				/* (addr+5) + *(addr+1) = call function addr -> this  signature into <CDirector::AddSurvivorBot> */
+				/* Sig. should point to "call" opcode E8, not to the func. start */
+			}
+			
+			/* C++ Function:  	void* __thiscall  CTerrorPlayer::RoundRespawn(CBaseEntity*) */
+			/* 
+			*	Search string:  	Through "playercontrolledzombies" to find function < CTerrorGameRules::HasPlayerControlledZombies > 
+			*	function < CTerrorPlayer::RoundRespawn(void) > on the inside call the function < CTerrorGameRules::HasPlayerControlledZombies > 
+			*	you need search this function < CTerrorGameRules::HasPlayerControlledZombies > ,  one by one for match linux's function < CTerrorPlayer::RoundRespawn(void) > 
+			*/
+			/* Windows signature:  	56 8B F1 E8 ?? ?? ?? ?? E8 ?? ?? ?? ?? 84 C0 75 07 8B CE E8 ?? ?? ?? ?? C6 86 75 3E 00 00 00 */
+			/* Finally: 	 56 8B F1 E8 ?? ?? ?? ?? E8 ?? ?? ?? ?? 84 C0 75 */
+			/* Version:  	2209 */
+			/* 
+			*	Where call this function: 
+			*	windows: 8B 06 8B 90 08 08 00 00 8B CE FF D2 B0 01 5E 5D C2 04 00 CC  < call edx > < edx = (*pEntity)+0x808 >  OllyDebug breakpoint
+			*/
+			"CTerrorPlayer::RoundRespawn"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
+				"windows"	"\x56\x8B\xF1\xE8****\xE8****\x84\xC0\x75"
+				/*  56 8B F1 E8 ? ? ? ? E8 ? ? ? ? 84 C0 75 */
+			}
+		}
+	}
+}

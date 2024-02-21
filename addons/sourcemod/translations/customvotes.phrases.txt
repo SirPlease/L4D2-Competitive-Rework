@@ -1,0 +1,53 @@
+﻿"Phrases"
+{
+	"Already Voted"
+	{
+		"en"	"{yellow}[投票] {lightgreen} You have already voted for this item."
+		"chi"	"{yellow}[投票] {lightgreen} 你已经进行过此项投票."
+	}
+
+	"No Valid Clients"
+	{
+		"en"	"{yellow}[投票] {lightgreen} No clients available."
+		"chi"	"{yellow}[投票] {lightgreen} 无有效客户端."
+	}
+
+	"No Votes Remaining"
+	{
+		"en"	"{yellow}[投票] {lightgreen} You may no longer vote for this item."
+		"chi"	"{yellow}[投票] {lightgreen} 你不能再进行此项投票."
+	}
+
+	"Voting No Longer Available"
+	{
+		"en"	"{yellow}[投票] {lightgreen} This vote is no longer available to players."
+		"chi"	"{yellow}[投票] {lightgreen} 此项投票不再向玩家开放."
+	}
+
+	"Not Enough Valid Clients"
+	{
+		"en"	"{yellow}[投票] {lightgreen} There are not enough players to vote for this."
+		"chi"	"{yellow}[投票] {lightgreen} 没有足够的玩家参与投票."
+	}
+
+	"Votes Remaining"
+	{
+		"#format"	"{1:i}"
+		"en"		"{yellow}[投票] {lightgreen} You may vote for this {1} more time(s)."
+		"chi"		"{yellow}[投票] {lightgreen} 你还可以进行此项投票{green} {1} {lightgreen}次."
+	}
+
+	"Vote Delay"
+	{
+		"#format"	"{1:i}"
+		"en"		"{yellow}[投票] {lightgreen} You must wait {1} more second(s) before voting."
+		"chi"		"{yellow}[投票] {lightgreen} 你必须等待{green} {1} {lightgreen}秒才能进行投票."
+	}
+
+	"Vote Cooldown"
+	{
+		"#format"	"{1:i}"
+		"en"		"{yellow}[投票] {lightgreen} You must wait {1} more second(s) before voting for this again."
+		"chi"		"{yellow}[投票] {lightgreen} 你必须等待{green} {1} {lightgreen}秒才能再次进行此项投票."
+	}
+}

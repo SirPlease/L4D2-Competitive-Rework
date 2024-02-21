@@ -1,0 +1,8 @@
+"Phrases"
+{
+	"Current"
+	{
+		"en"		"{default}Current: {orange}%d%%"
+		"chi"		"{default}当前进度: {orange}%d%%"
+	}
+}

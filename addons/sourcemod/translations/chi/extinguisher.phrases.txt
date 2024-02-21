@@ -1,0 +1,107 @@
+"Phrases"
+{
+	"Ext_ChatTagExtinguisher"
+	{
+		"chi"	"{olive}[灭火器] {default}"
+	}
+	"Ext_ChatTagFlamethrower"
+	{
+		"chi"	"{olive}[火枪] {default}"
+	}
+	"Ext_ChatTagFreezerspray"
+	{
+		"chi"	"{olive}[冷冻喷雾] {default}"
+	}
+	"Ext_ChatTagBlastpushback"
+	{
+		"chi"	"{olive}[爆炸后推] {default}"
+	}
+	"Ext_WeaponName"
+	{
+		"chi"	"SMG"
+	}
+	"Ext_Blocked"
+	{
+		"chi"	"你要 '{olive}<WEAPON>{default}' 才可用灭火器."
+	}
+	"Ext_Broken"
+	{
+		"chi"	"被 {olive}<NAME>{default} 破坏."
+	}
+	"Ext_EquipFull"
+	{
+		"chi"	"太多人使用灭火器 ."
+	}
+	"Ext_EquipHasCheck"
+	{
+		"chi"	"已装备. 只可装备 {olive}<WEAPON>{default} 时有效. 输入 {olive}!dropext{default} 或 R 键弃置."
+	}
+	"Ext_EquipHasCombo"
+	{
+		"chi"	"已装备. 喷火(攻击键), 扑灭 molotov火,烟花火同 Spitter 液,喷向及推开敌人可减慢敌人速度(zoom 键).喷向敌人可炸飞敌人(zoom + shift键). 输入 {olive}!dropext{default} 或 R 键弃置."
+	}
+	"Ext_EquipCombo"
+	{
+		"chi"	"已装备. 喷火(攻击键), 扑灭 molotov火,烟花火同 Spitter 液,喷向及推开敌人可减慢敌人速度(zoom 键).喷向敌人可炸飞敌人(zoom + shift键). 输入 {olive}!dropext{default} 或 R 键弃置."
+	}
+	"Ext_EquipUseExtinguisher"
+	{
+		"chi"	"已装备. 可扑灭 molotov火,烟花火同 Spitter 液. 输入 {olive}!dropext{default} 或 R 键弃置."
+	}
+	"Ext_EquipUseFlamethrower"
+	{
+		"chi"	"已装备. 可燃烧敌人及物理对象. 输入 {olive}!dropext{default} 或 R 键弃置."
+	}
+	"Ext_EquipUseFreezerspray"
+	{
+		"chi"	"已装备. 喷向及推开敌人可减慢敌人速度. 输入 {olive}!dropext{default} 或 R 键弃置."
+	}
+	"Ext_EquipUseBlastpushback"
+	{
+		"chi"	"已装备. 喷向敌人可炸飞敌人. 输入 {olive}!dropext{default} 或 R 键弃置."
+	}
+	"Ext_EmptyExtinguisher"
+	{
+		"chi"	"灭火器 燃料: 空!"
+	}
+	"Ext_EmptyFlamethrower"
+	{
+		"chi"	"火枪 燃料: 空!"
+	}
+	"Ext_EmptyFreezerspray"
+	{
+		"chi"	"冷冻喷雾 燃料: 空!"
+	}
+	"Ext_EmptyBlastpushback"
+	{
+		"chi"	"爆炸后推 燃料: 空!"
+	}
+	"Ext_FuelExtinguisher"
+	{
+		"chi"	"灭火器 燃料:"
+	}
+	"Ext_FuelFlamethrower"
+	{
+		"chi"	"火枪 燃料:"
+	}
+	"Ext_FuelFreezerspray"
+	{
+		"chi"	"冷冻喷雾 燃料:"
+	}
+	"Ext_FuelBlastpushback"
+	{
+		"chi"	"爆炸后推 燃料:"
+	}
+	"Ext_Incapped"
+	{
+		"chi"	"你倒下了也可以用灭火器，输入 {olive}!dropext{default} 或 R 键弃置."
+	}
+	"Ext_Refuel"
+	{
+		"chi"	"你可以拿住汽油罐瞄准灭火器按住射击键补充地上的灭火器的燃料。 输入 {olive}!dropext{default} 或 R 键弃置."
+	}
+	"Ext_Refueled"
+	{
+		"chi"	"已被加油！"
+	}
+}

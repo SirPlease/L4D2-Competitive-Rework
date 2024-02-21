@@ -1,0 +1,13 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"en"		"{blue}[{default}AutoPause{blue}]{default}"
+	}
+	"crashed"
+	{
+		"en"		"{olive}%s{default} crashed."
+		"es"		"{olive}%s{default} no responde."
+		"chi"		"{olive}%s{default} 客户端崩溃."
+	}
+}

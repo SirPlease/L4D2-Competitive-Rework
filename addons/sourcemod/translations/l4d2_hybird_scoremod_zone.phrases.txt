@@ -1,0 +1,110 @@
+"Phrases"
+{
+	"RHalfBonusFull"
+	{
+		"en"		"%s{default}R{orange}#1{default} Bonus: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
+		"chi"		"%s{default}R{orange}#1{default} 奖励分: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
+	}
+
+	"RBonusFull"
+	{
+		"en"		"%s{default}R{orange}#%i{default} Bonus: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | DB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | Pills: {olive}%d{default} <{lightgreen}%.1f%%{default}>]"
+		"chi"		"%s{default}R{orange}#%i{default} 奖励分: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | DB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | 药分: {olive}%d{default} <{lightgreen}%.1f%%{default}>]"
+	}
+
+	"RBonusLiteShort"
+	{
+		"en"		"%s{default}R{orange}#%i{default} Bonus: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+		"chi"		"%s{default}R{orange}#%i{default} 奖励分: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+
+	"RHalfBonusLite"
+	{
+		"en"		"%s{default}R{orange}#1{default} Bonus: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+		"chi"		"%s{default}R{orange}#1{default} 奖励分: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+
+	"RBonusLite"
+	{
+		"en"		"%s{default}R{orange}#%i{default} Bonus: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {lightgreen}%.0f%%{default} | DB: {lightgreen}%.0f%%{default} | Pills: {lightgreen}%.0f%%{default}]"
+		"chi"		"%s{default}R{orange}#%i{default} 奖励分: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {lightgreen}%.0f%%{default} | DB: {lightgreen}%.0f%%{default} | 药分: {lightgreen}%.0f%%{default}]"
+	}
+
+	"MapInfo"
+	{
+		"en"		"{default}[{orange}Hybrid Bonus{default} :: {lightgreen}%iv%i{default}] Map Info"
+		"chi"		"{default}[{orange}Hybrid Bonus{default} :: {lightgreen}%iv%i{default}] 地图信息"
+	}
+
+	"Distance"
+	{
+		"en"		"{default}Distance: {olive}%d{default}"
+		"chi"		"{default}路程分: {olive}%d{default}"
+	}
+
+	"TotalBonus"
+	{
+		"en"		"{default}Total Bonus: {olive}%d{default} <{lightgreen}100.0%%{default}>"
+		"chi"		"{default}总奖励分: {olive}%d{default} <{lightgreen}100.0%%{default}>"
+	}
+
+	"HealthBonus"
+	{
+		"en"		"{default}Health Bonus: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+		"chi"		"{default}血量奖励分: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+
+	"DamageBonus"
+	{
+		"en"		"{default}Damage Bonus: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+		"chi"		"{default}伤害奖励分: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+
+	"PillsBonus"
+	{
+		"en"		"{default}Pills Bonus: {olive}%d{default}(max {olive}%d{default}) <{lightgreen}%.1f%%{default}>"
+		"chi"		"{default}止痛药奖励分: {olive}%d{default}(max {olive}%d{default}) <{lightgreen}%.1f%%{default}>"
+	}
+
+	"TieBreakerBonus"
+	{
+		"en"		"{default}Tiebreaker: {olive}%d{default}"
+		"chi"		"{default}平局决胜分: {olive}%d{default}"
+	}
+
+	// no color tags
+	// 无法使用color tags
+	// --------------------------------------
+
+	"WipedOut"
+	{
+		"en"		"wiped out"
+		"chi"		"全军覆灭"
+	}
+
+	"Depleted"
+	{
+		"en"		"bonus depleted"
+		"chi"		"奖励分消耗殆尽"
+	}
+
+	// --------------------------------------
+
+	"EQSMRBonus"
+	{
+		"en"		"%s{default}Round {orange}%i{default} Bonus: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
+		"chi"		"%s{default}回合 {orange}%i{default} 奖励分: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
+	}
+
+	"TieBreaker"
+	{
+		"en"		"%s{lightgreen}TIEBREAKER{default}: Team {orange}%#1{default} - {olive}%i{default}, Team {orange}%#2{default} - {olive}%i{default}"
+		"chi"		"%s{lightgreen}平局决胜{default}: 团队 {orange}%#1{default} - {olive}%i{default}, 团队 {orange}%#2{default} - {olive}%i{default}"
+	}
+
+	"TieBreakerAnnounce"
+	{
+		"en"		"%s{olive}Teams have performed absolutely equal! Impossible to decide a clear round winner."
+		"chi"		"%s{olive}双方本轮得分绝对相等! 无法决定哪一方为本轮胜者."
+	}
+}

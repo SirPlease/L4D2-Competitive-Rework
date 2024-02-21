@@ -1,0 +1,102 @@
+"Phrases"
+{
+	"welcome_msg"
+	{
+		"pt"		"Este servidor é protegido pelo Little Anti-Cheat {1}"
+	}
+
+	"kick_query_failure"
+	{
+		"pt"		"Erro: seu cliente falhou em responder o pedido a tempo. Por favor, reinicie seu jogo se este problema persistir"
+	}
+
+	"kick_interp_exploit"
+	{
+		"pt"		"Violação detectada: sua interpolação está muito alta ({1}ms / máx. {2}ms). Por favor, defina seu cl_interp de volta para {3} ou menor"
+	}
+
+	"tban_ping_high"
+	{
+		"pt"		"Seu ping está muito alto ({1} / máx. {2})"
+	}
+
+	"kick_ban_generic"
+	{
+		"pt"		"Você foi banido(a) deste servidor"
+	}
+
+	"ban_angle"
+	{
+		"pt"		"Angle-Cheats detectado"
+	}
+
+	"ban_chat_clear"
+	{
+		"pt"		"Limpador de Chat detectado"
+	}
+
+	"ban_convar"
+	{
+		"pt"		"Cvar Inválida detectada"
+	}
+	
+	"ban_nolerp"
+	{
+		"pt"		"NoLerp detectado"
+	}
+
+	"ban_bhop"
+	{
+		"pt"		"Bhop detectado"
+	}
+
+	"ban_aimbot"
+	{
+		"pt"		"Aimbot detectado"
+	}
+
+	"ban_aimlock"
+	{
+		"pt"		"Aimlock detectado"
+	}
+	
+	"ban_anti_duck_delay"
+	{
+		"pt" 		"Anti-Duck-Delay detectado"
+	}
+
+	"ban_noisemaker"
+	{
+		"pt" 		"Brinquedo Barulhento Infinito detectado"
+	}
+
+	"ban_macro"
+	{
+		"pt"		"Macro detectado"
+	}
+
+	"kick_macro"
+	{
+		"pt"		"O macro de {1} não é permitido neste servidor"
+	}
+
+	"chat_invalid_characters"
+	{
+		"pt" 		"Sua mensagem de texto foi bloqueada (Motivo: Caracteres Inválidos)."
+	}
+
+	"chat_wide_char_spam"
+	{
+		"pt"		"Sua mensagem de texto foi bloqueada (Motivo: Spam de Caracteres do tipo Wide)."
+	}
+
+	"kick_bad_name"
+	{
+		"pt"		"Seu nome contém caracteres inválidos. Por favor, mude seu nome"
+	}
+
+	"ban_name_newline"
+	{
+		"pt"		"Name Newlines detectado"
+	}
+}

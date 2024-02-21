@@ -634,7 +634,7 @@ static void ConVarsInType()
 	Weapon_bRemoveExtraItems = Weapon_hRemoveExtraItems.BoolValue;
 }
 
-static void WI_ConvarChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+public void WI_ConvarChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	for (int index = FIRST_WEAPON; index < NUM_OF_WEAPONS; index++) {
 		if (Weapon_hConvar[index] == null) {
@@ -1203,17 +1203,17 @@ static void WI_GetMapInfo()
 	Weapon_bUpdateMapInfo = false;
 }
 
-static void WI_RoundStart_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+public void WI_RoundStart_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	CreateTimer(0.3, WI_RoundStartLoop, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-static void WI_RoundEnd_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+public void WI_RoundEnd_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	Weapon_bUpdateMapInfo = true;
 }
 
-static Action WI_RoundStartLoop(Handle hTimer)
+public Action WI_RoundStartLoop(Handle hTimer)
 {
 	if (!IsPluginEnabled()) {
 		return Plugin_Stop;
@@ -1276,7 +1276,7 @@ static Action WI_RoundStartLoop(Handle hTimer)
 	return Plugin_Stop;
 }
 
-static void WI_SpawnerGiveItem_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+public void WI_SpawnerGiveItem_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!IsPluginEnabled()) {
 		return;

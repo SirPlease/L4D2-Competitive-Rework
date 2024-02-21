@@ -1,0 +1,44 @@
+"Phrases"
+{
+	"Title"
+	{
+		"en"		"{red}[{default}Tank Rock Selector{red}]"
+		"chi"		"{red}[{default}Tank 抛石选择{red}]"
+	}
+
+	"ERock"
+	{
+		"en"		"{red}Use {default}-> {olive}Underhand throw"
+		"chi"		"{red}使用键 {default}-> {olive}低抛砖"
+	}
+
+	"MeleeRock"
+	{
+		"en"		"{red}Melee {default}-> {olive}One hand overhand"
+		"chi"		"{red}鼠标右键 {default}-> {olive}右键砖"
+	}
+
+	"RRock"
+	{
+		"en"		"{red}Reload {default}-> {olive}Two hand overhand"
+		"chi"		"{red}换弹键 {default}-> {olive}高抛砖"
+	}
+
+	"JumpRockCoolDown"
+	{
+		"en"		"{red}Jump Rocks {default}have a {olive}%i{default} second cooldown."
+		"chi"		"{red}跳砖 {default}有 {olive}%i{default} 秒冷却时间"
+	}
+
+	"JumpRockNotice"
+	{
+		"en"		"<{red}JumpRock{default}> Jump Rock will be ready in {olive}%i{default} seconds!"
+		"chi"		"<{red}JumpRock{default}> 跳砖将在 {olive}%i{default} 秒内冷却完毕!"
+	}
+
+	"Ready"
+	{
+		"en"		"<{red}JumpRock{default}> Jump Rock Is {olive}Ready!"
+		"chi"		"<{red}JumpRock{default}> 跳砖已准备 {olive}完毕!"
+	}
+]

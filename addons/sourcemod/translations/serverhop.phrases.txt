@@ -1,0 +1,25 @@
+﻿"Phrases"
+{
+	"SelectServer"
+	{
+		"chi"		"选择一个服务器加入..."
+		"en"		"Select a server to join ..."
+	}
+	"AboutToJoinServer"
+	{
+		"chi"		"<服务器信息>"
+		"en"		"<Target Server Info>"
+	}
+	"HopNotification"
+	{
+		"#format"	"{1:s},{2:s}"
+		"chi"		"{1} 准备换服至 {2} !"
+		"en"		"{1} is about to hop to {2} !"
+	}
+	"Advert"
+	{
+		"#format"	"{1:s},{2:s}"
+		"chi"		"{1} [键入 {2} 加入]"
+		"en"		"{1} [type {2} to join]"
+	}
+}

@@ -1,0 +1,107 @@
+"Phrases"
+{
+	"(Voice)"
+	{
+		"chi"		"(人物语音)"
+	}
+	
+	"playeraskready"
+	{
+		"chi"		"准备好了吗"
+	}
+	
+	"playerno"
+	{
+		"chi"		"不"
+	}
+	
+	"playersorry"
+	{
+		"chi"		"抱歉"
+	}
+	
+	"playeryes"
+	{
+		"chi"		"是"
+	}
+	
+	"playerthanks"
+	{
+		"chi"		"谢谢！"
+	}
+	
+	"playermoveon"
+	{
+		"chi"		"走吧"
+	}
+	
+	"playerleadon"
+	{
+		"chi"		"你带路"
+	}
+	
+	"playerhurryup"
+	{
+		"chi"		"快！"
+	}
+	
+	"playernicejob"
+	{
+		"chi"		"干得好！"
+	}
+	
+	"playerwaithere"
+	{
+		"chi"		"等等"
+	}
+	
+	"playerwarncareful"
+	{
+		"chi"		"小心"
+	}
+	
+	"playerimwithyou"
+	{
+		"chi"		"我跟着你呢"
+	}
+	
+	"playeralsowarnsmoker"
+	{
+		"chi"		"Smoker!"
+	}
+	
+	"playeralsowarnboomer"
+	{
+		"chi"		"Boomer!"
+	}
+	
+	"playeralsowarnhunter"
+	{
+		"chi"		"Hunter!"
+	}
+	
+	"playeralsowarnspitter"
+	{
+		"chi"		"Spitter!"
+	}
+	
+	"playeralsowarnjockey"
+	{
+		"chi"		"Jockey!"
+	}
+	
+	"playeralsowarncharger"
+	{
+		"chi"		"Charger!"
+	}
+	
+	"playeralsowarnwitch"
+	{
+		"chi"		"Witch!"
+	}
+	
+	"playeralsowarntank"
+	{
+		"chi"		"Tank!"
+	}
+}

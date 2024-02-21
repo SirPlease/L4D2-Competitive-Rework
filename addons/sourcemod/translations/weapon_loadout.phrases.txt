@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"en"		"{blue}[{green}Zone{blue}]{default}:"
+	}
+	"OnlyFirstReadyup"
+	{
+		"en"		"You can only call for the vote during the first ready-up of a round."
+	}
+	"CannotCalled"
+	{
+		"en"		"A vote cannot be called at this moment, try again in a second or five."
+	}
+	"NeedFull"
+	{
+		"en"		"Both teams need to be full."
+	}
+	"SurvivorsGet"
+	{
+		"en"		"Survivors get %s?"
+	}
+	"BeforeReadyup"
+	{
+		"en"		"Vote didn't pass before you left ready-up."
+	}
+	"WeaponsSet"
+	{
+		"en"		"Survivor Weapons Set!"
+	}
+	"Welcome"
+	{
+		"en"		"Welcome to {blue}Zone{green}Hunters{default}."
+	}
+	"Type"
+	{
+		"en"		"Type {olive}!mode{default} in chat to vote on weapons used."
+	}
+}

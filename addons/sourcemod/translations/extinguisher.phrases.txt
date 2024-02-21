@@ -1,0 +1,107 @@
+"Phrases"
+{
+	"Ext_ChatTagExtinguisher"
+	{
+		"en"	"{olive}[Extinguisher] {default}"
+	}
+	"Ext_ChatTagFlamethrower"
+	{
+		"en"	"{olive}[Flamethrower] {default}"
+	}
+	"Ext_ChatTagFreezerspray"
+	{
+		"en"	"{olive}[Freezerspray] {default}"
+	}
+	"Ext_ChatTagBlastpushback"
+	{
+		"en"	"{olive}[Blastpushback] {default}"
+	}
+	"Ext_WeaponName"
+	{
+		"en"	"a SMG"
+	}
+	"Ext_Blocked"
+	{
+		"en"	"You can only use extinguishers if you have equipped '{olive}<WEAPON>{default}'."
+	}
+	"Ext_Broken"
+	{
+		"en"	"was broken by {olive}<NAME>{default}."
+	}
+	"Ext_EquipFull"
+	{
+		"en"	"Too many players are using the Extinguisher."
+	}
+	"Ext_EquipHasCheck"
+	{
+		"en"	"Already equipped! Requires '{olive}<WEAPON>{default}' to use."
+	}
+	"Ext_EquipHasCombo"
+	{
+		"en"	"Already equipped! Flamethrower (primary attack key), Exinguisher (zoom key) and Blast (walk + zoom keys). {olive}Reload{default} to drop (or {olive}!dropext{default} in chat)."
+	}
+	"Ext_EquipCombo"
+	{
+		"en"	"equipped. Flamethrower (primary attack key) and Exinguisher (zoom key). {olive}Reload{default} to drop (or {olive}!dropext{default} in chat)."
+	}
+	"Ext_EquipUseExtinguisher"
+	{
+		"en"	"equipped. Exinguish molotov and firework explosions. {olive}Reload{default} to drop (or {olive}!dropext{default} in chat)."
+	}
+	"Ext_EquipUseFlamethrower"
+	{
+		"en"	"equipped. Burn enemies and ignite prop_physics. {olive}Reload{default} to drop (or {olive}!dropext{default} in chat)."
+	}
+	"Ext_EquipUseFreezerspray"
+	{
+		"en"	"equipped. Spray and shove enemies to slow them down. {olive}Reload{default} to drop (or {olive}!dropext{default} in chat)."
+	}
+	"Ext_EquipUseBlastpushback"
+	{
+		"en"	"equipped. Blasts survivors and special infected away from you."
+	}
+	"Ext_EmptyExtinguisher"
+	{
+		"en"	"Extinguisher Fuel: Empty!"
+	}
+	"Ext_EmptyFlamethrower"
+	{
+		"en"	"Flamethrower Fuel: Empty!"
+	}
+	"Ext_EmptyFreezerspray"
+	{
+		"en"	"Freezerspray Fuel: Empty!"
+	}
+	"Ext_EmptyBlastpushback"
+	{
+		"en"	"Blastpushback Fuel: Empty!"
+	}
+	"Ext_FuelExtinguisher"
+	{
+		"en"	"Extinguisher Fuel:"
+	}
+	"Ext_FuelFlamethrower"
+	{
+		"en"	"Flamethrower Fuel:"
+	}
+	"Ext_FuelFreezerspray"
+	{
+		"en"	"Freezerspray Fuel:"
+	}
+	"Ext_FuelBlastpushback"
+	{
+		"en"	"Blastpushback Fuel:"
+	}
+	"Ext_Incapped"
+	{
+		"en"	"You can use the extinguisher while incapped. {olive}Reload{default} to drop (or {olive}!dropext{default} in chat)."
+	}
+	"Ext_Refuel"
+	{
+		"en"	"You can refuel dropped Extinguishers while holding a Gas Can, aim at the Extinguisher and hold SHOOT (mouse1). {olive}Reload{default} to drop (or {olive}!dropext{default} in chat)."
+	}
+	"Ext_Refueled"
+	{
+		"en"	"Has been refueled!"
+	}
+}

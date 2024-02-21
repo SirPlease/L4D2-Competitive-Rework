@@ -1,0 +1,12 @@
+"Phrases"
+{
+	"NativeVotes Revote"
+	{
+		"tr"	"Oylama tekrarlanıyor..."
+	}
+	
+	"NativeVotes Revote No Time"
+	{
+		"tr"	"Tekrar oy vermek için yeterli zaman yok."
+	}
+}

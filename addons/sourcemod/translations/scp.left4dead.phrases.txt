@@ -1,0 +1,50 @@
+//Please use notpad++ or vscode to open this file, so you will see the special ascii character
+//= \x01 (SOH) - Use normal color from this point forward
+//= \x02 (STX) - Use team color up to the end of the player name
+//= \x03 (ETX) - Use team color from this point forward
+//= \x04 (EOT) - Use location color from this point forward 
+//= \x05 (ENQ) - Use achievement color from this point forward
+
+"Phrases"
+{
+	"L4D_Chat_Infected"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"			"(Infected) {1} :  {2}"
+	}
+	"L4D_Chat_Survivor"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"			"(Survivor) {1} :  {2}"
+	}
+	"L4D_Chat_Infected_Dead"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"			"*DEAD*(Infected) {1} :  {2}"
+	}
+	"L4D_Chat_Survivor_Dead"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"			"*DEAD*(Survivor) {1} :  {2}"
+	}
+	"L4D_Chat_Spec"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"			"(Spectator) {1} :  {2}"
+	}
+	"L4D_Chat_All"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"			"{1} :  {2}"
+	}
+	"L4D_Chat_AllDead"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"			"*DEAD* {1} :  {2}"
+	}
+	"L4D_Chat_AllSpec"
+	{
+		"#format"	"{1:s},{2:s}"
+		"en"			"*SPEC* {1} :  {2}"
+	}
+}

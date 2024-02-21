@@ -11,23 +11,26 @@ static int
 
 static const char 
 	hintPhrase[2][] = {"HintUnready", "HintReady"},
-	readySymbol[2][] = {"☐", "☑"},
-	teamReadySymbol[2][] = {" [X]", " [√]"};
+	readySymbol[2][] = {"❀", "✿"},
+	teamReadySymbol[2][] = {" ❀", " ✿"};
 
 void InitPanel()
 {
 	if (cmdFooter == null)
 	{
 		cmdFooter = new Footer();
-		cmdFooter.Add("->1. !ready|!r / !unready|!nr");
-		cmdFooter.Add("->2. !slots #");
-		cmdFooter.Add("->3. !voteboss <tank> <witch>");
-		cmdFooter.Add("->4. !match / !rmatch");
-		cmdFooter.Add("->5. !show / !hide");
-		cmdFooter.Add("->6. !setscores <survs> <inf>");
-		cmdFooter.Add("->7. !lerps");
-		cmdFooter.Add("->8. !secondary");
-		cmdFooter.Add("->9. !forcestart / !fs");
+		cmdFooter.Add("❀ !ready|!r / !unready|!nr");
+		cmdFooter.Add("❀ !slots #");
+		cmdFooter.Add("❀ !voteboss <tank> <witch>");
+		cmdFooter.Add("❀ !match / !rmatch");
+		cmdFooter.Add("❀ !show / !hide");
+		cmdFooter.Add("❀ !setscores <survs> <inf>");
+		cmdFooter.Add("❀ !lerps");
+		cmdFooter.Add("❀ !secondary");
+		cmdFooter.Add("❀ !mix / !mixmap");
+		cmdFooter.Add("❀ !fw");
+		cmdFooter.Add("❀ !rope");
+		cmdFooter.Add("❀ !votemenu");
 	}
 	
 	curCmd = 0;
@@ -85,15 +88,15 @@ void UpdatePanel()
 	g_cvServerNamer.GetString(ServerName, sizeof(ServerName));
 	
 	l4d_ready_cfg_name.GetString(cfgName, sizeof(cfgName));
-	Format(ServerBuffer, sizeof(ServerBuffer), "▸ Server: %s \n▸ Slots: %d/%d\n▸ Config: %s", ServerName, GetSeriousClientCount(), FindConVar("sv_maxplayers").IntValue, cfgName);
+	Format(ServerBuffer, sizeof(ServerBuffer), "❀ 服务器: %s \n❀ 人数: %d/%d\n❀ 配置: %s", ServerName, GetSeriousClientCount(), FindConVar("sv_maxplayers").IntValue, cfgName);
 	menuPanel.DrawText(ServerBuffer);
 	
-	FormatTime(ServerBuffer, sizeof(ServerBuffer), "▸ %m/%d/%Y - %I:%M%p");
+	FormatTime(ServerBuffer, sizeof(ServerBuffer), "❀ %m/%d/%Y - %I:%M%p");
 	Format(ServerBuffer, sizeof(ServerBuffer), "%s (%02d:%02d)", ServerBuffer, iPassTime / 60, iPassTime % 60);
 	menuPanel.DrawText(ServerBuffer);
 	
 	menuPanel.DrawText(" ");
-	menuPanel.DrawText("▸ Commands:");
+	menuPanel.DrawText("❀ 命令Commands:");
 	menuPanel.DrawText(FooterGet(cmdFooter, curCmd));
 	menuPanel.DrawText(" ");
 	
@@ -157,7 +160,7 @@ void UpdatePanel()
 	{
 		survivorBuffer[bufLen] = '\0';
 		ReplaceString(survivorBuffer, sizeof(survivorBuffer), "#", "_");
-		Format(nameBuf, sizeof(nameBuf), "->%d. Survivors%s", ++textCount, isTeamReadyMode ? teamReadySymbol[survivorReady] : "");
+		Format(nameBuf, sizeof(nameBuf), "->%d. 生还者%s", ++textCount, isTeamReadyMode ? teamReadySymbol[survivorReady] : "");
 		menuPanel.DrawText(nameBuf);
 		menuPanel.DrawText(survivorBuffer);
 	}
@@ -167,7 +170,7 @@ void UpdatePanel()
 	{
 		infectedBuffer[bufLen] = '\0';
 		ReplaceString(infectedBuffer, sizeof(infectedBuffer), "#", "_");
-		Format(nameBuf, sizeof(nameBuf), "->%d. Infected%s", ++textCount, isTeamReadyMode ? teamReadySymbol[infectedReady] : "");
+		Format(nameBuf, sizeof(nameBuf), "->%d. 感染者%s", ++textCount, isTeamReadyMode ? teamReadySymbol[infectedReady] : "");
 		menuPanel.DrawText(nameBuf);
 		menuPanel.DrawText(infectedBuffer);
 	}
@@ -180,7 +183,7 @@ void UpdatePanel()
 		if (bufLen != 0)
 		{
 			casterBuffer[bufLen] = '\0';
-			Format(nameBuf, sizeof(nameBuf), "->%d. Caster%s", ++textCount, casterCount > 1 ? "s" : "");
+			Format(nameBuf, sizeof(nameBuf), "->%d. 解说%s", ++textCount, casterCount > 1 ? "s" : "");
 			menuPanel.DrawText(nameBuf);
 			ReplaceString(casterBuffer, sizeof(casterBuffer), "#", "_", true);
 			menuPanel.DrawText(casterBuffer);
@@ -191,7 +194,7 @@ void UpdatePanel()
 	if (bufLen != 0)
 	{
 		specBuffer[bufLen] = '\0';
-		Format(nameBuf, sizeof(nameBuf), "->%d. Spectator%s", ++textCount, specCount > 1 ? "s" : "");
+		Format(nameBuf, sizeof(nameBuf), "->%d. 旁观者%s", ++textCount, specCount > 1 ? "s" : "");
 		menuPanel.DrawText(nameBuf);
 		ReplaceString(specBuffer, sizeof(specBuffer), "#", "_");
 		if (playerCount > l4d_ready_max_players.IntValue && specCount - casterCount > 1)

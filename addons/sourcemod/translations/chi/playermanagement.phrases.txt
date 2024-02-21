@@ -1,0 +1,25 @@
+"Phrases"
+{
+	"JoinTeam_Cooldown"
+	{
+		"#format"	"{1:.1f}"
+		"chi"		"{blue}[{green}Team Manager{blue}] {default}请等待 {olive}{1} {default}秒后再切换阵营"
+	}
+	
+	"Announce_Spectate"
+	{
+		"#format"	"{1:N}"
+		"chi"		"{olive}[{green}!{olive}] {default}玩家 {teamcolor}{1}{default} 移动至旁观者"
+	}
+	
+	"Disallowed_Spectate_Capped"
+	{
+		"chi"		"{olive}[{green}!{olive}] {default}被控时不允许旁观"
+	}
+	
+	"SwapTeam_ReplyFailure"
+	{
+		"#format"	"{1:N}"
+		"chi"		"{olive}[{green}!{olive}] 无法交换{teamcolor}{1}{default}的阵营，{green}目标阵营已满员或无可接管的 AI"
+	}
+}

@@ -1,0 +1,151 @@
+"Phrases"
+{
+	"Auto_Show_Maplist"
+	{
+		"en"		"{olive}<Mixmap>{default}Using Mixmap plugin (show maplist{orange}!maplist{default})."
+		"chi"		"{olive}<Mixmap>{default}正在使用Mixmap插件（地图一览指令{orange}!maplist{default})。"
+	}
+
+	"Differ_Abort"
+	{
+		"en"		"{olive}<Mixmap>{default}Current map differs from disigned map，abort……"
+		"chi"		"{olive}<Mixmap>{default}当前地图与设计地图不一致，插件中止……"
+	}
+
+	"Show_Next_Map"
+	{
+		"en"		"{olive}<Mixmap>{default}Changing next map: %s"
+		"chi"		"{olive}<Mixmap>{default}切换下一张地图: %s"
+	}
+
+	"Already_Start_Admin"
+	{
+		"en"		"{olive}<Mixmap>{default}Plugin already starts, type !fstopmixmap first if need to restart."
+		"chi"		"{olive}<Mixmap>{default}插件已经启用，如需重新启用请先输入 !fstopmixmap 中止。"
+	}
+
+	"Force_Start"
+	{
+		"en"		"{olive}<Mixmap>{default}Admin {teamcolor}%N {default}forces to start Mixmap{orange}(%s)."
+		"chi"		"{olive}<Mixmap>{default}管理员 {teamcolor}%N {default}强制启用Mixmap{orange}(%s)。"
+	}
+
+	"Manualmixmap_Syntax"
+	{
+		"en"		"Syntax: sm_manualmixmap <map1> <map2> <map3> <...>"
+		"chi"		"用法: sm_manualmixmap <map1> <map2> <map3> <...>"
+	}
+
+	"Already_Start"
+	{
+		"en"		"{olive}<Mixmap>{default}Plugin already starts, type !stopmixmap first if need to restart."
+		"chi"		"{olive}<Mixmap>{default}插件已经启用，如需重新启用请先输入 !stopmixmap 中止。"
+	}
+
+	"Invalid_Cfg"
+	{
+		"en"		"{olive}<Mixmap>{default}Invalid map pool！"
+		"chi"		"{olive}<Mixmap>{default}无效地图池！"
+	}
+
+	"Not_Start"
+	{
+		"en"		"{olive}<Mixmap>{default}Plugin did not start, no need to stop."
+		"chi"		"{olive}<Mixmap>{default}插件尚未启用，无需中止。"
+	}
+
+	"Vote_Stop"
+	{
+		"en"		"{olive}<Mixmap>{default}Player {teamcolor}%N{default} initiates a vote to stop Mixmap."
+		"chi"		"{olive}<Mixmap>{default}玩家 {teamcolor}%N{default} 发起投票关闭Mixmap。"
+	}
+
+
+	"Vote_Progress"
+	{
+		"en"		"[SM] There is a vote in progress!"
+		"chi"		"[SM] 有投票正在进行！"
+	}
+
+	"Stop_Mixmap"
+	{
+		"en"		"{olive}<Mixmap>{default}Maps initiated, abort……"
+		"chi"		"{olive}<Mixmap>{default}地图初始化，插件中止……"
+	}
+
+	"Stop_Mixmap_Admin"
+	{
+		"en"		"{olive}<Mixmap>{default}Maps initiated, abort……"
+		"chi"		"{olive}<Mixmap>管理员{teamcolor} %N {default}强制关闭Mixmap，地图初始化，插件中止……"
+	}
+
+	"Start_Mixmap"
+	{
+		"en"		"{olive}<Mixmap>{default}Player {teamcolor}%N{default} initiates a vote to start Mixmap{orange}(%s)."
+		"chi"		"{olive}<Mixmap>{default}玩家  {teamcolor}%N{default} 发起投票启用Mixmap{orange}(%s)。"
+	}
+
+	"Show_Maplist_Not_Start"
+	{
+		"en"		"{olive}<Mixmap>{default}Plugin did not start, there is not a maplist."
+		"chi"		"{olive}<Mixmap>{default}插件未启用，无法查看地图列表。"
+	}
+	
+	"Show_Maplist_Cmd"
+	{
+		"en"		"{olive}Show maplist {orange}!maplist {default}| {olive}Abort Cmd{orange}!stopmixmap"
+		"chi"		"{olive}地图一览指令 {orange}!maplist {default}| {olive}中止指令{orange} !stopmixmap"
+	}
+
+	"Select_Maps_Succeed"
+	{
+		"en"		"{olive}<Mixmap>{default}Selecting maps randomly succeeds."
+		"chi"		"{olive}<Mixmap>{default}地图已成功抽取！"
+	}
+
+	"Change_Map_First"
+	{
+		"en"		"{olive}<Mixmap>{default}Changing map after {orange} 15 {default}seconds."
+		"chi"		"{olive}<Mixmap>{default}将在{orange} 15 {default}秒后开始切换地图。"
+	}
+	"AllMaps_Official"
+	{
+		"en"		"{orange}[-----list of all official maps-----]"
+		"chi"		"{orange}[-----所有官方地图代码列表-----]"
+	}
+	"AllMaps_Usage"
+	{
+		"en"		"{orange}Usage: {default}!manualmixmap <map1> <map2>..."
+		"chi"		"{orange}用法：{default}!manualmixmap <地图1> <地图2>......"
+	}
+	"Fail_Load_Preset"
+	{
+		"en"		"{olive}<Mixmap>{default}Failed to load preset!"
+		"chi"		"{olive}<Mixmap>{default}地图组未成功加载！"
+	}
+	"Maps_Not_Match_Rank"
+	{
+		"en"		"{olive}<Mixmap>{default}Preset has {orange}improper tagranks{default}: the number of maps to be played does not match the highest rank. Should have N+1 tagranks for highest rank N."
+		"chi"		"{olive}<Mixmap>{default}地图组的{orange}标签有误{default}：设定的地图数量和标签数量不一致。当标签最大值为N+1时，地图数量应为N。"
+	}
+	"Cvote_Title"
+	{
+		"en"		"Start a Mixmap? (%s)"
+		"chi"		"启用Mixmap插件？（%s）"
+	}
+	"Cvote_Title_Off"
+	{
+		"en"		"Stop a Mixmap? "
+		"chi"		"中止Mixmap插件？"
+	}
+	"Cexec_Title"
+	{
+		"en"		"Selecting maps randomly……"
+		"chi"		"即将随机抽取地图……"
+	}
+	"Maplist_Title"
+	{
+		"en"		"{olive}[-------- Maplist --------]"
+		"chi"		"{olive}[-------- 地图列表 --------]"
+	}
+}

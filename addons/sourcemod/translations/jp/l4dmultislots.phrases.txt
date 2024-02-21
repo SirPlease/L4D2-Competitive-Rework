@@ -1,0 +1,37 @@
+//日本語 by HekuT
+
+"Phrases"
+{
+	"A surviving Bot was added."
+	{
+		"jp" "サバイバルボット追加."
+	}
+	"Impossible to generate a bot at the moment."
+	{
+		"jp" "現時点でボット生成不可能."
+	}
+	"Please wait to be revived or rescued"
+	{
+		"jp" "蘇生されるまでしばらく待ってください."
+	}
+	"You are idle. press the left mouse button to join the survivors!"
+	{
+		"jp" "非活動であります。マウス左ボタンでサバイバーたちと組みます."
+	}
+	"You are already on the team of survivors."
+	{
+		"jp" "サバイバーチームにもう加入しています."
+	}
+	"Type in chat !join To join the survivors"
+	{
+		"jp" "サバイバーチームに加入するにチャットで {olive}!join{default} と入力."
+	}
+	"The survivors has started the game, please wait to be resurrected or rescued"
+	{
+		"jp" "バーチームはゲームの始まりに踏み込みwます。蘇生までにしばらく待ってください"
+	}
+	"No Bots for replacement."
+	{
+		"jp" "入れ替えのボットはありません."
+	}
+}

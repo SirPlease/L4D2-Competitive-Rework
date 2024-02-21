@@ -1,0 +1,92 @@
+// AUDIORULES_XBOX.XSC
+//
+// Audio Configuration
+
+"AudioRules_Xbox.xsc"
+{
+	"sound/music/"
+	{
+		"xmaQuality"	"90"
+		"xmaSeekTable"	"1"
+	}
+		
+	"sound/commentary/"
+	{
+		"forceTo22K"	"1"
+	}
+
+	"sound/ui/"
+	{
+		"forceTo22K"	"1"
+	}
+
+	"sound/common/"
+	{
+		"forceTo22K"	"1"
+	}
+
+	"sound/items/"
+	{
+		"forceTo22K"	"1"
+	}
+
+	"sound/npc/infected/"
+	{
+		"forceTo22K"	"1"
+	}
+
+	"sound/player/footsteps/"
+	{
+		"forceTo22K"	"1"
+	}
+
+	"sound/player/boomer/voice"
+	{
+		"forceTo22K"	"1"
+	}
+
+	"sound/player/boomer_var01/voice"
+	{
+		"forceTo22K"	"1"
+	}
+
+	"sound/player/charger/voice"
+	{
+		"forceTo22K"	"1"
+	}
+
+	"sound/player/hunter/voice"
+	{
+		"forceTo22K"	"1"
+	}
+
+	"sound/player/jockey/voice"
+	{
+		"forceTo22K"	"1"
+	}
+
+	"sound/player/pz/voice"
+	{
+		"forceTo22K"	"1"
+	}
+
+	"sound/player/smoker/voice"
+	{
+		"forceTo22K"	"1"
+	}
+
+	"sound/player/spitter/voice"
+	{
+		"forceTo22K"	"1"
+	}
+
+	"sound/player/survivor/voice"
+	{
+		"forceTo22K"	"1"
+	}
+
+	"sound/player/tank/voice"
+	{
+		"forceTo22K"	"1"
+	}
+}

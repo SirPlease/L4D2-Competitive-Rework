@@ -19,7 +19,7 @@
 	"Notify_TankhudState"
 	{
 		"#format"	"{1:t}"
-		"chi"		"<{olive}HUD{default}> 坦克HUD现在为 {1}"
+		"chi"		"<{olive}HUD{default}> 坦克面板已 {1}"
 	}
 	
 	"Notify_SpechudUsage"

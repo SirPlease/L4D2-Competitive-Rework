@@ -3,7 +3,7 @@
 #endif
 #define __map_info_included
 
-#define DEBUG_MI				false
+#define DEBUG_MI				0
 #define MI_MODULE_NAME			"MapInfo"
 
 static int
@@ -11,7 +11,6 @@ static int
 	iIsInEditMode[MAXPLAYERS + 1] = {0, ...};
 
 static bool
-	MI_bDebugEnabled = DEBUG_MI,
 	MapDataAvailable = false;
 
 static float
@@ -68,7 +67,7 @@ void MI_OnModuleEnd()
 	MI_KV_Close();
 }
 
-static void PlayerDisconnect_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+public void PlayerDisconnect_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("userid"));
 	if (client > 0 && client <= MaxClients) {
@@ -76,7 +75,7 @@ static void PlayerDisconnect_Event(Event hEvent, const char[] sEventName, bool b
 	}
 }
 
-static Action MI_KV_CmdSave(int client, int args)
+public Action MI_KV_CmdSave(int client, int args)
 {
 	char sCurMap[128];
 	GetCurrentMap(sCurMap, sizeof(sCurMap));
@@ -92,13 +91,13 @@ static Action MI_KV_CmdSave(int client, int args)
 		kMIData.Rewind();
 		kMIData.ExportToFile(sNameBuff);
 
-		ReplyToCommand(client, "%s has been added to %s.", sCurMap, sNameBuff);
+		ReplyToCommand(client, "%t", "AddedMapInfo", sCurMap, sNameBuff);		//%s has been added to %s.
 	}
 
 	return Plugin_Handled;
 }
 
-static Action MI_KV_CmdSaveLoc(int client, int args)
+public Action MI_KV_CmdSaveLoc(int client, int args)
 {
 	bool updateinfo = false;
 	char sCurMap[128];
@@ -106,7 +105,7 @@ static Action MI_KV_CmdSaveLoc(int client, int args)
 
 	if (!iIsInEditMode[client]) {
 		if (!args) {
-			ReplyToCommand(client, "Move to the location of the medkits, then enter the point type (start_point or end_point)");
+			ReplyToCommand(client, "%t", "EnterPointType");		//Move to the location of the medkits, then enter the point type (start_point or end_point)
 			return Plugin_Handled;
 		}
 
@@ -115,12 +114,12 @@ static Action MI_KV_CmdSaveLoc(int client, int args)
 
 		if (strcmp(sBuffer, "start_point", true) == 0) {
 			iIsInEditMode[client] = 1;
-			ReplyToCommand(client, "Move a few feet from the medkits and enter this command again to set the start_dist for this point");
+			ReplyToCommand(client, "%t", "SetStartPoint");		//Move a few feet from the medkits and enter this command again to set the start_dist for this point
 		} else if (strcmp(sBuffer, "end_point", true) == 0) {
 			iIsInEditMode[client] = 2;
-			ReplyToCommand(client, "Move to the farthest point in the saferoom and enter this command again to set the end_dist for this point");
+			ReplyToCommand(client, "%t", "SetEndPoint");		//Move to the farthest point in the saferoom and enter this command again to set the end_dist for this point
 		} else {
-			ReplyToCommand(client, "Please enter the location type: start_point, end_point");
+			ReplyToCommand(client, "%t", "SelectType");			//Please enter the location type: start_point, end_point
 			return Plugin_Handled;
 		}
 
@@ -141,7 +140,7 @@ static Action MI_KV_CmdSaveLoc(int client, int args)
 			kMIData.SetFloat("start_dist", fDistance);
 		}
 
-		ReplyToCommand(client, "Move to the farthest point in the saferoom and enter this command again to set start_extra_dist for this point");
+		ReplyToCommand(client, "%t", "SetStartExtraPoint");		//Move to the farthest point in the saferoom and enter this command again to set start_extra_dist for this point
 
 		updateinfo = true;
 	} else if (iIsInEditMode[client] == 2) {
@@ -177,7 +176,7 @@ static Action MI_KV_CmdSaveLoc(int client, int args)
 		kMIData.Rewind();
 		kMIData.ExportToFile(sNameBuff);
 
-		ReplyToCommand(client, "mapinfo.txt has been updated!");
+		ReplyToCommand(client, "%t", "UpdatedMapInfo");			//mapinfo.txt has been updated!
 	}
 
 	return Plugin_Handled;
@@ -195,7 +194,7 @@ static void MI_KV_Load()
 {
 	char sNameBuff[PLATFORM_MAX_PATH];
 
-	if (MI_bDebugEnabled || IsDebugEnabled()) {
+	if (DEBUG_MI || IsDebugEnabled()) {
 		LogMessage("[%s] Loading MapInfo KeyValues", MI_MODULE_NAME);
 	}
 
@@ -414,12 +413,12 @@ stock float GetMapStartExtraDist() //WeaponInformation use it
 }
 
 // Natives
-static int _native_IsMapDataAvailable(Handle plugin, int numParams)
+public int _native_IsMapDataAvailable(Handle plugin, int numParams)
 {
 	return IsMapDataAvailable();
 }
 
-static int _native_GetMapValueInt(Handle plugin, int numParams)
+public int _native_GetMapValueInt(Handle plugin, int numParams)
 {
 	int iLen = 0;
 	GetNativeStringLength(1, iLen);
@@ -433,9 +432,9 @@ static int _native_GetMapValueInt(Handle plugin, int numParams)
 }
 
 #if SOURCEMOD_V_MINOR > 9
-static any _native_GetMapValueFloat(Handle plugin, int numParams)
+public any _native_GetMapValueFloat(Handle plugin, int numParams)
 #else
-static int _native_GetMapValueFloat(Handle plugin, int numParams)
+public int _native_GetMapValueFloat(Handle plugin, int numParams)
 #endif
 {
 	int iLen = 0;
@@ -454,7 +453,7 @@ static int _native_GetMapValueFloat(Handle plugin, int numParams)
 #endif
 }
 
-static int _native_GetMapValueVector(Handle plugin, int numParams)
+public int _native_GetMapValueVector(Handle plugin, int numParams)
 {
 	int iLen = 0;
 	GetNativeStringLength(1, iLen);
@@ -471,7 +470,7 @@ static int _native_GetMapValueVector(Handle plugin, int numParams)
 	return 1;
 }
 
-static int _native_GetMapValueString(Handle plugin, int numParams)
+public int _native_GetMapValueString(Handle plugin, int numParams)
 {
 	int iLen = 0;
 	GetNativeStringLength(1, iLen);
@@ -496,7 +495,7 @@ static int _native_GetMapValueString(Handle plugin, int numParams)
 	return 1;
 }
 
-static int _native_CopyMapSubsection(Handle plugin, int numParams)
+public int _native_CopyMapSubsection(Handle plugin, int numParams)
 {
 	int iLen = 0;
 	GetNativeStringLength(2, iLen);

@@ -1,0 +1,45 @@
+"Phrases"
+{
+	"NEW_FIRST_CAPITAN"
+	{
+		"#format"		"{1:N},{2:d}"
+		"en"			"Team {olive}survivors {default}captain {green}{1} {default}(votes {2})"
+	}
+
+	"NEW_SECOND_CAPITAN"
+	{
+		"#format"		"{1:N},{2:d}"
+		"en"			"Team {olive}infected {olive}captain {green}{1} {default}(votes {2})"
+	}
+
+	"PICK_TEAM"
+	{
+		"#format"		"{1:N},{2:N}"
+		"en"			"The capitan {olive}{1} {default}chose the player {green}{2}"
+	}
+
+	"VOTE_DISPLAY_MSG"
+	{
+		"en"			"Start mix with captains"
+	}
+
+	"VOTE_END_MSG"
+	{
+		"en"			"Team mixing with captains in progress"
+	}
+
+	"MENU_TITLE_FIRST_CAPITAN"
+	{
+		"en"			"Choose a first team captain"
+	}
+
+	"MENU_TITLE_SECOND_CAPITAN"
+	{
+		"en"			"Choose a second team captain"
+	}
+
+	"MENU_TITLE_PICK_TEAMS"
+	{
+		"en"			"Choose an ally"
+	}
+}

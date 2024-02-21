@@ -1,0 +1,74 @@
+"Phrases"
+{
+	"List_Players"
+	{
+		"en"		"Who do you want to respawn?"
+		"ru"		"Кого оживить?"
+		"hu"		"Kit szeretnél visszahozni?"
+		"es"		"¿A quien quieres reaparecer?"
+		"sv"		"Vem vill du förnya/återuppliva?"
+		"zho"		"你想復活誰?"
+		"chi"		"你想复活谁?"
+		"pt"		"Quem você gostaria de respawnar?"
+		"pt_p"		"Quem você gostaria de respawnar?"
+	}
+	"Respawn_Player"
+	{
+		"en"		"Respawn player"
+		"ru"		"Оживить игрока"
+		"hu"		"Játékos visszahozása"
+		"es"		"Reaparecer jugador"
+		"sv"		"Förnya spelare '%N'"
+		"zho"		"復活玩家"
+		"chi"		"复活玩家"
+		"pt"		"Respawnar jogador"
+		"pt_p"		"Respawnar jogador"
+	}
+	"Respawn_Info"
+	{
+		"en"		"Respawned player '%N'"
+		"ru"		"Оживлён игрок '%N'"
+		"hu"		"Játékos visszahozva '%N'"
+		"es"		"Reapareciste a '%N'"
+		"sv"		"Förnyade spelare '%N'"
+		"zho"		"復活了 '%N'"
+		"chi"		"复活了 '%N'"
+		"pt"		"Jogador '%N' respawnado"
+		"pt_p"		"Jogador '%N' respawnado"
+	}
+	"Spectator"
+	{
+		"en"		" (spectator)"
+		"ru"		" (зритель)"
+		"hu"		" (néző)"
+	}
+	"Dead"
+	{
+		"en"		" (dead)"
+		"ru"		" (мёртв)"
+		"hu"		" (halott)"
+	}
+	"List_Teams"
+	{
+		"en"		"Selects the team:"
+		"ru"		"Выберите команду:"
+		"hu"		"Válasz csapatott:"
+	}
+	"Survivors" // team
+	{
+		"en"		"Survivors"
+		"ru"		"Выжившие"
+		"hu"		"Túlélők"
+	}
+	"Infected" // team
+	{
+		"en"		"Infected"
+		"ru"		"Заражённые"
+		"hu"		"Fertőzött"
+	}
+	
+	"Dummy" // Dummy. Don't touch!
+	{
+		"en"	""
+	}
+}

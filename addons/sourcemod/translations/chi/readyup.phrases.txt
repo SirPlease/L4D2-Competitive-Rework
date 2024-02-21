@@ -52,7 +52,11 @@
 		"chi"		"{default}[{green}!{default}] {green}叫停强制开始！ {default}({green}由 {olive}{1} {green}发起{default})"
 	}
 	
-	
+	"TwoRoundRestart"
+	{
+		"chi"		"{default}[{green}!{default}] 比赛将会\n{default}[{green}!{default}]在2轮重启后可用."
+	}
+
 // The following are not allowed to use any color tag
 	"HintReady"
 	{
@@ -104,5 +108,46 @@
 	"AutoStartNotEnoughPlayers"
 	{
 		"chi"		"玩家数量不足..."
+	}
+	
+	// The following are words from readyup panel and not allowed to use any color tag
+	"ServerSlotsConfigs"
+	{
+		"chi"		"▸ 服务器: %s \n▸ 位数: %d/%d\n▸ 配置: %s"
+	}
+
+	"Command"
+	{
+		"chi"		"▸ 指令:"
+	}
+
+	"TimePassed"
+	{
+		"chi"		"%s (%02d:%02d)"		//这只依据你的喜好改变时间格式
+	}
+	
+	"Survivors"
+	{
+		"chi"		"->%d. 生还者%s"
+	}
+	
+	"Infected"
+	{
+		"chi"		"->%d. 感染者%s"
+	}
+
+	"Caster"
+	{
+		"chi"		"->%d. 解说%s"
+	}
+
+	"Spectator"
+	{
+		"chi"		"->%d. 旁观者%s"
+	}
+
+	"ManySpec"
+	{
+		"chi"		"**许多** (%d)"
 	}
 }

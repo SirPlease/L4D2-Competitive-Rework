@@ -1880,9 +1880,9 @@ void OnAcidDamage(int victim, int attacker, int inflictor, float damage, int dam
 	// Emit sound when taking acid damage
 	if( damage > 0 )
 	{
-		if( ((damagetype == (DMG_ENERGYBEAM|DMG_RADIATION) && attacker > 0 && attacker <= MaxClients && IsClientInGame(attacker) && GetClientTeam(attacker) != 3)) || (damagetype == (DMG_ENERGYBEAM|DMG_RADIATION|DMG_PREVENT_PHYSICS_FORCE) && attacker > MaxClients) )
+		if( (damagetype == (DMG_ENERGYBEAM|DMG_RADIATION|DMG_PREVENT_PHYSICS_FORCE) && attacker > MaxClients) || (damagetype == (DMG_ENERGYBEAM|DMG_RADIATION) && attacker > 0 && attacker <= MaxClients && (!IsClientInGame(attacker) || GetClientTeam(attacker) != 3)) )
 		{
-			EmitSoundToAll(g_sAcidSounds[GetRandomInt(0, sizeof(g_sAcidSounds) - 1)], inflictor, SNDCHAN_AUTO, 85, _, 0.7, GetRandomInt(95, 105));
+			EmitSoundToAll(g_sAcidSounds[GetRandomInt(0, sizeof(g_sAcidSounds) - 1)], victim, SNDCHAN_AUTO, 85, _, 0.7, GetRandomInt(95, 105));
 
 			// Red flash when taking damage
 			Handle msg = StartMessageOne("Fade", victim);
@@ -1906,27 +1906,30 @@ public void OnEntityDestroyed(int entity)
 	{
 		g_iAcidEntity[entity] = 0;
 
-		bool reset = true;
+		int client;
+		int test = -1;
 
 		// Check no more acid entities are alive
-		for( int i = MaxClients + 1; i < 2048; i++ )
+		while( (test = FindEntityByClassname(test, "insect_swarm")) != INVALID_ENT_REFERENCE )
 		{
-			if( EntRefToEntIndex(g_iAcidEntity[i]) != INVALID_ENT_REFERENCE )
+			if( test != entity )
 			{
-				reset = false;
-				break;
+				client = GetEntPropEnt(test, Prop_Data, "m_hOwnerEntity");
+				if( client < 1 || client > MaxClients || !IsClientInGame(client) || GetClientTeam(client) != 3 )
+				{
+					return;
+				}
 			}
 		}
 
 		// If no acid entities are alive, unhook damage on clients
-		if( reset )
+		g_bAcidWatch = false;
+
+		for( int i = 1; i <= MaxClients; i++ )
 		{
-			for( int i = 1; i <= MaxClients; i++ )
+			if( IsClientInGame(i) )
 			{
-				if( IsClientInGame(i) )
-				{
-					SDKUnhook(i, SDKHook_OnTakeDamageAlivePost, OnAcidDamage);
-				}
+				SDKUnhook(i, SDKHook_OnTakeDamageAlivePost, OnAcidDamage);
 			}
 		}
 	}

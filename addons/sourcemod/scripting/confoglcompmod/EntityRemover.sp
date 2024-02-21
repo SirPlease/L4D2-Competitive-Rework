@@ -5,7 +5,7 @@
 
 #define ER_MODULE_NAME				"EntityRemover"
 
-#define DEBUG_ER					false
+#define DEBUG_ER					0
 
 #define ER_KV_ACTION_KILL			1
 
@@ -21,7 +21,6 @@
 #define ER_KV_CONDITION_CONTAINS	5
 
 static bool
-	ER_bDebugEnabled = DEBUG_ER,
 	ER_bKillParachutist = true,
 	ER_bReplaceGhostHurt = false;
 
@@ -55,7 +54,7 @@ void ER_OnModuleStart()
 	HookEvent("round_start", ER_RoundStart_Event, EventHookMode_PostNoCopy);
 }
 
-static void ER_ConVarChange(ConVar hConvar, const char[] sOldValue, const char[] sNewValue)
+public void ER_ConVarChange(ConVar hConvar, const char[] sOldValue, const char[] sNewValue)
 {
 	ER_bKillParachutist = ER_hKillParachutist.BoolValue;
 	ER_bReplaceGhostHurt = ER_hReplaceGhostHurt.BoolValue;
@@ -78,7 +77,7 @@ static void ER_KV_Load()
 {
 	char sNameBuff[PLATFORM_MAX_PATH], sDescBuff[256], sValBuff[32];
 
-	if (ER_bDebugEnabled || IsDebugEnabled()) {
+	if (DEBUG_ER || IsDebugEnabled()) {
 		LogMessage("[%s] Loading EntityRemover KeyValues", ER_MODULE_NAME);
 	}
 
@@ -93,7 +92,7 @@ static void ER_KV_Load()
 	}
 
 	// Create cvars for all entity removes
-	if (ER_bDebugEnabled || IsDebugEnabled()) {
+	if (DEBUG_ER || IsDebugEnabled()) {
 		LogMessage("[%s] Creating entry CVARs", ER_MODULE_NAME);
 	}
 
@@ -109,7 +108,7 @@ static void ER_KV_Load()
 
 			CreateConVarEx(sNameBuff, sValBuff, sDescBuff);
 
-			if (ER_bDebugEnabled || IsDebugEnabled()) {
+			if (DEBUG_ER || IsDebugEnabled()) {
 				LogMessage("[%s] Creating CVAR %s", ER_MODULE_NAME, sNameBuff);
 			}
 
@@ -121,13 +120,13 @@ static void ER_KV_Load()
 	kERData.Rewind();
 }
 
-static Action ER_KV_CmdReload(int client, int args)
+public Action ER_KV_CmdReload(int client, int args)
 {
 	if (!IsPluginEnabled()) {
 		return Plugin_Continue;
 	}
 
-	ReplyToCommand(client, "[ER] Reloading EntityRemoveData");
+	ReplyToCommand(client, "%t", "ReloadingER");			//[ER] Reloading EntityRemoveData
 	ER_KV_Reload();
 
 	return Plugin_Handled;
@@ -267,7 +266,7 @@ static bool ER_KV_TakeAction(int action, int iEntity)
 {
 	switch (action) {
 		case ER_KV_ACTION_KILL: {
-			if (ER_bDebugEnabled || IsDebugEnabled()) {
+			if (DEBUG_ER || IsDebugEnabled()) {
 				LogMessage("[%s]     Killing!", ER_MODULE_NAME);
 			}
 
@@ -348,7 +347,7 @@ static bool ER_ReplaceTriggerHurtGhost(int ent)
 	return false;
 }
 
-static void ER_RoundStart_Event(Event hEvent, const char[] sEventName, bool bdontBroadcast)
+public void ER_RoundStart_Event(Event hEvent, const char[] sEventName, bool bdontBroadcast)
 {
 	if (!IsPluginEnabled()) {
 		return;
@@ -357,10 +356,10 @@ static void ER_RoundStart_Event(Event hEvent, const char[] sEventName, bool bdon
 	CreateTimer(0.3, ER_RoundStart_Timer, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-static Action ER_RoundStart_Timer(Handle hTimer)
+public Action ER_RoundStart_Timer(Handle hTimer)
 {
 	char sBuffer[MAX_ENTITY_NAME_LENGTH];
-	if (ER_bDebugEnabled || IsDebugEnabled()) {
+	if (DEBUG_ER || IsDebugEnabled()) {
 		LogMessage("[%s] Starting RoundStart Event", ER_MODULE_NAME);
 	}
 
@@ -382,7 +381,7 @@ static Action ER_RoundStart_Timer(Handle hTimer)
 		} else if (ER_bReplaceGhostHurt && ER_ReplaceTriggerHurtGhost(ent)) {
 			//empty
 		} else if (kERData != null && kERData.JumpToKey(sBuffer)) {
-			if (ER_bDebugEnabled || IsDebugEnabled()) {
+			if (DEBUG_ER || IsDebugEnabled()) {
 				LogMessage("[%s] Dealing with an instance of %s", ER_MODULE_NAME, sBuffer);
 			}
 

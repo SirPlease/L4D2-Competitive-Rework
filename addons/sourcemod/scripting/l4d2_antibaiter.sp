@@ -88,6 +88,8 @@ public void OnPluginStart()
 	
 	CreateTimer(1.0, AntibaiterThink, _, TIMER_REPEAT);
 
+	LoadTranslations("l4d2_antibaiter.phrases");
+
 #if DEBUG
 	RegConsoleCmd("sm_regsi", RegisterSI);
 #endif
@@ -265,7 +267,7 @@ public Action AntibaiterThink(Handle hTimer)
 					HideCountdown();
 					LaunchHorde();
 					hordeDelayChecks = 0;
-					CPrintToChatAll("{blue}[{default}Anti-baiter{blue}]{default} Prepare for the incoming horde!");
+					CPrintToChatAll("%t", "AntiBaiter");		//{blue}[{default}Anti-baiter{blue}]{default} Prepare for the incoming horde!
 				}
 			} else {
 				#if DEBUG
@@ -355,10 +357,6 @@ void LaunchHorde()
 	if (client == -1) {
 		return;
 	}
-	
-	#if DEBUG
-	PrintToChatAll("m_PanicTimer - duration: %f, timestamp: %f", CTimer_GetDuration(PanicTimer()), CTimer_GetTimestamp(PanicTimer()));
-	#endif
 	
 	int info_director = MaxClients+1;
 	if ((info_director = FindEntityByClassname(info_director, "info_director")) != INVALID_ENT_REFERENCE)

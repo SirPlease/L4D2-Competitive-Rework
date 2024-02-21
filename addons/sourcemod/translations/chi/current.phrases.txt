@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"current_cmd"
+	{
+		"chi"		"当前: {green}%d%%{default}"
+	}
+}

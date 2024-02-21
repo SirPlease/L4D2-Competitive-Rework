@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"Switch Map/Mission"
+	{
+		"en"		"Switch Map/Mission"
+	}
+	
+	"All maps"
+	{
+		"en"		"All maps"
+	}
+	
+	"Choose a Map"
+	{
+		"en"		"Choose a Map"
+	}
+	
+	"Admin is forcing a map change"
+	{
+		"#format"		"{1:s}"
+		"en"		"An admin changes the map to {1}"
+	}
+}

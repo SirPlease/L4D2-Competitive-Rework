@@ -1,0 +1,108 @@
+"Phrases"
+{
+    "VOTE_DISPLAY_MSG"
+    {
+        "en"    "Start mix with experience"
+    }
+
+    "VOTE_END_MSG"
+    {
+        "en"    "Mixing with experience in progress"
+    }
+
+    "START_GET_INFO"
+    {
+        "en"    "{green} Start getting stats for mix members!"
+    }
+
+    "SHOW_ONE_RP"
+    {
+        "#format"    "{1:N},{2:i}"
+        "en"         "{green}The experience of {1} is divided into {2}!"
+    }
+
+    "CHECK_DONE"
+    {
+        "en"    "{green}All checks are done, start the mix!"
+    }
+
+    "EXP_EQUATION"
+    {
+        "en"    "Mix member Experience score = Matchup win rate * (0.55 * real game hours + TANK stone hits * number of stones hit per hour + T1 weapon kills * 0.005 * (1 + shotgun kills in T1 weapon kills as a percentage))"
+    }
+
+    "MIX_FINISH"
+    {
+        "en"    "[{green}! {default}] {olive} team assignment complete!"
+    }
+
+    "SUR_TOTAL_RP"
+    {
+        "#format"    "{1:i}"
+        "en"         "The survivor team's experience is divided into {blue}{1}"
+    }
+
+    "INF_TOTAL_RP"
+    {
+        "#format"    "{1:i}"
+        "en"         "The infected team's experience is divided into {red}{1}"
+    }
+
+    "DIFF_RP"
+    {
+        "#format"    "{1:i}"
+        "en"         "Difference {olive}{1}"
+    }
+
+    "HINT_CONSOLE"
+    {
+        "en"    "[{green}! {default}] {olive} you can view the console output to get information about each person's experience!"
+    }
+
+    "FAIL_CANT_GET_ID"
+    {
+        "#format"    "{1:N},{2:i}"
+        "en"         "{red}{1} Unable to get Steam 64-bit ID, will participate in mix with {2} points"
+    }
+
+    "FAIL_CANT_GET_INFO"
+    {
+        "#format"    "{1:N},{2:i}"
+        "en"         "{red}{1} Failed to get game information, will participate in mix with {2} points"
+    }
+
+    "FAIL_PLAYER_HIDE_INFO_CONTINUE"
+    {
+        "#format"    "{1:N},{2:i}"
+        "en"         "{red}{1} No game details disclosed, will participate in mix with {2} points"
+    }
+
+    "FAIL_PLAYER_HIDE_INFO_STOP"
+    {
+        "#format"    "{1:N}"
+        "en"         "{red}{1} Failed to get game details, mix rollback. \n{default}[{green}! {default}] Please make sure that all mix members have made the game details public."
+    }
+
+	"FAIL_PLAYER_INFO_RETRY"
+	{
+        "#format"       "{1:N},{2:i}"
+		"en"			"Querying {1}'s game information failed, retrying (remaining {2} times)"
+	}
+
+    "MIXMETHOD_AVERAGE"
+    {
+        "en"    "[{green}MIX{default}] {olive}Team Mixing algorithm will ensure the smallest point difference between the two sides!"
+    }
+    "MIXMETHOD_BALANCE"
+    {
+        "en"    "[{green}MIX{default}] {olive}Team Mixing algorithm will ensure similar strength composition between the two sides!"
+    }
+    "MIXMETHOD_SLOT"
+    {
+        "en"    "[{green}MIX{default}] {olive}Team Mixing algorithm will ensure that at least one person is available for the designated role, while the rest are evenly distributed!"
+    }
+    "MIXMETHOD_FAIL"
+    {
+        "en"    "[{green}MIX{default}] {olive}The execution conditions for the MIX algorithm are not met, MIX terminated, please modify the cvar {green}sm_mix_exp_type{default}!"
+    }
+}   

@@ -1,0 +1,26 @@
+"Phrases"
+{
+	"IsSacrificeFinale"
+	{
+		"en"			"The map is a sacrifice ending, the current function has been closed"
+		"chi"			"该地图是牺牲结局，已关闭当前功能"
+	}
+	"SurvivorReached"
+	{
+		"#format"		"{1:d},{2:d}"
+		"en"			"{1} survivors have reached the end zone ({2} required)"
+		"chi"			"{1}名生还者已到达终点区域(需要{2}名)"
+	}
+	"Countdown_Send"
+	{
+		"#format"		"{1:d}"
+		"en"			"{1} seconds later teleport survivors who have not entered the end zone"
+		"chi"			"{1} 秒后传送未进入终点区域的生还者"
+	}
+	"Countdown_Slay"
+	{
+		"#format"		"{1:d}"
+		"en"			"{1} seconds later slay survivors who have not entered the end zone"
+		"chi"			"{1} 秒后处死未进入终点区域的生还者"
+	}
+}

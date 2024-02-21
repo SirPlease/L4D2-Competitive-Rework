@@ -1,0 +1,368 @@
+"Missions"
+{
+	"List"
+	{
+		"Valve"
+		{
+			"Total"		"14"
+			"1"		"#L4D360UI_CampaignName_C1"
+			"10"		"#L4D360UI_CampaignName_C10"
+			"11"		"#L4D360UI_CampaignName_C11"
+			"12"		"#L4D360UI_CampaignName_C12"
+			"13"		"#L4D360UI_CampaignName_C13"
+			"14"		"#L4D360UI_CampaignName_C14"
+			"2"		"#L4D360UI_CampaignName_C2"
+			"3"		"#L4D360UI_CampaignName_C3"
+			"4"		"#L4D360UI_CampaignName_C4"
+			"5"		"#L4D360UI_CampaignName_C5"
+			"6"		"#L4D360UI_CampaignName_C6"
+			"7"		"#L4D360UI_CampaignName_C7"
+			"8"		"#L4D360UI_CampaignName_C8"
+			"9"		"#L4D360UI_CampaignName_C9"
+		}
+	}
+	"Missions"
+	{
+		"#L4D360UI_CampaignName_C1"
+		{
+			"Name"		"L4D2C1"
+			"1"
+			{
+				"Map"		"c1m1_hotel"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C1M1"
+			}
+			"2"
+			{
+				"Map"		"c1m2_streets"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C1M2"
+			}
+			"3"
+			{
+				"Map"		"c1m3_mall"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C1M3"
+			}
+			"4"
+			{
+				"Map"		"c1m4_atrium"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C1M4"
+			}
+		}
+		"#L4D360UI_CampaignName_C10"
+		{
+			"Name"		"L4D2C10"
+			"1"
+			{
+				"Map"		"c10m1_caves"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C10M1"
+			}
+			"2"
+			{
+				"Map"		"c10m2_drainage"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C10M2"
+			}
+			"3"
+			{
+				"Map"		"c10m3_ranchhouse"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C10M3"
+			}
+			"4"
+			{
+				"Map"		"c10m4_mainstreet"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C10M4"
+			}
+			"5"
+			{
+				"Map"		"c10m5_houseboat"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C10M5"
+			}
+		}
+		"#L4D360UI_CampaignName_C11"
+		{
+			"Name"		"L4D2C11"
+			"1"
+			{
+				"Map"		"c11m1_greenhouse"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C11M1"
+			}
+			"2"
+			{
+				"Map"		"c11m2_offices"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C11M2"
+			}
+			"3"
+			{
+				"Map"		"c11m3_garage"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C11M3"
+			}
+			"4"
+			{
+				"Map"		"c11m4_terminal"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C11M4"
+			}
+			"5"
+			{
+				"Map"		"c11m5_runway"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C11M5"
+			}
+		}
+		"#L4D360UI_CampaignName_C12"
+		{
+			"Name"		"L4D2C12"
+			"1"
+			{
+				"Map"		"c12m1_hilltop"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C12M1"
+			}
+			"2"
+			{
+				"Map"		"c12m2_traintunnel"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C12M2"
+			}
+			"3"
+			{
+				"Map"		"c12m3_bridge"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C12M3"
+			}
+			"4"
+			{
+				"Map"		"c12m4_barn"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C12M4"
+			}
+			"5"
+			{
+				"Map"		"c12m5_cornfield"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C12M5"
+			}
+		}
+		"#L4D360UI_CampaignName_C13"
+		{
+			"Name"		"L4D2C13"
+			"1"
+			{
+				"Map"		"c13m1_alpinecreek"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C13M1"
+			}
+			"2"
+			{
+				"Map"		"c13m2_southpinestream"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C13M2"
+			}
+			"3"
+			{
+				"Map"		"c13m3_memorialbridge"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C13M3"
+			}
+			"4"
+			{
+				"Map"		"c13m4_cutthroatcreek"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C13M4"
+			}
+		}
+		"#L4D360UI_CampaignName_C14"
+		{
+			"Name"		"L4D2C14"
+			"1"
+			{
+				"Map"		"c14m1_junkyard"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C14M1"
+			}
+			"2"
+			{
+				"Map"		"c14m2_lighthouse"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C14M2"
+			}
+		}
+		"#L4D360UI_CampaignName_C2"
+		{
+			"Name"		"L4D2C2"
+			"1"
+			{
+				"Map"		"c2m1_highway"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C2M1"
+			}
+			"2"
+			{
+				"Map"		"c2m2_fairgrounds"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C2M2"
+			}
+			"3"
+			{
+				"Map"		"c2m3_coaster"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C2M3"
+			}
+			"4"
+			{
+				"Map"		"c2m4_barns"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C2M4"
+			}
+			"5"
+			{
+				"Map"		"c2m5_concert"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C2M5"
+			}
+		}
+		"#L4D360UI_CampaignName_C3"
+		{
+			"Name"		"L4D2C3"
+			"1"
+			{
+				"Map"		"c3m1_plankcountry"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C3M1"
+			}
+			"2"
+			{
+				"Map"		"c3m2_swamp"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C3M2"
+			}
+			"3"
+			{
+				"Map"		"c3m3_shantytown"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C3M3"
+			}
+			"4"
+			{
+				"Map"		"c3m4_plantation"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C3M4"
+			}
+		}
+		"#L4D360UI_CampaignName_C4"
+		{
+			"Name"		"L4D2C4"
+			"1"
+			{
+				"Map"		"c4m1_milltown_a"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C4M1"
+			}
+			"2"
+			{
+				"Map"		"c4m2_sugarmill_a"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C4M2"
+			}
+			"3"
+			{
+				"Map"		"c4m3_sugarmill_b"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C4M3"
+			}
+			"4"
+			{
+				"Map"		"c4m4_milltown_b"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C4M4"
+			}
+			"5"
+			{
+				"Map"		"c4m5_milltown_escape"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C4M5"
+			}
+		}
+		"#L4D360UI_CampaignName_C5"
+		{
+			"Name"		"L4D2C5"
+			"1"
+			{
+				"Map"		"c5m1_waterfront"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C5M1"
+			}
+			"2"
+			{
+				"Map"		"c5m2_park"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C5M2"
+			}
+			"3"
+			{
+				"Map"		"c5m3_cemetery"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C5M3"
+			}
+			"4"
+			{
+				"Map"		"c5m4_quarter"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C5M4"
+			}
+			"5"
+			{
+				"Map"		"c5m5_bridge"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C5M5"
+			}
+		}
+		"#L4D360UI_CampaignName_C6"
+		{
+			"Name"		"L4D2C6"
+			"1"
+			{
+				"Map"		"c6m1_riverbank"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C6M1"
+			}
+			"2"
+			{
+				"Map"		"c6m2_bedlam"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C6M2"
+			}
+			"3"
+			{
+				"Map"		"c6m3_port"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C6M3"
+			}
+		}
+		"#L4D360UI_CampaignName_C7"
+		{
+			"Name"		"L4D2C7"
+			"1"
+			{
+				"Map"		"c7m1_docks"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C7M1"
+			}
+			"2"
+			{
+				"Map"		"c7m2_barge"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C7M2"
+			}
+			"3"
+			{
+				"Map"		"c7m3_port"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C7M3"
+			}
+		}
+		"#L4D360UI_CampaignName_C8"
+		{
+			"Name"		"L4D2C8"
+			"1"
+			{
+				"Map"		"c8m1_apartment"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C8M1"
+			}
+			"2"
+			{
+				"Map"		"c8m2_subway"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C8M2"
+			}
+			"3"
+			{
+				"Map"		"c8m3_sewers"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C8M3"
+			}
+			"4"
+			{
+				"Map"		"c8m4_interior"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C8M4"
+			}
+			"5"
+			{
+				"Map"		"c8m5_rooftop"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C8M5"
+			}
+		}
+		"#L4D360UI_CampaignName_C9"
+		{
+			"Name"		"L4D2C9"
+			"1"
+			{
+				"Map"		"c9m1_alleys"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C9M1"
+			}
+			"2"
+			{
+				"Map"		"c9m2_lots"
+				"DisplayName"		"#L4D360UI_LevelName_COOP_C9M2"
+			}
+		}
+	}
+}

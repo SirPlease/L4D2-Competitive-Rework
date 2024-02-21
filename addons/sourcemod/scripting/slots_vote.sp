@@ -49,7 +49,7 @@ public Action SlotsRequest(int client, int args)
 		}
 		else
 		{
-			if (GetUserFlagBits(client) & ADMFLAG_GENERIC)
+			if (GetUserFlagBits(client) != 0)
 			{
 				char sName[MAX_NAME_LENGTH];
 				GetClientName(client, sName, sizeof(sName));

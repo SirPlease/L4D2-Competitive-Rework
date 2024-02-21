@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"FlippedSurvivor"
+	{
+		"es"		"¡{green}%s{default} lanzo una moneda para elegir equipo y le salió {blue}Superviviente{default}!"
+	}
+	"FlippedInfected"
+	{
+		"es"		"¡{green}%s{default} lanzo una moneda para elegir equipo y le salió {blue}Infectado{default}!"
+	}
+	"Wait"
+	{
+		"es"		"[Teamflip] Vaya, reduce la velocidad. Espere al menos %d segundos."
+	}
+}

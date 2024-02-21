@@ -1,0 +1,22 @@
+"Phrases"
+{
+	"Door_Open"
+	{
+		"chi"		"{olive}[安全门] {white}被 {orange}%N 打开"
+	}
+
+	"Door_Close"
+	{
+		"chi"		"{olive}[安全门] {white}被 {orange}%N 关上"
+	}
+
+	"Door_Wait"
+	{
+		"chi"		"{olive}[安全门] {white}门将在 {orange}%d {white}秒后打开"
+	}
+
+	"Door_Unlocked"
+	{
+		"chi"		"{olive}[安全门] {white}已经 {orange}打开"
+	}
+}

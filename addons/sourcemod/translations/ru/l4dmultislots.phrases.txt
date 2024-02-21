@@ -1,0 +1,41 @@
+//русский by HekuT, berry
+
+"Phrases"
+{
+	"A surviving Bot was added."
+	{
+		"ru" "Добавлен бот за выживших."
+	}
+	"Impossible to generate a bot at the moment."
+	{
+		"ru" "В настоящий момент невозможно создать бота."
+	}
+	"Please wait to be revived or rescued"
+	{
+		"ru" "Подождите, пока вас поднимут или спасут."
+	}
+	"You are idle. press the left mouse button to join the survivors!"
+	{
+		"ru" "Вы бездействуете. Нажмите ЛКМ, чтобы вернуться в команду!"
+	}
+	"You are already on the team of survivors."
+	{
+		"ru" "Вы уже в команде выживших."
+	}
+	"Type in chat !join To join the survivors"
+	{
+		"ru" "Введите в чате {olive}!join{default}, чтобы присоединиться к выжившим."
+	}
+	"The survivors has started the game, please wait to be resurrected or rescued"
+	{
+		"ru" "Выживший зашёл во время начатой игры, ожидайте воскрешения или спасения"
+	}
+	"No Bots for replacement."
+	{
+		"ru" "Нет ботов для замены."
+	}
+	"No Second Chance"
+	{
+		"ru" "В этом раунде вы уже играли в {blue}команде выживших{default}. Вы появитесь {green}мёртвым{default}."
+	}
+}

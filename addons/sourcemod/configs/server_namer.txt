@@ -1,0 +1,182 @@
+//Available variables: {hostname},{servernum},{gamemode},{difficulty}
+//
+"GameMods"
+{
+	"difficulties"
+	{
+		"Easy"			"Easy"
+		"Normal"		"Normal"
+		"Hard"			"Advanced"
+		"Impossible"	"Expert"
+	}
+	"versus"
+	{
+		"name"			"Versus"
+		"difficulty"	"0"
+	}
+	"coop"
+	{
+		"name"			"Campaign"
+		"difficulty"	"1"
+	}
+	"survival"
+	{
+		"name"			"Survival"
+		"difficulty"	"0"
+	}
+	"scavenge"
+	{
+		"name"			"Scavenge"
+		"difficulty"	"0"
+	}
+	"mutation12"
+	{
+		"name"			"Realism Versus"
+		"difficulty"	"0"
+	}
+	"realism"
+	{
+		"name"			"Realism"
+		"difficulty"	"1"
+	}
+	"mutation13"
+	{
+		"name"			"Follow the Liter"
+		"difficulty"	"0"
+	}
+	"community4"
+	{
+		"name"			"Nightmare"
+		"difficulty"	"0"
+	}
+	"community1"
+	{
+		"name"			"Special Delivery"
+		"difficulty"	"1"
+	}
+	"community2"
+	{
+		"name"			"Flu Season"
+		"difficulty"	"1"
+	}
+	"community5"
+	{
+		"name"			"Death`s Door"
+		"difficulty"	"1"
+	}
+	"gunbrain"
+	{
+		"name"			"GunBrain"
+		"difficulty"	"1"
+	}
+	"l4d1coop"
+	{
+		"name"			"L4D1 Campaign"
+		"difficulty"	"1"
+	}
+	"mutation10"
+	{
+		"name"			"Room For One"
+		"difficulty"	"1"
+	}
+	"mutation14"
+	{
+		"name"			"Gib Fest"
+		"difficulty"	"1"
+	}
+	"mutation16"
+	{
+		"name"			"Hunting Party"
+		"difficulty"	"1"
+	}
+	"mutation2"
+	{
+		"name"			"Headshot!"
+		"difficulty"	"1"
+	}
+	"mutation20"
+	{
+		"name"			"Healing Gnome"
+		"difficulty"	"1"
+	}
+	"mutation3"
+	{
+		"name"			"Bleed Out"
+		"difficulty"	"1"
+	}
+	"mutation4"
+	{
+		"name"			"Hard Eight"
+		"difficulty"	"1"
+	}
+	"mutation5"
+	{
+		"name"			"Four Swordsmen"
+		"difficulty"	"1"
+	}
+	"mutation7"
+	{
+		"name"			"Chainsaw Massacre"
+		"difficulty"	"1"
+	}
+	"mutation8"
+	{
+		"name"			"Iron Man"
+		"difficulty"	"1"
+	}
+	"mutation9"
+	{
+		"name"			"Last Gnome On Earth"
+		"difficulty"	"1"
+	}
+	"holdout"
+	{
+		"name"			"Holdout"
+		"difficulty"	"1"
+	}
+	"dash"
+	{
+		"name"			"Dash"
+		"difficulty"	"1"
+	}
+	"shootzones"
+	{
+		"name"			"ShootZones"
+		"difficulty"	"1"
+	}
+	"mutation15"
+	{
+		"name"			"Versus Survival"
+		"difficulty"	"0"
+	}
+	"community3"
+	{
+		"name"			"Riding My Survivor"
+		"difficulty"	"0"
+	}
+	"community6"
+	{
+		"name"			"Confogl mutation"
+		"difficulty"	"0"
+	}
+	"l4d1vs"
+	{
+		"name"			"L4D1 Versus"
+		"difficulty"	"0"
+	}
+	"mutation11"
+	{
+		"name"			"Healthpackalypse"
+		"difficulty"	"0"
+	}
+	"mutation18"
+	{
+		"name"			"Bleed Out Versus"
+		"difficulty"	"0"
+	}
+	"mutation19"
+	{
+		"name"			"Taaannnk!!"
+		"difficulty"	"0"
+	}
+}

@@ -1,0 +1,12 @@
+"Phrases"
+{
+	"losm_common_limit"
+	{
+		"chi"		"<{olive}Horde{default}> {blue}有限尸潮事件{default} 已经开始, 将刷出 {olive}%i{default} 个僵尸.."
+	}
+
+	"oec_remaining"
+	{
+		"chi"		"<{olive}Horde{default}> 还剩 {red}%i{default} 个.."
+	}
+}

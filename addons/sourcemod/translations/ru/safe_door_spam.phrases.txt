@@ -1,0 +1,22 @@
+"Phrases"
+{
+	"Door_Open"
+	{
+		"ru"		"{olive}[Убежище] {white}открыто игроком {orange}%N"
+	}
+
+	"Door_Close"
+	{
+		"ru"		"{olive}[Убежище] {white}закрыто игроком {orange}%N"
+	}
+
+	"Door_Wait"
+	{
+		"ru"		"{olive}[Убежище] {white}Дверь откроется через {orange}%d {white}секунд"
+	}
+
+	"Door_Unlocked"
+	{
+		"ru"		"{olive}[Saferoom] {white}дверь {orange}открыта"
+	}
+}

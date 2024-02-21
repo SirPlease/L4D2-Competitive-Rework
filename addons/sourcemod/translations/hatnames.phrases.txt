@@ -1,0 +1,383 @@
+"Phrases"
+{
+	"models/infected/gibs/gibs.mdl"
+	{
+		"en"		"Hand Gib"
+	}
+	"models/infected/limbs/exploded_boomer_head.mdl"
+	{
+		"en"		"Boomer Head"
+	}
+	"models/infected/limbs/limb_male_head01.mdl"
+	{
+		"en"		"Head Gib"
+	}
+	"models/props/cs_militia/circularsaw01.mdl"
+	{
+		"en"		"Circular Saw"
+	}
+	"models/props/de_nuke/emergency_lighta.mdl"
+	{
+		"en"		"Red Emergency Light"
+	}
+	"models/props_fairgrounds/alligator.mdl"
+	{
+		"en"		"Alligator"
+	}
+	"models/props_fairgrounds/mr_mustachio.mdl"
+	{
+		"en"		"Mr Mustachio"
+	}
+	"models/props_fortifications/orange_cone001_clientside.mdl"
+	{
+		"en"		"Traffic Cone"
+	}
+	"models/props_interiors/teddy_bear.mdl"
+	{
+		"en"		"Teddy Bear"
+	}
+	"models/props_interiors/toilet_b_breakable01_part13.mdl"
+	{
+		"en"		"Toilet Seat"
+	}
+	"models/props_interiors/waterbottle.mdl"
+	{
+		"en"		"Water bottle"
+	}
+	"models/props_urban/dock_pylon_cap001.mdl"
+	{
+		"en"		"Dock Pylon"
+	}
+	"models/props_urban/life_ring001.mdl"
+	{
+		"en"		"Life Ring"
+	}
+	"models/props_lighting/light_construction02.mdl"
+	{
+		"en"		"Construction Light"
+	}
+	"models/extras/info_speech.mdl"
+	{
+		"en"		"Speech Quote"
+	}
+	"models/infected/smoker_tongue_attach.mdl"
+	{
+		"en"		"Smoker Tongue"
+	}
+	"models/props/de_inferno/ceiling_fan_blade.mdl"
+	{
+		"en"		"Ceiling Fan Blades"
+	}
+	"models/f18/f18_placeholder.mdl"
+	{
+		"en"		"F-18 Jet Plane"
+	}
+	"models/deadbodies/dead_male_civilian_radio.mdl"
+	{
+		"en"		"Civilian Radio"
+	}
+	"models/infected/cim_riot_faceplate.mdl"
+	{
+		"en"		"Riot Faceplate"
+	}
+	"models/props_interiors/styrofoam_cups.mdl"
+	{
+		"en"		"Styrofoam Cups"
+	}
+	"models/props_shacks/bug_lamp01.mdl"
+	{
+		"en"		"Bug Lamp Zapper"
+	}
+	"models/props_unique/grill_campground.mdl"
+	{
+		"en"		"BBQ Grill"
+	}
+	"models/props_unique/luggagecart01.mdl"
+	{
+		"en"		"Luggage Cart"
+	}
+	"models/props_unique/spawn_apartment/lantern.mdl"
+	{
+		"en"		"Lantern"
+	}
+	"models/props_urban/exit_sign002.mdl"
+	{
+		"en"		"Exit Sign"
+	}
+	"models/props_urban/garden_hose001.mdl"
+	{
+		"en"		"Garden Hose"
+	}
+	"models/props_urban/plastic_flamingo001.mdl"
+	{
+		"en"		"Pink Flamingo"
+	}
+	"models/props_waterfront/money_pile.mdl"
+	{
+		"en"		"Money Pile"
+	}
+	"models/props_fairgrounds/elephant.mdl"
+	{
+		"en"		"Elephant"
+	}
+	"models/props_fairgrounds/giraffe.mdl"
+	{
+		"en"		"Giraffe"
+	}
+	"models/props_fairgrounds/garbage_popcorn_box.mdl"
+	{
+		"en"		"Popcorn Box"
+	}
+	"models/props_fairgrounds/gnome_closet.mdl"
+	{
+		"en"		"Gnome Closet"
+	}
+	"models/props_fairgrounds/snake.mdl"
+	{
+		"en"		"Snake"
+	}
+	"models/props_interiors/toaster.mdl"
+	{
+		"en"		"Toaster"
+	}
+	"models/props_unique/doll01.mdl"
+	{
+		"en"		"Doll"
+	}
+	"models/props_junk/garbage_hubcap01a.mdl"
+	{
+		"en"		"Hub Cap"
+	}
+	"models/props_mall/mall_mannequin_rhand.mdl"
+	{
+		"en"		"Mannequin Hand"
+	}
+	"models/props_lab/desklamp01.mdl"
+	{
+		"en"		"Desk Lamp"
+	}
+	"models/props_vehicles/helicopter_rescue.mdl"
+	{
+		"en"		"Big Helicopter"
+	}
+	"models/hybridphysx/news_helicoptor_map1_intro_v1.mdl"
+	{
+		"en"		"News Helicopter"
+	}
+	"models/missiles/f18_agm65maverick.mdl"
+	{
+		"en"		"Missile"
+	}
+	"models/props_vehicles/boat_fishing02.mdl"
+	{
+		"en"		"Fishing Boat"
+	}
+	"models/props_urban/big_wheel001.mdl"
+	{
+		"en"		"Childs Trike"
+	}
+	"models/props_interiors/mounteddeerhead01.mdl"
+	{
+		"en"		"Deer Head"
+	}
+	"models/props_misc/pot-1.mdl"
+	{
+		"en"		"Saucepan"
+	}
+	"models/props_c17/metalpot002a.mdl"
+	{
+		"en"		"Frying Pan"
+	}
+	"models/gibs/hgibs.mdl"
+	{
+		"en"		"Skull"
+	}
+	"models/props/cs_militia/caseofbeer01.mdl"
+	{
+		"en"		"Case of Beer"
+	}
+	"models/props/cs_office/chair_office.mdl"
+	{
+		"en"		"Office Chair"
+	}
+	"models/props_cemetery/crypts_top02.mdl"
+	{
+		"en"		"Graveyard Cross"
+	}
+	"models/props_fairgrounds/kiddyland_riderocket_small.mdl"
+	{
+		"en"		"Kiddyland Rocket"
+	}
+	"models/props_interiors/toilet_b_breakable01.mdl"
+	{
+		"en"		"Toilet"
+	}
+	"models/props_misc/lamp-1_gib1.mdl"
+	{
+		"en"		"Lamp Shade"
+	}
+	"models/props_misc/saddle-1.mdl"
+	{
+		"en"		"Saddle"
+	}
+	"models/props_unique/wheelchair01.mdl"
+	{
+		"en"		"Wheel Chair"
+	}
+	"models/props_urban/mega_phone001.mdl"
+	{
+		"en"		"Mega Phone"
+	}
+	"models/props/de_train/de_train_floodlights_01.mdl"
+	{
+		"en"		"Flood lights"
+	}
+	"models/props_vehicles/tire001c_car.mdl"
+	{
+		"en"		"Car Tire"
+	}
+	"models/props/de_inferno/ceiling_fan.mdl"
+	{
+		"en"		"Ceiling Fan"
+	}
+	"models/props/de_prodigy/fan.mdl"
+	{
+		"en"		"Fan"
+	}
+	"models/props_foliage/urban_pot_clay01.mdl"
+	{
+		"en"		"Pot Plant 1"
+	}
+	"models/props_foliage/urban_pot_clay02.mdl"
+	{
+		"en"		"Pot Plant 2"
+	}
+	"models/props_downtown/ironing_board_flat.mdl"
+	{
+		"en"		"Ironing Board"
+	}
+	"models/props_collectables/coin.mdl"
+	{
+		"en"		"Coin"
+	}
+	"models/infected/jockey.mdl"
+	{
+		"en"		"Jockey"
+	}
+	"models/items/l4d_gift.mdl"
+	{
+		"en"		"Gift"
+	}
+	"models/props_street/firehydrant.mdl"
+	{
+		"en"		"Fire Hydrant"
+	}
+	"models/props_junk/gnome.mdl"
+	{
+		"en"		"Gnome"
+	}
+	"models/bunny/b_sailboat.mdl"
+	{
+		"en"		"Sail Boat"
+	}
+	"models/props/de_nuke/light_red2.mdl"
+	{
+		"en"		"Red Bulkhead Light"
+	}
+	"models/props_buildables/mine.mdl"
+	{
+		"en"		"Wheel Hubcap"
+	}
+	"models/props_cemetery/crypts_top01.mdl"
+	{
+		"en"		"Graveyard Cross"
+	}
+	"models/props_misc/tea_pot-1.mdl"
+	{
+		"en"		"Tea Pot"
+	}
+	"models/props_fairgrounds/pyrotechnics_launcher.mdl"
+	{
+		"en"		"Pyrotechnics"
+	}
+	"models/props_interiors/coffee_maker.mdl"
+	{
+		"en"		"Coffee Maker"
+	}
+	"models/props_interiors/pot01a.mdl"
+	{
+		"en"		"Kettle"
+	}
+	"models/props_interiors/tv.mdl"
+	{
+		"en"		"TV"
+	}
+	"models/props_interiors/lamp_floor_gib2.mdl"
+	{
+		"en"		"Lamp Shade 1"
+	}
+	"models/props_interiors/lamp_table02_gib2.mdl"
+	{
+		"en"		"Lamp Shade 2"
+	}
+	"models/props_lighting/semi_flush_001.mdl"
+	{
+		"en"		"Lamp Shade 3"
+	}
+	"models/props_junk/petfoodbag01.mdl"
+	{
+		"en"		"Dog Food"
+	}
+	"models/props_lighting/flashlight_dropped_01.mdl"
+	{
+		"en"		"Dalek Flash Light"
+	}
+	"models/props_lighting/lightfixture03.mdl"
+	{
+		"en"		"Ball Light"
+	}
+	"models/props_mall/cash_register.mdl"
+	{
+		"en"		"Cash Register"
+	}
+	"models/props_placeable/tier1_guns_trophy.mdl"
+	{
+		"en"		"Gun Trophy 1"
+	}
+	"models/props_placeable/tier2_guns_trophy.mdl"
+	{
+		"en"		"Gun Trophy 2"
+	}
+	"models/weapons/arms/v_spitter_arms.mdl"
+	{
+		"en"		"Spitter Arms"
+	}
+	"models/weapons/arms/v_jockey_arms.mdl"
+	{
+		"en"		"Jockey Claws"
+	}
+	"models/v_models/weapons/v_claw_hulk.mdl"
+	{
+		"en"		"Tank Claws"
+	}
+	"models/w_models/weapons/w_he_grenade.mdl"
+	{
+		"en"		"Grenade Shell"
+	}
+	"models/props_junk/propanecanister001a.mdl"
+	{
+		"en"		"Propane Cylinder"
+	}
+	"models/w_models/weapons/w_eq_medkit.mdl"
+	{
+		"en"		"Medkit Cap"
+	}
+	"models/weapons/melee/w_riotshield.mdl"
+	{
+		"en"		"Riot Shield"
+	}
+	"models/props_skybox/boat_rescue_tug_sunshine.mdl"
+	{
+		"en"		"Tug Boat"
+	}
+}

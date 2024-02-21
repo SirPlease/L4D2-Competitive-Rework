@@ -8,11 +8,10 @@
 #define _l4d2_changelevel_included
 
 /**
-*	@param	sMapName				Map String without .bsp
-*	@param	bShouldResetScores		Reset all scores in all gamemodes
+*	@param	sMapName	Map String without .bsp
 *	@noreturn
 */
-native void L4D2_ChangeLevel(const char[] sMapName, bool bShouldResetScores=true);
+native void L4D2_ChangeLevel(const char[] sMapName);
 
 public SharedPlugin __pl_l4d2_changelevel = 
 {

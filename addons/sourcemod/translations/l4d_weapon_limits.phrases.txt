@@ -1,0 +1,14 @@
+"Phrases"
+{
+	"LimitsCleared"
+	{
+		"en"		"{blue}[{default}Weapon Limits{blue}]{default} Weapon limits cleared!"
+		"chi"		"{blue}[{default}武器限制{blue}]{default} 武器限制已清除!"
+	}
+
+	"ReachedLimits"
+	{
+		"en"		"{blue}[{default}Weapon Limits{blue}]{default} This weapon group has reached its max of {green}%d."
+		"chi"		"{blue}[{default}武器限制{blue}]{default} 这一组武器的拥有数已达到了它的最大限制数量 {green}%d {default}把."
+	}
+}

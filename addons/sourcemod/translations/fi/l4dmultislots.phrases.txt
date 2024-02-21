@@ -1,0 +1,37 @@
+//Suomalainen by HekuT
+
+"Phrases"
+{
+	"A surviving Bot was added."
+	{
+		"fi" "Eloonjäänyt botti lisättiin."
+	}
+	"Impossible to generate a bot at the moment."
+	{
+		"fi" "Ei voi tuottaa botti tällä hetkellä."
+	}
+	"Please wait to be revived or rescued"
+	{
+		"fi" "Odota, että sinun menee elvytetään tai pelastetaan."
+	}
+	"You are idle. press the left mouse button to join the survivors!"
+	{
+		"fi" "Olet tyhjäkäynnillä. Paina hiiren vasenta painiketta liittyäksesit selviytyjiin!"
+	}
+	"You are already on the team of survivors."
+	{
+		"fi" "Olet selviytyneiden joukkueessa."
+	}
+	"Type in chat !join To join the survivors"
+	{
+		"fi" "Kirjoita chatissa {olive}!join{default} Liity selviytyneisiin."
+	}
+	"The survivors has started the game, please wait to be resurrected or rescued"
+	{
+		"fi" "Selviytyneet tulevat pelin alkamisen leikki aikana, odottavat, että heidät herätetään kuolleista"
+	}
+	"No Bots for replacement."
+	{
+		"fi" " Ei botteja korvaamista varten."
+	}
+}

@@ -1,0 +1,45 @@
+//
+// PRELOAD_XBOX.XSC
+//
+// Prevent or add specific resources to the preload
+// Syntax: <-/+> <resourcepath>
+// - Removes
+// + Adds
+//
+
++ "materials\debug\debugempty.360.vtf"
+
++ "materials\dev\identitylightwarp.360.vtf"
++ "materials\dev\twenty.360.vtf"
+
++ "materials\effects\flashlight_border.360.vtf"
+
++ "materials\engine\lightsprite.360.vtf"
++ "materials\engine\normalizedrandomdirections2d.360.vtf"
++ "materials\engine\l4d_spinner.360.vtf"
+
++ "materials\sprites\qi_center.360.vtf"
++ "materials\sprites\crosshairs.360.vtf"
+
++ "materials\vgui\fonts\buttons_32.360.vtf"
+
++ "materials\vgui\hud\xbox_reticle.360.vtf"
++ "materials\vgui\hud\icon_commentary.360.vtf"
+
++ "sound\common\null.360.wav"
++ "sound\ui\buttonrollover.360.wav"
++ "sound\ui\buttonclick.360.wav"
++ "sound\ui\buttonclickrelease.360.wav"
++ "sound\player\suit_denydevice.360.wav"
+
+
+
+
+
+
+
+
+
+
+
+

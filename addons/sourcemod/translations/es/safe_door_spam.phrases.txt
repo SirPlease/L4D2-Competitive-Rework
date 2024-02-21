@@ -1,0 +1,22 @@
+"Phrases"
+{
+	"Door_Open"
+	{
+		"es"		"{olive}[Refugio] {white}abierto por {orange}%N"
+	}
+
+	"Door_Close"
+	{
+		"es"		"{olive}[Refugio] {white}cerrado por {orange}%N"
+	}
+
+	"Door_Wait"
+	{
+		"es"		"{white}El {olive}[Refugio] {white}se desbloqueará en {orange}%d {white}segundos"
+	}
+
+	"Door_Unlocked"
+	{
+		"es"		"{white}Puerta del {olive}[Refugio] {orange}abierta"
+	}
+}

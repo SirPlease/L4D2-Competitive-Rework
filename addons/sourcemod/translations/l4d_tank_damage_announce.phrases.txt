@@ -1,0 +1,22 @@
+"Phrases"
+{
+	"HealthRemaining"
+	{
+		"en"		"{default}[{green}!{default}] {blue}Tank {default}({olive}%s{default}) had {green}%d {default}health remaining."
+	}
+
+	"DamageDealtToTank"
+	{
+		"en"		"{default}[{green}!{default}] {blue}Damage {default}dealt to{blue} Tank {default}({olive}%s{default})"
+	}
+
+	"DamageDealtToAITank"
+	{
+		"en"		"{default}[{green}!{default}] {blue}Damage {default}dealt to{blue} Tank {default}({olive}AI{default})"
+	}
+
+	"DamageDetail"		//this only affects format
+	{
+		"en"		"{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N"
+	}
+}

@@ -1,0 +1,14 @@
+"Phrases"
+{
+	"Command_SwitchOff"
+	{
+		"en"		"{blue}[{default}ItemSwitch{blue}] {default}Switch to Weapon on pick-up: {blue}OFF"
+		"chi"		"{blue}[{default}ItemSwitch{blue}] {default}捡拾东西的时候切换武器: {blue}OFF"
+	}
+	
+	"Command_SwitchOn"
+	{
+		"en"		"{blue}[{default}ItemSwitch{blue}] {default}Switch to Weapon on pick-up: {blue}ON"
+		"chi"		"{blue}[{default}ItemSwitch{blue}] {default}捡拾东西的时候切换武器: {blue}ON"
+	}
+}

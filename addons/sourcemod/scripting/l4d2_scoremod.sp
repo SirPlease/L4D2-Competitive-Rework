@@ -5,8 +5,8 @@
 #include <left4dhooks>
 #undef REQUIRE_PLUGIN
 #include <l4d2lib>
-#define REQUIRE_PLUGIN
 #include <colors>
+#define REQUIRE_PLUGIN
 
 #define DEBUG_SM	0
 
@@ -15,7 +15,7 @@ public Plugin myinfo =
 	name = "L4D2 Scoremod",
 	author = "CanadaRox, ProdigySim",
 	description = "L4D2 Custom Scoring System (Health Bonus)",
-	version = "1.1.2",
+	version = "1.1.1",
 	url = "https://bitbucket.org/CanadaRox/random-sourcemod-stuff"
 };
 
@@ -124,14 +124,18 @@ public OnPluginStart()
 	SM_iAdrenPercent = GetConVarInt(SM_hAdrenPercent);
 	
 	RegConsoleCmd("sm_health", SM_Cmd_Health);
-	
+
+	LoadTranslations("l4d2_scoremod.phrases");
+}
+
+public OnAllPluginsLoaded()
+{
 	l4d2lib_available = LibraryExists("l4d2lib");
-	
 }
  
 public OnLibraryRemoved(const String:name[])
 {
-	if (strcmp(name, "l4d2lib") == 0)
+	if (StrEqual(name, "l4d2lib"))
 	{
 		l4d2lib_available = false;
 	}
@@ -139,7 +143,7 @@ public OnLibraryRemoved(const String:name[])
  
 public OnLibraryAdded(const String:name[])
 {
-	if (strcmp(name, "l4d2lib") == 0)
+	if (StrEqual(name, "l4d2lib"))
 	{
 		l4d2lib_available = true;
 	}
@@ -182,37 +186,20 @@ public SM_ConVarChanged_Enable(Handle:convar, const String:oldValue[], const Str
 	{
 		PluginDisable();
 		SM_bModuleIsEnabled = false;
-		return;
 	}
-
-	PluginEnable();
-	SM_bModuleIsEnabled = true;
+	else
+	{
+		PluginEnable();
+		SM_bModuleIsEnabled = true;
+	}
 }
 
-public SM_ConVarChanged_TempMulti0(Handle:convar, const String:oldValue[], const String:newValue[])
-{
-	SM_fTempMulti[0] = StringToFloat(newValue);
-}
+public SM_ConVarChanged_TempMulti0(Handle:convar, const String:oldValue[], const String:newValue[]) SM_fTempMulti[0] = StringToFloat(newValue);
+public SM_ConVarChanged_TempMulti1(Handle:convar, const String:oldValue[], const String:newValue[]) SM_fTempMulti[1] = StringToFloat(newValue);
+public SM_ConVarChanged_TempMulti2(Handle:convar, const String:oldValue[], const String:newValue[]) SM_fTempMulti[2] = StringToFloat(newValue);
 
-public SM_ConVarChanged_TempMulti1(Handle:convar, const String:oldValue[], const String:newValue[])
-{
-	SM_fTempMulti[1] = StringToFloat(newValue);
-}
-
-public SM_ConVarChanged_TempMulti2(Handle:convar, const String:oldValue[], const String:newValue[])
-{
-	SM_fTempMulti[2] = StringToFloat(newValue);
-}
-
-public SM_CVChanged_HealthBonusRatio(Handle:convar, const String:oldValue[], const String:newValue[])
-{
-	SM_fHBRatio = StringToFloat(newValue);
-}
-
-public SM_CVChanged_SurvivalBonusRatio(Handle:convar, const String:oldValue[], const String:newValue[])
-{
-	SM_fSurvivalBonusRatio = StringToFloat(newValue);
-}
+public SM_CVChanged_HealthBonusRatio(Handle:convar, const String:oldValue[], const String:newValue[]) SM_fHBRatio = StringToFloat(newValue);
+public SM_CVChanged_SurvivalBonusRatio(Handle:convar, const String:oldValue[], const String:newValue[]) SM_fSurvivalBonusRatio = StringToFloat(newValue);
 
 public SM_ConVarChanged_Health(Handle:convar, const String:oldValue[], const String:newValue[])
 {
@@ -281,8 +268,9 @@ public Action:SM_RoundEnd_Event(Handle:event, const String:name[], bool:dontBroa
 		
 		// If the score is nonzero, trust the SurvivalBonus var.
 		SM_iFirstScore = (SM_iFirstScore ? GetConVarInt(SM_hSurvivalBonus) *iAliveCount : 0);
-		CPrintToChatAll("{blue}[{default}!{blue}] {default}Round {blue}1 {default}Bonus: {olive}%d", SM_iFirstScore);
-		if (GetConVarBool(SM_hCustomMaxDistance) && GetCustomMapMaxScore() > -1) CPrintToChatAll("{blue}[{default}!{blue}] {default}Custom Max Distance: {olive}%d", GetCustomMapMaxScore());
+		CPrintToChatAll("%t", "RoundOneBonus", SM_iFirstScore);		
+		//{blue}[{default}!{blue}] {default}Round {blue}1 {default}Bonus: {olive}%d
+		if (GetConVarBool(SM_hCustomMaxDistance) && GetCustomMapMaxScore() > -1) CPrintToChatAll("%t", "CustomDistanceBonus", GetCustomMapMaxScore());
 	}
 	else if (SM_bIsSecondRoundStarted && !SM_bIsSecondRoundOver)
 	{
@@ -293,12 +281,15 @@ public Action:SM_RoundEnd_Event(Handle:event, const String:name[], bool:dontBroa
 		new iScore = RoundToFloor(SM_CalculateAvgHealth(iAliveCount) * SM_fMapMulti * SM_fHBRatio + 400 * SM_fMapMulti * SM_fSurvivalBonusRatio);
 		// If the score is nonzero, trust the SurvivalBonus var.
 		iScore = iScore ? GetConVarInt(SM_hSurvivalBonus) * iAliveCount : 0; 
-		CPrintToChatAll("{blue}[{default}!{blue}] {default}Round {blue}1 {default}Bonus: {olive}%d", SM_iFirstScore);
-		CPrintToChatAll("{blue}[{default}!{blue}] {default}Round {blue}2 {default}Bonus: {olive}%d", iScore);
+		CPrintToChatAll("%t", "RoundOneBonus", SM_iFirstScore);
+		CPrintToChatAll("%t", "RoundTowBonus", iScore);
+		// {blue}[{default}!{blue}] {default}Round {blue}1 {default}Bonus: {olive}%d
+		// {blue}[{default}!{blue}] {default}Round {blue}2 {default}Bonus: {olive}%d
 		iDifference = SM_iFirstScore - iScore;
 		if (iScore > SM_iFirstScore) iDifference = (~iDifference) + 1;
-		CPrintToChatAll("{red}[{default}!{red}] {default}Difference: {olive}%d", iDifference);
-		if (GetConVarBool(SM_hCustomMaxDistance) && GetCustomMapMaxScore() > -1) CPrintToChatAll("{blue}[{default}!{blue}] {default}Custom Max Distance: {olive}%d", GetCustomMapMaxScore());
+		CPrintToChatAll("%t", "Difference", iDifference);		///{red}[{default}!{red}] {default}Difference: {olive}%d
+		if (GetConVarBool(SM_hCustomMaxDistance) && GetCustomMapMaxScore() > -1) CPrintToChatAll("%t", "CustomDistanceBonus", GetCustomMapMaxScore());
+		// {blue}[{default}!{blue}] {default}Custom Max Distance: {olive}%d
 	}
 }
 public Action:SM_RoundStart_Event(Handle:event, const String:name[], bool:dontBroadcast)
@@ -318,10 +309,7 @@ public Action:SM_FinaleVehicleLeaving_Event(Handle:event, const String:name[], b
 	SetConVarInt(SM_hSurvivalBonus, SM_CalculateSurvivalBonus());
 }
 
-bool:SM_IsPlayerIncap(client) 
-{
-	return (GetEntProp(client, Prop_Send, "m_isIncapacitated", 1) > 0);
-}
+SM_IsPlayerIncap(client) return GetEntProp(client, Prop_Send, "m_isIncapacitated");
 
 public Action:SM_Cmd_Health(client, args)
 {
@@ -336,7 +324,8 @@ public Action:SM_Cmd_Health(client, args)
     {
 		iDifference = SM_iFirstScore - iScore;
 		if (iScore > SM_iFirstScore) iDifference = (~iDifference) + 1;
-		CPrintToChat(client, "{blue}[{default}!{blue}] {default}Round {blue}1 {default}Bonus: {olive}%d {default}({green}Difference: {olive}%d{default})", SM_iFirstScore, iDifference);
+		CPrintToChat(client, "%t", "RoundOneBonus_Difference", SM_iFirstScore, iDifference);
+		// {blue}[{default}!{blue}] {default}Round {blue}1 {default}Bonus: {olive}%d {default}({green}Difference: {olive}%d{default})
 	}
 	
 	#if DEBUG_SM
@@ -345,7 +334,8 @@ public Action:SM_Cmd_Health(client, args)
 	
 	if (client)
 	{
-		CPrintToChat(client, "{blue}[{default}!{blue}] {default}Health Bonus: {olive}%d", iScore );
+		CPrintToChat(client, "%t", "HealthBonus", iScore );
+		// {blue}[{default}!{blue}] {default}Health Bonus: {olive}%d
 	}
 	else
 	{
@@ -354,7 +344,7 @@ public Action:SM_Cmd_Health(client, args)
 
 	if (GetConVarBool(SM_hCustomMaxDistance) && GetCustomMapMaxScore() > -1) {
 		if (client) {
-			CPrintToChat(client, "{blue}[{default}!{blue}] {default}Custom Max Distance: {olive}%d", GetCustomMapMaxScore());
+			CPrintToChat(client, "%t", "CustomDistanceBonus", GetCustomMapMaxScore());
 		}
 		else {
 			PrintToServer("[ScoreMod] Custom Max Distance: %d", GetCustomMapMaxScore());

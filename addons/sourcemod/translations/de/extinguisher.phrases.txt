@@ -1,0 +1,107 @@
+"Phrases"
+{
+	"Ext_ChatTagExtinguisher"
+	{
+		"de"	"{olive}[Feuerlöscher] {default}"
+	}
+	"Ext_ChatTagFlamethrower"
+	{
+		"de"	"{olive}[Flammenwerfer] {default}"
+	}
+	"Ext_ChatTagFreezerspray"
+	{
+		"de"	"{olive}[Eisspray] {default}"
+	}
+	"Ext_ChatTagBlastpushback"
+	{
+		"de"	"{olive}[Pressluftflasche] {default}"
+	}
+	"Ext_WeaponName"
+	{
+		"de"	"eine SMG"
+	}
+	"Ext_Blocked"
+	{
+		"de"	"Du kannst Feuerlöscher nur benutzen, wenn du folgende Waffe hast: '{olive}<WEAPON>{default}'"
+	}
+	"Ext_Broken"
+	{
+		"de"	"wurde zerstört von {olive}<NAME>{default}."
+	}
+	"Ext_EquipFull"
+	{
+		"de"	"Zu viele Spieler benutzen bereits Feuerlöscher."
+	}
+	"Ext_EquipHasCheck"
+	{
+		"de"	"Bereits angelegt! Benötigt folgende Waffe zum Benutzen: '{olive}<WEAPON>{default}'"
+	}
+	"Ext_EquipHasCombo"
+	{
+		"de"	"Bereits angelegt! Flammenwerfer (Primäre Angriffstaste), Feuerlöscher (Zoomtaste) und Pressluftflasche (Gehen + Zoomtaste). {olive}Nachladen{default} zum Ablegen (oder {olive}!dropext{default} im Chat)."
+	}
+	"Ext_EquipCombo"
+	{
+		"de"	"angelegt. Flammenwerfer (Primäre Angriffstaste) und Feuerlöscher (Zoomtaste). {olive}Nachladen{default} zum Ablegen (oder {olive}!dropext{default} im Chat)."
+	}
+	"Ext_EquipUseExtinguisher"
+	{
+		"de"	"angelegt. Lösche Molotows und Feuerwerk Explosionen. {olive}Nachladen{default} zum Ablegen (oder {olive}!dropext{default} im Chat)."
+	}
+	"Ext_EquipUseFlamethrower"
+	{
+		"de"	"angelegt. Verbrenne Gegner und entzünde 'prop_physics'. {olive}Nachladen{default} zum Ablegen (oder {olive}!dropext{default} im Chat)."
+	}
+	"Ext_EquipUseFreezerspray"
+	{
+		"de"	"angelegt. Sprühe Gegner ein und stoße sie weg, um sie langsamer zu machen. {olive}Nachladen{default} zum Ablegen (oder {olive}!dropext{default} im Chat)."
+	}
+	"Ext_EquipUseBlastpushback"
+	{
+		"de"	"angelegt. Schießt Überlebende und besondere Infizierte weg von dir. {olive}Nachladen{default} zum Ablegen (oder {olive}!dropext{default} im Chat)."
+	}
+	"Ext_EmptyExtinguisher"
+	{
+		"de"	"Feuerlöscher-Treibstoff: Leer!"
+	}
+	"Ext_EmptyFlamethrower"
+	{
+		"de"	"Flammenwerfer-Treibstoff: Leer!"
+	}
+	"Ext_EmptyFreezerspray"
+	{
+		"de"	"Eisspray-Treibstoff: Leer!"
+	}
+	"Ext_EmptyBlastpushback"
+	{
+		"de"	"Pressluftflaschen-Treibstoff: Leer!"
+	}
+	"Ext_FuelExtinguisher"
+	{
+		"de"	"Feuerlöscher-Treibstoff:"
+	}
+	"Ext_FuelFlamethrower"
+	{
+		"de"	"Flammenwerfer-Treibstoff:"
+	}
+	"Ext_FuelFreezerspray"
+	{
+		"de"	"Eisspray-Treibstoff:"
+	}
+	"Ext_FuelBlastpushback"
+	{
+		"de"	"Pressluftflaschen-Treibstoff:"
+	}
+	"Ext_Incapped"
+	{
+		"de"	"Du kannst den Feuerlöscher benutzen während du außer Gefecht gesetzt bist. {olive}Nachladen{default} zum Ablegen (oder {olive}!dropext{default} im Chat)."
+	}
+	"Ext_Refuel"
+	{
+		"de"	"Du kannst abgelegte Feuerlöscher mit einem Kanister nachfüllen. Ziele auf den Feuerlöscher während du den Kanister hältst und halte SCHIEßEN (linke Maustaste). {olive}Nachladen{default} zum Ablegen (oder {olive}!dropext{default} im Chat)."
+	}
+	"Ext_Refueled"
+	{
+		"de"	"Wurde nachgefüllt!"
+	}
+}

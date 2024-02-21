@@ -1,0 +1,12 @@
+"Phrases"
+{
+	"VOTE_DISPLAY_MSG"
+	{
+		"en"			"Start command mix randomly"
+	}
+
+	"VOTE_END_MSG"
+	{
+		"en"			"Random command mixing in progress"
+	}
+}

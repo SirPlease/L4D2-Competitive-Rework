@@ -1,0 +1,97 @@
+﻿"Phrases"
+{
+	"Print_CmdBonus_Full"
+	{
+		"chi"		"%sR{green}#%i{default} 奖励分: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | DB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | PB: {olive}%d{default} <{lightgreen}%.1f%%{default}>]"
+	}
+
+	"Print_CmdBonus_Full_SecondRound_0"
+	{
+		"chi"		"%sR{green}#1{default} 奖励分: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
+	}
+
+	"Print_CmdBonus_Full_SecondRound_1"
+	{
+		"chi"		"%sR{green}#1{default} 奖励分: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%t]"
+	}
+
+	"Print_CmdBonus_Lite"
+	{
+		"chi"		"%sR{green}#%i{default} 奖励分: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+
+	"Print_CmdBonus"
+	{
+		"chi"		"%sR{green}#%i{default} 奖励分: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {lightgreen}%.0f%%{default} | DB: {lightgreen}%.0f%%{default} | PB: {lightgreen}%.0f%%{default}]"
+	}
+
+	"Print_CmdBonus_SecondRound"
+	{
+		"chi"		"%sR{green}#1{default} 奖励分: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+
+	"Print_CmdMapInfo_Title"
+	{
+		"chi"		"[{green}Hybrid Bonus{default} :: {lightgreen}%iv%i{default}] 地图信息"
+	}
+
+	"Print_CmdMapInfo_Distance"
+	{
+		"chi"		"路程分: {olive}%d"
+	}
+
+	"Print_CmdMapInfo_TotalBonus"
+	{
+		"chi"		"总奖励分: {olive}%d{default} <{lightgreen}100.0%%{default}>"
+	}
+
+	"Print_CmdMapInfo_HealthBonus"
+	{
+		"chi"		"实血分: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+
+	"Print_CmdMapInfo_DamageBonus"
+	{
+		"chi"		"虚血分: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+
+	"Print_CmdMapInfo_PillsBonus"
+	{
+		"chi"		"药分: {olive}%d{default} (max {olive}%d{default}) <{lightgreen}%.1f%%{default}>"
+	}
+
+	"Print_CmdMapInfo_Tiebreaker"
+	{
+		"chi"		"平局决胜分: {olive}%d"
+	}
+
+	"Print_RoundEndStats_0"
+	{
+		"chi"		"%s回合 {green}#%i{default} 奖励分: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
+	}
+
+	"Print_RoundEndStats_1"
+	{
+		"chi"		"%s回合 {green}#%i{default} 奖励分: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%t]"
+	}
+
+	"Print_RoundEndStats_TIEBREAKER"
+	{
+		"chi"		"%s{lightgreen}平局决胜{default}: 队伍 {green}%#1{default} - {olive}%i{default}, 队伍 {green}%#2{default} - {olive}%i{default}"
+	}
+
+	"Print_SurvivorState_Num"
+	{
+		"chi"		"%s%i{default}/{olive}%i{default}"
+	}
+
+	"Print_SurvivorState_Wiped_Out"
+	{
+		"chi"		"{green}团灭{default}"
+	}
+
+	"Print_SurvivorState_Bonus_Depleted"
+	{
+		"chi"		"{green}分耗殆尽{default}"
+	}
+}

@@ -1,0 +1,107 @@
+"Phrases"
+{
+	"Ext_ChatTagExtinguisher"
+	{
+		"zho"	"{olive}[滅火器] {default}"
+	}
+	"Ext_ChatTagFlamethrower"
+	{
+		"zho"	"{olive}[火槍] {default}"
+	}
+	"Ext_ChatTagFreezerspray"
+	{
+		"zho"	"{olive}[冷凍噴霧] {default}"
+	}
+	"Ext_ChatTagBlastpushback"
+	{
+		"zho"	"{olive}[爆炸後推] {default}"
+	}
+	"Ext_WeaponName"
+	{
+		"zho"	"SMG"
+	}
+	"Ext_Blocked"
+	{
+		"zho"	"你要 '{olive}<WEAPON>{default}' 才可用滅火器."
+	}
+	"Ext_Broken"
+	{
+		"zho"	"被 {olive}<NAME>{default} 破壞."
+	}
+	"Ext_EquipFull"
+	{
+		"zho"	"太多人使用滅火器 ."
+	}
+	"Ext_EquipHasCheck"
+	{
+		"zho"	"已裝備. 只可裝備 {olive}<WEAPON>{default} 時有效. 輸入 {olive}!dropext{default} 或 R 鍵棄置."
+	}
+	"Ext_EquipHasCombo"
+	{
+		"zho"	"已裝備. 噴火(攻擊鍵), 撲滅 molotov火,煙花火同 Spitter 液,噴向及推開敵人可減慢敵人速度(zoom 鍵).噴向敵人可炸飛敵人(zoom + shift鍵). 輸入 {olive}!dropext{default} 或 R 鍵棄置."
+	}
+	"Ext_EquipCombo"
+	{
+		"zho"	"已裝備. 噴火(攻擊鍵), 撲滅 molotov火,煙花火同 Spitter 液,噴向及推開敵人可減慢敵人速度(zoom 鍵).噴向敵人可炸飛敵人(zoom + shift鍵). 輸入 {olive}!dropext{default} 或 R 鍵棄置."
+	}
+	"Ext_EquipUseExtinguisher"
+	{
+		"zho"	"已裝備. 可撲滅 molotov火,煙花火同 Spitter 液. 輸入 {olive}!dropext{default} 或 R 鍵棄置."
+	}
+	"Ext_EquipUseFlamethrower"
+	{
+		"zho"	"已裝備. 可燃燒敵人及物理物件. 輸入 {olive}!dropext{default} 或 R 鍵棄置."
+	}
+	"Ext_EquipUseFreezerspray"
+	{
+		"zho"	"已裝備. 噴向及推開敵人可減慢敵人速度. 輸入 {olive}!dropext{default} 或 R 鍵棄置."
+	}
+	"Ext_EquipUseBlastpushback"
+	{
+		"zho"	"已裝備. 噴向敵人可炸飛敵人. 輸入 {olive}!dropext{default} 或 R 鍵棄置."
+	}
+	"Ext_EmptyExtinguisher"
+	{
+		"zho"	"滅火器 燃料: 空!"
+	}
+	"Ext_EmptyFlamethrower"
+	{
+		"zho"	"火槍 燃料: 空!"
+	}
+	"Ext_EmptyFreezerspray"
+	{
+		"zho"	"冷凍噴霧 燃料: 空!"
+	}
+	"Ext_EmptyBlastpushback"
+	{
+		"zho"	"爆炸後推 燃料: 空!"
+	}
+	"Ext_FuelExtinguisher"
+	{
+		"zho"	"滅火器 燃料:"
+	}
+	"Ext_FuelFlamethrower"
+	{
+		"zho"	"火槍 燃料:"
+	}
+	"Ext_FuelFreezerspray"
+	{
+		"zho"	"冷凍噴霧 燃料:"
+	}
+	"Ext_FuelBlastpushback"
+	{
+		"zho"	"爆炸後推 燃料:"
+	}
+	"Ext_Incapped"
+	{
+		"zho"	"你倒下了也可以用滅火器，輸入 {olive}!dropext{default} 或 R 鍵棄置."
+	}
+	"Ext_Refuel"
+	{
+		"zho"	"你可以拿住汽油罐瞄準滅火器按住 射擊鍵 補充地上的滅火器的燃料。 輸入 {olive}!dropext{default} 或 R 鍵棄置."
+	}
+	"Ext_Refueled"
+	{
+		"zho"	"已被加油！"
+	}
+}

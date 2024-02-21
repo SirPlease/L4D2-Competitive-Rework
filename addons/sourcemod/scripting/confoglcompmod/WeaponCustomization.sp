@@ -36,12 +36,12 @@ void WC_OnModuleStart()
 	HookEvent("weapon_drop", WC_WeaponDrop_Event);
 }
 
-static void WC_ConVarChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+public void WC_ConVarChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	WC_iLimitCount = WC_hLimitCount.IntValue;
 }
 
-static void WC_WeaponDrop_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+public void WC_WeaponDrop_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!IsPluginEnabled()) {
 		return;
@@ -52,7 +52,7 @@ static void WC_WeaponDrop_Event(Event hEvent, const char[] sEventName, bool bDon
 	hEvent.GetString("item", WC_sLastWeapon, sizeof(WC_sLastWeapon));
 }
 
-static void WC_PlayerUse_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+public void WC_PlayerUse_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!IsPluginEnabled()) {
 		return;
@@ -72,7 +72,7 @@ static void WC_PlayerUse_Event(Event hEvent, const char[] sEventName, bool bDont
 		if (SniperCount(client) >= WC_iLimitCount) {
 			RemovePlayerItem(client, primary);
 			//PrintToChat(client, "\x01[\x05Confogl\x01] Maximum \x04%d \x01sniping rifle(s) is enforced.", WC_iLimitCount);
-			CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Maximum {blue}%d {olive}sniping rifle(s) {default}is enforced.", WC_iLimitCount);
+			CPrintToChat(client, "%t", "SniperLimited", WC_iLimitCount);		//{blue}[{default}Confogl{blue}]{default} Maximum {blue}%d {olive}sniping rifle(s) {default}is enforced.
 
 			if (WC_iLastClient == client) {
 				if (WC_iLastWeapon > 0 && IsValidEdict(WC_iLastWeapon)) {

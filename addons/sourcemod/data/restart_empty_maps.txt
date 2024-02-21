@@ -1,0 +1,23 @@
+<
+< This file is used if:
+< * ConVar "sm_restart_empty_server_start_changemap" == 1
+< or
+< * ConVar "sm_restart_empty_method" == 3
+<
+< Provide the list of maps you want be able randomly change to, below:
+<
+< (you can remove all comments and unused maps)
+
+// Left 4 Dead 2
+//
+c1m1_hotel
+c2m1_highway
+c3m1_plankcountry
+c4m1_milltown_a
+c5m1_waterfront
+c6m1_riverbank
+c8m1_apartment
+c10m1_caves
+c11m1_greenhouse
+C12m1_hilltop
+

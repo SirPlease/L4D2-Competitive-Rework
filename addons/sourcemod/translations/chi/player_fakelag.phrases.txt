@@ -1,0 +1,73 @@
+﻿"Phrases"
+{
+	"Usage"
+	{
+		"chi"		"{olive}<FakeLag>{orange}用法：{default}!fakelag <玩家名> <延迟增值>"
+	}
+	"Usage_Myfl"
+	{
+		"chi"		"{olive}<FakeLag>{orange}用法：{default}!myfakelag <延迟增值>"
+	}
+	"No_Target"
+	{
+		"chi"		"{olive}<FakeLag>{default}未找到目标玩家"
+	}
+	"Not_Ingame"
+	{
+		"chi"		"{olive}<FakeLag>{default}玩家 {orange}%N {default}未加入游戏。"
+	}
+	"Fake_Client"
+	{
+		"chi"		"{olive}<FakeLag>{default}玩家 {orange}%N {default}不是真实用户，无法增加其延迟。"
+	}
+	"Set_Fakelag"
+	{
+		"#format"	"{1:d},{2:N},{3:N}"
+		"chi"		"{olive}<FakeLag>{default}管理员({olive}{2}{default}) 为 {teamcolor}{3} {default}增加 {orange}{1}ms {default}延迟"
+	}
+	"Set_MyFakelag"
+	{
+		"#format"	"{1:d},{2:N}"
+		"chi"		"{olive}<FakeLag>{default}玩家({teamcolor}{2}{default}) 为自己增加 {orange}{1}ms {default}延迟"
+	}
+	"InValid_Fakelag"
+	{
+		"chi"		"{olive}<FakeLag>{default}fakelag设定值超出限定范围（合理值：{orange}%d {default}- {orange}%d{default}）"
+	}
+	"vote_to_start"
+	{
+		"chi"		"{olive}<FakeLag> {teamcolor}%N {default}发起一个投票（平衡双方ping值）。"
+	}
+	"not_enough_player"
+	{
+		"chi"		"{olive}<FakeLag>{default} 需 {orange}%d {default}名玩家加入队伍才能发起投票"
+	}
+	"Vote_Tittle"
+	{
+		"chi"		"是否平衡双方ping值？"
+	}
+	"already_vote"
+	{
+		"chi"		"{olive}<FakeLag>{default}暂无法发起投票，因有投票正在进行"
+	}
+	"Vote_Pass_Tittle"
+	{
+		"chi"		"正在平衡双方ping值"
+	}
+	"eping_notice_player"
+	{
+		"chi"		"{olive}<FakeLag>{default}系统自动为你设置 {orange}%dms {default}的延迟"
+	}
+	"equalize_finish"
+	{
+		"chi"		"{olive}<FakeLag>{default}平衡pings值完毕，变动的总差值为 {orange}%dms {default}。"
+	}
+	"show_ping"
+	{
+		"chi"		"{teamcolor}%N: {default}%.1fms"
+	}
+	"show_ping_fl"
+	{
+		"chi"		"{teamcolor}%N: {default}%.1fms ( %.1fms + {orange}%.1fms {default})"
+	}
+}

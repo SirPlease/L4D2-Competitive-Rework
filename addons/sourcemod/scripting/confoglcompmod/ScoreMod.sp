@@ -3,7 +3,7 @@
 #endif
 #define __scoremod_included
 
-#define DEBUG_SM			false
+#define DEBUG_SM			0
 #define SM_MODULE_NAME		"ScoreMod"
 
 static int
@@ -21,7 +21,6 @@ static float
 	SM_fTempMulti[3] = {0.0, ...};
 
 static bool
-	SM_bDebugEnabled = DEBUG_SM,
 	SM_bEventsHooked = false,
 	SM_bModuleIsEnabled = false,
 	SM_bHooked = false,
@@ -137,7 +136,7 @@ void SM_OnMapStart()
 	SM_fTempMulti[2] = SM_hTempMulti2.FloatValue;
 }
 
-static void SM_ConVarChanged_Enable(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+public void SM_ConVarChanged_Enable(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	if (StringToInt(sNewValue) == 0) {
 		PluginDisable();
@@ -148,32 +147,32 @@ static void SM_ConVarChanged_Enable(ConVar hConVar, const char[] sOldValue, cons
 	}
 }
 
-static void SM_ConVarChanged_TempMulti0(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+public void SM_ConVarChanged_TempMulti0(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	SM_fTempMulti[0] = StringToFloat(sNewValue);
 }
 
-static void SM_ConVarChanged_TempMulti1(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+public void SM_ConVarChanged_TempMulti1(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	SM_fTempMulti[1] = StringToFloat(sNewValue);
 }
 
-static void SM_ConVarChanged_TempMulti2(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+public void SM_ConVarChanged_TempMulti2(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	SM_fTempMulti[2] = StringToFloat(sNewValue);
 }
 
-static void SM_CVChanged_HealthBonusRatio(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+public void SM_CVChanged_HealthBonusRatio(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	SM_fHBRatio = StringToFloat(sNewValue);
 }
 
-static void SM_CVChanged_SurvivalBonusRatio(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+public void SM_CVChanged_SurvivalBonusRatio(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	SM_fSurvivalBonusRatio = StringToFloat(sNewValue);
 }
 
-static void SM_ConVarChanged_Health(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+public void SM_ConVarChanged_Health(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	SM_fHealPercent = SM_hHealPercent.FloatValue;
 	SM_iPillPercent = SM_hPillPercent.IntValue;
@@ -241,7 +240,7 @@ static void PluginDisable(bool unhook = true)
 	SM_bHooked = false;
 }
 
-static void SM_DoorClose_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+public void SM_DoorClose_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!SM_bModuleIsEnabled || !IsPluginEnabled() || !hEvent.GetBool("checkpoint")) {
 		return;
@@ -250,7 +249,7 @@ static void SM_DoorClose_Event(Event hEvent, const char[] sEventName, bool bDont
 	SM_hSurvivalBonus.SetInt(SM_CalculateSurvivalBonus());
 }
 
-static void SM_PlayerDeath_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+public void SM_PlayerDeath_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!SM_bModuleIsEnabled || !IsPluginEnabled()) {
 		return;
@@ -264,7 +263,7 @@ static void SM_PlayerDeath_Event(Event hEvent, const char[] sEventName, bool bDo
 	}
 }
 
-static void SM_RoundEnd_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+public void SM_RoundEnd_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!SM_bModuleIsEnabled || !IsPluginEnabled()) {
 		return;
@@ -280,11 +279,11 @@ static void SM_RoundEnd_Event(Event hEvent, const char[] sEventName, bool bDontB
 		SM_iFirstScore = (SM_iFirstScore) ? (SM_hSurvivalBonus.IntValue * iAliveCount) : 0;
 
 		//PrintToChatAll("\x01[\x05Confogl\x01] Round 1 Bonus: \x04%d", SM_iFirstScore);
-		CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} Round 1 Bonus: {olive}%d", SM_iFirstScore);
+		CPrintToChatAll("%t", "RoundOneBonus", SM_iFirstScore);		//{blue}[{default}Confogl{blue}]{default} Round 1 Bonus: {olive}%d
 
 		if (SM_hCustomMaxDistance.BoolValue && GetCustomMapMaxScore() > -1) {
 			//PrintToChatAll("\x01[\x05Confogl\x01] Custom Max Distance: \x04%d", GetCustomMapMaxScore());
-			CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} Custom Max Distance: {olive}%d", GetCustomMapMaxScore());
+			CPrintToChatAll("%t", "CustomMaxDistance", GetCustomMapMaxScore());
 		}
 	} else if (SM_bIsSecondRoundStarted && !SM_bIsSecondRoundOver) {
 		SM_bIsSecondRoundOver = true;
@@ -297,17 +296,17 @@ static void SM_RoundEnd_Event(Event hEvent, const char[] sEventName, bool bDontB
 
 		//PrintToChatAll("\x01[\x05Confogl\x01] Round 1 Bonus: \x04%d", SM_iFirstScore);
 		//PrintToChatAll("\x01[\x05Confogl\x01] Round 2 Bonus: \x04%d", iScore);
-		CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} Round 1 Bonus: {olive}%d", SM_iFirstScore);
-		CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} Round 2 Bonus: {olive}%d", iScore);
+		CPrintToChatAll("%t", "RoundOneBonus", SM_iFirstScore);
+		CPrintToChatAll("%t", "RoundTowBonus", iScore);
 
 		if (SM_hCustomMaxDistance.BoolValue && GetCustomMapMaxScore() > -1) {
 			//PrintToChatAll("\x01[\x05Confogl\x01] Custom Max Distance: \x04%d", GetCustomMapMaxScore());
-			CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} Custom Max Distance: {olive}%d", GetCustomMapMaxScore());
+			CPrintToChatAll("%t", "CustomMaxDistance", GetCustomMapMaxScore());		//{blue}[{default}Confogl{blue}]{default} Custom Max Distance: {olive}%d
 		}
 	}
 }
 
-static void SM_RoundStart_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+public void SM_RoundStart_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!SM_bModuleIsEnabled || !IsPluginEnabled() || !SM_bIsFirstRoundOver) {
 		return;
@@ -317,7 +316,7 @@ static void SM_RoundStart_Event(Event hEvent, const char[] sEventName, bool bDon
 	SM_bIsSecondRoundStarted = true;
 }
 
-static void SM_FinaleVehicleLeaving_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+public void SM_FinaleVehicleLeaving_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!SM_bModuleIsEnabled || !IsPluginEnabled()) {
 		return;
@@ -326,7 +325,7 @@ static void SM_FinaleVehicleLeaving_Event(Event hEvent, const char[] sEventName,
 	SM_hSurvivalBonus.SetInt(SM_CalculateSurvivalBonus());
 }
 
-static Action SM_Cmd_Health(int client, int args)
+public Action SM_Cmd_Health(int client, int args)
 {
 	if (!SM_bModuleIsEnabled || !IsPluginEnabled()) {
 		return Plugin_Handled;
@@ -337,34 +336,34 @@ static Action SM_Cmd_Health(int client, int args)
 
 	if (SM_bIsSecondRoundStarted) {
 		//PrintToChat(client, "\x01[\x05Confogl\x01] Round 1 Bonus: \x04%d", SM_iFirstScore);
-		CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Round 1 Bonus: {olive}%d", SM_iFirstScore);
+		CPrintToChat(client, "%t", "RoundOneBonus", SM_iFirstScore);
 	}
 
 	if (client) {
 		//PrintToChat(client, "\x01[\x05Confogl\x01] Average Health: \x04%.02f", fAvgHealth);
-		CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Average Health: {olive}%.02f", fAvgHealth);
+		CPrintToChat(client, "%t", "AverageHealth", fAvgHealth); 	//{blue}[{default}Confogl{blue}]{default} Average Health: {olive}%.02f
 	} else {
 		PrintToServer("[Confogl] Average Health: %.02f", fAvgHealth);
 	}
 
 	int iScore = RoundToFloor(fAvgHealth * SM_fMapMulti * SM_fHBRatio) * iAliveCount;
 
-	if (SM_bDebugEnabled || IsDebugEnabled()) {
+	if (DEBUG_SM || IsDebugEnabled()) {
 		LogMessage("[%s] CalcScore: %d MapMulti: %.02f Multiplier %.02f", SM_MODULE_NAME, iScore, SM_fMapMulti, SM_fHBRatio);
 	}
 
 	if (client) {
 		//PrintToChat(client, "\x01[\x05Confogl\x01] Health Bonus: \x04%d", iScore);
-		CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Health Bonus: {olive}%d", iScore);
+		CPrintToChat(client, "%t", "HealthBonus", iScore);		//{blue}[{default}Confogl{blue}]{default} Health Bonus: {olive}%d
 
 		if (SM_fSurvivalBonusRatio != 0.0) {
 			//PrintToChat(client, "\x01[\x05Confogl\x01] Static Survival Bonus Per Survivor: \x04%d", RoundToFloor(400 * SM_fMapMulti * SM_fSurvivalBonusRatio));
-			CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Static Survival Bonus Per Survivor: {olive}%d", RoundToFloor(400 * SM_fMapMulti * SM_fSurvivalBonusRatio));
+			CPrintToChat(client, "%t", "SurvivalBonus", RoundToFloor(400 * SM_fMapMulti * SM_fSurvivalBonusRatio));		//{blue}[{default}Confogl{blue}]{default} Static Survival Bonus Per Survivor: {olive}%d
 		}
 
 		if (SM_hCustomMaxDistance.BoolValue && GetCustomMapMaxScore() > -1) {
 			//PrintToChat(client, "\x01[\x05Confogl\x01] Custom Max Distance: \x04%d", GetCustomMapMaxScore());
-			CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Custom Max Distance: {olive}%d", GetCustomMapMaxScore());
+			CPrintToChat(client, "%t", "CustomMaxDistance", GetCustomMapMaxScore());
 		}
 	} else {
 		PrintToServer("[Confogl] Health Bonus: %d", iScore);
@@ -463,16 +462,16 @@ static float SM_CalculateAvgHealth(int &iAliveCount = 0)
 
 	// return Average Health Points
 	float fAvgHealth = (iTotalHealth + fTotalAdjustedTempHealth) / iSurvCount;
-	
-	if (SM_bDebugEnabled || IsDebugEnabled()) {
-		LogMessage("[%s] TotalPerm: %d TotalAdjustedTemp: %.02f SurvCount: %d AliveCount: %d AvgHealth: %.02f", \
-						SM_MODULE_NAME, iTotalHealth, fTotalAdjustedTempHealth, iSurvCount, iAliveCount, fAvgHealth);
-	}
+
+#if DEBUG_SM
+	LogMessage("[%s] TotalPerm: %d TotalAdjustedTemp: %.02f SurvCount: %d AliveCount: %d AvgHealth: %.02f", \
+					SM_MODULE_NAME, iTotalHealth, fTotalAdjustedTempHealth, iSurvCount, iAliveCount, fAvgHealth);
+#endif
 
 	return fAvgHealth;
 }
 
-/*static Action SM_Command_Say(int iClient, const char[] sCommand, int iArgc)
+/*public Action SM_Command_Say(int iClient, const char[] sCommand, int iArgc)
 {
 	if (iClient == 0 || !SM_bModuleIsEnabled || !IsPluginEnabled()) {
 		return Plugin_Continue;
@@ -501,12 +500,12 @@ static int SM_CalculateScore()
 	return RoundToFloor(fScore * SM_fMapMulti * SM_fHBRatio + 400 * SM_fMapMulti * SM_fSurvivalBonusRatio) * iAliveCount;
 }
 
-static int Native_IsScoremodEnabled(Handle plugin, int numParams)
+public int Native_IsScoremodEnabled(Handle plugin, int numParams)
 {
 	return (SM_bModuleIsEnabled && IsPluginEnabled());
 }
 
-static int Native_GetScoremodBonus(Handle plugin, int numParams)
+public int Native_GetScoremodBonus(Handle plugin, int numParams)
 {
 	if (!SM_bModuleIsEnabled || !IsPluginEnabled()) {
 		return -1;

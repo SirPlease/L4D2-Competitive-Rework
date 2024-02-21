@@ -1,0 +1,18 @@
+"Phrases"
+{
+	"VOTE_DISPLAY_MSG"
+	{
+		"ru"			"Начать микс по рангу"
+	}
+
+	"VOTE_END_MSG"
+	{
+		"ru"			"Микс по рангу в процессе"
+	}
+
+	"NO_RANK"
+	{
+		"#format"		"{1:N}"
+		"ru"			"Игрок {olive}{1} {default}не имеет ранга. {olive}Откат микса"
+	}
+}

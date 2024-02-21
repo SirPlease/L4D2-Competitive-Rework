@@ -1,0 +1,107 @@
+"Phrases"
+{
+	"Ext_ChatTagExtinguisher"
+	{
+		"es"	"{olive}[Extintor] {default}"
+	}
+	"Ext_ChatTagFlamethrower"
+	{
+		"es"	"{olive}[Lanzallamas] {default}"
+	}
+	"Ext_ChatTagFreezerspray"
+	{
+		"es"	"{olive}[Spray congelante] {default}"
+	}
+	"Ext_ChatTagBlastpushback"
+	{
+		"es"	"{olive}[Explosivo de retroceso] {default}"
+	}
+	"Ext_WeaponName"
+	{
+		"es"	"una SMG"
+	}
+	"Ext_Blocked"
+	{
+		"es"	"Solo puedes usar un Extintor si tienes equipado '{olive}<WEAPON>{default}'."
+	}
+	"Ext_Broken"
+	{
+		"es"	"fue roto por {olive}<NAME>{default}."
+	}
+	"Ext_EquipFull"
+	{
+		"es"	"Demasiados jugadores estan usando el Extintor."
+	}
+	"Ext_EquipHasCheck"
+	{
+		"es"	"Ya lo tienes equipado! Requiere '{olive}<WEAPON>{default}' para usarlo."
+	}
+	"Ext_EquipHasCombo"
+	{
+		"es"	"Ya lo tienes equipado! Lanzallamas (botón de ataque principal), Extintor (botón de zoom) y explosión (caminar + botón de zoom). Recarga para soltar (o {olive}!dropext{default} en el chat)."
+	}
+	"Ext_EquipCombo"
+	{
+		"es"	"equipado. Lanzallamas (botón de ataque principal) y Extintor (botón de zoom). Recarga para soltar (o {olive}!dropext{default} en el chat)."
+	}
+	"Ext_EquipUseExtinguisher"
+	{
+		"es"	"equipado. Apaga molotovs y fuegos artificiales. Recarga para soltar (o {olive}!dropext{default} en el chat)."
+	}
+	"Ext_EquipUseFlamethrower"
+	{
+		"es"	"equipado. Quema enemigos y prende fuego a prop_physics. Recarga para soltar (o {olive}!dropext{default} en el chat)."
+	}
+	"Ext_EquipUseFreezerspray"
+	{
+		"es"	"equipado. Rocía y empuja a tus enemigos para ralentizarlos. Recarga para soltar (o {olive}!dropext{default} en el chat)."
+	}
+	"Ext_EquipUseBlastpushback"
+	{
+		"es"	"equipado. Empuja a los supervivientes y infectados especiales."
+	}
+	"Ext_EmptyExtinguisher"
+	{
+		"es"	"Combustible del extintor: Vacío!"
+	}
+	"Ext_EmptyFlamethrower"
+	{
+		"es"	"Combustible del lanzallamas: Vacío!"
+	}
+	"Ext_EmptyFreezerspray"
+	{
+		"es"	"Combustible del spray congelante: Vacío!"
+	}
+	"Ext_EmptyBlastpushback"
+	{
+		"es"	"Combustible del explosivo de retroceso: Vacío!"
+	}
+	"Ext_FuelExtinguisher"
+	{
+		"es"	"Combustible del extintor:"
+	}
+	"Ext_FuelFlamethrower"
+	{
+		"es"	"Combustible del lanzallamas:"
+	}
+	"Ext_FuelFreezerspray"
+	{
+		"es"	"Combustible del spray congelante:"
+	}
+	"Ext_FuelBlastpushback"
+	{
+		"es"	"Combustible del explosivo de retroceso:"
+	}
+	"Ext_Incapped"
+	{
+		"es"	"Puedes usar el extintor mientras estas incapacitado. Recarga para soltar (o {olive}!dropext{default} en el chat)."
+	}
+	"Ext_Refuel"
+	{
+		"es"	"Puedes rellenar el combustible de un extintor en el suelo con un bidón de gasolina, apunta al extintor y presiona DISPARO (mouse1). Recarga para soltar (o {olive}!dropext{default} en el chat)."
+	}
+	"Ext_Refueled"
+	{
+		"es"	"Ha sido rellenado con combustible!"
+	}
+}

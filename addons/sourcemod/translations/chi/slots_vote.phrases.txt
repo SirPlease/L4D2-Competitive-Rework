@@ -1,0 +1,44 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"    	"{blue}[{default}位数{blue}]{default}"
+	}
+	"NotConsoleVote"
+	{
+		"chi"		"[Slots] 你必须在游戏中。"
+	}
+	"LimitSlotsAbove"
+	{
+		"chi"		"该服无法设置空位在 {olive}%i{default} 以上."
+	}
+	"LimitedSlotsTo"
+	{
+		"#format"   "{1:s},{2:i}" // 1:sName 2:Int
+		"chi"		"{olive}{1}{default} 已将空位调整至 {blue}{2}{default}"
+	}
+	"RequiredPlayers"
+	{
+		"chi"		"你无法设置空位低于所需的玩家。"
+	}
+	"SlotsUsage"
+	{
+		"chi"		"用法: {olive}!slots{default} <{olive}数字{default}> {blue}|{default} 例如: {olive}!slots 8{default}"
+	}
+	"Spectators"
+	{
+		"chi"		"旁观者无法发起投票。"
+	}
+	"LimitSlots"
+	{
+		"chi"		"设置空位为 '%s'?"
+	}
+	"CannotBeStarted"
+	{
+		"chi"		"现暂无法发起投票。"
+	}
+	"LimitingSlots"
+	{
+		"chi"		"限制空位中..."
+	}
+}

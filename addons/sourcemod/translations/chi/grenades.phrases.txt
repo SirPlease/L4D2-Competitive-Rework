@@ -1,0 +1,109 @@
+"Phrases"
+{
+	// Valid colors: {orange} {green} {cyan} {white}
+	// Translation By steamcommunity.com/id/Dania0/
+	"GrenadeMenu_Title"
+	{
+		"chi"			"形态手雷"
+	}
+	"GrenadeMenu_Invalid"
+	{
+		"chi"			"{orange}[{green}Grenade{orange}] {orange}你得拥有一个手雷."
+	}
+	"GrenadeMod_Mode"
+	{
+		"chi"			"{orange}[{green}Grenade{orange}] {green}模式:{orange}"
+	}
+	"GrenadeMod_Hint"
+	{
+		"chi"			"{orange}[{green}Grenade{orange}] {green}改变模式: {white}持有手雷的同时按下 {orange}中键{white}."
+	}
+	"GrenadeMod_Hint2"
+	{
+		"chi"			"{orange}[{green}Grenade{orange}] {green}改变模式: {white}聊天框输入指令 {orange}!grenade."
+	}
+	"GrenadeMod_Title_0"
+	{
+		"chi"			"原始模式"
+	}
+	"GrenadeMod_Title_1"
+	{
+		"chi"			"炸弹"
+	}
+	"GrenadeMod_Title_2"
+	{
+		"chi"			"炎爆术"
+	}
+	"GrenadeMod_Title_3"
+	{
+		"chi"			"烟花"
+	}
+	"GrenadeMod_Title_4"
+	{
+		"chi"			"烟雾弹"
+	}
+	"GrenadeMod_Title_5"
+	{
+		"chi"			"黑洞"
+	}
+	"GrenadeMod_Title_6"
+	{
+		"chi"			"闪光弹"
+	}
+	"GrenadeMod_Title_7"
+	{
+		"chi"			"护盾"
+	}
+	"GrenadeMod_Title_8"
+	{
+		"chi"			"特斯拉电圈"
+	}
+	"GrenadeMod_Title_9"
+	{
+		"chi"			"毒液"
+	}
+	"GrenadeMod_Title_10"
+	{
+		"chi"			"冰霜新星"
+	}
+	"GrenadeMod_Title_11"
+	{
+		"chi"			"回血"
+	}
+	"GrenadeMod_Title_12"
+	{
+		"chi"			"蒸发"
+	}
+	"GrenadeMod_Title_13"
+	{
+		"chi"			"灭火器"
+	}
+	"GrenadeMod_Title_14"
+	{
+		"chi"			"高亮敌人"
+	}
+	"GrenadeMod_Title_15"
+	{
+		"chi"			"反重力"
+	}
+	"GrenadeMod_Title_16"
+	{
+		"chi"			"火墙火墙火墙"
+	}
+	"GrenadeMod_Title_17"
+	{
+		"chi"			"子弹雷"
+	}
+	"GrenadeMod_Title_18"
+	{
+		"chi"			"高射炮"
+	}
+	"GrenadeMod_Title_19"
+	{
+		"chi"			"空袭"
+	}
+	"GrenadeMod_Title_20"
+	{
+		"chi"			"武器"
+	}
+}

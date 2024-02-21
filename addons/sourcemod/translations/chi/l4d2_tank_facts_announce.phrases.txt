@@ -1,0 +1,37 @@
+"Phrases"
+{
+	"Announce_Title"
+	{
+		"#format"	"{1:s}"
+		"chi"		"[{green}!{default}] {blue}Tank {default} ({olive}{1}{default}) {blue}数据{default}统计:"
+	}
+	
+	// CSayText appears to be async or via text stream?, whatever it costs random amount of time.
+	// For unknown reason stacking color tags can slow certain processing of message.
+	// To print messages in a proper order, extra tags should be added in front.
+	
+	"Announce_TankAttack"
+	{
+		"#format"	"{1:d},{2:d},{3:d}"
+		"chi"		"{red}坦克{green}> {default}拳: {red}{1} {green}/ {default}饼: {red}{2} {green}/ {default}铁: {red}{3}"
+
+	}
+	
+	"Announce_AttackResult"
+	{
+		"#format"	"{1:d},{2:d}"
+		"chi"		"{blue}生还{blue}{green}> {default}倒地: {olive}{1} {green}/ {default}死亡: {olive}{2}"
+	}
+	
+	"Announce_Summary_WithMinute"
+	{
+		"#format"	"{1:d},{2:d},{3:d}"
+		"chi"		"{green}坦克{default}存活时间: {lightgreen}{1}分钟 {2}秒 {green}/ {default}造成伤害: {lightgreen}{3}"
+	}
+	
+	"Announce_Summary_WithoutMinute"
+	{
+		"#format"	"{1:d},{2:d}"
+		"chi"		"{green}坦克{default}存活时间: {lightgreen}{1}秒 {green}/ {default}造成伤害: {lightgreen}{2}"
+	}
+}

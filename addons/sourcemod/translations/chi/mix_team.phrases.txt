@@ -1,0 +1,79 @@
+"Phrases"
+{
+    "BAD_ARGUMENT"
+    {
+        "#format"       "{1:s}"
+        "chi"           "{default}[{green}!{default}] mix的参数 {1} 不正确。使用方法：{olive}!mix <type>"
+    }
+
+    "ARGUMENT_EXAMPLE"
+    {
+        "#format"       "{1:s}"
+        "chi"           "{default}[{green}!{default}] > {olive}!mix {1}"
+    }
+
+    "NO_ARGUMENT"
+    {
+        "chi"           "{default}[{green}!{default}] mix没有参数。使用方法：{olive}!mix <type>"
+    }
+
+    "CANT_CHANGE_TEAM"
+    {
+        "chi"           "{default}[{green}!{default}] 在mix期间，您无法更改团队 {olive}"
+    }
+
+    "BAD_TEAM_SIZE"
+    {
+        "#format"       "{1:d}"
+        "chi"           "{default}[{green}!{default}] 游戏中的玩家数量不足。 {olive}需要 {1} 名玩家"
+    }
+
+    "LEFT_READYUP"
+    {
+        "chi"           "{default}[{green}!{default}] 无法进行mix：{olive}仅在准备阶段可用"
+    }
+
+    "VOTE_COULDOWN"
+    {
+        "#format"       "{1:d}"
+        "chi"           "{default}[{green}!{default}] 此时无法发起投票，请在{1}秒后重试"
+    }
+
+	"SECOND_HALF_OF_ROUND"
+	{
+		"chi"			"{default}[{green}!{default}] 无法进行mix: {olive}回合已经过了一半"
+	}
+
+    "ROUND_LIVE"
+    {
+        "chi"           "{default}[{green}!{default}] 无法进行mix：{olive}回合已经开始"
+    }
+
+    "CLIENT_LEAVE"
+    {
+        "#format"       "{1:N}"
+        "chi"           "{default}[{green}!{default}] mix成员{olive}{1}{default}离开。{olive}恢复队伍状态"
+    }
+
+    "CANCEL_MIX_SUCCESS"
+    {
+        "#format"       "{1:N}"
+        "chi"           "{default}[{green}!{default}] Mix成员{olive}{1}{default}中断了mix"
+    }
+
+    "CANCEL_MIX_FAIL"
+    {
+        "#format"       "{1:d}"
+        "chi"           "{default}[{green}!{default}] 此时无法中断mix，请在{1}秒后重试"
+    }
+
+    "ALREADY_IN_PROGRESS"
+    {
+        "chi"           "{default}[{green}!{default}] 已经有一个mix在进行中！"
+    }
+
+    "UNSUPPORTED"
+    {
+        "chi"           "{default}[{green}!{default}] 不支持此投票类型！"
+    }
+}

@@ -1,0 +1,73 @@
+"ForceMissionChangerSettings"
+{
+	"c14m2_lighthouse"
+	{
+		"建图代码"		"c1m1_hotel"
+		"地图中文名"		"死亡中心"
+	}
+	"c1m4_atrium"
+	{
+		"建图代码"		"c2m1_highway"
+		"地图中文名"		"黑色狂欢节"
+	}
+	"c2m5_concert"
+	{
+		"建图代码"		"c3m1_plankcountry"
+		"地图中文名"		"沼泽激战"
+	}
+	"c3m4_plantation"
+	{
+		"建图代码"		"c4m1_milltown_a"
+		"地图中文名"		"暴风骤雨"
+	}
+	"c4m5_milltown_escape"
+	{
+		"建图代码"		"c5m1_waterfront"
+		"地图中文名"		"教区"
+	}
+	"c5m5_bridge"
+	{
+		"建图代码"		"c6m1_riverbank"
+		"地图中文名"		"短暂时刻"
+	}
+	"c6m3_port"
+	{
+		"建图代码"		"c7m1_docks"
+		"地图中文名"		"牺牲"
+	}
+	"c7m3_port"
+	{
+		"建图代码"		"c8m1_apartment"
+		"地图中文名"		"毫不留情"
+	}
+	"c8m5_rooftop"
+	{
+		"建图代码"		"c9m1_alleys"
+		"地图中文名"		"坠机险途"
+	}
+	"c9m2_lots"
+	{
+		"建图代码"		"c10m1_caves"
+		"地图中文名"		"死亡丧钟"
+	}
+	"c10m5_houseboat"
+	{
+		"建图代码"		"c11m1_greenhouse"
+		"地图中文名"		"静寂时分"
+	}
+	"c11m5_runway"
+	{
+		"建图代码"		"c12m1_hilltop"
+		"地图中文名"		"血腥收获"
+	}
+	"c12m5_cornfield"
+	{
+		"建图代码"		"c13m1_alpinecreek"
+		"地图中文名"		"刺骨寒溪"
+	}
+	"c13m4_cutthroatcreek"
+	{
+		"建图代码"		"c14m1_junkyard"
+		"地图中文名"		"殊死一搏"
+	}
+}

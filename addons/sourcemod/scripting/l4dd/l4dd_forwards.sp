@@ -184,12 +184,12 @@ GlobalForward g_hFWD_CCharge_ImpactStagger;
 GlobalForward g_hFWD_CInsectSwarm_CanHarm;
 GlobalForward g_hFWD_CInsectSwarm_CanHarm_Post;
 GlobalForward g_hFWD_CInsectSwarm_CanHarm_PostHandled;
-GlobalForward g_hFWD_CPipeBombProjectile_Create_Pre;
-GlobalForward g_hFWD_CPipeBombProjectile_Create_Post;
-GlobalForward g_hFWD_CPipeBombProjectile_Create_PostHandled;
 GlobalForward g_hFWD_CMolotovProjectile_Create_Pre;
 GlobalForward g_hFWD_CMolotovProjectile_Create_Post;
 GlobalForward g_hFWD_CMolotovProjectile_Create_PostHandled;
+GlobalForward g_hFWD_CPipeBombProjectile_Create_Pre;
+GlobalForward g_hFWD_CPipeBombProjectile_Create_Post;
+GlobalForward g_hFWD_CPipeBombProjectile_Create_PostHandled;
 GlobalForward g_hFWD_CVomitJarProjectile_Create_Pre;
 GlobalForward g_hFWD_CVomitJarProjectile_Create_Post;
 GlobalForward g_hFWD_CVomitJarProjectile_Create_PostHandled;
@@ -612,10 +612,10 @@ void CreateDetour(GameData hGameData, DHookCallback fCallback, DHookCallback fPo
 			// DynamicHook
 			if( hHook )
 			{
-				g_aDetourHookIDsPre.Push(INVALID_HOOK_ID);
-				g_aDetourHookIDsPost.Push(INVALID_HOOK_ID);
 				g_aDetoursHooked.Push(0);
 				g_aDetourHandles.Push(0);
+				g_aDetourHookIDsPre.Push(INVALID_HOOK_ID);
+				g_aDetourHookIDsPost.Push(INVALID_HOOK_ID);
 			}
 			// DynamicDetour
 			else
@@ -625,7 +625,6 @@ void CreateDetour(GameData hGameData, DHookCallback fCallback, DHookCallback fPo
 
 				g_aDetoursHooked.Push(0);			// Default disabled
 				g_aDetourHandles.Push(hDetour);		// Store handle
-
 				g_aDetourHookIDsPre.Push(INVALID_HOOK_ID);
 				g_aDetourHookIDsPost.Push(INVALID_HOOK_ID);
 			}
@@ -2001,6 +2000,7 @@ MRESReturn DTR_CTankRock_OnRelease(DHookParam hParams) // Forward "L4D_TankRock_
 	//PrintToServer("##### DTR_CTankRock_OnRelease");
 	int pThis = hParams.Get(1);
 	int tank = GetEntPropEnt(pThis, Prop_Data, "m_hThrower");
+	if( tank < 1 ) return MRES_Ignored;
 
 	float v1[3];
 	float v2[3];
@@ -2072,6 +2072,7 @@ MRESReturn DTR_CTankRock_OnRelease_Post(DHookParam hParams) // Forward "L4D_Tank
 	//PrintToServer("##### DTR_CTankRock_OnRelease_Post");
 	int pThis = hParams.Get(1);
 	int tank = GetEntPropEnt(pThis, Prop_Data, "m_hThrower");
+	if( tank < 1 ) return MRES_Ignored;
 
 	float v1[3];
 	float v2[3];
@@ -3809,86 +3810,6 @@ MRESReturn DTR_CTerrorPlayer_MaterializeFromGhost_Post(int client) // Forward "L
 	return MRES_Ignored;
 }
 
-bool g_bBlock_CPipeBombProjectile_Create;
-MRESReturn DTR_CPipeBombProjectile_Create_Pre(DHookReturn hReturn, DHookParam hParams) // Forward "L4D_PipeBombProjectile_Pre"
-{
-	//PrintToServer("##### DTR_CPipeBombProjectile_Create_Pre");
-	int client;
-	if( !hParams.IsNull(5) )
-		client = hParams.Get(5);
-
-	float v1[3];
-	float v2[3];
-	float v3[3];
-	float v4[3];
-
-	hParams.GetVector(1, v1); // vPos
-	hParams.GetVector(2, v2); // vAng
-	hParams.GetVector(3, v3); // vVel
-	hParams.GetVector(4, v4); // vRot
-
-	Action aResult = Plugin_Continue;
-	Call_StartForward(g_hFWD_CPipeBombProjectile_Create_Pre);
-	Call_PushCell(client);
-	Call_PushArrayEx(v1, sizeof(v1), SM_PARAM_COPYBACK);
-	Call_PushArrayEx(v2, sizeof(v2), SM_PARAM_COPYBACK);
-	Call_PushArrayEx(v3, sizeof(v3), SM_PARAM_COPYBACK);
-	Call_PushArrayEx(v4, sizeof(v4), SM_PARAM_COPYBACK);
-	Call_Finish(aResult);
-
-	if( aResult == Plugin_Handled )
-	{
-		g_bBlock_CPipeBombProjectile_Create = true;
-
-		hReturn.Value = -1;
-		return MRES_Supercede;
-	}
-
-	g_bBlock_CPipeBombProjectile_Create = false;
-
-	if( aResult == Plugin_Changed )
-	{
-		hParams.SetVector(1, v1);
-		hParams.SetVector(2, v2);
-		hParams.SetVector(3, v3);
-		hParams.SetVector(4, v4);
-		return MRES_ChangedHandled;
-	}
-
-	return MRES_Ignored;
-}
-
-MRESReturn DTR_CPipeBombProjectile_Create_Post(DHookReturn hReturn, DHookParam hParams) // Forward "L4D_PipeBombProjectile_Post" and "L4D_PipeBombProjectile_PostHandled"
-{
-	//PrintToServer("##### DTR_CPipeBombProjectile_Create_Post");
-	int client;
-	if( !hParams.IsNull(5) )
-		client = hParams.Get(5);
-
-	int entity = hReturn.Value;
-
-	float v1[3];
-	float v2[3];
-	float v3[3];
-	float v4[3];
-
-	hParams.GetVector(1, v1); // vPos
-	hParams.GetVector(2, v2); // vAng
-	hParams.GetVector(3, v3); // vVel
-	hParams.GetVector(4, v4); // vRot
-
-	Call_StartForward(g_bBlock_CPipeBombProjectile_Create ? g_hFWD_CPipeBombProjectile_Create_PostHandled : g_hFWD_CPipeBombProjectile_Create_Post);
-	Call_PushCell(client);
-	Call_PushCell(entity);
-	Call_PushArray(v1, sizeof(v1));
-	Call_PushArray(v2, sizeof(v2));
-	Call_PushArray(v3, sizeof(v3));
-	Call_PushArray(v4, sizeof(v4));
-	Call_Finish();
-
-	return MRES_Ignored;
-}
-
 bool g_bBlock_CMolotovProjectile_Create;
 MRESReturn DTR_CMolotovProjectile_Create_Pre(DHookReturn hReturn, DHookParam hParams) // Forward "L4D_MolotovProjectile_Pre"
 {
@@ -3958,6 +3879,86 @@ MRESReturn DTR_CMolotovProjectile_Create_Post(DHookReturn hReturn, DHookParam hP
 	hParams.GetVector(4, v4); // vRot
 
 	Call_StartForward(g_bBlock_CMolotovProjectile_Create ? g_hFWD_CMolotovProjectile_Create_PostHandled : g_hFWD_CMolotovProjectile_Create_Post);
+	Call_PushCell(client);
+	Call_PushCell(entity);
+	Call_PushArray(v1, sizeof(v1));
+	Call_PushArray(v2, sizeof(v2));
+	Call_PushArray(v3, sizeof(v3));
+	Call_PushArray(v4, sizeof(v4));
+	Call_Finish();
+
+	return MRES_Ignored;
+}
+
+bool g_bBlock_CPipeBombProjectile_Create;
+MRESReturn DTR_CPipeBombProjectile_Create_Pre(DHookReturn hReturn, DHookParam hParams) // Forward "L4D_PipeBombProjectile_Pre"
+{
+	//PrintToServer("##### DTR_CPipeBombProjectile_Create_Pre");
+	int client;
+	if( !hParams.IsNull(5) )
+		client = hParams.Get(5);
+
+	float v1[3];
+	float v2[3];
+	float v3[3];
+	float v4[3];
+
+	hParams.GetVector(1, v1); // vPos
+	hParams.GetVector(2, v2); // vAng
+	hParams.GetVector(3, v3); // vVel
+	hParams.GetVector(4, v4); // vRot
+
+	Action aResult = Plugin_Continue;
+	Call_StartForward(g_hFWD_CPipeBombProjectile_Create_Pre);
+	Call_PushCell(client);
+	Call_PushArrayEx(v1, sizeof(v1), SM_PARAM_COPYBACK);
+	Call_PushArrayEx(v2, sizeof(v2), SM_PARAM_COPYBACK);
+	Call_PushArrayEx(v3, sizeof(v3), SM_PARAM_COPYBACK);
+	Call_PushArrayEx(v4, sizeof(v4), SM_PARAM_COPYBACK);
+	Call_Finish(aResult);
+
+	if( aResult == Plugin_Handled )
+	{
+		g_bBlock_CPipeBombProjectile_Create = true;
+
+		hReturn.Value = -1;
+		return MRES_Supercede;
+	}
+
+	g_bBlock_CPipeBombProjectile_Create = false;
+
+	if( aResult == Plugin_Changed )
+	{
+		hParams.SetVector(1, v1);
+		hParams.SetVector(2, v2);
+		hParams.SetVector(3, v3);
+		hParams.SetVector(4, v4);
+		return MRES_ChangedHandled;
+	}
+
+	return MRES_Ignored;
+}
+
+MRESReturn DTR_CPipeBombProjectile_Create_Post(DHookReturn hReturn, DHookParam hParams) // Forward "L4D_PipeBombProjectile_Post" and "L4D_PipeBombProjectile_PostHandled"
+{
+	//PrintToServer("##### DTR_CPipeBombProjectile_Create_Post");
+	int client;
+	if( !hParams.IsNull(5) )
+		client = hParams.Get(5);
+
+	int entity = hReturn.Value;
+
+	float v1[3];
+	float v2[3];
+	float v3[3];
+	float v4[3];
+
+	hParams.GetVector(1, v1); // vPos
+	hParams.GetVector(2, v2); // vAng
+	hParams.GetVector(3, v3); // vVel
+	hParams.GetVector(4, v4); // vRot
+
+	Call_StartForward(g_bBlock_CPipeBombProjectile_Create ? g_hFWD_CPipeBombProjectile_Create_PostHandled : g_hFWD_CPipeBombProjectile_Create_Post);
 	Call_PushCell(client);
 	Call_PushCell(entity);
 	Call_PushArray(v1, sizeof(v1));

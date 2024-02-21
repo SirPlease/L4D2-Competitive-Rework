@@ -1,0 +1,77 @@
+"Phrases"
+{
+	"FailWitchCrown"
+	{
+		"#format"	"{1:N}"
+		"en"		"{default}[{green}!{default}] {red}{1} {default}({olive}crowned witch fail{default}) and was incapped by {red}Witch."
+		"chi"		"{default}[{green}!{default}] {red}{1} {default}({olive}秒妹失败{default}) ，被 {red}Witch {default}挠倒了"
+	}
+	"TankKillWitch"
+	{
+		"#format"	"{1:N}"
+		"en"		"{default}[{green}!{default}] {red}Tank {default}({olive}{1}{default}) killed the {red}Witch"
+		"chi"		"{default}[{green}!{default}] {red}Tank {default}({olive}{1}{default}) 杀死了 {red}Witch"
+	}
+	
+	"WitchRemainedHealth"
+	{
+		"#format"	"{1:d}"
+		"en"		"{default}[{green}!{default}] {blue}Witch {default}had {olive}{1} {default}health remaining"
+		"chi"		"{default}[{green}!{default}] {blue}Witch {default}还剩下 {olive}{1} {default}点血"
+	}
+
+	"DamageToWitch"
+	{
+		"en"		"{default}[{green}!{default}] {blue}Damage {default}dealt to {blue}Witch:"
+		"chi"		"{default}[{green}!{default}] 对{blue}女巫{default}产生的{blue}伤害"
+	}
+	
+	"PrefectWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"en"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3} ★★"
+		"chi"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3} ★★"
+	}
+
+	"FinalShotWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"en"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3} ★"
+		"chi"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3} ★"
+	}
+
+	"AssistanceWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"en"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3}"
+		"chi"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3}"
+	}
+
+	"FinalShotInfWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"en"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}Infected {olive} ☆"
+		"chi"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}感染者 {olive} ☆"
+	}
+
+	"AssistanceInfWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"en"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}Infected"
+		"chi"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}感染者"
+	}
+
+	"FinalShotTankWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"en"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}Tank {olive} ☆"
+		"chi"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}Tank {olive} ☆"
+	}
+
+	"AssistanceTankWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"en"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}Tank"
+		"chi"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}Tank"
+	}
+}

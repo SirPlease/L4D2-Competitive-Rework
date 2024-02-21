@@ -1,0 +1,8 @@
+"Phrases"
+{
+	"WrapStuck"
+	{
+		"en"		"<{olive}TankPunchStuck{default}> Found {blue}%N{default} stuck after a punch. Warped him to a valid position."
+		"chi"		"<{olive}TankPunchStuck{default}> 发现 {blue}%N{default} 受到拳击后卡住. 已将他移到一个合法的位置."
+	}
+}

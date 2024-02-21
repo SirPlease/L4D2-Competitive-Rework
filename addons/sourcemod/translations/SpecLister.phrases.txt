@@ -1,0 +1,44 @@
+﻿"Phrases"
+{
+	"Mute_Menu_Title"
+	{
+		"en"		"Mute Control Menu:"
+		"chi"		"静音控制菜单:"
+		"zho"		"靜音控制菜單:"
+	}
+
+	"Mute_Team_All"
+	{
+		"en"		"Mute All Teammates"
+		"chi"		"静音所有队友"
+		"zho"		"靜音所有隊友"
+	}
+
+	"UnMute_Team_All"
+	{
+		"en"		"UnMute All Teammates"
+		"chi"		"解除队友静音"
+		"zho"		"解除隊友靜音"
+	}
+
+	"Speclisten"
+	{
+		"en"		"Speclisten Mode"
+		"chi"		"旁观监听模式"
+		"zho"		"旁觀監聽模式"
+	}
+
+	"Speclisten_On"
+	{
+		"en"		"{olive}[SpecListner] {default}Speclistener {blue}turns on"
+		"chi"		"{olive}[SpecListner] {default}监听 {blue}已启用"
+		"zho"		"{olive}[SpecListner] {default}監聽 {blue}已啟用"
+	}
+
+	"Speclisten_Off"
+	{
+		"en"		"{olive}[SpecListner] {default}Speclistener {red}turns off"
+		"chi"		"{olive}[SpecListner] {default}监听 {red}已禁用"
+		"zho"		"{olive}[SpecListner] {default}監聽 {red}已禁用"
+	}
+}

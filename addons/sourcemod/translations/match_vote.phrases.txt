@@ -1,0 +1,96 @@
+"Phrases"
+{
+	"NoMatchModeFound"
+	{
+		"en"		"{blue}[{default}Match{blue}] {default}No configs for such mode were found."
+		"chi"		"{blue}[{default}Match{blue}] {default}没有找到这个模式."
+	}
+
+	"NoSpecVote"
+	{
+		"en"		"{blue}[{default}Match{blue}] {default}Match voting isn't allowed for spectators."
+		"chi"		"{blue}[{default}Match{blue}] {default}旁观者不允许投票选择模式."
+	}
+
+	"AlreadyLoaded"
+	{
+		"en"		"{blue}[{default}Match{blue}] {default}Matchmode already loaded! Use !rmatch first to unload config!"
+		"chi"		"{blue}[{default}Match{blue}] {default}模式已经加载! 请先使用!rmatch卸载配置!"
+	}
+
+	"PlayersNumRequire"
+	{
+		"en"		"{blue}[{default}Match{blue}] {default}Match vote cannot be started. Not enough players."
+		"chi"		"{blue}[{default}Match{blue}] {default}没有足够多的玩家来发起模式更改投票"
+	}
+
+	"MatchVoteUnavailable"
+	{
+		"en"		"{blue}[{default}Match{blue}] {default}Match vote cannot be started now."
+		"chi"		"{blue}[{default}Match{blue}] {default}模式更改投票暂不可用."
+	}
+
+	"NoSpecVoteReset"
+	{
+		"en"		"{blue}[{default}Match{blue}] {default}Resetmatch voting isn't allowed for spectators."
+		"chi"		"{blue}[{default}Match{blue}] {default}旁观者不允许投票重赛."
+	}
+
+	"NoConfigLoaded"
+	{
+		"en"		"{blue}[{default}Match{blue}] {default}No matchmode loaded."
+		"chi"		"{blue}[{default}Match{blue}] {default}当前无比赛模式加载."
+	}
+
+	"WaitConnecting"
+	{
+		"en"		"{blue}[{default}Match{blue}] {default}Resetmatch vote cannot be started. Players are connecting"
+		"chi"		"{blue}[{default}Match{blue}] {default}重赛投票暂不可用，有玩家正在连接"
+	}
+
+	"ResetMatchUnavailable"
+	{
+		"en"		"{blue}[{default}Match{blue}] {default}Resetmatch vote cannot be started now."
+		"chi"		"{blue}[{default}Match{blue}] {default}重赛投票暂不可用."
+	}
+
+	// The following phrases aren't allowed to use any color tags.
+	// 以下语句不允许使用任何文字颜色tags
+
+	"SelectFirstCategory"		
+	{
+		"en"		"Select match mode:"
+		"chi"		"选择要玩的模式:"
+	}
+
+	"SelectSecondCategory"
+	{
+		"en"		"Select %s config:"
+		"chi"		"选择 %s 配置:"
+	}
+
+	"IsLoadConfogl"
+	{
+		"en"		"Load Confogl '%s' config?"
+		"chi"		"加载 Confogl '%s' 模式?"
+	}
+
+	"Loaded"
+	{
+		"en"		"Matchmode Loaded"
+		"chi"		"比赛模式已加载"
+	}
+
+	"TurnOff"
+	{
+		"en"		"Turn off Confogl?"
+		"chi"		"卸载Confogl?"
+	}
+
+	"Unloading"
+	{
+		"en"		"Confogl is unloading..."
+		"chi"		"Confogl正在卸载..."
+	}
+
+}

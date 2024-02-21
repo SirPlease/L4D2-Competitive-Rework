@@ -3443,52 +3443,6 @@ forward void L4D2_Infected_HitByVomitJar_Post(int victim, int attacker);
 forward void L4D2_Infected_HitByVomitJar_PostHandled(int victim, int attacker);
 
 /**
- * @brief Called whenever CPipeBombProjectile::Create is invoked
- * @remarks Called when a PipeBomb projectile is being created
- *
- * @param client			the client who is throwing the grenade (can be 0)
- * @param vecPos			the position vector of the projectile
- * @param vecAng			the angle vector of the projectile
- * @param vecVel			the velocity vector of the projectile
- * @param vecRot			the rotation vector of the projectile
- *
- * @return					Plugin_Handled to block the grenade creation, Plugin_Changed to modify the vector values, Plugin_Continue otherwise
- */
-forward Action L4D_PipeBombProjectile_Pre(int client, float vecPos[3], float vecAng[3], float vecVel[3], float vecRot[3]);
-
-/**
- * @brief Called whenever CPipeBombProjectile::Create is invoked
- * @remarks Called when a PipeBomb projectile has been created
- * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
- *
- * @param client			the client who is throwing the grenade
- * @param projectile		the projectile entity index (can be 0 if blocked in the pre hook)
- * @param vecPos			the position vector of the projectile
- * @param vecAng			the angle vector of the projectile
- * @param vecVel			the velocity vector of the projectile
- * @param vecRot			the rotation vector of the projectile
- *
- * @noreturn
- */
-forward void L4D_PipeBombProjectile_Post(int client, int projectile, const float vecPos[3], const float vecAng[3], const float vecVel[3], const float vecRot[3]);
-
-/**
- * @brief Called whenever CPipeBombProjectile::Create is invoked
- * @remarks Called when a PipeBomb projectile has been blocked
- * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
- *
- * @param client			the client who is throwing the grenade (can be -1 if blocked)
- * @param projectile		the projectile entity index (can be 0 if blocked in the pre hook)
- * @param vecPos			the position vector of the projectile
- * @param vecAng			the angle vector of the projectile
- * @param vecVel			the velocity vector of the projectile
- * @param vecRot			the rotation vector of the projectile
- *
- * @noreturn
- */
-forward void L4D_PipeBombProjectile_PostHandled(int client, int projectile, const float vecPos[3], const float vecAng[3], const float vecVel[3], const float vecRot[3]);
-
-/**
  * @brief Called whenever CMolotovProjectile::Create is invoked
  * @remarks Called when a Molotov projectile is being created
  *
@@ -3533,6 +3487,52 @@ forward void L4D_MolotovProjectile_Post(int client, int projectile, const float 
  * @noreturn
  */
 forward void L4D_MolotovProjectile_PostHandled(int client, int projectile, const float vecPos[3], const float vecAng[3], const float vecVel[3], const float vecRot[3]);
+
+/**
+ * @brief Called whenever CPipeBombProjectile::Create is invoked
+ * @remarks Called when a PipeBomb projectile is being created
+ *
+ * @param client			the client who is throwing the grenade (can be 0)
+ * @param vecPos			the position vector of the projectile
+ * @param vecAng			the angle vector of the projectile
+ * @param vecVel			the velocity vector of the projectile
+ * @param vecRot			the rotation vector of the projectile
+ *
+ * @return					Plugin_Handled to block the grenade creation, Plugin_Changed to modify the vector values, Plugin_Continue otherwise
+ */
+forward Action L4D_PipeBombProjectile_Pre(int client, float vecPos[3], float vecAng[3], float vecVel[3], float vecRot[3]);
+
+/**
+ * @brief Called whenever CPipeBombProjectile::Create is invoked
+ * @remarks Called when a PipeBomb projectile has been created
+ * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @param client			the client who is throwing the grenade
+ * @param projectile		the projectile entity index (can be 0 if blocked in the pre hook)
+ * @param vecPos			the position vector of the projectile
+ * @param vecAng			the angle vector of the projectile
+ * @param vecVel			the velocity vector of the projectile
+ * @param vecRot			the rotation vector of the projectile
+ *
+ * @noreturn
+ */
+forward void L4D_PipeBombProjectile_Post(int client, int projectile, const float vecPos[3], const float vecAng[3], const float vecVel[3], const float vecRot[3]);
+
+/**
+ * @brief Called whenever CPipeBombProjectile::Create is invoked
+ * @remarks Called when a PipeBomb projectile has been blocked
+ * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @param client			the client who is throwing the grenade (can be -1 if blocked)
+ * @param projectile		the projectile entity index (can be 0 if blocked in the pre hook)
+ * @param vecPos			the position vector of the projectile
+ * @param vecAng			the angle vector of the projectile
+ * @param vecVel			the velocity vector of the projectile
+ * @param vecRot			the rotation vector of the projectile
+ *
+ * @noreturn
+ */
+forward void L4D_PipeBombProjectile_PostHandled(int client, int projectile, const float vecPos[3], const float vecAng[3], const float vecVel[3], const float vecRot[3]);
 
 /**
  * @brief Called whenever CVomitJarProjectile::Create is invoked
@@ -3645,7 +3645,7 @@ forward Action L4D_Molotov_Detonate(int entity, int client);
 
 /**
  * @brief Called whenever CMolotovProjectile::Detonate is invoked
- * @remarks Called when a Molotov projectile is about to explode
+ * @remarks Called when a Molotov projectile has exploded
  * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
  *
  * @param entity			the entity that exploded
@@ -3657,7 +3657,7 @@ forward void L4D_Molotov_Detonate_Post(int entity, int client);
 
 /**
  * @brief Called whenever CMolotovProjectile::Detonate is invoked
- * @remarks Called when a Molotov projectile is about to explode
+ * @remarks Called when a Molotov projectile explosion was prevented
  * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
  *
  * @param entity			the entity that exploded
@@ -3669,7 +3669,12 @@ forward void L4D_Molotov_Detonate_PostHandled(int entity, int client);
 
 /**
  * @brief Called whenever CPipeBombProjectile::Detonate is invoked
- * @remarks Called when a PipeBomb projectile is about to explode
+ * @remarks Called when a PipeBomb projectile (or possibly a breakable prop, see include file notes below) is about to explode
+ *
+ * @note This forward is also called when a breakable prop (propane tank, oxygen tank etc) is breaking, to detect pipebomb only you should:
+ * @note Use the "L4D_PipeBombProjectile_Post" forward and store GetGameTime() with the projectile entity index
+ * @note Then within this forward compare the current GetGameTime() with the one stored for the entity
+ * @note If the times do not match then a PipeBomb has exploded, if the times match then a breakable prop has exploded
  *
  * @param entity			the entity that exploded
  * @param client			the client who threw the grenade, can be -1
@@ -3680,8 +3685,13 @@ forward Action L4D_PipeBomb_Detonate(int entity, int client);
 
 /**
  * @brief Called whenever CPipeBombProjectile::Detonate is invoked
- * @remarks Called when a PipeBomb projectile is about to explode
+ * @remarks Called when a PipeBomb projectile (or possibly a breakable prop, see include file notes below) has exploded
  * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ *
+ * @note This forward is also called when a breakable prop (propane tank, oxygen tank etc) is breaking, to detect pipebomb only you should:
+ * @note Use the "L4D_PipeBombProjectile_Post" forward and store GetGameTime() with the projectile entity index
+ * @note Then within this forward compare the current GetGameTime() with the one stored for the entity
+ * @note If the times do not match then a PipeBomb has exploded, if the times match then a breakable prop has exploded
  *
  * @param entity			the entity that exploded
  * @param client			the client who threw the grenade, can be -1
@@ -3692,7 +3702,7 @@ forward void L4D_PipeBomb_Detonate_Post(int entity, int client);
 
 /**
  * @brief Called whenever CPipeBombProjectile::Detonate is invoked
- * @remarks Called when a PipeBomb projectile is about to explode
+ * @remarks Called when a PipeBomb projectile explosion (or possibly a breakable prop, see include file notes below) was prevented
  * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
  *
  * @param entity			the entity that exploded
@@ -3716,7 +3726,7 @@ forward Action L4D2_VomitJar_Detonate(int entity, int client);
 
 /**
  * @brief Called whenever CVomitJarProjectile::Detonate is invoked
- * @remarks Called when a VomitJar projectile is about to explode
+ * @remarks Called when a VomitJar projectile has exploded
  * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
  *
  * @param entity			the entity that exploded
@@ -3729,7 +3739,7 @@ forward void L4D2_VomitJar_Detonate_Post(int entity, int client);
 
 /**
  * @brief Called whenever CVomitJarProjectile::Detonate is invoked
- * @remarks Called when a VomitJar projectile is about to explode
+ * @remarks Called when a VomitJar projectile explosion was prevented
  * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
  *
  * @param entity			the entity that exploded
@@ -3754,7 +3764,7 @@ forward Action L4D2_GrenadeLauncher_Detonate(int entity, int client);
 
 /**
  * @brief Called whenever CGrenadeLauncher_Projectile::Explode is invoked
- * @remarks Called when a Grenade Launcher projectile is about to explode
+ * @remarks Called when a Grenade Launcher projectile has exploded
  * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
  *
  * @param entity			the entity that exploded
@@ -3767,7 +3777,7 @@ forward void L4D2_GrenadeLauncher_Detonate_Post(int entity, int client);
 
 /**
  * @brief Called whenever CGrenadeLauncher_Projectile::Explode is invoked
- * @remarks Called when a Grenade Launcher projectile is about to explode
+ * @remarks Called when a Grenade Launcher projectile explosion was prevented
  * @remarks This forward will ONLY trigger if the relative pre-hook forward has been blocked with Plugin_Handled
  *
  * @param entity			the entity that exploded

@@ -78,6 +78,8 @@ public OnPluginStart()
 	
 	g_iOffset_Incapacitated = FindSendPropInfo("Tank", "m_isIncapacitated");
 	fwdOnTankDeath = CreateGlobalForward("OnTankDeath", ET_Event);
+
+	LoadTranslations("l4d_tank_damage_announce.phrases");
 }
 
 public OnMapStart()
@@ -248,7 +250,7 @@ PrintRemainingHealth()
 	decl String:name[MAX_NAME_LENGTH];
 	if (IsFakeClient(tankclient)) name = "AI";
 	else GetClientName(tankclient, name, sizeof(name));
-	CPrintToChatAll("{default}[{green}!{default}] {blue}Tank {default}({olive}%s{default}) had {green}%d {default}health remaining", name, g_iLastTankHealth);
+	CPrintToChatAll("%t", "HealthRemaining", name, g_iLastTankHealth);		//{default}[{green}!{default}] {blue}Tank {default}({olive}%s{default}) had {green}%d {default}health remaining
 }
 
 PrintTankDamage()
@@ -263,11 +265,11 @@ PrintTankDamage()
 			{
 				decl String:name[MAX_NAME_LENGTH];
 				GetClientName(i, name, sizeof(name));
-				CPrintToChatAll("{default}[{green}!{default}] {blue}Damage {default}dealt to {blue}Tank {default}({olive}%s{default})", name);
+				CPrintToChatAll("%t", "DamageDealtToTank", name);		//{default}[{green}!{default}] {blue}Damage {default}dealt to {blue}Tank {default}({olive}%s{default})
 				g_iWasTank[i] = 0;
 			}
 			else if(g_iWasTankAI > 0) 
-				CPrintToChatAll("{default}[{green}!{default}] {blue}Damage {default}dealt to {blue}Tank {default}({olive}AI{default})");
+				CPrintToChatAll("%t", "DamageDealtToAITank");		//{default}[{green}!{default}] {blue}Damage {default}dealt to {blue}Tank {default}({olive}AI{default})
 			g_iWasTankAI = 0;
 		}
 	}
@@ -323,7 +325,7 @@ PrintTankDamage()
 		{
     		if (IsClientInGame(i))
     		{
-				CPrintToChat(i, "{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N", damage, percent_damage, client);
+				CPrintToChat(i, "%t", "DamageDetail", damage, percent_damage, client);		//{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N
 			}
 		}
 	}

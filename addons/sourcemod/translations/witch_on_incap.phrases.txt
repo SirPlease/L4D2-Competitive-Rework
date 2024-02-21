@@ -1,0 +1,9 @@
+"Phrases"
+{
+	"IncapSurSpawnAWitch"
+	{
+		"#format"	"{1:N}"
+		"en"		"{olive}{1} {default}went down and spawned a witch!."
+		"chi"		"{olive}{1} {default}倒地并因此生成了一个witch!."
+	}
+}

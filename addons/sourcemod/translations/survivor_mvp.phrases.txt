@@ -1,0 +1,75 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"en"		"{blue}[{default}MVP{blue}]{default}"
+	}
+	"YourRankSI"
+	{
+		"en"		"{blue}Rank {green}SI: {olive}#%d {blue}({default}%d {green}dmg {blue}[{default}%.0f%%{blue}]{default}, %d {green}kills {blue}[{default}%.0f%%{blue}])\n"
+	}
+	"YourRankCI"
+	{
+		"en"		"{blue}Rank {green}CI: {olive}#%d {blue}({default}%d {green}common {blue}[{default}%.0f%%{blue}])\n"
+	}
+	"YourRankFF"
+	{
+		"en"		"{blue}Rank {green}FF: {olive}#%d {blue}({default}%d {green}friendly fire {blue}[{default}%.0f%%{blue}])\n"
+	}
+	"BotName"
+	{
+		"en"		"[BOT]"
+	}
+	"NobodyName"
+	{
+		"en"		"{blue}({default}nobody{blue})"
+	}
+	"NotEnoughAction"
+	{
+		"en"		"{blue}({default}not enough action yet{blue}){default}\n"
+	}
+	"ReportSI_Absolute"
+	{
+		"en"		"{green}SI: {olive}%s {blue}({default}%d {green}dmg{default}, %d {green}kills{blue})\n"
+	}
+	"ReportSI_Percent"
+	{
+		"en"		"{green}SI: {olive}%s {blue}({green}dmg {blue}[{default}%.0f%%{blue}]{default}, {green}kills {blue}[{default}%.0f%%{blue}])\n"
+	}
+	"ReportSI_Full"
+	{
+		"en"		"{green}SI: {olive}%s {blue}({default}%d {green}dmg {blue}[{default}%.0f%%{blue}]{default}, %d {green}kills {blue}[{default}%.0f%%{blue}])\n"
+	}
+	"ReportSI_Nobody"
+	{
+		"en"		"{green}SI: {blue}({default}Nobody{blue})\n"
+	}
+	"ReportCI_Absolute"
+	{
+		"en"		"{green}CI: {olive}%s {blue}({default}%d {green}common{blue})\n"
+	}
+	"ReportCI_Percent"
+	{
+		"en"		"{green}CI: {olive}%s {blue}({green}common {blue}[{default}%.0f%%{blue}])\n"
+	}
+	"ReportCI_Full"
+	{
+		"en"		"{green}CI: {olive}%s {blue}({default}%d {green}common {blue}[{default}%.0f%%{blue}])\n"
+	}
+	"NoFF"
+	{
+		"en"		"{blue}({default}No friendly fire at all!{blue})\n" 
+	}
+	"ReportFF_Absolute"
+	{
+		"en"		"{green}FF: {olive}%s {blue}({default}%d {green}friendly fire{blue})\n"
+	}
+	"ReportFF_Percent"
+	{
+		"en"		"{green}FF: {olive}%s {blue}({green}friendly fire {blue}[{default}%.0f%%{blue}])\n"
+	}
+	"ReportFF_Full"
+	{
+		"en"		"{green}FF: {olive}%s {blue}({default}%d {green}friendly fire {blue}[{default}%.0f%%{blue}])\n"
+	}
+}

@@ -1,0 +1,120 @@
+"Phrases"
+{
+	"phrase1"
+	{
+		"en"	"Type !pass to give the Tank to another player."
+		"ru"	"Напишите !pass, чтобы передать Танка."
+		"hu"	"Írd be !pass hogy átad a Tankot."
+		"es"	"Escribe !pass para pasar el Tanque a otro jugador."
+        "chi"   "使用 !pass 将克的控制权转交给别人"
+	}
+	"phrase2"
+	{
+		"en"	"The Tank can be given to another player before the Frustration meter runs out."
+		"ru"	"Танка можно передать только на первом контроле."
+		"hu"	"A Tank átadható frusztráció előtt."
+		"es"	"El Tanque se puede entregar a otro jugador antes de que se agote el medidor de frustración."
+        "chi"   "在控制权耗尽之前，可以随时将tank交给其他玩家"
+	}
+	"phrase3"
+	{
+		"#format" "{1:N},{2:N}"
+		"en"	"{1} passed the Tank to {2}"
+		"ru"	"{1} передал Танка игроку {2}"
+		"hu"	"{1} átadta a Tankot {2}-nak"
+		"es"	"{1} pasó el Tanque a {2}"
+        "chi"	"{1} 将坦克控制权转交给 {2}"
+
+	}
+	"phrase4"
+	{
+		"en"	"Who will take the Tank?"
+		"ru"	"Кому передать Танка?"
+		"hu"	"Ki veszi át a Tankot?"
+		"es"	"¿Quién tomará el Tanque?"
+        "chi"   "谁将控制tank?"
+	}
+	"phrase5"
+	{
+		"en"	"Do you want to play as the Tank?"
+		"ru"	"Вы хотите сыграть Танком?"
+		"hu"	"Szeretnél Tankként játszani?"
+		"es"	"¿Quieres jugar como el Tanque?"
+        "chi"   "你想玩Tank吗?"
+	}
+	"phrase6"
+	{
+		"#format" "{1:N}"
+		"en"	"{1} didn't agree to be the Tank."
+		"ru"	"{1} не согласился быть Танком."
+		"hu"	"{1} nem egyezett bele hogy Tank lehessen."
+		"es"	"{1} no estuvo de acuerdo en ser el Tanque."
+        "chi"   "{1} 不想玩Tank"
+	}
+	"phrase7"
+	{
+		"en"	"The Tank can't be passed right now."
+		"ru"	"Передача Танка сейчас не доступна."
+		"hu"	"A Tank most még nem adható át."
+		"es"	"El Tanque no se puede pasar en este momento."
+        "chi"   "无法转移Tank控制权"
+	}
+	"phrase8"
+	{
+		"en"	"The Tank can't be passed when it's on fire."
+		"ru"	"Танка можно передать если он не горит."
+		"hu"	"A Tank átadható ha nincs felgyújtva."
+		"es"	"El Tanque no se puede pasar cuando está en llamas."
+        "chi"   "无法在Tank点燃时转移控制权"
+	}
+	"phrase9"
+	{
+		"#format" "{1:N}"
+		"en"	"An admin has passed the Tank to {1}"
+		"ru"	"Админ передал Танка игроку {1}"
+		"hu"	"Egy admin átadta a tankot {1}-nak"
+		"es"	"Un administrador ha pasado el Tanque a {1}"
+        "chi"   "管理员将Tank控制权转交给 {1}"
+	}
+	"phrase10"
+	{
+		"en"	"Pass the Tank"
+		"ru"	"Передать контроль Танка"
+		"hu"	"Add át a Tankot"
+		"es"	"Pasar el Tanque"
+        "chi"   "转移控制权"
+	}
+	"phrase11"
+	{
+		"en"	"The Tank can only be passed when it hasn't received any damage."
+		"ru"	"Танка можно передать если он не получил урона."
+		"hu"	"A Tank átadható ha nem szenved el sebzést."
+		"es"	"El Tanque sólo se puede pasar cuando no ha recibido ningún daño."
+        "chi"   "只能在Tank受伤之前转移控制权"
+	}
+	"phrase12"
+	{
+		"en"	"Control Tank Bot"
+		"ru"	"Взять Танка бота под контроль"
+		"hu"	"Vedd át a Bot Tankot"
+		"es"	"Control Tanque Bot"
+        "chi"   "控制孤军Tank"
+	}
+	"phrase13"
+	{
+		"#format" "{1:d},{2:d}"
+		"en"	"The Tank pass limit reached [{1}/{2}]."
+		"ru"	"Достигнут лимит передачи Танка [{1}/{2}]."
+		"es"	"Se alcanzó el límite de pases del Tanque [{1}/{2}]."
+        "chi"   "坦克控制权转移次数已达 [{1}/{2}]."
+	}
+	"phrase14"
+	{
+		"#format" "{1:N},{2:N},{3:d},{4:d}"
+		"en"	"{1} passed the Tank to {2} [{3}/{4}]."
+		"ru"	"{1} передал Танка игроку {2} [{3}/{4}]."
+		"hu"	"{1} átadta a Tankot {2}-nak [{3}/{4}]."
+		"es"	"{1} pasó el Tanque a {2} [{3}/{4}]."
+        "chi"   "{1} 将Tank控制权转交给 {2} [{3}/{4}]."
+	}
+}

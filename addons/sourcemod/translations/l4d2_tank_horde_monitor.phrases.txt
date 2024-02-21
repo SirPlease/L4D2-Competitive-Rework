@@ -1,0 +1,38 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"en"		"<{olive}Horde{default}>"
+		"chi"		"<{olive}尸潮事件{default}>"
+	}
+
+	"HordePaused"
+	{
+		"en"		"Horde has {blue}paused{default} due to tank in play! Progressing by {blue}%0.1f%%{default} will start the horde."
+		"chi"		"尸潮因Tank生成而已被{blue}暂停{default}! 继续推进{blue}%0.1f%%{default}将会重启尸潮."
+	}
+
+	"WarningPercent"
+	{
+		"en"		"{blue}%0.1f%%{default} left until horde starts..."
+		"chi"		"剩余{blue}%0.1f%%{default}进度重启尸潮..."
+	}
+
+	"HordeResumed"
+	{
+		"en"		"Horde has {blue}resumed{default} at {green}%i%% strength{default}, pushing will increase the horde."
+		"chi"		"尸潮已在 {green}%i%%{default} 的{green}强度{default}下被{blue}重启{default}, 继续推进将会提升尸潮强度."
+	}
+
+	"StrenthPercent"
+	{
+		"en"		"Horde is at {green}%i%% strength{default}..."
+		"chi"		"当前尸潮强度为 {green}%i%%{default} ..."
+	}
+
+	"100PercentStrenth"
+	{
+		"en"		"Survivors have pushed too far, horde is at {green}100%% strength{default}!"
+		"chi"		"生还者已推进太远, 尸潮强度已重新回到{green}100%%{default}!"
+	}
+}

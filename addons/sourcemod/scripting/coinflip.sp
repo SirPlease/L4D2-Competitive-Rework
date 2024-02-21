@@ -10,6 +10,7 @@
  
 #include <sourcemod>
 #include <sdktools>
+#include <colors>
 
 new result_int;
 new String:client_name[32]; // Used to store the client_name of the player who calls coinflip
@@ -38,6 +39,8 @@ public OnPluginStart()
 	RegConsoleCmd("sm_flip", Command_Coinflip);
 	RegConsoleCmd("sm_roll", Command_Picknumber);
 	RegConsoleCmd("sm_picknumber", Command_Picknumber);
+
+	LoadTranslations("coinflip.phrases");
 }
 
 public Action:Command_Coinflip(client, args)
@@ -50,15 +53,18 @@ public Action:Command_Coinflip(client, args)
 		GetClientName(client, client_name, sizeof(client_name)); // Gets the client_name of the person using the command
 		
 		if(result_int == 0)
-			PrintToChatAll("\x01[\x05Coinflip\x01] \x03%s\x01 flipped a coin!\nIt's \x04Heads\x01!", client_name); // Here \x04 is actually yellow
+			PrintToChatAll("%t %t", "Tag", "HeadsCoin", client_name); // Here \x04 is actually yellow
+			//\x01[\x05Coinflip\x01] \x03%s\x01 flipped a coin!\nIt's \x04Heads\x01!
 		else
-			PrintToChatAll("\x01[\x05Coinflip\x01] \x03%s\x01 flipped a coin!\nIt's \x04Tails\x01!", client_name);
+			PrintToChatAll("%t %t", "Tag", "TailsCoin", client_name);
+			//\x01[\x05Coinflip\x01] \x03%s\x01 flipped a coin!\nIt's \x04Tails\x01!
 		
 		previous_timeC = current_timeC; // Update the previous time
 	}
 	else
 	{
-		PrintToConsole(client, "[Coinflip] Whoa there buddy, slow down. Wait at least %d seconds.", GetConVarInt(delay_time));
+		PrintToConsole(client, "%t", "SlowDownMan", GetConVarInt(delay_time));
+		//[Coinflip] Whoa there buddy, slow down. Wait at least %d seconds.
 	}
 	
 	return Plugin_Handled;
@@ -76,7 +82,8 @@ public Action:Command_Picknumber(client, args)
 		{
 			result_int = GetURandomInt() % (number_max); // Generates a random number within the default range
 			
-			PrintToChatAll("\x01[\x05Coinflip\x01] \x03%s\x01 rolled a \x03%d \x01sided die!\nIt's \x04%d\x01!", client_name, number_max, result_int + 1);
+			PrintToChatAll("%t %t", "%t", "Roll", client_name, number_max, result_int + 1);
+			//\x01[\x05Coinflip\x01] \x03%s\x01 rolled a \x03%d \x01sided die!\nIt's \x04%d\x01!
 		}
 		else
 		{
@@ -87,13 +94,15 @@ public Action:Command_Picknumber(client, args)
 			max = StringToInt(arg);
 			
 			result_int = GetURandomInt() % (max); // Generates a random number within the specified range
-			PrintToChatAll("\x01[\x05Coinflip\x01] \x03%s\x01 rolled a \x03%d \x01sided die!\nIt's \x04%d\x01!", client_name, max, result_int + 1);
+			PrintToChatAll("%t %t", "Tag", "Roll", client_name, max, result_int + 1);
+			//\x01[\x05Coinflip\x01] \x03%s\x01 rolled a \x03%d \x01sided die!\nIt's \x04%d\x01!
 		}
 		
 		previous_timeN = current_timeN; // Update the previous time
 	}
 	else
 	{
-		PrintToConsole(client, "[Coinflip] Whoa there buddy, slow down. Wait at least %d seconds.", GetConVarInt(delay_time));
+		PrintToConsole(client, "%t", "SlowDownMan", GetConVarInt(delay_time));
+		//[Coinflip] Whoa there buddy, slow down. Wait at least %d seconds.
 	}
 }

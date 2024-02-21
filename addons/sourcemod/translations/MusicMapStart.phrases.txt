@@ -1,0 +1,98 @@
+/*
+	Following named colors are supported:
+	 - {white}	(use instead of \x01 )
+	 - {cyan}	(use instead of \x03 )
+	 - {orange}	(use instead of \x04 )
+	 - {green}	(use instead of \x05 )
+*/
+
+"Phrases"
+{
+    "Congratulation1"
+	{
+		"en"		"Hello, my friend! Wishing you the best of luck in your endeavors!"
+		"ru"		"Дорогие друзья!"
+		"chi" 		"嗨bro!祝你这把稳赢!!!"
+	}
+	"Congratulation2"
+	{
+		"en"		"I hope you will find satisfaction in this game."
+		"chi" 		"希望你能满足于这场游戏喵~"
+	}
+	"Congratulation3"
+	{
+		"en"		"Watch out of deer :D"
+		"chi"		"如果想禁用开局音乐, 可以在设置里关闭(重载配置失效)"
+	}
+	"StopMusic"
+	{
+		"en"		"Stop music"
+		"chi"  		"停止音乐"
+	}
+	"PlayAgain"
+	{
+		"en"		"Play music again"
+		"ru"		"Играть музыку ещё раз"
+		"chi"		"重放音乐"
+	}
+	"Volume"
+	{
+		"en"		"Volume"
+		"ru"		"Громкость"
+		"chi"		"调节音量"
+	}
+	"NextVolume"
+	{
+		"en"		"Volume for the next track:"
+		"ru"		"Громкость для следующего трека:"
+		"chi" 		"下一首歌的音量"
+	}
+	"GoNext"
+	{
+		"en"		"Next track"
+		"ru"		"Следующий трек"
+		"chi" 		"下一首"
+	}
+	"NoMusicNextMap"
+	{
+		"en"		"Don't play music on next map"
+		"ru"		"Не играть музыку на следующей карте"
+		"chi"		"[启用]进图自动播放音乐"
+	}
+	"MusicNextMap"
+	{
+		"en"		"Play music on next map"
+		"ru"		"Играть музыку на следующей карте"
+		"chi"		"[禁用]进图自动播放音乐"
+	}
+	"NoMenuAutostart"
+	{
+		"en"		"Don't show this menu on map start"
+		"ru"		"Не показывать это меню при запуске карты"
+		"chi"		"[启用]进图时展示菜单"
+	}
+	"MenuAutostart"
+	{
+		"en"		"Show this menu on map start"
+		"ru"		"Показывать это меню при запуске карты"
+		"chi"		"[禁用]进图时展示菜单"
+	}
+	"Playing"
+	{
+		"en"		"{green}Now playing: {cyan}"
+		"ru"		"{green}Сейчас играет: {cyan}"
+		"chi"		"{green}目前正在播放: {cyan}"
+	}
+	"Info"
+	{
+		"en"		"To stop the music or adjusting menu, enter {orange}!music"
+		"ru"		"Для остановки музыки или настройки меню введите {orange}!music"
+		"chi"		"使用指令{orange}!music{white}停止音乐或打开调整菜单 "
+	}
+	"Settings"
+	{
+		"en"		"Settings"
+		"ru"		"Настройки"
+		"chi"		"设置"
+	}
+}

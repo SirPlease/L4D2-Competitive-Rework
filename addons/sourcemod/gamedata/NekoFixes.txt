@@ -1,0 +1,25 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Signatures"
+		{
+			"NET_QueuePacket"
+			{
+				"library"	"engine"
+           		"windows"	"\x55\x8B\xEC\x83\xEC\x0C\x53\x8B\x5D\x0C\x8B\x43\x40"
+				"linux"		"\x55\x89\xE5\x57\x56\x53\x83\xEC\x4C\x8B\x5D\x0C\x8B\x43\x40"
+			}
+		}
+      	"Functions"
+		{
+        	"NET_QueuePacket"
+			{
+				"signature" "NET_QueuePacket"
+				"callconv" "thiscall"
+				"return" "bool"
+				"this" "ignore"
+			}
+      	}
+	}
+}

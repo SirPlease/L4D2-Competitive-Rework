@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"DeathTimer"
+	{
+		"es"		"{olive}%N{default} intentó evadir el cronómetro de muerte."
+	}
+	"UnableToJoin"
+	{
+		"es"		"No podrás unirte al equipo por {red}%.1f{default} segundos."
+	}
+	"Moved"
+	{
+		"es"		"Serás movido automáticamente."
+	}
+	"SlotsReserved"
+	{
+		"es"		"Este equipo actualmente tiene espacios {olive}reservados{default}."
+	}
+}

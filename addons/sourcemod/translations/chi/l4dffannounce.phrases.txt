@@ -1,0 +1,43 @@
+"Phrases"
+{
+	"announceff_chat_attack"
+	{
+		"#format"	"{1:d},{2:s}"
+		"chi"		"<{olive}FFAnnounce{default}> 你友伤了 {blue}{2}{default} {green}{1}{default} 血!"
+	}
+	"announceff_chat_attacked"
+	{
+		"chi"		"<{olive}FFAnnounce{default}> {blue}%s{default} 友伤了你 {green}%d{default} 血!"
+	}
+	"announceff_chat_damagetotal"
+	{
+		"chi"		"<{olive}FFAnnounce{default}> 总伤害: {green}%d{default}"
+	}
+	"announceff_hint_attack"
+	{
+		"#format"	"{1:d},{2:s}"
+		"chi"		"<FFAnnounce> 你友伤了 {2} {1} 血!"
+	}
+	"announceff_hint_attacked"
+	{	
+		"chi"		"<FFAnnounce> %s 友伤了你 %d 血!"
+	}
+	"announceff_printcenter_attack"
+	{
+		"#format"	"{1:d},{2:s}"
+		"chi"		"<FFAnnounce> 你友伤了 {2} {1} 血!"
+	}
+	"announceff_printcenter_attacked"
+	{
+		"chi"		"<FFAnnounce> %s 友伤了你 %d 血!"
+	}
+	"announceff_print_roundend_totaldamage"
+	{
+		"chi"		"<{olive}FFAnnounce{default}> 您对队友造成的总伤害:"
+	}
+	"announceff_print_roundend_totaldamage_player"
+	{
+		"#format"	"{1:s},{2:d},{3:.0f}"
+		"chi"		"{olive}{2}{default} 点友伤 [{green}{3}%%{default}] : {blue}{1}{default}"
+	}
+}

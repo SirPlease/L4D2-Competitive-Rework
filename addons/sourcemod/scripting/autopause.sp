@@ -58,6 +58,8 @@ public OnPluginStart() {
     HookEvent("round_end", round_end);
     HookEvent("player_team", playerTeam);
     HookEvent("player_disconnect", playerDisconnect, EventHookMode_Pre);
+
+    LoadTranslations("autopause.phrases");
 }
 
 public OnAllPluginsLoaded()
@@ -156,7 +158,7 @@ public playerDisconnect(Handle:event, const String:name[], bool:dontBroadcast) {
             {
                 FakeClientCommand(client, "sm_pause");
             }
-            CPrintToChatAll("{blue}[{default}AutoPause{blue}] {olive}%s {default}crashed.", playerName);
+            CPrintToChatAll("%t %t", "Tag", "AutoPause", playerName);        //{blue}[{default}AutoPause{blue}] {olive}%s {default}crashed.
         }
     }
 

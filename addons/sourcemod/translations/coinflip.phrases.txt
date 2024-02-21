@@ -1,0 +1,31 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"en"			"{default}[{orange}Coinflip{default}]"
+		"chi"			"{default}[{orange}抛硬币{default}]"
+	}
+
+	"HeadsCoin"
+	{
+		"en"			"{olive}%s{default} flipped a coin!\nIt's {green}Heads{default}!"
+		"chi"			"{olive}%s{default} 抛了一枚硬币!\n是{green} 正面 {default}!"
+	}
+
+	"TailsCoin"
+	{
+		"en"			"{olive}%s{default} flipped a coin!\nIt's {green}Tails{default}!"
+		"chi"			"{olive}%s{default} 抛了一枚硬币!\n是{green} 反面 {default}!"
+	}
+
+	"Roll"
+	{
+		"en"			"{olive}%s{default} rolled a {olive}%d {default}sided die!\nIt's {green}%d{default}!"
+		"chi"			"{olive}%s{default} 掷了一枚{olive} %d面 {default}骰子!\n是{green} %d点 {default}!"
+	}
+
+	"SlowDownMan"		//this is only printed to console.
+	{
+		"en"			"[Coinflip] Whoa there buddy, slow down. Wait at least %d seconds."
+	}
+}

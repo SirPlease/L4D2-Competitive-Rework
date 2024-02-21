@@ -2,33 +2,258 @@
 {
 	"on"
 	{
-		"en"		"{blue}on{default}"
+		"en"		"{blue}On{default}"
+		"chi"		"{blue}开启{default}"
 	}
 	
 	"off"
 	{
-		"en"		"{red}off{default}"
+		"en"		"{red}Off{default}"
+		"chi"		"{red}关闭{default}"
 	}
 	
 	"Notify_SpechudState"
 	{
 		"#format"	"{1:t}"
 		"en"		"<{olive}HUD{default}> Spectator HUD is now {1}"
+		"chi"		"<{olive}HUD{default}> 旁观面板已 {1}"
 	}
 	
 	"Notify_TankhudState"
 	{
 		"#format"	"{1:t}"
 		"en"		"<{olive}HUD{default}> Tank HUD is now {1}"
+		"chi"		"<{olive}HUD{default}> 坦克HUD现在为 {1}"
 	}
 	
 	"Notify_SpechudUsage"
 	{
 		"en"		"<{olive}HUD{default}> Type {green}!spechud{default} into chat to toggle the {blue}Spectator HUD"
+		"chi"		"<{olive}HUD{default}> 聊天输入 {green}!spechud{default} 切换 {blue}旁观面板开关"
 	}
-	
+
 	"Notify_TankhudUsage"
 	{
 		"en"		"<{olive}HUD{default}> Type {green}!tankhud{default} into chat to toggle the {red}Tank HUD"
+		"chi"		"<{olive}HUD{default}> 聊天输入 {green}!tankhud{default} 切换 {red}Tank 面板开关"
+	}
+
+	// The following phrases aren't allowed to use any color tags.
+	// 以下语句不允许使用任何文字颜色tags.
+
+	"ServerSlotsTickrate"
+	{
+		"en"		"Server: %s [Slots %i/%i | %iT]"
+		"chi"		"服务器: %s [位数 %i/%i | %iT]"
+	}
+
+	"SurvivorsScav"
+	{
+		"en"		"->1. Survivors [%d of %d]"
+		"chi"		"->1. 生还者 [%d of %d]"
+	}
+
+	"SurvivorsVersus"
+	{
+		"en"		"->1. Survivors [%d]"
+		"chi"		"->1. 生还者 [%d]"
+	}
+
+	"Dead"
+	{
+		"en"		"%s: Dead"
+		"chi"		"%s: 死亡"
+	}
+
+	"HangingLedgeHP"
+	{	
+		"en"		"%s: <%iHP@Hanging>"
+		"chi"		"%s: <%iHP@挂边>"
+	}
+
+	"2nd"
+	{
+		"en"		"2nd"
+		"chi"		"2倒"
+	}
+
+	"1st"
+	{
+		"en"		"1st"
+		"chi"		"1倒"
+	}
+
+	"AccumulatedTime"
+	{
+		"en"		"> Accumulated Time [%02d:%02.0f]"
+		"chi"		"> 累计时间 [%02d:%02.0f]"
+	}
+
+	"OpponentDuration"
+	{
+		"en"		"> Opponent Duration [%02d:%05.2f]"
+		"chi"		"> 对手用时 [%02d:%05.2f]"
+	}
+	
+	"ScoreFormat"
+	{
+		"en"		"> HB: %.0f%% | DB: %.0f%% | Pills: %i / %.0f%%"
+		"chi"		"> HB: %.0f%% | DB: %.0f%% | 药分: %i / %.0f%%"
+	}
+
+	"Bonus"
+	{
+		"en"		"> Bonus: %i <%.1f%%>"
+		"chi"		"> 奖励分: %i <%.1f%%>"
+	}
+		
+	"Distance"
+	{
+		"en"		"> Distance: %i"
+		"chi"		"> 路程分: %i"
+	}
+	
+	"HealthBonus"
+	{	
+		"en"		"> Health Bonus: %i"
+		"chi"		"> 血量奖励分: %i"
+	}
+
+	"InfectedScav"
+	{
+		"en"		"->2. Infected [%d of %d]"
+		"chi"		"->2. 感染者 [%d of %d]"
+	}
+	
+	"InfectedVersus"
+	{
+		"en"		"->2. Infected [%d]"
+		"chi"		"->2. 感染者 [%d]"
+	}
+
+	"Seconds"
+	{
+		"en"		"%is"
+		"chi"		"%i秒"
+	}
+
+	"InDeadTime"
+	{
+		"en"		"%s: Dead (%s)"
+		"chi"		"%s: 死亡 (%s)"
+	}
+	
+	"Spawning..."
+	{
+		"en"		"Spawning..."
+		"chi"		"重生中..."
+	}
+
+	"InGhostWithHealth"
+	{
+		"en"		"%s: %s (Ghost@%iHP)"
+		"chi"		"%s: %s (灵魂状态@%iHP)"
+	}
+
+	"InGhost"
+	{
+		"en"		"%s: %s (Ghost)"
+		"chi"		"%s: %s (灵魂状态)"
+	}
+
+	"CoolDownSeconds"
+	{
+		"en"		" [%is]"
+		"chi"		" [%i秒]"
+	}
+
+	"InfectedOnFire"
+	{
+		"en"		"%s: %s (%iHP) [On Fire]%s"
+		"chi"		"%s: %s (%iHP) [着火]%s"
+	}
+
+	"NoSI"
+	{
+		"en"		"There is no SI at this moment"
+		"chi"		"没有特感"
+	}
+
+	"TankController"
+	{
+		"en"		"Control : %s (%s)"
+		"chi"		"控制人 : %s (%s)"
+	}
+
+	"TankControllerAI"
+	{
+		"en"		"Control : AI (%s)"
+		"chi"		"控制人 : AI (%s)"
+	}
+
+	"TankHealth"
+	{
+		"en"		"Health  : %i / %i%%"
+		"chi"		"血量  : %i / %i%%"
+	}
+
+	"TankFrustr"
+	{
+		"en"		"Frustr.  : %d%%"
+		"chi"		"控制权  : %d%%"
+	}
+
+	"TankNetWork"
+	{
+		"en"		"Network: %ims / %.1f"
+		"chi"		"网络延迟: %ims / %.1f"
+	}
+
+	"TankHealth0"
+	{
+		"en"		"Health  : Dead"
+		"chi"		"血量  : 死亡"
+	}
+
+	"TankFrustrAI"
+	{
+		"en"		"Frustr.  : AI"
+		"chi"		"控制权  : AI"
+	}
+
+	"TankNetWorkAI"
+	{
+		"en"		"Network: AI"
+		"chi"		"网络延迟: AI"
+	}
+
+	"BestOfRounds"
+	{
+		"en"		"Best of %i"
+		"chi"		"%i局内胜出"
+	}
+
+	"Static"
+	{
+		"en"		"Static"
+		"chi"		"固定"
+	}
+
+	"Event"
+	{
+		"en"		"Event"
+		"chi"		"事件"
+	}
+
+	"CurrentEx"
+	{
+		"en"		"%s | Cur: %i%%"
+		"chi"		"%s | 当前: %i%%"
+	}
+	
+	"Current"
+	{
+		"en"		"Cur: %i%%"
+		"chi"		"当前: %i%%"
 	}
 }

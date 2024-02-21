@@ -26,17 +26,17 @@ void FS_OnModuleStart()
 	HookEvent("finale_start", FS_FinaleStart_Event, EventHookMode_PostNoCopy);
 }
 
-static void FS_Round_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+public void FS_Round_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	FS_bIsFinale = false;
 }
 
-static void FS_FinaleStart_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+public void FS_FinaleStart_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	FS_bIsFinale = true;
 }
 
-static void FS_ConVarChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+public void FS_ConVarChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	FS_bEnabled = FS_hEnabled.BoolValue;
 }
@@ -46,7 +46,7 @@ void FS_OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_PreThinkPost, HookCallback);
 }
 
-static void HookCallback(int client)
+public void HookCallback(int client)
 {
 	if (!FS_bIsFinale) {
 		return;

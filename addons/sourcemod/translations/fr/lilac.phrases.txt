@@ -1,0 +1,70 @@
+"Phrases"
+{
+	"welcome_msg"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Ce serveur est protégé par Little Anti-Cheat {1}"
+	}
+
+	"kick_query_failure"
+	{
+		"fr"		"Erreur: Echec de la réponse à une requète, redémarrez votre jeu si cette erreur persiste"
+	}
+
+	"kick_interp_exploit"
+	{
+		"#format"	"{1:.0f},{2:d},{3:.3f}"
+		"fr"		"Exploit détecté: Votre interp est trop élevé ({1}ms / {2}ms max). Fixez votre cl_interp à {3} ou moins"
+	}
+
+	"tban_ping_high"
+	{
+		"#format"	"{1:.0f},{2:d}"
+		"fr"		"Votre ping est trop élevé ({1} / {2} max)"
+	}
+
+	"kick_ban_generic"
+	{
+		"fr"		"Vous avez été bannis du serveur"
+	}
+
+	"ban_angle"
+	{
+		"fr"		"Angle-Cheats détecté"
+	}
+
+	"ban_chat_clear"
+	{
+		"fr"		"Suppression du chat détecté (chat-clear)"
+	}
+
+	"ban_convar"
+	{
+		"fr"		"ConVar invalide détecté"
+	}
+
+	"ban_bhop"
+	{
+		"fr"		"Bhop détecté"
+	}
+
+	"ban_aimbot"
+	{
+		"fr"		"Aimbot détecté"
+	}
+
+	"ban_aimlock"
+	{
+		"fr"		"Aimlock détecté"
+	}
+
+	"ban_anti_duck_delay"
+	{
+		"fr" 		"Anti délai d'accroupissement détecté"
+	}
+
+	"ban_noisemaker"
+	{
+		"fr" 		"Spam deGénérateur de bruit infini détecté"
+	}
+}

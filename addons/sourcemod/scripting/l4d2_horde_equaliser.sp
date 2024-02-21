@@ -54,6 +54,8 @@ public void OnPluginStart()
 	hCvarHordeCheckpointAnnounce = CreateConVar("l4d2_heq_checkpoint_sound", "1", "Play the incoming mob sound at checkpoints (each 1/4 of total commons killed off) to simulate L4D1 behaviour");
 
 	HookEvent("round_start", RoundStartEvent, EventHookMode_PostNoCopy);
+
+	LoadTranslations("l4d2_horde_equaliser.phrases");
 }
 
 void InitGameData()
@@ -114,7 +116,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 		// Our job here is done
 		if (commonTotal >= commonLimit) {
 			if (!announcedEventEnd){
-				CPrintToChatAll("<{olive}Horde{default}> {red}No {default}common remaining!");
+				CPrintToChatAll("%t %t", "Tag", "NoCommonRemaining");		//<{olive}Horde{default}> {red}No {default}common remaining!
 				announcedEventEnd = true;
 			}
 			return;
@@ -130,7 +132,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 			
 			int remaining = commonLimit - commonTotal;
 			if (remaining != 0) {
-				CPrintToChatAll("<{olive}Horde{default}> {red}%i {default}common remaining..", remaining);
+				CPrintToChatAll("%t %t", "Tag", "CommonRemaining", remaining);		//<{olive}Horde{default}> {red}%i {default}common remaining..
 			}
 			
 			checkpointAnnounced[lastCheckpoint] = true;
@@ -168,7 +170,7 @@ public Action L4D_OnSpawnMob(int &amount)
 	// If it's a "finite" infinite horde...
 	if (IsInfiniteHordeActive()) {
 		if (!announcedInChat) {
-			CPrintToChatAll("<{olive}Horde{default}> A {blue}finite event{default} of {olive}%i{default} commons has started! Rush or wait it out, the choice is yours!", commonLimit);
+			CPrintToChatAll("%t %t", "Tag", "EventStart", commonLimit);		//<{olive}Horde{default}> A {blue}finite event{default} of {olive}%i{default} commons has started! Rush or wait it out, the choice is yours!
 			announcedInChat = true;
 		}
 		

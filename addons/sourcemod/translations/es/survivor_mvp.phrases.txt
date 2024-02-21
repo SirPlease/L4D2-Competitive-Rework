@@ -1,0 +1,71 @@
+"Phrases"
+{
+	"YourRankSI"
+	{
+		"es"		"{blue}Rango {green}Especial: {olive}#%d {blue}({default}%d {green}daño {blue}[{default}%.0f%%{blue}]{default}, %d {green}muertes {blue}[{default}%.0f%%{blue}])"
+	}
+	"YourRankCI"
+	{
+		"es"		"{blue}Rango {green}Común: {olive}#%d {blue}({default}%d {green}comúnes {blue}[{default}%.0f%%{blue}])"
+	}
+	"YourRankFF"
+	{
+		"es"		"{blue}Rango {green}Fuego Amigo: {olive}#%d {blue}({default}%d {green}fuego amigo {blue}[{default}%.0f%%{blue}])"
+	}
+	"BotName"
+	{
+		"es"		"[BOT]"
+	}
+	"NobodyName"
+	{
+		"es"		"{blue}({default}nadie{blue})"
+	}
+	"NotEnoughAction"
+	{
+		"es"		"{blue}({default}no hay suficiente acción todavía{blue})"
+	}
+	"ReportSI_Absolute"
+	{
+		"es"		"{green}SI: {olive}%s {blue}({default}%d {green}daño{default}, %d {green}muertes{blue})"
+	}
+	"ReportSI_Percent"
+	{
+		"es"		"{green}SI: {olive}%s {blue}({green}daño {blue}[{default}%.0f%%{blue}]{default}, {green}muertes {blue}[{default}%.0f%%{blue}])"
+	}
+	"ReportSI_Full"
+	{
+		"es"		"{green}Especial: {olive}%s {blue}({default}%d {green}daño {blue}[{default}%.0f%%{blue}]{default}, %d {green}muertes {blue}[{default}%.0f%%{blue}])"
+	}
+	"ReportSI_Nobody"
+	{
+		"es"		"{green}SI: {blue}({default}Nadie{blue})"
+	}
+	"ReportCI_Absolute"
+	{
+		"es"		"{green}CI: {olive}%s {blue}({default}%d {green}comúnes{blue})"
+	}
+	"ReportCI_Percent"
+	{
+		"es"		"{green}CI: {olive}%s {blue}({green}comúnes {blue}[{default}%.0f%%{blue}])"
+	}
+	"ReportCI_Full"
+	{
+		"es"		"{green}Comun: {olive}%s {blue}({default}%d {green}muertes {blue}[{default}%.0f%%{blue}])"
+	}
+	"NoFF"
+	{
+		"es"		"{blue}({default}No hay fuego amigo en absoluto!{blue})" 
+	}
+	"ReportFF_Absolute"
+	{
+		"es"		"{green}FF: {olive}%s {blue}({default}%d {green}fuego amigo{blue})"
+	}
+	"ReportFF_Percent"
+	{
+		"es"		"{green}FF: {olive}%s {blue}({green}fuego amigo {blue}[{default}%.0f%%{blue}])"
+	}
+	"ReportFF_Full"
+	{
+		"es"		"{green}Fuego Amigo: {olive}%s {blue}({default}%d {green}daño {blue}[{default}%.0f%%{blue}])"
+	}
+}

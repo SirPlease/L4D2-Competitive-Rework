@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"[{olive}抛硬币{default}]"
+	}
+	"Heads"
+	{
+		"chi"		"{lightgreen}%s{default} 抛了个硬币!\nIt's {green}正面{default}!"
+	}
+	"Tails"
+	{
+		"chi"		"{lightgreen}%s{default} 抛了个硬币!\nIt's {green}反面{default}!"
+	}
+	"rolled"
+	{
+		"chi"		"{lightgreen}%s{default} 挑选随机数字，最大为 {teamcolor}%d{default}!\n数字为 {green}%d{default}!"
+	}
+}

@@ -1,0 +1,509 @@
+"Phrases"
+{
+	"SCOPE_DETECTED"
+	{
+		"chi"			"[{olive}表情动作{default}]{darkred} 开镜时您无法使用表情动作！"
+	}
+	"NO_DANCES_ACCESS_FLAG"
+	{
+		"chi"			"[{olive}表情动作{default}]{darkred} 您无权使用舞蹈！！"
+	}
+	"NO_EMOTES_ACCESS_FLAG"
+	{
+		"chi"			"[{olive}表情动作{default}]{darkred} 您无权使用表情动作！！"
+	}
+	"MUST_BE_ALIVE"
+	{
+		"chi"			"[{olive}表情动作{default}]{darkred} 您必须在存活时才能使用！"
+	}
+
+	"STAY_ON_GROUND"
+	{
+		"chi"			"[{olive}表情动作{default}]{darkred} 您必须呆在地上才能使用！"
+	}
+
+	"COOLDOWN_EMOTES"
+	{
+		"chi"			"[{olive}表情动作{default}]{darkred} 冷却中！"
+	}
+
+	"AMIN_1_INVALID"
+	{
+		"chi"			"[{olive}表情动作{default}]{darkred} 参数1无效！！！"
+	}
+	
+	"CANNOT_USE_NOW"
+	{
+		"chi"			"[{olive}表情动作{default}]{darkred} 您现在不能使用！！！"
+	}
+
+	"INVALID_EMOTE_ID"
+	{
+		"chi"			"[{olive}表情动作{default}]{darkred} 无效的表情动作编号，应该在(1-86)之间！"
+	}
+
+	"RANDOM_EMOTE"
+	{
+		"chi"			"随机表情动作"
+	}
+
+	"RANDOM_DANCE"
+	{
+		"chi"			"随机舞蹈"
+	}	
+
+	"EMOTES_LIST"
+	{
+		"chi"			"表情动作列表"
+	}
+
+	"DANCES_LIST"
+	{
+		"chi"			"舞蹈列表"
+	}		
+
+	"EMOTE_PLAYER"
+	{
+		"chi"			"表情动作玩家"
+	}	
+
+	"SELECT_EMOTE"
+	{
+		"chi"			"选择表情动作"
+	}
+	
+	"TITLE_MAIM_MENU"
+	{
+		"chi"			"表情动作和舞蹈"
+	}
+	
+	"TITLE_EMOTES_MENU"
+	{
+		"chi"			"表情动作"
+	}	
+	
+	"TITLE_DANCES_MENU"
+	{
+		"chi"			"舞蹈"
+	}	
+
+	"Emote_Fonzie_Pistol"
+	{
+		"chi"			"手指枪"
+	}
+
+	"Emote_Bring_It_On"
+	{
+		"chi"			"到我这儿来"
+	}
+
+	"Emote_ThumbsDown"
+	{
+		"chi"			"大拇指向下"
+	}
+	
+	"Emote_Celebration_Loop"
+	{
+		"chi"			"庆祝"
+	}
+
+	"Emote_BlowKiss"
+	{
+		"chi"			"飞吻"
+	}
+
+	"Emote_Calculated"
+	{
+		"chi"			"算计"
+	}
+
+	"Emote_Confused"
+	{
+		"chi"			"困惑"
+	}
+	
+	"Emote_Chug"
+	{
+		"chi"			"嘎嚓嘎嚓"
+	}
+
+	"Emote_Cry"
+	{
+		"chi"			"哭泣"
+	}
+
+	"Emote_DustingOffHands"
+	{
+		"chi"			"堡垒乐队"
+
+	}
+
+	"Emote_DustOffShoulders"
+	{
+		"chi"			"舞动青春2"
+	}
+	
+	"Emote_Facepalm"
+	{
+		"chi"			"捂脸"
+	}
+
+	"Emote_Fishing"
+	{
+		"chi"			"陷入圈套"
+	}
+
+	"Emote_Flex"
+	{
+		"chi"			"弯曲"
+	}
+
+	"Emote_golfclap"
+	{
+		"chi"			"高尔夫球鼓掌"
+	}
+	
+	"Emote_HandSignals"
+	{
+		"chi"			"手示信号"
+	}
+
+	"Emote_HeelClick"
+	{
+		"chi"			"点击！"
+	}
+
+	"Emote_Hotstuff"
+	{
+		"chi"			"大人物"
+	}
+
+	"Emote_IBreakYou"
+	{
+		"chi"			"断点"
+	}
+	
+	"Emote_IHeartYou"
+	{
+		"chi"			"真爱"
+	}
+
+	"Emote_Kung-Fu_Salute"
+	{
+		"chi"			"功夫敬礼"
+	}
+
+	"Emote_Laugh"
+	{
+		"chi"			"大笑"
+	}
+
+	"Emote_Luchador"
+	{
+		"chi"			"摔跤手"
+	}
+	
+	"Emote_Make_It_Rain"
+	{
+		"chi"			"发牌雨"
+	}
+
+	"Emote_NotToday"
+	{
+		"chi"			"不要"
+	}
+
+	"Emote_RockPaperScissor_Paper"
+	{
+		"chi"			"布"
+	}
+
+	"Emote_RockPaperScissor_Rock"
+	{
+		"chi"			"石头"
+	}
+	
+	"Emote_RockPaperScissor_Scissor"
+	{
+		"chi"			"剪刀"
+	}
+
+	"Emote_Salt"
+	{
+		"chi"			"撒盐"
+	}
+
+	"Emote_Salute"
+	{
+		"chi"			"敬礼"
+	}
+
+	"Emote_SmoothDrive"
+	{
+		"chi"			"开车"
+	}
+	"Emote_Snap"
+	{
+		"chi"			"响指"
+	}
+
+	"Emote_StageBow"
+	{
+		"chi"			"礼仪"
+	}
+
+	"Emote_ThumbsUp"
+	{
+		"chi"			"赞许"
+	}
+	"Emote_Wave2"
+	{
+		"chi"			"敬礼2"
+	}
+
+	"Emote_Yeet"
+	{
+		"chi"			"兴奋"
+	}
+
+	"DanceMoves"
+	{
+		"chi"			"舞蹈步伐"
+	}
+
+	"Emote_Mask_Off_Intro"
+	{
+		"chi"			"橘子汁"
+	}
+	
+	"Emote_Zippy_Dance"
+	{
+		"chi"			"粗暴"
+	}
+
+	"ElectroShuffle"
+	{
+		"chi"			"电子曳步舞"
+	}
+
+	"Emote_AerobicChamp"
+	{
+		"chi"			"有氧运动"
+	}
+
+	"Emote_Bendy"
+	{
+		"chi"			"柔韧"
+	}
+	
+	"Emote_BandOfTheFort"
+	{
+		"chi"			"最好的朋友"
+	}
+
+	"Emote_Boogie_Down_Intro"
+	{
+		"chi"			"布吉舞"
+	}
+
+	"Emote_Capoeira"
+	{
+		"chi"			"巴西战舞"
+	}
+
+	"Emote_Charleston"
+	{
+		"chi"			"摩登女"
+	}
+	
+	"Emote_Chicken"
+	{
+		"chi"			"小鸡"
+	}
+
+	"Emote_Dance_NoBones"
+	{
+		"chi"			"无骨"
+	}
+
+	"Emote_Dance_Shoot"
+	{
+		"chi"			"天花乱坠"
+	}
+
+	"Emote_Dance_SwipeIt"
+	{
+		"chi"			"舞动青春"
+	}
+	
+	"Emote_Dance_Disco_T3"
+	{
+		"chi"			"狂热迪斯科"
+	}
+
+	"Emote_DG_Disco"
+	{
+		"chi"			"狂热迪斯科2"
+	}
+
+	"Emote_Dance_Worm"
+	{
+		"chi"			"蠕虫"
+	}
+
+	"Emote_Dance_Loser"
+	{
+		"chi"			"失败者"
+	}
+	
+	"Emote_Dance_Breakdance"
+	{
+		"chi"			"霹雳舞"
+	}
+
+	"Emote_Dance_Pump"
+	{
+		"chi"			"Pump舞"
+	}
+
+	"Emote_Dance_RideThePony"
+	{
+		"chi"			"骑小马"
+	}
+
+	"Emote_Dab"
+	{
+		"chi"			"Dab手势"
+	}
+
+	"Emote_EasternBloc_Start"
+	{
+		"chi"			"东方集团"
+	}
+
+	"Emote_FancyFeet"
+	{
+		"chi"			"完美舞步"
+	}
+
+	"Emote_FlossDance"
+	{
+		"chi"			"甩手舞"
+	}
+
+	"Emote_FlippnSexy"
+	{
+		"chi"			"Flippn舞"
+	}
+
+	"Emote_Fresh"
+	{
+		"chi"			"新鲜"
+	}
+
+	"Emote_GrooveJam"
+	{
+		"chi"			"Grefg"
+	}
+
+	"Emote_guitar"
+	{
+		"chi"			"弹吉他"
+	}
+
+	"Emote_Hillbilly_Shuffle_Intro"
+	{
+		"chi"			"曳步舞"
+	}
+
+	"Emote_Hiphop_01"
+	{
+		"chi"			"嘻哈"
+	}
+
+	"Emote_Hula_Start"
+	{
+		"chi"			"夏威夷草裙舞"
+	}
+
+	"Emote_InfiniDab_Intro"
+	{
+		"chi"			"无限Dab手势"
+	}
+
+	"Emote_Intensity_Start"
+	{
+		"chi"			"惊吓"
+	}
+
+	"Emote_IrishJig_Start"
+	{
+		"chi"			"土耳其舞"
+	}
+
+	"Emote_KoreanEagle"
+	{
+		"chi"			"老鹰"
+	}
+
+	"Emote_Kpop_02"
+	{
+		"chi"			"真心"
+	}
+
+	"Emote_LivingLarge"
+	{
+		"chi"			"富裕生活"
+	}
+
+	"Emote_Maracas"
+	{
+		"chi"			"沙槌"
+	}
+
+	"Emote_PopLock"
+	{
+		"chi"			"流行锁"
+	}
+
+	"Emote_PopRock"
+	{
+		"chi"			"明星魅力"
+	}
+
+	"Emote_RobotDance"
+	{
+		"chi"			"机械舞"
+	}
+
+	"Emote_T-Rex"
+	{
+		"chi"			"霸王龙"
+	}
+
+	"Emote_TechnoZombie"
+	{
+		"chi"			"被鼓舞"
+	}
+
+	"Emote_Twist"
+	{
+		"chi"			"旋转"
+	}
+
+	"Emote_WarehouseDance_Start"
+	{
+		"chi"			"生意兴隆"
+	}
+
+	"Emote_Wiggle"
+	{
+		"chi"			"蠕动"
+	}
+
+	"Emote_Youre_Awesome"
+	{
+		"chi"			"你真厉害"
+	}
+
+}

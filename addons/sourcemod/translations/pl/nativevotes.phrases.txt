@@ -1,0 +1,12 @@
+"Phrases"
+{
+	"NativeVotes Revote"
+	{
+		"pl"	"Ponowne glosowanie..."
+	}
+	
+	"NativeVotes Revote No Time"
+	{
+		"pl"	"Nie ma dosc czasu ponownie glosowac."
+	}
+}

@@ -1,0 +1,12 @@
+"Phrases"
+{
+	"VOTE_DISPLAY_MSG"
+	{
+		"chi"			"开始进行mix（随机分队）"
+	}
+
+	"VOTE_END_MSG"
+	{
+		"chi"			"即将进行mix..."
+	}
+}

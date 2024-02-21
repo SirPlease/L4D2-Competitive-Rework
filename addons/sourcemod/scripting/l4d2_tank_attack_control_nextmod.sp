@@ -48,6 +48,8 @@ public void OnPluginStart()
 
 	HookEvent("round_start", RoundStartEvent, EventHookMode_PostNoCopy);
 	HookEvent("tank_spawn", TankSpawn_Event);
+
+	LoadTranslations("l4d2_tank_attack_control_nextmod.phrases");
 }
 
 public void RoundStartEvent(Event hEvent, char[] sEventName, bool bDontBroadcast)
@@ -72,13 +74,19 @@ public void TankSpawn_Event(Event hEvent, char[] sEventName, bool bDontBroadcast
 	}
 	
 	if (!hidemessage && (GetConVarBool(hOverhandOnly) == false)) {
-		CPrintToChat(tank, "{red}[{default}Tank Rock Selector{red}]");
-		CPrintToChat(tank, "{red}Use {default}-> {olive}Underhand throw");
-		CPrintToChat(tank, "{red}Melee {default}-> {olive}One hand overhand");
-		CPrintToChat(tank, "{red}Reload {default}-> {olive}Two hand overhand");
+		CPrintToChat(tank, "%t", "Title");
+		CPrintToChat(tank, "%t", "ERock");
+		CPrintToChat(tank, "%t", "MeleeRock");
+		CPrintToChat(tank, "%t", "RRock");
+
+		// {red}[{default}Tank Rock Selector{red}]
+		// {red}Use {default}-> {olive}Underhand throw
+		// {red}Melee {default}-> {olive}One hand overhand
+		// {red}Reload {default}-> {olive}Two hand overhand
 
 		if (!GetConVarBool(g_hBlockJumpRock)) {
-			CPrintToChat(tank, "{red}Jump Rocks {default}have a {olive}%i{default} second cooldown.", GetConVarInt(g_hJumpRockCooldown));
+			CPrintToChat(tank, "%t", "JumpRockCoolDown", GetConVarInt(g_hJumpRockCooldown));
+			// {red}Jump Rocks {default}have a {olive}%i{default} second cooldown.
 		}
 	}
 
@@ -197,7 +205,8 @@ void PutJumpRockOnCooldown(int client)
 	CreateTimer(1.0, Timer_Countdown, _, TIMER_REPEAT);
 	
 	// Announce Time Until Rock is ready
-	CPrintToChat(client, "<{red}JumpRock{default}> Jump Rock will be ready in {olive}%i{default} seconds!", GetConVarInt(g_hJumpRockCooldown));
+	CPrintToChat(client, "%t", "JumpRockNotice", GetConVarInt(g_hJumpRockCooldown));
+	// <{red}JumpRock{default}> Jump Rock will be ready in {olive}%i{default} seconds!
 }
 
 void blah(int client, int buttons)
@@ -224,7 +233,8 @@ public Action ResetJumpRockCooldown(Handle hTimer, any userid)
 	}
 	
 	JumpRockReady = true;
-	CPrintToChat(client, "<{red}JumpRock{default}> Jump Rock Is {olive}Ready!");
+	CPrintToChat(client, "%t", "Ready");
+	// <{red}JumpRock{default}> Jump Rock Is {olive}Ready!
 	return Plugin_Stop;
 }
 

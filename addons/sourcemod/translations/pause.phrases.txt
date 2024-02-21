@@ -3,183 +3,266 @@
 	"Tag"
 	{
 		"en"	"{default}[{green}!{default}]"
+		"chi"	"{default}[{green}!{default}]"
 	}
+
 	"ClientFullyLoaded"
 	{
 		"en"	"{olive}%N {default}has fully loaded"
+		"chi"	"{olive}%N {default}已加载完毕"
 	}
+
 	"PauseCommand"
 	{
 		"en"	"{olive}%N {blue}Paused{default}."
+		"chi"	"{olive}%N {blue}提出暂停{default}."
 	}
+
 	// PauseDelay_Timer
 	"PauseAction"
 	{
 		"en"	"{red}PAUSED"
+		"chi"	"{red}暂停"
 	}
+
 	"PauseDelay"
 	{
 		"en"	"{blue}Pausing in{default}: {olive}%d"
+		"chi"	"{blue}将在: {olive}%d秒{blue} 内暂停"
 	}
+
 	// ForcePause_Cmd
 	"Crashed"
 	{
 		"en"	"{olive}Game {default}was {green}force paused {default}because a player has {blue}crashed{default}."
+		"chi"	"{olive}游戏{default}因一名玩家 {blue}掉线{default} 而被{green}强制暂停."
 	}
+
 	"ForcePause"
 	{
 		"en"	"A {green}force pause {default}is issued by {blue}Admin {default}({olive}%N{default})"
+		"chi"	"{blue}管理员{default} ({olive}%N{default}) 发起了一个 {green}强制暂停{default}."
 	}
+
 	// Unpause_Cmd
 	"UnpauseSurvivors"
 	{
 		"en"	"{olive}%N %s{default}marked {blue}%s {default}ready."
+		"chi"	"{olive}%N %s{default}标记 {blue}%s {default}已经准备完毕."
 	}
+
 	"UnpauseInfected"
 	{
 		"en"	"{olive}%N %s{default}marked {red}%s {default}ready."
+		"chi"	"{olive}%N %s{default}标记 {blue}%s {default}已经准备完毕."
 	}
+
 	"UnpauseInitiator"
 	{
 		"en"	"{olive}%N {default}marked {green}Initiator {default}ready."
+		"chi"	"{olive}%N {default}标记 {green}发起者 {default}已经准备完毕."
 	}
+
 	"UnpauseAdminConfirm"
 	{
 		"en"	"{olive}Teams {default}are ready. Wait for {blue}Admin {default}to {green}confirm{default}."
+		"chi"	"{olive}双方团队{default}已准备完毕. 等待{blue}管理员{green}确认完毕{default}."
 	}
+
 	// Unready_Cmd
 	"UnreadySurvivors"
 	{
 		"en"	"{olive}%N %s{default}marked {blue}%s {default}not ready."
+		"chi"	"{olive}%N %s{default}标记 {blue}%s {default}还未准备好."
 	}
+
 	"UnreadyInfected"
 	{
 		"en"	"{olive}%N %s{default}marked {red}%s {default}not ready."
+		"chi"	"{olive}%N %s{default}标记 {blue}%s {default}还未准备好."
 	}
+
 	"UnreadyInitiator"
 	{
 		"en"	"{olive}%N {default}marked {green}Initiator {default}not ready."
+		"chi"	"{olive}%N %s{default}标记 {green}发起者 {default}还未准备好."
 	}
+
 	// void AsInitiator()
 	"AsInitiator"
 	{
-		"en"		"{default}as {green}Initiator "
+		"en"	"{default}as {green}Initiator "
+		"chi"	"{default}作为{green}发起者 "
 	}
+
 	// ForceUnpause_Cmd
 	"ForceUnpause"
 	{
 		"en"	"A {green}force unpause {default}is issued by {blue}Admin {default}({olive}%N{default})"
+		"chi"	"{blue}管理员 {default}({olive}%N{default}) 发起了一个 {green}强制解除暂停{default}."
 	}
+
 	// AddPauseCount
 	"PauseLimit"
 	{
 		"en"	"You have reached your pause limit."
+		"chi"	"您已达到最大暂停次数."
 	}
+
 	// AttemptPause
 	"PauseDeferred"
 	{
 		"en"	"{red}Pause has been delayed due to a pick-up in progress!"
+		"chi"	"{red}因一个倒地救人过程正在进行, 暂停已被延时生效!"
 	}
+
 	// Pause
 	"PausePreventSpawn"
 	{
 		"en"	"{default}Your {red}Spawn {default}has been prevented because of the Pause"
+		"chi"	"{default}因为暂停过程正在进行, {default}您的 {red}特感重生 {default}行为已被阻止."
 	}
+
 	// Show_Cmd
 	"PanelShow"
 	{
 		"en"	"Panel is now {blue}on{default}."
+		"chi"	"面板现在已 {blue}打开{default}."
 	}
+
 	"PanelHide"
 	{
 		"en"	"Panel is now {red}off{default}."
+		"chi"	"面板现在已 {red}关闭{default}."
 	}
+
 	// UpdatePanel
 	"PanelSlots"
 	{
 		"en"	"▸ Server: %s\n▸ Slots: %d/%d"
+		"chi"	"▸ 服务器: %s\n▸ 位数: %d/%d"
 	}
+
 	"PanelDate"
 	{
 		"en"	"▸ %m/%d/%Y - %I:%M%p"
+		"chi"	"▸ %m/%d/%Y - %I:%M%p"
 	}
+
 	"PanelTitle"
 	{
 		"en"	"▸ Ready Status"
+		"chi"	"▸ 准备状态"
 	}
+
 	"RequireAdmin"
 	{
 		"en"	"->0. Require Admin to Unpause"
+		"chi"	"->0. 要求管理员进行暂停解除"
 	}
+
 	"SurvivorUnPaused"
 	{
 		"en"	"->1. Survivors: [√]"
+		"chi"	"->1. 生还者: [√]"
 	}
+
 	"SurvivorPaused"
 	{
 		"en"	"->1. Survivors: [X]"
+		"chi"	"->1. 生还者: [X]"
 	}
+
 	"InfectedUnPaused"
 	{
 		"en"	"->2. Infected: [√]"
+		"chi"	"->2. 感染者: [√]"
 	}
+
 	"InfectedPaused"
 	{
 		"en"	"->2. Infected: [X]"
+		"chi"	"->2. 感染者: [X]"
 	}
+
 	"InitiatorUnPaused"
 	{
 		"en"	"->0. Initiator: [√]"
+		"chi"	"->0. 发起者: [√]"
 	}
+
 	"InitiatorPaused"
 	{
 		"en"	"->0. Initiator: [X]"
+		"chi"	"->0. 发起者: [X]"
 	}
+
 	"AutoPauseCrash"
 	{
 		"en"	"▸ Forced AutoPause -> Crash"
+		"chi"	"▸ 强制自动暂停 -> 游戏崩溃"
 	}
+
 	"ForcePauseAdmin"
 	{
 		"en"	"▸ Force Pause -> %s (Admin)"
+		"chi"	"▸ 强制暂停 -> %s (管理员)"
 	}
+
 	"InitiatorPause"
 	{
 		"en"	"▸ Initiator -> %s (%s)"
+		"chi"	"▸ 发起者 -> %s (%s)"
 	}
+
 	"DurationPause"
 	{
 		"en"	"▸ Duration: %02d:%02d"
+		"chi"	"▸ 过程用时: %02d:%02d"
 	}
+
 	// InitiateLiveCountdown
 	"CountdownCancelNotify"
 	{
 		"en"		"Say {olive}!unready {default}to cancel"
+		"chi"		"输入 {olive}!unready {default}来取消"
 	}
+
 	"GameisLive"
 	{
 		"en"		"Game is live!"
+		"chi"		"游戏已开始!"
 	}
+
 	"CountdownReadyDelay"
 	{
 		"en"		"{blue}Live in{default}: {olive}%d{default}..."
+		"chi"		"{blue}游戏开始于{default}: {olive}%d{default}..."
 	}
+
 	// CancelFullReady
 	"CountdownCancelled"
 	{
 		"en"		"{olive}%N {default}cancelled the countdown!"
+		"chi"		"{olive}%N {default}取消了倒计时!"
 	}
+
 	// Callvote_Callback
 	"CallvoteNoSpec"
 	{
 		"en"		"You're unable to call votes as a spectator."
+		"chi"		"旁观者不允许发起投票."
 	}
+
 	"CallvoteNoExploit"
 	{
 		"en"		"You've just switched Teams, you are unable to vote for a few seconds."
+		"chi"		"您刚刚切换了队伍, 在接下来的几秒内您不允许投票."
 	}
+
 	"CallvoteCannotTargetAdmin"
 	{
 		"en"		"You may not kick Admins."
+		"chi"		"您不允许踢出管理员."
 	}
 }

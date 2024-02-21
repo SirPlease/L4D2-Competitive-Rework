@@ -1,0 +1,147 @@
+"Phrases"
+{
+    "Tag"
+    {
+        "chi"        "{blue}<{green}BossVote{blue}>{default}"
+    }
+    // RunVoteChecks
+    "NotAvailable"
+    {
+        "chi"        "这张地图不能投票更改boss位置."
+    }
+    "Available"
+    {
+        "chi"        "Boss位置投票只能在准备开始前."
+    }
+    "FirstRound"
+    {
+        "chi"        "Boss位置投票只能在第一回合."
+    }
+    "NotAvailableForSpec"
+    {
+        "chi"        "Boss位置投票不开放给旁观者."
+    }
+    "CannotBeCalled"
+    {
+        "chi"        "Boss位置投票暂时不能使用..."
+    }
+    // VoteBossCmd
+    "Usage"
+    {
+        "chi"        "用法: !voteboss {olive}<{default}tank{olive}> <{default}witch{olive}>{default}."
+    }
+    "Usage2"
+    {
+        "chi"        "用 {default}\"{blue}0{default}\" 表示 {olive}不生成{default}, \"{blue}-1{default}\" 表示 {olive}不更改."
+    }
+    "Invalid"
+    {
+        "chi"        "百分比是 {olive}无效的{default}."
+    }
+    "TankStatic"
+    {
+        "chi"        "这张地图Tank位置是固定的，所以不能进行更改."
+    }
+    "WitchStatic"
+    {
+        "chi"        "这张地图Witch位置是固定的，所以不能进行更改."
+    }
+    "TankBanned"
+    {
+        "chi"        "这个Tank进度被 {blue}禁用了{default}."
+    }
+    "WitchBanned"
+    {
+        "chi"        "这个Witch进度被 {blue}禁用了{default}."
+    }
+    "SetBosses"
+    {
+        "chi"        "设置Tank进度为: %s , Witch进度为: %s?"
+    }
+    "SetTank"
+    {
+        "chi"        "设置Tank进度为: %s 并且禁用 Witch?"
+    }
+    "SetOnlyTank"
+    {
+        "chi"        "设置Tank进度为: %s?"
+    }
+    "SetWitch"
+    {
+        "chi"        "禁用Tank 并且设置Witch进度为: %s?"
+    }
+    "SetOnlyWitch"
+    {
+        "chi"        "设置Witch进度为: %s?"
+    }
+    "SetBossesDisabled"
+    {
+        "chi"        "将Tank和Witch生成都关闭?"
+    }
+    "SetTankDisabled"
+    {
+        "chi"        "将Tank生成设为关闭?"
+    }
+    "SetWitchDisabled"
+    {
+        "chi"        "将Witch生成设为关闭?"
+    }
+    // BossVoteResultHandler
+    "OnlyReadyUp"
+    {
+        "chi"        "tank生成只能再准备前设置."
+    }
+    "SettingBoss"
+    {
+        "chi"        "设置Boss生成..."
+    }
+    "SettingTank"
+    {
+        "chi"        "设置Tank生成..."
+    }
+    "SettingWitch"
+    {
+        "chi"        "设置Witch生成..."
+    }
+    "SettingBossDisabled"
+    {
+        "chi"        "设置Boss禁用..."
+    }
+    // ForceTankCommand
+    "CommandNotAvailable"
+    {
+        "chi"        "指令不能用于这张图."
+    }
+    "TankSpawnStatic"
+    {
+        "chi"        "这张地图Tank位置是固定的，所以不能进行更改."
+    }
+    "PercentageInvalid"
+    {
+        "chi"        "这个进度是 {blue}无效的{default}."
+    }
+    "Percentagebanned"
+    {
+        "chi"        "这个进度被 {blue}禁用了{default}."
+    }
+    "TankSpawnAdmin"
+    {
+		"#format"   "{1:i},{2:s}" // 1:p_iRequestedPercent 2:clientName
+        "chi"        "Tank位置被管理员 {blue}{2}{default}设置为：{olive}{1}%{default}."
+    }
+    // ForceWitchCommand
+    "WitchSpawnStatic"
+    {
+        "chi"        "这张地图Witch位置是固定的，所以不能进行更改."
+    }
+    "WitchSpawnAdmin"
+    {
+		"#format"   "{1:i},{2:s}" // 1:p_iRequestedPercent 2:clientName
+        "chi"        "Witch位置被管理员 {blue}{2}{default}设置为：{olive}{1}%{default}."
+    }
+	"RoundNotReachLimit"
+    {
+		"#format"   "{1:i}" // 1:round_limit
+        "en"        "您这个难度就想马上逃课了？不行呢！(你还需要尝试{blue}{1}次{default}无法通过后才能使用{olive}boss投票功能{default})."
+    }
+}

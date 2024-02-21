@@ -1,0 +1,95 @@
+"Phrases"
+{
+	"Mute Menu"
+	{
+		"en"		"Mute Menu"
+		"zho"		"靜音介面"
+		"chi"		"静音界面"
+	}
+	"Mute player chat text"
+	{
+		"en"		"Mute player chat text"
+		"zho"		"封鎖玩家文字聊天"
+		"chi"		"屏蔽玩家文字聊天"
+	}
+	"Mute player mic voice"
+	{
+		"en"		"Mute player mic voice"
+		"zho"		"封鎖玩家語音"
+		"chi"		"屏蔽玩家语音"
+	}
+	"No one"
+	{
+		"en"		"There Are No Any Other Players"
+		"zho"       "沒有其他玩家"
+		"chi"       "没有其他玩家"
+	}
+	"Invalid Player"
+	{
+		"en"		"Invalid player, Choose again!"
+		"zho"		"無效的玩家，請重新选择"
+		"chi"		"无效的玩家，请重新选择"
+	}	
+	"Blocked"
+	{
+		"en"		"(Blocked)"
+		"zho"		"(封鎖中)"
+		"chi"		"(屏蔽中)"
+	}
+	"Chat_blocked (C)"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"[{olive}TS{default}] {olive}{1}{default} have muted {green}{2}{default}'s chat text in personal list."
+		"zho"		"[{olive}TS{default}] {olive}{1}{default} 已在個人名單上 封鎖 {green}{2}{default} 的文字聊天."
+		"chi"		"[{olive}TS{default}] {olive}{1}{default} 已在个人名单上 屏蔽 {green}{2}{default} 的文字聊天."
+	}
+	"Chat_blocked"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1} have muted {2}'s chat text in personal list."
+		"zho"		"{1} 已在個人名單上 封鎖 {2} 的文字聊天."
+		"chi"		"{1} 已在个人名单上 屏蔽 {2} 的文字聊天."
+	}
+	"Chat_unblocked (C)"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"[{olive}TS{default}] {olive}{1}{default} have unmuted {green}{2}{default}'s chat text in personal list."
+		"zho"		"[{olive}TS{default}] {olive}{1}{default} 已在個人名單上 移除封鎖 {green}{2}{default} 的文字聊天."
+		"chi"		"[{olive}TS{default}] {olive}{1}{default} 已在个人名单上 解除屏蔽 {green}{2}{default} 的文字聊天."
+	}
+	"Chat_unblocked"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1} have unmuted {2}'s chat text in personal list."
+		"zho"		"{1} 已在個人名單上 移除封鎖 {2} 的文字聊天."
+		"chi"		"{1} 已在个人名单上 解除屏蔽 {2} 的文字聊天."
+	}
+	"Voice_blocked (C)"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"[{olive}TS{default}] {olive}{1}{default} have muted {green}{2}{default}'s mic voice in personal list."
+		"zho"		"[{olive}TS{default}] {olive}{1}{default} 已在個人名單上 封鎖 {green}{2}{default} 的語音."
+		"chi"		"[{olive}TS{default}] {olive}{1}{default} 已在个人名单上 屏蔽 {green}{2}{default} 的语音."
+	}
+	"Voice_blocked"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1} have muted {2}'s mic voice in personal list."
+		"zho"		"{1} 已在個人名單上 封鎖 {2} 的語音."
+		"chi"		"{1} 已在个人名单上 屏蔽 {2} 的语音."
+	}
+	"Voice_unblocked (C)"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"[{olive}TS{default}] {olive}{1}{default} have unmuted {green}{2}{default}'s mic voice in personal list."
+		"zho"		"[{olive}TS{default}] {olive}{1}{default} 已在個人名單上 移除封鎖 {green}{2}{default} 的語音."
+		"chi"		"[{olive}TS{default}] {olive}{1}{default} 已在个人名单上 解除屏蔽 {green}{2}{default} 的语音."
+	}
+	"Voice_unblocked"
+	{
+		"#format"	"{1:N},{2:N}"
+		"en"		"{1} have unmuted {2}'s mic voice in personal list."
+		"zho"		"{1} 已在個人名單上 移除封鎖 {2} 的語音."
+		"chi"		"{1} 已在个人名单上 解除屏蔽 {2} 的语音."
+	}
+}

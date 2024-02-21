@@ -1,0 +1,129 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Addresses"
+		{
+			"NextBotCreatePlayerBot.jumptable"
+			{
+				"windows"
+				{
+					"signature"	"CTerrorPlayer::ReplaceWithBot.jumptable"
+					"offset"	"7"
+				}
+			}
+		}
+
+		"Offsets"
+		{
+			"RoundRespawn_Offset"
+			{
+				"linux"		"25" // 0x19
+				"windows"	"15" // 0xF
+			}
+
+			"RoundRespawn_Byte" // JNZ => JNS
+			{
+				"linux"		"117" // 0x75
+				"windows"	"117" // 0x75
+			}
+
+			"m_nFallenSurvivors"
+			{
+				"linux"		"8"
+				"windows"	"8"
+			}
+
+			"m_FallenSurvivorTimer"
+			{
+				"linux"		"12"
+				"windows"	"12"
+			}
+		}
+
+		"Signatures"
+		{
+			"CTerrorPlayer::ReplaceWithBot.jumptable"
+			{
+				"library" "server"
+				// Switch jump with a bunch of cases matching...
+				// PUSH rel32
+				// CALL rel32
+				// JUMP rel8
+				// There are acutally 2 matches of this in the windows binary, 
+				// but they appear to be the same functionality--so it doesn't matter which we get.
+				/* FF 24 85 ? ? ? ? 68 ? ? ? ? E8 ? ? ? ? EB ? 68 ? ? ? ? E8 ? ? ? ? EB ? 68 ? ? ? ? E8 ? ? ? ? EB ? 68 ? ? ? ? E8 ? ? ? ? EB ? 68 ? ? ? ? E8 ? ? ? ? EB ? 68 ? ? ? ? E8 ? ? ? ? EB ? 68 ? ? ? ? E8 */
+				"windows" "\xFF\x24\x85\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xEB\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xEB\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xEB\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xEB\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xEB\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xEB\x2A\x68\x2A\x2A\x2A\x2A\xE8"
+			}
+
+			/* CTerrorPlayer::RoundRespawn(void) */
+			"CTerrorPlayer::RoundRespawn"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x75\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\xC6\x86"
+				/* ? ? ? ? ? ? ? ? E8 ? ? ? ? 84 ? 75 ? 8B ? E8 ? ? ? ? C6 86 */
+			}
+
+			/* TerrorNavMesh::GetLastCheckpoint(TerrorNavMesh *__hidden this) */
+			"TerrorNavMesh::GetLastCheckpoint"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK13TerrorNavMesh17GetLastCheckpointEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x33\x2A\x57\x85\x2A\x7E\x2A\x8B\xB1\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
+				/* ? ? ? ? ? ? 56 33 ? 57 85 ? 7E ? 8B B1 ? ? ? ? 8B ? 8B */
+			}
+
+			/* Checkpoint::GetLargestArea(Checkpoint *__hidden this) */
+			"Checkpoint::GetLargestArea"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK10Checkpoint14GetLargestAreaEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x53\x8B\x2A\x2A\x33\x2A\x33\x2A\x89\x2A\x2A\x83"
+				/* ? ? ? ? ? ? ? 8B ? 53 8B ? ? 33 ? 33 ? 89 ? ? 83 */
+			}
+
+			"NextBotCreatePlayerBot<Smoker>"
+			{
+				"library"	"server"
+				"linux"		"@_Z22NextBotCreatePlayerBotI6SmokerEPT_PKc"
+			}
+
+			"NextBotCreatePlayerBot<Boomer>"
+			{
+				"library"	"server"
+				"linux"		"@_Z22NextBotCreatePlayerBotI6BoomerEPT_PKc"
+			}
+
+			"NextBotCreatePlayerBot<Hunter>"
+			{
+				"library"	"server"
+				"linux"		"@_Z22NextBotCreatePlayerBotI6HunterEPT_PKc"
+			}
+
+			"NextBotCreatePlayerBot<Spitter>"
+			{
+				"library"	"server"
+				"linux"		"@_Z22NextBotCreatePlayerBotI7SpitterEPT_PKc"
+			}
+
+			"NextBotCreatePlayerBot<Jockey>"
+			{
+				"library"	"server"
+				"linux"		"@_Z22NextBotCreatePlayerBotI6JockeyEPT_PKc"
+			}
+
+			"NextBotCreatePlayerBot<Charger>"
+			{
+				"library"	"server"
+				"linux"		"@_Z22NextBotCreatePlayerBotI7ChargerEPT_PKc"
+			}
+
+			"NextBotCreatePlayerBot<Tank>"
+			{
+				"library"	"server"
+				"linux"		"@_Z22NextBotCreatePlayerBotI4TankEPT_PKc"
+			}
+		}
+	}
+}

@@ -85,7 +85,7 @@ static void ClearCLSEntry(CLSEntry entry[CLSEntry])
 }
 #endif*/
 
-static Action _CheckClientSettings_Timer(Handle hTimer)
+public Action _CheckClientSettings_Timer(Handle hTimer)
 {
 	if (!IsPluginEnabled()) {
 		if (IsDebugEnabled()) {
@@ -129,7 +129,7 @@ static void EnforceCliSettings(int client)
 #endif
 }
 
-static void _EnforceCliSettings_QueryReply(QueryCookie cookie, int client, ConVarQueryResult result, \
+public void _EnforceCliSettings_QueryReply(QueryCookie cookie, int client, ConVarQueryResult result, \
 												const char[] cvarName, const char[] cvarValue, any value)
 {
 	if (!IsClientConnected(client) || !IsClientInGame(client) || IsClientInKickQueue(client)) {
@@ -161,8 +161,8 @@ static void _EnforceCliSettings_QueryReply(QueryCookie cookie, int client, ConVa
 
 				/*PrintToChatAll("\x01[\x05Confogl\x01] Kicking \x04%L\x01 for having an illegal value for '\x04%s\x01' (\x04%f\x01) !!!", \
 									client, cvarName, fCvarVal);*/
-				CPrintToChatAll("{blue}[{default}Confogl{blue}] {olive}%L{default} was kicked for having an illegal value for '{green}%s{default}' {blue}({default}%f{blue})", \
-									client, cvarName, fCvarVal);
+				CPrintToChatAll("%t", "KickIllegalValueClient", \
+									client, cvarName, fCvarVal);		//{blue}[{default}Confogl{blue}] {olive}%L{default} was kicked for having an illegal value for '{green}%s{default}' {blue}({default}%f{blue})
 
 				char kickMessage[256] = "Illegal Client Value for ";
 				Format(kickMessage, sizeof(kickMessage), "%s%s (%.2f)", kickMessage, cvarName, fCvarVal);
@@ -199,8 +199,8 @@ static void _EnforceCliSettings_QueryReply(QueryCookie cookie, int client, ConVa
 
 				/*PrintToChatAll("\x01[\x05Confogl\x01] Kicking \x04%L\x01 for having an illegal value for '\x04%s\x01' (\x04%f\x01) !!!", \
 									client, cvarName, fCvarVal);*/
-				CPrintToChatAll("{blue}[{default}Confogl{blue}] {olive}%L{default} was kicked for having an illegal value for '{green}%s{default}' {blue}({default}%f{blue})", \
-									client, cvarName, fCvarVal);
+				CPrintToChatAll("%t", "KickIllegalValueClient" ,\
+									client, cvarName, fCvarVal);		//{blue}[{default}Confogl{blue}] {olive}%L{default} was kicked for having an illegal value for '{green}%s{default}' {blue}({default}%f{blue})
 
 				char kickMessage[256] = "Illegal Client Value for ";
 				Format(kickMessage, sizeof(kickMessage), "%s%s (%.2f)", kickMessage, cvarName, fCvarVal);
@@ -225,10 +225,10 @@ static void _EnforceCliSettings_QueryReply(QueryCookie cookie, int client, ConVa
 #endif
 }
 
-static Action _ClientSettings_Cmd(int client, int args)
+public Action _ClientSettings_Cmd(int client, int args)
 {
 	int iSize = ClientSettingsArray.Length;
-	ReplyToCommand(client, "[Confogl] Tracked Client CVars (Total %d)", iSize);
+	ReplyToCommand(client, "%t", "TrackedClientCVars", iSize);		//[Confogl] Tracked Client CVars (Total %d)
 
 #if SOURCEMOD_V_MINOR > 9
 	CLSEntry clsetting;
@@ -290,7 +290,7 @@ static Action _ClientSettings_Cmd(int client, int args)
 	return Plugin_Handled;
 }
 
-static Action _TrackClientCvar_Cmd(int args)
+public Action _TrackClientCvar_Cmd(int args)
 {
 	if (args < 3 || args == 4) {
 		PrintToServer("Usage: confogl_trackclientcvar <cvar> <hasMin> <min> [<hasMax> <max> [<action>]]");
@@ -347,7 +347,7 @@ static Action _TrackClientCvar_Cmd(int args)
 	return Plugin_Handled;
 }
 
-static Action _ResetTracking_Cmd(int args)
+public Action _ResetTracking_Cmd(int args)
 {
 	if (ClientSettingsCheckTimer != null) {
 		PrintToServer("Can't reset tracking in the middle of a match");
@@ -360,7 +360,7 @@ static Action _ResetTracking_Cmd(int args)
 	return Plugin_Handled;
 }
 
-static Action _StartClientChecking_Cmd(int args)
+public Action _StartClientChecking_Cmd(int args)
 {
 	_StartTracking();
 

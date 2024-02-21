@@ -1,0 +1,107 @@
+"Phrases"
+{
+    "VOTE_DISPLAY_MSG"
+    {
+        "chi"    "开始进行mix（经验分队）"
+    }
+
+    "VOTE_END_MSG"
+    {
+        "chi"    "正在分队..."
+    }
+
+    "START_GET_INFO"
+    {
+        "chi"    "{green}开始获取mix成员的统计信息!"
+    }
+
+    "SHOW_ONE_RP"
+    {
+        "#format"    "{1:N},{2:i}"
+        "chi"        "{green}{1} 的经验分为 {2}!"
+    }
+
+    "CHECK_DONE"
+    {
+        "chi"    "{green}所有人全部检查完成，开始分队!"
+    }
+
+    "EXP_EQUATION"
+    {
+        "chi"    "Mix成员 经验评分 = 对抗胜率*(0.55*真实游戏时长+TANK石头命中数*每小时中石头数+T1武器击杀数*0.005*(1+单发霰弹枪击杀在T1武器击杀占比))"
+    }
+
+    "MIX_FINISH"
+    {
+        "chi"    "[{green}!{default}] {olive} 队伍分配完毕!"
+    }
+
+    "SUR_TOTAL_RP"
+    {
+        "#format"    "{1:i}"
+        "chi"        "生还方经验分为 {blue}{1}"
+    }
+
+    "INF_TOTAL_RP"
+    {
+        "#format"    "{1:i}"
+        "chi"        "特感方经验分为 {red}{1}"
+    }
+
+    "DIFF_RP"
+    {
+        "#format"    "{1:i}"
+        "chi"        "双方分差 {olive}{1}"
+    }
+
+    "HINT_CONSOLE"
+    {
+        "chi"    "[{green}!{default}] {olive}你可以查看控制台输出来获取每个人的经验信息!"
+    }
+
+    "FAIL_CANT_GET_ID"
+    {
+        "#format"    "{1:N},{2:i}"
+        "chi"        "{red}{1} 无法获取Steam64位ID，将以{2}分参与mix"
+    }
+
+    "FAIL_CANT_GET_INFO"
+    {
+        "#format"    "{1:N},{2:i}"
+        "chi"        "{red}{1} 获取游戏信息失败，将以{2}分参与mix"
+    }
+
+    "FAIL_PLAYER_HIDE_INFO_CONTINUE"
+    {
+        "#format"    "{1:N},{2:i}"
+        "chi"        "{red}{1} 未公开游戏详情，将以{2}分参与mix"
+    }
+
+    "FAIL_PLAYER_HIDE_INFO_STOP"
+    {
+        "#format"    "{1:N}"
+        "chi"        "{red}{1} 游戏详情获取失败，MIX停止。\n{default}[{green}!{default}] 请确保所有mix成员都已公开游戏信息。"
+    }
+
+    "FAIL_PLAYER_INFO_RETRY"
+	{
+        "#format"       "{1:N},{2:i}"
+		"chi"		    "查询 {1} 的游戏信息失败，正在重试（剩余 {2} 次）"
+	}
+    "MIXMETHOD_AVERAGE"
+    {
+        "chi"    "[{green}MIX{default}] {olive}分队算法将确保双方分差最小!"
+    }
+    "MIXMETHOD_BALANCE"
+    {
+        "chi"    "[{green}MIX{default}] {olive}分队算法将确保双方实力构成相似!"
+    }
+    "MIXMETHOD_SLOT"
+    {
+        "chi"    "[{green}MIX{default}] {olive}分队算法将确保双方至少有一个人可为喷子手，其他人将平均分配!"
+    }
+    "MIXMETHOD_FAIL"
+    {
+        "chi"    "[{green}MIX{default}] {olive}不符合MIX算法的执行条件, MIX终止, 请修改cvar {green}sm_mix_exp_type{default}!"
+    }
+}

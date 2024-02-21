@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"[{olive}Teamflip{default}]"
+	}
+	"FlippedSurvivor"
+	{
+		"chi"		"{green}%s{default}  随机挑选了一个队伍，是 {blue}幸存者{default} 队伍!"
+	}
+	"FlippedInfected"
+	{
+		"chi"		"{green}%s{default} 随机挑选了一个队伍，是 {red}感染者{default} 队伍!"
+	}
+	"Wait"
+	{
+		"chi"		"[Teamflip] 哇，伙计，慢点。至少要等 %d 秒。"
+	}
+}

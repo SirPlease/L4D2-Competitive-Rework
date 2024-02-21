@@ -1,0 +1,227 @@
+"Games"
+{
+	"#default"
+	{
+		"Offsets"
+		{
+			"OS"
+			{
+				"windows"	"1"
+				"linux"		"2"
+			}
+		}
+	}
+
+    "left4dead"
+    {
+		"Addresses"
+		{
+			"RoundRespawn"
+			{
+				"windows"
+				{
+					"signature"	"RoundRespawn"			
+				}
+				"linux"
+				{
+					"signature"	"RoundRespawn"
+				}
+			}
+			"NextBotCreatePlayerBot<SurvivorBot>"
+			{
+				"signature" "NextBotCreatePlayerBot<SurvivorBot>"
+			}
+		}
+
+		"Offsets"
+		{
+			"RoundRespawn_Offset"
+			{
+				"windows"		"15" // 0xF
+				"linux"			"35" // 0x23
+			}
+			"RoundRespawn_Byte" // JNZ => JNS
+			{
+				"windows"		"117" // 0x75
+				"linux"			"117" // 0x75
+			}
+		}
+		
+		"Signatures"
+		{
+			/* CTerrorPlayer::RoundRespawn(CTerrorPlayer *this) */
+			"RoundRespawn"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75\x07\x8B\xCE\xE8\x2A\x2A\x2A\x2A\xC6\x86"
+				/* ? ? ? ? ? ? ? ? E8 ? ? ? ? 84 C0 75 07 8B CE E8 ? ? ? ? C6 86 */
+				/* previous function in vtable has a string */
+			}
+			
+			/*  NextBotCreatePlayerBotSurvivorBot(const char *src) */
+			"NextBotCreatePlayerBot<SurvivorBot>"
+			{
+				"library"	"server"
+				"linux"		"@_Z22NextBotCreatePlayerBotI11SurvivorBotEPT_PKc"
+				"windows"	"\xE8\x2A\x2A\x2A\x2A\x8B\xF8\x83\xC4\x08\x3B\xFD\x74\x2A\x8B\x37"
+				/* E8 ? ? ? ? 8B F8 83 C4 08 3B FD 74 ? 8B 37 */
+				/* (addr+5) + *(addr+1) = call function addr -> this  signature into <CDirector::AddSurvivorBot> */
+				/* Sig. should point to "call" opcode E8, not to the func. start */
+			}
+			
+			/* CCSPlayer::State_Transition(CBaseEntity *, int) */
+			"State_Transition"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CCSPlayer16State_TransitionE13CSPlayerState"
+				"windows"	"\x56\x8B\x2A\x8B\x86\x0C\x12"
+				/* 56 8B ? 8B 86 0C 12 */
+			}
+			
+			/* CTerrorPlayer::BecomeGhost(CBaseEntity *, int, char) */
+			"BecomeGhost"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer11BecomeGhostE15ZombieClassTypeb"
+				"windows"	"\x83\xEC\x28\x53\x8B\x5C\x24\x34\x56\x53\x8B\xF1"
+				/* 83 EC 28 53 8B 5C 24 34 56 53 8B F1 */
+				/* Found by seq. of XRefs: String "round_start_pre_entity" in CTerrorGameRules::RestartRound => Director::OnRoundStart => ForEachPlayerZombie<RespawnPlayer> => Sub => CTerrorPlayer::BecomeGhost */
+			}
+			
+			/* SurvivorBot::SetHumanSpectator(SurvivorBot *this, CTerrorPlayer *) */
+			"SetHumanSpec"
+			{
+				"library"	"server"
+				"linux"		"@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
+				"windows"	"\x53\x8B\x2A\x83\xBB\x80\x2E"
+				/* 53 8B ? 83 BB 80 2E */
+			}
+			
+			/* CTerrorPlayer::TakeOverBot(CTerrorPlayer *this, bool) */
+			"TakeOverBot"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer11TakeOverBotEb"
+				"windows"	"\x81\xEC\x10\x02\x2A\x2A\x53"
+				/* 81 EC 10 02 ? ? 53 */
+			}
+			
+			/* not used */
+			/* CTerrorPlayer::TakeOverZombieBot(CTerrorPlayer *this, CTerrorPlayer *) */
+			"TakeOverZombieBot"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer17TakeOverZombieBotEPS_"
+				"windows"	"\x81\x2A\x08\x2A\x2A\x2A\x53\x55\x8B\xAC\x24\x14"
+				/* 81 ? 08 ? ? ? 53 55 8B AC 24 14 */
+			}
+			
+		}
+    }
+    
+    "left4dead2"
+    {
+		"Addresses"
+		{
+			"RoundRespawn"
+			{
+				"windows"
+				{
+					"signature"	"RoundRespawn"			
+				}
+				"linux"
+				{
+					"signature"	"RoundRespawn"
+				}
+			}
+			"NextBotCreatePlayerBot<SurvivorBot>"
+			{
+				"signature" "NextBotCreatePlayerBot<SurvivorBot>"
+			}
+		}
+
+		"Offsets"
+		{
+			"RoundRespawn_Offset"
+			{
+				"windows"		"15" // 0xF
+				"linux"			"25" // 0x19
+			}
+			"RoundRespawn_Byte" // JNZ => JNS
+			{
+				"windows"		"117" // 0x75
+				"linux"			"117" // 0x75
+			}
+		}
+		
+		"Signatures"
+		{
+			/* CTerrorPlayer::RoundRespawn(CTerrorPlayer *this) */
+			"RoundRespawn"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
+				"windows"	"\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75"
+				/* 56 8B F1 E8 ? ? ? ? E8 ? ? ? ? 84 C0 75	*/
+			}
+		
+			/* CTerrorPlayer::BecomeGhost(CTerrorPlayer *this, bool a2) */
+			"BecomeGhost"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer11BecomeGhostEb"
+				"windows"	"\x55\x8B\xEC\x53\x8B\x5D\x2A\x56\x53\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x84"
+				/* 55 8B EC 53 8B 5D ? 56 53 8B F1 E8 ? ? ? ? 84 */
+			}
+			
+			/* CCSPlayer::State_Transition(int a1, int a2) */
+			"State_Transition"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CCSPlayer16State_TransitionE13CSPlayerState"
+				"windows"	"\x55\x8B\xEC\x56\x8B\xF1\x8B\x86\x2A\x2A\x2A\x2A\x57\x8B\x7D\x2A\x85\xC0\x74\x2A\x83"
+				/* 55 8B EC 56 8B F1 8B 86 ? ? ? ? 57 8B 7D ? 85 C0 74 ? 83 */
+			}
+			
+			/*  NextBotCreatePlayerBotSurvivorBot(const char *src) */
+			"NextBotCreatePlayerBot<SurvivorBot>"
+			{	
+				"library"	"server"
+				"linux"		"@_Z22NextBotCreatePlayerBotI11SurvivorBotEPT_PKc"
+				"windows"	"\xE8\x2A\x2A\x2A\x2A\x83\xC4\x08\x85\xC0\x74\x1C\x8B\x10\x8B"
+				/* E8 ? ? ? ? 83 C4 08 85 C0 74 1C 8B 10 8B */
+				/* (addr+5) + *(addr+1) = call function addr -> this  signature into <CDirector::AddSurvivorBot> */
+				/* Sig. should point to "call" opcode E8, not to the func. start */
+			}
+			
+			/* SurvivorBot::SetHumanSpectator(SurvivorBot *__hidden this, CTerrorPlayer *) */
+			"SetHumanSpec"
+			{
+				"library"	"server"
+				"linux"		"@_ZN11SurvivorBot17SetHumanSpectatorEP13CTerrorPlayer"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x83\xBE\x2A\x2A\x2A\x2A\x00\x7E\x07\x32\xC0\x5E\x5D\xC2\x04\x00\x8B\x0D"
+				/* ? ? ? ? ? ? 83 BE ? ? ? ? 00 7E 07 32 C0 5E 5D C2 04 00 8B 0D */
+			}
+			
+			/* CTerrorPlayer::TakeOverBot(CTerrorPlayer *__hidden this, bool) */
+			"TakeOverBot"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer11TakeOverBotEb"
+				"windows"	"\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x56\x8D\x85"
+				/* 55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 33 C5 89 45 FC 53 56 8D 85 */
+			}
+			
+			/* not used */
+			/* CTerrorPlayer::TakeOverZombieBot(CTerrorPlayer *__hidden this, CTerrorPlayer *) */
+			"TakeOverZombieBot"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer17TakeOverZombieBotEPS_"
+				"windows"	"\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x53\x8B\x2A\x2A\x80"
+				/* 55 8B ? 81 ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 53 8B ? ? 80 */
+			}
+		}
+    }
+}

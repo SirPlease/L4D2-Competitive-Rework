@@ -1,0 +1,27 @@
+"Phrases"
+{
+	"VOTE_TITLE"
+	{
+		"en"			"Start random maps"
+	}
+    "VOTE_MESSAGE"
+	{
+		"en"			"Random map in progress"
+	}
+	"ANNOUNCE_MIXMAP_PREFIX"
+	{
+		"en"			"[{red}!{default}] mixmap queue: "
+	}
+	"HINT_SHOW_MAP_QUEUE"
+	{
+		"en" 			"Use {olive}!mixmap{default} to show again"
+	}
+	"QUEUE_NO_MAP"
+	{
+		"en"			"No mixmap!"
+	}
+	"CHANGE_TO_FIRST_MAP"
+	{
+		"en"			"[mix] After 5s change to the first map..."
+	}
+}

@@ -1,0 +1,13 @@
+"CountryShow"
+{
+	"messages"
+	{
+		"playerjoin"		"{GREEN}{PLAYERNAME} {DEFAULT}<{LIGHTGREEN}{STEAMID}{DEFAULT}> {GREEN}正在连接"
+		"playerdisc"		"{GREEN}{PLAYERNAME} {DEFAULT}<{LIGHTGREEN}{STEAMID}{DEFAULT}> {GREEN}离开游戏 ({DEFAULT}{DISC_REASON}{GREEN})"
+	}
+	"messages_admin"
+	{
+		"playerjoin"		"{GREEN}{PLAYERNAME} {DEFAULT}<{LIGHTGREEN}{STEAMID}{DEFAULT}> {GREEN}正在连接"
+		"playerdisc"		"{GREEN}{PLAYERNAME} {DEFAULT}<{LIGHTGREEN}{STEAMID}{DEFAULT}> {GREEN}离开游戏 ({DEFAULT}{DISC_REASON}{GREEN})"
+	}
+}

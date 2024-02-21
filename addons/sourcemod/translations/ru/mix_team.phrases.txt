@@ -1,0 +1,73 @@
+"Phrases"
+{
+	"BAD_ARGUMENT"
+	{
+		"#format"		"{1:s}"
+		"ru"			"Плохой аргумент {1} для микса. Используйте: {olive}!mix <type>"
+	}
+	
+	"NO_ARGUMENT"
+	{
+		"ru"			"Не выбран тип микса. Используйте: {olive}!mix <type>"
+	}
+
+	"CANT_CHANGE_TEAM"
+	{
+		"ru"			"{olive}Нельзя {default}менять команду {olive}во время микса"
+	}
+
+	"BAD_TEAM_SIZE"
+	{
+		"#format"		"{1:d}"
+		"ru"			"В команде недостаточно игроков. {olive}Необходимо {1} игрока(ов)"
+	}
+
+	"LEFT_READYUP"
+	{
+		"ru"			"Невозможно начать микс: {olive}доступно только во время ReadyUp"
+	}
+
+	"VOTE_COULDOWN"
+	{
+		"#format"		"{1:d}"
+		"ru"			"Сейчас голосование недоступно. Подождите {olive}{1} сек"
+	}
+	
+	"SECOND_HALF_OF_ROUND"
+	{
+		"ru"			"Невозможно начать микс: {olive}сейчас идёт вторая часть раунда"
+	}
+
+	"ROUND_LIVE"
+	{
+		"ru"			"Невозможно начать микс: {olive}раунд уже начался"
+	}
+
+	"CLIENT_LEAVE"
+	{
+		"#format"		"{1:N}"
+		"ru"			"Участник микса {olive}{1} {default}вышел. {olive}Откат микса"
+	}
+
+	"CANCEL_MIX_SUCCESS"
+	{
+		"#format"		"{1:N}"
+		"ru"			"Участник микса {olive}{1} {default}прервал микс"
+	}
+
+	"CANCEL_MIX_FAIL"
+	{
+		"#format"		"{1:d}"
+		"ru"			"Сейчас прерывание микса. Подождите {olive}{1} сек"
+	}
+	
+	"ALREADY_IN_PROGRESS"
+	{
+		"ru"			"Микс уже идёт!"
+	}
+
+	"UNSUPPORTED"
+	{
+		"ru" 			"NativeVotes не может создать голосование"
+	}
+}

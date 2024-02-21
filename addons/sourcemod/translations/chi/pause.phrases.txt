@@ -1,0 +1,144 @@
+"Phrases"
+{
+// The following uses bracket style color tags (see colors.inc)
+	"ClientFullyLoaded"
+	{
+		"chi"		"{default}[{green}!{default}] {olive}%N {default}已加载完毕"
+	}
+	
+	"PauseCommand"
+	{
+		"chi"		"{default}[{green}!{default}] {olive}%N {blue}提出暂停{default}"
+	}
+	
+	"PauseAction"
+	{
+		"chi"		"{default}[{green}!{default}] {red}游戏暂停"
+	}
+	
+	"PauseDelay"
+	{
+		"chi"		"{default}[{green}!{default}] {blue}游戏即将暂停{default}：{olive}%d"
+	}
+	
+	"PauseDeferred"
+	{
+		"chi"		"{default}[{green}!{default}] {red}由于有生还者正在被救起，暂停因此顺延！"
+	}
+	
+	"ForcePause"
+	{
+		"chi"		"{default}[{green}!{default}] {blue}管理员 {default}({olive}%N{default}) {green}强制游戏暂停"
+	}
+	
+	"ForceUnpause"
+	{
+		"chi"		"{default}[{green}!{default}] {blue}管理员 {default}({olive}%N{default}) {green}强制游戏暂停恢复"
+	}
+	
+	"UnpauseSurvivors"
+	{
+		"chi"		"{default}[{green}!{default}] {olive}%N {default}代表{blue}生还者{default}准备好了"
+	}
+	
+	"UnpauseSurvivorInitiator"
+	{
+		"chi"		"{default}[{green}!{default}] {olive}%N {default}作为{green}发起人{default}代表{blue}生还者{default}准备好了"
+	}
+	
+	"UnpauseInfected"
+	{
+		"chi"		"{default}[{green}!{default}] {olive}%N {default}代表{red}感染者{default}准备好了"
+	}
+	
+	"UnpauseInfectedInitiator"
+	{
+		"chi"		"{default}[{green}!{default}] {olive}%N {default}作为{green}发起人{default}代表{red}感染者{default}准备好了"
+	}
+	
+	"UnpauseInitiator"
+	{
+		"chi"		"{default}[{green}!{default}] {olive}%N {default}代表{green}发起人{default}准备好了"
+	}
+	
+	"UnpauseAdminConfirm"
+	{
+		"chi"		"{default}[{green}!{default}] {olive}双方阵营{default}已经准备好了。等待{blue}管理员{green}确认{default}。"
+	}
+	
+	"UnreadySurvivors"
+	{
+		"chi"		"{default}[{green}!{default}] {olive}%N {default}代表{blue}生还者{default}取消准备"
+	}
+	
+	"UnreadySurvivorInitiator"
+	{
+		"chi"		"{default}[{green}!{default}] {olive}%N {default}作为{green}发起人{default}代表{blue}生还者{default}取消准备"
+	}
+	
+	"UnreadyInfected"
+	{
+		"chi"		"{default}[{green}!{default}] {olive}%N {default}代表{red}感染者{default}取消准备"
+	}
+	
+	"UnreadyInfectedInitiator"
+	{
+		"chi"		"{default}[{green}!{default}] {olive}%N {default}作为{green}发起人{default}代表{red}感染者{default}取消准备"
+	}
+	
+	"UnreadyInitiator"
+	{
+		"chi"		"{default}[{green}!{default}] {olive}%N {default}代表{green}发起人{default}取消准备"
+	}
+	
+	"PausePreventSpawn"
+	{
+		"chi"		"{default}[{green}!{default}] {default}由于游戏暂停，你不能{red}复活"
+	}
+	
+	"PanelHide"
+	{
+		"chi"		"[{olive}Pause{default}] 准备面板已 {red}关闭"
+	}
+	
+	"PanelShow"
+	{
+		"chi"		"[{olive}Pause{default}] 准备面板已 {blue}开启"
+	}
+	
+	"CountdownCancelNotify"
+	{
+		"chi"		"{default}[{green}!{default}] 输入 {olive}!unready {default}取消暂停恢复"
+	}
+	
+	"CountdownReadyDelay"
+	{
+		"chi"		"{default}[{green}!{default}] {blue}暂停即将恢复{default}：{olive}%d{default}..."
+	}
+	
+	"CountdownCancelled"
+	{
+		"chi"		"{default}[{green}!{default}] {teamcolor}%N {green}中止了倒数！"
+	}
+	
+	"CallvoteNoSpec"
+	{
+		"chi"		"{blue}[{green}!{blue}] {default}旁观不可以投票。"
+	}
+	
+	"CallvoteNoExploit"
+	{
+		"chi"		"{blue}[{green}!{blue}] {default}由于你刚刚转换了阵营，短时间内你不能投票。"
+	}
+	
+	"CallvoteCannotTargetAdmin"
+	{
+		"chi"		"{blue}[{green}!{blue}] {default}你不能踢出管理员。"
+	}
+	
+// The following are not allowed to use any color tag
+	"GameisLive"
+	{
+		"chi"		"比赛开始！"
+	}
+}

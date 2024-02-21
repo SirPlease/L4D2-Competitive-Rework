@@ -1,0 +1,26 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"en"		"<{olive}Horde{default}>"
+		"chi"		"<{olive}尸潮事件{default}>"
+	}
+
+	"NoCommonRemaining"
+	{
+		"en"		"{red}No {default}common remaining!"
+		"chi"		"{red}没有{default}剩余小丧尸!"
+	}
+
+	"CommonRemaining"
+	{
+		"en"		"{red}%i {default}common remaining.."
+		"chi"		"{default}还剩{red}%i{default}个.."
+	}
+
+	"EventStart"
+	{
+		"en"		"A {blue}finite event{default} of {olive}%i{default} commons has started! Rush or wait it out, the choice is yours!"
+		"chi"		"一个有{olive}%i{default}个小丧尸的{blue}有限尸潮事件{default}已开始! 冲或守, 决定权在于你们!"
+	}
+}

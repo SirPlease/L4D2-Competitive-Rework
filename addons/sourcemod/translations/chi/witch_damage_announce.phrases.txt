@@ -1,0 +1,66 @@
+"Phrases"
+{
+	"FailWitchCrown"
+	{
+		"#format"	"{1:N}"
+		"chi"		"{default}[{green}!{default}] {red}{1} {default}({olive}秒妹失败{default}) ，被 {red}Witch {default}挠倒了"
+	}
+	"TankKillWitch"
+	{
+		"#format"	"{1:N}"
+		"chi"		"{default}[{green}!{default}] {red}Tank {default}({olive}{1}{default}) 杀死了 {red}Witch"
+	}
+	
+	"WitchRemainedHealth"
+	{
+		"#format"	"{1:d}"
+		"chi"		"{default}[{green}!{default}] {blue}Witch {default}还剩下 {olive}{1} {default}点血"
+	}
+
+	"DamageToWitch"
+	{
+		"chi"		"{default}[{green}!{default}] 对{blue}女巫{default}产生的{blue}伤害"
+	}
+	
+	"PrefectWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"chi"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3} ★★"
+	}
+
+	"FinalShotWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"chi"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3} ★"
+	}
+
+	"AssistanceWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"chi"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3}"
+	}
+
+	"FinalShotInfWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"chi"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}感染者 {olive} ☆"
+	}
+
+	"AssistanceInfWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"chi"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}感染者"
+	}
+
+	"FinalShotTankWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"chi"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}Tank {olive} ☆"
+	}
+
+	"AssistanceTankWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"chi"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}Tank"
+	}
+}

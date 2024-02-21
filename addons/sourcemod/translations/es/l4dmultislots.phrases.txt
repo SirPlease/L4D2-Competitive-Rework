@@ -1,0 +1,37 @@
+// spanish language by hckr
+
+"Phrases"
+{
+    "A surviving Bot was added."
+    {
+        "es" "Se añadió un Bot sobreviviente."
+    }
+    "Impossible to generate a bot at the moment."
+    {
+        "es" "Imposible generar un bot en este momento."
+    }
+    "Please wait to be revived or rescued"
+    {
+        "es" "Por favor, espera a ser revivido o rescatado."
+    }
+    "You are idle. press the left mouse button to join the survivors!"
+    {
+        "es" "Estás ocioso. ¡Presiona el botón izquierdo del ratón para unirte a los supervivientes!"
+    }
+    "You are already on the team of survivors."
+    {
+        "es" "Ya estás en el equipo de sobrevivientes."
+    }
+    "Type in chat !join To join the survivors"
+    {
+        "es" "Escribe en el chat {olive}!join{default} para unirse a los supervivientes."
+    }
+    "The survivors has started the game, please wait to be resurrected or rescued"
+    {
+        "es" "Los sobrevivientes han comenzado el juego, por favor espere a ser resucitado o rescatado."
+    }
+    "No Bots for replacement."
+    {
+        "es" "No hay bots de reemplazo."
+    }
+} 
