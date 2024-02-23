@@ -27,7 +27,7 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
     convarDebug = CreateConVar("l4d2_tank_flying_incap_debug", "0", "Are we debugging?");
-    convarAnim = CreateConVar("l4d2_tank_flying_incap_anim_fix", "1", "Remove the getting-up animation at the end of fly. (NOTE: Survivors will be able to shoot as soon as they land.)");
+    convarAnim = CreateConVar("l4d2_tank_flying_incap_anim_fix", "0", "Remove the getting-up animation at the end of fly. (NOTE: Survivors will be able to shoot as soon as they land.)");
     bDebug = convarDebug.BoolValue;
     bAnim = convarAnim.BoolValue;
     convarDebug.AddChangeHook(CvarsChanged);
