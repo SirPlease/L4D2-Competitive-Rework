@@ -76,18 +76,27 @@ void NextFrame_HookAnimation(int userid)
 
 Action AnimHook_PunchFly(int client, int &activity)
 {
-    if (bDebug)
+    static int last = 0;
+
+    if (bDebug && last != activity)
     {
         if (activity < 0) activity = 0;
 
-        char curActName[64];
+        char curActName[64], lastActName[64];
         AnimGetActivity(activity, curActName, sizeof(curActName));
-        PrintToChatAll("[FlyingIncap]: (%.1f) (%N) \x05%s", GetGameTime(), client, curActName);
+        AnimGetActivity(last, lastActName, sizeof(lastActName));
+        PrintToChatAll("\x01[FlyingIncap]: (%.1f) (%N) [\x05%s\x01] [\x04%s\x01]", GetGameTime(), client, curActName, lastActName);
+
+        last = activity;
     }
 
     switch (activity)
     {
-    case L4D2_ACT_TERROR_HIT_BY_TANKPUNCH, L4D2_ACT_TERROR_IDLE_FALL_FROM_TANKPUNCH, L4D2_ACT_TERROR_JUMP_LANDING, L4D2_ACT_TERROR_JUMP_LANDING_HARD:
+    case L4D2_ACT_TERROR_HIT_BY_TANKPUNCH,
+            L4D2_ACT_TERROR_IDLE_FALL_FROM_TANKPUNCH,
+            L4D2_ACT_TERROR_JUMP_LANDING,
+            L4D2_ACT_TERROR_JUMP_LANDING_HARD,
+	        L4D2_ACT_DEPLOY_PISTOL:
         {
             return Plugin_Continue;
         }
