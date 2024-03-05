@@ -35,7 +35,7 @@ public Plugin myinfo =
     name = "Pause plugin",
     author = "CanadaRox, Sir, Forgetest",
     description = "Adds pause functionality without breaking pauses, also prevents SI from spawning because of the Pause.",
-    version = "6.7",
+    version = "6.7.1",
     url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -53,8 +53,8 @@ Handle
 ConVar
     onlyEnableForce,
     pauseDelayCvar,
+    unpauseDelayCvar,
     initiatorReadyCvar,
-    l4d_ready_delay,
     pauseLimitCvar,
     serverNamerCvar;
 
@@ -63,8 +63,8 @@ Handle
     readyCountdownTimer,
     deferredPauseTimer;
 int
-    readyDelay,
-    pauseDelay;
+    pauseDelay,
+    unpauseDelay;
 bool
     isPaused,
     RoundEnd,
@@ -110,9 +110,9 @@ public void OnPluginStart()
     LoadTranslations("pause.phrases");
     onlyEnableForce = CreateConVar("sm_onlyforce", "0", "Only allow for force pause and unpause functionality");
     pauseDelayCvar = CreateConVar("sm_pausedelay", "0", "Delay to apply before a pause happens.  Could be used to prevent Tactical Pauses", FCVAR_NONE, true, 0.0);
+    unpauseDelayCvar = CreateConVar("sm_unpausedelay", "3", "Delay to apply before an unpause happens.", FCVAR_NONE, true, 0.0);
     initiatorReadyCvar = CreateConVar("sm_initiatorready", "0", "Require or not the pause initiator should ready before unpausing the game", FCVAR_NONE, true, 0.0);
     pauseLimitCvar = CreateConVar("sm_pauselimit", "0", "Limits the amount of pauses a player can do in a single game. Set to 0 to disable.", FCVAR_NONE, true, 0.0);
-    l4d_ready_delay = FindConVar("l4d_ready_delay");
 	
     playerPauseCount = new StringMap();
 
@@ -690,14 +690,14 @@ void InitiateLiveCountdown()
     if (readyCountdownTimer == null)
     {
         CPrintToChatAll("%t %t", "Tag", "CountdownCancelNotify");
-        readyDelay = l4d_ready_delay.IntValue;
+        unpauseDelay = unpauseDelayCvar.IntValue;
         readyCountdownTimer = CreateTimer(1.0, ReadyCountdownDelay_Timer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
     }
 }
 
 public Action ReadyCountdownDelay_Timer(Handle timer)
 {
-    if (readyDelay == 0)
+    if (unpauseDelay == 0)
     {
         Unpause();
         PrintHintTextToAll("%t", "GameisLive");
@@ -705,8 +705,8 @@ public Action ReadyCountdownDelay_Timer(Handle timer)
     }
     else
     {
-        CPrintToChatAll("%t %t", "Tag", "CountdownReadyDelay", readyDelay);
-        readyDelay--;
+        CPrintToChatAll("%t %t", "Tag", "CountdownReadyDelay", unpauseDelay);
+        unpauseDelay--;
     }
     return Plugin_Continue;
 }
