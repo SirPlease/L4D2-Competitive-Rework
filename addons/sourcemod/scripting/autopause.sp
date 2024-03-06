@@ -23,24 +23,28 @@
 #include <colors>
 
 #undef REQUIRE_PLUGIN
+#include "pause"
 #include "readyup"
 
 public Plugin:myinfo =
 {
     name = "L4D2 Auto-pause",
-    author = "Darkid, Griffin",
+    author = "Darkid, Griffin, StarterX4",
     description = "When a player disconnects due to crash, automatically pause the game. When they rejoin, give them a correct spawn timer.",
-    version = "2.0",
+    version = "2.1",
     url = "https://github.com/jbzdarkid/AutoPause"
 }
 
 new Handle:g_hCvarEnabled;
 new Handle:g_hCvarForce;
 new Handle:g_hCvarApdebug;
+new Handle:g_hCvarForceUnPause;
 
 new Handle:crashedPlayers;
+new Handle:generalCrashers
 new Handle:infectedPlayers;
 new Handle:survivorPlayers;
+new bool:IsPauseAvailable;
 new bool:readyUpIsAvailable;
 new bool:RoundEnd;
 
@@ -49,8 +53,10 @@ public OnPluginStart() {
     g_hCvarEnabled = CreateConVar("autopause_enable", "1", "Whether or not to automatically pause when a player crashes.");
     g_hCvarForce = CreateConVar("autopause_force", "0", "Whether or not to force pause when a player crashes.");
     g_hCvarApdebug = CreateConVar("autopause_apdebug", "0", "Whether or not to debug information.");
+    g_hCvarForceUnPause = CreateConVar("autopause_forceunpause", "0", "Whether or not to force unpause when a crashed player rejoins.");
 
     crashedPlayers = CreateTrie();
+    generalCrashers = CreateArray(64);
     infectedPlayers = CreateArray(64);
     survivorPlayers = CreateArray(64);
 
@@ -63,20 +69,24 @@ public OnPluginStart() {
 public OnAllPluginsLoaded()
 {
     readyUpIsAvailable = LibraryExists("readyup");
+    IsPauseAvailable = LibraryExists("pause");
 }
 
 public OnLibraryRemoved(const String:name[])
 {
     if (StrEqual(name, "readyup")) readyUpIsAvailable = false;
+    if (StrEqual(name, "pause")) IsPauseAvailable = false;
 }
 
 public OnLibraryAdded(const String:name[])
 {
     if (StrEqual(name, "readyup")) readyUpIsAvailable = true;
+    if (StrEqual(name, "pause")) IsPauseAvailable = true;
 }
 
 public round_start(Handle:event, const String:name[], bool:dontBroadcast) {
     ClearTrie(crashedPlayers);
+    ClearArray(generalCrashers);
     ClearArray(infectedPlayers);
     ClearArray(survivorPlayers);
     RoundEnd = false;
@@ -97,7 +107,7 @@ public playerTeam(Handle:event, const String:name[], bool:dontBroadcast) {
     new newTeam = GetEventInt(event, "team");
 
     new index = FindStringInArray(infectedPlayers, steamId);
-    new survindex = FindStringInArray(infectedPlayers, steamId);
+    new survindex = FindStringInArray(survivorPlayers, steamId);
     if (oldTeam == 3) {
         if (index != -1) RemoveFromArray(infectedPlayers, index);
         if (GetConVarBool(g_hCvarApdebug)) LogMessage("[AutoPause] Removed player %s from infected team.", steamId);
@@ -157,6 +167,11 @@ public playerDisconnect(Handle:event, const String:name[], bool:dontBroadcast) {
                 FakeClientCommand(client, "sm_pause");
             }
             CPrintToChatAll("{blue}[{default}AutoPause{blue}] {olive}%s {default}crashed.", playerName);
+
+            // General crashed players array (for autounpause)
+            if (FindStringInArray(generalCrashers, steamId) == -1) {
+                PushArrayString(generalCrashers, steamId);
+            }
         }
     }
 
@@ -168,6 +183,31 @@ public playerDisconnect(Handle:event, const String:name[], bool:dontBroadcast) {
             timeLeft = CTimer_GetRemainingTime(spawnTimer);
             LogMessage("[AutoPause] Player %s left the game with %f time until spawn.", steamId, timeLeft);
             SetTrieValue(crashedPlayers, steamId, timeLeft);
+        }
+    }
+}
+
+public void OnClientPutInServer(int client)
+{
+    if (IsPauseAvailable && IsInPause())
+    {
+        if (client <= 0 || client > MaxClients) return;
+        decl String:steamId[64];
+        GetClientAuthId(client, AuthId_Steam2, steamId, sizeof(steamId));
+        if (strcmp(steamId, "BOT") == 0) return;
+        // Give up on strangers.
+        if (FindStringInArray(infectedPlayers, steamId) == -1 && 
+            FindStringInArray(survivorPlayers, steamId) == -1 && 
+            FindStringInArray(generalCrashers, steamId) == -1) return;
+
+        if (!IsFakeClient(client))
+        { // Enabling forced Pause also turns forced Unpause on.
+            if (GetConVarBool(g_hCvarForceUnPause) || GetConVarBool(g_hCvarForce))
+            {
+                ServerCommand("sm_forceunpause");
+                if (GetConVarBool(g_hCvarApdebug)) LogMessage("Player %s rejoined. Forced Unpause got invoked.", client);
+            }
+            RemoveFromArray(generalCrashers, FindStringInArray(generalCrashers, steamId));
         }
     }
 }
