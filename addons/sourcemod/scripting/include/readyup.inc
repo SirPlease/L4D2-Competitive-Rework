@@ -54,6 +54,28 @@ forward void OnRoundIsLivePre();
 forward void OnRoundIsLive();
 
 /**
+ * Called when the live countdown has been cancelled
+ * 
+ * @param client 			The client index.
+ * @param sDisruptReason 	The reason why cancel the live countdown
+ */
+forward void OnReadyCountdownCancelled(int client, char sDisruptReason);
+
+/**
+ * Called when client is ready
+ * 
+ * @param client 			The client index.
+ */
+forward void OnPlayerReady(int client);
+
+/**
+ * Called when client is unready
+ * 
+ * @param client 			The client index.
+ */
+forward void OnPlayerUnready(int client);
+
+/**
  * Returns the index of a item in the footer array.
  * Does not have to be exact. The footer only needs to contain the input, does not need to match.
  *
