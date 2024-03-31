@@ -1,29 +1,12 @@
-/*
-	SourcePawn is Copyright (C) 2006-2015 AlliedModders LLC.  All rights reserved.
-	SourceMod is Copyright (C) 2006-2015 AlliedModders LLC.  All rights reserved.
-	Pawn and SMALL are Copyright (C) 1997-2015 ITB CompuPhase.
-	Source is Copyright (C) Valve Corporation.
-	All trademarks are property of their respective owners.
-
-	This program is free software: you can redistribute it and/or modify it
-	under the terms of the GNU General Public License as published by the
-	Free Software Foundation, either version 3 of the License, or (at your
-	option) any later version.
-
-	This program is distributed in the hope that it will be useful, but
-	WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-	General Public License for more details.
-
-	You should have received a copy of the GNU General Public License along
-	with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
 #include <sourcemod>
 #include <left4dhooks>
 #include <colors>
 
 #undef REQUIRE_PLUGIN
 #include "readyup"
+
+#define L4D2_TEAM_SURVIVOR 2
+#define L4D2_TEAM_INFECTED 3
 
 public Plugin:myinfo =
 {
@@ -41,8 +24,9 @@ new Handle:g_hCvarApdebug;
 new Handle:crashedPlayers;
 new Handle:infectedPlayers;
 new Handle:survivorPlayers;
+
 new bool:readyUpIsAvailable;
-new bool:RoundEnd;
+new bool:roundEnd;
 
 public OnPluginStart() {
     // Suggestion by Nati: Disable for any 1v1
@@ -54,10 +38,10 @@ public OnPluginStart() {
     infectedPlayers = CreateArray(64);
     survivorPlayers = CreateArray(64);
 
-    HookEvent("round_start", round_start);
-    HookEvent("round_end", round_end);
-    HookEvent("player_team", playerTeam);
-    HookEvent("player_disconnect", playerDisconnect, EventHookMode_Pre);
+    HookEvent("round_start", RoundStart_Event);
+    HookEvent("round_end", RoundEnd_Event);
+    HookEvent("player_team", PlayerTeam_Event);
+    HookEvent("player_disconnect", PlayerDisconnect_Event, EventHookMode_Pre);
 }
 
 public OnAllPluginsLoaded()
@@ -67,86 +51,109 @@ public OnAllPluginsLoaded()
 
 public OnLibraryRemoved(const String:name[])
 {
-    if (StrEqual(name, "readyup")) readyUpIsAvailable = false;
+    if (StrEqual(name, "readyup")) 
+        readyUpIsAvailable = false;
 }
 
 public OnLibraryAdded(const String:name[])
 {
-    if (StrEqual(name, "readyup")) readyUpIsAvailable = true;
+    if (StrEqual(name, "readyup")) 
+        readyUpIsAvailable = true;
 }
 
-public round_start(Handle:event, const String:name[], bool:dontBroadcast) {
+public RoundStart_Event(Handle:event, const String:name[], bool:dontBroadcast) {
     ClearTrie(crashedPlayers);
     ClearArray(infectedPlayers);
     ClearArray(survivorPlayers);
-    RoundEnd = false;
+    roundEnd = false;
 }
 
-public round_end(Handle:event, const String:name[], bool:dontBroadcast) {
-    RoundEnd = true;
+public RoundEnd_Event(Handle:event, const String:name[], bool:dontBroadcast) {
+    roundEnd = true;
 }
 
-// Handles players leaving and joining the infected team.
-public playerTeam(Handle:event, const String:name[], bool:dontBroadcast) {
+public PlayerTeam_Event(Handle:event, const String:name[], bool:dontBroadcast) {
     new client = GetClientOfUserId(GetEventInt(event, "userid"));
-    if (client <= 0 || client > MaxClients) return;
+    if (client <= 0 || client > MaxClients) 
+        return;
+
     decl String:steamId[64];
     GetClientAuthId(client, AuthId_Steam2, steamId, sizeof(steamId));
-    if (strcmp(steamId, "BOT") == 0) return;
-    new oldTeam = GetEventInt(event, "oldteam");
-    new newTeam = GetEventInt(event, "team");
+    if (strcmp(steamId, "BOT") == 0) 
+        return;
 
-    new index = FindStringInArray(infectedPlayers, steamId);
-    new survindex = FindStringInArray(infectedPlayers, steamId);
-    if (oldTeam == 3) {
-        if (index != -1) RemoveFromArray(infectedPlayers, index);
-        if (GetConVarBool(g_hCvarApdebug)) LogMessage("[AutoPause] Removed player %s from infected team.", steamId);
+    new infectedIndex = FindStringInArray(infectedPlayers, steamId);
+    if (infectedIndex != -1) {
+        RemoveFromArray(infectedPlayers, infectedIndex);
+
+        if (GetConVarBool(g_hCvarApdebug)) 
+            LogMessage("[AutoPause] Removed player %s from infected team.", steamId);
     }
-    else if (oldTeam == 2) {
-        if (survindex != -1) RemoveFromArray(survivorPlayers, survindex);
-        if (GetConVarBool(g_hCvarApdebug)) LogMessage("[AutoPause] Removed player %s from survivor team.", steamId);
+
+    new survivorIndex = FindStringInArray(survivorPlayers, steamId);
+    if (survivorIndex != -1) {
+        RemoveFromArray(survivorPlayers, survivorIndex);
+
+        if (GetConVarBool(g_hCvarApdebug)) 
+            LogMessage("[AutoPause] Removed player %s from survivor team.", steamId);
     }
-    if (newTeam == 3) {
+
+    new team = GetEventInt(event, "team");
+
+    if (team == L4D2_TEAM_SURVIVOR) {
+        PushArrayString(survivorPlayers, steamId);
+
+        if (GetConVarBool(g_hCvarApdebug)) 
+            LogMessage("[AutoPause] Added player %s to survivor team.", steamId);
+
+        return;
+    }
+
+    if (team == L4D2_TEAM_INFECTED) {
+        PushArrayString(infectedPlayers, steamId);
+
+        if (GetConVarBool(g_hCvarApdebug)) 
+            LogMessage("[AutoPause] Added player %s to infected team.", steamId);
+
         decl Float:spawnTime;
         if (GetTrieValue(crashedPlayers, steamId, spawnTime)) {
             new CountdownTimer:spawnTimer = L4D2Direct_GetSpawnTimer(client);
             CTimer_Start(spawnTimer, spawnTime);
             RemoveFromTrie(crashedPlayers, steamId);
             LogMessage("[AutoPause] Player %s rejoined, set spawn timer to %f.", steamId, spawnTime);
-        } else if (index == -1) {
-            PushArrayString(infectedPlayers, steamId);
-            if (GetConVarBool(g_hCvarApdebug)) LogMessage("[AutoPause] Added player %s to infected team.", steamId);
         }
-    }
-    else if (newTeam == 2 && survindex == -1) {
-        PushArrayString(survivorPlayers, steamId);
-        if (GetConVarBool(g_hCvarApdebug)) LogMessage("[AutoPause] Added player %s to survivor team.", steamId);
     }
 }
 
-public playerDisconnect(Handle:event, const String:name[], bool:dontBroadcast) {
+public PlayerDisconnect_Event(Handle:event, const String:name[], bool:dontBroadcast) {
     new client = GetClientOfUserId(GetEventInt(event, "userid"));
-    if (client <= 0 || client > MaxClients) return;
+    if (client <= 0 || client > MaxClients) 
+        return;
+
     decl String:steamId[64];
     GetClientAuthId(client, AuthId_Steam2, steamId, sizeof(steamId));
-    if (strcmp(steamId, "BOT") == 0) return;
+    if (strcmp(steamId, "BOT") == 0) 
+        return;
 
-    // Player wasn't actually a gamer, ignore
-    if (FindStringInArray(infectedPlayers, steamId) == -1 && FindStringInArray(survivorPlayers, steamId) == -1) return;
+    if (FindStringInArray(infectedPlayers, steamId) == -1 && FindStringInArray(survivorPlayers, steamId) == -1)
+        return;
 
     decl String:reason[128];
     GetEventString(event, "reason", reason, sizeof(reason));
+
     decl String:playerName[128];
     GetEventString(event, "name", playerName, sizeof(playerName));
+
     decl String:timedOut[256];
     Format(timedOut, sizeof(timedOut), "%s timed out", playerName);
 
-    if (GetConVarBool(g_hCvarApdebug)) LogMessage("[AutoPause] Player %s (%s) left the game: %s", playerName, steamId, reason);
+    if (GetConVarBool(g_hCvarApdebug)) 
+        LogMessage("[AutoPause] Player %s (%s) left the game: %s", playerName, steamId, reason);
 
     // If the leaving player crashed, pause.
     if (strcmp(reason, timedOut) == 0 || strcmp(reason, "No Steam logon") == 0)
     {
-        if ((!readyUpIsAvailable || !IsInReady()) && !RoundEnd && GetConVarBool(g_hCvarEnabled)) 
+        if ((!readyUpIsAvailable || !IsInReady()) && !roundEnd && GetConVarBool(g_hCvarEnabled)) 
         {
             if (GetConVarBool(g_hCvarForce)) 
             {
