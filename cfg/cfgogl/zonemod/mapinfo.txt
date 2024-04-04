@@ -2333,22 +2333,14 @@
 				"min"		"56"
 				"max"		"99"
 			}
-			"ItemLimits"
-			{
-				"pain_pills"	"3"
-			}
+		}
+		"ItemLimits"
+		{
+			"pain_pills"	"3"
 		}
 	}
 	"l4d2_ff05_station"
 	{
-		"tank_ban_flow"
-		{
-			"Elevator"
-			{
-				"min"		"55"
-				"max"		"75"
-			}
-		}
 		"ItemLimits"
 		{
 			"pain_pills"	"4"
