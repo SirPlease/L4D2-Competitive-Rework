@@ -2325,7 +2325,7 @@
 	"l4d2_ff04_plant"
 	{
 		"max_distance"		"600"
-		"horde_limit"		"200"
+		"horde_limit"		"150"
 		"tank_ban_flow"
 		{
 			"Alarm event"
