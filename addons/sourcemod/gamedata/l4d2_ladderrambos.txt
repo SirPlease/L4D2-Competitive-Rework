@@ -80,9 +80,9 @@
 				}
 				"windows"
 				{
-					"offset"		"47"
+					"offset"		"2Fh"
 					"verify"		"\x74"
-					"patch"			"\x5E\xC3" //pop and ret at jnz
+					"patch"			"\xEB" //jmp instead of jz
 				}
 			}
 			"CTerrorPlayer::OnLadderDismount__WeaponDeploy_patch" //stops the WeaponDeploy call
@@ -138,8 +138,8 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer13OnLadderMountEv"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x8B\xCE\xE8\x2A\x2A\x2A\x2A\x6A\x2A\x8B"
-						/* ? ? ? ? ? ? 8B F1 E8 ? ? ? ? 8B CE E8 ? ? ? ? 6A ? 8B */
+				"windows"	"\x56\x68\x2A\x2A\x2A\x2A\x8B\xF1\xE8\x2A\x2A\x2A\x2A\x8B\xCE\xE8"
+						/* 56 68 ? ? ? ? 8B F1 E8 ? ? ? ? 8B CE E8 */
 						/* XREF from function CTerrorPlayer::PlayerRunCommand search string "CTerrorPlayer::PlayerRunCommand" */
 			}
 			"CTerrorPlayer::OnLadderDismount"
