@@ -201,6 +201,8 @@ void MatchSurvivor(ArrayList clients, int survivorCharacter)
 	int type;
 	bool matched;
 
+	if( !g_bLeft4Dead2 ) survivorCharacter -= 4;
+
 	for( int i = 1; i <= MaxClients; i++ )
 	{
 		if( IsClientInGame(i) && GetClientTeam(i) == 2 )
@@ -228,8 +230,6 @@ void MatchSurvivor(ArrayList clients, int survivorCharacter)
 				if( type == survivorCharacter )
 					matched = true;
 			} else {
-				survivorCharacter -= 4;
-
 				if( GetEntProp(i, Prop_Send, "m_survivorCharacter") == survivorCharacter )
 					matched = true;
 			}

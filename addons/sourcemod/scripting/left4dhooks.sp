@@ -18,8 +18,8 @@
 
 
 
-#define PLUGIN_VERSION		"1.142"
-#define PLUGIN_VERLONG		1142
+#define PLUGIN_VERSION		"1.146"
+#define PLUGIN_VERLONG		1146
 
 #define DEBUG				0
 // #define DEBUG			1	// Prints addresses + detour info (only use for debugging, slows server down).
@@ -886,6 +886,21 @@ int Native_CTerrorGameRules_IsGenericCooperativeMode(Handle plugin, int numParam
 
 int Native_Internal_IsCoopMode(Handle plugin, int numParams) // Native "L4D_IsCoopMode"
 {
+	if( g_iCurrentMode == GAMEMODE_COOP && g_bLeft4Dead2 )
+	{
+		if( !g_bMapStarted )
+		{
+			ThrowNativeError(SP_ERROR_NOT_RUNNABLE, NATIVE_TOO_EARLY, "L4D_IsCoopMode");
+			return false;
+		}
+
+		ValidateAddress(g_pGameRules, "g_pGameRules");
+		ValidateNatives(g_hSDK_CTerrorGameRules_IsRealismMode, "CTerrorGameRules::IsRealismMode");
+
+		//PrintToServer("#### CALL g_hSDK_CTerrorGameRules_IsRealismMode");
+		return SDKCall(g_hSDK_CTerrorGameRules_IsRealismMode, g_pGameRules) == false;
+	}
+
 	return g_iCurrentMode == GAMEMODE_COOP;
 }
 
@@ -943,9 +958,13 @@ public void OnMapEnd()
 		}
 	}
 
-	// Reset hooks
-	g_iAnimationHookedClients.Clear();
-	g_iAnimationHookedPlugins.Clear();
+	// Reset hooks - Clear causes memory leaks, delete and re-create
+	// g_iAnimationHookedClients.Clear();
+	// g_iAnimationHookedPlugins.Clear();
+	delete g_iAnimationHookedClients;
+	delete g_iAnimationHookedPlugins;
+	g_iAnimationHookedClients = new ArrayList();
+	g_iAnimationHookedPlugins = new ArrayList(2);
 
 	// Remove all hooked functions from private forward
 	Handle hIter = GetPluginIterator();
@@ -1093,8 +1112,7 @@ int Native_AnimHookDisable(Handle plugin, int numParams) // Native "AnimHookDisa
 	int entity;
 
 	// Loop through all anim hooks
-	int length = g_iAnimationHookedPlugins.Length;
-	for( int i = 0; i < length; i++ )
+	for( int i = g_iAnimationHookedPlugins.Length-1; i >= 0; i-- )
 	{
 		// Get hooked plugin handle
 		target = g_iAnimationHookedPlugins.Get(i, 0);
@@ -1109,8 +1127,6 @@ int Native_AnimHookDisable(Handle plugin, int numParams) // Native "AnimHookDisa
 			if( client == entity )
 			{
 				g_iAnimationHookedPlugins.Erase(i);
-				if( i > 0 ) i--;
-				length--;
 			} else {
 				keep = true;
 			}
@@ -1127,7 +1143,7 @@ int Native_AnimHookDisable(Handle plugin, int numParams) // Native "AnimHookDisa
 	}
 
 	// Remove detour, no more plugins using it
-	if( length == 0 && g_aDetoursHooked.Get(index) == 1 && g_aForceDetours.Get(g_iAnimationDetourIndex) == 1 )
+	if( g_iAnimationHookedPlugins.Length == 0 && g_aDetoursHooked.Get(index) == 1 && g_aForceDetours.Get(g_iAnimationDetourIndex) == 1 )
 	{
 		g_bAnimationRemoveHook = true;
 		RequestFrame(OnFrameRemoveDetour);
@@ -1450,6 +1466,9 @@ public void OnMapStart()
 	// Enable or Disable detours as required.
 	CheckRequiredDetours();
 
+
+
+	// Benchmark
 	#if DEBUG
 	g_vProf.Stop();
 	g_fProf += g_vProf.Time;
@@ -1462,126 +1481,127 @@ public void OnMapStart()
 
 
 	// Because reload command calls this function. We only want these loaded on actual map start.
-	if( !g_bMapStarted )
+	if( g_bMapStarted ) return;
+
+
+
+	GetGameMode(); // Get current game mode
+
+
+
+	// Precache Models, prevent crashing when spawning with SpawnSpecial()
+	for( int i = 0; i < sizeof(g_sModels1); i++ )
+		PrecacheModel(g_sModels1[i]);
+
+	PrecacheModel(SPRITE_GLOW, true); // Dissolver
+
+	g_iGasCanModel = PrecacheModel(MODEL_GASCAN);
+
+	if( g_bLeft4Dead2 )
 	{
-		GetGameMode(); // Get current game mode
+		for( int i = 0; i < sizeof(g_sModels2); i++ )
+			PrecacheModel(g_sModels2[i]);
+
+		for( int i = 0; i < sizeof(g_sAcidSounds); i++ )
+			PrecacheSound(g_sAcidSounds[i]);
+
+		for( int i = 0; i < 2048; i++ )
+			g_iAcidEntity[i] = 0;
+	}
+
+	// PipeBomb projectile
+	PrecacheParticle(PARTICLE_FUSE);
+	PrecacheParticle(PARTICLE_LIGHT);
 
 
 
-		// Precache Models, prevent crashing when spawning with SpawnSpecial()
-		for( int i = 0; i < sizeof(g_sModels1); i++ )
-			PrecacheModel(g_sModels1[i]);
+	// Director Variables initialized before the plugin is able to hook.
+	// Extension was able to process these and fire the forwards accordingly.
+	// Some plugins want to overwrite these values from the forward. Please report which ones are required.
+	static bool bDirectorVars;
+	if( g_bLeft4Dead2 && bDirectorVars == false )
+	{
+		bDirectorVars = true;
 
-		PrecacheModel(SPRITE_GLOW, true); // Dissolver
+		// Variable + default value you're passing, which may be used if the director var is not set. Probably uses cvar instead. Unknown.
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "MaxSpecials",			1); // This doesn't appear to work in the finale. At least for some maps.
 
-		if( g_bLeft4Dead2 )
+		// These only appear to work in the Finale, or maybe some specific maps. Unknown.
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "SmokerLimit",			1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "BoomerLimit",			1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "HunterLimit",			1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "SpitterLimit",		1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "JockeyLimit",			1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "ChargerLimit",		1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "TankLimit",			1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "DominatorLimit",		1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "WitchLimit",			1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "CommonLimit",			1);
+
+		// Challenge mode required?
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_MaxSpecials",		1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_BaseSpecialLimit",	1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_SmokerLimit",		1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_BoomerLimit",		1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_HunterLimit",		1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_SpitterLimit",		1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_JockeyLimit",		1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_ChargerLimit",		1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_TankLimit",		1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_DominatorLimit",	1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_WitchLimit",		1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_CommonLimit",		1);
+
+		// These also exist, required?
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "TotalSmokers",		1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "TotalBoomers",		1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "TotalHunters",		1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "TotalSpitter",		1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "TotalJockey",			1);
+		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "TotalCharger",		1);
+	}
+
+
+
+	// Melee weapon IDs - They can change when switching map depending on what melee weapons are enabled
+	if( g_bLeft4Dead2 )
+	{
+		delete g_aMeleePtrs;
+		delete g_aMeleeIDs;
+
+		g_aMeleePtrs = new ArrayList(2);
+		g_aMeleeIDs = new StringMap();
+
+		int iTable = FindStringTable("meleeweapons");
+		if( iTable == INVALID_STRING_TABLE ) // Default to known IDs
 		{
-			for( int i = 0; i < sizeof(g_sModels2); i++ )
-				PrecacheModel(g_sModels2[i]);
+			g_aMeleeIDs.SetValue("fireaxe",				0);
+			g_aMeleeIDs.SetValue("frying_pan",			1);
+			g_aMeleeIDs.SetValue("machete",				2);
+			g_aMeleeIDs.SetValue("baseball_bat",		3);
+			g_aMeleeIDs.SetValue("crowbar",				4);
+			g_aMeleeIDs.SetValue("cricket_bat",			5);
+			g_aMeleeIDs.SetValue("tonfa",				6);
+			g_aMeleeIDs.SetValue("katana",				7);
+			g_aMeleeIDs.SetValue("electric_guitar",		8);
+			g_aMeleeIDs.SetValue("knife",				9);
+			g_aMeleeIDs.SetValue("golfclub",			10);
+			g_aMeleeIDs.SetValue("pitchfork",			11);
+			g_aMeleeIDs.SetValue("shovel",				12);
+		} else {
+			// Get actual IDs
+			int iNum = GetStringTableNumStrings(iTable);
+			char sName[PLATFORM_MAX_PATH];
 
-			for( int i = 0; i < sizeof(g_sAcidSounds); i++ )
-				PrecacheSound(g_sAcidSounds[i]);
-
-			for( int i = 0; i < 2048; i++ )
-				g_iAcidEntity[i] = 0;
-		}
-
-		g_iGasCanModel = PrecacheModel(MODEL_GASCAN);
-
-		// PipeBomb projectile
-		PrecacheParticle(PARTICLE_FUSE);
-		PrecacheParticle(PARTICLE_LIGHT);
-
-
-
-		// Director Variables initialized before the plugin is able to hook.
-		// Extension was able to process these and fire the forwards accordingly.
-		// Some plugins want to overwrite these values from the forward. Please report which ones are required.
-		static bool bDirectorVars;
-		if( g_bLeft4Dead2 && bDirectorVars == false )
-		{
-			bDirectorVars = true;
-
-			// Variable + default value you're passing, which may be used if the director var is not set. Probably uses cvar instead. Unknown.
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "MaxSpecials",			1); // This doesn't appear to work in the finale. At least for some maps.
-
-			// These only appear to work in the Finale, or maybe some specific maps. Unknown.
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "SmokerLimit",			1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "BoomerLimit",			1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "HunterLimit",			1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "SpitterLimit",		1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "JockeyLimit",			1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "ChargerLimit",		1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "TankLimit",			1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "DominatorLimit",		1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "WitchLimit",			1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "CommonLimit",			1);
-
-			// Challenge mode required?
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_MaxSpecials",		1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_BaseSpecialLimit",	1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_SmokerLimit",		1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_BoomerLimit",		1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_HunterLimit",		1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_SpitterLimit",		1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_JockeyLimit",		1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_ChargerLimit",		1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_TankLimit",		1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_DominatorLimit",	1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_WitchLimit",		1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_CommonLimit",		1);
-
-			// These also exist, required?
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "TotalSmokers",		1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "TotalBoomers",		1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "TotalHunters",		1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "TotalSpitter",		1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "TotalJockey",			1);
-			SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "TotalCharger",		1);
-		}
-
-
-
-		// Melee weapon IDs - They can change when switching map depending on what melee weapons are enabled
-		if( g_bLeft4Dead2 )
-		{
-			delete g_aMeleePtrs;
-			delete g_aMeleeIDs;
-
-			g_aMeleePtrs = new ArrayList(2);
-			g_aMeleeIDs = new StringMap();
-
-			int iTable = FindStringTable("meleeweapons");
-			if( iTable == INVALID_STRING_TABLE ) // Default to known IDs
+			for( int i = 0; i < iNum; i++ )
 			{
-				g_aMeleeIDs.SetValue("fireaxe",				0);
-				g_aMeleeIDs.SetValue("frying_pan",			1);
-				g_aMeleeIDs.SetValue("machete",				2);
-				g_aMeleeIDs.SetValue("baseball_bat",		3);
-				g_aMeleeIDs.SetValue("crowbar",				4);
-				g_aMeleeIDs.SetValue("cricket_bat",			5);
-				g_aMeleeIDs.SetValue("tonfa",				6);
-				g_aMeleeIDs.SetValue("katana",				7);
-				g_aMeleeIDs.SetValue("electric_guitar",		8);
-				g_aMeleeIDs.SetValue("knife",				9);
-				g_aMeleeIDs.SetValue("golfclub",			10);
-				g_aMeleeIDs.SetValue("pitchfork",			11);
-				g_aMeleeIDs.SetValue("shovel",				12);
-			} else {
-				// Get actual IDs
-				int iNum = GetStringTableNumStrings(iTable);
-				char sName[PLATFORM_MAX_PATH];
-
-				for( int i = 0; i < iNum; i++ )
-				{
-					ReadStringTable(iTable, i, sName, sizeof(sName));
-					g_aMeleeIDs.SetValue(sName, i);
-				}
+				ReadStringTable(iTable, i, sName, sizeof(sName));
+				g_aMeleeIDs.SetValue(sName, i);
 			}
 		}
-
-		g_bMapStarted = true;
 	}
+
+	g_bMapStarted = true;
 }
 
 
