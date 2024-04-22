@@ -1,0 +1,39 @@
+"Phrases"
+{
+    "Tag"
+    {
+        "en"    "[{olive}!{default}]"
+    }
+    "Usage"
+    {
+        "en"    "{blue}Usage{default}"
+    }
+    "NoSnoop"
+    {
+        "en"    "You Should Not {red}Snoop{default} on The Tank!"
+    }
+    "BecomeSpectator"
+    {
+        "en"    "{teamcolor}%N{default} has become a spectator!"
+    }
+    "WhileCapped"
+    {
+        "en"    "{red}No spectating{default} while capped!"
+    }
+    "FixBot"
+    {
+        "en"    "{teamcolor}%N{default} is attempting to fix bot counts"
+    }
+    "FixBotConsole"
+    {
+        "en"    "Console is attempting to {red}fix bot counts{default}"
+    }
+    "ValidTeams"
+    {
+        "en"    "Valid teams: %d = Spectators, %d = Survivors, %d = Infected"
+    }
+    "CouldNotSwitched"
+    {
+        "en"    "{teamcolor}%N{default} could not be switched because the target team was full or has no bot to take over."
+    }
+}
