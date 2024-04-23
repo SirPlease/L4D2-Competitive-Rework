@@ -53,8 +53,6 @@ ConVar	 l4d_pm_supress_spectate;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	CreateNative("ChangeClientTeamEx", Native_ChangeClientTeamEx);
-	RegPluginLibrary("playermanagement");
 	isMapActive = late;
 	return APLRes_Success;
 }
@@ -102,25 +100,6 @@ void LoadGamedata()
 	}
 
 	delete hGamedata;
-}
-
-any Native_ChangeClientTeamEx(Handle plugin, int numParams)
-{
-	int client = GetNativeCell(1);
-	L4D2Team team = view_as<L4D2Team>(GetNativeCell(2));
-	bool force = view_as<bool>(GetNativeCell(3));
-
-	if (client < 1 || client > MaxClients)
-	{
-		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index %d", client);
-	}
-	
-	if (!IsClientInGame(client))
-	{
-		return ThrowNativeError(SP_ERROR_NATIVE, "Client %d is not in game", client);
-	}
-
-	return ChangeClientTeamEx(client, team, force);
 }
 
 public void OnPluginEnd()
