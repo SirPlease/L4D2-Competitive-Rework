@@ -73,7 +73,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_s", Spectate_Cmd, "Moves you to the spectator team");
 
 	sm_allow_spectate_command = CreateConVar("sm_allow_spectate_command", "1", "Allow players to use !spectate/!spec/!s");
-	g_cvarBlockInTank		  = CreateConVar("sm_blockspecintank", "1", "Block suvivors from switching to spect while in tank", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	g_cvarBlockInTank		  = CreateConVar("sm_blockspecintank", "0", "Block suvivors from switching to spect while in tank", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	AddCommandListener(TeamChange_Listener, "jointeam");
 
 	survivor_limit = FindConVar("survivor_limit");
