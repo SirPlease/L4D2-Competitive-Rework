@@ -1,6 +1,6 @@
 /*
 *	[ANY] Command and ConVar - Buffer Overflow Fixer
-*	Copyright (C) 2022 Silvers
+*	Copyright (C) 2024 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION 		"2.8"
+#define PLUGIN_VERSION 		"2.9"
 
 /*======================================================================================
 	Plugin Info:
@@ -31,6 +31,12 @@
 
 ========================================================================================
 	Change Log:
+
+2.9 (23-Jan-2024)
+	- Fixed memory leak from clearing ArrayList handles. Thanks to "HarryPotter" for help solving.
+
+2.8b (11-Feb-2023)
+	- Updated GameData signature for CS:GO. Thanks to "foxsay" for reporting.
 
 2.8 (19-Jan-2022)
 	- Fixed leaking handles when triggered to fix buffer issues.
@@ -149,7 +155,7 @@ public void OnPluginStart()
 }
 
 #if DEBUGGING
-public Action sm_cvar_test(int c, int a)
+Action sm_cvar_test(int client, int args)
 {
 	int cv;
 	ConVar cvar;
@@ -168,14 +174,14 @@ public Action sm_cvar_test(int c, int a)
 // ====================================================================================================
 // Detour
 // ====================================================================================================
-public MRESReturn InsertCommand(Handle hReturn, Handle hParams)
+MRESReturn InsertCommand(Handle hReturn, Handle hParams)
 {
 	// Get command argument.
 	DHookGetParamString(hParams, 1, g_sCurrentCommand, sizeof(g_sCurrentCommand));
 	return MRES_Ignored;
 }
 
-public MRESReturn InsertCommandPost(Handle hReturn, Handle hParams)
+MRESReturn InsertCommandPost(Handle hReturn, Handle hParams)
 {
 	// See if the server was able to insert the command just fine.
 	bool bSuccess = DHookGetReturn(hReturn);
@@ -205,7 +211,7 @@ public MRESReturn InsertCommandPost(Handle hReturn, Handle hParams)
 // Reinsert the convars/commands that failed to be executed on the last frame now.
 // Doesn't get called when servers hibernating, eg on first start up, until server wakes.
 // ====================================================================================================
-public void OnNextFrame(any na)
+void OnNextFrame(any na)
 {
 	// Remove next frame so if they fail it will create the request and execute again on next frame
 	g_NextFrame = false;
@@ -213,7 +219,10 @@ public void OnNextFrame(any na)
 	// Swap the buffers so we don't add to the list we're currently processing in our InsertServerCommand hook.
 	// Executes the ConVars/commands in the order they were.
 	ArrayList aCmdList = g_aCommandList.Clone();
-	g_aCommandList.Clear();
+
+	// g_aCommandList.Clear(); // Does not free memory, delete and re-create.
+	delete g_aCommandList;
+	g_aCommandList = new ArrayList(ByteCountToCells(ARGS_BUFFER_LENGTH));
 
 	static char sCommand[ARGS_BUFFER_LENGTH];
 
