@@ -2300,6 +2300,17 @@
 		"end_dist"			"150.000000"
 		"max_distance"		"800"
 	}
+	"l4d2_ff01_woods"
+	{
+		"tank_ban_flow"
+		{
+			"Early"
+			{
+				"min"		"35"
+				"max"		"99"
+			}
+		}
+	}
 	"l4d2_ff03_highway"
 	{
 		"tank_ban_flow"
@@ -2313,14 +2324,26 @@
 	}
 	"l4d2_ff04_plant"
 	{
-		"horde_limit"		"200"
+		"max_distance"		"600"
+		"horde_limit"		"150"
 		"tank_ban_flow"
 		{
-			"1"
+			"Alarm event"
 			{
 				"min"		"56"
 				"max"		"99"
 			}
+		}
+		"ItemLimits"
+		{
+			"pain_pills"	"3"
+		}
+	}
+	"l4d2_ff05_station"
+	{
+		"ItemLimits"
+		{
+			"pain_pills"	"4"
 		}
 	}
 	"uz_crash"
