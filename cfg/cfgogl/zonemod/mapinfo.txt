@@ -1625,20 +1625,20 @@
 		"end_dist"			"365.062012"
 		"tank_ban_flow"
 		{
-			"may spawn too close"
+			"after stair, may too close"
 			{
-				"min"		"28"
-				"max"		"41"
+				"min"		"36"
+				"max"		"49"
 			}
 			"down the platform"
 			{
-				"min"		"59"
-				"max"		"62"
+				"min"		"57"
+				"max"		"63"
 			}
 			"through the vent"
 			{
-				"min"		"62"
-				"max"		"68"
+				"min"		"67"
+				"max"		"75"
 			}
 		}
 	}
