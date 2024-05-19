@@ -1,27 +1,43 @@
+1.146 (21-Apr-2024)
+	- Fixed a memory leak. Thanks to "HarryPotter" for reporting.
+	- Fixed native "L4D_WriteMemoryString" buffer length. Thanks to "HarryPotter" for reporting.
+	- Changed natives "L4D_Dissolve" and "L4D_TankRockPrj" to return -1 if the entity failed to be created. Thanks to "ReCreator" for reporting.
+
+	- Updated: Plugin.
+	- Updated: "/scripting/include/left4dhooks.inc" include file.
+	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
+
+1.145 (03-Apr-2024)
+	- Changed natives "L4D_IsPositionInFirstCheckpoint" and "L4D_IsPositionInLastCheckpoint" to scan for the nearest visible NavArea to prevent finding those outside saferooms, and accurately return true.
+	- Fixed target filters that match specific Survivors not working for multiples of the same characters in L4D1. Thanks to "HarryPotter" for reporting.
+	- Fixed native "L4D_IsCoopMode" in L4D2 reporting true for Realism mode. Thanks to "HarryPotter" for reporting.
+	- Really fixed forward "L4D2_OnChooseVictim_Pre" throwing errors in L4D1 (for some reason the changes in gamedata did not carry over to release version).
+
+1.144 (05-Mar-2024)
+	- Added forwards: "L4D2_OnStartUseAction", "L4D2_OnStartUseAction_Post" and "L4D2_OnStartUseAction_PostHandled" to trigger on actions, see "L4D2UseAction" enum from "left4dhooks_stocks.inc" include file. Requested by "Machine".
+	- Added native "L4D_IsTouchingTrigger" to detect if an entity is touching a trigger.
+	- Added native "L4D_StopBeingRevived" to stop a player being revived from incapacitated state.
+	- Fixed native "L4D_IsInLastCheckpoint" to check if a player is within the "info_changelevel" area of the last checkpoint. Thanks to "Shadowysn" for help pointing out some information to make it work accurately.
+	- Fixed native "AnimHookDisable" not completely working under some circumstances. Thanks to "Forgetest" for finding and fixing.
+	- Fixed forward "L4D2_OnChooseVictim_Pre" throwing errors in L4D1.
+
+1.143 (25-Jan-2024)
+	- Added examples for the "L4D_PipeBomb_Detonate*" forwards to the test plugin for differentiating PipeBomb and breakable prop (propane tank, oxygen tank etc) explosions.
+	- Clarified forwards "L4D_PipeBomb_Detonate" notes within the include file for differentiating PipeBomb and breakable prop explosions. Thanks to "HarryPotter" for reporting.
+	- Changed the Spitter Acid bug fix to play the sound from the victim, instead of from the acid source location. Thanks to "JustMadMan" for reporting.
+	- Fixed forward "L4D_TankRock_OnRelease" from possibly given an invalid Tank owner index. Thanks to "Re:Creator" for reporting.
+	- Fixed memory leak from clearing animation hook arrays. Thanks to "yongeni" for reporting and "HarryPotter" for fixing.
+
 1.142 (12-Jan-2024)
 	- Fixed the last update breaking on Linux servers. Thanks to "Hawkins" for reporting and testing.
 
-	- Updated: "/gamedata/l4dd/left4dhooks.l4d1.txt" GameData file.
-	- Updated: "/gamedata/l4dd/left4dhooks.l4d2.txt" GameData file.
-	- Updated: "/scripting/l4dd/l4dd_gamedata.sp" project file.
-
 1.141 (11-Jan-2024)
-	- Added forwards "L4D_MolotovProjectile*", "L4D2_VomitJarProjectile*" and "L4D2_GrenadeLauncherProjectile*" to trigger when on various grenade creations. Requested by "Kerouha".
+	- Added forwards "L4D_MolotovProjectile*", "L4D2_VomitJarProjectile*" and "L4D2_GrenadeLauncherProjectile*" to trigger when various grenade projectiles are created. Requested by "Kerouha".
 	- Added forward "L4D2_OnChooseVictim_Pre" which shows the previously targeted entity. Requested by "Forgetest".
-	- Added "AmmoDef" methodmaps and natives for ammo definitions. Thanks to "Forgetest" for writing and providing.
+	- Added "AmmoDef" and "Ammo_t" methodmaps and natives for ammo definitions. Thanks to "Forgetest" for writing and providing.
 	- Changed stock "L4D_IsPlayerStaggering" to be more accurate. Plugins using this stock should be recompiled. Thanks to "HarryPotter" for updating.
 	- Changed forward "L4D2_OnChooseVictim" when using return Plugin_Handled to block the function, bots will stand still only instead of targeting themselves and attacking while standing still.
 	- Changed natives "L4D_PipeBombPrj", "L4D2_VomitJarPrj", "L4D_MolotovPrj", "L4D2_GrenadeLauncherPrj", "L4D2_SpitterPrj" and "L4D_TankRockPrj" to allow specifying the velocity and rotation. Thanks to "Forgetest" for changing.
-
-	- Updated: Plugin and test plugin.
-	- Updated: "/gamedata/l4dd/left4dhooks.l4d1.txt" GameData file.
-	- Updated: "/gamedata/l4dd/left4dhooks.l4d2.txt" GameData file.
-	- Updated: "/scripting/include/left4dhooks.inc" Include file.
-	- Updated: "/scripting/include/left4dhooks_silver.inc" Include file.
-	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_gamedata.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_setup.sp" project file.
 
 1.140 (03-Dec-2023)
 	- Added forwards "L4D_OnIncapacitated", "L4D_OnIncapacitated_Post" and "L4D_OnIncapacitated_PostHandled" to trigger when a Survivor is incapacitated. Requested by "HarryPotter".

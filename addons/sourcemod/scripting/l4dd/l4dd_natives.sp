@@ -80,6 +80,7 @@ Handle g_hSDK_TerrorNavArea_FindRandomSpot;
 Handle g_hSDK_CTerrorPlayer_WarpToValidPositionIfStuck;
 Handle g_hSDK_IsVisibleToPlayer;
 Handle g_hSDK_CDirector_HasAnySurvivorLeftSafeArea;
+Handle g_hSDK_CBaseTrigger_IsTouching;
 // Handle g_hSDK_CDirector_IsAnySurvivorInExitCheckpoint;
 Handle g_hSDK_CDirector_AreAllSurvivorsInFinaleArea;
 Handle g_hSDK_TerrorNavMesh_GetInitialCheckpoint;
@@ -146,6 +147,7 @@ Handle g_hSDK_CTerrorPlayer_OnPummelEnded;
 Handle g_hSDK_CTerrorPlayer_OnCarryEnded;
 Handle g_hSDK_CTerrorPlayer_OnRideEnded;
 Handle g_hSDK_CDirector_CreateRescuableSurvivors;
+Handle g_hSDK_CTerrorPlayer_StopBeingRevived;
 Handle g_hSDK_CTerrorPlayer_OnRevived;
 Handle g_hSDK_CTerrorGameRules_GetVersusCompletion;
 Handle g_hSDK_CDirectorTacticalServices_GetHighestFlowSurvivor;
@@ -315,7 +317,8 @@ int Native_WriteMemoryString(Handle plugin, int numParams) // Native "L4D_WriteM
 	int addy = GetNativeCell(1);
 
 	int maxlength;
-	GetNativeStringLength(2, maxlength) + 1;
+	GetNativeStringLength(2, maxlength);
+	maxlength += 1;
 	char[] buffer = new char[maxlength];
 
 	GetNativeString(2, buffer, maxlength);
@@ -952,7 +955,11 @@ int Native_CEntityDissolve_Create(Handle plugin, int numParams) // Native "L4D_D
 
 	//PrintToServer("#### CALL g_hSDK_CEntityDissolve_Create");
 	int dissolver = SDKCall(g_hSDK_CEntityDissolve_Create, entity, "", GetGameTime() + 0.8, 2, false);
-	SetEntPropFloat(dissolver, Prop_Send, "m_flFadeOutStart", 0.0); // Fixes broken particles
+	if( dissolver != -1 )
+	{
+		SetEntPropFloat(dissolver, Prop_Send, "m_flFadeOutStart", 0.0); // Fixes broken particles
+	}
+
 	return dissolver;
 }
 
@@ -1138,6 +1145,17 @@ int Native_CDirector_HasAnySurvivorLeftSafeArea(Handle plugin, int numParams) //
 	return SDKCall(g_hSDK_CDirector_HasAnySurvivorLeftSafeArea, g_pDirector);
 }
 
+int Native_CBaseTrigger_IsTouching(Handle plugin, int numParams) // Native "L4D_IsTouchingTrigger"
+{
+	ValidateNatives(g_hSDK_CBaseTrigger_IsTouching, "CBaseTrigger::IsTouching");
+
+	int trigger = GetNativeCell(1);
+	int entity = GetNativeCell(2);
+
+	//PrintToServer("#### CALL g_hSDK_CBaseTrigger_IsTouching");
+	return SDKCall(g_hSDK_CBaseTrigger_IsTouching, trigger, entity);
+}
+
 int Native_CDirector_IsAnySurvivorInStartArea(Handle plugin, int numParams) // Native "L4D_IsAnySurvivorInStartArea"
 {
 	if( g_bLeft4Dead2 )
@@ -1264,10 +1282,73 @@ bool IsInFirstCheckpoint(int client)
 int Native_IsInLastCheckpoint(Handle plugin, int numParams) // Native "L4D_IsInLastCheckpoint"
 {
 	int client = GetNativeCell(1);
+
 	return IsInLastCheckpoint(client);
 }
 
 bool IsInLastCheckpoint(int client)
+{
+	static int entity = INVALID_ENT_REFERENCE;
+
+	if( EntRefToEntIndex(entity) == INVALID_ENT_REFERENCE )
+	{
+		entity = FindEntityByClassname(-1, "info_changelevel");
+		if( entity == INVALID_ENT_REFERENCE )
+		{
+			return false;
+		}
+
+		entity = EntIndexToEntRef(entity);
+	}
+
+	return SDKCall(g_hSDK_CBaseTrigger_IsTouching, entity, client);
+}
+
+/* ALTERNATIVE METHOD: checking vMins and vMax, although can be inaccurate if the saferoom is not a rectangle (c2m4 for example) - Thanks to "Shadowysn" for pointing out
+bool IsInLastCheckpoint(int client)
+{
+	static int entity = INVALID_ENT_REFERENCE;
+	static float vMax[3];
+	static float vMin[3];
+
+	if( EntRefToEntIndex(entity) == INVALID_ENT_REFERENCE )
+	{
+		entity = FindEntityByClassname(-1, "info_changelevel");
+		if( entity == INVALID_ENT_REFERENCE )
+		{
+			return false;
+		}
+
+		entity = EntIndexToEntRef(entity);
+
+		GetEntPropVector(entity, Prop_Data, "m_vecMaxs", vMax);
+		GetEntPropVector(entity, Prop_Data, "m_vecMins", vMin);
+	}
+
+	float vPos[3];
+
+	GetClientAbsOrigin(client, vPos);
+
+	if( vPos[0] > vMin[0] && vPos[1] > vMin[1] && vPos[2] > vMin[2] && vPos[0] < vMax[0] && vPos[1] < vMax[1] && vPos[2] < vMax[2] )
+	{
+		return true;
+	}
+
+	return false;
+}
+// */
+
+/* OLD METHOD: Kept for reference, those it does not return correctly on all maps
+int Native_IsInLastCheckpoint_Old(Handle plugin, int numParams) // Native "L4D_IsInLastCheckpoint_Old"
+{
+	int client = GetNativeCell(1);
+	bool nav;
+	if( numParams > 1 ) nav = GetNativeCell(2);
+
+	return IsInLastCheckpoint_Old(client, nav);
+}
+
+bool IsInLastCheckpoint_Old(int client, bool nav)
 {
 	ValidateNatives(g_hSDK_CTerrorGameRules_IsMissionFinalMap, "CTerrorGameRules::IsMissionFinalMap");
 
@@ -1278,38 +1359,44 @@ bool IsInLastCheckpoint(int client)
 
 	if( g_bLeft4Dead2 )
 	{
-		float vPos[3];
-		GetClientAbsOrigin(client, vPos);
-		return IsPositionInSaferoom(vPos, false);
-
-		/*
-		ValidateNatives(g_hSDK_CTerrorPlayer_GetLastKnownArea, "CTerrorPlayer::GetLastKnownArea");
-		ValidateNatives(g_hSDK_TerrorNavMesh_GetLastCheckpoint, "TerrorNavMesh::GetLastCheckpoint");
-		ValidateNatives(g_hSDK_TerrorNavMesh_IsInExitCheckpoint_NoLandmark, "TerrorNavMesh::IsInExitCheckpoint_NoLandmark");
-
-		//PrintToServer("#### CALL g_hSDK_CTerrorPlayer_GetLastKnownArea");
-		int area = SDKCall(g_hSDK_CTerrorPlayer_GetLastKnownArea, client);
-		if( area == 0 ) return false;
-
-		//PrintToServer("#### CALL g_hSDK_TerrorNavMesh_GetLastCheckpoint");
-		int nav1 = SDKCall(g_hSDK_TerrorNavMesh_GetLastCheckpoint, g_pNavMesh);
-		if( nav1 )
+		if( !nav )
 		{
-			//PrintToServer("#### CALL g_hSDK_Checkpoint_ContainsArea");
-			if( SDKCall(g_hSDK_Checkpoint_ContainsArea, nav1, area) )
+			float vPos[3];
+			GetClientAbsOrigin(client, vPos);
+			return IsPositionInSaferoom(vPos, false);
+		}
+		else
+		{
+			ValidateNatives(g_hSDK_CTerrorPlayer_GetLastKnownArea, "CTerrorPlayer::GetLastKnownArea");
+			ValidateNatives(g_hSDK_TerrorNavMesh_GetLastCheckpoint, "TerrorNavMesh::GetLastCheckpoint");
+			ValidateNatives(g_hSDK_TerrorNavMesh_IsInExitCheckpoint_NoLandmark, "TerrorNavMesh::IsInExitCheckpoint_NoLandmark");
+
+			//PrintToServer("#### CALL g_hSDK_CTerrorPlayer_GetLastKnownArea");
+			int area = SDKCall(g_hSDK_CTerrorPlayer_GetLastKnownArea, client);
+			if( area == 0 ) return false;
+
+			//PrintToServer("#### CALL g_hSDK_TerrorNavMesh_GetLastCheckpoint");
+			int nav1 = SDKCall(g_hSDK_TerrorNavMesh_GetLastCheckpoint, g_pNavMesh);
+			if( nav1 )
+			{
+				//PrintToServer("#### CALL g_hSDK_Checkpoint_ContainsArea");
+				if( SDKCall(g_hSDK_Checkpoint_ContainsArea, nav1, area) )
+					return true;
+			}
+
+			//PrintToServer("#### CALL g_hSDK_TerrorNavMesh_IsInExitCheckpoint_NoLandmark");
+			if( SDKCall(g_hSDK_TerrorNavMesh_IsInExitCheckpoint_NoLandmark, g_pNavMesh, area) )
 				return true;
 		}
-
-		//PrintToServer("#### CALL g_hSDK_TerrorNavMesh_IsInExitCheckpoint_NoLandmark");
-		if( SDKCall(g_hSDK_TerrorNavMesh_IsInExitCheckpoint_NoLandmark, g_pNavMesh, area) )
-			return true;
-		*/
 	}
 	else
 	{
 		return g_bCheckpointLast[client];
 	}
+
+	return false;
 }
+*/
 
 int Native_IsPositionInFirstCheckpoint(Handle plugin, int numParams) // Native "L4D_IsPositionInFirstCheckpoint"
 {
@@ -1329,7 +1416,7 @@ int Native_IsPositionInLastCheckpoint(Handle plugin, int numParams) // Native "L
 
 bool IsPositionInSaferoom(float vecPos[3], bool bStartSaferoom)
 {
-	Address nav = L4D_GetNearestNavArea(vecPos, 1000.0, _, _, true);
+	Address nav = L4D_GetNearestNavArea(vecPos, 1000.0, true, true, false);
 	if( nav != Address_Null )
 	{
 		int spawnAttributes = GetTerrorNavArea_Attributes(nav);
@@ -1596,20 +1683,23 @@ int Native_CTankRock_Create(Handle plugin, int numParams) // Native "L4D_TankRoc
 
 	// Create rock
 	int entity = CreateEntityByName("env_rock_launcher");
-	TeleportEntity(entity, vPos, vAng, vVel);
-	DispatchSpawn(entity);
+	if( entity != -1 )
+	{
+		TeleportEntity(entity, vPos, vAng, vVel);
+		DispatchSpawn(entity);
 
-	// Watch for "tank_rock" entity index and to set owner
-	g_iTankRockEntity = 0;
-	g_iTankRockOwner = client > 0 && client <= MaxClients ? client : -1;
-	AcceptEntityInput(entity, "LaunchRock");
-	g_iTankRockOwner = 0;
+		// Watch for "tank_rock" entity index and to set owner
+		g_iTankRockEntity = 0;
+		g_iTankRockOwner = client > 0 && client <= MaxClients ? client : -1;
+		AcceptEntityInput(entity, "LaunchRock");
+		g_iTankRockOwner = 0;
 
-	// Delete and return rock index
-	RemoveEntity(entity);
+		// Delete and return rock index
+		RemoveEntity(entity);
 
-	entity = g_iTankRockEntity;
-	g_iTankRockEntity = 0;
+		entity = g_iTankRockEntity;
+		g_iTankRockEntity = 0;
+	}
 
 	return entity;
 }
@@ -1693,19 +1783,22 @@ int Native_CPipeBombProjectile_Create(Handle plugin, int numParams) // Native "L
 void CreatePipeParticle(int target, int type)
 {
 	int entity = CreateEntityByName("info_particle_system");
-	if( type == 0 )	DispatchKeyValue(entity, "effect_name", PARTICLE_FUSE);
-	else			DispatchKeyValue(entity, "effect_name", PARTICLE_LIGHT);
+	if( entity != -1 )
+	{
+		if( type == 0 )	DispatchKeyValue(entity, "effect_name", PARTICLE_FUSE);
+		else			DispatchKeyValue(entity, "effect_name", PARTICLE_LIGHT);
 
-	DispatchSpawn(entity);
-	ActivateEntity(entity);
-	AcceptEntityInput(entity, "Start");
+		DispatchSpawn(entity);
+		ActivateEntity(entity);
+		AcceptEntityInput(entity, "Start");
 
-	SetVariantString("!activator");
-	AcceptEntityInput(entity, "SetParent", target);
+		SetVariantString("!activator");
+		AcceptEntityInput(entity, "SetParent", target);
 
-	if( type == 0 )	SetVariantString("fuse");
-	else			SetVariantString("pipebomb_light");
-	AcceptEntityInput(entity, "SetParentAttachment", target);
+		if( type == 0 )	SetVariantString("fuse");
+		else			SetVariantString("pipebomb_light");
+		AcceptEntityInput(entity, "SetParentAttachment", target);
+	}
 }
 
 int Native_CMolotovProjectile_Create(Handle plugin, int numParams) // Native "L4D_MolotovPrj"
@@ -1880,9 +1973,9 @@ void OnAcidDamage(int victim, int attacker, int inflictor, float damage, int dam
 	// Emit sound when taking acid damage
 	if( damage > 0 )
 	{
-		if( ((damagetype == (DMG_ENERGYBEAM|DMG_RADIATION) && attacker > 0 && attacker <= MaxClients && IsClientInGame(attacker) && GetClientTeam(attacker) != 3)) || (damagetype == (DMG_ENERGYBEAM|DMG_RADIATION|DMG_PREVENT_PHYSICS_FORCE) && attacker > MaxClients) )
+		if( (damagetype == (DMG_ENERGYBEAM|DMG_RADIATION|DMG_PREVENT_PHYSICS_FORCE) && attacker > MaxClients) || (damagetype == (DMG_ENERGYBEAM|DMG_RADIATION) && attacker > 0 && attacker <= MaxClients && (!IsClientInGame(attacker) || GetClientTeam(attacker) != 3)) )
 		{
-			EmitSoundToAll(g_sAcidSounds[GetRandomInt(0, sizeof(g_sAcidSounds) - 1)], inflictor, SNDCHAN_AUTO, 85, _, 0.7, GetRandomInt(95, 105));
+			EmitSoundToAll(g_sAcidSounds[GetRandomInt(0, sizeof(g_sAcidSounds) - 1)], victim, SNDCHAN_AUTO, 85, _, 0.7, GetRandomInt(95, 105));
 
 			// Red flash when taking damage
 			Handle msg = StartMessageOne("Fade", victim);
@@ -1906,27 +1999,30 @@ public void OnEntityDestroyed(int entity)
 	{
 		g_iAcidEntity[entity] = 0;
 
-		bool reset = true;
+		int client;
+		int test = -1;
 
 		// Check no more acid entities are alive
-		for( int i = MaxClients + 1; i < 2048; i++ )
+		while( (test = FindEntityByClassname(test, "insect_swarm")) != INVALID_ENT_REFERENCE )
 		{
-			if( EntRefToEntIndex(g_iAcidEntity[i]) != INVALID_ENT_REFERENCE )
+			if( test != entity )
 			{
-				reset = false;
-				break;
+				client = GetEntPropEnt(test, Prop_Data, "m_hOwnerEntity");
+				if( client < 1 || client > MaxClients || !IsClientInGame(client) || GetClientTeam(client) != 3 )
+				{
+					return;
+				}
 			}
 		}
 
 		// If no acid entities are alive, unhook damage on clients
-		if( reset )
+		g_bAcidWatch = false;
+
+		for( int i = 1; i <= MaxClients; i++ )
 		{
-			for( int i = 1; i <= MaxClients; i++ )
+			if( IsClientInGame(i) )
 			{
-				if( IsClientInGame(i) )
-				{
-					SDKUnhook(i, SDKHook_OnTakeDamageAlivePost, OnAcidDamage);
-				}
+				SDKUnhook(i, SDKHook_OnTakeDamageAlivePost, OnAcidDamage);
 			}
 		}
 	}
@@ -2586,11 +2682,14 @@ int Native_CTerrorPlayer_OnStaggered(Handle plugin, int numParams) // Native "L4
 	int a1 = GetNativeCell(1);
 	int a2 = GetNativeCell(2);
 	float vDir[3];
-	GetNativeArray(3, vDir, sizeof(vDir));
 
 	if( IsNativeParamNullVector(3) )
 	{
 		GetEntPropVector(a2, Prop_Send, "m_vecOrigin", vDir);
+	}
+	else
+	{
+		GetNativeArray(3, vDir, sizeof(vDir));
 	}
 
 	//PrintToServer("#### CALL g_hSDK_CTerrorPlayer_OnStaggered");
@@ -5069,6 +5168,19 @@ void RespawnRescue()
 	SDKCall(g_hSDK_CDirector_CreateRescuableSurvivors, g_pDirector);
 
 	g_hCvar_RescueDeadTime.SetInt(time);
+}
+
+int Native_CTerrorPlayer_StopBeingRevived(Handle plugin, int numParams) // Native "L4D_StopBeingRevived"
+{
+	ValidateNatives(g_hSDK_CTerrorPlayer_StopBeingRevived, "CTerrorPlayer::StopBeingRevived");
+
+	int client = GetNativeCell(1);
+	int vocalize = GetNativeCell(2);
+
+	//PrintToServer("#### CALL g_hSDK_CTerrorPlayer_StopBeingRevived");
+	SDKCall(g_hSDK_CTerrorPlayer_StopBeingRevived, client, vocalize);
+
+	return 0;
 }
 
 int Native_CTerrorPlayer_OnRevived(Handle plugin, int numParams) // Native "L4D_ReviveSurvivor"

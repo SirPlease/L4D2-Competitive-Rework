@@ -344,6 +344,18 @@ void LoadGameData()
 			LogError("Failed to create SDKCall: \"CDirector::HasAnySurvivorLeftSafeArea\" (%s)", g_sSystem);
 	}
 
+	StartPrepSDKCall(SDKCall_Entity);
+	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CBaseTrigger::IsTouching") == false )
+	{
+		LogError("Failed to find signature: \"CBaseTrigger::IsTouching\" (%s)", g_sSystem);
+	} else {
+		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+		PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
+		g_hSDK_CBaseTrigger_IsTouching = EndPrepSDKCall();
+		if( g_hSDK_CBaseTrigger_IsTouching == null )
+			LogError("Failed to create SDKCall: \"CBaseTrigger::IsTouching\" (%s)", g_sSystem);
+	}
+
 	/*
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::IsAnySurvivorInStartArea") == false )
@@ -401,7 +413,7 @@ void LoadGameData()
 		if( g_hSDK_TerrorNavMesh_GetLastCheckpoint == null )
 			LogError("Failed to create SDKCall: \"TerrorNavMesh::GetLastCheckpoint\" (%s)", g_sSystem);
 	}
-	*/
+	// */
 
 	if( g_bLeft4Dead2 )
 	{
@@ -429,7 +441,7 @@ void LoadGameData()
 			if( g_hSDK_TerrorNavMesh_IsInExitCheckpoint_NoLandmark == null )
 				LogError("Failed to create SDKCall: \"TerrorNavMesh::IsInExitCheckpoint_NoLandmark\" (%s)", g_sSystem);
 		}
-		*/
+		// */
 	}
 
 	StartPrepSDKCall(SDKCall_Static);
@@ -1712,6 +1724,17 @@ void LoadGameData()
 		g_hSDK_CDirector_CreateRescuableSurvivors = EndPrepSDKCall();
 		if( g_hSDK_CDirector_CreateRescuableSurvivors == null )
 			LogError("Failed to create SDKCall: \"CDirector::CreateRescuableSurvivors\" (%s)", g_sSystem);
+	}
+
+	StartPrepSDKCall(SDKCall_Player);
+	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::StopBeingRevived") == false )
+	{
+		LogError("Failed to find signature: \"CTerrorPlayer::StopBeingRevived\" (%s)", g_sSystem);
+	} else {
+		PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
+		g_hSDK_CTerrorPlayer_StopBeingRevived = EndPrepSDKCall();
+		if( g_hSDK_CTerrorPlayer_StopBeingRevived == null )
+			LogError("Failed to create SDKCall: \"CTerrorPlayer::StopBeingRevived\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);

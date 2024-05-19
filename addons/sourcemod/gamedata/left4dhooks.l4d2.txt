@@ -1169,9 +1169,9 @@
 				}
 			}
 
-			"L4DD::CPipeBombProjectile::Create"
+			"L4DD::CMolotovProjectile::Create"
 			{
-				"signature"		"CPipeBombProjectile::Create"
+				"signature"		"CMolotovProjectile::Create"
 				"callconv"		"cdecl"
 				"return"		"cbaseentity"
 				"arguments"
@@ -1203,9 +1203,9 @@
 				}
 			}
 
-			"L4DD::CMolotovProjectile::Create"
+			"L4DD::CPipeBombProjectile::Create"
 			{
-				"signature"		"CMolotovProjectile::Create"
+				"signature"		"CPipeBombProjectile::Create"
 				"callconv"		"cdecl"
 				"return"		"cbaseentity"
 				"arguments"
@@ -1645,7 +1645,7 @@
 			}
 
 			/**
-			 * Thanks to "Psyk0tik" from: https://github.com/Psykotikism/Mutant_Tanks
+			 * Thanks to "Psyk0tik" from: https://github.com/Psykotikism/L4D1-2_Signatures
 			 * CBaseBackpackItem::StartAction(CBaseBackpackItem::BackpackItemActionType, CBaseBackpackItem::BackpackItemActionTrigger)
 			 *
 			 * Note: Detouring as a pre-hook for changing the following per player before starting any actions:
@@ -1672,6 +1672,33 @@
 					"actionTrigger"
 					{
 						"type"		"int"
+					}
+				}
+			}
+
+			"L4DD::CTerrorPlayer::StartUseAction"
+			{
+				"signature"	"CTerrorPlayer::StartUseAction"
+				"callconv"	"thiscall"
+				"return"	"int"
+				"this"		"entity"
+				"arguments"
+				{
+					"actionType"
+					{
+						"type"		"int"
+					}
+					"actionTarget"
+					{
+						"type"		"cbaseentity"
+					}
+					"some_float"
+					{
+						"type"		"float"
+					}
+					"some_bool"
+					{
+						"type"		"bool"
 					}
 				}
 			}
@@ -1984,7 +2011,6 @@
 		// ====================================================================================================
 		"Offsets"
 		{
-			// Used to block "L4D2_OnSendInRescueVehicle" and "L4D2_OnUseHealingItems" on Linux until DHooks supports object returns.
 			"OS"
 			{
 				"windows"	"0"
@@ -3014,7 +3040,6 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer13FindUseEntityEfffPbb"
-				"mac"		"@_ZN13CTerrorPlayer13FindUseEntityEfffPbb"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x0F"
 				/* ? ? ? ? ? ? ? ? E8 ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 0F */
 			}
@@ -3167,6 +3192,25 @@
 				"linux"		"@_Z17IsVisibleToPlayerRK6VectorP11CBasePlayeriifPK11CBaseEntityPP13TerrorNavAreaPb"
 				"windows"	"\x55\x8B\x2A\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x8B\x2A\x2A\x8B\x2A\x2A\x53\x8B\x2A\x2A\x56\x8B\x2A\x2A\xC6"
 				/* 55 8B ? 81 EC ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 8B ? ? 8B ? ? 53 8B ? ? 56 8B ? ? C6 */
+			}
+
+			/**
+			 * Thanks to "Psyk0tik" from: https://github.com/Psykotikism/L4D1-2_Signatures
+			 * CBaseTrigger::IsTouching(CBaseEntity *)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "PlayerOutsideCheckpoint" string.
+			 * 2. The string can only be found in "InfoChangelevel::OnCheckpointDoorClosed".
+			 * 3. Click on the first function call in "InfoChangelevel::OnCheckpointDoorClosed".
+			 * 4. Click on the last function call in that function.
+			 * 5. This function should be the second function call in that function.
+			 **/
+			"CBaseTrigger::IsTouching"
+			{
+				"library"	"server"
+				"linux"		"@_ZN12CBaseTrigger10IsTouchingEP11CBaseEntity"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\x8B\x2A\x2A\xFF\x2A\x8B\x2A\x89\x2A\x2A\xEB\x2A\xC7\x45\x2A\x2A\x2A\x2A\x2A\x8D\x2A\x2A\x51\x8D\x8E\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x33"
+				// /* ? ? ? ? ? ? 8B ? ? 85 ? 74 ? 8B ? 8B ? ? FF ? 8B ? 89 ? ? EB ? C7 45 ? ? ? ? ? 8D ? ? 51 8D 8E ? ? ? ? E8 ? ? ? ? 33 */
 			}
 
 			/*
@@ -4123,6 +4167,22 @@
 			}
 
 			/*
+			 * Thanks to "Psyk0tik" from: https://github.com/Psykotikism/L4D1-2_Signatures
+			 * CTerrorPlayer::StopBeingRevived(bool)
+			 *
+			 * How to find on Windows:
+			 * 1. Search for the "Player.StopVoice" string.
+			 * 2. One of the functions that references that string should be this function.
+			 */
+			"CTerrorPlayer::StopBeingRevived"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer16StopBeingRevivedEb"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x57\x51\xD9\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x87"
+				/* ? ? ? ? ? ? 57 51 D9 ? ? 8B ? E8 ? ? ? ? 8B 87 */
+			}
+
+			/*
 			* CTerrorPlayer::OnRevived(void)
 			*
 			* ->Search for string "revive_success", then open vtables window. Should be the 5th member.
@@ -4319,7 +4379,7 @@
 			}
 
 			/**
-			 * Thanks to "Psyk0tik" from: https://github.com/Psykotikism/Mutant_Tanks
+			 * Thanks to "Psyk0tik" from: https://github.com/Psykotikism/L4D1-2_Signatures
 			 * CBaseBackpackItem::StartAction(CBaseBackpackItem::BackpackItemActionType, CBaseBackpackItem::BackpackItemActionTrigger)
 			 *
 			 * Note: Used for detouring the function.
@@ -4335,9 +4395,17 @@
 			{
 				"library"	"server"
 				"linux"		"@_ZN17CBaseBackpackItem11StartActionENS_22BackpackItemActionTypeENS_25BackpackItemActionTriggerE"
-				"mac"		"@_ZN17CBaseBackpackItem11StartActionENS_22BackpackItemActionTypeENS_25BackpackItemActionTriggerE"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x8B\x2A\x85\x2A\x75\x2A\x5F\x32\x2A\x5E\x8B"
 				/* ? ? ? ? ? ? 8B ? E8 ? ? ? ? 8B ? 85 ? 75 ? 5F 32 ? 5E 8B */
+			}
+
+			"CTerrorPlayer::StartUseAction"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer14StartUseActionE21TerrorPlayerUseActionP11CBaseEntityfb"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84"
+				/* ? ? ? ? ? ? 8B ? ? 8B ? 85 ? 0F 84 ? ? ? ? E8 ? ? ? ? 84 */
+				/* Search "PlayerUsingMe" and look for the function call near the bottom with the value "11" in args */
 			}
 
 			/* cdecl BossZombiePlayerBot::ChooseVictim(BossZombiePlayerBot *this, CTerrorPlayer *, char, CBaseCombatCharacter *) */

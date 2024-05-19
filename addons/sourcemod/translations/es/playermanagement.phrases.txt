@@ -1,0 +1,35 @@
+"Phrases"
+{
+    "Usage"
+    {
+        "es"    "{blue}Uso{default}"
+    }
+    "NoSnoop"
+    {
+        "es"    "No Deberías {red}Espiar{default} al Tanque!"
+    }
+    "BecomeSpectator"
+    {
+        "es"    "{teamcolor}%N{default} se ha convertido en espectador!"
+    }
+    "WhileCapped"
+    {
+        "es"    "{red}No se puede espectar{default} mientras se captura!"
+    }
+    "FixBot"
+    {
+        "es"    "{teamcolor}%N{default} está intentando arreglar los contadores de bots"
+    }
+    "FixBotConsole"
+    {
+        "es"    "La consola está intentando arreglar los {red}contadores de bots{default}"
+    }
+    "ValidTeams"
+    {
+        "es"    "Equipos válidos: %d = Espectadores, %d = Supervivientes, %d = Infectados"
+    }
+    "CouldNotSwitched"
+    {
+        "es"    "{teamcolor}%N{default} no pudo cambiarse porque el equipo objetivo estaba lleno o no tenía ningún bot para hacerse cargo."
+    }
+}
