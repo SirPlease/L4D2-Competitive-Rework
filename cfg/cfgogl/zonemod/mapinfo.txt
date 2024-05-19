@@ -1623,6 +1623,24 @@
 		"start_extra_dist"	"188.167191"
 		"end_point"			"-7367.650391 8434.535156 -671.968750"
 		"end_dist"			"365.062012"
+		"tank_ban_flow"
+		{
+			"may spawn too close"
+			{
+				"min"		"28"
+				"max"		"41"
+			}
+			"down the platform"
+			{
+				"min"		"59"
+				"max"		"62"
+			}
+			"through the vent"
+			{
+				"min"		"62"
+				"max"		"68"
+			}
+		}
 	}
 	"l4d_dbd2dc_new_dawn"
 	{
