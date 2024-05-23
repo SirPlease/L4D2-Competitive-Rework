@@ -1625,11 +1625,6 @@
 		"end_dist"			"365.062012"
 		"tank_ban_flow"
 		{
-			"after stair, may too close"
-			{
-				"min"		"36"
-				"max"		"49"
-			}
 			"down the platform"
 			{
 				"min"		"57"
@@ -1637,7 +1632,7 @@
 			}
 			"through the vent"
 			{
-				"min"		"67"
+				"min"		"73"
 				"max"		"75"
 			}
 		}
@@ -2848,6 +2843,11 @@
 	{
 		"tank_ban_flow"
 		{
+			"early"
+			{
+				"min"		"0"
+				"max"		"27"
+			}
 			"near_building"
 			{
 				"min"		"72"
@@ -2886,6 +2886,19 @@
 		}
 	}
 
+//=======================================================================
+//=============== Open Road 绝命公路
+	"x1m2_path"
+	{
+		"tank_ban_flow"
+		{
+			"being out the cave"
+			{
+				"min"		"82"
+				"max"		"100"
+			}
+		}
+	}
 	
 
 //-------- ↓↓↓ you can add custom info here ↓↓↓
