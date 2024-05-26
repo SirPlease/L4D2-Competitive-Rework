@@ -210,26 +210,6 @@
 		"chi"		"指定玩家尚未完全进入游戏."
 	}
 
-	"Played Sound"
-	{
-		"chi"		"已播放声音给玩家 '{1}'"
-	}
-
-	"Slapped player"
-	{
-		"chi"		"已拍打玩家 '{1}'"
-	}
-
-	"Slayed player"
-	{
-		"chi"		"已处死玩家 '{1}'"
-	}
-
-	"Kicked player"
-	{
-		"chi"		"已踢出玩家 '{1}'"
-	}
-
 	"Cannot participate in vote"
 	{
 		"chi"		"您无法参与该项投票."
@@ -248,6 +228,26 @@
 	"Off"
 	{
 		"chi"		"关"
+	}
+	
+	"Say all"
+	{
+		"chi"		"(所有人) {1}"
+	}
+	
+	"Chat admins"
+	{
+		"chi"		"(管理员频道) {1}"
+	}
+
+	"Chat to admins"
+	{
+		"chi"		"(发送给管理员) {1}"
+	}
+
+	"Private say to"
+	{
+		"chi"		"(私聊给 {1}) {2}"
 	}
 
 }

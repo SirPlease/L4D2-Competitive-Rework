@@ -22,22 +22,12 @@
 
 	"Already Voted"
 	{
-		"fi"		"Olet jo äänestänyt Rock the Votessa."
+		"fi"		"Olet jo äänestänyt Rock the Votessa. ({1} ääntä, {2} vaaditaan)"
 	}
 
 	"Minimal Players Not Met"
 	{
 		"fi"		"Pelaajien minimimäärää ei ole saavutettu."
-	}
-
-	"Map Already In Vote"
-	{
-		"fi"		"Kartta '{1}' on jo äänestyslistassa."
-	}
-
-	"Map Inserted"
-	{
-		"fi"		"Kartta '{1}' lisättiin Rock the Voteen."
 	}
 
 	"RTV Requested"
@@ -53,16 +43,6 @@
 	"Don't Change"
 	{
 		"fi"		"Pidä nykyinen kartta"
-	}
-
-	"Already Nominated"
-	{
-		"fi"		"Olet jo ehdottanut karttaa."
-	}
-
-	"Max Nominations"
-	{
-		"fi"		"Ehdotuksien maksimimäärä saavutettu."
 	}
 
 	"Selected Map"
@@ -83,21 +63,6 @@
 	"Changing Maps"
 	{
 		"fi"		"Vaihdetaan kartaksi {1}! Rock the Vote on puhunut!"
-	}
-
-	"Map Already Nominated"
-	{
-		"fi"		"Kartta jonka valitsit on jo ehdotettuna."
-	}
-
-	"Map Nominated"
-	{
-		"fi"		"{1} ehdotti karttaa {2} Rock the Voteen."
-	}
-
-	"Nominate Title"
-	{
-		"fi"		"Ehdota karttaa: "
 	}
 
 }

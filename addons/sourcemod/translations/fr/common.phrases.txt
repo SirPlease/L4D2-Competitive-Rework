@@ -210,26 +210,6 @@
 		"fr"		"Ce Joueur n'est pas complètement en Jeu."
 	}
 
-	"Played Sound"
-	{
-		"fr"		"a joué un son au joueur '{1}' "
-	}
-
-	"Slapped player"
-	{
-		"fr"		"a giflé '{1}'"
-	}
-
-	"Slayed player"
-	{
-		"fr"		"a tué le joueur '{1}' "
-	}
-
-	"Kicked player"
-	{
-		"fr"		"a kické le joueur '{1}' "
-	}
-
 	"Cannot participate in vote"
 	{
 		"fr"		"Vous ne pouvez pas participer à ce vote."
@@ -248,6 +228,26 @@
 	"Off"
 	{
 		"fr"		"Off"
+	}
+
+	"Say all"
+	{
+		"fr"		"(TOUS) {1}"
+	}
+	
+	"Chat admins"
+	{
+		"fr"		"(ADMINS) {1}"
+	}
+	
+	"Chat to admins"
+	{
+		"fr"		"(AUX ADMINS) {1}"
+	}
+	
+	"Private say to"
+	{
+		"fr"		"(Privé à {1}) {2}"
 	}
 
 }
