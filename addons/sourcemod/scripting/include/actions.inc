@@ -6,7 +6,10 @@
 
 #define ACTION_NAME_LENGTH 32
 
+#tryinclude <version>
+
 #include <actions_processors>
+#include <actions_constructor>
 
 enum QueryResultType
 {
@@ -231,8 +234,6 @@ methodmap ActionsManager
 
 	/**
  	* @brief Gets action user data 
- 	* @remark Data persists until the action is destroyed
- 	* @remark Data is still usable in OnActionDestroyed callback
  	*
  	* @param key			Key for data 
  	* @param data			Variable for stored data
@@ -241,6 +242,29 @@ methodmap ActionsManager
  	* @return				True if data exists, false otherwise
  	*/
 	public static native bool GetActionUserData(BehaviorAction action, const char[] key, any &data);
+
+	/**
+ 	* @brief Gets action user data vector
+ 	*
+ 	* @param key			Key for data 
+ 	* @param vec			Vector to store to
+ 	*
+	* @error				Invalid action passed
+ 	* @return				True if data exists, false otherwise
+ 	*/
+	public static native bool GetActionUserDataVector(BehaviorAction action, const char[] key, float vec[3]);
+
+	/**
+ 	* @brief Gets action user data string
+ 	*
+ 	* @param key			Key for data 
+ 	* @param buffer			Buffer to store to
+ 	* @param length			Buffer length
+ 	*
+	* @error				Invalid action passed
+ 	* @return				True if data exists, false otherwise
+ 	*/
+	public static native bool GetActionUserDataString(BehaviorAction action, const char[] key, char[] buffer, int length);
 
 	/**
  	* @brief Sets action user data 
@@ -256,6 +280,34 @@ methodmap ActionsManager
 	public static native void SetActionUserData(BehaviorAction action, const char[] key, any data);
 
 	/**
+ 	* @brief Sets action user data vector
+ 	* @remark Data persists until the action is destroyed
+ 	* @remark Data is still usable in OnActionDestroyed callback
+ 	*
+ 	* @param key			Key to store data at 
+ 	* @param data			Data to store
+ 	* @param vec			Vector to store
+ 	*
+	* @error				Invalid action passed
+ 	* @noreturn		
+ 	*/
+	public static native void SetActionUserDataVector(BehaviorAction action, const char[] key, const float vec[3]);
+
+	/**
+ 	* @brief Sets action user data vector
+ 	* @remark Data persists until the action is destroyed
+ 	* @remark Data is still usable in OnActionDestroyed callback
+ 	*
+ 	* @param key			Key to store data at 
+ 	* @param data			Data to store
+ 	* @param string			String to store
+ 	*
+	* @error				Invalid action passed
+ 	* @noreturn		
+ 	*/
+	public static native void SetActionUserDataString(BehaviorAction action, const char[] key, const char[] string);
+
+	/**
  	* @brief Gets action user data with identity
  	* @remark Data persists until the plugin who owns data is unloaded
  	* @remark Data is still usable in OnActionDestroyed callback
@@ -268,6 +320,31 @@ methodmap ActionsManager
 	public static native bool GetActionUserDataIdentity(BehaviorAction action, const char[] key, any &data);
 
 	/**
+ 	* @brief Gets action user data with identity (vector)
+ 	* @remark Data persists until the plugin who owns data is unloaded
+ 	* @remark Data is still usable in OnActionDestroyed callback
+	*
+ 	* @param key			Key for data 
+ 	* @param vector			Variable for stored data
+ 	*
+ 	* @return				True if data exists, false otherwise
+ 	*/
+	public static native bool GetActionUserDataIdentityVector(BehaviorAction action, const char[] key, float vector[3]);
+
+	/**
+ 	* @brief Gets action user data with identity (string)
+ 	* @remark Data persists until the plugin who owns data is unloaded
+ 	* @remark Data is still usable in OnActionDestroyed callback
+	*
+ 	* @param key			Key for data 
+ 	* @param buffer			Variable for stored data
+ 	* @param length			Length of buffer
+ 	*
+ 	* @return				True if data exists, false otherwise
+ 	*/
+	public static native bool GetActionUserDataIdentityString(BehaviorAction action, const char[] key, char[] buffer, int length);
+
+	/**
  	* @brief Sets action user data with identity
  	* @remark Data persists until the plugin who owns data is unloaded
  	* @remark Data is still usable in OnActionDestroyed callback
@@ -278,6 +355,30 @@ methodmap ActionsManager
  	* @noreturn	
  	*/
 	public static native void SetActionUserDataIdentity(BehaviorAction action, const char[] key, any data);
+
+	/**
+ 	* @brief Sets action user data with identity (vector)
+ 	* @remark Data persists until the plugin who owns data is unloaded
+ 	* @remark Data is still usable in OnActionDestroyed callback
+	*
+ 	* @param key			Key to store data at 
+ 	* @param vector			Vector to store
+ 	*
+ 	* @noreturn	
+ 	*/
+	public static native void SetActionUserDataIdentityVector(BehaviorAction action, const char[] key, const float vector[3]);
+
+	/**
+ 	* @brief Sets action user data with identity (vector)
+ 	* @remark Data persists until the plugin who owns data is unloaded
+ 	* @remark Data is still usable in OnActionDestroyed callback
+	*
+ 	* @param key			Key to store data at 
+ 	* @param string			String to store
+ 	*
+ 	* @noreturn	
+ 	*/
+	public static native void SetActionUserDataIdentityString(BehaviorAction action, const char[] key, const char[] string);
 }
 
 methodmap ActionComponent < Handle
@@ -329,6 +430,25 @@ methodmap ActionComponent < Handle
 		public native get();
 	}
 
+	/**
+ 	* @brief Returns component physical address
+	* 
+ 	*/
+	property any Address
+	{
+		public native get();
+	}
+
+	/**
+ 	* @brief Returns component actor
+	* @remark Returns 0 if component is inactive
+	* 
+ 	*/
+	property int Actor
+	{
+		public native get();
+	}
+	
 	/**
  	* @brief Update callback setter
 	* 
@@ -484,6 +604,41 @@ methodmap BehaviorAction < BehaviorActionListeners
 	}
 
 	/**
+ 	* @brief Gets action user data (vector)
+	* @remark Doesn't check if data exists 
+ 	* @remark Data persists until the action is destroyed
+ 	* @remark Data is still usable in OnActionDestroyed callback
+ 	*
+ 	* @param key			Key for data
+ 	* @param out			Out vector
+ 	*
+	* @error				Invalid action passed
+ 	* @noreturn				
+ 	*/
+	public void GetUserDataVector(const char[] key, float out[3])
+	{
+		ActionsManager.GetActionUserDataVector(this, key, out);
+	}
+
+	/**
+ 	* @brief Gets action user data (string)
+	* @remark Doesn't check if data exists 
+ 	* @remark Data persists until the action is destroyed
+ 	* @remark Data is still usable in OnActionDestroyed callback
+ 	*
+ 	* @param key			Key for data
+ 	* @param buffer			Out buffer
+	* @param length 		Buffer length
+ 	*
+	* @error				Invalid action passed
+ 	* @noreturn				
+ 	*/
+	public void GetUserDataString(const char[] key, char[] buffer, int length)
+	{
+		ActionsManager.GetActionUserDataString(this, key, buffer, length);
+	}
+
+	/**
  	* @brief Sets action user data 
  	* @remark Data persists until the action is destroyed
  	* @remark Data is still usable in OnActionDestroyed callback
@@ -497,6 +652,38 @@ methodmap BehaviorAction < BehaviorActionListeners
 	public void SetUserData(const char[] key, any data)
 	{
 		ActionsManager.SetActionUserData(this, key, data);
+	}
+
+	/**
+ 	* @brief Sets action user data (vector)
+ 	* @remark Data persists until the action is destroyed
+ 	* @remark Data is still usable in OnActionDestroyed callback
+ 	*
+ 	* @param key			Key to store data at 
+ 	* @param vector			Vector to store
+ 	*
+	* @error				Invalid action passed
+ 	* @noreturn	
+ 	*/
+	public void SetUserDataVector(const char[] key, const float vector[3])
+	{
+		ActionsManager.SetActionUserDataVector(this, key, vector);
+	}
+
+	/**
+ 	* @brief Sets action user data (vector)
+ 	* @remark Data persists until the action is destroyed
+ 	* @remark Data is still usable in OnActionDestroyed callback
+ 	*
+ 	* @param key			Key to store data at 
+ 	* @param string			String to store
+ 	*
+	* @error				Invalid action passed
+ 	* @noreturn	
+ 	*/
+	public void SetUserDataString(const char[] key, const char[] string)
+	{
+		ActionsManager.SetActionUserDataString(this, key, string);
 	}
 
 	/**
@@ -518,6 +705,41 @@ methodmap BehaviorAction < BehaviorActionListeners
 	}
 
 	/**
+ 	* @brief Gets action user data (vector)
+	* @remark Doesn't check if data exists 
+ 	* @remark Data persists until the plugin who owns data is unloaded
+ 	* @remark Data is still usable in OnActionDestroyed callback
+ 	*
+ 	* @param key			Key for data
+ 	* @param out			Out vector
+ 	*
+	* @error				Invalid action passed
+ 	* @noreturn				
+ 	*/
+	public void GetUserDataIdentityVector(const char[] key, float out[3])
+	{
+		ActionsManager.GetActionUserDataIdentityVector(this, key, out);
+	}
+
+	/**
+ 	* @brief Gets action user data (string)
+	* @remark Doesn't check if data exists 
+ 	* @remark Data persists until the plugin who owns data is unloaded
+ 	* @remark Data is still usable in OnActionDestroyed callback
+ 	*
+ 	* @param key			Key for data
+ 	* @param buffer			Out buffer
+	* @param length 		Buffer length
+ 	*
+	* @error				Invalid action passed
+ 	* @noreturn				
+ 	*/
+	public void GetUserDataIdentityString(const char[] key, char[] buffer, int length)
+	{
+		ActionsManager.GetActionUserDataIdentityString(this, key, buffer, length);
+	}
+
+	/**
  	* @brief Sets action user data with identity
  	* @remark Data persists until the plugin who owns data is unloaded
  	* @remark Data is still usable in OnActionDestroyed callback
@@ -533,9 +755,41 @@ methodmap BehaviorAction < BehaviorActionListeners
 	}
 
 	/**
+ 	* @brief Sets action user data with identity
+ 	* @remark Data persists until the plugin who owns data is unloaded
+ 	* @remark Data is still usable in OnActionDestroyed callback
+ 	*
+ 	* @param key			Key to store data at 
+ 	* @param vector			Vector to store
+ 	*
+	* @error				Invalid action passed
+ 	* @noreturn	
+ 	*/
+	public void SetUserDataIdentityVector(const char[] key, const float vector[3])
+	{
+		ActionsManager.SetActionUserDataIdentityVector(this, key, vector);
+	}
+
+	/**
+ 	* @brief Sets action user data with identity
+ 	* @remark Data persists until the plugin who owns data is unloaded
+ 	* @remark Data is still usable in OnActionDestroyed callback
+ 	*
+ 	* @param key			Key to store data at 
+ 	* @param string			String to store
+ 	*
+	* @error				Invalid action passed
+ 	* @noreturn	
+ 	*/
+	public void SetUserDataIdentityString(const char[] key, const char[] string)
+	{
+		ActionsManager.SetActionUserDataIdentityString(this, key, string);
+	}
+
+	/**
  	* @brief Simple wrapper to get action data 
  	*
- 	* @param int			Offset to data 
+ 	* @param offset			Offset to data 
  	* @param type			How many bytes read (See NumberType)
  	*
  	* @return				Stored data
@@ -548,7 +802,7 @@ methodmap BehaviorAction < BehaviorActionListeners
 	/**
  	* @brief Simple wrapper to set action data 
  	*
- 	* @param int			Offset to data 
+ 	* @param offset			Offset to data 
  	* @param data			Data to set
  	* @param type			How many bytes set (See NumberType)
  	*
@@ -564,7 +818,37 @@ methodmap BehaviorAction < BehaviorActionListeners
 	{
 		StoreToAddress(view_as<Address>(this) + view_as<Address>(offset), data, type, updateMemAccess);
 	}
- #endif	
+ #endif
+
+ 	/**
+ 	* @brief Stores a vector at specified offset
+ 	*
+ 	* @param offset			Offset to data 
+ 	* @param vec			Vector to set from
+ 	*
+ 	* @noreturn
+ 	*/
+	public void SetVector( int offset, const float vec[3] )
+	{
+		this.Set(offset, vec[0], NumberType_Int32);
+		this.Set(offset + 4, vec[1], NumberType_Int32);
+		this.Set(offset + 8, vec[2], NumberType_Int32);
+	}
+	
+ 	/**
+ 	* @brief Loads a vector at specified offset
+ 	*
+ 	* @param offset			Offset to data 
+ 	* @param out			Vector to load to
+ 	*
+ 	* @noreturn
+ 	*/
+	public void GetVector( int offset, float out[3] )
+	{
+		out[0] = view_as<float>(this.Get(offset, NumberType_Int32));
+		out[1] = view_as<float>(this.Get(offset + 4, NumberType_Int32));
+		out[2] = view_as<float>(this.Get(offset + 8, NumberType_Int32));
+	}
 
 	/**
  	* @brief Stores pending event result
@@ -578,7 +862,7 @@ methodmap BehaviorAction < BehaviorActionListeners
 	* @error				Invalid action passed or invalid runtime result
  	* @noreturn
  	*/
-	#pragma deprecated This functions is deprecated. Does nothing.
+	#pragma deprecated This function is deprecated. Does nothing.
 	public native void StorePendingEventResult( ActionResultType type = CONTINUE, BehaviorAction action = INVALID_ACTION, EventResultPriorityType priority = RESULT_TRY, const char[] reason = NULL_STRING );
 	
 	// ====================================================================================================
@@ -651,7 +935,7 @@ methodmap BehaviorAction < BehaviorActionListeners
 	
 	/**
  	* @brief Property to get/set started state of action
-	* @note if this returns true then OnStart handled has already been called 
+	* @note if this returns true then OnStart handled has already been called or is about to be called next frame
 	* 
  	* @return				true if started, false otherwise
  	*/
@@ -687,6 +971,8 @@ public void __ext_actions_SetNTVOptional()
 	MarkNativeAsOptional("ActionComponent.Reset");
 	MarkNativeAsOptional("ActionComponent.GetName");
 	MarkNativeAsOptional("ActionComponent.SetName");
+	MarkNativeAsOptional("ActionComponent.Address");
+	MarkNativeAsOptional("ActionComponent.Actor");
 
 	MarkNativeAsOptional("ActionResult.GetReason");
 	MarkNativeAsOptional("ActionResult.SetReason");
@@ -738,7 +1024,7 @@ public void __ext_actions_SetNTVOptional()
 
 	MarkNativeAsOptional("__action_setlistener");
 	MarkNativeAsOptional("__action_removelistener");
-	
-	__ext_actions_SetNTVOptionalLegacy();
+
+	__ext_actions_constructor_SetNTVOptional();
 }
 #endif 
