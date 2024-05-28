@@ -2,7 +2,7 @@
 
 **IMPORTANT NOTES** - **DON'T IGNORE THESE!**
 * The goal for this repo is to work on **Linux**, but Windows support is available.
-* Ensure that your machine is running at least **Ubuntu 20.04** (GLIB minimum of 2.31)
+* Ensure that your machine is running at least **Ubuntu 20.04** (GLIBC minimum of 2.31)
 > While Windows is supported by the repository, there may be things that don't fully function on Windows that we may have missed.
 > Please report any issues you run into!
 * This repository only supports Sourcemod **1.11** and up.
