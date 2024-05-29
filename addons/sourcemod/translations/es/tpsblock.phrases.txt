@@ -1,5 +1,9 @@
 "Phrases"
 {
+	"Tag"
+	{
+		"es"		"[{green}!{default}]"
+	}
 	"Cvar_Invalid"
 	{
 		"es"		"El comando {olive}c_thirdpersonshoulder{default} es inválido o esta protegido."
