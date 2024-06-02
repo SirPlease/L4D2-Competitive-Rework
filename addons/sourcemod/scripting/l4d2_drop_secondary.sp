@@ -2,6 +2,7 @@
 #pragma newdecls required
 #include <sourcemod>
 #include <sdktools>
+#include <left4dhooks>
 
 char sSecondary[MAXPLAYERS + 1][64];
 char sMeleeScript[MAXPLAYERS + 1][64];
@@ -113,10 +114,15 @@ public void Event_OnPlayerUse(Event event, const char[] name, bool dontBroadcast
 	if (IsValidSurvivor(client) && IsValidEntity(targetid)) 
 	{
 		char sClassname[32];
-		GetEntityClassname(targetid, sClassname, sizeof(sClassname))
+		GetEntityClassname(targetid, sClassname, sizeof(sClassname));
 
-		if (StrContains(sClassname, "pistol") != -1 ||
-		StrContains(sClassname, "melee") != -1)
+		if (StrContains(sClassname, "weapon_spawn") != -1)
+		{
+			L4D2WeaponId weaponID = view_as<L4D2WeaponId>(GetEntProp(targetid, Prop_Send, "m_weaponID"));
+			L4D2_GetWeaponNameByWeaponId(weaponID, sClassname, sizeof(sClassname));
+		}
+	
+		if (StrContains(sClassname, "pistol") != -1 || StrContains(sClassname, "melee") != -1)
 		{
 			// We do an actual check of what the client has here because we deal with limitations in certain configs.
 			// The limitation would cause the secondary to be set on the client while the client didn't even equip it.
@@ -166,7 +172,7 @@ bool IsValidSurvivor(int client)
 void SpawnSecondary(int client)
 {
 	int weapon;
-	
+
 	if (StrEqual(sSecondary[client], SECONDARY_PISTOL)) weapon = CreateEntityByName("weapon_pistol");
 	else if (StrEqual(sSecondary[client], SECONDARY_PISTOL_MAGNUM)) weapon = CreateEntityByName("weapon_pistol_magnum");
 	else 
