@@ -1,5 +1,9 @@
 "Phrases"
 {
+	"Tag"
+	{
+		"es"	"{default}[{green}!{default}]"
+	}
 	"ClientFullyLoaded"
 	{
 		"es"	"{olive}%N {default}ha cargado totalmente"

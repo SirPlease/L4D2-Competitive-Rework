@@ -1,6 +1,10 @@
 "Phrases"
 // RunVoteChecks
 {
+    "Tag"
+    {
+        "es"        "{blue}<{green}BossVote{blue}>{default}"
+    }
     "NotAvailable"
     {
         "es"        "Boss Vote no está disponible en este mapa."

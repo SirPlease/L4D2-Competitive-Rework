@@ -1,5 +1,9 @@
 "Phrases"
 {
+	"Tag"
+	{
+		"es"    "[{green}!{default}]"
+	}
 	"LoseFrustration"
 	{
         "es"	"El {red}Tank{default} {green}aún perderá{default} la frustración mientras los sobrevivientes estén en la {olive}habitación segura{default}."
