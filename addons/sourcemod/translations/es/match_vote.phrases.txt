@@ -1,0 +1,79 @@
+"Phrases"
+{
+    "Disabled"
+    {
+        "es"    "El complemento esta {red}Desactivado{default}"
+    }
+    "NoConsole"
+    {
+        "es"    "Este comando no puede ser usado desde la consola."
+    }
+    "ConfoglNotAvailable"
+    {
+        "es"    "Confogl {red}no está disponible{default}."
+    }
+    "CedaGame"
+    {
+        "es"    "No se permite ejecutar este comando en un {red}partido cedapug{default}"
+    }
+    "Title_Match"
+    {
+        "es"    "Seleccionar modo:"
+    }
+    "Title_Config"
+    {
+        "es"    "Selecciona el tipo %s:"
+    }
+    "ConfigNotFound"
+    {
+        "es"    "No se encontraron config para este modo."
+    }
+    "NoSpec"
+    {
+        "es"    "La votacion no puede ser iniciada por espectadores."
+    }
+    "MatchLoaded"
+    {
+        "es"    "El Modo ya esta cargado!"
+    }
+    "NotEnoughPlayers"
+    {
+        "es"    "La votacion no puede ser iniciada. {red}No hay suficientes jugadores{default} ({red}%d{default}/{green}%d{default})."
+    }
+    "Title_LoadConfig"
+    {
+        "es"    "Cargar config '%s' de confogl?"
+    }
+    "VoteInProgress"
+    {
+        "es"    "{red}Hay una votacion en progreso{default}, por favor espera {green}%d{default} segundos."
+    }
+    "VotePass_Loading"
+    {
+        "es"    "Cargando modo..."
+    }
+    "MatchNotLoaded"
+    {
+        "es"    "{red}No hay un modo{default} cargado."
+    }
+    "PlayersConnecting"
+    {
+        "es"    "La votacion no puede ser iniciada. Hay jugadores que se están conectando"
+    }
+    "Title_OffConfogl"
+    {
+        "es"    "Apagar Confogl?"
+    }
+    "VotePass_Unloading"
+    {
+        "es"    "Descargando Confogl..."
+    }
+    "Title_ChangeConfogl"
+    {
+        "es"    "Cambiar config de confogl a '%s'?"
+    }
+    "VotePass_Changed"
+    {
+        "es"    "Cambiado el modo..."
+    }
+}
