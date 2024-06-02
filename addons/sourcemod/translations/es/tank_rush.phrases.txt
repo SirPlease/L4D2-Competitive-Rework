@@ -1,5 +1,9 @@
 "Phrases"
 {
+	"Tag"
+	{
+		"es"		"{red}[{default}NoTankRush{red}]"
+	}
 	"freeze"
 	{
 		"es"		"{red}El Tank {default}ha aparecido. ¡{olive}Congelando {default}el puntaje!"

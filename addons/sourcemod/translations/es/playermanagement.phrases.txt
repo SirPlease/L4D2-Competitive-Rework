@@ -1,5 +1,9 @@
 "Phrases"
 {
+    "Tag"
+    {
+        "es"    "[{olive}!{default}]"
+    }
     "Usage"
     {
         "es"    "{blue}Uso{default}"

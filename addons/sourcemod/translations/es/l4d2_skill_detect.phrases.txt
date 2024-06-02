@@ -1,14 +1,30 @@
 "Phrases"
 {
+	"Tag+"
+	{
+		"es"	"{green}★{default}"
+	}
+	"Tag++"
+	{
+		"es"	"{green}★★{default}"
+	}
+	"Tag+++"
+	{
+		"es"	"{green}★★★{default}"
+	}
+	"Tag++++"
+	{
+		"es"	"{green}★★★★{default}"
+	}
 	// boomer pop
 	"Popped"
 	{
         "#format"   "{1:N},{2:N}" // 1:attacker 2:victim
-		"es"		"{olive}{2}{default} fue {blue}popped{default} por {olive}{1}{default}."
+		"es"		"{olive}{2}{default} fue {blue}pop{default} por {olive}{1}{default}."
 	}
 	"PoppedBot"
 	{
-		"es"		"Un boomer fue {blue}popped{default} por {olive}%N{default}."
+		"es"		"Un boomer fue {blue}pop{default} por {olive}%N{default}."
 	}
     // charger level
 	"Leveled"
@@ -86,26 +102,26 @@
 	"HurtSkeet"
 	{
         "#format"   "{1:N},{2:i},{3:s}" // 1:victim 2:damage 3:(bOverKill) ? buffer : ""
-		"es"		"{olive}{1}{default} {green}no{default} murio por skeet ({blue}{2}{default} daño).{3}"
+		"es"		"{olive}{1}{default} fue {green}chip-skeet{default} ({blue}{2}{default} daño).{3}"
 	}
 	"HurtSkeetBot"
 	{
         "#format"   "{1:i},{2:s}" // 1:damage 2:(bOverKill) ? buffer : ""
-		"es"		"{olive}Hunter{default} {green}not{default} murio por skeet ({blue}{1}{default} daño).{2}"
+		"es"		"{olive}Hunter{default} fue {green}chip-skeet{default} ({blue}{1}{default} daño).{2}"
 	}
 	"Unchipped"
 	{
-		"es"		"(Hubiera sido skeet, si no estuviera herido)"
+		"es"		""
 	}
     // crown
 	"CrownedWitch"
 	{
         "#format"   "{1:N},{2:i}" // 1:attacker 2:damage
-		"es"		"{olive}{1}{default} realizo un crowned a la witch ({blue}{2}{default} damage)."
+		"es"		"{olive}{1}{default} realizo un crown a la witch ({blue}{2}{default} damage)."
 	}
 	"CrownedWitch2"
 	{
-		"es"		"La witch fue {blue}crowned{default}."
+		"es"		"La witch fue {blue}crown{default}."
 	}
     // drawcrown
 	"DrawCrowned"
