@@ -641,6 +641,8 @@ void LoadGameData()
 		hFile.WriteLine("					}");
 		hFile.WriteLine("				}");
 		hFile.WriteLine("			}");
+		if( g_bLeft4Dead2 )
+		{
 		hFile.WriteLine("			\"L4DD::CVomitJarProjectile::Create\"");
 		hFile.WriteLine("			{");
 		hFile.WriteLine("				\"signature\"		\"FindAddress_1\"");
@@ -707,6 +709,7 @@ void LoadGameData()
 		hFile.WriteLine("					}");
 		hFile.WriteLine("				}");
 		hFile.WriteLine("			}");
+		}
 		hFile.WriteLine("		}");
 
 		// Dynamically generated addresses

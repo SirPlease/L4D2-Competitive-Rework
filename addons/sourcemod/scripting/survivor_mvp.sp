@@ -85,7 +85,7 @@ public Plugin:myinfo =
     name = "Survivor MVP notification",
     author = "Tabun, Artifacial",
     description = "Shows MVP for survivor team at end of round",
-    version = "0.3.1",
+    version = "0.3.2",
     url = "https://github.com/alexberriman/l4d2_survivor_mvp"
 };
 
@@ -910,8 +910,8 @@ public PlayerHurt_Event(Handle:event, const String:name[], bool:dontBroadcast)
         // Otherwise if friendly fire
         else if (GetClientTeam(attacker) == TEAM_SURVIVOR && GetClientTeam(victim) == TEAM_SURVIVOR && bTrackFF)                // survivor on survivor action == FF
         {
-            if (!bRUPActive || GetEntityMoveType(victim) != MOVETYPE_NONE || bPlayerLeftStartArea) {
-                // but don't record while frozen in readyup / before leaving saferoom
+            if (!bRUPActive || GetEntityMoveType(victim) != MOVETYPE_NONE || !L4D_IsPlayerIncapacitated(victim) || bPlayerLeftStartArea) {
+                // but don't record while frozen in readyup / before leaving saferoom / victim is incapacitated
                 iDidFF[attacker] += damageDone;
                 iTotalFF += damageDone;
             }
@@ -1012,7 +1012,7 @@ public InfectedDeath_Event(Handle:event, const String:name[], bool:dontBroadcast
     new attackerId = GetEventInt(event, "attacker");
     new attacker = GetClientOfUserId(attackerId);
     
-    if (attackerId && IsClientAndInGame(attacker) && GetClientTeam(attacker) == TEAM_SURVIVOR)
+    if (bPlayerLeftStartArea && attackerId && IsClientAndInGame(attacker) && GetClientTeam(attacker) == TEAM_SURVIVOR)
     {
         // If the tank is up, let's store separately
         if (tankSpawned) {
