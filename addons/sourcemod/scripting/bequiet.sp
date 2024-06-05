@@ -43,6 +43,7 @@ public void OnPluginStart()
     hCvarSpecSeeChat.AddChangeHook(cvarChanged);
 
     AutoExecConfig(true);
+    LoadTranslations("bequiet.phrases");
 }
 
 public Action Say_Callback(int client, char[] command, int args)
@@ -79,9 +80,9 @@ public Action TeamSay_Callback(int client, char[] command, int args)
             {
                 if (GetClientTeam(client) == 2)
                 {
-                    CPrintToChat(i, "{default}(Survivor) {blue}%N {default}: %s", client, sChat);
+                    CPrintToChat(i, "%t", "SurvivorSay", client, sChat);
                 }
-                else CPrintToChat(i, "{default}(Infected) {red}%N {default}: %s", client, sChat);
+                else CPrintToChat(i, "%t", "InfectedSay", client, sChat);
             }
             i++;
         }

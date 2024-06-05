@@ -1,0 +1,29 @@
+"Phrases"
+{
+    "Unpausing"
+    {
+        "chi"           "{blue}[{default}自动暂停{blue}] {default}所有{green}崩溃的{default}玩家已重连.. {blue}解除暂停{default}!"
+    }
+
+    "Waiting"
+    {
+        "#format"       "{1:i},{2:t}"   // 1: remainingCrashers 2: remainingCrashers > 1 ? "players" : "player"
+        "chi"           "{blue}[{default}自动暂停{blue}] {default}正在等待 {olive}{1} {default}名{green}崩溃的{default}{2}以启动{blue}暂停解除{default}!"
+    }
+
+    "Crashed"
+    {
+        "#format"       "{1:N}"         // 1: client
+        "chi"           "{blue}[{default}自动暂停{blue}] {olive}{1} {default}游戏崩溃了."
+    }
+
+    "players"           //此种语境下不需要加 '们'
+    {
+        "chi"           "玩家"
+    }
+
+    "player"
+    {
+        "chi"           "玩家"
+    }
+}
