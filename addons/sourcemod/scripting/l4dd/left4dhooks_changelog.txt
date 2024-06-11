@@ -1,11 +1,30 @@
-1.146 (21-Apr-2024)
-	- Fixed a memory leak. Thanks to "HarryPotter" for reporting.
-	- Fixed native "L4D_WriteMemoryString" buffer length. Thanks to "HarryPotter" for reporting.
-	- Changed natives "L4D_Dissolve" and "L4D_TankRockPrj" to return -1 if the entity failed to be created. Thanks to "ReCreator" for reporting.
+1.150 (06-May-2024)
+	- L4D1 Linux: Removed some unused clone functions that were removed from the game update. Thanks to "Ja-Forces" and "Forgetest" for reporting.
 
 	- Updated: Plugin.
-	- Updated: "/scripting/include/left4dhooks.inc" include file.
-	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
+	- Updated: "/gamedata/left4dhooks.l4d1.txt" GameData file.
+	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
+
+1.149 (06-May-2024)
+	- Repackage of the last update to include the GameData changes, which it did not.
+
+1.148 (05-May-2024)
+	- Update to fix GameData changes on Linux due to the recent update in L4D1. Thanks to "Forgetest" for fixing.
+	- Removed excess "functions" from the L4D1 temporary gamedata file, which were intended only for L4D2.
+
+	- Updated: Plugin.
+	- Updated: "/gamedata/left4dhooks.l4d1.txt" GameData file.
+	- Updated: "/scripting/l4dd/l4dd_gamedata.sp" project file.
+
+1.147 (30-Apr-2024)
+	- Fixed the "L4D_CancelStagger" not working on Special Infected (hackish fix, the SDKCall does not appear to work). Thanks to "Forgetest" for a solution.
+	- Changed "left4dhooks_silver.inc" include file to include the main "left4dhooks.inc" include, required by some functions. Thanks to "Forgetest" for reporting.
+	- Moved bool block variables within the forwards to the top, preventing wrongly firing the "*PostHandled" forwards, in case of any error before being set to false.
+
+1.146 (21-Apr-2024)
+	- Fixed a memory leak from the Animation hooks system. Thanks to "HarryPotter" for reporting.
+	- Fixed native "L4D_WriteMemoryString" buffer length. Thanks to "HarryPotter" for reporting.
+	- Changed natives "L4D_Dissolve" and "L4D_TankRockPrj" to return -1 if the entity failed to be created. Thanks to "ReCreator" for reporting.
 
 1.145 (03-Apr-2024)
 	- Changed natives "L4D_IsPositionInFirstCheckpoint" and "L4D_IsPositionInLastCheckpoint" to scan for the nearest visible NavArea to prevent finding those outside saferooms, and accurately return true.

@@ -34,7 +34,7 @@ jobs:
           - "1.12"
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set environment variables
         run: |
           echo "SCRIPTS_PATH=$GITHUB_WORKSPACE/addons/sourcemod/scripting" >> $GITHUB_ENV

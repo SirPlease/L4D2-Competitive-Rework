@@ -125,4 +125,14 @@
 		"de"		"{1} wurde gekickt (Grund: {2})"
 	}
 
+	"Please select a map"
+	{
+		"de"		"Bitte wähle eine Map "
+	}
+	
+	"Choose Config"
+	{
+		"de"		"Wähle eine Konfiguration"
+	}
+
 }

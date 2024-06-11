@@ -1,5 +1,9 @@
 "Phrases"
 {
+	"Tag"
+	{
+		"es"		"{default}[{green}8Ball{default}]"
+	}
 	"Usage"
 	{
 		"es"		"Uso: !8ball <pregunta>"

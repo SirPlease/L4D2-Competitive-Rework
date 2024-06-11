@@ -76,6 +76,7 @@ struct Plugin
 #include <commandfilters>
 #include <nextmap>
 #include <commandline>
+#include <entitylump>
 
 enum APLRes
 {
@@ -397,7 +398,7 @@ native int GetTime(int bigStamp[2]={0,0});
  * Produces a date and/or time string value for a timestamp.
  *
  * See this URL for valid parameters:
- * http://cplusplus.com/reference/clibrary/ctime/strftime.html
+ * https://cplusplus.com/reference/ctime/strftime/
  *
  * Note that available parameters depends on support from your operating system.
  * In particular, ones highlighted in yellow on that page are not currently
@@ -410,6 +411,24 @@ native int GetTime(int bigStamp[2]={0,0});
  * @error               Buffer too small or invalid time format.
  */
 native void FormatTime(char[] buffer, int maxlength, const char[] format, int stamp=-1);
+
+/**
+ * Parses a string representing a date and/or time into a unix timestamp.
+ * The timezone is always interpreted as UTC/GMT.
+ *
+ * See this URL for valid parameters:
+ * https://en.cppreference.com/w/cpp/io/manip/get_time
+ *
+ * Note that available parameters depends on support from your operating system.
+ * In particular, ones highlighted in yellow on that page are not currently
+ * available on Windows and should be avoided for portable plugins.
+ *
+ * @param dateTime     Date and/or time string.
+ * @param format       Formatting rules (passing NULL_STRING will use the rules defined in sm_datetime_format).
+ * @return             32bit timestamp (number of seconds since unix epoch).
+ * @error              Invalid date/time string or time format.
+ */
+native int ParseTime(const char[] dateTime, const char[] format);
 
 /**
  * Loads a game config file.

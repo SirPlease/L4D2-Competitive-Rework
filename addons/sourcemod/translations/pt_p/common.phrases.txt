@@ -210,26 +210,6 @@
 		"pt_p"		"O jogador selecionado ainda não está totalmente conectado."
 	}
 
-	"Played Sound"
-	{
-		"pt_p"		"Som tocado para '{1}'"
-	}
-
-	"Slapped player"
-	{
-		"pt_p"		"'{1}' foi esbofeteado(a)."
-	}
-
-	"Slayed player"
-	{
-		"pt_p"		"'{1}' foi chacinado(a)."
-	}
-
-	"Kicked player"
-	{
-		"pt_p"		"'{1}' foi expulso(a)"
-	}
-
 	"Cannot participate in vote"
 	{
 		"pt_p"		"Não podes participar nesta votação."
@@ -248,6 +228,26 @@
 	"Off"
 	{
 		"pt_p"		"Desligado"
+	}
+
+	"Say all"
+	{
+		"pt_p"		"(TODOS) {1}"
+	}
+	
+	"Chat admins"
+	{
+		"pt_p"		"(ADMINS) {1}"
+	}
+	
+	"Chat to admins"
+	{
+		"pt_p"		"(PARA ADMINS) {1}"
+	}
+	
+	"Private say to"
+	{
+		"pt_p"		"(Privado para {1}) {2}"
 	}
 
 }

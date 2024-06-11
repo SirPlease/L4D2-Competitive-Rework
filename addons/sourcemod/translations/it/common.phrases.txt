@@ -210,26 +210,6 @@
 		"it"		"Il giocatore che hai scelto non è ancora totalmente in gioco."
 	}
 
-	"Played Sound"
-	{
-		"it"		"Avviato un suono per il giocatore '{1}'"
-	}
-
-	"Slapped player"
-	{
-		"it"		"Il giocatore '{1}' è stato colpito. "
-	}
-
-	"Slayed player"
-	{
-		"it"		"Il giocatore '{1}' è stato giustiziato."
-	}
-
-	"Kicked player"
-	{
-		"it"		"Il giocatore '{1}' è stato espulso "
-	}
-
 	"Cannot participate in vote"
 	{
 		"it"		"Non puoi partecipare a questa votazione."
@@ -249,5 +229,24 @@
 	{
 		"it"		"No"
 	}
-
+	
+	"Say all"
+	{
+		"it"		"(TUTTI) {1}"
+	}
+	
+	"Chat admins"
+	{
+		"it"		"(AMMINISTRATORI) {1}"
+	}
+	
+	"Chat to admins"
+	{
+		"it"		"(AGLI AMMINISTRATORI) {1}"
+	}
+	
+	"Private say to"
+	{
+		"it"		"(Privato a {1}) {2}"
+	}
 }

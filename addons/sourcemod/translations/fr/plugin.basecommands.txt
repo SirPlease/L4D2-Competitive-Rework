@@ -125,4 +125,14 @@
 		"fr"		"{1} kické (Raison: {2})"
 	}
 
+	"Please select a map"
+	{
+		"fr"		"Veuillez selectionner une map"
+	}
+
+	"Choose Config"
+	{
+		"fr"		"Choisir une Config"
+	}
+
 }
