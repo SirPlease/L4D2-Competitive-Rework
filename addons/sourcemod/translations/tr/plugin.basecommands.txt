@@ -125,9 +125,4 @@
 		"tr"		"{1} oyundan atıldı (Neden: {2})"
 	}
 
-	"Please select a map"
-	{
-		"tr"		"Lütfen bir harita seçin"
-	}
-
 }

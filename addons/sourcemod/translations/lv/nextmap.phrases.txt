@@ -1,5 +1,10 @@
 "Phrases"
 {
+	"Next Map"
+	{
+		"lv"		"Nākamā karte: {1}"
+	}
+
 	"Map History"
 	{
 		"lv"		"Kartes vēsture"

@@ -1,5 +1,10 @@
 "Phrases"
 {
+	"Next Map"
+	{
+		"pt"		"Próximo mapa: {1}"
+	}
+
 	"Map History"
 	{
 		"pt"		"Histórico de mapas"
@@ -17,7 +22,7 @@
 
 	"Played Time"
 	{
-		"pt"		"[Tempo jogado]"
+		"pt"		"[Tempo jogado] "
 	}
 
 	"Reason"
@@ -34,4 +39,5 @@
 	{
 		"pt"		"atrás"
 	}
+
 }

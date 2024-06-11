@@ -1,5 +1,10 @@
 "Phrases"
 {
+	"Next Map"
+	{
+		"chi"		"下一幅地图: {1}"
+	}
+
 	"Map History"
 	{
 		"chi"		"地图历史纪录"

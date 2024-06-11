@@ -25,19 +25,4 @@
 		"he"		"רצח את {1}"
 	}
 
-	"Name changed"
-	{
-		"he"		"השם שונה"
-	}
-
-	"Renamed target"
-	{
-		"he"		"שם {1} שונה"
-	}
-
-	"Rename player"
-	{
-		"he"		"שנה את שם השחקן"
-	}
-
 }

@@ -1,5 +1,10 @@
 "Phrases"
 {
+	"Next Map"
+	{
+		"jp"		"次のマップ: {1}"
+	}
+
 	"Map History"
 	{
 		"jp"		"マップ履歴"

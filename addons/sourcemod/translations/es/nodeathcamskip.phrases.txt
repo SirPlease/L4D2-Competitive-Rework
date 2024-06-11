@@ -1,8 +1,0 @@
-"Phrases"
-{
-	"WarnExploiting"
-	{
-		"#format"	"{1:N}"
-		"es"		"{red}[{default}Explotar{red}] {olive}{1} {default}intentó saltarse el temporizador de muerte."
-	}
-}

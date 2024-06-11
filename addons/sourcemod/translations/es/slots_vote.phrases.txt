@@ -1,9 +1,5 @@
 "Phrases"
 {
-	"Tag"
-	{
-		"es"    	"{blue}[{default}Slots{blue}]{default}"
-	}
 	"NotConsoleVote"
 	{
 		"es"		"[Slots] Debes estar dentro del juego."

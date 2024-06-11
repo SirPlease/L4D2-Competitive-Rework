@@ -1,5 +1,10 @@
 "Phrases"
 {
+	"Next Map"
+	{
+		"hu"		"A következő pálya: {1}"
+	}
+
 	"Map History"
 	{
 		"hu"		"Palya tortenelem"

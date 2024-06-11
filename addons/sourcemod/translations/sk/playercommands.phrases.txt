@@ -40,4 +40,9 @@
 		"sk"		"Premenovať hráča"
 	}
 
+	"Dead Player Rename"
+	{
+		"sk"		"{1} bude premenovaný v ďalšom kole. "
+	}
+
 }

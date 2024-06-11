@@ -105,8 +105,6 @@
 			"engine"			"csgo"
 			"engine"			"sdk2013"
 			"engine"			"contagion"
-			"engine"			"pvkii"
-			"engine"			"mcv"
 		}
 		
 		"Offsets"
@@ -191,10 +189,8 @@
 			"game"					"doi"
 			"game"					"bms"
 			"game"					"iosoccer"
-			"game"					"vietnam"
 			"game"					"open_fortress"
 			"game"					"tf2classic"
-			"game"					"pf2"
 		}
 
 		"Keys"
@@ -245,11 +241,9 @@
 			"game"					"doi"
 			"game"					"bms"
 			"game"					"iosoccer"
-			"game"					"vietnam"
 			"game"					"reactivedrop"
 			"game"					"open_fortress"
 			"game"					"tf2classic"
-			"game"					"pf2"
 		}
 		
 		"Keys"
@@ -310,10 +304,8 @@
 			"game"					"csgo"
 			"game"					"reactivedrop"
 			"game"					"FortressForever"
-			"game"					"vietnam"
 			"game"					"open_fortress"
 			"game"					"tf2classic"
-			"game"					"pf2"
 		}
 		
 		"Keys"
@@ -366,7 +358,6 @@
 			"engine"	"csgo"
 			"engine"	"blade"
 			"engine"	"insurgency"
-			"engine"	"mcv"
 		}
 		
 		"Keys"
@@ -395,34 +386,6 @@
 		"Keys"
 		{
 			"RadioMenuClosesOnInvalidSlot"	"yes"
-		}
-	}
-
-
-	/**
-	 * Menu Sounds
-	 */
-	"#default"
-	{
-		"Keys"
-		{
-			/**
-	 		 * Specifies the sound that gets played when an item is selected from a menu.
-	 		 */
-			"MenuItemSound"			"buttons/button14.wav"
-
-			/**
-			 * Specifies the sound that gets played when an "Exit" button is selected 
-			 * from a menu.
-			 */
-			"MenuExitSound"			"buttons/combine_button7.wav"
-			
-			/**
-			 * Specifies the sound that gets played when an "Exit Back" button is selected 
-			 * from a menu.  This is the special "Back" button that is intended to roll back
-			 * to a previous menu.
-			 */
-			"MenuExitBackSound"		"buttons/combine_button7.wav"
 		}
 	}
 }

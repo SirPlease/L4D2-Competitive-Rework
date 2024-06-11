@@ -75,11 +75,7 @@ native void CloseHandle(Handle hndl);
  */
 native Handle CloneHandle(Handle hndl, Handle plugin=INVALID_HANDLE);
 
-methodmap Handle __nullable__ {
-    public native ~Handle();
-
-    public native void Close();
-};
+using __intrinsics__.Handle;
 
 /**
  * Do not use this function.  Returns if a Handle and its contents

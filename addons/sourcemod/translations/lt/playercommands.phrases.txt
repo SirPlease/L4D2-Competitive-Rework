@@ -40,4 +40,9 @@
 		"lt"		"Pakeisti žaidėjo pseudonimą"
 	}
 
+	"Dead Player Rename"
+	{
+		"lt"		"{1} bus pakeistas pseudonimas sekantį raundą."
+	}
+
 }

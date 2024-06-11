@@ -241,13 +241,12 @@ methodmap KeyValues < Handle
 	// have the previous key saved for backwards traversal.
 	//
 	// @param kv            KeyValues Handle.
-	// @return              True on success, false if there is no higher node.
-	public native bool SavePosition();
+	public native void SavePosition();
 
 	// Jumps back to the previous position.  Returns false if there are no
-	// previous positions (i.e., at the root node with an empty traversal stack).
-	// This should be called once for each successful Jump call, in order to return
-	// to the top node.  This function pops one node off the internal traversal stack.
+	// previous positions (i.e., at the root node).  This should be called
+	// once for each successful Jump call, in order to return to the top node.
+	// This function pops one node off the internal traversal stack.
 	//
 	// @return              True on success, false if there is no higher node.
 	public native bool GoBack();
@@ -272,14 +271,12 @@ methodmap KeyValues < Handle
 	//                        thus the state is as if KvGoBack() was called.
 	public native int DeleteThis();
 
-	// Sets the position back to the top node and clears the entire
-	// node traversal history (by default).  This can be used instead of looping
-	// KvGoBack() if recursive iteration is not important.
+	// Sets the position back to the top node, emptying the entire node
+	// traversal history.  This can be used instead of looping KvGoBack()
+	// if recursive iteration is not important.
 	//
 	// @param kv            KeyValues Handle.
-	// @param clearHistory  If true, the entire node traversal stack is cleared.
-	//                      If false, this will add to the traversal stack.
-	public native void Rewind(bool clearHistory=true);
+	public native void Rewind();
 
 	// Retrieves the current section name.
 	//
@@ -308,7 +305,7 @@ methodmap KeyValues < Handle
 
 	// Returns the position in the jump stack; I.e. the number of calls
 	// required for KvGoBack to return to the root node.  If at the root node,
-	// and the traversal stack is empty, 0 is returned.
+	// 0 is returned.
 	//
 	// @return              Number of non-root nodes in the jump stack.
 	public native int NodesInStack();
@@ -526,10 +523,9 @@ native bool KvGotoNextKey(Handle kv, bool keyOnly=true);
  * have the previous key saved for backwards traversal.
  *
  * @param kv            KeyValues Handle.
- * @return              True on success, false if there is no higher node.
  * @error               Invalid Handle.
  */
-native bool KvSavePosition(Handle kv);
+native void KvSavePosition(Handle kv);
 
 /**
  * Removes the given key from the current position.
@@ -560,9 +556,9 @@ native int KvDeleteThis(Handle kv);
 
 /**
  * Jumps back to the previous position.  Returns false if there are no
- * previous positions (i.e., at the root node with an empty traversal stack).
- * This should be called once for each successful Jump call, in order to return
- * to the top node.  This function pops one node off the internal traversal stack.
+ * previous positions (i.e., at the root node).  This should be called
+ * once for each successful Jump call, in order to return to the top node.
+ * This function pops one node off the internal traversal stack.
  *
  * @param kv            KeyValues Handle.
  * @return              True on success, false if there is no higher node.

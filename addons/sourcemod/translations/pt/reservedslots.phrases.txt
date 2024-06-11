@@ -2,6 +2,7 @@
 {
 	"Slot reserved"
 	{
-		"pt"		"Conexão cancelada devido a uma vaga reservada"
+		"pt"		"Conexão cancelada por reserva de vaga"
 	}
+
 }

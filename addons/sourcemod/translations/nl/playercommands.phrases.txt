@@ -40,4 +40,9 @@
 		"nl"		"Hernoem speler"
 	}
 
+	"Dead Player Rename"
+	{
+		"nl"		"{1} krijgt een nieuwe naam de volgende ronde."
+	}
+
 }

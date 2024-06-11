@@ -65,8 +65,4 @@
 		"es"		"Nominados"
 	}
 
-	"Map Not In Pool"
-	{
-		"es"		"El mapa '{1}' no está en el grupo de nominaciones."
-	}
 }

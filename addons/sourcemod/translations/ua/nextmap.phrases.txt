@@ -1,5 +1,10 @@
 "Phrases"
 {
+	"Next Map"
+	{
+		"ua"		"Наступна карта: {1}"
+	}
+
 	"Map History"
 	{
 		"ua"		"Історія карт"

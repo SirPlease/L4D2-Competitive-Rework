@@ -19,11 +19,6 @@
 	{
 		"it"		"Il fuoco amico è disattivato."
 	}
-	
-	"Friendly Fire Percent"
-	{
-		"it"		"Il fuoco amico è a {1}%."
-	}
 
 	"Current Map"
 	{

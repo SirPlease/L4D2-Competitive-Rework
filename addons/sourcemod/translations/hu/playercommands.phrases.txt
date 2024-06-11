@@ -40,4 +40,9 @@
 		"hu"		"Játékos átnevezése"
 	}
 
+	"Dead Player Rename"
+	{
+		"hu"		"{1} át lesz nevezve a következő körben"
+	}
+
 }

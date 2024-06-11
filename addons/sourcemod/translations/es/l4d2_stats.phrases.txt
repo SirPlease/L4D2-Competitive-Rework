@@ -1,17 +1,5 @@
 "Phrases"
 {
-	"Tag+"
-	{
-		"es"	"{green}★{default}"
-	}
-	"Tag++"
-	{
-		"es"    "{green}★★{default}"
-	}
-	"Tag+++"
-	{
-		"es"	"{green}★★★{default}"
-	}
 	"MeleeSkeeted"
 	{
         "#format"   "{1:N},{2:N}" // 1:victim 2:attacker

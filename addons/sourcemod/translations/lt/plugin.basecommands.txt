@@ -125,9 +125,4 @@
 		"lt"		"Išspirtas {1} (Priežastis: {2})"
 	}
 
-	"Please select a map"
-	{
-		"lt"		"Pasirinkti žemėlapį"
-	}
-
 }

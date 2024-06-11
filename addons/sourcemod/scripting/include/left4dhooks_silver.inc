@@ -26,7 +26,6 @@
 #include <sdktools>
 #include <sdkhooks>
 
-#tryinclude <left4dhooks>
 #tryinclude <left4dhooks_anim>
 #tryinclude <left4dhooks_stocks>
 #tryinclude <left4dhooks_lux_library>

@@ -18,8 +18,8 @@
 
 
 
-#define PLUGIN_VERSION		"1.150"
-#define PLUGIN_VERLONG		1150
+#define PLUGIN_VERSION		"1.146"
+#define PLUGIN_VERLONG		1146
 
 #define DEBUG				0
 // #define DEBUG			1	// Prints addresses + detour info (only use for debugging, slows server down).
@@ -348,7 +348,6 @@ int g_iCanBecomeGhostOffset;
 
 // Other
 Address g_pScriptId;
-int g_iCancelStagger[MAXPLAYERS+1];
 int g_iPlayerResourceRef;
 int g_iOffsetAmmo;
 int g_iPrimaryAmmoType;
@@ -728,7 +727,15 @@ void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 
 void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
-	ResetVars();
+	// Reset checkpoints
+	if( !g_bLeft4Dead2 )
+	{
+		for( int i = 1; i <= MaxClients; i++ )
+		{
+			g_bCheckpointFirst[i] = false;
+			g_bCheckpointLast[i] = false;
+		}
+	}
 }
 
 void Event_EnteredStartArea(Event event, const char[] name, bool dontBroadcast)
@@ -799,25 +806,6 @@ public void OnPluginEnd()
 
 	// Target Filters
 	UnloadTargetFilters();
-}
-
-void ResetVars()
-{
-	// Reset L4D1 variables
-	if( !g_bLeft4Dead2 )
-	{
-		for( int i = 1; i <= MaxClients; i++ )
-		{
-			// Reset checkpoints
-			g_bCheckpointFirst[i] = false;
-			g_bCheckpointLast[i] = false;
-
-			// Reset stagger hooks
-			if( g_iCancelStagger[i] )
-				SDKUnhook(i, SDKHook_PostThinkPost, OnThinkCancelStagger);
-			g_iCancelStagger[i] = 0;
-		}
-	}
 }
 
 
@@ -960,7 +948,15 @@ public void OnMapEnd()
 	g_bFinalCheck = false;
 	g_iMaxChapters = 0;
 
-	ResetVars();
+	// Reset checkpoints
+	if( !g_bLeft4Dead2 )
+	{
+		for( int i = 1; i <= MaxClients; i++ )
+		{
+			g_bCheckpointFirst[i] = false;
+			g_bCheckpointLast[i] = false;
+		}
+	}
 
 	// Reset hooks - Clear causes memory leaks, delete and re-create
 	// g_iAnimationHookedClients.Clear();

@@ -40,4 +40,9 @@
 		"it"		"Rinomina un giocatore"
 	}
 
+	"Dead Player Rename"
+	{
+		"it"		"{1} verrà rinominato il prossimo round."
+	}
+
 }

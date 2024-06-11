@@ -1,5 +1,10 @@
 "Phrases"
 {
+	"Next Map"
+	{
+		"sk"		"Ďalšia mapa : {1} "
+	}
+
 	"Map History"
 	{
 		"sk"		"História zmien máp"

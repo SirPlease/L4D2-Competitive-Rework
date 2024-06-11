@@ -85,7 +85,7 @@ public Plugin:myinfo =
     name = "Survivor MVP notification",
     author = "Tabun, Artifacial",
     description = "Shows MVP for survivor team at end of round",
-    version = "0.3.3",
+    version = "0.3.1",
     url = "https://github.com/alexberriman/l4d2_survivor_mvp"
 };
 
@@ -96,12 +96,13 @@ new     Handle:     hCountTankDamage =  INVALID_HANDLE;         // whether we're
 new     Handle:     hCountWitchDamage = INVALID_HANDLE;         // whether we're tracking witch damage for MVP-selection
 new     Handle:     hTrackFF =          INVALID_HANDLE;         // whether we're tracking friendly-fire damage (separate stat)
 new     Handle:     hBrevityFlags =     INVALID_HANDLE;         // how verbose/brief the output should be:
+new     Handle:     hRUPActive =        INVALID_HANDLE;         // whether the ready up mod is active
 
 new     bool:       bCountTankDamage;
 new     bool:       bCountWitchDamage;
 new     bool:       bTrackFF;
 new                 iBrevityFlags;
-new     bool:       bRUPLive;
+new     bool:       bRUPActive;
 
 new     String:     sClientName[MAXPLAYERS + 1][64];            // which name is connected to the clientId?
 
@@ -275,6 +276,17 @@ public OnPluginStart()
     
     if (!(iBrevityFlags & BREV_FF)) { bTrackFF = true; } // force tracking on if we're showing FF
     
+    // RUP?
+    hRUPActive = FindConVar("l4d_ready_enabled");
+    if (hRUPActive != INVALID_HANDLE)
+    {
+        // hook changes for this, and set state appropriately
+        bRUPActive = GetConVarBool(hRUPActive);
+        HookConVarChange(hRUPActive, ConVarChange_RUPActive);
+    } else {
+        // not loaded
+        bRUPActive = false;
+    }
     bPlayerLeftStartArea = false;
     
     // Commands
@@ -285,10 +297,12 @@ public OnPluginStart()
     RegConsoleCmd("say_team", Say_Cmd);
 }
 
-public OnRoundIsLive()
+/*
+public OnPluginEnd()
 {
-    bRUPLive = true;
+// nothing
 }
+*/
 
 public OnClientPutInServer(client)
 {
@@ -346,6 +360,10 @@ public ConVarChange_BrevityFlags(Handle:cvar, const String:oldValue[], const Str
     if (!(iBrevityFlags & BREV_FF)) { 
         bTrackFF = true; 
     } // force tracking on if we're showing FF
+}
+
+public ConVarChange_RUPActive(Handle:cvar, const String:oldValue[], const String:newValue[]) {
+    bRUPActive = StringToInt(newValue) != 0;
 }
 
 /*
@@ -416,7 +434,6 @@ public void ScavRoundStart(Handle:event, const String:name[], bool:dontBroadcast
 public RoundStart_Event(Handle:event, const String:name[], bool:dontBroadcast)
 {
     bPlayerLeftStartArea = false;
-    bRUPLive = false;
     
     if (!bInRound)
     {
@@ -506,7 +523,6 @@ public RoundEnd_Event(Handle:event, const String:name[], bool:dontBroadcast)
         }
     }
     
-    bRUPLive = false;
     tankSpawned = false;
 }
 
@@ -892,10 +908,10 @@ public PlayerHurt_Event(Handle:event, const String:name[], bool:dontBroadcast)
         }
         
         // Otherwise if friendly fire
-        else if (GetClientTeam(attacker) == TEAM_SURVIVOR && GetClientTeam(victim) == TEAM_SURVIVOR && bTrackFF && !L4D_IsPlayerIncapacitated(victim))                // survivor on survivor action == FF
+        else if (GetClientTeam(attacker) == TEAM_SURVIVOR && GetClientTeam(victim) == TEAM_SURVIVOR && bTrackFF)                // survivor on survivor action == FF
         {
-            if (bRUPLive || bPlayerLeftStartArea) {
-                // but don't record before readyup ended or before leaving saferoom if readyup is not loaded.
+            if (!bRUPActive || GetEntityMoveType(victim) != MOVETYPE_NONE || bPlayerLeftStartArea) {
+                // but don't record while frozen in readyup / before leaving saferoom
                 iDidFF[attacker] += damageDone;
                 iTotalFF += damageDone;
             }
@@ -996,7 +1012,7 @@ public InfectedDeath_Event(Handle:event, const String:name[], bool:dontBroadcast
     new attackerId = GetEventInt(event, "attacker");
     new attacker = GetClientOfUserId(attackerId);
     
-    if (bPlayerLeftStartArea && attackerId && IsClientAndInGame(attacker) && GetClientTeam(attacker) == TEAM_SURVIVOR)
+    if (attackerId && IsClientAndInGame(attacker) && GetClientTeam(attacker) == TEAM_SURVIVOR)
     {
         // If the tank is up, let's store separately
         if (tankSpawned) {

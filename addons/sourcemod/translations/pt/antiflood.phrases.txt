@@ -4,4 +4,5 @@
 	{
 		"pt"		"Você está enviando mensagens demais!"
 	}
+
 }

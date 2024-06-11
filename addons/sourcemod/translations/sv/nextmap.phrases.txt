@@ -1,33 +1,38 @@
 "Phrases"
 {
+	"Next Map"
+	{
+		"sv"		"Nästa bana: {1}"
+	}
+
 	"Map History"
 	{
-		"sv"		"Kartans historia"
+		"sv"		"Banans historia"
 	}
 
 	"Map"
 	{
-		"sv"		"[Karta]"
+		"sv"		"[Bana]  "
 	}
 
 	"Started"
 	{
-		"sv"		"[Startad]"
+		"sv"		"[Startad]  "
 	}
 
 	"Played Time"
 	{
-		"sv"		"[Spelad tid]"
+		"sv"		"[Spelad tid]  "
 	}
 
 	"Reason"
 	{
-		"sv"		"[Anledning till avslutande]"
+		"sv"		"[Anledning till avslutande]  "
 	}
 
 	"Current Map"
 	{
-		"sv"		"Nuvarande karta"
+		"sv"		"Nuvarande bana"
 	}
 
 	"ago"

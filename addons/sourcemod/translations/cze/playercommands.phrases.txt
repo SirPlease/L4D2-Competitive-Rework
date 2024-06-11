@@ -40,4 +40,9 @@
 		"cze"		" Prejmenovat hrace"
 	}
 
+	"Dead Player Rename"
+	{
+		"cze"		"Hrac {1} bude pristi kolo prejmenovan."
+	}
+
 }

@@ -65,9 +65,4 @@
 		"da"		"Nomineret"
 	}
 
-	"Map Not In Pool"
-	{
-		"da"		"Bane '{1}' er ikke i nominations pujlen."
-	}
-
 }

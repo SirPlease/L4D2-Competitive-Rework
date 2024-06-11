@@ -208,8 +208,7 @@ enum TFCond
 	TFCond_LostFooting, //126: Less ground friction
 	TFCond_AirCurrent, //127: Reduced air control and friction
 	TFCond_HalloweenHellHeal, // 128: Used when a player gets teleported to hell
-	TFCond_PowerupModeDominant, // 129: Reduces effects of certain powerups
-	TFCond_ImmuneToPushback // 130: Player is immune to pushback effects
+	TFCond_PowerupModeDominant // 129: Reduces effects of certain powerups
 };
 
 const float TFCondDuration_Infinite = -1.0;

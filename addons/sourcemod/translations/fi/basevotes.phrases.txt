@@ -80,6 +80,11 @@
 		"fi"		"Toinen ylläpitäjä käyttää karttaäänestysvalikkoa tällä hetkellä."
 	}
 
+	"Please select a map"
+	{
+		"fi"		"Valitse kartta"
+	}
+
 	"Start the Vote"
 	{
 		"fi"		"Aloita äänestys"

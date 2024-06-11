@@ -1,5 +1,10 @@
 "Phrases"
 {
+	"Next Map"
+	{
+		"lt"		"Sekantis žemėlapis: {1}"
+	}
+
 	"Map History"
 	{
 		"lt"		"Žemėlapių Istorija"

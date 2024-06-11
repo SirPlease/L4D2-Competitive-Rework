@@ -32,11 +32,17 @@
 
 	"Renamed target"
 	{
-		"jp"		"{1}をリネームしました。"
+		"jp"		"リネーム対象"
 	}
 
 	"Rename player"
 	{
 		"jp"		"プレイヤーをリネーム"
 	}
+
+	"Dead Player Rename"
+	{
+		"jp"		"{1} は次のラウンドで名前が変更されます。"
+	}
+
 }

@@ -145,7 +145,7 @@ public Action Command_Addmap(int client, int args)
 	int status;
 	if (!g_mapTrie.GetValue(resolvedMap, status))
 	{
-		ReplyToCommand(client, "%t", "Map Not In Pool", displayName);
+		ReplyToCommand(client, "%t", "Map was not found", displayName);
 		return Plugin_Handled;		
 	}
 	
@@ -197,7 +197,15 @@ public Action Command_Nominate(int client, int args)
 	
 	if (args == 0)
 	{	
-		OpenNominationMenu(client);
+		if (source == SM_REPLY_TO_CHAT)
+		{
+			OpenNominationMenu(client);
+		}
+		else
+		{
+			ReplyToCommand(client, "[SM] Usage: sm_nominate <mapname>");
+		}
+		
 		return Plugin_Handled;
 	}
 	
@@ -300,7 +308,7 @@ void AttemptNominate(int client, const char[] map, int size)
 	int status;
 	if (!g_mapTrie.GetValue(mapname, status))
 	{
-		ReplyToCommand(client, "%t", "Map Not In Pool", displayName);
+		ReplyToCommand(client, "%t", "Map was not found", displayName);
 		return;		
 	}
 	

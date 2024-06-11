@@ -1,5 +1,10 @@
 "Phrases"
 {
+	"Next Map"
+	{
+		"fr"		"Map suivante: {1}"
+	}
+
 	"Map History"
 	{
 		"fr"		"Historique des Maps"

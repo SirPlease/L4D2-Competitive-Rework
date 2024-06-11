@@ -140,8 +140,7 @@ stock int StrCopy(char[] dest, int destLen, const char[] source)
  * Formats a string according to the SourceMod format rules (see documentation).
  *
  * @param buffer        Destination string buffer.
- * @param maxlength     Maximum length of output string buffer,
- *                      including the null terminator.
+ * @param maxlength     Maximum length of output string buffer.
  * @param format        Formatting rules.
  * @param ...           Variable number of format parameters.
  * @return              Number of characters written to the buffer,
@@ -156,8 +155,7 @@ native int Format(char[] buffer, int maxlength, const char[] format, any ...);
  *       check is removed, it is slightly faster.
  *
  * @param buffer        Destination string buffer.
- * @param maxlength     Maximum length of output string buffer,
- *                      including the null terminator.
+ * @param maxlength     Maximum length of output string buffer.
  * @param format        Formatting rules.
  * @param ...           Variable number of format parameters.
  * @return              Number of characters written to the buffer,
@@ -172,8 +170,7 @@ native int FormatEx(char[] buffer, int maxlength, const char[] format, any ...);
  *       implementing your own variable argument functions.
  *
  * @param buffer        Destination string buffer.
- * @param maxlength     Maximum length of output string buffer,
- *                      including the null terminator.
+ * @param maxlength     Maximum length of output string buffer.
  * @param format        Formatting rules.
  * @param varpos        Argument number which contains the '...' symbol.
  *                      Note: Arguments start at 1.

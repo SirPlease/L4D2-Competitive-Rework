@@ -125,14 +125,4 @@
 		"da"		"Fjernede {1} (årsag: {2})"
 	}
 
-	"Please select a map"
-	{
-		"da"		"Vælg venligst en bane"
-	}
-
-	"Choose Config"
-	{
-		"da"		"Vælg Konfiguration"
-	}
-
 }

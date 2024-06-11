@@ -1,5 +1,10 @@
 "Phrases"
 {
+	"Next Map"
+	{
+		"cze"		"Pristi mapa: {1}"
+	}
+
 	"Map History"
 	{
 		"cze"		"Historie map"

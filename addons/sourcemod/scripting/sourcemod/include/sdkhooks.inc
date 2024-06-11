@@ -378,8 +378,6 @@ forward Action OnLevelInit(const char[] mapName, char mapEntities[2097152]);
 /**
  * Hooks an entity
  *
- * Unhooked automatically upon destruction/removal of the entity
- *
  * @param entity        Entity index
  * @param type          Type of function to hook
  * @param callback      Function to call when hook is called
@@ -388,8 +386,6 @@ native void SDKHook(int entity, SDKHookType type, SDKHookCB callback);
 
 /**
  * Hooks an entity
- *
- * Unhooked automatically upon destruction/removal of the entity
  *
  * @param entity        Entity index
  * @param type          Type of function to hook

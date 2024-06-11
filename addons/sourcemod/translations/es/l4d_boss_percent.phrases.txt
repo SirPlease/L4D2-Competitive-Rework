@@ -1,13 +1,5 @@
 "Phrases"
 {
-	"TagTank"
-	{
-		"es"	"<{olive}Tank{default}>"
-	}
-	"TagWitch"
-	{
-		"es"	"<{olive}Witch{default}>"
-	}
 	"TankOn"
 	{
 		"es"	"Tank: %d%%"
