@@ -4848,14 +4848,40 @@ int Native_Infected_OnHitByVomitJar(Handle plugin, int numParams) // Native "L4D
 
 int Native_CTerrorPlayer_CancelStagger(Handle plugin, int numParams) // Native "L4D_CancelStagger"
 {
-	ValidateNatives(g_hSDK_CTerrorPlayer_CancelStagger, "CTerrorPlayer::CancelStagger");
+	// ValidateNatives(g_hSDK_CTerrorPlayer_CancelStagger, "CTerrorPlayer::CancelStagger");
 
 	int client = GetNativeCell(1);
 
-	//PrintToServer("#### CALL g_hSDK_CTerrorPlayer_CancelStagger");
+	// if( !g_bLeft4Dead2 && GetClientTeam(client) == 3 )
+	if( GetClientTeam(client) == 3 )
+	{
+		// Hack for L4D1 to stop staggering on SI, the SDKCall does not stop the stagger animation, only resets the variables
+		// Don't know if an L4D1 update broke the SDKCall, nothing has changed with the function itself, I thought it used to work
+		if( g_iCancelStagger[client] == 0 )
+			SDKHook(client, SDKHook_PostThinkPost, OnThinkCancelStagger);
+
+		g_iCancelStagger[client] = 3;
+	}
+
+	// PrintToServer("#### CALL g_hSDK_CTerrorPlayer_CancelStagger");
 	SDKCall(g_hSDK_CTerrorPlayer_CancelStagger, client);
 
 	return 0;
+}
+
+void OnThinkCancelStagger(int client)
+{
+	g_iCancelStagger[client]--;
+	if( g_iCancelStagger[client] == 0 )
+	{
+		SDKUnhook(client, SDKHook_PostThinkPost, OnThinkCancelStagger);
+	}
+
+	if( GetClientTeam(client) == 3 && IsPlayerAlive(client) && L4D_IsPlayerStaggering(client) )
+	{
+		SetEntityMoveType(client, MOVETYPE_WALK); // Makes them move less than without this line
+		SetEntPropFloat(client, Prop_Send, "m_flCycle", 1.0); // Skip stumble animation
+	}
 }
 
 int Native_CTerrorPlayer_FindUseEntity(Handle plugin, int numParams) // Native "L4D_FindUseEntity"

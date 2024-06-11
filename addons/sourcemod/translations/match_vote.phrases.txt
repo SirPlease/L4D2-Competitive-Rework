@@ -1,0 +1,83 @@
+"Phrases"
+{
+    "Tag"
+    {
+        "en"    "[{olive}!{default}]"
+    }
+    "Disabled"
+    {
+        "en"    "Plugin is {red}Disabled{default}"
+    }
+    "NoConsole"
+    {
+        "en"    "This command can't be used from console."
+    }
+    "ConfoglNotAvailable"
+    {
+        "en"    "Confogl is {red}not available{default}."
+    }
+    "CedaGame"
+    {
+        "en"    "It is not allowed to run this command in a {red}cedapug match{default}"
+    }
+    "Title_Match"
+    {
+        "en"    "Select match mode:"
+    }
+    "Title_Config"
+    {
+        "en"    "Select type %s:"
+    }
+    "ConfigNotFound"
+    {
+        "en"    "No configs for such mode were found."
+    }
+    "NoSpec"
+    {
+        "en"    "Voting cannot be initiated by spectators."
+    }
+    "MatchLoaded"
+    {
+        "en"    "Matchmode already loaded!"
+    }
+    "NotEnoughPlayers"
+    {
+        "en"    "Vote cannot be started. {red}Not enough players{default} ({red}%d{default}/{green}%d{default})."
+    }
+    "Title_LoadConfig"
+    {
+        "en"    "Load confogl '%s' config?"
+    }
+    "VoteInProgress"
+    {
+        "en"    "{red}Vote in progress{default}, please wait {green}%d{default} seconds."
+    }
+    "VotePass_Loading"
+    {
+        "en"    "Matchmode loading..."
+    }
+    "MatchNotLoaded"
+    {
+        "en"    "{red}No matchmode{default} loaded."
+    }
+    "PlayersConnecting"
+    {
+        "en"    "Vote cannot be started. Players are connecting."
+    }
+    "Title_OffConfogl"
+    {
+        "en"    "Turn off Confogl?"
+    }
+    "VotePass_Unloading"
+    {
+        "en"    "Confogl unloading..."
+    }
+    "Title_ChangeConfogl"
+    {
+        "en"    "Change confogl config to '%s'?"
+    }
+    "VotePass_Changed"
+    {
+        "en"    "Matchmode Changed..."
+    }
+}

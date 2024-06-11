@@ -1,5 +1,9 @@
 "Phrases"
 {
+	"Tag"
+	{
+		"es"	"{red}[{default}!{red}]"
+	}
 	"Spawned"
 	{
     	"es"	"¡Se ha generado un {olive}Tank {default}({red}Control: %s{default})!"

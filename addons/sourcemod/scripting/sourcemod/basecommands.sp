@@ -88,7 +88,6 @@ public void OnPluginStart()
 	{
 		L4D2ChangeLevelActive = true;
 	}
-	
 	g_MapList = new Menu(MenuHandler_ChangeMap, MenuAction_Display);
 	g_MapList.SetTitle("%T", "Please select a map", LANG_SERVER);
 	g_MapList.ExitBackButton = true;

@@ -125,4 +125,13 @@
 		"it"		"Il giocatore \"{1}\" è stato espulso (Motivo: {2})"
 	}
 
+	"Please select a map"
+	{
+		"it"		"Seleziona una mappa"
+	}
+	
+	"Choose Config"
+	{
+		"it"			"Scegli una configurazione"
+	}
 }

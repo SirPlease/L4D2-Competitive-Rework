@@ -1,16 +1,92 @@
 "Games"
 {
-	"left4dead2"
+	"tf"
 	{
-		"Signatures"
+		"Offsets"
 		{
-			"TheNextBots"
+			"MyNextBotPointer"
 			{
-				"library" "server"
-				"windows" "\xB8\x01\x00\x00\x00\x84\x05\x2A\x2A\x2A\x2A\x0F\x85\x2A\x2A\x2A\x2A\x09\x05\x2A\x2A\x2A\x2A\x33\xC0"
-				"linux" "@_Z11TheNextBotsv"
+				"windows" "74"
+				"linux" "75"
 			}
 			
+			"GetEntity"
+			{
+				"windows" "46"
+				"linux" "47"
+			}
+		}
+		
+		"Signatures"
+		{
+			"INextBot::Reset"
+			{
+				"library" "server"
+				"windows" "\xC7\x41\x14\x19\xFC\xFF\xFF"
+				"linux" "@_ZN8INextBot5ResetEv"
+			}
+		}
+	}
+	
+	"left4dead"
+	{
+		"Offsets"
+		{
+			"MyNextBotPointer"
+			{
+				"windows" "71"
+				"linux" "72"
+			}
+			
+			"GetEntity"
+			{
+				"windows" "39"
+				"linux" "40"
+			}
+			
+			"MySurvivorBotPointer"
+			{
+				"windows" "41"
+				"linux" "42"
+			}
+		}
+		
+		"Signatures"
+		{
+			"INextBot::Reset"
+			{
+				"library" "server"
+				"windows" "\xD9\x05\x2A\x2A\x2A\x2A\x56\x8B\xF1\x57\x8D\x7E\x38"
+				"linux" "@_ZN8INextBot5ResetEv"
+			}
+		}
+	}
+	
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			"MyNextBotPointer"
+			{
+				"windows" "81"
+				"linux" "82"
+			}
+			
+			"GetEntity"
+			{
+				"windows" "44"
+				"linux" "45"
+			}
+			
+			"MySurvivorBotPointer"
+			{
+				"windows" "46"
+				"linux" "47"
+			}
+		}
+		
+		"Signatures"
+		{
 			"INextBot::Reset"
 			{
 				"library" "server"

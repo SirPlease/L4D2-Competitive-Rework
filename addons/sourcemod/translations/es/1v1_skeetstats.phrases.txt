@@ -16,7 +16,7 @@
 	"SI_DMG_CI"
 	{
         "#format"   "{1:d},{2:d},{3:d}" // 1:iDidDamageAll[iClientPlaying] 2:iGotKills[iClientPlaying] 3:iGotCommon[iClientPlaying]
-		"es"		"{olive}{1}{default} daño | {olive}{1}{default} muertes | {olive}{1}{default} comunes\n"
+		"es"		"{olive}{1}{default} daño | {olive}{2}{default} muertes | {olive}{3}{default} comunes\n"
 	}
 	"SI_DMG"
 	{

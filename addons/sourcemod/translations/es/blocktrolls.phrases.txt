@@ -1,5 +1,9 @@
 "Phrases"
 {
+	"Tag"
+	{
+		"es"    "[{green}!{default}]"
+	}
 	"VotingNotEnabled"
 	{
 		"es"	"La votación no está habilitada hasta los {olive}40s{default} segundos en la ronda."

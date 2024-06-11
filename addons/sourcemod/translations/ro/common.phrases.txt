@@ -210,26 +210,6 @@
 		"ro"		"Jucătorul indicat nu este incă complet în joc."
 	}
 
-	"Played Sound"
-	{
-		"ro"		"Sunet executat pe jucătorul '{1}'"
-	}
-
-	"Slapped player"
-	{
-		"ro"		"Jucătorul '{1}' a primit slap"
-	}
-
-	"Slayed player"
-	{
-		"ro"		"Jucătorul '{1}' a primit slay"
-	}
-
-	"Kicked player"
-	{
-		"ro"		"Jucătorul '{1}' a primit kick"
-	}
-
 	"Cannot participate in vote"
 	{
 		"ro"		"Nu poti participa la aceasta votare"
@@ -252,22 +232,22 @@
 
 	"Say all"
 	{
-		"ro"		"Say tuturor"
+		"ro"		"(Say tuturor) {1}"
 	}
 
 	"Chat admins"
 	{
-		"ro"		"Chat admins"
+		"ro"		"(Chat admins) {1}"
 	}
 
 	"Chat to admins"
 	{
-		"ro"		"Chat cu admins"
+		"ro"		"(Chat cu admins) {1}"
 	}
 
 	"Private say to"
 	{
-		"ro"		"Say privat lui"
+		"ro"		"(Say privat lui {1}) {2}"
 	}
 
 }
