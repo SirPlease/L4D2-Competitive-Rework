@@ -16,6 +16,9 @@
 #define IS_VALID_CASTER(%1)     (IS_VALID_INGAME(%1) && casterSystemAvailable && IsClientCaster(%1))
 
 ArrayList h_whosHadTank;
+ArrayList h_previousTeamA;
+ArrayList h_previousTeamB;
+
 char queuedTankSteamId[64];
 ConVar hTankPrint, hTankDebug;
 bool casterSystemAvailable;
@@ -80,7 +83,9 @@ public void OnPluginStart()
     
     // Initialise the tank arrays/data values
     h_whosHadTank = new ArrayList(ByteCountToCells(64));
-    
+    h_previousTeamA = new ArrayList(ByteCountToCells(64));
+    h_previousTeamB = new ArrayList(ByteCountToCells(64));
+
     // Admin commands
     RegAdminCmd("sm_tankshuffle", TankShuffle_Cmd, ADMFLAG_SLAY, "Re-picks at random someone to become tank.");
     RegAdminCmd("sm_givetank", GiveTank_Cmd, ADMFLAG_SLAY, "Gives the tank to a selected player");
@@ -144,6 +149,8 @@ public Action newGame(Handle timer)
     if (teamAScore == 0 && teamBScore == 0)
     {
         h_whosHadTank.Clear();
+        h_previousTeamA.Clear();
+        h_previousTeamB.Clear();
         queuedTankSteamId = "";
     }
 
@@ -347,6 +354,8 @@ public void chooseTank(any data)
 
     if (StrEqual(sOverrideTank, ""))
     {
+        EnsureStartingPlayersWillBeTank();
+
         // Create our pool of players to choose from
         ArrayList infectedPool = new ArrayList(ByteCountToCells(64));
         addTeamSteamIdsToArray(infectedPool, L4D2Team_Infected);
@@ -608,3 +617,129 @@ CountdownTimer GetFrustrationTimer(int client)
     return view_as<CountdownTimer>(GetEntityAddress(client) + view_as<Address>(s_iOffs_m_frustrationTimer));
 }
 
+public void EnsureStartingPlayersWillBeTank()
+{
+    ArrayList infectedTeam = new ArrayList(ByteCountToCells(64));
+    addTeamSteamIdsToArray(infectedTeam, L4D2Team_Infected);
+
+    int infectedTeamSize = GetArraySize(infectedTeam);
+    if (infectedTeamSize == 0)
+    {
+        delete infectedTeam;
+        return;
+    }
+
+    // Is it necessary to use "delete previousTeam" for this variable? 
+    // If do this, won't it remove h_previousTeamA or h_previousTeamB?
+    ArrayList previousTeam = GetPreviousInfectedTeam(infectedTeam);
+    
+    ArrayList newPlayers = ExceptStringInArray(infectedTeam, previousTeam);
+    int newPlayersSize = GetArraySize(newPlayers);
+    
+    if (newPlayersSize == 0)
+    {
+        delete infectedTeam;
+        delete newPlayers;
+        return;
+    }
+
+    FillPreviousTeamWithNewPlayers(newPlayers, previousTeam);
+    
+    ArrayList missingPlayers = ExceptStringInArray(previousTeam, infectedTeam);
+    int missingPlayersSize = GetArraySize(missingPlayers);
+
+    char newPlayer[64];
+    char missingPlayer[64];
+
+    for (int i = 0; i < newPlayersSize && i < missingPlayersSize; i++)
+    {
+        GetArrayString(newPlayers, i, newPlayer, sizeof(newPlayer));
+        GetArrayString(missingPlayers, i, missingPlayer, sizeof(missingPlayer));
+
+        if (FindStringInArray(h_whosHadTank, missingPlayer) != -1)
+            PushArrayString(h_whosHadTank, newPlayer);
+
+        int previousTeamIndex = FindStringInArray(previousTeam, missingPlayer);
+        if (previousTeamIndex != -1)
+            RemoveFromArray(previousTeam, previousTeamIndex);
+
+        PushArrayString(previousTeam, newPlayer);
+    }
+
+    delete infectedTeam;
+    delete newPlayers;
+    delete missingPlayers;
+}
+
+public ArrayList GetPreviousInfectedTeam(ArrayList infectedTeam)
+{
+    int previousTeamASize = GetArraySize(h_previousTeamA);
+    int previousTeamBSize = GetArraySize(h_previousTeamB);
+
+    if (previousTeamASize == 0 && previousTeamBSize == 0)
+    {
+        addTeamSteamIdsToArray(h_previousTeamA, L4D2Team_Infected);
+        addTeamSteamIdsToArray(h_previousTeamB, L4D2Team_Survivor);
+
+        return h_previousTeamA;
+    }
+
+    char steamId[64];
+    
+    int infectedCountTeamA = 0;
+    int infectedCountTeamB = 0;
+
+    int infectedTeamSize = GetArraySize(infectedTeam);
+
+    for (int i = 0; i < infectedTeamSize; i++)
+    {
+        GetArrayString(infectedTeam, i, steamId, sizeof(steamId));
+
+        if (FindStringInArray(h_previousTeamA, steamId) != -1)
+            infectedCountTeamA++;
+
+        if (FindStringInArray(h_previousTeamB, steamId) != -1)
+            infectedCountTeamB++;
+    }
+
+    return infectedCountTeamA > infectedCountTeamB ? h_previousTeamA : h_previousTeamB;
+}
+
+public ArrayList ExceptStringInArray(ArrayList first, ArrayList second)
+{
+    ArrayList except = new ArrayList(ByteCountToCells(64));
+
+    char steamId[64];
+
+    int firstSize = GetArraySize(first);
+  
+    for (int i = 0; i < firstSize; i++)
+    {
+        GetArrayString(first, i, steamId, sizeof(steamId));
+
+        if (FindStringInArray(second, steamId) == -1)
+            PushArrayString(except, steamId);
+    }
+
+    return except;
+}
+
+public void FillPreviousTeamWithNewPlayers(ArrayList newPlayers, ArrayList previousTeam)
+{
+    char steamId[64];
+
+    int teamSize = TeamSize();
+    int previousTeamSize = GetArraySize(previousTeam);
+    int newPlayersSize = GetArraySize(newPlayers);
+
+    for (int i = 0; previousTeamSize < teamSize && i < newPlayersSize; i++)
+    {
+        GetArrayString(newPlayers, i, steamId, sizeof(steamId));
+        PushArrayString(previousTeam, steamId);
+    }
+}
+
+public int TeamSize()
+{
+	return GetConVarInt(FindConVar("survivor_limit"));
+}
