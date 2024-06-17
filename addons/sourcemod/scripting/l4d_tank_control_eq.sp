@@ -16,7 +16,10 @@
 #define IS_VALID_CASTER(%1)     (IS_VALID_INGAME(%1) && casterSystemAvailable && IsClientCaster(%1))
 
 ArrayList h_whosHadTank;
+
 char queuedTankSteamId[64];
+char tankInitiallyChosen[64];
+
 ConVar hTankPrint, hTankDebug;
 bool casterSystemAvailable;
 Handle hForwardOnTryOfferingTankBot;
@@ -133,6 +136,7 @@ public void RoundStart_Event(Event hEvent, const char[] eName, bool dontBroadcas
 {
     CreateTimer(10.0, newGame);
     dcedTankFrustration = -1;
+    tankInitiallyChosen = "";
 }
 
 public Action newGame(Handle timer)
@@ -145,6 +149,7 @@ public Action newGame(Handle timer)
     {
         h_whosHadTank.Clear();
         queuedTankSteamId = "";
+        tankInitiallyChosen = "";
     }
 
     return Plugin_Stop;
@@ -157,6 +162,7 @@ public Action newGame(Handle timer)
 public void RoundEnd_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
     queuedTankSteamId = "";
+    tankInitiallyChosen = "";
 }
 
 /**
@@ -165,6 +171,8 @@ public void RoundEnd_Event(Event hEvent, const char[] eName, bool dontBroadcast)
  
 public void PlayerLeftStartArea_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
+    tankInitiallyChosen = "";
+
     chooseTank(0);
     outputTankToAll(0);
 }
@@ -206,6 +214,19 @@ public void PlayerTeam_Event(Event hEvent, const char[] name, bool dontBroadcast
             RequestFrame(outputTankToAll, 0);
         }
     }
+
+    L4D2Team team = view_as<L4D2Team>(hEvent.GetInt("team"));
+
+    if (client && team == view_as<L4D2Team>(L4D2Team_Infected) && !IsFakeClient(client) && !StrEqual(tankInitiallyChosen, ""))
+    {
+        GetClientAuthId(client, AuthId_Steam2, tmpSteamId, sizeof(tmpSteamId));
+
+        if (strcmp(tankInitiallyChosen, tmpSteamId) == 0)
+        {
+            strcopy(queuedTankSteamId, sizeof(queuedTankSteamId), tankInitiallyChosen);
+            RequestFrame(outputTankToAll, 0);
+        }
+    }
 }
 
 /**
@@ -227,6 +248,8 @@ public void PlayerDeath_Event(Event hEvent, const char[] eName, bool dontBroadca
             {
                 PrintToConsoleAll("[TC] Tank died(1), choosing a new tank");
             }
+
+            tankInitiallyChosen = "";
             chooseTank(0);
         }
     }
@@ -238,6 +261,8 @@ public void TankKilled_Event(Event hEvent, const char[] eName, bool dontBroadcas
     {
         PrintToConsoleAll("[TC] Tank died(2), choosing a new tank");
     }
+
+    tankInitiallyChosen = "";
     chooseTank(0);
     dcedTankFrustration = -1;
 }
@@ -284,6 +309,8 @@ public Action Tank_Cmd(int client, int args)
  
 public Action TankShuffle_Cmd(int client, int args)
 {
+    tankInitiallyChosen = "";
+
     chooseTank(0);
     outputTankToAll(0);
     
@@ -325,6 +352,8 @@ public Action GiveTank_Cmd(int client, int args)
         GetClientAuthId(target, AuthId_Steam2, steamId, sizeof(steamId));
 
         strcopy(queuedTankSteamId, sizeof(queuedTankSteamId), steamId);
+        strcopy(tankInitiallyChosen, sizeof(tankInitiallyChosen), steamId);
+
         outputTankToAll(0);
     }
     
@@ -384,6 +413,10 @@ public void chooseTank(any data)
         // Select a random person to become tank
         int rndIndex = GetRandomInt(0, GetArraySize(infectedPool) - 1);
         GetArrayString(infectedPool, rndIndex, queuedTankSteamId, sizeof(queuedTankSteamId));
+
+        if (StrEqual(tankInitiallyChosen, ""))
+            strcopy(tankInitiallyChosen, sizeof(tankInitiallyChosen), queuedTankSteamId);
+
         delete infectedPool;
     } else {
         strcopy(queuedTankSteamId, sizeof(queuedTankSteamId), sOverrideTank);
