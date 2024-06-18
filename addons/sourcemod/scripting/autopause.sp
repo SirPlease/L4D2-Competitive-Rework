@@ -77,7 +77,7 @@ public void OnPluginStart()
     HookEvent("player_team", Event_PlayerTeam);
     HookEvent("player_disconnect", Event_PlayerDisconnect, EventHookMode_Pre);
 
-    LoadTranslations("autopasue.phrases");
+    LoadTranslations("autopause.phrases");
 }
 
 public void OnAllPluginsLoaded()
