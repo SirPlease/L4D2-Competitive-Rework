@@ -1,4 +1,5 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdktools>
@@ -6,9 +7,9 @@
 #include <caster_system>
 #define MAX_SPEED 2
 
-new bool:readyUpIsAvailable;
+bool readyUpIsAvailable;
 
-public Plugin:myinfo =
+public Plugin myinfo =
 {
     name = "Caster Assister",
     author = "CanadaRox, Sir",
@@ -17,11 +18,11 @@ public Plugin:myinfo =
     url = ""
 };
 
-new Float:currentMulti[MAXPLAYERS+1] = { 1.0, ... };
-new Float:currentIncrement[MAXPLAYERS+1] = { 0.1, ... };
-new Float:verticalIncrement[MAXPLAYERS+1] = { 10.0, ... };
+float currentMulti[MAXPLAYERS+1] = { 1.0, ... };
+float currentIncrement[MAXPLAYERS+1] = { 0.1, ... };
+float verticalIncrement[MAXPLAYERS+1] = { 10.0, ... };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
     RegConsoleCmd("sm_set_specspeed_multi", SetSpecspeed_Cmd);
     RegConsoleCmd("sm_set_specspeed_increment", SetSpecspeedIncrement_Cmd);
@@ -32,12 +33,12 @@ public OnPluginStart()
     HookEvent("player_team", PlayerTeam_Event);
 }
 
-public OnAllPluginsLoaded()
+public void OnAllPluginsLoaded()
 {
     readyUpIsAvailable = LibraryExists("caster_system");
 }
 
-public OnLibraryRemoved(const String:name[])
+public void OnLibraryRemoved(const char[] name)
 {
     if (StrEqual(name, "caster_system"))
     {
@@ -45,7 +46,7 @@ public OnLibraryRemoved(const String:name[])
     }
 }
 
-public OnLibraryAdded(const String:name[])
+public void OnLibraryAdded(const char[] name)
 {
     if (StrEqual(name, "caster_system"))
     {
@@ -53,7 +54,7 @@ public OnLibraryAdded(const String:name[])
     }
 }
 
-public OnClientPutInServer(client)
+public void OnClientPutInServer(int client)
 {
     if (readyUpIsAvailable && IsClientCaster(client))
     {
@@ -61,17 +62,17 @@ public OnClientPutInServer(client)
     }
 }
 
-public PlayerTeam_Event(Handle:event, const String:name[], bool:dontBroadcast)
+public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 {
-    new team = GetEventInt(event, "team");
+    int team = event.GetInt("team");
     if (team == 1)
     {
-        new client = GetClientOfUserId(GetEventInt(event, "userid"));
+        int client = GetClientOfUserId(event.GetInt("userid"));
         SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", currentMulti[client]);
     }
 }
 
-public Action:SetSpecspeed_Cmd(client, args)
+public Action SetSpecspeed_Cmd(int client, int args)
 {
     if (GetClientTeam(client) != 1)
     {
@@ -83,9 +84,9 @@ public Action:SetSpecspeed_Cmd(client, args)
         ReplyToCommand(client, "Usage: sm_set_specspeed_multi # (default: 1.0)");
         return Plugin_Handled;
     }
-    decl String:buffer[10];
+    char buffer[10];
     GetCmdArg(1, buffer, sizeof(buffer));
-    new Float:newVal = StringToFloat(buffer);
+    float newVal = StringToFloat(buffer);
     if (IsSpeedValid(newVal)) {
         SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", newVal);
         currentMulti[client] = newVal;
@@ -93,7 +94,7 @@ public Action:SetSpecspeed_Cmd(client, args)
     return Plugin_Handled;
 }
 
-public Action:SetSpecspeedIncrement_Cmd(client, args)
+public Action SetSpecspeedIncrement_Cmd(int client, int args)
 {
     if (GetClientTeam(client) != 1)
     {
@@ -105,13 +106,13 @@ public Action:SetSpecspeedIncrement_Cmd(client, args)
         ReplyToCommand(client, "Usage: sm_set_specspeed_increment # (default: 0.1)");
         return Plugin_Handled;
     }
-    decl String:buffer[10];
+    char buffer[10];
     GetCmdArg(1, buffer, sizeof(buffer));
     currentIncrement[client] = StringToFloat(buffer);
     return Plugin_Handled;
 }
 
-public Action:IncreaseSpecspeed_Cmd(client, args)
+public Action IncreaseSpecspeed_Cmd(int client, int args)
 {
     if (GetClientTeam(client) != 1)
     {
@@ -122,7 +123,7 @@ public Action:IncreaseSpecspeed_Cmd(client, args)
     return Plugin_Handled;
 }
 
-public Action:DecreaseSpecspeed_Cmd(client, args)
+public Action DecreaseSpecspeed_Cmd(int client, int args)
 {
     if (GetClientTeam(client) != 1)
     {
@@ -133,16 +134,16 @@ public Action:DecreaseSpecspeed_Cmd(client, args)
     return Plugin_Handled;
 }
 
-stock IncreaseSpecspeed(client, Float:difference)
+stock void IncreaseSpecspeed(int client, float difference)
 {
-    new Float:curVal = GetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue");
+    float curVal = GetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue");
     if (IsSpeedValid(curVal + difference)) {
         SetEntPropFloat(client, Prop_Send, "m_flLaggedMovementValue", curVal + difference);
         currentMulti[client] = curVal + difference;
     }
 }
 
-public Action:SetVerticalIncrement_Cmd(client, args)
+public Action SetVerticalIncrement_Cmd(int client, int args)
 {
     if (GetClientTeam(client) != 1)
     {
@@ -154,13 +155,13 @@ public Action:SetVerticalIncrement_Cmd(client, args)
         ReplyToCommand(client, "Usage: sm_set_vertical_increment # (default: 10.0)");
         return Plugin_Handled;
     }
-    decl String:buffer[10];
+    char buffer[10];
     GetCmdArg(1, buffer, sizeof(buffer));
     verticalIncrement[client] = StringToFloat(buffer);
     return Plugin_Handled;
 }
 
-public Action:OnPlayerRunCmd(client, &buttons)
+public Action OnPlayerRunCmd(int client, int &buttons)
 {
 	if (IsValidClient(client) && GetClientTeam(client) == 1)
 	{

@@ -76,6 +76,8 @@ public void OnPluginStart()
     HookEvent("round_end", Event_RoundEnd);
     HookEvent("player_team", Event_PlayerTeam);
     HookEvent("player_disconnect", Event_PlayerDisconnect, EventHookMode_Pre);
+
+    LoadTranslations("autopause.phrases");
 }
 
 public void OnAllPluginsLoaded()
@@ -128,7 +130,7 @@ public void OnClientPutInServer(int client)
     {
         if (!remainingCrashers)
         {
-            CPrintToChatAll("{blue}[{default}AutoPause{blue}] {default}All {green}crashed {default}players have reconnected.. {blue}Unpausing{default}!");
+            CPrintToChatAll("%t", "Unpausing");
             ServerCommand("sm_forceunpause");
 
             if (convarDebug.BoolValue)
@@ -138,7 +140,11 @@ public void OnClientPutInServer(int client)
             }
         }
         else
-            CPrintToChatAll("{blue}[{default}AutoPause{blue}] {default}Waiting for {olive}%i {default}more {green}crashed {default}player%s {default}before automatic {blue}Unpause{default}!", remainingCrashers, remainingCrashers > 1 ? "s" : "");
+        {
+            CPrintToChatAll("%t", "Waiting", remainingCrashers, remainingCrashers > 1 ? "players" : "player");
+            // https://github.com/Target5150/MoYu_Server_Stupid_Plugins/blob/78a5204e757e8a45309872ab2705c509500a9f6e/The%20Last%20Stand/readyup/readyup/panel.inc#L387
+            // to solve plural problem in languages
+        }
     }
 }
 
@@ -283,7 +289,7 @@ public void Event_PlayerDisconnect(Event hEvent, char[] sEventName, bool dontBro
             if (FindStringInArray(generalCrashers, sAuthId) == -1)
                 PushArrayString(generalCrashers, sAuthId);
                 
-            CPrintToChatAll("{blue}[{default}AutoPause{blue}] {olive}%N {default}crashed.", client);
+            CPrintToChatAll("%t", "Crashed", client);
         }
     }
 
