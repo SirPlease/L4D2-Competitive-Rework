@@ -1,0 +1,29 @@
+"Phrases"
+{
+    "Unpausing"
+    {
+        "en"        "{blue}[{default}AutoPause{blue}] {default}All {green}crashed {default}players have reconnected.. {blue}Unpausing{default}!"
+    }
+
+    "Waiting"
+    {
+        "#format"   "{1:i},{2:t}"   // 1: remainingCrashers 2: remainingCrashers > 1 ? "players" : "player"
+        "en"        "{blue}[{default}AutoPause{blue}] {default}Waiting for {olive}{1} {default}more {green}crashed {default}{2} before automatic {blue}Unpause{default}!"
+    }
+
+    "Crashed"
+    {
+        "#format"   "{1:N}"         // 1: client
+        "en"        "{blue}[{default}AutoPause{blue}] {olive}{1} {default}crashed."
+    }
+
+    "players"
+    {
+        "en"        "players"
+    }
+
+    "player"
+    {
+        "en"        "player"
+    }
+}
