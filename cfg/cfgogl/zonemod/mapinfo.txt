@@ -2711,15 +2711,10 @@
 	{
 		"tank_ban_flow"
 		{
-			"early"
+			"alarmcar"
 			{
 				"min" "0"
-				"max" "33"
-			}
-			"late"
-			{
-				"min" "60"
-				"max" "100"
+				"max" "40"
 			}
 		}
 	}
@@ -2727,40 +2722,50 @@
 	{
 		"tank_ban_flow"
 		{
-			"early"
+			"riverside"
 			{
 				"min" "0"
-				"max" "33"
+				"max" "35"
 			}
-		}
-		"ItemLimits"
-		{
-			"pain_pills" "3"
 		}
 	}
 	"noecho_m3"
 	{
-		"horde_limit" "80"
 		"tank_ban_flow"
 		{
-			"early"
+			"parking area"
 			{
 				"min" "0"
-				"max" "33"
+				"max" "43"
 			}
-			"late"
+			"alarmcar"
 			{
-				"min" "70"
-				"max" "100"
+				"min" "47"
+				"max" "51"
 			}
-		}
-		"ItemLimits"
-		{
-			"pain_pills" "3"
 		}
 	}
 	"noecho_m4"
 	{
+		"tank_ban_flow"
+		{
+			"container route"
+			{
+				"min" "71"
+				"max" "100"
+			}
+		}
+	}
+	"noecho_m5"
+	{
+		"tank_ban_flow"
+		{
+			"alarmcar"
+			{
+				"min" "42"
+				"max" "50"
+			}
+		}
 		"ItemLimits"
 		{
 			"pain_pills" "5"
@@ -2832,10 +2837,20 @@
 	{
 		"tank_ban_flow"
 		{
+			"early"
+			{
+				"min"		"0"
+				"max"		"28"
+			}
 			"cornfield"
 			{
-				"min"		"45"
-				"max"		"64"
+				"min"		"36"
+				"max"		"66"
+			}
+			"down the ladder"
+			{
+				"min"		"71"
+				"max"		"100"
 			}
 		}
 	}
@@ -2843,15 +2858,10 @@
 	{
 		"tank_ban_flow"
 		{
-			"early"
-			{
-				"min"		"0"
-				"max"		"27"
-			}
 			"near_building"
 			{
-				"min"		"72"
-				"max"		"100"
+				"min"		"74"
+				"max"		"99"
 			}
 		}
 		"ItemLimits"
@@ -2865,8 +2875,8 @@
 		{
 			"early"
 			{
-				"min"        "0"
-				"max"        "32"
+				"min"		"0"
+				"max"		"32"
 			}
 		}
 	}
