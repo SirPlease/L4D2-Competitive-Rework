@@ -8,7 +8,7 @@
 
 #define TEAM_SPECTATOR          1
 #define TEAM_INFECTED           3
-#define ZOMBIECLASS_TANK        6
+#define ZOMBIECLASS_TANK        8
 #define IS_SPECTATOR(%1)        (GetClientTeam(%1) == TEAM_SPECTATOR)
 #define IS_INFECTED(%1)         (GetClientTeam(%1) == TEAM_INFECTED)
 #define IS_VALID_INFECTED(%1)   (IsClientInGame(%1) && IS_INFECTED(%1))
