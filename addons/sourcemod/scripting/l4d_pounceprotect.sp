@@ -6,7 +6,7 @@
 
 #define GAMEDATA "l4d2_si_ability"
 
-Handle hCBaseAbility_OnOwnerTakeDamage;
+DynamicHook hCBaseAbility_OnOwnerTakeDamage;
 
 public Plugin myinfo =
 {
@@ -19,20 +19,19 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	Handle hGamedata = LoadGameConfigFile(GAMEDATA);
+	GameData hGamedata = new GameData(GAMEDATA);
 
 	if (!hGamedata) {
 		SetFailState("Gamedata '%s.txt' missing or corrupt.", GAMEDATA);
 	}
 	
-	int iOnOwnerTakeDamageOffset = GameConfGetOffset(hGamedata, "CBaseAbility::OnOwnerTakeDamage");
+	int iOnOwnerTakeDamageOffset = hGamedata.GetOffset("CBaseAbility::OnOwnerTakeDamage");
 	if (iOnOwnerTakeDamageOffset == -1) {
 		SetFailState("Failed to get offset 'CBaseAbility::OnOwnerTakeDamage'.");
 	}
 	
-	hCBaseAbility_OnOwnerTakeDamage = DHookCreate(iOnOwnerTakeDamageOffset, HookType_Entity, ReturnType_Void, ThisPointer_Ignore, CBaseAbility_OnOwnerTakeDamage);
-
-	DHookAddParam(hCBaseAbility_OnOwnerTakeDamage, HookParamType_ObjectPtr);
+	hCBaseAbility_OnOwnerTakeDamage = new DynamicHook(iOnOwnerTakeDamageOffset, HookType_Entity, ReturnType_Void, ThisPointer_Ignore);
+	hCBaseAbility_OnOwnerTakeDamage.AddParam(HookParamType_ObjectPtr);
 
 	delete hGamedata;
 }
@@ -40,14 +39,14 @@ public void OnPluginStart()
 public void OnEntityCreated(int entity, const char[] classname)
 {
 	if (strcmp(classname, "ability_lunge") == 0) {
-		DHookEntity(hCBaseAbility_OnOwnerTakeDamage, false, entity); 
+		hCBaseAbility_OnOwnerTakeDamage.HookEntity(Hook_Post, entity, CBaseAbility_OnOwnerTakeDamage); 
 	}
 }
 
 // During this function call the game simply validates the owner entity 
 // and then sets a bool saying you can't pounce again if you're already mid-pounce.
 // afaik
-public MRESReturn CBaseAbility_OnOwnerTakeDamage(Handle hParams)
+MRESReturn CBaseAbility_OnOwnerTakeDamage(Handle hParams)
 {
 	// Skip the whole function plox
 	return MRES_Supercede;

@@ -1,4 +1,5 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdktools>
@@ -14,8 +15,8 @@
 #define DEBUG                   0
 
 
-new Handle: g_hUseConfigDir;
-new String: g_sUseConfigDir[MAX_CONFIG_LEN];     // which directory in cfgogl are we using? none = cfg/
+ConVar g_hUseConfigDir;
+char g_sUseConfigDir[MAX_CONFIG_LEN];     // which directory in cfgogl are we using? none = cfg/
 
 /*
     to do:
@@ -28,11 +29,11 @@ new String: g_sUseConfigDir[MAX_CONFIG_LEN];     // which directory in cfgogl ar
  */
 
 
-new Handle: g_hKvOrig = INVALID_HANDLE;         // kv to store original values in
+KeyValues g_hKvOrig = null;         // kv to store original values in
 
 
 
-public Plugin:myinfo = {
+public Plugin myinfo = {
     name        = "L4D(2) map-based convar loader.",
     author      = "Tabun",
     version     = "0.1b",
@@ -40,22 +41,22 @@ public Plugin:myinfo = {
 };
 
 
-public OnPluginStart() {
+public void OnPluginStart() {
     g_hUseConfigDir = CreateConVar("l4d_mapcvars_configdir", "", "Which cfgogl config are we using?", FCVAR_NONE);
-    GetConVarString(g_hUseConfigDir, g_sUseConfigDir, MAX_CONFIG_LEN);
-    HookConVarChange(g_hUseConfigDir, CvarConfigChange);
+    g_hUseConfigDir.GetString(g_sUseConfigDir, MAX_CONFIG_LEN);
+    g_hUseConfigDir.AddChangeHook(CvarConfigChange);
     
     // prepare KV for saving old states
-    g_hKvOrig = CreateKeyValues("MapCvars_Orig");     // store original values
+    g_hKvOrig = new KeyValues("MapCvars_Orig");     // store original values
 }
 
-public OnPluginEnd() {
+public void OnPluginEnd() {
     ResetMapPrefs();
-    if (g_hKvOrig != INVALID_HANDLE) { CloseHandle(g_hKvOrig); }
+    if (g_hKvOrig != null) { delete g_hKvOrig; }    // actually a global handle is freed itself when plugin ends. just in case.
 }
 
 
-public CvarConfigChange( Handle:cvar, const String:oldValue[], const String:newValue[] ) {
+public void CvarConfigChange( ConVar cvar, const char[] oldValue, const char[] newValue ) {
     strcopy(g_sUseConfigDir, MAX_CONFIG_LEN, newValue);
 
     #if DEBUG
@@ -66,26 +67,26 @@ public CvarConfigChange( Handle:cvar, const String:oldValue[], const String:newV
 }
 
 
-public OnMapStart() {
+public void OnMapStart() {
     GetThisMapPrefs();
 }
 
-public OnMapEnd() {
+public void OnMapEnd() {
     ResetMapPrefs();
 }
 
 
-public GetThisMapPrefs()
+int GetThisMapPrefs()
 {
-    new iNumChanged = 0;                                // how many cvars were changed for this map
+    int iNumChanged = 0;                                // how many cvars were changed for this map
     
     // reopen original keyvalues for clean slate:
-    if (g_hKvOrig != INVALID_HANDLE) { CloseHandle(g_hKvOrig); }
-    g_hKvOrig = CreateKeyValues("MapCvars_Orig");       // store original values for this map
+    if (g_hKvOrig != null) { delete g_hKvOrig; }
+    g_hKvOrig = new KeyValues("MapCvars_Orig");       // store original values for this map
     
     
     // build path to current config's keyvalues file
-    new String:usePath[PLATFORM_MAX_PATH];
+    char usePath[PLATFORM_MAX_PATH];
     if (strlen(g_sUseConfigDir) > 0)
     {
         usePath = "../../cfg/cfgogl/";
@@ -108,10 +109,10 @@ public GetThisMapPrefs()
     PrintToServer("[mcv] trying keyvalue read (from [%s])...", usePath);
     #endif
     
-    new Handle: hKv = CreateKeyValues("MapCvars");
-    FileToKeyValues(hKv, usePath);
+    KeyValues hKv = new KeyValues("MapCvars");
+    hKv.ImportFromFile(usePath);
     
-    if (hKv == INVALID_HANDLE) {
+    if (hKv == null) {
         #if DEBUG
         PrintToServer("[mcv] couldn't read file.");
         #endif
@@ -119,13 +120,13 @@ public GetThisMapPrefs()
     }
     
     // read keyvalues for current map
-    new String:sMapName[64];
+    char sMapName[64];
     GetCurrentMap(sMapName, 64);
     
-    if (!KvJumpToKey(hKv, sMapName))
+    if (!hKv.JumpToKey(sMapName))
     {
         // no special settings for this map
-        CloseHandle(hKv);
+        delete hKv;
         #if DEBUG
         PrintToServer("[mcv] couldn't find map (%s)", sMapName);
         #endif
@@ -134,19 +135,19 @@ public GetThisMapPrefs()
     
     // find all cvar keys and save the original values
     // then execute the change
-    new String:tmpKey[MAX_VARLENGTH];
-    new String:tmpValueNew[MAX_VALUELENGTH];
-    new String:tmpValueOld[MAX_VALUELENGTH];
-    new Handle: hConVar = INVALID_HANDLE;
+    char tmpKey[MAX_VARLENGTH];
+    char tmpValueNew[MAX_VALUELENGTH];
+    char tmpValueOld[MAX_VALUELENGTH];
+    ConVar hConVar = null;
     //new iConVarFlags = 0;
     
     
-    if (KvGotoFirstSubKey(hKv, false))                              // false to get values
+    if (hKv.GotoFirstSubKey(false))                              // false to get values
     {
         do
         {
             // read key stuff
-            KvGetSectionName(hKv, tmpKey, sizeof(tmpKey));              // the subkey is a key-value pair, so get this to get the 'convar'
+            hKv.GetSectionName(tmpKey, sizeof(tmpKey));              // the subkey is a key-value pair, so get this to get the 'convar'
             #if DEBUG
             PrintToServer("[mcv] kv key found: [%s], reading value...", tmpKey);
             #endif
@@ -161,30 +162,30 @@ public GetThisMapPrefs()
             }
             */
             
-            if (hConVar != INVALID_HANDLE) {
+            if (hConVar != null) {
                 // get type..
                 //iConVarFlags = GetConVarFlags(hConVar);
                 
                 // types?
                 //      FCVAR_CHEAT
                 
-                KvGetString(hKv, NULL_STRING, tmpValueNew, sizeof(tmpValueNew), "[:none:]");
+                hKv.GetString(NULL_STRING, tmpValueNew, sizeof(tmpValueNew), "[:none:]");
                 #if DEBUG
                 PrintToServer("[mcv] kv value read: [%s] => [%s])", tmpKey, tmpValueNew);
                 #endif
                 
                 // read, save and set value
                 if (!StrEqual(tmpValueNew,"[:none:]")) {
-                    GetConVarString(hConVar, tmpValueOld, sizeof(tmpValueOld));
+                    hConVar.GetString(tmpValueOld, sizeof(tmpValueOld));
                     PrintToServer("[mcv] cvar value changed: [%s] => [%s] (saved old: [%s]))", tmpKey, tmpValueNew, tmpValueOld);
                     
                     if (!StrEqual(tmpValueNew,tmpValueOld)) {
                         // different, save the old
                         iNumChanged++;
-                        KvSetString(g_hKvOrig, tmpKey, tmpValueOld);
+                        g_hKvOrig.SetString(tmpKey, tmpValueOld);
                         
                         // apply the new
-                        SetConVarString(hConVar, tmpValueNew);
+                        hConVar.SetString(tmpValueNew);
                         //if (iConVarFlags & FCVAR_CHEAT) {
                             
                         //}
@@ -195,34 +196,34 @@ public GetThisMapPrefs()
                 PrintToServer("[mcv] convar doesn't exist: [%s], not changing it.", tmpKey);
                 #endif
             }
-        } while (KvGotoNextKey(hKv, false));
+        } while (hKv.GotoNextKey(false));
     } 
     
-    KvSetString(g_hKvOrig, "__EOF__", "1");             // a test-safeguard
+    g_hKvOrig.SetString("__EOF__", "1");             // a test-safeguard
     
-    CloseHandle(hKv);
+    delete hKv;
     return iNumChanged;
 }
 
-public ResetMapPrefs()
+void ResetMapPrefs()
 {
-    KvRewind(g_hKvOrig);
+    g_hKvOrig.Rewind();
     
     #if DEBUG
     PrintToServer("[mcv] attempting to reset values, if any...");
     #endif
     
     // find all cvar keys and reset to original values
-    new String: tmpKey[64];
-    new String: tmpValueOld[512];
-    new Handle: hConVar = INVALID_HANDLE;
+    char tmpKey[64];
+    char tmpValueOld[512];
+    ConVar hConVar = null;
     
-    if (KvGotoFirstSubKey(g_hKvOrig, false))                              // false to get values
+    if (g_hKvOrig.GotoFirstSubKey(false))                              // false to get values
     {
         do
         {
             // read key stuff
-            KvGetSectionName(g_hKvOrig, tmpKey, sizeof(tmpKey));      // the subkey is a key-value pair, so get this to get the 'convar'
+            g_hKvOrig.GetSectionName(tmpKey, sizeof(tmpKey));      // the subkey is a key-value pair, so get this to get the 'convar'
             
             if (StrEqual(tmpKey, "__EOF__")) { 
                 #if DEBUG
@@ -240,9 +241,9 @@ public ResetMapPrefs()
                 // is it a convar?
                 hConVar = FindConVar(tmpKey);
                 
-                if (hConVar != INVALID_HANDLE) {
+                if (hConVar != null) {
                     
-                    KvGetString(g_hKvOrig, NULL_STRING, tmpValueOld, sizeof(tmpValueOld), "[:none:]");
+                    g_hKvOrig.GetString(NULL_STRING, tmpValueOld, sizeof(tmpValueOld), "[:none:]");
                     #if DEBUG
                     PrintToServer("[mcv] kv saved value read: [%s] => [%s])", tmpKey, tmpValueOld);
                     #endif
@@ -251,7 +252,7 @@ public ResetMapPrefs()
                     if (!StrEqual(tmpValueOld,"[:none:]")) {
                         
                         // reset the old
-                        SetConVarString(hConVar, tmpValueOld);
+                        hConVar.SetString(tmpValueOld);
                         PrintToServer("[mcv] cvar value reset to original: [%s] => [%s])", tmpKey, tmpValueOld);
                     }
                 } else {
@@ -261,6 +262,6 @@ public ResetMapPrefs()
                 }
             }
             
-        } while (KvGotoNextKey(g_hKvOrig, false));
+        } while (g_hKvOrig.GotoNextKey(false));
     }
 }

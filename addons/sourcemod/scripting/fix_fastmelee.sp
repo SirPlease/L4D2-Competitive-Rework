@@ -1,13 +1,16 @@
+#pragma semicolon 1
+#pragma newdecls required
+
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
 
 #define PL_VERSION "2.1"
 
-new Handle:hWeaponSwitchFwd;
+GlobalForward hWeaponSwitchFwd;
 
-new Float:fLastMeleeSwing[MAXPLAYERS + 1];
-new bool:bLate;
+float fLastMeleeSwing[MAXPLAYERS + 1];
+bool bLate;
 
 public Plugin myinfo =
 {
@@ -18,37 +21,43 @@ public Plugin myinfo =
 	url = "http://steamcommunity.com/groups/b1com"
 };
 
-public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
+	EngineVersion iEngine = GetEngineVersion();
+	if (iEngine != Engine_Left4Dead2)
+	{
+		strcopy(error, err_max, "Plugin only supports Left 4 Dead 2.");
+		return APLRes_SilentFailure;
+	}
+
 	bLate = late;
 	return APLRes_Success;
 }
 
-public OnPluginStart()
+public void OnPluginStart()
 {
-	decl String:gfstring[128];
-	GetGameFolderName(gfstring, sizeof(gfstring));
-	if (!StrEqual(gfstring, "left4dead2", false))
-	{
-		SetFailState("Plugin supports Left 4 dead 2 only!");
-	}
-	HookEvent("weapon_fire", Event_WeaponFire);
-	CreateConVar("l4d2_fast_melee_fix_version", PL_VERSION, "Fast melee fix version");
-	if (bLate)
-	{
-		for (new i = 1; i <= MaxClients; i++)
-		{
-			if (IsClientInGame(i) && !IsFakeClient(i))
-			{
-				SDKHook(i, SDKHook_WeaponSwitchPost, OnWeaponSwitched);
-			}
-		}
-	}
+	CreateConVar("l4d2_fast_melee_fix_version", PL_VERSION, "Fast melee fix version", FCVAR_NOTIFY | FCVAR_DONTRECORD | FCVAR_SPONLY);
 
-	hWeaponSwitchFwd = CreateGlobalForward("OnClientMeleeSwitch", ET_Ignore, Param_Cell, Param_Cell);
+	HookEvent("weapon_fire", Event_WeaponFire, EventHookMode_Post);
+
+	if (bLate)
+		LateLoadHook();
+
+	hWeaponSwitchFwd = new GlobalForward("OnClientMeleeSwitch", ET_Ignore, Param_Cell, Param_Cell);
 }
 
-public OnClientPutInServer(client)
+void LateLoadHook()
+{
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (IsClientInGame(i) && !IsFakeClient(i))
+		{
+			SDKHook(i, SDKHook_WeaponSwitchPost, OnWeaponSwitched);
+		}
+	}
+}
+
+public void OnClientPutInServer(int client)
 {
 	if (!IsFakeClient(client))
 	{
@@ -57,38 +66,37 @@ public OnClientPutInServer(client)
 	fLastMeleeSwing[client] = 0.0;
 }
 
-public Action:Event_WeaponFire(Handle:event, const String:name[], bool:dontBroadcast)
+public Action Event_WeaponFire(Event event, char[] name, bool dontBroadcast)
 {
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int client = GetClientOfUserId(event.GetInt("userid"));
 	if (client > 0 && !IsFakeClient(client))
 	{
-		decl String:sBuffer[64];
-		GetEventString(event, "weapon", sBuffer, sizeof(sBuffer));
+		char sBuffer[64];
+		event.GetString("weapon", sBuffer, sizeof(sBuffer));
 		if (StrEqual(sBuffer, "melee"))
 		{
 			fLastMeleeSwing[client] = GetGameTime();
 		}
 	}
+
+	return Plugin_Continue;
 }
 
-public OnWeaponSwitched(client, weapon)
+public void OnWeaponSwitched(int client, int weapon)
 {
 	if (!IsFakeClient(client) && IsValidEntity(weapon))
 	{
-		decl String:sBuffer[32];
+		char sBuffer[32];
 		GetEntityClassname(weapon, sBuffer, sizeof(sBuffer));
 		if (StrEqual(sBuffer, "weapon_melee"))
 		{
-			new Float:fShouldbeNextAttack = fLastMeleeSwing[client] + 0.92;
-			new Float:fByServerNextAttack = GetGameTime() + 0.5;
+			float fShouldbeNextAttack = fLastMeleeSwing[client] + 0.92;
+			float fByServerNextAttack = GetGameTime() + 0.5;
 			SetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack", (fShouldbeNextAttack > fByServerNextAttack) ? fShouldbeNextAttack : fByServerNextAttack);
 
 			Call_StartForward(hWeaponSwitchFwd);
-
 			Call_PushCell(client);
-
 			Call_PushCell(weapon);
-
 			Call_Finish();
 		}
 	}
