@@ -236,8 +236,10 @@ bool IsPointInStartSaferoom(Float:location[3], entity=-1)
         if (g_fStartLocA[1] < g_fStartLocB[1]) { yMin = g_fStartLocA[1]; yMax = g_fStartLocB[1]; } else { yMin = g_fStartLocB[1]; yMax = g_fStartLocA[1]; }
         if (g_fStartLocA[2] < g_fStartLocB[2]) { zMin = g_fStartLocA[2]; zMax = g_fStartLocB[2]; } else { zMin = g_fStartLocB[2]; zMax = g_fStartLocA[2]; }
         
-        PrintDebug("dimensions checked: %f - %f (%f) -- %f - %f (%f) -- %f - %f (%f)", xMin, xMax, location[0], yMin, yMax, location[1], zMin, zMax, location[2]);
-        
+		#if SR_DEBUG_MODE
+			PrintDebug("dimensions checked: %f - %f (%f) -- %f - %f (%f) -- %f - %f (%f)", xMin, xMax, location[0], yMin, yMax, location[1], zMin, zMax, location[2]);
+        #endif
+		
         inSaferoom =  bool: (   location[0] >= xMin && location[0] <= xMax
                             &&  location[1] >= yMin && location[1] <= yMax
                             &&  location[2] >= zMin && location[2] <= zMax  );
@@ -249,8 +251,10 @@ bool IsPointInStartSaferoom(Float:location[3], entity=-1)
             if (g_fStartLocC[1] < g_fStartLocD[1]) { yMin = g_fStartLocC[1]; yMax = g_fStartLocD[1]; } else { yMin = g_fStartLocD[1]; yMax = g_fStartLocC[1]; }
             if (g_fStartLocC[2] < g_fStartLocD[2]) { zMin = g_fStartLocC[2]; zMax = g_fStartLocD[2]; } else { zMin = g_fStartLocD[2]; zMax = g_fStartLocC[2]; }
             
-            PrintDebug("extra dimensions checked: %f - %f (%f) -- %f - %f (%f) -- %f - %f (%f)", xMin, xMax, location[0], yMin, yMax, location[1], zMin, zMax, location[2]);
-            
+			#if SR_DEBUG_MODE
+				PrintDebug("extra dimensions checked: %f - %f (%f) -- %f - %f (%f) -- %f - %f (%f)", xMin, xMax, location[0], yMin, yMax, location[1], zMin, zMax, location[2]);
+			#endif
+			
             inSaferoom =  bool: (   location[0] >= xMin && location[0] <= xMax
                                 &&  location[1] >= yMin && location[1] <= yMax
                                 &&  location[2] >= zMin && location[2] <= zMax  );
@@ -304,8 +308,10 @@ bool IsPointInEndSaferoom(Float:location[3], entity = -1)
         if (g_fEndLocA[1] < g_fEndLocB[1]) { yMin = g_fEndLocA[1]; yMax = g_fEndLocB[1]; } else { yMin = g_fEndLocB[1]; yMax = g_fEndLocA[1]; }
         if (g_fEndLocA[2] < g_fEndLocB[2]) { zMin = g_fEndLocA[2]; zMax = g_fEndLocB[2]; } else { zMin = g_fEndLocB[2]; zMax = g_fEndLocA[2]; }
         
-        PrintDebug("dimensions checked: %f - %f (%f) -- %f - %f (%f) -- %f - %f (%f)", xMin, xMax, location[0], yMin, yMax, location[1], zMin, zMax, location[2]);
-        
+		#if SR_DEBUG_MODE
+			PrintDebug("dimensions checked: %f - %f (%f) -- %f - %f (%f) -- %f - %f (%f)", xMin, xMax, location[0], yMin, yMax, location[1], zMin, zMax, location[2]);
+        #endif
+		
         inSaferoom =  bool: (   location[0] >= xMin && location[0] <= xMax
                             &&  location[1] >= yMin && location[1] <= yMax
                             &&  location[2] >= zMin && location[2] <= zMax  );
@@ -317,8 +323,10 @@ bool IsPointInEndSaferoom(Float:location[3], entity = -1)
             if (g_fEndLocC[1] < g_fEndLocD[1]) { yMin = g_fEndLocC[1]; yMax = g_fEndLocD[1]; } else { yMin = g_fEndLocD[1]; yMax = g_fEndLocC[1]; }
             if (g_fEndLocC[2] < g_fEndLocD[2]) { zMin = g_fEndLocC[2]; zMax = g_fEndLocD[2]; } else { zMin = g_fEndLocD[2]; zMax = g_fEndLocC[2]; }
             
-            PrintDebug("extra dimensions checked: %f - %f (%f) -- %f - %f (%f) -- %f - %f (%f)", xMin, xMax, location[0], yMin, yMax, location[1], zMin, zMax, location[2]);
-            
+			#if SR_DEBUG_MODE
+				PrintDebug("extra dimensions checked: %f - %f (%f) -- %f - %f (%f) -- %f - %f (%f)", xMin, xMax, location[0], yMin, yMax, location[1], zMin, zMax, location[2]);
+            #endif
+			
             inSaferoom =  bool: (   location[0] >= xMin && location[0] <= xMax
                                 &&  location[1] >= yMin && location[1] <= yMax
                                 &&  location[2] >= zMin && location[2] <= zMax  );
@@ -452,6 +460,7 @@ stock RotatePoint(Float:origin[3], &Float:pointX, &Float:pointY, Float:angle)
     return;
 }
 
+#if SR_DEBUG_MODE
 void PrintDebug(const String:Message[], any:...)
 {
     #if SR_DEBUG_MODE
@@ -462,3 +471,4 @@ void PrintDebug(const String:Message[], any:...)
         //PrintToChatAll(DebugBuff);
     #endif
 }
+#endif
