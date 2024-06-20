@@ -80,7 +80,7 @@ bool RunVoteChecks(int client)
 	return true;
 }
 
-public Action VoteBossCmd(int client, int args)
+Action VoteBossCmd(int client, int args)
 {
 	if (!GetConVarBool(g_hCvarBossVoting)) {
 		return Plugin_Handled;
@@ -219,7 +219,7 @@ public Action VoteBossCmd(int client, int args)
 	return Plugin_Handled;
 }
 
-public void BossVoteActionHandler(Handle vote, BuiltinVoteAction action, int param1, int param2)
+void BossVoteActionHandler(Handle vote, BuiltinVoteAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -234,7 +234,7 @@ public void BossVoteActionHandler(Handle vote, BuiltinVoteAction action, int par
 	}
 }
 
-public void BossVoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
+void BossVoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
 {
 	for (int i=0; i<num_items; i++)
 	{
@@ -332,7 +332,7 @@ bool IsInteger(const char[] buffer)
  * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 */
 
-public Action ForceTankCommand(int client, int args)
+Action ForceTankCommand(int client, int args)
 {
 	if (!GetConVarBool(g_hCvarBossVoting)) {
 		return Plugin_Handled;
@@ -400,7 +400,7 @@ public Action ForceTankCommand(int client, int args)
 	return Plugin_Handled;
 }
 
-public Action ForceWitchCommand(int client, int args)
+Action ForceWitchCommand(int client, int args)
 {
 	if (!GetConVarBool(g_hCvarBossVoting)) {
 		return Plugin_Handled;

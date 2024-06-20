@@ -40,7 +40,7 @@ public void L4D2_OnEndVersusModeRound_Post()
 	SaveTeams();
 }
 
-public void RoundStart_Event(Handle event, const char[] name, bool dontBroadcast)
+void RoundStart_Event(Handle event, const char[] name, bool dontBroadcast)
 {
 	DisableFixTeam();
 
@@ -53,7 +53,7 @@ public void RoundStart_Event(Handle event, const char[] name, bool dontBroadcast
 	CreateTimer(1.0, EnableFixTeam_Timer);
 }
 
-public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
+void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 {
 	if (IsNewGame())
 	{
@@ -73,14 +73,14 @@ public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 	CreateTimer(1.0, FixTeam_Timer);
 }
 
-public Action FixTeam_Timer(Handle timer)
+Action FixTeam_Timer(Handle timer)
 {
 	FixTeams();
 
 	return Plugin_Continue;
 }
 
-public Action EnableFixTeam_Timer(Handle timer)
+Action EnableFixTeam_Timer(Handle timer)
 {
 	EnableFixTeam();
 	FixTeams();
@@ -89,14 +89,14 @@ public Action EnableFixTeam_Timer(Handle timer)
 	return Plugin_Continue;
 }
 
-public Action DisableFixTeam_Timer(Handle timer)
+Action DisableFixTeam_Timer(Handle timer)
 {
 	DisableFixTeam();
 
 	return Plugin_Continue;
 }
 
-public void SaveTeams()
+void SaveTeams()
 {
 	ClearTeamsData();
 
@@ -109,7 +109,7 @@ public void SaveTeams()
 	CopyClientsToArray(losers, losersTeam);
 }
 
-public void CopyClientsToArray(ArrayList arrayList, int team)
+void CopyClientsToArray(ArrayList arrayList, int team)
 {
 	for (int client = 1; client <= MaxClients; client++)
 	{
@@ -120,7 +120,7 @@ public void CopyClientsToArray(ArrayList arrayList, int team)
 	}
 }
 
-public void FixTeams()
+void FixTeams()
 {
 	if (!MustFixTheTeams())
 		return;
@@ -147,7 +147,7 @@ public void FixTeams()
 	EnableFixTeam();
 }
 
-public void MoveToSpectatorWhoIsNotInTheTeam(ArrayList arrayList, int team)
+void MoveToSpectatorWhoIsNotInTheTeam(ArrayList arrayList, int team)
 {
     for (int client = 1; client <= MaxClients; client++)
     {
@@ -159,7 +159,7 @@ public void MoveToSpectatorWhoIsNotInTheTeam(ArrayList arrayList, int team)
     }
 }
 
-public void MoveSpectatorsToTheCorrectTeam(ArrayList arrayList, int team)
+void MoveSpectatorsToTheCorrectTeam(ArrayList arrayList, int team)
 {
     for (int client = 1; client <= MaxClients; client++)
     {
@@ -171,7 +171,7 @@ public void MoveSpectatorsToTheCorrectTeam(ArrayList arrayList, int team)
     }
 }
 
-public bool PlayersInCorrectTeam(ArrayList arrayList, int team)
+bool PlayersInCorrectTeam(ArrayList arrayList, int team)
 {
 	int arraySize = GetArraySize(arrayList);
 
@@ -186,7 +186,7 @@ public bool PlayersInCorrectTeam(ArrayList arrayList, int team)
 	return true;
 }
 
-public bool SurvivorsAreWinning()
+bool SurvivorsAreWinning()
 {
 	int flipped = GameRules_GetProp("m_bAreTeamsFlipped");
 
@@ -199,33 +199,33 @@ public bool SurvivorsAreWinning()
 	return survivorScore >= infectedScore;
 }
 
-public bool MustFixTheTeams()
+bool MustFixTheTeams()
 {
 	return fixTeam && !TeamsDataIsEmpty();
 }
 
-public void EnableFixTeam()
+void EnableFixTeam()
 {
 	fixTeam = true;
 }
 
-public void DisableFixTeam()
+void DisableFixTeam()
 {
 	fixTeam = false;
 }
 
-public void ClearTeamsData()
+void ClearTeamsData()
 {
 	winners.Clear();
 	losers.Clear();
 }
 
-public bool TeamsDataIsEmpty()
+bool TeamsDataIsEmpty()
 {
 	return GetArraySize(winners) == 0 && GetArraySize(losers) == 0;
 }
 
-public bool IsNewGame()
+bool IsNewGame()
 {
 	int teamAScore = L4D2Direct_GetVSCampaignScore(0);
 	int teamBScore = L4D2Direct_GetVSCampaignScore(1);
@@ -233,7 +233,7 @@ public bool IsNewGame()
 	return teamAScore == 0 && teamBScore == 0;
 }
 
-public void MovePlayerToTeam(int client, int team)
+void MovePlayerToTeam(int client, int team)
 {
     // No need to check multiple times if we're trying to move a player to a possibly full team.
     if (team != L4D2_TEAM_SPECTATOR && NumberOfPlayersInTheTeam(team) >= TeamSize())
@@ -252,7 +252,7 @@ public void MovePlayerToTeam(int client, int team)
     }
 }
 
-public int NumberOfPlayersInTheTeam(int team)
+int NumberOfPlayersInTheTeam(int team)
 {
 	int count = 0;
 
@@ -267,7 +267,7 @@ public int NumberOfPlayersInTheTeam(int team)
 	return count;
 }
 
-public int TeamSize()
+int TeamSize()
 {
 	return GetConVarInt(FindConVar("survivor_limit"));
 }

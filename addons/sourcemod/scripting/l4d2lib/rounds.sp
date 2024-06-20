@@ -51,12 +51,12 @@ void Rounds_OnMapEnd_Update()
 	g_bInRound = false;
 }
 
-public int _native_GetCurrentRound(Handle hPlugin, int iNumParams)
+int _native_GetCurrentRound(Handle hPlugin, int iNumParams)
 {
 	return g_iRoundNumber;
 }
 
-public int _native_CurrentlyInRound(Handle hPlugin, int iNumParams)
+int _native_CurrentlyInRound(Handle hPlugin, int iNumParams)
 {
 	return g_bInRound;
 }

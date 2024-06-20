@@ -68,12 +68,12 @@ public void OnMapStart()
 	DisableGhostHurt();
 }
 
-public void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	DisableGhostHurt();
 }
 
-public Action Cmd_ResetGhostHurt(int iArgs)
+Action Cmd_ResetGhostHurt(int iArgs)
 {
 	DisableGhostHurt();
 	PrintToServer("DisableGhostHurt()");

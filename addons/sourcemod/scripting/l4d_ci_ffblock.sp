@@ -44,7 +44,7 @@ public OnEntityCreated(entity, const String:classname[])
     }
 }
 
-public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damagetype)
+Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damagetype)
 {
     //Check if Damage has to be corrected - Intensively tested on both 30, 60 and 100 Tick. Server performance does not decrease.
     if (!IsValidClient(attacker)) return Plugin_Continue;

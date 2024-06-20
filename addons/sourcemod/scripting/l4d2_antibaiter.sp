@@ -108,17 +108,17 @@ void InitGameData()
 	delete hGamedata2;
 }
 
-public void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	IsRoundIsActive = false;
 }
 
-public void Event_RoundEnd(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_RoundEnd(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	IsRoundIsActive = false;
 }
 
-public void Event_RoundGoesLive(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_RoundGoesLive(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	//This event works great with the plugin readyup.smx (does not conflict)
 	//This event works great in different game modes: versus, coop, scavenge and etc
@@ -126,7 +126,7 @@ public void Event_RoundGoesLive(Event hEvent, const char[] name, bool dontBroadc
 	StartRound();
 }
 
-public void Event_PlayerBiled(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_PlayerBiled(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	bool byBoom = hEvent.GetBool("by_boomer");
 	if (byBoom && hCvarStopTimerOnBile.BoolValue)
@@ -145,7 +145,7 @@ public void OnRoundIsLive()
 }
 
 #if DEBUG
-public Action RegisterSI(int client, int args)
+Action RegisterSI(int client, int args)
 {
 	StartRound();
 	return Plugin_Handled;
@@ -192,7 +192,7 @@ public void OnConfigsExecuted()
 	minProgress = hCvarMinProgressThreshold.FloatValue;
 }
 
-public Action AntibaiterThink(Handle hTimer)
+Action AntibaiterThink(Handle hTimer)
 {
 	if (!IsRoundActive()) {
 		return Plugin_Handled;

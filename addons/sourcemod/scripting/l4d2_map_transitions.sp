@@ -84,8 +84,7 @@ void LoadSDK()
 	delete hGameData;
 }
 
-//public void OnRoundEnd() //l4d2util forward was removed
-public void L4D2_OnEndVersusModeRound_Post() //left4dhooks
+public void L4D2_OnEndVersusModeRound_Post()
 {
 	//If map is in last half, attempt a transition
 	if (InSecondHalfOfRound()) {
@@ -97,7 +96,7 @@ public void L4D2_OnEndVersusModeRound_Post() //left4dhooks
 	}
 }
 
-public Action OnRoundEnd_Post(Handle hTimer)
+Action OnRoundEnd_Post(Handle hTimer)
 {
 	g_hTransitionTimer = null;
 	
@@ -141,7 +140,7 @@ public void OnMapStart()
 	}
 }
 
-public Action Timer_OnMapStartDelay(Handle hTimer)
+Action Timer_OnMapStartDelay(Handle hTimer)
 {
 	SetScores();
 
@@ -171,7 +170,7 @@ void SetScores()
 	#endif
 }
 
-public Action AddMapTransition(int iArgs)
+Action AddMapTransition(int iArgs)
 {
 	if (iArgs != 2) {
 		PrintToServer("Usage: sm_add_map_transition <starting map name> <ending map name>");

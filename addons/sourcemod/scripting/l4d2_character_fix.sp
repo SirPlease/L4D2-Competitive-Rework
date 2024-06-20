@@ -14,7 +14,7 @@ public OnPluginStart() {
 	hCvarMaxZombies = FindConVar("z_max_player_zombies");
 }
 
-public Action:TeamCmd(client, const String:command[], argc) {
+Action:TeamCmd(client, const String:command[], argc) {
 	if (client && argc > 0)
 	{
 		static String:sBuffer[128];

@@ -18,7 +18,7 @@ public void OnPluginStart()
 	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 }
 
-public void Event_RoundStart(Event hEvent, const char[] eName, bool dontBroadcast)
+void Event_RoundStart(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	int EntityCount = GetEntityCount();
 	char EdictClassName[128];

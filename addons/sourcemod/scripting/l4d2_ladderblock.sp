@@ -96,19 +96,19 @@ public void OnClientPutInServer(int iClient)
 	}
 }
 
-public void Charging(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Charging(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iCharger = GetClientOfUserId(hEvent.GetInt("userid"));
 	g_iInCharge[iCharger] = true;
 }
 
-public void NotCharging(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void NotCharging(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iCharger = GetClientOfUserId(hEvent.GetInt("userid"));
 	g_iInCharge[iCharger] = false;
 }
 
-public Action SDKHook_cb_Touch(int iEntity, int iOther)
+Action SDKHook_cb_Touch(int iEntity, int iOther)
 {
 	if (iOther > MaxClients || iOther < 1) {
 		return Plugin_Continue;
@@ -165,7 +165,7 @@ void ST_ToogleHook(bool bHook)
 	}
 }
 
-public void OnCvarChange_Flags(ConVar hConvar, const char[] sOldValue, const char[] sNewValue)
+void OnCvarChange_Flags(ConVar hConvar, const char[] sOldValue, const char[] sNewValue)
 {
 	if (strcmp(sOldValue, sNewValue) == 0) {
 		return;
@@ -180,7 +180,7 @@ public void OnCvarChange_Flags(ConVar hConvar, const char[] sOldValue, const cha
 	}
 }
 
-public void OnCvarChange_Immune(ConVar hConvar, const char[] sOldValue, const char[] sNewValue)
+void OnCvarChange_Immune(ConVar hConvar, const char[] sOldValue, const char[] sNewValue)
 {
 	if (strcmp(sOldValue, sNewValue) != 0) {
 		g_iCvarImmune = g_hImmune.IntValue;

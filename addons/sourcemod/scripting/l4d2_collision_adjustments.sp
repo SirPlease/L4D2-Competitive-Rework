@@ -54,7 +54,7 @@ public void OnPluginStart()
 	HookEvent("round_end", Event_Reset, EventHookMode_PostNoCopy);
 }
 
-public void cvarChanged(ConVar cvar, const char[] oldValue, const char[] newValue)
+void cvarChanged(ConVar cvar, const char[] oldValue, const char[] newValue)
 {
 	CvarsInType();
 }
@@ -109,19 +109,19 @@ public Action CH_PassFilter(int ent1, int ent2, bool &result)
 	return Plugin_Continue;
 }
 
-public void Event_Reset(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_Reset(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	for (int i = 0; i <= MAXPLAYERS; i++) {
 		isPulled[i] = false;
 	}
 }
 
-public void Event_SurvivorPulled(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_SurvivorPulled(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	isPulled[GetClientOfUserId(hEvent.GetInt("victim"))] = true;
 }
 
-public void Event_PullEnd(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_PullEnd(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	isPulled[GetClientOfUserId(hEvent.GetInt("victim"))] = false;
 }

@@ -574,7 +574,7 @@ public void OnPluginStart()
 	}
 }
 
-public void OnHookEvent()
+void OnHookEvent()
 {
 	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 	HookEvent("scavenge_round_start", Event_RoundStart, EventHookMode_PostNoCopy);
@@ -610,7 +610,7 @@ public void OnHookEvent()
 	HookEvent("triggered_car_alarm", Event_CarAlarmGoesOff, EventHookMode_Post);
 }
 
-public void CvarChange_PounceInterrupt(Handle convar, const char[] oldValue, const char[] newValue)
+void CvarChange_PounceInterrupt(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	g_iPounceInterrupt = GetConVarInt(convar);
 }

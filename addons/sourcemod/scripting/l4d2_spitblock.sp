@@ -55,7 +55,7 @@ public void OnPluginStart()
 	}
 }
 
-public Action AddSpitBlockSquare(int iArgs)
+Action AddSpitBlockSquare(int iArgs)
 {
 	float fSquare[4];
 	char sMapName[MAX_MAP_NAME_SIZE], sBuffer[32], sGetCmd[128];
@@ -83,7 +83,7 @@ public Action AddSpitBlockSquare(int iArgs)
 	return Plugin_Handled;
 }
 
-public Action RemoveSpitBlockSquare(int iArgs)
+Action RemoveSpitBlockSquare(int iArgs)
 {
 	float fSquare[4];
 	char sMapName[MAX_MAP_NAME_SIZE], sGetCmd[128];
@@ -130,7 +130,7 @@ public void OnClientPostAdminCheck(int iClient)
 	SDKHook(iClient, SDKHook_OnTakeDamage, stop_spit_dmg);
 }
 
-public Action stop_spit_dmg(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamageType)
+Action stop_spit_dmg(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamageType)
 {
 	if (!g_bIsBlockEnable || !(iDamageType & DMG_TYPE_SPIT)) { //for performance
 		return Plugin_Continue;

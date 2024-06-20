@@ -34,7 +34,7 @@ public void OnPluginStart()
 	HookEvent("player_bot_replace", playerBotReplace_Event);
 }
 
-public void playerBotReplace_Event(Event hEvent, char[] sEventName, bool dontBroadcast)
+void playerBotReplace_Event(Event hEvent, char[] sEventName, bool dontBroadcast)
 {
 	int bot = GetClientOfUserId(hEvent.GetInt("bot"));
 

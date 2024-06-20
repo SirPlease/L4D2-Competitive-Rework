@@ -68,7 +68,7 @@ public void L4D_OnSpawnTank_Post(int client, const float vecPos[3], const float 
 	EmitSoundToAll(DANG);
 }
 
-public void Event_PlayerSpawn(Event event, char[] name, bool dontBroadcast)
+void Event_PlayerSpawn(Event event, char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 

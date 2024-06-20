@@ -29,12 +29,12 @@ public void OnPluginStart()
 	HookEvent("jockey_ride_end", JockeyRideEnd, EventHookMode_Post);
 }
 
-public void JockeyLedgeHangChange(ConVar cVar, const char[] oldValue, const char[] newValue)
+void JockeyLedgeHangChange(ConVar cVar, const char[] oldValue, const char[] newValue)
 {
 	fLedgeHangInterval = hCvarJockeyLedgeHang.FloatValue;
 }
 
-public void JockeyRideEnd(Event hEvent, const char[] name, bool dontBroadcast) 
+void JockeyRideEnd(Event hEvent, const char[] name, bool dontBroadcast) 
 {
 	int jockeyVictim = GetClientOfUserId(GetEventInt(hEvent, "victim"));
 

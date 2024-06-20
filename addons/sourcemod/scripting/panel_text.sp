@@ -28,13 +28,13 @@ public OnPluginStart()
 	sm_readypaneltextdelay = CreateConVar("sm_readypaneltextdelay", "4.0", "Delay before adding the text to the ready-up panel for order control", FCVAR_NONE, true, 0.0, true, 10.0);
 }
 
-public Action:LockStrings_Cmd(args)
+Action:LockStrings_Cmd(args)
 {
 	areStringsLocked = true;
 	return Plugin_Handled;
 }
 
-public Action:AddReadyString_Cmd(args)
+Action:AddReadyString_Cmd(args)
 {
 	if (stringCount < 10 && !areStringsLocked)
 	{
@@ -44,19 +44,19 @@ public Action:AddReadyString_Cmd(args)
 	return Plugin_Handled;
 }
 
-public Action:ResetStringCount_Cmd(args)
+Action:ResetStringCount_Cmd(args)
 {
 	stringCount = 0;
 	areStringsLocked = false;
 	return Plugin_Handled;
 }
 
-public RoundStart_Event(Handle:event, const String:name[], bool:dontBroadcast)
+void RoundStart_Event(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	CreateTimer(GetConVarFloat(sm_readypaneltextdelay), panelTimer);
 }
 
-public Action:panelTimer(Handle:timer)
+Action:panelTimer(Handle:timer)
 {
 	for (new i = 0; i < stringCount && AddStringToReadyFooter(panelText[i]); i++)
 	{ }

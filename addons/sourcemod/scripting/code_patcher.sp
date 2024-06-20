@@ -75,7 +75,7 @@ public void OnPluginEnd()
 	}
 }
 
-public Action CodePatchListCommand(int args)
+Action CodePatchListCommand(int args)
 {
 	char name[MAX_PATCH_NAME_LENGTH + 1];
 	char bytes[MAX_PATCH_SIZE];
@@ -102,7 +102,7 @@ public Action CodePatchListCommand(int args)
 	return Plugin_Handled;
 }
 
-public Action CodePatchPatchCommand(int args)
+Action CodePatchPatchCommand(int args)
 {
 	if (GetCmdArgs() != 1) {
 		PrintToServer("syntax: codepatch_patch <patch_name>");
@@ -184,7 +184,7 @@ public Action CodePatchPatchCommand(int args)
 	return Plugin_Handled;
 }
 
-public Action CodePatchUnpatchCommand(int args)
+Action CodePatchUnpatchCommand(int args)
 {
 	if (GetCmdArgs() != 1) {
 		PrintToServer("syntax: codepatch_unpatch <patch_name>");
@@ -383,7 +383,7 @@ static bool RevertPatch(const char[] name)
 }
 
 /* Natives */
-public int IsPatchApplied(Handle plugin, int numParams)
+int IsPatchApplied(Handle plugin, int numParams)
 {
 	int length;
 	GetNativeStringLength(1, length);
@@ -400,7 +400,7 @@ public int IsPatchApplied(Handle plugin, int numParams)
 	return bIsPatchApplied;
 }
 
-public int GetPatchAddress(Handle plugin, int numParams)
+int GetPatchAddress(Handle plugin, int numParams)
 {
 	int length;
 	GetNativeStringLength(1, length);
@@ -422,7 +422,7 @@ public int GetPatchAddress(Handle plugin, int numParams)
 	return hPatchAddresses.Get(patchId);
 }
 
-public int IsPlatformWindows(Handle plugin, int numParams)
+int IsPlatformWindows(Handle plugin, int numParams)
 {
 	return bIsWindows;
 }

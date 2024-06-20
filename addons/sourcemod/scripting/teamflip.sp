@@ -33,7 +33,7 @@ public OnPluginStart()
 	RegConsoleCmd("sm_tf", Command_teamflip);
 }
 
-public Action:Command_teamflip(client, args)
+Action:Command_teamflip(client, args)
 {
 	current_timeC = GetTime();
 	

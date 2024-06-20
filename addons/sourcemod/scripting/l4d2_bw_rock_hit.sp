@@ -97,7 +97,7 @@ void InitGameData()
 	delete hGameData;
 }
 
-public void CvarsChanged(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+void CvarsChanged(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	CvarsToType();
 }
@@ -119,7 +119,7 @@ public void OnClientDisconnect(int iClient)
 	SDKUnhook(iClient, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
-public Action OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamagetype, 
+Action OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamagetype, 
 								int &iWeapon, float fDamageForce[3], float fDamagePosition[3])
 {
 	if (iDamagetype != DMG_CLUB || !IsTankRock(iInflictor)) {
@@ -203,7 +203,7 @@ void CTankRock__Detonate(int iTankRock)
 }
 
 #if DEBUG
-public Action Cmd_DetonateRock(int iClient, int iArgs)
+Action Cmd_DetonateRock(int iClient, int iArgs)
 {
 	int iEntity = -1;
 	while ((iEntity = FindEntityByClassname(iEntity, "tank_rock")) != -1) {

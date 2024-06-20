@@ -104,7 +104,7 @@ void PluginDisable()
 	UnFreezePoints();
 }
 
-public void OnTankGoneAI(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void OnTankGoneAI(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!cvar_unfreezeAI.BoolValue)
 	{
@@ -119,7 +119,7 @@ public void OnTankGoneAI(Event hEvent, const char[] sEventName, bool bDontBroadc
 	}
 }
 
-public void NoTankRushChange(ConVar convar, const char[] oldValue, const char[] newValue)
+void NoTankRushChange(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	if (StringToInt(newValue) == 0)
 	{
@@ -130,7 +130,7 @@ public void NoTankRushChange(ConVar convar, const char[] oldValue, const char[] 
 	}
 }
 
-public void RoundStart(Event hEvent, const char[] eName, bool dontBroadcast)
+void RoundStart(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	if (InSecondHalfOfRound())
 	{
@@ -138,12 +138,12 @@ public void RoundStart(Event hEvent, const char[] eName, bool dontBroadcast)
 	}
 }
 
-public void TankSpawn(Event hEvent, const char[] eName, bool dontBroadcast)
+void TankSpawn(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	FreezePoints(true);
 }
 
-public void PlayerDeath(Event hEvent, const char[] eName, bool dontBroadcast)
+void PlayerDeath(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("userid"));
 	if (client > 0 && IsTank(client))
@@ -160,7 +160,7 @@ public void OnClientDisconnect(int client)
 	}
 }
 
-public Action CheckForTanksDelay(Handle timer)
+Action CheckForTanksDelay(Handle timer)
 {
 	if (!IsTankActuallyInPlay())
 	{

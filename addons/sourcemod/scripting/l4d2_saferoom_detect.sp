@@ -102,23 +102,25 @@ public OnAllPluginsLoaded()
     g_bLGOIsAvailable = LibraryExists("confogl");
 }
 
-public Native_IsEntityInStartSaferoom(Handle:plugin, numParams)
+int Native_IsEntityInStartSaferoom(Handle:plugin, numParams)
 {
     new entity = GetNativeCell(1);
     return _: IsEntityInStartSaferoom(entity);
 }
-public Native_IsEntityInEndSaferoom(Handle:plugin, numParams)
+
+int Native_IsEntityInEndSaferoom(Handle:plugin, numParams)
 {
     new entity = GetNativeCell(1);
     return _: IsEntityInEndSaferoom(entity);
 }
 
-public Native_IsPlayerInStartSaferoom(Handle:plugin, numParams)
+int Native_IsPlayerInStartSaferoom(Handle:plugin, numParams)
 {
     new client = GetNativeCell(1);
     return _: IsPlayerInStartSaferoom(client);
 }
-public Native_IsPlayerInEndSaferoom(Handle:plugin, numParams)
+
+int Native_IsPlayerInEndSaferoom(Handle:plugin, numParams)
 {
     new client = GetNativeCell(1);
     return _: IsPlayerInEndSaferoom(client);
@@ -157,7 +159,7 @@ public OnMapEnd()
 // Checks
 // ------
 
-public IsEntityInStartSaferoom(entity)
+bool IsEntityInStartSaferoom(entity)
 {
     if ( !IsValidEntity(entity) || GetEntSendPropOffs(entity, "m_vecOrigin", true) == -1 ) { return false; }
     
@@ -168,7 +170,7 @@ public IsEntityInStartSaferoom(entity)
     return IsPointInStartSaferoom(location);
 }
 
-public IsEntityInEndSaferoom(entity)
+bool IsEntityInEndSaferoom(entity)
 {
     if ( !IsValidEntity(entity) || GetEntSendPropOffs(entity, "m_vecOrigin", true) == -1 ) { return false; }
     
@@ -180,7 +182,7 @@ public IsEntityInEndSaferoom(entity)
 }
 
 
-public IsPlayerInStartSaferoom(client)
+bool IsPlayerInStartSaferoom(client)
 {
     if (client < 1 || client > MaxClients || !IsClientInGame(client)) { return false; }
     
@@ -195,7 +197,7 @@ public IsPlayerInStartSaferoom(client)
     return bool: (IsPointInStartSaferoom(locationA) || IsPointInStartSaferoom(locationB));
 }
 
-public IsPlayerInEndSaferoom(client)
+bool IsPlayerInEndSaferoom(client)
 {
     if (client < 1 || client > MaxClients || !IsClientInGame(client)) { return false; }
     
@@ -450,7 +452,7 @@ stock RotatePoint(Float:origin[3], &Float:pointX, &Float:pointY, Float:angle)
     return;
 }
 
-public PrintDebug(const String:Message[], any:...)
+void PrintDebug(const String:Message[], any:...)
 {
     #if SR_DEBUG_MODE
         decl String:DebugBuff[256];

@@ -88,7 +88,7 @@ public void OnConfigsExecuted()
 	}
 }
 
-public Action Listener_Quit(int iClient, const char[] sCommand, int iArgc)
+Action Listener_Quit(int iClient, const char[] sCommand, int iArgc)
 {
 	g_bShutdown = true;
 	return Plugin_Continue;
@@ -124,7 +124,7 @@ public void OnCedapugEnded()
 	g_bCedaGame = false;
 }
 
-public Action MatchRequest(int iClient, int iArgs)
+Action MatchRequest(int iClient, int iArgs)
 {
 	if (!g_hEnabled.BoolValue)
 	{
@@ -220,7 +220,7 @@ void MatchModeMenu(int iClient)
 	hMenu.Display(iClient, 20);
 }
 
-public int MatchModeMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int MatchModeMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	if (action == MenuAction_End)
 	{
@@ -262,7 +262,7 @@ public int MatchModeMenuHandler(Menu menu, MenuAction action, int param1, int pa
 	return 0;
 }
 
-public int ConfigsMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int ConfigsMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	if (action == MenuAction_End)
 		delete menu;
@@ -327,7 +327,7 @@ bool StartMatchVote(int iClient, const char[] sCfgName)
 	return true;
 }
 
-public void VoteActionHandler(Handle vote, BuiltinVoteAction action, int param1, int param2)
+void VoteActionHandler(Handle vote, BuiltinVoteAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -343,7 +343,7 @@ public void VoteActionHandler(Handle vote, BuiltinVoteAction action, int param1,
 	}
 }
 
-public void MatchVoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
+void MatchVoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
 {
 	for (int i = 0; i < num_items; i++)
 	{
@@ -364,7 +364,7 @@ public void MatchVoteResultHandler(Handle vote, int num_votes, int num_clients, 
 	DisplayBuiltinVoteFail(vote, BuiltinVoteFail_Loses);
 }
 
-public Action MatchReset(int iClient, int iArgs)
+Action MatchReset(int iClient, int iArgs)
 {
 	if (!g_hEnabled.BoolValue)
 	{
@@ -438,7 +438,7 @@ bool StartResetMatchVote(int iClient)
 	return true;
 }
 
-public void ResetMatchVoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
+void ResetMatchVoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
 {
 	for (int i = 0; i < num_items; i++)
 	{
@@ -459,7 +459,7 @@ public void ResetMatchVoteResultHandler(Handle vote, int num_votes, int num_clie
 	DisplayBuiltinVoteFail(vote, BuiltinVoteFail_Loses);
 }
 
-public Action ChangeMatchRequest(int iClient, int iArgs)
+Action ChangeMatchRequest(int iClient, int iArgs)
 {
 	if (!g_hEnabled.BoolValue)
 	{
@@ -539,7 +539,7 @@ void ChMatchModeMenu(int iClient)
 	hMenu.Display(iClient, 20);
 }
 
-public int ChMatchModeMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int ChMatchModeMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	if (action == MenuAction_End)
 	{
@@ -581,7 +581,7 @@ public int ChMatchModeMenuHandler(Menu menu, MenuAction action, int param1, int 
 	return 0;
 }
 
-public int ChConfigsMenuHandler(Menu menu, MenuAction action, int param1, int param2)
+int ChConfigsMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 {
 	if (action == MenuAction_End)
 	{
@@ -651,7 +651,7 @@ bool StartChMatchVote(int iClient, const char[] sCfgName)
 	return true;
 }
 
-public void ChMatchVoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
+void ChMatchVoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
 {
 	for (int i = 0; i < num_items; i++)
 	{

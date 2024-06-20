@@ -30,7 +30,7 @@ public void OnPluginStart()
 	HookEvent("player_bot_replace", OnTankGoneAi);
 }
 
-public void OnTankGoneAi(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void OnTankGoneAi(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iNewTank = GetClientOfUserId(hEvent.GetInt("bot"));
 	
@@ -45,7 +45,7 @@ public void OnTankGoneAi(Event hEvent, const char[] sEventName, bool bDontBroadc
 	}
 }
 
-public Action Timed_CheckAndKill(Handle hTimer, any iNewTank)
+Action Timed_CheckAndKill(Handle hTimer, any iNewTank)
 {
 	if (IsFakeClient(iNewTank) && IsPlayerAlive(iNewTank)) {
 		ForcePlayerSuicide(iNewTank);

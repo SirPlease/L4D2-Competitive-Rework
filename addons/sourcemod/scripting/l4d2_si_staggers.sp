@@ -58,7 +58,7 @@ public void OnPluginStart()
 	hCvarInfectedFlags.AddChangeHook(PluginActivityChanged);
 }
 
-public void PluginActivityChanged(ConVar cvar, const char[] oldValue, const char[] newValue)
+void PluginActivityChanged(ConVar cvar, const char[] oldValue, const char[] newValue)
 {
 	iActiveFlags = hCvarInfectedFlags.IntValue;
 }

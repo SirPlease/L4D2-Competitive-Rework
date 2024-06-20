@@ -17,13 +17,13 @@ public OnClientPutInServer(client)
 
 public OnPluginStart()
 {
-	for (new client = 1; client <= MAXPLAYERS; client++)
+	for (new client = 1; client <= MaxClients; client++)
 	{
 		if (IsValidClient(client)) SDKHook(client, SDKHook_SetTransmit, Hook_SetTransmit);
 	}
 }
 
-public Action:Hook_SetTransmit(client, entity)
+Action:Hook_SetTransmit(client, entity)
 {
 	// By default Valve still transmits the entities to Survivors, even when not in sight or in ghost mode.
 	// Detecting if a player is actually in someone's sight is likely impossible to implement without issues, but blocking ghosts from being transmitted has no downsides.

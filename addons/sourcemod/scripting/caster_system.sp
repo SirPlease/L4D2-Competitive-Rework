@@ -89,13 +89,13 @@ void LoadPluginTranslation()
 //  Natives
 // ========================
 
-public int Native_IsClientCaster(Handle plugin, int numParams)
+int Native_IsClientCaster(Handle plugin, int numParams)
 {
 	int client = GetNativeCell(1);
 	return IsClientCaster(client);
 }
 
-public int Native_IsIDCaster(Handle plugin, int numParams)
+int Native_IsIDCaster(Handle plugin, int numParams)
 {
 	char buffer[64];
 	GetNativeString(1, buffer, sizeof(buffer));
@@ -120,7 +120,7 @@ bool IsIDCaster(const char[] AuthID)
 //  Caster Addons
 // ========================
 
-public void OnAddonsSettingChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+void OnAddonsSettingChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	bool disable = !!StringToInt(newValue);
 	bool previous = !!StringToInt(oldValue);
@@ -163,7 +163,7 @@ public void OnAddonsSettingChanged(ConVar convar, const char[] oldValue, const c
 	}
 }
 
-public Action Timer_ReconnectCasters(Handle timer, ArrayList aList)
+Action Timer_ReconnectCasters(Handle timer, ArrayList aList)
 {
 	int size = aList.Length;
 	for (int i = 0; i < size; i++)
@@ -180,7 +180,7 @@ public Action L4D2_OnClientDisableAddons(const char[] SteamID)
 	return (!g_hDisableAddons.BoolValue && IsIDCaster(SteamID)) ? Plugin_Handled : Plugin_Continue;
 }
 
-public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
+void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 {
 	if (event.GetInt("team") != L4D2Team_Spectator)
 	{
@@ -189,7 +189,7 @@ public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public Action CasterCheck(Handle timer, int userid)
+Action CasterCheck(Handle timer, int userid)
 {
 	int client = GetClientOfUserId(userid);
 	if (client && IsClientInGame(client) && GetClientTeam(client) != L4D2Team_Spectator && IsClientCaster(client))
@@ -206,7 +206,7 @@ public Action CasterCheck(Handle timer, int userid)
 //  Caster Registration
 // ========================
 
-public Action Cast_Cmd(int client, int args)
+Action Cast_Cmd(int client, int args)
 {
 	if (!client) return Plugin_Continue;
 	
@@ -237,7 +237,7 @@ public Action Cast_Cmd(int client, int args)
 	return Plugin_Handled;
 }
 
-public Action Caster_Cmd(int client, int args)
+Action Caster_Cmd(int client, int args)
 {	
 	if (args < 1)
 	{
@@ -267,7 +267,7 @@ public Action Caster_Cmd(int client, int args)
 	return Plugin_Handled;
 }
 
-public Action NotCasting_Cmd(int client, int args)
+Action NotCasting_Cmd(int client, int args)
 {
 	char buffer[64];
 	
@@ -315,14 +315,14 @@ public Action NotCasting_Cmd(int client, int args)
 	return Plugin_Handled;
 }
 
-public Action Reconnect(Handle timer, int client)
+Action Reconnect(Handle timer, int client)
 {
 	if (IsClientConnected(client)) ReconnectClient(client);
 
 	return Plugin_Stop;
 }
 
-public Action ResetCaster_Cmd(int client, int args)
+Action ResetCaster_Cmd(int client, int args)
 {
 	casterTrie.Clear();
 	forbidSelfRegister = false;
@@ -330,7 +330,7 @@ public Action ResetCaster_Cmd(int client, int args)
 	return Plugin_Handled;
 }
 
-public Action AddCasterSteamID_Cmd(int client, int args)
+Action AddCasterSteamID_Cmd(int client, int args)
 {
 	char buffer[128];
 	GetCmdArg(1, buffer, sizeof(buffer));
@@ -347,7 +347,7 @@ public Action AddCasterSteamID_Cmd(int client, int args)
 	return Plugin_Handled;
 }
 
-public Action RemoveCasterSteamID_Cmd(int client, int args)
+Action RemoveCasterSteamID_Cmd(int client, int args)
 {
 	char buffer[128];
 	GetCmdArg(1, buffer, sizeof(buffer));
@@ -366,7 +366,7 @@ public Action RemoveCasterSteamID_Cmd(int client, int args)
 	return Plugin_Handled;
 }
 
-public Action PrintCasters_Cmd(int client, int args)
+Action PrintCasters_Cmd(int client, int args)
 {
 	StringMapSnapshot ss = allowedCastersTrie.Snapshot();
 	char buffer[128];
@@ -396,7 +396,7 @@ public Action PrintCasters_Cmd(int client, int args)
 //  Kick Specs
 // ========================
 
-public Action KickSpecs_Cmd(int client, int args)
+Action KickSpecs_Cmd(int client, int args)
 {
 	AdminId id = GetUserAdmin(client);
 	if (id != INVALID_ADMIN_ID && GetAdminFlag(id, Admin_Ban)) // Check for specific admin flag
@@ -457,7 +457,7 @@ void StartKickSpecsVote(int client)
 	FakeClientCommand(client, "Vote Yes");
 }
 
-public void VoteActionHandler(Handle vote, BuiltinVoteAction action, int param1, int param2)
+void VoteActionHandler(Handle vote, BuiltinVoteAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -472,7 +472,7 @@ public void VoteActionHandler(Handle vote, BuiltinVoteAction action, int param1,
 	}
 }
 
-public void KickSpecsVoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
+void KickSpecsVoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
 {
 	for (int i = 0; i < num_items; i++)
 	{
@@ -494,7 +494,7 @@ public void KickSpecsVoteResultHandler(Handle vote, int num_votes, int num_clien
 	DisplayBuiltinVoteFail(vote, BuiltinVoteFail_Loses);
 }
 
-public Action Timer_KickSpecs(Handle timer)
+Action Timer_KickSpecs(Handle timer)
 {
 	for (int i = 1; i <= MaxClients; i++)
 	{

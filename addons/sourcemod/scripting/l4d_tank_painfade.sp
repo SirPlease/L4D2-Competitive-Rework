@@ -75,7 +75,7 @@ public OnClientDisconnect(client)
     }
 }
 
-public Action:TankSpawn(Handle:event, const String:name[], bool:dontBroadcast)
+Action:TankSpawn(Handle:event, const String:name[], bool:dontBroadcast)
 {
     if (!bEnabled || bIsTankInPlay) return;
     
@@ -83,7 +83,7 @@ public Action:TankSpawn(Handle:event, const String:name[], bool:dontBroadcast)
     AttachEffect();
 }
 
-public Action:PlayerDeath( Handle:event, const String:name[], bool:dontBroadcast ) 
+Action:PlayerDeath( Handle:event, const String:name[], bool:dontBroadcast ) 
 {
     if (!bEnabled) return;
     
@@ -94,7 +94,7 @@ public Action:PlayerDeath( Handle:event, const String:name[], bool:dontBroadcast
     }
 }
 
-public Action:CheckForTanksDelay( Handle:timer ) 
+Action:CheckForTanksDelay( Handle:timer ) 
 {
     if (FindTank() == -1) 
     {
@@ -103,7 +103,7 @@ public Action:CheckForTanksDelay( Handle:timer )
     }
 }
 
-public Action:OnTankDamaged(victim, &attacker, &inflictor, &Float:damage, &damageType, &weapon, Float:damageForce[3], Float:damagePosition[3]) 
+Action:OnTankDamaged(victim, &attacker, &inflictor, &Float:damage, &damageType, &weapon, Float:damageForce[3], Float:damagePosition[3]) 
 {
     if (!attacker || weapon < 1 || !IsTank(victim))
         return Plugin_Continue;

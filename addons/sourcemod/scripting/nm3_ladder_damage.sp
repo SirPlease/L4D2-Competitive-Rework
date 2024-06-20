@@ -79,7 +79,7 @@ public void OnClientPutInServer(int iClient)
 	SDKUnhook(iClient, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
 }*/
 
-public Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamagetype)
+Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamagetype)
 {
 	if (iDamagetype != DMG_FALL || !g_bIsSewers || fDamage <= 30.0) {
 		return Plugin_Continue;

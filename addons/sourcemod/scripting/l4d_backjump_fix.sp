@@ -45,7 +45,7 @@ public void OnPluginStart()
 	HookEvent("player_spawn", Event_PlayerSpawn);
 }
 
-public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
+void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if (!client || GetClientTeam(client) != 3 || GetEntProp(client, Prop_Send, "m_zombieClass") != 3)
@@ -58,7 +58,7 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 	}
 }
 
-public MRESReturn CLunge_OnTouch(int pThis, Handle hParams)
+MRESReturn CLunge_OnTouch(int pThis, Handle hParams)
 {
 	int other = DHookGetParam(hParams, 1);
 	if (other <= 0) return MRES_Ignored;

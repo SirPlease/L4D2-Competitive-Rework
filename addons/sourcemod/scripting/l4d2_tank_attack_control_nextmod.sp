@@ -50,14 +50,14 @@ public void OnPluginStart()
 	HookEvent("tank_spawn", TankSpawn_Event);
 }
 
-public void RoundStartEvent(Event hEvent, char[] sEventName, bool bDontBroadcast)
+void RoundStartEvent(Event hEvent, char[] sEventName, bool bDontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; i++) {
 		throwQueuedAt[i] = 0.0;
 	}
 }
 
-public void TankSpawn_Event(Event hEvent, char[] sEventName, bool bDontBroadcast)
+void TankSpawn_Event(Event hEvent, char[] sEventName, bool bDontBroadcast)
 {
 	int tank = GetClientOfUserId(hEvent.GetInt("userid"));
 	if (IsFakeClient(tank)) {
@@ -215,7 +215,7 @@ void SetClientButtons(int client, int button)
 	}
 }
 
-public Action ResetJumpRockCooldown(Handle hTimer, any userid)
+Action ResetJumpRockCooldown(Handle hTimer, any userid)
 {
 	int client = GetClientOfUserId(userid);
 
@@ -228,7 +228,7 @@ public Action ResetJumpRockCooldown(Handle hTimer, any userid)
 	return Plugin_Stop;
 }
 
-public Action Timer_Countdown(Handle hTimer)
+Action Timer_Countdown(Handle hTimer)
 {
 	if (g_fCooldownTime <= 0.0) {
 		return Plugin_Stop;

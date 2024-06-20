@@ -97,13 +97,13 @@ public OnClientPutInServer(client)
     fLastAdjusted[client] = 0.0;
 }
 
-public OnTeamChange(Handle:event, String:name[], bool:dontBroadcast)
+void OnTeamChange(Handle:event, String:name[], bool:dontBroadcast)
 {
     new client = GetClientOfUserId(GetEventInt(event, "userid"));
     CreateTimer(10.0, TimerAdjustRates, client, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action:TimerAdjustRates(Handle:timer, any:client)
+Action:TimerAdjustRates(Handle:timer, any:client)
 {
     AdjustRates(client);
     return Plugin_Handled;

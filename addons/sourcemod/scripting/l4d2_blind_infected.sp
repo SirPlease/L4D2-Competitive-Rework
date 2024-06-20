@@ -74,7 +74,7 @@ public void OnPluginStart()
 	CreateTimer(ENT_CHECK_INTERVAL, Timer_EntCheck, _, TIMER_REPEAT);
 }
 
-public Action Timer_EntCheck(Handle hTimer)
+Action Timer_EntCheck(Handle hTimer)
 {
 	char sTmp[PLATFORM_MAX_PATH];
 	int iCurrentEnt[eArray_Size], iEntity, iSize = g_hBlockedEntities.Length;
@@ -94,14 +94,14 @@ public Action Timer_EntCheck(Handle hTimer)
 	return Plugin_Continue;
 }
 
-public void RoundStart_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void RoundStart_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	g_hBlockedEntities.Clear();
 	
 	CreateTimer(1.2, RoundStartDelay_Timer, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action RoundStartDelay_Timer(Handle hTimer)
+Action RoundStartDelay_Timer(Handle hTimer)
 {
 	int iWeapon;
 	int iBhTemp[eArray_Size], iEntityCount = GetEntityCount();
@@ -127,7 +127,7 @@ public Action RoundStartDelay_Timer(Handle hTimer)
 	return Plugin_Stop;
 }
 
-public Action OnTransmit(int iEntity, int iClient)
+Action OnTransmit(int iEntity, int iClient)
 {
 	if (GetClientTeam(iClient) != L4D2Team_Infected) {
 		return Plugin_Continue;
@@ -196,7 +196,7 @@ bool IsVisibleTo(int iClient, int iEntity) // check an entity for being visible 
 	return bIsVisible;
 }
 
-public bool TraceFilter(int iEntity, int iContentsMask)
+bool TraceFilter(int iEntity, int iContentsMask)
 {
 	if (iEntity <= MaxClients || !IsValidEntity(iEntity)) { // dont let WORLD, players, or invalid entities be hit
 		return false;

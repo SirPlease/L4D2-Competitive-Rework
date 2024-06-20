@@ -86,7 +86,7 @@ public OnEntityDestroyed(entity)
 }
 
 // witch tracking
-public Action: Event_WitchSpawned(Handle:event, const String:name[], bool:dontBroadcast)
+Action: Event_WitchSpawned(Handle:event, const String:name[], bool:dontBroadcast)
 {
     new witch = GetEventInt(event, "witchid");    
     decl String:witch_key[10];
@@ -95,7 +95,7 @@ public Action: Event_WitchSpawned(Handle:event, const String:name[], bool:dontBr
 }
 
 // kill tracking
-public Action: Event_WitchKilled(Handle:event, const String:name[], bool:dontBroadcast)
+Action: Event_WitchKilled(Handle:event, const String:name[], bool:dontBroadcast)
 {
     new witch = GetEventInt(event, "witchid");
     new attacker = GetClientOfUserId( GetEventInt(event, "userid") );
@@ -118,7 +118,7 @@ public Action: Event_WitchKilled(Handle:event, const String:name[], bool:dontBro
 }
 
 // track witch doing damage to survivors
-public Action: OnTakeDamageByWitch(victim, &attacker, &inflictor, &Float:damage, &damagetype)
+Action: OnTakeDamageByWitch(victim, &attacker, &inflictor, &Float:damage, &damagetype)
 {
     if (IS_VALID_SURVIVOR(victim) && damage > 0.0) {
         if (IsWitch(attacker)) {

@@ -26,7 +26,7 @@ public OnPluginStart()
     // ResetConVar(FindConVar("tank_swing_miss_interval"));
 // }
 
-public Action:OnPlayerHurt(Handle:event, String:event_name[], bool:dontBroadcast)
+Action:OnPlayerHurt(Handle:event, String:event_name[], bool:dontBroadcast)
 {
 	new tank = GetClientOfUserId(GetEventInt(event, "userid"));
 	new survivor = GetClientOfUserId(GetEventInt(event, "attacker"));

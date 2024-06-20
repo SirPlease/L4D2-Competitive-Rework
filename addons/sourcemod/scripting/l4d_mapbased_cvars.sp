@@ -55,7 +55,7 @@ public OnPluginEnd() {
 }
 
 
-public CvarConfigChange( Handle:cvar, const String:oldValue[], const String:newValue[] ) {
+void CvarConfigChange( Handle:cvar, const String:oldValue[], const String:newValue[] ) {
     strcopy(g_sUseConfigDir, MAX_CONFIG_LEN, newValue);
 
     #if DEBUG
@@ -75,7 +75,7 @@ public OnMapEnd() {
 }
 
 
-public GetThisMapPrefs()
+int GetThisMapPrefs()
 {
     new iNumChanged = 0;                                // how many cvars were changed for this map
     
@@ -204,7 +204,7 @@ public GetThisMapPrefs()
     return iNumChanged;
 }
 
-public ResetMapPrefs()
+void ResetMapPrefs()
 {
     KvRewind(g_hKvOrig);
     

@@ -16,11 +16,12 @@ public OnPluginStart()
 	AddAmbientSoundHook(AmbientSHook:OnAmbientSound);
 }
 
-public Action:OnNormalSound(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags)
+Action:OnNormalSound(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags)
 {
 	return (StrContains(sample, "firewerks", true) > -1) ? Plugin_Stop : Plugin_Continue;
 }
-public Action:OnAmbientSound(char sample[PLATFORM_MAX_PATH], int &entity, float &volume, int &level, int &pitch, float pos[3], int &flags, float &delay)
+
+Action:OnAmbientSound(char sample[PLATFORM_MAX_PATH], int &entity, float &volume, int &level, int &pitch, float pos[3], int &flags, float &delay)
 {
 	return (StrContains(sample, "firewerks", true) > -1) ? Plugin_Stop : Plugin_Continue;
 }

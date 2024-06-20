@@ -14,7 +14,7 @@
 Handle g_hCWeaponSpawn_GiveItem = null;
 ArrayStack g_hItems = null;
 
-public MRESReturn Handler_CWeaponSpawn_GiveItem(int spawner, Handle hReturn)
+MRESReturn Handler_CWeaponSpawn_GiveItem(int spawner, Handle hReturn)
 {
 	if (GetEntProp(spawner, Prop_Data, "m_itemCount") == 0) {
 		DHookSetReturn(hReturn, false);

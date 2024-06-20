@@ -50,14 +50,14 @@ public void OnPluginStart()
 	HookEvent("tank_spawn", TankSpawn_Event);
 }
 
-public void RoundStartEvent(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void RoundStartEvent(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; i++) {
 		throwQueuedAt[i] = 0.0;
 	}
 }
 
-public void TankSpawn_Event(Event event, const char[] name, bool dontBroadcast)
+void TankSpawn_Event(Event event, const char[] name, bool dontBroadcast)
 {
 	int tank = GetClientOfUserId(GetEventInt(event, "userid"));
 	if (IsFakeClient(tank)) return;

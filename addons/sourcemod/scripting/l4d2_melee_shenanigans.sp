@@ -25,7 +25,7 @@ public void OnPluginStart()
     hDropMethod.AddChangeHook(ConVarChange);
 }
 
-public Action PlayerHit(Handle event, char[] event_name, bool dontBroadcast)
+Action PlayerHit(Handle event, char[] event_name, bool dontBroadcast)
 {
     int Player = GetClientOfUserId(GetEventInt(event, "userid"));
     char Weapon[256];  
@@ -102,7 +102,7 @@ stock bool IsTankOrCharger(int client)
     return false;
 }
 
-public void ConVarChange(ConVar convar, char[] oldValue, char[] newValue)
+void ConVarChange(ConVar convar, char[] oldValue, char[] newValue)
 {
     iDropMethod = StringToInt(newValue);
 }

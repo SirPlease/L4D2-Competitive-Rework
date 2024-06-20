@@ -94,17 +94,17 @@ public OnClientDisconnect_Post(client)
 	CreateTimer(0.1, Timer_CheckTank, client); // Use a delayed timer due to bugs where the tank passes to another player
 }
 
-public Cvar_Enabled(Handle:convar, const String:oldValue[], const String:newValue[])
+void Cvar_Enabled(Handle:convar, const String:oldValue[], const String:newValue[])
 {
 	g_bEnabled = StringToInt(newValue) > 0 ? true:false;
 }
 
-public Cvar_SurvivorLimit(Handle:convar, const String:oldValue[], const String:newValue[])
+void Cvar_SurvivorLimit(Handle:convar, const String:oldValue[], const String:newValue[])
 {
 	g_iSurvivorLimit = StringToInt(newValue);
 }
 
-public Cvar_TankHealth(Handle:convar, const String:oldValue[], const String:newValue[])
+void Cvar_TankHealth(Handle:convar, const String:oldValue[], const String:newValue[])
 {
 	CalculateTankHealth();
 }
@@ -135,7 +135,7 @@ CalculateTankHealth()
 	}
 }
 
-public Event_PlayerHurt(Handle:event, const String:name[], bool:dontBroadcast)
+void Event_PlayerHurt(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	if (!g_bIsTankInPlay) return; // No tank in play; no damage to record
 	
@@ -156,7 +156,7 @@ public Event_PlayerHurt(Handle:event, const String:name[], bool:dontBroadcast)
 	g_iLastTankHealth = GetEventInt(event, "health");
 }
 
-public Event_PlayerKilled(Handle:event, const String:name[], bool:dontBroadcast)
+void Event_PlayerKilled(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	if (!g_bIsTankInPlay) return; // No tank in play; no damage to record
 	
@@ -176,7 +176,7 @@ public Event_PlayerKilled(Handle:event, const String:name[], bool:dontBroadcast)
 	CreateTimer(0.1, Timer_CheckTank, victim); // Use a delayed timer due to bugs where the tank passes to another player
 }
 
-public Event_TankSpawn(Handle:event, const String:name[], bool:dontBroadcast)
+void Event_TankSpawn(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	new client = GetClientOfUserId(GetEventInt(event, "userid"));
 	g_iTankClient = client;
@@ -191,7 +191,7 @@ public Event_TankSpawn(Handle:event, const String:name[], bool:dontBroadcast)
 	g_iLastTankHealth = GetClientHealth(client);
 }
 
-public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
+void Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	bPrintedHealth = false;
 	g_bIsTankInPlay = false;
@@ -200,7 +200,7 @@ public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 }
 
 // When survivors wipe or juke tank, announce damage
-public Event_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
+void Event_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	// But only if a tank that hasn't been killed exists
 	if (g_bAnnounceTankDamage)
@@ -211,7 +211,7 @@ public Event_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
 	ClearTankDamage();
 }
 
-public Action:Timer_CheckTank(Handle:timer, any:oldtankclient)
+Action:Timer_CheckTank(Handle:timer, any:oldtankclient)
 {
 	if (g_iTankClient != oldtankclient) return; // Tank passed
 	
@@ -386,7 +386,7 @@ bool IsExactPercent(int damage)
 	return (FloatAbs(fDifference) < 0.001) ? true : false;
 }
 
-public SortByDamageDesc(elem1, elem2, const array[], Handle:hndl)
+int SortByDamageDesc(elem1, elem2, const array[], Handle:hndl)
 {
 	// By damage, then by client index, descending
 	if (g_iDamage[elem1] > g_iDamage[elem2]) return -1;

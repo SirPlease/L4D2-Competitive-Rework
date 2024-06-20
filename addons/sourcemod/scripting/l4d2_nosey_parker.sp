@@ -68,7 +68,7 @@ public void OnPluginStart()
 	g_hGhostDelayMin.AddChangeHook(Cvar_Changed);
 }
 
-public void Cvar_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+void Cvar_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	g_fGhostDelay = hConVar.FloatValue;
 }
@@ -78,7 +78,7 @@ public void OnMapEnd()
 	g_hTongueParalyzeTimer = null; //if TIMER_FLAG_NO_MAPCHANGE
 }
 
-public void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iVictim = GetClientOfUserId(hEvent.GetInt("userid"));
 	if (iVictim > 0
@@ -99,7 +99,7 @@ public void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBr
 	}
 }
 
-public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iClient = GetClientOfUserId(hEvent.GetInt("userid"));
 	if (iClient == 0 
@@ -123,7 +123,7 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 	}
 }
 
-public void Event_CHJ_Attack(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_CHJ_Attack(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iAttacker = GetClientOfUserId(hEvent.GetInt("userid"));
 	if (iAttacker == 0 
@@ -147,7 +147,7 @@ public void Event_CHJ_Attack(Event hEvent, const char[] sEventName, bool bDontBr
 	PrintInflictedDamage(iVictim, iAttacker);
 }
 
-public void Event_SmokerAttackFirst(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_SmokerAttackFirst(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iAttackerUserid = hEvent.GetInt("userid");
 	int iAttacker = GetClientOfUserId(iAttackerUserid);
@@ -167,7 +167,7 @@ public void Event_SmokerAttackFirst(Event hEvent, const char[] sEventName, bool 
 	}
 }
 
-public Action CheckSurvivorState(Handle hTimer, ArrayStack hEventMembers)
+Action CheckSurvivorState(Handle hTimer, ArrayStack hEventMembers)
 {
 	/* Fix warning 204: symbol is assigned a value that is never used: "checks"*/
 	if (!hEventMembers.Empty) {
@@ -187,7 +187,7 @@ public Action CheckSurvivorState(Handle hTimer, ArrayStack hEventMembers)
 	return Plugin_Stop;
 }
 
-public void Event_SmokerAttackSecond(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_SmokerAttackSecond(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iAttacker = GetClientOfUserId(hEvent.GetInt("userid"));
 	int iVictim = GetClientOfUserId(hEvent.GetInt("victim"));

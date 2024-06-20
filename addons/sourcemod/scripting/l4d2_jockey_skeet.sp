@@ -103,7 +103,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-public Action ResetDamageCounter(Handle hTimer, any jockey)
+Action ResetDamageCounter(Handle hTimer, any jockey)
 {
 	for (int i = 1; i <= MaxClients; i++) {
 		inflictedDamage[jockey][i] = 0.0;

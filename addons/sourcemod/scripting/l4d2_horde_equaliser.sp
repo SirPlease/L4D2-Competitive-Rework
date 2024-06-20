@@ -91,7 +91,7 @@ public void OnMapStart()
 	PrecacheSound(HORDE_SOUND);
 }
 
-public void RoundStartEvent(Event hEvent, const char[] name, bool dontBroadcast)
+void RoundStartEvent(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	commonTotal = 0;
 	lastCheckpoint = 0;

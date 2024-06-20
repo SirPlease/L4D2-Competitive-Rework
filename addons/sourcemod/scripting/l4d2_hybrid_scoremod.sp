@@ -148,7 +148,7 @@ public OnMapStart()
 	bTiebreakerEligibility[1] = false;
 }
 
-public CvarChanged(Handle:convar, const String:oldValue[], const String:newValue[])
+void CvarChanged(Handle:convar, const String:oldValue[], const String:newValue[])
 {
 	OnConfigsExecuted();
 }
@@ -165,7 +165,7 @@ public OnClientDisconnect(client)
 	SDKUnhook(client, SDKHook_OnTakeDamagePost, OnTakeDamagePost);
 }
 
-public void RoundStartEvent(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void RoundStartEvent(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	for (new i = 0; i <= MAXPLAYERS; i++)
 	{
@@ -174,37 +174,37 @@ public void RoundStartEvent(Event hEvent, const char[] sEventName, bool bDontBro
 	bRoundOver = false;
 }
 
-public Native_GetHealthBonus(Handle:plugin, numParams)
+int Native_GetHealthBonus(Handle:plugin, numParams)
 {
 	return RoundToFloor(GetSurvivorHealthBonus());
 }
  
-public Native_GetMaxHealthBonus(Handle:plugin, numParams)
+int Native_GetMaxHealthBonus(Handle:plugin, numParams)
 {
 	return RoundToFloor(fMapHealthBonus);
 }
  
-public Native_GetDamageBonus(Handle:plugin, numParams)
+int Native_GetDamageBonus(Handle:plugin, numParams)
 {
 	return RoundToFloor(GetSurvivorDamageBonus());
 }
  
-public Native_GetMaxDamageBonus(Handle:plugin, numParams)
+int Native_GetMaxDamageBonus(Handle:plugin, numParams)
 {
 	return RoundToFloor(fMapDamageBonus);
 }
  
-public Native_GetPillsBonus(Handle:plugin, numParams)
+int Native_GetPillsBonus(Handle:plugin, numParams)
 {
 	return RoundToFloor(GetSurvivorPillBonus());
 }
  
-public Native_GetMaxPillsBonus(Handle:plugin, numParams)
+int Native_GetMaxPillsBonus(Handle:plugin, numParams)
 {
 	return iPillWorth * iTeamSize;
 }
 
-public Action:CmdBonus(client, args)
+Action:CmdBonus(client, args)
 {
 	if (bRoundOver || !client)
 		return Plugin_Handled;
@@ -243,7 +243,7 @@ public Action:CmdBonus(client, args)
 	return Plugin_Handled;
 }
 
-public Action:CmdMapInfo(client, args)
+Action:CmdMapInfo(client, args)
 {
 	new Float:fMaxPillsBonus = float(iPillWorth * iTeamSize);
 	new Float:fTotalBonus = fMapBonus + fMaxPillsBonus;
@@ -264,7 +264,7 @@ public Action:CmdMapInfo(client, args)
 	return Plugin_Handled;
 }
 
-public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damagetype)
+Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damagetype)
 {
 	if (!IsSurvivor(victim) || IsPlayerIncap(victim)) return Plugin_Continue;
 
@@ -279,13 +279,13 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 	return Plugin_Continue;
 }
 
-public OnPlayerLedgeGrab(Handle:event, const String:name[], bool:dontBroadcast)
+void OnPlayerLedgeGrab(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	new client = GetClientOfUserId(GetEventInt(event, "userid"));
 	iLostTempHealth[InSecondHalfOfRound()] += L4D2Direct_GetPreIncapHealthBuffer(client);
 }
 
-public void OnPlayerRevived(Handle:event, const String:name[], bool:dontBroadcast)
+void OnPlayerRevived(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	bool bLedge = GetEventBool(event, "ledge_hang");
 	if (!bLedge) return;
@@ -296,12 +296,12 @@ public void OnPlayerRevived(Handle:event, const String:name[], bool:dontBroadcas
 	RequestFrame(Revival, client);
 }
 
-public void Revival(int client)
+void Revival(int client)
 {
 	iLostTempHealth[InSecondHalfOfRound()] -= GetSurvivorTemporaryHealth(client);
 }
 
-public void OnPlayerHurt(Handle:event, const String:name[], bool:dontBroadcast) 
+void OnPlayerHurt(Handle:event, const String:name[], bool:dontBroadcast) 
 {
 	new victim = GetClientOfUserId(GetEventInt(event, "userid"));
 	new attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
@@ -326,7 +326,7 @@ public void OnPlayerHurt(Handle:event, const String:name[], bool:dontBroadcast)
 	iTempHealth[victim] = GetSurvivorTemporaryHealth(victim) - fFakeDamage;
 }
 
-public void OnTakeDamagePost(victim, attacker, inflictor, Float:damage, damagetype)
+void OnTakeDamagePost(victim, attacker, inflictor, Float:damage, damagetype)
 {
 	if (!IsSurvivor(victim)) return;
 		
@@ -403,7 +403,7 @@ public Action:L4D2_OnEndVersusModeRound(bool:countSurvivors)
 	return Plugin_Continue;
 }
 
-public Action:PrintRoundEndStats(Handle:timer) 
+Action:PrintRoundEndStats(Handle:timer) 
 {
 	for (new i = 0; i <= InSecondHalfOfRound(); i++)
 	{

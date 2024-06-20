@@ -87,7 +87,7 @@ void InitGameData()
 	delete hDamedata2;
 }
 
-public void RoundStartEvent(Event hEvent, const char[] name, bool dontBroadcast)
+void RoundStartEvent(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	ResetWarnings();
 	TimerCleanUp();
@@ -96,7 +96,7 @@ public void RoundStartEvent(Event hEvent, const char[] name, bool dontBroadcast)
 	fProgressFlowPercent = 0.0;
 }
 
-public void RoundEndEvent(Event hEvent, const char[] name, bool dontBroadcast)
+void RoundEndEvent(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	ResetWarnings();
 	TimerCleanUp();
@@ -114,7 +114,7 @@ public void OnMapEnd()
 	fProgressFlowPercent = 0.0;
 }
 
-public void TankSpawn(Event event, const char[] name, bool dontBroadcast) 
+void TankSpawn(Event event, const char[] name, bool dontBroadcast) 
 {
 	if (!tankInPlay){
 		tankInPlay = true;
@@ -129,7 +129,7 @@ public void TankSpawn(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public void TankDeath(Event event, const char[] name, bool dontBroadcast)
+void TankDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	if (client > 0 && IsInfected(client) && IsTank(client)) {
@@ -145,7 +145,7 @@ public void OnClientDisconnect(int client)
 	}
 }
 
-public Action Timer_CheckTank(Handle timer)
+Action Timer_CheckTank(Handle timer)
 {
 	int tankclient = FindTankClient();
 	if (!tankclient || !IsPlayerAlive(tankclient)) {
@@ -156,7 +156,7 @@ public Action Timer_CheckTank(Handle timer)
 	return Plugin_Stop;
 }
 
-public void AnnounceTankSpawn()
+void AnnounceTankSpawn()
 {
 	fProgressFlowPercent = GetFlowUntilBypass(fFurthestFlow, fBypassFlow);
 	CPrintToChatAll("<{olive}Horde{default}> Horde has {blue}paused{default} due to tank in play! Progressing by {blue}%0.1f%%{default} will start the horde.", fProgressFlowPercent);
@@ -166,7 +166,7 @@ public void AnnounceTankSpawn()
 	g_hFlowCheckTimer = CreateTimer(2.0, FlowCheckTimer, _, TIMER_REPEAT);
 }
 
-public Action FlowCheckTimer(Handle hTimer)
+Action FlowCheckTimer(Handle hTimer)
 {
 	if (!tankInPlay || announcedHordeResume || announcedHordeMax){
 		g_hFlowCheckTimer = null;
@@ -312,7 +312,7 @@ float GetFlowUntilBypass(float fCurrentFlowValue, float fBypassFlowValue)
 	return result;
 }
 
-public void TimerCleanUp()
+void TimerCleanUp()
 {
 	if (g_hFlowCheckTimer != null){
 		delete g_hFlowCheckTimer;
@@ -320,7 +320,7 @@ public void TimerCleanUp()
 	}
 }
 
-public void ResetWarnings()
+void ResetWarnings()
 {
 	tankInPlay = false;
 	tankInPlayDelay = false;

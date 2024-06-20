@@ -20,7 +20,7 @@ public OnPluginStart()
 	RegConsoleCmd("sm_changelog", ChangeLog_CMD);
 }
 
-public Action:ChangeLog_CMD(client, args)
+Action:ChangeLog_CMD(client, args)
 {
 	new String:link[128];
 	GetConVarString(linkCVar, link, sizeof(link));

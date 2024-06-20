@@ -147,7 +147,7 @@ public void OnMapEnd()
 	g_bSecondHalf = false;
 }
 
-public void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	// reset
 	g_hCvarDefibPenalty.SetInt(g_iOriginalPenalty);
@@ -156,7 +156,7 @@ public void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBr
 	g_iSameChange = -1;
 }
 
-public void Event_RoundEnd(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_RoundEnd(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	// Fix double event call
 	float fRoundEndTime = GameRules_GetPropFloat("m_flRoundEndTime");
@@ -172,7 +172,7 @@ public void Event_RoundEnd(Event hEvent, const char[] sEventName, bool bDontBroa
 	}
 }
 
-public Action Cmd_Bonus(int iClient, int iArgs)
+Action Cmd_Bonus(int iClient, int iArgs)
 {
 	if (!g_hCvarEnabled.BoolValue || !g_hCvarDoDisplay.BoolValue) {
 		return Plugin_Continue;
@@ -182,7 +182,7 @@ public Action Cmd_Bonus(int iClient, int iArgs)
 	return Plugin_Handled;
 }
 
-/*public Action Command_Say(int iClient, const char[] sCommand, int iArgs)
+/*Action Command_Say(int iClient, const char[] sCommand, int iArgs)
 {
 	if (!g_hCvarEnabled.BoolValue || !g_hCvarDoDisplay.BoolValue) {
 		return Plugin_Continue;
@@ -202,7 +202,7 @@ public Action Cmd_Bonus(int iClient, int iArgs)
 
 // Tank and Witch tracking
 // -----------------------
-public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!g_hCvarEnabled.BoolValue) {
 		return;
@@ -235,7 +235,7 @@ void TankKilled()
 	ReportChange(iTankBonus);
 }
 
-public void Event_WitchKilled(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_WitchKilled(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!g_hCvarEnabled.BoolValue) {
 		return;
@@ -368,7 +368,7 @@ void ReportChange(int iBonusChange, int iClient = -1, bool bAbsoluteSet = false)
 
 // Defib tracking
 // --------------
-public void Event_DefibUsed(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_DefibUsed(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	g_iDefibsUsed[RoundNum()]++;
 }
@@ -382,7 +382,7 @@ int RoundNum()
 }
 
 /*
-public PrintDebug(const char[] Message, any ...)
+void PrintDebug(const char[] Message, any ...)
 {
 #if DEBUG_MODE
 	char DebugBuff[256];
@@ -396,12 +396,12 @@ public PrintDebug(const char[] Message, any ...)
 
 // Natives
 // -------
-public int Native_GetRoundBonus(Handle hPlugin, int iNumParams)
+int Native_GetRoundBonus(Handle hPlugin, int iNumParams)
 {
 	return g_iBonus[RoundNum()];
 }
 
-public int Native_ResetRoundBonus(Handle hPlugin, int iNumParams)
+int Native_ResetRoundBonus(Handle hPlugin, int iNumParams)
 {
 	g_iBonus[RoundNum()] = 0;
 
@@ -411,7 +411,7 @@ public int Native_ResetRoundBonus(Handle hPlugin, int iNumParams)
 	return 1;
 }
 
-public int Native_SetRoundBonus(Handle hPlugin, int iNumParams)
+int Native_SetRoundBonus(Handle hPlugin, int iNumParams)
 {
 	int iBonus = GetNativeCell(1);
 
@@ -431,7 +431,7 @@ public int Native_SetRoundBonus(Handle hPlugin, int iNumParams)
 	return 1;
 }
 
-public int Native_AddRoundBonus(Handle hPlugin, int iNumParams)
+int Native_AddRoundBonus(Handle hPlugin, int iNumParams)
 {
 	bool bNoReport = false;
 	int iBonus = GetNativeCell(1);
@@ -458,12 +458,12 @@ public int Native_AddRoundBonus(Handle hPlugin, int iNumParams)
 	return 1;
 }
 
-public int Native_GetDefibsUsed(Handle hPlugin, int iNumParams)
+int Native_GetDefibsUsed(Handle hPlugin, int iNumParams)
 {
 	return g_iDefibsUsed[RoundNum()];
 }
 
-public int Native_SetDefibPenalty(Handle hPlugin, int iNumParams)
+int Native_SetDefibPenalty(Handle hPlugin, int iNumParams)
 {
 	int iPenalty = GetNativeCell(1);
 

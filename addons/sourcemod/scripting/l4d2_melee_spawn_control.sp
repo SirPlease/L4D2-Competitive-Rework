@@ -64,7 +64,7 @@ public void OnPluginStart()
 	hCvarAddMelee = CreateConVar("l4d2_add_melee", "", "Add melee weapons to map basis melee spawn or l4d2_melee_spawn, use ',' to separate between names. Empty for don't add");
 }
 
-public MRESReturn DH_OnGetMissionInfo(Handle hReturn)
+MRESReturn DH_OnGetMissionInfo(Handle hReturn)
 {
 	if(GetGameTime() > 5.0) return MRES_Ignored;
 	char t[255], s[255], f[255], m[64]

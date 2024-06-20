@@ -129,7 +129,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	return Plugin_Continue;
 }
 
-public Action ChangeSecondaryFlags(int client, int args)
+Action ChangeSecondaryFlags(int client, int args)
 {
 	if (IsValidClient(client)) {
 		if (iSwitchFlags[client] != 3) {
@@ -149,7 +149,7 @@ public Action ChangeSecondaryFlags(int client, int args)
 //       Yucky Timer Method~       |
 //                                 |
 // -------------------------------*/
-public Action DelayUse(Handle hTimer, any client)
+Action DelayUse(Handle hTimer, any client)
 {
 	bTanked[client] = false;
 	hTanked[client] = null;
@@ -157,7 +157,7 @@ public Action DelayUse(Handle hTimer, any client)
 	return Plugin_Stop;
 }
 
-public Action DelaySwitchHealth(Handle hTimer, any client)
+Action DelaySwitchHealth(Handle hTimer, any client)
 {
 	bCantSwitchHealth[client] = false;
 	hHealth[client] = null;
@@ -165,7 +165,7 @@ public Action DelaySwitchHealth(Handle hTimer, any client)
 	return Plugin_Stop;
 }
 
-public Action DelaySwitchSecondary(Handle hTimer, any client)
+Action DelaySwitchSecondary(Handle hTimer, any client)
 {
 	bCantSwitchSecondary[client] = false;
 	hSecondary[client] = null;
@@ -173,7 +173,7 @@ public Action DelaySwitchSecondary(Handle hTimer, any client)
 	return Plugin_Stop;
 }
 
-public Action DelayValveSwitch(Handle hTimer, any client)
+Action DelayValveSwitch(Handle hTimer, any client)
 {
 	bPreventValveSwitch[client] = false;
 	hValveSwitch[client] = null;
@@ -187,7 +187,7 @@ public Action DelayValveSwitch(Handle hTimer, any client)
 //         SDK Hooks, Fun!         |
 //                                 |
 // -------------------------------*/
-public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	if (!IsValidEdict(inflictor) || !IsPlayerSurvivor(victim)) {
 		return Plugin_Continue;
@@ -221,7 +221,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 
-public Action WeaponCanSwitchTo(int client, int weapon)
+Action WeaponCanSwitchTo(int client, int weapon)
 {
 	if (!IsValidEntity(weapon)) {
 		return Plugin_Continue;
@@ -244,7 +244,7 @@ public Action WeaponCanSwitchTo(int client, int weapon)
 	return Plugin_Continue;
 }
 
-public Action WeaponEquip(int client, int weapon)
+Action WeaponEquip(int client, int weapon)
 {
 	if (!IsValidEntity(weapon)) {
 		return Plugin_Continue;
@@ -283,7 +283,7 @@ public Action WeaponEquip(int client, int weapon)
 	return Plugin_Continue;
 }
 
-public Action WeaponDrop(int client, int weapon)
+Action WeaponDrop(int client, int weapon)
 {
 	if (!IsValidEntity(weapon)) {
 		return Plugin_Continue;
@@ -419,7 +419,7 @@ void HookValidClient(int client, bool Hook)
 //          Cvar Changes!          |
 //                                 |
 // -------------------------------*/
-public void CVarChanged(ConVar cvar, const char[] oldValue, const char[] newValue)
+void CVarChanged(ConVar cvar, const char[] oldValue, const char[] newValue)
 {
 	IncapFlags = hIncapPickupFlags.IntValue;
 	SwitchFlags = hSwitchFlags.IntValue;

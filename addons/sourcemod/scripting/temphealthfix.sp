@@ -25,7 +25,7 @@ public void OnPluginStart()
 	HookEvent("bot_player_replace", PlayerChange_Event);
 }
 
-public void Incap_Event(Event event, const char[] name, bool dontBroadcast)
+void Incap_Event(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
@@ -41,7 +41,7 @@ public void Incap_Event(Event event, const char[] name, bool dontBroadcast)
 	SetEntPropFloat(client, Prop_Send, "m_healthBuffer", 0.0);
 }
 
-public void Revive_Event(Event event, const char[] name, bool dontBroadcast)
+void Revive_Event(Event event, const char[] name, bool dontBroadcast)
 {
 	if (event.GetBool("ledge_hang"))
 	{
@@ -53,7 +53,7 @@ public void Revive_Event(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public void PlayerChange_Event(Event event, const char[] name, bool dontBroadcast)
+void PlayerChange_Event(Event event, const char[] name, bool dontBroadcast)
 {
 	int bot = GetClientOfUserId(event.GetInt("bot"))
 	int player = GetClientOfUserId(event.GetInt("player"))

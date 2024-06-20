@@ -49,22 +49,22 @@ void ResetArray()
 	}
 }
 
-public void Event_Reset(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
+void Event_Reset(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
 {
 	ResetArray();
 }
 
-public void Event_ChargeStart(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
+void Event_ChargeStart(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
 {
 	IsInCharge[GetClientOfUserId(hEvent.GetInt("userid"))] = true;
 }
 
-public void Event_ChargeEnd(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
+void Event_ChargeEnd(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
 {
 	IsInCharge[GetClientOfUserId(hEvent.GetInt("userid"))] = false;
 }
 
-public void BotReplacesPlayer(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
+void BotReplacesPlayer(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
 {
 	int iClient = GetClientOfUserId(hEvent.GetInt("player"));
 	if (iClient > 0 && IsInCharge[iClient]) {
@@ -75,12 +75,12 @@ public void BotReplacesPlayer(Event hEvent, const char[] sEntityName, bool bDont
 	}
 }
 
-public void Event_OnPlayerSpawn(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
+void Event_OnPlayerSpawn(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
 {
 	IsInCharge[GetClientOfUserId(hEvent.GetInt("userid"))] = false;
 }
 
-public void Event_OnPlayerDeath(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
+void Event_OnPlayerDeath(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
 {
 	IsInCharge[GetClientOfUserId(hEvent.GetInt("userid"))] = false;
 }

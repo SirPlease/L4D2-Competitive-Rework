@@ -61,7 +61,7 @@ public void L4D_OnFirstSurvivorLeftSafeArea_Post()
         tankSpawnedSurvivorFlow = L4D2Direct_GetVSTankFlowPercent(InSecondHalfOfRound()) ? RoundToNearest(L4D2Direct_GetVSTankFlowPercent(InSecondHalfOfRound()) * 100.0) : 0;
 }
 
-public void Event_TankSpawn(Event hEvent, char[] sEventName, bool dontBroadcast)
+void Event_TankSpawn(Event hEvent, char[] sEventName, bool dontBroadcast)
 {
     iTank = GetClientOfUserId(hEvent.GetInt("userid"));
 
@@ -92,7 +92,7 @@ public void Event_TankSpawn(Event hEvent, char[] sEventName, bool dontBroadcast)
     }
 }
 
-public void Event_ResetTank(Event hEvent, char[] sEventName, bool dontBroadcast)
+void Event_ResetTank(Event hEvent, char[] sEventName, bool dontBroadcast)
 {
     if (strcmp(sEventName, "player_death") == 0)
     {
@@ -115,7 +115,7 @@ public void Event_ResetTank(Event hEvent, char[] sEventName, bool dontBroadcast)
     delete hTankTimer;
 }
 
-public Action timerTank(Handle timer)
+Action timerTank(Handle timer)
 {
     if (IsClientInGame(iTank) && !IsFakeClient(iTank))
     {

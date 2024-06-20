@@ -48,7 +48,7 @@ public OnPluginStart()
 	AddCommandListener(VPF_cmdh_Vote, "vote");
 }
 
-public Action:VPF_cmdh_Vote(client, const String:command[], argc)
+Action:VPF_cmdh_Vote(client, const String:command[], argc)
 {
 	if (g_bVotePoolFixTriggered && GetClientTeam(client) == 1)
 		return Plugin_Handled;
@@ -56,17 +56,17 @@ public Action:VPF_cmdh_Vote(client, const String:command[], argc)
 	return Plugin_Continue;
 }
 
-public Action:VPF_ev_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
+Action:VPF_ev_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	VPF_PrepareToFindVoteEnt();
 }
 
-public Action:VPF_ev_VoteStarted(Handle:event, const String:name[], bool:dontBroadcast)
+Action:VPF_ev_VoteStarted(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	VPF_PrepareToFix(GetEventInt(event, "team"), GetEventInt(event, "initiator"));
 }
 
-public Action:VPF_mh_OnVoteStart(UserMsg:msg_id, Handle:bf, const players[], playersNum, bool:reliable, bool:init)
+Action:VPF_mh_OnVoteStart(UserMsg:msg_id, Handle:bf, const players[], playersNum, bool:reliable, bool:init)
 {
 	new team = BfReadByte(bf);
 	new client = BfReadByte(bf);
@@ -92,7 +92,7 @@ VPF_PrepareToFindVoteEnt()
 		CreateTimer(0.5, VPF_t_FindVoteContollerEnt, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action:VPF_t_FindVoteContollerEnt(Handle:timer)
+Action:VPF_t_FindVoteContollerEnt(Handle:timer)
 {
 	g_iVoteEntity = EntIndexToEntRef(FindEntityByClassname(-1, "vote_controller"));
 }

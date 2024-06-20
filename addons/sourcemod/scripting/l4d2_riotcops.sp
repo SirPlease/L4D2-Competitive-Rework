@@ -60,14 +60,14 @@ public void OnEntityCreated(int iEntity, const char[] sClassName)
 	}
 }
 
-public void RiotCopSpawn(int iEntity)
+void RiotCopSpawn(int iEntity)
 {
 	if (IsRiotCop(iEntity)) {
 		SDKHook(iEntity, SDKHook_TraceAttack, RiotCopTraceAttack);
 	}
 }
 
-public Action RiotCopTraceAttack(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamageType, \
+Action RiotCopTraceAttack(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamageType, \
 										int &iAmmoType, int iHitBox, int iHitGroup)
 {
 	if (iHitGroup != HITGROUP_HEAD || !IsRiotCop(iVictim)) {
