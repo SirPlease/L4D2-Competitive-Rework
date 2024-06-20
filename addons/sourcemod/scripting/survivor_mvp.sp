@@ -146,7 +146,7 @@ new                 iRoundNumber;
 new                 bInRound;
 new                 bPlayerLeftStartArea;                       // used for tracking FF when RUP enabled
 
-new     String:     sTmpString[MAX_NAME_LENGTH];                // just used because I'm not going to break my head over why string assignment parameter passing doesn't work
+stock char sTmpString[MAX_NAME_LENGTH];                // just used because I'm not going to break my head over why string assignment parameter passing doesn't work
 
 /*
 *      Natives
@@ -548,11 +548,14 @@ Action SurvivorMVP_Cmd(client, args)
         }
     }
     PrintLoserz(true, client);
+
+    return Plugin_Handled;
 }
 
 Action ShowMVPStats_Cmd(client, args)
 {
     PrintLoserz(true, client);
+    return Plugin_Handled;
 }
 
 Action:delayedMVPPrint(Handle:timer)
@@ -989,9 +992,9 @@ void PlayerDeath_Event(Handle:event, const String:name[], bool:dontBroadcast)
 }
 
 // Was the zombie a hunter?
-bool:isHunter(zombieClass) {
+/*bool:isHunter(zombieClass) {
     return zombieClass == ZC_HUNTER;
-}
+}*/
 
 void InfectedDeath_Event(Handle:event, const String:name[], bool:dontBroadcast)
 {
@@ -1253,6 +1256,7 @@ stock getSurvivor(exclude[4])
     return 0;
 }
 
+/* //survivor_mvp.sp(1258) : error 017: undefined symbol "MAXLENGTH"
 void stripUnicode(String:testString[MAX_NAME_LENGTH])
 {
     new const maxlength = MAXLENGTH;
@@ -1304,7 +1308,7 @@ void stripUnicode(String:testString[MAX_NAME_LENGTH])
             }
         }
     }
-}
+}*/
 
 /*
 stock bool:IsCommonInfected(iEntity)
