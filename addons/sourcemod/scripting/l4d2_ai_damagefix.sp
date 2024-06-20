@@ -119,7 +119,7 @@ public void OnPluginStart()
 }
 
 
- oid OnAIDamageFixEnableChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+void OnAIDamageFixEnableChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
     fEnabled = StringToInt(newValue);
 }
@@ -128,7 +128,6 @@ void OnPounceInterruptChanged(ConVar convar, const char[] oldValue, const char[]
 {
     iPounceInterrupt = StringToInt(newValue);
 }
-
 
 public void OnClientPostAdminCheck(int client)
 {
