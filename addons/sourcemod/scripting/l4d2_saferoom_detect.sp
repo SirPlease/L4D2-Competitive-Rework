@@ -213,7 +213,7 @@ bool IsPlayerInEndSaferoom(client)
 }
 
 
-IsPointInStartSaferoom(Float:location[3], entity=-1)
+bool IsPointInStartSaferoom(Float:location[3], entity=-1)
 {
     if (g_iMode == DETMODE_EXACT)
     {
@@ -280,7 +280,7 @@ IsPointInStartSaferoom(Float:location[3], entity=-1)
     
 }
 
-IsPointInEndSaferoom(Float:location[3], entity = -1)
+bool IsPointInEndSaferoom(Float:location[3], entity = -1)
 {    
     if (g_iMode == DETMODE_EXACT)
     {
