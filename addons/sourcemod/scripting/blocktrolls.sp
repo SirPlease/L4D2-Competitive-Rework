@@ -83,15 +83,6 @@ Action Vote_Listener(int client, const char[] command, int argc)
 	return Plugin_Continue;
 }
 
-Action CallvoteCallback(int client, int args)
-{
-	if (g_bBlockCallvote)
-	{
-		return Plugin_Handled;
-	}
-	return Plugin_Continue;
-}
-
 Action EnableCallvoteTimer(Handle timer)
 {
 	g_bBlockCallvote = false;
