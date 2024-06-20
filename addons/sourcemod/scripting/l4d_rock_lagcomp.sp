@@ -396,7 +396,7 @@ Action ProcessRockHitboxes(Event event, const char[] name, bool dontBroadcast)
 			- GetVectorLength(o_Minus_c, true) + radius*radius;
 			
 			if (delta >= 0.0) {
-				ApplyDamageOnRock(i, client, eyePos, c, event, entity);
+				ApplyDamageOnRock(i, eyePos, c, event, entity);
 			}
 		}
 	}
@@ -407,7 +407,7 @@ Action ProcessRockHitboxes(Event event, const char[] name, bool dontBroadcast)
 /*
  * Apply damage on rock depending on weapon and distance.
  */
-void ApplyDamageOnRock(rockIndex, client, float eyePos[3], float c[3], Event event, rockEntity)
+void ApplyDamageOnRock(rockIndex, float eyePos[3], float c[3], Event event, rockEntity)
 {
 	new String:weaponName[MAX_STR_LEN]; 
 	event.GetString("weapon", weaponName, MAX_STR_LEN);
@@ -541,7 +541,7 @@ bool IsMountedMachineGun(const char[] weaponName)
  * Print Methods
  */
 
-void PrintEntityLocation(int entity)
+stock void PrintEntityLocation(int entity)
 {
 	if (IsValidEntity(entity)) {
 		new String:classname[MAX_STR_LEN];
@@ -596,7 +596,7 @@ CTankRock__Detonate(rock)
  * Vector functions
  */
 
-void Vector_Print(float v[3])
+stock void Vector_Print(float v[3])
 {
 	PrintToChatAll("(%.2f, %.2f, %.2f)", v[0],v[1],v[2]);
 }
