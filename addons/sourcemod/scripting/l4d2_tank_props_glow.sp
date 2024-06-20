@@ -274,6 +274,7 @@ void TankPropTankSpawn(Event hEvent, const char[] sEventName, bool bDontBroadcas
 	g_bTankSpawned = true;
 }
 
+/* // error 203: symbol is never used: "PD_ev_EntityKilled"
 void PD_ev_EntityKilled(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!g_bTankSpawned) {
@@ -286,6 +287,7 @@ void PD_ev_EntityKilled(Event hEvent, const char[] sEventName, bool bDontBroadca
 		CreateTimer(1.5, TankDeadCheck, _, TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
+*/
 
 void TankPropTankKilled(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
