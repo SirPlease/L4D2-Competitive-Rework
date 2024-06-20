@@ -326,7 +326,7 @@ bool:SM_IsPlayerIncap(client)
 
 Action SM_Cmd_Health(client, args)
 {
-	if (!SM_bModuleIsEnabled) return;
+	if (!SM_bModuleIsEnabled) return Plugin_Handled;
 	
 	decl iAliveCount;
 	new Float:fAvgHealth = SM_CalculateAvgHealth(iAliveCount);	
@@ -361,6 +361,8 @@ Action SM_Cmd_Health(client, args)
 			PrintToServer("[ScoreMod] Custom Max Distance: %d", GetCustomMapMaxScore());
 		}
 	}
+	
+	return Plugin_Handled;
 }
 
 stock SM_CalculateSurvivalBonus()
