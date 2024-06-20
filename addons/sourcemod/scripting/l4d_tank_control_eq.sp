@@ -1,35 +1,47 @@
-#include <colors>
-#include <readyup>
-
 #pragma semicolon 1
 #pragma newdecls required
 
+#include <colors>
+#include <readyup>
 #include <sourcemod>
 #include <left4dhooks>
-#undef REQUIRE_PLUGIN
-#include <caster_system>
 
-#define IS_VALID_CLIENT(%1)     (%1 > 0 && %1 <= MaxClients)
-#define IS_INFECTED(%1)         (GetClientTeam(%1) == 3)
-#define IS_VALID_INGAME(%1)     (IS_VALID_CLIENT(%1) && IsClientInGame(%1))
-#define IS_VALID_INFECTED(%1)   (IS_VALID_INGAME(%1) && IS_INFECTED(%1))
-#define IS_VALID_CASTER(%1)     (IS_VALID_INGAME(%1) && casterSystemAvailable && IsClientCaster(%1))
+#define TEAM_SPECTATOR          1
+#define TEAM_INFECTED           3
+#define ZOMBIECLASS_TANK        8
+#define IS_SPECTATOR(%1)        (GetClientTeam(%1) == TEAM_SPECTATOR)
+#define IS_INFECTED(%1)         (GetClientTeam(%1) == TEAM_INFECTED)
+#define IS_VALID_INFECTED(%1)   (IsClientInGame(%1) && IS_INFECTED(%1))
+#define IS_VALID_SPECTATOR(%1)  (IsClientInGame(%1) && IS_SPECTATOR(%1))
 
 ArrayList h_whosHadTank;
-char queuedTankSteamId[64];
-ConVar hTankPrint, hTankDebug;
-bool casterSystemAvailable;
-Handle hForwardOnTryOfferingTankBot;
-Handle hForwardOnTankSelection;
+
+ConVar 
+    hTankPrint,
+    hTankWindow, 
+    hTankDebug;
+
+GlobalForward
+    hForwardOnTryOfferingTankBot,
+    hForwardOnTankSelection;
+
+char 
+    queuedTankSteamId[64],
+    tankInitiallyChosen[64];
+
+float 
+    fTankGrace,
+    initialTankLeft,
+    gotTankAt;
+
 int dcedTankFrustration = -1;
-float fTankGrace;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
     CreateNative("GetTankSelection", Native_GetTankSelection);
 
-    hForwardOnTryOfferingTankBot = CreateGlobalForward("TankControl_OnTryOfferingTankBot", ET_Ignore, Param_String);
-    hForwardOnTankSelection = CreateGlobalForward("TankControl_OnTankSelection", ET_Ignore, Param_String);
+    hForwardOnTryOfferingTankBot = new GlobalForward("TankControl_OnTryOfferingTankBot", ET_Ignore, Param_String);
+    hForwardOnTankSelection = new GlobalForward("TankControl_OnTankSelection", ET_Ignore, Param_String);
 
     return APLRes_Success;
 }
@@ -39,30 +51,10 @@ public int Native_GetTankSelection(Handle plugin, int numParams) { return getInf
 public Plugin myinfo = 
 {
     name = "L4D2 Tank Control",
-    author = "arti",
-    description = "Distributes the role of the tank evenly throughout the team",
-    version = "0.0.20",
-    url = "https://github.com/alexberriman/l4d2-plugins/tree/master/l4d_tank_control"
-}
-
-enum L4D2Team
-{
-    L4D2Team_None = 0,
-    L4D2Team_Spectator,
-    L4D2Team_Survivor,
-    L4D2Team_Infected
-}
-
-enum ZClass
-{
-    ZClass_Smoker = 1,
-    ZClass_Boomer = 2,
-    ZClass_Hunter = 3,
-    ZClass_Spitter = 4,
-    ZClass_Jockey = 5,
-    ZClass_Charger = 6,
-    ZClass_Witch = 7,
-    ZClass_Tank = 8
+    author = "arti, (Contributions by: Sheo, Sir, Altair-Sossai)",
+    description = "Distributes the role of the tank evenly throughout the team, allows for overrides. (Includes forwards)",
+    version = "0.0.22",
+    url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
 public void OnPluginStart()
@@ -91,24 +83,16 @@ public void OnPluginStart()
     RegConsoleCmd("sm_witch", Tank_Cmd, "Shows who is becoming the tank.");
     
     // Cvars
-    hTankPrint = CreateConVar("tankcontrol_print_all", "0", "Who gets to see who will become the tank? (0 = Infected, 1 = Everyone)");
-    hTankDebug = CreateConVar("tankcontrol_debug", "0", "Whether or not to debug to console");
+    hTankPrint  = CreateConVar("tankcontrol_print_all", "0", "Who gets to see who will become the tank? (0 = Infected, 1 = Everyone)");
+    hTankWindow = CreateConVar("tankcontrol_force_window", "0.0", "Give player that was initially going to be Tank (or was Tank and dced) back the Tank this long after Tank was given to somebody else (0 = Off)");
+    hTankDebug  = CreateConVar("tankcontrol_debug", "0", "Whether or not to debug to console");
 }
 
-public void OnAllPluginsLoaded()
-{
-    casterSystemAvailable = LibraryExists("caster_system");
-}
 
-public void OnLibraryAdded(const char[] name)
-{
-    if (StrEqual(name, "caster_system")) casterSystemAvailable = true;
-}
+/*=========================================================================
+|                            Left4Dhooks                                  |
+=========================================================================*/
 
-public void OnLibraryRemoved(const char[] name)
-{
-    if (StrEqual(name, "caster_system")) casterSystemAvailable = false;
-}
 
 public void L4D2_OnTankPassControl(int iOldTank, int iNewTank, int iPassCount)
 {
@@ -123,19 +107,79 @@ public void L4D2_OnTankPassControl(int iOldTank, int iNewTank, int iPassCount)
         CTimer_Start(GetFrustrationTimer(iNewTank), fTankGrace);
         L4D2Direct_SetTankPassedCount(L4D2Direct_GetTankPassedCount() - 1);
     }
+
+    gotTankAt = GetGameTime();
+    if (hTankDebug.BoolValue)
+        PrintToConsoleAll("[TC] gotTankAt set to %f (iOldTank: %N - iNewTank: %N)", GetGameTime(), iOldTank, iNewTank);
 }
+
+/**
+ * Make sure we give the tank to our queued player.
+ */
+public Action L4D_OnTryOfferingTankBot(int tank_index, bool &enterStatis)
+{    
+    // Reset the tank's frustration if need be
+    if (!IsFakeClient(tank_index)) 
+    {
+        PrintHintText(tank_index, "Rage Meter Refilled");
+        for (int i = 1; i <= MaxClients; i++) 
+        {
+            if (!IS_VALID_INFECTED(i) && !IS_VALID_SPECTATOR(i))
+                continue;
+
+            if (tank_index == i) 
+                CPrintToChat(i, "{red}<{default}Tank Rage{red}> {olive}Rage Meter {red}Refilled");
+            else 
+                CPrintToChat(i, "{red}<{default}Tank Rage{red}> {default}({green}%N{default}'s) {olive}Rage Meter {red}Refilled", tank_index);
+        }
+        
+        SetTankFrustration(tank_index, 100);
+        L4D2Direct_SetTankPassedCount(L4D2Direct_GetTankPassedCount() + 1);
+
+        return Plugin_Handled;
+    }
+
+    // Allow third party plugins to override tank selection
+    char sOverrideTank[64];
+    sOverrideTank[0] = '\0';
+    Call_StartForward(hForwardOnTryOfferingTankBot);
+    Call_PushStringEx(sOverrideTank, sizeof(sOverrideTank), SM_PARAM_STRING_UTF8, SM_PARAM_COPYBACK);
+    Call_Finish();
+
+    if (!StrEqual(sOverrideTank, ""))
+        strcopy(queuedTankSteamId, sizeof(queuedTankSteamId), sOverrideTank);
+    
+    // If we don't have a queued tank, choose one
+    if (!strcmp(queuedTankSteamId, ""))
+        chooseTank(0);
+    
+    // Mark the player as having had tank
+    if (strcmp(queuedTankSteamId, "") != 0)
+    {
+        setTankTickets(queuedTankSteamId, 20000);
+        h_whosHadTank.PushString(queuedTankSteamId);
+    }
+    
+    return Plugin_Continue;
+}
+
+
+/*=========================================================================
+|                                 Events                                  |
+=========================================================================*/
+
 
 /**
  * When a new game starts, reset the tank pool.
  */
- 
 public void RoundStart_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
     CreateTimer(10.0, newGame);
     dcedTankFrustration = -1;
+    tankInitiallyChosen = "";
 }
 
-public Action newGame(Handle timer)
+Action newGame(Handle timer)
 {
     int teamAScore = L4D2Direct_GetVSCampaignScore(0);
     int teamBScore = L4D2Direct_GetVSCampaignScore(1);
@@ -145,6 +189,7 @@ public Action newGame(Handle timer)
     {
         h_whosHadTank.Clear();
         queuedTankSteamId = "";
+        tankInitiallyChosen = "";
     }
 
     return Plugin_Stop;
@@ -153,18 +198,19 @@ public Action newGame(Handle timer)
 /**
  * When the round ends, reset the active tank.
  */
- 
 public void RoundEnd_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
     queuedTankSteamId = "";
+    tankInitiallyChosen = "";
 }
 
 /**
  * When a player leaves the start area, choose a tank and output to all.
  */
- 
 public void PlayerLeftStartArea_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
+    tankInitiallyChosen = "";
+
     chooseTank(0);
     outputTankToAll(0);
 }
@@ -172,14 +218,17 @@ public void PlayerLeftStartArea_Event(Event hEvent, const char[] eName, bool don
 /**
  * When the queued tank switches teams, choose a new one
  */
- 
 public void PlayerTeam_Event(Event hEvent, const char[] name, bool dontBroadcast)
 {
-    L4D2Team oldTeam = view_as<L4D2Team>(hEvent.GetInt("oldteam"));
+    int team = hEvent.GetInt("team");
+    int oldTeam = hEvent.GetInt("oldteam");
     int client = GetClientOfUserId(hEvent.GetInt("userid"));
     char tmpSteamId[64];
 
-    if (client && oldTeam == view_as<L4D2Team>(L4D2Team_Infected))
+    if (client < 1 || client > MaxClients)
+        return;
+
+    if (oldTeam == TEAM_INFECTED)
     {
         /*
         * Triggers for disconnects as well as forced-swaps and whatnot.
@@ -188,45 +237,102 @@ public void PlayerTeam_Event(Event hEvent, const char[] name, bool dontBroadcast
         if (!IsFakeClient(client))
         {
             int zombieClass = GetEntProp(client, Prop_Send, "m_zombieClass");
-            if (view_as<ZClass>(zombieClass) == ZClass_Tank)
+            if (zombieClass == ZOMBIECLASS_TANK)
             {
                 dcedTankFrustration = GetTankFrustration(client);
                 fTankGrace = CTimer_GetRemainingTime(GetFrustrationTimer(client));
 
                 // Slight fix due to the timer seemingly always getting stuck between 0.5s~1.2s even after Grace period has passed.
                 // CTimer_IsElapsed still returns false as well.
-                if (fTankGrace < 0.0 || dcedTankFrustration < 100) fTankGrace = 0.0;
+                if (fTankGrace < 0.0 || dcedTankFrustration < 100) 
+                    fTankGrace = 0.0;
             }
         }
 
         GetClientAuthId(client, AuthId_Steam2, tmpSteamId, sizeof(tmpSteamId));
+
+        if (strcmp(tankInitiallyChosen, tmpSteamId) == 0)
+            initialTankLeft = GetGameTime();
+
         if (strcmp(queuedTankSteamId, tmpSteamId) == 0)
         {
             RequestFrame(chooseTank, 0);
             RequestFrame(outputTankToAll, 0);
         }
     }
+
+    if (team == TEAM_INFECTED && !IsFakeClient(client) && !StrEqual(tankInitiallyChosen, ""))
+    {
+        GetClientAuthId(client, AuthId_Steam2, tmpSteamId, sizeof(tmpSteamId));
+        if (strcmp(tankInitiallyChosen, tmpSteamId) == 0)
+        {
+            /* Not touching multiple tanks with a ten-foot pole.
+            Could technically be done though.. TODO? */
+            int tank = getTankPlayer();
+
+            if (hTankDebug.BoolValue)
+                PrintToConsoleAll("[TC] Tank: %N - L4D2_GetTankCount: %i - initialTankLeft: %f - gotTankAt: %f", tank, L4D2_GetTankCount(), initialTankLeft, gotTankAt);
+
+            float window = hTankWindow.FloatValue;
+            if (window > 0.0 && L4D2_GetTankCount() == 1 && tank != -1 && (gotTankAt - initialTankLeft) < window)
+            {
+                // Delay by a frame as player needs to "settle in"
+                RequestFrame(ReplaceTank, client);
+            }
+            else
+            {
+                strcopy(queuedTankSteamId, sizeof(queuedTankSteamId), tankInitiallyChosen);
+                RequestFrame(outputTankToAll, 0);
+            }
+        }
+    }
+}
+
+/**
+ * Replaces the current tank with the initially chosen Tank.
+ * Also removes the current Tank from the h_whosHadTank array.
+ * 
+ * @param deservingTank
+ *      The player to give the Tank to.
+ */
+void ReplaceTank(int deservingTank)
+{
+    int oldTank = getTankPlayer();
+
+    if (oldTank != -1 && IS_INFECTED(deservingTank))
+    {
+        if (hTankDebug.BoolValue)
+            PrintToConsoleAll("[TC] Tank: %N being replaced by %N", oldTank, deservingTank);
+
+        L4D_ReplaceTank(oldTank, deservingTank);
+
+        char oldTankSteamId[64];
+        GetClientAuthId(oldTank, AuthId_Steam2, oldTankSteamId, sizeof(oldTankSteamId));
+
+        int index = h_whosHadTank.FindString(oldTankSteamId);
+        if (index != -1)
+            h_whosHadTank.Erase(index);
+    }
+    else if (hTankDebug.BoolValue)
+        PrintToConsoleAll("[TC] oldTank: %i and deservingTank: is%s valid", oldTank, IS_INFECTED(deservingTank) ? "" : " NOT VALID");
 }
 
 /**
  * When the tank dies, requeue a player to become tank (for finales)
  */
- 
 public void PlayerDeath_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
-    int zombieClass = 0;
-    int victimId = hEvent.GetInt("userid");
-    int victim = GetClientOfUserId(victimId);
+    int victim = GetClientOfUserId(hEvent.GetInt("userid"));
     
-    if (victimId && IsClientInGame(victim)) 
+    if (victim && IS_VALID_INFECTED(victim)) 
     {
-        zombieClass = GetEntProp(victim, Prop_Send, "m_zombieClass");
-        if (view_as<ZClass>(zombieClass) == ZClass_Tank) 
+        int zombieClass = GetEntProp(victim, Prop_Send, "m_zombieClass");
+        if (zombieClass == ZOMBIECLASS_TANK) 
         {
-            if (GetConVarBool(hTankDebug))
-            {
+            if (hTankDebug.BoolValue)
                 PrintToConsoleAll("[TC] Tank died(1), choosing a new tank");
-            }
+
+            tankInitiallyChosen = "";
             chooseTank(0);
         }
     }
@@ -234,44 +340,38 @@ public void PlayerDeath_Event(Event hEvent, const char[] eName, bool dontBroadca
 
 public void TankKilled_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
-    if (GetConVarBool(hTankDebug))
-    {
+    if (hTankDebug.BoolValue)
         PrintToConsoleAll("[TC] Tank died(2), choosing a new tank");
-    }
+
+    tankInitiallyChosen = "";
     chooseTank(0);
     dcedTankFrustration = -1;
 }
+
+
+/*=========================================================================
+|                               Commands                                  |
+=========================================================================*/
+
 
 /**
  * When a player wants to find out whos becoming tank,
  * output to them.
  */
- 
-public Action Tank_Cmd(int client, int args)
+Action Tank_Cmd(int client, int args)
 {
-    if (!IsClientInGame(client)) 
-      return Plugin_Handled;
-
-    int tankClientId;
-    char tankClientName[128];
-    
-    // Only output if we have a queued tank
-    if (! strcmp(queuedTankSteamId, ""))
-    {
+    // Only output if client is in-game and we have a queued tank
+    if (!IsClientInGame(client) || strcmp(queuedTankSteamId, ""))
         return Plugin_Handled;
-    }
     
-    tankClientId = getInfectedPlayerBySteamId(queuedTankSteamId);
-    if (tankClientId != -1)
+    int tankClientId = getInfectedPlayerBySteamId(queuedTankSteamId);
+
+    if (tankClientId != -1 && (hTankPrint.BoolValue || IS_INFECTED(client) || IS_SPECTATOR(client)))
     {
-        GetClientName(tankClientId, tankClientName, sizeof(tankClientName));
-        
-        // If on infected, print to entire team
-        if (view_as<L4D2Team>(GetClientTeam(client)) == L4D2Team_Infected || (casterSystemAvailable && IsClientCaster(client)))
-        {
-            if (client == tankClientId) CPrintToChat(client, "{red}<{default}Tank Selection{red}> {green}You {default}will become the {red}Tank{default}!");
-            else CPrintToChat(client, "{red}<{default}Tank Selection{red}> {olive}%s {default}will become the {red}Tank!", tankClientName);
-        }
+        if (client == tankClientId) 
+            CPrintToChat(client, "{red}<{default}Tank Selection{red}> {green}You {default}will become the {red}Tank{default}!");
+        else 
+            CPrintToChat(client, "{red}<{default}Tank Selection{red}> {olive}%N {default}will become the {red}Tank!", tankClientId);
     }
     
     return Plugin_Handled;
@@ -281,9 +381,10 @@ public Action Tank_Cmd(int client, int args)
  * Shuffle the tank (randomly give to another player in
  * the pool.
  */
- 
-public Action TankShuffle_Cmd(int client, int args)
+Action TankShuffle_Cmd(int client, int args)
 {
+    tankInitiallyChosen = "";
+
     chooseTank(0);
     outputTankToAll(0);
     
@@ -293,8 +394,7 @@ public Action TankShuffle_Cmd(int client, int args)
 /**
  * Give the tank to a specific player.
  */
- 
-public Action GiveTank_Cmd(int client, int args)
+Action GiveTank_Cmd(int client, int args)
 {    
     // Who are we targetting?
     char arg1[32];
@@ -302,43 +402,45 @@ public Action GiveTank_Cmd(int client, int args)
     
     // Try and find a matching player
     int target = FindTarget(client, arg1);
-    if (target == -1)
+
+    if (target == -1 || !IsClientInGame(target) || IsFakeClient(target))
     {
+        CPrintToChat(client, "{green}[{olive}Tank Control{green}] {default}Invalid Target. Unable to give tank");
+        return Plugin_Handled;
+    }
+
+    // Checking if on our desired team
+    if (!IS_INFECTED(target))
+    {
+        CPrintToChat(client, "{green}[{olive}Tank Control{green}] {olive}%N {default}is not on the infected team. Unable to give tank", target);
         return Plugin_Handled;
     }
     
-    // Get the players name
-    char name[MAX_NAME_LENGTH];
-    GetClientName(target, name, sizeof(name));
-    
     // Set the tank
-    if (IsClientInGame(target) && ! IsFakeClient(target))
-    {
-        // Checking if on our desired team
-        if (view_as<L4D2Team>(GetClientTeam(target)) != L4D2Team_Infected)
-        {
-            CPrintToChatAll("{olive}[SM] {default}%s not on infected. Unable to give tank", name);
-            return Plugin_Handled;
-        }
-        
-        char steamId[64];
-        GetClientAuthId(target, AuthId_Steam2, steamId, sizeof(steamId));
+    char steamId[64];
+    GetClientAuthId(target, AuthId_Steam2, steamId, sizeof(steamId));
 
-        strcopy(queuedTankSteamId, sizeof(queuedTankSteamId), steamId);
-        outputTankToAll(0);
-    }
+    strcopy(queuedTankSteamId, sizeof(queuedTankSteamId), steamId);
+    strcopy(tankInitiallyChosen, sizeof(tankInitiallyChosen), steamId);
+
+    outputTankToAll(0);
     
     return Plugin_Handled;
 }
+
+
+/*=========================================================================
+|                                 Stocks                                  |
+=========================================================================*/
+
 
 /**
  * Selects a player on the infected team from random who hasn't been
  * tank and gives it to them.
  */
- 
-public void chooseTank(any data)
+void chooseTank(any data)
 {
-    //Let other plugins to override tank selection
+    // Allow other plugins to override tank selection.
     char sOverrideTank[64];
     sOverrideTank[0] = '\0';
     Call_StartForward(hForwardOnTankSelection);
@@ -347,12 +449,12 @@ public void chooseTank(any data)
 
     if (StrEqual(sOverrideTank, ""))
     {
-        // Create our pool of players to choose from
+        // Create our pool of players to choose from.
         ArrayList infectedPool = new ArrayList(ByteCountToCells(64));
-        addTeamSteamIdsToArray(infectedPool, L4D2Team_Infected);
+        addTeamSteamIdsToArray(infectedPool, TEAM_INFECTED);
         
         // If there is nobody on the infected team, return (otherwise we'd be stuck trying to select forever)
-        if (GetArraySize(infectedPool) == 0)
+        if (infectedPool.Length == 0)
         {
             delete infectedPool;
             return;
@@ -362,19 +464,17 @@ public void chooseTank(any data)
         removeTanksFromPool(infectedPool, h_whosHadTank);
         
         // If the infected pool is empty, remove infected players from pool
-        if (GetArraySize(infectedPool) == 0) // (when nobody on infected ,error)
+        if (infectedPool.Length == 0) // (when nobody on infected ,error)
         {
             ArrayList infectedTeam = new ArrayList(ByteCountToCells(64));
-            addTeamSteamIdsToArray(infectedTeam, L4D2Team_Infected);
-            if (GetArraySize(infectedTeam) > 1)
+            addTeamSteamIdsToArray(infectedTeam, TEAM_INFECTED);
+            if (infectedTeam.Length > 1)
             {
                 removeTanksFromPool(h_whosHadTank, infectedTeam);
                 chooseTank(0);
             }
             else
-            {
                 queuedTankSteamId = "";
-            }
             
             delete infectedTeam;
             delete infectedPool;
@@ -382,203 +482,141 @@ public void chooseTank(any data)
         }
         
         // Select a random person to become tank
-        int rndIndex = GetRandomInt(0, GetArraySize(infectedPool) - 1);
-        GetArrayString(infectedPool, rndIndex, queuedTankSteamId, sizeof(queuedTankSteamId));
+        int rndIndex = GetRandomInt(0, infectedPool.Length - 1);
+        infectedPool.GetString(rndIndex, queuedTankSteamId, sizeof(queuedTankSteamId));
+
+        if (StrEqual(tankInitiallyChosen, ""))
+            strcopy(tankInitiallyChosen, sizeof(tankInitiallyChosen), queuedTankSteamId);
+
         delete infectedPool;
-    } else {
+    } 
+    else
         strcopy(queuedTankSteamId, sizeof(queuedTankSteamId), sOverrideTank);
-    }
-}
-
-/**
- * Make sure we give the tank to our queued player.
- */
- 
-public Action L4D_OnTryOfferingTankBot(int tank_index, bool &enterStatis)
-{    
-    // Reset the tank's frustration if need be
-    if (! IsFakeClient(tank_index)) 
-    {
-        PrintHintText(tank_index, "Rage Meter Refilled");
-        for (int i = 1; i <= MaxClients; i++) 
-        {
-            if (! IsClientInGame(i) || GetClientTeam(i) != 3)
-                continue;
-
-            if (tank_index == i) CPrintToChat(i, "{red}<{default}Tank Rage{red}> {olive}Rage Meter {red}Refilled");
-            else CPrintToChat(i, "{red}<{default}Tank Rage{red}> {default}({green}%N{default}'s) {olive}Rage Meter {red}Refilled", tank_index);
-        }
-        
-        SetTankFrustration(tank_index, 100);
-        L4D2Direct_SetTankPassedCount(L4D2Direct_GetTankPassedCount() + 1);
-
-        return Plugin_Handled;
-    }
-
-    //Allow third party plugins to override tank selection
-    char sOverrideTank[64];
-    sOverrideTank[0] = '\0';
-    Call_StartForward(hForwardOnTryOfferingTankBot);
-    Call_PushStringEx(sOverrideTank, sizeof(sOverrideTank), SM_PARAM_STRING_UTF8, SM_PARAM_COPYBACK);
-    Call_Finish();
-    if (!StrEqual(sOverrideTank, "")) {
-        strcopy(queuedTankSteamId, sizeof(queuedTankSteamId), sOverrideTank);
-    }
-    
-    // If we don't have a queued tank, choose one
-    if (! strcmp(queuedTankSteamId, ""))
-        chooseTank(0);
-    
-    // Mark the player as having had tank
-    if (strcmp(queuedTankSteamId, "") != 0)
-    {
-        setTankTickets(queuedTankSteamId, 20000);
-        PushArrayString(h_whosHadTank, queuedTankSteamId);
-    }
-    
-    return Plugin_Continue;
 }
 
 /**
  * Sets the amount of tickets for a particular player, essentially giving them tank.
  */
- 
-public void setTankTickets(const char[] steamId, int tickets)
+void setTankTickets(const char[] steamId, int tickets)
 {
     int tankClientId = getInfectedPlayerBySteamId(steamId);
     
     for (int i = 1; i <= MaxClients; i++)
     {
-        if (IsClientInGame(i) && ! IsFakeClient(i) && GetClientTeam(i) == 3)
-        {
+        if (IS_VALID_INFECTED(i) && !IsFakeClient(i))
             L4D2Direct_SetTankTickets(i, (i == tankClientId) ? tickets : 0);
-        }
     }
 }
 
 /**
  * Output who will become tank
  */
- 
-public void outputTankToAll(any data)
+void outputTankToAll(any data)
 {
-    char tankClientName[MAX_NAME_LENGTH];
     int tankClientId = getInfectedPlayerBySteamId(queuedTankSteamId);
     
     if (tankClientId != -1)
     {
-        GetClientName(tankClientId, tankClientName, sizeof(tankClientName));
-        if (GetConVarBool(hTankPrint))
+        for (int i = 1; i <= MaxClients; i++) 
         {
-            CPrintToChatAll("{red}<{default}Tank Selection{red}> {olive}%s {default}will become the {red}Tank!", tankClientName);
-        }
-        else
-        {
-            for (int i = 1; i <= MaxClients; i++) 
-            {
-                if (!IS_VALID_INFECTED(i) && !IS_VALID_CASTER(i))
+            if (!IsClientInGame(i) || (!hTankPrint.BoolValue && !IS_INFECTED(i) && !IS_SPECTATOR(i)))
                 continue;
 
-                if (tankClientId == i) CPrintToChat(i, "{red}<{default}Tank Selection{red}> {green}You {default}will become the {red}Tank{default}!");
-                else CPrintToChat(i, "{red}<{default}Tank Selection{red}> {olive}%s {default}will become the {red}Tank!", tankClientName);
-            }
+            if (tankClientId == i) 
+                CPrintToChat(i, "{red}<{default}Tank Selection{red}> {green}You {default}will become the {red}Tank{default}!");
+            else 
+                CPrintToChat(i, "{red}<{default}Tank Selection{red}> {olive}%N {default}will become the {red}Tank!", tankClientId);
         }
     }
 }
 
-stock void PrintToInfected(const char[] Message, any ... )
+/**
+ * Retrieves the current Tank player.
+ * 
+ * @return
+ *     The tank's client index or -1 if not found.
+ */
+int getTankPlayer()
 {
-    char sPrint[256];
-    VFormat(sPrint, sizeof(sPrint), Message, 2);
-
-    for (int i = 1; i <= MaxClients; i++) 
+    for (int i = 1; i <= MaxClients; i++)
     {
-        if (!IS_VALID_INFECTED(i) && !IS_VALID_CASTER(i)) 
-        { 
-            continue; 
-        }
-
-        CPrintToChat(i, "{default}%s", sPrint);
+        if (!IS_INFECTED(i) || IsFakeClient(i))
+            continue;
+        
+        int zombieClass = GetEntProp(i, Prop_Send, "m_zombieClass");
+        
+        if (zombieClass == ZOMBIECLASS_TANK)
+            return i;
     }
+
+    return -1;
 }
+
 /**
  * Adds steam ids for a particular team to an array.
  * 
- * @ param Handle:steamIds
+ * @param steamIds
  *     The array steam ids will be added to.
- * @param L4D2Team:team
+ * @param team
  *     The team to get steam ids for.
  */
- 
-public void addTeamSteamIdsToArray(ArrayList steamIds, L4D2Team team)
+void addTeamSteamIdsToArray(ArrayList steamIds, int team)
 {
     char steamId[64];
 
     for (int i = 1; i <= MaxClients; i++)
     {
-        // Basic check
-        if (IsClientInGame(i) && ! IsFakeClient(i))
-        {
-            // Checking if on our desired team
-            if (view_as<L4D2Team>(GetClientTeam(i)) != team)
-                continue;
+        if (!IsClientInGame(i) || IsFakeClient(i) || GetClientTeam(i) != team)
+            continue;
         
-            GetClientAuthId(i, AuthId_Steam2, steamId, sizeof(steamId));
-            PushArrayString(steamIds, steamId);
-        }
+        GetClientAuthId(i, AuthId_Steam2, steamId, sizeof(steamId));
+        steamIds.PushString(steamId);
     }
 }
 
 /**
  * Removes steam ids from the tank pool if they've already had tank.
  * 
- * @param Handle:steamIdTankPool
- *     The pool of potential steam ids to become tank.
- * @ param Handle:tanks
- *     The steam ids of players who've already had tank.
- * 
- * @return
- *     The pool of steam ids who haven't had tank.
+ * @param steamIdTankPool
+ *     The array containing potential steam ids to become tank.
+ * @param tanks
+ *     The array containing steam ids of players who've already had tank.
  */
- 
-public void removeTanksFromPool(ArrayList steamIdTankPool, ArrayList tanks)
+void removeTanksFromPool(ArrayList steamIdTankPool, ArrayList tanks)
 {
     int index;
     char steamId[64];
-    
-    int ArraySize = GetArraySize(tanks);
+    int ArraySize = tanks.Length;
+
     for (int i = 0; i < ArraySize; i++)
     {
-        GetArrayString(tanks, i, steamId, sizeof(steamId));
-        index = FindStringInArray(steamIdTankPool, steamId);
+        tanks.GetString(i, steamId, sizeof(steamId));
+        index = steamIdTankPool.FindString(steamId);
         
         if (index != -1)
-        {
-            RemoveFromArray(steamIdTankPool, index);
-        }
+            steamIdTankPool.Erase(index);
     }
 }
 
 /**
  * Retrieves a player's client index by their steam id.
  * 
- * @param const String:steamId[]
- *     The steam id to look for.
+ * @param steamId
+ *     The steam id string to look for.
  * 
  * @return
- *     The player's client index.
+ *     The player's client index or -1 if not found.
  */
- 
-public int getInfectedPlayerBySteamId(const char[] steamId) 
+int getInfectedPlayerBySteamId(const char[] steamId) 
 {
     char tmpSteamId[64];
    
     for (int i = 1; i <= MaxClients; i++) 
     {
-        if (!IsClientInGame(i) || GetClientTeam(i) != 3)
+        if (!IS_VALID_INFECTED(i))
             continue;
-        
-        GetClientAuthId(i, AuthId_Steam2, tmpSteamId, sizeof(tmpSteamId));     
+
+        GetClientAuthId(i, AuthId_Steam2, tmpSteamId, sizeof(tmpSteamId));
         
         if (strcmp(steamId, tmpSteamId) == 0)
             return i;
@@ -587,24 +625,23 @@ public int getInfectedPlayerBySteamId(const char[] steamId)
     return -1;
 }
 
-void SetTankFrustration(int iTankClient, int iFrustration) {
-    if (iFrustration < 0 || iFrustration > 100) {
-        return;
-    }
-    
-    SetEntProp(iTankClient, Prop_Send, "m_frustration", 100-iFrustration);
+void SetTankFrustration(int iTankClient, int iFrustration) 
+{
+    if (iFrustration >= 0 && iFrustration <= 100)
+        SetEntProp(iTankClient, Prop_Send, "m_frustration", 100-iFrustration);
 }
 
-int GetTankFrustration(int iTankClient) {
+int GetTankFrustration(int iTankClient) 
+{
     return 100 - GetEntProp(iTankClient, Prop_Send, "m_frustration");
 }
 
 CountdownTimer GetFrustrationTimer(int client)
 {
     static int s_iOffs_m_frustrationTimer = -1;
+
     if (s_iOffs_m_frustrationTimer == -1)
         s_iOffs_m_frustrationTimer = FindSendPropInfo("CTerrorPlayer", "m_frustration") + 4;
     
     return view_as<CountdownTimer>(GetEntityAddress(client) + view_as<Address>(s_iOffs_m_frustrationTimer));
 }
-
