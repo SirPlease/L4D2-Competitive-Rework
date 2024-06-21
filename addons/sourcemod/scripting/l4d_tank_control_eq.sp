@@ -7,6 +7,7 @@
 #include <left4dhooks>
 
 #define TEAM_SPECTATOR          1
+#define TEAM_SURVIVOR           2
 #define TEAM_INFECTED           3
 #define ZOMBIECLASS_TANK        8
 #define IS_SPECTATOR(%1)        (GetClientTeam(%1) == TEAM_SPECTATOR)
@@ -15,6 +16,7 @@
 #define IS_VALID_SPECTATOR(%1)  (IsClientInGame(%1) && IS_SPECTATOR(%1))
 
 ArrayList h_whosHadTank;
+ArrayList h_tankQueue;
 
 ConVar 
     hTankPrint,
@@ -72,7 +74,8 @@ public void OnPluginStart()
     
     // Initialise the tank arrays/data values
     h_whosHadTank = new ArrayList(ByteCountToCells(64));
-    
+    h_tankQueue = new ArrayList(ByteCountToCells(64));
+
     // Admin commands
     RegAdminCmd("sm_tankshuffle", TankShuffle_Cmd, ADMFLAG_SLAY, "Re-picks at random someone to become tank.");
     RegAdminCmd("sm_givetank", GiveTank_Cmd, ADMFLAG_SLAY, "Gives the tank to a selected player");
@@ -150,14 +153,20 @@ public Action L4D_OnTryOfferingTankBot(int tank_index, bool &enterStatis)
         strcopy(queuedTankSteamId, sizeof(queuedTankSteamId), sOverrideTank);
     
     // If we don't have a queued tank, choose one
-    if (strcmp(queuedTankSteamId, "") == 0)
+    if (StrEqual(queuedTankSteamId, ""))
         chooseTank(0);
     
     // Mark the player as having had tank
-    if (strcmp(queuedTankSteamId, "") != 0)
+    if (!StrEqual(queuedTankSteamId, ""))
     {
         setTankTickets(queuedTankSteamId, 20000);
-        h_whosHadTank.PushString(queuedTankSteamId);
+
+        if (h_whosHadTank.FindString(queuedTankSteamId) == -1)
+            h_whosHadTank.PushString(queuedTankSteamId);
+
+        int index = h_tankQueue.FindString(queuedTankSteamId);
+        if (index != -1)
+            h_tankQueue.Erase(index);
     }
     
     return Plugin_Continue;
@@ -188,6 +197,7 @@ Action newGame(Handle timer)
     if (teamAScore == 0 && teamBScore == 0)
     {
         h_whosHadTank.Clear();
+        h_tankQueue.Clear();
         queuedTankSteamId = "";
         tankInitiallyChosen = "";
     }
@@ -251,10 +261,10 @@ void PlayerTeam_Event(Event hEvent, const char[] name, bool dontBroadcast)
 
         GetClientAuthId(client, AuthId_Steam2, tmpSteamId, sizeof(tmpSteamId));
 
-        if (strcmp(tankInitiallyChosen, tmpSteamId) == 0)
+        if (StrEqual(tankInitiallyChosen, tmpSteamId))
             initialTankLeft = GetGameTime();
 
-        if (strcmp(queuedTankSteamId, tmpSteamId) == 0)
+        if (StrEqual(queuedTankSteamId, tmpSteamId))
         {
             RequestFrame(chooseTank, 0);
             RequestFrame(outputTankToAll, 0);
@@ -264,7 +274,7 @@ void PlayerTeam_Event(Event hEvent, const char[] name, bool dontBroadcast)
     if (team == TEAM_INFECTED && !IsFakeClient(client) && !StrEqual(tankInitiallyChosen, ""))
     {
         GetClientAuthId(client, AuthId_Steam2, tmpSteamId, sizeof(tmpSteamId));
-        if (strcmp(tankInitiallyChosen, tmpSteamId) == 0)
+        if (StrEqual(tankInitiallyChosen, tmpSteamId))
         {
             /* Not touching multiple tanks with a ten-foot pole.
             Could technically be done though.. TODO? */
@@ -290,7 +300,7 @@ void PlayerTeam_Event(Event hEvent, const char[] name, bool dontBroadcast)
 
 /**
  * Replaces the current tank with the initially chosen Tank.
- * Also removes the current Tank from the h_whosHadTank array.
+ * And requeues the old Tank.
  * 
  * @param deservingTank
  *      The player to give the Tank to.
@@ -306,12 +316,29 @@ void ReplaceTank(int deservingTank)
 
         L4D_ReplaceTank(oldTank, deservingTank);
 
-        char oldTankSteamId[64];
-        GetClientAuthId(oldTank, AuthId_Steam2, oldTankSteamId, sizeof(oldTankSteamId));
+        char steamId[64];
 
-        int index = h_whosHadTank.FindString(oldTankSteamId);
+        // Requeue the old tank        
+        GetClientAuthId(oldTank, AuthId_Steam2, steamId, sizeof(steamId));
+        if (h_tankQueue.FindString(steamId) == -1)
+        {
+            h_tankQueue.ShiftUp(0);
+            h_tankQueue.SetString(0, steamId);
+        }
+
+        int index = h_whosHadTank.FindString(steamId);
         if (index != -1)
             h_whosHadTank.Erase(index);
+
+        // Remove the deserving tank from the queue if they're in it
+        GetClientAuthId(deservingTank, AuthId_Steam2, steamId, sizeof(steamId));
+        index = h_tankQueue.FindString(steamId);
+        if (index != -1)
+            h_tankQueue.Erase(index);
+
+        index = h_whosHadTank.FindString(steamId);
+        if (index == -1)
+            h_whosHadTank.PushString(steamId);                
     }
     else if (hTankDebug.BoolValue)
         PrintToConsoleAll("[TC] oldTank: %i and deservingTank: is%s valid", oldTank, IS_INFECTED(deservingTank) ? "" : " NOT VALID");
@@ -361,7 +388,7 @@ void TankKilled_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 Action Tank_Cmd(int client, int args)
 {
     // Only output if client is in-game and we have a queued tank
-    if (!IsClientInGame(client) || strcmp(queuedTankSteamId, "") == 0)
+    if (!IsClientInGame(client) || StrEqual(queuedTankSteamId, ""))
         return Plugin_Handled;
     
     int tankClientId = getInfectedPlayerBySteamId(queuedTankSteamId);
@@ -447,51 +474,41 @@ void chooseTank(any data)
     Call_PushStringEx(sOverrideTank, sizeof(sOverrideTank), SM_PARAM_STRING_UTF8, SM_PARAM_COPYBACK);
     Call_Finish();
 
-    if (StrEqual(sOverrideTank, ""))
+    if (!StrEqual(sOverrideTank, ""))
     {
-        // Create our pool of players to choose from.
-        ArrayList infectedPool = new ArrayList(ByteCountToCells(64));
-        addTeamSteamIdsToArray(infectedPool, TEAM_INFECTED);
-        
-        // If there is nobody on the infected team, return (otherwise we'd be stuck trying to select forever)
-        if (infectedPool.Length == 0)
-        {
-            delete infectedPool;
-            return;
-        }
-
-        // Remove players who've already had tank from the pool.
-        removeTanksFromPool(infectedPool, h_whosHadTank);
-        
-        // If the infected pool is empty, remove infected players from pool
-        if (infectedPool.Length == 0) // (when nobody on infected ,error)
-        {
-            ArrayList infectedTeam = new ArrayList(ByteCountToCells(64));
-            addTeamSteamIdsToArray(infectedTeam, TEAM_INFECTED);
-            if (infectedTeam.Length > 1)
-            {
-                removeTanksFromPool(h_whosHadTank, infectedTeam);
-                chooseTank(0);
-            }
-            else
-                queuedTankSteamId = "";
-            
-            delete infectedTeam;
-            delete infectedPool;
-            return;
-        }
-        
-        // Select a random person to become tank
-        int rndIndex = GetRandomInt(0, infectedPool.Length - 1);
-        infectedPool.GetString(rndIndex, queuedTankSteamId, sizeof(queuedTankSteamId));
-
-        if (StrEqual(tankInitiallyChosen, ""))
-            strcopy(tankInitiallyChosen, sizeof(tankInitiallyChosen), queuedTankSteamId);
-
-        delete infectedPool;
-    } 
-    else
         strcopy(queuedTankSteamId, sizeof(queuedTankSteamId), sOverrideTank);
+        return;
+    }
+
+    queuedTankSteamId = "";
+
+    int nextTankIndex = PeekNextTankIndexInTheQueue();
+
+    if (nextTankIndex == -1)
+    {
+        EnqueueNewInfectedPlayers();
+        nextTankIndex = PeekNextTankIndexInTheQueue();
+    }
+
+    if (nextTankIndex == -1)
+    {
+        RemoveAllInfectedFrom(h_tankQueue);
+        RemoveAllInfectedFrom(h_whosHadTank);
+        EnqueueNewInfectedPlayers();
+        nextTankIndex = PeekNextTankIndexInTheQueue();
+    }
+
+    if (nextTankIndex == -1)
+        return;
+
+    char steamId[64];
+
+    h_tankQueue.GetString(nextTankIndex, steamId, sizeof(steamId));
+
+    strcopy(queuedTankSteamId, sizeof(queuedTankSteamId), steamId);
+
+    if (StrEqual(tankInitiallyChosen, ""))
+        strcopy(tankInitiallyChosen, sizeof(tankInitiallyChosen), steamId);
 }
 
 /**
@@ -553,52 +570,6 @@ int getTankPlayer()
 }
 
 /**
- * Adds steam ids for a particular team to an array.
- * 
- * @param steamIds
- *     The array steam ids will be added to.
- * @param team
- *     The team to get steam ids for.
- */
-void addTeamSteamIdsToArray(ArrayList steamIds, int team)
-{
-    char steamId[64];
-
-    for (int i = 1; i <= MaxClients; i++)
-    {
-        if (!IsClientInGame(i) || IsFakeClient(i) || GetClientTeam(i) != team)
-            continue;
-        
-        GetClientAuthId(i, AuthId_Steam2, steamId, sizeof(steamId));
-        steamIds.PushString(steamId);
-    }
-}
-
-/**
- * Removes steam ids from the tank pool if they've already had tank.
- * 
- * @param steamIdTankPool
- *     The array containing potential steam ids to become tank.
- * @param tanks
- *     The array containing steam ids of players who've already had tank.
- */
-void removeTanksFromPool(ArrayList steamIdTankPool, ArrayList tanks)
-{
-    int index;
-    char steamId[64];
-    int ArraySize = tanks.Length;
-
-    for (int i = 0; i < ArraySize; i++)
-    {
-        tanks.GetString(i, steamId, sizeof(steamId));
-        index = steamIdTankPool.FindString(steamId);
-        
-        if (index != -1)
-            steamIdTankPool.Erase(index);
-    }
-}
-
-/**
  * Retrieves a player's client index by their steam id.
  * 
  * @param steamId
@@ -618,7 +589,7 @@ int getInfectedPlayerBySteamId(const char[] steamId)
 
         GetClientAuthId(i, AuthId_Steam2, tmpSteamId, sizeof(tmpSteamId));
         
-        if (strcmp(steamId, tmpSteamId) == 0)
+        if (StrEqual(steamId, tmpSteamId))
             return i;
     }
     
@@ -644,4 +615,85 @@ CountdownTimer GetFrustrationTimer(int client)
         s_iOffs_m_frustrationTimer = FindSendPropInfo("CTerrorPlayer", "m_frustration") + 4;
     
     return view_as<CountdownTimer>(GetEntityAddress(client) + view_as<Address>(s_iOffs_m_frustrationTimer));
+}
+
+int PeekNextTankIndexInTheQueue()
+{
+    if (h_tankQueue.Length == 0)
+        return -1;
+
+    char steamId[64];
+
+    for (int i = 0; i < h_tankQueue.Length; i++)
+    {
+        h_tankQueue.GetString(i, steamId, sizeof(steamId));
+
+        int client = getInfectedPlayerBySteamId(steamId);
+        if (client != -1)
+            return i;
+    }
+
+    return -1;
+}
+
+void EnqueueNewInfectedPlayers()
+{
+    char steamId[64];
+
+    int start = h_tankQueue.Length;
+    int end = -1;
+
+    for (int client = 1; client <= MaxClients; client++)
+    {
+        if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != TEAM_INFECTED)
+            continue;
+        
+        GetClientAuthId(client, AuthId_Steam2, steamId, sizeof(steamId));
+
+        if (h_tankQueue.FindString(steamId) != -1 || h_whosHadTank.FindString(steamId) != -1)
+            continue;
+
+        h_tankQueue.PushString(steamId);
+
+        end = h_tankQueue.Length - 1;
+    }
+
+    if (end != -1)
+        ShuffleArray(h_tankQueue, start, end);
+}
+
+void RemoveAllInfectedFrom(ArrayList arrayList)
+{
+    char steamId[64];
+
+    for (int client = 1; client <= MaxClients; client++)
+    {
+        if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != TEAM_INFECTED)
+            continue;
+        
+        GetClientAuthId(client, AuthId_Steam2, steamId, sizeof(steamId));
+
+        int index = arrayList.FindString(steamId);
+        if (index != -1)
+            arrayList.Erase(index);
+    }
+}
+
+void ShuffleArray(ArrayList arrayList, int start, int end)
+{
+    if (start == end)
+        return;
+
+    int swaps = (end - start + 1) * 2;
+
+    for (int i = 0; i < swaps; i++)
+    {
+        int index1 = GetRandomInt(start, end);
+        int index2 = GetRandomInt(start, end);
+
+        if (index1 == index2)
+            continue;
+
+        arrayList.SwapAt(index1, index2);
+    }
 }
