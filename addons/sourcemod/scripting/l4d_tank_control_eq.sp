@@ -7,7 +7,6 @@
 #include <left4dhooks>
 
 #define TEAM_SPECTATOR          1
-#define TEAM_SURVIVOR           2
 #define TEAM_INFECTED           3
 #define ZOMBIECLASS_TANK        8
 #define IS_SPECTATOR(%1)        (GetClientTeam(%1) == TEAM_SPECTATOR)
