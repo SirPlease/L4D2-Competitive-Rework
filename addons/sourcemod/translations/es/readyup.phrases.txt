@@ -1,0 +1,108 @@
+"Phrases"
+{
+// The following uses bracket style color tags (see colors.inc)
+	"PanelHide"
+	{
+		"es"		"[{olive}Readyup{default}] El panel esta ahora {red}apagado{default}"
+	}
+	
+	"PanelShow"
+	{
+		"es"		"[{olive}Readyup{default}] El panel esta ahora {blue}encendido{default}"
+	}
+	
+	"ForceStartAdmin"
+	{
+		"#format"	"{1:N}"
+		"es"		"[{green}!{default}] {blue}El inicio del juego {default}es {green}forzado {default}por {blue}Admin {default}({olive}{1}{default})"
+	}
+	
+	"VoteInProgress"
+	{
+		"es"		"[{olive}Readyup{default}] Hay {olive}una votacion {green}en progreso{default}."
+	}
+	
+	"VoteDelay"
+	{
+		"#format"	"{1:d}"
+		"es"		"[{olive}Readyup{default}] Espera {blue}{1}s {default}para llamar a otra votacion."
+	}
+	
+	"Player marked unready"
+	{
+		"#format"	"{1:N}"
+		"es"		"{default}[{green}!{default}] {green}¡Cuenta regresiva cancelada! {default}({teamcolor}{1} {green}marcado como no listo{default})"
+	}
+	
+	"Player switched team"
+	{
+		"#format"	"{1:N}"
+		"es"		"{default}[{green}!{default}] {green}¡Cuenta regresiva cancelada! {default}({teamcolor}{1} {olive}cambio de equipo{default})"
+	}
+	
+	"Player disconnected"
+	{
+		"#format"	"{1:N}"
+		"es"		"{default}[{green}!{default}] {green}¡Cuenta regresiva cancelada! {default}({teamcolor}{1} {green}desconectado{default})"
+	}
+	
+	"Admin aborted"
+	{
+		"#format"	"{1:N}"
+		"es"		"{default}[{green}!{default}] {green}¡Inicio forzado cancelado! {default}({olive}{1} {green}emitido{default})"
+	}
+	
+	
+// The following are not allowed to use any color tag
+	"HintReady"
+	{
+		"es"		"Estas listo.\nEscribe !unready\nPresiona F2 para no estar listo."
+	}
+	
+	"HintUnready"
+	{
+		"es"		"No estas listo.\nEscribe !ready\nPresiona F1 para estar listo."
+	}
+	
+	"LiveCountdownBegin"
+	{
+		"es"		"¡Empezando en vivo!\nEscribe !unready\nPresiona F2 para cancelar"
+	}
+	
+	"LiveCountdown"
+	{
+		"#format"	"{1:d}"
+		"es"		"En vivo en: {1}\nEscribe !unready\nPresiona F2 para cancelar"
+	}
+	
+	"LiveCountdownCancelled"
+	{
+		"es"		"¡Cuenta regresiva cancelada!"
+	}
+	
+	"RoundIsLive"
+	{
+		"es"		"¡La ronda esta en vivo!"
+	}
+	
+	"InitiateAutoStart"
+	{
+		"es"		"¡El juego comenzara automaticamente!"
+	}
+	
+	"AutoStartCountdown"
+	{
+		"#format"	"{1:d}"
+		"es"		"El juego comienza en: {1}"
+	}
+	
+	"AutoStartWaiting"
+	{
+		"es"		"Esperando a que los jugadores carguen..."
+	}
+	
+	"AutoStartNotEnoughPlayers"
+	{
+		"es"		"Se requieren mas jugadores..."
+	}
+}
