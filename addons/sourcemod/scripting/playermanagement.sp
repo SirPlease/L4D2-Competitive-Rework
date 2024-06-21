@@ -139,11 +139,11 @@ public Action FixBots_Cmd(int client, int args)
 {
 	if (client != 0)
 	{
-		PrintToChatAll("%t %t", "Tag", "FixBot", client);
+		CPrintToChatAll("%t %t", "Tag", "FixBot", client);
 	}
 	else
 	{
-		PrintToChatAll("%t %t", "Tag", "FixBotConsole");
+		CPrintToChatAll("%t %t", "Tag", "FixBotConsole");
 	}
 	FixBotCount();
 	return Plugin_Handled;

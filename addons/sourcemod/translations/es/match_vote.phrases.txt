@@ -1,5 +1,9 @@
 "Phrases"
 {
+    "Tag"
+    {
+        "es"    "[{olive}!{default}]"
+    }
     "Disabled"
     {
         "es"    "El complemento esta {red}Desactivado{default}"
