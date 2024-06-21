@@ -150,7 +150,7 @@ public Action L4D_OnTryOfferingTankBot(int tank_index, bool &enterStatis)
         strcopy(queuedTankSteamId, sizeof(queuedTankSteamId), sOverrideTank);
     
     // If we don't have a queued tank, choose one
-    if (!strcmp(queuedTankSteamId, ""))
+    if (strcmp(queuedTankSteamId, "") == 0)
         chooseTank(0);
     
     // Mark the player as having had tank
@@ -361,7 +361,7 @@ void TankKilled_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 Action Tank_Cmd(int client, int args)
 {
     // Only output if client is in-game and we have a queued tank
-    if (!IsClientInGame(client) || strcmp(queuedTankSteamId, ""))
+    if (!IsClientInGame(client) || strcmp(queuedTankSteamId, "") == 0)
         return Plugin_Handled;
     
     int tankClientId = getInfectedPlayerBySteamId(queuedTankSteamId);
