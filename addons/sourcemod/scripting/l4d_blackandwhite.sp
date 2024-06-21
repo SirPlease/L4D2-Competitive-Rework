@@ -56,7 +56,7 @@ public OnPluginStart()
 	HookConVarChange(h_cvarGlowEnable, ChangeVars);
 }
 
-public EventReviveSuccess(Handle:event, const String:name[], bool:dontBroadcast)
+void EventReviveSuccess(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	if(GetEventBool(event, "lastlife"))
 	{
@@ -159,7 +159,7 @@ public EventReviveSuccess(Handle:event, const String:name[], bool:dontBroadcast)
 	return;
 }
 
-public EventHealSuccess(Handle:event, const String:name[], bool:dontBroadcast)
+void EventHealSuccess(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	new healeeID = GetEventInt(event, "subject");
 	new healee = GetClientOfUserId(healeeID);
@@ -212,7 +212,7 @@ public EventHealSuccess(Handle:event, const String:name[], bool:dontBroadcast)
 	return;
 }
 
-public EventPlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
+void EventPlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	new deadID = GetEventInt(event, "userid");
 	new dead = GetClientOfUserId(deadID);
@@ -263,7 +263,7 @@ public EventPlayerDeath(Handle:event, const String:name[], bool:dontBroadcast)
 //failing that, hook player_team?
 
 //get cvar changes during game
-public ChangeVars(Handle:cvar, const String:oldVal[], const String:newVal[])
+void ChangeVars(Handle:cvar, const String:oldVal[], const String:newVal[])
 {
 	//read values from convars
 	bandw_notice = GetConVarInt(h_cvarNoticeType);

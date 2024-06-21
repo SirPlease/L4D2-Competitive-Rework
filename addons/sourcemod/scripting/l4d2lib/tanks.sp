@@ -91,7 +91,7 @@ void Tanks_PlayerDeath(Event hEvent)
 	g_hTankDeathTimer = CreateTimer(0.5, TankDeath_Timer);
 }
 
-public Action TankDeath_Timer(Handle hTimer)
+Action TankDeath_Timer(Handle hTimer)
 {
 	Call_StartForward(g_hFwdTankDeath);
 	Call_PushCell(g_iTankClient);

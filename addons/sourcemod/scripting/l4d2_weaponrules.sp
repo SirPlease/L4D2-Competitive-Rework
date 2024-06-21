@@ -55,7 +55,7 @@ public void OnPluginStart()
 	ResetWeaponRules();
 }
 
-public Action ResetWeaponRulesCb(int args)
+Action ResetWeaponRulesCb(int args)
 {
 	ResetWeaponRules();
 
@@ -69,7 +69,7 @@ void ResetWeaponRules()
 	}
 }
 
-public void RoundStartCb(Event hEvent, const char[] eName, bool dontBroadcast)
+void RoundStartCb(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	CreateTimer(0.3, RoundStartDelay, _, TIMER_FLAG_NO_MAPCHANGE);
 }
@@ -89,7 +89,7 @@ public void OnConfigsExecuted()
 	}
 }
 
-public Action RoundStartDelay(Handle hTimer)
+Action RoundStartDelay(Handle hTimer)
 {
 	g_bRoundStartHit = true;
 	
@@ -100,7 +100,7 @@ public Action RoundStartDelay(Handle hTimer)
 	return Plugin_Stop;
 }
 
-public Action AddWeaponRuleCb(int args)
+Action AddWeaponRuleCb(int args)
 {
 	if (args < 2) {
 		PrintToServer("Usage: l4d2_addweaponrule <match> <replace>");

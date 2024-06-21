@@ -215,7 +215,7 @@ public void OnConfigsExecuted()
 // OnEnableDisable - Patch or unpatch
 // ====================================================================================================
 
-public void OnEnableDisable(ConVar convar, const char[] oldValue, const char[] newValue)
+void OnEnableDisable(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	ApplyPatch((bCvar_Enabled = Cvar_Enabled.BoolValue));
 }
@@ -224,7 +224,7 @@ public void OnEnableDisable(ConVar convar, const char[] oldValue, const char[] n
 // OnConVarChanged - Refresh ConVar storage
 // ====================================================================================================
 
-public void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	GetCvars();
 }
@@ -257,7 +257,7 @@ public void OnClientPutInServer(int client)
 // Event_RoundStart - Reset temp values
 // ====================================================================================================
 
-public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; i++)
 	{
@@ -271,7 +271,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 // Detour_CanDeployFor - Constantly called to check if player can pull out a weapon
 // ====================================================================================================
 
-public MRESReturn Detour_CanDeployFor(int pThis, Handle hReturn)
+MRESReturn Detour_CanDeployFor(int pThis, Handle hReturn)
 {
 	if (!bCvar_Enabled)
 		return MRES_Ignored;
@@ -383,7 +383,7 @@ public MRESReturn Detour_CanDeployFor(int pThis, Handle hReturn)
 // Detour_Reload - Block reload based on ConVar
 // ====================================================================================================
 
-public MRESReturn Detour_Reload(int pThis, Handle hReturn)
+MRESReturn Detour_Reload(int pThis, Handle hReturn)
 {
 	int client = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
 	bool bIsOnLadder = GetEntityMoveType(client) == MOVETYPE_LADDER;
@@ -400,7 +400,7 @@ public MRESReturn Detour_Reload(int pThis, Handle hReturn)
 // Detour_ShotgunReload - Block reload based on ConVar
 // ====================================================================================================
 
-public MRESReturn Detour_ShotgunReload(int pThis, Handle hReturn)
+MRESReturn Detour_ShotgunReload(int pThis, Handle hReturn)
 {
 	int client = GetEntPropEnt(pThis, Prop_Send, "m_hOwner");
 	

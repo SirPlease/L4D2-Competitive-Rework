@@ -116,7 +116,7 @@ public void OnPluginStart()
 	}
 }
 
-public void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int iSize = hClientSettingsArray.Length;
 #if SOURCEMOD_V_MINOR > 9
@@ -136,14 +136,14 @@ public void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast
 #endif
 }
 
-public void Event_RoundGoesLive(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_RoundGoesLive(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	//This event works great with the plugin readyup.smx (does not conflict)
 	//This event works great in different game modes: versus, coop, scavenge and etc
 	bIsMatchLive = true;
 }
 
-public void Event_RoundEnd(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_RoundEnd(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	bIsMatchLive = false;
 }
@@ -153,7 +153,7 @@ public void OnMapEnd()
 	hClientSettingsArray.Clear();
 }
 
-public void OnTeamChange(Event hEvent, const char[] name, bool dontBroadcast)
+void OnTeamChange(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	if (hEvent.GetInt("team") != L4D2Team_Spectator) {
 		int userid = hEvent.GetInt("userid");
@@ -164,7 +164,7 @@ public void OnTeamChange(Event hEvent, const char[] name, bool dontBroadcast)
 	}
 }
 
-public Action OnTeamChangeDelay(Handle hTimer, any userid)
+Action OnTeamChangeDelay(Handle hTimer, any userid)
 {
 	int client = GetClientOfUserId(userid);
 	if (client > 0) {
@@ -181,7 +181,7 @@ public void OnClientSettingsChanged(int client)
 	}
 }
 
-public Action ListRates(int client, int args)
+Action ListRates(int client, int args)
 {
 	ReplyToCommand(client, "\x01[RateMonitor] List of player netsettings(\x03cmd\x01/\x04upd\x01/\x05rate\x01):");
 	
@@ -475,32 +475,32 @@ bool IsNatural(const char[] str)
 	return true;
 }
 
-public void cvarChanged_AllowedRateChanges(ConVar convar, const char[] oldValue, const char[] newValue)
+void cvarChanged_AllowedRateChanges(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	iAllowedRateChanges = hCvarAllowedRateChanges.IntValue;
 }
 
-public void cvarChanged_MinRate(ConVar convar, const char[] oldValue, const char[] newValue)
+void cvarChanged_MinRate(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	iMinRate = hCvarMinRate.IntValue;
 }
 
-public void cvarChanged_MinCmd(ConVar convar, const char[] oldValue, const char[] newValue)
+void cvarChanged_MinCmd(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	iMinCmd = hCvarMinCmd.IntValue;
 }
 
-public void cvarChanged_ProhibitFakePing(ConVar convar, const char[] oldValue, const char[] newValue)
+void cvarChanged_ProhibitFakePing(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	bProhibitFakePing = hCvarProhibitFakePing.BoolValue;
 }
 
-public void cvarChanged_ExceedAction(ConVar convar, const char[] oldValue, const char[] newValue)
+void cvarChanged_ExceedAction(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	iActionUponExceed = hCvarProhibitedAction.IntValue;
 }
 
-public void cvarChanged_PublicNotice(ConVar convar, const char[] oldValue, const char[] newValue)
+void cvarChanged_PublicNotice(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	bPublic = hCvarPublicNotice.BoolValue;
 }

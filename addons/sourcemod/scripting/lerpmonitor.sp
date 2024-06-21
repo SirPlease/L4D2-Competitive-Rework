@@ -50,7 +50,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
-public int LM_GetLerpTime(Handle plugin, int numParams) 
+int LM_GetLerpTime(Handle plugin, int numParams) 
 {
 	int client = GetNativeCell(1);
 	if (client < 1 || client > MaxClients) {
@@ -70,7 +70,7 @@ public int LM_GetLerpTime(Handle plugin, int numParams)
 	return view_as<int>(-1.0);
 }
 
-public int LM_GetCurrentLerpTime(Handle plugin, int numParams) 
+int LM_GetCurrentLerpTime(Handle plugin, int numParams) 
 {
 	int client = GetNativeCell(1);
 	if (client < 1 || client > MaxClients) {
@@ -128,7 +128,7 @@ public void OnClientPutInServer(int client)
 	}
 }
 
-public Action Process(Handle hTimer, int userid)
+Action Process(Handle hTimer, int userid)
 {
 	int client = GetClientOfUserId(userid);
 	if (client > 0 && GetClientTeam(client) > L4D_TEAM_SPECTATE) {
@@ -150,7 +150,7 @@ public void OnMapEnd()
 	ArrLerpsCountChanges.Clear();
 }
 
-public void Event_RoundGoesLive(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_RoundGoesLive(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	//This event works great with the plugin readyup.smx (does not conflict)
 	//This event works great in different game modes: versus, coop, scavenge and etc
@@ -164,7 +164,7 @@ public void OnClientSettingsChanged(int client)
 	}
 }
 
-public void Event_PlayerDisconnect(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_PlayerDisconnect(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	char SteamID[64];
 	hEvent.GetString("networkid", SteamID, sizeof(SteamID));
@@ -177,7 +177,7 @@ public void Event_PlayerDisconnect(Event hEvent, const char[] name, bool dontBro
 	//ArrLerpsCountChanges.Remove(SteamID);
 }
 
-public void OnTeamChange(Event hEvent, const char[] eName, bool dontBroadcast)
+void OnTeamChange(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	if (hEvent.GetInt("team") > L4D_TEAM_SPECTATE) {
 		int userid = hEvent.GetInt("userid");
@@ -190,7 +190,7 @@ public void OnTeamChange(Event hEvent, const char[] eName, bool dontBroadcast)
 	}
 }
 
-public Action OnTeamChangeDelay(Handle hTimer, int userid)
+Action OnTeamChangeDelay(Handle hTimer, int userid)
 {
 	int client = GetClientOfUserId(userid);
 	if (client > 0) {
@@ -199,13 +199,13 @@ public Action OnTeamChangeDelay(Handle hTimer, int userid)
 	return Plugin_Stop;
 }
 
-public void Event_RoundEnd(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_RoundEnd(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	// little delay for other round end used modules
 	CreateTimer(0.5, Timer_RoundEndDelay, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action Timer_RoundEndDelay(Handle hTimer)
+Action Timer_RoundEndDelay(Handle hTimer)
 {
 	isFirstHalf = false;
 	isTransfer = true;
@@ -216,7 +216,7 @@ public Action Timer_RoundEndDelay(Handle hTimer)
 	return Plugin_Stop;
 }
 
-public Action Lerps_Cmd(int client, int args)
+Action Lerps_Cmd(int client, int args)
 {
 	bool isEmpty = true;
 	if (ArrLerpsValue.Size > 0) {
@@ -242,7 +242,7 @@ public Action Lerps_Cmd(int client, int args)
 	return Plugin_Handled;
 }
 
-public void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	// delete change count for second half
 	if (!isFirstHalf) {
@@ -252,7 +252,7 @@ public void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast
 	CreateTimer(0.5, OnTransfer, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action OnTransfer(Handle hTimer)
+Action OnTransfer(Handle hTimer)
 {
 	isTransfer = false;
 	return Plugin_Stop;

@@ -92,7 +92,7 @@ void ProcessReadyupFooter()
 	}
 }
 
-public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	g_bMessagePrinted = false;
 	g_bRoundStarted = true;
@@ -108,12 +108,12 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
+void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	g_bRoundStarted = false;
 }
 
-public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
+void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 {
 	if (!g_bAllowFooter) return;
 	
@@ -130,7 +130,7 @@ public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public Action UpdateReadyUpFooter(Handle timer)
+Action UpdateReadyUpFooter(Handle timer)
 {
 	g_hAddFooterTimer = null;
 	
@@ -158,7 +158,7 @@ public void OnRoundIsLive()
 	}
 }
 
-public void Event_PlayerLeftStartArea(Event event, const char[] name, bool dontBroadcast)
+void Event_PlayerLeftStartArea(Event event, const char[] name, bool dontBroadcast)
 {
 	// if no readyup, use this as the starting event
 	if (!g_bMessagePrinted) {

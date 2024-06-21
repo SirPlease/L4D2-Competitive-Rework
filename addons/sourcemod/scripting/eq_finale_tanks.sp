@@ -74,7 +74,7 @@ public void OnPluginStart()
 	HookEvent("round_start", RoundStartEvent, EventHookMode_PostNoCopy);
 }
 
-public Action SetMapFirstTankSpawningScheme(int args)
+Action SetMapFirstTankSpawningScheme(int args)
 {
 	if (args != 1) {
 		PrintToServer("Usage: tank_map_flow_and_second_event <mapname>");
@@ -89,7 +89,7 @@ public Action SetMapFirstTankSpawningScheme(int args)
 	return Plugin_Handled;
 }
 
-public Action SetMapSecondTankSpawningScheme(int args)
+Action SetMapSecondTankSpawningScheme(int args)
 {
 	if (args != 1) {
 		PrintToServer("Usage: tank_map_only_first_event <mapname>");
@@ -104,12 +104,12 @@ public Action SetMapSecondTankSpawningScheme(int args)
 	return Plugin_Handled;
 }
 
-public void RoundStartEvent(Event hEvent, const char[] name, bool dontBroadcast)
+void RoundStartEvent(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	CreateTimer(8.0, ProcessTankSpawn, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action ProcessTankSpawn(Handle hTimer)
+Action ProcessTankSpawn(Handle hTimer)
 {
 	spawnScheme = Skip;
 	tankCount = 0;

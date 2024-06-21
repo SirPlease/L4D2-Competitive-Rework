@@ -59,7 +59,7 @@ public Action L4D_OnSpawnITMob(int &iAmount)
 	return Plugin_Changed;
 }
 
-public void Cvars_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+void Cvars_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	CheckPatch(hConVar.BoolValue);
 }

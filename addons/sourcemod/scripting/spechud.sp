@@ -217,12 +217,12 @@ void LoadPluginTranslations()
 // ======================================================================
 //  Dependency Monitor
 // ======================================================================
-public void GameConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+void GameConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	GetGameCvars();
 }
 
-public void ServerCvarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+void ServerCvarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	FillServerNamer();
 }
@@ -281,7 +281,7 @@ void InitTankSpawnSchemeTrie()
 	BuildCustomTrieEntries();
 }
 
-public Action SetMapFirstTankSpawningScheme(int args)
+Action SetMapFirstTankSpawningScheme(int args)
 {
 	char mapname[64];
 	GetCmdArg(1, mapname, sizeof(mapname));
@@ -290,7 +290,7 @@ public Action SetMapFirstTankSpawningScheme(int args)
 	return Plugin_Handled;
 }
 
-public Action SetMapSecondTankSpawningScheme(int args)
+Action SetMapSecondTankSpawningScheme(int args)
 {
 	char mapname[64];
 	GetCmdArg(1, mapname, sizeof(mapname));
@@ -298,7 +298,7 @@ public Action SetMapSecondTankSpawningScheme(int args)
 	return Plugin_Handled;
 }
 
-public Action SetFinaleExceptionMap(int args)
+Action SetFinaleExceptionMap(int args)
 {
 	char mapname[64];
 	GetCmdArg(1, mapname, sizeof(mapname));
@@ -318,7 +318,6 @@ public void OnClientDisconnect(int client)
 }
 
 public void OnMapStart() { bRoundLive = false; }
-public void OnMapEnd() {}
 public void OnRoundIsLive()
 {
 	FillReadyConfig();
@@ -388,17 +387,17 @@ public void OnRoundIsLive()
 // ======================================================================
 //  Events
 // ======================================================================
-public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	bRoundLive = false;
 }
 
-public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
+void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	bRoundLive = false;
 }
 
-public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
+void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if (!client || !IsInfected(client)) return;
@@ -410,12 +409,12 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 	}
 }
 
-public void Event_WitchDeath(Event event, const char[] name, bool dontBroadcast)
+void Event_WitchDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	if (iWitchCount > 0) iWitchCount--;
 }
 
-public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
+void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	if (!client) return;
@@ -436,7 +435,7 @@ public void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 // ======================================================================
 //  HUD Command Callbacks
 // ======================================================================
-public Action ToggleSpecHudCmd(int client, int args) 
+Action ToggleSpecHudCmd(int client, int args) 
 {
 	if (GetClientTeam(client) != L4D2Team_Spectator)
 		return Plugin_Handled;
@@ -447,7 +446,7 @@ public Action ToggleSpecHudCmd(int client, int args)
 	return Plugin_Handled;
 }
 
-public Action ToggleTankHudCmd(int client, int args) 
+Action ToggleTankHudCmd(int client, int args) 
 {
 	int team = GetClientTeam(client);
 	if (team == L4D2Team_Survivor)
@@ -464,7 +463,7 @@ public Action ToggleTankHudCmd(int client, int args)
 // ======================================================================
 //  HUD Handle
 // ======================================================================
-public Action HudDrawTimer(Handle hTimer)
+Action HudDrawTimer(Handle hTimer)
 {
 	if (IsInReady() || IsInPause())
 		return Plugin_Continue;
@@ -560,8 +559,8 @@ public Action HudDrawTimer(Handle hTimer)
 	return Plugin_Continue;
 }
 
-public int DummySpecHudHandler(Menu hMenu, MenuAction action, int param1, int param2) { return 1; }
-public int DummyTankHudHandler(Menu hMenu, MenuAction action, int param1, int param2) { return 1; }
+int DummySpecHudHandler(Menu hMenu, MenuAction action, int param1, int param2) { return 1; }
+int DummyTankHudHandler(Menu hMenu, MenuAction action, int param1, int param2) { return 1; }
 
 /**********************************************************************************************/
 

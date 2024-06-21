@@ -25,7 +25,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_current", CurrentCmd);
 }
 
-public Action CurrentCmd(int client, int args)
+Action CurrentCmd(int client, int args)
 {
 	int boss_proximity = RoundToNearest(GetBossProximity() * 100.0);
 	PrintToChat(client, "\x01Current: \x04%d%%", boss_proximity);

@@ -48,7 +48,7 @@ void InitGameData()
 	delete hGamedata;
 }
 
-public void Cvars_Changed(ConVar convar, const char[] oldValue, const char[] newValue)
+void Cvars_Changed(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	CheckPatch(convar.BoolValue);
 }

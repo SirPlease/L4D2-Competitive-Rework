@@ -110,7 +110,7 @@ public void OnPluginStart()
 	}
 }
 
-public void Cvars_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+void Cvars_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	CvarsToType();
 }
@@ -132,7 +132,7 @@ public void OnClientDisconnect(int iClient)
 	SDKUnhook(iClient, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
 }
 
-public Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamagetype)
+Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamagetype)
 {
 	//DMG_SLOWBURN - works for all types of melee weapons
 	if (!(iDamagetype & DMG_SLOWBURN)) {

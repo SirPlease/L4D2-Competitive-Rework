@@ -91,12 +91,12 @@ public void OnMapStart()
 	g_aHOTPair.Clear();
 }
 
-public void Player_BotReplace_Event(Event event, const char[] name, bool dontBroadcast)
+void Player_BotReplace_Event(Event event, const char[] name, bool dontBroadcast)
 {
 	HandleSurvivorTakeover(event.GetInt("player"), event.GetInt("bot"));
 }
 
-public void Bot_PlayerReplace_Event(Event event, const char[] name, bool dontBroadcast)
+void Bot_PlayerReplace_Event(Event event, const char[] name, bool dontBroadcast)
 {
 	HandleSurvivorTakeover(event.GetInt("bot"), event.GetInt("player"));
 }
@@ -119,7 +119,7 @@ void HandleSurvivorTakeover(int replacee, int replacer)
 	}
 }
 
-public void PillsUsed_Event(Event event, const char[] name, bool dontBroadcast)
+void PillsUsed_Event(Event event, const char[] name, bool dontBroadcast)
 {
 	HealEntityOverTime(
 		event.GetInt("userid"),
@@ -129,7 +129,7 @@ public void PillsUsed_Event(Event event, const char[] name, bool dontBroadcast)
 	);
 }
 
-public void AdrenalineUsed_Event(Event event, const char[] name, bool dontBroadcast)
+void AdrenalineUsed_Event(Event event, const char[] name, bool dontBroadcast)
 {
 	HealEntityOverTime(
 		event.GetInt("userid"),
@@ -166,7 +166,7 @@ void HealEntityOverTime(int userid, float interval, int increment, int total)
 	}
 }
 
-public Action __HOT_ACTION(Handle timer, DataPack pack)
+Action __HOT_ACTION(Handle timer, DataPack pack)
 {
 	pack.Reset();
 	
@@ -216,7 +216,7 @@ void __HealTowardsMax(int client, int amount, int max)
  * ConVar Change
  */
 
-public void PillHotChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+void PillHotChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	bool newval = StringToInt(newValue)!=0;
 	if (newval && StringToInt(oldValue) ==0)
@@ -229,7 +229,7 @@ public void PillHotChanged(ConVar convar, const char[] oldValue, const char[] ne
 	}
 }
 
-public void AdrenHotChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+void AdrenHotChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	bool newval = StringToInt(newValue)!=0;
 	if (newval && StringToInt(oldValue) ==0)

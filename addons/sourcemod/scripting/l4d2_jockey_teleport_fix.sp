@@ -32,7 +32,7 @@ public void OnPluginStart() {
     HookEvent("player_bot_replace", Event_BotReplacedByPlayer);
 }
 
-public void Event_JockeyRide(Event hEvent, char[] name, bool dontBroadcast) {
+void Event_JockeyRide(Event hEvent, char[] name, bool dontBroadcast) {
 
     int client = GetClientOfUserId(hEvent.GetInt("victim"));
     float currentOrigin[3];
@@ -46,7 +46,7 @@ public void Event_JockeyRide(Event hEvent, char[] name, bool dontBroadcast) {
     SDKHook(client, SDKHook_PreThink, OnPreThink);
 }
 
-public void Event_BotReplacedByPlayer(Event hEvent, char[] name, bool dontBroadcast) {
+void Event_BotReplacedByPlayer(Event hEvent, char[] name, bool dontBroadcast) {
 
     int client = GetClientOfUserId(hEvent.GetInt("player"));
     int bot    = GetClientOfUserId(hEvent.GetInt("bot"));
@@ -61,7 +61,7 @@ public void Event_BotReplacedByPlayer(Event hEvent, char[] name, bool dontBroadc
     SDKHook(client, SDKHook_PreThink, OnPreThink);
 }
 
-public void Event_PlayerReplacedByBot(Event hEvent, char[] name, bool dontBroadcast) {
+void Event_PlayerReplacedByBot(Event hEvent, char[] name, bool dontBroadcast) {
 
     int client = GetClientOfUserId(hEvent.GetInt("player"));
     int bot    = GetClientOfUserId(hEvent.GetInt("bot"));

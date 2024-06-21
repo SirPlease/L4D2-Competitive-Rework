@@ -89,7 +89,7 @@ void MapInfo_PlayerDisconnect_Event(Event hEvent)
 	}
 }
 
-public Action MI_KV_CmdSave(int iClient, int iArgs)
+Action MI_KV_CmdSave(int iClient, int iArgs)
 {
 	char sCurMap[128];
 	GetCurrentMap(sCurMap, sizeof(sCurMap));
@@ -117,7 +117,7 @@ public Action MI_KV_CmdSave(int iClient, int iArgs)
 	return Plugin_Handled;
 }
 
-public Action MI_KV_CmdSaveLoc(int iClient, int iArgs)
+Action MI_KV_CmdSaveLoc(int iClient, int iArgs)
 {
 	bool bUpdateInfo;
 	char sCurMap[128];
@@ -338,17 +338,17 @@ static int IsEntityInSaferoom(int iEntity)
 	return iResult;
 }
 
-public int _native_IsMapDataAvailable(Handle hPlugin, int iNumParams)
+int _native_IsMapDataAvailable(Handle hPlugin, int iNumParams)
 {
 	return g_bMapDataAvailable;
 }
 
-public int _native_IsEntityInSaferoom(Handle hPlugin, int iNumParams)
+int _native_IsEntityInSaferoom(Handle hPlugin, int iNumParams)
 {
 	return IsEntityInSaferoom(GetNativeCell(1));
 }
 
-public int _native_GetMapStartOrigin(Handle hPlugin, int iNumParams)
+int _native_GetMapStartOrigin(Handle hPlugin, int iNumParams)
 {
 	float fOrigin[3];
 	GetNativeArray(1, fOrigin, sizeof(fOrigin));
@@ -362,7 +362,7 @@ public int _native_GetMapStartOrigin(Handle hPlugin, int iNumParams)
 	return 1;
 }
 
-public int _native_GetMapEndOrigin(Handle hPlugin, int iNumParams)
+int _native_GetMapEndOrigin(Handle hPlugin, int iNumParams)
 {
 	float fOrigin[3];
 	GetNativeArray(1, fOrigin, sizeof(fOrigin));
@@ -376,22 +376,22 @@ public int _native_GetMapEndOrigin(Handle hPlugin, int iNumParams)
 	return 1;
 }
 
-public int _native_GetMapStartDist(Handle hPlugin, int iNumParams)
+int _native_GetMapStartDist(Handle hPlugin, int iNumParams)
 {
 	return view_as<int>(g_fStartDist);
 }
 
-public int _native_GetMapStartExtraDist(Handle hPlugin, int iNumParams)
+int _native_GetMapStartExtraDist(Handle hPlugin, int iNumParams)
 {
 	return view_as<int>(g_fStartExtraDist);
 }
 
-public int _native_GetMapEndDist(Handle hPlugin, int iNumParams)
+int _native_GetMapEndDist(Handle hPlugin, int iNumParams)
 {
 	return view_as<int>(g_fEndDist);
 }
 
-public int _native_GetMapValueInt(Handle hPlugin, int iNumParams)
+int _native_GetMapValueInt(Handle hPlugin, int iNumParams)
 {
 	int iLen;
 	GetNativeStringLength(1, iLen);
@@ -404,7 +404,7 @@ public int _native_GetMapValueInt(Handle hPlugin, int iNumParams)
 	return KvGetNum(g_hMIData, sKey, iDefVal);
 }
 
-public int _native_GetMapValueFloat(Handle hPlugin, int iNumParams)
+int _native_GetMapValueFloat(Handle hPlugin, int iNumParams)
 {
 	int iLen;
 	GetNativeStringLength(1, iLen);
@@ -418,7 +418,7 @@ public int _native_GetMapValueFloat(Handle hPlugin, int iNumParams)
 	return view_as<int>(KvGetFloat(g_hMIData, sKey, fDefVal));
 }
 
-public int _native_GetMapValueVector(Handle hPlugin, int iNumParams)
+int _native_GetMapValueVector(Handle hPlugin, int iNumParams)
 {
 	int iLen;
 	GetNativeStringLength(1, iLen);
@@ -436,7 +436,7 @@ public int _native_GetMapValueVector(Handle hPlugin, int iNumParams)
 	return 1;
 }
 
-public int _native_GetMapValueString(Handle hPlugin, int iNumParams)
+int _native_GetMapValueString(Handle hPlugin, int iNumParams)
 {
 	int iLen;
 	GetNativeStringLength(1, iLen);
@@ -461,7 +461,7 @@ public int _native_GetMapValueString(Handle hPlugin, int iNumParams)
 	return 1;
 }
 
-public int _native_CopyMapSubsection(Handle hPlugin, int iNumParams)
+int _native_CopyMapSubsection(Handle hPlugin, int iNumParams)
 {
 	int iLen;
 	GetNativeStringLength(2, iLen);

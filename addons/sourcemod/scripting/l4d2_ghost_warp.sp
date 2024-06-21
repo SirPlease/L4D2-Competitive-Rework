@@ -97,7 +97,7 @@ void InitTrie()
 	g_hTrieNameToGenderIndex.SetValue("francis", L4D2Gender_Biker);
 }
 
-public void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	// GetGameTime (gpGlobals->curtime) starts from scratch every map.
 	// Let's clean this up
@@ -108,7 +108,7 @@ public void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBr
 	}
 }
 
-public Action Cmd_WarpToSurvivor(int iClient, int iArgs)
+Action Cmd_WarpToSurvivor(int iClient, int iArgs)
 {
 	if (iClient == 0) {
 		ReplyToCommand(iClient, "%s This command is not available for the server!", PLUGIN_TAG);
@@ -217,7 +217,7 @@ public void L4D_OnEnterGhostState(int iClient)
 	SDKHook(iClient, SDKHook_PostThinkPost, Hook_OnPostThinkPost);
 }
 
-public void Hook_OnPostThinkPost(int iClient)
+void Hook_OnPostThinkPost(int iClient)
 {
 	int iPressButtons = GetEntProp(iClient, Prop_Data, "m_afButtonPressed");
 
@@ -359,7 +359,7 @@ int GetSurvivorOfFlowRank(int iRank)
 	return strSurvArray.eiSurvivorIndex;
 }
 
-public int sortFunc(int iIndex1, int iIndex2, Handle hArray, Handle hndl)
+int sortFunc(int iIndex1, int iIndex2, Handle hArray, Handle hndl)
 {
 	eSurvFlow strSurvArray1;
 	eSurvFlow strSurvArray2;
@@ -411,7 +411,7 @@ int GetSurvivorOfFlowRank(int iRank)
 	return strSurvArray[eiSurvivorIndex];
 }
 
-public int sortFunc(int iIndex1, int iIndex2, Handle hArray, Handle hndl)
+int sortFunc(int iIndex1, int iIndex2, Handle hArray, Handle hndl)
 {
 	eSurvFlow strSurvArray1[eSurvFlow];
 	eSurvFlow strSurvArray2[eSurvFlow];

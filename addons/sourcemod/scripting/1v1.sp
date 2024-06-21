@@ -47,7 +47,7 @@ public void OnPluginStart()
 	HookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);
 }
 
-public void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int fDamage = hEvent.GetInt("dmg_health");
 	if (fDamage < g_hCvarDmgThreshold.IntValue) {

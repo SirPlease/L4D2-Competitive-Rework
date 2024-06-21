@@ -103,7 +103,7 @@ void InitMenu()
 	g_hMenu.ExitButton = true;
 }
 
-public void Event_PlayerTeam(Event hEvent, char[] sEventName , bool bDontBroadcast)
+void Event_PlayerTeam(Event hEvent, char[] sEventName , bool bDontBroadcast)
 {
 	// Mode not picked, don't care.
 	if (g_iCurrentMode == eUndecided) {
@@ -125,7 +125,7 @@ public void Event_PlayerTeam(Event hEvent, char[] sEventName , bool bDontBroadca
 	CreateTimer(0.2, Timer_ChangeTeamDelay, iUserId, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action Timer_ChangeTeamDelay(Handle hTimer, any iUserId)
+Action Timer_ChangeTeamDelay(Handle hTimer, any iUserId)
 {
 	int iPlayer = GetClientOfUserId(iUserId);
 	if (iPlayer > 0 && GetClientTeam(iPlayer) == L4D2Team_Survivor) {
@@ -135,7 +135,7 @@ public Action Timer_ChangeTeamDelay(Handle hTimer, any iUserId)
 	return Plugin_Stop;
 }
 
-public void Event_RoundStart(Event hEvent, char[] sEventName, bool bDontBroadcast)
+void Event_RoundStart(Event hEvent, char[] sEventName, bool bDontBroadcast)
 {
 	CreateTimer(0.5, Timer_ClearMap, _, TIMER_FLAG_NO_MAPCHANGE); // Clear all Weapons on this delayed timer.
 
@@ -149,7 +149,7 @@ public void Event_RoundStart(Event hEvent, char[] sEventName, bool bDontBroadcas
 	CreateTimer(2.0, Timer_GiveWeapons, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action Cmd_VoteMode(int iClient, int iArgs)
+Action Cmd_VoteMode(int iClient, int iArgs)
 {
 	// Don't care about non-loaded players or Spectators.
 	if (iClient == 0 || GetClientTeam(iClient) < L4D2Team_Survivor) {
@@ -182,7 +182,7 @@ public Action Cmd_VoteMode(int iClient, int iArgs)
 	return Plugin_Handled;
 }
 
-public Action Cmd_ForceVoteMode(int iClient, int iArgs)
+Action Cmd_ForceVoteMode(int iClient, int iArgs)
 {
 	if (iClient == 0) {
 		return Plugin_Handled;
@@ -211,7 +211,7 @@ void ShowMenu(int iClient)
 	g_hMenu.Display(iClient, MENU_TIME_FOREVER);
 }
 
-public int Menu_VoteMenuHandler(Menu hMenu, MenuAction iAction, int iClient, int iIndex)
+int Menu_VoteMenuHandler(Menu hMenu, MenuAction iAction, int iClient, int iIndex)
 {
 	switch (iAction) {
 		case MenuAction_Select: {
@@ -259,7 +259,7 @@ public int Menu_VoteMenuHandler(Menu hMenu, MenuAction iAction, int iClient, int
 	return 0;
 }
 
-public void BV_VoteActionHandler(Handle hVote, BuiltinVoteAction iAction, int iParam1, int iParam2)
+void BV_VoteActionHandler(Handle hVote, BuiltinVoteAction iAction, int iParam1, int iParam2)
 {
 	switch (iAction) {
 		case BuiltinVoteAction_End: {
@@ -272,7 +272,7 @@ public void BV_VoteActionHandler(Handle hVote, BuiltinVoteAction iAction, int iP
 	}
 }
 
-public void BV_VoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
+void BV_VoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
 {
 	ReturnReadyUpPanel();
 
@@ -302,7 +302,7 @@ public void BV_VoteResultHandler(Handle vote, int num_votes, int num_clients, co
 	return;
 }
 
-public Action Timer_ClearMap(Handle hTimer)
+Action Timer_ClearMap(Handle hTimer)
 {
 	char sEntityName[MAX_ENTITY_NAME_LENGTH];
 	int iOwner = -1, iEntity = INVALID_ENT_REFERENCE;
@@ -329,7 +329,7 @@ public Action Timer_ClearMap(Handle hTimer)
 	return Plugin_Stop;
 }
 
-public Action Timer_GiveWeapons(Handle hTimer) {
+Action Timer_GiveWeapons(Handle hTimer) {
 	GiveSurvivorsWeapons();
 	return Plugin_Stop;
 }
@@ -414,7 +414,7 @@ void GiveAndRemovePlayerWeapon(int iClient, const char[] sWeaponName, bool bOnly
 #endif
 }
 
-public Action Timer_InformPlayers(Handle hTimer)
+Action Timer_InformPlayers(Handle hTimer)
 {
 	static int iNumPrinted = 0;
 

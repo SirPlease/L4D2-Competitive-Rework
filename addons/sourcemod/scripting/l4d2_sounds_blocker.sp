@@ -93,7 +93,7 @@ public void OnPluginStart()
 
 // ------ Whitelist/Custom ------
 
-public Action WhitelistPath_Cmd(int args)
+Action WhitelistPath_Cmd(int args)
 {
 	char path[255];
 	GetCmdArg(1, path, sizeof(path));
@@ -101,7 +101,7 @@ public Action WhitelistPath_Cmd(int args)
 	return Plugin_Handled;
 }
 
-public Action CustomPath_Cmd(int args)
+Action CustomPath_Cmd(int args)
 {
 	char path[255];
 	GetCmdArg(1, path, sizeof(path));
@@ -110,17 +110,17 @@ public Action CustomPath_Cmd(int args)
 }
 
 // ------ Sound Blocking ------
-public Action OnNormalSound(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
+Action OnNormalSound(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
 {
 	return checkSound(sample);
 }
 
-public Action OnAmbientSound(char sample[PLATFORM_MAX_PATH], int &entity, float &volume, int &level, int &pitch, float pos[3], int &flags, float &delay)
+Action OnAmbientSound(char sample[PLATFORM_MAX_PATH], int &entity, float &volume, int &level, int &pitch, float pos[3], int &flags, float &delay)
 {
 	return checkSound(sample);
 }
 
-public Action checkSound(char sample[256])
+Action checkSound(char sample[256])
 {
 	// Fireworks
 	if (h_FireWorks.BoolValue) {
@@ -222,7 +222,7 @@ int CountValidItemsInArray(char array[255][255]) {
 	return val;
 }
 
-public Action checkWhitelist(char sample[256]) {
+Action checkWhitelist(char sample[256]) {
 	int itemsInArray = CountValidItemsInArray(a_whitelistSoundPaths) + 1;
 	if (itemsInArray > 0) {
 		for (int i = 0; i < itemsInArray; i++) {

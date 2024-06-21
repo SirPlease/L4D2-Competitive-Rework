@@ -16,7 +16,7 @@ public OnPluginStart()
 	CreateConVar("l4d2_fix_frozen_tank_version", PL_VERSION, "Frozen tank fix version", FCVAR_NOTIFY);
 }
 
-public Event_PlayerIncap(Handle:event, const String:name[], bool:dontBroadcast)
+void Event_PlayerIncap(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	new client = GetClientOfUserId(GetEventInt(event, "userid"));
 	if (client > 0 && IsPlayerTank(client))
@@ -25,7 +25,7 @@ public Event_PlayerIncap(Handle:event, const String:name[], bool:dontBroadcast)
 	}
 }
 
-public Action:KillTank_tCallback(Handle:timer)
+Action:KillTank_tCallback(Handle:timer)
 {
 	for (new i = 1; i <= MaxClients; i++)
 	{

@@ -90,7 +90,7 @@ public void OnPluginStart()
 	RegAdminCmd("sm_changelevel", Changelevel, ADMFLAG_ROOT, "L4D2 changelevel method to release all resources");
 }
 
-public Action Changelevel(int iClient, int iArg)
+Action Changelevel(int iClient, int iArg)
 {
 	char sMapName[PLATFORM_MAX_PATH];
 	char temp[2];
@@ -122,7 +122,7 @@ void L4D2_ChangeLevel(const char[] sMapName, bool bShouldResetScores=true)
 	SDKCall(hDirectorChangeLevel, TheDirector, sMapName);
 }
 
-public int L4D2_ChangeLevelNV(Handle plugin, int numParams)
+int L4D2_ChangeLevelNV(Handle plugin, int numParams)
 {
 	if(numParams < 1)
 		ThrowNativeError(SP_ERROR_PARAM, "Invalid numParams");

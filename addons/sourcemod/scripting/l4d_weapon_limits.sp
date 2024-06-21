@@ -120,7 +120,7 @@ public void OnMapStart()
 	PrecacheSound(SOUND_NAME);
 }
 
-public void ClearUp(Event hEvent, const char[] name, bool dontBroadcast)
+void ClearUp(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; i++) {
 		bIsIncappedWithMelee[i] = false;
@@ -138,7 +138,7 @@ public void OnClientDisconnect(int client)
 	SDKUnhook(client, SDKHook_WeaponCanUse, Hook_WeaponCanUse);
 }
 
-public Action AddLimit_Cmd(int args)
+Action AddLimit_Cmd(int args)
 {
 	if (bIsLocked) {
 		PrintToServer("Limits have been locked !");
@@ -182,7 +182,7 @@ public Action AddLimit_Cmd(int args)
 	return Plugin_Handled;
 }
 
-public Action LockLimits_Cmd(int args)
+Action LockLimits_Cmd(int args)
 {
 	if (bIsLocked) {
 		PrintToServer("Weapon limits already locked !");
@@ -195,7 +195,7 @@ public Action LockLimits_Cmd(int args)
 	return Plugin_Handled;
 }
 
-public Action ClearLimits_Cmd(int args)
+Action ClearLimits_Cmd(int args)
 {
 	if (!bIsLocked) {
 		return Plugin_Handled;
@@ -212,7 +212,7 @@ public Action ClearLimits_Cmd(int args)
 	return Plugin_Handled;
 }
 
-public Action Hook_WeaponCanUse(int client, int weapon)
+Action Hook_WeaponCanUse(int client, int weapon)
 {
 	// TODO: There seems to be an issue that this hook will be constantly called
 	//       when client with no weapon on equivalent slot just eyes or walks on it.
@@ -278,7 +278,7 @@ public Action Hook_WeaponCanUse(int client, int weapon)
 	return Plugin_Continue;
 }
 
-public void OnIncap(Event event, const char[] name, bool dontBroadcast)
+void OnIncap(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
@@ -293,7 +293,7 @@ public void OnIncap(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public void OnRevive(Event event, const char[] name, bool dontBroadcast)
+void OnRevive(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("subject"));
 
@@ -304,7 +304,7 @@ public void OnRevive(Event event, const char[] name, bool dontBroadcast)
 	bIsIncappedWithMelee[client] = false;
 }
 
-public void OnDeath(Event event, const char[] name, bool dontBroadcast)
+void OnDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
@@ -315,7 +315,7 @@ public void OnDeath(Event event, const char[] name, bool dontBroadcast)
 	bIsIncappedWithMelee[client] = false;
 }
 
-public void OnBotReplacedPlayer(Event event, const char[] name, bool dontBroadcast)
+void OnBotReplacedPlayer(Event event, const char[] name, bool dontBroadcast)
 {
 	int bot = GetClientOfUserId(event.GetInt("bot"));
 
@@ -329,7 +329,7 @@ public void OnBotReplacedPlayer(Event event, const char[] name, bool dontBroadca
 	bIsIncappedWithMelee[player] = false;
 }
 
-public void OnPlayerReplacedBot(Event event, const char[] name, bool dontBroadcast)
+void OnPlayerReplacedBot(Event event, const char[] name, bool dontBroadcast)
 {
 	int player = GetClientOfUserId(event.GetInt("player"));
 

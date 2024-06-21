@@ -54,7 +54,7 @@ public void OnPluginStart()
 	g_hBotKickDelay = CreateConVar("bot_kick_delay", "0", "How long should we wait before kicking infected bots?", _, true, 0.0, true, 30.0);
 }
 
-public void PlayerBotReplace(Event hEvent, const char[] eName, bool dontBroadcast)
+void PlayerBotReplace(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	int iUserID = hEvent.GetInt("bot");
 	int iBot = GetClientOfUserId(iUserID);
@@ -84,7 +84,7 @@ bool ShouldBeKicked(int iBot)
 	return true;
 }
 
-public Action Timer_KillBotDelay(Handle hTimer, any iUserID)
+Action Timer_KillBotDelay(Handle hTimer, any iUserID)
 {
 	int iBot = GetClientOfUserId(iUserID);
 	if (iBot > 0 && IsPlayerAlive(iBot) && ShouldBeKicked(iBot)) {

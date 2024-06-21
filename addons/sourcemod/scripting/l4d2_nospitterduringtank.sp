@@ -72,7 +72,7 @@ public OnPluginStart()
 	g_iSpitterLimit = GetConVarInt(g_hSpitterLimit);
 }
 
-public Cvar_SpitterLimit(Handle:convar, const String:oldValue[], const String:newValue[])
+void Cvar_SpitterLimit(Handle:convar, const String:oldValue[], const String:newValue[])
 {
 	if (g_bIsTankInPlay || StringToInt(oldValue) == 0) return;
 	g_iSpitterLimit = StringToInt(newValue);
@@ -96,7 +96,7 @@ public OnClientDisconnect_Post(client)
 	CreateTimer(0.5, Timer_CheckTank, client);
 }
 
-public Event_PlayerKilled(Handle:event, const String:name[], bool:dontBroadcast)
+void Event_PlayerKilled(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	if (!g_bIsTankInPlay) return;
 
@@ -108,7 +108,7 @@ public Event_PlayerKilled(Handle:event, const String:name[], bool:dontBroadcast)
 	CreateTimer(0.5, Timer_CheckTank, victim);
 }
 
-public Event_TankSpawn(Handle:event, const String:name[], bool:dontBroadcast)
+void Event_TankSpawn(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	new client = GetClientOfUserId(GetEventInt(event, "userid"));
 	g_iTankClient = client;
@@ -119,7 +119,7 @@ public Event_TankSpawn(Handle:event, const String:name[], bool:dontBroadcast)
 	SetConVarInt(g_hSpitterLimit, 0);
 }
 
-public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
+void Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	g_bIsTankInPlay = false;
 	g_iTankClient = 0;
@@ -129,7 +129,7 @@ public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 	}
 }
 
-public Event_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
+void Event_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	// A bit redundant to do it on both start/end, but there are cases where those events are bypassed
 	// specifically by admin commands
@@ -140,7 +140,7 @@ public Event_RoundEnd(Handle:event, const String:name[], bool:dontBroadcast)
 	}
 }
 
-public Action:Timer_CheckTank(Handle:timer, any:oldtankclient)
+Action:Timer_CheckTank(Handle:timer, any:oldtankclient)
 {
 	// We already saw tank pass via another event firing
 	if (g_iTankClient != oldtankclient) return;
@@ -176,7 +176,7 @@ FindTankClient()
 	return 0;
 }
 
-public OnPluginEnd()
+public void OnPluginEnd()
 {
 	if (g_iSpitterLimit > 0 && GetConVarInt(g_hSpitterLimit) == 0)
 		SetConVarInt(g_hSpitterLimit, g_iSpitterLimit);

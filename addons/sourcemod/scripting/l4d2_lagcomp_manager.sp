@@ -181,7 +181,7 @@ public void OnConfigsExecuted()
 	CheckCvar();
 }
 
-public void SvUnLag_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+void SvUnLag_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	CheckCvar();
 }
@@ -348,7 +348,7 @@ bool IsFindEntity(int iEntity)
  * @remarks Basically this lagcomp array is always empty, so don't be surprised you won't see anything in the console
  * @remarks This works, for example, for melee weapons or for the boomer's ability, at this moment, entities should appear in this array
  */
-public Action Cmd_ShowLagCompList(int client, int args)
+Action Cmd_ShowLagCompList(int client, int args)
 {
 	ReplyToCommand(client, "[%s] The lagcomp array should have been printed to the server console!", GAMEDATA);
 	LagComp_ShowAllEntities();

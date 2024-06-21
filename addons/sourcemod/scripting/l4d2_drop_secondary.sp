@@ -60,7 +60,7 @@ public void OnClientDisconnect(int client)
 	sMeleeScript[client] = MELEE_NONE;
 }
 
-public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; i++)
 	{
@@ -75,7 +75,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 *                          THEIR SECONDARY AND MELEE SCRIPT
 *                  
 *****************************************************************************************/
-public void Event_OnPlayerReplacedByBot(Event event, const char[] name, bool dontBroadcast)
+void Event_OnPlayerReplacedByBot(Event event, const char[] name, bool dontBroadcast)
 {
 	int bot = GetClientOfUserId(event.GetInt("bot"))
 	int player = GetClientOfUserId(event.GetInt("player"))
@@ -88,7 +88,7 @@ public void Event_OnPlayerReplacedByBot(Event event, const char[] name, bool don
 	if (bDebug) CPrintToChatAll("{green}[{olive}OnPlayerReplacedByBot{green}] {default}- {blue}BOT {default}replaced {blue}%N {default}({green}Secondary: {olive}%s{default})", player, sSecondary[bot]);
 }
 
-public void Event_OnBotReplacedByPlayer(Event event, const char[] name, bool dontBroadcast)
+void Event_OnBotReplacedByPlayer(Event event, const char[] name, bool dontBroadcast)
 {
 	int bot = GetClientOfUserId(event.GetInt("bot"))
 	int player = GetClientOfUserId(event.GetInt("player"))
@@ -106,7 +106,7 @@ public void Event_OnBotReplacedByPlayer(Event event, const char[] name, bool don
 *                   THIS FIRES AND STORES A PLAYER'S SECONDARY
 *                  
 *****************************************************************************************/
-public void Event_OnPlayerUse(Event event, const char[] name, bool dontBroadcast) 
+void Event_OnPlayerUse(Event event, const char[] name, bool dontBroadcast) 
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 	int targetid = event.GetInt("targetid");
@@ -149,7 +149,7 @@ public void Event_OnPlayerUse(Event event, const char[] name, bool dontBroadcast
 *                     IN CASE HE/SHE DIES WHILE INCAPACITATED
 *                  
 *****************************************************************************************/
-public Action Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
+Action Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int victim = GetClientOfUserId(event.GetInt("userid"));
 	if (IsValidSurvivor(victim))
@@ -209,7 +209,7 @@ void DetermineMeleeScript(int client, int iWeaponIndex)
 	if (bDebug) CPrintToChatAll("{green}[{olive}DetermineMeleeScript{green}] {default}- {blue}%N {default}has {olive}%s {default}- MS: {olive}%s", client, buffScriptName, sMeleeScript[client]);
 }
 
-public void DebugChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+void DebugChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	bDebug = l4d2_drop_secondary_debug.BoolValue;
 	CPrintToChatAll("{blue}[{default}L4D2 Drop Secondary{blue}]{default}: {green}Debugging {olive}%s", bDebug ? "Enabled" : "Disabled");

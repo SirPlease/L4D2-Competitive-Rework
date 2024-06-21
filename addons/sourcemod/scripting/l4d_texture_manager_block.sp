@@ -18,7 +18,7 @@ public void OnPluginStart()
 	CreateTimer(fRand, CheckClients, _, TIMER_REPEAT);
 }
 
-public Action CheckClients(Handle hTimer)
+Action CheckClients(Handle hTimer)
 {
 	if (!IsServerProcessing()) {
 		return Plugin_Continue;
@@ -35,7 +35,7 @@ public Action CheckClients(Handle hTimer)
 	return Plugin_Continue;
 }
 
-public void ClientQueryCallback(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue, any value)
+void ClientQueryCallback(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue, any value)
 {
 	switch (result) {
 		case ConVarQuery_Okay: {

@@ -30,7 +30,7 @@ public void OnPluginStart()
 	HookConVarChange(hMaxSlots, CVarChanged);
 }
 
-public Action SlotsRequest(int client, int args)
+Action SlotsRequest(int client, int args)
 {
 	if (client == 0)
 	{
@@ -113,7 +113,7 @@ bool StartSlotVote(int client, char[] Slots)
 	return false;
 }
 
-public void VoteActionHandler(Handle vote, BuiltinVoteAction action, int param1, int param2)
+void VoteActionHandler(Handle vote, BuiltinVoteAction action, int param1, int param2)
 {
 	switch (action)
 	{
@@ -129,7 +129,7 @@ public void VoteActionHandler(Handle vote, BuiltinVoteAction action, int param1,
 	}
 }
 
-public void SlotVoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
+void SlotVoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
 {
 	for (int i = 0; i < num_items; i++)
 	{
@@ -150,7 +150,7 @@ public void SlotVoteResultHandler(Handle vote, int num_votes, int num_clients, c
 	DisplayBuiltinVoteFail(vote, BuiltinVoteFail_Loses);
 }
 
-public void CVarChanged(Handle cvar, char[] oldValue, char[] newValue)
+void CVarChanged(Handle cvar, char[] oldValue, char[] newValue)
 {
 	MaxSlots = GetConVarInt(hMaxSlots);
 }

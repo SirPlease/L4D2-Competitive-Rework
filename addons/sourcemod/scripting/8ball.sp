@@ -19,7 +19,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_8ball", Command_8ball);
 }
 
-public Action Command_8ball(int iClient, int iArgs)
+Action Command_8ball(int iClient, int iArgs)
 {
 	if (iArgs == 0)
 	{

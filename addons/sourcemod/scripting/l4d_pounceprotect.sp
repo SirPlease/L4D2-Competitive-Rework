@@ -47,7 +47,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 // During this function call the game simply validates the owner entity 
 // and then sets a bool saying you can't pounce again if you're already mid-pounce.
 // afaik
-public MRESReturn CBaseAbility_OnOwnerTakeDamage(Handle hParams)
+MRESReturn CBaseAbility_OnOwnerTakeDamage(Handle hParams)
 {
 	// Skip the whole function plox
 	return MRES_Supercede;

@@ -49,7 +49,7 @@ public void OnClientPutInServer(int iClient)
 	SDKHook(iClient, SDKHook_TraceAttack, TraceAttack);
 }
 
-public Action TraceAttack(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, \
+Action TraceAttack(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, \
 								int &fDamageType, int &iAmmoType, int iHitBox, int iHitGroup)
 {
 	if (iHitGroup != HITGROUP_STOMACH) {

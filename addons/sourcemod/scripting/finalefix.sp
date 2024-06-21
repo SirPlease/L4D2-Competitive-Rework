@@ -20,7 +20,7 @@ public void OnPluginStart()
 	HookEvent("finale_vehicle_leaving", FinaleEnd_Event, EventHookMode_PostNoCopy);
 }
 
-public void FinaleEnd_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void FinaleEnd_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; i++) {
 		if (IsClientInGame(i) && GetClientTeam(i) == TEAM_SURVIVOR && IsPlayerIncap(i)) {

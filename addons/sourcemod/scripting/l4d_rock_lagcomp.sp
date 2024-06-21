@@ -222,7 +222,7 @@ public void OnEntityDestroyed(int entity)
 /*
  * Turn off all damage dealt to the rock, since we're using a custom hitbox.
  */ 
-public Action PreventDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype) {
+Action PreventDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype) {
 	if (ROCK_HITBOX_ENABLED) {
 		damage = 0.0;
 		return Plugin_Handled;
@@ -269,7 +269,7 @@ public void OnGameFrame()
  * @param array array of rocks
  * @param entity entity index of the rock
  */
-public void Array_AddNewRock(ArrayList array, int entity)
+void Array_AddNewRock(ArrayList array, int entity)
 {
 	new index = array.Push(entity);
 	array.Set(index, CreateArray(3, MAX_HISTORY_FRAMES), BLOCK_POS_HISTORY);
@@ -283,7 +283,7 @@ public void Array_AddNewRock(ArrayList array, int entity)
  * @param array array of rocks
  * @param entity entity index of the rock
  */
-public void Array_RemoveRock(ArrayList array, int rockEntity)
+void Array_RemoveRock(ArrayList array, int rockEntity)
 {
 	new rockIndex = Array_SearchRock(array, rockEntity);
 	
@@ -317,7 +317,7 @@ public int Array_SearchRock(ArrayList array, rockEntity)
 /*
  * Checks if rock is allowed to be dealt damage.
  */
-public bool Array_IsRockAllowedDmg(rockIndex)
+bool Array_IsRockAllowedDmg(rockIndex)
 {
 	return CURR_GAME_TIME - rockEntitiesArray.Get(rockIndex, BLOCK_START_TIME) >= ROCK_GODFRAMES_TIME;
 }
@@ -330,8 +330,7 @@ public bool Array_IsRockAllowedDmg(rockIndex)
  * Handles the weapon_fire event. Calculates a line-sphere intersection between
  * the shooting survivors and the rock(s). Deals damages accordingly.
  */
-public Action ProcessRockHitboxes(Event event, const char[] name, 
-		bool dontBroadcast)
+Action ProcessRockHitboxes(Event event, const char[] name, bool dontBroadcast)
 {
 	if (rockEntitiesArray.Length == 0) {
 		return Plugin_Handled;
@@ -397,7 +396,7 @@ public Action ProcessRockHitboxes(Event event, const char[] name,
 			- GetVectorLength(o_Minus_c, true) + radius*radius;
 			
 			if (delta >= 0.0) {
-				ApplyDamageOnRock(i, client, eyePos, c, event, entity);
+				ApplyDamageOnRock(i, eyePos, c, event, entity);
 			}
 		}
 	}
@@ -408,8 +407,7 @@ public Action ProcessRockHitboxes(Event event, const char[] name,
 /*
  * Apply damage on rock depending on weapon and distance.
  */
-public void ApplyDamageOnRock(rockIndex, client, float eyePos[3], float c[3], Event event,
-		rockEntity)
+void ApplyDamageOnRock(rockIndex, float eyePos[3], float c[3], Event event, rockEntity)
 {
 	new String:weaponName[MAX_STR_LEN]; 
 	event.GetString("weapon", weaponName, MAX_STR_LEN);
@@ -463,7 +461,7 @@ public void ApplyDamageOnRock(rockIndex, client, float eyePos[3], float c[3], Ev
 /*
  * Applies a single bullet damage to a single rock.
  */
-public void ApplyBulletToRock(rockIndex, rockEntity, float damage, float range)
+void ApplyBulletToRock(rockIndex, rockEntity, float damage, float range)
 {
 	new Float:rockDamage = float(rockEntitiesArray.Get(rockIndex, BLOCK_DMG_DEALT));
 	rockDamage += damage / range * 100;
@@ -479,17 +477,17 @@ public void ApplyBulletToRock(rockIndex, rockEntity, float damage, float range)
 	}
 }
 
-public bool IsPistol(const char[] weaponName)
+bool IsPistol(const char[] weaponName)
 {
 	return StrEqual(weaponName, "pistol");
 }
 
-public bool IsMagnum(const char[] weaponName)
+bool IsMagnum(const char[] weaponName)
 {
 	return StrEqual("pistol_magnum", weaponName);
 }
 
-public bool IsShotgun(const char[] weaponName)
+bool IsShotgun(const char[] weaponName)
 {
 	return StrEqual(weaponName, "shotgun_chrome")
 		|| StrEqual(weaponName, "shotgun_spas")
@@ -497,14 +495,14 @@ public bool IsShotgun(const char[] weaponName)
 		|| StrEqual(weaponName, "pumpshotgun");
 }
 
-public bool IsSmg(const char[] weaponName)
+bool IsSmg(const char[] weaponName)
 {
 	return StrEqual(weaponName, "smg")
 		|| StrEqual(weaponName, "smg_silenced")
 		|| StrEqual(weaponName, "smg_mp5");
 }
 
-public bool IsRifle(const char[] weaponName)
+bool IsRifle(const char[] weaponName)
 {
 	return StrEqual(weaponName, "rifle")
 		|| StrEqual(weaponName, "rifle_ak47")
@@ -513,13 +511,13 @@ public bool IsRifle(const char[] weaponName)
 		|| StrEqual(weaponName, "rifle_sg552");
 }
 
-public bool IsMelee(const char[] weaponName)
+bool IsMelee(const char[] weaponName)
 {
 	return StrEqual(weaponName, "chainsaw")
 		|| StrEqual(weaponName, "melee");
 }
 
-public bool IsSniper(const char[] weaponName)
+bool IsSniper(const char[] weaponName)
 {
 	return StrEqual(weaponName, "sniper_awp")
 		|| StrEqual(weaponName, "sniper_military")
@@ -527,14 +525,14 @@ public bool IsSniper(const char[] weaponName)
 		|| StrEqual(weaponName, "hunting_rifle");
 }
 
-public bool IsMiniGun(const char[] weaponName)
+bool IsMiniGun(const char[] weaponName)
 {
 	return StrEqual(weaponName, "prop_minigun_l4d1")
 		|| StrEqual(weaponName, "prop_minigun");
 	
 }
 
-public bool IsMountedMachineGun(const char[] weaponName)
+bool IsMountedMachineGun(const char[] weaponName)
 {
     return StrEqual(weaponName, "prop_mounted_machine_gun");
 }
@@ -543,7 +541,7 @@ public bool IsMountedMachineGun(const char[] weaponName)
  * Print Methods
  */
 
-public void PrintEntityLocation(int entity)
+stock void PrintEntityLocation(int entity)
 {
 	if (IsValidEntity(entity)) {
 		new String:classname[MAX_STR_LEN];
@@ -555,7 +553,7 @@ public void PrintEntityLocation(int entity)
 	}
 }
 
-public bool IsRock(int entity)
+bool IsRock(int entity)
 {
 	if (IsValidEntity(entity)) {
 		new String:classname[MAX_STR_LEN];
@@ -598,7 +596,7 @@ CTankRock__Detonate(rock)
  * Vector functions
  */
 
-public void Vector_Print(float v[3])
+stock void Vector_Print(float v[3])
 {
 	PrintToChatAll("(%.2f, %.2f, %.2f)", v[0],v[1],v[2]);
 }
@@ -612,7 +610,7 @@ bool:IsSurvivor(client)
 	return (client > 0 && client <= MaxClients && IsClientInGame(client) && GetClientTeam(client) == 2);
 }
 
-public float Clamp(float value, float valueMin, float valueMax)
+float Clamp(float value, float valueMin, float valueMax)
 {
 	if (value < valueMin) {
 		return valueMin;

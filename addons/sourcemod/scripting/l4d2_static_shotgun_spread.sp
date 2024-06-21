@@ -155,19 +155,19 @@ static void HotPatchFactor(int factor)
 	StoreToAddress(pAddr + view_as<Address>(g_FactorOffset[eLinux]), factor, NumberType_Int32);
 }
 
-public void OnRing1BulletsChange(ConVar hCvar, const char[] oldVal, const char[] newVal)
+void OnRing1BulletsChange(ConVar hCvar, const char[] oldVal, const char[] newVal)
 {
 	int nBullets = StringToInt(newVal);
 	HotPatchBullets(nBullets);
 }
 
-public void OnRing1FactorChange(ConVar hCvar, const char[] oldVal, const char[] newVal)
+void OnRing1FactorChange(ConVar hCvar, const char[] oldVal, const char[] newVal)
 {
 	int factor = StringToInt(newVal);
 	HotPatchFactor(factor);
 }
 
-public void OnCenterPelletChange(ConVar hCvar, const char[] oldVal, const char[] newVal)
+void OnCenterPelletChange(ConVar hCvar, const char[] oldVal, const char[] newVal)
 {
 	bool value = !!StringToInt(newVal);
 	HotPatchCenterPellet(value);

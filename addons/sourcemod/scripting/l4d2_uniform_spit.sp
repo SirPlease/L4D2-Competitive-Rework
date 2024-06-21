@@ -105,7 +105,7 @@ void InitGameData()
 	delete hGamedata;
 }
 
-public void CvarsChanged(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+void CvarsChanged(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	CvarsToType();
 }
@@ -123,7 +123,7 @@ void CvarsToType()
 	g_iGodframeTicks = g_hCvarGodframeTicks.IntValue;
 }
 
-public void Event_RoundReset(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_RoundReset(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	g_hPuddles.Clear();
 }
@@ -174,7 +174,7 @@ public void OnEntityDestroyed(int iEntity)
  *   return 263168; //DMG_RADIATION|DMG_ENERGYBEAM
  * }
 */
-public Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &fDamageType)
+Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &fDamageType)
 {
 	if (!(fDamageType & DMG_TYPE_SPIT)) { //for performance
 		return Plugin_Continue;

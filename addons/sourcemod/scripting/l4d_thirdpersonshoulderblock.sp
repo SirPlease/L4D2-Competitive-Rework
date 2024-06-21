@@ -46,7 +46,7 @@ public void OnPluginStart()
 	CreateTimer(GetRandomFloat(2.5, 3.5), CheckClients, _, TIMER_REPEAT);
 }
 
-public Action CheckClients(Handle timer)
+Action CheckClients(Handle timer)
 {
 	if (GetConVarBool(cvar_enabled))
 	{
@@ -64,7 +64,7 @@ public Action CheckClients(Handle timer)
 	return Plugin_Handled;
 }
 
-public void QueryClientConVarCallback(QueryCookie cookie, int client, ConVarQueryResult result, char[] cvarName, char[] cvarValue)
+void QueryClientConVarCallback(QueryCookie cookie, int client, ConVarQueryResult result, char[] cvarName, char[] cvarValue)
 {
 	if (IsClientInGame(client) && !IsClientInKickQueue(client))
 	{

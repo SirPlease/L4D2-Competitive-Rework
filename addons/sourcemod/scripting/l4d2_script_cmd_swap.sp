@@ -35,7 +35,7 @@ public void OnPluginStart()
 	AddCommandListener(CmdScript, "script");
 }
 
-public Action CmdScript(int client, const char[] command, int arg)
+Action CmdScript(int client, const char[] command, int arg)
 {
 	static char args[BUFFER_SIZE];
 	GetCmdArgString(args, sizeof(args));

@@ -57,7 +57,7 @@ public OnClientPutInServer(client)
 	fLastMeleeSwing[client] = 0.0;
 }
 
-public Action:Event_WeaponFire(Handle:event, const String:name[], bool:dontBroadcast)
+Action:Event_WeaponFire(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	new client = GetClientOfUserId(GetEventInt(event, "userid"));
 	if (client > 0 && !IsFakeClient(client))
@@ -71,7 +71,7 @@ public Action:Event_WeaponFire(Handle:event, const String:name[], bool:dontBroad
 	}
 }
 
-public OnWeaponSwitched(client, weapon)
+void OnWeaponSwitched(client, weapon)
 {
 	if (!IsFakeClient(client) && IsValidEntity(weapon))
 	{

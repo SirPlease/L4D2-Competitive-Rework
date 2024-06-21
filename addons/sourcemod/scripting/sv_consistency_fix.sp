@@ -71,7 +71,7 @@ void ToggleMessage()
 	}
 }
 
-public void Cvar_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+void Cvar_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	ToggleMessage();
 }
@@ -81,13 +81,13 @@ public void OnClientConnected(int client)
 	ClientCommand(client, "cl_consistencycheck");
 }
 
-public void Event_PlayerConnectFull(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_PlayerConnectFull(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iUserId = hEvent.GetInt("userid");
 	CreateTimer(0.2, PrintWhitelist, iUserId, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action PrintWhitelist(Handle hTimer, any iUserId)
+Action PrintWhitelist(Handle hTimer, any iUserId)
 {
 	int iClient = GetClientOfUserId(iUserId);
 	if (iClient > 0) {
@@ -111,7 +111,7 @@ public Action PrintWhitelist(Handle hTimer, any iUserId)
 	return Plugin_Stop;
 }
 
-public Action Cmd_ConsistencyCheck(int iClient, int iArgs)
+Action Cmd_ConsistencyCheck(int iClient, int iArgs)
 {
 	if (iArgs < 1) {
 		for (int i = 1; i <= MaxClients; i++) {

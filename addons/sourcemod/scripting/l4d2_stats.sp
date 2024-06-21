@@ -65,7 +65,7 @@ public void OnPluginStart()
 	HookEvent("triggered_car_alarm", Event_AlarmCar);
 }
 
-public void Event_PlayerSpawn(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_PlayerSpawn(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("userid"));
 	if (client == 0 || !IsClientInGame(client))
@@ -102,7 +102,7 @@ public void Event_PlayerSpawn(Event hEvent, const char[] sEventName, bool bDontB
 	}
 }
 
-public void Event_WeaponFire(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_WeaponFire(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("userid"));
 	for (int i = 1; i <= MaxClients; i++)
@@ -131,7 +131,7 @@ public void OnMapEnd()
 	g_bHasRoundEnded = true;
 }
 
-public void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	g_bHasRoundEnded = false;
 
@@ -140,7 +140,7 @@ public void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBr
 	BoomerKillTime = 0.0;
 }
 
-public void Event_RoundEnd(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_RoundEnd(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (g_bHasRoundEnded)
 	{
@@ -156,7 +156,7 @@ public void Event_RoundEnd(Event hEvent, const char[] sEventName, bool bDontBroa
 }
 
 // Pounce tracking, from skeet announce
-public void Event_AbilityUse(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_AbilityUse(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (g_bHasRoundEnded)
 	{
@@ -180,7 +180,7 @@ public void Event_AbilityUse(Event hEvent, const char[] sEventName, bool bDontBr
 	}
 }
 
-public void Event_LungePounce(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_LungePounce(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int attacker    = GetClientOfUserId(hEvent.GetInt("userid"));
 	int zombieclass = GetInfectedClass(attacker);
@@ -191,7 +191,7 @@ public void Event_LungePounce(Event hEvent, const char[] sEventName, bool bDontB
 	}
 }
 
-public Action Timer_GroundedCheck(Handle hTimer, any userid)
+Action Timer_GroundedCheck(Handle hTimer, any userid)
 {
 	int client = GetClientOfUserId(userid);
 	if (client > 0 && !(GetEntityFlags(client) & FL_ONGROUND))
@@ -203,13 +203,13 @@ public Action Timer_GroundedCheck(Handle hTimer, any userid)
 	return Plugin_Stop;
 }
 
-public Action Timer_KillBoomer(Handle hTimer)
+Action Timer_KillBoomer(Handle hTimer)
 {
 	BoomerKillTime += 0.1;
 	return Plugin_Continue;
 }
 
-public void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (g_bHasRoundEnded)
 	{
@@ -279,7 +279,7 @@ public void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBr
 	}
 }
 
-public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (g_bHasRoundEnded)
 	{
@@ -483,7 +483,7 @@ public void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontB
 	}
 }
 
-public Action Timer_BoomerKilledCheck(Handle hTimer)
+Action Timer_BoomerKilledCheck(Handle hTimer)
 {
 	BoomerKillTime = BoomerKillTime - 0.2;
 
@@ -541,7 +541,7 @@ public Action Timer_BoomerKilledCheck(Handle hTimer)
 	return Plugin_Stop;
 }
 
-public void Event_PlayerShoved(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_PlayerShoved(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (g_bHasRoundEnded)
 	{
@@ -580,7 +580,7 @@ public void Event_PlayerShoved(Event hEvent, const char[] sEventName, bool bDont
 	}
 }
 
-public Action Timer_BoomerShove(Handle hTimer)
+Action Timer_BoomerShove(Handle hTimer)
 {
 	// PrintToChatAll("[DEBUG] BoomerShove timer expired, credit for boomer shutdown is available to anyone at this point!");
 	g_hBoomerShoveTimer = null;
@@ -589,7 +589,7 @@ public Action Timer_BoomerShove(Handle hTimer)
 	return Plugin_Stop;
 }
 
-public void Event_PlayerBoomed(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_PlayerBoomed(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (g_bHasBoomLanded)
 	{
@@ -641,7 +641,7 @@ public void Event_PlayerBoomed(Event hEvent, const char[] sEventName, bool bDont
  * 	"userid"	"short"		// person who triggered the car alarm
  * }
  */
-public void Event_AlarmCar(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_AlarmCar(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iClient = GetClientOfUserId(hEvent.GetInt("userid"));
 	if (iClient > 0 && GetClientTeam(iClient) == TEAM_SURVIVOR)
@@ -669,7 +669,7 @@ void ClearDamage(int client)
 	}
 }
 
-public int ClientValue2DSortDesc(int[] x, int[] y, const int[][] array, Handle hndl)
+int ClientValue2DSortDesc(int[] x, int[] y, const int[][] array, Handle hndl)
 {
 	if (x[1] > y[1])
 	{

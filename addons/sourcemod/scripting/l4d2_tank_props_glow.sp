@@ -91,7 +91,7 @@ public void OnLibraryAdded(const char[] name)
 	}
 }
 
-public void ConVarChanged_Cvars(ConVar hConvar, const char[] sOldValue, const char[] sNewValue)
+void ConVarChanged_Cvars(ConVar hConvar, const char[] sOldValue, const char[] sNewValue)
 {
 	GetCvars();
 }
@@ -108,7 +108,7 @@ void GetCvars()
 	g_iCvarColor = GetColor(sColor);
 }
 
-public void TankPropsGlowAllow(Handle hConVar, const char[] sOldValue, const char[] sNewValue)
+void TankPropsGlowAllow(Handle hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	if (!g_hCvartankPropsGlow.BoolValue) {
 		PluginDisable();
@@ -117,7 +117,7 @@ public void TankPropsGlowAllow(Handle hConVar, const char[] sOldValue, const cha
 	}
 }
 
-public void ConVarChanged_Glow(Handle hConVar, const char[] sOldValue, const char[] sNewValue)
+void ConVarChanged_Glow(Handle hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	GetCvars();
 
@@ -140,7 +140,7 @@ public void ConVarChanged_Glow(Handle hConVar, const char[] sOldValue, const cha
 	}
 }
 
-public void ConVarChanged_Range(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+void ConVarChanged_Range(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	GetCvars();
 
@@ -162,7 +162,7 @@ public void ConVarChanged_Range(ConVar hConVar, const char[] sOldValue, const ch
 	}
 }
 
-public void ConVarChanged_RangeMin(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+void ConVarChanged_RangeMin(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	GetCvars();
 
@@ -248,7 +248,7 @@ public void OnMapEnd()
 	g_hTankPropsHit.Clear();
 }
 
-public void TankPropRoundReset(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void TankPropRoundReset(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	DHookRemoveEntityListener(ListenType_Created, PossibleTankPropCreated);
 
@@ -258,7 +258,7 @@ public void TankPropRoundReset(Event hEvent, const char[] sEventName, bool bDont
 	g_hTankPropsHit.Clear();
 }
 
-public void TankPropTankSpawn(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void TankPropTankSpawn(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (g_bTankSpawned) {
 		return;
@@ -274,7 +274,8 @@ public void TankPropTankSpawn(Event hEvent, const char[] sEventName, bool bDontB
 	g_bTankSpawned = true;
 }
 
-public void PD_ev_EntityKilled(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+/* // error 203: symbol is never used: "PD_ev_EntityKilled"
+void PD_ev_EntityKilled(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!g_bTankSpawned) {
 		return;
@@ -286,8 +287,9 @@ public void PD_ev_EntityKilled(Event hEvent, const char[] sEventName, bool bDont
 		CreateTimer(1.5, TankDeadCheck, _, TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
+*/
 
-public void TankPropTankKilled(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void TankPropTankKilled(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!g_bTankSpawned) {
 		return;
@@ -296,7 +298,7 @@ public void TankPropTankKilled(Event hEvent, const char[] sEventName, bool bDont
 	CreateTimer(0.5, TankDeadCheck, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action TankDeadCheck(Handle hTimer)
+Action TankDeadCheck(Handle hTimer)
 {
 	if (GetTankClient() == -1) {
 		CreateTimer(g_hCvarTankPropsBeGone.FloatValue, TankPropsBeGone);
@@ -309,14 +311,14 @@ public Action TankDeadCheck(Handle hTimer)
 	return Plugin_Stop;
 }
 
-public Action TankPropsBeGone(Handle hTimer)
+Action TankPropsBeGone(Handle hTimer)
 {
 	UnhookTankProps();
 
 	return Plugin_Stop;
 }
 
-public void PropDamaged(int iVictim, int iAttacker, int iInflictor, float fDamage, int iDamageType)
+void PropDamaged(int iVictim, int iAttacker, int iInflictor, float fDamage, int iDamageType)
 {
 	if (IsValidAliveTank(iAttacker) || g_hTankPropsHit.FindValue(iInflictor) != -1) {
 		//PrintToChatAll("tank hit %d", iVictim);
@@ -374,7 +376,7 @@ void CreateTankPropGlow(int iTarget)
 	g_iEntityList[iTarget] = EntIndexToEntRef(iEntity);
 }
 
-public Action OnTransmit(int iEntity, int iClient)
+Action OnTransmit(int iEntity, int iClient)
 {
 	switch (GetClientTeam(iClient)) {
 		case TEAM_INFECTED: {
@@ -470,7 +472,7 @@ void UnhookTankProps()
 }
 
 //analogue public void OnEntityCreated(int iEntity, const char[] sClassName)
-public void PossibleTankPropCreated(int iEntity, const char[] sClassName)
+void PossibleTankPropCreated(int iEntity, const char[] sClassName)
 {
 	if (sClassName[0] != 'p') {
 		return;
@@ -485,7 +487,7 @@ public void PossibleTankPropCreated(int iEntity, const char[] sClassName)
 	SDKHook(iEntity, SDKHook_SpawnPost, Hook_PropSpawned);
 }
 
-public void Hook_PropSpawned(int iEntity)
+void Hook_PropSpawned(int iEntity)
 {
 	if (iEntity < MaxClients || !IsValidEntity(iEntity)) {
 		return;

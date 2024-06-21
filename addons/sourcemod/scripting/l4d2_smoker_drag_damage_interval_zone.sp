@@ -68,12 +68,12 @@ void InitGameData()
 	delete hGamedata;
 }
 
-public void tongue_choke_damage_amount_ValueChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+void tongue_choke_damage_amount_ValueChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	SetConVarInt(convar, 1); // hack-hack: game tries to change this cvar for some reason, can't be arsed so HARDCODETHATSHIT
 }
 
-public void OnTongueGrab(Event hEvent, const char[] name, bool dontBroadcast)
+void OnTongueGrab(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int userid = hEvent.GetInt("victim");
 	int client = GetClientOfUserId(userid);
@@ -96,7 +96,7 @@ void FixDragInterval(int client, int userid)
 	CreateTimer(fTimerUpdate, FixDragIntervalTimer, userid, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action FirstDamage(Handle hTimer, any userid)
+Action FirstDamage(Handle hTimer, any userid)
 {
 	int client = GetClientOfUserId(userid);
 	if (client > 0 && GetClientTeam(client) == TEAM_SURVIVOR && IsSurvivorBeingDragged(client)) {
@@ -113,7 +113,7 @@ public Action FirstDamage(Handle hTimer, any userid)
 	return Plugin_Continue;
 }
 
-public Action FixDragIntervalTimer(Handle hTimer, any userid)
+Action FixDragIntervalTimer(Handle hTimer, any userid)
 {
 	int client = GetClientOfUserId(userid);
 	if (client > 0 && GetClientTeam(client) == TEAM_SURVIVOR && IsSurvivorBeingDragged(client)) {

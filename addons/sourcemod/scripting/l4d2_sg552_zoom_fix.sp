@@ -14,7 +14,7 @@ public OnPluginStart()
 	HookEvent("weapon_zoom", WeaponZoom_Event);
 }
 
-public void WeaponZoom_Event(Event hEvent, const char[] eName, bool dontBroadcast)
+void WeaponZoom_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	int userid = GetEventInt(hEvent, "userid");
 	int client = GetClientOfUserId(userid);

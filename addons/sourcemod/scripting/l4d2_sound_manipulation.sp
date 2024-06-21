@@ -30,7 +30,7 @@ public void OnPluginStart()
 	AddNormalSoundHook(SoundHook);
 }
 
-public Action SoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH],int &entity, int &channel, float &volume, int &level, int &pitch, int &flags,char soundEntry[PLATFORM_MAX_PATH], int &seed)
+Action SoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH],int &entity, int &channel, float &volume, int &level, int &pitch, int &flags,char soundEntry[PLATFORM_MAX_PATH], int &seed)
 {
 	if (!iSoundFlags) // Are we even blocking sounds?
 	  return Plugin_Continue;
@@ -48,7 +48,7 @@ public Action SoundHook(int clients[MAXPLAYERS], int &numClients, char sample[PL
 	return Plugin_Continue;
 }
 
-public void FlagsChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+void FlagsChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
     iSoundFlags = cvarSoundFlags.IntValue;
 }

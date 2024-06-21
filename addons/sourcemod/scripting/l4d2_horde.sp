@@ -92,7 +92,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 	}
 }
 
-public void CommonSpawnPost(int entity)
+void CommonSpawnPost(int entity)
 {
 	if (IsValidEntity(entity)) {
 		if (GetAllCommon() > (iCommonLimit - 8)) {
@@ -101,7 +101,7 @@ public void CommonSpawnPost(int entity)
 	}
 }
 
-public void RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
+void RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	fSavedTime = 0.0;
 }

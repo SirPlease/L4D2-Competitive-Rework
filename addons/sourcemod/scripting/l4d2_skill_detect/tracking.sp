@@ -3,7 +3,7 @@
 #endif
 #define _skill_detect_tracking_included
 
-public Action Event_RoundStart(Handle event, const char[] name, bool dontBroadcast)
+Action Event_RoundStart(Handle event, const char[] name, bool dontBroadcast)
 {
 	g_iRocksBeingThrownCount = 0;
 
@@ -19,14 +19,14 @@ public Action Event_RoundStart(Handle event, const char[] name, bool dontBroadca
 	return Plugin_Continue;
 }
 
-public Action Event_RoundEnd(Handle event, const char[] name, bool dontBroadcast)
+Action Event_RoundEnd(Handle event, const char[] name, bool dontBroadcast)
 {
 	// clean trie, new cars will be created
 	ClearTrie(g_hCarTrie);
 	return Plugin_Continue;
 }
 
-public Action Event_PlayerHurt(Handle event, const char[] name, bool dontBroadcast)
+Action Event_PlayerHurt(Handle event, const char[] name, bool dontBroadcast)
 {
 	int victim	 = GetClientOfUserId(GetEventInt(event, "userid"));
 	int attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
@@ -266,7 +266,7 @@ public Action Event_PlayerHurt(Handle event, const char[] name, bool dontBroadca
 	return Plugin_Continue;
 }
 
-public Action Event_PlayerSpawn(Handle event, const char[] name, bool dontBroadcast)
+Action Event_PlayerSpawn(Handle event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	if (!IsValidInfected(client))
@@ -318,7 +318,7 @@ public Action Event_PlayerSpawn(Handle event, const char[] name, bool dontBroadc
 }
 
 // player about to get incapped
-public Action Event_IncapStart(Handle event, const char[] name, bool dontBroadcast)
+Action Event_IncapStart(Handle event, const char[] name, bool dontBroadcast)
 {
 	// test for deathcharges
 
@@ -352,7 +352,7 @@ public Action Event_IncapStart(Handle event, const char[] name, bool dontBroadca
 }
 
 // trace attacks on hunters
-public Action TraceAttack_Hunter(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& ammotype, int hitbox, int hitgroup)
+Action TraceAttack_Hunter(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& ammotype, int hitbox, int hitgroup)
 {
 	// track pinning
 	g_iSpecialVictim[victim] = GetEntPropEnt(victim, Prop_Send, "m_pounceVictim");
@@ -369,7 +369,7 @@ public Action TraceAttack_Hunter(int victim, int& attacker, int& inflictor, floa
 	return Plugin_Continue;
 }
 
-public Action TraceAttack_Charger(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& ammotype, int hitbox, int hitgroup)
+Action TraceAttack_Charger(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& ammotype, int hitbox, int hitgroup)
 {
 	// track pinning
 	int victimA = GetEntPropEnt(victim, Prop_Send, "m_carryVictim");
@@ -382,14 +382,14 @@ public Action TraceAttack_Charger(int victim, int& attacker, int& inflictor, flo
 	return Plugin_Continue;
 }
 
-public Action TraceAttack_Jockey(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& ammotype, int hitbox, int hitgroup)
+Action TraceAttack_Jockey(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& ammotype, int hitbox, int hitgroup)
 {
 	// track pinning
 	g_iSpecialVictim[victim] = GetEntPropEnt(victim, Prop_Send, "m_jockeyVictim");
 	return Plugin_Continue;
 }
 
-public Action Event_PlayerDeath(Handle hEvent, const char[] name, bool dontBroadcast)
+Action Event_PlayerDeath(Handle hEvent, const char[] name, bool dontBroadcast)
 {
 	int victim	 = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 	int attacker = GetClientOfUserId(GetEventInt(hEvent, "attacker"));
@@ -483,7 +483,7 @@ public Action Event_PlayerDeath(Handle hEvent, const char[] name, bool dontBroad
 	return Plugin_Continue;
 }
 
-public Action Event_PlayerShoved(Handle event, const char[] name, bool dontBroadcast)
+Action Event_PlayerShoved(Handle event, const char[] name, bool dontBroadcast)
 {
 	int victim	 = GetClientOfUserId(GetEventInt(event, "userid"));
 	int attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
@@ -534,7 +534,7 @@ public Action Event_PlayerShoved(Handle event, const char[] name, bool dontBroad
 	return Plugin_Continue;
 }
 
-public Action Event_LungePounce(Handle event, const char[] name, bool dontBroadcast)
+Action Event_LungePounce(Handle event, const char[] name, bool dontBroadcast)
 {
 	int client			  = GetClientOfUserId(GetEventInt(event, "userid"));
 	int victim			  = GetClientOfUserId(GetEventInt(event, "victim"));
@@ -588,7 +588,7 @@ public Action Event_LungePounce(Handle event, const char[] name, bool dontBroadc
 	return Plugin_Continue;
 }
 
-public Action Timer_HunterDP(Handle timer, Handle pack)
+Action Timer_HunterDP(Handle timer, Handle pack)
 {
 	ResetPack(pack);
 	int	  client  = ReadPackCell(pack);
@@ -601,7 +601,7 @@ public Action Timer_HunterDP(Handle timer, Handle pack)
 	return Plugin_Continue;
 }
 
-public Action Event_PlayerJumped(Handle event, const char[] name, bool dontBroadcast)
+Action Event_PlayerJumped(Handle event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 
@@ -683,7 +683,7 @@ public Action Event_PlayerJumped(Handle event, const char[] name, bool dontBroad
 	return Plugin_Continue;
 }
 
-public Action Timer_CheckHop(Handle timer, any client)
+Action Timer_CheckHop(Handle timer, any client)
 {
 	// player back to ground = end of hop (streak)?
 
@@ -710,7 +710,7 @@ public Action Timer_CheckHop(Handle timer, any client)
 	return Plugin_Continue;
 }
 
-public Action Timer_CheckHopStreak(Handle timer, any client)
+Action Timer_CheckHopStreak(Handle timer, any client)
 {
 	if (!IsValidClientInGame(client) || !IsPlayerAlive(client))
 		return Plugin_Continue;
@@ -729,7 +729,7 @@ public Action Timer_CheckHopStreak(Handle timer, any client)
 	return Plugin_Continue;
 }
 
-public Action Event_PlayerJumpApex(Handle event, const char[] name, bool dontBroadcast)
+Action Event_PlayerJumpApex(Handle event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 
@@ -748,7 +748,7 @@ public Action Event_PlayerJumpApex(Handle event, const char[] name, bool dontBro
 	return Plugin_Continue;
 }
 
-public Action Event_JockeyRide(Handle event, const char[] name, bool dontBroadcast)
+Action Event_JockeyRide(Handle event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	int victim = GetClientOfUserId(GetEventInt(event, "victim"));
@@ -773,7 +773,7 @@ public Action Event_JockeyRide(Handle event, const char[] name, bool dontBroadca
 	return Plugin_Continue;
 }
 
-public Action Event_AbilityUse(Handle event, const char[] name, bool dontBroadcast)
+Action Event_AbilityUse(Handle event, const char[] name, bool dontBroadcast)
 {
 	// track hunters pouncing
 	int	 client = GetClientOfUserId(GetEventInt(event, "userid"));
@@ -810,7 +810,7 @@ public Action Event_AbilityUse(Handle event, const char[] name, bool dontBroadca
 }
 
 // charger carrying
-public Action Event_ChargeCarryStart(Handle event, const char[] name, bool dontBroadcast)
+Action Event_ChargeCarryStart(Handle event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	int victim = GetClientOfUserId(GetEventInt(event, "victim"));
@@ -840,7 +840,7 @@ public Action Event_ChargeCarryStart(Handle event, const char[] name, bool dontB
 	return Plugin_Continue;
 }
 
-public Action Event_ChargeImpact(Handle event, const char[] name, bool dontBroadcast)
+Action Event_ChargeImpact(Handle event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	int victim = GetClientOfUserId(GetEventInt(event, "victim"));
@@ -860,7 +860,7 @@ public Action Event_ChargeImpact(Handle event, const char[] name, bool dontBroad
 	return Plugin_Continue;
 }
 
-public Action Event_ChargePummelStart(Handle event, const char[] name, bool dontBroadcast)
+Action Event_ChargePummelStart(Handle event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 
@@ -871,7 +871,7 @@ public Action Event_ChargePummelStart(Handle event, const char[] name, bool dont
 	return Plugin_Continue;
 }
 
-public Action Event_ChargeCarryEnd(Handle event, const char[] name, bool dontBroadcast)
+Action Event_ChargeCarryEnd(Handle event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 
@@ -885,14 +885,14 @@ public Action Event_ChargeCarryEnd(Handle event, const char[] name, bool dontBro
 	return Plugin_Continue;
 }
 
-public Action Timer_ChargeCarryEnd(Handle timer, any client)
+Action Timer_ChargeCarryEnd(Handle timer, any client)
 {
 	// set charge time to 0 to avoid deathcharge timer continuing
 	g_iChargeVictim[client] = 0;	// unset this so the repeated timer knows to stop for an ongroundcheck
 	return Plugin_Continue;
 }
 
-public Action Timer_ChargeCheck(Handle timer, any client)
+Action Timer_ChargeCheck(Handle timer, any client)
 {
 	// if something went wrong with the survivor or it was too long ago, forget about it
 	if (!IsValidSurvivor(client) || !g_iVictimCharger[client] || g_fChargeTime[client] == 0.0 || (GetGameTime() - g_fChargeTime[client]) > MAX_CHARGE_TIME)
@@ -924,7 +924,7 @@ public Action Timer_ChargeCheck(Handle timer, any client)
 	return Plugin_Continue;
 }
 
-public Action Timer_DeathChargeCheck(Handle timer, any client)
+Action Timer_DeathChargeCheck(Handle timer, any client)
 {
 	if (!IsValidClientInGame(client))
 		return Plugin_Continue;
@@ -1031,7 +1031,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 	}
 }
 
-public void OnEntitySpawned_CarAlarm(int entity)
+void OnEntitySpawned_CarAlarm(int entity)
 {
 	if (!IsValidEntity(entity))
 		return;
@@ -1047,7 +1047,7 @@ public void OnEntitySpawned_CarAlarm(int entity)
 	HookSingleEntityOutput(entity, "OnCarAlarmStart", Hook_CarAlarmStart);
 }
 
-public void OnEntitySpawned_CarAlarmGlass(int entity)
+void OnEntitySpawned_CarAlarmGlass(int entity)
 {
 	if (!IsValidEntity(entity))
 		return;
@@ -1107,7 +1107,7 @@ public void OnEntityDestroyed(int entity)
 	}
 }
 
-public Action Timer_WitchKeyDelete(Handle timer, any witch)
+Action Timer_WitchKeyDelete(Handle timer, any witch)
 {
 	char witch_key[10];
 	FormatEx(witch_key, sizeof(witch_key), "%x", witch);
@@ -1115,7 +1115,7 @@ public Action Timer_WitchKeyDelete(Handle timer, any witch)
 	return Plugin_Continue;
 }
 
-public Action Timer_CheckRockSkeet(Handle timer, any rock)
+Action Timer_CheckRockSkeet(Handle timer, any rock)
 {
 	int	 rock_array[3];
 	char rock_key[10];
@@ -1134,7 +1134,7 @@ public Action Timer_CheckRockSkeet(Handle timer, any rock)
 }
 
 // boomer got somebody
-public Action Event_PlayerBoomed(Handle event, const char[] name, bool dontBroadcast)
+Action Event_PlayerBoomed(Handle event, const char[] name, bool dontBroadcast)
 {
 	int	 attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
 	bool byBoom	  = GetEventBool(event, "by_boomer");
@@ -1167,7 +1167,7 @@ public Action Timer_BoomVomitCheck(Handle timer, any client)
 }
 
 // boomers that didn't bile anyone
-public Action Event_BoomerExploded(Handle event, const char[] name, bool dontBroadcast)
+Action Event_BoomerExploded(Handle event, const char[] name, bool dontBroadcast)
 {
 	int	 client = GetClientOfUserId(GetEventInt(event, "userid"));
 	bool biled	= GetEventBool(event, "splashedbile");
@@ -1181,7 +1181,7 @@ public Action Event_BoomerExploded(Handle event, const char[] name, bool dontBro
 }
 
 // crown tracking
-public Action Event_WitchSpawned(Handle event, const char[] name, bool dontBroadcast)
+Action Event_WitchSpawned(Handle event, const char[] name, bool dontBroadcast)
 {
 	int witch = GetEventInt(event, "witchid");
 
@@ -1195,7 +1195,7 @@ public Action Event_WitchSpawned(Handle event, const char[] name, bool dontBroad
 	return Plugin_Continue;
 }
 
-public Action Event_WitchKilled(Handle event, const char[] name, bool dontBroadcast)
+Action Event_WitchKilled(Handle event, const char[] name, bool dontBroadcast)
 {
 	int witch	 = GetEventInt(event, "witchid");
 	int attacker = GetClientOfUserId(GetEventInt(event, "userid"));
@@ -1216,7 +1216,7 @@ public Action Event_WitchKilled(Handle event, const char[] name, bool dontBroadc
 	return Plugin_Continue;
 }
 
-public Action Event_WitchHarasserSet(Handle event, const char[] name, bool dontBroadcast)
+Action Event_WitchHarasserSet(Handle event, const char[] name, bool dontBroadcast)
 {
 	int	 witch = GetEventInt(event, "witchid");
 
@@ -1242,7 +1242,7 @@ public Action Event_WitchHarasserSet(Handle event, const char[] name, bool dontB
 	return Plugin_Continue;
 }
 
-public Action OnTakeDamageByWitch(int victim, int& attacker, int& inflictor, float& damage, int& damagetype)
+Action OnTakeDamageByWitch(int victim, int& attacker, int& inflictor, float& damage, int& damagetype)
 {
 	// if a survivor is hit by a witch, note it in the witch damage array (maxplayers+2 = 1)
 	if (IsValidSurvivor(victim) && damage > 0.0)
@@ -1274,7 +1274,7 @@ public Action OnTakeDamageByWitch(int victim, int& attacker, int& inflictor, flo
 	return Plugin_Continue;
 }
 
-public void OnTakeDamagePost_Witch(int victim, int attacker, int inflictor, float damage, int damagetype)
+void OnTakeDamagePost_Witch(int victim, int attacker, int inflictor, float damage, int damagetype)
 {
 	// only called for witches, so no check required
 
@@ -1322,7 +1322,7 @@ public void OnTakeDamagePost_Witch(int victim, int attacker, int inflictor, floa
 	}
 }
 
-public Action Timer_CheckWitchCrown(Handle timer, Handle pack)
+Action Timer_CheckWitchCrown(Handle timer, Handle pack)
 {
 	ResetPack(pack);
 	int	 attacker = ReadPackCell(pack);
@@ -1334,7 +1334,7 @@ public Action Timer_CheckWitchCrown(Handle timer, Handle pack)
 	return Plugin_Continue;
 }
 
-stock void CheckWitchCrown(int witch, int attacker, bool bOneShot = false)
+void CheckWitchCrown(int witch, int attacker, bool bOneShot = false)
 {
 	char witch_key[10];
 	FormatEx(witch_key, sizeof(witch_key), "%x", witch);
@@ -1424,7 +1424,7 @@ stock void CheckWitchCrown(int witch, int attacker, bool bOneShot = false)
 }
 
 // tank rock
-public Action TraceAttack_Rock(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& ammotype, int hitbox, int hitgroup)
+Action TraceAttack_Rock(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& ammotype, int hitbox, int hitgroup)
 {
 	if (IsValidSurvivor(attacker))
 	{
@@ -1443,7 +1443,7 @@ public Action TraceAttack_Rock(int victim, int& attacker, int& inflictor, float&
 	return Plugin_Continue;
 }
 
-public void OnTouch_Rock(int entity)
+void OnTouch_Rock(int entity)
 {
 	// remember that the rock wasn't shot
 	char rock_key[10];
@@ -1456,7 +1456,7 @@ public void OnTouch_Rock(int entity)
 }
 
 // smoker tongue cutting & self clears
-public Action Event_TonguePullStopped(Handle event, const char[] name, bool dontBroadcast)
+Action Event_TonguePullStopped(Handle event, const char[] name, bool dontBroadcast)
 {
 	int attacker = GetClientOfUserId(GetEventInt(event, "userid"));
 	int victim	 = GetClientOfUserId(GetEventInt(event, "victim"));
@@ -1493,7 +1493,7 @@ public Action Event_TonguePullStopped(Handle event, const char[] name, bool dont
 	return Plugin_Continue;
 }
 
-public Action Event_TongueGrab(Handle event, const char[] name, bool dontBroadcast)
+Action Event_TongueGrab(Handle event, const char[] name, bool dontBroadcast)
 {
 	int attacker = GetClientOfUserId(GetEventInt(event, "userid"));
 	int victim	 = GetClientOfUserId(GetEventInt(event, "victim"));
@@ -1512,7 +1512,7 @@ public Action Event_TongueGrab(Handle event, const char[] name, bool dontBroadca
 	return Plugin_Continue;
 }
 
-public Action Event_ChokeStart(Handle event, const char[] name, bool dontBroadcast)
+Action Event_ChokeStart(Handle event, const char[] name, bool dontBroadcast)
 {
 	int attacker = GetClientOfUserId(GetEventInt(event, "userid"));
 
@@ -1521,7 +1521,7 @@ public Action Event_ChokeStart(Handle event, const char[] name, bool dontBroadca
 	return Plugin_Continue;
 }
 
-public Action Event_ChokeStop(Handle event, const char[] name, bool dontBroadcast)
+Action Event_ChokeStop(Handle event, const char[] name, bool dontBroadcast)
 {
 	int attacker = GetClientOfUserId(GetEventInt(event, "userid"));
 	int victim	 = GetClientOfUserId(GetEventInt(event, "victim"));
@@ -1541,7 +1541,7 @@ public Action Event_ChokeStop(Handle event, const char[] name, bool dontBroadcas
 }
 
 // car alarm handling
-public void Hook_CarAlarmStart(const char[] output, int caller, int activator, float delay)
+void Hook_CarAlarmStart(const char[] output, int caller, int activator, float delay)
 {
 	// char car_key[10];
 	// FormatEx(car_key, sizeof(car_key), "%x", entity);
@@ -1549,13 +1549,13 @@ public void Hook_CarAlarmStart(const char[] output, int caller, int activator, f
 	PrintDebug("calarm trigger: caller %i / activator %i / delay: %.2f", caller, activator, delay);
 }
 
-public Action Event_CarAlarmGoesOff(Handle event, const char[] name, bool dontBroadcast)
+Action Event_CarAlarmGoesOff(Handle event, const char[] name, bool dontBroadcast)
 {
 	g_fLastCarAlarm = GetGameTime();
 	return Plugin_Continue;
 }
 
-public Action OnTakeDamage_Car(int victim, int& attacker, int& inflictor, float& damage, int& damagetype)
+Action OnTakeDamage_Car(int victim, int& attacker, int& inflictor, float& damage, int& damagetype)
 {
 	if (!IsValidSurvivor(attacker))
 		return Plugin_Continue;
@@ -1593,7 +1593,7 @@ public Action OnTakeDamage_Car(int victim, int& attacker, int& inflictor, float&
 	return Plugin_Continue;
 }
 
-public void OnTouch_Car(int entity, int client)
+void OnTouch_Car(int entity, int client)
 {
 	if (!IsValidSurvivor(client))
 		return;
@@ -1609,7 +1609,7 @@ public void OnTouch_Car(int entity, int client)
 	return;
 }
 
-public Action OnTakeDamage_CarGlass(int victim, int& attacker, int& inflictor, float& damage, int& damagetype)
+Action OnTakeDamage_CarGlass(int victim, int& attacker, int& inflictor, float& damage, int& damagetype)
 {
 	// check for either: boomer pop or survivor
 	if (!IsValidSurvivor(attacker))
@@ -1645,7 +1645,7 @@ public Action OnTakeDamage_CarGlass(int victim, int& attacker, int& inflictor, f
 	return Plugin_Continue;
 }
 
-public void OnTouch_CarGlass(int entity, int client)
+void OnTouch_CarGlass(int entity, int client)
 {
 	if (!IsValidSurvivor(client))
 		return;
@@ -1666,7 +1666,7 @@ public void OnTouch_CarGlass(int entity, int client)
 	return;
 }
 
-public Action Timer_CheckAlarm(Handle timer, any entity)
+Action Timer_CheckAlarm(Handle timer, any entity)
 {
 	// PrintToChatAll( "checking alarm: time: %.3f", GetGameTime() - g_fLastCarAlarm );
 
