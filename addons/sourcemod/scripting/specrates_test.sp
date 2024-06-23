@@ -51,7 +51,7 @@ public void OnPluginStart()
 	RegAdminCmd("sm_changestatusrates", Cmd_ChangeStatusRates, ADMFLAG_GENERIC);
 	RegAdminCmd("sm_getstatusrates", Cmd_GetStatusRates, ADMFLAG_GENERIC);
 
-	if (g_bLateload)
+	if (!g_bLateload)
 		return;
 
 	g_bSpecRates = LibraryExists("caster_system");
