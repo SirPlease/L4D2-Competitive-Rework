@@ -67,7 +67,7 @@ public void OnPluginStart()
 	RegServerCmd("saferoom_frustration_tickdown", SetSaferoomFrustrationTickdown);
 }
 
-public Action SetSaferoomFrustrationTickdown(int args)
+Action SetSaferoomFrustrationTickdown(int args)
 {
 	char mapname[64];
 	GetCmdArg(1, mapname, sizeof(mapname));
@@ -108,7 +108,7 @@ public void L4D_OnSpawnTank_Post(int client, const float vecPos[3], const float 
 
 }
 
-public void Event_EnteredStartArea(Event hEvent, const char[] sName, bool dontBroadcast)
+void Event_EnteredStartArea(Event hEvent, const char[] sName, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 	if (IsValidSurvivor(client))
@@ -122,13 +122,13 @@ public void Event_EnteredStartArea(Event hEvent, const char[] sName, bool dontBr
 	}
 }
 
-public void Event_RoundEndEvent(Event hEvent, const char[] sName, bool dontBroadcast)
+void Event_RoundEndEvent(Event hEvent, const char[] sName, bool dontBroadcast)
 {
 	DebugPrint("Unhook from round_end");
 	UnHookAll();
 }
 
-public void Event_PlayerDeath(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_PlayerDeath(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("userid"));
 	if (client > 0 && IsTank(client))
@@ -138,13 +138,13 @@ public void Event_PlayerDeath(Event hEvent, const char[] name, bool dontBroadcas
 	}
 }
 
-public void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	DebugPrint("Unhook from round_start");
 	UnHookAll();
 }
 
-public void UnHookAll()
+void UnHookAll()
 {
 	UnhookEvent("player_entered_start_area", Event_EnteredStartArea);
 	UnhookEvent("round_end", Event_RoundEndEvent);

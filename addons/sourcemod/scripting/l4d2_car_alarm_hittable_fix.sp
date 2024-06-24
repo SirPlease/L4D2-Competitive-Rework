@@ -124,7 +124,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 	  SDKHook(entity, SDKHook_Touch, OnTouch);
 }
 
-public void OnTouch(int car, int other)
+void OnTouch(int car, int other)
 {
 	// Is the other entity a Survivor?
 	if ((iFlags & FLAGS[0]) && other >= 1 && other <= MaxClients && GetClientTeam(other) == 2)
@@ -163,7 +163,7 @@ public void OnTouch(int car, int other)
 	}
 }
 
-public Action DisableAlarm(Handle timer, any car)
+Action DisableAlarm(Handle timer, any car)
 {
 	int Tank = -1;
 

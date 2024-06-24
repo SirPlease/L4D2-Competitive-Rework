@@ -47,13 +47,13 @@ public void OnMapStart()
 	}
 }
 
-public void EventRoundReset(Event hEvent, const char[] name, bool dontBroadcast)
+void EventRoundReset(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	decalThisTick = 0;
 	iLastTick = 0;
 }
 
-public void BulletImpactEvent(Event hEvent, const char[] name, bool dontBroadcast)
+void BulletImpactEvent(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	float pos[3];
 	int userid = hEvent.GetInt("userid");
@@ -77,7 +77,7 @@ public void BulletImpactEvent(Event hEvent, const char[] name, bool dontBroadcas
 	CreateTimer(++decalThisTick * GetTickInterval(), TimerDelayShowDecal, hStack, TIMER_FLAG_NO_MAPCHANGE | TIMER_HNDL_CLOSE);
 }
 
-public Action TimerDelayShowDecal(Handle hTimer, ArrayStack hStack)
+Action TimerDelayShowDecal(Handle hTimer, ArrayStack hStack)
 {
 	if (!hStack.Empty) {
 		int client = GetClientOfUserId(hStack.Pop());

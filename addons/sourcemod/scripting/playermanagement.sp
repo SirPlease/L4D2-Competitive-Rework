@@ -135,15 +135,15 @@ void OnGameplayStart(const char[] output, int caller, int activator, float delay
 	if (GetHumanCount()) FixBotCount();
 }
 
-public Action FixBots_Cmd(int client, int args)
+Action FixBots_Cmd(int client, int args)
 {
 	if (client != 0)
 	{
-		PrintToChatAll("%t %t", "Tag", "FixBot", client);
+		CPrintToChatAll("%t %t", "Tag", "FixBot", client);
 	}
 	else
 	{
-		PrintToChatAll("%t %t", "Tag", "FixBotConsole");
+		CPrintToChatAll("%t %t", "Tag", "FixBotConsole");
 	}
 	FixBotCount();
 	return Plugin_Handled;
@@ -154,7 +154,7 @@ void survivor_limitChanged(ConVar convar, const char[] oldValue, const char[] ne
 	if (isMapActive && GetHumanCount()) FixBotCount();
 }
 
-public Action Spectate_Cmd(int client, int args)
+Action Spectate_Cmd(int client, int args)
 {
 	if (!sm_allow_spectate_command.BoolValue)
 	{
@@ -205,7 +205,7 @@ public Action Spectate_Cmd(int client, int args)
 	return Plugin_Handled;
 }
 
-public Action SecureSpec(Handle timer, any client)
+Action SecureSpec(Handle timer, any client)
 {
 	KillTimer(SpecTimer[client]);
 	SpecTimer[client] = INVALID_HANDLE;
@@ -213,7 +213,7 @@ public Action SecureSpec(Handle timer, any client)
 	return Plugin_Stop;
 }
 
-public Action RespecDelay_Timer(Handle timer, any client)
+Action RespecDelay_Timer(Handle timer, any client)
 {
 	if (IsClientInGame(client))
 	{
@@ -229,7 +229,7 @@ public Action L4D_OnEnterGhostStatePre(int client)
 	return blockVotes[client] ? Plugin_Handled : Plugin_Continue;
 }
 
-public Action TeamChange_Listener(int client, const char[] command, int argc)
+Action TeamChange_Listener(int client, const char[] command, int argc)
 {
 	// Invalid
 	if (!IsClientInGame(client) || argc < 1)
@@ -255,7 +255,7 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 	return blockVotes[client] ? Plugin_Stop : Plugin_Continue;
 }
 
-public Action SwapTeams_Cmd(int client, int args)
+Action SwapTeams_Cmd(int client, int args)
 {
 	for (int cli = 1; cli <= MaxClients; cli++)
 	{
@@ -273,7 +273,7 @@ bool IsGhost(int client)
 	return !!GetEntProp(client, Prop_Send, "m_isGhost", 1);
 }
 
-public Action Swap_Cmd(int client, int args)
+Action Swap_Cmd(int client, int args)
 {
 	if (args < 1)
 	{
@@ -314,7 +314,7 @@ public Action Swap_Cmd(int client, int args)
 	return Plugin_Handled;
 }
 
-public Action SwapTo_Cmd(int client, int args)
+Action SwapTo_Cmd(int client, int args)
 {
 	if (args < 2)
 	{
@@ -547,7 +547,7 @@ stock void FixBotCount()
 	}
 }
 
-public void OnFrame_KickBot(int userid)
+void OnFrame_KickBot(int userid)
 {
 	int client = GetClientOfUserId(userid);
 	if (client > 0) KickClient(client);

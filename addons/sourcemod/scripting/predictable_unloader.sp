@@ -77,7 +77,7 @@ public void OnPluginStart()
 	aReservedPlugins = CreateArray(PLATFORM_MAX_PATH);
 }
 
-public Action UnloadPlugins(int args) 
+Action UnloadPlugins(int args) 
 {
 	char stockpluginname[64];
 	Handle pluginIterator = GetPluginIterator();
@@ -113,14 +113,14 @@ public Action UnloadPlugins(int args)
 	return Plugin_Handled;
 }
 
-public Action RefreshPlugins(Handle timer)
+Action RefreshPlugins(Handle timer)
 {
 	ServerCommand("sm plugins refresh");
 
 	return Plugin_Stop;
 }
 
-public Action UnloadSelf(Handle timer)
+Action UnloadSelf(Handle timer)
 {
 	ServerCommand("sm plugins unload %s", sPlugin);
 

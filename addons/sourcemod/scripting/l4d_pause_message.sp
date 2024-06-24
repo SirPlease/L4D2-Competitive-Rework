@@ -25,13 +25,13 @@ public void OnPluginStart()
 	AddCommandListener(pauseCmd, "unpause");
 }
 
-public Action pauseCmd(int client, const char[] command, int argc) 
+Action pauseCmd(int client, const char[] command, int argc) 
 {
 	if (!bPausable) return Plugin_Handled;
 	return Plugin_Continue;
 }
 
-public void PauseChange(Handle convar, const char[] oldValue, const char[] newValue)
+void PauseChange(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	int Value = StringToInt(newValue);
 

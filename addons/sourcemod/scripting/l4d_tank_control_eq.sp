@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
     return APLRes_Success;
 }
 
-public int Native_GetTankSelection(Handle plugin, int numParams) { return getInfectedPlayerBySteamId(queuedTankSteamId); }
+int Native_GetTankSelection(Handle plugin, int numParams) { return getInfectedPlayerBySteamId(queuedTankSteamId); }
 
 public Plugin myinfo = 
 {
@@ -150,7 +150,7 @@ public Action L4D_OnTryOfferingTankBot(int tank_index, bool &enterStatis)
         strcopy(queuedTankSteamId, sizeof(queuedTankSteamId), sOverrideTank);
     
     // If we don't have a queued tank, choose one
-    if (!strcmp(queuedTankSteamId, ""))
+    if (strcmp(queuedTankSteamId, "") == 0)
         chooseTank(0);
     
     // Mark the player as having had tank
@@ -172,7 +172,7 @@ public Action L4D_OnTryOfferingTankBot(int tank_index, bool &enterStatis)
 /**
  * When a new game starts, reset the tank pool.
  */
-public void RoundStart_Event(Event hEvent, const char[] eName, bool dontBroadcast)
+void RoundStart_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
     CreateTimer(10.0, newGame);
     dcedTankFrustration = -1;
@@ -198,7 +198,7 @@ Action newGame(Handle timer)
 /**
  * When the round ends, reset the active tank.
  */
-public void RoundEnd_Event(Event hEvent, const char[] eName, bool dontBroadcast)
+void RoundEnd_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
     queuedTankSteamId = "";
     tankInitiallyChosen = "";
@@ -207,7 +207,7 @@ public void RoundEnd_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 /**
  * When a player leaves the start area, choose a tank and output to all.
  */
-public void PlayerLeftStartArea_Event(Event hEvent, const char[] eName, bool dontBroadcast)
+void PlayerLeftStartArea_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
     tankInitiallyChosen = "";
 
@@ -218,7 +218,7 @@ public void PlayerLeftStartArea_Event(Event hEvent, const char[] eName, bool don
 /**
  * When the queued tank switches teams, choose a new one
  */
-public void PlayerTeam_Event(Event hEvent, const char[] name, bool dontBroadcast)
+void PlayerTeam_Event(Event hEvent, const char[] name, bool dontBroadcast)
 {
     int team = hEvent.GetInt("team");
     int oldTeam = hEvent.GetInt("oldteam");
@@ -320,7 +320,7 @@ void ReplaceTank(int deservingTank)
 /**
  * When the tank dies, requeue a player to become tank (for finales)
  */
-public void PlayerDeath_Event(Event hEvent, const char[] eName, bool dontBroadcast)
+void PlayerDeath_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
     int victim = GetClientOfUserId(hEvent.GetInt("userid"));
     
@@ -338,7 +338,7 @@ public void PlayerDeath_Event(Event hEvent, const char[] eName, bool dontBroadca
     }
 }
 
-public void TankKilled_Event(Event hEvent, const char[] eName, bool dontBroadcast)
+void TankKilled_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
     if (hTankDebug.BoolValue)
         PrintToConsoleAll("[TC] Tank died(2), choosing a new tank");
@@ -361,7 +361,7 @@ public void TankKilled_Event(Event hEvent, const char[] eName, bool dontBroadcas
 Action Tank_Cmd(int client, int args)
 {
     // Only output if client is in-game and we have a queued tank
-    if (!IsClientInGame(client) || strcmp(queuedTankSteamId, ""))
+    if (!IsClientInGame(client) || strcmp(queuedTankSteamId, "") == 0)
         return Plugin_Handled;
     
     int tankClientId = getInfectedPlayerBySteamId(queuedTankSteamId);

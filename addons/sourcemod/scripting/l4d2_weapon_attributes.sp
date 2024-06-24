@@ -303,7 +303,7 @@ void OnReloadDurationEnableAttriChanged(bool newValue)
     }
 }
 
-public Action Cmd_Weapon(int args)
+Action Cmd_Weapon(int args)
 {
     if (args < 3) {
         PrintDebug(eLogError|eServerPrint, "Syntax: sm_weapon <weapon> <attr> <value>.");
@@ -422,7 +422,7 @@ public Action Cmd_Weapon(int args)
     return Plugin_Handled;
 }
 
-public Action Cmd_WeaponAttributes(int client, int args)
+Action Cmd_WeaponAttributes(int client, int args)
 {
     int iCvarValue = hHideWeaponAttributes.IntValue;
 
@@ -505,7 +505,7 @@ public Action Cmd_WeaponAttributes(int client, int args)
     return Plugin_Handled;
 }
 
-public Action Cmd_WeaponAttributesReset(int args)
+Action Cmd_WeaponAttributesReset(int args)
 {
     OnTankDamageEnableAttriChanged(false);
     
@@ -548,7 +548,7 @@ bool __cdecl CDirector::IsTankInPlay(CDirector *this)
     return *((_DWORD *)this + 64) > 0;
 }
 */
-public Action DamageBuffVsTank(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action DamageBuffVsTank(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
     if (!(damagetype & DMG_BULLET) && !(damagetype & DMG_CLUB)) {
         return Plugin_Continue;

@@ -50,14 +50,14 @@ public void OnPluginStart()
 	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 }
 
-public void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (g_hCvarEnabled.BoolValue) {
 		CreateTimer(DELAY_ROUNDSTART, Timer_DelayedOnRoundStart, _, TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
-public Action Timer_DelayedOnRoundStart(Handle hTimer)
+Action Timer_DelayedOnRoundStart(Handle hTimer)
 {
 	// check for any items in the end saferoom, and remove them
 	char sClassname[128];

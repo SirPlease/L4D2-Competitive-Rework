@@ -148,7 +148,7 @@ public void OnClientPutInServer(int client)
     }
 }
 
-public void Event_RoundStart(Event hEvent, char[] sEventName, bool dontBroadcast) 
+void Event_RoundStart(Event hEvent, char[] sEventName, bool dontBroadcast) 
 {
     ClearTrie(crashedPlayers);
     ClearArray(generalCrashers);
@@ -157,12 +157,12 @@ public void Event_RoundStart(Event hEvent, char[] sEventName, bool dontBroadcast
     bRoundEnd = false;
 }
 
-public void Event_RoundEnd(Event hEvent, char[] sEventName, bool dontBroadcast)
+void Event_RoundEnd(Event hEvent, char[] sEventName, bool dontBroadcast)
 {
     bRoundEnd = true;
 }
 
-public void Event_PlayerTeam(Event hEvent, char[] sEventName, bool dontBroadcast) 
+void Event_PlayerTeam(Event hEvent, char[] sEventName, bool dontBroadcast) 
 {
     int client = GetClientOfUserId(hEvent.GetInt("userid"));
 
@@ -239,7 +239,7 @@ public void Event_PlayerTeam(Event hEvent, char[] sEventName, bool dontBroadcast
     }
 }
 
-public void Event_PlayerDisconnect(Event hEvent, char[] sEventName, bool dontBroadcast)
+void Event_PlayerDisconnect(Event hEvent, char[] sEventName, bool dontBroadcast)
 {
     int client = GetClientOfUserId(hEvent.GetInt("userid"));
 

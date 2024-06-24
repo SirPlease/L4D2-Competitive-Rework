@@ -19,7 +19,7 @@ void Survivors_RebuildArray_Delay()
 	CreateTimer(0.3, BuildArray_Timer);
 }
 
-public Action BuildArray_Timer(Handle hTimer)
+Action BuildArray_Timer(Handle hTimer)
 {
 	Survivors_RebuildArray();
 }
@@ -42,12 +42,12 @@ void Survivors_RebuildArray()
 	}
 }
 
-public int _native_GetSurvivorCount(Handle hPlugin, int iNumParams)
+int _native_GetSurvivorCount(Handle hPlugin, int iNumParams)
 {
 	return g_iSurvivorCount;
 }
 
-public int _native_GetSurvivorOfIndex(Handle hPlugin, int iNumParams)
+int _native_GetSurvivorOfIndex(Handle hPlugin, int iNumParams)
 {
 	int iClient = GetNativeCell(1);
 

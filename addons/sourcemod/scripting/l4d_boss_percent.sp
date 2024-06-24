@@ -112,7 +112,7 @@ public void OnPluginStart()
 	HookEvent("player_say", DKRWorkaround, EventHookMode_Post);                           // Called when a message is sent in chat. Used to grab the Dark Carnival: Remix boss percentages.
 }
 
-public void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	GetCvars();
 }
@@ -136,7 +136,7 @@ void GetCvars()
 */
 
 // Allows other plugins to update boss percentages
-public int Native_UpdateBossPercents(Handle plugin, int numParams)
+int Native_UpdateBossPercents(Handle plugin, int numParams)
 {
 	CreateTimer(0.1, GetBossPercents);
 	UpdateReadyUpFooter(0.2);
@@ -145,14 +145,14 @@ public int Native_UpdateBossPercents(Handle plugin, int numParams)
 }
 
 // Used for other plugins to check if the current map is Dark Carnival: Remix (It tends to break things when it comes to bosses)
-public int Native_IsDarkCarniRemix(Handle plugin, int numParams)
+int Native_IsDarkCarniRemix(Handle plugin, int numParams)
 {
 	return g_bIsRemix;
 }
 
 // Other plugins can use this to set the witch as "disabled" on the ready up, and when the !boss command is used
 // YOU NEED TO SET THIS EVERY MAP
-public int Native_SetWitchDisabled(Handle plugin, int numParams)
+int Native_SetWitchDisabled(Handle plugin, int numParams)
 {
 	g_bWitchDisabled = view_as<bool>(GetNativeCell(1));
 	UpdateReadyUpFooter();
@@ -162,7 +162,7 @@ public int Native_SetWitchDisabled(Handle plugin, int numParams)
 
 // Other plugins can use this to set the tank as "disabled" on the ready up, and when the !boss command is used
 // YOU NEED TO SET THIS EVERY MAP
-public int Native_SetTankDisabled(Handle plugin, int numParams)
+int Native_SetTankDisabled(Handle plugin, int numParams)
 {
 	g_bTankDisabled = view_as<bool>(GetNativeCell(1));
 	UpdateReadyUpFooter();
@@ -171,7 +171,7 @@ public int Native_SetTankDisabled(Handle plugin, int numParams)
 }
 
 // Used for other plugins to get the stored witch percent
-public int Native_GetStoredWitchPercent(Handle plugin, int numParams)
+int Native_GetStoredWitchPercent(Handle plugin, int numParams)
 {
 	return g_fWitchPercent;
 }
@@ -183,14 +183,14 @@ public int Native_GetStoredTankPercent(Handle plugin, int numParams)
 }
 
 // Used for other plugins to get the ready footer index of the boss percents
-public int Native_GetReadyUpFooterIndex(Handle plugin, int numParams)
+int Native_GetReadyUpFooterIndex(Handle plugin, int numParams)
 {
 	if (g_ReadyUpAvailable) return g_iReadyUpFooterIndex;
 	else return -1;
 }
 
 // Used for other plugins to refresh the boss percents on the ready up
-public int Native_RefreshReadyUp(Handle plugin, int numParams)
+int Native_RefreshReadyUp(Handle plugin, int numParams)
 {
 	if (g_ReadyUpAvailable)
 	{
@@ -266,7 +266,7 @@ public void OnMapEnd()
  * If the Ready Up plugin is not available, we use this.
  * It will print boss percents upon survivors leaving the saferoom.
  */
-public void LeftStartAreaEvent(Event event, const char[] name, bool dontBroadcast)
+void LeftStartAreaEvent(Event event, const char[] name, bool dontBroadcast)
 {
 	if (!g_ReadyUpAvailable)
 	{
@@ -300,7 +300,7 @@ public void OnRoundIsLive()
 /* Called when a new round starts (twice each map)
  * Here we will need to refresh the boss percents.
  */
-public void RoundStartEvent(Event event, const char[] name, bool dontBroadcast)
+void RoundStartEvent(Event event, const char[] name, bool dontBroadcast)
 {
 	// Reset Ready Up Variables
 	g_bReadyUpFooterAdded = false;
@@ -377,7 +377,7 @@ int GetPercentageFromText(const char[] text)
  * From there we can add them to our Ready Up menu and to our !boss commands
  *
  */
-public void DKRWorkaround(Event event, const char[] name, bool dontBroadcast)
+void DKRWorkaround(Event event, const char[] name, bool dontBroadcast)
 {
 	// If the current map is not part of the Dark Carnival: Remix campaign, don't continue
 	if (!g_bIsRemix) return;
@@ -477,7 +477,7 @@ stock float GetWitchFlow(int round)
  * This method will be called upon every new round
  *
  */
-public Action GetBossPercents(Handle timer)
+Action GetBossPercents(Handle timer)
 {
 	// We need to do things a little differently if it's Dark Carnival: Remix
 	if (g_bIsRemix)
@@ -597,7 +597,7 @@ void UpdateReadyUpFooter(float interval = 0.1)
 		g_hUpdateFooterTimer = CreateTimer(interval, Timer_UpdateReadyUpFooter);
 }
 
-public Action Timer_UpdateReadyUpFooter(Handle timer)
+Action Timer_UpdateReadyUpFooter(Handle timer)
 {
 	g_hUpdateFooterTimer = null;
 
@@ -694,7 +694,7 @@ public Action Timer_UpdateReadyUpFooter(Handle timer)
  *
  * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 */
-public Action BossCmd(int client, int args)
+Action BossCmd(int client, int args)
 {
 	// Show our boss percents
 	if (client)
@@ -706,7 +706,7 @@ public Action BossCmd(int client, int args)
 	return Plugin_Handled;
 }
 
-public void PrintCurrent(int userid)
+void PrintCurrent(int userid)
 {
 	int client = GetClientOfUserId(userid);
 	if (client) FakeClientCommand(client, "say /current");

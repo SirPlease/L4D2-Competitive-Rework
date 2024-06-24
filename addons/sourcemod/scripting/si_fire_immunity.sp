@@ -79,7 +79,7 @@ public void OnPluginStart()
 	HookEvent("round_end", EventReset, EventHookMode_PostNoCopy);
 }
 
-public void EventReset(Event hEvent, const char[] eName, bool dontBroadcast)
+void EventReset(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; i++) {
 		g_fWaitTime[i] = 0.0;
@@ -128,7 +128,7 @@ public void EventReset(Event hEvent, const char[] eName, bool dontBroadcast)
  * Event_PlayerHurt: A1m`, attacker: 2 (entityclassname player), attackerentid: 0 (entityclassname player)
  * Event string weapon: entityflame, type: 268435464
 */
-public void Event_PlayerHurt(Event hEvent, const char[] eName, bool dontBroadcast)
+void Event_PlayerHurt(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	/*
 	 * This event 'player_hurt' is called very often
@@ -190,7 +190,7 @@ void ExtinguishType(int iClient, int iUserID, int iDamage)
 	}
 }
 
-public Action ExtinguishDelay(Handle hTimer, any iUserID)
+Action ExtinguishDelay(Handle hTimer, any iUserID)
 {
 	int iClient = GetClientOfUserId(iUserID);
 	if (iClient > 0 && IsLiveInfected(iClient)) {

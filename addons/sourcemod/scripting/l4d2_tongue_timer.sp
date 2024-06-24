@@ -67,7 +67,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
-public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3])
+Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3])
 {
 	if (!IsValidClient(victim)) return Plugin_Continue;
 	if (!IsValidClient(attacker)) return Plugin_Continue;
@@ -103,7 +103,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 //                    EVENTS
 //
 // ----------------------------------------------
-public void Event_TongueGrab(Event event, const char[] name, bool dontBroadcast)
+void Event_TongueGrab(Event event, const char[] name, bool dontBroadcast)
 {
 	int victim = GetClientOfUserId(event.GetInt("victim"));
 
@@ -113,7 +113,7 @@ public void Event_TongueGrab(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public void Event_TonguePullStopped(Event event, const char[] name, bool dontBroadcast)
+void Event_TonguePullStopped(Event event, const char[] name, bool dontBroadcast)
 {
 	int victim = GetClientOfUserId(event.GetInt("victim"));
 	int smoker = GetClientOfUserId(event.GetInt("smoker"));
@@ -124,12 +124,12 @@ public void Event_TonguePullStopped(Event event, const char[] name, bool dontBro
 	}
 }
 
-public void Event_TongueRelease(Event event, const char[] name, bool dontBroadcast)
+void Event_TongueRelease(Event event, const char[] name, bool dontBroadcast)
 {
 	RequestFrame(OnNextFrame);
 }
 
-public void Event_Replace(Event event, const char[] name, bool dontBroadcast)
+void Event_Replace(Event event, const char[] name, bool dontBroadcast)
 {
 	int bot = GetClientOfUserId(event.GetInt("bot"));
 	int player = GetClientOfUserId(event.GetInt("player"));
@@ -151,9 +151,9 @@ public void Event_Replace(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public void ClearPulls()
+void ClearPulls()
 {
-	for(int i = 1; i <= MaxClients; i++)
+	for (int i = 1; i <= MaxClients; i++)
 	{
 		bPlayerPulled[i] = false;
 	}
@@ -170,7 +170,7 @@ void OnNextFrame(any victim)
 	ClearPulls();
 }
 
-public void OnSmokerSurvivorClear(any smoker)
+void OnSmokerSurvivorClear(any smoker)
 {
 	if (IsValidAliveSmoker(smoker))
 	{
@@ -197,7 +197,7 @@ public void OnSmokerSurvivorClear(any smoker)
 //                 CONVARS
 //
 // ----------------------------------------------
-public void ConvarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+void ConvarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	fTongueDelayTank = convarTongueDelayTank.FloatValue;
 	fTongueDelaySurvivor = convarTongueDelaySurvivor.FloatValue;

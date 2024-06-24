@@ -48,7 +48,7 @@ public void OnPluginStart()
 	}
 }
 
-public void BashKills_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+void BashKills_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	g_bIsEnabled = hConVar.BoolValue;
 }
@@ -58,7 +58,7 @@ public void OnClientPutInServer(int iClient)
 	SDKHook(iClient, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
 }
 
-public Action Hook_OnTakeDamage(int iVictim, int& iAttacker, int& iInflictor, float& fDamage, \
+Action Hook_OnTakeDamage(int iVictim, int& iAttacker, int& iInflictor, float& fDamage, \
 									int& iDamageType, int& iWeapon, float fDamageForce[3], float fDamagePosition[3])
 {
 	if (!g_bIsEnabled) {

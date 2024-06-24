@@ -95,7 +95,7 @@ void LoadSDK()
 }
 
 //Starting point for the setscores command
-public Action Command_SetScores(int client, int args)
+Action Command_SetScores(int client, int args)
 {
 	//Only allow during the first ready up of the round
 	if (!inFirstReadyUpOfRound) {
@@ -211,7 +211,7 @@ void SetScores(const int survScore, const int infectScore, const int iAdminIndex
 }
 
 //Handler for the vote
-public void VoteActionHandler(Handle vote, BuiltinVoteAction action, int param1, int param2) {
+void VoteActionHandler(Handle vote, BuiltinVoteAction action, int param1, int param2) {
 	switch (action) {
 		case BuiltinVoteAction_End: {
 			voteHandler = null;
@@ -224,7 +224,7 @@ public void VoteActionHandler(Handle vote, BuiltinVoteAction action, int param1,
 }
 
 //Handles a score vote's results, if a majority voted for the score change then set the scores
-public void ScoreVoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
+void ScoreVoteResultHandler(Handle vote, int num_votes, int num_clients, const int[][] client_info, int num_items, const int[][] item_info)
 {
 	for (int i = 0; i < num_items; i++) {
 		if (item_info[i][BUILTINVOTEINFO_ITEM_INDEX] == BUILTINVOTES_VOTE_YES) {

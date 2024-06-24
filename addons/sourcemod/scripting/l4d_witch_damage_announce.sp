@@ -115,7 +115,7 @@ public void OnEntityCreated(int entity, const char[] classname)
     }
 }
 
-public void WitchHurt_Event(Event hEvent, const char[] name, bool dontBroadcast)
+void WitchHurt_Event(Event hEvent, const char[] name, bool dontBroadcast)
 {
     int victimEntId = hEvent.GetInt("entityid");
 
@@ -137,7 +137,7 @@ public void WitchHurt_Event(Event hEvent, const char[] name, bool dontBroadcast)
     }
 }
 
-public void RoundStart_Event(Event hEvent, const char[] name, bool dontBroadcast)
+void RoundStart_Event(Event hEvent, const char[] name, bool dontBroadcast)
 {
     ClearDamage();
 
@@ -146,7 +146,7 @@ public void RoundStart_Event(Event hEvent, const char[] name, bool dontBroadcast
     bHasPrinted = false;
 }
 
-public void RoundEnd_Event(Event hEvent, const char[] name, bool dontBroadcast)
+void RoundEnd_Event(Event hEvent, const char[] name, bool dontBroadcast)
 {
     if (bWitchSpawned)
     {
@@ -159,7 +159,7 @@ public void RoundEnd_Event(Event hEvent, const char[] name, bool dontBroadcast)
     }
 }
 
-public void WitchDeath_Event(Event hEvent, const char[] name, bool dontBroadcast)
+void WitchDeath_Event(Event hEvent, const char[] name, bool dontBroadcast)
 {
     int killerId = hEvent.GetInt("userid");
     int killer = GetClientOfUserId(killerId);
@@ -188,7 +188,7 @@ public void WitchDeath_Event(Event hEvent, const char[] name, bool dontBroadcast
     }
 }
 
-public void PlayerDied_Event(Event hEvent, const char[] name, bool dontBroadcast)
+void PlayerDied_Event(Event hEvent, const char[] name, bool dontBroadcast)
 {
     int userId = hEvent.GetInt("userid");
     int victim = GetClientOfUserId(userId);

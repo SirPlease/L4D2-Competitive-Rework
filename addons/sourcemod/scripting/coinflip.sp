@@ -40,7 +40,7 @@ public OnPluginStart()
 	RegConsoleCmd("sm_picknumber", Command_Picknumber);
 }
 
-public Action:Command_Coinflip(client, args)
+Action:Command_Coinflip(client, args)
 {
 	current_timeC = GetTime();
 	
@@ -64,7 +64,7 @@ public Action:Command_Coinflip(client, args)
 	return Plugin_Handled;
 }
 
-public Action:Command_Picknumber(client, args)
+Action:Command_Picknumber(client, args)
 {
 	current_timeN = GetTime();
 	

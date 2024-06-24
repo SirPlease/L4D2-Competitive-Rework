@@ -163,7 +163,7 @@ public void OnClientPutInServer(int client)
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
-public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	// Reset everything to make sure we don't run into issues when a map is restarted (as GameTime resets)
 	for (int i = 1; i <= MaxClients; i++)
@@ -190,7 +190,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public Action PatchBreakableForklifts(Handle timer)
+Action PatchBreakableForklifts(Handle timer)
 {
 	int forklift = -1;
 
@@ -210,7 +210,7 @@ public Action PatchBreakableForklifts(Handle timer)
 	return Plugin_Stop;
 }
 
-public Action UnpatchBreakableForklifts(Handle timer)
+Action UnpatchBreakableForklifts(Handle timer)
 {
 	int forklift = -1;
 
@@ -230,7 +230,7 @@ public Action UnpatchBreakableForklifts(Handle timer)
 	return Plugin_Stop;
 }
 
-public void ConVarChanged_UnbreakableForklifts(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+void ConVarChanged_UnbreakableForklifts(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	if (hUnbreakableForklifts.BoolValue)
 	{
@@ -242,11 +242,11 @@ public void ConVarChanged_UnbreakableForklifts(ConVar hConVar, const char[] sOld
 	}
 }
 
-public int Native_UnbreakableForklifts(Handle plugin, int numParams) {
+int Native_UnbreakableForklifts(Handle plugin, int numParams) {
 	return hUnbreakableForklifts.BoolValue;
 }
 
-public void Event_GauntletFinaleStart(Event event, const char[] name, bool dontBroadcast)
+void Event_GauntletFinaleStart(Event event, const char[] name, bool dontBroadcast)
 {
 	bIsGauntletFinale = true;
 }
@@ -375,7 +375,7 @@ bool GetHittableDamage(int entity, float &damage)
 	return true;
 }
 
-public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	// Hey, we don't care.
 	if (!IsValidEdict(attacker) || 

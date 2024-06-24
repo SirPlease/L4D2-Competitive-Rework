@@ -167,7 +167,7 @@ public void OnMapEnd()
 	g_bMapStarted = false;
 }
 
-public void ConVarChanged_Allow(Handle convar, const char[] oldValue, const char[] newValue)
+void ConVarChanged_Allow(Handle convar, const char[] oldValue, const char[] newValue)
 {
 	IsAllowed();
 }
@@ -246,7 +246,7 @@ bool IsAllowedGameMode()
 	return true;
 }
 
-public void OnGamemode(const char[] output, int caller, int activator, float delay)
+void OnGamemode(const char[] output, int caller, int activator, float delay)
 {
 	if( strcmp(output, "OnCoop") == 0 )
 		g_iCurrentMode = 1;
@@ -263,7 +263,7 @@ public void OnGamemode(const char[] output, int caller, int activator, float del
 // ====================================================================================================
 //					EVENTS
 // ====================================================================================================
-public void Event_NoDraw(Event event, const char[] name, bool dontBroadcast)
+void Event_NoDraw(Event event, const char[] name, bool dontBroadcast)
 {
 	if( g_bCvarAllow && (!g_bLeft4DHooks || L4D_IsFirstMapInScenario()) )
 	{
@@ -285,7 +285,7 @@ public void Event_NoDraw(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public Action TimerStart(Handle timer)
+Action TimerStart(Handle timer)
 {
 	char buffer[128]; // 128 should be long enough, 3rd party maps could be longer than Valves ~52 chars (including OnUser1 below)?
 

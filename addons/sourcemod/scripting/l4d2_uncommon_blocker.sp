@@ -76,7 +76,7 @@
 #define DEBUG 0
 #define UNCOMMON_INFECTED_AMOUNT 7
 
-public const char sUncommon[][] =
+stock const char sUncommon[][] =
 {
 	"ceda",
 	"crawler",
@@ -116,7 +116,7 @@ public void OnPluginStart()
 	RegAdminCmd("sm_uncinfblock_check", Cmd_UncInfBlock_Check, ADMFLAG_GENERIC);
 }
 
-public Action Cmd_UncInfBlock_Check(int iClient, int iArgs)
+Action Cmd_UncInfBlock_Check(int iClient, int iArgs)
 {
 	for (int i = 0; i < UNCOMMON_INFECTED_AMOUNT; i++) {
 		ReplyToCommand(iClient, "Uncommon class '%s' %s. Uncommon infected Flag: %d.", sUncommon[i], (IsUncommonInfectedBlocked(i)) ? "blocked" : "unblocked", (1 << i));
@@ -136,12 +136,12 @@ public void OnEntityCreated(int iEntity, const char[] sClassName)
 	}
 }
 
-public void Hook_OnEntitySpawned(int iEntity)
+void Hook_OnEntitySpawned(int iEntity)
 {
 	RequestFrame(OnNextFrame, EntIndexToEntRef(iEntity));
 }
 
-public void OnNextFrame(int iEntity)
+void OnNextFrame(int iEntity)
 {
 	if (EntRefToEntIndex(iEntity) == INVALID_ENT_REFERENCE || !IsValidEdict(iEntity)) {
 		return;

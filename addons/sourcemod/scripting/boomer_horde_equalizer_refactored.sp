@@ -110,7 +110,7 @@ public void OnPluginEnd()
 /* =================================================================================
 									CONVARS
 ================================================================================= */
-public void Cvars_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+void Cvars_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	CheckPatch(g_hPatchEnable.BoolValue);
 	iMobSize               = g_hMobMaxSize.IntValue;
@@ -120,7 +120,7 @@ public void Cvars_Changed(ConVar hConVar, const char[] sOldValue, const char[] s
 /* =================================================================================
 								SERVER COMMANDS
 ================================================================================= */
-public Action ServerCmdSetBoomHorde(int args)
+Action ServerCmdSetBoomHorde(int args)
 {
 	// Check to make sure the arguments are set up right.
 	if (args != 2) 
@@ -145,7 +145,7 @@ public Action ServerCmdSetBoomHorde(int args)
 /* =================================================================================
 									EVENTS
 ================================================================================= */
-public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	// Just in case.
 	BoomedSurvivorCount = 0;
@@ -155,7 +155,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public void Event_PlayerBotReplace(Event event, const char[] name, bool dontBroadcast)
+void Event_PlayerBotReplace(Event event, const char[] name, bool dontBroadcast)
 {
 	int player = GetClientOfUserId(event.GetInt("player"));
 
@@ -171,7 +171,7 @@ public void Event_PlayerBotReplace(Event event, const char[] name, bool dontBroa
 	}
 }
 
-public void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
+void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
 {
 	int bot = GetClientOfUserId(event.GetInt("bot"));
 
@@ -187,7 +187,7 @@ public void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroa
 	}
 }
 
-public void Event_PlayerBoomedExpired(Event event, const char[] name, bool dontBroadcast)
+void Event_PlayerBoomedExpired(Event event, const char[] name, bool dontBroadcast)
 {
 	// This event only triggers on players (Bile bomb on SI or Boomer bile on Survivors)
 	// Will only have to check if the player is a Survivor.

@@ -119,16 +119,15 @@ public void OnPluginStart()
 }
 
 
-public void OnAIDamageFixEnableChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+void OnAIDamageFixEnableChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
     fEnabled = StringToInt(newValue);
 }
 
-public void OnPounceInterruptChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+void OnPounceInterruptChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
     iPounceInterrupt = StringToInt(newValue);
 }
-
 
 public void OnClientPostAdminCheck(int client)
 {
@@ -137,7 +136,7 @@ public void OnClientPostAdminCheck(int client)
     iHunterSkeetDamage[client] = 0;
 }
 
-public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
+Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
     // Must be enabled, victim and attacker must be ingame, damage must be greater than 0, victim must be AI infected
     if (fEnabled && IsClientAndInGame(victim) && IsClientAndInGame(attacker) && damage > 0.0 && GetClientTeam(victim) == TEAM_INFECTED && IsFakeClient(victim))
@@ -175,7 +174,7 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 }
 
 // hunters pouncing / tracking
-public void Event_AbilityUse(Event event, const char[] name, bool dontBroadcast)
+void Event_AbilityUse(Event event, const char[] name, bool dontBroadcast)
 {
     // track hunters pouncing
     int client = GetClientOfUserId(event.GetInt("userid"));

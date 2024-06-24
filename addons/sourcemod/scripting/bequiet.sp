@@ -46,7 +46,7 @@ public void OnPluginStart()
     LoadTranslations("bequiet.phrases");
 }
 
-public Action Say_Callback(int client, char[] command, int args)
+Action Say_Callback(int client, char[] command, int args)
 {
     char sayWord[MAX_NAME_LENGTH];
     GetCmdArg(1, sayWord, sizeof(sayWord));
@@ -58,7 +58,7 @@ public Action Say_Callback(int client, char[] command, int args)
     return Plugin_Continue; 
 }
 
-public Action TeamSay_Callback(int client, char[] command, int args)
+Action TeamSay_Callback(int client, char[] command, int args)
 {
     char sayWord[MAX_NAME_LENGTH];
     GetCmdArg(1, sayWord, sizeof(sayWord));
@@ -90,13 +90,13 @@ public Action TeamSay_Callback(int client, char[] command, int args)
     return Plugin_Continue;
 }
 
-public Action Event_ServerConVar(Event event, const char[] name, bool dontBroadcast)
+Action Event_ServerConVar(Event event, const char[] name, bool dontBroadcast)
 {
     if (bCvarChange) return Plugin_Handled;
     return Plugin_Continue;
 }
 
-public Action Event_NameChange(Event event, const char[] name, bool dontBroadcast)
+Action Event_NameChange(Event event, const char[] name, bool dontBroadcast)
 {
     int clientid = event.GetInt("userid");
     int client = GetClientOfUserId(clientid); 
@@ -109,7 +109,7 @@ public Action Event_NameChange(Event event, const char[] name, bool dontBroadcas
     return Plugin_Continue;
 }
 
-public void cvarChanged(Handle convar, const char[] oldValue, const char[] newValue)
+void cvarChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
     bCvarChange = hCvarCvarChange.BoolValue;
     bNameChange = hCvarNameChange.BoolValue;
@@ -117,7 +117,7 @@ public void cvarChanged(Handle convar, const char[] oldValue, const char[] newVa
     bSpecSeeChat = hCvarSpecSeeChat.BoolValue;
 }
 
-stock bool IsValidClient(int client)
+bool IsValidClient(int client)
 { 
     if (client <= 0 || client > MaxClients || !IsClientConnected(client) || !IsClientInGame(client)) return false; 
     return true;

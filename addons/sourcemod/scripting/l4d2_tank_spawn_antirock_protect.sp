@@ -21,7 +21,7 @@ public void OnPluginStart()
 	g_cvAntiRockProtectTime = CreateConVar("l4d2_antirock_protect_time", "1.5", "Protection time to avoid Tank throwing a rock by accident");
 }
 
-public void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
+void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
 {
 	int tank = GetClientOfUserId(event.GetInt("userid"));
 	g_fSpawnTime[tank] = GetGameTime();

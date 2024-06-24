@@ -37,14 +37,14 @@ public void OnPluginStart()
 	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 }
 
-public void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	CreateTimer(1.0, Timer_RoundStartDelay, _, TIMER_FLAG_NO_MAPCHANGE);
 	// Some canisters will spawn much later. For example a map c2m1_highway
 	CreateTimer(10.0, Timer_RoundStartDelay, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action Timer_RoundStartDelay(Handle hTimer)
+Action Timer_RoundStartDelay(Handle hTimer)
 {
 	int iEntity = -1;
 

@@ -127,11 +127,11 @@ public void OnMapStart() {
 // Flow Handling
 // ======================================
 
-public void RoundStartEvent(Event event, const char[] name, bool dontBroadcast) {
+void RoundStartEvent(Event event, const char[] name, bool dontBroadcast) {
 	CreateTimer(0.5, AdjustBossFlow, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action AdjustBossFlow(Handle timer) {
+Action AdjustBossFlow(Handle timer) {
 	if (InSecondHalfOfRound()) {
 		return Plugin_Stop;
 	}
@@ -405,7 +405,7 @@ int GetRandomIntervalNum(ArrayList aList) {
 // Boss Spawn Scheme Commands
 // ======================================
 
-public Action StaticTank_Command(int args) {
+Action StaticTank_Command(int args) {
 	char mapname[64];
 	GetCmdArg(1, mapname, sizeof(mapname));
 	StrToLower(mapname);
@@ -416,7 +416,7 @@ public Action StaticTank_Command(int args) {
 	return Plugin_Handled;
 }
 
-public Action StaticWitch_Command(int args) {
+Action StaticWitch_Command(int args) {
 	char mapname[64];
 	GetCmdArg(1, mapname, sizeof(mapname));
 	StrToLower(mapname);
@@ -427,7 +427,7 @@ public Action StaticWitch_Command(int args) {
 	return Plugin_Handled;
 }
 
-public Action Reset_Command(int args) {
+Action Reset_Command(int args) {
 	hStaticTankMaps.Clear();
 	hStaticWitchMaps.Clear();
 	return Plugin_Handled;
@@ -437,19 +437,19 @@ public Action Reset_Command(int args) {
 // Debug Commands
 // ======================================
 
-public Action Info_Cmd(int client, int args) {
+Action Info_Cmd(int client, int args) {
 	PrintDebugInfoDump();
 	return Plugin_Handled;
 }
 
 #if DEBUG
-public Action Test_Cmd(int client, int args) {
+Action Test_Cmd(int client, int args) {
 	PrintDebug("[Test_Cmd] Starting AdjustBossFlow timer...");
 	CreateTimer(0.5, AdjustBossFlow, _, TIMER_FLAG_NO_MAPCHANGE);
 	return Plugin_Handled;
 }
 
-public Action Profiler_Cmd(int client, int args) {
+Action Profiler_Cmd(int client, int args) {
 	if (args != 1) {
 		ReplyToCommand(client, "[SM] Usage: sm_tank_witch_debug_profiler <times>");
 		return Plugin_Handled;
@@ -484,7 +484,7 @@ public Action Profiler_Cmd(int client, int args) {
 // Natives
 // ======================================
 
-public int Native_IsStaticTankMap(Handle plugin, int numParams) {
+int Native_IsStaticTankMap(Handle plugin, int numParams) {
 	int bytes = 0;
 	
 	char mapname[64];
@@ -498,7 +498,7 @@ public int Native_IsStaticTankMap(Handle plugin, int numParams) {
 	}
 }
 
-public int Native_IsStaticWitchMap(Handle plugin, int numParams) {
+int Native_IsStaticWitchMap(Handle plugin, int numParams) {
 	int bytes = 0;
 	
 	char mapname[64];
@@ -512,12 +512,12 @@ public int Native_IsStaticWitchMap(Handle plugin, int numParams) {
 	}
 }
 
-public int Native_IsTankPercentValid(Handle plugin, int numParams) {
+int Native_IsTankPercentValid(Handle plugin, int numParams) {
 	int flow = GetNativeCell(1);
 	return IsTankPercentValid(flow);
 }
 
-public int Native_IsWitchPercentValid(Handle plugin, int numParams) {
+int Native_IsWitchPercentValid(Handle plugin, int numParams) {
 	int flow = GetNativeCell(1);
 	bool ignoreBlock = GetNativeCell(2);
 	
@@ -543,7 +543,7 @@ public int Native_IsWitchPercentValid(Handle plugin, int numParams) {
 	}
 }
 
-public int Native_IsWitchPercentBlockedForTank(Handle plugin, int numParams) {
+int Native_IsWitchPercentBlockedForTank(Handle plugin, int numParams) {
 	int interval[2];
 	if (GetTankAvoidInterval(interval) && IsValidInterval(interval)) {
 		int flow = GetNativeCell(1);
@@ -552,7 +552,7 @@ public int Native_IsWitchPercentBlockedForTank(Handle plugin, int numParams) {
 	return false;
 }
 
-public int Native_SetTankPercent(Handle plugin, int numParams) {
+int Native_SetTankPercent(Handle plugin, int numParams) {
 	int flow = GetNativeCell(1);
 	if (!IsTankPercentValid(flow)) return false;
 	DynamicAdjustWitchFlow(flow);
@@ -560,7 +560,7 @@ public int Native_SetTankPercent(Handle plugin, int numParams) {
 	return true;
 }
 
-public int Native_SetWitchPercent(Handle plugin, int numParams) {
+int Native_SetWitchPercent(Handle plugin, int numParams) {
 	int flow = GetNativeCell(1);
 	if (!IsWitchPercentValid(flow)) return false;
 	SetWitchPercent(flow);

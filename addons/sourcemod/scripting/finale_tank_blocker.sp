@@ -35,7 +35,7 @@ public void OnMapEnd()
 	g_iTankCount[1] = 0;
 }
 
-public Action SetFinaleExceptionMap(int iArgs)
+Action SetFinaleExceptionMap(int iArgs)
 {
 	if (iArgs != 1) {
 		PrintToServer("Usage: finale_tank_default <mapname>");

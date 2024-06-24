@@ -87,7 +87,7 @@ public void OnClientDisconnect(int iClient)
 	SDKUnhook(iClient, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
-public Action OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamageType)
+Action OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamageType)
 {
 	if (!(iDamageType & DMG_SLASH)) {
 		return Plugin_Continue;

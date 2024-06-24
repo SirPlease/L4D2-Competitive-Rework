@@ -157,14 +157,14 @@ public void OnMapEnd()
 
 /* Events */
 #if MODULE_ROUNDS
-public void RoundEnd_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void RoundEnd_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	Rounds_OnRoundEnd_Update();
 }
 #endif
 
 #if MODULE_ROUNDS || MODULE_TANKS || MODULE_SURVIVORS
-public void RoundStart_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void RoundStart_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 #if MODULE_ROUNDS
 	Rounds_OnRoundStart_Update();
@@ -181,19 +181,19 @@ public void RoundStart_Event(Event hEvent, const char[] sEventName, bool bDontBr
 #endif
 
 #if MODULE_TANKS
-public void TankSpawn_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void TankSpawn_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	Tanks_TankSpawn(hEvent);
 }
 
-public void ItemPickup_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void ItemPickup_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	Tanks_ItemPickup(hEvent);
 }
 #endif
 
 #if MODULE_TANKS || MODULE_SURVIVORS
-public void PlayerDeath_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void PlayerDeath_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 #if MODULE_TANKS
 	Tanks_PlayerDeath(hEvent);
@@ -206,7 +206,7 @@ public void PlayerDeath_Event(Event hEvent, const char[] sEventName, bool bDontB
 #endif
 
 #if MODULE_SURVIVORS || MODULE_MAPINFO
-public void PlayerDisconnect_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void PlayerDisconnect_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 #if MODULE_SURVIVORS
 	Survivors_RebuildArray();
@@ -219,29 +219,28 @@ public void PlayerDisconnect_Event(Event hEvent, const char[] sEventName, bool b
 #endif
 
 #if MODULE_SURVIVORS
-public void PlayerSpawn_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void PlayerSpawn_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	Survivors_RebuildArray();
 }
 
-public void PlayerBotReplace_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void PlayerBotReplace_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	Survivors_RebuildArray();
 }
 
-public void BotPlayerReplace_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void BotPlayerReplace_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	Survivors_RebuildArray();
 }
 
-public void DefibrillatorUsed_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void DefibrillatorUsed_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	Survivors_RebuildArray();
 }
 
-public void PlayerTeam_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void PlayerTeam_Event(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	Survivors_RebuildArray_Delay();
 }
 #endif
-

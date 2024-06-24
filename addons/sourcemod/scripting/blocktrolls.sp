@@ -53,7 +53,7 @@ public void OnMapStart()
 	CreateTimer(40.0, EnableCallvoteTimer);
 }
 
-public void OnPlayerJoin(Handle event, char[] name, bool dontBroadcast)
+void OnPlayerJoin(Handle event, char[] name, bool dontBroadcast)
 {
 	if (GetEventInt(event, "oldteam") == 0)
 	{
@@ -62,7 +62,7 @@ public void OnPlayerJoin(Handle event, char[] name, bool dontBroadcast)
 	}
 }
 
-public Action Vote_Listener(int client, const char[] command, int argc)
+Action Vote_Listener(int client, const char[] command, int argc)
 {
 	if (g_bBlockCallvote)
 	{
@@ -83,16 +83,7 @@ public Action Vote_Listener(int client, const char[] command, int argc)
 	return Plugin_Continue;
 }
 
-public Action CallvoteCallback(int client, int args)
-{
-	if (g_bBlockCallvote)
-	{
-		return Plugin_Handled;
-	}
-	return Plugin_Continue;
-}
-
-public Action EnableCallvoteTimer(Handle timer)
+Action EnableCallvoteTimer(Handle timer)
 {
 	g_bBlockCallvote = false;
 	return Plugin_Stop;

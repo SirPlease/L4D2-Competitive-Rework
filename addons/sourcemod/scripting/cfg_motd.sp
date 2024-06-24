@@ -24,7 +24,7 @@ public OnPluginStart()
     RegConsoleCmd("sm_cfg", ShowMOTD, "Show a MOTD describing the current config");
 }
 
-public Action:ShowMOTD(client, args) 
+Action:ShowMOTD(client, args) 
 {
     decl String:title[64], String:url[192];
     

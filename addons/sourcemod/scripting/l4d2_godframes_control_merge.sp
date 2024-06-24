@@ -201,8 +201,7 @@ public void OnPluginStart()
 	}
 }
 
-//public void OnRoundStart() //l4d2util forward
-public void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; i++) { //clear both fake and real just because
 		g_fFakeGodframeEnd[i] = 0.0;
@@ -212,7 +211,7 @@ public void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBr
 	}
 }
 
-public void PostSurvivorRelease(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void PostSurvivorRelease(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iVictim = GetClientOfUserId(hEvent.GetInt("victim"));
 
@@ -255,7 +254,7 @@ public void L4D2_OnStagger_Post(int client, int source)
 	}
 }
 
-public void Event_Replaced(Event hEvent, char[] name, bool dontBroadcast) 
+void Event_Replaced(Event hEvent, char[] name, bool dontBroadcast) 
 {
 	bool bBotReplaced = (!strncmp(name, "b", 1));
 	int replaced = bBotReplaced ? GetClientOfUserId(hEvent.GetInt("bot")) : GetClientOfUserId(hEvent.GetInt("player"));
@@ -310,7 +309,7 @@ void Timed_SetFrustration(any iClient)
 	}
 }
 
-public Action OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, \
+Action OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, \
 								int &iDamagetype, int &iWeapon, float fDamageForce[3], float fDamagePosition[3])
 {
 	if (!IsValidSurvivor(iVictim) || !IsValidEdict(iAttacker) || !IsValidEdict(iInflictor)) { 
@@ -528,7 +527,7 @@ public Action OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &
 	return Plugin_Continue;
 }
 
-public Action Timed_ResetGlow(Handle hTimer, any iClient)
+Action Timed_ResetGlow(Handle hTimer, any iClient)
 {
 	if (IsClientAndInGame(iClient)) {
 		// remove transparency/color
@@ -559,7 +558,7 @@ public void OnMapStart()
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
 
 // The sole purpose of this hook is to prevent survivor bots from causing the vision of human survivors to recoil
-public Action TraceAttackUndoFF(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamagetype, int &iAmmotype, int iHitbox, int iHitgroup)
+Action TraceAttackUndoFF(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamagetype, int &iAmmotype, int iHitbox, int iHitgroup)
 {
 	// If none of the flags are enabled, don't do anything
 	if (!g_iEnabledFlags) {
@@ -581,7 +580,7 @@ public Action TraceAttackUndoFF(int iVictim, int &iAttacker, int &iInflictor, fl
 
 // Apply fractional permanent damage here
 // Also announce damage, and undo guilty bot damage
-public Action Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+Action Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!g_iEnabledFlags) {
 		return Plugin_Continue;
@@ -638,7 +637,7 @@ public Action Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDont
 
 // When a Survivor is incapped by damage, player_hurt will not fire
 // So you may notice that the code here has some similarities to the code for player_hurt
-public Action Event_PlayerIncapStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+Action Event_PlayerIncapStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	// Cycle the incap pointer, now that the damage has been confirmed
 	int iVictim = GetClientOfUserId(hEvent.GetInt("userid"));
@@ -662,7 +661,7 @@ public Action Event_PlayerIncapStart(Event hEvent, const char[] sEventName, bool
 
 // If a bot is guilty of creating a friendly fire event, undo it
 // Also give the human some reaction time to realize the bot ran in front of them
-public Action Event_FriendlyFire(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+Action Event_FriendlyFire(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!(g_iEnabledFlags & FFTYPE_STUPIDBOTS)) {
 		return Plugin_Continue;
@@ -677,7 +676,7 @@ public Action Event_FriendlyFire(Event hEvent, const char[] sEventName, bool bDo
 	return Plugin_Continue;
 }
 
-public Action StupidGuiltyBotDelay(Handle hTimer, any iClient)
+Action StupidGuiltyBotDelay(Handle hTimer, any iClient)
 {
 	g_bStupidGuiltyBots[iClient] = false;
 
@@ -686,7 +685,7 @@ public Action StupidGuiltyBotDelay(Handle hTimer, any iClient)
 
 // While a Charger is carrying a Survivor, undo any friendly fire done to them
 // since they are effectively pinned and pinned survivors are normally immune to FF
-public Action Event_ChargerCarryStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+Action Event_ChargerCarryStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!(g_iEnabledFlags & FFTYPE_CHARGERCARRY)) {
 		return Plugin_Continue;
@@ -703,7 +702,7 @@ public Action Event_ChargerCarryStart(Event hEvent, const char[] sEventName, boo
 // (there is some time between carryend and pummelbegin,
 // but pummelbegin does not always get called if the charger died first, so it is unreliable
 // and besides the survivor has natural FF immunity when pinned)
-public Action Event_ChargerCarryEnd(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+Action Event_ChargerCarryEnd(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iClient = GetClientOfUserId(hEvent.GetInt("victim"));
 	CreateTimer(1.0, ChargerCarryFFDelay, iClient, TIMER_FLAG_NO_MAPCHANGE);
@@ -711,7 +710,7 @@ public Action Event_ChargerCarryEnd(Event hEvent, const char[] sEventName, bool 
 	return Plugin_Continue;
 }
 
-public Action ChargerCarryFFDelay(Handle hTimer, any iClient)
+Action ChargerCarryFFDelay(Handle hTimer, any iClient)
 {
 	g_bChargerCarryNoFF[iClient] = false;
 
@@ -719,7 +718,7 @@ public Action ChargerCarryFFDelay(Handle hTimer, any iClient)
 }
 
 // For health kit undo, we must remember the target in HealBegin
-public Action Event_HealBegin(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+Action Event_HealBegin(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!g_iEnabledFlags) {
 		return Plugin_Continue; // Not enabled?  Done
@@ -744,7 +743,7 @@ public Action Event_HealBegin(Event hEvent, const char[] sEventName, bool bDontB
 
 // When healing ends, remember how much temp health the target had
 // This way it can be restored in UndoDamage
-public Action Event_HealEnd(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+Action Event_HealEnd(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!g_iEnabledFlags) {
 		return Plugin_Continue; // Not enabled?  Done
@@ -769,7 +768,7 @@ public Action Event_HealEnd(Event hEvent, const char[] sEventName, bool bDontBro
 }
 
 // Save the amount of health restored as negative so it can be undone
-public Action Event_HealSuccess(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+Action Event_HealSuccess(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!g_iEnabledFlags) {
 		return Plugin_Continue; // Not enabled?  Done
@@ -923,17 +922,17 @@ bool IsClientAndInGame(int iClient)
 }
 
 // Cvars
-public void OnUndoFFEnableChanged(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+void OnUndoFFEnableChanged(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	g_iEnabledFlags = StringToInt(sNewValue);
 }
 
-public void OnUndoFFBlockZeroDmgChanged(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+void OnUndoFFBlockZeroDmgChanged(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	g_iBlockZeroDmg = StringToInt(sNewValue);
 }
 
-public void OnPermFracChanged(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+void OnPermFracChanged(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	g_fPermFrac = StringToFloat(sNewValue);
 }
@@ -945,7 +944,7 @@ public void OnPermFracChanged(ConVar hConVar, const char[] sOldValue, const char
 //																												   //
 //																												   //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
-public void ProcessShot(ArrayStack hStack)
+void ProcessShot(ArrayStack hStack)
 {
 	int iVictim = 0, iAttacker = 0, iWeapon = 0;
 	if (!hStack.Empty) {
@@ -1001,7 +1000,7 @@ bool IsTankRock(int iEntity)
 }
 
 // Natives
-public int Native_GiveClientGodFrames(Handle hPlugin, int iNumParams)
+int Native_GiveClientGodFrames(Handle hPlugin, int iNumParams)
 {
 	int iClient = GetNativeCell(1);
 	

@@ -249,12 +249,6 @@ public void OnPluginStart()
 	}
 }
 
-/*
-public OnPluginEnd()
-{
-    // nothing
-}
-*/
 public void OnClientPutInServer(int client)
 {
 	char tmpBuffer[64];
@@ -274,7 +268,7 @@ public void OnClientPutInServer(int client)
  *      convar changes  (phase this out later)
  *      ==============
  */
-public void ConVarChange_CountTankDamage(Handle cvar, const char[] oldValue, const char[] newValue)
+void ConVarChange_CountTankDamage(Handle cvar, const char[] oldValue, const char[] newValue)
 {
 	if (StringToInt(newValue) == 0)
 	{
@@ -286,7 +280,7 @@ public void ConVarChange_CountTankDamage(Handle cvar, const char[] oldValue, con
 	}
 }
 
-public void ConVarChange_CountWitchDamage(Handle cvar, const char[] oldValue, const char[] newValue)
+void ConVarChange_CountWitchDamage(Handle cvar, const char[] oldValue, const char[] newValue)
 {
 	if (StringToInt(newValue) == 0)
 	{
@@ -298,12 +292,12 @@ public void ConVarChange_CountWitchDamage(Handle cvar, const char[] oldValue, co
 	}
 }
 
-public void ConVarChange_BrevityFlags(Handle cvar, const char[] oldValue, const char[] newValue)
+ void ConVarChange_BrevityFlags(Handle cvar, const char[] oldValue, const char[] newValue)
 {
 	iBrevityFlags = StringToInt(newValue);
 }
 
-public void ConVarChange_RUPActive(Handle cvar, const char[] oldValue, const char[] newValue)
+void ConVarChange_RUPActive(Handle cvar, const char[] oldValue, const char[] newValue)
 {
 	if (StringToInt(newValue) == 0)
 	{
@@ -315,7 +309,7 @@ public void ConVarChange_RUPActive(Handle cvar, const char[] oldValue, const cha
 	}
 }
 
-public void ConVarChange_PounceDmgInt(Handle cvar, const char[] oldValue, const char[] newValue)
+void ConVarChange_PounceDmgInt(Handle cvar, const char[] oldValue, const char[] newValue)
 {
 	iPounceDmgInt = StringToInt(newValue);
 }
@@ -324,7 +318,7 @@ public void ConVarChange_PounceDmgInt(Handle cvar, const char[] oldValue, const 
  *      map load / round start/end
  *      ==========================
  */
-public Action PlayerLeftStartArea(Handle event, const char[] name, bool dontBroadcast)
+Action PlayerLeftStartArea(Handle event, const char[] name, bool dontBroadcast)
 {
 	iClientPlaying       = GetCurrentSurvivor();
 	bPlayerLeftStartArea = true;    // if RUP active, now we can start tracking
@@ -346,7 +340,7 @@ public void OnMapEnd()
 	bInRound     = false;
 }
 
-public void RoundStart_Event(Handle event, const char[] name, bool dontBroadcast)
+void RoundStart_Event(Handle event, const char[] name, bool dontBroadcast)
 {
 	iClientPlaying       = GetCurrentSurvivor();
 	bPlayerLeftStartArea = false;
@@ -366,7 +360,7 @@ public void RoundStart_Event(Handle event, const char[] name, bool dontBroadcast
 	}
 }
 
-public void RoundEnd_Event(Handle event, const char[] name, bool dontBroadcast)
+void RoundEnd_Event(Handle event, const char[] name, bool dontBroadcast)
 {
 	// only show / log stuff when the round is done "the first time"
 	if (bInRound)
@@ -381,7 +375,7 @@ public void RoundEnd_Event(Handle event, const char[] name, bool dontBroadcast)
  *      cmds / reports
  *      ==============
  */
-public Action Say_Cmd(int client, int args)
+Action Say_Cmd(int client, int args)
 {
 	if (!client)
 	{
@@ -399,7 +393,7 @@ public Action Say_Cmd(int client, int args)
 	return Plugin_Continue;
 }
 
-public Action SkeetStat_Cmd(int client, int args)
+Action SkeetStat_Cmd(int client, int args)
 {
 	// FloatSub(GetEngineTime(), fPreviousShot[user]) < SHOTGUN_TIME             // <-- use this to avoid the following from affecting stats.. maybe.
 	ResolveOpenShots();    // make sure we're up to date (this *might* affect the stats, but it'd have to be insanely badly timed
@@ -407,7 +401,7 @@ public Action SkeetStat_Cmd(int client, int args)
 	return Plugin_Handled;
 }
 
-public Action delayedSkeetStatPrint(Handle timer)
+Action delayedSkeetStatPrint(Handle timer)
 {
 	PrintSkeetStats(0);
 	return Plugin_Continue;
@@ -417,7 +411,7 @@ public Action delayedSkeetStatPrint(Handle timer)
  *      track damage/kills & accuracy
  *      =============================
  */
-public void PlayerHurt_Event(Handle event, const char[] name, bool dontBroadcast)
+void PlayerHurt_Event(Handle event, const char[] name, bool dontBroadcast)
 {
 	int zombieClass = 0;
 
@@ -507,7 +501,7 @@ public void PlayerHurt_Event(Handle event, const char[] name, bool dontBroadcast
 	}
 }
 
-public void InfectedHurt_Event(Handle event, const char[] name, bool dontBroadcast)
+void InfectedHurt_Event(Handle event, const char[] name, bool dontBroadcast)
 {
 	// check user
 	int userId = GetEventInt(event, "attacker");
@@ -646,7 +640,7 @@ public void InfectedHurt_Event(Handle event, const char[] name, bool dontBroadca
 	}
 }
 
-public void PlayerDeath_Event(Handle event, const char[] name, bool dontBroadcast)
+void PlayerDeath_Event(Handle event, const char[] name, bool dontBroadcast)
 {
 	int zombieClass = 0;
 
@@ -710,7 +704,7 @@ public void PlayerDeath_Event(Handle event, const char[] name, bool dontBroadcas
 	}
 }
 
-public void InfectedDeath_Event(Handle event, const char[] name, bool dontBroadcast)
+void InfectedDeath_Event(Handle event, const char[] name, bool dontBroadcast)
 {
 	int attackerId = GetEventInt(event, "attacker");
 	int attacker   = GetClientOfUserId(attackerId);
@@ -724,7 +718,7 @@ public void InfectedDeath_Event(Handle event, const char[] name, bool dontBroadc
 	}
 }
 
-public void PlayerShoved_Event(Handle event, const char[] name, bool dontBroadcast)
+void PlayerShoved_Event(Handle event, const char[] name, bool dontBroadcast)
 {
 	// check user
 	int userId = GetEventInt(event, "attacker");
@@ -748,7 +742,7 @@ public void PlayerShoved_Event(Handle event, const char[] name, bool dontBroadca
 }
 
 // hunters pouncing / tracking
-public void AbilityUse_Event(Handle event, const char[] name, bool dontBroadcast)
+void AbilityUse_Event(Handle event, const char[] name, bool dontBroadcast)
 {
 	// track hunters pouncing
 	int  userId = GetEventInt(event, "userid");
@@ -771,7 +765,7 @@ public void AbilityUse_Event(Handle event, const char[] name, bool dontBroadcast
 	}
 }
 
-public Action groundTouchTimer(Handle timer, int client)
+Action groundTouchTimer(Handle timer, int client)
 {
 	if (IsClientAndInGame(client) && (isGrounded(client) || !IsPlayerAlive(client)))
 	{
@@ -782,13 +776,13 @@ public Action groundTouchTimer(Handle timer, int client)
 	return Plugin_Continue;
 }
 
-public bool isGrounded(int client)
+bool isGrounded(int client)
 {
 	return (GetEntProp(client, Prop_Data, "m_fFlags") & FL_ONGROUND) > 0;
 }
 
 // accuracy:
-public void WeaponFire_Event(Handle event, const char[] name, bool dontBroadcast)
+void WeaponFire_Event(Handle event, const char[] name, bool dontBroadcast)
 {
 	// check user
 	int userId = GetEventInt(event, "userid");
@@ -1004,7 +998,7 @@ void PrintSkeetStats(int toClient)
  */
 
 // resolve hits, for the final shotgun blasts before wipe/saferoom
-public void ResolveOpenShots()
+ void ResolveOpenShots()
 {
 	if (iClientPlaying <= 0)
 	{

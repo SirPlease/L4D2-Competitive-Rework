@@ -38,7 +38,7 @@ ConVar
 Handle
 	g_hJockeySoundTimer[MAXPLAYERS + 1] = {null, ...};
 
-public const char g_sJockeySound[][] =
+stock const char g_sJockeySound[][] =
 {
 	"player/jockey/voice/idle/jockey_recognize02.wav",
 	"player/jockey/voice/idle/jockey_recognize06.wav",
@@ -94,7 +94,7 @@ public void L4D_OnEnterGhostState(int client)
 	ChangeJockeyTimerStatus(client, false);
 }
 
-public void PlayerSpawn_Event(Event event, const char[] name, bool dontBroadcast)
+void PlayerSpawn_Event(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
@@ -118,7 +118,7 @@ public void PlayerSpawn_Event(Event event, const char[] name, bool dontBroadcast
 	RequestFrame(JockeyRideEnd_NextFrame, GetClientUserId(client));
 }
 
-public void PlayerDeath_Event(Event event, const char[] name, bool dontBroadcast)
+void PlayerDeath_Event(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
@@ -131,7 +131,7 @@ public void PlayerDeath_Event(Event event, const char[] name, bool dontBroadcast
 	ChangeJockeyTimerStatus(client, false);
 }
 
-public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
+void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
@@ -144,7 +144,7 @@ public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 	ChangeJockeyTimerStatus(client, false);
 }
 
-public void JockeyRideStart_Event(Event event, const char[] name, bool dontBroadcast)
+void JockeyRideStart_Event(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
@@ -152,7 +152,7 @@ public void JockeyRideStart_Event(Event event, const char[] name, bool dontBroad
 	ChangeJockeyTimerStatus(client, false);
 }
 
-public void JockeyRideEnd_Event(Event event, const char[] name, bool dontBroadcast)
+void JockeyRideEnd_Event(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 

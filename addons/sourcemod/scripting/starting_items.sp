@@ -81,7 +81,7 @@ public void OnRoundIsLive()
 	DetermineItems();
 }
 
-public void PlayerLeftStartArea(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void PlayerLeftStartArea(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (!g_bReadyUpAvailable) {
 		DetermineItems();
@@ -170,7 +170,7 @@ void GivePlayerWeaponByName(int iClient, const char[] sWeaponName)
 }
 
 #if DEBUG
-public Action Cmd_GiveStartingItems(int iClient, int iArgs)
+Action Cmd_GiveStartingItems(int iClient, int iArgs)
 {
 	DetermineItems();
 	PrintToChat(iClient, "DetermineItems()");

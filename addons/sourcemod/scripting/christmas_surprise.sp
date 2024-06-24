@@ -43,7 +43,7 @@ public OnMapStart()
 	CreateTimer(0.5, MakeSnow);
 }
 
-public Action:MakeSnow(Handle:timer)
+Action:MakeSnow(Handle:timer)
 {
 	new iSnow = -1;
 	while ((iSnow = FindEntityByClassname(iSnow , "func_precipitation")) != INVALID_ENT_REFERENCE) AcceptEntityInput(iSnow, "Kill");
@@ -70,7 +70,7 @@ public Action:MakeSnow(Handle:timer)
 	}
 }
 
-public Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
+void Event_RoundStart(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	CreateTimer(0.7, MakeSnow);
 }

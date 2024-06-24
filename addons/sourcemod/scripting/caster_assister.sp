@@ -62,7 +62,7 @@ public void OnClientPutInServer(int client)
     }
 }
 
-public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
+void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 {
     int team = event.GetInt("team");
     if (team == 1)
@@ -72,7 +72,7 @@ public void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
     }
 }
 
-public Action SetSpecspeed_Cmd(int client, int args)
+Action SetSpecspeed_Cmd(int client, int args)
 {
     if (GetClientTeam(client) != 1)
     {
@@ -94,7 +94,7 @@ public Action SetSpecspeed_Cmd(int client, int args)
     return Plugin_Handled;
 }
 
-public Action SetSpecspeedIncrement_Cmd(int client, int args)
+Action SetSpecspeedIncrement_Cmd(int client, int args)
 {
     if (GetClientTeam(client) != 1)
     {
@@ -112,7 +112,7 @@ public Action SetSpecspeedIncrement_Cmd(int client, int args)
     return Plugin_Handled;
 }
 
-public Action IncreaseSpecspeed_Cmd(int client, int args)
+Action IncreaseSpecspeed_Cmd(int client, int args)
 {
     if (GetClientTeam(client) != 1)
     {
@@ -123,7 +123,7 @@ public Action IncreaseSpecspeed_Cmd(int client, int args)
     return Plugin_Handled;
 }
 
-public Action DecreaseSpecspeed_Cmd(int client, int args)
+Action DecreaseSpecspeed_Cmd(int client, int args)
 {
     if (GetClientTeam(client) != 1)
     {
@@ -143,7 +143,7 @@ stock void IncreaseSpecspeed(int client, float difference)
     }
 }
 
-public Action SetVerticalIncrement_Cmd(int client, int args)
+Action SetVerticalIncrement_Cmd(int client, int args)
 {
     if (GetClientTeam(client) != 1)
     {

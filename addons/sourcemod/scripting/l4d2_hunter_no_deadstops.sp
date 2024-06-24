@@ -109,7 +109,7 @@ bool HasTarget(int hunter)
 	return (IsSurvivor(target) && IsPlayerAlive(target));
 }
 
-public void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	// clear SI tracking stats
 	for (int i = 1; i <= MaxClients; i++)
@@ -118,7 +118,7 @@ public void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast
 	}
 }
 
-public void Event_PlayerDeath(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_PlayerDeath(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int victim = GetClientOfUserId(hEvent.GetInt("userid"));
 
@@ -131,7 +131,7 @@ public void Event_PlayerDeath(Event hEvent, const char[] name, bool dontBroadcas
 }
 
 // hunters pouncing / tracking
-public void Event_AbilityUse(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_AbilityUse(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	// track hunters pouncing
 	char abilityName[64];

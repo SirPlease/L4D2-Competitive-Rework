@@ -127,7 +127,7 @@ public void OnConfigsExecuted()
 	CvarsToType();
 }
 
-public void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	CvarsToType();
 }
@@ -143,7 +143,7 @@ void CvarsToType()
 	fJockeyMinMountedSpeed = hCvarJockeyMinMoundedSpeed.FloatValue;
 }
 
-public void TankSpawn(Event event, const char[] name, bool dontBroadcast) 
+void TankSpawn(Event event, const char[] name, bool dontBroadcast) 
 {
 	if (!tankInPlay) {
 		tankInPlay = true;
@@ -153,7 +153,7 @@ public void TankSpawn(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public void TankDeath(Event event, const char[] name, bool dontBroadcast)
+void TankDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	if (client > 0 && IsInfected(client) && IsTank(client)) {
@@ -161,7 +161,7 @@ public void TankDeath(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-public Action Timer_CheckTank(Handle timer)
+Action Timer_CheckTank(Handle timer)
 {
 	int tankclient = FindTankClient();
 	if (!tankclient || !IsPlayerAlive(tankclient)) {
@@ -174,14 +174,14 @@ public Action Timer_CheckTank(Handle timer)
 	return Plugin_Stop;
 }
 
-public void RoundStart(Event event, const char[] name, bool dontBroadcast)
+void RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	tankInPlay = false;
 	HookCrouchTriggers();
 }
 
 // Hook trigger_multiple entities that are named "l4d2_slowdown_crouch_speed"
-public void HookCrouchTriggers()
+void HookCrouchTriggers()
 {
 	bFoundCrouchTrigger = false;
 
@@ -205,14 +205,14 @@ public void HookCrouchTriggers()
 	}
 }
 
-public void CrouchSpeedStartTouch(const char[] output, int caller, int activator, float delay)
+void CrouchSpeedStartTouch(const char[] output, int caller, int activator, float delay)
 {
 	if (0 < activator <= MaxClients && IsClientInGame(activator)) {
 		bPlayerInCrouchTrigger[activator] = true;
 	}
 }
 
-public void CrouchSpeedEndTouch(const char[] output, int caller, int activator, float delay)
+void CrouchSpeedEndTouch(const char[] output, int caller, int activator, float delay)
 {
 	if (0 < activator <= MaxClients && IsClientInGame(activator)) {
 		bPlayerInCrouchTrigger[activator] = false;
@@ -224,7 +224,7 @@ public void CrouchSpeedEndTouch(const char[] output, int caller, int activator, 
  * Slowdown from gunfire: Tank & SI
  *
 **/
-public void PlayerHurt(Event event, const char[] name, bool dontBroadcast)
+void PlayerHurt(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	if (client > 0 && IsInfected(client)) {

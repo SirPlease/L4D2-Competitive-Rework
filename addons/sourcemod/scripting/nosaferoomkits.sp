@@ -29,7 +29,7 @@ public void OnPluginStart()
 	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 }
 
-public void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	char GameMode[32];
 	GetConVarString(FindConVar("mp_gamemode"), GameMode, sizeof(GameMode));

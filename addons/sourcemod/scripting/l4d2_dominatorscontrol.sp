@@ -95,7 +95,7 @@ public void OnPluginEnd()
 	SetDominators();
 }
 
-public void OnCvarDominatorsChange(ConVar hCvar, const char[] sOldVal, const char[] sNewVal)
+void OnCvarDominatorsChange(ConVar hCvar, const char[] sOldVal, const char[] sNewVal)
 {
 	int iNewVal = StringToInt(sNewVal);
 	if (iNewVal == g_iDominators) {

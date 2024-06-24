@@ -69,7 +69,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
-public int _Native_HealthBonus(Handle plugin, int numParams)
+int _Native_HealthBonus(Handle plugin, int numParams)
 {
 	return SM_CalculateSurvivalBonus();
 }
@@ -176,7 +176,7 @@ public OnMapStart()
 	SM_fTempMulti[2] = GetConVarFloat(SM_hTempMulti2);
 }
 
-public SM_ConVarChanged_Enable(Handle:convar, const String:oldValue[], const String:newValue[])
+void SM_ConVarChanged_Enable(Handle:convar, const String:oldValue[], const String:newValue[])
 {
 	if (StringToInt(newValue) == 0)
 	{
@@ -189,32 +189,32 @@ public SM_ConVarChanged_Enable(Handle:convar, const String:oldValue[], const Str
 	SM_bModuleIsEnabled = true;
 }
 
-public SM_ConVarChanged_TempMulti0(Handle:convar, const String:oldValue[], const String:newValue[])
+void SM_ConVarChanged_TempMulti0(Handle:convar, const String:oldValue[], const String:newValue[])
 {
 	SM_fTempMulti[0] = StringToFloat(newValue);
 }
 
-public SM_ConVarChanged_TempMulti1(Handle:convar, const String:oldValue[], const String:newValue[])
+void SM_ConVarChanged_TempMulti1(Handle:convar, const String:oldValue[], const String:newValue[])
 {
 	SM_fTempMulti[1] = StringToFloat(newValue);
 }
 
-public SM_ConVarChanged_TempMulti2(Handle:convar, const String:oldValue[], const String:newValue[])
+void SM_ConVarChanged_TempMulti2(Handle:convar, const String:oldValue[], const String:newValue[])
 {
 	SM_fTempMulti[2] = StringToFloat(newValue);
 }
 
-public SM_CVChanged_HealthBonusRatio(Handle:convar, const String:oldValue[], const String:newValue[])
+void SM_CVChanged_HealthBonusRatio(Handle:convar, const String:oldValue[], const String:newValue[])
 {
 	SM_fHBRatio = StringToFloat(newValue);
 }
 
-public SM_CVChanged_SurvivalBonusRatio(Handle:convar, const String:oldValue[], const String:newValue[])
+void SM_CVChanged_SurvivalBonusRatio(Handle:convar, const String:oldValue[], const String:newValue[])
 {
 	SM_fSurvivalBonusRatio = StringToFloat(newValue);
 }
 
-public SM_ConVarChanged_Health(Handle:convar, const String:oldValue[], const String:newValue[])
+void SM_ConVarChanged_Health(Handle:convar, const String:oldValue[], const String:newValue[])
 {
 	SM_fHealPercent = GetConVarFloat(SM_hHealPercent);
 	SM_iPillPercent = GetConVarInt(SM_hPillPercent);
@@ -248,7 +248,7 @@ PluginDisable()
 	SM_bHooked = false;
 }
 
-public Action:SM_DoorClose_Event(Handle:event, const String:name[], bool:dontBroadcast)
+void SM_DoorClose_Event(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	if (!SM_bModuleIsEnabled) return;
 	if (GetEventBool(event, "checkpoint"))
@@ -257,7 +257,7 @@ public Action:SM_DoorClose_Event(Handle:event, const String:name[], bool:dontBro
 	}
 }
 
-public Action:SM_PlayerDeath_Event(Handle:event, const String:name[], bool:dontBroadcast)
+void SM_PlayerDeath_Event(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	if (!SM_bModuleIsEnabled) return;
 	new client = GetClientOfUserId(GetEventInt(event, "userid"));
@@ -269,7 +269,7 @@ public Action:SM_PlayerDeath_Event(Handle:event, const String:name[], bool:dontB
 	
 }
 
-public Action:SM_RoundEnd_Event(Handle:event, const String:name[], bool:dontBroadcast)
+void SM_RoundEnd_Event(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	if (!SM_bModuleIsEnabled) return;
 	if(!SM_bIsFirstRoundOver) 
@@ -301,7 +301,8 @@ public Action:SM_RoundEnd_Event(Handle:event, const String:name[], bool:dontBroa
 		if (GetConVarBool(SM_hCustomMaxDistance) && GetCustomMapMaxScore() > -1) CPrintToChatAll("{blue}[{default}!{blue}] {default}Custom Max Distance: {olive}%d", GetCustomMapMaxScore());
 	}
 }
-public Action:SM_RoundStart_Event(Handle:event, const String:name[], bool:dontBroadcast)
+
+void SM_RoundStart_Event(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	if (!SM_bModuleIsEnabled) return;
 	if(SM_bIsFirstRoundOver) 
@@ -311,7 +312,7 @@ public Action:SM_RoundStart_Event(Handle:event, const String:name[], bool:dontBr
 	}
 }
 
-public Action:SM_FinaleVehicleLeaving_Event(Handle:event, const String:name[], bool:dontBroadcast)
+void SM_FinaleVehicleLeaving_Event(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	if (!SM_bModuleIsEnabled) return;
 	
@@ -323,9 +324,9 @@ bool:SM_IsPlayerIncap(client)
 	return (GetEntProp(client, Prop_Send, "m_isIncapacitated", 1) > 0);
 }
 
-public Action:SM_Cmd_Health(client, args)
+Action SM_Cmd_Health(client, args)
 {
-	if (!SM_bModuleIsEnabled) return;
+	if (!SM_bModuleIsEnabled) return Plugin_Handled;
 	
 	decl iAliveCount;
 	new Float:fAvgHealth = SM_CalculateAvgHealth(iAliveCount);	
@@ -360,6 +361,8 @@ public Action:SM_Cmd_Health(client, args)
 			PrintToServer("[ScoreMod] Custom Max Distance: %d", GetCustomMapMaxScore());
 		}
 	}
+	
+	return Plugin_Handled;
 }
 
 stock SM_CalculateSurvivalBonus()
@@ -458,7 +461,7 @@ stock Float:SM_CalculateAvgHealth(&iAliveCount=0)
 	return fAvgHealth;
 }
 
-public Action:SM_Command_Say(client, args)
+Action SM_Command_Say(client, args)
 {
 	if (!SM_bModuleIsEnabled) return Plugin_Continue;
 	

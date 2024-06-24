@@ -46,7 +46,7 @@ public void OnPluginStart()
 	delete hGamedata;
 }
 
-public void ResetEvent(Event hEvent, const char[] name, bool dontBroadcast)
+void ResetEvent(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	for (int i = 0; i <= MAXPLAYERS; i++) {
 		blockJumpCap[i] = false;
@@ -60,7 +60,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 	}
 }
 
-public void OnPlayerShoved(Event hEvent, const char[] name, bool dontBroadcast)
+void OnPlayerShoved(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int shovee = GetClientOfUserId(hEvent.GetInt("userid"));
 	int shover = GetClientOfUserId(hEvent.GetInt("attacker"));
@@ -71,13 +71,13 @@ public void OnPlayerShoved(Event hEvent, const char[] name, bool dontBroadcast)
 	}
 }
 
-public Action ResetJumpcapState(Handle hTimer, any jockey)
+Action ResetJumpcapState(Handle hTimer, any jockey)
 {
 	blockJumpCap[jockey] = false;
 	return Plugin_Handled;
 }
 
-public MRESReturn CLeap_OnTouch(int ability, Handle hParams)
+MRESReturn CLeap_OnTouch(int ability, Handle hParams)
 {
 	int jockey = GetEntPropEnt(ability, Prop_Send, "m_owner");
 	if (IsJockey(jockey) && !IsFakeClient(jockey)) {

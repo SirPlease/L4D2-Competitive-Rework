@@ -26,7 +26,7 @@ public void OnPluginStart()
 	HookConVarChange(hCommonLimit, Cvar_CommonLimitChange);
 }
 
-public void Cvar_CommonLimitChange(ConVar hCvar, const char[] oldValue, const char[] newValue)
+void Cvar_CommonLimitChange(ConVar hCvar, const char[] oldValue, const char[] newValue)
 {
 	iCommonLimit = hCommonLimit.IntValue;
 }

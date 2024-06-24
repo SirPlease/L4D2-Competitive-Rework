@@ -22,7 +22,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
-public any Ntv_ReleaseFromViewControl(Handle plugin, int numParams)
+any Ntv_ReleaseFromViewControl(Handle plugin, int numParams)
 {
 	ReleaseFromViewControl(_, GetNativeCell(1));
 

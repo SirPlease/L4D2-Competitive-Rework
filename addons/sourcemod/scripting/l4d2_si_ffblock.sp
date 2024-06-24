@@ -66,7 +66,7 @@ public void OnPluginStart()
 	}
 }
 
-public void Cvars_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+void Cvars_Changed(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
 {
 	CvarsToType();
 }
@@ -78,14 +78,14 @@ void CvarsToType()
 	g_bBlockWitchFF = g_hCvarBlockWitchFF.BoolValue;
 }
 
-public void Event_WitchSpawn(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+void Event_WitchSpawn(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iWitch = hEvent.GetInt("witchid");
 
 	SDKHook(iWitch, SDKHook_OnTakeDamage, Hook_WitchOnTakeDamage);
 }
 
-public Action Hook_WitchOnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamagetype)
+Action Hook_WitchOnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamagetype)
 {
 	if (!(iDamagetype & DMG_CLUB) || !g_bBlockWitchFF) {
 		return Plugin_Continue;
@@ -112,7 +112,7 @@ public void OnClientPutInServer(int iClient)
 	SDKHook(iClient, SDKHook_OnTakeDamage, Hook_PlayerOnTakeDamage);
 }
 
-public Action Hook_PlayerOnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamagetype)
+Action Hook_PlayerOnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamagetype)
 {
 	if (!(iDamagetype & DMG_CLUB) || !g_bFFBlock) {
 		return Plugin_Continue;
