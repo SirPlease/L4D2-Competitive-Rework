@@ -25,7 +25,7 @@ This purpose of this document is to make it very easy to get Optimized Servers r
 > **Initial Server Install/Connection:**  
 > This part of the Project will focus on preparing your dedicated Server/VDS for L4D2.  
 
-Login to your webhosts admin panel and ensure you are using Ubuntu **18.04 or earlier**.  You should have had an option to do this during the order process, but if not most hosts will have an intuitive admin panel to allow you to do this.  I used GCoreLabs to set up a server whilst writing this guide, and they have a 'reinstall' option under "[Management > Virtual Machines](https://imgur.com/A7kRTyO)".
+Login to your webhosts admin panel and ensure you are using Ubuntu **20.04 or newer**.  You should have had an option to do this during the order process, but if not most hosts will have an intuitive admin panel to allow you to do this.  I used GCoreLabs to set up a server whilst writing this guide, and they have a 'reinstall' option under "[Management > Virtual Machines](https://imgur.com/A7kRTyO)".
 
 For the next part, you will need to make use of an SSH Client such as [Putty](http://www.putty.org/).
 
