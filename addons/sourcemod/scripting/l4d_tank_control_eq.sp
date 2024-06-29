@@ -54,7 +54,7 @@ public Plugin myinfo =
     name = "L4D2 Tank Control",
     author = "arti, (Contributions by: Sheo, Sir, Altair-Sossai)",
     description = "Distributes the role of the tank evenly throughout the team, allows for overrides. (Includes forwards)",
-    version = "0.0.22",
+    version = "0.0.23",
     url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
@@ -340,7 +340,7 @@ void ReplaceTank(int deservingTank)
             h_whosHadTank.PushString(steamId);                
     }
     else if (hTankDebug.BoolValue)
-        PrintToConsoleAll("[TC] oldTank: %i and deservingTank: is%s valid", oldTank, IS_INFECTED(deservingTank) ? "" : " NOT VALID");
+        PrintToConsoleAll("[TC] oldTank: %i and deservingTank: is%s valid", oldTank, IS_INFECTED(deservingTank) ? "" : " NOT");
 }
 
 /**
