@@ -4,10 +4,10 @@
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
-#include <left4dhooks>
+#include <left4dhooks_anim>
 #include <actions>
 
-#define PLUGIN_VERSION "1.3.1"
+#define PLUGIN_VERSION "1.4.1"
 
 public Plugin myinfo = 
 {
@@ -22,7 +22,10 @@ public Plugin myinfo =
 
 Handle g_hCall_MyNextBotPointer;
 Handle g_hCall_GetBodyInterface;
+Handle g_hCall_GetLocomotionInterface;
 Handle g_hCall_SetDesiredPosture;
+
+int g_iOffs_ZombieBotLocomotion__m_ladder;
 
 enum ActivityType 
 { 
@@ -52,6 +55,10 @@ methodmap INextBot
 	public ZombieBotBody GetBodyInterface() {
 		return SDKCall(g_hCall_GetBodyInterface, this);
 	}
+
+	public ZombieBotLocomotion GetLocomotionInterface() {
+		return SDKCall(g_hCall_GetLocomotionInterface, this);
+	}
 }
 
 methodmap ZombieBotBody
@@ -71,11 +78,20 @@ methodmap ZombieBotBody
 	}
 }
 
+methodmap ZombieBotLocomotion
+{
+	property Address m_ladder {
+		public get() { return LoadFromAddress(view_as<Address>(this) + view_as<Address>(g_iOffs_ZombieBotLocomotion__m_ladder), NumberType_Int32); }
+		public set(Address p) { StoreToAddress(view_as<Address>(this) + view_as<Address>(g_iOffs_ZombieBotLocomotion__m_ladder), p, NumberType_Int32); }
+	}
+}
+
 enum
 {
 	SHOVE_CROUCHING	= 1,
 	SHOVE_FALLING	= (1 << 1),
-	SHOVE_LANDING	= (1 << 2)
+	SHOVE_LANDING	= (1 << 2),
+	SHOVE_CLIMBING	= (1 << 3),
 };
 
 int g_iShoveFlag;
@@ -86,73 +102,6 @@ enum PendingShoveState
 	PendingShove_Yes,
 	PendingShove_Callback,
 };
-
-enum struct PendingShoveInfo
-{
-	int key;
-	PendingShoveState state;
-	float direction_x;
-	float direction_y;
-	float direction_z;
-}
-
-int __CompileKey(int entity) {
-	return EntIndexToEntRef(entity);
-}
-
-methodmap PendingShoveStore < ArrayList
-{
-	public PendingShoveStore() {
-		return view_as<PendingShoveStore>(new ArrayList(sizeof(PendingShoveInfo) + 1));
-	}
-	
-	public PendingShoveState GetState(int entity) {
-		PendingShoveState state;
-		int idx = this.FindValue(__CompileKey(entity), PendingShoveInfo::key);
-		if (idx != -1)
-			state = this.Get(idx, PendingShoveInfo::state);
-		return state;
-	}
-	
-	public void SetState(int entity, PendingShoveState state) {
-		int key = __CompileKey(entity);
-		int idx = this.FindValue(key, PendingShoveInfo::key);
-		if (idx == -1)
-			idx = this.Push(key);
-		this.Set(idx, state, PendingShoveInfo::state);
-	}
-	
-	public bool GetDirection(int entity, float direction[3]) {
-		int idx = this.FindValue(__CompileKey(entity), PendingShoveInfo::key);
-		if (idx != -1) {
-			direction[0] = this.Get(idx, PendingShoveInfo::direction_x);
-			direction[1] = this.Get(idx, PendingShoveInfo::direction_y);
-			direction[2] = this.Get(idx, PendingShoveInfo::direction_z);
-			return true;
-		}
-		return false;
-	}
-	
-	public void SetDirection(int entity, const float direction[3]) {
-		int key = __CompileKey(entity);
-		int idx = this.FindValue(key, PendingShoveInfo::key);
-		if (idx == -1)
-			idx = this.Push(key);
-		this.Set(idx, direction[0], PendingShoveInfo::direction_x);
-		this.Set(idx, direction[1], PendingShoveInfo::direction_y);
-		this.Set(idx, direction[2], PendingShoveInfo::direction_z);
-	}
-	
-	public bool Delete(int entity) {
-		int idx = this.FindValue(__CompileKey(entity), PendingShoveInfo::key);
-		if (idx != -1) {
-			this.Erase(idx);
-			return true;
-		}
-		return false;
-	}
-}
-PendingShoveStore g_PendingShoveStore;
 
 public void OnPluginStart()
 {
@@ -177,34 +126,29 @@ public void OnPluginStart()
 		SetFailState("Missing signature \"INextBot::GetBodyInterface\"");
 	PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 	g_hCall_GetBodyInterface = EndPrepSDKCall();
+
+	StartPrepSDKCall(SDKCall_Raw);
+	if (!PrepSDKCall_SetFromConf(gd, SDKConf_Virtual, "INextBot::GetLocomotionInterface"))
+		SetFailState("Missing signature \"INextBot::GetLocomotionInterface\"");
+	PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+	g_hCall_GetLocomotionInterface = EndPrepSDKCall();
+
+	g_iOffs_ZombieBotLocomotion__m_ladder = gd.GetOffset("ZombieBotLocomotion::m_ladder");
 	
 	delete gd;
 	
-	g_PendingShoveStore = new PendingShoveStore();
-	
 	CreateConVarHook("l4d_common_shove_flag",
-					"7",
+					"15",
 					"Flag for fixing common shove.\n"
-				...	"1 = Crouch, 2 = Falling, 4 = Landing",
+				...	"1 = Crouch, 2 = Falling, 4 = Landing, 8 = Climbing",
 					FCVAR_CHEAT,
-					true, 0.0, true, 7.0,
+					true, 0.0, false, 15.0,
 					CvarChg_ShoveFlag);
 }
 
 void CvarChg_ShoveFlag(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	g_iShoveFlag = convar.IntValue;
-}
-
-public void OnMapStart()
-{
-	g_PendingShoveStore.Clear();
-}
-
-public void OnEntityDestroyed(int entity)
-{
-	if (IsInfected(entity))
-		g_PendingShoveStore.Delete(entity);
 }
 
 public void OnActionCreated(BehaviorAction action, int actor, const char[] name)
@@ -225,7 +169,7 @@ Action InfectedShoved_OnStart(BehaviorAction action, int actor, any priorAction,
 		{
 			result.type = CONTINUE; // do not exit
 			
-			g_PendingShoveStore.SetState(actor, PendingShove_Yes); // for later use in "InfectedShoved_OnLandOnGroundPost"
+			action.SetUserData("state", PendingShove_Yes); // for later use in "InfectedShoved_OnLandOnGroundPost"
 			
 			float direction[3], pos[3];
 			direction[0] = action.Get(56, NumberType_Int32);
@@ -234,7 +178,7 @@ Action InfectedShoved_OnStart(BehaviorAction action, int actor, any priorAction,
 			GetEntPropVector(actor, Prop_Data, "m_vecAbsOrigin", pos);
 			SubtractVectors(direction, pos, direction);
 			
-			g_PendingShoveStore.SetDirection(actor, direction);
+			action.SetUserDataVector("direction", direction);
 			
 			// almost certain that shove does nothing at the moment, just skip it
 			return Plugin_Handled; 
@@ -243,29 +187,33 @@ Action InfectedShoved_OnStart(BehaviorAction action, int actor, any priorAction,
 		return Plugin_Continue;
 	}
 	
+	INextBot nb = MyNextBotPointer(actor);
 	if (g_iShoveFlag & SHOVE_CROUCHING)
 	{
-		MyNextBotPointer(actor).GetBodyInterface().SetDesiredPosture(STAND); // force standing to activate shoves
+		nb.GetBodyInterface().SetDesiredPosture(STAND); // force standing to activate shoves
+	}
+
+	if (g_iShoveFlag & SHOVE_CLIMBING)
+	{
+		nb.GetLocomotionInterface().m_ladder = Address_Null;
 	}
 	
 	if (g_iShoveFlag & SHOVE_LANDING
-	  || (g_iShoveFlag & SHOVE_FALLING && g_PendingShoveStore.GetState(actor) == PendingShove_Callback))
+	  || (g_iShoveFlag & SHOVE_FALLING && action.GetUserData("state") == PendingShove_Callback))
 	{
 		ForceActivityInterruptible(actor); // if they happen to land on ground at the time, override
 	}
 	
-	if (g_PendingShoveStore.GetState(actor) == PendingShove_Callback)
+	if (action.GetUserData("state") == PendingShove_Callback)
 	{
 		float direction[3], pos[3];
-		g_PendingShoveStore.GetDirection(actor, direction);
+		action.GetUserDataVector("direction", direction);
 		GetEntPropVector(actor, Prop_Data, "m_vecAbsOrigin", pos);
 		AddVectors(pos, direction, pos);
 		
 		action.Set(56, pos[0], NumberType_Int32);
 		action.Set(60, pos[1], NumberType_Int32);
 		action.Set(64, pos[2], NumberType_Int32);
-		
-		g_PendingShoveStore.Delete(actor);
 	}
 	
 	return Plugin_Continue;
@@ -286,11 +234,11 @@ Action InfectedShoved_OnShoved(BehaviorAction action, int actor, int entity, Act
 
 Action InfectedShoved_OnLandOnGroundPost(BehaviorAction action, int actor, int entity, ActionDesiredResult result)
 {
-	if (~g_iShoveFlag & SHOVE_FALLING || g_PendingShoveStore.GetState(actor) != PendingShove_Yes)
+	if (~g_iShoveFlag & SHOVE_FALLING || action.GetUserData("state") != PendingShove_Yes)
 		return Plugin_Continue;
 	
 	action.IsStarted = false; // trick the action into calling OnStart as if actor get shoved this frame
-	g_PendingShoveStore.SetState(actor, PendingShove_Callback);
+	action.SetUserData("state", PendingShove_Callback);
 	
 	ForceActivityInterruptible(actor); // if they happen to land on ground at the time, override
 	
