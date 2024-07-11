@@ -5,7 +5,7 @@
 #include <sdktools>
 #include <dhooks>
 
-#define PLUGIN_VERSION "3.2"
+#define PLUGIN_VERSION "3.3.1"
 
 public Plugin myinfo =
 {
@@ -18,8 +18,14 @@ public Plugin myinfo =
 
 #define GAMEDATA_FILE "l4d_tongue_bend_fix"
 #define KEY_UPDATEBEND "CTongue::UpdateBend"
-#define KEY_EXCEPTION "BendExceptionClass"
 
+enum
+{
+	Exception_Door			= 1,
+	Exception_Carryable		= (1 << 1),
+};
+
+ConVar g_cvExceptions;
 StringMap g_smExceptions;
 
 public void OnPluginStart()
@@ -31,19 +37,23 @@ public void OnPluginStart()
 	if (!hDetour) SetFailState("Missing signature \""...KEY_UPDATEBEND..."\"");
 	if (!hDetour.Enable(Hook_Post, DTR_OnUpdateBend_Post)) SetFailState("Failed to post-detour \""...KEY_UPDATEBEND..."\"");
 	
-	g_smExceptions = new StringMap();
-	
-	char key[32], buffer[64];
-	for( int i = 1;
-		FormatEx(key, sizeof(key), KEY_EXCEPTION..."%i", i)
-		&& GameConfGetKeyValue(conf, key, buffer, sizeof(buffer));
-		++i )
-	{
-		g_smExceptions.SetValue(buffer, true);
-		PrintToServer("[TongueBend] Read \""...KEY_EXCEPTION..."\" (%s)", buffer);
-	}
-	
 	delete conf;
+	
+	g_cvExceptions = CreateConVar("tongue_bend_exception_flag",
+									"1",
+									"Flag to allow bending on certain types of entities.\n" \
+								...	"1 = Doors, 2 = Carryable, 3 = All, 0 = Disable",
+									FCVAR_NONE,
+									true, 0.0, false, 3.0);
+	
+	g_smExceptions = new StringMap();
+	g_smExceptions.SetValue("prop_door_rotating", Exception_Door);
+	g_smExceptions.SetValue("weapon_gascan", Exception_Carryable);
+	g_smExceptions.SetValue("weapon_propanetank", Exception_Carryable);
+	g_smExceptions.SetValue("weapon_cola_bottles", Exception_Carryable);
+	g_smExceptions.SetValue("weapon_fireworkcrate", Exception_Carryable);
+	g_smExceptions.SetValue("weapon_gnome", Exception_Carryable);
+	g_smExceptions.SetValue("weapon_oxygentank", Exception_Carryable);
 }
 
 MRESReturn DTR_OnUpdateBend_Post(int pThis, DHookReturn hReturn)
@@ -88,11 +98,11 @@ bool TestBendOnException(const float vStart[3], const float vEnd[3])
 	Handle tr = TR_TraceRayFilterEx(vStart, vEnd, MASK_VISIBLE_AND_NPCS|CONTENTS_WINDOW, RayType_EndPoint, TraceFilter_NoNPCsOrPlayer);
 	if (TR_DidHit(tr))
 	{
-		int entity = TR_GetEntityIndex(tr);
+		int i = TR_GetEntityIndex(tr);
 		
 		char classname[64];
-		GetEntityClassname(entity, classname, sizeof(classname));
-		if (g_smExceptions.GetValue(classname, entity))
+		GetEntityClassname(i, classname, sizeof(classname));
+		if (g_smExceptions.GetValue(classname, i) && (g_cvExceptions.IntValue & i))
 		{
 			delete tr;
 			return true;
