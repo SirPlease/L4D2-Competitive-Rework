@@ -1159,7 +1159,7 @@ Action Event_PlayerBoomed(Handle event, const char[] name, bool dontBroadcast)
 }
 
 // check how many booms landed
-public Action Timer_BoomVomitCheck(Handle timer, any client)
+Action Timer_BoomVomitCheck(Handle timer, any client)
 {
 	HandleVomitLanded(client, g_iBoomerVomitHits[client]);
 	g_iBoomerVomitHits[client] = 0;

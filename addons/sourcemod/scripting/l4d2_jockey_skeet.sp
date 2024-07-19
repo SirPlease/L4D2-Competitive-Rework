@@ -70,7 +70,7 @@ public void OnClientDisconnect(int client)
 	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }
 
-public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon,
+Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon,
 							float damageForce[3], float damagePosition[3], int damagecustom)
 {
 	if (!IsJockey(victim) || !IsSurvivor(attacker) || IsFakeClient(attacker) || !IsValidEdict(weapon)) {
@@ -127,7 +127,7 @@ bool IsJockey(int client)
 		&& IsClientInGame(client)
 		&& GetClientTeam(client) == TEAM_INFECTED
 		&& GetEntProp(client, Prop_Send, "m_zombieClass") == Z_JOCKEY
-		&& !GetEntProp(client, Prop_Send, "m_isGhost"));
+		&& !GetEntProp(client, Prop_Send, "m_isGhost", 1));
 }
 
 bool HasJockeyTarget(int infected)
