@@ -177,7 +177,7 @@ int Native_GetStoredWitchPercent(Handle plugin, int numParams)
 }
 
 // Used for other plugins to get the stored tank percent
-public int Native_GetStoredTankPercent(Handle plugin, int numParams)
+int Native_GetStoredTankPercent(Handle plugin, int numParams)
 {
 	return g_fTankPercent;
 }
