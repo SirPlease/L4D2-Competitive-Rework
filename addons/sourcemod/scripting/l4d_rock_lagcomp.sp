@@ -302,7 +302,7 @@ void Array_RemoveRock(ArrayList array, int rockEntity)
  * @param entity entity index to search for
  * @return array index if found, -1 if not found.
  */
-public int Array_SearchRock(ArrayList array, rockEntity)
+int Array_SearchRock(ArrayList array, rockEntity)
 {
 	for (int i = 0; i < array.Length; ++i) {
 		new cRockEntity = array.Get(i, BLOCK_ENT_REF);
