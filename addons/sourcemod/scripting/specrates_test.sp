@@ -61,13 +61,13 @@ Action Cmd_ChangeStatusRates(int client, int args)
 {
 	if (!g_bSpecRates)
 	{
-		CReplyToCommand(client, "[{green}Spectares{default}] {red}Error{default}: SpecRates is not loaded.");
+		CReplyToCommand(client, "[{green}SpecRates{default}] {red}Error{default}: SpecRates is not loaded.");
 		return Plugin_Handled;
 	}
 
 	if (args < 1)
 	{
-		CReplyToCommand(client, "[{green}Spectares{default}] {blue}Usage{default}: sm_changestatusrates <target>");
+		CReplyToCommand(client, "[{green}SpecRates{default}] {blue}Usage{default}: sm_changestatusrates <target>");
 		return Plugin_Handled;
 	}
 
@@ -77,7 +77,7 @@ Action Cmd_ChangeStatusRates(int client, int args)
 	int target = FindTarget(client, buffer);
 	if (target == -1)
 	{
-		CReplyToCommand(client, "[{green}Spectares{default}] {red}Error{default}: Invalid target.");
+		CReplyToCommand(client, "[{green}SpecRates{default}] {red}Error{default}: Invalid target.");
 		return Plugin_Handled;
 	}
 
@@ -89,7 +89,7 @@ Action Cmd_ChangeStatusRates(int client, int args)
 		case RatesFree:
 			SetStatusRates(client, RatesLimit);
 	}
-	CReplyToCommand(client, "[{green}Spectares{default}] {blue}Success{default}: Status Rates change {olive}%s{default} --> {olive}%s{default} to {blue}%N{default}", OldStatus == RatesLimit ? "Block" : "Free", OldStatus == RatesLimit ? "Free" : "Block", target);
+	CReplyToCommand(client, "[{green}SpecRates{default}] {blue}Success{default}: Status Rates change {olive}%s{default} --> {olive}%s{default} to {blue}%N{default}", OldStatus == RatesLimit ? "Block" : "Free", OldStatus == RatesLimit ? "Free" : "Block", target);
 	return Plugin_Handled;
 }
 
@@ -97,13 +97,13 @@ Action Cmd_GetStatusRates(int client, int args)
 {
 	if (!g_bSpecRates)
 	{
-		CReplyToCommand(client, "[{green}Spectares{default}] {red}Error{default}: SpecRates is not loaded.");
+		CReplyToCommand(client, "[{green}SpecRates{default}] {red}Error{default}: SpecRates is not loaded.");
 		return Plugin_Handled;
 	}
 
 	if (args < 1)
 	{
-		CReplyToCommand(client, "[{green}Spectares{default}] {blue}Usage{default}: sm_changestatusrates <target>");
+		CReplyToCommand(client, "[{green}SpecRates{default}] {blue}Usage{default}: sm_changestatusrates <target>");
 		return Plugin_Handled;
 	}
 
@@ -113,11 +113,11 @@ Action Cmd_GetStatusRates(int client, int args)
 	int target = FindTarget(client, buffer);
 	if (target == -1)
 	{
-		CReplyToCommand(client, "[{green}Spectares{default}] {red}Error{default}: Invalid target.");
+		CReplyToCommand(client, "[{green}SpecRates{default}] {red}Error{default}: Invalid target.");
 		return Plugin_Handled;
 	}
 
 	StatusRates OldStatus = GetStatusRates(client);
-	CReplyToCommand(client, "[{green}Spectares{default}] {blue}Success{default}: Status Rates is {olive}%s{default} to {blue}%N{default}", OldStatus == RatesLimit ? "Block" : "Free", target);
+	CReplyToCommand(client, "[{green}SpecRates{default}] {blue}Success{default}: Status Rates is {olive}%s{default} to {blue}%N{default}", OldStatus == RatesLimit ? "Block" : "Free", target);
 	return Plugin_Handled;
 }
