@@ -2,7 +2,7 @@
 {
 	"Tag"
 	{
-		"es"		"{default}[{green}!{default}]"
+		"es"		"{default}[{olive}!{default}]"
 	}
 	"Current"
 	{
