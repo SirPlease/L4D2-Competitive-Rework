@@ -42,12 +42,13 @@ public Plugin myinfo =
 	name = "L4D2 Horde Equaliser",
 	author = "Visor (original idea by Sir), A1m`",
 	description = "Make certain event hordes finite",
-	version = "3.0.9",
+	version = "3.0.10",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public void OnPluginStart()
 {
+	LoadTranslation("l4d2_horde_equaliser.phrases");
 	InitGameData();
 	
 	hCvarNoEventHordeDuringTanks = CreateConVar("l4d2_heq_no_tank_horde", "0", "Put infinite hordes on a 'hold up' during Tank fights");
@@ -114,7 +115,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 		// Our job here is done
 		if (commonTotal >= commonLimit) {
 			if (!announcedEventEnd){
-				CPrintToChatAll("<{olive}Horde{default}> {red}No {default}common remaining!");
+				CPrintToChatAll("%t %t", "Tag", "NoCommonRemaining");
 				announcedEventEnd = true;
 			}
 			return;
@@ -130,7 +131,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 			
 			int remaining = commonLimit - commonTotal;
 			if (remaining != 0) {
-				CPrintToChatAll("<{olive}Horde{default}> {red}%i {default}common remaining..", remaining);
+				CPrintToChatAll("%t %t", "Tag", "CommonRemaining", remaining);
 			}
 			
 			checkpointAnnounced[lastCheckpoint] = true;
@@ -168,7 +169,7 @@ public Action L4D_OnSpawnMob(int &amount)
 	// If it's a "finite" infinite horde...
 	if (IsInfiniteHordeActive()) {
 		if (!announcedInChat) {
-			CPrintToChatAll("<{olive}Horde{default}> A {blue}finite event{default} of {olive}%i{default} commons has started! Rush or wait it out, the choice is yours!", commonLimit);
+			CPrintToChatAll("%t %t", "Tag", "FiniteEventStarted", commonLimit);
 			announcedInChat = true;
 		}
 		
@@ -219,4 +220,24 @@ bool IsTankUp()
 	}
 
 	return false;
+}
+
+/**
+ * Check if the translation file exists
+ *
+ * @param translation	Translation name.
+ * @noreturn
+ */
+stock void LoadTranslation(const char[] translation)
+{
+	char
+		sPath[PLATFORM_MAX_PATH],
+		sName[64];
+
+	Format(sName, sizeof(sName), "translations/%s.txt", translation);
+	BuildPath(Path_SM, sPath, sizeof(sPath), sName);
+	if (!FileExists(sPath))
+		SetFailState("Missing translation file %s.txt", translation);
+
+	LoadTranslations(translation);
 }
