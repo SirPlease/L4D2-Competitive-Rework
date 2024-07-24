@@ -2,10 +2,10 @@
 {
 	"Tag"
 	{
-		"es"		"{default}[{olive}!{default}]"
+		"es"		"<{olive}Progreso{default}>"
 	}
 	"Current"
 	{
-		"es"		"Progreso: {green}%d%%{default}"
+		"es"		"{green}%d%%{default}"
 	}
 }

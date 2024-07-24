@@ -2,10 +2,10 @@
 {
 	"Tag"
 	{
-		"en"		"{default}[{olive}!{default}]"
+		"en"		"<{olive}Current{default}>"
 	}
 	"Current"
 	{
-		"en"		"Current: {green}%d%%{default}"
+		"en"		"{green}%d%%{default}"
 	}
 }
