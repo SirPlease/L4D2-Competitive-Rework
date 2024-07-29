@@ -116,4 +116,50 @@
 	{
 		"chi"		"玩家数量不足..."
 	}
+
+	// readyup/panel.inc
+	"PanelSlots"
+	{
+		"chi"		"▸ 服务器: %s \n▸ 玩家: %d/%d\n▸ 配置: %s"
+	}
+	
+	"PanelCommands"
+	{
+		"chi"		"▸ 命令:"
+	}
+
+	"PanelSurvivors"
+	{
+		"chi"	"->%d. 幸存者%s"
+	}
+
+	"PanelInfected"
+	{
+		"chi"	"->%d. 感染者%s"
+	}
+
+	"PanelCaster"
+	{
+		"chi"	"->%d. 解说员"
+	}
+
+	"PanelCasters"
+	{
+		"chi"	"->%d. 解说员"
+	}
+
+	"PanelSpectator"
+	{
+		"chi"	"->%d. 观众"
+	}
+
+	"PanelSpectators"
+	{
+		"chi"	"->%d. 观众"
+	}
+
+	"PanelMany"
+	{
+		"chi"	"**许多** (%d)"
+	}
 }

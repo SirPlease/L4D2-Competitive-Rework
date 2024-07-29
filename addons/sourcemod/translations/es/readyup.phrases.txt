@@ -116,4 +116,50 @@
 	{
 		"es"		"Se requieren mas jugadores..."
 	}
+
+	// readyup/panel.inc
+	"PanelSlots"
+	{
+		"es"		"▸ Servidor: %s \n▸ Espacios: %d/%d\n▸ Config: %s"
+	}
+
+	"PanelCommands"
+	{
+		"es"		"▸ Comandos:"
+	}
+
+	"PanelSurvivors"
+	{
+		"es"	"->%d. Superviviente%s"
+	}
+
+	"PanelInfected"
+	{
+		"es"	"->%d. Infectado%s"
+	}
+
+	"PanelCaster"
+	{
+		"es"	"->%d. Comentador"
+	}
+
+	"PanelCasters"
+	{
+		"es"	"->%d. Comentadores"
+	}
+
+	"PanelSpectator"
+	{
+		"es"	"->%d. Espectador"
+	}
+
+	"PanelSpectators"
+	{
+		"es"	"->%d. Espectadores"
+	}
+
+	"PanelMany"
+	{
+		"es"	"**Muchos** (%d)"
+	}
 }

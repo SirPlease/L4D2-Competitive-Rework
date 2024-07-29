@@ -111,4 +111,50 @@
 	{
 		"jp"		"プレイヤーのローディング完了を待っています..."
 	}
+
+	// readyup/panel.inc
+	"PanelSlots"
+	{
+		"jp"		"▸ サーバー: %s \n▸ スロット: %d/%d\n▸ 設定: %s"
+	}
+	
+	"PanelCommands"
+	{
+		"jp"		"▸ コマンド:"
+	}
+
+	"PanelSurvivors"
+	{
+		"jp"	"->%d. 生存者%s"
+	}
+
+	"PanelInfected"
+	{
+		"jp"	"->%d. インフェクテッド%s"
+	}
+
+	"PanelCaster"
+	{
+		"jp"	"->%d. キャスター"
+	}
+
+	"PanelCasters"
+	{
+		"jp"	"->%d. キャスター"
+	}
+
+	"PanelSpectator"
+	{
+		"jp"	"->%d. 観戦者"
+	}
+
+	"PanelSpectators"
+	{
+		"jp"	"->%d. 観戦者"
+	}
+
+	"PanelMany"
+	{
+		"jp"	"**多数** (%d)"
+	}
 }
