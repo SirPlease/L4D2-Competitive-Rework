@@ -83,7 +83,7 @@
 	"CountUnReady"
 	{
 		"#format"	"{1:d}{2:d}"
-		"en"		"[{olive}{1}{default}/{olive}{2}{default}]"
+		"chi"		"[{olive}{1}{default}/{olive}{2}{default}]"
 	}
 
 	"UnReadyLimit"
