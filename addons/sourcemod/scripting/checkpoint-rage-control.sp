@@ -68,7 +68,7 @@ public void OnPluginStart()
 	LoadTranslation("checkpoint-rage-control.phrases");
 	
 	g_cvarAllMaps = CreateConVar("crc_global", "0", "Remove saferoom frustration preservation mechanic on all maps by default");
-	g_cvarDebug	  = CreateConVar("crc_debug", "3", "Whether or not to debug. 0:disable, 1:enable, 2:onlychat, 3:onlyconsole", FCVAR_NONE, true, 0.0, true, 3.0);
+	g_cvarDebug	  = CreateConVar("crc_debug", "0", "Whether or not to debug. 0:disable, 1:enable, 2:onlychat, 3:onlyconsole", FCVAR_NONE, true, 0.0, true, 3.0);
 
 	LoadGameData();
 	RegServerCmd("saferoom_frustration_tickdown", SetSaferoomFrustrationTickdown);
@@ -76,8 +76,7 @@ public void OnPluginStart()
 
 Action SetSaferoomFrustrationTickdown(int args)
 {
-	char
-		sMap[64];
+	char sMap[64];
 	GetCmdArg(1, sMap, sizeof(sMap));
 
 	g_smTickdownMaps.SetValue(sMap, true);
@@ -97,9 +96,7 @@ public void OnMapStart()
 		return;
 	}
 
-	char
-		sMap[64];
-
+	char sMap[64];
 	GetCurrentMap(sMap, sizeof(sMap));
 
 	int dummy;
@@ -278,10 +275,8 @@ Address FindPatchTarget(GameData gamedata)
 	else
 		DebugPrint("{green}Found{default} Saferoom Check Signature [Address:0x%X]", pTarget);
 
-	int
-		iOffset = gamedata.GetOffset("UpdateZombieFrustration_SaferoomCheck");
-
-	pTarget		= pTarget + (view_as<Address>(iOffset));
+	int iOffset = gamedata.GetOffset("UpdateZombieFrustration_SaferoomCheck");
+	pTarget = pTarget + (view_as<Address>(iOffset));
 
 	if (LoadFromAddress(pTarget, NumberType_Int8) != CALL_OPCODE)
 		SetFailState("Saferoom Check Offset or signature seems incorrect");
