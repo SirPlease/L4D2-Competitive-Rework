@@ -19,8 +19,11 @@
 #pragma newdecls required
 
 #include <colors>
-#include <left4dhooks>
 #include <sourcemod>
+
+#undef REQUIRE_PLUGIN
+#include <left4dhooks>
+#define REQUIRE_PLUGIN 
 
 #define CALL_OPCODE 0xE8
 
