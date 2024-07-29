@@ -62,7 +62,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	LoadTranslations("checkpoint-rage-control.phrases");
+	LoadTranslation("checkpoint-rage-control.phrases");
 	
 	g_cvarAllMaps = CreateConVar("crc_global", "0", "Remove saferoom frustration preservation mechanic on all maps by default");
 	g_cvarDebug	  = CreateConVar("crc_debug", "3", "Whether or not to debug. 0:disable, 1:enable, 2:onlychat, 3:onlyconsole", FCVAR_NONE, true, 0.0, true, 3.0);
@@ -71,7 +71,7 @@ public void OnPluginStart()
 	RegServerCmd("saferoom_frustration_tickdown", SetSaferoomFrustrationTickdown);
 }
 
-public Action SetSaferoomFrustrationTickdown(int args)
+Action SetSaferoomFrustrationTickdown(int args)
 {
 	char
 		sMap[64];
@@ -128,7 +128,7 @@ public void L4D2_OnEndVersusModeRound_Post()
 	UnHookAll();
 }
 
-public void Event_EnteredStartArea(Event hEvent, const char[] sName, bool dontBroadcast)
+void Event_EnteredStartArea(Event hEvent, const char[] sName, bool dontBroadcast)
 {
 	if (!g_bIsHoocked)
 		return;
@@ -152,7 +152,7 @@ public void Event_EnteredStartArea(Event hEvent, const char[] sName, bool dontBr
 	UnHookAll();
 }
 
-public void Event_PlayerDeath(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_PlayerDeath(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("userid"));
 	if (!IsValidClientIndex(client) || !IsClientInGame(client) || !IsTank(client))
@@ -214,7 +214,7 @@ void LoadGameData()
 /**
  * Unhooks all events that were previously hooked.
  */
-public void UnHookAll()
+void UnHookAll()
 {
 	UnhookEvent("player_entered_start_area", Event_EnteredStartArea);
 	UnhookEvent("player_death", Event_PlayerDeath);
@@ -299,7 +299,7 @@ Address FindPatchTarget(GameData gamedata)
  * @param client The client index to check.
  * @return True if the client index is valid, false otherwise.
  */
-stock bool IsValidClientIndex(int client)
+bool IsValidClientIndex(int client)
 {
 	return (client > 0 && client <= MaxClients);
 }
@@ -310,7 +310,7 @@ stock bool IsValidClientIndex(int client)
  * @param client client ID
  * @return bool
  */
-stock bool IsTank(int client)
+bool IsTank(int client)
 {
 	return (L4D_GetClientTeam(client) == L4DTeam_Infected && L4D2_GetPlayerZombieClass(client) == L4D2ZombieClass_Tank);
 }
@@ -344,7 +344,7 @@ void DebugPrint(char[] sMessage, any...)
  * @param translation	Translation name.
  * @noreturn
  */
-stock void LoadTranslation(const char[] translation)
+void LoadTranslation(const char[] translation)
 {
 	char
 		sPath[PLATFORM_MAX_PATH],
