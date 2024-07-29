@@ -62,6 +62,7 @@ void SetupForwardsNatives()
 	g_hFWD_CTerrorPlayer_TakeOverBot_Pre									= new GlobalForward("L4D_OnTakeOverBot",								ET_Event, Param_Cell);
 	g_hFWD_CTerrorPlayer_TakeOverBot_Post									= new GlobalForward("L4D_OnTakeOverBot_Post",							ET_Event, Param_Cell, Param_Cell);
 	g_hFWD_CTerrorPlayer_TakeOverBot_PostHandled							= new GlobalForward("L4D_OnTakeOverBot_PostHandled",					ET_Event, Param_Cell, Param_Cell);
+	g_hFWD_CDirector_OnFinishIntro											= new GlobalForward("L4D_OnFinishIntro",								ET_Event);
 	g_hFWD_CDirector_IsTeamFull												= new GlobalForward("L4D_OnIsTeamFull",									ET_Event, Param_Cell, Param_CellByRef);
 	g_hFWD_CTerrorGameRules_ClearTeamScores									= new GlobalForward("L4D_OnClearTeamScores",							ET_Event, Param_Cell);
 	g_hFWD_CTerrorGameRules_SetCampaignScores								= new GlobalForward("L4D_OnSetCampaignScores",							ET_Event, Param_CellByRef, Param_CellByRef);
@@ -433,6 +434,7 @@ void SetupForwardsNatives()
 	CreateNative("L4D_GetNavArea_AttributeFlags",					Native_GetCNavArea_AttributeFlags);
 	CreateNative("L4D_SetNavArea_AttributeFlags",					Native_SetCNavArea_AttributeFlags);
 	CreateNative("L4D_GetMaxChapters",								Native_CTerrorGameRules_GetNumChaptersForMissionAndMode);
+	CreateNative("L4D_IsInIntro",									Native_CTerrorGameRules_IsInIntro);
 	CreateNative("L4D_GetVersusMaxCompletionScore",					Native_GetVersusMaxCompletionScore);
 	CreateNative("L4D_SetVersusMaxCompletionScore",					Native_SetVersusMaxCompletionScore);
 

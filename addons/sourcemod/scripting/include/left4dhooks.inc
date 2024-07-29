@@ -60,14 +60,14 @@
 
 
 
-// Natives: 272 (including 3 for L4D1 only)
-// L4D1 = 31 [left4downtown] + 47 [l4d_direct] + 16 [l4d2addresses] + 72 [silvers - mine!] + 4 [anim] = 171
-// L4D2 = 61 [left4downtown] + 59 [l4d_direct] + 31 [l4d2addresses] + 116 [silvers - mine!] + 4 [anim] = 271
+// Natives: 273 (including 3 for L4D1 only)
+// L4D1 = 31 [left4downtown] + 47 [l4d_direct] + 16 [l4d2addresses] + 73 [silvers - mine!] + 4 [anim] = 172
+// L4D2 = 61 [left4downtown] + 59 [l4d_direct] + 31 [l4d2addresses] + 117 [silvers - mine!] + 4 [anim] = 272
 // Methods and Natives by "Forgetest": 53 [PlayerAnimState] + 22 [Ammo_t] + 15 [AmmoDef] = 90
 
-// Forwards: 220 (including 5 for L4D1 only)
-// L4D1 = 146
-// L4D2 = 215
+// Forwards: 221 (including 5 for L4D1 only)
+// L4D1 = 147
+// L4D2 = 216
 
 // Stocks: 169 (L4D1 = 114, L4D2 = 167)
 // left4dhooks_silver			46 stocks	(L4D1 = 39,		L4D2 = 53)
@@ -217,6 +217,7 @@ public void __pl_l4dh_SetNTVOptional()
 	MarkNativeAsOptional("L4D2_GetWitchCount");
 	MarkNativeAsOptional("L4D_GetCurrentChapter");
 	MarkNativeAsOptional("L4D_GetMaxChapters");
+	MarkNativeAsOptional("L4D_IsInIntro");
 	MarkNativeAsOptional("L4D_GetAllNavAreas");
 	MarkNativeAsOptional("L4D_GetNavAreaID");
 	MarkNativeAsOptional("L4D_GetNavAreaByID");
@@ -1672,6 +1673,15 @@ forward void L4D_OnMaterializeFromGhost(int client);
  * @noreturn
  */
 forward void L4D_OnMaterializeFromGhost_PostHandled(int client);
+
+/**
+ * @brief Called whenever CDirector::OnFinishIntro is invoked
+ * @remarks called when the intro cutscene has finished
+ * @remarks This is a post hook, it appears to be called before the "L4D_OnReleaseSurvivorPositions" forward.
+ *
+ * @noreturn
+ */
+forward void L4D_OnFinishIntro();
 
 /**
  * @brief Called whenever IsTeamFull is invoked
@@ -5576,6 +5586,13 @@ native int L4D_GetCurrentChapter();
  * @return			Max chapters
  */
 native int L4D_GetMaxChapters();
+
+/**
+ * @brief Returns if the intro cutscene is playing
+ *
+ * @return			True if the intro cutscene is playing, false otherwise
+ */
+native int L4D_IsInIntro();
 
 /**
  * @brief Returns all TheNavAreas addresses

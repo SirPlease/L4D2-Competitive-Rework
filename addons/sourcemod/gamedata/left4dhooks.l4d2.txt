@@ -522,6 +522,21 @@
 				}
 			}
 
+			"L4DD::CDirector::OnFinishIntro"
+			{
+				"signature"		"CDirector::OnFinishIntro"
+				"callconv"		"thiscall"
+				"return"		"bool"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"bool"
+					}
+				}
+			}
+
 			"L4DD::CDirector::IsTeamFull"
 			{
 				"signature"		"CDirector::IsTeamFull"
@@ -3523,6 +3538,18 @@
 				"linux"		"@_ZN13CTerrorPlayer17OnEnterGhostStateEv"
 				"windows"	"\x55\x8B\xEC\x83\xEC\x08\x53\x56\x8B\xF1\x8B\x86\x2A\x2A\x2A\x2A\x8B"
 				/* 55 8B EC 83 EC 08 53 56 8B F1 8B 86 ? ? ? ? 8B */
+			}
+
+			/*
+			 * CDirector::OnFinishIntro(CDirector *this)
+			 */
+			"CDirector::OnFinishIntro"
+			{
+				"library"		"server"
+				"linux"			"@_ZN9CDirector13OnFinishIntroEv"
+				"windows"		"\x55\x8B\x2A\x51\x8B\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x2A\x2A\x2A\x2A\x6A\x2A\xE8\x2A\x2A\x2A\x2A\x80"
+				/* 55 8B ? 51 8B ? ? ? ? ? 56 8B ? ? ? ? ? 6A ? E8 ? ? ? ? 80 */
+				/* Search "hostfile" for "CTerrorPlayer::ShowHostDetails" - The string appears twice in this function. Xref to function that calls this, xref again , xref again for target function. */
 			}
 
 			/*
