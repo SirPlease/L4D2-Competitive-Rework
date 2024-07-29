@@ -79,7 +79,18 @@
 	{
 		"ko"		"카운트다운 취소됨!"
 	}
-	
+
+	"CountUnReady"
+	{
+		"#format"	"{1:d}{2:d}"
+		"ko"		"[{olive}{1}{default}/{olive}{2}{default}]"
+	}
+
+	"UnReadyLimit"
+	{
+		"ko"		"{default}[{green}!{default}] 취소한 횟수가 {red}제한{default}에 도달했습니다 [{green}%d{default}]"
+	}
+
 	"RoundIsLive"
 	{
 		"ko"		"라운드 시작!"

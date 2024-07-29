@@ -79,7 +79,18 @@
 	{
 		"en"		"Countdown Cancelled!"
 	}
-	
+
+	"CountUnReady"
+	{
+		"#format"	"{1:d}{2:d}"
+		"en"		"[{olive}{1}{default}/{olive}{2}{default}]"
+	}
+
+	"UnReadyLimit"
+	{
+		"en"	"{default}[{green}!{default}] You have reached your {red}unready limit{default} [{green}%d{default}]"
+	}
+
 	"RoundIsLive"
 	{
 		"en"		"Round is live!"
