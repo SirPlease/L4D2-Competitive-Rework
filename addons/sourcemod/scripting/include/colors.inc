@@ -2,7 +2,7 @@
  *                                                                        *
  *                       Colored Chat Functions                           *
  *                   Author: exvel, Editor: Popoklopsi, Powerlord, Bara   *
- *                           Version: 1.3.3                               *
+ *                           Version: 1.3.2                               *
  *                                                                        *
  **************************************************************************/
 
