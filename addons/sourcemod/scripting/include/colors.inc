@@ -13,9 +13,8 @@
 
 #define CSOURCETV				1 // Enable print for SourceTV
 
-#if !defined MAX_MESSAGE_LENGTH
-	#define MAX_MESSAGE_LENGTH		250
-#endif
+#define MAX_MESSAGE_LENGTH		250
+
 #define MAX_COLORS				12
 
 #define SERVER_INDEX			0
