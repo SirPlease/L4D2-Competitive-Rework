@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.144"
+#define PLUGIN_VERSION		"1.151"
 
 /*=======================================================================================
 	Plugin Info:
@@ -352,6 +352,9 @@ Action sm_l4dd(int client, int args)
 		Uncomment the things you want to test. All disabled by default.
 		Must test individual sections on their own otherwise you'll receive errors about symbols already defined..
 	*/
+
+
+	// PrintToServer("L4D_IsInIntro %d", L4D_IsInIntro()); //WORKING
 
 
 
@@ -1926,7 +1929,7 @@ Action sm_l4dd(int client, int args)
 
 	if( g_bLeft4Dead2 )
 	{
-		// Test attribute tag mis-match
+		// Test attribute tag mismatch
 		// PrintToServer("L4D2_GetIntWeaponAttribute_DD: %d",		L4D2_GetIntWeaponAttribute("weapon_smg", L4D2FWA_MaxPlayerSpeed));
 
 		int scores[2];
@@ -2810,6 +2813,18 @@ public void L4D_OnTakeOverBot_PostHandled(int client, bool success)
 		called++;
 
 		ForwardCalled("\"L4D_OnTakeOverBot_PostHandled\" %d (%N). Success: %d", client, client, success);
+	}
+}
+
+public void L4D_OnFinishIntro()
+{
+	static int called;
+	if( called < MAX_CALLS )
+	{
+		if( called == 0 ) g_iForwards++;
+		called++;
+
+		ForwardCalled("\"L4D_OnFinishIntro\"");
 	}
 }
 
@@ -4674,7 +4689,9 @@ public Action L4D1_FirstAidKit_StartHealing(int client, int entity)
 		called++;
 
 		// Better to use FindConVar in plugin start, hook the convar for change and store the value in a variable, this is just an example:
-		float range = FindConVar("player_use_radius").FloatValue;
+		float range;
+		if( g_bLeft4Dead2 ) range = FindConVar("player_use_radius").FloatValue;
+		else range = 96.0; // L4D1 doesn't have this cvar, maybe another, don't know name
 
 		int target = L4D_FindUseEntity(client, true, range); // "m_healTarget" is not set at this point, must call this native if you wish to identify the target before healing
 		if( target < 0 || target > MaxClients ) target = 0;

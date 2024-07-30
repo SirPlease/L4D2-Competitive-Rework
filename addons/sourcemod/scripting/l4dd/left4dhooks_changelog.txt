@@ -1,3 +1,17 @@
+1.151 (17-Jun-2024)
+	- Added forward "L4D_OnFinishIntro" to fire when the intro cutscene has finished (probably only first chapter of a campaign).
+	- Added native "L4D_IsInIntro" to determine if the intro cutscene is playing.
+	- Fixed native "L4D_CancelStagger" blocking being able to stagger someone after calling cancel stagger within the same or next few frames. Thanks to "KoMiKoZa" for reporting. Bug affected "Shove Handler" plugin.
+
+	- Updated: Plugin and test plugin.
+	- Updated: "/gamedata/left4dhooks.l4d1.txt" GameData file.
+	- Updated: "/gamedata/left4dhooks.l4d2.txt" GameData file.
+	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_gamedata.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_setup.sp" project file.
+	- Updated: "/scripting/include/left4dhooks.inc" include file.
+
 1.150 (06-May-2024)
 	- L4D1 Linux: Removed some unused clone functions that were removed from the game update. Thanks to "Ja-Forces" and "Forgetest" for reporting.
 
@@ -12,12 +26,8 @@
 	- Update to fix GameData changes on Linux due to the recent update in L4D1. Thanks to "Forgetest" for fixing.
 	- Removed excess "functions" from the L4D1 temporary gamedata file, which were intended only for L4D2.
 
-	- Updated: Plugin.
-	- Updated: "/gamedata/left4dhooks.l4d1.txt" GameData file.
-	- Updated: "/scripting/l4dd/l4dd_gamedata.sp" project file.
-
 1.147 (30-Apr-2024)
-	- Fixed the "L4D_CancelStagger" not working on Special Infected (hackish fix, the SDKCall does not appear to work). Thanks to "Forgetest" for a solution.
+	- Fixed native "L4D_CancelStagger" not working on Special Infected (hackish fix, the SDKCall does not appear to work). Thanks to "Forgetest" for a solution.
 	- Changed "left4dhooks_silver.inc" include file to include the main "left4dhooks.inc" include, required by some functions. Thanks to "Forgetest" for reporting.
 	- Moved bool block variables within the forwards to the top, preventing wrongly firing the "*PostHandled" forwards, in case of any error before being set to false.
 

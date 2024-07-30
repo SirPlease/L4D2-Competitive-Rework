@@ -2289,6 +2289,9 @@ void LoadGameData()
 
 		g_iOff_m_bFirstSurvivorLeftStartArea = hGameData.GetOffset("m_bFirstSurvivorLeftStartArea");
 		ValidateOffset(g_iOff_m_bFirstSurvivorLeftStartArea, "m_bFirstSurvivorLeftStartArea");
+
+		g_iOff_m_bInIntro = hGameData.GetOffset("m_bInIntro");
+		ValidateOffset(g_iOff_m_bInIntro, "m_bInIntro");
 	}
 	else
 	{
@@ -2358,7 +2361,7 @@ void LoadGameData()
 	}
 	else if( byte != 0x90 )
 	{
-		LogError("CTerrorPlayer::CanBecomeGhost patch: byte mis-match. %X", LoadFromAddress(g_pCTerrorPlayer_CanBecomeGhost + view_as<Address>(g_iCanBecomeGhostOffset), NumberType_Int8));
+		LogError("CTerrorPlayer::CanBecomeGhost patch: byte mismatch. %X", LoadFromAddress(g_pCTerrorPlayer_CanBecomeGhost + view_as<Address>(g_iCanBecomeGhostOffset), NumberType_Int8));
 	}
 	// ====================
 
@@ -2517,6 +2520,10 @@ void LoadGameData()
 		PrintToServer("g_iOff_m_eCurrentMainSequenceActivity = %d", g_iOff_m_eCurrentMainSequenceActivity);
 		PrintToServer("g_iOff_m_bIsCustomSequence = %d", g_iOff_m_bIsCustomSequence);
 		PrintToServer("");
+	}
+	else
+	{
+		PrintToServer("m_bInIntro = %d", g_iOff_m_bInIntro);
 	}
 	#endif
 	#endif

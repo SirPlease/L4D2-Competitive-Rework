@@ -18,8 +18,8 @@
 
 
 
-#define PLUGIN_VERSION		"1.150"
-#define PLUGIN_VERLONG		1150
+#define PLUGIN_VERSION		"1.151"
+#define PLUGIN_VERLONG		1151
 
 #define DEBUG				0
 // #define DEBUG			1	// Prints addresses + detour info (only use for debugging, slows server down).
@@ -115,7 +115,7 @@
 
 // ====================================================================================================
 // UPDATER
-#define UPDATE_URL					"https://raw.githubusercontent.com/SilvDev/Left4DHooks/main/sourcemod/updater.txt"
+#define UPDATE_URL						"https://raw.githubusercontent.com/SilvDev/Left4DHooks/main/sourcemod/updater.txt"
 
 native void Updater_AddPlugin(const char[] url);
 // ====================================================================================================
@@ -298,6 +298,7 @@ int g_iOff_m_PendingMobCount;
 int g_iOff_m_nFirstClassIndex;
 int g_iOff_m_fMapMaxFlowDistance;
 int g_iOff_m_chapter;
+int g_iOff_m_bInIntro;
 int g_iOff_m_attributeFlags;
 int g_iOff_m_spawnAttributes;
 int g_iOff_NavAreaID;

@@ -65,6 +65,7 @@ GlobalForward g_hFWD_CSquirrelVM_GetValue_Void;
 GlobalForward g_hFWD_CSquirrelVM_GetValue_Int;
 GlobalForward g_hFWD_CSquirrelVM_GetValue_Float;
 GlobalForward g_hFWD_CSquirrelVM_GetValue_Vector;
+GlobalForward g_hFWD_CDirector_OnFinishIntro;
 GlobalForward g_hFWD_CDirector_IsTeamFull;
 GlobalForward g_hFWD_CTerrorPlayer_EnterGhostState_Pre;
 GlobalForward g_hFWD_CTerrorPlayer_EnterGhostState_Post;
@@ -317,6 +318,7 @@ void SetupDetours(GameData hGameData = null)
 	CreateDetour(hGameData,			DTR_CTerrorPlayer_TakeOverBot_Pre,							DTR_CTerrorPlayer_TakeOverBot_Post,							"L4DD::CTerrorPlayer::TakeOverBot",									"L4D_OnTakeOverBot");
 	CreateDetour(hGameData,			DTR_CTerrorPlayer_TakeOverBot_Pre,							DTR_CTerrorPlayer_TakeOverBot_Post,							"L4DD::CTerrorPlayer::TakeOverBot",									"L4D_OnTakeOverBot_Post",						true);
 	CreateDetour(hGameData,			DTR_CTerrorPlayer_TakeOverBot_Pre,							DTR_CTerrorPlayer_TakeOverBot_Post,							"L4DD::CTerrorPlayer::TakeOverBot",									"L4D_OnTakeOverBot_PostHandled",				true);
+	CreateDetour(hGameData,			DTR_CDirector_OnFinishIntro_Pre,							DTR_CDirector_OnFinishIntro,								"L4DD::CDirector::OnFinishIntro",									"L4D_OnFinishIntro");
 	CreateDetour(hGameData,			DTR_CDirector_IsTeamFull,									INVALID_FUNCTION,											"L4DD::CDirector::IsTeamFull",										"L4D_OnIsTeamFull");
 	CreateDetour(hGameData,			DTR_CTerrorGameRules_ClearTeamScores,						INVALID_FUNCTION,											"L4DD::CTerrorGameRules::ClearTeamScores",							"L4D_OnClearTeamScores");
 	CreateDetour(hGameData,			DTR_CTerrorGameRules_SetCampaignScores,						DTR_CTerrorGameRules_SetCampaignScores_Post,				"L4DD::CTerrorGameRules::SetCampaignScores",						"L4D_OnSetCampaignScores");
@@ -1643,6 +1645,21 @@ MRESReturn DTR_CTerrorPlayer_TakeOverBot_Post(int pThis, DHookReturn hReturn, DH
 	Call_StartForward(g_bBlock_CTerrorPlayer_TakeOverBot ? g_hFWD_CTerrorPlayer_TakeOverBot_PostHandled : g_hFWD_CTerrorPlayer_TakeOverBot_Post);
 	Call_PushCell(pThis);
 	Call_PushCell(hReturn.Value);
+	Call_Finish();
+
+	return MRES_Ignored;
+}
+
+MRESReturn DTR_CDirector_OnFinishIntro_Pre()
+{
+	//PrintToServer("##### DTR_CDirector_OnFinishIntro_Pre");
+	return MRES_Ignored;
+}
+
+MRESReturn DTR_CDirector_OnFinishIntro() // Forward "L4D_OnFinishIntro"
+{
+	//PrintToServer("##### DTR_CDirector_OnFinishIntro");
+	Call_StartForward(g_hFWD_CDirector_OnFinishIntro);
 	Call_Finish();
 
 	return MRES_Ignored;
