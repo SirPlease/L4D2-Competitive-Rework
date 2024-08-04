@@ -114,6 +114,7 @@ static Action ReadyCountdownDelay_Timer(Handle timer)
 		InitiateLive();
 		PlayLiveSound();
 		s_readyCountdownTimer = null;
+		RespectateSpectators();	//# Fix score bug for spectators, specifically for casters
 		return Plugin_Stop;
 	}
 	
@@ -248,6 +249,17 @@ void CancelFullReady(int client, disruptType type)
 			Call_PushCell(client);
 			Call_PushString(g_sDisruptReason[type]);
 			Call_Finish();
+		}
+	}
+}
+
+void RespectateSpectators()
+{
+	for (int client = 1; client <= MaxClients; ++client)
+	{
+		if (IsClientInGame(client) && !IsFakeClient(client) && GetClientTeam(client) == L4D2Team_Spectator )
+		{
+			FakeClientCommand(client, "sm_spectate");
 		}
 	}
 }
