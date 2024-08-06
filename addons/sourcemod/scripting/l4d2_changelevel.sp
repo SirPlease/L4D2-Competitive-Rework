@@ -34,6 +34,8 @@ static Handle hDirectorClearTeamScores;
 //Credit ProdigySim for l4d2_direct reading of TheDirector class https://forums.alliedmods.net/showthread.php?t=180028
 static Address TheDirector = Address_Null;
 
+bool bChangeLevelEnabled = true;
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if(GetEngineVersion() != Engine_Left4Dead2)
@@ -88,6 +90,8 @@ public void OnPluginStart()
 	delete hGamedata;
 	
 	RegAdminCmd("sm_changelevel", Changelevel, ADMFLAG_ROOT, "L4D2 changelevel method to release all resources");
+
+	bChangeLevelEnabled = true;
 }
 
 Action Changelevel(int iClient, int iArg)
@@ -114,12 +118,25 @@ Action Changelevel(int iClient, int iArg)
 
 void L4D2_ChangeLevel(const char[] sMapName, bool bShouldResetScores=true)
 {
+	if (!bChangeLevelEnabled)
+		return;
+
+	bChangeLevelEnabled = false;
+	CreateTimer(15.0, EnableChangeLevel);
+
 	PrintToServer("[SM] Changelevel to %s", sMapName);
 	if(bShouldResetScores)
 	{
 		SDKCall(hDirectorClearTeamScores, TheDirector, 1);
 	}
 	SDKCall(hDirectorChangeLevel, TheDirector, sMapName);
+}
+
+Action EnableChangeLevel(Handle timer)
+{
+	bChangeLevelEnabled = true;
+
+	return Plugin_Stop;
 }
 
 int L4D2_ChangeLevelNV(Handle plugin, int numParams)
