@@ -112,8 +112,8 @@ You can't as he hasn't made it public.  You can use the one created by LuckyLock
 You will need to update your server.  
   
 ./steamcmd.sh  
-login anonymous  
 force_install_dir ./Steam/steamapps/common/l4d2  
+login anonymous  
 app_update 222860 validate  
 quit  
 
