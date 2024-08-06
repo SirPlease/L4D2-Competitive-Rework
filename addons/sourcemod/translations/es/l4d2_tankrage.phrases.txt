@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"es"		"{red}[{default}Tank Rage{red}]{default}"
+	}
+	"SurvivorsRunBack"
+	{
+        "es"        "Por cada {olive}%i{green}%% {default}que los Supervivientes retrocedan, se congelara la frustracion del Tank por {olive}%0.1f {green}segundos{default}."
+	}
+}

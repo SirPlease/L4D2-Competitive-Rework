@@ -1,0 +1,46 @@
+"Phrases"
+{
+	"TagRage"
+	{
+		"en"		"{red}<{default}Tank Rage{red}>"
+	}
+	"Refilled"
+	{
+		"en"		"{default}({green}%N{default}'s) {olive}Rage Meter {red}Refilled"
+	}
+	"RefilledBot"
+	{
+		"en"		"{olive}Rage Meter {red}Refilled"
+	}
+
+    "TagSelection"
+	{
+		"en"		"{red}<{default}Tank Selection{red}>"
+	}
+    "YouBecomeTank"
+	{
+		"en"		"{green}You {default}will become the {red}Tank{default}!"
+	}
+   "BecomeTank"
+	{
+		"en"		"{olive}%N {default}will become the {red}Tank!"
+	}
+
+    "TagControl"
+	{
+		"en"		"{green}[{olive}Tank Control{green}]"
+	}
+   "InvalidTarget"
+	{
+		"en"		"{default}Invalid Target. Unable to give tank"
+	}
+   "NoInfected"
+	{
+		"en"		"{olive}%N {default}is not on the infected team. Unable to give tank"
+	}
+
+    "HintText"
+	{
+		"en"		"Rage Meter Refilled"
+	}
+}

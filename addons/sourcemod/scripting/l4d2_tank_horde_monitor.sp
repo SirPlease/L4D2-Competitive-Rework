@@ -49,6 +49,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslation("l4d2_tank_horde_monitor.phrases");
 	InitGameData();
 	
 	g_hBypassFlowDistance = FindConVar("director_tank_bypass_max_flow_travel");
@@ -159,7 +160,7 @@ Action Timer_CheckTank(Handle timer)
 void AnnounceTankSpawn()
 {
 	fProgressFlowPercent = GetFlowUntilBypass(fFurthestFlow, fBypassFlow);
-	CPrintToChatAll("<{olive}Horde{default}> Horde has {blue}paused{default} due to tank in play! Progressing by {blue}%0.1f%%{default} will start the horde.", fProgressFlowPercent);
+	CPrintToChatAll("%t %t", "Tag", "TankPlay", fProgressFlowPercent);
 	announcedTankSpawn = true;
 
 	// Begin repeating flow checker
@@ -186,7 +187,7 @@ Action FlowCheckTimer(Handle hTimer)
 
 	if (fProgressFlowPercent - fWarningPercent >= 1.0){
 		fProgressFlowPercent = fWarningPercent;
-		CPrintToChatAll("<{olive}Horde{default}> {blue}%0.1f%%{default} left until horde starts...", fWarningPercent);
+		CPrintToChatAll("%t %t", "Tag", "UntilHordeStarts", fWarningPercent);
 	}
 
 	return Plugin_Continue;
@@ -224,7 +225,7 @@ public Action L4D_OnSpawnMob(int &amount)
 			if (!announcedHordeResume && tankInPlayDelay && fPushAmount >= 0.05){
 				fPushWarningPercent = fPushAmount;
 				int iPushPercent = RoundToNearest(fPushAmount * 100.0);
-				CPrintToChatAll("<{olive}Horde{default}> Horde has {blue}resumed{default} at {green}%i%% strength{default}, pushing will increase the horde.", iPushPercent);
+				CPrintToChatAll("%t %t", "Tag", "HordeResumed", iPushPercent);
 				announcedHordeResume = true;
 			}
 
@@ -232,12 +233,12 @@ public Action L4D_OnSpawnMob(int &amount)
 			if (fPushAmount - fPushWarningPercent >= 0.20 && fPushAmount != 1.0 && announcedHordeResume){
 				fPushWarningPercent = fPushAmount;
 				int iPushPercent = RoundToNearest(fPushAmount * 100.0);
-				CPrintToChatAll("<{olive}Horde{default}> Horde is at {green}%i%% strength{default}...", iPushPercent);
+				CPrintToChatAll("%t %t", "Tag", "HordeStrength", iPushPercent);
 			}
 
 			// Have survivors have pushed past the extra distance we allow?
 			if (fPushAmount == 1.0){
-				CPrintToChatAll("<{olive}Horde{default}> Survivors have pushed too far, horde is at {green}100%% strength{default}!");
+				CPrintToChatAll("%t %t", "Tag", "HordeVeryStrength");
 				announcedHordeMax = true;
 			}
 
@@ -328,4 +329,24 @@ void ResetWarnings()
 	announcedHordeResume = false;
 	announcedHordeMax = false;
 	fPushWarningPercent = 0.0;
+}
+
+/**
+ * Check if the translation file exists
+ *
+ * @param translation	Translation name.
+ * @noreturn
+ */
+stock void LoadTranslation(const char[] translation)
+{
+	char
+		sPath[PLATFORM_MAX_PATH],
+		sName[64];
+
+	Format(sName, sizeof(sName), "translations/%s.txt", translation);
+	BuildPath(Path_SM, sPath, sizeof(sPath), sName);
+	if (!FileExists(sPath))
+		SetFailState("Missing translation file %s.txt", translation);
+
+	LoadTranslations(translation);
 }

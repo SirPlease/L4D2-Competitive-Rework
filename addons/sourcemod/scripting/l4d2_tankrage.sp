@@ -23,12 +23,13 @@ public Plugin myinfo =
     name = "L4D2 Tank Rage",
     author = "Sir",
     description = "Manage Tank Rage when Survivors are running back.",
-    version = "1.0",
+    version = "1.0.1",
     url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public void OnPluginStart()
 {
+    LoadTranslation("l4d2_tankrage.phrases");
     g_hVsBossBuffer = FindConVar("versus_boss_buffer");
     convarRageFlowPercent = CreateConVar("l4d2_tankrage_flowpercent", "7", "The percentage in flow the survival have to run back to grant frustration freeze (Furthest Survivor)");
     convarRageFreezeTime  = CreateConVar("l4d2_tankrage_freezetime", "4.0", "Time in seconds to freeze the Tank's frustration when survivors have ran back per <flowpercent>.");
@@ -86,7 +87,7 @@ void Event_TankSpawn(Event hEvent, char[] sEventName, bool dontBroadcast)
 
     if (!IsFakeClient(iTank))
     {
-        CPrintToChatAll("{red}[{default}Tank Rage{red}] {default}For every {olive}%i{green}%% {default}Survivors run back, the Tank will have their frustration frozen for {olive}%0.1f {green}seconds{default}.", convarRageFlowPercent.IntValue, convarRageFreezeTime.FloatValue);
+        CPrintToChatAll("%t %t", "Tag", "SurvivorsRunBack", convarRageFlowPercent.IntValue, convarRageFreezeTime.FloatValue);
         hTankTimer = CreateTimer(0.1, timerTank, _, TIMER_REPEAT)
         bHaveHadFlowOrStaticTank = true;
     }
@@ -205,4 +206,24 @@ InSecondHalfOfRound()
 int min(int a, int b) 
 {
     return a < b ? a : b;
+}
+
+/**
+ * Check if the translation file exists
+ *
+ * @param translation	Translation name.
+ * @noreturn
+ */
+stock void LoadTranslation(const char[] translation)
+{
+	char
+		sPath[PLATFORM_MAX_PATH],
+		sName[64];
+
+	Format(sName, sizeof(sName), "translations/%s.txt", translation);
+	BuildPath(Path_SM, sPath, sizeof(sPath), sName);
+	if (!FileExists(sPath))
+		SetFailState("Missing translation file %s.txt", translation);
+
+	LoadTranslations(translation);
 }

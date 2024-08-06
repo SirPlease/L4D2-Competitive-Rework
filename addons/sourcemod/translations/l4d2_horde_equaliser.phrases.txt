@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"en"		"<{olive}Horde{default}>"
+	}
+	"NoCommonRemaining"
+	{
+		"en"		"{red}No {default}common remaining!"
+	}
+	"CommonRemaining"
+	{
+		"en"		"{red}%i {default}common remaining.."
+	}
+	"FiniteEventStarted"
+	{
+		"en"		"A {blue}finite event{default} of {olive}%i{default} commons has started! Rush or wait it out, the choice is yours!"
+	}
+}
