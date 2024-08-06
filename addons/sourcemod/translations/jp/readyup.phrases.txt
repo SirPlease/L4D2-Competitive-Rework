@@ -79,7 +79,18 @@
 	{
 		"jp"		"カウントダウンがキャンセルされました！"
 	}
-	
+
+	"CountUnReady"
+	{
+		"#format"	"{1:d}{2:d}"
+		"jp"		"[{olive}{1}{default}/{olive}{2}{default}]"
+	}
+
+	"UnReadyLimit"
+	{
+		"jp"		"{default}[{green}!{default}] キャンセル回数が{red}制限{default}に達しました [{green}%d{default}]"
+	}
+
 	"RoundIsLive"
 	{
 		"jp"		"ラウンド開始！"
@@ -99,5 +110,51 @@
 	"AutoStartWaiting"
 	{
 		"jp"		"プレイヤーのローディング完了を待っています..."
+	}
+
+	// readyup/panel.inc
+	"PanelSlots"
+	{
+		"jp"		"▸ サーバー: %s \n▸ スロット: %d/%d\n▸ 設定: %s"
+	}
+	
+	"PanelCommands"
+	{
+		"jp"		"▸ コマンド:"
+	}
+
+	"PanelSurvivors"
+	{
+		"jp"	"->%d. 生存者%s"
+	}
+
+	"PanelInfected"
+	{
+		"jp"	"->%d. インフェクテッド%s"
+	}
+
+	"PanelCaster"
+	{
+		"jp"	"->%d. キャスター"
+	}
+
+	"PanelCasters"
+	{
+		"jp"	"->%d. キャスター"
+	}
+
+	"PanelSpectator"
+	{
+		"jp"	"->%d. 観戦者"
+	}
+
+	"PanelSpectators"
+	{
+		"jp"	"->%d. 観戦者"
+	}
+
+	"PanelMany"
+	{
+		"jp"	"**多数** (%d)"
 	}
 }
