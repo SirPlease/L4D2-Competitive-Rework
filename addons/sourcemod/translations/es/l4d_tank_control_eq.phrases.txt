@@ -1,0 +1,46 @@
+"Phrases"
+{
+	"TagRage"
+	{
+		"es"		"{red}<{default}Tank Rage{red}>"
+	}
+	"Refilled"
+	{
+		"es"		"{default}({green}%N{default}) {olive}Medidor de Control {red}Recargado"
+	}
+	"RefilledBot"
+	{
+		"es"		"{olive}Medidor de Control {red}Recargado"
+	}
+
+    "TagSelection"
+	{
+		"es"		"{red}<{default}Tank Selection{red}>"
+	}
+    "YouBecomeTank"
+	{
+		"es"		"{green}Tu {default}serás el {red}Tank{default}!"
+	}
+   "BecomeTank"
+	{
+		"es"		"{olive}%N {default}será el {red}Tank!"
+	}
+
+    "TagControl"
+	{
+		"es"		"{green}[{olive}Tank Control{green}]"
+	}
+   "InvalidTarget"
+	{
+		"es"		"{default}Objetivo inválido. No se puede dar tanque"
+	}
+   "NoInfected"
+	{
+		"es"		"{olive}%N {default}no está en el equipo infectado. No se puede dar tanque"
+	}
+
+    "HintText"
+	{
+		"es"		 "Medidor de Control Recargado"
+	}
+}

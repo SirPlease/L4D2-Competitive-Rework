@@ -54,7 +54,7 @@ public void OnPluginStart()
 	if (!g_bLateload)
 		return;
 
-	g_bSpecRates = LibraryExists("caster_system");
+	g_bSpecRates = LibraryExists("specrates");
 }
 
 Action Cmd_ChangeStatusRates(int client, int args)

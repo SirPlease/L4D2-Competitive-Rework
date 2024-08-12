@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"es"		"<{olive}Horde{default}>"
+	}
+	"NoCommonRemaining"
+	{
+		"es"		 "{red}No {default}quedan infectados comunes!"
+	}
+	"CommonRemaining"
+	{
+		"es"		"{red}%i {default}infectados comunes restantes.."
+	}
+	"FiniteEventStarted"
+	{
+		"es"		"Un {blue}evento finito{default} de {olive}%i{default} infectados comunes ha comenzado!, avanza o espera, la elección es tuya!"
+	}
+}

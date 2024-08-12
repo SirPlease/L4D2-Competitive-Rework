@@ -1,0 +1,27 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"en"		"<{olive}Horde{default}>"
+	}
+	"TankPlay"
+	{
+		"en"		"Horde has {blue}paused{default} due to tank in play! Progressing by {blue}%0.1f%%{default} will start the horde."
+	}
+	"UntilHordeStarts"
+	{
+		"en"		"{blue}%0.1f%%{default} left until horde starts..."
+	}
+	"HordeResumed"
+	{
+		"en"		"Horde has {blue}resumed{default} at {green}%i%% strength{default}, pushing will increase the horde."
+	}
+	"HordeStrength"
+	{
+		"en"		"Horde is at {green}%i%% strength{default}..."
+	}
+	"HordeVeryStrength"
+	{
+		"en"		"{red}Survivors have pushed too far{default}, horde is at {green}100%% strength{default}!"
+	}
+}

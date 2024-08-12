@@ -1,0 +1,27 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"es"		"<{olive}Horde{default}>"
+	}
+	"TankPlay"
+	{
+        "es"        "La horda se ha {blue}pausado{default} debido a que hay un tanque en juego! Progresar un {blue}%0.1f%%{default} iniciará la horda."
+	}
+	"UntilHordeStarts"
+	{
+        "es"        "{blue}%0.1f%%{default} restante hasta que comience la horda..."
+	}
+	"HordeResumed"
+	{
+        "es"        "La horda ha {blue}resumido{default} con una fuerza del {green}%i%%{default}, empujar aumentará la horda."
+	}
+	"HordeStrength"
+	{
+        "es"        "La horda está al {green}%i%% de fuerza{default}..."
+	}
+	"HordeVeryStrength"
+	{
+        "es"        "{red}Los supervivientes han empujado demasiado lejos{default}, la horda está al {green}100%% de fuerza{default}!"
+	}
+}

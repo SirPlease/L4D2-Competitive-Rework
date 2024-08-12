@@ -12,6 +12,7 @@
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
+#include <colors>
 #define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 
@@ -49,12 +50,13 @@ public Plugin myinfo =
 	name = "L4D Weapon Limits",
 	author = "CanadaRox, Stabby, Forgetest, A1m`, robex",
 	description = "Restrict weapons individually or together",
-	version = "2.2.1",
+	version = "2.2.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public void OnPluginStart()
 {
+	LoadTranslation("l4d_weapon_limits.phrases");
 	InitSDKCall();
 	L4D2Weapons_Init();
 
@@ -373,7 +375,7 @@ void denyWeapon(int wep_slot, LimitArrayEntry arrayEntry, int weapon, int client
 		&& g_iLastPrintTickCount[client] != iLastTick
 	) {
 		//CPrintToChat(client, "{blue}[{default}Weapon Limits{blue}]{default} This weapon group has reached its max of {green}%d", arrayEntry.LAE_iLimit);
-		PrintToChat(client, "\x01[\x05Weapon Limits\x01] This weapon group has reached its max of \x04%d\x01!", arrayEntry.LAE_iLimit);
+		CPrintToChat(client, "%t %t", "Tag", "Full", arrayEntry.LAE_iLimit);
 		EmitSoundToClient(client, SOUND_NAME);
 
 		g_iWeaponAlreadyGiven[client][weapon] = iWeaponRef;
@@ -583,3 +585,23 @@ void CTerrorWeapon::DefaultTouch(CBasePlayer *pOther)
 	}
 }
 */
+
+/**
+ * Check if the translation file exists
+ *
+ * @param translation	Translation name.
+ * @noreturn
+ */
+stock void LoadTranslation(const char[] translation)
+{
+	char
+		sPath[PLATFORM_MAX_PATH],
+		sName[64];
+
+	Format(sName, sizeof(sName), "translations/%s.txt", translation);
+	BuildPath(Path_SM, sPath, sizeof(sPath), sName);
+	if (!FileExists(sPath))
+		SetFailState("Missing translation file %s.txt", translation);
+
+	LoadTranslations(translation);
+}
