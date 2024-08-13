@@ -2,15 +2,15 @@
 {
 	"Tag"
 	{
-		"en"    	"{blue}[{default}位数{blue}]{default}"
+		"chi"    	"{blue}[{default}位数{blue}]{default}"
 	}
 	"NotConsoleVote"
 	{
-		"en"		"[位数] 你必须在游戏内."
+		"chi"		"[位数] 你必须在游戏内."
 	}
 	"LimitSlotsAbove"
 	{
-		"en"		"你不能在这个服务器中限制超过 {olive}%i{default} 以上的位数."
+		"chi"		"你不能在这个服务器中限制超过 {olive}%i{default} 以上的位数."
 	}
 	"LimitedSlotsTo"
 	{
