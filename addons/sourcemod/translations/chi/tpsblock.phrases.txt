@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"en"		"[{green}!{default}]"
+	}
+	"Cvar_Invalid"
+	{
+		"en"		"指令 {olive}c_thirdpersonshoulder{default} 无效或被保护."
+	}
+	"Cvar_Value1"
+	{
+		"en"		"进入游戏需在你的控制台里输入 {olive}c_thirdpersonshoulder 0{default}."
+	}
+	"Cvar_Invalid_Nocolor"
+	{
+		"en"		"指令 c_thirdpersonshoulder 无效或被保护."
+	}
+	"Cvar_Value1_Nocolor"
+	{
+		"en"		"进入游戏需在你的控制台里输入 c_thirdpersonshoulder 0."
+	}
+}

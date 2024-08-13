@@ -1,0 +1,54 @@
+"Phrases"
+{
+	"Tag+"
+	{
+		"chi"	"{green}★{default}"
+	}
+	"Tag++"
+	{
+		"chi"    "{green}★★{default}"
+	}
+	"Tag+++"
+	{
+		"chi"	"{green}★★★{default}"
+	}
+	"MeleeSkeeted"
+	{
+        "#format"   "{1:N},{2:N}" // 1:victim 2:attacker
+		"chi"    	"{olive}{1}{default} 被 {olive}{2}{default} 使用 {blue}近战{default}空爆{default}"
+	}
+	"Headshotted"
+	{
+       "#format"	"{1:N},{2:N}" // 1:victim 2:attacker
+		"chi"    	"{olive}{1}{default} 被 {olive}{2}{default} {blue}爆头击杀{default}"
+	}
+	"TeamSkeeted"
+	{
+       "#format"	"{1:N},{2:N},{3:d},{4:d},{5:s},{6:s}" // 1:attacker 2:victim 3:damage 4:shots 5:shots == 1 ? "" : "s" 6:assister_string
+		"chi"    	"{olive}{1}{default} 以 {blue}{4}{default} 发{5}造成了 {blue}{3} 点伤害{default}团队空爆了 {olive}{2}{default}. 协助者: {olive}{6}{default}"
+	}
+	"Skeeted"
+	{
+       "#format"	"{1:N},{2:N},{3:d},{4:s}" // 1:attacker 2:victim 3:shots 4:shots == 1 ? "" : "s"
+		"chi"    	"{olive}{1}{default} 以 {blue}{3}{default} 发子弹{4}空爆了 {olive}{2}{default}"
+	}
+	"ShutBoomer"
+	{
+       "#format"	"{1:N},{2:s},{3:.1f}" // 1:g_iBoomerKiller 2:Boomer 3:BoomerKillTime
+		"chi"    	"{olive}{1}{default} 在 {blue}{3}{default} 秒内速爆了 {olive}{2}{default} 的Boomer"
+	}
+	"AlarmedCar"
+	{
+		"chi"		"{olive}%N{default} 触发了 {olive}警报车{default}"
+	}
+    "Plural"
+    {
+        "chi"       " "     // no plural word in chinese.
+    }
+    "Shot"
+    {
+        "chi"       "发"    // based on content.
+    }
+}
+
+

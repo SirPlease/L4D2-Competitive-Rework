@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"<{olive}当前进度{default}>"
+	}
+	"Current"
+	{
+		"chi"		"{green}%d%%{default}"
+	}
+}

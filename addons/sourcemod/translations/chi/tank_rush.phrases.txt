@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"{red}[{default}克局封锁{red}]"
+	}
+	"freeze"
+	{
+		"chi"		"{red}Tank {default}已生成. {olive}冻结 {default}路程分!"
+	}
+	"unfreeze"
+	{
+		"chi"		"{red}Tank {default}已死亡. {olive}解冻 {default}路程分!"
+	}
+	"saferoom"
+	{
+		"chi"		"{red}生还者 {default}成功到达了安全屋. {olive}解冻 {default}路程分!"
+	}
+}

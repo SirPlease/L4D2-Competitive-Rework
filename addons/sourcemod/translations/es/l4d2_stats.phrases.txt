@@ -41,6 +41,14 @@
 	{
 		"es"		"{olive}%N{default} activó un {olive}Automóvil con alarma{default}"
 	}
+    "Plural"
+    {
+        "es"       "s"
+    }
+    "Shot"
+    {
+        "es"       "disparo"
+    }
 }
 
 

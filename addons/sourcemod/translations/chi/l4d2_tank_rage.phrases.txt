@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"{red}[{default}Tank 控制权{red}]{default}"
+	}
+	"SurvivorsRunBack"
+	{
+		"chi"		"每当生还者回退进度 {olive}%i{green}%% {default}, Tank将会获得 {olive}%0.1f {green}秒{default} 的控制权失去冷却."
+	}
+}

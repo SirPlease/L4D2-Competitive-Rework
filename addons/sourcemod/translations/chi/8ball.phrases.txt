@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"{default}[{green}8球游戏{default}]"
+	}
+	"Usage"
+	{
+		"chi"		"用法: !8ball <问题>"
+	}
+	"Asked"
+	{
+		"chi"		"{teamcolor}%N{default} 发起问题: {olive}%s{default}"
+	}
+	"WithYes"
+	{
+		"chi"		"我跟一个 {olive}同意{default}!"
+	}
+	"WithNo"
+	{
+		"chi"		"我跟一个 {red}否定{default}!"
+	}
+	"Yikes"
+	{
+		"chi"		"我靠. {red}才不要{default}!"
+	}
+	"Sure"
+	{
+		"chi"		"呃... {olive}还行{default}?"
+	}
+	"AbsolutelyNot"
+	{
+		"chi"		"LOL {red}绝对不可能{default}!"
+	}
+	"Yeah"
+	{
+		"chi"		"你要我说? {olive}肯定可以{default}!"
+	}
+}

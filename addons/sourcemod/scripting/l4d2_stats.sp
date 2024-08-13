@@ -423,14 +423,22 @@ void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontBroadcas
 				char buf[MAX_NAME_LENGTH + 8];
 				int  assist_shots = g_iShotsDealt[victim][assisters[0][0]];
 
+				// Plural problem
+				char sPlural[8];
+				Format(sPlural, sizeof(sPlural), "%t", "Plural");
+
+				// details
+				char sWord[32];
+				Format(sWord, sizeof(sWord), "%t", "Shot");
+
 				// Construct assisters string
-				Format(assister_string, sizeof(assister_string), "%N (%d/%d shot%s)",
-				       assisters[0][0], assisters[0][1], g_iShotsDealt[victim][assisters[0][0]], assist_shots == 1 ? "" : "s");
+				Format(assister_string, sizeof(assister_string), "%N (%d/%d %s%s)",
+				       assisters[0][0], assisters[0][1], g_iShotsDealt[victim][assisters[0][0]], sWord, assist_shots == 1 ? "" : sPlural);
 
 				for (i = 1; i < assister_count; i++)
 				{
 					assist_shots = g_iShotsDealt[victim][assisters[i][0]];
-					Format(buf, sizeof(buf), ", %N (%d/%d shot%s)", assisters[i][0], assisters[i][1], assist_shots, assist_shots == 1 ? "" : "s");
+					Format(buf, sizeof(buf), ", %N (%d/%d %s%s)", assisters[i][0], assisters[i][1], assist_shots, sWord, assist_shots == 1 ? "" : sPlural);
 
 					StrCat(assister_string, sizeof(assister_string), buf);
 				}
@@ -458,7 +466,7 @@ void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontBroadcas
 				    }
 				}*/
 
-				CPrintToChatAll("%t %t", "Tag+" , "TeamSkeeted", attacker, victim, damage, shots, shots == 1 ? "" : "s", assister_string);
+				CPrintToChatAll("%t %t", "Tag+" , "TeamSkeeted", attacker, victim, damage, shots, shots == 1 ? "" : sPlural, assister_string);
 			}
 			else {
 				/*CPrintToChat(victim, "{green}★ {default}You were skeeted by {olive}%N {default}in {blue}%d shot%c", attacker, shots, plural);
@@ -472,7 +480,11 @@ void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontBroadcas
 				    }
 				}*/
 
-				CPrintToChatAll("%t %t", "Tag+", "Skeeted", attacker, victim, shots, shots == 1 ? "" : "s");
+				// Plural problem
+				char sPlural[8];
+				Format(sPlural, sizeof(sPlural), "%t", "Plural");
+
+				CPrintToChatAll("%t %t", "Tag+", "Skeeted", attacker, victim, shots, shots == 1 ? "" : sPlural);
 			}
 		}
 	}

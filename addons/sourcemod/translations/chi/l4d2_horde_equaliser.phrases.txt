@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"<{olive}尸潮事件{default}>"
+	}
+	"NoCommonRemaining"
+	{
+		"chi"		"{red}没有{default}剩余的小丧尸!"
+	}
+	"CommonRemaining"
+	{
+		"chi"		"还剩 {red}%i {default}个小丧尸.."
+	}
+	"FiniteEventStarted"
+	{
+		"chi"		"一个拥有 {olive}%i{default} 个小丧尸的 {blue}有限的尸潮事件{default} 已经开始! 推进或防守, 决定权在你们!"
+	}
+}

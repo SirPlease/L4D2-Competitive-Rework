@@ -1,0 +1,83 @@
+"Phrases"
+{
+    "Tag"
+    {
+        "chi"    "[{olive}!{default}]"
+    }
+    "Disabled"
+    {
+        "chi"    "插件{red}未启用{default}"
+    }
+    "NoConsole"
+    {
+        "chi"    "该指令不能从控制台输入."
+    }
+    "ConfoglNotAvailable"
+    {
+        "chi"    "Confogl {red}未启用{default}."
+    }
+    "CedaGame"
+    {
+        "chi"    "不允许在{red}cedapug 比赛中使用该指令{default}"
+    }
+    "Title_Match"
+    {
+        "chi"    "选择比赛模式:"
+    }
+    "Title_Config"
+    {
+        "chi"    "选择类型 %s:"
+    }
+    "ConfigNotFound"
+    {
+        "chi"    "未找到相关模式的配置文件."
+    }
+    "NoSpec"
+    {
+        "chi"    "旁观者不允许进行投票."
+    }
+    "MatchLoaded"
+    {
+        "chi"    "比赛模式已加载!"
+    }
+    "NotEnoughPlayers"
+    {
+        "chi"    "不能发起投票. {red}玩家人数不足{default} ({red}%d{default}/{green}%d{default})."
+    }
+    "Title_LoadConfig"
+    {
+        "chi"    "加载 confogl '%s' 配置?"
+    }
+    "VoteInProgress"
+    {
+        "chi"    "{red}投票进行中{default}, 请等待 {green}%d{default} 秒."
+    }
+    "VotePass_Loading"
+    {
+        "chi"    "加载比赛模式..."
+    }
+    "MatchNotLoaded"
+    {
+        "chi"    "{red}没有比赛模式{default} 加载."
+    }
+    "PlayersConnecting"
+    {
+        "chi"    "不能发起投票. 玩家们正在连接."
+    }
+    "Title_OffConfogl"
+    {
+        "chi"    "卸载 Confogl?"
+    }
+    "VotePass_Unloading"
+    {
+        "chi"    "Confogl 正在卸载..."
+    }
+    "Title_ChangeConfogl"
+    {
+        "chi"    "更改 confogl 配置为 '%s'?"
+    }
+    "VotePass_Changed"
+    {
+        "chi"    "比赛模式已更改..."
+    }
+}

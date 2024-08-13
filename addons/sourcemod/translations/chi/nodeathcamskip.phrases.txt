@@ -3,6 +3,6 @@
 	"WarnExploiting"
 	{
 		"#format"	"{1:N}"
-		"en"		"{red}[{default}Exploit{red}] {olive}{1} {default}tried skipping the Death Timer."
+		"chi"		"{red}[{default}Exploit{red}] {olive}{1} {default}尝试跳过死亡时间." // didn't come out a translation for 'Exploit'. so be it.
 	}
 }
