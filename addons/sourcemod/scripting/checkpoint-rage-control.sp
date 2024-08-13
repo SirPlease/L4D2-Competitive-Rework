@@ -43,7 +43,7 @@ Address
 
 bool
 	g_bIsPatched,
-	g_bIsHoocked = false,
+	g_bIsHooked = false,
 	g_bPlayerJoin[MAXPLAYERS + 1] = {false, ...};
 
 ConVar
@@ -108,20 +108,20 @@ public void OnMapStart()
 
 public void L4D_OnSpawnTank_Post(int client, const float vecPos[3], const float vecAng[3])
 {
-	if (g_bIsHoocked)
+	if (g_bIsHooked)
 		return;
 
 	HookEvent("player_entered_start_area", Event_EnteredStartArea);
 	HookEvent("player_death", Event_PlayerDeath);
 	HookEvent("player_team", Event_PlayerTeam, EventHookMode_Pre);
 
-	DebugPrint("{blue}Prepared hooks{default} from L4D_OnSpawnTank_Post [player_entered_start_area, player_death]");
-	g_bIsHoocked = true;
+	DebugPrint("{blue}Prepared hooks{default} from L4D_OnSpawnTank_Post [player_entered_start_area, player_death, player_team]");
+	g_bIsHooked = true;
 }
 
 public void L4D2_OnEndVersusModeRound_Post()
 {
-	if (!g_bIsHoocked)
+	if (!g_bIsHooked)
 		return;
 
 	DebugPrint("{red}Unhook{default} from L4D2_OnEndVersusModeRound_Post");
@@ -130,7 +130,7 @@ public void L4D2_OnEndVersusModeRound_Post()
 
 void Event_EnteredStartArea(Event hEvent, const char[] sName, bool dontBroadcast)
 {
-	if (!g_bIsHoocked)
+	if (!g_bIsHooked)
 		return;
 		
 	int client = GetClientOfUserId(hEvent.GetInt("userid"));
@@ -139,7 +139,7 @@ void Event_EnteredStartArea(Event hEvent, const char[] sName, bool dontBroadcast
 
 	if (g_bPlayerJoin[client])
 	{
-		DebugPrint("{red}Client{default} (%N) is market to joinig, skip {red}Unhook{default}", client);
+		DebugPrint("{red}Client{default} (%N) is marked as joining, skip {red}Unhook{default}", client);
 		return;
 	}
 
@@ -164,7 +164,7 @@ void Event_PlayerDeath(Event hEvent, const char[] name, bool dontBroadcast)
 
 public void Event_PlayerTeam(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	if (!g_bIsHoocked)
+	if (!g_bIsHooked)
 		return;
 
 	int client = GetClientOfUserId(GetEventInt(hEvent, "userid"));
@@ -177,14 +177,14 @@ public void Event_PlayerTeam(Event hEvent, const char[] sEventName, bool bDontBr
 		return;
 	
 	g_bPlayerJoin[client] = true;
-	DebugPrint("{blue}Client{default} ({blue}%N{default}) market to joining", client);
+	DebugPrint("{blue}Client{default} ({blue}%N{default}) marked to joining", client);
 	CreateTimer(0.2, Timer_PlayerTeamSurvivor, client, TIMER_FLAG_NO_MAPCHANGE);
 }
 
 Action Timer_PlayerTeamSurvivor(Handle timer, any data)
 {
 	g_bPlayerJoin[data] = false;
-	DebugPrint("{blue}Client{default} ({blue}%N{default}) market to not joining", data);
+	DebugPrint("{blue}Client{default} ({blue}%N{default}) marked to not joining", data);
 	return Plugin_Stop;
 }
 
@@ -218,7 +218,7 @@ void UnHookAll()
 {
 	UnhookEvent("player_entered_start_area", Event_EnteredStartArea);
 	UnhookEvent("player_death", Event_PlayerDeath);
-	g_bIsHoocked = false;
+	g_bIsHooked = false;
 }
 
 /**
