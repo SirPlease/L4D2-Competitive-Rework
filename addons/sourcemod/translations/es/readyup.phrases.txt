@@ -31,13 +31,13 @@
 	"Player marked unready"
 	{
 		"#format"	"{1:N}"
-		"es"		"{default}[{green}!{default}] {green}¡Cuenta regresiva cancelada! {default}({teamcolor}{1} {green}marcado como no listo{default})"
+		"es"		"{default}[{green}!{default}] {green}¡Cuenta regresiva cancelada! {default}({teamcolor}{1}{default} no esta {green}listo{default})"
 	}
 	
 	"Player switched team"
 	{
 		"#format"	"{1:N}"
-		"es"		"{default}[{green}!{default}] {green}¡Cuenta regresiva cancelada! {default}({teamcolor}{1} {olive}cambio de equipo{default})"
+		"es"		"{default}[{green}!{default}] {green}¡Cuenta regresiva cancelada! {default}({teamcolor}{1}{default} se {olive}cambio de equipo{default})"
 	}
 	
 	"Player disconnected"
@@ -79,7 +79,18 @@
 	{
 		"es"		"¡Cuenta regresiva cancelada!"
 	}
-	
+
+	"CountUnReady"
+	{
+		"#format"	"{1:d}{2:d}"
+		"es"		"[{olive}{1}{default}/{olive}{2}{default}]"
+	}
+
+	"UnReadyLimit"
+	{
+		"es"		"{default}[{green}!{default}] Has alcanzado tu {red}limite de cancelaciones{default} [{green}%d{default}]"
+	}
+
 	"RoundIsLive"
 	{
 		"es"		"¡La ronda esta en vivo!"
@@ -104,5 +115,51 @@
 	"AutoStartNotEnoughPlayers"
 	{
 		"es"		"Se requieren mas jugadores..."
+	}
+
+	// readyup/panel.inc
+	"PanelSlots"
+	{
+		"es"		"▸ Servidor: %s \n▸ Espacios: %d/%d\n▸ Config: %s"
+	}
+
+	"PanelCommands"
+	{
+		"es"		"▸ Comandos:"
+	}
+
+	"PanelSurvivors"
+	{
+		"es"	"->%d. Superviviente%s"
+	}
+
+	"PanelInfected"
+	{
+		"es"	"->%d. Infectado%s"
+	}
+
+	"PanelCaster"
+	{
+		"es"	"->%d. Comentador"
+	}
+
+	"PanelCasters"
+	{
+		"es"	"->%d. Comentadores"
+	}
+
+	"PanelSpectator"
+	{
+		"es"	"->%d. Espectador"
+	}
+
+	"PanelSpectators"
+	{
+		"es"	"->%d. Espectadores"
+	}
+
+	"PanelMany"
+	{
+		"es"	"**Muchos** (%d)"
 	}
 }

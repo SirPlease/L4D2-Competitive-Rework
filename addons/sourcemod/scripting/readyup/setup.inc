@@ -72,6 +72,7 @@ void SetupConVars()
 	l4d_ready_autostart_min		= CreateConVar("l4d_ready_autostart_min", "0.25", "Percent of max players (Versus = 8) in game to allow auto-start to proceed.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	l4d_ready_unbalanced_start	= CreateConVar("l4d_ready_unbalanced_start", "0", "Allow game to go live when teams are not full.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	l4d_ready_unbalanced_min	= CreateConVar("l4d_ready_unbalanced_min", "2", "Minimum of players in each team to allow a unbalanced start.", FCVAR_NOTIFY, true, 0.0);
+	l4d_ready_unready_limit		= CreateConVar("l4d_ready_unready_limit", "0", "Limit of unready that a player can do. Set to 0 to disable.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
 	// game convars
 	director_no_specials = FindConVar("director_no_specials");

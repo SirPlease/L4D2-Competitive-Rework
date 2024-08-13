@@ -1,18 +1,18 @@
 #if defined _readyup_panel_included
- #endinput
+	#endinput
 #endif
 #define _readyup_panel_included
 
 static Footer
 	cmdFooter;
-	
+
 static int
 	curCmd;
 
-static const char 
-	hintPhrase[2][] = {"HintUnready", "HintReady"},
-	readySymbol[2][] = {"☐", "☑"},
-	teamReadySymbol[2][] = {" [X]", " [√]"};
+static const char
+	hintPhrase[2][]		 = { "HintUnready", "HintReady" },
+	readySymbol[2][]	 = { "☐", "☑" },
+	teamReadySymbol[2][] = { " [X]", " [√]" };
 
 void InitPanel()
 {
@@ -29,13 +29,13 @@ void InitPanel()
 		cmdFooter.Add("->8. !secondary");
 		cmdFooter.Add("->9. !forcestart / !fs");
 	}
-	
+
 	curCmd = 0;
-	CreateTimer(1.0, MenuRefresh_Timer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-	CreateTimer(4.0, MenuCmd_Timer, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+	CreateTimer(1.0, MenuRefresh_Timer, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+	CreateTimer(4.0, MenuCmd_Timer, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 }
 
-int DummyHandler(Handle menu, MenuAction action, int param1, int param2) { return 1; }
+int	   DummyHandler(Handle menu, MenuAction action, int param1, int param2) { return 1; }
 
 Action MenuRefresh_Timer(Handle timer)
 {
@@ -64,58 +64,62 @@ void UpdatePanel()
 {
 	char survivorBuffer[400] = "";
 	char infectedBuffer[400] = "";
-	char casterBuffer[300] = "";
-	char specBuffer[200] = "";
-	int playerCount = 0;
-	int casterCount = 0;
-	int specCount = 0;
-
-	Panel menuPanel = new Panel();
+	char casterBuffer[300]	 = "";
+	char specBuffer[200]	 = "";
+	int	 playerCount		 = 0;
+	int	 casterCount		 = 0;
+	int	 specCount			 = 0;
 
 	char ServerBuffer[128];
 	char ServerName[32];
 	char cfgName[32];
 
-	int iPassTime = RoundToFloor(GetGameTime() - fStartTimestamp);
-	
-	bool isTeamReadyMode = readyUpMode == ReadyMode_TeamReady;
-	int survivorReady = IsTeamReady(L4D2Team_Survivor);
-	int infectedReady = IsTeamReady(L4D2Team_Infected);
+	int	 iPassTime		 = RoundToFloor(GetGameTime() - fStartTimestamp);
 
+	bool isTeamReadyMode = readyUpMode == ReadyMode_TeamReady;
+	int	 survivorReady	 = IsTeamReady(L4D2Team_Survivor);
+	int	 infectedReady	 = IsTeamReady(L4D2Team_Infected);
+
+	// Panel Slots
 	g_cvServerNamer.GetString(ServerName, sizeof(ServerName));
-	
 	l4d_ready_cfg_name.GetString(cfgName, sizeof(cfgName));
-	Format(ServerBuffer, sizeof(ServerBuffer), "▸ Server: %s \n▸ Slots: %d/%d\n▸ Config: %s", ServerName, GetSeriousClientCount(), FindConVar("sv_maxplayers").IntValue, cfgName);
-	menuPanel.DrawText(ServerBuffer);
-	
-	FormatTime(ServerBuffer, sizeof(ServerBuffer), "▸ %m/%d/%Y - %I:%M%p");
-	Format(ServerBuffer, sizeof(ServerBuffer), "%s (%02d:%02d)", ServerBuffer, iPassTime / 60, iPassTime % 60);
-	menuPanel.DrawText(ServerBuffer);
-	
-	menuPanel.DrawText(" ");
-	menuPanel.DrawText("▸ Commands:");
-	menuPanel.DrawText(FooterGet(cmdFooter, curCmd));
-	menuPanel.DrawText(" ");
-	
+	int	   Maxplayers;
+	ConVar sv_maxplayers = FindConVar("sv_maxplayers");
+	if (sv_maxplayers == null)
+		Maxplayers = 8;
+	else
+		Maxplayers = sv_maxplayers.IntValue;
+
+	// Panel DateTime - Format will be defined by sm_datetime_format
+	char DateTimeBuffer[128];
+	FormatTime(DateTimeBuffer, sizeof(DateTimeBuffer), NULL_STRING);
+	Format(DateTimeBuffer, sizeof(DateTimeBuffer), "▸ %s", DateTimeBuffer);
+	Format(DateTimeBuffer, sizeof(DateTimeBuffer), "%s (%02d:%02d)", DateTimeBuffer, iPassTime / 60, iPassTime % 60);
+
+	// Panel Commands
+	char FooterBuffer[128];
+	Format(FooterBuffer, sizeof(FooterBuffer), "%s", FooterGet(cmdFooter, curCmd));
+
+	// Panel Players
 	char nameBuf[64];
-	
 	for (int client = 1; client <= MaxClients; client++)
 	{
 		if (IsClientInGame(client) && !IsFakeClient(client))
 		{
 			++playerCount;
 			GetClientFixedName(client, nameBuf, sizeof(nameBuf));
-			
+
 			if (IsPlayer(client))
 			{
-				bool type = (GetClientTeam(client) == L4D2Team_Survivor);
-				int isReady = view_as<int>(IsPlayerReady(client));
-				
+				bool type	 = (GetClientTeam(client) == L4D2Team_Survivor);
+				int	 isReady = view_as<int>(IsPlayerReady(client));
+
 				switch (readyUpMode)
 				{
 					case ReadyMode_PlayerReady:
 					{
-						if (!inLiveCountdown) PrintHintText(client, "%t", hintPhrase[isReady]);
+						if (!inLiveCountdown)
+							PrintHintText(client, "%t", hintPhrase[isReady]);
 						Format(nameBuf, sizeof(nameBuf), "%s %s%s\n", readySymbol[isReady], nameBuf, IsPlayerAfk(client) ? " [AFK]" : "");
 					}
 					case ReadyMode_AutoStart:
@@ -124,7 +128,8 @@ void UpdatePanel()
 					}
 					case ReadyMode_TeamReady:
 					{
-						if (!inLiveCountdown) PrintHintText(client, "%t", hintPhrase[type ? survivorReady : infectedReady]);
+						if (!inLiveCountdown)
+							PrintHintText(client, "%t", hintPhrase[type ? survivorReady : infectedReady]);
 						Format(nameBuf, sizeof(nameBuf), "%s%s\n", nameBuf, IsPlayerAfk(client) ? " [AFK]" : "");
 					}
 				}
@@ -150,16 +155,13 @@ void UpdatePanel()
 			}
 		}
 	}
-	
+
 	int textCount = 0;
-	int bufLen = strlen(survivorBuffer);
+	int bufLen	  = strlen(survivorBuffer);
 	if (bufLen != 0)
 	{
 		survivorBuffer[bufLen] = '\0';
 		ReplaceString(survivorBuffer, sizeof(survivorBuffer), "#", "_");
-		Format(nameBuf, sizeof(nameBuf), "->%d. Survivors%s", ++textCount, isTeamReadyMode ? teamReadySymbol[survivorReady] : "");
-		menuPanel.DrawText(nameBuf);
-		menuPanel.DrawText(survivorBuffer);
 	}
 
 	bufLen = strlen(infectedBuffer);
@@ -167,73 +169,101 @@ void UpdatePanel()
 	{
 		infectedBuffer[bufLen] = '\0';
 		ReplaceString(infectedBuffer, sizeof(infectedBuffer), "#", "_");
-		Format(nameBuf, sizeof(nameBuf), "->%d. Infected%s", ++textCount, isTeamReadyMode ? teamReadySymbol[infectedReady] : "");
-		menuPanel.DrawText(nameBuf);
-		menuPanel.DrawText(infectedBuffer);
-	}
-	
-	if (specCount && textCount) menuPanel.DrawText(" ");
-
-	if (casterSystemAvailable)
-	{
-		bufLen = strlen(casterBuffer);
-		if (bufLen != 0)
-		{
-			casterBuffer[bufLen] = '\0';
-			Format(nameBuf, sizeof(nameBuf), "->%d. Caster%s", ++textCount, casterCount > 1 ? "s" : "");
-			menuPanel.DrawText(nameBuf);
-			ReplaceString(casterBuffer, sizeof(casterBuffer), "#", "_", true);
-			menuPanel.DrawText(casterBuffer);
-		}
-	}
-	
-	bufLen = strlen(specBuffer);
-	if (bufLen != 0)
-	{
-		specBuffer[bufLen] = '\0';
-		Format(nameBuf, sizeof(nameBuf), "->%d. Spectator%s", ++textCount, specCount > 1 ? "s" : "");
-		menuPanel.DrawText(nameBuf);
-		ReplaceString(specBuffer, sizeof(specBuffer), "#", "_");
-		if (playerCount > l4d_ready_max_players.IntValue && specCount - casterCount > 1)
-			FormatEx(specBuffer, sizeof(specBuffer), "**Many** (%d)", specCount - casterCount);
-		menuPanel.DrawText(specBuffer);
-	}
-
-	if (nativeFooter.Length)
-	{
-		menuPanel.DrawText(" ");
-		for (int i = 0; i < nativeFooter.Length; i++)
-		{
-			menuPanel.DrawText(FooterGet(nativeFooter, i));
-		}
 	}
 
 	for (int client = 1; client <= MaxClients; client++)
 	{
-		if (IsClientInGame(client) && !IsFakeClient(client) && !IsPlayerHiddenPanel(client)) 
+		if (!IsClientInGame(client) || IsFakeClient(client) || IsPlayerHiddenPanel(client))
+			continue;
+
+		if (BuiltinVote_IsVoteInProgress() && IsClientInBuiltinVotePool(client))
+			continue;
+
+		if (Game_IsVoteInProgress())
 		{
-			if (BuiltinVote_IsVoteInProgress() && IsClientInBuiltinVotePool(client))
-			{
+			int voteteam = Game_GetVoteTeam();
+			if (voteteam == -1 || voteteam == GetClientTeam(client))
 				continue;
-			}
-			
-			if (Game_IsVoteInProgress())
-			{
-				int voteteam = Game_GetVoteTeam();
-				if (voteteam == -1 || voteteam == GetClientTeam(client))
-				{
-					continue;
-				}
-			}
-			
-			switch (GetClientMenu(client))
-			{
-				case MenuSource_External, MenuSource_Normal: continue;
-			}
-			
-			menuPanel.Send(client, DummyHandler, 1);
 		}
+
+		switch (GetClientMenu(client))
+		{
+			case MenuSource_External, MenuSource_Normal: continue;
+		}
+
+		Panel menuPanel = new Panel();
+
+		Format(ServerBuffer, sizeof(ServerBuffer), "%T", "PanelSlots", client, ServerName, GetSeriousClientCount(), Maxplayers, cfgName);
+		menuPanel.DrawText(ServerBuffer);
+		menuPanel.DrawText(DateTimeBuffer);
+
+		menuPanel.DrawText(" ");
+		Format(ServerBuffer, sizeof(ServerBuffer), "%T", "PanelCommands", client);
+		menuPanel.DrawText(ServerBuffer);
+		menuPanel.DrawText(FooterBuffer);
+		menuPanel.DrawText(" ");
+
+		bufLen = strlen(survivorBuffer);
+		if (bufLen != 0)
+		{
+			Format(nameBuf, sizeof(nameBuf), "%T", "PanelSurvivors", client, ++textCount, isTeamReadyMode ? teamReadySymbol[survivorReady] : "");
+			menuPanel.DrawText(nameBuf);
+			menuPanel.DrawText(survivorBuffer);
+		}
+
+		bufLen = strlen(infectedBuffer);
+		if (bufLen != 0)
+		{
+			Format(nameBuf, sizeof(nameBuf), "%T", "PanelInfected", client, ++textCount, isTeamReadyMode ? teamReadySymbol[infectedReady] : "");
+			menuPanel.DrawText(nameBuf);
+			menuPanel.DrawText(infectedBuffer);
+		}
+
+		if (specCount && textCount)
+			menuPanel.DrawText(" ");
+
+		if (casterSystemAvailable)
+		{
+			bufLen = strlen(casterBuffer);
+			if (bufLen != 0)
+			{
+				casterBuffer[bufLen] = '\0';
+				if (casterCount < 2)
+					Format(nameBuf, sizeof(nameBuf), "%T", "PanelCaster", client, ++textCount);
+				else
+					Format(nameBuf, sizeof(nameBuf), "%T", "PanelCasters", client, ++textCount);
+				menuPanel.DrawText(nameBuf);
+				ReplaceString(casterBuffer, sizeof(casterBuffer), "#", "_", true);
+				menuPanel.DrawText(casterBuffer);
+			}
+		}
+
+		bufLen = strlen(specBuffer);
+		if (bufLen != 0)
+		{
+			specBuffer[bufLen] = '\0';
+			if (specCount < 2)
+				Format(nameBuf, sizeof(nameBuf), "%T", "PanelSpectator", client, ++textCount);
+			else
+				Format(nameBuf, sizeof(nameBuf), "%T", "PanelSpectators", client, ++textCount);
+
+			menuPanel.DrawText(nameBuf);
+			ReplaceString(specBuffer, sizeof(specBuffer), "#", "_");
+			if (playerCount > l4d_ready_max_players.IntValue && specCount - casterCount > 1)
+				FormatEx(specBuffer, sizeof(specBuffer), "%T", "PanelMany", client, specCount - casterCount);
+			menuPanel.DrawText(specBuffer);
+		}
+
+		if (nativeFooter.Length)
+		{
+			menuPanel.DrawText(" ");
+			for (int i = 0; i < nativeFooter.Length; i++)
+			{
+				menuPanel.DrawText(FooterGet(nativeFooter, i));
+			}
+		}
+
+		menuPanel.Send(client, DummyHandler, 1);
+		delete menuPanel;
 	}
-	
-	delete menuPanel;
 }
