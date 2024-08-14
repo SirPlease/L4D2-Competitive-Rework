@@ -54,13 +54,13 @@ public Plugin myinfo =
     name = "L4D2 Tank Control",
     author = "arti, (Contributions by: Sheo, Sir, Altair-Sossai)",
     description = "Distributes the role of the tank evenly throughout the team, allows for overrides. (Includes forwards)",
-    version = "0.0.23",
+    version = "0.0.24",
     url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
 public void OnPluginStart()
 {
-    // Load translations (for targeting player)
+    LoadTranslation("l4d_tank_control_eq.phrases");
     LoadTranslations("common.phrases");
     
     // Event hooks
@@ -123,16 +123,16 @@ public Action L4D_OnTryOfferingTankBot(int tank_index, bool &enterStatis)
     // Reset the tank's frustration if need be
     if (!IsFakeClient(tank_index)) 
     {
-        PrintHintText(tank_index, "Rage Meter Refilled");
+        PrintHintText(tank_index, "%t", "HintText");
         for (int i = 1; i <= MaxClients; i++) 
         {
             if (!IS_VALID_INFECTED(i) && !IS_VALID_SPECTATOR(i))
                 continue;
 
             if (tank_index == i) 
-                CPrintToChat(i, "{red}<{default}Tank Rage{red}> {olive}Rage Meter {red}Refilled");
+                CPrintToChat(i, "%t %t", "TagRage", "RefilledBot");
             else 
-                CPrintToChat(i, "{red}<{default}Tank Rage{red}> {default}({green}%N{default}'s) {olive}Rage Meter {red}Refilled", tank_index);
+                CPrintToChat(i, "%t %t", "TagRage", "Refilled", tank_index);
         }
         
         SetTankFrustration(tank_index, 100);
@@ -395,9 +395,9 @@ Action Tank_Cmd(int client, int args)
     if (tankClientId != -1 && (hTankPrint.BoolValue || IS_INFECTED(client) || IS_SPECTATOR(client)))
     {
         if (client == tankClientId) 
-            CPrintToChat(client, "{red}<{default}Tank Selection{red}> {green}You {default}will become the {red}Tank{default}!");
+            CPrintToChat(client, "%t %t", "TagSelection", "YouBecomeTank");
         else 
-            CPrintToChat(client, "{red}<{default}Tank Selection{red}> {olive}%N {default}will become the {red}Tank!", tankClientId);
+            CPrintToChat(client, "%t %t", "TagSelection", "BecomeTank", tankClientId);
     }
     
     return Plugin_Handled;
@@ -431,14 +431,14 @@ Action GiveTank_Cmd(int client, int args)
 
     if (target == -1 || !IsClientInGame(target) || IsFakeClient(target))
     {
-        CPrintToChat(client, "{green}[{olive}Tank Control{green}] {default}Invalid Target. Unable to give tank");
+        CPrintToChat(client, "%t %t", "TagControl", "InvalidTarget");
         return Plugin_Handled;
     }
 
     // Checking if on our desired team
     if (!IS_INFECTED(target))
     {
-        CPrintToChat(client, "{green}[{olive}Tank Control{green}] {olive}%N {default}is not on the infected team. Unable to give tank", target);
+        CPrintToChat(client, "%t %t", "TagControl", "NoInfected", target);
         return Plugin_Handled;
     }
     
@@ -539,9 +539,9 @@ void outputTankToAll(any data)
                 continue;
 
             if (tankClientId == i) 
-                CPrintToChat(i, "{red}<{default}Tank Selection{red}> {green}You {default}will become the {red}Tank{default}!");
+                CPrintToChat(i, "%t %t", "TagSelection", "YouBecomeTank");
             else 
-                CPrintToChat(i, "{red}<{default}Tank Selection{red}> {olive}%N {default}will become the {red}Tank!", tankClientId);
+                CPrintToChat(i, "%t %t", "TagSelection", "BecomeTank", tankClientId);
         }
     }
 }
@@ -695,4 +695,24 @@ void ShuffleArray(ArrayList arrayList, int start, int end)
 
         arrayList.SwapAt(index1, index2);
     }
+}
+
+/**
+ * Check if the translation file exists
+ *
+ * @param translation	Translation name.
+ * @noreturn
+ */
+stock void LoadTranslation(const char[] translation)
+{
+	char
+		sPath[PLATFORM_MAX_PATH],
+		sName[64];
+
+	Format(sName, sizeof(sName), "translations/%s.txt", translation);
+	BuildPath(Path_SM, sPath, sizeof(sPath), sName);
+	if (!FileExists(sPath))
+		SetFailState("Missing translation file %s.txt", translation);
+
+	LoadTranslations(translation);
 }

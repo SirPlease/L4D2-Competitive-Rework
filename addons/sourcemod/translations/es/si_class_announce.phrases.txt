@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"SI"
+	{
+        "es"        "IE: "
+	}
+	"SpecialInfected"
+	{
+        "es"        "Infectados Especiales: "
+	}
+}

@@ -3,6 +3,7 @@
 
 #include <sourcemod>
 #include <left4dhooks>
+#include <colors>
 
 #define TEAM_SURVIVORS 2
 
@@ -13,12 +14,13 @@ public Plugin myinfo =
 	name = "L4D2 Survivor Progress",
 	author = "CanadaRox, Visor",
 	description = "Print survivor progress in flow percents ",
-	version = "2.0.3",
+	version = "2.0.4",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public void OnPluginStart()
 {
+	LoadTranslation("current.phrases");
 	g_hVsBossBuffer = FindConVar("versus_boss_buffer");
 
 	RegConsoleCmd("sm_cur", CurrentCmd);
@@ -28,10 +30,15 @@ public void OnPluginStart()
 Action CurrentCmd(int client, int args)
 {
 	int boss_proximity = RoundToNearest(GetBossProximity() * 100.0);
-	PrintToChat(client, "\x01Current: \x04%d%%", boss_proximity);
+	CPrintToChat(client, "%t %t", "Tag", "Current", boss_proximity);
 	return Plugin_Handled;
 }
 
+/**
+ * Calculates the proximity of the boss to the survivors.
+ *
+ * @return The proximity value, ranging from 0.0 to 1.0.
+ */
 float GetBossProximity()
 {
 	float proximity = GetMaxSurvivorCompletion() + g_hVsBossBuffer.FloatValue / L4D2Direct_GetMapMaxFlowDistance();
@@ -39,6 +46,11 @@ float GetBossProximity()
 	return (proximity > 1.0) ? 1.0 : proximity;
 }
 
+/**
+ * Calculates the maximum completion flow for survivors in the game.
+ *
+ * @return The maximum completion flow for survivors.
+ */
 float GetMaxSurvivorCompletion()
 {
 	float flow = 0.0, tmp_flow = 0.0, origin[3];
@@ -55,4 +67,24 @@ float GetMaxSurvivorCompletion()
 	}
 
 	return (flow / L4D2Direct_GetMapMaxFlowDistance());
+}
+
+/**
+ * Check if the translation file exists
+ *
+ * @param translation	Translation name.
+ * @noreturn
+ */
+stock void LoadTranslation(const char[] translation)
+{
+	char
+		sPath[PLATFORM_MAX_PATH],
+		sName[64];
+
+	Format(sName, sizeof(sName), "translations/%s.txt", translation);
+	BuildPath(Path_SM, sPath, sizeof(sPath), sName);
+	if (!FileExists(sPath))
+		SetFailState("Missing translation file %s.txt", translation);
+
+	LoadTranslations(translation);
 }
