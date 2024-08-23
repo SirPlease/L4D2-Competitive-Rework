@@ -1,0 +1,30 @@
+"Games"
+{
+	"left4dead"
+	{
+		"Signatures"
+		{
+			"PhysDisableEntityCollisions"
+			{
+				"library"		"server"
+				"linux"			"@_Z27PhysDisableEntityCollisionsP11CBaseEntityS0_"
+				"windows"		"\x57\x8B\x7C\x24\x08\x85\xFF\x74\x2A\x56\x8B\x74\x24\x10\x85\xF6\x74\x2A\x8B\x0D\x2A\x2A\x2A\x2A\x8B\x01\x8B\x50\x04"
+								/* 57 8B 7C 24 08 85 FF 74 ? 56 8B 74 24 10 85 F6 74 ? 8B 0D ? ? ? ? 8B 01 8B 50 04 */
+			}
+		}
+	}
+
+	"left4dead2"
+	{
+		"Signatures"
+		{
+			"PhysDisableEntityCollisions"
+			{
+				"library"		"server"
+				"linux"			"@_Z27PhysDisableEntityCollisionsP11CBaseEntityS0_"
+				"windows"		"\x55\x8B\xEC\x57\x8B\x7D\x08\x85\xFF\x74\x2A\x56\x8B\x75\x0C\x85\xF6\x74\x2A\x8B\x0D\x2A\x2A\x2A\x2A\x8B\x01\x8B\x50\x04"
+								/* 55 8B EC 57 8B 7D 08 85 FF 74 ? 56 8B 75 0C 85 F6 74 ? 8B 0D ? ? ? ? 8B 01 8B 50 04 */
+			}
+		}
+	}
+}
