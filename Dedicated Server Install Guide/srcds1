@@ -48,51 +48,51 @@ DESC="L4D2 Dedicated Server #$SVNUM on port $PORT"
 ###########################################
 
 case "$1" in
-	start)
-		if su $SRCDS_USER -l -c "screen -ls" |grep $NAME; then
-			echo -n "$DESC: $NAME already started!"
-		else
-			echo "Starting $DESC: $NAME"
-			cd $DIR
-			su $SRCDS_USER -l -c "screen -d -m -S $NAME $DAEMON $PARAMS"
-		fi
-		;;
+    start)
+        if su $SRCDS_USER -l -c "screen -ls" | grep -w "$NAME"; then
+            echo -n "$DESC: $NAME already started!"
+        else
+            echo "Starting $DESC: $NAME"
+            cd $DIR
+            su $SRCDS_USER -l -c "screen -d -m -S $NAME $DAEMON $PARAMS"
+        fi
+        ;;
 
-	stop)
-		if su $SRCDS_USER -l -c "screen -ls" |grep $NAME; then
-			echo -n "Stopping $DESC: $NAME"
-			kill `su $SRCDS_USER -l -c "screen -ls" |grep $NAME |awk -F . '{print $1}'|awk '{print $1}'`
-			echo " ... done."
-		else
-			echo "Couldn't find a running $DESC"
-		fi
-		;;
+    stop)
+        if su $SRCDS_USER -l -c "screen -ls" | grep -w "$NAME"; then
+            echo -n "Stopping $DESC: $NAME"
+            kill `su $SRCDS_USER -l -c "screen -ls" | grep -w "$NAME" | awk -F . '{print $1}' | awk '{print $1}'`
+            echo " ... done."
+        else
+            echo "Couldn't find a running $DESC"
+        fi
+        ;;
 
-	restart)
-		if su $SRCDS_USER -l -c "screen -ls" |grep $NAME; then
-			echo -n "Stopping $DESC: $NAME"
-			kill `su $SRCDS_USER -l -c "screen -ls" |grep $NAME |awk -F . '{print $1}'|awk '{print $1}'`
-			echo " ... done."
-		else
-			echo "Couldn't find a running $DESC"
-		fi
-		echo -n "Starting $DESC: $NAME"
-		cd $DIR
-		su $SRCDS_USER -l -c "screen -d -m -S $NAME $DAEMON $PARAMS"
-		echo " ... done."
-		;;
+    restart)
+        if su $SRCDS_USER -l -c "screen -ls" | grep -w "$NAME"; then
+            echo -n "Stopping $DESC: $NAME"
+            kill `su $SRCDS_USER -l -c "screen -ls" | grep -w "$NAME" | awk -F . '{print $1}' | awk '{print $1}'`
+            echo " ... done."
+        else
+            echo "Couldn't find a running $DESC"
+        fi
+        echo -n "Starting $DESC: $NAME"
+        cd $DIR
+        su $SRCDS_USER -l -c "screen -d -m -S $NAME $DAEMON $PARAMS"
+        echo " ... done."
+        ;;
 
-	status)
-		# Check whether there's a "srcds" process
-		ps aux | grep -v grep | grep srcds_r > /dev/null
-		CHECK=$?
-		[ $CHECK -eq 0 ] && echo "SRCDS is UP" || echo "SRCDS is DOWN"
-		;;
+    status)
+        # Check whether there's a "srcds" process
+        ps aux | grep -v grep | grep srcds_r > /dev/null
+        CHECK=$?
+        [ $CHECK -eq 0 ] && echo "SRCDS is UP" || echo "SRCDS is DOWN"
+        ;;
 
-	*)
-		echo "Usage: $0 {start|stop|status|restart}"
-		exit 1
-		;;
+    *)
+        echo "Usage: $0 {start|stop|status|restart}"
+        exit 1
+        ;;
 esac
 
 exit 0
