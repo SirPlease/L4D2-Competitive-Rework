@@ -1,0 +1,117 @@
+﻿"Games"
+{
+	"cstrike"
+	{
+		"Offsets"
+		{
+			"Weapon_ShootPosition"
+			{
+				"windows"	"265"
+				"linux"		"266"
+				"mac"		"266"
+			}
+		}
+	}
+
+	"csgo"
+	{
+		"Offsets"
+		{
+			"Weapon_ShootPosition"
+			{
+				"windows"	"290"
+				"linux"		"291"
+				"mac"		"291"
+			}
+		}
+	}
+
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			"Weapon_ShootPosition"
+			{
+				"windows"	"285"
+				"linux"		"286"
+				"mac"		"286"
+			}
+		}
+	}
+
+	"tf"
+	{
+		"Offsets"
+		{
+			"Weapon_ShootPosition"
+			{
+				"windows"	"272"
+				"linux"		"273"
+				"mac"		"273"
+			}
+		}
+	}
+
+	"left4dead"
+	{
+		"Offsets"
+		{
+			"Weapon_ShootPosition"
+			{
+				"windows"	"264"
+				"linux"		"265"
+				"mac"		"265"
+			}
+		}
+	}
+
+	"dod"
+	{
+		"Offsets"
+		{
+			"Weapon_ShootPosition"
+			{
+				"windows"	"265"
+				"linux"		"266"
+				"mac"		"266"
+			}
+		}
+	}
+
+	"nucleardawn"
+	{
+		"Offsets"
+		{
+			"Weapon_ShootPosition"
+			{
+				"windows"	"296"
+				"linux"		"297"
+				"mac"		"297"
+			}
+		}
+	}
+
+	"hl2mp"
+	{
+		"Offsets"
+		{
+			"Weapon_ShootPosition"
+			{
+				"windows"	"265"
+				"linux"		"266"
+				"mac"		"266"
+			}
+		}
+	}
+
+	"NeotokyoSource"
+	{
+		"Offsets"
+		{
+			"Weapon_ShootPosition"
+			{
+				"windows"	"221"
+			}
+		}
+	}
+}
