@@ -230,19 +230,26 @@ void CancelFullReady(int client, disruptType type)
 {
 	if (readyUpMode == ReadyMode_AutoStart)
 		return;
-	
+
 	if (s_readyCountdownTimer != null)
 	{
+		if (l4d_ready_unready_limit.BoolValue && type == readyStatus && !AddUnReadyCount(client))
+			return;
+
 		delete s_readyCountdownTimer;
 		InitiateReadyUp(false);
 		
 		SetTeamFrozen(L4D2Team_Survivor, l4d_ready_survivor_freeze.BoolValue);
 		if (type == teamShuffle) // fix spectating
 			SetClientFrozen(client, false);
-		
+
 		PrintHintTextToAll("%t", "LiveCountdownCancelled");
-		CPrintToChatAllEx(client, "%t", g_sDisruptReason[type], client);
-		
+
+		if (l4d_ready_unready_limit.BoolValue && type == readyStatus)
+			CPrintToChatAllEx(client, "%t %t", g_sDisruptReason[type], client, "CountUnReady", GetUnReadyCount(client), l4d_ready_unready_limit.IntValue);
+		else
+			CPrintToChatAllEx(client, "%t", g_sDisruptReason[type], client);
+
 		if (g_hCountdownCancelledForward.FunctionCount)
 		{
 			Call_StartForward(g_hCountdownCancelledForward);
@@ -253,6 +260,7 @@ void CancelFullReady(int client, disruptType type)
 	}
 }
 
+
 void RespectateSpectators()
 {
 	for (int client = 1; client <= MaxClients; ++client)
@@ -262,4 +270,45 @@ void RespectateSpectators()
 			FakeClientCommand(client, "sm_spectate");
 		}
 	}
+}
+
+/**
+ * Adds an unready count for a client.
+ *
+ * @param client The client index.
+ * @return True if the unready count was successfully added, false otherwise.
+ */
+bool AddUnReadyCount(int client)
+{
+	char authId[18];
+	GetClientAuthId(client, AuthId_SteamID64, authId, sizeof(authId));
+	int unReadyCount = 0;
+	g_smUnreadyCount.GetValue(authId, unReadyCount);
+
+	if (unReadyCount >= l4d_ready_unready_limit.IntValue)
+	{
+		CPrintToChat(client, "%t", "UnReadyLimit", l4d_ready_unready_limit.IntValue);
+		return false;
+	}
+
+	unReadyCount++;
+	g_smUnreadyCount.SetValue(authId, unReadyCount);
+
+	return true;
+}
+
+/**
+ * Returns the number of unready(s) for a given client.
+ *
+ * @param client The client index.
+ * @return The number of unready players.
+ */
+int GetUnReadyCount(int client)
+{
+	char authId[18];
+	GetClientAuthId(client, AuthId_SteamID64, authId, sizeof(authId));
+	int unReadyCount = 0;
+	g_smUnreadyCount.GetValue(authId, unReadyCount);
+
+	return unReadyCount;
 }

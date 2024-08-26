@@ -79,7 +79,18 @@
 	{
 		"en"		"Countdown Cancelled!"
 	}
-	
+
+	"CountUnReady"
+	{
+		"#format"	"{1:d}{2:d}"
+		"en"		"[{olive}{1}{default}/{olive}{2}{default}]"
+	}
+
+	"UnReadyLimit"
+	{
+		"en"	"{default}[{green}!{default}] You have reached your {red}unready limit{default} [{green}%d{default}]"
+	}
+
 	"RoundIsLive"
 	{
 		"en"		"Round is live!"
@@ -104,5 +115,51 @@
 	"AutoStartNotEnoughPlayers"
 	{
 		"en"		"More players are required..."
+	}
+
+	// readyup/panel.inc
+	"PanelSlots"
+	{
+		"en"		"▸ Server: %s \n▸ Slots: %d/%d\n▸ Config: %s"
+	}
+	
+	"PanelCommands"
+	{
+		"en"		"▸ Commands:"
+	}
+
+	"PanelSurvivors"
+	{
+		"en"	"->%d. Survivors%s"
+	}
+
+	"PanelInfected"
+	{
+		"en"	"->%d. Infected%s"
+	}
+
+	"PanelCaster"
+	{
+		"en"	"->%d. Caster"
+	}
+
+	"PanelCasters"
+	{
+		"en"	"->%d. Casters"
+	}
+
+	"PanelSpectator"
+	{
+		"en"	"->%d. Spectator"
+	}
+
+	"PanelSpectators"
+	{
+		"en"	"->%d. Spectators"
+	}
+
+	"PanelMany"
+	{
+		"en"	"**Many** (%d)"
 	}
 }

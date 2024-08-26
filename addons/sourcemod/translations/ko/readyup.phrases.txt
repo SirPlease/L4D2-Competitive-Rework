@@ -79,7 +79,18 @@
 	{
 		"ko"		"카운트다운 취소됨!"
 	}
-	
+
+	"CountUnReady"
+	{
+		"#format"	"{1:d}{2:d}"
+		"ko"		"[{olive}{1}{default}/{olive}{2}{default}]"
+	}
+
+	"UnReadyLimit"
+	{
+		"ko"		"{default}[{green}!{default}] 취소한 횟수가 {red}제한{default}에 도달했습니다 [{green}%d{default}]"
+	}
+
 	"RoundIsLive"
 	{
 		"ko"		"라운드 시작!"
@@ -99,5 +110,51 @@
 	"AutoStartWaiting"
 	{
 		"ko"		"로드 중인 플레이어를 기다립니다."
+	}
+
+	// readyup/panel.inc
+	"PanelSlots"
+	{
+		"ko"		"▸ 서버: %s \n▸ 슬롯: %d/%d\n▸ 설정: %s"
+	}
+	
+	"PanelCommands"
+	{
+		"ko"		"▸ 명령어:"
+	}
+
+	"PanelSurvivors"
+	{
+		"ko"	"->%d. 생존자%s"
+	}
+
+	"PanelInfected"
+	{
+		"ko"	"->%d. 감염자%s"
+	}
+
+	"PanelCaster"
+	{
+		"ko"	"->%d. 캐스터"
+	}
+
+	"PanelCasters"
+	{
+		"ko"	"->%d. 캐스터"
+	}
+
+	"PanelSpectator"
+	{
+		"ko"	"->%d. 관전자"
+	}
+
+	"PanelSpectators"
+	{
+		"ko"	"->%d. 관전자"
+	}
+
+	"PanelMany"
+	{
+		"ko"	"**많음** (%d)"
 	}
 }
