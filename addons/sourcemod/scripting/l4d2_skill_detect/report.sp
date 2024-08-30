@@ -112,9 +112,22 @@ stock void HandleSkeet(int attacker, int victim, bool bMelee = false, bool bSnip
 				CPrintToChatAll("%t %t", "Tag+", "TeamSkeetedBot");
 		}
 		else if (IsValidClientInGame(attacker) && IsValidClientInGame(victim) && !IsFakeClient(victim))
-			CPrintToChatAll("%t %t", "Tag++", "Skeeted", attacker, (bMelee) ? Melee() : ((bSniper) ? Headshot() : ((bGL) ? Grenade() : "")), victim);
+		{
+			for (int i = 0; i < MaxClients; i++)
+			{
+				if (IsValidClientInGame(i) && !IsFakeClient(i))
+					CPrintToChat(i, "%t %t", "Tag++", "Skeeted", attacker, (bMelee) ? Melee(i) : ((bSniper) ? Headshot(i) : ((bGL) ? Grenade(i) : "")), victim);
+			}
+		}
+			
 		else if (IsValidClientInGame(attacker))
-			CPrintToChatAll("%t %t", "Tag+", "SkeetedBot", attacker, (bMelee) ? Melee() : ((bSniper) ? Headshot() : ((bGL) ? Grenade() : "")));
+		{
+			for (int i = 0; i < MaxClients; i++)
+			{
+				if (IsValidClientInGame(i) && !IsFakeClient(i))
+					CPrintToChat(i, "%t %t", "Tag++", "SkeetedBot", attacker, (bMelee) ? Melee(i) : ((bSniper) ? Headshot(i) : ((bGL) ? Grenade(i) : "")), "");
+			}
+		}
 	}
 
 	// call forward
@@ -155,12 +168,19 @@ stock void HandleNonSkeet(int attacker, int victim, int damage, bool bOverKill =
 	// report?
 	if (g_cvarReport.BoolValue && g_cvarRepHurtSkeet.BoolValue)
 	{
-		char buffer[64];
-		Format(buffer, sizeof(buffer), "%t", "Unchipped");
-		if (IsValidClientInGame(victim))
-			CPrintToChatAll("%t %t", "Tag+", "HurtSkeet", victim, damage, (bOverKill) ? buffer : "");
-		else
-			CPrintToChatAll("%t %t", "Tag+", "HurtSkeetBot", damage, (bOverKill) ? buffer : "");
+		for (int i = 0; i < MaxClients; i++)
+		{
+			if (IsValidClientInGame(i) && !IsFakeClient(i))
+			{
+				char buffer[64];
+				Format(buffer, sizeof(buffer), "%T", "Unchipped", i);
+
+				if (IsValidClientInGame(victim))
+					CPrintToChat(i, "%t %t", "Tag+", "HurtSkeet", victim, damage, (bOverKill) ? buffer : "");
+				else
+					CPrintToChat(i, "%t %t", "Tag+", "HurtSkeetBot", damage, (bOverKill) ? buffer : "");
+			}
+		}
 	}
 
 	// call forward
@@ -255,13 +275,19 @@ void HandleSmokerSelfClear(int attacker, int victim, bool withShove = false)
 	// report?
 	if (g_cvarReport.BoolValue && g_cvarRepSelfClear.BoolValue && (!withShove || g_cvarRepSelfClearShove.BoolValue))
 	{
-		char Buffer[64];
-		Format(Buffer, sizeof(Buffer), "%t", "Shoving");
+		for (int i = 0; i < MaxClients; i++)
+		{
+			if (IsValidClientInGame(i) && !IsFakeClient(i))
+			{
+				char Buffer[64];
+				Format(Buffer, sizeof(Buffer), "%T", "Shoving", i);
 
-		if (IsValidClientInGame(attacker) && IsValidClientInGame(victim) && !IsFakeClient(victim))
-			CPrintToChatAll("%t %t", "Tag++", "SelfClearedTongue", attacker, victim, (withShove) ? Buffer : "");
-		else if (IsValidClientInGame(attacker))
-			CPrintToChatAll("%t %t", "Tag++", "SelfClearedTongueBot", attacker, (withShove) ? Buffer : "");
+				if (IsValidClientInGame(attacker) && IsValidClientInGame(victim) && !IsFakeClient(victim))
+					CPrintToChat(i, "%t %t", "Tag++", "SelfClearedTongue", attacker, victim, (withShove) ? Buffer : "");
+				else if (IsValidClientInGame(attacker))
+					CPrintToChat(i, "%t %t", "Tag++", "SelfClearedTongueBot", attacker, (withShove) ? Buffer : "");
+			}
+		}
 	}
 
 	// call forward
@@ -347,13 +373,19 @@ stock void HandleDeathCharge(int attacker, int victim, float height, float dista
 	// report?
 	if (g_cvarReport.BoolValue && g_cvarRepDeathCharge.BoolValue && height >= g_cvarDeathChargeHeight.FloatValue)
 	{
-		char Buffer[64];
-		Format(Buffer, sizeof(Buffer), "%t", "Bowling");
+		for (int i = 0; i < MaxClients; i++)
+		{
+			if (IsValidClientInGame(i) && !IsFakeClient(i))
+			{
+				char Buffer[64];
+				Format(Buffer, sizeof(Buffer), "%t", "Bowling", i);
 
-		if (IsValidClientInGame(attacker) && IsValidClientInGame(victim) && !IsFakeClient(attacker))
-			CPrintToChatAll("%t %t", "Tag++++", "DeathCharged", attacker, victim, (bCarried) ? "" : Buffer, RoundFloat(height));
-		else if (IsValidClientInGame(victim))
-			CPrintToChatAll("%t %t", "Tag++++", "DeathChargedBot", victim, (bCarried) ? "" : Buffer, RoundFloat(height));
+				if (IsValidClientInGame(attacker) && IsValidClientInGame(victim) && !IsFakeClient(attacker))
+					CPrintToChat(i, "%t %t", "Tag++++", "DeathCharged", attacker, victim, (bCarried) ? "" : Buffer, RoundFloat(height));
+				else if (IsValidClientInGame(victim))
+					CPrintToChat(i, "%t %t", "Tag++++", "DeathChargedBot", victim, (bCarried) ? "" : Buffer, RoundFloat(height));
+			}
+		}
 	}
 
 	Call_StartForward(g_hForwardDeathCharge);
@@ -426,7 +458,7 @@ stock void HandleVomitLanded(int attacker, int boomCount)
 stock void HandleBHopStreak(int survivor, int streak, float maxVelocity)
 {
 	if (g_cvarRepBhopStreak.BoolValue && IsValidClientInGame(survivor) && !IsFakeClient(survivor) && streak >= g_cvarBHopMinStreak.IntValue)
-		CPrintToChat(survivor, "%t %t", "Tag+", "BunnyHop", streak, (streak > 1) ? PluralCount() : "", maxVelocity);
+		CPrintToChat(survivor, "%t %t", "Tag+", "BunnyHop", streak, (streak > 1) ? PluralCount(survivor) : "", maxVelocity);
 
 	Call_StartForward(g_hForwardBHopStreak);
 	Call_PushCell(survivor);
@@ -487,31 +519,31 @@ stock void HandleCarAlarmTriggered(int survivor, int infected, int reason)
 	Call_Finish();
 }
 
-char[] Melee()
+char[] Melee(int client)
 {
 	char sBuffer[32];
-	Format(sBuffer, sizeof(sBuffer), "%t", "Melee");
+	Format(sBuffer, sizeof(sBuffer), "%T", "Melee", client);
 	return sBuffer;
 }
 
-char[] Headshot()
+char[] Headshot(int client)
 {
 	char sBuffer[32];
-	Format(sBuffer, sizeof(sBuffer), "%t", "HeadShot");
+	Format(sBuffer, sizeof(sBuffer), "%T", "HeadShot", client);
 	return sBuffer;
 }
 
-char[] Grenade()
+char[] Grenade(int client)
 {
 	char sBuffer[32];
-	Format(sBuffer, sizeof(sBuffer), "%t", "Grenade");
+	Format(sBuffer, sizeof(sBuffer), "%T", "Grenade", client);
 	return sBuffer;
 }
 
-char[] PluralCount()
+char[] PluralCount(int client)
 {
 	char sBuffer[32];
-	Format(sBuffer, sizeof(sBuffer), "%t", "PluralCount");
+	Format(sBuffer, sizeof(sBuffer), "%T", "PluralCount", client);
 	return sBuffer;
 }
 
