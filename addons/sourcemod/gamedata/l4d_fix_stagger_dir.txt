@@ -1,0 +1,109 @@
+"Games"
+{
+	"#default"
+	{
+		"Functions"
+		{
+			"CTerrorPlayer::OnStaggered"
+			{
+				"signature"		"CTerrorPlayer::OnStaggered"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"cbaseentity"
+					}
+					"a2"
+					{
+						"type"	"vectorptr"
+					}
+				}
+			}
+		}
+	}
+
+	"left4dead"
+	{
+		"Offsets"
+		{
+			"CTerrorPlayer::m_PlayerAnimState"
+			{
+				"linux"			"6024"
+				"windows"		"6004"
+			}
+
+			"m_flEyeYaw"
+			{
+				"linux"			"112"
+				"windows"		"116"
+			}
+		}
+
+		"Signatures"
+		{
+			// Stolen from left4dhooks thanks to Silvers
+			/*
+			 * CTerrorPlayer::OnStaggered(CBaseEntity *, Vector const)
+			 */
+			"CTerrorPlayer::OnStaggered"
+			{
+				"library"		"server"
+				"linux"			"@_ZN13CTerrorPlayer11OnStaggeredEP11CBaseEntityPK6Vector"
+				"windows"		"\x83\x2A\x2A\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
+				/* 83 ? ? ? 8B ? E8 ? ? ? ? 84 ? 0F 85 ? ? ? ? 8B ? 8B */
+				/* Search: "Player.Shoved" */
+			}
+		}
+	}
+
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			/* Windows offset:
+			 *
+			 * Search string "PlayerLedgeHangMiddle", which will lead you to "CTerrorPlayerAnimState::HandleActivity_Incapacitated".
+			 * Go to its only xref function, and again, then you are at vtable of "CTerrorPlayerAnimState".
+			 * Double click on the first virtual function "CTerrorPlayerAnimState::ClearAnimationState".
+			 * Go to its function xref 3 times, and you will meet with an enormous constructor function.
+			 * 
+			 * 1. Generate pseudocode and you can easily find the offset where the cursor is.
+			 * 2. See the "mov" instruction below the highlighted "call".
+			 */
+			
+			"CTerrorPlayer::m_PlayerAnimState"
+			{
+				"linux"			"10512"
+				"windows"		"10524"
+			}
+
+			"m_flEyeYaw"
+			{
+				"linux"			"228"
+				"windows"		"228"
+			}
+		}
+
+		"Signatures"
+		{
+			// Stolen from left4dhooks thanks to Silvers
+			/*
+			 * CTerrorPlayer::OnStaggered(CBaseEntity *, Vector const*) - used by L4D2 on Survivors, causes staggering (e.g. Charger Impact nearby)
+			 *
+			 * - string "PlayerShoved" has 3 refs, the one furthest into a function should be this one.
+			 */
+			"CTerrorPlayer::OnStaggered"
+			{
+				"library"		"server"
+				"linux"			"@_ZN13CTerrorPlayer11OnStaggeredEP11CBaseEntityPK6Vector"
+				"windows" 		"\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x83\x2A\x2A\x55\x8B\x2A\x2A\x89\x2A\x2A\x2A\x8B\x2A\x83\x2A\x2A\x56\x57\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85\x2A\x2A\x2A\x2A\x8B\x2A\x8B"
+				/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 83 ? ? 56 57 8B ? E8 ? ? ? ? 84 ? 0F 85 ? ? ? ? 8B ? 8B
+				 * Using a long local jump as the unique portion (last few bytes of sig)
+				 */
+			}
+		}
+	}
+}
