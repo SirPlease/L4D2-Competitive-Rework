@@ -2152,30 +2152,6 @@
 				"linux"		"1592"
 			}
 
-			"ItemManagerPtr"
-			{
-				"linux"		"1580"
-				"windows"	"1580"
-			}
-
-			"MusicBanksPtr"
-			{
-				"linux"		"1584"
-				"windows"	"1584"
-			}
-
-			"SessionManagerPtr"
-			{
-				"windows"	"1588"
-				"linux"		"1588"
-			}
-
-			"ChallengeModePtr"
-			{
-				"windows"	"1608"
-				"linux"		"1608"
-			}
-
 			"CSquirrelVM::GetValue"
 			{
 				"windows"	"37"
@@ -2193,14 +2169,14 @@
 			// Can be found in "CDirector::GetScriptScope(CDirector::ScriptLevels_t)"
 			"m_iszScriptId"
 			{
-				"windows"	"1160"
-				"linux"		"1160"
+				"windows"	"968"
+				"linux"		"968"
 			}
 
 			"m_rescueCheckTimer"
 			{
-				"windows"	"980"
-				"linux"		"980"
+				"windows"	"788"
+				"linux"		"788"
 			}
 
 			"m_PendingMobCount"
@@ -2290,11 +2266,6 @@
 			{
 				"windows"	"8"
 				"linux"		"8"
-			}
-			"m_iCampaignScores2"
-			{
-				"windows"	"920"
-				"linux"		"916"
 			}
 			"m_fTankSpawnFlowPercent"
 			{
@@ -2821,7 +2792,7 @@
 			}
 
 			/*
-			* CTerrorPlayer::OnITExpired(void)
+			*  CTerrorPlayer::OnITExpired(void)
 			*/
 			"CTerrorPlayer::OnITExpired"
 			{
@@ -2870,8 +2841,8 @@
 			}
 
 			/*
-			* CInferno::StartBurning(Vector const&, Vector const&, Vector const&, int)
-			* Search: "Inferno.StartSweeten"
+			*  CInferno::StartBurning(Vector const&, Vector const&, Vector const&, int)
+			*  Search: "Inferno.StartSweeten"
 			*/
 			"CInferno::StartBurning"
 			{
@@ -2882,8 +2853,8 @@
 			}
 
 			/*
-			* CPipeBombProjectile::Create(Vector  const&, QAngle  const&, Vector  const&, Vector  const&, CBaseCombatCharacter *, float)
-			* Search: "BEEP_CONTEXT"
+			*  CPipeBombProjectile::Create(Vector  const&, QAngle  const&, Vector  const&, Vector  const&, CBaseCombatCharacter *, float)
+			*  Search: "BEEP_CONTEXT"
 			*/
 			"CPipeBombProjectile::Create"
 			{
@@ -2894,7 +2865,7 @@
 			}
 
 			/*
-			* CSpitterProjectile::Create(Vector  const&,QAngle  const&,Vector  const&,Vector  const&,CBaseCombatCharacter *)
+			*  CSpitterProjectile::Create(Vector  const&,QAngle  const&,Vector  const&,Vector  const&,CBaseCombatCharacter *)
 			*/
 			"CSpitterProjectile::Create"
 			{
@@ -2905,8 +2876,8 @@
 			}
 
 			/*
-			* CMolotovProjectile::Create(int, int, int, int, CBaseEntity *)
-			* Search: "Molotov projectile spawned at %f %f %f"
+			*  CMolotovProjectile::Create(int, int, int, int, CBaseEntity *)
+			*  Search: "Molotov projectile spawned at %f %f %f"
 			*/
 			"CMolotovProjectile::Create"
 			{
@@ -2922,8 +2893,8 @@
 			}
 
 			/*
-			* CVomitJarProjectile::Create(int, int, int, int, CBaseEntity *)
-			* Search: "VomitJar projectile spawned at %f %f %f"
+			*  CVomitJarProjectile::Create(int, int, int, int, CBaseEntity *)
+			*  Search: "VomitJar projectile spawned at %f %f %f"
 			*/
 			"CVomitJarProjectile::Create"
 			{
@@ -2939,8 +2910,8 @@
 			}
 
 			/*
-			* CGrenadeLauncher_Projectile::Create(int, int, int, int, CBaseEntity *, int)
-			* Search: "VomitJar projectile spawned at %f %f %f"
+			*  CGrenadeLauncher_Projectile::Create(int, int, int, int, CBaseEntity *, int)
+			*  Search: "VomitJar projectile spawned at %f %f %f"
 			*/
 			"CGrenadeLauncher_Projectile::Create"
 			{
@@ -2956,8 +2927,8 @@
 			}
 
 			/*
-			* CPipeBombProjectile::Detonate(CPipeBombProjectile *this)
-			* Search: "weapon_pipebomb_dirt"
+			*  CPipeBombProjectile::Detonate(CPipeBombProjectile *this)
+			*  Search: "weapon_pipebomb_dirt"
 			*/
 			"CPipeBombProjectile::Detonate"
 			{
@@ -2968,8 +2939,8 @@
 			}
 
 			/*
-			* CMolotovProjectile::Detonate(CMolotovProjectile *this)
-			* Search: "hegrenade_detonate" - the function that contains "Molotov.Loop"
+			*  CMolotovProjectile::Detonate(CMolotovProjectile *this)
+			*  Search: "hegrenade_detonate" - the function that contains "Molotov.Loop"
 			*/
 			"CMolotovProjectile::Detonate"
 			{
@@ -2980,8 +2951,8 @@
 			}
 
 			/*
-			* CVomitJarProjectile::Detonate(CVomitJarProjectile *this)
-			* Search: "CedaJar.Explode"
+			*  CVomitJarProjectile::Detonate(CVomitJarProjectile *this)
+			*  Search: "CedaJar.Explode"
 			*/
 			"CVomitJarProjectile::Detonate"
 			{
@@ -2992,8 +2963,8 @@
 			}
 
 			/*
-			* CGrenadeLauncher_Projectile::Explode(CGrenadeLauncher_Projectile *this, CGameTrace *a2, int a3)
-			* Search: "weapon_grenadelauncher_water"
+			*  CGrenadeLauncher_Projectile::Explode(CGrenadeLauncher_Projectile *this, CGameTrace *a2, int a3)
+			*  Search: "weapon_grenadelauncher_water"
 			*/
 			"CGrenadeLauncher_Projectile::Explode"
 			{
@@ -3040,7 +3011,7 @@
 			}
 
 			/*
-			* CTerrorPlayer::OnAdrenalineUsed(CTerrorPlayer *this, float)
+			*  CTerrorPlayer::OnAdrenalineUsed(CTerrorPlayer *this, float)
 			*/
 			"CTerrorPlayer::OnAdrenalineUsed"
 			{
@@ -3089,7 +3060,7 @@
 			}
 
 			/*
-			* Script_ForceVersusStart(void)
+			*  Script_ForceVersusStart(void)
 			*/
 			"Script_ForceVersusStart"
 			{
@@ -3100,7 +3071,7 @@
 			}
 
 			/*
-			* Script_ForceSurvivalStart(void)
+			*  Script_ForceSurvivalStart(void)
 			*/
 			"Script_ForceSurvivalStart"
 			{
@@ -3111,7 +3082,7 @@
 			}
 
 			/*
-			* Script_ForceScavengeStart(void)
+			*  Script_ForceScavengeStart(void)
 			*/
 			"Script_ForceScavengeStart"
 			{
@@ -3122,7 +3093,7 @@
 			}
 
 			/*
-			* ScriptClassDesc_t * GetScriptDesc<CDirector>(CDirector *)
+			*  ScriptClassDesc_t * GetScriptDesc<CDirector>(CDirector *)
 			*/
 			"CDirector::ForceNextStage"
 			{
@@ -3139,8 +3110,8 @@
 			}
 
 			/*
-			* CDirector::ForceNextStage(CDirector *this)
-			* Note: Unused since breaks every update, windows has a new method above to get the address
+			*  CDirector::ForceNextStage(CDirector *this)
+			*  Note: Unused since breaks every update, windows has a new method above to get the address
 			*/
 			"ForceNextStage"
 			{
@@ -3152,7 +3123,7 @@
 			}
 
 			/*
-			* CDirector::IsTankInPlay(CDirector *this)
+			*  CDirector::IsTankInPlay(CDirector *this)
 			*/
 			"CDirector::IsTankInPlay"
 			{
@@ -3164,7 +3135,7 @@
 			}
 
 			/*
-			* CDirector::GetFurthestSurvivorFlow(CDirector *this)
+			*  CDirector::GetFurthestSurvivorFlow(CDirector *this)
 			*/
 			"CDirector::GetFurthestSurvivorFlow"
 			{
@@ -3176,7 +3147,7 @@
 			}
 
 			/*
-			* ZombieManager::GetRandomPZSpawnPosition(ZombieManager *_ZombieManager, int zombieClass, int attempts, int a4, int a5)
+			*  ZombieManager::GetRandomPZSpawnPosition(ZombieManager *_ZombieManager, int zombieClass, int attempts, int a4, int a5)
 			*/
 			"ZombieManager::GetRandomPZSpawnPosition"
 			{
@@ -3188,7 +3159,7 @@
 			}
 
 			/*
-			* CNavMesh::GetNearestNavArea(CNavMesh *this, const Vector *, bool, float, bool, bool, bool)
+			*  CNavMesh::GetNearestNavArea(CNavMesh *this, const Vector *, bool, float, bool, bool, bool)
 			*/
 			"CNavMesh::GetNearestNavArea"
 			{
@@ -3200,7 +3171,7 @@
 			}
 
 			/*
-			* TerrorNavArea::FindRandomSpot(TerrorNavArea *this)
+			*  TerrorNavArea::FindRandomSpot(TerrorNavArea *this)
 			*/
 			"TerrorNavArea::FindRandomSpot"
 			{
@@ -3258,7 +3229,7 @@
 			}
 
 			/*
-			* CDirector::HasAnySurvivorLeftSafeArea(CDirector *this)
+			*  CDirector::HasAnySurvivorLeftSafeArea(CDirector *this)
 			*/
 			"CDirector::HasAnySurvivorLeftSafeArea"
 			{
@@ -3270,7 +3241,7 @@
 			}
 
 			/*
-			* CDirector::IsAnySurvivorInStartArea(CDirector *__hidden this)
+			*  CDirector::IsAnySurvivorInStartArea(CDirector *__hidden this)
 			*/
 			"CDirector::IsAnySurvivorInStartArea"
 			{
@@ -3282,7 +3253,7 @@
 			}
 
 			/*
-			* TerrorNavMesh::GetInitialCheckpoint(TerrorNavMesh *this)
+			*  TerrorNavMesh::GetInitialCheckpoint(TerrorNavMesh *this)
 			*/
 			"TerrorNavMesh::GetInitialCheckpoint"
 			{
@@ -3294,7 +3265,7 @@
 			}
 
 			/*
-			* TerrorNavMesh::IsInInitialCheckpoint_NoLandmark(TerrorNavArea *)const
+			*  TerrorNavMesh::IsInInitialCheckpoint_NoLandmark(TerrorNavArea *)const
 			*/
 			"TerrorNavMesh::IsInInitialCheckpoint_NoLandmark"
 			{
@@ -3306,7 +3277,7 @@
 			}
 
 			/*
-			* TerrorNavMesh::IsInExitCheckpoint_NoLandmark(TerrorNavArea *)const
+			*  TerrorNavMesh::IsInExitCheckpoint_NoLandmark(TerrorNavArea *)const
 			*/
 			"TerrorNavMesh::IsInExitCheckpoint_NoLandmark"
 			{
@@ -3318,7 +3289,7 @@
 			}
 
 			/*
-			* Checkpoint::ContainsArea(TerrorNavArea *)const
+			*  Checkpoint::ContainsArea(TerrorNavArea *)const
 			*/
 			"Checkpoint::ContainsArea"
 			{
@@ -3330,7 +3301,7 @@
 			}
 
 			/*
-			* TerrorNavMesh::GetLastCheckpoint(TerrorNavMesh *this)
+			*  TerrorNavMesh::GetLastCheckpoint(TerrorNavMesh *this)
 			*/
 			"TerrorNavMesh::GetLastCheckpoint"
 			{
@@ -3342,7 +3313,7 @@
 			}
 
 			/*
-			* CDirector::IsAnySurvivorInExitCheckpoint(CDirector *__hidden this)
+			*  CDirector::IsAnySurvivorInExitCheckpoint(CDirector *__hidden this)
 			*/
 			"CDirector::IsAnySurvivorInExitCheckpoint"
 			{
@@ -3366,7 +3337,7 @@
 			}
 
 			/*
-			* SurvivorBot::IsReachable(SurvivorBot *this, const Vector *)
+			*  SurvivorBot::IsReachable(SurvivorBot *this, const Vector *)
 			*/
 			"SurvivorBot::IsReachable"
 			{
@@ -3378,7 +3349,7 @@
 			}
 
 			/*
-			* float NavAreaTravelDistance<ShortestPathCost>(Vector const&, Vector const&, ShortestPathCost &)
+			*  float NavAreaTravelDistance<ShortestPathCost>(Vector const&, Vector const&, ShortestPathCost &)
 			*/
 			"NavAreaTravelDistance"
 			{
@@ -3391,7 +3362,7 @@
 
 			// UNUSED: Using VScript Wrapper alternative. Args are difficult to follow for SDKCall.
 			/*
-			* int NavAreaBuildPath<ShortestPathCost>(CNavArea *,CNavArea *,Vector const*,Vector const*,ShortestPathCost &,CNavArea **,float,int,bool)
+			*  int NavAreaBuildPath<ShortestPathCost>(CNavArea *,CNavArea *,Vector const*,Vector const*,ShortestPathCost &,CNavArea **,float,int,bool)
 			*/
 			"NavAreaBuildPath"
 			{
@@ -3883,7 +3854,7 @@
 			}
 
 			/**
-			 * Witch::SetHarasser(Witch *this, CBaseEntity *)
+			 *  Witch::SetHarasser(Witch *this, CBaseEntity *)
 			 **/
 			"Witch::SetHarasser"
 			{
@@ -4269,7 +4240,7 @@
 			}
 
 			/*
-			 * CTerrorWeapon::OnSwingStart(CTerrorWeapon *this)
+			 *  CTerrorWeapon::OnSwingStart(CTerrorWeapon *this)
 			 */
 			"CTerrorWeapon::OnSwingStart"
 			{
@@ -4413,7 +4384,7 @@
 			}
 
 			/*
-			 * CGasCan::ShouldStartAction(int, int, CTerrorPlayer *, CPointPropUseTarget *)
+			 *  CGasCan::ShouldStartAction(int, int, CTerrorPlayer *, CPointPropUseTarget *)
 			 */
 			"CGasCan::ShouldStartAction"
 			{
@@ -4645,27 +4616,6 @@
 				"linux"		"@_ZN13CTerrorPlayer16SetNextShoveTimeEf"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x0F\x2F\x2A\x2A\x2A\x2A\x2A\x76\x2A\xF3\x0F\x2A\x2A\x2A\x2A\x2A\x2A\x0F\x2A\x2A\x9F\xF6\x2A\x2A\x7B\x2A\x80\x2A\x2A\x2A\x74\x2A\x80\x2A\x2A\x2A\xF3\x0F\x2A\x2A\x2A\x2A\x2A\x2A\x5E\x5D"
 				/* ? ? ? ? ? ? ? ? 56 8B ? 0F 2F ? ? ? ? ? 76 ? F3 0F ? ? ? ? ? ? 0F ? ? 9F F6 ? ? 7B ? 80 ? ? ? 74 ? 80 ? ? ? F3 0F ? ? ? ? ? ? 5E 5D */
-			}
-
-			/*
-			 * CTerrorGameRules::RecomputeTeamScores(CTerrorGameRules *this, bool)
-			 */
-			"CTerrorGameRules::RecomputeTeamScores"
-			{
-				"library"	"server"
-				"linux"		"@_ZN16CTerrorGameRules19RecomputeTeamScoresEb"
-				"windows"	"\x55\x8B\x2A\xA1\x2A\x2A\x2A\x2A\x57\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x80\x2A\x2A\x2A\x0F\x84"
-				/* 55 8B ? A1 ? ? ? ? 57 8B ? 8B ? ? ? ? ? 80 ? ? ? 0F 84 */
-				/* Search "RevivedByDefibrillatorDelayed" few calls down, with (0) as param */
-			}
-
-			// Thanks to "Lux" taken "lux_library" gamedata
-			"CTerrorPlayer::OnRevivedByDefibrillator"
-			{
-				"library"	"server"
-				"linux"		"@_ZN13CTerrorPlayer24OnRevivedByDefibrillatorEPS_P19CSurvivorDeathModel"
-				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x8B\xF1\x8A\x86\xE1\x3F\x00\x00"
-				/* ? ? ? ? ? ? 53 56 8B F1 8A 86 E1 3F 00 00 */
 			}
 
 			/* CDirector::AreWanderersAllowed(void)

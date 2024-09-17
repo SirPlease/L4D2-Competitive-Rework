@@ -18,8 +18,8 @@
 
 
 
-#define PLUGIN_VERSION		"1.152"
-#define PLUGIN_VERLONG		1152
+#define PLUGIN_VERSION		"1.151"
+#define PLUGIN_VERLONG		1151
 
 #define DEBUG				0
 // #define DEBUG			1	// Prints addresses + detour info (only use for debugging, slows server down).
@@ -278,7 +278,6 @@ int g_iOff_m_PlayerAnimState;
 int g_iOff_m_eCurrentMainSequenceActivity;
 int g_iOff_m_bIsCustomSequence;
 int g_iOff_m_iCampaignScores;
-int g_iOff_m_iCampaignScores2;
 int g_iOff_m_fTankSpawnFlowPercent;
 int g_iOff_m_fWitchSpawnFlowPercent;
 int g_iOff_m_iTankPassedCount;
@@ -326,10 +325,6 @@ int g_pScriptedEventManager;
 int g_pVersusMode;
 int g_pSurvivalMode;
 int g_pScavengeMode;
-int g_pItemManager;
-int g_pMusicBanks;
-int g_pSessionManager;
-int g_pChallengeMode;
 Address g_pServer;
 Address g_pAmmoDef;
 Address g_pDirector;
@@ -355,8 +350,6 @@ int g_iCanBecomeGhostOffset;
 // Other
 Address g_pScriptId;
 int g_iCancelStagger[MAXPLAYERS+1];
-int g_iClientDeathModel[MAXPLAYERS+1];
-int g_iDeathModel;
 int g_iPlayerResourceRef;
 int g_iOffsetAmmo;
 int g_iPrimaryAmmoType;
@@ -727,10 +720,6 @@ public void OnPluginStart()
 		HookEvent("player_entered_checkpoint",		Event_EnteredCheckpoint);
 		HookEvent("player_left_checkpoint",			Event_LeftCheckpoint);
 	}
-	else
-	{
-		HookEvent("player_death",					Event_PlayerDeath);
-	}
 }
 
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
@@ -791,12 +780,6 @@ void Event_LeftCheckpoint(Event event, const char[] name, bool dontBroadcast)
 	}
 }
 
-void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
-{
-	int client = event.GetInt("userid");
-	g_iClientDeathModel[GetClientOfUserId(client)] = g_iDeathModel;
-}
-
 
 
 // ====================================================================================================
@@ -834,13 +817,6 @@ void ResetVars()
 			if( g_iCancelStagger[i] )
 				SDKUnhook(i, SDKHook_PostThinkPost, OnThinkCancelStagger);
 			g_iCancelStagger[i] = 0;
-		}
-	}
-	else
-	{
-		for( int i = 1; i <= MaxClients; i++ )
-		{
-			g_iClientDeathModel[i] = 0;
 		}
 	}
 }

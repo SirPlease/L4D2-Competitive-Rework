@@ -1,12 +1,7 @@
-1.152 (07-Sep-2024)
-	- Added 4 member pointers of CDirector for L4D_GetPointer() to use. Thanks to "blueblur0730" for adding on GitHub.
-	- Added native "L4D_SetCampaignScores" to set the current campaign scores stored in the Director.
-	- Added native "L4D2_DefibByDeadBody" for L4D2 to revive a players death model and revive animation. Partially added by "King_OXO".
-	- Added stocks "L4D_GetFlowFromPoint" and "L4D_IsEnoughFlow" to the "left4dhooks_silver.inc" include file. Thanks to "King_OXO" for adding.
-	- Added stock "L4D_ChangeClientTeam" to the "left4dhooks_stocks.inc" include file. Thanks to "Arman" for adding.
-	- Changed native "L4DDirect_RecomputeTeamScores" to support L4D1. Requested by "Arman".
-	- Fixed the "L4D2_GetVersusCampaignScores" and "L4D2_SetVersusCampaignScores" natives from not working. Thanks to "Arman" for reporting.
-	- L4D2: Fixed the "m_rescueCheckTimer" and "m_iszScriptId" offsets. Thanks to "yuzumi" for providing.
+1.151 (17-Jun-2024)
+	- Added forward "L4D_OnFinishIntro" to fire when the intro cutscene has finished (probably only first chapter of a campaign).
+	- Added native "L4D_IsInIntro" to determine if the intro cutscene is playing.
+	- Fixed native "L4D_CancelStagger" blocking being able to stagger someone after calling cancel stagger within the same or next few frames. Thanks to "KoMiKoZa" for reporting. Bug affected "Shove Handler" plugin.
 
 	- Updated: Plugin and test plugin.
 	- Updated: "/gamedata/left4dhooks.l4d1.txt" GameData file.
@@ -16,13 +11,6 @@
 	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
 	- Updated: "/scripting/l4dd/l4dd_setup.sp" project file.
 	- Updated: "/scripting/include/left4dhooks.inc" include file.
-	- Updated: "/scripting/include/left4dhooks_silver.inc" include file.
-	- Updated: "/scripting/include/left4dhooks_stocks.inc" include file.
-
-1.151 (17-Jun-2024)
-	- Added forward "L4D_OnFinishIntro" to fire when the intro cutscene has finished (probably only first chapter of a campaign).
-	- Added native "L4D_IsInIntro" to determine if the intro cutscene is playing.
-	- Fixed native "L4D_CancelStagger" blocking being able to stagger someone after calling cancel stagger within the same or next few frames. Thanks to "KoMiKoZa" for reporting. Bug affected "Shove Handler" plugin.
 
 1.150 (06-May-2024)
 	- L4D1 Linux: Removed some unused clone functions that were removed from the game update. Thanks to "Ja-Forces" and "Forgetest" for reporting.
