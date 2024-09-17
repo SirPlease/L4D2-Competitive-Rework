@@ -166,6 +166,46 @@ stock bool L4D_IsEngineLeft4Dead2()
 
 
 // ==================================================
+// FLOW STOCKS
+// ==================================================
+/**
+ * Returns a flow by vector position
+ *
+ * @return The flow distance for the given position
+ */
+stock float L4D_GetFlowFromPoint(float point[3])
+{
+	Address terrorNavPointer = L4D2Direct_GetTerrorNavArea(point);
+	if( terrorNavPointer == Address_Null )
+	{
+		return 0.0;
+	}
+
+	return L4D2Direct_GetTerrorNavAreaFlow(terrorNavPointer);
+}
+
+/**
+ * Check if the players flow distance is greater than the given value
+ *
+ * @return True if the given value is less than the clients flow distance
+ */
+stock bool L4D_IsEnoughFlow(int client, float given)
+{
+	float flow;
+
+	flow = L4D2Direct_GetFlowDistance(client);
+
+	if( given <= flow )
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
+
+// ==================================================
 // DOOR STOCKS
 // ==================================================
 

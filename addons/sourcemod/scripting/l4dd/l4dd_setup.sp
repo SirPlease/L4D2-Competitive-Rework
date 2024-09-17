@@ -375,6 +375,7 @@ void SetupForwardsNatives()
 	CreateNative("L4D_ForceSurvivalStart",		 					Native_ForceSurvivalStart);
 	CreateNative("L4D2_ForceScavengeStart",		 					Native_ForceScavengeStart);
 	CreateNative("L4D2_IsTankInPlay",		 						Native_CDirector_IsTankInPlay);
+	CreateNative("L4D2_DefibByDeadBody",							Native_DefibDeadBody);
 	CreateNative("L4D2_IsReachable",		 						Native_SurvivorBot_IsReachable);
 	CreateNative("L4D2_GetFirstSpawnClass",		 					Native_GetFirstSpawnClass);
 	CreateNative("L4D2_SetFirstSpawnClass",		 					Native_SetFirstSpawnClass);
@@ -445,6 +446,7 @@ void SetupForwardsNatives()
 	CreateNative("L4D_GetPlayerSpawnTime",							Native_GetPlayerSpawnTime);
 	CreateNative("L4D_SetPlayerSpawnTime",							Native_SetPlayerSpawnTime);
 	CreateNative("L4D_GetTeamScore",								Native_CTerrorGameRules_GetTeamScore);
+	CreateNative("L4D_SetCampaignScores",							Native_CTerrorGameRules_SetCampaignScores);
 	CreateNative("L4D_GetMobSpawnTimerRemaining",					Native_GetMobSpawnTimerRemaining);
 	CreateNative("L4D_GetMobSpawnTimerDuration",					Native_GetMobSpawnTimerDuration);
 	CreateNative("L4D2_ChangeFinaleStage",							Native_CDirectorScriptedEventManager_ChangeFinaleStage);

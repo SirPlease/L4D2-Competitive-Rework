@@ -60,18 +60,18 @@
 
 
 
-// Natives: 273 (including 3 for L4D1 only)
-// L4D1 = 31 [left4downtown] + 47 [l4d_direct] + 16 [l4d2addresses] + 73 [silvers - mine!] + 4 [anim] = 172
-// L4D2 = 61 [left4downtown] + 59 [l4d_direct] + 31 [l4d2addresses] + 117 [silvers - mine!] + 4 [anim] = 272
+// Natives: 275 (including 3 for L4D1 only)
+// L4D1 = 31 [left4downtown] + 47 [l4d_direct] + 16 [l4d2addresses] + 74 [silvers - mine!] + 4 [anim] = 173
+// L4D2 = 61 [left4downtown] + 59 [l4d_direct] + 31 [l4d2addresses] + 119 [silvers - mine!] + 4 [anim] = 274
 // Methods and Natives by "Forgetest": 53 [PlayerAnimState] + 22 [Ammo_t] + 15 [AmmoDef] = 90
 
 // Forwards: 221 (including 5 for L4D1 only)
 // L4D1 = 147
 // L4D2 = 216
 
-// Stocks: 169 (L4D1 = 114, L4D2 = 167)
-// left4dhooks_silver			46 stocks	(L4D1 = 39,		L4D2 = 53)
-// left4dhooks_stocks			84 stocks	(L4D1 = 45,		L4D2 = 80)
+// Stocks: 172 (L4D1 = 117, L4D2 = 170)
+// left4dhooks_silver			48 stocks	(L4D1 = 41,		L4D2 = 55)
+// left4dhooks_stocks			85 stocks	(L4D1 = 46,		L4D2 = 81)
 // left4dhooks_lux_library		34 stocks	(L4D1 = 30,		L4D2 = 34)
 
 
@@ -544,7 +544,11 @@ enum PointerType
 	POINTER_THENAVAREAS		= 12,	// @TheNavAreas
 	POINTER_MISSIONINFO		= 13,	// MissionInfo pointer
 	POINTER_SURVIVALMODE	= 14,	// pSurvivalMode pointer (assuming this is the same as pVersusMode in L4D1 and also TheDirector)
-	POINTER_AMMODEF			= 15	// ammoDef Pointer
+	POINTER_AMMODEF			= 15,	// ammoDef Pointer
+	POINTER_ITEMMANAGER		= 16,	// pItemManager (L4D2 Only)
+	POINTER_MUSICBANKS		= 17,	// pMusicBanks (L4D2 Only)
+	POINTER_SESSIONMANAGER	= 18,	// pSessionManager (L4D2 Only)
+	POINTER_CHALLENGEMODE	= 19	// pChallengeMode (L4D2 Only) (mutation modes)
 };
 
 // Provided by "BHaType":
@@ -838,7 +842,7 @@ enum WeaponType
 	WEAPONTYPE_UNKNOWN
 };
 
-stock const char g_sWeaponTypes[WeaponType][] =
+stock static const char g_sWeaponTypes[WeaponType][] =
 {
 	"pistol",
 	"smg",
@@ -5026,6 +5030,19 @@ native void L4D2_ForceScavengeStart();
 native bool L4D2_IsTankInPlay();
 
 /**
+ * @brief Revive a dead player by defib, players the getting up animation
+ * @remarks This will only work if the plugin was not reloaded after the player has died
+ *
+ * @param client		Client to revive
+ * @param reviver		Who did th reviving
+ * @param nopenalty		Should this revive add to teams number of defibs used count?
+ *
+ * @noreturn
+ */
+// L4D2 only
+native void L4D2_DefibByDeadBody(int client, int reviver, bool nopenalty);
+
+/**
  * @brief Returns the directors script scope handle
  * @remarks	Scope level
  * 0 = DirectorScript
@@ -5367,6 +5384,16 @@ native int L4D_SetVersusMaxCompletionScore(int score);
  *					or the team's campaign score if campaign_score = true
  */
 native int L4D_GetTeamScore(int logical_team, bool campaign_score=false);
+
+/**
+ * @brief Set the current campaign scores stored in the Director
+ *
+ * @param scoreA	score of logical team A
+ * @param scoreB	score of logical team B
+ *
+ * @noreturn
+ */
+native void L4D_SetCampaignScores(int scoreA, int scoreB);
 
 /**
  * @brief Tells if the Mission (map) is the first map of the campaign
@@ -6314,6 +6341,7 @@ native int L4D2Direct_GetVSCampaignScore(int teamNumber);
  * @note You can use the gamerules m_bAreTeamsFlipped property to figure out team numbers
  * @note The campaign scores value is also stored in gamerules, however this is the "master" version
  * @note Keep in mind the current survivor team's distance/bonus score will be added at the end of a round
+ * @remarks Use L4DDirect_RecomputeTeamScores native after to update the tab score board
  *
  * @param teamNumber	Team number to set campaign score of, 0 or 1
  * @param score			Score to set for the team
