@@ -35,7 +35,7 @@ public Plugin myinfo =
 	name = "1v1 EQ",
 	author = "Blade + Confogl Team, Tabun, Visor",
 	description = "A plugin designed to support 1v1.",
-	version = "0.2.1",
+	version = "0.2.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -54,7 +54,8 @@ void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBroadcast
 		return;
 	}
 	
-	int iAttacker = GetClientOfUserId(hEvent.GetInt("attacker"));
+	int iAttackerId = hEvent.GetInt("attacker");
+	int iAttacker = GetClientOfUserId(iAttackerId);
 	if (!IsClientAndInGame(iAttacker) || GetClientTeam(iAttacker) != L4D2Team_Infected) {
 		return;
 	}
@@ -84,11 +85,27 @@ void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBroadcast
 	
 	CPrintToChatAll("%t %t", "Tag", "HealthRemaining", sName, L4D2_InfectedNames[iZclass], iRemainingHealth);
 	
-	ForcePlayerSuicide(iAttacker);
+	RequestFrame(NextFrame_PlayerHurt, iAttackerId);
 	
 	if (iRemainingHealth == 1) {
 		CPrintToChat(iVictim, "%t", "UMad");
 	}
+}
+
+void NextFrame_PlayerHurt(int userid)
+{
+	int iAttacker = GetClientOfUserId(userid);
+	if (!IsClientAndInGame(iAttacker) || GetClientTeam(iAttacker) != L4D2Team_Infected || !IsPlayerAlive(iAttacker)) {
+		return;
+	}
+
+	int iZclass = GetEntProp(iAttacker, Prop_Send, "m_zombieClass");
+	
+	if (iZclass < L4D2Infected_Smoker || iZclass > L4D2Infected_Charger) {
+		return;
+	}
+	
+	ForcePlayerSuicide(iAttacker);
 }
 
 bool IsClientAndInGame(int iClient)
