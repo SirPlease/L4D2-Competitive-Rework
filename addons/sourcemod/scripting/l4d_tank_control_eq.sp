@@ -556,7 +556,7 @@ int getTankPlayer()
 {
     for (int i = 1; i <= MaxClients; i++)
     {
-        if (!IS_INFECTED(i) || IsFakeClient(i))
+        if (!IsClientInGame(i) || !IS_INFECTED(i) || IsFakeClient(i))
             continue;
         
         int zombieClass = GetEntProp(i, Prop_Send, "m_zombieClass");
