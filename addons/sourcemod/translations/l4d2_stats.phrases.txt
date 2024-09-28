@@ -41,6 +41,14 @@
 	{
 		"en"		"{olive}%N{default} triggered an {olive}Alarmed Car{default}"
 	}
+    "Plural"
+    {
+        "en"       "s"
+    }
+    "Shot"
+    {
+        "en"       "shot"
+    }
 }
 
 
