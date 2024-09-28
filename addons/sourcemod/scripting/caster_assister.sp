@@ -152,7 +152,7 @@ Action SetVerticalIncrement_Cmd(int client, int args)
 
     if (args != 1)
     {
-        ReplyToCommand(client, "Usage: sm_set_vertical_increment # (default: 10.0)");
+        ReplyToCommand(client, "Usage: sm_set_vertical_increment # (default: 450.0)");
         return Plugin_Handled;
     }
     char buffer[10];
