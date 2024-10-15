@@ -1686,6 +1686,7 @@
 				"max"		"100"
 			}
 		}
+		"max_distance"		"700"
 	}
 	"uf3_harbor"
 	{
