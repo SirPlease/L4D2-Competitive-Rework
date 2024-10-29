@@ -42,7 +42,7 @@ native void PBONUS_SetDefibPenalty(penalty);
 
 public SharedPlugin __pl_l4d2_penalty_bonus =
 {
-    name = "l4d2_penalty_bonus",
+    name = "penaltybonus",
     file = "l4d2_penalty_bonus.smx",
 #if defined REQUIRE_PLUGIN
     required = 1,
