@@ -1,0 +1,185 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"	"{default}[{green}!{default}]"
+	}
+	"ClientFullyLoaded"
+	{
+		"chi"	"{olive}%N {default}已完全连接"
+	}
+	"PauseCommand"
+	{
+		"chi"	"{olive}%N {blue}提出暂停{default}."
+	}
+	// PauseDelay_Timer
+	"PauseAction"
+	{
+		"chi"	"{red}暂停"
+	}
+	"PauseDelay"
+	{
+		"chi"	"{blue}即将暂停{default}: {olive}%d"
+	}
+	// ForcePause_Cmd
+	"Crashed"
+	{
+		"chi"	"{olive}游戏 {default}因一位玩家 {blue}游戏崩溃{default} 被  {green}强制暂停{default}."
+	}
+	"ForcePause"
+	{
+		"chi"	"{blue}管理员 {default}({olive}%N{default}) 发起了一个{green}强制暂停 {default}"
+	}
+	// Unpause_Cmd
+	"UnpauseSurvivors"
+	{
+		"chi"	"{olive}%N %s{default}示意 {blue}%s {default}已准备好."
+	}
+	"UnpauseInfected"
+	{
+		"chi"	"{olive}%N %s{default}示意 {red}%s {default}已准备好."
+	}
+	"UnpauseInitiator"
+	{
+		"chi"	"{olive}%N {default}示意 {green}发起者 {default}已准备好."
+	}
+	"UnpauseAdminConfirm"
+	{
+		"chi"	"{olive}双方团队 {default}已准备好. 等待 {blue}管理员 {default}{green}确认{default}."
+	}
+	// Unready_Cmd
+	"UnreadySurvivors"
+	{
+		"chi"	"{olive}%N %s{default}示意 {blue}%s {default}未准备好."
+	}
+	"UnreadyInfected"
+	{
+		"chi"	"{olive}%N %s{default}示意 {red}%s {default}未准备好."
+	}
+	"UnreadyInitiator"
+	{
+		"chi"	"{olive}%N {default}示意 {green}发起者 {default}未准备好."
+	}
+	// void AsInitiator()
+	"AsInitiator"
+	{
+		"chi"		"{default}作为 {green}发起者 "
+	}
+	// ForceUnpause_Cmd
+	"ForceUnpause"
+	{
+		"chi"	"{blue}管理员 {default}({olive}%N{default}) 发起了 {green}强制解除暂停{default}"
+	}
+	// AddPauseCount
+	"PauseLimit"
+	{
+		"chi"	"你已达到你的暂停限制."
+	}
+	// AttemptPause
+	"PauseDeferred"
+	{
+		"chi"	"{red}暂停因一个救人过程正在进行而推迟!"
+	}
+	// Pause
+	"PausePreventSpawn"
+	{
+		"chi"	"{default}你的 {red}特感重生 {default}因暂停而被阻止"
+	}
+	// Show_Cmd
+	"PanelShow"
+	{
+		"chi"	"面板现已 {blue}开{default}."
+	}
+	"PanelHide"
+	{
+		"chi"	"面板现已 {red}关{default}."
+	}
+	// UpdatePanel
+	"PanelSlots"
+	{
+		"chi"	"▸ 服务器: %s\n▸ 位数: %d/%d"
+	}
+	"PanelDate"
+	{
+		"chi"	"▸ %m/%d/%Y - %I:%M%p"
+	}
+	"PanelTitle"
+	{
+		"chi"	"▸ 准备状态"
+	}
+	"RequireAdmin"
+	{
+		"chi"	"->0. 需要管理员解除暂停"
+	}
+	"SurvivorUnPaused"
+	{
+		"chi"	"->1. 生还者: [√]"
+	}
+	"SurvivorPaused"
+	{
+		"chi"	"->1. 生还者: [X]"
+	}
+	"InfectedUnPaused"
+	{
+		"chi"	"->2. 感染者: [√]"
+	}
+	"InfectedPaused"
+	{
+		"chi"	"->2. 感染者: [X]"
+	}
+	"InitiatorUnPaused"
+	{
+		"chi"	"->0. 发起者: [√]"
+	}
+	"InitiatorPaused"
+	{
+		"chi"	"->0. 发起者: [X]"
+	}
+	"AutoPauseCrash"
+	{
+		"chi"	"▸ 强制自动暂停 -> 游戏崩溃"
+	}
+	"ForcePauseAdmin"
+	{
+		"chi"	"▸ 强制暂停 -> %s (管理员)"
+	}
+	"InitiatorPause"
+	{
+		"chi"	"▸ 发起者 -> %s (%s)"
+	}
+	"DurationPause"
+	{
+		"chi"	"▸ 时长: %02d:%02d"
+	}
+	// InitiateLiveCountdown
+	"CountdownCancelNotify"
+	{
+		"chi"		"输入 {olive}!unready {default}来取消"
+	}
+	"GameisLive"
+	{
+		"chi"		"游戏继续!"
+	}
+	"CountdownReadyDelay"
+	{
+		"chi"		"{blue}解除暂停{default}: {olive}%d{default}..."
+	}
+	// CancelFullReady
+	"CountdownCancelled"
+	{
+		"chi"		"{olive}%N {default}取消了倒计时!"
+	}
+	// Callvote_Callback
+	"CallvoteNoSpec"
+	{
+		"chi"		"你不能作为一个旁观者发起投票."
+	}
+	"CallvoteNoExploit"
+	{
+		"chi"		"你刚刚切换了队伍, 你不能在几秒内发起投票."
+	}
+	"CallvoteCannotTargetAdmin"
+	{
+		"chi"		"你不能踢出管理员."
+	}
+}

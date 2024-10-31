@@ -1,0 +1,20 @@
+"Phrases"
+{
+	"Title"
+	{
+		"chi"	"{blue}[{default}Tank 扔石选择器{blue}]"
+	}
+    // 译者注: R键, E键, 鼠标右键均为习惯性描述. 其实际对应的是客户端自己设定的对应换弹, 使用和鼠标右键的键位.
+	"Reload"
+	{
+		"chi"	"{olive}R键{default} = {blue}双手举头石{default}"
+	}
+	"Use"
+	{
+		"chi"	"{olive}E键{default} = {blue}低抛石{default}"
+	}
+	"M2"
+	{
+		"chi"	"{olive}鼠标右键{default} = {blue}一手举头石{default}"
+	}
+}

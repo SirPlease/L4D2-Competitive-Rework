@@ -3,7 +3,7 @@
 #endif
 #define _skill_detect_tracking_included
 
-Action Event_RoundStart(Handle event, const char[] name, bool dontBroadcast)
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	g_iRocksBeingThrownCount = 0;
 
@@ -16,33 +16,31 @@ Action Event_RoundStart(Handle event, const char[] name, bool dontBroadcast)
 			g_fVictimLastShove[i][j] = 0.0;
 		}
 	}
-	return Plugin_Continue;
 }
 
-Action Event_RoundEnd(Handle event, const char[] name, bool dontBroadcast)
+void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	// clean trie, new cars will be created
-	ClearTrie(g_hCarTrie);
-	return Plugin_Continue;
+	g_hCarTrie.Clear();
 }
 
-Action Event_PlayerHurt(Handle event, const char[] name, bool dontBroadcast)
+void Event_PlayerHurt(Event event, const char[] name, bool dontBroadcast)
 {
-	int victim	 = GetClientOfUserId(GetEventInt(event, "userid"));
-	int attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
+	int victim	 = GetClientOfUserId(event.GetInt("userid"));
+	int attacker = GetClientOfUserId(event.GetInt("attacker"));
 	int zClass;
 
-	int damage	   = GetEventInt(event, "dmg_health");
-	int damagetype = GetEventInt(event, "type");
+	int damage	   = event.GetInt("dmg_health");
+	int damagetype = event.GetInt("type");
 
 	if (IsValidInfected(victim))
 	{
 		zClass		 = GetEntProp(victim, Prop_Send, "m_zombieClass");
-		int health	 = GetEventInt(event, "health");
-		int hitgroup = GetEventInt(event, "hitgroup");
+		int health	 = event.GetInt("health");
+		int hitgroup = event.GetInt("hitgroup");
 
 		if (damage < 1)
-			return Plugin_Continue;
+			return;
 
 		switch (zClass)
 		{
@@ -52,7 +50,7 @@ Action Event_PlayerHurt(Handle event, const char[] name, bool dontBroadcast)
 				if (!IsValidSurvivor(attacker))
 				{
 					g_iHunterLastHealth[victim] = health;
-					return Plugin_Continue;
+					return;
 				}
 
 				// if the damage done is greater than the health we know the hunter to have remaining, reduce the damage done
@@ -105,9 +103,9 @@ Action Event_PlayerHurt(Handle event, const char[] name, bool dontBroadcast)
 
 						char		  weaponB[32];
 						strWeaponType weaponTypeB;
-						GetEventString(event, "weapon", weaponB, sizeof(weaponB));
+						event.GetString("weapon", weaponB, sizeof(weaponB));
 
-						if (GetTrieValue(g_hTrieWeapons, weaponB, weaponTypeB) && weaponTypeB == WPTYPE_GL)
+						if (g_hTrieWeapons.GetValue(weaponB, weaponTypeB) && weaponTypeB == WPTYPE_GL)
 						{
 							if (g_cvarAllowGLSkeet.BoolValue)
 								HandleSkeet(attacker, victim, false, false, true);
@@ -117,9 +115,9 @@ Action Event_PlayerHurt(Handle event, const char[] name, bool dontBroadcast)
 						// headshot with bullet based weapon (only single shots) -- only snipers
 						char		  weaponA[32];
 						strWeaponType weaponTypeA;
-						GetEventString(event, "weapon", weaponA, sizeof(weaponA));
+						event.GetString("weapon", weaponA, sizeof(weaponA));
 
-						if (GetTrieValue(g_hTrieWeapons, weaponA, weaponTypeA) && (weaponTypeA == WPTYPE_SNIPER || weaponTypeA == WPTYPE_MAGNUM))
+						if (g_hTrieWeapons.GetValue(weaponA, weaponTypeA) && (weaponTypeA == WPTYPE_SNIPER || weaponTypeA == WPTYPE_MAGNUM))
 						{
 							if (damage >= g_iPounceInterrupt)
 							{
@@ -206,7 +204,7 @@ Action Event_PlayerHurt(Handle event, const char[] name, bool dontBroadcast)
 			case ZC_SMOKER:
 			{
 				if (!IsValidSurvivor(attacker))
-					return Plugin_Continue;
+					return;
 				g_iSmokerVictimDamage[victim] += damage;
 			}
 		}
@@ -227,7 +225,7 @@ Action Event_PlayerHurt(Handle event, const char[] name, bool dontBroadcast)
 			case ZC_TANK:
 			{
 				char weapon[10];
-				GetEventString(event, "weapon", weapon, sizeof(weapon));
+				event.GetString("weapon", weapon, sizeof(weapon));
 
 				if (StrEqual(weapon, "tank_rock"))
 				{
@@ -239,13 +237,13 @@ Action Event_PlayerHurt(Handle event, const char[] name, bool dontBroadcast)
 						FormatEx(rock_key, sizeof(rock_key), "%x", g_iTankRock[attacker]);
 						int rock_array[3];
 						rock_array[rckDamage] = -1;
-						SetTrieArray(g_hRockTrie, rock_key, rock_array, sizeof(rock_array), true);
+						g_hRockTrie.SetArray(rock_key, rock_array, sizeof(rock_array), true);
 					}
 
 					if (IsValidSurvivor(victim))
 						HandleRockEaten(attacker, victim);
 				}
-				return Plugin_Continue;
+				return;
 			}
 		}
 	}
@@ -262,17 +260,16 @@ Action Event_PlayerHurt(Handle event, const char[] name, bool dontBroadcast)
 		else if (damagetype & DMG_FALL && damage >= MIN_DC_FALL_DMG)
 			g_iVictimFlags[victim] = g_iVictimFlags[victim] | VICFLG_HURTLOTS;
 	}
-
-	return Plugin_Continue;
 }
 
-Action Event_PlayerSpawn(Handle event, const char[] name, bool dontBroadcast)
+void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
-	if (!IsValidInfected(client))
-		return Plugin_Continue;
-	int zClass			  = GetEntProp(client, Prop_Send, "m_zombieClass");
+	int client = GetClientOfUserId(event.GetInt("userid"));
 
+	if (!IsValidInfected(client))
+		return;
+
+	int zClass			  = GetEntProp(client, Prop_Send, "m_zombieClass");
 	g_fSpawnTime[client]  = GetGameTime();
 	g_fPinTime[client][0] = 0.0;
 	g_fPinTime[client][1] = 0.0;
@@ -313,26 +310,24 @@ Action Event_PlayerSpawn(Handle event, const char[] name, bool dontBroadcast)
 			g_iChargerHealth[client] = g_cvarChargerHealth.IntValue;
 		}
 	}
-
-	return Plugin_Continue;
 }
 
 // player about to get incapped
-Action Event_IncapStart(Handle event, const char[] name, bool dontBroadcast)
+void Event_IncapStart(Event event, const char[] name, bool dontBroadcast)
 {
 	// test for deathcharges
 
-	int	   client	 = GetClientOfUserId(GetEventInt(event, "userid"));
-	// int attacker = GetClientOfUserId( GetEventInt(event, "attacker") );
-	int	   attackent = GetEventInt(event, "attackerentid");
-	int	   dmgtype	 = GetEventInt(event, "type");
+	int	   client	 = GetClientOfUserId(event.GetInt("userid"));
+	// int attacker = GetClientOfUserId( event.GetInt("attacker") );
+	int	   attackent = event.GetInt("attackerentid");
+	int	   dmgtype	 = event.GetInt("type");
 
 	char   classname[24];
 	strOEC classnameOEC;
 	if (IsValidEntity(attackent))
 	{
 		GetEdictClassname(attackent, classname, sizeof(classname));
-		if (GetTrieValue(g_hTrieEntityCreated, classname, classnameOEC))
+		if (g_hTrieEntityCreated.GetValue(classname, classnameOEC))
 		{
 			g_iVictimFlags[client] = g_iVictimFlags[client] | VICFLG_TRIGGER;
 		}
@@ -347,8 +342,6 @@ Action Event_IncapStart(Handle event, const char[] name, bool dontBroadcast)
 
 	if (flow < WEIRD_FLOW_THRESH)
 		g_iVictimFlags[client] = g_iVictimFlags[client] | VICFLG_WEIRDFLOW;
-
-	return Plugin_Continue;
 }
 
 // trace attacks on hunters
@@ -389,10 +382,10 @@ Action TraceAttack_Jockey(int victim, int& attacker, int& inflictor, float& dama
 	return Plugin_Continue;
 }
 
-Action Event_PlayerDeath(Handle hEvent, const char[] name, bool dontBroadcast)
+void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
-	int victim	 = GetClientOfUserId(GetEventInt(hEvent, "userid"));
-	int attacker = GetClientOfUserId(GetEventInt(hEvent, "attacker"));
+	int victim	 = GetClientOfUserId(event.GetInt( "userid"));
+	int attacker = GetClientOfUserId(event.GetInt( "attacker"));
 
 	if (IsValidInfected(victim))
 	{
@@ -403,7 +396,7 @@ Action Event_PlayerDeath(Handle hEvent, const char[] name, bool dontBroadcast)
 			case ZC_HUNTER:
 			{
 				if (!IsValidSurvivor(attacker))
-					return Plugin_Continue;
+					return;
 
 				if (g_iHunterShotDmgTeam[victim] > 0 && g_bHunterKilledPouncing[victim])
 				{
@@ -434,7 +427,7 @@ Action Event_PlayerDeath(Handle hEvent, const char[] name, bool dontBroadcast)
 			case ZC_SMOKER:
 			{
 				if (!IsValidSurvivor(attacker))
-					return Plugin_Continue;
+					return;
 
 				if (g_bSmokerClearCheck[victim] && g_iSmokerVictim[victim] == attacker && g_iSmokerVictimDamage[victim] >= g_cvarSelfClearThresh.IntValue)
 					HandleSmokerSelfClear(attacker, victim);
@@ -468,8 +461,8 @@ Action Event_PlayerDeath(Handle hEvent, const char[] name, bool dontBroadcast)
 	else if (IsValidSurvivor(victim))
 	{
 		// check for deathcharges
-		// new atkent = GetEventInt(hEvent, "attackerentid");
-		int dmgtype = GetEventInt(hEvent, "type");
+		// new atkent = event.GetInt( "attackerentid");
+		int dmgtype = event.GetInt( "type");
 
 		// PrintDebug("Died [%N]: attk: %i / %i - dmgtype: %i", victim, attacker, atkent, dmgtype );
 
@@ -479,19 +472,17 @@ Action Event_PlayerDeath(Handle hEvent, const char[] name, bool dontBroadcast)
 			// if something other than the charger killed them, remember (not a DC)
 			g_iVictimFlags[victim] = g_iVictimFlags[victim] | VICFLG_KILLEDBYOTHER;
 	}
-
-	return Plugin_Continue;
 }
 
-Action Event_PlayerShoved(Handle event, const char[] name, bool dontBroadcast)
+void Event_PlayerShoved(Event event, const char[] name, bool dontBroadcast)
 {
-	int victim	 = GetClientOfUserId(GetEventInt(event, "userid"));
-	int attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
+	int victim	 = GetClientOfUserId(event.GetInt("userid"));
+	int attacker = GetClientOfUserId(event.GetInt("attacker"));
 
 	PrintDebug("Shove from %i on %i", attacker, victim);
 
 	if (!IsValidSurvivor(attacker) || !IsValidInfected(victim))
-		return Plugin_Continue;
+		return;
 
 	int zClass = GetEntProp(victim, Prop_Send, "m_zombieClass");
 	PrintDebug(" --> Shove from %N on %N (class: %i) -- (last shove time: %.2f / %.2f)", attacker, victim, zClass, g_fVictimLastShove[victim][attacker], ( GetGameTime() - g_fVictimLastShove[victim][attacker] ) );
@@ -531,13 +522,12 @@ Action Event_PlayerShoved(Handle event, const char[] name, bool dontBroadcast)
 		g_bSmokerShoved[victim] = true;
 
 	PrintDebug("shove by %i on %i", attacker, victim );
-	return Plugin_Continue;
 }
 
-Action Event_LungePounce(Handle event, const char[] name, bool dontBroadcast)
+void Event_LungePounce(Event event, const char[] name, bool dontBroadcast)
 {
-	int client			  = GetClientOfUserId(GetEventInt(event, "userid"));
-	int victim			  = GetClientOfUserId(GetEventInt(event, "victim"));
+	int client			  = GetClientOfUserId(event.GetInt("userid"));
+	int victim			  = GetClientOfUserId(event.GetInt("victim"));
 
 	g_fPinTime[client][0] = GetGameTime();
 
@@ -550,7 +540,7 @@ Action Event_LungePounce(Handle event, const char[] name, bool dontBroadcast)
 		&& g_fPouncePosition[client][1] == 0.0
 		&& g_fPouncePosition[client][2] == 0.0)
 	{
-		return Plugin_Continue;
+		return;
 	}
 
 	float endPos[3];
@@ -578,38 +568,37 @@ Action Event_LungePounce(Handle event, const char[] name, bool dontBroadcast)
 	else if (fDamage > fMaxDmg + 1.0) 
 		fDamage = fMaxDmg + 1.0;
 
-	Handle pack = CreateDataPack();
-	WritePackCell(pack, client);
-	WritePackCell(pack, victim);
-	WritePackFloat(pack, fDamage);
-	WritePackFloat(pack, fHeight);
+	DataPack pack = new DataPack();
+	pack.WriteCell(client);
+	pack.WriteCell(victim);
+	pack.WriteFloat(fDamage);
+	pack.WriteFloat(fHeight);
 	CreateTimer(0.05, Timer_HunterDP, pack);
-
-	return Plugin_Continue;
 }
 
-Action Timer_HunterDP(Handle timer, Handle pack)
+Action Timer_HunterDP(Handle timer, DataPack pack)
 {
-	ResetPack(pack);
-	int	  client  = ReadPackCell(pack);
-	int	  victim  = ReadPackCell(pack);
-	float fDamage = ReadPackFloat(pack);
-	float fHeight = ReadPackFloat(pack);
-	CloseHandle(pack);
+	pack.Reset();
+	int	  client  = pack.ReadCell();
+	int	  victim  = pack.ReadCell();
+	float fDamage = pack.ReadFloat();
+	float fHeight = pack.ReadFloat();
+	delete pack;
 
 	HandleHunterDP(client, victim, g_iPounceDamage[client], fDamage, fHeight);
 	return Plugin_Continue;
 }
 
-Action Event_PlayerJumped(Handle event, const char[] name, bool dontBroadcast)
+void Event_PlayerJumped(Event event, const char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int client = GetClientOfUserId(event.GetInt("userid"));
 
 	if (IsValidInfected(client))
 	{
 		int zClass = GetEntProp(client, Prop_Send, "m_zombieClass");
 		if (zClass != ZC_JOCKEY)
-			return Plugin_Continue;
+			return;
+
 		// where did jockey jump from?
 		GetClientAbsOrigin(client, g_fPouncePosition[client]);
 	}
@@ -679,11 +668,9 @@ Action Event_PlayerJumped(Handle event, const char[] name, bool dontBroadcast)
 			CreateTimer(HOP_CHECK_TIME, Timer_CheckHop, client, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 		}
 	}
-
-	return Plugin_Continue;
 }
 
-Action Timer_CheckHop(Handle timer, any client)
+Action Timer_CheckHop(Handle timer, int client)
 {
 	// player back to ground = end of hop (streak)?
 
@@ -701,7 +688,6 @@ Action Timer_CheckHop(Handle timer, any client)
 		// PrintToChatAll("grounded %i: vel length: %.1f", client, GetVectorLength(fVel) );
 
 		g_bHopCheck[client] = true;
-
 		CreateTimer(HOPEND_CHECK_TIME, Timer_CheckHopStreak, client, TIMER_FLAG_NO_MAPCHANGE);
 
 		return Plugin_Stop;
@@ -710,7 +696,7 @@ Action Timer_CheckHop(Handle timer, any client)
 	return Plugin_Continue;
 }
 
-Action Timer_CheckHopStreak(Handle timer, any client)
+Action Timer_CheckHopStreak(Handle timer, int client)
 {
 	if (!IsValidClientInGame(client) || !IsPlayerAlive(client))
 		return Plugin_Continue;
@@ -729,9 +715,9 @@ Action Timer_CheckHopStreak(Handle timer, any client)
 	return Plugin_Continue;
 }
 
-Action Event_PlayerJumpApex(Handle event, const char[] name, bool dontBroadcast)
+void Event_PlayerJumpApex(Event event, const char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int client = GetClientOfUserId(event.GetInt("userid"));
 
 	if (g_bIsHopping[client])
 	{
@@ -741,26 +727,25 @@ Action Event_PlayerJumpApex(Handle event, const char[] name, bool dontBroadcast)
 		float fLength = GetVectorLength(fVel);
 
 		if (fLength > g_fHopTopVelocity[client])
-		{
 			g_fHopTopVelocity[client] = fLength;
-		}
 	}
-	return Plugin_Continue;
 }
 
-Action Event_JockeyRide(Handle event, const char[] name, bool dontBroadcast)
+void Event_JockeyRide(Event event, const char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
-	int victim = GetClientOfUserId(GetEventInt(event, "victim"));
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	int victim = GetClientOfUserId(event.GetInt("victim"));
 
 	if (!IsValidInfected(client) || !IsValidSurvivor(victim))
-		return Plugin_Continue;
+		return;
+
 	g_fPinTime[client][0] = GetGameTime();
 
 	// minimum distance travelled?
 	// ignore if no real pounce start pos
 	if (g_fPouncePosition[client][0] == 0.0 && g_fPouncePosition[client][1] == 0.0 && g_fPouncePosition[client][2] == 0.0)
-		return Plugin_Continue;
+		return;
+
 	float endPos[3];
 	GetClientAbsOrigin(client, endPos);
 	float fHeight = g_fPouncePosition[client][2] - endPos[2];
@@ -769,23 +754,21 @@ Action Event_JockeyRide(Handle event, const char[] name, bool dontBroadcast)
 
 	// (high) pounce
 	HandleJockeyDP(client, victim, fHeight);
-
-	return Plugin_Continue;
 }
 
-Action Event_AbilityUse(Handle event, const char[] name, bool dontBroadcast)
+void Event_AbilityUse(Event event, const char[] name, bool dontBroadcast)
 {
 	// track hunters pouncing
-	int	 client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int	 client = GetClientOfUserId(event.GetInt("userid"));
 	char abilityName[64];
-	GetEventString(event, "ability", abilityName, sizeof(abilityName));
+	event.GetString("ability", abilityName, sizeof(abilityName));
 
 	if (!IsValidClientInGame(client))
-		return Plugin_Continue;
+		return;
 
 	strAbility ability;
-	if (!GetTrieValue(g_hTrieAbility, abilityName, ability))
-		return Plugin_Continue;
+	if (!g_hTrieAbility.GetValue(abilityName, ability))
+		return;
 
 	switch (ability)
 	{
@@ -805,18 +788,16 @@ Action Event_AbilityUse(Handle event, const char[] name, bool dontBroadcast)
 			if (g_iRocksBeingThrownCount < 9) { g_iRocksBeingThrownCount++; }
 		}
 	}
-
-	return Plugin_Continue;
 }
 
 // charger carrying
-Action Event_ChargeCarryStart(Handle event, const char[] name, bool dontBroadcast)
+void Event_ChargeCarryStart(Event event, const char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
-	int victim = GetClientOfUserId(GetEventInt(event, "victim"));
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	int victim = GetClientOfUserId(event.GetInt("victim"));
 
 	if (!IsValidInfected(client))
-		return Plugin_Continue;
+		return;
 
 	PrintDebug("Charge carry start: %i - %i -- time: %.2f", client, victim, GetGameTime());
 
@@ -825,7 +806,7 @@ Action Event_ChargeCarryStart(Handle event, const char[] name, bool dontBroadcas
 	g_fPinTime[client][1] = 0.0;
 
 	if (!IsValidSurvivor(victim))
-		return Plugin_Continue;
+		return;
 
 	g_iChargeVictim[client]	 = victim;			  // store who we're carrying (as long as this is set, it's not considered an impact charge flight)
 	g_iVictimCharger[victim] = client;			  // store who's charging whom
@@ -837,16 +818,15 @@ Action Event_ChargeCarryStart(Handle event, const char[] name, bool dontBroadcas
 
 	// CreateTimer( CHARGE_CHECK_TIME, Timer_ChargeCheck, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE );
 	CreateTimer(CHARGE_CHECK_TIME, Timer_ChargeCheck, victim, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
-	return Plugin_Continue;
 }
 
-Action Event_ChargeImpact(Handle event, const char[] name, bool dontBroadcast)
+void Event_ChargeImpact(Event event, const char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
-	int victim = GetClientOfUserId(GetEventInt(event, "victim"));
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	int victim = GetClientOfUserId(event.GetInt("victim"));
 
 	if (!IsValidInfected(client) || !IsValidSurvivor(victim))
-		return Plugin_Continue;
+		return;
 
 	// remember how many people the charger bumped into, and who, and where they were
 	GetClientAbsOrigin(victim, g_fChargeVictimPos[victim]);
@@ -857,42 +837,39 @@ Action Event_ChargeImpact(Handle event, const char[] name, bool dontBroadcast)
 	g_iVictimMapDmg[victim]	 = 0;
 
 	CreateTimer(CHARGE_CHECK_TIME, Timer_ChargeCheck, victim, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
-	return Plugin_Continue;
 }
 
-Action Event_ChargePummelStart(Handle event, const char[] name, bool dontBroadcast)
+void Event_ChargePummelStart(Event event, const char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int client = GetClientOfUserId(event.GetInt("userid"));
 
 	if (!IsValidInfected(client))
-		return Plugin_Continue;
+		return;
 
 	g_fPinTime[client][1] = GetGameTime();
-	return Plugin_Continue;
 }
 
-Action Event_ChargeCarryEnd(Handle event, const char[] name, bool dontBroadcast)
+void Event_ChargeCarryEnd(Event event, const char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
+	int client = GetClientOfUserId(event.GetInt("userid"));
 
 	if (client < 1 || client > MaxClients)
-		return Plugin_Continue;
+		return;
 
 	g_fPinTime[client][1] = GetGameTime();
 
 	// delay so we can check whether charger died 'mid carry'
 	CreateTimer(0.1, Timer_ChargeCarryEnd, client, TIMER_FLAG_NO_MAPCHANGE);
-	return Plugin_Continue;
 }
 
-Action Timer_ChargeCarryEnd(Handle timer, any client)
+Action Timer_ChargeCarryEnd(Handle timer, int client)
 {
 	// set charge time to 0 to avoid deathcharge timer continuing
 	g_iChargeVictim[client] = 0;	// unset this so the repeated timer knows to stop for an ongroundcheck
 	return Plugin_Continue;
 }
 
-Action Timer_ChargeCheck(Handle timer, any client)
+Action Timer_ChargeCheck(Handle timer, int client)
 {
 	// if something went wrong with the survivor or it was too long ago, forget about it
 	if (!IsValidSurvivor(client) || !g_iVictimCharger[client] || g_fChargeTime[client] == 0.0 || (GetGameTime() - g_fChargeTime[client]) > MAX_CHARGE_TIME)
@@ -924,7 +901,7 @@ Action Timer_ChargeCheck(Handle timer, any client)
 	return Plugin_Continue;
 }
 
-Action Timer_DeathChargeCheck(Handle timer, any client)
+Action Timer_DeathChargeCheck(Handle timer, int client)
 {
 	if (!IsValidClientInGame(client))
 		return Plugin_Continue;
@@ -984,7 +961,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 	// track infected / witches, so damage on them counts as hits
 
 	strOEC classnameOEC;
-	if (!GetTrieValue(g_hTrieEntityCreated, classname, classnameOEC))
+	if (!g_hTrieEntityCreated.GetValue(classname, classnameOEC))
 		return;
 
 	switch (classnameOEC)
@@ -1003,7 +980,7 @@ public void OnEntityCreated(int entity, const char[] classname)
 				g_iTankRock[tank]	= entity;
 				rock_array[rckTank] = tank;
 			}
-			SetTrieArray(g_hRockTrie, rock_key, rock_array, sizeof(rock_array), true);
+			g_hRockTrie.SetArray(rock_key, rock_array, sizeof(rock_array), true);
 
 			SDKHook(entity, SDKHook_TraceAttack, TraceAttack_Rock);
 			SDKHook(entity, SDKHook_Touch, OnTouch_Rock);
@@ -1041,8 +1018,8 @@ void OnEntitySpawned_CarAlarm(int entity)
 	char target[48];
 	GetEntPropString(entity, Prop_Data, "m_iName", target, sizeof(target));
 
-	SetTrieValue(g_hCarTrie, target, entity);
-	SetTrieValue(g_hCarTrie, car_key, 0);	 // who shot the car?
+	g_hCarTrie.SetValue(target, entity);
+	g_hCarTrie.SetValue(car_key, 0);	 // who shot the car?
 
 	HookSingleEntityOutput(entity, "OnCarAlarmStart", Hook_CarAlarmStart);
 }
@@ -1061,22 +1038,22 @@ void OnEntitySpawned_CarAlarmGlass(int entity)
 	int parentEntity;
 
 	// find targetname in trie
-	if (GetTrieValue(g_hCarTrie, parent, parentEntity))
+	if (g_hCarTrie.GetValue(parent, parentEntity))
 	{
 		// if valid entity, save the parent entity
 		if (IsValidEntity(parentEntity))
 		{
-			SetTrieValue(g_hCarTrie, car_key, parentEntity);
+			g_hCarTrie.SetValue(car_key, parentEntity);
 
 			char car_key_p[10];
 			FormatEx(car_key_p, sizeof(car_key_p), "%x_A", parentEntity);
 			int testEntity;
 
-			if (GetTrieValue(g_hCarTrie, car_key_p, testEntity))
+			if (g_hCarTrie.GetValue(car_key_p, testEntity))
 				// second glass
 				FormatEx(car_key_p, sizeof(car_key_p), "%x_B", parentEntity);
 
-			SetTrieValue(g_hCarTrie, car_key_p, entity);
+			g_hCarTrie.SetValue(car_key_p, entity);
 		}
 	}
 }
@@ -1088,7 +1065,7 @@ public void OnEntityDestroyed(int entity)
 	FormatEx(witch_key, sizeof(witch_key), "%x", entity);
 
 	int rock_array[3];
-	if (GetTrieArray(g_hRockTrie, witch_key, rock_array, sizeof(rock_array)))
+	if (g_hRockTrie.GetArray(witch_key, rock_array, sizeof(rock_array)))
 	{
 		// tank rock
 		CreateTimer(ROCK_CHECK_TIME, Timer_CheckRockSkeet, entity);
@@ -1097,7 +1074,7 @@ public void OnEntityDestroyed(int entity)
 	}
 
 	int witch_array[MAXPLAYERS + DMGARRAYEXT];
-	if (GetTrieArray(g_hWitchTrie, witch_key, witch_array, sizeof(witch_array)))
+	if (g_hWitchTrie.GetArray(witch_key, witch_array, sizeof(witch_array)))
 	{
 		// witch
 		//  delayed deletion, to avoid potential problems with crowns not detecting
@@ -1107,24 +1084,24 @@ public void OnEntityDestroyed(int entity)
 	}
 }
 
-Action Timer_WitchKeyDelete(Handle timer, any witch)
+Action Timer_WitchKeyDelete(Handle timer, int witch)
 {
 	char witch_key[10];
 	FormatEx(witch_key, sizeof(witch_key), "%x", witch);
-	RemoveFromTrie(g_hWitchTrie, witch_key);
+	g_hWitchTrie.Remove(witch_key);
 	return Plugin_Continue;
 }
 
-Action Timer_CheckRockSkeet(Handle timer, any rock)
+Action Timer_CheckRockSkeet(Handle timer, int rock)
 {
 	int	 rock_array[3];
 	char rock_key[10];
 	FormatEx(rock_key, sizeof(rock_key), "%x", rock);
 
-	if (!GetTrieArray(g_hRockTrie, rock_key, rock_array, sizeof(rock_array)))
+	if (!g_hRockTrie.GetArray(rock_key, rock_array, sizeof(rock_array)))
 		return Plugin_Continue;
 
-	RemoveFromTrie(g_hRockTrie, rock_key);
+	g_hRockTrie.Remove(rock_key);
 
 	// if rock didn't hit anyone / didn't touch anything, it was shot
 	if (rock_array[rckDamage] > 0)
@@ -1134,17 +1111,17 @@ Action Timer_CheckRockSkeet(Handle timer, any rock)
 }
 
 // boomer got somebody
-Action Event_PlayerBoomed(Handle event, const char[] name, bool dontBroadcast)
+void Event_PlayerBoomed(Event event, const char[] name, bool dontBroadcast)
 {
-	int	 attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
-	bool byBoom	  = GetEventBool(event, "by_boomer");
+	int	 attacker = GetClientOfUserId(event.GetInt("attacker"));
+	bool byBoom	  = event.GetBool("by_boomer");
 
 	if (byBoom && IsValidInfected(attacker))
 	{
 		g_bBoomerHitSomebody[attacker] = true;
 
 		// check if it was vomit spray
-		bool byExplosion			   = GetEventBool(event, "exploded");
+		bool byExplosion			   = event.GetBool("exploded");
 		if (!byExplosion)
 		{
 			// count amount of booms
@@ -1155,11 +1132,10 @@ Action Event_PlayerBoomed(Handle event, const char[] name, bool dontBroadcast)
 			g_iBoomerVomitHits[attacker]++;
 		}
 	}
-	return Plugin_Continue;
 }
 
 // check how many booms landed
-Action Timer_BoomVomitCheck(Handle timer, any client)
+Action Timer_BoomVomitCheck(Handle timer, int client)
 {
 	HandleVomitLanded(client, g_iBoomerVomitHits[client]);
 	g_iBoomerVomitHits[client] = 0;
@@ -1167,64 +1143,61 @@ Action Timer_BoomVomitCheck(Handle timer, any client)
 }
 
 // boomers that didn't bile anyone
-Action Event_BoomerExploded(Handle event, const char[] name, bool dontBroadcast)
+void Event_BoomerExploded(Event event, const char[] name, bool dontBroadcast)
 {
-	int	 client = GetClientOfUserId(GetEventInt(event, "userid"));
-	bool biled	= GetEventBool(event, "splashedbile");
+	int	 client = GetClientOfUserId(event.GetInt("userid"));
+	bool biled	= event.GetBool("splashedbile");
 	if (!biled && !g_bBoomerHitSomebody[client])
 	{
-		int attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
+		int attacker = GetClientOfUserId(event.GetInt("attacker"));
 		if (IsValidSurvivor(attacker))
 			HandlePop(attacker, client, g_iBoomerGotShoved[client], (GetGameTime() - g_fSpawnTime[client]));
 	}
-	return Plugin_Continue;
 }
 
 // crown tracking
-Action Event_WitchSpawned(Handle event, const char[] name, bool dontBroadcast)
+void Event_WitchSpawned(Event event, const char[] name, bool dontBroadcast)
 {
-	int witch = GetEventInt(event, "witchid");
+	int witch = event.GetInt("witchid");
 
 	SDKHook(witch, SDKHook_OnTakeDamagePost, OnTakeDamagePost_Witch);
 
 	int	 witch_dmg_array[MAXPLAYERS + DMGARRAYEXT];
 	char witch_key[10];
+
 	FormatEx(witch_key, sizeof(witch_key), "%x", witch);
 	witch_dmg_array[MAXPLAYERS + WTCH_HEALTH] = g_cvarWitchHealth.IntValue;
-	SetTrieArray(g_hWitchTrie, witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT, false);
-	return Plugin_Continue;
+	g_hWitchTrie.SetArray(witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT, false);
 }
 
-Action Event_WitchKilled(Handle event, const char[] name, bool dontBroadcast)
+void Event_WitchKilled(Event event, const char[] name, bool dontBroadcast)
 {
-	int witch	 = GetEventInt(event, "witchid");
-	int attacker = GetClientOfUserId(GetEventInt(event, "userid"));
+	int witch	 = event.GetInt("witchid");
+	int attacker = GetClientOfUserId(event.GetInt("userid"));
 	SDKUnhook(witch, SDKHook_OnTakeDamagePost, OnTakeDamagePost_Witch);
 
 	if (!IsValidSurvivor(attacker))
-		return Plugin_Continue;
+		return;
 
-	bool   bOneShot = GetEventBool(event, "oneshot");
+	bool   bOneShot = event.GetBool("oneshot");
 
 	// is it a crown / drawcrown?
-	Handle pack		= CreateDataPack();
-	WritePackCell(pack, attacker);
-	WritePackCell(pack, witch);
-	WritePackCell(pack, (bOneShot) ? 1 : 0);
+	DataPack pack = new DataPack();
+	pack.WriteCell(attacker);
+	pack.WriteCell(witch);
+	pack.WriteCell((bOneShot) ? 1 : 0);
 	CreateTimer(WITCH_CHECK_TIME, Timer_CheckWitchCrown, pack);
-
-	return Plugin_Continue;
 }
 
-Action Event_WitchHarasserSet(Handle event, const char[] name, bool dontBroadcast)
+void Event_WitchHarasserSet(Event event, const char[] name, bool dontBroadcast)
 {
-	int	 witch = GetEventInt(event, "witchid");
+	int	 witch = event.GetInt("witchid");
 
 	char witch_key[10];
 	FormatEx(witch_key, sizeof(witch_key), "%x", witch);
 	int witch_dmg_array[MAXPLAYERS + DMGARRAYEXT];
 
-	if (!GetTrieArray(g_hWitchTrie, witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT))
+	if (!g_hWitchTrie.GetArray(witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT))
 	{
 		for (int i = 0; i <= MAXPLAYERS; i++)
 		{
@@ -1232,14 +1205,13 @@ Action Event_WitchHarasserSet(Handle event, const char[] name, bool dontBroadcas
 		}
 		witch_dmg_array[MAXPLAYERS + WTCH_HEALTH]	= g_cvarWitchHealth.IntValue;
 		witch_dmg_array[MAXPLAYERS + WTCH_STARTLED] = 1;	// harasser set
-		SetTrieArray(g_hWitchTrie, witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT, false);
+		g_hWitchTrie.SetArray(witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT, false);
 	}
 	else
 	{
 		witch_dmg_array[MAXPLAYERS + WTCH_STARTLED] = 1;	// harasser set
-		SetTrieArray(g_hWitchTrie, witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT, true);
+		g_hWitchTrie.SetArray(witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT, true);
 	}
-	return Plugin_Continue;
 }
 
 Action OnTakeDamageByWitch(int victim, int& attacker, int& inflictor, float& damage, int& damagetype)
@@ -1254,7 +1226,7 @@ Action OnTakeDamageByWitch(int victim, int& attacker, int& inflictor, float& dam
 			FormatEx(witch_key, sizeof(witch_key), "%x", attacker);
 			int witch_dmg_array[MAXPLAYERS + DMGARRAYEXT];
 
-			if (!GetTrieArray(g_hWitchTrie, witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT))
+			if (!g_hWitchTrie.GetArray(witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT))
 			{
 				for (int i = 0; i <= MAXPLAYERS; i++)
 				{
@@ -1262,12 +1234,12 @@ Action OnTakeDamageByWitch(int victim, int& attacker, int& inflictor, float& dam
 				}
 				witch_dmg_array[MAXPLAYERS + WTCH_HEALTH]	= g_cvarWitchHealth.IntValue;
 				witch_dmg_array[MAXPLAYERS + WTCH_GOTSLASH] = 1;	// failed
-				SetTrieArray(g_hWitchTrie, witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT, false);
+				g_hWitchTrie.SetArray(witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT, false);
 			}
 			else
 			{
 				witch_dmg_array[MAXPLAYERS + WTCH_GOTSLASH] = 1;	// failed
-				SetTrieArray(g_hWitchTrie, witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT, true);
+				g_hWitchTrie.SetArray(witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT, true);
 			}
 		}
 	}
@@ -1282,14 +1254,14 @@ void OnTakeDamagePost_Witch(int victim, int attacker, int inflictor, float damag
 	FormatEx(witch_key, sizeof(witch_key), "%x", victim);
 	int witch_dmg_array[MAXPLAYERS + DMGARRAYEXT];
 
-	if (!GetTrieArray(g_hWitchTrie, witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT))
+	if (!g_hWitchTrie.GetArray(witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT))
 	{
 		for (int i = 0; i <= MAXPLAYERS; i++)
 		{
 			witch_dmg_array[i] = 0;
 		}
 		witch_dmg_array[MAXPLAYERS + WTCH_HEALTH] = g_cvarWitchHealth.IntValue;
-		SetTrieArray(g_hWitchTrie, witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT, false);
+		g_hWitchTrie.SetArray(witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT, false);
 	}
 
 	// store damage done to witch
@@ -1311,24 +1283,24 @@ void OnTakeDamagePost_Witch(int victim, int attacker, int inflictor, float damag
 		// continued blast, add up
 		witch_dmg_array[MAXPLAYERS + WTCH_CROWNSHOT] += RoundToFloor(damage);
 
-		SetTrieArray(g_hWitchTrie, witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT, true);
+		g_hWitchTrie.SetArray(witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT, true);
 	}
 	else
 	{
 		// store all chip from other sources than survivor in [0]
 		witch_dmg_array[0] += RoundToFloor(damage);
 		// witch_dmg_array[MAXPLAYERS+1] -= RoundToFloor(damage);
-		SetTrieArray(g_hWitchTrie, witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT, true);
+		g_hWitchTrie.SetArray(witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT, true);
 	}
 }
 
-Action Timer_CheckWitchCrown(Handle timer, Handle pack)
+Action Timer_CheckWitchCrown(Handle timer, DataPack pack)
 {
-	ResetPack(pack);
-	int	 attacker = ReadPackCell(pack);
-	int	 witch	  = ReadPackCell(pack);
-	bool bOneShot = view_as<bool>(ReadPackCell(pack));
-	CloseHandle(pack);
+	pack.Reset();
+	int	 attacker = pack.ReadCell();
+	int	 witch	  = pack.ReadCell();
+	bool bOneShot = view_as<bool>(pack.ReadCell());
+	delete pack;
 
 	CheckWitchCrown(witch, attacker, bOneShot);
 	return Plugin_Continue;
@@ -1339,7 +1311,7 @@ void CheckWitchCrown(int witch, int attacker, bool bOneShot = false)
 	char witch_key[10];
 	FormatEx(witch_key, sizeof(witch_key), "%x", witch);
 	int witch_dmg_array[MAXPLAYERS + DMGARRAYEXT];
-	if (!GetTrieArray(g_hWitchTrie, witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT))
+	if (!g_hWitchTrie.GetArray(witch_key, witch_dmg_array, MAXPLAYERS + DMGARRAYEXT))
 	{
 		PrintDebug("Witch Crown Check: Error: Trie entry missing (entity: %i, oneshot: %i)", witch, bOneShot);
 		return;
@@ -1434,11 +1406,12 @@ Action TraceAttack_Rock(int victim, int& attacker, int& inflictor, float& damage
 		*/
 		char rock_key[10];
 		int	 rock_array[3];
+
 		FormatEx(rock_key, sizeof(rock_key), "%x", victim);
-		GetTrieArray(g_hRockTrie, rock_key, rock_array, sizeof(rock_array));
+		g_hRockTrie.GetArray(rock_key, rock_array, sizeof(rock_array));
 		rock_array[rckDamage] += RoundToFloor(damage);
 		rock_array[rckSkeeter] = attacker;
-		SetTrieArray(g_hRockTrie, rock_key, rock_array, sizeof(rock_array), true);
+		g_hRockTrie.SetArray(rock_key, rock_array, sizeof(rock_array), true);
 	}
 	return Plugin_Continue;
 }
@@ -1450,21 +1423,22 @@ void OnTouch_Rock(int entity)
 	FormatEx(rock_key, sizeof(rock_key), "%x", entity);
 	int rock_array[3];
 	rock_array[rckDamage] = -1;
-	SetTrieArray(g_hRockTrie, rock_key, rock_array, sizeof(rock_array), true);
+	g_hRockTrie.SetArray(rock_key, rock_array, sizeof(rock_array), true);
 
 	SDKUnhook(entity, SDKHook_Touch, OnTouch_Rock);
 }
 
 // smoker tongue cutting & self clears
-Action Event_TonguePullStopped(Handle event, const char[] name, bool dontBroadcast)
+void Event_TonguePullStopped(Event event, const char[] name, bool dontBroadcast)
 {
-	int attacker = GetClientOfUserId(GetEventInt(event, "userid"));
-	int victim	 = GetClientOfUserId(GetEventInt(event, "victim"));
-	int smoker	 = GetClientOfUserId(GetEventInt(event, "smoker"));
-	int reason	 = GetEventInt(event, "release_type");
+	int attacker = GetClientOfUserId(event.GetInt("userid"));
+	int victim	 = GetClientOfUserId(event.GetInt("victim"));
+	int smoker	 = GetClientOfUserId(event.GetInt("smoker"));
+	int reason	 = event.GetInt("release_type");
 
 	if (!IsValidSurvivor(attacker) || !IsValidInfected(smoker))
-		return Plugin_Continue;
+		return;
+
 	// clear check -  if the smoker itself was not shoved, handle the clear
 	HandleClear(attacker, smoker, victim,
 				ZC_SMOKER,
@@ -1473,7 +1447,7 @@ Action Event_TonguePullStopped(Handle event, const char[] name, bool dontBroadca
 				view_as<bool>(reason != CUT_SLASH && reason != CUT_KILL));
 
 	if (attacker != victim)
-		return Plugin_Continue;
+		return;
 
 	if (reason == CUT_KILL)
 		g_bSmokerClearCheck[smoker] = true;
@@ -1489,14 +1463,12 @@ Action Event_TonguePullStopped(Handle event, const char[] name, bool dontBroadca
 		if (StrEqual(weapon, "weapon_melee", false))
 			HandleTongueCut(attacker, smoker);
 	}
-
-	return Plugin_Continue;
 }
 
-Action Event_TongueGrab(Handle event, const char[] name, bool dontBroadcast)
+void Event_TongueGrab(Event event, const char[] name, bool dontBroadcast)
 {
-	int attacker = GetClientOfUserId(GetEventInt(event, "userid"));
-	int victim	 = GetClientOfUserId(GetEventInt(event, "victim"));
+	int attacker = GetClientOfUserId(event.GetInt("userid"));
+	int victim	 = GetClientOfUserId(event.GetInt("victim"));
 
 	if (IsValidInfected(attacker) && IsValidSurvivor(victim))
 	{
@@ -1508,28 +1480,25 @@ Action Event_TongueGrab(Handle event, const char[] name, bool dontBroadcast)
 		g_fPinTime[attacker][0]			= GetGameTime();
 		g_fPinTime[attacker][1]			= 0.0;
 	}
-
-	return Plugin_Continue;
 }
 
-Action Event_ChokeStart(Handle event, const char[] name, bool dontBroadcast)
+void Event_ChokeStart(Event event, const char[] name, bool dontBroadcast)
 {
-	int attacker = GetClientOfUserId(GetEventInt(event, "userid"));
+	int attacker = GetClientOfUserId(event.GetInt("userid"));
 
 	if (g_fPinTime[attacker][0] == 0.0) { g_fPinTime[attacker][0] = GetGameTime(); }
 	g_fPinTime[attacker][1] = GetGameTime();
-	return Plugin_Continue;
 }
 
-Action Event_ChokeStop(Handle event, const char[] name, bool dontBroadcast)
+void Event_ChokeStop(Event event, const char[] name, bool dontBroadcast)
 {
-	int attacker = GetClientOfUserId(GetEventInt(event, "userid"));
-	int victim	 = GetClientOfUserId(GetEventInt(event, "victim"));
-	int smoker	 = GetClientOfUserId(GetEventInt(event, "smoker"));
-	int reason	 = GetEventInt(event, "release_type");
+	int attacker = GetClientOfUserId(event.GetInt("userid"));
+	int victim	 = GetClientOfUserId(event.GetInt("victim"));
+	int smoker	 = GetClientOfUserId(event.GetInt("smoker"));
+	int reason	 = event.GetInt("release_type");
 
 	if (!IsValidSurvivor(attacker) || !IsValidInfected(smoker))
-		return Plugin_Continue;
+		return;
 
 	// if the smoker itself was not shoved, handle the clear
 	HandleClear(attacker, smoker, victim,
@@ -1537,7 +1506,6 @@ Action Event_ChokeStop(Handle event, const char[] name, bool dontBroadcast)
 				(g_fPinTime[smoker][1] > 0.0) ? (GetGameTime() - g_fPinTime[smoker][1]) : -1.0,
 				(GetGameTime() - g_fPinTime[smoker][0]),
 				view_as<bool>(reason != CUT_SLASH && reason != CUT_KILL));
-	return Plugin_Continue;
 }
 
 // car alarm handling
@@ -1549,10 +1517,9 @@ void Hook_CarAlarmStart(const char[] output, int caller, int activator, float de
 	PrintDebug("calarm trigger: caller %i / activator %i / delay: %.2f", caller, activator, delay);
 }
 
-Action Event_CarAlarmGoesOff(Handle event, const char[] name, bool dontBroadcast)
+void Event_CarAlarmGoesOff(Event event, const char[] name, bool dontBroadcast)
 {
 	g_fLastCarAlarm = GetGameTime();
-	return Plugin_Continue;
 }
 
 Action OnTakeDamage_Car(int victim, int& attacker, int& inflictor, float& damage, int& damagetype)
@@ -1573,7 +1540,7 @@ Action OnTakeDamage_Car(int victim, int& attacker, int& inflictor, float& damage
 
 	char car_key[10];
 	FormatEx(car_key, sizeof(car_key), "%x", victim);
-	SetTrieValue(g_hCarTrie, car_key, attacker);
+	g_hCarTrie.SetValue(car_key, attacker);
 
 	if (damagetype & DMG_BLAST)
 	{
@@ -1602,7 +1569,7 @@ void OnTouch_Car(int entity, int client)
 
 	char car_key[10];
 	FormatEx(car_key, sizeof(car_key), "%x", entity);
-	SetTrieValue(g_hCarTrie, car_key, client);
+	g_hCarTrie.SetValue(car_key, client);
 
 	g_iLastCarAlarmReason[client] = CALARM_TOUCHED;
 
@@ -1619,12 +1586,12 @@ Action OnTakeDamage_CarGlass(int victim, int& attacker, int& inflictor, float& d
 	FormatEx(car_key, sizeof(car_key), "%x", victim);
 	int parentEntity;
 
-	if (GetTrieValue(g_hCarTrie, car_key, parentEntity))
+	if (g_hCarTrie.GetValue(car_key, parentEntity))
 	{
 		CreateTimer(0.01, Timer_CheckAlarm, parentEntity, TIMER_FLAG_NO_MAPCHANGE);
 
 		FormatEx(car_key, sizeof(car_key), "%x", parentEntity);
-		SetTrieValue(g_hCarTrie, car_key, attacker);
+		g_hCarTrie.SetValue(car_key, attacker);
 
 		if (damagetype & DMG_BLAST)
 		{
@@ -1653,12 +1620,12 @@ void OnTouch_CarGlass(int entity, int client)
 	FormatEx(car_key, sizeof(car_key), "%x", entity);
 	int parentEntity;
 
-	if (GetTrieValue(g_hCarTrie, car_key, parentEntity))
+	if (g_hCarTrie.GetValue(car_key, parentEntity))
 	{
 		CreateTimer(0.01, Timer_CheckAlarm, parentEntity, TIMER_FLAG_NO_MAPCHANGE);
 
 		FormatEx(car_key, sizeof(car_key), "%x", parentEntity);
-		SetTrieValue(g_hCarTrie, car_key, client);
+		g_hCarTrie.SetValue(car_key, client);
 
 		g_iLastCarAlarmReason[client] = CALARM_TOUCHED;
 	}
@@ -1666,7 +1633,7 @@ void OnTouch_CarGlass(int entity, int client)
 	return;
 }
 
-Action Timer_CheckAlarm(Handle timer, any entity)
+Action Timer_CheckAlarm(Handle timer, int entity)
 {
 	// PrintToChatAll( "checking alarm: time: %.3f", GetGameTime() - g_fLastCarAlarm );
 
@@ -1679,25 +1646,25 @@ Action Timer_CheckAlarm(Handle timer, any entity)
 
 		// remove car glass
 		FormatEx(car_key, sizeof(car_key), "%x_A", entity);
-		if (GetTrieValue(g_hCarTrie, car_key, testEntity))
+		if (g_hCarTrie.GetValue(car_key, testEntity))
 		{
-			RemoveFromTrie(g_hCarTrie, car_key);
+			g_hCarTrie.Remove(car_key);
 			SDKUnhook(testEntity, SDKHook_OnTakeDamage, OnTakeDamage_CarGlass);
 			SDKUnhook(testEntity, SDKHook_Touch, OnTouch_CarGlass);
 		}
 		FormatEx(car_key, sizeof(car_key), "%x_B", entity);
-		if (GetTrieValue(g_hCarTrie, car_key, testEntity))
+		if (g_hCarTrie.GetValue(car_key, testEntity))
 		{
-			RemoveFromTrie(g_hCarTrie, car_key);
+			g_hCarTrie.Remove(car_key);
 			SDKUnhook(testEntity, SDKHook_OnTakeDamage, OnTakeDamage_CarGlass);
 			SDKUnhook(testEntity, SDKHook_Touch, OnTouch_CarGlass);
 		}
 
 		// remove car
 		FormatEx(car_key, sizeof(car_key), "%x", entity);
-		if (GetTrieValue(g_hCarTrie, car_key, survivor))
+		if (g_hCarTrie.GetValue(car_key, survivor))
 		{
-			RemoveFromTrie(g_hCarTrie, car_key);
+			g_hCarTrie.Remove(car_key);
 			SDKUnhook(entity, SDKHook_OnTakeDamage, OnTakeDamage_Car);
 			SDKUnhook(entity, SDKHook_Touch, OnTouch_Car);
 		}

@@ -1,0 +1,20 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"[{olive}1v1{default}]"
+	}
+	"HealthRemaining"
+	{
+		"#format"   "{1:s},{2:s},{3:d}" // 1:sName 2:L4D2_InfectedNames[iZclass] 3:iRemainingHealth
+		"chi"		"{red}{1}{default} ({green}{2}{default}) 还剩下 {olive}{3}{default} 点血量!"
+	}
+	"AI"
+	{
+		"chi"		"AI"
+	}
+	"UMad"
+	{
+		"chi"		"大可不必急了..."
+	}
+}
