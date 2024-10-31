@@ -54,7 +54,7 @@ public Plugin myinfo =
     name = "L4D2 Tank Control",
     author = "arti, (Contributions by: Sheo, Sir, Altair-Sossai)",
     description = "Distributes the role of the tank evenly throughout the team, allows for overrides. (Includes forwards)",
-    version = "0.0.24",
+    version = "0.0.25",
     url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
@@ -119,7 +119,7 @@ public void L4D2_OnTankPassControl(int iOldTank, int iNewTank, int iPassCount)
  * Make sure we give the tank to our queued player.
  */
 public Action L4D_OnTryOfferingTankBot(int tank_index, bool &enterStatis)
-{    
+{
     // Reset the tank's frustration if need be
     if (!IsFakeClient(tank_index)) 
     {
@@ -171,6 +171,19 @@ public Action L4D_OnTryOfferingTankBot(int tank_index, bool &enterStatis)
     return Plugin_Continue;
 }
 
+public void L4D_OnLeaveStasis(int tank)
+{
+    int newTank = getInfectedPlayerBySteamId(queuedTankSteamId);
+
+    if (newTank != -1)
+    {
+        if (hTankDebug.BoolValue)
+            PrintToConsoleAll("[TC] Tank was not properly assigned to a player, assign to %N.", newTank);
+
+        L4D_ReplaceTank(tank, newTank);
+        L4D2Direct_SetTankPassedCount(1); // Otherwise the Tank gets 3 controls.
+    }
+}
 
 /*=========================================================================
 |                                 Events                                  |
