@@ -18,12 +18,19 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	HookEvent("tank_spawn", Event_TankSpawn, EventHookMode_Post);
+	HookEvent("bot_player_replace", Event_BotPlayerReplace, EventHookMode_Post);
 	g_cvAntiRockProtectTime = CreateConVar("l4d2_antirock_protect_time", "1.5", "Protection time to avoid Tank throwing a rock by accident");
 }
 
 void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
 {
 	int tank = GetClientOfUserId(event.GetInt("userid"));
+	g_fSpawnTime[tank] = GetGameTime();
+}
+
+void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
+{
+	int tank = GetClientOfUserId(event.GetInt("player"));
 	g_fSpawnTime[tank] = GetGameTime();
 }
 
