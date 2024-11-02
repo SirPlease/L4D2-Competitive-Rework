@@ -17,24 +17,13 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-<<<<<<< HEAD
-	HookEvent("tank_spawn", Event_TankSpawn, EventHookMode_Post);
-	HookEvent("bot_player_replace", Event_BotPlayerReplace, EventHookMode_Post);
-=======
 	HookEvent("player_spawn", Event_PlayerSpawn, EventHookMode_Post);
->>>>>>> 133e728ede049f784ea421125b36b64f2eebbd43
 	g_cvAntiRockProtectTime = CreateConVar("l4d2_antirock_protect_time", "1.5", "Protection time to avoid Tank throwing a rock by accident");
 }
 
 public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
 	g_fSpawnTime[GetClientOfUserId(event.GetInt("userid"))] = GetGameTime();
-}
-
-void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
-{
-	int tank = GetClientOfUserId(event.GetInt("player"));
-	g_fSpawnTime[tank] = GetGameTime();
 }
 
 public Action L4D_OnCThrowActivate(int ability)
