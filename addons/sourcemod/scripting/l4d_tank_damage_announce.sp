@@ -168,11 +168,11 @@ Action Timer_CheckPassTank(Handle timer, int tank)
         g_iYourTank[tank] = -1;
         CPrintToChatAll("{default}[{green}!{default}] {blue}Tank had been passed {default}({green}%d {default}health remaining)", g_iLastTankHealth[tank]);
         ClearTankDamage(tank);
-        return Plugin_Stop;
     }
-
-    PrintTankDamageAnnounce(tank, true);
-    ClearTankDamage(tank);
+    else {
+        PrintTankDamageAnnounce(tank, true);
+        ClearTankDamage(tank);
+    }
 
     return Plugin_Stop;
 }
