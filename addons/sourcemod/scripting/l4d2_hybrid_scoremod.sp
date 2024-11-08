@@ -54,7 +54,7 @@ public Plugin:myinfo =
 	name = "L4D2 Scoremod+",
 	author = "Visor",
 	description = "The next generation scoring mod",
-	version = "2.2.4",
+	version = "2.2.5",
 	url = "https://github.com/Attano/L4D2-Competitive-Framework"
 };
 
@@ -363,7 +363,7 @@ public Action:L4D2_OnEndVersusModeRound(bool:countSurvivors)
 		return Plugin_Continue;
 
 	new team = InSecondHalfOfRound();
-	new iSurvivalMultiplier = GetUprightSurvivors();    // I don't know how reliable countSurvivors is and I'm too lazy to test
+	new iSurvivalMultiplier = countSurvivors ? GetAliveSurvivorCount(false) : 0;
 	fSurvivorBonus[team] = GetSurvivorHealthBonus() + GetSurvivorDamageBonus() + GetSurvivorPillBonus();
 	fSurvivorBonus[team] = float(RoundToFloor(fSurvivorBonus[team] / float(iTeamSize)) * iTeamSize); // make it a perfect divisor of team size value
 	if (iSurvivalMultiplier > 0 && RoundToFloor(fSurvivorBonus[team] / iSurvivalMultiplier) >= iTeamSize) // anything lower than team size will result in 0 after division
@@ -448,7 +448,7 @@ Float:GetSurvivorHealthBonus()
 
 Float:GetSurvivorDamageBonus()
 {
-	new survivalMultiplier = GetUprightSurvivors();
+	new survivalMultiplier = GetAliveSurvivorCount();
 	new Float:fDamageBonus = (fMapTempHealthBonus - float(iLostTempHealth[InSecondHalfOfRound()])) * fTempHpWorth / iTeamSize * survivalMultiplier;
 #if SM2_DEBUG
 	PrintToChatAll("\x01Adding temp hp bonus: \x05%.1f\x01 (eligible survivors: \x05%d\x01)", fDamageBonus, survivalMultiplier);
@@ -524,22 +524,25 @@ bool:IsPlayerLedged(client)
 	return bool:(GetEntProp(client, Prop_Send, "m_isHangingFromLedge") | GetEntProp(client, Prop_Send, "m_isFallingFromLedge"));
 }
 
-GetUprightSurvivors()
+GetAliveSurvivorCount(bool uprightOnly = true)
 {
-	new aliveCount;
-	new survivorCount;
+	new survivorCount, aliveCount, uprightCount;
+
 	for (new i = 1; i <= MaxClients && survivorCount < iTeamSize; i++)
 	{
 		if (IsSurvivor(i))
 		{
 			survivorCount++;
-			if (IsPlayerAlive(i) && !IsPlayerIncap(i) && !IsPlayerLedged(i))
-			{
+
+			if (IsPlayerAlive(i))
 				aliveCount++;
-			}
+
+			if (!IsPlayerIncap(i) && !IsPlayerLedged(i))
+				uprightCount++;
 		}
 	}
-	return aliveCount;
+
+	return uprightOnly ? uprightCount : aliveCount;
 }
 
 GetSurvivorTemporaryHealth(client)

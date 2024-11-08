@@ -54,7 +54,7 @@ public Plugin myinfo =
     name = "L4D2 Tank Control",
     author = "arti, (Contributions by: Sheo, Sir, Altair-Sossai)",
     description = "Distributes the role of the tank evenly throughout the team, allows for overrides. (Includes forwards)",
-    version = "0.0.24",
+    version = "0.0.26",
     url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
@@ -68,7 +68,6 @@ public void OnPluginStart()
     HookEvent("round_start", RoundStart_Event, EventHookMode_PostNoCopy);
     HookEvent("round_end", RoundEnd_Event, EventHookMode_PostNoCopy);
     HookEvent("player_team", PlayerTeam_Event, EventHookMode_Post);
-    HookEvent("tank_killed", TankKilled_Event, EventHookMode_PostNoCopy);
     HookEvent("player_death", PlayerDeath_Event, EventHookMode_Post);
     
     // Initialise the tank arrays/data values
@@ -119,7 +118,7 @@ public void L4D2_OnTankPassControl(int iOldTank, int iNewTank, int iPassCount)
  * Make sure we give the tank to our queued player.
  */
 public Action L4D_OnTryOfferingTankBot(int tank_index, bool &enterStatis)
-{    
+{
     // Reset the tank's frustration if need be
     if (!IsFakeClient(tank_index)) 
     {
@@ -171,6 +170,38 @@ public Action L4D_OnTryOfferingTankBot(int tank_index, bool &enterStatis)
     return Plugin_Continue;
 }
 
+public void L4D_OnLeaveStasis(int tank)
+{
+    // Tank is always AI here, delay by a frame.
+    RequestFrame(L4D_OnLeaveStasis_Post, tank);
+}
+
+void L4D_OnLeaveStasis_Post(int tank)
+{
+    // Tank passed from AI to a player, nothing to do here.
+    if (!IsClientInGame(tank))
+        return;
+
+    if (hTankDebug.BoolValue)
+        PrintToConsoleAll("[TC] Tank was not properly assigned to a player, trying to re-assign...");
+
+    int newTank = getInfectedPlayerBySteamId(queuedTankSteamId);
+
+    // Still no candidates, give up.
+    if (newTank == -1)
+    {
+        if (hTankDebug.BoolValue)
+            PrintToConsoleAll("[TC] Tried to assign Tank to another player, but there's no one available?");
+
+        return;
+    }
+
+    if (hTankDebug.BoolValue)
+        PrintToConsoleAll("[TC] Assigned tank to %N.", newTank);
+
+    L4D_ReplaceTank(tank, newTank);
+    L4D2Direct_SetTankPassedCount(1); // Otherwise the Tank gets 3 controls.
+}
 
 /*=========================================================================
 |                                 Events                                  |
@@ -184,6 +215,7 @@ void RoundStart_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
     CreateTimer(10.0, newGame);
     dcedTankFrustration = -1;
+    gotTankAt = 0.0;
     tankInitiallyChosen = "";
 }
 
@@ -350,30 +382,21 @@ void PlayerDeath_Event(Event hEvent, const char[] eName, bool dontBroadcast)
 {
     int victim = GetClientOfUserId(hEvent.GetInt("userid"));
     
-    if (victim && IS_VALID_INFECTED(victim)) 
+    if (victim && IS_VALID_INFECTED(victim) && gotTankAt > 0.0)
     {
         int zombieClass = GetEntProp(victim, Prop_Send, "m_zombieClass");
         if (zombieClass == ZOMBIECLASS_TANK) 
         {
             if (hTankDebug.BoolValue)
-                PrintToConsoleAll("[TC] Tank died(1), choosing a new tank");
+                PrintToConsoleAll("[TC] Tank died (player_death), choosing a new tank");
 
             tankInitiallyChosen = "";
             chooseTank(0);
+            gotTankAt = 0.0;
+            dcedTankFrustration = -1;
         }
     }
 }
-
-void TankKilled_Event(Event hEvent, const char[] eName, bool dontBroadcast)
-{
-    if (hTankDebug.BoolValue)
-        PrintToConsoleAll("[TC] Tank died(2), choosing a new tank");
-
-    tankInitiallyChosen = "";
-    chooseTank(0);
-    dcedTankFrustration = -1;
-}
-
 
 /*=========================================================================
 |                               Commands                                  |

@@ -11,20 +11,19 @@ public Plugin myinfo =
 	name = "[L4D2] Tank Spawn Anti-Rock Protect",
 	author = "B[R]UTUS",
 	description = "Protects a Tank player from randomly rock attack at his spawn",
-	version = "1.0.1",
+	version = "1.0.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
 public void OnPluginStart()
 {
-	HookEvent("tank_spawn", Event_TankSpawn, EventHookMode_Post);
+	HookEvent("player_spawn", Event_PlayerSpawn, EventHookMode_Post);
 	g_cvAntiRockProtectTime = CreateConVar("l4d2_antirock_protect_time", "1.5", "Protection time to avoid Tank throwing a rock by accident");
 }
 
-void Event_TankSpawn(Event event, const char[] name, bool dontBroadcast)
+public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 {
-	int tank = GetClientOfUserId(event.GetInt("userid"));
-	g_fSpawnTime[tank] = GetGameTime();
+	g_fSpawnTime[GetClientOfUserId(event.GetInt("userid"))] = GetGameTime();
 }
 
 public Action L4D_OnCThrowActivate(int ability)
