@@ -68,12 +68,10 @@ Pound damage:
 - damageForce = 0 0 0
 - Damage equal to convar 'z_charger_pound_dmg', def 15
 - Game function: CTerrorPlayer::HandleAnimEvent
-	[Hook_OnTakeDamage] Victim: Ellis (4), attacker: A1m` (2), inflictor: player (2), damage: 15.000000, damagetype: 128
+
+[Hook_OnTakeDamage] Victim: Ellis (4), attacker: A1m` (2), inflictor: player (2), damage: 15.000000, damagetype: 128
 	weapon: None (-1), damageForce: 0.000000 0.000000 0.000000, damagePosition: 0.000000 0.000000 0.000000
 	m_carryVictim: -1, m_pummelVictim: 4, m_isCharging: 0
-
-[Hook_OnTakeDamage] Victim: (Nick) 5, attacker: (Noname`) 2, inflictor: 2, damage: 15.000000, damagetype: 128 
-[Hook_OnTakeDamage] Weapon: -1, damageforce: 0.000000 0.000000 0.000000, damageposition: 0.000000 0.000000 0.000000
 */
 Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamagetype, \
 								int &iWeapon, float fDamageForce[3], float fDamagePosition[3])
