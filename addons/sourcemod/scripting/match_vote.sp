@@ -90,18 +90,20 @@ public void OnConfigsExecuted()
 
 Action Listener_Quit(int iClient, const char[] sCommand, int iArgc)
 {
-	g_bShutdown = true;
-	return Plugin_Continue;
+    if (!g_bShutdown && g_hSvMaxPlayers != null && g_hMaxPlayers != null)
+    {
+        g_hSvMaxPlayers.SetInt(g_hMaxPlayers.IntValue);
+    }
+    
+    g_bShutdown = true;
+    return Plugin_Continue;
 }
 
 public void OnPluginEnd()
 {
-	if (g_bShutdown)
-		return;
-
-	g_hSvMaxPlayers.SetInt(g_hMaxPlayers.IntValue);
+    if (g_bShutdown)
+        return;
 }
-
 public void OnLibraryRemoved(const char[] sPluginName)
 {
 	if (strcmp(sPluginName, "confogl") == 0)
