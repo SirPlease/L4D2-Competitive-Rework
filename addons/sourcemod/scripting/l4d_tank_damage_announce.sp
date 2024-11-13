@@ -92,9 +92,9 @@ public void OnMapStart()
     }
 }
 
-public void OnClientDisconnect_Post(int client)
+public void OnClientDisconnect(int client)
 {
-    if (g_iYourTank[client] == client) {
+    if (g_iYourTank[client] == client && !IsFakeClient(client)) {
         CreateTimer(0.1, Timer_CheckPassTank, client, TIMER_FLAG_NO_MAPCHANGE);
     }
 }
@@ -230,7 +230,7 @@ void PrintTankDamageAnnounce(int tank, bool isDead = false)
     int[] survivor_clients = new int[GetSurvivorCount()];
 
     for (int client = 1; client <= MaxClients; client++) {
-        if (!IsValidSurvivor(client) || g_iDamage[tank][client] <= 0) {
+        if (!IsClientInGame(client) || GetClientTeam(client) != TEAM_SURVIVOR || g_iDamage[tank][client] <= 0) {
             continue;
         }
 
@@ -253,7 +253,7 @@ void PrintTankDamageAnnounce(int tank, bool isDead = false)
         last_percent = 100,
         adjusted_percent_damage;
 
-    for (int i; i <= survivor_index; i++) {
+    for (int i; i < survivor_index; i++) {
         int client = survivor_clients[i];
         damage = g_iDamage[tank][client];
         percent_damage = GetDamageAsPercent(damage);
