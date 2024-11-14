@@ -277,7 +277,7 @@ Action Swap_Cmd(int client, int args)
 {
 	if (args < 1)
 	{
-		ReplyToCommand(client, "%t %t: sm_swap <player1> <player2> ... <playerN>", "Tag", "Usage");
+		CPrintToChat(client, "%t %t: sm_swap <player1> <player2> ... <playerN>", "Tag", "Usage");
 		return Plugin_Handled;
 	}
 
@@ -318,8 +318,8 @@ Action SwapTo_Cmd(int client, int args)
 {
 	if (args < 2)
 	{
-		ReplyToCommand(client, "%t %t: sm_swapto <teamnum> <player1> <player2> ... <playerN>\n%d = Spectators, %d = Survivors, %d = Infected", "Tag", "Usage", L4D2Team_Spectator, L4D2Team_Survivor, L4D2Team_Infected);
-		ReplyToCommand(client, "%t %t: sm_swapto force <teamnum> <player1> <player2> ... <playerN>\n%d = Spectators, %d = Survivors, %d = Infected", "Tag", "Usage", L4D2Team_Spectator, L4D2Team_Survivor, L4D2Team_Infected);
+		CPrintToChat(client, "%t %t: sm_swapto <teamnum> <player1> <player2> ... <playerN>\n%d = Spectators, %d = Survivors, %d = Infected", "Tag", "Usage", L4D2Team_Spectator, L4D2Team_Survivor, L4D2Team_Infected);
+		CPrintToChat(client, "%t %t: sm_swapto force <teamnum> <player1> <player2> ... <playerN>\n%d = Spectators, %d = Survivors, %d = Infected", "Tag", "Usage", L4D2Team_Spectator, L4D2Team_Survivor, L4D2Team_Infected);
 		return Plugin_Handled;
 	}
 
@@ -336,7 +336,7 @@ Action SwapTo_Cmd(int client, int args)
 	L4D2Team team = view_as<L4D2Team>(StringToInt(argbuf));
 	if (team < L4D2Team_Spectator || team > L4D2Team_Infected)
 	{
-		ReplyToCommand(client, "%t %t", "Tag", "ValidTeams", L4D2Team_Spectator, L4D2Team_Survivor, L4D2Team_Infected);
+		CPrintToChat(client, "%t %t", "Tag", "ValidTeams", L4D2Team_Spectator, L4D2Team_Survivor, L4D2Team_Infected);
 		return Plugin_Handled;
 	}
 
