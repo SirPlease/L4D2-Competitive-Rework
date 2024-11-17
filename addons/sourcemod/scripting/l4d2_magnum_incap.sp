@@ -97,6 +97,20 @@ void ReviveSuccess_Event(Event hEvent, char[] name, bool dontBroadcast)
 		RemoveEntity(secWeaponIndex);
 
 		GivePlayerItem(client, "weapon_pistol_magnum");
+		CreateTimer(0.1, Timer_CheckMagClient, client);
 		g_bHasDeagle[client] = false; // Gets set on incap anywoo.
 	}
+}
+
+public Action Timer_CheckMagClient(Handle timer, int client){
+	if (IsClientInGame(client)){
+		int secWeaponIndex = GetPlayerWeaponSlot(client, L4D2WeaponSlot_Secondary);
+		if (!secWeaponIndex){
+			GivePlayerItem(client, "weapon_pistol");
+			if (GetConVarInt(g_hReplaceMagnum) > 1) {
+				GivePlayerItem(client, "weapon_pistol");
+			}
+		}
+	}
+	return Plugin_Stop;
 }
