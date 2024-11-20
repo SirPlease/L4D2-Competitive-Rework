@@ -20,6 +20,15 @@
 #define GAMEDATA_USE_AMMO			"CWeaponAmmoSpawn_Use"
 #define SOUND_NAME					"player/suit_denydevice.wav"
 
+// enum struct LimitInfo
+// {
+// 	ArrayList weapons;
+// 	int limit;
+// 	int give_ammo;
+// }
+// ArrayList g_LimitInfoList;
+// StringMap g_WeaponLimitMap;
+
 enum struct LimitArrayEntry
 {
 	int LAE_iLimit;
@@ -39,8 +48,7 @@ ArrayList
 	hLimitArray;
 
 bool
-	bIsLocked,
-	bIsIncappedWithMelee[MAXPLAYERS + 1];
+	bIsLocked;
 
 StringMap
 	hMeleeWeaponNamesTrie = null;
@@ -50,7 +58,7 @@ public Plugin myinfo =
 	name = "L4D Weapon Limits",
 	author = "CanadaRox, Stabby, Forgetest, A1m`, robex",
 	description = "Restrict weapons individually or together",
-	version = "2.2.2",
+	version = "2.2.3",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -75,11 +83,6 @@ public void OnPluginStart()
 	RegServerCmd("l4d_wlimits_clear", ClearLimits_Cmd, "Clears all weapon limits (limits must be locked to be cleared)");
 
 	HookEvent("round_start", ClearUp, EventHookMode_PostNoCopy);
-	HookEvent("player_incapacitated_start", OnIncap);
-	HookEvent("revive_success", OnRevive);
-	HookEvent("player_death", OnDeath);
-	HookEvent("player_bot_replace", OnBotReplacedPlayer);
-	HookEvent("bot_player_replace", OnPlayerReplacedBot);
 
 	// For debug
 	/*for (int i = 1; i <= MaxClients; i++) {
@@ -120,12 +123,16 @@ void InitSDKCall()
 public void OnMapStart()
 {
 	PrecacheSound(SOUND_NAME);
+
+	for (int i = 1; i <= MaxClients; ++i)
+	{
+		if (IsClientInGame(i)) OnClientPutInServer(i);
+	}
 }
 
 void ClearUp(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	for (int i = 1; i <= MaxClients; i++) {
-		bIsIncappedWithMelee[i] = false;
 		g_iLastPrintTickCount[i] = 0;
 	}
 }
@@ -169,9 +176,13 @@ Action AddLimit_Cmd(int args)
 		GetCmdArg(i, sTempBuff, sizeof(sTempBuff));
 
 		wepid = WeaponNameToId(sTempBuff);
-		AddBitMask(newEntry.LAE_WeaponArray, wepid);
 
-		// assume it might be a melee
+		// @Forgetest: Fix incorrectly counting generic melees with an entry of melee names only.
+		if (wepid != WEPID_NONE) {
+			AddBitMask(newEntry.LAE_WeaponArray, wepid);
+		}
+
+		// assume it's a melee
 		if (wepid == WEPID_NONE) {
 			if (hMeleeWeaponNamesTrie.GetValue(sTempBuff, meleeid)) {
 				AddBitMask(newEntry.LAE_MeleeArray, meleeid);
@@ -205,7 +216,7 @@ Action ClearLimits_Cmd(int args)
 
 	bIsLocked = false;
 
-	PrintToChatAll("[L4D Weapon Limits] Weapon limits cleared!");
+	PrintToServer("[L4D Weapon Limits] Weapon limits cleared!");
 
 	if (hLimitArray != null) {
 		hLimitArray.Clear();
@@ -280,71 +291,6 @@ Action Hook_WeaponCanUse(int client, int weapon)
 	return Plugin_Continue;
 }
 
-void OnIncap(Event event, const char[] name, bool dontBroadcast)
-{
-	int client = GetClientOfUserId(event.GetInt("userid"));
-
-	if (client < 1 || GetClientTeam(client) != L4D2Team_Survivor) {
-		return;
-	}
-
-	int iMelee = GetPlayerWeaponSlot(client, 1);
-
-	if (IdentifyWeapon(iMelee) == WEPID_MELEE) {
-		bIsIncappedWithMelee[client] = true;
-	}
-}
-
-void OnRevive(Event event, const char[] name, bool dontBroadcast)
-{
-	int client = GetClientOfUserId(event.GetInt("subject"));
-
-	if (client < 1 || !bIsIncappedWithMelee[client]) {
-		return;
-	}
-
-	bIsIncappedWithMelee[client] = false;
-}
-
-void OnDeath(Event event, const char[] name, bool dontBroadcast)
-{
-	int client = GetClientOfUserId(event.GetInt("userid"));
-
-	if (client < 1 || GetClientTeam(client) != L4D2Team_Survivor || !bIsIncappedWithMelee[client]) {
-		return;
-	}
-
-	bIsIncappedWithMelee[client] = false;
-}
-
-void OnBotReplacedPlayer(Event event, const char[] name, bool dontBroadcast)
-{
-	int bot = GetClientOfUserId(event.GetInt("bot"));
-
-	if (bot < 1 || GetClientTeam(bot) != L4D2Team_Survivor) {
-		return;
-	}
-
-	int player = GetClientOfUserId(event.GetInt("player"));
-
-	bIsIncappedWithMelee[bot] = bIsIncappedWithMelee[player];
-	bIsIncappedWithMelee[player] = false;
-}
-
-void OnPlayerReplacedBot(Event event, const char[] name, bool dontBroadcast)
-{
-	int player = GetClientOfUserId(event.GetInt("player"));
-
-	if (player < 1 || GetClientTeam(player) != L4D2Team_Survivor) {
-		return;
-	}
-
-	int bot = GetClientOfUserId(event.GetInt("bot"));
-
-	bIsIncappedWithMelee[player] = bIsIncappedWithMelee[bot];
-	bIsIncappedWithMelee[bot] = false;
-}
-
 // Fixing an error when compiling in sourcemod 1.9
 void AddBitMask(int[] iMask, int iWeaponId)
 {
@@ -385,8 +331,6 @@ void denyWeapon(int wep_slot, LimitArrayEntry arrayEntry, int weapon, int client
 
 int GetWeaponCount(const int[] mask)
 {
-	bool queryMelee = view_as<bool>(mask[WEPID_MELEE / 32] & (1 << (WEPID_MELEE % 32)));
-
 	int count, wepid;
 
 	for (int i = 1; i <= MaxClients; i++) {
@@ -397,7 +341,18 @@ int GetWeaponCount(const int[] mask)
 		for (int j = 0; j < L4D2WeaponSlot_Size; ++j) {
 			wepid = IdentifyWeapon(GetPlayerWeaponSlot(i, j));
 
-			if (isWeaponLimited(mask, wepid) || (j == 1 && queryMelee && bIsIncappedWithMelee[i])) {
+			if (isWeaponLimited(mask, wepid)) {
+				count++;
+			}
+		}
+
+		// @Forgetest
+		// Lucky that "incap" prop is reset before function "OnRevive" restores secondary
+		// so no concern about player failing to get their secondary back
+		if (IsIncapacitated(i) || IsHangingFromLedge(i)) {
+			wepid = IdentifyWeapon(GetPlayerSecondaryWeaponRestore(i));
+
+			if (isWeaponLimited(mask, wepid)) {
 				count++;
 			}
 		}
@@ -416,12 +371,23 @@ int GetMeleeCount(const int[] mask)
 		}
 
 		meleeid = IdentifyMeleeWeapon(GetPlayerWeaponSlot(i, L4D2WeaponSlot_Secondary));
-		if (meleeid == WEPID_MELEE_NONE) {
-			continue;
+		if (meleeid != WEPID_MELEE_NONE) {
+			if (isWeaponLimited(mask, meleeid)) {
+				count++;
+			}
 		}
 
-		if (isWeaponLimited(mask, meleeid) || bIsIncappedWithMelee[i]) {
-			count++;
+		// @Forgetest
+		// Lucky that "incap" prop is reset before function "OnRevive" restores secondary
+		// so no concern about player failing to get their secondary back
+		if (IsIncapacitated(i) || IsHangingFromLedge(i)) {
+			meleeid = IdentifyMeleeWeapon(GetPlayerSecondaryWeaponRestore(i));
+
+			if (meleeid != WEPID_MELEE_NONE) {
+				if (isWeaponLimited(mask, meleeid)) {
+					count++;
+				}
+			}
 		}
 	}
 
@@ -430,10 +396,10 @@ int GetMeleeCount(const int[] mask)
 
 void GiveDefaultAmmo(int client)
 {
-	// NOTE:
+	// @Forgetest NOTE:
 	// Previously the plugin seems to cache an index of one ammo pile in current map, and is supposed to use it here.
 	// For some reason, the caching never runs, and the code is completely wrong either.
-	// Therefore, it has been consistently using an SDKCall like below ('0' should be the index of ammo pile).
+	// Therefore, it has been consistently using an SDKCall like below ('0' should've been the index of ammo pile).
 	// However, since it actually has worked without error and crash for a long time, I would decide to leave it still.
 	// If your server suffers from this, please try making use of the functions commented below.
 
@@ -458,6 +424,15 @@ stock int MakeAmmoPile()
 	LogMessage("No ammo pile found, creating one: %d", iAmmoPile);
 	return ammo;
 }*/
+
+int GetPlayerSecondaryWeaponRestore(int client)
+{
+	static int s_iOffs_m_hSecondaryWeaponRestore = -1;
+	if (s_iOffs_m_hSecondaryWeaponRestore == -1)
+		s_iOffs_m_hSecondaryWeaponRestore = FindSendPropInfo("CTerrorPlayer", "m_iVersusTeam") - 20;
+
+	return GetEntDataEnt2(client, s_iOffs_m_hSecondaryWeaponRestore);
+}
 
 /* @A1m`:
 When the player touches the weapon, then this code from the plugin is called every frame,
