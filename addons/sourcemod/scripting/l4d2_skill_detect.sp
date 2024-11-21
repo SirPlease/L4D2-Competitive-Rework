@@ -61,7 +61,7 @@
 #include <sdktools>
 #include <sourcemod>
 
-#define PLUGIN_VERSION		 "1.1.1"
+#define PLUGIN_VERSION		 "1.1.2"
 
 #define SHOTGUN_BLAST_TIME	 0.1
 #define POUNCE_CHECK_TIME	 0.1
@@ -183,39 +183,40 @@ char g_csSIClassName[][] = {
 char g_sDebugFile[256];	 // debug file name
 bool g_bLateLoad = false;	 // whether we're loading late (after map has started)
 
-Handle
-	g_hForwardSkeet			  = INVALID_HANDLE,
-	g_hForwardSkeetHurt		  = INVALID_HANDLE,
-	g_hForwardSkeetMelee	  = INVALID_HANDLE,
-	g_hForwardSkeetMeleeHurt  = INVALID_HANDLE,
-	g_hForwardSkeetSniper	  = INVALID_HANDLE,
-	g_hForwardSkeetSniperHurt = INVALID_HANDLE,
-	g_hForwardSkeetGL		  = INVALID_HANDLE,
-	g_hForwardHunterDeadstop  = INVALID_HANDLE,
-	g_hForwardSIShove		  = INVALID_HANDLE,
-	g_hForwardBoomerPop		  = INVALID_HANDLE,
-	g_hForwardLevel			  = INVALID_HANDLE,
-	g_hForwardLevelHurt		  = INVALID_HANDLE,
-	g_hForwardCrown			  = INVALID_HANDLE,
-	g_hForwardDrawCrown		  = INVALID_HANDLE,
-	g_hForwardTongueCut		  = INVALID_HANDLE,
-	g_hForwardSmokerSelfClear = INVALID_HANDLE,
-	g_hForwardRockSkeeted	  = INVALID_HANDLE,
-	g_hForwardRockEaten		  = INVALID_HANDLE,
-	g_hForwardHunterDP		  = INVALID_HANDLE,
-	g_hForwardJockeyDP		  = INVALID_HANDLE,
-	g_hForwardDeathCharge	  = INVALID_HANDLE,
-	g_hForwardClear			  = INVALID_HANDLE,
-	g_hForwardVomitLanded	  = INVALID_HANDLE,
-	g_hForwardBHopStreak	  = INVALID_HANDLE,
-	g_hForwardAlarmTriggered  = INVALID_HANDLE,
+GlobalForward
+	g_hForwardSkeet			  = null,
+	g_hForwardSkeetHurt		  = null,
+	g_hForwardSkeetMelee	  = null,
+	g_hForwardSkeetMeleeHurt  = null,
+	g_hForwardSkeetSniper	  = null,
+	g_hForwardSkeetSniperHurt = null,
+	g_hForwardSkeetGL		  = null,
+	g_hForwardHunterDeadstop  = null,
+	g_hForwardSIShove		  = null,
+	g_hForwardBoomerPop		  = null,
+	g_hForwardLevel			  = null,
+	g_hForwardLevelHurt		  = null,
+	g_hForwardCrown			  = null,
+	g_hForwardDrawCrown		  = null,
+	g_hForwardTongueCut		  = null,
+	g_hForwardSmokerSelfClear = null,
+	g_hForwardRockSkeeted	  = null,
+	g_hForwardRockEaten		  = null,
+	g_hForwardHunterDP		  = null,
+	g_hForwardJockeyDP		  = null,
+	g_hForwardDeathCharge	  = null,
+	g_hForwardClear			  = null,
+	g_hForwardVomitLanded	  = null,
+	g_hForwardBHopStreak	  = null,
+	g_hForwardAlarmTriggered  = null;
 
-	g_hTrieWeapons			  = INVALID_HANDLE,	   // weapon check
-	g_hTrieEntityCreated	  = INVALID_HANDLE,	   // getting classname of entity created
-	g_hTrieAbility			  = INVALID_HANDLE,	   // ability check
-	g_hWitchTrie			  = INVALID_HANDLE,	   // witch tracking (Crox)
-	g_hRockTrie				  = INVALID_HANDLE,	   // tank rock tracking
-	g_hCarTrie				  = INVALID_HANDLE;	   // car alarm tracking
+StringMap
+	g_hTrieWeapons			  = null,	   // weapon check
+	g_hTrieEntityCreated	  = null,	   // getting classname of entity created
+	g_hTrieAbility			  = null,	   // ability check
+	g_hWitchTrie			  = null,	   // witch tracking (Crox)
+	g_hRockTrie				  = null,	   // tank rock tracking
+	g_hCarTrie				  = null;	   // car alarm tracking
 
 // all SI / pinners
 float
@@ -436,31 +437,31 @@ public APLRes
 {
 	RegPluginLibrary("skill_detect");
 
-	g_hForwardSkeet			  = CreateGlobalForward("OnSkeet", ET_Ignore, Param_Cell, Param_Cell);
-	g_hForwardSkeetHurt		  = CreateGlobalForward("OnSkeetHurt", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
-	g_hForwardSkeetMelee	  = CreateGlobalForward("OnSkeetMelee", ET_Ignore, Param_Cell, Param_Cell);
-	g_hForwardSkeetMeleeHurt  = CreateGlobalForward("OnSkeetMeleeHurt", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
-	g_hForwardSkeetSniper	  = CreateGlobalForward("OnSkeetSniper", ET_Ignore, Param_Cell, Param_Cell);
-	g_hForwardSkeetSniperHurt = CreateGlobalForward("OnSkeetSniperHurt", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
-	g_hForwardSkeetGL		  = CreateGlobalForward("OnSkeetGL", ET_Ignore, Param_Cell, Param_Cell);
-	g_hForwardSIShove		  = CreateGlobalForward("OnSpecialShoved", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
-	g_hForwardHunterDeadstop  = CreateGlobalForward("OnHunterDeadstop", ET_Ignore, Param_Cell, Param_Cell);
-	g_hForwardBoomerPop		  = CreateGlobalForward("OnBoomerPop", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Float);
-	g_hForwardLevel			  = CreateGlobalForward("OnChargerLevel", ET_Ignore, Param_Cell, Param_Cell);
-	g_hForwardLevelHurt		  = CreateGlobalForward("OnChargerLevelHurt", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
-	g_hForwardCrown			  = CreateGlobalForward("OnWitchCrown", ET_Ignore, Param_Cell, Param_Cell);
-	g_hForwardDrawCrown		  = CreateGlobalForward("OnWitchDrawCrown", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
-	g_hForwardTongueCut		  = CreateGlobalForward("OnTongueCut", ET_Ignore, Param_Cell, Param_Cell);
-	g_hForwardSmokerSelfClear = CreateGlobalForward("OnSmokerSelfClear", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
-	g_hForwardRockSkeeted	  = CreateGlobalForward("OnTankRockSkeeted", ET_Ignore, Param_Cell, Param_Cell);
-	g_hForwardRockEaten		  = CreateGlobalForward("OnTankRockEaten", ET_Ignore, Param_Cell, Param_Cell);
-	g_hForwardHunterDP		  = CreateGlobalForward("OnHunterHighPounce", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Float, Param_Float, Param_Cell, Param_Cell);
-	g_hForwardJockeyDP		  = CreateGlobalForward("OnJockeyHighPounce", ET_Ignore, Param_Cell, Param_Cell, Param_Float, Param_Cell);
-	g_hForwardDeathCharge	  = CreateGlobalForward("OnDeathCharge", ET_Ignore, Param_Cell, Param_Cell, Param_Float, Param_Float, Param_Cell);
-	g_hForwardClear			  = CreateGlobalForward("OnSpecialClear", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Cell, Param_Float, Param_Float, Param_Cell);
-	g_hForwardVomitLanded	  = CreateGlobalForward("OnBoomerVomitLanded", ET_Ignore, Param_Cell, Param_Cell);
-	g_hForwardBHopStreak	  = CreateGlobalForward("OnBunnyHopStreak", ET_Ignore, Param_Cell, Param_Cell, Param_Float);
-	g_hForwardAlarmTriggered  = CreateGlobalForward("OnCarAlarmTriggered", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
+	g_hForwardSkeet			  = new GlobalForward("OnSkeet", ET_Ignore, Param_Cell, Param_Cell);
+	g_hForwardSkeetHurt		  = new GlobalForward("OnSkeetHurt", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
+	g_hForwardSkeetMelee	  = new GlobalForward("OnSkeetMelee", ET_Ignore, Param_Cell, Param_Cell);
+	g_hForwardSkeetMeleeHurt  = new GlobalForward("OnSkeetMeleeHurt", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
+	g_hForwardSkeetSniper	  = new GlobalForward("OnSkeetSniper", ET_Ignore, Param_Cell, Param_Cell);
+	g_hForwardSkeetSniperHurt = new GlobalForward("OnSkeetSniperHurt", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
+	g_hForwardSkeetGL		  = new GlobalForward("OnSkeetGL", ET_Ignore, Param_Cell, Param_Cell);
+	g_hForwardSIShove		  = new GlobalForward("OnSpecialShoved", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
+	g_hForwardHunterDeadstop  = new GlobalForward("OnHunterDeadstop", ET_Ignore, Param_Cell, Param_Cell);
+	g_hForwardBoomerPop		  = new GlobalForward("OnBoomerPop", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Float);
+	g_hForwardLevel			  = new GlobalForward("OnChargerLevel", ET_Ignore, Param_Cell, Param_Cell);
+	g_hForwardLevelHurt		  = new GlobalForward("OnChargerLevelHurt", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
+	g_hForwardCrown			  = new GlobalForward("OnWitchCrown", ET_Ignore, Param_Cell, Param_Cell);
+	g_hForwardDrawCrown		  = new GlobalForward("OnWitchDrawCrown", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
+	g_hForwardTongueCut		  = new GlobalForward("OnTongueCut", ET_Ignore, Param_Cell, Param_Cell);
+	g_hForwardSmokerSelfClear = new GlobalForward("OnSmokerSelfClear", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
+	g_hForwardRockSkeeted	  = new GlobalForward("OnTankRockSkeeted", ET_Ignore, Param_Cell, Param_Cell);
+	g_hForwardRockEaten		  = new GlobalForward("OnTankRockEaten", ET_Ignore, Param_Cell, Param_Cell);
+	g_hForwardHunterDP		  = new GlobalForward("OnHunterHighPounce", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Float, Param_Float, Param_Cell, Param_Cell);
+	g_hForwardJockeyDP		  = new GlobalForward("OnJockeyHighPounce", ET_Ignore, Param_Cell, Param_Cell, Param_Float, Param_Cell);
+	g_hForwardDeathCharge	  = new GlobalForward("OnDeathCharge", ET_Ignore, Param_Cell, Param_Cell, Param_Float, Param_Float, Param_Cell);
+	g_hForwardClear			  = new GlobalForward("OnSpecialClear", ET_Ignore, Param_Cell, Param_Cell, Param_Cell, Param_Cell, Param_Float, Param_Float, Param_Cell);
+	g_hForwardVomitLanded	  = new GlobalForward("OnBoomerVomitLanded", ET_Ignore, Param_Cell, Param_Cell);
+	g_hForwardBHopStreak	  = new GlobalForward("OnBunnyHopStreak", ET_Ignore, Param_Cell, Param_Cell, Param_Float);
+	g_hForwardAlarmTriggered  = new GlobalForward("OnCarAlarmTriggered", ET_Ignore, Param_Cell, Param_Cell, Param_Cell);
 	g_bLateLoad				  = late;
 
 	return APLRes_Success;
@@ -516,7 +517,7 @@ public void OnPluginStart()
 
 	// cvars: built in
 	g_cvarPounceInterrupt	= FindConVar("z_pounce_damage_interrupt");
-	HookConVarChange(g_cvarPounceInterrupt, CvarChange_PounceInterrupt);
+	g_cvarPounceInterrupt.AddChangeHook(CvarChange_PounceInterrupt);
 	g_iPounceInterrupt		  = g_cvarPounceInterrupt.IntValue;
 
 	g_cvarChargerHealth		  = FindConVar("z_charger_health");
@@ -535,28 +536,28 @@ public void OnPluginStart()
 		g_cvarMaxPounceDamage = CreateConVar("z_hunter_max_pounce_bonus_damage", "49", "Not available on this server, added by l4d2_skill_detect.", FCVAR_NONE, true, 0.0, false);
 
 	// tries
-	g_hTrieWeapons = CreateTrie();
-	SetTrieValue(g_hTrieWeapons, "hunting_rifle", WPTYPE_SNIPER);
-	SetTrieValue(g_hTrieWeapons, "sniper_military", WPTYPE_SNIPER);
-	SetTrieValue(g_hTrieWeapons, "sniper_awp", WPTYPE_SNIPER);
-	SetTrieValue(g_hTrieWeapons, "sniper_scout", WPTYPE_SNIPER);
-	SetTrieValue(g_hTrieWeapons, "pistol_magnum", WPTYPE_MAGNUM);
-	SetTrieValue(g_hTrieWeapons, "grenade_launcher_projectile", WPTYPE_GL);
+	g_hTrieWeapons = new StringMap();
+	g_hTrieWeapons.SetValue("hunting_rifle", WPTYPE_SNIPER);
+	g_hTrieWeapons.SetValue("sniper_military", WPTYPE_SNIPER);
+	g_hTrieWeapons.SetValue("sniper_awp", WPTYPE_SNIPER);
+	g_hTrieWeapons.SetValue("sniper_scout", WPTYPE_SNIPER);
+	g_hTrieWeapons.SetValue("pistol_magnum", WPTYPE_MAGNUM);
+	g_hTrieWeapons.SetValue("grenade_launcher_projectile", WPTYPE_GL);
 
-	g_hTrieEntityCreated = CreateTrie();
-	SetTrieValue(g_hTrieEntityCreated, "tank_rock", OEC_TANKROCK);
-	SetTrieValue(g_hTrieEntityCreated, "witch", OEC_WITCH);
-	SetTrieValue(g_hTrieEntityCreated, "trigger_hurt", OEC_TRIGGER);
-	SetTrieValue(g_hTrieEntityCreated, "prop_car_alarm", OEC_CARALARM);
-	SetTrieValue(g_hTrieEntityCreated, "prop_car_glass", OEC_CARGLASS);
+	g_hTrieEntityCreated = new StringMap();
+	g_hTrieEntityCreated.SetValue("tank_rock", OEC_TANKROCK);
+	g_hTrieEntityCreated.SetValue("witch", OEC_WITCH);
+	g_hTrieEntityCreated.SetValue("trigger_hurt", OEC_TRIGGER);
+	g_hTrieEntityCreated.SetValue("prop_car_alarm", OEC_CARALARM);
+	g_hTrieEntityCreated.SetValue("prop_car_glass", OEC_CARGLASS);
 
-	g_hTrieAbility = CreateTrie();
-	SetTrieValue(g_hTrieAbility, "ability_lunge", ABL_HUNTERLUNGE);
-	SetTrieValue(g_hTrieAbility, "ability_throw", ABL_ROCKTHROW);
+	g_hTrieAbility = new StringMap();
+	g_hTrieAbility.SetValue("ability_lunge", ABL_HUNTERLUNGE);
+	g_hTrieAbility.SetValue("ability_throw", ABL_ROCKTHROW);
 
-	g_hWitchTrie = CreateTrie();
-	g_hRockTrie	 = CreateTrie();
-	g_hCarTrie	 = CreateTrie();
+	g_hWitchTrie = new StringMap();
+	g_hRockTrie	 = new StringMap();
+	g_hCarTrie	 = new StringMap();
 
 	static char logFile[PLATFORM_MAX_PATH];
 	Format(logFile, sizeof(logFile), "/logs/l4d2_skill_detect.log");
@@ -610,9 +611,9 @@ void OnHookEvent()
 	HookEvent("triggered_car_alarm", Event_CarAlarmGoesOff, EventHookMode_Post);
 }
 
-void CvarChange_PounceInterrupt(Handle convar, const char[] oldValue, const char[] newValue)
+void CvarChange_PounceInterrupt(ConVar convar, const char[] oldValue, const char[] newValue)
 {
-	g_iPounceInterrupt = GetConVarInt(convar);
+	g_iPounceInterrupt = convar.IntValue;
 }
 
 public void OnClientPostAdminCheck(int client)

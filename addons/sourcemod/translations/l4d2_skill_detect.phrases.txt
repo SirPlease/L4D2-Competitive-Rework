@@ -271,7 +271,7 @@
 	}
 	"CalarmBoomer"
 	{
-        "#format"   "{1:N},{2:N}" // 1:infected 2:survivor
+        "#format"   "{1:N},{2:N}" // 1:survivor 2:infected
 		"en"		"{olive}{1}{default} triggered an alarm by killing a boomer {olive}{2}{default}."
 	}
 	"CalarmBoomerBot"
