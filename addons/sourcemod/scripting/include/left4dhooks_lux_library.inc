@@ -539,7 +539,7 @@ stock void TE_SetupPhysicsProp(float vecModelOrigin[3],
 								float vecVelocity[3]={0.0, ...}, 
 								int iFlags=0,
 								int iEffects=0,
-								int iSkin=0,
+								public int iSkin=0,
 								int RGB[3]={255, ...})
 {
 	TE_Start("physicsprop");
