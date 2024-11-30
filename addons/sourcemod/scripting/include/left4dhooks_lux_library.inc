@@ -539,7 +539,7 @@ stock void TE_SetupPhysicsProp(float vecModelOrigin[3],
 								float vecVelocity[3]={0.0, ...}, 
 								int iFlags=0,
 								int iEffects=0,
-								public int iSkin=0,
+								int iSkin=0,
 								int RGB[3]={255, ...})
 {
 	TE_Start("physicsprop");
@@ -554,6 +554,11 @@ stock void TE_SetupPhysicsProp(float vecModelOrigin[3],
 	TE_WriteNum("r", RGB[0]);
 	TE_WriteNum("g", RGB[1]);
 	TE_WriteNum("b", RGB[2]);
+	
+	// Garbage code to prevent warning, symbol 'iSkin' is not used
+	if (iSkin == -1) {
+		LogError("TE_SetupPhysicsProp %d", iSkin);
+	}
 }
 
 /**
