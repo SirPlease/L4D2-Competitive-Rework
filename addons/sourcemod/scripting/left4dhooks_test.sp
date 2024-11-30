@@ -45,7 +45,6 @@
 #undef REQUIRE_PLUGIN
 #include <left4dhooks>
 #define REQUIRE_PLUGIN
-#include <timers>
 
 #define MAX_CALLS			1		// How many times to print each forward
 #define DEMO_ANIM			0		// Demonstrate "Incapped Crawling" animation hooks
@@ -2431,12 +2430,12 @@ Action sm_l4dd(int client, int args)
 	delete trace;
 }*/
 
-stock bool _TraceFilter(int entity, int contentsMask)
+/*stock bool _TraceFilter(int entity, int contentsMask)
 {
 	if( !entity || entity <= MaxClients || !IsValidEntity(entity) ) // dont let WORLD, or invalid entities be hit
 		return false;
 	return true;
-}
+}*/
 
 
 
