@@ -2409,7 +2409,7 @@ Action sm_l4dd(int client, int args)
 	return Plugin_Continue;
 }*/
 
-void GetGroundAngles(float vOrigin[3])
+/*void GetGroundAngles(float vOrigin[3])
 {
 	float vAng[3], vLookAt[3], vTargetOrigin[3];
 
@@ -2429,7 +2429,7 @@ void GetGroundAngles(float vOrigin[3])
 	}
 
 	delete trace;
-}
+}*/
 
 stock bool _TraceFilter(int entity, int contentsMask)
 {
@@ -5721,7 +5721,7 @@ stock void OnPummelTeleport(DataPack dPack)
 }
 
 // To block the stumble animation use the next two functions:
-stock Action OnPummelOnAnimPre(int client, int &anim)
+/*stock Action OnPummelOnAnimPre(int client, int &anim)
 {
 	if( anim == L4D2_ACT_TERROR_SLAMMED_WALL || anim == L4D2_ACT_TERROR_SLAMMED_GROUND )
 	{
@@ -5731,7 +5731,7 @@ stock Action OnPummelOnAnimPre(int client, int &anim)
 	}
 
 	return Plugin_Continue;
-}
+}*/
 
 /*stock Action TimerOnPummelResetAnim(Handle timer, int victim) // Don't need client userID since it's not going to be validated just removed
 {
