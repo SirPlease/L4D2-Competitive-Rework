@@ -146,7 +146,7 @@ new                 iRoundNumber;
 new                 bInRound;
 new                 bPlayerLeftStartArea;                       // used for tracking FF when RUP enabled
 
-stock char sTmpString[MAX_NAME_LENGTH];                // just used because I'm not going to break my head over why string assignment parameter passing doesn't work
+//stock char sTmpString[MAX_NAME_LENGTH];                // just used because I'm not going to break my head over why string assignment parameter passing doesn't work
 
 /*
 *      Natives

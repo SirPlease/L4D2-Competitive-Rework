@@ -363,7 +363,7 @@ public HoldOutStarts ( const String:output[], caller, activator, Float:delay )
 {
     if ( g_bHoldoutActive ) { return; }
     
-    PrintDebug( 1, "Holdout Starts (hooked)." );
+    PrintDebug( "Holdout Starts (hooked)." );
     
     g_bHoldoutActive = true;
     g_iHoldoutStartTime = GetTime();
@@ -401,7 +401,7 @@ public HoldOutEnds_Hook ( const String:output[], caller, activator, Float:delay 
     // hooked on map logic
     // only use as safeguard / check for time
     
-    PrintDebug( 1, "Holdout Ends (hooked): abs: %i / prg %i / defined %i.", GetTime() - g_iHoldoutStartTime, g_iProgress, g_iHoldoutTime );
+    PrintDebug( "Holdout Ends (hooked): abs: %i / prg %i / defined %i.", GetTime() - g_iHoldoutStartTime, g_iProgress, g_iHoldoutTime );
     
     if ( g_bHoldoutActive )
     {
@@ -417,7 +417,7 @@ stock HoldOutEnds( bool:bByRequest = false )
 {
     g_bHoldoutActive = false;
     
-    PrintDebug( 1, "Holdout over, awarding bonus: prg %i / defined %i.", g_iProgress, g_iHoldoutTime );
+    PrintDebug( "Holdout over, awarding bonus: prg %i / defined %i.", g_iProgress, g_iHoldoutTime );
     
     g_iActualBonus = CalculateHoldOutBonus();
     
@@ -638,7 +638,7 @@ KV_Load()
         return;
     }
 
-    PrintDebug( 1, "Holdout data loaded from file: %s.", sNameBuff );
+    PrintDebug( "Holdout data loaded from file: %s.", sNameBuff );
 }
 
 bool: KV_UpdateHoldoutMapInfo()
@@ -680,7 +680,7 @@ bool: KV_UpdateHoldoutMapInfo()
             KvGetString( g_kHIData, "t_e_hook", g_sHoldoutEndHook, MAXSTR, "" );
         }
         
-        PrintDebug( 1, "Read holdout mapinfo for '%s': %i / (factor: %.2f; abs: %i).",
+        PrintDebug( "Read holdout mapinfo for '%s': %i / (factor: %.2f; abs: %i).",
             mapname, g_bHoldoutThisRound,
             g_fHoldoutPointFactor, g_iHoldoutPointAbsolute
         );
@@ -734,13 +734,10 @@ stock GetPlayerCharacter ( client )
     return tmpChr;
 }
 
-stock PrintDebug( debugLevel, const String:Message[], any:... )
+stock PrintDebug( const String:Message[], any:... )
 {
-    //if (debugLevel <= GetConVarInt(g_hCvarDebug))
-    //{
-        decl String:DebugBuff[256];
-        VFormat(DebugBuff, sizeof(DebugBuff), Message, 3);
-        LogMessage(DebugBuff);
-        //PrintToServer(DebugBuff);
-    //}
+	decl String:DebugBuff[256];
+	VFormat(DebugBuff, sizeof(DebugBuff), Message, 3);
+	LogMessage(DebugBuff);
+	//PrintToServer(DebugBuff);
 }
