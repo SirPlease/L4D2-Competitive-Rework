@@ -23,7 +23,7 @@ public Plugin myinfo =
 	name = "Incapped Charger Damage",
 	author = "Sir, A1m`",
 	description = "Modify Charger pummel damage done to Survivors",
-	version = "2.1",
+	version = "2.1.0",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
