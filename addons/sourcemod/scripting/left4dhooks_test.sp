@@ -45,6 +45,7 @@
 #undef REQUIRE_PLUGIN
 #include <left4dhooks>
 #define REQUIRE_PLUGIN
+#include <timers>
 
 #define MAX_CALLS			1		// How many times to print each forward
 #define DEMO_ANIM			0		// Demonstrate "Incapped Crawling" animation hooks
@@ -334,7 +335,7 @@ Action sm_l4df(int client, int args)
 	return Plugin_Handled;
 }
 
-stock Action TimerCancelStagger(Handle timer, int client)
+/*stock Action TimerCancelStagger(Handle timer, int client)
 {
 	client = GetClientOfUserId(client);
 	if( client )
@@ -343,7 +344,7 @@ stock Action TimerCancelStagger(Handle timer, int client)
 	}
 
 	return Plugin_Continue;
-}
+}*/
 
 Action sm_l4dd(int client, int args)
 {
@@ -2380,7 +2381,7 @@ Action sm_l4dd(int client, int args)
 	return Plugin_Handled;
 }
 
-stock Action TimerDetonate(Handle timer, int entity)
+/*stock Action TimerDetonate(Handle timer, int entity)
 {
 	entity = EntRefToEntIndex(entity);
 	if( entity != INVALID_ENT_REFERENCE )
@@ -2389,9 +2390,9 @@ stock Action TimerDetonate(Handle timer, int entity)
 	}
 
 	return Plugin_Continue;
-}
+}*/
 
-stock Action TimerDetonateVomitjar(Handle timer, int entity)
+/*stock Action TimerDetonateVomitjar(Handle timer, int entity)
 {
 	entity = EntRefToEntIndex(entity);
 	if( entity != INVALID_ENT_REFERENCE )
@@ -2406,7 +2407,7 @@ stock Action TimerDetonateVomitjar(Handle timer, int entity)
 	}
 
 	return Plugin_Continue;
-}
+}*/
 
 void GetGroundAngles(float vOrigin[3])
 {
@@ -5732,12 +5733,12 @@ stock Action OnPummelOnAnimPre(int client, int &anim)
 	return Plugin_Continue;
 }
 
-stock Action TimerOnPummelResetAnim(Handle timer, int victim) // Don't need client userID since it's not going to be validated just removed
+/*stock Action TimerOnPummelResetAnim(Handle timer, int victim) // Don't need client userID since it's not going to be validated just removed
 {
 	AnimHookDisable(victim, OnPummelOnAnimPre);
 
 	return Plugin_Continue;
-}
+}*/
 
 public void L4D2_OnPummelVictim_Post(int attacker, int victim)
 {
@@ -6131,9 +6132,9 @@ void ForwardCalled(const char[] format, any ...)
 	// PrintToServer("----------");
 }
 
-stock bool TraceFilter(int entity, int contentsMask, int client)
+/*stock bool TraceFilter(int entity, int contentsMask, int client)
 {
 	if( entity == client )
 		return false;
 	return true;
-}
+}*/
