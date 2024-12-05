@@ -27,6 +27,51 @@
 
 	"left4dead"
 	{
+		"Functions"
+		{
+			"CTerrorPlayer::OnShovedBySurvivor"
+			{
+				"linux"
+				{
+					"signature"	"CTerrorPlayer::OnShovedBySurvivor [clone]"
+					"callconv"	"cdecl"
+				}
+				"windows"
+				{
+					"signature"	"CTerrorPlayer::OnShovedBySurvivor"
+					"callconv"	"stdcall"
+				}
+				"return"		"void"
+				"arguments"
+				{
+					"this"
+					{
+						"type"	"cbaseentity"
+						"linux"
+						{
+							"register" "eax"
+						}
+						"windows"
+						{
+							"register" "ecx"
+						}
+					}
+					"a2"
+					{
+						"type"	"cbaseentity"
+						"linux"
+						{
+							"register" "edx"
+						}
+					}
+					"a3"
+					{
+						"type"	"vectorptr"
+					}
+				}
+			}
+		}
+
 		"Offsets"
 		{
 			"CTerrorPlayer::m_PlayerAnimState"
@@ -56,11 +101,69 @@
 				/* 83 ? ? ? 8B ? E8 ? ? ? ? 84 ? 0F 85 ? ? ? ? 8B ? 8B */
 				/* Search: "Player.Shoved" */
 			}
+
+			// Stolen from left4dhooks thanks to Silvers
+			/*
+			 * CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&)
+			 */
+			"CTerrorPlayer::OnShovedBySurvivor"
+			{
+				"library"	"server"
+				"linux" 	"@_ZN13CTerrorPlayer18OnShovedBySurvivorEPS_RK6Vector"
+				"windows" 	"\x81\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x84\x2A\x0F\x85"
+				/* 81 ? ? ? ? ? 56 8B ? E8 ? ? ? ? 84 ? 0F 85 */
+			}
+
+			// Stolen from left4dhooks thanks to Silvers
+			/*
+			 * CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&) [clone]
+			 */
+			"CTerrorPlayer::OnShovedBySurvivor [clone]"
+			{
+				"library"	"server"
+				"linux" 	"@_ZN13CTerrorPlayer18OnShovedBySurvivorEPS_RK6Vector.part.591"
+			}
 		}
 	}
 
 	"left4dead2"
 	{
+		"Functions"
+		{
+			"CTerrorPlayer::OnShovedBySurvivor"
+			{
+				"signature"		"CTerrorPlayer::OnShovedBySurvivor"
+				"linux"
+				{
+					"callconv"	"cdecl"
+				}
+				"windows"
+				{
+					"callconv"	"stdcall"
+				}
+				"return"		"void"
+				"arguments"
+				{
+					"this"
+					{
+						"type"	"cbaseentity"
+						"windows"
+						{
+							"register"	"ecx"
+						}
+					}
+					"a2"
+					{
+						"type"	"cbaseentity"
+					}
+					"a3"
+					{
+						"type"	"vectorptr"
+					}
+				}
+			}
+		}
+
 		"Offsets"
 		{
 			/* Windows offset:
@@ -103,6 +206,19 @@
 				/* ? ? ? ? ? ? 83 ? ? 83 ? ? 55 8B ? ? 89 ? ? ? 8B ? 83 ? ? 56 57 8B ? E8 ? ? ? ? 84 ? 0F 85 ? ? ? ? 8B ? 8B
 				 * Using a long local jump as the unique portion (last few bytes of sig)
 				 */
+			}
+
+			// Stolen from left4dhooks thanks to Silvers
+			/*
+			 * CTerrorPlayer::OnShovedBySurvivor(CTerrorPlayer*, Vector const&) - used by L4D2 on Special Infected (got melee'd)
+			 * unique string "jockey_ride" in CTerrorPlayer::OnLeptOnSurvivor(), look up for "JockeyZombie.Ride", look up for var_14, CTerrorPlayer::OnShovedBySurvivor is call after that
+			 */
+			"CTerrorPlayer::OnShovedBySurvivor"
+			{
+				"library"	"server"
+				"linux" 	"@_ZN13CTerrorPlayer18OnShovedBySurvivorEPS_RK6Vector"
+				"windows" 	"\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53\x8B\x5D\x2A\x56\x57\x8B\x7D\x2A\x8B\xF1"
+				/* 55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 33 C5 89 45 FC 53 8B 5D ? 56 57 8B 7D ? 8B F1 */
 			}
 		}
 	}
