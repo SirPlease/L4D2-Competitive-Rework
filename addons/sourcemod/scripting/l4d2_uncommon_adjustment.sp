@@ -7,7 +7,7 @@
 #include <actions>
 #include <l4d2util>
 
-#define PLUGIN_VERSION "3.0"
+#define PLUGIN_VERSION "3.1"
 
 public Plugin myinfo =
 {
@@ -72,6 +72,7 @@ bool g_bRiotcopArmor;
 bool g_bMudmanCrouch;
 bool g_bMudmanSplatter;
 bool g_bJimmySplatter;
+bool g_bCEDAFireProof;
 
 int g_iOffs_m_nInfectedFlags;
 
@@ -159,6 +160,13 @@ public void OnPluginStart()
 						true, 0.0, true, 1.0,
 						JimmySplatter_ConVarChanged);
 	
+	CreateConVarHook("l4d2_ceda_fire_proof",
+						"1",
+						"Set whether CEDA is fireproofed.",
+						FCVAR_NONE,
+						true, 0.0, true, 1.0,
+						CEDAFireProof_ConVarChanged);
+	
 	g_iOffs_m_nInfectedFlags = FindSendPropInfo("Infected", "m_nFallenFlags") - 4;
 }
 
@@ -210,6 +218,11 @@ void MudmanSplatter_ConVarChanged(ConVar convar, const char[] oldValue, const ch
 void JimmySplatter_ConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	g_bJimmySplatter = convar.BoolValue;
+}
+
+void CEDAFireProof_ConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+	g_bCEDAFireProof = convar.BoolValue;
 }
 
 public void OnEntityCreated(int entity, const char[] classname)
@@ -286,6 +299,11 @@ void SDK_OnSpawn_Post(int entity)
 		{
 			if (!g_bRiotcopArmor)
 				RemoveInfectedFlags(entity, INFECTED_FLAG_RIOTCOP_ARMOR);
+		}
+	case L4D2Gender_Ceda:
+		{
+			if (!g_bCEDAFireProof)
+				RemoveInfectedFlags(entity, INFECTED_FLAG_FIRE_IMMUNE);
 		}
 	case L4D2Gender_Jimmy:
 		{
