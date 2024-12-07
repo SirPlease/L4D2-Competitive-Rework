@@ -1,0 +1,71 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Functions"
+		{
+			"InfectedAttack::OnPunch"
+			{
+				"signature"		"InfectedAttack::OnPunch"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"address"
+				"arguments"
+				{
+					"Infected *"
+					{
+						"type"	"cbaseentity"
+					}
+					"CBaseEntity *"
+					{
+						"type"	"cbaseentity"
+					}
+				}
+			}
+
+			"CTerrorPlayer::QueueScreenBloodSplatter"
+			{
+				"signature"		"CTerrorPlayer::QueueScreenBloodSplatter"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"entity"
+				"arguments"
+				{
+					"int"
+					{
+						"type"	"int"
+					}
+					"float"
+					{
+						"type"	"float"
+					}
+					"CTerrorPlayer::SplatterType_t"
+					{
+						"type"	"int"
+					}
+				}
+			}
+		}
+
+		"Signatures"
+		{
+			// Search convar "z_attack_infected_it_damage"
+			"InfectedAttack::OnPunch"
+			{
+				"library"		"server"
+				"linux"			"@_ZN14InfectedAttack7OnPunchEP8InfectedP11CBaseEntity"
+				"windows"		"\x55\x8B\xEC\x81\xEC\x64\x01\x00\x00\xA1"
+								/* 55 8B EC 81 EC 64 01 00 00 A1 */
+			}
+
+			// Search convar "z_splatterdistance"
+			"CTerrorPlayer::QueueScreenBloodSplatter"
+			{
+				"library"		"server"
+				"linux"			"@_ZN13CTerrorPlayer24QueueScreenBloodSplatterEifNS_14SplatterType_tE"
+				"windows"		"\x55\x8B\xEC\xA1\x2A\x2A\x2A\x2A\xF3\x0F\x10\x40\x2C\x0F\x2F\x45\x0C"
+								/* 55 8B EC A1 ? ? ? ? F3 0F 10 40 2C 0F 2F 45 0C */
+			}
+		}
+	}
+}
