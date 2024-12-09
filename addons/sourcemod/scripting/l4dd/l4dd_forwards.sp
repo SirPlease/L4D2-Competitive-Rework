@@ -5517,7 +5517,7 @@ MRESReturn DTR_CSquirrelVM_GetValue(DHookReturn hReturn, DHookParam hParams) // 
 bool StringToVector(const char[] str, const char[] spilt, float vec[3])
 {
 	char buffers[3][20];
-	if( 3 > ExplodeString(str, spilt, buffers, sizeof(buffers[]), sizeof(buffers[][]), true) )
+	if( 3 > ExplodeString(str, spilt, buffers, sizeof(buffers), sizeof(buffers[]), true) )
 		return false;
 
 	for( int i = 0; i < 3; ++i )
