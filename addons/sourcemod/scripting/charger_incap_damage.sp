@@ -111,3 +111,4 @@ Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fD
 	fDamage = g_hCvarDmgIncappedPound.FloatValue;
 	return Plugin_Changed;
 }
+
