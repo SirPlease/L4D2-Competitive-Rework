@@ -2,12 +2,12 @@
 #pragma newdecls required
 
 #include <sourcemod>
-#include <dhooks>
+#include <sourcescramble>
 #include <sdkhooks>
 #include <actions>
 #include <l4d2util>
 
-#define PLUGIN_VERSION "3.1"
+#define PLUGIN_VERSION "3.2"
 
 public Plugin myinfo =
 {
@@ -24,18 +24,11 @@ methodmap GameDataWrapper < GameData {
 		if (!gd) SetFailState("Missing gamedata \"%s\"", file);
 		return view_as<GameDataWrapper>(gd);
 	}
-	public DynamicDetour CreateDetourOrFail(
-			const char[] name,
-			DHookCallback preHook = INVALID_FUNCTION,
-			DHookCallback postHook = INVALID_FUNCTION) {
-		DynamicDetour hSetup = DynamicDetour.FromConf(this, name);
-		if (!hSetup)
-			SetFailState("Missing detour setup \"%s\"", name);
-		if (preHook != INVALID_FUNCTION && !hSetup.Enable(Hook_Pre, preHook))
-			SetFailState("Failed to pre-detour \"%s\"", name);
-		if (postHook != INVALID_FUNCTION && !hSetup.Enable(Hook_Post, postHook))
-			SetFailState("Failed to post-detour \"%s\"", name);
-		return hSetup;
+	public MemoryPatch CreatePatchOrFail(const char[] name, bool enable = false) {
+		MemoryPatch hPatch = MemoryPatch.CreateFromConf(this, name);
+		if (!(enable ? hPatch.Enable() : hPatch.Validate()))
+			SetFailState("Failed to patch \"%s\"", name);
+		return hPatch;
 	}
 }
 
@@ -70,8 +63,8 @@ float g_flJimmyHealthScale;
 int g_iFallenEquipments;
 bool g_bRiotcopArmor;
 bool g_bMudmanCrouch;
-bool g_bMudmanSplatter;
-bool g_bJimmySplatter;
+MemoryPatch g_Patch_MudmanSplatter;
+MemoryPatch g_Patch_JimmySplatter;
 bool g_bCEDAFireProof;
 
 int g_iOffs_m_nInfectedFlags;
@@ -79,8 +72,8 @@ int g_iOffs_m_nInfectedFlags;
 public void OnPluginStart()
 {
 	GameDataWrapper gd = new GameDataWrapper("l4d2_uncommon_adjustment");
-	delete gd.CreateDetourOrFail("InfectedAttack::OnPunch", DTR_OnPunch, DTR_OnPunch_Post);
-	delete gd.CreateDetourOrFail("CTerrorPlayer::QueueScreenBloodSplatter", DTR_QueueScreenBloodSplatter);
+	g_Patch_MudmanSplatter = gd.CreatePatchOrFail("mudman_screen_splatter", false);
+	g_Patch_JimmySplatter = gd.CreatePatchOrFail("jimmy_screen_splatter", false);
 	delete gd;
 
 	z_health = FindConVar("z_health");
@@ -212,12 +205,26 @@ void MudmanCrouch_ConVarChanged(ConVar convar, const char[] oldValue, const char
 
 void MudmanSplatter_ConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
-	g_bMudmanSplatter = convar.BoolValue;
+	// warning 213: tag mismatch (expected "bool", got "void")
+	// haha
+	// convar.BoolValue ? g_Patch_MudmanSplatter.Enable() : g_Patch_MudmanSplatter.Disable();
+
+	if (convar.BoolValue)
+		g_Patch_MudmanSplatter.Disable();
+	else
+		g_Patch_MudmanSplatter.Enable();
 }
 
 void JimmySplatter_ConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
-	g_bJimmySplatter = convar.BoolValue;
+	// warning 213: tag mismatch (expected "bool", got "void")
+	// haha
+	// convar.BoolValue ? g_Patch_JimmySplatter.Enable() : g_Patch_JimmySplatter.Disable();
+
+	if (convar.BoolValue)
+		g_Patch_JimmySplatter.Disable();
+	else
+		g_Patch_JimmySplatter.Enable();
 }
 
 void CEDAFireProof_ConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
@@ -393,41 +400,6 @@ Action OnSoundPost(BehaviorAction action, int actor, int entity, const float pos
 	}
 	
 	return Plugin_Continue;
-}
-
-bool g_bBlockSplatter = false;
-MRESReturn DTR_OnPunch(Address pThis, DHookParam hParams)
-{
-	int infected = hParams.Get(1);
-
-	switch (GetGender(infected))
-	{
-	case L4D2Gender_Crawler:
-		{
-			if (g_bMudmanSplatter)
-				return MRES_Ignored;
-		}
-	
-	case L4D2Gender_Jimmy:
-		{
-			if (g_bJimmySplatter)
-				return MRES_Ignored;
-		}
-	}
-
-	g_bBlockSplatter = true;
-	return MRES_Ignored;	
-}
-
-MRESReturn DTR_OnPunch_Post(Address pThis, DHookParam hParams)
-{
-	g_bBlockSplatter = false;
-	return MRES_Ignored;
-}
-
-MRESReturn DTR_QueueScreenBloodSplatter(int client, DHookParam hParams)
-{
-	return g_bBlockSplatter ? MRES_Supercede : MRES_Ignored;
 }
 
 void AddInfectedFlags(int entity, int flags)

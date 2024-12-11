@@ -2,47 +2,39 @@
 {
 	"left4dead2"
 	{
-		"Functions"
+		"MemPatches"
 		{
-			"InfectedAttack::OnPunch"
+			"mudman_screen_splatter"
 			{
 				"signature"		"InfectedAttack::OnPunch"
-				"callconv"		"thiscall"
-				"return"		"void"
-				"this"			"address"
-				"arguments"
+				"linux"
 				{
-					"Infected *"
-					{
-						"type"	"cbaseentity"
-					}
-					"CBaseEntity *"
-					{
-						"type"	"cbaseentity"
-					}
+					"offset"	"5BDh"
+					"verify"	"\x74"
+					"patch"		"\x90\x90"
+				}
+				"windows"
+				{
+					"offset"	"3C1h"
+					"verify"	"\x74"
+					"patch"		"\x90\x90"
 				}
 			}
 
-			"CTerrorPlayer::QueueScreenBloodSplatter"
+			"jimmy_screen_splatter"
 			{
-				"signature"		"CTerrorPlayer::QueueScreenBloodSplatter"
-				"callconv"		"thiscall"
-				"return"		"void"
-				"this"			"entity"
-				"arguments"
+				"signature"		"InfectedAttack::OnPunch"
+				"linux"
 				{
-					"int"
-					{
-						"type"	"int"
-					}
-					"float"
-					{
-						"type"	"float"
-					}
-					"CTerrorPlayer::SplatterType_t"
-					{
-						"type"	"int"
-					}
+					"offset"	"5CAh"
+					"verify"	"\x0F\x85"
+					"patch"		"\x90\xE9"
+				}
+				"windows"
+				{
+					"offset"	"3CDh"
+					"verify"	"\x0F\x85"
+					"patch"		"\x90\xE9"
 				}
 			}
 		}
@@ -56,15 +48,6 @@
 				"linux"			"@_ZN14InfectedAttack7OnPunchEP8InfectedP11CBaseEntity"
 				"windows"		"\x55\x8B\xEC\x81\xEC\x64\x01\x00\x00\xA1"
 								/* 55 8B EC 81 EC 64 01 00 00 A1 */
-			}
-
-			// Search convar "z_splatterdistance"
-			"CTerrorPlayer::QueueScreenBloodSplatter"
-			{
-				"library"		"server"
-				"linux"			"@_ZN13CTerrorPlayer24QueueScreenBloodSplatterEifNS_14SplatterType_tE"
-				"windows"		"\x55\x8B\xEC\xA1\x2A\x2A\x2A\x2A\xF3\x0F\x10\x40\x2C\x0F\x2F\x45\x0C"
-								/* 55 8B EC A1 ? ? ? ? F3 0F 10 40 2C 0F 2F 45 0C */
 			}
 		}
 	}
