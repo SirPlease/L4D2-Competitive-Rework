@@ -13,7 +13,7 @@ This purpose of this document is to make it very easy to get Optimized Servers r
 * 1 core per server, 1GB Memory per server
   * Gameservers are usually hosted in a Shared Environment, thus not recommended. 
 * A modern CPU, if you're planning on increasing the tickrate I would aim for a solid 3GHz CPU at minimum.
-* DDoS Protection to absorb volume attacks and to filter out malicious traffic.
+* DDoS Protection to absorb volume attacks 和 to filter out malicious traffic.
 
 > **Solid Server Hosts (In My Experience):**
 * NFOServers (**for US**, mostly)
@@ -25,7 +25,7 @@ This purpose of this document is to make it very easy to get Optimized Servers r
 > **Initial Server Install/Connection:**  
 > This part of the Project will focus on preparing your dedicated Server/VDS for L4D2.  
 
-Login to your webhosts admin panel and ensure you are using Ubuntu **20.04 or newer**.  You should have had an option to do this during the order process, but if not most hosts will have an intuitive admin panel to allow you to do this.  I used GCoreLabs to set up a server whilst writing this guide, and they have a 'reinstall' option under "[Management > Virtual Machines](https://imgur.com/A7kRTyO)".
+Login to your webhosts admin panel 和 ensure you are using Ubuntu **20.04 or newer**.  You should have had an option to do this during the order process, but if not most hosts will have an intuitive admin panel to allow you to do this.  I used GCoreLabs to set up a server whilst writing this guide, and they have a 'reinstall' option under "[Management > Virtual Machines](https://imgur.com/A7kRTyO)".
 
 For the next part, you will need to make use of an SSH Client such as [Putty](http://www.putty.org/).
 
@@ -34,7 +34,7 @@ Once Putty is installed and launched, you only need to enter the IP address of y
 After this you should get a black screen which says "login as:".  You should enter the username provided by your hosting provider (likely 'root').  After this you'll be prompted for the password.  NB: With the username or password in your clipboard you can simply right click to paste it into putty.  The password will not display on screen but it will paste as long as it's in your clipboard.
 
 > **L4D2 Prerequisites:**  
-> Before you can install L4D2, there are a number of items you must install first.  Simply copy and paste each of these commands one by one into the putty terminal.  You won't get any feedback on the first command, but the next 4 will visibily install something, and potentially ask you give permission.  You just need to type 'y' and enter when prompted.
+> Before you can install L4D2, there are a number of items you must install first. Simply copy 和 paste each of these commands one by one into the putty terminal. You won't get any feedback on the first command, but the next 4 will visibily install something, 和 potentially ask you give permission. You just need to type 'y' and enter when prompted.
 
 **dpkg --add-architecture i386 # enable multi-arch  
 apt-get update && apt-get upgrade  
@@ -44,8 +44,8 @@ apt-get install screen**
 
 > **Creating a User to run the Servers on**  
 > You don't want to be running these services on root, do you?!  
-> We'll call the account Steam and allow it to run certain Root commands so that you won't have to log into Root all the time.  
-> After that, we'll login to the user. (when you enter the login comamnd it will ask you which user to log in to, simply log in with the new username (steam) and password you just created seconds ago).
+> We'll call the account Steam 和 allow it to run certain Root commands so that you won't have to log into Root all the time.  
+> After that, we'll login to the user. (when you enter the login comamnd it will ask you which user to log in to, simply log in with the new username (steam) 和 password you just created seconds ago).
 
 **adduser steam**  
 **adduser steam sudo**  
@@ -57,11 +57,7 @@ apt-get install screen**
 
 **wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz  
 tar -xvzf steamcmd_linux.tar.gz  
-./steamcmd.sh  
-force_install_dir ./Steam/steamapps/common/l4d2  
-login anonymous  
-app_update 222860 validate  
-quit**
+./steamcmd.sh +force_install_dir ./Steam/steamapps/common/l4d2 +login anonymous +@sSteamCmdForcePlatformType windows +app_update 222860 validate +quit && \./steamcmd.sh +force_install_dir./Steam/steamapps/common/l4d2 +login anonymous +@sSteamCmdForcePlatformType linux  +app_update 222860 validate +quit**
 
 > **Setup the Server Start/Restart/Stop Files**  
 > Next you'll need to download the srcds1 file provided within this directory.  You can [click here](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/Dedicated%20Server%20Install%20Guide/srcds1), select raw, then right click and save.
