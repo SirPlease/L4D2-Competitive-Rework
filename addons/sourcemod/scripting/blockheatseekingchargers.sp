@@ -14,73 +14,41 @@
 
 #include <sourcemod>
 
-#define PL_VERSION "1.2.1"
-
-bool
-	IsInCharge[MAXPLAYERS + 1] = {false, ...};
+#define PL_VERSION		"1.3.2"
 
 public Plugin myinfo =
 {
 	name = "Blocks heatseeking chargers",
 	description = "Blocks heatseeking chargers",
-	author = "sheo",
+	author = "sheo, A1m`",
 	version = PL_VERSION,
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
-}
+};
 
 public void OnPluginStart()
 {
-	CreateConVar("l4d2_block_heatseeking_chargers_version", PL_VERSION, "Block heatseeking chargers fix version");
-	
-	HookEvent("player_bot_replace", BotReplacesPlayer);
-	HookEvent("charger_charge_start", Event_ChargeStart);
-	HookEvent("charger_charge_end", Event_ChargeEnd);
-	HookEvent("player_spawn", Event_OnPlayerSpawn);
-	HookEvent("player_death", Event_OnPlayerDeath);
-	
-	HookEvent("round_start", Event_Reset, EventHookMode_PostNoCopy);
-	HookEvent("round_end", Event_Reset, EventHookMode_PostNoCopy);
+	HookEvent("player_bot_replace", Event_PlayerBotReplace);
 }
 
-void ResetArray()
+void Event_PlayerBotReplace(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
 {
-	for (int i = 0; i <= MaxClients; i++) {
-		IsInCharge[i] = false;
+	int iBot = GetClientOfUserId(hEvent.GetInt("bot"));
+	if (iBot < 1) {
+		return;
 	}
-}
-
-void Event_Reset(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
-{
-	ResetArray();
-}
-
-void Event_ChargeStart(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
-{
-	IsInCharge[GetClientOfUserId(hEvent.GetInt("userid"))] = true;
-}
-
-void Event_ChargeEnd(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
-{
-	IsInCharge[GetClientOfUserId(hEvent.GetInt("userid"))] = false;
-}
-
-void BotReplacesPlayer(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
-{
-	int iClient = GetClientOfUserId(hEvent.GetInt("player"));
-	if (iClient > 0 && IsInCharge[iClient]) {
-		int iBot = GetClientOfUserId(hEvent.GetInt("bot"));
-		
+	
+	int iAbility = GetEntPropEnt(iBot, Prop_Send, "m_customAbility");
+	if (iAbility == -1) {
+		return;
+	}
+	
+	char sAbilityName[64];
+	GetEntityClassname(iAbility, sAbilityName, sizeof(sAbilityName));
+	if (strcmp(sAbilityName, "ability_charge") != 0) {
+		return;
+	}
+	
+	if (GetEntProp(iAbility, Prop_Send, "m_isCharging", 1) > 0) {
 		SetEntityFlags(iBot, GetEntityFlags(iBot) | FL_FROZEN);
-		IsInCharge[iClient] = false;
 	}
-}
-
-void Event_OnPlayerSpawn(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
-{
-	IsInCharge[GetClientOfUserId(hEvent.GetInt("userid"))] = false;
-}
-
-void Event_OnPlayerDeath(Event hEvent, const char[] sEntityName, bool bDontBroadcast)
-{
-	IsInCharge[GetClientOfUserId(hEvent.GetInt("userid"))] = false;
 }
