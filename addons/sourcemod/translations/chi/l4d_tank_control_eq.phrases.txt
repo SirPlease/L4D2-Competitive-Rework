@@ -1,0 +1,46 @@
+"Phrases"
+{
+	"TagRage"
+	{
+		"chi"		"{red}<{default}Tank控制权{red}>"
+	}
+	"Refilled"
+	{
+		"chi"		"{default}({green}%N{default}) 的{olive}控制权{red}重新回满"
+	}
+	"RefilledBot"
+	{
+		"chi"		"{olive}控制权{red}重新回满"
+	}
+
+    "TagSelection"
+	{
+		"chi"		"{red}<{default}Tank轮换{red}>"
+	}
+    "YouBecomeTank"
+	{
+		"chi"		"{green}你 {default}将会成为 {red}Tank{default}!"
+	}
+   "BecomeTank"
+	{
+		"chi"		"{olive}%N {default}将会成为 {red}Tank!"
+	}
+
+    "TagControl"
+	{
+		"chi"		"{green}[{olive}Tank控制人{green}]"
+	}
+   "InvalidTarget"
+	{
+		"chi"		"{default}无效的目标. 无法给予Tank"
+	}
+   "NoInfected"
+	{
+		"chi"		"{olive}%N {default}不在感染者阵营, 无法给予Tank"
+	}
+
+    "HintText"
+	{
+		"chi"		"控制权重新回满"
+	}
+}

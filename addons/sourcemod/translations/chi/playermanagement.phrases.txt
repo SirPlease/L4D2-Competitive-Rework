@@ -1,0 +1,39 @@
+"Phrases"
+{
+    "Tag"
+    {
+        "chi"    "[{olive}!{default}]"
+    }
+    "Usage"
+    {
+        "chi"    "{blue}用法{default}"
+    }
+    "NoSnoop"
+    {
+        "chi"    "你不能旁观{red}偷窥{default}Tank!"
+    }
+    "BecomeSpectator"
+    {
+        "chi"    "{teamcolor}%N{default} 变成了旁观者!"
+    }
+    "WhileCapped"
+    {
+        "chi"    "倒地时{red}不允许旁观{default}!"
+    }
+    "FixBot"
+    {
+        "chi"    "{teamcolor}%N{default} 在尝试修复bot数量"
+    }
+    "FixBotConsole"
+    {
+        "chi"    "控制台在尝试{red}修复bot数量{default}"
+    }
+    "ValidTeams"
+    {
+        "chi"    "有效队伍: %d = 旁观者, %d = 生还者, %d = 感染者"
+    }
+    "CouldNotSwitched"
+    {
+        "chi"    "{teamcolor}%N{default} 不能切换队伍, 因为目标团队人员已满或没有bot接管."
+    }
+}
