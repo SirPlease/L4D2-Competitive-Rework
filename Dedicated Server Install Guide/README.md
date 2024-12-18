@@ -57,11 +57,7 @@ apt-get install screen**
 
 **wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz  
 tar -xvzf steamcmd_linux.tar.gz  
-./steamcmd.sh  
-force_install_dir ./Steam/steamapps/common/l4d2  
-login anonymous  
-app_update 222860 validate  
-quit**
+./steamcmd.sh +force_install_dir ./Steam/steamapps/common/l4d2 +login anonymous +@sSteamCmdForcePlatformType windows +app_update 222860 validate +quit && \./steamcmd.sh +force_install_dir ./Steam/steamapps/common/l4d2 +login anonymous +@sSteamCmdForcePlatformType linux +app_update 222860 validate +quit**
 
 > **Setup the Server Start/Restart/Stop Files**  
 > Next you'll need to download the srcds1 file provided within this directory.  You can [click here](https://github.com/SirPlease/L4D2-Competitive-Rework/blob/master/Dedicated%20Server%20Install%20Guide/srcds1), select raw, then right click and save.
