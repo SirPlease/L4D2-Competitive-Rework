@@ -1,0 +1,100 @@
+"Phrases"
+{
+	"TagRage"
+	{
+		"chi"		"{red}<{default}Tank控制权{red}>"
+	}
+	"Refilled"
+	{
+		"chi"		"{default}({green}%N{default}) 的{olive}控制权{red}重新回满"
+	}
+	"RefilledBot"
+	{
+		"chi"		"{olive}控制权{red}重新回满"
+	}
+
+    "TagSelection"
+	{
+		"chi"		"{red}<{default}Tank轮换{red}>"
+	}
+    "YouBecomeTank"
+	{
+		"chi"		"{green}你 {default}将会成为 {red}Tank{default}!"
+	}
+   "BecomeTank"
+	{
+		"chi"		"{olive}%N {default}将会成为 {red}Tank!"
+	}
+
+    "TagControl"
+	{
+		"chi"		"{green}[{olive}Tank控制人{green}]"
+	}
+   "InvalidTarget"
+	{
+		"chi"		"{default}无效的目标. 无法给予Tank"
+	}
+   "NoInfected"
+	{
+		"chi"		"{olive}%N {default}不在感染者阵营, 无法给予Tank"
+	}
+
+    "HintText"
+	{
+		"chi"		"控制权重新回满"
+	}
+
+        "TankPoolHeader"
+    {
+        "chi"       "=== 坦克池状态 ==="
+    }
+    "CurrentQueue"
+    {
+        "chi"       "当前坦克队列："
+    }
+    "QueueEmpty"
+    {
+        "chi"       "队列为空"
+    }
+    "PlayedTanks"
+    {
+        "chi"       "已经当过坦克的玩家："
+    }
+    "AvailableTanks"
+    {
+        "chi"       "可以当坦克的玩家："
+    }
+    "NoPlayedTanks"
+    {
+        "chi"       "还没有人当过坦克"
+    }
+    "NoAvailableTanks"
+    {
+        "chi"       "没有可用的坦克玩家"
+    }
+    "PlayerAddedToQueue"
+    {
+        "#format"   "{1:N}"
+        "chi"       "{1} 已被添加到坦克队列"
+    }
+    "PlayerRemovedFromQueue"
+    {
+        "#format"   "{1:N}"
+        "chi"       "{1} 已从坦克队列中移除"
+    }
+    "PlayerAlreadyInQueue"
+    {
+        "#format"   "{1:N}"
+        "chi"       "{1} 已经在坦克队列中"
+    }
+    "PlayerNotInQueue"
+    {
+        "#format"   "{1:N}"
+        "chi"       "{1} 不在坦克队列中"
+    }
+    "PlayerRemovedFromCurrent"
+    {
+        "#format"   "{1:N}"
+        "chi"       "{1} 已被移除当前坦克资格"
+    }
+}

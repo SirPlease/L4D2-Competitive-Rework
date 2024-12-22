@@ -43,4 +43,58 @@
 	{
 		"en"		"Rage Meter Refilled"
 	}
+	
+	"TankPoolHeader"
+	{
+		"en"		"{green}Tank Pool Status"
+	}
+	"CurrentQueue"
+	{
+		"en"		"Current Tank Queue:"
+	}
+    "QueueEmpty"
+    {
+        "en"        "Queue is empty"
+    }
+    "PlayedTanks"
+    {
+        "en"        "Players who have played Tank:"
+    }
+    "AvailableTanks"
+    {
+        "en"        "Available Tank Players:"
+    }
+    "NoPlayedTanks"
+    {
+        "en"        "No one has played Tank yet"
+    }
+   "NoAvailableTanks"
+   {
+        "en"        "No available Tank players"
+    }
+    "PlayerAddedToQueue"
+   {
+        "#format"   "{1:N}"
+        "en"        "{1} has been added to the Tank queue"
+    }
+    "PlayerRemovedFromQueue"
+    {
+        "#format"   "{1:N}"
+        "en"        "{1} has been removed from the Tank queue"
+    }
+    "PlayerAlreadyInQueue"
+    {
+        "#format"   "{1:N}"
+        "en"        "{1} is already in the Tank queue"
+    }
+    "PlayerNotInQueue"
+    {
+        "#format"   "{1:N}"
+        "en"        "{1} is not in the Tank queue"
+    }
+   "PlayerRemovedFromCurrent"
+    {
+        "#format"   "{1:N}"
+        "en"        "{1} has been removed from being the current Tank"
+    }
 }
