@@ -3,6 +3,11 @@
 #endif
 #define _l4d_tank_control_eq_included
 
+/**
+ * @brief Retrieves the selected tank's client index.
+ *
+ * @return			Client id of the selected tank, -1 if no one is selected.
+ */
 native int GetTankSelection();
 
 /**
