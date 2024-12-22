@@ -104,7 +104,6 @@ public void OnPluginStart()
     RegConsoleCmd("sm_tank", Tank_Cmd, "Shows who is becoming the tank.");
     RegConsoleCmd("sm_boss", Tank_Cmd, "Shows who is becoming the tank.");
     RegConsoleCmd("sm_witch", Tank_Cmd, "Shows who is becoming the tank.");
-    RegConsoleCmd("sm_tankpool", TankPool_Cmd, "Shows who is in the pool of possible tanks.");
     
     // Cvars
     hTankPrint  = CreateConVar("tankcontrol_print_all", "0", "Who gets to see who will become the tank? (0 = Infected, 1 = Everyone)");
@@ -499,77 +498,6 @@ Action GiveTank_Cmd(int client, int args)
 
     outputTankToAll(0);
     
-    return Plugin_Handled;
-}
-
-public Action TankPool_Cmd(int client, int args)
-{
-    if (!IsClientInGame(client))
-        return Plugin_Handled;
-    // 显示当前Tank队列
-    CPrintToChat(client, "%t", "TankPoolHeader");
-    CPrintToChat(client, "%t", "CurrentQueue");
-   
-    if (h_tankQueue.Length == 0)
-    {
-        CPrintToChat(client, "%t", "QueueEmpty");
-    }
-    else
-    {
-        char steamId[64];
-        for (int i = 0; i < h_tankQueue.Length; i++)
-        {
-            h_tankQueue.GetString(i, steamId, sizeof(steamId));
-            int tankClient = getInfectedPlayerBySteamId(steamId);
-            if (tankClient != -1)
-            {
-                CPrintToChat(client, "%d. %N", i + 1, tankClient);
-            }
-        }
-    }
-    // 显示已经当过Tank的玩家
-    CPrintToChat(client, "\n%t", "PlayedTanks");
-    if (h_whosHadTank.Length == 0)
-    {
-        CPrintToChat(client, "%t", "NoPlayedTanks");
-    }
-    else
-    {
-        char steamId[64];
-        for (int i = 0; i < h_whosHadTank.Length; i++)
-        {
-            h_whosHadTank.GetString(i, steamId, sizeof(steamId));
-            int player = getInfectedPlayerBySteamId(steamId);
-            if (player != -1)
-            {
-                CPrintToChat(client, "- %N", player);
-            }
-        }
-    }
-    // 显示可用的Tank玩家
-    ArrayList availablePlayers = new ArrayList(ByteCountToCells(64));
-    AddTeamSteamIdsToArray(availablePlayers, TEAM_INFECTED);
-    RemoveSteamIdsFromArray(availablePlayers, h_whosHadTank);
-    RemoveSteamIdsFromArray(availablePlayers, h_tankQueue);
-    CPrintToChat(client, "\n%t", "AvailableTanks");
-    if (availablePlayers.Length == 0)
-    {
-        CPrintToChat(client, "%t", "NoAvailableTanks");
-    }
-    else
-    {
-        char steamId[64];
-        for (int i = 0; i < availablePlayers.Length; i++)
-        {
-            availablePlayers.GetString(i, steamId, sizeof(steamId));
-            int player = getInfectedPlayerBySteamId(steamId);
-            if (player != -1)
-            {
-                CPrintToChat(client, "- %N", player);
-            }
-        }
-    }
-    delete availablePlayers;
     return Plugin_Handled;
 }
 
