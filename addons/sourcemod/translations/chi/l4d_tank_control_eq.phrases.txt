@@ -43,4 +43,25 @@
 	{
 		"chi"		"控制权重新回满"
 	}
+
+	"PlayerAlreadyInQueue"
+    {
+        "chi"       "{olive}%N {default}已经在坦克队列中了"
+    }
+    "PlayerAddedToQueue"
+    {
+        "chi"       "{olive}%N {default}已被添加到坦克队列"
+    }
+    "PlayerRemovedFromQueue"
+    {
+        "chi"       "{olive}%N {default}已从坦克队列中移除"
+    }
+    "PlayerRemovedFromCurrent"
+    {
+        "chi"       "{olive}%N {default}已被移除当前坦克身份"
+    }
+    "PlayerNotInQueue"
+    {
+        "chi"       "{olive}%N {default}不在坦克队列中"
+    }
 }

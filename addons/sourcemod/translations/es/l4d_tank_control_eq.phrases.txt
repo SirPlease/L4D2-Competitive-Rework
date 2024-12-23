@@ -43,4 +43,25 @@
 	{
 		"es"		 "Medidor de Control Recargado"
 	}
+
+	"PlayerAlreadyInQueue"
+    {
+        "es"        "{olive}%N {default}ya está en la cola del Tank"
+    }  
+    "PlayerAddedToQueue"
+    {
+        "es"        "{olive}%N {default}ha sido añadido a la cola del Tank"
+    }
+    "PlayerRemovedFromQueue"
+    {
+        "es"        "{olive}%N {default}ha sido eliminado de la cola del Tank"
+    }
+    "PlayerRemovedFromCurrent"
+    {
+        "es"        "{olive}%N {default}ha sido removido como el Tank actual"
+    }
+    "PlayerNotInQueue"
+    {
+        "es"        "{olive}%N {default}no está en la cola del Tank"
+    }
 }
