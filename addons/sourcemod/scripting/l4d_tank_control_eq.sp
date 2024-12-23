@@ -41,7 +41,6 @@ Handle g_hForwardOnQueueChanged;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-    // 注册插件库名称 / Register plugin library name
     RegPluginLibrary("l4d_tank_control_eq");
 
     CreateNative("GetTankSelection", Native_GetTankSelection);
@@ -525,7 +524,6 @@ public Action AddTankPool_Cmd(int client, int args)
         return Plugin_Handled;
     }
 
-    // 如果当前没有Tank选择，直接设置为当前Tank
     if (StrEqual(queuedTankSteamId, ""))
     {
         strcopy(queuedTankSteamId, sizeof(queuedTankSteamId), steamId);
@@ -565,20 +563,17 @@ public Action RemoveTankPool_Cmd(int client, int args)
     bool wasCurrentTank = StrEqual(queuedTankSteamId, steamId);
     int queueIndex = h_tankQueue.FindString(steamId);
     
-    // 如果在队列中，移除
     if (queueIndex != -1)
     {
         h_tankQueue.Erase(queueIndex);
         CPrintToChatAll("%t", "PlayerRemovedFromQueue", target);
     }
     
-    // 如果是当前Tank，清除并重新选择
     if (wasCurrentTank)
     {
         queuedTankSteamId = "";
         tankInitiallyChosen = "";
         
-        // 重新选择Tank
         if (h_tankQueue.Length > 0)
         {
             char nextTankSteamId[64];
@@ -634,7 +629,6 @@ void chooseTank(any data)
         return;
     }
 
-    // 检查是否有手动设置的队列
     if (h_tankQueue.Length > 0)
     {
         char steamId[64];
@@ -651,7 +645,6 @@ void chooseTank(any data)
         }
     }
 
-    // 如果没有手动设置的队列或队列中的玩家无效，继续原有的随机选择逻辑
     queuedTankSteamId = "";
     tankInitiallyChosen = "";
 
