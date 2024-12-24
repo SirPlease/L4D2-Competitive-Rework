@@ -292,6 +292,11 @@ void PlayerTeam_Event(Event hEvent, const char[] name, bool dontBroadcast)
     if (client < 1 || client > MaxClients)
         return;
 
+    if (oldTeam == TEAM_INFECTED || team == TEAM_INFECTED)
+    {
+        RequestFrame(CleanTankQueue);
+    }
+
     if (oldTeam == TEAM_INFECTED)
     {
         /*
@@ -1024,4 +1029,32 @@ public int Native_RemoveFromTankQueue(Handle plugin, int numParams)
     Call_StartForward(g_hForwardOnQueueChanged);
     Call_Finish();
     return true;
+}
+
+void CleanTankQueue()
+{
+    ArrayList validPlayers = new ArrayList(ByteCountToCells(64));
+    char steamId[64];
+
+    for (int i = 1; i <= MaxClients; i++)
+    {
+        if (!IsClientInGame(i) || IsFakeClient(i) || GetClientTeam(i) != TEAM_INFECTED)
+            continue;
+
+        GetClientAuthId(i, AuthId_Steam2, steamId, sizeof(steamId));
+        validPlayers.PushString(steamId);
+    }
+
+    for (int i = h_tankQueue.Length - 1; i >= 0; i--)
+    {
+        h_tankQueue.GetString(i, steamId, sizeof(steamId));
+        if (validPlayers.FindString(steamId) == -1)
+        {
+            h_tankQueue.Erase(i);
+        }
+    }
+
+    delete validPlayers;
+    
+    TriggerQueueChanged();
 }
