@@ -11,6 +11,15 @@
 #include <l4d2util>
 #include <colors>
 
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	CreateNative("l4d2_map_transitions_GetNextMap",	Native_GetNextMap);
+
+	RegPluginLibrary("l4d2_map_transitions");
+
+	return APLRes_Success;
+}
+
 #define DEBUG 0
 
 #define MAP_NAME_MAX_LENGTH 64
@@ -194,4 +203,33 @@ int GetCurrentMapLower(char[] buffer, int maxlength)
 	int bytes = GetCurrentMap(buffer, maxlength);
 	if (bytes) String_ToLower(buffer, maxlength);
 	return bytes;
+}
+
+
+// Native------------
+
+// native void l4d2_map_transitions_GetNextMap(char[] buffer, int maxlength);
+int Native_GetNextMap(Handle plugin, int numParams)
+{
+	int maxlength = GetNativeCell(2);
+	if (maxlength <= 0) 
+		return 0;
+
+	char[] buffer = new char[maxlength];
+
+	char sCurrentMapName[MAP_NAME_MAX_LENGTH], sNextMapName[MAP_NAME_MAX_LENGTH];
+	GetCurrentMapLower(sCurrentMapName, sizeof(sCurrentMapName));
+
+	//We have a map to transition to
+	if (g_hMapTransitionPair.GetString(sCurrentMapName, sNextMapName, sizeof(sNextMapName))) 
+	{
+		FormatEx(buffer, maxlength, "%s", sNextMapName);
+		SetNativeString(1, buffer, maxlength);
+	}
+	else
+	{
+		FormatEx(buffer, maxlength, "");
+	}
+
+	return 0;
 }
