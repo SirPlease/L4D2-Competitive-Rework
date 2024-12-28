@@ -146,7 +146,7 @@ Action OnRoundEnd_Post(Handle hTimer)
 
 		Call_StartForward(g_hFWD_ChangeNextMapPost);
 		Call_PushString(sNextMapName);
-		Call_Finish(aResult);
+		Call_Finish();
 
 		CPrintToChatAll("{olive}[MT]{default} Starting transition from: {blue}%s{default} to: {blue}%s", sCurrentMapName, sNextMapName);
 		ForceChangeLevel(sNextMapName, "Map Transitions");
