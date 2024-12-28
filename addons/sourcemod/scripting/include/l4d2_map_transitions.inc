@@ -33,6 +33,26 @@
  */
 native void l4d2_map_transitions_GetNextMap(char[] buffer, int maxlength);
 
+/**
+ * @brief Called when the plugin is about to force change next map
+ *
+ * @param sNextMapName	the next map name for map transition
+ *
+ * @return			Plugin_Handled to block map changing, Plugin_Continue otherwise
+ */
+forward Action l4d2_map_transitions_OnChangeNextMap_Pre(const char[] sNextMapName);
+
+/**
+ * @brief Called when the plugin is about to force change next map
+ * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ * 
+ * @param sNextMapName	the next map name for map transition
+ *
+ * @noreturn
+ */
+forward void l4d2_map_transitions_OnChangeNextMap_Post(const char[] sNextMapName);
+
+
 public SharedPlugin __pl_l4d2_map_transitions =
 {
 	name = "l4d2_map_transitions",
