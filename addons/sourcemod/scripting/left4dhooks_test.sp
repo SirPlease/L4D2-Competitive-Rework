@@ -334,7 +334,7 @@ Action sm_l4df(int client, int args)
 	return Plugin_Handled;
 }
 
-stock Action TimerCancelStagger(Handle timer, int client)
+/*stock Action TimerCancelStagger(Handle timer, int client)
 {
 	client = GetClientOfUserId(client);
 	if( client )
@@ -343,7 +343,7 @@ stock Action TimerCancelStagger(Handle timer, int client)
 	}
 
 	return Plugin_Continue;
-}
+}*/
 
 Action sm_l4dd(int client, int args)
 {
@@ -2380,7 +2380,7 @@ Action sm_l4dd(int client, int args)
 	return Plugin_Handled;
 }
 
-stock Action TimerDetonate(Handle timer, int entity)
+/*stock Action TimerDetonate(Handle timer, int entity)
 {
 	entity = EntRefToEntIndex(entity);
 	if( entity != INVALID_ENT_REFERENCE )
@@ -2389,9 +2389,9 @@ stock Action TimerDetonate(Handle timer, int entity)
 	}
 
 	return Plugin_Continue;
-}
+}*/
 
-stock Action TimerDetonateVomitjar(Handle timer, int entity)
+/*stock Action TimerDetonateVomitjar(Handle timer, int entity)
 {
 	entity = EntRefToEntIndex(entity);
 	if( entity != INVALID_ENT_REFERENCE )
@@ -2406,9 +2406,9 @@ stock Action TimerDetonateVomitjar(Handle timer, int entity)
 	}
 
 	return Plugin_Continue;
-}
+}*/
 
-void GetGroundAngles(float vOrigin[3])
+/*void GetGroundAngles(float vOrigin[3])
 {
 	float vAng[3], vLookAt[3], vTargetOrigin[3];
 
@@ -2428,14 +2428,14 @@ void GetGroundAngles(float vOrigin[3])
 	}
 
 	delete trace;
-}
+}*/
 
-stock bool _TraceFilter(int entity, int contentsMask)
+/*stock bool _TraceFilter(int entity, int contentsMask)
 {
 	if( !entity || entity <= MaxClients || !IsValidEntity(entity) ) // dont let WORLD, or invalid entities be hit
 		return false;
 	return true;
-}
+}*/
 
 
 
@@ -5720,7 +5720,7 @@ stock void OnPummelTeleport(DataPack dPack)
 }
 
 // To block the stumble animation use the next two functions:
-stock Action OnPummelOnAnimPre(int client, int &anim)
+/*stock Action OnPummelOnAnimPre(int client, int &anim)
 {
 	if( anim == L4D2_ACT_TERROR_SLAMMED_WALL || anim == L4D2_ACT_TERROR_SLAMMED_GROUND )
 	{
@@ -5730,14 +5730,14 @@ stock Action OnPummelOnAnimPre(int client, int &anim)
 	}
 
 	return Plugin_Continue;
-}
+}*/
 
-stock Action TimerOnPummelResetAnim(Handle timer, int victim) // Don't need client userID since it's not going to be validated just removed
+/*stock Action TimerOnPummelResetAnim(Handle timer, int victim) // Don't need client userID since it's not going to be validated just removed
 {
 	AnimHookDisable(victim, OnPummelOnAnimPre);
 
 	return Plugin_Continue;
-}
+}*/
 
 public void L4D2_OnPummelVictim_Post(int attacker, int victim)
 {
@@ -6131,9 +6131,9 @@ void ForwardCalled(const char[] format, any ...)
 	// PrintToServer("----------");
 }
 
-stock bool TraceFilter(int entity, int contentsMask, int client)
+/*stock bool TraceFilter(int entity, int contentsMask, int client)
 {
 	if( entity == client )
 		return false;
 	return true;
-}
+}*/

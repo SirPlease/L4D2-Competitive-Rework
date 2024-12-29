@@ -12,15 +12,15 @@ bool readyUpIsAvailable;
 public Plugin myinfo =
 {
     name = "Caster Assister",
-    author = "CanadaRox, Sir",
+    author = "CanadaRox, Sir, Forgetest",
     description = "Allows spectators to control their own specspeed and move vertically",
-    version = "2.2",
+    version = "2.3",
     url = ""
 };
 
 float currentMulti[MAXPLAYERS+1] = { 1.0, ... };
 float currentIncrement[MAXPLAYERS+1] = { 0.1, ... };
-float verticalIncrement[MAXPLAYERS+1] = { 10.0, ... };
+float verticalIncrement[MAXPLAYERS+1] = { 450.0, ... };
 
 public void OnPluginStart()
 {
@@ -152,7 +152,7 @@ Action SetVerticalIncrement_Cmd(int client, int args)
 
     if (args != 1)
     {
-        ReplyToCommand(client, "Usage: sm_set_vertical_increment # (default: 10.0)");
+        ReplyToCommand(client, "Usage: sm_set_vertical_increment # (default: 450.0)");
         return Plugin_Handled;
     }
     char buffer[10];
@@ -161,17 +161,19 @@ Action SetVerticalIncrement_Cmd(int client, int args)
     return Plugin_Handled;
 }
 
-public Action OnPlayerRunCmd(int client, int &buttons)
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon, int &subtype, int &cmdnum, int &tickcount, int &seed, int mouse[2])
 {
 	if (IsValidClient(client) && GetClientTeam(client) == 1)
 	{
 		if (buttons & IN_USE)
 		{
-			MoveUp(client, verticalIncrement[client]);
+			vel[2] += verticalIncrement[client];
+			return Plugin_Changed;
 		}
 		else if (buttons & IN_RELOAD)
 		{
-			MoveUp(client, -verticalIncrement[client]);
+			vel[2] -= verticalIncrement[client];
+			return Plugin_Changed;
 		}
 	}
 
@@ -181,14 +183,6 @@ public Action OnPlayerRunCmd(int client, int &buttons)
 bool IsSpeedValid(float speed)
 {
 	return (speed >= 0 && speed <= MAX_SPEED);
-}
-
-void MoveUp(int client, float distance)
-{
-	float origin[3];
-	GetClientAbsOrigin(client, origin);
-	origin[2] += distance;
-	TeleportEntity(client, origin, NULL_VECTOR, NULL_VECTOR);
 }
 
 bool IsValidClient(int client)

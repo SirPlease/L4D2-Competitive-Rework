@@ -5,7 +5,7 @@
 #include <dhooks>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "1.8"
+#define PLUGIN_VERSION "1.10"
 
 public Plugin myinfo = 
 {
@@ -104,6 +104,8 @@ public void OnPluginStart()
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("player_incapacitated", Event_PlayerIncap);
 	HookEvent("player_death", Event_PlayerDeath);
+	HookEvent("charger_carry_start", Event_ChargerCarryStart);
+	HookEvent("charger_carry_end", Event_ChargerCarryEnd);
 	HookEvent("charger_pummel_end", Event_ChargerPummelEnd);
 	HookEvent("charger_killed", Event_ChargerKilled);
 	HookEvent("player_bot_replace", Event_PlayerBotReplace);
@@ -226,6 +228,32 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 	
 	g_iChargeVictim[attacker] = -1;
 	g_iChargeAttacker[client] = -1;
+}
+
+void Event_ChargerCarryStart(Event event, const char[] name, bool dontBroadcast)
+{
+	int victim = GetClientOfUserId(event.GetInt("victim"));
+	if (!victim || !IsClientInGame(victim))
+		return;
+	
+	int attacker = GetClientOfUserId(event.GetInt("userid"));
+	if (!attacker || !IsClientInGame(attacker))
+		return;
+	
+	SetEntPropFloat(victim, Prop_Send, "m_jumpSupressedUntil", GetGameTime() + 0.5);
+}
+
+void Event_ChargerCarryEnd(Event event, const char[] name, bool dontBroadcast)
+{
+	int victim = GetClientOfUserId(event.GetInt("victim"));
+	if (!victim || !IsClientInGame(victim))
+		return;
+	
+	int attacker = GetClientOfUserId(event.GetInt("userid"));
+	if (!attacker || !IsClientInGame(attacker))
+		return;
+	
+	SetEntPropFloat(victim, Prop_Send, "m_jumpSupressedUntil", GetGameTime() + 0.3);
 }
 
 // Calls if charger has started pummelling.
@@ -360,6 +388,17 @@ void HandlePlayerReplace(int replacer, int replacee)
 			g_iChargeVictim[replacer] = g_iChargeVictim[replacee];
 			g_iChargeAttacker[g_iChargeVictim[replacee]] = replacer;
 			g_iChargeVictim[replacee] = -1;
+
+			if (L4D2_IsInQueuedPummel(replacee))
+			{
+				float flQueuedPummelTime = L4D2_GetQueuedPummelStartTime(replacee);
+				L4D2_SetQueuedPummelStartTime(replacer, flQueuedPummelTime);
+				L4D2_SetQueuedPummelAttacker(g_iChargeVictim[replacer], replacer);
+				L4D2_SetQueuedPummelVictim(replacer, g_iChargeVictim[replacer]);
+
+				L4D2_SetQueuedPummelStartTime(replacee, -1.0);
+				L4D2_SetQueuedPummelVictim(replacee, -1);
+			}
 		}
 	}
 	else

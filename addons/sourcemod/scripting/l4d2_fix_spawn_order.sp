@@ -5,7 +5,7 @@
 #include <left4dhooks>
 #include <l4d2util_infected>
 
-#define PLUGIN_VERSION "4.4.2"
+#define PLUGIN_VERSION "4.4.3"
 
 public Plugin myinfo = 
 {
@@ -145,11 +145,19 @@ void ToggleEvents(bool isEnable)
 //   2. Return zombie class, based on the player state: ghost to the beginning, materialized to the end.
 //
 
-public void L4D_OnMaterializeFromGhost(int client)
+public Action L4D_OnMaterializeFromGhostPre(int client)
 {
 	PrintDebug("\x05%N \x05materialized \x01as (\x04%s\x01)", client, L4D2_InfectedNames[GetInfectedClass(client)]);
-	
+
 	g_bPlayerSpawned[client] = true;
+	return Plugin_Continue;
+}
+
+public void L4D_OnMaterializeFromGhost_PostHandled(int client)
+{
+	PrintDebug("\x05%N \x05got de-materialized because of other plugins' handling.", client);
+	
+	g_bPlayerSpawned[client] = false;
 }
 
 void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
