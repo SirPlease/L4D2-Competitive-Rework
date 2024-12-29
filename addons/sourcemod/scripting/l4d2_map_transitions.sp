@@ -11,6 +11,21 @@
 #include <l4d2util>
 #include <colors>
 
+GlobalForward g_hFWD_ChangeNextMapPre;
+GlobalForward g_hFWD_ChangeNextMapPost;
+
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	CreateNative("l4d2_map_transitions_GetNextMap",	Native_GetNextMap);
+
+	g_hFWD_ChangeNextMapPre		= new GlobalForward("l4d2_map_transitions_OnChangeNextMap_Pre",		ET_Event, Param_String);
+	g_hFWD_ChangeNextMapPost	= new GlobalForward("l4d2_map_transitions_OnChangeNextMap_Post",	ET_Ignore, Param_String);
+
+	RegPluginLibrary("l4d2_map_transitions");
+
+	return APLRes_Success;
+}
+
 #define DEBUG 0
 
 #define MAP_NAME_MAX_LENGTH 64
@@ -115,6 +130,24 @@ Action OnRoundEnd_Post(Handle hTimer)
 			LogMessage("Map transitioned from: %s to: %s", sCurrentMapName, sNextMapName);
 		#endif
 
+		Action aResult = Plugin_Continue;
+		Call_StartForward(g_hFWD_ChangeNextMapPre);
+		Call_PushString(sNextMapName);
+		Call_Finish(aResult);
+
+		if( aResult == Plugin_Handled )
+		{
+			g_iPointsTeamA = 0;
+			g_iPointsTeamB = 0;
+			g_bHasTransitioned = false;
+
+			return Plugin_Stop;
+		}
+
+		Call_StartForward(g_hFWD_ChangeNextMapPost);
+		Call_PushString(sNextMapName);
+		Call_Finish();
+
 		CPrintToChatAll("{olive}[MT]{default} Starting transition from: {blue}%s{default} to: {blue}%s", sCurrentMapName, sNextMapName);
 		ForceChangeLevel(sNextMapName, "Map Transitions");
 	}
@@ -194,4 +227,33 @@ int GetCurrentMapLower(char[] buffer, int maxlength)
 	int bytes = GetCurrentMap(buffer, maxlength);
 	if (bytes) String_ToLower(buffer, maxlength);
 	return bytes;
+}
+
+
+// Native------------
+
+// native void l4d2_map_transitions_GetNextMap(char[] buffer, int maxlength);
+int Native_GetNextMap(Handle plugin, int numParams)
+{
+	int maxlength = GetNativeCell(2);
+	if (maxlength <= 0) 
+		return 0;
+
+	char[] buffer = new char[maxlength];
+
+	char sCurrentMapName[MAP_NAME_MAX_LENGTH], sNextMapName[MAP_NAME_MAX_LENGTH];
+	GetCurrentMapLower(sCurrentMapName, sizeof(sCurrentMapName));
+
+	//We have a map to transition to
+	if (g_hMapTransitionPair.GetString(sCurrentMapName, sNextMapName, sizeof(sNextMapName))) 
+	{
+		FormatEx(buffer, maxlength, "%s", sNextMapName);
+		SetNativeString(1, buffer, maxlength);
+	}
+	else
+	{
+		FormatEx(buffer, maxlength, "");
+	}
+
+	return 0;
 }
