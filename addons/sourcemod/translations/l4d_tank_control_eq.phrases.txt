@@ -43,4 +43,25 @@
 	{
 		"en"		"Rage Meter Refilled"
 	}
+
+	"PlayerAlreadyInQueue"
+    {
+        "en"        "{olive}%N {default}is already in the tank queue"
+    }
+	"PlayerAddedToQueue"
+    {
+        "en"        "{olive}%N {default}has been added to the tank queue"
+    }
+	"PlayerRemovedFromQueue"
+    {
+        "en"        "{olive}%N {default}has been removed from the tank queue"
+    }
+	"PlayerRemovedFromCurrent"
+    {
+        "en"        "{olive}%N {default}has been removed as the current tank"
+    }
+	"PlayerNotInQueue"
+    {
+        "en"        "{olive}%N {default}is not in the tank queue"
+    }
 }
