@@ -54,6 +54,6 @@ void PlayerDeath_Event(Event event, const char[] name, bool dontBroadcast)
     int type = GetEventInt(event, "type");
 
     // I don't know why 6144, but it works    
-    if (type == 6144)
+    if (type == 0 || type == 6144)
         g_bBlocked[client] = true;
 }
