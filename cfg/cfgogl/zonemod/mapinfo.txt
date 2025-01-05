@@ -476,7 +476,7 @@
 		"start_dist"		"50.000000"
 		"start_extra_dist"	"0.000000"
 		"end_dist"			"50.000000"
-		"max_distance"		"700"
+		"max_distance"		"600"
 		"horde_limit"		"150"
 		"tank_ban_flow"
 		{
@@ -1686,6 +1686,7 @@
 				"max"		"100"
 			}
 		}
+		"max distance"      "700"
 	}
 	"uf3_harbor"
 	{
@@ -2166,6 +2167,7 @@
 		"start_extra_dist"	"350.000000"
 		"end_dist"			"50.000000"
 		"horde_limit"		"90"
+		"max_distance"      "600"
 	}
 	"l4d2_diescraper3_mid_361"
 	{
@@ -2904,16 +2906,63 @@
 
 //=======================================================================
 //=============== Open Road 绝命公路
+	"x1m1_cliffs"
+	{
+		"start_point"		"-1015.396912 341.406525 126.031250"
+		"end_point"			"3243.783203 6433.084473 -4.936020"
+		"start_dist"		"50.000000"
+		"start_extra_dist"	"200.000000"
+		"end_dist"			"50.000000"
+	}
 	"x1m2_path"
 	{
+		"start_point"		"3243.607178 6429.794922 -4.936020"
+		"end_point"			"-1189.893921 8862.433594 -321.936340"
+		"start_dist"		"50.000000"
+		"start_extra_dist"	"300.000000"
+		"end_dist"			"50.000000"
+		"max_distance"		"600"
 		"tank_ban_flow"
 		{
-			"being out the cave"
+			"Outside the cave"
 			{
 				"min"		"82"
 				"max"		"100"
 			}
 		}
+	}
+	"x1m3_city"
+	{
+		"start_point"		"-1191.079956 8860.584961 -321.936340"
+		"end_point"			"-2887.968750 3387.599365 -480.968750"
+		"start_dist"		"50.000000"
+		"start_extra_dist"	"500.000000"
+		"end_dist"			"350.000000"
+	}
+	"x1m4_forest"
+	{
+		"start_point"		"-3031.968750 3448.686768 -480.968750"
+		"end_point"			"3737.209473 -3916.848633 -841.968750"
+		"start_dist"		"350.000000"
+		"start_extra_dist"	"500.000000"
+		"end_dist"			"300.000000"
+		"max_distance"		"600"
+		"tank_ban_flow"
+		{
+			"1"
+			{
+				"min"		"70"
+				"max"		"100"
+			}
+		}
+	}
+	"x1m5_salvation"
+	{
+		"start_point"		"3724.242188 -3920.156982 -841.968750"
+		"end_point"			"6660.927246 -2910.637695 -1017.968750"
+		"start_dist"		"300.000000"
+		"start_extra_dist"	"350.000000"
+		"end_dist"			"50.000000"
 	}
 	
 //=======================================================================
@@ -2991,6 +3040,6 @@
 
 
 
-//-------- ↓↓↓ dont del the last parenthesis ↓↓↓
+//-------- ↓↓↓ dont delete the closing bracket ↓↓↓
 
 }
