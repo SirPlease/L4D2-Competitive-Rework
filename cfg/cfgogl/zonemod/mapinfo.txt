@@ -1080,6 +1080,11 @@
 				"min"		"34"
 				"max"		"63"
 			}
+			"may spawn in water"
+			{
+				"min"		"70"
+				"max"		"72"
+			}
 			"Late spawns"
 			{
 				"min"		"78"
