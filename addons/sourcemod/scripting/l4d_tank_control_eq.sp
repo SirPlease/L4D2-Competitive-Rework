@@ -69,9 +69,9 @@ int Native_GetTankSelection(Handle plugin, int numParams) { return getInfectedPl
 public Plugin myinfo = 
 {
     name = "L4D2 Tank Control",
-    author = "arti, (Contributions by: Sheo, Sir, Altair-Sossai) , Hana",
+    author = "arti, (Contributions by: Sheo, Sir, Altair-Sossai, Hana)",
     description = "Distributes the role of the tank evenly throughout the team, allows for overrides. (Includes forwards)",
-    version = "0.0.27",
+    version = "0.0.28",
     url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
@@ -194,13 +194,19 @@ public Action L4D_OnTryOfferingTankBot(int tank_index, bool &enterStatis)
 public void L4D_OnLeaveStasis(int tank)
 {
     // Tank is always AI here, delay by a frame.
-    RequestFrame(L4D_OnLeaveStasis_Post, tank);
+    RequestFrame(L4D_OnLeaveStasis_Post, GetClientUserId(tank));
 }
 
-void L4D_OnLeaveStasis_Post(int tank)
+void L4D_OnLeaveStasis_Post(int userid)
 {
+    int tank = GetClientOfUserId(userid);
     // Tank passed from AI to a player, nothing to do here.
-    if (!IsClientInGame(tank))
+    if (!tank || !IsClientInGame(tank))
+        return;
+    
+    // @Forgetest: 
+    //   AI Tank may have committed suicide at the moment
+    if (!IsPlayerAlive(tank) || GetEntProp(tank, Prop_Send, "m_isIncapacitated")) // Thanks to @sheo for noting the tank incap
         return;
 
     if (hTankDebug.BoolValue)
