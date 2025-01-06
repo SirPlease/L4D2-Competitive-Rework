@@ -15,7 +15,7 @@ In its current state it allows anyone to host their own up to date competitive L
 This project is **Actively Developed**.
 
 > **Included Matchmodes:**
-* **Zonemod 2.8.9c**
+* **Zonemod 2.8.9e**
 * **Zonemod Hunters**
 * **Zonemod Retro**
 * **NeoMod 0.4a** 
