@@ -82,6 +82,7 @@ void InitiateLive(bool real = true)
 	if (real)
 	{
 		ClearSurvivorProgress();
+		ResetSurvivorState();
 		RestartCountdowns(true);
 		
 		UTIL_WrapperForward(g_hLiveForward);

@@ -141,6 +141,18 @@ void ClearSurvivorProgress()
 	}
 }
 
+void ResetSurvivorState()
+{
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (!IsClientInGame(i) || GetClientTeam(i) != L4D2Team_Survivor)
+			continue;
+			
+		SetEntProp(i, Prop_Data, "m_idrowndmg", 0.0);
+		SetEntProp(i, Prop_Data, "m_idrownrestored", 0.0);
+	}
+}
+
 void SetAllowSpawns(bool allow)
 {
 	director_no_specials.BoolValue = allow;
