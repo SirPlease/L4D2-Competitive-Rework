@@ -19,7 +19,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	AddCommandListener(TeamCmd, "jointeam")
+	AddCommandListener(TeamCmd, "jointeam");
 
 	g_hCvarMaxZombies = FindConVar("z_max_player_zombies");
 }
@@ -32,11 +32,11 @@ Action TeamCmd(int iClient, const char[] sCommand, int iArgc)
 
 	char sBuffer[128];
 	GetCmdArg(1, sBuffer, sizeof(sBuffer));
-	new newteam = StringToInt(sBuffer);
+	int iNewteam = StringToInt(sBuffer);
 
 	if (GetClientTeam(iClient) == TEAM_SURVIVOR 
 		&& (strcmp("Infected", sBuffer, false) == 0 
-		|| newteam == TEAM_INFECTED)
+		|| iNewteam == TEAM_INFECTED)
 	) {
 		if (GetInfectedCount() >= g_hCvarMaxZombies.IntValue) {
 			return Plugin_Handled;
