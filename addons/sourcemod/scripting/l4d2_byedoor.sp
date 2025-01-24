@@ -1,15 +1,17 @@
 #pragma semicolon 1
-#pragma newdecls required;
+#pragma newdecls required
 
 #include <sourcemod>
 #include <sdktools>
+
+#define ENTITY_NAME_MAX_LENGTH 64
 
 public Plugin myinfo =
 {
 	name = "Byebye Door",
 	description = "Time to kill Saferoom Doors.",
 	author = "Sir",
-	version = "1.1",
+	version = "1.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -20,15 +22,21 @@ public void OnPluginStart()
 
 void Event_RoundStart(Event hEvent, const char[] eName, bool dontBroadcast)
 {
-	int EntityCount = GetEntityCount();
-	char EdictClassName[128];
-	for (int i = 0; i <= EntityCount; i++){
-		if (IsValidEntity(i)) {
-			GetEdictClassname(i, EdictClassName, 128);
-			if (StrContains(EdictClassName, "prop_door_rotating_checkpoint", false) != -1 
-					&& GetEntProp(i, Prop_Send, "m_bLocked", 4) == 1) {
-				AcceptEntityInput(i, "Kill", -1, -1, 0);
-				return;
+	int iEntityCount = GetEntityCount();
+	char sClassName[ENTITY_NAME_MAX_LENGTH];
+
+	for (int i = (MaxClients + 1); i <= iEntityCount; i++){
+		if (!IsValidEdict(i)) {
+			continue;
+		}
+
+		GetEdictClassname(i, sClassName, sizeof(sClassName));
+
+		if (strcmp(sClassName, "prop_door_rotating_checkpoint", false) == 0) {
+			if (GetEntProp(i, Prop_Send, "m_bLocked", 1) > 0) {
+				RemoveEntity(i);
+
+				break;
 			}
 		}
 	}

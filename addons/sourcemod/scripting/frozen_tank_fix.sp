@@ -1,54 +1,52 @@
+#pragma semicolon 1
+#pragma newdecls required
+
 #include <sourcemod>
 #include <sdktools>
 
-#define PL_VERSION "2.0"
+#define TEAM_INFECTED 3
+#define Z_TANK 8
 
-public Plugin:myinfo =
+public Plugin myinfo =
 {
 	name = "Fix frozen tanks",
-	version = PL_VERSION,
+	version = "2.2",
 	author = "sheo",
-}
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
+};
 
-public OnPluginStart()
+public void OnPluginStart()
 {
 	HookEvent("player_incapacitated", Event_PlayerIncap);
-	CreateConVar("l4d2_fix_frozen_tank_version", PL_VERSION, "Frozen tank fix version", FCVAR_NOTIFY);
 }
 
-void Event_PlayerIncap(Handle:event, const String:name[], bool:dontBroadcast)
+void Event_PlayerIncap(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
-	if (client > 0 && IsPlayerTank(client))
-	{
-		CreateTimer(1.0, KillTank_tCallback);
+	int iClient = GetClientOfUserId(hEvent.GetInt("userid"));
+	if (iClient > 0 && IsPlayerTank(iClient)) {
+		CreateTimer(1.0, Timer_KillTankDelay, _, TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
-Action:KillTank_tCallback(Handle:timer)
+Action Timer_KillTankDelay(Handle hTimer)
 {
-	for (new i = 1; i <= MaxClients; i++)
-	{
-		if (IsPlayerTank(i) && IsIncapitated(i))
-		{
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsPlayerTank(i) && IsIncapitated(i)) {
 			ForcePlayerSuicide(i);
 		}
 	}
+
+	return Plugin_Stop;
 }
 
-bool:IsIncapitated(client)
+bool IsPlayerTank(int iClient)
 {
-	return bool:GetEntProp(client, Prop_Send, "m_isIncapacitated");
+	return (IsClientInGame(iClient)
+		&& GetClientTeam(iClient) == TEAM_INFECTED
+		&& GetEntProp(iClient, Prop_Send, "m_zombieClass") == Z_TANK);
 }
 
-bool:IsPlayerTank(client)
+bool IsIncapitated(int iClient)
 {
-	if (IsClientInGame(client) && GetClientTeam(client) == 3)
-	{
-		if (GetEntProp(client, Prop_Send, "m_zombieClass") == 8)
-		{
-			return true;
-		}
-	}
-	return false;
+	return (GetEntProp(iClient, Prop_Send, "m_isIncapacitated", 1) > 0);
 }
