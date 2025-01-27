@@ -31,7 +31,7 @@ forward void OnHoldOutBonusStart(int time);
  */
 forward void OnHoldOutBonusEnd(int bonus, int time);
 
-public SharedPlugin:__pl_holdoutbonus =
+public SharedPlugin __pl_holdoutbonus =
 {
 	name = "holdout_bonus",
 	file = "holdout_bonus.smx",
