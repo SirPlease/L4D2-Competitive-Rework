@@ -697,7 +697,7 @@ void GetEntityName(int iEntity, char[] sTargetName, int iSize)
 	GetEntPropString(iEntity, Prop_Data, "m_iName", sTargetName, iSize);
 }
 
-char[] GetPlayerCharacter(int client)
+int GetPlayerCharacter(int client)
 {
 	int tmpChr = GetEntProp(client, Prop_Send, "m_survivorCharacter");
 
