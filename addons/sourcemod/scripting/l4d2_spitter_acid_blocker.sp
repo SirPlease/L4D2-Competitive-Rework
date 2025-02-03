@@ -6,8 +6,6 @@
 
 #define L4D2_TEAM_INFECTED 3
 
-bool g_bBlocked[MAXPLAYERS + 1];
-
 public Plugin myinfo =
 {
     name        = "L4D2 - Spitter Acid Blocker",
@@ -19,41 +17,23 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-    HookEvent("player_death", PlayerDeath_Event, EventHookMode_Post);
+    HookEvent("player_team", PlayerTeam_Event, EventHookMode_Post);
 }
 
-public void L4D_OnEnterGhostState(int client)
+void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 {
-    g_bBlocked[client] = false;
-}
-
-public void L4D_OnSpawnSpecial_Post(int client, int zombieClass, const float vecPos[3], const float vecAng[3])
-{
-    g_bBlocked[client] = false;
-}
-
-public void OnEntityCreated(int entity, const char[] classname)
-{
-    if (StrEqual(classname, "insect_swarm"))
-        SDKHook(entity, SDKHook_SpawnPost, SDK_OnSpawnPost);
-}
-
-void SDK_OnSpawnPost(int entity)
-{
-    int owner = GetEntPropEnt(entity, Prop_Data, "m_hOwnerEntity");
-    if (owner < 1 || owner > MaxClients || !g_bBlocked[owner])
+    int oldTeam = GetEventInt(event, "oldteam");
+    if (oldTeam != L4D2_TEAM_INFECTED)
         return;
 
-    AcceptEntityInput(entity, "Kill");
-    g_bBlocked[owner] = false;
-}
-
-void PlayerDeath_Event(Event event, const char[] name, bool dontBroadcast)
-{
     int client = GetClientOfUserId(GetEventInt(event, "userid"));
-    int type = GetEventInt(event, "type");
+    int entity = -1;
 
-    // I don't know why 6144, but it works    
-    if (type == 0 || type == 6144)
-        g_bBlocked[client] = true;
+    while((entity = FindEntityByClassname(entity, "insect_swarm")) != INVALID_ENT_REFERENCE)
+    {
+        if(GetEntPropEnt(entity, Prop_Data, "m_hOwnerEntity") != client)
+            continue;
+
+        AcceptEntityInput(entity, "Kill");
+    }
 }
