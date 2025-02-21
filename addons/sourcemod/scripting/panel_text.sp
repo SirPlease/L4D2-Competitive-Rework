@@ -1,63 +1,78 @@
 #pragma semicolon 1
+#pragma newdecls required
 
 #include <sourcemod>
 #include <readyup>
-#define PLUGIN_VERSION "1 point 1"
-#define MAX_TEXT_LENGTH 65
 
-public Plugin:myinfo =
+#define MAX_TEXT_LENGTH 65
+#define MAX_STRING_COUNT 10
+
+char g_sPanelText[MAX_STRING_COUNT][MAX_TEXT_LENGTH];
+
+int g_iStringCount = 0;
+
+bool g_bAreStringsLocked = false;
+
+ConVar g_hCvarReadyPanelTextDelay = null;
+
+public Plugin myinfo =
 {
 	name = "Add Text To Readyup Panel",
 	author = "epilimic",
 	description = "Displays custom text in the readyup panel. Spanks for the help CanadaRox!",
-	version = PLUGIN_VERSION,
-	url = "http://buttsecs.org"
+	version = "1.2",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework/"
 };
 
-new String:panelText[10][MAX_TEXT_LENGTH];
-new stringCount = 0;
-new bool:areStringsLocked;
-new Handle:sm_readypaneltextdelay;
-
-public OnPluginStart()
+public void OnPluginStart()
 {
-	RegServerCmd("sm_addreadystring", AddReadyString_Cmd, "Sets the string to add to the ready-up panel", FCVAR_NONE);
-	RegServerCmd("sm_resetstringcount", ResetStringCount_Cmd, "Resets the string count", FCVAR_NONE);
-	RegServerCmd("sm_lockstrings", LockStrings_Cmd, "Locks the strings", FCVAR_NONE);
-	HookEvent("round_start", RoundStart_Event, EventHookMode_PostNoCopy);
-	sm_readypaneltextdelay = CreateConVar("sm_readypaneltextdelay", "4.0", "Delay before adding the text to the ready-up panel for order control", FCVAR_NONE, true, 0.0, true, 10.0);
+	g_hCvarReadyPanelTextDelay = CreateConVar("sm_readypaneltextdelay", "4.0", "Delay before adding the text to the ready-up panel for order control", _, true, 0.0, true, 10.0);
+
+	RegServerCmd("sm_addreadystring", Cmd_AddReadyString, "Sets the string to add to the ready-up panel");
+	RegServerCmd("sm_resetstringcount", Cmd_ResetStringCount, "Resets the string count");
+	RegServerCmd("sm_lockstrings", Cmd_LockStrings, "Locks the strings");
+
+	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 }
 
-Action:LockStrings_Cmd(args)
+Action Cmd_LockStrings(int iArgs)
 {
-	areStringsLocked = true;
+	g_bAreStringsLocked = true;
 	return Plugin_Handled;
 }
 
-Action:AddReadyString_Cmd(args)
+Action Cmd_AddReadyString(int iArgs)
 {
-	if (stringCount < 10 && !areStringsLocked)
-	{
-		GetCmdArg(1, panelText[stringCount], MAX_TEXT_LENGTH);
-		++stringCount;
+	if (g_iStringCount < MAX_STRING_COUNT && !g_bAreStringsLocked) {
+		GetCmdArg(1, g_sPanelText[g_iStringCount], MAX_TEXT_LENGTH);
+
+		++g_iStringCount;
 	}
+
 	return Plugin_Handled;
 }
 
-Action:ResetStringCount_Cmd(args)
+Action Cmd_ResetStringCount(int iArgs)
 {
-	stringCount = 0;
-	areStringsLocked = false;
+	g_iStringCount = 0;
+	g_bAreStringsLocked = false;
+
 	return Plugin_Handled;
 }
 
-void RoundStart_Event(Handle:event, const String:name[], bool:dontBroadcast)
+void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	CreateTimer(GetConVarFloat(sm_readypaneltextdelay), panelTimer);
+	float fTime = g_hCvarReadyPanelTextDelay.FloatValue;
+	CreateTimer(fTime, panelTimer, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-Action:panelTimer(Handle:timer)
+Action panelTimer(Handle hTimer)
 {
-	for (new i = 0; i < stringCount && AddStringToReadyFooter(panelText[i]); i++)
-	{ }
+	for (int i = 0; i < g_iStringCount; i++) {
+		if (!AddStringToReadyFooter(g_sPanelText[i])) {
+			break;
+		}
+	}
+
+	return Plugin_Stop;
 }

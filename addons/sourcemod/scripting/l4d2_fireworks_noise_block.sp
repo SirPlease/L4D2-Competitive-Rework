@@ -1,27 +1,32 @@
+#pragma semicolon 1
+#pragma newdecls required
+
 #include <sourcemod>
 #include <sdktools>
 
-public Plugin:myinfo =
+public Plugin myinfo =
 {
 	name = "L4D2 Fireworks Noise Blocker",
 	description = "Focus on SI!",
 	author = "Visor",
-	version = "0.3",
-	url = "https://github.com/Attano/L4D2-Competitive-Framework"
+	version = "0.4",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
-	AddNormalSoundHook(NormalSHook:OnNormalSound);
-	AddAmbientSoundHook(AmbientSHook:OnAmbientSound);
+	AddNormalSoundHook(Hook_OnNormalSound);
+	AddAmbientSoundHook(Hook_OnAmbientSound);
 }
 
-Action:OnNormalSound(int clients[64], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, float &volume, int &level, int &pitch, int &flags)
+Action Hook_OnNormalSound(int clients[MAXPLAYERS], int &numClients, char sample[PLATFORM_MAX_PATH], int &entity, int &channel, \
+									float &volume, int &level, int &pitch, int &flags, char soundEntry[PLATFORM_MAX_PATH], int &seed)
 {
 	return (StrContains(sample, "firewerks", true) > -1) ? Plugin_Stop : Plugin_Continue;
 }
 
-Action:OnAmbientSound(char sample[PLATFORM_MAX_PATH], int &entity, float &volume, int &level, int &pitch, float pos[3], int &flags, float &delay)
+Action Hook_OnAmbientSound(char sample[PLATFORM_MAX_PATH], int &entity, float &volume, int &level, \
+									int &pitch, float pos[3], int &flags, float &delay)
 {
 	return (StrContains(sample, "firewerks", true) > -1) ? Plugin_Stop : Plugin_Continue;
 }
