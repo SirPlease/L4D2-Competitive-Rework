@@ -12,8 +12,8 @@
 StringMap
 	ArrLerpsValue = null,
 	ArrLerpsCountChanges = null;
-	
-ConVar 
+
+ConVar
 	cVarReadyUpLerpChanges = null,
 	cVarAllowedLerpChanges = null,
 	cVarLerpChangeSpec = null,
@@ -32,56 +32,25 @@ bool
 	isMatchLife = true,
 	isTransfer = false;
 
-public Plugin myinfo = 
+public Plugin myinfo =
 {
 	name = "LerpMonitor++",
 	author = "ProdigySim, Die Teetasse, vintik, A1m`",
 	description = "Keep track of players' lerp settings",
-	version = "2.3",
-	url = "https://github.com/A1mDev/L4D2-Competitive-Plugins"
+	version = "2.4.2",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	IsLateLoad = late;
+
 	CreateNative("LM_GetLerpTime", LM_GetLerpTime);
 	CreateNative("LM_GetCurrentLerpTime", LM_GetCurrentLerpTime);
+	CreateNative("LM_GetStoredLerpTime", LM_GetStoredLerpTime);
+
 	RegPluginLibrary("lerpmonitor");
 	return APLRes_Success;
-}
-
-int LM_GetLerpTime(Handle plugin, int numParams) 
-{
-	int client = GetNativeCell(1);
-	if (client < 1 || client > MaxClients) {
-		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index %d!", client);
-	}
-	
-	if (!IsClientInGame(client)) {
-		return ThrowNativeError(SP_ERROR_NATIVE, "Client %d is not in game!", client);
-	}
-	
-	float fLerpValue = -1.0;
-	char sSteamID[STEAMID_SIZE];
-	GetClientAuthId(client, AuthId_Steam2, sSteamID, sizeof(sSteamID));
-	if (ArrLerpsValue.GetValue(sSteamID, fLerpValue)) {
-		return view_as<int>(fLerpValue);
-	}
-	return view_as<int>(-1.0);
-}
-
-int LM_GetCurrentLerpTime(Handle plugin, int numParams) 
-{
-	int client = GetNativeCell(1);
-	if (client < 1 || client > MaxClients) {
-		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index %d!", client);
-	}
-	
-	if (!IsClientConnected(client)) {
-		return ThrowNativeError(SP_ERROR_NATIVE, "Client %d not connected!", client);
-	}
-	
-	return view_as<int>(GetLerpTime(client));
 }
 
 public void OnPluginStart()
@@ -93,37 +62,46 @@ public void OnPluginStart()
 	cVarShowLerpTeamChange = CreateConVar("sm_show_lerp_team_changes", "1", "show a message about the player's lerp if he changes the team", _, true, 0.0, true, 1.0);
 	cVarMinLerp = CreateConVar("sm_min_lerp", "0.000", "Minimum allowed lerp value", _, true, 0.000, true, 0.500);
 	cVarMaxLerp = CreateConVar("sm_max_lerp", "0.067", "Maximum allowed lerp value", _, true, 0.000, true, 0.500);
-	
+
 	RegConsoleCmd("sm_lerps", Lerps_Cmd, "List the Lerps of all players in game");
-	
+
 	cVarMinUpdateRate = FindConVar("sv_minupdaterate");
 	cVarMaxUpdateRate = FindConVar("sv_maxupdaterate");
 	cVarMinInterpRatio = FindConVar("sv_client_min_interp_ratio");
 	cVarMaxInterpRatio = FindConVar("sv_client_max_interp_ratio");
-	
+
 	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 	HookEvent("round_end", Event_RoundEnd, EventHookMode_PostNoCopy);
 	HookEvent("player_team", OnTeamChange, EventHookMode_Post);
 	HookEvent("player_disconnect", Event_PlayerDisconnect, EventHookMode_Post);
 	HookEvent("player_left_start_area", Event_RoundGoesLive, EventHookMode_PostNoCopy);
-	
+
 	// create arrays
 	ArrLerpsValue = new StringMap();
 	ArrLerpsCountChanges = new StringMap();
-	
-	if (IsLateLoad) {
-		// process current players
-		for (int i = 1; i <= MaxClients; i++) {
-			if (IsClientInGame(i) && !IsFakeClient(i)) {
-				ProcessPlayerLerp(i, true);
-			}
+
+	LateLoad();
+}
+
+void LateLoad()
+{
+	if (!IsLateLoad) {
+		return;
+	}
+
+	// process current players
+	for (int i = 1; i <= MaxClients; i++) {
+		if (!IsClientInGame(i) || IsFakeClient(i)) {
+			continue;
 		}
+
+		ProcessPlayerLerp(i, true);
 	}
 }
 
 public void OnClientPutInServer(int client)
 {
-	if (IsValidEntity(client) && !IsFakeClient(client)) {
+	if (!IsFakeClient(client)) {
 		CreateTimer(1.0, Process, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
@@ -131,7 +109,7 @@ public void OnClientPutInServer(int client)
 Action Process(Handle hTimer, int userid)
 {
 	int client = GetClientOfUserId(userid);
-	if (client > 0 && GetClientTeam(client) > L4D_TEAM_SPECTATE) {
+	if (client > 0) {
 		ProcessPlayerLerp(client);
 	}
 
@@ -159,7 +137,7 @@ void Event_RoundGoesLive(Event hEvent, const char[] name, bool dontBroadcast)
 
 public void OnClientSettingsChanged(int client)
 {
-	if (IsValidEntity(client) && !IsFakeClient(client)) {
+	if (IsValidEdict(client) && !IsFakeClient(client)) {
 		ProcessPlayerLerp(client);
 	}
 }
@@ -168,11 +146,11 @@ void Event_PlayerDisconnect(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	char SteamID[64];
 	hEvent.GetString("networkid", SteamID, sizeof(SteamID));
-	
+
 	if (StrContains(SteamID, "STEAM") != 0) {
 		return;
 	}
-	
+
 	ArrLerpsValue.Remove(SteamID);
 	//ArrLerpsCountChanges.Remove(SteamID);
 }
@@ -196,6 +174,7 @@ Action OnTeamChangeDelay(Handle hTimer, int userid)
 	if (client > 0) {
 		ProcessPlayerLerp(client, false, true);
 	}
+
 	return Plugin_Stop;
 }
 
@@ -218,27 +197,28 @@ Action Timer_RoundEndDelay(Handle hTimer)
 
 Action Lerps_Cmd(int client, int args)
 {
-	bool isEmpty = true;
+	int iCount = 0;
 	if (ArrLerpsValue.Size > 0) {
 		ReplyToCommand(client, "[!] Lerp setting list:");
-		
+
 		float fLerpValue;
 		char sSteamID[STEAMID_SIZE];
 		for (int i = 1; i <= MaxClients; i++) {
 			if (IsClientInGame(i) && !IsFakeClient(i)) {
 				GetClientAuthId(i, AuthId_Steam2, sSteamID, sizeof(sSteamID));
-				
+
 				if (ArrLerpsValue.GetValue(sSteamID, fLerpValue)) {
 					ReplyToCommand(client, "%N [%s]: %.01f", i, sSteamID, fLerpValue * 1000);
-					isEmpty = false;
+					iCount++;
 				}
 			}
 		}
 	}
-	
-	if (isEmpty) {
+
+	if (iCount == 0) {
 		ReplyToCommand(client, "There is nothing here!");
 	}
+
 	return Plugin_Handled;
 }
 
@@ -248,28 +228,29 @@ void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
 	if (!isFirstHalf) {
 		ArrLerpsCountChanges.Clear();
 	}
-	
+
 	CreateTimer(0.5, OnTransfer, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
 Action OnTransfer(Handle hTimer)
 {
 	isTransfer = false;
+
 	return Plugin_Stop;
 }
 
-void ProcessPlayerLerp(int client, bool load = false, bool team = false) 
+void ProcessPlayerLerp(int client, bool load = false, bool team = false)
 {
 	float newLerpTime = GetLerpTime(client); // get lerp
-	
+
 	// set lerp for fixing differences between server and client with cl_interp_ratio 0
 	SetEntPropFloat(client, Prop_Data, "m_fLerpTime", newLerpTime);
-	
+
 	// check lerp first
 	if (GetClientTeam(client) < L4D_TEAM_SURVIVORS) {
 		return;
 	}
-	
+
 	// Get steamid
 	char steamID[STEAMID_SIZE];
 	GetClientAuthId(client, AuthId_Steam2, steamID, sizeof(steamID));
@@ -288,7 +269,7 @@ void ProcessPlayerLerp(int client, bool load = false, bool team = false)
 					return;
 				}
 			}
-			
+
 			if (cVarBadLerpAction.IntValue == 1) {
 				CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}was moved to spectators for lerp {teamcolor}%.01f", client, newLerpTime * 1000);
 				CPrintToChatEx(client, client, "{default}<{olive}Lerp{default}> Illegal lerp value (min: {teamcolor}%.01f{default}, max: {teamcolor}%.01f{default})", cVarMinLerp.FloatValue * 1000, cVarMaxLerp.FloatValue * 1000);
@@ -298,11 +279,11 @@ void ProcessPlayerLerp(int client, bool load = false, bool team = false)
 				KickClient(client, "Illegal lerp value (min: %.01f, max: %.01f)", cVarMinLerp.FloatValue * 1000, cVarMaxLerp.FloatValue * 1000);
 			}
 		}
-		
+
 		// nothing else to do
 		return;
 	}
-	
+
 	float currentLerpTime = 0.0;
 	if (!ArrLerpsValue.GetValue(steamID, currentLerpTime)) {
 		// add to array
@@ -311,13 +292,13 @@ void ProcessPlayerLerp(int client, bool load = false, bool team = false)
 		}
 
 		ArrLerpsValue.SetValue(steamID, newLerpTime, true);
-		//ArrLerpsCountChanges.SetValue(steamID, 0, true); 
+		//ArrLerpsCountChanges.SetValue(steamID, 0, true);
 		return;
 	}
-	
+
 	if (currentLerpTime == newLerpTime) { // no change?
 		if (team && cVarShowLerpTeamChange.BoolValue) {
-			CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f", client, newLerpTime * 1000); 
+			CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f", client, newLerpTime * 1000);
 		}
 		return;
 	}
@@ -326,10 +307,10 @@ void ProcessPlayerLerp(int client, bool load = false, bool team = false)
 		int count = 0;
 		ArrLerpsCountChanges.GetValue(steamID, count);
 		count++;
-		
+
 		int max = cVarAllowedLerpChanges.IntValue;
 		CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {green}%.01f {default}[%s%d{default}/%d {olive}changes]", client, newLerpTime * 1000, currentLerpTime * 1000, ((count > max) ? "{teamcolor} ": ""), count, max);
-	
+
 		if (cVarLerpChangeSpec.BoolValue && (count > max)) {
 			CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}was moved to spectators (illegal lerp change)!", client);
 			ChangeClientTeam(client, L4D_TEAM_SPECTATE);
@@ -337,43 +318,43 @@ void ProcessPlayerLerp(int client, bool load = false, bool team = false)
 			// no lerp update
 			return;
 		}
-		
+
 		ArrLerpsCountChanges.SetValue(steamID, count); // update changes
 	} else {
 		CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {green}%.01f", client, newLerpTime * 1000, currentLerpTime * 1000);
 	}
-	
+
 	ArrLerpsValue.SetValue(steamID, newLerpTime); // update lerp
-	//ArrLerpsCountChanges.SetValue(steamID, 0, true); 
+	//ArrLerpsCountChanges.SetValue(steamID, 0, true);
 }
 
 float GetLerpTime(int client)
 {
 	char buffer[64];
-	
+
 	if (!GetClientInfo(client, "cl_updaterate", buffer, sizeof(buffer))) {
 		buffer = "";
 	}
-	
+
 	int updateRate = StringToInt(buffer);
 	updateRate = RoundFloat(clamp(float(updateRate), cVarMinUpdateRate.FloatValue, cVarMaxUpdateRate.FloatValue));
-	
+
 	if (!GetClientInfo(client, "cl_interp_ratio", buffer, sizeof(buffer))) {
 		buffer = "";
 	}
-	
+
 	float flLerpRatio = StringToFloat(buffer);
-	
+
 	if (!GetClientInfo(client, "cl_interp", buffer, sizeof(buffer))) {
 		buffer = "";
 	}
-	
+
 	float flLerpAmount = StringToFloat(buffer);
-	
+
 	if (cVarMinInterpRatio != null && cVarMaxInterpRatio != null && cVarMinInterpRatio.FloatValue != -1.0) {
 		flLerpRatio = clamp(flLerpRatio, cVarMinInterpRatio.FloatValue, cVarMaxInterpRatio.FloatValue);
 	}
-	
+
 	return maximum(flLerpAmount, flLerpRatio / updateRate);
 }
 
@@ -385,4 +366,68 @@ float maximum(float a, float b)
 float clamp(float inc, float low, float high)
 {
 	return (inc > high) ? high : ((inc < low) ? low : inc);
+}
+
+int LM_GetLerpTime(Handle plugin, int numParams)
+{
+	int client = GetNativeCell(1);
+
+	//'GetClientAuthId' - will abort the code on error (If the client is not connected or the index is invalid).
+	/*if (client < 1 || client > MaxClients) {
+		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index %d!", client);
+	}
+
+	if (!IsClientConnected(client)) {
+		return ThrowNativeError(SP_ERROR_NATIVE, "Client %d not connected!", client);
+	}*/
+
+	char sSteamID[STEAMID_SIZE];
+	GetClientAuthId(client, AuthId_Steam2, sSteamID, sizeof(sSteamID));
+
+	float fLerpValue = -1.0;
+	if (ArrLerpsValue.GetValue(sSteamID, fLerpValue)) {
+		return view_as<int>(fLerpValue);
+	}
+
+	return view_as<int>(GetLerpTime(client));
+}
+
+int LM_GetCurrentLerpTime(Handle plugin, int numParams)
+{
+	int client = GetNativeCell(1);
+
+	//'GetClientInfo' - will abort the code on error (If the client is not connected or the index is invalid).
+	/*if (client < 1 || client > MaxClients) {
+		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index %d!", client);
+	}
+
+	if (!IsClientConnected(client)) {
+		return ThrowNativeError(SP_ERROR_NATIVE, "Client %d not connected!", client);
+	}*/
+
+	return view_as<int>(GetLerpTime(client));
+}
+
+int LM_GetStoredLerpTime(Handle plugin, int numParams)
+{
+	int client = GetNativeCell(1);
+
+	//'GetClientAuthId' - will abort the code on error (If the client is not connected or the index is invalid).
+	/*if (client < 1 || client > MaxClients) {
+		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index %d!", client);
+	}
+
+	if (!IsClientConnected(client)) {
+		return ThrowNativeError(SP_ERROR_NATIVE, "Client %d not connected!", client);
+	}*/
+
+	char sSteamID[STEAMID_SIZE];
+	GetClientAuthId(client, AuthId_Steam2, sSteamID, sizeof(sSteamID));
+
+	float fLerpValue = -1.0;
+	if (ArrLerpsValue.GetValue(sSteamID, fLerpValue)) {
+		return view_as<int>(fLerpValue);
+	}
+
+	return view_as<int>(-1.0);
 }
