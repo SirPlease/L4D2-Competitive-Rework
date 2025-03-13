@@ -73,12 +73,12 @@ public void OnPluginStart()
 	AddCommandListener(TeamSay_Callback, "say_team");
 
 	HookEvent("server_cvar", Event_ServerConVar, EventHookMode_Pre);
-    HookUserMessage(GetUserMessageId("SayText2"), TextMsg, true);
+	HookUserMessage(GetUserMessageId("SayText2"), TextMsg, true);
 
-	g_cvarCvarChange	 = CreateConVar("bq_cvar_change_suppress", "1", "Silence Server Cvars being changed, this makes for a clean chat with no disturbances.", FCVAR_NONE, true, 0.0, true, 1.0);
-	g_cvarNameChange	 = CreateConVar("bq_name_change_suppress", "1", "Silence Player name Changes.", FCVAR_NONE, true, 0.0, true, 1.0);
-	g_cvarSpecSeeChat	 = CreateConVar("bq_show_player_team_chat_spec", "1", "Show Spectators Survivors and Infected Team chat?", FCVAR_NONE, true, 0.0, true, 1.0);
-	g_cvarBaseChat		 = CreateConVar("bq_basechat", "1", "basechat support?", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_cvarCvarChange  = CreateConVar("bq_cvar_change_suppress", "1", "Silence Server Cvars being changed, this makes for a clean chat with no disturbances.", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_cvarNameChange  = CreateConVar("bq_name_change_suppress", "1", "Silence Player name Changes.", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_cvarSpecSeeChat = CreateConVar("bq_show_player_team_chat_spec", "1", "Show Spectators Survivors and Infected Team chat?", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_cvarBaseChat	  = CreateConVar("bq_basechat", "1", "basechat support?", FCVAR_NONE, true, 0.0, true, 1.0);
 
 	AutoExecConfig(true, "bequiet");
 
@@ -122,22 +122,22 @@ Action Event_ServerConVar(Event event, const char[] name, bool dontBroadcast)
 
 public Action TextMsg(UserMsg msg_id, BfRead msg, const int[] players, int playersNum, bool reliable, bool init)
 {
-    msg.ReadByte(); // Skip first parameter
-    msg.ReadByte(); // Skip second parameter
+	msg.ReadByte();	   // Skip first parameter
+	msg.ReadByte();	   // Skip second parameter
 
-    char buffer[100];
-    buffer[0] = '\0';
-    msg.ReadString(buffer, sizeof(buffer), false);
+	char buffer[100];
+	buffer[0] = '\0';
+	msg.ReadString(buffer, sizeof(buffer), false);
 
-    // left4dead2/resource/left4dead2_english.txt, found "Cstrike_Name_Change"
-    if (StrContains(buffer, "Cstrike_Name_Change") == -1)
-        return Plugin_Continue;
+	// left4dead2/resource/left4dead2_english.txt, found "Cstrike_Name_Change"
+	if (StrContains(buffer, "Cstrike_Name_Change") == -1)
+		return Plugin_Continue;
 
-    if (g_cvarNameChange.BoolValue)
-        return Plugin_Handled;
+	if (g_cvarNameChange.BoolValue)
+		return Plugin_Handled;
 
-    return Plugin_Continue;
-} 
+	return Plugin_Continue;
+}
 
 /**
  * This function handles the display of team chat messages to spectators in the game.
@@ -153,7 +153,7 @@ void SpecSeeTeamChat(int iAuthor, char[] sChat)
 		sMessage[500];
 
 	L4DTeam
-        L4DTeamAuthor = L4D_GetClientTeam(iAuthor);
+		L4DTeamAuthor = L4D_GetClientTeam(iAuthor);
 
 	switch (L4DTeamAuthor)
 	{
@@ -165,19 +165,19 @@ void SpecSeeTeamChat(int iAuthor, char[] sChat)
 			Format(sTeamAuthor, sizeof(sTeamAuthor), "%t", "Team_Spectator");
 	}
 
-    Format(sMessage, sizeof(sMessage), "(%s) %N:  %s", sTeamAuthor, iAuthor, sChat);
+	Format(sMessage, sizeof(sMessage), "(%s) %N:  %s", sTeamAuthor, iAuthor, sChat);
 	CRemoveTags(sMessage, sizeof(sMessage));
 	PrintToServer("%s", sMessage);
 
-    sMessage[0] = '\0';
+	sMessage[0] = '\0';
 	Format(sMessage, sizeof(sMessage), "(%s) \x03%N\x01:  %s", sTeamAuthor, iAuthor, sChat);
 	for (int iTarget = 1; iTarget <= MaxClients; iTarget++)
 	{
 		if (IsClientConnected(iTarget) && (IsClientSourceTV(iTarget) || IsClientReplay(iTarget)))
-        {
-            CPrintToChatEx(iTarget, iAuthor, sMessage);
-    		continue;
-        }
+		{
+			CPrintToChatEx(iTarget, iAuthor, sMessage);
+			continue;
+		}
 
 		if (!IsClientInGame(iTarget) || IsFakeClient(iTarget))
 			continue;
@@ -185,12 +185,12 @@ void SpecSeeTeamChat(int iAuthor, char[] sChat)
 		L4DTeam L4DTeamTarget = L4D_GetClientTeam(iTarget);
 
 		// Don't show spectator chat to survivors or infected
-        if (L4DTeamAuthor == L4DTeam_Spectator && (L4DTeamTarget == L4DTeam_Survivor || L4DTeamTarget == L4DTeam_Infected))
-            continue;
+		if (L4DTeamAuthor == L4DTeam_Spectator && (L4DTeamTarget == L4DTeam_Survivor || L4DTeamTarget == L4DTeam_Infected))
+			continue;
 
-        // Don't show infected chat to survivors and vice versa
-        if ((L4DTeamAuthor == L4DTeam_Survivor && L4DTeamTarget == L4DTeam_Infected) || (L4DTeamAuthor == L4DTeam_Infected && L4DTeamTarget == L4DTeam_Survivor))
-            continue;
+		// Don't show infected chat to survivors and vice versa
+		if ((L4DTeamAuthor == L4DTeam_Survivor && L4DTeamTarget == L4DTeam_Infected) || (L4DTeamAuthor == L4DTeam_Infected && L4DTeamTarget == L4DTeam_Survivor))
+			continue;
 
 		CPrintToChatEx(iTarget, iAuthor, sMessage);
 	}
