@@ -1,6 +1,10 @@
 /* -----------------------------------------------------------------------------------------------------------------------------------------------------
  * 	Changelog:
  * 	---------
+ *		2.3: (17.01.2025) (Forgetest)
+ *			Fix:
+ *			- Fixed "small-sized" mobs involving uncommon zombies.
+ *
  *		2.2: (24.10.2021) (A1m`)
  *			1. Fixed: in some cases we received the coordinates of the infected 0.0.0, now the plugin always gets the correct coordinates.
  *
@@ -96,7 +100,7 @@ public Plugin myinfo =
 	name = "Uncommon Infected Blocker",
 	author = "Tabun, A1m`",
 	description = "Blocks uncommon infected from ruining your day.",
-	version = "2.2",
+	version = "2.3",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -166,10 +170,13 @@ void OnNextFrame(int iEntity)
 	}
 	
 	float fLocation[3];
-	GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", fLocation);			// get location
+	GetEntPropVector(iEntity, Prop_Data, "m_vecAbsOrigin", fLocation);			// get location
+																				// @Forgetest: "m_vecOrigin" is not world origin
+
+	bool mobRush = GetEntProp(iEntity, Prop_Send, "m_mobRush") == 1;
 
 #if DEBUG
-	PrintToChatAll("2 Blocked uncommon infected! Entity: %d, location: %.0f %.0f %.0f.", EntRefToEntIndex(iEntity), fLocation[0], fLocation[1], fLocation[2]);
+	PrintToChatAll("2 Blocked uncommon infected! Entity: %d, location: %.0f %.0f %.0f, mobRush: %s.", EntRefToEntIndex(iEntity), fLocation[0], fLocation[1], fLocation[2], mobRush ? "true" : "false");
 #endif
 
 	// kill the uncommon infected
@@ -179,10 +186,10 @@ void OnNextFrame(int iEntity)
 	AcceptEntityInput(iEntity, "Kill");
 #endif
 
-	SpawnNewInfected(fLocation);											// spawn infected in location instead
+	SpawnNewInfected(fLocation, mobRush);											// spawn infected in location instead
 }
 
-void SpawnNewInfected(const float fLocation[3])
+void SpawnNewInfected(const float fLocation[3], bool mobRush)
 {
 	int iInfected = CreateEntityByName("infected");
 	if (iInfected < 1) {
@@ -203,8 +210,11 @@ void SpawnNewInfected(const float fLocation[3])
 
 	TeleportEntity(iInfected, fLocation, NULL_VECTOR, NULL_VECTOR);
 
+	if (mobRush)
+		SetEntProp(iInfected, Prop_Send, "m_mobRush", mobRush);
+
 #if DEBUG
-	PrintToChatAll("Spawned new infected! Entity: %d, location: %.0f %.0f %.0f.", iInfected, fLocation[0], fLocation[1], fLocation[2]);
+	PrintToChatAll("Spawned new infected! Entity: %d, location: %.0f %.0f %.0f, mobRush: %s.", iInfected, fLocation[0], fLocation[1], fLocation[2], mobRush ? "true" : "false");
 #endif
 }
 
