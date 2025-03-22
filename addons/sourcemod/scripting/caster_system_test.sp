@@ -8,36 +8,34 @@
 #include <caster_system>
 #define REQUIRE_PLUGIN
 
-#define STEAMID2_LENGTH	   32
-#define PREFIX_TEST	   "[{olive}Test{default}]"
+#define STEAMID2_LENGTH 32
+#define PREFIX_TEST		"[{olive}Test{default}]"
 
 bool
-    g_bLateload,
-    g_bCasterSystem;
-
+	g_bLateload,
+	g_bCasterSystem;
 
 enum eTypeList
 {
 	kCaster = 0,
-	kWhite = 1,
-	kSQL = 2
+	kWhite	= 1,
+	kSQL	= 2
 }
 
 enum L4DTeam
 {
-	L4DTeam_Unassigned				= 0,
-	L4DTeam_Spectator				= 1,
-	L4DTeam_Survivor				= 2,
-	L4DTeam_Infected				= 3
+	L4DTeam_Unassigned = 0,
+	L4DTeam_Spectator  = 1,
+	L4DTeam_Survivor   = 2,
+	L4DTeam_Infected   = 3
 }
 
-public Plugin g_myInfo =
-{
-    name        = "L4D2 Caster System Test",
-    author      = "lechuga",
-    description = "Testing native and forward",
-    version     = "1.0",
-    url         = "https://github.com/SirPlease/L4D2-Competitive-Rework"
+public Plugin g_myInfo = {
+	name		= "L4D2 Caster System Test",
+	author		= "lechuga",
+	description = "Testing native and forward",
+	version		= "1.0",
+	url			= "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErr_max)
@@ -68,7 +66,7 @@ public void OnPluginStart()
 	vLoadTranslation("common.phrases");
 	vLoadTranslation("caster_system.phrases");
 
-    RegConsoleCmd("sm_tcaster", aTcasterRegCmd, "Registers a player to the caster list");
+	RegConsoleCmd("sm_tcaster", aTcasterRegCmd, "Registers a player to the caster list");
 	RegConsoleCmd("sm_tcaster_rm", aTcasterRemoveCmd, "Removes a player from the caster list");
 
 	RegConsoleCmd("sm_tcaster_wl", aTwhitelistRegCmd, "Adds a player to the whitelist");
@@ -76,19 +74,19 @@ public void OnPluginStart()
 
 	if (!g_bLateload)
 		return;
-	
+
 	g_bCasterSystem = LibraryExists("caster_system");
 }
 
 Action aTcasterRegCmd(int iClient, int iArgs)
 {
-    if (!g_bCasterSystem)
-    {
-        CPrintToChatAll("%s {red}Caster System{default} is not loaded", PREFIX_TEST);
-        return Plugin_Handled;
-    }
+	if (!g_bCasterSystem)
+	{
+		CPrintToChatAll("%s {red}Caster System{default} is not loaded", PREFIX_TEST);
+		return Plugin_Handled;
+	}
 
-    ReplySource eRsCmd = GetCmdReplySource();
+	ReplySource eRsCmd = GetCmdReplySource();
 	if (iArgs == 0)
 	{
 		if (eRsCmd == SM_REPLY_TO_CHAT && iClient != SERVER_INDEX)
@@ -98,26 +96,26 @@ Action aTcasterRegCmd(int iClient, int iArgs)
 		return Plugin_Handled;
 	}
 
-    char szArguments[64];
-    GetCmdArgString(szArguments, sizeof(szArguments));
+	char szArguments[64];
+	GetCmdArgString(szArguments, sizeof(szArguments));
 
-    char szArg[STEAMID2_LENGTH];
-    BreakString(szArguments, szArg, sizeof(szArg));
+	char szArg[STEAMID2_LENGTH];
+	BreakString(szArguments, szArg, sizeof(szArg));
 
-    vProcessReg(iClient, szArg, kCaster);
+	vProcessReg(iClient, szArg, kCaster);
 
-    return Plugin_Handled;
+	return Plugin_Handled;
 }
 
 Action aTwhitelistRegCmd(int iClient, int iArgs)
 {
-    if (!g_bCasterSystem)
-    {
-        CPrintToChatAll("%s {red}Caster System{default} is not loaded", PREFIX_TEST);
-        return Plugin_Handled;
-    }
+	if (!g_bCasterSystem)
+	{
+		CPrintToChatAll("%s {red}Caster System{default} is not loaded", PREFIX_TEST);
+		return Plugin_Handled;
+	}
 
-    ReplySource eRsCmd = GetCmdReplySource();
+	ReplySource eRsCmd = GetCmdReplySource();
 	if (iArgs == 0)
 	{
 		if (eRsCmd == SM_REPLY_TO_CHAT && iClient != SERVER_INDEX)
@@ -127,15 +125,15 @@ Action aTwhitelistRegCmd(int iClient, int iArgs)
 		return Plugin_Handled;
 	}
 
-    char szArguments[64];
-    GetCmdArgString(szArguments, sizeof(szArguments));
+	char szArguments[64];
+	GetCmdArgString(szArguments, sizeof(szArguments));
 
-    char szArg[STEAMID2_LENGTH];
-    BreakString(szArguments, szArg, sizeof(szArg));
+	char szArg[STEAMID2_LENGTH];
+	BreakString(szArguments, szArg, sizeof(szArg));
 
-    vProcessReg(iClient, szArg, kWhite);
+	vProcessReg(iClient, szArg, kWhite);
 
-    return Plugin_Handled;
+	return Plugin_Handled;
 }
 
 /**
@@ -151,34 +149,34 @@ Action aTwhitelistRegCmd(int iClient, int iArgs)
  */
 void vProcessReg(int iClient, const char[] szArg, eTypeList eList)
 {
-    if (bIsSteamId(szArg))
-    {
-        vRegister(iClient, NO_INDEX, szArg, szArg, eList, kAuth);
-        return;
-    }
+	if (bIsSteamId(szArg))
+	{
+		vRegister(iClient, NO_INDEX, szArg, szArg, eList, kAuth);
+		return;
+	}
 
-    int iTarget = FindTarget(iClient, szArg, true, false);
-    if (iTarget == NO_INDEX)
-        return;
-        
-    char szAuthId[STEAMID2_LENGTH];
-    if (!GetClientAuthId(iTarget, AuthId_Steam2, szAuthId, sizeof(szAuthId)))
-    {
-        CReplyToCommand(iClient, "%t %t", "Prefix", "AuthIdError", szAuthId);
-        return;
-    }
-    
-    char szName[16];
-    GetClientName(iTarget, szName, sizeof(szName));
-    vRegister(iClient, iTarget, szAuthId, szName, eList, kClient);
+	int iTarget = FindTarget(iClient, szArg, true, false);
+	if (iTarget == NO_INDEX)
+		return;
+
+	char szAuthId[STEAMID2_LENGTH];
+	if (!GetClientAuthId(iTarget, AuthId_Steam2, szAuthId, sizeof(szAuthId)))
+	{
+		CReplyToCommand(iClient, "%t %t", "Prefix", "AuthIdError", szAuthId);
+		return;
+	}
+
+	char szName[16];
+	GetClientName(iTarget, szName, sizeof(szName));
+	vRegister(iClient, iTarget, szAuthId, szName, eList, kClient);
 }
 
 void vDisplayRegMenu(int iClient, eTypeList eList)
 {
-    Menu hMenu;
-    hMenu = new Menu(iRegMenuHandler);
+	Menu hMenu;
+	hMenu = new Menu(iRegMenuHandler);
 	char szTitle[100];
-    Format(szTitle, sizeof(szTitle), "%t", "MenuPlayersList");
+	Format(szTitle, sizeof(szTitle), "%t", "MenuPlayersList");
 	hMenu.SetTitle(szTitle);
 	vListTargets(hMenu, eList);
 
@@ -201,78 +199,78 @@ void vDisplayRegMenu(int iClient, eTypeList eList)
  */
 void vListTargets(Menu hMenu, eTypeList eList)
 {
-    char szName[64], szBuffer[16], szAuthId[STEAMID2_LENGTH];
-    int iUserId;
+	char szName[64], szBuffer[16], szAuthId[STEAMID2_LENGTH];
+	int	 iUserId;
 
-    for (int i = 1; i <= MaxClients; i++)
-    {
-        if (!IsClientConnected(i) || IsFakeClient(i))
-            continue;
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (!IsClientConnected(i) || IsFakeClient(i))
+			continue;
 
-        if (!GetClientName(i, szName, sizeof(szName)))
-            continue;
+		if (!GetClientName(i, szName, sizeof(szName)))
+			continue;
 
-        if (!GetClientAuthId(i, AuthId_Steam2, szAuthId, sizeof(szAuthId)))
-            continue;
+		if (!GetClientAuthId(i, AuthId_Steam2, szAuthId, sizeof(szAuthId)))
+			continue;
 
-        // Construct an identifier and add the eTypeList to it
-        iUserId = GetClientUserId(i);
-        Format(szBuffer, sizeof(szBuffer), "%d:%d", iUserId, view_as<int>(eList));
+		// Construct an identifier and add the eTypeList to it
+		iUserId = GetClientUserId(i);
+		Format(szBuffer, sizeof(szBuffer), "%d:%d", iUserId, view_as<int>(eList));
 
-        bool bIsCaster = (eList == kCaster) ? bCaster(kClient, kGet, i, szAuthId) : bCasterWhitelist(kClient, kGet, i, szAuthId);
-        hMenu.AddItem(szBuffer, szName, bIsCaster ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
-    }
+		bool bIsCaster = (eList == kCaster) ? bCaster(kClient, kGet, i, szAuthId) : bCasterWhitelist(kClient, kGet, i, szAuthId);
+		hMenu.AddItem(szBuffer, szName, bIsCaster ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+	}
 }
 
 public int iRegMenuHandler(Menu hMenu, MenuAction eAction, int iClient, int iItem)
 {
-    switch (eAction)
-    {
-        case MenuAction_Select:
-        {
-            char szInfo[32], szName[32];
-            int iUserId, iTarget;
+	switch (eAction)
+	{
+		case MenuAction_Select:
+		{
+			char szInfo[32], szName[32];
+			int	 iUserId, iTarget;
 
-            hMenu.GetItem(iItem, szInfo, sizeof(szInfo), _, szName, sizeof(szName));
-            
-            char szPart1[16], szPart2[16];
-            int iIndex;
+			hMenu.GetItem(iItem, szInfo, sizeof(szInfo), _, szName, sizeof(szName));
 
-            iIndex = SplitString(szInfo, ":", szPart1, sizeof(szPart1));
-            if (iIndex != -1)
-                SplitString(szInfo[iIndex], ":", szPart2, sizeof(szPart2));
+			char szPart1[16], szPart2[16];
+			int	 iIndex;
 
-            int iPart1 = StringToInt(szPart1);
-            int iPart2 = StringToInt(szPart2);
+			iIndex = SplitString(szInfo, ":", szPart1, sizeof(szPart1));
+			if (iIndex != -1)
+				SplitString(szInfo[iIndex], ":", szPart2, sizeof(szPart2));
 
-            iUserId = iPart1;
-            eTypeList eList = view_as<eTypeList>(iPart2);
+			int iPart1		= StringToInt(szPart1);
+			int iPart2		= StringToInt(szPart2);
 
-            if ((iTarget = GetClientOfUserId(iUserId)) == SERVER_INDEX)
-                CPrintToChat(iClient, "%t %t", "Prefix", "Player no longer available");
-            else if (!CanUserTarget(iClient, iTarget))
-                CPrintToChat(iClient, "%t %t", "Prefix", "Unable to target");
-            else
-            {
-                char szAuthId[STEAMID2_LENGTH];
-                if (!GetClientAuthId(iTarget, AuthId_Steam2, szAuthId, sizeof(szAuthId)))
-                {
-                    CReplyToCommand(iClient, "%t %t", "Prefix", "AuthIdError", szAuthId);
-                    return Plugin_Handled;
-                }
+			iUserId			= iPart1;
+			eTypeList eList = view_as<eTypeList>(iPart2);
 
-                char szTargetName[16];
-                GetClientName(iTarget, szTargetName, sizeof(szTargetName));
+			if ((iTarget = GetClientOfUserId(iUserId)) == SERVER_INDEX)
+				CPrintToChat(iClient, "%t %t", "Prefix", "Player no longer available");
+			else if (!CanUserTarget(iClient, iTarget))
+				CPrintToChat(iClient, "%t %t", "Prefix", "Unable to target");
+			else
+			{
+				char szAuthId[STEAMID2_LENGTH];
+				if (!GetClientAuthId(iTarget, AuthId_Steam2, szAuthId, sizeof(szAuthId)))
+				{
+					CReplyToCommand(iClient, "%t %t", "Prefix", "AuthIdError", szAuthId);
+					return 0;
+				}
 
-                vRegister(iClient, iTarget, szAuthId, szTargetName, eList, kClient);
-            }
-        }
-        case MenuAction_End:
-        {
-            delete hMenu;
-        }
-    }
-    return 0;
+				char szTargetName[16];
+				GetClientName(iTarget, szTargetName, sizeof(szTargetName));
+
+				vRegister(iClient, iTarget, szAuthId, szTargetName, eList, kClient);
+			}
+		}
+		case MenuAction_End:
+		{
+			delete hMenu;
+		}
+	}
+	return 0;
 }
 
 /**
@@ -287,35 +285,35 @@ public int iRegMenuHandler(Menu hMenu, MenuAction eAction, int iClient, int iIte
  */
 void vRegister(int iClient, int iTarget, const char[] szAuthId, const char[] szDisplayName, eTypeList eList, eTypeID eId)
 {
-    bool bIndex = (eId == kClient);
-    bool bFound = false;
+	bool bIndex = (eId == kClient);
+	bool bFound = false;
 
-    switch (eList)
-    {
-        case kCaster:
-            bFound = bIndex ? bCaster(eId, kGet, iTarget, szAuthId) : bCaster(eId, kGet, NO_INDEX, szAuthId);
-        case kWhite:
-            bFound = bIndex ? bCasterWhitelist(eId, kGet, iTarget, szAuthId) : bCasterWhitelist(eId, kGet, NO_INDEX, szAuthId);
-    }
+	switch (eList)
+	{
+		case kCaster:
+			bFound = bIndex ? bCaster(eId, kGet, iTarget, szAuthId) : bCaster(eId, kGet, NO_INDEX, szAuthId);
+		case kWhite:
+			bFound = bIndex ? bCasterWhitelist(eId, kGet, iTarget, szAuthId) : bCasterWhitelist(eId, kGet, NO_INDEX, szAuthId);
+	}
 
-    if (bFound)
-    {
-        CReplyToCommand(iClient, "%t %t", "Prefix", eList == kCaster ? "CasterFound" : "WhitelistFound", szDisplayName);
-        return;
-    }
+	if (bFound)
+	{
+		CReplyToCommand(iClient, "%t %t", "Prefix", eList == kCaster ? "CasterFound" : "WhitelistFound", szDisplayName);
+		return;
+	}
 
-    switch (eList)
-    {
-        case kCaster:
-            bCaster(eId, kSet, iTarget, szAuthId);
-        case kWhite:
-            bCasterWhitelist(eId, kSet, iTarget, szAuthId);
-    }
+	switch (eList)
+	{
+		case kCaster:
+			bCaster(eId, kSet, iTarget, szAuthId);
+		case kWhite:
+			bCasterWhitelist(eId, kSet, iTarget, szAuthId);
+	}
 }
 
 Action aTcasterRemoveCmd(int iClient, int iArgs)
 {
-    ReplySource eRsCmd = GetCmdReplySource();
+	ReplySource eRsCmd = GetCmdReplySource();
 	if (iArgs == 0)
 	{
 		if (eRsCmd == SM_REPLY_TO_CHAT && iClient != SERVER_INDEX)
@@ -325,19 +323,19 @@ Action aTcasterRemoveCmd(int iClient, int iArgs)
 		return Plugin_Handled;
 	}
 
-    char szArguments[64];
-    GetCmdArgString(szArguments, sizeof(szArguments));
+	char szArguments[64];
+	GetCmdArgString(szArguments, sizeof(szArguments));
 
-    char szArg[STEAMID2_LENGTH];
-    BreakString(szArguments, szArg, sizeof(szArg));
+	char szArg[STEAMID2_LENGTH];
+	BreakString(szArguments, szArg, sizeof(szArg));
 
-    vProcessRemove(iClient, szArg, kCaster);
-    return Plugin_Handled;
+	vProcessRemove(iClient, szArg, kCaster);
+	return Plugin_Handled;
 }
 
 Action aTwhitelistRemoveCmd(int iClient, int iArgs)
 {
-    ReplySource eRsCmd = GetCmdReplySource();
+	ReplySource eRsCmd = GetCmdReplySource();
 	if (iArgs == 0)
 	{
 		if (eRsCmd == SM_REPLY_TO_CHAT && iClient != SERVER_INDEX)
@@ -347,14 +345,14 @@ Action aTwhitelistRemoveCmd(int iClient, int iArgs)
 		return Plugin_Handled;
 	}
 
-    char szArguments[64];
-    GetCmdArgString(szArguments, sizeof(szArguments));
+	char szArguments[64];
+	GetCmdArgString(szArguments, sizeof(szArguments));
 
-    char szArg[STEAMID2_LENGTH];
-    BreakString(szArguments, szArg, sizeof(szArg));
+	char szArg[STEAMID2_LENGTH];
+	BreakString(szArguments, szArg, sizeof(szArg));
 
-    vProcessRemove(iClient, szArg, kWhite);
-    return Plugin_Handled;
+	vProcessRemove(iClient, szArg, kWhite);
+	return Plugin_Handled;
 }
 
 /**
@@ -371,26 +369,26 @@ Action aTwhitelistRemoveCmd(int iClient, int iArgs)
  */
 void vProcessRemove(int iClient, const char[] szArg, eTypeList eList)
 {
-    if (bIsSteamId(szArg))
-    {
-        vRemove(iClient, NO_INDEX, szArg, szArg, eList, kAuth);
-        return;
-    }
+	if (bIsSteamId(szArg))
+	{
+		vRemove(iClient, NO_INDEX, szArg, szArg, eList, kAuth);
+		return;
+	}
 
-    int iTarget = FindTarget(iClient, szArg, true, false);
-    if (iTarget == NO_INDEX)
-        return;
+	int iTarget = FindTarget(iClient, szArg, true, false);
+	if (iTarget == NO_INDEX)
+		return;
 
-    char szAuthId[STEAMID2_LENGTH];
-    if (!GetClientAuthId(iTarget, AuthId_Steam2, szAuthId, sizeof(szAuthId)))
-    {
-        CReplyToCommand(iClient, "%t %t", "Prefix", "AuthIdError", szAuthId);
-        return;
-    }
+	char szAuthId[STEAMID2_LENGTH];
+	if (!GetClientAuthId(iTarget, AuthId_Steam2, szAuthId, sizeof(szAuthId)))
+	{
+		CReplyToCommand(iClient, "%t %t", "Prefix", "AuthIdError", szAuthId);
+		return;
+	}
 
-    char szName[16];
-    GetClientName(iTarget, szName, sizeof(szName));
-    vRemove(iClient, iTarget, szAuthId, szName, eList, kClient);
+	char szName[16];
+	GetClientName(iTarget, szName, sizeof(szName));
+	vRemove(iClient, iTarget, szAuthId, szName, eList, kClient);
 }
 
 /**
@@ -409,42 +407,42 @@ void vProcessRemove(int iClient, const char[] szArg, eTypeList eList)
  */
 void vRemove(int iClient, int iTarget, const char[] szAuthId, const char[] szDisplayName, eTypeList eList, eTypeID eId)
 {
-    bool bIndex = (iTarget > SERVER_INDEX);
-    bool bFound = false;
+	bool bIndex = (iTarget > SERVER_INDEX);
+	bool bFound = false;
 
-    switch (eList)
-    {
-        case kCaster:
-            bFound = bIndex ? bCaster(eId, kGet, iTarget, szAuthId) : bCaster(eId, kGet, NO_INDEX, szAuthId);
-        case kWhite:
-            bFound = bIndex ? bCasterWhitelist(eId, kGet, iTarget, szAuthId) : bCasterWhitelist(eId, kGet, NO_INDEX, szAuthId);
-    }
+	switch (eList)
+	{
+		case kCaster:
+			bFound = bIndex ? bCaster(eId, kGet, iTarget, szAuthId) : bCaster(eId, kGet, NO_INDEX, szAuthId);
+		case kWhite:
+			bFound = bIndex ? bCasterWhitelist(eId, kGet, iTarget, szAuthId) : bCasterWhitelist(eId, kGet, NO_INDEX, szAuthId);
+	}
 
-    if (!bFound)
-    {
-        CReplyToCommand(iClient, "%t %t", "Prefix", eList == kCaster ? "CasterNoFound" : "WhitelistNoFound", szDisplayName);
-        return;
-    }
+	if (!bFound)
+	{
+		CReplyToCommand(iClient, "%t %t", "Prefix", eList == kCaster ? "CasterNoFound" : "WhitelistNoFound", szDisplayName);
+		return;
+	}
 
-    switch (eList)
-    {
-        case kCaster:
-            bCaster(eId, kRem, iTarget, szAuthId);
-        case kWhite:
-            bCasterWhitelist(eId, kRem, iTarget, szAuthId);
-    }
+	switch (eList)
+	{
+		case kCaster:
+			bCaster(eId, kRem, iTarget, szAuthId);
+		case kWhite:
+			bCasterWhitelist(eId, kRem, iTarget, szAuthId);
+	}
 }
 
 void vDisplayRemoveMenu(int iClient, eTypeList eList)
 {
 	char szTitle[100];
-    switch (eList)
-    {
-        case kCaster:
-            Format(szTitle, sizeof(szTitle), "%T", "MenuCastersList", iClient);
-        case kWhite:
-            Format(szTitle, sizeof(szTitle), "%T", "MenuWhitelistList", iClient);
-    }
+	switch (eList)
+	{
+		case kCaster:
+			Format(szTitle, sizeof(szTitle), "%T", "MenuCastersList", iClient);
+		case kWhite:
+			Format(szTitle, sizeof(szTitle), "%T", "MenuWhitelistList", iClient);
+	}
 
 	Menu hMenu = new Menu(iMenuRemove);
 	hMenu.SetTitle(szTitle);
@@ -468,11 +466,11 @@ void vDisplayRemoveMenu(int iClient, eTypeList eList)
 void vRemoveTargets(Menu hMenu, eTypeList eList, int iClient)
 {
 	char
-        szName[64],
+		szName[64],
 		szInfo[16],
 		szAuthId[STEAMID2_LENGTH];
 
-	bool 
+	bool
 		bFound;
 
 	int
@@ -489,7 +487,7 @@ void vRemoveTargets(Menu hMenu, eTypeList eList, int iClient)
 		if (!GetClientAuthId(i, AuthId_Steam2, szAuthId, sizeof(szAuthId)))
 			continue;
 
-        Format(szInfo, sizeof(szInfo), "%d:%d", GetClientUserId(i), view_as<int>(eList));
+		Format(szInfo, sizeof(szInfo), "%d:%d", GetClientUserId(i), view_as<int>(eList));
 
 		switch (eList)
 		{
@@ -499,101 +497,99 @@ void vRemoveTargets(Menu hMenu, eTypeList eList, int iClient)
 				bFound = bCasterWhitelist(kClient, kGet, i, szAuthId);
 		}
 
-        if (bFound)
+		if (bFound)
 		{
-            hMenu.AddItem(szInfo, szName);
+			hMenu.AddItem(szInfo, szName);
 			iTargets++;
 		}
 	}
 
 	if (iTargets == 0)
 	{
-        char szMsj[64];
-        Format(szMsj, sizeof(szMsj), "%T", "NoTargetsToRemove", iClient);
+		char szMsj[64];
+		Format(szMsj, sizeof(szMsj), "%T", "NoTargetsToRemove", iClient);
 		hMenu.AddItem("", szMsj, ITEMDRAW_DISABLED);
 	}
 }
 
 public int iMenuRemove(Menu hMenu, MenuAction eAction, int iClient, int iItem)
 {
-    if (eAction == MenuAction_Select)
-    {
-            char
-				szInfo[32],
-				szName[32],
-				szPart1[16],
-				szPart2[16];
+	if (eAction == MenuAction_Select)
+	{
+		char
+			szInfo[32],
+			szName[32],
+			szPart1[16],
+			szPart2[16];
 
-            int
-				iIndex,
-				iUserId,
-				iTarget;
+		int
+			iIndex,
+			iUserId,
+			iTarget;
 
-			eTypeList
-				eList;
+		eTypeList
+			eList;
 
-            hMenu.GetItem(iItem, szInfo, sizeof(szInfo), _, szName, sizeof(szName));
-            
-            iIndex = SplitString(szInfo, ":", szPart1, sizeof(szPart1));
-            SplitString(szInfo[iIndex], ":", szPart2, sizeof(szPart2));
+		hMenu.GetItem(iItem, szInfo, sizeof(szInfo), _, szName, sizeof(szName));
 
-            iUserId = StringToInt(szPart1);
-            eList = view_as<eTypeList>(StringToInt(szPart2));
+		iIndex = SplitString(szInfo, ":", szPart1, sizeof(szPart1));
+		SplitString(szInfo[iIndex], ":", szPart2, sizeof(szPart2));
 
-        if ((iTarget = GetClientOfUserId(iUserId)) == SERVER_INDEX)
-            CPrintToChat(iClient, "%t %t", "Prefix", "Player no longer available");
-        else
-        {
-            char szAuthId[STEAMID2_LENGTH];
-            if (!GetClientAuthId(iTarget, AuthId_Steam2, szAuthId, sizeof(szAuthId)))
-            {
-                CReplyToCommand(iClient, "%t %t", "Prefix", "AuthIdError", szAuthId);
-                return Plugin_Handled;
-            }
+		iUserId = StringToInt(szPart1);
+		eList	= view_as<eTypeList>(StringToInt(szPart2));
 
-            vRemove(iClient, iTarget, szAuthId, szName, eList, kClient);
-        }
-    }
-    else if (eAction == MenuAction_End)
-        delete hMenu;
-    return 0;
+		if ((iTarget = GetClientOfUserId(iUserId)) == SERVER_INDEX)
+			CPrintToChat(iClient, "%t %t", "Prefix", "Player no longer available");
+		else
+		{
+			char szAuthId[STEAMID2_LENGTH];
+			if (!GetClientAuthId(iTarget, AuthId_Steam2, szAuthId, sizeof(szAuthId)))
+			{
+				CReplyToCommand(iClient, "%t %t", "Prefix", "AuthIdError", szAuthId);
+				return 0;
+			}
+
+			vRemove(iClient, iTarget, szAuthId, szName, eList, kClient);
+		}
+	}
+	else if (eAction == MenuAction_End)
+		delete hMenu;
+	return 0;
 }
 
 public void OnCaster(eTypeID eID, int iClient, const char[] szAuthId)
 {
-
-    switch(eID)
-    {
-        case kClient:
-        {
-            LogMessage("[OnCaster] eTypeID: %d | iClient: %N", eID, iClient);
-            CPrintToChatAll("%s {blue}%N{default} was registered as a caster", PREFIX_TEST, iClient);
-        }
-        case kAuth:
-        {
-            LogMessage("[OnCaster] eTypeID: %d | szAuthId: %s", eID, szAuthId);
-            CPrintToChatAll("%s {blue}%s{default} was registered as a caster", PREFIX_TEST, szAuthId);
-        }
-    }
+	switch (eID)
+	{
+		case kClient:
+		{
+			LogMessage("[OnCaster] eTypeID: %d | iClient: %N", eID, iClient);
+			CPrintToChatAll("%s {blue}%N{default} was registered as a caster", PREFIX_TEST, iClient);
+		}
+		case kAuth:
+		{
+			LogMessage("[OnCaster] eTypeID: %d | szAuthId: %s", eID, szAuthId);
+			CPrintToChatAll("%s {blue}%s{default} was registered as a caster", PREFIX_TEST, szAuthId);
+		}
+	}
 }
 
 public void OffCaster(eTypeID eID, int iClient, const char[] szAuthId)
 {
-    switch(eID)
-    {
-        case kClient:
-        {
-            LogMessage("[OffCaster] eTypeID: %d | iClient: %N", eID, iClient);
-            CPrintToChatAll("%s {red}%N{default} was removed from the casters list", PREFIX_TEST, iClient);
-        }
-        case kAuth:
-        {
-            LogMessage("[OffCaster] eTypeID: %d | szAuthId: %s", eID, szAuthId);
-            CPrintToChatAll("%s {red}%s{default} was removed from the casters list", PREFIX_TEST, szAuthId);
-        }
-    }
+	switch (eID)
+	{
+		case kClient:
+		{
+			LogMessage("[OffCaster] eTypeID: %d | iClient: %N", eID, iClient);
+			CPrintToChatAll("%s {red}%N{default} was removed from the casters list", PREFIX_TEST, iClient);
+		}
+		case kAuth:
+		{
+			LogMessage("[OffCaster] eTypeID: %d | szAuthId: %s", eID, szAuthId);
+			CPrintToChatAll("%s {red}%s{default} was removed from the casters list", PREFIX_TEST, szAuthId);
+		}
+	}
 }
-
 
 /**
  * Returns the clients team using L4DTeam.
@@ -630,7 +626,7 @@ bool bIsSteamId(const char[] szAuthId)
 	if (iPos1 == NO_INDEX)
 		return false;
 
-	int iPos2 = FindCharInString(szAuthId, ':', iPos1 + 1);
+	int iPos2 = FindCharInString(szAuthId, ':', view_as<bool>(iPos1 + 1));
 	if (iPos2 == NO_INDEX)
 		return false;
 
