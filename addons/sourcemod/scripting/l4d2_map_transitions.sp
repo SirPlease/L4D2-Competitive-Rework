@@ -2,8 +2,6 @@
 #pragma newdecls required
 
 #include <sourcemod>
-#include <sdktools>
-#include <sdkhooks>
 //#include <l4d2_direct>
 //#include <left4downtown>
 #include <left4dhooks>
@@ -14,16 +12,9 @@
 #define DEBUG 0
 
 #define MAP_NAME_MAX_LENGTH 64
-#define SECTION_NAME "CTerrorGameRules::SetCampaignScores"
-
-#define LEFT4FRAMEWORK_GAMEDATA "left4dhooks.l4d2"
-//#define LEFT4FRAMEWORK_GAMEDATA "left4downtown.l4d2"
 
 StringMap
 	g_hMapTransitionPair = null;
-
-Handle
-	g_hSetCampaignScores;
 
 int
 	g_iPointsTeamA = 0,
@@ -40,14 +31,13 @@ public Plugin myinfo =
 	name = "Map Transitions",
 	author = "Derpduck, Forgetest",
 	description = "Define map transitions to combine campaigns",
-	version = "3.2",
+	version = "3.3",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public void OnPluginStart()
 {
 	CheckGame();
-	LoadSDK();
 
 	g_hMapTransitionPair = new StringMap();
 
@@ -61,30 +51,7 @@ void CheckGame()
 	}
 }
 
-void LoadSDK()
-{
-	Handle hGameData = LoadGameConfigFile(LEFT4FRAMEWORK_GAMEDATA);
-	if (hGameData == null) {
-		SetFailState("Could not load gamedata/%s.txt", LEFT4FRAMEWORK_GAMEDATA);
-	}
-
-	StartPrepSDKCall(SDKCall_GameRules);
-	if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, SECTION_NAME)) {
-		SetFailState("Function '%s' not found.", SECTION_NAME);
-	}
-
-	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-	g_hSetCampaignScores = EndPrepSDKCall();
-
-	if (g_hSetCampaignScores == null) {
-		SetFailState("Function '%s' found, but something went wrong.", SECTION_NAME);
-	}
-
-	delete hGameData;
-}
-
-public void L4D2_OnEndVersusModeRound_Post()
+public void L4D2_OnEndVersusModeRound_Post() //left4dhooks
 {
 	//If map is in last half, attempt a transition
 	if (InSecondHalfOfRound()) {
@@ -158,12 +125,11 @@ void SetScores()
 		#endif
 	}
 
-	//Set scores on scoreboard
-	SDKCall(g_hSetCampaignScores, g_iPointsTeamA, g_iPointsTeamB);
-
 	//Set actual scores
 	L4D2Direct_SetVSCampaignScore(0, g_iPointsTeamA);
 	L4D2Direct_SetVSCampaignScore(1, g_iPointsTeamB);
+	GameRules_SetProp("m_iCampaignScore", g_iPointsTeamA, _, 0);
+	GameRules_SetProp("m_iCampaignScore", g_iPointsTeamB, _, 1);
 
 	#if DEBUG
 		LogMessage("Set scores to: (Survivors) %i vs (Infected) %i", g_iPointsTeamA, g_iPointsTeamB);

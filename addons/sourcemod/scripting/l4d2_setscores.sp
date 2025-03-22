@@ -17,16 +17,12 @@
 #pragma newdecls required
 
 #include <sourcemod>
-#include <sdktools>
 #include <left4dhooks>
 #include <builtinvotes>
 
 #define L4D_TEAM_SPECTATE 1
 
-#define PLUGIN_VERSION "1.4"
-
-#define LEFT4FRAMEWORK_GAMEDATA "left4dhooks.l4d2"
-#define SECTION_NAME "CTerrorGameRules::SetCampaignScores"
+#define PLUGIN_VERSION "1.5"
 
 public Plugin myinfo =
 {
@@ -43,8 +39,7 @@ ConVar
 	forceAdminsToVote;
 	
 Handle 
-	voteHandler,
-	hSetCampaignScores;
+	voteHandler;
 	
 int 
 	survivorScore, 
@@ -57,12 +52,11 @@ bool
 public void OnPluginStart()
 {
 	CheckGame();
-	LoadSDK();
-	
+
 	minimumPlayersForVote = CreateConVar("setscore_player_limit", "2", "Minimum # of players in game to start the vote");
 	allowPlayersToVote = CreateConVar("setscore_allow_player_vote", "1", "Whether player initiated votes are allowed, 1 to allow (default), 0 to disallow.");
 	forceAdminsToVote = CreateConVar("setscore_force_admin_vote", "0", "Whether admin score changes require a vote, 1 vote required, 0 vote not required (default).");
-	
+
 	RegConsoleCmd("sm_setscores", Command_SetScores, "sm_setscores <survivor score> <infected score>");
 }
 
@@ -71,27 +65,6 @@ void CheckGame()
 	if (GetEngineVersion() != Engine_Left4Dead2) {
 		SetFailState("Plugin 'SetScores' supports Left 4 Dead 2 only!");
 	}
-}
-
-void LoadSDK()
-{
-	Handle conf = LoadGameConfigFile(LEFT4FRAMEWORK_GAMEDATA);
-	if (conf == INVALID_HANDLE) {
-		SetFailState("Could not load gamedata/%s.txt", LEFT4FRAMEWORK_GAMEDATA);
-	}
-
-	StartPrepSDKCall(SDKCall_GameRules);
-	if (!PrepSDKCall_SetFromConf(conf, SDKConf_Signature, SECTION_NAME)) {
-		SetFailState("Function '" ... SECTION_NAME ... "' not found.");
-	}
-	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-	PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
-	hSetCampaignScores = EndPrepSDKCall();
-	if (hSetCampaignScores == INVALID_HANDLE) {
-		SetFailState("Function '" ... SECTION_NAME ... "' found, but something went wrong.");
-	}
-	
-	delete conf;
 }
 
 //Starting point for the setscores command
@@ -191,16 +164,16 @@ void SetScores(const int survScore, const int infectScore, const int iAdminIndex
 {
 	//Determine which teams are which
 	bool bFlipped = !!GameRules_GetProp("m_bAreTeamsFlipped");
+
 	int SurvivorTeamIndex = bFlipped ? 1 : 0;
 	int InfectedTeamIndex = bFlipped ? 0 : 1;
-	
+
 	//Set the scores
-	SDKCall(hSetCampaignScores,
-				(bFlipped) ? infectScore : survScore,
-				(bFlipped) ? survScore : infectScore); //visible scores
-	L4D2Direct_SetVSCampaignScore(SurvivorTeamIndex, survScore); //real scores
+	L4D2Direct_SetVSCampaignScore(SurvivorTeamIndex, survScore);
 	L4D2Direct_SetVSCampaignScore(InfectedTeamIndex, infectScore);
-	
+	GameRules_SetProp("m_iCampaignScore", survScore, _, SurvivorTeamIndex);
+	GameRules_SetProp("m_iCampaignScore", infectScore, _, InfectedTeamIndex);
+
 	if (iAdminIndex != -1) { //This works well for an index '0' as well, if the initiator is CONSOLE
 		char client_name[32];
 		GetClientName(iAdminIndex, client_name, sizeof(client_name));
