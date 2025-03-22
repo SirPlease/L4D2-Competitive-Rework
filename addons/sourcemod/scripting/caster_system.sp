@@ -703,7 +703,7 @@ public int iRegMenuHandler(Menu hMenu, MenuAction eAction, int iClient, int iIte
 				if (!GetClientAuthId(iTarget, AuthId_Steam2, szAuthId, sizeof(szAuthId)))
 				{
 					CReplyToCommand(iClient, "%t %t", "Prefix", "AuthIdError", szAuthId);
-					return Plugin_Handled;
+					return 0;
 				}
 
 				vRegister(iClient, iTarget, szAuthId, szName, eList, kClient, SM_REPLY_TO_CHAT);
@@ -1082,7 +1082,7 @@ public int iMenuRemoveHandler(Menu hMenu, MenuAction eAction, int iClient, int i
 			if (!GetClientAuthId(iTarget, AuthId_Steam2, szAuthId, sizeof(szAuthId)))
 			{
 				CReplyToCommand(iClient, "%t %t", "Prefix", "AuthIdError", szAuthId);
-				return Plugin_Handled;
+				return 0;
 			}
 
 			vRemove(iClient, iTarget, szAuthId, szName, eList, kClient, SM_REPLY_TO_CHAT);
@@ -1930,7 +1930,7 @@ bool bIsSteamId(const char[] szAuthId)
 	if (iPos1 == NO_INDEX)
 		return false;
 
-	int iPos2 = FindCharInString(szAuthId, ':', iPos1 + 1);
+	int iPos2 = FindCharInString(szAuthId, ':', view_as<bool>(iPos1 + 1));
 	if (iPos2 == NO_INDEX)
 		return false;
 
