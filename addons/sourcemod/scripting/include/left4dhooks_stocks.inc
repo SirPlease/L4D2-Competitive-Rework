@@ -1,7 +1,7 @@
 /**
  * =============================================================================
  * Left 4 Dead Stocks Library (C)2011-2012 Buster "Mr. Zero" Nielsen
- * Syntax Update and merge into "Left 4 DHooks Direct" (C) 2024 "SilverShot"
+ * Syntax Update and merge into "Left 4 DHooks Direct" (C) 2025 "SilverShot"
  * =============================================================================
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -137,15 +137,15 @@ enum L4D2ZombieClassType
 enum L4D2UseAction
 {
 	L4D2UseAction_None				= 0,	// No use action active
-	L4D2UseAction_Healing			= 1,	// Includes healing yourself or a teammate.
+	L4D2UseAction_Healing			= 1,	// Includes healing yourself or a teammate
 	L4D2UseAction_AmmoPack			= 2,	// When deploying the ammo pack that was never added into the game
-	L4D2UseAction_Defibing			= 4,	// When defib'ing a dead body.
-	L4D2UseAction_GettingDefibed	= 5,	// When comming back to life from a dead body.
+	L4D2UseAction_Defibing			= 4,	// When defib'ing a dead body
+	L4D2UseAction_GettingDefibed	= 5,	// When comming back to life from a dead body
 	L4D2UseAction_DeployIncendiary	= 6,	// When deploying Incendiary ammo
 	L4D2UseAction_DeployExplosive	= 7,	// When deploying Explosive ammo
 	L4D2UseAction_PouringGas		= 8,	// Pouring gas into a generator
-	L4D2UseAction_Cola				= 9,	// For Dead Center map 2 cola event, when handing over the cola to whitalker.
-	L4D2UseAction_Button			= 10,	// Such as buttons, timed buttons, generators, etc.
+	L4D2UseAction_Cola				= 9,	// For Dead Center map 2 cola event, when handing over the cola to Whitaker
+	L4D2UseAction_Button			= 10,	// Such as buttons, timed buttons, generators, etc
 	L4D2UseAction_UsePointScript	= 11	// When using a "point_script_use_target" entity
 	/* List is not fully done, these are just the ones I have found so far */
 }
@@ -161,7 +161,7 @@ enum L4DResourceType
 	L4DResource_TankTickets2
 }
 
-stock const char L4D1ZombieClassname[6][] =
+stock const char L4D1ZombieClassname[6][32] =
 {
 	"smoker",
 	"boomer",
@@ -171,7 +171,7 @@ stock const char L4D1ZombieClassname[6][] =
 	"error_bad_L4D1ZombieClassType"
 };
 
-stock const char L4D2ZombieClassname[9][] =
+stock const char L4D2ZombieClassname[9][32] =
 {
 	"smoker",
 	"boomer",
@@ -196,11 +196,11 @@ static const char L4DResourceName[L4DResourceType][] =
 };
 
 /**
- * Returns the clients team using L4DTeam.
+ * Returns the clients team using L4DTeam
  *
- * @param client		Player's index.
- * @return				Current L4DTeam of player.
- * @error				Invalid client index.
+ * @param client		Player's index
+ * @return				Current L4DTeam of player
+ * @error				Invalid client index
  */
 stock L4DTeam L4D_GetClientTeam(int client)
 {
@@ -209,65 +209,103 @@ stock L4DTeam L4D_GetClientTeam(int client)
 }
 
 /**
- * Returns zombie player L4D1 zombie class.
+ * Changes the client's team using L4DTeam
  *
- * @param client		Player's index.
- * @return				Current L4D1ZombieClassType of player.
- * @error				Invalid client index.
+ * @param client		Player's index
+ * @return				New L4DTeam of player
+ * @error				Invalid client index
  */
-// L4D1 only.
+stock void L4D_ChangeClientTeam(int client, L4DTeam team)
+{
+	ChangeClientTeam(client, view_as<int>(team));
+}
+
+/**
+ * Returns zombie player L4D1 zombie class
+ *
+ * @param client		Player's index
+ * @return				Current L4D1ZombieClassType of player
+ * @error				Invalid client index
+ */
+// L4D1 only
 stock L4D1ZombieClassType L4D1_GetPlayerZombieClass(int client)
 {
 	return view_as<L4D1ZombieClassType>(GetEntProp(client, Prop_Send, "m_zombieClass"));
 }
 
 /**
- * Set zombie player L4D1 zombie class.
+ * Set zombie player L4D1 zombie class
  *
- * @param client		Player's index.
- * @param class			L4D1ZombieClassType class symbol.
+ * @param client		Player's index
+ * @param class			L4D1ZombieClassType class symbol
  * @noreturn
- * @error				Invalid client index.
+ * @error				Invalid client index
  */
-// L4D1 only.
+// L4D1 only
 stock void L4D1_SetPlayerZombieClass(int client, L4D1ZombieClassType class)
 {
 	SetEntProp(client, Prop_Send, "m_zombieClass", class);
 }
 
 /**
- * Returns zombie player L4D2 zombie class.
+ * Returns zombie player L4D2 zombie class
  *
- * @param client		Player's index.
- * @return				Current L4D2ZombieClassType of player.
- * @error				Invalid client index.
+ * @param client		Player's index
+ * @return				Current L4D2ZombieClassType of player
+ * @error				Invalid client index
  */
-// L4D2 only.
+// L4D2 only
 stock any L4D2_GetPlayerZombieClass(int client)
 {
 	return view_as<L4D2ZombieClassType>(GetEntProp(client, Prop_Send, "m_zombieClass"));
 }
 
 /**
- * Set zombie player L4D2 zombie class.
+ * Set zombie player L4D2 zombie class
  *
- * @param client		Player's index.
- * @param class			L4D2ZombieClassType class symbol.
+ * @param client		Player's index
+ * @param class			L4D2ZombieClassType class symbol
  * @noreturn
- * @error				Invalid client index.
+ * @error				Invalid client index
  */
-// L4D2 only.
+// L4D2 only
 stock void L4D2_SetPlayerZombieClass(int client, L4D2ZombieClassType class)
 {
 	SetEntProp(client, Prop_Send, "m_zombieClass", class);
 }
 
 /**
- * Returns ghost state of zombie player.
+ * Returns zombie player L4D1 zombie classname from the L4D1ZombieClassType value
  *
- * @param client		Player index.
- * @return				True if player is ghost, false otherwise.
- * @error				Invalid client index.
+ * @param type			L4D1ZombieClassType
+ * @return				Classname string
+ * @error				Invalid type index
+ */
+// L4D1 only
+stock char[] L4D1_GetZombieClassname(L4D1ZombieClassType type)
+{
+	return L4D1ZombieClassname[type];
+}
+
+/**
+ * Returns zombie player L4D2 zombie classname from the L4D2ZombieClassType value
+ *
+ * @param type			L4D1ZombieClassType
+ * @return				Classname string
+ * @error				Invalid type index
+ */
+// L4D2 only
+stock char[] L4D2_GetZombieClassname(L4D2ZombieClassType type)
+{
+	return L4D2ZombieClassname[type];
+}
+
+/**
+ * Returns ghost state of zombie player
+ *
+ * @param client		Player index
+ * @return				True if player is ghost, false otherwise
+ * @error				Invalid client index
  */
 stock bool L4D_IsPlayerGhost(int client)
 {
@@ -275,12 +313,12 @@ stock bool L4D_IsPlayerGhost(int client)
 }
 
 /**
- * Sets ghost state of zombie player.
+ * Sets ghost state of zombie player
  *
- * @param client		Player index.
- * @param isGhost		Sets ghost status.
+ * @param client		Player index
+ * @param isGhost		Sets ghost status
  * @noreturn
- * @error				Invalid client index.
+ * @error				Invalid client index
  */
 stock void L4D_SetPlayerGhostState(int client, bool isGhost)
 {
@@ -288,11 +326,11 @@ stock void L4D_SetPlayerGhostState(int client, bool isGhost)
 }
 
 /**
- * Returns ghost spawn state of zombie player.
+ * Returns ghost spawn state of zombie player
  *
- * @param client		Player index.
- * @return				Player's spawn state bits.
- * @error				Invalid client index.
+ * @param client		Player index
+ * @return				Player's spawn state bits
+ * @error				Invalid client index
  */
 stock int L4D_GetPlayerGhostSpawnState(int client)
 {
@@ -300,14 +338,14 @@ stock int L4D_GetPlayerGhostSpawnState(int client)
 }
 
 /**
- * Set zombie player's ghost spawn state bits.
+ * Set zombie player's ghost spawn state bits
  *
- * Note: The game updates spawn state bits every frame.
+ * Note: The game updates spawn state bits every frame
  *
- * @param client		Player index.
- * @param bits			Ghost spawn state bits.
+ * @param client		Player index
+ * @param bits			Ghost spawn state bits
  * @noreturn
- * @error				Invalid client index.
+ * @error				Invalid client index
  */
 stock void L4D_SetPlayerGhostSpawnState(int client, int bits)
 {
@@ -315,10 +353,10 @@ stock void L4D_SetPlayerGhostSpawnState(int client, int bits)
 }
 
 /**
- * Returns whether zombie player is culling.
+ * Returns whether zombie player is culling
  *
- * @param client		Player index.
- * @return				True if player is culling, false otherwise.
+ * @param client		Player index
+ * @return				True if player is culling, false otherwise
  */
 stock bool L4D_IsPlayerCulling(int client)
 {
@@ -326,12 +364,12 @@ stock bool L4D_IsPlayerCulling(int client)
 }
 
 /**
- * Set culling state of zombie player.
+ * Set culling state of zombie player
  *
- * @param client		Player index.
- * @param isCulling		Whether player is culling.
+ * @param client		Player index
+ * @param isCulling		Whether player is culling
  * @noreturn
- * @error				Invalid client index.
+ * @error				Invalid client index
  */
 stock void L4D_SetPlayerCullingState(int client, bool isCulling)
 {
@@ -339,13 +377,13 @@ stock void L4D_SetPlayerCullingState(int client, bool isCulling)
 }
 
 /**
- * Returns whether player is incapacitated.
+ * Returns whether player is incapacitated
  *
- * Note: A tank player will return true when in dying animation.
+ * Note: A tank player will return true when in dying animation
  *
- * @param client		Player index.
- * @return				True if incapacitated, false otherwise.
- * @error				Invalid client index.
+ * @param client		Player index
+ * @return				True if incapacitated, false otherwise
+ * @error				Invalid client index
  */
 stock bool L4D_IsPlayerIncapacitated(int client)
 {
@@ -353,12 +391,12 @@ stock bool L4D_IsPlayerIncapacitated(int client)
 }
 
 /**
- * Set player's incapacitated state.
+ * Set player's incapacitated state
  *
- * @param client			Player index.
- * @param isIncapacitated	Whether the player is incapacitated.
+ * @param client			Player index
+ * @param isIncapacitated	Whether the player is incapacitated
  * @noreturn
- * @error					Invalid client index.
+ * @error					Invalid client index
  */
 stock void L4D_SetPlayerIncapacitatedState(int client, bool isIncapacitated)
 {
@@ -366,10 +404,10 @@ stock void L4D_SetPlayerIncapacitatedState(int client, bool isIncapacitated)
 }
 
 /**
- * Returns survivor player shove penalty.
+ * Returns survivor player shove penalty
  *
- * @param client		Player index.
- * @return				Current shove penalty of player.
+ * @param client		Player index
+ * @return				Current shove penalty of player
  */
 stock int L4D_GetPlayerShovePenalty(int client)
 {
@@ -377,12 +415,12 @@ stock int L4D_GetPlayerShovePenalty(int client)
 }
 
 /**
- * Set survivor player shove penalty.
+ * Set survivor player shove penalty
  *
- * @param client		Player index.
- * @param shovePenalty	Shove penalty.
+ * @param client		Player index
+ * @param shovePenalty	Shove penalty
  * @noreturn
- * @error				Invalid client index.
+ * @error				Invalid client index
  */
 stock void L4D_SetPlayerShovePenalty(int client, int shovePenalty)
 {
@@ -390,11 +428,11 @@ stock void L4D_SetPlayerShovePenalty(int client, int shovePenalty)
 }
 
 /**
- * Returns tank player's frustration.
+ * Returns tank player's frustration
  *
- * @param client		Player index.
- * @return				How frustrated tank player is.
- * @error				Invalid client index.
+ * @param client		Player index
+ * @return				How frustrated tank player is
+ * @error				Invalid client index
  */
 stock int L4D_GetTankFrustration(int client)
 {
@@ -402,12 +440,12 @@ stock int L4D_GetTankFrustration(int client)
 }
 
 /**
- * Set tank player's frustration.
+ * Set tank player's frustration
  *
- * @param client		Player index.
- * @param frustration	How frustrated tank player is.
+ * @param client		Player index
+ * @param frustration	How frustrated tank player is
  * @noreturn
- * @error				Invalid client index.
+ * @error				Invalid client index
  */
 stock void L4D_SetTankFrustration(int client, int frustration)
 {
@@ -415,10 +453,10 @@ stock void L4D_SetTankFrustration(int client, int frustration)
 }
 
 /**
- * Returns whether survivor player is idle.
+ * Returns whether survivor player is idle
  *
- * @param				Player index.
- * @return				True if idle, false otherwise.
+ * @param				Player index
+ * @return				True if idle, false otherwise
  */
 stock bool L4D_IsPlayerIdle(int client)
 {
@@ -426,10 +464,10 @@ stock bool L4D_IsPlayerIdle(int client)
 }
 
 /**
- * Returns survivor bot of idle survivor player.
+ * Returns survivor bot of idle survivor player
  *
- * @param client		Player index.
- * @return				Player index of the bot, -1 if not found.
+ * @param client		Player index
+ * @return				Player index of the bot, -1 if not found
  */
 stock int L4D_GetBotOfIdlePlayer(int client)
 {
@@ -468,11 +506,11 @@ stock int L4D_GetBotOfIdlePlayer(int client)
 }
 
 /**
- * Returns idle survivor player of survivor bot.
+ * Returns idle survivor player of survivor bot
  *
- * @param bot			Player index of bot.
- * @return				Player index of idle client, -1 if not found.
- * @error				Invalid client index.
+ * @param bot			Player index of bot
+ * @return				Player index of idle client, -1 if not found
+ * @error				Invalid client index
  */
 stock int L4D_GetIdlePlayerOfBot(int bot)
 {
@@ -489,9 +527,9 @@ stock int L4D_GetIdlePlayerOfBot(int bot)
 }
 
 /**
- * Returns resource entity.
+ * Returns resource entity
  *
- * @return				Entity index of resource entity, -1 if not found.
+ * @return				Entity index of resource entity, -1 if not found
  */
 stock int L4D_GetResourceEntity()
 {
@@ -499,12 +537,12 @@ stock int L4D_GetResourceEntity()
 }
 
 /**
- * Retrieves client data from the resource entity.
+ * Retrieves client data from the resource entity
  *
- * @param client		Player's index.
+ * @param client		Player's index
  * @param type			ResourceType constant
- * @return				Value or -1 on failure.
- * @error				Invalid client index, client not in game or failed to find resource entity.
+ * @return				Value or -1 on failure
+ * @error				Invalid client index, client not in game or failed to find resource entity
  */
 stock int L4D_GetPlayerResourceData(int client, L4DResourceType type)
 {
@@ -531,15 +569,15 @@ stock int L4D_GetPlayerResourceData(int client, L4DResourceType type)
 }
 
 /**
- * Sets client data in the resource entity.
+ * Sets client data in the resource entity
  *
- * Note: The game overwrites these values every frame, so changing them will have very little effect.
+ * Note: The game overwrites these values every frame, so changing them will have very little effect
  *
- * @param client		Player's index.
+ * @param client		Player's index
  * @param type			ResourceType constant
- * @param value			Value to set.
- * @return				Value or -1 on failure.
- * @error				Invalid client index, client not in game or failed to find resource entity.
+ * @param value			Value to set
+ * @return				Value or -1 on failure
+ * @error				Invalid client index, client not in game or failed to find resource entity
  */
 stock bool L4D_SetPlayerResourceData(int client, L4DResourceType type, any value)
 {
@@ -570,10 +608,10 @@ stock bool L4D_SetPlayerResourceData(int client, L4DResourceType type, any value
 /**
  * Removes the weapon from a client's weapon slot
  *
- * @param client		Player's index.
- * @param slot			Slot index.
+ * @param client		Player's index
+ * @param slot			Slot index
  * @noreturn
- * @error				Invalid client or lack of mod support.
+ * @error				Invalid client or lack of mod support
  */
 stock void L4D_RemoveWeaponSlot(int client, L4DWeaponSlot slot)
 {
@@ -588,9 +626,9 @@ stock void L4D_RemoveWeaponSlot(int client, L4DWeaponSlot slot)
 /**
  * Removes all weapons from a client
  *
- * @param client		Player's index.
+ * @param client		Player's index
  * @noreturn
- * @error				Invalid client or lack of mod support.
+ * @error				Invalid client or lack of mod support
  */
 stock void L4D_RemoveAllWeapons(int client)
 {
@@ -601,13 +639,13 @@ stock void L4D_RemoveAllWeapons(int client)
 }
 
 /**
- * Returns whether the finale is active.
+ * Returns whether the finale is active
  *
  * Note: Finales can also be on other maps than just the finale map. A perfect
  * example of this is the Swamp Fever map 1 crescendo event. This event is
- * defined as a finale by Valve for some reason.
+ * defined as a finale by Valve for some reason
  *
- * @return				True if finale is active, false otherwise.
+ * @return				True if finale is active, false otherwise
  */
 stock bool L4D_IsFinaleActive()
 {
@@ -622,9 +660,9 @@ stock bool L4D_IsFinaleActive()
 }
 
 /**
- * Returns whether any survivor have left the safe area.
+ * Returns whether any survivor have left the safe area
  *
- * @return				True if any survivor have left safe area, false otherwise.
+ * @return				True if any survivor have left safe area, false otherwise
  */
 stock bool L4D_HasAnySurvivorLeftSafeAreaStock()
 {
@@ -639,9 +677,9 @@ stock bool L4D_HasAnySurvivorLeftSafeAreaStock()
 }
 
 /**
- * Returns pending tank player.
+ * Returns pending tank player
  *
- * @return				Player index of pending tank player, -1 if not found.
+ * @return				Player index of pending tank player, -1 if not found
  */
 stock int L4D_GetPendingTankPlayer()
 {
@@ -656,17 +694,17 @@ stock int L4D_GetPendingTankPlayer()
 }
 
 /**
- * Set entity glow. This is consider safer and more robust over setting each glow property on their own because glow offset will be check first.
+ * Set entity glow. This is consider safer and more robust over setting each glow property on their own because glow offset will be check first
  *
- * @param entity		Entity index.
- * @parma type			Glow type.
- * @param range			Glow max range, 0 for unlimited.
- * @param minRange		Glow min range.
- * @param colorOverride	Glow color, RGB.
- * @param flashing		Whether the glow will be flashing.
- * @return				True if glow was set, false if entity does not support glow.
+ * @param entity		Entity index
+ * @parma type			Glow type
+ * @param range			Glow max range, 0 for unlimited
+ * @param minRange		Glow min range
+ * @param colorOverride	Glow color, RGB
+ * @param flashing		Whether the glow will be flashing
+ * @return				True if glow was set, false if entity does not support glow
  */
-// L4D2 only.
+// L4D2 only
 stock bool L4D2_SetEntityGlow(int entity, L4D2GlowType type, int range, int minRange, int colorOverride[3], bool flashing)
 {
 	if (!IsValidEntity(entity))
@@ -693,189 +731,189 @@ stock bool L4D2_SetEntityGlow(int entity, L4D2GlowType type, int range, int minR
 }
 
 /**
- * Set entity glow type.
+ * Set entity glow type
  *
- * @param entity		Entity index.
- * @parma type			Glow type.
+ * @param entity		Entity index
+ * @parma type			Glow type
  * @noreturn
- * @error				Invalid entity index or entity does not support glow.
+ * @error				Invalid entity index or entity does not support glow
  */
-// L4D2 only.
+// L4D2 only
 stock void L4D2_SetEntityGlow_Type(int entity, L4D2GlowType type)
 {
 	SetEntProp(entity, Prop_Send, "m_iGlowType", type);
 }
 
 /**
- * Set entity glow range.
+ * Set entity glow range
  *
- * @param entity		Entity index.
- * @parma range			Glow range.
+ * @param entity		Entity index
+ * @parma range			Glow range
  * @noreturn
- * @error				Invalid entity index or entity does not support glow.
+ * @error				Invalid entity index or entity does not support glow
  */
-// L4D2 only.
+// L4D2 only
 stock void L4D2_SetEntityGlow_Range(int entity, int range)
 {
 	SetEntProp(entity, Prop_Send, "m_nGlowRange", range);
 }
 
 /**
- * Set entity glow min range.
+ * Set entity glow min range
  *
- * @param entity		Entity index.
- * @parma minRange		Glow min range.
+ * @param entity		Entity index
+ * @parma minRange		Glow min range
  * @noreturn
- * @error				Invalid entity index or entity does not support glow.
+ * @error				Invalid entity index or entity does not support glow
  */
-// L4D2 only.
+// L4D2 only
 stock void L4D2_SetEntityGlow_MinRange(int entity, int minRange)
 {
 	SetEntProp(entity, Prop_Send, "m_nGlowRangeMin", minRange);
 }
 
 /**
- * Set entity glow color.
+ * Set entity glow color
  *
- * @param entity		Entity index.
- * @parma colorOverride	Glow color, RGB.
+ * @param entity		Entity index
+ * @parma colorOverride	Glow color, RGB
  * @noreturn
- * @error				Invalid entity index or entity does not support glow.
+ * @error				Invalid entity index or entity does not support glow
  */
-// L4D2 only.
+// L4D2 only
 stock void L4D2_SetEntityGlow_Color(int entity, int colorOverride[3])
 {
 	SetEntProp(entity, Prop_Send, "m_glowColorOverride", colorOverride[0] + (colorOverride[1] * 256) + (colorOverride[2] * 65536));
 }
 
 /**
- * Set entity glow flashing state.
+ * Set entity glow flashing state
  *
- * @param entity		Entity index.
- * @parma flashing		Whether glow will be flashing.
+ * @param entity		Entity index
+ * @parma flashing		Whether glow will be flashing
  * @noreturn
- * @error				Invalid entity index or entity does not support glow.
+ * @error				Invalid entity index or entity does not support glow
  */
-// L4D2 only.
+// L4D2 only
 stock void L4D2_SetEntityGlow_Flashing(int entity, bool flashing)
 {
 	SetEntProp(entity, Prop_Send, "m_bFlashing", flashing);
 }
 
 /**
- * Returns entity glow type.
+ * Returns entity glow type
  *
- * @param entity		Entity index.
- * @return				L4D2 glow type.
- * @error				Invalid entity index or entity does not support glow.
+ * @param entity		Entity index
+ * @return				L4D2 glow type
+ * @error				Invalid entity index or entity does not support glow
  */
-// L4D2 only.
+// L4D2 only
 stock L4D2GlowType L4D2_GetEntityGlow_Type(int entity)
 {
 	return view_as<L4D2GlowType>(GetEntProp(entity, Prop_Send, "m_iGlowType"));
 }
 
 /**
- * Returns entity glow range.
+ * Returns entity glow range
  *
- * @param entity		Entity index.
- * @return				Glow range.
- * @error				Invalid entity index or entity does not support glow.
+ * @param entity		Entity index
+ * @return				Glow range
+ * @error				Invalid entity index or entity does not support glow
  */
-// L4D2 only.
+// L4D2 only
 stock int L4D2_GetEntityGlow_Range(int entity)
 {
 	return GetEntProp(entity, Prop_Send, "m_nGlowRange");
 }
 
 /**
- * Returns entity glow min range.
+ * Returns entity glow min range
  *
- * @param entity		Entity index.
- * @return				Glow min range.
- * @error				Invalid entity index or entity does not support glow.
+ * @param entity		Entity index
+ * @return				Glow min range
+ * @error				Invalid entity index or entity does not support glow
  */
-// L4D2 only.
+// L4D2 only
 stock int L4D2_GetEntityGlow_MinRange(int entity)
 {
 	return GetEntProp(entity, Prop_Send, "m_nGlowRangeMin");
 }
 
 /**
- * Returns entity glow flashing state.
+ * Returns entity glow flashing state
  *
- * @param entity		Entity index.
- * @return				Glow flashing state.
- * @error				Invalid entity index or entity does not support glow.
+ * @param entity		Entity index
+ * @return				Glow flashing state
+ * @error				Invalid entity index or entity does not support glow
  */
-// L4D2 only.
+// L4D2 only
 stock bool L4D2_GetEntityGlow_Flashing(int entity)
 {
 	return view_as<bool>(GetEntProp(entity, Prop_Send, "m_bFlashing"));
 }
 
 /**
- * Removes entity glow.
+ * Removes entity glow
  *
- * @param entity		Entity index.
+ * @param entity		Entity index
  * @return				True if glow was removed, false if entity does not
- *						support glow.
+ *						support glow
  */
-// L4D2 only.
+// L4D2 only
 stock bool L4D2_RemoveEntityGlow(int entity)
 {
 	return view_as<bool>(L4D2_SetEntityGlow(entity, L4D2Glow_None, 0, 0, { 0, 0, 0 }, false));
 }
 
 /**
- * Removes entity glow override color.
+ * Removes entity glow override color
  *
  * Note: This only removes the override color and reset it to the default glow
- * color.
+ * color
  *
- * @param entity		Entity index.
+ * @param entity		Entity index
  * @noreturn
- * @error				Invalid entity index or entity does not support glow.
+ * @error				Invalid entity index or entity does not support glow
  */
-// L4D2 only.
+// L4D2 only
 stock void L4D2_RemoveEntityGlow_Color(int entity)
 {
 	L4D2_SetEntityGlow_Color(entity, { 0, 0, 0 });
 }
 
 /**
- * Whether survivor glow for player is enabled.
+ * Whether survivor glow for player is enabled
  *
- * @param client		Client index.
- * @return				True if survivor glow is enabled, false otherwise.
- * @error				Invalid client index.
+ * @param client		Client index
+ * @return				True if survivor glow is enabled, false otherwise
+ * @error				Invalid client index
  */
-// L4D2 only.
+// L4D2 only
 stock bool L4D2_IsPlayerSurvivorGlowEnable(int client)
 {
 	return view_as<bool>(GetEntProp(client, Prop_Send, "m_bSurvivorGlowEnabled"));
 }
 
 /**
- * Set survivor glow state for player.
+ * Set survivor glow state for player
  *
- * @param client		Client index.
- * @param enabled		Whether survivor glow is enabled.
+ * @param client		Client index
+ * @param enabled		Whether survivor glow is enabled
  * @noreturn
- * @error				Invalid client index.
+ * @error				Invalid client index
  */
-// L4D2 only.
+// L4D2 only
 stock void L4D2_SetPlayerSurvivorGlowState(int client, bool enabled)
 {
 	SetEntProp(client, Prop_Send, "m_bSurvivorGlowEnabled", enabled);
 }
 
 /**
- * Return player current revive count.
+ * Return player current revive count
  *
- * @param client		Client index.
- * @return				Survivor's current revive count.
- * @error				Invalid client index.
+ * @param client		Client index
+ * @return				Survivor's current revive count
+ * @error				Invalid client index
  */
 stock int L4D_GetPlayerReviveCount(int client)
 {
@@ -883,12 +921,12 @@ stock int L4D_GetPlayerReviveCount(int client)
 }
 
 /**
- * Set player revive count.
+ * Set player revive count
  *
- * @param client		Client index.
- * @param count			Revive count.
+ * @param client		Client index
+ * @param count			Revive count
  * @noreturn
- * @error				Invalid client index.
+ * @error				Invalid client index
  */
 stock void L4D_SetPlayerReviveCount(int client, int count)
 {
@@ -896,13 +934,13 @@ stock void L4D_SetPlayerReviveCount(int client, int count)
 }
 
 /**
- * Return player intensity.
+ * Return player intensity
  *
- * Note: Its percentage. 0.0 - Player is calm, 1.0 - Player is stressed.
+ * Note: Its percentage. 0.0 - Player is calm, 1.0 - Player is stressed
  *
- * @param client		Client index.
- * @return				Intensity.
- * @error				Invalid client index.
+ * @param client		Client index
+ * @return				Intensity
+ * @error				Invalid client index
  */
 stock float L4D_GetPlayerIntensity(int client)
 {
@@ -912,11 +950,11 @@ stock float L4D_GetPlayerIntensity(int client)
 }
 
 /**
- * Returns average survivor intensity.
+ * Returns average survivor intensity
  *
- * Note: Its percentage. 0.0 - All survivors is calm, 1.0 - All survivors is stressed.
+ * Note: Its percentage. 0.0 - All survivors is calm, 1.0 - All survivors is stressed
  *
- * @return				Average intensity level for survivors.
+ * @return				Average intensity level for survivors
  */
 stock float L4D_GetAvgSurvivorIntensity()
 {
@@ -942,29 +980,32 @@ stock float L4D_GetAvgSurvivorIntensity()
 }
 
 /**
- * Set player intensity.
+ * Set player intensity
  *
- * Note: Its percentage. 0.0 - Player is calm, 1.0 - Player is stressed.
+ * Note: Its percentage. 0.0 - Player is calm, 1.0 - Player is stressed
  *
- * @param client		Client index.
- * @param intensity		Intensity.
+ * @param client		Client index
+ * @param intensity		Intensity
  * @noreturn
- * @error				Invalid client index.
+ * @error				Invalid client index
  */
+/*
+// MOVED TO NATIVES:
 stock void L4D_SetPlayerIntensity(int client, float intensity)
 {
 	SetEntProp(client, Prop_Send, "m_clientIntensity", RoundToNearest(intensity * 100.0));
 }
+*/
 
 /**
- * Returns whether player is calm.
+ * Returns whether player is calm
  *
  * Note: Player is calm means that the player have not taken damage or
- * fired their weapon for a while. Survivor bots always return false.
+ * fired their weapon for a while. Survivor bots always return false
  *
- * @param client		Client index.
- * @return				True if player is calm, false otherwise.
- * @error				Invalid client index.
+ * @param client		Client index
+ * @return				True if player is calm, false otherwise
+ * @error				Invalid client index
  */
 stock bool L4D_IsPlayerCalm(int client)
 {
@@ -972,14 +1013,14 @@ stock bool L4D_IsPlayerCalm(int client)
 }
 
 /**
- * Set player is calm state.
+ * Set player is calm state
  *
- * Note: Player is calm means that the player have not taken damage or fired their weapon for a while.
+ * Note: Player is calm means that the player have not taken damage or fired their weapon for a while
  *
- * @param client		Client index.
- * @param isCalm		Whether player is calm.
+ * @param client		Client index
+ * @param isCalm		Whether player is calm
  * @noreturn
- * @error				Invalid client index.
+ * @error				Invalid client index
  */
 stock void L4D_SetPlayerCalmState(int client, bool isCalm)
 {
@@ -987,16 +1028,16 @@ stock void L4D_SetPlayerCalmState(int client, bool isCalm)
 }
 
 /**
- * Returns whether player has visible threats.
+ * Returns whether player has visible threats
  *
  * Note: This function should work for all players. Survivors looking upon
  * specials, witch or tank will be marked as has visible threats. However
  * looking at commons will not be seen as has visible threats. The common has
- * to be awaken from its slumber before beings seen as a threat.
+ * to be awaken from its slumber before beings seen as a threat
  *
- * @parma client		Client index.
- * @return				True if player has visible threats, false otherwise.
- * @error				Invalid client index.
+ * @parma client		Client index
+ * @return				True if player has visible threats, false otherwise
+ * @error				Invalid client index
  */
 stock bool L4D_HasVisibleThreats(int client)
 {
@@ -1004,11 +1045,11 @@ stock bool L4D_HasVisibleThreats(int client)
 }
 
 /**
- * Returns whether player is on third strike.
+ * Returns whether player is on third strike
  *
- * @param client		Client index.
- * @return				True if on third strike, false otherwise.
- * @error				Invalid client index.
+ * @param client		Client index
+ * @return				True if on third strike, false otherwise
+ * @error				Invalid client index
  */
 stock bool L4D_IsPlayerOnThirdStrike(int client)
 {
@@ -1016,12 +1057,12 @@ stock bool L4D_IsPlayerOnThirdStrike(int client)
 }
 
 /**
- * Set player third strike state.
+ * Set player third strike state
  *
- * @param client		Client index.
- * @param onThirdStrike Whether survivor is on third strike.
+ * @param client		Client index
+ * @param onThirdStrike Whether survivor is on third strike
  * @noreturn
- * @error				Invalid client index.
+ * @error				Invalid client index
  */
 stock void L4D_SetPlayerThirdStrikeState(int client, bool onThirdStrike)
 {
@@ -1029,16 +1070,16 @@ stock void L4D_SetPlayerThirdStrikeState(int client, bool onThirdStrike)
 }
 
 /**
- * Returns whether player is going to die.
+ * Returns whether player is going to die
  *
  * Note: This is not the same as is player on third strike. While on third
  * strike defines whether player should die next time they get incapacitated,
  * this defines whether the survivor should limp when they hit 1hp and make
- * the character vocalize their "I dont think I'm gonna make it" lines.
+ * the character vocalize their "I dont think I'm gonna make it" lines
  *
- * @param client		Client index.
- * @return				True if player is going to die, false otherwise.
- * @error				Invalid client index.
+ * @param client		Client index
+ * @return				True if player is going to die, false otherwise
+ * @error				Invalid client index
  */
 stock bool L4D_IsPlayerGoingToDie(int client)
 {
@@ -1046,12 +1087,12 @@ stock bool L4D_IsPlayerGoingToDie(int client)
 }
 
 /**
- * Set player is going to die state.
+ * Set player is going to die state
  *
- * @param client		Client index.
- * @param isGoingToDie	Whether player is going to die.
+ * @param client		Client index
+ * @param isGoingToDie	Whether player is going to die
  * @noreturn
- * @error				Invalid client index.
+ * @error				Invalid client index
  */
 stock void L4D_SetPlayerIsGoingToDie(int client, bool isGoingToDie)
 {
@@ -1059,11 +1100,11 @@ stock void L4D_SetPlayerIsGoingToDie(int client, bool isGoingToDie)
 }
 
 /**
- * Returns whether weapon is upgrade compatible.
+ * Returns whether weapon is upgrade compatible
  *
- * @param weapon		Weapon entity index.
- * @return				True if compatible with upgrades, false otherwise.
- * @error				Invalid entity index.
+ * @param weapon		Weapon entity index
+ * @return				True if compatible with upgrades, false otherwise
+ * @error				Invalid entity index
  */
 stock bool L4D2_IsWeaponUpgradeCompatible(int weapon)
 {
@@ -1074,13 +1115,13 @@ stock bool L4D2_IsWeaponUpgradeCompatible(int weapon)
 }
 
 /**
- * Returns upgraded ammo count for weapon.
+ * Returns upgraded ammo count for weapon
  *
- * @param weapon		Weapon entity index.
- * @return				Upgraded ammo count.
- * @error				Invalid entity index.
+ * @param weapon		Weapon entity index
+ * @return				Upgraded ammo count
+ * @error				Invalid entity index
  */
-// L4D2 only.
+// L4D2 only
 stock int L4D2_GetWeaponUpgradeAmmoCount(int weapon)
 {
 	if( HasEntProp(weapon, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded") )
@@ -1090,14 +1131,14 @@ stock int L4D2_GetWeaponUpgradeAmmoCount(int weapon)
 }
 
 /**
- * Set upgraded ammo count in weapon.
+ * Set upgraded ammo count in weapon
  *
- * @param weapon		Weapon entity index.
- * @param count			Upgraded ammo count.
+ * @param weapon		Weapon entity index
+ * @param count			Upgraded ammo count
  * @noreturn
- * @error				Invalid entity index.
+ * @error				Invalid entity index
  */
-// L4D2 only.
+// L4D2 only
 stock void L4D2_SetWeaponUpgradeAmmoCount(int weapon, int count)
 {
 	if( HasEntProp(weapon, Prop_Send, "m_nUpgradedPrimaryAmmoLoaded") )
@@ -1105,13 +1146,13 @@ stock void L4D2_SetWeaponUpgradeAmmoCount(int weapon, int count)
 }
 
 /**
- * Returns weapon upgrades of weapon.
+ * Returns weapon upgrades of weapon
  *
- * @param weapon		Weapon entity index.
- * @return				Weapon upgrade bits.
- * @error				Invalid entity index.
+ * @param weapon		Weapon entity index
+ * @return				Weapon upgrade bits
+ * @error				Invalid entity index
  */
-// L4D2 only.
+// L4D2 only
 stock int L4D2_GetWeaponUpgrades(int weapon)
 {
 	if( HasEntProp(weapon, Prop_Send, "m_upgradeBitVec") )
@@ -1121,14 +1162,14 @@ stock int L4D2_GetWeaponUpgrades(int weapon)
 }
 
 /**
- * Set weapon upgrades for weapon.
+ * Set weapon upgrades for weapon
  *
- * @param weapon		Weapon entity index.
- * @param upgrades		Weapon upgrade bits.
+ * @param weapon		Weapon entity index
+ * @param upgrades		Weapon upgrade bits
  * @noreturn
- * @error				Invalid entity index.
+ * @error				Invalid entity index
  */
-// L4D2 only.
+// L4D2 only
 stock void L4D2_SetWeaponUpgrades(int weapon, int upgrades)
 {
 	if( HasEntProp(weapon, Prop_Send, "m_upgradeBitVec") )
@@ -1138,16 +1179,18 @@ stock void L4D2_SetWeaponUpgrades(int weapon, int upgrades)
 }
 
 /**
- * Returns infected attacker of survivor victim.
+ * Returns infected attacker of survivor victim
  *
  * Note: Infected attacker means the infected player that is currently
- * pinning down the survivor. Such as hunter, smoker, charger and jockey.
+ * pinning down the survivor. Such as hunter, smoker, charger and jockey
  *
- * @param client		Survivor client index.
- * @return				Infected attacker index, -1 if not found.
- * @error				Invalid client index.
+ * You can use the native L4D2_GetSpecialInfectedDominatingMe() which is likely faster, instead of this stock
+ *
+ * @param client		Survivor client index
+ * @return				Infected attacker index, -1 if not found
+ * @error				Invalid client index
  */
-// L4D2 only.
+// L4D2 only
 stock int L4D2_GetInfectedAttacker(int client)
 {
 	int attacker;
@@ -1190,16 +1233,16 @@ stock int L4D2_GetInfectedAttacker(int client)
 }
 
 /**
- * Returns survivor victim of infected attacker.
+ * Returns survivor victim of infected attacker
  *
  * Note: Survivor victim means the survivor player that is currently pinned
- * down by an attacker. Such as hunter, smoker, charger and jockey.
+ * down by an attacker. Such as hunter, smoker, charger and jockey
  *
- * @param client		Infected client index.
- * @return				Survivor victim index, -1 if not found.
- * @error				Invalid client index.
+ * @param client		Infected client index
+ * @return				Survivor victim index, -1 if not found
+ * @error				Invalid client index
  */
-// L4D2 only.
+// L4D2 only
 stock int L4D2_GetSurvivorVictim(int client)
 {
 	int victim;
@@ -1242,38 +1285,38 @@ stock int L4D2_GetSurvivorVictim(int client)
 }
 
 /**
- * Returns whether survivor client was present at survival start.
+ * Returns whether survivor client was present at survival start
  *
- * @param client		Client index.
- * @return				True if survivor was present at survival start, false otherwise.
- * @error				Invalid client index.
+ * @param client		Client index
+ * @return				True if survivor was present at survival start, false otherwise
+ * @error				Invalid client index
  */
-// L4D2 only.
+// L4D2 only
 stock bool L4D2_WasPresentAtSurvivalStart(int client)
 {
 	return view_as<bool>(GetEntProp(client, Prop_Send, "m_bWasPresentAtSurvivalStart"));
 }
 
 /**
- * Sets whether player was present at survival start.
+ * Sets whether player was present at survival start
  *
- * @param client		Client index.
- * @param wasPresent	Whether survivor was present at survival start.
+ * @param client		Client index
+ * @param wasPresent	Whether survivor was present at survival start
  * @noreturn
- * @error				Invalid client index.
+ * @error				Invalid client index
  */
-// L4D2 only.
+// L4D2 only
 stock void L4D2_SetPresentAtSurvivalStart(int client, bool wasPresent)
 {
 	SetEntProp(client, Prop_Send, "m_bWasPresentAtSurvivalStart", wasPresent);
 }
 
 /**
- * Returns whether player is using a mounted weapon.
+ * Returns whether player is using a mounted weapon
  *
- * @param client		Client index.
- * @return				True if using a mounted weapon, false otherwise.
- * @error				Invalid client index.
+ * @param client		Client index
+ * @return				True if using a mounted weapon, false otherwise
+ * @error				Invalid client index
  */
 stock bool L4D_IsPlayerUsingMountedWeapon(int client)
 {
@@ -1281,17 +1324,17 @@ stock bool L4D_IsPlayerUsingMountedWeapon(int client)
 }
 
 /**
- * Returns player temporarily health.
+ * Returns player temporarily health
  *
  * Note: This will not work with mutations or campaigns that alters the decay
  * rate through vscript'ing. If you want to be sure that it works no matter
- * the mutation, you will have to detour the OnGetScriptValueFloat function.
+ * the mutation, you will have to detour the OnGetScriptValueFloat function
  * Doing so you are able to capture the altered decay rate and calculate the
- * temp health the same way as this function does.
+ * temp health the same way as this function does
  *
- * @param client		Client index.
- * @return				Player's temporarily health, -1 if unable to get.
- * @error				Invalid client index or unable to find pain_pills_decay_rate cvar.
+ * @param client		Client index
+ * @return				Player's temporarily health, -1 if unable to get
+ * @error				Invalid client index or unable to find pain_pills_decay_rate cvar
  */
 stock int L4D_GetPlayerTempHealth(int client)
 {
@@ -1310,12 +1353,12 @@ stock int L4D_GetPlayerTempHealth(int client)
 }
 
 /**
- * Set players temporarily health.
+ * Set players temporarily health
  *
- * @param client		Client index.
- * @param tempHealth	Temporarily health.
+ * @param client		Client index
+ * @param tempHealth	Temporarily health
  * @noreturn
- * @error				Invalid client index.
+ * @error				Invalid client index
  */
 stock void L4D_SetPlayerTempHealth(int client, int tempHealth)
 {
@@ -1324,12 +1367,12 @@ stock void L4D_SetPlayerTempHealth(int client, int tempHealth)
 }
 
 /**
- * Set players temporarily health. Allows for setting above 200 HP.
+ * Set players temporarily health. Allows for setting above 200 HP
  *
- * @param client		Client index.
- * @param tempHealth	Temporarily health.
+ * @param client		Client index
+ * @param tempHealth	Temporarily health
  * @noreturn
- * @error				Invalid client index.
+ * @error				Invalid client index
  */
 stock void L4D_SetPlayerTempHealthFloat(int client, float tempHealth)
 {
@@ -1348,69 +1391,69 @@ stock void L4D_SetPlayerTempHealthFloat(int client, float tempHealth)
 }
 
 /**
- * Returns player use action.
+ * Returns player use action
  *
- * @param client		Client index.
- * @return				Use action.
- * @error				Invalid client index.
+ * @param client		Client index
+ * @return				Use action
+ * @error				Invalid client index
  */
-// L4D2 only.
+// L4D2 only
 stock L4D2UseAction L4D2_GetPlayerUseAction(int client)
 {
 	return view_as<L4D2UseAction>(GetEntProp(client, Prop_Send, "m_iCurrentUseAction"));
 }
 
 /**
- * Returns player use action target.
+ * Returns player use action target
  *
- * @param client		Client index.
- * @return				Entity index.
- * @error				Invalid client index.
+ * @param client		Client index
+ * @return				Entity index
+ * @error				Invalid client index
  */
-// L4D2 only.
+// L4D2 only
 stock int L4D2_GetPlayerUseActionTarget(int client)
 {
 	return GetEntPropEnt(client, Prop_Send, "m_useActionTarget");
 }
 
 /**
- * Returns player use action owner.
+ * Returns player use action owner
  *
- * @param client		Client index.
- * @return				Entity index.
- * @error				Invalid client index.
+ * @param client		Client index
+ * @return				Entity index
+ * @error				Invalid client index
  */
-// L4D2 only.
+// L4D2 only
 stock int L4D2_GetPlayerUseActionOwner(int client)
 {
 	return GetEntPropEnt(client, Prop_Send, "m_useActionOwner");
 }
 
 /**
- * Creates an instructor hint.
+ * Creates an instructor hint
  *
  * Note: Both infected and survivor players will see hint. No more than one at
  * a time can be shown. The "newest" hint will override the old no matter the
  * timeout and range. This instructor hint will not be shown if the given
- * player is dead.
+ * player is dead
  *
- * @param name			Instructor hint name.
- * @param target		Entity index of target.
- * @param caption		Caption of hint.
- * @param color			Color of the caption. RGB format.
- * @param iconOnScreen	Icon when hint is on screen.
- * @param iconOffScreen	Icon when hint is off screen.
- * @param binding		Key binding to show.
- * @param iconOffset	Height offset for icon from target entity's origin.
- * @param range			Display range of hint. 0 for unlimited range.
- * @param timeout		Timeout out for hint. 0 will persist until stopped with L4D2_EndInstructorHint.
- * @param allowNoDrawTarget	Whether hint will work with targets that have nodraw set.
- * @param noOffScreen	Whether when hint is off screen it will show an arrow pointing to target.
- * @param forceCaption	Whether the hint and icon will show even when occluded a wall.
- * @param flags			Instructor hint bit flags. See L4D2_IHFLAG_* defines.
- * @return				True if send, false otherwise.
+ * @param name			Instructor hint name
+ * @param target		Entity index of target
+ * @param caption		Caption of hint
+ * @param color			Color of the caption. RGB format
+ * @param iconOnScreen	Icon when hint is on screen
+ * @param iconOffScreen	Icon when hint is off screen
+ * @param binding		Key binding to show
+ * @param iconOffset	Height offset for icon from target entity's origin
+ * @param range			Display range of hint. 0 for unlimited range
+ * @param timeout		Timeout out for hint. 0 will persist until stopped with L4D2_EndInstructorHint
+ * @param allowNoDrawTarget	Whether hint will work with targets that have nodraw set
+ * @param noOffScreen	Whether when hint is off screen it will show an arrow pointing to target
+ * @param forceCaption	Whether the hint and icon will show even when occluded a wall
+ * @param flags			Instructor hint bit flags. See L4D2_IHFLAG_* defines
+ * @return				True if send, false otherwise
  */
-// L4D2 only.
+// L4D2 only
 stock bool L4D2_CreateInstructorHint(const char[] name,
 									int target = 0,
 									const char[] caption,
@@ -1454,12 +1497,12 @@ stock bool L4D2_CreateInstructorHint(const char[] name,
 }
 
 /**
- * Stops all instructor hints with name.
+ * Stops all instructor hints with name
  *
- * @param name			Name of instructor hint to stop.
- * @return				True if send, false otherwise.
+ * @param name			Name of instructor hint to stop
+ * @return				True if send, false otherwise
  */
-// L4D2 only.
+// L4D2 only
 stock bool L4D2_StopInstructorHint(const char[] name)
 {
 	Event event = CreateEvent("instructor_server_hint_stop", true);
@@ -1474,25 +1517,25 @@ stock bool L4D2_StopInstructorHint(const char[] name)
 }
 
 /**
- * Returns whether shotgun needs to be pumped.
+ * Returns whether shotgun needs to be pumped
  *
- * @parma weapon		Weapon entity index.
- * @return				True if shotgun needs to be pumped, false otherwise.
+ * @parma weapon		Weapon entity index
+ * @return				True if shotgun needs to be pumped, false otherwise
  */
-// L4D1 only.
+// L4D1 only
 stock int L4D1_GetShotgunNeedPump(int weapon)
 {
 	return HasEntProp(weapon, Prop_Send, "m_needPump") && GetEntProp(weapon, Prop_Send, "m_needPump");
 }
 
 /**
- * Sets whether shotgun needs to be pumped.
+ * Sets whether shotgun needs to be pumped
  *
- * @parma weapon		Weapon entity index.
- * @parma needPump		Whether shotgun needs to be pumped.
+ * @parma weapon		Weapon entity index
+ * @parma needPump		Whether shotgun needs to be pumped
  * @noreturn
  */
-// L4D1 only.
+// L4D1 only
 stock void L4D1_SetShotgunNeedPump(int weapon, bool needPump)
 {
 	if( HasEntProp(weapon, Prop_Send, "m_needPump") )
@@ -1502,15 +1545,15 @@ stock void L4D1_SetShotgunNeedPump(int weapon, bool needPump)
 }
 
 /**
- * Sets custom ability cooldown of client.
+ * Sets custom ability cooldown of client
  *
- * Note: Used for the Infected class abilities.
+ * Note: Used for the Infected class abilities
  *
- * @param client		Client index.
- * @param time			How long before client can use their custom ability.
- * @return				True if set, false if no ability found.
+ * @param client		Client index
+ * @param time			How long before client can use their custom ability
+ * @return				True if set, false if no ability found
  */
-// L4D2 only.
+// L4D2 only
 stock bool L4D2_SetCustomAbilityCooldown(int client, float time)
 {
 	int ability = GetEntPropEnt(client, Prop_Send, "m_customAbility");
@@ -1741,55 +1784,55 @@ static const char L4D2WeaponWorldModel[L4D2WeaponId][] =
 StringMap g_hWeaponNameTrie;
 
 /**
- * Returns whether weapon id is valid.
+ * Returns whether weapon id is valid
  *
- * @param weaponId		Weapon id to check for validity.
- * @return				True if weapon id is valid, false otherwise.
+ * @param weaponId		Weapon id to check for validity
+ * @return				True if weapon id is valid, false otherwise
  */
-// L4D2 only.
+// L4D2 only
 stock bool L4D2_IsValidWeaponId(L4D2WeaponId weaponId)
 {
 	return weaponId >= L4D2WeaponId_None && weaponId < L4D2WeaponId_MAX;
 }
 
 /**
- * Returns whether weapon name is a valid weapon.
+ * Returns whether weapon name is a valid weapon
  *
- * @param weaponName	Weapon name to check for validity.
- * @return				True if weapon name is valid, false otherwise.
+ * @param weaponName	Weapon name to check for validity
+ * @return				True if weapon name is valid, false otherwise
  */
-// L4D2 only.
+// L4D2 only
 stock bool L4D2_IsValidWeaponName(const char[] weaponName)
 {
 	return L4D2_GetWeaponIdByWeaponName(weaponName) != L4D2WeaponId_None;
 }
 
 /**
- * Checks to see if a given weapon id has a known WeaponModel in this file's model array.
+ * Checks to see if a given weapon id has a known WeaponModel in this file's model array
  *
  * Note: The melee weapon have multiple valid models. This function will
- * return false for melee weapon.
+ * return false for melee weapon
  *
- * @param weaponId		Weapon id to check for a known weapon model for.
- * @return				True if a valid weapon model exists for weapon id, false otherwise.
+ * @param weaponId		Weapon id to check for a known weapon model for
+ * @return				True if a valid weapon model exists for weapon id, false otherwise
  */
-// L4D2 only.
+// L4D2 only
 stock bool L4D2_HasValidWeaponWorldModel(L4D2WeaponId weaponId)
 {
 	return L4D2WeaponWorldModel[weaponId][0] != '\0';
 }
 
 /**
- * Returns weapon world model by weapon id.
+ * Returns weapon world model by weapon id
  *
- * @note Does not work with melee weapons.
+ * @note Does not work with melee weapons
  *
- * @param weaponId		Weapon id.
- * @param dest			Destination string buffer to copy to.
- * @param destlen		Destination buffer length (includes null terminator).
- * @return				Number of cells written.
+ * @param weaponId		Weapon id
+ * @param dest			Destination string buffer to copy to
+ * @param destlen		Destination buffer length (includes null terminator)
+ * @return				Number of cells written
  */
-// L4D2 only.
+// L4D2 only
 stock int L4D2_GetWeaponModelByWeaponId(L4D2WeaponId weaponId, char[] dest, int destlen)
 {
 	if (!L4D2_IsValidWeaponId(weaponId))
@@ -1801,14 +1844,14 @@ stock int L4D2_GetWeaponModelByWeaponId(L4D2WeaponId weaponId, char[] dest, int 
 }
 
 /**
- * Returns weapon id by weapon world model.
+ * Returns weapon id by weapon world model
  *
- * @note Does not work with melee weapons.
+ * @note Does not work with melee weapons
  *
- * @param model			Weapon world model.
- * @return				Weapon Id.
+ * @param model			Weapon world model
+ * @return				Weapon Id
  */
-// L4D2 only.
+// L4D2 only
 stock L4D2WeaponId L4D2_GetWeaponIdByWeaponModel(const char[] model)
 {
 	for (int i = 0; i < sizeof(L4D2WeaponWorldModel); i++)
@@ -1823,12 +1866,12 @@ stock L4D2WeaponId L4D2_GetWeaponIdByWeaponModel(const char[] model)
 }
 
 /**
- * Returns weapon id by weapon name.
+ * Returns weapon id by weapon name
  *
- * @param weaponName	Weapon name to get id from.
- * @return				The corresponding weapon id if found, else L4D2WeaponId_None.
+ * @param weaponName	Weapon name to get id from
+ * @return				The corresponding weapon id if found, else L4D2WeaponId_None
  */
-// L4D2 only.
+// L4D2 only
 stock L4D2WeaponId L4D2_GetWeaponIdByWeaponName(const char[] weaponName)
 {
 	L4D2_InitWeaponNameTrie();
@@ -1837,14 +1880,14 @@ stock L4D2WeaponId L4D2_GetWeaponIdByWeaponName(const char[] weaponName)
 }
 
 /**
- * Returns weapon name by weapon id.
+ * Returns weapon name by weapon id
  *
- * @param weaponName	Weapon id to get name from.
- * @param dest			Destination string buffer to copy to.
- * @param destlen		Destination buffer length (includes null terminator).
- * @return				Number of cells written.
+ * @param weaponName	Weapon id to get name from
+ * @param dest			Destination string buffer to copy to
+ * @param destlen		Destination buffer length (includes null terminator)
+ * @return				Number of cells written
  */
-// L4D2 only.
+// L4D2 only
 stock int L4D2_GetWeaponNameByWeaponId(L4D2WeaponId weaponId, char[] dest, int destlen)
 {
 	if (!L4D2_IsValidWeaponId(weaponId))
@@ -1856,13 +1899,13 @@ stock int L4D2_GetWeaponNameByWeaponId(L4D2WeaponId weaponId, char[] dest, int d
 }
 
 /**
- * Returns weapon id of entity.
+ * Returns weapon id of entity
  *
- * @param weapon		Entity index of weapon.
- * @return				Weapon id if found, L4D2WeaponId_None otherwise.
- * @error				Invalid entity index.
+ * @param weapon		Entity index of weapon
+ * @return				Weapon id if found, L4D2WeaponId_None otherwise
+ * @error				Invalid entity index
  */
-// L4D2 only.
+// L4D2 only
 stock L4D2WeaponId L4D2_GetWeaponId(int weapon)
 {
 	char classname[64];
@@ -1886,11 +1929,11 @@ stock L4D2WeaponId L4D2_GetWeaponId(int weapon)
 }
 
 /**
- * Initialize the L4D2 weapon names trie. Not necessary to be executed, done by the functions that require the trie.
+ * Initialize the L4D2 weapon names trie. Not necessary to be executed, done by the functions that require the trie
  *
  * @noreturn
  */
-// L4D2 only.
+// L4D2 only
 stock void L4D2_InitWeaponNameTrie()
 {
 	if (g_hWeaponNameTrie != null)

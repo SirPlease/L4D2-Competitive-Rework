@@ -1,6 +1,6 @@
 /*
 *	Left 4 DHooks Direct - Stock Functions
-*	Copyright (C) 2024 Silvers
+*	Copyright (C) 2025 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ enum
 	L4D_WEAPON_SLOT_GRENADE		= 2,
 	L4D_WEAPON_SLOT_MEDKIT		= 3,	// L4D2: Also upgrade ammo packs and defibrillator
 	L4D_WEAPON_SLOT_PILLS		= 4,	// L4D2: Also Adrenaline
-	L4D_WEAPON_SLOT_CARRIED		= 5		// Physics props such as GasCan etc.
+	L4D_WEAPON_SLOT_CARRIED		= 5		// Physics props such as GasCan etc
 }
 
 enum
@@ -166,6 +166,46 @@ stock bool L4D_IsEngineLeft4Dead2()
 
 
 // ==================================================
+// FLOW STOCKS
+// ==================================================
+/**
+ * Returns a flow by vector position
+ *
+ * @return The flow distance for the given position
+ */
+stock float L4D_GetFlowFromPoint(float point[3])
+{
+	Address terrorNavPointer = L4D2Direct_GetTerrorNavArea(point);
+	if( terrorNavPointer == Address_Null )
+	{
+		return 0.0;
+	}
+
+	return L4D2Direct_GetTerrorNavAreaFlow(terrorNavPointer);
+}
+
+/**
+ * Check if the players flow distance is greater than the given value
+ *
+ * @return True if the given value is less than the clients flow distance
+ */
+stock bool L4D_IsEnoughFlow(int client, float given)
+{
+	float flow;
+
+	flow = L4D2Direct_GetFlowDistance(client);
+
+	if( given <= flow )
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
+
+// ==================================================
 // DOOR STOCKS
 // ==================================================
 
@@ -200,7 +240,7 @@ stock int L4D_GetDoorFlag(int entity)
 // ==================================================
 
 /**
- * @brief Returns a players current weapon, or -1 if none.
+ * @brief Returns a players current weapon, or -1 if none
  *
  * @param client			Client ID of the player to check
  *
@@ -346,7 +386,7 @@ stock bool L4D_IsTankProp(int entity)
 /**
  * @brief Creates a panic event mob horde
  * @remarks Subject to horde cooldown timer
- * @remarks Can probably reset the timer with either "L4D_ResetMobTimer();" native or using "L4D2CT_MobSpawnTimer" with the timer natives.
+ * @remarks Can probably reset the timer with either "L4D_ResetMobTimer();" native or using "L4D2CT_MobSpawnTimer" with the timer natives
  *
  * @noreturn
  */
@@ -469,7 +509,7 @@ stock int L4D_GetVictimSmoker(int client)
  *
  * @return Victim client index, or 0 if none
  */
-// L4D2 only.
+// L4D2 only
 stock int L4D_GetVictimCharger(int client)
 {
 	int attacker;
@@ -490,7 +530,7 @@ stock int L4D_GetVictimCharger(int client)
  *
  * @return Victim client index, or 0 if none
  */
-// L4D2 only.
+// L4D2 only
 stock int L4D_GetVictimCarry(int client)
 {
 	int attacker;
@@ -511,7 +551,7 @@ stock int L4D_GetVictimCarry(int client)
  *
  * @return Victim client index, or 0 if none
  */
-// L4D2 only.
+// L4D2 only
 stock int L4D_GetVictimJockey(int client)
 {
 	int attacker;
@@ -572,7 +612,7 @@ stock int L4D_GetAttackerSmoker(int client)
  *
  * @return Attacker client index, or 0 if none
  */
-// L4D2 only.
+// L4D2 only
 stock int L4D_GetAttackerCharger(int client)
 {
 	int attacker;
@@ -593,7 +633,7 @@ stock int L4D_GetAttackerCharger(int client)
  *
  * @return Attacker client index, or 0 if none
  */
-// L4D2 only.
+// L4D2 only
 stock int L4D_GetAttackerCarry(int client)
 {
 	int attacker;
@@ -614,7 +654,7 @@ stock int L4D_GetAttackerCarry(int client)
  *
  * @return Attacker client index, or 0 if none
  */
-// L4D2 only.
+// L4D2 only
 stock int L4D_GetAttackerJockey(int client)
 {
 	int attacker;
@@ -714,7 +754,7 @@ stock int L4D_GetPinnedSurvivor(int client)
  *
  * @return Returns true when someone is being carried/pummelled by more than 1 Charger
  */
-// L4D2 only.
+// L4D2 only
 stock bool L4D2_IsMultiCharged(int victim)
 {
 	if( !L4D_IsEngineLeft4Dead2() )
@@ -775,7 +815,7 @@ stock bool L4D_HasReachedSmoker(int client)
 #define QueuedPummel_Attacker	8
 
 /**
- * @brief Internally used to get offset to the start of queued pummel field.
+ * @brief Internally used to get offset to the start of queued pummel field
  *
  * @return					Offset into CTerrorPlayer to the start of queued pummel props
  */
@@ -789,7 +829,7 @@ static stock int L4D2_OffsQueuedPummelInfo()
 }
 
 /**
- * @brief Returns the timestamp when the queued pummel begins.
+ * @brief Returns the timestamp when the queued pummel begins
  *
  * @param client			Client ID of the charger to check
  *
@@ -801,7 +841,7 @@ stock float L4D2_GetQueuedPummelStartTime(int charger)
 }
 
 /**
- * @brief Sets the timestamp when the queued pummel begins.
+ * @brief Sets the timestamp when the queued pummel begins
  *
  * @param client			Client ID of the charger to check
  * @param timestamp			Timestamp to set
@@ -814,7 +854,7 @@ stock void L4D2_SetQueuedPummelStartTime(int charger, float timestamp)
 }
 
 /**
- * @brief Returns if a Charger is in a queued pummel.
+ * @brief Returns if a Charger is in a queued pummel
  *
  * @param charger			Client ID of the charger to check
  *
@@ -828,7 +868,7 @@ stock bool L4D2_IsInQueuedPummel(int charger)
 }
 
 /**
- * @brief Returns the victim of a Charger in a queued pummel.
+ * @brief Returns the victim of a Charger in a queued pummel
  *
  * @param client			Client ID of the player to check
  *
@@ -840,7 +880,7 @@ stock int L4D2_GetQueuedPummelVictim(int client)
 }
 
 /**
- * @brief Sets the victim of a Charger in a queued pummel.
+ * @brief Sets the victim of a Charger in a queued pummel
  *
  * @param client			Client ID of the player to set
  * @param target			Client ID of the target to set
@@ -853,7 +893,7 @@ stock void L4D2_SetQueuedPummelVictim(int client, int target)
 }
 
 /**
- * @brief Returns the attacker of a Survivor in a queued pummel.
+ * @brief Returns the attacker of a Survivor in a queued pummel
  *
  * @param client			Client ID of the player to check
  *
@@ -865,7 +905,7 @@ stock int L4D2_GetQueuedPummelAttacker(int client)
 }
 
 /**
- * @brief Sets the attacker of a Survivor in a queued pummel.
+ * @brief Sets the attacker of a Survivor in a queued pummel
  *
  * @param client			Client ID of the player to set
  * @param target			Client ID of the target to set
@@ -952,7 +992,7 @@ stock void L4D_LedgeHangDisable(int client)
  *
  * @return Returns true if player is staggering, false otherwise
  */
-// Updated more accurate version thanks to "HarryPotter" for providing.
+// Updated more accurate version thanks to "HarryPotter" for providing
 stock bool L4D_IsPlayerStaggering(int client)
 {
 	static int Activity = -1;
@@ -1144,7 +1184,7 @@ stock void L4D_StopReviveAction(int client)
 
 	if( L4D_IsEngineLeft4Dead2() )
 	{
-		owner = GetEntPropEnt(client, Prop_Send, "m_useActionOwner");		// used when healing e.t.c.
+		owner = GetEntPropEnt(client, Prop_Send, "m_useActionOwner");		// used when healing etc
 		target = GetEntPropEnt(client, Prop_Send, "m_useActionTarget");
 		SetEntPropEnt(client, Prop_Send, "m_useActionOwner", -1);
 		SetEntPropEnt(client, Prop_Send, "m_useActionTarget", -1);
