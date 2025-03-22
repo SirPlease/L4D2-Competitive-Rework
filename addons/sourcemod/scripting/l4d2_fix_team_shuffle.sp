@@ -1,10 +1,10 @@
 #include <sourcemod>
-#include <sdktools>
 #include <left4dhooks>
 
+#define L4D2_TEAM_NONE      0
 #define L4D2_TEAM_SPECTATOR 1
-#define L4D2_TEAM_SURVIVOR 2
-#define L4D2_TEAM_INFECTED 3
+#define L4D2_TEAM_SURVIVOR  2
+#define L4D2_TEAM_INFECTED  3
 
 bool fixTeam = false;
 
@@ -16,14 +16,14 @@ public Plugin myinfo =
 	name = "L4D2 - Fix team shuffle",
 	author = "Altair Sossai",
 	description = "Fix teams shuffling during map switching",
-	version = "1.0.0",
-	url = "https://github.com/altair-sossai/l4d2-zone-server"
+	version = "1.0.1",
+	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public void OnPluginStart()
 {
-	HookEvent("round_start", RoundStart_Event);
-	HookEvent("player_team", PlayerTeam_Event, EventHookMode_Post);
+	HookEvent("round_start", RoundStart_Event, EventHookMode_PostNoCopy);
+	HookEvent("player_team", PlayerTeam_Event);
 
 	winners = CreateArray(64);
 	losers = CreateArray(64);
@@ -44,7 +44,7 @@ void RoundStart_Event(Handle event, const char[] name, bool dontBroadcast)
 {
 	DisableFixTeam();
 
-	if (IsNewGame())
+	if (L4D_HasMapStarted() && IsNewGame())
 	{
 		ClearTeamsData();
 		return;
@@ -55,6 +55,23 @@ void RoundStart_Event(Handle event, const char[] name, bool dontBroadcast)
 
 void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 {
+	if (!L4D_HasMapStarted())
+		return;
+
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	if (!IsClientInGame(client) || IsFakeClient(client))
+		return;
+
+	int team = event.GetInt("team");
+	if (team == L4D2_TEAM_SPECTATOR)
+	{
+		int oldteam = event.GetInt("oldteam");
+		if (oldteam == L4D2_TEAM_NONE)
+			CreateTimer(0.5, ReSpec_Timer, client);
+
+		return;
+	}
+
 	if (IsNewGame())
 	{
 		DisableFixTeam();
@@ -62,15 +79,19 @@ void PlayerTeam_Event(Event event, const char[] name, bool dontBroadcast)
 		return;
 	}
 
-	int client = GetClientOfUserId(GetEventInt(event, "userid"));
-	if (!IsClientInGame(client) || IsFakeClient(client))
-		return;
-
-	int team = GetEventInt(event, "team");
-	if (team == L4D2_TEAM_SPECTATOR)
-		return;
-
 	CreateTimer(1.0, FixTeam_Timer);
+}
+
+Action ReSpec_Timer(Handle timer, any client)
+{
+	if (IsClientInGame(client) 
+	&& GetClientTeam(client) == L4D2_TEAM_SPECTATOR
+	&& FindValueInArray(winners, client) == -1 
+	&& FindValueInArray(losers, client) == -1)
+	{
+		FakeClientCommand(client, "sm_spectate");
+	}
+	return Plugin_Stop;
 }
 
 Action FixTeam_Timer(Handle timer)
@@ -115,7 +136,7 @@ void CopyClientsToArray(ArrayList arrayList, int team)
 	{
 		if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != team)
 			continue;
-		
+
 		PushArrayCell(arrayList, client);
 	}
 }
@@ -128,7 +149,7 @@ void FixTeams()
 	DisableFixTeam();
 
 	bool survivorsAreWinning = SurvivorsAreWinning();
-	
+
 	int winnerTeam = survivorsAreWinning ? L4D2_TEAM_SURVIVOR : L4D2_TEAM_INFECTED;
 	int losersTeam = survivorsAreWinning ? L4D2_TEAM_INFECTED : L4D2_TEAM_SURVIVOR;
 
@@ -140,7 +161,7 @@ void FixTeams()
 
 	bool winnersInCorrectTeam = PlayersInCorrectTeam(winners, winnerTeam);
 	bool losersInCorrectTeam = PlayersInCorrectTeam(losers, losersTeam);
-	
+
 	if (winnersInCorrectTeam && losersInCorrectTeam)
 		return;
 
@@ -153,7 +174,7 @@ void MoveToSpectatorWhoIsNotInTheTeam(ArrayList arrayList, int team)
     {
         if (!IsClientInGame(client) || IsFakeClient(client) || GetClientTeam(client) != team)
             continue;
-		
+
         if (FindValueInArray(arrayList, client) == -1)
             MovePlayerToTeam(client, L4D2_TEAM_SPECTATOR);
     }
