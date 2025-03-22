@@ -157,7 +157,7 @@ void AdjustRates(int client)
 		g_Players[client].LastAdjusted = GetEngineTime();
 
 		L4DTeam team = L4D_GetClientTeam(client);
-		if (team == L4DTeam_Survivor || team == L4DTeam_Infected || (g_bCasterSystem && IsClientCaster(client)))
+		if (team == L4DTeam_Survivor || team == L4DTeam_Infected || (g_bCasterSystem && bCaster(kClient, kGet, client)))
 			ResetRates(client);
 		else if (team == L4DTeam_Spectator)
 		{
