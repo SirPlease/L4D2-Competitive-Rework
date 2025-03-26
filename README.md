@@ -2,11 +2,11 @@
 
 **IMPORTANT NOTES** - **DON'T IGNORE THESE!**
 * The goal for this repo is to work on **Linux**, but Windows support is available.
-* Ensure that your machine is running at least **Ubuntu 20.04** (GLIBC minimum of 2.31)
+* Ensure that your machine is running at least **Ubuntu 22.04** (GLIBC minimum of 2.35)
 > While Windows is supported by the repository, there may be things that don't fully function on Windows that we may have missed.
 > Please report any issues you run into!
-* This repository only supports Sourcemod **1.11** and up.
-* Everything on this repository is being tested on Sourcemod **1.12** (specifically **1.12.7137**) as of the 25th of May, 2024.
+* This repository only supports Sourcemod **1.12** and up.
+* Everything on this repository is confirmed to be working on **1.12**+ (specifically **1.12.7195**) as of the 26th of March, 2025.
 
 ## **About:**
 
@@ -15,7 +15,7 @@ In its current state it allows anyone to host their own up to date competitive L
 This project is **Actively Developed**.
 
 > **Included Matchmodes:**
-* **Zonemod 2.8.9c**
+* **Zonemod 2.8.9e**
 * **Zonemod Hunters**
 * **Zonemod Retro**
 * **NeoMod 0.4a** 
