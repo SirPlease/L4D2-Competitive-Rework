@@ -88,6 +88,7 @@ public void OnPluginStart()
 	{
 		L4D2ChangeLevelActive = true;
 	}
+	
 	g_MapList = new Menu(MenuHandler_ChangeMap, MenuAction_Display);
 	g_MapList.SetTitle("%T", "Please select a map", LANG_SERVER);
 	g_MapList.ExitBackButton = true;
@@ -101,6 +102,13 @@ public void OnPluginStart()
 	ProtectVar("sm_show_activity");
 	ProtectVar("sm_immunity_mode");
 }
+
+public void OnLibraryAdded(const char[] name)
+{
+	if (strcmp(name, "l4d2_changelevel") == 0)
+		L4D2ChangeLevelActive = true;
+}
+
 
 public void OnMapStart()
 {
@@ -192,24 +200,12 @@ public void OnAdminMenuReady(Handle aTopMenu)
 	}
 }
 
-public void OnLibraryAdded(const char[] name)
-{
-	if (strcmp(name, "l4d2_changelevel") == 0)
-	{
-		L4D2ChangeLevelActive = true;
-	}
-}
-
 public void OnLibraryRemoved(const char[] name)
 {
 	if (strcmp(name, "adminmenu") == 0)
-	{
 		hTopMenu = null;
-	}
 	else if (strcmp(name, "l4d2_changelevel") == 0)
-	{
 		L4D2ChangeLevelActive = false;
-	}
 }
 
 #define FLAG_STRINGS		14
