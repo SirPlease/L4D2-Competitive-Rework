@@ -409,7 +409,7 @@ Action aReconnectCastersTimer(Handle hTimer, ArrayList aCasterList)
 
 public Action L4D2_OnClientDisableAddons(const char[] szAuthId)
 {
-	return (!g_cvAddonsEnable.BoolValue && bCaster(kAuth, SERVER_INDEX, szAuthId)) ? Plugin_Handled : Plugin_Continue;
+	return (g_cvAddonsEnable.BoolValue && bCaster(kAuth, SERVER_INDEX, szAuthId)) ? Plugin_Handled : Plugin_Continue;
 }
 
 void vPlayerTeamEvent(Event event, const char[] szName, bool bDontBroadcast)
