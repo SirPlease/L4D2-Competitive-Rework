@@ -293,4 +293,9 @@
 	{
 		"es"		"No se encontraron jugadores"
 	}
+
+	"KickSpecsVoteTitle"
+	{
+		"es"		"Expulsar a los espectadores que no son admins y Caster?"
+	}
 }

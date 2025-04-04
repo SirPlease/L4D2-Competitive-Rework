@@ -293,4 +293,9 @@
 	{
 		"en"		"No players found"
 	}
+
+	"KickSpecsVoteTitle"
+	{
+		"en"		"Kick Non-Admin & Non-Casting Spectators?"
+	}
 }
