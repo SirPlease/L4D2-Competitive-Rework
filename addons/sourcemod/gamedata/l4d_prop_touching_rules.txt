@@ -1,0 +1,231 @@
+"Games"
+{
+	"#default"
+	{
+		"Functions"
+		{
+			"PhysicsDamage::operator()"
+			{
+				"signature"		"PhysicsDamage::operator()"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"ignore"
+				"arguments"
+				{
+					"pPlayer"
+					{
+						"type"	"cbaseentity"
+					}
+				}
+			}
+		}
+	}
+
+	"left4dead"
+	{
+		"MemPatches"
+		{
+			"prop_moveaway_mass_thres"
+			{
+				"signature"		"PhysicsDamage::operator()"
+				"linux"
+				{
+					"offset"	"4EFh"
+					"verify"	"\x2A\x2A\xD9\x83"	// D9 83 C8 0D D9 FF			fld		ds:(flt_953DBC - 0BC2FF4h)[ebx] ; 900.0
+					"preserve"	"\xFF\xFF\x00\x00\xFF\xFF\xFF\xFF"
+					"patch"		"\x90\x90\xD9\x05\x90\x90\x90\x90"	// D9 05
+				}
+				"windows"
+				{
+					"offset"	"373h"
+					"verify"	"\x2A\x2A\xD8\x1D"	// D8 1D 5C D1 46 10			fcomp	ds:flt_1046D15C ; 900.0
+					"preserve"	"\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
+					"patch"		"\x90\x90\x90\x90\x90\x90\x90\x90"
+				}
+			}
+
+			"prop_medium_touching_moveaway"
+			{
+				"signature"		"PhysicsDamage::operator()"
+				"linux"
+				{
+					"offset"	"518h"
+					
+					// 89 74 24 04			mov     [esp+18Ch+lpstype], esi ; CBasePlayer *
+					// 89 3C 24				mov     [esp+18Ch+lpsrc], edi ; CBaseEntity *
+					// E8 C4 AB FF FF		call    _Z12MovePropAwayP11CBaseEntityP11CBasePlayer ; MovePropAway(CBaseEntity *,CBasePlayer *)
+					"verify"	"\x89\x74\x24\x04\x89\x3C\x24\xE8"
+
+					// B0 01				mov		al, 1
+					// EB 08				jmp		short after_call_to_MovePropAway
+					"patch"		"\xB0\x01\xEB\x08"
+				}
+				"windows"
+				{
+					"offset"	"396h"
+					
+					// 56					push	esi
+					// 57					push	edi
+					// E8 63 FA FF FF		call	_Z12MovePropAwayP11CBaseEntityP11CBasePlayer ; MovePropAway(CBaseEntity *,CBasePlayer *)
+					// 83 C4 08				add		esp, 8
+					"verify"	"\x89\x5C\x24\x04\x89\x34\x24\xE8"
+
+					// B0 01				mov		al, 1
+					// EB 06				jmp		short after_call_to_MovePropAway
+					"patch"		"\xB0\x01\xEB\x06"
+				}
+			}
+
+			"prop_heavy_touching_move_above"
+			{
+				"signature"		"PhysicsDamage::operator()"
+				"linux"
+				{
+					"offset"	"855h"
+
+					// D9 84 24 24 01 00 00					fld		[esp+18Ch+var_68]
+					// DD 5C 24 30							fstp	[esp+18Ch+var_15C]
+					// D9 84 24 20 01 00 00					fld		[esp+18Ch+var_6C]
+					// DD 5C 24 28							fstp	[esp+18Ch+var_164]
+					// D9 84 24 1C 01 00 00					fld		[esp+18Ch+var_70]
+					// DD 5C 24 20							fstp	[esp+18Ch+var_16C]
+					// D9 44 24 60							fld		[esp+18Ch+var_12C]
+					// ...
+					// E8 4D 30 0F 00						call	_ZN11CBaseEntity12SetAbsOriginERK6Vector ; CBaseEntity::SetAbsOrigin(Vector const&)
+					"verify"	"\xD9\x84\x24\x2A\x2A\x2A\x2A\xDD\x5C\x24\x2A\xD9\x84\x24\x2A\x2A\x2A\x2A\xDD\x5C\x24\x2A\xD9\x84\x24\x2A\x2A\x2A\x2A\xDD\x5C\x24\x2A\xD9\x44\x24"
+
+					// EB 62								jmp		short after_call_to_SetAbsOrigin
+					"patch"		"\xEB\x62"
+				}
+				"windows"
+				{
+					"offset"	"557h"
+					
+					// D9 84 24 A4 00 00 00					fld		[esp+140h+var_9C]
+					// 83 EC 30								sub		esp, 30h
+					// ...
+					// E8 9B EA DD FF						call	_ZN11CBaseEntity12SetAbsOriginERK6Vector ; CBaseEntity::SetAbsOrigin(Vector const&)
+					"verify"	"\xD9\x84\x24\x2A\x2A\x2A\x2A\x83\xEC\x30"
+
+					// EB 5C								jmp     short after_call_to_SetAbsOrigin
+					"patch"		"\xEB\x5C"
+				}
+			}
+		}
+
+		"Signatures"
+		{
+			"PhysicsDamage::operator()"
+			{
+				"library"		"server"
+				"linux"			"@_ZN13PhysicsDamageclEP13CTerrorPlayer"
+				"windows"		"\x55\x8B\xEC\x83\xE4\xC0\x81\xEC\x34\x01\x00\x00\x53\x56\x8B\x75\x08"
+				// 55 8B EC 83 E4 C0 81 EC 34 01 00 00 53 56 8B 75 08
+			}
+		}
+	}
+
+	"left4dead2"
+	{
+		"MemPatches"
+		{
+			"prop_moveaway_mass_thres"
+			{
+				"signature"		"PhysicsDamage::operator()"
+				"linux"
+				{
+					"offset"	"5D4h"
+					"verify"	"\x2A\x0F\x2F\x0D"	// 0F 2F 0D 00 D0 BF 00			comiss	xmm1, ds:dword_BFD000 ; 900.0
+					"preserve"	"\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
+					"patch"		"\x90\x90\x90\x90\x90\x90\x90\x90"
+				}
+				"windows"
+				{
+					"offset"	"4A6h"
+					"verify"	"\xF3\x0F\x10"		// F3 0F 10 05 E0 DA 60 10		movss	xmm0, ds:dword_1060DAE0 ; 900.0
+					"preserve"	"\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
+					"patch"		"\x90\x90\x90\x90\x90\x90\x90\x90"
+				}
+			}
+
+			"prop_medium_touching_moveaway"
+			{
+				"signature"		"PhysicsDamage::operator()"
+				"linux"
+				{
+					"offset"	"5F2h"
+					
+					// 89 5C 24 04			mov		[esp+4], ebx    ; CBasePlayer *
+					// 89 34 24				mov		[esp], esi      ; CBaseEntity *
+					// E8 F2 73 FF FF		call	_Z12MovePropAwayP11CBaseEntityP11CBasePlayer ; MovePropAway(CBaseEntity *,CBasePlayer *)
+					"verify"	"\x89\x5C\x24\x04\x89\x34\x24\xE8"
+
+					// B0 01				mov		al, 1
+					// EB 08				jmp		short after_call_to_MovePropAway
+					"patch"		"\xB0\x01\xEB\x08"
+				}
+				"windows"
+				{
+					"offset"	"4C7h"
+					
+					// 56					push	esi
+					// 57					push	edi
+					// E8 E2 F8 FF FF		call	_Z12MovePropAwayP11CBaseEntityP11CBasePlayer ; MovePropAway(CBaseEntity *,CBasePlayer *)
+					// 83 C4 08				add		esp, 8
+					"verify"	"\x89\x5C\x24\x04\x89\x34\x24\xE8"
+
+					// B0 01				mov		al, 1
+					// EB 06				jmp		short after_call_to_MovePropAway
+					"patch"		"\xB0\x01\xEB\x06"
+				}
+			}
+
+			"prop_heavy_touching_move_above"
+			{
+				"signature"		"PhysicsDamage::operator()"
+				"linux"
+				{
+					"offset"	"9FFh"
+
+					// 8B 03								mov		eax, [ebx]
+					// F3 0F 10 95 48 FF FF FF				movss	xmm2, [ebp+var_CC.endpos.z]
+					// F3 0F 10 8D 44 FF FF FF				movss	xmm1, [ebp+var_CC.endpos.y]
+					// F3 0F 10 85 40 FF FF FF				movss	xmm0, [ebp+var_CC.endpos.x]
+					// 0F 5A D2								cvtps2pd xmm2, xmm2
+					// ...
+					// E8 1E DE 0F 00						call	_ZN11CBaseEntity12SetAbsOriginERK6Vector ; CBaseEntity::SetAbsOrigin(Vector const&)
+					"verify"	"\x8B\x03\xF3\x0F\x10\x2A\x2A\x2A\x2A\x2A\xF3\x0F\x10\x2A\x2A\x2A\x2A\x2A\xF3\x0F\x10\x2A\x2A\x2A\x2A\x2A\x0F"
+
+					// E9 BE 00 00 00						jmp		after_call_to_SetAbsOrigin
+					"patch"		"\xE9\xBE\x00\x00\x00"
+				}
+				"windows"
+				{
+					"offset"	"58Fh"
+					
+					// D9 45 BC								fld     [ebp+var_44]
+					// 8B 06								mov     eax, [esi]
+					// 8B 90 B4 00 00 00					mov     edx, [eax+0B4h]
+					// 83 EC 30								sub     esp, 30h
+					// ...
+					// E8 1E DE 0F 00						call	_ZN11CBaseEntity12SetAbsOriginERK6Vector ; CBaseEntity::SetAbsOrigin(Vector const&)
+					"verify"	"\xD9\x45\x2A\x8B\x06\x8B\x2A\x2A\x2A\x2A\x2A\x83\xEC\x30"
+
+					// EB 4F								jmp     short after_call_to_SetAbsOrigin
+					"patch"		"\xEB\x4F"
+				}
+			}
+		}
+
+		"Signatures"
+		{
+			"PhysicsDamage::operator()"
+			{
+				"library"		"server"
+				"linux"			"@_ZN13PhysicsDamageclEP13CTerrorPlayer"
+				"windows"		"\x55\x8B\xEC\x81\xEC\x34\x01\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x56\x8B\x75\x08"
+				// 55 8B EC 81 EC 34 01 00 00 A1 ? ? ? ? 33 C5 89 45 FC 56 8B 75 08
+			}
+		}
+	}
+}
