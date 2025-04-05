@@ -182,16 +182,27 @@ int iCasterNative(Handle hPlugin, int iNumParams)
 	LogMessage("[iCasterNative] eTypeID: %d | eTypeAction: %d | iClient: %d | szAuthId: %s", eID, eAction, iTarget, szAuthId);
 #endif
 
+	bool bIsCaster = g_smCaster.GetValue(szAuthId, g_iDummy);
 	switch (eAction)
 	{
 		case kGet:
-			return g_smCaster.GetValue(szAuthId, g_iDummy);
+			return bIsCaster;
 		case kSet:
-			vRegister(SERVER_INDEX, iTarget, szAuthId, szName, kCaster, eID, SM_REPLY_TO_CONSOLE);
+		{
+			if (bIsCaster)
+				return 0;
+
+			return g_smCaster.SetValue(szAuthId, true);
+		}
 		case kRem:
-			vRemove(SERVER_INDEX, iTarget, szAuthId, szName, kCaster, eID, SM_REPLY_TO_CONSOLE);
+		{
+			if (!bIsCaster)
+				return 0;
+				
+			return g_smCaster.Remove(szAuthId);
+		}
 	}
-	return 1;
+	return 0;
 }
 
 /**
@@ -233,17 +244,27 @@ int iWhitelistNative(Handle hPlugin, int iNumParams)
 	LogMessage("[iWhitelistNative] eTypeID: %d | eTypeAction: %d | iClient: %d | szAuthId: %s", eID, eAction, iTarget, szAuthId);
 #endif
 
+	bool bIsWhitelist = g_smWhitelist.GetValue(szAuthId, g_iDummy);
 	switch (eAction)
 	{
 		case kGet:
-			return g_smCaster.GetValue(szAuthId, g_iDummy);
+			return bIsWhitelist;
 		case kSet:
-			vRegister(SERVER_INDEX, iTarget, szAuthId, szName, kWhite, eID, SM_REPLY_TO_CONSOLE);
-		case kRem:
-			vRemove(SERVER_INDEX, iTarget, szAuthId, szName, kWhite, eID, SM_REPLY_TO_CONSOLE);
+		{
+			if (bIsWhitelist)
+				return 0;
 
+			return g_smWhitelist.SetValue(szAuthId, true);
+		}
+		case kRem:
+		{
+			if (!bIsWhitelist)
+				return 0;
+				
+			return g_smWhitelist.Remove(szAuthId);
+		}
 	}
-	return 1;
+	return 0;
 }
 
 /**
@@ -304,7 +325,7 @@ int iInmunityNative(Handle hPlugin, int iNumParams)
 			return g_smSpecInmunity.Remove(szAuthId);
 		}
 	}
-	return 1;
+	return 0;
 }
 
 // ========================
