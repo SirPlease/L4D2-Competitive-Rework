@@ -156,9 +156,27 @@ int iCasterNative(Handle hPlugin, int iNumParams)
 {
 	eTypeID		eID		= GetNativeCell(1);
 	eTypeAction eAction = GetNativeCell(2);
-	int			iTarget = GetNativeCell(3);
-	char		szAuthId[STEAMID2_LENGTH];
-	GetNativeString(4, szAuthId, sizeof(szAuthId));
+	int			iTarget;
+
+	char
+		szAuthId[STEAMID2_LENGTH],
+		szName[32];
+
+	switch (eID)
+	{
+		case kClient:
+		{
+			iTarget = GetNativeCell(3);
+			GetClientAuthId(iTarget, AuthId_Steam2, szAuthId, sizeof(szAuthId));
+			GetClientName(iTarget, szName, sizeof(szName));
+		}
+		case kAuth:
+		{
+			iTarget = NO_INDEX;
+			GetNativeString(4, szAuthId, sizeof(szAuthId));
+			strcopy(szName, sizeof(szName), szAuthId);
+		}
+	}
 
 #if DEBUG_API
 	LogMessage("[iCasterNative] eTypeID: %d | eTypeAction: %d | iClient: %d | szAuthId: %s", eID, eAction, iTarget, szAuthId);
@@ -169,33 +187,9 @@ int iCasterNative(Handle hPlugin, int iNumParams)
 		case kGet:
 			return g_smCaster.GetValue(szAuthId, g_iDummy);
 		case kSet:
-		{
-			switch (eID)
-			{
-				case kClient:
-				{
-					char szName[32];
-					GetClientName(iTarget, szName, sizeof(szName));
-					vRegister(SERVER_INDEX, iTarget, szAuthId, szName, kCaster, eID, SM_REPLY_TO_CONSOLE);
-				}
-				case kAuth:
-					vRegister(SERVER_INDEX, NO_INDEX, szAuthId, szAuthId, kCaster, eID, SM_REPLY_TO_CONSOLE);
-			}
-		}
+			vRegister(SERVER_INDEX, iTarget, szAuthId, szName, kCaster, eID, SM_REPLY_TO_CONSOLE);
 		case kRem:
-		{
-			switch (eID)
-			{
-				case kClient:
-				{
-					char szName[32];
-					GetClientName(iTarget, szName, sizeof(szName));
-					vRemove(SERVER_INDEX, iTarget, szAuthId, szName, kCaster, eID, SM_REPLY_TO_CONSOLE);
-				}
-				case kAuth:
-					vRemove(SERVER_INDEX, NO_INDEX, szAuthId, szAuthId, kCaster, eID, SM_REPLY_TO_CONSOLE);
-			}
-		}
+			vRemove(SERVER_INDEX, iTarget, szAuthId, szName, kCaster, eID, SM_REPLY_TO_CONSOLE);
 	}
 	return 1;
 }
@@ -213,9 +207,27 @@ int iWhitelistNative(Handle hPlugin, int iNumParams)
 {
 	eTypeID		eID		= GetNativeCell(1);
 	eTypeAction eAction = GetNativeCell(2);
-	int			iTarget = GetNativeCell(3);
-	char		szAuthId[STEAMID2_LENGTH];
-	GetNativeString(4, szAuthId, sizeof(szAuthId));
+	int			iTarget;
+	
+	char
+		szAuthId[STEAMID2_LENGTH],
+		szName[32];
+
+	switch (eID)
+	{
+		case kClient:
+		{
+			iTarget = GetNativeCell(3);
+			GetClientAuthId(iTarget, AuthId_Steam2, szAuthId, sizeof(szAuthId));
+			GetClientName(iTarget, szName, sizeof(szName));
+		}
+		case kAuth:
+		{
+			iTarget = NO_INDEX;
+			GetNativeString(4, szAuthId, sizeof(szAuthId));
+			strcopy(szName, sizeof(szName), szAuthId);
+		}
+	}
 
 #if DEBUG_API
 	LogMessage("[iWhitelistNative] eTypeID: %d | eTypeAction: %d | iClient: %d | szAuthId: %s", eID, eAction, iTarget, szAuthId);
@@ -226,33 +238,10 @@ int iWhitelistNative(Handle hPlugin, int iNumParams)
 		case kGet:
 			return g_smCaster.GetValue(szAuthId, g_iDummy);
 		case kSet:
-		{
-			switch (eID)
-			{
-				case kClient:
-				{
-					char szName[32];
-					GetClientName(iTarget, szName, sizeof(szName));
-					vRegister(SERVER_INDEX, iTarget, szAuthId, szName, kWhite, eID, SM_REPLY_TO_CONSOLE);
-				}
-				case kAuth:
-					vRegister(SERVER_INDEX, NO_INDEX, szAuthId, szAuthId, kWhite, eID, SM_REPLY_TO_CONSOLE);
-			}
-		}
+			vRegister(SERVER_INDEX, iTarget, szAuthId, szName, kWhite, eID, SM_REPLY_TO_CONSOLE);
 		case kRem:
-		{
-			switch (eID)
-			{
-				case kClient:
-				{
-					char szName[32];
-					GetClientName(iTarget, szName, sizeof(szName));
-					vRegister(SERVER_INDEX, iTarget, szAuthId, szName, kWhite, eID, SM_REPLY_TO_CONSOLE);
-				}
-				case kAuth:
-					vRemove(SERVER_INDEX, NO_INDEX, szAuthId, szAuthId, kWhite, eID, SM_REPLY_TO_CONSOLE);
-			}
-		}
+			vRemove(SERVER_INDEX, iTarget, szAuthId, szName, kWhite, eID, SM_REPLY_TO_CONSOLE);
+
 	}
 	return 1;
 }
@@ -273,22 +262,28 @@ int iInmunityNative(Handle hPlugin, int iNumParams)
 
 	eTypeID		eID		= GetNativeCell(1);
 	eTypeAction eAction = GetNativeCell(2);
-	int			iTarget = GetNativeCell(3);
+	int			iTarget;
 	char		szAuthId[STEAMID2_LENGTH];
-	GetNativeString(4, szAuthId, sizeof(szAuthId));
-	bool bInmunity;
-
-#if DEBUG_API
-	LogMessage("[iInmunityNative] eTypeID: %d | eTypeAction: %d | iClient: %d | szAuthId: %s", eID, eAction, iTarget, szAuthId);
-#endif
+	bool 		bInmunity;
 
 	switch (eID)
 	{
 		case kClient:
+		{
+			iTarget = GetNativeCell(3);
+			GetClientAuthId(iTarget, AuthId_Steam2, szAuthId, sizeof(szAuthId));
 			bInmunity = bSpecInmunity(kClient, iTarget);
+		}
 		case kAuth:
+		{
+			GetNativeString(4, szAuthId, sizeof(szAuthId));
 			bInmunity = bSpecInmunity(kAuth, NO_INDEX, szAuthId);
+		}
 	}
+
+#if DEBUG_API
+	LogMessage("[iInmunityNative] eTypeID: %d | eTypeAction: %d | iClient: %d | szAuthId: %s", eID, eAction, iTarget, szAuthId);
+#endif
 
 	switch (eAction)
 	{
@@ -299,34 +294,14 @@ int iInmunityNative(Handle hPlugin, int iNumParams)
 			if (bInmunity)
 				return 0;
 
-			switch (eID)
-			{
-				case kClient:
-				{
-					char szClientAuthId[STEAMID2_LENGTH];
-					GetClientAuthId(iTarget, AuthId_Steam2, szClientAuthId, sizeof(szClientAuthId));
-					return g_smSpecInmunity.SetValue(szClientAuthId, true);
-				}
-				case kAuth:
-					return g_smSpecInmunity.SetValue(szAuthId, true);
-			}
+			return g_smSpecInmunity.SetValue(szAuthId, true);
 		}
 		case kRem:
 		{
-			if (bInmunity)
+			if (!bInmunity)
 				return 0;
 
-			switch (eID)
-			{
-				case kClient:
-				{
-					char szClientAuthId[STEAMID2_LENGTH];
-					GetClientAuthId(iTarget, AuthId_Steam2, szClientAuthId, sizeof(szClientAuthId));
-					return g_smSpecInmunity.Remove(szClientAuthId);
-				}
-				case kAuth:
-					return g_smSpecInmunity.Remove(szAuthId);
-			}
+			return g_smSpecInmunity.Remove(szAuthId);
 		}
 	}
 	return 1;
