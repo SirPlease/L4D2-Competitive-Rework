@@ -3,11 +3,13 @@
 
 #include <sourcemod>
 #include <sdktools>
+
 #undef REQUIRE_PLUGIN
 #include <caster_system>
-#define MAX_SPEED 2
+#define REQUIRE_PLUGIN
 
-bool readyUpIsAvailable;
+#define MAX_SPEED 2
+bool g_cvCasterSystem;
 
 public Plugin myinfo =
 {
@@ -35,14 +37,14 @@ public void OnPluginStart()
 
 public void OnAllPluginsLoaded()
 {
-    readyUpIsAvailable = LibraryExists("caster_system");
+    g_cvCasterSystem = LibraryExists("caster_system");
 }
 
 public void OnLibraryRemoved(const char[] name)
 {
     if (StrEqual(name, "caster_system"))
     {
-        readyUpIsAvailable = false;
+        g_cvCasterSystem = false;
     }
 }
 
@@ -50,13 +52,13 @@ public void OnLibraryAdded(const char[] name)
 {
     if (StrEqual(name, "caster_system"))
     {
-        readyUpIsAvailable = true;
+        g_cvCasterSystem = true;
     }
 }
 
 public void OnClientPutInServer(int client)
 {
-    if (readyUpIsAvailable && IsClientCaster(client))
+    if (g_cvCasterSystem && bCaster(kClient, kGet, client))
     {
         FakeClientCommand(client, "sm_spechud");
     }
