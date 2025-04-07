@@ -1374,6 +1374,11 @@ void CheckWitchCrown(int witch, int attacker, bool bOneShot = false)
 	// full crown? unharrassed
 	if (!witch_dmg_array[MAXPLAYERS + WTCH_STARTLED] && (bOneShot || witch_dmg_array[MAXPLAYERS + WTCH_CROWNSHOT] >= iWitchHealth))
 	{
+		PrintDebug("Witch Crown Check: Full crown detected. Attacker: %N, Damage: %i, Chip Damage: %i",
+				   attacker,
+				   witch_dmg_array[attacker],
+				   chipDamage);
+
 		// make sure that we don't count any type of chip
 		if (g_cvarHideFakeDamage.BoolValue)
 		{
@@ -1389,6 +1394,11 @@ void CheckWitchCrown(int witch, int attacker, bool bOneShot = false)
 	}
 	else if (witch_dmg_array[MAXPLAYERS + WTCH_CROWNSHOT] >= g_cvarDrawCrownThresh.IntValue)
 	{
+		PrintDebug("Witch Crown Check: Draw crown detected. Attacker: %N, Crown Shot: %i, Threshold: %i",
+				   attacker,
+				   witch_dmg_array[MAXPLAYERS + WTCH_CROWNSHOT],
+				   g_cvarDrawCrownThresh.IntValue);
+
 		// draw crown: harassed + over X damage done by one survivor -- in ONE shot
 
 		for (int i = 0; i <= MAXPLAYERS; i++)
@@ -1399,6 +1409,8 @@ void CheckWitchCrown(int witch, int attacker, bool bOneShot = false)
 			else
 				chipDamage += witch_dmg_array[i];
 		}
+
+		PrintDebug("Witch Crown Check: Chip Damage Calculated: %i, Total Health: %i", chipDamage, iWitchHealth);
 
 		// make sure that we don't count any type of chip
 		if (g_cvarHideFakeDamage.BoolValue)
@@ -1411,13 +1423,28 @@ void CheckWitchCrown(int witch, int attacker, bool bOneShot = false)
 			}
 			else
 				witch_dmg_array[MAXPLAYERS + WTCH_CROWNSHOT] = iWitchHealth - chipDamage;
+
+			PrintDebug("Witch Crown Check: Adjusted Crown Shot: %i, Adjusted Chip Damage: %i",
+					   witch_dmg_array[MAXPLAYERS + WTCH_CROWNSHOT],
+					   chipDamage);
+
 			// re-check whether it qualifies as a drawcrown:
 			if (witch_dmg_array[MAXPLAYERS + WTCH_CROWNSHOT] < g_cvarDrawCrownThresh.IntValue)
+			{
+				PrintDebug("Witch Crown Check: Adjusted Crown Shot below threshold. No draw crown.");
 				return;
+			}
 		}
 
 		// plus, set final shot as 'damage', and the rest as chip
 		HandleDrawCrown(attacker, witch_dmg_array[MAXPLAYERS + WTCH_CROWNSHOT], chipDamage);
+	}
+	else
+	{
+		PrintDebug("Witch Crown Check: No crown detected. Crown Shot: %i, Threshold: %i, Harassed: %i",
+				   witch_dmg_array[MAXPLAYERS + WTCH_CROWNSHOT],
+				   g_cvarDrawCrownThresh.IntValue,
+				   witch_dmg_array[MAXPLAYERS + WTCH_STARTLED]);
 	}
 
 	// remove trie

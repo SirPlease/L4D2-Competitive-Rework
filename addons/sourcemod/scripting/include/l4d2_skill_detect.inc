@@ -20,7 +20,7 @@ enum CarAlarmTriggerReason
 /**
  *  CarAlarmTriggerReason: the name of the 'reason' in OnCarAlarmTriggered() forward
  */
-char sCarAlarmTriggerReason[CarAlarmTrigger_Size][] = {
+stock char sCarAlarmTriggerReason[CarAlarmTrigger_Size][] = {
 	"unknown",
 	"hit",
 	"touched",
