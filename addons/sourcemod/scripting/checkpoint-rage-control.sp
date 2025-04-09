@@ -80,7 +80,7 @@ Action SetSaferoomFrustrationTickdown(int args)
 	GetCmdArg(1, sMap, sizeof(sMap));
 
 	g_smTickdownMaps.SetValue(sMap, true);
-	return Plugin_Continue;
+	return Plugin_Handled;
 }
 
 public void OnPluginEnd()
