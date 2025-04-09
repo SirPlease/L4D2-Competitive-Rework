@@ -1,0 +1,301 @@
+"Phrases"
+{
+	"Prefix"
+	{
+		"es"		"[{olive}Caster{default}]"
+	}
+
+	"AllowAddons"
+	{
+		"es"		"Los Addons ahora están {blue}permitidos {default}para los casters."
+	}
+
+	"CasterEmpty"
+	{
+		"es"		"No hay {red}casters registrados{default}."
+	}
+
+	"CasterFound"
+	{
+		"#format"	"{1:s}"
+		"es"		"{blue}'{1}'{default} ya está registrado como caster"
+	}
+
+	"CasterNoFound"
+	{
+		"#format"	"{1:s}"
+		"es"		"{red}'{1}'{default} no está registrado como caster"
+	}
+
+	"CasterPlay"
+	{
+		"es"		"Antes de jugar, debes {red}eliminar tu registro de caster{default}"
+	}
+
+	"CasterReconnect"
+	{
+		"es"		"Reconéctate para que tus {green}Addons funcionen{default}."
+	}
+
+	"CasterReg"
+	{
+		"#format"	"{1:s}"
+		"es"		"{blue}'{1}'{default} fue registrado como caster"
+	}
+
+	"CasterRegFrom"
+	{
+		"#format"	"{1:N}"
+		"es"		"{blue}Admin{default} ({olive}{1}{default}) te ha registrado como caster"
+	}
+
+	"CasterRegError"
+	{
+		"#format"	"{1:s}"
+		"es"		"Error al registrar caster ({olive}{1}{default})"
+	}
+
+	"CasterRemove"
+	{
+		"#format"	"{1:s}"
+		"es"		"{red}'{1}'{default} fue eliminado de la lista de casters"
+	}
+
+	"CasterRemoveFrom"
+	{
+		"#format"	"{1:N}"
+		"es"		"{blue}Admin{default} ({olive}{1}{default}) te ha desregistrado como caster"
+	}
+
+	"CasterRemoveError"
+	{
+		"#format"	"{1:s}"
+		"es"		"Error al eliminar caster ({olive}{1}{default})"
+	}
+
+	"CasterReset"
+	{
+		"es"		"Lista de {blue}casters{default} restablecida con éxito"
+	}
+
+	"ForbidAddons"
+	{
+		"es"		"Los Addons ahora están {red}prohibidos {default}para los casters."
+	}
+
+	"ListPrinted"
+	{
+		"es"		"Lista impresa en la {green}consola{default}"
+	}
+
+	"MenuCastersList"
+	{
+		"es"		"Lista de Casters"
+	}
+
+	"MenuPlayersList"
+	{
+		"es"		"Lista de Jugadores"
+	}
+
+	"MenuWhitelistList"
+	{
+		"es"		"Lista Blanca"
+	}
+
+	"PlayerNotFound"
+	{
+		"#format"	"{1:s}"
+		"es"		"{red}'{1}'{default} no encontrado"
+	}
+
+	"Reconnect"
+	{
+		"es"		"Serás reconectado al servidor, ahora {green}verás una pantalla negra en lugar de una barra de carga{default}"
+	}
+
+	"SQLCacheSuccess"
+	{
+		"es"		"La caché de base de datos fue actualizada {green}exitosamente{default}"
+	}
+
+	"SQLDisabled"
+	{
+		"es"		"SQL {red}deshabilitado{default}."
+	}
+
+	"SQLError"
+	{
+		"es"		"{red}Error{default} en la consulta SQL"
+	}
+
+	"SQLFound"
+	{
+		"#format"	"{1:s}"
+		"es"		"{blue}'{1}'{default} ya está registrado en la base de datos"
+	}
+
+	"SQLNoFound"
+	{
+		"#format"	"{1:s}"
+		"es"		"{red}'{1}'{default} no está registrado en la base de datos"
+	}
+
+	"SQLNoConnect"
+	{
+		"es"		"{red}No se pudo{default} conectar a la base de datos."
+	}
+
+	"SQLQueryError"
+	{
+		"es"		"Error en la consulta a la base de datos"
+	}
+
+	"SQLReg"
+	{
+		"#format"	"{1:s}"
+		"es"		"{blue}'{1}'{default} fue registrado en la base de datos"
+	}
+
+	"SQLRegFrom"
+	{
+		"#format"	"{1:N}"
+		"es"		"{blue}Admin{default} ({olive}{1}{default}) te ha registrado en la base de datos"
+	}
+
+	"SQLRemoved"
+	{
+		"#format"	"{1:s}"
+		"es"		"{red}'{1}'{default} fue eliminado de la base de datos"
+	}
+
+	"SQLRemovedFrom"
+	{
+		"#format"	"{1:N}"
+		"es"		"{blue}Admin{default} ({olive}{1}{default}) te ha eliminado de la base de datos"
+	}
+	
+	"SQLResetSuccess"
+	{
+		"es"		"La base de datos fue {green}restablecida{default} con éxito"
+	}
+
+	"SQLTableCreated"
+	{
+		"es"		"Tabla SQL creada exitosamente."
+	}
+
+	"SelfRegCasterFound"
+	{
+		"es"		"Ya estás {blue}registrado{default} como {blue}caster{default}."
+	}
+
+	"SelfRegDisabled"
+	{
+		"es"		"El auto-registro está {red}deshabilitado{default}."
+	}
+
+	"SelfRegNoAdmin"
+	{
+		"es"		"{red}Solo los admins{default} pueden registrar a otros jugadores."
+	}
+
+	"SelfRegSuccess"
+	{
+		"es"		"Te has {blue}registrado{default} como {blue}caster{default}."
+	}
+
+	"SelfRegWhitelistNotFound"
+	{
+		"es"		"No puedes {green}auto-registrarte{default} ya que {red}no estás en la lista blanca{default}."
+	}
+
+	"AuthIdError"
+	{
+		"#format"	"{1:s}"
+		"es"		"El steamid ({red}'{1}'{default}) es inválido."
+	}
+
+	"UnRegCasterNonAdmin"
+	{
+		"es"		"Solo los {blue}admins{default} pueden eliminar a otros casters."
+	}
+
+	"Use"
+	{
+		"es"		"Usar"
+	}
+
+	"UseNoCast"
+	{
+		"es"		"Usa {green}!uncast{default}, para eliminar tu registro"
+	}
+
+	"WhitelistEmpty"
+	{
+		"es"		"No puedes {green}auto-registrarte{default} ya que {red}no hay jugadores en la lista blanca{default}."
+	}
+
+	"WhitelistFound"
+	{
+		"#format"	"{1:s}"
+		"es"		"{blue}'{1}'{default} ya está en la lista blanca"
+	}
+
+	"WhitelistNoFound"
+	{
+		"#format"	"{1:s}"
+		"es"		"{red}'{1}'{default} no está en la lista blanca"
+	}
+
+	"WhitelistReg"
+	{
+		"#format"	"{1:s}"
+		"es"		"{blue}'{1}'{default} añadido a la lista blanca"
+	}
+
+	"WhitelistRegFrom"
+	{
+		"#format"	"{1:N}"
+		"es"		"{blue}Admin{default} ({olive}{1}{default}) te ha añadido a la lista blanca"
+	}
+
+	"WhitelistRegError"
+	{
+		"#format"	"{1:s}"
+		"es"		"Error al añadir a la lista blanca ({olive}{1}{default})"
+	}
+
+	"WhitelistRemove"
+	{
+		"#format"	"{1:s}"
+		"es"		"{red}'{1}'{default} eliminado de la lista blanca"
+	}
+
+	"WhitelistRemoveFrom"
+	{
+		"#format"	"{1:N}"
+		"es"		"{blue}Admin{default} ({olive}{1}{default}) te ha eliminado de la lista blanca"
+	}
+	
+	"WhitelistRemoveError"
+	{
+		"#format"	"{1:s}"
+		"es"		"Error al eliminar de la lista blanca ({olive}{1}{default})"
+	}
+	
+	"WhitelistReset"
+	{
+		"es"		"{blue}Lista blanca{default} restablecida con éxito"
+	}
+
+	"NoTargetsToRemove"
+	{
+		"es"		"No se encontraron jugadores"
+	}
+
+	"KickSpecsVoteTitle"
+	{
+		"es"		"Expulsar a los espectadores que no son admins y Caster?"
+	}
+}
