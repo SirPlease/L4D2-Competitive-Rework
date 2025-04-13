@@ -103,12 +103,6 @@
 		"es"		"Lista Blanca"
 	}
 
-	"PlayerNotFound"
-	{
-		"#format"	"{1:s}"
-		"es"		"{red}'{1}'{default} no encontrado"
-	}
-
 	"Reconnect"
 	{
 		"es"		"Serás reconectado al servidor, ahora {green}verás una pantalla negra en lugar de una barra de carga{default}"
@@ -297,5 +291,15 @@
 	"KickSpecsVoteTitle"
 	{
 		"es"		"Expulsar a los espectadores que no son admins y Caster?"
+	}
+
+	"KickSpecsVoteSuccess"
+	{
+		"es"		"Adiós Espectadores!"
+	}
+
+	"KickSpecsReason"
+	{
+		"es"		"Sin espectadores, por favor!"
 	}
 }

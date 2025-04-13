@@ -103,12 +103,6 @@
 		"en"		"Whitelist"
 	}
 
-	"PlayerNotFound"
-	{
-		"#format"	"{1:s}"
-		"en"		"{red}'{1}'{default} not found"
-	}
-
 	"Reconnect"
 	{
 		"en"		"You will be reconnected to the server, now {green}you will see a black screen instead of a loading bar{default}"
@@ -297,5 +291,15 @@
 	"KickSpecsVoteTitle"
 	{
 		"en"		"Kick Non-Admin & Non-Casting Spectators?"
+	}
+
+	"KickSpecsVoteSuccess"
+	{
+		"en"		"Ciao Spectators!"
+	}
+	
+	"KickSpecsReason"
+	{
+		"en"		"No Spectators, please!"
 	}
 }
