@@ -626,7 +626,11 @@ void KV_Load()
 		return;
 	}
 
-	PrintDebug("Holdout data loaded from file: %s.", sNameBuff);
+    if (strlen(sNameBuff) > 0) {
+        PrintDebug("Holdout data loaded from file: %s", sNameBuff);
+    } else {
+        PrintDebug("Holdout data loaded, but file path is empty.");
+    }
 }
 
 bool KV_UpdateHoldoutMapInfo()
