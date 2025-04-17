@@ -626,7 +626,7 @@ void KV_Load()
 		return;
 	}
 
-	PrintDebug("Holdout data loaded from file: %s.", sNameBuff);
+    PrintDebug("Holdout data loaded from file: %s", sNameBuff);
 }
 
 bool KV_UpdateHoldoutMapInfo()
@@ -723,7 +723,7 @@ int GetPlayerCharacter(int client)
 void PrintDebug(const char[] Message, any ...)
 {
 	char DebugBuff[256];
-	VFormat(DebugBuff, sizeof(DebugBuff), Message, 3);
+	VFormat(DebugBuff, sizeof(DebugBuff), Message, 2);
 	LogMessage(DebugBuff);
 	//PrintToServer(DebugBuff);
 }
