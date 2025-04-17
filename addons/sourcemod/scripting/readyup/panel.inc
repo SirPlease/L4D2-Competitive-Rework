@@ -133,7 +133,7 @@ void UpdatePanel()
 			else
 			{
 				++specCount;
-				if (casterSystemAvailable && IsClientCaster(client))
+				if (casterSystemAvailable && bCaster(kClient, kGet, client))
 				{
 					++casterCount;
 					Format(nameBuf, sizeof(nameBuf), "%s\n", nameBuf);
