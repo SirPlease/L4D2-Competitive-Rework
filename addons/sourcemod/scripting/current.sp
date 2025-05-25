@@ -53,7 +53,7 @@ float GetBossProximity()
  */
 float GetMaxSurvivorCompletion()
 {
-	float flow = 0.0, tmp_flow = 0.0, origin[3];
+	float flow = 0.0, tmp_flow = 0.0;
 	Address pNavArea;
 	for (int i = 1; i <= MaxClients; i++) {
 		if (IsClientInGame(i) && GetClientTeam(i) == TEAM_SURVIVORS && IsPlayerAlive(i)) {
