@@ -23,7 +23,7 @@ public Plugin myinfo =
     name = "L4D2 Tank Rage",
     author = "Sir",
     description = "Manage Tank Rage when Survivors are running back.",
-    version = "1.0.1",
+    version = "1.0.2",
     url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
