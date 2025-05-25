@@ -14,7 +14,7 @@ public Plugin myinfo =
 	name = "L4D2 Survivor Progress",
 	author = "CanadaRox, Visor",
 	description = "Print survivor progress in flow percents ",
-	version = "2.0.4",
+	version = "2.0.5",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
