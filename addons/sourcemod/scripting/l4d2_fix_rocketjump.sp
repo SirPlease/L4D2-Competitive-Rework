@@ -5,7 +5,7 @@
 #include <sdktools>
 #include <sdkhooks>
 
-#define PLUGIN_VERSION "1.4"
+#define PLUGIN_VERSION "1.5"
 #define MAXENTITY 2048
 
 public Plugin myinfo =
@@ -106,7 +106,18 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
             GetEntPropVector(client, Prop_Data, "m_vecAbsVelocity", flVel);
             //PrintToChatAll("%N m_vecAbsVelocity - %.2f %.2f %.2f", client, flVel[0], flVel[1], flVel[2]);
 
-            flVel[2] = 0.0; //velocity height zero
+            // velocity height zero - prevents getting "squished"
+            if (flVel[2] < 0.0)
+            {
+                flVel[2] = 0.0;
+            }
+
+            // normal jump velocity - prevents getting launched
+            if (flVel[2] > 242.29)
+            {
+                flVel[2] = 242.29;
+            }
+
             TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, flVel);
         }
     }
