@@ -3040,7 +3040,7 @@
 			"CGrenadeLauncher_Projectile::Explode"
 			{
 				"library"	"server"
-				"linux"		"@_ZN27CGrenadeLauncher_Projectile12ExplodeTouchEP11CBaseEntity"
+				"linux"		"@_ZN27CGrenadeLauncher_Projectile7ExplodeEP10CGameTracei"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x8B\x2A\x2A\x53\x56\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\xC1\x2A\x2A\x57"
 				/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 8B ? ? 53 56 8B ? 8B ? ? ? ? ? C1 ? ? 57 */
 			}

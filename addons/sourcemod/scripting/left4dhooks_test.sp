@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.158"
+#define PLUGIN_VERSION		"1.159"
 
 /*=======================================================================================
 	Plugin Info:
@@ -5648,7 +5648,7 @@ public Action L4D2_OnTransitionRestore(int client)
 		if( called == 0 ) g_iForwards++;
 		called++;
 
-		ForwardCalled("\"L4D2_OnChangeFinaleStage\" client: %d (%N)", client, client);
+		ForwardCalled("\"L4D2_OnTransitionRestore\" client: %d (%N)", client, client);
 	}
 
 	// return Plugin_Handled;

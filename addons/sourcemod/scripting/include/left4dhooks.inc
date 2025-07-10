@@ -1360,6 +1360,7 @@ forward void L4D_OnSpawnSpecial_PostHandled(int client, int zombieClass, const f
 /**
  * @brief Called whenever ZombieManager::SpawnTank(Vector&,QAngle&) is invoked
  * @remarks Not invoked if z_spawn tank is used and it gives a ghosted/dead player tank
+ * @remarks This sometimes triggers every frame or so, in L4D2 "c7m3_port" map on Windows, after leaving the saferoom in Versus
  *
  * @param vecPos		Vector coordinate where tank is spawned
  * @param vecAng		QAngle where tank will be facing
@@ -1372,6 +1373,7 @@ forward Action L4D_OnSpawnTank(const float vecPos[3], const float vecAng[3]);
  * @brief Called whenever ZombieManager::SpawnTank(Vector&,QAngle&) is invoked
  * @remarks Not invoked if z_spawn tank is used and it gives a ghosted/dead player tank
  * @remarks This forward will not trigger if the relative pre-hook forward has been blocked with Plugin_Handled
+ * @remarks This sometimes triggers every frame or so, in L4D2 "c7m3_port" map on Windows, after leaving the saferoom in Versus, client index will be -1
  *
  * @param client		The client index who spawned
  * @param vecPos		Vector coordinate where tank is spawned
@@ -2288,7 +2290,7 @@ forward void L4D_TankRock_BounceTouch_PostHandled(int tank, int rock, int entity
  * @param tank_index		Client index of the tank
  * @param enterStasis		Is the tank in stasis
  *
- * @return				Plugin_Handled to block window from showing and to keep Tank Bot, Plugin_Changed to use overwritten values from plugin, Plugin_Continue otherwise
+ * @return					Plugin_Handled to block window from showing and to keep Tank Bot, Plugin_Changed to use overwritten values from plugin, Plugin_Continue otherwise
  */
 forward Action L4D_OnTryOfferingTankBot(int tank_index, bool &enterStasis);
 

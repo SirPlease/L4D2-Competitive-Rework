@@ -1,13 +1,18 @@
-1.158 (21-Mar-2025)
-	- Added forwards "L4D2_OnTransitionRestore*" and "L4D2_OnRestoreTransitionedSurvivorBots*" to trigger on clients and bots transitioning data restore. Thanks to "blueblur0730" for adding.
-	- Fixed native "L4D2Direct_SetVSCampaignScore" not updating the scores fully. Thanks to "nikita1824" for reporting.
+1.159 (01-Jul-2025)
+	- Fixed forward "L4D_OnDeathDroppedWeapons" from throwing client not in game errors. Thanks to "Mystik Spiral" for reporting.
+	- Fixed forwards "L4D2_VomitJarProjectile_*" not working due to incorrect initialization. Thanks to "Drgon" and "ProjectSky" for reporting.
+	- Fixed gamedata signature for "CGrenadeLauncher_Projectile::Explode" forward on L4D2 Linux. Thanks to "xiaolinRM" for reporting.
+	- Clarification in the include file on how often the "L4D_OnSpawnTank*" forwards trigger. Thanks to "Marttt" for reporting.
 
 	- Updated: Plugin and test plugin.
 	- Updated: "/gamedata/left4dhooks.l4d2.txt" GameData file.
 	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
 	- Updated: "/scripting/l4dd/l4dd_setup.sp" project file.
 	- Updated: "/scripting/include/left4dhooks.inc" include file.
+
+1.158 (21-Mar-2025)
+	- Added forwards "L4D2_OnTransitionRestore*" and "L4D2_OnRestoreTransitionedSurvivorBots*" to trigger on clients and bots transitioning data restore. Thanks to "blueblur0730" for adding.
+	- Fixed native "L4D2Direct_SetVSCampaignScore" not updating the scores fully. Thanks to "nikita1824" for reporting.
 
 1.157 (04-Jan-2025)
 	- Plugin is now compiled with SourceMod version 1.11 again.
