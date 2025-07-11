@@ -2029,6 +2029,18 @@
 				}
 			}
 
+			"CTerrorPlayer::RoundRespawn::Address"
+			{
+				"windows"
+				{
+					"signature" "CTerrorPlayer::RoundRespawn"
+				}
+				"linux"
+				{
+					"signature" "CTerrorPlayer::RoundRespawn"
+				}
+			}
+
 			// Used for dynamic searching of memory address for SDKCall
 			"Molotov_StrFind"
 			{
@@ -2262,6 +2274,22 @@
 			{
 				"windows"	"5"
 				"linux"		"5"
+			}
+
+			"CTerrorPlayer::RoundRespawn::Offset"
+			{
+				"windows"	"8"
+				"linux"		"18"
+			}
+			"CTerrorPlayer::RoundRespawn::Bytes"
+			{
+				"windows"	"232" // 0xE8
+				"linux"		"232" // 0xE8
+			}
+			"CTerrorPlayer::RoundRespawn::Count"
+			{
+				"windows"	"16"
+				"linux"		"17"
 			}
 
 			"MobSpawnTimer"
@@ -5901,7 +5929,7 @@
 				"library"	"server"
 				"linux"		"@_ZN13CTerrorPlayer12RoundRespawnEv"
 				"windows"	"\x56\x8B\xF1\xE8\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x84\xC0\x75"
-				/* 56 8B F1 E8 ? ? ? ? E8 ? ? ? ? 84 C0 75	*/
+				/* 56 8B F1 E8 ? ? ? ? E8 ? ? ? ? 84 C0 75 */
 			}
 
 			/*

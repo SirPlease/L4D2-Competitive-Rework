@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.159"
+#define PLUGIN_VERSION		"1.160"
 
 /*=======================================================================================
 	Plugin Info:
@@ -359,6 +359,11 @@ Action sm_l4dd(int client, int args)
 		Uncomment the things you want to test. All disabled by default.
 		Must test individual sections on their own otherwise you'll receive errors about symbols already defined..
 	*/
+
+
+
+	L4D_RespawnPlayer(client, false);
+	PrintToServer("L4D_RespawnPlayer %N", client);
 
 
 

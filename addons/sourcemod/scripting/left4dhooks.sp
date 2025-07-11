@@ -18,8 +18,8 @@
 
 
 
-#define PLUGIN_VERSION		"1.159"
-#define PLUGIN_VERLONG		1159
+#define PLUGIN_VERSION		"1.160"
+#define PLUGIN_VERLONG		1160
 
 #define DEBUG				0
 // #define DEBUG			1	// Prints addresses + detour info (only use for debugging, slows server down).
@@ -304,6 +304,11 @@ int g_iOff_m_bInIntro;
 int g_iOff_m_attributeFlags;
 int g_iOff_m_spawnAttributes;
 int g_iOff_NavAreaID;
+
+Address g_pCTerrorPlayer_RoundRespawn;
+int g_iOff_RespawnPlayer;
+int g_iSize_RespawnPlayer;
+int g_iByte_RespawnPlayer;
 // int g_iOff_m_iClrRender; // NULL PTR - METHOD (kept for demonstration)
 // int ClearTeamScore_A;
 // int ClearTeamScore_B;

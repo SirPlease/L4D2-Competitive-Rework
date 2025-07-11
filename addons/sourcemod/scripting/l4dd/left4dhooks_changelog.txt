@@ -1,3 +1,13 @@
+1.160 (15-Jul-2025)
+	- Changed native "L4D_RespawnPlayer" to specify resetting player stats or not. Requested by "ball2hi".
+
+	- Updated: Plugin and test plugin.
+	- Updated: "/gamedata/left4dhooks.l4d1.txt" GameData file.
+	- Updated: "/gamedata/left4dhooks.l4d2.txt" GameData file.
+	- Updated: "/scripting/l4dd/l4dd_gamedata.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
+	- Updated: "/scripting/include/left4dhooks.inc" include file.
+
 1.159 (01-Jul-2025)
 	- Fixed forward "L4D_OnDeathDroppedWeapons" from throwing client not in game errors. Thanks to "Mystik Spiral" for reporting.
 	- Fixed forwards "L4D2_VomitJarProjectile_*" not working due to incorrect initialization. Thanks to "Drgon" and "ProjectSky" for reporting.

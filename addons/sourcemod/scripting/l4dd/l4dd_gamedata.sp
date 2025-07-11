@@ -2458,8 +2458,26 @@ void LoadGameData()
 	}
 	else if( byte != 0x90 )
 	{
-		LogError("CTerrorPlayer::CanBecomeGhost patch: byte mismatch. %X", LoadFromAddress(g_pCTerrorPlayer_CanBecomeGhost + view_as<Address>(g_iCanBecomeGhostOffset), NumberType_Int8));
+		LogError("CTerrorPlayer::CanBecomeGhost patch: byte mismatch. %X (%s)", LoadFromAddress(g_pCTerrorPlayer_CanBecomeGhost + view_as<Address>(g_iCanBecomeGhostOffset), NumberType_Int8), g_sSystem);
 	}
+	// ====================
+
+
+
+	// ====================
+	// Patch to allow "L4D_RespawnPlayer" to not reset stats
+	// ====================
+	// Address to function
+	g_pCTerrorPlayer_RoundRespawn = hGameData.GetAddress("CTerrorPlayer::RoundRespawn::Address");
+	ValidateAddress(g_pCTerrorPlayer_RoundRespawn, "CTerrorPlayer::RoundRespawn::Address", true);
+
+	// Offset to patch
+	g_iOff_RespawnPlayer = hGameData.GetOffset("CTerrorPlayer::RoundRespawn::Offset");
+	ValidateOffset(g_iOff_RespawnPlayer, "CTerrorPlayer::RoundRespawn::Offset");
+
+	// Patch count and byte match
+	g_iByte_RespawnPlayer = hGameData.GetOffset("CTerrorPlayer::RoundRespawn::Bytes");
+	g_iSize_RespawnPlayer = hGameData.GetOffset("CTerrorPlayer::RoundRespawn::Count");
 	// ====================
 
 

@@ -5288,9 +5288,39 @@ int Native_CTerrorPlayer_RespawnPlayer(Handle plugin, int numParams) // Native "
 	ValidateNatives(g_hSDK_CTerrorPlayer_RoundRespawn, "CTerrorPlayer::RoundRespawn");
 
 	int client = GetNativeCell(1);
+	bool reset = true;
+	if( numParams == 2 ) 
+		reset = GetNativeCell(2);
+
+	ArrayList aList = new ArrayList();
+	if( !reset )
+	{
+		int byte = LoadFromAddress(g_pCTerrorPlayer_RoundRespawn + view_as<Address>(g_iOff_RespawnPlayer), NumberType_Int8);
+		if( byte != g_iByte_RespawnPlayer )
+		{
+			reset = true;
+			LogError("CTerrorPlayer::RoundRespawn patch: byte mismatch. %X (%s).", byte, g_sSystem);
+		}
+
+		for( int i = 0; i < g_iSize_RespawnPlayer; i++ )
+		{
+			aList.Push(LoadFromAddress(g_pCTerrorPlayer_RoundRespawn + view_as<Address>(g_iOff_RespawnPlayer + i), NumberType_Int8));
+			StoreToAddress(g_pCTerrorPlayer_RoundRespawn + view_as<Address>(g_iOff_RespawnPlayer + i), 0x90, NumberType_Int8);
+		}
+	}
 
 	//PrintToServer("#### CALL g_hSDK_CTerrorPlayer_RoundRespawn");
 	SDKCall(g_hSDK_CTerrorPlayer_RoundRespawn, client);
+
+	if( !reset )
+	{
+		for( int i = 0; i < g_iSize_RespawnPlayer; i++ )
+		{
+			StoreToAddress(g_pCTerrorPlayer_RoundRespawn + view_as<Address>(g_iOff_RespawnPlayer + i), aList.Get(i), NumberType_Int8);
+		}
+	}
+
+	delete aList;
 
 	return 0;
 }

@@ -5137,7 +5137,7 @@ native void L4D2_UseAdrenaline(int client, float fTime = 15.0, bool heal = true,
  *
  * @noreturn
  */
-native void L4D_RespawnPlayer(int client);
+native void L4D_RespawnPlayer(int client, bool resetStats = true);
 
 /**
  * @brief To takeover a Survivor bot. First use "ChangeClientTeam" and change them to 0. Then call "L4D_SetHumanSpec" then call "L4D_TakeOverBot"
