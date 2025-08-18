@@ -33,9 +33,9 @@
 public Plugin myinfo =
 {
     name = "Pause plugin",
-    author = "CanadaRox, Sir, Forgetest",
+    author = "CanadaRox, Sir, Forgetest, A1m`",
     description = "Adds pause functionality without breaking pauses, also prevents SI from spawning because of the Pause.",
-    version = "6.7.1",
+    version = "6.8",
     url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -178,6 +178,7 @@ public void OnClientPutInServer(int client)
         if (!IsFakeClient(client))
         {
             CPrintToChatAll("%t %t", "Tag", "ClientFullyLoaded", client);
+            SetEntPropFloat(client, Prop_Data, "m_fLastPlayerTalkTime", 0.0);
         }
     }
 }
@@ -501,7 +502,9 @@ void Pause()
                     CPrintToChat(client, "%t %t", "Tag", "PausePreventSpawn");
                 }
             }
-			
+
+            SetEntPropFloat(client, Prop_Data, "m_fLastPlayerTalkTime", 0.0);
+
             if (!pauseProcessed)
             {
                 sv_pausable.BoolValue = true;
@@ -509,7 +512,7 @@ void Pause()
                 sv_pausable.BoolValue = false;
                 pauseProcessed = true;
             }
-			
+
             if (team == L4D2Team_Spectator)
             {
                 sv_noclipduringpause.ReplicateToClient(client, "1");
@@ -542,6 +545,8 @@ void Unpause(bool real = true)
         {
             if (IsClientInGame(client) && !IsFakeClient(client))
             {
+                SetEntPropFloat(client, Prop_Data, "m_fLastPlayerTalkTime", 0.0);
+
                 if(!unpauseProcessed)
                 {
                     sv_pausable.BoolValue = true;
@@ -759,18 +764,20 @@ void ToggleCommandListeners(bool enable)
 {
     if (enable && !listened)
     {
-        AddCommandListener(Say_Callback, "say");
-        AddCommandListener(TeamSay_Callback, "say_team");
         AddCommandListener(Unpause_Callback, "unpause");
         AddCommandListener(Callvote_Callback, "callvote");
+
+        HookEvent("player_say", Event_PlayerSay, EventHookMode_Post);
+
         listened = true;
     }
     else if (!enable && listened)
     {
-        RemoveCommandListener(Say_Callback, "say");
-        RemoveCommandListener(TeamSay_Callback, "say_team");
         RemoveCommandListener(Unpause_Callback, "unpause");
         RemoveCommandListener(Callvote_Callback, "callvote");
+
+        UnhookEvent("player_say", Event_PlayerSay, EventHookMode_Post);
+
         listened = false;
     }
 }
@@ -840,45 +847,22 @@ Action Callvote_Callback(int client, char[] command, int argc)
     return Plugin_Handled;
 }
 
-Action Say_Callback(int client, char[] command, int argc)
+void Event_PlayerSay(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-    if (isPaused)
-    {
-        char buffer[256];
-        GetCmdArgString(buffer, sizeof(buffer));
-        StripQuotes(buffer);
-        if (IsChatTrigger() || buffer[0] == '!' || buffer[0] == '/')  // Hidden command or chat trigger
-        {
-            return Plugin_Handled;
-        }
-        if (client == 0)
-        {
-            PrintToChatAll("Console : %s", buffer);
-        }
-        else
-        {
-            CPrintToChatAllEx(client, "{teamcolor}%N{default} : %s", client, buffer);
-        }
-        return Plugin_Handled;
-    }
-    return Plugin_Continue;
+    int iUserId = hEvent.GetInt("userid");
+    RequestFrame(FrameDelay_PlayerSay, iUserId);
 }
 
-Action TeamSay_Callback(int client, char[] command, int argc)
+void FrameDelay_PlayerSay(int iUserId)
 {
-    if (isPaused)
-    {
-        char buffer[256];
-        GetCmdArgString(buffer, sizeof(buffer));
-        StripQuotes(buffer);
-        if (IsChatTrigger() || buffer[0] == '!' || buffer[0] == '/')  // Hidden command or chat trigger
-        {
-            return Plugin_Handled;
-        }
-        PrintToTeam(client, GetClientTeam(client), buffer);
-        return Plugin_Handled;
+    int iClient = GetClientOfUserId(iUserId);
+	if (iClient < 1 || !isPaused) {
+        return;
     }
-    return Plugin_Continue;
+
+    // During a pause the time (gpGlobals->curtime) does not change.
+    // Let's reset this property for the chat to work.
+    SetEntPropFloat(iClient, Prop_Data, "m_fLastPlayerTalkTime", 0.0);
 }
 
 Action Unpause_Callback(int client, char[] command, int argc)
