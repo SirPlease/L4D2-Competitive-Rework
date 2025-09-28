@@ -9,7 +9,7 @@
 #undef REQUIRE_PLUGIN
 #include <caster_system>
 
-#define PLUGIN_VERSION "10.2.5"
+#define PLUGIN_VERSION "10.2.6"
 
 public Plugin myinfo =
 {
@@ -74,7 +74,7 @@ ConVar
 // Plugin Cvars
 ConVar 
 	// basic
-	l4d_ready_enabled, l4d_ready_cfg_name, l4d_ready_server_cvar, l4d_ready_max_players,
+	l4d_ready_enabled, l4d_ready_cfg_name, l4d_ready_server_cvar, l4d_ready_max_players, l4d_ready_autoready,
 	// game
 	l4d_ready_disable_spawns, l4d_ready_survivor_freeze,
 	// sound
