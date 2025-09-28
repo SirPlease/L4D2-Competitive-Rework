@@ -63,6 +63,11 @@ void SetButtonTime(int client)
 	if (IsPlayer(client) && inReadyUp && l4d_ready_autoready.BoolValue && iPassTime >= l4d_ready_autoready.IntValue)
 	{
 		SetPlayerReady(client, true);
+
+		if (CheckFullReady())
+		{
+			InitiateLiveCountdown();
+		}
 	}
 }
 
