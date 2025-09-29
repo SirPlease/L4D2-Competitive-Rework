@@ -18,8 +18,8 @@
 
 
 
-#define PLUGIN_VERSION		"1.158"
-#define PLUGIN_VERLONG		1158
+#define PLUGIN_VERSION		"1.160"
+#define PLUGIN_VERLONG		1160
 
 #define DEBUG				0
 // #define DEBUG			1	// Prints addresses + detour info (only use for debugging, slows server down).
@@ -28,6 +28,8 @@
 // #define DETOUR_ALL		1	// Enable all detours, for testing.
 
 #define KILL_VSCRIPT		0	// 0=Keep VScript entity after using for "GetVScriptOutput". 1=Kill the entity after use (more resourceful to keep recreating, use if you're maxing out entities and reaching the limit regularly).
+
+#define ALLOW_UPDATER		0	// 0=Off. 1=Allow the plugin to auto-update using the "Updater" plugin by "GoD-Tony". 2=Allow updating and reloading after update.
 
 
 
@@ -110,6 +112,15 @@
 #include <sdkhooks>
 #include <dhooks>
 #include <left4dhooks>
+
+// ====================================================================================================
+// UPDATER
+#define UPDATE_URL						"https://raw.githubusercontent.com/SilvDev/Left4DHooks/main/sourcemod/updater.txt"
+
+native void Updater_AddPlugin(const char[] url);
+// ====================================================================================================
+
+
 
 // PROFILER
 #if DEBUG
@@ -293,6 +304,11 @@ int g_iOff_m_bInIntro;
 int g_iOff_m_attributeFlags;
 int g_iOff_m_spawnAttributes;
 int g_iOff_NavAreaID;
+
+Address g_pCTerrorPlayer_RoundRespawn;
+int g_iOff_RespawnPlayer;
+int g_iSize_RespawnPlayer;
+int g_iByte_RespawnPlayer;
 // int g_iOff_m_iClrRender; // NULL PTR - METHOD (kept for demonstration)
 // int ClearTeamScore_A;
 // int ClearTeamScore_B;
@@ -433,6 +449,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	g_hThisPlugin = myself;
 
 
+
+	// =================
+	// UPDATER
+	// =================
+	MarkNativeAsOptional("Updater_AddPlugin");
+
+
+
 	// =================
 	// DUPLICATE PLUGIN RUNNING
 	// =================
@@ -471,6 +495,32 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 	return APLRes_Success;
 }
+
+
+
+// ====================================================================================================
+//									UPDATER
+// ====================================================================================================
+#if ALLOW_UPDATER
+public void OnLibraryAdded(const char[] name)
+{
+	if( strcmp(name, "updater") == 0 )
+	{
+		Updater_AddPlugin(UPDATE_URL);
+	}
+}
+#endif
+
+#if ALLOW_UPDATER == 2
+public void Updater_OnPluginUpdated()
+{
+	char filename[64];
+	GetPluginFilename(null, filename, sizeof(filename));
+	ServerCommand("sm plugins reload %s", filename);
+}
+#endif
+
+
 
 // ====================================================================================================
 //									SETUP

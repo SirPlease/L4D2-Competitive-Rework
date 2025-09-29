@@ -28,7 +28,7 @@
 bool bIsGauntletFinale = false; //Gauntlet finales do reduced hittable damage
 float fOverkill[MAXPLAYERS + 1][2048]; // Overkill, prolly don't need this big of a global array, could also use adt_array.
 float fSpecialOverkill[MAXPLAYERS + 1][3]; // Dealing with breakable pieces that will cause multiple hits in a row (unintended behaviour)
-bool bLateLoad;   // Late load support!
+bool bLateLoad; // Late load support!
 
 //cvars
 ConVar hGauntletFinaleMulti;
@@ -47,6 +47,9 @@ ConVar hMilitiaRockStandingDamage;
 ConVar hSofaChairStandingDamage;
 ConVar hAtlasBallDamage;
 ConVar hIBeamDamage;
+ConVar hBrickPalletsPiecesDamage;
+ConVar hBoatSmashPiecesDamage;
+ConVar hConcretePillerPiecesDamage;
 ConVar hDiescraperBallDamage;
 ConVar hVanDamage;
 ConVar hStandardIncapDamage;
@@ -57,10 +60,10 @@ ConVar hUnbreakableForklifts;
 
 public Plugin myinfo = 
 {
-    name = "L4D2 Hittable Control",
-    author = "Stabby, Visor, Sir, Derpduck, Forgetest",
-    version = "0.7",
-    description = "Allows for customisation of hittable damage values (and debugging)"
+	name = "L4D2 Hittable Control",
+	author = "Stabby, Visor, Sir, Derpduck, Forgetest",
+	version = "0.8",
+	description = "Allows for customisation of hittable damage values (and debugging)"
 };
 
 public void OnPluginStart()
@@ -113,6 +116,15 @@ public void OnPluginStart()
 	hIBeamDamage			= CreateConVar( "hc_ibeam_standing_damage",	"48.0",
 											"Damage of ibeams to non-incapped survivors.",
 											FCVAR_NONE, true, 0.0, true, 300.0 );
+	hBrickPalletsPiecesDamage	= CreateConVar( "hc_brick_pallets_standing_damage",	"13.0",
+											"Damage of hittable brick pallets pieces to non-incapped survivors.",
+											FCVAR_NONE, true, 0.0, true, 300.0 );
+	hBoatSmashPiecesDamage		= CreateConVar( "hc_boat_smash_standing_damage",	"23.0",
+											"Damage of hittable boat smash pieces to non-incapped survivors.",
+											FCVAR_NONE, true, 0.0, true, 300.0 );
+	hConcretePillerPiecesDamage	= CreateConVar( "hc_concrete_piller_standing_damage",	"8.0",
+											"Damage of hittable concrete piller pieces to non-incapped survivors.",
+											FCVAR_NONE, true, 0.0, true, 300.0 );
 	hDiescraperBallDamage	= CreateConVar( "hc_diescraper_ball_standing_damage",	"100.0",
 											"Damage of hittable ball statue on Diescraper finale to non-incapped survivors.",
 											FCVAR_NONE, true, 0.0, true, 300.0 );
@@ -123,12 +135,12 @@ public void OnPluginStart()
 											"Damage of all hittables to incapped players. -1 will have incap damage default to valve's standard incoherent damages. -2 will have incap damage default to each hittable's corresponding standing damage.",
 											FCVAR_NONE, true, -2.0, true, 300.0 );
 	hTankSelfDamage			= CreateConVar( "hc_disable_self_damage",		"0",
-											"If set, tank will not damage itself with hittables. (0.6.1 simply prevents all damage from Prop_Physics & Alarm Cars to cover for the event a Tank punches a hittable into another and gets hit)",
+											"If set, tank will not damage itself with hittables. (1: simply prevents all damage from Prop_Physics & Alarm Cars to cover for the event a Tank punches a hittable into another and gets hit)",
 											FCVAR_NONE, true, 0.0, true, 1.0 );
 	hOverHitInterval		= CreateConVar( "hc_overhit_time",				"1.2",
 											"The amount of time to wait before allowing consecutive hits from the same hittable to register. Recommended values: 0.0-0.5: instant kill; 0.5-0.7: sizeable overhit; 0.7-1.0: standard overhit; 1.0-1.2: reduced overhit; 1.2+: no overhit unless the car rolls back on top. Set to tank's punch interval (default 1.5) to fully remove all possibility of overhit.",
 											FCVAR_NONE, true, 0.0, false );
-	hOverHitDebug		    = CreateConVar( "hc_debug",				"0",
+	hOverHitDebug			= CreateConVar( "hc_debug",				"0",
 											"0: Disable Debug - 1: Enable Debug",
 											FCVAR_NONE, true, 0.0, false );
 	hUnbreakableForklifts	= CreateConVar( "hc_unbreakable_forklifts",	"0",
@@ -140,7 +152,7 @@ public void OnPluginStart()
 		for (int i = 1; i <= MaxClients; i++)
 		{
 			if(IsClientInGame(i))
-			  OnClientPutInServer(i);
+				OnClientPutInServer(i);
 		}
 	}
 
@@ -261,21 +273,21 @@ bool ProcessSpecialHittables(int victim, int &attacker, int &inflictor, float &d
 	{
 		if (fSpecialOverkill[victim][0] - GetGameTime() > 0) return true;
 		fSpecialOverkill[victim][0] = GetGameTime() + hOverHitInterval.FloatValue;
-		damage = 13.0;
+		damage = hBrickPalletsPiecesDamage.FloatValue;
 		attacker = FindTank();
 	}
 	else if (StrContains(sModelName, "boat_smash_break", false) != -1) // [1]
 	{
 		if (fSpecialOverkill[victim][1] - GetGameTime() > 0) return true;
 		fSpecialOverkill[victim][1] = GetGameTime() + hOverHitInterval.FloatValue;
-		damage = 23.0;
+		damage = hBoatSmashPiecesDamage.FloatValue;
 		attacker = FindTank();
 	}
 	else if (StrContains(sModelName, "concretepiller01_dm01", false) != -1) // [2]
 	{
 		if (fSpecialOverkill[victim][2] - GetGameTime() > 0) return true;
 		fSpecialOverkill[victim][2] = GetGameTime() + hOverHitInterval.FloatValue;
-		damage = 8.0;
+		damage = hConcretePillerPiecesDamage.FloatValue;
 		attacker = FindTank();
 	}
 	
@@ -305,7 +317,7 @@ bool GetHittableDamage(int entity, float &damage)
 	else if (StrContains(sModelName, "forklift_brokenlift", false) != -1)
 	{
 		damage = hBrokenForkliftStandingDamage.FloatValue;
-	}		
+	}
 	else if (StrEqual(sModelName, "models/props_vehicles/airport_baggage_cart2.mdl", false))
 	{
 		damage = hBaggageStandingDamage.FloatValue;
@@ -381,7 +393,7 @@ Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, in
 	if (!IsValidEdict(attacker) || 
 	!IsValidEdict(victim) || 
 	!IsValidEdict(inflictor))
-	  return Plugin_Continue;
+		return Plugin_Continue;
 	
 	char sClass[64];
 	GetEdictClassname(inflictor, sClass, sizeof(sClass));

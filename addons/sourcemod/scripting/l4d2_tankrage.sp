@@ -23,7 +23,7 @@ public Plugin myinfo =
     name = "L4D2 Tank Rage",
     author = "Sir",
     description = "Manage Tank Rage when Survivors are running back.",
-    version = "1.0.1",
+    version = "1.0.2",
     url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -172,12 +172,11 @@ int GetBossProximity()
 
 float GetMaxSurvivorCompletion()
 {
-    float flow = 0.0, tmp_flow = 0.0, origin[3];
+    float flow = 0.0, tmp_flow = 0.0;
     Address pNavArea;
     for (int i = 1; i <= MaxClients; i++) {
         if (IsClientInGame(i) && GetClientTeam(i) == 2 && IsPlayerAlive(i)) {
-            GetClientAbsOrigin(i, origin);
-            pNavArea = L4D2Direct_GetTerrorNavArea(origin);
+            pNavArea = L4D_GetLastKnownArea(i);
             if (pNavArea != Address_Null) {
                 tmp_flow = L4D2Direct_GetTerrorNavAreaFlow(pNavArea);
                 flow = (flow > tmp_flow) ? flow : tmp_flow;

@@ -447,9 +447,9 @@ void SetupDetours(GameData hGameData = null)
 
 	if( g_bLeft4Dead2 )
 	{
-		CreateDetour(g_bLinuxOS ? hGameData : g_hTempGameData,		DTR_CVomitJarProjectile_Create_Pre,		DTR_CVomitJarProjectile_Create_Post,			"L4DD::CVomitJarProjectile::Create",								"L4D_MolotovProjectile_Pre");
-		CreateDetour(g_bLinuxOS ? hGameData : g_hTempGameData,		DTR_CVomitJarProjectile_Create_Pre,		DTR_CVomitJarProjectile_Create_Post,			"L4DD::CVomitJarProjectile::Create",								"L4D_MolotovProjectile_Post",					true);
-		CreateDetour(g_bLinuxOS ? hGameData : g_hTempGameData,		DTR_CVomitJarProjectile_Create_Pre,		DTR_CVomitJarProjectile_Create_Post,			"L4DD::CVomitJarProjectile::Create",								"L4D_MolotovProjectile_PostHandled",			true);
+		CreateDetour(g_bLinuxOS ? hGameData : g_hTempGameData,		DTR_CVomitJarProjectile_Create_Pre,		DTR_CVomitJarProjectile_Create_Post,			"L4DD::CVomitJarProjectile::Create",								"L4D2_VomitJarProjectile_Pre");
+		CreateDetour(g_bLinuxOS ? hGameData : g_hTempGameData,		DTR_CVomitJarProjectile_Create_Pre,		DTR_CVomitJarProjectile_Create_Post,			"L4DD::CVomitJarProjectile::Create",								"L4D2_VomitJarProjectile_Post",					true);
+		CreateDetour(g_bLinuxOS ? hGameData : g_hTempGameData,		DTR_CVomitJarProjectile_Create_Pre,		DTR_CVomitJarProjectile_Create_Post,			"L4DD::CVomitJarProjectile::Create",								"L4D2_VomitJarProjectile_PostHandled",			true);
 
 		CreateDetour(g_bLinuxOS ? hGameData : g_hTempGameData,		DTR_CGrenadeLauncherProjectile_Create_Pre,	DTR_CGrenadeLauncherProjectile_Create_Post,	"L4DD::CGrenadeLauncher_Projectile::Create",						"L4D2_GrenadeLauncherProjectile_Pre");
 		CreateDetour(g_bLinuxOS ? hGameData : g_hTempGameData,		DTR_CGrenadeLauncherProjectile_Create_Pre,	DTR_CGrenadeLauncherProjectile_Create_Post,	"L4DD::CGrenadeLauncher_Projectile::Create",						"L4D2_GrenadeLauncherProjectile_Post",			true);
@@ -1246,8 +1246,6 @@ MRESReturn Spawn_TankWitch_Post(Handle hForward, Handle hForward2, DHookReturn h
 	Call_PushArray(a1, sizeof(a1));
 	Call_PushArray(a2, sizeof(a2));
 	Call_Finish();
-
-	// g_bBlock_Spawn_TankWitch = false;
 
 	return MRES_Ignored;
 }
@@ -3518,7 +3516,8 @@ MRESReturn DTR_CTerrorPlayer_OnIncapacitatedAsSurvivor_Post(int pThis, DHookRetu
 MRESReturn DTR_CTerrorPlayer_DropWeapons(int pThis, DHookReturn hReturn) // Forward "L4D_OnDeathDroppedWeapons"
 {
 	//PrintToServer("##### DTR_CTerrorPlayer_DropWeapons");
-
+	if( pThis < 1 || pThis > MaxClients ) return MRES_Ignored;
+	if( !IsClientInGame(pThis) ) return MRES_Ignored;
 	if( !IsPlayerAlive(pThis) ) return MRES_Ignored; // Triggered before round_start or so but players are dead at this point, should only trigger when still alive
 
 	// Get held object if non-weapon
@@ -4816,11 +4815,11 @@ MRESReturn DTR_InfoChangelevel_SaveEntities_Post_L4D2(int pThis) // Forward "L4D
 	return MRES_Ignored;
 }
 
-bool g_hBlock_CTerrorPlayer_TransitionRestore;
+bool g_bBlock_CTerrorPlayer_TransitionRestore;
 MRESReturn DTR_CTerrorPlayer_TransitionRestore(int pThis, DHookReturn hReturn)
 {
 	//PrintToServer("##### DTR_CTerrorPlayer_TransitionRestore");
-	g_hBlock_CTerrorPlayer_TransitionRestore = false;
+	g_bBlock_CTerrorPlayer_TransitionRestore = false;
 
 	Action aResult = Plugin_Continue;
 	Call_StartForward(g_hFWD_CTerrorPlayer_TransitionRestore);
@@ -4829,7 +4828,7 @@ MRESReturn DTR_CTerrorPlayer_TransitionRestore(int pThis, DHookReturn hReturn)
 
 	if( aResult == Plugin_Handled )
 	{
-		g_hBlock_CTerrorPlayer_TransitionRestore = true;
+		g_bBlock_CTerrorPlayer_TransitionRestore = true;
 
 		hReturn.Value = 0;
 		return MRES_Supercede;
@@ -4843,7 +4842,7 @@ MRESReturn DTR_CTerrorPlayer_TransitionRestore_Post(int pThis, DHookReturn hRetu
 	//PrintToServer("##### DTR_CTerrorPlayer_TransitionRestore_Post");
 	Address iReturn = hReturn.Value;
 
-	Call_StartForward(g_hBlock_CTerrorPlayer_TransitionRestore ? g_hFWD_CTerrorPlayer_TransitionRestore_PostHandled : g_hFWD_CTerrorPlayer_TransitionRestore_Post);
+	Call_StartForward(g_bBlock_CTerrorPlayer_TransitionRestore ? g_hFWD_CTerrorPlayer_TransitionRestore_PostHandled : g_hFWD_CTerrorPlayer_TransitionRestore_Post);
 	Call_PushCell(pThis);
 	Call_PushCell(iReturn);
 	Call_Finish();

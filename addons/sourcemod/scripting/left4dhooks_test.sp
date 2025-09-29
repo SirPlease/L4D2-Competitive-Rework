@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.158"
+#define PLUGIN_VERSION		"1.160"
 
 /*=======================================================================================
 	Plugin Info:
@@ -359,6 +359,11 @@ Action sm_l4dd(int client, int args)
 		Uncomment the things you want to test. All disabled by default.
 		Must test individual sections on their own otherwise you'll receive errors about symbols already defined..
 	*/
+
+
+
+	L4D_RespawnPlayer(client, false);
+	PrintToServer("L4D_RespawnPlayer %N", client);
 
 
 
@@ -5648,7 +5653,7 @@ public Action L4D2_OnTransitionRestore(int client)
 		if( called == 0 ) g_iForwards++;
 		called++;
 
-		ForwardCalled("\"L4D2_OnChangeFinaleStage\" client: %d (%N)", client, client);
+		ForwardCalled("\"L4D2_OnTransitionRestore\" client: %d (%N)", client, client);
 	}
 
 	// return Plugin_Handled;
