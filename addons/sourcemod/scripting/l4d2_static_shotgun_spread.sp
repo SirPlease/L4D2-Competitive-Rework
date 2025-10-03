@@ -4,10 +4,9 @@
 #include <sourcemod>
 #include <sourcescramble>
 
-#define GAMEDATA_FILE "code_patcher"
-#define KEY_SGSPREAD "sgspread"
-#define BULLET_MAX_SIZE 4
-#define DEBUG 0
+#define BULLET_MAX_SIZE		4
+#define GAMEDATA_FILE		"code_patcher"
+#define KEY_SGSPREAD		"sgspread"
 
 // Original code & Notes: https://github.com/Jahze/l4d2_plugins/tree/master/spread_patch
 // Static Shotgun Spread leverages code_patcher (code_patcher.txt gamedata)
@@ -22,11 +21,12 @@ enum
 	eWindows = 0,
 	eLinux,
 	/* eMac, joke:) */
+
 	ePlatform_Size
-}
+};
 
 int
-	g_ePlatform;
+	g_ePlatform = eLinux;
 
 static const int
 	g_BulletOffsets[ePlatform_Size][BULLET_MAX_SIZE] = {
@@ -43,132 +43,145 @@ static const int
 	};
 
 MemoryPatch
-	g_hPatch_sgspread;
+	g_hPatchSgSpread = null;
 
 ConVar
-	hRing1BulletsCvar,
-	hRing1FactorCvar,
-	hCenterPelletCvar;
+	g_hCvarRing1Bullets = null,
+	g_hCvarRing1Factor = null,
+	g_hCvarhCenterPellet = null;
 
-public Plugin myinfo = 
+public Plugin myinfo =
 {
 	name = "L4D2 Static Shotgun Spread",
 	author = "Jahze, Visor, A1m`, Rena",
-	version = "1.6.1",
+	version = "1.6.3",
 	description = "Changes the values in the sgspread patch",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public void OnPluginStart()
 {
-	Handle conf = LoadGameConfigFile(GAMEDATA_FILE);
-	if (conf == null) {
+	InitGameData();
+
+	g_hCvarRing1Bullets = CreateConVar("sgspread_ring1_bullets", "3", "Number of bullets for the first ring, the remaining bullets will be in the second ring.");
+	g_hCvarRing1Factor = CreateConVar("sgspread_ring1_factor", "2", "Determines how far or closer the bullets will be from the center for the first ring.");
+	g_hCvarhCenterPellet = CreateConVar("sgspread_center_pellet", "1", "Center pellet: 0 - off, 1 - on.", _, true, 0.0, true, 1.0);
+
+	InitPlugin();
+}
+
+void InitGameData()
+{
+	Handle hConf = LoadGameConfigFile(GAMEDATA_FILE);
+	if (hConf == null) {
 		SetFailState("Missing gamedata \"" ... GAMEDATA_FILE ... "\"");
 	}
-	
-	g_hPatch_sgspread = MemoryPatch.CreateFromConf(conf, KEY_SGSPREAD);
-	if (g_hPatch_sgspread == null || !g_hPatch_sgspread.Validate()) {
-		SetFailState("Failed to validate MemoryPatch \"" ... KEY_SGSPREAD ... "\"");
-	}
-	
-	if (!g_hPatch_sgspread.Enable()) {
-		SetFailState("Failed to enable MemoryPatch \"" ... KEY_SGSPREAD ... "\"");
-	}
-	
-	g_ePlatform = GameConfGetOffset(conf, "OS");
+
+	g_ePlatform = GameConfGetOffset(hConf, "OS");
 	if (g_ePlatform == -1) {
 		SetFailState("Failed to retrieve offset \"OS\"");
 	}
-	
-	delete conf;
-	
-	hRing1BulletsCvar = CreateConVar("sgspread_ring1_bullets", "3", "Number of bullets for the first ring, the remaining bullets will be in the second ring.");
-	hRing1FactorCvar = CreateConVar("sgspread_ring1_factor", "2", "Determines how far or closer the bullets will be from the center for the first ring.");
-	hCenterPelletCvar = CreateConVar("sgspread_center_pellet", "1", "Center pellet: 0 - off, 1 - on.", _, true, 0.0, true, 1.0);
-	
-	hRing1BulletsCvar.AddChangeHook(OnRing1BulletsChange);
-	hRing1FactorCvar.AddChangeHook(OnRing1FactorChange);
-	hCenterPelletCvar.AddChangeHook(OnCenterPelletChange);
-	
-	HotPatchBullets(hRing1BulletsCvar.IntValue);
-	HotPatchFactor(hRing1FactorCvar.IntValue);
-	HotPatchCenterPellet(hCenterPelletCvar.BoolValue);
+
+	g_hPatchSgSpread = MemoryPatch.CreateFromConf(hConf, KEY_SGSPREAD);
+	if (g_hPatchSgSpread == null || !g_hPatchSgSpread.Validate()) {
+		SetFailState("Failed to validate MemoryPatch \"" ... KEY_SGSPREAD ... "\"");
+	}
+
+	Address pFinalAddr = g_hPatchSgSpread.Address + view_as<Address>(g_CenterPelletOffset[g_ePlatform]);
+	int iCurrentValue = LoadFromAddress(pFinalAddr, NumberType_Int8);
+	if (iCurrentValue != 1) {
+		SetFailState("Center pellet offset is uncorrect! CheckByte: %x", iCurrentValue);
+	}
+
+	if (!g_hPatchSgSpread.Enable()) {
+		SetFailState("Failed to enable MemoryPatch \"" ... KEY_SGSPREAD ... "\"");
+	}
+
+	delete hConf;
 }
 
-static void HotPatchCenterPellet(bool newValue)
+void InitPlugin()
 {
-	Address pAddr = g_hPatch_sgspread.Address;
-	
-	int currentValue = LoadFromAddress(pAddr + view_as<Address>(g_CenterPelletOffset[g_ePlatform]), NumberType_Int8);
-	
-	int bullets = hRing1BulletsCvar.IntValue;
-	
-	#if DEBUG
-	static bool IsFirstPatch = false;
-	if (!IsFirstPatch) {
-		PrintToServer("Center pellet offset is %s! CheckByte: %x", (currentValue == 0x01) ? "correct ": "uncorrect", currentValue);
-		PrintToChatAll("Center pellet offset is %s! CheckByte: %x", (currentValue == 0x01) ? "correct ": "uncorrect", currentValue);
-		IsFirstPatch = true;
-	}
-	#endif
-	
-	if (!!currentValue == newValue) {
-		return;
-	}
-	
-	StoreToAddress(pAddr + view_as<Address>(g_CenterPelletOffset[g_ePlatform]), view_as<int>(newValue), NumberType_Int8);
-	
-	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[g_ePlatform][0]), bullets + (1 - view_as<int>(!newValue)), NumberType_Int8);
-	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[g_ePlatform][1]), bullets + (1 - view_as<int>(!newValue)), NumberType_Int8);
-	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[g_ePlatform][2]), bullets + (2 - view_as<int>(!newValue)), NumberType_Int8);
+	HotPatchBullets(g_hCvarRing1Bullets.IntValue);
+	HotPatchFactor(g_hCvarRing1Factor.IntValue);
+	HotPatchCenterPellet(g_hCvarhCenterPellet.BoolValue);
+
+	g_hCvarRing1Bullets.AddChangeHook(OnRing1BulletsChange);
+	g_hCvarRing1Factor.AddChangeHook(OnRing1FactorChange);
+	g_hCvarhCenterPellet.AddChangeHook(OnCenterPelletChange);
 }
 
-static void HotPatchBullets(int nBullets)
+public void OnPluginEnd()
 {
-	bool centerpellet = !hCenterPelletCvar.BoolValue;
-	float degree = 0.0;
-	
+	Address pFinalAddr = g_hPatchSgSpread.Address + view_as<Address>(g_CenterPelletOffset[g_ePlatform]);
+	int iCurrentValue = LoadFromAddress(pFinalAddr, NumberType_Int8);
+	if (iCurrentValue != 1) {
+		StoreToAddress(pFinalAddr, 1, NumberType_Int8);
+	}
+}
+
+void OnRing1BulletsChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+{
+	HotPatchBullets(hConVar.IntValue);
+}
+
+void OnRing1FactorChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+{
+	HotPatchFactor(hConVar.IntValue);
+}
+
+void OnCenterPelletChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)
+{
+	HotPatchCenterPellet(hConVar.BoolValue);
+}
+
+void HotPatchBullets(int iBullets)
+{
+	bool bCenterpellet = !g_hCvarhCenterPellet.BoolValue;
+	float fDegree = 0.0;
+
 	if (g_ePlatform == eWindows) {
-		degree = 360.0 / float(nBullets);
+		fDegree = 360.0 / float(iBullets);
 	} else {
-		degree = 360.0 / (2.0 * float(nBullets));
+		fDegree = 360.0 / (2.0 * float(iBullets));
 	}
-	
-	Address pAddr = g_hPatch_sgspread.Address;
-	
-	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[g_ePlatform][0]), nBullets + (1 - view_as<int>(centerpellet)), NumberType_Int8);
-	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[g_ePlatform][1]), nBullets + (1 - view_as<int>(centerpellet)), NumberType_Int8);
-	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[g_ePlatform][2]), nBullets + (2 - view_as<int>(centerpellet)), NumberType_Int8);
-	
-	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[g_ePlatform][3]), view_as<int>(degree), NumberType_Int32);
+
+	Address pAddr = g_hPatchSgSpread.Address;
+
+	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[g_ePlatform][0]), iBullets + (1 - view_as<int>(bCenterpellet)), NumberType_Int8);
+	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[g_ePlatform][1]), iBullets + (1 - view_as<int>(bCenterpellet)), NumberType_Int8);
+	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[g_ePlatform][2]), iBullets + (2 - view_as<int>(bCenterpellet)), NumberType_Int8);
+
+	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[g_ePlatform][3]), view_as<int>(fDegree), NumberType_Int32);
 }
 
-static void HotPatchFactor(int factor)
+void HotPatchFactor(int fFactor)
 {
-	Address pAddr = g_hPatch_sgspread.Address;
+	Address pAddr = g_hPatchSgSpread.Address;
 
 	if (g_ePlatform == eWindows) {
-		StoreToAddress(pAddr + view_as<Address>(g_FactorOffset[eWindows]), view_as<int>(float(factor)), NumberType_Int32); //On windows need the float type !!!
+		// Asm patch on windows need the float type !
+		StoreToAddress(pAddr + view_as<Address>(g_FactorOffset[eWindows]), view_as<int>(float(fFactor)), NumberType_Int32);
 		return;
 	}
-	
-	StoreToAddress(pAddr + view_as<Address>(g_FactorOffset[eLinux]), factor, NumberType_Int32);
+
+	StoreToAddress(pAddr + view_as<Address>(g_FactorOffset[eLinux]), fFactor, NumberType_Int32);
 }
 
-void OnRing1BulletsChange(ConVar hCvar, const char[] oldVal, const char[] newVal)
+void HotPatchCenterPellet(bool bNewValue)
 {
-	int nBullets = StringToInt(newVal);
-	HotPatchBullets(nBullets);
-}
+	Address pAddr = g_hPatchSgSpread.Address;
 
-void OnRing1FactorChange(ConVar hCvar, const char[] oldVal, const char[] newVal)
-{
-	int factor = StringToInt(newVal);
-	HotPatchFactor(factor);
-}
+	bool iCurrentValue = LoadFromAddress(pAddr + view_as<Address>(g_CenterPelletOffset[g_ePlatform]), NumberType_Int8);
+	if (iCurrentValue == bNewValue) {
+		return;
+	}
 
-void OnCenterPelletChange(ConVar hCvar, const char[] oldVal, const char[] newVal)
-{
-	bool value = !!StringToInt(newVal);
-	HotPatchCenterPellet(value);
+	int iBullets = g_hCvarRing1Bullets.IntValue;
+
+	StoreToAddress(pAddr + view_as<Address>(g_CenterPelletOffset[g_ePlatform]), view_as<int>(bNewValue), NumberType_Int8);
+
+	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[g_ePlatform][0]), iBullets + (1 - view_as<int>(!bNewValue)), NumberType_Int8);
+	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[g_ePlatform][1]), iBullets + (1 - view_as<int>(!bNewValue)), NumberType_Int8);
+	StoreToAddress(pAddr + view_as<Address>(g_BulletOffsets[g_ePlatform][2]), iBullets + (2 - view_as<int>(!bNewValue)), NumberType_Int8);
 }
