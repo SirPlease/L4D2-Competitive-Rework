@@ -36,7 +36,7 @@ static const int
 	g_iDegreeOffsets[ePlatform_Size] = {
 		0x3f,	// Windows
 		0x43	// Linux
-	}
+	},
 	g_iFactorOffset[ePlatform_Size] = {
 		0x36,	// Windows
 		0x34	// Linux
