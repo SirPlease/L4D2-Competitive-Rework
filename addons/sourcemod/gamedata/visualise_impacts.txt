@@ -1,0 +1,28 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Signatures"
+		{
+			/** @A1m:
+			 * [Windows]
+			 * To locate the `CBaseEntity::RemoveAllDecals` function, follow these steps:
+			 *  1. Find the `CC_Ent_Create` function — it can be identified by the string "Cannot ent_create players!\n".
+			 *  2. Near the end of `CC_Ent_Create`, there is a call to `UTIL_DropToFloor`. Check the xrefs to this function.
+			 *  3. Among the cross-references, look for `CItem::Respawn` (usually the second-to-last one).
+			 *  4. Inside `CItem::Respawn`, you will find a call to `CBaseEntity::RemoveAllDecals`.
+			 *
+			 * Signature:
+			 *     void CBaseEntity::RemoveAllDecals( void )
+			 */
+			"CBaseEntity::RemoveAllDecals"
+			{
+				"library"		"server"
+
+				"linux"			"@_ZN11CBaseEntity15RemoveAllDecalsEv"
+								/* 6A 00 51 E8 ? ? ? ? 6A 01 */
+				"windows"		"\x6A\x00\x51\xE8\x2A\x2A\x2A\x2A\x6A\x01"
+			}
+		}
+	}
+}
