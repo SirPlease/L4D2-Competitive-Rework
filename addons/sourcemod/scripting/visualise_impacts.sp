@@ -25,9 +25,7 @@
 #include <sourcemod>
 #include <sdktools>
 
-#define GAMEDATA_FILE						"visualise_impacts"
-#define REMOVEALLDECALS_SIGN				"CBaseEntity::RemoveAllDecals"
-#define DECAL_NAME							"materials/decals/metal/metal01b.vtf"
+#define DECAL_NAME		"materials/decals/metal/metal01b.vtf"
 
 int
 	g_iPrecacheDecal = 0;
@@ -39,57 +37,30 @@ ConVar
 	g_hCvarMultiplayerMaxTempEnts = null,
 	g_hCvarRemoveDecalsTime = null;
 
-Handle
-	g_hCallRemoveAllDecals = null;
-
 ArrayList
-	g_DecalQueue = null;
+	g_hDecalQueue = null;
 
 public Plugin myinfo =
 {
 	name = "Visualise impacts",
 	author = "A1m`",
-	version = "1.6",
+	version = "1.7",
 	description = "Shows bullet impacts (based on the original by Jahze, fully rewritten and improved)",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework" 
 };
 
 public void OnPluginStart()
 {
-	InitGameData();
-	InitPlugin();
-
 	g_hCvarRemoveDecalsTime = CreateConVar("l4d_remove_decals_time", "20.0", "After what time will the decals be removed? (0 for disable)", _, true, 0.0, true, 320.0);
 
-	RegConsoleCmd("sm_remove_decals", Cmd_RemoveDecals);
-}
-
-void InitGameData()
-{
-	GameData hGameData = new GameData(GAMEDATA_FILE);
-	if (hGameData == null) {
-		SetFailState("Could not load gamedata/%s.txt", GAMEDATA_FILE);
-	}
-
-	StartPrepSDKCall(SDKCall_Entity);
-
-	if (!PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, REMOVEALLDECALS_SIGN)) {
-		SetFailState("Function '%s' not found", REMOVEALLDECALS_SIGN);
-	}
-
-	g_hCallRemoveAllDecals = EndPrepSDKCall();
-	if (g_hCallRemoveAllDecals == null) {
-		SetFailState("Function '%s' found, but something went wrong", REMOVEALLDECALS_SIGN);
-	}
-
-	delete hGameData;
+	InitPlugin();
 }
 
 void InitPlugin()
 {
 	g_hCvarMultiplayerMaxTempEnts = FindConVar("sv_multiplayer_maxtempentities");
 
-	g_DecalQueue = new ArrayList();
+	g_hDecalQueue = new ArrayList();
 
 	g_iPrecacheDecal = PrecacheDecal(DECAL_NAME, true);
 
@@ -142,7 +113,7 @@ void ShouldRemoveAllDecals()
 
 void SendSendQueueDecals()
 {
-	if (g_DecalQueue.Length <= 0) {
+	if (g_hDecalQueue.Length <= 0) {
 		return;
 	}
 
@@ -166,8 +137,8 @@ void SendSendQueueDecals()
 
 	int iProcessed = 0;
 
-	while (g_DecalQueue.Length > 0 && iProcessed < iMaxPerTick) {
-		DataPack hDp = g_DecalQueue.Get(0);
+	while (g_hDecalQueue.Length > 0 && iProcessed < iMaxPerTick) {
+		DataPack hDp = g_hDecalQueue.Get(0);
 
 		if (hDp != null) {
 			hDp.Reset();
@@ -182,17 +153,9 @@ void SendSendQueueDecals()
 		}
 
 		CloseHandle(hDp);
-		g_DecalQueue.Erase(0);
+		g_hDecalQueue.Erase(0);
 		iProcessed++;
 	}
-}
-
-Action Cmd_RemoveDecals(int iClient, int iArgs)
-{
-	RemoveAllDecalsForAll();
-
-	ReplyToCommand(iClient, "All decals removed successfully!");
-	return Plugin_Handled;
 }
 
 void Event_RoundChangeState(Event hEvent, const char[] sEventName, bool bDontBroadcast)
@@ -213,7 +176,7 @@ void Event_BulletImpact(Event hEvent, const char[] sEventName, bool bDontBroadca
 	hDp.WriteCell(iUserId);
 	hDp.WriteFloatArray(fPos, sizeof(fPos), false);
 
-	g_DecalQueue.Push(hDp);
+	g_hDecalQueue.Push(hDp);
 
 	g_hRemoveDecalsTime = GetGameTime() + g_hCvarRemoveDecalsTime.FloatValue;
 }
@@ -247,40 +210,24 @@ void RemoveAllDecalsForAll()
 	}
 }
 
-/** @A1m`:
- * I don't know how to implement this code in sourcemod, it seems impossible,
- * it takes the index of the entity class instead of the usermessage index.
- *
-#define BASEENTITY_MSG_REMOVE_DECALS		1
-
-void CBaseEntity::RemoveAllDecals( void )
-{
-	EntityMessageBegin( this );
-		MessageWriteByte( BASEENTITY_MSG_REMOVE_DECALS );
-	MessageEnd();
-}
-**/
-
 void RemoveAllDecals(int iClient)
 {
 	PrintToChat(iClient, "[Note] Use command `r_removedecals` for client to clean old decals.");
-
-	SDKCall(g_hCallRemoveAllDecals, iClient);
 }
 
 void ClearAllData()
 {
 	g_hRemoveDecalsTime = 0.0;
 
-	for (int iIter = 0; iIter < g_DecalQueue.Length; iIter++) {
-		DataPack hDp = g_DecalQueue.Get(0);
+	for (int iIter = 0; iIter < g_hDecalQueue.Length; iIter++) {
+		DataPack hDp = g_hDecalQueue.Get(0);
 
 		if (hDp != null) {
 			CloseHandle(hDp);
 		}
 
-		g_DecalQueue.Erase(0);
+		g_hDecalQueue.Erase(0);
 	}
 
-	g_DecalQueue.Clear();
+	g_hDecalQueue.Clear();
 }
