@@ -1,0 +1,49 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Functions"
+		{
+			"CY115::CTerrorPlayer::ThrowWeapon"
+			{
+				"signature"		"CTerrorPlayer::ThrowWeapon"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"cbaseentity"
+					}
+					"a2"
+					{
+						"type"	"cbaseentity"
+					}
+					"a3"
+					{
+						"type"	"float"
+					}
+					"a4"
+					{
+						"type"	"charptr"
+					}
+					"a5"
+					{
+						"type"	"charptr"
+					}
+				}
+			}
+		}
+
+		"Signatures"
+		{
+			"CTerrorPlayer::ThrowWeapon"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer11ThrowWeaponEP13CTerrorWeaponPS_fPKcS4_"
+				"windows"	"\x55\x89\xE5\x57\x56\x53\x81\xEC\x6C\x01\x00\x00\x8B\x75\x0C"
+			}
+		}
+	}
+}
