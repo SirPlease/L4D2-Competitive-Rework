@@ -1,13 +1,23 @@
-/* @A1m`:
- * We cannot send to the client temporary objects larger than specified in cvar 'sv_multiplayer_maxtempentities'.
- * A large number of decals will not be displayed if you do not set a delay in sending,
- * or we need to increase the cvar 'sv_multiplayer_maxtempentities' value, by default it is 32 (we can set 255). 
+/** @A1m`:
+ * The engine does not allow sending temporary entities larger than the value set in the cvar 'sv_multiplayer_maxtempentities'.
+ * If too many decals are sent in a single tick, some will not be displayed unless we add a delay,
+ * or increase the cvar value (default is 32, can be raised up to 255).
  *
- * TE_SendToClient with the set delay does not fix this issue.
- * Now the plugin shows all impacts correctly.
- * The plugin also correctly resets this delay with some time, so we don't get high delay.
- * Fix plugin not working after loading the map, it was necessary to constantly reload it.
-*/
+ * Note: Using TE_SendToClient with a delay alone does not fix this issue.
+ *
+ * This plugin solves the problem by properly queuing decals, so all bullet impacts are displayed.
+ * The delay is cleared automatically after a short period, so it won’t accumulate.
+ * Additionally, the plugin fixes an issue where it would stop working after map load (previously it required a manual reload)
+ * (Add PrecacheDecal in `OnMapStart`).
+ *
+ * The plugin now supports automatic decal removal after the configured time period.
+ *
+ * Original code & Notes (Author Jahze): https://github.com/Jahze/l4d2_plugins/tree/master/spread_patch
+ *
+ * Note: For some reason, calling function `CBaseEntity::RemoveAllDecals` for the client doesn't work to clear decals.
+ * Note: Use command `r_removedecals` for client to clean old decals.
+ * 
+**/
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -15,87 +25,209 @@
 #include <sourcemod>
 #include <sdktools>
 
-#define DECAL_NAME "materials/decals/metal/metal01b.vtf"
+#define DECAL_NAME		"materials/decals/metal/metal01b.vtf"
 
 int
-	decalThisTick = 0,
-	iLastTick = 0,
 	g_iPrecacheDecal = 0;
-	
-public Plugin myinfo = 
+
+float
+	g_hRemoveDecalsTime = 0.0;
+
+ConVar
+	g_hCvarMultiplayerMaxTempEnts = null,
+	g_hCvarRemoveDecalsTime = null;
+
+ArrayList
+	g_hDecalQueue = null;
+
+public Plugin myinfo =
 {
 	name = "Visualise impacts",
-	author = "Jahze?, A1m`",
-	version = "1.3",
-	description = "See name",
+	author = "A1m`",
+	version = "1.7",
+	description = "Shows bullet impacts (based on the original by Jahze, fully rewritten and improved)",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework" 
 };
 
 public void OnPluginStart()
 {
+	g_hCvarRemoveDecalsTime = CreateConVar("l4d_remove_decals_time", "20.0", "After what time will the decals be removed? (0 for disable)", _, true, 0.0, true, 320.0);
+
+	InitPlugin();
+}
+
+void InitPlugin()
+{
+	g_hCvarMultiplayerMaxTempEnts = FindConVar("sv_multiplayer_maxtempentities");
+
+	g_hDecalQueue = new ArrayList();
+
 	g_iPrecacheDecal = PrecacheDecal(DECAL_NAME, true);
-	
-	HookEvent("bullet_impact", BulletImpactEvent, EventHookMode_Post);
-	HookEvent("round_start", EventRoundReset, EventHookMode_PostNoCopy);
-	HookEvent("round_end", EventRoundReset, EventHookMode_PostNoCopy);
+
+	HookEvent("bullet_impact", Event_BulletImpact, EventHookMode_Post);
+
+	HookEvent("round_start", Event_RoundChangeState, EventHookMode_PostNoCopy);
+	HookEvent("round_end", Event_RoundChangeState, EventHookMode_PostNoCopy);
+}
+
+public void OnPluginEnd()
+{
+	ClearAllData();
 }
 
 public void OnMapStart()
 {
+	ClearAllData();
+
 	if (!IsDecalPrecached(DECAL_NAME)) {
 		g_iPrecacheDecal = PrecacheDecal(DECAL_NAME, true); //true or false?
 	}
 }
 
-void EventRoundReset(Event hEvent, const char[] name, bool dontBroadcast)
+public void OnMapEnd()
 {
-	decalThisTick = 0;
-	iLastTick = 0;
+	ClearAllData();
 }
 
-void BulletImpactEvent(Event hEvent, const char[] name, bool dontBroadcast)
+public void OnGameFrame()
 {
-	float pos[3];
-	int userid = hEvent.GetInt("userid");
-	//int client = GetClientOfUserId(userid);
+	/** @A1m`:
+	 * We only use half the possible value for reliability if any other decals were sent.
+	 * We use a function `OnGameFrame` instead of creating a bunch of timers,
+	 * and no longer ignore cvar `sv_multiplayer_maxtempentities`.
+	**/
 
-	pos[0] = hEvent.GetFloat("x");
-	pos[1] = hEvent.GetFloat("y");
-	pos[2] = hEvent.GetFloat("z");
+	SendSendQueueDecals();
+	ShouldRemoveAllDecals();
+}
 
-	int iTick = GetGameTickCount();
-
-	if (iTick != iLastTick) {
-		decalThisTick = 0;
-		iLastTick = iTick;
+void ShouldRemoveAllDecals()
+{
+	if (g_hRemoveDecalsTime <= 0.5 || GetGameTime() < g_hRemoveDecalsTime) {
+		return;
 	}
 
-	ArrayStack hStack = new ArrayStack(sizeof(pos));
-	hStack.PushArray(pos[0], sizeof(pos));
-	hStack.Push(userid);
-	
-	CreateTimer(++decalThisTick * GetTickInterval(), TimerDelayShowDecal, hStack, TIMER_FLAG_NO_MAPCHANGE | TIMER_HNDL_CLOSE);
+	RemoveAllDecalsForAll();
+	g_hRemoveDecalsTime = 0.0;
 }
 
-Action TimerDelayShowDecal(Handle hTimer, ArrayStack hStack)
+void SendSendQueueDecals()
 {
-	if (!hStack.Empty) {
-		int client = GetClientOfUserId(hStack.Pop());
-		if (client > 0) {
-			float pos[3];
-			hStack.PopArray(pos[0], sizeof(pos));
-			SendDecal(client, pos);
+	if (g_hDecalQueue.Length <= 0) {
+		return;
+	}
+
+	int iMaxPerTick = 32 / 2; // 32 - default value
+
+	if (g_hCvarMultiplayerMaxTempEnts != null) {
+		int iCvarValue = g_hCvarMultiplayerMaxTempEnts.IntValue;
+
+		// Disabled?
+		// We protect against division by zero and guarantee that at least one decal will be send.
+		if (iCvarValue < 1) {
+			return;
 		}
+
+		if (iCvarValue < 2) {
+			iCvarValue = 2;
+		}
+
+		iMaxPerTick = iCvarValue / 2;
 	}
 
-	return Plugin_Stop;
+	int iProcessed = 0;
+
+	while (g_hDecalQueue.Length > 0 && iProcessed < iMaxPerTick) {
+		DataPack hDp = g_hDecalQueue.Get(0);
+
+		if (hDp != null) {
+			hDp.Reset();
+
+			int iClient = GetClientOfUserId(hDp.ReadCell());
+			if (iClient > 0) {
+				float fPos[3];
+				hDp.ReadFloatArray(fPos, sizeof(fPos));
+
+				SendDecal(iClient, fPos);
+			}
+		}
+
+		CloseHandle(hDp);
+		g_hDecalQueue.Erase(0);
+		iProcessed++;
+	}
 }
 
-void SendDecal(int client, float pos[3])
+void Event_RoundChangeState(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	TE_Start("BSP Decal");
-	TE_WriteVector("m_vecOrigin", pos);
-	TE_WriteNum("m_nEntity", 0);
+	ClearAllData();
+}
+
+void Event_BulletImpact(Event hEvent, const char[] sEventName, bool bDontBroadcast)
+{
+	int iUserId = hEvent.GetInt("userid");
+
+	float fPos[3];
+	fPos[0] = hEvent.GetFloat("x");
+	fPos[1] = hEvent.GetFloat("y");
+	fPos[2] = hEvent.GetFloat("z");
+
+	DataPack hDp = new DataPack();
+	hDp.WriteCell(iUserId);
+	hDp.WriteFloatArray(fPos, sizeof(fPos), false);
+
+	g_hDecalQueue.Push(hDp);
+
+	g_hRemoveDecalsTime = GetGameTime() + g_hCvarRemoveDecalsTime.FloatValue;
+}
+
+void SendDecal(int iClient, float fPos[3])
+{
+	/** @A1m`:
+	 * "World Decal" instead of "BSP Decal" allows you to use command `r_cleardecal` for clearing.
+	 * Command `r_cleardecal` cannot be executed by the server only by the client. =(
+	 * But it seems like it's impossible to clean "BSP Decal" at all.
+	**/
+
+	TE_Start("World Decal");
+
+	TE_WriteVector("m_vecOrigin", fPos);
 	TE_WriteNum("m_nIndex", g_iPrecacheDecal);
-	TE_SendToClient(client, 0.0);
+
+	TE_SendToClient(iClient, 0.0);
+
+	g_hRemoveDecalsTime = GetGameTime() + g_hCvarRemoveDecalsTime.FloatValue;
+}
+
+void RemoveAllDecalsForAll()
+{
+	for (int iIter = 1; iIter <= MaxClients; iIter++) {
+		if (!IsClientInGame(iIter) || IsFakeClient(iIter)) {
+			continue;
+		}
+
+		RemoveAllDecals(iIter);
+	}
+}
+
+void RemoveAllDecals(int iClient)
+{
+	PrintToChat(iClient, "[Note] Use command `r_removedecals` for client to clean old decals.");
+}
+
+void ClearAllData()
+{
+	g_hRemoveDecalsTime = 0.0;
+
+	for (int iIter = 0; iIter < g_hDecalQueue.Length; iIter++) {
+		DataPack hDp = g_hDecalQueue.Get(0);
+
+		if (hDp != null) {
+			CloseHandle(hDp);
+		}
+
+		g_hDecalQueue.Erase(0);
+	}
+
+	g_hDecalQueue.Clear();
 }
