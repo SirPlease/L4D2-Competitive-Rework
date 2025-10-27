@@ -38,6 +38,11 @@ Action Ready_Cmd(int client, int args)
 
 Action Unready_Cmd(int client, int args)
 {
+	if (l4d_ready_autoready.BoolValue)
+	{
+		return Plugin_Handled;
+	}
+
 	if (inReadyUp && client)
 	{
 		bool hasflag = CheckCommandAccess(client, "sm_ban", ADMFLAG_BAN); // Check for specific admin flag

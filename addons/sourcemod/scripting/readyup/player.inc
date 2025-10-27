@@ -22,18 +22,18 @@ bool SetPlayerReady(int client, bool ready)
 	
 	if (prev && !ready)
 	{
-		if (g_hPlayerReadyForward.FunctionCount)
+		if (g_hPlayerUnreadyForward.FunctionCount)
 		{
-			Call_StartForward(g_hPlayerReadyForward);
+			Call_StartForward(g_hPlayerUnreadyForward);
 			Call_PushCell(client);
 			Call_Finish();
 		}
 	}
 	else if (!prev && ready)
 	{
-		if (g_hPlayerUnreadyForward.FunctionCount)
+		if (g_hPlayerReadyForward.FunctionCount)
 		{
-			Call_StartForward(g_hPlayerUnreadyForward);
+			Call_StartForward(g_hPlayerReadyForward);
 			Call_PushCell(client);
 			Call_Finish();
 		}
@@ -57,6 +57,18 @@ bool SetPlayerHiddenPanel(int client, bool hidden)
 void SetButtonTime(int client)
 {
 	buttonTime[client] = GetEngineTime();
+
+	int iPassTime = RoundToFloor(GetGameTime() - fStartTimestamp);
+
+	if (IsPlayer(client) && inReadyUp && l4d_ready_autoready.BoolValue && iPassTime >= l4d_ready_autoready.IntValue)
+	{
+		SetPlayerReady(client, true);
+
+		if (CheckFullReady())
+		{
+			InitiateLiveCountdown();
+		}
+	}
 }
 
 #define AFK_DURATION 15.0

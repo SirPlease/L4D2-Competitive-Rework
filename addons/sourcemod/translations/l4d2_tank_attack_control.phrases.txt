@@ -6,14 +6,14 @@
 	}
 	"Reload"
 	{
-		"en"	"{olive}Reload{default} = {blue}2 Handed Overhand{default}"
+		"en"	"{olive}Reload{default}/{olive}!overhand{default} = {blue}2 Handed Overhand{default}"
 	}
 	"Use"
 	{
-		"en"	"{olive}Use{default} = {blue}Underhand{default}"
+		"en"	"{olive}Use{default}/{olive}!underhand{default} = {blue}Underhand{default}"
 	}
 	"M2"
 	{
-		"en"	"{olive}M2{default} = {blue}1 Handed Overhand{default}"
+		"en"	"{olive}M2{default}/{olive}!overonehand{default} = {blue}1 Handed Overhand{default}"
 	}
 }
