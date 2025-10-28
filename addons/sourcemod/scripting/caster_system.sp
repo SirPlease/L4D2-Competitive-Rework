@@ -29,10 +29,16 @@ bool forbidSelfRegister;
 
 ConVar g_hDisableAddons;
 
+GlobalForward g_hFWD_CasterRegistered;
+GlobalForward g_hFWD_CasterUnregistered;
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	CreateNative("IsClientCaster", Native_IsClientCaster);
 	CreateNative("IsIDCaster", Native_IsIDCaster);
+
+	g_hFWD_CasterRegistered = new GlobalForward("OnCasterRegistered", ET_Ignore, Param_Cell);
+	g_hFWD_CasterUnregistered = new GlobalForward("OnCasterUnregistered", ET_Ignore, Param_Cell);
 
 	RegPluginLibrary("caster_system");
 	return APLRes_Success;
@@ -232,6 +238,10 @@ Action Cast_Cmd(int client, int args)
 		casterTrie.SetValue(buffer, true);
 		CPrintToChat(client, "%t", "SelfCast1");
 		CPrintToChat(client, "%t", "SelfCast2");
+
+		Call_StartForward(g_hFWD_CasterRegistered);
+		Call_PushCell(client);
+		Call_Finish();
 	}
 	
 	return Plugin_Handled;
@@ -257,6 +267,10 @@ Action Caster_Cmd(int client, int args)
 			ReplyToCommand(client, "\x01%t", "RegCasterReply", target);
 			CPrintToChat(target, "%t", "RegCasterTarget", client);
 			CPrintToChat(target, "%t", "SelfCast2");
+
+			Call_StartForward(g_hFWD_CasterRegistered);
+			Call_PushCell(target);
+			Call_Finish();
 		}
 		else
 		{
@@ -279,6 +293,10 @@ Action NotCasting_Cmd(int client, int args)
 			CPrintToChat(client, "%t", "Reconnect1");
 			CPrintToChat(client, "%t", "Reconnect2");
 			
+			Call_StartForward(g_hFWD_CasterUnregistered);
+			Call_PushCell(client);
+			Call_Finish();
+
 			// Reconnection to disable their addons
 			CreateTimer(3.0, Reconnect, client);
 		}
@@ -303,6 +321,10 @@ Action NotCasting_Cmd(int client, int args)
 				{
 					CPrintToChat(target, "%t", "UnregCasterTarget", client);
 					NotCasting_Cmd(target, 0);
+
+					Call_StartForward(g_hFWD_CasterUnregistered);
+					Call_PushCell(target);
+					Call_Finish();
 				}
 				ReplyToCommand(client, "\x01%t", "UnregCasterSuccess", target);
 			}
