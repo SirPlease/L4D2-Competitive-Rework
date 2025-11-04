@@ -4,111 +4,143 @@
 #include <sourcemod>
 #include <dhooks>
 
-#define Z_JOCKEY 5
-#define TEAM_SURVIVOR 2
-#define TEAM_INFECTED 3
+#define Z_JOCKEY			5
 
-#define GAMEDATA "l4d2_si_ability"
+#define TEAM_SURVIVOR		2
+#define TEAM_INFECTED		3
 
-Handle hCLeap_OnTouch;
+#define GAMEDATA			"l4d2_si_ability"
+#define L4D2_MAXPLAYERS		32
 
-bool blockJumpCap[MAXPLAYERS + 1];
+enum struct eShovedInfo
+{
+	int eiUserId;
+	float efBlockUntil;
+}
+
+ConVar g_hCvarJumpCapBlockTime = null;
+
+Handle g_hCLeap_OnTouch = null;
+
+eShovedInfo g_esShovedInfo[L4D2_MAXPLAYERS + 1];
 
 public Plugin myinfo =
 {
 	name = "L4D2 Jockey Jump-Cap Patch",
 	author = "Visor, A1m`",
 	description = "Prevent Jockeys from being able to land caps with non-ability jumps in unfair situations",
-	version = "1.4",
+	version = "1.6",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
 public void OnPluginStart()
+{
+	InitGameData();
+
+	g_hCvarJumpCapBlockTime = CreateConVar(
+		"l4d2_jumpcap_block_time",
+		"3.0",
+		"Sets the block duration for jockey jumpcaps (in seconds)", 
+		_, true, 1.0, true, 10.0
+	);
+
+	HookEvent("round_start", Event_Reset, EventHookMode_PostNoCopy);
+	HookEvent("round_end", Event_Reset, EventHookMode_PostNoCopy);
+	HookEvent("player_shoved", Event_PlayerShoved);
+}
+
+void InitGameData()
 {
 	Handle hGamedata = LoadGameConfigFile(GAMEDATA);
 
 	if (!hGamedata) {
 		SetFailState("Gamedata '%s.txt' missing or corrupt.", GAMEDATA);
 	}
-	
-	int iCleapOnTouch = GameConfGetOffset(hGamedata, "CBaseAbility::OnTouch");
-	if (iCleapOnTouch == -1) {
+
+	int iCleapOnTouchOffset = GameConfGetOffset(hGamedata, "CBaseAbility::OnTouch");
+	if (iCleapOnTouchOffset == -1) {
 		SetFailState("Failed to get offset 'CBaseAbility::OnTouch'.");
 	}
 
-	hCLeap_OnTouch = DHookCreate(iCleapOnTouch, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, CLeap_OnTouch);
-	DHookAddParam(hCLeap_OnTouch, HookParamType_CBaseEntity);
-	
-	HookEvent("round_start", ResetEvent, EventHookMode_PostNoCopy);
-	HookEvent("round_end", ResetEvent, EventHookMode_PostNoCopy);
-	HookEvent("player_shoved", OnPlayerShoved);
-	
+	g_hCLeap_OnTouch = DHookCreate(iCleapOnTouchOffset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, CLeap_OnTouch);
+	DHookAddParam(g_hCLeap_OnTouch, HookParamType_CBaseEntity);
+
 	delete hGamedata;
 }
 
-void ResetEvent(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_Reset(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	for (int i = 0; i <= MAXPLAYERS; i++) {
-		blockJumpCap[i] = false;
+	for (int i = 0; i <= L4D2_MAXPLAYERS; i++) {
+		g_esShovedInfo[i].eiUserId = 0;
+		g_esShovedInfo[i].efBlockUntil = 0.0;
 	}
 }
 
-public void OnEntityCreated(int entity, const char[] classname)
+public void OnEntityCreated(int iEntity, const char[] sClassName)
 {
-	if (strcmp(classname, "ability_leap") == 0) {
-		DHookEntity(hCLeap_OnTouch, false, entity); 
+	if (strcmp(sClassName, "ability_leap") == 0) {
+		DHookEntity(g_hCLeap_OnTouch, false, iEntity);
 	}
 }
 
-void OnPlayerShoved(Event hEvent, const char[] name, bool dontBroadcast)
+void Event_PlayerShoved(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	int shovee = GetClientOfUserId(hEvent.GetInt("userid"));
-	int shover = GetClientOfUserId(hEvent.GetInt("attacker"));
-	
-	if (IsSurvivor(shover) && IsJockey(shovee)) {
-		blockJumpCap[shovee] = true;
-		CreateTimer(3.0, ResetJumpcapState, shovee, TIMER_FLAG_NO_MAPCHANGE);
+	int iShover = GetClientOfUserId(hEvent.GetInt("attacker"));
+	if (!IsSurvivor(iShover)) {
+		return;
+	}
+
+	int iShoveeUserId = hEvent.GetInt("userid");
+	int iShovee = GetClientOfUserId(iShoveeUserId);
+	if (IsJockey(iShovee)) {
+		g_esShovedInfo[iShovee].eiUserId = iShoveeUserId;
+		g_esShovedInfo[iShovee].efBlockUntil = GetGameTime() + g_hCvarJumpCapBlockTime.FloatValue;
 	}
 }
 
-Action ResetJumpcapState(Handle hTimer, any jockey)
+MRESReturn CLeap_OnTouch(int iAbility, DHookParam hParams)
 {
-	blockJumpCap[jockey] = false;
-	return Plugin_Handled;
-}
-
-MRESReturn CLeap_OnTouch(int ability, Handle hParams)
-{
-	int jockey = GetEntPropEnt(ability, Prop_Send, "m_owner");
-	if (IsJockey(jockey) && !IsFakeClient(jockey)) {
-		int survivor = DHookGetParam(hParams, 1);
-		if (IsSurvivor(survivor)) {
-			if (!IsAbilityActive(ability) && blockJumpCap[jockey]) {
-				return MRES_Supercede;
-			}
-		}
+	int iJockey = GetEntPropEnt(iAbility, Prop_Send, "m_owner");
+	if (!IsJockey(iJockey) || IsFakeClient(iJockey)) {
+		return MRES_Ignored;
 	}
+
+	int iSurvivor = hParams.Get(1);
+	if (!IsSurvivor(iSurvivor)) {
+		return MRES_Ignored;
+	}
+
+	if (!IsAbilityActive(iAbility) && IsJumpBlocked(iJockey)) {
+		return MRES_Supercede;
+	}
+
 	return MRES_Ignored;
 }
 
-bool IsAbilityActive(int ability)
+bool IsJumpBlocked(int iClient)
 {
-	return view_as<bool>(GetEntProp(ability, Prop_Send, "m_isLeaping", 1));
+    return (g_esShovedInfo[iClient].eiUserId == GetClientUserId(iClient)
+        && g_esShovedInfo[iClient].efBlockUntil >= GetGameTime());
 }
 
-bool IsJockey(int client)
+bool IsAbilityActive(int iAbility)
 {
-	return (client > 0 
-		&& client <= MaxClients 
-		&& IsClientInGame(client) 
-		&& GetClientTeam(client) == TEAM_INFECTED 
-		&& GetEntProp(client, Prop_Send, "m_zombieClass") == Z_JOCKEY);
+	return (GetEntProp(iAbility, Prop_Send, "m_isLeaping", 1) > 0);
 }
 
-bool IsSurvivor(int client)
+bool IsJockey(int iClient)
 {
-	return (client > 0
-		&& client <= MaxClients
-		&& IsClientInGame(client)
-		&& GetClientTeam(client) == TEAM_SURVIVOR);
+	return (iClient > 0
+		&& iClient <= MaxClients
+		&& IsClientInGame(iClient)
+		&& GetClientTeam(iClient) == TEAM_INFECTED
+		&& GetEntProp(iClient, Prop_Send, "m_zombieClass") == Z_JOCKEY);
+}
+
+bool IsSurvivor(int iClient)
+{
+	return (iClient > 0
+		&& iClient <= MaxClients
+		&& IsClientInGame(iClient)
+		&& GetClientTeam(iClient) == TEAM_SURVIVOR);
 }
