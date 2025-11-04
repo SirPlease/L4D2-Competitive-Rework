@@ -16,7 +16,7 @@ enum struct eShovedInfo
 {
 	int eiUserId;
 	float efBlockUntil;
-};
+}
 
 ConVar g_hCvarJumpCapBlockTime = null;
 
