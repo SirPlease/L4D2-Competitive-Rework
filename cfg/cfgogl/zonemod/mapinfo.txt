@@ -1379,6 +1379,11 @@
 				"min"		"0"
 				"max"		"45"
 			}
+			"Block point of no return tank"
+			{
+				"min"       "75"
+				"max"       "100"
+			}
 		}
 	}
 	"l4d2_vs_stadium2_riverwalk"
