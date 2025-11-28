@@ -1,5 +1,5 @@
 /**
- * Version 2.2 by A1m`
+ * Version 2.3 by A1m`
  *
  * Changes:
  * 1. Removed duplicate plugins:
@@ -10,7 +10,11 @@
  *    - Replaced with safer, hook-based implementation using OnTakeDamage and netprops.
  *    - Ensures more stable and reliable drag damage behavior without unnecessary timers.
  *
- * 3. Supports late loading.
+ * Notes:
+ *    The timing of damage is not perfect, as 'CTerrorPlayer::PostThink' is not called every frame,
+ *    but after a certain period of time depending on the number of players and the tick rate (see function 'CTerrorPlayer::ShouldPostThink').
+ *    For this reason, it is difficult to calculate using game netprops whether this was the first damage dealt or not,
+ *    the code becomes too complicated, so we introduce our own variables to determine this.
 **/
 
 #pragma semicolon 1
@@ -39,7 +43,16 @@ float
 	g_fDebugDamageInterval = 0.0;
 #endif
 
+enum
+{
+	eUserId = 0,
+	eHitCount,
+
+	eDamageInfo_Size
+};
+
 int
+	g_iTongueHitCount[MAXPLAYERS + 1][eDamageInfo_Size],
 	g_iTongueDragDamageTimerDurationOffset = -1,
 	g_iTongueDragDamageTimerTimeStampOffset = -1;
 
@@ -53,7 +66,7 @@ public Plugin myinfo =
 	name = "L4D2 smoker drag damage interval",
 	author = "Visor, Sir, A1m`",
 	description = "Implements a native-like cvar that should've been there out of the box",
-	version = "2.2",
+	version = "2.3",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -83,9 +96,9 @@ void InitGameData()
 		SetFailState("Gamedata '%s.txt' missing or corrupt.", GAMEDATA);
 	}
 
-	int iTongueDragDamageTimer = GameConfGetOffset(hGamedata, "CTerrorPlayer::m_tongueDragDamageTimer");
+	int iTongueDragDamageTimer = GameConfGetOffset(hGamedata, "CTerrorPlayer->m_tongueDragDamageTimer");
 	if (iTongueDragDamageTimer == -1) {
-		SetFailState("Failed to get offset 'CTerrorPlayer::m_tongueDragDamageTimer'.");
+		SetFailState("Failed to get offset 'CTerrorPlayer->m_tongueDragDamageTimer'.");
 	}
 
 	g_iTongueDragDamageTimerDurationOffset = iTongueDragDamageTimer + CT_DURATION_OFFSET;
@@ -123,6 +136,9 @@ void Event_OnTongueGrab(Event hEvent, const char[] eName, bool bDontBroadcast)
 		SetDragDamageTimer(iVictim, GetFirstDamageInterval());
 	}
 
+	g_iTongueHitCount[iVictim][eUserId] = hEvent.GetInt("victim");
+	g_iTongueHitCount[iVictim][eHitCount] = 0;
+
 #if DEBUG
 	g_fDebugDamageInterval = GetGameTime();
 #endif
@@ -131,6 +147,7 @@ void Event_OnTongueGrab(Event hEvent, const char[] eName, bool bDontBroadcast)
 Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage, int &iDamageType)
 {
 	// Replacing the function patch 'CTerrorPlayer::UpdateHangingFromTongue'.
+	// This dmg function is called after variable 'CTerrorPlayer::m_tongueDragDamageTimer' is set, we can't get it here.
 	if (!(iDamageType & DMG_CHOKE)) {
 		return Plugin_Continue;
 	}
@@ -141,8 +158,7 @@ Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fD
 	}
 
 	// Stop dragging.
-	bool bIsHangingFromTongue = (GetEntProp(iVictim, Prop_Send, "m_isHangingFromTongue", 1) > 0);
-	if (bIsHangingFromTongue) {
+	if (GetEntProp(iVictim, Prop_Send, "m_isHangingFromTongue", 1) > 0) {
 		return Plugin_Continue;
 	}
 
@@ -150,14 +166,12 @@ Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fD
 	SetDragDamageTimer(iVictim, g_hTongueDragDamageInterval.FloatValue);
 
 	// First damage if cvar enabled.
+	g_iTongueHitCount[iVictim][eHitCount]++;
 	bool bFirstDamage = false;
-	float fTongueDragFirstDamage = g_hTongueDragFirstDamage.FloatValue;
 
-	if (fTongueDragFirstDamage > 0.0) {
-		float fTongueVictimTimer = GetEntPropFloat(iVictim, Prop_Send, "m_tongueVictimTimer", IT_TIMESTAMP_INDEX);
-
-		if (FloatCompareEps(fTongueVictimTimer, GetFirstDamageInterval()) == 0) {
-			fDamage = fTongueDragFirstDamage;
+	if (g_hTongueDragFirstDamage.FloatValue > 0.0) {
+		if (g_iTongueHitCount[iVictim][eHitCount] == 1 && g_iTongueHitCount[iVictim][eUserId] == GetClientUserId(iVictim)) {
+			fDamage = g_hTongueDragFirstDamage.FloatValue;
 			bFirstDamage = true;
 		}
 	}
@@ -186,18 +200,6 @@ void SetDragDamageTimer(int iClient, float fDuration)
 
 	SetEntDataFloat(iClient, g_iTongueDragDamageTimerDurationOffset, fDuration, false); // 'CountdownTimer::duration'
 	SetEntDataFloat(iClient, g_iTongueDragDamageTimerTimeStampOffset, fTimeStamp, false); // 'CountdownTimer::timestamp'
-}
-
-// For small differences in tick interval.
-int FloatCompareEps(float fOne, float fTwo, float fEps = EPSILON)
-{
-	if (FloatAbs(fOne - fTwo) < fEps) {
-		return 0;
-	} else if (fOne > fTwo) {
-		return 1;
-	}
-
-	return -1;
 }
 
 #if DEBUG
