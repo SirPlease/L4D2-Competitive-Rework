@@ -7,7 +7,7 @@
  *    - l4d2_smoker_drag_damage_interval.
  *
  * 2. Removed untrusted timer-based code:
- *    - Replaced with safer, hook-based implementation using OnTakeDamage and netprops.
+ *    - Replaced with safer, hook-based implementation using OnTakeDamage.
  *    - Ensures more stable and reliable drag damage behavior without unnecessary timers.
  *
  * Notes:
