@@ -67,7 +67,7 @@ public OnPluginStart()
 }
 
 // player damage tracking
-public OnClientPostAdminCheck(client)
+public OnClientPutInServer(client)
 {
     SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamageByWitch);
 }

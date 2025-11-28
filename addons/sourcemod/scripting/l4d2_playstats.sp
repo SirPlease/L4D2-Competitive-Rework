@@ -736,7 +736,7 @@ public void OnConfigsExecuted()
 }
 
 // find a player
-public void OnClientPostAdminCheck(int client)
+public void OnClientPutInServer(int client)
 {
 	GetPlayerIndexForClient(client);
 }
