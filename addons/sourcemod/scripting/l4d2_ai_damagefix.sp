@@ -112,7 +112,7 @@ public void OnPluginStart()
     if (bLateLoad) {
         for (int i = 1; i < MaxClients + 1; i++) {
             if (IsClientAndInGame(i)) {
-                OnClientPostAdminCheck(i);
+                OnClientPutInServer(i);
             }
         }
     }
@@ -129,7 +129,7 @@ void OnPounceInterruptChanged(ConVar convar, const char[] oldValue, const char[]
     iPounceInterrupt = StringToInt(newValue);
 }
 
-public void OnClientPostAdminCheck(int client)
+public void OnClientPutInServer(int client)
 {
     // hook bots spawning
     SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);

@@ -615,7 +615,7 @@ void CvarChange_PounceInterrupt(Handle convar, const char[] oldValue, const char
 	g_iPounceInterrupt = GetConVarInt(convar);
 }
 
-public void OnClientPostAdminCheck(int client)
+public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamageByWitch);
 }

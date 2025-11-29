@@ -125,14 +125,14 @@ public void OnPluginStart()
 	if (lateLoad) {
 		for (int i = 1; i <= MaxClients; i++) {
 			if (IsClientInGame(i)) {
-				OnClientPostAdminCheck(i);
+				OnClientPutInServer(i);
 			}
 		}
 	}
 }
 
 // Used to check for tank rocks and tank punches.
-public void OnClientPostAdminCheck(int client)
+public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 }

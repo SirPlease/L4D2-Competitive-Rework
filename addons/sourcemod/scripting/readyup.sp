@@ -320,7 +320,7 @@ public void OnMapEnd()
 	}
 }
 
-public void OnClientPostAdminCheck(int client)
+public void OnClientPutInServer(int client)
 {
 	if (inReadyUp && L4D2_IsScavengeMode() && !IsFakeClient(client))
 	{
