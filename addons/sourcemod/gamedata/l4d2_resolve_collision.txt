@@ -3,7 +3,7 @@
 	"left4dead2"
 	{
 		"Offsets"
-		{	
+		{
 			"Infected::m_vecNeighbors"
 			{
 				"windows" "7468"
@@ -117,6 +117,30 @@
 				"library"		"server"
 				"linux"			"@_ZN11CBaseEntity15SetGroundEntityEPS_"
 				"windows"		"\x55\x8B\xEC\x53\x8B\xD9\x8B\x83\x44\x02\x00\x00"
+			}
+			
+			"ZombieBotLocomotion::OnAnimationActivityComplete"
+			{
+				"library"		"server"
+				"linux"			"@_ZN19ZombieBotLocomotion27OnAnimationActivityCompleteEi"
+				"windows"		"\x55\x8B\xEC\x83\xEC\x0C\x57\x8B\xF9\x83\xBF\xE8\x00\x00\x00\x00"
+			}
+			
+			"CBaseEntity::SetAbsVelocity" // https://github.com/Psykotikism/L4D1-2_Signatures
+			{
+				"library"	"server"
+				"linux"		"@_ZN11CBaseEntity14SetAbsVelocityERK6Vector"
+				"mac"		"@_ZN11CBaseEntity14SetAbsVelocityERK6Vector"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x2A\xF3\x2A\x2A\x2A\x57\x8B\x2A\x0F"
+						/* ? ? ? ? ? ? 56 8B ? ? F3 ? ? ? 57 8B ? 0F */
+			}
+			
+			"ZombieBotLocomotion::UpdatePosition"
+			{
+				"library"	"server"
+				"linux"		"@_ZN19ZombieBotLocomotion14UpdatePositionERK6Vector"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x30\xA1\x2A\x2A\x2A\x2A\x53\x56\x57\x8B\xF9"
+						/* ? ? ? ? ? ? 56 8B ? ? F3 ? ? ? 57 8B ? 0F */
 			}
 		}
 	}
