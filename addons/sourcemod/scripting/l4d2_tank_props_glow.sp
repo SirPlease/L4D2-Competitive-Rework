@@ -438,7 +438,7 @@ void HookTankProps()
 {
 	int iEntCount = GetMaxEntities();
 
-	for (int i = MaxClients+1; i < iEntCount; i++) {
+	for (int i = MaxClients+1; i <= iEntCount; i++) {
 		if (IsTankProp(i)) {
 			SDKHook(i, SDKHook_OnTakeDamagePost, PropDamaged);
 			g_hTankProps.Push(i);
