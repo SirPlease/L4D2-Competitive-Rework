@@ -438,7 +438,7 @@ void HookTankProps()
 {
 	int iEntCount = GetMaxEntities();
 
-	for (int i = MaxClients; i < iEntCount; i++) {
+	for (int i = MaxClients+1; i <= iEntCount; i++) {
 		if (IsTankProp(i)) {
 			SDKHook(i, SDKHook_OnTakeDamagePost, PropDamaged);
 			g_hTankProps.Push(i);
@@ -489,7 +489,7 @@ void PossibleTankPropCreated(int iEntity, const char[] sClassName)
 
 void Hook_PropSpawned(int iEntity)
 {
-	if (iEntity < MaxClients || !IsValidEntity(iEntity)) {
+	if (iEntity <= MaxClients || !IsValidEntity(iEntity)) {
 		return;
 	}
 
