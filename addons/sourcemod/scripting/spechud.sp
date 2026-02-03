@@ -19,9 +19,9 @@
 #include <lerpmonitor>
 #include <witch_and_tankifier>
 
-#define PLUGIN_VERSION	"3.8.5"
+#define PLUGIN_VERSION "3.8.6"
 
-public Plugin myinfo = 
+public Plugin myinfo =
 {
 	name = "Hyper-V HUD Manager",
 	author = "Visor, Forgetest",
@@ -33,7 +33,7 @@ public Plugin myinfo =
 // ======================================================================
 //  Macros
 // ======================================================================
-#define SPECHUD_DRAW_INTERVAL   0.5
+#define SPECHUD_DRAW_INTERVAL 0.5
 #define TRANSLATION_FILE "spechud.phrases"
 
 // ======================================================================
@@ -328,7 +328,7 @@ public void OnRoundIsLive()
 	
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (IsClientInGame(i) && GetClientTeam(i) == TEAM_SPECTATOR && !IsClientSourceTV(i))
+		if (IsClientInGame(i) && GetClientTeam(i) == L4D2Team_Spectator && !IsClientSourceTV(i))
 			FakeClientCommand(i, "sm_spectate");
 	}
 	
@@ -431,7 +431,7 @@ void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 		bTankHudActive[client] = true;
 	}
 	
-	//if (team == 3) storedClass[client] = ZC_None;
+	//if (team == L4D2Team_Infected) storedClass[client] = ZC_None;
 }
 
 /**********************************************************************************************/
@@ -439,8 +439,11 @@ void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 // ======================================================================
 //  HUD Command Callbacks
 // ======================================================================
-Action ToggleSpecHudCmd(int client, int args) 
+Action ToggleSpecHudCmd(int client, int args)
 {
+	if (!IsValidClientIndex(client) || !IsClientInGame(client))
+		return Plugin_Handled;
+	
 	if (GetClientTeam(client) != L4D2Team_Spectator)
 		return Plugin_Handled;
 	
@@ -450,10 +453,12 @@ Action ToggleSpecHudCmd(int client, int args)
 	return Plugin_Handled;
 }
 
-Action ToggleTankHudCmd(int client, int args) 
+Action ToggleTankHudCmd(int client, int args)
 {
-	int team = GetClientTeam(client);
-	if (team == L4D2Team_Survivor)
+	if (!IsValidClientIndex(client) || !IsClientInGame(client))
+		return Plugin_Handled;
+	
+	if (GetClientTeam(client)  == L4D2Team_Survivor)
 		return Plugin_Handled;
 	
 	bTankHudActive[client] = !bTankHudActive[client];
@@ -488,21 +493,21 @@ Action HudDrawTimer(Handle hTimer)
 			continue;
 		}
 		
-		int team = GetClientTeam(i);
-		switch (team)
+		switch (GetClientTeam(i))
 		{
-		case 3:
-			{
-				if (bTankHudActive[i])
-					tankHud_clients[tankHud_total++] = i;
-			}
-		case 1:
+			case L4D2Team_Spectator:
 			{
 				if (bSpecHudActive[i])
 					specHud_clients[specHud_total++] = i;
 				else if (bTankHudActive[i])
 					tankHud_clients[tankHud_total++] = i;
 			}
+			case L4D2Team_Infected:
+			{
+				if (bTankHudActive[i])
+					tankHud_clients[tankHud_total++] = i;
+			}
+
 		}
 	}
 	
@@ -711,7 +716,7 @@ void FillSurvivorInfo(Panel hSpecHud)
 	int[] clients = new int[MaxClients];
 	for (int i = 1; i <= MaxClients; ++i)
 	{
-		if (!IsClientInGame(i) || GetClientTeam(i) != 2)
+		if (!IsClientInGame(i) || GetClientTeam(i) != L4D2Team_Survivor)
 			continue;
 		
 		clients[total++] = i;
@@ -917,11 +922,11 @@ void FillInfectedInfo(Panel hSpecHud)
 	int infectedCount = 0;
 	for (int client = 1; client <= MaxClients; ++client)
 	{
-		if (!IsClientInGame(client) || GetClientTeam(client) != 3)
+		if (!IsClientInGame(client) || GetClientTeam(client) != L4D2Team_Infected)
 			continue;
 		
 		GetClientFixedName(client, name, sizeof(name));
-		if (!IsPlayerAlive(client)) 
+		if (!IsPlayerAlive(client))
 		{
 			int timeLeft = RoundToFloor(L4D_GetPlayerSpawnTime(client));
 			if (timeLeft < 0) // Deathcam
@@ -1061,8 +1066,9 @@ bool FillTankInfo(Panel hSpecHud, bool bTankHUD = false)
 	int health = GetClientHealth(tank);
 	int maxhealth = GetEntProp(tank, Prop_Send, "m_iMaxHealth");
 	float healthPercent = L4D2Util_IntToPercentFloat(health, maxhealth); // * 100 already
+	bool isIncapacitated = IsIncapacitated(tank);
 	
-	if (health <= 0 || IsIncapacitated(tank))
+	if (health <= 0 || isIncapacitated)
 	{
 		info = "Health  : Dead";
 	}
@@ -1095,7 +1101,7 @@ bool FillTankInfo(Panel hSpecHud, bool bTankHUD = false)
 	DrawPanelText(hSpecHud, info);
 
 	// Draw fire status
-	if (GetEntityFlags(tank) & FL_ONFIRE)
+	if (!isIncapacitated && GetEntityFlags(tank) & FL_ONFIRE)
 	{
 		int timeleft = RoundToCeil(healthPercent / 100.0 * fTankBurnDuration);
 		FormatEx(info, sizeof(info), "On Fire : %is", timeleft);
@@ -1207,13 +1213,13 @@ void FillGameInfo(Panel hSpecHud)
  *	+68: Grenade Launcher - ammo_grenadelauncher_max
  */
 
-#define	ASSAULT_RIFLE_OFFSET_IAMMO		12;
-#define	SMG_OFFSET_IAMMO				20;
-#define	PUMPSHOTGUN_OFFSET_IAMMO		28;
-#define	AUTO_SHOTGUN_OFFSET_IAMMO		32;
-#define	HUNTING_RIFLE_OFFSET_IAMMO		36;
-#define	MILITARY_SNIPER_OFFSET_IAMMO	40;
-#define	GRENADE_LAUNCHER_OFFSET_IAMMO	68;
+#define	ASSAULT_RIFLE_OFFSET_IAMMO		12
+#define	SMG_OFFSET_IAMMO				20
+#define	PUMPSHOTGUN_OFFSET_IAMMO		28
+#define	AUTO_SHOTGUN_OFFSET_IAMMO		32
+#define	HUNTING_RIFLE_OFFSET_IAMMO		36
+#define	MILITARY_SNIPER_OFFSET_IAMMO	40
+#define	GRENADE_LAUNCHER_OFFSET_IAMMO	68
 
 stock int GetWeaponExtraAmmo(int client, int wepid)
 {
@@ -1224,24 +1230,24 @@ stock int GetWeaponExtraAmmo(int client, int wepid)
 	switch (wepid)
 	{
 		case WEPID_RIFLE, WEPID_RIFLE_AK47, WEPID_RIFLE_DESERT, WEPID_RIFLE_SG552:
-			offset = ASSAULT_RIFLE_OFFSET_IAMMO
+			offset = ASSAULT_RIFLE_OFFSET_IAMMO;
 		case WEPID_SMG, WEPID_SMG_SILENCED:
-			offset = SMG_OFFSET_IAMMO
+			offset = SMG_OFFSET_IAMMO;
 		case WEPID_PUMPSHOTGUN, WEPID_SHOTGUN_CHROME:
-			offset = PUMPSHOTGUN_OFFSET_IAMMO
+			offset = PUMPSHOTGUN_OFFSET_IAMMO;
 		case WEPID_AUTOSHOTGUN, WEPID_SHOTGUN_SPAS:
-			offset = AUTO_SHOTGUN_OFFSET_IAMMO
+			offset = AUTO_SHOTGUN_OFFSET_IAMMO;
 		case WEPID_HUNTING_RIFLE:
-			offset = HUNTING_RIFLE_OFFSET_IAMMO
+			offset = HUNTING_RIFLE_OFFSET_IAMMO;
 		case WEPID_SNIPER_MILITARY, WEPID_SNIPER_AWP, WEPID_SNIPER_SCOUT:
-			offset = MILITARY_SNIPER_OFFSET_IAMMO
+			offset = MILITARY_SNIPER_OFFSET_IAMMO;
 		case WEPID_GRENADE_LAUNCHER:
-			offset = GRENADE_LAUNCHER_OFFSET_IAMMO
+			offset = GRENADE_LAUNCHER_OFFSET_IAMMO;
 		default:
 			return -1;
 	}
 	return GetEntData(client, ammoOffset + offset);
-} 
+}
 
 stock int GetWeaponClipAmmo(int weapon)
 {
@@ -1287,10 +1293,10 @@ stock bool ValvePanel_ShiftInvalidString(char[] str, int maxlen)
 //	return team ^ view_as<int>(InSecondHalfOfRound() != GameRules_GetProp("m_bAreTeamsFlipped"));
 //}
 
-stock int GetRealClientCount() 
+stock int GetRealClientCount()
 {
 	int clients = 0;
-	for (int i = 1; i <= MaxClients; ++i) 
+	for (int i = 1; i <= MaxClients; ++i)
 	{
 		if (IsClientConnected(i) && !IsFakeClient(i)) clients++;
 	}
@@ -1330,7 +1336,7 @@ stock int FormatScavengeRoundTime(char[] buffer, int maxlen, int teamIndex, bool
 				Format(buffer, maxlen, "%d:%05.2f", minutes, seconds);
 }
 
-/* 
+/*
  * GetScavengeRoundDuration & GetScavengeTeamScore
  * credit to ProdigySim
  */
