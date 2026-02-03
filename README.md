@@ -1,24 +1,35 @@
 # **L4D2 Competitive Rework**
 
-**IMPORTANT NOTES** - **DON'T IGNORE THESE!**
-* The goal for this repo is to work on **Linux**, but Windows support is available.
-* Ensure that your machine is running at least **Ubuntu 22.04** (GLIBC minimum of 2.35)
-> While Windows is supported by the repository, there may be things that don't fully function on Windows that we may have missed.
-> Please report any issues you run into!
-* This repository only supports Sourcemod **1.12** and up.
-* Everything on this repository is confirmed to be working on **1.12**+ (specifically **1.12.7195**) as of the 26th of March, 2025.
+> [!IMPORTANT]
+> It is recommended to host servers on Linux, but Windows is supported.  
+> When running Linux ensure that your setup is running a minimum of **`GLIBC 2.35`** (Ubuntu 22.04 or higher) or you will run into issues loading certain extensions.  
+> This repository only supports Sourcemod **1.12** and up (which comes with the repository for ease of use)  
+
+---
+
+> [!NOTE]
+> ConVar **`mv_maxplayers`** was added which replaces **`sv_maxplayers`** in **`cfg/server.cfg`**, this is used to prevent it from being overwritten every map change.  
+> On config unload, the value will be reset to the value used in the **`cfg/server.cfg`**.
+
+> [!NOTE]
+> Every confogl matchmode will now execute 2 additional files; **`cfg/sharedplugins.cfg`** and **`cfg/generalfixes.cfg`**.  
+> **`generalfixes.cfg`** contains all the crucial fixes that will be loaded in every matchmode.  
+> **`sharedplugins.cfg`** is for you, the server owner. You can load any custom plugin that you want to be loaded in every matchmode here.
+
+> [!CAUTION]
+> Plugin load locking and unlocking is no longer handled by the configs themselves, refrain from doing it manually or you can run into issues.
 
 ## **About:**
 
-This project started off with a focus on reworking the very outdated platform for competitive L4D2.
+This project started off with a focus on reworking the very outdated platform for competitive L4D2.  
 In its current state it allows anyone to host their own up to date competitive L4D2 servers.
-This project is **Actively Developed**.
 
 > **Included Matchmodes:**
-* **Zonemod 2.8.9e**
+
+* **Zonemod 2.9e**
 * **Zonemod Hunters**
 * **Zonemod Retro**
-* **NeoMod 0.4a** 
+* **NeoMod 0.4a**
 * **NextMod 1.0.5**
 * **Promod Elite 1.1**
 * **Acemod Revamped 1.2**
@@ -27,19 +38,10 @@ This project is **Actively Developed**.
 
 ---
 
-## **Important Notes**
-* We've added "**mv_maxplayers**" that replaces sv_maxplayers in the Server.cfg, this is used to prevent it from being overwritten every map change.
-  * On config unload, the value will be to the value used in the Server.cfg
-* Every Confogl matchmode will now execute 2 additional files, namely "**sharedplugins.cfg**" and "**generalfixes.cfg**" which are located in your **left4dead2/cfg** folder.
-  * "**General Fixes**" simply ensures that all the Fixes discussed in here are loaded by every Matchmode.
-  * "**Shared Plugins**" is for you, the Server host. You surely have some plugins that you'd like to be loaded in every matchmode, you can define them here. 
-    * **NOTE:** Plugin load locking and unlocking is no longer handled by the Configs themselves, so if you're using this project do **NOT** define plugin load locks/unlocks within the configs you're adding manually.
-
----
-	
 ## **Credits:**
 
 > **Foundation/Advanced Work:**
+
 * A1m`
 * AlliedModders LLC.
 * "Confogl Team"
@@ -53,30 +55,31 @@ This project is **Actively Developed**.
 * Visor
 
 > **Additional Plugins/Extensions:**
+
 * Accelerator74
-* Arti 
-* AtomicStryker 
+* Arti
+* AtomicStryker
 * Backwards
 * BHaType
-* Blade 
+* Blade
 * Buster
-* Canadarox 
-* CircleSquared 
-* Darkid 
+* Canadarox
+* CircleSquared
+* Darkid
 * DarkNoghri
-* Dcx 
+* Dcx
 * Devilesk
-* Die Teetasse 
-* Disawar1 
-* Don 
+* Die Teetasse
+* Disawar1
+* Don
 * Dragokas
 * Dr. Gregory House
-* Epilimic 
-* Estoopi 
-* Griffin 
+* Epilimic
+* Estoopi
+* Griffin
 * Harry Potter
-* Jacob 
-* Luckylock 
+* Jacob
+* Luckylock
 * Madcap
 * Mr. Zero
 * Nielsen
@@ -85,24 +88,21 @@ This project is **Actively Developed**.
 * Sheo
 * Sir
 * Spoon
-* Stabby 
-* Step 
+* Stabby
+* Step
 * Tabun
 * Target
 * TheTrick
-* V10 
+* V10
 * Vintik
 * VoiDeD
 * xoxo
 * $atanic $pirit
 
-
 > **Competitive Mapping Rework:**
+
 * Aiden
 * Derpduck
 
-> **Testing/Issue Reporting:**
-* Too many to list, keep up the great work in reporting issues!
-
-**NOTE:** If your work is being used and I forgot to credit you, my sincere apologies.  
-I've done my best to include everyone on the list, simply create an issue and name the plugin/extension you've made/contributed to and I'll make sure to credit you properly.
+> [!NOTE]
+> If your work is being used and I forgot to credit you, don't hesitate to contact me on Discord (user: `sirplease`)
