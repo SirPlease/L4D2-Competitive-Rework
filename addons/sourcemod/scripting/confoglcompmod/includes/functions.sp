@@ -124,11 +124,7 @@ stock int GetURandomIntRange(int min, int max)
 
 stock void KillEntity(int iEntity)
 {
-#if SOURCEMOD_V_MINOR > 8
 	RemoveEntity(iEntity);
-#else
-	AcceptEntityInput(iEntity, "Kill");
-#endif
 }
 
 /**

@@ -40,7 +40,6 @@ static const char g_szDoors_Type_Tracked[][ENTITY_MAX_NAME_LENGTH] =
 	"prop_door_rotating_checkpoint"
 };
 
-#if SOURCEMOD_V_MINOR > 9
 enum struct DoorsData
 {
 	int DoorsData_Type;
@@ -50,18 +49,6 @@ enum struct DoorsData
 
 DoorsData
 	g_ddDoors[MAX_EDICTS];
-
-#else
-enum DoorsData
-{
-	DoorsData_Type,
-	Float:DoorsData_Speed,
-	bool:DoorsData_ForceClose
-};
-
-DoorsData
-	g_ddDoors[MAX_EDICTS][DoorsData];
-#endif
 
 ConVar
 	g_hCvarDoorSpeed;
@@ -74,7 +61,7 @@ public Plugin myinfo =
 	name = "Tickrate Fixes",
 	author = "Sir, Griffin, A1m`",
 	description = "Fixes a handful of silly Tickrate bugs",
-	version = "1.4",
+	version = "1.4.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
@@ -162,11 +149,7 @@ void Door_SetSettingsAll()
 
 void Door_SetSettings(int iEntity)
 {
-#if SOURCEMOD_V_MINOR > 9
 	float fSpeed = g_ddDoors[iEntity].DoorsData_Speed * g_fDoorSpeed;
-#else
-	float fSpeed = g_ddDoors[iEntity][DoorsData_Speed] * g_fDoorSpeed;
-#endif
 
 	SetEntPropFloat(iEntity, Prop_Data, "m_flSpeed", fSpeed);
 }
@@ -186,11 +169,7 @@ void Door_ResetSettingsAll()
 
 void Door_ResetSettings(int iEntity)
 {
-#if SOURCEMOD_V_MINOR > 9
 	float fSpeed = g_ddDoors[iEntity].DoorsData_Speed;
-#else
-	float fSpeed = g_ddDoors[iEntity][DoorsData_Speed];
-#endif
 
 	SetEntPropFloat(iEntity, Prop_Data, "m_flSpeed", fSpeed);
 }
@@ -210,28 +189,16 @@ void Door_GetSettingsAll()
 
 void Door_GetSettings(int iEntity, int iDoorType)
 {
-#if SOURCEMOD_V_MINOR > 9
 	g_ddDoors[iEntity].DoorsData_Type = iDoorType;
 	g_ddDoors[iEntity].DoorsData_Speed = GetEntPropFloat(iEntity, Prop_Data, "m_flSpeed");
 	g_ddDoors[iEntity].DoorsData_ForceClose = view_as<bool>(GetEntProp(iEntity, Prop_Data, "m_bForceClosed"));
-#else
-	g_ddDoors[iEntity][DoorsData_Type] = iDoorType;
-	g_ddDoors[iEntity][DoorsData_Speed] = GetEntPropFloat(iEntity, Prop_Data, "m_flSpeed");
-	g_ddDoors[iEntity][DoorsData_ForceClose] = view_as<bool>(GetEntProp(iEntity, Prop_Data, "m_bForceClosed"));
-#endif
 }
 
 void Door_ClearSettingsAll()
 {
 	for (int i = 0; i < MAX_EDICTS; i++) {
-		#if SOURCEMOD_V_MINOR > 9
-			g_ddDoors[i].DoorsData_Type = DoorsTypeTracked_None;
-			g_ddDoors[i].DoorsData_Speed = 0.0;
-			g_ddDoors[i].DoorsData_ForceClose = false;
-		#else
-			g_ddDoors[i][DoorsData_Type] = DoorsTypeTracked_None;
-			g_ddDoors[i][DoorsData_Speed] = 0.0;
-			g_ddDoors[i][DoorsData_ForceClose] = false;
-		#endif
+		g_ddDoors[i].DoorsData_Type = DoorsTypeTracked_None;
+		g_ddDoors[i].DoorsData_Speed = 0.0;
+		g_ddDoors[i].DoorsData_ForceClose = false;
 	}
 }

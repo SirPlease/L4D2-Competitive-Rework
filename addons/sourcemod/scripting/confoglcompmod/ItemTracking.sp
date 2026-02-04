@@ -40,7 +40,6 @@ enum /*ItemNames*/
 };*/
 
 // For spawn entires adt_array
-#if SOURCEMOD_V_MINOR > 9
 enum struct ItemTracking
 {
     int IT_entity;
@@ -51,18 +50,6 @@ enum struct ItemTracking
     float IT_angles1;
     float IT_angles2;
 }
-#else
-enum ItemTracking
-{
-    IT_entity,
-    Float:IT_origins,
-    Float:IT_origins1,
-    Float:IT_origins2,
-    Float:IT_angles,
-    Float:IT_angles1,
-    Float:IT_angles2
-};
-#endif
 
 static const char g_sItemNames[ItemList_Size][ItemNames_Size][] =
 {
@@ -151,11 +138,7 @@ void IT_OnModuleStart()
     CreateItemListTrie();
 
     // Create item spawns array;
-#if SOURCEMOD_V_MINOR > 9
     ItemTracking curitem;
-#else
-    ItemTracking curitem[ItemTracking];
-#endif
 
     for (int i = 0; i < ItemList_Size; i++) {
         g_hItemSpawns[i] = new ArrayList(sizeof(curitem));
@@ -325,11 +308,7 @@ static void KillRegisteredItems()
 
 static void SpawnItems()
 {
-#if SOURCEMOD_V_MINOR > 9
     ItemTracking curitem;
-#else
-    ItemTracking curitem[ItemTracking];
-#endif
 
     float origins[3], angles[3];
     int arrsize = 0, itement = 0, wepid = 0;
@@ -341,11 +320,7 @@ static void SpawnItems()
         arrsize = g_hItemSpawns[itemidx].Length;
 
         for (int idx = 0; idx < arrsize; idx++) {
-            #if SOURCEMOD_V_MINOR > 9
-                g_hItemSpawns[itemidx].GetArray(idx, curitem, sizeof(curitem));
-            #else
-                g_hItemSpawns[itemidx].GetArray(idx, curitem[0], sizeof(curitem));
-            #endif
+            g_hItemSpawns[itemidx].GetArray(idx, curitem, sizeof(curitem));
 
             GetSpawnOrigins(origins, curitem);
             GetSpawnAngles(angles, curitem);
@@ -373,11 +348,7 @@ static void SpawnItems()
 
 static void EnumerateSpawns()
 {
-#if SOURCEMOD_V_MINOR > 9
     ItemTracking curitem;
-#else
-    ItemTracking curitem[ItemTracking];
-#endif
 
     float origins[3], angles[3];
     int itemindex = 0, psychonic = GetEntityCount();
@@ -426,11 +397,7 @@ static void EnumerateSpawns()
                     }*/
                 } else {
                     // Store entity, angles, origin
-                    #if SOURCEMOD_V_MINOR > 9
-                        curitem.IT_entity = i;
-                    #else
-                        curitem[IT_entity] = i;
-                    #endif
+                    curitem.IT_entity = i;
 
                     GetEntPropVector(i, Prop_Send, "m_vecOrigin", origins);
                     GetEntPropVector(i, Prop_Send, "m_angRotation", angles);
@@ -443,11 +410,7 @@ static void EnumerateSpawns()
                     SetSpawnAngles(angles, curitem);
 
                     // Push this instance onto our array for that item
-                    #if SOURCEMOD_V_MINOR > 9
-                        g_hItemSpawns[itemindex].PushArray(curitem, sizeof(curitem));
-                    #else
-                        g_hItemSpawns[itemindex].PushArray(curitem[0], sizeof(curitem));
-                    #endif
+                    g_hItemSpawns[itemindex].PushArray(curitem, sizeof(curitem));
                 }
             }
         }
@@ -456,11 +419,7 @@ static void EnumerateSpawns()
 
 static void RemoveToLimits()
 {
-#if SOURCEMOD_V_MINOR > 9
     ItemTracking curitem;
-#else
-    ItemTracking curitem[ItemTracking];
-#endif
 
     int curlimit = 0, killidx = 0;
 
@@ -477,27 +436,15 @@ static void RemoveToLimits()
                     LogMessage("[%s] Killing randomly chosen %s (%d) #%d", IT_MODULE_NAME, g_sItemNames[itemidx][IN_longname], itemidx, killidx);
                 }
 
-                #if SOURCEMOD_V_MINOR > 9
-                    g_hItemSpawns[itemidx].GetArray(killidx, curitem, sizeof(curitem));
+                g_hItemSpawns[itemidx].GetArray(killidx, curitem, sizeof(curitem));
 
-                    if (IsValidEdict(curitem.IT_entity)) {
-                        KillEntity(curitem.IT_entity);
+                if (IsValidEdict(curitem.IT_entity)) {
+                    KillEntity(curitem.IT_entity);
 
-                        /*if (!AcceptEntityInput(curitem.IT_entity, "kill")) {
-                            Debug_LogError(IT_MODULE_NAME, "Error killing instance of item %s", g_sItemNames[itemidx][IN_longname]);
-                        }*/
-                    }
-                #else
-                    g_hItemSpawns[itemidx].GetArray(killidx, curitem[0], sizeof(curitem));
-
-                    if (IsValidEdict(curitem[IT_entity])) {
-                        KillEntity(curitem[IT_entity]);
-
-                        /*if (!AcceptEntityInput(curitem[IT_entity], "kill")) {
-                            Debug_LogError(IT_MODULE_NAME, "Error killing instance of item %s", g_sItemNames[itemidx][IN_longname]);
-                        }*/
-                    }
-                #endif
+                    /*if (!AcceptEntityInput(curitem.IT_entity, "kill")) {
+                        Debug_LogError(IT_MODULE_NAME, "Error killing instance of item %s", g_sItemNames[itemidx][IN_longname]);
+                    }*/
+                }
 
                 g_hItemSpawns[itemidx].Erase(killidx);
             }
@@ -506,7 +453,6 @@ static void RemoveToLimits()
     }
 }
 
-#if SOURCEMOD_V_MINOR > 9
 static void SetSpawnOrigins(const float buf[3], ItemTracking spawn)
 {
     spawn.IT_origins = buf[0];
@@ -534,35 +480,6 @@ static void GetSpawnAngles(float buf[3], const ItemTracking spawn)
     buf[1] = spawn.IT_angles1;
     buf[2] = spawn.IT_angles2;
 }
-#else
-static void SetSpawnOrigins(const float buf[3], ItemTracking spawn[ItemTracking])
-{
-    spawn[IT_origins] = buf[0];
-    spawn[IT_origins1] = buf[1];
-    spawn[IT_origins2] = buf[2];
-}
-
-static void SetSpawnAngles(const float buf[3], ItemTracking spawn[ItemTracking])
-{
-    spawn[IT_angles] = buf[0];
-    spawn[IT_angles1] = buf[1];
-    spawn[IT_angles2] = buf[2];
-}
-
-static void GetSpawnOrigins(float buf[3], const ItemTracking spawn[ItemTracking])
-{
-    buf[0] = spawn[IT_origins];
-    buf[1] = spawn[IT_origins1];
-    buf[2] = spawn[IT_origins2];
-}
-
-static void GetSpawnAngles(float buf[3], const ItemTracking spawn[ItemTracking])
-{
-    buf[0] = spawn[IT_angles];
-    buf[1] = spawn[IT_angles1];
-    buf[2] = spawn[IT_angles2];
-}
-#endif
 
 static int GetWeaponIDFromItemList(int id)
 {

@@ -57,7 +57,7 @@ public Plugin myinfo =
 	name = "L4D2 Uniform Spit",
 	author = "Visor, Sir, A1m`",
 	description = "Make the spit deal a set amount of DPS under all circumstances",
-	version = "1.5",
+	version = "1.5.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -215,7 +215,7 @@ Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fD
 		}
 		
 		if (iVictimArray[iVictim][eCount] > g_iMaxTicks) {
-			KillEntity(iInflictor);
+			RemoveEntity(iInflictor);
 		}
 		
 		return Plugin_Changed;
@@ -248,11 +248,3 @@ bool IsSurvivor(int iClient)
 		&& GetClientTeam(iClient) == TEAM_SURVIVOR);
 }
 
-void KillEntity(int iEntity)
-{
-#if SOURCEMOD_V_MINOR > 8
-	RemoveEntity(iEntity);
-#else
-	AcceptEntityInput(iEntity, "Kill");
-#endif
-}

@@ -34,7 +34,6 @@ bool
 	bProhibitFakePing,
 	bIsMatchLive;
 
-#if SOURCEMOD_V_MINOR > 9
 enum struct NetsettingsStruct
 {
 	char Client_SteamId[STEAMID_SIZE];
@@ -43,23 +42,13 @@ enum struct NetsettingsStruct
 	int Client_Updaterate;
 	int Client_Changes;
 }
-#else
-enum NetsettingsStruct
-{
-	String:Client_SteamId[STEAMID_SIZE],
-	Client_Rate,
-	Client_Cmdrate,
-	Client_Updaterate,
-	Client_Changes
-};
-#endif
 
 public Plugin myinfo =
 {
 	name = "RateMonitor",
 	author = "Visor, Sir, A1m`",
 	description = "Keep track of players' netsettings",
-	version = "2.6",
+	version = "2.6.1",
 	url = "https://github.com/A1mDev/L4D2-Competitive-Plugins"
 };
 
@@ -101,11 +90,7 @@ public void OnPluginStart()
 	HookEvent("player_left_start_area", Event_RoundGoesLive, EventHookMode_PostNoCopy);
 	HookEvent("player_team", OnTeamChange);
 	
-#if SOURCEMOD_V_MINOR > 9
 	hClientSettingsArray = new ArrayList(sizeof(NetsettingsStruct));
-#else
-	hClientSettingsArray = new ArrayList(view_as<int>(NetsettingsStruct));
-#endif
 
 	if (IsLateLoad) {
 		for (int i = 1; i <= MaxClients; i++) {
@@ -119,21 +104,12 @@ public void OnPluginStart()
 void Event_RoundStart(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int iSize = hClientSettingsArray.Length;
-#if SOURCEMOD_V_MINOR > 9
 	NetsettingsStruct player;
 	for (int i = 0; i < iSize; i++) {
 		hClientSettingsArray.GetArray(i, player, sizeof(NetsettingsStruct));
 		player.Client_Changes = 0;
 		hClientSettingsArray.SetArray(i, player, sizeof(NetsettingsStruct));
 	}
-#else
-	NetsettingsStruct player[NetsettingsStruct];
-	for (int i = 0; i < iSize; i++) {
-		hClientSettingsArray.GetArray(i, player[0], view_as<int>(NetsettingsStruct));
-		player[Client_Changes] = 0;
-		hClientSettingsArray.SetArray(i, player[0], view_as<int>(NetsettingsStruct));
-	}
-#endif
 }
 
 void Event_RoundGoesLive(Event hEvent, const char[] name, bool dontBroadcast)
@@ -187,7 +163,6 @@ Action ListRates(int client, int args)
 	
 	int iSize = hClientSettingsArray.Length;
 
-#if SOURCEMOD_V_MINOR > 9
 	NetsettingsStruct player;
 	for (int i = 0; i < iSize; i++) {
 		hClientSettingsArray.GetArray(i, player, sizeof(NetsettingsStruct));
@@ -197,17 +172,6 @@ Action ListRates(int client, int args)
 			ReplyToCommand(client, "\x03%N\x01 : %d/%d/%d", iClient, player.Client_Cmdrate, player.Client_Updaterate, player.Client_Rate);
 		}
 	}
-#else
-	NetsettingsStruct player[NetsettingsStruct];
-	for (int i = 0; i < iSize; i++) {
-		hClientSettingsArray.GetArray(i, player[0], view_as<int>(NetsettingsStruct));
-
-		int iClient = GetClientBySteamId(player[Client_SteamId]);
-		if (iClient > 0 && GetClientTeam(iClient) > L4D2Team_Spectator) {
-			ReplyToCommand(client, "\x03%N\x01 : %d/%d/%d", iClient, player[Client_Cmdrate], player[Client_Updaterate], player[Client_Rate]);
-		}
-	}
-#endif
 
 	return Plugin_Handled;
 }
@@ -267,7 +231,6 @@ void RegisterSettings(int client)
 		return;
 	}
 	
-#if SOURCEMOD_V_MINOR > 9
 	NetsettingsStruct player;
 	if (iIndex > -1) {
 		hClientSettingsArray.GetArray(iIndex, player, sizeof(NetsettingsStruct));
@@ -314,54 +277,6 @@ void RegisterSettings(int client)
 						client, player.Client_Cmdrate, player.Client_Updaterate, player.Client_Rate);
 		}
 	}
-#else
-	NetsettingsStruct player[NetsettingsStruct];
-	if (iIndex > -1) {
-		hClientSettingsArray.GetArray(iIndex, player[0], view_as<int>(NetsettingsStruct));
-		
-		if (iRate == player[Client_Rate] && iCmdRate == player[Client_Cmdrate] && iUpdateRate == player[Client_Updaterate]) {
-			return; // No change
-		}
-		
-		if (bIsMatchLive && iAllowedRateChanges > -1) {
-			player[Client_Changes] += 1;
-			Format(sCounter, sizeof(sCounter), "[%d/%d]", player[Client_Changes], iAllowedRateChanges);
-			
-			// If not punished for bad rate settings yet, punish for overlimit rate change(if any)
-			if (player[Client_Changes] > iAllowedRateChanges) {
-				Format(sCmdRate, sizeof(sCmdRate), "%s%d", iCmdRate != player[Client_Cmdrate] ? "*" : "", iCmdRate);
-				Format(sUpdateRate, sizeof(sUpdateRate), "%s%d\x01", iUpdateRate != player[Client_Updaterate] ? "*" : "", iUpdateRate);
-				Format(sRate, sizeof(sRate), "%s%d\x01", iRate != player[Client_Rate] ? "*" : "", iRate);
-			
-				PunishPlayer(client, sCmdRate, sUpdateRate, sRate, sCounter, iIndex);
-				return;
-			}
-		}
-		
-		if (bPublic) {
-			CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N{default}'s netsettings changed from {teamcolor}%d/%d/%d {default}to {teamcolor}%d/%d/%d {olive}%s", \
-						client, player[Client_Cmdrate], player[Client_Updaterate], player[Client_Rate], iCmdRate, iUpdateRate, iRate, sCounter);
-		}
-		
-		player[Client_Cmdrate] = iCmdRate;
-		player[Client_Updaterate] = iUpdateRate;
-		player[Client_Rate] = iRate;
-		
-		hClientSettingsArray.SetArray(iIndex, player[0], view_as<int>(NetsettingsStruct));
-	} else {
-		strcopy(player[Client_SteamId], STEAMID_SIZE, sSteamId);
-		player[Client_Cmdrate] = iCmdRate;
-		player[Client_Updaterate] = iUpdateRate;
-		player[Client_Rate] = iRate;
-		player[Client_Changes] = 0;
-		
-		hClientSettingsArray.PushArray(player[0], view_as<int>(NetsettingsStruct));
-		if (bPublic) {
-			CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N{default}'s netsettings set to {teamcolor}%d/%d/%d", \
-						client, player[Client_Cmdrate], player[Client_Updaterate], player[Client_Rate]);
-		}
-	}
-#endif
 }
 
 void PunishPlayer(int client, const char[] sCmdRate, const char[] sUpdateRate, const char[] sRate, const char[] sCounter, int iIndex)
@@ -391,27 +306,15 @@ void PunishPlayer(int client, const char[] sCmdRate, const char[] sUpdateRate, c
 				CPrintToChatEx(client, client, "{default}<{olive}Rates{default}> Please adjust your rates to values higher than {olive}%d/%d/%d%s", \
 								iMinCmd, iMinUpd, iMinRate, bProhibitFakePing ? " and remove any non-digital characters" : "");
 			} else {
-				#if SOURCEMOD_V_MINOR > 9
-					NetsettingsStruct player;
-					hClientSettingsArray.GetArray(iIndex, player, sizeof(NetsettingsStruct));
+				NetsettingsStruct player;
+				hClientSettingsArray.GetArray(iIndex, player, sizeof(NetsettingsStruct));
 		
-					if (bPublic) {
-						CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N {default}was moved to spectators for illegal netsettings: {teamcolor}%s/%s/%s {olive}%s", \
-									client, sCmdRate, sUpdateRate, sRate, sCounter);
-					}
-					CPrintToChatEx(client, client, "{default}<{olive}Rates{default}> Change your netsettings back to: {teamcolor}%d/%d/%d", \
-									player.Client_Cmdrate, player.Client_Updaterate, player.Client_Rate);
-				#else
-					NetsettingsStruct player[NetsettingsStruct];
-					hClientSettingsArray.GetArray(iIndex, player[0], view_as<int>(NetsettingsStruct));
-		
-					if (bPublic) {
-						CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N {default}was moved to spectators for illegal netsettings: {teamcolor}%s/%s/%s {olive}%s", \
-									client, sCmdRate, sUpdateRate, sRate, sCounter);
-					}
-					CPrintToChatEx(client, client, "{default}<{olive}Rates{default}> Change your netsettings back to: {teamcolor}%d/%d/%d", \
-									player[Client_Cmdrate], player[Client_Updaterate], player[Client_Rate]);
-				#endif
+				if (bPublic) {
+					CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N {default}was moved to spectators for illegal netsettings: {teamcolor}%s/%s/%s {olive}%s", \
+							client, sCmdRate, sUpdateRate, sRate, sCounter);
+				}
+				CPrintToChatEx(client, client, "{default}<{olive}Rates{default}> Change your netsettings back to: {teamcolor}%d/%d/%d", \
+							player.Client_Cmdrate, player.Client_Updaterate, player.Client_Rate);
 			}
 		}
 		case 3: {// Kick
@@ -422,19 +325,11 @@ void PunishPlayer(int client, const char[] sCmdRate, const char[] sUpdateRate, c
 				CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N {default}was kicked for illegal netsettings: {teamcolor}%s/%s/%s {olive}%s", \
 								client, sCmdRate, sUpdateRate, sRate, sCounter);
 			} else {
-				#if SOURCEMOD_V_MINOR > 9
-					NetsettingsStruct player;
-					hClientSettingsArray.GetArray(iIndex, player, sizeof(NetsettingsStruct));
+				NetsettingsStruct player;
+				hClientSettingsArray.GetArray(iIndex, player, sizeof(NetsettingsStruct));
 
-					KickClient(client, "Change your rates to previous values and remove non-digits: %d/%d/%d", \
-									player.Client_Cmdrate, player.Client_Updaterate, player.Client_Rate);
-				#else
-					NetsettingsStruct player[NetsettingsStruct];
-					hClientSettingsArray.GetArray(iIndex, player[0], view_as<int>(NetsettingsStruct));
-
-					KickClient(client, "Change your rates to previous values and remove non-digits: %d/%d/%d", \
-									player[Client_Cmdrate], player[Client_Updaterate], player[Client_Rate]);
-				#endif
+				KickClient(client, "Change your rates to previous values and remove non-digits: %d/%d/%d", \
+							player.Client_Cmdrate, player.Client_Updaterate, player.Client_Rate);
 				
 				CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N {default}was kicked due to illegal netsettings change: {teamcolor}%s/%s/%s {olive}%s", \
 									client, sCmdRate, sUpdateRate, sRate, sCounter);

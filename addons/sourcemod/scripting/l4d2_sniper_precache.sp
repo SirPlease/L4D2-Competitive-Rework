@@ -16,7 +16,7 @@ public Plugin myinfo =
 {
 	name		= "L4D2 Sniper Precache",
 	author		= "Visor, A1m`",
-	version		= "2.2",
+	version		= "2.2.1",
 	description	= "Unlocks German sniper weapons",
 	url 		= "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
@@ -41,9 +41,5 @@ void SpawnWeaponByName(const char[] sWeaponName)
 	
 	DispatchSpawn(iEntity);
 	
-	#if SOURCEMOD_V_MINOR > 8
-		RemoveEntity(iEntity);
-	#else
-		AcceptEntityInput(iEntity, "Kill");
-	#endif
+	RemoveEntity(iEntity);
 }

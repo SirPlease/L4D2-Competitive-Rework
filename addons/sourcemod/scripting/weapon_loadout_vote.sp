@@ -9,7 +9,6 @@
 #undef REQUIRE_PLUGIN
 #include <readyup>
 
-#define USE_GIVEPLAYERITEM 0 // Works correctly only in the latest version of sourcemod 1.11 (GivePlayerItem sourcemod native)
 #define MAX_ENTITY_NAME_LENGTH 64
 
 enum
@@ -71,7 +70,7 @@ public Plugin myinfo =
 	name = "Weapon Loadout",
 	author = "Sir, A1m`",
 	description = "Allows the Players to choose which weapons to play the mode in.",
-	version = "2.3",
+	version = "2.3.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -319,7 +318,7 @@ Action Timer_ClearMap(Handle hTimer)
 			if (strcmp(sEntityName[7], sRemoveWeaponNames[i]) == 0) {
 				iOwner = GetEntPropEnt(iEntity, Prop_Send, "m_hOwnerEntity");
 				if (iOwner == -1 || !IsClientInGame(iOwner)) {
-					KillEntity(iEntity);
+					RemoveEntity(iEntity);
 				}
 
 				break;
@@ -392,17 +391,17 @@ void GiveAndRemovePlayerWeapon(int iClient, const char[] sWeaponName, bool bOnly
 
 		// Remove current Weapon.
 		RemovePlayerItem(iClient, iCurrMainWeapon);
-		KillEntity(iCurrMainWeapon);
+		RemoveEntity(iCurrMainWeapon);
 	}
 
 	if (iCurrSecondaryWeapon != -1) {
 		// Remove current Weapon.
 		RemovePlayerItem(iClient, iCurrSecondaryWeapon);
-		KillEntity(iCurrSecondaryWeapon);
+		RemoveEntity(iCurrSecondaryWeapon);
 	}
 
-#if (SOURCEMOD_V_MINOR == 11) || USE_GIVEPLAYERITEM
-	GivePlayerItem(iClient, sWeaponName); // Fixed only in the latest version of sourcemod 1.11
+#if (SOURCEMOD_V_MINOR >= 12 || (SOURCEMOD_V_MINOR == 11 && SOURCEMOD_V_REV >= 6754))
+	GivePlayerItem(iClient, sWeaponName); // Was fixed in v1.11.6754 (https://github.com/alliedmodders/sourcemod/commit/59840685a49a4e85eeb0d7f6271e861)
 #else
 	int iEntity = CreateEntityByName(sWeaponName);
 	if (iEntity == -1) {
@@ -454,11 +453,3 @@ bool InSecondHalfOfRound()
 	return view_as<bool>(GameRules_GetProp("m_bInSecondHalfOfRound", 1));
 }
 
-void KillEntity(int iEntity)
-{
-#if SOURCEMOD_V_MINOR > 8
-	RemoveEntity(iEntity);
-#else
-	AcceptEntityInput(iEntity, "Kill");
-#endif
-}

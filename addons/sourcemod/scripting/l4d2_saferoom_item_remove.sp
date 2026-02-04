@@ -35,7 +35,7 @@ public Plugin myinfo =
 	name = "Saferoom Item Remover",
 	author = "Tabun, Sir, A1m`",
 	description = "Removes any saferoom item (start or end).",
-	version = "1.1",
+	version = "1.1.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -83,7 +83,7 @@ Action Timer_DelayedOnRoundStart(Handle hTimer)
 			if (iCvarSafeRoomValue & eSAFEROOM_END) {
 				if (SAFEDETECT_IsEntityInEndSaferoom(i)) {
 					// kill the item
-					KillEntity(i);
+					RemoveEntity(i);
 					
 					iCountEnd++;
 					continue;
@@ -93,7 +93,7 @@ Action Timer_DelayedOnRoundStart(Handle hTimer)
 			if (iCvarSafeRoomValue & eSAFEROOM_START) {
 				if (SAFEDETECT_IsEntityInStartSaferoom(i)) {
 					// kill the item
-					KillEntity(i);
+					RemoveEntity(i);
 					
 					iCountStart++;
 					continue;
@@ -152,11 +152,3 @@ void PrepareTrie()
 	//g_hTrieItems.SetValue("prop_physics", eITEM_KILLABLE);
 }
 
-void KillEntity(int iEntity)
-{
-#if SOURCEMOD_V_MINOR > 8
-	RemoveEntity(iEntity);
-#else
-	AcceptEntityInput(iEntity, "Kill");
-#endif
-}

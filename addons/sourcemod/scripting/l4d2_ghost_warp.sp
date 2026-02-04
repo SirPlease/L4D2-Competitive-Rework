@@ -10,19 +10,11 @@
 #define PLUGIN_TAG					"[GhostWarp]"
 #define PLUGIN_TAG_COLOR			"\x01[\x03GhostWarp\x01]"
 
-#if SOURCEMOD_V_MINOR > 9
 enum struct eSurvFlow
 {
 	int eiSurvivorIndex;
 	float efSurvivorFlow;
 }
-#else
-enum eSurvFlow
-{
-	eiSurvivorIndex,
-	Float:efSurvivorFlow
-};
-#endif
 
 enum
 {
@@ -51,7 +43,7 @@ public Plugin myinfo =
 	name = "Infected Warp",
 	author = "Confogl Team, CanadaRox, A1m`",
 	description = "Allows infected to warp to survivors",
-	version = "2.4",
+	version = "2.4.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -323,7 +315,6 @@ int GetGenderOfSurvivor(int iGender, int &iSurvivorCount)
 	return 0;
 }
 
-#if SOURCEMOD_V_MINOR > 9
 int GetSurvivorOfFlowRank(int iRank)
 {
 	int iArrayIndex = iRank - 1;
@@ -375,59 +366,6 @@ int sortFunc(int iIndex1, int iIndex2, Handle hArray, Handle hndl)
 		return 0;
 	}
 }
-#else
-int GetSurvivorOfFlowRank(int iRank)
-{
-	int iArrayIndex = iRank - 1;
-
-	eSurvFlow strSurvArray[eSurvFlow];
-	ArrayList hFlowArray = new ArrayList(sizeof(strSurvArray));
-
-	for (int iClient = 1; iClient <= MaxClients; iClient++) {
-		if (IsClientInGame(iClient) && GetClientTeam(iClient) == L4D2Team_Survivor && IsPlayerAlive(iClient)) {
-			strSurvArray[eiSurvivorIndex] = iClient;
-			strSurvArray[efSurvivorFlow] = L4D2Direct_GetFlowDistance(iClient);
-
-			hFlowArray.PushArray(strSurvArray[0], sizeof(strSurvArray));
-		}
-	}
-
-	int iArraySize = hFlowArray.Length;
-	if (iArraySize < 1) {
-		return 0;
-	}
-
-	SortADTArrayCustom(hFlowArray, sortFunc);
-
-	if (iArrayIndex >= iArraySize) {
-		iArrayIndex = iArraySize - 1;
-	}
-
-	hFlowArray.GetArray(iArrayIndex, strSurvArray[0], sizeof(strSurvArray));
-
-	hFlowArray.Clear();
-	delete hFlowArray;
-
-	return strSurvArray[eiSurvivorIndex];
-}
-
-int sortFunc(int iIndex1, int iIndex2, Handle hArray, Handle hndl)
-{
-	eSurvFlow strSurvArray1[eSurvFlow];
-	eSurvFlow strSurvArray2[eSurvFlow];
-
-	GetArrayArray(hArray, iIndex1, strSurvArray1[0], sizeof(strSurvArray1));
-	GetArrayArray(hArray, iIndex2, strSurvArray2[0], sizeof(strSurvArray2));
-
-	if (strSurvArray1[efSurvivorFlow] > strSurvArray2[efSurvivorFlow]) {
-		return -1;
-	} else if (strSurvArray1[efSurvivorFlow] < strSurvArray2[efSurvivorFlow]) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-#endif
 
 bool IsStringNumeric(const char[] sString, const int MaxSize)
 {

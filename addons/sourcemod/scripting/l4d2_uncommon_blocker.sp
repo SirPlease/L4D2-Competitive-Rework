@@ -100,7 +100,7 @@ public Plugin myinfo =
 	name = "Uncommon Infected Blocker",
 	author = "Tabun, A1m`",
 	description = "Blocks uncommon infected from ruining your day.",
-	version = "2.3",
+	version = "2.3.1",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -180,11 +180,7 @@ void OnNextFrame(int iEntity)
 #endif
 
 	// kill the uncommon infected
-#if SOURCEMOD_V_MINOR > 8
 	RemoveEntity(iEntity);
-#else
-	AcceptEntityInput(iEntity, "Kill");
-#endif
 
 	SpawnNewInfected(fLocation, mobRush);											// spawn infected in location instead
 }
