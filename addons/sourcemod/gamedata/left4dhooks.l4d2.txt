@@ -1496,6 +1496,54 @@
 				}
 			}
 
+			"L4DD::CTongue::ActivateAbility"
+			{
+				"signature"		"CTongue::ActivateAbility"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+			}
+
+			"L4DD::CVomit::ActivateAbility"
+			{
+				"signature"		"CVomit::ActivateAbility"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+			}
+
+			"L4DD::CLunge::ActivateAbility"
+			{
+				"signature"		"CLunge::ActivateAbility"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+			}
+
+			"L4DD::CLeap::ActivateAbility"
+			{
+				"signature"		"CLeap::ActivateAbility"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+			}
+
+			"L4DD::CSpitAbility::ActivateAbility"
+			{
+				"signature"		"CSpitAbility::ActivateAbility"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+			}
+
+			"L4DD::CCharge::ActivateAbility"
+			{
+				"signature"		"CCharge::ActivateAbility"
+				"callconv"		"thiscall"
+				"return"		"int"
+				"this"			"entity"
+			}
+
 			"L4DD::CTerrorPlayer::MaterializeFromGhost"
 			{
 				"signature"		"CTerrorPlayer::MaterializeFromGhost"
@@ -2241,6 +2289,13 @@
 				"linux"		"1160"
 			}
 
+			// ? - Neburai
+			"EHandleOffset"
+			{
+				"windows"	"928"
+				"linux"		"948"
+			}
+
 			"m_rescueCheckTimer"
 			{
 				"windows"	"980"
@@ -2766,6 +2821,11 @@
 				"linux"		"3148"
 			}
 
+			"CAmmoDef::MaxCarry"
+			{
+				"linux"		"0"
+				"windows"	"0"
+			}
 
 
 			// Animation offsets:
@@ -4929,6 +4989,80 @@
 				"linux"		"@_ZN8Infected15OnHitByVomitJarEP20CBaseCombatCharacter"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x56\x8B\xF1\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\xFF\xD2\x84\xC0\x0F\x2A\x2A\x2A\x2A\x2A\x8B\x06\x8B\x90\x2A\x2A\x2A\x2A\x8B\xCE\xFF\xD2\x84\xC0\x75\x2A\x56\xE8\x2A\x2A\x2A\x2A\x8B\xC8\xE8"
 				/* ? ? ? ? ? ? 56 8B F1 8B 06 8B 90 ? ? ? ? FF D2 84 C0 0F ? ? ? ? ? 8B 06 8B 90 ? ? ? ? 8B CE FF D2 84 C0 75 ? 56 E8 ? ? ? ? 8B C8 E8 */
+			}
+
+			/*
+			 * CTongue::ActivateAbility(CTongue *this)
+			 */
+			"CTongue::ActivateAbility"
+			{
+				"library"	"server"
+				"linux"		"@_ZN7CTongue15ActivateAbilityEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\xFF\x2A\x84\x2A\x74\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x74\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x03\x2A\x8D\x2A\x2A\x2A\x85\x2A\x74\x2A\xC1\x2A\x2A\x39\x2A\x2A\x75\x2A\x8B\x2A\x85\x2A\x74"
+				/* ? ? ? ? ? 8B ? ? ? ? ? FF ? 84 ? 74 ? 8B ? ? ? ? ? 83 ? ? 74 ? 8B ? ? ? ? ? 8B ? 81 ? ? ? ? ? 03 ? 8D ? ? ? 85 ? 74 ? C1 ? ? 39 ? ? 75 ? 8B ? 85 ? 74 */
+				/* Search: "Tongue took %f damage (was %f/%f)." for "CTongue::OnTongueShot" and XRef to VTable and count up to find target function */
+			}
+
+			/*
+			 * CVomit::ActivateAbility(CVomit *this)
+			 */
+			"CVomit::ActivateAbility"
+			{
+				"library"	"server"
+				"linux"		"@_ZN6CVomit15ActivateAbilityEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B"
+				/* ? ? ? ? ? 8B ? 8B ? 8B ? ? ? ? ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? ? ? ? ? 83 ? ? 0F 84 ? ? ? ? 8B */
+				/* "Vomit.Use" */
+			}
+
+			/*
+			 * CLunge::ActivateAbility(CLunge *this)
+			 */
+			"CLunge::ActivateAbility"
+			{
+				"library"	"server"
+				"linux"		"@_ZN6CLunge15ActivateAbilityEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x8B\x2A\x80\x2A\x2A\x2A\x2A\x2A\x2A\x57\x75\x2A\x8D\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xD9\x2A\x2A\x2A\x2A\x2A\xD9\x2A\xDF\x2A\xDD\x2A\x72\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x53\x83"
+				/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 56 8B ? 80 ? ? ? ? ? ? 57 75 ? 8D ? ? ? ? ? E8 ? ? ? ? D9 ? ? ? ? ? D9 ? DF ? DD ? 72 ? 8B ? 8B ? ? ? ? ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? ? ? ? ? 53 83 */
+				/* Search: "pounce_fail" for "CLunge::IsAbilityReadyToFire" and XRef to VTable, target function should be below */
+			}
+
+			/*
+			 * CSpitAbility::ActivateAbility(CSpitAbility *this)
+			 */
+			"CSpitAbility::ActivateAbility"
+			{
+				"library"	"server"
+				"linux"		"@_ZN12CSpitAbility15ActivateAbilityEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x03\x2A\x8D\x2A\x2A\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\xC1\x2A\x2A\x39\x2A\x2A\x0F\x85\x2A\x2A\x2A\x2A\x57\x8B\x2A\x85\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x6A\x2A\x6A"
+				/* ? ? ? ? ? ? ? 8B ? 8B ? ? ? ? ? 83 ? ? 0F 84 ? ? ? ? 8B ? ? ? ? ? 8B ? 81 ? ? ? ? ? 03 ? 8D ? ? ? 85 ? 0F 84 ? ? ? ? C1 ? ? 39 ? ? 0F 85 ? ? ? ? 57 8B ? 85 ? 0F 84 ? ? ? ? 8B ? 8B ? ? ? ? ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? 6A ? 6A */
+				/* "SpitterZombie.Spit" */
+			}
+
+			/*
+			 * CLeap::ActivateAbility(CLeap *this)
+			 */
+			"CLeap::ActivateAbility"
+			{
+				"library"	"server"
+				"linux"		"@_ZN5CLeap15ActivateAbilityEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x8B\x2A\x80\x2A\x2A\x2A\x2A\x2A\x2A\x57\x75\x2A\x8D\x2A\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\xD9\x2A\x2A\x2A\x2A\x2A\xD9\x2A\xDF\x2A\xDD\x2A\x72\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x74"
+				/* ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 ? 89 ? ? 56 8B ? 80 ? ? ? ? ? ? 57 75 ? 8D ? ? ? ? ? E8 ? ? ? ? D9 ? ? ? ? ? D9 ? DF ? DD ? 72 ? 8B ? 8B ? ? ? ? ? 8B ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? ? ? ? ? 83 ? ? 74 */
+				/* 1. Search: "JockeyZombie.Ride" for "CTerrorPlayer::OnLeptOnSurvivor" (signature for this already exists in this GameData file) */
+				/* 2. XRef function to find "CLeap::OnTouch" */
+				/* 3. XRef to VTable, count up to target function */
+			}
+
+			/*
+			 * CCharge::ActivateAbility(CCharge *this)
+			 */
+			"CCharge::ActivateAbility"
+			{
+				"library"	"server"
+				"linux"		"@_ZN7CCharge15ActivateAbilityEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\xFF\x2A\x84\x2A\x0F\x84\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x53\x83"
+				/* ? ? ? ? ? 8B ? ? ? ? ? FF ? 84 ? 0F 84 ? ? ? ? 8B ? ? ? ? ? 53 83 */
+				/* Search: "chair_charged" for "CCharge::HandleCustomCollision" and XRef to VTable and count up to find target function */
 			}
 
 			/*

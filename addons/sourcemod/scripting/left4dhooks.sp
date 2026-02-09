@@ -1,6 +1,6 @@
 /*
 *	Left 4 DHooks Direct
-*	Copyright (C) 2025 Silvers
+*	Copyright (C) 2026 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -18,8 +18,8 @@
 
 
 
-#define PLUGIN_VERSION		"1.160"
-#define PLUGIN_VERLONG		1160
+#define PLUGIN_VERSION		"1.162"
+#define PLUGIN_VERLONG		1162
 
 #define DEBUG				0
 // #define DEBUG			1	// Prints addresses + detour info (only use for debugging, slows server down).
@@ -131,7 +131,7 @@ float g_fProf;
 
 // NEW SOURCEMOD ONLY
 #if SOURCEMOD_V_MINOR < 11
- #error Plugin "Left 4 DHooks" only supports SourceMod version 1.11 and newer
+#error Plugin "Left 4 DHooks" only supports SourceMod version 1.11 and newer
 #endif
 
 
@@ -263,6 +263,7 @@ int g_iOff_VanillaModeOffset;
 Address g_pVanillaModeAddress;
 
 // Various offsets
+// int g_iOff_EHandle;
 int g_iOff_LobbyReservation;
 int g_iOff_VersusStartTimer;
 int g_iOff_m_rescueCheckTimer;
@@ -527,6 +528,22 @@ public void Updater_OnPluginUpdated()
 // ====================================================================================================
 public void OnPluginStart()
 {
+	// Get server OS
+	char sPath[PLATFORM_MAX_PATH];
+	BuildPath(Path_SM, sPath, sizeof(sPath), "gamedata/%s.txt", g_bLeft4Dead2 ? GAMEDATA_2 : GAMEDATA_1);
+	if( FileExists(sPath) == false ) SetFailState("\n==========\nMissing required file: \"%s\".\nRead installation instructions again.\n==========", sPath);
+
+	GameData hGameData = new GameData(g_bLeft4Dead2 ? GAMEDATA_2 : GAMEDATA_1);
+	if( hGameData == null ) SetFailState("Failed to load \"%s.txt\" gamedata.", g_bLeft4Dead2 ? GAMEDATA_2 : GAMEDATA_1);
+
+	g_hGameData = hGameData;
+
+	g_bLinuxOS = hGameData.GetOffset("OS") == 1;
+	FormatEx(g_sSystem, sizeof(g_sSystem), "%s/%d/%s", g_bLinuxOS ? "NIX" : "WIN", g_bLeft4Dead2 ? 2 : 1, PLUGIN_VERSION);
+
+
+
+	// Initialize
 	g_fLoadTime = GetEngineTime();
 
 	g_iClassTank = g_bLeft4Dead2 ? 8 : 5;
@@ -1096,10 +1113,13 @@ public void OnClientDisconnect(int client)
 
 public void OnNotifyPluginUnloaded(Handle plugin)
 {
-	for( int i = 1; i <= MaxClients; i++ )
+	if( plugin )
 	{
-		g_hAnimationCallbackPre[i].RemoveAllFunctions(plugin);
-		g_hAnimationCallbackPost[i].RemoveAllFunctions(plugin);
+		for( int i = 1; i <= MaxClients; i++ )
+		{
+			g_hAnimationCallbackPre[i].RemoveAllFunctions(plugin);
+			g_hAnimationCallbackPost[i].RemoveAllFunctions(plugin);
+		}
 	}
 }
 
@@ -1577,7 +1597,7 @@ public void OnMapStart()
 		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "WitchLimit",			1);
 		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "CommonLimit",			1);
 
-		// Challenge mode required?
+		// Challenge mode, required?
 		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_MaxSpecials",		1);
 		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_BaseSpecialLimit",	1);
 		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_SmokerLimit",		1);

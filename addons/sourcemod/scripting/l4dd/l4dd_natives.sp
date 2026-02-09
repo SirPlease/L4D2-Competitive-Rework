@@ -1,6 +1,6 @@
 /*
 *	Left 4 DHooks Direct
-*	Copyright (C) 2025 Silvers
+*	Copyright (C) 2026 Silvers
 *
 *	This program is free software: you can redistribute it and/or modify
 *	it under the terms of the GNU General Public License as published by
@@ -94,6 +94,7 @@ Handle g_hSDK_Checkpoint_ContainsArea;
 Handle g_hSDK_CTerrorGameRules_GetNumChaptersForMissionAndMode;
 Handle g_hSDK_CDirector_GetGameModeBase;
 Handle g_hSDK_KeyValues_GetString;
+Handle g_hSDK_AmmoDef_MaxCarry;
 
 // left4downtown.inc
 Handle g_hSDK_CTerrorGameRules_GetTeamScore;
@@ -357,6 +358,35 @@ int Native_HasMapStarted(Handle plugin, int numParams) // Native "L4D_HasMapStar
 // ==================================================
 // MEMORY HELPERS
 // ==================================================
+// Props to "nosoop"
+stock int GetEntityFromAddress(Address pEntity)
+{
+	if( pEntity == Address_Null )
+		return -1;
+
+	static int addy = -1;
+	if( addy == -1 )
+	{
+		addy = FindDataMapInfo(0, "m_angRotation") + 12;
+	}
+
+	return GetEntityFromHandle(Deref(pEntity + view_as<Address>(addy)));
+}
+
+stock int GetEntityFromHandle(any handle)
+{
+	int ent = handle & 0xFFF;
+	if( ent == 0xFFF )
+		ent = -1;
+	return ent;
+}
+
+stock any Deref(any addr, NumberType numt = NumberType_Int32)
+{
+	return LoadFromAddress(view_as<Address>(addr), numt);
+}  
+
+/* Old method
 int GetEntityFromAddress(int addr)
 {
 	int max = GetEntityCount();
@@ -364,8 +394,10 @@ int GetEntityFromAddress(int addr)
 		if( IsValidEdict(i) )
 			if( GetEntityAddress(i) == view_as<Address>(addr) )
 				return i;
+
 	return -1;
 }
+*/
 
 int GetClientFromAddress(int addr)
 {
@@ -1150,7 +1182,7 @@ int Native_TerrorNavArea_FindRandomSpot(Handle plugin, int numParams) // Native 
 	return 0;
 }
 
-int Native_CTerrorPlayer_WarpToValidPositionIfStuck(Handle plugin, int numParams) // Native "L4D_FindRandomSpot"
+int Native_CTerrorPlayer_WarpToValidPositionIfStuck(Handle plugin, int numParams) // Native "L4D_WarpToValidPositionIfStuck"
 {
 	ValidateNatives(g_hSDK_CTerrorPlayer_WarpToValidPositionIfStuck, "CTerrorPlayer::WarpToValidPositionIfStuck");
 
@@ -2985,9 +3017,9 @@ int Native_SetLobbyReservation(Handle plugin, int numParams) // Native "L4D_SetL
 	if( length > 8 )
 	{
 		val2 = HexStrToInt(sTemp[length - 8]);
+		sTemp[length - 8] = 0;
 	}
 
-	sTemp[length - 8] = 0;
 	val1 = HexStrToInt(sTemp);
 
 	StoreToAddress(g_pServer + view_as<Address>(g_iOff_LobbyReservation + 4), val1, NumberType_Int32, false);
@@ -4269,13 +4301,9 @@ any Direct_GetSpawnTimer(Handle plugin, int numParams) // Native "L4D2Direct_Get
 
 	int client = GetNativeCell(1);
 	if( client < 1 || client > MaxClients )
-		return CTimer_Null;
+		return -1.0;
 
-	Address pEntity = GetEntityAddress(client);
-	if( pEntity == Address_Null )
-		return CTimer_Null;
-
-	return view_as<CountdownTimer>(pEntity + view_as<Address>(g_iOff_m_flBecomeGhostAt - 8));
+	return GetEntDataFloat(client, g_iOff_m_flBecomeGhostAt);
 }
 
 any Direct_GetInvulnerabilityTimer(Handle plugin, int numParams) // Native "L4D2Direct_GetInvulnerabilityTimer"
@@ -6137,9 +6165,10 @@ void Ammo_t_CreateNatives()
 any Native_Ammo_t_GetName(Handle plugin, int numParams)
 {
 	Address pThis = GetNativeCell(1);
+	Address pName = LoadFromAddress(pThis, NumberType_Int32);
 
 	char name[MAX_NAME_LENGTH];
-	L4D_ReadMemoryString(pThis, name, sizeof(name));
+	L4D_ReadMemoryString(pName, name, sizeof(name));
 
 	SetNativeString(2, name, GetNativeCell(3));
 	return 0;
@@ -6316,6 +6345,7 @@ void AmmoDef_CreateNatives()
 	CreateNative("AmmoDef.PlrDamage", Native_AmmoDef_PlrDamage);
 	CreateNative("AmmoDef.NPCDamage", Native_AmmoDef_NPCDamage);
 	CreateNative("AmmoDef.MaxCarry", Native_AmmoDef_MaxCarry);
+	CreateNative("AmmoDef.MaxCarry_Call", Native_AmmoDef_MaxCarry_Call);
 	CreateNative("AmmoDef.DamageType", Native_AmmoDef_DamageType);
 	CreateNative("AmmoDef.Flags", Native_AmmoDef_Flags);
 	CreateNative("AmmoDef.MinSplashSize", Native_AmmoDef_MinSplashSize);
@@ -6424,6 +6454,21 @@ any Native_AmmoDef_MaxCarry(Handle plugin, int numParams)
 	{
 		return AmmoDef_m_AmmoType(nAmmoIndex).pMaxCarry;
 	}
+}
+
+any Native_AmmoDef_MaxCarry_Call(Handle plugin, int numParams)
+{
+	ValidateAddress(g_pAmmoDef, "AmmoDef");
+
+	int nAmmoIndex = GetNativeCell(1);
+	int client = GetNativeCell(2);
+
+	// "nAmmoIndex" left unchecked because it's done in the called function
+	if( client < 1 || client > MaxClients )
+		client = -1;
+
+	//PrintToServer("#### CALL g_hSDK_AmmoDef_MaxCarry");
+	return SDKCall(g_hSDK_AmmoDef_MaxCarry, g_pAmmoDef, nAmmoIndex, client);
 }
 
 any Native_AmmoDef_DamageType(Handle plugin, int numParams)
