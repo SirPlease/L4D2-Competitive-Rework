@@ -39,7 +39,7 @@ public Plugin myinfo =
     name = "L4D2 Auto-pause",
     author = "Darkid, Griffin, StarterX4, Forgetest, J.",
     description = "When a player disconnects due to crash, automatically pause the game. When they rejoin, give them a correct spawn timer.",
-    version = "2.3",
+    version = "2.4",
     url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
@@ -190,14 +190,13 @@ void Event_PlayerTeam(Event hEvent, char[] sEventName, bool dontBroadcast)
             DebugLog(sDebugMessage);
         }
     }
-    else if (newTeam == L4D_TEAM_INFECTED) 
+    else if (newTeam == L4D_TEAM_INFECTED)
     {
         float fSpawnTime;
 
-        if (crashedPlayers.GetValue(sAuthId, fSpawnTime)) 
+        if (crashedPlayers.GetValue(sAuthId, fSpawnTime))
         {
-            CountdownTimer CTimer_SpawnTimer = L4D2Direct_GetSpawnTimer(client);
-            CTimer_Start(CTimer_SpawnTimer, fSpawnTime);
+            L4D_SetPlayerSpawnTime(client, fSpawnTime, true);
             crashedPlayers.Remove(sAuthId);
 
             if (convarDebug.BoolValue)
@@ -205,8 +204,8 @@ void Event_PlayerTeam(Event hEvent, char[] sEventName, bool dontBroadcast)
                 Format(sDebugMessage, sizeof(sDebugMessage), "[AutoPause (%s)] Player %s rejoined the infected, set spawn timer to %f.", sEventName, sAuthId, fSpawnTime);
                 DebugLog(sDebugMessage);
             }
-        } 
-        
+        }
+
         teamPlayers.SetValue(sAuthId, newTeam);
 
         if (convarDebug.BoolValue)
@@ -282,13 +281,12 @@ void Event_PlayerDisconnect(Event hEvent, char[] sEventName, bool dontBroadcast)
     }
 
     int team;
-    if (teamPlayers.GetValue(sAuthId, team) && team == L4D_TEAM_INFECTED) 
+    if (teamPlayers.GetValue(sAuthId, team) && team == L4D_TEAM_INFECTED)
     {
-        CountdownTimer CTimer_SpawnTimer = L4D2Direct_GetSpawnTimer(client);
-        if (CTimer_SpawnTimer != CTimer_Null) 
-        {
-            float fTimeLeft = CTimer_GetRemainingTime(CTimer_SpawnTimer);
+        float fTimeLeft = L4D_GetPlayerSpawnTime(client);
 
+        if (fTimeLeft > 0.0)
+        {
             if (convarDebug.BoolValue)
             {
                 Format(sDebugMessage, sizeof(sDebugMessage), "[AutoPause (%s)] Player %s left the game with %f time until spawn.", sEventName, sAuthId, fTimeLeft);
