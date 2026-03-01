@@ -38,6 +38,30 @@
 					}
 				}
 			}
+
+			// Checkpoint::GetSpawnPosition(Vector *, QAngle *, TerrorNavArea **)const
+			"l4d_consistent_escaperoute::Checkpoint::GetSpawnPosition"
+			{
+				"signature"		"Checkpoint::GetSpawnPosition"
+				"callconv"		"thiscall"
+				"return"		"bool"
+				"this"			"address"
+				"arguments"
+				{
+					"Vector *"
+					{
+						"type"	"vectorptr"
+					}
+					"QAngle *"
+					{
+						"type"	"vectorptr"
+					}
+					"TerrorNavArea **"
+					{
+						"type"	"objectptr"
+					}
+				}
+			}
 		}
 	}
 
@@ -97,6 +121,22 @@
 				"windows"		"\x83\xEC\x34\x8B\x0D\x2A\x2A\x2A\x2A\x53"
 								/* 83 EC 34 8B 0D ? ? ? ? 53 */
 			}
+
+			"Checkpoint::GetSpawnPosition"
+			{
+				"library"		"server"
+				"linux"			"@_ZNK10Checkpoint16GetSpawnPositionEP6VectorP6QAnglePP13TerrorNavArea"
+				"windows"		"\x55\x8B\xEC\x83\xE4\xF0\x81\xEC\x14\x01\x00\x00\x8B\x45\x08\x53"
+								/* 55 8B EC 83 E4 F0 81 EC 14 01 00 00 8B 45 08 53 */
+			}
+
+			"Checkpoint::GetLargestArea"
+			{
+				"library"		"server"
+				"linux"			"@_ZNK10Checkpoint14GetLargestAreaEv"
+				"windows"		"\x51\xD9\xEE\x8B\xC1"
+								/* 51 D9 EE 8B C1 */
+			}
 		}
 	}
 	
@@ -155,6 +195,22 @@
 				"linux"			"@_Z22GetPlayerSpawnPosition21SurvivorCharacterTypeP6VectorP6QAnglePP13TerrorNavArea"
 				"windows"		"\x55\x8B\xEC\x83\xEC\x4C\x53\x33\xDB"
 								/* 55 8B EC 83 EC 4C 53 33 DB */
+			}
+
+			"Checkpoint::GetSpawnPosition"
+			{
+				"library"		"server"
+				"linux"			"@_ZNK10Checkpoint16GetSpawnPositionEP6VectorP6QAnglePP13TerrorNavArea"
+				"windows"		"\x53\x8B\xDC\x83\xEC\x08\x83\xE4\xF0\x83\xC4\x04\x55\x8B\x6B\x04\x89\x6C\x24\x04\x8B\xEC\x81\xEC\x28\x01\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x8B\x43\x08\x56"
+								/* 53 8B DC 83 EC 08 83 E4 F0 83 C4 04 55 8B 6B 04 89 6C 24 04 8B EC 81 EC 28 01 00 00 A1 ? ? ? ? 33 C5 89 45 FC 8B 43 08 56 */
+			}
+
+			"Checkpoint::GetLargestArea"
+			{
+				"library"		"server"
+				"linux"			"@_ZNK10Checkpoint14GetLargestAreaEv"
+				"windows"		"\x55\x8B\xEC\x51\x0F\x57\xC0\x8B\xD1"
+								/* 55 8B EC 51 0F 57 C0 8B D1 */
 			}
 		}
 	}
