@@ -186,9 +186,17 @@
 		"max_distance"		"600"
 		"tank_ban_flow"
 		{
-			"1"
+			"Field"
 			{
-				"min"		"80"
+				"min"		"77"
+				"max"		"100"
+			}
+		}
+		"witch_ban_flow"
+		{
+			"Field"
+			{
+				"min"		"77"
 				"max"		"100"
 			}
 		}
