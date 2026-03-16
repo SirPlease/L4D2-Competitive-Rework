@@ -1575,9 +1575,17 @@ public void Survivor_glow(int client)
 			//个人定制轮廓部分
 			char steamid[32];
 			GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
-			if(StrContains(steamid, "632322128", false) != -1){
+			if(StrContains(steamid, "632322128", false) != -1 || StrContains(steamid, "121430603", false)){
 				//760308896 定制
-				menu.AddItem("option17", "定制轮廓", player[client].GlowType == 17 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+				menu.AddItem("option17", "定制轮廓1", player[client].GlowType == 17 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+			}
+			if(StrContains(steamid, "511614235", false) != -1 || StrContains(steamid, "121430603", false)){
+				//8894224 定制
+				menu.AddItem("option18", "定制轮廓2", player[client].GlowType == 18 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+			}
+			if(StrContains(steamid, "632322128", false) != -1 || StrContains(steamid, "121430603", false)){
+				//1850229089 定制
+				menu.AddItem("option19", "定制轮廓3", player[client].GlowType == 19 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 			}
 		}	
 		menu.ExitButton = true;
@@ -1706,6 +1714,16 @@ void GetAura(int client, int id)
             SetEntProp(client, Prop_Send, "m_glowColorOverride", 255 + (69 * 256) + (0 * 65536));
             CPrintToChat(client, "\x05你 \x04将轮廓颜色改为您的\x01: \x04定制颜色轮廓 \x01!");
 		}
+		case 18:
+		{
+            SetEntProp(client, Prop_Send, "m_glowColorOverride", 255 + (115 * 256) + (215 * 65536));
+            CPrintToChat(client, "\x05你 \x04将轮廓颜色改为您的\x01: \x04定制颜色轮廓 \x01!");
+		}
+		case 19:
+		{
+            SetEntProp(client, Prop_Send, "m_glowColorOverride", 255 + (110 * 256) + (156 * 65536));
+            CPrintToChat(client, "\x05你 \x04将轮廓颜色改为您的\x01: \x04定制颜色轮廓 \x01!");
+		}
     }
 
 	if ((id >= 0 && id <= 15) || id >= 17)    {
@@ -1787,9 +1805,13 @@ public void Survivor_skin(int client)
 			//个人定制皮肤部分
 			char steamid[32];
 			GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
-			if(StrContains(steamid, "632322128", false) != -1){
+			if(StrContains(steamid, "632322128", false) != -1 || StrContains(steamid, "121430603", false)){
 				//760308896 定制
-				menu.AddItem("option17", "定制皮肤", player[client].SkinType == 17 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+				menu.AddItem("option17", "定制皮肤1", player[client].SkinType == 17 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+			}
+			if(StrContains(steamid, "888190443", false) != -1|| StrContains(steamid, "121430603", false)){
+				//8894224 定制
+				menu.AddItem("option18", "定制皮肤2", player[client].SkinType == 18 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 			}
 		}
 		menu.ExitButton = true;
@@ -1950,6 +1972,13 @@ void GetSkin(int client, int id, bool broadcast = true)
 		{
             SetEntityRenderMode(client, RENDER_GLOW);
             SetEntityRenderColor(client, 139, 101, 8, 255);
+            if(broadcast)
+            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04您的定制皮肤 \x01!");
+		}
+		case 18:
+		{
+            SetEntityRenderMode(client, RENDER_GLOW);
+            SetEntityRenderColor(client, 0, 0, 0, 255);
             if(broadcast)
             	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04您的定制皮肤 \x01!");
 		}
