@@ -1,14 +1,76 @@
+1.166 (15-Mar-2026)
+	- Added native "L4D_FindByClassnameTargetname" to search for an entity by classname and targetname.
+	- Added native "L4D_NavArea_IsBlocked" to check if a NavArea is blocked. Requested by "gvazdas".
+	- Added natives "L4D_FindEntityByClassnameNearest" and "L4D_FindEntityByClassnameWithin" to find nearest entities. Requested by "gvazdas".
+	- These two natives are over 3x and 2x faster respectively than looping entities and working out distance in SourceMod.
+
+	- Fixed native "L4D_IsInIntro" not working on "c3m1_plankcountry" and "c7m1_docks". If other maps are broken please report. Thanks to "gvazdas" for reporting.
+	- Fixed forward "L4D2_OnEntityShoved" not working on Common Infected in recent updates. Thanks to "HwanGyul" for reporting.
+
+	- Updated: Plugin and test plugin.
+	- Updated: "/gamedata/left4dhooks.l4d1.txt" GameData file.
+	- Updated: "/gamedata/left4dhooks.l4d2.txt" GameData file.
+	- Updated: "/scripting/include/left4dhooks.inc" Include file.
+	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_gamedata.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_setup.sp" project file.
+
+1.165 (14-Mar-2026)
+	- Fixed the "GetMeleePointer" SDKCall being accidentality removed. Thanks to "zuaLdakid05" for reporting.
+
+1.164 (14-Mar-2026)
+	- Fixed native "L4D2_IsVisibleToPlayer" crashing. Thanks to "morzlee" for reporting.
+
+1.163 (14-Mar-2026)
+	- Added native "L4D2_StartAssault" to trigger Special Infected to attack. Requested by "gvazdas".
+	- Added native "L4D2_RushVictim" to trigger Common to attack a specific player. Requested by "gvazdas".
+	- Added native "L4D2Direct_AddSurvivorBot" to spawn Survivor bots. Thanks to "spumer" for adding.
+	- Added natives "L4D_NavArea_GetAdjacentCount" and "L4D_NavArea_GetAdjacentAreas" to check for adjacent nav areas. Requested by "Slaven555".
+	- Added "POINTER_THENEXTBOTS" enum for the "L4D_GetPointer" native to return the TheNextBots pointer.
+
+	- Fixed storing float to int variable when setting float attribute "L4D2FWA_PenetrationNumLayers". Thanks to "jensewe" for fixing.
+	- Fixed default return value of Native "L4D2_GetFloatWeaponAttribute". Thanks to "jensewe" for fixing.
+	- Fixed "Invalid private forward handle" errors. Thanks to "gvazdas" for testing and various others for reporting.
+	- Fixed forwards "L4D_PipeBombProjectile*" and "L4D_PipeBomb_Detonate*" from firing due to breakable props when the "L4D_CBreakableProp_Break" forward wasn't being used. Thanks to "blueblur07302 for reporting.
+
+1.162 (25-Jan-2026)
+	- Added new target filters. Requested by Tonblader:
+		"@sa" - Alive Survivors.
+		"@surva" - Alive Survivors.
+		"@survivorsalive" - Alive Survivors.
+		"@ia" - Alive Infected.
+		"@infea" - Alive Infected.
+		"@infectedalive" - Alive Infected.
+
+	- Changes to fix script execution timeout due to loading the gamedata twice on plugin start. Thanks to "kayletid201" for reporting.
+	- Various small changes to capture and prevent bugs or errors.
+
+1.161 (04-Jan-2026)
+	- Fixed copy paste error breaking server OS detection. Thanks to "Hawkins" for reporting.
+
+1.160 (04-Jan-2026)
+	- Fixed native "L4D_SetLobbyReservation" from throwing errors. Thanks to "mr.raptor" for reporting.
+	- Changed native "L4D_GetEntityFromAddress" to work for all entities. Thanks to "Neburai", "blueblur0730" and "nosoop" for code.
+	- Changed native "L4D2Direct_GetSpawnTimer" inconsistency, requires code changes if used. Thanks to "A1m`" for fixing.
+	- Changed native "L4D_RespawnPlayer" to specify resetting player stats or not. Requested by "ball2hi".
+
+	- Added new forwards for when Special Infected attempt to activate their ability. Requested by "lzvs".
+		"L4D_ActivateAbility_Smoker", "L4D_ActivateAbility_Boomer", "L4D_ActivateAbility_Hunter", "L4D2_ActivateAbility_Jockey", "L4D2_ActivateAbility_Spitter", "L4D2_ActivateAbility_Charger".
+
+	- Changed forward "L4D2_OnSendInRescueVehicle" has been unblocked on Linux for L4D2. Thanks to "spumer" for reporting it works without crashes.
+	- Changed forward "L4D_OnIncapacitated*" to display the "weapon" entity. Thanks to "Xbye".
+
+	- Added "PZDmgMsg" enum for the "PZDmgMsg" usermessage. Thanks to "A1m`" for creating.
+
+	- Fixed "Ammo_t.GetName" methodmap and added "AmmoDef.MaxCarry_Call". Thanks to "jensewe" on GitHub.
+	- Fixed wrong comment info for "L4D_WarpToValidPositionIfStuck" in "l4dd_natives". Thanks to "Marttt" for reporting.
+
 1.159 (01-Jul-2025)
 	- Fixed forward "L4D_OnDeathDroppedWeapons" from throwing client not in game errors. Thanks to "Mystik Spiral" for reporting.
 	- Fixed forwards "L4D2_VomitJarProjectile_*" not working due to incorrect initialization. Thanks to "Drgon" and "ProjectSky" for reporting.
 	- Fixed gamedata signature for "CGrenadeLauncher_Projectile::Explode" forward on L4D2 Linux. Thanks to "xiaolinRM" for reporting.
 	- Clarification in the include file on how often the "L4D_OnSpawnTank*" forwards trigger. Thanks to "Marttt" for reporting.
-
-	- Updated: Plugin and test plugin.
-	- Updated: "/gamedata/left4dhooks.l4d2.txt" GameData file.
-	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_setup.sp" project file.
-	- Updated: "/scripting/include/left4dhooks.inc" include file.
 
 1.158 (21-Mar-2025)
 	- Added forwards "L4D2_OnTransitionRestore*" and "L4D2_OnRestoreTransitionedSurvivorBots*" to trigger on clients and bots transitioning data restore. Thanks to "blueblur0730" for adding.
@@ -61,10 +123,6 @@
 1.150 (06-May-2024)
 	- L4D1 Linux: Removed some unused clone functions that were removed from the game update. Thanks to "Ja-Forces" and "Forgetest" for reporting.
 
-	- Updated: Plugin.
-	- Updated: "/gamedata/left4dhooks.l4d1.txt" GameData file.
-	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
-
 1.149 (06-May-2024)
 	- Repackage of the last update to include the GameData changes, which it did not.
 
@@ -80,7 +138,7 @@
 1.146 (21-Apr-2024)
 	- Fixed a memory leak from the Animation hooks system. Thanks to "HarryPotter" for reporting.
 	- Fixed native "L4D_WriteMemoryString" buffer length. Thanks to "HarryPotter" for reporting.
-	- Changed natives "L4D_Dissolve" and "L4D_TankRockPrj" to return -1 if the entity failed to be created. Thanks to "ReCreator" for reporting.
+	- Changed natives "L4D_Dissolve" and "L4D_TankRockPrj" to return -1 if the entity failed to be created. Thanks to "Re:Creator" for reporting.
 
 1.145 (03-Apr-2024)
 	- Changed natives "L4D_IsPositionInFirstCheckpoint" and "L4D_IsPositionInLastCheckpoint" to scan for the nearest visible NavArea to prevent finding those outside saferooms, and accurately return true.
@@ -590,8 +648,6 @@
 	- Wildcarded the "Music::Play" signatures to be compatible with plugins detouring. Thanks to "user2000", "Edison1318" and "Shadowysn" for reporting.
 	- Wildcarded the "ZombieManager::SpawnTank" signatures to be compatible with plugins detouring. Thanks to "Tank Rush" for reporting.
 
-	- L4D1 and L4D2 GameData files updated.
-
 1.75 (18-Nov-2021)
 	- Fixed forward "L4D2_OnHitByVomitJar" throwing errors about null pointer.
 	- Forwards "L4D_OnVomitedUpon" and "L4D2_OnHitByVomitJar" attacker can now be reported as 0.
@@ -759,7 +815,7 @@
 	- Added natives "L4D_GetTempHealth" and "L4D_SetTempHealth" to handle Survivors temporary health buffer.
 	- Added natives "L4D_PlayMusic" to play a specified music string to a client. Thanks to "DeathChaos25" and "Shadowysn" for "Dynamic Soundtrack Sets" plugin.
 	- Added natives "L4D_StopMusic" to stop playing a specified music string to a client. Thanks to "DeathChaos25" and "Shadowysn" for "Dynamic Soundtrack Sets" plugin.
-	- Moved the animation ACT_* enums from "include/left4dhooks.inc" to "include/left4dhooks_anim.inc". Suggested by "Accelerator". No plugin changes required.
+	- Moved the animation ACT_* enums from "include/left4dhooks.inc" to "include/left4dhooks_anim.inc". Suggested by "Accelerator74". No plugin changes required.
 
 	- Thanks to "Psyk0tik" for requesting the following forwards and natives and their signatures found here: https://github.com/Psykotikism/L4D1-2_Signatures
 

@@ -375,6 +375,9 @@ void SetupForwardsNatives()
 	CreateNative("L4D_GetNearestNavArea",		 					Native_CNavMesh_GetNearestNavArea);
 	CreateNative("L4D_GetLastKnownArea",		 					Native_CTerrorPlayer_GetLastKnownArea);
 	CreateNative("L4D_IsTouchingTrigger",		 					Native_CBaseTrigger_IsTouching);
+	CreateNative("L4D_FindEntityByClassnameNearest",		 		Native_CGlobalEntityList_FindEntityByClassnameNearest);
+	CreateNative("L4D_FindEntityByClassnameWithin",		 			Native_CGlobalEntityList_FindEntityByClassnameWithin);
+	CreateNative("L4D_FindByClassnameTargetname",		 			Native_FindByClassnameTargetname);
 	CreateNative("L4D_HasAnySurvivorLeftSafeArea",		 			Native_CDirector_HasAnySurvivorLeftSafeArea);
 	CreateNative("L4D_IsAnySurvivorInStartArea",		 			Native_CDirector_IsAnySurvivorInStartArea);
 	CreateNative("L4D_IsAnySurvivorInCheckpoint",		 			Native_CDirector_IsAnySurvivorInCheckpoint);
@@ -429,6 +432,8 @@ void SetupForwardsNatives()
 	CreateNative("L4D2_NavAreaTravelDistance",		 				Native_NavAreaTravelDistance);
 	CreateNative("L4D2_NavAreaBuildPath",							Native_NavAreaBuildPath);
 	CreateNative("L4D2_CommandABot",								Native_CommandABot);
+	CreateNative("L4D2_RushVictim",									Native_RushVictim);
+	CreateNative("L4D2_StartAssault",								Native_StartAssault);
 
 	CreateNative("L4D2_VScriptWrapper_GetMapNumber",				Native_VS_GetMapNumber);
 	CreateNative("L4D2_VScriptWrapper_HasEverBeenInjured",			Native_VS_HasEverBeenInjured);
@@ -471,7 +476,10 @@ void SetupForwardsNatives()
 	CreateNative("L4D_GetNavAreaPos",								Native_GetNavAreaPos);
 	CreateNative("L4D_GetNavAreaCenter",							Native_GetNavAreaCenter);
 	CreateNative("L4D_GetNavAreaSize",								Native_GetNavAreaSize);
+	CreateNative("L4D_NavArea_GetAdjacentCount",					Native_CNavArea_GetAdjacentCount);
+	CreateNative("L4D_NavArea_GetAdjacentAreas",					Native_CNavArea_GetAdjacentAreas);
 	CreateNative("L4D_NavArea_IsConnected",							Native_CNavArea_IsConnected);
+	CreateNative("L4D_NavArea_IsBlocked",							Native_CNavArea_IsBlocked);
 	CreateNative("L4D_GetNavArea_SpawnAttributes",					Native_GetTerrorNavArea_Attributes);
 	CreateNative("L4D_SetNavArea_SpawnAttributes",					Native_SetTerrorNavArea_Attributes);
 	CreateNative("L4D_GetNavArea_AttributeFlags",					Native_GetCNavArea_AttributeFlags);
@@ -557,6 +565,7 @@ void SetupForwardsNatives()
 	CreateNative("L4D2Direct_GetTerrorNavArea",						Direct_GetTerrorNavArea);
 	CreateNative("L4D2Direct_GetTerrorNavAreaFlow",					Direct_GetTerrorNavAreaFlow);
 	CreateNative("L4D2Direct_TryOfferingTankBot",					Direct_TryOfferingTankBot);
+	CreateNative("L4D2Direct_AddSurvivorBot",						Direct_AddSurvivorBot);
 	CreateNative("L4D2Direct_GetFlowDistance",						Direct_GetFlowDistance);
 	CreateNative("L4D2Direct_DoAnimationEvent",						Direct_DoAnimationEvent);
 	CreateNative("L4DDirect_GetSurvivorHealthBonus",				Direct_GetSurvivorHealthBonus);
