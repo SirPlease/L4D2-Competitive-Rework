@@ -1575,15 +1575,15 @@ public void Survivor_glow(int client)
 			//个人定制轮廓部分
 			char steamid[32];
 			GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
-			if(StrContains(steamid, "632322128", false) != -1 || StrContains(steamid, "121430603", false)){
+			if(StrContains(steamid, "632322128", false) != -1 || StrContains(steamid, "121430603", false) != -1 ){
 				//760308896 定制
 				menu.AddItem("option17", "定制轮廓1", player[client].GlowType == 17 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 			}
-			if(StrContains(steamid, "511614235", false) != -1 || StrContains(steamid, "121430603", false)){
+			if(StrContains(steamid, "511614235", false) != -1 || StrContains(steamid, "121430603", false) != -1 ){
 				//8894224 定制
 				menu.AddItem("option18", "定制轮廓2", player[client].GlowType == 18 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 			}
-			if(StrContains(steamid, "632322128", false) != -1 || StrContains(steamid, "121430603", false)){
+			if(StrContains(steamid, "632322128", false) != -1 || StrContains(steamid, "121430603", false) != -1 ){
 				//1850229089 定制
 				menu.AddItem("option19", "定制轮廓3", player[client].GlowType == 19 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 			}
@@ -1805,11 +1805,11 @@ public void Survivor_skin(int client)
 			//个人定制皮肤部分
 			char steamid[32];
 			GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
-			if(StrContains(steamid, "632322128", false) != -1 || StrContains(steamid, "121430603", false)){
+			if(StrContains(steamid, "632322128", false) != -1 || StrContains(steamid, "121430603", false) != -1 ){
 				//760308896 定制
 				menu.AddItem("option17", "定制皮肤1", player[client].SkinType == 17 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 			}
-			if(StrContains(steamid, "888190443", false) != -1|| StrContains(steamid, "121430603", false)){
+			if(StrContains(steamid, "888190443", false) != -1|| StrContains(steamid, "121430603", false) != -1 ){
 				//8894224 定制
 				menu.AddItem("option18", "定制皮肤2", player[client].SkinType == 18 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 			}
