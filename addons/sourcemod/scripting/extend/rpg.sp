@@ -1583,7 +1583,7 @@ public void Survivor_glow(int client)
 				//8894224 定制
 				menu.AddItem("option18", "定制轮廓2", player[client].GlowType == 18 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 			}
-			if(StrContains(steamid, "632322128", false) != -1 || StrContains(steamid, "121430603", false) != -1 ){
+			if(StrContains(steamid, "888190443", false) != -1 || StrContains(steamid, "121430603", false) != -1 ){
 				//1850229089 定制
 				menu.AddItem("option19", "定制轮廓3", player[client].GlowType == 19 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 			}
@@ -1813,6 +1813,10 @@ public void Survivor_skin(int client)
 				//8894224 定制
 				menu.AddItem("option18", "定制皮肤2", player[client].SkinType == 18 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 			}
+			if(StrContains(steamid, "697994844", false) != -1|| StrContains(steamid, "121430603", false) != -1 ){
+				//2530533727 定制
+				menu.AddItem("option19", "定制皮肤3", player[client].SkinType == 19 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+			}
 		}
 		menu.ExitButton = true;
 		menu.Display(client, MENU_TIME_FOREVER);
@@ -1982,6 +1986,13 @@ void GetSkin(int client, int id, bool broadcast = true)
             if(broadcast)
             	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04您的定制皮肤 \x01!");
 		}
+		case 19: 
+        {
+            SetEntityRenderMode(client, RENDER_GLOW);
+            SetEntityRenderColor(client, 0, 0, 0, 50);
+            if(broadcast)
+            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04您的定制皮肤 \x01!");
+        }
     }
     
     player[client].SkinType = id;
