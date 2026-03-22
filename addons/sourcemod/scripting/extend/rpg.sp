@@ -1716,12 +1716,12 @@ void GetAura(int client, int id)
 		}
 		case 18:
 		{
-            SetEntProp(client, Prop_Send, "m_glowColorOverride", 255 + (115 * 256) + (215 * 65536));
+            SetEntProp(client, Prop_Send, "m_glowColorOverride", 255 + (110 * 256) + (156 * 65536));
             CPrintToChat(client, "\x05你 \x04将轮廓颜色改为您的\x01: \x04定制颜色轮廓 \x01!");
 		}
 		case 19:
 		{
-            SetEntProp(client, Prop_Send, "m_glowColorOverride", 255 + (110 * 256) + (156 * 65536));
+            SetEntProp(client, Prop_Send, "m_glowColorOverride", 255 + (115 * 256) + (215 * 65536));
             CPrintToChat(client, "\x05你 \x04将轮廓颜色改为您的\x01: \x04定制颜色轮廓 \x01!");
 		}
     }
@@ -1816,6 +1816,10 @@ public void Survivor_skin(int client)
 			if(StrContains(steamid, "697994844", false) != -1|| StrContains(steamid, "121430603", false) != -1 ){
 				//2530533727 定制
 				menu.AddItem("option19", "定制皮肤3", player[client].SkinType == 19 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+			}
+			if(StrContains(steamid, "511614235", false) != -1|| StrContains(steamid, "121430603", false) != -1 ){
+				//2530533727 定制
+				menu.AddItem("option20", "定制皮肤4", player[client].SkinType == 20 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 			}
 		}
 		menu.ExitButton = true;
@@ -1982,14 +1986,21 @@ void GetSkin(int client, int id, bool broadcast = true)
 		case 18:
 		{
             SetEntityRenderMode(client, RENDER_GLOW);
-            SetEntityRenderColor(client, 0, 0, 0, 255);
+            SetEntityRenderColor(client, 0, 0, 0, 60);
             if(broadcast)
             	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04您的定制皮肤 \x01!");
 		}
 		case 19: 
         {
             SetEntityRenderMode(client, RENDER_GLOW);
-            SetEntityRenderColor(client, 0, 0, 0, 50);
+            SetEntityRenderColor(client, 0, 0, 0, 60);
+            if(broadcast)
+            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04您的定制皮肤 \x01!");
+        }
+		case 20: 
+        {
+            SetEntityRenderMode(client, RENDER_GLOW);
+            SetEntityRenderColor(client, 0, 0, 0, 60);
             if(broadcast)
             	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04您的定制皮肤 \x01!");
         }
