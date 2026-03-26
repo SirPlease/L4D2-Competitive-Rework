@@ -132,14 +132,16 @@ public void OnClientPutInServer(int client)
 
 void OnTeamChange(Event event, const char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(event.GetInt("userid"));
-	CreateTimer(10.0, TimerAdjustRates, client, TIMER_FLAG_NO_MAPCHANGE);
+	RequestFrame(OnNextFrame_AdjustRates, event.GetInt("userid"));
 }
 
-Action TimerAdjustRates(Handle timer, any client)
+void OnNextFrame_AdjustRates(any userid)
 {
+	int client = GetClientOfUserId(userid);
+	if (!IsValidClient(client))
+		return;
+
 	AdjustRates(client);
-	return Plugin_Handled;
 }
 
 public void OnClientSettingsChanged(int client)
