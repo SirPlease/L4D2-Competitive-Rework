@@ -287,8 +287,11 @@ public void OnMapEnd()
 
 void ClearPhysicsHitInfos()
 {
-	for (int i = 0; i < sizeof(g_nPhysicsHitInfoEntry); ++i)
+	for (int i = 0; i < MAX_EDICTS; ++i)
+	{
 		g_nPhysicsHitInfoEntry[i] = -1;
+		g_iPhysicsDamage[i] = -1;
+	}
 
 	delete g_PhysicsHitInfos;
 	g_PhysicsHitInfos = new ArrayList(sizeof(PhysicsHitInfo));
