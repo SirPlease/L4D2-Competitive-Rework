@@ -1,0 +1,14 @@
+"Games"
+{
+	"#default"
+	{
+		"Offsets"
+		{
+			"IPhysicsObject::GetMass"
+			{
+				"linux"		"30"
+				"windows"	"29"
+			}
+		}
+	}
+}
