@@ -140,7 +140,7 @@ public Plugin myinfo =
 {
 	name = "L4D2 Hittable Control",
 	author = "Stabby, Visor, Sir, Derpduck, Forgetest",
-	version = "0.9",
+	version = "0.9.1",
 	description = "Allows for customisation of hittable damage values (and debugging)"
 };
 
@@ -357,6 +357,14 @@ public void OnEntityCreated(int entity, const char[] classname)
 	  || !strcmp(classname, "prop_car_alarm")))
 	{
 		SDKHook(entity, SDKHook_SpawnPost, Physics_OnSpawnPost);
+	}
+}
+
+public void OnEntityDestroyed(int entity)
+{
+	if (entity > 0 && entity < MAX_EDICTS)
+	{
+		g_nPhysicsHitInfoEntry[entity] = -1;
 	}
 }
 
