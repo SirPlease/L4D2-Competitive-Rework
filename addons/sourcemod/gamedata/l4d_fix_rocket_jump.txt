@@ -1,0 +1,72 @@
+"Games"
+{
+	"#default"
+	{
+		"Functions"
+		{
+			"CGameMovement::SetGroundEntity"
+			{
+				"signature"		"CGameMovement::SetGroundEntity"
+				"linux"
+				{
+					"callconv"	"cdecl"
+				}
+				"windows"
+				{
+					"callconv"	"stdcall"
+				}
+				"return"		"void"
+				"arguments"
+				{
+					"this"
+					{
+						"type"	"objectptr"
+						"windows"
+						{
+							"register"	"ecx"
+						}
+					}
+					"a1"
+					{
+						"type"	"objectptr"
+					}
+				}
+			}
+		}
+
+		"Signatures"
+		{
+			"CGameMovement::SetGroundEntity"
+			{
+				"library"		"server"
+				"linux"			"@_ZN13CGameMovement15SetGroundEntityEP10CGameTrace"
+			}
+		}
+	}
+
+	"left4dead"
+	{
+		"Signatures"
+		{
+			"CGameMovement::SetGroundEntity"
+			{
+				"library"		"server"
+				"windows"		"\x83\xEC\x0C\x53\x55\x8B\x6C\x24\x18\x85\xED\x56\x8B\xD9"
+				// 83 EC 0C 53 55 8B 6C 24 18 85 ED 56 8B D9
+			}
+		}
+	}
+
+	"left4dead2"
+	{
+		"Signatures"
+		{
+			"CGameMovement::SetGroundEntity"
+			{
+				"library"		"server"
+				"windows"		"\x55\x8B\xEC\x8B\x45\x08\x83\xEC\x0C\x53\x56\x57\x8B\xF9"
+				// 55 8B EC 8B 45 08 83 EC 0C 53 56 57 8B F9
+			}
+		}
+	}
+}

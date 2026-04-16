@@ -291,7 +291,7 @@
 		{
 			"Field"
 			{
-				"min"		"80"
+				"min"		"77"
 				"max"		"100"
 			}
 		}
@@ -299,7 +299,7 @@
 		{
 			"Field"
 			{
-				"min"		"80"
+				"min"		"77"
 				"max"		"100"
 			}
 		}
@@ -2995,7 +2995,7 @@
 	
 //=======================================================================
 //=============== Dead Center Rebirth 死亡中心-重生
- "dcr_m1_hotel"
+	"dcr_m1_hotel"
 	{
 		"start_point"		"427.606232 5739.467773 2926.982178"
 		"end_point"			"2045.685913 4429.264160 1246.031250"
@@ -3050,7 +3050,121 @@
 		"start_extra_dist"	"150.000000"
 		"end_dist"			"150.000000"
 	}
-	
+
+//=======================================================================
+//=============== Dead Center 2025 死中心 2025
+	"dc2025_1"
+	{
+		"ItemLimits"
+		{
+			"pain_pills"	"3"
+		}
+	}
+	"dc2025_2"
+	{
+		"max_distance"		"700"
+		"tank_ban_flow"
+		{
+			"Parking"
+			{
+				"min"		"72"
+				"max"		"100"
+			}
+		}
+		"ItemLimits"
+		{
+			"pain_pills"	"3"
+		}
+	}	
+	"dc2025_3"
+	{
+		"tank_ban_flow"
+		{
+			"Event spawn"
+			{
+				"min"		"72"
+				"max"		"100"
+			}
+		}
+		"ItemLimits"
+		{
+			"pain_pills"	"3"
+		}
+	}	
+	"dc2025_4"
+	{
+		"max_distance"		"600"
+		"ItemLimits"
+		{
+			"pain_pills"	"4"
+		}
+	}
+
+//=======================================================================
+//=============== Snow Town 冰雪小镇
+	"snowtown_m1"
+	{
+		"tank_ban_flow"
+		{
+			"early"
+			{
+				"min"		"0"
+				"max"		"35"
+			}
+		}
+	}
+	"snowtown_m3"
+	{
+		"tank_ban_flow"
+		{
+			"lane"
+			{
+				"min"        "76"
+				"max"        "81"
+			}
+			"late"
+			{
+				"min"        "84"
+				"max"        "100"
+			}
+		}
+		"ItemLimits"
+		{
+			"pain_pills"    "3"
+		}
+	}
+	"snowtown_m4"
+	{
+		"tank_ban_flow"
+		{
+			"stairs"
+			{
+				"min"        "25"
+				"max"        "30"
+			}
+			"late"
+			{
+				"min"        "67"
+				"max"        "100"
+			}
+		}
+	}
+	"snowtown_m5"
+	{
+		"tank_ban_flow"
+		{
+			"near the event"
+			{
+				"min"        "67"
+				"max"        "100"
+			}
+		}
+		"ItemLimits"
+		{
+			"pain_pills"    "5"
+		}
+	}
+
 //-------- ↓↓↓ you can add custom info here ↓↓↓
 
 
