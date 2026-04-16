@@ -132,12 +132,18 @@ public void OnClientPutInServer(int client)
 
 void OnTeamChange(Event event, const char[] name, bool dontBroadcast)
 {
-	int client = GetClientOfUserId(event.GetInt("userid"));
-	CreateTimer(10.0, TimerAdjustRates, client, TIMER_FLAG_NO_MAPCHANGE);
+	if (event.GetBool("disconnect"))
+		return;
+
+	CreateTimer(10.0, TimerAdjustRates, event.GetInt("userid"), TIMER_FLAG_NO_MAPCHANGE);
 }
 
-Action TimerAdjustRates(Handle timer, any client)
+Action TimerAdjustRates(Handle timer, any userid)
 {
+	int client = GetClientOfUserId(userid);
+	if (!IsValidClient(client))
+		return Plugin_Handled;
+
 	AdjustRates(client);
 	return Plugin_Handled;
 }
