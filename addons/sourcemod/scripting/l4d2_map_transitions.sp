@@ -2,12 +2,9 @@
 #pragma newdecls required
 
 #include <sourcemod>
-//#include <l4d2_direct>
-//#include <left4downtown>
 #include <left4dhooks>
 #define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
-#include <colors>
 
 #define DEBUG 0
 
@@ -82,8 +79,8 @@ Action OnRoundEnd_Post(Handle hTimer)
 			LogMessage("Map transitioned from: %s to: %s", sCurrentMapName, sNextMapName);
 		#endif
 
-		CPrintToChatAll("{olive}[MT]{default} Starting transition from: {blue}%s{default} to: {blue}%s", sCurrentMapName, sNextMapName);
-		ForceChangeLevel(sNextMapName, "Map Transitions");
+		PrintToServer("[MT] Starting transition from: %s to: %s", sCurrentMapName, sNextMapName); // none of player can see PrintToChat text when changing map
+		L4D_RestartScenarioFromVote(sNextMapName);	// Use this instead and c6m1 will spawn witch correctly
 	}
 
 	return Plugin_Stop;
