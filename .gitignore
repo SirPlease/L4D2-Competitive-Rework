@@ -24,3 +24,5 @@ $RECYCLE.BIN/
 
 # Visual Studio Code files
 /.vscode
+addons/sourcemod/scripting/.DS_Store
+addons/sourcemod/plugins/optional/.DS_Store
