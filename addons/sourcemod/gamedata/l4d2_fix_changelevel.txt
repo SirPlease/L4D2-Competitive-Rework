@@ -37,13 +37,19 @@
 				"linux"			"944"
 				"windows"		"944"
 			}
+
+			"CDirector::m_szOriginalMap"
+			{
+				"linux"			"948"
+				"windows"		"948"
+			}
 		}
 
 		"Addresses"
 		{
 			"CDirector::m_isTransitioning"
 			{
-				"signature"	"CDirector::OnBeginTransition"
+				"signature"		"CDirector::OnBeginTransition"
 				"linux"
 				{
 					"read"		"14"
@@ -51,6 +57,32 @@
 				"windows"
 				{
 					"read"		"26"
+				}
+			}
+
+			"s_landmarkName"
+			{
+				"signature"		"InfoChangelevel::StartChangeLevel"
+				"linux"
+				{
+					"read"		"88"
+				}
+				"windows"
+				{
+					"read"		"77"
+				}
+			}
+
+			"s_landmarkPosition"
+			{
+				"signature"		"InfoChangelevel::StartChangeLevel"
+				"linux"
+				{
+					"read"		"190"
+				}
+				"windows"
+				{
+					"read"		"160"
 				}
 			}
 		}
@@ -89,6 +121,14 @@
 				"linux"			"@_ZN14CVEngineServer11ChangeLevelEPKcS1_"
 				"windows"		"\x55\x8B\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x2A\x2A\x89\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x56\x8B\x2A\x2A\x57\x8B"
 								/* 55 8B ? ? ? ? ? ? ? A1 ? ? ? ? ? ? 89 ? ? A1 ? ? ? ? 56 8B ? ? 57 8B */
+			}
+
+			"InfoChangelevel::StartChangeLevel"
+			{
+				"library"		"server"
+				"linux"			"@_ZN15InfoChangelevel16StartChangeLevelEPK10Checkpoint"
+				"windows"		"\x55\x8B\xEC\xA1\x2A\x2A\x2A\x2A\x83\x78\x30\x00\x56\x8B\xF1\x74"
+								// 55 8B EC A1 ? ? ? ? 83 78 30 00 56 8B F1 74
 			}
 		}
 	}

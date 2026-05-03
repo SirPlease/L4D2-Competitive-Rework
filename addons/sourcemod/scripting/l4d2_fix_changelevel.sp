@@ -6,7 +6,7 @@
 #include <dhooks>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.2"
 
 public Plugin myinfo =
 {
@@ -81,7 +81,10 @@ Handle g_CallOnBeginTransition;
 Handle g_CallOnBeginChangeLevel;
 int g_iOffs_m_mapDurationTimer;
 int g_iOffs_m_flTotalMissionElaspedTime;
+int g_iOffs_m_szOriginalMap;
 Address gp_m_isTransitioning;
+Address gp_s_landmarkName;
+Address gp_s_landmarkPosition;
 
 methodmap CDirector {
 	public void ClearTeamScores(bool newCampaign) {
@@ -96,8 +99,14 @@ methodmap CDirector {
 	property float m_flTotalMissionElaspedTime {
 		public set(float flTotalMissionElaspedTime) { StoreToAddress(view_as<Address>(this) + view_as<Address>(g_iOffs_m_flTotalMissionElaspedTime), flTotalMissionElaspedTime, NumberType_Int32); }
 	}
+	property Address m_szOriginalMap {
+		public get() { return view_as<Address>(this) + view_as<Address>(g_iOffs_m_szOriginalMap); }
+	}
 	public bool IsTransitioning() {
 		return LoadFromAddress(gp_m_isTransitioning, NumberType_Int8);
+	}
+	public void SetOriginalMap(const char[] map) {
+		UTIL_StoreToAddressString(this.m_szOriginalMap, map, 32);
 	}
 }
 CDirector TheDirector;
@@ -110,20 +119,23 @@ public void OnPluginStart()
 		{SDKType_Bool, SDKPass_Plain}
 	};
 	g_CallClearTeamScores = gd.CreateSDKCallOrFail(SDKCall_Raw, SDKConf_Signature, "CDirector::ClearTeamScores", params, sizeof(params), false);
-
+	
 	SDKCallParamsWrapper params2[] = {
 		{SDKType_Bool, SDKPass_Plain}
 	};
 	g_CallOnBeginTransition = gd.CreateSDKCallOrFail(SDKCall_Raw, SDKConf_Signature, "CDirector::OnBeginTransition", params2, sizeof(params2), false);
-
+	
 	SDKCallParamsWrapper params3[] = {
 		{SDKType_String, SDKPass_Pointer}
 	};
 	g_CallOnBeginChangeLevel = gd.CreateSDKCallOrFail(SDKCall_GameRules, SDKConf_Signature, "CTerrorGameRules::OnBeginChangeLevel", params3, sizeof(params3), false);
-
+	
 	g_iOffs_m_mapDurationTimer = gd.GetOffsetOrFail("CDirector::m_mapDurationTimer");
 	g_iOffs_m_flTotalMissionElaspedTime = gd.GetOffsetOrFail("CDirector::m_flTotalMissionElaspedTime");
+	g_iOffs_m_szOriginalMap = gd.GetOffsetOrFail("CDirector::m_szOriginalMap");
 	gp_m_isTransitioning = gd.GetAddressOrFail("CDirector::m_isTransitioning");
+	gp_s_landmarkName = gd.GetAddressOrFail("s_landmarkName");
+	gp_s_landmarkPosition = gd.GetAddressOrFail("s_landmarkPosition");
 
 	delete gd.CreateDetourOrFail("CVEngineServer::ChangeLevel", DTR__CVEngineServer__ChangeLevel);
 	delete gd;
@@ -132,29 +144,32 @@ public void OnPluginStart()
 public void OnAllPluginsLoaded()
 {
 	TheDirector = view_as<CDirector>(L4D_GetPointer(POINTER_DIRECTOR));
+	if (!TheDirector)
+	{
+		LogError("Failed to retrieve TheDirector pointer from left4dhooks");
+	}
 }
 
 MRESReturn DTR__CVEngineServer__ChangeLevel(DHookParam hParams)
 {
 	if (!TheDirector)
-	{
-		LogError("Failed to retrieve TheDirector pointer from left4dhooks");
 		return MRES_Ignored;
-	}
-
+	
 	char map[64]/*, reason[64]*/;
 	hParams.GetString(1, map, sizeof(map));
 	// if (!hParams.IsNull(2))
 	//	hParams.GetString(2, reason, sizeof(reason));
-
+	
 	if (TheDirector.IsTransitioning())
 		return MRES_Ignored;
-
+	
 	TheDirector.ClearTeamScores(true);
-
+	
 	ITimer_Start(TheDirector.m_mapDurationTimer);
 	TheDirector.m_flTotalMissionElaspedTime = 0.0;
 
+	TheDirector.SetOriginalMap(map);
+	ClearTransitionedLandmarkName();
 	TheDirector.OnBeginTransition(false);
 	GameRules__OnBeginChangeLevel(map);
 
@@ -164,4 +179,23 @@ MRESReturn DTR__CVEngineServer__ChangeLevel(DHookParam hParams)
 void GameRules__OnBeginChangeLevel(const char[] map)
 {
 	SDKCall(g_CallOnBeginChangeLevel, map);
+}
+
+void ClearTransitionedLandmarkName()
+{
+	StoreToAddress(gp_s_landmarkName, 0, NumberType_Int8);
+	StoreToAddress(gp_s_landmarkPosition, 0.0, NumberType_Int32);
+	StoreToAddress(gp_s_landmarkPosition + view_as<Address>(4), 0.0, NumberType_Int32);
+	StoreToAddress(gp_s_landmarkPosition + view_as<Address>(8), 0.0, NumberType_Int32);
+}
+
+void UTIL_StoreToAddressString(Address dest, const char[] src, int maxlength)
+{
+	int len = strlen(src);
+	if (len > maxlength - 1)
+		len = maxlength - 1;
+	for (int i = 0; i < len; ++i) {
+		StoreToAddress(dest + view_as<Address>(i), src[i], NumberType_Int8);
+	}
+	StoreToAddress(dest + view_as<Address>(len), 0, NumberType_Int8);
 }
