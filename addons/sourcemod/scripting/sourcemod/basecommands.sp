@@ -36,7 +36,6 @@
 #include <sourcemod>
 #undef REQUIRE_PLUGIN
 #include <adminmenu>
-#include <l4d2_changelevel>
 
 #pragma newdecls required
 
@@ -53,7 +52,6 @@ TopMenu hTopMenu;
 
 Menu g_MapList;
 StringMap g_ProtectedVars;
-bool L4D2ChangeLevelActive;
 
 #include "basecommands/kick.sp"
 #include "basecommands/reloadadmins.sp"
@@ -80,12 +78,10 @@ public void OnPluginStart()
 	
 	/* Account for late loading */
 	TopMenu topmenu;
-
 	if (LibraryExists("adminmenu") && ((topmenu = GetAdminTopMenu()) != null))
+	{
 		OnAdminMenuReady(topmenu);
-
-	if (LibraryExists("l4d2_changelevel"))
-		L4D2ChangeLevelActive = true;
+	}
 	
 	g_MapList = new Menu(MenuHandler_ChangeMap, MenuAction_Display);
 	g_MapList.SetTitle("%T", "Please select a map", LANG_SERVER);
@@ -191,19 +187,12 @@ public void OnAdminMenuReady(Handle aTopMenu)
 	}
 }
 
-public void OnLibraryAdded(const char[] name)
-{
-	if (strcmp(name, "l4d2_changelevel") == 0)
-		L4D2ChangeLevelActive = true;
-}
-
 public void OnLibraryRemoved(const char[] name)
 {
 	if (strcmp(name, "adminmenu") == 0)
+	{
 		hTopMenu = null;
-
-	else if (strcmp(name, "l4d2_changelevel") == 0)
-		L4D2ChangeLevelActive = false;
+	}
 }
 
 #define FLAG_STRINGS		14

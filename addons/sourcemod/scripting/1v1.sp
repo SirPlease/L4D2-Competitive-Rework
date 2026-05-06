@@ -52,7 +52,7 @@ public Plugin myinfo =
 	name = "1v1 EQ",
 	author = "Blade + Confogl Team, Tabun, Visor",
 	description = "A plugin designed to support 1v1.",
-	version = "0.2.2",
+	version = "0.2.4",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -98,7 +98,7 @@ void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBroadcast
 	int iRemainingHealth = GetClientHealth(iAttacker);
 
 	// [1v1] Player (Hunter) had 250 health remaining!
-	// [1v1] AI (Hunter) had 250 health remaining!
+	// [1v1] [BOT] Hunter had 250 health remaining!
 	
 	char sName[MAX_NAME_LENGTH];
 	if (IsFakeClient(iAttacker)) {

@@ -500,20 +500,20 @@ stock const int WeaponSlots[WEPID_SIZE] =
 */
 enum /*SurvivorCharacterType*/
 {
-	SurvivorCharacter_Nick = 0,
-	SurvivorCharacter_Rochelle,
-	SurvivorCharacter_Coach,
-	SurvivorCharacter_Ellis,
-	SurvivorCharacter_Bill,
-	SurvivorCharacter_Zoey,
-	SurvivorCharacter_Francis,
-	SurvivorCharacter_Louis,
-	SurvivorCharacter_Invalid, // 8
+	L4D2Util_SurvivorCharacter_Nick = 0,
+	L4D2Util_SurvivorCharacter_Rochelle,
+	L4D2Util_SurvivorCharacter_Coach,
+	L4D2Util_SurvivorCharacter_Ellis,
+	L4D2Util_SurvivorCharacter_Bill,
+	L4D2Util_SurvivorCharacter_Zoey,
+	L4D2Util_SurvivorCharacter_Francis,
+	L4D2Util_SurvivorCharacter_Louis,
+	L4D2Util_SurvivorCharacter_Invalid, // 8
 
-	SurvivorCharacter_Size // 9 size
+	L4D2Util_SurvivorCharacter_Size // 9 size
 };
 
-stock const char g_sSurvivorDisplayName[SurvivorCharacter_Size][] =
+stock const char g_sSurvivorDisplayName[L4D2Util_SurvivorCharacter_Size][] =
 {
 	"Nick",
 	"Rochelle",
@@ -526,7 +526,7 @@ stock const char g_sSurvivorDisplayName[SurvivorCharacter_Size][] =
 	"Invalid"
 };
 
-stock const char g_sSurvivorName[SurvivorCharacter_Size][] =
+stock const char g_sSurvivorName[L4D2Util_SurvivorCharacter_Size][] =
 {
 	"Gambler",
 	"Producer",
@@ -540,7 +540,7 @@ stock const char g_sSurvivorName[SurvivorCharacter_Size][] =
 };
 
 // Models for each of the characters
-stock const char g_sSurvivorModels[SurvivorCharacter_Size - 1][] =
+stock const char g_sSurvivorModels[L4D2Util_SurvivorCharacter_Size - 1][] =
 {
 	"models/survivors/survivor_gambler.mdl",	// MODEL_NICK
 	"models/survivors/survivor_producer.mdl",	// MODEL_ROCHELLE

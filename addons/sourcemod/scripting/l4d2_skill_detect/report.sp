@@ -112,9 +112,9 @@ stock void HandleSkeet(int attacker, int victim, bool bMelee = false, bool bSnip
 				CPrintToChatAll("%t %t", "Tag+", "TeamSkeetedBot");
 		}
 		else if (IsValidClientInGame(attacker) && IsValidClientInGame(victim) && !IsFakeClient(victim))
-			CPrintToChatAll("%t %t", "Tag++", "Skeeted", attacker, (bMelee) ? Melee() : ((bSniper) ? Headshot() : ((bGL) ? Grenade() : "")), victim);
+			CPrintToChatAll("%t %t", "Tag++", "Skeeted", attacker, (bMelee) ? "Melee" : ((bSniper) ? "HeadShot" : ((bGL) ? "Grenade" : "Empty")), victim);
 		else if (IsValidClientInGame(attacker))
-			CPrintToChatAll("%t %t", "Tag+", "SkeetedBot", attacker, (bMelee) ? Melee() : ((bSniper) ? Headshot() : ((bGL) ? Grenade() : "")));
+			CPrintToChatAll("%t %t", "Tag+", "SkeetedBot", attacker, (bMelee) ? "Melee" : ((bSniper) ? "HeadShot" : ((bGL) ? "Grenade" : "Empty")));
 	}
 
 	// call forward
@@ -155,12 +155,10 @@ stock void HandleNonSkeet(int attacker, int victim, int damage, bool bOverKill =
 	// report?
 	if (g_cvarReport.BoolValue && g_cvarRepHurtSkeet.BoolValue)
 	{
-		char buffer[64];
-		Format(buffer, sizeof(buffer), "%t", "Unchipped");
 		if (IsValidClientInGame(victim))
-			CPrintToChatAll("%t %t", "Tag+", "HurtSkeet", victim, damage, (bOverKill) ? buffer : "");
+			CPrintToChatAll("%t %t", "Tag+", "HurtSkeet", victim, damage, (bOverKill) ? "Unchipped" : "Empty");
 		else
-			CPrintToChatAll("%t %t", "Tag+", "HurtSkeetBot", damage, (bOverKill) ? buffer : "");
+			CPrintToChatAll("%t %t", "Tag+", "HurtSkeetBot", damage, (bOverKill) ? "Unchipped" : "Empty");
 	}
 
 	// call forward
@@ -255,13 +253,10 @@ void HandleSmokerSelfClear(int attacker, int victim, bool withShove = false)
 	// report?
 	if (g_cvarReport.BoolValue && g_cvarRepSelfClear.BoolValue && (!withShove || g_cvarRepSelfClearShove.BoolValue))
 	{
-		char Buffer[64];
-		Format(Buffer, sizeof(Buffer), "%t", "Shoving");
-
 		if (IsValidClientInGame(attacker) && IsValidClientInGame(victim) && !IsFakeClient(victim))
-			CPrintToChatAll("%t %t", "Tag++", "SelfClearedTongue", attacker, victim, (withShove) ? Buffer : "");
+			CPrintToChatAll("%t %t", "Tag++", "SelfClearedTongue", attacker, victim, (withShove) ? "Shoving" : "Empty");
 		else if (IsValidClientInGame(attacker))
-			CPrintToChatAll("%t %t", "Tag++", "SelfClearedTongueBot", attacker, (withShove) ? Buffer : "");
+			CPrintToChatAll("%t %t", "Tag++", "SelfClearedTongueBot", attacker, (withShove) ? "Shoving" : "Empty");
 	}
 
 	// call forward
@@ -347,13 +342,10 @@ stock void HandleDeathCharge(int attacker, int victim, float height, float dista
 	// report?
 	if (g_cvarReport.BoolValue && g_cvarRepDeathCharge.BoolValue && height >= g_cvarDeathChargeHeight.FloatValue)
 	{
-		char Buffer[64];
-		Format(Buffer, sizeof(Buffer), "%t", "Bowling");
-
 		if (IsValidClientInGame(attacker) && IsValidClientInGame(victim) && !IsFakeClient(attacker))
-			CPrintToChatAll("%t %t", "Tag++++", "DeathCharged", attacker, victim, (bCarried) ? "" : Buffer, RoundFloat(height));
+			CPrintToChatAll("%t %t", "Tag++++", "DeathCharged", attacker, victim, (bCarried) ? "Empty" : "Bowling", RoundFloat(height));
 		else if (IsValidClientInGame(victim))
-			CPrintToChatAll("%t %t", "Tag++++", "DeathChargedBot", victim, (bCarried) ? "" : Buffer, RoundFloat(height));
+			CPrintToChatAll("%t %t", "Tag++++", "DeathChargedBot", victim, (bCarried) ? "Empty" : "Bowling", RoundFloat(height));
 	}
 
 	Call_StartForward(g_hForwardDeathCharge);
@@ -426,7 +418,7 @@ stock void HandleVomitLanded(int attacker, int boomCount)
 stock void HandleBHopStreak(int survivor, int streak, float maxVelocity)
 {
 	if (g_cvarRepBhopStreak.BoolValue && IsValidClientInGame(survivor) && !IsFakeClient(survivor) && streak >= g_cvarBHopMinStreak.IntValue)
-		CPrintToChat(survivor, "%t %t", "Tag+", "BunnyHop", streak, (streak > 1) ? PluralCount() : "", maxVelocity);
+		CPrintToChat(survivor, "%t %t", "Tag+", "BunnyHop", streak, (streak > 1) ? "PluralCount" : "Empty", maxVelocity);
 
 	Call_StartForward(g_hForwardBHopStreak);
 	Call_PushCell(survivor);
@@ -487,31 +479,4 @@ stock void HandleCarAlarmTriggered(int survivor, int infected, int reason)
 	Call_Finish();
 }
 
-char[] Melee()
-{
-	char sBuffer[32];
-	Format(sBuffer, sizeof(sBuffer), "%t", "Melee");
-	return sBuffer;
-}
-
-char[] Headshot()
-{
-	char sBuffer[32];
-	Format(sBuffer, sizeof(sBuffer), "%t", "HeadShot");
-	return sBuffer;
-}
-
-char[] Grenade()
-{
-	char sBuffer[32];
-	Format(sBuffer, sizeof(sBuffer), "%t", "Grenade");
-	return sBuffer;
-}
-
-char[] PluralCount()
-{
-	char sBuffer[32];
-	Format(sBuffer, sizeof(sBuffer), "%t", "PluralCount");
-	return sBuffer;
-}
 

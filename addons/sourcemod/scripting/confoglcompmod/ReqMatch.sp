@@ -16,7 +16,6 @@ static bool
 	RM_bIsAMatchActive	  = false,
 	RM_bIsPluginsLoaded	  = false,
 	RM_bIsMapRestarted	  = false,
-	RM_bIsChangeLevelAvailable = false,
 	RM_bIsChmatchRequest = false;
 
 static Handle
@@ -41,22 +40,6 @@ void RM_APL()
 	RM_hFwdMatchUnload = CreateGlobalForward("LGO_OnMatchModeUnloaded", ET_Ignore);
 
 	CreateNative("LGO_IsMatchModeLoaded", native_IsMatchModeLoaded);
-}
-
-public void OnLibraryAdded(const char[] name)
-{
-	if (strcmp(name, "l4d2_changelevel") == 0)
-	{
-		RM_bIsChangeLevelAvailable = true;
-	}
-}
-
-public void OnLibraryRemoved(const char[] name)
-{
-	if (strcmp(name, "l4d2_changelevel") == 0)
-	{
-		RM_bIsChangeLevelAvailable = false;
-	}
 }
 
 void RM_OnModuleStart()
@@ -102,9 +85,6 @@ void RM_OnModuleStart()
 		RM_hReloaded.SetInt(0);
 		RM_Match_Load();
 	}
-
-	// ChangeLevel
-	RM_bIsChangeLevelAvailable = LibraryExists("l4d2_changelevel");
 }
 
 void RM_OnMapStart()
@@ -307,8 +287,7 @@ static Action RM_Match_MapRestart_Timer(Handle hTimer, DataPack hDp)
 	hDp.Reset();
 	hDp.ReadString(sMap, sizeof(sMap));
 
-	if (RM_bIsChangeLevelAvailable) L4D2_ChangeLevel(sMap);
-	else ServerCommand("changelevel %s", sMap);
+	ForceChangeLevel(sMap, "Match restart");
 
 	RM_bIsMapRestarted = true;
 

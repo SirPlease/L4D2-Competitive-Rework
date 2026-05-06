@@ -22,7 +22,7 @@ public Plugin myinfo =
 	name = "L4D2 Ellis Hunter Band aid Fix",
 	author = "Sir (with pointers from Rena)",
 	description = "Band-aid fix for Ellis' getup not matching the other Survivors",
-	version = "1.1",
+	version = "1.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -40,7 +40,7 @@ void Event_PounceEnd(Event event, char[] name, bool dontBroadcast)
 
 	int charIndex = IdentifySurvivorFast(client); // Already contains checks inside
 
-	if (charIndex == SurvivorCharacter_Ellis) {
+	if (charIndex == L4D2Util_SurvivorCharacter_Ellis) {
 		AnimHookEnable(client, INVALID_FUNCTION, EllisPostPounce);
 	}
 }
@@ -64,7 +64,6 @@ Action EllisPostPounce(int client, int &sequence)
 	// Ellis Hunter get up animation?
 	if (sequence == ANIM_ELLIS_HUNTER_GETUP) {
 		SDKHook(client, SDKHook_PostThinkPost, UpdateThink);
-	
 		AnimHookDisable(client, INVALID_FUNCTION, EllisPostPounce);
 	}
 

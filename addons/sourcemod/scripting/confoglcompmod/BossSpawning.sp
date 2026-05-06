@@ -49,6 +49,7 @@ void BS_OnMapStart()
 {
 	BS_bIsFirstRound = true;
 	BS_bFinaleStarted = false;
+	BS_bDeleteWitches = false;
 
 	for (int i = 0; i < ROUND_MAX_COUNT; i++) {
 		BS_iTankCount[i] = 0;
