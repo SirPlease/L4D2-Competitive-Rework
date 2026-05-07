@@ -26,6 +26,7 @@ new Handle:cvar_excludeGroupMemberPlay;
 new Handle:cvar_excludeReservedSlots;
 new Handle:cvar_excludePrivileged;
 new Handle:cvar_excludeGroupMember;
+new Handle:cvar_excludeGroupMemberCount;
 new Handle:cvar_groupID;
 new Handle:cvar_banTime;
 new Handle:cvar_gameId;
@@ -145,6 +146,12 @@ public OnPluginStart()
 		"1",
 		"Should we exclude players that are members of our Steam group?",
 		FCVAR_NONE, true, 0.0, true, 1.0
+	);
+	cvar_excludeGroupMemberCount = CreateConVar(
+		"sm_veterans_excludegroupmembercount",
+		"2",
+		"How many leading sv_steamgroup groups should be excluded from advertisement/time punishment? 0 disables group count matching.",
+		FCVAR_NONE, true, 0.0, true, MAX_FLOAT
 	);
 	/*
 	cvar_groupID = CreateConVar(
@@ -664,25 +671,52 @@ public void HTTPResponse_GetUserGroups(HTTPResponse response, int client)
 	// jump to "games" array section
 	JSONArray jsonArray = view_as<JSONArray>(dataObj.Get("groups"));
 	
-	char keyname[64],groupID[64];
+	char keyname[64];
 	int size = jsonArray.Length;
 	for (int i = 0; i < size; ++i)
 	{
 		delete dataObj;
 		dataObj = view_as<JSONObject>(jsonArray.Get(i));
-		GetConVarString(cvar_groupID, groupID, sizeof(groupID));
 		if ( dataObj.GetString("gid", keyname, sizeof(keyname))
-			&& StrContains(groupID, keyname, false) != -1 )
+			&& IsConfiguredGroupExempt(keyname) )
 		{
-			//LogError("%s %s %d", groupID, keyname, StrContains(groupID, keyname, false) != -1);
 			player[client].isGroupMember = 1;
 			break;
 		}
-		//LogError("%s %s %d", groupID, keyname, StrContains(groupID, keyname, false) != -1);
 	}
 	
 	delete jsonArray;
 	delete dataObj;
+}
+
+bool:IsConfiguredGroupExempt(const String:steamGroupId[])
+{
+	int exemptCount = GetConVarInt(cvar_excludeGroupMemberCount);
+	if (exemptCount <= 0)
+	{
+		return false;
+	}
+
+	char groupIDs[256];
+	GetConVarString(cvar_groupID, groupIDs, sizeof(groupIDs));
+
+	char groups[32][32];
+	int groupCount = ExplodeString(groupIDs, ",", groups, sizeof(groups), sizeof(groups[]));
+	if (groupCount > exemptCount)
+	{
+		groupCount = exemptCount;
+	}
+
+	for (int i = 0; i < groupCount; ++i)
+	{
+		TrimString(groups[i]);
+		if (StrEqual(groups[i], steamGroupId, false))
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 public void HTTPResponse_GetUserStatsForGame(HTTPResponse response, int client)
