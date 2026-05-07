@@ -252,6 +252,10 @@ void ProcessPlayerLerp(int client, bool load = false, bool team = false)
 
     // 修改点：处理超出允许范围的Lerp，给予5秒修改时间
     if ((FloatCompare(newLerpTime, cVarMinLerp.FloatValue) == -1)  || (FloatCompare(newLerpTime, cVarMaxLerp.FloatValue) == 1)) {
+        if (load) {
+            return;
+        }
+
         if (g_hLerpWarningTimer[client] == null) {
             CPrintToChatEx(client, client, "{default}<{olive}Lerp{default}> {teamcolor}警告:{default} 你的Lerp值非法 (最小: {teamcolor}%.01f{default}, 最大: {teamcolor}%.01f{default})! 请在 5 秒内改回来。", cVarMinLerp.FloatValue * 1000, cVarMaxLerp.FloatValue * 1000);
             g_hLerpWarningTimer[client] = CreateTimer(5.0, Timer_CheckBadLerpRange, GetClientUserId(client));
