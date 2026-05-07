@@ -81,8 +81,8 @@ public void OnPluginStart()
 	hCvarGamemode = FindConVar("mp_gamemode");
 	hCvarMotdTitle = CreateConVar("sm_cfgmotd_title", "AnneHappy电信服");
 	hCvarMotdUrl = CreateConVar("sm_cfgmotd_url", "http://anne.trygek.com/");  // 主页以后更换为数据库控制
-	hCvarIPUrl = CreateConVar("sm_cfgip_url", "http://anne.trygek.com/bans/");	// 服务器ip页面，以后更换为数据库控制
-	hCvarDonateUrl = CreateConVar("sm_donate_url", "https://anne.trygek.com/sponsor/"); //赞助页面
+	hCvarIPUrl = CreateConVar("sm_cfgip_url", "http://anne.trygek.com/ip.php");	// 服务器ip页面，以后更换为数据库控制
+	hCvarDonateUrl = CreateConVar("sm_donate_url", "http://anne.trygek.com/sponsor/"); //赞助页面
 	hCvarEnableAutoupdate.AddChangeHook(UpdateStatuChange);
 	hCvarGamemode.AddChangeHook(GamemodeChange);
 	hCvarLobbyControl.AddChangeHook(GamemodeChange);
@@ -101,7 +101,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_joingame", TurnClientToSurvivors);
 	RegConsoleCmd("sm_survivor", TurnClientToSurvivors);
 	RegConsoleCmd("sm_donate", DonateServer);
-	
+
 	AddCommandListener(Command_Setinfo, "jointeam");
 	AddCommandListener(Command_Setinfo1, "chooseteam");
 	RegConsoleCmd("sm_ip", ShowAnneServerIP);
