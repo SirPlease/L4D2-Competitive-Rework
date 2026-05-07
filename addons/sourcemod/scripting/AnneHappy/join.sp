@@ -65,7 +65,8 @@ ConVar
 	hCvarGamemode,
 	hCvarSvAllowLobbyCo,
 	hCvarEnableAutoRemoveLobby,
-	hCvarIPUrl;
+	hCvarIPUrl,
+	hCvarDonateUrl;
 
 
 public void OnPluginStart()
@@ -79,8 +80,9 @@ public void OnPluginStart()
 	hCvarSteamgroupExclusive = FindConVar("sv_steamgroup_exclusive");
 	hCvarGamemode = FindConVar("mp_gamemode");
 	hCvarMotdTitle = CreateConVar("sm_cfgmotd_title", "AnneHappy电信服");
-	hCvarMotdUrl = CreateConVar("sm_cfgmotd_url", "http://dl.trygek.com/l4d_stats/index.php");  // 以后更换为数据库控制
-	hCvarIPUrl = CreateConVar("sm_cfgip_url", "http://dl.trygek.com/index.php");	// 以后更换为数据库控制
+	hCvarMotdUrl = CreateConVar("sm_cfgmotd_url", "http://anne.trygek.com/");  // 主页以后更换为数据库控制
+	hCvarIPUrl = CreateConVar("sm_cfgip_url", "http://anne.trygek.com/bans/");	// 服务器ip页面，以后更换为数据库控制
+	hCvarDonateUrl = CreateConVar("sm_donate_url", "https://anne.trygek.com/sponsor/"); //赞助页面
 	hCvarEnableAutoupdate.AddChangeHook(UpdateStatuChange);
 	hCvarGamemode.AddChangeHook(GamemodeChange);
 	hCvarLobbyControl.AddChangeHook(GamemodeChange);
@@ -98,6 +100,8 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_team2", TurnClientToSurvivors);
 	RegConsoleCmd("sm_joingame", TurnClientToSurvivors);
 	RegConsoleCmd("sm_survivor", TurnClientToSurvivors);
+	RegConsoleCmd("sm_donate", DonateServer);
+	
 	AddCommandListener(Command_Setinfo, "jointeam");
 	AddCommandListener(Command_Setinfo1, "chooseteam");
 	RegConsoleCmd("sm_ip", ShowAnneServerIP);
@@ -432,12 +436,78 @@ public Action ShowAnneServerWeb(int client, int args)
 	return Plugin_Handled;
 }
 
+public Action DonateServer(int client, int args)
+{
+	if(!IsValidClient(client) || IsFakeClient(client))
+		return Plugin_Handled;
+
+	ShowDonateWebToPlayer(client);
+	return Plugin_Handled;
+}
+
+public void ResetMode()
+{
+	for(int i = 1; i <= MaxClients; i++)
+	{
+		if(IsValidClient(i) && !IsFakeClient(i))
+		{
+			ShowDonateWebToPlayer(i);
+		}
+	}
+}
+
 public void ShowMotdToPlayer(int client)
 {
 	char title[64], url[192];
 	GetConVarString(hCvarMotdTitle, title, sizeof(title));
 	GetConVarString(hCvarMotdUrl, url, sizeof(url));
 	ShowMOTDPanel(client, title, url, MOTDPANEL_TYPE_URL);	
+}
+
+void ShowDonateWebToPlayer(int client)
+{
+	char steam64[32], name[MAX_NAME_LENGTH], encodedName[MAX_NAME_LENGTH * 3 + 1];
+	if(!GetClientAuthId(client, AuthId_SteamID64, steam64, sizeof(steam64), true))
+	{
+		strcopy(steam64, sizeof(steam64), "");
+	}
+
+	GetClientName(client, name, sizeof(name));
+	UrlEncode(name, encodedName, sizeof(encodedName));
+
+	char title[64], baseUrl[192], url[384], separator[2];
+	GetConVarString(hCvarMotdTitle, title, sizeof(title));
+	GetConVarString(hCvarDonateUrl, baseUrl, sizeof(baseUrl));
+	strcopy(separator, sizeof(separator), StrContains(baseUrl, "?", false) == -1 ? "?" : "&");
+	Format(url, sizeof(url), "%s%ssteam64id=%s&name=%s", baseUrl, separator, steam64, encodedName);
+
+	ShowMOTDPanel(client, title, url, MOTDPANEL_TYPE_URL);
+}
+
+stock void UrlEncode(const char[] input, char[] output, int maxlen)
+{
+	int written = 0;
+	for(int i = 0; input[i] != '\0' && written < maxlen - 1; i++)
+	{
+		int c = input[i];
+		if(c < 0)
+			c += 256;
+
+		if((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '-' || c == '_' || c == '.' || c == '~')
+		{
+			output[written++] = view_as<char>(c);
+		}
+		else if(written < maxlen - 3)
+		{
+			Format(output[written], maxlen - written, "%%%02X", c);
+			written += 3;
+		}
+		else
+		{
+			break;
+		}
+	}
+	output[written] = '\0';
 }
 
 public Action GetBot(int client, int args) 

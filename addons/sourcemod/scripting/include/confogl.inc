@@ -52,6 +52,13 @@ forward void LGO_OnMatchModeLoaded();
  */
 forward void LGO_OnMatchModeUnloaded();
 
+/**
+ * @brief Called when matchmode is reset.
+ *
+ * @noreturn
+ */
+forward void ResetMode();
+
 /* NATIVES */
 
 /**

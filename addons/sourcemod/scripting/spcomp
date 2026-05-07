@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_path="${BASH_SOURCE[0]}"
+script_dir="$(cd "$(dirname "$script_path")" && pwd)"
+repo_root="$(cd "$script_dir/../../.." && pwd)"
+
+translate_arg() {
+  local arg="$1"
+  case "$arg" in
+    "$repo_root"/*)
+      printf '/work/%s\n' "${arg#"$repo_root"/}"
+      ;;
+    -i"$repo_root"/*)
+      printf -- '-i/work/%s\n' "${arg#-i"$repo_root"/}"
+      ;;
+    -o"$repo_root"/*)
+      local out="/work/${arg#-o"$repo_root"/}"
+      printf -- '-o%s\n' "$out"
+      ;;
+    *)
+      printf '%s\n' "$arg"
+      ;;
+  esac
+}
+
+docker_args=()
+output_path=""
+
+for arg in "$@"; do
+  translated="$(translate_arg "$arg")"
+  docker_args+=("$translated")
+  if [[ "$translated" == -o/work/* ]]; then
+    output_path="${translated#-o}"
+  fi
+done
+
+docker run --rm --platform linux/amd64 \
+  -v "$repo_root:/work" \
+  -w /work/addons/sourcemod/scripting \
+  ubuntu:22.04 \
+  bash -lc '
+    set -euo pipefail
+    if [[ -n "$1" ]]; then
+      mkdir -p "$(dirname "$1")"
+    fi
+    chmod +x sourcemod/spcomp64
+    exec sourcemod/spcomp64 "${@:2}"
+  ' _ "$output_path" "${docker_args[@]}"

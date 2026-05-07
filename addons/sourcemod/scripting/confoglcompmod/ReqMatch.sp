@@ -20,7 +20,8 @@ static bool
 
 static Handle
 	RM_hFwdMatchLoad   = null,
-	RM_hFwdMatchUnload = null;
+	RM_hFwdMatchUnload = null,
+	RM_hFwdResetMode   = null;
 
 static ConVar
 	RM_hSbAllBotGame	   = null,
@@ -38,6 +39,7 @@ void RM_APL()
 {
 	RM_hFwdMatchLoad   = CreateGlobalForward("LGO_OnMatchModeLoaded", ET_Ignore);
 	RM_hFwdMatchUnload = CreateGlobalForward("LGO_OnMatchModeUnloaded", ET_Ignore);
+	RM_hFwdResetMode   = CreateGlobalForward("ResetMode", ET_Ignore);
 
 	CreateNative("LGO_IsMatchModeLoaded", native_IsMatchModeLoaded);
 }
@@ -247,6 +249,9 @@ static void RM_Match_Unload(bool bForced = false)
 	RM_bIsPluginsLoaded = false;
 
 	Call_StartForward(RM_hFwdMatchUnload);
+	Call_Finish();
+
+	Call_StartForward(RM_hFwdResetMode);
 	Call_Finish();
 
 	//PrintToChatAll("\x01[\x05Confogl\x01] Match mode unloaded!");
