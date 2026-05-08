@@ -6,7 +6,6 @@
 #include <SteamWorks>
 
 #define DESC_TIMER_INTERVAL 0.1
-#define DESC_FORCE_INTERVAL 10.0
 
 /*
  * =====================================================
@@ -24,8 +23,7 @@
  *
  *  性能与节流：
  *  - 开服 / OnConfigsExecuted：立即重算一次 description
- *  - 每 0.1 秒重算一次 description，内容变化时立即调用 SteamWorks_SetGameDescription
- *  - 内容不变时，每 10 秒强制推送一次，避免 Steam 侧状态偶发丢失
+ *  - 每 0.1 秒重算一次 description，并直接调用 SteamWorks_SetGameDescription
  * =====================================================
  */
 
@@ -34,7 +32,7 @@ public Plugin myinfo =
     name        = "Anne ServerName & GameDescription",
     author      = "东",
     description = "动态服务器名 + GameDescription [几特几秒]",
-    version     = "1.4.2",
+    version     = "1.4.4",
     url         = ""
 };
 
@@ -65,9 +63,7 @@ ConVar g_hHostNameFormat;        // sn_hostname_format（默认 "{hostname}{game
 
 // ======= GameDescription 推送缓存与定时器 =======
 static char  g_sDescComputed[128];   // 最近一次“重算”得到的描述
-static char  g_sDescPushed[128];     // 最近一次已推送到 SteamWorks 的描述
-Handle       g_hDescTimer = null;    // 0.1s 周期定时器
-float        g_fLastDescPush = 0.0;  // 最近一次成功推送时间
+int          g_iDescTimerSerial = 0; // 定时器代号，用于让旧 timer 自行停止
 
 // -----------------------------
 // Lifecycle
@@ -130,9 +126,9 @@ public void OnConfigsExecuted()
     if (cvarDirCount != null)          cvarDirCount.AddChangeHook(OnCvarChanged);
     if (cvarDirInterval != null)       cvarDirInterval.AddChangeHook(OnCvarChanged);
 
-    // 开服后：立即重算并强制推送一次
+    // 开服后：立即重算并推送一次
     RecomputeDescriptionCached();
-    PushGameDescription(true);
+    SteamWorks_SetGameDescription(g_sDescComputed);
 
     // 刷新服务器名（房间名）
     Update();
@@ -152,17 +148,15 @@ public void OnMapStart()
 
     StartDescriptionTimer();
 
-    // 换图时也重算并强制推送一次
+    // 换图时也重算并推送一次
     RecomputeDescriptionCached();
-    PushGameDescription(true);
+    SteamWorks_SetGameDescription(g_sDescComputed);
 }
 
 public void OnPluginEnd()
 {
-    if (g_hDescTimer != null) {
-        KillTimer(g_hDescTimer);
-        g_hDescTimer = null;
-    }
+    g_iDescTimerSerial++;
+
     if (HostName != INVALID_HANDLE) {
         CloseHandle(HostName);
         HostName = INVALID_HANDLE;
@@ -201,12 +195,16 @@ public void Update()
 }
 
 // -----------------------------
-// 0.1 秒检查一次：变化立即推送；没变化则按低频间隔保活推送。
+// 0.1 秒重算一次，并直接推送到 SteamWorks。
 // -----------------------------
 public Action Timer_UpdateDesc(Handle timer, any data)
 {
+    if (data != g_iDescTimerSerial) {
+        return Plugin_Stop;
+    }
+
     RecomputeDescriptionCached();
-    PushGameDescription(false);
+    SteamWorks_SetGameDescription(g_sDescComputed);
     return Plugin_Continue;
 }
 
@@ -215,12 +213,8 @@ public Action Timer_UpdateDesc(Handle timer, any data)
 // -----------------------------
 void StartDescriptionTimer()
 {
-    if (g_hDescTimer != null) {
-        KillTimer(g_hDescTimer);
-        g_hDescTimer = null;
-    }
-
-    g_hDescTimer = CreateTimer(DESC_TIMER_INTERVAL, Timer_UpdateDesc, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+    g_iDescTimerSerial++;
+    CreateTimer(DESC_TIMER_INTERVAL, Timer_UpdateDesc, g_iDescTimerSerial, TIMER_REPEAT);
 }
 
 // -----------------------------
@@ -231,25 +225,6 @@ void RecomputeDescriptionCached()
     char desc[128];
     BuildGameDescription(desc, sizeof(desc));
     strcopy(g_sDescComputed, sizeof(g_sDescComputed), desc);
-}
-
-void PushGameDescription(bool force)
-{
-    if (!SteamWorks_IsLoaded()) {
-        return;
-    }
-
-    float now = GetEngineTime();
-    bool changed = !StrEqual(g_sDescComputed, g_sDescPushed);
-    bool forceDue = force || (now - g_fLastDescPush >= DESC_FORCE_INTERVAL);
-    if (!changed && !forceDue) {
-        return;
-    }
-
-    if (SteamWorks_SetGameDescription(g_sDescComputed)) {
-        strcopy(g_sDescPushed, sizeof(g_sDescPushed), g_sDescComputed);
-        g_fLastDescPush = now;
-    }
 }
 
 // -----------------------------

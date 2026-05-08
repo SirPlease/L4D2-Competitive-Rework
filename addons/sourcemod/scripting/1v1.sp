@@ -27,24 +27,7 @@
 #include <colors>
 #include <l4d2util_constants>
 
-#define TAUNT_HIGH_THRESHOLD            0.4
-#define TAUNT_MID_THRESHOLD             0.2
-#define TAUNT_LOW_THRESHOLD             0.04
-
-static char SINames[7][] =
-{
-	"",
-    "gas",          // smoker
-    "exploding",    // boomer
-    "hunter",
-    "spitter",
-    "jockey",
-    "charger",
-};
-
 ConVar
-	g_hCvarPvEMode = null,
-	g_hSpecialInfectedHP[7],
 	g_hCvarDmgThreshold = null;
 
 public Plugin myinfo =
@@ -58,15 +41,8 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	char buffer[17];
-	for (int i = 1; i < 7; i++)
-	{
-		Format(buffer, sizeof(buffer), "z_%s_health", SINames[i]);
-		g_hSpecialInfectedHP[i] = FindConVar(buffer);
-	}
 	LoadTranslations("1v1.phrases");
 	g_hCvarDmgThreshold = CreateConVar("sm_1v1_dmgthreshold", "24", "Amount of damage done (at once) before SI suicides.", _, true, 1.0);
-	g_hCvarPvEMode = CreateConVar("sm_1v1_PvEMode", "0", "Is this Mode Is PvE.", _, true, 0.0, true, 1.0);
 
 	HookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);
 }
@@ -100,38 +76,15 @@ void Event_PlayerHurt(Event hEvent, const char[] sEventName, bool bDontBroadcast
 	// [1v1] Player (Hunter) had 250 health remaining!
 	// [1v1] [BOT] Hunter had 250 health remaining!
 	
-	char sName[MAX_NAME_LENGTH];
-	if (IsFakeClient(iAttacker)) {
-		Format(sName, sizeof(sName), "%t", "AI");
-	} else {
-		GetClientName(iAttacker, sName, sizeof(sName));
-	}
-	if(g_hCvarPvEMode.BoolValue)
-	{
-		CPrintToChatAll("%t %t", "TagPvE", "HealthRemaining", sName, L4D2_InfectedNames[iZclass], iRemainingHealth);
-	}
+	if (IsFakeClient(iAttacker))
+		CPrintToChatAll("%t %t", "Tag", "HealthRemainingAI", L4D2_InfectedNames[iZclass], iRemainingHealth);
 	else
-	{
-		CPrintToChatAll("%t %t", "Tag", "HealthRemaining", sName, L4D2_InfectedNames[iZclass], iRemainingHealth);
-	}
+		CPrintToChatAll("%t %t", "Tag", "HealthRemaining", iAttacker, L4D2_InfectedNames[iZclass], iRemainingHealth);
 	
 	RequestFrame(NextFrame_PlayerHurt, iAttackerId);
 	
-	int maxHealth = g_hSpecialInfectedHP[iZclass].IntValue;
 	if (iRemainingHealth == 1) {
 		CPrintToChat(iVictim, "%t", "UMad");
-	}
-	else if (iRemainingHealth <= RoundToCeil(maxHealth * TAUNT_LOW_THRESHOLD))
-    {
-		CPrintToChat(iVictim, "%t", "Sad");
-	}
-	else if (iRemainingHealth <= RoundToCeil(maxHealth * TAUNT_MID_THRESHOLD))
-    {
-		CPrintToChat(iVictim, "%t", "Close");
-    }
-	else if (iRemainingHealth <= RoundToCeil(maxHealth * TAUNT_HIGH_THRESHOLD))
-	{
-		CPrintToChat(iVictim, "%t", "NBad");
 	}
 }
 
