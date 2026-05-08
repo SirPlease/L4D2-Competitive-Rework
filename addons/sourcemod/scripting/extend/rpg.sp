@@ -633,22 +633,25 @@ public void RewardScore(){
 		}
 		char pluginsname[64];
 		GetConVarString(FindConVar("l4d_ready_cfg_name"), pluginsname, sizeof(pluginsname));
-		if(StrContains(pluginsname,"AnneHappy") !=-1 || StrContains(pluginsname, "WitchParty") != -1 || StrContains(pluginsname,"AllCharger") != -1 )
+		if(StrContains(pluginsname,"AnneHappy") !=-1 )
 		{
+			float mult = 1;
+			if(StrContains(pluginsname, "HardCore", false) != -1)
+				mult = 1.3;
 			if(valid)
 			{
 				if(InfectedNumber==5)
-					AddReward(200);
+					AddReward(RoundToFloor(200*mult));
 				if(InfectedNumber==6)
-					AddReward(500);
+					AddReward(RoundToFloor(500*mult));
 				if(InfectedNumber==7)
-					AddReward(800);
+					AddReward(RoundToFloor(800*mult));
 				if(InfectedNumber==8)
-					AddReward(1100);
+					AddReward(RoundToFloor(1100*mult));
 				if(InfectedNumber==9)
-					AddReward(1500);
+					AddReward(RoundToFloor(1500*mult));
 				if(InfectedNumber>9)
-					AddReward(2000);
+					AddReward(RoundToFloor(2000*mult));
 			}
 		}
 	}
