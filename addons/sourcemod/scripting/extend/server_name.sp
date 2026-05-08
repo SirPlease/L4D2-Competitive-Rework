@@ -5,7 +5,7 @@
 #include <sdktools>
 #include <SteamWorks>
 
-#define DESC_TIMER_INTERVAL 0.1
+#define DESC_RECOMPUTE_INTERVAL 10.0
 
 /*
  * =====================================================
@@ -22,8 +22,9 @@
  *      * [无mod]：l4d2_addons_eclipse == 0 时显示
  *
  *  性能与节流：
- *  - 开服 / OnConfigsExecuted：立即重算一次 description
- *  - 每 0.1 秒重算一次 description，并直接调用 SteamWorks_SetGameDescription
+ *  - 开服 / OnConfigsExecuted：立即重算一次 description（仅写缓存）
+ *  - 每 10 秒重算一次 description（仅写缓存）
+ *  - OnGameFrame：每帧推送当前缓存到 SteamWorks
  * =====================================================
  */
 
@@ -32,7 +33,7 @@ public Plugin myinfo =
     name        = "Anne ServerName & GameDescription",
     author      = "东",
     description = "动态服务器名 + GameDescription [几特几秒]",
-    version     = "1.4.4",
+    version     = "1.4.5",
     url         = ""
 };
 
@@ -63,7 +64,6 @@ ConVar g_hHostNameFormat;        // sn_hostname_format（默认 "{hostname}{game
 
 // ======= GameDescription 推送缓存与定时器 =======
 static char  g_sDescComputed[128];   // 最近一次“重算”得到的描述
-int          g_iDescTimerSerial = 0; // 定时器代号，用于让旧 timer 自行停止
 
 // -----------------------------
 // Lifecycle
@@ -126,9 +126,8 @@ public void OnConfigsExecuted()
     if (cvarDirCount != null)          cvarDirCount.AddChangeHook(OnCvarChanged);
     if (cvarDirInterval != null)       cvarDirInterval.AddChangeHook(OnCvarChanged);
 
-    // 开服后：立即重算并推送一次
+    // 开服后：立即重算一次（只写缓存）
     RecomputeDescriptionCached();
-    SteamWorks_SetGameDescription(g_sDescComputed);
 
     // 刷新服务器名（房间名）
     Update();
@@ -146,17 +145,12 @@ public void OnMapStart()
         FileToKeyValues(HostName, SavePath);
     }
 
-    StartDescriptionTimer();
-
-    // 换图时也重算并推送一次
+    // 换图时也重算一次缓存
     RecomputeDescriptionCached();
-    SteamWorks_SetGameDescription(g_sDescComputed);
 }
 
 public void OnPluginEnd()
 {
-    g_iDescTimerSerial++;
-
     if (HostName != INVALID_HANDLE) {
         CloseHandle(HostName);
         HostName = INVALID_HANDLE;
@@ -178,7 +172,7 @@ public void Event_PlayerTeam(Event hEvent, const char[] sName, bool bDontBroadca
 
 public void OnCvarChanged(ConVar cvar, const char[] oldVal, const char[] newVal)
 {
-    // ConVar 变化：服务器名立即刷新，description 最迟 0.1 秒内刷新
+    // ConVar 变化：只更新服务器名（description 交给 10s 定时器）
     Update();
 }
 
@@ -195,26 +189,28 @@ public void Update()
 }
 
 // -----------------------------
-// 0.1 秒重算一次，并直接推送到 SteamWorks。
+// 每帧推送当前缓存到 SteamWorks。
 // -----------------------------
-public Action Timer_UpdateDesc(Handle timer, any data)
+public void OnGameFrame()
 {
-    if (data != g_iDescTimerSerial) {
-        return Plugin_Stop;
-    }
-
-    RecomputeDescriptionCached();
     SteamWorks_SetGameDescription(g_sDescComputed);
-    return Plugin_Continue;
 }
 
 // -----------------------------
-// 启动/重启 0.1s GameDescription 定时器
+// 启动 10s GameDescription 缓存重算定时器
 // -----------------------------
 void StartDescriptionTimer()
 {
-    g_iDescTimerSerial++;
-    CreateTimer(DESC_TIMER_INTERVAL, Timer_UpdateDesc, g_iDescTimerSerial, TIMER_REPEAT);
+    CreateTimer(DESC_RECOMPUTE_INTERVAL, Timer_RecomputeDesc, _, TIMER_REPEAT);
+}
+
+// -----------------------------
+// 定时重算（10s），只更新缓存
+// -----------------------------
+public Action Timer_RecomputeDesc(Handle timer, any data)
+{
+    RecomputeDescriptionCached();
+    return Plugin_Continue;
 }
 
 // -----------------------------

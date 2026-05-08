@@ -80,9 +80,9 @@ public void OnPluginStart()
 	hCvarSteamgroupExclusive = FindConVar("sv_steamgroup_exclusive");
 	hCvarGamemode = FindConVar("mp_gamemode");
 	hCvarMotdTitle = CreateConVar("sm_cfgmotd_title", "AnneHappy电信服");
-	hCvarMotdUrl = CreateConVar("sm_cfgmotd_url", "http://anne.trygek.com/");  // 主页以后更换为数据库控制
+	hCvarMotdUrl = CreateConVar("sm_cfgmotd_url", "http://anne.trygek.com/l4d2/");  // 主页以后更换为数据库控制
 	hCvarIPUrl = CreateConVar("sm_cfgip_url", "http://anne.trygek.com/ip.php");	// 服务器ip页面，以后更换为数据库控制
-	hCvarDonateUrl = CreateConVar("sm_donate_url", "http://anne.trygek.com/sponsor/"); //赞助页面
+	hCvarDonateUrl = CreateConVar("sm_donate_url", "http://anne.trygek.com/l4d2/sponsor/l4d2.php"); //赞助页面
 	hCvarEnableAutoupdate.AddChangeHook(UpdateStatuChange);
 	hCvarGamemode.AddChangeHook(GamemodeChange);
 	hCvarLobbyControl.AddChangeHook(GamemodeChange);
