@@ -1118,9 +1118,9 @@
 		"end_dist"			"245.495361"
 		"tank_ban_flow"
 		{
-			"During sewers"
+			"During sewers + double ladder drop"
 			{
-				"min"		"60"
+				"min"		"52"
 				"max"		"79"
 			}
 		}
