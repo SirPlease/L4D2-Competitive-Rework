@@ -635,7 +635,7 @@ public void RewardScore(){
 		GetConVarString(FindConVar("l4d_ready_cfg_name"), pluginsname, sizeof(pluginsname));
 		if(StrContains(pluginsname,"AnneHappy") !=-1 )
 		{
-			float mult = 1;
+			float mult = 1.0;
 			if(StrContains(pluginsname, "HardCore", false) != -1)
 				mult = 1.3;
 			if(valid)
