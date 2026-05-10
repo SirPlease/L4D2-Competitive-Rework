@@ -123,6 +123,7 @@ Handle
 
 Database g_hDB;
 bool g_bDBReady, g_bPeakQueryPending, g_bLastPeakActive, g_bLastPeakKnown, g_bIsMySQL;
+int g_iLastActiveServers, g_iLastTotalServers;
 
 public void OnPluginStart()
 { 
@@ -391,7 +392,15 @@ void ApplyPeakRestriction()
         return;
 
     ServerCommand("sm_resetmatch");
-    CPrintToChatAll("管理员不在场，高峰期模式人数不足 {green}%d{default} 人，{green}强制卸载模式!!!!", g_iCvarCount);
+    if (g_iCvarPeakMode == 1 && g_bLastPeakKnown)
+    {
+        CPrintToChatAll("管理员不在场，当前全服 {green}%d/%d{default} 台服务器有玩家，达到高峰期限制({green}%.0f%%{default})；本模式人数不足 {green}%d{default} 人，{green}强制卸载模式!!!!",
+            g_iLastActiveServers, g_iLastTotalServers, g_fCvarPeakRatio * 100.0, g_iCvarCount);
+    }
+    else
+    {
+        CPrintToChatAll("管理员不在场，当前处于限制时间段；本模式人数不足 {green}%d{default} 人，{green}强制卸载模式!!!!", g_iCvarCount);
+    }
 }
 
 void SetupPeakDatabase()
@@ -402,6 +411,8 @@ void SetupPeakDatabase()
     g_bDBReady = false;
     g_bPeakQueryPending = false;
     g_bLastPeakKnown = false;
+    g_iLastActiveServers = 0;
+    g_iLastTotalServers = 0;
 
     delete g_hDB;
     SQL_TConnect(SQLCB_OnConnect, g_sCvarDBConfig, 0);
@@ -569,6 +580,9 @@ public void SQLCB_QueryPeakState(Handle owner, Handle hndl, const char[] error, 
     int iActiveServers = SQL_FetchInt(hndl, 0);
     int iTotalServers = SQL_FetchInt(hndl, 1);
     bool bIsPeak = false;
+
+    g_iLastActiveServers = iActiveServers;
+    g_iLastTotalServers = iTotalServers;
 
     if (iTotalServers > 0)
     {
