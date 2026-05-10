@@ -478,9 +478,11 @@ void ShowDonateWebToPlayer(int client)
 	char title[64], baseUrl[192], url[384], separator[2];
 	GetConVarString(hCvarMotdTitle, title, sizeof(title));
 	GetConVarString(hCvarDonateUrl, baseUrl, sizeof(baseUrl));
+	ReplaceString(baseUrl, sizeof(baseUrl), "/l4d2/sponsor/l4d2.php", "/sponsor/l4d2.php", false);
 	strcopy(separator, sizeof(separator), StrContains(baseUrl, "?", false) == -1 ? "?" : "&");
 	Format(url, sizeof(url), "%s%ssteam_id=%s&name=%s", baseUrl, separator, steam64, encodedName);
 
+	PrintToConsole(client, "[AnneDonate] Open donate url: %s", url);
 	ShowMOTDPanel(client, title, url, MOTDPANEL_TYPE_URL);
 }
 
