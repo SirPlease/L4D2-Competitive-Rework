@@ -124,6 +124,7 @@ Handle
 Database g_hDB;
 bool g_bDBReady, g_bPeakQueryPending, g_bLastPeakActive, g_bLastPeakKnown, g_bIsMySQL;
 int g_iLastActiveServers, g_iLastTotalServers;
+int g_iLastStatusWriteTime, g_iLastStatusPlayerCount = -1;
 
 public void OnPluginStart()
 { 
@@ -140,8 +141,8 @@ public void OnPluginStart()
     g_hCvarDBConfig     = CreateConVar( PLUGIN_NAME ... "_db_config",     "l4dstats",        "peak_mode=1 使用的 databases.cfg 区块名", CVAR_FLAGS);
     g_hCvarServerId     = CreateConVar( PLUGIN_NAME ... "_server_id",     "",               "本服务器唯一ID，留空自动使用 hostname:hostport", CVAR_FLAGS);
     g_hCvarStatusTable  = CreateConVar( PLUGIN_NAME ... "_status_table",  "l4d_server_status", "peak_mode=1 使用的服务器状态表名", CVAR_FLAGS);
-    g_hCvarStatusInterval = CreateConVar(PLUGIN_NAME ... "_status_interval", "30.0",        "peak_mode=1 本服人数写入数据库的间隔秒数", CVAR_FLAGS, true, 5.0);
-    g_hCvarStatusMaxAge = CreateConVar( PLUGIN_NAME ... "_status_max_age", "90",            "peak_mode=1 查询全服状态时，只统计多少秒内更新过的服务器", CVAR_FLAGS, true, 10.0);
+    g_hCvarStatusInterval = CreateConVar(PLUGIN_NAME ... "_status_interval", "60.0",        "peak_mode=1 本服人数写入数据库的心跳间隔秒数；人数变化时会尽快写入", CVAR_FLAGS, true, 5.0);
+    g_hCvarStatusMaxAge = CreateConVar( PLUGIN_NAME ... "_status_max_age", "180",           "peak_mode=1 查询全服状态时，只统计多少秒内更新过的服务器，建议为status_interval的3倍", CVAR_FLAGS, true, 10.0);
     CreateConVar(                       PLUGIN_NAME ... "_version",       PLUGIN_VERSION, PLUGIN_NAME ... " Plugin Version", CVAR_FLAGS_PLUGIN_VERSION);
     g_hTzServerOffset = CreateConVar(PLUGIN_NAME ... "_server_utc_offset", "480",
         "Fallback: server's UTC offset in minutes (only used if %z unsupported).");
@@ -413,6 +414,8 @@ void SetupPeakDatabase()
     g_bLastPeakKnown = false;
     g_iLastActiveServers = 0;
     g_iLastTotalServers = 0;
+    g_iLastStatusWriteTime = 0;
+    g_iLastStatusPlayerCount = -1;
 
     delete g_hDB;
     SQL_TConnect(SQLCB_OnConnect, g_sCvarDBConfig, 0);
@@ -476,7 +479,7 @@ public void SQLCB_CreateStatusTable(Handle owner, Handle hndl, const char[] erro
     }
 
     g_bDBReady = true;
-    UpdateServerStatus();
+    UpdateServerStatus(true);
 }
 
 void RestartStatusTimer()
@@ -495,10 +498,24 @@ Action Timer_UpdateServerStatus(Handle timer)
     return Plugin_Continue;
 }
 
-void UpdateServerStatus()
+void UpdateServerStatus(bool bForce = false)
 {
     if (g_iCvarPeakMode != 1 || !g_bDBReady || g_hDB == null)
         return;
+
+    int iNow = GetTime();
+    int iPlayers = GetHumanPlayerCount();
+    int iMinChangedInterval = 5;
+    int iHeartbeatInterval = RoundToFloor(g_fCvarStatusInterval);
+
+    if (!bForce)
+    {
+        if (iPlayers == g_iLastStatusPlayerCount && iNow - g_iLastStatusWriteTime < iHeartbeatInterval)
+            return;
+
+        if (iPlayers != g_iLastStatusPlayerCount && iNow - g_iLastStatusWriteTime < iMinChangedInterval)
+            return;
+    }
 
     char sServerId[256], sHostname[256], sEscServerId[512], sEscHostname[512];
     strcopy(sServerId, sizeof(sServerId), g_sCvarServerId);
@@ -517,14 +534,17 @@ void UpdateServerStatus()
     {
         FormatEx(sQuery, sizeof(sQuery),
             "REPLACE INTO `%s` (`server_id`, `hostname`, `players`, `updated_at`, `enabled`) VALUES ('%s', '%s', %d, UNIX_TIMESTAMP(), 1)",
-            g_sCvarStatusTable, sEscServerId, sEscHostname, GetHumanPlayerCount());
+            g_sCvarStatusTable, sEscServerId, sEscHostname, iPlayers);
     }
     else
     {
         FormatEx(sQuery, sizeof(sQuery),
             "REPLACE INTO `%s` (`server_id`, `hostname`, `players`, `updated_at`, `enabled`) VALUES ('%s', '%s', %d, strftime('%%s','now'), 1)",
-            g_sCvarStatusTable, sEscServerId, sEscHostname, GetHumanPlayerCount());
+            g_sCvarStatusTable, sEscServerId, sEscHostname, iPlayers);
     }
+
+    g_iLastStatusWriteTime = iNow;
+    g_iLastStatusPlayerCount = iPlayers;
 
     SQL_TQuery(g_hDB, SQLCB_Generic, sQuery);
 }
