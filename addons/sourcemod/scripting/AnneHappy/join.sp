@@ -432,9 +432,24 @@ public Action Command_Setinfo1(int client, const char[] command, int args)
 
 public Action ShowAnneServerIP(int client, int args) 
 {
-	char title[64], url[192];
+	char title[64], baseUrl[192], url[768], serverName[192], encodedServerName[576], separator[2];
 	GetConVarString(hCvarMotdTitle, title, sizeof(title));
-	GetConVarString(hCvarIPUrl, url, sizeof(url));
+	GetConVarString(hCvarIPUrl, baseUrl, sizeof(baseUrl));
+
+	ConVar hHostname = FindConVar("hostname");
+	if(hHostname != null)
+	{
+		GetConVarString(hHostname, serverName, sizeof(serverName));
+	}
+	else
+	{
+		strcopy(serverName, sizeof(serverName), "");
+	}
+
+	UrlEncode(serverName, encodedServerName, sizeof(encodedServerName));
+	strcopy(separator, sizeof(separator), StrContains(baseUrl, "?", false) == -1 ? "?" : "&");
+	Format(url, sizeof(url), "%s%sserver=%s", baseUrl, separator, encodedServerName);
+
 	ShowMOTDPanel(client, title, url, MOTDPANEL_TYPE_URL);
 	return Plugin_Handled;
 }
