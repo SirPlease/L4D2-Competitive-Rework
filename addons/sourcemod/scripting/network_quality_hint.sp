@@ -3,7 +3,7 @@
 
 #include <sourcemod>
 
-#define PLUGIN_VERSION "1.0.0"
+#define PLUGIN_VERSION "1.0.1"
 #define CHAT_TAG "\x04[网络]\x01"
 
 ConVar
@@ -173,8 +173,8 @@ Action Timer_CheckClients(Handle timer)
 void CheckClient(int client)
 {
 	int ping = GetClientPingMs(client);
-	float loss = GetClientAvgLoss(client, NetFlow_Both) * 100.0;
-	float choke = GetClientAvgChoke(client, NetFlow_Both) * 100.0;
+	float loss = GetClientLossPct(client);
+	float choke = GetClientChokePct(client);
 
 	bool badPing = g_iPingLimit >= 0 && ping > g_iPingLimit;
 	bool badLoss = g_fLossLimit >= 0.0 && loss > g_fLossLimit;
@@ -218,8 +218,8 @@ Action Command_NetStatus(int client, int args)
 void PrintClientStatus(int client, bool includeRouteHint)
 {
 	int ping = GetClientPingMs(client);
-	float loss = GetClientAvgLoss(client, NetFlow_Both) * 100.0;
-	float choke = GetClientAvgChoke(client, NetFlow_Both) * 100.0;
+	float loss = GetClientLossPct(client);
+	float choke = GetClientChokePct(client);
 
 	PrintToChat(client, "%s 当前网络：ping \x05%dms\x01，loss \x05%.2f%%\x01，choke \x05%.2f%%\x01。", CHAT_TAG, ping, loss, choke);
 
@@ -289,6 +289,25 @@ void BuildReason(char[] buffer, int maxlen, bool badPing, bool badLoss, bool bad
 int GetClientPingMs(int client)
 {
 	return RoundToNearest(GetClientAvgLatency(client, NetFlow_Outgoing) * 1000.0);
+}
+
+float GetClientLossPct(int client)
+{
+	return GetNetworkPct(GetClientAvgLoss(client, NetFlow_Outgoing));
+}
+
+float GetClientChokePct(int client)
+{
+	return GetNetworkPct(GetClientAvgChoke(client, NetFlow_Outgoing));
+}
+
+float GetNetworkPct(float value)
+{
+	if (value < 0.0) {
+		return 0.0;
+	}
+
+	return value * 100.0;
 }
 
 bool IsHumanInGame(int client)
