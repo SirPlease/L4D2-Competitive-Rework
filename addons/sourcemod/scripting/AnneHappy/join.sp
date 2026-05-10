@@ -35,6 +35,8 @@
 #define IsValidClient(%1)		(1 <= %1 <= MaxClients && IsClientInGame(%1))
 #define IsValidAliveClient(%1)	(1 <= %1 <= MaxClients && IsClientInGame(%1) && IsPlayerAlive(%1))
 #define GETBOTINTERVAL 3.0
+#define DONATE_CONFIG_FILE "configs/anne_donate.cfg"
+#define DONATE_MAX_OPTIONS 16
 
 public Plugin myinfo =
 {
@@ -55,7 +57,12 @@ bool
 	g_bGroupSystemAvailable = false;
 
 char
-	g_sDonateAmount[MAXPLAYERS + 1][16];
+	g_sDonateAmount[MAXPLAYERS + 1][16],
+	g_sDonateOptionAmount[DONATE_MAX_OPTIONS][16],
+	g_sDonateOptionDisplay[DONATE_MAX_OPTIONS][64];
+
+int
+	g_iDonateOptionCount = 0;
 
 ConVar
 	hCvarMotdTitle,
@@ -104,6 +111,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_joingame", TurnClientToSurvivors);
 	RegConsoleCmd("sm_survivor", TurnClientToSurvivors);
 	RegConsoleCmd("sm_donate", DonateServer);
+	RegAdminCmd("sm_donate_reload", ReloadDonateConfig, ADMFLAG_CONFIG, "Reload donate amount config");
 
 	AddCommandListener(Command_Setinfo, "jointeam");
 	AddCommandListener(Command_Setinfo1, "chooseteam");
@@ -113,6 +121,7 @@ public void OnPluginStart()
 	RegAdminCmd("sm_restartmap", RestartMap, ADMFLAG_ROOT, "restarts map");
 	HookEvent("player_disconnect", PlayerDisconnect_Event, EventHookMode_Pre);
 	HookEvent("player_team", Event_PlayerTeam);
+	LoadDonateConfig();
 	ChangeLobby();
 }
 
@@ -462,13 +471,21 @@ public Action DonateServer(int client, int args)
 	return Plugin_Handled;
 }
 
+public Action ReloadDonateConfig(int client, int args)
+{
+	LoadDonateConfig();
+	ReplyToCommand(client, "[AnneDonate] 已重新读取赞助配置，共 %d 个档位。", g_iDonateOptionCount);
+	return Plugin_Handled;
+}
+
 public void ResetMode()
 {
 	for(int i = 1; i <= MaxClients; i++)
 	{
 		if(IsValidClient(i) && !IsFakeClient(i))
 		{
-			ShowDonateWebToPlayer(i);
+			CPrintToChat(i, "{green}[AnneDonate]{default} 当前属于高峰期，仅管理员可以游玩。请赞助管理员后继续游玩。");
+			ShowDonateAmountMenu(i);
 		}
 	}
 }
@@ -506,9 +523,10 @@ void ShowDonateAmountMenu(int client)
 {
 	Menu menu = new Menu(DonateAmountMenuHandler);
 	menu.SetTitle("请选择赞助金额：");
-	menu.AddItem("20", "20 元 / 30 天");
-	menu.AddItem("100", "100 元 / 120 天");
-	menu.AddItem("168", "168 元 / 365 天");
+	for(int i = 0; i < g_iDonateOptionCount; i++)
+	{
+		menu.AddItem(g_sDonateOptionAmount[i], g_sDonateOptionDisplay[i]);
+	}
 	menu.AddItem("web", "只打开赞助网页");
 	menu.ExitButton = true;
 	menu.Display(client, 20);
@@ -578,7 +596,7 @@ void SubmitDonateRequest(int client, const char[] amount, const char[] method, c
 
 	if(GetFeatureStatus(FeatureType_Native, "SteamWorks_CreateHTTPRequest") != FeatureStatus_Available)
 	{
-		CPrintToChat(client, "{green}[AnneDonate]{default} SteamWorks 不可用，已打开赞助网页，请用网页或手机提交申请。");
+		CPrintToChat(client, "{green}[AnneDonate]{default} SteamWorks 不可用，已打开赞助页面，请扫码支付后联系管理员核实。");
 		return;
 	}
 
@@ -604,7 +622,7 @@ void SubmitDonateRequest(int client, const char[] amount, const char[] method, c
 		return;
 	}
 
-	CPrintToChat(client, "{green}[AnneDonate]{default} 已提交赞助申请，网页已打开，请扫码完成付款。");
+	CPrintToChat(client, "{green}[AnneDonate]{default} 正在提交赞助信息，赞助页面将用于扫码支付。");
 }
 
 public void DonateSubmitCompleted(Handle request, bool failure, bool requestSuccessful, EHTTPStatusCode statusCode, any userid)
@@ -614,11 +632,11 @@ public void DonateSubmitCompleted(Handle request, bool failure, bool requestSucc
 	{
 		if(failure || !requestSuccessful || statusCode < k_EHTTPStatusCode200OK || statusCode >= k_EHTTPStatusCode300MultipleChoices)
 		{
-			CPrintToChat(client, "{green}[AnneDonate]{default} 赞助申请提交失败，HTTP 状态: %d。", statusCode);
+			CPrintToChat(client, "{green}[AnneDonate]{default} 赞助信息提交失败，HTTP 状态: %d。请扫码支付后联系管理员核实。", statusCode);
 		}
 		else
 		{
-			CPrintToChat(client, "{green}[AnneDonate]{default} 赞助申请提交成功。");
+			CPrintToChat(client, "{green}[AnneDonate]{default} 赞助信息已提交，请在打开的赞助页面扫码支付。");
 		}
 	}
 	delete request;
@@ -628,6 +646,50 @@ void GetDonateBaseUrl(char[] baseUrl, int maxlen)
 {
 	GetConVarString(hCvarDonateUrl, baseUrl, maxlen);
 	ReplaceString(baseUrl, maxlen, "/l4d2/sponsor/l4d2.php", "/sponsor/l4d2.php", false);
+}
+
+void LoadDonateConfig()
+{
+	g_iDonateOptionCount = 0;
+
+	char path[PLATFORM_MAX_PATH];
+	BuildPath(Path_SM, path, sizeof(path), DONATE_CONFIG_FILE);
+
+	KeyValues kv = new KeyValues("AnneDonate");
+	if(kv.ImportFromFile(path) && kv.JumpToKey("items") && kv.GotoFirstSubKey())
+	{
+		do
+		{
+			if(g_iDonateOptionCount >= DONATE_MAX_OPTIONS)
+				break;
+
+			kv.GetString("amount", g_sDonateOptionAmount[g_iDonateOptionCount], sizeof(g_sDonateOptionAmount[]));
+			kv.GetString("display", g_sDonateOptionDisplay[g_iDonateOptionCount], sizeof(g_sDonateOptionDisplay[]));
+			if(g_sDonateOptionAmount[g_iDonateOptionCount][0] != '\0' && g_sDonateOptionDisplay[g_iDonateOptionCount][0] != '\0')
+			{
+				g_iDonateOptionCount++;
+			}
+		}
+		while(kv.GotoNextKey());
+	}
+	delete kv;
+
+	if(g_iDonateOptionCount == 0)
+	{
+		AddDefaultDonateOption("20", "20 元 / 30 天");
+		AddDefaultDonateOption("100", "100 元 / 180 天");
+		AddDefaultDonateOption("168", "168 元 / 365 天");
+	}
+}
+
+void AddDefaultDonateOption(const char[] amount, const char[] display)
+{
+	if(g_iDonateOptionCount >= DONATE_MAX_OPTIONS)
+		return;
+
+	strcopy(g_sDonateOptionAmount[g_iDonateOptionCount], sizeof(g_sDonateOptionAmount[]), amount);
+	strcopy(g_sDonateOptionDisplay[g_iDonateOptionCount], sizeof(g_sDonateOptionDisplay[]), display);
+	g_iDonateOptionCount++;
 }
 
 stock void UrlEncode(const char[] input, char[] output, int maxlen)
