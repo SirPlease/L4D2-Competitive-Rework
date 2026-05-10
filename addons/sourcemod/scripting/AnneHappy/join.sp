@@ -54,6 +54,9 @@ bool
 	g_bUpdateSystemAvailable = false, 
 	g_bGroupSystemAvailable = false;
 
+char
+	g_sDonateAmount[MAXPLAYERS + 1][16];
+
 ConVar
 	hCvarMotdTitle,
 	hCvarMotdUrl,
@@ -441,7 +444,21 @@ public Action DonateServer(int client, int args)
 	if(!IsValidClient(client) || IsFakeClient(client))
 		return Plugin_Handled;
 
-	ShowDonateWebToPlayer(client);
+	if(args >= 2)
+	{
+		char amount[16], method[16], note[128];
+		GetCmdArg(1, amount, sizeof(amount));
+		GetCmdArg(2, method, sizeof(method));
+		if(args >= 3)
+		{
+			GetCmdArg(3, note, sizeof(note));
+		}
+		SubmitDonateRequest(client, amount, method, note);
+		ShowDonateWebToPlayer(client);
+		return Plugin_Handled;
+	}
+
+	ShowDonateAmountMenu(client);
 	return Plugin_Handled;
 }
 
@@ -477,13 +494,140 @@ void ShowDonateWebToPlayer(int client)
 
 	char title[64], baseUrl[192], url[384], separator[2];
 	GetConVarString(hCvarMotdTitle, title, sizeof(title));
-	GetConVarString(hCvarDonateUrl, baseUrl, sizeof(baseUrl));
-	ReplaceString(baseUrl, sizeof(baseUrl), "/l4d2/sponsor/l4d2.php", "/sponsor/l4d2.php", false);
+	GetDonateBaseUrl(baseUrl, sizeof(baseUrl));
 	strcopy(separator, sizeof(separator), StrContains(baseUrl, "?", false) == -1 ? "?" : "&");
 	Format(url, sizeof(url), "%s%ssteam_id=%s&name=%s", baseUrl, separator, steam64, encodedName);
 
 	PrintToConsole(client, "[AnneDonate] Open donate url: %s", url);
 	ShowMOTDPanel(client, title, url, MOTDPANEL_TYPE_URL);
+}
+
+void ShowDonateAmountMenu(int client)
+{
+	Menu menu = new Menu(DonateAmountMenuHandler);
+	menu.SetTitle("请选择赞助金额：");
+	menu.AddItem("20", "20 元 / 30 天");
+	menu.AddItem("100", "100 元 / 120 天");
+	menu.AddItem("168", "168 元 / 365 天");
+	menu.AddItem("web", "只打开赞助网页");
+	menu.ExitButton = true;
+	menu.Display(client, 20);
+}
+
+public int DonateAmountMenuHandler(Menu menu, MenuAction action, int client, int item)
+{
+	if(action == MenuAction_Select)
+	{
+		char amount[16];
+		menu.GetItem(item, amount, sizeof(amount));
+		if(StrEqual(amount, "web"))
+		{
+			ShowDonateWebToPlayer(client);
+		}
+		else
+		{
+			strcopy(g_sDonateAmount[client], sizeof(g_sDonateAmount[]), amount);
+			ShowDonateMethodMenu(client);
+		}
+	}
+	else if(action == MenuAction_End)
+	{
+		delete menu;
+	}
+	return 0;
+}
+
+void ShowDonateMethodMenu(int client)
+{
+	Menu menu = new Menu(DonateMethodMenuHandler);
+	menu.SetTitle("请选择支付方式：");
+	menu.AddItem("wechat", "微信支付");
+	menu.AddItem("alipay", "支付宝");
+	menu.AddItem("other", "其他");
+	menu.ExitButton = true;
+	menu.Display(client, 20);
+}
+
+public int DonateMethodMenuHandler(Menu menu, MenuAction action, int client, int item)
+{
+	if(action == MenuAction_Select)
+	{
+		char method[16];
+		menu.GetItem(item, method, sizeof(method));
+		SubmitDonateRequest(client, g_sDonateAmount[client], method, "");
+		ShowDonateWebToPlayer(client);
+	}
+	else if(action == MenuAction_End)
+	{
+		delete menu;
+	}
+	return 0;
+}
+
+void SubmitDonateRequest(int client, const char[] amount, const char[] method, const char[] note)
+{
+	char baseUrl[192], steam64[32], name[MAX_NAME_LENGTH];
+	GetDonateBaseUrl(baseUrl, sizeof(baseUrl));
+	GetClientName(client, name, sizeof(name));
+
+	if(!GetClientAuthId(client, AuthId_SteamID64, steam64, sizeof(steam64), true))
+	{
+		CPrintToChat(client, "{green}[AnneDonate]{default} 无法获取 SteamID64，请稍后重试。");
+		return;
+	}
+
+	if(GetFeatureStatus(FeatureType_Native, "SteamWorks_CreateHTTPRequest") != FeatureStatus_Available)
+	{
+		CPrintToChat(client, "{green}[AnneDonate]{default} SteamWorks 不可用，已打开赞助网页，请用网页或手机提交申请。");
+		return;
+	}
+
+	Handle request = SteamWorks_CreateHTTPRequest(k_EHTTPMethodPOST, baseUrl);
+	if(request == null)
+	{
+		CPrintToChat(client, "{green}[AnneDonate]{default} 创建赞助申请失败，请稍后重试。");
+		return;
+	}
+
+	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "direct_steam_id", steam64);
+	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "direct_name", name);
+	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "amount", amount);
+	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "method", method);
+	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "note", note);
+	SteamWorks_SetHTTPRequestContextValue(request, GetClientUserId(client));
+	SteamWorks_SetHTTPCallbacks(request, DonateSubmitCompleted);
+
+	if(!SteamWorks_SendHTTPRequest(request))
+	{
+		delete request;
+		CPrintToChat(client, "{green}[AnneDonate]{default} 发送赞助申请失败，请稍后重试。");
+		return;
+	}
+
+	CPrintToChat(client, "{green}[AnneDonate]{default} 已提交赞助申请，网页已打开，请扫码完成付款。");
+}
+
+public void DonateSubmitCompleted(Handle request, bool failure, bool requestSuccessful, EHTTPStatusCode statusCode, any userid)
+{
+	int client = GetClientOfUserId(userid);
+	if(IsValidClient(client) && !IsFakeClient(client))
+	{
+		if(failure || !requestSuccessful || statusCode < k_EHTTPStatusCode200OK || statusCode >= k_EHTTPStatusCode300MultipleChoices)
+		{
+			CPrintToChat(client, "{green}[AnneDonate]{default} 赞助申请提交失败，HTTP 状态: %d。", statusCode);
+		}
+		else
+		{
+			CPrintToChat(client, "{green}[AnneDonate]{default} 赞助申请提交成功。");
+		}
+	}
+	delete request;
+}
+
+void GetDonateBaseUrl(char[] baseUrl, int maxlen)
+{
+	GetConVarString(hCvarDonateUrl, baseUrl, maxlen);
+	ReplaceString(baseUrl, maxlen, "/l4d2/sponsor/l4d2.php", "/sponsor/l4d2.php", false);
 }
 
 stock void UrlEncode(const char[] input, char[] output, int maxlen)
