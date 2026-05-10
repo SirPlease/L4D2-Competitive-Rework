@@ -38,7 +38,7 @@
 	"9"
 	{
 		"type"		"S"
-		"text"		"{LIGHTGREEN}输入 {GREEN}!dance{LIGHTGREEN} 跳跳舞解解压，如果跳舞人物没动作\n请steam联机选项打开允许全部服务器内容后重新进入服务器"
+		"text"		"{LIGHTGREEN}如果欣赏腐竹的工作，输入 {GREEN}!donate{LIGHTGREEN}赞助服务器"
 	}
 	"10"
 	{
