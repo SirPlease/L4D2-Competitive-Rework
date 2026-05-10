@@ -309,6 +309,17 @@ CREATE TABLE `server_settings` (
   PRIMARY KEY (`sname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `l4d_server_status`;
+CREATE TABLE `l4d_server_status` (
+  `server_id` varchar(128) CHARACTER SET utf8mb4 NOT NULL,
+  `hostname` varchar(128) CHARACTER SET utf8mb4 NOT NULL DEFAULT '',
+  `players` int(11) NOT NULL DEFAULT '0',
+  `updated_at` int(11) NOT NULL DEFAULT '0',
+  `enabled` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`server_id`),
+  KEY `updated_at` (`updated_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 DROP TABLE IF EXISTS `settings`;
 CREATE TABLE `settings` (

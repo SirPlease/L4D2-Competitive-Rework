@@ -90,12 +90,13 @@ ConVar survivor_limit, z_max_player_zombies;
 int g_iCvarSurvivorLimit, g_iCvarInfectedMax;
 
 ConVar g_hCvarEnable, g_hCvarTime, g_hCvarCount, g_hCvarFlag, g_hCvarDelay;
+ConVar g_hCvarPeakMode, g_hCvarPeakRatio, g_hCvarDBConfig, g_hCvarServerId, g_hCvarStatusTable, g_hCvarStatusInterval, g_hCvarStatusMaxAge;
 // 服务器本地相对 UTC 的偏移（分钟）。优先用 %z，失败时回退到可配置的 ConVar。
 ConVar g_hTzServerOffset; // 可选：回退用（例如老 Windows 不支持 %z）
 bool g_bCvarEnable;
-int g_iCvarCount;
-float g_fCvarDelay;
-char g_sCvarime[128], g_sCvarFlag[AdminFlags_TOTAL];
+int g_iCvarCount, g_iCvarPeakMode, g_iCvarStatusMaxAge;
+float g_fCvarDelay, g_fCvarPeakRatio, g_fCvarStatusInterval;
+char g_sCvarime[128], g_sCvarFlag[AdminFlags_TOTAL], g_sCvarDBConfig[64], g_sCvarServerId[128], g_sCvarStatusTable[64];
 
 enum struct ETimeData
 {
@@ -117,7 +118,11 @@ bool
     g_bPluginStart;
 
 Handle
-    g_hDetectTimer;
+    g_hDetectTimer,
+    g_hStatusTimer;
+
+Database g_hDB;
+bool g_bDBReady, g_bPeakQueryPending, g_bLastPeakActive, g_bLastPeakKnown, g_bIsMySQL;
 
 public void OnPluginStart()
 { 
@@ -129,6 +134,13 @@ public void OnPluginStart()
     g_hCvarCount        = CreateConVar(	PLUGIN_NAME ... "_count", 		  "3",              "檢測 survivor_limit + infected 空位 <= 此數值之時，強制執行sm_resetmatch, 卸載模式", CVAR_FLAGS, true, 1.0, true, 32.0);
     g_hCvarFlag         = CreateConVar(	PLUGIN_NAME ... "_flag", 		  "b",              "有這權限的管理員在場就不會被強制卸載模式", CVAR_FLAGS);
     g_hCvarDelay        = CreateConVar(	PLUGIN_NAME ... "_delay", 		  "60.0",           "地圖載入此秒數後才會檢測時間與人數", CVAR_FLAGS, true, 0.0);
+    g_hCvarPeakMode     = CreateConVar( PLUGIN_NAME ... "_peak_mode",     "1",              "高峰期判定方式: 0=按_time時間段, 1=共享数据库统计所有服务器有玩家比例", CVAR_FLAGS, true, 0.0, true, 1.0);
+    g_hCvarPeakRatio    = CreateConVar( PLUGIN_NAME ... "_peak_ratio",    "0.60",           "peak_mode=1 时，有玩家服务器数/有效服务器数 >= 此比例即视为高峰期", CVAR_FLAGS, true, 0.0, true, 1.0);
+    g_hCvarDBConfig     = CreateConVar( PLUGIN_NAME ... "_db_config",     "l4dstats",        "peak_mode=1 使用的 databases.cfg 区块名", CVAR_FLAGS);
+    g_hCvarServerId     = CreateConVar( PLUGIN_NAME ... "_server_id",     "",               "本服务器唯一ID，留空自动使用 hostname:hostport", CVAR_FLAGS);
+    g_hCvarStatusTable  = CreateConVar( PLUGIN_NAME ... "_status_table",  "l4d_server_status", "peak_mode=1 使用的服务器状态表名", CVAR_FLAGS);
+    g_hCvarStatusInterval = CreateConVar(PLUGIN_NAME ... "_status_interval", "30.0",        "peak_mode=1 本服人数写入数据库的间隔秒数", CVAR_FLAGS, true, 5.0);
+    g_hCvarStatusMaxAge = CreateConVar( PLUGIN_NAME ... "_status_max_age", "90",            "peak_mode=1 查询全服状态时，只统计多少秒内更新过的服务器", CVAR_FLAGS, true, 10.0);
     CreateConVar(                       PLUGIN_NAME ... "_version",       PLUGIN_VERSION, PLUGIN_NAME ... " Plugin Version", CVAR_FLAGS_PLUGIN_VERSION);
     g_hTzServerOffset = CreateConVar(PLUGIN_NAME ... "_server_utc_offset", "480",
         "Fallback: server's UTC offset in minutes (only used if %z unsupported).");
@@ -143,6 +155,13 @@ public void OnPluginStart()
     g_hCvarCount.AddChangeHook(ConVarChanged_TimeCvars);
     g_hCvarFlag.AddChangeHook(ConVarChanged_TimeCvars);
     g_hCvarDelay.AddChangeHook(ConVarChanged_TimeCvars);
+    g_hCvarPeakMode.AddChangeHook(ConVarChanged_PeakCvars);
+    g_hCvarPeakRatio.AddChangeHook(ConVarChanged_PeakCvars);
+    g_hCvarDBConfig.AddChangeHook(ConVarChanged_PeakCvars);
+    g_hCvarServerId.AddChangeHook(ConVarChanged_PeakCvars);
+    g_hCvarStatusTable.AddChangeHook(ConVarChanged_PeakCvars);
+    g_hCvarStatusInterval.AddChangeHook(ConVarChanged_PeakCvars);
+    g_hCvarStatusMaxAge.AddChangeHook(ConVarChanged_PeakCvars);
 
     HookEvent("round_start",            Event_RoundStart, EventHookMode_PostNoCopy);
     HookEvent("player_spawn",           Event_PlayerSpawn);
@@ -152,6 +171,9 @@ public void OnPluginStart()
     HookEvent("finale_vehicle_leaving", Event_RoundEnd,		EventHookMode_PostNoCopy); //final map final rescue vehicle leaving  (does not trigger round_end)
 
     HookEvent("player_team",            Event_PlayerTeam);
+
+    SetupPeakDatabase();
+    RestartStatusTimer();
 }
 
 // Cvars-------------------------------
@@ -167,6 +189,13 @@ void ConVarChanged_TimeCvars(ConVar hCvar, const char[] sOldVal, const char[] sN
     GetTimeCvars();
 }
 
+void ConVarChanged_PeakCvars(ConVar hCvar, const char[] sOldVal, const char[] sNewVal)
+{
+    GetCvars();
+    SetupPeakDatabase();
+    RestartStatusTimer();
+}
+
 void GetCvars()
 {
     g_iCvarSurvivorLimit = survivor_limit.IntValue;
@@ -177,6 +206,25 @@ void GetCvars()
     g_iCvarCount = g_hCvarCount.IntValue;
     g_hCvarFlag.GetString(g_sCvarFlag, sizeof(g_sCvarFlag));
     g_fCvarDelay = g_hCvarDelay.FloatValue;
+    g_iCvarPeakMode = g_hCvarPeakMode.IntValue;
+    g_fCvarPeakRatio = g_hCvarPeakRatio.FloatValue;
+    g_hCvarDBConfig.GetString(g_sCvarDBConfig, sizeof(g_sCvarDBConfig));
+    g_hCvarServerId.GetString(g_sCvarServerId, sizeof(g_sCvarServerId));
+    g_hCvarStatusTable.GetString(g_sCvarStatusTable, sizeof(g_sCvarStatusTable));
+    g_fCvarStatusInterval = g_hCvarStatusInterval.FloatValue;
+    g_iCvarStatusMaxAge = g_hCvarStatusMaxAge.IntValue;
+
+    TrimString(g_sCvarServerId);
+    TrimString(g_sCvarStatusTable);
+    if (g_sCvarStatusTable[0] == '\0' || !IsSafeSQLIdentifier(g_sCvarStatusTable))
+    {
+        strcopy(g_sCvarStatusTable, sizeof(g_sCvarStatusTable), "l4d_server_status");
+    }
+
+    if (g_sCvarServerId[0] == '\0')
+    {
+        BuildDefaultServerId(g_sCvarServerId, sizeof(g_sCvarServerId));
+    }
 }
 
 void GetTimeCvars()
@@ -223,6 +271,12 @@ public void OnMapEnd()
     g_bPluginStart = false;
 }
 
+public void OnPluginEnd()
+{
+    delete g_hStatusTimer;
+    delete g_hDB;
+}
+
 // Event-------------------------------
 
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast) 
@@ -252,6 +306,9 @@ void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 
 void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast) 
 {
+    if (g_iCvarPeakMode == 1)
+        CreateTimer(1.0, Timer_UpdateServerStatus, _, TIMER_FLAG_NO_MAPCHANGE);
+
     if(!g_bCvarEnable || !g_bPluginStart || g_hDetectTimer != null) return;
 
     int userid = event.GetInt("userid");
@@ -287,6 +344,20 @@ Action Timer_DetectPlayerCount(Handle timer)
     if (g_iCvarSurvivorLimit + GetInfectedSlots() > g_iCvarCount)
         return Plugin_Continue;
 
+    if (g_iCvarPeakMode == 1)
+    {
+        QueryPeakState();
+        return Plugin_Continue;
+    }
+
+    if (IsInConfiguredTime())
+        ApplyPeakRestriction();
+
+    return Plugin_Continue;
+}
+
+bool IsInConfiguredTime()
+{
     bool bIsInCvarTime = false;
     ETimeData eTimeData;
 
@@ -311,16 +382,215 @@ Action Timer_DetectPlayerCount(Handle timer)
         }
     }
 
-    if (!bIsInCvarTime)
-        return Plugin_Continue;
+    return bIsInCvarTime;
+}
 
+void ApplyPeakRestriction()
+{
     if (IsAnyAdminOnline())
-        return Plugin_Continue;
+        return;
 
     ServerCommand("sm_resetmatch");
-    CPrintToChatAll("管理员不在场，此时间段模式人数不足 {green}%d{default} 人，{green}强制卸载模式!!!!", g_iCvarCount);
+    CPrintToChatAll("管理员不在场，高峰期模式人数不足 {green}%d{default} 人，{green}强制卸载模式!!!!", g_iCvarCount);
+}
 
+void SetupPeakDatabase()
+{
+    if (g_iCvarPeakMode != 1)
+        return;
+
+    g_bDBReady = false;
+    g_bPeakQueryPending = false;
+    g_bLastPeakKnown = false;
+
+    delete g_hDB;
+    SQL_TConnect(SQLCB_OnConnect, g_sCvarDBConfig, 0);
+}
+
+public void SQLCB_OnConnect(Handle owner, Handle hndl, const char[] error, any data)
+{
+    if (hndl == null)
+    {
+        LogError("[%s] DB connect failed: %s", PLUGIN_NAME, error);
+        return;
+    }
+
+    g_hDB = view_as<Database>(hndl);
+
+    char sDriver[32];
+    if (!SQL_GetDriverIdent(owner, sDriver, sizeof(sDriver)))
+    {
+        LogError("[%s] Failed to get DB driver ident", PLUGIN_NAME);
+        return;
+    }
+    g_bIsMySQL = StrEqual(sDriver, "mysql", false);
+
+    char sQuery[768];
+    if (g_bIsMySQL)
+    {
+        FormatEx(sQuery, sizeof(sQuery),
+            "CREATE TABLE IF NOT EXISTS `%s` ( \
+                `server_id` VARCHAR(128) NOT NULL, \
+                `hostname` VARCHAR(128) NOT NULL DEFAULT '', \
+                `players` INT NOT NULL DEFAULT 0, \
+                `updated_at` INT NOT NULL DEFAULT 0, \
+                `enabled` TINYINT NOT NULL DEFAULT 1, \
+                PRIMARY KEY (`server_id`), \
+                KEY `updated_at` (`updated_at`) \
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
+            g_sCvarStatusTable);
+    }
+    else
+    {
+        FormatEx(sQuery, sizeof(sQuery),
+            "CREATE TABLE IF NOT EXISTS `%s` ( \
+                `server_id` TEXT NOT NULL PRIMARY KEY, \
+                `hostname` TEXT NOT NULL DEFAULT '', \
+                `players` INTEGER NOT NULL DEFAULT 0, \
+                `updated_at` INTEGER NOT NULL DEFAULT 0, \
+                `enabled` INTEGER NOT NULL DEFAULT 1 \
+            )",
+            g_sCvarStatusTable);
+    }
+
+    SQL_TQuery(g_hDB, SQLCB_CreateStatusTable, sQuery);
+}
+
+public void SQLCB_CreateStatusTable(Handle owner, Handle hndl, const char[] error, any data)
+{
+    if (hndl == null && error[0] != '\0')
+    {
+        LogError("[%s] Create status table failed: %s", PLUGIN_NAME, error);
+        return;
+    }
+
+    g_bDBReady = true;
+    UpdateServerStatus();
+}
+
+void RestartStatusTimer()
+{
+    delete g_hStatusTimer;
+
+    if (g_iCvarPeakMode != 1)
+        return;
+
+    g_hStatusTimer = CreateTimer(g_fCvarStatusInterval, Timer_UpdateServerStatus, _, TIMER_REPEAT);
+}
+
+Action Timer_UpdateServerStatus(Handle timer)
+{
+    UpdateServerStatus();
     return Plugin_Continue;
+}
+
+void UpdateServerStatus()
+{
+    if (g_iCvarPeakMode != 1 || !g_bDBReady || g_hDB == null)
+        return;
+
+    char sServerId[256], sHostname[256], sEscServerId[512], sEscHostname[512];
+    strcopy(sServerId, sizeof(sServerId), g_sCvarServerId);
+
+    ConVar hHostname = FindConVar("hostname");
+    if (hHostname != null)
+        hHostname.GetString(sHostname, sizeof(sHostname));
+    else
+        strcopy(sHostname, sizeof(sHostname), sServerId);
+
+    SQL_EscapeString(g_hDB, sServerId, sEscServerId, sizeof(sEscServerId));
+    SQL_EscapeString(g_hDB, sHostname, sEscHostname, sizeof(sEscHostname));
+
+    char sQuery[1024];
+    if (g_bIsMySQL)
+    {
+        FormatEx(sQuery, sizeof(sQuery),
+            "REPLACE INTO `%s` (`server_id`, `hostname`, `players`, `updated_at`, `enabled`) VALUES ('%s', '%s', %d, UNIX_TIMESTAMP(), 1)",
+            g_sCvarStatusTable, sEscServerId, sEscHostname, GetHumanPlayerCount());
+    }
+    else
+    {
+        FormatEx(sQuery, sizeof(sQuery),
+            "REPLACE INTO `%s` (`server_id`, `hostname`, `players`, `updated_at`, `enabled`) VALUES ('%s', '%s', %d, strftime('%%s','now'), 1)",
+            g_sCvarStatusTable, sEscServerId, sEscHostname, GetHumanPlayerCount());
+    }
+
+    SQL_TQuery(g_hDB, SQLCB_Generic, sQuery);
+}
+
+void QueryPeakState()
+{
+    if (g_iCvarPeakMode != 1)
+        return;
+
+    if (!g_bDBReady || g_hDB == null)
+    {
+        if (g_bLastPeakKnown && g_bLastPeakActive)
+            ApplyPeakRestriction();
+        return;
+    }
+
+    if (g_bPeakQueryPending)
+        return;
+
+    UpdateServerStatus();
+    g_bPeakQueryPending = true;
+
+    char sQuery[512];
+    if (g_bIsMySQL)
+    {
+        FormatEx(sQuery, sizeof(sQuery),
+            "SELECT SUM(CASE WHEN `players` > 0 THEN 1 ELSE 0 END), COUNT(*) FROM `%s` WHERE `enabled` = 1 AND `updated_at` >= UNIX_TIMESTAMP() - %d",
+            g_sCvarStatusTable, g_iCvarStatusMaxAge);
+    }
+    else
+    {
+        FormatEx(sQuery, sizeof(sQuery),
+            "SELECT SUM(CASE WHEN `players` > 0 THEN 1 ELSE 0 END), COUNT(*) FROM `%s` WHERE `enabled` = 1 AND `updated_at` >= strftime('%%s','now') - %d",
+            g_sCvarStatusTable, g_iCvarStatusMaxAge);
+    }
+
+    SQL_TQuery(g_hDB, SQLCB_QueryPeakState, sQuery);
+}
+
+public void SQLCB_QueryPeakState(Handle owner, Handle hndl, const char[] error, any data)
+{
+    g_bPeakQueryPending = false;
+
+    if (hndl == null)
+    {
+        LogError("[%s] Query peak state failed: %s", PLUGIN_NAME, error);
+        return;
+    }
+
+    if (!SQL_FetchRow(hndl))
+        return;
+
+    int iActiveServers = SQL_FetchInt(hndl, 0);
+    int iTotalServers = SQL_FetchInt(hndl, 1);
+    bool bIsPeak = false;
+
+    if (iTotalServers > 0)
+    {
+        float fRatio = float(iActiveServers) / float(iTotalServers);
+        bIsPeak = (fRatio >= g_fCvarPeakRatio);
+    }
+
+    g_bLastPeakKnown = true;
+    g_bLastPeakActive = bIsPeak;
+
+    if (!bIsPeak || !g_bCvarEnable || g_iCvarSurvivorLimit + GetInfectedSlots() > g_iCvarCount)
+        return;
+
+    ApplyPeakRestriction();
+}
+
+public void SQLCB_Generic(Handle owner, Handle hndl, const char[] error, any data)
+{
+    if (hndl == null && error[0] != '\0')
+    {
+        LogError("[%s] SQL error: %s", PLUGIN_NAME, error);
+    }
 }
 
 
@@ -406,6 +676,50 @@ int GetInfectedSlots()
     {
         return g_iCvarInfectedMax;
     }
+}
+
+int GetHumanPlayerCount()
+{
+    int iCount = 0;
+    for (int i = 1; i <= MaxClients; i++)
+    {
+        if (IsClientInGame(i) && !IsFakeClient(i))
+            iCount++;
+    }
+
+    return iCount;
+}
+
+void BuildDefaultServerId(char[] buffer, int maxlen)
+{
+    char sHostname[96];
+    ConVar hHostname = FindConVar("hostname");
+    if (hHostname != null)
+        hHostname.GetString(sHostname, sizeof(sHostname));
+    else
+        strcopy(sHostname, sizeof(sHostname), "server");
+
+    ConVar hHostPort = FindConVar("hostport");
+    int iPort = (hHostPort != null) ? hHostPort.IntValue : 0;
+
+    FormatEx(buffer, maxlen, "%s:%d", sHostname, iPort);
+}
+
+bool IsSafeSQLIdentifier(const char[] value)
+{
+    int iLen = strlen(value);
+    if (iLen <= 0)
+        return false;
+
+    for (int i = 0; i < iLen; i++)
+    {
+        int c = value[i];
+        bool bOk = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_';
+        if (!bOk)
+            return false;
+    }
+
+    return true;
 }
 
 void ClearDefault()
