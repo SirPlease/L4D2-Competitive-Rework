@@ -622,13 +622,29 @@ public void HTTPResponse_GetOwnedGames(HTTPResponse response, int client)
 	// jump to "games" array section
 	JSONArray jsonArray = view_as<JSONArray>(dataObj.Get("games"));
 	delete dataObj;
+
+	if (!jsonArray || jsonArray.Length <= 0)
+	{
+		player[client].totalplaytime = 0;
+		player[client].last2weektime = 0;
+		delete jsonArray;
+		return;
+	}
 	
 	// right here is the data requested
 	dataObj = view_as<JSONObject>(jsonArray.Get(0));
+
+	if (!dataObj)
+	{
+		player[client].totalplaytime = 0;
+		player[client].last2weektime = 0;
+		delete jsonArray;
+		return;
+	}
 	
 	// playtime is formatted in minutes
-	player[client].totalplaytime = dataObj.GetInt("playtime_forever");
-	player[client].last2weektime = dataObj.GetInt("playtime_2weeks");
+	player[client].totalplaytime = dataObj.HasKey("playtime_forever") ? dataObj.GetInt("playtime_forever") : 0;
+	player[client].last2weektime = dataObj.HasKey("playtime_2weeks") ? dataObj.GetInt("playtime_2weeks") : 0;
 	//LogError("%i %i", player[client].totalplaytime, player[client].last2weektime);
 	delete jsonArray;
 	delete dataObj;

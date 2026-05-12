@@ -4,6 +4,8 @@
 #pragma newdecls required
 
 bool g_bFullyConnected;
+bool g_bConnecting;
+Handle g_hReconnectTimer = null;
 
 Database g_hDatabase = null;
 
@@ -28,16 +30,49 @@ public void OnPluginStart()
 
 public void OnConfigsExecuted()
 {
-	if (!g_hDatabase)
+	SQL_ConnectChatLog();
+}
+
+void SQL_ConnectChatLog()
+{
+	if (g_hDatabase != null || g_bConnecting)
+		return;
+
+	g_bConnecting = true;
+	Database.Connect(SQL_Connection, "chatlog");
+}
+
+void SQL_ScheduleReconnect()
+{
+	g_bFullyConnected = false;
+	g_bConnecting = false;
+
+	if (g_hDatabase != null)
 	{
-		Database.Connect(SQL_Connection, "chatlog");
+		delete g_hDatabase;
+		g_hDatabase = null;
 	}
+
+	if (g_hReconnectTimer == null)
+		g_hReconnectTimer = CreateTimer(10.0, Timer_ReconnectDatabase);
+}
+
+public Action Timer_ReconnectDatabase(Handle timer, any data)
+{
+	g_hReconnectTimer = null;
+	SQL_ConnectChatLog();
+	return Plugin_Stop;
 }
 
 public void SQL_Connection(Database database, const char[] error, int data)
 {
+	g_bConnecting = false;
+
 	if (database == null)
-		SetFailState(error);
+	{
+		LogError("[chatlog] 数据库连接失败: %s", error);
+		SQL_ScheduleReconnect();
+	}
 	else
 	{
 		g_hDatabase = database;
@@ -45,7 +80,7 @@ public void SQL_Connection(Database database, const char[] error, int data)
 		g_hDatabase.SetCharset("utf8mb4");
 
 		g_hDatabase.Query(SQL_CreateCallback, "\
-		CREATE TABLE IF NOT EXISTs`chat_log` ( \
+			CREATE TABLE IF NOT EXISTS `chat_log` ( \
 			`id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT, \
 			`date` DATETIME NULL DEFAULT NULL, \
 			`map` VARCHAR(128) NOT NULL COLLATE 'utf8mb4_general_ci', \
@@ -67,8 +102,12 @@ public void SQL_Connection(Database database, const char[] error, int data)
 public void SQL_CreateCallback(Database datavas, DBResultSet results, const char[] error, int data)
 {
 	if (results == null)
-		SetFailState(error);
-		
+	{
+		LogError("[chatlog] 初始化数据表失败: %s", error);
+		SQL_ScheduleReconnect();
+		return;
+	}
+
 	g_bFullyConnected = true;
 }
 
@@ -122,6 +161,7 @@ public void SQL_Error(Database datavas, DBResultSet results, const char[] error,
 {
 	if (results == null)
 	{
-		SetFailState(error);
+		LogError("[chatlog] SQL 查询失败: %s", error);
+		SQL_ScheduleReconnect();
 	}
 }

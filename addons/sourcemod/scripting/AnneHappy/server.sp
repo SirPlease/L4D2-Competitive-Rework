@@ -748,14 +748,14 @@ void AnnounceBW(int client)
 
     if (teamBroadcast)
     {
-        CPrintToChatAll("[{olive}提示{default}] {blue}%N{default} 已经 {lightgreen}黑白{default}，请优先保护并治疗！", client);
+        CPrintToChatAll("[{olive}提示{default}] {green}%N{default} 已经 {olive}黑白{default}，请优先保护并治疗！", client);
         for (int i = 1; i <= MaxClients; i++)
             if (IsValidClient(i) && GetClientTeam(i) == 2)
                 PrintHintText(i, "%N 已经黑白（再次倒地会直接死亡）！", client);
     }
     else
     {
-        CPrintToChat(client, "[{olive}提示{default}] 你现在 {lightgreen}黑白{default}，请尽快治疗！");
+        CPrintToChat(client, "[{olive}提示{default}] 你现在 {green}黑白{default}，请尽快治疗！");
         PrintHintText(client, "你现在黑白（再次倒地会直接死亡）！");
     }
 

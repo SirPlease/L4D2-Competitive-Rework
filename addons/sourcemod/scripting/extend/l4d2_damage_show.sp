@@ -353,6 +353,28 @@ static bool DB_EnsureReady()
     return (g_DbReady && g_DB != INVALID_HANDLE);
 }
 
+static bool DB_IsConnectionLostError(const char[] error)
+{
+    return StrContains(error, "Lost connection", false) != -1
+        || StrContains(error, "server has gone away", false) != -1;
+}
+
+static void DB_MarkConnectionLost(const char[] error)
+{
+    if (!DB_IsConnectionLostError(error))
+        return;
+
+    if (g_DB != INVALID_HANDLE)
+    {
+        CloseHandle(g_DB);
+        g_DB = INVALID_HANDLE;
+    }
+
+    g_DbReady = false;
+    g_DbConnecting = false;
+    g_DbRetryAfter = GetGameTime() + DB_RETRY_COOLDOWN;
+}
+
 public void SQLCB_OnConnect(Handle owner, Handle hndl, const char[] error, any data)
 {
     LogInfo("[DB] SQLCB_OnConnect fired. hndl=%p error='%s'",
@@ -392,6 +414,7 @@ public void SQLCB_OnSessionDump(Handle owner, Handle hndl, const char[] error, a
     if (error[0])
     {
         LogErr("[DB] session snapshot failed: %s", error);
+        DB_MarkConnectionLost(error);
         return;
     }
     if (hndl != INVALID_HANDLE && SQL_FetchRow(hndl))
@@ -408,7 +431,10 @@ public void SQLCB_OnSessionDump(Handle owner, Handle hndl, const char[] error, a
 public void SQLCB_Nop(Handle owner, Handle hndl, const char[] error, any data)
 {
     if (error[0] != '\0')
+    {
         LogErr("[DB] SQL error in NOP: %s", error);
+        DB_MarkConnectionLost(error);
+    }
 }
 
 // ========== DB 加载 / 保存（DB 优先 + 队列保存） ==========
@@ -470,6 +496,7 @@ public void SQLCB_Load(Handle owner, Handle hndl, const char[] error, any data)
         g_LoadState[client] = LS_Ready;
         LogErr("[Load] SQL error: %s. Used %s for client %d.",
                error, ok ? "cookie" : "defaults", client);
+        DB_MarkConnectionLost(error);
         return;
     }
 
@@ -665,6 +692,7 @@ public void SQLCB_Save(Handle owner, Handle hndl, const char[] error, any data)
     if (error[0] != '\0')
     {
         LogErr("[Save] SQL error for client %d: %s", client, error);
+        DB_MarkConnectionLost(error);
     }
     else
     {

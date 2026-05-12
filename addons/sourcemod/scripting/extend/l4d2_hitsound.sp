@@ -505,6 +505,26 @@ public void SQL_OnConnect(Handle owner, Handle hndl, const char[] error, any dat
     ReloadAllPlayersPrefs();
 }
 
+bool DB_IsConnectionLostError(const char[] error)
+{
+    return StrContains(error, "Lost connection", false) != -1
+        || StrContains(error, "server has gone away", false) != -1;
+}
+
+void DB_MarkConnectionLost(const char[] error)
+{
+    if (!DB_IsConnectionLostError(error))
+        return;
+
+    if (g_hDB != INVALID_HANDLE)
+    {
+        CloseHandle(g_hDB);
+        g_hDB = INVALID_HANDLE;
+    }
+
+    ScheduleDBConnectRetry();
+}
+
 // ========================================================
 // Persistence: DB + Fallback
 // ========================================================
@@ -534,6 +554,7 @@ public void SQL_OnEnsureColumn(Handle owner, Handle hndl, const char[] error, an
         && StrContains(error, "duplicate column", false) == -1)
     {
         LogError("[hitsound] 自动补充数据库列失败: %s", error);
+        DB_MarkConnectionLost(error);
     }
 }
 
@@ -738,6 +759,7 @@ public void SQL_OnLoadPrefs(Handle owner, Handle hndl, const char[] error, any u
     if (hndl == INVALID_HANDLE)
     {
         LogError("[hitsound] 加载玩家配置失败: %s", error);
+        DB_MarkConnectionLost(error);
         ScheduleLoadRetry(client);
         return;
     }
@@ -823,7 +845,10 @@ void DB_SavePlayerPrefs(int client)
 public void SQL_OnSavePrefs(Handle owner, Handle hndl, const char[] error, any data)
 {
     if (hndl == INVALID_HANDLE)
+    {
         LogError("[hitsound] 保存玩家配置失败: %s", error);
+        DB_MarkConnectionLost(error);
+    }
 }
 
 // KeyValues fallback

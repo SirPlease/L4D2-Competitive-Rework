@@ -35,6 +35,7 @@ public Plugin myinfo =
 
 /* -------------------- ConVars -------------------- */
 Handle g_hDb = INVALID_HANDLE;
+Handle g_hDbReconnectTimer = INVALID_HANDLE;
 
 ConVar gCvarEnable;
 ConVar gCvarDBSection;
@@ -140,11 +141,41 @@ void DB_Connect()
     SQL_TConnect(DB_OnConnected, g_sDBSection, 0);
 }
 
+bool DB_IsConnectionLostError(const char[] error)
+{
+    return StrContains(error, "Lost connection", false) != -1
+        || StrContains(error, "server has gone away", false) != -1;
+}
+
+void DB_MarkConnectionLost(const char[] error)
+{
+    if (!DB_IsConnectionLostError(error))
+        return;
+
+    if (g_hDb != INVALID_HANDLE)
+    {
+        CloseHandle(g_hDb);
+        g_hDb = INVALID_HANDLE;
+    }
+
+    if (g_hDbReconnectTimer == INVALID_HANDLE)
+        g_hDbReconnectTimer = CreateTimer(5.0, Timer_DBReconnect);
+}
+
+public Action Timer_DBReconnect(Handle timer, any data)
+{
+    g_hDbReconnectTimer = INVALID_HANDLE;
+    DB_Connect();
+    return Plugin_Stop;
+}
+
 public void DB_OnConnected(Handle owner, Handle hndl, const char[] error, any data)
 {
     if (hndl == INVALID_HANDLE)
     {
         LogError("[BlockList] DB connect failed: %s", error);
+        if (g_hDbReconnectTimer == INVALID_HANDLE)
+            g_hDbReconnectTimer = CreateTimer(5.0, Timer_DBReconnect);
         return;
     }
 
@@ -191,6 +222,7 @@ public void DB_GenericCallback(Handle owner, Handle hndl, const char[] error, an
     if (hndl == INVALID_HANDLE && error[0] != '\0')
     {
         LogError("[BlockList] SQL error: %s", error);
+        DB_MarkConnectionLost(error);
     }
 }
 
@@ -381,6 +413,7 @@ public void DB_CheckJoinBlock_Callback(Handle owner, Handle hndl, const char[] e
     if (error[0] != '\0' || hndl == INVALID_HANDLE)
     {
         LogError("[BlockList] CheckJoin SQL error: %s", error);
+        DB_MarkConnectionLost(error);
         return;
     }
 
@@ -581,6 +614,7 @@ public void DB_BlockList_Callback(Handle owner, Handle hndl, const char[] error,
     {
         ReplyToCommand(client, "%t", "Query_Failed_Generic");
         LogError("[BlockList] List SQL error: %s", error);
+        DB_MarkConnectionLost(error);
         return;
     }
 
@@ -658,6 +692,7 @@ public void DB_CheckExist_Callback(Handle owner, Handle hndl, const char[] error
     {
         ReplyToCommand(client, "%t", "Query_Failed_Generic");
         LogError("[BlockList] Exist SQL error: %s", error);
+        DB_MarkConnectionLost(error);
         return;
     }
 
@@ -706,6 +741,7 @@ public void DB_Block_Count_Callback(Handle owner, Handle hndl, const char[] erro
     {
         ReplyToCommand(client, "%t", "Block_Failed_Generic");
         LogError("[BlockList] Count SQL error: %s", error);
+        DB_MarkConnectionLost(error);
         return;
     }
 
@@ -748,6 +784,7 @@ public void DB_Block_Insert_Callback(Handle owner, Handle hndl, const char[] err
     {
         ReplyToCommand(client, "%t", "Block_Failed_Generic");
         LogError("[BlockList] Insert SQL error: %s", error);
+        DB_MarkConnectionLost(error);
         return;
     }
 
@@ -791,6 +828,7 @@ public void DB_Unblock_Callback(Handle owner, Handle hndl, const char[] error, a
     {
         ReplyToCommand(client, "%t", "Unblock_Failed_Generic");
         LogError("[BlockList] Delete SQL error: %s", error);
+        DB_MarkConnectionLost(error);
         return;
     }
 
@@ -947,6 +985,7 @@ public void DB_BuildMyListMenu(Handle owner, Handle hndl, const char[] error, an
     {
         PrintToChat(client, "%t", "Query_Failed_Generic");
         LogError("[BlockList] Menu SQL error: %s", error);
+        DB_MarkConnectionLost(error);
         return;
     }
 
