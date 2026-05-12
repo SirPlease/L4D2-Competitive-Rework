@@ -23,7 +23,9 @@
  *     ADD COLUMN `hitsound_kill`  TINYINT NOT NULL DEFAULT 0,
  *     ADD COLUMN `hiticon_head`   TINYINT NOT NULL DEFAULT 0,
  *     ADD COLUMN `hiticon_hit`    TINYINT NOT NULL DEFAULT 0,
- *     ADD COLUMN `hiticon_kill`   TINYINT NOT NULL DEFAULT 0;
+ *     ADD COLUMN `hiticon_kill`   TINYINT NOT NULL DEFAULT 0,
+ *     ADD COLUMN `hitsound_si_only` TINYINT NOT NULL DEFAULT 0,
+ *     ADD COLUMN `hiticon_si_only`  TINYINT NOT NULL DEFAULT 0;
  *
  * commands:
  *   !snd    -> 主菜单（音效/图标套装（玩家） + 特定开关 + 管理员单独设置）
@@ -77,6 +79,9 @@ int  g_SndKill  [MAXPLAYERS + 1] = {0, ...};
 int  g_IcHead   [MAXPLAYERS + 1] = {0, ...};
 int  g_IcHit    [MAXPLAYERS + 1] = {0, ...};
 int  g_IcKill   [MAXPLAYERS + 1] = {0, ...};
+
+bool g_SndSpecialOnly[MAXPLAYERS + 1] = { false, ... };
+bool g_IcSpecialOnly [MAXPLAYERS + 1] = { false, ... };
 
 bool g_PrefsLoaded[MAXPLAYERS + 1] = { false, ... };
 bool g_PrefsDirty [MAXPLAYERS + 1] = { false, ... };
@@ -169,6 +174,24 @@ static void MarkDirtyAndSave(int client)
         KV_SavePlayer(client);
         g_PrefsDirty[client] = false;
     }
+}
+
+static bool IsSpecialInfectedClient(int client)
+{
+    if (!IsValidClient(client) || GetClientTeam(client) != 3) return false;
+
+    int zClass = GetEntProp(client, Prop_Send, "m_zombieClass");
+    return (1 <= zClass && zClass <= 6) || zClass == 8;
+}
+
+static bool ShouldShowIconFeedback(int attacker, bool specialTarget)
+{
+    return !g_IcSpecialOnly[attacker] || specialTarget;
+}
+
+static bool ShouldPlaySoundFeedback(int attacker, bool specialTarget)
+{
+    return !g_SndSpecialOnly[attacker] || specialTarget;
 }
 
 // 根据“音效套装ID(1..N)”与类型取路径：which 0=headshot, 1=hit, 2=kill
@@ -476,6 +499,8 @@ public void SQL_OnConnect(Handle owner, Handle hndl, const char[] error, any dat
     g_DBRetryCount = 0;
     LogMessage("[hitsound] 数据库连接成功。");
 
+    DB_EnsureExtraColumns();
+
     // 插件重载/晚加载时，在线玩家不会触发 OnClientPutInServer，这里主动补一次
     ReloadAllPlayersPrefs();
 }
@@ -483,6 +508,35 @@ public void SQL_OnConnect(Handle owner, Handle hndl, const char[] error, any dat
 // ========================================================
 // Persistence: DB + Fallback
 // ========================================================
+static void DB_EnsureExtraColumns()
+{
+    if (g_hDB == INVALID_HANDLE) return;
+
+    char table[64];
+    GetConVarString(cv_db_table, table, sizeof(table));
+
+    char q[256];
+    Format(q, sizeof(q),
+        "ALTER TABLE `%s` ADD COLUMN `hitsound_si_only` TINYINT NOT NULL DEFAULT 0;",
+        table);
+    SQL_TQuery(g_hDB, SQL_OnEnsureColumn, q);
+
+    Format(q, sizeof(q),
+        "ALTER TABLE `%s` ADD COLUMN `hiticon_si_only` TINYINT NOT NULL DEFAULT 0;",
+        table);
+    SQL_TQuery(g_hDB, SQL_OnEnsureColumn, q);
+}
+
+public void SQL_OnEnsureColumn(Handle owner, Handle hndl, const char[] error, any data)
+{
+    if (hndl == INVALID_HANDLE
+        && StrContains(error, "Duplicate column", false) == -1
+        && StrContains(error, "duplicate column", false) == -1)
+    {
+        LogError("[hitsound] 自动补充数据库列失败: %s", error);
+    }
+}
+
 public void OnClientPutInServer(int client)
 {
     if (IsFakeClient(client)) return;
@@ -503,6 +557,9 @@ public void OnClientPutInServer(int client)
     } else {
         g_IcHead[client] = g_IcHit[client] = g_IcKill[client] = 0;
     }
+
+    g_SndSpecialOnly[client] = false;
+    g_IcSpecialOnly [client] = false;
 
     g_PrefsLoaded[client] = false;
     g_PrefsDirty [client] = false;
@@ -641,7 +698,8 @@ public void DB_RequestLoadPlayer(int client, const char[] sid)
     Format(q, sizeof(q),
         "SELECT \
            hitsound_head, hitsound_hit, hitsound_kill, \
-           hiticon_head,  hiticon_hit,  hiticon_kill \
+           hiticon_head,  hiticon_hit,  hiticon_kill, \
+           hitsound_si_only, hiticon_si_only \
          FROM `%s` \
          WHERE steamid='%s' \
          LIMIT 1;",
@@ -692,6 +750,8 @@ public void SQL_OnLoadPrefs(Handle owner, Handle hndl, const char[] error, any u
         int ic_head = SafeFetchInt(hndl, 3);
         int ic_hit  = SafeFetchInt(hndl, 4);
         int ic_kill = SafeFetchInt(hndl, 5);
+        int snd_si_only = SafeFetchInt(hndl, 6);
+        int ic_si_only  = SafeFetchInt(hndl, 7);
 
         ClampSetSnd(hs_head); ClampSetSnd(hs_hit); ClampSetSnd(hs_kill);
         ClampSetIc (ic_head); ClampSetIc (ic_hit); ClampSetIc (ic_kill);
@@ -703,6 +763,9 @@ public void SQL_OnLoadPrefs(Handle owner, Handle hndl, const char[] error, any u
         g_IcHead [client] = ic_head;
         g_IcHit  [client] = ic_hit;
         g_IcKill [client] = ic_kill;
+
+        g_SndSpecialOnly[client] = (snd_si_only != 0);
+        g_IcSpecialOnly [client] = (ic_si_only != 0);
 
         // 推断最近套装（三项相同才记录）
         if (g_SndHead[client]>0 && g_SndHead[client]==g_SndHit[client] && g_SndHead[client]==g_SndKill[client])
@@ -732,22 +795,27 @@ void DB_SavePlayerPrefs(int client)
 
     int hs_head = g_SndHead[client], hs_hit = g_SndHit[client], hs_kill = g_SndKill[client];
     int ic_head = g_IcHead [client], ic_hit = g_IcHit [client], ic_kill = g_IcKill[client];
+    int snd_si_only = g_SndSpecialOnly[client] ? 1 : 0;
+    int ic_si_only  = g_IcSpecialOnly [client] ? 1 : 0;
 
-    char q[1024];
+    char q[1536];
     Format(q, sizeof(q),
         "INSERT INTO `%s` ( \
             steamid, hitsound_head, hitsound_hit, hitsound_kill, \
-            hiticon_head, hiticon_hit, hiticon_kill \
+            hiticon_head, hiticon_hit, hiticon_kill, \
+            hitsound_si_only, hiticon_si_only \
         ) \
-        VALUES ('%s', %d, %d, %d, %d, %d, %d) \
+        VALUES ('%s', %d, %d, %d, %d, %d, %d, %d, %d) \
         ON DUPLICATE KEY UPDATE \
             hitsound_head=VALUES(hitsound_head), \
             hitsound_hit =VALUES(hitsound_hit), \
             hitsound_kill=VALUES(hitsound_kill), \
             hiticon_head =VALUES(hiticon_head), \
             hiticon_hit  =VALUES(hiticon_hit), \
-            hiticon_kill =VALUES(hiticon_kill);",
-        table, sid, hs_head, hs_hit, hs_kill, ic_head, ic_hit, ic_kill);
+            hiticon_kill =VALUES(hiticon_kill), \
+            hitsound_si_only=VALUES(hitsound_si_only), \
+            hiticon_si_only =VALUES(hiticon_si_only);",
+        table, sid, hs_head, hs_hit, hs_kill, ic_head, ic_hit, ic_kill, snd_si_only, ic_si_only);
 
     SQL_TQuery(g_hDB, SQL_OnSavePrefs, q);
 }
@@ -777,6 +845,9 @@ void KV_SavePlayer(int client)
     KvSetNum(g_SoundStore, "IcHit",   g_IcHit[client]);
     KvSetNum(g_SoundStore, "IcKill",  g_IcKill[client]);
 
+    KvSetNum(g_SoundStore, "SndSpecialOnly", g_SndSpecialOnly[client] ? 1 : 0);
+    KvSetNum(g_SoundStore, "IcSpecialOnly",  g_IcSpecialOnly [client] ? 1 : 0);
+
     KvGoBack(g_SoundStore);
     KvRewind(g_SoundStore);
     KeyValuesToFile(g_SoundStore, g_SavePath);
@@ -800,6 +871,9 @@ void KV_LoadPlayer(int client)
     g_IcHead[client]  = KvGetNum(g_SoundStore, "IcHead", 0);
     g_IcHit [client]  = KvGetNum(g_SoundStore, "IcHit",  0);
     g_IcKill[client]  = KvGetNum(g_SoundStore, "IcKill", 0);
+
+    g_SndSpecialOnly[client] = (KvGetNum(g_SoundStore, "SndSpecialOnly", 0) != 0);
+    g_IcSpecialOnly [client] = (KvGetNum(g_SoundStore, "IcSpecialOnly",  0) != 0);
 
     // 兼容旧 KV 键：若音效三项全0，尝试旧 Snd
     if (g_SndHead[client]==0 && g_SndHit[client]==0 && g_SndKill[client]==0) {
@@ -859,15 +933,17 @@ public Action Event_PlayerDeath(Handle event, const char[] name, bool dontBroadc
     if (IsValidClient(victim) && GetClientTeam(victim) == 3 &&
         IsValidClient(attacker) && GetClientTeam(attacker) == 2 && !IsFakeClient(attacker))
     {
+        bool specialTarget = IsSpecialInfectedClient(victim);
+
         // 图标（按项）
-        if (GetConVarInt(cv_pic_enable) == 1)
+        if (GetConVarInt(cv_pic_enable) == 1 && ShouldShowIconFeedback(attacker, specialTarget))
         {
             int setId = headshot ? g_IcHead[attacker] : g_IcKill[attacker];
             if (setId > 0) ShowOverlayBySet(attacker, setId, headshot ? 0 : 2);
         }
 
         // 音效（按项）
-        if (GetConVarInt(cv_sound_enable) == 1)
+        if (GetConVarInt(cv_sound_enable) == 1 && ShouldPlaySoundFeedback(attacker, specialTarget))
         {
             char s[PLATFORM_MAX_PATH];
             int setId = headshot ? g_SndHead[attacker] : g_SndKill[attacker];
@@ -898,6 +974,7 @@ public Action Event_PlayerHurt(Handle event, const char[] name, bool dontBroadca
 
     if (IsValidClient(victim) && IsValidClient(attacker) && !IsFakeClient(attacker) && GetClientTeam(victim) == 3)
     {
+        bool specialTarget = IsSpecialInfectedClient(victim);
         float AddDamage = 0.0;
         if (RoundToNearest(float(health - dmg) - AddDamage) <= 0.0)
             g_IsVictimDeadPlayer[victim] = true;
@@ -905,14 +982,14 @@ public Action Event_PlayerHurt(Handle event, const char[] name, bool dontBroadca
         if (!g_IsVictimDeadPlayer[victim])
         {
             // 图标：命中
-            if (GetConVarInt(cv_pic_enable) == 1)
+            if (GetConVarInt(cv_pic_enable) == 1 && ShouldShowIconFeedback(attacker, specialTarget))
             {
                 int setId = g_IcHit[attacker];
                 if (setId > 0) ShowOverlayBySet(attacker, setId, 1);
             }
 
             // 音效：命中
-            if (GetConVarInt(cv_sound_enable) == 1 && !inferno)
+            if (GetConVarInt(cv_sound_enable) == 1 && !inferno && ShouldPlaySoundFeedback(attacker, specialTarget))
             {
                 char s2[PLATFORM_MAX_PATH];
                 int setId = g_SndHit[attacker];
@@ -939,15 +1016,17 @@ public Action Event_InfectedDeath(Handle event, const char[] name, bool dontBroa
 
     if (IsValidClient(attacker) && GetClientTeam(attacker) == 2 && !IsFakeClient(attacker))
     {
+        bool specialTarget = false;
+
         // 图标：击杀/爆头
-        if (GetConVarInt(cv_pic_enable) == 1)
+        if (GetConVarInt(cv_pic_enable) == 1 && ShouldShowIconFeedback(attacker, specialTarget))
         {
             int setId = headshot ? g_IcHead[attacker] : g_IcKill[attacker];
             if (setId > 0) ShowOverlayBySet(attacker, setId, headshot ? 0 : 2);
         }
 
         // 音效：击杀/爆头
-        if (GetConVarInt(cv_sound_enable) == 1)
+        if (GetConVarInt(cv_sound_enable) == 1 && ShouldPlaySoundFeedback(attacker, specialTarget))
         {
             char s[PLATFORM_MAX_PATH];
             int setId = headshot ? g_SndHead[attacker] : g_SndKill[attacker];
@@ -974,19 +1053,20 @@ public Action Event_InfectedHurt(Handle event, const char[] name, bool dontBroad
 
     if (IsValidClient(attacker) && !IsFakeClient(attacker))
     {
+        bool specialTarget = false;
         bool dead = ((hp - dmg) <= 0);
 
         if (!dead)
         {
             // 图标：命中
-            if (GetConVarInt(cv_pic_enable) == 1)
+            if (GetConVarInt(cv_pic_enable) == 1 && ShouldShowIconFeedback(attacker, specialTarget))
             {
                 int setId = g_IcHit[attacker];
                 if (setId > 0) ShowOverlayBySet(attacker, setId, 1);
             }
 
             // 音效：命中
-            if (GetConVarInt(cv_sound_enable) == 1)
+            if (GetConVarInt(cv_sound_enable) == 1 && ShouldPlaySoundFeedback(attacker, specialTarget))
             {
                 char s2[PLATFORM_MAX_PATH];
                 int setId = g_SndHit[attacker];
@@ -1122,6 +1202,7 @@ public Action Cmd_MenuMain(int client, int args)
 
     char sndHead[32], sndHit[32], sndKill[32];
     char icHead[32],  icHit[32],  icKill[32];
+    char sndScope[16], icScope[16];
 
     if (g_SndHead[client] > 0 && g_SndHead[client] <= g_SetCount) GetArrayString(g_SetNames, g_SndHead[client]-1, sndHead, sizeof(sndHead)); else strcopy(sndHead, sizeof(sndHead), "关闭");
     if (g_SndHit [client] > 0 && g_SndHit [client] <= g_SetCount) GetArrayString(g_SetNames, g_SndHit [client]-1, sndHit,  sizeof(sndHit )); else strcopy(sndHit , sizeof(sndHit ), "关闭");
@@ -1131,9 +1212,12 @@ public Action Cmd_MenuMain(int client, int args)
     if (g_IcHit [client]  > 0 && g_IcHit [client]  <= g_OvCount) GetArrayString(g_OvNames, g_IcHit [client]-1,  icHit,  sizeof(icHit )); else strcopy(icHit , sizeof(icHit ), "关闭");
     if (g_IcKill[client]  > 0 && g_IcKill[client]  <= g_OvCount) GetArrayString(g_OvNames, g_IcKill[client]-1,  icKill, sizeof(icKill)); else strcopy(icKill, sizeof(icKill), "关闭");
 
+    strcopy(sndScope, sizeof(sndScope), g_SndSpecialOnly[client] ? "仅特感" : "全部");
+    strcopy(icScope,  sizeof(icScope),  g_IcSpecialOnly [client] ? "仅特感" : "全部");
+
     Format(title, sizeof(title),
-        "命中反馈设置\n音效(爆头/命中/击杀): %s / %s / %s\n图标(爆头/命中/击杀): %s / %s / %s",
-        sndHead, sndHit, sndKill, icHead, icHit, icKill);
+        "命中反馈设置\n音效(爆头/命中/击杀): %s / %s / %s [%s]\n图标(爆头/命中/击杀): %s / %s / %s [%s]",
+        sndHead, sndHit, sndKill, sndScope, icHead, icHit, icKill, icScope);
     SetMenuTitle(menu, title);
 
     // 玩家：按套装设置
@@ -1146,6 +1230,8 @@ public Action Cmd_MenuMain(int client, int args)
     // 特定开关（非管理员也可用）：三项在 0 与 最近套装ID 之间切
     AddMenuItem(menu, "snd_toggle_each", "特定音效开关（命中/击杀/爆头）");
     AddMenuItem(menu, "ico_toggle_each", "特定图标开关（命中/击杀/爆头）");
+    AddMenuItem(menu, "snd_special_only", g_SndSpecialOnly[client] ? "音效范围：仅特感/Tank" : "音效范围：全部感染者");
+    AddMenuItem(menu, "ico_special_only", g_IcSpecialOnly [client] ? "图标范围：仅特感/Tank" : "图标范围：全部感染者");
 
     // 管理员专用：单独设置成任意套装ID（含 0=关闭）
     if (CheckCommandAccess(client, "hitsound_admin", ADMFLAG_GENERIC, true)) {
@@ -1195,6 +1281,22 @@ public int MenuHandler_Main(Handle menu, MenuAction action, int client, int item
         if (StrEqual(info, "ico_toggle_each"))
         {
             OpenToggleEachMenu(client, false);
+            return 0;
+        }
+        if (StrEqual(info, "snd_special_only"))
+        {
+            g_SndSpecialOnly[client] = !g_SndSpecialOnly[client];
+            PrintToChat(client, "音效范围：%s", g_SndSpecialOnly[client] ? "仅特感/Tank" : "全部感染者");
+            MarkDirtyAndSave(client);
+            Cmd_MenuMain(client, 0);
+            return 0;
+        }
+        if (StrEqual(info, "ico_special_only"))
+        {
+            g_IcSpecialOnly[client] = !g_IcSpecialOnly[client];
+            PrintToChat(client, "图标范围：%s", g_IcSpecialOnly[client] ? "仅特感/Tank" : "全部感染者");
+            MarkDirtyAndSave(client);
+            Cmd_MenuMain(client, 0);
             return 0;
         }
 
