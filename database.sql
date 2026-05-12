@@ -268,6 +268,44 @@ CREATE TABLE `players` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+DROP TABLE IF EXISTS `score_quarter`;
+CREATE TABLE `score_quarter` (
+  `steamid` varchar(64) CHARACTER SET utf8mb4 NOT NULL,
+  `quarter_key` int(8) NOT NULL DEFAULT '0',
+  `points` int(11) NOT NULL DEFAULT '0',
+  `updated` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`steamid`),
+  KEY `quarter_points` (`quarter_key`,`points`),
+  KEY `points` (`points`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+DROP TABLE IF EXISTS `score_log`;
+CREATE TABLE `score_log` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `created` int(11) NOT NULL,
+  `steamid` varchar(64) CHARACTER SET utf8mb4 NOT NULL,
+  `name` varchar(128) CHARACTER SET utf8mb4 NOT NULL,
+  `map` varchar(128) CHARACTER SET utf8mb4 NOT NULL,
+  `gamemode` int(2) NOT NULL DEFAULT '0',
+  `difficulty` varchar(32) CHARACTER SET utf8mb4 NOT NULL DEFAULT '',
+  `team` int(2) NOT NULL DEFAULT '0',
+  `score` int(11) NOT NULL DEFAULT '0',
+  `score_after` int(11) NOT NULL DEFAULT '0',
+  `reason` varchar(64) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'unknown',
+  `formula` varchar(255) CHARACTER SET utf8mb4 NOT NULL DEFAULT '',
+  `round_valid` tinyint(1) NOT NULL DEFAULT '0',
+  `usebuy` tinyint(1) NOT NULL DEFAULT '0',
+  `newbie_count` int(4) NOT NULL DEFAULT '0',
+  `newbie_multiplier` double NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `steamid_created` (`steamid`,`created`),
+  KEY `reason_created` (`reason`,`created`),
+  KEY `map_created` (`map`,`created`),
+  KEY `score_created` (`score`,`created`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 DROP TABLE IF EXISTS `RPG`;
 CREATE TABLE `RPG` (
   `steamid` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
@@ -318,6 +356,14 @@ CREATE TABLE `l4d_server_status` (
   `enabled` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`server_id`),
   KEY `updated_at` (`updated_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `l4d_peak_state`;
+CREATE TABLE `l4d_peak_state` (
+  `state_key` varchar(64) CHARACTER SET utf8mb4 NOT NULL,
+  `hold_until` int(11) NOT NULL DEFAULT '0',
+  `updated_at` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`state_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 

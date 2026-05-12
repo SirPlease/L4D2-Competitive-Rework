@@ -85,16 +85,17 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define TEAM_SPECTATOR		1
 #define TEAM_SURVIVOR		2
 #define TEAM_INFECTED		3
+#define PEAK_STATE_TABLE    "l4d_peak_state"
 
 ConVar survivor_limit, z_max_player_zombies;
 int g_iCvarSurvivorLimit, g_iCvarInfectedMax;
 
 ConVar g_hCvarEnable, g_hCvarTime, g_hCvarCount, g_hCvarFlag, g_hCvarDelay;
-ConVar g_hCvarPeakMode, g_hCvarPeakRatio, g_hCvarDBConfig, g_hCvarServerId, g_hCvarStatusTable, g_hCvarStatusInterval, g_hCvarStatusMaxAge;
+ConVar g_hCvarPeakMode, g_hCvarPeakRatio, g_hCvarPeakHoldTime, g_hCvarDBConfig, g_hCvarServerId, g_hCvarStatusTable, g_hCvarStatusInterval, g_hCvarStatusMaxAge;
 // 服务器本地相对 UTC 的偏移（分钟）。优先用 %z，失败时回退到可配置的 ConVar。
 ConVar g_hTzServerOffset; // 可选：回退用（例如老 Windows 不支持 %z）
 bool g_bCvarEnable;
-int g_iCvarCount, g_iCvarPeakMode, g_iCvarStatusMaxAge;
+int g_iCvarCount, g_iCvarPeakMode, g_iCvarPeakHoldTime, g_iCvarStatusMaxAge;
 float g_fCvarDelay, g_fCvarPeakRatio, g_fCvarStatusInterval;
 char g_sCvarime[128], g_sCvarFlag[AdminFlags_TOTAL], g_sCvarDBConfig[64], g_sCvarServerId[128], g_sCvarStatusTable[64];
 
@@ -125,6 +126,7 @@ Database g_hDB;
 bool g_bDBReady, g_bPeakQueryPending, g_bLastPeakActive, g_bLastPeakKnown, g_bIsMySQL;
 int g_iLastActiveServers, g_iLastTotalServers;
 int g_iLastStatusWriteTime, g_iLastStatusPlayerCount = -1;
+int g_iPeakHoldUntil;
 
 public void OnPluginStart()
 { 
@@ -138,6 +140,7 @@ public void OnPluginStart()
     g_hCvarDelay        = CreateConVar(	PLUGIN_NAME ... "_delay", 		  "60.0",           "地圖載入此秒數後才會檢測時間與人數", CVAR_FLAGS, true, 0.0);
     g_hCvarPeakMode     = CreateConVar( PLUGIN_NAME ... "_peak_mode",     "1",              "高峰期判定方式: 0=按_time時間段, 1=共享数据库统计所有服务器有玩家比例", CVAR_FLAGS, true, 0.0, true, 1.0);
     g_hCvarPeakRatio    = CreateConVar( PLUGIN_NAME ... "_peak_ratio",    "0.60",           "peak_mode=1 时，有玩家服务器数/有效服务器数 >= 此比例即视为高峰期", CVAR_FLAGS, true, 0.0, true, 1.0);
+    g_hCvarPeakHoldTime = CreateConVar( PLUGIN_NAME ... "_peak_hold_time", "3600",          "peak_mode=1 时，一旦进入高峰期后至少持续限制多少秒；0=不保持", CVAR_FLAGS, true, 0.0);
     g_hCvarDBConfig     = CreateConVar( PLUGIN_NAME ... "_db_config",     "l4dstats",        "peak_mode=1 使用的 databases.cfg 区块名", CVAR_FLAGS);
     g_hCvarServerId     = CreateConVar( PLUGIN_NAME ... "_server_id",     "",               "本服务器唯一ID，留空自动使用 hostname:hostport", CVAR_FLAGS);
     g_hCvarStatusTable  = CreateConVar( PLUGIN_NAME ... "_status_table",  "l4d_server_status", "peak_mode=1 使用的服务器状态表名", CVAR_FLAGS);
@@ -159,6 +162,7 @@ public void OnPluginStart()
     g_hCvarDelay.AddChangeHook(ConVarChanged_TimeCvars);
     g_hCvarPeakMode.AddChangeHook(ConVarChanged_PeakCvars);
     g_hCvarPeakRatio.AddChangeHook(ConVarChanged_PeakCvars);
+    g_hCvarPeakHoldTime.AddChangeHook(ConVarChanged_PeakCvars);
     g_hCvarDBConfig.AddChangeHook(ConVarChanged_PeakCvars);
     g_hCvarServerId.AddChangeHook(ConVarChanged_PeakCvars);
     g_hCvarStatusTable.AddChangeHook(ConVarChanged_PeakCvars);
@@ -173,6 +177,8 @@ public void OnPluginStart()
     HookEvent("finale_vehicle_leaving", Event_RoundEnd,		EventHookMode_PostNoCopy); //final map final rescue vehicle leaving  (does not trigger round_end)
 
     HookEvent("player_team",            Event_PlayerTeam);
+
+    RegAdminCmd("sm_peakstatus", Cmd_PeakStatus, ADMFLAG_GENERIC, "查看当前全服高峰期判定状态");
 
     SetupPeakDatabase();
     RestartStatusTimer();
@@ -210,6 +216,7 @@ void GetCvars()
     g_fCvarDelay = g_hCvarDelay.FloatValue;
     g_iCvarPeakMode = g_hCvarPeakMode.IntValue;
     g_fCvarPeakRatio = g_hCvarPeakRatio.FloatValue;
+    g_iCvarPeakHoldTime = g_hCvarPeakHoldTime.IntValue;
     g_hCvarDBConfig.GetString(g_sCvarDBConfig, sizeof(g_sCvarDBConfig));
     g_hCvarServerId.GetString(g_sCvarServerId, sizeof(g_sCvarServerId));
     g_hCvarStatusTable.GetString(g_sCvarStatusTable, sizeof(g_sCvarStatusTable));
@@ -322,6 +329,30 @@ void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
     }
 }
 
+Action Cmd_PeakStatus(int client, int args)
+{
+    if (g_iCvarPeakMode == 0)
+    {
+        if (IsInConfiguredTime())
+            ReplyToCommand(client, "[Peak] 当前使用时间段判定模式。现在在限制时间段内。");
+        else
+            ReplyToCommand(client, "[Peak] 当前使用时间段判定模式。现在不在限制时间段内。");
+        return Plugin_Handled;
+    }
+
+    if (!g_bDBReady || g_hDB == null)
+    {
+        ReplyToCommand(client, "[Peak] 数据库尚未连接完成，暂时无法查询全服高峰期状态。");
+        return Plugin_Handled;
+    }
+
+    int userid = (client > 0) ? GetClientUserId(client) : -1;
+    QueryPeakState(userid);
+    ReplyToCommand(client, "[Peak] 正在查询全服高峰期状态...");
+
+    return Plugin_Handled;
+}
+
 // Timer & Frame-------------------------------
 
 Action Timer_PluginStart(Handle timer)
@@ -348,7 +379,7 @@ Action Timer_DetectPlayerCount(Handle timer)
 
     if (g_iCvarPeakMode == 1)
     {
-        QueryPeakState();
+        QueryPeakState(0);
         return Plugin_Continue;
     }
 
@@ -395,8 +426,9 @@ void ApplyPeakRestriction()
     ServerCommand("sm_resetmatch");
     if (g_iCvarPeakMode == 1 && g_bLastPeakKnown)
     {
-        CPrintToChatAll("管理员不在场，当前全服 {green}%d/%d{default} 台服务器有玩家，达到高峰期限制({green}%.0f%%{default})；本模式人数不足 {green}%d{default} 人，{green}强制卸载模式!!!!",
-            g_iLastActiveServers, g_iLastTotalServers, g_fCvarPeakRatio * 100.0, g_iCvarCount);
+        int iRemain = GetPeakHoldRemaining();
+        CPrintToChatAll("管理员不在场，当前全服 {green}%d/%d{default} 台服务器有玩家，高峰期限制({green}%.0f%%{default})剩余 {green}%d{default} 分钟；本模式人数不足 {green}%d{default} 人，{green}强制卸载模式!!!!",
+            g_iLastActiveServers, g_iLastTotalServers, g_fCvarPeakRatio * 100.0, RoundToCeil(float(iRemain) / 60.0), g_iCvarCount);
     }
     else
     {
@@ -416,6 +448,7 @@ void SetupPeakDatabase()
     g_iLastTotalServers = 0;
     g_iLastStatusWriteTime = 0;
     g_iLastStatusPlayerCount = -1;
+    g_iPeakHoldUntil = 0;
 
     delete g_hDB;
     SQL_TConnect(SQLCB_OnConnect, g_sCvarDBConfig, 0);
@@ -475,6 +508,40 @@ public void SQLCB_CreateStatusTable(Handle owner, Handle hndl, const char[] erro
     if (hndl == null && error[0] != '\0')
     {
         LogError("[%s] Create status table failed: %s", PLUGIN_NAME, error);
+        return;
+    }
+
+    char sQuery[512];
+    if (g_bIsMySQL)
+    {
+        FormatEx(sQuery, sizeof(sQuery),
+            "CREATE TABLE IF NOT EXISTS `%s` ( \
+                `state_key` VARCHAR(64) NOT NULL, \
+                `hold_until` INT NOT NULL DEFAULT 0, \
+                `updated_at` INT NOT NULL DEFAULT 0, \
+                PRIMARY KEY (`state_key`) \
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
+            PEAK_STATE_TABLE);
+    }
+    else
+    {
+        FormatEx(sQuery, sizeof(sQuery),
+            "CREATE TABLE IF NOT EXISTS `%s` ( \
+                `state_key` TEXT NOT NULL PRIMARY KEY, \
+                `hold_until` INTEGER NOT NULL DEFAULT 0, \
+                `updated_at` INTEGER NOT NULL DEFAULT 0 \
+            )",
+            PEAK_STATE_TABLE);
+    }
+
+    SQL_TQuery(g_hDB, SQLCB_CreatePeakStateTable, sQuery);
+}
+
+public void SQLCB_CreatePeakStateTable(Handle owner, Handle hndl, const char[] error, any data)
+{
+    if (hndl == null && error[0] != '\0')
+    {
+        LogError("[%s] Create peak state table failed: %s", PLUGIN_NAME, error);
         return;
     }
 
@@ -549,57 +616,69 @@ void UpdateServerStatus(bool bForce = false)
     SQL_TQuery(g_hDB, SQLCB_Generic, sQuery);
 }
 
-void QueryPeakState()
+void QueryPeakState(int iReplyUserid)
 {
     if (g_iCvarPeakMode != 1)
         return;
 
     if (!g_bDBReady || g_hDB == null)
     {
-        if (g_bLastPeakKnown && g_bLastPeakActive)
+        if (iReplyUserid != 0)
+            ReplyPeakStatus(iReplyUserid, false, false);
+        else if (g_bLastPeakKnown && g_bLastPeakActive)
             ApplyPeakRestriction();
         return;
     }
 
-    if (g_bPeakQueryPending)
+    if (g_bPeakQueryPending && iReplyUserid == 0)
         return;
 
     UpdateServerStatus();
-    g_bPeakQueryPending = true;
+    if (iReplyUserid == 0)
+        g_bPeakQueryPending = true;
 
-    char sQuery[512];
+    char sQuery[768];
     if (g_bIsMySQL)
     {
         FormatEx(sQuery, sizeof(sQuery),
-            "SELECT SUM(CASE WHEN `players` > 0 THEN 1 ELSE 0 END), COUNT(*) FROM `%s` WHERE `enabled` = 1 AND `updated_at` >= UNIX_TIMESTAMP() - %d",
-            g_sCvarStatusTable, g_iCvarStatusMaxAge);
+            "SELECT SUM(CASE WHEN `players` > 0 THEN 1 ELSE 0 END), COUNT(*), COALESCE((SELECT `hold_until` FROM `%s` WHERE `state_key` = 'global' LIMIT 1), 0) FROM `%s` WHERE `enabled` = 1 AND `updated_at` >= UNIX_TIMESTAMP() - %d",
+            PEAK_STATE_TABLE, g_sCvarStatusTable, g_iCvarStatusMaxAge);
     }
     else
     {
         FormatEx(sQuery, sizeof(sQuery),
-            "SELECT SUM(CASE WHEN `players` > 0 THEN 1 ELSE 0 END), COUNT(*) FROM `%s` WHERE `enabled` = 1 AND `updated_at` >= strftime('%%s','now') - %d",
-            g_sCvarStatusTable, g_iCvarStatusMaxAge);
+            "SELECT SUM(CASE WHEN `players` > 0 THEN 1 ELSE 0 END), COUNT(*), COALESCE((SELECT `hold_until` FROM `%s` WHERE `state_key` = 'global' LIMIT 1), 0) FROM `%s` WHERE `enabled` = 1 AND `updated_at` >= strftime('%%s','now') - %d",
+            PEAK_STATE_TABLE, g_sCvarStatusTable, g_iCvarStatusMaxAge);
     }
 
-    SQL_TQuery(g_hDB, SQLCB_QueryPeakState, sQuery);
+    SQL_TQuery(g_hDB, SQLCB_QueryPeakState, sQuery, iReplyUserid);
 }
 
 public void SQLCB_QueryPeakState(Handle owner, Handle hndl, const char[] error, any data)
 {
-    g_bPeakQueryPending = false;
+    int iReplyUserid = data;
+    if (iReplyUserid == 0)
+        g_bPeakQueryPending = false;
 
     if (hndl == null)
     {
         LogError("[%s] Query peak state failed: %s", PLUGIN_NAME, error);
+        if (iReplyUserid != 0)
+            ReplyPeakStatus(iReplyUserid, false, false);
         return;
     }
 
     if (!SQL_FetchRow(hndl))
+    {
+        if (iReplyUserid != 0)
+            ReplyPeakStatus(iReplyUserid, false, false);
         return;
+    }
 
     int iActiveServers = SQL_FetchInt(hndl, 0);
     int iTotalServers = SQL_FetchInt(hndl, 1);
-    bool bIsPeak = false;
+    int iGlobalHoldUntil = SQL_FetchInt(hndl, 2);
+    bool bRawPeak = false;
 
     g_iLastActiveServers = iActiveServers;
     g_iLastTotalServers = iTotalServers;
@@ -607,11 +686,27 @@ public void SQLCB_QueryPeakState(Handle owner, Handle hndl, const char[] error, 
     if (iTotalServers > 0)
     {
         float fRatio = float(iActiveServers) / float(iTotalServers);
-        bIsPeak = (fRatio >= g_fCvarPeakRatio);
+        bRawPeak = (fRatio >= g_fCvarPeakRatio);
     }
+
+    int iNow = GetTime();
+    if (bRawPeak)
+    {
+        g_iPeakHoldUntil = iNow + g_iCvarPeakHoldTime;
+        SavePeakHoldUntil(g_iPeakHoldUntil);
+    }
+    else
+    {
+        g_iPeakHoldUntil = iGlobalHoldUntil;
+    }
+
+    bool bIsPeak = bRawPeak || (g_iPeakHoldUntil > iNow);
 
     g_bLastPeakKnown = true;
     g_bLastPeakActive = bIsPeak;
+
+    if (iReplyUserid != 0)
+        ReplyPeakStatus(iReplyUserid, true, bRawPeak);
 
     if (!bIsPeak || !g_bCvarEnable || g_iCvarSurvivorLimit + GetInfectedSlots() > g_iCvarCount)
         return;
@@ -624,6 +719,67 @@ public void SQLCB_Generic(Handle owner, Handle hndl, const char[] error, any dat
     if (hndl == null && error[0] != '\0')
     {
         LogError("[%s] SQL error: %s", PLUGIN_NAME, error);
+    }
+}
+
+void SavePeakHoldUntil(int iHoldUntil)
+{
+    if (!g_bDBReady || g_hDB == null)
+        return;
+
+    char sQuery[512];
+    if (g_bIsMySQL)
+    {
+        FormatEx(sQuery, sizeof(sQuery),
+            "REPLACE INTO `%s` (`state_key`, `hold_until`, `updated_at`) VALUES ('global', %d, UNIX_TIMESTAMP())",
+            PEAK_STATE_TABLE, iHoldUntil);
+    }
+    else
+    {
+        FormatEx(sQuery, sizeof(sQuery),
+            "REPLACE INTO `%s` (`state_key`, `hold_until`, `updated_at`) VALUES ('global', %d, strftime('%%s','now'))",
+            PEAK_STATE_TABLE, iHoldUntil);
+    }
+
+    SQL_TQuery(g_hDB, SQLCB_Generic, sQuery);
+}
+
+int GetPeakHoldRemaining()
+{
+    int iRemain = g_iPeakHoldUntil - GetTime();
+    return (iRemain > 0) ? iRemain : 0;
+}
+
+void ReplyPeakStatus(int iReplyUserid, bool bQueryOk, bool bRawPeak)
+{
+    int client = 0;
+    if (iReplyUserid > 0)
+    {
+        client = GetClientOfUserId(iReplyUserid);
+        if (client == 0)
+            return;
+    }
+
+    if (!bQueryOk)
+    {
+        ReplyToCommand(client, "[Peak] 查询失败或数据库未就绪，请查看 SourceMod error 日志。");
+        return;
+    }
+
+    float fRatio = 0.0;
+    if (g_iLastTotalServers > 0)
+        fRatio = float(g_iLastActiveServers) / float(g_iLastTotalServers);
+
+    int iRemain = GetPeakHoldRemaining();
+    if (g_bLastPeakActive)
+    {
+        ReplyToCommand(client, "[Peak] 当前处于高峰期限制。全服有玩家服务器: %d/%d (%.1f%%)，阈值: %.0f%%，本轮锁定剩余: %d 分钟，实时占比%s达到阈值。",
+            g_iLastActiveServers, g_iLastTotalServers, fRatio * 100.0, g_fCvarPeakRatio * 100.0, RoundToCeil(float(iRemain) / 60.0), bRawPeak ? "已" : "未");
+    }
+    else
+    {
+        ReplyToCommand(client, "[Peak] 当前未进入高峰期限制。全服有玩家服务器: %d/%d (%.1f%%)，阈值: %.0f%%。",
+            g_iLastActiveServers, g_iLastTotalServers, fRatio * 100.0, g_fCvarPeakRatio * 100.0);
     }
 }
 

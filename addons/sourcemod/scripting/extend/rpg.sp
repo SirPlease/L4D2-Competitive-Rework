@@ -36,12 +36,10 @@ PlayerStruct player[MAXPLAYERS + 1];
 bool valid = true, UseBuy = false;
 bool IsStart=false;
 bool IsAllowBigGun = false;
-bool IsAnne = false;
-int InfectedNumber=6;
 bool g_bEnableGlow = true;
 bool  g_bAllowUseB = true;
 ConVar g_hAllowUseB = null;
-ConVar GaoJiRenJi, AllowBigGun, g_InfectedNumber, g_cShopEnable, g_hEnableGlow, g_hInfectedLimit = null;
+ConVar GaoJiRenJi, AllowBigGun, g_cShopEnable, g_hEnableGlow, g_hInfectedLimit = null;
 // === Admin Anti-Kick ===
 ConVar g_hAntiKickEnable;
 ConVar g_hAntiKickBlockVote;
@@ -292,8 +290,6 @@ public void OnAllPluginsLoaded()
         if (g_hInfectedLimit != null)
         {
             g_hInfectedLimit.AddChangeHook(ConVarChanged_Cvars);
-            RefreshInfectedLimit();
-            IsAnne = true; // 兼容你原先用来标识“启用Anne系配置”的开关
         }
     }
 	g_bDamageShowHudAvailable = LibraryExists("damage_show");
@@ -313,8 +309,6 @@ public void OnLibraryAdded(const char[] name)
         if (g_hInfectedLimit != null)
         {
             g_hInfectedLimit.AddChangeHook(ConVarChanged_Cvars);
-            RefreshInfectedLimit();
-            IsAnne = true;
         }
     }
 	else if (StrEqual(name, "punch_angle")) { g_bpunchangelSystemAvailable = true; }
@@ -337,7 +331,6 @@ public void OnLibraryRemoved(const char[] name)
             g_hInfectedLimit.RemoveChangeHook(ConVarChanged_Cvars);
             g_hInfectedLimit = null;
         }
-        // 不再强制关闭 IsAnne；保持你原来的判定流转（仅不再跟随 l4d_infected_limit）
     }
 	else if (StrEqual(name, "punch_angle")) { g_bpunchangelSystemAvailable = false; }
 	else if (StrEqual(name, "damage_show")) { g_bDamageShowHudAvailable = false; }
@@ -388,7 +381,6 @@ public void  OnPluginStart()
 	HookEvent("player_death", 	EventReturnBlood, 				EventHookMode_Pre);
 	HookEvent("player_spawn", 	Event_Player_Spawn, 			EventHookMode_Pre);
 	HookEvent("mission_lost", 	EventMissionLost , 				EventHookMode_Post);
-	HookEvent("map_transition", EventMapChange, 				EventHookMode_Pre);
 	HookEvent("player_afk", 	Event_PlayerAFK, 				EventHookMode_Pre);
 	HookEvent("player_team", 	Event_PlayerDisconnectOrAFK, 	EventHookMode_Post);
 	//HookEvent("player_team", 	Event_PlayerTeam, EventHookMode_Pre);
@@ -420,15 +412,11 @@ public void  OnPluginStart()
 		g_hInfectedLimit = FindConVar("l4d_infected_limit");
 		if (g_hInfectedLimit != null)
 		{
-			RefreshInfectedLimit();
 			g_hInfectedLimit.AddChangeHook(ConVarChanged_Cvars);
-			IsAnne = true;
 		}
 	}
 	AllowBigGun.AddChangeHook(ConVarChanged_Cvars);
 	g_hEnableGlow.AddChangeHook(ConVarChanged_Cvars);
-	if(g_InfectedNumber != null)
-	g_InfectedNumber.AddChangeHook(ConVarChanged_Cvars);
 	if(GaoJiRenJi != null)
 		GaoJiRenJi.AddChangeHook(ConVarChanged_Cvars);
 	ReturnBlood = CreateConVar("ReturnBlood", "0", "回血模式");
@@ -496,8 +484,6 @@ void ConVarChanged_Cvars(ConVar convar, const char[] oldValue, const char[] newV
         Call_Finish();
     }
 
-    // 统一从缓存句柄取
-    RefreshInfectedLimit();
     IsAllowBigGun = GetConVarBool(AllowBigGun);
     g_bEnableGlow = GetConVarBool(g_hEnableGlow);
 }
@@ -609,66 +595,6 @@ public int SetSurvivorPermHealth(int client, int health)
 public int IsPlayerIncap(int client)
 {
 	return GetEntProp(client, Prop_Send, "m_isIncapacitated", 4, 0);
-}
-
-public Action EventMapChange(Handle event, const char []name, bool dontBroadcast){
-	if(!UseBuy && valid && IsAnne)
-		RewardScore();
-	return Plugin_Continue;
-}
-
-public void RewardScore(){
-	if(!g_bl4dstatsSystemAvailable)
-		return;
-	if(FindConVar("l4d_ready_cfg_name"))
-	{
-		GaoJiRenJi = FindConVar("sb_fix_enabled");
-		if(GaoJiRenJi != null && GaoJiRenJi.BoolValue){
-			PrintToChatAll("\x01[\x04RANK\x01]\x04由于开启了高级人机，不能获得额外过关积分");
-			return;
-		}
-		if(!IsThisRoundValid()){
-			PrintToChatAll("\x01[\x04RANK\x01]\x04由于关闭了tank连跳，不能获得额外过关积分");
-			return;
-		}
-		char pluginsname[64];
-		GetConVarString(FindConVar("l4d_ready_cfg_name"), pluginsname, sizeof(pluginsname));
-		if(StrContains(pluginsname,"AnneHappy") !=-1 )
-		{
-			float mult = 1.0;
-			if(StrContains(pluginsname, "HardCore", false) != -1)
-				mult = 1.3;
-			if(valid)
-			{
-				if(InfectedNumber==5)
-					AddReward(RoundToFloor(200*mult));
-				if(InfectedNumber==6)
-					AddReward(RoundToFloor(500*mult));
-				if(InfectedNumber==7)
-					AddReward(RoundToFloor(800*mult));
-				if(InfectedNumber==8)
-					AddReward(RoundToFloor(1100*mult));
-				if(InfectedNumber==9)
-					AddReward(RoundToFloor(1500*mult));
-				if(InfectedNumber>9)
-					AddReward(RoundToFloor(2000*mult));
-			}
-		}
-	}
-}
-
-public void AddReward(int Score){
-	if(!g_bl4dstatsSystemAvailable)
-		return;
-	if(IsAboveFourPeople())
-	{
-		Score = RoundToFloor(Score * (4.0 / getSurvivorNum()));
-	}
-	for(int i=1;i<MaxClients;i++){
-		if(IsSurvivor(i))
-			ClientMapChangeWithoutBuyReward(i,Score);
-	}
-	PrintToChatAll("\x01[\x04RANK\x01]\x04幸存者强势通过当前关卡，没花费任何B数，获得额外%d过关积分",Score);
 }
 
 public Action EventMissionLost(Handle event, const char []name, bool dontBroadcast){
@@ -961,17 +887,6 @@ public Action Timer_AutoGive(Handle timer, any client)
 	return Plugin_Continue;
 }
 
-public void ClientMapChangeWithoutBuyReward(int Client,int RewordScore){
-	if(!IsValidClient(Client) || IsFakeClient(Client) || !g_bl4dstatsSystemAvailable)
-		return;
-	char query[255];
-	char SteamID[64];
-	GetClientAuthId(Client, AuthId_Steam2,SteamID, sizeof(SteamID));
-	if(StrEqual(SteamID,"BOT"))return;
-	Format(query, sizeof(query), "UPDATE players SET points=points+%d WHERE steamid = '%s'",RewordScore, SteamID);	
-	SendSQLUpdate(query);
-	return;
-}
 public void ClientSaveToFileLoad(int Client)
 {
 	if(!IsValidClient(Client) || IsFakeClient(Client) || !g_bMysqlSystemAvailable)
@@ -1037,15 +952,6 @@ public void ClientSaveToFileSave(int Client)
 	SendSQLUpdate(query);
 	return;
 }
-
-static void RefreshInfectedLimit()
-{
-    if (g_bInfectedControlAvailable && g_hInfectedLimit != null)
-    {
-        InfectedNumber = g_hInfectedLimit.IntValue;
-    }
-}
-
 
 //开局发近战能力武器
 public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
@@ -1491,13 +1397,13 @@ public void BuildMenu(int client)
 			menu.AddItem("HitSound", binfo);
 		}
 
-		if(g_bEnableGlow && ((g_bl4dstatsSystemAvailable && (l4dstats_IsTopPlayer(client,20) || (CheckCommandAccess(client, "", ADMFLAG_SLAY)) || player[client].GlowType > 0) || !g_bl4dstatsSystemAvailable)))
+		if(g_bEnableGlow && ((g_bl4dstatsSystemAvailable && (l4dstats_IsTopPlayer(client,20) || (l4dstats_IsQuarterTopPlayer(client , 5) && l4dstats_GetClientQuarterScore(client) > 100000) || (CheckCommandAccess(client, "", ADMFLAG_SLAY)) || player[client].GlowType > 0) || !g_bl4dstatsSystemAvailable)))
 		{
 			FormatEx(binfo, sizeof(binfo),  "生还者轮廓", client); //生还者轮廓菜单
 			menu.AddItem("Survivor_glow", binfo);
 		}
 
-		if((g_bl4dstatsSystemAvailable && ( l4dstats_IsTopPlayer(client,50) || ((CheckCommandAccess(client, "", ADMFLAG_SLAY))) || player[client].SkinType > 0 )) || !g_bl4dstatsSystemAvailable)
+		if((g_bl4dstatsSystemAvailable && ( l4dstats_IsTopPlayer(client,50) || (l4dstats_IsQuarterTopPlayer(client, 10) && l4dstats_GetClientQuarterScore(client) > 100000 )|| ((CheckCommandAccess(client, "", ADMFLAG_SLAY))) || player[client].SkinType > 0 )) || !g_bl4dstatsSystemAvailable)
 		{
 			FormatEx(binfo, sizeof(binfo),  "生还者皮肤", client); //生还者轮廓菜单
 			menu.AddItem("Survivor_skin", binfo);
@@ -2761,4 +2667,3 @@ public Action OnSmKick(int client, const char[] command, int argc)
     // 更高免疫管理员可以踢（尊重免疫层级）
     return Plugin_Continue;
 }
-

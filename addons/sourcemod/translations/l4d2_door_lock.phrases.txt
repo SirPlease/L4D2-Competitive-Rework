@@ -1,0 +1,184 @@
+//--------------------------------------------------
+
+// To Customize The Texts Color, Use The Following:
+
+// default (white) - {default}
+// turquoise - {lightgreen}
+// orange - {green}
+// olive - {olive}
+
+// -------------------------------------------------
+
+
+"Phrases"
+{
+	"Ready Up Countdown"
+	{
+		"#format"		"{1:d}"
+		"en"			"Ready Up Time: {1}"
+		"chi"			"准备时间: {1}"
+	}
+
+	"Round Begin Countdown"
+	{
+		"#format"		"{1:d}"
+		"en"			"Round Will Begin In: {1}"
+		"chi"			"回合将在 {1} 后开始"
+	}
+
+	"Move Out"
+	{
+		"en"			"Move Out!"
+		"chi"			"开干!"
+	}
+
+	"Leavers Message"
+	{
+		"en"			"Players are not ready, please wait ..."
+		"chi"			"其他玩家尚未准备好, 请等待 ..."
+	}
+
+	"Round Started"
+	{
+		"en"			"[Lock] Error: round already started."
+		"chi"			"[Lock] 错误: 回合尚未开始"
+	}
+
+	"Saferoom Locked"
+	{
+		"en"			"[Lock] Error: The safe area is already locked."
+		"chi"			"[Lock] 错误: 安全区域尚未解锁"
+	}
+
+	"Saferoom Unlocked"
+	{
+		"en"			"[Lock] Error: The safe area is already unlocked."
+		"chi"			"[Lock] 错误: 安全区域解锁中"
+	}
+
+	"Ready Up Time Ended"
+	{
+		"en"			"[Lock] Error: ready up time has ended."
+		"chi"			"[Lock] 错误: 准备时间已结束"
+	}
+
+	"Admin Locks"
+	{
+		"#format"		"{1:N}"
+		"en"			"[Lock] Admin {1} has locked the safe area."
+		"chi"			"[Lock] 管理员 {1} 已锁定安全区域"
+	}
+
+	"Admin Unlocks"
+	{
+		"#format"		"{1:N}"
+		"en"			"[Lock] Admin {1} has unlocked the safe area."
+		"chi"			"[Lock] 管理员 {1} 已解锁安全区域"
+	}
+
+	"Spectator Ready"
+	{
+		"en"			"[Lock] Error: you need to join a team to use this command."
+		"chi"			"[Lock] 错误: 你需要加入队伍来使用这个指令"
+	}
+
+	"You Are Ready"
+	{
+		"en"			"[Lock] Error: you are ready."
+		"chi"			"[Lock] 错误: 你已经准备好了"
+	}
+
+	"You Are Unready"
+	{
+		"en"			"[Lock] Error: you are unready."
+		"chi"			"[Lock] 错误: 你尚未准备"
+	}
+
+	"Ready Up Limit"
+	{
+		"en"			"[Lock] Error: you can't use this command anymore."
+		"chi"			"[Lock] 错误: 你无法继续使用这个指令"
+	}
+
+	"Admin Controls"
+	{
+		"en"			"[Lock] Error: admin is controlling safe area."
+		"chi"			"[Lock] 错误: 管理员已控制此安全区域"
+	}
+
+	"Player Is Ready"
+	{
+		"en"			"You are ready."
+		"chi"			"你已经准备好了"
+	}
+
+	"Player Is Unready"
+	{
+		"en"			"You are unready."
+		"chi"			"你还没有准备好"
+	}
+
+	"Notify Survivors Ready"
+	{
+		"#format"		"{1:d},{2:d},{3:.1f%%}"
+		"en"			"[Lock] The survivor team is ready ({1}/{2} - {3})."
+		"chi"			"[Lock] 生还者团队已准备 ({1}/{2} - {3})."
+	}
+
+	"Notify Infected Ready"
+	{
+		"#format"		"{1:d},{2:d},{3:.1f%%}"
+		"en"			"[Lock] The infected team is ready ({1}/{2} - {3})."
+		"chi"			"[Lock] 感染者团队已准备 ({1}/{2} - {3})."
+	}
+
+	"Notify Survivors Unready"
+	{
+		"#format"		"{1:d},{2:d},{3:.1f%%}"
+		"en"			"[Lock] The survivor team is unready ({1}/{2} - {3})."
+		"chi"			"[Lock] 生还者团队未准备 ({1}/{2} - {3})."
+	}
+
+	"Notify Infected Unready"
+	{
+		"#format"		"{1:d},{2:d},{3:.1f%%}"
+		"en"			"[Lock] The infected team is unready ({1}/{2} - {3})."
+		"chi"			"[Lock] 感染者团队未准备 ({1}/{2} - {3})."
+	}
+
+	"Menu Title"
+	{
+		"en"			"Are You Ready To Start:"
+		"chi"			"你准备好了吗:"
+	}
+
+	"Menu Ready"
+	{
+		"en"			"Ready"
+		"chi"			"按1确认准备"
+	}
+
+	"Menu Unready"
+	{
+		"en"			"Unready"
+		"chi"			"按2取消准备"
+	}
+
+	"Menu Survivor"
+	{
+		"en"			"Survivor"
+		"chi"			"生还者"
+	}
+
+	"Menu Infected"
+	{
+		"en"			"Infected"
+		"chi"			"感染者"
+	}
+
+	"Menu Close"
+	{
+		"en"			"Close"
+		"chi"			"关闭"
+	}
+}

@@ -3,7 +3,7 @@
 
 #include <sourcemod>
 
-#define PLUGIN_VERSION "1.0.1"
+#define PLUGIN_VERSION "1.0.2"
 #define CHAT_TAG "\x04[网络]\x01"
 
 ConVar
@@ -224,8 +224,10 @@ void PrintClientStatus(int client, bool includeRouteHint)
 	PrintToChat(client, "%s 当前网络：ping \x05%dms\x01，loss \x05%.2f%%\x01，choke \x05%.2f%%\x01。", CHAT_TAG, ping, loss, choke);
 
 	if (includeRouteHint) {
+		float clientChoke = GetClientIncomingChokePct(client);
 		char pageUrl[512];
 		BuildServerPageUrl(pageUrl, sizeof(pageUrl));
+		PrintToChat(client, "%s 检测口径：choke 使用服务器发给你的方向；你发给服务器方向当前为 \x05%.2f%%\x01。", CHAT_TAG, clientChoke);
 		PrintToChat(client, "%s 如果延迟或丢包异常，请打开 IP 页面复制当前服务器地址后重新连接：\x04%s\x01", CHAT_TAG, pageUrl);
 	}
 }
@@ -299,6 +301,11 @@ float GetClientLossPct(int client)
 float GetClientChokePct(int client)
 {
 	return GetNetworkPct(GetClientAvgChoke(client, NetFlow_Outgoing));
+}
+
+float GetClientIncomingChokePct(int client)
+{
+	return GetNetworkPct(GetClientAvgChoke(client, NetFlow_Incoming));
 }
 
 float GetNetworkPct(float value)

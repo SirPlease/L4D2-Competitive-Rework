@@ -17,9 +17,14 @@ public SharedPlugin __pl_l4d_stats =
 public void __pl_l4d_stats_SetNTVOptional()
 {
 	MarkNativeAsOptional("l4dstats_GetClientScore");
+	MarkNativeAsOptional("l4dstats_GetClientQuarterScore");
+	MarkNativeAsOptional("l4dstats_GetClientQuarterRank");
+	MarkNativeAsOptional("l4dstats_GetCurrentQuarter");
 	MarkNativeAsOptional("l4dstats_IsTopPlayer");
+	MarkNativeAsOptional("l4dstats_IsQuarterTopPlayer");
 	MarkNativeAsOptional("l4dstats_GetClientPlayTime");
 	MarkNativeAsOptional("l4dstats_AddClientScore");
+	MarkNativeAsOptional("l4dstats_AdddClientScore");
 }
 #endif
 
@@ -32,6 +37,28 @@ public void __pl_l4d_stats_SetNTVOptional()
  */
 native int l4dstats_GetClientScore(int client);
 /**
+ * get a player's current-quarter score.
+ *
+ * @param client		Client Index.
+
+ * @return		Player current-quarter Score.
+ */
+native int l4dstats_GetClientQuarterScore(int client);
+/**
+ * get a player's current-quarter rank.
+ *
+ * @param client		Client Index.
+
+ * @return		Player current-quarter rank, 0 if not ranked.
+ */
+native int l4dstats_GetClientQuarterRank(int client);
+/**
+ * get current quarter key. Format: YYYYQ, e.g. 20262.
+ *
+ * @return		Current quarter key.
+ */
+native int l4dstats_GetCurrentQuarter();
+/**
  * get A player is in ranklimit
  *
  * @param client		Client Index.
@@ -39,6 +66,15 @@ native int l4dstats_GetClientScore(int client);
  * @return		0 for false, 1 for true.
  */
 native int l4dstats_IsTopPlayer(int client, int ranklimit);
+/**
+ * get whether a player is in the current-quarter top ranklimit.
+ *
+ * @param client		Client Index.
+ * @param ranklimit		Rank limit, 1-100.
+
+ * @return		0 for false, 1 for true.
+ */
+native int l4dstats_IsQuarterTopPlayer(int client, int ranklimit);
 /**
  * get A player time[min]
  *
@@ -55,6 +91,7 @@ native int l4dstats_GetClientPlayTime(int client);
  * @return		0 for false, 1 for true.
  */
 native int l4dstats_AddClientScore(int client, int Score); 
+native int l4dstats_AdddClientScore(int client, int Score); 
 /**
  * Called when l4d_stats plugins announce rank and score.
  *
