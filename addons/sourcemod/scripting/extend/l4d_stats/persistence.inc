@@ -67,25 +67,50 @@ bool:CheckDatabaseValidity(const String:Prefix[])
 
 public Action:timer_ProtectedFriendly(Handle:timer, any:data)
 {
-	TimerProtectedFriendly[data] = INVALID_HANDLE;
-	new ProtectedFriendlies = ProtectedFriendlyCounter[data];
-	ProtectedFriendlyCounter[data] = 0;
+	new Handle:Pack = data;
+	ResetPack(Pack);
+	new TimerUserID = ReadPackCell(Pack);
+	new TimerRoundToken = ReadPackCell(Pack);
+	new client = GetClientOfUserId(TimerUserID);
 
-	if (data == 0 || !IsClientConnected(data) || !IsClientInGame(data) || IsClientBot(data))
-		return;
+	if (client <= 0 || client > MaxClients)
+	{
+		return Plugin_Stop;
+	}
+
+	if (TimerProtectedFriendly[client] != timer)
+	{
+		return Plugin_Stop;
+	}
+
+	TimerProtectedFriendly[client] = INVALID_HANDLE;
+
+	if (TimerRoundToken != ProtectedFriendlyRoundToken || StatsDisabled() || CampaignOver || !Stats_IsSurvivorHuman(client))
+	{
+		ProtectedFriendlyCounter[client] = 0;
+		return Plugin_Stop;
+	}
+
+	new ProtectedFriendlies = ProtectedFriendlyCounter[client];
+	ProtectedFriendlyCounter[client] = 0;
+
+	if (ProtectedFriendlies <= 0)
+	{
+		return Plugin_Stop;
+	}
 
 	new Score = ModifyScoreDifficulty(GetConVarInt(cvar_Protect) * ProtectedFriendlies, 2, 3, TEAM_SURVIVORS);
-	Score = NewPlayerBonus_ApplyScoreMultiplier(data, Score);
+	Score = NewPlayerBonus_ApplyScoreMultiplier(client, Score);
 	ScoreLog_SetContext("protect_teammate", "base=l4d_stats_protect*protected_count,difficulty,newbie_multiplier");
-	AddScore(data, Score);
+	AddScore(client, Score);
 
 	UpdateMapStat("points", Score);
 
 	decl String:UpdatePoints[32];
 	decl String:UserID[MAX_LINE_WIDTH];
-	GetClientRankAuthString(data, UserID, sizeof(UserID));
+	GetClientRankAuthString(client, UserID, sizeof(UserID));
 	decl String:UserName[MAX_LINE_WIDTH];
-	GetClientName(data, UserName, sizeof(UserName));
+	GetClientName(client, UserName, sizeof(UserName));
 
 	switch (CurrentGamemodeID)
 	{

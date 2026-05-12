@@ -260,6 +260,7 @@ new Handle:cvar_MedkitBotMode = INVALID_HANDLE;
 
 new ProtectedFriendlyCounter[MAXPLAYERS + 1];
 new Handle:TimerProtectedFriendly[MAXPLAYERS + 1];
+new ProtectedFriendlyRoundToken = 1;
 
 // Announce rank
 new Handle:TimerRankChangeCheck[MAXPLAYERS + 1];

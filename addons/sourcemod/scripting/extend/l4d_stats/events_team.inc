@@ -1874,7 +1874,7 @@ L4D2:
 
 public Action:event_Award_L4D2(Handle:event, const String:name[], bool:dontBroadcast)
 {
-	if (StatsDisabled())
+	if (StatsDisabled() || CampaignOver)
 	{
 		return;
 	}
@@ -1909,7 +1909,7 @@ public Action:event_Award_L4D2(Handle:event, const String:name[], bool:dontBroad
 
 	if (AwardID == 67) // Protect friendly
 	{
-		if (!SubjectID)
+		if (!SubjectID || !Stats_IsSurvivorHuman(User))
 		{
 			return;
 		}
@@ -1922,7 +1922,10 @@ public Action:event_Award_L4D2(Handle:event, const String:name[], bool:dontBroad
 			TimerProtectedFriendly[User] = INVALID_HANDLE;
 		}
 
-		TimerProtectedFriendly[User] = CreateTimer(3.0, timer_ProtectedFriendly, User);
+		new Handle:Pack = CreateDataPack();
+		WritePackCell(Pack, GetClientUserId(User));
+		WritePackCell(Pack, ProtectedFriendlyRoundToken);
+		TimerProtectedFriendly[User] = CreateTimer(3.0, timer_ProtectedFriendly, Pack, TIMER_DATA_HNDL_CLOSE);
 
 		return;
 	}

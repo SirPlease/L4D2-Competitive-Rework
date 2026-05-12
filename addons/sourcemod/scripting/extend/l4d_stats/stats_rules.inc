@@ -289,6 +289,13 @@ ResetInfVars()
 {
 	new i;
 
+	// 让上一回合/上一张图遗留的保护队友延迟结算全部失效，避免过关后旧计时器继续刷分。
+	ProtectedFriendlyRoundToken++;
+	if (ProtectedFriendlyRoundToken > 1000000000)
+	{
+		ProtectedFriendlyRoundToken = 1;
+	}
+
 	// Reset all Infected variables
 	for (i = 0; i < MAXPLAYERS + 1; i++)
 	{
@@ -325,6 +332,11 @@ ResetInfVars()
 
 		TimerBoomerPerfectCheck[i] = INVALID_HANDLE;
 		TimerInfectedDamageCheck[i] = INVALID_HANDLE;
+
+		if (TimerProtectedFriendly[i] != INVALID_HANDLE)
+		{
+			CloseHandle(TimerProtectedFriendly[i]);
+		}
 
 		TimerProtectedFriendly[i] = INVALID_HANDLE;
 		ProtectedFriendlyCounter[i] = 0;
