@@ -55,7 +55,8 @@ public void SQL_Connection(Database database, const char[] error, int data)
 			`message` VARCHAR(126) NOT NULL COLLATE 'utf8mb4_general_ci', \
 			`server` varchar(126) DEFAULT NULL COLLATE 'utf8mb4_general_ci', \
 			`port` int(11) DEFAULT NULL , \
-			PRIMARY KEY (`id`) USING BTREE \
+			PRIMARY KEY (`id`) USING BTREE, \
+			KEY `idx_chat_log_date` (`date`) \
 		) \
 		DEFAULT CHARSET='utf8mb4' \
 		ENGINE=InnoDB \

@@ -264,7 +264,11 @@ CREATE TABLE `players` (
   `mutations_kills_survivors` int(11) NOT NULL DEFAULT '0',
   `playtime_mutations` int(11) NOT NULL DEFAULT '0',
   `points_mutations` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`steamid`)
+  `totalpoints` int(11) GENERATED ALWAYS AS (`points` + `points_survivors` + `points_infected` + `points_realism` + `points_survival` + `points_scavenge_survivors` + `points_scavenge_infected` + `points_realism_survivors` + `points_realism_infected` + `points_mutations`) STORED,
+  `totalplaytime` int(11) GENERATED ALWAYS AS (`playtime` + `playtime_versus` + `playtime_realism` + `playtime_survival` + `playtime_scavenge` + `playtime_realismversus` + `playtime_mutations`) STORED,
+  PRIMARY KEY (`steamid`),
+  KEY `idx_players_totalpoints` (`totalpoints`),
+  KEY `idx_players_totalplaytime` (`totalplaytime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -393,7 +397,9 @@ CREATE TABLE `timedmaps` (
   `usebuy` int(1) unsigned NOT NULL DEFAULT '0',
   `auto` int(1) unsigned NOT NULL DEFAULT '0',
   `anneversion` varchar(64) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'None',
-  PRIMARY KEY (`map`,`gamemode`,`difficulty`,`steamid`,`time`,`mutation`,`mode`,`sinum`,`sitime`,`usebuy`,`anneversion`,`auto`,`players`)
+  PRIMARY KEY (`map`,`gamemode`,`difficulty`,`steamid`,`time`,`mutation`,`mode`,`sinum`,`sitime`,`usebuy`,`anneversion`,`auto`,`players`),
+  KEY `idx_timedmaps_filter_time` (`anneversion`,`sinum`,`sitime`,`usebuy`,`auto`,`mode`,`time`),
+  KEY `idx_timedmaps_filter_players_time` (`anneversion`,`sinum`,`sitime`,`usebuy`,`auto`,`mode`,`players`,`time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

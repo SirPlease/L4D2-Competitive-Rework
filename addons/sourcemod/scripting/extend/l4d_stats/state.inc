@@ -7,8 +7,8 @@
 
 new String:TM_MENU_CURRENT[4] = " <<";
 
-new String:DB_PLAYERS_TOTALPOINTS[1024] = "points + points_survivors + points_infected + points_realism + points_survival + points_scavenge_survivors + points_scavenge_infected + points_realism_survivors + points_realism_infected + points_mutations";
-new String:DB_PLAYERS_TOTALPLAYTIME[1024] = "playtime + playtime_versus + playtime_realism + playtime_survival + playtime_scavenge + playtime_realismversus + playtime_mutations";
+new String:DB_PLAYERS_TOTALPOINTS[1024] = "totalpoints";
+new String:DB_PLAYERS_TOTALPLAYTIME[1024] = "totalplaytime";
 
 new String:RANKVOTE_QUESTION[128] = "Do you want to shuffle teams by player PPM?";
 

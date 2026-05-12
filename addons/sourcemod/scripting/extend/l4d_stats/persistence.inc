@@ -800,7 +800,7 @@ CheckCurrentMapDB()
 	GetCurrentMap(MapName, sizeof(MapName));
 
 	decl String:query[512];
-	Format(query, sizeof(query), "SELECT name FROM %smaps WHERE LOWER(name) = LOWER('%s') AND gamemode = %i AND mutation = '%s'", DbPrefix, MapName, GetCurrentGamemodeID(), CurrentMutation);
+	Format(query, sizeof(query), "SELECT name FROM %smaps WHERE name = LOWER('%s') AND gamemode = %i AND mutation = '%s'", DbPrefix, MapName, GetCurrentGamemodeID(), CurrentMutation);
 
 	SQL_TQuery(db, InsertMapDB, query);
 }
@@ -1176,7 +1176,7 @@ public UpdateMapStat(const String:Field[], Score)
 	Format(FieldSQL, sizeof(FieldSQL), "%s_%s", Field, DiffSQL);
 
 	decl String:query[512];
-	Format(query, sizeof(query), "UPDATE %smaps SET %s = %s + %i WHERE LOWER(name) = LOWER('%s') and gamemode = %i", DbPrefix, FieldSQL, FieldSQL, Score, MapName, GetCurrentGamemodeID());
+	Format(query, sizeof(query), "UPDATE %smaps SET %s = %s + %i WHERE name = LOWER('%s') and gamemode = %i", DbPrefix, FieldSQL, FieldSQL, Score, MapName, GetCurrentGamemodeID());
 	SendSQLUpdate(query);
 }
 
@@ -1204,6 +1204,6 @@ public UpdateMapStatFloat(const String:Field[], Float:Value)
 	Format(FieldSQL, sizeof(FieldSQL), "%s_%s", Field, DiffSQL);
 
 	decl String:query[512];
-	Format(query, sizeof(query), "UPDATE %smaps SET %s = %s + %f WHERE LOWER(name) = LOWER('%s') and gamemode = %i", DbPrefix, FieldSQL, FieldSQL, Value, MapName, GetCurrentGamemodeID());
+	Format(query, sizeof(query), "UPDATE %smaps SET %s = %s + %f WHERE name = LOWER('%s') and gamemode = %i", DbPrefix, FieldSQL, FieldSQL, Value, MapName, GetCurrentGamemodeID());
 	SendSQLUpdate(query);
 }
