@@ -6,13 +6,13 @@
 #include <dhooks>
 #include <left4dhooks>
 
-#define PLUGIN_VERSION "1.2"
+#define PLUGIN_VERSION "1.3"
 
 public Plugin myinfo =
 {
 	name = "[L4D2] Fix Changelevel",
 	author = "Lux (for \"l4d2_changelevel\"), Forgetest",
-	description = "Fix issues due to forced changelevel (i.e. No gascans in scavenge, incorrect behavior of \"OnGameplayStart\").",
+	description = "Fix issues due to forced changelevel + resolve partial map names before the engine sees them.",
 	version = PLUGIN_VERSION,
 	url = "https://github.com/Target5150/MoYu_Server_Stupid_Plugins"
 }
@@ -119,17 +119,17 @@ public void OnPluginStart()
 		{SDKType_Bool, SDKPass_Plain}
 	};
 	g_CallClearTeamScores = gd.CreateSDKCallOrFail(SDKCall_Raw, SDKConf_Signature, "CDirector::ClearTeamScores", params, sizeof(params), false);
-	
+
 	SDKCallParamsWrapper params2[] = {
 		{SDKType_Bool, SDKPass_Plain}
 	};
 	g_CallOnBeginTransition = gd.CreateSDKCallOrFail(SDKCall_Raw, SDKConf_Signature, "CDirector::OnBeginTransition", params2, sizeof(params2), false);
-	
+
 	SDKCallParamsWrapper params3[] = {
 		{SDKType_String, SDKPass_Pointer}
 	};
 	g_CallOnBeginChangeLevel = gd.CreateSDKCallOrFail(SDKCall_GameRules, SDKConf_Signature, "CTerrorGameRules::OnBeginChangeLevel", params3, sizeof(params3), false);
-	
+
 	g_iOffs_m_mapDurationTimer = gd.GetOffsetOrFail("CDirector::m_mapDurationTimer");
 	g_iOffs_m_flTotalMissionElaspedTime = gd.GetOffsetOrFail("CDirector::m_flTotalMissionElaspedTime");
 	g_iOffs_m_szOriginalMap = gd.GetOffsetOrFail("CDirector::m_szOriginalMap");
@@ -154,17 +154,33 @@ MRESReturn DTR__CVEngineServer__ChangeLevel(DHookParam hParams)
 {
 	if (!TheDirector)
 		return MRES_Ignored;
-	
+
 	char map[64]/*, reason[64]*/;
 	hParams.GetString(1, map, sizeof(map));
 	// if (!hParams.IsNull(2))
 	//	hParams.GetString(2, reason, sizeof(reason));
-	
+
+	/*
+		sm_map (and possible other callers) accept partial names like "c4m1" for "c4m1_milltown_a"
+		these get resolved for display via FindMap() but pass the original "c4m1" back to the
+		engine, which then gets stuck trying to load a non-existent map.
+		This way we don't have to modify official SourceMod files with every update.
+	*/
+	bool changedParam = false;
+	char fullMap[64];
+
+	if (GetMapDisplayName(map, fullMap, sizeof(fullMap)))
+	{
+		strcopy(map, sizeof(map), fullMap);
+		hParams.SetString(1, fullMap);
+		changedParam = true;
+	}
+
 	if (TheDirector.IsTransitioning())
-		return MRES_Ignored;
-	
+		return changedParam ? MRES_ChangedHandled : MRES_Ignored;
+
 	TheDirector.ClearTeamScores(true);
-	
+
 	ITimer_Start(TheDirector.m_mapDurationTimer);
 	TheDirector.m_flTotalMissionElaspedTime = 0.0;
 
@@ -173,7 +189,7 @@ MRESReturn DTR__CVEngineServer__ChangeLevel(DHookParam hParams)
 	TheDirector.OnBeginTransition(false);
 	GameRules__OnBeginChangeLevel(map);
 
-	return MRES_Ignored;
+	return changedParam ? MRES_ChangedHandled : MRES_Ignored;
 }
 
 void GameRules__OnBeginChangeLevel(const char[] map)
