@@ -84,7 +84,15 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnConfigsExecuted()
 {
-	ConnectDatabase();
+	if (g_hDatabase != null)
+	{
+		g_bReady = true;
+		StartPollTimer();
+	}
+	else
+	{
+		ConnectDatabase();
+	}
 }
 
 public void OnPluginEnd()

@@ -62,7 +62,7 @@ bool:IsDBConnectionLostError(const String:error[])
 }
 
 // 标记连接丢失并安排重连
-ScheduleDBReconnect(const String:error[])
+void ScheduleDBReconnect(const char[] error)
 {
 	if (!IsDBConnectionLostError(error))
 		return;
