@@ -454,6 +454,41 @@ public void SQL_OnInsertMessage(Database database, DBResultSet results, const ch
 	}
 }
 
+/**
+ * 从完整 hostname 中提取 "Anne云服#N" 前缀。
+ * 若未找到该模式，则原样返回 server。
+ */
+void GetShortServerName(const char[] server, char[] shortName, int maxLen)
+{
+	// 查找 "Anne云服#" 在字符串中的位置（UTF-8：Anne=4字节，云=3，服=3，#=1，共11字节）
+	static const char pattern[] = "Anne\xe4\xba\x91\xe6\x9c\x8d#"; // "Anne云服#"
+	int pos = StrContains(server, pattern, false);
+	if (pos < 0)
+	{
+		// 未找到，原样使用
+		strcopy(shortName, maxLen, server);
+		return;
+	}
+
+	int prefixLen = strlen(pattern); // 模式本身的长度
+	int start = pos + prefixLen;     // '#' 之后第一个字符的下标
+
+	// 向后读取连续数字
+	int end = start;
+	while (server[end] >= '0' && server[end] <= '9')
+		end++;
+
+	// 截取 pos .. end-1
+	int copyLen = end - pos;
+	if (copyLen <= 0 || copyLen >= maxLen)
+	{
+		strcopy(shortName, maxLen, server);
+		return;
+	}
+
+	strcopy(shortName, copyLen + 1, server[pos]);
+}
+
 public void SQL_OnPollMessages(Database database, DBResultSet results, const char[] error, any data)
 {
 	g_bPollInFlight = false;
@@ -467,6 +502,7 @@ public void SQL_OnPollMessages(Database database, DBResultSet results, const cha
 
 	char prefix[64];
 	char server[128];
+	char shortServer[64];
 	char name[128];
 	char message[256];
 
@@ -476,13 +512,13 @@ public void SQL_OnPollMessages(Database database, DBResultSet results, const cha
 	{
 		int id = results.FetchInt(0);
 		results.FetchString(1, server, sizeof(server));
-		int port = results.FetchInt(2);
 		results.FetchString(3, name, sizeof(name));
 		results.FetchString(4, message, sizeof(message));
 
 		if (id > g_iLastMessageId)
 			g_iLastMessageId = id;
 
-		PrintToChatAll("\x04%s \x03[%s:%d] \x05%s\x01: %s", prefix, server, port, name, message);
+		GetShortServerName(server, shortServer, sizeof(shortServer));
+		PrintToChatAll("\x04%s \x03[%s] \x05%s\x01: %s", prefix, shortServer, name, message);
 	}
 }
