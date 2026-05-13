@@ -95,6 +95,16 @@ public void OnPluginEnd()
 	}
 }
 
+public void OnMapEnd()
+{
+	// 换图时主动清理定时器和连接状态，
+	// 确保 SQL 回调不会操作已失效的句柄。
+	StopPollTimer();
+	StopReconnectTimer();
+	g_bReady = false;
+	g_bPollInFlight = false;
+}
+
 public Action Command_GlobalChat(int client, int args)
 {
 	if (!g_cvEnabled.BoolValue)
@@ -171,32 +181,32 @@ void ScheduleReconnect()
 		g_hDatabase = null;
 	}
 
-	if (g_hReconnectTimer == null)
-		g_hReconnectTimer = CreateTimer(10.0, Timer_ReconnectDatabase, _, TIMER_FLAG_NO_MAPCHANGE);
+	StopReconnectTimer();
+	g_hReconnectTimer = CreateTimer(10.0, Timer_ReconnectDatabase);
 }
 
 void StartPollTimer()
 {
 	StopPollTimer();
-	g_hPollTimer = CreateTimer(g_cvPollInterval.FloatValue, Timer_PollMessages, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+	g_hPollTimer = CreateTimer(g_cvPollInterval.FloatValue, Timer_PollMessages, _, TIMER_REPEAT);
 }
 
 void StopPollTimer()
 {
-	if (g_hPollTimer != null)
-	{
-		delete g_hPollTimer;
-		g_hPollTimer = null;
-	}
+	Handle timer = g_hPollTimer;
+	g_hPollTimer = null;
+
+	if (timer != null)
+		delete timer;
 }
 
 void StopReconnectTimer()
 {
-	if (g_hReconnectTimer != null)
-	{
-		delete g_hReconnectTimer;
-		g_hReconnectTimer = null;
-	}
+	Handle timer = g_hReconnectTimer;
+	g_hReconnectTimer = null;
+
+	if (timer != null)
+		delete timer;
 }
 
 public Action Timer_ReconnectDatabase(Handle timer, any data)

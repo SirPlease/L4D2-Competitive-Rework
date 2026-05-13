@@ -129,6 +129,7 @@ bool   g_UseMySQL = false;
 bool  g_DbConnecting = false;
 bool  g_DbReady      = false;
 float g_DbRetryAfter = 0.0;
+Handle g_hDbReconnectTimer = INVALID_HANDLE;
 #define DB_RETRY_COOLDOWN 10.0
 
 Cookie g_ck = null;
@@ -364,6 +365,8 @@ static void DB_MarkConnectionLost(const char[] error)
     if (!DB_IsConnectionLostError(error))
         return;
 
+    LogErr("[DB] 检测到数据库连接丢失，%.0f 秒后自动重连...", DB_RETRY_COOLDOWN);
+
     if (g_DB != INVALID_HANDLE)
     {
         CloseHandle(g_DB);
@@ -373,6 +376,17 @@ static void DB_MarkConnectionLost(const char[] error)
     g_DbReady = false;
     g_DbConnecting = false;
     g_DbRetryAfter = GetGameTime() + DB_RETRY_COOLDOWN;
+
+    if (g_hDbReconnectTimer == INVALID_HANDLE)
+        g_hDbReconnectTimer = CreateTimer(DB_RETRY_COOLDOWN, Timer_DmgShowDBReconnect);
+}
+
+public Action Timer_DmgShowDBReconnect(Handle timer, any data)
+{
+    g_hDbReconnectTimer = INVALID_HANDLE;
+    g_DbRetryAfter = 0.0; // 清除冷却，允许立即连接
+    DB_BeginConnect();
+    return Plugin_Stop;
 }
 
 public void SQLCB_OnConnect(Handle owner, Handle hndl, const char[] error, any data)
@@ -387,7 +401,12 @@ public void SQLCB_OnConnect(Handle owner, Handle hndl, const char[] error, any d
         LogErr("[DB] connect failed: %s", error);
         g_DB = INVALID_HANDLE;
         g_DbReady = false;
+        g_DbConnecting = false;
         g_DbRetryAfter = GetGameTime() + DB_RETRY_COOLDOWN;
+
+        // 主动安排重连
+        if (g_hDbReconnectTimer == INVALID_HANDLE)
+            g_hDbReconnectTimer = CreateTimer(DB_RETRY_COOLDOWN, Timer_DmgShowDBReconnect);
         return;
     }
 

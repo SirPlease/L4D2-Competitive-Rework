@@ -5,6 +5,8 @@
 
 // 数据库连接、玩家/地图持久化、基础查询和相关计分定时器。
 
+static Handle g_hDBReconnectTimer = INVALID_HANDLE;
+
 // Make connection to database.
 
 bool:ConnectDB()
@@ -50,6 +52,49 @@ bool:ConnectDB()
 	}
 
 	return true;
+}
+
+// 检测是否为连接丢失错误
+bool:IsDBConnectionLostError(const String:error[])
+{
+	return (StrContains(error, "Lost connection", false) != -1
+		|| StrContains(error, "server has gone away", false) != -1);
+}
+
+// 标记连接丢失并安排重连
+ScheduleDBReconnect(const String:error[])
+{
+	if (!IsDBConnectionLostError(error))
+		return;
+
+	LogError("[l4d_stats] 检测到数据库连接丢失，10 秒后自动重连...");
+
+	if (db != INVALID_HANDLE)
+	{
+		CloseHandle(db);
+		db = INVALID_HANDLE;
+	}
+
+	if (g_hDBReconnectTimer == INVALID_HANDLE)
+		g_hDBReconnectTimer = CreateTimer(10.0, Timer_L4DStatsDBReconnect);
+}
+
+public Action:Timer_L4DStatsDBReconnect(Handle:timer, any:data)
+{
+	g_hDBReconnectTimer = INVALID_HANDLE;
+
+	if (ConnectDB())
+	{
+		LogMessage("[l4d_stats] 数据库重连成功。");
+		CreateTimer(1.0, InitPlayers);
+	}
+	else
+	{
+		LogError("[l4d_stats] 数据库重连失败，10 秒后再次重试。");
+		g_hDBReconnectTimer = CreateTimer(10.0, Timer_L4DStatsDBReconnect);
+	}
+
+	return Plugin_Stop;
 }
 
 bool:CheckDatabaseValidity(const String:Prefix[])
@@ -588,6 +633,7 @@ public QueryClientStatsDP_1(Handle:owner, Handle:hndl, const String:error[], any
 	if (hndl == INVALID_HANDLE)
 	{
 		LogError("QueryClientStatsDP_1 Query failed: %s", error);
+		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -602,6 +648,7 @@ public QueryClientStatsDP_2(Handle:owner, Handle:hndl, const String:error[], any
 	if (hndl == INVALID_HANDLE)
 	{
 		LogError("QueryClientStatsDP_2 Query failed: %s", error);
+		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -616,6 +663,7 @@ public QueryClientStatsDP_3(Handle:owner, Handle:hndl, const String:error[], any
 	if (hndl == INVALID_HANDLE)
 	{
 		LogError("QueryClientStatsDP_3 Query failed: %s", error);
+		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -630,6 +678,7 @@ public QueryClientStatsDP_4(Handle:owner, Handle:hndl, const String:error[], any
 	if (hndl == INVALID_HANDLE)
 	{
 		LogError("QueryClientStatsDP_4 Query failed: %s", error);
+		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -644,6 +693,7 @@ public QueryClientStatsDP_5(Handle:owner, Handle:hndl, const String:error[], any
 	if (hndl == INVALID_HANDLE)
 	{
 		LogError("QueryClientStatsDP_5 Query failed: %s", error);
+		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -661,6 +711,7 @@ public QueryClientStatsDP_6(Handle:owner, Handle:hndl, const String:error[], any
 			CloseHandle(dp);
 
 		LogError("QueryClientStatsDP_6 Query failed: %s", error);
+		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -678,6 +729,7 @@ public QueryClientStatsDP_7(Handle:owner, Handle:hndl, const String:error[], any
 			CloseHandle(dp);
 
 		LogError("QueryClientStatsDP_7 Query failed: %s", error);
+		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -695,6 +747,7 @@ public QueryClientStatsDP_8(Handle:owner, Handle:hndl, const String:error[], any
 			CloseHandle(dp);
 
 		LogError("QueryClientStatsDP_8 Query failed: %s", error);
+		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -712,6 +765,7 @@ public QueryClientStatsDP_9(Handle:owner, Handle:hndl, const String:error[], any
 			CloseHandle(dp);
 
 		LogError("QueryClientStatsDP_9 Query failed: %s", error);
+		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -1019,6 +1073,8 @@ public SQLErrorCheckCallback(Handle:owner, Handle:hndl, const String:error[], an
 		{
 			LogError("SQL Error: %s", error);
 		}
+
+		ScheduleDBReconnect(error);
 	}
 }
 
