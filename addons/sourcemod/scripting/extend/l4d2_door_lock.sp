@@ -51,7 +51,6 @@ Handle g_hTimer_WarmingUpTime;
 Handle g_hTimer_CountdownTime;
 Handle g_hTimer_UnreadyGiveUp;
 Handle g_hTimer_ReadyUpChecks;
-Handle g_hTimer_ForceVersusST;
 
 int g_iUnlocksTime;
 int g_iLoadersTime;
@@ -280,7 +279,6 @@ void Event_RoundFreezeEnd(Event event, const char[] name, bool dontBroadcast)
 	
 	g_hTimer_IgnoreLoaders = CreateTimer(1.0, Timer_DisregardLoaders, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	g_hTimer_PendingLoader = CreateTimer(1.0, Timer_PendingLoaders, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
-	g_hTimer_ForceVersusST = CreateTimer(1.0, Timer_ForceRoundToStart, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 }
 
 /* =============================================================================================================== *
@@ -297,7 +295,6 @@ void Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
 	if(g_hTimer_UnreadyGiveUp != null) delete g_hTimer_UnreadyGiveUp;
 	if(g_hTimer_CountdownTime != null) delete g_hTimer_CountdownTime;
 	if(g_hTimer_ReadyUpChecks != null) delete g_hTimer_ReadyUpChecks;
-	if(g_hTimer_ForceVersusST != null) delete g_hTimer_ForceVersusST;
 }
 
 /* =============================================================================================================== *
@@ -745,33 +742,7 @@ public void OnClientDisconnect(int client)
 	}
 }
 
-/* =============================================================================================================== *
- *                     				Force Round To Start When Condition Is Triggered							   *
- *================================================================================================================ */
 
-Action Timer_ForceRoundToStart(Handle timer)
-{
-	if(g_bLeftSafeAreas)
-	{
-		g_hTimer_ForceVersusST = null;
-		return Plugin_Stop;
-	}
-	
-	static int iTimes = 0;
-	
-	if(iTimes > 120 && !g_bLockSafeAreas)
-	{
-		iTimes = 0;
-		g_bLeftSafeAreas = true;
-		L4D_ForceVersusStart();
-		
-		g_hTimer_ForceVersusST = null;
-		return Plugin_Stop;
-	}
-	
-	++ iTimes;
-	return Plugin_Continue;
-}
 
 /* =============================================================================================================== *
  *                     				Prevent Rounds From Starting Until All Players Are Ready					   *
