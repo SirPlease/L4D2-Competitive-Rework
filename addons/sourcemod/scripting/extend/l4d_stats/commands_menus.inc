@@ -846,34 +846,27 @@ QueryClientStatsDP_PlayerJoined(Client, const String:SteamID[])
 	decl String:QuarterLabel[32];
 	QuarterRank_FormatCurrentQuarter(QuarterLabel, sizeof(QuarterLabel));
 
-	if (!QuarterRank_Enabled())
+	if (ClientRank[Client] > 0)
 	{
-		if (ClientRank[Client] > 0)
-		{
-			StatsPrintToChatAll("玩家 \x05%s \x01进入游戏! (总榜: \x03%i/%i\x01, 总分: \x03%i\x01)", userName, ClientRank[Client], RankTotal, ClientPoints[Client]);
-		}
-		else
-		{
-			StatsPrintToChatAll("玩家 \x05%s \x01进入游戏! (总榜未上榜)", userName);
-		}
-		return;
-	}
-
-	if (ClientRank[Client] > 0 && ClientQuarterRank[Client] > 0)
-	{
-		StatsPrintToChatAll("玩家 \x05%s \x01进入游戏! 当前\x05%s\x01: 季度排名 \x03%i/%i\x01, 季度分 \x03%i\x01; 总榜 \x03%i/%i\x01, 总分 \x03%i\x01", userName, QuarterLabel, ClientQuarterRank[Client], QuarterRankTotal, ClientQuarterPoints[Client], ClientRank[Client], RankTotal, ClientPoints[Client]);
-	}
-	else if (ClientRank[Client] > 0)
-	{
-		StatsPrintToChatAll("玩家 \x05%s \x01进入游戏! 当前\x05%s\x01: 季度未上榜; 总榜 \x03%i/%i\x01, 总分 \x03%i\x01", userName, QuarterLabel, ClientRank[Client], RankTotal, ClientPoints[Client]);
-	}
-	else if (ClientQuarterRank[Client] > 0)
-	{
-		StatsPrintToChatAll("玩家 \x05%s \x01进入游戏! 当前\x05%s\x01: 季度排名 \x03%i/%i\x01, 季度分 \x03%i\x01; 总榜未上榜", userName, QuarterLabel, ClientQuarterRank[Client], QuarterRankTotal, ClientQuarterPoints[Client]);
+		StatsPrintToChatAll("玩家 \x05%s \x01进入游戏! (总榜: \x03%i/%i\x01, 总分: \x03%i\x01)", userName, ClientRank[Client], RankTotal, ClientPoints[Client]);
 	}
 	else
 	{
-		StatsPrintToChatAll("玩家 \x05%s \x01进入游戏! 当前\x05%s\x01: 季度未上榜; 总榜未上榜", userName, QuarterLabel);
+		StatsPrintToChatAll("玩家 \x05%s \x01进入游戏! (总榜未上榜)", userName);
+	}
+
+	if (!QuarterRank_Enabled())
+	{
+		return;
+	}
+
+	if (ClientQuarterRank[Client] > 0)
+	{
+		StatsPrintToChatAll("当前 \x05%s\x01: 季度排名 \x03%i/%i\x01, 季度分 \x03%i\x01", QuarterLabel, ClientQuarterRank[Client], QuarterRankTotal, ClientQuarterPoints[Client]);
+	}
+	else
+	{
+		StatsPrintToChatAll("当前 \x05%s\x01: 季度未上榜", QuarterLabel);
 	}
 }
 

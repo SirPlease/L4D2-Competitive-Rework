@@ -57,6 +57,10 @@ public void OnPluginStart()
 
 	RegConsoleCmd("sm_qf", Command_GlobalChat, "发送全服聊天: !qf <内容>");
 	RegConsoleCmd("sm_quanfu", Command_GlobalChat, "发送全服聊天: !quanfu <内容>");
+	
+	RegConsoleCmd("sm_zd", Command_LFG, "发送找队友信息: !zd <内容>");
+	RegConsoleCmd("sm_zudui", Command_LFG, "发送找队友信息: !zudui <内容>");
+	RegConsoleCmd("sm_zdy", Command_LFG, "发送找队友信息: !zdy <内容>");
 
 	AutoExecConfig(true, "global_chat");
 }
@@ -142,6 +146,8 @@ public Action Command_GlobalChat(int client, int args)
 		ReplyToCommand(client, "[全服] 无法获取你的 SteamID，请稍后再试。");
 		return Plugin_Handled;
 	}
+	
+	NormalizeSteamId(steamId);
 
 	char clientName[MAX_NAME_LENGTH];
 	GetClientName(client, clientName, sizeof(clientName));
@@ -153,6 +159,61 @@ public Action Command_GlobalChat(int client, int args)
 	}
 
 	ReserveDailyUsage(client, steamId, clientName, message, GetDailyLimit(client));
+	return Plugin_Handled;
+}
+
+public Action Command_LFG(int client, int args)
+{
+	if (!g_cvEnabled.BoolValue)
+	{
+		ReplyToCommand(client, "[全服] 全服聊天当前未启用。");
+		return Plugin_Handled;
+	}
+
+	if (client <= 0 || !IsClientInGame(client) || IsFakeClient(client))
+	{
+		ReplyToCommand(client, "[全服] 只有游戏内玩家可以使用找队友功能。");
+		return Plugin_Handled;
+	}
+
+	if (!g_bReady || g_hDatabase == null)
+	{
+		ReplyToCommand(client, "[全服] 数据库尚未连接，请稍后再试。");
+		return Plugin_Handled;
+	}
+
+	char message[128];
+	if (args > 0)
+	{
+		GetCmdArgString(message, sizeof(message));
+		StripQuotes(message);
+		TrimString(message);
+	}
+
+	char steamId[32];
+	if (!GetClientAuthId(client, AuthId_Steam2, steamId, sizeof(steamId)))
+	{
+		ReplyToCommand(client, "[全服] 无法获取你的 SteamID，请稍后再试。");
+		return Plugin_Handled;
+	}
+	
+	NormalizeSteamId(steamId);
+
+	char clientName[MAX_NAME_LENGTH];
+	GetClientName(client, clientName, sizeof(clientName));
+
+	char formattedMsg[256];
+	FormatEx(formattedMsg, sizeof(formattedMsg), "%s_||_%s", clientName, message);
+
+	if (HasUnlimitedGlobalChat(client))
+	{
+		InsertGlobalMessage(steamId, "@LFG", formattedMsg);
+		ReplyToCommand(client, "[全服] 找队友信息已发送给所有旁观玩家。");
+		return Plugin_Handled;
+	}
+
+	ReserveDailyUsage(client, steamId, "@LFG", formattedMsg, GetDailyLimit(client));
+	ReplyToCommand(client, "[全服] 找队友信息已发送给所有旁观玩家。");
 	return Plugin_Handled;
 }
 
@@ -266,6 +327,23 @@ public void SQL_OnCreateTable(Database database, DBResultSet results, const char
 	if (results == null)
 	{
 		LogError("[global_chat] 初始化消息表失败: %s", error);
+		ScheduleReconnect();
+		return;
+	}
+
+	g_hDatabase.Query(SQL_OnCreateTitlesTable, "\
+		CREATE TABLE IF NOT EXISTS `anne_global_chat_titles` ( \
+			`steamid` VARCHAR(32) NOT NULL COLLATE 'utf8mb4_general_ci', \
+			`title` VARCHAR(64) NOT NULL COLLATE 'utf8mb4_general_ci', \
+			PRIMARY KEY (`steamid`) USING BTREE \
+		) DEFAULT CHARSET='utf8mb4' ENGINE=InnoDB;");
+}
+
+public void SQL_OnCreateTitlesTable(Database database, DBResultSet results, const char[] error, any data)
+{
+	if (results == null)
+	{
+		LogError("[global_chat] 初始化头衔表失败: %s", error);
 		ScheduleReconnect();
 		return;
 	}
@@ -528,7 +606,112 @@ public void SQL_OnPollMessages(Database database, DBResultSet results, const cha
 		if (id > g_iLastMessageId)
 			g_iLastMessageId = id;
 
-		GetShortServerName(server, shortServer, sizeof(shortServer));
-		PrintToChatAll("\x04%s \x03[%s] \x05%s\x01: %s", prefix, shortServer, name, message);
+		if (StrEqual(name, "@LOGIN"))
+		{
+			PrintToChatAll("\x04%s %s", prefix, message);
+		}
+		else if (StrEqual(name, "@LFG"))
+		{
+			char parts[2][128];
+			int count = ExplodeString(message, "_||_", parts, sizeof(parts), sizeof(parts[]));
+			if (count < 1) continue;
+
+			for (int i = 1; i <= MaxClients; i++)
+			{
+				if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) == 1)
+				{
+					if (count < 2 || parts[1][0] == '\0')
+					{
+						PrintCenterText(i, "%s 玩家在 %s 召唤队友", parts[0], server);
+						PrintToChat(i, "\x04%s \x05%s \x01玩家在 \x03%s \x01召唤队友", prefix, parts[0], server);
+					}
+					else
+					{
+						PrintCenterText(i, "%s 玩家在 %s 召唤队友", parts[0], server);
+						PrintToChat(i, "\x04%s \x05%s \x01玩家在 \x03%s \x01召唤队友\n\x01留言: \x05%s", prefix, parts[0], server, parts[1]);
+					}
+				}
+			}
+		}
+		else
+		{
+			GetShortServerName(server, shortServer, sizeof(shortServer));
+			PrintToChatAll("\x04%s \x03[%s] \x05%s\x01: %s", prefix, shortServer, name, message);
+		}
+	}
+}
+
+public void OnClientPostAdminCheck(int client)
+{
+	if (!g_cvEnabled.BoolValue || !g_bReady || g_hDatabase == null)
+		return;
+
+	if (IsFakeClient(client))
+		return;
+
+	char steamId[32];
+	if (!GetClientAuthId(client, AuthId_Steam2, steamId, sizeof(steamId)))
+		return;
+	
+	NormalizeSteamId(steamId);
+
+	char query[256];
+	char safeSteamId[64];
+	g_hDatabase.Escape(steamId, safeSteamId, sizeof(safeSteamId));
+	
+	g_hDatabase.Format(query, sizeof(query), "SELECT title FROM anne_global_chat_titles WHERE steamid = '%s'", safeSteamId);
+	
+	DataPack pack = new DataPack();
+	pack.WriteCell(GetClientUserId(client));
+	pack.WriteString(steamId);
+	
+	g_hDatabase.Query(SQL_OnCheckLoginTitle, query, pack);
+}
+
+public void SQL_OnCheckLoginTitle(Database database, DBResultSet results, const char[] error, DataPack pack)
+{
+	pack.Reset();
+	int userid = pack.ReadCell();
+	char steamId[32];
+	pack.ReadString(steamId, sizeof(steamId));
+	delete pack;
+
+	if (results == null)
+	{
+		LogError("[global_chat] 检查玩家头衔失败: %s", error);
+		return;
+	}
+
+	if (results.FetchRow())
+	{
+		int client = GetClientOfUserId(userid);
+		if (client > 0 && IsClientInGame(client))
+		{
+			char title[64];
+			results.FetchString(0, title, sizeof(title));
+
+			char clientName[MAX_NAME_LENGTH];
+			GetClientName(client, clientName, sizeof(clientName));
+
+			char hostname[128];
+			char shortServer[64];
+			GetConVarString(FindConVar("hostname"), hostname, sizeof(hostname));
+			GetShortServerName(hostname, shortServer, sizeof(shortServer));
+
+			char formattedMsg[256];
+			FormatEx(formattedMsg, sizeof(formattedMsg), "\x01%s \x05%s \x01在 \x03%s \x01上线了！", title, clientName, shortServer);
+
+			InsertGlobalMessage(steamId, "@LOGIN", formattedMsg);
+		}
+	}
+}
+
+void NormalizeSteamId(char[] steamId)
+{
+	// 规范化 SteamID，强制将前缀统一替换为 STEAM_0:1:
+	if (StrContains(steamId, "STEAM_") == 0)
+	{
+		steamId[6] = '0';
+		steamId[8] = '1';
 	}
 }
