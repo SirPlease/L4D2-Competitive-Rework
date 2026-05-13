@@ -593,6 +593,24 @@ public GetClientPointsRankChange(Handle:owner, Handle:hndl, const String:error[]
 	GetClientPointsWorker(owner, hndl, error, client, GetClientRankRankChange);
 }
 
+// Generate client's current-quarter point total before checking quarter rank changes.
+public GetClientQuarterPointsRankChange(Handle:owner, Handle:hndl, const String:error[], any:client)
+{
+	if (!client)
+	{
+		return;
+	}
+
+	if (hndl == INVALID_HANDLE)
+	{
+		LogError("GetClientQuarterPointsRankChange Query failed: %s", error);
+		return;
+	}
+
+	QuarterRank_GetClientPoints(owner, hndl, error, client);
+	QuarterRank_QueryClientRank(client, GetClientQuarterRankRankChange);
+}
+
 // Generate client's point total.
 GetClientPointsWorker(Handle:owner, Handle:hndl, const String:error[], any:client, SQLTCallback:callback=INVALID_FUNCTION)
 {
@@ -737,6 +755,125 @@ public GetClientRankRankChange(Handle:owner, Handle:hndl, const String:error[], 
 
 		if (!IsClientBot(client) && IsClientConnected(client) && IsClientInGame(client))
 			StatsPrintToChat(client, "你的排名%s了 \x04%i 名\x01! \x05(Rank: %i)", Label, RankChange,  RankChangeLastRank[client]);
+	}
+}
+
+// Generate client's current-quarter rank and announce quarter rank changes.
+public GetClientQuarterRankRankChange(Handle:owner, Handle:hndl, const String:error[], any:client)
+{
+	if (!client)
+	{
+		return;
+	}
+
+	if (hndl == INVALID_HANDLE)
+	{
+		LogError("GetClientQuarterRankRankChange Query failed: %s", error);
+		return;
+	}
+
+	QuarterRank_GetClientRank(owner, hndl, error, client);
+
+	new CurrentRank = ClientQuarterRank[client];
+	new LastRank = QuarterRankChangeLastRank[client];
+
+	if (QuarterRankChangeFirstCheck[client])
+	{
+		QuarterRankChangeLastRank[client] = CurrentRank;
+		QuarterRankChangeFirstCheck[client] = false;
+		return;
+	}
+
+	if (LastRank == CurrentRank)
+	{
+		return;
+	}
+
+	QuarterRankChangeLastRank[client] = CurrentRank;
+
+	if (!GetConVarInt(cvar_AnnounceMode) || !GetConVarBool(cvar_AnnounceRankChange))
+	{
+		return;
+	}
+
+	if (!Stats_IsValidHumanClient(client))
+	{
+		return;
+	}
+
+	decl String:QuarterLabel[32];
+	QuarterRank_FormatCurrentQuarter(QuarterLabel, sizeof(QuarterLabel));
+
+	if (CurrentRank <= 0)
+	{
+		StatsPrintToChat(client, "你已离开 \x05%s\x01 排行榜。", QuarterLabel);
+		return;
+	}
+
+	if (LastRank <= 0)
+	{
+		StatsPrintToChat(client, "你进入了 \x05%s\x01 排行榜! 当前季度排名 \x04%i\x01, 季度分数 \x04%i\x01。", QuarterLabel, CurrentRank, ClientQuarterPoints[client]);
+		return;
+	}
+
+	new RankChange = LastRank - CurrentRank;
+	decl String:Label[16];
+	if (RankChange > 0)
+	{
+		Format(Label, sizeof(Label), "上升");
+	}
+	else
+	{
+		RankChange *= -1;
+		Format(Label, sizeof(Label), "下降");
+	}
+
+	StatsPrintToChat(client, "你的 \x05%s\x01 排名%s了 \x04%i 名\x01! \x05(季度排名: %i / 季度分数: %i)", QuarterLabel, Label, RankChange, CurrentRank, ClientQuarterPoints[client]);
+}
+
+QueryClientStatsDP_PlayerJoined(Client, const String:SteamID[])
+{
+	#pragma unused SteamID
+
+	if (!Stats_IsValidHumanClient(Client))
+	{
+		return;
+	}
+
+	decl String:userName[MAX_LINE_WIDTH];
+	GetClientName(Client, userName, sizeof(userName));
+
+	decl String:QuarterLabel[32];
+	QuarterRank_FormatCurrentQuarter(QuarterLabel, sizeof(QuarterLabel));
+
+	if (!QuarterRank_Enabled())
+	{
+		if (ClientRank[Client] > 0)
+		{
+			StatsPrintToChatAll("玩家 \x05%s \x01进入游戏! (总榜: \x03%i/%i\x01, 总分: \x03%i\x01)", userName, ClientRank[Client], RankTotal, ClientPoints[Client]);
+		}
+		else
+		{
+			StatsPrintToChatAll("玩家 \x05%s \x01进入游戏! (总榜未上榜)", userName);
+		}
+		return;
+	}
+
+	if (ClientRank[Client] > 0 && ClientQuarterRank[Client] > 0)
+	{
+		StatsPrintToChatAll("玩家 \x05%s \x01进入游戏! 当前\x05%s\x01: 季度排名 \x03%i/%i\x01, 季度分 \x03%i\x01; 总榜 \x03%i/%i\x01, 总分 \x03%i\x01", userName, QuarterLabel, ClientQuarterRank[Client], QuarterRankTotal, ClientQuarterPoints[Client], ClientRank[Client], RankTotal, ClientPoints[Client]);
+	}
+	else if (ClientRank[Client] > 0)
+	{
+		StatsPrintToChatAll("玩家 \x05%s \x01进入游戏! 当前\x05%s\x01: 季度未上榜; 总榜 \x03%i/%i\x01, 总分 \x03%i\x01", userName, QuarterLabel, ClientRank[Client], RankTotal, ClientPoints[Client]);
+	}
+	else if (ClientQuarterRank[Client] > 0)
+	{
+		StatsPrintToChatAll("玩家 \x05%s \x01进入游戏! 当前\x05%s\x01: 季度排名 \x03%i/%i\x01, 季度分 \x03%i\x01; 总榜未上榜", userName, QuarterLabel, ClientQuarterRank[Client], QuarterRankTotal, ClientQuarterPoints[Client]);
+	}
+	else
+	{
+		StatsPrintToChatAll("玩家 \x05%s \x01进入游戏! 当前\x05%s\x01: 季度未上榜; 总榜未上榜", userName, QuarterLabel);
 	}
 }
 
@@ -944,8 +1081,10 @@ public DisplayRank(Handle:owner, Handle:hndl, const String:error[], any:client)
 	new Handle:RankPanel = CreatePanel();
 	new String:Value[MAX_LINE_WIDTH];
 	new String:URL[MAX_LINE_WIDTH];
+	new String:QuarterLabel[32];
 
 	GetConVarString(cvar_SiteURL, URL, sizeof(URL));
+	QuarterRank_FormatCurrentQuarter(QuarterLabel, sizeof(QuarterLabel));
 	new Float:HeadshotRatio = Headshots == 0 ? 0.00 : float(Headshots)/float(InfectedKilled)*100;
 
 	Format(Value, sizeof(Value), "%s的排名" , Name);
@@ -974,10 +1113,10 @@ public DisplayRank(Handle:owner, Handle:hndl, const String:error[], any:client)
 	Format(Value, sizeof(Value), "目前分数: %i" , Points);
 	DrawPanelText(RankPanel, Value);
 
-	Format(Value, sizeof(Value), "季度分数: %i" , ClientQuarterPoints[client]);
+	Format(Value, sizeof(Value), "%s分数: %i" , QuarterLabel, ClientQuarterPoints[client]);
 	DrawPanelText(RankPanel, Value);
 
-	Format(Value, sizeof(Value), "季度排名: %i (共%i)" , ClientQuarterRank[client], QuarterRankTotal);
+	Format(Value, sizeof(Value), "%s排名: %i (共%i)" , QuarterLabel, ClientQuarterRank[client], QuarterRankTotal);
 	DrawPanelText(RankPanel, Value);
 
 	Format(Value, sizeof(Value), "每分钟获取分数: %.2f" , PPM);
@@ -2217,10 +2356,12 @@ public DisplayQuarterTop10(Handle:owner, Handle:hndl, const String:error[], any:
 		return;
 	}
 
-	decl String:Name[32], String:Disp[MAX_LINE_WIDTH];
+	decl String:Name[32], String:Disp[MAX_LINE_WIDTH], String:QuarterLabel[32];
+	QuarterRank_FormatCurrentQuarter(QuarterLabel, sizeof(QuarterLabel));
 
 	new Handle:Top10Panel = CreatePanel();
-	SetPanelTitle(Top10Panel, "季度 Top 10 玩家");
+	Format(Disp, sizeof(Disp), "%s Top 10 玩家", QuarterLabel);
+	SetPanelTitle(Top10Panel, Disp);
 
 	while (SQL_FetchRow(hndl))
 	{

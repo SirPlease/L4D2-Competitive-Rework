@@ -52,6 +52,7 @@
 #define CM_TOP10 1
 #define CM_NEXTRANK 2
 #define CM_NEXTRANKFULL 3
+#define CM_PLAYERJOINED 4
 
 #define SOUND_RANKVOTE "items/suitchargeok1.wav"
 #define SOUND_MAPTIME_START_L4D1 "UI/Beep23.wav"

@@ -395,6 +395,8 @@ ResetVars()
 			CloseHandle(TimerRankChangeCheck[i]);
 
 		TimerRankChangeCheck[i] = INVALID_HANDLE;
+		QuarterRankChangeLastRank[i] = 0;
+		QuarterRankChangeFirstCheck[i] = true;
 
 		for (j = 0; j < MAXPLAYERS + 1; j++)
 		{
@@ -432,6 +434,7 @@ public StartRankChangeCheck(Client)
 		return;
 
 	RankChangeFirstCheck[Client] = true;
+	QuarterRankChangeFirstCheck[Client] = true;
 	DoShowRankChange(Client);
 	TimerRankChangeCheck[Client] = CreateTimer(GetConVarFloat(cvar_AnnounceRankChangeIVal), timer_ShowRankChange, Client, TIMER_REPEAT);
 }

@@ -348,6 +348,11 @@ public DoShowRankChange(Client)
 	GetClientRankAuthString(Client, ClientID, sizeof(ClientID));
 
 	QueryClientPointsSteamID(Client, ClientID, GetClientPointsRankChange);
+
+	if (QuarterRank_Enabled())
+	{
+		QuarterRank_QueryClientPointsSteamID(Client, ClientID, GetClientQuarterPointsRankChange);
+	}
 }
 
 // Display player rank.
@@ -407,7 +412,7 @@ public DoShowPlayerJoined(client)
 	decl String:clientId[MAX_LINE_WIDTH];
 	GetClientRankAuthString(client, clientId, sizeof(clientId));
 
-	QueryClientPointsSteamID(client, clientId, GetClientPointsPlayerJoined);
+	QueryClientStatsSteamID(client, clientId, CM_PLAYERJOINED);
 }
 
 // Display common Infected scores to each player.

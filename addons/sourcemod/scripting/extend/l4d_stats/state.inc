@@ -266,6 +266,8 @@ new ProtectedFriendlyRoundToken = 1;
 new Handle:TimerRankChangeCheck[MAXPLAYERS + 1];
 new RankChangeLastRank[MAXPLAYERS + 1];
 new bool:RankChangeFirstCheck[MAXPLAYERS + 1];
+new QuarterRankChangeLastRank[MAXPLAYERS + 1];
+new bool:QuarterRankChangeFirstCheck[MAXPLAYERS + 1];
 
 // MapTiming
 new Float:MapTimingStartTime = -1.0;

@@ -154,6 +154,8 @@ public OnClientDisconnect(client)
 	InitializeClientInf(client);
 	PlayerRankVote[client] = RANKVOTE_NOVOTE;
 	ClientRankMute[client] = false;
+	QuarterRankChangeLastRank[client] = 0;
+	QuarterRankChangeFirstCheck[client] = true;
 
 	if (TimerRankChangeCheck[client] != INVALID_HANDLE)
 		CloseHandle(TimerRankChangeCheck[client]);

@@ -742,6 +742,10 @@ public QueryClientStatsDP_9(Handle:owner, Handle:hndl, const String:error[], any
 	{
 		QueryClientStatsDP_NextRankFull(Client, SteamID);
 	}
+	else if (CallingMethod == CM_PLAYERJOINED)
+	{
+		QueryClientStatsDP_PlayerJoined(Client, SteamID);
+	}
 
 	// Clean your mess up
 	CloseHandle(dp);

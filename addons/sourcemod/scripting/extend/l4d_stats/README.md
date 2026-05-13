@@ -76,7 +76,7 @@ l4d_stats_nobuy_bonus_hardcore_multiplier 1.3
 l4d_stats_quarter_rank_enable 1
 ```
 
-插件会自动创建 `%sscore_quarter` 表。所有走 `AddScore` 的分数都会同时进入总榜和当前季度榜；季度 key 格式是 `YYYYQ`，例如 `20262` 表示 2026 年第 2 季度。检测到季度切换时，当前季度榜会自动清零并进入新季度。
+插件会自动创建 `%sscore_quarter` 表。所有走 `AddScore` 的分数都会同时进入总榜和当前季度榜；季度 key 格式是 `YYYYQ`，例如 `20262` 表示 2026 年第 2 季度。检测到季度切换时，当前季度榜会自动清零并进入新季度。玩家进服提示、排名面板、季度 Top10 和季度排名变化提示都会显示当前季度。
 
 玩家命令：
 

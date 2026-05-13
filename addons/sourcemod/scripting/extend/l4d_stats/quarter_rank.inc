@@ -39,6 +39,14 @@ stock QuarterRank_GetCurrentQuarter()
 	return QuarterRank_GetCurrentKey();
 }
 
+stock QuarterRank_FormatCurrentQuarter(String:buffer[], maxlength)
+{
+	new QuarterKey = QuarterRank_GetCurrentQuarter();
+	new Year = QuarterKey / 10;
+	new Quarter = QuarterKey % 10;
+	Format(buffer, maxlength, "%i年第%i季度", Year, Quarter);
+}
+
 stock QuarterRank_EnsureTable()
 {
 	if (db == INVALID_HANDLE)
