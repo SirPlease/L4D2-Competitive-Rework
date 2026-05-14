@@ -140,7 +140,7 @@ public Plugin myinfo =
 {
 	name = "L4D2 Hittable Control",
 	author = "Stabby, Visor, Sir, Derpduck, Forgetest",
-	version = "0.9.1",
+	version = "0.9.2",
 	description = "Allows for customisation of hittable damage values (and debugging)"
 };
 
@@ -373,6 +373,13 @@ void Physics_OnSpawnPost(int entity)
 	int parent = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
 	if (parent != -1)
 	{
+		// In case the breakable parent was forced to
+		if (g_nPhysicsHitInfoEntry[parent] == -1)
+		{
+			g_nPhysicsHitInfoEntry[parent] = NewPhysicsHitInfo();
+			DebugMsg("Physics_OnSpawnPost (missing info from breakable parent#%d) [#%d]", parent, g_nPhysicsHitInfoEntry[parent]);
+		}
+		
 		g_nPhysicsHitInfoEntry[entity] = g_nPhysicsHitInfoEntry[parent];
 	}
 	g_iPhysicsDamage[entity] = -1;
