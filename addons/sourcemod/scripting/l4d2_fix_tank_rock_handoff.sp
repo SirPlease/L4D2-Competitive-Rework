@@ -43,33 +43,29 @@ public void OnPluginStart()
 /* Covers Player to Player passes (including forced) */
 public void L4D_OnReplaceTank(int oldTank, int newTank)
 {
-	CancelTankThrow(newTank);
+	CancelPossibleTankThrow(newTank);
 }
 
 /* Covers Player to Bot passes */
 void Event_PlayerBotReplace(Event event, const char[] name, bool dontBroadcast)
 {
 	int bot = GetClientOfUserId(event.GetInt("bot"));
-
-	if (bot > 0 && IsTank(bot))
-		CancelTankThrow(bot);
+	CancelPossibleTankThrow(bot);
 }
 
 /* Covers Bot to Player passes (as we do in some plugins) */
 void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
 {
 	int player = GetClientOfUserId(event.GetInt("player"));
-
-	if (player > 0 && IsTank(player))
-		CancelTankThrow(player);
+	CancelPossibleTankThrow(player);
 }
 
-void CancelTankThrow(int tank)
+void CancelPossibleTankThrow(int client)
 {
-	if (!IsTank(tank))
+	if (!IsTank(client))
 		return;
 
-	int ability = GetEntPropEnt(tank, Prop_Send, "m_customAbility");
+	int ability = GetEntPropEnt(client, Prop_Send, "m_customAbility");
 	if (ability == -1)
 		return;
 
