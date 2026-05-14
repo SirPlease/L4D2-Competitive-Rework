@@ -360,16 +360,10 @@ public void OnEntityCreated(int entity, const char[] classname)
 	}
 }
 
-public void OnEntityDestroyed(int entity)
-{
-	if (entity > 0 && entity < MAX_EDICTS)
-	{
-		g_nPhysicsHitInfoEntry[entity] = -1;
-	}
-}
-
 void Physics_OnSpawnPost(int entity)
 {
+	g_nPhysicsHitInfoEntry[entity] = -1;
+
 	int parent = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
 	if (parent != -1)
 	{
@@ -401,10 +395,10 @@ Action Physics_OnTakeDamage(int victim, int &attacker, int &inflictor, float &da
 	if (!IsValidEdict(attacker))
 		return Plugin_Continue;
 
-	DebugMsg("(#%d) Physics_OnTakeDamage (attacker %d)", victim, attacker);
-
 	if (attacker > 0 && attacker <= MaxClients && IsTank(attacker))
 	{
+		DebugMsg("(#%d) Physics_OnTakeDamage tank (%N #%d)", victim, attacker, attacker);
+
 		// A tank punches me, create a new entry if not
 		if (g_nPhysicsHitInfoEntry[victim] == -1)
 		{
@@ -423,6 +417,8 @@ Action Physics_OnTakeDamage(int victim, int &attacker, int &inflictor, float &da
 	}
 	else if (IsEntityClassname(attacker, "prop_physics*"))
 	{
+		DebugMsg("(#%d) Physics_OnTakeDamage prop_physics (#%d)", victim, attacker);
+		
 		// Collides with other physics, clone their hit info
 		if (g_nPhysicsHitInfoEntry[attacker] != -1)
 		{
@@ -445,7 +441,7 @@ Action Physics_OnTakeDamage(int victim, int &attacker, int &inflictor, float &da
 				selfinfo.lastAttackerTime = GetGameTime();
 
 				g_PhysicsHitInfos.SetArray(g_nPhysicsHitInfoEntry[victim], selfinfo);
-				DebugMsg("(#%d) Physics_OnTakeDamage prop_physics (#%d) [%d]", victim, g_nPhysicsHitInfoEntry[attacker], selfinfo.lastAttackerId);
+				DebugMsg("(#%d) Physics_OnTakeDamage prop_physics (#%d) [lastAttackerId %d]", victim, g_nPhysicsHitInfoEntry[attacker], selfinfo.lastAttackerId);
 			}
 		}
 		else
@@ -604,7 +600,8 @@ Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, in
 	// Hey, we don't care.
 	if (!IsValidEdict(attacker)
 	 || !IsValidEdict(inflictor)
-	 || g_nPhysicsHitInfoEntry[inflictor] == -1)
+	 || g_nPhysicsHitInfoEntry[inflictor] == -1
+	 || !IsEntityClassname(inflictor, "prop_physics*"))
 		return Plugin_Continue;
 	
 	if (IsTank(victim) && hTankSelfDamage.BoolValue)
