@@ -31,6 +31,12 @@ ConVar g_cvLimit5M;
 ConVar g_cvLimit10M;
 ConVar g_cvLimit20M;
 
+ConVar g_cvLFGLimitDefault;
+ConVar g_cvLFGLimit1M;
+ConVar g_cvLFGLimit5M;
+ConVar g_cvLFGLimit10M;
+ConVar g_cvLFGLimit20M;
+
 public Plugin myinfo =
 {
 	name = "Anne Global Chat",
@@ -54,6 +60,12 @@ public void OnPluginStart()
 	g_cvLimit5M = CreateConVar("sm_qf_limit_5m", "10", "500w 积分以上玩家每日全服聊天次数。", FCVAR_NONE, true, 0.0);
 	g_cvLimit10M = CreateConVar("sm_qf_limit_10m", "20", "1000w 积分以上玩家每日全服聊天次数。", FCVAR_NONE, true, 0.0);
 	g_cvLimit20M = CreateConVar("sm_qf_limit_20m", "30", "2000w 积分以上玩家每日全服聊天次数。", FCVAR_NONE, true, 0.0);
+
+	g_cvLFGLimitDefault = CreateConVar("sm_zd_limit_default", "3", "普通玩家每日找队友次数。", FCVAR_NONE, true, 0.0);
+	g_cvLFGLimit1M = CreateConVar("sm_zd_limit_1m", "5", "100w 积分以上玩家每日找队友次数。", FCVAR_NONE, true, 0.0);
+	g_cvLFGLimit5M = CreateConVar("sm_zd_limit_5m", "10", "500w 积分以上玩家每日找队友次数。", FCVAR_NONE, true, 0.0);
+	g_cvLFGLimit10M = CreateConVar("sm_zd_limit_10m", "20", "1000w 积分以上玩家每日找队友次数。", FCVAR_NONE, true, 0.0);
+	g_cvLFGLimit20M = CreateConVar("sm_zd_limit_20m", "30", "2000w 积分以上玩家每日找队友次数。", FCVAR_NONE, true, 0.0);
 
 	RegConsoleCmd("sm_qf", Command_GlobalChat, "发送全服聊天: !qf <内容>");
 	RegConsoleCmd("sm_quanfu", Command_GlobalChat, "发送全服聊天: !quanfu <内容>");
@@ -220,7 +232,7 @@ public Action Command_LFG(int client, int args)
 		return Plugin_Handled;
 	}
 
-	ReserveDailyUsage(client, steamId, "@LFG", formattedMsg, GetDailyLimit(client));
+	ReserveDailyLFGUsage(client, steamId, "@LFG", formattedMsg, GetLFGDailyLimit(client));
 	ReplyToCommand(client, "[全服] 找队友信息已发送给所有旁观玩家。");
 	return Plugin_Handled;
 }
@@ -367,6 +379,38 @@ public void SQL_OnCreateTitlesTable(Database database, DBResultSet results, cons
 		) DEFAULT CHARSET='utf8mb4' ENGINE=InnoDB;");
 }
 
+public void SQL_OnCreateUsageTable(Database database, DBResultSet results, const char[] error, any data)
+{
+	if (results == null)
+	{
+		LogError("[global_chat] 初始化使用次数表失败: %s", error);
+		ScheduleReconnect();
+		return;
+	}
+
+	g_hDatabase.Query(SQL_OnCreateLFGUsageTable, "\
+		CREATE TABLE IF NOT EXISTS `anne_lfg_chat_usage` ( \
+			`steamid` VARCHAR(32) NOT NULL COLLATE 'utf8mb4_general_ci', \
+			`usage_date` DATE NOT NULL, \
+			`used_count` INT UNSIGNED NOT NULL DEFAULT 0, \
+			`last_used_at` DATETIME NOT NULL, \
+			PRIMARY KEY (`steamid`, `usage_date`) USING BTREE, \
+			KEY `idx_anne_lfg_chat_usage_date` (`usage_date`) \
+		) DEFAULT CHARSET='utf8mb4' ENGINE=InnoDB;");
+}
+
+public void SQL_OnCreateLFGUsageTable(Database database, DBResultSet results, const char[] error, any data)
+{
+	if (results == null)
+	{
+		LogError("[global_chat] 初始化找队友使用次数表失败: %s", error);
+		ScheduleReconnect();
+		return;
+	}
+
+	g_hDatabase.Query(SQL_OnLoadLastId, "SELECT COALESCE(MAX(id), 0) FROM anne_global_chat");
+}
+
 void RunCleanupIfNeeded()
 {
 	int retentionDays = g_cvRetentionDays.IntValue;
@@ -385,6 +429,9 @@ void RunCleanupIfNeeded()
 
 	g_hDatabase.Format(query, sizeof(query), "DELETE FROM anne_global_chat_usage WHERE usage_date < DATE_SUB(CURDATE(), INTERVAL %d DAY)", retentionDays);
 	g_hDatabase.Query(SQL_OnCleanup, query);
+
+	g_hDatabase.Format(query, sizeof(query), "DELETE FROM anne_lfg_chat_usage WHERE usage_date < DATE_SUB(CURDATE(), INTERVAL %d DAY)", retentionDays);
+	g_hDatabase.Query(SQL_OnCleanup, query);
 }
 
 public void SQL_OnCleanup(Database database, DBResultSet results, const char[] error, any data)
@@ -396,17 +443,7 @@ public void SQL_OnCleanup(Database database, DBResultSet results, const char[] e
 	}
 }
 
-public void SQL_OnCreateUsageTable(Database database, DBResultSet results, const char[] error, any data)
-{
-	if (results == null)
-	{
-		LogError("[global_chat] 初始化使用次数表失败: %s", error);
-		ScheduleReconnect();
-		return;
-	}
 
-	g_hDatabase.Query(SQL_OnLoadLastId, "SELECT COALESCE(MAX(id), 0) FROM anne_global_chat");
-}
 
 public void SQL_OnLoadLastId(Database database, DBResultSet results, const char[] error, any data)
 {
@@ -448,6 +485,27 @@ int GetDailyLimit(int client)
 		return g_cvLimit1M.IntValue;
 
 	return g_cvLimitDefault.IntValue;
+}
+
+int GetLFGDailyLimit(int client)
+{
+	int score = 0;
+	if (g_bl4dstatsAvailable && GetFeatureStatus(FeatureType_Native, "l4dstats_GetClientScore") == FeatureStatus_Available)
+		score = l4dstats_GetClientScore(client);
+
+	if (score >= 20000000)
+		return g_cvLFGLimit20M.IntValue;
+
+	if (score >= 10000000)
+		return g_cvLFGLimit10M.IntValue;
+
+	if (score >= 5000000)
+		return g_cvLFGLimit5M.IntValue;
+
+	if (score >= 1000000)
+		return g_cvLFGLimit1M.IntValue;
+
+	return g_cvLFGLimitDefault.IntValue;
 }
 
 void ReserveDailyUsage(int client, const char[] steamId, const char[] clientName, const char[] message, int limit)
@@ -513,6 +571,76 @@ public void SQL_OnReserveDailyUsage(Database database, DBResultSet results, cons
 		int client = GetClientOfUserId(userid);
 		if (client > 0)
 			ReplyToCommand(client, "[全服] 今日全服聊天次数已用完（每日 %d 次）。", limit);
+
+		return;
+	}
+
+	InsertGlobalMessage(steamId, clientName, message);
+}
+
+void ReserveDailyLFGUsage(int client, const char[] steamId, const char[] clientName, const char[] message, int limit)
+{
+	if (limit <= 0)
+	{
+		ReplyToCommand(client, "[全服] 你当前没有找队友次数。");
+		return;
+	}
+
+	char safeSteamId[64];
+	g_hDatabase.Escape(steamId, safeSteamId, sizeof(safeSteamId));
+
+	char usageDate[16];
+	FormatTime(usageDate, sizeof(usageDate), "%Y-%m-%d", GetTime());
+
+	char query[768];
+	g_hDatabase.Format(query, sizeof(query), "\
+		INSERT INTO anne_lfg_chat_usage (steamid, usage_date, used_count, last_used_at) \
+		VALUES ('%s', '%s', 1, NOW()) \
+		ON DUPLICATE KEY UPDATE \
+			last_used_at = IF(used_count < %d, NOW(), last_used_at), \
+			used_count = IF(used_count < %d, used_count + 1, used_count)",
+		safeSteamId, usageDate, limit, limit);
+
+	DataPack pack = new DataPack();
+	pack.WriteCell(GetClientUserId(client));
+	pack.WriteCell(limit);
+	pack.WriteString(steamId);
+	pack.WriteString(clientName);
+	pack.WriteString(message);
+
+	g_hDatabase.Query(SQL_OnReserveDailyLFGUsage, query, pack);
+}
+
+public void SQL_OnReserveDailyLFGUsage(Database database, DBResultSet results, const char[] error, DataPack pack)
+{
+	pack.Reset();
+	int userid = pack.ReadCell();
+	int limit = pack.ReadCell();
+
+	char steamId[32];
+	char clientName[MAX_NAME_LENGTH];
+	char message[256];
+	pack.ReadString(steamId, sizeof(steamId));
+	pack.ReadString(clientName, sizeof(clientName));
+	pack.ReadString(message, sizeof(message));
+	delete pack;
+
+	if (results == null)
+	{
+		int client = GetClientOfUserId(userid);
+		if (client > 0)
+			ReplyToCommand(client, "[全服] 检查今日找队友次数失败，请稍后再试。");
+
+		LogError("[global_chat] 更新每日找队友次数失败: %s", error);
+		ScheduleReconnect();
+		return;
+	}
+
+	if (results.AffectedRows <= 0)
+	{
+		int client = GetClientOfUserId(userid);
+		if (client > 0)
+			ReplyToCommand(client, "[全服] 今日找队友次数已用完（每日 %d 次）。", limit);
 
 		return;
 	}
