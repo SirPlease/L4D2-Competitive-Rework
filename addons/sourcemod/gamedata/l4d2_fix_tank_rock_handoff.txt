@@ -1,0 +1,15 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Signatures"
+		{
+			"CThrow::OnStunned"
+			{
+				"library"	"server"
+				"linux"		"@_ZN6CThrow9OnStunnedEf"
+				"windows"	"\x55\x8B\xEC\xF3\x0F\x10\x05\x2A\x2A\x2A\x2A\x56"
+			}
+		}
+	}
+}
