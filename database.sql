@@ -402,6 +402,28 @@ CREATE TABLE `timedmaps` (
   KEY `idx_timedmaps_filter_players_time` (`anneversion`,`sinum`,`sitime`,`usebuy`,`auto`,`mode`,`players`,`time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `timedmap_runs`;
+CREATE TABLE `timedmap_runs` (
+  `run_id` varchar(64) NOT NULL,
+  `map` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
+  `gamemode` int(1) unsigned NOT NULL,
+  `difficulty` int(1) unsigned NOT NULL,
+  `steamid` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
+  `time` double NOT NULL,
+  `players` int(2) NOT NULL,
+  `mutation` varchar(64) CHARACTER SET utf8mb4 NOT NULL DEFAULT '',
+  `mode` int(1) unsigned NOT NULL DEFAULT '0',
+  `sinum` int(1) unsigned NOT NULL DEFAULT '0',
+  `sitime` int(1) unsigned NOT NULL DEFAULT '0',
+  `usebuy` int(1) unsigned NOT NULL DEFAULT '0',
+  `auto` int(1) unsigned NOT NULL DEFAULT '0',
+  `anneversion` varchar(64) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'None',
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  PRIMARY KEY (`run_id`,`steamid`),
+  KEY `idx_timedmap_runs_filter_time` (`map`,`mode`,`difficulty`,`sinum`,`sitime`,`usebuy`,`anneversion`,`time`),
+  KEY `idx_timedmap_runs_steamid` (`steamid`,`modified`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sb_admins`;
 CREATE TABLE `sb_admins` (

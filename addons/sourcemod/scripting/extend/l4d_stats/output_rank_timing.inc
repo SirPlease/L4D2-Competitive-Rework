@@ -58,6 +58,47 @@ MapTimingEnabled()
 	return MapTimingBlocked || CurrentGamemodeID == GAMEMODE_COOP || CurrentGamemodeID == GAMEMODE_SURVIVAL || CurrentGamemodeID == GAMEMODE_REALISM || CurrentGamemodeID == GAMEMODE_OTHERMUTATIONS;
 }
 
+MapTimingRuns_EnsureTable()
+{
+	decl String:query[2048];
+	Format(query, sizeof(query),
+		"CREATE TABLE IF NOT EXISTS `%stimedmap_runs` ("
+		... "`run_id` varchar(64) NOT NULL,"
+		... "`map` varchar(255) CHARACTER SET utf8mb4 NOT NULL,"
+		... "`gamemode` int(1) unsigned NOT NULL,"
+		... "`difficulty` int(1) unsigned NOT NULL,"
+		... "`steamid` varchar(255) CHARACTER SET utf8mb4 NOT NULL,"
+		... "`time` double NOT NULL,"
+		... "`players` int(2) NOT NULL,"
+		... "`mutation` varchar(64) CHARACTER SET utf8mb4 NOT NULL DEFAULT '',"
+		... "`mode` int(1) unsigned NOT NULL DEFAULT '0',"
+		... "`sinum` int(1) unsigned NOT NULL DEFAULT '0',"
+		... "`sitime` int(1) unsigned NOT NULL DEFAULT '0',"
+		... "`usebuy` int(1) unsigned NOT NULL DEFAULT '0',"
+		... "`auto` int(1) unsigned NOT NULL DEFAULT '0',"
+		... "`anneversion` varchar(64) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'None',"
+		... "`created` datetime NOT NULL,"
+		... "`modified` datetime NOT NULL,"
+		... "PRIMARY KEY (`run_id`,`steamid`),"
+		... "KEY `idx_timedmap_runs_filter_time` (`map`,`mode`,`difficulty`,`sinum`,`sitime`,`usebuy`,`anneversion`,`time`),"
+		... "KEY `idx_timedmap_runs_steamid` (`steamid`,`modified`)"
+		... ") ENGINE=InnoDB DEFAULT CHARSET=utf8",
+		DbPrefix);
+	DoFastQuery(0, query);
+}
+
+MapTimingRuns_RecordParticipant(const String:RunID[], const String:MapName[], GamemodeID, const String:ClientID[], Float:TotalTime, PlayerCounter, GameDifficulty, const String:Mutation[], Mode)
+{
+	decl String:query[2048];
+	Format(query, sizeof(query),
+		"INSERT IGNORE INTO `%stimedmap_runs` "
+		... "(`run_id`,`map`,`gamemode`,`difficulty`,`steamid`,`time`,`players`,`mutation`,`mode`,`sinum`,`sitime`,`usebuy`,`auto`,`anneversion`,`created`,`modified`) "
+		... "VALUES ('%s','%s',%i,%i,'%s',%f,%i,'%s',%i,%i,%i,%i,%i,'%s',NOW(),NOW())",
+		DbPrefix, RunID, MapName, GamemodeID, GameDifficulty, ClientID, TotalTime, PlayerCounter, Mutation, Mode,
+		GetAnneInfectedNumber(), GetAnneSISpawnTime(), g_brpgAvailable && L4D_RPG_GetGlobalValue(INDEX_USEBUY), IsAutoSpawnTime(), GetAnneVersion());
+	SendSQLUpdate(query);
+}
+
 public StartMapTiming()
 {
 	if (!MapTimingEnabled() || MapTimingStartTime != 0.0 || StatsDisabled())
@@ -182,6 +223,19 @@ public bool StopMapTiming()
 
 	new i, PlayerCounter = 0, InfectedCounter = (CurrentGamemodeID == GAMEMODE_VERSUS || CurrentGamemodeID == GAMEMODE_SCAVENGE ? 0 : 1);
 
+	// 结算时以实际过关队伍为准，补登记中途加入/重连后加入的真人幸存者。
+	for (i = 1; i <= maxplayers; i++)
+	{
+		if (IsClientConnected(i) && IsClientInGame(i) && !IsClientBot(i) && GetClientTeam(i) == TEAM_SURVIVORS)
+		{
+			GetClientRankAuthString(i, ClientID, sizeof(ClientID));
+			if (!GetTrieValue(MapTimingSurvivors, ClientID, enabled))
+			{
+				SetTrieValue(MapTimingSurvivors, ClientID, 1, true);
+			}
+		}
+	}
+
 	for (i = 1; i <= maxplayers; i++)
 	{
 		if (IsClientConnected(i) && IsClientInGame(i) && !IsClientBot(i))
@@ -212,7 +266,14 @@ public bool StopMapTiming()
 
 	new GameDifficulty = GetCurrentDifficulty();
 	if(mode > 0)
+	{
 		GetThisModeBestTime(g_brpgAvailable && L4D_RPG_GetGlobalValue(INDEX_USEBUY));	
+		PlayerCounter = GetConVarInt(cvar_SurvivorLimit);
+	}
+
+	decl String:RunID[64];
+	Format(RunID, sizeof(RunID), "%i_%i_%i", GetTime(), RoundToFloor(TotalTime * 1000.0), GetRandomInt(1000, 9999));
+
 	for (i = 1; i <= maxplayers; i++)
 	{
 		if (IsClientConnected(i) && IsClientInGame(i) && !IsClientBot(i))
@@ -226,17 +287,16 @@ public bool StopMapTiming()
 				if (GetTrieValue(MapTimingSurvivors, ClientID, enabled))
 				{
 					if (enabled)
-					{
-						dp = CreateDataPack();
+						{
+							dp = CreateDataPack();
+							MapTimingRuns_RecordParticipant(RunID, MapName, CurrentGamemodeID, ClientID, TotalTime, PlayerCounter, GameDifficulty, CurrentMutation, mode);
 
-						WritePackString(dp, MapName);
-						WritePackCell(dp, CurrentGamemodeID);
-						WritePackString(dp, ClientID);
-						WritePackFloat(dp, TotalTime);
-						WritePackCell(dp, i);
-						if(mode > 0)
-							PlayerCounter = GetConVarInt(cvar_SurvivorLimit);
-						WritePackCell(dp, PlayerCounter);
+							WritePackString(dp, MapName);
+							WritePackCell(dp, CurrentGamemodeID);
+							WritePackString(dp, ClientID);
+							WritePackFloat(dp, TotalTime);
+							WritePackCell(dp, i);
+							WritePackCell(dp, PlayerCounter);
 						WritePackCell(dp, GameDifficulty);
 						WritePackString(dp, CurrentMutation);
 

@@ -367,6 +367,7 @@ public ClearStatsAll(client)
 
 		return;
 	}
+	DoFastQuery(client, "DELETE FROM `%stimedmap_runs`", DbPrefix);
 
 	if (!DoFastQuery(client, "DELETE FROM %splayers", DbPrefix))
 	{
@@ -2549,7 +2550,10 @@ public ClearTMAllPanelHandler(Handle:menu, MenuAction:action, param1, param2)
 	if (param2 == 1)
 	{
 		if (DoFastQuery(param1, "DELETE FROM %stimedmaps", DbPrefix))
+		{
+			DoFastQuery(param1, "DELETE FROM `%stimedmap_runs`", DbPrefix);
 			StatsPrintToChatPreFormatted(param1, "All map timings removed!");
+		}
 		else
 			StatsPrintToChatPreFormatted(param1, "Removing map timings failed!");
 	}
@@ -2566,7 +2570,10 @@ public ClearTMCoopPanelHandler(Handle:menu, MenuAction:action, param1, param2)
 	if (param2 == 1)
 	{
 		if (DoFastQuery(param1, "DELETE FROM %stimedmaps WHERE gamemode = %i", DbPrefix, GAMEMODE_COOP))
+		{
+			DoFastQuery(param1, "DELETE FROM `%stimedmap_runs` WHERE gamemode = %i", DbPrefix, GAMEMODE_COOP);
 			StatsPrintToChatPreFormatted(param1, "Clearing map timings for Coop successful!");
+		}
 		else
 			StatsPrintToChatPreFormatted(param1, "Clearing map timings for Coop failed!");
 	}
@@ -2583,7 +2590,10 @@ public ClearTMSurvivalPanelHandler(Handle:menu, MenuAction:action, param1, param
 	if (param2 == 1)
 	{
 		if (DoFastQuery(param1, "DELETE FROM %stimedmaps WHERE gamemode = %i", DbPrefix, GAMEMODE_SURVIVAL))
+		{
+			DoFastQuery(param1, "DELETE FROM `%stimedmap_runs` WHERE gamemode = %i", DbPrefix, GAMEMODE_SURVIVAL);
 			StatsPrintToChatPreFormatted(param1, "Clearing map timings for Survival successful!");
+		}
 		else
 			StatsPrintToChatPreFormatted(param1, "Clearing map timings for Survival failed!");
 	}
@@ -2600,7 +2610,10 @@ public ClearTMRealismPanelHandler(Handle:menu, MenuAction:action, param1, param2
 	if (param2 == 1)
 	{
 		if (DoFastQuery(param1, "DELETE FROM %stimedmaps WHERE gamemode = %i", DbPrefix, GAMEMODE_REALISM))
+		{
+			DoFastQuery(param1, "DELETE FROM `%stimedmap_runs` WHERE gamemode = %i", DbPrefix, GAMEMODE_REALISM);
 			StatsPrintToChatPreFormatted(param1, "Clearing map timings for Realism successful!");
+		}
 		else
 			StatsPrintToChatPreFormatted(param1, "Clearing map timings for Realism failed!");
 	}
@@ -2617,7 +2630,10 @@ public ClearTMMutationsPanelHandler(Handle:menu, MenuAction:action, param1, para
 	if (param2 == 1)
 	{
 		if (DoFastQuery(param1, "DELETE FROM %stimedmaps WHERE gamemode = %i", DbPrefix, GAMEMODE_OTHERMUTATIONS))
+		{
+			DoFastQuery(param1, "DELETE FROM `%stimedmap_runs` WHERE gamemode = %i", DbPrefix, GAMEMODE_OTHERMUTATIONS);
 			StatsPrintToChatPreFormatted(param1, "Clearing map timings for Mutations successful!");
+		}
 		else
 			StatsPrintToChatPreFormatted(param1, "Clearing map timings for Mutations failed!");
 	}
@@ -2765,6 +2781,7 @@ public DisplayClearPanelHandler(Handle:menu, MenuAction:action, param1, param2)
 	if (DoFastQuery(param1, "DELETE FROM %splayers WHERE steamid = '%s'", DbPrefix, SteamID))
 	{
 		DoFastQuery(param1, "DELETE FROM %stimedmaps WHERE steamid = '%s'", DbPrefix, SteamID);
+		DoFastQuery(param1, "DELETE FROM `%stimedmap_runs` WHERE steamid = '%s'", DbPrefix, SteamID);
 
 		ClientPoints[client] = 0;
 		ClientRank[client] = 0;

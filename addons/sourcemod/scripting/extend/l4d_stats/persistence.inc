@@ -44,6 +44,7 @@ bool:ConnectDB()
 		ScoreLog_EnsureTable();
 		QuarterRank_EnsureTable();
 		ModeStats_EnsureTable();
+		MapTimingRuns_EnsureTable();
 	}
 	else
 	{
