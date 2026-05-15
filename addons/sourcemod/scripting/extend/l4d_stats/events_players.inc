@@ -276,6 +276,7 @@ public Action:event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
 		len += Format(query[len], sizeof(query)-len, "kills = kills + 1, kill_%s = kill_%s + 1", InfectedType, InfectedType);
 		len += Format(query[len], sizeof(query)-len, "%s WHERE steamid = '%s'", Headshot, AttackerID);
 		SendSQLUpdate(query);
+		ModeStats_RecordKills(Attacker, 1, GetEventBool(event, "headshot") ? 1 : 0);
 
 		if (Mode && Score > 0)
 		{

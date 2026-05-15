@@ -470,6 +470,7 @@ public AddScore(Client, Score)
 	CurrentPoints[Client] += Score;
 	ScoreLog_Record(Client, Score);
 	QuarterRank_RecordScore(Client, Score);
+	ModeStats_RecordScore(Client, Score);
 
 	//if (GetConVarBool(cvar_AnnounceRankChange))
 	//{
@@ -1476,6 +1477,7 @@ SurvivorDiedNamed(Attacker, Victim, const String:VictimName[], const String:Atta
 		len += Format(query[len], sizeof(query)-len, "UPDATE %splayers SET points_mutations = points_mutations + %i, mutations_kills_survivors = mutations_kills_survivors + 1 ", DbPrefix, Score);
 	len += Format(query[len], sizeof(query)-len, "WHERE steamid = '%s'", AttackerID);
 	SendSQLUpdate(query);
+	ModeStats_RecordKills(Attacker, 1);
 
 	if (Mode < 0)
 		Mode = GetConVarInt(cvar_AnnounceMode);

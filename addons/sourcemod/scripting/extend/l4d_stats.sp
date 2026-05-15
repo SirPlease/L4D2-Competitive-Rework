@@ -16,6 +16,7 @@
 #include "l4d_stats/no_buy_bonus.inc"
 #include "l4d_stats/score_log.inc"
 #include "l4d_stats/quarter_rank.inc"
+#include "l4d_stats/mode_stats.inc"
 
 // Plugin Info
 public Plugin:myinfo =

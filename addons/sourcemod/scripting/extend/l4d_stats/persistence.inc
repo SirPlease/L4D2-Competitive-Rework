@@ -43,6 +43,7 @@ bool:ConnectDB()
 
 		ScoreLog_EnsureTable();
 		QuarterRank_EnsureTable();
+		ModeStats_EnsureTable();
 	}
 	else
 	{
@@ -1179,12 +1180,13 @@ public UpdatePlayerFull(Client, const String:SteamID[], const String:Name[])
 		mode = 6;
 	}
 	//旁观者更新时间戳，但是不增加游戏时间，这样来方便统计在线人数
-	if(!IsPlayer(Client) || IsFunGame() > 2)
+	if(!IsPlayer(Client) || !ModeStats_IsRankedMode())
 		Format(query, sizeof(query), "UPDATE %splayers SET lastontime = UNIX_TIMESTAMP(), lastannemode = %i, lastgamemode = %i, name = '%s', ip = '%s' WHERE steamid = '%s'", DbPrefix, mode, CurrentGamemodeID, Name, IP, SteamID);
 	else
 		Format(query, sizeof(query), "UPDATE %splayers SET lastontime = UNIX_TIMESTAMP(), %s = %s + 1, lastannemode = %i, lastgamemode = %i, name = '%s', ip = '%s' WHERE steamid = '%s'", DbPrefix, Playtime, Playtime, mode, CurrentGamemodeID, Name, IP, SteamID);
 	
 	SQL_TQuery(db, UpdatePlayerCallback, query, Client);
+	ModeStats_RecordPlaytime(Client, 1);
 }
 
 // Report error on sql query;

@@ -517,6 +517,7 @@ InterstitialPlayerUpdateEx(client, bool:ApplyNewPlayerMultiplier)
 	len += Format(query[len], sizeof(query)-len, "headshots = headshots + %i ", TimerHeadshots[client]);
 	len += Format(query[len], sizeof(query)-len, "WHERE steamid = '%s'", ClientID);
 	SendSQLUpdate(query);
+	ModeStats_RecordKills(client, TimerKills[client], TimerHeadshots[client]);
 
 	UpdateMapStat("kills", TimerKills[client]);
 	UpdateMapStat("points", AwardPoints);
