@@ -226,6 +226,8 @@ public OnPluginStart()
 	{
 		HookEvent("defibrillator_used", event_DefibPlayer);
 	}
+	HookEvent("item_pickup", event_ItemPickup);
+	HookEvent("heal_begin", event_HealBegin);
 	HookEvent("heal_success", event_HealPlayer);
 	HookEvent("revive_success", event_RevivePlayer);
 	HookEvent("tongue_pull_stopped", event_TongueSave);

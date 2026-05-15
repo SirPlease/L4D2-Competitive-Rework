@@ -171,9 +171,11 @@ public Action:event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
 		}
 
 		decl String:query[1024];
-		Format(query, sizeof(query), "UPDATE %splayers SET %s = %s - %i, award_teamkill = award_teamkill + 1 WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, AttackerID);
+			Format(query, sizeof(query), "UPDATE %splayers SET %s = %s - %i, award_teamkill = award_teamkill + 1 WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, AttackerID);
 
-		SendSQLUpdate(query);
+			SendSQLUpdate(query);
+			QuarterRank_RecordField(Attacker, "award_teamkill", 1);
+			QuarterRank_RecordScore(Attacker, Score * (-1));
 
 		if (Mode == 1 || Mode == 2)
 			StatsPrintToChat(Attacker, "你因为队内误杀 \x05%s\x01 \x03失去了 \x04%i \x01分!", VictimName, Score);
@@ -274,9 +276,10 @@ public Action:event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
 		decl String:query[1024];
 		len += Format(query[len], sizeof(query)-len, "UPDATE %splayers SET %s = %s + %i, ", DbPrefix, UpdatePoints, UpdatePoints, Score);
 		len += Format(query[len], sizeof(query)-len, "kills = kills + 1, kill_%s = kill_%s + 1", InfectedType, InfectedType);
-		len += Format(query[len], sizeof(query)-len, "%s WHERE steamid = '%s'", Headshot, AttackerID);
-		SendSQLUpdate(query);
-		ModeStats_RecordKills(Attacker, 1, GetEventBool(event, "headshot") ? 1 : 0);
+			len += Format(query[len], sizeof(query)-len, "%s WHERE steamid = '%s'", Headshot, AttackerID);
+			SendSQLUpdate(query);
+			ModeStats_RecordKills(Attacker, 1, GetEventBool(event, "headshot") ? 1 : 0);
+			QuarterRank_RecordInfectedKill(Attacker, InfectedType, 1, GetEventBool(event, "headshot") ? 1 : 0);
 
 		if (Mode && Score > 0)
 		{
@@ -672,6 +675,100 @@ public Action:event_TankKilled(Handle:event, const String:name[], bool:dontBroad
 	TankCount = TankCount + 1;
 }
 
+stock bool:Stats_IsTrackedWeaponEntity(entity)
+{
+	return entity > 0 && entity < sizeof(Pills);
+}
+
+stock Stats_RecordFirstHolder(firstHolder[], entity, client)
+{
+	if (!Stats_IsTrackedWeaponEntity(entity) || !Stats_IsValidClient(client))
+		return;
+
+	if (firstHolder[entity] == 0)
+		firstHolder[entity] = GetClientUserId(client);
+}
+
+stock bool:Stats_IsOriginalHolder(firstHolder[], entity, client)
+{
+	if (!Stats_IsTrackedWeaponEntity(entity) || !Stats_IsValidClient(client))
+		return false;
+
+	if (firstHolder[entity] == 0)
+		firstHolder[entity] = GetClientUserId(client);
+
+	return firstHolder[entity] == GetClientUserId(client);
+}
+
+stock Stats_RecordHeldSupportItems(client)
+{
+	if (!Stats_IsValidClient(client) || GetClientTeam(client) != TEAM_SURVIVORS)
+		return;
+
+	decl String:ClassName[MAX_LINE_WIDTH];
+	new entity = GetPlayerWeaponSlot(client, 3);
+	if (Stats_IsTrackedWeaponEntity(entity) && IsValidEntity(entity))
+	{
+		GetEntityClassname(entity, ClassName, sizeof(ClassName));
+		if (StrContains(ClassName, "first_aid_kit", false) != -1)
+			Stats_RecordFirstHolder(FirstAidFirstHolder, entity, client);
+	}
+
+	entity = GetPlayerWeaponSlot(client, 4);
+	if (Stats_IsTrackedWeaponEntity(entity) && IsValidEntity(entity))
+	{
+		GetEntityClassname(entity, ClassName, sizeof(ClassName));
+		if (StrContains(ClassName, "pain_pills", false) != -1)
+			Stats_RecordFirstHolder(PillsFirstHolder, entity, client);
+		else if (StrContains(ClassName, "adrenaline", false) != -1)
+			Stats_RecordFirstHolder(AdrenalineFirstHolder, entity, client);
+	}
+}
+
+public Action:timer_RecordInitialSupportItems(Handle:timer)
+{
+	for (new i = 1; i <= MaxClients; i++)
+	{
+		Stats_RecordHeldSupportItems(i);
+	}
+}
+
+public Action:event_ItemPickup(Handle:event, const String:name[], bool:dontBroadcast)
+{
+	new client = GetClientOfUserId(GetEventInt(event, "userid"));
+
+	if (!Stats_IsValidClient(client) || GetClientTeam(client) != TEAM_SURVIVORS)
+		return;
+
+	decl String:ItemName[MAX_LINE_WIDTH];
+	GetEventString(event, "item", ItemName, sizeof(ItemName));
+
+	if (StrContains(ItemName, "pain_pills", false) != -1)
+	{
+		Stats_RecordFirstHolder(PillsFirstHolder, GetPlayerWeaponSlot(client, 4), client);
+	}
+	else if (StrContains(ItemName, "adrenaline", false) != -1)
+	{
+		Stats_RecordFirstHolder(AdrenalineFirstHolder, GetPlayerWeaponSlot(client, 4), client);
+	}
+	else if (StrContains(ItemName, "first_aid_kit", false) != -1)
+	{
+		Stats_RecordFirstHolder(FirstAidFirstHolder, GetPlayerWeaponSlot(client, 3), client);
+	}
+}
+
+public Action:event_HealBegin(Handle:event, const String:name[], bool:dontBroadcast)
+{
+	new Giver = GetClientOfUserId(GetEventInt(event, "userid"));
+
+	if (!Stats_IsValidClient(Giver))
+		return;
+
+	new FirstAidID = GetPlayerWeaponSlot(Giver, 3);
+	HealingFirstAid[Giver] = FirstAidID;
+	Stats_RecordFirstHolder(FirstAidFirstHolder, FirstAidID, Giver);
+}
+
 // Adrenaline give code. Special note, Adrenalines can only be given once. (Even if it's initially given by a bot!)
 
 GiveAdrenaline(Giver, Recipient, AdrenalineID = -1)
@@ -679,6 +776,9 @@ GiveAdrenaline(Giver, Recipient, AdrenalineID = -1)
 	// Stats enabled is checked by the caller
 
 	if (CurrentGamemodeID == GAMEMODE_SURVIVAL && !SurvivalStarted)
+		return;
+
+	if (!Stats_IsValidClient(Giver) || !Stats_IsValidClient(Recipient))
 		return;
 
 	if (AdrenalineID < 0)
@@ -689,10 +789,15 @@ GiveAdrenaline(Giver, Recipient, AdrenalineID = -1)
 	else
 		Adrenaline[AdrenalineID] = 1;
 
-	if (IsClientBot(Giver))
+	Stats_RecordFirstHolder(AdrenalineFirstHolder, AdrenalineID, Giver);
+
+	if (!Stats_IsSurvivorHuman(Giver) || !Stats_IsSurvivorHuman(Recipient))
 		return;
-	
-	if(g_brpgAvailable && !L4D_RPG_GetGlobalValue(INDEX_VALID))
+
+	if (!Stats_IsOriginalHolder(AdrenalineFirstHolder, AdrenalineID, Giver))
+		return;
+
+	if (!Stats_IsRpgRoundValid())
 		return;
 
 	decl String:RecipientName[MAX_LINE_WIDTH];
@@ -747,8 +852,9 @@ GiveAdrenaline(Giver, Recipient, AdrenalineID = -1)
 	Score = NewPlayerBonus_ApplyScoreMultiplier(Giver, Score);
 
 	decl String:query[1024];
-	Format(query, sizeof(query), "UPDATE %splayers SET %s = %s + %i, award_adrenaline = award_adrenaline + 1 WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, GiverID);
-	SendSQLUpdate(query);
+		Format(query, sizeof(query), "UPDATE %splayers SET %s = %s + %i, award_adrenaline = award_adrenaline + 1 WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, GiverID);
+		SendSQLUpdate(query);
+		QuarterRank_RecordField(Giver, "award_adrenaline", 1);
 
 	UpdateMapStat("points", Score);
 	decl String:ScoreFormula[MAX_MESSAGE_WIDTH];
@@ -797,6 +903,9 @@ GivePills(Giver, Recipient, PillsID = -1)
 	if (CurrentGamemodeID == GAMEMODE_SURVIVAL && !SurvivalStarted)
 		return;
 
+	if (!Stats_IsValidClient(Giver) || !Stats_IsValidClient(Recipient))
+		return;
+
 	if (PillsID < 0)
 		PillsID = GetPlayerWeaponSlot(Recipient, 4);
 
@@ -805,10 +914,15 @@ GivePills(Giver, Recipient, PillsID = -1)
 	else
 		Pills[PillsID] = 1;
 
-	if (IsClientBot(Giver))
+	Stats_RecordFirstHolder(PillsFirstHolder, PillsID, Giver);
+
+	if (!Stats_IsSurvivorHuman(Giver) || !Stats_IsSurvivorHuman(Recipient))
 		return;
-	
-	if(g_brpgAvailable && !L4D_RPG_GetGlobalValue(INDEX_VALID))
+
+	if (!Stats_IsOriginalHolder(PillsFirstHolder, PillsID, Giver))
+		return;
+
+	if (!Stats_IsRpgRoundValid())
 		return;
 
 	decl String:RecipientName[MAX_LINE_WIDTH];
@@ -863,8 +977,9 @@ GivePills(Giver, Recipient, PillsID = -1)
 	Score = NewPlayerBonus_ApplyScoreMultiplier(Giver, Score);
 
 	decl String:query[1024];
-	Format(query, sizeof(query), "UPDATE %splayers SET %s = %s + %i, award_pills = award_pills + 1 WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, GiverID);
-	SendSQLUpdate(query);
+		Format(query, sizeof(query), "UPDATE %splayers SET %s = %s + %i, award_pills = award_pills + 1 WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, GiverID);
+		SendSQLUpdate(query);
+		QuarterRank_RecordField(Giver, "award_pills", 1);
 
 	UpdateMapStat("points", Score);
 	decl String:ScoreFormula[MAX_MESSAGE_WIDTH];
@@ -893,6 +1008,9 @@ public Action:event_DefibPlayer(Handle:event, const String:name[], bool:dontBroa
 	if (CurrentGamemodeID == GAMEMODE_SURVIVAL && (!SurvivalStarted || !GetConVarBool(cvar_EnableSvMedicPoints)))
 		return;
 
+	if (!Stats_IsRpgRoundValid())
+		return;
+
 	new Recipient = GetClientOfUserId(GetEventInt(event, "subject"));
 	new Giver = GetClientOfUserId(GetEventInt(event, "userid"));
 
@@ -905,11 +1023,14 @@ public Action:event_DefibPlayer(Handle:event, const String:name[], bool:dontBroa
 		AnnounceMedkitPenalty();
 	}
 
-	if (IsClientBot(Giver))
+	if (!Stats_IsSurvivorHuman(Giver))
 		return;
 
 	// How is this possible?
 	if (Recipient == Giver)
+		return;
+
+	if (!Stats_IsSurvivorHuman(Recipient))
 		return;
 
 	decl String:RecipientName[MAX_LINE_WIDTH];
@@ -967,6 +1088,7 @@ public Action:event_DefibPlayer(Handle:event, const String:name[], bool:dontBroa
 	decl String:query[1024];
 	Format(query, sizeof(query), "UPDATE %splayers SET %s = %s + %i, award_defib = award_defib + 1 WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, GiverID);
 	SendSQLUpdate(query);
+	QuarterRank_RecordField(Giver, "award_defib", 1);
 
 	UpdateMapStat("points", Score);
 	decl String:ScoreFormula[MAX_MESSAGE_WIDTH];
@@ -994,6 +1116,9 @@ public Action:event_HealPlayer(Handle:event, const String:name[], bool:dontBroad
 	if (CurrentGamemodeID == GAMEMODE_SURVIVAL && (!SurvivalStarted || !GetConVarBool(cvar_EnableSvMedicPoints)))
 		return;
 
+	if (!Stats_IsRpgRoundValid())
+		return;
+
 	new Recipient = GetClientOfUserId(GetEventInt(event, "subject"));
 	new Giver = GetClientOfUserId(GetEventInt(event, "userid"));
 	new Amount = GetEventInt(event, "health_restored");
@@ -1011,6 +1136,15 @@ public Action:event_HealPlayer(Handle:event, const String:name[], bool:dontBroad
 		return;
 
 	if (Recipient == Giver)
+		return;
+
+	new FirstAidID = HealingFirstAid[Giver];
+	HealingFirstAid[Giver] = 0;
+
+	if (!Stats_IsSurvivorHuman(Giver) || !Stats_IsSurvivorHuman(Recipient))
+		return;
+
+	if (!Stats_IsOriginalHolder(FirstAidFirstHolder, FirstAidID, Giver))
 		return;
 
 	decl String:RecipientName[MAX_LINE_WIDTH];
@@ -1072,6 +1206,7 @@ public Action:event_HealPlayer(Handle:event, const String:name[], bool:dontBroad
 	decl String:query[1024];
 	Format(query, sizeof(query), "UPDATE %splayers SET %s = %s + %i, award_medkit = award_medkit + 1 WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, GiverID);
 	SendSQLUpdate(query);
+	QuarterRank_RecordField(Giver, "award_medkit", 1);
 
 	UpdateMapStat("points", Score);
 	decl String:ScoreFormula[MAX_MESSAGE_WIDTH];

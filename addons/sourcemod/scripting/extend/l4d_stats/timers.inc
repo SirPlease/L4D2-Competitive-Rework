@@ -199,9 +199,11 @@ public Action:timer_FriendlyFireDamageEnd(Handle:timer, any:dp)
 			Score = RoundToFloor(Score / 5.0);
 		}
 
-        decl String:query[1024];
-        Format(query, sizeof(query), "UPDATE %splayers SET %s = %s - %i, award_friendlyfire = award_friendlyfire + 1 WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, AttackerID);
-        SendSQLUpdate(query);
+	        decl String:query[1024];
+	        Format(query, sizeof(query), "UPDATE %splayers SET %s = %s - %i, award_friendlyfire = award_friendlyfire + 1 WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, AttackerID);
+	        SendSQLUpdate(query);
+	        QuarterRank_RecordField(Attacker, "award_friendlyfire", 1);
+	        QuarterRank_RecordScore(Attacker, Score * (-1));
 
         new Mode = 0;
         if (Score > 0)
@@ -302,6 +304,7 @@ public Action:timer_MeleeKill(Handle:timer, any:data)
 	GetClientRankAuthString(data, clientID, sizeof(clientID));
 	Format(query, sizeof(query), "UPDATE %splayers SET melee_kills = melee_kills + %i WHERE steamid = '%s'", DbPrefix, Counter, clientID);
 	SendSQLUpdate(query);
+	QuarterRank_RecordField(data, "melee_kills", Counter);
 }
 
 // Perform minutely updates of player database.
@@ -518,6 +521,7 @@ InterstitialPlayerUpdateEx(client, bool:ApplyNewPlayerMultiplier)
 	len += Format(query[len], sizeof(query)-len, "WHERE steamid = '%s'", ClientID);
 	SendSQLUpdate(query);
 	ModeStats_RecordKills(client, TimerKills[client], TimerHeadshots[client]);
+	QuarterRank_RecordInfectedKill(client, "infected", TimerKills[client], TimerHeadshots[client]);
 
 	UpdateMapStat("kills", TimerKills[client]);
 	UpdateMapStat("points", AwardPoints);

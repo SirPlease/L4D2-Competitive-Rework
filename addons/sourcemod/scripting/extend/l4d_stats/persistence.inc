@@ -131,7 +131,7 @@ public Action:timer_ProtectedFriendly(Handle:timer, any:data)
 
 	TimerProtectedFriendly[client] = INVALID_HANDLE;
 
-	if (TimerRoundToken != ProtectedFriendlyRoundToken || StatsDisabled() || CampaignOver || !Stats_IsSurvivorHuman(client))
+	if (TimerRoundToken != ProtectedFriendlyRoundToken || StatsDisabled() || CampaignOver || !Stats_IsRpgRoundValid() || !Stats_IsSurvivorHuman(client))
 	{
 		ProtectedFriendlyCounter[client] = 0;
 		return Plugin_Stop;
@@ -145,9 +145,9 @@ public Action:timer_ProtectedFriendly(Handle:timer, any:data)
 		return Plugin_Stop;
 	}
 
-	new Score = ModifyScoreDifficulty(GetConVarInt(cvar_Protect) * ProtectedFriendlies, 2, 3, TEAM_SURVIVORS);
+	new Score = ModifyScoreDifficulty(GetConVarInt(cvar_Protect), 2, 3, TEAM_SURVIVORS);
 	Score = NewPlayerBonus_ApplyScoreMultiplier(client, Score);
-	ScoreLog_SetContext("protect_teammate", "base=l4d_stats_protect*protected_count,difficulty,newbie_multiplier");
+	ScoreLog_SetContext("protect_teammate", "base=l4d_stats_protect,difficulty,newbie_multiplier");
 	AddScore(client, Score);
 
 	UpdateMapStat("points", Score);
@@ -193,13 +193,14 @@ public Action:timer_ProtectedFriendly(Handle:timer, any:data)
 	decl String:query[1024];
 	Format(query, sizeof(query), "UPDATE %splayers SET %s = %s + %i, award_protect = award_protect + %i WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, ProtectedFriendlies, UserID);
 	SendSQLUpdate(query);
+	QuarterRank_RecordField(client, "award_protect", ProtectedFriendlies);
 
 	if (Score > 0)
 	{
 		new Mode = GetConVarInt(cvar_AnnounceMode);
 
 		if (Mode == 1 || Mode == 2)
-			StatsPrintToChat(data, "你\x05 保护队友 \x01获得了 \x04%i \x01分！!", Score);
+			StatsPrintToChat(client, "你\x05 保护队友 \x01获得了 \x04%i \x01分！!", Score);
 		else if (Mode == 3)
 			StatsPrintToChatAll("\x05%s\x05 保护队友 \x01获得了 \x04%i \x01分！\x01!", UserName, Score);
 	}
@@ -1187,6 +1188,7 @@ public UpdatePlayerFull(Client, const String:SteamID[], const String:Name[])
 	
 	SQL_TQuery(db, UpdatePlayerCallback, query, Client);
 	ModeStats_RecordPlaytime(Client, 1);
+	QuarterRank_RecordPlaytime(Client, 1);
 }
 
 // Report error on sql query;

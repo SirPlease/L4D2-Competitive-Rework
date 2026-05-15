@@ -52,12 +52,46 @@ stock QuarterRank_EnsureTable()
 	if (db == INVALID_HANDLE)
 		return;
 
-	decl String:query[1024];
+	decl String:query[4096];
 	new len = 0;
 	len += Format(query[len], sizeof(query) - len, "CREATE TABLE IF NOT EXISTS `%sscore_quarter` (", DbPrefix);
 	len += Format(query[len], sizeof(query) - len, "`steamid` varchar(64) CHARACTER SET utf8mb4 NOT NULL,");
 	len += Format(query[len], sizeof(query) - len, "`quarter_key` int(8) NOT NULL DEFAULT '0',");
 	len += Format(query[len], sizeof(query) - len, "`points` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`playtime` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`points_coop` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`points_survivors` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`points_infected` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`points_survival` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`points_realism` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`points_scavenge_survivors` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`points_scavenge_infected` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`points_realism_survivors` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`points_realism_infected` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`points_mutations` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`kills` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`headshots` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`melee_kills` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`kill_infected` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`kill_hunter` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`kill_smoker` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`kill_boomer` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`kill_spitter` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`kill_jockey` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`kill_charger` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`award_medkit` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`award_pills` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`award_adrenaline` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`award_revive` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`award_defib` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`award_rescue` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`award_protect` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`award_friendlyfire` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`award_teamkill` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`award_fincap` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`award_left4dead` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`award_letinsafehouse` int(11) NOT NULL DEFAULT '0',");
+	len += Format(query[len], sizeof(query) - len, "`award_witchdisturb` int(11) NOT NULL DEFAULT '0',");
 	len += Format(query[len], sizeof(query) - len, "`updated` int(11) NOT NULL DEFAULT '0',");
 	len += Format(query[len], sizeof(query) - len, "PRIMARY KEY (`steamid`),");
 	len += Format(query[len], sizeof(query) - len, "KEY `quarter_points` (`quarter_key`,`points`),");
@@ -71,7 +105,30 @@ stock QuarterRank_EnsureTable()
 		return;
 	}
 
+	QuarterRank_EnsurePlaytimeColumn();
 	QuarterRank_EnsureCurrentQuarter();
+}
+
+stock QuarterRank_EnsurePlaytimeColumn()
+{
+	if (db == INVALID_HANDLE)
+		return;
+
+	decl String:query[1024];
+	Format(query, sizeof(query), "SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '%sscore_quarter' AND COLUMN_NAME = 'playtime'", DbPrefix);
+	SQL_TQuery(db, QuarterRank_CheckPlaytimeColumn, query);
+}
+
+public QuarterRank_CheckPlaytimeColumn(Handle:owner, Handle:hndl, const String:error[], any:data)
+{
+	if (hndl == INVALID_HANDLE)
+	{
+		LogError("QuarterRank_CheckPlaytimeColumn Query failed: %s", error);
+		return;
+	}
+
+	if (!SQL_FetchRow(hndl) || SQL_FetchInt(hndl, 0) <= 0)
+		DoFastQuery(0, "ALTER TABLE `%sscore_quarter` ADD COLUMN `playtime` int(11) NOT NULL DEFAULT '0' AFTER `points`", DbPrefix);
 }
 
 stock QuarterRank_ResetLocalCache()
@@ -106,8 +163,8 @@ stock QuarterRank_EnsureCurrentQuarter()
 	if (db == INVALID_HANDLE || !g_bQuarterRankTableReady)
 		return;
 
-	decl String:query[512];
-	Format(query, sizeof(query), "UPDATE `%sscore_quarter` SET quarter_key = %i, points = 0, updated = UNIX_TIMESTAMP() WHERE quarter_key <> %i", DbPrefix, g_iQuarterRankKey, g_iQuarterRankKey);
+	decl String:query[1024];
+	Format(query, sizeof(query), "UPDATE `%sscore_quarter` SET quarter_key = %i, points = 0, playtime = 0, updated = UNIX_TIMESTAMP() WHERE quarter_key <> %i", DbPrefix, g_iQuarterRankKey, g_iQuarterRankKey);
 	SendSQLUpdate(query);
 	g_bQuarterRankDbChecked = true;
 }
@@ -121,6 +178,13 @@ stock bool:QuarterRank_Enabled()
 		return false;
 
 	return true;
+}
+
+stock QuarterRank_GetModePointsColumn(Client, String:buffer[], maxlength)
+{
+	Stats_GetPointsColumnForTeam(GetClientTeam(Client), buffer, maxlength);
+	if (StrEqual(buffer, "points"))
+		Format(buffer, maxlength, "points_coop");
 }
 
 stock QuarterRank_RecordScore(Client, Score)
@@ -146,9 +210,85 @@ stock QuarterRank_RecordScore(Client, Score)
 	if (InsertScore < 0)
 		InsertScore = 0;
 
+	decl String:ModePointsColumn[32];
+	QuarterRank_GetModePointsColumn(Client, ModePointsColumn, sizeof(ModePointsColumn));
+
+	decl String:query[1024];
+	Format(query, sizeof(query), "INSERT INTO `%sscore_quarter` (steamid, quarter_key, points, `%s`, updated) VALUES ('%s', %i, %i, %i, UNIX_TIMESTAMP()) ON DUPLICATE KEY UPDATE points = IF(quarter_key = VALUES(quarter_key), GREATEST(points + %i, 0), VALUES(points)), `%s` = IF(quarter_key = VALUES(quarter_key), GREATEST(`%s` + %i, 0), VALUES(`%s`)), quarter_key = VALUES(quarter_key), updated = VALUES(updated)",
+		DbPrefix, ModePointsColumn, EscSteamID, g_iQuarterRankKey, InsertScore, InsertScore, Score, ModePointsColumn, ModePointsColumn, Score, ModePointsColumn);
+	SendSQLUpdate(query);
+}
+
+stock QuarterRank_RecordField(Client, const String:Field[], Amount)
+{
+	if (Amount <= 0)
+		return;
+
+	QuarterRank_EnsureCurrentQuarter();
+
+	if (!QuarterRank_Enabled() || StatsDisabled() || !Stats_IsValidHumanClient(Client))
+		return;
+
+	decl String:SteamID[MAX_LINE_WIDTH];
+	decl String:EscSteamID[MAX_LINE_WIDTH * 2 + 1];
+	GetClientRankAuthString(Client, SteamID, sizeof(SteamID));
+	SQL_EscapeString(db, SteamID, EscSteamID, sizeof(EscSteamID));
+
+	decl String:query[1024];
+	Format(query, sizeof(query), "INSERT INTO `%sscore_quarter` (steamid, quarter_key, `%s`, updated) VALUES ('%s', %i, %i, UNIX_TIMESTAMP()) ON DUPLICATE KEY UPDATE `%s` = IF(quarter_key = VALUES(quarter_key), `%s` + VALUES(`%s`), VALUES(`%s`)), quarter_key = VALUES(quarter_key), updated = VALUES(updated)",
+		DbPrefix, Field, EscSteamID, g_iQuarterRankKey, Amount, Field, Field, Field, Field);
+	SendSQLUpdate(query);
+}
+
+stock QuarterRank_RecordInfectedKill(Client, const String:InfectedType[], Kills, Headshots = 0)
+{
+	if (Kills <= 0)
+		return;
+
+	QuarterRank_EnsureCurrentQuarter();
+
+	if (!QuarterRank_Enabled() || StatsDisabled() || !Stats_IsValidHumanClient(Client))
+		return;
+
+	if (Headshots < 0)
+		Headshots = 0;
+
+	decl String:SteamID[MAX_LINE_WIDTH];
+	decl String:EscSteamID[MAX_LINE_WIDTH * 2 + 1];
+	GetClientRankAuthString(Client, SteamID, sizeof(SteamID));
+	SQL_EscapeString(db, SteamID, EscSteamID, sizeof(EscSteamID));
+
+	decl String:KillColumn[32];
+	Format(KillColumn, sizeof(KillColumn), "kill_%s", InfectedType);
+
+	decl String:query[1024];
+	Format(query, sizeof(query), "INSERT INTO `%sscore_quarter` (steamid, quarter_key, kills, headshots, `%s`, updated) VALUES ('%s', %i, %i, %i, %i, UNIX_TIMESTAMP()) ON DUPLICATE KEY UPDATE kills = IF(quarter_key = VALUES(quarter_key), kills + VALUES(kills), VALUES(kills)), headshots = IF(quarter_key = VALUES(quarter_key), headshots + VALUES(headshots), VALUES(headshots)), `%s` = IF(quarter_key = VALUES(quarter_key), `%s` + VALUES(`%s`), VALUES(`%s`)), quarter_key = VALUES(quarter_key), updated = VALUES(updated)",
+		DbPrefix, KillColumn, EscSteamID, g_iQuarterRankKey, Kills, Headshots, Kills, KillColumn, KillColumn, KillColumn, KillColumn);
+	SendSQLUpdate(query);
+}
+
+stock QuarterRank_RecordPlaytime(Client, Minutes)
+{
+	if (Minutes <= 0)
+		return;
+
+	QuarterRank_EnsureCurrentQuarter();
+
+	if (!QuarterRank_Enabled() || StatsDisabled() || !Stats_IsValidHumanClient(Client))
+		return;
+
+	new team = GetClientTeam(Client);
+	if (team != TEAM_SURVIVORS && team != TEAM_INFECTED)
+		return;
+
+	decl String:SteamID[MAX_LINE_WIDTH];
+	decl String:EscSteamID[MAX_LINE_WIDTH * 2 + 1];
+	GetClientRankAuthString(Client, SteamID, sizeof(SteamID));
+	SQL_EscapeString(db, SteamID, EscSteamID, sizeof(EscSteamID));
+
 	decl String:query[512];
-	Format(query, sizeof(query), "INSERT INTO `%sscore_quarter` (steamid, quarter_key, points, updated) VALUES ('%s', %i, %i, UNIX_TIMESTAMP()) ON DUPLICATE KEY UPDATE points = IF(quarter_key = VALUES(quarter_key), GREATEST(points + %i, 0), VALUES(points)), quarter_key = VALUES(quarter_key), updated = VALUES(updated)",
-		DbPrefix, EscSteamID, g_iQuarterRankKey, InsertScore, Score);
+	Format(query, sizeof(query), "INSERT INTO `%sscore_quarter` (steamid, quarter_key, playtime, updated) VALUES ('%s', %i, %i, UNIX_TIMESTAMP()) ON DUPLICATE KEY UPDATE playtime = IF(quarter_key = VALUES(quarter_key), playtime + VALUES(playtime), VALUES(playtime)), quarter_key = VALUES(quarter_key), updated = VALUES(updated)",
+		DbPrefix, EscSteamID, g_iQuarterRankKey, Minutes);
 	SendSQLUpdate(query);
 }
 

@@ -17,7 +17,7 @@ HunterSmokerSave(Savior, Victim, BasePoints, AdvMult, ExpertMult, String:SaveFro
 	if (StatsDisabled() || human < 3)
 		return;
 
-	if (IsClientBot(Savior) || IsClientBot(Victim))
+	if (!Stats_IsSurvivorHuman(Savior) || !Stats_IsSurvivorHuman(Victim) || Savior == Victim)
 		return;
 
 	new Mode = GetConVarInt(cvar_AnnounceMode);
@@ -261,19 +261,20 @@ stock int CheckSurvivorsHumans()
 	return humans;
 }
 
-bool:CheckHumans()
+stock Stats_GetMinPlayingHumans()
 {
 	new MinHumans = GetConVarInt(cvar_HumansNeeded);
-	new Humans = 0;
-	new maxplayers = MaxClients;
 
-	for (new i = 1; i <= maxplayers; i++)
-	{
-		if (IsClientConnected(i) && IsClientInGame(i) && !IsClientBot(i))
-		{
-			Humans++;
-		}
-	}
+	if (!SinglePlayerMode() && MinHumans < 2)
+		MinHumans = 2;
+
+	return MinHumans;
+}
+
+bool:CheckHumans()
+{
+	new MinHumans = Stats_GetMinPlayingHumans();
+	new Humans = Stats_CountPlayingHumans();
 
 	if (Humans < MinHumans)
 	{
@@ -377,6 +378,7 @@ ResetVars()
 
 	// Reset kill/point score timer amount
 	CreateTimer(1.0, InitPlayers);
+	CreateTimer(1.0, timer_RecordInitialSupportItems);
 
 	TankCount = 0;
 
@@ -385,9 +387,10 @@ ResetVars()
 	{
 		AnnounceCounter[i] = 0;
 		CurrentPoints[i] = 0;
-		ClientRankMute[i] = false;
-		ClientEnabled[i] = false;
-	}
+			ClientRankMute[i] = false;
+			ClientEnabled[i] = false;
+			HealingFirstAid[i] = 0;
+		}
 
 	for (i = 0; i < MAXPLAYERS + 1; i++)
 	{
@@ -409,11 +412,20 @@ ResetVars()
 		MeleeKillTimer[i] = INVALID_HANDLE;
 		MeleeKillCounter[i] = 0;
 
-		PostAdminCheckRetryCounter[i] = 0;
-	}
+			PostAdminCheckRetryCounter[i] = 0;
+		}
 
-	ResetInfVars();
-}
+		for (i = 0; i < sizeof(Pills); i++)
+		{
+			Pills[i] = 0;
+			Adrenaline[i] = 0;
+			PillsFirstHolder[i] = 0;
+			AdrenalineFirstHolder[i] = 0;
+			FirstAidFirstHolder[i] = 0;
+		}
+
+		ResetInfVars();
+	}
 
 public ResetRankChangeCheck()
 {
@@ -1262,6 +1274,8 @@ UpdateFriendlyFire(Attacker, Victim)
 	decl String:query[1024];
 	Format(query, sizeof(query), "UPDATE %splayers SET %s = %s - %i, award_friendlyfire = award_friendlyfire + 1 WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, AttackerID);
 	SendSQLUpdate(query);
+	QuarterRank_RecordField(Attacker, "award_friendlyfire", 1);
+	QuarterRank_RecordScore(Attacker, Score * (-1));
 
 	new Mode = 0;
 	if (Score > 0)

@@ -500,9 +500,11 @@ PlayerIncap(Attacker, Victim)
 			Score = RoundToFloor(Score / 5.0);
 		}
 
-		decl String:query[512];
-		Format(query, sizeof(query), "UPDATE %splayers SET %s = %s - %i, award_fincap = award_fincap + 1 WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, AttackerID);
-		SendSQLUpdate(query);
+			decl String:query[512];
+			Format(query, sizeof(query), "UPDATE %splayers SET %s = %s - %i, award_fincap = award_fincap + 1 WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, AttackerID);
+			SendSQLUpdate(query);
+			QuarterRank_RecordField(Attacker, "award_fincap", 1);
+			QuarterRank_RecordScore(Attacker, Score * (-1));
 
 		if (Mode == 1 || Mode == 2)
 			StatsPrintToChat(Attacker, "你 \x03失去了 \x04%i \x01分 by \x03黑倒了 \x05%s\x01!", Score, VictimName);
@@ -689,6 +691,7 @@ public Action:event_PlayerSpawn(Handle:event, const String:name[], bool:dontBroa
 		return;
 
 	InitializeClientInf(Player);
+	Stats_RecordHeldSupportItems(Player);
 
 	ClientInfectedType[Player] = 0;
 	BoomerHitCounter[Player] = 0;
@@ -1700,6 +1703,9 @@ public Action:event_RevivePlayer(Handle:event, const String:name[], bool:dontBro
 	if (CurrentGamemodeID == GAMEMODE_SURVIVAL && !SurvivalStarted)
 		return;
 
+	if (!Stats_IsRpgRoundValid())
+		return;
+
 	if (GetEventBool(event, "ledge_hang"))
 		return;
 
@@ -1707,7 +1713,7 @@ public Action:event_RevivePlayer(Handle:event, const String:name[], bool:dontBro
 	new Victim = GetClientOfUserId(GetEventInt(event, "subject"));
 	new Mode = GetConVarInt(cvar_AnnounceMode);
 
-	if (IsClientBot(Savior) || IsClientBot(Victim) || Savior == Victim)
+	if (!Stats_IsSurvivorHuman(Savior) || !Stats_IsSurvivorHuman(Victim) || Savior == Victim)
 		return;
 		
 
@@ -1761,6 +1767,7 @@ public Action:event_RevivePlayer(Handle:event, const String:name[], bool:dontBro
 	decl String:query[1024];
 	Format(query, sizeof(query), "UPDATE %splayers SET %s = %s + %i, award_revive = award_revive + 1 WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, SaviorID);
 	SendSQLUpdate(query);
+	QuarterRank_RecordField(Savior, "award_revive", 1);
 
 	UpdateMapStat("points", Score);
 	decl String:ScoreFormula[MAX_MESSAGE_WIDTH];
@@ -1909,7 +1916,14 @@ public Action:event_Award_L4D2(Handle:event, const String:name[], bool:dontBroad
 
 	if (AwardID == 67) // Protect friendly
 	{
-		if (!SubjectID || !Stats_IsSurvivorHuman(User))
+		Recipient = Stats_ClientFromEntityOrUserId(SubjectID);
+
+		if (!Stats_IsSurvivorHuman(User) || !Stats_IsSurvivorHuman(Recipient) || User == Recipient)
+		{
+			return;
+		}
+
+		if (!Stats_IsRpgRoundValid())
 		{
 			return;
 		}
@@ -1942,7 +1956,12 @@ public Action:event_Award_L4D2(Handle:event, const String:name[], bool:dontBroad
 			return;
 		}
 
-		Recipient = GetClientOfUserId(GetClientUserId(SubjectID));
+		if (!Stats_IsRpgRoundValid())
+		{
+			return;
+		}
+
+		Recipient = Stats_ClientFromEntityOrUserId(SubjectID);
 
 		GivePills(User, Recipient);
 
@@ -1961,7 +1980,12 @@ public Action:event_Award_L4D2(Handle:event, const String:name[], bool:dontBroad
 			return;
 		}
 
-		Recipient = GetClientOfUserId(GetClientUserId(SubjectID));
+		if (!Stats_IsRpgRoundValid())
+		{
+			return;
+		}
+
+		Recipient = Stats_ClientFromEntityOrUserId(SubjectID);
 
 		GiveAdrenaline(User, Recipient);
 
@@ -1975,7 +1999,7 @@ public Action:event_Award_L4D2(Handle:event, const String:name[], bool:dontBroad
 			return;
 		}
 
-		Recipient = GetClientOfUserId(GetClientUserId(SubjectID));
+		Recipient = Stats_ClientFromEntityOrUserId(SubjectID);
 
 		PlayerIncap(User, Recipient);
 
@@ -1989,9 +2013,14 @@ public Action:event_Award_L4D2(Handle:event, const String:name[], bool:dontBroad
 			return;
 		}
 
-		Recipient = GetClientOfUserId(GetClientUserId(SubjectID));
+		if (!Stats_IsRpgRoundValid())
+		{
+			return;
+		}
 
-		if (IsClientBot(Recipient))
+		Recipient = Stats_ClientFromEntityOrUserId(SubjectID);
+
+		if (!Stats_IsSurvivorHuman(User) || !Stats_IsSurvivorHuman(Recipient) || User == Recipient)
 		{
 			return;
 		}
@@ -2132,6 +2161,12 @@ public Action:event_Award_L4D2(Handle:event, const String:name[], bool:dontBroad
 	decl String:query[1024];
 	Format(query, sizeof(query), "UPDATE %splayers SET %s = %s + %i%s WHERE steamid = '%s'", DbPrefix, UpdatePoints, UpdatePoints, Score, AwardSQL, UserID);
 	SendSQLUpdate(query);
+	if (AwardID == 80)
+		QuarterRank_RecordField(User, "award_rescue", 1);
+	else if (AwardID == 86)
+		QuarterRank_RecordField(User, "award_left4dead", 1);
+	else if (AwardID == 95)
+		QuarterRank_RecordField(User, "award_letinsafehouse", 1);
 
 	if (Score != 0)
 	{
@@ -2286,6 +2321,9 @@ public Action:event_WitchCrowned(Handle:event, const String:name[], bool:dontBro
 	if (StatsDisabled() || CurrentGamemodeID == GAMEMODE_SURVIVAL)
 		return;
 
+	if (!Stats_IsRpgRoundValid())
+		return;
+
 	new Killer = GetClientOfUserId(GetEventInt(event, "userid"));
 	new bool:Crowned = GetEventBool(event, "oneshot");
 
@@ -2374,8 +2412,9 @@ public Action:event_WitchDisturb(Handle:event, const String:name[], bool:dontBro
 		decl String:UserID[MAX_LINE_WIDTH];
 		GetClientRankAuthString(User, UserID, sizeof(UserID));
 
-		decl String:query[1024];
-		Format(query, sizeof(query), "UPDATE %splayers SET award_witchdisturb = award_witchdisturb + 1 WHERE steamid = '%s'", DbPrefix, UserID);
-		SendSQLUpdate(query);
+			decl String:query[1024];
+			Format(query, sizeof(query), "UPDATE %splayers SET award_witchdisturb = award_witchdisturb + 1 WHERE steamid = '%s'", DbPrefix, UserID);
+			SendSQLUpdate(query);
+			QuarterRank_RecordField(User, "award_witchdisturb", 1);
+		}
 	}
-}

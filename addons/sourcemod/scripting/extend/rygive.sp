@@ -723,6 +723,7 @@ int _CreateInfected(const char[] zombie, const float vPos[3], const float vAng[3
 
 		TeleportEntity(ent, vPos, vAng, NULL_VECTOR);
 		DispatchSpawn(ent);
+		L4D_RPG_SetGlobalValue(INDEX_VALID, false);
 
 		if (strlen(zombie) > 5)
 			SetEntityModel(ent, g_sSpecialModels[8]);
@@ -833,7 +834,8 @@ void Miscell(int client, int item) {
 	menu.AddItem("a", "倒地");
 	menu.AddItem("b", "剥夺");
 	menu.AddItem("c", "复活");
-	menu.AddItem("d", "传送");
+	if(GetClientImmunityLevel(client) > 99)
+		menu.AddItem("d", "传送");
 	menu.AddItem("e", "友伤");
 	if(GetClientImmunityLevel(client) > 90)
 		menu.AddItem("f", "伤害免疫");

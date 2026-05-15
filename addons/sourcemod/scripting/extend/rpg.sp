@@ -225,6 +225,84 @@ static bool IsAdminProtected(int target)
     return GetClientImmunityLevel(target) >= minImm;    // 否则：需达到阈值
 }
 
+static bool HasRootGlowAccess(int client)
+{
+	return GetClientImmunityLevel(client) >= 100 || CheckCommandAccess(client, "", ADMFLAG_PASSWORD);
+}
+
+static bool HasBasicGlowAccess(int client)
+{
+	if (!g_bl4dstatsSystemAvailable)
+		return true;
+
+	return l4dstats_IsTopPlayer(client, 20)
+		|| (l4dstats_IsQuarterTopPlayer(client, 5) && l4dstats_GetClientQuarterScore(client) > 100000)
+		|| CheckCommandAccess(client, "", ADMFLAG_SLAY);
+}
+
+static bool IsCustomGlowOwner(int client, int glowType)
+{
+	char steamid[32];
+	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
+
+	switch (glowType)
+	{
+		case 17:
+			return StrContains(steamid, "632322128", false) != -1 || StrContains(steamid, "121430603", false) != -1;
+		case 18:
+			return StrContains(steamid, "511614235", false) != -1 || StrContains(steamid, "121430603", false) != -1;
+		case 19:
+			return StrContains(steamid, "888190443", false) != -1 || StrContains(steamid, "121430603", false) != -1;
+	}
+
+	return false;
+}
+
+static bool CanClientUseGlow(int client, int glowType)
+{
+	if (glowType == 0)
+		return true;
+	if (!IsValidClient(client) || glowType < 0 || glowType > 19)
+		return false;
+	if (!g_bl4dstatsSystemAvailable)
+		return glowType < 17 || IsCustomGlowOwner(client, glowType);
+
+	if (glowType >= 17)
+		return HasBasicGlowAccess(client) && IsCustomGlowOwner(client, glowType);
+	if (glowType < 15)
+		return HasBasicGlowAccess(client);
+	if (glowType == 15)
+		return l4dstats_IsTopPlayer(client, 3) || HasRootGlowAccess(client);
+	if (glowType == 16)
+		return l4dstats_IsTopPlayer(client, 1) || HasRootGlowAccess(client);
+
+	return false;
+}
+
+static void ClearClientGlow(int client, bool persist, bool notify = false)
+{
+	if (!IsValidClient(client))
+		return;
+
+	player[client].GlowType = 0;
+	DisableGlow(client);
+
+	if (persist)
+		ClientSaveToFileSave(client);
+
+	if (notify)
+		CPrintToChat(client, "\x01[\x04RPG\x01] \x05你的轮廓权限已失效，已自动关闭。");
+}
+
+static bool ValidateClientGlow(int client, bool persist, bool notify = false)
+{
+	if (player[client].GlowType == 0 || CanClientUseGlow(client, player[client].GlowType))
+		return true;
+
+	ClearClientGlow(client, persist, notify);
+	return false;
+}
+
 // 解析 callvote/ sm_kick 里的目标参数，支持 "#userid" 或 精确姓名；
 // 如果精确不唯一，则返回 0（避免误判）
 static int ResolveSingleTarget(const char[] arg)
@@ -544,7 +622,10 @@ public Action PlayerSpawnTimer( Handle hTimer, any UserID )
 	if( GetClientTeam( client ) == 2 && IsPlayerGhost( client ) != true )
 	{
 		if(player[client].GlowType && g_bEnableGlow)
-			GetAura(client,player[client].GlowType);
+		{
+			if (ValidateClientGlow(client, true, true))
+				GetAura(client,player[client].GlowType);
+		}
 		if(player[client].ClientHat)
 			ServerCommand("sm_hatclient #%d %d", GetClientUserId(client), player[client].ClientHat);
 		if(player[client].SkinType)
@@ -566,7 +647,10 @@ public void Event_PlayerTeam(Event hEvent, const char[] name, bool dontBroadcast
 	if( iTeam == 2 )
 	{
 		if(player[client].GlowType && g_bEnableGlow)
-			GetAura(client,player[client].GlowType);
+		{
+			if (ValidateClientGlow(client, true, true))
+				GetAura(client,player[client].GlowType);
+		}
 		if(player[client].ClientHat)
 			ServerCommand("sm_hatclient #%d %d", GetClientUserId(client), player[client].ClientHat);
 		if(player[client].SkinType)
@@ -752,25 +836,8 @@ public void SetPlayer(int client)
 		
 		if(player[client].GlowType && g_bEnableGlow)
 		{
-			if(player[client].GlowType < 15 || player[client].GlowType >= 17)
-			{
-				if(l4dstats_IsTopPlayer(client, 20) || (CheckCommandAccess(client, "", ADMFLAG_SLAY)))
-				{
-					GetAura(client,player[client].GlowType);
-				}else
-				{
-					player[client].GlowType = 0;
-					//ClientSaveToFileSave(client);
-				}
-			}			
-			else if(l4dstats_IsTopPlayer(client, 3) || GetUserAdmin(client).ImmunityLevel == 100 || (CheckCommandAccess(client, "", ADMFLAG_PASSWORD)))
-			{
+			if (ValidateClientGlow(client, true, true))
 				GetAura(client,player[client].GlowType);
-			}else
-			{
-				player[client].GlowType = 0;
-				ClientSaveToFileSave(client);
-			}
 		}
 
 		if(player[client].ClientHat)
@@ -1328,6 +1395,7 @@ public void ShowMelee(Handle owner, Handle hndl, const char []error, any data)
 		player[client].ClientRecoil = SQL_FetchInt(hndl, 5);
 		FakeClientCommand(client, "sm_recoil %d", player[client].ClientRecoil);
  		SQL_FetchString(hndl, 6, player[client].tags.ChatTag, 24);
+		ValidateClientGlow(client, true, true);
 	}
 	else
 	{
@@ -1397,7 +1465,7 @@ public void BuildMenu(int client)
 			menu.AddItem("HitSound", binfo);
 		}
 
-		if(g_bEnableGlow && ((g_bl4dstatsSystemAvailable && (l4dstats_IsTopPlayer(client,20) || (l4dstats_IsQuarterTopPlayer(client , 5) && l4dstats_GetClientQuarterScore(client) > 100000) || (CheckCommandAccess(client, "", ADMFLAG_SLAY)) || player[client].GlowType > 0) || !g_bl4dstatsSystemAvailable)))
+		if(g_bEnableGlow && (HasBasicGlowAccess(client) || player[client].GlowType > 0))
 		{
 			FormatEx(binfo, sizeof(binfo),  "生还者轮廓", client); //生还者轮廓菜单
 			menu.AddItem("Survivor_glow", binfo);
@@ -1456,10 +1524,11 @@ public void Survivor_glow(int client)
 {
 	if( IsVaildClient(client) )
 	{
+		ValidateClientGlow(client, true, true);
 		Menu menu = new Menu(VIPAuraMenuHandler);
 		menu.SetTitle("生还者轮廓\n——————————");
 		menu.AddItem("option0", "关闭\n ", player[client].GlowType == 0 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
-		if((g_bl4dstatsSystemAvailable && (l4dstats_IsTopPlayer(client,20) || (CheckCommandAccess(client, "", ADMFLAG_SLAY)))) || !g_bl4dstatsSystemAvailable)
+		if(HasBasicGlowAccess(client))
 		{
 			menu.AddItem("option1", "绿色", player[client].GlowType == 1 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 			menu.AddItem("option2", "蓝色", player[client].GlowType == 2 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
@@ -1477,22 +1546,20 @@ public void Survivor_glow(int client)
 			menu.AddItem("option14", "白色", player[client].GlowType == 14 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 			DumpAdminCache(AdminCache_Admins,true);
 			DumpAdminCache(AdminCache_Groups,true);
-			if((g_bl4dstatsSystemAvailable && (l4dstats_IsTopPlayer(client,3) || GetUserAdmin(client).ImmunityLevel == 100)) || !g_bl4dstatsSystemAvailable)
+			if(CanClientUseGlow(client, 15))
 				menu.AddItem("option15", "金黄色", player[client].GlowType == 15 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
-			if((g_bl4dstatsSystemAvailable && (l4dstats_IsTopPlayer(client,1) || GetUserAdmin(client).ImmunityLevel == 100)) || !g_bl4dstatsSystemAvailable)
+			if(CanClientUseGlow(client, 16))
 				menu.AddItem("option16", "彩虹色", player[client].GlowType == 16 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 			//个人定制轮廓部分
-			char steamid[32];
-			GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid));
-			if(StrContains(steamid, "632322128", false) != -1 || StrContains(steamid, "121430603", false) != -1 ){
+			if(CanClientUseGlow(client, 17)){
 				//760308896 定制
 				menu.AddItem("option17", "定制轮廓1", player[client].GlowType == 17 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 			}
-			if(StrContains(steamid, "511614235", false) != -1 || StrContains(steamid, "121430603", false) != -1 ){
+			if(CanClientUseGlow(client, 18)){
 				//8894224 定制
 				menu.AddItem("option18", "定制轮廓2", player[client].GlowType == 18 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 			}
-			if(StrContains(steamid, "888190443", false) != -1 || StrContains(steamid, "121430603", false) != -1 ){
+			if(CanClientUseGlow(client, 19)){
 				//1850229089 定制
 				menu.AddItem("option19", "定制轮廓3", player[client].GlowType == 19 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 			}
@@ -1513,11 +1580,17 @@ public int VIPAuraMenuHandler(Menu menu, MenuAction action, int param1, int para
             char option[64];
             menu.GetItem(param2, option, sizeof(option));
             //PrintToConsoleAll("%s", option);
-            char result[2][6];
-            ExplodeString(option, "option", result, 2, 6);
-            //PrintToConsoleAll("%s", result[1]);
-            GetAura(param1, StringToInt(result[1], 10));
-            ClientSaveToFileSave(param1);
+	            char result[2][6];
+	            ExplodeString(option, "option", result, 2, 6);
+	            //PrintToConsoleAll("%s", result[1]);
+	            int glowType = StringToInt(result[1], 10);
+	            if (glowType != 0 && !CanClientUseGlow(param1, glowType))
+	            {
+	                ClearClientGlow(param1, true, true);
+	                return 0;
+	            }
+	            GetAura(param1, glowType);
+	            ClientSaveToFileSave(param1);
             //SetCookie(param1, cookie, param2);
 			
             Survivor_glow( param1 );
@@ -1529,6 +1602,12 @@ public int VIPAuraMenuHandler(Menu menu, MenuAction action, int param1, int para
 
 void GetAura(int client, int id) 
 {
+	if (id != 0 && !CanClientUseGlow(client, id))
+	{
+		ClearClientGlow(client, true, true);
+		return;
+	}
+
     switch (id) 
     {
         case 0: 
