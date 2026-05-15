@@ -61,6 +61,7 @@ jobs:
           rm -f CompetitiveWithAnne-${{ steps.date.outputs.date }}/left4dead2/addons/sourcemod/plugins/extend/punch_angle.smx
           rm -f CompetitiveWithAnne-${{ steps.date.outputs.date }}/left4dead2/addons/sourcemod/plugins/extend/l4d2_blacklist.smx
           rm -f CompetitiveWithAnne-${{ steps.date.outputs.date }}/left4dead2/addons/sourcemod/plugins/extend/l4d2_hitsound.smx
+          rm -f CompetitiveWithAnne-${{ steps.date.outputs.date }}/left4dead2/addons/sourcemod/plugins/extend/global_chat.smx
           cp CompetitiveWithAnne-${{ steps.date.outputs.date }}/left4dead2/addons/sourcemod/plugins/disabled/rpg.smx CompetitiveWithAnne-${{ steps.date.outputs.date }}/left4dead2/addons/sourcemod/plugins/extend/
           tar -czvf CompetitiveWithAnne-${{ steps.date.outputs.date }}-nomysql.tar.gz CompetitiveWithAnne-${{ steps.date.outputs.date }}
 
