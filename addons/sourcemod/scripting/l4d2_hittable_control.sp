@@ -140,7 +140,7 @@ public Plugin myinfo =
 {
 	name = "L4D2 Hittable Control",
 	author = "Stabby, Visor, Sir, Derpduck, Forgetest",
-	version = "0.9.2",
+	version = "0.9.3",
 	description = "Allows for customisation of hittable damage values (and debugging)"
 };
 
@@ -415,7 +415,7 @@ Action Physics_OnTakeDamage(int victim, int &attacker, int &inflictor, float &da
 		g_PhysicsHitInfos.SetArray(g_nPhysicsHitInfoEntry[victim], info);
 		DebugMsg("(#%d) Physics_OnTakeDamage [%N]", victim, attacker);
 	}
-	else if (IsEntityClassname(attacker, "prop_physics*"))
+	else if (IsEntityClassname(attacker, "prop_physics*") || IsEntityClassname(attacker, "prop_car_alarm"))
 	{
 		DebugMsg("(#%d) Physics_OnTakeDamage prop_physics (#%d)", victim, attacker);
 		
@@ -601,7 +601,7 @@ Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, in
 	if (!IsValidEdict(attacker)
 	 || !IsValidEdict(inflictor)
 	 || g_nPhysicsHitInfoEntry[inflictor] == -1
-	 || !IsEntityClassname(inflictor, "prop_physics*"))
+	 || (!IsEntityClassname(inflictor, "prop_physics*") && !IsEntityClassname(inflictor, "prop_car_alarm")))
 		return Plugin_Continue;
 	
 	if (IsTank(victim) && hTankSelfDamage.BoolValue)
