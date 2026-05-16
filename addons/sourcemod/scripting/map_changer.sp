@@ -2,6 +2,7 @@
 #pragma newdecls required
 #include <sourcemod>
 #include <left4dhooks>
+#include <l4d2_nativevote>
 
 #define PLUGIN_NAME				"Map Changer"
 #define PLUGIN_AUTHOR			"Alex Dragokas, fdxx, sorallll"
@@ -58,7 +59,12 @@ bool
 	g_bUMHooked,
 	g_bIsFinalMap,
 	g_bChangeLevel,
-	g_bFinaleRandomNextMap;
+	g_bFinaleRandomNextMap,
+	g_bFinaleFailureVote,
+	g_bFinaleFailureVoteDefault,
+	g_bFinaleFailureVoteStarted,
+	g_bFinaleFailureVoteDecided,
+	g_bFinaleFailureChangeEnabled;
 
 UserMsg
 	g_umDisconnectToLobby;
@@ -66,12 +72,19 @@ UserMsg
 ConVar
 	g_cvFinaleChangeType,
 	g_cvFinaleFailureCount,
-	g_cvFinaleRandomNextMap;
+	g_cvFinaleRandomNextMap,
+	g_cvFinaleFailureVote,
+	g_cvFinaleFailureVoteDefault,
+	g_cvFinaleFailureVoteDelay;
 
 int
 	g_iFailureCount,
 	g_iFinaleChangeType,
-	g_iFinaleFailureCount;
+	g_iFinaleFailureCount,
+	g_iFinaleFailureVoteRetries;
+
+float
+	g_fFinaleFailureVoteDelay;
 
 public Plugin myinfo = {
 	name = PLUGIN_NAME,
@@ -124,13 +137,20 @@ public void OnPluginStart() {
 	g_cvFinaleChangeType = 		CreateConVar("mapchanger_finale_change_type",		"8",	"0 - 终局不换地图(返回大厅); 1 - 救援载具离开时; 2 - 终局获胜时; 4 - 统计屏幕出现时; 8 - 统计屏幕结束时", CVAR_FLAGS);
 	g_cvFinaleFailureCount =	CreateConVar("mapchanger_finale_failure_count",		"3",	"终局团灭几次自动换到下一张图", CVAR_FLAGS);
 	g_cvFinaleRandomNextMap =	CreateConVar("mapchanger_finale_random_nextmap",	"1",	"终局是否启用随机下一关地图", CVAR_FLAGS);
+	g_cvFinaleFailureVote =		CreateConVar("mapchanger_finale_failure_vote",		"1",	"救援关第一回合是否投票决定启用终局团灭自动换图", CVAR_FLAGS);
+	g_cvFinaleFailureVoteDefault = CreateConVar("mapchanger_finale_failure_vote_default", "1", "投票关闭或无法发起时是否默认启用终局团灭自动换图", CVAR_FLAGS);
+	g_cvFinaleFailureVoteDelay =	CreateConVar("mapchanger_finale_failure_vote_delay", "30.0", "救援关第一回合开始后延迟多少秒发起终局团灭自动换图投票", CVAR_FLAGS, true, 1.0, true, 120.0);
 	g_cvFinaleChangeType.AddChangeHook(CvarChanged);
 	g_cvFinaleFailureCount.AddChangeHook(CvarChanged);
 	g_cvFinaleRandomNextMap.AddChangeHook(CvarChanged);
+	g_cvFinaleFailureVote.AddChangeHook(CvarChanged);
+	g_cvFinaleFailureVoteDefault.AddChangeHook(CvarChanged);
+	g_cvFinaleFailureVoteDelay.AddChangeHook(CvarChanged);
 
 	//AutoExecConfig(true);
 
 	HookEvent("round_end", 				Event_RoundEnd, 		EventHookMode_PostNoCopy);
+	HookEvent("round_start",			Event_RoundStart,	EventHookMode_PostNoCopy);
 	HookEvent("finale_win", 			Event_FinaleWin,		EventHookMode_PostNoCopy);
 	HookEvent("finale_vehicle_leaving",	Event_VehicleLeaving,	EventHookMode_PostNoCopy);
 
@@ -208,6 +228,7 @@ void ParseNextMapData() {
 
 public void OnConfigsExecuted() {
 	GetCvars();
+	TryScheduleFinaleFailureVote();
 }
 
 void CvarChanged(ConVar convar, const char[] oldValue, const char[] newValue) {
@@ -218,17 +239,32 @@ void GetCvars() {
 	g_iFinaleChangeType =		g_cvFinaleChangeType.IntValue;
 	g_iFinaleFailureCount =		g_cvFinaleFailureCount.IntValue;
 	g_bFinaleRandomNextMap =	g_cvFinaleRandomNextMap.BoolValue;
+	g_bFinaleFailureVote =		g_cvFinaleFailureVote.BoolValue;
+	g_bFinaleFailureVoteDefault = g_cvFinaleFailureVoteDefault.BoolValue;
+	g_fFinaleFailureVoteDelay =	g_cvFinaleFailureVoteDelay.FloatValue;
+
+	if (!g_bFinaleFailureVoteDecided)
+		g_bFinaleFailureChangeEnabled = !g_bFinaleFailureVote || g_bFinaleFailureVoteDefault;
 }
 
 public void OnMapEnd() {
 	g_iFailureCount = 0;
+	g_iFinaleFailureVoteRetries = 0;
 	g_sNextMap[0] = '\0';
+	g_bFinaleFailureVoteStarted = false;
+	g_bFinaleFailureVoteDecided = false;
+	g_bFinaleFailureChangeEnabled = true;
 	UnhookDisconnectToLobby();
 }
 
 public void OnMapStart() {
 	ParseNextMapData();
 	g_bIsFinalMap = L4D_IsMissionFinalMap();
+	g_iFailureCount = 0;
+	g_iFinaleFailureVoteRetries = 0;
+	g_bFinaleFailureVoteStarted = false;
+	g_bFinaleFailureVoteDecided = false;
+	g_bFinaleFailureChangeEnabled = !g_bFinaleFailureVote || g_bFinaleFailureVoteDefault;
 
 	if (!g_aRandomNextMap.Length)
 		InitRandomNextMapArray();
@@ -295,8 +331,88 @@ Action umDisconnectToLobby(UserMsg msg_id, BfRead msg, const int[] players, int 
 	return Plugin_Continue;
 }
 
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast) {
+	TryScheduleFinaleFailureVote();
+}
+
+void TryScheduleFinaleFailureVote() {
+	if (!g_bIsFinalMap || !g_bFinaleFailureVote || g_iFinaleFailureCount <= 0 || g_bFinaleFailureVoteStarted)
+		return;
+
+	g_bFinaleFailureVoteStarted = true;
+	CreateTimer(g_fFinaleFailureVoteDelay, Timer_StartFinaleFailureVote, _, TIMER_FLAG_NO_MAPCHANGE);
+}
+
+Action Timer_StartFinaleFailureVote(Handle timer) {
+	if (!g_bIsFinalMap || !g_bFinaleFailureVote || g_bFinaleFailureVoteDecided || g_iFinaleFailureCount <= 0)
+		return Plugin_Stop;
+
+	if (!L4D2NativeVote_IsAllowNewVote()) {
+		if (++g_iFinaleFailureVoteRetries <= 6)
+			CreateTimer(5.0, Timer_StartFinaleFailureVote, _, TIMER_FLAG_NO_MAPCHANGE);
+		return Plugin_Stop;
+	}
+
+	int clients[MAXPLAYERS];
+	int numClients;
+	for (int i = 1; i <= MaxClients; i++) {
+		if (!IsClientInGame(i) || IsFakeClient(i))
+			continue;
+
+		int team = GetClientTeam(i);
+		if (team < 2 || team > 3)
+			continue;
+
+		clients[numClients++] = i;
+	}
+
+	if (!numClients)
+		return Plugin_Stop;
+
+	L4D2NativeVote vote = L4D2NativeVote(FinaleFailureVote_Handler);
+	vote.Initiator = clients[0];
+	vote.SetTitle("启用救援失败%d次自动换图?", g_iFinaleFailureCount);
+	vote.SetInfo("%d", g_iFinaleFailureCount);
+
+	if (!vote.DisplayVote(clients, numClients, 20) && ++g_iFinaleFailureVoteRetries <= 6)
+		CreateTimer(5.0, Timer_StartFinaleFailureVote, _, TIMER_FLAG_NO_MAPCHANGE);
+
+	return Plugin_Stop;
+}
+
+void FinaleFailureVote_Handler(L4D2NativeVote vote, VoteAction action, int param1, int param2) {
+	switch (action) {
+		case VoteAction_Start: {
+			PrintToChatAll("\x04[MapChanger]\x01 投票：是否启用本救援图失败 \x05%d\x01 次自动换图？", g_iFinaleFailureCount);
+		}
+
+		case VoteAction_PlayerVoted: {
+			if (IsClientInGame(param1) && !IsFakeClient(param1))
+				PrintToChatAll("\x04[MapChanger]\x01 %N 已投票。", param1);
+		}
+
+		case VoteAction_End: {
+			g_bFinaleFailureVoteDecided = true;
+
+			if (vote.YesCount > vote.PlayerCount / 2) {
+				g_bFinaleFailureChangeEnabled = true;
+				vote.SetPass("已启用");
+				PrintToChatAll("\x04[MapChanger]\x01 已启用本救援图失败 \x05%d\x01 次自动换图。", g_iFinaleFailureCount);
+			}
+			else {
+				g_bFinaleFailureChangeEnabled = false;
+				vote.SetFail();
+				PrintToChatAll("\x04[MapChanger]\x01 本救援图已关闭失败次数自动换图。");
+			}
+		}
+	}
+}
+
 void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast) {
 	if (!g_bIsFinalMap)
+		return;
+
+	if (!g_bFinaleFailureChangeEnabled)
 		return;
 
 	g_iFailureCount++;

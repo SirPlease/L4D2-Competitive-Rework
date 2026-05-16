@@ -602,10 +602,10 @@ int Item_MenuHandler(Menu menu, MenuAction action, int client, int param2) {
 			g_iFunction[client] = 3;
 			g_iSelection[client] = menu.Selection;
 
-			if (param2 < 17)
-				FormatEx(g_sNamedItem[client], sizeof g_sNamedItem, "give %s", item);
-			else
+			if (strcmp(item, "incendiary_ammo") == 0 || strcmp(item, "explosive_ammo") == 0 || strcmp(item, "laser_sight") == 0)
 				FormatEx(g_sNamedItem[client], sizeof g_sNamedItem, "upgrade_add %s", item);
+			else
+				FormatEx(g_sNamedItem[client], sizeof g_sNamedItem, "give %s", item);
 				
 			ShowAliveSur(client);
 		}
