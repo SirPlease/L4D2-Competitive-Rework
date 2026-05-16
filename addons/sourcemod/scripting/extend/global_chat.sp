@@ -15,6 +15,8 @@ bool g_bConnecting;
 bool g_bReady;
 bool g_bPollInFlight;
 bool g_bl4dstatsAvailable;
+bool g_bClientSeeGlobal[MAXPLAYERS + 1];
+bool g_bClientSeeLFG[MAXPLAYERS + 1];
 int g_iLastMessageId;
 int g_iLastCleanupTime;
 
@@ -30,12 +32,16 @@ ConVar g_cvLimit1M;
 ConVar g_cvLimit5M;
 ConVar g_cvLimit10M;
 ConVar g_cvLimit20M;
+ConVar g_cvLimitKickAdmin;
+ConVar g_cvShowGlobal;
+ConVar g_cvShowLFG;
 
 ConVar g_cvLFGLimitDefault;
 ConVar g_cvLFGLimit1M;
 ConVar g_cvLFGLimit5M;
 ConVar g_cvLFGLimit10M;
 ConVar g_cvLFGLimit20M;
+ConVar g_cvLFGLimitKickAdmin;
 
 public Plugin myinfo =
 {
@@ -60,12 +66,16 @@ public void OnPluginStart()
 	g_cvLimit5M = CreateConVar("sm_qf_limit_5m", "10", "500w 积分以上玩家每日全服聊天次数。", FCVAR_NONE, true, 0.0);
 	g_cvLimit10M = CreateConVar("sm_qf_limit_10m", "20", "1000w 积分以上玩家每日全服聊天次数。", FCVAR_NONE, true, 0.0);
 	g_cvLimit20M = CreateConVar("sm_qf_limit_20m", "30", "2000w 积分以上玩家每日全服聊天次数。", FCVAR_NONE, true, 0.0);
+	g_cvLimitKickAdmin = CreateConVar("sm_qf_limit_kick_admin", "50", "有 kick 权限但没有 z 权限的管理员每日全服聊天次数。", FCVAR_NONE, true, 0.0);
+	g_cvShowGlobal = CreateConVar("sm_qf_show_global", "1", "本服玩家是否能看到普通全服聊天和上线提示。", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_cvShowLFG = CreateConVar("sm_zd_show_global", "1", "本服旁观玩家是否能看到找队友全服提示。", FCVAR_NONE, true, 0.0, true, 1.0);
 
 	g_cvLFGLimitDefault = CreateConVar("sm_zd_limit_default", "3", "普通玩家每日找队友次数。", FCVAR_NONE, true, 0.0);
 	g_cvLFGLimit1M = CreateConVar("sm_zd_limit_1m", "5", "100w 积分以上玩家每日找队友次数。", FCVAR_NONE, true, 0.0);
 	g_cvLFGLimit5M = CreateConVar("sm_zd_limit_5m", "10", "500w 积分以上玩家每日找队友次数。", FCVAR_NONE, true, 0.0);
 	g_cvLFGLimit10M = CreateConVar("sm_zd_limit_10m", "20", "1000w 积分以上玩家每日找队友次数。", FCVAR_NONE, true, 0.0);
 	g_cvLFGLimit20M = CreateConVar("sm_zd_limit_20m", "30", "2000w 积分以上玩家每日找队友次数。", FCVAR_NONE, true, 0.0);
+	g_cvLFGLimitKickAdmin = CreateConVar("sm_zd_limit_kick_admin", "50", "有 kick 权限但没有 z 权限的管理员每日找队友次数。", FCVAR_NONE, true, 0.0);
 
 	RegConsoleCmd("sm_qf", Command_GlobalChat, "发送全服聊天: !qf <内容>");
 	RegConsoleCmd("sm_quanfu", Command_GlobalChat, "发送全服聊天: !quanfu <内容>");
@@ -73,8 +83,29 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_zd", Command_LFG, "发送找队友信息: !zd <内容>");
 	RegConsoleCmd("sm_zudui", Command_LFG, "发送找队友信息: !zudui <内容>");
 	RegConsoleCmd("sm_zdy", Command_LFG, "发送找队友信息: !zdy <内容>");
+	RegConsoleCmd("sm_qfmenu", Command_GlobalChatMenu, "打开全服聊天接收设置菜单");
+	RegConsoleCmd("sm_qfadmin", Command_GlobalChatMenu, "打开全服聊天接收设置菜单");
+	RegConsoleCmd("sm_zdmenu", Command_GlobalChatMenu, "打开找队友提示接收设置菜单");
+
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		g_bClientSeeGlobal[i] = true;
+		g_bClientSeeLFG[i] = true;
+	}
 
 	AutoExecConfig(true, "global_chat");
+}
+
+public void OnClientPutInServer(int client)
+{
+	g_bClientSeeGlobal[client] = true;
+	g_bClientSeeLFG[client] = true;
+}
+
+public void OnClientDisconnect(int client)
+{
+	g_bClientSeeGlobal[client] = true;
+	g_bClientSeeLFG[client] = true;
 }
 
 public void OnAllPluginsLoaded()
@@ -233,8 +264,89 @@ public Action Command_LFG(int client, int args)
 	}
 
 	ReserveDailyLFGUsage(client, steamId, "@LFG", formattedMsg, GetLFGDailyLimit(client));
-	ReplyToCommand(client, "[全服] 找队友信息已发送给所有旁观玩家。");
 	return Plugin_Handled;
+}
+
+public Action Command_GlobalChatMenu(int client, int args)
+{
+	if (client <= 0 || !IsClientInGame(client) || IsFakeClient(client))
+		return Plugin_Handled;
+
+	ShowGlobalChatMenu(client);
+	return Plugin_Handled;
+}
+
+bool CanToggleLFGPreference(int client)
+{
+	return CheckCommandAccess(client, "sm_kick", ADMFLAG_KICK, true);
+}
+
+void ShowGlobalChatMenu(int client)
+{
+	Menu menu = new Menu(MenuHandler_GlobalChatMenu);
+	menu.SetTitle("全服聊天接收设置\n普通全服: %s\n找队友提示: %s", g_bClientSeeGlobal[client] ? "接收" : "屏蔽", g_bClientSeeLFG[client] ? "接收" : "屏蔽");
+	menu.AddItem("toggle_global", g_bClientSeeGlobal[client] ? "屏蔽普通全服聊天" : "接收普通全服聊天");
+
+	if (CanToggleLFGPreference(client))
+		menu.AddItem("toggle_lfg", g_bClientSeeLFG[client] ? "屏蔽找队友提示" : "接收找队友提示");
+	else
+		menu.AddItem("lfg_locked", "找队友提示: 仅管理员可屏蔽", ITEMDRAW_DISABLED);
+
+	menu.ExitButton = true;
+	menu.Display(client, MENU_TIME_FOREVER);
+}
+
+public int MenuHandler_GlobalChatMenu(Menu menu, MenuAction action, int client, int item)
+{
+	if (action == MenuAction_End)
+	{
+		delete menu;
+		return 0;
+	}
+
+	if (action != MenuAction_Select)
+		return 0;
+
+	if (client <= 0 || !IsClientInGame(client))
+		return 0;
+
+	char info[32];
+	menu.GetItem(item, info, sizeof(info));
+
+	if (StrEqual(info, "toggle_global"))
+	{
+		g_bClientSeeGlobal[client] = !g_bClientSeeGlobal[client];
+		PrintToChat(client, "\x04[全服]\x01 你已%s普通全服聊天。", g_bClientSeeGlobal[client] ? "接收" : "屏蔽");
+		ShowGlobalChatMenu(client);
+	}
+	else if (StrEqual(info, "toggle_lfg") && CanToggleLFGPreference(client))
+	{
+		g_bClientSeeLFG[client] = !g_bClientSeeLFG[client];
+		PrintToChat(client, "\x04[全服]\x01 你已%s找队友提示。", g_bClientSeeLFG[client] ? "接收" : "屏蔽");
+		ShowGlobalChatMenu(client);
+	}
+
+	return 0;
+}
+
+bool CanReceiveGlobalMessage(int client)
+{
+	return g_cvShowGlobal.BoolValue
+		&& client > 0
+		&& client <= MaxClients
+		&& IsClientInGame(client)
+		&& !IsFakeClient(client)
+		&& g_bClientSeeGlobal[client];
+}
+
+bool CanReceiveLFGMessage(int client)
+{
+	return g_cvShowLFG.BoolValue
+		&& client > 0
+		&& client <= MaxClients
+		&& IsClientInGame(client)
+		&& !IsFakeClient(client)
+		&& g_bClientSeeLFG[client];
 }
 
 void ConnectDatabase()
@@ -463,11 +575,19 @@ public void SQL_OnLoadLastId(Database database, DBResultSet results, const char[
 
 bool HasUnlimitedGlobalChat(int client)
 {
+	return CheckCommandAccess(client, "sm_qf_unlimited", ADMFLAG_ROOT, true);
+}
+
+bool HasKickAdminGlobalChatLimit(int client)
+{
 	return CheckCommandAccess(client, "sm_kick", ADMFLAG_KICK, true);
 }
 
 int GetDailyLimit(int client)
 {
+	if (HasKickAdminGlobalChatLimit(client))
+		return g_cvLimitKickAdmin.IntValue;
+
 	int score = 0;
 	if (g_bl4dstatsAvailable && GetFeatureStatus(FeatureType_Native, "l4dstats_GetClientScore") == FeatureStatus_Available)
 		score = l4dstats_GetClientScore(client);
@@ -489,6 +609,9 @@ int GetDailyLimit(int client)
 
 int GetLFGDailyLimit(int client)
 {
+	if (HasKickAdminGlobalChatLimit(client))
+		return g_cvLFGLimitKickAdmin.IntValue;
+
 	int score = 0;
 	if (g_bl4dstatsAvailable && GetFeatureStatus(FeatureType_Native, "l4dstats_GetClientScore") == FeatureStatus_Available)
 		score = l4dstats_GetClientScore(client);
@@ -646,6 +769,10 @@ public void SQL_OnReserveDailyLFGUsage(Database database, DBResultSet results, c
 	}
 
 	InsertGlobalMessage(steamId, clientName, message);
+
+	int client = GetClientOfUserId(userid);
+	if (client > 0)
+		ReplyToCommand(client, "[全服] 找队友信息已发送给所有旁观玩家。");
 }
 
 void InsertGlobalMessage(const char[] steamId, const char[] clientName, const char[] message)
@@ -744,7 +871,11 @@ public void SQL_OnPollMessages(Database database, DBResultSet results, const cha
 
 		if (StrEqual(name, "@LOGIN"))
 		{
-			PrintToChatAll("\x04%s %s", prefix, message);
+			for (int i = 1; i <= MaxClients; i++)
+			{
+				if (CanReceiveGlobalMessage(i))
+					PrintToChat(i, "\x04%s %s", prefix, message);
+			}
 		}
 		else if (StrEqual(name, "@LFG"))
 		{
@@ -754,7 +885,7 @@ public void SQL_OnPollMessages(Database database, DBResultSet results, const cha
 
 			for (int i = 1; i <= MaxClients; i++)
 			{
-				if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) == 1)
+				if (CanReceiveLFGMessage(i) && GetClientTeam(i) == 1)
 				{
 					if (count < 2 || parts[1][0] == '\0')
 					{
@@ -772,7 +903,11 @@ public void SQL_OnPollMessages(Database database, DBResultSet results, const cha
 		else
 		{
 			GetShortServerName(server, shortServer, sizeof(shortServer));
-			PrintToChatAll("\x04%s \x03[%s] \x05%s\x01: %s", prefix, shortServer, name, message);
+			for (int i = 1; i <= MaxClients; i++)
+			{
+				if (CanReceiveGlobalMessage(i))
+					PrintToChat(i, "\x04%s \x03[%s] \x05%s\x01: %s", prefix, shortServer, name, message);
+			}
 		}
 	}
 }

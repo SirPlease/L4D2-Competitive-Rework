@@ -572,8 +572,10 @@ void Item(int client, int item) {
 	menu.AddItem("vomitjar", "胆汁瓶");
 	menu.AddItem("first_aid_kit", "医疗包");
 	menu.AddItem("defibrillator", "电击器");
-	menu.AddItem("upgradepack_incendiary", "燃烧弹药包");
-	menu.AddItem("upgradepack_explosive", "高爆弹药包");
+	if(GetClientImmunityLevel(client) > 90){
+		menu.AddItem("upgradepack_incendiary", "燃烧弹药包");
+		menu.AddItem("upgradepack_explosive", "高爆弹药包");
+	}
 	menu.AddItem("adrenaline", "肾上腺素");
 	menu.AddItem("pain_pills", "止痛药");
 	menu.AddItem("gascan", "汽油桶");
@@ -583,8 +585,10 @@ void Item(int client, int item) {
 	menu.AddItem("cola_bottles", "可乐瓶");
 	menu.AddItem("gnome", "圣诞老人");
 	menu.AddItem("ammo", "普通弹药");
-	menu.AddItem("incendiary_ammo", "燃烧弹药");
-	menu.AddItem("explosive_ammo", "高爆弹药");
+	if(GetClientImmunityLevel(client) > 90){
+		menu.AddItem("incendiary_ammo", "燃烧弹药");
+		menu.AddItem("explosive_ammo", "高爆弹药");
+	}
 	menu.AddItem("laser_sight", "激光瞄准器");
 	menu.ExitBackButton = true;
 	menu.DisplayAt(client, item, MENU_TIME_FOREVER);
@@ -2103,7 +2107,12 @@ int ShowAliveSur_MenuHandler(Menu menu, MenuAction action, int client, int param
 			else
 				CheatCommand(GetClientOfUserId(StringToInt(item)), g_sNamedItem[client]);
 			
-			if(g_bRPG) L4D_RPG_SetGlobalValue(INDEX_USEBUY, true);
+			if(g_bRPG){
+				if(IsAnne() == 1)
+					L4D_RPG_SetGlobalValue(INDEX_USEBUY, true);
+				else if(IsAnne() == 2)
+					L4D_RPG_SetGlobalValue(INDEX_VALID, true);
+			}
 			PageExitBack(client, g_iFunction[client], g_iSelection[client]);
 		}
 
@@ -2117,6 +2126,27 @@ int ShowAliveSur_MenuHandler(Menu menu, MenuAction action, int client, int param
 	}
 
 	return 0;
+}
+
+stock int IsAnne(){
+	char plugin_name[1024];
+	ConVar cvar_mode;
+	if(cvar_mode == null && FindConVar("l4d_ready_cfg_name"))
+	{
+		cvar_mode = FindConVar("l4d_ready_cfg_name");
+	}
+	if(cvar_mode == null) return 0;
+	GetConVarString(cvar_mode, plugin_name, sizeof(plugin_name));
+	if(StrContains(plugin_name, "AnneHappy", false) != -1)
+	{
+		if(StrContains(plugin_name, "HardCore", false) != -1)
+			return 2;
+		else
+			return 1;
+	}else
+	{
+		return 0;
+	}
 }
 
 void PageExitBack(int client, int func, int item) {

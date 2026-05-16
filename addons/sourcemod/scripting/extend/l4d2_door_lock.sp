@@ -2,6 +2,7 @@
 
 	General Updates:
 
+ *	16-05-2026 > Version 2.3: Freeze survivor bots while saferoom is locked and unfreeze them when human players take over.
  *	26-02-2023 > Version 2.2: Added new cvar to prevent some commands from interfering with readup panel, and fix panel not closing after readyup time is over.
  *	25-02-2023 > Version 2.1: Remove repeated timer to display menu, added color support and fixes a bug where sometimes survivors doesn't get full hp when teleported.
  *	27-01-2023 > Version 2.0: Fixed a bug, doors close when players are connecting and survivros already left safe area - Thanks to official instruction.
@@ -28,7 +29,7 @@
 
 #pragma semicolon 1
 #pragma newdecls required
-#define PLUGIN_VERSION "2.2"
+#define PLUGIN_VERSION "2.3"
 
 /* =============================================================================================================== *
  *										Bools, Handles, Integers and ConVars				   			 		   *
@@ -42,8 +43,10 @@ bool g_bInfectedReady;
 bool g_bLockSafeAreas;
 bool g_bIgnoreLoaders;
 bool g_bLeftSafeAreas;
+bool g_bNoBotMoveChanged;
 bool g_bClientIsReady [MAXPLAYERS+1];
 bool g_bPanelIsOpened [MAXPLAYERS+1];
+bool g_bSurvivorBotFrozen [MAXPLAYERS+1];
 
 Handle g_hTimer_IgnoreLoaders;
 Handle g_hTimer_PendingLoader;
@@ -94,6 +97,7 @@ ConVar Cvar_DoorLock_UnrdyTime;
 ConVar Cvar_DoorLock_Announces;
 ConVar Cvar_DoorLock_LeaverMsg;
 ConVar Cvar_DoorLock_EnableCmd;
+ConVar Cvar_DoorLock_FreezeSurvivorBots;
 
 ConVar Cvar_DoorLock_MPGameMod;
 ConVar Cvar_DoorLock_NoBotMove;
@@ -153,6 +157,7 @@ public void OnPluginStart()
 	Cvar_DoorLock_Announces = CreateConVar("l4d2_doorlock_readyup_notify", "1", "团队准备就绪时显示聊天文本", FCVAR_NOTIFY, true, 0.0, true, 3.0);
 	Cvar_DoorLock_LeaverMsg = CreateConVar("l4d2_doorlock_leavers_notify", "2", "在被传送时向离开者显示聊天文本（0=禁用，1=聊天，2=中心文本）", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	Cvar_DoorLock_EnableCmd = CreateConVar("l4d2_doorlock_add_commands", "!map,!buy,!shop", "添加你想要的命令以防止干扰ReadyUp面板 (无空格)", FCVAR_NOTIFY);
+	Cvar_DoorLock_FreezeSurvivorBots = CreateConVar("l4d2_doorlock_freeze_survivor_bots", "1", "如果为1，锁门且不能出去时只冻结生还者Bot，真人接管后自动解冻；0=保留原本nb_player_stop停止全部Bot", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	//AutoExecConfig(true, "l4d2_door_lock");
 	
 	Cvar_DoorLock_MPGameMod = FindConVar("mp_gamemode");
@@ -168,6 +173,9 @@ public void OnPluginStart()
 	HookEvent("round_freeze_end", Event_RoundFreezeEnd, EventHookMode_Post);
 	HookEvent("round_end", Event_OnRoundEnd, EventHookMode_PostNoCopy);
 	HookEvent("player_spawn", Event_PlayerSpawn, EventHookMode_Post);
+	HookEvent("player_team", Event_PlayerTeam, EventHookMode_Post);
+	HookEvent("bot_player_replace", Event_BotPlayerReplace, EventHookMode_Post);
+	HookEvent("player_bot_replace", Event_PlayerBotReplace, EventHookMode_Post);
 	HookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Pre);
 	HookEvent("player_ledge_grab", Event_PlayerIncapacitated, EventHookMode_Pre);
 	HookEvent("player_incapacitated", Event_PlayerIncapacitated, EventHookMode_Post);
@@ -259,6 +267,7 @@ void Event_RoundFreezeEnd(Event event, const char[] name, bool dontBroadcast)
 	{
 		g_bClientIsReady[i] = false;
 		g_bPanelIsOpened[i] = false;
+		g_bSurvivorBotFrozen[i] = false;
 		g_iUnrdyCounts[i] = Cvar_DoorLock_UnrdyTime.IntValue;
 	}
 	
@@ -268,6 +277,7 @@ void Event_RoundFreezeEnd(Event event, const char[] name, bool dontBroadcast)
 	g_bLockSafeAreas = false;
 	g_bIgnoreLoaders = false;
 	g_bLeftSafeAreas = false;
+	g_bNoBotMoveChanged = false;
 	
 	g_iLoadersTime = Cvar_DoorLock_LoaderMax.IntValue;
 	g_iGiveUpsTime = Cvar_DoorLock_RdyTimeUp.IntValue;
@@ -287,8 +297,12 @@ void Event_RoundFreezeEnd(Event event, const char[] name, bool dontBroadcast)
 
 void Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
-	if(!L4D2_DoorLock_Enable()) return;
-	
+	UnFreezeSurvivorBots();
+	if(g_bNoBotMoveChanged)
+	{
+		ResetConVar(Cvar_DoorLock_NoBotMove);
+		g_bNoBotMoveChanged = false;
+	}
 	delete g_hTimer_IgnoreLoaders;
 	if(g_hTimer_PendingLoader != null) delete g_hTimer_PendingLoader;
 	if(g_hTimer_WarmingUpTime != null) delete g_hTimer_WarmingUpTime;
@@ -303,10 +317,13 @@ void Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
 
 public Action OnPlayerRunCmd (int client, int &buttons)
 {
+	if(g_bLockSafeAreas && !g_bLeftSafeAreas)
+		UpdateClientSurvivorBotFreeze(client);
+	
 	if(!Cvar_DoorLock_ModesType.BoolValue && !g_bLeftSafeAreas && g_bLockSafeAreas)
 	{
 		if(IsClientInGame(client) && GetClientTeam(client) == 2 && L4D2_DoorLock_Enable())
-			if(IsValidEntity(client) && g_bFirstScenario) SetEntityMoveType(client, MOVETYPE_NONE);
+			if(IsValidEntity(client) && g_bFirstScenario && ShouldFreezeFirstChapterSurvivor(client)) SetEntityMoveType(client, MOVETYPE_NONE);
 	}
 	return Plugin_Continue;
 }
@@ -645,7 +662,12 @@ int Handle_ShowPlayersReadyStatus(Menu panel, MenuAction action, int param1, int
 void TriggerSafeAreaLocksFeatures()
 {
 	g_bLockSafeAreas = true;
-	Cvar_DoorLock_NoBotMove.SetString("1");
+	if(!Cvar_DoorLock_FreezeSurvivorBots.BoolValue)
+	{
+		Cvar_DoorLock_NoBotMove.SetString("1");
+		g_bNoBotMoveChanged = true;
+	}
+	FreezeSurvivorBots();
 	
 	if(Cvar_DoorLock_AddCheats.IntValue > 1) Cvar_DoorLock_MaxesAmmo.SetString("1");
 	for(int i = 1; i <= MaxClients; i++)
@@ -669,6 +691,34 @@ void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast)
 	
 	if(Cvar_DoorLock_AddCheats.IntValue == 1 || Cvar_DoorLock_AddCheats.IntValue == 3)
 		SetEntProp(client, Prop_Data, "m_takedamage", 1);
+	
+	UpdateClientSurvivorBotFreeze(client);
+}
+
+void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
+{
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	if(!client) return;
+	
+	CreateTimer(0.1, Timer_UpdateClientSurvivorBotFreeze, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+}
+
+void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
+{
+	int player = GetClientOfUserId(event.GetInt("player"));
+	int bot = GetClientOfUserId(event.GetInt("bot"));
+	
+	if(player) CreateTimer(0.1, Timer_UnFreezeHumanSurvivor, GetClientUserId(player), TIMER_FLAG_NO_MAPCHANGE);
+	if(bot) CreateTimer(0.1, Timer_UpdateClientSurvivorBotFreeze, GetClientUserId(bot), TIMER_FLAG_NO_MAPCHANGE);
+}
+
+void Event_PlayerBotReplace(Event event, const char[] name, bool dontBroadcast)
+{
+	int player = GetClientOfUserId(event.GetInt("player"));
+	int bot = GetClientOfUserId(event.GetInt("bot"));
+	
+	if(player) CreateTimer(0.1, Timer_UpdateClientSurvivorBotFreeze, GetClientUserId(player), TIMER_FLAG_NO_MAPCHANGE);
+	if(bot) CreateTimer(0.1, Timer_UpdateClientSurvivorBotFreeze, GetClientUserId(bot), TIMER_FLAG_NO_MAPCHANGE);
 }
 
 public void OnClientPutInServer(int client)
@@ -686,7 +736,27 @@ public void OnClientPutInServer(int client)
 		
 		if(Cvar_DoorLock_AddCheats.IntValue == 1 || Cvar_DoorLock_AddCheats.IntValue == 3)
 			SetEntProp(client, Prop_Data, "m_takedamage", 1);
+		
+		UpdateClientSurvivorBotFreeze(client);
 	}
+}
+
+Action Timer_UpdateClientSurvivorBotFreeze(Handle timer, int userid)
+{
+	int client = GetClientOfUserId(userid);
+	if(client)
+	{
+		UpdateClientSurvivorBotFreeze(client);
+		UnFreezeHumanSurvivor(client);
+	}
+	return Plugin_Handled;
+}
+
+Action Timer_UnFreezeHumanSurvivor(Handle timer, int userid)
+{
+	int client = GetClientOfUserId(userid);
+	if(client) UnFreezeHumanSurvivor(client, true);
+	return Plugin_Handled;
 }
 
 Action Timer_DisplayPanelOnConnect(Handle timer, int userid)
@@ -706,7 +776,12 @@ Action Timer_DisplayPanelOnConnect(Handle timer, int userid)
 void UnTriggerSafeAreaLocksFeatures()
 {
 	g_bLockSafeAreas = false;
-	ResetConVar(Cvar_DoorLock_NoBotMove);
+	if(g_bNoBotMoveChanged)
+	{
+		ResetConVar(Cvar_DoorLock_NoBotMove);
+		g_bNoBotMoveChanged = false;
+	}
+	UnFreezeSurvivorBots();
 	
 	if(Cvar_DoorLock_AddCheats.IntValue > 1) ResetConVar(Cvar_DoorLock_MaxesAmmo);
 	for(int i = 1; i <= MaxClients; i++)
@@ -723,6 +798,8 @@ void UnTriggerSafeAreaLocksFeatures()
 
 public void OnClientDisconnect(int client)
 {
+	g_bSurvivorBotFrozen[client] = false;
+	
 	if(!L4D2_DoorLock_Enable() || !IsClientInGame(client)) return;
 	
 	if(g_bAdminTakeover && g_bLockSafeAreas && IsClientGenericAdmin(client) && GetAdminsCount() == 1)
@@ -945,11 +1022,80 @@ void Heal_Survivor(int client)
  *											Freezing Players In First Chapters									   *
  *================================================================================================================ */
 
+bool ShouldFreezeSurvivorBot(int client)
+{
+	return L4D2_DoorLock_Enable()
+		&& Cvar_DoorLock_FreezeSurvivorBots.BoolValue
+		&& g_bLockSafeAreas
+		&& !g_bLeftSafeAreas
+		&& IsValidEntity(client)
+		&& IsClientInGame(client)
+		&& IsPlayerAlive(client)
+		&& GetClientTeam(client) == 2
+		&& IsFakeClient(client);
+}
+
+bool ShouldFreezeFirstChapterSurvivor(int client)
+{
+	if(!Cvar_DoorLock_FreezeSurvivorBots.BoolValue) return true;
+	return IsFakeClient(client);
+}
+
+void UpdateClientSurvivorBotFreeze(int client)
+{
+	if(client < 1 || client > MaxClients || !IsValidEntity(client) || !IsClientInGame(client)) return;
+	
+	if(ShouldFreezeSurvivorBot(client))
+	{
+		SetEntityMoveType(client, MOVETYPE_NONE);
+		g_bSurvivorBotFrozen[client] = true;
+		return;
+	}
+	
+	if(g_bSurvivorBotFrozen[client])
+	{
+		SetEntityMoveType(client, MOVETYPE_WALK);
+		g_bSurvivorBotFrozen[client] = false;
+	}
+}
+
+void FreezeSurvivorBots()
+{
+	if(!Cvar_DoorLock_FreezeSurvivorBots.BoolValue) return;
+	
+	for (int i = 1; i <= MaxClients; i++)
+		UpdateClientSurvivorBotFreeze(i);
+}
+
+void UnFreezeSurvivorBots()
+{
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if(!g_bSurvivorBotFrozen[i]) continue;
+		
+		if(IsValidEntity(i) && IsClientInGame(i))
+			SetEntityMoveType(i, MOVETYPE_WALK);
+		
+		g_bSurvivorBotFrozen[i] = false;
+	}
+}
+
+void UnFreezeHumanSurvivor(int client, bool force = false)
+{
+	if(!g_bLockSafeAreas || g_bLeftSafeAreas || !Cvar_DoorLock_FreezeSurvivorBots.BoolValue) return;
+	if(client < 1 || client > MaxClients || !IsValidEntity(client) || !IsClientInGame(client)) return;
+	if(IsFakeClient(client) || GetClientTeam(client) != 2) return;
+	if(!force && !Cvar_DoorLock_ModesType.BoolValue) return;
+	
+	SetEntityMoveType(client, MOVETYPE_WALK);
+	g_bSurvivorBotFrozen[client] = false;
+}
+
 void FreezePlayersInFirstChapters()
 {
 	if(!g_bFirstScenario || Cvar_DoorLock_ModesType.BoolValue) return;
 	for (int i = 1; i <= MaxClients; i++)
-		if(IsValidEntity(i) && IsClientInGame(i) && GetClientTeam(i) == 2)
+		if(IsValidEntity(i) && IsClientInGame(i) && GetClientTeam(i) == 2 && ShouldFreezeFirstChapterSurvivor(i))
 			SetEntityMoveType(i, MOVETYPE_NONE);
 }
 

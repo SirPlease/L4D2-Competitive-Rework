@@ -142,7 +142,7 @@ public void OnPluginStart()
     g_hCvarPeakRatio    = CreateConVar( PLUGIN_NAME ... "_peak_ratio",    "0.60",           "peak_mode=1 时，有玩家服务器数/有效服务器数 >= 此比例即视为高峰期", CVAR_FLAGS, true, 0.0, true, 1.0);
     g_hCvarPeakHoldTime = CreateConVar( PLUGIN_NAME ... "_peak_hold_time", "3600",          "peak_mode=1 时，一旦进入高峰期后至少持续限制多少秒；0=不保持", CVAR_FLAGS, true, 0.0);
     g_hCvarDBConfig     = CreateConVar( PLUGIN_NAME ... "_db_config",     "l4dstats",        "peak_mode=1 使用的 databases.cfg 区块名", CVAR_FLAGS);
-    g_hCvarServerId     = CreateConVar( PLUGIN_NAME ... "_server_id",     "",               "本服务器唯一ID，留空自动使用 hostname:hostport", CVAR_FLAGS);
+    g_hCvarServerId     = CreateConVar( PLUGIN_NAME ... "_server_id",     "",               "本服务器唯一ID；留空时优先从hostname提取前缀#编号，如Anne云服#21，失败则使用hostname:hostport", CVAR_FLAGS);
     g_hCvarStatusTable  = CreateConVar( PLUGIN_NAME ... "_status_table",  "l4d_server_status", "peak_mode=1 使用的服务器状态表名", CVAR_FLAGS);
     g_hCvarStatusInterval = CreateConVar(PLUGIN_NAME ... "_status_interval", "60.0",        "peak_mode=1 本服人数写入数据库的心跳间隔秒数；人数变化时会尽快写入", CVAR_FLAGS, true, 5.0);
     g_hCvarStatusMaxAge = CreateConVar( PLUGIN_NAME ... "_status_max_age", "180",           "peak_mode=1 查询全服状态时，只统计多少秒内更新过的服务器，建议为status_interval的3倍", CVAR_FLAGS, true, 10.0);
@@ -889,10 +889,54 @@ void BuildDefaultServerId(char[] buffer, int maxlen)
     else
         strcopy(sHostname, sizeof(sHostname), "server");
 
+    if (TryBuildIndexedHostnameId(sHostname, buffer, maxlen))
+        return;
+
     ConVar hHostPort = FindConVar("hostport");
     int iPort = (hHostPort != null) ? hHostPort.IntValue : 0;
 
     FormatEx(buffer, maxlen, "%s:%d", sHostname, iPort);
+}
+
+bool TryBuildIndexedHostnameId(const char[] hostname, char[] buffer, int maxlen)
+{
+    int iLen = strlen(hostname);
+    int iHash = -1;
+
+    for (int i = 0; i < iLen; i++)
+    {
+        if (hostname[i] == '#')
+        {
+            iHash = i;
+            break;
+        }
+    }
+
+    if (iHash < 0)
+        return false;
+
+    int iDigitStart = iHash + 1;
+    while (iDigitStart < iLen && (hostname[iDigitStart] == ' ' || hostname[iDigitStart] == '\t'))
+        iDigitStart++;
+
+    int iDigitEnd = iDigitStart;
+    while (iDigitEnd < iLen && hostname[iDigitEnd] >= '0' && hostname[iDigitEnd] <= '9')
+        iDigitEnd++;
+
+    if (iDigitEnd == iDigitStart)
+        return false;
+
+    int iOut = 0;
+    for (int i = 0; i <= iHash && iOut < maxlen - 1; i++)
+        buffer[iOut++] = hostname[i];
+
+    for (int i = iDigitStart; i < iDigitEnd && iOut < maxlen - 1; i++)
+        buffer[iOut++] = hostname[i];
+
+    buffer[iOut] = '\0';
+    TrimString(buffer);
+
+    return buffer[0] != '\0';
 }
 
 bool IsSafeSQLIdentifier(const char[] value)

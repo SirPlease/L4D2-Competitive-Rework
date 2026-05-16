@@ -352,6 +352,9 @@ ResetInfVars()
 }
 
 public Action L4D_OnFirstSurvivorLeftSafeArea(int client){
+	Stats_RecordAllHeldSupportItems();
+	Stats_ScheduleInitialSupportItemScans(12.0);
+
 	for (int i = 1; i <= MaxClients; i++)
 	{
 		if(IsClientInGame(i) && GetClientTeam(i) == 2)
@@ -378,7 +381,8 @@ ResetVars()
 
 	// Reset kill/point score timer amount
 	CreateTimer(1.0, InitPlayers);
-	CreateTimer(1.0, timer_RecordInitialSupportItems);
+	InitialSupportScanUntil = 0.0;
+	Stats_ScheduleInitialSupportItemScans(10.0);
 
 	TankCount = 0;
 
@@ -387,10 +391,10 @@ ResetVars()
 	{
 		AnnounceCounter[i] = 0;
 		CurrentPoints[i] = 0;
-			ClientRankMute[i] = false;
-			ClientEnabled[i] = false;
-			HealingFirstAid[i] = 0;
-		}
+		ClientRankMute[i] = false;
+		ClientEnabled[i] = false;
+		HealingFirstAid[i] = 0;
+	}
 
 	for (i = 0; i < MAXPLAYERS + 1; i++)
 	{
@@ -400,6 +404,11 @@ ResetVars()
 		TimerRankChangeCheck[i] = INVALID_HANDLE;
 		QuarterRankChangeLastRank[i] = 0;
 		QuarterRankChangeFirstCheck[i] = true;
+		SupportReloadTime[i] = 0.0;
+		SupportReloadType[i] = 0;
+		SupportReloadOrigin[i][0] = 0.0;
+		SupportReloadOrigin[i][1] = 0.0;
+		SupportReloadOrigin[i][2] = 0.0;
 
 		for (j = 0; j < MAXPLAYERS + 1; j++)
 		{

@@ -238,13 +238,17 @@ new ClientGameModePoints[MAXPLAYERS + 1][GAMEMODES];
 // Misc arrays
 new TimerPoints[MAXPLAYERS + 1];
 new TimerKills[MAXPLAYERS + 1];
-	new TimerHeadshots[MAXPLAYERS + 1];
-	new Pills[4096];
-	new Adrenaline[4096];
-	new PillsFirstHolder[4096];
-	new AdrenalineFirstHolder[4096];
-	new FirstAidFirstHolder[4096];
-	new HealingFirstAid[MAXPLAYERS + 1];
+new TimerHeadshots[MAXPLAYERS + 1];
+new Pills[4096];
+new Adrenaline[4096];
+new PillsFirstHolder[4096];
+new AdrenalineFirstHolder[4096];
+new FirstAidFirstHolder[4096];
+new HealingFirstAid[MAXPLAYERS + 1];
+new Float:SupportReloadTime[MAXPLAYERS + 1];
+new SupportReloadType[MAXPLAYERS + 1];
+new Float:SupportReloadOrigin[MAXPLAYERS + 1][3];
+new Float:InitialSupportScanUntil = 0.0;
 
 new String:QueryBuffer[MAX_QUERY_COUNTER][MAX_QUERY_COUNTER];
 new QueryCounter = 0;

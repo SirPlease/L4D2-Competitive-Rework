@@ -485,6 +485,7 @@ public OnConfigsExecuted()
 	RegConsoleCmd("sm_rankmenu", cmd_ShowRankMenu);
 	RegConsoleCmd("sm_rankmutetoggle", cmd_ToggleClientRankMute);
 	RegConsoleCmd("sm_rankmute", cmd_ClientRankMute);
+	AddCommandListener(Command_ReloadSupportItem, "+reload");
 	RegConsoleCmd("sm_showmotd", cmd_ShowMotd);
 	RegConsoleCmd("sm_resetscore", cmd_ResetScore);
 

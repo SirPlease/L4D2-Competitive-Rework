@@ -680,6 +680,42 @@ stock bool:Stats_IsTrackedWeaponEntity(entity)
 	return entity > 0 && entity < sizeof(Pills);
 }
 
+stock Stats_GetHeldSupportItemType(client)
+{
+	if (!Stats_IsValidClient(client) || GetClientTeam(client) != TEAM_SURVIVORS)
+		return 0;
+
+	new entity = GetPlayerWeaponSlot(client, 4);
+	if (!Stats_IsTrackedWeaponEntity(entity) || !IsValidEntity(entity))
+		return 0;
+
+	decl String:ClassName[MAX_LINE_WIDTH];
+	GetEntityClassname(entity, ClassName, sizeof(ClassName));
+	if (StrContains(ClassName, "pain_pills", false) != -1)
+		return 1;
+
+	if (StrContains(ClassName, "adrenaline", false) != -1)
+		return 2;
+
+	return 0;
+}
+
+public Action:Command_ReloadSupportItem(client, const String:command[], argc)
+{
+	if (!Stats_IsSurvivorHuman(client))
+		return Plugin_Continue;
+
+	new ItemType = Stats_GetHeldSupportItemType(client);
+	if (ItemType == 0)
+		return Plugin_Continue;
+
+	SupportReloadTime[client] = GetEngineTime();
+	SupportReloadType[client] = ItemType;
+	GetClientAbsOrigin(client, SupportReloadOrigin[client]);
+
+	return Plugin_Continue;
+}
+
 stock Stats_RecordFirstHolder(firstHolder[], entity, client)
 {
 	if (!Stats_IsTrackedWeaponEntity(entity) || !Stats_IsValidClient(client))
@@ -689,13 +725,49 @@ stock Stats_RecordFirstHolder(firstHolder[], entity, client)
 		firstHolder[entity] = GetClientUserId(client);
 }
 
+stock Stats_MarkUnscoreableSupportItem(firstHolder[], entity)
+{
+	if (!Stats_IsTrackedWeaponEntity(entity))
+		return;
+
+	if (firstHolder[entity] == 0)
+		firstHolder[entity] = -1;
+}
+
+stock bool:Stats_IsRecentReloadTransferPickup(client, ItemType)
+{
+	if (!Stats_IsSurvivorHuman(client) || ItemType == 0)
+		return false;
+
+	new Float:Now = GetEngineTime();
+	decl Float:Origin[3];
+	GetClientAbsOrigin(client, Origin);
+
+	for (new i = 1; i <= MaxClients; i++)
+	{
+		if (i == client || !Stats_IsSurvivorHuman(i))
+			continue;
+
+		if (SupportReloadType[i] != ItemType)
+			continue;
+
+		if (Now - SupportReloadTime[i] > 1.0)
+			continue;
+
+		if (GetVectorDistance(Origin, SupportReloadOrigin[i]) <= 250.0)
+			return true;
+	}
+
+	return false;
+}
+
 stock bool:Stats_IsOriginalHolder(firstHolder[], entity, client)
 {
 	if (!Stats_IsTrackedWeaponEntity(entity) || !Stats_IsValidClient(client))
 		return false;
 
 	if (firstHolder[entity] == 0)
-		firstHolder[entity] = GetClientUserId(client);
+		return false;
 
 	return firstHolder[entity] == GetClientUserId(client);
 }
@@ -725,12 +797,41 @@ stock Stats_RecordHeldSupportItems(client)
 	}
 }
 
-public Action:timer_RecordInitialSupportItems(Handle:timer)
+stock Stats_RecordAllHeldSupportItems()
 {
 	for (new i = 1; i <= MaxClients; i++)
 	{
 		Stats_RecordHeldSupportItems(i);
 	}
+}
+
+stock Stats_ScheduleInitialSupportItemScans(Float:Duration)
+{
+	new Float:Until = GetEngineTime() + Duration;
+	if (Until > InitialSupportScanUntil)
+		InitialSupportScanUntil = Until;
+
+	CreateTimer(0.2, timer_RecordInitialSupportItems);
+	CreateTimer(1.0, timer_RecordInitialSupportItems);
+	CreateTimer(3.0, timer_RecordInitialSupportItems);
+	CreateTimer(6.0, timer_RecordInitialSupportItems);
+	CreateTimer(10.0, timer_RecordInitialSupportItems);
+}
+
+public Action:timer_RecordInitialSupportItems(Handle:timer)
+{
+	if (CampaignOver)
+	{
+		return Plugin_Stop;
+	}
+
+	if (Isstart && GetEngineTime() > InitialSupportScanUntil)
+	{
+		return Plugin_Stop;
+	}
+
+	Stats_RecordAllHeldSupportItems();
+	return Plugin_Stop;
 }
 
 public Action:event_ItemPickup(Handle:event, const String:name[], bool:dontBroadcast)
@@ -745,11 +846,19 @@ public Action:event_ItemPickup(Handle:event, const String:name[], bool:dontBroad
 
 	if (StrContains(ItemName, "pain_pills", false) != -1)
 	{
-		Stats_RecordFirstHolder(PillsFirstHolder, GetPlayerWeaponSlot(client, 4), client);
+		new entity = GetPlayerWeaponSlot(client, 4);
+		if (Stats_IsRecentReloadTransferPickup(client, 1))
+			Stats_MarkUnscoreableSupportItem(PillsFirstHolder, entity);
+		else
+			Stats_RecordFirstHolder(PillsFirstHolder, entity, client);
 	}
 	else if (StrContains(ItemName, "adrenaline", false) != -1)
 	{
-		Stats_RecordFirstHolder(AdrenalineFirstHolder, GetPlayerWeaponSlot(client, 4), client);
+		new entity = GetPlayerWeaponSlot(client, 4);
+		if (Stats_IsRecentReloadTransferPickup(client, 2))
+			Stats_MarkUnscoreableSupportItem(AdrenalineFirstHolder, entity);
+		else
+			Stats_RecordFirstHolder(AdrenalineFirstHolder, entity, client);
 	}
 	else if (StrContains(ItemName, "first_aid_kit", false) != -1)
 	{
@@ -789,11 +898,10 @@ GiveAdrenaline(Giver, Recipient, AdrenalineID = -1)
 	else
 		Adrenaline[AdrenalineID] = 1;
 
-	Stats_RecordFirstHolder(AdrenalineFirstHolder, AdrenalineID, Giver);
-
 	if (!Stats_IsSurvivorHuman(Giver) || !Stats_IsSurvivorHuman(Recipient))
 		return;
 
+	// 给针计分只认第一次拾取/开局持有记录，不能在赠送结算时补记送出者。
 	if (!Stats_IsOriginalHolder(AdrenalineFirstHolder, AdrenalineID, Giver))
 		return;
 
@@ -914,11 +1022,10 @@ GivePills(Giver, Recipient, PillsID = -1)
 	else
 		Pills[PillsID] = 1;
 
-	Stats_RecordFirstHolder(PillsFirstHolder, PillsID, Giver);
-
 	if (!Stats_IsSurvivorHuman(Giver) || !Stats_IsSurvivorHuman(Recipient))
 		return;
 
+	// 给药计分只认第一次拾取/开局持有记录，避免插件转交后重新生成实体刷药分。
 	if (!Stats_IsOriginalHolder(PillsFirstHolder, PillsID, Giver))
 		return;
 
