@@ -12,6 +12,7 @@ new bool:g_bQuarterRankDbChecked = false;
 new g_iQuarterRankKey = 0;
 new QuarterRankTotal = 0;
 new ClientQuarterPoints[MAXPLAYERS + 1];
+new ClientQuarterPlayTime[MAXPLAYERS + 1];
 new ClientQuarterRank[MAXPLAYERS + 1];
 new CheckQuarterPlayerPoint[100];
 
@@ -138,6 +139,7 @@ stock QuarterRank_ResetLocalCache()
 	for (new i = 1; i <= MaxClients; i++)
 	{
 		ClientQuarterPoints[i] = 0;
+		ClientQuarterPlayTime[i] = 0;
 		ClientQuarterRank[i] = 0;
 	}
 
@@ -281,6 +283,8 @@ stock QuarterRank_RecordPlaytime(Client, Minutes)
 	if (team != TEAM_SURVIVORS && team != TEAM_INFECTED)
 		return;
 
+	ClientQuarterPlayTime[Client] += Minutes;
+
 	decl String:SteamID[MAX_LINE_WIDTH];
 	decl String:EscSteamID[MAX_LINE_WIDTH * 2 + 1];
 	GetClientRankAuthString(Client, SteamID, sizeof(SteamID));
@@ -313,7 +317,7 @@ stock QuarterRank_QueryClientPointsSteamID(Client, const String:SteamID[], SQLTC
 	SQL_EscapeString(db, SteamID, EscSteamID, sizeof(EscSteamID));
 
 	decl String:query[512];
-	Format(query, sizeof(query), "SELECT points FROM `%sscore_quarter` WHERE steamid = '%s' AND quarter_key = %i", DbPrefix, EscSteamID, g_iQuarterRankKey);
+	Format(query, sizeof(query), "SELECT points, playtime FROM `%sscore_quarter` WHERE steamid = '%s' AND quarter_key = %i", DbPrefix, EscSteamID, g_iQuarterRankKey);
 	SQL_TQuery(db, callback, query, Client);
 }
 
@@ -322,7 +326,7 @@ stock QuarterRank_QueryClientPointsDP(Handle:dp, SQLTCallback:callback)
 	QuarterRank_EnsureCurrentQuarter();
 	if (!QuarterRank_Enabled())
 	{
-		SQL_TQuery(db, callback, "SELECT 0", dp);
+		SQL_TQuery(db, callback, "SELECT 0, 0", dp);
 		return;
 	}
 
@@ -335,7 +339,7 @@ stock QuarterRank_QueryClientPointsDP(Handle:dp, SQLTCallback:callback)
 	SQL_EscapeString(db, SteamID, EscSteamID, sizeof(EscSteamID));
 
 	decl String:query[512];
-	Format(query, sizeof(query), "SELECT points FROM `%sscore_quarter` WHERE steamid = '%s' AND quarter_key = %i", DbPrefix, EscSteamID, g_iQuarterRankKey);
+	Format(query, sizeof(query), "SELECT points, playtime FROM `%sscore_quarter` WHERE steamid = '%s' AND quarter_key = %i", DbPrefix, EscSteamID, g_iQuarterRankKey);
 	SQL_TQuery(db, callback, query, dp);
 }
 
@@ -351,8 +355,12 @@ public QuarterRank_GetClientPoints(Handle:owner, Handle:hndl, const String:error
 	}
 
 	ClientQuarterPoints[client] = 0;
+	ClientQuarterPlayTime[client] = 0;
 	if (SQL_FetchRow(hndl))
+	{
 		ClientQuarterPoints[client] = SQL_FetchInt(hndl, 0);
+		ClientQuarterPlayTime[client] = SQL_FetchInt(hndl, 1);
+	}
 }
 
 stock QuarterRank_QueryClientRank(Client, SQLTCallback:callback=INVALID_FUNCTION)

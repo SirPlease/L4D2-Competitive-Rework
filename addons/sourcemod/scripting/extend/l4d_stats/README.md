@@ -90,6 +90,7 @@ sm_quartertop10
 
 ```sourcepawn
 native int l4dstats_GetClientQuarterScore(int client);
+native int l4dstats_GetClientQuarterPlayTime(int client);
 native int l4dstats_GetClientQuarterRank(int client);
 native int l4dstats_GetCurrentQuarter();
 native int l4dstats_IsQuarterTopPlayer(int client, int ranklimit);

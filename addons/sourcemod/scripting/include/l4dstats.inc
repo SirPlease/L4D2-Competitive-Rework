@@ -18,6 +18,7 @@ public void __pl_l4d_stats_SetNTVOptional()
 {
 	MarkNativeAsOptional("l4dstats_GetClientScore");
 	MarkNativeAsOptional("l4dstats_GetClientQuarterScore");
+	MarkNativeAsOptional("l4dstats_GetClientQuarterPlayTime");
 	MarkNativeAsOptional("l4dstats_GetClientQuarterRank");
 	MarkNativeAsOptional("l4dstats_GetCurrentQuarter");
 	MarkNativeAsOptional("l4dstats_IsTopPlayer");
@@ -44,6 +45,14 @@ native int l4dstats_GetClientScore(int client);
  * @return		Player current-quarter Score.
  */
 native int l4dstats_GetClientQuarterScore(int client);
+/**
+ * get a player's current-quarter playtime in minutes.
+ *
+ * @param client		Client Index.
+
+ * @return		Player current-quarter playtime[min].
+ */
+native int l4dstats_GetClientQuarterPlayTime(int client);
 /**
  * get a player's current-quarter rank.
  *

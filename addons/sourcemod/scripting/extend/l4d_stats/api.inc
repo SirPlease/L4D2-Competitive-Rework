@@ -13,6 +13,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	
 	CreateNative("l4dstats_GetClientScore", Native_GetClientScore);
 	CreateNative("l4dstats_GetClientQuarterScore", Native_GetClientQuarterScore);
+	CreateNative("l4dstats_GetClientQuarterPlayTime", Native_GetClientQuarterPlayTime);
 	CreateNative("l4dstats_GetClientQuarterRank", Native_GetClientQuarterRank);
 	CreateNative("l4dstats_GetCurrentQuarter", Native_GetCurrentQuarter);
 	CreateNative("l4dstats_AdddClientScore", Native_AddClientScore);
@@ -85,6 +86,26 @@ public int Native_GetClientQuarterScore(Handle plugin, int numParams)
 	
 	QuarterRank_EnsureCurrentQuarter();
 	return ClientQuarterPoints[client];
+}
+
+public int Native_GetClientQuarterPlayTime(Handle plugin, int numParams)
+{
+	int client = GetNativeCell(1);
+	
+	if (client < 1 || client > MaxClients)
+	{
+		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index (%d)", client);
+	}
+	if (!IsClientConnected(client))
+	{
+		return ThrowNativeError(SP_ERROR_NATIVE, "Client %d is not connected", client);
+	}
+	if(IsFakeClient(client)){
+		return ThrowNativeError(SP_ERROR_NATIVE, "Client %d is A bot", client);
+	}
+	
+	QuarterRank_EnsureCurrentQuarter();
+	return ClientQuarterPlayTime[client];
 }
 
 public int Native_GetClientQuarterRank(Handle plugin, int numParams)
