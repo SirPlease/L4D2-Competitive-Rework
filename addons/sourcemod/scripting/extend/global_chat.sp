@@ -8,15 +8,21 @@
 #define PLUGIN_VERSION "1.0"
 
 Database g_hDatabase = null;
+Database g_hBlacklistDatabase = null;
 Handle g_hPollTimer = null;
 Handle g_hReconnectTimer = null;
+Handle g_hBlacklistReconnectTimer = null;
+Handle g_hBlacklistRefreshTimer = null;
 
 bool g_bConnecting;
+bool g_bBlacklistConnecting;
 bool g_bReady;
 bool g_bPollInFlight;
+bool g_bBlacklistRefreshInFlight;
 bool g_bl4dstatsAvailable;
 bool g_bClientSeeGlobal[MAXPLAYERS + 1];
 bool g_bClientSeeLFG[MAXPLAYERS + 1];
+StringMap g_mClientBlockedSteam64[MAXPLAYERS + 1];
 int g_iLastMessageId;
 int g_iLastCleanupTime;
 
@@ -27,6 +33,10 @@ ConVar g_cvPollBatch;
 ConVar g_cvCleanupInterval;
 ConVar g_cvRetentionDays;
 ConVar g_cvMessagePrefix;
+ConVar g_cvBlacklistFilter;
+ConVar g_cvBlacklistDatabaseConfig;
+ConVar g_cvBlacklistTable;
+ConVar g_cvBlacklistRefreshInterval;
 ConVar g_cvLimitDefault;
 ConVar g_cvLimit1M;
 ConVar g_cvLimit5M;
@@ -61,6 +71,10 @@ public void OnPluginStart()
 	g_cvCleanupInterval = CreateConVar("sm_qf_cleanup_interval", "21600", "清理旧全服聊天记录的间隔，单位秒。", FCVAR_NONE, true, 300.0);
 	g_cvRetentionDays = CreateConVar("sm_qf_retention_days", "7", "全服聊天记录保留天数。0 表示不清理。", FCVAR_NONE, true, 0.0);
 	g_cvMessagePrefix = CreateConVar("sm_qf_prefix", "[全服]", "全服聊天前缀。");
+	g_cvBlacklistFilter = CreateConVar("sm_qf_blacklist_filter", "1", "是否按 l4d2_blacklist 屏蔽全服聊天显示。", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_cvBlacklistDatabaseConfig = CreateConVar("sm_qf_blacklist_database", "l4dstats", "l4d2_blacklist 使用的 databases.cfg 配置名称。");
+	g_cvBlacklistTable = CreateConVar("sm_qf_blacklist_table", "player_blocks", "l4d2_blacklist 使用的数据库表名。");
+	g_cvBlacklistRefreshInterval = CreateConVar("sm_qf_blacklist_refresh_interval", "60.0", "刷新当前在线玩家 blacklist 缓存的间隔，单位秒。", FCVAR_NONE, true, 10.0, true, 600.0);
 	g_cvLimitDefault = CreateConVar("sm_qf_limit_default", "3", "普通玩家每日全服聊天次数。", FCVAR_NONE, true, 0.0);
 	g_cvLimit1M = CreateConVar("sm_qf_limit_1m", "5", "100w 积分以上玩家每日全服聊天次数。", FCVAR_NONE, true, 0.0);
 	g_cvLimit5M = CreateConVar("sm_qf_limit_5m", "10", "500w 积分以上玩家每日全服聊天次数。", FCVAR_NONE, true, 0.0);
@@ -100,12 +114,14 @@ public void OnClientPutInServer(int client)
 {
 	g_bClientSeeGlobal[client] = true;
 	g_bClientSeeLFG[client] = true;
+	ClearClientBlacklistCache(client);
 }
 
 public void OnClientDisconnect(int client)
 {
 	g_bClientSeeGlobal[client] = true;
 	g_bClientSeeLFG[client] = true;
+	ClearClientBlacklistCache(client);
 }
 
 public void OnAllPluginsLoaded()
@@ -136,18 +152,39 @@ public void OnConfigsExecuted()
 	{
 		ConnectDatabase();
 	}
+
+	if (g_hBlacklistDatabase != null)
+	{
+		StartBlacklistRefreshTimer();
+		RefreshBlacklistCache();
+	}
+	else
+	{
+		ConnectBlacklistDatabase();
+	}
 }
 
 public void OnPluginEnd()
 {
 	StopPollTimer();
 	StopReconnectTimer();
+	StopBlacklistReconnectTimer();
+	StopBlacklistRefreshTimer();
 
 	if (g_hDatabase != null)
 	{
 		delete g_hDatabase;
 		g_hDatabase = null;
 	}
+
+	if (g_hBlacklistDatabase != null)
+	{
+		delete g_hBlacklistDatabase;
+		g_hBlacklistDatabase = null;
+	}
+
+	for (int i = 1; i <= MaxClients; i++)
+		ClearClientBlacklistCache(i);
 }
 
 public void OnMapEnd()
@@ -156,8 +193,10 @@ public void OnMapEnd()
 	// 确保 SQL 回调不会操作已失效的句柄。
 	StopPollTimer();
 	StopReconnectTimer();
+	StopBlacklistRefreshTimer();
 	g_bReady = false;
 	g_bPollInFlight = false;
+	g_bBlacklistRefreshInFlight = false;
 }
 
 public Action Command_GlobalChat(int client, int args)
@@ -200,16 +239,23 @@ public Action Command_GlobalChat(int client, int args)
 	
 	NormalizeSteamId(steamId);
 
+	char steamId64[32];
+	if (!GetClientAuthId(client, AuthId_SteamID64, steamId64, sizeof(steamId64), true))
+	{
+		ReplyToCommand(client, "[全服] 无法获取你的 SteamID64，请稍后再试。");
+		return Plugin_Handled;
+	}
+
 	char clientName[MAX_NAME_LENGTH];
 	GetClientName(client, clientName, sizeof(clientName));
 
 	if (HasUnlimitedGlobalChat(client))
 	{
-		InsertGlobalMessage(steamId, clientName, message);
+		InsertGlobalMessage(steamId64, clientName, message);
 		return Plugin_Handled;
 	}
 
-	ReserveDailyUsage(client, steamId, clientName, message, GetDailyLimit(client));
+	ReserveDailyUsage(client, steamId, steamId64, clientName, message, GetDailyLimit(client));
 	return Plugin_Handled;
 }
 
@@ -250,6 +296,13 @@ public Action Command_LFG(int client, int args)
 	
 	NormalizeSteamId(steamId);
 
+	char steamId64[32];
+	if (!GetClientAuthId(client, AuthId_SteamID64, steamId64, sizeof(steamId64), true))
+	{
+		ReplyToCommand(client, "[全服] 无法获取你的 SteamID64，请稍后再试。");
+		return Plugin_Handled;
+	}
+
 	char clientName[MAX_NAME_LENGTH];
 	GetClientName(client, clientName, sizeof(clientName));
 
@@ -258,12 +311,12 @@ public Action Command_LFG(int client, int args)
 
 	if (HasUnlimitedGlobalChat(client))
 	{
-		InsertGlobalMessage(steamId, "@LFG", formattedMsg);
+		InsertGlobalMessage(steamId64, "@LFG", formattedMsg);
 		ReplyToCommand(client, "[全服] 找队友信息已发送给所有旁观玩家。");
 		return Plugin_Handled;
 	}
 
-	ReserveDailyLFGUsage(client, steamId, "@LFG", formattedMsg, GetLFGDailyLimit(client));
+	ReserveDailyLFGUsage(client, steamId, steamId64, "@LFG", formattedMsg, GetLFGDailyLimit(client));
 	return Plugin_Handled;
 }
 
@@ -329,24 +382,273 @@ public int MenuHandler_GlobalChatMenu(Menu menu, MenuAction action, int client, 
 	return 0;
 }
 
-bool CanReceiveGlobalMessage(int client)
+bool CanReceiveGlobalMessage(int client, const char[] senderSteam64)
 {
 	return g_cvShowGlobal.BoolValue
 		&& client > 0
 		&& client <= MaxClients
 		&& IsClientInGame(client)
 		&& !IsFakeClient(client)
-		&& g_bClientSeeGlobal[client];
+		&& g_bClientSeeGlobal[client]
+		&& !IsSenderBlockedByClient(client, senderSteam64);
 }
 
-bool CanReceiveLFGMessage(int client)
+bool CanReceiveLFGMessage(int client, const char[] senderSteam64)
 {
 	return g_cvShowLFG.BoolValue
 		&& client > 0
 		&& client <= MaxClients
 		&& IsClientInGame(client)
 		&& !IsFakeClient(client)
-		&& g_bClientSeeLFG[client];
+		&& g_bClientSeeLFG[client]
+		&& !IsSenderBlockedByClient(client, senderSteam64);
+}
+
+bool IsSenderBlockedByClient(int client, const char[] senderSteam64)
+{
+	if (!g_cvBlacklistFilter.BoolValue || senderSteam64[0] == '\0' || !IsSteam64(senderSteam64))
+		return false;
+
+	if (g_mClientBlockedSteam64[client] == null)
+		return false;
+
+	int value;
+	return g_mClientBlockedSteam64[client].GetValue(senderSteam64, value);
+}
+
+bool IsSteam64(const char[] value)
+{
+	int len = strlen(value);
+	if (len < 15)
+		return false;
+
+	for (int i = 0; i < len; i++)
+	{
+		if (value[i] < '0' || value[i] > '9')
+			return false;
+	}
+
+	return true;
+}
+
+void ClearClientBlacklistCache(int client)
+{
+	if (client < 1 || client > MaxClients)
+		return;
+
+	if (g_mClientBlockedSteam64[client] != null)
+	{
+		delete g_mClientBlockedSteam64[client];
+		g_mClientBlockedSteam64[client] = null;
+	}
+}
+
+void AddClientBlockedSteam64(int client, const char[] blockedSteam64)
+{
+	if (client < 1 || client > MaxClients || blockedSteam64[0] == '\0')
+		return;
+
+	if (g_mClientBlockedSteam64[client] == null)
+		g_mClientBlockedSteam64[client] = new StringMap();
+
+	g_mClientBlockedSteam64[client].SetValue(blockedSteam64, 1);
+}
+
+int FindClientBySteam64(const char[] steam64)
+{
+	char current[32];
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (!IsClientInGame(i) || IsFakeClient(i))
+			continue;
+
+		if (!GetClientAuthId(i, AuthId_SteamID64, current, sizeof(current), true))
+			continue;
+
+		if (StrEqual(current, steam64))
+			return i;
+	}
+
+	return 0;
+}
+
+void GetSafeBlacklistTable(char[] table, int maxlen)
+{
+	char raw[64];
+	g_cvBlacklistTable.GetString(raw, sizeof(raw));
+
+	int out;
+	for (int i = 0; raw[i] != '\0' && out < maxlen - 1; i++)
+	{
+		if ((raw[i] >= 'a' && raw[i] <= 'z')
+			|| (raw[i] >= 'A' && raw[i] <= 'Z')
+			|| (raw[i] >= '0' && raw[i] <= '9')
+			|| raw[i] == '_')
+		{
+			table[out++] = raw[i];
+		}
+	}
+
+	table[out] = '\0';
+	if (table[0] == '\0')
+		strcopy(table, maxlen, "player_blocks");
+}
+
+void ConnectBlacklistDatabase()
+{
+	if (!g_cvBlacklistFilter.BoolValue || g_hBlacklistDatabase != null || g_bBlacklistConnecting)
+		return;
+
+	char configName[64];
+	g_cvBlacklistDatabaseConfig.GetString(configName, sizeof(configName));
+
+	g_bBlacklistConnecting = true;
+	Database.Connect(SQL_OnBlacklistConnect, configName);
+}
+
+public void SQL_OnBlacklistConnect(Database database, const char[] error, any data)
+{
+	g_bBlacklistConnecting = false;
+
+	if (database == null)
+	{
+		LogError("[global_chat] blacklist 数据库连接失败: %s", error);
+		ScheduleBlacklistReconnect();
+		return;
+	}
+
+	g_hBlacklistDatabase = database;
+	g_hBlacklistDatabase.SetCharset("utf8mb4");
+	StartBlacklistRefreshTimer();
+	RefreshBlacklistCache();
+}
+
+void ScheduleBlacklistReconnect()
+{
+	g_bBlacklistConnecting = false;
+	g_bBlacklistRefreshInFlight = false;
+	StopBlacklistRefreshTimer();
+
+	if (g_hBlacklistDatabase != null)
+	{
+		delete g_hBlacklistDatabase;
+		g_hBlacklistDatabase = null;
+	}
+
+	StopBlacklistReconnectTimer();
+	g_hBlacklistReconnectTimer = CreateTimer(10.0, Timer_ReconnectBlacklistDatabase);
+}
+
+void StartBlacklistRefreshTimer()
+{
+	StopBlacklistRefreshTimer();
+	g_hBlacklistRefreshTimer = CreateTimer(g_cvBlacklistRefreshInterval.FloatValue, Timer_RefreshBlacklistCache, _, TIMER_REPEAT);
+}
+
+void StopBlacklistRefreshTimer()
+{
+	Handle timer = g_hBlacklistRefreshTimer;
+	g_hBlacklistRefreshTimer = null;
+
+	if (timer != null)
+		delete timer;
+}
+
+void StopBlacklistReconnectTimer()
+{
+	Handle timer = g_hBlacklistReconnectTimer;
+	g_hBlacklistReconnectTimer = null;
+
+	if (timer != null)
+		delete timer;
+}
+
+public Action Timer_ReconnectBlacklistDatabase(Handle timer, any data)
+{
+	g_hBlacklistReconnectTimer = null;
+	ConnectBlacklistDatabase();
+	return Plugin_Stop;
+}
+
+public Action Timer_RefreshBlacklistCache(Handle timer, any data)
+{
+	RefreshBlacklistCache();
+	return Plugin_Continue;
+}
+
+void RefreshBlacklistCache()
+{
+	if (!g_cvBlacklistFilter.BoolValue || g_hBlacklistDatabase == null || g_bBlacklistRefreshInFlight)
+		return;
+
+	char inClause[1024];
+	char steam64[32];
+	char escaped[64];
+	int count;
+
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (!IsClientInGame(i) || IsFakeClient(i))
+			continue;
+
+		if (!GetClientAuthId(i, AuthId_SteamID64, steam64, sizeof(steam64), true))
+			continue;
+
+		g_hBlacklistDatabase.Escape(steam64, escaped, sizeof(escaped));
+
+		if (count == 0)
+			FormatEx(inClause, sizeof(inClause), "'%s'", escaped);
+		else
+			Format(inClause, sizeof(inClause), "%s,'%s'", inClause, escaped);
+
+		count++;
+	}
+
+	if (count == 0)
+	{
+		for (int i = 1; i <= MaxClients; i++)
+			ClearClientBlacklistCache(i);
+		return;
+	}
+
+	char table[64];
+	GetSafeBlacklistTable(table, sizeof(table));
+
+	char query[1280];
+	FormatEx(query, sizeof(query), "SELECT blocker, blocked FROM `%s` WHERE blocker IN (%s)", table, inClause);
+
+	g_bBlacklistRefreshInFlight = true;
+	g_hBlacklistDatabase.Query(SQL_OnRefreshBlacklistCache, query);
+}
+
+public void SQL_OnRefreshBlacklistCache(Database database, DBResultSet results, const char[] error, any data)
+{
+	g_bBlacklistRefreshInFlight = false;
+
+	if (results == null)
+	{
+		LogError("[global_chat] 刷新 blacklist 缓存失败: %s", error);
+		ScheduleBlacklistReconnect();
+		return;
+	}
+
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (IsClientInGame(i) && !IsFakeClient(i))
+			ClearClientBlacklistCache(i);
+	}
+
+	char blocker[32];
+	char blocked[32];
+	while (results.FetchRow())
+	{
+		results.FetchString(0, blocker, sizeof(blocker));
+		results.FetchString(1, blocked, sizeof(blocked));
+
+		int client = FindClientBySteam64(blocker);
+		if (client > 0)
+			AddClientBlockedSteam64(client, blocked);
+	}
 }
 
 void ConnectDatabase()
@@ -420,7 +722,7 @@ public Action Timer_PollMessages(Handle timer, any data)
 	RunCleanupIfNeeded();
 
 	char query[256];
-	g_hDatabase.Format(query, sizeof(query), "SELECT id, server, port, name, message FROM anne_global_chat WHERE id > %d ORDER BY id ASC LIMIT %d", g_iLastMessageId, g_cvPollBatch.IntValue);
+	g_hDatabase.Format(query, sizeof(query), "SELECT id, steamid, server, port, name, message FROM anne_global_chat WHERE id > %d ORDER BY id ASC LIMIT %d", g_iLastMessageId, g_cvPollBatch.IntValue);
 	g_bPollInFlight = true;
 	g_hDatabase.Query(SQL_OnPollMessages, query);
 
@@ -631,7 +933,7 @@ int GetLFGDailyLimit(int client)
 	return g_cvLFGLimitDefault.IntValue;
 }
 
-void ReserveDailyUsage(int client, const char[] steamId, const char[] clientName, const char[] message, int limit)
+void ReserveDailyUsage(int client, const char[] usageSteamId, const char[] messageSteamId, const char[] clientName, const char[] message, int limit)
 {
 	if (limit <= 0)
 	{
@@ -640,7 +942,7 @@ void ReserveDailyUsage(int client, const char[] steamId, const char[] clientName
 	}
 
 	char safeSteamId[64];
-	g_hDatabase.Escape(steamId, safeSteamId, sizeof(safeSteamId));
+	g_hDatabase.Escape(usageSteamId, safeSteamId, sizeof(safeSteamId));
 
 	char usageDate[16];
 	FormatTime(usageDate, sizeof(usageDate), "%Y-%m-%d", GetTime());
@@ -657,7 +959,7 @@ void ReserveDailyUsage(int client, const char[] steamId, const char[] clientName
 	DataPack pack = new DataPack();
 	pack.WriteCell(GetClientUserId(client));
 	pack.WriteCell(limit);
-	pack.WriteString(steamId);
+	pack.WriteString(messageSteamId);
 	pack.WriteString(clientName);
 	pack.WriteString(message);
 
@@ -701,7 +1003,7 @@ public void SQL_OnReserveDailyUsage(Database database, DBResultSet results, cons
 	InsertGlobalMessage(steamId, clientName, message);
 }
 
-void ReserveDailyLFGUsage(int client, const char[] steamId, const char[] clientName, const char[] message, int limit)
+void ReserveDailyLFGUsage(int client, const char[] usageSteamId, const char[] messageSteamId, const char[] clientName, const char[] message, int limit)
 {
 	if (limit <= 0)
 	{
@@ -710,7 +1012,7 @@ void ReserveDailyLFGUsage(int client, const char[] steamId, const char[] clientN
 	}
 
 	char safeSteamId[64];
-	g_hDatabase.Escape(steamId, safeSteamId, sizeof(safeSteamId));
+	g_hDatabase.Escape(usageSteamId, safeSteamId, sizeof(safeSteamId));
 
 	char usageDate[16];
 	FormatTime(usageDate, sizeof(usageDate), "%Y-%m-%d", GetTime());
@@ -727,7 +1029,7 @@ void ReserveDailyLFGUsage(int client, const char[] steamId, const char[] clientN
 	DataPack pack = new DataPack();
 	pack.WriteCell(GetClientUserId(client));
 	pack.WriteCell(limit);
-	pack.WriteString(steamId);
+	pack.WriteString(messageSteamId);
 	pack.WriteString(clientName);
 	pack.WriteString(message);
 
@@ -852,6 +1154,7 @@ public void SQL_OnPollMessages(Database database, DBResultSet results, const cha
 	}
 
 	char prefix[64];
+	char senderSteam64[32];
 	char server[128];
 	char shortServer[64];
 	char name[128];
@@ -862,9 +1165,10 @@ public void SQL_OnPollMessages(Database database, DBResultSet results, const cha
 	while (results.FetchRow())
 	{
 		int id = results.FetchInt(0);
-		results.FetchString(1, server, sizeof(server));
-		results.FetchString(3, name, sizeof(name));
-		results.FetchString(4, message, sizeof(message));
+		results.FetchString(1, senderSteam64, sizeof(senderSteam64));
+		results.FetchString(2, server, sizeof(server));
+		results.FetchString(4, name, sizeof(name));
+		results.FetchString(5, message, sizeof(message));
 
 		if (id > g_iLastMessageId)
 			g_iLastMessageId = id;
@@ -873,7 +1177,7 @@ public void SQL_OnPollMessages(Database database, DBResultSet results, const cha
 		{
 			for (int i = 1; i <= MaxClients; i++)
 			{
-				if (CanReceiveGlobalMessage(i))
+				if (CanReceiveGlobalMessage(i, senderSteam64))
 					PrintToChat(i, "\x04%s %s", prefix, message);
 			}
 		}
@@ -885,7 +1189,7 @@ public void SQL_OnPollMessages(Database database, DBResultSet results, const cha
 
 			for (int i = 1; i <= MaxClients; i++)
 			{
-				if (CanReceiveLFGMessage(i) && GetClientTeam(i) == 1)
+				if (CanReceiveLFGMessage(i, senderSteam64) && GetClientTeam(i) == 1)
 				{
 					if (count < 2 || parts[1][0] == '\0')
 					{
@@ -905,7 +1209,7 @@ public void SQL_OnPollMessages(Database database, DBResultSet results, const cha
 			GetShortServerName(server, shortServer, sizeof(shortServer));
 			for (int i = 1; i <= MaxClients; i++)
 			{
-				if (CanReceiveGlobalMessage(i))
+				if (CanReceiveGlobalMessage(i, senderSteam64))
 					PrintToChat(i, "\x04%s \x03[%s] \x05%s\x01: %s", prefix, shortServer, name, message);
 			}
 		}
@@ -926,6 +1230,12 @@ public void OnClientPostAdminCheck(int client)
 	
 	NormalizeSteamId(steamId);
 
+	char steamId64[32];
+	if (!GetClientAuthId(client, AuthId_SteamID64, steamId64, sizeof(steamId64), true))
+		return;
+
+	RefreshBlacklistCache();
+
 	char query[256];
 	char safeSteamId[64];
 	g_hDatabase.Escape(steamId, safeSteamId, sizeof(safeSteamId));
@@ -934,7 +1244,7 @@ public void OnClientPostAdminCheck(int client)
 	
 	DataPack pack = new DataPack();
 	pack.WriteCell(GetClientUserId(client));
-	pack.WriteString(steamId);
+	pack.WriteString(steamId64);
 	
 	g_hDatabase.Query(SQL_OnCheckLoginTitle, query, pack);
 }
@@ -943,8 +1253,8 @@ public void SQL_OnCheckLoginTitle(Database database, DBResultSet results, const 
 {
 	pack.Reset();
 	int userid = pack.ReadCell();
-	char steamId[32];
-	pack.ReadString(steamId, sizeof(steamId));
+	char steamId64[32];
+	pack.ReadString(steamId64, sizeof(steamId64));
 	delete pack;
 
 	if (results == null)
@@ -972,7 +1282,7 @@ public void SQL_OnCheckLoginTitle(Database database, DBResultSet results, const 
 			char formattedMsg[256];
 			FormatEx(formattedMsg, sizeof(formattedMsg), "\x01%s \x05%s \x01在 \x03%s \x01上线了！", title, clientName, shortServer);
 
-			InsertGlobalMessage(steamId, "@LOGIN", formattedMsg);
+			InsertGlobalMessage(steamId64, "@LOGIN", formattedMsg);
 		}
 	}
 }
