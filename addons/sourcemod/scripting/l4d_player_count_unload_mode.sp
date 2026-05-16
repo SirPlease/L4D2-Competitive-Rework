@@ -124,6 +124,7 @@ Handle
 
 Database g_hDB;
 bool g_bDBReady, g_bPeakQueryPending, g_bLastPeakActive, g_bLastPeakKnown, g_bIsMySQL;
+bool g_bAutoServerId;
 int g_iLastActiveServers, g_iLastTotalServers;
 int g_iLastStatusWriteTime, g_iLastStatusPlayerCount = -1;
 int g_iPeakHoldUntil;
@@ -232,7 +233,12 @@ void GetCvars()
 
     if (g_sCvarServerId[0] == '\0')
     {
+        g_bAutoServerId = true;
         BuildDefaultServerId(g_sCvarServerId, sizeof(g_sCvarServerId));
+    }
+    else
+    {
+        g_bAutoServerId = false;
     }
 }
 
@@ -472,6 +478,28 @@ public void SQLCB_OnConnect(Handle owner, Handle hndl, const char[] error, any d
     }
     g_bIsMySQL = StrEqual(sDriver, "mysql", false);
 
+    if (g_bIsMySQL)
+    {
+        SQL_TQuery(g_hDB, SQLCB_SetNames, "SET NAMES utf8mb4");
+        return;
+    }
+
+    CreateStatusTable();
+}
+
+public void SQLCB_SetNames(Handle owner, Handle hndl, const char[] error, any data)
+{
+    if (hndl == null && error[0] != '\0')
+    {
+        LogError("[%s] SET NAMES utf8mb4 failed: %s", PLUGIN_NAME, error);
+        return;
+    }
+
+    CreateStatusTable();
+}
+
+void CreateStatusTable()
+{
     char sQuery[768];
     if (g_bIsMySQL)
     {
@@ -585,13 +613,21 @@ void UpdateServerStatus(bool bForce = false)
     }
 
     char sServerId[256], sHostname[256], sEscServerId[512], sEscHostname[512];
-    strcopy(sServerId, sizeof(sServerId), g_sCvarServerId);
-
     ConVar hHostname = FindConVar("hostname");
     if (hHostname != null)
         hHostname.GetString(sHostname, sizeof(sHostname));
     else
-        strcopy(sHostname, sizeof(sHostname), sServerId);
+        strcopy(sHostname, sizeof(sHostname), "server");
+
+    if (g_bAutoServerId)
+    {
+        if (!TryBuildIndexedHostnameId(sHostname, sServerId, sizeof(sServerId)))
+            return;
+    }
+    else
+    {
+        strcopy(sServerId, sizeof(sServerId), g_sCvarServerId);
+    }
 
     SQL_EscapeString(g_hDB, sServerId, sEscServerId, sizeof(sEscServerId));
     SQL_EscapeString(g_hDB, sHostname, sEscHostname, sizeof(sEscHostname));
@@ -889,13 +925,18 @@ void BuildDefaultServerId(char[] buffer, int maxlen)
     else
         strcopy(sHostname, sizeof(sHostname), "server");
 
-    if (TryBuildIndexedHostnameId(sHostname, buffer, maxlen))
+    BuildServerIdFromHostname(sHostname, buffer, maxlen);
+}
+
+void BuildServerIdFromHostname(const char[] hostname, char[] buffer, int maxlen)
+{
+    if (TryBuildIndexedHostnameId(hostname, buffer, maxlen))
         return;
 
     ConVar hHostPort = FindConVar("hostport");
     int iPort = (hHostPort != null) ? hHostPort.IntValue : 0;
 
-    FormatEx(buffer, maxlen, "%s:%d", sHostname, iPort);
+    FormatEx(buffer, maxlen, "%s:%d", hostname, iPort);
 }
 
 bool TryBuildIndexedHostnameId(const char[] hostname, char[] buffer, int maxlen)
