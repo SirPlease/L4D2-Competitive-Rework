@@ -370,3 +370,55 @@ witchparty 和 allcharger模式在普通药役的基础上小僵尸再减少17-2
 
 #### ai_smoker3.smx
 - 同步树树子上游更新
+
+### 2026年4月16日-5月16日更新记录
+#### 基础环境与上游同步
+- SourceMod 更新到 1.12.0.7230，同步 bin、extensions、基础插件和 spcomp 编译器。
+- left4dhooks 更新到 1.166，同步 gamedata、include、插件主体和测试/forwards/natives 相关源码。
+- 更新 SourceScramble 扩展和 include。
+- ZoneMod 更新到 2.9.1a，同步 matchmodes、zonemod/zoneretro/zonehunters/zh/zm 等模式配置。
+- 同步 confoglcompmod 更新，修复 `confogl_addcvar` 在 Windows 下的问题，并更新 BossSpawning 逻辑。
+- 新增 `scripts/spcomp-docker.sh`，方便 macOS 下通过 Docker 编译 SourcePawn 插件。
+- 更新 GitHub Actions 检查与编译流程，包括 `check_plugins.yml` 和 `CompetitiveWithAnne.yml`。
+
+#### 通用修复插件
+- `l4d2_fix_changelevel.smx` 切换为 Forgetest 版本，支持部分地图名解析，并替换原 `l4d2_changelevel` 相关 gamedata/include/插件加载项。
+- 新增并加载 `l4d2_fix_tank_rock_handoff.smx`，修复 Tank Rocks 在控制权转移时的问题，后续补了一次小修。
+- 新增 `l4d2_block_autoaim.smx`，用于 Patch Aim Assist，并加入 `cfg/generalfixes.cfg`。
+- `l4d2_hittable_control.smx` 修复 hittable 伤害错误作用到 common 的问题，并增加 breakable hittable fallback。
+- `l4d_prop_touching_rules.txt` 更新。
+- `l4d2util` 的 SurvivorCharacter enum 重命名，避免和 left4dhooks 冲突；同步影响到 `l4d2_ellis_hunter_bandaid_fix`、`l4d2_getup_slide_fix` 及 archive 里的相关源码。
+- `lerpmonitor.smx` 修复通过把 lerp 改到 101 解除硬直的操作，并同步 allcharger、alone、AnneHappy、AnneHappy Hardcore、hunters、witchparty 的相关 shared_settings。
+- `1v1.smx` 简化逻辑并修复单人模式问题；同步 `1v1_skeetstats`、`l4d2_skill_detect`、`l4d_boss_percent`、`match_vote` 的翻译和小修复。
+
+#### AnneHappy 与扩展插件
+- `l4d_stats.smx` 大幅重构，拆分为多个 include 模块，新增带新奖励、无商店奖励、分数日志、季度排名、回合状态、玩家状态和数据库持久化等模块。
+- `l4d_stats.smx` 修复保护队友分数翻倍、部分刷分选项、PPM/KPM 重置和地图记录名单不完整的问题。
+- `l4d_stats.smx` 优化季度排名显示，地图记录增加完整玩家名单，数据库结构和 `database.sql` 同步更新。
+- 新增 `database_performance_migration.sql`，优化数据库性能，降低统计插件和高峰期插件的数据库压力。
+- `rpg.smx` 调整评分逻辑，去除牛牛冲锋和 witchparty 的强势通过分，并修复可能导致刷分的选项。
+- `global_chat.smx` 新增全服聊天插件，接入数据库配置，优化全服输出格式，修复全服聊天问题；新增 `!qfmenu` 让玩家控制是否查看全服信息，并增加找队友限制。
+- `join.smx` 修复赞助页面和赞助流程，新增 `anne_donate.cfg`，优化 IP 页面显示；fantasydong 组和 Anne 电信服免除广告。
+- `l4d2_door_lock.smx` 新增锁门相关功能，增加玩家加载锁安全帽设置，修复强行开始问题，并增加出门前不允许 Bot 活动的限制。
+- `network_quality_hint.smx` 新增网络延迟检测插件，方便玩家切换到正确运营商的三线 IP，并优化 `cfg/sourcemod/network_quality_hint.cfg`、`cfg/confogl_rates.cfg` 和 `cfg/server.cfg` 参数。
+- `l4d_player_count_unload_mode.smx` 优化高峰期判定，改为统计服务器有人数量且没有大于 60% 的情况；降低数据库压力、调整提示语句并修复高峰期相关 bug。
+- `l4d2_hitsound.smx` 新增只对特感生效的开关，并修复命中反馈配置有时整关丢失的问题。
+- `l4d2_blacklist.smx` 修复未使用数据库的问题。
+- `chatlog.smx`、`l4d2_damage_show.smx`、`veterans.smx`、`server.smx` 修复数据库错误或增加数据库重连处理。
+- `server_name.smx` 修复单人模式错误，并减少 `SteamWorks_SetGameDescription` 调用，避免疑似调用过多导致的崩服问题。
+- `rygive.smx` 修复可能导致刷分的相关逻辑。
+
+#### 地图、Stripper 与 Nav
+- 同步 2026 年 4 月地图更新和后续 stripper review，覆盖 zonemod、zonemod_anne、nextmod、deadman、acemodrv、neomod、apex、eq、pmelite 等多个目录的大量地图 cfg。
+- zonemod_anne 同步上游 zonemod 地图改动，包含官图、三方图和多种自定义战役地图的 stripper 更新。
+- Carried Off 更新：同步 `cwm1_intro`、`cwm2_warehouse`、`cwm3_drain`、`cwm4_building`，并新增 `cwm1_intro_navfixes.nut`、`cwm2_warehouse_navfixes.nut`。
+- Open Road 3 更新：修复 `x1m3_city`，新增 `x1m3_city_navfixes.nut`。
+- Detour Ahead 3 更新：修复 `cdta_03warehouse` 导航、fire escape pathing 和 sewer drop tank ban，新增 `cdta_03warehouse_navfixes.nut`，并同步相关 mapinfo。
+- 更新 `OutSkirts.cfg`、`versus_3.cfg`、`x1m3_city.cfg`、`cdta_03warehouse.cfg` 等单图修复。
+- 同步 `cfg/cfgogl/*/mapinfo.txt` 和多个模式的 shared_plugins/confogl_plugins，保证地图、插件加载和模式配置一致。
+
+#### 配置、广告与文档
+- 更新 `README.md` 和相关说明，配合 ZoneMod 版本与默认网页显示调整。
+- 更新 `addons/sourcemod/configs/advertisements*.txt`，增加赞助引导语。
+- 更新 `addons/sourcemod/configs/databases.cfg`，配合全服聊天、统计、伤害显示等插件的数据库连接与重连。
+- 更新 `.gitignore`，减少无关文件进入版本管理。
