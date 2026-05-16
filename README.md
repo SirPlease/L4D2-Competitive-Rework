@@ -3,7 +3,7 @@
 > [!IMPORTANT]
 > It is recommended to host servers on Linux, but Windows is supported.  
 > When running Linux ensure that your setup is running a minimum of **`GLIBC 2.35`** (Ubuntu 22.04 or higher) or you will run into issues loading certain extensions.  
-> This repository only supports Sourcemod **1.12** and up (which comes with the repository for ease of use)  
+> This repository only supports Sourcemod **1.12** and up (which comes with the repository for ease of use)
 
 ---
 
@@ -26,7 +26,7 @@ In its current state it allows anyone to host their own up to date competitive L
 
 > **Included Matchmodes:**
 
-* **Zonemod 2.9.1a**
+* **Zonemod 2.9.1b**
 * **Zonemod Hunters**
 * **Zonemod Retro**
 * **NeoMod 0.4a**
@@ -35,6 +35,23 @@ In its current state it allows anyone to host their own up to date competitive L
 * **Acemod Revamped 1.2**
 * **Equilibrium 3.0c**
 * **Apex 1.1.2**
+
+---
+
+## **Download & Installation:**
+
+> [!IMPORTANT]
+> Pick the archive that matches your **Server OS**:
+> * **Linux:** `L4D2-Competitive-Rework-<version>-linux.tar.gz`
+> * **Windows:** `L4D2-Competitive-Rework-<version>-windows.zip`
+
+1. Download the latest archive from the [**Releases**](../../releases/latest) page.
+2. Extract it directly into your server's **`left4dead2/`** directory.
+3. For first-time server setup on dedicated servers, the [Dedicated Server Install Guide](Dedicated%20Server%20Install%20Guide/README.md) might be of use to you!
+
+> [!NOTE]
+> Releases only include what the servers need, **no** SourcePawn sources or compiler.  
+> To modify or recompile plugins, clone the repository instead.
 
 ---
 
@@ -103,6 +120,7 @@ In its current state it allows anyone to host their own up to date competitive L
 
 * Aiden
 * Derpduck
+* Mart
 
 > [!NOTE]
 > If your work is being used and I forgot to credit you, don't hesitate to contact me on Discord (user: `sirplease`)
