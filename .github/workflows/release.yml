@@ -65,12 +65,12 @@ jobs:
 
             if [ -z "${BUILT[$name]:-}" ]; then
               if [ -f "$SCRIPTING/$name.sp" ]; then
-                src="$SCRIPTING/$name.sp"
+                base="$SCRIPTING"
                 inc="$SCRIPTING/include"
               elif [ -f "$SCRIPTING/sourcemod/$name.sp" ]; then
                 # Stock SourceMod plugins live one level down with their
                 # own include tree.
-                src="$SCRIPTING/sourcemod/$name.sp"
+                base="$SCRIPTING/sourcemod"
                 inc="$SCRIPTING/sourcemod/include"
               else
                 echo "::error::No .sp source found for shipped plugin '$name' ($smx)"
@@ -79,10 +79,15 @@ jobs:
               fi
 
               echo "Compiling $name ..."
-              if "$COMPILER" -E -w234 -w217 -O2 -v2 -i "$inc" "-o$BUILD/$name.smx" "$src"; then
+              # Run with cwd = the scripting dir and a bare source filename,
+              # exactly like check_plugins.yml: some plugins (e.g. readyup)
+              # use working-directory-relative quoted #includes that only
+              # resolve from there. -i / -o / $BUILD are absolute, so the
+              # subshell cd does not affect them.
+              if ( cd "$base" && "$COMPILER" -E -w234 -w217 -O2 -v2 -i "$inc" "-o$BUILD/$name.smx" "$name.sp" ); then
                 BUILT[$name]="$BUILD/$name.smx"
               else
-                echo "::error::Failed to compile '$name' ($src)"
+                echo "::error::Failed to compile '$name' ($base/$name.sp)"
                 FAILED="$FAILED $name"
                 continue
               fi
