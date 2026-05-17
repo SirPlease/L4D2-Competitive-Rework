@@ -192,10 +192,13 @@ public bool StopMapTiming()
 	}else if(IsAnne() == 1)
 	{
 		mode = 1;
-	}else if(IsAnne() == 2)
-	{
-		mode = 6;
-	}
+		}else if(IsAnneShotgunMode())
+		{
+			mode = 7;
+		}else if(IsAnne() == 2)
+		{
+			mode = 6;
+		}
 	ConVar multiplayer = FindConVar("l4d_multislots_survivors_manager_enable");
 	if(mode > 0 && (multiplayer == null || multiplayer.IntValue == 1 || GetConVarInt(cvar_SurvivorLimit) > 4))
 	{
@@ -343,10 +346,13 @@ GetThisModeBestTime(int UseBuy=0)
 	}else if(IsAnne() == 1)
 	{
 		mode = 1;
-	}else if(IsAnne() == 2)
-	{
-		mode = 6;
-	}
+		}else if(IsAnneShotgunMode())
+		{
+			mode = 7;
+		}else if(IsAnne() == 2)
+		{
+			mode = 6;
+		}
 	Format(query, sizeof(query), "SELECT time FROM %stimedmaps WHERE map = '%s' AND gamemode = %i AND difficulty = %i AND mutation = '%s'  AND sinum = %i AND sitime = %i AND anneversion = '%s' AND mode = %i AND usebuy = %i AND auto = %i AND players = %i ORDER BY time LIMIT 1",\
 	 		DbPrefix, MapName, CurrentGamemodeID, GameDifficulty, CurrentMutation, GetAnneInfectedNumber(), GetAnneSISpawnTime(),\
 			GetAnneVersion(), mode, UseBuy, IsAutoSpawnTime(), GetConVarInt(cvar_SurvivorLimit));
@@ -395,10 +401,13 @@ public UpdateMapTimingStat(Handle:owner, Handle:hndl, const String:error[], any:
 	}else if(IsAnne() == 1)
 	{
 		mode = 1;
-	}else if(IsAnne() == 2)
-	{
-		mode = 6;
-	}
+		}else if(IsAnneShotgunMode())
+		{
+			mode = 7;
+		}else if(IsAnne() == 2)
+		{
+			mode = 6;
+		}
 	ResetPack(dp);
 
 	decl String:MapName[MAX_LINE_WIDTH], String:ClientID[MAX_LINE_WIDTH], String:query[512], String:TimeLabel[32], String:Mutation[MAX_LINE_WIDTH];

@@ -1177,6 +1177,9 @@ public UpdatePlayerFull(Client, const String:SteamID[], const String:Name[])
 	}else if(Is1vht())
 	{
 		mode = 5;
+	}else if(IsAnneShotgunMode())
+	{
+		mode = 7;
 	}else if(IsAnne() == 2)
 	{
 		mode = 6;

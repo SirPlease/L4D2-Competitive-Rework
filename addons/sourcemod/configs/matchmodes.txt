@@ -26,6 +26,10 @@
 		{
 			"name" "硬核药役模式"
 		}
+		"annehappy_shotgun"
+		{
+			"name" "喷子硬核模式"
+		}
 	}
 	"Normal Configs"
 	{

@@ -48,6 +48,10 @@
 		{
 			"message" "硬核药役模式"
 		}
+		"sm_fm annehappy_shotgun"
+		{
+			"message" "喷子硬核模式"
+		}
 		"sm_fm coop"
 		{
 			"message" "战役模式"

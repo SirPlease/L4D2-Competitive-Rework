@@ -17,7 +17,11 @@ ConVar
 	g_hCvarWeapon,
 	g_hCvarCoop,
 	g_hAutoSpawnTimeControl,
-	g_hCvarPluginVersion;
+	g_hCvarPluginVersion,
+	g_hCvarAiDynamicEnable,
+	g_hCvarAiCurrentLevel,
+	g_hCvarAiCurrentMode,
+	g_hCvarAiFixedLevel;
 
 int 
 	CommonLimit,
@@ -33,6 +37,7 @@ public void OnPluginStart()
 	g_hCvarInfectedLimit = FindConVar("l4d_infected_limit");
 	g_hCvarTankBhop = FindConVar("ai_Tank_Bhop");
 	g_hAutoSpawnTimeControl = FindConVar("inf_EnableAutoSpawnTime");
+	RefreshDynamicAiCvars();
 	g_hCvarWeapon = CreateConVar("ZonemodWeapon", "0", "", 0, false, 0.0, false, 0.0);
 	g_hCvarPluginVersion = CreateConVar("AnnePluginVersion", "Latest", "Anne插件版本");
 	HookConVarChange(g_hCvarInfectedTime, Cvar_InfectedTime);
@@ -54,6 +59,11 @@ public void OnPluginStart()
 	HookEvent("round_start", event_RoundStart);
 	HookEvent("player_death", player_death, EventHookMode_Post);
 	RegAdminCmd("sm_killall", killall, ADMFLAG_BAN, "处死所有玩家");
+}
+
+public void OnAllPluginsLoaded()
+{
+	RefreshDynamicAiCvars();
 }
 
 public void OnPluginEnd()
@@ -160,8 +170,9 @@ public void CvarWeapon(ConVar convar, const char[] oldValue, const char[] newVal
 
 void printinfo(int client = 0, bool All = true){
 	//FormatTime(sBuffer, sizeof(sBuffer), "%Y/%m/%d");
-	char buffer[128];
-	char buffer2[128];
+	char buffer[256];
+	char buffer2[256];
+	char aiBuffer[64];
 	if(g_hCvarTankBhop != null){
 		Format(buffer, sizeof(buffer), "\x03Tank连跳\x05[\x04%s\x05]", TankBhop > 0?"开启":"关闭");
 		Format(buffer, sizeof(buffer), "%s \x03武器\x05[\x04%s\x05]", buffer, Weapon > 0?(Weapon > 1?"Anne+":"Zone"):"Anne");
@@ -169,6 +180,9 @@ void printinfo(int client = 0, bool All = true){
 	{
 		Format(buffer, sizeof(buffer), "\x03武器\x05[\x04%s\x05]",  Weapon > 0?(Weapon > 1?"Anne+":"Zone"):"Anne");
 	}
+
+	if(BuildAiDifficultyText(aiBuffer, sizeof(aiBuffer)))
+		Format(buffer, sizeof(buffer), "%s %s", buffer, aiBuffer);
 		
 	if(PLUGIN_VERSION[0] == '\0')
 	GetConVarString(g_hCvarPluginVersion, PLUGIN_VERSION, sizeof(PLUGIN_VERSION));
@@ -194,6 +208,74 @@ void printinfo(int client = 0, bool All = true){
 	{
 		PrintToChat(client, buffer);
 		PrintToChat(client, buffer2);
+	}
+}
+
+void RefreshDynamicAiCvars()
+{
+	if(g_hCvarAiDynamicEnable == null)
+		g_hCvarAiDynamicEnable = FindConVar("ah_ai_dynamic_enable");
+	if(g_hCvarAiCurrentLevel == null)
+		g_hCvarAiCurrentLevel = FindConVar("ah_ai_dynamic_current_level");
+	if(g_hCvarAiCurrentMode == null)
+		g_hCvarAiCurrentMode = FindConVar("ah_ai_dynamic_current_mode");
+	if(g_hCvarAiFixedLevel == null)
+		g_hCvarAiFixedLevel = FindConVar("ah_ai_dynamic_fixed_level");
+}
+
+bool BuildAiDifficultyText(char[] buffer, int maxlen)
+{
+	RefreshDynamicAiCvars();
+
+	if(g_hCvarAiCurrentLevel == null)
+		return false;
+	if(g_hCvarAiDynamicEnable != null && !g_hCvarAiDynamicEnable.BoolValue)
+		return false;
+
+	int level = g_hCvarAiCurrentLevel.IntValue;
+	int mode = g_hCvarAiCurrentMode != null ? g_hCvarAiCurrentMode.IntValue : 0;
+	int fixedLevel = g_hCvarAiFixedLevel != null ? g_hCvarAiFixedLevel.IntValue : 0;
+
+	if(level <= 0 && fixedLevel > 0)
+	{
+		level = fixedLevel;
+		mode = 1;
+	}
+
+	char levelName[16];
+	GetAiLevelName(level, levelName, sizeof(levelName));
+	Format(buffer, maxlen, "\x03动态难度\x05[\x04%s-%s\x05]", mode > 0 ? "固定" : "自动", levelName);
+	return true;
+}
+
+void GetAiLevelName(int level, char[] buffer, int maxlen)
+{
+	switch(level)
+	{
+		case 1:
+		{
+			strcopy(buffer, maxlen, "简单");
+		}
+		case 2:
+		{
+			strcopy(buffer, maxlen, "普通");
+		}
+		case 3:
+		{
+			strcopy(buffer, maxlen, "困难");
+		}
+		case 4:
+		{
+			strcopy(buffer, maxlen, "专家");
+		}
+		case 5:
+		{
+			strcopy(buffer, maxlen, "极限");
+		}
+		default:
+		{
+			strcopy(buffer, maxlen, "待定");
+		}
 	}
 }
 

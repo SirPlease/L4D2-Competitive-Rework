@@ -422,3 +422,32 @@ witchparty 和 allcharger模式在普通药役的基础上小僵尸再减少17-2
 - 更新 `addons/sourcemod/configs/advertisements*.txt`，增加赞助引导语。
 - 更新 `addons/sourcemod/configs/databases.cfg`，配合全服聊天、统计、伤害显示等插件的数据库连接与重连。
 - 更新 `.gitignore`，减少无关文件进入版本管理。
+
+### 2026年5月17日更新记录
+#### AnneHappy 动态特感难度
+- 新增 `annehappy_dynamic_ai_difficulty.smx`，根据当前生还者队伍的 `l4d_stats` PPM 自动定档，并在生还者离开安全门前完成计算；出门后本回合难度锁定，不再随投票或数据变化即时调整。
+- 动态难度分为简单、普通、困难、专家、极限 5 档，默认阈值采用当前可用样本分位：P60=`30.89`、P75=`43.23`、P90=`63.70`、P95=`77.57`。
+- 当前季度 PPM 因季度时长晚于季度分数上线而失真，默认关闭季度优先；保留 `ah_ai_dynamic_use_quarter_stats`，后续完整季度可改为“季度样本 >= 5 小时使用季度 PPM，否则回退总榜 PPM”。
+- 支持从数据库表 `ai_dynamic_ppm_thresholds` 读取每日预计算分位阈值；网页或定时任务可每天凌晨 4 点写入，插件只读取已计算好的结果，读取失败或过期时回退本地 cfg 阈值。
+- 新增 `addons/sourcemod/configs/AnneHappy/dynamic_ai_difficulty.cfg`，将各档特感和 Tank 属性拆成独立配置，方便后续不用改源码直接调档位数值。
+- 动态难度只调整特感和 Tank 行为属性，不改刷特数量、刷特间隔、刷点距离、传送检测等章节固定节奏。
+- Tank、Boomer、Charger、Spitter、Jockey、Hunter、Smoker 按档位区分关键行为参数；Jockey 抢控保持关闭，由 `target_override` 控制目标。
+- 删除旧 AITank3 已无效或不再使用的配置项，例如 `ai_TankSneakTime`、`ai_TankAirAngleRestrict`、`ai_Tank_Bhop`。
+- 新增命令 `sm_aippm` 查看当前 PPM、阈值来源和锁定状态；新增 `sm_aidiff 0-5` 支持自动/固定简单/固定普通/固定困难/固定专家/固定极限。
+
+#### 投票菜单与模式加载
+- AnneHappy、AnneHappy Hardcore、AnneHappy Shotgun、多人模式、单人模式的投票菜单新增独立分类 `固定特感难度`，可直接投票执行 `sm_aidiff 0-5`；coop 模式不启用该投票项。
+- 出门前投票固定难度会立即影响当前回合；出门后投票只记录为下一回合设置，当前回合保持锁定难度不变。
+- 动态难度插件已加入 AnneHappy、AnneHappy Hardcore、AnneHappy Shotgun、AllCharger、Alone、Hunters、WitchParty 等相关模式加载流程，避免投票菜单中 `sm_aidiff` 命令不可用。
+
+#### text 插件显示
+- `text.smx` 增加动态难度显示，`!xx`、回合开始提示和玩家进服提示会显示 `动态难度[自动-专家]` 或 `动态难度[固定-极限]`。
+- 动态难度插件新增当前难度状态 cvar：`ah_ai_dynamic_current_level`、`ah_ai_dynamic_current_mode`、`ah_ai_dynamic_current_ppm`、`ah_ai_dynamic_current_locked`，供 `text.smx` 和后续其他插件读取。
+
+#### l4d_stats 接口
+- `l4d_stats` 新增季度游玩时间 native，动态难度可在未来完整季度中使用季度积分 / 季度时长计算玩家 PPM。
+- 季度排名数据结构增加 `playtime` 字段，并在季度查询与写入流程中同步维护。
+
+#### 文档与配置
+- 新增 `docs/annehappy_dynamic_ai_difficulty.md`，记录 PPM 分档、数据库阈值表结构、动态难度配置说明、投票/命令用法和特感属性差异。
+- 新增 `cfg/sourcemod/annehappy_dynamic_ai_difficulty.cfg` 作为默认 cvar 配置，方便服务器直接调整阈值来源、季度统计开关和固定难度模式。

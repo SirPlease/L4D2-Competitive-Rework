@@ -15,7 +15,7 @@
 	{
 		"sm_fchmatch AnneHappy"
 		{
-			"message" "最新版本"
+			"message" "喷子硬核最新版本"
 		}
 		"exec vote/Anne/Anne25-10.cfg"
 		{
@@ -104,11 +104,11 @@
 		{
 			"message" "18特模式"
 		}
-		"exec vote/hardcorel/AnneHappy19.cfg"
+		"exec vote/hardcore/AnneHappy19.cfg"
 		{
 			"message" "19特模式"
 		}
-		"exec vote/hardcorel/AnneHappy20.cfg"
+		"exec vote/hardcore/AnneHappy20.cfg"
 		{
 			"message" "20特模式"
 		}
@@ -405,7 +405,7 @@
 		}
 		"exec vote/Anne/Anneold.cfg"
 		{
-			"message" "AnneHappy原版"
+			"message" "AnneHappy喷子硬核"
 		}
 	}
 	"开关击杀音效"

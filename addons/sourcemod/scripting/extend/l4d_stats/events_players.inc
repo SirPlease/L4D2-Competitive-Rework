@@ -344,6 +344,23 @@ stock int IsAnne(){
 	}
 }
 
+stock bool IsAnneShotgunMode(){
+	decl String:plugin_name[MAX_LINE_WIDTH];
+	if(cvar_mode == null && FindConVar("l4d_ready_cfg_name"))
+	{
+		cvar_mode = FindConVar("l4d_ready_cfg_name");
+	}
+	if(cvar_mode == null) return false;
+	GetConVarString(cvar_mode, plugin_name, sizeof(plugin_name));
+	if(StrContains(plugin_name, "AnneHappy", false) != -1 && StrContains(plugin_name, "Shotgun", false) != -1)
+	{
+		return true;
+	}else
+	{
+		return false;
+	}
+}
+
 
 stock int IsFunGame(){
 	//判断游戏是否是娱乐模式，alone 1vht删除特感分(返回1)，witchparty allcharger realismCoop RealismRealism versus 等其他模式不加分不减分，不记游戏时间，只做统计(返回2)

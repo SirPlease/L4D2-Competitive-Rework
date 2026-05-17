@@ -246,6 +246,7 @@ void BuildGameDescription(char[] out, int maxlen)
     // 模式识别
     bool isAnneHappy    = (StrContains(cfg, "AnneHappy",   false) != -1);
     bool isHardCore     = (StrContains(cfg, "HardCore",    false) != -1);
+    bool isShotgun      = (StrContains(cfg, "Shotgun",     false) != -1);
     bool isAnneCoop     = (StrContains(cfg, "AnneCoop",    false) != -1);
     bool isAnneRealism  = (StrContains(cfg, "AnneRealism", false) != -1);
     bool isAllCharger   = (StrContains(cfg, "AllCharger",  false) != -1);
@@ -256,7 +257,11 @@ void BuildGameDescription(char[] out, int maxlen)
     // 标签文本
     char mode[32];
     if (isAnneHappy) {
-        strcopy(mode, sizeof(mode), isHardCore ? "硬核药役" : "普通药役");
+        if (isShotgun) {
+            strcopy(mode, sizeof(mode), "喷子药役");
+        } else {
+            strcopy(mode, sizeof(mode), isHardCore ? "硬核药役" : "普通药役");
+        }
     } else if (isAnneCoop) {
         strcopy(mode, sizeof(mode), "Anne战役");
     } else if (isAnneRealism) {
@@ -316,6 +321,7 @@ public void UpdateServerName()
     // 模式判定
     bool isAnneHappy    = (StrContains(sReadyUpCfgName, "AnneHappy",   false) != -1);
     bool isHardCore     = (StrContains(sReadyUpCfgName, "HardCore",    false) != -1);
+    bool isShotgun      = (StrContains(sReadyUpCfgName, "Shotgun",     false) != -1);
     bool isAnneCoop     = (StrContains(sReadyUpCfgName, "AnneCoop",    false) != -1);
     bool isAnneRealism  = (StrContains(sReadyUpCfgName, "AnneRealism", false) != -1);
     bool isAllCharger   = (StrContains(sReadyUpCfgName, "AllCharger",  false) != -1);
@@ -324,7 +330,11 @@ public void UpdateServerName()
     bool isAlone        = (StrContains(sReadyUpCfgName, "Alone",       false) != -1);
 
     if (isAnneHappy) {
-        ReplaceString(FinalHostname, sizeof(FinalHostname), "{Confogl}", isHardCore ? "[硬核药役]" : "[普通药役]");
+        if (isShotgun) {
+            ReplaceString(FinalHostname, sizeof(FinalHostname), "{Confogl}", "[喷子药役]");
+        } else {
+            ReplaceString(FinalHostname, sizeof(FinalHostname), "{Confogl}", isHardCore ? "[硬核药役]" : "[普通药役]");
+        }
         IsAnne = true;
     }
     else if (isAnneCoop) {

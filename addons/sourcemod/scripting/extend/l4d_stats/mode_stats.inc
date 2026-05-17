@@ -45,6 +45,8 @@ stock ModeStats_GetAnneMode()
 		return 4;
 	if (Is1vht())
 		return 5;
+	if (IsAnneShotgunMode())
+		return 7;
 	if (IsAnne() == 2)
 		return 6;
 

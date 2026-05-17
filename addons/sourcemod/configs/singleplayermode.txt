@@ -226,14 +226,6 @@
 		{
 			"message" "600单位"
 		}
-		"sm_cvar inf_SpawnDistanceMin 650.0"
-		{
-			"message" "650单位"
-		}
-		"sm_cvar inf_SpawnDistanceMin 700.0"
-		{
-			"message" "700单位"
-		}
 	}
 	"特感传送检测秒数"
 	{
@@ -348,6 +340,33 @@
 		"sm_cvar specrates_fulltickspecnum 1"
 		{
 			"message" "限制旁观tick"
+		}
+	}
+	"固定特感难度"
+	{
+		"sm_aidiff 0"
+		{
+			"message" "自动"
+		}
+		"sm_aidiff 1"
+		{
+			"message" "固定简单"
+		}
+		"sm_aidiff 2"
+		{
+			"message" "固定普通"
+		}
+		"sm_aidiff 3"
+		{
+			"message" "固定困难"
+		}
+		"sm_aidiff 4"
+		{
+			"message" "固定专家"
+		}
+		"sm_aidiff 5"
+		{
+			"message" "固定极限"
 		}
 	}
 	"武器配置"
