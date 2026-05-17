@@ -426,12 +426,16 @@ witchparty 和 allcharger模式在普通药役的基础上小僵尸再减少17-2
 ### 2026年5月17日更新记录
 #### AnneHappy 动态特感难度
 - 新增 `annehappy_dynamic_ai_difficulty.smx`，根据当前生还者队伍的 `l4d_stats` PPM 自动定档，并在生还者离开安全门前完成计算；出门后本回合难度锁定，不再随投票或数据变化即时调整。
+- 队伍定档 PPM 使用当前真人生还者的个人 PPM 算术平均，每个玩家权重一致，避免高积分或长时长玩家单独把整队难度拉高。
 - 动态难度分为简单、普通、困难、专家、极限 5 档，默认阈值采用当前可用样本分位：P60=`30.89`、P75=`43.23`、P90=`63.70`、P95=`77.57`。
 - 当前季度 PPM 因季度时长晚于季度分数上线而失真，默认关闭季度优先；保留 `ah_ai_dynamic_use_quarter_stats`，后续完整季度可改为“季度样本 >= 5 小时使用季度 PPM，否则回退总榜 PPM”。
 - 支持从数据库表 `ai_dynamic_ppm_thresholds` 读取每日预计算分位阈值；网页或定时任务可每天凌晨 4 点写入，插件只读取已计算好的结果，读取失败或过期时回退本地 cfg 阈值。
 - 新增 `addons/sourcemod/configs/AnneHappy/dynamic_ai_difficulty.cfg`，将各档特感和 Tank 属性拆成独立配置，方便后续不用改源码直接调档位数值。
 - 动态难度只调整特感和 Tank 行为属性，不改刷特数量、刷特间隔、刷点距离、传送检测等章节固定节奏。
 - Tank、Boomer、Charger、Spitter、Jockey、Hunter、Smoker 按档位区分关键行为参数；Jockey 抢控保持关闭，由 `target_override` 控制目标。
+- 极限档 Hunter 启用 `l4d2_hunter_patch` 的 `convert_leap=1` 和 `crouch_pounce=2`，非极限档固定关闭该强化，避免档位切换后状态残留。
+- `ai_hunter_2.smx` 增加对 `l4d2_hunter_patch` 开关变化的监听，动态难度运行时切换极限档时会同步刷新 Hunter 蹲扑兼容参数。
+- 极限档 Tank 从最初高压参数略微削弱，降低贴脸停跳压迫、连跳速度上限/冲量；投石距离和翻越/爬梯速率回到专家档，减少卡住或动画状态异常风险。
 - 删除旧 AITank3 已无效或不再使用的配置项，例如 `ai_TankSneakTime`、`ai_TankAirAngleRestrict`、`ai_Tank_Bhop`。
 - 新增命令 `sm_aippm` 查看当前 PPM、阈值来源和锁定状态；新增 `sm_aidiff 0-5` 支持自动/固定简单/固定普通/固定困难/固定专家/固定极限。
 

@@ -2,7 +2,7 @@
 
 ## PPM 分档
 
-PPM 从 `l4d_stats` 获取。当前默认使用总积分 / 总游玩分钟数，避免本季度“先记分、后记时长”导致季度 PPM 偏高。等下个完整季度数据可信后，可以打开 `ah_ai_dynamic_use_quarter_stats 1`：每个真人生还者季度样本达到 5 小时时使用季度积分 / 季度游玩分钟数，否则回退总积分 / 总游玩分钟数。
+PPM 从 `l4d_stats` 获取。当前默认对每个真人生还者使用总积分 / 总游玩分钟数得到个人 PPM，再对当前生还者队伍取算术平均，避免高积分或长时长玩家把整队难度单独拉高。等下个完整季度数据可信后，可以打开 `ah_ai_dynamic_use_quarter_stats 1`：每个真人生还者季度样本达到 5 小时时使用季度积分 / 季度游玩分钟数，否则回退总积分 / 总游玩分钟数。
 
 插件调用的是 `l4d_stats.smx` 暴露的 native：
 
@@ -11,7 +11,7 @@ PPM 从 `l4d_stats` 获取。当前默认使用总积分 / 总游玩分钟数，
 - `l4dstats_GetClientQuarterScore(client)`
 - `l4dstats_GetClientQuarterPlayTime(client)`
 
-只统计当前在生还者队伍的真人玩家，忽略 Bot 和没有有效游玩时间的数据。最终队伍 PPM 使用所有玩家“采用后的积分总和 / 采用后的分钟总和”。
+只统计当前在生还者队伍的真人玩家，忽略 Bot 和没有有效游玩时间的数据。最终队伍 PPM 使用所有有效玩家的个人 PPM 算术平均，每个当前玩家权重一致；`sm_aippm` 仍显示采用后的积分总和和分钟总和，方便排查数据来源。
 
 定档时机：
 
@@ -65,7 +65,7 @@ PPM 从 `l4d_stats` 获取。当前默认使用总积分 / 总游玩分钟数，
 
 ## 每日分位阈值
 
-推荐流程是网页或 cron 每天凌晨 4 点计算一次 PPM 分位数，然后写入数据库；插件只读取 `id=1` 这一行，不在游戏内跑排行榜大查询。读取失败、数据为空或超过 `ah_ai_dynamic_threshold_max_age` 时，插件回退使用 cfg 里的固定阈值。
+推荐流程是网页或 cron 每天凌晨 4 点计算一次 PPM 分位数，然后写入数据库；插件只读取 `id=1` 这一行，不在游戏内跑排行榜大查询。网页脚本按“每个玩家一条个人 PPM 样本”计算分位，和游戏内当前队伍个人 PPM 均值的口径一致。读取失败、数据为空或超过 `ah_ai_dynamic_threshold_max_age` 时，插件回退使用 cfg 里的固定阈值。
 
 分位映射：
 
@@ -151,7 +151,7 @@ ON DUPLICATE KEY UPDATE
 - Charger：所有档都开启连跳，主要区分 `ai_ChagrerBhopSpeed`。
 - Spitter：所有档都开启连跳，主要区分 `ai_SpitterBhopSpeed`。
 - Jockey：所有档都开启连跳，主要区分连跳速度和行为复杂度。`ai_JockeyAllowInterControl` 全档固定为 `0`，抢控目标由 `target_override` 控制。
-- Hunter：主要区分基础飞扑空速和低飞角度。简单档垂直角度更大，Hunter 更容易飞高，给玩家更多空爆窗口；越难越低飞。
+- Hunter：主要区分基础飞扑空速和低飞角度。简单档垂直角度更大，Hunter 更容易飞高，给玩家更多空爆窗口；越难越低飞。极限档额外启用 `l4d2_hunter_patch_convert_leap 1` + `l4d2_hunter_patch_crouch_pounce 2`，等同原 `crouch_on` 强化。
 - Smoker：所有档都开启连跳和无视野连跳，主要区分连跳速度、左右偏角、无视野角度和空中速度修正角度。越难空中修正阈值越小，修正更早介入。
 
 `cfg/vote/hard_on.cfg` 里属于投票/样本或刷点节奏的项目没有加入动态难度：`sm_veterans_*` 不是特感/Tank 行为属性，`inf_TeleportCheckTime` 属于传送检查节奏。
@@ -163,14 +163,15 @@ ON DUPLICATE KEY UPDATE
 | 反应时间 | 远距 5.0 / 近距 0.5 | 5.0 / 0.5 | 5.0 / 0.5 | 5.0 / 0.5 | 0.0 / 0.0 |
 | Hunter/Jockey 空速 | 700 / 700 | 750 / 750 | 800 / 800 | 850 / 850 | 900 / 900 |
 | Hunter 垂直角度 | 12，更容易飞高 | 10 | 8 | 7 | 6 |
+| Hunter patch | 关闭 | 关闭 | 关闭 | 关闭 | `convert_leap=1`，`crouch_pounce=2` |
 | Smoker 连跳 | 开启，速度 70，修正角 70 | 速度 90，修正角 60 | 速度 105，修正角 55 | 速度 120，修正角 50 | 速度 150，修正角 45 |
 | Jockey | 速度 50，低骗推 | 速度 60，低复杂度 | 速度 70，中复杂度 | 速度 80，高复杂度 | 速度 150，更远启动和更高骗推 |
 | Spitter | 连跳速度 45 | 65 | 85 | 100 | 250 |
 | Charger | 连跳速度 45 | 60 | 75 | 90 | 150 |
 | Boomer | 速度 70，30 帧转目标 | 95，25 帧 | 125，20 帧 | 150，15 帧 | 250，10 帧 |
-| Tank | 停跳 220，最大速 700，修正角 60 | 190 / 800 / 55 | 160 / 900 / 50 | 135 / 1000 / 45 | 100 / 1100 / 45 |
+| Tank | 停跳 220，最大速 700，修正角 60 | 190 / 800 / 55 | 160 / 900 / 50 | 135 / 1000 / 45 | 120 / 1050 / 45 |
 
-## confogl_plugins.cfg 中 ai 开头插件的 ConVar
+## confogl_plugins.cfg 中 AI 和 Hunter Patch 的 ConVar
 
 ### `ai_smoker3.smx`
 
@@ -179,6 +180,10 @@ ON DUPLICATE KEY UPDATE
 ### `ai_hunter_2.smx`
 
 `ai_hunter_fast_pounce_distance`, `ai_hunter_vertical_angle`, `ai_hunter_angle_mean`, `ai_hunter_angle_std`, `ai_hunter_straight_pounce_distance`, `ai_hunter_aim_offset`, `ai_hunter_no_sight_pounce_range`, `ai_hunter_back_vision`, `ai_hunter_melee_first`, `ai_hunter_high_pounce`, `ai_hunter_wall_detect_distance`, `ai_hunter_angle_diff`
+
+### `l4d2_hunter_patch.smx`
+
+`l4d2_hunter_patch_convert_leap`, `l4d2_hunter_patch_crouch_pounce`, `l4d2_hunter_patch_bonus_damage`, `l4d2_hunter_patch_pounce_interrupt`
 
 ### `ai_jockey_2.smx`
 
@@ -200,4 +205,4 @@ ON DUPLICATE KEY UPDATE
 
 `ai_tank3_enable`, `ai_tank_bhop`, `ai_Tank_StopDistance`, `ai_tank3_bhop_max_dist`, `ai_tank3_bhop_min_speed`, `ai_tank3_bhop_max_speed`, `ai_tank3_bhop_impulse`, `ai_tank3_bhop_no_vision`, `_ai_tank3_bhop_nvis_maxang`, `ai_tank3_airvec_modify_degree`, `ai_tank3_airvec_modify_degree_max`, `ai_tank3_airvec_modify_interval`, `ai_tank3_throw_min_dist`, `ai_tank3_throw_max_dist`, `ai_tank3_climb_anim_rate`, `ai_tank3_low_climb_anim_rate`, `ai_tank3_ladder_climb_rate`, `ai_tank3_rock_target_adjust`, `ai_tank3_back_fist`, `ai_tank3_back_fist_range`, `ai_tank3_back_fist_max_spd`, `ai_tank3_punch_lock_vision`, `ai_tank3_jump_rock`, `ai_tank3_back_fist_window`, `ai_tank3_head_block_enable`, `ai_tank3_head_block_time`, `ai_tank3_head_block_vertical`, `ai_tank3_head_block_horizontal`, `ai_tank3_head_block_ignore_time`, `ai_tank3_head_block_force_rock_time`, `ai_tank3_head_block_force_rock_range`, `ai_tank3_head_block_force_rock_release_h`, `ai_tank3_head_block_force_rock_release_v`, `ai_tank3_plugin_name`, `ai_tank3_log_level`
 
-第 4 档保持当前专家强度；第 5 档参考 `cfg/vote/hard_on.cfg` 作为极限强度，并只调整特感和 Tank 的行为属性。
+第 4 档保持当前专家强度；第 5 档参考 `cfg/vote/hard_on.cfg` 作为极限强度，并只调整特感和 Tank 的行为属性。极限 Tank 已从最初高压参数稍微回落；投石距离和翻越/爬梯速率保持专家档，降低卡住或动画状态异常风险。

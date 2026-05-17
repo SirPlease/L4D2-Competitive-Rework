@@ -1539,12 +1539,19 @@ public Action:event_DoorOpen(Handle:event, const String:name[], bool:dontBroadca
 
 	StartMapTiming();
 	Isstart = true;
+	NewPlayerBonus_AnnounceRoundStart();
 
 	return Plugin_Continue;
 }
 
 public Action:event_StartArea(Handle:event, const String:name[], bool:dontBroadcast)
 {
+	if(CurrentGamemodeID != GAMEMODE_SURVIVAL && !StatsDisabled())
+	{
+		Stats_RecordStartGrantedSupportItems();
+		NewPlayerBonus_AnnounceRoundStart();
+	}
+
 	if(MapTimingBlocked || MapTimingStartTime != 0.0 || CurrentGamemodeID == GAMEMODE_SURVIVAL || StatsDisabled())
 	{
 		MapTimingBlocked = true;
@@ -1552,6 +1559,7 @@ public Action:event_StartArea(Handle:event, const String:name[], bool:dontBroadc
 	}
 	StartMapTiming();
 	Isstart = true;
+	NewPlayerBonus_AnnounceRoundStart();
 
 	return Plugin_Continue;
 }

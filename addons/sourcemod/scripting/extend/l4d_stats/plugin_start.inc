@@ -317,6 +317,7 @@ public OnPluginStart()
 	//CreateTimer(1.0, InitPlayers); // Called in OnMapStart
 	CreateTimer(60.0, timer_UpdatePlayers, INVALID_HANDLE, TIMER_REPEAT);
 	UpdateTimer = CreateTimer(GetConVarFloat(cvar_UpdateRate), timer_ShowTimerScore, INVALID_HANDLE, TIMER_REPEAT);
+	AddCommandListener(Command_BlockSupportGiveSource, "give");
 	HookConVarChange(cvar_UpdateRate, action_TimerChanged);
 	HookConVarChange(cvar_DbPrefix, action_DbPrefixChanged);
 

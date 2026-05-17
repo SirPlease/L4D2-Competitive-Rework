@@ -83,7 +83,7 @@ public void OnPluginStart()
     g_cvDebug = CreateConVar("ah_ai_dynamic_debug", "0", "是否输出动态难度调试日志", FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_cvCurrentLevel = CreateConVar("ah_ai_dynamic_current_level", "0", "当前回合动态难度：0=未定档，1=简单，2=普通，3=困难，4=专家，5=极限", FCVAR_DONTRECORD, true, 0.0, true, 5.0);
     g_cvCurrentMode = CreateConVar("ah_ai_dynamic_current_mode", "0", "当前回合动态难度来源：0=自动，1=固定", FCVAR_DONTRECORD, true, 0.0, true, 1.0);
-    g_cvCurrentPPM = CreateConVar("ah_ai_dynamic_current_ppm", "0.0", "当前回合自动定档使用的平均 PPM；固定模式为 0", FCVAR_DONTRECORD, true, 0.0);
+    g_cvCurrentPPM = CreateConVar("ah_ai_dynamic_current_ppm", "0.0", "当前回合自动定档使用的平均个人 PPM；固定模式为 0", FCVAR_DONTRECORD, true, 0.0);
     g_cvCurrentLocked = CreateConVar("ah_ai_dynamic_current_locked", "0", "当前回合动态难度是否已经锁定", FCVAR_DONTRECORD, true, 0.0, true, 1.0);
     CreateConVar("ah_ai_dynamic_version", PLUGIN_VERSION, "AnneHappy Dynamic AI Difficulty version", FCVAR_NOTIFY | FCVAR_DONTRECORD);
 
@@ -261,7 +261,7 @@ bool TryApplyAutoDifficulty(bool silent)
     PublishCurrentDifficulty();
 
     if (g_cvDebug.BoolValue)
-        LogMessage("[AnneHappyAI] stats_players=%d quarter_players=%d fallback_players=%d score=%d minutes=%d ppm=%.2f level=%d", players, quarterPlayers, fallbackPlayers, totalScore, totalMinutes, ppm, g_iCurrentLevel);
+        LogMessage("[AnneHappyAI] stats_players=%d quarter_players=%d fallback_players=%d score=%d minutes=%d avg_player_ppm=%.2f level=%d", players, quarterPlayers, fallbackPlayers, totalScore, totalMinutes, ppm, g_iCurrentLevel);
 
     return true;
 }
@@ -295,7 +295,7 @@ public Action Cmd_ShowPPM(int client, int args)
     GetLevelName(g_iCurrentLevel, levelName, sizeof(levelName));
     GetThresholdSourceName(thresholdSource, sizeof(thresholdSource));
     GetActiveThresholds(ppmNormal, ppmHard, ppmExpert, ppmExtreme);
-    ReplyToCommand(client, "[AnneHappyAI] 难度=%d(%s) PPM=%.2f 积分=%d 时间=%d分钟 人数=%d 季度样本=%d 总榜回退=%d 阈值=%s %.2f/%.2f/%.2f/%.2f 锁定=%s 固定=%d",
+    ReplyToCommand(client, "[AnneHappyAI] 难度=%d(%s) 平均PPM=%.2f 积分=%d 时间=%d分钟 人数=%d 季度样本=%d 总榜回退=%d 阈值=%s %.2f/%.2f/%.2f/%.2f 锁定=%s 固定=%d",
         g_iCurrentLevel, levelName, ppm, totalScore, totalMinutes, players, quarterPlayers, fallbackPlayers,
         thresholdSource, ppmNormal, ppmHard, ppmExpert, ppmExtreme,
         g_bDifficultyLocked ? "是" : "否", g_cvFixedLevel.IntValue);
@@ -403,6 +403,7 @@ bool GetSurvivorStatsPPM(float &ppm, int &players, int &totalScore, int &totalMi
 
     bool quarterReady = g_cvUseQuarterStats.BoolValue && QuarterStatsReady();
     int minQuarterMinutes = g_cvQuarterMinMinutes.IntValue;
+    float totalPlayerPPM = 0.0;
 
     for (int client = 1; client <= MaxClients; client++)
     {
@@ -447,12 +448,13 @@ bool GetSurvivorStatsPPM(float &ppm, int &players, int &totalScore, int &totalMi
 
         totalScore += selectedScore;
         totalMinutes += selectedMinutes;
+        totalPlayerPPM += float(selectedScore) / float(selectedMinutes);
     }
 
-    if (players <= 0 || totalMinutes <= 0)
+    if (players <= 0)
         return false;
 
-    ppm = float(totalScore) / float(totalMinutes);
+    ppm = totalPlayerPPM / float(players);
     return true;
 }
 
@@ -838,7 +840,7 @@ void ApplyDifficulty(int level, bool force, float ppm = 0.0, int score = 0, int 
     {
         char levelName[16];
         GetLevelName(level, levelName, sizeof(levelName));
-        PrintToChatAll("\x04[AnneHappyAI]\x01 l4d_stats PPM %.2f，%d人积分 %d / %d分钟（季度%d人/总榜回退%d人），动态难度调整为 \x03%s\x01。", ppm, players, score, minutes, quarterPlayers, fallbackPlayers, levelName);
+        PrintToChatAll("\x04[AnneHappyAI]\x01 l4d_stats 平均个人PPM %.2f，%d人积分 %d / %d分钟（季度%d人/总榜回退%d人），动态难度调整为 \x03%s\x01。", ppm, players, score, minutes, quarterPlayers, fallbackPlayers, levelName);
     }
 }
 

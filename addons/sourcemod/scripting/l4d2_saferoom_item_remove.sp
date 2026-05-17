@@ -3,9 +3,10 @@
 
 #include <sourcemod>
 #include <sdktools>
+#include <sdkhooks>
 #include <l4d2_saferoom_detect>
 
-#define DELAY_ROUNDSTART 1.0
+static const float ROUNDSTART_CLEANUP_DELAYS[] = { 0.1, 0.5, 1.0 };
 
 enum
 {
@@ -35,7 +36,7 @@ public Plugin myinfo =
 	name = "Saferoom Item Remover",
 	author = "Tabun, Sir, A1m`",
 	description = "Removes any saferoom item (start or end).",
-	version = "1.1.1",
+	version = "1.1.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 };
 
@@ -53,57 +54,105 @@ public void OnPluginStart()
 void Event_RoundStart(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	if (g_hCvarEnabled.BoolValue) {
-		CreateTimer(DELAY_ROUNDSTART, Timer_DelayedOnRoundStart, _, TIMER_FLAG_NO_MAPCHANGE);
+		for (int i = 0; i < sizeof(ROUNDSTART_CLEANUP_DELAYS); i++) {
+			CreateTimer(ROUNDSTART_CLEANUP_DELAYS[i], Timer_DelayedOnRoundStart, _, TIMER_FLAG_NO_MAPCHANGE);
+		}
 	}
+}
+
+public void OnEntityCreated(int iEntity, const char[] sClassname)
+{
+	if (g_hCvarEnabled == null || g_hCvarItems == null || g_hTrieItems == null || !g_hCvarEnabled.BoolValue) {
+		return;
+	}
+
+	int iCheckItem;
+	if (!g_hTrieItems.GetValue(sClassname, iCheckItem)) {
+		return;
+	}
+
+	int iCvarItemsValue = g_hCvarItems.IntValue;
+	if (iCheckItem != eITEM_KILLABLE && !(iCvarItemsValue & iCheckItem)) {
+		return;
+	}
+
+	RequestFrame(Frame_RemoveSaferoomItem, EntIndexToEntRef(iEntity));
+}
+
+void Frame_RemoveSaferoomItem(any iEntRef)
+{
+	int iEntity = EntRefToEntIndex(iEntRef);
+	if (iEntity == INVALID_ENT_REFERENCE || g_hCvarEnabled == null || g_hCvarSaferoom == null || g_hCvarItems == null || !g_hCvarEnabled.BoolValue) {
+		return;
+	}
+
+	int iRemovedSaferoom;
+	TryRemoveSaferoomItem(iEntity, g_hCvarSaferoom.IntValue, g_hCvarItems.IntValue, iRemovedSaferoom);
 }
 
 Action Timer_DelayedOnRoundStart(Handle hTimer)
 {
 	// check for any items in the end saferoom, and remove them
-	char sClassname[128];
-	int iCheckItem, iCountEnd = 0, iCountStart = 0;
+	int iCountEnd = 0, iCountStart = 0;
 	
 	int iEntityCount = GetEntityCount();
 	int iCvarSafeRoomValue = g_hCvarSaferoom.IntValue;
+	int iCvarItemsValue = g_hCvarItems.IntValue;
 	
 	for (int i = (MaxClients + 1); i <= iEntityCount; i++) {
-		if (!IsValidEntity(i)) {
+		int iRemovedSaferoom;
+		if (!TryRemoveSaferoomItem(i, iCvarSafeRoomValue, iCvarItemsValue, iRemovedSaferoom)) {
 			continue;
 		}
-		
-		// check item type
-		GetEntityClassname(i, sClassname, sizeof(sClassname));
-		
-		if (!g_hTrieItems.GetValue(sClassname, iCheckItem)) {
-			continue;
-		}
-		
-		// see if item is of a killable type by cvar
-		if (iCheckItem == eITEM_KILLABLE || g_hCvarItems.IntValue & iCheckItem) {
-			if (iCvarSafeRoomValue & eSAFEROOM_END) {
-				if (SAFEDETECT_IsEntityInEndSaferoom(i)) {
-					// kill the item
-					RemoveEntity(i);
-					
-					iCountEnd++;
-					continue;
-				}
-			}
-			
-			if (iCvarSafeRoomValue & eSAFEROOM_START) {
-				if (SAFEDETECT_IsEntityInStartSaferoom(i)) {
-					// kill the item
-					RemoveEntity(i);
-					
-					iCountStart++;
-					continue;
-				}
-			}
+
+		if (iRemovedSaferoom == eSAFEROOM_END) {
+			iCountEnd++;
+		} else if (iRemovedSaferoom == eSAFEROOM_START) {
+			iCountStart++;
 		}
 	}
 
 	LogMessage("Removed %i saferoom item(s) (start: %i; end: %i).", iCountStart + iCountEnd, iCountStart, iCountEnd);
 	return Plugin_Stop;
+}
+
+bool TryRemoveSaferoomItem(int iEntity, int iCvarSafeRoomValue, int iCvarItemsValue, int &iRemovedSaferoom)
+{
+	iRemovedSaferoom = 0;
+
+	if (g_hTrieItems == null || !IsValidEntity(iEntity)) {
+		return false;
+	}
+
+	char sClassname[128];
+	GetEntityClassname(iEntity, sClassname, sizeof(sClassname));
+
+	int iCheckItem;
+	if (!g_hTrieItems.GetValue(sClassname, iCheckItem)) {
+		return false;
+	}
+
+	if (iCheckItem != eITEM_KILLABLE && !(iCvarItemsValue & iCheckItem)) {
+		return false;
+	}
+
+	if (iCvarSafeRoomValue & eSAFEROOM_END) {
+		if (SAFEDETECT_IsEntityInEndSaferoom(iEntity)) {
+			RemoveEntity(iEntity);
+			iRemovedSaferoom = eSAFEROOM_END;
+			return true;
+		}
+	}
+
+	if (iCvarSafeRoomValue & eSAFEROOM_START) {
+		if (SAFEDETECT_IsEntityInStartSaferoom(iEntity)) {
+			RemoveEntity(iEntity);
+			iRemovedSaferoom = eSAFEROOM_START;
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void PrepareTrie()
@@ -133,22 +182,31 @@ void PrepareTrie()
 	
 	g_hTrieItems.SetValue("weapon_item_spawn", eITEM_KILLABLE_HEALTH);
 	g_hTrieItems.SetValue("weapon_first_aid_kit_spawn", eITEM_KILLABLE_HEALTH);
+	g_hTrieItems.SetValue("weapon_first_aid_kit", eITEM_KILLABLE_HEALTH);
 	g_hTrieItems.SetValue("weapon_defibrillator_spawn", eITEM_KILLABLE_HEALTH);
+	g_hTrieItems.SetValue("weapon_defibrillator", eITEM_KILLABLE_HEALTH);
 	g_hTrieItems.SetValue("weapon_pain_pills_spawn", eITEM_KILLABLE_HEALTH);
+	g_hTrieItems.SetValue("weapon_pain_pills", eITEM_KILLABLE_HEALTH);
 	g_hTrieItems.SetValue("weapon_adrenaline_spawn", eITEM_KILLABLE_HEALTH);
+	g_hTrieItems.SetValue("weapon_adrenaline", eITEM_KILLABLE_HEALTH);
 	
 	g_hTrieItems.SetValue("weapon_pipe_bomb_spawn", eITEM_KILLABLE_OTHER);
+	g_hTrieItems.SetValue("weapon_pipe_bomb", eITEM_KILLABLE_OTHER);
 	g_hTrieItems.SetValue("weapon_molotov_spawn", eITEM_KILLABLE_OTHER);
+	g_hTrieItems.SetValue("weapon_molotov", eITEM_KILLABLE_OTHER);
 	g_hTrieItems.SetValue("weapon_vomitjar_spawn", eITEM_KILLABLE_OTHER);
+	g_hTrieItems.SetValue("weapon_vomitjar", eITEM_KILLABLE_OTHER);
 	g_hTrieItems.SetValue("weapon_gascan_spawn", eITEM_KILLABLE_OTHER);
+	g_hTrieItems.SetValue("weapon_gascan", eITEM_KILLABLE_OTHER);
 	g_hTrieItems.SetValue("upgrade_spawn", eITEM_KILLABLE_OTHER);
 	g_hTrieItems.SetValue("upgrade_laser_sight", eITEM_KILLABLE_OTHER);
 	g_hTrieItems.SetValue("weapon_upgradepack_explosive_spawn", eITEM_KILLABLE_OTHER);
+	g_hTrieItems.SetValue("weapon_upgradepack_explosive", eITEM_KILLABLE_OTHER);
 	g_hTrieItems.SetValue("weapon_upgradepack_incendiary_spawn", eITEM_KILLABLE_OTHER);
+	g_hTrieItems.SetValue("weapon_upgradepack_incendiary", eITEM_KILLABLE_OTHER);
 	g_hTrieItems.SetValue("upgrade_ammo_incendiary", eITEM_KILLABLE_OTHER);
 	g_hTrieItems.SetValue("upgrade_ammo_explosive", eITEM_KILLABLE_OTHER);
 	
 	//g_hTrieItems.SetValue(prop_fuel_barrel", eITEM_KILLABLE);
 	//g_hTrieItems.SetValue("prop_physics", eITEM_KILLABLE);
 }
-

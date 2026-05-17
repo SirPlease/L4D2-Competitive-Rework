@@ -352,7 +352,7 @@ ResetInfVars()
 }
 
 public Action L4D_OnFirstSurvivorLeftSafeArea(int client){
-	Stats_RecordAllHeldSupportItems();
+	Stats_RecordStartGrantedSupportItems();
 	Stats_ScheduleInitialSupportItemScans(12.0);
 
 	for (int i = 1; i <= MaxClients; i++)
@@ -360,6 +360,7 @@ public Action L4D_OnFirstSurvivorLeftSafeArea(int client){
 		if(IsClientInGame(i) && GetClientTeam(i) == 2)
 			ClientEnabled[i] = true;
 	}
+	NewPlayerBonus_AnnounceRoundStart();
 	//开局提示该难度完成最快速度
 	if(!IsNormalMode())GetThisModeBestTime();
 	return Plugin_Continue;
@@ -375,6 +376,8 @@ ResetVars()
 	PanicEvent = false;
 	PanicEventIncap = false;
 	CampaignOver = false;
+	Isstart = false;
+	SupportStartGrantRecorded = false;
 	WitchExists = false;
 	WitchDisturb = false;
 	MedkitsUsedCounter = 0;
@@ -406,6 +409,7 @@ ResetVars()
 		QuarterRankChangeFirstCheck[i] = true;
 		SupportReloadTime[i] = 0.0;
 		SupportReloadType[i] = 0;
+		SupportGiveCommandUntil[i] = 0.0;
 		SupportReloadOrigin[i][0] = 0.0;
 		SupportReloadOrigin[i][1] = 0.0;
 		SupportReloadOrigin[i][2] = 0.0;
@@ -421,20 +425,22 @@ ResetVars()
 		MeleeKillTimer[i] = INVALID_HANDLE;
 		MeleeKillCounter[i] = 0;
 
-			PostAdminCheckRetryCounter[i] = 0;
-		}
-
-		for (i = 0; i < sizeof(Pills); i++)
-		{
-			Pills[i] = 0;
-			Adrenaline[i] = 0;
-			PillsFirstHolder[i] = 0;
-			AdrenalineFirstHolder[i] = 0;
-			FirstAidFirstHolder[i] = 0;
-		}
-
-		ResetInfVars();
+		PostAdminCheckRetryCounter[i] = 0;
 	}
+
+	for (i = 0; i < sizeof(Pills); i++)
+	{
+		Pills[i] = 0;
+		Adrenaline[i] = 0;
+		PillsFirstHolder[i] = 0;
+		AdrenalineFirstHolder[i] = 0;
+		FirstAidFirstHolder[i] = 0;
+		SupportItemWorldSpawned[i] = false;
+	}
+
+	Stats_RecordWorldSupportItems();
+	ResetInfVars();
+}
 
 public ResetRankChangeCheck()
 {

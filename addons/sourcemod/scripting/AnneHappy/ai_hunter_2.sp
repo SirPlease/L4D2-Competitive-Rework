@@ -61,7 +61,9 @@ ConVar
     g_hPounceGiveUpRange,
     g_hPounceSilenceRange,
     g_hCommitAttackRange,
-    g_hLungePower;
+    g_hLungePower,
+    g_hHunterPatchConvertLeap,
+    g_hHunterPatchCrouchPounce;
 
 // ===== 运行时状态 =====
 bool
@@ -174,18 +176,30 @@ public void OnMapEnd()
 
 public void OnAllPluginsLoaded()
 {
-    ignoreCrouch = false;
+    // 兼容 hunter_patch，并监听动态难度运行时切换。
+    g_hHunterPatchConvertLeap = FindConVar("l4d2_hunter_patch_convert_leap");
+    g_hHunterPatchCrouchPounce = FindConVar("l4d2_hunter_patch_crouch_pounce");
 
-    // 兼容 hunter_patch 的行为
-    ConVar g_hCoverLeap = FindConVar("l4d2_hunter_patch_convert_leap");
-    if (g_hCoverLeap && g_hCoverLeap.IntValue == 1)
-    {
-        g_hCoverLeap = FindConVar("l4d2_hunter_patch_crouch_pounce");
-        if (g_hCoverLeap && g_hCoverLeap.IntValue == 2)
-        {
-            ignoreCrouch = true;
-        }
-    }
+    if (g_hHunterPatchConvertLeap != null)
+        g_hHunterPatchConvertLeap.AddChangeHook(hunterPatchChangedHandler);
+
+    if (g_hHunterPatchCrouchPounce != null)
+        g_hHunterPatchCrouchPounce.AddChangeHook(hunterPatchChangedHandler);
+
+    updateHunterPatchCompatibility();
+}
+
+void hunterPatchChangedHandler(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+    updateHunterPatchCompatibility();
+}
+
+void updateHunterPatchCompatibility()
+{
+    ignoreCrouch = g_hHunterPatchConvertLeap != null
+        && g_hHunterPatchConvertLeap.IntValue == 1
+        && g_hHunterPatchCrouchPounce != null
+        && g_hHunterPatchCrouchPounce.IntValue == 2;
 
     if (ignoreCrouch)
     {

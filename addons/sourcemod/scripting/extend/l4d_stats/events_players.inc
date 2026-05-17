@@ -697,6 +697,160 @@ stock bool:Stats_IsTrackedWeaponEntity(entity)
 	return entity > 0 && entity < sizeof(Pills);
 }
 
+stock bool:Stats_IsSupportItemClassName(const String:ClassName[])
+{
+	return StrContains(ClassName, "pain_pills", false) != -1 ||
+		StrContains(ClassName, "adrenaline", false) != -1 ||
+		StrContains(ClassName, "first_aid_kit", false) != -1;
+}
+
+stock Stats_GetSupportItemOwner(entity)
+{
+	if (!Stats_IsTrackedWeaponEntity(entity) || !IsValidEntity(entity) || !HasEntProp(entity, Prop_Send, "m_hOwnerEntity"))
+		return -1;
+
+	return GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
+}
+
+stock Stats_RecordWorldSupportItem(entity)
+{
+	if (!Stats_IsTrackedWeaponEntity(entity) || !IsValidEntity(entity))
+		return;
+
+	decl String:ClassName[MAX_LINE_WIDTH];
+	GetEntityClassname(entity, ClassName, sizeof(ClassName));
+	if (!Stats_IsSupportItemClassName(ClassName))
+		return;
+
+	if (!Stats_IsValidClient(Stats_GetSupportItemOwner(entity)))
+		SupportItemWorldSpawned[entity] = true;
+}
+
+stock Stats_RecordWorldSupportItems()
+{
+	new EntityLimit = GetMaxEntities();
+	if (EntityLimit > sizeof(SupportItemWorldSpawned))
+		EntityLimit = sizeof(SupportItemWorldSpawned);
+
+	for (new entity = MaxClients + 1; entity < EntityLimit; entity++)
+	{
+		Stats_RecordWorldSupportItem(entity);
+	}
+}
+
+public OnEntityCreated(entity, const String:ClassName[])
+{
+	if (!Stats_IsTrackedWeaponEntity(entity) || !Stats_IsSupportItemClassName(ClassName))
+		return;
+
+	Pills[entity] = 0;
+	Adrenaline[entity] = 0;
+	PillsFirstHolder[entity] = 0;
+	AdrenalineFirstHolder[entity] = 0;
+	FirstAidFirstHolder[entity] = 0;
+	SupportItemWorldSpawned[entity] = false;
+
+	CreateTimer(0.1, timer_RecordWorldSupportItem, EntIndexToEntRef(entity), TIMER_FLAG_NO_MAPCHANGE);
+}
+
+public Action:timer_RecordWorldSupportItem(Handle:timer, any:entityRef)
+{
+	new entity = EntRefToEntIndex(entityRef);
+	if (entity == INVALID_ENT_REFERENCE)
+		return Plugin_Stop;
+
+	Stats_RecordWorldSupportItem(entity);
+	return Plugin_Stop;
+}
+
+stock bool:Stats_IsSupportGiveBlocked(client)
+{
+	return Stats_IsValidClient(client) && GetEngineTime() <= SupportGiveCommandUntil[client];
+}
+
+stock Stats_MarkHeldSupportItemsUnscoreable(client)
+{
+	if (!Stats_IsValidClient(client) || GetClientTeam(client) != TEAM_SURVIVORS)
+		return;
+
+	new entity = GetPlayerWeaponSlot(client, 3);
+	if (Stats_IsTrackedWeaponEntity(entity) && IsValidEntity(entity))
+		Stats_MarkUnscoreableSupportItem(FirstAidFirstHolder, entity);
+
+	entity = GetPlayerWeaponSlot(client, 4);
+	if (!Stats_IsTrackedWeaponEntity(entity) || !IsValidEntity(entity))
+		return;
+
+	decl String:ClassName[MAX_LINE_WIDTH];
+	GetEntityClassname(entity, ClassName, sizeof(ClassName));
+	if (StrContains(ClassName, "pain_pills", false) != -1)
+		Stats_MarkUnscoreableSupportItem(PillsFirstHolder, entity);
+	else if (StrContains(ClassName, "adrenaline", false) != -1)
+		Stats_MarkUnscoreableSupportItem(AdrenalineFirstHolder, entity);
+}
+
+public Action:timer_MarkHeldSupportItemsUnscoreable(Handle:timer, any:userId)
+{
+	new client = GetClientOfUserId(userId);
+	if (client > 0)
+		Stats_MarkHeldSupportItemsUnscoreable(client);
+
+	return Plugin_Stop;
+}
+
+public Action:Command_BlockSupportGiveSource(client, const String:command[], argc)
+{
+	if (!Stats_IsValidClient(client))
+		return Plugin_Continue;
+
+	decl String:Args[128];
+	GetCmdArgString(Args, sizeof(Args));
+	if (StrContains(Args, "pain_pills", false) == -1 &&
+		StrContains(Args, "pills", false) == -1 &&
+		StrContains(Args, "adrenaline", false) == -1 &&
+		StrContains(Args, "first_aid", false) == -1 &&
+		StrContains(Args, "firstaid", false) == -1)
+		return Plugin_Continue;
+
+	SupportGiveCommandUntil[client] = GetEngineTime() + 2.0;
+	CreateTimer(0.1, timer_MarkHeldSupportItemsUnscoreable, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+	CreateTimer(0.5, timer_MarkHeldSupportItemsUnscoreable, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+	return Plugin_Continue;
+}
+
+stock Stats_RecordScoreableSupportHolder(firstHolder[], entity, client, bool:AllowStartGrant=false)
+{
+	if (!Stats_IsTrackedWeaponEntity(entity) || !Stats_IsValidClient(client))
+		return;
+
+	if (firstHolder[entity] != 0)
+		return;
+
+	if (SupportItemWorldSpawned[entity] || (AllowStartGrant && !Stats_IsSupportGiveBlocked(client)))
+		firstHolder[entity] = GetClientUserId(client);
+	else if (Isstart || AllowStartGrant || Stats_IsSupportGiveBlocked(client))
+		firstHolder[entity] = -1;
+}
+
+stock bool:Stats_ShouldMarkUnknownSupportPickupUnscoreable(client)
+{
+	return Isstart || Stats_IsSupportGiveBlocked(client);
+}
+
+stock bool:Stats_IsScoreableSupportPickup(entity)
+{
+	if (!Stats_IsTrackedWeaponEntity(entity))
+		return false;
+
+	return SupportItemWorldSpawned[entity];
+}
+
+stock Stats_HandleUnknownSupportPickup(firstHolder[], entity, client)
+{
+	if (Stats_ShouldMarkUnknownSupportPickupUnscoreable(client))
+		Stats_MarkUnscoreableSupportItem(firstHolder, entity);
+}
+
 stock Stats_GetHeldSupportItemType(client)
 {
 	if (!Stats_IsValidClient(client) || GetClientTeam(client) != TEAM_SURVIVORS)
@@ -789,7 +943,7 @@ stock bool:Stats_IsOriginalHolder(firstHolder[], entity, client)
 	return firstHolder[entity] == GetClientUserId(client);
 }
 
-stock Stats_RecordHeldSupportItems(client)
+stock Stats_RecordHeldSupportItems(client, bool:AllowHeldAfterStart=false)
 {
 	if (!Stats_IsValidClient(client) || GetClientTeam(client) != TEAM_SURVIVORS)
 		return;
@@ -800,7 +954,7 @@ stock Stats_RecordHeldSupportItems(client)
 	{
 		GetEntityClassname(entity, ClassName, sizeof(ClassName));
 		if (StrContains(ClassName, "first_aid_kit", false) != -1)
-			Stats_RecordFirstHolder(FirstAidFirstHolder, entity, client);
+			Stats_RecordScoreableSupportHolder(FirstAidFirstHolder, entity, client, AllowHeldAfterStart);
 	}
 
 	entity = GetPlayerWeaponSlot(client, 4);
@@ -808,18 +962,35 @@ stock Stats_RecordHeldSupportItems(client)
 	{
 		GetEntityClassname(entity, ClassName, sizeof(ClassName));
 		if (StrContains(ClassName, "pain_pills", false) != -1)
-			Stats_RecordFirstHolder(PillsFirstHolder, entity, client);
+			Stats_RecordScoreableSupportHolder(PillsFirstHolder, entity, client, AllowHeldAfterStart);
 		else if (StrContains(ClassName, "adrenaline", false) != -1)
-			Stats_RecordFirstHolder(AdrenalineFirstHolder, entity, client);
+			Stats_RecordScoreableSupportHolder(AdrenalineFirstHolder, entity, client, AllowHeldAfterStart);
 	}
 }
 
-stock Stats_RecordAllHeldSupportItems()
+stock Stats_RecordAllHeldSupportItems(bool:AllowHeldAfterStart=false)
 {
 	for (new i = 1; i <= MaxClients; i++)
 	{
-		Stats_RecordHeldSupportItems(i);
+		Stats_RecordHeldSupportItems(i, AllowHeldAfterStart);
 	}
+}
+
+stock Stats_ScheduleStartGrantedSupportItemScans()
+{
+	CreateTimer(0.1, timer_RecordStartGrantedSupportItems, _, TIMER_FLAG_NO_MAPCHANGE);
+	CreateTimer(0.5, timer_RecordStartGrantedSupportItems, _, TIMER_FLAG_NO_MAPCHANGE);
+	CreateTimer(1.0, timer_RecordStartGrantedSupportItems, _, TIMER_FLAG_NO_MAPCHANGE);
+}
+
+stock Stats_RecordStartGrantedSupportItems()
+{
+	if (SupportStartGrantRecorded)
+		return;
+
+	SupportStartGrantRecorded = true;
+	Stats_RecordAllHeldSupportItems(true);
+	Stats_ScheduleStartGrantedSupportItemScans();
 }
 
 stock Stats_ScheduleInitialSupportItemScans(Float:Duration)
@@ -851,6 +1022,15 @@ public Action:timer_RecordInitialSupportItems(Handle:timer)
 	return Plugin_Stop;
 }
 
+public Action:timer_RecordStartGrantedSupportItems(Handle:timer)
+{
+	if (CampaignOver)
+		return Plugin_Stop;
+
+	Stats_RecordAllHeldSupportItems(true);
+	return Plugin_Stop;
+}
+
 public Action:event_ItemPickup(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	new client = GetClientOfUserId(GetEventInt(event, "userid"));
@@ -866,20 +1046,28 @@ public Action:event_ItemPickup(Handle:event, const String:name[], bool:dontBroad
 		new entity = GetPlayerWeaponSlot(client, 4);
 		if (Stats_IsRecentReloadTransferPickup(client, 1))
 			Stats_MarkUnscoreableSupportItem(PillsFirstHolder, entity);
+		else if (Stats_IsScoreableSupportPickup(entity))
+			Stats_RecordScoreableSupportHolder(PillsFirstHolder, entity, client);
 		else
-			Stats_RecordFirstHolder(PillsFirstHolder, entity, client);
+			Stats_HandleUnknownSupportPickup(PillsFirstHolder, entity, client);
 	}
 	else if (StrContains(ItemName, "adrenaline", false) != -1)
 	{
 		new entity = GetPlayerWeaponSlot(client, 4);
 		if (Stats_IsRecentReloadTransferPickup(client, 2))
 			Stats_MarkUnscoreableSupportItem(AdrenalineFirstHolder, entity);
+		else if (Stats_IsScoreableSupportPickup(entity))
+			Stats_RecordScoreableSupportHolder(AdrenalineFirstHolder, entity, client);
 		else
-			Stats_RecordFirstHolder(AdrenalineFirstHolder, entity, client);
+			Stats_HandleUnknownSupportPickup(AdrenalineFirstHolder, entity, client);
 	}
 	else if (StrContains(ItemName, "first_aid_kit", false) != -1)
 	{
-		Stats_RecordFirstHolder(FirstAidFirstHolder, GetPlayerWeaponSlot(client, 3), client);
+		new entity = GetPlayerWeaponSlot(client, 3);
+		if (Stats_IsScoreableSupportPickup(entity))
+			Stats_RecordScoreableSupportHolder(FirstAidFirstHolder, entity, client);
+		else
+			Stats_HandleUnknownSupportPickup(FirstAidFirstHolder, entity, client);
 	}
 }
 
@@ -892,7 +1080,7 @@ public Action:event_HealBegin(Handle:event, const String:name[], bool:dontBroadc
 
 	new FirstAidID = GetPlayerWeaponSlot(Giver, 3);
 	HealingFirstAid[Giver] = FirstAidID;
-	Stats_RecordFirstHolder(FirstAidFirstHolder, FirstAidID, Giver);
+	Stats_RecordScoreableSupportHolder(FirstAidFirstHolder, FirstAidID, Giver);
 }
 
 // Adrenaline give code. Special note, Adrenalines can only be given once. (Even if it's initially given by a bot!)

@@ -244,10 +244,13 @@ new Adrenaline[4096];
 new PillsFirstHolder[4096];
 new AdrenalineFirstHolder[4096];
 new FirstAidFirstHolder[4096];
+new bool:SupportItemWorldSpawned[4096];
+new bool:SupportStartGrantRecorded = false;
 new HealingFirstAid[MAXPLAYERS + 1];
 new Float:SupportReloadTime[MAXPLAYERS + 1];
 new SupportReloadType[MAXPLAYERS + 1];
 new Float:SupportReloadOrigin[MAXPLAYERS + 1][3];
+new Float:SupportGiveCommandUntil[MAXPLAYERS + 1];
 new Float:InitialSupportScanUntil = 0.0;
 
 new String:QueryBuffer[MAX_QUERY_COUNTER][MAX_QUERY_COUNTER];

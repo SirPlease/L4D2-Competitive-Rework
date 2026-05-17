@@ -9,6 +9,7 @@ new Handle:cvar_NewPlayerBonusMaxPoints = INVALID_HANDLE;
 new Handle:cvar_NewPlayerBonusFirstMultiplier = INVALID_HANDLE;
 new Handle:cvar_NewPlayerBonusExtraMultiplier = INVALID_HANDLE;
 new Handle:cvar_NewPlayerBonusMaxMultiplier = INVALID_HANDLE;
+new bool:g_bNewPlayerBonusRoundAnnounced = false;
 
 // 带新人奖励配置：
 // - 同时以累计游玩时间和总分判断新人。
@@ -26,6 +27,7 @@ stock NewPlayerBonus_CreateCvars()
 
 stock NewPlayerBonus_ResetRound()
 {
+	g_bNewPlayerBonusRoundAnnounced = false;
 }
 
 stock bool:NewPlayerBonus_IsNewPlayer(client)
@@ -108,4 +110,27 @@ stock NewPlayerBonus_AnnounceMultiplier(const String:Reason[], BaseScore)
 		return;
 
 	StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03带新玩家%s倍率: \x05%i \x01名新人, 非新人幸存者获得 \x04%.1fx \x01分数倍率!", Reason, NewPlayerCount, Multiplier);
+}
+
+stock NewPlayerBonus_AnnounceRoundStart()
+{
+	if (g_bNewPlayerBonusRoundAnnounced || !GetConVarBool(cvar_NewPlayerBonusEnable) || !GetConVarInt(cvar_AnnounceMode))
+		return;
+
+	new NewPlayerCount = NewPlayerBonus_CountNewSurvivors();
+	new Float:Multiplier = NewPlayerBonus_GetMultiplier();
+	if (NewPlayerCount <= 0 || Multiplier <= 1.0)
+		return;
+
+	g_bNewPlayerBonusRoundAnnounced = true;
+
+	for (new i = 1; i <= MaxClients; i++)
+	{
+		if (!NewPlayerBonus_IsNewPlayer(i))
+			continue;
+
+		StatsPrintToChat(i, "\x03你当前被判定为新人，本局非新人幸存者会获得 \x04%.1fx \x01带新分数倍率。", Multiplier);
+	}
+
+	StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03本局检测到 \x05%i \x01名新人，带新系数为 \x04%.1fx\x01；新人本身不吃倍率，非新人幸存者获得加成。", NewPlayerCount, Multiplier);
 }
