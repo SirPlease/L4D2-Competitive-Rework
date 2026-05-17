@@ -788,6 +788,8 @@ Action Timer_DisplayPanelOnConnect(Handle timer, int userid)
 void UnTriggerSafeAreaLocksFeatures()
 {
 	g_bLockSafeAreas = false;
+	// 真人出门前不解冻Bot，也不恢复nb_player_stop
+	/*
 	g_bSurvivorBotFreezeActive = false;
 	if(g_bNoBotMoveChanged)
 	{
@@ -795,6 +797,7 @@ void UnTriggerSafeAreaLocksFeatures()
 		g_bNoBotMoveChanged = false;
 	}
 	UnFreezeSurvivorBots();
+	*/
 
 	if(Cvar_DoorLock_AddCheats.IntValue > 1) ResetConVar(Cvar_DoorLock_MaxesAmmo);
 	for(int i = 1; i <= MaxClients; i++)
@@ -842,6 +845,11 @@ public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
 	if(L4D2_DoorLock_Enable() && g_bSurvivorBotFreezeActive)
 	{
 		g_bSurvivorBotFreezeActive = false;
+		if(g_bNoBotMoveChanged)
+		{
+			ResetConVar(Cvar_DoorLock_NoBotMove);
+			g_bNoBotMoveChanged = false;
+		}
 		UnFreezeSurvivorBots();
 	}
 
@@ -1112,7 +1120,7 @@ void UnLockAllRotatingSaferoomDoors()
 	SetVariantString("spawnflags 8192");
 	AcceptEntityInput(iCheckPointDoor, "AddOutput");
 	AcceptEntityInput(iCheckPointDoor, "Unlock");
-	AcceptEntityInput(iCheckPointDoor, "Open");
+	// AcceptEntityInput(iCheckPointDoor, "Open"); // 注释掉此行以防止倒计时结束后门自动强制打开
 	AcceptEntityInput(iCheckPointDoor, "StartGlowing");
 
 	int iDoorUnlockColors[3];

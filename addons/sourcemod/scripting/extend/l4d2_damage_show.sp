@@ -10,7 +10,7 @@
 // =========================
 // Plugin constants / config
 // =========================
-#define PLUGIN_VERSION  "2.2-mysql-cookie(db-first)+asyncconnect+queue-save+steam2+fixes"
+#define PLUGIN_VERSION  "2.3-mysql-cookie(db-first)+keepalive+dirty-save"
 #define SPRITE_MATERIAL "materials/sprites/laserbeam.vmt"
 #define DMG_HEADSHOT    (1 << 30)
 #define L4D2_MAXPLAYERS 32
@@ -131,6 +131,8 @@ bool  g_DbReady      = false;
 float g_DbRetryAfter = 0.0;
 Handle g_hDbReconnectTimer = INVALID_HANDLE;
 #define DB_RETRY_COOLDOWN 10.0
+#define DB_KEEPALIVE_INTERVAL 60.0
+Handle g_hDbKeepAliveTimer = INVALID_HANDLE;
 
 Cookie g_ck = null;
 
@@ -147,6 +149,9 @@ char g_CookieRaw[MAXPLAYERS + 1][256];
 
 // 保存排队：在未加载完成时点了“保存”，把当时的设置拍个快照
 bool          g_PendingSave[MAXPLAYERS + 1];
+bool          g_SettingsDirty[MAXPLAYERS + 1];
+int           g_SettingsRevision[MAXPLAYERS + 1];
+int           g_SaveRevision[MAXPLAYERS + 1];
 
 static void ResetClientState(int client)
 {
@@ -154,8 +159,26 @@ static void ResetClientState(int client)
     g_HaveCookie[client] = false;
     g_CookieRaw[client][0] = '\0';
     g_PendingSave[client] = false;
+    g_SettingsDirty[client] = false;
+    g_SettingsRevision[client] = 0;
+    g_SaveRevision[client] = 0;
 }
 PlayerSetData g_SaveSnapshot[MAXPLAYERS + 1];
+
+static void Settings_MarkDirty(int client)
+{
+    if (client > 0 && client <= MaxClients && IsClientConnected(client) && !IsFakeClient(client))
+    {
+        g_SettingsDirty[client] = true;
+        g_SettingsRevision[client]++;
+    }
+}
+
+static void Settings_MarkClean(int client)
+{
+    if (client > 0 && client <= MaxClients)
+        g_SettingsDirty[client] = false;
+}
 
 static const int color[][3] = {
     {  0,255,  0}, // 绿：友伤
@@ -342,8 +365,8 @@ static void DB_BeginConnect()
     g_UseMySQL = true;   // 有配置就视为启用，真正就绪看 g_DbReady
     g_DbReady = false;
 
-    // 正确参数顺序：SQL_TConnect(回调, 配置名, 持久化, 可选data)
-    SQL_TConnect(SQLCB_OnConnect, DB_CONF_NAME, true);
+    // SQL_TConnect 第三个参数是回调 data，不是 persistent。
+    SQL_TConnect(SQLCB_OnConnect, DB_CONF_NAME, 0);
     LogInfo("[DB] SQL_TConnect issued (async) for '%s'", DB_CONF_NAME);
 } 
 
@@ -352,6 +375,49 @@ static bool DB_EnsureReady()
     if (g_DbReady && g_DB != INVALID_HANDLE) return true;
     DB_BeginConnect();
     return (g_DbReady && g_DB != INVALID_HANDLE);
+}
+
+static void DB_StartKeepAlive()
+{
+    if (g_hDbKeepAliveTimer != INVALID_HANDLE)
+        return;
+
+    g_hDbKeepAliveTimer = CreateTimer(DB_KEEPALIVE_INTERVAL, Timer_DmgShowDBKeepAlive, 0, TIMER_REPEAT);
+}
+
+static void DB_StopKeepAlive()
+{
+    if (g_hDbKeepAliveTimer == INVALID_HANDLE)
+        return;
+
+    KillTimer(g_hDbKeepAliveTimer);
+    g_hDbKeepAliveTimer = INVALID_HANDLE;
+}
+
+public Action Timer_DmgShowDBKeepAlive(Handle timer, any data)
+{
+    if (g_hDbKeepAliveTimer != timer)
+        return Plugin_Stop;
+
+    if (!g_UseMySQL)
+        return Plugin_Continue;
+
+    if (!g_DbReady || g_DB == INVALID_HANDLE)
+    {
+        DB_BeginConnect();
+        return Plugin_Continue;
+    }
+
+    SQL_TQuery(g_DB, SQLCB_KeepAlive, "SELECT 1", 0, DBPrio_Low);
+    return Plugin_Continue;
+}
+
+public void SQLCB_KeepAlive(Handle owner, Handle hndl, const char[] error, any data)
+{
+    if (error[0] != '\0')
+    {
+        DB_MarkConnectionLost(error);
+    }
 }
 
 static bool DB_IsConnectionLostError(const char[] error)
@@ -365,7 +431,9 @@ static void DB_MarkConnectionLost(const char[] error)
     if (!DB_IsConnectionLostError(error))
         return;
 
-    LogErr("[DB] 检测到数据库连接丢失，%.0f 秒后自动重连...", DB_RETRY_COOLDOWN);
+    bool alreadyScheduled = (!g_DbReady && g_DB == INVALID_HANDLE && g_hDbReconnectTimer != INVALID_HANDLE);
+    if (!alreadyScheduled)
+        LogErr("[DB] 检测到数据库连接丢失，%.0f 秒后自动重连...", DB_RETRY_COOLDOWN);
 
     if (g_DB != INVALID_HANDLE)
     {
@@ -420,6 +488,7 @@ public void SQLCB_OnConnect(Handle owner, Handle hndl, const char[] error, any d
     DB_DebugDumpSession();
 
     LogInfo("[DB] connected (async), handle=%p", g_DB);
+    DB_FlushPendingSaves();
 }
 
 public void SQLCB_OnSetNames(Handle owner, Handle hndl, const char[] error, any data)
@@ -470,6 +539,7 @@ static void DB_Load(int client)
         if (!ok) Settings_Default(client);
 
         g_LoadState[client] = LS_Ready;
+        Settings_MarkClean(client);
         LogInfo("[Load] DB not ready, used %s for client %d.",
                 ok ? "cookie" : "defaults", client);
         return;
@@ -485,6 +555,7 @@ static void DB_Load(int client)
             ok = ApplyCookieRawString(client, g_CookieRaw[client]);
         if (!ok) Settings_Default(client);
         g_LoadState[client] = LS_Ready;
+        Settings_MarkClean(client);
         LogInfo("[Load] No Steam2 (or BOT), used %s for client %d.",
                 ok ? "cookie" : "defaults", client);
         return;
@@ -513,6 +584,7 @@ public void SQLCB_Load(Handle owner, Handle hndl, const char[] error, any data)
         if (!ok) Settings_Default(client);
 
         g_LoadState[client] = LS_Ready;
+        Settings_MarkClean(client);
         LogErr("[Load] SQL error: %s. Used %s for client %d.",
                error, ok ? "cookie" : "defaults", client);
         DB_MarkConnectionLost(error);
@@ -538,6 +610,7 @@ public void SQLCB_Load(Handle owner, Handle hndl, const char[] error, any data)
         ClampStyle(client);
 
         g_LoadState[client] = LS_Ready;
+        Settings_MarkClean(client);
         // ★ 新增：DB 数据落地后，执行门禁并保存
         Gate_EnforceFor(client, "db-load");
         LogInfo("[Load] Loaded settings from DB for client %d.", client);
@@ -583,6 +656,7 @@ public void SQLCB_Load(Handle owner, Handle hndl, const char[] error, any data)
         SQL_TQuery(g_DB, SQLCB_Nop, q);
 
         g_LoadState[client] = LS_Ready;
+        Settings_MarkClean(client);
         // ★ 新增：DB 数据落地后，执行门禁并保存
         Gate_EnforceFor(client, "db-load");
     }
@@ -632,14 +706,38 @@ static int DB_Save_Snapshot(int client)
     SQLCat(q, sizeof q, "showdist=VALUES(showdist), summode=VALUES(summode), sg_merge=VALUES(sg_merge)");
 
     LogInfo("[SaveSnapshot] Exec SQL (client=%d): %s", client, q);
-    SQL_TQuery(g_DB, SQLCB_Save, q, client);
+    g_SaveRevision[client] = g_SettingsRevision[client];
+    SQL_TQuery(g_DB, SQLCB_Save, q, GetClientUserId(client));
     return 2;
 }
 
+static void DB_FlushPendingSaves()
+{
+    if (!g_DbReady || g_DB == INVALID_HANDLE)
+        return;
+
+    for (int i = 1; i <= MaxClients; i++)
+    {
+        if (!IsClientInGame(i) || IsFakeClient(i))
+            continue;
+        if (!g_PendingSave[i] || g_LoadState[i] != LS_Ready)
+            continue;
+
+        g_PendingSave[i] = false;
+        int rc = DB_Save_Snapshot(i);
+        LogInfo("[SavePending] Flushed after reconnect for client %d, rc=%d", i, rc);
+    }
+}
+
 // 返回：0 未保存/失败；1 仅 Cookie；2 已发起 DB 异步保存
-static int DB_Save(int client)
+static int DB_Save(int client, bool force = false)
 {
     ClampStyle(client);
+
+    if (!force && !g_SettingsDirty[client])
+    {
+        return 0;
+    }
 
     // 1) 若还没 Ready：排队保存（拍快照），并写本地 Cookie 兜底
     if (g_LoadState[client] != LS_Ready)
@@ -656,9 +754,12 @@ static int DB_Save(int client)
     // 2) DB 不可用：只写 Cookie
     if (!g_UseMySQL || g_DB == INVALID_HANDLE || IsFakeClient(client))
     {
+        g_SaveSnapshot[client] = g_Plr[client];
+        g_PendingSave[client] = true;
         Cookie_Save(client);
+        DB_BeginConnect();
         CPrintToChat(client, "{olive}[HUD]{default} 设置已保存到本地（Cookie）。MySQL 未启用或不可用。");
-        LogInfo("[Save] DB not available, saved to Cookie. client=%d", client);
+        LogInfo("[Save] DB not available, saved to Cookie and queued. client=%d", client);
         return 1;
     }
 
@@ -697,7 +798,8 @@ static int DB_Save(int client)
     SQLCat(q, sizeof q, "showdist=VALUES(showdist), summode=VALUES(summode), sg_merge=VALUES(sg_merge)");
 
     LogInfo("[Save] Exec SQL (client=%d): %s", client, q);
-    SQL_TQuery(g_DB, SQLCB_Save, q, client);
+    g_SaveRevision[client] = g_SettingsRevision[client];
+    SQL_TQuery(g_DB, SQLCB_Save, q, GetClientUserId(client));
 
     // 双写 Cookie：本地立即生效
     Cookie_Save(client);
@@ -707,15 +809,27 @@ static int DB_Save(int client)
 
 public void SQLCB_Save(Handle owner, Handle hndl, const char[] error, any data)
 {
-    int client = data;
+    int userid = data;
+    int client = GetClientOfUserId(userid);
     if (error[0] != '\0')
     {
-        LogErr("[Save] SQL error for client %d: %s", client, error);
+        LogErr("[Save] SQL error for userid %d (client %d): %s", userid, client, error);
+        if (DB_IsConnectionLostError(error) && IsValidClient(client))
+        {
+            g_SaveSnapshot[client] = g_Plr[client];
+            g_PendingSave[client] = true;
+            Cookie_Save(client, true);
+        }
         DB_MarkConnectionLost(error);
     }
     else
     {
-        LogInfo("[Save] SQL OK for client %d.", client);
+        if (IsValidClient(client) && g_SaveRevision[client] == g_SettingsRevision[client])
+        {
+            Settings_MarkClean(client);
+            g_PendingSave[client] = false;
+        }
+        LogInfo("[Save] SQL OK for userid %d (client %d).", userid, client);
     }
 }
 
@@ -750,6 +864,7 @@ public void OnPluginStart()
     g_ck = new Cookie(COOKIE_NAME, "damage hud per-client", CookieAccess_Protected);
 
     // DB（异步）
+    DB_StartKeepAlive();
     DB_BeginConnect();
 
     // 命令
@@ -775,6 +890,23 @@ public void OnPluginStart()
     HookEvent("player_hurt", E_PlayerHurt);
     for (int i=1;i<=MaxClients;i++)
         if (IsClientInGame(i)) SDKHook(i, SDKHook_OnTakeDamagePost, SDK_OnTakeDamagePost);
+}
+
+public void OnPluginEnd()
+{
+    DB_StopKeepAlive();
+
+    if (g_hDbReconnectTimer != INVALID_HANDLE)
+    {
+        KillTimer(g_hDbReconnectTimer);
+        g_hDbReconnectTimer = INVALID_HANDLE;
+    }
+
+    if (g_DB != INVALID_HANDLE)
+    {
+        CloseHandle(g_DB);
+        g_DB = INVALID_HANDLE;
+    }
 }
 
 public void OnClientConnected(int client)
@@ -900,9 +1032,9 @@ public void OnClientDisconnect(int client)
     {
         if (g_LoadState[client] == LS_Ready)
         {
-            DB_Save(client); // Ready 才写库
+            DB_Save(client); // Ready 且有变更时才写库，避免断开/换图空写库
         }
-        else
+        else if (g_SettingsDirty[client] || g_PendingSave[client])
         {
             Cookie_Save(client, true); // 未 Ready：仅 Cookie 兜底
             LogInfo("[Save@Disconnect] Not ready (state=%d), skip DB save; cookie only.", view_as<int>(g_LoadState[client]));
@@ -1061,7 +1193,7 @@ public int Menu_Root(Menu menu, MenuAction action, int client, int param2)
     else if (StrEqual(key, "save"))
     {
         ClampStyle(client);
-        DB_Save(client);
+        DB_Save(client, true);
         CPrintToChat(client, "{olive}[HUD]{default} 设置已保存。");
         OpenRootMenu(client);
     }
@@ -1128,6 +1260,7 @@ public int Menu_Style(Menu menu, MenuAction action, int client, int param2)
     else if (StrEqual(key, "back")) { OpenRootMenu(client); return 0; }
 
     ClampStyle(client);
+    Settings_MarkDirty(client);
     OpenStyleMenu(client);
     return 0;
 }
@@ -1173,13 +1306,20 @@ public int Menu_Share(Menu menu, MenuAction action, int client, int param2)
 
     char key[32];
     menu.GetItem(param2, key, sizeof key);
+    bool persistentChanged = false;
 
     if (StrEqual(key, "toggle_see"))
+    {
         g_Plr[client].see_others = !g_Plr[client].see_others;
+        persistentChanged = true;
+    }
     else if (StrEqual(key, "scope"))
     {
         if (IsAdminOrRoot(client))
+        {
             g_Plr[client].share_scope = (g_Plr[client].share_scope + 1) % 2;
+            persistentChanged = true;
+        }
         else
             CPrintToChat(client, "{olive}[HUD]{default} 只有管理员可以修改分享范围。");
     }
@@ -1208,6 +1348,8 @@ public int Menu_Share(Menu menu, MenuAction action, int client, int param2)
     else if (StrEqual(key, "back")) { OpenRootMenu(client); return 0; }
 
     ClampStyle(client);
+    if (persistentChanged)
+        Settings_MarkDirty(client);
     OpenShareMenu(client);
     return 0;
 }
@@ -1724,10 +1866,16 @@ static void Gate_EnforceFor(int client, const char[] reason = "")
     if (changed)
     {
         ClampStyle(client);
+        Settings_MarkDirty(client);
 
         // 已加载 → 写 DB；未加载 → 写 Cookie 并排队
-        if (g_LoadState[client] == LS_Ready) DB_Save(client);
-        else Cookie_Save(client, true);
+        if (g_LoadState[client] == LS_Ready) DB_Save(client, true);
+        else
+        {
+            g_SaveSnapshot[client] = g_Plr[client];
+            g_PendingSave[client] = true;
+            Cookie_Save(client, true);
+        }
 
         if (IsClientInGame(client))
         {
