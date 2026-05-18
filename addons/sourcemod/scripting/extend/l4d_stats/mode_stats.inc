@@ -30,7 +30,12 @@ stock ModeStats_EnsureTable()
 
 	g_bModeStatsTableReady = DoFastQuery(0, query);
 	if (!g_bModeStatsTableReady)
-		LogError("Failed to create mode stats table `%splayer_mode_stats`.", DbPrefix);
+	{
+		if (IsDBReconnectPending() || db == INVALID_HANDLE)
+			LogMessage("Mode stats table `%splayer_mode_stats` is not ready; waiting for database reconnect.", DbPrefix);
+		else
+			LogError("Failed to create mode stats table `%splayer_mode_stats`.", DbPrefix);
+	}
 }
 
 stock ModeStats_GetAnneMode()

@@ -50,7 +50,12 @@ stock ScoreLog_EnsureTable()
 
 	g_bScoreLogTableReady = DoFastQuery(0, query);
 	if (!g_bScoreLogTableReady)
-		LogError("Failed to create score log table `%sscore_log`.", DbPrefix);
+	{
+		if (IsDBReconnectPending() || db == INVALID_HANDLE)
+			LogMessage("Score log table `%sscore_log` is not ready; waiting for database reconnect.", DbPrefix);
+		else
+			LogError("Failed to create score log table `%sscore_log`.", DbPrefix);
+	}
 }
 
 stock ScoreLog_SetContext(const String:Reason[], const String:Formula[], Uses = 1)

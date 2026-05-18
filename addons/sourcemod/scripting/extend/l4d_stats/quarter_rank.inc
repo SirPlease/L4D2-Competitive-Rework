@@ -102,7 +102,10 @@ stock QuarterRank_EnsureTable()
 	g_bQuarterRankTableReady = DoFastQuery(0, query);
 	if (!g_bQuarterRankTableReady)
 	{
-		LogError("Failed to create quarter rank table `%sscore_quarter`.", DbPrefix);
+		if (IsDBReconnectPending() || db == INVALID_HANDLE)
+			LogMessage("Quarter rank table `%sscore_quarter` is not ready; waiting for database reconnect.", DbPrefix);
+		else
+			LogError("Failed to create quarter rank table `%sscore_quarter`.", DbPrefix);
 		return;
 	}
 
@@ -125,6 +128,12 @@ public QuarterRank_CheckPlaytimeColumn(Handle:owner, Handle:hndl, const String:e
 	if (hndl == INVALID_HANDLE)
 	{
 		LogError("QuarterRank_CheckPlaytimeColumn Query failed: %s", error);
+		return;
+	}
+
+	if (!SQL_HasResultSet(hndl))
+	{
+		LogMessage("QuarterRank_CheckPlaytimeColumn returned no result set; waiting for the next database check.");
 		return;
 	}
 

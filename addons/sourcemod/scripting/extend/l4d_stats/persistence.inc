@@ -6,6 +6,8 @@
 // 数据库连接、玩家/地图持久化、基础查询和相关计分定时器。
 
 static Handle g_hDBReconnectTimer = INVALID_HANDLE;
+static Handle g_hDBKeepAliveTimer = INVALID_HANDLE;
+#define DB_KEEPALIVE_INTERVAL 60.0
 
 // Make connection to database.
 
@@ -27,13 +29,7 @@ bool:ConnectDB()
 		else if (!SQL_FastQuery(db, "SET NAMES 'utf8mb4'"))
 		{
 			if (SQL_GetError(db, Error, sizeof(Error)))
-			{
-				if (IsDBConnectionLostError(Error))
-					LogMessage("[l4d_stats] 设置数据库字符集时连接丢失，等待自动重连。");
-				else
-					LogError("Failed to update encoding to utf8mb4: %s", Error);
-				ScheduleDBReconnect(Error);
-			}
+				LogError("Failed to update encoding to utf8mb4: %s", Error);
 			else
 				LogError("Failed to update encoding to utf8mb4: unknown");
 			if (db != INVALID_HANDLE)
@@ -80,6 +76,7 @@ bool:ConnectDB()
 		return false;
 	}
 
+	DB_StartKeepAlive();
 	return true;
 }
 
@@ -106,6 +103,8 @@ void ScheduleDBReconnect(const char[] error)
 	g_bQuarterRankTableReady = false;
 	g_bQuarterRankDbChecked = false;
 	g_bModeStatsTableReady = false;
+
+	DB_StopKeepAlive();
 
 	if (db != INVALID_HANDLE)
 	{
@@ -137,6 +136,47 @@ public Action:Timer_L4DStatsDBReconnect(Handle:timer, any:data)
 	}
 
 	return Plugin_Stop;
+}
+
+// KeepAlive：每 60 秒发一次 SELECT 1 防止 MySQL wait_timeout 回收连接
+DB_StartKeepAlive()
+{
+	if (g_hDBKeepAliveTimer != INVALID_HANDLE)
+		return;
+
+	g_hDBKeepAliveTimer = CreateTimer(DB_KEEPALIVE_INTERVAL, Timer_L4DStatsDBKeepAlive, _, TIMER_REPEAT);
+}
+
+DB_StopKeepAlive()
+{
+	if (g_hDBKeepAliveTimer == INVALID_HANDLE)
+		return;
+
+	KillTimer(g_hDBKeepAliveTimer);
+	g_hDBKeepAliveTimer = INVALID_HANDLE;
+}
+
+public Action:Timer_L4DStatsDBKeepAlive(Handle:timer, any:data)
+{
+	if (g_hDBKeepAliveTimer != timer)
+		return Plugin_Stop;
+
+	if (db == INVALID_HANDLE)
+	{
+		g_hDBKeepAliveTimer = INVALID_HANDLE;
+		return Plugin_Stop;
+	}
+
+	SQL_TQuery(db, SQLCallback_KeepAlive, "SELECT 1", _, DBPrio_Low);
+	return Plugin_Continue;
+}
+
+public SQLCallback_KeepAlive(Handle:owner, Handle:hndl, const String:error[], any:data)
+{
+	if (!StrEqual("", error))
+	{
+		ScheduleDBReconnect(error);
+	}
 }
 
 bool:CheckDatabaseValidity(const String:Prefix[])

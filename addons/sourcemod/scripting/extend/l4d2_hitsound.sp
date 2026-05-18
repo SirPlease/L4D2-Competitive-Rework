@@ -543,6 +543,17 @@ void DB_MarkConnectionLost(const char[] error)
     ScheduleDBConnectRetry();
 }
 
+void DB_ResetConnectionForRetry()
+{
+    if (g_hDB != INVALID_HANDLE)
+    {
+        CloseHandle(g_hDB);
+        g_hDB = INVALID_HANDLE;
+    }
+
+    ScheduleDBConnectRetry();
+}
+
 // ========================================================
 // Persistence: DB + Fallback
 // ========================================================
@@ -588,6 +599,13 @@ public void SQL_OnCheckExtraColumn(Handle owner, Handle hndl, const char[] error
         }
 
         LogError("[hitsound] 检查数据库列 `%s` 失败: %s", column, error);
+        return;
+    }
+
+    if (!SQL_HasResultSet(hndl))
+    {
+        LogMessage("[hitsound] 检查数据库列 `%s` 没有返回结果集，等待自动重连。", column);
+        DB_ResetConnectionForRetry();
         return;
     }
 
