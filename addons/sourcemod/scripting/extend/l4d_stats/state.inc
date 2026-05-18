@@ -246,6 +246,7 @@ new AdrenalineFirstHolder[4096];
 new FirstAidFirstHolder[4096];
 new bool:SupportItemWorldSpawned[4096];
 new bool:SupportStartGrantRecorded = false;
+new Float:SupportStartGrantUntil = 0.0;
 new HealingFirstAid[MAXPLAYERS + 1];
 new Float:SupportReloadTime[MAXPLAYERS + 1];
 new SupportReloadType[MAXPLAYERS + 1];

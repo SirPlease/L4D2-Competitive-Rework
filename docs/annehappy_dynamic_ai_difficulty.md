@@ -18,6 +18,7 @@ PPM 从 `l4d_stats` 获取。当前默认对每个真人生还者使用总积分
 - 每回合 `round_start` 后先应用简单难度作为保底，然后立即尝试自动定档。
 - 如果 `l4d_stats` 数据还没加载完成，会在安全门内按间隔重试。
 - 一旦定档成功，本回合锁定该难度，出门后不会再动态变化。
+- 锁定后插件会按 `ah_ai_dynamic_enforce_interval` 重刷当前档位 cvar；这不会改变本回合难度，只用于防止其他投票或手动 cvar 把属性改成别的档。
 - `player_left_start_area` 只负责锁定兜底状态：如果出门前仍未读到统计数据，本回合保持简单难度。
 
 默认分档：
@@ -50,6 +51,7 @@ PPM 从 `l4d_stats` 获取。当前默认对每个真人生还者使用总积分
 | `ah_ai_dynamic_threshold_max_age` | `172800` | 数据库阈值最大有效秒数；默认 2 天，过期回退固定 cfg |
 | `ah_ai_dynamic_fixed_level` | `0` | `0=自动`，`1-5=固定简单/普通/困难/专家/极限` |
 | `ah_ai_dynamic_config` | `configs/AnneHappy/dynamic_ai_difficulty.cfg` | 每档难度的特感/Tank cvar 配置文件，相对 `addons/sourcemod` |
+| `ah_ai_dynamic_enforce_interval` | `10.0` | 难度锁定后定期重刷当前档位 cvar，防止旧投票或手动 `sm_cvar` 覆盖；`0=关闭` |
 | `ah_ai_dynamic_use_quarter_stats` | `0` | 是否启用季度 PPM 优先；当前季度数据失真，默认关闭 |
 | `ah_ai_dynamic_quarter_min_minutes` | `300` | 启用季度 PPM 时，玩家季度样本低于该分钟数则回退总积分 PPM |
 | `ah_ai_dynamic_announce` | `1` | 调档时聊天提示 |

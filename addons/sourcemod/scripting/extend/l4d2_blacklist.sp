@@ -36,6 +36,7 @@ public Plugin myinfo =
 /* -------------------- ConVars -------------------- */
 Handle g_hDb = INVALID_HANDLE;
 Handle g_hDbReconnectTimer = INVALID_HANDLE;
+#define DB_RECONNECT_DELAY 10.0
 
 ConVar gCvarEnable;
 ConVar gCvarDBSection;
@@ -131,65 +132,49 @@ void BL_Log(const char[] fmt, any ...)
 }
 
 /* -------------------- DB 连接（自动 MySQL/SQLite） -------------------- */
-void DB_Connect()
+void DB_Close()
 {
     if (g_hDb != INVALID_HANDLE)
     {
         CloseHandle(g_hDb);
         g_hDb = INVALID_HANDLE;
     }
-    SQL_TConnect(DB_OnConnected, g_sDBSection, 0);
 }
 
-bool DB_IsConnectionLostError(const char[] error)
+bool DB_Connect()
 {
-    return StrContains(error, "Lost connection", false) != -1
-        || StrContains(error, "server has gone away", false) != -1;
-}
-
-void DB_MarkConnectionLost(const char[] error)
-{
-    if (!DB_IsConnectionLostError(error))
-        return;
-
     if (g_hDb != INVALID_HANDLE)
+        return true;
+
+    if (!SQL_CheckConfig(g_sDBSection))
     {
-        CloseHandle(g_hDb);
-        g_hDb = INVALID_HANDLE;
+        LogError("[BlockList] databases.cfg missing '%s' entry", g_sDBSection);
+        if (g_hDbReconnectTimer == INVALID_HANDLE)
+            g_hDbReconnectTimer = CreateTimer(DB_RECONNECT_DELAY, Timer_DBReconnect);
+        return false;
     }
 
-    if (g_hDbReconnectTimer == INVALID_HANDLE)
-        g_hDbReconnectTimer = CreateTimer(5.0, Timer_DBReconnect);
-}
-
-public Action Timer_DBReconnect(Handle timer, any data)
-{
-    g_hDbReconnectTimer = INVALID_HANDLE;
-    DB_Connect();
-    return Plugin_Stop;
-}
-
-public void DB_OnConnected(Handle owner, Handle hndl, const char[] error, any data)
-{
-    if (hndl == INVALID_HANDLE)
+    char error[256];
+    g_hDb = SQL_Connect(g_sDBSection, true, error, sizeof(error));
+    if (g_hDb == INVALID_HANDLE)
     {
         LogError("[BlockList] DB connect failed: %s", error);
+        DB_Close();
         if (g_hDbReconnectTimer == INVALID_HANDLE)
-            g_hDbReconnectTimer = CreateTimer(5.0, Timer_DBReconnect);
-        return;
+            g_hDbReconnectTimer = CreateTimer(DB_RECONNECT_DELAY, Timer_DBReconnect);
+        return false;
     }
-
-    g_hDb = hndl;
 
     char ident[32];
-    // 关键：这里应该传 owner（DBDriver 句柄）
-    if (!SQL_GetDriverIdent(owner, ident, sizeof(ident)))
-    {
-        LogError("[BlockList] Failed to get driver ident");
-        return;
-    }
-
+    SQL_ReadDriver(g_hDb, ident, sizeof(ident));
     bool isMySQL = StrEqual(ident, "mysql", false);
+
+    if (isMySQL)
+    {
+        if (!SQL_SetCharset(g_hDb, "utf8mb4"))
+            LogError("[BlockList] failed to set DB charset utf8mb4");
+        SQL_FastQuery(g_hDb, "SET NAMES 'utf8mb4'");
+    }
 
     char sql[512];
     if (isMySQL)
@@ -214,8 +199,32 @@ public void DB_OnConnected(Handle owner, Handle hndl, const char[] error, any da
     }
 
     SQL_TQuery(g_hDb, DB_GenericCallback, sql);
+    return true;
 }
 
+bool DB_IsConnectionLostError(const char[] error)
+{
+    return StrContains(error, "Lost connection", false) != -1
+        || StrContains(error, "server has gone away", false) != -1;
+}
+
+void DB_MarkConnectionLost(const char[] error)
+{
+    if (!DB_IsConnectionLostError(error))
+        return;
+
+    DB_Close();
+
+    if (g_hDbReconnectTimer == INVALID_HANDLE)
+        g_hDbReconnectTimer = CreateTimer(DB_RECONNECT_DELAY, Timer_DBReconnect);
+}
+
+public Action Timer_DBReconnect(Handle timer, any data)
+{
+    g_hDbReconnectTimer = INVALID_HANDLE;
+    DB_Connect();
+    return Plugin_Stop;
+}
 
 public void DB_GenericCallback(Handle owner, Handle hndl, const char[] error, any data)
 {
@@ -300,11 +309,22 @@ public void OnPluginStart()
     DB_Connect();
 }
 
+public void OnPluginEnd()
+{
+    if (g_hDbReconnectTimer != INVALID_HANDLE)
+    {
+        KillTimer(g_hDbReconnectTimer);
+        g_hDbReconnectTimer = INVALID_HANDLE;
+    }
+
+    DB_Close();
+}
+
 public void OnCvarChanged(ConVar cvar, const char[] o, const char[] n)
 {
     if (cvar == gCvarTableName)        strcopy(g_sTable, sizeof(g_sTable), n);
     else if (cvar == gCvarKickMsg)     strcopy(g_sKickMsg, sizeof(g_sKickMsg), n);
-    else if (cvar == gCvarDBSection)   { strcopy(g_sDBSection, sizeof(g_sDBSection), n); DB_Connect(); }
+    else if (cvar == gCvarDBSection)   { strcopy(g_sDBSection, sizeof(g_sDBSection), n); DB_Close(); DB_Connect(); }
     else if (cvar == gCvarLimitUser)   g_iLimitUser = StringToInt(n);
     else if (cvar == gCvarLimitAdmin)  g_iLimitAdmin = StringToInt(n);
     else if (cvar == gCvarConsiderTeams) g_bConsiderTeamsOnly = StringToInt(n) != 0;

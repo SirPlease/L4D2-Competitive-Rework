@@ -834,6 +834,9 @@ stock Stats_RecordScoreableSupportHolder(firstHolder[], entity, client, bool:All
 
 stock bool:Stats_ShouldMarkUnknownSupportPickupUnscoreable(client)
 {
+	if (!Stats_IsSupportGiveBlocked(client) && GetEngineTime() <= SupportStartGrantUntil)
+		return false;
+
 	return Isstart || Stats_IsSupportGiveBlocked(client);
 }
 
@@ -989,6 +992,7 @@ stock Stats_RecordStartGrantedSupportItems()
 		return;
 
 	SupportStartGrantRecorded = true;
+	SupportStartGrantUntil = GetEngineTime() + 1.2;
 	Stats_RecordAllHeldSupportItems(true);
 	Stats_ScheduleStartGrantedSupportItemScans();
 }

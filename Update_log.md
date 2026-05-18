@@ -432,6 +432,8 @@ witchparty 和 allcharger模式在普通药役的基础上小僵尸再减少17-2
 - 支持从数据库表 `ai_dynamic_ppm_thresholds` 读取每日预计算分位阈值；网页或定时任务可每天凌晨 4 点写入，插件只读取已计算好的结果，读取失败或过期时回退本地 cfg 阈值。
 - 新增 `addons/sourcemod/configs/AnneHappy/dynamic_ai_difficulty.cfg`，将各档特感和 Tank 属性拆成独立配置，方便后续不用改源码直接调档位数值。
 - 动态难度只调整特感和 Tank 行为属性，不改刷特数量、刷特间隔、刷点距离、传送检测等章节固定节奏。
+- 动态难度锁定后会按 `ah_ai_dynamic_enforce_interval` 定期重刷当前档位 cvar，防止旧投票或手动 `sm_cvar` 把普通/简单档覆盖成极限属性。
+- 投票菜单移除旧的 `hard_on/hard_off` 和 `crouch_on/crouch_off` 直改 cvar 入口，统一通过 `固定特感难度` 分类管理档位。
 - Tank、Boomer、Charger、Spitter、Jockey、Hunter、Smoker 按档位区分关键行为参数；Jockey 抢控保持关闭，由 `target_override` 控制目标。
 - 极限档 Hunter 启用 `l4d2_hunter_patch` 的 `convert_leap=1` 和 `crouch_pounce=2`，非极限档固定关闭该强化，避免档位切换后状态残留。
 - `ai_hunter_2.smx` 增加对 `l4d2_hunter_patch` 开关变化的监听，动态难度运行时切换极限档时会同步刷新 Hunter 蹲扑兼容参数。

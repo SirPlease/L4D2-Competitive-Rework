@@ -5,7 +5,7 @@
 #undef REQUIRE_PLUGIN
 #include <l4dstats>
 
-#define PLUGIN_VERSION "2026.05.17.4"
+#define PLUGIN_VERSION "2026.05.18.1"
 #define TEAM_SURVIVOR 2
 #define DEFAULT_CONFIG_PATH "configs/AnneHappy/dynamic_ai_difficulty.cfg"
 #define DEFAULT_THRESHOLD_DB_CONFIG "l4dstats"
@@ -25,6 +25,7 @@ ConVar g_cvThresholdMode;
 ConVar g_cvThresholdDbConfig;
 ConVar g_cvThresholdTable;
 ConVar g_cvThresholdMaxAge;
+ConVar g_cvEnforceInterval;
 ConVar g_cvAnnounce;
 ConVar g_cvDebug;
 ConVar g_cvCurrentLevel;
@@ -34,7 +35,9 @@ ConVar g_cvCurrentLocked;
 
 Database g_hThresholdDb = null;
 Handle g_hTimer = null;
+Handle g_hThresholdDbReconnectTimer = null;
 float g_fNextCheckAt = 0.0;
+float g_fNextEnforceAt = 0.0;
 float g_fDbLevel2PPM = 0.0;
 float g_fDbLevel3PPM = 0.0;
 float g_fDbLevel4PPM = 0.0;
@@ -53,6 +56,8 @@ bool g_bThresholdSchemaReady = false;
 bool g_bThresholdQueryInFlight = false;
 bool g_bDbThresholdReady = false;
 char g_sDbThresholdSource[32];
+
+#define THRESHOLD_DB_RECONNECT_DELAY 10.0
 
 public Plugin myinfo =
 {
@@ -79,6 +84,7 @@ public void OnPluginStart()
     g_cvThresholdDbConfig = CreateConVar("ah_ai_dynamic_threshold_db_config", DEFAULT_THRESHOLD_DB_CONFIG, "每日 PPM 阈值数据库配置名，对应 databases.cfg", FCVAR_NOTIFY);
     g_cvThresholdTable = CreateConVar("ah_ai_dynamic_threshold_table", DEFAULT_THRESHOLD_TABLE, "每日 PPM 阈值表名，只允许字母数字下划线", FCVAR_NOTIFY);
     g_cvThresholdMaxAge = CreateConVar("ah_ai_dynamic_threshold_max_age", "172800", "数据库阈值最大有效秒数；0=不检查过期，默认2天", FCVAR_NOTIFY, true, 0.0);
+    g_cvEnforceInterval = CreateConVar("ah_ai_dynamic_enforce_interval", "10.0", "难度锁定后每隔多少秒重刷当前档位 cvar，防止旧投票或手动 sm_cvar 覆盖；0=关闭", FCVAR_NOTIFY, true, 0.0, true, 60.0);
     g_cvAnnounce = CreateConVar("ah_ai_dynamic_announce", "1", "调档时是否在聊天框提示", FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_cvDebug = CreateConVar("ah_ai_dynamic_debug", "0", "是否输出动态难度调试日志", FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_cvCurrentLevel = CreateConVar("ah_ai_dynamic_current_level", "0", "当前回合动态难度：0=未定档，1=简单，2=普通，3=困难，4=专家，5=极限", FCVAR_DONTRECORD, true, 0.0, true, 5.0);
@@ -110,6 +116,19 @@ public void OnMapEnd()
     StopDifficultyTimer();
 }
 
+public void OnPluginEnd()
+{
+    StopDifficultyTimer();
+
+    if (g_hThresholdDbReconnectTimer != null)
+    {
+        KillTimer(g_hThresholdDbReconnectTimer);
+        g_hThresholdDbReconnectTimer = null;
+    }
+
+    CloseThresholdDb();
+}
+
 void StartDifficultyTimer()
 {
     if (g_hTimer != null)
@@ -130,6 +149,7 @@ void StopDifficultyTimer()
 public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
     g_fNextCheckAt = 0.0;
+    g_fNextEnforceAt = 0.0;
     g_fCurrentPPM = 0.0;
     g_iCurrentLevel = 0;
     g_iCurrentMode = 0;
@@ -166,10 +186,19 @@ public void Event_PlayerLeftStartArea(Event event, const char[] name, bool dontB
 
 public Action Timer_CheckDifficulty(Handle timer)
 {
-    if (!g_cvEnable.BoolValue || g_bDifficultyLocked || !g_bPendingAutoApply)
+    if (!g_cvEnable.BoolValue)
         return Plugin_Continue;
 
     float now = GetGameTime();
+    if (g_bDifficultyLocked)
+    {
+        EnforceLockedDifficulty(now);
+        return Plugin_Continue;
+    }
+
+    if (!g_bPendingAutoApply)
+        return Plugin_Continue;
+
     if (g_fNextCheckAt > now)
         return Plugin_Continue;
 
@@ -180,6 +209,21 @@ public Action Timer_CheckDifficulty(Handle timer)
 
     TryApplyAutoDifficulty(false);
     return Plugin_Continue;
+}
+
+void EnforceLockedDifficulty(float now)
+{
+    if (g_iCurrentLevel <= 0)
+        return;
+
+    float interval = g_cvEnforceInterval.FloatValue;
+    if (interval <= 0.0 || g_fNextEnforceAt > now)
+        return;
+
+    g_fNextEnforceAt = now + interval;
+    int applied = ApplyProfileCvars(g_iCurrentLevel);
+    if (g_cvDebug.BoolValue)
+        LogMessage("[AnneHappyAI] enforced locked level=%d applied=%d", g_iCurrentLevel, applied);
 }
 
 void PrepareRoundDifficulty(bool silent)
@@ -319,6 +363,8 @@ public Action Cmd_SetDifficulty(int client, int args)
         if (g_bSurvivorsLeftStartArea)
         {
             ReplyToCommand(client, "[AnneHappyAI] 已切换为自动难度，将从下一回合开始生效；当前回合难度不变。");
+            if (g_cvAnnounce.BoolValue)
+                PrintToChatAll("\x04[AnneHappyAI]\x01 已切换为自动难度，将从下一回合开始生效；当前回合难度不变。");
             return Plugin_Handled;
         }
 
@@ -331,6 +377,8 @@ public Action Cmd_SetDifficulty(int client, int args)
             PublishCurrentDifficulty();
 
         ReplyToCommand(client, "[AnneHappyAI] 已切换为自动难度。");
+        if (g_cvAnnounce.BoolValue)
+            PrintToChatAll("\x04[AnneHappyAI]\x01 已切换为自动难度。");
         return Plugin_Handled;
     }
 
@@ -341,6 +389,8 @@ public Action Cmd_SetDifficulty(int client, int args)
         char levelName[16];
         GetLevelName(level, levelName, sizeof(levelName));
         ReplyToCommand(client, "[AnneHappyAI] 已固定难度为 %d(%s)，将从下一回合开始生效；当前回合难度不变。", level, levelName);
+        if (g_cvAnnounce.BoolValue)
+            PrintToChatAll("\x04[AnneHappyAI]\x01 已固定下一回合难度为 \x03%s\x01；当前回合难度不变。", levelName);
         return Plugin_Handled;
     }
 
@@ -354,6 +404,8 @@ public Action Cmd_SetDifficulty(int client, int args)
     char levelName[16];
     GetLevelName(level, levelName, sizeof(levelName));
     ReplyToCommand(client, "[AnneHappyAI] 已固定难度为 %d(%s)", level, levelName);
+    if (g_cvAnnounce.BoolValue)
+        PrintToChatAll("\x04[AnneHappyAI]\x01 已固定当前回合难度为 \x03%s\x01。", levelName);
     return Plugin_Handled;
 }
 
@@ -570,28 +622,64 @@ void ConnectThresholdDb()
     if (!SQL_CheckConfig(configName))
     {
         LogError("[AnneHappyAI] threshold database config not found: %s", configName);
+        ScheduleThresholdDbReconnect();
         return;
     }
 
     g_bThresholdDbConnecting = true;
-    Database.Connect(SQL_OnThresholdDbConnected, configName);
-}
-
-public void SQL_OnThresholdDbConnected(Database db, const char[] error, any data)
-{
+    char error[256];
+    g_hThresholdDb = SQL_Connect(configName, true, error, sizeof(error));
     g_bThresholdDbConnecting = false;
 
-    if (db == null)
+    if (g_hThresholdDb == null)
     {
         LogError("[AnneHappyAI] failed to connect threshold database: %s", error);
+        ScheduleThresholdDbReconnect();
         return;
     }
 
-    g_hThresholdDb = db;
     if (!SQL_SetCharset(g_hThresholdDb, "utf8mb4") && g_cvDebug.BoolValue)
         LogMessage("[AnneHappyAI] failed to set threshold database charset utf8mb4");
+    SQL_FastQuery(g_hThresholdDb, "SET NAMES 'utf8mb4'");
 
     CreateThresholdTable();
+}
+
+bool IsThresholdDbConnectionLostError(const char[] error)
+{
+    return StrContains(error, "Lost connection", false) != -1
+        || StrContains(error, "server has gone away", false) != -1;
+}
+
+void CloseThresholdDb()
+{
+    if (g_hThresholdDb != null)
+    {
+        delete g_hThresholdDb;
+        g_hThresholdDb = null;
+    }
+
+    g_bThresholdDbConnecting = false;
+    g_bThresholdQueryInFlight = false;
+    g_bThresholdSchemaReady = false;
+}
+
+void ScheduleThresholdDbReconnect(const char[] error = "")
+{
+    if (error[0] != '\0' && !IsThresholdDbConnectionLostError(error))
+        return;
+
+    CloseThresholdDb();
+
+    if (g_hThresholdDbReconnectTimer == null)
+        g_hThresholdDbReconnectTimer = CreateTimer(THRESHOLD_DB_RECONNECT_DELAY, Timer_ReconnectThresholdDb);
+}
+
+public Action Timer_ReconnectThresholdDb(Handle timer, any data)
+{
+    g_hThresholdDbReconnectTimer = null;
+    ConnectThresholdDb();
+    return Plugin_Stop;
 }
 
 bool GetThresholdTableName(char[] table, int maxlen)
@@ -649,6 +737,7 @@ public void SQL_OnThresholdTableCreated(Database db, DBResultSet results, const 
     if (error[0] != '\0')
     {
         LogError("[AnneHappyAI] failed to create threshold table: %s", error);
+        ScheduleThresholdDbReconnect(error);
         return;
     }
 
@@ -680,6 +769,9 @@ public void SQL_OnThresholdP95ColumnChecked(Database db, DBResultSet results, co
     if (error[0] != '\0')
     {
         LogError("[AnneHappyAI] failed to check threshold ppm_p95 column: %s", error);
+        ScheduleThresholdDbReconnect(error);
+        if (IsThresholdDbConnectionLostError(error))
+            return;
         g_bThresholdSchemaReady = true;
         QueryThresholdRow();
         return;
@@ -718,6 +810,7 @@ public void SQL_OnThresholdP95ColumnAdded(Database db, DBResultSet results, cons
     if (error[0] != '\0')
     {
         LogError("[AnneHappyAI] failed to add threshold ppm_p95 column: %s", error);
+        ScheduleThresholdDbReconnect(error);
         return;
     }
 
@@ -748,6 +841,7 @@ public void SQL_OnThresholdRowLoaded(Database db, DBResultSet results, const cha
     if (error[0] != '\0')
     {
         LogError("[AnneHappyAI] failed to load threshold row: %s", error);
+        ScheduleThresholdDbReconnect(error);
         return;
     }
 

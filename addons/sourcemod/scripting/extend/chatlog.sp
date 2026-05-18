@@ -9,6 +9,9 @@ Handle g_hReconnectTimer = null;
 
 Database g_hDatabase = null;
 
+#define CHATLOG_DB_CONFIG "chatlog"
+#define CHATLOG_RECONNECT_DELAY 10.0
+
 ConVar chatlog_clearTable;
 ConVar chatlog_clearTableDuration;
 
@@ -38,8 +41,57 @@ void SQL_ConnectChatLog()
 	if (g_hDatabase != null || g_bConnecting)
 		return;
 
+	if (!SQL_CheckConfig(CHATLOG_DB_CONFIG))
+	{
+		LogError("[chatlog] databases.cfg 缺少 '%s' 配置。", CHATLOG_DB_CONFIG);
+		SQL_ScheduleReconnect();
+		return;
+	}
+
 	g_bConnecting = true;
-	Database.Connect(SQL_Connection, "chatlog");
+	char error[256];
+	g_hDatabase = SQL_Connect(CHATLOG_DB_CONFIG, true, error, sizeof(error));
+	g_bConnecting = false;
+
+	if (g_hDatabase == null)
+	{
+		LogError("[chatlog] 数据库连接失败: %s", error);
+		SQL_ScheduleReconnect();
+		return;
+	}
+
+	if (!SQL_SetCharset(g_hDatabase, "utf8mb4"))
+		LogError("[chatlog] 设置数据库字符集 utf8mb4 失败。");
+
+	SQL_FastQuery(g_hDatabase, "SET NAMES 'utf8mb4'");
+	SQL_CreateChatLogTable();
+}
+
+void SQL_CreateChatLogTable()
+{
+	g_hDatabase.Query(SQL_CreateCallback, "\
+		CREATE TABLE IF NOT EXISTS `chat_log` ( \
+		`id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT, \
+		`date` DATETIME NULL DEFAULT NULL, \
+		`map` VARCHAR(128) NOT NULL COLLATE 'utf8mb4_general_ci', \
+		`steamid` VARCHAR(21) NOT NULL COLLATE 'utf8mb4_general_ci', \
+		`name` VARCHAR(128) NOT NULL COLLATE 'utf8mb4_general_ci', \
+		`message_style` TINYINT(2) NULL DEFAULT 0, \
+		`message` VARCHAR(126) NOT NULL COLLATE 'utf8mb4_general_ci', \
+		`server` varchar(126) DEFAULT NULL COLLATE 'utf8mb4_general_ci', \
+		`port` int(11) DEFAULT NULL , \
+		PRIMARY KEY (`id`) USING BTREE, \
+		KEY `idx_chat_log_date` (`date`) \
+	) \
+	DEFAULT CHARSET='utf8mb4' \
+	ENGINE=InnoDB \
+	;");
+}
+
+bool SQL_IsConnectionLostError(const char[] error)
+{
+	return StrContains(error, "Lost connection", false) != -1
+		|| StrContains(error, "server has gone away", false) != -1;
 }
 
 void SQL_ScheduleReconnect()
@@ -54,7 +106,7 @@ void SQL_ScheduleReconnect()
 	}
 
 	if (g_hReconnectTimer == null)
-		g_hReconnectTimer = CreateTimer(10.0, Timer_ReconnectDatabase);
+		g_hReconnectTimer = CreateTimer(CHATLOG_RECONNECT_DELAY, Timer_ReconnectDatabase);
 }
 
 public Action Timer_ReconnectDatabase(Handle timer, any data)
@@ -64,51 +116,32 @@ public Action Timer_ReconnectDatabase(Handle timer, any data)
 	return Plugin_Stop;
 }
 
-public void SQL_Connection(Database database, const char[] error, int data)
-{
-	g_bConnecting = false;
-
-	if (database == null)
-	{
-		LogError("[chatlog] 数据库连接失败: %s", error);
-		SQL_ScheduleReconnect();
-	}
-	else
-	{
-		g_hDatabase = database;
-
-		g_hDatabase.SetCharset("utf8mb4");
-
-		g_hDatabase.Query(SQL_CreateCallback, "\
-			CREATE TABLE IF NOT EXISTS `chat_log` ( \
-			`id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT, \
-			`date` DATETIME NULL DEFAULT NULL, \
-			`map` VARCHAR(128) NOT NULL COLLATE 'utf8mb4_general_ci', \
-			`steamid` VARCHAR(21) NOT NULL COLLATE 'utf8mb4_general_ci', \
-			`name` VARCHAR(128) NOT NULL COLLATE 'utf8mb4_general_ci', \
-			`message_style` TINYINT(2) NULL DEFAULT 0, \
-			`message` VARCHAR(126) NOT NULL COLLATE 'utf8mb4_general_ci', \
-			`server` varchar(126) DEFAULT NULL COLLATE 'utf8mb4_general_ci', \
-			`port` int(11) DEFAULT NULL , \
-			PRIMARY KEY (`id`) USING BTREE, \
-			KEY `idx_chat_log_date` (`date`) \
-		) \
-		DEFAULT CHARSET='utf8mb4' \
-		ENGINE=InnoDB \
-		;");
-	}
-}
-
 public void SQL_CreateCallback(Database datavas, DBResultSet results, const char[] error, int data)
 {
 	if (results == null)
 	{
 		LogError("[chatlog] 初始化数据表失败: %s", error);
-		SQL_ScheduleReconnect();
+		if (SQL_IsConnectionLostError(error))
+			SQL_ScheduleReconnect();
 		return;
 	}
 
 	g_bFullyConnected = true;
+}
+
+public void OnPluginEnd()
+{
+	if (g_hReconnectTimer != null)
+	{
+		KillTimer(g_hReconnectTimer);
+		g_hReconnectTimer = null;
+	}
+
+	if (g_hDatabase != null)
+	{
+		delete g_hDatabase;
+		g_hDatabase = null;
+	}
 }
 
 public Action OnClientSayCommand(int client, const char[] command, const char[] szArgs)
@@ -162,6 +195,7 @@ public void SQL_Error(Database datavas, DBResultSet results, const char[] error,
 	if (results == null)
 	{
 		LogError("[chatlog] SQL 查询失败: %s", error);
-		SQL_ScheduleReconnect();
+		if (SQL_IsConnectionLostError(error))
+			SQL_ScheduleReconnect();
 	}
 }

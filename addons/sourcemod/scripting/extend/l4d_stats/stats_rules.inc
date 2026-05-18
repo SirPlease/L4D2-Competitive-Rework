@@ -378,6 +378,7 @@ ResetVars()
 	CampaignOver = false;
 	Isstart = false;
 	SupportStartGrantRecorded = false;
+	SupportStartGrantUntil = 0.0;
 	WitchExists = false;
 	WitchDisturb = false;
 	MedkitsUsedCounter = 0;
@@ -593,8 +594,19 @@ public CheckSurvivorsWin()
 		return;
 
 	CampaignOver = true;
+	if (g_brpgAvailable && !L4D_RPG_GetGlobalValue(INDEX_VALID))
+	{
+		StopMapTiming();
+		return;
+	}
+	if (!IsNormalMode() && !IsThisRoundValid())
+	{
+		StopMapTiming();
+		return;
+	}
+
 	//StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03CampaignOver值没问题!");
-	if(!StopMapTiming())return;
+	StopMapTiming();
 	CurrentGamemodeID = GetCurrentGamemodeID();
 	// Return if gamemode is Scavenge or Survival
 	if (CurrentGamemodeID == GAMEMODE_SCAVENGE ||

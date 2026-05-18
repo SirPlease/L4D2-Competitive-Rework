@@ -98,8 +98,7 @@ bool   g_IsVictimDeadPlayer[MAXPLAYERS + 1] = { false, ... };
 
 #define DB_LOAD_RETRY_DELAY 0.5
 #define DB_LOAD_RETRY_MAX   20
-#define DB_CONNECT_RETRY_DELAY 1.0
-#define DB_CONNECT_RETRY_MAX   30
+#define DB_CONNECT_RETRY_DELAY 10.0
 
 // Fallback KV
 Handle g_SoundStore = INVALID_HANDLE;
@@ -318,6 +317,21 @@ public void OnConfigsExecuted()
     ReloadAllPlayersPrefs();
 }
 
+public void OnPluginEnd()
+{
+    if (g_taskDBRetry != INVALID_HANDLE)
+    {
+        KillTimer(g_taskDBRetry);
+        g_taskDBRetry = INVALID_HANDLE;
+    }
+
+    if (g_hDB != INVALID_HANDLE)
+    {
+        CloseHandle(g_hDB);
+        g_hDB = INVALID_HANDLE;
+    }
+}
+
 // ========================================================
 // Config loading
 // ========================================================
@@ -455,11 +469,41 @@ static void StartDBConnect()
     if (!GetConVarBool(cv_db_enable)) return;
     if (g_hDB != INVALID_HANDLE || g_DBConnecting) return;
 
-    g_DBConnecting = true;
-
     char confName[32];
     GetConVarString(cv_db_conf, confName, sizeof(confName));
-    SQL_TConnect(SQL_OnConnect, confName, 0);
+    TrimString(confName);
+
+    if (!SQL_CheckConfig(confName))
+    {
+        LogError("[hitsound] databases.cfg 缺少 '%s' 配置。", confName);
+        ScheduleDBConnectRetry();
+        return;
+    }
+
+    g_DBConnecting = true;
+
+    char error[256];
+    g_hDB = SQL_Connect(confName, true, error, sizeof(error));
+    g_DBConnecting = false;
+
+    if (g_hDB == INVALID_HANDLE)
+    {
+        LogError("[hitsound] 数据库连接失败: %s", error);
+        ScheduleDBConnectRetry();
+        return;
+    }
+
+    g_DBRetryCount = 0;
+    if (!SQL_SetCharset(g_hDB, "utf8mb4"))
+        LogError("[hitsound] 设置数据库字符集 utf8mb4 失败。");
+    SQL_FastQuery(g_hDB, "SET NAMES 'utf8mb4'");
+
+    LogMessage("[hitsound] 数据库连接成功。");
+
+    DB_EnsureExtraColumns();
+
+    // 插件重载/晚加载时，在线玩家不会触发 OnClientPutInServer，这里主动补一次
+    ReloadAllPlayersPrefs();
 }
 
 static void ScheduleDBConnectRetry()
@@ -467,12 +511,6 @@ static void ScheduleDBConnectRetry()
     if (!GetConVarBool(cv_db_enable)) return;
     if (g_hDB != INVALID_HANDLE) return;
     if (g_taskDBRetry != INVALID_HANDLE) return;
-
-    if (g_DBRetryCount >= DB_CONNECT_RETRY_MAX)
-    {
-        LogError("[hitsound] 数据库连接重试超时，本章节暂时使用 KV/default。");
-        return;
-    }
 
     g_DBRetryCount++;
     g_taskDBRetry = CreateTimer(DB_CONNECT_RETRY_DELAY, Timer_RetryDBConnect);
@@ -483,26 +521,6 @@ public Action Timer_RetryDBConnect(Handle timer, any data)
     g_taskDBRetry = INVALID_HANDLE;
     StartDBConnect();
     return Plugin_Stop;
-}
-
-public void SQL_OnConnect(Handle owner, Handle hndl, const char[] error, any data)
-{
-    g_DBConnecting = false;
-
-    if (hndl == INVALID_HANDLE)
-    {
-        LogError("[hitsound] 数据库连接失败: %s", error);
-        ScheduleDBConnectRetry();
-        return;
-    }
-    g_hDB = hndl;
-    g_DBRetryCount = 0;
-    LogMessage("[hitsound] 数据库连接成功。");
-
-    DB_EnsureExtraColumns();
-
-    // 插件重载/晚加载时，在线玩家不会触发 OnClientPutInServer，这里主动补一次
-    ReloadAllPlayersPrefs();
 }
 
 bool DB_IsConnectionLostError(const char[] error)
@@ -839,7 +857,7 @@ void DB_SavePlayerPrefs(int client)
             hiticon_si_only =VALUES(hiticon_si_only);",
         table, sid, hs_head, hs_hit, hs_kill, ic_head, ic_hit, ic_kill, snd_si_only, ic_si_only);
 
-    SQL_TQuery(g_hDB, SQL_OnSavePrefs, q);
+    SQL_TQuery(g_hDB, SQL_OnSavePrefs, q, GetClientUserId(client));
 }
 
 public void SQL_OnSavePrefs(Handle owner, Handle hndl, const char[] error, any data)
@@ -847,6 +865,9 @@ public void SQL_OnSavePrefs(Handle owner, Handle hndl, const char[] error, any d
     if (hndl == INVALID_HANDLE)
     {
         LogError("[hitsound] 保存玩家配置失败: %s", error);
+        int client = GetClientOfUserId(data);
+        if (client > 0 && IsClientInGame(client))
+            g_PrefsDirty[client] = true;
         DB_MarkConnectionLost(error);
     }
 }

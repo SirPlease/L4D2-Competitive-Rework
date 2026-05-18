@@ -321,23 +321,7 @@
 		{
 			"message" "开启枪械抖动"
 		}
-		"exec vote/crouch_on.cfg"
-		{
-			"message" "开启无蓄力hunter[极牢]"
-		}
-		"exec vote/crouch_off.cfg"
-		{
-			"message" "关闭无蓄力hunter"
-		}
-		"exec vote/hard_on.cfg"
-		{
-			"message" "开启特感属性增强[极牢]"
-		}
-		"exec vote/hard_off.cfg"
-		{
-			"message" "关闭特感属性增强"
-		}
-		"sm_cvar specrates_fulltickspecnum 1"
+			"sm_cvar specrates_fulltickspecnum 1"
 		{
 			"message" "限制旁观tick"
 		}

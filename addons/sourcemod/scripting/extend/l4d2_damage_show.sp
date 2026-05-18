@@ -10,7 +10,7 @@
 // =========================
 // Plugin constants / config
 // =========================
-#define PLUGIN_VERSION  "2.3-mysql-cookie(db-first)+keepalive+dirty-save"
+#define PLUGIN_VERSION  "2.4-mysql-cookie(db-first)+persistent+keepalive"
 #define SPRITE_MATERIAL "materials/sprites/laserbeam.vmt"
 #define DMG_HEADSHOT    (1 << 30)
 #define L4D2_MAXPLAYERS 32
@@ -365,9 +365,9 @@ static void DB_BeginConnect()
     g_UseMySQL = true;   // 有配置就视为启用，真正就绪看 g_DbReady
     g_DbReady = false;
 
-    // SQL_TConnect 第三个参数是回调 data，不是 persistent。
-    SQL_TConnect(SQLCB_OnConnect, DB_CONF_NAME, 0);
-    LogInfo("[DB] SQL_TConnect issued (async) for '%s'", DB_CONF_NAME);
+    char error[256];
+    Handle hndl = SQL_Connect(DB_CONF_NAME, true, error, sizeof(error));
+    SQLCB_OnConnect(INVALID_HANDLE, hndl, error, 0);
 } 
 
 static bool DB_EnsureReady()
@@ -487,7 +487,7 @@ public void SQLCB_OnConnect(Handle owner, Handle hndl, const char[] error, any d
 
     DB_DebugDumpSession();
 
-    LogInfo("[DB] connected (async), handle=%p", g_DB);
+    LogInfo("[DB] connected, handle=%p", g_DB);
     DB_FlushPendingSaves();
 }
 
@@ -863,7 +863,7 @@ public void OnPluginStart()
     // Cookie
     g_ck = new Cookie(COOKIE_NAME, "damage hud per-client", CookieAccess_Protected);
 
-    // DB（异步）
+    // DB（持久连接 + 定时保活）
     DB_StartKeepAlive();
     DB_BeginConnect();
 
