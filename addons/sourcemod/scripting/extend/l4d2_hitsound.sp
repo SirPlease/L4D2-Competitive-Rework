@@ -581,8 +581,13 @@ public void SQL_OnCheckExtraColumn(Handle owner, Handle hndl, const char[] error
 
     if (hndl == INVALID_HANDLE || error[0] != '\0')
     {
+        if (DB_IsConnectionLostError(error))
+        {
+            DB_MarkConnectionLost(error);
+            return;
+        }
+
         LogError("[hitsound] 检查数据库列 `%s` 失败: %s", column, error);
-        DB_MarkConnectionLost(error);
         return;
     }
 
@@ -605,8 +610,13 @@ public void SQL_OnEnsureColumn(Handle owner, Handle hndl, const char[] error, an
         && StrContains(error, "Duplicate column", false) == -1
         && StrContains(error, "duplicate column", false) == -1)
     {
+        if (DB_IsConnectionLostError(error))
+        {
+            DB_MarkConnectionLost(error);
+            return;
+        }
+
         LogError("[hitsound] 自动补充数据库列失败: %s", error);
-        DB_MarkConnectionLost(error);
     }
 }
 
@@ -810,8 +820,10 @@ public void SQL_OnLoadPrefs(Handle owner, Handle hndl, const char[] error, any u
 
     if (hndl == INVALID_HANDLE)
     {
-        LogError("[hitsound] 加载玩家配置失败: %s", error);
-        DB_MarkConnectionLost(error);
+        if (DB_IsConnectionLostError(error))
+            DB_MarkConnectionLost(error);
+        else
+            LogError("[hitsound] 加载玩家配置失败: %s", error);
         ScheduleLoadRetry(client);
         return;
     }
@@ -898,11 +910,14 @@ public void SQL_OnSavePrefs(Handle owner, Handle hndl, const char[] error, any d
 {
     if (hndl == INVALID_HANDLE)
     {
-        LogError("[hitsound] 保存玩家配置失败: %s", error);
         int client = GetClientOfUserId(data);
         if (client > 0 && IsClientInGame(client))
             g_PrefsDirty[client] = true;
-        DB_MarkConnectionLost(error);
+
+        if (DB_IsConnectionLostError(error))
+            DB_MarkConnectionLost(error);
+        else
+            LogError("[hitsound] 保存玩家配置失败: %s", error);
     }
 }
 

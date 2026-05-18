@@ -469,9 +469,17 @@ bool:DoFastQuery(Client, const String:Query[], any:...)
 	{
 		if (SQL_GetError(db, Error, sizeof(Error)))
 		{
-			PrintToConsole(Client, "[RANK] Fast query failed! (Error = \"%s\") Query = \"%s\"", Error, FormattedQuery);
-			LogError("Fast query failed! (Error = \"%s\") Query = \"%s\"", Error, FormattedQuery);
-			ScheduleDBReconnect(Error);
+			if (IsDBConnectionLostError(Error))
+			{
+				PrintToConsole(Client, "[RANK] Database connection lost, retrying automatically. Query = \"%s\"", FormattedQuery);
+				LogMessage("Fast query lost database connection. Query = \"%s\"", FormattedQuery);
+				ScheduleDBReconnect(Error);
+			}
+			else
+			{
+				PrintToConsole(Client, "[RANK] Fast query failed! (Error = \"%s\") Query = \"%s\"", Error, FormattedQuery);
+				LogError("Fast query failed! (Error = \"%s\") Query = \"%s\"", Error, FormattedQuery);
+			}
 		}
 		else
 		{

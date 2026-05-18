@@ -28,7 +28,10 @@ bool:ConnectDB()
 		{
 			if (SQL_GetError(db, Error, sizeof(Error)))
 			{
-				LogError("Failed to update encoding to utf8mb4: %s", Error);
+				if (IsDBConnectionLostError(Error))
+					LogMessage("[l4d_stats] 设置数据库字符集时连接丢失，等待自动重连。");
+				else
+					LogError("Failed to update encoding to utf8mb4: %s", Error);
 				ScheduleDBReconnect(Error);
 			}
 			else
@@ -98,7 +101,7 @@ void ScheduleDBReconnect(const char[] error)
 	if (!IsDBConnectionLostError(error))
 		return;
 
-	LogError("[l4d_stats] 检测到数据库连接丢失，10 秒后自动重连...");
+	LogMessage("[l4d_stats] 检测到数据库连接丢失，10 秒后自动重连...");
 	g_bScoreLogTableReady = false;
 	g_bQuarterRankTableReady = false;
 	g_bQuarterRankDbChecked = false;
@@ -1103,11 +1106,22 @@ public SQLErrorCheckCallback(Handle:owner, Handle:hndl, const String:error[], an
 		return;
 	}
 
-	if(!StrEqual("", error))
-	{
-		if (DEBUG)
+		if(!StrEqual("", error))
 		{
-			LogError("SQL Error: %s (Query: \"%s\")", error, QueryBuffer[queryid]);
+			if (IsDBConnectionLostError(error))
+			{
+				if (DEBUG)
+					LogMessage("SQL connection lost: %s (Query: \"%s\")", error, QueryBuffer[queryid]);
+				else
+					LogMessage("SQL connection lost: %s", error);
+
+				ScheduleDBReconnect(error);
+				return;
+			}
+
+			if (DEBUG)
+			{
+				LogError("SQL Error: %s (Query: \"%s\")", error, QueryBuffer[queryid]);
 		}
 		else
 		{
