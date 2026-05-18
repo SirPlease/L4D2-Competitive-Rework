@@ -7,6 +7,7 @@
 
 static Handle g_hDBReconnectTimer = INVALID_HANDLE;
 static Handle g_hDBKeepAliveTimer = INVALID_HANDLE;
+static bool g_bTablesVerified = false;
 #define DB_KEEPALIVE_INTERVAL 60.0
 
 // Make connection to database.
@@ -55,21 +56,27 @@ bool:ConnectDB()
 			return false;
 		}
 
-		ScoreLog_EnsureTable();
-		if (db == INVALID_HANDLE)
-			return false;
+		// 表结构只需首次启动验证一次，换图后跳过（表不会消失）
+		if (!g_bTablesVerified)
+		{
+			ScoreLog_EnsureTable();
+			if (db == INVALID_HANDLE)
+				return false;
 
-		QuarterRank_EnsureTable();
-		if (db == INVALID_HANDLE)
-			return false;
+			QuarterRank_EnsureTable();
+			if (db == INVALID_HANDLE)
+				return false;
 
-		ModeStats_EnsureTable();
-		if (db == INVALID_HANDLE)
-			return false;
+			ModeStats_EnsureTable();
+			if (db == INVALID_HANDLE)
+				return false;
 
-		MapTimingRuns_EnsureTable();
-		if (db == INVALID_HANDLE)
-			return false;
+			MapTimingRuns_EnsureTable();
+			if (db == INVALID_HANDLE)
+				return false;
+
+			g_bTablesVerified = true;
+		}
 	}
 	else
 	{
