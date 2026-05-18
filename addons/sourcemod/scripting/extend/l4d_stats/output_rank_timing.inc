@@ -60,6 +60,9 @@ MapTimingEnabled()
 
 MapTimingRuns_EnsureTable()
 {
+	if (db == INVALID_HANDLE)
+		return;
+
 	decl String:query[2048];
 	Format(query, sizeof(query),
 		"CREATE TABLE IF NOT EXISTS `%stimedmap_runs` ("
@@ -84,7 +87,19 @@ MapTimingRuns_EnsureTable()
 		... "KEY `idx_timedmap_runs_steamid` (`steamid`,`modified`)"
 		... ") ENGINE=InnoDB DEFAULT CHARSET=utf8",
 		DbPrefix);
-	DoFastQuery(0, query);
+
+	if (!DoFastQuery(0, query) && db != INVALID_HANDLE)
+	{
+		// CREATE TABLE 可能因连接超时等临时错误失败，回查表是否实际已存在
+		if (DoFastQuery(0, "SELECT 1 FROM `%stimedmap_runs` LIMIT 0", DbPrefix))
+		{
+			LogMessage("[l4d_stats] timedmap_runs 表已存在，忽略 CREATE TABLE 错误。");
+		}
+		else
+		{
+			LogError("Failed to create or verify table `%stimedmap_runs`.", DbPrefix);
+		}
+	}
 }
 
 MapTimingRuns_RecordParticipant(const String:RunID[], const String:MapName[], GamemodeID, const String:ClientID[], Float:TotalTime, PlayerCounter, GameDifficulty, const String:Mutation[], Mode)
