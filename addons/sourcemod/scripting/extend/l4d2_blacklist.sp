@@ -309,6 +309,17 @@ public void OnPluginStart()
     DB_Connect();
 }
 
+public void OnMapEnd()
+{
+    if (g_hDbReconnectTimer != INVALID_HANDLE)
+    {
+        KillTimer(g_hDbReconnectTimer);
+        g_hDbReconnectTimer = INVALID_HANDLE;
+    }
+
+    DB_Close();
+}
+
 public void OnPluginEnd()
 {
     if (g_hDbReconnectTimer != INVALID_HANDLE)

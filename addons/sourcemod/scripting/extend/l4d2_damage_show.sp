@@ -994,6 +994,18 @@ public Action Timer_DBEnsureLoad(Handle timer, any userid)
     return Plugin_Stop;
 }
 
+public void OnMapEnd()
+{
+    g_DbReady = false;
+    g_DbConnecting = false;
+
+    if (g_DB != INVALID_HANDLE)
+    {
+        CloseHandle(g_DB);
+        g_DB = INVALID_HANDLE;
+    }
+}
+
 public void OnMapStart()
 {
     g_sprite = PrecacheModel(SPRITE_MATERIAL, true);

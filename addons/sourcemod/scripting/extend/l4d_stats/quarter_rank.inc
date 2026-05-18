@@ -119,7 +119,6 @@ stock QuarterRank_EnsureTable()
 		return;
 	}
 
-	QuarterRank_EnsurePlaytimeColumn();
 	QuarterRank_EnsureCurrentQuarter();
 }
 

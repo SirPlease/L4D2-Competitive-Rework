@@ -306,6 +306,23 @@ public void OnPluginStart()
     }
 }
 
+public void OnMapEnd()
+{
+    if (g_taskDBRetry != INVALID_HANDLE)
+    {
+        KillTimer(g_taskDBRetry);
+        g_taskDBRetry = INVALID_HANDLE;
+    }
+
+    if (g_hDB != INVALID_HANDLE)
+    {
+        CloseHandle(g_hDB);
+        g_hDB = INVALID_HANDLE;
+    }
+
+    g_DBConnecting = false;
+}
+
 // 在执行完 cfg（例如加载模式/exec zonemod/药抗）后，重新加载在线玩家的偏好
 public void OnConfigsExecuted()
 {

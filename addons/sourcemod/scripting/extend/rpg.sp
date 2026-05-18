@@ -519,6 +519,17 @@ public void  OnPluginStart()
 			player[i].CanBuy=true;
 	}
 }
+
+public void OnMapEnd()
+{
+	if (db != INVALID_HANDLE)
+	{
+		CloseHandle(db);
+		db = INVALID_HANDLE;
+	}
+	g_bMysqlSystemAvailable = false;
+}
+
 public void OnConfigsExecuted()
 {
 	// Init MySQL connections
@@ -1382,8 +1393,14 @@ public void ShowMelee(Handle owner, Handle hndl, const char []error, any data)
 {
     int client = data;
 
-    if (!client || hndl == INVALID_HANDLE&&IsFakeClient(client))
+    if (!client || !IsClientInGame(client) || IsFakeClient(client))
         return;
+
+    if (hndl == INVALID_HANDLE)
+    {
+        LogError("[RPG] ShowMelee query failed: %s", error);
+        return;
+    }
 
     if (SQL_FetchRow(hndl))
 	{

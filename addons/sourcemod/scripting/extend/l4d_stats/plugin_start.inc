@@ -448,6 +448,11 @@ public OnPluginStart()
 }
 
 
+public OnMapEnd()
+{
+	DB_Disconnect();
+}
+
 public OnConfigsExecuted()
 {
 	GetConVarString(cvar_DbPrefix, DbPrefix, sizeof(DbPrefix));

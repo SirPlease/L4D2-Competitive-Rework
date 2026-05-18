@@ -194,9 +194,24 @@ public void OnMapEnd()
 	StopPollTimer();
 	StopReconnectTimer();
 	StopBlacklistRefreshTimer();
+	StopBlacklistReconnectTimer();
 	g_bReady = false;
 	g_bPollInFlight = false;
 	g_bBlacklistRefreshInFlight = false;
+	g_bConnecting = false;
+	g_bBlacklistConnecting = false;
+
+	if (g_hDatabase != null)
+	{
+		delete g_hDatabase;
+		g_hDatabase = null;
+	}
+
+	if (g_hBlacklistDatabase != null)
+	{
+		delete g_hBlacklistDatabase;
+		g_hBlacklistDatabase = null;
+	}
 }
 
 public Action Command_GlobalChat(int client, int args)

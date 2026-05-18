@@ -31,6 +31,23 @@ public void OnPluginStart()
 	AutoExecConfig(true, "chatlog");
 }
 
+public void OnMapEnd()
+{
+	g_bFullyConnected = false;
+
+	if (g_hReconnectTimer != null)
+	{
+		KillTimer(g_hReconnectTimer);
+		g_hReconnectTimer = null;
+	}
+
+	if (g_hDatabase != null)
+	{
+		delete g_hDatabase;
+		g_hDatabase = null;
+	}
+}
+
 public void OnConfigsExecuted()
 {
 	SQL_ConnectChatLog();
