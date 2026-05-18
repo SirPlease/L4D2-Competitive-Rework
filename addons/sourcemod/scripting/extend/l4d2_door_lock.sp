@@ -226,8 +226,8 @@ public void OnMapStart()
 
 	if (L4D_IsFirstMapInScenario()) g_bFirstScenario = true;
 
-	if(g_bFirstScenario) ResetConVar(Cvar_DoorLock_ExitTimer);
-	else Cvar_DoorLock_ExitTimer.SetString("999999");
+	// 所有关卡（含第一关）都阻止引擎通过 versus_force_start_time 强制开始回合
+	Cvar_DoorLock_ExitTimer.SetString("999999");
 }
 
 /* =============================================================================================================== *
@@ -842,7 +842,27 @@ public void OnClientDisconnect(int client)
 
 public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
 {
-	if(L4D2_DoorLock_Enable() && g_bSurvivorBotFreezeActive)
+	if(!L4D2_DoorLock_Enable())
+	{
+		g_bLeftSafeAreas = true;
+		return Plugin_Continue;
+	}
+
+	// 只要还没有真人出过门，Bot 触发的出门事件一律拦截
+	if(!g_bLeftSafeAreas && client > 0 && client <= MaxClients && IsClientInGame(client) && IsFakeClient(client))
+	{
+		return Plugin_Handled;
+	}
+
+	// 非第一关、门还锁着、准备时间未到 → 拦截真人并传送回安全区
+	if(!g_bFirstScenario && g_bLockSafeAreas && !g_bLeftSafeAreas && g_iGiveUpsTime > 0)
+	{
+		Activate_SurvivorTeleport(client);
+		return Plugin_Handled;
+	}
+
+	// 真人确认出门 → 解冻所有Bot
+	if(g_bSurvivorBotFreezeActive)
 	{
 		g_bSurvivorBotFreezeActive = false;
 		if(g_bNoBotMoveChanged)
@@ -851,12 +871,6 @@ public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
 			g_bNoBotMoveChanged = false;
 		}
 		UnFreezeSurvivorBots();
-	}
-
-	if(L4D2_DoorLock_Enable() && !g_bFirstScenario && g_bLockSafeAreas && !g_bLeftSafeAreas && g_iGiveUpsTime > 0)
-	{
-		Activate_SurvivorTeleport(client);
-		return Plugin_Handled;
 	}
 
 	g_bLeftSafeAreas = true;

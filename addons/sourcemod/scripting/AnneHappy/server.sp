@@ -608,7 +608,7 @@ public Action L4D_OnFirstSurvivorLeftSafeArea()
     SetBot(0, 0);
     if (!IsRealismORCoop())
         CreateTimer(0.5, Timer_AutoGive, _, TIMER_FLAG_NO_MAPCHANGE);
-    return Plugin_Stop;
+    return Plugin_Continue;
 }
 
 public Action Timer_AutoGive(Handle timer)
