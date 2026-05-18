@@ -957,6 +957,9 @@ ReadDb()
 
 ReadDbMotd()
 {
+	if (db == INVALID_HANDLE)
+		return;
+
 	decl String:query[512];
 	Format(query, sizeof(query), "SELECT svalue FROM %sserver_settings WHERE sname = 'motdmessage' LIMIT 1", DbPrefix);
 	SQL_TQuery(db, ReadDbMotdCallback, query);

@@ -43,6 +43,9 @@ bool:ConnectDB()
 
 		if (!CheckDatabaseValidity(DbPrefix))
 		{
+			if (IsDBReconnectPending())
+				return false;
+
 			LogError("Database is missing required table or tables.");
 			if (db != INVALID_HANDLE)
 			{
@@ -53,9 +56,20 @@ bool:ConnectDB()
 		}
 
 		ScoreLog_EnsureTable();
+		if (db == INVALID_HANDLE)
+			return false;
+
 		QuarterRank_EnsureTable();
+		if (db == INVALID_HANDLE)
+			return false;
+
 		ModeStats_EnsureTable();
+		if (db == INVALID_HANDLE)
+			return false;
+
 		MapTimingRuns_EnsureTable();
+		if (db == INVALID_HANDLE)
+			return false;
 	}
 	else
 	{
@@ -64,6 +78,11 @@ bool:ConnectDB()
 	}
 
 	return true;
+}
+
+bool:IsDBReconnectPending()
+{
+	return (g_hDBReconnectTimer != INVALID_HANDLE);
 }
 
 // 检测是否为连接丢失错误
@@ -102,12 +121,16 @@ public Action:Timer_L4DStatsDBReconnect(Handle:timer, any:data)
 	if (ConnectDB())
 	{
 		LogMessage("[l4d_stats] 数据库重连成功。");
+		ReadDb();
+		GetTop100PlayerScore();
+		QuarterRank_QueryTop100Scores();
 		CreateTimer(1.0, InitPlayers);
 	}
 	else
 	{
 		LogError("[l4d_stats] 数据库重连失败，10 秒后再次重试。");
-		g_hDBReconnectTimer = CreateTimer(10.0, Timer_L4DStatsDBReconnect);
+		if (g_hDBReconnectTimer == INVALID_HANDLE)
+			g_hDBReconnectTimer = CreateTimer(10.0, Timer_L4DStatsDBReconnect);
 	}
 
 	return Plugin_Stop;

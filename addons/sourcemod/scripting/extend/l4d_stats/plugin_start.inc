@@ -453,7 +453,8 @@ public OnConfigsExecuted()
 	GetConVarString(cvar_DbPrefix, DbPrefix, sizeof(DbPrefix));
 
 	// Init MySQL connections
-	if (!ConnectDB())
+	new bool:DatabaseReady = ConnectDB();
+	if (!DatabaseReady && !IsDBReconnectPending())
 	{
 		SetFailState("Connecting to database failed. Read error log for further details.");
 		return;
@@ -497,7 +498,10 @@ public OnConfigsExecuted()
 	RegAdminCmd("sm_rank_motd", cmd_SetMotd, ADMFLAG_GENERIC, "Set Message Of The Day");
 	
 	// Read the settings etc from the database.
-	ReadDb();
-	GetTop100PlayerScore();
-	QuarterRank_QueryTop100Scores();
+	if (DatabaseReady && db != INVALID_HANDLE)
+	{
+		ReadDb();
+		GetTop100PlayerScore();
+		QuarterRank_QueryTop100Scores();
+	}
 }

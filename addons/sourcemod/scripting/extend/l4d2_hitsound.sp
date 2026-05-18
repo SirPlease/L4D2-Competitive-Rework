@@ -579,7 +579,7 @@ public void SQL_OnCheckExtraColumn(Handle owner, Handle hndl, const char[] error
     pack.ReadString(column, sizeof(column));
     delete pack;
 
-    if (hndl == INVALID_HANDLE)
+    if (hndl == INVALID_HANDLE || error[0] != '\0')
     {
         LogError("[hitsound] 检查数据库列 `%s` 失败: %s", column, error);
         DB_MarkConnectionLost(error);
@@ -589,16 +589,19 @@ public void SQL_OnCheckExtraColumn(Handle owner, Handle hndl, const char[] error
     if (SQL_FetchRow(hndl) && SQL_FetchInt(hndl, 0) > 0)
         return;
 
-    char q[256];
-    Format(q, sizeof(q),
-        "ALTER TABLE `%s` ADD COLUMN `%s` TINYINT NOT NULL DEFAULT 0;",
-        table, column);
-    SQL_TQuery(g_hDB, SQL_OnEnsureColumn, q);
+    if (g_hDB != INVALID_HANDLE)
+    {
+        char q[256];
+        Format(q, sizeof(q),
+            "ALTER TABLE `%s` ADD COLUMN `%s` TINYINT NOT NULL DEFAULT 0;",
+            table, column);
+        SQL_TQuery(g_hDB, SQL_OnEnsureColumn, q);
+    }
 }
 
 public void SQL_OnEnsureColumn(Handle owner, Handle hndl, const char[] error, any data)
 {
-    if (hndl == INVALID_HANDLE
+    if ((hndl == INVALID_HANDLE || error[0] != '\0')
         && StrContains(error, "Duplicate column", false) == -1
         && StrContains(error, "duplicate column", false) == -1)
     {

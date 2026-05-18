@@ -187,6 +187,9 @@ public int Native_IsQuarterTopPlayer(Handle plugin, int numParams)
 // Find a player from Top 100 ranking Points.
 public GetTop100PlayerScore()
 {
+	if (db == INVALID_HANDLE)
+		return;
+
 	decl String:query[512];
 	Format(query, sizeof(query), "SELECT (%s) as totalpoints FROM %splayers ORDER BY totalpoints DESC LIMIT 100", DB_PLAYERS_TOTALPOINTS, DbPrefix);
 	SQL_TQuery(db, GetTop100PlayersScore, query,0);
