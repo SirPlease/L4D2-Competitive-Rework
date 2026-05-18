@@ -553,15 +553,46 @@ static void DB_EnsureExtraColumns()
     char table[64];
     GetConVarString(cv_db_table, table, sizeof(table));
 
+    DB_EnsureExtraColumn(table, "hitsound_si_only");
+    DB_EnsureExtraColumn(table, "hiticon_si_only");
+}
+
+static void DB_EnsureExtraColumn(const char[] table, const char[] column)
+{
+    DataPack pack = new DataPack();
+    pack.WriteString(table);
+    pack.WriteString(column);
+
     char q[256];
     Format(q, sizeof(q),
-        "ALTER TABLE `%s` ADD COLUMN `hitsound_si_only` TINYINT NOT NULL DEFAULT 0;",
-        table);
-    SQL_TQuery(g_hDB, SQL_OnEnsureColumn, q);
+        "SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '%s' AND COLUMN_NAME = '%s';",
+        table, column);
+    SQL_TQuery(g_hDB, SQL_OnCheckExtraColumn, q, pack);
+}
 
+public void SQL_OnCheckExtraColumn(Handle owner, Handle hndl, const char[] error, DataPack pack)
+{
+    pack.Reset();
+    char table[64];
+    char column[32];
+    pack.ReadString(table, sizeof(table));
+    pack.ReadString(column, sizeof(column));
+    delete pack;
+
+    if (hndl == INVALID_HANDLE)
+    {
+        LogError("[hitsound] 检查数据库列 `%s` 失败: %s", column, error);
+        DB_MarkConnectionLost(error);
+        return;
+    }
+
+    if (SQL_FetchRow(hndl) && SQL_FetchInt(hndl, 0) > 0)
+        return;
+
+    char q[256];
     Format(q, sizeof(q),
-        "ALTER TABLE `%s` ADD COLUMN `hiticon_si_only` TINYINT NOT NULL DEFAULT 0;",
-        table);
+        "ALTER TABLE `%s` ADD COLUMN `%s` TINYINT NOT NULL DEFAULT 0;",
+        table, column);
     SQL_TQuery(g_hDB, SQL_OnEnsureColumn, q);
 }
 

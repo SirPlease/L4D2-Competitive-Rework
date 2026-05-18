@@ -457,6 +457,9 @@ public ClearStatsMapsHandler(Handle:owner, Handle:hndl, const String:error[], an
 
 bool:DoFastQuery(Client, const String:Query[], any:...)
 {
+	if (db == INVALID_HANDLE)
+		return false;
+
 	new String:FormattedQuery[4096];
 	VFormat(FormattedQuery, sizeof(FormattedQuery), Query, 3);
 
@@ -468,6 +471,7 @@ bool:DoFastQuery(Client, const String:Query[], any:...)
 		{
 			PrintToConsole(Client, "[RANK] Fast query failed! (Error = \"%s\") Query = \"%s\"", Error, FormattedQuery);
 			LogError("Fast query failed! (Error = \"%s\") Query = \"%s\"", Error, FormattedQuery);
+			ScheduleDBReconnect(Error);
 		}
 		else
 		{

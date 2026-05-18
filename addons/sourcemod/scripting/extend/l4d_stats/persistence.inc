@@ -22,22 +22,33 @@ bool:ConnectDB()
 		if (db == INVALID_HANDLE)
 		{
 			LogError("Failed to connect to database: %s", Error);
-			CloseHandle(db);
 			return false;
 		}
 		else if (!SQL_FastQuery(db, "SET NAMES 'utf8mb4'"))
 		{
 			if (SQL_GetError(db, Error, sizeof(Error)))
+			{
 				LogError("Failed to update encoding to utf8mb4: %s", Error);
+				ScheduleDBReconnect(Error);
+			}
 			else
 				LogError("Failed to update encoding to utf8mb4: unknown");
-			CloseHandle(db);
+			if (db != INVALID_HANDLE)
+			{
+				CloseHandle(db);
+				db = INVALID_HANDLE;
+			}
+			return false;
 		}
 
 		if (!CheckDatabaseValidity(DbPrefix))
 		{
 			LogError("Database is missing required table or tables.");
-			CloseHandle(db);
+			if (db != INVALID_HANDLE)
+			{
+				CloseHandle(db);
+				db = INVALID_HANDLE;
+			}
 			return false;
 		}
 
@@ -49,7 +60,6 @@ bool:ConnectDB()
 	else
 	{
 		LogError("Databases.cfg missing '%s' entry!", DB_CONF_NAME);
-		CloseHandle(db);
 		return false;
 	}
 
@@ -70,6 +80,10 @@ void ScheduleDBReconnect(const char[] error)
 		return;
 
 	LogError("[l4d_stats] 检测到数据库连接丢失，10 秒后自动重连...");
+	g_bScoreLogTableReady = false;
+	g_bQuarterRankTableReady = false;
+	g_bQuarterRankDbChecked = false;
+	g_bModeStatsTableReady = false;
 
 	if (db != INVALID_HANDLE)
 	{
