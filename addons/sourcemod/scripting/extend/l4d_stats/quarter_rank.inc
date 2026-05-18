@@ -100,12 +100,22 @@ stock QuarterRank_EnsureTable()
 	len += Format(query[len], sizeof(query) - len, ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
 	g_bQuarterRankTableReady = DoFastQuery(0, query);
-	if (!g_bQuarterRankTableReady)
+	if (!g_bQuarterRankTableReady && db != INVALID_HANDLE)
 	{
-		if (IsDBReconnectPending() || db == INVALID_HANDLE)
-			LogMessage("Quarter rank table `%sscore_quarter` is not ready; waiting for database reconnect.", DbPrefix);
+		// CREATE TABLE 可能因共享连接的串台错误而失败，用 SELECT 回查验证表是否实际存在
+		if (DoFastQuery(0, "SELECT 1 FROM `%sscore_quarter` LIMIT 0", DbPrefix))
+		{
+			g_bQuarterRankTableReady = true;
+			LogMessage("[l4d_stats] score_quarter 表已存在，忽略 CREATE TABLE 错误。");
+		}
 		else
+		{
 			LogError("Failed to create quarter rank table `%sscore_quarter`.", DbPrefix);
+			return;
+		}
+	}
+	else if (!g_bQuarterRankTableReady)
+	{
 		return;
 	}
 

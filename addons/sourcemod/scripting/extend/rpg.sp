@@ -737,7 +737,7 @@ public bool ConnectDB()
 	if (SQL_CheckConfig(DB_CONF_NAME))
 	{
 		char Error[256];
-		db = SQL_Connect(DB_CONF_NAME, true, Error, sizeof(Error));
+		db = SQL_Connect(DB_CONF_NAME, false, Error, sizeof(Error));
 		if (db == INVALID_HANDLE)
 		{
 			LogError("Failed to connect to database: %s", Error);

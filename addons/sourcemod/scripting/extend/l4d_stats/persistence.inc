@@ -19,28 +19,12 @@ bool:ConnectDB()
 	if (SQL_CheckConfig(DB_CONF_NAME))
 	{
 		new String:Error[256];
-		db = SQL_Connect(DB_CONF_NAME, true, Error, sizeof(Error));
+		db = SQL_Connect(DB_CONF_NAME, false, Error, sizeof(Error));
 
 		if (db == INVALID_HANDLE)
 		{
 			LogError("Failed to connect to database: %s", Error);
 			return false;
-		}
-
-		// 验活：持久化连接可能被 MySQL wait_timeout 回收，先用 SELECT 1 探测
-		if (!SQL_FastQuery(db, "SELECT 1"))
-		{
-			LogMessage("[l4d_stats] 持久化连接已过期，正在重新建立连接...");
-			CloseHandle(db);
-			db = INVALID_HANDLE;
-
-			// 用 persistent=false 强制建立新的 TCP 连接
-			db = SQL_Connect(DB_CONF_NAME, false, Error, sizeof(Error));
-			if (db == INVALID_HANDLE)
-			{
-				LogError("[l4d_stats] 重新连接数据库失败: %s", Error);
-				return false;
-			}
 		}
 
 		if (!SQL_FastQuery(db, "SET NAMES 'utf8mb4'"))

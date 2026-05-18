@@ -50,7 +50,7 @@ void SQL_ConnectChatLog()
 
 	g_bConnecting = true;
 	char error[256];
-	g_hDatabase = SQL_Connect(CHATLOG_DB_CONFIG, true, error, sizeof(error));
+	g_hDatabase = SQL_Connect(CHATLOG_DB_CONFIG, false, error, sizeof(error));
 	g_bConnecting = false;
 
 	if (g_hDatabase == null)

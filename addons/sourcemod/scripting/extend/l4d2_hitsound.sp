@@ -483,7 +483,7 @@ static void StartDBConnect()
     g_DBConnecting = true;
 
     char error[256];
-    g_hDB = SQL_Connect(confName, true, error, sizeof(error));
+    g_hDB = SQL_Connect(confName, false, error, sizeof(error));
     g_DBConnecting = false;
 
     if (g_hDB == INVALID_HANDLE)

@@ -49,12 +49,18 @@ stock ScoreLog_EnsureTable()
 	len += Format(query[len], sizeof(query) - len, ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
 	g_bScoreLogTableReady = DoFastQuery(0, query);
-	if (!g_bScoreLogTableReady)
+	if (!g_bScoreLogTableReady && db != INVALID_HANDLE)
 	{
-		if (IsDBReconnectPending() || db == INVALID_HANDLE)
-			LogMessage("Score log table `%sscore_log` is not ready; waiting for database reconnect.", DbPrefix);
+		// CREATE TABLE 可能因共享连接的串台错误而失败，用 SELECT 回查验证表是否实际存在
+		if (DoFastQuery(0, "SELECT 1 FROM `%sscore_log` LIMIT 0", DbPrefix))
+		{
+			g_bScoreLogTableReady = true;
+			LogMessage("[l4d_stats] score_log 表已存在，忽略 CREATE TABLE 错误。");
+		}
 		else
+		{
 			LogError("Failed to create score log table `%sscore_log`.", DbPrefix);
+		}
 	}
 }
 

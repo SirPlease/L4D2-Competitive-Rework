@@ -366,7 +366,7 @@ static void DB_BeginConnect()
     g_DbReady = false;
 
     char error[256];
-    Handle hndl = SQL_Connect(DB_CONF_NAME, true, error, sizeof(error));
+    Handle hndl = SQL_Connect(DB_CONF_NAME, false, error, sizeof(error));
     SQLCB_OnConnect(INVALID_HANDLE, hndl, error, 0);
 } 
 

@@ -29,12 +29,18 @@ stock ModeStats_EnsureTable()
 	len += Format(query[len], sizeof(query) - len, ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
 	g_bModeStatsTableReady = DoFastQuery(0, query);
-	if (!g_bModeStatsTableReady)
+	if (!g_bModeStatsTableReady && db != INVALID_HANDLE)
 	{
-		if (IsDBReconnectPending() || db == INVALID_HANDLE)
-			LogMessage("Mode stats table `%splayer_mode_stats` is not ready; waiting for database reconnect.", DbPrefix);
+		// CREATE TABLE 可能因共享连接的串台错误而失败，用 SELECT 回查验证表是否实际存在
+		if (DoFastQuery(0, "SELECT 1 FROM `%splayer_mode_stats` LIMIT 0", DbPrefix))
+		{
+			g_bModeStatsTableReady = true;
+			LogMessage("[l4d_stats] player_mode_stats 表已存在，忽略 CREATE TABLE 错误。");
+		}
 		else
+		{
 			LogError("Failed to create mode stats table `%splayer_mode_stats`.", DbPrefix);
+		}
 	}
 }
 
