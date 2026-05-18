@@ -471,6 +471,7 @@ bool:DoFastQuery(Client, const String:Query[], any:...)
 		{
 			PrintToConsole(Client, "[RANK] Fast query failed! (Error = \"%s\") Query = \"%s\"", Error, FormattedQuery);
 			LogError("Fast query failed! (Error = \"%s\") Query = \"%s\"", Error, FormattedQuery);
+			ScheduleDBReconnect(Error);
 		}
 		else
 		{
@@ -1143,6 +1144,136 @@ public DisplayRank(Handle:owner, Handle:hndl, const String:error[], any:client)
 	CloseHandle(RankPanel);
 }
 
+// Send a read-only RANK panel for another player's SteamID.
+// This path intentionally does not write ClientPoints/ClientRank/ClientQuarter* for the viewer.
+public DisplayRankSnapshot(Handle:owner, Handle:hndl, const String:error[], any:client)
+{
+	if (!Stats_IsValidHumanClient(client))
+		return;
+
+	if (hndl == INVALID_HANDLE)
+	{
+		LogError("DisplayRankSnapshot Query failed: %s", error);
+		return;
+	}
+
+	new Float:PPM;
+	new Playtime, Points, InfectedKilled, SurvivorsKilled, Headshots;
+	new Rank, TotalRank, GameModeRank, GameModeTotal, QuarterPoints, QuarterPlayTime, QuarterRank, QuarterTotal;
+	new String:Name[32];
+
+	if (SQL_FetchRow(hndl))
+	{
+		SQL_FetchString(hndl, 0, Name, sizeof(Name));
+		Playtime = SQL_FetchInt(hndl, 1);
+		Points = SQL_FetchInt(hndl, 2);
+		InfectedKilled = SQL_FetchInt(hndl, 3);
+		SurvivorsKilled = SQL_FetchInt(hndl, 4);
+		Headshots = SQL_FetchInt(hndl, 5);
+		Rank = SQL_FetchInt(hndl, 6);
+		TotalRank = SQL_FetchInt(hndl, 7);
+		GameModeRank = SQL_FetchInt(hndl, 8);
+		GameModeTotal = SQL_FetchInt(hndl, 9);
+		QuarterPoints = SQL_FetchInt(hndl, 10);
+		QuarterPlayTime = SQL_FetchInt(hndl, 11);
+		QuarterRank = SQL_FetchInt(hndl, 12);
+		QuarterTotal = SQL_FetchInt(hndl, 13);
+		PPM = Playtime > 0 ? float(Points) / float(Playtime) : 0.0;
+	}
+	else
+	{
+		Format(Name, sizeof(Name), "Unknown");
+		Playtime = 0;
+		Points = 0;
+		InfectedKilled = 0;
+		SurvivorsKilled = 0;
+		Headshots = 0;
+		Rank = 0;
+		TotalRank = 0;
+		GameModeRank = 0;
+		GameModeTotal = 0;
+		QuarterPoints = 0;
+		QuarterPlayTime = 0;
+		QuarterRank = 0;
+		QuarterTotal = 0;
+		PPM = 0.0;
+	}
+
+	#pragma unused QuarterPlayTime
+
+	ReplaceString(Name, sizeof(Name), "&lt;", "<");
+	ReplaceString(Name, sizeof(Name), "&gt;", ">");
+	ReplaceString(Name, sizeof(Name), "&#37;", "%");
+	ReplaceString(Name, sizeof(Name), "&#61;", "=");
+	ReplaceString(Name, sizeof(Name), "&#42;", "*");
+
+	new Handle:RankPanel = CreatePanel();
+	new String:Value[MAX_LINE_WIDTH];
+	new String:URL[MAX_LINE_WIDTH];
+	new String:QuarterLabel[32];
+
+	GetConVarString(cvar_SiteURL, URL, sizeof(URL));
+	QuarterRank_FormatCurrentQuarter(QuarterLabel, sizeof(QuarterLabel));
+	new Float:HeadshotRatio = InfectedKilled == 0 ? 0.00 : float(Headshots)/float(InfectedKilled)*100;
+
+	Format(Value, sizeof(Value), "%s的排名" , Name);
+	SetPanelTitle(RankPanel, Value);
+
+	Format(Value, sizeof(Value), "排名: %i  (共%i)" , Rank, TotalRank);
+	DrawPanelText(RankPanel, Value);
+
+	if (!InvalidGameMode())
+	{
+		Format(Value, sizeof(Value), "%s 排名: %i (共%i)" , CurrentGamemodeLabel, GameModeRank, GameModeTotal);
+		DrawPanelText(RankPanel, Value);
+	}
+
+	if (Playtime > 60)
+	{
+		Format(Value, sizeof(Value), "游玩时间: %.2f 小时" , float(Playtime)/ 60.0);
+		DrawPanelText(RankPanel, Value);
+	}
+	else
+	{
+		Format(Value, sizeof(Value), "游玩时间: %i 分钟" , Playtime);
+		DrawPanelText(RankPanel, Value);
+	}
+
+	Format(Value, sizeof(Value), "目前分数: %i" , Points);
+	DrawPanelText(RankPanel, Value);
+
+	Format(Value, sizeof(Value), "%s分数: %i" , QuarterLabel, QuarterPoints);
+	DrawPanelText(RankPanel, Value);
+
+	Format(Value, sizeof(Value), "%s排名: %i (共%i)" , QuarterLabel, QuarterRank, QuarterTotal);
+	DrawPanelText(RankPanel, Value);
+
+	Format(Value, sizeof(Value), "每分钟获取分数: %.2f" , PPM);
+	DrawPanelText(RankPanel, Value);
+
+	Format(Value, sizeof(Value), "消灭的小僵尸: %i" , InfectedKilled);
+	DrawPanelText(RankPanel, Value);
+
+	Format(Value, sizeof(Value), "杀死的生还者: %i" , SurvivorsKilled);
+	DrawPanelText(RankPanel, Value);
+
+	Format(Value, sizeof(Value), "爆头数量: %i" , Headshots);
+	DrawPanelText(RankPanel, Value);
+
+	Format(Value, sizeof(Value), "爆头比率: %.2f \%" , HeadshotRatio);
+	DrawPanelText(RankPanel, Value);
+
+	if (!StrEqual(URL, "", false))
+	{
+		Format(Value, sizeof(Value), "完整数据可以在 %s 查看", URL);
+		DrawPanelText(RankPanel, Value);
+	}
+
+	DrawPanelItem(RankPanel, "关闭");
+	SendPanelToClient(RankPanel, client, RankPanelHandler, 30);
+	CloseHandle(RankPanel);
+}
+
 public StartRankVote(client)
 {
 	if (L4DStatsConf == INVALID_HANDLE)
@@ -1459,9 +1590,9 @@ public Action:cmd_ShowQuarterTop10(client, args)
 	if (!IsClientConnected(client) && !IsClientInGame(client) && IsClientBot(client))
 		return Plugin_Handled;
 
-	if (!QuarterRank_Enabled())
+	if (!QuarterRank_Enabled() && !QuarterRank_RecoverIfNeeded())
 	{
-		StatsPrintToChat(client, "季度榜单当前不可用。");
+		StatsPrintToChat(client, "季度榜单当前不可用，正在等待数据库重连。");
 		return Plugin_Handled;
 	}
 
@@ -2350,6 +2481,9 @@ public DisplayQuarterTop10(Handle:owner, Handle:hndl, const String:error[], any:
 	if (!client || hndl == INVALID_HANDLE)
 	{
 		LogError("DisplayQuarterTop10 failed! Reason: %s", error);
+		ScheduleDBReconnect(error);
+		if (Stats_IsValidHumanClient(client))
+			StatsPrintToChat(client, "季度榜单查询失败，正在等待数据库重连。");
 		return;
 	}
 

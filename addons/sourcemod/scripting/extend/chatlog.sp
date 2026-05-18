@@ -6,11 +6,15 @@
 bool g_bFullyConnected;
 bool g_bConnecting;
 Handle g_hReconnectTimer = null;
+Handle g_hKeepAliveTimer = null;
+Handle g_hCleanupTimer = null;
 
 Database g_hDatabase = null;
 
 #define CHATLOG_DB_CONFIG "chatlog"
 #define CHATLOG_RECONNECT_DELAY 10.0
+#define CHATLOG_KEEPALIVE_INTERVAL 45.0
+#define CHATLOG_CLEANUP_INTERVAL 21600.0
 
 ConVar chatlog_clearTable;
 ConVar chatlog_clearTableDuration;
@@ -40,6 +44,9 @@ public void OnMapEnd()
 		KillTimer(g_hReconnectTimer);
 		g_hReconnectTimer = null;
 	}
+
+	SQL_StopKeepAliveTimer();
+	SQL_StopCleanupTimer();
 
 	if (g_hDatabase != null)
 	{
@@ -115,6 +122,8 @@ void SQL_ScheduleReconnect()
 {
 	g_bFullyConnected = false;
 	g_bConnecting = false;
+	SQL_StopKeepAliveTimer();
+	SQL_StopCleanupTimer();
 
 	if (g_hDatabase != null)
 	{
@@ -126,11 +135,83 @@ void SQL_ScheduleReconnect()
 		g_hReconnectTimer = CreateTimer(CHATLOG_RECONNECT_DELAY, Timer_ReconnectDatabase);
 }
 
+void SQL_StartKeepAliveTimer()
+{
+	if (g_hKeepAliveTimer != null)
+		return;
+
+	g_hKeepAliveTimer = CreateTimer(CHATLOG_KEEPALIVE_INTERVAL, Timer_KeepAlive, _, TIMER_REPEAT);
+}
+
+void SQL_StopKeepAliveTimer()
+{
+	if (g_hKeepAliveTimer == null)
+		return;
+
+	KillTimer(g_hKeepAliveTimer);
+	g_hKeepAliveTimer = null;
+}
+
+void SQL_StartCleanupTimer()
+{
+	SQL_StopCleanupTimer();
+	g_hCleanupTimer = CreateTimer(CHATLOG_CLEANUP_INTERVAL, Timer_CleanupChatLog, _, TIMER_REPEAT);
+}
+
+void SQL_StopCleanupTimer()
+{
+	if (g_hCleanupTimer == null)
+		return;
+
+	KillTimer(g_hCleanupTimer);
+	g_hCleanupTimer = null;
+}
+
 public Action Timer_ReconnectDatabase(Handle timer, any data)
 {
 	g_hReconnectTimer = null;
 	SQL_ConnectChatLog();
 	return Plugin_Stop;
+}
+
+public Action Timer_KeepAlive(Handle timer, any data)
+{
+	if (!g_bFullyConnected || g_hDatabase == null)
+		return Plugin_Continue;
+
+	g_hDatabase.Query(SQL_KeepAliveCallback, "SELECT 1");
+	return Plugin_Continue;
+}
+
+public void SQL_KeepAliveCallback(Database datavas, DBResultSet results, const char[] error, int data)
+{
+	if (results == null)
+	{
+		LogError("[chatlog] 数据库保活失败: %s", error);
+		SQL_ScheduleReconnect();
+	}
+}
+
+public Action Timer_CleanupChatLog(Handle timer, any data)
+{
+	SQL_RunCleanup();
+	return Plugin_Continue;
+}
+
+void SQL_RunCleanup()
+{
+	if (!g_bFullyConnected || g_hDatabase == null || !GetConVarBool(chatlog_clearTable))
+		return;
+
+	char szTimeFunction[64];
+	char szQuery[256];
+	GetConVarString(chatlog_clearTableDuration, szTimeFunction, sizeof(szTimeFunction));
+	TrimString(szTimeFunction);
+	if (szTimeFunction[0] == '\0')
+		return;
+
+	g_hDatabase.Format(szQuery, sizeof(szQuery), "DELETE FROM chat_log WHERE date < DATE_SUB(NOW(), INTERVAL %s)", szTimeFunction);
+	g_hDatabase.Query(SQL_Error, szQuery);
 }
 
 public void SQL_CreateCallback(Database datavas, DBResultSet results, const char[] error, int data)
@@ -144,6 +225,9 @@ public void SQL_CreateCallback(Database datavas, DBResultSet results, const char
 	}
 
 	g_bFullyConnected = true;
+	SQL_StartKeepAliveTimer();
+	SQL_StartCleanupTimer();
+	SQL_RunCleanup();
 }
 
 public void OnPluginEnd()
@@ -153,6 +237,9 @@ public void OnPluginEnd()
 		KillTimer(g_hReconnectTimer);
 		g_hReconnectTimer = null;
 	}
+
+	SQL_StopKeepAliveTimer();
+	SQL_StopCleanupTimer();
 
 	if (g_hDatabase != null)
 	{
@@ -169,7 +256,7 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 		{
 			int iMsgStyle, iServerPort;
 			int iTimeTmp = GetTime();
-			char szQuery[512], szTime[512], szMap[128], szSteamID[21], szTimeFunction[64], szServerName[64];
+			char szQuery[512], szTime[512], szMap[128], szSteamID[21], szServerName[64];
 
 			if (StrContains(command, "_", false) != -1)
 			{
@@ -188,23 +275,17 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 			if(!GetClientAuthId(client, AuthId_Steam2, szSteamID, sizeof(szSteamID)))
 			{
 				LogError("Player %N's steamid couldn't be fetched", client);
-				return;
+				return Plugin_Continue;
 			}
 			iServerPort = GetConVarInt( FindConVar( "hostport" ) );
 			GetConVarString(FindConVar("hostname"), szServerName, sizeof(szServerName));
 
 			g_hDatabase.Format(szQuery, sizeof(szQuery), "INSERT INTO chat_log (date, map, steamid, name, message_style, message, server, port) VALUES ('%s', '%s', '%s', '%N', '%d', '%s', '%s', '%d')", szTime, szMap, szSteamID, client, iMsgStyle, szArgs, szServerName, iServerPort);
 			g_hDatabase.Query(SQL_Error, szQuery);
-
-			GetConVarString(chatlog_clearTableDuration, szTimeFunction, sizeof(szTimeFunction));
-
-			if (GetConVarBool(chatlog_clearTable))
-			{
-				g_hDatabase.Format(szQuery, sizeof(szQuery), "DELETE FROM chat_log WHERE date < DATE_SUB(NOW(), INTERVAL %s)", szTimeFunction);
-				g_hDatabase.Query(SQL_Error, szQuery);
-			}
 		}
 	}
+
+	return Plugin_Continue;
 }
 
 public void SQL_Error(Database datavas, DBResultSet results, const char[] error, int data)

@@ -398,6 +398,10 @@ ResetVars()
 		ClientRankMute[i] = false;
 		ClientEnabled[i] = false;
 		HealingFirstAid[i] = 0;
+		SupportMedicineAwardCount[i] = 0;
+		SupportMedkitAwardCount[i] = 0;
+		SupportReviveAwardCount[i] = 0;
+		SupportDefibAwardCount[i] = 0;
 	}
 
 	for (i = 0; i < MAXPLAYERS + 1; i++)

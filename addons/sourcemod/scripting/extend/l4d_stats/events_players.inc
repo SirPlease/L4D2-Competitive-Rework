@@ -1105,6 +1105,39 @@ public Action:event_HealBegin(Handle:event, const String:name[], bool:dontBroadc
 	Stats_RecordScoreableSupportHolder(FirstAidFirstHolder, FirstAidID, Giver);
 }
 
+#define SUPPORT_ROUND_AWARD_LIMIT 2
+
+stock bool:Stats_HasSupportAwardRoundStarted()
+{
+	if (CurrentGamemodeID == GAMEMODE_SURVIVAL)
+		return SurvivalStarted;
+
+	return Isstart || L4D_HasAnySurvivorLeftSafeArea();
+}
+
+stock bool:Stats_TryConsumeSupportRoundAward(Giver, Recipient, AwardCount[])
+{
+	if (!Stats_HasSupportAwardRoundStarted())
+		return false;
+
+	if (!Stats_IsSurvivorHuman(Giver) || !Stats_IsSurvivorHuman(Recipient))
+		return false;
+
+	if (!Stats_IsRpgRoundValid())
+		return false;
+
+	if (AwardCount[Giver] >= SUPPORT_ROUND_AWARD_LIMIT)
+		return false;
+
+	AwardCount[Giver]++;
+	return true;
+}
+
+stock bool:Stats_TryConsumeMedicineGiveAward(Giver, Recipient)
+{
+	return Stats_TryConsumeSupportRoundAward(Giver, Recipient, SupportMedicineAwardCount);
+}
+
 // Adrenaline give code. Special note, Adrenalines can only be given once. (Even if it's initially given by a bot!)
 
 GiveAdrenaline(Giver, Recipient, AdrenalineID = -1)
@@ -1125,14 +1158,7 @@ GiveAdrenaline(Giver, Recipient, AdrenalineID = -1)
 	else
 		Adrenaline[AdrenalineID] = 1;
 
-	if (!Stats_IsSurvivorHuman(Giver) || !Stats_IsSurvivorHuman(Recipient))
-		return;
-
-	// 给针计分只认第一次拾取/开局持有记录，不能在赠送结算时补记送出者。
-	if (!Stats_IsOriginalHolder(AdrenalineFirstHolder, AdrenalineID, Giver))
-		return;
-
-	if (!Stats_IsRpgRoundValid())
+	if (!Stats_TryConsumeMedicineGiveAward(Giver, Recipient))
 		return;
 
 	decl String:RecipientName[MAX_LINE_WIDTH];
@@ -1249,14 +1275,7 @@ GivePills(Giver, Recipient, PillsID = -1)
 	else
 		Pills[PillsID] = 1;
 
-	if (!Stats_IsSurvivorHuman(Giver) || !Stats_IsSurvivorHuman(Recipient))
-		return;
-
-	// 给药计分只认第一次拾取/开局持有记录，避免插件转交后重新生成实体刷药分。
-	if (!Stats_IsOriginalHolder(PillsFirstHolder, PillsID, Giver))
-		return;
-
-	if (!Stats_IsRpgRoundValid())
+	if (!Stats_TryConsumeMedicineGiveAward(Giver, Recipient))
 		return;
 
 	decl String:RecipientName[MAX_LINE_WIDTH];
@@ -1357,14 +1376,11 @@ public Action:event_DefibPlayer(Handle:event, const String:name[], bool:dontBroa
 		AnnounceMedkitPenalty();
 	}
 
-	if (!Stats_IsSurvivorHuman(Giver))
-		return;
-
 	// How is this possible?
 	if (Recipient == Giver)
 		return;
 
-	if (!Stats_IsSurvivorHuman(Recipient))
+	if (!Stats_TryConsumeSupportRoundAward(Giver, Recipient, SupportDefibAwardCount))
 		return;
 
 	decl String:RecipientName[MAX_LINE_WIDTH];
@@ -1472,13 +1488,9 @@ public Action:event_HealPlayer(Handle:event, const String:name[], bool:dontBroad
 	if (Recipient == Giver)
 		return;
 
-	new FirstAidID = HealingFirstAid[Giver];
 	HealingFirstAid[Giver] = 0;
 
-	if (!Stats_IsSurvivorHuman(Giver) || !Stats_IsSurvivorHuman(Recipient))
-		return;
-
-	if (!Stats_IsOriginalHolder(FirstAidFirstHolder, FirstAidID, Giver))
+	if (!Stats_TryConsumeSupportRoundAward(Giver, Recipient, SupportMedkitAwardCount))
 		return;
 
 	decl String:RecipientName[MAX_LINE_WIDTH];

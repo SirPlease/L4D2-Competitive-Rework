@@ -3,6 +3,7 @@
 
 #include <sourcemod>
 #include <builtinvotes>
+#include <left4dhooks>
 #include <colors>
 #undef REQUIRE_PLUGIN
 #include <sourcebanspp>
@@ -144,7 +145,7 @@ public Action VoteRequest(int client, int args)
 		if (DirExists(sBuffer))
 		{
 			FindConfigName(sCfg, sBuffer, sizeof(sBuffer));
-			if (StartVote(client, sBuffer))
+			if (StartVote(client, sBuffer, sCfg))
 			{
 				strcopy(g_sCfg, sizeof(g_sCfg), sCfg);
 				FakeClientCommand(client, "Vote Yes");
@@ -205,7 +206,12 @@ public int VoteMenuHandler(Handle menu, MenuAction action, int param1, int param
 			do {
 				KvGetSectionName(g_hCfgsKV, sInfo,  sizeof(sInfo));
 				KvGetString(g_hCfgsKV, "message", sBuffer, sizeof(sBuffer), "");
-				AddMenuItem(hMenu, sInfo, sBuffer, ITEMDRAW_DEFAULT);
+				int itemStyle = ITEMDRAW_DEFAULT;
+				if (L4D_HasAnySurvivorLeftSafeArea() && IsRestartMapVoteCommand(sInfo))
+				{
+					itemStyle = ITEMDRAW_DISABLED;
+				}
+				AddMenuItem(hMenu, sInfo, sBuffer, itemStyle);
 			} while (KvGotoNextKey(g_hCfgsKV, true));
 			DisplayMenu(hMenu, param1, 20);
 		}
@@ -233,7 +239,7 @@ public int ConfigsMenuHandler(Handle menu, MenuAction action, int param1, int pa
 		strcopy(g_sCfg, sizeof(g_sCfg), sInfo);
 		if (!StrEqual(g_sCfg, "sm_votekick", true))
 		{
-			if (StartVote(param1, sBuffer))
+			if (StartVote(param1, sBuffer, sInfo))
 			{
 				FakeClientCommand(param1, "Vote Yes");
 			}
@@ -258,11 +264,27 @@ public int ConfigsMenuHandler(Handle menu, MenuAction action, int param1, int pa
 	return 0;
 }
 
-bool StartVote(int client, char[] cfgname)
+bool IsRestartMapVoteCommand(const char[] command)
 {
+	char sCommand[128];
+	strcopy(sCommand, sizeof(sCommand), command);
+	TrimString(sCommand);
+
+	return StrEqual(sCommand, "sm_restartmap", false);
+}
+
+bool StartVote(int client, const char[] cfgname, const char[] command)
+{
+	if (L4D_HasAnySurvivorLeftSafeArea() && IsRestartMapVoteCommand(command))
+	{
+		CPrintToChat(client, "[{olive}vote{default}] {red}对局开始后不能投票重置当前地图.");
+		return false;
+	}
+
 	if (!IsBuiltinVoteInProgress())
 	{
 		char sBuffer[64];
+		strcopy(g_sCfg, sizeof(g_sCfg), command);
 		g_hVote = CreateBuiltinVote(VoteActionHandler, BuiltinVoteType_Custom_YesNo, BuiltinVoteAction_Cancel | BuiltinVoteAction_VoteEnd | BuiltinVoteAction_End);
 		Format(sBuffer, 64, "执行 '%s' ?", cfgname);
 		SetBuiltinVoteArgument(g_hVote, sBuffer);

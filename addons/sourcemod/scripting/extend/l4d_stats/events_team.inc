@@ -1729,9 +1729,11 @@ public Action:event_RevivePlayer(Handle:event, const String:name[], bool:dontBro
 	new Victim = GetClientOfUserId(GetEventInt(event, "subject"));
 	new Mode = GetConVarInt(cvar_AnnounceMode);
 
-	if (!Stats_IsSurvivorHuman(Savior) || !Stats_IsSurvivorHuman(Victim) || Savior == Victim)
+	if (Savior == Victim)
 		return;
-		
+
+	if (!Stats_TryConsumeSupportRoundAward(Savior, Victim, SupportReviveAwardCount))
+		return;
 
 	decl String:SaviorName[MAX_LINE_WIDTH];
 	GetClientName(Savior, SaviorName, sizeof(SaviorName));

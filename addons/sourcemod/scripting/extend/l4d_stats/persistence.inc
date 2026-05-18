@@ -8,7 +8,7 @@
 static Handle g_hDBReconnectTimer = INVALID_HANDLE;
 static Handle g_hDBKeepAliveTimer = INVALID_HANDLE;
 static bool g_bTablesVerified = false;
-#define DB_KEEPALIVE_INTERVAL 60.0
+#define DB_KEEPALIVE_INTERVAL 45.0
 
 // Make connection to database.
 
@@ -25,6 +25,7 @@ bool:ConnectDB()
 		if (db == INVALID_HANDLE)
 		{
 			LogError("Failed to connect to database: %s", Error);
+			ScheduleDBReconnect();
 			return false;
 		}
 
@@ -39,6 +40,7 @@ bool:ConnectDB()
 				CloseHandle(db);
 				db = INVALID_HANDLE;
 			}
+			ScheduleDBReconnect(Error);
 			return false;
 		}
 
@@ -114,6 +116,7 @@ DB_Disconnect()
 	g_bQuarterRankTableReady = false;
 	g_bQuarterRankDbChecked = false;
 	g_bModeStatsTableReady = false;
+	g_bTablesVerified = false;
 }
 
 // 检测是否为连接丢失错误
@@ -124,9 +127,9 @@ bool:IsDBConnectionLostError(const String:error[])
 }
 
 // 标记连接丢失并安排重连
-void ScheduleDBReconnect(const char[] error)
+void ScheduleDBReconnect(const char[] error = "")
 {
-	if (!IsDBConnectionLostError(error))
+	if (error[0] != '\0' && !IsDBConnectionLostError(error))
 		return;
 
 	LogMessage("[l4d_stats] 检测到数据库连接丢失，10 秒后自动重连...");
@@ -134,6 +137,7 @@ void ScheduleDBReconnect(const char[] error)
 	g_bQuarterRankTableReady = false;
 	g_bQuarterRankDbChecked = false;
 	g_bModeStatsTableReady = false;
+	g_bTablesVerified = false;
 
 	DB_StopKeepAlive();
 
@@ -169,7 +173,7 @@ public Action:Timer_L4DStatsDBReconnect(Handle:timer, any:data)
 	return Plugin_Stop;
 }
 
-// KeepAlive：每 60 秒发一次 SELECT 1 防止 MySQL wait_timeout 回收连接
+// KeepAlive：低于 MySQL wait_timeout=120 秒，避免空闲连接被回收。
 DB_StartKeepAlive()
 {
 	if (g_hDBKeepAliveTimer != INVALID_HANDLE)
@@ -726,8 +730,126 @@ QueryClientStats(Client, CallingMethod=CM_UNKNOWN)
 	QueryClientStatsSteamID(Client, SteamID, CallingMethod);
 }
 
+stock bool:Stats_ShouldUseReadOnlyRankDisplay(Client, const String:SteamID[], CallingMethod)
+{
+	if (CallingMethod != CM_RANK && CallingMethod != CM_TOP10)
+		return false;
+
+	if (!Stats_IsValidHumanClient(Client))
+		return false;
+
+	decl String:ClientID[MAX_LINE_WIDTH];
+	GetClientRankAuthString(Client, ClientID, sizeof(ClientID));
+
+	return !StrEqual(ClientID, SteamID, false);
+}
+
+stock Stats_BuildRankDisplayGameModeSQL(String:ModeRankSQL[], ModeRankMax, String:ModeTotalSQL[], ModeTotalMax)
+{
+	if (InvalidGameMode())
+	{
+		strcopy(ModeRankSQL, ModeRankMax, "0");
+		strcopy(ModeTotalSQL, ModeTotalMax, "0");
+		return;
+	}
+
+	decl String:OuterPoints[128], String:RankPoints[128], String:RankTimeWhere[64], String:TotalTimeWhere[64];
+	switch (CurrentGamemodeID)
+	{
+		case GAMEMODE_VERSUS:
+		{
+			strcopy(OuterPoints, sizeof(OuterPoints), "p.points_survivors + p.points_infected");
+			strcopy(RankPoints, sizeof(RankPoints), "gm.points_survivors + gm.points_infected");
+			strcopy(RankTimeWhere, sizeof(RankTimeWhere), "gm.playtime_versus > 0");
+			strcopy(TotalTimeWhere, sizeof(TotalTimeWhere), "gm_total.playtime_versus > 0");
+		}
+		case GAMEMODE_REALISM:
+		{
+			strcopy(OuterPoints, sizeof(OuterPoints), "p.points_realism");
+			strcopy(RankPoints, sizeof(RankPoints), "gm.points_realism");
+			strcopy(RankTimeWhere, sizeof(RankTimeWhere), "gm.playtime_realism > 0");
+			strcopy(TotalTimeWhere, sizeof(TotalTimeWhere), "gm_total.playtime_realism > 0");
+		}
+		case GAMEMODE_SURVIVAL:
+		{
+			strcopy(OuterPoints, sizeof(OuterPoints), "p.points_survival");
+			strcopy(RankPoints, sizeof(RankPoints), "gm.points_survival");
+			strcopy(RankTimeWhere, sizeof(RankTimeWhere), "gm.playtime_survival > 0");
+			strcopy(TotalTimeWhere, sizeof(TotalTimeWhere), "gm_total.playtime_survival > 0");
+		}
+		case GAMEMODE_SCAVENGE:
+		{
+			strcopy(OuterPoints, sizeof(OuterPoints), "p.points_scavenge_survivors + p.points_scavenge_infected");
+			strcopy(RankPoints, sizeof(RankPoints), "gm.points_scavenge_survivors + gm.points_scavenge_infected");
+			strcopy(RankTimeWhere, sizeof(RankTimeWhere), "gm.playtime_scavenge > 0");
+			strcopy(TotalTimeWhere, sizeof(TotalTimeWhere), "gm_total.playtime_scavenge > 0");
+		}
+		case GAMEMODE_REALISMVERSUS:
+		{
+			strcopy(OuterPoints, sizeof(OuterPoints), "p.points_realism_survivors + p.points_realism_infected");
+			strcopy(RankPoints, sizeof(RankPoints), "gm.points_realism_survivors + gm.points_realism_infected");
+			strcopy(RankTimeWhere, sizeof(RankTimeWhere), "gm.playtime_realismversus > 0");
+			strcopy(TotalTimeWhere, sizeof(TotalTimeWhere), "gm_total.playtime_realismversus > 0");
+		}
+		case GAMEMODE_OTHERMUTATIONS:
+		{
+			strcopy(OuterPoints, sizeof(OuterPoints), "p.points_mutations");
+			strcopy(RankPoints, sizeof(RankPoints), "gm.points_mutations");
+			strcopy(RankTimeWhere, sizeof(RankTimeWhere), "gm.playtime_mutations > 0");
+			strcopy(TotalTimeWhere, sizeof(TotalTimeWhere), "gm_total.playtime_mutations > 0");
+		}
+		default:
+		{
+			strcopy(OuterPoints, sizeof(OuterPoints), "p.points");
+			strcopy(RankPoints, sizeof(RankPoints), "gm.points");
+			strcopy(RankTimeWhere, sizeof(RankTimeWhere), "gm.playtime > 0");
+			strcopy(TotalTimeWhere, sizeof(TotalTimeWhere), "gm_total.playtime > 0");
+		}
+	}
+
+	Format(ModeRankSQL, ModeRankMax, "(SELECT COUNT(*) FROM %splayers AS gm WHERE %s AND (%s) >= (%s))", DbPrefix, RankTimeWhere, RankPoints, OuterPoints);
+	Format(ModeTotalSQL, ModeTotalMax, "(SELECT COUNT(*) FROM %splayers AS gm_total WHERE %s)", DbPrefix, TotalTimeWhere);
+}
+
+stock Stats_BuildRankDisplayQuarterSQL(String:QuarterJoinSQL[], QuarterJoinMax, String:QuarterFieldsSQL[], QuarterFieldsMax)
+{
+	QuarterRank_EnsureCurrentQuarter();
+
+	if (!QuarterRank_Enabled())
+	{
+		QuarterJoinSQL[0] = '\0';
+		strcopy(QuarterFieldsSQL, QuarterFieldsMax, "0, 0, 0, 0");
+		return;
+	}
+
+	Format(QuarterJoinSQL, QuarterJoinMax, "LEFT JOIN `%sscore_quarter` AS q ON q.steamid = p.steamid AND q.quarter_key = %i", DbPrefix, g_iQuarterRankKey);
+	Format(QuarterFieldsSQL, QuarterFieldsMax, "IFNULL(q.points, 0), IFNULL(q.playtime, 0), CASE WHEN IFNULL(q.points, 0) <= 0 THEN 0 ELSE (SELECT COUNT(*) FROM `%sscore_quarter` AS qr WHERE qr.quarter_key = %i AND qr.points >= q.points AND qr.points > 0) END, (SELECT COUNT(*) FROM `%sscore_quarter` AS qt WHERE qt.quarter_key = %i AND qt.points > 0)", DbPrefix, g_iQuarterRankKey, DbPrefix, g_iQuarterRankKey);
+}
+
+QueryReadOnlyRankDisplaySteamID(Client, const String:SteamID[])
+{
+	decl String:EscSteamID[MAX_LINE_WIDTH * 2 + 1];
+	SQL_EscapeString(db, SteamID, EscSteamID, sizeof(EscSteamID));
+
+	decl String:ModeRankSQL[512], String:ModeTotalSQL[256];
+	Stats_BuildRankDisplayGameModeSQL(ModeRankSQL, sizeof(ModeRankSQL), ModeTotalSQL, sizeof(ModeTotalSQL));
+
+	decl String:QuarterJoinSQL[256], String:QuarterFieldsSQL[1024];
+	Stats_BuildRankDisplayQuarterSQL(QuarterJoinSQL, sizeof(QuarterJoinSQL), QuarterFieldsSQL, sizeof(QuarterFieldsSQL));
+
+	decl String:query[4096];
+	Format(query, sizeof(query), "SELECT p.name, p.%s, p.%s, p.kills, p.versus_kills_survivors + p.scavenge_kills_survivors + p.realism_kills_survivors + p.mutations_kills_survivors, p.headshots, (SELECT COUNT(*) FROM %splayers AS rp WHERE rp.%s >= p.%s), (SELECT COUNT(*) FROM %splayers), %s, %s, %s FROM %splayers AS p %s WHERE p.steamid = '%s'", DB_PLAYERS_TOTALPLAYTIME, DB_PLAYERS_TOTALPOINTS, DbPrefix, DB_PLAYERS_TOTALPOINTS, DB_PLAYERS_TOTALPOINTS, DbPrefix, ModeRankSQL, ModeTotalSQL, QuarterFieldsSQL, DbPrefix, QuarterJoinSQL, EscSteamID);
+	SQL_TQuery(db, DisplayRankSnapshot, query, Client);
+}
+
 QueryClientStatsSteamID(Client, const String:SteamID[], CallingMethod=CM_UNKNOWN)
 {
+	if (Stats_ShouldUseReadOnlyRankDisplay(Client, SteamID, CallingMethod))
+	{
+		QueryReadOnlyRankDisplaySteamID(Client, SteamID);
+		return;
+	}
+
 	new Handle:dp = CreateDataPack();
 
 	WritePackCell(dp, Client);

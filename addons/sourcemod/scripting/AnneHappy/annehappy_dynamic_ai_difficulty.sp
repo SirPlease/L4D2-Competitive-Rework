@@ -36,6 +36,7 @@ ConVar g_cvCurrentLocked;
 Database g_hThresholdDb = null;
 Handle g_hTimer = null;
 Handle g_hThresholdDbReconnectTimer = null;
+Handle g_hThresholdDbKeepAliveTimer = null;
 float g_fNextCheckAt = 0.0;
 float g_fNextEnforceAt = 0.0;
 float g_fDbLevel2PPM = 0.0;
@@ -58,6 +59,7 @@ bool g_bDbThresholdReady = false;
 char g_sDbThresholdSource[32];
 
 #define THRESHOLD_DB_RECONNECT_DELAY 10.0
+#define THRESHOLD_DB_KEEPALIVE_INTERVAL 45.0
 
 public Plugin myinfo =
 {
@@ -628,7 +630,7 @@ void ConnectThresholdDb()
 
     g_bThresholdDbConnecting = true;
     char error[256];
-    g_hThresholdDb = SQL_Connect(configName, true, error, sizeof(error));
+    g_hThresholdDb = SQL_Connect(configName, false, error, sizeof(error));
     g_bThresholdDbConnecting = false;
 
     if (g_hThresholdDb == null)
@@ -642,6 +644,7 @@ void ConnectThresholdDb()
         LogMessage("[AnneHappyAI] failed to set threshold database charset utf8mb4");
     SQL_FastQuery(g_hThresholdDb, "SET NAMES 'utf8mb4'");
 
+    StartThresholdDbKeepAlive();
     CreateThresholdTable();
 }
 
@@ -653,6 +656,8 @@ bool IsThresholdDbConnectionLostError(const char[] error)
 
 void CloseThresholdDb()
 {
+    StopThresholdDbKeepAlive();
+
     if (g_hThresholdDb != null)
     {
         delete g_hThresholdDb;
@@ -669,10 +674,46 @@ void ScheduleThresholdDbReconnect(const char[] error = "")
     if (error[0] != '\0' && !IsThresholdDbConnectionLostError(error))
         return;
 
+    g_iNextThresholdRefreshAt = 0;
     CloseThresholdDb();
 
     if (g_hThresholdDbReconnectTimer == null)
         g_hThresholdDbReconnectTimer = CreateTimer(THRESHOLD_DB_RECONNECT_DELAY, Timer_ReconnectThresholdDb);
+}
+
+void StartThresholdDbKeepAlive()
+{
+    if (g_hThresholdDbKeepAliveTimer != null)
+        return;
+
+    g_hThresholdDbKeepAliveTimer = CreateTimer(THRESHOLD_DB_KEEPALIVE_INTERVAL, Timer_ThresholdDbKeepAlive, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+}
+
+void StopThresholdDbKeepAlive()
+{
+    if (g_hThresholdDbKeepAliveTimer == null)
+        return;
+
+    KillTimer(g_hThresholdDbKeepAliveTimer);
+    g_hThresholdDbKeepAliveTimer = null;
+}
+
+public Action Timer_ThresholdDbKeepAlive(Handle timer, any data)
+{
+    if (g_hThresholdDb == null)
+        return Plugin_Continue;
+
+    g_hThresholdDb.Query(SQL_OnThresholdDbKeepAlive, "SELECT 1");
+    return Plugin_Continue;
+}
+
+public void SQL_OnThresholdDbKeepAlive(Database db, DBResultSet results, const char[] error, any data)
+{
+    if (results == null)
+    {
+        LogError("[AnneHappyAI] threshold database keepalive failed: %s", error);
+        ScheduleThresholdDbReconnect(error);
+    }
 }
 
 public Action Timer_ReconnectThresholdDb(Handle timer, any data)

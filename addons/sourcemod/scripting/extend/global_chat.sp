@@ -11,8 +11,10 @@ Database g_hDatabase = null;
 Database g_hBlacklistDatabase = null;
 Handle g_hPollTimer = null;
 Handle g_hReconnectTimer = null;
+Handle g_hKeepAliveTimer = null;
 Handle g_hBlacklistReconnectTimer = null;
 Handle g_hBlacklistRefreshTimer = null;
+Handle g_hBlacklistKeepAliveTimer = null;
 
 bool g_bConnecting;
 bool g_bBlacklistConnecting;
@@ -53,6 +55,9 @@ ConVar g_cvLFGLimit10M;
 ConVar g_cvLFGLimit20M;
 ConVar g_cvLFGLimitKickAdmin;
 
+#define GLOBAL_CHAT_RECONNECT_DELAY 10.0
+#define GLOBAL_CHAT_KEEPALIVE_INTERVAL 45.0
+
 public Plugin myinfo =
 {
 	name = "Anne Global Chat",
@@ -66,7 +71,7 @@ public void OnPluginStart()
 {
 	g_cvEnabled = CreateConVar("sm_qf_enabled", "1", "是否启用全服聊天。", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_cvDatabaseConfig = CreateConVar("sm_qf_database", "globalchat", "databases.cfg 里的数据库配置名称。");
-	g_cvPollInterval = CreateConVar("sm_qf_poll_interval", "1.0", "全服聊天轮询间隔，单位秒。", FCVAR_NONE, true, 0.5, true, 30.0);
+	g_cvPollInterval = CreateConVar("sm_qf_poll_interval", "2.0", "全服聊天轮询间隔，单位秒。", FCVAR_NONE, true, 2.0, true, 30.0);
 	g_cvPollBatch = CreateConVar("sm_qf_poll_batch", "30", "每次最多拉取多少条全服聊天消息。", FCVAR_NONE, true, 1.0, true, 200.0);
 	g_cvCleanupInterval = CreateConVar("sm_qf_cleanup_interval", "21600", "清理旧全服聊天记录的间隔，单位秒。", FCVAR_NONE, true, 300.0);
 	g_cvRetentionDays = CreateConVar("sm_qf_retention_days", "7", "全服聊天记录保留天数。0 表示不清理。", FCVAR_NONE, true, 0.0);
@@ -168,8 +173,10 @@ public void OnPluginEnd()
 {
 	StopPollTimer();
 	StopReconnectTimer();
+	StopKeepAliveTimer();
 	StopBlacklistReconnectTimer();
 	StopBlacklistRefreshTimer();
+	StopBlacklistKeepAliveTimer();
 
 	if (g_hDatabase != null)
 	{
@@ -193,8 +200,10 @@ public void OnMapEnd()
 	// 确保 SQL 回调不会操作已失效的句柄。
 	StopPollTimer();
 	StopReconnectTimer();
+	StopKeepAliveTimer();
 	StopBlacklistRefreshTimer();
 	StopBlacklistReconnectTimer();
+	StopBlacklistKeepAliveTimer();
 	g_bReady = false;
 	g_bPollInFlight = false;
 	g_bBlacklistRefreshInFlight = false;
@@ -534,6 +543,7 @@ public void SQL_OnBlacklistConnect(Database database, const char[] error, any da
 
 	g_hBlacklistDatabase = database;
 	g_hBlacklistDatabase.SetCharset("utf8mb4");
+	StartBlacklistKeepAliveTimer();
 	StartBlacklistRefreshTimer();
 	RefreshBlacklistCache();
 }
@@ -543,6 +553,7 @@ void ScheduleBlacklistReconnect()
 	g_bBlacklistConnecting = false;
 	g_bBlacklistRefreshInFlight = false;
 	StopBlacklistRefreshTimer();
+	StopBlacklistKeepAliveTimer();
 
 	if (g_hBlacklistDatabase != null)
 	{
@@ -551,7 +562,7 @@ void ScheduleBlacklistReconnect()
 	}
 
 	StopBlacklistReconnectTimer();
-	g_hBlacklistReconnectTimer = CreateTimer(10.0, Timer_ReconnectBlacklistDatabase);
+	g_hBlacklistReconnectTimer = CreateTimer(GLOBAL_CHAT_RECONNECT_DELAY, Timer_ReconnectBlacklistDatabase);
 }
 
 void StartBlacklistRefreshTimer()
@@ -578,6 +589,23 @@ void StopBlacklistReconnectTimer()
 		delete timer;
 }
 
+void StartBlacklistKeepAliveTimer()
+{
+	if (g_hBlacklistKeepAliveTimer != null)
+		return;
+
+	g_hBlacklistKeepAliveTimer = CreateTimer(GLOBAL_CHAT_KEEPALIVE_INTERVAL, Timer_BlacklistKeepAlive, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+}
+
+void StopBlacklistKeepAliveTimer()
+{
+	Handle timer = g_hBlacklistKeepAliveTimer;
+	g_hBlacklistKeepAliveTimer = null;
+
+	if (timer != null)
+		delete timer;
+}
+
 public Action Timer_ReconnectBlacklistDatabase(Handle timer, any data)
 {
 	g_hBlacklistReconnectTimer = null;
@@ -589,6 +617,24 @@ public Action Timer_RefreshBlacklistCache(Handle timer, any data)
 {
 	RefreshBlacklistCache();
 	return Plugin_Continue;
+}
+
+public Action Timer_BlacklistKeepAlive(Handle timer, any data)
+{
+	if (!g_cvBlacklistFilter.BoolValue || g_hBlacklistDatabase == null)
+		return Plugin_Continue;
+
+	g_hBlacklistDatabase.Query(SQL_OnBlacklistKeepAlive, "SELECT 1");
+	return Plugin_Continue;
+}
+
+public void SQL_OnBlacklistKeepAlive(Database database, DBResultSet results, const char[] error, any data)
+{
+	if (results == null)
+	{
+		LogError("[global_chat] blacklist 数据库保活失败: %s", error);
+		ScheduleBlacklistReconnect();
+	}
 }
 
 void RefreshBlacklistCache()
@@ -684,6 +730,7 @@ void ScheduleReconnect()
 	g_bConnecting = false;
 	g_bPollInFlight = false;
 	StopPollTimer();
+	StopKeepAliveTimer();
 
 	if (g_hDatabase != null)
 	{
@@ -692,7 +739,7 @@ void ScheduleReconnect()
 	}
 
 	StopReconnectTimer();
-	g_hReconnectTimer = CreateTimer(10.0, Timer_ReconnectDatabase);
+	g_hReconnectTimer = CreateTimer(GLOBAL_CHAT_RECONNECT_DELAY, Timer_ReconnectDatabase);
 }
 
 void StartPollTimer()
@@ -714,6 +761,23 @@ void StopReconnectTimer()
 {
 	Handle timer = g_hReconnectTimer;
 	g_hReconnectTimer = null;
+
+	if (timer != null)
+		delete timer;
+}
+
+void StartKeepAliveTimer()
+{
+	if (g_hKeepAliveTimer != null)
+		return;
+
+	g_hKeepAliveTimer = CreateTimer(GLOBAL_CHAT_KEEPALIVE_INTERVAL, Timer_KeepAlive, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+}
+
+void StopKeepAliveTimer()
+{
+	Handle timer = g_hKeepAliveTimer;
+	g_hKeepAliveTimer = null;
 
 	if (timer != null)
 		delete timer;
@@ -742,6 +806,24 @@ public Action Timer_PollMessages(Handle timer, any data)
 	g_hDatabase.Query(SQL_OnPollMessages, query);
 
 	return Plugin_Continue;
+}
+
+public Action Timer_KeepAlive(Handle timer, any data)
+{
+	if (!g_bReady || g_hDatabase == null)
+		return Plugin_Continue;
+
+	g_hDatabase.Query(SQL_OnKeepAlive, "SELECT 1");
+	return Plugin_Continue;
+}
+
+public void SQL_OnKeepAlive(Database database, DBResultSet results, const char[] error, any data)
+{
+	if (results == null)
+	{
+		LogError("[global_chat] 数据库保活失败: %s", error);
+		ScheduleReconnect();
+	}
 }
 
 public void SQL_OnConnect(Database database, const char[] error, any data)
@@ -887,6 +969,7 @@ public void SQL_OnLoadLastId(Database database, DBResultSet results, const char[
 		g_iLastMessageId = results.FetchInt(0);
 
 	g_bReady = true;
+	StartKeepAliveTimer();
 	StartPollTimer();
 }
 

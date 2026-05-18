@@ -16,9 +16,15 @@
 #define PLUGIN_VERSION "2.0"
 #define MAX_LINE_WIDTH 64
 #define DB_CONF_NAME  "rpg"
+#define RPG_DB_RECONNECT_DELAY 10.0
+#define RPG_DB_KEEPALIVE_INTERVAL 45.0
+#define RPG_DB_LOAD_RETRY_DELAY 2.0
 
 // 进行 MySQL 连接相关变量
 Handle db = INVALID_HANDLE;
+Handle g_hDbReconnectTimer = null;
+Handle g_hDbKeepAliveTimer = null;
+int g_iDbLoadRetryCount[MAXPLAYERS + 1];
 enum struct PlayerStruct{
 	int ClientPoints;
 	int ClientBlood;
@@ -522,12 +528,15 @@ public void  OnPluginStart()
 
 public void OnMapEnd()
 {
-	if (db != INVALID_HANDLE)
-	{
-		CloseHandle(db);
-		db = INVALID_HANDLE;
-	}
+	StopDbReconnectTimer();
+	CloseDbConnection();
 	g_bMysqlSystemAvailable = false;
+}
+
+public void OnPluginEnd()
+{
+	StopDbReconnectTimer();
+	CloseDbConnection();
 }
 
 public void OnConfigsExecuted()
@@ -743,7 +752,11 @@ public void EventReturnBlood(Handle event, const char []name, bool dontBroadcast
 public bool ConnectDB()
 {
 	if (db != INVALID_HANDLE)
+	{
+		StartDbKeepAliveTimer();
+		g_bMysqlSystemAvailable = true;
 		return true;
+	}
 
 	if (SQL_CheckConfig(DB_CONF_NAME))
 	{
@@ -752,7 +765,7 @@ public bool ConnectDB()
 		if (db == INVALID_HANDLE)
 		{
 			LogError("Failed to connect to database: %s", Error);
-			CloseHandle(db);
+			g_bMysqlSystemAvailable = false;
 			return false;
 		}
 		else if (!SQL_SetCharset(db,"utf8mb4"))
@@ -761,34 +774,134 @@ public bool ConnectDB()
 				LogError("Failed to update encoding to utf8mb4: %s", Error);
 			else
 				LogError("Failed to update encoding to utf8mb4: unknown");
-			CloseHandle(db);
+			CloseDbConnection();
+			g_bMysqlSystemAvailable = false;
+			return false;
 		}
 
 	}
 	else
 	{
 		LogError("Databases.cfg missing '%s' entry!", DB_CONF_NAME);
-		CloseHandle(db);
+		g_bMysqlSystemAvailable = false;
 		return false;
 	}
 
+	SQL_FastQuery(db, "SET NAMES 'utf8mb4'");
+	StartDbKeepAliveTimer();
+	g_bMysqlSystemAvailable = true;
 	return true;
+}
+
+bool IsDbConnectionLostError(const char[] error)
+{
+	return StrContains(error, "Lost connection", false) != -1
+		|| StrContains(error, "server has gone away", false) != -1;
+}
+
+void StartDbKeepAliveTimer()
+{
+	if (g_hDbKeepAliveTimer != null)
+		return;
+
+	g_hDbKeepAliveTimer = CreateTimer(RPG_DB_KEEPALIVE_INTERVAL, Timer_DbKeepAlive, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+}
+
+void StopDbKeepAliveTimer()
+{
+	if (g_hDbKeepAliveTimer == null)
+		return;
+
+	KillTimer(g_hDbKeepAliveTimer);
+	g_hDbKeepAliveTimer = null;
+}
+
+void StopDbReconnectTimer()
+{
+	if (g_hDbReconnectTimer == null)
+		return;
+
+	KillTimer(g_hDbReconnectTimer);
+	g_hDbReconnectTimer = null;
+}
+
+void CloseDbConnection()
+{
+	StopDbKeepAliveTimer();
+
+	if (db != INVALID_HANDLE)
+	{
+		CloseHandle(db);
+		db = INVALID_HANDLE;
+	}
+}
+
+void ScheduleDbReconnect(const char[] error = "")
+{
+	if (error[0] != '\0' && !IsDbConnectionLostError(error))
+		return;
+
+	g_bMysqlSystemAvailable = false;
+	CloseDbConnection();
+
+	if (g_hDbReconnectTimer == null)
+		g_hDbReconnectTimer = CreateTimer(RPG_DB_RECONNECT_DELAY, Timer_ReconnectDb, _, TIMER_FLAG_NO_MAPCHANGE);
+}
+
+public Action Timer_ReconnectDb(Handle timer, any data)
+{
+	g_hDbReconnectTimer = null;
+
+	if (!ConnectDB())
+	{
+		ScheduleDbReconnect();
+		return Plugin_Stop;
+	}
+
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (IsValidClient(i) && !IsFakeClient(i))
+			ClientSaveToFileLoad(i);
+	}
+
+	return Plugin_Stop;
+}
+
+public Action Timer_DbKeepAlive(Handle timer, any data)
+{
+	if (db == INVALID_HANDLE)
+		return Plugin_Continue;
+
+	SQL_TQuery(db, SQL_DbKeepAliveCallback, "SELECT 1");
+	return Plugin_Continue;
+}
+
+public void SQL_DbKeepAliveCallback(Handle owner, Handle hndl, const char[] error, any data)
+{
+	if (hndl == INVALID_HANDLE || error[0] != '\0')
+	{
+		LogError("[RPG] database keepalive failed: %s", error);
+		ScheduleDbReconnect(error);
+	}
 }
 
 public void SendSQLUpdate(char []query)
 {
-    if (db == INVALID_HANDLE)
+    if (db == INVALID_HANDLE && !ConnectDB())
+	{
+		ScheduleDbReconnect();
         return;
+	}
 
     SQL_TQuery(db, SQLErrorCheckCallback, query);
 }
 public void SQLErrorCheckCallback(Handle owner, Handle hndl, const char []error, any data)
 {
-    if (db == INVALID_HANDLE)
-        return;
-
     if(!StrEqual("", error))
+	{
         LogError("SQL Error: %s", error);
+		ScheduleDbReconnect(error);
+	}
 }
 
 
@@ -804,6 +917,7 @@ public void OnClientPostAdminCheck(int client)
 	player[client].CanBuy=true;
 	player[client].ClientPoints = 500;
 	player[client].Check = false;
+	g_iDbLoadRetryCount[client] = 0;
 	if(g_bMysqlSystemAvailable)
 	{
 		player[client].ClientMelee = 0;
@@ -816,6 +930,11 @@ public void OnClientPostAdminCheck(int client)
 	}
 	CreateTimer(3.0, CheckPlayer, client);
 	CreateTimer(10.0, SetClientTag, client);
+}
+
+public void OnClientDisconnect(int client)
+{
+	g_iDbLoadRetryCount[client] = 0;
 }
 
 public Action SetClientTag(Handle timer, int client)
@@ -969,12 +1088,17 @@ public void ClientSaveToFileLoad(int Client)
 {
 	if(!IsValidClient(Client) || IsFakeClient(Client) || !g_bMysqlSystemAvailable)
 		return;
+	if (db == INVALID_HANDLE && !ConnectDB())
+	{
+		ScheduleDbReconnect();
+		return;
+	}
 	char query[255];
 	char SteamID[64];
 	GetClientAuthId(Client, AuthId_Steam2,SteamID, sizeof(SteamID));
 	if(StrEqual(SteamID,"BOT"))return;
 	Format(query, sizeof(query), "SELECT MELEE_DATA,BLOOD_DATA,HAT,GLOW,SKIN,RECOIL,CHATTAG FROM RPG WHERE steamid = '%s'", SteamID);	
-	SQL_TQuery(db, ShowMelee, query, Client);
+	SQL_TQuery(db, ShowMelee, query, GetClientUserId(Client));
 	return;
 }
 
@@ -1391,7 +1515,7 @@ public bool RemovePoints(int client, int costpoints,char bitem[64])
 //数据库操作返回数据
 public void ShowMelee(Handle owner, Handle hndl, const char []error, any data)
 {
-    int client = data;
+    int client = GetClientOfUserId(data);
 
     if (!client || !IsClientInGame(client) || IsFakeClient(client))
         return;
@@ -1399,8 +1523,17 @@ public void ShowMelee(Handle owner, Handle hndl, const char []error, any data)
     if (hndl == INVALID_HANDLE)
     {
         LogError("[RPG] ShowMelee query failed: %s", error);
+		ScheduleDbReconnect(error);
+
+		if (IsDbConnectionLostError(error) && g_iDbLoadRetryCount[client] < 1)
+		{
+			g_iDbLoadRetryCount[client]++;
+			CreateTimer(RPG_DB_LOAD_RETRY_DELAY, Timer_RetryClientLoad, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+		}
         return;
     }
+
+	g_iDbLoadRetryCount[client] = 0;
 
     if (SQL_FetchRow(hndl))
 	{
@@ -1419,6 +1552,22 @@ public void ShowMelee(Handle owner, Handle hndl, const char []error, any data)
 		PrintToChat(client,"\x04新用户，正在创建数据库");
 		ClientSaveToFileCreate(client);
 	}
+}
+
+public Action Timer_RetryClientLoad(Handle timer, any userid)
+{
+	int client = GetClientOfUserId(userid);
+	if (!client || !IsClientInGame(client) || IsFakeClient(client))
+		return Plugin_Stop;
+
+	if (db == INVALID_HANDLE && !ConnectDB())
+	{
+		ScheduleDbReconnect();
+		return Plugin_Stop;
+	}
+
+	ClientSaveToFileLoad(client);
+	return Plugin_Stop;
 }
 //实现给予物品
 public void GiveItems(int client, char bitem[64])
