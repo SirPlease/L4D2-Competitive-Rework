@@ -1544,6 +1544,14 @@ public Action:event_DoorOpen(Handle:event, const String:name[], bool:dontBroadca
 	return Plugin_Continue;
 }
 
+public Action:event_StartAreaPre(Handle:event, const String:name[], bool:dontBroadcast)
+{
+	if(CurrentGamemodeID != GAMEMODE_SURVIVAL && !StatsDisabled())
+		Stats_OpenStartGrantedSupportItemWindow();
+
+	return Plugin_Continue;
+}
+
 public Action:event_StartArea(Handle:event, const String:name[], bool:dontBroadcast)
 {
 	if(CurrentGamemodeID != GAMEMODE_SURVIVAL && !StatsDisabled())

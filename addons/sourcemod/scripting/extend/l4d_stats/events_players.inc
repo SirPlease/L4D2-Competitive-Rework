@@ -768,6 +768,14 @@ stock bool:Stats_IsSupportGiveBlocked(client)
 	return Stats_IsValidClient(client) && GetEngineTime() <= SupportGiveCommandUntil[client];
 }
 
+stock bool:Stats_IsSupportStartGrantWindow()
+{
+	if (GetEngineTime() > SupportStartGrantUntil)
+		return false;
+
+	return !g_brpgAvailable || !L4D_RPG_GetGlobalValue(INDEX_USEBUY);
+}
+
 stock Stats_MarkHeldSupportItemsUnscoreable(client)
 {
 	if (!Stats_IsValidClient(client) || GetClientTeam(client) != TEAM_SURVIVORS)
@@ -812,6 +820,9 @@ public Action:Command_BlockSupportGiveSource(client, const String:command[], arg
 		StrContains(Args, "firstaid", false) == -1)
 		return Plugin_Continue;
 
+	if (Stats_IsSupportStartGrantWindow())
+		return Plugin_Continue;
+
 	SupportGiveCommandUntil[client] = GetEngineTime() + 2.0;
 	CreateTimer(0.1, timer_MarkHeldSupportItemsUnscoreable, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	CreateTimer(0.5, timer_MarkHeldSupportItemsUnscoreable, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
@@ -834,7 +845,7 @@ stock Stats_RecordScoreableSupportHolder(firstHolder[], entity, client, bool:All
 
 stock bool:Stats_ShouldMarkUnknownSupportPickupUnscoreable(client)
 {
-	if (!Stats_IsSupportGiveBlocked(client) && GetEngineTime() <= SupportStartGrantUntil)
+	if (!Stats_IsSupportGiveBlocked(client) && Stats_IsSupportStartGrantWindow())
 		return false;
 
 	return Isstart || Stats_IsSupportGiveBlocked(client);
@@ -986,13 +997,20 @@ stock Stats_ScheduleStartGrantedSupportItemScans()
 	CreateTimer(1.0, timer_RecordStartGrantedSupportItems, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
+stock Stats_OpenStartGrantedSupportItemWindow()
+{
+	new Float:Until = GetEngineTime() + 1.2;
+	if (Until > SupportStartGrantUntil)
+		SupportStartGrantUntil = Until;
+}
+
 stock Stats_RecordStartGrantedSupportItems()
 {
 	if (SupportStartGrantRecorded)
 		return;
 
 	SupportStartGrantRecorded = true;
-	SupportStartGrantUntil = GetEngineTime() + 1.2;
+	Stats_OpenStartGrantedSupportItemWindow();
 	Stats_RecordAllHeldSupportItems(true);
 	Stats_ScheduleStartGrantedSupportItemScans();
 }
