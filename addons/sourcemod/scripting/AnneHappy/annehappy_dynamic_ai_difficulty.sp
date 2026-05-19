@@ -26,6 +26,7 @@ ConVar g_cvThresholdDbConfig;
 ConVar g_cvThresholdTable;
 ConVar g_cvThresholdMaxAge;
 ConVar g_cvEnforceInterval;
+ConVar g_cvSurvivorMaxIncaps;
 ConVar g_cvAnnounce;
 ConVar g_cvDebug;
 ConVar g_cvCurrentLevel;
@@ -87,6 +88,7 @@ public void OnPluginStart()
     g_cvThresholdTable = CreateConVar("ah_ai_dynamic_threshold_table", DEFAULT_THRESHOLD_TABLE, "每日 PPM 阈值表名，只允许字母数字下划线", FCVAR_NOTIFY);
     g_cvThresholdMaxAge = CreateConVar("ah_ai_dynamic_threshold_max_age", "172800", "数据库阈值最大有效秒数；0=不检查过期，默认2天", FCVAR_NOTIFY, true, 0.0);
     g_cvEnforceInterval = CreateConVar("ah_ai_dynamic_enforce_interval", "10.0", "难度锁定后每隔多少秒重刷当前档位 cvar，防止旧投票或手动 sm_cvar 覆盖；0=关闭", FCVAR_NOTIFY, true, 0.0, true, 60.0);
+    g_cvSurvivorMaxIncaps = CreateConVar("ah_ai_dynamic_survivor_max_incaps", "2", "动态难度应用时强制恢复的生还者最大倒地次数；-1=不处理", FCVAR_NOTIFY, true, -1.0, true, 10.0);
     g_cvAnnounce = CreateConVar("ah_ai_dynamic_announce", "1", "调档时是否在聊天框提示", FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_cvDebug = CreateConVar("ah_ai_dynamic_debug", "0", "是否输出动态难度调试日志", FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_cvCurrentLevel = CreateConVar("ah_ai_dynamic_current_level", "0", "当前回合动态难度：0=未定档，1=简单，2=普通，3=困难，4=专家，5=极限", FCVAR_DONTRECORD, true, 0.0, true, 5.0);
@@ -102,13 +104,13 @@ public void OnPluginStart()
     RegAdminCmd("sm_aidiff", Cmd_SetDifficulty, ADMFLAG_CONFIG, "sm_aidiff <0-5> 设置动态难度；0=自动，1-5=固定难度");
     RegAdminCmd("sm_aidiff_reload", Cmd_ReloadDifficulty, ADMFLAG_CONFIG, "重新读取难度配置并应用当前难度");
 
-    AutoExecConfig(true, "annehappy_dynamic_ai_difficulty");
     StartDifficultyTimer();
 }
 
 public void OnConfigsExecuted()
 {
     StartDifficultyTimer();
+    EnforceSurvivorLifeCvars();
     RequestThresholdRefresh(true);
     PrepareRoundDifficulty(true);
 }
@@ -155,6 +157,7 @@ public void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
     g_bPendingAutoApply = true;
     g_bSurvivorsLeftStartArea = false;
     PublishCurrentDifficulty();
+    EnforceSurvivorLifeCvars();
 
     RequestThresholdRefresh(false);
     PrepareRoundDifficulty(true);
@@ -1026,6 +1029,20 @@ bool ApplyConfigCvar(const char[] name, const char[] value)
     return true;
 }
 
+void EnforceSurvivorLifeCvars()
+{
+    int maxIncaps = g_cvSurvivorMaxIncaps.IntValue;
+    if (maxIncaps < 0)
+        return;
+
+    ConVar cvar = FindConVar("survivor_max_incapacitated_count");
+    if (cvar == null)
+        return;
+
+    if (cvar.IntValue != maxIncaps)
+        cvar.SetInt(maxIncaps, true, false);
+}
+
 int ApplyProfileCvars(int level)
 {
     char path[PLATFORM_MAX_PATH];
@@ -1068,6 +1085,7 @@ int ApplyProfileCvars(int level)
     }
 
     delete kv;
+    EnforceSurvivorLifeCvars();
 
     if (applied <= 0)
         LogError("[AnneHappyAI] No cvars applied from section \"%s\" in config: %s", levelKey, path);
