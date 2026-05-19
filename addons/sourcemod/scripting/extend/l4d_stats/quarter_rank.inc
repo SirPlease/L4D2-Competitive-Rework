@@ -193,9 +193,10 @@ stock QuarterRank_EnsureCurrentQuarter()
 
 public QuarterRank_CheckOldRows(Handle:owner, Handle:hndl, const String:error[], any:data)
 {
-	if (hndl == INVALID_HANDLE)
+	if (hndl == INVALID_HANDLE || error[0] != '\0')
 	{
-		LogError("QuarterRank_CheckOldRows failed: %s", error);
+		if (error[0] != '\0')
+			LogError("QuarterRank_CheckOldRows failed: %s", error);
 		ScheduleDBReconnect(error);
 		return;
 	}
