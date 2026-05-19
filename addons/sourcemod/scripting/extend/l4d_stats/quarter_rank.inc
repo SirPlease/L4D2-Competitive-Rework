@@ -184,9 +184,34 @@ stock QuarterRank_EnsureCurrentQuarter()
 	if (db == INVALID_HANDLE || !g_bQuarterRankTableReady)
 		return;
 
-	decl String:query[1024];
-	Format(query, sizeof(query), "UPDATE `%sscore_quarter` SET quarter_key = %i, points = 0, playtime = 0, updated = UNIX_TIMESTAMP() WHERE quarter_key <> %i", DbPrefix, g_iQuarterRankKey, g_iQuarterRankKey);
-	SendSQLUpdate(query);
+	// 先异步查有没有旧季度行，COUNT = 0 就跳过 UPDATE，
+	// 避免开服阶段连接刚建立时在这条季度初始化 SQL 上触发断连。
+	decl String:query[512];
+	Format(query, sizeof(query), "SELECT COUNT(*) FROM `%sscore_quarter` WHERE quarter_key <> %i LIMIT 1", DbPrefix, g_iQuarterRankKey);
+	SQL_TQuery(db, QuarterRank_CheckOldRows, query);
+}
+
+public QuarterRank_CheckOldRows(Handle:owner, Handle:hndl, const String:error[], any:data)
+{
+	if (hndl == INVALID_HANDLE)
+	{
+		LogError("QuarterRank_CheckOldRows failed: %s", error);
+		ScheduleDBReconnect(error);
+		return;
+	}
+
+	new count = 0;
+	if (SQL_FetchRow(hndl))
+		count = SQL_FetchInt(hndl, 0);
+
+	if (count > 0)
+	{
+		decl String:query[1024];
+		Format(query, sizeof(query), "UPDATE `%sscore_quarter` SET quarter_key = %i, points = 0, playtime = 0, updated = UNIX_TIMESTAMP() WHERE quarter_key <> %i", DbPrefix, g_iQuarterRankKey, g_iQuarterRankKey);
+		SendSQLUpdate(query);
+		LogMessage("[l4d_stats] 检测到 %i 条旧季度行，已发送季度切换 UPDATE。", count);
+	}
+
 	g_bQuarterRankDbChecked = true;
 }
 

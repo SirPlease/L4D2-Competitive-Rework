@@ -148,7 +148,7 @@ ON DUPLICATE KEY UPDATE
 
 从简单到极限逐步增强，但非极限档尽量保持同一套基础行为，不再用大量开关差异制造难度。
 
-- Tank：所有档都开启 AITank3 连跳和无视野连跳，主要区分停跳距离、连跳加速度、最大速度、空中修正角度。`ai_TankSneakTime` 和旧的 `ai_TankAirAngleRestrict` 不属于当前 `ai_tank3.smx`，已经从配置移除。
+- Tank：所有档都保留 AITank3 连跳和无视野连跳；无视野连跳角度按各模式 `shared_settings.cfg` 的普通强度基准恢复为 `57.0`，不参与动态难度分档。主要区分停跳距离、连跳加速度、最大速度、空中修正角度和攀爬倍速。`ai_TankSneakTime` 和旧的 `ai_TankAirAngleRestrict` 不属于当前 `ai_tank3.smx`，已经从配置移除。
 - Boomer：所有档都开启连跳和转视角，主要区分连跳速度与转视角帧数；专家保持 15 帧，极限为 10 帧。
 - Charger：所有档都开启连跳，主要区分 `ai_ChagrerBhopSpeed`。
 - Spitter：所有档都开启连跳，主要区分 `ai_SpitterBhopSpeed`。
@@ -171,7 +171,7 @@ ON DUPLICATE KEY UPDATE
 | Spitter | 连跳速度 45 | 65 | 85 | 100 | 250 |
 | Charger | 连跳速度 45 | 60 | 75 | 90 | 150 |
 | Boomer | 速度 70，30 帧转目标 | 95，25 帧 | 125，20 帧 | 150，15 帧 | 250，10 帧 |
-| Tank | 停跳 220，最大速 700，修正角 60 | 190 / 800 / 55 | 160 / 900 / 50 | 135 / 1000 / 45 | 120 / 1050 / 45 |
+| Tank | 无视野 57，220 / 650 / 60 | 57，190 / 720 / 55 | 57，170 / 820 / 50 | 57，150 / 920 / 45 | 57，135 / 980 / 45 |
 
 ## confogl_plugins.cfg 中 AI 和 Hunter Patch 的 ConVar
 
@@ -207,4 +207,4 @@ ON DUPLICATE KEY UPDATE
 
 `ai_tank3_enable`, `ai_tank_bhop`, `ai_Tank_StopDistance`, `ai_tank3_bhop_max_dist`, `ai_tank3_bhop_min_speed`, `ai_tank3_bhop_max_speed`, `ai_tank3_bhop_impulse`, `ai_tank3_bhop_no_vision`, `_ai_tank3_bhop_nvis_maxang`, `ai_tank3_airvec_modify_degree`, `ai_tank3_airvec_modify_degree_max`, `ai_tank3_airvec_modify_interval`, `ai_tank3_throw_min_dist`, `ai_tank3_throw_max_dist`, `ai_tank3_climb_anim_rate`, `ai_tank3_low_climb_anim_rate`, `ai_tank3_ladder_climb_rate`, `ai_tank3_rock_target_adjust`, `ai_tank3_back_fist`, `ai_tank3_back_fist_range`, `ai_tank3_back_fist_max_spd`, `ai_tank3_punch_lock_vision`, `ai_tank3_jump_rock`, `ai_tank3_back_fist_window`, `ai_tank3_head_block_enable`, `ai_tank3_head_block_time`, `ai_tank3_head_block_vertical`, `ai_tank3_head_block_horizontal`, `ai_tank3_head_block_ignore_time`, `ai_tank3_head_block_force_rock_time`, `ai_tank3_head_block_force_rock_range`, `ai_tank3_head_block_force_rock_release_h`, `ai_tank3_head_block_force_rock_release_v`, `ai_tank3_plugin_name`, `ai_tank3_log_level`
 
-第 4 档保持当前专家强度；第 5 档参考 `cfg/vote/hard_on.cfg` 作为极限强度，并只调整特感和 Tank 的行为属性。极限 Tank 已从最初高压参数稍微回落；投石距离和翻越/爬梯速率保持专家档，降低卡住或动画状态异常风险。
+第 4 档保留专家强度但回调 Tank 机动上限；第 5 档参考 `cfg/vote/hard_on.cfg` 作为极限强度，并只调整特感和 Tank 的行为属性。Tank 翻越/爬梯速率已整体回落，降低卡住、卡点抖动或同一位置反复上下攀爬的风险。

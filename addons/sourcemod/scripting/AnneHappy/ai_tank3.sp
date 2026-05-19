@@ -85,6 +85,7 @@ Handle g_hSdkTankClawSweepFist;
 bool  g_bLateLoad;
 float g_fTankSwingRange;
 float g_fHeadBlockIgnoreUntil[MAXPLAYERS + 1];
+bool  g_bWasOnLadder[MAXPLAYERS + 1];
 
 // ===== 结构体 =====
 enum struct AiTank
@@ -285,6 +286,7 @@ void evtRoundStart(Event event, const char[] name, bool dontBroadcast)
         g_AiTanks[i].forceRockUntil = 0.0;
         g_AiTanks[i].forceRockTarget = -1;
         g_fHeadBlockIgnoreUntil[i] = 0.0;
+        g_bWasOnLadder[i] = false;
     }
 }
 
@@ -297,6 +299,7 @@ void evtRoundEnd(Event event, const char[] name, bool dontBroadcast)
         g_AiTanks[i].forceRockUntil = 0.0;
         g_AiTanks[i].forceRockTarget = -1;
         g_fHeadBlockIgnoreUntil[i] = 0.0;
+        g_bWasOnLadder[i] = false;
     }
 }
 
@@ -929,6 +932,7 @@ public void OnClientPutInServer(int client)
 {
     g_AiTanks[client].initData();
     g_fHeadBlockIgnoreUntil[client] = 0.0;
+    g_bWasOnLadder[client] = false;
 
     // 后置动画钩子：识别投石/翻越等序列变化
     AnimHookEnable(client, INVALID_FUNCTION, tankAnimHookPostCb);
@@ -946,6 +950,7 @@ public void OnClientDisconnect(int client)
     g_AiTanks[client].headBlockStart = 0.0;
     g_AiTanks[client].forceRockUntil = 0.0;
     g_AiTanks[client].forceRockTarget = -1;
+    g_bWasOnLadder[client] = false;
 }
 
 // ===== 翻越播放速率维护（进入翻越时挂，退出解）=====
@@ -988,13 +993,22 @@ void ladderRateModifyHookHandler(int client)
     // 在梯子上：持续“喂”播放速率为 ai_tank3_ladder_climb_rate
     if (GetEntityMoveType(client) == MOVETYPE_LADDER)
     {
+        g_bWasOnLadder[client] = true;
         float want = g_cvLadderClimbAnimRate.FloatValue;
         float cur  = GetEntPropFloat(client, Prop_Send, "m_flPlaybackRate");
         if (cur != want)
             SetEntPropFloat(client, Prop_Send, "m_flPlaybackRate", want);
         return;
     }
-    // 非梯子：不做事（翻越的速度由 climbRateModifyHookHandler 处理）
+
+    if (g_bWasOnLadder[client])
+    {
+        g_bWasOnLadder[client] = false;
+
+        int animSeq = GetEntProp(client, Prop_Data, "m_nSequence");
+        if (!isMatchedSequence(animSeq, view_as<TankSequenceType>(tankSequence_Climb)))
+            SetEntPropFloat(client, Prop_Send, "m_flPlaybackRate", 1.0);
+    }
 }
 
 // ===== 动画后置钩子：识别投石/攀爬序列并触发相应逻辑 =====

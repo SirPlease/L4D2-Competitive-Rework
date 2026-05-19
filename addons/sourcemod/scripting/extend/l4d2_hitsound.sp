@@ -88,6 +88,7 @@ bool g_PrefsDirty [MAXPLAYERS + 1] = { false, ... };
 
 Handle g_hDB = INVALID_HANDLE;
 Handle g_taskDBRetry = INVALID_HANDLE;
+Handle g_taskDBKeepAlive = INVALID_HANDLE;
 Handle g_taskLoadRetry[MAXPLAYERS + 1] = { INVALID_HANDLE, ... };
 int    g_LoadRetryCount[MAXPLAYERS + 1] = { 0, ... };
 int    g_DBRetryCount = 0;
@@ -99,6 +100,7 @@ bool   g_IsVictimDeadPlayer[MAXPLAYERS + 1] = { false, ... };
 #define DB_LOAD_RETRY_DELAY 0.5
 #define DB_LOAD_RETRY_MAX   20
 #define DB_CONNECT_RETRY_DELAY 10.0
+#define DB_KEEPALIVE_INTERVAL 45.0
 
 // Fallback KV
 Handle g_SoundStore = INVALID_HANDLE;
@@ -308,6 +310,8 @@ public void OnPluginStart()
 
 public void OnMapEnd()
 {
+    DB_StopKeepAlive();
+
     if (g_taskDBRetry != INVALID_HANDLE)
     {
         KillTimer(g_taskDBRetry);
@@ -336,6 +340,8 @@ public void OnConfigsExecuted()
 
 public void OnPluginEnd()
 {
+    DB_StopKeepAlive();
+
     if (g_taskDBRetry != INVALID_HANDLE)
     {
         KillTimer(g_taskDBRetry);
@@ -517,6 +523,7 @@ static void StartDBConnect()
 
     LogMessage("[hitsound] 数据库连接成功。");
 
+    DB_StartKeepAlive();
     DB_EnsureExtraColumns();
 
     // 插件重载/晚加载时，在线玩家不会触发 OnClientPutInServer，这里主动补一次
@@ -551,6 +558,8 @@ void DB_MarkConnectionLost(const char[] error)
     if (!DB_IsConnectionLostError(error))
         return;
 
+    DB_StopKeepAlive();
+
     if (g_hDB != INVALID_HANDLE)
     {
         CloseHandle(g_hDB);
@@ -558,6 +567,42 @@ void DB_MarkConnectionLost(const char[] error)
     }
 
     ScheduleDBConnectRetry();
+}
+
+/* -------------------- KeepAlive -------------------- */
+static void DB_StartKeepAlive()
+{
+    if (g_taskDBKeepAlive != INVALID_HANDLE)
+        return;
+    g_taskDBKeepAlive = CreateTimer(DB_KEEPALIVE_INTERVAL, Timer_HitsoundKeepAlive, _, TIMER_REPEAT);
+}
+
+static void DB_StopKeepAlive()
+{
+    if (g_taskDBKeepAlive == INVALID_HANDLE)
+        return;
+    KillTimer(g_taskDBKeepAlive);
+    g_taskDBKeepAlive = INVALID_HANDLE;
+}
+
+public Action Timer_HitsoundKeepAlive(Handle timer, any data)
+{
+    if (g_hDB == INVALID_HANDLE)
+    {
+        g_taskDBKeepAlive = INVALID_HANDLE;
+        return Plugin_Stop;
+    }
+    SQL_TQuery(g_hDB, SQLCB_HitsoundKeepAlive, "SELECT 1", _, DBPrio_Low);
+    return Plugin_Continue;
+}
+
+public void SQLCB_HitsoundKeepAlive(Handle owner, Handle hndl, const char[] error, any data)
+{
+    if (hndl == INVALID_HANDLE && error[0] != '\0')
+    {
+        LogError("[hitsound] KeepAlive failed: %s", error);
+        DB_MarkConnectionLost(error);
+    }
 }
 
 // ========================================================

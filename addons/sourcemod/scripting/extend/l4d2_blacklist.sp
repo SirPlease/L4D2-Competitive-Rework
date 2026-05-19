@@ -36,7 +36,9 @@ public Plugin myinfo =
 /* -------------------- ConVars -------------------- */
 Handle g_hDb = INVALID_HANDLE;
 Handle g_hDbReconnectTimer = INVALID_HANDLE;
+Handle g_hDbKeepAliveTimer = INVALID_HANDLE;
 #define DB_RECONNECT_DELAY 10.0
+#define DB_KEEPALIVE_INTERVAL 45.0
 
 ConVar gCvarEnable;
 ConVar gCvarDBSection;
@@ -134,6 +136,8 @@ void BL_Log(const char[] fmt, any ...)
 /* -------------------- DB 连接（自动 MySQL/SQLite） -------------------- */
 void DB_Close()
 {
+    DB_StopKeepAlive();
+
     if (g_hDb != INVALID_HANDLE)
     {
         CloseHandle(g_hDb);
@@ -199,6 +203,7 @@ bool DB_Connect()
     }
 
     SQL_TQuery(g_hDb, DB_GenericCallback, sql);
+    DB_StartKeepAlive();
     return true;
 }
 
@@ -231,6 +236,43 @@ public void DB_GenericCallback(Handle owner, Handle hndl, const char[] error, an
     if (hndl == INVALID_HANDLE && error[0] != '\0')
     {
         LogError("[BlockList] SQL error: %s", error);
+        DB_MarkConnectionLost(error);
+    }
+}
+
+/* -------------------- KeepAlive -------------------- */
+void DB_StartKeepAlive()
+{
+    if (g_hDbKeepAliveTimer != INVALID_HANDLE)
+        return;
+    g_hDbKeepAliveTimer = CreateTimer(DB_KEEPALIVE_INTERVAL, Timer_DBKeepAlive, _, TIMER_REPEAT);
+}
+
+void DB_StopKeepAlive()
+{
+    if (g_hDbKeepAliveTimer != INVALID_HANDLE)
+    {
+        KillTimer(g_hDbKeepAliveTimer);
+        g_hDbKeepAliveTimer = INVALID_HANDLE;
+    }
+}
+
+public Action Timer_DBKeepAlive(Handle timer, any data)
+{
+    if (g_hDb == INVALID_HANDLE)
+    {
+        g_hDbKeepAliveTimer = INVALID_HANDLE;
+        return Plugin_Stop;
+    }
+    SQL_TQuery(g_hDb, DB_KeepAliveCallback, "SELECT 1", _, DBPrio_Low);
+    return Plugin_Continue;
+}
+
+public void DB_KeepAliveCallback(Handle owner, Handle hndl, const char[] error, any data)
+{
+    if (hndl == INVALID_HANDLE && error[0] != '\0')
+    {
+        LogError("[BlockList] KeepAlive failed: %s", error);
         DB_MarkConnectionLost(error);
     }
 }
