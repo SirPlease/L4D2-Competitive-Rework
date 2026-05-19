@@ -451,7 +451,10 @@ public OnPluginStart()
 
 public OnMapEnd()
 {
-	DB_Disconnect();
+	// flow offloading 已修复，不再需要换图时主动断连。
+	// 保持连接跨地图复用，避免同步重连阻塞服务器线程。
+	// 仅停止 KeepAlive 计时器（OnConfigsExecuted 的 ConnectDB 会重启）。
+	DB_StopKeepAlive();
 }
 
 public OnConfigsExecuted()

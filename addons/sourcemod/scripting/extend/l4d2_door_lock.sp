@@ -146,7 +146,7 @@ public void OnPluginStart()
 	Cvar_DoorLock_AllowLock = CreateConVar("l4d2_doorlock_plugin_enable", "1", "如果为1，启用插件", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	Cvar_DoorLock_GameModes = CreateConVar("l4d2_doorlock_game_mode", "versus,coop", "在这些模式中启用插件，用英文逗号隔开 (无空格, 无内容 = 全模式).", FCVAR_NOTIFY);
 	Cvar_DoorLock_AddCheats = CreateConVar("l4d2_doorlock_add_cheats", "1", "安全区准备锁定模式 (0 = 无特殊锁定, 1 = 禁友伤, 2 = 无限弹药, 3 = 1和2)", FCVAR_NOTIFY, true, 0.0, true, 3.0);
-	Cvar_DoorLock_Countdown = CreateConVar("l4d2_doorlock_countdown", "5", "你想设置多长时间的倒计时来解锁安全区？ (秒)", FCVAR_NOTIFY);
+	Cvar_DoorLock_Countdown = CreateConVar("l4d2_doorlock_countdown", "0", "你想设置多长时间的倒计时来解锁安全区？ (秒)", FCVAR_NOTIFY);
 	Cvar_DoorLock_LoaderMax = CreateConVar("l4d2_doorlock_loaders_time", "40", "最多等待加载玩家多长时间 (秒)", FCVAR_NOTIFY);
 	Cvar_DoorLock_AllowGlow = CreateConVar("l4d2_doorlock_glow_enable", "1", "如果为1，为安全室的门设置发光轮毂", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	Cvar_DoorLock_GlowRange = CreateConVar("l4d2_doorlock_glow_range", "500", "设置安全门的发光范围", FCVAR_NOTIFY);

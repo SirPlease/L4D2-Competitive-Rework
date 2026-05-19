@@ -528,9 +528,11 @@ public void  OnPluginStart()
 
 public void OnMapEnd()
 {
+	// flow offloading 已修复，不再需要换图时主动断连。
+	// KeepAlive 使用了 TIMER_FLAG_NO_MAPCHANGE 会自动停止。
 	StopDbReconnectTimer();
-	CloseDbConnection();
-	g_bMysqlSystemAvailable = false;
+	StopDbKeepAliveTimer();
+	// 不调用 CloseDbConnection()，连接保持跨地图复用
 }
 
 public void OnPluginEnd()

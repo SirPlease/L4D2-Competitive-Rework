@@ -996,14 +996,17 @@ public Action Timer_DBEnsureLoad(Handle timer, any userid)
 
 public void OnMapEnd()
 {
-    g_DbReady = false;
+    // flow offloading 已修复，不再需要换图时主动断连。
+    DB_StopKeepAlive();
     g_DbConnecting = false;
 
-    if (g_DB != INVALID_HANDLE)
+    if (g_hDbReconnectTimer != INVALID_HANDLE)
     {
-        CloseHandle(g_DB);
-        g_DB = INVALID_HANDLE;
+        KillTimer(g_hDbReconnectTimer);
+        g_hDbReconnectTimer = INVALID_HANDLE;
     }
+
+    // 不关闭 g_DB，连接保持跨地图复用
 }
 
 public void OnMapStart()

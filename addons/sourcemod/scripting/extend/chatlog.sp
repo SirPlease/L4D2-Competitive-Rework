@@ -37,8 +37,8 @@ public void OnPluginStart()
 
 public void OnMapEnd()
 {
-	g_bFullyConnected = false;
-
+	// flow offloading 已修复，不再需要换图时主动断连。
+	// 保持连接跨地图复用。
 	if (g_hReconnectTimer != null)
 	{
 		KillTimer(g_hReconnectTimer);
@@ -47,12 +47,7 @@ public void OnMapEnd()
 
 	SQL_StopKeepAliveTimer();
 	SQL_StopCleanupTimer();
-
-	if (g_hDatabase != null)
-	{
-		delete g_hDatabase;
-		g_hDatabase = null;
-	}
+	// 不关闭 g_hDatabase，连接保持跨地图复用
 }
 
 public void OnConfigsExecuted()

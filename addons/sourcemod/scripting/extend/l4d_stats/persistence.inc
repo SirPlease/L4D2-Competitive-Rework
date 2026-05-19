@@ -15,7 +15,10 @@ static bool g_bTablesVerified = false;
 bool:ConnectDB()
 {
 	if (db != INVALID_HANDLE)
+	{
+		DB_StartKeepAlive();
 		return true;
+	}
 
 	if (SQL_CheckConfig(DB_CONF_NAME))
 	{
@@ -93,30 +96,6 @@ bool:ConnectDB()
 bool:IsDBReconnectPending()
 {
 	return (g_hDBReconnectTimer != INVALID_HANDLE);
-}
-
-// 换图前主动断开连接，避免加载期间 MySQL 超时导致 "Lost connection" 错误
-DB_Disconnect()
-{
-	DB_StopKeepAlive();
-
-	if (g_hDBReconnectTimer != INVALID_HANDLE)
-	{
-		KillTimer(g_hDBReconnectTimer);
-		g_hDBReconnectTimer = INVALID_HANDLE;
-	}
-
-	if (db != INVALID_HANDLE)
-	{
-		CloseHandle(db);
-		db = INVALID_HANDLE;
-	}
-
-	g_bScoreLogTableReady = false;
-	g_bQuarterRankTableReady = false;
-	g_bQuarterRankDbChecked = false;
-	g_bModeStatsTableReady = false;
-	g_bTablesVerified = false;
 }
 
 // 检测是否为连接丢失错误

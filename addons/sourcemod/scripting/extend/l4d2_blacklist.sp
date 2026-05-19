@@ -353,13 +353,15 @@ public void OnPluginStart()
 
 public void OnMapEnd()
 {
+    // flow offloading 已修复，不再需要换图时主动断连。
     if (g_hDbReconnectTimer != INVALID_HANDLE)
     {
         KillTimer(g_hDbReconnectTimer);
         g_hDbReconnectTimer = INVALID_HANDLE;
     }
 
-    DB_Close();
+    DB_StopKeepAlive();
+    // 不调用 DB_Close()，连接保持跨地图复用
 }
 
 public void OnPluginEnd()

@@ -310,6 +310,7 @@ public void OnPluginStart()
 
 public void OnMapEnd()
 {
+    // flow offloading 已修复，不再需要换图时主动断连。
     DB_StopKeepAlive();
 
     if (g_taskDBRetry != INVALID_HANDLE)
@@ -318,12 +319,7 @@ public void OnMapEnd()
         g_taskDBRetry = INVALID_HANDLE;
     }
 
-    if (g_hDB != INVALID_HANDLE)
-    {
-        CloseHandle(g_hDB);
-        g_hDB = INVALID_HANDLE;
-    }
-
+    // 不关闭 g_hDB，连接保持跨地图复用
     g_DBConnecting = false;
 }
 
