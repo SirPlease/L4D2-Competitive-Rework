@@ -228,7 +228,17 @@ public int Native_AddClientScore(Handle plugin, int numParams)
 	}
 	
 	int Score = GetNativeCell(2);
-	ScoreLog_SetContext("native_add_score", "native=l4dstats_AdddClientScore");
+	decl String:Reason[MAX_LINE_WIDTH];
+	strcopy(Reason, sizeof(Reason), "native_add_score");
+	if (numParams >= 3)
+	{
+		GetNativeString(3, Reason, sizeof(Reason));
+		TrimString(Reason);
+		if (Reason[0] == '\0')
+			strcopy(Reason, sizeof(Reason), "native_add_score");
+	}
+
+	ScoreLog_SetContext(Reason, "native=l4dstats_AddClientScore");
 	if (Stats_AwardClientScore(client, Score))
 		ClientPoints[client] += Score;
 	else

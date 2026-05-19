@@ -6,6 +6,7 @@
 #undef REQUIRE_PLUGIN
 #include <adminmenu>
 #include <rpg>
+#include <global_chat>
 
 // 模块加载顺序：常量和全局状态必须先加载，随后是通用工具和业务模块。
 #include "l4d_stats/constants.inc"

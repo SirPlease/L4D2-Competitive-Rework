@@ -292,6 +292,7 @@ new Handle:MapTimingSurvivors = INVALID_HANDLE; // Survivors at the beginning of
 new Handle:MapTimingInfected = INVALID_HANDLE; // Survivors at the beginning of the map
 new String:MapTimingMenuInfo[MAXPLAYERS + 1][MAX_LINE_WIDTH];
 float FastestTime = -1.0;
+new bool:g_bMapTimingGlobalBroadcastSent = false;
 
 // When an admin calls for clear database, the client id is stored here for a period of time.
 // The admin must then call the clear command again to confirm the call. After the second call

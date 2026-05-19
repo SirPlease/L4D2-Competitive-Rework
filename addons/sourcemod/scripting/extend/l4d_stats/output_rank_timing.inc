@@ -122,6 +122,7 @@ public StartMapTiming()
 	}
 
 	MapTimingStartTime = GetEngineTime();
+	g_bMapTimingGlobalBroadcastSent = false;
 
 	new ClientTeam, maxplayers = MaxClients;
 	decl String:ClientID[MAX_LINE_WIDTH];
@@ -165,6 +166,134 @@ GetCurrentDifficulty()
 	else return 0;
 }
 
+GetMapTimingDifficulty()
+{
+	if (AnneMultiPlayerMode() || IsAnneShotgunMode())
+	{
+		ConVar enabled = FindConVar("ah_ai_dynamic_enable");
+		ConVar currentLevel = FindConVar("ah_ai_dynamic_current_level");
+		if (currentLevel != null && (enabled == null || enabled.BoolValue))
+		{
+			new level = currentLevel.IntValue;
+			if (level >= 1 && level <= 5)
+				return level;
+		}
+
+		ConVar fixedLevel = FindConVar("ah_ai_dynamic_fixed_level");
+		if (fixedLevel != null && (enabled == null || enabled.BoolValue))
+		{
+			new level = fixedLevel.IntValue;
+			if (level >= 1 && level <= 5)
+				return level;
+		}
+	}
+
+	return GetCurrentDifficulty();
+}
+
+GetMapTimingDifficultyName(Difficulty, String:Name[], MaxLength)
+{
+	switch (Difficulty)
+	{
+		case 1:
+			strcopy(Name, MaxLength, "简单");
+		case 2:
+			strcopy(Name, MaxLength, "普通");
+		case 3:
+			strcopy(Name, MaxLength, "困难");
+		case 4:
+			strcopy(Name, MaxLength, "专家");
+		case 5:
+			strcopy(Name, MaxLength, "极限");
+		default:
+			strcopy(Name, MaxLength, "未知");
+	}
+}
+
+GetMapTimingMode()
+{
+	if (IsWitchParty())
+		return 2;
+	else if (IsAllCharger())
+		return 3;
+	else if (IsAlone())
+		return 4;
+	else if (Is1vht())
+		return 5;
+	else if (IsAnneShotgunMode())
+		return 7;
+	else if (IsAnne() == 2)
+		return 6;
+	else if (IsAnne() == 1)
+		return 1;
+
+	return 0;
+}
+
+bool:IsAnneTimingBroadcastMode(Mode)
+{
+	return Mode == 1 || Mode == 6 || Mode == 7;
+}
+
+GetMapTimingModeName(Mode, String:Name[], MaxLength)
+{
+	switch (Mode)
+	{
+		case 1:
+			strcopy(Name, MaxLength, "普通药役");
+		case 6:
+			strcopy(Name, MaxLength, "硬核药役");
+		case 7:
+			strcopy(Name, MaxLength, "喷子药役");
+		default:
+			strcopy(Name, MaxLength, "药役");
+	}
+}
+
+BuildMapTimingRunPlayerNames(String:Names[], MaxLength)
+{
+	Names[0] = '\0';
+
+	new shown = 0;
+	new total = 0;
+	new enabled;
+	decl String:ClientID[MAX_LINE_WIDTH], String:ClientName[MAX_NAME_LENGTH], String:Buffer[MAX_MESSAGE_WIDTH];
+
+	for (new i = 1; i <= MaxClients; i++)
+	{
+		if (!IsClientConnected(i) || !IsClientInGame(i) || IsClientBot(i) || GetClientTeam(i) != TEAM_SURVIVORS)
+			continue;
+
+		GetClientRankAuthString(i, ClientID, sizeof(ClientID));
+		if (!GetTrieValue(MapTimingSurvivors, ClientID, enabled) || !enabled)
+			continue;
+
+		total++;
+		if (shown >= 3)
+			continue;
+
+		GetClientName(i, ClientName, sizeof(ClientName));
+		if (Names[0] == '\0')
+			strcopy(Names, MaxLength, ClientName);
+		else
+		{
+			Format(Buffer, sizeof(Buffer), "%s、%s", Names, ClientName);
+			strcopy(Names, MaxLength, Buffer);
+		}
+		shown++;
+	}
+
+	if (total > shown)
+	{
+		Format(Buffer, sizeof(Buffer), "%s 等%d人", Names, total);
+		strcopy(Names, MaxLength, Buffer);
+	}
+	else if (Names[0] == '\0')
+	{
+		strcopy(Names, MaxLength, "本次队伍");
+	}
+}
+
 public bool StopMapTiming()
 {
 	if (!MapTimingEnabled() || MapTimingStartTime <= 0.0 || StatsDisabled())
@@ -191,29 +320,7 @@ public bool StopMapTiming()
 		MapTimingBlocked = true;
 		return false;
 	}
-	int mode = 0;
-	if(IsWitchParty())
-	{
-		mode = 2;
-	}else if(IsAllCharger())
-	{
-		mode = 3;
-	}else if(IsAlone())
-	{
-		mode = 4;
-	}else if(Is1vht())
-	{
-		mode = 5;
-	}else if(IsAnne() == 1)
-	{
-		mode = 1;
-		}else if(IsAnneShotgunMode())
-		{
-			mode = 7;
-		}else if(IsAnne() == 2)
-		{
-			mode = 6;
-		}
+	int mode = GetMapTimingMode();
 	ConVar multiplayer = FindConVar("l4d_multislots_survivors_manager_enable");
 	if(mode > 0 && (multiplayer == null || multiplayer.IntValue == 1 || GetConVarInt(cvar_SurvivorLimit) > 4))
 	{
@@ -282,7 +389,7 @@ public bool StopMapTiming()
 	//if (InfectedCounter <= 0)
 		//return;
 
-	new GameDifficulty = GetCurrentDifficulty();
+	new GameDifficulty = GetMapTimingDifficulty();
 	if(mode > 0)
 	{
 		GetThisModeBestTime(g_brpgAvailable && L4D_RPG_GetGlobalValue(INDEX_USEBUY));	
@@ -291,6 +398,10 @@ public bool StopMapTiming()
 
 	decl String:RunID[64];
 	Format(RunID, sizeof(RunID), "%i_%i_%i", GetTime(), RoundToFloor(TotalTime * 1000.0), GetRandomInt(1000, 9999));
+
+	decl String:RunPlayers[MAX_MESSAGE_WIDTH];
+	BuildMapTimingRunPlayerNames(RunPlayers, sizeof(RunPlayers));
+	MaybeAnnounceAnneNoBuyFastest(MapName, TotalTime, PlayerCounter, GameDifficulty, mode, RunPlayers);
 
 	for (i = 1; i <= maxplayers; i++)
 	{
@@ -344,35 +455,93 @@ GetThisModeBestTime(int UseBuy=0)
 
 	GetCurrentMap(MapName, sizeof(MapName));
 
-	new GameDifficulty = GetCurrentDifficulty();
-	int mode = 1;
-	if(IsWitchParty())
-	{
-		mode = 2;
-	}else if(IsAllCharger())
-	{
-		mode = 3;
-	}else if(IsAlone())
-	{
-		mode = 4;
-	}else if(Is1vht())
-	{
-		mode = 5;
-	}else if(IsAnne() == 1)
-	{
+	new GameDifficulty = GetMapTimingDifficulty();
+	int mode = GetMapTimingMode();
+	if (mode <= 0)
 		mode = 1;
-		}else if(IsAnneShotgunMode())
-		{
-			mode = 7;
-		}else if(IsAnne() == 2)
-		{
-			mode = 6;
-		}
 	Format(query, sizeof(query), "SELECT time FROM %stimedmaps WHERE map = '%s' AND gamemode = %i AND difficulty = %i AND mutation = '%s'  AND sinum = %i AND sitime = %i AND anneversion = '%s' AND mode = %i AND usebuy = %i AND auto = %i AND players = %i ORDER BY time LIMIT 1",\
 	 		DbPrefix, MapName, CurrentGamemodeID, GameDifficulty, CurrentMutation, GetAnneInfectedNumber(), GetAnneSISpawnTime(),\
 			GetAnneVersion(), mode, UseBuy, IsAutoSpawnTime(), GetConVarInt(cvar_SurvivorLimit));
 	LogMessage("GetFastTimequery: %s", query);
 	SQL_TQuery(db, GetFastTime, query);
+}
+
+MaybeAnnounceAnneNoBuyFastest(const String:MapName[], Float:TotalTime, PlayerCounter, GameDifficulty, Mode, const String:RunPlayers[])
+{
+	if (g_bMapTimingGlobalBroadcastSent || db == INVALID_HANDLE)
+		return;
+
+	if (!IsAnneTimingBroadcastMode(Mode) || GetAnneSISpawnTime() != 16)
+		return;
+
+	if (g_brpgAvailable && L4D_RPG_GetGlobalValue(INDEX_USEBUY))
+		return;
+
+	decl String:query[512];
+	Format(query, sizeof(query), "SELECT time FROM %stimedmaps WHERE map = '%s' AND gamemode = %i AND difficulty = %i AND mutation = '%s' AND sinum = %i AND sitime = 16 AND anneversion = '%s' AND mode = %i AND usebuy = 0 AND auto = %i AND players = %i ORDER BY time LIMIT 1",
+		DbPrefix, MapName, CurrentGamemodeID, GameDifficulty, CurrentMutation, GetAnneInfectedNumber(), GetAnneVersion(), Mode, IsAutoSpawnTime(), PlayerCounter);
+
+	new Handle:dp = CreateDataPack();
+	WritePackString(dp, MapName);
+	WritePackFloat(dp, TotalTime);
+	WritePackCell(dp, GameDifficulty);
+	WritePackCell(dp, GetAnneInfectedNumber());
+	WritePackCell(dp, Mode);
+	WritePackString(dp, RunPlayers);
+	WritePackString(dp, GetAnneVersion());
+
+	SQL_TQuery(db, SQL_OnCheckAnneNoBuyFastest, query, dp);
+}
+
+public SQL_OnCheckAnneNoBuyFastest(Handle:owner, Handle:hndl, const String:error[], any:dp)
+{
+	ResetPack(dp);
+	decl String:MapName[MAX_LINE_WIDTH], String:AnneVersion[64], String:RunPlayers[MAX_MESSAGE_WIDTH];
+	new Float:TotalTime, GameDifficulty, InfectedNumber, Mode;
+	ReadPackString(dp, MapName, sizeof(MapName));
+	TotalTime = ReadPackFloat(dp);
+	GameDifficulty = ReadPackCell(dp);
+	InfectedNumber = ReadPackCell(dp);
+	Mode = ReadPackCell(dp);
+	ReadPackString(dp, RunPlayers, sizeof(RunPlayers));
+	ReadPackString(dp, AnneVersion, sizeof(AnneVersion));
+	CloseHandle(dp);
+
+	if (hndl == INVALID_HANDLE)
+	{
+		LogError("[l4d_stats] Anne fastest broadcast query failed: %s", error);
+		return;
+	}
+
+	new bool:IsFastest = false;
+	new Float:OldTime = -1.0;
+	if (SQL_GetRowCount(hndl) > 0)
+	{
+		SQL_FetchRow(hndl);
+		OldTime = SQL_FetchFloat(hndl, 0);
+		IsFastest = TotalTime < OldTime;
+	}
+	else
+	{
+		IsFastest = true;
+	}
+
+	if (!IsFastest || g_bMapTimingGlobalBroadcastSent)
+		return;
+
+	g_bMapTimingGlobalBroadcastSent = true;
+
+	decl String:TimeLabel[32], String:DifficultyName[16], String:ModeName[32], String:Message[256];
+	SetTimeLabel(TotalTime, TimeLabel, sizeof(TimeLabel));
+	GetMapTimingDifficultyName(GameDifficulty, DifficultyName, sizeof(DifficultyName));
+	GetMapTimingModeName(Mode, ModeName, sizeof(ModeName));
+	Format(Message, sizeof(Message), "\x05[%s地图记录刷新通告]\x01: \x05%s\x01 在 \x03[%s]\x01 刷新 \x04%d特16秒无商店%s难度记录\x01，新纪录为 \x04%s\x01。",
+		ModeName, RunPlayers, MapName, InfectedNumber, DifficultyName, TimeLabel);
+
+	if (GetFeatureStatus(FeatureType_Native, "GlobalChat_Broadcast") == FeatureStatus_Available && GlobalChat_Broadcast(Message))
+		return;
+
+	StatsPrintToChatAll("%s", Message);
 }
 
 public GetFastTime(Handle:owner, Handle:hndl, const String:error[], any:dp)
@@ -400,29 +569,7 @@ public GetFastTime(Handle:owner, Handle:hndl, const String:error[], any:dp)
 
 public UpdateMapTimingStat(Handle:owner, Handle:hndl, const String:error[], any:dp)
 {
-	int mode = 0;
-	if(IsWitchParty())
-	{
-		mode = 2;
-	}else if(IsAllCharger())
-	{
-		mode = 3;
-	}else if(IsAlone())
-	{
-		mode = 4;
-	}else if(Is1vht())
-	{
-		mode = 5;
-	}else if(IsAnne() == 1)
-	{
-		mode = 1;
-		}else if(IsAnneShotgunMode())
-		{
-			mode = 7;
-		}else if(IsAnne() == 2)
-		{
-			mode = 6;
-		}
+	int mode = GetMapTimingMode();
 	ResetPack(dp);
 
 	decl String:MapName[MAX_LINE_WIDTH], String:ClientID[MAX_LINE_WIDTH], String:query[512], String:TimeLabel[32], String:Mutation[MAX_LINE_WIDTH];

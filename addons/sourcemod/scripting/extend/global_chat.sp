@@ -67,6 +67,32 @@ public Plugin myinfo =
 	url = "https://github.com/fantasylidong/CompetitiveWithAnne"
 };
 
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	RegPluginLibrary("global_chat");
+	CreateNative("GlobalChat_Broadcast", Native_GlobalChatBroadcast);
+	return APLRes_Success;
+}
+
+public int Native_GlobalChatBroadcast(Handle plugin, int numParams)
+{
+	if (numParams < 1)
+		return ThrowNativeError(SP_ERROR_NATIVE, "GlobalChat_Broadcast requires message");
+
+	char message[256];
+	GetNativeString(1, message, sizeof(message));
+	TrimString(message);
+
+	if (message[0] == '\0')
+		return false;
+
+	if (!g_cvEnabled.BoolValue || !g_bReady || g_hDatabase == null)
+		return false;
+
+	InsertGlobalMessage("@SERVER", "@BROADCAST", message);
+	return true;
+}
+
 public void OnPluginStart()
 {
 	g_cvEnabled = CreateConVar("sm_qf_enabled", "1", "是否启用全服聊天。", FCVAR_NONE, true, 0.0, true, 1.0);
@@ -1300,6 +1326,14 @@ public void SQL_OnPollMessages(Database database, DBResultSet results, const cha
 						PrintToChat(i, "\x04%s \x05%s \x01玩家在 \x03%s \x01召唤队友\n\x01留言: \x05%s", prefix, parts[0], server, parts[1]);
 					}
 				}
+			}
+		}
+		else if (StrEqual(name, "@BROADCAST"))
+		{
+			for (int i = 1; i <= MaxClients; i++)
+			{
+				if (CanReceiveGlobalMessage(i, senderSteam64))
+					PrintToChat(i, "\x01%s", message);
 			}
 		}
 		else

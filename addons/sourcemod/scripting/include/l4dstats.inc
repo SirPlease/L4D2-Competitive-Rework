@@ -97,10 +97,11 @@ native int l4dstats_GetClientPlayTime(int client);
  *
  * @param client		Client Index.
 
- * @return		0 for false, 1 for true.
+ * @param reason		Optional score log reason.
+ * @return		New client score.
  */
-native int l4dstats_AddClientScore(int client, int Score); 
-native int l4dstats_AdddClientScore(int client, int Score); 
+native int l4dstats_AddClientScore(int client, int Score, const char[] reason = "native_add_score"); 
+native int l4dstats_AdddClientScore(int client, int Score, const char[] reason = "native_add_score"); 
 /**
  * Called when l4d_stats plugins announce rank and score.
  *

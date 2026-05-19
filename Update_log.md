@@ -423,6 +423,15 @@ witchparty 和 allcharger模式在普通药役的基础上小僵尸再减少17-2
 - 更新 `addons/sourcemod/configs/databases.cfg`，配合全服聊天、统计、伤害显示等插件的数据库连接与重连。
 - 更新 `.gitignore`，减少无关文件进入版本管理。
 
+### 2026年5月19日更新记录
+#### l4d_stats 与 global_chat
+- `global_chat.smx` 新增 `GlobalChat_Broadcast` native，允许其他插件写入全服广播消息；广播消息不再额外套普通全服聊天前缀。
+- `l4d_stats.smx` 地图时间记录适配 AnneHappy 动态难度：自动难度不再作为独立难度比较，而是按本回合自动选定后的固定档位记录和查询最快时间。
+- Anne 普通药役、硬核药役、喷子药役在刷新对应地图记录时支持全服通告；通告限定为当前模式、当前地图、当前特感数量、16 秒刷新、不使用商店、当前动态难度档位的最快纪录。
+- 地图记录通告格式调整为：`[普通药役/硬核药役/喷子药役地图记录刷新通告]: 玩家名 在 [地图] 刷新 几特16秒无商店难度记录，新纪录为 时间`。
+- 修正 AnneHappy Shotgun HardCore 模式的地图记录模式识别顺序，避免喷子药役被提前识别为普通药役或硬核药役。
+- `l4dstats_AddClientScore` / `l4dstats_AdddClientScore` native 增加第三个可选 `reason` 参数，可把外部插件加分理由写入 `score_log.reason`。
+
 ### 2026年5月17日更新记录
 #### AnneHappy 动态特感难度
 - 新增 `annehappy_dynamic_ai_difficulty.smx`，根据当前生还者队伍的 `l4d_stats` PPM 自动定档，并在生还者离开安全门前完成计算；出门后本回合难度锁定，不再随投票或数据变化即时调整。
