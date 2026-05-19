@@ -116,18 +116,14 @@ public void OnConfigsExecuted()
 public void OnMapEnd()
 {
     StopDifficultyTimer();
+    StopThresholdDbReconnect();
+    CloseThresholdDb();
 }
 
 public void OnPluginEnd()
 {
     StopDifficultyTimer();
-
-    if (g_hThresholdDbReconnectTimer != null)
-    {
-        KillTimer(g_hThresholdDbReconnectTimer);
-        g_hThresholdDbReconnectTimer = null;
-    }
-
+    StopThresholdDbReconnect();
     CloseThresholdDb();
 }
 
@@ -681,12 +677,21 @@ void ScheduleThresholdDbReconnect(const char[] error = "")
         g_hThresholdDbReconnectTimer = CreateTimer(THRESHOLD_DB_RECONNECT_DELAY, Timer_ReconnectThresholdDb);
 }
 
+void StopThresholdDbReconnect()
+{
+    if (g_hThresholdDbReconnectTimer == null)
+        return;
+
+    KillTimer(g_hThresholdDbReconnectTimer);
+    g_hThresholdDbReconnectTimer = null;
+}
+
 void StartThresholdDbKeepAlive()
 {
     if (g_hThresholdDbKeepAliveTimer != null)
         return;
 
-    g_hThresholdDbKeepAliveTimer = CreateTimer(THRESHOLD_DB_KEEPALIVE_INTERVAL, Timer_ThresholdDbKeepAlive, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+    g_hThresholdDbKeepAliveTimer = CreateTimer(THRESHOLD_DB_KEEPALIVE_INTERVAL, Timer_ThresholdDbKeepAlive, _, TIMER_REPEAT);
 }
 
 void StopThresholdDbKeepAlive()
@@ -700,8 +705,14 @@ void StopThresholdDbKeepAlive()
 
 public Action Timer_ThresholdDbKeepAlive(Handle timer, any data)
 {
+    if (g_hThresholdDbKeepAliveTimer != timer)
+        return Plugin_Stop;
+
     if (g_hThresholdDb == null)
-        return Plugin_Continue;
+    {
+        g_hThresholdDbKeepAliveTimer = null;
+        return Plugin_Stop;
+    }
 
     g_hThresholdDb.Query(SQL_OnThresholdDbKeepAlive, "SELECT 1");
     return Plugin_Continue;

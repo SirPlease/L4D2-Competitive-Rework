@@ -528,11 +528,7 @@ public void  OnPluginStart()
 
 public void OnMapEnd()
 {
-	// flow offloading 已修复，不再需要换图时主动断连。
-	// KeepAlive 使用了 TIMER_FLAG_NO_MAPCHANGE 会自动停止。
-	StopDbReconnectTimer();
-	StopDbKeepAliveTimer();
-	// 不调用 CloseDbConnection()，连接保持跨地图复用
+	// 连接和 KeepAlive 都保持跨地图运行，不停不断。
 }
 
 public void OnPluginEnd()
@@ -806,7 +802,7 @@ void StartDbKeepAliveTimer()
 	if (g_hDbKeepAliveTimer != null)
 		return;
 
-	g_hDbKeepAliveTimer = CreateTimer(RPG_DB_KEEPALIVE_INTERVAL, Timer_DbKeepAlive, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+	g_hDbKeepAliveTimer = CreateTimer(RPG_DB_KEEPALIVE_INTERVAL, Timer_DbKeepAlive, _, TIMER_REPEAT);
 }
 
 void StopDbKeepAliveTimer()
@@ -847,7 +843,7 @@ void ScheduleDbReconnect(const char[] error = "")
 	CloseDbConnection();
 
 	if (g_hDbReconnectTimer == null)
-		g_hDbReconnectTimer = CreateTimer(RPG_DB_RECONNECT_DELAY, Timer_ReconnectDb, _, TIMER_FLAG_NO_MAPCHANGE);
+		g_hDbReconnectTimer = CreateTimer(RPG_DB_RECONNECT_DELAY, Timer_ReconnectDb);
 }
 
 public Action Timer_ReconnectDb(Handle timer, any data)
