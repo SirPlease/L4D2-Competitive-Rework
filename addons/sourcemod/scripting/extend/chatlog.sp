@@ -49,7 +49,7 @@ void SQL_ConnectChatLog()
 	if (!SQL_CheckConfig(CHATLOG_DB_CONFIG))
 	{
 		LogError("[chatlog] databases.cfg 缺少 '%s' 配置。", CHATLOG_DB_CONFIG);
-		SQL_ScheduleReconnect();
+		SQL_MarkDatabaseUnavailable();
 		return;
 	}
 
@@ -61,7 +61,7 @@ void SQL_ConnectChatLog()
 	if (g_hDatabase == null)
 	{
 		LogError("[chatlog] 数据库连接失败: %s", error);
-		SQL_ScheduleReconnect();
+		SQL_MarkDatabaseUnavailable();
 		return;
 	}
 
@@ -99,11 +99,10 @@ bool SQL_IsConnectionLostError(const char[] error)
 		|| StrContains(error, "server has gone away", false) != -1;
 }
 
-void SQL_ScheduleReconnect()
+void SQL_MarkDatabaseUnavailable()
 {
 	g_bFullyConnected = false;
 	g_bConnecting = false;
-	LogError("[chatlog] 数据库连接不可用，跳过本次自动重连。");
 }
 
 void SQL_StartCleanupTimer()
@@ -149,7 +148,7 @@ public void SQL_CreateCallback(Database datavas, DBResultSet results, const char
 	{
 		LogError("[chatlog] 初始化数据表失败: %s", error);
 		if (SQL_IsConnectionLostError(error))
-			SQL_ScheduleReconnect();
+			SQL_MarkDatabaseUnavailable();
 		return;
 	}
 

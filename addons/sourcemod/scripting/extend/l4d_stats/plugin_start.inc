@@ -460,7 +460,7 @@ public OnConfigsExecuted()
 
 	// Init MySQL connections
 	new bool:DatabaseReady = ConnectDB();
-	if (!DatabaseReady && !IsDBReconnectPending())
+	if (!DatabaseReady)
 	{
 		SetFailState("Connecting to database failed. Read error log for further details.");
 		return;

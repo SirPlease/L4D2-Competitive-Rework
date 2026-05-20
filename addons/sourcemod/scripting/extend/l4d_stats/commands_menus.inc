@@ -471,7 +471,6 @@ bool:DoFastQuery(Client, const String:Query[], any:...)
 		{
 			PrintToConsole(Client, "[RANK] Fast query failed! (Error = \"%s\") Query = \"%s\"", Error, FormattedQuery);
 			LogError("Fast query failed! (Error = \"%s\") Query = \"%s\"", Error, FormattedQuery);
-			ScheduleDBReconnect(Error);
 		}
 		else
 		{
@@ -1592,7 +1591,7 @@ public Action:cmd_ShowQuarterTop10(client, args)
 
 	if (!QuarterRank_Enabled() && !QuarterRank_RecoverIfNeeded())
 	{
-		StatsPrintToChat(client, "季度榜单当前不可用，正在等待数据库重连。");
+		StatsPrintToChat(client, "季度榜单当前不可用，请稍后再试。");
 		return Plugin_Handled;
 	}
 
@@ -2481,9 +2480,8 @@ public DisplayQuarterTop10(Handle:owner, Handle:hndl, const String:error[], any:
 	if (!client || hndl == INVALID_HANDLE)
 	{
 		LogError("DisplayQuarterTop10 failed! Reason: %s", error);
-		ScheduleDBReconnect(error);
 		if (Stats_IsValidHumanClient(client))
-			StatsPrintToChat(client, "季度榜单查询失败，正在等待数据库重连。");
+			StatsPrintToChat(client, "季度榜单查询失败，请稍后再试。");
 		return;
 	}
 

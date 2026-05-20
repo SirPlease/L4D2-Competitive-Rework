@@ -81,26 +81,11 @@ bool:ConnectDB()
 	return true;
 }
 
-bool:IsDBReconnectPending()
-{
-	return false;
-}
-
 // 检测是否为连接丢失错误
 bool:IsDBConnectionLostError(const String:error[])
 {
 	return (StrContains(error, "Lost connection", false) != -1
 		|| StrContains(error, "server has gone away", false) != -1);
-}
-
-// 早期稳定版不在查询回调中主动关闭/重连数据库，避免过图时异步回调打到被关闭的句柄。
-void ScheduleDBReconnect(const char[] error = "")
-{
-	if (error[0] != '\0' && !IsDBConnectionLostError(error))
-		return;
-
-	if (error[0] != '\0')
-		LogError("[l4d_stats] database connection error: %s", error);
 }
 
 bool:CheckDatabaseValidity(const String:Prefix[])
@@ -758,7 +743,6 @@ public QueryClientStatsDP_1(Handle:owner, Handle:hndl, const String:error[], any
 	if (hndl == INVALID_HANDLE)
 	{
 		LogError("QueryClientStatsDP_1 Query failed: %s", error);
-		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -773,7 +757,6 @@ public QueryClientStatsDP_2(Handle:owner, Handle:hndl, const String:error[], any
 	if (hndl == INVALID_HANDLE)
 	{
 		LogError("QueryClientStatsDP_2 Query failed: %s", error);
-		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -788,7 +771,6 @@ public QueryClientStatsDP_3(Handle:owner, Handle:hndl, const String:error[], any
 	if (hndl == INVALID_HANDLE)
 	{
 		LogError("QueryClientStatsDP_3 Query failed: %s", error);
-		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -803,7 +785,6 @@ public QueryClientStatsDP_4(Handle:owner, Handle:hndl, const String:error[], any
 	if (hndl == INVALID_HANDLE)
 	{
 		LogError("QueryClientStatsDP_4 Query failed: %s", error);
-		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -818,7 +799,6 @@ public QueryClientStatsDP_5(Handle:owner, Handle:hndl, const String:error[], any
 	if (hndl == INVALID_HANDLE)
 	{
 		LogError("QueryClientStatsDP_5 Query failed: %s", error);
-		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -836,7 +816,6 @@ public QueryClientStatsDP_6(Handle:owner, Handle:hndl, const String:error[], any
 			CloseHandle(dp);
 
 		LogError("QueryClientStatsDP_6 Query failed: %s", error);
-		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -854,7 +833,6 @@ public QueryClientStatsDP_7(Handle:owner, Handle:hndl, const String:error[], any
 			CloseHandle(dp);
 
 		LogError("QueryClientStatsDP_7 Query failed: %s", error);
-		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -872,7 +850,6 @@ public QueryClientStatsDP_8(Handle:owner, Handle:hndl, const String:error[], any
 			CloseHandle(dp);
 
 		LogError("QueryClientStatsDP_8 Query failed: %s", error);
-		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -890,7 +867,6 @@ public QueryClientStatsDP_9(Handle:owner, Handle:hndl, const String:error[], any
 			CloseHandle(dp);
 
 		LogError("QueryClientStatsDP_9 Query failed: %s", error);
-		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -1197,7 +1173,6 @@ public SQLErrorCheckCallback(Handle:owner, Handle:hndl, const String:error[], an
 				else
 					LogMessage("SQL connection lost: %s", error);
 
-				ScheduleDBReconnect(error);
 				return;
 			}
 
@@ -1210,7 +1185,6 @@ public SQLErrorCheckCallback(Handle:owner, Handle:hndl, const String:error[], an
 			LogError("SQL Error: %s", error);
 		}
 
-		ScheduleDBReconnect(error);
 	}
 }
 

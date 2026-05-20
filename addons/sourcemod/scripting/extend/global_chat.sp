@@ -546,7 +546,7 @@ public void SQL_OnBlacklistConnect(Database database, const char[] error, any da
 	if (database == null)
 	{
 		LogError("[global_chat] blacklist 数据库连接失败: %s", error);
-		ScheduleBlacklistReconnect();
+		MarkBlacklistDatabaseUnavailable();
 		return;
 	}
 
@@ -556,12 +556,11 @@ public void SQL_OnBlacklistConnect(Database database, const char[] error, any da
 	RefreshBlacklistCache();
 }
 
-void ScheduleBlacklistReconnect()
+void MarkBlacklistDatabaseUnavailable()
 {
 	g_bBlacklistConnecting = false;
 	g_bBlacklistRefreshInFlight = false;
 	StopBlacklistRefreshTimer();
-	LogError("[global_chat] blacklist 数据库暂不可用，跳过自动重连。");
 }
 
 bool IsActiveBlacklistDatabase(Database database)
@@ -645,7 +644,7 @@ public void SQL_OnRefreshBlacklistCache(Database database, DBResultSet results, 
 	if (results == null)
 	{
 		LogError("[global_chat] 刷新 blacklist 缓存失败: %s", error);
-		ScheduleBlacklistReconnect();
+		MarkBlacklistDatabaseUnavailable();
 		return;
 	}
 
@@ -680,13 +679,12 @@ void ConnectDatabase()
 	Database.Connect(SQL_OnConnect, configName, g_iDatabaseGeneration);
 }
 
-void ScheduleReconnect()
+void MarkDatabaseUnavailable()
 {
 	g_bReady = false;
 	g_bConnecting = false;
 	g_bPollInFlight = false;
 	StopPollTimer();
-	LogError("[global_chat] 数据库暂不可用，跳过自动重连。");
 }
 
 bool IsActiveMainDatabase(Database database)
@@ -741,7 +739,7 @@ public void SQL_OnConnect(Database database, const char[] error, any data)
 	if (database == null)
 	{
 		LogError("[global_chat] 数据库连接失败: %s", error);
-		ScheduleReconnect();
+		MarkDatabaseUnavailable();
 		return;
 	}
 
@@ -769,7 +767,7 @@ public void SQL_OnCreateTable(Database database, DBResultSet results, const char
 	if (results == null)
 	{
 		LogError("[global_chat] 初始化消息表失败: %s", error);
-		ScheduleReconnect();
+		MarkDatabaseUnavailable();
 		return;
 	}
 
@@ -789,7 +787,7 @@ public void SQL_OnCreateTitlesTable(Database database, DBResultSet results, cons
 	if (results == null)
 	{
 		LogError("[global_chat] 初始化头衔表失败: %s", error);
-		ScheduleReconnect();
+		MarkDatabaseUnavailable();
 		return;
 	}
 
@@ -812,7 +810,7 @@ public void SQL_OnCreateUsageTable(Database database, DBResultSet results, const
 	if (results == null)
 	{
 		LogError("[global_chat] 初始化使用次数表失败: %s", error);
-		ScheduleReconnect();
+		MarkDatabaseUnavailable();
 		return;
 	}
 
@@ -835,7 +833,7 @@ public void SQL_OnCreateLFGUsageTable(Database database, DBResultSet results, co
 	if (results == null)
 	{
 		LogError("[global_chat] 初始化找队友使用次数表失败: %s", error);
-		ScheduleReconnect();
+		MarkDatabaseUnavailable();
 		return;
 	}
 
@@ -873,7 +871,7 @@ public void SQL_OnCleanup(Database database, DBResultSet results, const char[] e
 	if (results == null)
 	{
 		LogError("[global_chat] 清理旧消息失败: %s", error);
-		ScheduleReconnect();
+		MarkDatabaseUnavailable();
 	}
 }
 
@@ -887,7 +885,7 @@ public void SQL_OnLoadLastId(Database database, DBResultSet results, const char[
 	if (results == null)
 	{
 		LogError("[global_chat] 读取最新消息 ID 失败: %s", error);
-		ScheduleReconnect();
+		MarkDatabaseUnavailable();
 		return;
 	}
 
@@ -1019,7 +1017,7 @@ public void SQL_OnReserveDailyUsage(Database database, DBResultSet results, cons
 			ReplyToCommand(client, "[全服] 检查今日次数失败，请稍后再试。");
 
 		LogError("[global_chat] 更新每日使用次数失败: %s", error);
-		ScheduleReconnect();
+		MarkDatabaseUnavailable();
 		return;
 	}
 
@@ -1098,7 +1096,7 @@ public void SQL_OnReserveDailyLFGUsage(Database database, DBResultSet results, c
 			ReplyToCommand(client, "[全服] 检查今日找队友次数失败，请稍后再试。");
 
 		LogError("[global_chat] 更新每日找队友次数失败: %s", error);
-		ScheduleReconnect();
+		MarkDatabaseUnavailable();
 		return;
 	}
 
@@ -1150,7 +1148,7 @@ public void SQL_OnInsertMessage(Database database, DBResultSet results, const ch
 	if (results == null)
 	{
 		LogError("[global_chat] 写入全服消息失败: %s", error);
-		ScheduleReconnect();
+		MarkDatabaseUnavailable();
 	}
 }
 
@@ -1199,7 +1197,7 @@ public void SQL_OnPollMessages(Database database, DBResultSet results, const cha
 	if (results == null)
 	{
 		LogError("[global_chat] 拉取全服消息失败: %s", error);
-		ScheduleReconnect();
+		MarkDatabaseUnavailable();
 		return;
 	}
 

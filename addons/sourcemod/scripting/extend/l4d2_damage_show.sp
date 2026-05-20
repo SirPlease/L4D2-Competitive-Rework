@@ -377,14 +377,6 @@ static bool DB_IsConnectionLostError(const char[] error)
         || StrContains(error, "server has gone away", false) != -1;
 }
 
-static void DB_MarkConnectionLost(const char[] error)
-{
-    if (!DB_IsConnectionLostError(error))
-        return;
-
-    LogErr("[DB] database connection error: %s", error);
-}
-
 public void SQLCB_OnConnect(Handle owner, Handle hndl, const char[] error, any data)
 {
     LogInfo("[DB] SQLCB_OnConnect fired. hndl=%p error='%s'",
@@ -425,7 +417,6 @@ public void SQLCB_OnSessionDump(Handle owner, Handle hndl, const char[] error, a
     if (error[0])
     {
         LogErr("[DB] session snapshot failed: %s", error);
-        DB_MarkConnectionLost(error);
         return;
     }
     if (hndl != INVALID_HANDLE && SQL_FetchRow(hndl))
@@ -444,7 +435,6 @@ public void SQLCB_Nop(Handle owner, Handle hndl, const char[] error, any data)
     if (error[0] != '\0')
     {
         LogErr("[DB] SQL error in NOP: %s", error);
-        DB_MarkConnectionLost(error);
     }
 }
 
@@ -510,7 +500,6 @@ public void SQLCB_Load(Handle owner, Handle hndl, const char[] error, any data)
         Settings_MarkClean(client);
         LogErr("[Load] SQL error: %s. Used %s for client %d.",
                error, ok ? "cookie" : "defaults", client);
-        DB_MarkConnectionLost(error);
         return;
     }
 
@@ -743,7 +732,6 @@ public void SQLCB_Save(Handle owner, Handle hndl, const char[] error, any data)
             g_PendingSave[client] = true;
             Cookie_Save(client, true);
         }
-        DB_MarkConnectionLost(error);
     }
     else
     {

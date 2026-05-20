@@ -137,7 +137,6 @@ public QuarterRank_CheckPlaytimeColumn(Handle:owner, Handle:hndl, const String:e
 	if (hndl == INVALID_HANDLE)
 	{
 		LogError("QuarterRank_CheckPlaytimeColumn Query failed: %s", error);
-		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -197,7 +196,6 @@ public QuarterRank_CheckOldRows(Handle:owner, Handle:hndl, const String:error[],
 	{
 		if (error[0] != '\0')
 			LogError("QuarterRank_CheckOldRows failed: %s", error);
-		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -234,7 +232,6 @@ stock bool:QuarterRank_RecoverIfNeeded()
 
 	if (db == INVALID_HANDLE && !ConnectDB())
 	{
-		ScheduleDBReconnect();
 		return false;
 	}
 
@@ -415,7 +412,6 @@ public QuarterRank_GetClientPoints(Handle:owner, Handle:hndl, const String:error
 	if (hndl == INVALID_HANDLE)
 	{
 		LogError("QuarterRank_GetClientPoints Query failed: %s", error);
-		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -473,7 +469,6 @@ public QuarterRank_GetClientRank(Handle:owner, Handle:hndl, const String:error[]
 	if (hndl == INVALID_HANDLE)
 	{
 		LogError("QuarterRank_GetClientRank Query failed: %s", error);
-		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -513,7 +508,6 @@ public QuarterRank_GetTotal(Handle:owner, Handle:hndl, const String:error[], any
 	if (hndl == INVALID_HANDLE)
 	{
 		LogError("QuarterRank_GetTotal Query failed: %s", error);
-		ScheduleDBReconnect(error);
 		return;
 	}
 
@@ -539,7 +533,6 @@ public QuarterRank_GetTop100Scores(Handle:owner, Handle:hndl, const String:error
 	if (hndl == INVALID_HANDLE)
 	{
 		LogError("QuarterRank_GetTop100Scores failed! Reason: %s", error);
-		ScheduleDBReconnect(error);
 		return;
 	}
 

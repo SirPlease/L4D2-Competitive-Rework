@@ -799,20 +799,10 @@ void CloseDbConnection()
 	}
 }
 
-void ScheduleDbReconnect(const char[] error = "")
-{
-	if (error[0] != '\0' && !IsDbConnectionLostError(error))
-		return;
-
-	if (error[0] != '\0')
-		LogError("[RPG] database connection error: %s", error);
-}
-
 public void SendSQLUpdate(char []query)
 {
     if (db == INVALID_HANDLE && !ConnectDB())
 	{
-		ScheduleDbReconnect();
         return;
 	}
 
@@ -823,8 +813,6 @@ public void SQLErrorCheckCallback(Handle owner, Handle hndl, const char []error,
 	if (hndl == INVALID_HANDLE || hndl == null || error[0] != '\0')
 	{
 		LogError("SQL Error: %s", error);
-		if (IsDbConnectionLostError(error))
-			ScheduleDbReconnect(error);
 	}
 }
 
@@ -1014,7 +1002,6 @@ public void ClientSaveToFileLoad(int Client)
 		return;
 	if (db == INVALID_HANDLE && !ConnectDB())
 	{
-		ScheduleDbReconnect();
 		return;
 	}
 	char query[255];
@@ -1450,7 +1437,6 @@ public void ShowMelee(Handle owner, Handle hndl, const char []error, any data)
 
 		if (IsDbConnectionLostError(error) && g_iDbLoadRetryCount[client] < 1)
 		{
-			ScheduleDbReconnect(error);
 			g_iDbLoadRetryCount[client]++;
 			CreateTimer(RPG_DB_LOAD_RETRY_DELAY, Timer_RetryClientLoad, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		}
@@ -1486,7 +1472,6 @@ public Action Timer_RetryClientLoad(Handle timer, any userid)
 
 	if (db == INVALID_HANDLE && !ConnectDB())
 	{
-		ScheduleDbReconnect();
 		return Plugin_Stop;
 	}
 

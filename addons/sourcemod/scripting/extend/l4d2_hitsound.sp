@@ -495,20 +495,6 @@ static void StartDBConnect()
     ReloadAllPlayersPrefs();
 }
 
-bool DB_IsConnectionLostError(const char[] error)
-{
-    return StrContains(error, "Lost connection", false) != -1
-        || StrContains(error, "server has gone away", false) != -1;
-}
-
-void DB_MarkConnectionLost(const char[] error)
-{
-    if (!DB_IsConnectionLostError(error))
-        return;
-
-    LogError("[hitsound] database connection error: %s", error);
-}
-
 // ========================================================
 // Persistence: DB + Fallback
 // ========================================================
@@ -538,12 +524,6 @@ public void SQL_OnEnsureColumn(Handle owner, Handle hndl, const char[] error, an
         && StrContains(error, "Duplicate column", false) == -1
         && StrContains(error, "duplicate column", false) == -1)
     {
-        if (DB_IsConnectionLostError(error))
-        {
-            DB_MarkConnectionLost(error);
-            return;
-        }
-
         LogError("[hitsound] 自动补充数据库列失败: %s", error);
     }
 }
@@ -710,10 +690,7 @@ public void SQL_OnLoadPrefs(Handle owner, Handle hndl, const char[] error, any u
 
     if (hndl == INVALID_HANDLE)
     {
-        if (DB_IsConnectionLostError(error))
-            DB_MarkConnectionLost(error);
-        else
-            LogError("[hitsound] 加载玩家配置失败: %s", error);
+        LogError("[hitsound] 加载玩家配置失败: %s", error);
         KV_LoadPlayer(client);
         g_PrefsLoaded[client] = true;
         g_PrefsDirty [client] = false;
@@ -804,10 +781,7 @@ public void SQL_OnSavePrefs(Handle owner, Handle hndl, const char[] error, any d
         if (client > 0 && IsClientInGame(client))
             g_PrefsDirty[client] = true;
 
-        if (DB_IsConnectionLostError(error))
-            DB_MarkConnectionLost(error);
-        else
-            LogError("[hitsound] 保存玩家配置失败: %s", error);
+        LogError("[hitsound] 保存玩家配置失败: %s", error);
     }
 }
 

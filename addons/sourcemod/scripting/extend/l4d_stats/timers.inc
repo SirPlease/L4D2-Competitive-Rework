@@ -384,7 +384,6 @@ public GetBasicInf(Handle:owner, Handle:hndl, const String:error[], any:client)
 	if (hndl == INVALID_HANDLE)
 	{
 		LogError("GetBasicInf Query failed: %s", error);
-		ScheduleDBReconnect(error);
 		return;
 	}
 
