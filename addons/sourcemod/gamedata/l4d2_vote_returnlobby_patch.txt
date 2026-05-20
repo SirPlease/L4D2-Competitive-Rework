@@ -1,0 +1,39 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"MemPatches"
+		{
+			"CReturnToLobbyIssue::CanCallVote"
+			{
+				"signature" "CReturnToLobbyIssue::CanCallVote"
+
+				// return 0
+				
+				"linux"
+				{
+					"offset"	"0"
+					"verify"	"\x55"
+					"patch"		"\x31\xC0\xC3"
+				}
+
+				"windows"
+				{
+					"offset"	"0"
+					"verify"	"\x55"
+					"patch"		"\x30\xC0\xC2\x0C\x00"
+				}
+			}
+		}
+
+		"Signatures"
+		{
+			"CReturnToLobbyIssue::CanCallVote"
+			{
+				"library"	"server"
+				"linux"		"@_ZN19CReturnToLobbyIssue11CanCallVoteEiPKcPc"
+				"windows"	"\x55\x8B\xEC\x8B\x45\x10\x8B\x55\x0C\x50\x8B\x45\x08\x52\x50\xE8\x2A\x2A\x2A\x2A\x84\xC0\x0F\x95\xC0"
+			}
+		}
+	}
+}

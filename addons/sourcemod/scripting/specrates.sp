@@ -102,8 +102,8 @@ public void OnPluginStart()
 	sv_client_min_interp_ratio  = FindConVar("sv_client_min_interp_ratio");
 	sv_client_max_interp_ratio  = FindConVar("sv_client_max_interp_ratio");
 
-	// 旁观超额阈值：超过后（除管理员b/解说）一律 30 tick
-	cv_fullSpecNum = CreateConVar("specrates_fulltickspecnum", "4", "旁观超过这个数量后（除管理员b与解说），其余人全部30tick，无视积分");
+	// 旁观超额阈值：超过后（除管理员/解说）一律 30 tick
+	cv_fullSpecNum = CreateConVar("specrates_fulltickspecnum", "4", "旁观超过这个数量后（除管理员与解说），其余人全部30tick，无视积分");
 	cv_fullSpecNum.AddChangeHook(OnFullSpecChanged);
 
 	// ★ 新增：全局强制旁观限速开关
@@ -164,7 +164,7 @@ public void OnClientPutInServer(int client)
 		return;
 	}
 
-	// 如果此刻旁观超额，立即把非管理员b/解说的旁观都压到 30
+	// 如果此刻旁观超额，立即把非管理员/解说的旁观都压到 30
 	if (GetSpecCount() > cv_fullSpecNum.IntValue)
 		ApplyFullSpecEnforcement();
 }
@@ -242,7 +242,7 @@ void AdjustRates(int client)
 	g_Players[client].LastAdjusted = GetEngineTime();
 
 	L4DTeam team     = L4D_GetClientTeam(client);
-	bool   isAdminB  = HasAdminB(client);
+	bool   isAdmin   = HasAdminRateAccess(client);
 	bool   isCaster  = (g_bCasterSystem && IsClientCaster(client));
 	int    score     = (g_bL4DStatsAvail ? l4dstats_GetClientScore(client) : 0);
 	int    specCount = GetSpecCount();
@@ -250,7 +250,7 @@ void AdjustRates(int client)
 	// 对局中：非管理员 → 强制 100；管理员 → 128
 	if (team == L4DTeam_Survivor || team == L4DTeam_Infected)
 	{
-		if (isAdminB)
+		if (isAdmin)
 			SetFull128(client);
 		else
 			SetFull100(client);
@@ -263,22 +263,22 @@ void AdjustRates(int client)
 		// ★ 强制模式优先：管理员/解说 = 60；其他 = 30
 		if (cv_forceSpec != null && cv_forceSpec.BoolValue)
 		{
-			if (isAdminB || isCaster)
+			if (isAdmin || isCaster)
 				SetSpectator60(client);
 			else
 				SetSpectator30(client);
 			return;
 		}
 
-		// 超额时：除管理员b/解说外，一律 30
-		if (specCount > cv_fullSpecNum.IntValue && !isAdminB && !isCaster)
+		// 超额时：除管理员/解说外，一律 30
+		if (specCount > cv_fullSpecNum.IntValue && !isAdmin && !isCaster)
 		{
 			SetSpectator30(client);
 			return;
 		}
 
 		// 管理员/解说：给服务器默认（通常=100）
-		if (isAdminB || isCaster)
+		if (isAdmin || isCaster)
 		{
 			ResetToServerDefaults(client);
 			return;
@@ -422,7 +422,7 @@ void ApplyFullSpecEnforcement()
 		if (L4D_GetClientTeam(i) != L4DTeam_Spectator)
 			continue;
 
-		if (HasAdminB(i) || (g_bCasterSystem && IsClientCaster(i)))
+		if (HasAdminRateAccess(i) || (g_bCasterSystem && IsClientCaster(i)))
 			continue;
 
 		SetSpectator30(i);
@@ -439,7 +439,7 @@ void ApplyForceSpecEnforcement()
 		if (L4D_GetClientTeam(i) != L4DTeam_Spectator)
 			continue;
 
-		if (HasAdminB(i) || (g_bCasterSystem && IsClientCaster(i)))
+		if (HasAdminRateAccess(i) || (g_bCasterSystem && IsClientCaster(i)))
 			SetSpectator60(i);
 		else
 			SetSpectator30(i);
@@ -466,9 +466,9 @@ int GetSpecCount()
 	return count;
 }
 
-bool HasAdminB(int client)
+bool HasAdminRateAccess(int client)
 {
-	return (GetUserFlagBits(client) & ADMFLAG_GENERIC) != 0;
+	return CheckCommandAccess(client, "sm_adminrates", ADMFLAG_GENERIC);
 }
 
 // Natives

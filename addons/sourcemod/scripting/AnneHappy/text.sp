@@ -294,11 +294,6 @@ public void OnClientPutInServer(int Client)
 	if (IsValidPlayer(Client, false))
 	{
 		MaxPlayers ++ ;
-		if(MaxPlayers >= 3)
-		{
-			L4D_LobbyUnreserve();
-			ServerCommand("sm_cvar sv_allow_lobby_connect_only 0");
-		}
 		if(MaxPlayers == getBotLimit())
 		{
 			ConVar gjrj = FindConVar("sb_fix_enabled");

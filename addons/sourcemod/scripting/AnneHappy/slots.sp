@@ -3,7 +3,6 @@
 #pragma semicolon 1
 #include <sourcemod>
 #include <sdktools>
-#include <left4dhooks>
 
 #define PLUGIN_VERSION "1.0.0"
 #define MAX_LINE_WIDTH 64
@@ -52,7 +51,7 @@ void GetCvars()
 void compare(){
 	if(CurrentMaxSlots!=iMaxPlayer){
 		ServerCommand("sv_maxplayers %d",CurrentMaxSlots);
-    	ServerCommand("sv_visiblemaxplayers %d",CurrentMaxSlots);
+	ServerCommand("sv_visiblemaxplayers %d",CurrentMaxSlots);
 	}
 }
 //设置服务器位置动作
@@ -64,24 +63,21 @@ public Action SetSlots(int client,int args)
 	}
 	if(client==0||(IsValidClient(client) && IsPlayerAlive(client))){
 		char arg[32];
-    	GetCmdArg(1,arg,sizeof(arg));
-    	int slots=StringToInt(arg);
-    	if(slots<g_iCVarMinAllowedSlots||slots>g_iCVarMaxAllowedSlots){
-    		ReplyToCommand(client,"\x03错误参数，位置只能设置为%d-%d，使用方式为!slots 7(你想要的位置数)",g_iCVarMinAllowedSlots,g_iCVarMaxAllowedSlots);
+	GetCmdArg(1,arg,sizeof(arg));
+	int slots=StringToInt(arg);
+	if(slots<g_iCVarMinAllowedSlots||slots>g_iCVarMaxAllowedSlots){
+		ReplyToCommand(client,"\x03错误参数，位置只能设置为%d-%d，使用方式为!slots 7(你想要的位置数)",g_iCVarMinAllowedSlots,g_iCVarMaxAllowedSlots);
 			return Plugin_Handled;
-    	}
-    	CurrentMaxSlots=slots;
-    	SetConVarInt(g_hCVarCurrentMaxSlots,slots);
-    	ServerCommand("sv_maxplayers %d",slots);
-    	ServerCommand("sv_visiblemaxplayers %d",slots);
-    	if(slots>4){
-    		L4D_LobbyUnreserve();
-    		ServerCommand("sv_force_unreserved  1");
-    		ServerCommand("sv_allow_lobby_connect_only 0");
-    		ReplyToCommand(client,"\x03超过匹配限制人数，当前服务器大厅匹配去除，人数限制更改为:%d.",slots);   
-    	}else{
-    		ReplyToCommand(client,"\x03未超过匹配限制人数，当前服务器人数限制更改为:%d.",slots);  
-    	}
+	}
+	CurrentMaxSlots=slots;
+	SetConVarInt(g_hCVarCurrentMaxSlots,slots);
+	ServerCommand("sv_maxplayers %d",slots);
+	ServerCommand("sv_visiblemaxplayers %d",slots);
+	if(slots>4){
+		ReplyToCommand(client,"\x03超过匹配限制人数，当前服务器大厅匹配由大厅管理插件处理，人数限制更改为:%d.",slots);
+	}else{
+		ReplyToCommand(client,"\x03未超过匹配限制人数，当前服务器人数限制更改为:%d.",slots);
+	}
 	}
 	else{
 		PrintToChatAll("\x03不是生还者无法设置位置");

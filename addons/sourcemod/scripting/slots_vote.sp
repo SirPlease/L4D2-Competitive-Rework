@@ -4,7 +4,6 @@
 #include <builtinvotes>
 #include <colors>
 #include <sourcemod>
-#include <left4dhooks>
 
 #define L4D2Team_Spectator 1
 
@@ -52,12 +51,6 @@ Action SlotsRequest(int client, int args)
 			CPrintToChatAll("%t %t", "Tag", "LimitedSlotsTo", sName, Int);
 			SetConVarInt(FindConVar("sv_maxplayers"), Int);
 			SetConVarInt(FindConVar("sv_visiblemaxplayers"), Int);
-			if(Int > numSlots())
-			{
-				if(L4D_LobbyIsReserved())
-					L4D_LobbyUnreserve();
-				SetConVarInt(FindConVar("sv_allow_lobby_connect_only"), 0);
-			}
 		}
 		else{
 			if (Int > MaxSlots)
@@ -70,12 +63,6 @@ Action SlotsRequest(int client, int args)
 			}
 			else
 			{
-				if(Int > numSlots())
-				{
-					if(L4D_LobbyIsReserved())
-						L4D_LobbyUnreserve();
-					SetConVarInt(FindConVar("sv_allow_lobby_connect_only"), 0);
-				}
 				if (Int < GetConVarInt(FindConVar("survivor_limit")))
 				{
 					CPrintToChat(client, "%t %t", "Tag", "RequiredPlayers");
@@ -177,8 +164,4 @@ void CVarChanged(Handle cvar, char[] oldValue, char[] newValue)
 {
 	MaxSlots = GetConVarInt(hMaxSlots);
 	NonAdminMinSlots = GetConVarInt(hNonAdminMinSlots);
-}
-
-stock int numSlots() {
-	return LoadFromAddress(L4D_GetPointer(POINTER_SERVER) + view_as<Address>(L4D_GetServerOS() ? 380 : 384), NumberType_Int32);
 }

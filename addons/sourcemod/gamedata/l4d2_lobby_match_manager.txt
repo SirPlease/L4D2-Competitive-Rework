@@ -1,0 +1,147 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Functions"
+		{
+			// void CServerGameDLL::ApplyGameSettings( KeyValues *pKV )
+			"CServerGameDLL::ApplyGameSettings"
+			{
+				"signature"		"CServerGameDLL::ApplyGameSettings"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"address"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"objectptr"
+					}
+				}
+			}
+		}
+
+		"MemPatches"
+		{
+			"CBaseServer::ReplyReservationRequest"
+			{
+				"signature"	"CBaseServer::ReplyReservationRequest"
+
+				// if (GetNumClients() - GetNumFakeClients() > 0) Reservation request from %s rejected: server not empty.
+
+				"linux"
+				{
+					"offset"	"C9h"
+					"verify"	"\x0F\x8E"
+					"patch"		"\x90\x90\x90\x90\x90\x90"
+				}
+
+				"windows"
+				{
+					"offset"	"181h"
+					"verify"	"\x7E\x1B"
+					"patch"		"\x90\x90"
+				}
+			}
+		}
+
+		"Addresses"
+		{
+			"g_pMatchExtL4D"
+			{
+				"linux"
+				{
+					"signature"	"CTerrorGameRules::GetMissionInfo"
+					"read"		"44"
+				}
+
+				"windows"
+				{
+					"signature"	"CTerrorGameRules::GetMissionInfo"
+					"read"		"42"
+				}
+
+				"read"	"0"
+			}
+
+			"CBaseServer::m_nReservationCookie"
+			{
+				"linux"
+				{
+					"signature"	"CVEngineServer::CreateFakeClient"
+					"read"		"12"
+					"offset"	"364"
+				}
+
+				"windows"
+				{
+					"signature" "CVEngineServer::CreateFakeClient"
+					"read"		"8"
+					"offset"	"368"
+				}
+			}
+		}
+
+		"Offsets"
+		{
+			"CMatchExtL4D::GetGameModeInfo"
+			{
+				"linux"		"4"
+				"windows"	"4"
+			}
+
+			"CMatchExtL4D::GetMapInfo"
+			{
+				"linux"		"2"
+				"windows"	"2"
+			}
+		}
+
+		"Signatures"
+		{
+			// void CServerGameDLL::ApplyGameSettings( KeyValues *pKV )
+			"CServerGameDLL::ApplyGameSettings"
+			{
+				"library"	"server"
+				"linux"		"@_ZN14CServerGameDLL17ApplyGameSettingsEP9KeyValues"
+				"windows"	"\x55\x8B\xEC\x81\xEC\x2C\x01\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x56"
+				// 55 8B EC 81 EC 2C 01 00 00 A1 ? ? ? ? 33 C5 89 45 FC 56
+			}
+
+			// void CBaseServer::ReplyReservationRequest( const ns_address &adr, bf_read &msgIn )
+			"CBaseServer::ReplyReservationRequest"
+			{
+				"library"	"engine"
+				"linux"		"@_ZN11CBaseServer23ReplyReservationRequestER8netadr_sR7bf_read"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x8B\x45\x08\x53\x56\x8B\x75\x0C\x8B\xD9\x8B\x4E\x2A\x57\x89\x9D"
+				// ? ? ? ? ? ? ? ? ? A1 ? ? ? ? 33 C5 89 45 FC 8B 45 08 53 56 8B 75 0C 8B D9 8B 4E ? 57 89 9D
+			}
+
+			"CTerrorGameRules::GetMissionInfo"
+			{
+				"library"	"server"
+				"linux"		"@_ZN16CTerrorGameRules14GetMissionInfoEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x56\xFF\x2A\x8B\x2A\x8B\x2A\x8B\x2A\x2A\x6A\x2A\xFF\x2A\x8B\x2A\x85\x2A\x75\x2A\x5E"
+				// ? ? ? ? ? ? ? ? ? ? 8B ? 8B ? ? 56 FF ? 8B ? 8B ? 8B ? ? 6A ? FF ? 8B ? 85 ? 75 ? 5E 
+			}
+
+			"CVEngineServer::CreateFakeClient"
+			{
+				"library"	"engine"
+				"linux"		"@_ZN14CVEngineServer16CreateFakeClientEPKc"
+				"windows"	"\x55\x8B\x2A\x8B\x2A\x2A\x50\xB9\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x85\x2A\x75\x2A\x5D\xC2"
+				// 55 8B ? 8B ? ? 50 B9 ? ? ? ? E8 ? ? ? ? 85 ? 75 ? 5D C2
+			}
+
+			// void CBaseServer::UpdateGameType()
+			"CBaseServer::UpdateGameType"
+			{
+				"library"	"engine"
+				"linux"		"@_ZN11CBaseServer14UpdateGameTypeEv"
+				"windows"	"\x55\x8B\xEC\x81\xEC\x54\x04\x00\x00\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x53"
+				// 55 8B EC 81 EC 54 04 00 00 A1 ? ? ? ? 33 C5 89 45 FC 53
+			}
+		}
+	}
+}
+
