@@ -35,10 +35,6 @@ public Plugin myinfo =
 
 /* -------------------- ConVars -------------------- */
 Handle g_hDb = INVALID_HANDLE;
-Handle g_hDbReconnectTimer = INVALID_HANDLE;
-Handle g_hDbKeepAliveTimer = INVALID_HANDLE;
-#define DB_RECONNECT_DELAY 10.0
-#define DB_KEEPALIVE_INTERVAL 45.0
 
 ConVar gCvarEnable;
 ConVar gCvarDBSection;
@@ -136,8 +132,6 @@ void BL_Log(const char[] fmt, any ...)
 /* -------------------- DB 连接（自动 MySQL/SQLite） -------------------- */
 void DB_Close()
 {
-    DB_StopKeepAlive();
-
     if (g_hDb != INVALID_HANDLE)
     {
         CloseHandle(g_hDb);
@@ -153,19 +147,14 @@ bool DB_Connect()
     if (!SQL_CheckConfig(g_sDBSection))
     {
         LogError("[BlockList] databases.cfg missing '%s' entry", g_sDBSection);
-        if (g_hDbReconnectTimer == INVALID_HANDLE)
-            g_hDbReconnectTimer = CreateTimer(DB_RECONNECT_DELAY, Timer_DBReconnect);
         return false;
     }
 
     char error[256];
-    g_hDb = SQL_Connect(g_sDBSection, false, error, sizeof(error));
+    g_hDb = SQL_Connect(g_sDBSection, true, error, sizeof(error));
     if (g_hDb == INVALID_HANDLE)
     {
         LogError("[BlockList] DB connect failed: %s", error);
-        DB_Close();
-        if (g_hDbReconnectTimer == INVALID_HANDLE)
-            g_hDbReconnectTimer = CreateTimer(DB_RECONNECT_DELAY, Timer_DBReconnect);
         return false;
     }
 
@@ -203,7 +192,6 @@ bool DB_Connect()
     }
 
     SQL_TQuery(g_hDb, DB_GenericCallback, sql);
-    DB_StartKeepAlive();
     return true;
 }
 
@@ -218,17 +206,7 @@ void DB_MarkConnectionLost(const char[] error)
     if (!DB_IsConnectionLostError(error))
         return;
 
-    DB_Close();
-
-    if (g_hDbReconnectTimer == INVALID_HANDLE)
-        g_hDbReconnectTimer = CreateTimer(DB_RECONNECT_DELAY, Timer_DBReconnect);
-}
-
-public Action Timer_DBReconnect(Handle timer, any data)
-{
-    g_hDbReconnectTimer = INVALID_HANDLE;
-    DB_Connect();
-    return Plugin_Stop;
+    LogError("[BlockList] database connection error: %s", error);
 }
 
 public void DB_GenericCallback(Handle owner, Handle hndl, const char[] error, any data)
@@ -236,43 +214,6 @@ public void DB_GenericCallback(Handle owner, Handle hndl, const char[] error, an
     if (hndl == INVALID_HANDLE && error[0] != '\0')
     {
         LogError("[BlockList] SQL error: %s", error);
-        DB_MarkConnectionLost(error);
-    }
-}
-
-/* -------------------- KeepAlive -------------------- */
-void DB_StartKeepAlive()
-{
-    if (g_hDbKeepAliveTimer != INVALID_HANDLE)
-        return;
-    g_hDbKeepAliveTimer = CreateTimer(DB_KEEPALIVE_INTERVAL, Timer_DBKeepAlive, _, TIMER_REPEAT);
-}
-
-void DB_StopKeepAlive()
-{
-    if (g_hDbKeepAliveTimer != INVALID_HANDLE)
-    {
-        KillTimer(g_hDbKeepAliveTimer);
-        g_hDbKeepAliveTimer = INVALID_HANDLE;
-    }
-}
-
-public Action Timer_DBKeepAlive(Handle timer, any data)
-{
-    if (g_hDb == INVALID_HANDLE)
-    {
-        g_hDbKeepAliveTimer = INVALID_HANDLE;
-        return Plugin_Stop;
-    }
-    SQL_TQuery(g_hDb, DB_KeepAliveCallback, "SELECT 1", _, DBPrio_Low);
-    return Plugin_Continue;
-}
-
-public void DB_KeepAliveCallback(Handle owner, Handle hndl, const char[] error, any data)
-{
-    if (hndl == INVALID_HANDLE && error[0] != '\0')
-    {
-        LogError("[BlockList] KeepAlive failed: %s", error);
         DB_MarkConnectionLost(error);
     }
 }
@@ -353,17 +294,11 @@ public void OnPluginStart()
 
 public void OnMapEnd()
 {
-    // 连接和 KeepAlive 都保持跨地图运行，不停不断。
+    // 数据库连接保持跨地图运行。
 }
 
 public void OnPluginEnd()
 {
-    if (g_hDbReconnectTimer != INVALID_HANDLE)
-    {
-        KillTimer(g_hDbReconnectTimer);
-        g_hDbReconnectTimer = INVALID_HANDLE;
-    }
-
     DB_Close();
 }
 

@@ -5,15 +5,11 @@
 
 bool g_bFullyConnected;
 bool g_bConnecting;
-Handle g_hReconnectTimer = null;
-Handle g_hKeepAliveTimer = null;
 Handle g_hCleanupTimer = null;
 
 Database g_hDatabase = null;
 
 #define CHATLOG_DB_CONFIG "chatlog"
-#define CHATLOG_RECONNECT_DELAY 10.0
-#define CHATLOG_KEEPALIVE_INTERVAL 45.0
 #define CHATLOG_CLEANUP_INTERVAL 21600.0
 
 ConVar chatlog_clearTable;
@@ -37,7 +33,7 @@ public void OnPluginStart()
 
 public void OnMapEnd()
 {
-	// 连接和 KeepAlive 都保持跨地图运行，不停不断。
+	// 数据库连接保持跨地图运行。
 }
 
 public void OnConfigsExecuted()
@@ -59,7 +55,7 @@ void SQL_ConnectChatLog()
 
 	g_bConnecting = true;
 	char error[256];
-	g_hDatabase = SQL_Connect(CHATLOG_DB_CONFIG, false, error, sizeof(error));
+	g_hDatabase = SQL_Connect(CHATLOG_DB_CONFIG, true, error, sizeof(error));
 	g_bConnecting = false;
 
 	if (g_hDatabase == null)
@@ -107,34 +103,7 @@ void SQL_ScheduleReconnect()
 {
 	g_bFullyConnected = false;
 	g_bConnecting = false;
-	SQL_StopKeepAliveTimer();
-	SQL_StopCleanupTimer();
-
-	if (g_hDatabase != null)
-	{
-		delete g_hDatabase;
-		g_hDatabase = null;
-	}
-
-	if (g_hReconnectTimer == null)
-		g_hReconnectTimer = CreateTimer(CHATLOG_RECONNECT_DELAY, Timer_ReconnectDatabase);
-}
-
-void SQL_StartKeepAliveTimer()
-{
-	if (g_hKeepAliveTimer != null)
-		return;
-
-	g_hKeepAliveTimer = CreateTimer(CHATLOG_KEEPALIVE_INTERVAL, Timer_KeepAlive, _, TIMER_REPEAT);
-}
-
-void SQL_StopKeepAliveTimer()
-{
-	if (g_hKeepAliveTimer == null)
-		return;
-
-	KillTimer(g_hKeepAliveTimer);
-	g_hKeepAliveTimer = null;
+	LogError("[chatlog] 数据库连接不可用，跳过本次自动重连。");
 }
 
 void SQL_StartCleanupTimer()
@@ -150,31 +119,6 @@ void SQL_StopCleanupTimer()
 
 	KillTimer(g_hCleanupTimer);
 	g_hCleanupTimer = null;
-}
-
-public Action Timer_ReconnectDatabase(Handle timer, any data)
-{
-	g_hReconnectTimer = null;
-	SQL_ConnectChatLog();
-	return Plugin_Stop;
-}
-
-public Action Timer_KeepAlive(Handle timer, any data)
-{
-	if (!g_bFullyConnected || g_hDatabase == null)
-		return Plugin_Continue;
-
-	g_hDatabase.Query(SQL_KeepAliveCallback, "SELECT 1");
-	return Plugin_Continue;
-}
-
-public void SQL_KeepAliveCallback(Database datavas, DBResultSet results, const char[] error, int data)
-{
-	if (results == null)
-	{
-		LogError("[chatlog] 数据库保活失败: %s", error);
-		SQL_ScheduleReconnect();
-	}
 }
 
 public Action Timer_CleanupChatLog(Handle timer, any data)
@@ -210,20 +154,12 @@ public void SQL_CreateCallback(Database datavas, DBResultSet results, const char
 	}
 
 	g_bFullyConnected = true;
-	SQL_StartKeepAliveTimer();
 	SQL_StartCleanupTimer();
 	SQL_RunCleanup();
 }
 
 public void OnPluginEnd()
 {
-	if (g_hReconnectTimer != null)
-	{
-		KillTimer(g_hReconnectTimer);
-		g_hReconnectTimer = null;
-	}
-
-	SQL_StopKeepAliveTimer();
 	SQL_StopCleanupTimer();
 
 	if (g_hDatabase != null)
@@ -278,7 +214,5 @@ public void SQL_Error(Database datavas, DBResultSet results, const char[] error,
 	if (results == null)
 	{
 		LogError("[chatlog] SQL 查询失败: %s", error);
-		if (SQL_IsConnectionLostError(error))
-			SQL_ScheduleReconnect();
 	}
 }

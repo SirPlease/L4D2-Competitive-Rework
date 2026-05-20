@@ -5,30 +5,23 @@
 
 // 数据库连接、玩家/地图持久化、基础查询和相关计分定时器。
 
-static Handle g_hDBReconnectTimer = INVALID_HANDLE;
-static Handle g_hDBKeepAliveTimer = INVALID_HANDLE;
 static bool g_bTablesVerified = false;
-#define DB_KEEPALIVE_INTERVAL 45.0
 
 // Make connection to database.
 
 bool:ConnectDB()
 {
 	if (db != INVALID_HANDLE)
-	{
-		DB_StartKeepAlive();
 		return true;
-	}
 
 	if (SQL_CheckConfig(DB_CONF_NAME))
 	{
 		new String:Error[256];
-		db = SQL_Connect(DB_CONF_NAME, false, Error, sizeof(Error));
+		db = SQL_Connect(DB_CONF_NAME, true, Error, sizeof(Error));
 
 		if (db == INVALID_HANDLE)
 		{
 			LogError("Failed to connect to database: %s", Error);
-			ScheduleDBReconnect();
 			return false;
 		}
 
@@ -39,22 +32,18 @@ bool:ConnectDB()
 			else
 				LogError("Failed to update encoding to utf8mb4: unknown");
 			if (db != INVALID_HANDLE)
-			{
-				CloseHandle(db);
-				db = INVALID_HANDLE;
-			}
-			ScheduleDBReconnect(Error);
-			return false;
-		}
-
-		if (!CheckDatabaseValidity(DbPrefix))
-		{
-			if (IsDBReconnectPending())
+				{
+					CloseHandle(db);
+					db = INVALID_HANDLE;
+				}
 				return false;
+			}
 
-			LogError("Database is missing required table or tables.");
-			if (db != INVALID_HANDLE)
+			if (!CheckDatabaseValidity(DbPrefix))
 			{
+				LogError("Database is missing required table or tables.");
+				if (db != INVALID_HANDLE)
+				{
 				CloseHandle(db);
 				db = INVALID_HANDLE;
 			}
@@ -89,13 +78,12 @@ bool:ConnectDB()
 		return false;
 	}
 
-	DB_StartKeepAlive();
 	return true;
 }
 
 bool:IsDBReconnectPending()
 {
-	return (g_hDBReconnectTimer != INVALID_HANDLE);
+	return false;
 }
 
 // 检测是否为连接丢失错误
@@ -105,92 +93,14 @@ bool:IsDBConnectionLostError(const String:error[])
 		|| StrContains(error, "server has gone away", false) != -1);
 }
 
-// 标记连接丢失并安排重连
+// 早期稳定版不在查询回调中主动关闭/重连数据库，避免过图时异步回调打到被关闭的句柄。
 void ScheduleDBReconnect(const char[] error = "")
 {
 	if (error[0] != '\0' && !IsDBConnectionLostError(error))
 		return;
 
-	LogMessage("[l4d_stats] 检测到数据库连接丢失，10 秒后自动重连...");
-	g_bScoreLogTableReady = false;
-	g_bQuarterRankTableReady = false;
-	g_bQuarterRankDbChecked = false;
-	g_bModeStatsTableReady = false;
-	g_bTablesVerified = false;
-
-	DB_StopKeepAlive();
-
-	if (db != INVALID_HANDLE)
-	{
-		CloseHandle(db);
-		db = INVALID_HANDLE;
-	}
-
-	if (g_hDBReconnectTimer == INVALID_HANDLE)
-		g_hDBReconnectTimer = CreateTimer(10.0, Timer_L4DStatsDBReconnect);
-}
-
-public Action:Timer_L4DStatsDBReconnect(Handle:timer, any:data)
-{
-	g_hDBReconnectTimer = INVALID_HANDLE;
-
-	if (ConnectDB())
-	{
-		LogMessage("[l4d_stats] 数据库重连成功。");
-		ReadDb();
-		GetTop100PlayerScore();
-		QuarterRank_QueryTop100Scores();
-		CreateTimer(1.0, InitPlayers);
-	}
-	else
-	{
-		LogError("[l4d_stats] 数据库重连失败，10 秒后再次重试。");
-		if (g_hDBReconnectTimer == INVALID_HANDLE)
-			g_hDBReconnectTimer = CreateTimer(10.0, Timer_L4DStatsDBReconnect);
-	}
-
-	return Plugin_Stop;
-}
-
-// KeepAlive：低于 MySQL wait_timeout=120 秒，避免空闲连接被回收。
-DB_StartKeepAlive()
-{
-	if (g_hDBKeepAliveTimer != INVALID_HANDLE)
-		return;
-
-	g_hDBKeepAliveTimer = CreateTimer(DB_KEEPALIVE_INTERVAL, Timer_L4DStatsDBKeepAlive, _, TIMER_REPEAT);
-}
-
-DB_StopKeepAlive()
-{
-	if (g_hDBKeepAliveTimer == INVALID_HANDLE)
-		return;
-
-	KillTimer(g_hDBKeepAliveTimer);
-	g_hDBKeepAliveTimer = INVALID_HANDLE;
-}
-
-public Action:Timer_L4DStatsDBKeepAlive(Handle:timer, any:data)
-{
-	if (g_hDBKeepAliveTimer != timer)
-		return Plugin_Stop;
-
-	if (db == INVALID_HANDLE)
-	{
-		g_hDBKeepAliveTimer = INVALID_HANDLE;
-		return Plugin_Stop;
-	}
-
-	SQL_TQuery(db, SQLCallback_KeepAlive, "SELECT 1", _, DBPrio_Low);
-	return Plugin_Continue;
-}
-
-public SQLCallback_KeepAlive(Handle:owner, Handle:hndl, const String:error[], any:data)
-{
-	if (!StrEqual("", error))
-	{
-		ScheduleDBReconnect(error);
-	}
+	if (error[0] != '\0')
+		LogError("[l4d_stats] database connection error: %s", error);
 }
 
 bool:CheckDatabaseValidity(const String:Prefix[])

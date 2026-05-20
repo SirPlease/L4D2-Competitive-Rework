@@ -43,12 +43,7 @@ MemoryPatch
 
 int
 	g_iUnreserveType,
-	g_iReserveModifyFlags,
-	g_iSavedReservationCookie[2];
-
-bool
-	g_bLobbyFull,
-	g_bSavedReservationCookie;
+	g_iReserveModifyFlags;
 
 Address
 	g_pMatchExtL4D,
@@ -88,8 +83,6 @@ public void OnPluginStart()
 	g_cvUnreserveType.AddChangeHook(OnConVarChanged);
 	g_cvReserveModifyFlags.AddChangeHook(OnConVarChanged);
 
-	HookEvent("player_disconnect", Event_PlayerDisconnect, EventHookMode_Pre);
-
 	RegAdminCmd("sm_lobby_status", Cmd_Status, ADMFLAG_ROOT);
 	RegAdminCmd("sm_lobby_set", Cmd_Set, ADMFLAG_ROOT);
 }
@@ -101,12 +94,6 @@ void OnConVarChanged(ConVar convar, const char[] oldValue, const char[] newValue
 	g_iUnreserveType = g_cvUnreserveType.IntValue;
 	g_iReserveModifyFlags = g_cvReserveModifyFlags.IntValue;
 
-	if (g_iUnreserveType != UNRESERVE_WHEN_FULL)
-	{
-		g_bLobbyFull = false;
-		g_bSavedReservationCookie = false;
-	}
-	
 	g_mBlockReserve.Disable();
 	if (g_iUnreserveType == UNRESERVE_ALWAYS)
 	{
@@ -187,30 +174,8 @@ public void OnClientConnected(int client)
 
 	if (GetPlayerCount() >= GetMaxLobbySlots(g_sGameMode))
 	{
-		if (!g_bLobbyFull)
-			SaveReservationCookie();
-
-		g_bLobbyFull = true;
 		SetReservationCookie(false);
 		sv_allow_lobby_connect_only.BoolValue = false;
-	}
-}
-
-public void Event_PlayerDisconnect(Event event, const char[] name, bool dontBroadcast)
-{
-	if (g_iUnreserveType != UNRESERVE_WHEN_FULL || !g_bLobbyFull || !g_bSavedReservationCookie)
-		return;
-
-	int client = GetClientOfUserId(event.GetInt("userid"));
-	if (client < 1 || IsFakeClient(client))
-		return;
-
-	if (GetPlayerCount(client) < GetMaxLobbySlots(g_sGameMode))
-	{
-		SetReservationCookie(true, g_iSavedReservationCookie);
-		sv_allow_lobby_connect_only.BoolValue = true;
-		g_bLobbyFull = false;
-		g_bSavedReservationCookie = false;
 	}
 }
 
@@ -225,7 +190,7 @@ Action Cmd_Status(int client, int args)
 	else 
 		FormatEx(sCookie, sizeof(sCookie), "%x", iCookie[0]);
 
-	ReplyToCommand(client, "g_iUnreserveType = %i, iPlayers = %i, iMaxLobbySlots = %i, g_bLobbyFull = %b, g_bSavedReservationCookie = %b, sv_allow_lobby_connect_only = %i, sCookie = %s", g_iUnreserveType, GetPlayerCount(), GetMaxLobbySlots(g_sGameMode), g_bLobbyFull, g_bSavedReservationCookie, sv_allow_lobby_connect_only.IntValue, sCookie);
+	ReplyToCommand(client, "g_iUnreserveType = %i, iPlayers = %i, iMaxLobbySlots = %i, sv_allow_lobby_connect_only = %i, sCookie = %s", g_iUnreserveType, GetPlayerCount(), GetMaxLobbySlots(g_sGameMode), sv_allow_lobby_connect_only.IntValue, sCookie);
 	return Plugin_Handled;
 }
 
@@ -286,12 +251,6 @@ void SetReservationCookie(bool reservation, const int cookie[2]={0, 0})
 	StoreToAddress(g_pReservationCookie + view_as<Address>(4), cookie[1], NumberType_Int32);
 	SDKCall(g_hSDKUpdateGameType);
 	sv_hosting_lobby.BoolValue = reservation;
-}
-
-void SaveReservationCookie()
-{
-	GetReservationCookie(g_iSavedReservationCookie);
-	g_bSavedReservationCookie = g_iSavedReservationCookie[0] != 0 || g_iSavedReservationCookie[1] != 0;
 }
 
 void Init()

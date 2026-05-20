@@ -16,14 +16,10 @@
 #define PLUGIN_VERSION "2.0"
 #define MAX_LINE_WIDTH 64
 #define DB_CONF_NAME  "rpg"
-#define RPG_DB_RECONNECT_DELAY 10.0
-#define RPG_DB_KEEPALIVE_INTERVAL 45.0
 #define RPG_DB_LOAD_RETRY_DELAY 2.0
 
 // 进行 MySQL 连接相关变量
 Handle db = INVALID_HANDLE;
-Handle g_hDbReconnectTimer = null;
-Handle g_hDbKeepAliveTimer = null;
 int g_iDbLoadRetryCount[MAXPLAYERS + 1];
 enum struct PlayerStruct{
 	int ClientPoints;
@@ -528,12 +524,11 @@ public void  OnPluginStart()
 
 public void OnMapEnd()
 {
-	// 连接和 KeepAlive 都保持跨地图运行，不停不断。
+	// 数据库连接保持跨地图运行。
 }
 
 public void OnPluginEnd()
 {
-	StopDbReconnectTimer();
 	CloseDbConnection();
 }
 
@@ -751,7 +746,6 @@ public bool ConnectDB()
 {
 	if (db != INVALID_HANDLE)
 	{
-		StartDbKeepAliveTimer();
 		g_bMysqlSystemAvailable = true;
 		return true;
 	}
@@ -759,7 +753,7 @@ public bool ConnectDB()
 	if (SQL_CheckConfig(DB_CONF_NAME))
 	{
 		char Error[256];
-		db = SQL_Connect(DB_CONF_NAME, false, Error, sizeof(Error));
+		db = SQL_Connect(DB_CONF_NAME, true, Error, sizeof(Error));
 		if (db == INVALID_HANDLE)
 		{
 			LogError("Failed to connect to database: %s", Error);
@@ -786,7 +780,6 @@ public bool ConnectDB()
 	}
 
 	SQL_FastQuery(db, "SET NAMES 'utf8mb4'");
-	StartDbKeepAliveTimer();
 	g_bMysqlSystemAvailable = true;
 	return true;
 }
@@ -797,36 +790,8 @@ bool IsDbConnectionLostError(const char[] error)
 		|| StrContains(error, "server has gone away", false) != -1;
 }
 
-void StartDbKeepAliveTimer()
-{
-	if (g_hDbKeepAliveTimer != null)
-		return;
-
-	g_hDbKeepAliveTimer = CreateTimer(RPG_DB_KEEPALIVE_INTERVAL, Timer_DbKeepAlive, _, TIMER_REPEAT);
-}
-
-void StopDbKeepAliveTimer()
-{
-	if (g_hDbKeepAliveTimer == null)
-		return;
-
-	KillTimer(g_hDbKeepAliveTimer);
-	g_hDbKeepAliveTimer = null;
-}
-
-void StopDbReconnectTimer()
-{
-	if (g_hDbReconnectTimer == null)
-		return;
-
-	KillTimer(g_hDbReconnectTimer);
-	g_hDbReconnectTimer = null;
-}
-
 void CloseDbConnection()
 {
-	StopDbKeepAliveTimer();
-
 	if (db != INVALID_HANDLE)
 	{
 		CloseHandle(db);
@@ -839,48 +804,8 @@ void ScheduleDbReconnect(const char[] error = "")
 	if (error[0] != '\0' && !IsDbConnectionLostError(error))
 		return;
 
-	g_bMysqlSystemAvailable = false;
-	CloseDbConnection();
-
-	if (g_hDbReconnectTimer == null)
-		g_hDbReconnectTimer = CreateTimer(RPG_DB_RECONNECT_DELAY, Timer_ReconnectDb);
-}
-
-public Action Timer_ReconnectDb(Handle timer, any data)
-{
-	g_hDbReconnectTimer = null;
-
-	if (!ConnectDB())
-	{
-		ScheduleDbReconnect();
-		return Plugin_Stop;
-	}
-
-	for (int i = 1; i <= MaxClients; i++)
-	{
-		if (IsValidClient(i) && !IsFakeClient(i))
-			ClientSaveToFileLoad(i);
-	}
-
-	return Plugin_Stop;
-}
-
-public Action Timer_DbKeepAlive(Handle timer, any data)
-{
-	if (db == INVALID_HANDLE)
-		return Plugin_Continue;
-
-	SQL_TQuery(db, SQL_DbKeepAliveCallback, "SELECT 1");
-	return Plugin_Continue;
-}
-
-public void SQL_DbKeepAliveCallback(Handle owner, Handle hndl, const char[] error, any data)
-{
-	if (hndl == INVALID_HANDLE || error[0] != '\0')
-	{
-		LogError("[RPG] database keepalive failed: %s", error);
-		ScheduleDbReconnect(error);
-	}
+	if (error[0] != '\0')
+		LogError("[RPG] database connection error: %s", error);
 }
 
 public void SendSQLUpdate(char []query)
@@ -895,10 +820,11 @@ public void SendSQLUpdate(char []query)
 }
 public void SQLErrorCheckCallback(Handle owner, Handle hndl, const char []error, any data)
 {
-    if(!StrEqual("", error))
+	if (hndl == INVALID_HANDLE || hndl == null || error[0] != '\0')
 	{
-        LogError("SQL Error: %s", error);
-		ScheduleDbReconnect(error);
+		LogError("SQL Error: %s", error);
+		if (IsDbConnectionLostError(error))
+			ScheduleDbReconnect(error);
 	}
 }
 
@@ -1518,18 +1444,18 @@ public void ShowMelee(Handle owner, Handle hndl, const char []error, any data)
     if (!client || !IsClientInGame(client) || IsFakeClient(client))
         return;
 
-    if (hndl == INVALID_HANDLE)
-    {
-        LogError("[RPG] ShowMelee query failed: %s", error);
-		ScheduleDbReconnect(error);
+	if (hndl == INVALID_HANDLE || hndl == null || error[0] != '\0')
+	{
+		LogError("[RPG] ShowMelee query failed: %s", error);
 
 		if (IsDbConnectionLostError(error) && g_iDbLoadRetryCount[client] < 1)
 		{
+			ScheduleDbReconnect(error);
 			g_iDbLoadRetryCount[client]++;
 			CreateTimer(RPG_DB_LOAD_RETRY_DELAY, Timer_RetryClientLoad, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		}
-        return;
-    }
+		return;
+	}
 
 	g_iDbLoadRetryCount[client] = 0;
 

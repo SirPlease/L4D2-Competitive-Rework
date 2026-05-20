@@ -10,17 +10,15 @@
 Database g_hDatabase = null;
 Database g_hBlacklistDatabase = null;
 Handle g_hPollTimer = null;
-Handle g_hReconnectTimer = null;
-Handle g_hKeepAliveTimer = null;
-Handle g_hBlacklistReconnectTimer = null;
 Handle g_hBlacklistRefreshTimer = null;
-Handle g_hBlacklistKeepAliveTimer = null;
 
 bool g_bConnecting;
 bool g_bBlacklistConnecting;
 bool g_bReady;
 bool g_bPollInFlight;
 bool g_bBlacklistRefreshInFlight;
+int g_iDatabaseGeneration;
+int g_iBlacklistDatabaseGeneration;
 bool g_bl4dstatsAvailable;
 bool g_bClientSeeGlobal[MAXPLAYERS + 1];
 bool g_bClientSeeLFG[MAXPLAYERS + 1];
@@ -54,9 +52,6 @@ ConVar g_cvLFGLimit5M;
 ConVar g_cvLFGLimit10M;
 ConVar g_cvLFGLimit20M;
 ConVar g_cvLFGLimitKickAdmin;
-
-#define GLOBAL_CHAT_RECONNECT_DELAY 10.0
-#define GLOBAL_CHAT_KEEPALIVE_INTERVAL 45.0
 
 public Plugin myinfo =
 {
@@ -197,12 +192,10 @@ public void OnConfigsExecuted()
 
 public void OnPluginEnd()
 {
+	g_iDatabaseGeneration++;
+	g_iBlacklistDatabaseGeneration++;
 	StopPollTimer();
-	StopReconnectTimer();
-	StopKeepAliveTimer();
-	StopBlacklistReconnectTimer();
 	StopBlacklistRefreshTimer();
-	StopBlacklistKeepAliveTimer();
 
 	if (g_hDatabase != null)
 	{
@@ -222,31 +215,14 @@ public void OnPluginEnd()
 
 public void OnMapEnd()
 {
-	// 换图时主动清理定时器和连接状态，
-	// 确保 SQL 回调不会操作已失效的句柄。
+	// 过图只停轮询/刷新定时器，数据库连接保持跨图复用。
 	StopPollTimer();
-	StopReconnectTimer();
-	StopKeepAliveTimer();
 	StopBlacklistRefreshTimer();
-	StopBlacklistReconnectTimer();
-	StopBlacklistKeepAliveTimer();
 	g_bReady = false;
 	g_bPollInFlight = false;
 	g_bBlacklistRefreshInFlight = false;
 	g_bConnecting = false;
 	g_bBlacklistConnecting = false;
-
-	if (g_hDatabase != null)
-	{
-		delete g_hDatabase;
-		g_hDatabase = null;
-	}
-
-	if (g_hBlacklistDatabase != null)
-	{
-		delete g_hBlacklistDatabase;
-		g_hBlacklistDatabase = null;
-	}
 }
 
 public Action Command_GlobalChat(int client, int args)
@@ -553,12 +529,19 @@ void ConnectBlacklistDatabase()
 	g_cvBlacklistDatabaseConfig.GetString(configName, sizeof(configName));
 
 	g_bBlacklistConnecting = true;
-	Database.Connect(SQL_OnBlacklistConnect, configName);
+	Database.Connect(SQL_OnBlacklistConnect, configName, g_iBlacklistDatabaseGeneration);
 }
 
 public void SQL_OnBlacklistConnect(Database database, const char[] error, any data)
 {
 	g_bBlacklistConnecting = false;
+
+	if (data != g_iBlacklistDatabaseGeneration)
+	{
+		if (database != null)
+			delete database;
+		return;
+	}
 
 	if (database == null)
 	{
@@ -569,7 +552,6 @@ public void SQL_OnBlacklistConnect(Database database, const char[] error, any da
 
 	g_hBlacklistDatabase = database;
 	g_hBlacklistDatabase.SetCharset("utf8mb4");
-	StartBlacklistKeepAliveTimer();
 	StartBlacklistRefreshTimer();
 	RefreshBlacklistCache();
 }
@@ -579,16 +561,12 @@ void ScheduleBlacklistReconnect()
 	g_bBlacklistConnecting = false;
 	g_bBlacklistRefreshInFlight = false;
 	StopBlacklistRefreshTimer();
-	StopBlacklistKeepAliveTimer();
+	LogError("[global_chat] blacklist 数据库暂不可用，跳过自动重连。");
+}
 
-	if (g_hBlacklistDatabase != null)
-	{
-		delete g_hBlacklistDatabase;
-		g_hBlacklistDatabase = null;
-	}
-
-	StopBlacklistReconnectTimer();
-	g_hBlacklistReconnectTimer = CreateTimer(GLOBAL_CHAT_RECONNECT_DELAY, Timer_ReconnectBlacklistDatabase);
+bool IsActiveBlacklistDatabase(Database database)
+{
+	return database != null && g_hBlacklistDatabase != null && database == g_hBlacklistDatabase;
 }
 
 void StartBlacklistRefreshTimer()
@@ -606,61 +584,10 @@ void StopBlacklistRefreshTimer()
 		delete timer;
 }
 
-void StopBlacklistReconnectTimer()
-{
-	Handle timer = g_hBlacklistReconnectTimer;
-	g_hBlacklistReconnectTimer = null;
-
-	if (timer != null)
-		delete timer;
-}
-
-void StartBlacklistKeepAliveTimer()
-{
-	if (g_hBlacklistKeepAliveTimer != null)
-		return;
-
-	g_hBlacklistKeepAliveTimer = CreateTimer(GLOBAL_CHAT_KEEPALIVE_INTERVAL, Timer_BlacklistKeepAlive, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
-}
-
-void StopBlacklistKeepAliveTimer()
-{
-	Handle timer = g_hBlacklistKeepAliveTimer;
-	g_hBlacklistKeepAliveTimer = null;
-
-	if (timer != null)
-		delete timer;
-}
-
-public Action Timer_ReconnectBlacklistDatabase(Handle timer, any data)
-{
-	g_hBlacklistReconnectTimer = null;
-	ConnectBlacklistDatabase();
-	return Plugin_Stop;
-}
-
 public Action Timer_RefreshBlacklistCache(Handle timer, any data)
 {
 	RefreshBlacklistCache();
 	return Plugin_Continue;
-}
-
-public Action Timer_BlacklistKeepAlive(Handle timer, any data)
-{
-	if (!g_cvBlacklistFilter.BoolValue || g_hBlacklistDatabase == null)
-		return Plugin_Continue;
-
-	g_hBlacklistDatabase.Query(SQL_OnBlacklistKeepAlive, "SELECT 1");
-	return Plugin_Continue;
-}
-
-public void SQL_OnBlacklistKeepAlive(Database database, DBResultSet results, const char[] error, any data)
-{
-	if (results == null)
-	{
-		LogError("[global_chat] blacklist 数据库保活失败: %s", error);
-		ScheduleBlacklistReconnect();
-	}
 }
 
 void RefreshBlacklistCache()
@@ -712,6 +639,9 @@ public void SQL_OnRefreshBlacklistCache(Database database, DBResultSet results, 
 {
 	g_bBlacklistRefreshInFlight = false;
 
+	if (!IsActiveBlacklistDatabase(database))
+		return;
+
 	if (results == null)
 	{
 		LogError("[global_chat] 刷新 blacklist 缓存失败: %s", error);
@@ -747,7 +677,7 @@ void ConnectDatabase()
 	g_cvDatabaseConfig.GetString(configName, sizeof(configName));
 
 	g_bConnecting = true;
-	Database.Connect(SQL_OnConnect, configName);
+	Database.Connect(SQL_OnConnect, configName, g_iDatabaseGeneration);
 }
 
 void ScheduleReconnect()
@@ -756,16 +686,12 @@ void ScheduleReconnect()
 	g_bConnecting = false;
 	g_bPollInFlight = false;
 	StopPollTimer();
-	StopKeepAliveTimer();
+	LogError("[global_chat] 数据库暂不可用，跳过自动重连。");
+}
 
-	if (g_hDatabase != null)
-	{
-		delete g_hDatabase;
-		g_hDatabase = null;
-	}
-
-	StopReconnectTimer();
-	g_hReconnectTimer = CreateTimer(GLOBAL_CHAT_RECONNECT_DELAY, Timer_ReconnectDatabase);
+bool IsActiveMainDatabase(Database database)
+{
+	return database != null && g_hDatabase != null && database == g_hDatabase;
 }
 
 void StartPollTimer()
@@ -781,39 +707,6 @@ void StopPollTimer()
 
 	if (timer != null)
 		delete timer;
-}
-
-void StopReconnectTimer()
-{
-	Handle timer = g_hReconnectTimer;
-	g_hReconnectTimer = null;
-
-	if (timer != null)
-		delete timer;
-}
-
-void StartKeepAliveTimer()
-{
-	if (g_hKeepAliveTimer != null)
-		return;
-
-	g_hKeepAliveTimer = CreateTimer(GLOBAL_CHAT_KEEPALIVE_INTERVAL, Timer_KeepAlive, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
-}
-
-void StopKeepAliveTimer()
-{
-	Handle timer = g_hKeepAliveTimer;
-	g_hKeepAliveTimer = null;
-
-	if (timer != null)
-		delete timer;
-}
-
-public Action Timer_ReconnectDatabase(Handle timer, any data)
-{
-	g_hReconnectTimer = null;
-	ConnectDatabase();
-	return Plugin_Stop;
 }
 
 public Action Timer_PollMessages(Handle timer, any data)
@@ -834,27 +727,16 @@ public Action Timer_PollMessages(Handle timer, any data)
 	return Plugin_Continue;
 }
 
-public Action Timer_KeepAlive(Handle timer, any data)
-{
-	if (!g_bReady || g_hDatabase == null)
-		return Plugin_Continue;
-
-	g_hDatabase.Query(SQL_OnKeepAlive, "SELECT 1");
-	return Plugin_Continue;
-}
-
-public void SQL_OnKeepAlive(Database database, DBResultSet results, const char[] error, any data)
-{
-	if (results == null)
-	{
-		LogError("[global_chat] 数据库保活失败: %s", error);
-		ScheduleReconnect();
-	}
-}
-
 public void SQL_OnConnect(Database database, const char[] error, any data)
 {
 	g_bConnecting = false;
+
+	if (data != g_iDatabaseGeneration)
+	{
+		if (database != null)
+			delete database;
+		return;
+	}
 
 	if (database == null)
 	{
@@ -865,7 +747,7 @@ public void SQL_OnConnect(Database database, const char[] error, any data)
 
 	g_hDatabase = database;
 	g_hDatabase.SetCharset("utf8mb4");
-	g_hDatabase.Query(SQL_OnCreateTable, "\
+	database.Query(SQL_OnCreateTable, "\
 		CREATE TABLE IF NOT EXISTS `anne_global_chat` ( \
 			`id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, \
 			`created_at` DATETIME NOT NULL, \
@@ -881,6 +763,9 @@ public void SQL_OnConnect(Database database, const char[] error, any data)
 
 public void SQL_OnCreateTable(Database database, DBResultSet results, const char[] error, any data)
 {
+	if (!IsActiveMainDatabase(database))
+		return;
+
 	if (results == null)
 	{
 		LogError("[global_chat] 初始化消息表失败: %s", error);
@@ -888,7 +773,7 @@ public void SQL_OnCreateTable(Database database, DBResultSet results, const char
 		return;
 	}
 
-	g_hDatabase.Query(SQL_OnCreateTitlesTable, "\
+	database.Query(SQL_OnCreateTitlesTable, "\
 		CREATE TABLE IF NOT EXISTS `anne_global_chat_titles` ( \
 			`steamid` VARCHAR(32) NOT NULL COLLATE 'utf8mb4_general_ci', \
 			`title` VARCHAR(64) NOT NULL COLLATE 'utf8mb4_general_ci', \
@@ -898,6 +783,9 @@ public void SQL_OnCreateTable(Database database, DBResultSet results, const char
 
 public void SQL_OnCreateTitlesTable(Database database, DBResultSet results, const char[] error, any data)
 {
+	if (!IsActiveMainDatabase(database))
+		return;
+
 	if (results == null)
 	{
 		LogError("[global_chat] 初始化头衔表失败: %s", error);
@@ -905,7 +793,7 @@ public void SQL_OnCreateTitlesTable(Database database, DBResultSet results, cons
 		return;
 	}
 
-	g_hDatabase.Query(SQL_OnCreateUsageTable, "\
+	database.Query(SQL_OnCreateUsageTable, "\
 		CREATE TABLE IF NOT EXISTS `anne_global_chat_usage` ( \
 			`steamid` VARCHAR(32) NOT NULL COLLATE 'utf8mb4_general_ci', \
 			`usage_date` DATE NOT NULL, \
@@ -918,6 +806,9 @@ public void SQL_OnCreateTitlesTable(Database database, DBResultSet results, cons
 
 public void SQL_OnCreateUsageTable(Database database, DBResultSet results, const char[] error, any data)
 {
+	if (!IsActiveMainDatabase(database))
+		return;
+
 	if (results == null)
 	{
 		LogError("[global_chat] 初始化使用次数表失败: %s", error);
@@ -925,7 +816,7 @@ public void SQL_OnCreateUsageTable(Database database, DBResultSet results, const
 		return;
 	}
 
-	g_hDatabase.Query(SQL_OnCreateLFGUsageTable, "\
+	database.Query(SQL_OnCreateLFGUsageTable, "\
 		CREATE TABLE IF NOT EXISTS `anne_lfg_chat_usage` ( \
 			`steamid` VARCHAR(32) NOT NULL COLLATE 'utf8mb4_general_ci', \
 			`usage_date` DATE NOT NULL, \
@@ -938,6 +829,9 @@ public void SQL_OnCreateUsageTable(Database database, DBResultSet results, const
 
 public void SQL_OnCreateLFGUsageTable(Database database, DBResultSet results, const char[] error, any data)
 {
+	if (!IsActiveMainDatabase(database))
+		return;
+
 	if (results == null)
 	{
 		LogError("[global_chat] 初始化找队友使用次数表失败: %s", error);
@@ -945,7 +839,7 @@ public void SQL_OnCreateLFGUsageTable(Database database, DBResultSet results, co
 		return;
 	}
 
-	g_hDatabase.Query(SQL_OnLoadLastId, "SELECT COALESCE(MAX(id), 0) FROM anne_global_chat");
+	database.Query(SQL_OnLoadLastId, "SELECT COALESCE(MAX(id), 0) FROM anne_global_chat");
 }
 
 void RunCleanupIfNeeded()
@@ -973,6 +867,9 @@ void RunCleanupIfNeeded()
 
 public void SQL_OnCleanup(Database database, DBResultSet results, const char[] error, any data)
 {
+	if (!IsActiveMainDatabase(database))
+		return;
+
 	if (results == null)
 	{
 		LogError("[global_chat] 清理旧消息失败: %s", error);
@@ -984,6 +881,9 @@ public void SQL_OnCleanup(Database database, DBResultSet results, const char[] e
 
 public void SQL_OnLoadLastId(Database database, DBResultSet results, const char[] error, any data)
 {
+	if (!IsActiveMainDatabase(database))
+		return;
+
 	if (results == null)
 	{
 		LogError("[global_chat] 读取最新消息 ID 失败: %s", error);
@@ -995,7 +895,6 @@ public void SQL_OnLoadLastId(Database database, DBResultSet results, const char[
 		g_iLastMessageId = results.FetchInt(0);
 
 	g_bReady = true;
-	StartKeepAliveTimer();
 	StartPollTimer();
 }
 
@@ -1059,6 +958,12 @@ int GetLFGDailyLimit(int client)
 
 void ReserveDailyUsage(int client, const char[] usageSteamId, const char[] messageSteamId, const char[] clientName, const char[] message, int limit)
 {
+	if (!g_bReady || g_hDatabase == null)
+	{
+		ReplyToCommand(client, "[全服] 数据库尚未连接，请稍后再试。");
+		return;
+	}
+
 	if (limit <= 0)
 	{
 		ReplyToCommand(client, "[全服] 你当前没有全服聊天次数。");
@@ -1104,6 +1009,9 @@ public void SQL_OnReserveDailyUsage(Database database, DBResultSet results, cons
 	pack.ReadString(message, sizeof(message));
 	delete pack;
 
+	if (!IsActiveMainDatabase(database))
+		return;
+
 	if (results == null)
 	{
 		int client = GetClientOfUserId(userid);
@@ -1129,6 +1037,12 @@ public void SQL_OnReserveDailyUsage(Database database, DBResultSet results, cons
 
 void ReserveDailyLFGUsage(int client, const char[] usageSteamId, const char[] messageSteamId, const char[] clientName, const char[] message, int limit)
 {
+	if (!g_bReady || g_hDatabase == null)
+	{
+		ReplyToCommand(client, "[全服] 数据库尚未连接，请稍后再试。");
+		return;
+	}
+
 	if (limit <= 0)
 	{
 		ReplyToCommand(client, "[全服] 你当前没有找队友次数。");
@@ -1174,6 +1088,9 @@ public void SQL_OnReserveDailyLFGUsage(Database database, DBResultSet results, c
 	pack.ReadString(message, sizeof(message));
 	delete pack;
 
+	if (!IsActiveMainDatabase(database))
+		return;
+
 	if (results == null)
 	{
 		int client = GetClientOfUserId(userid);
@@ -1203,6 +1120,9 @@ public void SQL_OnReserveDailyLFGUsage(Database database, DBResultSet results, c
 
 void InsertGlobalMessage(const char[] steamId, const char[] clientName, const char[] message)
 {
+	if (!g_bReady || g_hDatabase == null)
+		return;
+
 	char hostname[128];
 	char safeHostname[256];
 	char safeSteamId[64];
@@ -1224,6 +1144,9 @@ void InsertGlobalMessage(const char[] steamId, const char[] clientName, const ch
 
 public void SQL_OnInsertMessage(Database database, DBResultSet results, const char[] error, any data)
 {
+	if (!IsActiveMainDatabase(database))
+		return;
+
 	if (results == null)
 	{
 		LogError("[global_chat] 写入全服消息失败: %s", error);
@@ -1269,6 +1192,9 @@ void GetShortServerName(const char[] server, char[] shortName, int maxLen)
 public void SQL_OnPollMessages(Database database, DBResultSet results, const char[] error, any data)
 {
 	g_bPollInFlight = false;
+
+	if (!IsActiveMainDatabase(database))
+		return;
 
 	if (results == null)
 	{
@@ -1388,6 +1314,9 @@ public void SQL_OnCheckLoginTitle(Database database, DBResultSet results, const 
 	char steamId64[32];
 	pack.ReadString(steamId64, sizeof(steamId64));
 	delete pack;
+
+	if (!IsActiveMainDatabase(database))
+		return;
 
 	if (results == null)
 	{

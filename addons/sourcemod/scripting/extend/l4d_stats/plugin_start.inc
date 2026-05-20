@@ -451,8 +451,7 @@ public OnPluginStart()
 
 public OnMapEnd()
 {
-	// 连接和 KeepAlive 都保持跨地图运行，不停不断。
-	// OnConfigsExecuted 的 ConnectDB 会检测并处理连接状态。
+	// 数据库连接保持跨地图运行。
 }
 
 public OnConfigsExecuted()

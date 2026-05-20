@@ -128,11 +128,6 @@ bool   g_UseMySQL = false;
 // 异步连接状态
 bool  g_DbConnecting = false;
 bool  g_DbReady      = false;
-float g_DbRetryAfter = 0.0;
-Handle g_hDbReconnectTimer = INVALID_HANDLE;
-#define DB_RETRY_COOLDOWN 10.0
-#define DB_KEEPALIVE_INTERVAL 60.0
-Handle g_hDbKeepAliveTimer = INVALID_HANDLE;
 
 Cookie g_ck = null;
 
@@ -350,7 +345,6 @@ static void DB_BeginConnect()
 {
     if (g_DbConnecting) return;
     if (g_DB != INVALID_HANDLE) return;
-    if (GetGameTime() < g_DbRetryAfter) return;
 
     if (!SQL_CheckConfig(DB_CONF_NAME))
     {
@@ -366,7 +360,7 @@ static void DB_BeginConnect()
     g_DbReady = false;
 
     char error[256];
-    Handle hndl = SQL_Connect(DB_CONF_NAME, false, error, sizeof(error));
+    Handle hndl = SQL_Connect(DB_CONF_NAME, true, error, sizeof(error));
     SQLCB_OnConnect(INVALID_HANDLE, hndl, error, 0);
 } 
 
@@ -375,49 +369,6 @@ static bool DB_EnsureReady()
     if (g_DbReady && g_DB != INVALID_HANDLE) return true;
     DB_BeginConnect();
     return (g_DbReady && g_DB != INVALID_HANDLE);
-}
-
-static void DB_StartKeepAlive()
-{
-    if (g_hDbKeepAliveTimer != INVALID_HANDLE)
-        return;
-
-    g_hDbKeepAliveTimer = CreateTimer(DB_KEEPALIVE_INTERVAL, Timer_DmgShowDBKeepAlive, 0, TIMER_REPEAT);
-}
-
-static void DB_StopKeepAlive()
-{
-    if (g_hDbKeepAliveTimer == INVALID_HANDLE)
-        return;
-
-    KillTimer(g_hDbKeepAliveTimer);
-    g_hDbKeepAliveTimer = INVALID_HANDLE;
-}
-
-public Action Timer_DmgShowDBKeepAlive(Handle timer, any data)
-{
-    if (g_hDbKeepAliveTimer != timer)
-        return Plugin_Stop;
-
-    if (!g_UseMySQL)
-        return Plugin_Continue;
-
-    if (!g_DbReady || g_DB == INVALID_HANDLE)
-    {
-        DB_BeginConnect();
-        return Plugin_Continue;
-    }
-
-    SQL_TQuery(g_DB, SQLCB_KeepAlive, "SELECT 1", 0, DBPrio_Low);
-    return Plugin_Continue;
-}
-
-public void SQLCB_KeepAlive(Handle owner, Handle hndl, const char[] error, any data)
-{
-    if (error[0] != '\0')
-    {
-        DB_MarkConnectionLost(error);
-    }
 }
 
 static bool DB_IsConnectionLostError(const char[] error)
@@ -431,30 +382,7 @@ static void DB_MarkConnectionLost(const char[] error)
     if (!DB_IsConnectionLostError(error))
         return;
 
-    bool alreadyScheduled = (!g_DbReady && g_DB == INVALID_HANDLE && g_hDbReconnectTimer != INVALID_HANDLE);
-    if (!alreadyScheduled)
-        LogErr("[DB] 检测到数据库连接丢失，%.0f 秒后自动重连...", DB_RETRY_COOLDOWN);
-
-    if (g_DB != INVALID_HANDLE)
-    {
-        CloseHandle(g_DB);
-        g_DB = INVALID_HANDLE;
-    }
-
-    g_DbReady = false;
-    g_DbConnecting = false;
-    g_DbRetryAfter = GetGameTime() + DB_RETRY_COOLDOWN;
-
-    if (g_hDbReconnectTimer == INVALID_HANDLE)
-        g_hDbReconnectTimer = CreateTimer(DB_RETRY_COOLDOWN, Timer_DmgShowDBReconnect);
-}
-
-public Action Timer_DmgShowDBReconnect(Handle timer, any data)
-{
-    g_hDbReconnectTimer = INVALID_HANDLE;
-    g_DbRetryAfter = 0.0; // 清除冷却，允许立即连接
-    DB_BeginConnect();
-    return Plugin_Stop;
+    LogErr("[DB] database connection error: %s", error);
 }
 
 public void SQLCB_OnConnect(Handle owner, Handle hndl, const char[] error, any data)
@@ -470,11 +398,6 @@ public void SQLCB_OnConnect(Handle owner, Handle hndl, const char[] error, any d
         g_DB = INVALID_HANDLE;
         g_DbReady = false;
         g_DbConnecting = false;
-        g_DbRetryAfter = GetGameTime() + DB_RETRY_COOLDOWN;
-
-        // 主动安排重连
-        if (g_hDbReconnectTimer == INVALID_HANDLE)
-            g_hDbReconnectTimer = CreateTimer(DB_RETRY_COOLDOWN, Timer_DmgShowDBReconnect);
         return;
     }
 
@@ -863,8 +786,7 @@ public void OnPluginStart()
     // Cookie
     g_ck = new Cookie(COOKIE_NAME, "damage hud per-client", CookieAccess_Protected);
 
-    // DB（持久连接 + 定时保活）
-    DB_StartKeepAlive();
+    // DB（持久连接，不做定时保活）
     DB_BeginConnect();
 
     // 命令
@@ -894,14 +816,6 @@ public void OnPluginStart()
 
 public void OnPluginEnd()
 {
-    DB_StopKeepAlive();
-
-    if (g_hDbReconnectTimer != INVALID_HANDLE)
-    {
-        KillTimer(g_hDbReconnectTimer);
-        g_hDbReconnectTimer = INVALID_HANDLE;
-    }
-
     if (g_DB != INVALID_HANDLE)
     {
         CloseHandle(g_DB);
@@ -996,7 +910,7 @@ public Action Timer_DBEnsureLoad(Handle timer, any userid)
 
 public void OnMapEnd()
 {
-    // 连接和 KeepAlive 都保持跨地图运行，不停不断。
+    // 数据库连接保持跨地图运行。
     g_DbConnecting = false;
 }
 
@@ -1081,8 +995,8 @@ public Action Cmd_DmgCookie(int client, int args)
 public Action Cmd_DmgDBStat(int client, int args)
 {
     PrintToConsole(client, "[DMGSHOW] ---- DB Status ----");
-    PrintToConsole(client, "[DMGSHOW] Ready=%d Connecting=%d Handle=%p RetryAfter=%.2f Now=%.2f",
-        g_DbReady ? 1:0, g_DbConnecting ? 1:0, g_DB, g_DbRetryAfter, GetGameTime());
+    PrintToConsole(client, "[DMGSHOW] Ready=%d Connecting=%d Handle=%p Now=%.2f",
+        g_DbReady ? 1:0, g_DbConnecting ? 1:0, g_DB, GetGameTime());
 
     if (!g_DbReady || g_DB == INVALID_HANDLE)
         return Plugin_Handled;

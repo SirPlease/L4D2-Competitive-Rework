@@ -87,20 +87,10 @@ bool g_PrefsLoaded[MAXPLAYERS + 1] = { false, ... };
 bool g_PrefsDirty [MAXPLAYERS + 1] = { false, ... };
 
 Handle g_hDB = INVALID_HANDLE;
-Handle g_taskDBRetry = INVALID_HANDLE;
-Handle g_taskDBKeepAlive = INVALID_HANDLE;
-Handle g_taskLoadRetry[MAXPLAYERS + 1] = { INVALID_HANDLE, ... };
-int    g_LoadRetryCount[MAXPLAYERS + 1] = { 0, ... };
-int    g_DBRetryCount = 0;
 bool   g_DBConnecting = false;
 
 Handle g_taskClean[MAXPLAYERS + 1] = { INVALID_HANDLE, ... };
 bool   g_IsVictimDeadPlayer[MAXPLAYERS + 1] = { false, ... };
-
-#define DB_LOAD_RETRY_DELAY 0.5
-#define DB_LOAD_RETRY_MAX   20
-#define DB_CONNECT_RETRY_DELAY 10.0
-#define DB_KEEPALIVE_INTERVAL 45.0
 
 // Fallback KV
 Handle g_SoundStore = INVALID_HANDLE;
@@ -310,7 +300,7 @@ public void OnPluginStart()
 
 public void OnMapEnd()
 {
-    // 连接和 KeepAlive 都保持跨地图运行，不停不断。
+    // 数据库连接保持跨地图运行。
     g_DBConnecting = false;
 }
 
@@ -327,14 +317,6 @@ public void OnConfigsExecuted()
 
 public void OnPluginEnd()
 {
-    DB_StopKeepAlive();
-
-    if (g_taskDBRetry != INVALID_HANDLE)
-    {
-        KillTimer(g_taskDBRetry);
-        g_taskDBRetry = INVALID_HANDLE;
-    }
-
     if (g_hDB != INVALID_HANDLE)
     {
         CloseHandle(g_hDB);
@@ -486,52 +468,31 @@ static void StartDBConnect()
     if (!SQL_CheckConfig(confName))
     {
         LogError("[hitsound] databases.cfg 缺少 '%s' 配置。", confName);
-        ScheduleDBConnectRetry();
         return;
     }
 
     g_DBConnecting = true;
 
     char error[256];
-    g_hDB = SQL_Connect(confName, false, error, sizeof(error));
+    g_hDB = SQL_Connect(confName, true, error, sizeof(error));
     g_DBConnecting = false;
 
     if (g_hDB == INVALID_HANDLE)
     {
         LogError("[hitsound] 数据库连接失败: %s", error);
-        ScheduleDBConnectRetry();
         return;
     }
 
-    g_DBRetryCount = 0;
     if (!SQL_SetCharset(g_hDB, "utf8mb4"))
         LogError("[hitsound] 设置数据库字符集 utf8mb4 失败。");
     SQL_FastQuery(g_hDB, "SET NAMES 'utf8mb4'");
 
     LogMessage("[hitsound] 数据库连接成功。");
 
-    DB_StartKeepAlive();
     DB_EnsureExtraColumns();
 
     // 插件重载/晚加载时，在线玩家不会触发 OnClientPutInServer，这里主动补一次
     ReloadAllPlayersPrefs();
-}
-
-static void ScheduleDBConnectRetry()
-{
-    if (!GetConVarBool(cv_db_enable)) return;
-    if (g_hDB != INVALID_HANDLE) return;
-    if (g_taskDBRetry != INVALID_HANDLE) return;
-
-    g_DBRetryCount++;
-    g_taskDBRetry = CreateTimer(DB_CONNECT_RETRY_DELAY, Timer_RetryDBConnect);
-}
-
-public Action Timer_RetryDBConnect(Handle timer, any data)
-{
-    g_taskDBRetry = INVALID_HANDLE;
-    StartDBConnect();
-    return Plugin_Stop;
 }
 
 bool DB_IsConnectionLostError(const char[] error)
@@ -545,51 +506,7 @@ void DB_MarkConnectionLost(const char[] error)
     if (!DB_IsConnectionLostError(error))
         return;
 
-    DB_StopKeepAlive();
-
-    if (g_hDB != INVALID_HANDLE)
-    {
-        CloseHandle(g_hDB);
-        g_hDB = INVALID_HANDLE;
-    }
-
-    ScheduleDBConnectRetry();
-}
-
-/* -------------------- KeepAlive -------------------- */
-static void DB_StartKeepAlive()
-{
-    if (g_taskDBKeepAlive != INVALID_HANDLE)
-        return;
-    g_taskDBKeepAlive = CreateTimer(DB_KEEPALIVE_INTERVAL, Timer_HitsoundKeepAlive, _, TIMER_REPEAT);
-}
-
-static void DB_StopKeepAlive()
-{
-    if (g_taskDBKeepAlive == INVALID_HANDLE)
-        return;
-    KillTimer(g_taskDBKeepAlive);
-    g_taskDBKeepAlive = INVALID_HANDLE;
-}
-
-public Action Timer_HitsoundKeepAlive(Handle timer, any data)
-{
-    if (g_hDB == INVALID_HANDLE)
-    {
-        g_taskDBKeepAlive = INVALID_HANDLE;
-        return Plugin_Stop;
-    }
-    SQL_TQuery(g_hDB, SQLCB_HitsoundKeepAlive, "SELECT 1", _, DBPrio_Low);
-    return Plugin_Continue;
-}
-
-public void SQLCB_HitsoundKeepAlive(Handle owner, Handle hndl, const char[] error, any data)
-{
-    if (hndl == INVALID_HANDLE && error[0] != '\0')
-    {
-        LogError("[hitsound] KeepAlive failed: %s", error);
-        DB_MarkConnectionLost(error);
-    }
+    LogError("[hitsound] database connection error: %s", error);
 }
 
 // ========================================================
@@ -657,15 +574,15 @@ public void OnClientPutInServer(int client)
 
     g_PrefsLoaded[client] = false;
     g_PrefsDirty [client] = false;
-    g_LoadRetryCount[client] = 0;
-
     if (GetConVarBool(cv_db_enable) && g_hDB != INVALID_HANDLE)
     {
         TryLoadPlayerPrefs(client);
     }
     else
     {
-        ScheduleLoadRetry(client);
+        KV_LoadPlayer(client);
+        g_PrefsLoaded[client] = true;
+        g_PrefsDirty [client] = false;
     }
 }
 
@@ -703,52 +620,8 @@ public void OnClientDisconnect(int client)
         KillTimer(g_taskClean[client]);
         g_taskClean[client] = INVALID_HANDLE;
     }
-    if (g_taskLoadRetry[client] != INVALID_HANDLE)
-    {
-        KillTimer(g_taskLoadRetry[client]);
-        g_taskLoadRetry[client] = INVALID_HANDLE;
-    }
-
     g_PrefsLoaded[client] = false;
     g_PrefsDirty [client] = false;
-    g_LoadRetryCount[client] = 0;
-}
-
-static void ScheduleLoadRetry(int client)
-{
-    if (client <= 0 || client > MaxClients) return;
-    if (!IsClientInGame(client) || IsFakeClient(client)) return;
-    if (g_PrefsLoaded[client]) return;
-    if (!GetConVarBool(cv_db_enable))
-    {
-        KV_LoadPlayer(client);
-        g_PrefsLoaded[client] = true;
-        g_PrefsDirty [client] = false;
-        return;
-    }
-    if (g_LoadRetryCount[client] >= DB_LOAD_RETRY_MAX)
-    {
-        LogError("[hitsound] 玩家 %N 的数据库配置加载重试超时，临时使用 KV/default。", client);
-        KV_LoadPlayer(client);
-        g_PrefsLoaded[client] = true;
-        g_PrefsDirty [client] = false;
-        return;
-    }
-    if (g_taskLoadRetry[client] != INVALID_HANDLE) return;
-
-    g_LoadRetryCount[client]++;
-    g_taskLoadRetry[client] = CreateTimer(DB_LOAD_RETRY_DELAY, Timer_RetryLoadPrefs, GetClientUserId(client));
-}
-
-public Action Timer_RetryLoadPrefs(Handle timer, any userid)
-{
-    int client = GetClientOfUserId(userid);
-    if (client <= 0 || !IsClientInGame(client))
-        return Plugin_Stop;
-
-    g_taskLoadRetry[client] = INVALID_HANDLE;
-    TryLoadPlayerPrefs(client);
-    return Plugin_Stop;
 }
 
 static void TryLoadPlayerPrefs(int client)
@@ -768,14 +641,18 @@ static void TryLoadPlayerPrefs(int client)
     if (g_hDB == INVALID_HANDLE)
     {
         StartDBConnect();
-        ScheduleLoadRetry(client);
+        KV_LoadPlayer(client);
+        g_PrefsLoaded[client] = true;
+        g_PrefsDirty [client] = false;
         return;
     }
 
     char sid[64];
     if (!GetClientAuthId(client, AuthId_Steam2, sid, sizeof(sid), true) || sid[0] == '\0')
     {
-        ScheduleLoadRetry(client);
+        KV_LoadPlayer(client);
+        g_PrefsLoaded[client] = true;
+        g_PrefsDirty [client] = false;
         return;
     }
 
@@ -819,7 +696,9 @@ public void ReloadAllPlayersPrefs()
         }
         else
         {
-            ScheduleLoadRetry(i);
+            KV_LoadPlayer(i);
+            g_PrefsLoaded[i] = true;
+            g_PrefsDirty [i] = false;
         }
     }
 }
@@ -835,7 +714,9 @@ public void SQL_OnLoadPrefs(Handle owner, Handle hndl, const char[] error, any u
             DB_MarkConnectionLost(error);
         else
             LogError("[hitsound] 加载玩家配置失败: %s", error);
-        ScheduleLoadRetry(client);
+        KV_LoadPlayer(client);
+        g_PrefsLoaded[client] = true;
+        g_PrefsDirty [client] = false;
         return;
     }
 
@@ -872,14 +753,12 @@ public void SQL_OnLoadPrefs(Handle owner, Handle hndl, const char[] error, any u
 
         g_PrefsLoaded[client] = true;
         g_PrefsDirty [client] = false;
-        g_LoadRetryCount[client] = 0;
     }
     else
     {
         // 无行：不立即 insert，等玩家改动时再写库
         g_PrefsLoaded[client] = true;
         g_PrefsDirty [client] = false;
-        g_LoadRetryCount[client] = 0;
     }
 }
 
