@@ -74,7 +74,7 @@ void CancelPossibleTankThrow(int client)
 
 bool IsTank(int client)
 {
-	if (client <= 0 || client > MaxClients || IsClientInGame(client))
+	if (client <= 0 || client > MaxClients || !IsClientInGame(client))
 		return false;
 
 	if (GetClientTeam(client) != L4D_TEAM_INFECTED)
