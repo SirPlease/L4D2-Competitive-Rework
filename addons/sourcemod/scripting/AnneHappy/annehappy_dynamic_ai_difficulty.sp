@@ -26,6 +26,7 @@ ConVar g_cvThresholdDbConfig;
 ConVar g_cvThresholdTable;
 ConVar g_cvThresholdMaxAge;
 ConVar g_cvEnforceInterval;
+ConVar g_cvTankBhopOverride;
 ConVar g_cvSurvivorMaxIncaps;
 ConVar g_cvAnnounce;
 ConVar g_cvDebug;
@@ -87,7 +88,8 @@ public void OnPluginStart()
     g_cvThresholdDbConfig = CreateConVar("ah_ai_dynamic_threshold_db_config", DEFAULT_THRESHOLD_DB_CONFIG, "每日 PPM 阈值数据库配置名，对应 databases.cfg", FCVAR_NOTIFY);
     g_cvThresholdTable = CreateConVar("ah_ai_dynamic_threshold_table", DEFAULT_THRESHOLD_TABLE, "每日 PPM 阈值表名，只允许字母数字下划线", FCVAR_NOTIFY);
     g_cvThresholdMaxAge = CreateConVar("ah_ai_dynamic_threshold_max_age", "172800", "数据库阈值最大有效秒数；0=不检查过期，默认2天", FCVAR_NOTIFY, true, 0.0);
-    g_cvEnforceInterval = CreateConVar("ah_ai_dynamic_enforce_interval", "10.0", "难度锁定后每隔多少秒重刷当前档位 cvar，防止旧投票或手动 sm_cvar 覆盖；0=关闭", FCVAR_NOTIFY, true, 0.0, true, 60.0);
+    g_cvEnforceInterval = CreateConVar("ah_ai_dynamic_enforce_interval", "0.0", "难度锁定后每隔多少秒重刷当前档位 cvar；0=关闭，避免覆盖投票或手动 sm_cvar", FCVAR_NOTIFY, true, 0.0, true, 60.0);
+    g_cvTankBhopOverride = CreateConVar("ah_ai_dynamic_tank_bhop_override", "-1", "Tank 连跳覆盖：-1=跟随档位配置，0=强制关闭，1=强制开启", FCVAR_NOTIFY, true, -1.0, true, 1.0);
     g_cvSurvivorMaxIncaps = CreateConVar("ah_ai_dynamic_survivor_max_incaps", "2", "动态难度应用时强制恢复的生还者最大倒地次数；-1=不处理", FCVAR_NOTIFY, true, -1.0, true, 10.0);
     g_cvAnnounce = CreateConVar("ah_ai_dynamic_announce", "1", "调档时是否在聊天框提示", FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_cvDebug = CreateConVar("ah_ai_dynamic_debug", "0", "是否输出动态难度调试日志", FCVAR_NOTIFY, true, 0.0, true, 1.0);
@@ -1029,6 +1031,25 @@ bool ApplyConfigCvar(const char[] name, const char[] value)
     return true;
 }
 
+bool ApplyTankBhopOverride()
+{
+    int overrideValue = g_cvTankBhopOverride.IntValue;
+    if (overrideValue < 0)
+        return false;
+
+    ConVar cvar = FindConVar("ai_tank_bhop");
+    if (cvar == null)
+    {
+        if (g_cvDebug.BoolValue)
+            LogMessage("[AnneHappyAI] tank bhop override cvar not found: ai_tank_bhop");
+
+        return false;
+    }
+
+    cvar.SetInt(overrideValue, true, false);
+    return true;
+}
+
 void EnforceSurvivorLifeCvars()
 {
     int maxIncaps = g_cvSurvivorMaxIncaps.IntValue;
@@ -1085,6 +1106,9 @@ int ApplyProfileCvars(int level)
     }
 
     delete kv;
+    if (ApplyTankBhopOverride())
+        applied++;
+
     EnforceSurvivorLifeCvars();
 
     if (applied <= 0)

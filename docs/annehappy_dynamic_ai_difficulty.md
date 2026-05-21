@@ -18,7 +18,7 @@ PPM 从 `l4d_stats` 获取。当前默认对每个真人生还者使用总积分
 - 每回合 `round_start` 后先应用简单难度作为保底，然后立即尝试自动定档。
 - 如果 `l4d_stats` 数据还没加载完成，会在安全门内按间隔重试。
 - 一旦定档成功，本回合锁定该难度，出门后不会再动态变化。
-- 锁定后插件会按 `ah_ai_dynamic_enforce_interval` 重刷当前档位 cvar；这不会改变本回合难度，只用于防止其他投票或手动 cvar 把属性改成别的档。
+- 锁定后默认不再定时重刷 cvar，避免覆盖投票或手动 `sm_cvar`；如需防覆盖，可手动把 `ah_ai_dynamic_enforce_interval` 设为大于 `0`。
 - `player_left_start_area` 只负责锁定兜底状态：如果出门前仍未读到统计数据，本回合保持简单难度。
 
 默认分档：
@@ -51,7 +51,8 @@ PPM 从 `l4d_stats` 获取。当前默认对每个真人生还者使用总积分
 | `ah_ai_dynamic_threshold_max_age` | `172800` | 数据库阈值最大有效秒数；默认 2 天，过期回退固定 cfg |
 | `ah_ai_dynamic_fixed_level` | `0` | `0=自动`，`1-5=固定简单/普通/困难/专家/极限` |
 | `ah_ai_dynamic_config` | `configs/AnneHappy/dynamic_ai_difficulty.cfg` | 每档难度的特感/Tank cvar 配置文件，相对 `addons/sourcemod` |
-| `ah_ai_dynamic_enforce_interval` | `10.0` | 难度锁定后定期重刷当前档位 cvar，防止旧投票或手动 `sm_cvar` 覆盖；`0=关闭` |
+| `ah_ai_dynamic_enforce_interval` | `0.0` | 难度锁定后定期重刷当前档位 cvar；默认关闭，避免覆盖投票或手动 `sm_cvar` |
+| `ah_ai_dynamic_tank_bhop_override` | `-1` | Tank 连跳覆盖：`-1=跟随档位配置`，`0=强制关闭`，`1=强制开启`；Alone 使用 `0` |
 | `ah_ai_dynamic_use_quarter_stats` | `0` | 是否启用季度 PPM 优先；当前季度数据失真，默认关闭 |
 | `ah_ai_dynamic_quarter_min_minutes` | `300` | 启用季度 PPM 时，玩家季度样本低于该分钟数则回退总积分 PPM |
 | `ah_ai_dynamic_announce` | `1` | 调档时聊天提示 |
@@ -148,7 +149,7 @@ ON DUPLICATE KEY UPDATE
 
 从简单到极限逐步增强，但非极限档尽量保持同一套基础行为，不再用大量开关差异制造难度。
 
-- Tank：所有档都保留 AITank3 连跳和无视野连跳；无视野连跳角度按各模式 `shared_settings.cfg` 的普通强度基准恢复为 `57.0`，不参与动态难度分档。主要区分停跳距离、连跳加速度、最大速度、空中修正角度和攀爬倍速。`ai_TankSneakTime` 和旧的 `ai_TankAirAngleRestrict` 不属于当前 `ai_tank3.smx`，已经从配置移除。
+- Tank：默认所有档都保留 AITank3 连跳和无视野连跳；Alone 通过 `ah_ai_dynamic_tank_bhop_override 0` 强制关闭 Tank 连跳。无视野连跳角度按各模式 `shared_settings.cfg` 的普通强度基准恢复为 `57.0`，不参与动态难度分档。主要区分停跳距离、连跳加速度、最大速度、空中修正角度和攀爬倍速。`ai_TankSneakTime` 和旧的 `ai_TankAirAngleRestrict` 不属于当前 `ai_tank3.smx`，已经从配置移除。
 - Boomer：所有档都开启连跳和转视角，主要区分连跳速度与转视角帧数；专家保持 15 帧，极限为 10 帧。
 - Charger：所有档都开启连跳，主要区分 `ai_ChagrerBhopSpeed`。
 - Spitter：所有档都开启连跳，主要区分 `ai_SpitterBhopSpeed`。
