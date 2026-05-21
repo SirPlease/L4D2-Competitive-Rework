@@ -18,7 +18,7 @@
 
 
 
-#define PLUGIN_VERSION		"1.160"
+#define PLUGIN_VERSION		"1.166"
 
 /*=======================================================================================
 	Plugin Info:
@@ -361,7 +361,211 @@ Action sm_l4dd(int client, int args)
 	*/
 
 
-	// /* Entity address test:
+
+
+
+	/*
+	PrintToChatAll("L4D_IsInIntro %d", L4D_IsInIntro());
+
+	if( g_bLeft4Dead2 )
+	{
+		int entity;
+
+		char sMap[20];
+		GetCurrentMap(sMap, sizeof(sMap));
+
+		if( strcmp(sMap, "c3m1_plankcountry") == 0 )
+		{
+			entity = L4D_FindByClassnameTargetname("logic_relay", "relay_intro_start");
+		}
+
+		PrintToServer("L4D_FindByClassnameTargetname \"logic_relay\" target: \"relay_intro_start\" == %d", entity);
+	}
+	// */
+
+
+
+
+
+	// Get TheNavAreas - check for blocked areas
+	/*
+	ArrayList aList = new ArrayList();
+	L4D_GetAllNavAreas(aList);
+
+	int size = aList.Length;
+	int total;
+	Address area;
+
+	// Check against all addresses:
+	for( int i = 0; i < size; i++ )
+	{
+		area = aList.Get(i);
+		if( L4D_NavArea_IsBlocked(area, -1, false) )
+		// if( L4D_NavArea_IsBlocked(area, 2, false) )
+		// if( L4D_NavArea_IsBlocked(area, 3, false) )
+		{
+			total++;
+			PrintToServer("NavArea %d blocked", area);
+		}
+	}
+
+	PrintToServer("Total %d of %d blocked", total, size);
+	// */
+
+
+
+
+
+	/*
+	float vecPos[3];
+	int survivor = GetRandomSurvivor(-1, -1);
+	GetClientEyePosition(survivor, vecPos);
+
+	int entity = L4D_FindEntityByClassnameNearest("prop_physics", vecPos, 2000.0);
+	if( entity != INVALID_ENT_REFERENCE )
+		L4D2_SetEntityGlow(entity, L4D2Glow_Constant, 1000, 1, {255, 0, 0}, true);
+	PrintToServer("L4D_FindEntityByClassnameNearest %d", entity);
+	// */
+
+
+
+
+
+	/*
+	float vecPos[3];
+	int survivor = GetRandomSurvivor(-1, -1);
+	GetClientEyePosition(survivor, vecPos);
+
+	int entity = INVALID_ENT_REFERENCE;
+	while( (entity = L4D_FindEntityByClassnameWithin(entity, "prop_physics", vecPos, 2000.0)) != INVALID_ENT_REFERENCE )
+	{
+		L4D2_SetEntityGlow(entity, L4D2Glow_Constant, 1000, 1, {255, 0, 0}, true);
+		PrintToServer("L4D_FindEntityByClassnameWithin %d", entity);
+	}
+	// */
+
+
+
+
+
+	/*
+	if( g_bLeft4Dead2 )
+	{
+		PrintToServer("POINTER_THENEXTBOTS = %d",		L4D_GetPointer(POINTER_THENEXTBOTS));
+
+		L4D2_StartAssault();
+
+		int target = GetRandomSurvivor(1, -1);
+		if( target )
+			L4D2_RushVictim(target, 5000.0);
+	}
+	// */
+
+
+
+
+
+	/*
+	if( g_bLeft4Dead2 )
+	{
+		// SurvivorCharacter_First = 0,		// Set-dependent: Nick (L4D2) or Bill (L4D1)
+		// SurvivorCharacter_Second,		// Set-dependent: Rochelle (L4D2) or Zoey (L4D1)
+		// SurvivorCharacter_Third,			// Set-dependent: Coach (L4D2) or Louis (L4D1)
+		// SurvivorCharacter_Fourth,		// Set-dependent: Ellis (L4D2) or Francis (L4D1)
+		// SurvivorCharacter_Bill = 4,		// Always Bill
+		// SurvivorCharacter_Zoey,			// Always Zoey
+		// SurvivorCharacter_Francis,		// Always Francis
+		// SurvivorCharacter_Louis,			// Always Louis
+		// SurvivorCharacter_Random			// Random from 0-3 (map's survivor set)
+
+		L4D2Direct_AddSurvivorBot(SurvivorCharacter_Bill);
+
+		// To get the Survivor bot client index we can do something like this:
+		int clients[MAXPLAYERS+1];
+		for( int i = 1; i <= MaxClients; i++ )
+		{
+			if( IsClientInGame(i) )
+				clients[i] = i;
+		}
+
+		L4D2Direct_AddSurvivorBot(SurvivorCharacter_First);
+
+		// After it's spawned we can find the client index:
+		for( int i = 1; i <= MaxClients; i++ )
+		{
+			if( clients[i] == 0 && IsClientInGame(i) && GetClientTeam(i) == 2 )
+			{
+				PrintToChatAll("SPAWNED %d", i);
+			}
+		}
+	}
+	// */
+
+
+
+
+
+	/*
+	int count;
+	char sTemp[4][16];
+	sTemp[0] = "NAV_NORTH";
+	sTemp[1] = "NAV_EAST";
+	sTemp[2] = "NAV_SOUTH";
+	sTemp[3] = "NAV_WEST";
+
+	// NavArea list
+	ArrayList navList = new ArrayList();
+	L4D_GetAllNavAreas(navList);
+	int size = navList.Length;
+
+	// Random nav
+	Address area = navList.Get(GetRandomInt(0, size - 1));
+
+	// Get direction count:
+	for( int i = 0; i < 4; i++ )
+	{
+		count = L4D_NavArea_GetAdjacentCount(area, i);
+		PrintToServer("L4D_NavArea_GetAdjacentCount (%d) %s == %d", area, sTemp[i], count);
+	}
+
+	PrintToServer("");
+
+	// Get adjacent areas:
+	ArrayList aList;
+	for( int i = 0; i < 4; i++ )
+	{
+		aList = new ArrayList();
+
+		count = L4D_NavArea_GetAdjacentAreas(area, i, aList);
+		for( int x = 0; x < count; x++ )
+		{
+			PrintToServer("L4D_NavArea_GetAdjacentAreas (%d) %s == [%d]", area, sTemp[i], aList.Get(x));
+		}
+
+		delete aList;
+	}
+
+	// Returns:
+	// L4D_NavArea_GetAdjacentCount (371211904) NAV_NORTH == 3
+	// L4D_NavArea_GetAdjacentCount (371211904) NAV_EAST == 2
+	// L4D_NavArea_GetAdjacentCount (371211904) NAV_SOUTH == 2
+	// L4D_NavArea_GetAdjacentCount (371211904) NAV_WEST == 1
+
+	// L4D_NavArea_GetAdjacentAreas (371211904) NAV_NORTH == [371420032]
+	// L4D_NavArea_GetAdjacentAreas (371211904) NAV_NORTH == [371052928]
+	// L4D_NavArea_GetAdjacentAreas (371211904) NAV_NORTH == [370628992]
+	// L4D_NavArea_GetAdjacentAreas (371211904) NAV_EAST == [371454976]
+	// L4D_NavArea_GetAdjacentAreas (371211904) NAV_EAST == [370685824]
+	// L4D_NavArea_GetAdjacentAreas (371211904) NAV_SOUTH == [372095104]
+	// L4D_NavArea_GetAdjacentAreas (371211904) NAV_SOUTH == [371736448]
+	// L4D_NavArea_GetAdjacentAreas (371211904) NAV_WEST == [371635840]
+	// */
+
+
+
+
+
+	/* Entity address test:
 	char classname[32];
 	Address addy;
 	int max, passed, failed;
@@ -762,6 +966,8 @@ Action sm_l4dd(int client, int args)
 
 
 
+
+
 	/*
 	// Get TheNavAreas - check for connected areas
 	ArrayList aList = new ArrayList();
@@ -1081,7 +1287,8 @@ Action sm_l4dd(int client, int args)
 		TR_GetEndPosition(vPos, trace);
 		TR_GetPlaneNormal(trace, vAng);
 		delete trace;
-// "inferno", "insect_swarm", "fire_cracker_blast"
+
+		// "inferno", "insect_swarm", "fire_cracker_blast"
 		int entity = CreateEntityByName("insect_swarm");
 		if( entity != -1 )
 		{
@@ -2484,7 +2691,7 @@ Action sm_l4dd(int client, int args)
 	PrintToServer("L4D_BecomeGhost %d",										L4D_BecomeGhost(client));
 
 	PrintToServer("L4D_State_Transition",									L4D_State_Transition(client, 6));
-	
+
 	// Has no affect
 	int car = GetClientAimTarget(client, false);
 	PrintToServer("L4D_RegisterForbiddenTarget %d",							L4D_RegisterForbiddenTarget(car));
@@ -2506,19 +2713,19 @@ Action sm_l4dd(int client, int args)
 			}
 
 		PrintToServer("L4D2_CTerrorPlayer_Fling",							L4D2_CTerrorPlayer_Fling(client, client, view_as<float>({ 1.0, 0.0, 0.0 })));
-		
+
 		PrintToServer("L4D2_GetVersusCompletionPlayer %d",					L4D2_GetVersusCompletionPlayer(client));
-		
+
 		PrintToServer("L4D2_SwapTeams",										L4D2_SwapTeams()); // WORKS, some survivors may spawn dead.
 
 		PrintToServer("L4D2_AreTeamsFlipped %d",							L4D2_AreTeamsFlipped());
-		
+
 		PrintToServer("L4D2_FullRestart",									L4D2_FullRestart());
-		
+
 		PrintToServer("L4D2_HideVersusScoreboard",							L4D2_HideVersusScoreboard());
-		
+
 		PrintToServer("L4D2_HideScavengeScoreboard",						L4D2_HideScavengeScoreboard());
-		
+
 		PrintToServer("L4D2_HideScoreboard",								L4D2_HideScoreboard());
 		}
 	// */
@@ -2603,9 +2810,9 @@ public Action L4D_OnSpawnSpecial(int &zombieClass, const float vecPos[3], const 
 
 	// zombieClass = 1;
 	// return Plugin_Changed;
-	
+
 	// return Plugin_Handled;
-	
+
 	return Plugin_Continue;
 }
 
@@ -2645,7 +2852,7 @@ public Action L4D_OnSpawnTank(const float vecPos[3], const float vecAng[3])
 	}
 
 	// return Plugin_Handled;
-	
+
 	return Plugin_Continue;
 }
 
@@ -2685,7 +2892,7 @@ public Action L4D_OnSpawnWitch(const float vecPos[3], const float vecAng[3])
 	}
 
 	// return Plugin_Handled;
-	
+
 	return Plugin_Continue;
 }
 
@@ -2725,7 +2932,7 @@ public Action L4D2_OnSpawnWitchBride(const float vecPos[3], const float vecAng[3
 	}
 
 	// return Plugin_Handled;
-	
+
 	return Plugin_Continue;
 }
 

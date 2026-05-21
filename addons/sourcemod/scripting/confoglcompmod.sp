@@ -3,7 +3,7 @@
 
 #define DEBUG_ALL				   0
 
-#define PLUGIN_VERSION			   "2.4.5"
+#define PLUGIN_VERSION			   "2.4.7"
 
 // Using these macros, you can disable unnecessary modules,
 // and they will not be included in the plugin at compile time,
@@ -32,8 +32,6 @@
 #include <sdkhooks>
 #include <left4dhooks>
 #include <colors>
-#undef REQUIRE_PLUGIN
-#include <l4d2_changelevel>
 //#include <l4d2lib> //ItemTracking (commented out)
 
 #include "confoglcompmod/includes/constants.sp"

@@ -8,7 +8,7 @@
 #define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
 
-stock const int getUpAnimations[SurvivorCharacter_Size - 1][5] =
+stock const int getUpAnimations[L4D2Util_SurvivorCharacter_Size - 1][5] =
 {
 	// l4d2
 	// 0: Nick, 1: Rochelle, 2: Coach, 3: Ellis
@@ -27,14 +27,14 @@ stock const int getUpAnimations[SurvivorCharacter_Size - 1][5] =
 };
 
 bool
-	isSurvivorStaggerBlocked[SurvivorCharacter_Size - 1];
+	isSurvivorStaggerBlocked[L4D2Util_SurvivorCharacter_Size - 1];
 
 public Plugin myinfo =
 {
 	name		= "Stagger Blocker",
 	author		= "Standalone (aka Manu), Visor, Sir, A1m`",
 	description	= "Block players from being staggered by Jockeys and Hunters for a time while getting up from a Hunter pounce & Charger pummel",
-	version		= "1.4.2",
+	version		= "1.4.3",
 	url		= "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
@@ -64,7 +64,7 @@ void Event_BotPlayerReplace(Event hEvent, const char[] eName, bool dontBroadcast
 {
 	int player = GetClientOfUserId(hEvent.GetInt("player"));
 	int charIndex = IdentifySurvivor(player);
-	if (charIndex == SurvivorCharacter_Invalid) {
+	if (charIndex == L4D2Util_SurvivorCharacter_Invalid) {
 		return;
 	}
 
@@ -78,7 +78,7 @@ void Event_PlayerBotReplace(Event hEvent, const char[] eName, bool dontBroadcast
 {
 	int bot = GetClientOfUserId(hEvent.GetInt("bot"));
 	int charIndex = IdentifySurvivor(bot);
-	if (charIndex == SurvivorCharacter_Invalid) {
+	if (charIndex == L4D2Util_SurvivorCharacter_Invalid) {
 		return;
 	}
 
@@ -91,7 +91,7 @@ void Event_PounceChargeEnd(Event hEvent, const char[] eName, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("victim"));
 	int charIndex = IdentifySurvivor(client);
-	if (charIndex == SurvivorCharacter_Invalid) {
+	if (charIndex == L4D2Util_SurvivorCharacter_Invalid) {
 		return;
 	}
 
@@ -111,7 +111,7 @@ Action HookOnThink(Handle hTimer, any client)
 void OnThink(int client)
 {
 	int charIndex = IdentifySurvivorFast(client);
-	if (charIndex == SurvivorCharacter_Invalid) {
+	if (charIndex == L4D2Util_SurvivorCharacter_Invalid) {
 		return;
 	}
 
@@ -141,7 +141,7 @@ public Action L4D2_OnStagger(int target, int source)
 	}
 
 	int charIndex = IdentifySurvivor(target);
-	if (charIndex == SurvivorCharacter_Invalid) {
+	if (charIndex == L4D2Util_SurvivorCharacter_Invalid) {
 		return Plugin_Continue;
 	}
 
@@ -164,7 +164,7 @@ public Action L4D2_OnPounceOrLeapStumble(int victim, int attacker)
 	}
 
 	int charIndex = IdentifySurvivor(victim);
-	if (charIndex == SurvivorCharacter_Invalid) {
+	if (charIndex == L4D2Util_SurvivorCharacter_Invalid) {
 		return Plugin_Continue;
 	}
 
@@ -177,7 +177,7 @@ public Action L4D2_OnPounceOrLeapStumble(int victim, int attacker)
 
 void ResetStaggerBlocked()
 {
-	for (int i = 0; i < (SurvivorCharacter_Size - 1); i++) {
+	for (int i = 0; i < (L4D2Util_SurvivorCharacter_Size - 1); i++) {
 		isSurvivorStaggerBlocked[i] = false;
 	}
 }

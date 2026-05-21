@@ -36,7 +36,7 @@ public Plugin myinfo =
 	name		= "Match Vote",
 	author		= "vintik, Sir, StarterX4",
 	description = "!match !rmatch !chmatch - Change Hostname and Slots while you're at it!",
-	version		= "1.4",
+	version		= "1.5",
 	url			= "https://github.com/L4D-Community/L4D2-Competitive-Framework"
 };
 
@@ -199,7 +199,7 @@ bool FindConfigName(const char[] sConfig, char[] sName, const int iMaxLength)
 void MatchModeMenu(int iClient)
 {
 	char sTitle[64];
-	Format(sTitle, sizeof(sTitle), "%t", "Title_Match");
+	FormatEx(sTitle, sizeof(sTitle), "%T", "Title_Match", iClient);
 
 	Menu hMenu = new Menu(MatchModeMenuHandler);
 	hMenu.SetTitle(sTitle);
@@ -236,7 +236,7 @@ int MatchModeMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		if (g_hModesKV.JumpToKey(sInfo) && g_hModesKV.GotoFirstSubKey())
 		{
 			char sTitle[64];
-			Format(sTitle, sizeof(sTitle), "%t", "Title_Config", sInfo);
+			FormatEx(sTitle, sizeof(sTitle), "%T", "Title_Config", param1, sInfo);
 
 			Menu hMenu = new Menu(ConfigsMenuHandler);
 			hMenu.SetTitle(sTitle);
@@ -317,7 +317,7 @@ bool StartMatchVote(int iClient, const char[] sCfgName)
 	}
 
 	char sTitle[64];
-	Format(sTitle, sizeof(sTitle), "%T", "Title_LoadConfig", LANG_SERVER, sCfgName);
+	FormatEx(sTitle, sizeof(sTitle), "%T", "Title_LoadConfig", LANG_SERVER, sCfgName);
 
 	g_hVote = CreateBuiltinVote(VoteActionHandler, BuiltinVoteType_Custom_YesNo, BuiltinVoteAction_Cancel | BuiltinVoteAction_VoteEnd | BuiltinVoteAction_End);
 	SetBuiltinVoteArgument(g_hVote, sTitle);
@@ -352,7 +352,7 @@ void MatchVoteResultHandler(Handle vote, int num_votes, int num_clients, const i
 			if (item_info[i][BUILTINVOTEINFO_ITEM_VOTES] > (num_votes / 2))
 			{
 				char sVotepass[64];
-				Format(sVotepass, sizeof(sVotepass), "%T", "VotePass_Loading", LANG_SERVER);
+				FormatEx(sVotepass, sizeof(sVotepass), "%T", "VotePass_Loading", LANG_SERVER);
 
 				DisplayBuiltinVotePass(vote, sVotepass);
 				ServerCommand("sm_forcematch %s", g_sCfg);
@@ -426,7 +426,7 @@ bool StartResetMatchVote(int iClient)
 	}
 
 	char sTitle[64];
-	Format(sTitle, sizeof(sTitle), "%T", "Title_OffConfogl", LANG_SERVER);
+	FormatEx(sTitle, sizeof(sTitle), "%T", "Title_OffConfogl", LANG_SERVER);
 
 	g_hVote = CreateBuiltinVote(VoteActionHandler, BuiltinVoteType_Custom_YesNo, BuiltinVoteAction_Cancel | BuiltinVoteAction_VoteEnd | BuiltinVoteAction_End);
 	SetBuiltinVoteArgument(g_hVote, sTitle);
@@ -447,7 +447,7 @@ void ResetMatchVoteResultHandler(Handle vote, int num_votes, int num_clients, co
 			if (item_info[i][BUILTINVOTEINFO_ITEM_VOTES] > (num_votes / 2))
 			{
 				char sVotepass[24];
-				Format(sVotepass, sizeof(sVotepass), "%T", "VotePass_Unloading", LANG_SERVER);
+				FormatEx(sVotepass, sizeof(sVotepass), "%T", "VotePass_Unloading", LANG_SERVER);
 
 				DisplayBuiltinVotePass(vote, sVotepass);
 				ServerCommand("sm_resetmatch");
@@ -518,7 +518,7 @@ Action ChangeMatchRequest(int iClient, int iArgs)
 void ChMatchModeMenu(int iClient)
 {
 	char sTitle[64];
-	Format(sTitle, sizeof(sTitle), "%t", "Title_Match");
+	FormatEx(sTitle, sizeof(sTitle), "%T", "Title_Match", iClient);
 
 	Menu hMenu = new Menu(ChMatchModeMenuHandler);
 	hMenu.SetTitle(sTitle);
@@ -555,7 +555,7 @@ int ChMatchModeMenuHandler(Menu menu, MenuAction action, int param1, int param2)
 		if (g_hModesKV.JumpToKey(sInfo) && g_hModesKV.GotoFirstSubKey())
 		{
 			char sTitle[64];
-			Format(sTitle, sizeof(sTitle), "%t", "Title_Config", sInfo);
+			FormatEx(sTitle, sizeof(sTitle), "%T", "Title_Config", param1, sInfo);
 
 			Menu hMenu = new Menu(ChConfigsMenuHandler);
 			hMenu.SetTitle(sTitle);
@@ -640,7 +640,7 @@ bool StartChMatchVote(int iClient, const char[] sCfgName)
 	}
 
 	char sTitle[64];
-	Format(sTitle, sizeof(sTitle), "%T", "Title_ChangeConfogl", LANG_SERVER, sCfgName);
+	FormatEx(sTitle, sizeof(sTitle), "%T", "Title_ChangeConfogl", LANG_SERVER, sCfgName);
 
 	g_hVote = CreateBuiltinVote(VoteActionHandler, BuiltinVoteType_Custom_YesNo, BuiltinVoteAction_Cancel | BuiltinVoteAction_VoteEnd | BuiltinVoteAction_End);
 	SetBuiltinVoteArgument(g_hVote, sTitle);
@@ -660,7 +660,7 @@ void ChMatchVoteResultHandler(Handle vote, int num_votes, int num_clients, const
 			if (item_info[i][BUILTINVOTEINFO_ITEM_VOTES] > (num_votes / 2))
 			{
 				char sVotepass[24];
-				Format(sVotepass, sizeof(sVotepass), "%T", "VotePass_Changed", LANG_SERVER);
+				FormatEx(sVotepass, sizeof(sVotepass), "%T", "VotePass_Changed", LANG_SERVER);
 
 				DisplayBuiltinVotePass(vote, sVotepass);
 				ServerCommand("sm_forcechangematch %s", g_sCfg);
@@ -684,7 +684,7 @@ stock void LoadTranslation(const char[] translation)
 		sPath[PLATFORM_MAX_PATH],
 		sName[64];
 
-	Format(sName, sizeof(sName), "translations/%s.txt", translation);
+	FormatEx(sName, sizeof(sName), "translations/%s.txt", translation);
 	BuildPath(Path_SM, sPath, sizeof(sPath), sName);
 	if (!FileExists(sPath))
 		SetFailState("Missing translation file %s.txt", translation);

@@ -901,6 +901,21 @@
 				}
 			}
 
+			"L4DD::CDirector::AddSurvivorBot"
+			{
+				"signature"		"CDirector::AddSurvivorBot"
+				"callconv"		"thiscall"
+				"return"		"void"
+				"this"			"ignore"
+				"arguments"
+				{
+					"a1"
+					{
+						"type"	"int"
+					}
+				}
+			}
+
 			"L4DD::CThrow::ActivateAbililty"
 			{
 				"signature"		"CThrow::ActivateAbililty"
@@ -2009,6 +2024,20 @@
 				"linux"
 				{
 					"signature" "TheNavMesh"
+				}
+				"read" "0"
+			}
+
+			"gEntList"
+			{
+				"windows"
+				{
+					"signature" "gEntList"
+					"read" "116"
+				}
+				"linux"
+				{
+					"signature" "gEntList"
 				}
 				"read" "0"
 			}
@@ -3350,6 +3379,15 @@
 				/* Search: "unsticking %s from %.1f %.1f %.1f to %.1f %.1f %.1f\n" */
 			}
 
+			"CDirector::IsLocationFoggedToSurvivors"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK9CDirector27IsLocationFoggedToSurvivorsERK6Vector"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x83\x2A\x2A\x33\x2A\x85\x2A\x0F\x2A\x2A\x52\x68\x2A\x2A\x2A\x2A\xE8"
+				/* ? ? ? ? ? ? ? ? 8B ? ? 83 ? ? 33 ? 85 ? 0F ? ? 52 68 ? ? ? ? E8 */
+				/* Search: "ZombieSpawnInFog" */
+			}
+
 			/**
 			* CTerrorPlayer::GetSpecialInfectedDominatingMe(CTerrorPlayer *this)
 			*
@@ -3402,6 +3440,24 @@
 				"linux"		"@_ZN12CBaseTrigger10IsTouchingEP11CBaseEntity"
 				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\x8B\x2A\x2A\xFF\x2A\x8B\x2A\x89\x2A\x2A\xEB\x2A\xC7\x45\x2A\x2A\x2A\x2A\x2A\x8D\x2A\x2A\x51\x8D\x8E\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x33"
 				// /* ? ? ? ? ? ? 8B ? ? 85 ? 74 ? 8B ? 8B ? ? FF ? 8B ? 89 ? ? EB ? C7 45 ? ? ? ? ? 8D ? ? 51 8D 8E ? ? ? ? E8 ? ? ? ? 33 */
+			}
+
+			"CGlobalEntityList::FindEntityByClassnameNearest"
+			{
+				"library"	"server"
+				"linux"		"@_ZN17CGlobalEntityList28FindEntityByClassnameNearestEPKcRK6Vectorf"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x53\x33\x2A\xF3\x2A\x2A\x2A\x0F\x2E\x2A\x2A\x2A\x2A\x2A\x9F"
+				/* ? ? ? ? ? ? ? ? ? 53 33 ? F3 ? ? ? 0F 2E ? ? ? ? ? 9F */
+				/* Search: "CheckpointDoorClosed". Target is sub call with "info_changelevel" as param. */
+			}
+
+			"CGlobalEntityList::FindEntityByClassnameWithin"
+			{
+				"library"	"server"
+				"linux"		"@_ZN17CGlobalEntityList27FindEntityByClassnameWithinEP11CBaseEntityPKcRK6Vectorf"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\xF3\x2A\x2A\x2A\x0F\x2E\x2A\x2A\x2A\x2A\x2A\x9F\xF6\x2A\x2A\x7A\x2A\x8B"
+				/* ? ? ? ? ? ? ? ? 83 ? ? F3 ? ? ? 0F 2E ? ? ? ? ? 9F F6 ? ? 7A ? 8B */
+				/* Search: "info_ladder_dismount" and target calls twice with this param. */
 			}
 
 			/*
@@ -4253,6 +4309,20 @@
 			}
 
 			/*
+			 * CDirector::AddSurvivorBot(SurvivorCharacterType) const
+			 *
+			 * Windows: find string "sb_add" → xref to ConCommand registration →
+			 * handler calls AddSurvivorBot(char*) wrapper → wrapper tail-calls this function
+			 */
+			"CDirector::AddSurvivorBot"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK9CDirector14AddSurvivorBotE21SurvivorCharacterType"
+				"windows"	"\x55\x8B\xEC\x8B\x89\x2A\x2A\x2A\x2A\x83\xEC\x2A\x56\x8D\x45\xFF"
+				/* 55 8B EC 8B 89 ? ? ? ? 83 EC ? 56 8D 45 FF */
+			}
+
+			/*
 			 * CThrow::ActivateAbililty()
 			 *		Start a tank rock throw
 			 *
@@ -4777,6 +4847,18 @@
 				"windows"	"\x55\x8B\x2A\x51\x53\x56\x8B\x2A\x2A\x8B\x2A\x89\x2A\x2A\x3B\x2A\x75\x2A\x5E"
 				/* 55 8B ? 51 53 56 8B ? ? 8B ? 89 ? ? 3B ? 75 */
 				/* Search: "Created new fencetop area %d(%x) between %d(%x) and %d(%x)\n" - target call is within the if statement below */
+			}
+
+			/*
+			 * CNavArea::IsBlocked(CNavArea *this, int, bool)
+			 */
+			"CNavArea::IsBlocked"
+			{
+				"library"	"server"
+				"linux"		"@_ZNK8CNavArea9IsBlockedEib"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x74\x2A\x8B\x2A\x2A\x85\x2A\x79\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x83"
+				/* ? ? ? ? ? ? ? 74 ? 8B ? ? 85 ? 79 ? 8B ? ? ? ? ? 83 */
+				/* Search: "Flow Error: Goal area is blocked!\n", target function is call above with "-1" */
 			}
 
 			/*
@@ -5710,6 +5792,17 @@
 				"linux"		"@g_pGameRules"
 			}
 
+			/* Used on Windows to resolve the "gEntList" pointer */
+			/* ResolveFollowupTargetToEntity(char *) */
+			"gEntList"
+			{
+				"library"	"server"
+				"linux"		"@gEntList"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x57\x8B\x2A\x68\x2A\x2A\x2A\x2A\x57\xE8\x2A\x2A\x2A\x2A\x83"
+				/* ? ? ? ? ? 8B ? ? 57 8B ? 68 ? ? ? ? 57 E8 ? ? ? ? 83 */
+				/* Search: "Couldn't resolve response target %s\n". Call with "0, v3, 0, 0, 0, 0" as params has target ptr. */
+			}
+
 			/* This signature sometimes has multiple matches, but this
 			 * does not matter as g_pGameRules is involved in all of them.
 			 * The same g_pGameRules offset applies to each match.
@@ -5765,6 +5858,36 @@
 				"library"	"server"
 				"windows"	"\x55\x8B\xEC\x81\xEC\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\xC5\x89\x45\xFC\x8B\x45\x14\x53\x8B\x5D\x08"
 				/* 55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 33 C5 89 45 FC 8B 45 14 53 8B 5D 08 */
+			}
+
+			/* Search: "Frame %8d/tick %8d: frame out of budget (%.2fms > %.2fms)\n" - xref to this function is our target
+			 */
+			"TheNextBots"
+			{
+				"library"	"server"
+				"linux"		"@_Z11TheNextBotsv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x84\x05\x2A\x2A\x2A\x2A\x0F\x85\x2A\x2A\x2A\x2A\x09\x2A\x2A\x2A\x2A\x2A\x33\x2A\xB9\x2A\x2A\x2A\x2A\x33"
+				/* ? ? ? ? ? 84 05 ? ? ? ? 0F 85 ? ? ? ? 09 ? ? ? ? ? 33 ? B9 ? ? ? ? 33 */
+			}
+
+			/* Search: "Chainsaw.Die" - You will see "TheNextBots" above the call, and below is a sub call with "1.0" as param
+			 */
+			"NextBotManager::RushVictim"
+			{
+				"library"	"server"
+				"linux"		"@_ZN14NextBotManager10RushVictimEP13CTerrorPlayerf"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x83\x2A\x2A\x0F\x2E\x2A\x2A\x2A\x2A\x2A\x9F\xF6\x2A\x2A\x7A\x2A\xA1\x2A\x2A\x2A\x2A\xF3"
+				/* ? ? ? ? ? ? ? ? 83 ? ? 0F 2E ? ? ? ? ? 9F F6 ? ? 7A ? A1 ? ? ? ? F3 */
+			}
+
+			/* Search: "Going into Old ClearNWait" - Below is a call, click into that and into the function it calls, this is the target
+			 */
+			"NextBotManager::StartAssault"
+			{
+				"library"	"server"
+				"linux"		"@_ZN14NextBotManager12StartAssaultEv"
+				"windows"	"\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x3D\x2A\x2A\x2A\x2A\x74\x2A\x56\x57\x0F\x2A\x2A\x8B\x2A\x2A\x03\x2A\x03\x2A\x03\x2A\x8B\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\xFF\x2A\x8B\x2A\xE8\x2A\x2A\x2A\x2A\x83"
+				/* ? ? ? ? ? ? ? 3D ? ? ? ? 74 ? 56 57 0F ? ? 8B ? ? 03 ? 03 ? 03 ? 8B ? ? 8B ? 8B ? ? ? ? ? 8B ? FF ? 8B ? E8 ? ? ? ? 83 */
 			}
 
 			"nav_update_lighting"

@@ -18,14 +18,17 @@
 
 
 
-#define PLUGIN_VERSION		"1.162"
-#define PLUGIN_VERLONG		1162
+#define PLUGIN_VERSION		"1.166"
+#define PLUGIN_VERLONG		1166
 
 #define DEBUG				0
 // #define DEBUG			1	// Prints addresses + detour info (only use for debugging, slows server down).
 
 #define DETOUR_ALL			0	// Only enable required detours, for public release.
 // #define DETOUR_ALL		1	// Enable all detours, for testing.
+
+#define VERIFY_SDKCALL		0
+// #define VERIFY_SDKCALL	1	// 1=Double check SDKCalls in case of accidental deletion (happened several times already -_-)
 
 #define KILL_VSCRIPT		0	// 0=Keep VScript entity after using for "GetVScriptOutput". 1=Kill the entity after use (more resourceful to keep recreating, use if you're maxing out entities and reaching the limit regularly).
 
@@ -337,6 +340,7 @@ int g_pItemManager;
 int g_pMusicBanks;
 int g_pSessionManager;
 int g_pChallengeMode;
+int g_pTheNextBots;
 Address g_pServer;
 Address g_pAmmoDef;
 Address g_pDirector;
@@ -345,6 +349,7 @@ Address g_pTheNavAreas;
 Address g_pTheNavAreas_List;
 Address g_pTheNavAreas_Size;
 Address g_pNavMesh;
+Address g_pEntList;
 Address g_pZombieManager;
 Address g_pMeleeWeaponInfoStore;
 Address g_pWeaponInfoDatabase;
@@ -451,9 +456,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 
 
-	// =================
+	// =========================
 	// UPDATER
-	// =================
+	// =========================
 	MarkNativeAsOptional("Updater_AddPlugin");
 
 
@@ -469,9 +474,9 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 
 
-	// =================
+	// =========================
 	// EXTENSION BLOCK
-	// =================
+	// =========================
 	if( GetFeatureStatus(FeatureType_Native, "L4D_RestartScenarioFromVote") != FeatureStatus_Unknown )
 	{
 		strcopy(error, err_max, "\n====================\nThis plugin replaces Left4Downtown. Delete the extension to run.\n====================");
@@ -480,16 +485,16 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 
 
-	// =================
+	// =========================
 	// SETUP FORWARDS AND NATIVES
-	// =================
+	// =========================
 	SetupForwardsNatives(); // From: "l4dd/l4dd_setup.sp"
 
 
 
-	// =================
+	// =========================
 	// END SETUP
-	// =================
+	// =========================
 	RegPluginLibrary("left4dhooks");
 
 
@@ -741,7 +746,7 @@ public void OnPluginStart()
 	// ====================================================================================================
 	//									EVENTS
 	// ====================================================================================================
-	HookEvent("round_start",					Event_RoundStart);
+	HookEvent("round_start",						Event_RoundStart);
 
 	if( !g_bLeft4Dead2 )
 	{
@@ -760,6 +765,23 @@ public void OnPluginStart()
 void Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
 	g_bRoundEnded = false;
+
+	// Modify broken maps to fix "L4D_IsInIntro" not reporting as true, and probably other bugs:
+	if( g_bLeft4Dead2 )
+	{
+		static char sMap[20];
+		GetCurrentMap(sMap, sizeof(sMap));
+
+		if( strcmp(sMap, "c3m1_plankcountry") == 0 || strcmp(sMap, "c7m1_docks") == 0 )
+		{
+			int entity = FindByClassTargetName("logic_relay", "relay_intro_start");
+			if( entity != -1 )
+			{
+				SetVariantString("OnTrigger director:StartIntro::0:-1");
+				AcceptEntityInput(entity, "AddOutput");
+			}
+		}
+	}
 }
 
 void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
@@ -819,6 +841,34 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
 	int client = event.GetInt("userid");
 	g_iClientDeathModel[GetClientOfUserId(client)] = g_iDeathModel;
+}
+
+public void OnEntityCreated(int entity, const char[] classname)
+{
+	// Used by "L4D_TankRockPrj" native
+	// Watch for this plugins native creating the "tank_rock" to return it's entity index and set owner if applicable
+	if( g_iTankRockOwner && strcmp(classname, "tank_rock") == 0 )
+	{
+		g_iTankRockEntity = entity;
+
+		// Must set owner on next frame after it's spawned
+		if( g_iTankRockOwner != -1 )
+		{
+			DataPack dPack = new DataPack();
+			dPack.WriteCell(EntIndexToEntRef(entity));
+			dPack.WriteCell(GetClientUserId(g_iTankRockOwner));
+			RequestFrame(OnFrameTankRock, dPack);
+		}
+
+		// Make the tank rock fully visible, otherwise it's semi-transparent (during pickup animation of Tank Rock).
+		SetEntityRenderColor(entity, 255, 255, 255, 255);
+	}
+
+	// Used by "L4D2_DefibByDeadBody" native
+	else if( g_bLeft4Dead2 && strcmp(classname, "survivor_death_model") == 0 )
+	{
+		g_iDeathModel = EntIndexToEntRef(entity);
+	}
 }
 
 
@@ -1032,8 +1082,8 @@ public void OnMapEnd()
 		{
 			for( int i = 1; i <= MaxClients; i++ )
 			{
-				g_hAnimationCallbackPre[i].RemoveAllFunctions(hPlug);
-				g_hAnimationCallbackPost[i].RemoveAllFunctions(hPlug);
+				if( g_hAnimationCallbackPre[i] ) g_hAnimationCallbackPre[i].RemoveAllFunctions(hPlug);
+				if( g_hAnimationCallbackPost[i] ) g_hAnimationCallbackPost[i].RemoveAllFunctions(hPlug);
 			}
 		}
 	}
@@ -1062,8 +1112,8 @@ public void OnClientDisconnect(int client)
 		{
 			hPlug = ReadPlugin(hIter);
 
-			g_hAnimationCallbackPre[client].RemoveAllFunctions(hPlug);
-			g_hAnimationCallbackPost[client].RemoveAllFunctions(hPlug);
+			if( g_hAnimationCallbackPre[client] ) g_hAnimationCallbackPre[client].RemoveAllFunctions(hPlug);
+			if( g_hAnimationCallbackPost[client] ) g_hAnimationCallbackPost[client].RemoveAllFunctions(hPlug);
 		}
 
 		delete hIter;
@@ -1117,8 +1167,8 @@ public void OnNotifyPluginUnloaded(Handle plugin)
 	{
 		for( int i = 1; i <= MaxClients; i++ )
 		{
-			g_hAnimationCallbackPre[i].RemoveAllFunctions(plugin);
-			g_hAnimationCallbackPost[i].RemoveAllFunctions(plugin);
+			if( g_hAnimationCallbackPre[i] ) g_hAnimationCallbackPre[i].RemoveAllFunctions(plugin);
+			if( g_hAnimationCallbackPost[i] ) g_hAnimationCallbackPost[i].RemoveAllFunctions(plugin);
 		}
 	}
 }
@@ -1197,8 +1247,14 @@ int Native_AnimHookDisable(Handle plugin, int numParams) // Native "AnimHookDisa
 	// Delete callback, client not being hooked from target plugin any more
 	if( !keep )
 	{
-		if( GetNativeFunction(2) != INVALID_FUNCTION ) g_hAnimationCallbackPre[client].RemoveFunction(plugin, GetNativeFunction(2));
-		if( GetNativeFunction(3) != INVALID_FUNCTION ) g_hAnimationCallbackPost[client].RemoveFunction(plugin, GetNativeFunction(3));
+		if( GetNativeFunction(2) != INVALID_FUNCTION )
+		{
+			if( g_hAnimationCallbackPre[client] ) g_hAnimationCallbackPre[client].RemoveFunction(plugin, GetNativeFunction(2));
+		}
+		if( GetNativeFunction(3) != INVALID_FUNCTION )
+		{
+			if( g_hAnimationCallbackPost[client] ) g_hAnimationCallbackPost[client].RemoveFunction(plugin, GetNativeFunction(3));
+		}
 	}
 
 	// Remove detour, no more plugins using it
@@ -1564,7 +1620,7 @@ public void OnMapStart()
 		for( int i = 0; i < sizeof(g_sAcidSounds); i++ )
 			PrecacheSound(g_sAcidSounds[i]);
 
-		for( int i = 0; i < 2048; i++ )
+		for( int i = 0; i <= 2048; i++ )
 			g_iAcidEntity[i] = 0;
 	}
 
@@ -1610,6 +1666,8 @@ public void OnMapStart()
 		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_DominatorLimit",	1);
 		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_WitchLimit",		1);
 		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_CommonLimit",		1);
+		// SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_AggressiveSpecials",		1); // Required?
+		// SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "cm_SpecialsRetreatToCover",	1); // Required?
 
 		// These also exist, required?
 		SDKCall(g_hSDK_CDirector_GetScriptValueInt, g_pDirector, "TotalSmokers",		1);
@@ -1622,7 +1680,7 @@ public void OnMapStart()
 
 
 
-	// Melee weapon IDs - They can change when switching map depending on what melee weapons are enabled
+	// Melee weapon IDs - They can change when switching map depending on which melee weapons are enabled
 	if( g_bLeft4Dead2 )
 	{
 		delete g_aMeleePtrs;

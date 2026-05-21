@@ -298,6 +298,9 @@ GlobalForward g_hFWD_AddonsDisabler;
 // Features: handles multiple detours for 1 forward, and multiple forwards for 1 detour. Also force enabling a detour without any forward using it.
 void SetupDetours(GameData hGameData = null)
 {
+	int iPipebombPrjIndex;			// Index of "L4D_PipeBombProjectile_Pre" detour
+	int iPipebombDtnIndex;			// Index of "L4D_PipeBomb_Detonate" detour
+
 	if( g_bCreatedDetours == false )
 	{
 		g_aDetoursHooked = new ArrayList();
@@ -458,6 +461,7 @@ void SetupDetours(GameData hGameData = null)
 	CreateDetour(hGameData,			DTR_BossZombiePlayerBot_ChooseVictim_Pre,					DTR_BossZombiePlayerBot_ChooseVictim_Post,					"L4DD::BossZombiePlayerBot::ChooseVictim",							"L4D2_OnChooseVictim",							true);
 	CreateDetour(hGameData,			DTR_CTerrorPlayer_MaterializeFromGhost_Pre,					DTR_CTerrorPlayer_MaterializeFromGhost_Post,				"L4DD::CTerrorPlayer::MaterializeFromGhost",						"L4D_OnMaterializeFromGhostPre");
 	CreateDetour(hGameData,			DTR_CTerrorPlayer_MaterializeFromGhost_Pre,					DTR_CTerrorPlayer_MaterializeFromGhost_Post,				"L4DD::CTerrorPlayer::MaterializeFromGhost",						"L4D_OnMaterializeFromGhost",					true);
+	iPipebombPrjIndex = g_iSmallIndex;
 	CreateDetour(hGameData,			DTR_CPipeBombProjectile_Create_Pre,							DTR_CPipeBombProjectile_Create_Post,						"L4DD::CPipeBombProjectile::Create",								"L4D_PipeBombProjectile_Pre");
 	CreateDetour(hGameData,			DTR_CPipeBombProjectile_Create_Pre,							DTR_CPipeBombProjectile_Create_Post,						"L4DD::CPipeBombProjectile::Create",								"L4D_PipeBombProjectile_Post",					true);
 	CreateDetour(hGameData,			DTR_CPipeBombProjectile_Create_Pre,							DTR_CPipeBombProjectile_Create_Post,						"L4DD::CPipeBombProjectile::Create",								"L4D_PipeBombProjectile_PostHandled",			true);
@@ -481,10 +485,25 @@ void SetupDetours(GameData hGameData = null)
 	CreateDetour(hGameData,			DTR_CMolotovProjectile_Detonate_Pre,						DTR_CMolotovProjectile_Detonate,							"L4DD::CMolotovProjectile::Detonate",								"L4D_Molotov_Detonate");
 	CreateDetour(hGameData,			DTR_CMolotovProjectile_Detonate_Pre,						DTR_CMolotovProjectile_Detonate,							"L4DD::CMolotovProjectile::Detonate",								"L4D_Molotov_Detonate_Post",					true);
 	CreateDetour(hGameData,			DTR_CMolotovProjectile_Detonate_Pre,						DTR_CMolotovProjectile_Detonate,							"L4DD::CMolotovProjectile::Detonate",								"L4D_Molotov_Detonate_PostHandled",				true);
+	iPipebombDtnIndex = g_iSmallIndex;
 	CreateDetour(hGameData,			DTR_CPipeBombProjectile_Detonate_Pre,						DTR_CPipeBombProjectile_Detonate,							"L4DD::CPipeBombProjectile::Detonate",								"L4D_PipeBomb_Detonate");
 	CreateDetour(hGameData,			DTR_CPipeBombProjectile_Detonate_Pre,						DTR_CPipeBombProjectile_Detonate,							"L4DD::CPipeBombProjectile::Detonate",								"L4D_PipeBomb_Detonate_Post",					true);
 	CreateDetour(hGameData,			DTR_CPipeBombProjectile_Detonate_Pre,						DTR_CPipeBombProjectile_Detonate,							"L4DD::CPipeBombProjectile::Detonate",								"L4D_PipeBomb_Detonate_PostHandled",			true);
 	CreateDetour(hGameData,			DTR_CTerrorPlayer_Extinguish,								INVALID_FUNCTION,											"L4DD::CTerrorPlayer::Extinguish",									"L4D_PlayerExtinguish");
+
+	// When either "L4D_PipeBombProjectile*" or "L4D_PipeBomb_Detonate*" forwards are enabled
+	// Enable "L4D_CBreakableProp_Break" to accurately detect if pipebomb detonations are actually pipebombs or just breakable props exploding
+	// Since "L4D_PipeBombProjectile*" and "L4D_PipeBomb_Detonate*" forwards would otherwise fire for breakable props
+	// This is tracked and fixed with the "g_bBreakable" bool in those forwards
+	if( g_bCreatedDetours )	// Detours have been created, we have indexes for pipbomb forwards
+	{
+		int status = g_aDetoursHooked.Get(iPipebombPrjIndex); // Get "L4D_PipeBombProjectile*" forward enabled/disabled status
+		if( !status ) status = g_aDetoursHooked.Get(iPipebombDtnIndex); // Get "L4D_PipeBomb_Detonate*" forward enabled/disabled status
+
+		// If either detour is enabled, force "L4D_CBreakableProp_Break" to be enabled also
+		g_aForceDetours.Set(g_iLargeIndex, status > 0);
+	}
+
 	CreateDetour(hGameData,			DTR_CBreakableProp_Break_Pre,								DTR_CBreakableProp_Break_Post,								"L4DD::CBreakableProp::Break",										"L4D_CBreakableProp_Break");
 	CreateDetour(hGameData,			DTR_CTerrorPlayer_OnVomitedUpon,							DTR_CTerrorPlayer_OnVomitedUpon_Post,						"L4DD::CTerrorPlayer::OnVomitedUpon",								"L4D_OnVomitedUpon");
 	CreateDetour(hGameData,			DTR_CTerrorPlayer_OnVomitedUpon,							DTR_CTerrorPlayer_OnVomitedUpon_Post,						"L4DD::CTerrorPlayer::OnVomitedUpon",								"L4D_OnVomitedUpon_Post",						true);
@@ -536,10 +555,10 @@ void SetupDetours(GameData hGameData = null)
 		CreateDetour(hGameData,		DTR_CLeap_ActivateAbility,									DTR_CLeap_ActivateAbility_Post,								"L4DD::CLeap::ActivateAbility",										"L4D2_ActivateAbility_Jockey_Post",				true);
 		CreateDetour(hGameData,		DTR_CLeap_ActivateAbility,									DTR_CLeap_ActivateAbility_Post,								"L4DD::CLeap::ActivateAbility",										"L4D2_ActivateAbility_Jockey_PostHandled",		true);
 		CreateDetour(hGameData,		DTR_CSpitAbility_ActivateAbility,							DTR_CSpitAbility_ActivateAbility_Post,						"L4DD::CSpitAbility::ActivateAbility",								"L4D2_ActivateAbility_Spitter");
-		CreateDetour(hGameData,		DTR_CSpitAbility_ActivateAbility,							DTR_CSpitAbility_ActivateAbility_Post,						"L4DD::CSpitAbility::ActivateAbility",								"L4D2_ActivateAbility_Spitter_Post",				true);
+		CreateDetour(hGameData,		DTR_CSpitAbility_ActivateAbility,							DTR_CSpitAbility_ActivateAbility_Post,						"L4DD::CSpitAbility::ActivateAbility",								"L4D2_ActivateAbility_Spitter_Post",			true);
 		CreateDetour(hGameData,		DTR_CSpitAbility_ActivateAbility,							DTR_CSpitAbility_ActivateAbility_Post,						"L4DD::CSpitAbility::ActivateAbility",								"L4D2_ActivateAbility_Spitter_PostHandled",		true);
 		CreateDetour(hGameData,		DTR_CCharge_ActivateAbility,								DTR_CCharge_ActivateAbility_Post,							"L4DD::CCharge::ActivateAbility",									"L4D2_ActivateAbility_Charger");
-		CreateDetour(hGameData,		DTR_CCharge_ActivateAbility,								DTR_CCharge_ActivateAbility_Post,							"L4DD::CCharge::ActivateAbility",									"L4D2_ActivateAbility_Charger_Post",				true);
+		CreateDetour(hGameData,		DTR_CCharge_ActivateAbility,								DTR_CCharge_ActivateAbility_Post,							"L4DD::CCharge::ActivateAbility",									"L4D2_ActivateAbility_Charger_Post",			true);
 		CreateDetour(hGameData,		DTR_CCharge_ActivateAbility,								DTR_CCharge_ActivateAbility_Post,							"L4DD::CCharge::ActivateAbility",									"L4D2_ActivateAbility_Charger_PostHandled",		true);
 
 	}
@@ -729,7 +748,9 @@ void CreateDetour(GameData hGameData, DHookCallback fCallback, DHookCallback fPo
 
 						if( fCallback != INVALID_FUNCTION && !hDetour.Enable(Hook_Pre, fCallback) ) LogError("Failed to detour pre \"%s\" (%s).", sName, g_sSystem);
 						if( fPostCallback != INVALID_FUNCTION && !hDetour.Enable(Hook_Post, fPostCallback) ) LogError("Failed to detour post \"%s\" (%s).", sName, g_sSystem);
-					} else {
+					}
+					else
+					{
 						g_aDetoursHooked.Set(g_iSmallIndex, 0);
 						#if defined DEBUG
 						#if DEBUG
@@ -771,7 +792,9 @@ void CreateDetour(GameData hGameData, DHookCallback fCallback, DHookCallback fPo
 						}
 
 						g_aDetourHookIDsPost.Set(g_iSmallIndex, hookID);		// Store handle
-					} else {
+					}
+					else
+					{
 						g_aDetoursHooked.Set(g_iSmallIndex, 0);
 						#if defined DEBUG
 						#if DEBUG
@@ -845,10 +868,6 @@ void CheckRequiredDetours(int client = 0)
 				// Force detour on?
 				if( g_aForceDetours.Get(i) )
 				{
-					// Get forward name
-					g_aForwardNames.GetString(i, sForward, sizeof(sForward));
-					g_aGameDataSigs.GetString(i, sName, sizeof(sName));
-
 					count++;
 
 					if( !useLast )
@@ -861,6 +880,10 @@ void CheckRequiredDetours(int client = 0)
 						g_vProf.Stop();
 						g_fProf += g_vProf.Time;
 
+						// Get forward name
+						g_aForwardNames.GetString(i, sForward, sizeof(sForward));
+						g_aGameDataSigs.GetString(i, sName, sizeof(sName));
+
 						PrintToServer("%3d %36s> %43s (%s)", count, (i == g_iAnimationDetourIndex && g_aForceDetours.Get(g_iAnimationDetourIndex)) ? "FORCED ANIM" : "FORCED DETOUR", sForward, sName[6]);
 						g_vProf.Start();
 					}
@@ -869,6 +892,10 @@ void CheckRequiredDetours(int client = 0)
 
 					if( client > 0 )
 					{
+						// Get forward name
+						g_aForwardNames.GetString(i, sForward, sizeof(sForward));
+						g_aGameDataSigs.GetString(i, sName, sizeof(sName));
+
 						ReplyToCommand(client - 1, "%3d %36s> %43s (%s)", count, (i == g_iAnimationDetourIndex && g_aForceDetours.Get(g_iAnimationDetourIndex)) ? "FORCED ANIM" : "FORCED DETOUR", sForward, sName[6]);
 					}
 				}
@@ -2981,7 +3008,7 @@ MRESReturn DTR_CTerrorWeapon_OnHit(int weapon, DHookReturn hReturn, DHookParam h
 
 		// Thanks to "A1m`" for this solution to getting an entity index instead of looping clients/entities:
 		int target = hParams.GetObjectVar(1, 76, ObjectValueType_CBaseEntityPtr);
-		if( target < 1 || target > MaxClients || !IsClientInGame(target) ) return MRES_Ignored;
+		if( !target || !IsValidEntity(target) ) return MRES_Ignored;
 
 		// Verify client hitting
 		int client = GetEntPropEnt(weapon, Prop_Send, "m_hOwnerEntity");
@@ -5128,7 +5155,7 @@ MRESReturn DTR_CTerrorPlayer_IsDominatedBySpecialInfected(int pThis, DHookReturn
 		Call_StartForward(g_hFWD_CTerrorPlayer_OnDominatedBySpecialInfected);
 		Call_PushCell(pThis);
 		Call_PushCell(attacker);
-		Call_Finish();	
+		Call_Finish();
 	}
 
 	return MRES_Ignored;
@@ -5667,6 +5694,7 @@ MRESReturn DTR_CBasePlayer_WaterMove_Post(int pThis, DHookReturn hReturn, DHookP
 
 
 
+
 // ====================================================================================================
 // VSCRIPT DIRECTOR - GetScriptValue*
 // ====================================================================================================
@@ -5793,6 +5821,8 @@ MRESReturn DTR_CDirector_GetScriptValueString(DHookReturn hReturn, DHookParam hP
 
 	return MRES_Ignored;
 }
+
+
 
 
 

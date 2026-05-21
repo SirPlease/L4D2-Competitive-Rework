@@ -15,17 +15,26 @@ enum struct CVSEntry
 	char CVSE_newval[CVS_CVAR_MAXLEN];
 }
 
+enum struct CVSPending
+{
+	char CVSP_name[CVS_CVAR_MAXLEN];
+	char CVSP_newval[CVS_CVAR_MAXLEN];
+}
+
 static bool
 	bTrackingStarted = false;
 
 static ArrayList
-	CvarSettingsArray = null;
+	CvarSettingsArray = null,
+	PendingCvarsArray = null;
 
 void CVS_OnModuleStart()
 {
 	CVSEntry cvsetting;
+	CVSPending cvspending;
 
 	CvarSettingsArray = new ArrayList(sizeof(cvsetting));
+	PendingCvarsArray = new ArrayList(sizeof(cvspending));
 
 	RegConsoleCmd("confogl_cvarsettings", CVS_CvarSettings_Cmd, "List all ConVars being enforced by Confogl");
 	RegConsoleCmd("confogl_cvardiff", CVS_CvarDiff_Cmd, "List any ConVars that have been changed from their initialized values");
@@ -42,6 +51,8 @@ void CVS_OnModuleEnd()
 
 void CVS_OnConfigsExecuted()
 {
+	ResolvePendingCvars();
+
 	if (bTrackingStarted) {
 		SetEnforcedCvars();
 	}
@@ -62,6 +73,7 @@ static Action CVS_SetCvars_Cmd(int args)
 	LogMessage("[%s] No longer accepting new ConVars", CVS_MODULE_NAME);
 #endif
 
+	ResolvePendingCvars();
 	SetEnforcedCvars();
 	bTrackingStarted = true;
 
@@ -211,6 +223,7 @@ static void ClearAllSettings()
 	}
 
 	CvarSettingsArray.Clear();
+	PendingCvarsArray.Clear();
 }
 
 static void SetEnforcedCvars()
@@ -251,22 +264,15 @@ static void AddCvar(const char[] cvar, const char[] newval)
 		return;
 	}
 
-	ConVar newCvar = FindConVar(cvar);
-
-	if (newCvar == null) {
-		Debug_LogError(CVS_MODULE_NAME, "Could not find CVar specified (%s)", cvar);
-		return;
-	}
-
 	char cvarBuffer[CVS_CVAR_MAXLEN];
 	int iSize = CvarSettingsArray.Length;
 
-	CVSEntry newEntry;
+	CVSEntry existingEntry;
 
 	for (int i = 0; i < iSize; i++) {
-		CvarSettingsArray.GetArray(i, newEntry, sizeof(newEntry));
+		CvarSettingsArray.GetArray(i, existingEntry, sizeof(existingEntry));
 
-		(newEntry.CVSE_cvar).GetName(cvarBuffer, CVS_CVAR_MAXLEN);
+		(existingEntry.CVSE_cvar).GetName(cvarBuffer, CVS_CVAR_MAXLEN);
 
 		if (strcmp(cvar, cvarBuffer, false) == 0) {
 			Debug_LogError(CVS_MODULE_NAME, "Attempt to track ConVar %s, which is already being tracked.", cvar);
@@ -274,19 +280,77 @@ static void AddCvar(const char[] cvar, const char[] newval)
 		}
 	}
 
-	newCvar.GetString(cvarBuffer, CVS_CVAR_MAXLEN);
+	int iPendingSize = PendingCvarsArray.Length;
+	CVSPending pendingEntry;
 
-	newEntry.CVSE_cvar = newCvar;
+	for (int i = 0; i < iPendingSize; i++) {
+		PendingCvarsArray.GetArray(i, pendingEntry, sizeof(pendingEntry));
+
+		if (strcmp(cvar, pendingEntry.CVSP_name, false) == 0) {
+			Debug_LogError(CVS_MODULE_NAME, "Attempt to track ConVar %s, which is already pending late-bind.", cvar);
+			return;
+		}
+	}
+
+	ConVar newCvar = FindConVar(cvar);
+
+	if (newCvar == null) {
+		// Owning plugin may not be loaded yet; retry from CVS_OnConfigsExecuted.
+		strcopy(pendingEntry.CVSP_name, CVS_CVAR_MAXLEN, cvar);
+		strcopy(pendingEntry.CVSP_newval, CVS_CVAR_MAXLEN, newval);
+		PendingCvarsArray.PushArray(pendingEntry, sizeof(pendingEntry));
+
+	#if CVARS_DEBUG
+		LogMessage("[%s] Pending late-bind for cvar = %s, newval = %s", CVS_MODULE_NAME, cvar, newval);
+	#endif
+		return;
+	}
+
+	PushTrackedCvar(newCvar, newval);
+}
+
+static void PushTrackedCvar(ConVar cvar, const char[] newval)
+{
+	char cvarBuffer[CVS_CVAR_MAXLEN];
+	cvar.GetString(cvarBuffer, CVS_CVAR_MAXLEN);
+
+	CVSEntry newEntry;
+	newEntry.CVSE_cvar = cvar;
 	strcopy(newEntry.CVSE_oldval, CVS_CVAR_MAXLEN, cvarBuffer);
 	strcopy(newEntry.CVSE_newval, CVS_CVAR_MAXLEN, newval);
 
-	newCvar.AddChangeHook(CVS_ConVarChange);
+	cvar.AddChangeHook(CVS_ConVarChange);
 
 #if CVARS_DEBUG
-	LogMessage("[%s] cvar = %s, newval = %s, oldval = %s", CVS_MODULE_NAME, cvar, newval, cvarBuffer);
+	char cvarName[CVS_CVAR_MAXLEN];
+	cvar.GetName(cvarName, sizeof(cvarName));
+	LogMessage("[%s] cvar = %s, newval = %s, oldval = %s", CVS_MODULE_NAME, cvarName, newval, cvarBuffer);
 #endif
 
 	CvarSettingsArray.PushArray(newEntry, sizeof(newEntry));
+}
+
+static void ResolvePendingCvars()
+{
+	int iSize = PendingCvarsArray.Length;
+	if (iSize == 0) {
+		return;
+	}
+
+	CVSPending pendingEntry;
+
+	// Reverse iteration so Erase() doesn't shift entries we haven't visited.
+	for (int i = iSize - 1; i >= 0; i--) {
+		PendingCvarsArray.GetArray(i, pendingEntry, sizeof(pendingEntry));
+
+		ConVar resolved = FindConVar(pendingEntry.CVSP_name);
+		if (resolved == null) {
+			continue;
+		}
+
+		PushTrackedCvar(resolved, pendingEntry.CVSP_newval);
+		PendingCvarsArray.Erase(i);
+	}
 }
 
 static void CVS_ConVarChange(ConVar hConVar, const char[] sOldValue, const char[] sNewValue)

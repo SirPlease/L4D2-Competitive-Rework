@@ -1,3 +1,39 @@
+1.166 (15-Mar-2026)
+	- Added native "L4D_FindByClassnameTargetname" to search for an entity by classname and targetname.
+	- Added native "L4D_NavArea_IsBlocked" to check if a NavArea is blocked. Requested by "gvazdas".
+	- Added natives "L4D_FindEntityByClassnameNearest" and "L4D_FindEntityByClassnameWithin" to find nearest entities. Requested by "gvazdas".
+	- These two natives are over 3x and 2x faster respectively than looping entities and working out distance in SourceMod.
+
+	- Fixed native "L4D_IsInIntro" not working on "c3m1_plankcountry" and "c7m1_docks". If other maps are broken please report. Thanks to "gvazdas" for reporting.
+	- Fixed forward "L4D2_OnEntityShoved" not working on Common Infected in recent updates. Thanks to "HwanGyul" for reporting.
+
+	- Updated: Plugin and test plugin.
+	- Updated: "/gamedata/left4dhooks.l4d1.txt" GameData file.
+	- Updated: "/gamedata/left4dhooks.l4d2.txt" GameData file.
+	- Updated: "/scripting/include/left4dhooks.inc" Include file.
+	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_natives.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_gamedata.sp" project file.
+	- Updated: "/scripting/l4dd/l4dd_setup.sp" project file.
+
+1.165 (14-Mar-2026)
+	- Fixed the "GetMeleePointer" SDKCall being accidentality removed. Thanks to "zuaLdakid05" for reporting.
+
+1.164 (14-Mar-2026)
+	- Fixed native "L4D2_IsVisibleToPlayer" crashing. Thanks to "morzlee" for reporting.
+
+1.163 (14-Mar-2026)
+	- Added native "L4D2_StartAssault" to trigger Special Infected to attack. Requested by "gvazdas".
+	- Added native "L4D2_RushVictim" to trigger Common to attack a specific player. Requested by "gvazdas".
+	- Added native "L4D2Direct_AddSurvivorBot" to spawn Survivor bots. Thanks to "spumer" for adding.
+	- Added natives "L4D_NavArea_GetAdjacentCount" and "L4D_NavArea_GetAdjacentAreas" to check for adjacent nav areas. Requested by "Slaven555".
+	- Added "POINTER_THENEXTBOTS" enum for the "L4D_GetPointer" native to return the TheNextBots pointer.
+
+	- Fixed storing float to int variable when setting float attribute "L4D2FWA_PenetrationNumLayers". Thanks to "jensewe" for fixing.
+	- Fixed default return value of Native "L4D2_GetFloatWeaponAttribute". Thanks to "jensewe" for fixing.
+	- Fixed "Invalid private forward handle" errors. Thanks to "gvazdas" for testing and various others for reporting.
+	- Fixed forwards "L4D_PipeBombProjectile*" and "L4D_PipeBomb_Detonate*" from firing due to breakable props when the "L4D_CBreakableProp_Break" forward wasn't being used. Thanks to "blueblur07302 for reporting.
+
 1.162 (25-Jan-2026)
 	- Added new target filters. Requested by Tonblader:
 		"@sa" - Alive Survivors.
@@ -10,17 +46,12 @@
 	- Changes to fix script execution timeout due to loading the gamedata twice on plugin start. Thanks to "kayletid201" for reporting.
 	- Various small changes to capture and prevent bugs or errors.
 
-	- Updated: Plugin.
-	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_gamedata.sp" project file.
-	- Updated: "/scripting/l4dd/l4dd_targetfilters.sp" project file.
-
 1.161 (04-Jan-2026)
 	- Fixed copy paste error breaking server OS detection. Thanks to "Hawkins" for reporting.
 
 1.160 (04-Jan-2026)
 	- Fixed native "L4D_SetLobbyReservation" from throwing errors. Thanks to "mr.raptor" for reporting.
-	- Changed native "L4D_GetEntityFromAddress" to work for all entities. Thanks to "Neburai", "blueblur" and "nosoop" for code.
+	- Changed native "L4D_GetEntityFromAddress" to work for all entities. Thanks to "Neburai", "blueblur0730" and "nosoop" for code.
 	- Changed native "L4D2Direct_GetSpawnTimer" inconsistency, requires code changes if used. Thanks to "A1m`" for fixing.
 	- Changed native "L4D_RespawnPlayer" to specify resetting player stats or not. Requested by "ball2hi".
 
@@ -91,10 +122,6 @@
 
 1.150 (06-May-2024)
 	- L4D1 Linux: Removed some unused clone functions that were removed from the game update. Thanks to "Ja-Forces" and "Forgetest" for reporting.
-
-	- Updated: Plugin.
-	- Updated: "/gamedata/left4dhooks.l4d1.txt" GameData file.
-	- Updated: "/scripting/l4dd/l4dd_forwards.sp" project file.
 
 1.149 (06-May-2024)
 	- Repackage of the last update to include the GameData changes, which it did not.
@@ -620,8 +647,6 @@
 	- Fixed native "L4D2_IsReachable" using a bad signature. Thanks to "tRololo312312" for reporting.
 	- Wildcarded the "Music::Play" signatures to be compatible with plugins detouring. Thanks to "user2000", "Edison1318" and "Shadowysn" for reporting.
 	- Wildcarded the "ZombieManager::SpawnTank" signatures to be compatible with plugins detouring. Thanks to "Tank Rush" for reporting.
-
-	- L4D1 and L4D2 GameData files updated.
 
 1.75 (18-Nov-2021)
 	- Fixed forward "L4D2_OnHitByVomitJar" throwing errors about null pointer.

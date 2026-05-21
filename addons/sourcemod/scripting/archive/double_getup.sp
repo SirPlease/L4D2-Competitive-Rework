@@ -60,7 +60,7 @@ enum ePlayerState
 	eTANK_PUNCH_JOCKEY_FIX
 }
 
-stock const int tankFlyAnim[SurvivorCharacter_Size - 1] =
+stock const int tankFlyAnim[L4D2Util_SurvivorCharacter_Size - 1] =
 {
 	628, // Nick
 	636, // Rochelle
@@ -69,8 +69,7 @@ stock const int tankFlyAnim[SurvivorCharacter_Size - 1] =
 	536, // Bill
 	545, // Zoey
 	539, // Francis
-	536, // Louis
-	539 // Francis
+	536 // Louis
 };
 
 ConVar
@@ -81,19 +80,19 @@ bool
 	lateLoad;
 
 int
-	pendingGetups[SurvivorCharacter_Size - 1] = {0, ...}, // This is used to track the number of pending getups. The collective opinion is that you should have at most 1.
-	interrupt[SurvivorCharacter_Size - 1] = {false, ...}, // If the player was getting up, and that getup is interrupted. This alows us to break out of the GetupTimer loop.
-	currentSequence[SurvivorCharacter_Size - 1] = {0, ...}; // Kept to track when a player changes sequences, i.e. changes animations.
+	pendingGetups[L4D2Util_SurvivorCharacter_Size - 1] = {0, ...}, // This is used to track the number of pending getups. The collective opinion is that you should have at most 1.
+	interrupt[L4D2Util_SurvivorCharacter_Size - 1] = {false, ...}, // If the player was getting up, and that getup is interrupted. This alows us to break out of the GetupTimer loop.
+	currentSequence[L4D2Util_SurvivorCharacter_Size - 1] = {0, ...}; // Kept to track when a player changes sequences, i.e. changes animations.
 
 ePlayerState
-	playerState[SurvivorCharacter_Size] = {eUPRIGHT, ...}; // Since there are multiple sequences for each animation, this acts as a simpler way to track a player's state.
+	playerState[L4D2Util_SurvivorCharacter_Size] = {eUPRIGHT, ...}; // Since there are multiple sequences for each animation, this acts as a simpler way to track a player's state.
 
 public Plugin myinfo =
 {
 	name = "L4D2 Get-Up Fix",
 	author = "Darkid, Jacob",
 	description = "Fixes the problem when, after completing a getup animation, you have another one.",
-	version = "3.8.1",
+	version = "3.8.2",
 	url = "https://github.com/SirPlease/L4D2-Competitive-Rework"
 }
 
@@ -139,7 +138,7 @@ public void OnClientPutInServer(int client)
 
 public void round_start(Event hEvent, const char[] name, bool dontBroadcast)
 {
-	for (int survivor = 0; survivor < SurvivorCharacter_Size; survivor++) {
+	for (int survivor = 0; survivor < L4D2Util_SurvivorCharacter_Size; survivor++) {
 		playerState[survivor] = eUPRIGHT;
 	}
 }
@@ -149,7 +148,7 @@ public void smoker_land(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("victim"));
 	int survivor = IdentifySurvivor(client);
-	if (survivor == SurvivorCharacter_Invalid) {
+	if (survivor == L4D2Util_SurvivorCharacter_Invalid) {
 		return;
 	}
 	
@@ -162,7 +161,7 @@ public void jockey_land(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("victim"));
 	int survivor = IdentifySurvivor(client);
-	if (survivor == SurvivorCharacter_Invalid) {
+	if (survivor == L4D2Util_SurvivorCharacter_Invalid) {
 		return;
 	}
 
@@ -173,7 +172,7 @@ public void jockey_clear(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("victim"));
 	int survivor = IdentifySurvivor(client);
-	if (survivor == SurvivorCharacter_Invalid) {
+	if (survivor == L4D2Util_SurvivorCharacter_Invalid) {
 		return;
 	}
 	
@@ -187,7 +186,7 @@ public void smoker_clear(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("victim"));
 	int survivor = IdentifySurvivor(client);
-	if (survivor == SurvivorCharacter_Invalid) {
+	if (survivor == L4D2Util_SurvivorCharacter_Invalid) {
 		return;
 	}
 	
@@ -204,7 +203,7 @@ public void hunter_clear(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("victim"));
 	int survivor = IdentifySurvivor(client);
-	if (survivor == SurvivorCharacter_Invalid) {
+	if (survivor == L4D2Util_SurvivorCharacter_Invalid) {
 		return;
 	}
 	
@@ -226,7 +225,7 @@ public void hunter_clear(Event hEvent, const char[] name, bool dontBroadcast)
 public void multi_charge(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int survivor = IdentifySurvivor(GetClientOfUserId(hEvent.GetInt("victim")));
-	if (survivor == SurvivorCharacter_Invalid) {
+	if (survivor == L4D2Util_SurvivorCharacter_Invalid) {
 		return;
 	}
 	
@@ -241,7 +240,7 @@ public void multi_charge(Event hEvent, const char[] name, bool dontBroadcast)
 public void charger_land_instant(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int survivor = IdentifySurvivor(GetClientOfUserId(hEvent.GetInt("victim")));
-	if (survivor == SurvivorCharacter_Invalid) {
+	if (survivor == L4D2Util_SurvivorCharacter_Invalid) {
 		return;
 	}
 	
@@ -257,7 +256,7 @@ public void charger_land_instant(Event hEvent, const char[] name, bool dontBroad
 public void charger_land(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int survivor = IdentifySurvivor(GetClientOfUserId(hEvent.GetInt("victim")));
-	if (survivor == SurvivorCharacter_Invalid) {
+	if (survivor == L4D2Util_SurvivorCharacter_Invalid) {
 		return;
 	}
 
@@ -273,7 +272,7 @@ public void charger_clear(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("victim"));
 	int survivor = IdentifySurvivor(client);
-	if (survivor == SurvivorCharacter_Invalid) {
+	if (survivor == L4D2Util_SurvivorCharacter_Invalid) {
 		return;
 	}
 	
@@ -289,7 +288,7 @@ public void charger_clear(Event hEvent, const char[] name, bool dontBroadcast)
 public void player_incap(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int survivor = IdentifySurvivor(GetClientOfUserId(hEvent.GetInt("userid")));
-	if (survivor == SurvivorCharacter_Invalid) {
+	if (survivor == L4D2Util_SurvivorCharacter_Invalid) {
 		return;
 	}
 	
@@ -306,7 +305,7 @@ public void player_revive(Event hEvent, const char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(hEvent.GetInt("subject"));
 	int survivor = IdentifySurvivor(client);
-	if (survivor == SurvivorCharacter_Invalid) {
+	if (survivor == L4D2Util_SurvivorCharacter_Invalid) {
 		return;
 	}
 	
@@ -318,7 +317,7 @@ public void player_revive(Event hEvent, const char[] name, bool dontBroadcast)
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)
 {
 	int survivor = IdentifySurvivor(victim);
-	if (survivor == SurvivorCharacter_Invalid) {
+	if (survivor == L4D2Util_SurvivorCharacter_Invalid) {
 		return Plugin_Continue;
 	}
 	
@@ -365,7 +364,7 @@ void _TankLandTimer(int client)
 public Action TankLandTimer(Handle hTimer, any client)
 {
 	int survivor = IdentifySurvivor(client);
-	if (survivor == SurvivorCharacter_Invalid) {
+	if (survivor == L4D2Util_SurvivorCharacter_Invalid) {
 		return Plugin_Stop;
 	}
 	
@@ -410,7 +409,7 @@ void _GetupTimer(int client)
 public Action GetupTimer(Handle hTimer, any client)
 {
 	int survivor = IdentifySurvivor(client);
-	if (survivor == SurvivorCharacter_Invalid) {
+	if (survivor == L4D2Util_SurvivorCharacter_Invalid) {
 		return Plugin_Stop;
 	}
 	
@@ -472,7 +471,7 @@ void _CancelGetup(int client)
 public Action CancelGetup(Handle hTimer, any client)
 {
 	int survivor = IdentifySurvivor(client);
-	if (survivor == SurvivorCharacter_Invalid) {
+	if (survivor == L4D2Util_SurvivorCharacter_Invalid) {
 		return Plugin_Stop;
 	}
 	

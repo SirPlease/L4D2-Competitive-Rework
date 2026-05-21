@@ -364,6 +364,35 @@ void LoadGameData()
 			LogError("Failed to create SDKCall: \"CBaseTrigger::IsTouching\" (%s)", g_sSystem);
 	}
 
+	StartPrepSDKCall(SDKCall_Raw);
+	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CGlobalEntityList::FindEntityByClassnameNearest") == false )
+	{
+		LogError("Failed to find signature: \"CGlobalEntityList::FindEntityByClassnameNearest\" (%s)", g_sSystem);
+	} else {
+		PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
+		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+		PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+		PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
+		g_hSDK_CGlobalEntityList_FindEntityByClassnameNearest = EndPrepSDKCall();
+		if( g_hSDK_CGlobalEntityList_FindEntityByClassnameNearest == null )
+			LogError("Failed to create SDKCall: \"CBaseTrigger::IsTouching\" (%s)", g_sSystem);
+	}
+
+	StartPrepSDKCall(SDKCall_Raw);
+	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CGlobalEntityList::FindEntityByClassnameWithin") == false )
+	{
+		LogError("Failed to find signature: \"CGlobalEntityList::FindEntityByClassnameWithin\" (%s)", g_sSystem);
+	} else {
+		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer, VDECODE_FLAG_ALLOWWORLD|VDECODE_FLAG_ALLOWNULL);
+		PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
+		PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
+		PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+		PrepSDKCall_SetReturnInfo(SDKType_CBaseEntity, SDKPass_Pointer);
+		g_hSDK_CGlobalEntityList_FindEntityByClassnameWithin = EndPrepSDKCall();
+		if( g_hSDK_CGlobalEntityList_FindEntityByClassnameWithin == null )
+			LogError("Failed to create SDKCall: \"CBaseTrigger::IsTouching\" (%s)", g_sSystem);
+	}
+
 	/*
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::IsAnySurvivorInStartArea") == false )
@@ -1010,12 +1039,15 @@ void LoadGameData()
 		StartPrepSDKCall(SDKCall_Player);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::OnRevivedByDefibrillator") == false )
 		{
-			SetFailState("Failed to find signature: \"CTerrorPlayer::OnRevivedByDefibrillator\" (%s)", g_sSystem);
+			LogError("Failed to find signature: \"CTerrorPlayer::OnRevivedByDefibrillator\" (%s)", g_sSystem);
 		}
-		PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
-		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-		g_hSDK_CTDefibPlayer = EndPrepSDKCall();
-		
+		else
+		{
+			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+			PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+			g_hSDK_CTDefibPlayer = EndPrepSDKCall();
+		}
+
 		if( g_hSDK_CTDefibPlayer == null )
 		{
 			LogError("Failed to create SDKCall: \"CTerrorPlayer::OnRevivedByDefibrillator\" (%s)", g_sSystem);
@@ -1399,6 +1431,21 @@ void LoadGameData()
 			LogError("Failed to create SDKCall: \"CDirector::TryOfferingTankBot\" (%s)", g_sSystem);
 	}
 
+	if( g_bLeft4Dead2 )
+	{
+		StartPrepSDKCall(SDKCall_Raw);
+		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CDirector::AddSurvivorBot") == false )
+		{
+			LogError("Failed to find signature: \"CDirector::AddSurvivorBot\" (%s)", g_sSystem);
+		} else {
+			PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+			g_hSDK_CDirector_AddSurvivorBot = EndPrepSDKCall();
+			if( g_hSDK_CDirector_AddSurvivorBot == null )
+				LogError("Failed to create SDKCall: \"CDirector::AddSurvivorBot\" (%s)", g_sSystem);
+		}
+	}
+
 	StartPrepSDKCall(SDKCall_Raw);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CNavMesh::GetNavArea") == false )
 	{
@@ -1423,6 +1470,19 @@ void LoadGameData()
 		g_hSDK_CNavArea_IsConnected = EndPrepSDKCall();
 		if( g_hSDK_CNavArea_IsConnected == null )
 			LogError("Failed to create SDKCall: \"CNavArea::IsConnected\" (%s)", g_sSystem);
+	}
+
+	StartPrepSDKCall(SDKCall_Raw);
+	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CNavArea::IsBlocked") == false )
+	{
+		LogError("Failed to find signature: \"CNavArea::IsBlocked\" (%s)", g_sSystem);
+	} else {
+		PrepSDKCall_AddParameter(SDKType_PlainOldData, SDKPass_Plain);
+		PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
+		PrepSDKCall_SetReturnInfo(SDKType_Bool, SDKPass_Plain);
+		g_hSDK_CNavArea_IsBlocked = EndPrepSDKCall();
+		if( g_hSDK_CNavArea_IsBlocked == null )
+			LogError("Failed to create SDKCall: \"CNavArea::IsBlocked\" (%s)", g_sSystem);
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
@@ -1505,6 +1565,40 @@ void LoadGameData()
 
 	if( g_bLeft4Dead2 )
 	{
+		StartPrepSDKCall(SDKCall_Static);
+		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "TheNextBots") == false )
+		{
+			LogError("Failed to find signature: \"TheNextBots\" (%s)", g_sSystem);
+		} else {
+			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+			g_hSDK_TheNextBots = EndPrepSDKCall();
+			if( g_hSDK_TheNextBots == null )
+				LogError("Failed to create SDKCall: \"TheNextBots\" (%s)", g_sSystem);
+		}
+
+		StartPrepSDKCall(SDKCall_Raw);
+		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "NextBotManager::RushVictim") == false )
+		{
+			LogError("Failed to find signature: \"NextBotManager::RushVictim\" (%s)", g_sSystem);
+		} else {
+			PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer, VDECODE_FLAG_ALLOWNULL);
+			PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+			g_hSDK_RushVictim = EndPrepSDKCall();
+			if( g_hSDK_RushVictim == null )
+				LogError("Failed to create SDKCall: \"NextBotManager::RushVictim\" (%s)", g_sSystem);
+		}
+
+		StartPrepSDKCall(SDKCall_Raw);
+		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "NextBotManager::StartAssault") == false )
+		{
+			LogError("Failed to find signature: \"NextBotManager::StartAssault\" (%s)", g_sSystem);
+		} else {
+			PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
+			g_hSDK_StartAssault = EndPrepSDKCall();
+			if( g_hSDK_StartAssault == null )
+				LogError("Failed to create SDKCall: \"NextBotManager::StartAssault\" (%s)", g_sSystem);
+		}
+
 		StartPrepSDKCall(SDKCall_Raw);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CMeleeWeaponInfoStore::GetMeleeWeaponInfo") == false )
 		{
@@ -1674,98 +1768,153 @@ void LoadGameData()
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::OnPouncedOnSurvivor") == false )
-		SetFailState("Failed to find signature: CTerrorPlayer::OnPouncedOnSurvivor");
-	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-	g_hSDK_CTerrorPlayer_OnPouncedOnSurvivor = EndPrepSDKCall();
-	if( g_hSDK_CTerrorPlayer_OnPouncedOnSurvivor == null )
-		SetFailState("Failed to create SDKCall: CTerrorPlayer::OnPouncedOnSurvivor");
+	{
+		LogError("Failed to find signature: \"CTerrorPlayer::OnPouncedOnSurvivor\" (%s)", g_sSystem);
+	}
+	else
+	{
+		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+		g_hSDK_CTerrorPlayer_OnPouncedOnSurvivor = EndPrepSDKCall();
+		if( g_hSDK_CTerrorPlayer_OnPouncedOnSurvivor == null )
+			LogError("Failed to create SDKCall: CTerrorPlayer::OnPouncedOnSurvivor");
+	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::GrabVictimWithTongue") == false )
-		SetFailState("Failed to find signature: CTerrorPlayer::GrabVictimWithTongue");
-	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-	g_hSDK_CTerrorPlayer_GrabVictimWithTongue = EndPrepSDKCall();
-	if( g_hSDK_CTerrorPlayer_GrabVictimWithTongue == null )
-		SetFailState("Failed to create SDKCall: CTerrorPlayer::GrabVictimWithTongue");
+	{
+		LogError("Failed to find signature: \"CTerrorPlayer::GrabVictimWithTongue\" (%s)", g_sSystem);
+	}
+	else
+	{
+		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+		g_hSDK_CTerrorPlayer_GrabVictimWithTongue = EndPrepSDKCall();
+		if( g_hSDK_CTerrorPlayer_GrabVictimWithTongue == null )
+			LogError("Failed to create SDKCall: CTerrorPlayer::GrabVictimWithTongue");
+	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::ReleaseTongueVictim") == false )
-		SetFailState("Failed to find signature: CTerrorPlayer::ReleaseTongueVictim");
-	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-	g_hSDK_CTerrorPlayer_ReleaseTongueVictim = EndPrepSDKCall();
-	if( g_hSDK_CTerrorPlayer_ReleaseTongueVictim == null )
-		SetFailState("Failed to create SDKCall: CTerrorPlayer::ReleaseTongueVictim");
+	{
+		LogError("Failed to find signature: \"CTerrorPlayer::ReleaseTongueVictim\" (%s)", g_sSystem);
+	}
+	else
+	{
+		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+		g_hSDK_CTerrorPlayer_ReleaseTongueVictim = EndPrepSDKCall();
+		if( g_hSDK_CTerrorPlayer_ReleaseTongueVictim == null )
+			LogError("Failed to create SDKCall: CTerrorPlayer::ReleaseTongueVictim");
+	}
 
 	StartPrepSDKCall(SDKCall_Player);
 	if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::OnPounceEnded") == false )
-		SetFailState("Failed to find signature: CTerrorPlayer::OnPounceEnded");
-	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-	g_hSDK_CTerrorPlayer_OnPounceEnded = EndPrepSDKCall();
-	if( g_hSDK_CTerrorPlayer_OnPounceEnded == null )
-		SetFailState("Failed to create SDKCall: CTerrorPlayer::OnPounceEnded");
+	{
+		LogError("Failed to find signature: \"CTerrorPlayer::OnPounceEnded\" (%s)", g_sSystem);
+	}
+	else
+	{
+		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+		g_hSDK_CTerrorPlayer_OnPounceEnded = EndPrepSDKCall();
+		if( g_hSDK_CTerrorPlayer_OnPounceEnded == null )
+			LogError("Failed to create SDKCall: CTerrorPlayer::OnPounceEnded");
+	}
 
 	if( g_bLeft4Dead2 )
 	{
 		StartPrepSDKCall(SDKCall_Player);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::OnLeptOnSurvivor") == false )
-			SetFailState("Failed to find signature: CTerrorPlayer::OnLeptOnSurvivor");
-		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-		g_hSDK_CTerrorPlayer_OnLeptOnSurvivor = EndPrepSDKCall();
-		if( g_hSDK_CTerrorPlayer_OnLeptOnSurvivor == null )
-			SetFailState("Failed to create SDKCall: CTerrorPlayer::OnLeptOnSurvivor");
+		{
+			LogError("Failed to find signature: \"CTerrorPlayer::OnLeptOnSurvivor\" (%s)", g_sSystem);
+		}
+		else
+		{
+			PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+			g_hSDK_CTerrorPlayer_OnLeptOnSurvivor = EndPrepSDKCall();
+			if( g_hSDK_CTerrorPlayer_OnLeptOnSurvivor == null )
+				LogError("Failed to create SDKCall: CTerrorPlayer::OnLeptOnSurvivor");
+		}
 
 		StartPrepSDKCall(SDKCall_Static);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "ThrowImpactedSurvivor") == false )
-			SetFailState("Failed to find signature: ThrowImpactedSurvivor");
-		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-		PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
-		PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
-		g_hSDK_ThrowImpactedSurvivor = EndPrepSDKCall();
-		if( g_hSDK_ThrowImpactedSurvivor == null )
-			SetFailState("Failed to create SDKCall: ThrowImpactedSurvivor");
+		{
+			LogError("Failed to find signature: \"ThrowImpactedSurvivor\" (%s)", g_sSystem);
+		}
+		else
+		{
+			PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+			PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+			PrepSDKCall_AddParameter(SDKType_Float, SDKPass_Plain);
+			PrepSDKCall_AddParameter(SDKType_Bool, SDKPass_Plain);
+			g_hSDK_ThrowImpactedSurvivor = EndPrepSDKCall();
+			if( g_hSDK_ThrowImpactedSurvivor == null )
+				LogError("Failed to create SDKCall: ThrowImpactedSurvivor");
+		}
 
 		StartPrepSDKCall(SDKCall_Player);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::OnStartCarryingVictim") == false )
-			SetFailState("Failed to find signature: CTerrorPlayer::OnStartCarryingVictim");
-		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-		g_hSDK_CTerrorPlayer_OnStartCarryingVictim = EndPrepSDKCall();
-		if( g_hSDK_CTerrorPlayer_OnStartCarryingVictim == null )
-			SetFailState("Failed to create SDKCall: CTerrorPlayer::OnStartCarryingVictim");
+		{
+			LogError("Failed to find signature: \"CTerrorPlayer::OnStartCarryingVictim\" (%s)", g_sSystem);
+		}
+		else
+		{
+			PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+			g_hSDK_CTerrorPlayer_OnStartCarryingVictim = EndPrepSDKCall();
+			if( g_hSDK_CTerrorPlayer_OnStartCarryingVictim == null )
+				LogError("Failed to create SDKCall: CTerrorPlayer::OnStartCarryingVictim");
+		}
 
 		StartPrepSDKCall(SDKCall_Player);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::QueuePummelVictim") == false )
-			SetFailState("Failed to find signature: CTerrorPlayer::QueuePummelVictim");
-		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-		PrepSDKCall_AddParameter(SDKType_Float, SDKPass_ByValue);
-		g_hSDK_CTerrorPlayer_QueuePummelVictim = EndPrepSDKCall();
-		if( g_hSDK_CTerrorPlayer_QueuePummelVictim == null )
-			SetFailState("Failed to create SDKCall: CTerrorPlayer::QueuePummelVictim");
+		{
+			LogError("Failed to find signature: \"CTerrorPlayer::QueuePummelVictim\" (%s)", g_sSystem);
+		}
+		else
+		{
+			PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+			PrepSDKCall_AddParameter(SDKType_Float, SDKPass_ByValue);
+			g_hSDK_CTerrorPlayer_QueuePummelVictim = EndPrepSDKCall();
+			if( g_hSDK_CTerrorPlayer_QueuePummelVictim == null )
+				LogError("Failed to create SDKCall: CTerrorPlayer::QueuePummelVictim");
+		}
 
 		StartPrepSDKCall(SDKCall_Player);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::OnPummelEnded") == false )
-			SetFailState("Failed to find signature: CTerrorPlayer::OnPummelEnded");
-		PrepSDKCall_AddParameter(SDKType_String, SDKPass_ByRef);
-		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-		g_hSDK_CTerrorPlayer_OnPummelEnded = EndPrepSDKCall();
-		if( g_hSDK_CTerrorPlayer_OnPummelEnded == null )
-			SetFailState("Failed to create SDKCall: CTerrorPlayer::OnPummelEnded");
+		{
+			LogError("Failed to find signature: \"CTerrorPlayer::OnPummelEnded\" (%s)", g_sSystem);
+		}
+		else
+		{
+			PrepSDKCall_AddParameter(SDKType_String, SDKPass_ByRef);
+			PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+			g_hSDK_CTerrorPlayer_OnPummelEnded = EndPrepSDKCall();
+			if( g_hSDK_CTerrorPlayer_OnPummelEnded == null )
+				LogError("Failed to create SDKCall: CTerrorPlayer::OnPummelEnded");
+		}
 
 		StartPrepSDKCall(SDKCall_Player);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::OnCarryEnded") == false )
-			SetFailState("Failed to find signature: CTerrorPlayer::OnCarryEnded");
-		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-		g_hSDK_CTerrorPlayer_OnCarryEnded = EndPrepSDKCall();
-		if( g_hSDK_CTerrorPlayer_OnCarryEnded == null )
-			SetFailState("Failed to create SDKCall: CTerrorPlayer::OnCarryEnded");
+		{
+			LogError("Failed to find signature: \"CTerrorPlayer::OnCarryEnded\" (%s)", g_sSystem);
+		}
+		else
+		{
+			PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+			g_hSDK_CTerrorPlayer_OnCarryEnded = EndPrepSDKCall();
+			if( g_hSDK_CTerrorPlayer_OnCarryEnded == null )
+				LogError("Failed to create SDKCall: CTerrorPlayer::OnCarryEnded");
+		}
 
 		StartPrepSDKCall(SDKCall_Player);
 		if( PrepSDKCall_SetFromConf(hGameData, SDKConf_Signature, "CTerrorPlayer::OnRideEnded") == false )
-			SetFailState("Failed to find signature: CTerrorPlayer::OnRideEnded");
-		PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-		g_hSDK_CTerrorPlayer_OnRideEnded = EndPrepSDKCall();
-		if( g_hSDK_CTerrorPlayer_OnRideEnded == null )
-			SetFailState("Failed to create SDKCall: CTerrorPlayer::OnRideEnded");
+		{
+			LogError("Failed to find signature: \"CTerrorPlayer::OnRideEnded\" (%s)", g_sSystem);
+		}
+		else
+		{
+			PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+			g_hSDK_CTerrorPlayer_OnRideEnded = EndPrepSDKCall();
+			if( g_hSDK_CTerrorPlayer_OnRideEnded == null )
+				LogError("Failed to create SDKCall: CTerrorPlayer::OnRideEnded");
+		}
 	}
 
 	StartPrepSDKCall(SDKCall_Player);
@@ -2171,6 +2320,161 @@ void LoadGameData()
 
 
 	// ====================================================================================================
+	//									VALIDATE SDKCALLS
+	// ====================================================================================================
+	#if VERIFY_SDKCALL
+	ValidateSDKCall(g_hSDK_GetWeaponInfo, "g_hSDK_GetWeaponInfo");
+	ValidateSDKCall(g_hSDK_CTerrorGameRules_GetMissionInfo, "g_hSDK_CTerrorGameRules_GetMissionInfo");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_GetLastKnownArea, "g_hSDK_CTerrorPlayer_GetLastKnownArea");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_Deafen, "g_hSDK_CTerrorPlayer_Deafen");
+	ValidateSDKCall(g_hSDK_Music_Play, "g_hSDK_Music_Play");
+	ValidateSDKCall(g_hSDK_Music_StopPlaying, "g_hSDK_Music_StopPlaying");
+	ValidateSDKCall(g_hSDK_CEntityDissolve_Create, "g_hSDK_CEntityDissolve_Create");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_OnITExpired, "g_hSDK_CTerrorPlayer_OnITExpired");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_EstimateFallingDamage, "g_hSDK_CTerrorPlayer_EstimateFallingDamage");
+	ValidateSDKCall(g_hSDK_CBaseEntity_WorldSpaceCenter, "g_hSDK_CBaseEntity_WorldSpaceCenter");
+	ValidateSDKCall(g_hSDK_CBaseEntity_ApplyLocalAngularVelocityImpulse, "g_hSDK_CBaseEntity_ApplyLocalAngularVelocityImpulse");
+	ValidateSDKCall(g_hSDK_ZombieManager_GetRandomPZSpawnPosition, "g_hSDK_ZombieManager_GetRandomPZSpawnPosition");
+	ValidateSDKCall(g_hSDK_CNavMesh_GetNearestNavArea, "g_hSDK_CNavMesh_GetNearestNavArea");
+	ValidateSDKCall(g_hSDK_TerrorNavArea_FindRandomSpot, "g_hSDK_TerrorNavArea_FindRandomSpot");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_WarpToValidPositionIfStuck, "g_hSDK_CTerrorPlayer_WarpToValidPositionIfStuck");
+	ValidateSDKCall(g_hSDK_CDirector_HasAnySurvivorLeftSafeArea, "g_hSDK_CDirector_HasAnySurvivorLeftSafeArea");
+	ValidateSDKCall(g_hSDK_CBaseTrigger_IsTouching, "g_hSDK_CBaseTrigger_IsTouching");
+	ValidateSDKCall(g_hSDK_CGlobalEntityList_FindEntityByClassnameNearest, "g_hSDK_CGlobalEntityList_FindEntityByClassnameNearest");
+	ValidateSDKCall(g_hSDK_CGlobalEntityList_FindEntityByClassnameWithin, "g_hSDK_CGlobalEntityList_FindEntityByClassnameWithin");
+	ValidateSDKCall(g_hSDK_CDirector_AreAllSurvivorsInFinaleArea, "g_hSDK_CDirector_AreAllSurvivorsInFinaleArea");
+	ValidateSDKCall(g_hSDK_TerrorNavMesh_GetInitialCheckpoint, "g_hSDK_TerrorNavMesh_GetInitialCheckpoint");
+	ValidateSDKCall(g_hSDK_Checkpoint_ContainsArea, "g_hSDK_Checkpoint_ContainsArea");
+	ValidateSDKCall(g_hSDK_CTerrorGameRules_HasPlayerControlledZombies, "g_hSDK_CTerrorGameRules_HasPlayerControlledZombies");
+	ValidateSDKCall(g_hSDK_ForceVersusStart, "g_hSDK_ForceVersusStart");
+	ValidateSDKCall(g_hSDK_ForceSurvivalStart, "g_hSDK_ForceSurvivalStart");
+	ValidateSDKCall(g_hSDK_CBaseGrenade_Detonate, "g_hSDK_CBaseGrenade_Detonate");
+	ValidateSDKCall(g_hSDK_CPipeBombProjectile_Create, "g_hSDK_CPipeBombProjectile_Create");
+	ValidateSDKCall(g_hSDK_CMolotovProjectile_Create, "g_hSDK_CMolotovProjectile_Create");
+	ValidateSDKCall(g_hSDK_NavAreaTravelDistance, "g_hSDK_NavAreaTravelDistance");
+	ValidateSDKCall(g_hSDK_CDirector_RestartScenarioFromVote, "g_hSDK_CDirector_RestartScenarioFromVote");
+	ValidateSDKCall(g_hSDK_CTerrorGameRules_SetCampaignScores, "g_hSDK_CTerrorGameRules_SetCampaignScores");
+	ValidateSDKCall(g_hSDK_CTerrorGameRules_GetTeamScore, "g_hSDK_CTerrorGameRules_GetTeamScore");
+	ValidateSDKCall(g_hSDK_CDirector_IsFirstMapInScenario, "g_hSDK_CDirector_IsFirstMapInScenario");
+	ValidateSDKCall(g_hSDK_CTerrorGameRules_IsMissionFinalMap, "g_hSDK_CTerrorGameRules_IsMissionFinalMap");
+	ValidateSDKCall(g_hSDK_KeyValues_GetString, "g_hSDK_KeyValues_GetString");
+	ValidateSDKCall(g_hSDK_AmmoDef_MaxCarry, "g_hSDK_AmmoDef_MaxCarry");
+	ValidateSDKCall(g_hSDK_CGameRulesProxy_NotifyNetworkStateChanged, "g_hSDK_CGameRulesProxy_NotifyNetworkStateChanged");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_OnStaggered, "g_hSDK_CTerrorPlayer_OnStaggered");
+	ValidateSDKCall(g_hSDK_CDirectorScriptedEventManager_SendInRescueVehicle, "g_hSDK_CDirectorScriptedEventManager_SendInRescueVehicle");
+	ValidateSDKCall(g_hSDK_ZombieManager_ReplaceTank, "g_hSDK_ZombieManager_ReplaceTank");
+	ValidateSDKCall(g_hSDK_ZombieManager_SpawnTank, "g_hSDK_ZombieManager_SpawnTank");
+	ValidateSDKCall(g_hSDK_ZombieManager_SpawnWitch, "g_hSDK_ZombieManager_SpawnWitch");
+	ValidateSDKCall(g_hSDK_CDirector_IsFinaleEscapeInProgress, "g_hSDK_CDirector_IsFinaleEscapeInProgress");
+	ValidateSDKCall(g_hSDK_SurvivorBot_SetHumanSpectator, "g_hSDK_SurvivorBot_SetHumanSpectator");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_TakeOverBot, "g_hSDK_CTerrorPlayer_TakeOverBot");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_CanBecomeGhost, "g_hSDK_CTerrorPlayer_CanBecomeGhost");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_SetBecomeGhostAt, "g_hSDK_CTerrorPlayer_SetBecomeGhostAt");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_GoAwayFromKeyboard, "g_hSDK_CTerrorPlayer_GoAwayFromKeyboard");
+	ValidateSDKCall(g_hSDK_CDirector_TryOfferingTankBot, "g_hSDK_CDirector_TryOfferingTankBot");
+	ValidateSDKCall(g_hSDK_CNavMesh_GetNavArea, "g_hSDK_CNavMesh_GetNavArea");
+	ValidateSDKCall(g_hSDK_CNavArea_IsConnected, "g_hSDK_CNavArea_IsConnected");
+	ValidateSDKCall(g_hSDK_CNavArea_IsBlocked, "g_hSDK_CNavArea_IsBlocked");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_GetFlowDistance, "g_hSDK_CTerrorPlayer_GetFlowDistance");
+	ValidateSDKCall(g_hSDK_Intensity_Reset, "g_hSDK_Intensity_Reset");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_SetShovePenalty, "g_hSDK_CTerrorPlayer_SetShovePenalty");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_DoAnimationEvent, "g_hSDK_CTerrorPlayer_DoAnimationEvent");
+	ValidateSDKCall(g_hSDK_CTerrorGameRules_RecomputeTeamScores, "g_hSDK_CTerrorGameRules_RecomputeTeamScores");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_OnVomitedUpon, "g_hSDK_CTerrorPlayer_OnVomitedUpon");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_CancelStagger, "g_hSDK_CTerrorPlayer_CancelStagger");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_FindUseEntity, "g_hSDK_CTerrorPlayer_FindUseEntity");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_OnPouncedOnSurvivor, "g_hSDK_CTerrorPlayer_OnPouncedOnSurvivor");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_GrabVictimWithTongue, "g_hSDK_CTerrorPlayer_GrabVictimWithTongue");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_ReleaseTongueVictim, "g_hSDK_CTerrorPlayer_ReleaseTongueVictim");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_OnPounceEnded, "g_hSDK_CTerrorPlayer_OnPounceEnded");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_RoundRespawn, "g_hSDK_CTerrorPlayer_RoundRespawn");
+	ValidateSDKCall(g_hSDK_CDirector_CreateRescuableSurvivors, "g_hSDK_CDirector_CreateRescuableSurvivors");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_StopBeingRevived, "g_hSDK_CTerrorPlayer_StopBeingRevived");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_OnRevived, "g_hSDK_CTerrorPlayer_OnRevived");
+	ValidateSDKCall(g_hSDK_CDirectorTacticalServices_GetHighestFlowSurvivor, "g_hSDK_CDirectorTacticalServices_GetHighestFlowSurvivor");
+	ValidateSDKCall(g_hSDK_Infected_GetFlowDistance, "g_hSDK_Infected_GetFlowDistance");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_TakeOverZombieBot, "g_hSDK_CTerrorPlayer_TakeOverZombieBot");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_ReplaceWithBot, "g_hSDK_CTerrorPlayer_ReplaceWithBot");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_CullZombie, "g_hSDK_CTerrorPlayer_CullZombie");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_CleanupPlayerState, "g_hSDK_CTerrorPlayer_CleanupPlayerState");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_SetClass, "g_hSDK_CTerrorPlayer_SetClass");
+	ValidateSDKCall(g_hSDK_CBaseAbility_CreateForPlayer, "g_hSDK_CBaseAbility_CreateForPlayer");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_MaterializeFromGhost, "g_hSDK_CTerrorPlayer_MaterializeFromGhost");
+	ValidateSDKCall(g_hSDK_CTerrorPlayer_BecomeGhost, "g_hSDK_CTerrorPlayer_BecomeGhost");
+	ValidateSDKCall(g_hSDK_CCSPlayer_State_Transition, "g_hSDK_CCSPlayer_State_Transition");
+	ValidateSDKCall(g_hSDK_CDirector_RegisterForbiddenTarget, "g_hSDK_CDirector_RegisterForbiddenTarget");
+	ValidateSDKCall(g_hSDK_CDirector_UnregisterForbiddenTarget, "g_hSDK_CDirector_UnregisterForbiddenTarget");
+	ValidateSDKCall(g_hSDK_InfoChangeLevel_IsEntitySaveable, "g_hSDK_InfoChangeLevel_IsEntitySaveable");
+	ValidateSDKCall(g_hSDK_CDirectorVersusMode_EndVersusModeRound, "g_hSDK_CDirectorVersusMode_EndVersusModeRound");
+	ValidateSDKCall(g_hSDK_CBaseServer_SetReservationCookie, "g_hSDK_CBaseServer_SetReservationCookie");
+
+	if( g_bLeft4Dead2 )
+	{
+		ValidateSDKCall(g_hSDK_CMultiPlayerAnimState_ResetMainActivity, "g_hSDK_CMultiPlayerAnimState_ResetMainActivity");
+		ValidateSDKCall(g_hSDK_CTerrorPlayer_GetSpecialInfectedDominatingMe, "g_hSDK_CTerrorPlayer_GetSpecialInfectedDominatingMe");
+		ValidateSDKCall(g_hSDK_IsVisibleToPlayer, "g_hSDK_IsVisibleToPlayer");
+		ValidateSDKCall(g_hSDK_TerrorNavMesh_IsInInitialCheckpoint_NoLandmark, "g_hSDK_TerrorNavMesh_IsInInitialCheckpoint_NoLandmark");
+		ValidateSDKCall(g_hSDK_CTerrorGameRules_GetSurvivorSet, "g_hSDK_CTerrorGameRules_GetSurvivorSet");
+		ValidateSDKCall(g_hSDK_CVomitJarProjectile_Create, "g_hSDK_CVomitJarProjectile_Create");
+		ValidateSDKCall(g_hSDK_CGrenadeLauncher_Projectile_Create, "g_hSDK_CGrenadeLauncher_Projectile_Create");
+		ValidateSDKCall(g_hSDK_CTerrorGameRules_IsRealismMode, "g_hSDK_CTerrorGameRules_IsRealismMode");
+		ValidateSDKCall(g_hSDK_CSpitterProjectile_Create, "g_hSDK_CSpitterProjectile_Create");
+		ValidateSDKCall(g_hSDK_CTerrorGameRules_HasConfigurableDifficultySetting, "g_hSDK_CTerrorGameRules_HasConfigurableDifficultySetting");
+		ValidateSDKCall(g_hSDK_NavAreaBuildPath_ShortestPathCost, "g_hSDK_NavAreaBuildPath_ShortestPathCost");
+		ValidateSDKCall(g_hSDK_CTerrorPlayer_OnAdrenalineUsed, "g_hSDK_CTerrorPlayer_OnAdrenalineUsed");
+		ValidateSDKCall(g_hSDK_CDirector_ForceNextStage, "g_hSDK_CDirector_ForceNextStage");
+		ValidateSDKCall(g_hSDK_ForceScavengeStart, "g_hSDK_ForceScavengeStart");
+		ValidateSDKCall(g_hSDK_CDirector_IsTankInPlay, "g_hSDK_CDirector_IsTankInPlay");
+		ValidateSDKCall(g_hSDK_CTDefibPlayer, "g_hSDK_CTDefibPlayer");
+		ValidateSDKCall(g_hSDK_SurvivorBot_IsReachable, "g_hSDK_SurvivorBot_IsReachable");
+		ValidateSDKCall(g_hSDK_CDirector_GetFurthestSurvivorFlow, "g_hSDK_CDirector_GetFurthestSurvivorFlow");
+		ValidateSDKCall(g_hSDK_CDirector_GetScriptValueInt, "g_hSDK_CDirector_GetScriptValueInt");
+		ValidateSDKCall(g_hSDK_CDirector_GetScriptValueFloat, "g_hSDK_CDirector_GetScriptValueFloat");
+		ValidateSDKCall(g_hSDK_CTerrorGameRules_GetNumChaptersForMissionAndMode, "g_hSDK_CTerrorGameRules_GetNumChaptersForMissionAndMode");
+		ValidateSDKCall(g_hSDK_CDirector_GetGameModeBase, "g_hSDK_CDirector_GetGameModeBase");
+		ValidateSDKCall(g_hSDK_CTerrorGameRules_IsGenericCooperativeMode, "g_hSDK_CTerrorGameRules_IsGenericCooperativeMode");
+		ValidateSDKCall(g_hSDK_CDirector_AddSurvivorBot, "g_hSDK_CDirector_AddSurvivorBot");
+		ValidateSDKCall(g_hSDK_TheNextBots, "g_hSDK_TheNextBots");
+		ValidateSDKCall(g_hSDK_RushVictim, "g_hSDK_RushVictim");
+		ValidateSDKCall(g_hSDK_StartAssault, "g_hSDK_StartAssault");
+		ValidateSDKCall(g_hSDK_CMeleeWeaponInfoStore_GetMeleeWeaponInfo, "g_hSDK_CMeleeWeaponInfoStore_GetMeleeWeaponInfo");
+		ValidateSDKCall(g_hSDK_CDirector_ResetMobTimer, "g_hSDK_CDirector_ResetMobTimer");
+		ValidateSDKCall(g_hSDK_CDirector_SpawnAllScavengeItems, "g_hSDK_CDirector_SpawnAllScavengeItems");
+		ValidateSDKCall(g_hSDK_CDirectorScriptedEventManager_ChangeFinaleStage, "g_hSDK_CDirectorScriptedEventManager_ChangeFinaleStage");
+		ValidateSDKCall(g_hSDK_ZombieManager_SpawnSpecial, "g_hSDK_ZombieManager_SpawnSpecial");
+		ValidateSDKCall(g_hSDK_ZombieManager_SpawnWitchBride, "g_hSDK_ZombieManager_SpawnWitchBride");
+		ValidateSDKCall(g_hSDK_CDirector_AreWanderersAllowed, "g_hSDK_CDirector_AreWanderersAllowed");
+		ValidateSDKCall(g_hSDK_CTerrorPlayer_OnLeptOnSurvivor, "g_hSDK_CTerrorPlayer_OnLeptOnSurvivor");
+		ValidateSDKCall(g_hSDK_ThrowImpactedSurvivor, "g_hSDK_ThrowImpactedSurvivor");
+		ValidateSDKCall(g_hSDK_CTerrorPlayer_OnStartCarryingVictim, "g_hSDK_CTerrorPlayer_OnStartCarryingVictim");
+		ValidateSDKCall(g_hSDK_CTerrorPlayer_QueuePummelVictim, "g_hSDK_CTerrorPlayer_QueuePummelVictim");
+		ValidateSDKCall(g_hSDK_CTerrorPlayer_OnPummelEnded, "g_hSDK_CTerrorPlayer_OnPummelEnded");
+		ValidateSDKCall(g_hSDK_CTerrorPlayer_OnCarryEnded, "g_hSDK_CTerrorPlayer_OnCarryEnded");
+		ValidateSDKCall(g_hSDK_CTerrorPlayer_OnRideEnded, "g_hSDK_CTerrorPlayer_OnRideEnded");
+		ValidateSDKCall(g_hSDK_CTerrorPlayer_OnHitByVomitJar, "g_hSDK_CTerrorPlayer_OnHitByVomitJar");
+		ValidateSDKCall(g_hSDK_Infected_OnHitByVomitJar, "g_hSDK_Infected_OnHitByVomitJar");
+		ValidateSDKCall(g_hSDK_CTerrorPlayer_Fling, "g_hSDK_CTerrorPlayer_Fling");
+		ValidateSDKCall(g_hSDK_CTerrorGameRules_GetVersusCompletion, "g_hSDK_CTerrorGameRules_GetVersusCompletion");
+		ValidateSDKCall(g_hSDK_CDirector_SwapTeams, "g_hSDK_CDirector_SwapTeams");
+		ValidateSDKCall(g_hSDK_CDirector_Rematch, "g_hSDK_CDirector_Rematch");
+		ValidateSDKCall(g_hSDK_CDirector_StartRematchVote, "g_hSDK_CDirector_StartRematchVote");
+		ValidateSDKCall(g_hSDK_CDirector_FullRestart, "g_hSDK_CDirector_FullRestart");
+		ValidateSDKCall(g_hSDK_CDirectorVersusMode_HideScoreboardNonVirtual, "g_hSDK_CDirectorVersusMode_HideScoreboardNonVirtual");
+		ValidateSDKCall(g_hSDK_CDirectorScavengeMode_HideScoreboardNonVirtual, "g_hSDK_CDirectorScavengeMode_HideScoreboardNonVirtual");
+		ValidateSDKCall(g_hSDK_CDirector_HideScoreboard, "g_hSDK_CDirector_HideScoreboard");
+	}
+
+	if( !g_bLeft4Dead2 )
+	{
+		ValidateSDKCall(g_hSDK_ZombieManager_SpawnHunter, "g_hSDK_ZombieManager_SpawnHunter");
+		ValidateSDKCall(g_hSDK_ZombieManager_SpawnBoomer, "g_hSDK_ZombieManager_SpawnBoomer");
+		ValidateSDKCall(g_hSDK_ZombieManager_SpawnSmoker, "g_hSDK_ZombieManager_SpawnSmoker");
+	}
+	#endif
+
+
+
+	// ====================================================================================================
 	//									POINTER OFFSETS
 	// ====================================================================================================
 	if( g_bLeft4Dead2 )
@@ -2198,6 +2502,8 @@ void LoadGameData()
 
 		g_pChallengeMode = hGameData.GetOffset("ChallengeModePtr");
 		ValidateOffset(g_pChallengeMode, "ChallengeModePtr");
+
+		g_pTheNextBots = SDKCall(g_hSDK_TheNextBots);
 
 
 
@@ -2261,6 +2567,9 @@ void LoadGameData()
 	g_pNavMesh = hGameData.GetAddress("TerrorNavMesh");
 	ValidateAddress(g_pNavMesh, "TheNavMesh", true);
 
+	g_pEntList = hGameData.GetAddress("gEntList");
+	ValidateAddress(g_pEntList, "gEntList", true);
+
 	g_pServer = hGameData.GetAddress("ServerAddr");
 	ValidateAddress(g_pServer, "g_pServer", true);
 
@@ -2316,6 +2625,7 @@ void LoadGameData()
 	PrintToServer("%12d == g_pZombieManager", g_pZombieManager);
 	PrintToServer("%12d == g_pGameRules", g_pGameRules);
 	PrintToServer("%12d == g_pNavMesh", g_pNavMesh);
+	PrintToServer("%12d == g_pEntList", g_pEntList);
 	PrintToServer("%12d == g_pServer", g_pServer);
 	PrintToServer("%12d == g_pWeaponInfoDatabase", g_pWeaponInfoDatabase);
 	PrintToServer("%12d == g_pVersusModePtr", g_pVersusMode);
@@ -2330,6 +2640,7 @@ void LoadGameData()
 		PrintToServer("%12d == g_pMusicBanksPtr", g_pMusicBanks);
 		PrintToServer("%12d == g_pSessionManagerPtr", g_pSessionManager);
 		PrintToServer("%12d == g_pChallengeModePtr", g_pChallengeMode);
+		PrintToServer("%12d == g_pTheNextBots", g_pTheNextBots);
 	}
 	PrintToServer("");
 	#endif
