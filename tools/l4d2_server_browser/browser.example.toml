@@ -1,0 +1,19 @@
+[master]
+enabled = true
+group = "公网大厅"
+address = "hl2master.steampowered.com:27011"
+region = "all"
+filter = "\\appid\\550"
+extra_filter = ["\\secure\\1"]
+limit = 200
+
+[[groups]]
+name = "我的服务器"
+servers = [
+  "127.0.0.1:27015",
+  "steam://connect/127.0.0.1:27016",
+]
+
+[[sourcebans]]
+name = "Anne SourceBans"
+url = "https://example.com/sourcebans"
