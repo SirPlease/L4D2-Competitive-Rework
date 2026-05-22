@@ -145,8 +145,8 @@ public void OnPluginStart()
     g_hCvarDBConfig     = CreateConVar( PLUGIN_NAME ... "_db_config",     "l4dstats",        "peak_mode=1 使用的 databases.cfg 区块名", CVAR_FLAGS);
     g_hCvarServerId     = CreateConVar( PLUGIN_NAME ... "_server_id",     "",               "本服务器唯一ID；留空时优先从hostname提取前缀#编号，如Anne云服#21，失败则使用hostname:hostport", CVAR_FLAGS);
     g_hCvarStatusTable  = CreateConVar( PLUGIN_NAME ... "_status_table",  "l4d_server_status", "peak_mode=1 使用的服务器状态表名", CVAR_FLAGS);
-    g_hCvarStatusInterval = CreateConVar(PLUGIN_NAME ... "_status_interval", "60.0",        "peak_mode=1 本服人数写入数据库的心跳间隔秒数；人数变化时会尽快写入", CVAR_FLAGS, true, 5.0);
-    g_hCvarStatusMaxAge = CreateConVar( PLUGIN_NAME ... "_status_max_age", "180",           "peak_mode=1 查询全服状态时，只统计多少秒内更新过的服务器，建议为status_interval的3倍", CVAR_FLAGS, true, 10.0);
+    g_hCvarStatusInterval = CreateConVar(PLUGIN_NAME ... "_status_interval", "180.0",       "peak_mode=1 本服人数写入数据库的心跳间隔秒数；人数变化时会尽快写入", CVAR_FLAGS, true, 5.0);
+    g_hCvarStatusMaxAge = CreateConVar( PLUGIN_NAME ... "_status_max_age", "540",           "peak_mode=1 查询全服状态时，只统计多少秒内更新过的服务器，建议为status_interval的3倍", CVAR_FLAGS, true, 10.0);
     CreateConVar(                       PLUGIN_NAME ... "_version",       PLUGIN_VERSION, PLUGIN_NAME ... " Plugin Version", CVAR_FLAGS_PLUGIN_VERSION);
     g_hTzServerOffset = CreateConVar(PLUGIN_NAME ... "_server_utc_offset", "480",
         "Fallback: server's UTC offset in minutes (only used if %z unsupported).");

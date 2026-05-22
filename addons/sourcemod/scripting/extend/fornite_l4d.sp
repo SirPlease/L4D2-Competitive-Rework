@@ -1956,7 +1956,7 @@ void CPrintToChat(int client, char[] message, any ...)
 {
 	static char buffer[256];
 	SetGlobalTransTarget(client);
-	VFormat(buffer, sizeof(buffer), message, 2);
+	VFormat(buffer, sizeof(buffer), message, 3);
 	ReplaceColor(buffer, sizeof(buffer));
 	PrintToChat(client, buffer);
 }

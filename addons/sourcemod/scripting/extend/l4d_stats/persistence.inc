@@ -971,6 +971,12 @@ public InsertMapDB(Handle:owner, Handle:hndl, const String:error[], any:data)
 	if (db == INVALID_HANDLE)
 		return;
 
+	if (hndl == INVALID_HANDLE)
+	{
+		LogError("InsertMapDB failed! Reason: %s", error);
+		return;
+	}
+
 	if (StatsDisabled(true))
 		return;
 
