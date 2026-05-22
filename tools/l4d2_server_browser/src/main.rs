@@ -1,4 +1,5 @@
 use clap::{Parser, ValueEnum};
+use eframe::egui;
 use regex::Regex;
 use reqwest::blocking::Client;
 use serde::{Deserialize, Serialize};
@@ -7,16 +8,18 @@ use std::fs;
 use std::io::{self, Read, Write};
 use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4, TcpStream, ToSocketAddrs, UdpSocket};
 use std::path::PathBuf;
-use std::sync::{Arc, Mutex};
+use std::sync::{
+    mpsc::{self, Receiver, Sender},
+    Arc, Mutex,
+};
 use std::thread;
 use std::time::{Duration, Instant};
-use tiny_http::{Header, Method, Request, Response, Server, StatusCode};
 
 const DEFAULT_MASTER: &str = "hl2master.steampowered.com:27011";
 const DEFAULT_FILTER: &str = "\\appid\\550";
 const DEFAULT_MASTER_GROUP: &str = "Steam Master";
 const DEFAULT_CONFIG_FILE: &str = "l4d2-browser.toml";
-const USER_AGENT: &str = "l4d2-server-browser/0.3";
+const USER_AGENT: &str = "l4d2-server-browser/0.4";
 
 fn main() {
     if let Err(err) = run() {
@@ -57,12 +60,6 @@ struct Cli {
 
     #[arg(long)]
     gui: bool,
-
-    #[arg(long, default_value = "127.0.0.1")]
-    gui_host: String,
-
-    #[arg(long, default_value_t = 8787)]
-    gui_port: u16,
 
     #[arg(long)]
     master: Option<String>,
@@ -1347,30 +1344,18 @@ fn print_json(rows: &[ServerRow]) -> Result<(), String> {
 }
 
 #[derive(Clone)]
-struct GuiApp {
-    cli: Cli,
-    config_path: PathBuf,
-}
-
-#[derive(Serialize)]
-struct GuiStatePayload {
-    config_path: String,
-    config: BrowserConfig,
-}
-
-#[derive(Deserialize)]
 struct AddServerRequest {
     group: String,
     server: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Clone)]
 struct AddSourceBansRequest {
     name: String,
     url: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Clone)]
 struct RconCommandRequest {
     address: String,
     password: String,
@@ -1378,7 +1363,7 @@ struct RconCommandRequest {
     timeout_ms: Option<u64>,
 }
 
-#[derive(Deserialize)]
+#[derive(Clone)]
 struct CvarRequest {
     address: String,
     password: Option<String>,
@@ -1386,7 +1371,7 @@ struct CvarRequest {
     timeout_ms: Option<u64>,
 }
 
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 struct ServerRowPayload {
     address: String,
     socket: String,
@@ -1396,158 +1381,352 @@ struct ServerRowPayload {
     error: Option<String>,
 }
 
-#[derive(Serialize)]
-struct MessagePayload {
-    message: String,
-}
-
-#[derive(Serialize)]
-struct RconPayload {
-    output: String,
-}
-
-#[derive(Serialize)]
+#[derive(Clone, Serialize)]
 struct CvarPayload {
     source: String,
     values: BTreeMap<String, String>,
 }
 
+enum GuiMessage {
+    Servers(Result<Vec<ServerRowPayload>, String>),
+    AddServer(Result<(), String>),
+    AddSourceBans(Result<(), String>),
+    Rcon(Result<String, String>),
+    Cvars(Result<CvarPayload, String>),
+}
+
+struct NativeGuiApp {
+    cli: Cli,
+    config_path: PathBuf,
+    tx: Sender<GuiMessage>,
+    rx: Receiver<GuiMessage>,
+    servers: Vec<ServerRowPayload>,
+    server_status: String,
+    config_status: String,
+    group_name: String,
+    server_address: String,
+    sourcebans_name: String,
+    sourcebans_url: String,
+    rcon_address: String,
+    rcon_password: String,
+    rcon_command_text: String,
+    rcon_output: String,
+    cvar_address: String,
+    cvar_password: String,
+    cvar_names: String,
+    cvar_output: String,
+}
+
 fn start_gui(cli: Cli, config_path: PathBuf) -> Result<(), String> {
-    let bind = format!("{}:{}", cli.gui_host, cli.gui_port);
-    let server = Server::http(&bind)
-        .map_err(|err| format!("failed to start GUI server at {bind}: {err}"))?;
-    let app = Arc::new(GuiApp { cli, config_path });
+    let options = eframe::NativeOptions {
+        viewport: egui::ViewportBuilder::default().with_inner_size([1180.0, 760.0]),
+        ..Default::default()
+    };
+    let title = "L4D2 刷服器".to_owned();
 
-    println!("GUI listening at http://{bind}/");
-    println!("Config file: {}", app.config_path.display());
+    eframe::run_native(
+        &title,
+        options,
+        Box::new(move |_cc| Ok(Box::new(NativeGuiApp::new(cli, config_path)))),
+    )
+    .map_err(|err| format!("failed to start native GUI: {err}"))
+}
 
-    for request in server.incoming_requests() {
-        let app = Arc::clone(&app);
-        if let Err(err) = handle_gui_request(&app, request) {
-            eprintln!("warning: GUI request failed: {err}");
+impl NativeGuiApp {
+    fn new(cli: Cli, config_path: PathBuf) -> Self {
+        let (tx, rx) = mpsc::channel();
+        let mut app = Self {
+            cli,
+            config_path,
+            tx,
+            rx,
+            servers: Vec::new(),
+            server_status: "等待刷新".to_owned(),
+            config_status: String::new(),
+            group_name: "我的服务器".to_owned(),
+            server_address: String::new(),
+            sourcebans_name: "SourceBans".to_owned(),
+            sourcebans_url: String::new(),
+            rcon_address: String::new(),
+            rcon_password: String::new(),
+            rcon_command_text: "status".to_owned(),
+            rcon_output: String::new(),
+            cvar_address: String::new(),
+            cvar_password: String::new(),
+            cvar_names: "hostname,sv_tags,mp_gamemode".to_owned(),
+            cvar_output: String::new(),
+        };
+        app.config_status = format!("配置文件：{}", app.config_path.display());
+        app.refresh_servers();
+        app
+    }
+
+    fn handle_messages(&mut self, ctx: &egui::Context) {
+        while let Ok(message) = self.rx.try_recv() {
+            match message {
+                GuiMessage::Servers(result) => match result {
+                    Ok(rows) => {
+                        self.server_status = format!("共 {} 个服务器", rows.len());
+                        self.servers = rows;
+                    }
+                    Err(err) => self.server_status = format!("刷新失败：{err}"),
+                },
+                GuiMessage::AddServer(result) => match result {
+                    Ok(()) => {
+                        self.config_status = "服务器已保存".to_owned();
+                        self.refresh_servers();
+                    }
+                    Err(err) => self.config_status = format!("保存服务器失败：{err}"),
+                },
+                GuiMessage::AddSourceBans(result) => match result {
+                    Ok(()) => {
+                        self.config_status = "SourceBans 订阅已保存".to_owned();
+                        self.refresh_servers();
+                    }
+                    Err(err) => self.config_status = format!("保存订阅失败：{err}"),
+                },
+                GuiMessage::Rcon(result) => {
+                    self.rcon_output = result.unwrap_or_else(|err| format!("RCON 失败：{err}"));
+                }
+                GuiMessage::Cvars(result) => {
+                    self.cvar_output = match result {
+                        Ok(payload) => format_cvar_payload(&payload),
+                        Err(err) => format!("读取失败：{err}"),
+                    };
+                }
+            }
+            ctx.request_repaint();
         }
     }
 
-    Ok(())
-}
-
-fn handle_gui_request(app: &GuiApp, mut request: Request) -> Result<(), String> {
-    let method = request.method().clone();
-    let path = request.url().split('?').next().unwrap_or("/").to_owned();
-
-    match (method, path.as_str()) {
-        (Method::Get, "/") => respond_html(request, GUI_HTML),
-        (Method::Get, "/api/state") => match load_config_or_default(&app.config_path) {
-            Ok(config) => {
-                let payload = GuiStatePayload {
-                    config_path: app.config_path.display().to_string(),
-                    config,
-                };
-                respond_json(request, StatusCode(200), &payload)
-            }
-            Err(err) => respond_error(request, StatusCode(500), err),
-        },
-        (Method::Get, "/api/servers") => {
-            let result = load_config_or_default(&app.config_path)
-                .and_then(|config| build_runtime(&app.cli, config))
+    fn refresh_servers(&mut self) {
+        self.server_status = "查询中...".to_owned();
+        let tx = self.tx.clone();
+        let cli = self.cli.clone();
+        let config_path = self.config_path.clone();
+        thread::spawn(move || {
+            let result = load_config_or_default(&config_path)
+                .and_then(|config| build_runtime(&cli, config))
                 .and_then(|(settings, manual_groups, subscriptions)| {
                     load_server_rows(&settings, &manual_groups, &subscriptions)
-                });
-            match result {
-                Ok(rows) => respond_json(request, StatusCode(200), &server_rows_payload(&rows)),
-                Err(err) => respond_error(request, StatusCode(500), err),
-            }
-        }
-        (Method::Post, "/api/groups") => {
-            let result = read_json_body(&mut request)
-                .and_then(|input| add_server_to_config(&app.config_path, input));
-            match result {
-                Ok(()) => respond_json(
-                    request,
-                    StatusCode(200),
-                    &MessagePayload {
-                        message: "server saved".to_owned(),
-                    },
-                ),
-                Err(err) => respond_error(request, StatusCode(400), err),
-            }
-        }
-        (Method::Post, "/api/sourcebans") => {
-            let result = read_json_body(&mut request)
-                .and_then(|input| add_sourcebans_to_config(&app.config_path, input));
-            match result {
-                Ok(()) => respond_json(
-                    request,
-                    StatusCode(200),
-                    &MessagePayload {
-                        message: "subscription saved".to_owned(),
-                    },
-                ),
-                Err(err) => respond_error(request, StatusCode(400), err),
-            }
-        }
-        (Method::Post, "/api/rcon") => {
-            let result = read_json_body(&mut request).and_then(|input: RconCommandRequest| {
-                let timeout = Duration::from_millis(input.timeout_ms.unwrap_or(2500).max(1));
-                rcon_command(&input.address, &input.password, &input.command, timeout)
-            });
-            match result {
-                Ok(output) => respond_json(request, StatusCode(200), &RconPayload { output }),
-                Err(err) => respond_error(request, StatusCode(400), err),
-            }
-        }
-        (Method::Post, "/api/cvars") => {
-            let result = read_json_body(&mut request).and_then(read_cvars);
-            match result {
-                Ok(payload) => respond_json(request, StatusCode(200), &payload),
-                Err(err) => respond_error(request, StatusCode(400), err),
-            }
-        }
-        _ => respond_json(
-            request,
-            StatusCode(404),
-            &MessagePayload {
-                message: "not found".to_owned(),
+                })
+                .map(|rows| server_rows_payload(&rows));
+            let _ = tx.send(GuiMessage::Servers(result));
+        });
+    }
+
+    fn save_server(&mut self) {
+        self.config_status = "保存服务器中...".to_owned();
+        let tx = self.tx.clone();
+        let path = self.config_path.clone();
+        let input = AddServerRequest {
+            group: self.group_name.clone(),
+            server: self.server_address.clone(),
+        };
+        thread::spawn(move || {
+            let result = add_server_to_config(&path, input);
+            let _ = tx.send(GuiMessage::AddServer(result));
+        });
+    }
+
+    fn save_sourcebans(&mut self) {
+        self.config_status = "保存订阅中...".to_owned();
+        let tx = self.tx.clone();
+        let path = self.config_path.clone();
+        let input = AddSourceBansRequest {
+            name: self.sourcebans_name.clone(),
+            url: self.sourcebans_url.clone(),
+        };
+        thread::spawn(move || {
+            let result = add_sourcebans_to_config(&path, input);
+            let _ = tx.send(GuiMessage::AddSourceBans(result));
+        });
+    }
+
+    fn run_rcon(&mut self) {
+        self.rcon_output = "执行中...".to_owned();
+        let tx = self.tx.clone();
+        let input = RconCommandRequest {
+            address: self.rcon_address.clone(),
+            password: self.rcon_password.clone(),
+            command: self.rcon_command_text.clone(),
+            timeout_ms: Some(2500),
+        };
+        thread::spawn(move || {
+            let timeout = Duration::from_millis(input.timeout_ms.unwrap_or(2500).max(1));
+            let result = rcon_command(&input.address, &input.password, &input.command, timeout);
+            let _ = tx.send(GuiMessage::Rcon(result));
+        });
+    }
+
+    fn read_cvars(&mut self) {
+        self.cvar_output = "读取中...".to_owned();
+        let tx = self.tx.clone();
+        let names = self
+            .cvar_names
+            .split(',')
+            .map(|name| name.trim().to_owned())
+            .filter(|name| !name.is_empty())
+            .collect::<Vec<_>>();
+        let input = CvarRequest {
+            address: self.cvar_address.clone(),
+            password: if self.cvar_password.trim().is_empty() {
+                None
+            } else {
+                Some(self.cvar_password.clone())
             },
-        ),
+            names: Some(names),
+            timeout_ms: Some(2500),
+        };
+        thread::spawn(move || {
+            let result = read_cvars(input);
+            let _ = tx.send(GuiMessage::Cvars(result));
+        });
     }
 }
 
-fn respond_error(request: Request, status: StatusCode, message: String) -> Result<(), String> {
-    respond_json(request, status, &MessagePayload { message })
+impl eframe::App for NativeGuiApp {
+    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        self.handle_messages(ctx);
+
+        egui::TopBottomPanel::top("top_bar").show(ctx, |ui| {
+            ui.horizontal(|ui| {
+                ui.heading("L4D2 刷服器");
+                if ui.button("刷新服务器").clicked() {
+                    self.refresh_servers();
+                }
+            });
+            ui.label(&self.config_status);
+        });
+
+        egui::SidePanel::left("controls")
+            .resizable(true)
+            .default_width(360.0)
+            .show(ctx, |ui| {
+                egui::ScrollArea::vertical().show(ui, |ui| {
+                    ui.heading("添加服务器");
+                    ui.label("分组");
+                    ui.text_edit_singleline(&mut self.group_name);
+                    ui.label("服务器地址");
+                    ui.text_edit_singleline(&mut self.server_address);
+                    if ui.button("保存服务器").clicked() {
+                        self.save_server();
+                    }
+
+                    ui.separator();
+                    ui.heading("SourceBans 订阅");
+                    ui.label("订阅名称");
+                    ui.text_edit_singleline(&mut self.sourcebans_name);
+                    ui.label("页面 URL");
+                    ui.text_edit_singleline(&mut self.sourcebans_url);
+                    if ui.button("保存订阅").clicked() {
+                        self.save_sourcebans();
+                    }
+
+                    ui.separator();
+                    ui.heading("RCON");
+                    ui.label("服务器地址");
+                    ui.text_edit_singleline(&mut self.rcon_address);
+                    ui.label("RCON 密码");
+                    ui.add(egui::TextEdit::singleline(&mut self.rcon_password).password(true));
+                    ui.label("命令");
+                    ui.text_edit_singleline(&mut self.rcon_command_text);
+                    if ui.button("执行命令").clicked() {
+                        self.run_rcon();
+                    }
+                    ui.add(
+                        egui::TextEdit::multiline(&mut self.rcon_output)
+                            .desired_rows(8)
+                            .code_editor(),
+                    );
+
+                    ui.separator();
+                    ui.heading("CVAR / Rules");
+                    ui.label("服务器地址");
+                    ui.text_edit_singleline(&mut self.cvar_address);
+                    ui.label("RCON 密码，可空");
+                    ui.add(egui::TextEdit::singleline(&mut self.cvar_password).password(true));
+                    ui.label("CVAR 名称，逗号分隔；公开 rules 可留空");
+                    ui.text_edit_singleline(&mut self.cvar_names);
+                    if ui.button("读取").clicked() {
+                        self.read_cvars();
+                    }
+                    ui.add(
+                        egui::TextEdit::multiline(&mut self.cvar_output)
+                            .desired_rows(8)
+                            .code_editor(),
+                    );
+                });
+            });
+
+        egui::CentralPanel::default().show(ctx, |ui| {
+            ui.horizontal(|ui| {
+                ui.heading("服务器列表");
+                ui.label(&self.server_status);
+            });
+            ui.separator();
+            egui::ScrollArea::both()
+                .auto_shrink([false, false])
+                .show(ui, |ui| {
+                    egui::Grid::new("servers_grid")
+                        .striped(true)
+                        .min_col_width(80.0)
+                        .show(ui, |ui| {
+                            ui.strong("分组");
+                            ui.strong("地址");
+                            ui.strong("延迟");
+                            ui.strong("人数");
+                            ui.strong("地图");
+                            ui.strong("VAC");
+                            ui.strong("服务器名 / 错误");
+                            ui.end_row();
+
+                            for row in &self.servers {
+                                let (players, map, vac, name) = if let Some(info) = &row.info {
+                                    (
+                                        format!("{}/{}", info.players, info.max_players),
+                                        info.map.clone(),
+                                        if info.vac { "yes" } else { "no" }.to_owned(),
+                                        info.name.clone(),
+                                    )
+                                } else {
+                                    (
+                                        "-".to_owned(),
+                                        "-".to_owned(),
+                                        "-".to_owned(),
+                                        row.error
+                                            .clone()
+                                            .unwrap_or_else(|| "not queried".to_owned()),
+                                    )
+                                };
+                                ui.label(row.groups.join(","));
+                                ui.monospace(&row.address);
+                                ui.label(
+                                    row.ping_ms
+                                        .map(|v| v.to_string())
+                                        .unwrap_or_else(|| "-".to_owned()),
+                                );
+                                ui.label(players);
+                                ui.label(map);
+                                ui.label(vac);
+                                ui.label(name);
+                                ui.end_row();
+                            }
+                        });
+                });
+        });
+    }
 }
 
-fn respond_html(request: Request, body: &str) -> Result<(), String> {
-    let response = Response::from_string(body)
-        .with_status_code(StatusCode(200))
-        .with_header(header("Content-Type", "text/html; charset=utf-8")?);
-    request.respond(response).map_err(|err| err.to_string())
-}
-
-fn respond_json<T: Serialize>(
-    request: Request,
-    status: StatusCode,
-    payload: &T,
-) -> Result<(), String> {
-    let body = serde_json::to_string_pretty(payload).map_err(|err| err.to_string())?;
-    let response = Response::from_string(body)
-        .with_status_code(status)
-        .with_header(header("Content-Type", "application/json; charset=utf-8")?);
-    request.respond(response).map_err(|err| err.to_string())
-}
-
-fn header(name: &str, value: &str) -> Result<Header, String> {
-    Header::from_bytes(name.as_bytes(), value.as_bytes())
-        .map_err(|_| format!("invalid header {name}"))
-}
-
-fn read_json_body<T: for<'de> Deserialize<'de>>(request: &mut Request) -> Result<T, String> {
-    let mut body = String::new();
-    request
-        .as_reader()
-        .read_to_string(&mut body)
-        .map_err(|err| format!("failed to read request body: {err}"))?;
-    serde_json::from_str(&body).map_err(|err| format!("invalid JSON request: {err}"))
+fn format_cvar_payload(payload: &CvarPayload) -> String {
+    let mut output = payload.source.clone();
+    for (name, value) in &payload.values {
+        output.push('\n');
+        output.push_str(name);
+        output.push_str(" = ");
+        output.push_str(value);
+    }
+    output
 }
 
 fn add_server_to_config(path: &PathBuf, input: AddServerRequest) -> Result<(), String> {
@@ -1809,162 +1988,6 @@ fn parse_rules_response(packet: &[u8]) -> Result<BTreeMap<String, String>, Strin
 
     Ok(values)
 }
-
-static GUI_HTML: &str = r#"<!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>L4D2 刷服器</title>
-  <style>
-    :root { color-scheme: light; --line:#d7dde5; --text:#111827; --muted:#657286; --bg:#f6f8fb; --panel:#ffffff; --accent:#1769aa; --danger:#b42318; }
-    * { box-sizing: border-box; }
-    body { margin:0; font:14px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--text); background:var(--bg); }
-    header { padding:18px 24px; border-bottom:1px solid var(--line); background:var(--panel); display:flex; justify-content:space-between; gap:12px; align-items:center; }
-    h1 { margin:0; font-size:22px; }
-    main { padding:18px 24px 28px; display:grid; grid-template-columns:360px minmax(0,1fr); gap:18px; }
-    section { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:14px; }
-    h2 { margin:0 0 12px; font-size:16px; }
-    label { display:block; margin:10px 0 5px; color:var(--muted); font-size:12px; }
-    input, textarea, button { width:100%; border:1px solid var(--line); border-radius:6px; padding:9px 10px; font:inherit; background:#fff; }
-    textarea { min-height:86px; resize:vertical; }
-    button { cursor:pointer; background:var(--accent); color:white; border-color:var(--accent); font-weight:600; }
-    button.secondary { background:#fff; color:var(--text); border-color:var(--line); }
-    .stack { display:grid; gap:14px; }
-    .row { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-    .status { color:var(--muted); font-size:12px; white-space:pre-wrap; }
-    .error { color:var(--danger); }
-    table { width:100%; border-collapse:collapse; }
-    th, td { padding:8px 7px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
-    th { color:var(--muted); font-size:12px; font-weight:700; background:#fbfcfe; position:sticky; top:0; }
-    code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px; }
-    .table-wrap { overflow:auto; max-height:70vh; border:1px solid var(--line); border-radius:8px; }
-    .output { background:#0f172a; color:#e5e7eb; border-radius:8px; padding:10px; min-height:120px; max-height:260px; overflow:auto; white-space:pre-wrap; }
-    @media (max-width: 920px) { main { grid-template-columns:1fr; padding:12px; } header { padding:14px 12px; align-items:flex-start; flex-direction:column; } }
-  </style>
-</head>
-<body>
-  <header>
-    <div>
-      <h1>L4D2 刷服器</h1>
-      <div class="status" id="configPath"></div>
-    </div>
-    <button class="secondary" style="max-width:160px" onclick="refreshServers()">刷新服务器</button>
-  </header>
-  <main>
-    <div class="stack">
-      <section>
-        <h2>添加服务器</h2>
-        <label>分组</label><input id="groupName" value="我的服务器">
-        <label>服务器地址</label><input id="serverAddress" placeholder="1.2.3.4:27015 或 steam://connect/...">
-        <label></label><button onclick="addServer()">保存服务器</button>
-        <div class="status" id="addServerStatus"></div>
-      </section>
-      <section>
-        <h2>SourceBans 订阅</h2>
-        <label>订阅名称</label><input id="sourcebansName" value="SourceBans">
-        <label>页面 URL</label><input id="sourcebansUrl" placeholder="https://example.com/sourcebans">
-        <label></label><button onclick="addSourceBans()">保存订阅</button>
-        <div class="status" id="sourcebansStatus"></div>
-      </section>
-      <section>
-        <h2>RCON</h2>
-        <label>服务器地址</label><input id="rconAddress" placeholder="1.2.3.4:27015">
-        <label>RCON 密码</label><input id="rconPassword" type="password">
-        <label>命令</label><input id="rconCommand" value="status">
-        <label></label><button onclick="runRcon()">执行命令</button>
-        <div class="output" id="rconOutput"></div>
-      </section>
-      <section>
-        <h2>CVAR / Rules</h2>
-        <label>服务器地址</label><input id="cvarAddress" placeholder="1.2.3.4:27015">
-        <label>RCON 密码（可空；空则读取公开 A2S_RULES）</label><input id="cvarPassword" type="password">
-        <label>CVAR 名称，逗号分隔（公开 rules 可留空）</label><input id="cvarNames" placeholder="hostname,sv_tags,mp_gamemode">
-        <label></label><button onclick="readCvars()">读取</button>
-        <div class="output" id="cvarOutput"></div>
-      </section>
-    </div>
-    <section>
-      <h2>服务器列表</h2>
-      <div class="status" id="serverStatus"></div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>分组</th><th>地址</th><th>延迟</th><th>人数</th><th>地图</th><th>VAC</th><th>服务器名</th></tr></thead>
-          <tbody id="servers"></tbody>
-        </table>
-      </div>
-    </section>
-  </main>
-  <script>
-    const $ = (id) => document.getElementById(id);
-    const api = async (url, options = {}) => {
-      const response = await fetch(url, options);
-      const text = await response.text();
-      const data = text ? JSON.parse(text) : {};
-      if (!response.ok) throw new Error(data.message || text || response.statusText);
-      return data;
-    };
-    const postJson = (url, body) => api(url, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
-    async function loadState() {
-      const state = await api('/api/state');
-      $('configPath').textContent = '配置文件：' + state.config_path;
-    }
-    async function addServer() {
-      $('addServerStatus').textContent = '保存中...';
-      try {
-        await postJson('/api/groups', { group:$('groupName').value, server:$('serverAddress').value });
-        $('addServerStatus').textContent = '已保存';
-        await refreshServers();
-      } catch (e) { $('addServerStatus').innerHTML = '<span class="error">' + e.message + '</span>'; }
-    }
-    async function addSourceBans() {
-      $('sourcebansStatus').textContent = '保存中...';
-      try {
-        await postJson('/api/sourcebans', { name:$('sourcebansName').value, url:$('sourcebansUrl').value });
-        $('sourcebansStatus').textContent = '已保存';
-        await refreshServers();
-      } catch (e) { $('sourcebansStatus').innerHTML = '<span class="error">' + e.message + '</span>'; }
-    }
-    async function refreshServers() {
-      $('serverStatus').textContent = '查询中...';
-      $('servers').innerHTML = '';
-      try {
-        const rows = await api('/api/servers');
-        $('serverStatus').textContent = '共 ' + rows.length + ' 个服务器';
-        $('servers').innerHTML = rows.map(row => {
-          const info = row.info || {};
-          const players = row.info ? `${info.players}/${info.max_players}` : '-';
-          const ping = row.ping_ms == null ? '-' : row.ping_ms;
-          const vac = row.info ? (info.vac ? 'yes' : 'no') : '-';
-          const name = row.info ? info.name : (row.error || '-');
-          return `<tr><td>${esc(row.groups.join(','))}</td><td><code>${esc(row.address)}</code></td><td>${ping}</td><td>${players}</td><td>${esc(info.map || '-')}</td><td>${vac}</td><td>${esc(name)}</td></tr>`;
-        }).join('');
-      } catch (e) { $('serverStatus').innerHTML = '<span class="error">' + e.message + '</span>'; }
-    }
-    async function runRcon() {
-      $('rconOutput').textContent = '执行中...';
-      try {
-        const data = await postJson('/api/rcon', { address:$('rconAddress').value, password:$('rconPassword').value, command:$('rconCommand').value });
-        $('rconOutput').textContent = data.output || '(empty)';
-      } catch (e) { $('rconOutput').textContent = e.message; }
-    }
-    async function readCvars() {
-      $('cvarOutput').textContent = '读取中...';
-      const names = $('cvarNames').value.split(',').map(v => v.trim()).filter(Boolean);
-      try {
-        const data = await postJson('/api/cvars', { address:$('cvarAddress').value, password:$('cvarPassword').value, names });
-        $('cvarOutput').textContent = data.source + '\\n' + Object.entries(data.values).map(([k,v]) => `${k} = ${v}`).join('\\n');
-      } catch (e) { $('cvarOutput').textContent = e.message; }
-    }
-    function esc(value) {
-      return String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-    }
-    loadState();
-    refreshServers();
-  </script>
-</body>
-</html>
-"#;
 
 #[cfg(test)]
 mod tests {

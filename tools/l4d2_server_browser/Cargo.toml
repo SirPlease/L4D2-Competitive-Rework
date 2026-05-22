@@ -1,6 +1,6 @@
 [package]
 name = "l4d2-server-browser"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 description = "A small Left 4 Dead 2 server browser using Steam master server and A2S_INFO."
 license = "GPL-3.0-or-later"
@@ -8,9 +8,9 @@ publish = false
 
 [dependencies]
 clap = { version = "4.5", features = ["derive"] }
+eframe = "0.32"
 regex = "1.11"
 reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls", "charset"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-tiny_http = "0.12"
 toml = "0.8"

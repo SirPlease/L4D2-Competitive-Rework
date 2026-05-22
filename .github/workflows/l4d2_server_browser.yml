@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
     inputs:
       release_tag:
-        description: 'Optional release tag, for example l4d2-browser-v0.2.0. Leave empty to only upload artifacts.'
+        description: 'Optional release tag, for example l4d2-browser-v0.4.0. Leave empty to only upload artifacts.'
         required: false
         type: string
 
@@ -53,6 +53,21 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
+
+      - name: Install Linux GUI build dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libasound2-dev \
+            libgl1-mesa-dev \
+            libwayland-dev \
+            libx11-dev \
+            libx11-xcb-dev \
+            libxcb-render0-dev \
+            libxcb-shape0-dev \
+            libxcb-xfixes0-dev \
+            libxkbcommon-dev
 
       - name: Install Rust target
         run: rustup target add ${{ matrix.target }}

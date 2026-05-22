@@ -238,6 +238,10 @@ void GetCvars()
     }
     else
     {
+        char sIndexedServerId[128];
+        if (TryBuildIndexedHostnameId(g_sCvarServerId, sIndexedServerId, sizeof(sIndexedServerId)))
+            strcopy(g_sCvarServerId, sizeof(g_sCvarServerId), sIndexedServerId);
+
         g_bAutoServerId = false;
     }
 }
@@ -573,8 +577,22 @@ public void SQLCB_CreatePeakStateTable(Handle owner, Handle hndl, const char[] e
         return;
     }
 
+    CleanupLegacyStatusRows();
+
     g_bDBReady = true;
     UpdateServerStatus(true);
+}
+
+void CleanupLegacyStatusRows()
+{
+    if (!g_bIsMySQL)
+        return;
+
+    char sQuery[256];
+    FormatEx(sQuery, sizeof(sQuery),
+        "DELETE FROM `%s` WHERE `server_id` COLLATE utf8mb4_bin NOT REGEXP '^Anne云服#[0-9]+$'",
+        g_sCvarStatusTable);
+    SQL_TQuery(g_hDB, SQLCB_Generic, sQuery);
 }
 
 void RestartStatusTimer()
@@ -967,14 +985,13 @@ bool TryBuildIndexedHostnameId(const char[] hostname, char[] buffer, int maxlen)
     if (iDigitEnd == iDigitStart)
         return false;
 
+    char sDigits[16];
     int iOut = 0;
-    for (int i = 0; i <= iHash && iOut < maxlen - 1; i++)
-        buffer[iOut++] = hostname[i];
+    for (int i = iDigitStart; i < iDigitEnd && iOut < sizeof(sDigits) - 1; i++)
+        sDigits[iOut++] = hostname[i];
+    sDigits[iOut] = '\0';
 
-    for (int i = iDigitStart; i < iDigitEnd && iOut < maxlen - 1; i++)
-        buffer[iOut++] = hostname[i];
-
-    buffer[iOut] = '\0';
+    FormatEx(buffer, maxlen, "Anne云服#%s", sDigits);
     TrimString(buffer);
 
     return buffer[0] != '\0';
