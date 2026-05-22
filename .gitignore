@@ -26,3 +26,9 @@ $RECYCLE.BIN/
 /.vscode
 addons/sourcemod/scripting/.DS_Store
 addons/sourcemod/plugins/optional/.DS_Store
+
+# Local database migration config with passwords
+scripts/mysql-install-clone-replica.sh
+scripts/mysql-install-clone-replica.env.example
+scripts/mysql-install-clone-replica.env
+mysql-install-clone-replica.env

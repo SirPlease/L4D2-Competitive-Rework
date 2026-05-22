@@ -167,16 +167,30 @@ bool IsNeedForceOfficialMap(SourceKeyValues kvSettings)
 	return strcmp(sApplyMap, sCurMap) != 0;
 }
 
-public void OnClientConnected(int client)
+public void OnClientPutInServer(int client)
 {
 	if (g_iUnreserveType != UNRESERVE_WHEN_FULL || IsFakeClient(client))
 		return;
+
+	CreateTimer(1.0, Timer_ClearLobbyIfFull, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+}
+
+Action Timer_ClearLobbyIfFull(Handle timer, any userid)
+{
+	int client = GetClientOfUserId(userid);
+	if (client < 1 || !IsClientInGame(client) || IsFakeClient(client))
+		return Plugin_Stop;
+
+	if (g_iUnreserveType != UNRESERVE_WHEN_FULL)
+		return Plugin_Stop;
 
 	if (GetPlayerCount() >= GetMaxLobbySlots(g_sGameMode))
 	{
 		SetReservationCookie(false);
 		sv_allow_lobby_connect_only.BoolValue = false;
 	}
+
+	return Plugin_Stop;
 }
 
 Action Cmd_Status(int client, int args)
