@@ -11,6 +11,11 @@ on:
     tags:
       - 'l4d2-browser-v*'
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Optional release tag, for example l4d2-browser-v0.2.0. Leave empty to only upload artifacts.'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -89,10 +94,10 @@ jobs:
           if-no-files-found: ignore
 
   release:
-    name: Publish tagged release
+    name: Publish release
     needs: build
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/l4d2-browser-v')
+    if: startsWith(github.ref, 'refs/tags/l4d2-browser-v') || (github.event_name == 'workflow_dispatch' && inputs.release_tag != '')
     permissions:
       contents: write
 
@@ -106,4 +111,6 @@ jobs:
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.ref_name }}
+          target_commitish: ${{ github.sha }}
           files: dist/*

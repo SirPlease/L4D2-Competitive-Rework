@@ -2,19 +2,21 @@ use clap::{Parser, ValueEnum};
 use regex::Regex;
 use reqwest::blocking::Client;
 use serde::{Deserialize, Serialize};
-use std::collections::{BTreeSet, HashMap, HashSet, VecDeque};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, VecDeque};
 use std::fs;
-use std::io;
-use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4, ToSocketAddrs, UdpSocket};
+use std::io::{self, Read, Write};
+use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4, TcpStream, ToSocketAddrs, UdpSocket};
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::{Duration, Instant};
+use tiny_http::{Header, Method, Request, Response, Server, StatusCode};
 
 const DEFAULT_MASTER: &str = "hl2master.steampowered.com:27011";
 const DEFAULT_FILTER: &str = "\\appid\\550";
 const DEFAULT_MASTER_GROUP: &str = "Steam Master";
-const USER_AGENT: &str = "l4d2-server-browser/0.2";
+const DEFAULT_CONFIG_FILE: &str = "l4d2-browser.toml";
+const USER_AGENT: &str = "l4d2-server-browser/0.3";
 
 fn main() {
     if let Err(err) = run() {
@@ -25,71 +27,17 @@ fn main() {
 
 fn run() -> Result<(), String> {
     let cli = Cli::parse();
-    let loaded_config = load_config(cli.config.as_ref())?;
-    let mut settings = RuntimeSettings::default();
-    let mut manual_groups = Vec::new();
-    let mut subscriptions = Vec::new();
-
-    if let Some(config) = loaded_config {
-        settings.apply_file_master(config.master)?;
-        manual_groups.extend(config.groups.into_iter().map(ManualGroup::try_from).collect::<Result<Vec<_>, _>>()?);
-        subscriptions.extend(
-            config
-                .sourcebans
-                .into_iter()
-                .map(SourceBansSubscription::try_from)
-                .collect::<Result<Vec<_>, _>>()?,
-        );
+    if cli.gui {
+        let config_path = cli
+            .config
+            .clone()
+            .unwrap_or_else(|| PathBuf::from(DEFAULT_CONFIG_FILE));
+        return start_gui(cli, config_path);
     }
 
-    settings.apply_cli(&cli)?;
-    manual_groups.extend(
-        cli.group
-            .iter()
-            .map(|value| parse_cli_group(value))
-            .collect::<Result<Vec<_>, _>>()?,
-    );
-    subscriptions.extend(
-        cli.sourcebans
-            .iter()
-            .map(|value| parse_cli_subscription(value))
-            .collect::<Result<Vec<_>, _>>()?,
-    );
-    subscriptions.extend(cli.sourcebans_url.iter().map(|url| SourceBansSubscription {
-        name: sourcebans_group_name(url),
-        url: url.to_owned(),
-    }));
-
-    let registry = collect_sources(&settings, &manual_groups, &subscriptions)?;
-    if registry.is_empty() {
-        return Err("no server addresses found from master, groups, or subscriptions".to_owned());
-    }
-
-    let endpoints: Vec<_> = registry
-        .into_values()
-        .map(|entry| Endpoint {
-            display: entry.display,
-            socket: entry.socket,
-            groups: entry.groups.into_iter().collect(),
-        })
-        .collect();
-
-    let mut rows = if settings.no_info {
-        endpoints
-            .into_iter()
-            .map(|endpoint| ServerRow {
-                endpoint,
-                info: None,
-                ping: None,
-                error: None,
-            })
-            .collect()
-    } else {
-        query_servers(endpoints, settings.server_timeout, settings.jobs)
-    };
-
-    rows = apply_filters(rows, &settings);
-    sort_rows(&mut rows, settings.sort);
+    let config = load_config(cli.config.as_ref())?.unwrap_or_default();
+    let (settings, manual_groups, subscriptions) = build_runtime(&cli, config)?;
+    let rows = load_server_rows(&settings, &manual_groups, &subscriptions)?;
 
     if settings.json {
         print_json(&rows)?;
@@ -100,12 +48,21 @@ fn run() -> Result<(), String> {
     Ok(())
 }
 
-#[derive(Parser, Debug)]
+#[derive(Parser, Debug, Clone)]
 #[command(name = "l4d2-server-browser")]
 #[command(about = "Left 4 Dead 2 server browser with groups and SourceBans subscriptions.")]
 struct Cli {
     #[arg(long)]
     config: Option<PathBuf>,
+
+    #[arg(long)]
+    gui: bool,
+
+    #[arg(long, default_value = "127.0.0.1")]
+    gui_host: String,
+
+    #[arg(long, default_value_t = 8787)]
+    gui_port: u16,
 
     #[arg(long)]
     master: Option<String>,
@@ -305,7 +262,97 @@ impl RuntimeSettings {
     }
 }
 
-#[derive(Debug, Deserialize, Default)]
+fn build_runtime(
+    cli: &Cli,
+    config: BrowserConfig,
+) -> Result<
+    (
+        RuntimeSettings,
+        Vec<ManualGroup>,
+        Vec<SourceBansSubscription>,
+    ),
+    String,
+> {
+    let mut settings = RuntimeSettings::default();
+    let mut manual_groups = Vec::new();
+    let mut subscriptions = Vec::new();
+
+    settings.apply_file_master(config.master)?;
+    manual_groups.extend(
+        config
+            .groups
+            .into_iter()
+            .map(ManualGroup::try_from)
+            .collect::<Result<Vec<_>, _>>()?,
+    );
+    subscriptions.extend(
+        config
+            .sourcebans
+            .into_iter()
+            .map(SourceBansSubscription::try_from)
+            .collect::<Result<Vec<_>, _>>()?,
+    );
+
+    settings.apply_cli(cli)?;
+    manual_groups.extend(
+        cli.group
+            .iter()
+            .map(|value| parse_cli_group(value))
+            .collect::<Result<Vec<_>, _>>()?,
+    );
+    subscriptions.extend(
+        cli.sourcebans
+            .iter()
+            .map(|value| parse_cli_subscription(value))
+            .collect::<Result<Vec<_>, _>>()?,
+    );
+    subscriptions.extend(cli.sourcebans_url.iter().map(|url| SourceBansSubscription {
+        name: sourcebans_group_name(url),
+        url: url.to_owned(),
+    }));
+
+    Ok((settings, manual_groups, subscriptions))
+}
+
+fn load_server_rows(
+    settings: &RuntimeSettings,
+    manual_groups: &[ManualGroup],
+    subscriptions: &[SourceBansSubscription],
+) -> Result<Vec<ServerRow>, String> {
+    let registry = collect_sources(settings, manual_groups, subscriptions)?;
+    if registry.is_empty() {
+        return Err("no server addresses found from master, groups, or subscriptions".to_owned());
+    }
+
+    let endpoints: Vec<_> = registry
+        .into_values()
+        .map(|entry| Endpoint {
+            display: entry.display,
+            socket: entry.socket,
+            groups: entry.groups.into_iter().collect(),
+        })
+        .collect();
+
+    let mut rows = if settings.no_info {
+        endpoints
+            .into_iter()
+            .map(|endpoint| ServerRow {
+                endpoint,
+                info: None,
+                ping: None,
+                error: None,
+            })
+            .collect()
+    } else {
+        query_servers(endpoints, settings.server_timeout, settings.jobs)
+    };
+
+    rows = apply_filters(rows, settings);
+    sort_rows(&mut rows, settings.sort);
+    Ok(rows)
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, Default)]
 struct BrowserConfig {
     #[serde(default)]
     master: Option<FileMaster>,
@@ -315,7 +362,7 @@ struct BrowserConfig {
     sourcebans: Vec<FileSourceBans>,
 }
 
-#[derive(Debug, Deserialize, Default)]
+#[derive(Debug, Clone, Deserialize, Serialize, Default)]
 struct FileMaster {
     enabled: Option<bool>,
     address: Option<String>,
@@ -327,13 +374,13 @@ struct FileMaster {
     limit: Option<usize>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 struct FileGroup {
     name: String,
     servers: Vec<String>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 struct FileSourceBans {
     name: String,
     url: String,
@@ -383,6 +430,32 @@ fn load_config(path: Option<&PathBuf>) -> Result<Option<BrowserConfig>, String> 
     let config = toml::from_str(&text)
         .map_err(|err| format!("failed to parse config {}: {err}", path.display()))?;
     Ok(Some(config))
+}
+
+fn load_config_or_default(path: &PathBuf) -> Result<BrowserConfig, String> {
+    match fs::read_to_string(path) {
+        Ok(text) => toml::from_str(&text)
+            .map_err(|err| format!("failed to parse config {}: {err}", path.display())),
+        Err(err) if err.kind() == io::ErrorKind::NotFound => Ok(BrowserConfig::default()),
+        Err(err) => Err(format!("failed to read config {}: {err}", path.display())),
+    }
+}
+
+fn save_config(path: &PathBuf, config: &BrowserConfig) -> Result<(), String> {
+    if let Some(parent) = path.parent() {
+        if !parent.as_os_str().is_empty() {
+            fs::create_dir_all(parent).map_err(|err| {
+                format!(
+                    "failed to create config directory {}: {err}",
+                    parent.display()
+                )
+            })?;
+        }
+    }
+
+    let text = toml::to_string_pretty(config)
+        .map_err(|err| format!("failed to serialize config: {err}"))?;
+    fs::write(path, text).map_err(|err| format!("failed to write config {}: {err}", path.display()))
 }
 
 fn non_empty(value: String, field: &str) -> Result<String, String> {
@@ -494,7 +567,10 @@ fn collect_sources(
                     }
                 }
             }
-            Err(err) => eprintln!("warning: SourceBans subscription {} failed: {err}", subscription.url),
+            Err(err) => eprintln!(
+                "warning: SourceBans subscription {} failed: {err}",
+                subscription.url
+            ),
         }
     }
 
@@ -515,12 +591,18 @@ struct Endpoint {
     groups: Vec<String>,
 }
 
-fn add_endpoint(registry: &mut HashMap<SocketAddrV4, RegistryEntry>, endpoint: Endpoint, group: &str) {
-    let entry = registry.entry(endpoint.socket).or_insert_with(|| RegistryEntry {
-        display: endpoint.display,
-        socket: endpoint.socket,
-        groups: BTreeSet::new(),
-    });
+fn add_endpoint(
+    registry: &mut HashMap<SocketAddrV4, RegistryEntry>,
+    endpoint: Endpoint,
+    group: &str,
+) {
+    let entry = registry
+        .entry(endpoint.socket)
+        .or_insert_with(|| RegistryEntry {
+            display: endpoint.display,
+            socket: endpoint.socket,
+            groups: BTreeSet::new(),
+        });
     entry.groups.insert(group.to_owned());
 }
 
@@ -640,7 +722,10 @@ fn build_master_request(region: u8, cursor: &str, filter: &str) -> Vec<u8> {
 }
 
 fn parse_master_response(packet: &[u8]) -> Result<Vec<SocketAddrV4>, String> {
-    let offset = if packet.len() >= 6 && packet.starts_with(&[0xFF, 0xFF, 0xFF, 0xFF]) && packet[4] == 0x66 {
+    let offset = if packet.len() >= 6
+        && packet.starts_with(&[0xFF, 0xFF, 0xFF, 0xFF])
+        && packet[4] == 0x66
+    {
         6
     } else {
         return Err("invalid master server response header".to_owned());
@@ -695,7 +780,8 @@ fn normalize_sourcebans_url(input: &str) -> Result<reqwest::Url, String> {
     } else {
         format!("https://{input}")
     };
-    let mut url = reqwest::Url::parse(&parse_input).map_err(|err| format!("invalid URL {input}: {err}"))?;
+    let mut url =
+        reqwest::Url::parse(&parse_input).map_err(|err| format!("invalid URL {input}: {err}"))?;
     let has_servers_page = url
         .query_pairs()
         .any(|(key, value)| key.eq_ignore_ascii_case("p") && value.eq_ignore_ascii_case("servers"));
@@ -715,7 +801,8 @@ fn normalize_sourcebans_url(input: &str) -> Result<reqwest::Url, String> {
 
 fn extract_sourcebans_addresses(body: &str) -> Result<Vec<String>, String> {
     let body = decode_minimal_html_entities(body);
-    let connect_re = Regex::new(r#"(?i)steam://connect/([^"'<>\s]+)"#).map_err(|err| err.to_string())?;
+    let connect_re =
+        Regex::new(r#"(?i)steam://connect/([^"'<>\s]+)"#).map_err(|err| err.to_string())?;
     let ip_re = Regex::new(
         r#"\b((?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)):(\d{2,5})\b"#,
     )
@@ -726,7 +813,12 @@ fn extract_sourcebans_addresses(body: &str) -> Result<Vec<String>, String> {
     let mut seen = BTreeSet::new();
     for capture in connect_re.captures_iter(&body) {
         if let Some(raw) = capture.get(1) {
-            let address = raw.as_str().split('/').next().unwrap_or(raw.as_str()).to_owned();
+            let address = raw
+                .as_str()
+                .split('/')
+                .next()
+                .unwrap_or(raw.as_str())
+                .to_owned();
             seen.insert(address);
         }
     }
@@ -778,7 +870,8 @@ fn sourcebans_group_name(url: &str) -> String {
 
 fn resolve_endpoint(input: &str) -> Result<Endpoint, String> {
     let address = normalize_endpoint_input(input)?;
-    let socket = resolve_ipv4(&address).map_err(|err| format!("failed to resolve {address}: {err}"))?;
+    let socket =
+        resolve_ipv4(&address).map_err(|err| format!("failed to resolve {address}: {err}"))?;
 
     Ok(Endpoint {
         display: address,
@@ -866,7 +959,10 @@ fn query_servers(endpoints: Vec<Endpoint>, timeout: Duration, jobs: usize) -> Ve
     std::mem::take(&mut *results)
 }
 
-fn query_server_info(addr: SocketAddrV4, timeout: Duration) -> Result<(ServerInfo, Duration), String> {
+fn query_server_info(
+    addr: SocketAddrV4,
+    timeout: Duration,
+) -> Result<(ServerInfo, Duration), String> {
     let socket = UdpSocket::bind("0.0.0.0:0").map_err(|err| err.to_string())?;
     socket
         .set_read_timeout(Some(timeout))
@@ -1250,6 +1346,626 @@ fn print_json(rows: &[ServerRow]) -> Result<(), String> {
     Ok(())
 }
 
+#[derive(Clone)]
+struct GuiApp {
+    cli: Cli,
+    config_path: PathBuf,
+}
+
+#[derive(Serialize)]
+struct GuiStatePayload {
+    config_path: String,
+    config: BrowserConfig,
+}
+
+#[derive(Deserialize)]
+struct AddServerRequest {
+    group: String,
+    server: String,
+}
+
+#[derive(Deserialize)]
+struct AddSourceBansRequest {
+    name: String,
+    url: String,
+}
+
+#[derive(Deserialize)]
+struct RconCommandRequest {
+    address: String,
+    password: String,
+    command: String,
+    timeout_ms: Option<u64>,
+}
+
+#[derive(Deserialize)]
+struct CvarRequest {
+    address: String,
+    password: Option<String>,
+    names: Option<Vec<String>>,
+    timeout_ms: Option<u64>,
+}
+
+#[derive(Serialize)]
+struct ServerRowPayload {
+    address: String,
+    socket: String,
+    groups: Vec<String>,
+    ping_ms: Option<u64>,
+    info: Option<ServerInfo>,
+    error: Option<String>,
+}
+
+#[derive(Serialize)]
+struct MessagePayload {
+    message: String,
+}
+
+#[derive(Serialize)]
+struct RconPayload {
+    output: String,
+}
+
+#[derive(Serialize)]
+struct CvarPayload {
+    source: String,
+    values: BTreeMap<String, String>,
+}
+
+fn start_gui(cli: Cli, config_path: PathBuf) -> Result<(), String> {
+    let bind = format!("{}:{}", cli.gui_host, cli.gui_port);
+    let server = Server::http(&bind)
+        .map_err(|err| format!("failed to start GUI server at {bind}: {err}"))?;
+    let app = Arc::new(GuiApp { cli, config_path });
+
+    println!("GUI listening at http://{bind}/");
+    println!("Config file: {}", app.config_path.display());
+
+    for request in server.incoming_requests() {
+        let app = Arc::clone(&app);
+        if let Err(err) = handle_gui_request(&app, request) {
+            eprintln!("warning: GUI request failed: {err}");
+        }
+    }
+
+    Ok(())
+}
+
+fn handle_gui_request(app: &GuiApp, mut request: Request) -> Result<(), String> {
+    let method = request.method().clone();
+    let path = request.url().split('?').next().unwrap_or("/").to_owned();
+
+    match (method, path.as_str()) {
+        (Method::Get, "/") => respond_html(request, GUI_HTML),
+        (Method::Get, "/api/state") => match load_config_or_default(&app.config_path) {
+            Ok(config) => {
+                let payload = GuiStatePayload {
+                    config_path: app.config_path.display().to_string(),
+                    config,
+                };
+                respond_json(request, StatusCode(200), &payload)
+            }
+            Err(err) => respond_error(request, StatusCode(500), err),
+        },
+        (Method::Get, "/api/servers") => {
+            let result = load_config_or_default(&app.config_path)
+                .and_then(|config| build_runtime(&app.cli, config))
+                .and_then(|(settings, manual_groups, subscriptions)| {
+                    load_server_rows(&settings, &manual_groups, &subscriptions)
+                });
+            match result {
+                Ok(rows) => respond_json(request, StatusCode(200), &server_rows_payload(&rows)),
+                Err(err) => respond_error(request, StatusCode(500), err),
+            }
+        }
+        (Method::Post, "/api/groups") => {
+            let result = read_json_body(&mut request)
+                .and_then(|input| add_server_to_config(&app.config_path, input));
+            match result {
+                Ok(()) => respond_json(
+                    request,
+                    StatusCode(200),
+                    &MessagePayload {
+                        message: "server saved".to_owned(),
+                    },
+                ),
+                Err(err) => respond_error(request, StatusCode(400), err),
+            }
+        }
+        (Method::Post, "/api/sourcebans") => {
+            let result = read_json_body(&mut request)
+                .and_then(|input| add_sourcebans_to_config(&app.config_path, input));
+            match result {
+                Ok(()) => respond_json(
+                    request,
+                    StatusCode(200),
+                    &MessagePayload {
+                        message: "subscription saved".to_owned(),
+                    },
+                ),
+                Err(err) => respond_error(request, StatusCode(400), err),
+            }
+        }
+        (Method::Post, "/api/rcon") => {
+            let result = read_json_body(&mut request).and_then(|input: RconCommandRequest| {
+                let timeout = Duration::from_millis(input.timeout_ms.unwrap_or(2500).max(1));
+                rcon_command(&input.address, &input.password, &input.command, timeout)
+            });
+            match result {
+                Ok(output) => respond_json(request, StatusCode(200), &RconPayload { output }),
+                Err(err) => respond_error(request, StatusCode(400), err),
+            }
+        }
+        (Method::Post, "/api/cvars") => {
+            let result = read_json_body(&mut request).and_then(read_cvars);
+            match result {
+                Ok(payload) => respond_json(request, StatusCode(200), &payload),
+                Err(err) => respond_error(request, StatusCode(400), err),
+            }
+        }
+        _ => respond_json(
+            request,
+            StatusCode(404),
+            &MessagePayload {
+                message: "not found".to_owned(),
+            },
+        ),
+    }
+}
+
+fn respond_error(request: Request, status: StatusCode, message: String) -> Result<(), String> {
+    respond_json(request, status, &MessagePayload { message })
+}
+
+fn respond_html(request: Request, body: &str) -> Result<(), String> {
+    let response = Response::from_string(body)
+        .with_status_code(StatusCode(200))
+        .with_header(header("Content-Type", "text/html; charset=utf-8")?);
+    request.respond(response).map_err(|err| err.to_string())
+}
+
+fn respond_json<T: Serialize>(
+    request: Request,
+    status: StatusCode,
+    payload: &T,
+) -> Result<(), String> {
+    let body = serde_json::to_string_pretty(payload).map_err(|err| err.to_string())?;
+    let response = Response::from_string(body)
+        .with_status_code(status)
+        .with_header(header("Content-Type", "application/json; charset=utf-8")?);
+    request.respond(response).map_err(|err| err.to_string())
+}
+
+fn header(name: &str, value: &str) -> Result<Header, String> {
+    Header::from_bytes(name.as_bytes(), value.as_bytes())
+        .map_err(|_| format!("invalid header {name}"))
+}
+
+fn read_json_body<T: for<'de> Deserialize<'de>>(request: &mut Request) -> Result<T, String> {
+    let mut body = String::new();
+    request
+        .as_reader()
+        .read_to_string(&mut body)
+        .map_err(|err| format!("failed to read request body: {err}"))?;
+    serde_json::from_str(&body).map_err(|err| format!("invalid JSON request: {err}"))
+}
+
+fn add_server_to_config(path: &PathBuf, input: AddServerRequest) -> Result<(), String> {
+    let group_name = non_empty(input.group.trim().to_owned(), "group")?;
+    let server = normalize_endpoint_input(&input.server)?;
+    let mut config = load_config_or_default(path)?;
+
+    if let Some(group) = config
+        .groups
+        .iter_mut()
+        .find(|group| group.name == group_name)
+    {
+        if !group.servers.iter().any(|existing| existing == &server) {
+            group.servers.push(server);
+        }
+    } else {
+        config.groups.push(FileGroup {
+            name: group_name,
+            servers: vec![server],
+        });
+    }
+
+    save_config(path, &config)
+}
+
+fn add_sourcebans_to_config(path: &PathBuf, input: AddSourceBansRequest) -> Result<(), String> {
+    let name = non_empty(input.name.trim().to_owned(), "name")?;
+    let url = normalize_sourcebans_url(&input.url)?.to_string();
+    let mut config = load_config_or_default(path)?;
+
+    if let Some(subscription) = config
+        .sourcebans
+        .iter_mut()
+        .find(|subscription| subscription.name == name)
+    {
+        subscription.url = url;
+    } else {
+        config.sourcebans.push(FileSourceBans { name, url });
+    }
+
+    save_config(path, &config)
+}
+
+fn server_rows_payload(rows: &[ServerRow]) -> Vec<ServerRowPayload> {
+    rows.iter()
+        .map(|row| ServerRowPayload {
+            address: row.endpoint.display.clone(),
+            socket: row.endpoint.socket.to_string(),
+            groups: row.endpoint.groups.clone(),
+            ping_ms: row.ping.map(|ping| ping.as_millis() as u64),
+            info: row.info.clone(),
+            error: row.error.clone(),
+        })
+        .collect()
+}
+
+#[derive(Debug)]
+struct RconPacket {
+    id: i32,
+    kind: i32,
+    body: String,
+}
+
+fn rcon_command(
+    address: &str,
+    password: &str,
+    command: &str,
+    timeout: Duration,
+) -> Result<String, String> {
+    let password = non_empty(password.trim().to_owned(), "rcon password")?;
+    let command = non_empty(command.trim().to_owned(), "rcon command")?;
+    let endpoint = resolve_endpoint(address)?;
+    let socket = SocketAddr::V4(endpoint.socket);
+    let mut stream = TcpStream::connect_timeout(&socket, timeout)
+        .map_err(|err| format!("failed to connect RCON {}: {err}", endpoint.display))?;
+    stream
+        .set_read_timeout(Some(timeout))
+        .map_err(|err| err.to_string())?;
+    stream
+        .set_write_timeout(Some(timeout))
+        .map_err(|err| err.to_string())?;
+
+    write_rcon_packet(&mut stream, 1, 3, &password)?;
+    let mut authed = false;
+    for _ in 0..8 {
+        let packet = read_rcon_packet(&mut stream)?;
+        if packet.id == -1 {
+            return Err("RCON auth failed".to_owned());
+        }
+        if packet.id == 1 && packet.kind == 2 {
+            authed = true;
+            break;
+        }
+    }
+    if !authed {
+        return Err("RCON auth response timed out".to_owned());
+    }
+
+    write_rcon_packet(&mut stream, 2, 2, &command)?;
+    write_rcon_packet(&mut stream, 3, 0, "")?;
+
+    let mut output = String::new();
+    for _ in 0..64 {
+        match read_rcon_packet(&mut stream) {
+            Ok(packet) if packet.id == 3 => break,
+            Ok(packet) if packet.id == 2 => output.push_str(&packet.body),
+            Ok(packet) if packet.id == -1 => return Err("RCON command rejected".to_owned()),
+            Ok(packet) => output.push_str(&packet.body),
+            Err(err) if !output.is_empty() => {
+                output.push_str(&format!("\n[read stopped: {err}]"));
+                break;
+            }
+            Err(err) => return Err(err),
+        }
+    }
+
+    Ok(output)
+}
+
+fn write_rcon_packet(stream: &mut TcpStream, id: i32, kind: i32, body: &str) -> Result<(), String> {
+    let size = 4 + 4 + body.len() + 2;
+    if size > i32::MAX as usize {
+        return Err("RCON packet too large".to_owned());
+    }
+
+    stream
+        .write_all(&(size as i32).to_le_bytes())
+        .and_then(|_| stream.write_all(&id.to_le_bytes()))
+        .and_then(|_| stream.write_all(&kind.to_le_bytes()))
+        .and_then(|_| stream.write_all(body.as_bytes()))
+        .and_then(|_| stream.write_all(&[0, 0]))
+        .map_err(|err| err.to_string())
+}
+
+fn read_rcon_packet(stream: &mut TcpStream) -> Result<RconPacket, String> {
+    let mut size_buf = [0u8; 4];
+    stream
+        .read_exact(&mut size_buf)
+        .map_err(|err| err.to_string())?;
+    let size = i32::from_le_bytes(size_buf);
+    if !(10..=1_048_576).contains(&size) {
+        return Err(format!("invalid RCON packet size: {size}"));
+    }
+
+    let mut payload = vec![0u8; size as usize];
+    stream
+        .read_exact(&mut payload)
+        .map_err(|err| err.to_string())?;
+    let id = i32::from_le_bytes([payload[0], payload[1], payload[2], payload[3]]);
+    let kind = i32::from_le_bytes([payload[4], payload[5], payload[6], payload[7]]);
+    let body_end = payload.len().saturating_sub(2);
+    let body = String::from_utf8_lossy(&payload[8..body_end]).into_owned();
+    Ok(RconPacket { id, kind, body })
+}
+
+fn read_cvars(input: CvarRequest) -> Result<CvarPayload, String> {
+    let timeout = Duration::from_millis(input.timeout_ms.unwrap_or(2500).max(1));
+    let names = input
+        .names
+        .unwrap_or_default()
+        .into_iter()
+        .map(|name| name.trim().to_owned())
+        .filter(|name| !name.is_empty())
+        .collect::<Vec<_>>();
+
+    if let Some(password) = input
+        .password
+        .filter(|password| !password.trim().is_empty())
+    {
+        if names.is_empty() {
+            return Err("RCON CVAR read requires at least one cvar name".to_owned());
+        }
+
+        let mut values = BTreeMap::new();
+        for name in names {
+            let output = rcon_command(&input.address, &password, &name, timeout)?;
+            values.insert(name, output);
+        }
+        return Ok(CvarPayload {
+            source: "rcon".to_owned(),
+            values,
+        });
+    }
+
+    let endpoint = resolve_endpoint(&input.address)?;
+    let mut values = query_server_rules(endpoint.socket, timeout)?;
+    if !names.is_empty() {
+        let wanted = names
+            .into_iter()
+            .map(|name| name.to_lowercase())
+            .collect::<HashSet<_>>();
+        values.retain(|name, _| wanted.contains(&name.to_lowercase()));
+    }
+
+    Ok(CvarPayload {
+        source: "a2s_rules".to_owned(),
+        values,
+    })
+}
+
+fn query_server_rules(
+    addr: SocketAddrV4,
+    timeout: Duration,
+) -> Result<BTreeMap<String, String>, String> {
+    let socket = UdpSocket::bind("0.0.0.0:0").map_err(|err| err.to_string())?;
+    socket
+        .set_read_timeout(Some(timeout))
+        .map_err(|err| err.to_string())?;
+    socket
+        .set_write_timeout(Some(timeout))
+        .map_err(|err| err.to_string())?;
+    socket
+        .connect(SocketAddr::V4(addr))
+        .map_err(|err| err.to_string())?;
+
+    socket
+        .send(&build_a2s_rules_request([0xFF, 0xFF, 0xFF, 0xFF]))
+        .map_err(|err| err.to_string())?;
+    let mut buf = [0u8; 8192];
+    let size = socket.recv(&mut buf).map_err(|err| err.to_string())?;
+    let packet = &buf[..size];
+
+    if let Some(challenge) = parse_challenge(packet) {
+        socket
+            .send(&build_a2s_rules_request(challenge))
+            .map_err(|err| err.to_string())?;
+        let size = socket.recv(&mut buf).map_err(|err| err.to_string())?;
+        return parse_rules_response(&buf[..size]);
+    }
+
+    parse_rules_response(packet)
+}
+
+fn build_a2s_rules_request(challenge: [u8; 4]) -> Vec<u8> {
+    let mut request = Vec::from(&b"\xFF\xFF\xFF\xFFV"[..]);
+    request.extend_from_slice(&challenge);
+    request
+}
+
+fn parse_rules_response(packet: &[u8]) -> Result<BTreeMap<String, String>, String> {
+    if packet.len() >= 4 && packet.starts_with(&[0xFE, 0xFF, 0xFF, 0xFF]) {
+        return Err("split A2S_RULES response is not supported".to_owned());
+    }
+    if packet.len() < 7 || !packet.starts_with(&[0xFF, 0xFF, 0xFF, 0xFF]) || packet[4] != 0x45 {
+        return Err("invalid A2S_RULES response".to_owned());
+    }
+
+    let mut reader = PacketReader::new(&packet[5..]);
+    let count = reader.u16_le()? as usize;
+    let mut values = BTreeMap::new();
+    for _ in 0..count {
+        if reader.remaining() == 0 {
+            break;
+        }
+        let name = reader.string()?;
+        let value = reader.string()?;
+        values.insert(name, value);
+    }
+
+    Ok(values)
+}
+
+static GUI_HTML: &str = r#"<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>L4D2 刷服器</title>
+  <style>
+    :root { color-scheme: light; --line:#d7dde5; --text:#111827; --muted:#657286; --bg:#f6f8fb; --panel:#ffffff; --accent:#1769aa; --danger:#b42318; }
+    * { box-sizing: border-box; }
+    body { margin:0; font:14px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--text); background:var(--bg); }
+    header { padding:18px 24px; border-bottom:1px solid var(--line); background:var(--panel); display:flex; justify-content:space-between; gap:12px; align-items:center; }
+    h1 { margin:0; font-size:22px; }
+    main { padding:18px 24px 28px; display:grid; grid-template-columns:360px minmax(0,1fr); gap:18px; }
+    section { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:14px; }
+    h2 { margin:0 0 12px; font-size:16px; }
+    label { display:block; margin:10px 0 5px; color:var(--muted); font-size:12px; }
+    input, textarea, button { width:100%; border:1px solid var(--line); border-radius:6px; padding:9px 10px; font:inherit; background:#fff; }
+    textarea { min-height:86px; resize:vertical; }
+    button { cursor:pointer; background:var(--accent); color:white; border-color:var(--accent); font-weight:600; }
+    button.secondary { background:#fff; color:var(--text); border-color:var(--line); }
+    .stack { display:grid; gap:14px; }
+    .row { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .status { color:var(--muted); font-size:12px; white-space:pre-wrap; }
+    .error { color:var(--danger); }
+    table { width:100%; border-collapse:collapse; }
+    th, td { padding:8px 7px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top; }
+    th { color:var(--muted); font-size:12px; font-weight:700; background:#fbfcfe; position:sticky; top:0; }
+    code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px; }
+    .table-wrap { overflow:auto; max-height:70vh; border:1px solid var(--line); border-radius:8px; }
+    .output { background:#0f172a; color:#e5e7eb; border-radius:8px; padding:10px; min-height:120px; max-height:260px; overflow:auto; white-space:pre-wrap; }
+    @media (max-width: 920px) { main { grid-template-columns:1fr; padding:12px; } header { padding:14px 12px; align-items:flex-start; flex-direction:column; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>L4D2 刷服器</h1>
+      <div class="status" id="configPath"></div>
+    </div>
+    <button class="secondary" style="max-width:160px" onclick="refreshServers()">刷新服务器</button>
+  </header>
+  <main>
+    <div class="stack">
+      <section>
+        <h2>添加服务器</h2>
+        <label>分组</label><input id="groupName" value="我的服务器">
+        <label>服务器地址</label><input id="serverAddress" placeholder="1.2.3.4:27015 或 steam://connect/...">
+        <label></label><button onclick="addServer()">保存服务器</button>
+        <div class="status" id="addServerStatus"></div>
+      </section>
+      <section>
+        <h2>SourceBans 订阅</h2>
+        <label>订阅名称</label><input id="sourcebansName" value="SourceBans">
+        <label>页面 URL</label><input id="sourcebansUrl" placeholder="https://example.com/sourcebans">
+        <label></label><button onclick="addSourceBans()">保存订阅</button>
+        <div class="status" id="sourcebansStatus"></div>
+      </section>
+      <section>
+        <h2>RCON</h2>
+        <label>服务器地址</label><input id="rconAddress" placeholder="1.2.3.4:27015">
+        <label>RCON 密码</label><input id="rconPassword" type="password">
+        <label>命令</label><input id="rconCommand" value="status">
+        <label></label><button onclick="runRcon()">执行命令</button>
+        <div class="output" id="rconOutput"></div>
+      </section>
+      <section>
+        <h2>CVAR / Rules</h2>
+        <label>服务器地址</label><input id="cvarAddress" placeholder="1.2.3.4:27015">
+        <label>RCON 密码（可空；空则读取公开 A2S_RULES）</label><input id="cvarPassword" type="password">
+        <label>CVAR 名称，逗号分隔（公开 rules 可留空）</label><input id="cvarNames" placeholder="hostname,sv_tags,mp_gamemode">
+        <label></label><button onclick="readCvars()">读取</button>
+        <div class="output" id="cvarOutput"></div>
+      </section>
+    </div>
+    <section>
+      <h2>服务器列表</h2>
+      <div class="status" id="serverStatus"></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>分组</th><th>地址</th><th>延迟</th><th>人数</th><th>地图</th><th>VAC</th><th>服务器名</th></tr></thead>
+          <tbody id="servers"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const api = async (url, options = {}) => {
+      const response = await fetch(url, options);
+      const text = await response.text();
+      const data = text ? JSON.parse(text) : {};
+      if (!response.ok) throw new Error(data.message || text || response.statusText);
+      return data;
+    };
+    const postJson = (url, body) => api(url, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+    async function loadState() {
+      const state = await api('/api/state');
+      $('configPath').textContent = '配置文件：' + state.config_path;
+    }
+    async function addServer() {
+      $('addServerStatus').textContent = '保存中...';
+      try {
+        await postJson('/api/groups', { group:$('groupName').value, server:$('serverAddress').value });
+        $('addServerStatus').textContent = '已保存';
+        await refreshServers();
+      } catch (e) { $('addServerStatus').innerHTML = '<span class="error">' + e.message + '</span>'; }
+    }
+    async function addSourceBans() {
+      $('sourcebansStatus').textContent = '保存中...';
+      try {
+        await postJson('/api/sourcebans', { name:$('sourcebansName').value, url:$('sourcebansUrl').value });
+        $('sourcebansStatus').textContent = '已保存';
+        await refreshServers();
+      } catch (e) { $('sourcebansStatus').innerHTML = '<span class="error">' + e.message + '</span>'; }
+    }
+    async function refreshServers() {
+      $('serverStatus').textContent = '查询中...';
+      $('servers').innerHTML = '';
+      try {
+        const rows = await api('/api/servers');
+        $('serverStatus').textContent = '共 ' + rows.length + ' 个服务器';
+        $('servers').innerHTML = rows.map(row => {
+          const info = row.info || {};
+          const players = row.info ? `${info.players}/${info.max_players}` : '-';
+          const ping = row.ping_ms == null ? '-' : row.ping_ms;
+          const vac = row.info ? (info.vac ? 'yes' : 'no') : '-';
+          const name = row.info ? info.name : (row.error || '-');
+          return `<tr><td>${esc(row.groups.join(','))}</td><td><code>${esc(row.address)}</code></td><td>${ping}</td><td>${players}</td><td>${esc(info.map || '-')}</td><td>${vac}</td><td>${esc(name)}</td></tr>`;
+        }).join('');
+      } catch (e) { $('serverStatus').innerHTML = '<span class="error">' + e.message + '</span>'; }
+    }
+    async function runRcon() {
+      $('rconOutput').textContent = '执行中...';
+      try {
+        const data = await postJson('/api/rcon', { address:$('rconAddress').value, password:$('rconPassword').value, command:$('rconCommand').value });
+        $('rconOutput').textContent = data.output || '(empty)';
+      } catch (e) { $('rconOutput').textContent = e.message; }
+    }
+    async function readCvars() {
+      $('cvarOutput').textContent = '读取中...';
+      const names = $('cvarNames').value.split(',').map(v => v.trim()).filter(Boolean);
+      try {
+        const data = await postJson('/api/cvars', { address:$('cvarAddress').value, password:$('cvarPassword').value, names });
+        $('cvarOutput').textContent = data.source + '\\n' + Object.entries(data.values).map(([k,v]) => `${k} = ${v}`).join('\\n');
+      } catch (e) { $('cvarOutput').textContent = e.message; }
+    }
+    function esc(value) {
+      return String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    }
+    loadState();
+    refreshServers();
+  </script>
+</body>
+</html>
+"#;
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1261,7 +1977,10 @@ mod tests {
         ];
 
         let addrs = parse_master_response(&packet).expect("valid master response");
-        assert_eq!(addrs, vec![SocketAddrV4::new(Ipv4Addr::new(1, 2, 3, 4), 27015)]);
+        assert_eq!(
+            addrs,
+            vec![SocketAddrV4::new(Ipv4Addr::new(1, 2, 3, 4), 27015)]
+        );
     }
 
     #[test]
@@ -1310,6 +2029,28 @@ mod tests {
     #[test]
     fn normalizes_sourcebans_root_url() {
         let url = normalize_sourcebans_url("https://example.com/sourcebans").expect("url");
-        assert_eq!(url.as_str(), "https://example.com/sourcebans/index.php?p=servers");
+        assert_eq!(
+            url.as_str(),
+            "https://example.com/sourcebans/index.php?p=servers"
+        );
+    }
+
+    #[test]
+    fn parses_rules_response() {
+        let mut packet = Vec::new();
+        packet.extend_from_slice(&[0xFF, 0xFF, 0xFF, 0xFF, 0x45]);
+        packet.extend_from_slice(&2u16.to_le_bytes());
+        packet.extend_from_slice(b"hostname\0Anne Server\0");
+        packet.extend_from_slice(b"sv_tags\0confogl,anne\0");
+
+        let rules = parse_rules_response(&packet).expect("valid rules");
+        assert_eq!(
+            rules.get("hostname").map(String::as_str),
+            Some("Anne Server")
+        );
+        assert_eq!(
+            rules.get("sv_tags").map(String::as_str),
+            Some("confogl,anne")
+        );
     }
 }

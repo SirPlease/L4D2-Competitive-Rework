@@ -9,6 +9,14 @@ cd tools/l4d2_server_browser
 cargo run --release -- --limit 100
 ```
 
+启动本地 GUI：
+
+```bash
+cargo run --release -- --gui --config browser.example.toml
+```
+
+然后打开 `http://127.0.0.1:8787/`。GUI 支持添加服务器、添加 SourceBans 订阅、刷新服务器列表、执行 RCON 命令、读取 CVAR/公开 rules。
+
 常用参数：
 
 ```bash
@@ -35,6 +43,9 @@ cargo run --release -- --config browser.example.toml
 
 # 只看某个分组
 cargo run --release -- --config browser.example.toml --only-group 'Anne'
+
+# 指定 GUI 监听地址
+cargo run --release -- --gui --gui-host 127.0.0.1 --gui-port 8787
 ```
 
 ## Config
@@ -64,6 +75,15 @@ url = "https://example.com/sourcebans"
 ```
 
 `sourcebans.url` 可以填站点根路径，也可以直接填 `index.php?p=servers`。工具会从页面里提取 `IP:port` 和 `steam://connect/...` 链接。
+
+## GUI / RCON
+
+GUI 模式会把新增服务器和 SourceBans 订阅写入 `--config` 指定的 TOML 文件；如果没有传 `--config`，默认写入当前目录的 `l4d2-browser.toml`。
+
+RCON 使用 Source RCON TCP 协议。读取 CVAR 有两种方式：
+
+- 填 RCON 密码和 CVAR 名称：通过 RCON 执行对应命令，适合读取私有 cvar。
+- 不填 RCON 密码：通过 `A2S_RULES` 读取服务器公开 rules，可留空名称读取全部公开项。
 
 ## Release Build
 
