@@ -5,8 +5,6 @@
 
 // 数据库连接、玩家/地图持久化、基础查询和相关计分定时器。
 
-static bool g_bTablesVerified = false;
-
 // Make connection to database.
 
 bool:ConnectDB()
@@ -14,70 +12,34 @@ bool:ConnectDB()
 	if (db != INVALID_HANDLE)
 		return true;
 
-	if (SQL_CheckConfig(DB_CONF_NAME))
-	{
-		new String:Error[256];
-		db = SQL_Connect(DB_CONF_NAME, true, Error, sizeof(Error));
-
-		if (db == INVALID_HANDLE)
-		{
-			LogError("Failed to connect to database: %s", Error);
-			return false;
-		}
-
-		if (!SQL_FastQuery(db, "SET NAMES 'utf8mb4'"))
-		{
-			if (SQL_GetError(db, Error, sizeof(Error)))
-				LogError("Failed to update encoding to utf8mb4: %s", Error);
-			else
-				LogError("Failed to update encoding to utf8mb4: unknown");
-			if (db != INVALID_HANDLE)
-				{
-					CloseHandle(db);
-					db = INVALID_HANDLE;
-				}
-				return false;
-			}
-
-			if (!CheckDatabaseValidity(DbPrefix))
-			{
-				LogError("Database is missing required table or tables.");
-				if (db != INVALID_HANDLE)
-				{
-				CloseHandle(db);
-				db = INVALID_HANDLE;
-			}
-			return false;
-		}
-
-		// 表结构只需首次启动验证一次，换图后跳过（表不会消失）
-		if (!g_bTablesVerified)
-		{
-			ScoreLog_EnsureTable();
-			if (db == INVALID_HANDLE)
-				return false;
-
-			QuarterRank_EnsureTable();
-			if (db == INVALID_HANDLE)
-				return false;
-
-			ModeStats_EnsureTable();
-			if (db == INVALID_HANDLE)
-				return false;
-
-			MapTimingRuns_EnsureTable();
-			if (db == INVALID_HANDLE)
-				return false;
-
-			g_bTablesVerified = true;
-		}
-	}
-	else
+	if (!SQL_CheckConfig(DB_CONF_NAME))
 	{
 		LogError("Databases.cfg missing '%s' entry!", DB_CONF_NAME);
 		return false;
 	}
 
+	new String:Error[256];
+	db = SQL_Connect(DB_CONF_NAME, true, Error, sizeof(Error));
+
+	if (db == INVALID_HANDLE)
+	{
+		LogError("Failed to connect to database: %s", Error);
+		return false;
+	}
+
+	if (!SQL_FastQuery(db, "SET NAMES 'utf8mb4'"))
+	{
+		if (SQL_GetError(db, Error, sizeof(Error)))
+			LogError("Failed to update encoding to utf8mb4: %s", Error);
+		else
+			LogError("Failed to update encoding to utf8mb4: unknown");
+
+		CloseHandle(db);
+		db = INVALID_HANDLE;
+		return false;
+	}
+
+	// 表结构由外部 SQL 管理，插件启动时只连接和读写，不自动建表/迁移。
 	return true;
 }
 
@@ -86,19 +48,6 @@ bool:IsDBConnectionLostError(const String:error[])
 {
 	return (StrContains(error, "Lost connection", false) != -1
 		|| StrContains(error, "server has gone away", false) != -1);
-}
-
-bool:CheckDatabaseValidity(const String:Prefix[])
-{
-	if (!DoFastQuery(0, "SELECT * FROM %splayers WHERE 1 = 2", Prefix) ||
-			!DoFastQuery(0, "SELECT * FROM %smaps WHERE 1 = 2", Prefix) ||
-			!DoFastQuery(0, "SELECT * FROM %stimedmaps WHERE 1 = 2", Prefix) ||
-			!DoFastQuery(0, "SELECT * FROM %ssettings WHERE 1 = 2", Prefix))
-	{
-		return false;
-	}
-
-	return true;
 }
 
 public Action:timer_ProtectedFriendly(Handle:timer, any:data)

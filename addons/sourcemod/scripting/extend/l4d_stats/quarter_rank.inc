@@ -7,7 +7,7 @@
 // 每次 AddScore 同步写入当前季度积分；季度切换时自动把当前榜清零。
 
 new Handle:cvar_QuarterRankEnable = INVALID_HANDLE;
-new bool:g_bQuarterRankTableReady = false;
+new bool:g_bQuarterRankTableReady = true;
 new bool:g_bQuarterRankDbChecked = false;
 new g_iQuarterRankKey = 0;
 new QuarterRankTotal = 0;
@@ -48,108 +48,6 @@ stock QuarterRank_FormatCurrentQuarter(String:buffer[], maxlength)
 	Format(buffer, maxlength, "%i年第%i季度", Year, Quarter);
 }
 
-stock QuarterRank_EnsureTable()
-{
-	if (db == INVALID_HANDLE)
-		return;
-
-	decl String:query[4096];
-	new len = 0;
-	len += Format(query[len], sizeof(query) - len, "CREATE TABLE IF NOT EXISTS `%sscore_quarter` (", DbPrefix);
-	len += Format(query[len], sizeof(query) - len, "`steamid` varchar(64) CHARACTER SET utf8mb4 NOT NULL,");
-	len += Format(query[len], sizeof(query) - len, "`quarter_key` int(8) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`points` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`playtime` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`points_coop` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`points_survivors` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`points_infected` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`points_survival` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`points_realism` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`points_scavenge_survivors` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`points_scavenge_infected` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`points_realism_survivors` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`points_realism_infected` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`points_mutations` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`kills` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`headshots` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`melee_kills` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`kill_infected` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`kill_hunter` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`kill_smoker` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`kill_boomer` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`kill_spitter` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`kill_jockey` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`kill_charger` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`award_medkit` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`award_pills` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`award_adrenaline` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`award_revive` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`award_defib` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`award_rescue` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`award_protect` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`award_friendlyfire` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`award_teamkill` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`award_fincap` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`award_left4dead` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`award_letinsafehouse` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`award_witchdisturb` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`updated` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "PRIMARY KEY (`steamid`),");
-	len += Format(query[len], sizeof(query) - len, "KEY `quarter_points` (`quarter_key`,`points`),");
-	len += Format(query[len], sizeof(query) - len, "KEY `points` (`points`)");
-	len += Format(query[len], sizeof(query) - len, ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
-
-	g_bQuarterRankTableReady = DoFastQuery(0, query);
-	if (!g_bQuarterRankTableReady && db != INVALID_HANDLE)
-	{
-		// CREATE TABLE 可能因共享连接的串台错误而失败，用 SELECT 回查验证表是否实际存在
-		if (DoFastQuery(0, "SELECT 1 FROM `%sscore_quarter` LIMIT 0", DbPrefix))
-		{
-			g_bQuarterRankTableReady = true;
-			LogMessage("[l4d_stats] score_quarter 表已存在，忽略 CREATE TABLE 错误。");
-		}
-		else
-		{
-			LogError("Failed to create quarter rank table `%sscore_quarter`.", DbPrefix);
-			return;
-		}
-	}
-	else if (!g_bQuarterRankTableReady)
-	{
-		return;
-	}
-
-	QuarterRank_EnsureCurrentQuarter();
-}
-
-stock QuarterRank_EnsurePlaytimeColumn()
-{
-	if (db == INVALID_HANDLE)
-		return;
-
-	decl String:query[1024];
-	Format(query, sizeof(query), "SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '%sscore_quarter' AND COLUMN_NAME = 'playtime'", DbPrefix);
-	SQL_TQuery(db, QuarterRank_CheckPlaytimeColumn, query);
-}
-
-public QuarterRank_CheckPlaytimeColumn(Handle:owner, Handle:hndl, const String:error[], any:data)
-{
-	if (hndl == INVALID_HANDLE)
-	{
-		LogError("QuarterRank_CheckPlaytimeColumn Query failed: %s", error);
-		return;
-	}
-
-	if (!SQL_HasResultSet(hndl))
-	{
-		LogMessage("QuarterRank_CheckPlaytimeColumn returned no result set; waiting for the next database check.");
-		return;
-	}
-
-	if (!SQL_FetchRow(hndl) || SQL_FetchInt(hndl, 0) <= 0)
-		DoFastQuery(0, "ALTER TABLE `%sscore_quarter` ADD COLUMN `playtime` int(11) NOT NULL DEFAULT '0' AFTER `points`", DbPrefix);
-}
-
 stock QuarterRank_ResetLocalCache()
 {
 	QuarterRankTotal = 0;
@@ -184,7 +82,7 @@ stock QuarterRank_EnsureCurrentQuarter()
 		return;
 
 	// 先异步查有没有旧季度行，COUNT = 0 就跳过 UPDATE，
-	// 避免开服阶段连接刚建立时在这条季度初始化 SQL 上触发断连。
+	// 避免连接刚建立时在这条季度切换 SQL 上触发断连。
 	decl String:query[512];
 	Format(query, sizeof(query), "SELECT COUNT(*) FROM `%sscore_quarter` WHERE quarter_key <> %i LIMIT 1", DbPrefix, g_iQuarterRankKey);
 	SQL_TQuery(db, QuarterRank_CheckOldRows, query);
@@ -235,10 +133,7 @@ stock bool:QuarterRank_RecoverIfNeeded()
 		return false;
 	}
 
-	if (!g_bQuarterRankTableReady)
-		QuarterRank_EnsureTable();
-	else
-		QuarterRank_EnsureCurrentQuarter();
+	QuarterRank_EnsureCurrentQuarter();
 
 	return QuarterRank_Enabled();
 }

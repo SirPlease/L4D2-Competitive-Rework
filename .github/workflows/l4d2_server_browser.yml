@@ -1,0 +1,107 @@
+name: Build L4D2 server browser
+
+on:
+  pull_request:
+    paths:
+      - 'tools/l4d2_server_browser/**'
+      - '.github/workflows/l4d2_server_browser.yml'
+  push:
+    branches:
+      - master
+    tags:
+      - 'l4d2-browser-v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: linux-x86_64
+            os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            binary: l4d2-server-browser
+            archive: tar.gz
+          - name: macos-x86_64
+            os: macos-latest
+            target: x86_64-apple-darwin
+            binary: l4d2-server-browser
+            archive: tar.gz
+          - name: macos-aarch64
+            os: macos-latest
+            target: aarch64-apple-darwin
+            binary: l4d2-server-browser
+            archive: tar.gz
+          - name: windows-x86_64
+            os: windows-latest
+            target: x86_64-pc-windows-msvc
+            binary: l4d2-server-browser.exe
+            archive: zip
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install Rust target
+        run: rustup target add ${{ matrix.target }}
+
+      - name: Test
+        if: matrix.target == 'x86_64-unknown-linux-gnu' || matrix.target == 'x86_64-pc-windows-msvc'
+        run: cargo test --manifest-path tools/l4d2_server_browser/Cargo.toml
+
+      - name: Build
+        run: cargo build --release --manifest-path tools/l4d2_server_browser/Cargo.toml --target ${{ matrix.target }}
+
+      - name: Stage package
+        shell: bash
+        run: |
+          set -euo pipefail
+          DIST="l4d2-server-browser-${{ matrix.target }}"
+          mkdir -p "$DIST"
+          cp "target/${{ matrix.target }}/release/${{ matrix.binary }}" "$DIST/"
+          cp tools/l4d2_server_browser/README.md "$DIST/"
+          cp tools/l4d2_server_browser/browser.example.toml "$DIST/"
+
+      - name: Archive tar.gz
+        if: matrix.archive == 'tar.gz'
+        shell: bash
+        run: tar -czf "l4d2-server-browser-${{ matrix.target }}.tar.gz" "l4d2-server-browser-${{ matrix.target }}"
+
+      - name: Archive zip
+        if: matrix.archive == 'zip'
+        shell: pwsh
+        run: Compress-Archive -Path "l4d2-server-browser-${{ matrix.target }}" -DestinationPath "l4d2-server-browser-${{ matrix.target }}.zip"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: l4d2-server-browser-${{ matrix.target }}
+          path: |
+            l4d2-server-browser-${{ matrix.target }}.tar.gz
+            l4d2-server-browser-${{ matrix.target }}.zip
+          if-no-files-found: ignore
+
+  release:
+    name: Publish tagged release
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/l4d2-browser-v')
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*

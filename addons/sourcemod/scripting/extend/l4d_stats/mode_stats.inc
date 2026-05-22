@@ -5,44 +5,7 @@
 
 // Per-mode efficiency stats. This is the canonical source for mode-scoped PPM/KPM.
 
-new bool:g_bModeStatsTableReady = false;
-
-stock ModeStats_EnsureTable()
-{
-	if (db == INVALID_HANDLE)
-		return;
-
-	decl String:query[2048];
-	new len = 0;
-	len += Format(query[len], sizeof(query) - len, "CREATE TABLE IF NOT EXISTS `%splayer_mode_stats` (", DbPrefix);
-	len += Format(query[len], sizeof(query) - len, "`steamid` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,");
-	len += Format(query[len], sizeof(query) - len, "`mode_id` tinyint(2) NOT NULL,");
-	len += Format(query[len], sizeof(query) - len, "`anne_mode` tinyint(2) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`points` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`playtime` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`kills` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`headshots` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`updated` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "PRIMARY KEY (`steamid`,`mode_id`,`anne_mode`),");
-	len += Format(query[len], sizeof(query) - len, "KEY `mode_ppm` (`mode_id`,`anne_mode`,`playtime`,`points`),");
-	len += Format(query[len], sizeof(query) - len, "KEY `mode_kpm` (`mode_id`,`anne_mode`,`playtime`,`kills`)");
-	len += Format(query[len], sizeof(query) - len, ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
-
-	g_bModeStatsTableReady = DoFastQuery(0, query);
-	if (!g_bModeStatsTableReady && db != INVALID_HANDLE)
-	{
-		// CREATE TABLE 可能因共享连接的串台错误而失败，用 SELECT 回查验证表是否实际存在
-		if (DoFastQuery(0, "SELECT 1 FROM `%splayer_mode_stats` LIMIT 0", DbPrefix))
-		{
-			g_bModeStatsTableReady = true;
-			LogMessage("[l4d_stats] player_mode_stats 表已存在，忽略 CREATE TABLE 错误。");
-		}
-		else
-		{
-			LogError("Failed to create mode stats table `%splayer_mode_stats`.", DbPrefix);
-		}
-	}
-}
+new bool:g_bModeStatsTableReady = true;
 
 stock ModeStats_GetAnneMode()
 {

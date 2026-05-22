@@ -7,7 +7,7 @@
 // 设计目标：每次 AddScore 都写一条独立流水，后续可以按玩家、地图、原因还原分数来源。
 
 new Handle:cvar_ScoreLogEnable = INVALID_HANDLE;
-new bool:g_bScoreLogTableReady = false;
+new bool:g_bScoreLogTableReady = true;
 new String:g_sScoreLogReason[MAX_LINE_WIDTH] = "";
 new String:g_sScoreLogFormula[MAX_MESSAGE_WIDTH] = "";
 new g_iScoreLogContextUses = 0;
@@ -15,53 +15,6 @@ new g_iScoreLogContextUses = 0;
 stock ScoreLog_CreateCvars()
 {
 	cvar_ScoreLogEnable = CreateConVar("l4d_stats_scorelog_enable", "1", "是否记录每次积分加减流水。0=关闭, 1=开启", 0, true, 0.0, true, 1.0);
-}
-
-stock ScoreLog_EnsureTable()
-{
-	if (db == INVALID_HANDLE)
-		return;
-
-	decl String:query[2048];
-	new len = 0;
-	len += Format(query[len], sizeof(query) - len, "CREATE TABLE IF NOT EXISTS `%sscore_log` (", DbPrefix);
-	len += Format(query[len], sizeof(query) - len, "`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,");
-	len += Format(query[len], sizeof(query) - len, "`created` int(11) NOT NULL,");
-	len += Format(query[len], sizeof(query) - len, "`steamid` varchar(64) CHARACTER SET utf8mb4 NOT NULL,");
-	len += Format(query[len], sizeof(query) - len, "`name` varchar(128) CHARACTER SET utf8mb4 NOT NULL,");
-	len += Format(query[len], sizeof(query) - len, "`map` varchar(128) CHARACTER SET utf8mb4 NOT NULL,");
-	len += Format(query[len], sizeof(query) - len, "`gamemode` int(2) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`difficulty` varchar(32) CHARACTER SET utf8mb4 NOT NULL DEFAULT '',");
-	len += Format(query[len], sizeof(query) - len, "`team` int(2) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`score` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`score_after` int(11) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`reason` varchar(64) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'unknown',");
-	len += Format(query[len], sizeof(query) - len, "`formula` varchar(255) CHARACTER SET utf8mb4 NOT NULL DEFAULT '',");
-	len += Format(query[len], sizeof(query) - len, "`round_valid` tinyint(1) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`usebuy` tinyint(1) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`newbie_count` int(4) NOT NULL DEFAULT '0',");
-	len += Format(query[len], sizeof(query) - len, "`newbie_multiplier` double NOT NULL DEFAULT '1',");
-	len += Format(query[len], sizeof(query) - len, "PRIMARY KEY (`id`),");
-	len += Format(query[len], sizeof(query) - len, "KEY `steamid_created` (`steamid`,`created`),");
-	len += Format(query[len], sizeof(query) - len, "KEY `reason_created` (`reason`,`created`),");
-	len += Format(query[len], sizeof(query) - len, "KEY `map_created` (`map`,`created`),");
-	len += Format(query[len], sizeof(query) - len, "KEY `score_created` (`score`,`created`)");
-	len += Format(query[len], sizeof(query) - len, ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
-
-	g_bScoreLogTableReady = DoFastQuery(0, query);
-	if (!g_bScoreLogTableReady && db != INVALID_HANDLE)
-	{
-		// CREATE TABLE 可能因共享连接的串台错误而失败，用 SELECT 回查验证表是否实际存在
-		if (DoFastQuery(0, "SELECT 1 FROM `%sscore_log` LIMIT 0", DbPrefix))
-		{
-			g_bScoreLogTableReady = true;
-			LogMessage("[l4d_stats] score_log 表已存在，忽略 CREATE TABLE 错误。");
-		}
-		else
-		{
-			LogError("Failed to create score log table `%sscore_log`.", DbPrefix);
-		}
-	}
 }
 
 stock ScoreLog_SetContext(const String:Reason[], const String:Formula[], Uses = 1)

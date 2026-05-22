@@ -16,16 +16,9 @@
  *   - 套装ID：1..N，0 表示禁用
  *   - 数组索引：内部数组存放为 0..N-1（故读取时用 setId-1）
  *
- * SQL（示例，表名默认 ConVar: sm_hitsound_db_table = RPG）:
- *   ALTER TABLE `RPG`
- *     ADD COLUMN `hitsound_head`  TINYINT NOT NULL DEFAULT 0,
- *     ADD COLUMN `hitsound_hit`   TINYINT NOT NULL DEFAULT 0,
- *     ADD COLUMN `hitsound_kill`  TINYINT NOT NULL DEFAULT 0,
- *     ADD COLUMN `hiticon_head`   TINYINT NOT NULL DEFAULT 0,
- *     ADD COLUMN `hiticon_hit`    TINYINT NOT NULL DEFAULT 0,
- *     ADD COLUMN `hiticon_kill`   TINYINT NOT NULL DEFAULT 0,
- *     ADD COLUMN `hitsound_si_only` TINYINT NOT NULL DEFAULT 0,
- *     ADD COLUMN `hiticon_si_only`  TINYINT NOT NULL DEFAULT 0;
+ * SQL 字段由外部手动维护，表名默认 ConVar: sm_hitsound_db_table = RPG。
+ * RPG 表需包含：hitsound_head/hit/kill、hiticon_head/hit/kill、
+ * hitsound_si_only、hiticon_si_only。
  *
  * commands:
  *   !snd    -> 主菜单（音效/图标套装（玩家） + 特定开关 + 管理员单独设置）
@@ -489,8 +482,6 @@ static void StartDBConnect()
 
     LogMessage("[hitsound] 数据库连接成功。");
 
-    DB_EnsureExtraColumns();
-
     // 插件重载/晚加载时，在线玩家不会触发 OnClientPutInServer，这里主动补一次
     ReloadAllPlayersPrefs();
 }
@@ -498,36 +489,6 @@ static void StartDBConnect()
 // ========================================================
 // Persistence: DB + Fallback
 // ========================================================
-static void DB_EnsureExtraColumns()
-{
-    if (g_hDB == INVALID_HANDLE) return;
-
-    char table[64];
-    GetConVarString(cv_db_table, table, sizeof(table));
-
-    DB_EnsureExtraColumn(table, "hitsound_si_only");
-    DB_EnsureExtraColumn(table, "hiticon_si_only");
-}
-
-static void DB_EnsureExtraColumn(const char[] table, const char[] column)
-{
-    char q[256];
-    Format(q, sizeof(q),
-        "ALTER TABLE `%s` ADD COLUMN `%s` TINYINT NOT NULL DEFAULT 0;",
-        table, column);
-    SQL_TQuery(g_hDB, SQL_OnEnsureColumn, q);
-}
-
-public void SQL_OnEnsureColumn(Handle owner, Handle hndl, const char[] error, any data)
-{
-    if ((hndl == INVALID_HANDLE || error[0] != '\0')
-        && StrContains(error, "Duplicate column", false) == -1
-        && StrContains(error, "duplicate column", false) == -1)
-    {
-        LogError("[hitsound] 自动补充数据库列失败: %s", error);
-    }
-}
-
 public void OnClientPutInServer(int client)
 {
     if (IsFakeClient(client)) return;

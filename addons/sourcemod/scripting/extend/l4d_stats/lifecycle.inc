@@ -215,15 +215,7 @@ public action_DbPrefixChanged(Handle:convar, const String:oldValue[], const Stri
 {
 	if (convar == cvar_DbPrefix)
 	{
-		if (StrEqual(DbPrefix, newValue))
-			return;
-
-		if (db != INVALID_HANDLE && !CheckDatabaseValidity(DbPrefix))
-		{
-			strcopy(DbPrefix, sizeof(DbPrefix), oldValue);
-			SetConVarString(cvar_DbPrefix, DbPrefix);
-		}
-		else
+		if (!StrEqual(DbPrefix, newValue))
 			strcopy(DbPrefix, sizeof(DbPrefix), newValue);
 	}
 }
