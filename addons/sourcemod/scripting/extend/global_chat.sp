@@ -6,6 +6,7 @@
 #include <l4dstats>
 
 #define PLUGIN_VERSION "1.0"
+#define LOCAL_ECHO_CACHE_SIZE 64
 
 Database g_hDatabase = null;
 Database g_hBlacklistDatabase = null;
@@ -25,6 +26,8 @@ bool g_bClientSeeLFG[MAXPLAYERS + 1];
 StringMap g_mClientBlockedSteam64[MAXPLAYERS + 1];
 int g_iLastMessageId;
 int g_iLastCleanupTime;
+int g_iLocalEchoedMessageIds[LOCAL_ECHO_CACHE_SIZE];
+int g_iLocalEchoedMessageIndex;
 
 ConVar g_cvEnabled;
 ConVar g_cvDatabaseConfig;
@@ -92,7 +95,7 @@ public void OnPluginStart()
 {
 	g_cvEnabled = CreateConVar("sm_qf_enabled", "1", "是否启用全服聊天。", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_cvDatabaseConfig = CreateConVar("sm_qf_database", "globalchat", "databases.cfg 里的数据库配置名称。");
-	g_cvPollInterval = CreateConVar("sm_qf_poll_interval", "10.0", "全服聊天轮询间隔，单位秒。", FCVAR_NONE, true, 2.0, true, 30.0);
+	g_cvPollInterval = CreateConVar("sm_qf_poll_interval", "5.0", "全服聊天轮询间隔，单位秒。", FCVAR_NONE, true, 2.0, true, 30.0);
 	g_cvPollBatch = CreateConVar("sm_qf_poll_batch", "30", "每次最多拉取多少条全服聊天消息。", FCVAR_NONE, true, 1.0, true, 200.0);
 	g_cvCleanupInterval = CreateConVar("sm_qf_cleanup_interval", "21600", "清理旧全服聊天记录的间隔，单位秒。", FCVAR_NONE, true, 300.0);
 	g_cvRetentionDays = CreateConVar("sm_qf_retention_days", "7", "全服聊天记录保留天数。0 表示不清理。", FCVAR_NONE, true, 0.0);
@@ -277,7 +280,7 @@ public Action Command_GlobalChat(int client, int args)
 
 	if (HasUnlimitedGlobalChat(client))
 	{
-		InsertGlobalMessage(steamId64, clientName, message);
+		InsertGlobalMessage(steamId64, clientName, message, true);
 		return Plugin_Handled;
 	}
 
@@ -1029,7 +1032,7 @@ public void SQL_OnReserveDailyUsage(Database database, DBResultSet results, cons
 		return;
 	}
 
-	InsertGlobalMessage(steamId, clientName, message);
+	InsertGlobalMessage(steamId, clientName, message, true);
 }
 
 void ReserveDailyLFGUsage(int client, const char[] usageSteamId, const char[] messageSteamId, const char[] clientName, const char[] message, int limit)
@@ -1112,7 +1115,7 @@ public void SQL_OnReserveDailyLFGUsage(Database database, DBResultSet results, c
 		ReplyToCommand(client, "[全服] 找队友信息已发送给所有旁观玩家。");
 }
 
-void InsertGlobalMessage(const char[] steamId, const char[] clientName, const char[] message)
+void InsertGlobalMessage(const char[] steamId, const char[] clientName, const char[] message, bool echoLocal = false)
 {
 	if (!g_bReady || g_hDatabase == null)
 		return;
@@ -1125,11 +1128,38 @@ void InsertGlobalMessage(const char[] steamId, const char[] clientName, const ch
 
 	char query[1024];
 	g_hDatabase.Format(query, sizeof(query), "INSERT INTO anne_global_chat (created_at, server, port, steamid, name, message) VALUES (NOW(), '%s', %d, '%s', '%s', '%s')", hostname, port, steamId, clientName, message);
-	g_hDatabase.Query(SQL_OnInsertMessage, query);
+
+	DataPack pack = null;
+	if (echoLocal)
+	{
+		pack = new DataPack();
+		pack.WriteString(steamId);
+		pack.WriteString(hostname);
+		pack.WriteString(clientName);
+		pack.WriteString(message);
+	}
+
+	g_hDatabase.Query(SQL_OnInsertMessage, query, pack);
 }
 
-public void SQL_OnInsertMessage(Database database, DBResultSet results, const char[] error, any data)
+public void SQL_OnInsertMessage(Database database, DBResultSet results, const char[] error, DataPack pack)
 {
+	char steamId[32];
+	char hostname[128];
+	char clientName[MAX_NAME_LENGTH];
+	char message[256];
+	bool echoLocal = (pack != null);
+
+	if (echoLocal)
+	{
+		pack.Reset();
+		pack.ReadString(steamId, sizeof(steamId));
+		pack.ReadString(hostname, sizeof(hostname));
+		pack.ReadString(clientName, sizeof(clientName));
+		pack.ReadString(message, sizeof(message));
+		delete pack;
+	}
+
 	if (!IsActiveMainDatabase(database))
 		return;
 
@@ -1137,6 +1167,13 @@ public void SQL_OnInsertMessage(Database database, DBResultSet results, const ch
 	{
 		LogError("[global_chat] 写入全服消息失败: %s", error);
 		MarkDatabaseUnavailable();
+		return;
+	}
+
+	if (echoLocal)
+	{
+		RememberLocalEchoedMessageId(results.InsertId);
+		PrintGlobalChatMessage(steamId, hostname, clientName, message);
 	}
 }
 
@@ -1209,6 +1246,9 @@ public void SQL_OnPollMessages(Database database, DBResultSet results, const cha
 		if (id > g_iLastMessageId)
 			g_iLastMessageId = id;
 
+		if (IsLocalEchoedMessageId(id))
+			continue;
+
 		if (StrEqual(name, "@LOGIN"))
 		{
 			for (int i = 1; i <= MaxClients; i++)
@@ -1257,6 +1297,44 @@ public void SQL_OnPollMessages(Database database, DBResultSet results, const cha
 					PrintToChat(i, "\x04%s \x03[%s] \x05%s\x01: %s", prefix, shortServer, name, message);
 			}
 		}
+	}
+}
+
+void RememberLocalEchoedMessageId(int id)
+{
+	if (id <= 0)
+		return;
+
+	g_iLocalEchoedMessageIds[g_iLocalEchoedMessageIndex] = id;
+	g_iLocalEchoedMessageIndex = (g_iLocalEchoedMessageIndex + 1) % LOCAL_ECHO_CACHE_SIZE;
+}
+
+bool IsLocalEchoedMessageId(int id)
+{
+	if (id <= 0)
+		return false;
+
+	for (int i = 0; i < LOCAL_ECHO_CACHE_SIZE; i++)
+	{
+		if (g_iLocalEchoedMessageIds[i] == id)
+			return true;
+	}
+
+	return false;
+}
+
+void PrintGlobalChatMessage(const char[] senderSteam64, const char[] server, const char[] name, const char[] message)
+{
+	char prefix[64];
+	char shortServer[64];
+
+	g_cvMessagePrefix.GetString(prefix, sizeof(prefix));
+	GetShortServerName(server, shortServer, sizeof(shortServer));
+
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (CanReceiveGlobalMessage(i, senderSteam64))
+			PrintToChat(i, "\x04%s \x03[%s] \x05%s\x01: %s", prefix, shortServer, name, message);
 	}
 }
 
