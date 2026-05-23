@@ -36,3 +36,4 @@ scripts/mysql-install-clone-replica.sh
 scripts/mysql-install-clone-replica.env.example
 scripts/mysql-install-clone-replica.env
 mysql-install-clone-replica.env
+scripts/install-docker-monitoring.sh

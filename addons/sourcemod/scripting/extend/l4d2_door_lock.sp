@@ -66,6 +66,15 @@ int g_iCurrentMaps;
 int g_iUnrdyCounts [MAXPLAYERS+1];
 int g_iClientDelay [MAXPLAYERS+1];
 
+void StopDoorLockTimer(Handle &timer)
+{
+	if(timer == null)
+		return;
+
+	delete timer;
+	timer = null;
+}
+
 enum
 {
 	C1M1 = 1,
@@ -312,12 +321,12 @@ void Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
 		g_bNoBotMoveChanged = false;
 	}
 	g_bSurvivorBotFreezeActive = false;
-	delete g_hTimer_IgnoreLoaders;
-	if(g_hTimer_PendingLoader != null) delete g_hTimer_PendingLoader;
-	if(g_hTimer_WarmingUpTime != null) delete g_hTimer_WarmingUpTime;
-	if(g_hTimer_UnreadyGiveUp != null) delete g_hTimer_UnreadyGiveUp;
-	if(g_hTimer_CountdownTime != null) delete g_hTimer_CountdownTime;
-	if(g_hTimer_ReadyUpChecks != null) delete g_hTimer_ReadyUpChecks;
+	StopDoorLockTimer(g_hTimer_IgnoreLoaders);
+	StopDoorLockTimer(g_hTimer_PendingLoader);
+	StopDoorLockTimer(g_hTimer_WarmingUpTime);
+	StopDoorLockTimer(g_hTimer_UnreadyGiveUp);
+	StopDoorLockTimer(g_hTimer_CountdownTime);
+	StopDoorLockTimer(g_hTimer_ReadyUpChecks);
 }
 
 /* =============================================================================================================== *
@@ -505,7 +514,7 @@ Action Command_Ready(int client, int args)
 		{
 			if(g_hTimer_CountdownTime == null)
 			{
-				if(g_hTimer_UnreadyGiveUp != null) delete g_hTimer_UnreadyGiveUp;
+				StopDoorLockTimer(g_hTimer_UnreadyGiveUp);
 				g_iUnlocksTime = Cvar_DoorLock_Countdown.IntValue;
 				g_hTimer_CountdownTime = CreateTimer(1.0, Timer_StartCountdownToUnlock, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 			}
@@ -566,7 +575,7 @@ Action Timer_ReadyUpStatusChecker(Handle timer)
 	else if(TeamReadyUpPercentageReached(2) && TeamReadyUpPercentageReached(3))
 	{
 		if(!g_bLockSafeAreas || g_hTimer_CountdownTime != null) return Plugin_Continue;
-		if(g_hTimer_UnreadyGiveUp != null) delete g_hTimer_UnreadyGiveUp;
+		StopDoorLockTimer(g_hTimer_UnreadyGiveUp);
 		g_iUnlocksTime = Cvar_DoorLock_Countdown.IntValue;
 		g_hTimer_CountdownTime = CreateTimer(1.0, Timer_StartCountdownToUnlock, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	}

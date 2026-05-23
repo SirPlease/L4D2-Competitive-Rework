@@ -484,19 +484,10 @@ public void SQLCB_OnConnect(Handle owner, Handle hndl, const char[] error, any d
 
     if (g_bIsMySQL)
     {
-        SQL_TQuery(g_hDB, SQLCB_SetNames, "SET NAMES utf8mb4");
-        return;
-    }
-
-    CreateStatusTable();
-}
-
-public void SQLCB_SetNames(Handle owner, Handle hndl, const char[] error, any data)
-{
-    if (hndl == null && error[0] != '\0')
-    {
-        LogError("[%s] SET NAMES utf8mb4 failed: %s", PLUGIN_NAME, error);
-        return;
+        if (!SQL_SetCharset(g_hDB, "utf8mb4"))
+        {
+            LogError("[%s] SQL_SetCharset utf8mb4 failed", PLUGIN_NAME);
+        }
     }
 
     CreateStatusTable();

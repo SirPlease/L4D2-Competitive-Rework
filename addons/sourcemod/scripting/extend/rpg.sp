@@ -779,7 +779,6 @@ public bool ConnectDB()
 		return false;
 	}
 
-	SQL_FastQuery(db, "SET NAMES 'utf8mb4'");
 	g_bMysqlSystemAvailable = true;
 	return true;
 }
@@ -787,7 +786,8 @@ public bool ConnectDB()
 bool IsDbConnectionLostError(const char[] error)
 {
 	return StrContains(error, "Lost connection", false) != -1
-		|| StrContains(error, "server has gone away", false) != -1;
+		|| StrContains(error, "server has gone away", false) != -1
+		|| StrContains(error, "communication packets", false) != -1;
 }
 
 void CloseDbConnection()
@@ -1004,11 +1004,11 @@ public void ClientSaveToFileLoad(int Client)
 	{
 		return;
 	}
-	char query[255];
+	char query[512];
 	char SteamID[64];
 	GetClientAuthId(Client, AuthId_Steam2,SteamID, sizeof(SteamID));
 	if(StrEqual(SteamID,"BOT"))return;
-	Format(query, sizeof(query), "SELECT MELEE_DATA,BLOOD_DATA,HAT,GLOW,SKIN,RECOIL,CHATTAG FROM RPG WHERE steamid = '%s'", SteamID);	
+	SQL_FormatQuery(db, query, sizeof(query), "SELECT MELEE_DATA,BLOOD_DATA,HAT,GLOW,SKIN,RECOIL,CHATTAG FROM RPG WHERE steamid = '%s'", SteamID);
 	SQL_TQuery(db, ShowMelee, query, GetClientUserId(Client));
 	return;
 }
@@ -1017,11 +1017,14 @@ public void ClientSaveToFileCreate(int Client)
 {
 	if(!IsValidClient(Client) || IsFakeClient(Client) || !g_bMysqlSystemAvailable)
 	return;
-	char query[255];
+	if (db == INVALID_HANDLE && !ConnectDB())
+		return;
+
+	char query[512];
 	char SteamID[64];
 	GetClientAuthId(Client, AuthId_Steam2,SteamID, sizeof(SteamID));
 	if(StrEqual(SteamID,"BOT"))return;
-	Format(query, sizeof(query), "INSERT INTO RPG (steamid,MELEE_DATA,BLOOD_DATA,HAT,GLOW,SKIN,RECOIL)  VALUES ('%s',%d,%d,%d,%d,%d,%d)", SteamID, 0, 0, 0, 0, 0, 1);	
+	SQL_FormatQuery(db, query, sizeof(query), "INSERT INTO RPG (steamid,MELEE_DATA,BLOOD_DATA,HAT,GLOW,SKIN,RECOIL) VALUES ('%s',%d,%d,%d,%d,%d,%d)", SteamID, 0, 0, 0, 0, 0, 1);
 	SendSQLUpdate(query);
 	return;
 }
@@ -1031,25 +1034,20 @@ public void ClientTagsSaveToFileSave(int Client)
     if (!IsValidClient(Client) || IsFakeClient(Client) || !g_bMysqlSystemAvailable)
         return;
 
+	if (db == INVALID_HANDLE && !ConnectDB())
+		return;
+
     char SteamID[64];
     GetClientAuthId(Client, AuthId_Steam2, SteamID, sizeof(SteamID));
     if (StrEqual(SteamID, "BOT")) return;
-
-    // 转义 ChatTag
-    char escTag[64];
-    escTag[0] = '\0';
-    if (player[Client].tags.ChatTag[0] != '\0' && db != INVALID_HANDLE)
-    {
-        SQL_EscapeString(db, player[Client].tags.ChatTag, escTag, sizeof(escTag));
-    }
 
     if (player[Client].tags.ChatTag[0] == '\0')
         CPrintToChat(Client, "\x04你的称号取消设置");
     else
         CPrintToChat(Client, "\x04你的称号更新成功，新称号为：\x03%s", player[Client].tags.ChatTag);
 
-    char query[255];
-    Format(query, sizeof(query), "UPDATE RPG SET CHATTAG='%s' WHERE steamid = '%s'", escTag, SteamID);
+    char query[512];
+    SQL_FormatQuery(db, query, sizeof(query), "UPDATE RPG SET CHATTAG='%s' WHERE steamid = '%s'", player[Client].tags.ChatTag, SteamID);
     SendSQLUpdate(query);
 }
 
@@ -1057,11 +1055,14 @@ public void ClientSaveToFileSave(int Client)
 {
 	if(!IsValidClient(Client) || IsFakeClient(Client) || !g_bMysqlSystemAvailable)
 		return;
-	char query[255];
+	if (db == INVALID_HANDLE && !ConnectDB())
+		return;
+
+	char query[512];
 	char SteamID[64];
 	GetClientAuthId(Client, AuthId_Steam2,SteamID, sizeof(SteamID));
 	if(StrEqual(SteamID,"BOT"))return;
-	Format(query, sizeof(query), "UPDATE RPG SET MELEE_DATA=%d,BLOOD_DATA=%d,HAT=%d,GLOW=%d,SKIN=%d,RECOIL=%d WHERE steamid = '%s'",player[Client].ClientMelee,player[Client].ClientBlood, player[Client].ClientHat, player[Client].GlowType, player[Client].SkinType, player[Client].ClientRecoil, SteamID);	
+	SQL_FormatQuery(db, query, sizeof(query), "UPDATE RPG SET MELEE_DATA=%d,BLOOD_DATA=%d,HAT=%d,GLOW=%d,SKIN=%d,RECOIL=%d WHERE steamid = '%s'", player[Client].ClientMelee, player[Client].ClientBlood, player[Client].ClientHat, player[Client].GlowType, player[Client].SkinType, player[Client].ClientRecoil, SteamID);
 	SendSQLUpdate(query);
 	return;
 }

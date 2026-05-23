@@ -643,7 +643,6 @@ void ConnectThresholdDb()
 
     if (!SQL_SetCharset(g_hThresholdDb, "utf8mb4") && g_cvDebug.BoolValue)
         LogMessage("[AnneHappyAI] failed to set threshold database charset utf8mb4");
-    SQL_FastQuery(g_hThresholdDb, "SET NAMES 'utf8mb4'");
 
     StartThresholdDbKeepAlive();
     CreateThresholdTable();
@@ -652,7 +651,8 @@ void ConnectThresholdDb()
 bool IsThresholdDbConnectionLostError(const char[] error)
 {
     return StrContains(error, "Lost connection", false) != -1
-        || StrContains(error, "server has gone away", false) != -1;
+        || StrContains(error, "server has gone away", false) != -1
+        || StrContains(error, "communication packets", false) != -1;
 }
 
 void CloseThresholdDb()

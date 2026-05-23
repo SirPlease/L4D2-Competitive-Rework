@@ -374,7 +374,8 @@ static bool DB_EnsureReady()
 static bool DB_IsConnectionLostError(const char[] error)
 {
     return StrContains(error, "Lost connection", false) != -1
-        || StrContains(error, "server has gone away", false) != -1;
+        || StrContains(error, "server has gone away", false) != -1
+        || StrContains(error, "communication packets", false) != -1;
 }
 
 public void SQLCB_OnConnect(Handle owner, Handle hndl, const char[] error, any data)
@@ -396,20 +397,15 @@ public void SQLCB_OnConnect(Handle owner, Handle hndl, const char[] error, any d
     g_DB = hndl;
     g_DbReady = true;
 
-    // 统一会话字符集（双保险）
-    SQL_SetCharset(g_DB, "utf8mb4");
-    SQL_TQuery(g_DB, SQLCB_OnSetNames, "SET NAMES utf8mb4", 0);
+    if (!SQL_SetCharset(g_DB, "utf8mb4"))
+    {
+        LogErr("[DB] SQL_SetCharset utf8mb4 failed");
+    }
 
     DB_DebugDumpSession();
 
     LogInfo("[DB] connected, handle=%p", g_DB);
     DB_FlushPendingSaves();
-}
-
-public void SQLCB_OnSetNames(Handle owner, Handle hndl, const char[] error, any data)
-{
-    if (error[0]) LogErr("[DB] SET NAMES utf8mb4 failed: %s", error);
-    else          LogInfo("[DB] SET NAMES utf8mb4 OK");
 }
 
 public void SQLCB_OnSessionDump(Handle owner, Handle hndl, const char[] error, any data)
@@ -460,7 +456,7 @@ static void DB_Load(int client)
 
     g_LoadState[client] = LS_DBPending;
 
-    char sid2[64], sid_esc[128];
+    char sid2[64];
     if (!GetClientAuthId(client, AuthId_Steam2, sid2, sizeof sid2) || StrEqual(sid2, "BOT"))
     {
         bool ok = false;
@@ -474,11 +470,9 @@ static void DB_Load(int client)
         return;
     }
 
-    SQL_EscapeString(g_DB, sid2, sid_esc, sizeof sid_esc);
-
     char q[512];
-    Format(q, sizeof q,
-        "SELECT enable,see_others,share_scope,size,gap,alpha,xoff,yoff,showdist,summode,sg_merge FROM rpgdamage WHERE steamid='%s' LIMIT 1", sid_esc);
+    SQL_FormatQuery(g_DB, q, sizeof q,
+        "SELECT enable,see_others,share_scope,size,gap,alpha,xoff,yoff,showdist,summode,sg_merge FROM rpgdamage WHERE steamid='%s' LIMIT 1", sid2);
 
     LogInfo("[Load] DB_Load SQL: %s", q);
     SQL_TQuery(g_DB, SQLCB_Load, q, GetClientUserId(client));
@@ -536,16 +530,19 @@ public void SQLCB_Load(Handle owner, Handle hndl, const char[] error, any data)
         if (!fromCookie)
             Settings_Default(client);
 
-        char sid2[64], sid_esc[128];
+        char sid2[64];
         GetClientAuthId(client, AuthId_Steam2, sid2, sizeof sid2);
-        SQL_EscapeString(g_DB, sid2, sid_esc, sizeof sid_esc);
 
         char q[1024]; q[0]='\0';
-        SQLCat(q, sizeof q, "INSERT INTO rpgdamage ");
-        SQLCat(q, sizeof q, "(steamid,enable,see_others,share_scope,size,gap,alpha,xoff,yoff,showdist,summode,sg_merge) ");
-        SQLCatF(q, sizeof q,
-            "VALUES ('%s',%d,%d,%d,%.1f,%.1f,%d,%.1f,%.1f,%.1f,%d,%d) ",
-            sid_esc,
+        SQL_FormatQuery(g_DB, q, sizeof q,
+            "INSERT INTO rpgdamage "
+            ... "(steamid,enable,see_others,share_scope,size,gap,alpha,xoff,yoff,showdist,summode,sg_merge) "
+            ... "VALUES ('%s',%d,%d,%d,%.1f,%.1f,%d,%.1f,%.1f,%.1f,%d,%d) "
+            ... "ON DUPLICATE KEY UPDATE "
+            ... "enable=VALUES(enable), see_others=VALUES(see_others), share_scope=VALUES(share_scope), "
+            ... "size=VALUES(size), gap=VALUES(gap), alpha=VALUES(alpha), xoff=VALUES(xoff), yoff=VALUES(yoff), "
+            ... "showdist=VALUES(showdist), summode=VALUES(summode), sg_merge=VALUES(sg_merge)",
+            sid2,
             g_Plr[client].enable?1:0,
             g_Plr[client].see_others?1:0,
             g_Plr[client].share_scope,
@@ -558,10 +555,6 @@ public void SQLCB_Load(Handle owner, Handle hndl, const char[] error, any data)
             g_Plr[client].summode?1:0,
             g_Plr[client].sgmerge?1:0
         );
-        SQLCat(q, sizeof q, "ON DUPLICATE KEY UPDATE ");
-        SQLCat(q, sizeof q, "enable=VALUES(enable), see_others=VALUES(see_others), share_scope=VALUES(share_scope), ");
-        SQLCat(q, sizeof q, "size=VALUES(size), gap=VALUES(gap), alpha=VALUES(alpha), xoff=VALUES(xoff), yoff=VALUES(yoff), ");
-        SQLCat(q, sizeof q, "showdist=VALUES(showdist), summode=VALUES(summode), sg_merge=VALUES(sg_merge)");
 
         LogInfo("[Load] No DB row; applying %s and inserting: %s",
                 fromCookie ? "cookie" : "defaults", q);
@@ -588,18 +581,20 @@ static int DB_Save_Snapshot(int client)
     if (!g_UseMySQL || g_DB == INVALID_HANDLE || IsFakeClient(client))
         return 0;
 
-    char sid2[64], sid_esc[128];
+    char sid2[64];
     if (!GetClientAuthId(client, AuthId_Steam2, sid2, sizeof sid2) || StrEqual(sid2, "BOT"))
         return 0;
 
-    SQL_EscapeString(g_DB, sid2, sid_esc, sizeof sid_esc);
-
     char q[1024]; q[0] = '\0';
-    SQLCat(q, sizeof q, "INSERT INTO rpgdamage ");
-    SQLCat(q, sizeof q, "(steamid,enable,see_others,share_scope,size,gap,alpha,xoff,yoff,showdist,summode,sg_merge) ");
-    SQLCatF(q, sizeof q,
-        "VALUES ('%s',%d,%d,%d,%.1f,%.1f,%d,%.1f,%.1f,%.1f,%d,%d) ",
-        sid_esc,
+    SQL_FormatQuery(g_DB, q, sizeof q,
+        "INSERT INTO rpgdamage "
+        ... "(steamid,enable,see_others,share_scope,size,gap,alpha,xoff,yoff,showdist,summode,sg_merge) "
+        ... "VALUES ('%s',%d,%d,%d,%.1f,%.1f,%d,%.1f,%.1f,%.1f,%d,%d) "
+        ... "ON DUPLICATE KEY UPDATE "
+        ... "enable=VALUES(enable), see_others=VALUES(see_others), share_scope=VALUES(share_scope), "
+        ... "size=VALUES(size), gap=VALUES(gap), alpha=VALUES(alpha), xoff=VALUES(xoff), yoff=VALUES(yoff), "
+        ... "showdist=VALUES(showdist), summode=VALUES(summode), sg_merge=VALUES(sg_merge)",
+        sid2,
         g_SaveSnapshot[client].enable?1:0,
         g_SaveSnapshot[client].see_others?1:0,
         g_SaveSnapshot[client].share_scope,
@@ -612,10 +607,6 @@ static int DB_Save_Snapshot(int client)
         g_SaveSnapshot[client].summode?1:0,
         g_SaveSnapshot[client].sgmerge?1:0
     );
-    SQLCat(q, sizeof q, "ON DUPLICATE KEY UPDATE ");
-    SQLCat(q, sizeof q, "enable=VALUES(enable), see_others=VALUES(see_others), share_scope=VALUES(share_scope), ");
-    SQLCat(q, sizeof q, "size=VALUES(size), gap=VALUES(gap), alpha=VALUES(alpha), xoff=VALUES(xoff), yoff=VALUES(yoff), ");
-    SQLCat(q, sizeof q, "showdist=VALUES(showdist), summode=VALUES(summode), sg_merge=VALUES(sg_merge)");
 
     LogInfo("[SaveSnapshot] Exec SQL (client=%d): %s", client, q);
     g_SaveRevision[client] = g_SettingsRevision[client];
@@ -676,7 +667,7 @@ static int DB_Save(int client, bool force = false)
     }
 
     // 3) 正常 DB 写入（UPSERT）
-    char sid2[64], sid_esc[128];
+    char sid2[64];
     if (!GetClientAuthId(client, AuthId_Steam2, sid2, sizeof sid2) || StrEqual(sid2, "BOT"))
     {
         Cookie_Save(client);
@@ -684,14 +675,17 @@ static int DB_Save(int client, bool force = false)
         LogErr("[Save] No valid Steam2, saved to Cookie. client=%d", client);
         return 1;
     }
-    SQL_EscapeString(g_DB, sid2, sid_esc, sizeof sid_esc);
 
     char q[1024]; q[0]='\0';
-    SQLCat(q, sizeof q, "INSERT INTO rpgdamage ");
-    SQLCat(q, sizeof q, "(steamid,enable,see_others,share_scope,size,gap,alpha,xoff,yoff,showdist,summode,sg_merge) ");
-    SQLCatF(q, sizeof q,
-        "VALUES ('%s',%d,%d,%d,%.1f,%.1f,%d,%.1f,%.1f,%.1f,%d,%d) ",
-        sid_esc,
+    SQL_FormatQuery(g_DB, q, sizeof q,
+        "INSERT INTO rpgdamage "
+        ... "(steamid,enable,see_others,share_scope,size,gap,alpha,xoff,yoff,showdist,summode,sg_merge) "
+        ... "VALUES ('%s',%d,%d,%d,%.1f,%.1f,%d,%.1f,%.1f,%.1f,%d,%d) "
+        ... "ON DUPLICATE KEY UPDATE "
+        ... "enable=VALUES(enable), see_others=VALUES(see_others), share_scope=VALUES(share_scope), "
+        ... "size=VALUES(size), gap=VALUES(gap), alpha=VALUES(alpha), xoff=VALUES(xoff), yoff=VALUES(yoff), "
+        ... "showdist=VALUES(showdist), summode=VALUES(summode), sg_merge=VALUES(sg_merge)",
+        sid2,
         g_Plr[client].enable?1:0,
         g_Plr[client].see_others?1:0,
         g_Plr[client].share_scope,
@@ -704,10 +698,6 @@ static int DB_Save(int client, bool force = false)
         g_Plr[client].summode?1:0,
         g_Plr[client].sgmerge?1:0
     );
-    SQLCat(q, sizeof q, "ON DUPLICATE KEY UPDATE ");
-    SQLCat(q, sizeof q, "enable=VALUES(enable), see_others=VALUES(see_others), share_scope=VALUES(share_scope), ");
-    SQLCat(q, sizeof q, "size=VALUES(size), gap=VALUES(gap), alpha=VALUES(alpha), xoff=VALUES(xoff), yoff=VALUES(yoff), ");
-    SQLCat(q, sizeof q, "showdist=VALUES(showdist), summode=VALUES(summode), sg_merge=VALUES(sg_merge)");
 
     LogInfo("[Save] Exec SQL (client=%d): %s", client, q);
     g_SaveRevision[client] = g_SettingsRevision[client];
@@ -989,24 +979,43 @@ public Action Cmd_DmgDBStat(int client, int args)
     if (!g_DbReady || g_DB == INVALID_HANDLE)
         return Plugin_Handled;
 
-    Handle h = SQL_Query(g_DB,
-        "SELECT @@character_set_client,@@character_set_connection,@@character_set_results,@@collation_connection");
-    if (h == INVALID_HANDLE)
+    SQL_TQuery(g_DB, SQLCB_OnDBStat,
+        "SELECT @@character_set_client,@@character_set_connection,@@character_set_results,@@collation_connection",
+        client > 0 ? GetClientUserId(client) : 0);
+    return Plugin_Handled;
+}
+
+public void SQLCB_OnDBStat(Handle owner, Handle hndl, const char[] error, any data)
+{
+    int client = 0;
+    if (data > 0)
     {
-        PrintToConsole(client, "[DMGSHOW] SQL_Query failed for session snapshot.");
-        return Plugin_Handled;
+        client = GetClientOfUserId(data);
+        if (client <= 0 || !IsClientInGame(client))
+            return;
     }
-    if (SQL_FetchRow(h))
+
+    if (error[0] != '\0' || hndl == INVALID_HANDLE)
+    {
+        if (client > 0)
+            PrintToConsole(client, "[DMGSHOW] DBStat async query failed: %s", error);
+        else
+            PrintToServer("[DMGSHOW] DBStat async query failed: %s", error);
+        return;
+    }
+
+    if (SQL_FetchRow(hndl))
     {
         char a[64], b[64], c[64], d[64];
-        SQL_FetchString(h, 0, a, sizeof a);
-        SQL_FetchString(h, 1, b, sizeof b);
-        SQL_FetchString(h, 2, c, sizeof c);
-        SQL_FetchString(h, 3, d, sizeof d);
-        PrintToConsole(client, "[DMGSHOW] Session charset: client=%s connection=%s results=%s coll=%s", a,b,c,d);
+        SQL_FetchString(hndl, 0, a, sizeof a);
+        SQL_FetchString(hndl, 1, b, sizeof b);
+        SQL_FetchString(hndl, 2, c, sizeof c);
+        SQL_FetchString(hndl, 3, d, sizeof d);
+        if (client > 0)
+            PrintToConsole(client, "[DMGSHOW] Session charset: client=%s connection=%s results=%s coll=%s", a,b,c,d);
+        else
+            PrintToServer("[DMGSHOW] Session charset: client=%s connection=%s results=%s coll=%s", a,b,c,d);
     }
-    CloseHandle(h);
-    return Plugin_Handled;
 }
 
 public Action Cmd_DmgForceSaveCookie(int client, int args)
@@ -1027,8 +1036,8 @@ public Action Cmd_DmgDBProbe(int client, int args)
         return Plugin_Handled;
     }
 
-    bool ok = SQL_FastQuery(tmp, "SET NAMES utf8mb4");
-    PrintToConsole(client, "[DMGSHOW] Probe: SET NAMES utf8mb4 -> %s", ok ? "OK" : "FAILED");
+    bool ok = SQL_SetCharset(tmp, "utf8mb4");
+    PrintToConsole(client, "[DMGSHOW] Probe: SQL_SetCharset utf8mb4 -> %s", ok ? "OK" : "FAILED");
 
     Handle h = SQL_Query(tmp, "SELECT 1");
     if (h == INVALID_HANDLE)

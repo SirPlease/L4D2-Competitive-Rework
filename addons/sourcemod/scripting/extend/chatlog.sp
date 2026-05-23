@@ -68,7 +68,6 @@ void SQL_ConnectChatLog()
 	if (!SQL_SetCharset(g_hDatabase, "utf8mb4"))
 		LogError("[chatlog] 设置数据库字符集 utf8mb4 失败。");
 
-	SQL_FastQuery(g_hDatabase, "SET NAMES 'utf8mb4'");
 	SQL_CreateChatLogTable();
 }
 
@@ -96,7 +95,8 @@ void SQL_CreateChatLogTable()
 bool SQL_IsConnectionLostError(const char[] error)
 {
 	return StrContains(error, "Lost connection", false) != -1
-		|| StrContains(error, "server has gone away", false) != -1;
+		|| StrContains(error, "server has gone away", false) != -1
+		|| StrContains(error, "communication packets", false) != -1;
 }
 
 void SQL_MarkDatabaseUnavailable()

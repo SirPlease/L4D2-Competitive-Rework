@@ -551,7 +551,8 @@ public void SQL_OnBlacklistConnect(Database database, const char[] error, any da
 	}
 
 	g_hBlacklistDatabase = database;
-	g_hBlacklistDatabase.SetCharset("utf8mb4");
+	if (!g_hBlacklistDatabase.SetCharset("utf8mb4"))
+		LogError("[global_chat] 设置 blacklist 数据库字符集 utf8mb4 失败。");
 	StartBlacklistRefreshTimer();
 	RefreshBlacklistCache();
 }
@@ -744,7 +745,8 @@ public void SQL_OnConnect(Database database, const char[] error, any data)
 	}
 
 	g_hDatabase = database;
-	g_hDatabase.SetCharset("utf8mb4");
+	if (!g_hDatabase.SetCharset("utf8mb4"))
+		LogError("[global_chat] 设置数据库字符集 utf8mb4 失败。");
 	database.Query(SQL_OnCreateTable, "\
 		CREATE TABLE IF NOT EXISTS `anne_global_chat` ( \
 			`id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, \
@@ -968,9 +970,6 @@ void ReserveDailyUsage(int client, const char[] usageSteamId, const char[] messa
 		return;
 	}
 
-	char safeSteamId[64];
-	g_hDatabase.Escape(usageSteamId, safeSteamId, sizeof(safeSteamId));
-
 	char usageDate[16];
 	FormatTime(usageDate, sizeof(usageDate), "%Y-%m-%d", GetTime());
 
@@ -981,7 +980,7 @@ void ReserveDailyUsage(int client, const char[] usageSteamId, const char[] messa
 		ON DUPLICATE KEY UPDATE \
 			last_used_at = IF(used_count < %d, NOW(), last_used_at), \
 			used_count = IF(used_count < %d, used_count + 1, used_count)",
-		safeSteamId, usageDate, limit, limit);
+		usageSteamId, usageDate, limit, limit);
 
 	DataPack pack = new DataPack();
 	pack.WriteCell(GetClientUserId(client));
@@ -1047,9 +1046,6 @@ void ReserveDailyLFGUsage(int client, const char[] usageSteamId, const char[] me
 		return;
 	}
 
-	char safeSteamId[64];
-	g_hDatabase.Escape(usageSteamId, safeSteamId, sizeof(safeSteamId));
-
 	char usageDate[16];
 	FormatTime(usageDate, sizeof(usageDate), "%Y-%m-%d", GetTime());
 
@@ -1060,7 +1056,7 @@ void ReserveDailyLFGUsage(int client, const char[] usageSteamId, const char[] me
 		ON DUPLICATE KEY UPDATE \
 			last_used_at = IF(used_count < %d, NOW(), last_used_at), \
 			used_count = IF(used_count < %d, used_count + 1, used_count)",
-		safeSteamId, usageDate, limit, limit);
+		usageSteamId, usageDate, limit, limit);
 
 	DataPack pack = new DataPack();
 	pack.WriteCell(GetClientUserId(client));
@@ -1122,21 +1118,13 @@ void InsertGlobalMessage(const char[] steamId, const char[] clientName, const ch
 		return;
 
 	char hostname[128];
-	char safeHostname[256];
-	char safeSteamId[64];
-	char safeName[256];
-	char safeMessage[512];
 
 	GetConVarString(FindConVar("hostname"), hostname, sizeof(hostname));
-	g_hDatabase.Escape(hostname, safeHostname, sizeof(safeHostname));
-	g_hDatabase.Escape(steamId, safeSteamId, sizeof(safeSteamId));
-	g_hDatabase.Escape(message, safeMessage, sizeof(safeMessage));
-	g_hDatabase.Escape(clientName, safeName, sizeof(safeName));
 
 	int port = FindConVar("hostport").IntValue;
 
 	char query[1024];
-	FormatEx(query, sizeof(query), "INSERT INTO anne_global_chat (created_at, server, port, steamid, name, message) VALUES (NOW(), '%s', %d, '%s', '%s', '%s')", safeHostname, port, safeSteamId, safeName, safeMessage);
+	g_hDatabase.Format(query, sizeof(query), "INSERT INTO anne_global_chat (created_at, server, port, steamid, name, message) VALUES (NOW(), '%s', %d, '%s', '%s', '%s')", hostname, port, steamId, clientName, message);
 	g_hDatabase.Query(SQL_OnInsertMessage, query);
 }
 
@@ -1293,10 +1281,8 @@ public void OnClientPostAdminCheck(int client)
 	RefreshBlacklistCache();
 
 	char query[256];
-	char safeSteamId[64];
-	g_hDatabase.Escape(steamId, safeSteamId, sizeof(safeSteamId));
 	
-	g_hDatabase.Format(query, sizeof(query), "SELECT title FROM anne_global_chat_titles WHERE steamid = '%s'", safeSteamId);
+	g_hDatabase.Format(query, sizeof(query), "SELECT title FROM anne_global_chat_titles WHERE steamid = '%s'", steamId);
 	
 	DataPack pack = new DataPack();
 	pack.WriteCell(GetClientUserId(client));

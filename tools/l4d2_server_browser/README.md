@@ -1,15 +1,31 @@
 # L4D2 Server Browser
 
-一个用 Rust 编写的求生之路 2 刷服/查服命令行工具。它可以从 Steam Master Server、手动分组和 SourceBans 订阅链接收集服务器地址，再对每个服务器发送 `A2S_INFO` 查询，输出分组、服务器名、地图、人数、延迟、VAC、标签等信息。
+一个用 Rust 编写的求生之路 2 刷服/查服工具，默认打开原生 GUI，也保留命令行查询模式。它可以从 Steam Master Server、手动分组和 SourceBans 订阅链接收集服务器地址，再对每个服务器发送 `A2S_INFO` 查询，输出分组、服务器名、地图、人数、延迟、VAC、标签等信息。
 
 ## Usage
+
+直接启动 GUI：
+
+```bash
+./l4d2-server-browser
+```
+
+Windows 下双击 `l4d2-server-browser.exe` 会直接打开原生 GUI，release 版不会额外弹出控制台窗口。macOS 下载包里会包含 `L4D2 Server Browser.app`，双击 `.app` 即可使用。
+
+GUI 没有传 `--config` 时，会把配置写到用户配置目录：
+
+- macOS: `~/Library/Application Support/L4D2 Server Browser/l4d2-browser.toml`
+- Linux: `~/.config/l4d2-server-browser/l4d2-browser.toml`
+- Windows: `%APPDATA%\L4D2 Server Browser\l4d2-browser.toml`
+
+命令行查询模式需要显式传参数，例如：
 
 ```bash
 cd tools/l4d2_server_browser
 cargo run --release -- --limit 100
 ```
 
-启动原生 GUI：
+开发环境启动原生 GUI：
 
 ```bash
 cargo run --release -- --gui --config browser.example.toml
@@ -76,7 +92,7 @@ url = "https://example.com/sourcebans"
 
 ## GUI / RCON
 
-GUI 模式是原生桌面窗口，不启动网页服务。新增服务器和 SourceBans 订阅会写入 `--config` 指定的 TOML 文件；如果没有传 `--config`，默认写入当前目录的 `l4d2-browser.toml`。
+GUI 模式是原生桌面窗口，不启动网页服务。新增服务器和 SourceBans 订阅会写入 `--config` 指定的 TOML 文件；如果没有传 `--config`，默认写入系统用户配置目录。
 
 RCON 使用 Source RCON TCP 协议。读取 CVAR 有两种方式：
 
@@ -93,6 +109,8 @@ RCON 使用 Source RCON TCP 协议。读取 CVAR 有两种方式：
 - `x86_64-pc-windows-msvc`
 
 手动运行 workflow 可以下载构建产物。推送 `l4d2-browser-v*` tag 时会自动创建 GitHub Release。
+
+macOS 压缩包会同时包含命令行二进制和 `L4D2 Server Browser.app`；普通使用直接打开 `.app`。Windows 压缩包里的 `.exe` 默认就是 GUI 程序。
 
 ## Notes
 

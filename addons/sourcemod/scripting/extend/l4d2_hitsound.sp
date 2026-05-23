@@ -135,6 +135,32 @@ static int SafeFetchInt(Handle hndl, int col)
 {
     return (col < SQL_GetFieldCount(hndl)) ? SQL_FetchInt(hndl, col) : 0;
 }
+
+static bool IsSafeSQLIdentifier(const char[] value)
+{
+    int len = strlen(value);
+    if (len <= 0)
+        return false;
+
+    for (int i = 0; i < len; i++)
+    {
+        int c = value[i];
+        if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_'))
+            return false;
+    }
+
+    return true;
+}
+
+static void GetDBTableName(char[] table, int maxlen)
+{
+    GetConVarString(cv_db_table, table, maxlen);
+    TrimString(table);
+
+    if (!IsSafeSQLIdentifier(table))
+        strcopy(table, maxlen, "RPG");
+}
+
 static void ClampSetSnd(int &v)
 {
     if (v < 0) v = 0;
@@ -478,7 +504,6 @@ static void StartDBConnect()
 
     if (!SQL_SetCharset(g_hDB, "utf8mb4"))
         LogError("[hitsound] 设置数据库字符集 utf8mb4 失败。");
-    SQL_FastQuery(g_hDB, "SET NAMES 'utf8mb4'");
 
     LogMessage("[hitsound] 数据库连接成功。");
 
@@ -604,15 +629,15 @@ static void TryLoadPlayerPrefs(int client)
 public void DB_RequestLoadPlayer(int client, const char[] sid)
 {
     char table[64];
-    GetConVarString(cv_db_table, table, sizeof(table));
+    GetDBTableName(table, sizeof(table));
 
     char q[512];
-    Format(q, sizeof(q),
+    SQL_FormatQuery(g_hDB, q, sizeof(q),
         "SELECT \
            hitsound_head, hitsound_hit, hitsound_kill, \
            hiticon_head,  hiticon_hit,  hiticon_kill, \
            hitsound_si_only, hiticon_si_only \
-         FROM `%s` \
+         FROM `%!s` \
          WHERE steamid='%s' \
          LIMIT 1;",
         table, sid);
@@ -705,7 +730,7 @@ void DB_SavePlayerPrefs(int client)
     if (g_hDB == INVALID_HANDLE) return;
 
     char sid[64]; GetClientAuthId(client, AuthId_Steam2, sid, sizeof(sid), true);
-    char table[64]; GetConVarString(cv_db_table, table, sizeof(table));
+    char table[64]; GetDBTableName(table, sizeof(table));
 
     int hs_head = g_SndHead[client], hs_hit = g_SndHit[client], hs_kill = g_SndKill[client];
     int ic_head = g_IcHead [client], ic_hit = g_IcHit [client], ic_kill = g_IcKill[client];
@@ -713,8 +738,8 @@ void DB_SavePlayerPrefs(int client)
     int ic_si_only  = g_IcSpecialOnly [client] ? 1 : 0;
 
     char q[1536];
-    Format(q, sizeof(q),
-        "INSERT INTO `%s` ( \
+    SQL_FormatQuery(g_hDB, q, sizeof(q),
+        "INSERT INTO `%!s` ( \
             steamid, hitsound_head, hitsound_hit, hitsound_kill, \
             hiticon_head, hiticon_hit, hiticon_kill, \
             hitsound_si_only, hiticon_si_only \

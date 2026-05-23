@@ -129,6 +129,29 @@ void BL_Log(const char[] fmt, any ...)
     LogToFileEx(path, "%s", buffer);
 }
 
+bool IsSafeSQLIdentifier(const char[] value)
+{
+    int len = strlen(value);
+    if (len <= 0)
+        return false;
+
+    for (int i = 0; i < len; i++)
+    {
+        int c = value[i];
+        if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_'))
+            return false;
+    }
+
+    return true;
+}
+
+void NormalizeTableName()
+{
+    TrimString(g_sTable);
+    if (!IsSafeSQLIdentifier(g_sTable))
+        strcopy(g_sTable, sizeof(g_sTable), "player_blocks");
+}
+
 /* -------------------- DB 连接（自动 MySQL/SQLite） -------------------- */
 void DB_Close()
 {
@@ -166,7 +189,6 @@ bool DB_Connect()
     {
         if (!SQL_SetCharset(g_hDb, "utf8mb4"))
             LogError("[BlockList] failed to set DB charset utf8mb4");
-        SQL_FastQuery(g_hDb, "SET NAMES 'utf8mb4'");
     }
 
     char sql[512];
@@ -239,6 +261,7 @@ public void OnPluginStart()
 
     // 初始值
     gCvarTableName.GetString(g_sTable, sizeof(g_sTable));
+    NormalizeTableName();
     gCvarKickMsg.GetString(g_sKickMsg, sizeof(g_sKickMsg));
     gCvarDBSection.GetString(g_sDBSection, sizeof(g_sDBSection));
     gCvarLogFile.GetString(g_sLogFile, sizeof(g_sLogFile));
@@ -289,7 +312,7 @@ public void OnPluginEnd()
 
 public void OnCvarChanged(ConVar cvar, const char[] o, const char[] n)
 {
-    if (cvar == gCvarTableName)        strcopy(g_sTable, sizeof(g_sTable), n);
+    if (cvar == gCvarTableName)        { strcopy(g_sTable, sizeof(g_sTable), n); NormalizeTableName(); }
     else if (cvar == gCvarKickMsg)     strcopy(g_sKickMsg, sizeof(g_sKickMsg), n);
     else if (cvar == gCvarDBSection)   { strcopy(g_sDBSection, sizeof(g_sDBSection), n); DB_Close(); DB_Connect(); }
     else if (cvar == gCvarLimitUser)   g_iLimitUser = StringToInt(n);

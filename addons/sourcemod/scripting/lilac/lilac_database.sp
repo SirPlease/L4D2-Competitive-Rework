@@ -108,14 +108,12 @@ void database_log(int client, char[] cheat, int detection=DATABASE_BAN, float da
 	float pos[3], ang[3];
 	
 	char name[MAX_NAME_LENGTH];
-	char safe_name[(sizeof(name)*2)+1];
 	if (!GetClientName(client, name, sizeof(name)))
-		strcopy(safe_name, sizeof(safe_name), "<no name>");
+		strcopy(name, sizeof(name), "<no name>");
 	else {
 		TrimString(name);
-		lil_db.Escape(name, safe_name, sizeof(safe_name));
-		if (strlen(safe_name) >= 128) // prevents exploits: don't exceed 127 characters else somes names could break the query
-			strcopy(safe_name, sizeof(safe_name), "<no name>");
+		if (strlen(name) >= 128) // prevents exploits: don't exceed 127 characters else some names could break the query
+			strcopy(name, sizeof(name), "<no name>");
 	}
 	
 	GetClientAuthId(client, AuthId_Steam2, steamid, sizeof(steamid), true);
@@ -127,7 +125,7 @@ void database_log(int client, char[] cheat, int detection=DATABASE_BAN, float da
 
 	get_player_log_angles(client, 0, true, ang);
 	
-	FormatEx(sql_buffer, sizeof(sql_buffer), "INSERT INTO lilac_detections("
+	lil_db.Format(sql_buffer, sizeof(sql_buffer), "INSERT INTO lilac_detections("
 												... "name, "
 												... "steamid, "
 												... "ip, "
@@ -181,7 +179,7 @@ void database_log(int client, char[] cheat, int detection=DATABASE_BAN, float da
 												... "'%f', "
 												... "'%f', "
 												... "'%s')",
-												safe_name,
+												name,
 												steamid,
 												ip,
 												cheat,

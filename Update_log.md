@@ -423,6 +423,36 @@ witchparty 和 allcharger模式在普通药役的基础上小僵尸再减少17-2
 - 更新 `addons/sourcemod/configs/databases.cfg`，配合全服聊天、统计、伤害显示等插件的数据库连接与重连。
 - 更新 `.gitignore`，减少无关文件进入版本管理。
 
+### 2026年5月20日-5月22日更新记录
+#### 大厅管理与模式加载
+- 新增 `l4d2_lobby_match_manager.smx` 和 `l4d2_vote_returnlobby_patch.smx`，把大厅人数管理和回大厅投票补丁从原有插件逻辑中拆出独立处理。
+- 修复大厅只能进入 3 个人的问题，并同步重新编译 `l4d2_lobby_match_manager.smx`。
+- `join.smx`、`slots_vote.smx`、`specrates.smx`、`text.smx` 及相关源码配合大厅管理调整，删除部分旧逻辑。
+- 多个模式的 `shared_cvars.cfg`、`shared_settings.cfg`、`confogl.cfg`、`server.cfg` 和 `sharedplugins.cfg` 同步更新，保证大厅管理、回大厅补丁和模式加载一致。
+
+#### 数据库与统计插件
+- `chatlog.smx`、`global_chat.smx`、`l4d2_blacklist.smx`、`l4d2_damage_show.smx`、`l4d2_hitsound.smx`、`l4d_stats.smx`、`rpg.smx` 等插件回退并清理手动数据库重连逻辑，改为交给 SourceMod 引擎处理连接恢复，避免大量数据库连接失败和换图/切模式崩服。
+- `l4d_stats.smx`、`global_chat.smx`、`fornite_l4d.smx`、`l4d_player_count_unload_mode.smx` 降低数据库压力，减少高峰期状态和统计写入相关开销。
+- 删除部分插件内对 SQL 结构的自动修改逻辑，数据库主体改为依赖外部 SQL 初始化脚本和配置自行创建，降低插件运行时改表风险。
+- `addons/sourcemod/configs/databases.cfg` 和 `.gitignore` 同步整理，删除仓库中的 `.DS_Store` 等无关文件。
+
+#### AnneHappy 动态难度与 Tank 修复
+- `ai_tank3.smx` 调整无视野跳相关处理，并修复极限难度回调错误值；`addons/sourcemod/gamedata/l4d2_ai_tank3.txt` 和动态难度配置同步更新。
+- 修复单人装逼模式因为动态特感难度导致 Tank 一直连跳的问题，单人模式加载流程和 `docs/annehappy_dynamic_ai_difficulty.md` 同步说明。
+- `l4d2_blacklist.smx`、`l4d2_hitsound.smx`、`l4d_stats.smx`、`specrates.smx` 等插件补充小修复并重新编译。
+
+#### 上游同步与地图修复
+- 同步上游 `l4d2_fix_tank_rock_handoff` 的 `IsTank` 判断修复，避免未进游戏客户端触发错误判断。
+- 同步上游 `l4d2_weapon_attributes` 修复。
+- 新增并同步 Parish Overgrowth 的 `PR1_Waterfront_F`、`PR5_Bridge_F` / `pr5_bridge_f` stripper 修复，并修正 `PR5_Bridge_F.cfg`。
+- 同步 Dark Carnival Remix 的 `dkr_m2_carnival`、`dkr_m3_tunneloflove` 梯子修复。
+
+#### Rust 刷服器与 GitHub Actions
+- 新增 `tools/l4d2_server_browser`，提供 Rust 编写的 L4D2 刷服/查服工具，支持 Steam Master Server、手动分组和 SourceBans 订阅来源。
+- 刷服器支持 `A2S_INFO` 查询、分组输出、服务器名/地图/人数/延迟/VAC/标签显示、JSON 输出、名称/地图过滤和配置文件加载。
+- 增加原生 GUI，可添加服务器和 SourceBans 订阅、刷新服务器列表、执行 RCON 命令，并读取 CVAR 或公开 rules。
+- 新增 `.github/workflows/l4d2_server_browser.yml`，用于构建 Linux、macOS、Windows 多平台产物，并支持通过 `l4d2-browser-v*` tag 创建 GitHub Release。
+
 ### 2026年5月19日更新记录
 #### l4d_stats 与 global_chat
 - `global_chat.smx` 新增 `GlobalChat_Broadcast` native，允许其他插件写入全服广播消息；广播消息不再额外套普通全服聊天前缀。
@@ -431,6 +461,11 @@ witchparty 和 allcharger模式在普通药役的基础上小僵尸再减少17-2
 - 地图记录通告格式调整为：`[普通药役/硬核药役/喷子药役地图记录刷新通告]: 玩家名 在 [地图] 刷新 几特16秒无商店难度记录，新纪录为 时间`。
 - 修正 AnneHappy Shotgun HardCore 模式的地图记录模式识别顺序，避免喷子药役被提前识别为普通药役或硬核药役。
 - `l4dstats_AddClientScore` / `l4dstats_AdddClientScore` native 增加第三个可选 `reason` 参数，可把外部插件加分理由写入 `score_log.reason`。
+
+#### 后续修复
+- 修复切换模式、更换地图时部分数据库插件可能崩服的问题。
+- 修复部分插件数据库错误日志过多的问题，减少无意义报错。
+- 调整动态难度配置和 `docs/annehappy_dynamic_ai_difficulty.md`，补充最新参数说明。
 
 ### 2026年5月17日更新记录
 #### AnneHappy 动态特感难度

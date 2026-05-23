@@ -1,9 +1,15 @@
+#![cfg_attr(
+    all(target_os = "windows", not(debug_assertions)),
+    windows_subsystem = "windows"
+)]
+
 use clap::{Parser, ValueEnum};
 use eframe::egui;
 use regex::Regex;
 use reqwest::blocking::Client;
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, VecDeque};
+use std::env;
 use std::fs;
 use std::io::{self, Read, Write};
 use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4, TcpStream, ToSocketAddrs, UdpSocket};
@@ -29,12 +35,10 @@ fn main() {
 }
 
 fn run() -> Result<(), String> {
+    let open_gui_by_default = env::args_os().len() == 1;
     let cli = Cli::parse();
-    if cli.gui {
-        let config_path = cli
-            .config
-            .clone()
-            .unwrap_or_else(|| PathBuf::from(DEFAULT_CONFIG_FILE));
+    if cli.gui || open_gui_by_default {
+        let config_path = cli.config.clone().unwrap_or_else(default_gui_config_path);
         return start_gui(cli, config_path);
     }
 
@@ -49,6 +53,52 @@ fn run() -> Result<(), String> {
     }
 
     Ok(())
+}
+
+fn default_gui_config_path() -> PathBuf {
+    #[cfg(target_os = "windows")]
+    {
+        if let Some(appdata) = env::var_os("APPDATA") {
+            return PathBuf::from(appdata)
+                .join("L4D2 Server Browser")
+                .join(DEFAULT_CONFIG_FILE);
+        }
+        if let Some(profile) = env::var_os("USERPROFILE") {
+            return PathBuf::from(profile)
+                .join("AppData")
+                .join("Roaming")
+                .join("L4D2 Server Browser")
+                .join(DEFAULT_CONFIG_FILE);
+        }
+    }
+
+    #[cfg(target_os = "macos")]
+    {
+        if let Some(home) = env::var_os("HOME") {
+            return PathBuf::from(home)
+                .join("Library")
+                .join("Application Support")
+                .join("L4D2 Server Browser")
+                .join(DEFAULT_CONFIG_FILE);
+        }
+    }
+
+    #[cfg(all(unix, not(target_os = "macos")))]
+    {
+        if let Some(xdg_config_home) = env::var_os("XDG_CONFIG_HOME") {
+            return PathBuf::from(xdg_config_home)
+                .join("l4d2-server-browser")
+                .join(DEFAULT_CONFIG_FILE);
+        }
+        if let Some(home) = env::var_os("HOME") {
+            return PathBuf::from(home)
+                .join(".config")
+                .join("l4d2-server-browser")
+                .join(DEFAULT_CONFIG_FILE);
+        }
+    }
+
+    PathBuf::from(DEFAULT_CONFIG_FILE)
 }
 
 #[derive(Parser, Debug, Clone)]
