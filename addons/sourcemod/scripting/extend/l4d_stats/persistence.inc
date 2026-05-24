@@ -19,7 +19,7 @@ bool:ConnectDB()
 	}
 
 	new String:Error[256];
-	db = SQL_Connect(DB_CONF_NAME, true, Error, sizeof(Error));
+	db = SQL_Connect(DB_CONF_NAME, false, Error, sizeof(Error));
 
 	if (db == INVALID_HANDLE)
 	{

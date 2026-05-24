@@ -12,6 +12,10 @@ Database g_hDatabase = null;
 Database g_hBlacklistDatabase = null;
 Handle g_hPollTimer = null;
 Handle g_hBlacklistRefreshTimer = null;
+Handle g_hDatabaseReconnectTimer = null;
+Handle g_hBlacklistReconnectTimer = null;
+
+#define DB_RECONNECT_DELAY 10.0
 
 bool g_bConnecting;
 bool g_bBlacklistConnecting;
@@ -87,7 +91,7 @@ public int Native_GlobalChatBroadcast(Handle plugin, int numParams)
 	if (!g_cvEnabled.BoolValue || !g_bReady || g_hDatabase == null)
 		return false;
 
-	InsertGlobalMessage("@SERVER", "@BROADCAST", message);
+	InsertGlobalMessage("@SERVER", "@BROADCAST", message, true);
 	return true;
 }
 
@@ -199,6 +203,18 @@ public void OnPluginEnd()
 	g_iBlacklistDatabaseGeneration++;
 	StopPollTimer();
 	StopBlacklistRefreshTimer();
+
+	if (g_hDatabaseReconnectTimer != null)
+	{
+		KillTimer(g_hDatabaseReconnectTimer);
+		g_hDatabaseReconnectTimer = null;
+	}
+
+	if (g_hBlacklistReconnectTimer != null)
+	{
+		KillTimer(g_hBlacklistReconnectTimer);
+		g_hBlacklistReconnectTimer = null;
+	}
 
 	if (g_hDatabase != null)
 	{
@@ -433,6 +449,14 @@ bool CanReceiveLFGMessage(int client, const char[] senderSteam64)
 		&& !IsSenderBlockedByClient(client, senderSteam64);
 }
 
+bool CanReceiveGlobalBroadcast(int client)
+{
+	return client > 0
+		&& client <= MaxClients
+		&& IsClientInGame(client)
+		&& !IsFakeClient(client);
+}
+
 bool IsSenderBlockedByClient(int client, const char[] senderSteam64)
 {
 	if (!g_cvBlacklistFilter.BoolValue || senderSteam64[0] == '\0' || !IsSteam64(senderSteam64))
@@ -523,6 +547,21 @@ void GetSafeBlacklistTable(char[] table, int maxlen)
 		strcopy(table, maxlen, "player_blocks");
 }
 
+void ScheduleBlacklistDatabaseReconnect()
+{
+	if (g_hBlacklistReconnectTimer == null)
+	{
+		g_hBlacklistReconnectTimer = CreateTimer(DB_RECONNECT_DELAY, Timer_ReconnectBlacklistDatabase);
+	}
+}
+
+public Action Timer_ReconnectBlacklistDatabase(Handle timer, any data)
+{
+	g_hBlacklistReconnectTimer = null;
+	ConnectBlacklistDatabase();
+	return Plugin_Stop;
+}
+
 void ConnectBlacklistDatabase()
 {
 	if (!g_cvBlacklistFilter.BoolValue || g_hBlacklistDatabase != null || g_bBlacklistConnecting)
@@ -553,6 +592,12 @@ public void SQL_OnBlacklistConnect(Database database, const char[] error, any da
 		return;
 	}
 
+	if (g_hBlacklistReconnectTimer != null)
+	{
+		KillTimer(g_hBlacklistReconnectTimer);
+		g_hBlacklistReconnectTimer = null;
+	}
+
 	g_hBlacklistDatabase = database;
 	if (!g_hBlacklistDatabase.SetCharset("utf8mb4"))
 		LogError("[global_chat] 设置 blacklist 数据库字符集 utf8mb4 失败。");
@@ -565,11 +610,19 @@ void MarkBlacklistDatabaseUnavailable()
 	g_bBlacklistConnecting = false;
 	g_bBlacklistRefreshInFlight = false;
 	StopBlacklistRefreshTimer();
+
+	if (g_hBlacklistDatabase != null)
+	{
+		delete g_hBlacklistDatabase;
+		g_hBlacklistDatabase = null;
+	}
+
+	ScheduleBlacklistDatabaseReconnect();
 }
 
 bool IsActiveBlacklistDatabase(Database database)
 {
-	return database != null && g_hBlacklistDatabase != null && database == g_hBlacklistDatabase;
+	return database != null && g_hBlacklistDatabase != null && database.IsSameConnection(g_hBlacklistDatabase);
 }
 
 void StartBlacklistRefreshTimer()
@@ -671,6 +724,21 @@ public void SQL_OnRefreshBlacklistCache(Database database, DBResultSet results, 
 	}
 }
 
+void ScheduleDatabaseReconnect()
+{
+	if (g_hDatabaseReconnectTimer == null)
+	{
+		g_hDatabaseReconnectTimer = CreateTimer(DB_RECONNECT_DELAY, Timer_ReconnectDatabase);
+	}
+}
+
+public Action Timer_ReconnectDatabase(Handle timer, any data)
+{
+	g_hDatabaseReconnectTimer = null;
+	ConnectDatabase();
+	return Plugin_Stop;
+}
+
 void ConnectDatabase()
 {
 	if (g_hDatabase != null || g_bConnecting)
@@ -689,11 +757,19 @@ void MarkDatabaseUnavailable()
 	g_bConnecting = false;
 	g_bPollInFlight = false;
 	StopPollTimer();
+
+	if (g_hDatabase != null)
+	{
+		delete g_hDatabase;
+		g_hDatabase = null;
+	}
+
+	ScheduleDatabaseReconnect();
 }
 
 bool IsActiveMainDatabase(Database database)
 {
-	return database != null && g_hDatabase != null && database == g_hDatabase;
+	return database != null && g_hDatabase != null && database.IsSameConnection(g_hDatabase);
 }
 
 void StartPollTimer()
@@ -745,6 +821,12 @@ public void SQL_OnConnect(Database database, const char[] error, any data)
 		LogError("[global_chat] 数据库连接失败: %s", error);
 		MarkDatabaseUnavailable();
 		return;
+	}
+
+	if (g_hDatabaseReconnectTimer != null)
+	{
+		KillTimer(g_hDatabaseReconnectTimer);
+		g_hDatabaseReconnectTimer = null;
 	}
 
 	g_hDatabase = database;
@@ -1173,7 +1255,7 @@ public void SQL_OnInsertMessage(Database database, DBResultSet results, const ch
 	if (echoLocal)
 	{
 		RememberLocalEchoedMessageId(results.InsertId);
-		PrintGlobalChatMessage(steamId, hostname, clientName, message);
+		DispatchGlobalChatMessage(steamId, hostname, clientName, message);
 	}
 }
 
@@ -1226,14 +1308,10 @@ public void SQL_OnPollMessages(Database database, DBResultSet results, const cha
 		return;
 	}
 
-	char prefix[64];
 	char senderSteam64[32];
 	char server[128];
-	char shortServer[64];
 	char name[128];
 	char message[256];
-
-	g_cvMessagePrefix.GetString(prefix, sizeof(prefix));
 
 	while (results.FetchRow())
 	{
@@ -1249,54 +1327,7 @@ public void SQL_OnPollMessages(Database database, DBResultSet results, const cha
 		if (IsLocalEchoedMessageId(id))
 			continue;
 
-		if (StrEqual(name, "@LOGIN"))
-		{
-			for (int i = 1; i <= MaxClients; i++)
-			{
-				if (CanReceiveGlobalMessage(i, senderSteam64))
-					PrintToChat(i, "\x04%s %s", prefix, message);
-			}
-		}
-		else if (StrEqual(name, "@LFG"))
-		{
-			char parts[2][128];
-			int count = ExplodeString(message, "_||_", parts, sizeof(parts), sizeof(parts[]));
-			if (count < 1) continue;
-
-			for (int i = 1; i <= MaxClients; i++)
-			{
-				if (CanReceiveLFGMessage(i, senderSteam64) && GetClientTeam(i) == 1)
-				{
-					if (count < 2 || parts[1][0] == '\0')
-					{
-						PrintCenterText(i, "%s 玩家在 %s 召唤队友", parts[0], server);
-						PrintToChat(i, "\x04%s \x05%s \x01玩家在 \x03%s \x01召唤队友", prefix, parts[0], server);
-					}
-					else
-					{
-						PrintCenterText(i, "%s 玩家在 %s 召唤队友", parts[0], server);
-						PrintToChat(i, "\x04%s \x05%s \x01玩家在 \x03%s \x01召唤队友\n\x01留言: \x05%s", prefix, parts[0], server, parts[1]);
-					}
-				}
-			}
-		}
-		else if (StrEqual(name, "@BROADCAST"))
-		{
-			for (int i = 1; i <= MaxClients; i++)
-			{
-				if (CanReceiveGlobalMessage(i, senderSteam64))
-					PrintToChat(i, "\x01%s", message);
-			}
-		}
-		else
-		{
-			GetShortServerName(server, shortServer, sizeof(shortServer));
-			for (int i = 1; i <= MaxClients; i++)
-			{
-				if (CanReceiveGlobalMessage(i, senderSteam64))
-					PrintToChat(i, "\x04%s \x03[%s] \x05%s\x01: %s", prefix, shortServer, name, message);
-			}
-		}
+		DispatchGlobalChatMessage(senderSteam64, server, name, message);
 	}
 }
 
@@ -1323,14 +1354,63 @@ bool IsLocalEchoedMessageId(int id)
 	return false;
 }
 
-void PrintGlobalChatMessage(const char[] senderSteam64, const char[] server, const char[] name, const char[] message)
+void DispatchGlobalChatMessage(const char[] senderSteam64, const char[] server, const char[] name, const char[] message)
 {
 	char prefix[64];
 	char shortServer[64];
 
 	g_cvMessagePrefix.GetString(prefix, sizeof(prefix));
-	GetShortServerName(server, shortServer, sizeof(shortServer));
 
+	if (StrEqual(name, "@LOGIN"))
+	{
+		for (int i = 1; i <= MaxClients; i++)
+		{
+			if (CanReceiveGlobalMessage(i, senderSteam64))
+				PrintToChat(i, "\x04%s %s", prefix, message);
+		}
+
+		return;
+	}
+
+	if (StrEqual(name, "@LFG"))
+	{
+		char parts[2][128];
+		int count = ExplodeString(message, "_||_", parts, sizeof(parts), sizeof(parts[]));
+		if (count < 1)
+			return;
+
+		for (int i = 1; i <= MaxClients; i++)
+		{
+			if (CanReceiveLFGMessage(i, senderSteam64) && GetClientTeam(i) == 1)
+			{
+				if (count < 2 || parts[1][0] == '\0')
+				{
+					PrintCenterText(i, "%s 玩家在 %s 召唤队友", parts[0], server);
+					PrintToChat(i, "\x04%s \x05%s \x01玩家在 \x03%s \x01召唤队友", prefix, parts[0], server);
+				}
+				else
+				{
+					PrintCenterText(i, "%s 玩家在 %s 召唤队友", parts[0], server);
+					PrintToChat(i, "\x04%s \x05%s \x01玩家在 \x03%s \x01召唤队友\n\x01留言: \x05%s", prefix, parts[0], server, parts[1]);
+				}
+			}
+		}
+
+		return;
+	}
+
+	if (StrEqual(name, "@BROADCAST"))
+	{
+		for (int i = 1; i <= MaxClients; i++)
+		{
+			if (CanReceiveGlobalBroadcast(i))
+				PrintToChat(i, "\x01%s", message);
+		}
+
+		return;
+	}
+
+	GetShortServerName(server, shortServer, sizeof(shortServer));
 	for (int i = 1; i <= MaxClients; i++)
 	{
 		if (CanReceiveGlobalMessage(i, senderSteam64))

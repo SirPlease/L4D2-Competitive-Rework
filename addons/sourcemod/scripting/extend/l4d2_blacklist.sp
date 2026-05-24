@@ -174,7 +174,7 @@ bool DB_Connect()
     }
 
     char error[256];
-    g_hDb = SQL_Connect(g_sDBSection, true, error, sizeof(error));
+    g_hDb = SQL_Connect(g_sDBSection, false, error, sizeof(error));
     if (g_hDb == INVALID_HANDLE)
     {
         LogError("[BlockList] DB connect failed: %s", error);
