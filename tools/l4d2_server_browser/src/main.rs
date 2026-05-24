@@ -3252,7 +3252,7 @@ impl eframe::App for NativeGuiApp {
                                                 for p in &self.selected_server_players {
                                                     ui.label(p.index.to_string());
                                                     ui.label(&p.name);
-                                                    ui.label(p.score.to_string());
+                                                    ui.label(format_optional_number(Some(p.score)));
                                                     ui.label(format_duration_seconds(p.duration));
                                                     ui.label(format_optional_number(p.points));
                                                     ui.label(format_playtime_minutes(
@@ -3732,7 +3732,7 @@ impl eframe::App for NativeGuiApp {
 
                                         for p in &filtered_players {
                                             ui.label(egui::RichText::new(&p.name).strong());
-                                            ui.label(p.score.to_string());
+                                            ui.label(format_optional_number(Some(p.score)));
                                             ui.label(format_duration_seconds(p.duration));
 
                                             ui.label(format_optional_number(p.points));
@@ -4054,7 +4054,7 @@ fn format_player_payload(players: &[PlayerInfo], language: GuiLanguage) -> Strin
         output.push_str(&format!(
             "{:<2} {:>6} {:>7}  {}",
             player.index,
-            player.score,
+            format_optional_number(Some(player.score)),
             format_duration_seconds(player.duration),
             player.name
         ));
