@@ -2,6 +2,7 @@
 
 	General Updates:
 
+ *	24-05-2026 > Version 2.7: Clear stale timer handles across map changes to prevent invalid handle errors.
  *	16-05-2026 > Version 2.6: Skip first-map door locking but still freeze survivor bots until humans leave.
  *	16-05-2026 > Version 2.5: Skip saferoom locking on the first map of each scenario.
  *	16-05-2026 > Version 2.4: Removed first scenario mode cvar and kept the default teleport behavior.
@@ -32,7 +33,7 @@
 
 #pragma semicolon 1
 #pragma newdecls required
-#define PLUGIN_VERSION "2.6"
+#define PLUGIN_VERSION "2.7"
 
 /* =============================================================================================================== *
  *										Bools, Handles, Integers and ConVars				   			 		   *
@@ -71,8 +72,30 @@ void StopDoorLockTimer(Handle &timer)
 	if(timer == null)
 		return;
 
-	delete timer;
+	Handle oldTimer = timer;
 	timer = null;
+	delete oldTimer;
+}
+
+void StopAllDoorLockTimers()
+{
+	StopDoorLockTimer(g_hTimer_IgnoreLoaders);
+	StopDoorLockTimer(g_hTimer_PendingLoader);
+	StopDoorLockTimer(g_hTimer_WarmingUpTime);
+	StopDoorLockTimer(g_hTimer_UnreadyGiveUp);
+	StopDoorLockTimer(g_hTimer_CountdownTime);
+	StopDoorLockTimer(g_hTimer_ReadyUpChecks);
+}
+
+void ClearDoorLockTimerRefs()
+{
+	// TIMER_FLAG_NO_MAPCHANGE timers are closed by SourceMod during map changes.
+	g_hTimer_IgnoreLoaders = null;
+	g_hTimer_PendingLoader = null;
+	g_hTimer_WarmingUpTime = null;
+	g_hTimer_UnreadyGiveUp = null;
+	g_hTimer_CountdownTime = null;
+	g_hTimer_ReadyUpChecks = null;
 }
 
 enum
@@ -212,6 +235,8 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 
 public void OnMapStart()
 {
+	ClearDoorLockTimerRefs();
+
 	g_bFirstScenario = false;
 	g_iCurrentMaps = 0;
 
@@ -237,6 +262,16 @@ public void OnMapStart()
 
 	// 所有关卡（含第一关）都阻止引擎通过 versus_force_start_time 强制开始回合
 	Cvar_DoorLock_ExitTimer.SetString("999999");
+}
+
+public void OnMapEnd()
+{
+	ClearDoorLockTimerRefs();
+}
+
+public void OnPluginEnd()
+{
+	StopAllDoorLockTimers();
 }
 
 /* =============================================================================================================== *
@@ -321,12 +356,7 @@ void Event_OnRoundEnd(Event event, const char[] name, bool dontBroadcast)
 		g_bNoBotMoveChanged = false;
 	}
 	g_bSurvivorBotFreezeActive = false;
-	StopDoorLockTimer(g_hTimer_IgnoreLoaders);
-	StopDoorLockTimer(g_hTimer_PendingLoader);
-	StopDoorLockTimer(g_hTimer_WarmingUpTime);
-	StopDoorLockTimer(g_hTimer_UnreadyGiveUp);
-	StopDoorLockTimer(g_hTimer_CountdownTime);
-	StopDoorLockTimer(g_hTimer_ReadyUpChecks);
+	StopAllDoorLockTimers();
 }
 
 /* =============================================================================================================== *
