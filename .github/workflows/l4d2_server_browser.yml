@@ -90,7 +90,7 @@ jobs:
           cp tools/l4d2_server_browser/README.md "$DIST/"
           cp tools/l4d2_server_browser/browser.example.toml "$DIST/"
           if [[ "${{ runner.os }}" == "macOS" ]]; then
-            APP="$DIST/L4D2 Server Browser.app"
+            APP="$DIST/电信服刷服器.app"
             mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
             cp "$BIN" "$APP/Contents/MacOS/l4d2-server-browser"
             chmod +x "$APP/Contents/MacOS/l4d2-server-browser"
@@ -102,7 +102,7 @@ jobs:
             <key>CFBundleDevelopmentRegion</key>
             <string>en</string>
             <key>CFBundleDisplayName</key>
-            <string>L4D2 Server Browser</string>
+            <string>电信服刷服器</string>
             <key>CFBundleExecutable</key>
             <string>l4d2-server-browser</string>
             <key>CFBundleIdentifier</key>
@@ -110,7 +110,7 @@ jobs:
             <key>CFBundleInfoDictionaryVersion</key>
             <string>6.0</string>
             <key>CFBundleName</key>
-            <string>L4D2 Server Browser</string>
+            <string>电信服刷服器</string>
             <key>CFBundlePackageType</key>
             <string>APPL</string>
             <key>CFBundleShortVersionString</key>

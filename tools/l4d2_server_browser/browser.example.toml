@@ -1,6 +1,9 @@
 [gui]
 language = "zh-CN"
 
+[updater]
+auto_check = true
+
 [master]
 enabled = true
 group = "公网大厅"

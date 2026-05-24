@@ -26,6 +26,8 @@ const DEFAULT_FILTER: &str = "\\appid\\550";
 const DEFAULT_MASTER_GROUP: &str = "Steam Master";
 const DEFAULT_CONFIG_FILE: &str = "l4d2-browser.toml";
 const USER_AGENT: &str = "l4d2-server-browser/0.4";
+const UPDATE_REPO: &str = "fantasylidong/CompetitiveWithAnne";
+const UPDATE_TAG_PREFIX: &str = "l4d2-browser-v";
 
 fn main() {
     if let Err(err) = run() {
@@ -404,6 +406,8 @@ struct BrowserConfig {
     #[serde(default)]
     gui: GuiConfig,
     #[serde(default)]
+    updater: UpdaterConfig,
+    #[serde(default)]
     master: Option<FileMaster>,
     #[serde(default)]
     groups: Vec<FileGroup>,
@@ -415,6 +419,24 @@ struct BrowserConfig {
 struct GuiConfig {
     #[serde(default)]
     language: GuiLanguage,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+struct UpdaterConfig {
+    #[serde(default = "default_update_auto_check")]
+    auto_check: bool,
+}
+
+impl Default for UpdaterConfig {
+    fn default() -> Self {
+        Self {
+            auto_check: default_update_auto_check(),
+        }
+    }
+}
+
+fn default_update_auto_check() -> bool {
+    true
 }
 
 #[derive(Debug, Clone, Copy, Deserialize, Serialize, PartialEq, Eq)]
@@ -444,7 +466,7 @@ impl GuiLanguage {
     fn text(self, key: TextKey) -> &'static str {
         match self {
             Self::ZhCn => match key {
-                TextKey::AppTitle => "L4D2 刷服器",
+                TextKey::AppTitle => "电信服刷服器",
                 TextKey::RefreshServers => "刷新服务器",
                 TextKey::Language => "语言",
                 TextKey::AddServer => "添加服务器",
@@ -462,7 +484,6 @@ impl GuiLanguage {
                 TextKey::CvarRules => "CVAR / Rules",
                 TextKey::OptionalRconPassword => "RCON 密码，可空",
                 TextKey::CvarNamesHelp => "CVAR 名称，逗号分隔；公开 rules 可留空",
-                TextKey::Read => "读取",
                 TextKey::ServerList => "服务器列表",
                 TextKey::HeaderGroup => "分组",
                 TextKey::HeaderAddress => "地址",
@@ -483,9 +504,28 @@ impl GuiLanguage {
                 TextKey::NotQueried => "未查询",
                 TextKey::Yes => "是",
                 TextKey::No => "否",
+                TextKey::ManualServersTab => "添加服务器",
+                TextKey::SourceBansTab => "SourceBans",
+                TextKey::ManualServerList => "已保存服务器",
+                TextKey::SubscriptionList => "已保存订阅",
+                TextKey::NewSubscription => "新建订阅",
+                TextKey::UpdateSubscription => "更新订阅",
+                TextKey::DeleteSubscription => "删除订阅",
+                TextKey::SubscriptionDeleted => "SourceBans 订阅已删除",
+                TextKey::SelectServerHint => {
+                    "点击服务器列表中的服务器后，可在这里执行 RCON 和查看 CVAR / Rules"
+                }
+                TextKey::SelectedServer => "已选择服务器",
+                TextKey::NoServerSelected => "未选择服务器",
+                TextKey::RefreshRules => "刷新 Rules",
+                TextKey::CheckUpdates => "检查更新",
+                TextKey::CheckingUpdates => "正在检查更新...",
+                TextKey::OpenDownloadPage => "打开下载页",
+                TextKey::AutoUpdate => "自动检查更新",
+                TextKey::CurrentVersion => "当前版本",
             },
             Self::EnUs => match key {
-                TextKey::AppTitle => "L4D2 Server Browser",
+                TextKey::AppTitle => "Telecom Server Browser",
                 TextKey::RefreshServers => "Refresh servers",
                 TextKey::Language => "Language",
                 TextKey::AddServer => "Add server",
@@ -505,7 +545,6 @@ impl GuiLanguage {
                 TextKey::CvarNamesHelp => {
                     "CVAR names, comma-separated; leave empty for public rules"
                 }
-                TextKey::Read => "Read",
                 TextKey::ServerList => "Server list",
                 TextKey::HeaderGroup => "Group",
                 TextKey::HeaderAddress => "Address",
@@ -526,6 +565,25 @@ impl GuiLanguage {
                 TextKey::NotQueried => "not queried",
                 TextKey::Yes => "yes",
                 TextKey::No => "no",
+                TextKey::ManualServersTab => "Add server",
+                TextKey::SourceBansTab => "SourceBans",
+                TextKey::ManualServerList => "Saved servers",
+                TextKey::SubscriptionList => "Saved subscriptions",
+                TextKey::NewSubscription => "New subscription",
+                TextKey::UpdateSubscription => "Update subscription",
+                TextKey::DeleteSubscription => "Delete subscription",
+                TextKey::SubscriptionDeleted => "SourceBans subscription deleted",
+                TextKey::SelectServerHint => {
+                    "Select a server from the list to run RCON and view CVAR / Rules"
+                }
+                TextKey::SelectedServer => "Selected server",
+                TextKey::NoServerSelected => "No server selected",
+                TextKey::RefreshRules => "Refresh Rules",
+                TextKey::CheckUpdates => "Check updates",
+                TextKey::CheckingUpdates => "Checking updates...",
+                TextKey::OpenDownloadPage => "Open download page",
+                TextKey::AutoUpdate => "Auto-check updates",
+                TextKey::CurrentVersion => "Current version",
             },
         }
     }
@@ -572,6 +630,34 @@ impl GuiLanguage {
         }
     }
 
+    fn delete_subscription_failed_status(self, err: &str) -> String {
+        match self {
+            Self::ZhCn => format!("删除订阅失败：{err}"),
+            Self::EnUs => format!("Failed to delete subscription: {err}"),
+        }
+    }
+
+    fn update_available_status(self, latest: &str) -> String {
+        match self {
+            Self::ZhCn => format!("发现新版本：{latest}"),
+            Self::EnUs => format!("Update available: {latest}"),
+        }
+    }
+
+    fn up_to_date_status(self) -> String {
+        match self {
+            Self::ZhCn => "已是最新版本".to_owned(),
+            Self::EnUs => "You are up to date".to_owned(),
+        }
+    }
+
+    fn update_check_failed_status(self, err: &str) -> String {
+        match self {
+            Self::ZhCn => format!("检查更新失败：{err}"),
+            Self::EnUs => format!("Update check failed: {err}"),
+        }
+    }
+
     fn rcon_failed_output(self, err: &str) -> String {
         match self {
             Self::ZhCn => format!("RCON 失败：{err}"),
@@ -607,7 +693,6 @@ enum TextKey {
     CvarRules,
     OptionalRconPassword,
     CvarNamesHelp,
-    Read,
     ServerList,
     HeaderGroup,
     HeaderAddress,
@@ -628,6 +713,23 @@ enum TextKey {
     NotQueried,
     Yes,
     No,
+    ManualServersTab,
+    SourceBansTab,
+    ManualServerList,
+    SubscriptionList,
+    NewSubscription,
+    UpdateSubscription,
+    DeleteSubscription,
+    SubscriptionDeleted,
+    SelectServerHint,
+    SelectedServer,
+    NoServerSelected,
+    RefreshRules,
+    CheckUpdates,
+    CheckingUpdates,
+    OpenDownloadPage,
+    AutoUpdate,
+    CurrentVersion,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, Default)]
@@ -799,17 +901,25 @@ fn collect_sources(
     let mut registry = HashMap::new();
 
     if settings.master_enabled {
-        let master_addr = resolve_ipv4(&settings.master)
-            .map_err(|err| format!("failed to resolve master server {}: {err}", settings.master))?;
-        let master = MasterClient {
-            addr: master_addr,
-            timeout: settings.master_timeout,
-        };
-        for endpoint in master
-            .fetch(settings.region, &settings.filter, settings.limit)
-            .map_err(|err| format!("master server query failed: {err}"))?
-        {
-            add_endpoint(&mut registry, endpoint, &settings.master_group);
+        match resolve_ipv4(&settings.master) {
+            Ok(master_addr) => {
+                let master = MasterClient {
+                    addr: master_addr,
+                    timeout: settings.master_timeout,
+                };
+                match master.fetch(settings.region, &settings.filter, settings.limit) {
+                    Ok(endpoints) => {
+                        for endpoint in endpoints {
+                            add_endpoint(&mut registry, endpoint, &settings.master_group);
+                        }
+                    }
+                    Err(err) => eprintln!("warning: master server query failed: {err}"),
+                }
+            }
+            Err(err) => eprintln!(
+                "warning: failed to resolve master server {}: {err}",
+                settings.master
+            ),
         }
     }
 
@@ -1658,10 +1768,39 @@ struct CvarPayload {
     values: BTreeMap<String, String>,
 }
 
+#[derive(Clone)]
+struct ManualServerEntry {
+    group: String,
+    server: String,
+}
+
+#[derive(Clone, Default)]
+struct GuiConfigLists {
+    manual_servers: Vec<ManualServerEntry>,
+    sourcebans: Vec<FileSourceBans>,
+}
+
+#[derive(Clone)]
+struct UpdateInfo {
+    latest_version: String,
+    html_url: String,
+    available: bool,
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum GuiTab {
+    ManualServers,
+    SourceBans,
+}
+
 enum GuiMessage {
     Servers(Result<Vec<ServerRowPayload>, String>),
+    ConfigLists(Result<GuiConfigLists, String>),
     AddServer(Result<(), String>),
     AddSourceBans(Result<(), String>),
+    UpdateSourceBans(Result<(), String>),
+    DeleteSourceBans(Result<(), String>),
+    UpdateCheck(Result<UpdateInfo, String>),
     Rcon(Result<String, String>),
     Cvars(Result<CvarPayload, String>),
 }
@@ -1670,9 +1809,17 @@ struct NativeGuiApp {
     cli: Cli,
     config_path: PathBuf,
     language: GuiLanguage,
+    active_tab: GuiTab,
     tx: Sender<GuiMessage>,
     rx: Receiver<GuiMessage>,
     servers: Vec<ServerRowPayload>,
+    manual_servers: Vec<ManualServerEntry>,
+    sourcebans_entries: Vec<FileSourceBans>,
+    selected_sourcebans: Option<usize>,
+    selected_server: Option<String>,
+    updater_auto_check: bool,
+    update_status: String,
+    update_url: Option<String>,
     server_status: String,
     config_status: String,
     group_name: String,
@@ -1795,14 +1942,23 @@ fn cjk_font_candidates() -> Vec<PathBuf> {
 
 impl NativeGuiApp {
     fn new(cli: Cli, config_path: PathBuf, language: GuiLanguage) -> Self {
+        let initial_config = load_config_or_default(&config_path).unwrap_or_default();
         let (tx, rx) = mpsc::channel();
         let mut app = Self {
             cli,
             config_path,
             language,
+            active_tab: GuiTab::ManualServers,
             tx,
             rx,
             servers: Vec::new(),
+            manual_servers: Vec::new(),
+            sourcebans_entries: Vec::new(),
+            selected_sourcebans: None,
+            selected_server: None,
+            updater_auto_check: initial_config.updater.auto_check,
+            update_status: String::new(),
+            update_url: None,
             server_status: language.text(TextKey::WaitingRefresh).to_owned(),
             config_status: String::new(),
             group_name: match language {
@@ -1822,7 +1978,11 @@ impl NativeGuiApp {
             cvar_output: String::new(),
         };
         app.config_status = app.language.config_file_status(&app.config_path);
+        app.refresh_config_lists();
         app.refresh_servers();
+        if app.updater_auto_check {
+            app.check_updates();
+        }
         app
     }
 
@@ -1836,9 +1996,25 @@ impl NativeGuiApp {
                     }
                     Err(err) => self.server_status = self.language.refresh_failed_status(&err),
                 },
+                GuiMessage::ConfigLists(result) => match result {
+                    Ok(lists) => {
+                        self.manual_servers = lists.manual_servers;
+                        self.sourcebans_entries = lists.sourcebans;
+                        if self
+                            .selected_sourcebans
+                            .is_some_and(|index| index >= self.sourcebans_entries.len())
+                        {
+                            self.selected_sourcebans = None;
+                        }
+                    }
+                    Err(err) => {
+                        self.config_status = self.language.refresh_failed_status(&err);
+                    }
+                },
                 GuiMessage::AddServer(result) => match result {
                     Ok(()) => {
                         self.config_status = self.language.text(TextKey::ServerSaved).to_owned();
+                        self.refresh_config_lists();
                         self.refresh_servers();
                     }
                     Err(err) => {
@@ -1849,10 +2025,50 @@ impl NativeGuiApp {
                     Ok(()) => {
                         self.config_status =
                             self.language.text(TextKey::SubscriptionSaved).to_owned();
+                        self.refresh_config_lists();
                         self.refresh_servers();
                     }
                     Err(err) => {
                         self.config_status = self.language.save_subscription_failed_status(&err);
+                    }
+                },
+                GuiMessage::UpdateSourceBans(result) => match result {
+                    Ok(()) => {
+                        self.config_status =
+                            self.language.text(TextKey::SubscriptionSaved).to_owned();
+                        self.refresh_config_lists();
+                        self.refresh_servers();
+                    }
+                    Err(err) => {
+                        self.config_status = self.language.save_subscription_failed_status(&err);
+                    }
+                },
+                GuiMessage::DeleteSourceBans(result) => match result {
+                    Ok(()) => {
+                        self.config_status =
+                            self.language.text(TextKey::SubscriptionDeleted).to_owned();
+                        self.selected_sourcebans = None;
+                        self.sourcebans_name.clear();
+                        self.sourcebans_url.clear();
+                        self.refresh_config_lists();
+                        self.refresh_servers();
+                    }
+                    Err(err) => {
+                        self.config_status = self.language.delete_subscription_failed_status(&err);
+                    }
+                },
+                GuiMessage::UpdateCheck(result) => match result {
+                    Ok(info) => {
+                        self.update_url = Some(info.html_url);
+                        self.update_status = if info.available {
+                            self.language.update_available_status(&info.latest_version)
+                        } else {
+                            self.language.up_to_date_status()
+                        };
+                    }
+                    Err(err) => {
+                        self.update_url = None;
+                        self.update_status = self.language.update_check_failed_status(&err);
                     }
                 },
                 GuiMessage::Rcon(result) => {
@@ -1886,6 +2102,15 @@ impl NativeGuiApp {
         });
     }
 
+    fn refresh_config_lists(&mut self) {
+        let tx = self.tx.clone();
+        let config_path = self.config_path.clone();
+        thread::spawn(move || {
+            let result = load_gui_config_lists(&config_path);
+            let _ = tx.send(GuiMessage::ConfigLists(result));
+        });
+    }
+
     fn save_server(&mut self) {
         self.config_status = self.language.text(TextKey::SavingServer).to_owned();
         let tx = self.tx.clone();
@@ -1914,7 +2139,44 @@ impl NativeGuiApp {
         });
     }
 
+    fn update_sourcebans(&mut self) {
+        let Some(index) = self.selected_sourcebans else {
+            self.save_sourcebans();
+            return;
+        };
+
+        self.config_status = self.language.text(TextKey::SavingSubscription).to_owned();
+        let tx = self.tx.clone();
+        let path = self.config_path.clone();
+        let input = AddSourceBansRequest {
+            name: self.sourcebans_name.clone(),
+            url: self.sourcebans_url.clone(),
+        };
+        thread::spawn(move || {
+            let result = update_sourcebans_in_config(&path, index, input);
+            let _ = tx.send(GuiMessage::UpdateSourceBans(result));
+        });
+    }
+
+    fn delete_sourcebans(&mut self) {
+        let Some(index) = self.selected_sourcebans else {
+            return;
+        };
+
+        let tx = self.tx.clone();
+        let path = self.config_path.clone();
+        thread::spawn(move || {
+            let result = delete_sourcebans_from_config(&path, index);
+            let _ = tx.send(GuiMessage::DeleteSourceBans(result));
+        });
+    }
+
     fn run_rcon(&mut self) {
+        if self.rcon_address.trim().is_empty() {
+            self.rcon_output = self.language.text(TextKey::NoServerSelected).to_owned();
+            return;
+        }
+
         self.rcon_output = self.language.text(TextKey::RunningCommand).to_owned();
         let tx = self.tx.clone();
         let input = RconCommandRequest {
@@ -1931,6 +2193,11 @@ impl NativeGuiApp {
     }
 
     fn read_cvars(&mut self) {
+        if self.cvar_address.trim().is_empty() {
+            self.cvar_output = self.language.text(TextKey::NoServerSelected).to_owned();
+            return;
+        }
+
         self.cvar_output = self.language.text(TextKey::Reading).to_owned();
         let tx = self.tx.clone();
         let names = self
@@ -1955,10 +2222,37 @@ impl NativeGuiApp {
         });
     }
 
+    fn select_server(&mut self, address: String) {
+        let changed = self.selected_server.as_deref() != Some(address.as_str());
+        self.selected_server = Some(address.clone());
+        self.rcon_address = address.clone();
+        self.cvar_address = address;
+
+        if changed {
+            self.read_cvars();
+        }
+    }
+
+    fn check_updates(&mut self) {
+        self.update_status = self.language.text(TextKey::CheckingUpdates).to_owned();
+        let tx = self.tx.clone();
+        thread::spawn(move || {
+            let result = check_latest_release();
+            let _ = tx.send(GuiMessage::UpdateCheck(result));
+        });
+    }
+
     fn save_gui_language(&mut self) {
         match save_gui_language_to_config(&self.config_path, self.language) {
             Ok(()) => self.config_status = self.language.text(TextKey::LanguageSaved).to_owned(),
             Err(err) => self.config_status = self.language.save_language_failed_status(&err),
+        }
+    }
+
+    fn save_updater_config(&mut self) {
+        if let Err(err) = save_updater_config_to_config(&self.config_path, self.updater_auto_check)
+        {
+            self.update_status = self.language.update_check_failed_status(&err);
         }
     }
 
@@ -1998,67 +2292,125 @@ impl eframe::App for NativeGuiApp {
                         self.text(TextKey::AppTitle).to_owned(),
                     ));
                 }
+                ui.separator();
+                ui.label(format!(
+                    "{} {}",
+                    self.text(TextKey::CurrentVersion),
+                    env!("CARGO_PKG_VERSION")
+                ));
+                let auto_update_label = self.text(TextKey::AutoUpdate);
+                if ui
+                    .checkbox(&mut self.updater_auto_check, auto_update_label)
+                    .changed()
+                {
+                    self.save_updater_config();
+                }
+                if ui.button(self.text(TextKey::CheckUpdates)).clicked() {
+                    self.check_updates();
+                }
+                if let Some(url) = self.update_url.clone() {
+                    if ui.button(self.text(TextKey::OpenDownloadPage)).clicked() {
+                        ctx.open_url(egui::OpenUrl::new_tab(url));
+                    }
+                }
             });
             ui.label(&self.config_status);
+            if !self.update_status.is_empty() {
+                ui.label(&self.update_status);
+            }
         });
 
         egui::SidePanel::left("controls")
             .resizable(true)
             .default_width(360.0)
             .show(ctx, |ui| {
-                egui::ScrollArea::vertical().show(ui, |ui| {
-                    ui.heading(self.text(TextKey::AddServer));
-                    ui.label(self.text(TextKey::Group));
-                    ui.text_edit_singleline(&mut self.group_name);
-                    ui.label(self.text(TextKey::ServerAddress));
-                    ui.text_edit_singleline(&mut self.server_address);
-                    if ui.button(self.text(TextKey::SaveServer)).clicked() {
-                        self.save_server();
-                    }
-
-                    ui.separator();
-                    ui.heading(self.text(TextKey::SourceBansSubscription));
-                    ui.label(self.text(TextKey::SubscriptionName));
-                    ui.text_edit_singleline(&mut self.sourcebans_name);
-                    ui.label(self.text(TextKey::PageUrl));
-                    ui.text_edit_singleline(&mut self.sourcebans_url);
-                    if ui.button(self.text(TextKey::SaveSubscription)).clicked() {
-                        self.save_sourcebans();
-                    }
-
-                    ui.separator();
-                    ui.heading(self.text(TextKey::Rcon));
-                    ui.label(self.text(TextKey::ServerAddress));
-                    ui.text_edit_singleline(&mut self.rcon_address);
-                    ui.label(self.text(TextKey::RconPassword));
-                    ui.add(egui::TextEdit::singleline(&mut self.rcon_password).password(true));
-                    ui.label(self.text(TextKey::Command));
-                    ui.text_edit_singleline(&mut self.rcon_command_text);
-                    if ui.button(self.text(TextKey::RunCommand)).clicked() {
-                        self.run_rcon();
-                    }
-                    ui.add(
-                        egui::TextEdit::multiline(&mut self.rcon_output)
-                            .desired_rows(8)
-                            .code_editor(),
+                let manual_servers_tab = self.text(TextKey::ManualServersTab);
+                let sourcebans_tab = self.text(TextKey::SourceBansTab);
+                ui.horizontal(|ui| {
+                    ui.selectable_value(
+                        &mut self.active_tab,
+                        GuiTab::ManualServers,
+                        manual_servers_tab,
                     );
+                    ui.selectable_value(&mut self.active_tab, GuiTab::SourceBans, sourcebans_tab);
+                });
+                ui.separator();
 
-                    ui.separator();
-                    ui.heading(self.text(TextKey::CvarRules));
-                    ui.label(self.text(TextKey::ServerAddress));
-                    ui.text_edit_singleline(&mut self.cvar_address);
-                    ui.label(self.text(TextKey::OptionalRconPassword));
-                    ui.add(egui::TextEdit::singleline(&mut self.cvar_password).password(true));
-                    ui.label(self.text(TextKey::CvarNamesHelp));
-                    ui.text_edit_singleline(&mut self.cvar_names);
-                    if ui.button(self.text(TextKey::Read)).clicked() {
-                        self.read_cvars();
+                egui::ScrollArea::vertical().show(ui, |ui| match self.active_tab {
+                    GuiTab::ManualServers => {
+                        ui.heading(self.text(TextKey::AddServer));
+                        ui.label(self.text(TextKey::Group));
+                        ui.text_edit_singleline(&mut self.group_name);
+                        ui.label(self.text(TextKey::ServerAddress));
+                        ui.text_edit_singleline(&mut self.server_address);
+                        if ui.button(self.text(TextKey::SaveServer)).clicked() {
+                            self.save_server();
+                        }
+
+                        ui.separator();
+                        ui.heading(self.text(TextKey::ManualServerList));
+                        if self.manual_servers.is_empty() {
+                            ui.label("-");
+                        } else {
+                            for entry in &self.manual_servers {
+                                ui.label(format!("{}: {}", entry.group, entry.server));
+                            }
+                        }
                     }
-                    ui.add(
-                        egui::TextEdit::multiline(&mut self.cvar_output)
-                            .desired_rows(8)
-                            .code_editor(),
-                    );
+                    GuiTab::SourceBans => {
+                        ui.heading(self.text(TextKey::SubscriptionList));
+                        let mut clicked_subscription = None;
+                        for (index, subscription) in self.sourcebans_entries.iter().enumerate() {
+                            let selected = self.selected_sourcebans == Some(index);
+                            if ui
+                                .selectable_label(selected, &subscription.name)
+                                .on_hover_text(&subscription.url)
+                                .clicked()
+                            {
+                                clicked_subscription = Some(index);
+                            }
+                        }
+
+                        if let Some(index) = clicked_subscription {
+                            self.selected_sourcebans = Some(index);
+                            if let Some(subscription) = self.sourcebans_entries.get(index) {
+                                self.sourcebans_name = subscription.name.clone();
+                                self.sourcebans_url = subscription.url.clone();
+                            }
+                        }
+
+                        ui.horizontal(|ui| {
+                            if ui.button(self.text(TextKey::NewSubscription)).clicked() {
+                                self.selected_sourcebans = None;
+                                self.sourcebans_name = "SourceBans".to_owned();
+                                self.sourcebans_url.clear();
+                            }
+                            if ui
+                                .add_enabled(
+                                    self.selected_sourcebans.is_some(),
+                                    egui::Button::new(self.text(TextKey::DeleteSubscription)),
+                                )
+                                .clicked()
+                            {
+                                self.delete_sourcebans();
+                            }
+                        });
+
+                        ui.separator();
+                        ui.heading(self.text(TextKey::SourceBansSubscription));
+                        ui.label(self.text(TextKey::SubscriptionName));
+                        ui.text_edit_singleline(&mut self.sourcebans_name);
+                        ui.label(self.text(TextKey::PageUrl));
+                        ui.text_edit_singleline(&mut self.sourcebans_url);
+                        let save_label = if self.selected_sourcebans.is_some() {
+                            self.text(TextKey::UpdateSubscription)
+                        } else {
+                            self.text(TextKey::SaveSubscription)
+                        };
+                        if ui.button(save_label).clicked() {
+                            self.update_sourcebans();
+                        }
+                    }
                 });
             });
 
@@ -2068,8 +2420,10 @@ impl eframe::App for NativeGuiApp {
                 ui.label(&self.server_status);
             });
             ui.separator();
+            let mut clicked_server = None;
             egui::ScrollArea::both()
                 .auto_shrink([false, false])
+                .max_height(380.0)
                 .show(ui, |ui| {
                     egui::Grid::new("servers_grid")
                         .striped(true)
@@ -2085,6 +2439,8 @@ impl eframe::App for NativeGuiApp {
                             ui.end_row();
 
                             for row in &self.servers {
+                                let selected =
+                                    self.selected_server.as_deref() == Some(row.address.as_str());
                                 let (players, map, vac, name) = if let Some(info) = &row.info {
                                     (
                                         format!("{}/{}", info.players, info.max_players),
@@ -2107,21 +2463,95 @@ impl eframe::App for NativeGuiApp {
                                         }),
                                     )
                                 };
-                                ui.label(row.groups.join(","));
-                                ui.monospace(&row.address);
-                                ui.label(
-                                    row.ping_ms
-                                        .map(|v| v.to_string())
-                                        .unwrap_or_else(|| "-".to_owned()),
-                                );
-                                ui.label(players);
-                                ui.label(map);
-                                ui.label(vac);
-                                ui.label(name);
+                                let mut row_clicked = ui
+                                    .selectable_label(selected, row.groups.join(","))
+                                    .clicked();
+                                row_clicked |= ui
+                                    .add(
+                                        egui::Label::new(
+                                            egui::RichText::new(&row.address).monospace(),
+                                        )
+                                        .sense(egui::Sense::click()),
+                                    )
+                                    .clicked();
+                                row_clicked |= ui
+                                    .add(
+                                        egui::Label::new(
+                                            row.ping_ms
+                                                .map(|v| v.to_string())
+                                                .unwrap_or_else(|| "-".to_owned()),
+                                        )
+                                        .sense(egui::Sense::click()),
+                                    )
+                                    .clicked();
+                                row_clicked |= ui
+                                    .add(egui::Label::new(players).sense(egui::Sense::click()))
+                                    .clicked();
+                                row_clicked |= ui
+                                    .add(egui::Label::new(map).sense(egui::Sense::click()))
+                                    .clicked();
+                                row_clicked |= ui
+                                    .add(egui::Label::new(vac).sense(egui::Sense::click()))
+                                    .clicked();
+                                row_clicked |= ui
+                                    .add(egui::Label::new(name).sense(egui::Sense::click()))
+                                    .clicked();
+                                if row_clicked {
+                                    clicked_server = Some(row.address.clone());
+                                }
                                 ui.end_row();
                             }
                         });
                 });
+
+            if let Some(address) = clicked_server {
+                self.select_server(address);
+            }
+
+            ui.separator();
+            if let Some(address) = self.selected_server.clone() {
+                ui.horizontal(|ui| {
+                    ui.heading(self.text(TextKey::SelectedServer));
+                    ui.monospace(address);
+                });
+
+                ui.columns(2, |columns| {
+                    columns[0].heading(self.text(TextKey::Rcon));
+                    columns[0].label(self.text(TextKey::RconPassword));
+                    columns[0]
+                        .add(egui::TextEdit::singleline(&mut self.rcon_password).password(true));
+                    columns[0].label(self.text(TextKey::Command));
+                    columns[0].text_edit_singleline(&mut self.rcon_command_text);
+                    if columns[0].button(self.text(TextKey::RunCommand)).clicked() {
+                        self.run_rcon();
+                    }
+                    columns[0].add(
+                        egui::TextEdit::multiline(&mut self.rcon_output)
+                            .desired_rows(10)
+                            .code_editor(),
+                    );
+
+                    columns[1].heading(self.text(TextKey::CvarRules));
+                    columns[1].label(self.text(TextKey::OptionalRconPassword));
+                    columns[1]
+                        .add(egui::TextEdit::singleline(&mut self.cvar_password).password(true));
+                    columns[1].label(self.text(TextKey::CvarNamesHelp));
+                    columns[1].text_edit_singleline(&mut self.cvar_names);
+                    if columns[1]
+                        .button(self.text(TextKey::RefreshRules))
+                        .clicked()
+                    {
+                        self.read_cvars();
+                    }
+                    columns[1].add(
+                        egui::TextEdit::multiline(&mut self.cvar_output)
+                            .desired_rows(10)
+                            .code_editor(),
+                    );
+                });
+            } else {
+                ui.label(self.text(TextKey::SelectServerHint));
+            }
         });
     }
 }
@@ -2178,10 +2608,132 @@ fn add_sourcebans_to_config(path: &PathBuf, input: AddSourceBansRequest) -> Resu
     save_config(path, &config)
 }
 
+fn update_sourcebans_in_config(
+    path: &PathBuf,
+    index: usize,
+    input: AddSourceBansRequest,
+) -> Result<(), String> {
+    let name = non_empty(input.name.trim().to_owned(), "name")?;
+    let url = normalize_sourcebans_url(&input.url)?.to_string();
+    let mut config = load_config_or_default(path)?;
+    let Some(subscription) = config.sourcebans.get_mut(index) else {
+        return Err(format!("sourcebans index {index} does not exist"));
+    };
+
+    subscription.name = name;
+    subscription.url = url;
+    save_config(path, &config)
+}
+
+fn delete_sourcebans_from_config(path: &PathBuf, index: usize) -> Result<(), String> {
+    let mut config = load_config_or_default(path)?;
+    if index >= config.sourcebans.len() {
+        return Err(format!("sourcebans index {index} does not exist"));
+    }
+
+    config.sourcebans.remove(index);
+    save_config(path, &config)
+}
+
 fn save_gui_language_to_config(path: &PathBuf, language: GuiLanguage) -> Result<(), String> {
     let mut config = load_config_or_default(path)?;
     config.gui.language = language;
     save_config(path, &config)
+}
+
+fn save_updater_config_to_config(path: &PathBuf, auto_check: bool) -> Result<(), String> {
+    let mut config = load_config_or_default(path)?;
+    config.updater.auto_check = auto_check;
+    save_config(path, &config)
+}
+
+fn load_gui_config_lists(path: &PathBuf) -> Result<GuiConfigLists, String> {
+    let config = load_config_or_default(path)?;
+    let manual_servers = config
+        .groups
+        .iter()
+        .flat_map(|group| {
+            group.servers.iter().map(|server| ManualServerEntry {
+                group: group.name.clone(),
+                server: server.clone(),
+            })
+        })
+        .collect();
+
+    Ok(GuiConfigLists {
+        manual_servers,
+        sourcebans: config.sourcebans,
+    })
+}
+
+#[derive(Deserialize)]
+struct GitHubRelease {
+    tag_name: String,
+    html_url: String,
+}
+
+fn check_latest_release() -> Result<UpdateInfo, String> {
+    let url = format!("https://api.github.com/repos/{UPDATE_REPO}/releases?per_page=30");
+    let client = Client::builder()
+        .timeout(Duration::from_millis(10_000))
+        .build()
+        .map_err(|err| format!("failed to build update client: {err}"))?;
+    let text = client
+        .get(&url)
+        .header("User-Agent", USER_AGENT)
+        .send()
+        .map_err(|err| format!("failed to request latest release: {err}"))?
+        .error_for_status()
+        .map_err(|err| format!("latest release request failed: {err}"))?
+        .text()
+        .map_err(|err| format!("failed to read latest release: {err}"))?;
+    let releases: Vec<GitHubRelease> = serde_json::from_str(&text)
+        .map_err(|err| format!("failed to parse latest release list: {err}"))?;
+    let release = releases
+        .into_iter()
+        .find(|release| release.tag_name.starts_with(UPDATE_TAG_PREFIX))
+        .ok_or_else(|| format!("no {UPDATE_TAG_PREFIX} release found"))?;
+    let latest_version = release_tag_version(&release.tag_name).to_owned();
+    let available = is_version_newer(&latest_version, env!("CARGO_PKG_VERSION"));
+
+    Ok(UpdateInfo {
+        latest_version,
+        html_url: release.html_url,
+        available,
+    })
+}
+
+fn release_tag_version(tag: &str) -> &str {
+    tag.strip_prefix(UPDATE_TAG_PREFIX)
+        .or_else(|| tag.strip_prefix('v'))
+        .unwrap_or(tag)
+}
+
+fn is_version_newer(latest: &str, current: &str) -> bool {
+    let latest_parts = version_parts(latest);
+    let current_parts = version_parts(current);
+    let max_len = latest_parts.len().max(current_parts.len()).max(1);
+
+    for index in 0..max_len {
+        let latest_part = *latest_parts.get(index).unwrap_or(&0);
+        let current_part = *current_parts.get(index).unwrap_or(&0);
+        if latest_part > current_part {
+            return true;
+        }
+        if latest_part < current_part {
+            return false;
+        }
+    }
+
+    false
+}
+
+fn version_parts(version: &str) -> Vec<u64> {
+    version
+        .split(|ch: char| !(ch.is_ascii_digit()))
+        .filter(|part| !part.is_empty())
+        .filter_map(|part| part.parse::<u64>().ok())
+        .collect()
 }
 
 fn server_rows_payload(rows: &[ServerRow]) -> Vec<ServerRowPayload> {
@@ -2481,6 +3033,15 @@ mod tests {
         let config: BrowserConfig =
             toml::from_str("[gui]\nlanguage = \"zh\"\n").expect("valid config");
         assert_eq!(config.gui.language, GuiLanguage::ZhCn);
+    }
+
+    #[test]
+    fn compares_release_versions() {
+        assert_eq!(release_tag_version("l4d2-browser-v0.5.1"), "0.5.1");
+        assert!(is_version_newer("0.5.0", "0.4.0"));
+        assert!(is_version_newer("0.4.1", "0.4.0"));
+        assert!(!is_version_newer("0.4.0", "0.4.0"));
+        assert!(!is_version_newer("0.3.9", "0.4.0"));
     }
 
     #[test]

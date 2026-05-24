@@ -1,4 +1,4 @@
-# L4D2 Server Browser
+# 电信服刷服器
 
 一个用 Rust 编写的求生之路 2 刷服/查服工具，默认打开原生 GUI，也保留命令行查询模式。它可以从 Steam Master Server、手动分组和 SourceBans 订阅链接收集服务器地址，再对每个服务器发送 `A2S_INFO` 查询，输出分组、服务器名、地图、人数、延迟、VAC、标签等信息。
 
@@ -10,7 +10,7 @@
 ./l4d2-server-browser
 ```
 
-Windows 下双击 `l4d2-server-browser.exe` 会直接打开原生 GUI，release 版不会额外弹出控制台窗口。macOS 下载包里会包含 `L4D2 Server Browser.app`，双击 `.app` 即可使用。
+Windows 下双击 `l4d2-server-browser.exe` 会直接打开原生 GUI，release 版不会额外弹出控制台窗口。macOS 下载包里会包含 `电信服刷服器.app`，双击 `.app` 即可使用。
 
 GUI 没有传 `--config` 时，会把配置写到用户配置目录：
 
@@ -70,6 +70,9 @@ cargo run --release -- --config browser.example.toml --only-group 'Anne'
 [gui]
 language = "zh-CN"
 
+[updater]
+auto_check = true
+
 [master]
 enabled = true
 group = "公网大厅"
@@ -97,12 +100,24 @@ url = "https://example.com/sourcebans"
 
 GUI 模式是原生桌面窗口，不启动网页服务。新增服务器和 SourceBans 订阅会写入 `--config` 指定的 TOML 文件；如果没有传 `--config`，默认写入系统用户配置目录。
 
+左侧使用标签页管理配置：
+
+- `添加服务器`：添加手动服务器，并显示已保存的服务器列表。
+- `SourceBans`：新增、修改、删除 SourceBans 订阅。
+
+右侧服务器列表支持点击选中服务器。选中后，底部会直接显示该服务器的 RCON 和 CVAR / Rules 面板；CVAR / Rules 会主动查询一次，RCON 只需要输入密码和命令后执行。
+
 GUI 启动时会自动加载系统 CJK 字体，避免 Windows/Linux 上中文显示成方块。界面支持 i18n，目前内置 `简体中文` 和 `English`，可在顶部语言下拉框切换；选择会保存到配置文件：
 
 ```toml
 [gui]
 language = "zh-CN"
+
+[updater]
+auto_check = true
 ```
+
+GUI 会在启动时检查 GitHub Release 是否有新版本，也可以点击顶部的“检查更新”。发现新版本后，点击“打开下载页”进入 Release 页面下载对应平台压缩包。
 
 RCON 使用 Source RCON TCP 协议。读取 CVAR 有两种方式：
 
@@ -120,7 +135,7 @@ RCON 使用 Source RCON TCP 协议。读取 CVAR 有两种方式：
 
 手动运行 workflow 可以下载构建产物。推送 `l4d2-browser-v*` tag 时会自动创建 GitHub Release。
 
-macOS 压缩包会同时包含命令行二进制和 `L4D2 Server Browser.app`；普通使用直接打开 `.app`。Windows 压缩包里的 `.exe` 默认就是 GUI 程序。
+macOS 压缩包会同时包含命令行二进制和 `电信服刷服器.app`；普通使用直接打开 `.app`。Windows 压缩包里的 `.exe` 默认就是 GUI 程序。
 
 ## Notes
 
