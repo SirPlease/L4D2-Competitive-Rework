@@ -546,7 +546,7 @@ impl GuiLanguage {
                 TextKey::FilterEmpty => "空房",
                 TextKey::FilterHasPlayers => "有人",
                 TextKey::FilterHideTimeout => "隐藏超时",
-                TextKey::GlobalPlayersTab => "全局玩家",
+                TextKey::GlobalPlayersTab => "全服在线玩家",
                 TextKey::BroadcastTab => "全服消息",
                 TextKey::SettingsTab => "首选项",
                 TextKey::ActivePlayers => "活动玩家",
@@ -620,7 +620,7 @@ impl GuiLanguage {
                 TextKey::FilterEmpty => "Empty Only",
                 TextKey::FilterHasPlayers => "Has Players",
                 TextKey::FilterHideTimeout => "Hide Timeouts",
-                TextKey::GlobalPlayersTab => "Global Players",
+                TextKey::GlobalPlayersTab => "All Server Players",
                 TextKey::BroadcastTab => "Broadcast",
                 TextKey::SettingsTab => "Settings",
                 TextKey::ActivePlayers => "Active Players",
@@ -1998,8 +1998,9 @@ enum GuiMessage {
     UpdateCheck(Result<UpdateInfo, String>),
     Rcon(Result<String, String>),
     Cvars(Result<CvarPayload, String>),
-    Players(Result<Vec<PlayerInfo>, String>),
-    GlobalPlayers(Result<Vec<GlobalPlayerEntry>, String>),
+    Players(Result<(Vec<PlayerInfo>, bool), String>),
+    GlobalPlayers(Result<(Vec<GlobalPlayerEntry>, bool), String>),
+    DeleteServer(Result<(), String>),
     ApiMe(Result<ApiUser, String>),
     SteamLoginStarted(Result<DeviceStartResponse, String>),
     SteamLoginFinished(Result<ApiLoginSession, String>),
@@ -2355,6 +2356,22 @@ impl NativeGuiApp {
                         self.config_status = self.language.delete_subscription_failed_status(&err);
                     }
                 },
+                GuiMessage::DeleteServer(result) => match result {
+                    Ok(()) => {
+                        self.config_status = match self.language {
+                            GuiLanguage::ZhCn => "服务器已删除".to_owned(),
+                            GuiLanguage::EnUs => "Server deleted".to_owned(),
+                        };
+                        self.refresh_config_lists();
+                        self.refresh_servers();
+                    }
+                    Err(err) => {
+                        self.config_status = match self.language {
+                            GuiLanguage::ZhCn => format!("删除服务器失败: {}", err),
+                            GuiLanguage::EnUs => format!("Failed to delete server: {}", err),
+                        };
+                    }
+                },
                 GuiMessage::UpdateCheck(result) => match result {
                     Ok(info) => {
                         self.update_url = Some(info.html_url);
@@ -2380,9 +2397,15 @@ impl NativeGuiApp {
                     };
                 }
                 GuiMessage::Players(result) => match result {
-                    Ok(players) => {
+                    Ok((players, stats_ok)) => {
                         self.selected_server_players = players.clone();
                         self.player_output = format_player_payload(&players, self.language);
+                        if !stats_ok && !players.is_empty() {
+                            self.player_output.push_str(match self.language {
+                                GuiLanguage::ZhCn => "\n⚠ 积分数据获取失败",
+                                GuiLanguage::EnUs => "\n⚠ Failed to fetch player stats",
+                            });
+                        }
                     }
                     Err(err) => {
                         self.selected_server_players.clear();
@@ -2392,7 +2415,7 @@ impl NativeGuiApp {
                 GuiMessage::GlobalPlayers(result) => {
                     self.global_players_querying = false;
                     match result {
-                        Ok(players) => {
+                        Ok((players, stats_ok)) => {
                             self.global_players = players;
                             let active_servers_count = self
                                 .global_players
@@ -2412,6 +2435,12 @@ impl NativeGuiApp {
                                     active_servers_count
                                 ),
                             };
+                            if !stats_ok && !self.global_players.is_empty() {
+                                self.global_players_status.push_str(match self.language {
+                                    GuiLanguage::ZhCn => " | ⚠ 积分数据获取失败",
+                                    GuiLanguage::EnUs => " | ⚠ Stats fetch failed",
+                                });
+                            }
                         }
                         Err(err) => {
                             self.global_players.clear();
@@ -2551,8 +2580,8 @@ impl NativeGuiApp {
         }
         self.global_players_querying = true;
         self.global_players_status = match self.language {
-            GuiLanguage::ZhCn => "正在获取全局玩家数据...".to_owned(),
-            GuiLanguage::EnUs => "Querying global players...".to_owned(),
+            GuiLanguage::ZhCn => "正在获取全服在线玩家数据...".to_owned(),
+            GuiLanguage::EnUs => "Querying all server players...".to_owned(),
         };
         self.global_players.clear();
 
@@ -2575,7 +2604,7 @@ impl NativeGuiApp {
 
         thread::spawn(move || {
             if servers_to_query.is_empty() {
-                let _ = tx.send(GuiMessage::GlobalPlayers(Ok(Vec::new())));
+                let _ = tx.send(GuiMessage::GlobalPlayers(Ok((Vec::new(), true))));
                 return;
             }
 
@@ -2626,13 +2655,13 @@ impl NativeGuiApp {
             }
 
             let mut final_results = Arc::try_unwrap(results).unwrap().into_inner().unwrap();
-            enrich_global_players_with_api_stats(&api_base_url, &mut final_results);
+            let stats_ok = enrich_global_players_with_api_stats(&api_base_url, &mut final_results);
             final_results.sort_by(|a, b| {
                 b.duration
                     .partial_cmp(&a.duration)
                     .unwrap_or(std::cmp::Ordering::Equal)
             });
-            let _ = tx.send(GuiMessage::GlobalPlayers(Ok(final_results)));
+            let _ = tx.send(GuiMessage::GlobalPlayers(Ok((final_results, stats_ok))));
         });
     }
 
@@ -2733,6 +2762,15 @@ impl NativeGuiApp {
         thread::spawn(move || {
             let result = add_server_to_config(&path, input);
             let _ = tx.send(GuiMessage::AddServer(result));
+        });
+    }
+
+    fn delete_server(&mut self, group: String, server: String) {
+        let tx = self.tx.clone();
+        let path = self.config_path.clone();
+        thread::spawn(move || {
+            let result = delete_server_from_config(&path, &group, &server);
+            let _ = tx.send(GuiMessage::DeleteServer(result));
         });
     }
 
@@ -2858,8 +2896,8 @@ impl NativeGuiApp {
             let result = resolve_endpoint(&address).and_then(|endpoint| {
                 let mut players =
                     query_server_players(endpoint.socket, Duration::from_millis(4500))?;
-                enrich_players_with_api_stats(&api_base_url, &mut players);
-                Ok(players)
+                let stats_ok = enrich_players_with_api_stats(&api_base_url, &mut players);
+                Ok((players, stats_ok))
             });
 
             let _ = tx.send(GuiMessage::Players(result));
@@ -3029,8 +3067,8 @@ impl eframe::App for NativeGuiApp {
                     }
 
                     let players_label = match self.language {
-                        GuiLanguage::ZhCn => "👥 全球在线玩家",
-                        GuiLanguage::EnUs => "👥 Global Players",
+                        GuiLanguage::ZhCn => "👥 全服在线玩家",
+                        GuiLanguage::EnUs => "👥 All Server Players",
                     };
                     if ui
                         .selectable_value(
@@ -3118,6 +3156,7 @@ impl eframe::App for NativeGuiApp {
             egui::SidePanel::right("inspector_panel")
                 .resizable(true)
                 .default_width(450.0)
+                .width_range(300.0..=650.0)
                 .show(ctx, |ui| {
                     ui.vertical(|ui| {
                         ui.spacing_mut().item_spacing = egui::vec2(0.0, 8.0);
@@ -3136,7 +3175,7 @@ impl eframe::App for NativeGuiApp {
                             )
                             .clicked()
                         {
-                            ctx.open_url(egui::OpenUrl::new_tab(connect_link));
+                            ctx.open_url(egui::OpenUrl::same_tab(connect_link));
                         }
 
                         ui.separator();
@@ -3293,10 +3332,14 @@ impl eframe::App for NativeGuiApp {
                                 ui.label(self.text(TextKey::OptionalRconPassword));
                                 ui.add(
                                     egui::TextEdit::singleline(&mut self.cvar_password)
-                                        .password(true),
+                                        .password(true)
+                                        .desired_width(ui.available_width()),
                                 );
                                 ui.label(self.text(TextKey::CvarNamesHelp));
-                                ui.text_edit_singleline(&mut self.cvar_names);
+                                ui.add(
+                                    egui::TextEdit::singleline(&mut self.cvar_names)
+                                        .desired_width(ui.available_width()),
+                                );
 
                                 ui.separator();
 
@@ -3654,10 +3697,10 @@ impl eframe::App for NativeGuiApp {
                                 .inner_margin(egui::Margin::same(16))
                                 .show(ui, |ui| {
                                     ui.vertical(|ui| {
-                                        ui.label(egui::RichText::new("在线玩家总量统计").strong().size(14.0));
+                                        ui.label(egui::RichText::new("全服在线玩家统计").strong().size(14.0));
                                         ui.add_space(8.0);
 
-                                        ui.label(format!("在线玩家总数: {}", self.global_players.len()));
+                                        ui.label(format!("全服在线玩家总数: {}", self.global_players.len()));
 
                                         let active_servers_count = self.global_players.iter()
                                             .map(|p| &p.server_address)
@@ -3706,7 +3749,7 @@ impl eframe::App for NativeGuiApp {
                                             let connect_link = format!("steam://connect/{}", p.server_address);
                                             let btn = egui::Button::new(format!("🎮 {}", p.server_name)).frame(false);
                                             if ui.add(btn).on_hover_text(format!("双击或点击连入：{}", p.server_address)).clicked() {
-                                                ctx.open_url(egui::OpenUrl::new_tab(connect_link));
+                                                ctx.open_url(egui::OpenUrl::same_tab(connect_link));
                                             }
                                             ui.end_row();
                                         }
@@ -3821,6 +3864,7 @@ impl eframe::App for NativeGuiApp {
                         if self.manual_servers.is_empty() {
                             ui.label("-");
                         } else {
+                            let mut delete_entry: Option<(String, String)> = None;
                             egui::Grid::new("manual_servers_grid")
                                 .striped(true)
                                 .min_col_width(120.0)
@@ -3828,9 +3872,15 @@ impl eframe::App for NativeGuiApp {
                                     for entry in &self.manual_servers {
                                         ui.label(egui::RichText::new(&entry.group).strong());
                                         ui.monospace(&entry.server);
+                                        if ui.button("❌").clicked() {
+                                            delete_entry = Some((entry.group.clone(), entry.server.clone()));
+                                        }
                                         ui.end_row();
                                     }
                                 });
+                            if let Some((group, server)) = delete_entry {
+                                self.delete_server(group, server);
+                            }
                         }
                     });
                 }
@@ -4116,6 +4166,29 @@ fn add_server_to_config(path: &PathBuf, input: AddServerRequest) -> Result<(), S
     save_config(path, &config)
 }
 
+fn delete_server_from_config(path: &PathBuf, group: &str, server: &str) -> Result<(), String> {
+    let mut config = load_config_or_default(path)?;
+    let mut found = false;
+
+    for g in config.groups.iter_mut() {
+        if g.name == group {
+            let before = g.servers.len();
+            g.servers.retain(|s| s != server);
+            if g.servers.len() < before {
+                found = true;
+            }
+        }
+    }
+
+    config.groups.retain(|g| !g.servers.is_empty());
+
+    if !found {
+        return Err(format!("server {} not found in group {}", server, group));
+    }
+
+    save_config(path, &config)
+}
+
 fn add_sourcebans_to_config(path: &PathBuf, input: AddSourceBansRequest) -> Result<(), String> {
     let name = non_empty(input.name.trim().to_owned(), "name")?;
     let url = normalize_sourcebans_url(&input.url)?.to_string();
@@ -4213,7 +4286,7 @@ struct GitHubRelease {
 }
 
 fn check_latest_release() -> Result<UpdateInfo, String> {
-    let url = format!("https://api.github.com/repos/{UPDATE_REPO}/releases?per_page=30");
+    let url = format!("https://api.github.com/repos/{UPDATE_REPO}/releases?per_page=100");
     let client = Client::builder()
         .timeout(Duration::from_millis(10_000))
         .build()
@@ -4768,7 +4841,7 @@ fn fetch_player_stats_batch(
     Ok(stats)
 }
 
-fn enrich_players_with_api_stats(base_url: &str, players: &mut [PlayerInfo]) {
+fn enrich_players_with_api_stats(base_url: &str, players: &mut [PlayerInfo]) -> bool {
     let queries = players
         .iter()
         .map(|player| player.name.trim().to_owned())
@@ -4777,7 +4850,7 @@ fn enrich_players_with_api_stats(base_url: &str, players: &mut [PlayerInfo]) {
         .into_iter()
         .collect::<Vec<_>>();
     let Ok(stats) = fetch_player_stats_batch(base_url, &queries) else {
-        return;
+        return false;
     };
 
     for player in players {
@@ -4788,9 +4861,10 @@ fn enrich_players_with_api_stats(base_url: &str, players: &mut [PlayerInfo]) {
             player.quarter_points = Some(stat.quarter_points);
         }
     }
+    true
 }
 
-fn enrich_global_players_with_api_stats(base_url: &str, players: &mut [GlobalPlayerEntry]) {
+fn enrich_global_players_with_api_stats(base_url: &str, players: &mut [GlobalPlayerEntry]) -> bool {
     let queries = players
         .iter()
         .map(|player| player.name.trim().to_owned())
@@ -4799,7 +4873,7 @@ fn enrich_global_players_with_api_stats(base_url: &str, players: &mut [GlobalPla
         .into_iter()
         .collect::<Vec<_>>();
     let Ok(stats) = fetch_player_stats_batch(base_url, &queries) else {
-        return;
+        return false;
     };
 
     for player in players {
@@ -4810,6 +4884,7 @@ fn enrich_global_players_with_api_stats(base_url: &str, players: &mut [GlobalPla
             player.quarter_points = Some(stat.quarter_points);
         }
     }
+    true
 }
 
 #[cfg(test)]
