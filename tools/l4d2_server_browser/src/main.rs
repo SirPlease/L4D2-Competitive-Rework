@@ -1847,6 +1847,8 @@ struct ServerRowPayload {
     ping_ms: Option<u64>,
     info: Option<ServerInfo>,
     error: Option<String>,
+    #[serde(skip)]
+    last_queried: Option<std::time::Instant>,
 }
 
 #[derive(Clone, Serialize)]
@@ -2005,6 +2007,7 @@ enum GuiMessage {
     SteamLoginStarted(Result<DeviceStartResponse, String>),
     SteamLoginFinished(Result<ApiLoginSession, String>),
     Broadcast(Result<ApiBroadcastResponse, String>),
+    ServerUpdate(String, Result<ServerRowPayload, String>),
 }
 
 struct NativeGuiApp {
@@ -2294,6 +2297,21 @@ impl NativeGuiApp {
                         self.sort_gui_servers();
                     }
                     Err(err) => self.server_status = self.language.refresh_failed_status(&err),
+                },
+                GuiMessage::ServerUpdate(address, result) => {
+                    if let Some(row) = self.servers.iter_mut().find(|r| r.address == address) {
+                        match result {
+                            Ok(new_payload) => {
+                                row.ping_ms = new_payload.ping_ms;
+                                row.info = new_payload.info;
+                                row.error = new_payload.error;
+                            }
+                            Err(err) => {
+                                row.error = Some(err);
+                            }
+                        }
+                        row.last_queried = Some(std::time::Instant::now());
+                    }
                 },
                 GuiMessage::ConfigLists(result) => match result {
                     Ok(lists) => {
@@ -2969,6 +2987,50 @@ impl NativeGuiApp {
 impl eframe::App for NativeGuiApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         self.handle_messages(ctx);
+
+        let now = std::time::Instant::now();
+        let mut servers_to_query = Vec::new();
+        for row in &mut self.servers {
+            let elapsed = row
+                .last_queried
+                .map(|t| now.duration_since(t).as_secs())
+                .unwrap_or(u64::MAX);
+            let is_populated = row.info.as_ref().map_or(false, |info| info.players > 0);
+
+            let needs_update = if is_populated {
+                elapsed >= 10
+            } else {
+                elapsed >= 60
+            };
+
+            if needs_update {
+                row.last_queried = Some(now);
+                servers_to_query.push(row.address.clone());
+            }
+        }
+
+        for address in servers_to_query {
+            let tx = self.tx.clone();
+            thread::spawn(move || {
+                if let Ok(endpoint) = resolve_endpoint(&address) {
+                    let result = match query_server_info(endpoint.socket, Duration::from_millis(2500)) {
+                        Ok((info, ping)) => Ok(ServerRowPayload {
+                            address: address.clone(),
+                            socket: endpoint.socket.to_string(),
+                            groups: Vec::new(),
+                            ping_ms: Some(ping.as_millis() as u64),
+                            info: Some(info),
+                            error: None,
+                            last_queried: Some(std::time::Instant::now()),
+                        }),
+                        Err(err) => Err(err),
+                    };
+                    let _ = tx.send(GuiMessage::ServerUpdate(address, result));
+                }
+            });
+        }
+
+        ctx.request_repaint_after(Duration::from_secs(1));
 
         // 1. 顶部面板 Top Bar
         egui::TopBottomPanel::top("top_bar").show(ctx, |ui| {
@@ -4361,6 +4423,7 @@ fn server_rows_payload(rows: &[ServerRow]) -> Vec<ServerRowPayload> {
             ping_ms: row.ping.map(|ping| ping.as_millis() as u64),
             info: row.info.clone(),
             error: row.error.clone(),
+            last_queried: Some(std::time::Instant::now()),
         })
         .collect()
 }
