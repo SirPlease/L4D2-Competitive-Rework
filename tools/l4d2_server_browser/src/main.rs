@@ -13,7 +13,7 @@ use std::env;
 use std::fs;
 use std::io::{self, Read, Write};
 use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4, TcpStream, ToSocketAddrs, UdpSocket};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::sync::{
     mpsc::{self, Receiver, Sender},
     Arc, Mutex,
@@ -402,11 +402,232 @@ fn load_server_rows(
 #[derive(Debug, Clone, Deserialize, Serialize, Default)]
 struct BrowserConfig {
     #[serde(default)]
+    gui: GuiConfig,
+    #[serde(default)]
     master: Option<FileMaster>,
     #[serde(default)]
     groups: Vec<FileGroup>,
     #[serde(default)]
     sourcebans: Vec<FileSourceBans>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, Default)]
+struct GuiConfig {
+    #[serde(default)]
+    language: GuiLanguage,
+}
+
+#[derive(Debug, Clone, Copy, Deserialize, Serialize, PartialEq, Eq)]
+enum GuiLanguage {
+    #[serde(rename = "zh-CN", alias = "zh-cn", alias = "zh")]
+    ZhCn,
+    #[serde(rename = "en-US", alias = "en-us", alias = "en")]
+    EnUs,
+}
+
+impl Default for GuiLanguage {
+    fn default() -> Self {
+        Self::ZhCn
+    }
+}
+
+impl GuiLanguage {
+    const ALL: [Self; 2] = [Self::ZhCn, Self::EnUs];
+
+    fn display_name(self) -> &'static str {
+        match self {
+            Self::ZhCn => "简体中文",
+            Self::EnUs => "English",
+        }
+    }
+
+    fn text(self, key: TextKey) -> &'static str {
+        match self {
+            Self::ZhCn => match key {
+                TextKey::AppTitle => "L4D2 刷服器",
+                TextKey::RefreshServers => "刷新服务器",
+                TextKey::Language => "语言",
+                TextKey::AddServer => "添加服务器",
+                TextKey::Group => "分组",
+                TextKey::ServerAddress => "服务器地址",
+                TextKey::SaveServer => "保存服务器",
+                TextKey::SourceBansSubscription => "SourceBans 订阅",
+                TextKey::SubscriptionName => "订阅名称",
+                TextKey::PageUrl => "页面 URL",
+                TextKey::SaveSubscription => "保存订阅",
+                TextKey::Rcon => "RCON",
+                TextKey::RconPassword => "RCON 密码",
+                TextKey::Command => "命令",
+                TextKey::RunCommand => "执行命令",
+                TextKey::CvarRules => "CVAR / Rules",
+                TextKey::OptionalRconPassword => "RCON 密码，可空",
+                TextKey::CvarNamesHelp => "CVAR 名称，逗号分隔；公开 rules 可留空",
+                TextKey::Read => "读取",
+                TextKey::ServerList => "服务器列表",
+                TextKey::HeaderGroup => "分组",
+                TextKey::HeaderAddress => "地址",
+                TextKey::HeaderPing => "延迟",
+                TextKey::HeaderPlayers => "人数",
+                TextKey::HeaderMap => "地图",
+                TextKey::HeaderVac => "VAC",
+                TextKey::HeaderNameOrError => "服务器名 / 错误",
+                TextKey::WaitingRefresh => "等待刷新",
+                TextKey::Querying => "查询中...",
+                TextKey::SavingServer => "保存服务器中...",
+                TextKey::SavingSubscription => "保存订阅中...",
+                TextKey::RunningCommand => "执行中...",
+                TextKey::Reading => "读取中...",
+                TextKey::ServerSaved => "服务器已保存",
+                TextKey::SubscriptionSaved => "SourceBans 订阅已保存",
+                TextKey::LanguageSaved => "语言设置已保存",
+                TextKey::NotQueried => "未查询",
+                TextKey::Yes => "是",
+                TextKey::No => "否",
+            },
+            Self::EnUs => match key {
+                TextKey::AppTitle => "L4D2 Server Browser",
+                TextKey::RefreshServers => "Refresh servers",
+                TextKey::Language => "Language",
+                TextKey::AddServer => "Add server",
+                TextKey::Group => "Group",
+                TextKey::ServerAddress => "Server address",
+                TextKey::SaveServer => "Save server",
+                TextKey::SourceBansSubscription => "SourceBans subscription",
+                TextKey::SubscriptionName => "Subscription name",
+                TextKey::PageUrl => "Page URL",
+                TextKey::SaveSubscription => "Save subscription",
+                TextKey::Rcon => "RCON",
+                TextKey::RconPassword => "RCON password",
+                TextKey::Command => "Command",
+                TextKey::RunCommand => "Run command",
+                TextKey::CvarRules => "CVAR / Rules",
+                TextKey::OptionalRconPassword => "RCON password, optional",
+                TextKey::CvarNamesHelp => {
+                    "CVAR names, comma-separated; leave empty for public rules"
+                }
+                TextKey::Read => "Read",
+                TextKey::ServerList => "Server list",
+                TextKey::HeaderGroup => "Group",
+                TextKey::HeaderAddress => "Address",
+                TextKey::HeaderPing => "Ping",
+                TextKey::HeaderPlayers => "Players",
+                TextKey::HeaderMap => "Map",
+                TextKey::HeaderVac => "VAC",
+                TextKey::HeaderNameOrError => "Server name / Error",
+                TextKey::WaitingRefresh => "Waiting to refresh",
+                TextKey::Querying => "Querying...",
+                TextKey::SavingServer => "Saving server...",
+                TextKey::SavingSubscription => "Saving subscription...",
+                TextKey::RunningCommand => "Running...",
+                TextKey::Reading => "Reading...",
+                TextKey::ServerSaved => "Server saved",
+                TextKey::SubscriptionSaved => "SourceBans subscription saved",
+                TextKey::LanguageSaved => "Language setting saved",
+                TextKey::NotQueried => "not queried",
+                TextKey::Yes => "yes",
+                TextKey::No => "no",
+            },
+        }
+    }
+
+    fn config_file_status(self, path: &Path) -> String {
+        match self {
+            Self::ZhCn => format!("配置文件：{}", path.display()),
+            Self::EnUs => format!("Config file: {}", path.display()),
+        }
+    }
+
+    fn server_count_status(self, count: usize) -> String {
+        match self {
+            Self::ZhCn => format!("共 {count} 个服务器"),
+            Self::EnUs => format!("{count} servers"),
+        }
+    }
+
+    fn refresh_failed_status(self, err: &str) -> String {
+        match self {
+            Self::ZhCn => format!("刷新失败：{err}"),
+            Self::EnUs => format!("Refresh failed: {err}"),
+        }
+    }
+
+    fn save_server_failed_status(self, err: &str) -> String {
+        match self {
+            Self::ZhCn => format!("保存服务器失败：{err}"),
+            Self::EnUs => format!("Failed to save server: {err}"),
+        }
+    }
+
+    fn save_subscription_failed_status(self, err: &str) -> String {
+        match self {
+            Self::ZhCn => format!("保存订阅失败：{err}"),
+            Self::EnUs => format!("Failed to save subscription: {err}"),
+        }
+    }
+
+    fn save_language_failed_status(self, err: &str) -> String {
+        match self {
+            Self::ZhCn => format!("保存语言设置失败：{err}"),
+            Self::EnUs => format!("Failed to save language setting: {err}"),
+        }
+    }
+
+    fn rcon_failed_output(self, err: &str) -> String {
+        match self {
+            Self::ZhCn => format!("RCON 失败：{err}"),
+            Self::EnUs => format!("RCON failed: {err}"),
+        }
+    }
+
+    fn cvar_failed_output(self, err: &str) -> String {
+        match self {
+            Self::ZhCn => format!("读取失败：{err}"),
+            Self::EnUs => format!("Read failed: {err}"),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+enum TextKey {
+    AppTitle,
+    RefreshServers,
+    Language,
+    AddServer,
+    Group,
+    ServerAddress,
+    SaveServer,
+    SourceBansSubscription,
+    SubscriptionName,
+    PageUrl,
+    SaveSubscription,
+    Rcon,
+    RconPassword,
+    Command,
+    RunCommand,
+    CvarRules,
+    OptionalRconPassword,
+    CvarNamesHelp,
+    Read,
+    ServerList,
+    HeaderGroup,
+    HeaderAddress,
+    HeaderPing,
+    HeaderPlayers,
+    HeaderMap,
+    HeaderVac,
+    HeaderNameOrError,
+    WaitingRefresh,
+    Querying,
+    SavingServer,
+    SavingSubscription,
+    RunningCommand,
+    Reading,
+    ServerSaved,
+    SubscriptionSaved,
+    LanguageSaved,
+    NotQueried,
+    Yes,
+    No,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, Default)]
@@ -1448,6 +1669,7 @@ enum GuiMessage {
 struct NativeGuiApp {
     cli: Cli,
     config_path: PathBuf,
+    language: GuiLanguage,
     tx: Sender<GuiMessage>,
     rx: Receiver<GuiMessage>,
     servers: Vec<ServerRowPayload>,
@@ -1468,32 +1690,125 @@ struct NativeGuiApp {
 }
 
 fn start_gui(cli: Cli, config_path: PathBuf) -> Result<(), String> {
+    let language = initial_gui_language(&config_path);
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default().with_inner_size([1180.0, 760.0]),
         ..Default::default()
     };
-    let title = "L4D2 刷服器".to_owned();
+    let title = language.text(TextKey::AppTitle).to_owned();
 
     eframe::run_native(
         &title,
         options,
-        Box::new(move |_cc| Ok(Box::new(NativeGuiApp::new(cli, config_path)))),
+        Box::new(move |cc| {
+            install_cjk_fonts(&cc.egui_ctx);
+            Ok(Box::new(NativeGuiApp::new(cli, config_path, language)))
+        }),
     )
     .map_err(|err| format!("failed to start native GUI: {err}"))
 }
 
+fn initial_gui_language(config_path: &Path) -> GuiLanguage {
+    load_config_or_default(&config_path.to_path_buf())
+        .map(|config| config.gui.language)
+        .unwrap_or_default()
+}
+
+fn install_cjk_fonts(ctx: &egui::Context) {
+    let Some((font_name, font_bytes)) = load_first_cjk_font() else {
+        return;
+    };
+
+    let mut fonts = egui::FontDefinitions::default();
+    fonts.font_data.insert(
+        font_name.clone(),
+        Arc::new(egui::FontData::from_owned(font_bytes)),
+    );
+
+    if let Some(family) = fonts.families.get_mut(&egui::FontFamily::Proportional) {
+        family.insert(0, font_name.clone());
+    }
+    if let Some(family) = fonts.families.get_mut(&egui::FontFamily::Monospace) {
+        family.push(font_name);
+    }
+
+    ctx.set_fonts(fonts);
+}
+
+fn load_first_cjk_font() -> Option<(String, Vec<u8>)> {
+    for path in cjk_font_candidates() {
+        if let Ok(bytes) = fs::read(&path) {
+            if !bytes.is_empty() {
+                let name = path
+                    .file_stem()
+                    .and_then(|stem| stem.to_str())
+                    .unwrap_or("system-cjk")
+                    .to_owned();
+                return Some((name, bytes));
+            }
+        }
+    }
+    None
+}
+
+fn cjk_font_candidates() -> Vec<PathBuf> {
+    let mut candidates = Vec::new();
+
+    #[cfg(target_os = "windows")]
+    {
+        let fonts_dir = env::var_os("WINDIR")
+            .map(PathBuf::from)
+            .unwrap_or_else(|| PathBuf::from(r"C:\Windows"))
+            .join("Fonts");
+        candidates.extend([
+            fonts_dir.join("msyh.ttc"),
+            fonts_dir.join("simhei.ttf"),
+            fonts_dir.join("simsun.ttc"),
+            fonts_dir.join("Deng.ttf"),
+            fonts_dir.join("NotoSansCJK-Regular.ttc"),
+        ]);
+    }
+
+    #[cfg(target_os = "macos")]
+    {
+        candidates.extend([
+            PathBuf::from("/System/Library/Fonts/PingFang.ttc"),
+            PathBuf::from("/System/Library/Fonts/STHeiti Light.ttc"),
+            PathBuf::from("/System/Library/Fonts/Supplemental/Songti.ttc"),
+            PathBuf::from("/System/Library/Fonts/Supplemental/Arial Unicode.ttf"),
+        ]);
+    }
+
+    #[cfg(all(unix, not(target_os = "macos")))]
+    {
+        candidates.extend([
+            PathBuf::from("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"),
+            PathBuf::from("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.otf"),
+            PathBuf::from("/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc"),
+            PathBuf::from("/usr/share/fonts/truetype/wqy/wqy-microhei.ttc"),
+            PathBuf::from("/usr/share/fonts/truetype/arphic/uming.ttc"),
+        ]);
+    }
+
+    candidates
+}
+
 impl NativeGuiApp {
-    fn new(cli: Cli, config_path: PathBuf) -> Self {
+    fn new(cli: Cli, config_path: PathBuf, language: GuiLanguage) -> Self {
         let (tx, rx) = mpsc::channel();
         let mut app = Self {
             cli,
             config_path,
+            language,
             tx,
             rx,
             servers: Vec::new(),
-            server_status: "等待刷新".to_owned(),
+            server_status: language.text(TextKey::WaitingRefresh).to_owned(),
             config_status: String::new(),
-            group_name: "我的服务器".to_owned(),
+            group_name: match language {
+                GuiLanguage::ZhCn => "我的服务器".to_owned(),
+                GuiLanguage::EnUs => "My servers".to_owned(),
+            },
             server_address: String::new(),
             sourcebans_name: "SourceBans".to_owned(),
             sourcebans_url: String::new(),
@@ -1506,7 +1821,7 @@ impl NativeGuiApp {
             cvar_names: "hostname,sv_tags,mp_gamemode".to_owned(),
             cvar_output: String::new(),
         };
-        app.config_status = format!("配置文件：{}", app.config_path.display());
+        app.config_status = app.language.config_file_status(&app.config_path);
         app.refresh_servers();
         app
     }
@@ -1516,32 +1831,38 @@ impl NativeGuiApp {
             match message {
                 GuiMessage::Servers(result) => match result {
                     Ok(rows) => {
-                        self.server_status = format!("共 {} 个服务器", rows.len());
+                        self.server_status = self.language.server_count_status(rows.len());
                         self.servers = rows;
                     }
-                    Err(err) => self.server_status = format!("刷新失败：{err}"),
+                    Err(err) => self.server_status = self.language.refresh_failed_status(&err),
                 },
                 GuiMessage::AddServer(result) => match result {
                     Ok(()) => {
-                        self.config_status = "服务器已保存".to_owned();
+                        self.config_status = self.language.text(TextKey::ServerSaved).to_owned();
                         self.refresh_servers();
                     }
-                    Err(err) => self.config_status = format!("保存服务器失败：{err}"),
+                    Err(err) => {
+                        self.config_status = self.language.save_server_failed_status(&err);
+                    }
                 },
                 GuiMessage::AddSourceBans(result) => match result {
                     Ok(()) => {
-                        self.config_status = "SourceBans 订阅已保存".to_owned();
+                        self.config_status =
+                            self.language.text(TextKey::SubscriptionSaved).to_owned();
                         self.refresh_servers();
                     }
-                    Err(err) => self.config_status = format!("保存订阅失败：{err}"),
+                    Err(err) => {
+                        self.config_status = self.language.save_subscription_failed_status(&err);
+                    }
                 },
                 GuiMessage::Rcon(result) => {
-                    self.rcon_output = result.unwrap_or_else(|err| format!("RCON 失败：{err}"));
+                    self.rcon_output =
+                        result.unwrap_or_else(|err| self.language.rcon_failed_output(&err));
                 }
                 GuiMessage::Cvars(result) => {
                     self.cvar_output = match result {
                         Ok(payload) => format_cvar_payload(&payload),
-                        Err(err) => format!("读取失败：{err}"),
+                        Err(err) => self.language.cvar_failed_output(&err),
                     };
                 }
             }
@@ -1550,7 +1871,7 @@ impl NativeGuiApp {
     }
 
     fn refresh_servers(&mut self) {
-        self.server_status = "查询中...".to_owned();
+        self.server_status = self.language.text(TextKey::Querying).to_owned();
         let tx = self.tx.clone();
         let cli = self.cli.clone();
         let config_path = self.config_path.clone();
@@ -1566,7 +1887,7 @@ impl NativeGuiApp {
     }
 
     fn save_server(&mut self) {
-        self.config_status = "保存服务器中...".to_owned();
+        self.config_status = self.language.text(TextKey::SavingServer).to_owned();
         let tx = self.tx.clone();
         let path = self.config_path.clone();
         let input = AddServerRequest {
@@ -1580,7 +1901,7 @@ impl NativeGuiApp {
     }
 
     fn save_sourcebans(&mut self) {
-        self.config_status = "保存订阅中...".to_owned();
+        self.config_status = self.language.text(TextKey::SavingSubscription).to_owned();
         let tx = self.tx.clone();
         let path = self.config_path.clone();
         let input = AddSourceBansRequest {
@@ -1594,7 +1915,7 @@ impl NativeGuiApp {
     }
 
     fn run_rcon(&mut self) {
-        self.rcon_output = "执行中...".to_owned();
+        self.rcon_output = self.language.text(TextKey::RunningCommand).to_owned();
         let tx = self.tx.clone();
         let input = RconCommandRequest {
             address: self.rcon_address.clone(),
@@ -1610,7 +1931,7 @@ impl NativeGuiApp {
     }
 
     fn read_cvars(&mut self) {
-        self.cvar_output = "读取中...".to_owned();
+        self.cvar_output = self.language.text(TextKey::Reading).to_owned();
         let tx = self.tx.clone();
         let names = self
             .cvar_names
@@ -1633,6 +1954,17 @@ impl NativeGuiApp {
             let _ = tx.send(GuiMessage::Cvars(result));
         });
     }
+
+    fn save_gui_language(&mut self) {
+        match save_gui_language_to_config(&self.config_path, self.language) {
+            Ok(()) => self.config_status = self.language.text(TextKey::LanguageSaved).to_owned(),
+            Err(err) => self.config_status = self.language.save_language_failed_status(&err),
+        }
+    }
+
+    fn text(&self, key: TextKey) -> &'static str {
+        self.language.text(key)
+    }
 }
 
 impl eframe::App for NativeGuiApp {
@@ -1641,9 +1973,30 @@ impl eframe::App for NativeGuiApp {
 
         egui::TopBottomPanel::top("top_bar").show(ctx, |ui| {
             ui.horizontal(|ui| {
-                ui.heading("L4D2 刷服器");
-                if ui.button("刷新服务器").clicked() {
+                ui.heading(self.text(TextKey::AppTitle));
+                if ui.button(self.text(TextKey::RefreshServers)).clicked() {
                     self.refresh_servers();
+                }
+                ui.separator();
+                ui.label(self.text(TextKey::Language));
+                let mut selected_language = self.language;
+                egui::ComboBox::from_id_salt("gui_language")
+                    .selected_text(selected_language.display_name())
+                    .show_ui(ui, |ui| {
+                        for language in GuiLanguage::ALL {
+                            ui.selectable_value(
+                                &mut selected_language,
+                                language,
+                                language.display_name(),
+                            );
+                        }
+                    });
+                if selected_language != self.language {
+                    self.language = selected_language;
+                    self.save_gui_language();
+                    ctx.send_viewport_cmd(egui::ViewportCommand::Title(
+                        self.text(TextKey::AppTitle).to_owned(),
+                    ));
                 }
             });
             ui.label(&self.config_status);
@@ -1654,34 +2007,34 @@ impl eframe::App for NativeGuiApp {
             .default_width(360.0)
             .show(ctx, |ui| {
                 egui::ScrollArea::vertical().show(ui, |ui| {
-                    ui.heading("添加服务器");
-                    ui.label("分组");
+                    ui.heading(self.text(TextKey::AddServer));
+                    ui.label(self.text(TextKey::Group));
                     ui.text_edit_singleline(&mut self.group_name);
-                    ui.label("服务器地址");
+                    ui.label(self.text(TextKey::ServerAddress));
                     ui.text_edit_singleline(&mut self.server_address);
-                    if ui.button("保存服务器").clicked() {
+                    if ui.button(self.text(TextKey::SaveServer)).clicked() {
                         self.save_server();
                     }
 
                     ui.separator();
-                    ui.heading("SourceBans 订阅");
-                    ui.label("订阅名称");
+                    ui.heading(self.text(TextKey::SourceBansSubscription));
+                    ui.label(self.text(TextKey::SubscriptionName));
                     ui.text_edit_singleline(&mut self.sourcebans_name);
-                    ui.label("页面 URL");
+                    ui.label(self.text(TextKey::PageUrl));
                     ui.text_edit_singleline(&mut self.sourcebans_url);
-                    if ui.button("保存订阅").clicked() {
+                    if ui.button(self.text(TextKey::SaveSubscription)).clicked() {
                         self.save_sourcebans();
                     }
 
                     ui.separator();
-                    ui.heading("RCON");
-                    ui.label("服务器地址");
+                    ui.heading(self.text(TextKey::Rcon));
+                    ui.label(self.text(TextKey::ServerAddress));
                     ui.text_edit_singleline(&mut self.rcon_address);
-                    ui.label("RCON 密码");
+                    ui.label(self.text(TextKey::RconPassword));
                     ui.add(egui::TextEdit::singleline(&mut self.rcon_password).password(true));
-                    ui.label("命令");
+                    ui.label(self.text(TextKey::Command));
                     ui.text_edit_singleline(&mut self.rcon_command_text);
-                    if ui.button("执行命令").clicked() {
+                    if ui.button(self.text(TextKey::RunCommand)).clicked() {
                         self.run_rcon();
                     }
                     ui.add(
@@ -1691,14 +2044,14 @@ impl eframe::App for NativeGuiApp {
                     );
 
                     ui.separator();
-                    ui.heading("CVAR / Rules");
-                    ui.label("服务器地址");
+                    ui.heading(self.text(TextKey::CvarRules));
+                    ui.label(self.text(TextKey::ServerAddress));
                     ui.text_edit_singleline(&mut self.cvar_address);
-                    ui.label("RCON 密码，可空");
+                    ui.label(self.text(TextKey::OptionalRconPassword));
                     ui.add(egui::TextEdit::singleline(&mut self.cvar_password).password(true));
-                    ui.label("CVAR 名称，逗号分隔；公开 rules 可留空");
+                    ui.label(self.text(TextKey::CvarNamesHelp));
                     ui.text_edit_singleline(&mut self.cvar_names);
-                    if ui.button("读取").clicked() {
+                    if ui.button(self.text(TextKey::Read)).clicked() {
                         self.read_cvars();
                     }
                     ui.add(
@@ -1711,7 +2064,7 @@ impl eframe::App for NativeGuiApp {
 
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.horizontal(|ui| {
-                ui.heading("服务器列表");
+                ui.heading(self.text(TextKey::ServerList));
                 ui.label(&self.server_status);
             });
             ui.separator();
@@ -1722,13 +2075,13 @@ impl eframe::App for NativeGuiApp {
                         .striped(true)
                         .min_col_width(80.0)
                         .show(ui, |ui| {
-                            ui.strong("分组");
-                            ui.strong("地址");
-                            ui.strong("延迟");
-                            ui.strong("人数");
-                            ui.strong("地图");
-                            ui.strong("VAC");
-                            ui.strong("服务器名 / 错误");
+                            ui.strong(self.text(TextKey::HeaderGroup));
+                            ui.strong(self.text(TextKey::HeaderAddress));
+                            ui.strong(self.text(TextKey::HeaderPing));
+                            ui.strong(self.text(TextKey::HeaderPlayers));
+                            ui.strong(self.text(TextKey::HeaderMap));
+                            ui.strong(self.text(TextKey::HeaderVac));
+                            ui.strong(self.text(TextKey::HeaderNameOrError));
                             ui.end_row();
 
                             for row in &self.servers {
@@ -1736,7 +2089,12 @@ impl eframe::App for NativeGuiApp {
                                     (
                                         format!("{}/{}", info.players, info.max_players),
                                         info.map.clone(),
-                                        if info.vac { "yes" } else { "no" }.to_owned(),
+                                        if info.vac {
+                                            self.text(TextKey::Yes)
+                                        } else {
+                                            self.text(TextKey::No)
+                                        }
+                                        .to_owned(),
                                         info.name.clone(),
                                     )
                                 } else {
@@ -1744,9 +2102,9 @@ impl eframe::App for NativeGuiApp {
                                         "-".to_owned(),
                                         "-".to_owned(),
                                         "-".to_owned(),
-                                        row.error
-                                            .clone()
-                                            .unwrap_or_else(|| "not queried".to_owned()),
+                                        row.error.clone().unwrap_or_else(|| {
+                                            self.text(TextKey::NotQueried).to_owned()
+                                        }),
                                     )
                                 };
                                 ui.label(row.groups.join(","));
@@ -1817,6 +2175,12 @@ fn add_sourcebans_to_config(path: &PathBuf, input: AddSourceBansRequest) -> Resu
         config.sourcebans.push(FileSourceBans { name, url });
     }
 
+    save_config(path, &config)
+}
+
+fn save_gui_language_to_config(path: &PathBuf, language: GuiLanguage) -> Result<(), String> {
+    let mut config = load_config_or_default(path)?;
+    config.gui.language = language;
     save_config(path, &config)
 }
 
@@ -2106,6 +2470,17 @@ mod tests {
             url.as_str(),
             "https://example.com/sourcebans/index.php?p=servers"
         );
+    }
+
+    #[test]
+    fn parses_gui_language() {
+        let config: BrowserConfig =
+            toml::from_str("[gui]\nlanguage = \"en-US\"\n").expect("valid config");
+        assert_eq!(config.gui.language, GuiLanguage::EnUs);
+
+        let config: BrowserConfig =
+            toml::from_str("[gui]\nlanguage = \"zh\"\n").expect("valid config");
+        assert_eq!(config.gui.language, GuiLanguage::ZhCn);
     }
 
     #[test]

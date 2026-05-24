@@ -1,3 +1,6 @@
+[gui]
+language = "zh-CN"
+
 [master]
 enabled = true
 group = "公网大厅"

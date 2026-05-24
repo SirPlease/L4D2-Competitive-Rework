@@ -67,6 +67,9 @@ cargo run --release -- --config browser.example.toml --only-group 'Anne'
 配置文件使用 TOML。示例见 `browser.example.toml`：
 
 ```toml
+[gui]
+language = "zh-CN"
+
 [master]
 enabled = true
 group = "公网大厅"
@@ -93,6 +96,13 @@ url = "https://example.com/sourcebans"
 ## GUI / RCON
 
 GUI 模式是原生桌面窗口，不启动网页服务。新增服务器和 SourceBans 订阅会写入 `--config` 指定的 TOML 文件；如果没有传 `--config`，默认写入系统用户配置目录。
+
+GUI 启动时会自动加载系统 CJK 字体，避免 Windows/Linux 上中文显示成方块。界面支持 i18n，目前内置 `简体中文` 和 `English`，可在顶部语言下拉框切换；选择会保存到配置文件：
+
+```toml
+[gui]
+language = "zh-CN"
+```
 
 RCON 使用 Source RCON TCP 协议。读取 CVAR 有两种方式：
 
