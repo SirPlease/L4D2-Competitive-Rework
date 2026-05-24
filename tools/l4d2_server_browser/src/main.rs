@@ -28,6 +28,7 @@ const DEFAULT_CONFIG_FILE: &str = "l4d2-browser.toml";
 const USER_AGENT: &str = "l4d2-server-browser/0.4";
 const UPDATE_REPO: &str = "fantasylidong/CompetitiveWithAnne";
 const UPDATE_TAG_PREFIX: &str = "l4d2-browser-v";
+const DEFAULT_API_BASE_URL: &str = "https://anne.trygek.com";
 
 fn main() {
     if let Err(err) = run() {
@@ -408,6 +409,8 @@ struct BrowserConfig {
     #[serde(default)]
     updater: UpdaterConfig,
     #[serde(default)]
+    api: ApiConfig,
+    #[serde(default)]
     master: Option<FileMaster>,
     #[serde(default)]
     groups: Vec<FileGroup>,
@@ -419,6 +422,27 @@ struct BrowserConfig {
 struct GuiConfig {
     #[serde(default)]
     language: GuiLanguage,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+struct ApiConfig {
+    #[serde(default = "default_api_base_url")]
+    base_url: String,
+    #[serde(default)]
+    token: Option<String>,
+}
+
+impl Default for ApiConfig {
+    fn default() -> Self {
+        Self {
+            base_url: default_api_base_url(),
+            token: None,
+        }
+    }
+}
+
+fn default_api_base_url() -> String {
+    DEFAULT_API_BASE_URL.to_owned()
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -502,19 +526,12 @@ impl GuiLanguage {
                 TextKey::SubscriptionSaved => "SourceBans 订阅已保存",
                 TextKey::LanguageSaved => "语言设置已保存",
                 TextKey::NotQueried => "未查询",
-                TextKey::Yes => "是",
-                TextKey::No => "否",
-                TextKey::ManualServersTab => "添加服务器",
-                TextKey::SourceBansTab => "SourceBans",
                 TextKey::ManualServerList => "已保存服务器",
                 TextKey::SubscriptionList => "已保存订阅",
                 TextKey::NewSubscription => "新建订阅",
                 TextKey::UpdateSubscription => "更新订阅",
                 TextKey::DeleteSubscription => "删除订阅",
                 TextKey::SubscriptionDeleted => "SourceBans 订阅已删除",
-                TextKey::SelectServerHint => {
-                    "点击服务器列表中的服务器后，可在这里执行 RCON 和查看 CVAR / Rules"
-                }
                 TextKey::SelectedServer => "已选择服务器",
                 TextKey::NoServerSelected => "未选择服务器",
                 TextKey::RefreshRules => "刷新 Rules",
@@ -529,17 +546,20 @@ impl GuiLanguage {
                 TextKey::FilterEmpty => "空房",
                 TextKey::FilterHasPlayers => "有人",
                 TextKey::FilterHideTimeout => "隐藏超时",
-                TextKey::FilterCustom => "自定义过滤",
                 TextKey::GlobalPlayersTab => "全局玩家",
+                TextKey::BroadcastTab => "全服消息",
                 TextKey::SettingsTab => "首选项",
                 TextKey::ActivePlayers => "活动玩家",
-                TextKey::ActiveServers => "活跃服务器",
                 TextKey::SearchPlaceholder => "实时过滤服务器（名称/地图/分组）...",
                 TextKey::TotalServers => "总服务器",
                 TextKey::ConnectGame => "一键连接",
                 TextKey::CvarSearchPlaceholder => "搜索 CVAR / 规则变量名...",
                 TextKey::GlobalPlayerSearchPlaceholder => "搜索在线玩家昵称...",
-                TextKey::Duration => "游戏时长",
+                TextKey::ApiBaseUrl => "AnneWeb API 地址",
+                TextKey::SteamLogin => "Steam 登录",
+                TextKey::Logout => "退出登录",
+                TextKey::BroadcastMessage => "全服消息内容",
+                TextKey::SendBroadcast => "发送全服消息",
             },
             Self::EnUs => match key {
                 TextKey::AppTitle => "Telecom Server Browser",
@@ -580,19 +600,12 @@ impl GuiLanguage {
                 TextKey::SubscriptionSaved => "SourceBans subscription saved",
                 TextKey::LanguageSaved => "Language setting saved",
                 TextKey::NotQueried => "not queried",
-                TextKey::Yes => "yes",
-                TextKey::No => "no",
-                TextKey::ManualServersTab => "Add server",
-                TextKey::SourceBansTab => "SourceBans",
                 TextKey::ManualServerList => "Saved servers",
                 TextKey::SubscriptionList => "Saved subscriptions",
                 TextKey::NewSubscription => "New subscription",
                 TextKey::UpdateSubscription => "Update subscription",
                 TextKey::DeleteSubscription => "Delete subscription",
                 TextKey::SubscriptionDeleted => "SourceBans subscription deleted",
-                TextKey::SelectServerHint => {
-                    "Select a server from the list to run RCON and view CVAR / Rules"
-                }
                 TextKey::SelectedServer => "Selected server",
                 TextKey::NoServerSelected => "No server selected",
                 TextKey::RefreshRules => "Refresh Rules",
@@ -607,17 +620,20 @@ impl GuiLanguage {
                 TextKey::FilterEmpty => "Empty Only",
                 TextKey::FilterHasPlayers => "Has Players",
                 TextKey::FilterHideTimeout => "Hide Timeouts",
-                TextKey::FilterCustom => "Custom Filter",
                 TextKey::GlobalPlayersTab => "Global Players",
+                TextKey::BroadcastTab => "Broadcast",
                 TextKey::SettingsTab => "Settings",
                 TextKey::ActivePlayers => "Active Players",
-                TextKey::ActiveServers => "Active Servers",
                 TextKey::SearchPlaceholder => "Filter servers (name/map/group)...",
                 TextKey::TotalServers => "Total Servers",
                 TextKey::ConnectGame => "Connect Game",
                 TextKey::CvarSearchPlaceholder => "Filter CVAR names...",
                 TextKey::GlobalPlayerSearchPlaceholder => "Search player name...",
-                TextKey::Duration => "Duration",
+                TextKey::ApiBaseUrl => "AnneWeb API URL",
+                TextKey::SteamLogin => "Steam login",
+                TextKey::Logout => "Logout",
+                TextKey::BroadcastMessage => "Broadcast message",
+                TextKey::SendBroadcast => "Send broadcast",
             },
         }
     }
@@ -745,17 +761,12 @@ enum TextKey {
     SubscriptionSaved,
     LanguageSaved,
     NotQueried,
-    Yes,
-    No,
-    ManualServersTab,
-    SourceBansTab,
     ManualServerList,
     SubscriptionList,
     NewSubscription,
     UpdateSubscription,
     DeleteSubscription,
     SubscriptionDeleted,
-    SelectServerHint,
     SelectedServer,
     NoServerSelected,
     RefreshRules,
@@ -770,17 +781,20 @@ enum TextKey {
     FilterEmpty,
     FilterHasPlayers,
     FilterHideTimeout,
-    FilterCustom,
     GlobalPlayersTab,
+    BroadcastTab,
     SettingsTab,
     ActivePlayers,
-    ActiveServers,
     SearchPlaceholder,
     TotalServers,
     ConnectGame,
     CvarSearchPlaceholder,
     GlobalPlayerSearchPlaceholder,
-    Duration,
+    ApiBaseUrl,
+    SteamLogin,
+    Logout,
+    BroadcastMessage,
+    SendBroadcast,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, Default)]
@@ -1813,6 +1827,18 @@ struct CvarRequest {
     timeout_ms: Option<u64>,
 }
 
+#[derive(Clone)]
+struct ApiLoginRequest {
+    base_url: String,
+}
+
+#[derive(Clone)]
+struct BroadcastRequest {
+    base_url: String,
+    token: String,
+    message: String,
+}
+
 #[derive(Clone, Serialize)]
 struct ServerRowPayload {
     address: String,
@@ -1838,6 +1864,7 @@ struct PlayerInfo {
     points: Option<i32>,
     playtime_mins: Option<i32>,
     ppm: Option<f32>,
+    quarter_points: Option<i32>,
 }
 
 #[derive(Clone)]
@@ -1863,6 +1890,7 @@ struct UpdateInfo {
 enum NavTab {
     Servers,
     GlobalPlayers,
+    Broadcast,
     AddServer,
     SourceBans,
     Settings,
@@ -1875,7 +1903,7 @@ enum InspectorTab {
     Cvars,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 struct GlobalPlayerEntry {
     name: String,
     score: i32,
@@ -1885,6 +1913,79 @@ struct GlobalPlayerEntry {
     points: Option<i32>,
     playtime_mins: Option<i32>,
     ppm: Option<f32>,
+    quarter_points: Option<i32>,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+struct ApiUser {
+    steam_id: String,
+    name: String,
+    #[serde(default)]
+    avatar: String,
+    #[serde(default)]
+    is_admin: bool,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+struct DeviceStartResponse {
+    ok: bool,
+    device_code: String,
+    user_code: String,
+    verification_url: String,
+    expires_in: u64,
+    interval: u64,
+}
+
+#[derive(Clone, Debug)]
+struct ApiLoginSession {
+    token: String,
+    user: ApiUser,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+struct ApiMeResponse {
+    ok: bool,
+    user: Option<ApiUser>,
+    message: Option<String>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+struct DevicePollResponse {
+    ok: bool,
+    status: Option<String>,
+    access_token: Option<String>,
+    user: Option<ApiUser>,
+    error: Option<String>,
+    message: Option<String>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+struct ApiBroadcastResponse {
+    ok: bool,
+    id: Option<u64>,
+    message: Option<String>,
+    error: Option<String>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+struct PlayerStatsBatchResponse {
+    ok: bool,
+    results: Vec<PlayerStatsLookup>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+struct PlayerStatsLookup {
+    ok: bool,
+    query: String,
+    player: Option<PlayerStats>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+struct PlayerStats {
+    total_points: i32,
+    playtime_minutes: i32,
+    ppm: f32,
+    quarter_points: i32,
 }
 
 enum GuiMessage {
@@ -1899,6 +2000,10 @@ enum GuiMessage {
     Cvars(Result<CvarPayload, String>),
     Players(Result<Vec<PlayerInfo>, String>),
     GlobalPlayers(Result<Vec<GlobalPlayerEntry>, String>),
+    ApiMe(Result<ApiUser, String>),
+    SteamLoginStarted(Result<DeviceStartResponse, String>),
+    SteamLoginFinished(Result<ApiLoginSession, String>),
+    Broadcast(Result<ApiBroadcastResponse, String>),
 }
 
 struct NativeGuiApp {
@@ -1939,51 +2044,64 @@ struct NativeGuiApp {
     ui_filter_empty: bool,
     ui_filter_has_players: bool,
     ui_filter_hide_timeout: bool,
-    ui_filter_custom: bool,
     save_rcon_password: bool,
     cvar_search_query: String,
     global_player_search_query: String,
     global_players: Vec<GlobalPlayerEntry>,
     global_players_status: String,
     global_players_querying: bool,
-    selected_player_index: Option<usize>,
     selected_server_players: Vec<PlayerInfo>,
+    api_base_url: String,
+    api_token: String,
+    api_user: Option<ApiUser>,
+    api_status: String,
+    steam_login_in_progress: bool,
+    broadcast_message: String,
+    broadcast_output: String,
+    broadcast_sending: bool,
 }
 
 fn apply_dark_theme(ctx: &egui::Context) {
     let mut style = (*ctx.style()).clone();
-    
+
     style.spacing.item_spacing = egui::vec2(12.0, 10.0);
     style.spacing.button_padding = egui::vec2(10.0, 6.0);
     style.spacing.scroll = egui::style::ScrollStyle::solid();
-    
+
     let mut visuals = egui::Visuals::dark();
-    
+
     visuals.panel_fill = egui::Color32::from_rgb(11, 15, 25);
     visuals.window_fill = egui::Color32::from_rgb(17, 24, 39);
     visuals.widgets.noninteractive.bg_fill = egui::Color32::from_rgb(17, 24, 39);
-    visuals.widgets.noninteractive.bg_stroke = egui::Stroke::new(1.0, egui::Color32::from_rgb(31, 41, 55));
-    
+    visuals.widgets.noninteractive.bg_stroke =
+        egui::Stroke::new(1.0, egui::Color32::from_rgb(31, 41, 55));
+
     visuals.widgets.inactive.bg_fill = egui::Color32::from_rgb(31, 41, 55);
-    visuals.widgets.inactive.bg_stroke = egui::Stroke::new(1.0, egui::Color32::from_rgb(55, 65, 81));
-    visuals.widgets.inactive.fg_stroke = egui::Stroke::new(1.0, egui::Color32::from_rgb(248, 250, 252));
-    visuals.widgets.inactive.rounding = egui::Rounding::same(6.0);
-    
+    visuals.widgets.inactive.bg_stroke =
+        egui::Stroke::new(1.0, egui::Color32::from_rgb(55, 65, 81));
+    visuals.widgets.inactive.fg_stroke =
+        egui::Stroke::new(1.0, egui::Color32::from_rgb(248, 250, 252));
+    visuals.widgets.inactive.corner_radius = egui::CornerRadius::same(6);
+
     visuals.widgets.hovered.bg_fill = egui::Color32::from_rgb(79, 70, 229);
-    visuals.widgets.hovered.bg_stroke = egui::Stroke::new(1.0, egui::Color32::from_rgb(99, 102, 241));
-    visuals.widgets.hovered.fg_stroke = egui::Stroke::new(1.0, egui::Color32::from_rgb(255, 255, 255));
-    visuals.widgets.hovered.rounding = egui::Rounding::same(6.0);
-    
+    visuals.widgets.hovered.bg_stroke =
+        egui::Stroke::new(1.0, egui::Color32::from_rgb(99, 102, 241));
+    visuals.widgets.hovered.fg_stroke =
+        egui::Stroke::new(1.0, egui::Color32::from_rgb(255, 255, 255));
+    visuals.widgets.hovered.corner_radius = egui::CornerRadius::same(6);
+
     visuals.widgets.active.bg_fill = egui::Color32::from_rgb(99, 102, 241);
-    visuals.widgets.active.bg_stroke = egui::Stroke::new(1.0, egui::Color32::from_rgb(129, 140, 248));
-    visuals.widgets.active.fg_stroke = egui::Stroke::new(1.0, egui::Color32::from_rgb(255, 255, 255));
-    visuals.widgets.active.rounding = egui::Rounding::same(6.0);
-    
+    visuals.widgets.active.bg_stroke =
+        egui::Stroke::new(1.0, egui::Color32::from_rgb(129, 140, 248));
+    visuals.widgets.active.fg_stroke =
+        egui::Stroke::new(1.0, egui::Color32::from_rgb(255, 255, 255));
+    visuals.widgets.active.corner_radius = egui::CornerRadius::same(6);
+
     visuals.selection.bg_fill = egui::Color32::from_rgb(99, 102, 241);
     visuals.selection.stroke = egui::Stroke::new(1.0, egui::Color32::from_rgb(255, 255, 255));
-    
-    visuals.extreme_bg_fill = egui::Color32::from_rgb(3, 7, 18);
-    
+
+    visuals.extreme_bg_color = egui::Color32::from_rgb(3, 7, 18);
+
     style.visuals = visuals;
     ctx.set_style(style);
 }
@@ -2137,19 +2255,28 @@ impl NativeGuiApp {
             ui_filter_empty: false,
             ui_filter_has_players: false,
             ui_filter_hide_timeout: false,
-            ui_filter_custom: false,
             save_rcon_password: false,
             cvar_search_query: String::new(),
             global_player_search_query: String::new(),
             global_players: Vec::new(),
             global_players_status: String::new(),
             global_players_querying: false,
-            selected_player_index: None,
             selected_server_players: Vec::new(),
+            api_base_url: initial_config.api.base_url,
+            api_token: initial_config.api.token.unwrap_or_default(),
+            api_user: None,
+            api_status: String::new(),
+            steam_login_in_progress: false,
+            broadcast_message: String::new(),
+            broadcast_output: String::new(),
+            broadcast_sending: false,
         };
         app.config_status = app.language.config_file_status(&app.config_path);
         app.refresh_config_lists();
         app.refresh_servers();
+        if !app.api_token.trim().is_empty() {
+            app.refresh_api_user();
+        }
         if app.updater_auto_check {
             app.check_updates();
         }
@@ -2252,30 +2379,38 @@ impl NativeGuiApp {
                         Err(err) => self.language.cvar_failed_output(&err),
                     };
                 }
-                GuiMessage::Players(result) => {
-                    match result {
-                        Ok(players) => {
-                            self.selected_server_players = players.clone();
-                            self.player_output = format_player_payload(&players, self.language);
-                        }
-                        Err(err) => {
-                            self.selected_server_players.clear();
-                            self.player_output = err;
-                        }
+                GuiMessage::Players(result) => match result {
+                    Ok(players) => {
+                        self.selected_server_players = players.clone();
+                        self.player_output = format_player_payload(&players, self.language);
                     }
-                }
+                    Err(err) => {
+                        self.selected_server_players.clear();
+                        self.player_output = err;
+                    }
+                },
                 GuiMessage::GlobalPlayers(result) => {
                     self.global_players_querying = false;
                     match result {
                         Ok(players) => {
                             self.global_players = players;
-                            let active_servers_count = self.global_players.iter()
+                            let active_servers_count = self
+                                .global_players
+                                .iter()
                                 .map(|p| &p.server_address)
                                 .collect::<std::collections::HashSet<_>>()
                                 .len();
                             self.global_players_status = match self.language {
-                                GuiLanguage::ZhCn => format!("共 {} 个在线玩家，分布在 {} 个服务器", self.global_players.len(), active_servers_count),
-                                GuiLanguage::EnUs => format!("{} players online across {} servers", self.global_players.len(), active_servers_count),
+                                GuiLanguage::ZhCn => format!(
+                                    "共 {} 个在线玩家，分布在 {} 个服务器",
+                                    self.global_players.len(),
+                                    active_servers_count
+                                ),
+                                GuiLanguage::EnUs => format!(
+                                    "{} players online across {} servers",
+                                    self.global_players.len(),
+                                    active_servers_count
+                                ),
                             };
                         }
                         Err(err) => {
@@ -2286,6 +2421,108 @@ impl NativeGuiApp {
                             };
                         }
                     }
+                }
+                GuiMessage::ApiMe(result) => match result {
+                    Ok(user) => {
+                        self.api_status = match self.language {
+                            GuiLanguage::ZhCn => format!(
+                                "已登录：{}{}",
+                                user.name,
+                                if user.is_admin { "（管理员）" } else { "" }
+                            ),
+                            GuiLanguage::EnUs => format!(
+                                "Logged in: {}{}",
+                                user.name,
+                                if user.is_admin { " (admin)" } else { "" }
+                            ),
+                        };
+                        self.api_user = Some(user);
+                    }
+                    Err(err) => {
+                        self.api_user = None;
+                        self.api_status = err;
+                    }
+                },
+                GuiMessage::SteamLoginStarted(result) => match result {
+                    Ok(start) => {
+                        self.api_status = match self.language {
+                            GuiLanguage::ZhCn => format!(
+                                "已打开 Steam 授权页面，登录码：{}，等待授权...",
+                                start.user_code
+                            ),
+                            GuiLanguage::EnUs => format!(
+                                "Opened Steam authorization page, code: {}, waiting...",
+                                start.user_code
+                            ),
+                        };
+                        ctx.open_url(egui::OpenUrl::new_tab(start.verification_url));
+                    }
+                    Err(err) => {
+                        self.steam_login_in_progress = false;
+                        self.api_status = err;
+                    }
+                },
+                GuiMessage::SteamLoginFinished(result) => {
+                    self.steam_login_in_progress = false;
+                    match result {
+                        Ok(session) => {
+                            self.api_token = session.token;
+                            self.api_user = Some(session.user.clone());
+                            if let Err(err) = save_api_config_to_config(
+                                &self.config_path,
+                                &self.api_base_url,
+                                Some(&self.api_token),
+                            ) {
+                                self.api_status = err;
+                            } else {
+                                self.api_status = match self.language {
+                                    GuiLanguage::ZhCn => format!(
+                                        "Steam 登录成功：{}{}",
+                                        session.user.name,
+                                        if session.user.is_admin {
+                                            "（管理员）"
+                                        } else {
+                                            ""
+                                        }
+                                    ),
+                                    GuiLanguage::EnUs => format!(
+                                        "Steam login succeeded: {}{}",
+                                        session.user.name,
+                                        if session.user.is_admin {
+                                            " (admin)"
+                                        } else {
+                                            ""
+                                        }
+                                    ),
+                                };
+                            }
+                        }
+                        Err(err) => {
+                            self.api_status = err;
+                        }
+                    }
+                }
+                GuiMessage::Broadcast(result) => {
+                    self.broadcast_sending = false;
+                    self.broadcast_output = match result {
+                        Ok(response) if response.ok => match self.language {
+                            GuiLanguage::ZhCn => format!(
+                                "已写入全服消息队列 #{}：{}",
+                                response.id.unwrap_or_default(),
+                                response.message.unwrap_or_default()
+                            ),
+                            GuiLanguage::EnUs => format!(
+                                "Broadcast queued #{}: {}",
+                                response.id.unwrap_or_default(),
+                                response.message.unwrap_or_default()
+                            ),
+                        },
+                        Ok(response) => response
+                            .error
+                            .or(response.message)
+                            .unwrap_or_else(|| "broadcast failed".to_owned()),
+                        Err(err) => err,
+                    };
                 }
             }
             ctx.request_repaint();
@@ -2320,19 +2557,21 @@ impl NativeGuiApp {
         self.global_players.clear();
 
         let tx = self.tx.clone();
-        let servers_to_query = self.servers.iter()
+        let servers_to_query = self
+            .servers
+            .iter()
             .filter(|row| row.info.is_some())
             .map(|row| {
-                let name = row.info.as_ref().map(|i| i.name.clone()).unwrap_or_default();
+                let name = row
+                    .info
+                    .as_ref()
+                    .map(|i| i.name.clone())
+                    .unwrap_or_default();
                 (row.address.clone(), name)
             })
             .collect::<Vec<_>>();
 
-        let client = Client::builder()
-            .timeout(Duration::from_secs(3))
-            .build()
-            .unwrap_or_default();
-        let client = Arc::new(client);
+        let api_base_url = self.api_base_url.clone();
 
         thread::spawn(move || {
             if servers_to_query.is_empty() {
@@ -2343,42 +2582,37 @@ impl NativeGuiApp {
             let queue = Arc::new(Mutex::new(VecDeque::from(servers_to_query)));
             let results = Arc::new(Mutex::new(Vec::new()));
             let mut workers = Vec::new();
-            
+
             for _ in 0..16 {
                 let queue = Arc::clone(&queue);
                 let results = Arc::clone(&results);
-                let client = Arc::clone(&client);
-                let worker = thread::spawn(move || {
-                    loop {
-                        let item = {
-                            let mut q = queue.lock().unwrap();
-                            q.pop_front()
-                        };
-                        let Some((addr_str, server_name)) = item else {
-                            break;
-                        };
-                        
-                        if let Ok(socket_addr) = resolve_endpoint(&addr_str) {
-                            if let Ok(players) = query_server_players(socket_addr.socket, Duration::from_millis(2500)) {
-                                let mut res = results.lock().unwrap();
-                                for mut p in players {
-                                    if !p.name.trim().is_empty() {
-                                        if let Some((points, playtime_mins, ppm)) = fetch_player_stats_from_web(&client, &p.name) {
-                                            p.points = Some(points);
-                                            p.playtime_mins = Some(playtime_mins);
-                                            p.ppm = Some(ppm);
-                                        }
-                                        res.push(GlobalPlayerEntry {
-                                            name: p.name,
-                                            score: p.score,
-                                            duration: p.duration,
-                                            server_name: server_name.clone(),
-                                            server_address: addr_str.clone(),
-                                            points: p.points,
-                                            playtime_mins: p.playtime_mins,
-                                            ppm: p.ppm,
-                                        });
-                                    }
+                let worker = thread::spawn(move || loop {
+                    let item = {
+                        let mut q = queue.lock().unwrap();
+                        q.pop_front()
+                    };
+                    let Some((addr_str, server_name)) = item else {
+                        break;
+                    };
+
+                    if let Ok(socket_addr) = resolve_endpoint(&addr_str) {
+                        if let Ok(players) =
+                            query_server_players(socket_addr.socket, Duration::from_millis(2500))
+                        {
+                            let mut res = results.lock().unwrap();
+                            for p in players {
+                                if !p.name.trim().is_empty() {
+                                    res.push(GlobalPlayerEntry {
+                                        name: p.name,
+                                        score: p.score,
+                                        duration: p.duration,
+                                        server_name: server_name.clone(),
+                                        server_address: addr_str.clone(),
+                                        points: None,
+                                        playtime_mins: None,
+                                        ppm: None,
+                                        quarter_points: None,
+                                    });
                                 }
                             }
                         }
@@ -2392,7 +2626,12 @@ impl NativeGuiApp {
             }
 
             let mut final_results = Arc::try_unwrap(results).unwrap().into_inner().unwrap();
-            final_results.sort_by(|a, b| b.duration.partial_cmp(&a.duration).unwrap_or(std::cmp::Ordering::Equal));
+            enrich_global_players_with_api_stats(&api_base_url, &mut final_results);
+            final_results.sort_by(|a, b| {
+                b.duration
+                    .partial_cmp(&a.duration)
+                    .unwrap_or(std::cmp::Ordering::Equal)
+            });
             let _ = tx.send(GuiMessage::GlobalPlayers(Ok(final_results)));
         });
     }
@@ -2403,6 +2642,83 @@ impl NativeGuiApp {
         thread::spawn(move || {
             let result = load_gui_config_lists(&config_path);
             let _ = tx.send(GuiMessage::ConfigLists(result));
+        });
+    }
+
+    fn refresh_api_user(&mut self) {
+        if self.api_token.trim().is_empty() {
+            return;
+        }
+
+        let tx = self.tx.clone();
+        let base_url = self.api_base_url.clone();
+        let token = self.api_token.clone();
+        thread::spawn(move || {
+            let result = api_me(&base_url, &token);
+            let _ = tx.send(GuiMessage::ApiMe(result));
+        });
+    }
+
+    fn start_steam_login(&mut self) {
+        if self.steam_login_in_progress {
+            return;
+        }
+
+        self.steam_login_in_progress = true;
+        self.api_status = match self.language {
+            GuiLanguage::ZhCn => "正在创建 Steam 登录请求...".to_owned(),
+            GuiLanguage::EnUs => "Creating Steam login request...".to_owned(),
+        };
+        let tx = self.tx.clone();
+        let request = ApiLoginRequest {
+            base_url: self.api_base_url.clone(),
+        };
+        thread::spawn(move || {
+            let result = steam_device_login(request, tx.clone());
+            let _ = tx.send(GuiMessage::SteamLoginFinished(result));
+        });
+    }
+
+    fn logout_api(&mut self) {
+        let old_token = self.api_token.clone();
+        self.api_token.clear();
+        self.api_user = None;
+        self.api_status = match self.language {
+            GuiLanguage::ZhCn => "已退出登录".to_owned(),
+            GuiLanguage::EnUs => "Logged out".to_owned(),
+        };
+        let _ = save_api_config_to_config(&self.config_path, &self.api_base_url, None);
+        if !old_token.trim().is_empty() {
+            let base_url = self.api_base_url.clone();
+            thread::spawn(move || {
+                let _ = api_logout(&base_url, &old_token);
+            });
+        }
+    }
+
+    fn send_broadcast(&mut self) {
+        if self.broadcast_sending {
+            return;
+        }
+        if self.api_token.trim().is_empty() {
+            self.broadcast_output = match self.language {
+                GuiLanguage::ZhCn => "请先 Steam 登录。".to_owned(),
+                GuiLanguage::EnUs => "Please login with Steam first.".to_owned(),
+            };
+            return;
+        }
+
+        self.broadcast_sending = true;
+        self.broadcast_output = self.language.text(TextKey::RunningCommand).to_owned();
+        let tx = self.tx.clone();
+        let request = BroadcastRequest {
+            base_url: self.api_base_url.clone(),
+            token: self.api_token.clone(),
+            message: self.broadcast_message.clone(),
+        };
+        thread::spawn(move || {
+            let result = api_broadcast(request);
+            let _ = tx.send(GuiMessage::Broadcast(result));
         });
     }
 
@@ -2537,35 +2853,15 @@ impl NativeGuiApp {
 
         self.player_output = self.language.text(TextKey::Reading).to_owned();
         let tx = self.tx.clone();
+        let api_base_url = self.api_base_url.clone();
         thread::spawn(move || {
-            let mut result = resolve_endpoint(&address).and_then(|endpoint| {
-                query_server_players(endpoint.socket, Duration::from_millis(4500))
+            let result = resolve_endpoint(&address).and_then(|endpoint| {
+                let mut players =
+                    query_server_players(endpoint.socket, Duration::from_millis(4500))?;
+                enrich_players_with_api_stats(&api_base_url, &mut players);
+                Ok(players)
             });
-            
-            if let Ok(ref mut players) = result {
-                let client = Client::builder()
-                    .timeout(Duration::from_secs(3))
-                    .build()
-                    .unwrap_or_default();
-                let client = Arc::new(client);
-                let mut handles = Vec::new();
-                for player in players.iter() {
-                    let player_name = player.name.clone();
-                    let client = Arc::clone(&client);
-                    let handle = thread::spawn(move || {
-                        fetch_player_stats_from_web(&client, &player_name)
-                    });
-                    handles.push(handle);
-                }
-                for (player, handle) in players.iter_mut().zip(handles) {
-                    if let Ok(Some((points, playtime_mins, ppm))) = handle.join() {
-                        player.points = Some(points);
-                        player.playtime_mins = Some(playtime_mins);
-                        player.ppm = Some(ppm);
-                    }
-                }
-            }
-            
+
             let _ = tx.send(GuiMessage::Players(result));
         });
     }
@@ -2641,13 +2937,13 @@ impl eframe::App for NativeGuiApp {
             ui.horizontal(|ui| {
                 ui.heading(self.text(TextKey::AppTitle));
                 ui.separator();
-                
+
                 if ui.button(self.text(TextKey::RefreshServers)).clicked() {
                     self.refresh_servers();
                 }
-                
+
                 ui.separator();
-                
+
                 ui.label(self.text(TextKey::Language));
                 let mut selected_language = self.language;
                 egui::ComboBox::from_id_salt("gui_language")
@@ -2668,7 +2964,7 @@ impl eframe::App for NativeGuiApp {
                         self.text(TextKey::AppTitle).to_owned(),
                     ));
                 }
-                
+
                 ui.separator();
                 ui.label(format!(
                     "{} {}",
@@ -2692,10 +2988,18 @@ impl eframe::App for NativeGuiApp {
                 }
             });
             ui.horizontal(|ui| {
-                ui.label(egui::RichText::new(&self.config_status).size(11.0).color(egui::Color32::from_rgb(148, 163, 184)));
+                ui.label(
+                    egui::RichText::new(&self.config_status)
+                        .size(11.0)
+                        .color(egui::Color32::from_rgb(148, 163, 184)),
+                );
                 if !self.update_status.is_empty() {
                     ui.separator();
-                    ui.label(egui::RichText::new(&self.update_status).size(11.0).color(egui::Color32::from_rgb(234, 179, 8)));
+                    ui.label(
+                        egui::RichText::new(&self.update_status)
+                            .size(11.0)
+                            .color(egui::Color32::from_rgb(234, 179, 8)),
+                    );
                 }
             });
         });
@@ -2708,51 +3012,96 @@ impl eframe::App for NativeGuiApp {
                 ui.vertical(|ui| {
                     ui.spacing_mut().item_spacing = egui::vec2(0.0, 10.0);
                     ui.add_space(8.0);
-                    
+
                     let servers_label = match self.language {
                         GuiLanguage::ZhCn => "🌐 服务器浏览器",
                         GuiLanguage::EnUs => "🌐 Server Browser",
                     };
-                    if ui.selectable_value(&mut self.current_nav, NavTab::Servers, egui::RichText::new(servers_label).strong()).clicked() {
+                    if ui
+                        .selectable_value(
+                            &mut self.current_nav,
+                            NavTab::Servers,
+                            egui::RichText::new(servers_label).strong(),
+                        )
+                        .clicked()
+                    {
                         // Clicked servers
                     }
-                    
+
                     let players_label = match self.language {
                         GuiLanguage::ZhCn => "👥 全球在线玩家",
                         GuiLanguage::EnUs => "👥 Global Players",
                     };
-                    if ui.selectable_value(&mut self.current_nav, NavTab::GlobalPlayers, egui::RichText::new(players_label).strong()).clicked() {
+                    if ui
+                        .selectable_value(
+                            &mut self.current_nav,
+                            NavTab::GlobalPlayers,
+                            egui::RichText::new(players_label).strong(),
+                        )
+                        .clicked()
+                    {
                         self.refresh_global_players();
                     }
-                    
+
+                    let broadcast_label = match self.language {
+                        GuiLanguage::ZhCn => "📣 全服消息",
+                        GuiLanguage::EnUs => "📣 Broadcast",
+                    };
+                    let _ = ui.selectable_value(
+                        &mut self.current_nav,
+                        NavTab::Broadcast,
+                        egui::RichText::new(broadcast_label).strong(),
+                    );
+
                     let add_server_label = match self.language {
                         GuiLanguage::ZhCn => "➕ 添加服务器",
                         GuiLanguage::EnUs => "➕ Add Server",
                     };
-                    if ui.selectable_value(&mut self.current_nav, NavTab::AddServer, egui::RichText::new(add_server_label).strong()).clicked() {
+                    if ui
+                        .selectable_value(
+                            &mut self.current_nav,
+                            NavTab::AddServer,
+                            egui::RichText::new(add_server_label).strong(),
+                        )
+                        .clicked()
+                    {
                         self.config_status = self.language.config_file_status(&self.config_path);
                     }
-                    
+
                     let sourcebans_label = match self.language {
                         GuiLanguage::ZhCn => "🔗 SourceBans 订阅",
                         GuiLanguage::EnUs => "🔗 SourceBans Sub",
                     };
-                    if ui.selectable_value(&mut self.current_nav, NavTab::SourceBans, egui::RichText::new(sourcebans_label).strong()).clicked() {
+                    if ui
+                        .selectable_value(
+                            &mut self.current_nav,
+                            NavTab::SourceBans,
+                            egui::RichText::new(sourcebans_label).strong(),
+                        )
+                        .clicked()
+                    {
                         self.config_status = self.language.config_file_status(&self.config_path);
                     }
-                    
+
                     let settings_label = match self.language {
                         GuiLanguage::ZhCn => "⚙️ 首选项设置",
                         GuiLanguage::EnUs => "⚙️ Preferences",
                     };
-                    let _ = ui.selectable_value(&mut self.current_nav, NavTab::Settings, egui::RichText::new(settings_label).strong());
-                    
+                    let _ = ui.selectable_value(
+                        &mut self.current_nav,
+                        NavTab::Settings,
+                        egui::RichText::new(settings_label).strong(),
+                    );
+
                     let sponsor_label = match self.language {
                         GuiLanguage::ZhCn => "💖 赞赞赞助支持",
                         GuiLanguage::EnUs => "💖 Sponsor Anne",
                     };
                     ui.add_space(10.0);
-                    if ui.selectable_label(false, egui::RichText::new(sponsor_label).strong()).clicked() {
+                    if ui
+                        .selectable_label(false, egui::RichText::new(sponsor_label).strong())
+                        .clicked()
+                    {
                         ctx.open_url(egui::OpenUrl::new_tab("https://anne.trygek.com/sponsor/"));
                     }
                 });
@@ -2772,24 +3121,48 @@ impl eframe::App for NativeGuiApp {
                 .show(ctx, |ui| {
                     ui.vertical(|ui| {
                         ui.spacing_mut().item_spacing = egui::vec2(0.0, 8.0);
-                        
+
                         ui.heading(self.text(TextKey::SelectedServer));
                         ui.monospace(&address);
-                        
+
                         let connect_link = format!("steam://connect/{}", address);
-                        if ui.button(egui::RichText::new(format!("🎮 {}", self.text(TextKey::ConnectGame))).strong()).clicked() {
+                        if ui
+                            .button(
+                                egui::RichText::new(format!(
+                                    "🎮 {}",
+                                    self.text(TextKey::ConnectGame)
+                                ))
+                                .strong(),
+                            )
+                            .clicked()
+                        {
                             ctx.open_url(egui::OpenUrl::new_tab(connect_link));
                         }
-                        
+
                         ui.separator();
-                        
+
+                        let players_tab_label = self.text(TextKey::PlayerList);
+                        let rcon_tab_label = self.text(TextKey::Rcon);
+                        let cvars_tab_label = self.text(TextKey::CvarRules);
                         ui.horizontal(|ui| {
-                            ui.selectable_value(&mut self.inspector_tab, InspectorTab::Players, self.text(TextKey::PlayerList));
-                            ui.selectable_value(&mut self.inspector_tab, InspectorTab::Rcon, self.text(TextKey::Rcon));
-                            ui.selectable_value(&mut self.inspector_tab, InspectorTab::Cvars, self.text(TextKey::CvarRules));
+                            ui.selectable_value(
+                                &mut self.inspector_tab,
+                                InspectorTab::Players,
+                                players_tab_label,
+                            );
+                            ui.selectable_value(
+                                &mut self.inspector_tab,
+                                InspectorTab::Rcon,
+                                rcon_tab_label,
+                            );
+                            ui.selectable_value(
+                                &mut self.inspector_tab,
+                                InspectorTab::Cvars,
+                                cvars_tab_label,
+                            );
                         });
                         ui.separator();
-                        
+
                         match self.inspector_tab {
                             InspectorTab::Players => {
                                 ui.horizontal(|ui| {
@@ -2798,9 +3171,11 @@ impl eframe::App for NativeGuiApp {
                                         self.read_players();
                                     }
                                 });
-                                
+
                                 if self.selected_server_players.is_empty() {
-                                    ui.add(egui::Label::new(egui::RichText::new(&self.player_output).monospace()));
+                                    ui.add(egui::Label::new(
+                                        egui::RichText::new(&self.player_output).monospace(),
+                                    ));
                                 } else {
                                     egui::ScrollArea::vertical().show(ui, |ui| {
                                         egui::Grid::new("selected_players_grid")
@@ -2808,46 +3183,51 @@ impl eframe::App for NativeGuiApp {
                                             .min_col_width(55.0)
                                             .show(ui, |ui| {
                                                 ui.strong("#");
-                                                ui.strong(match self.language { GuiLanguage::ZhCn => "名字", GuiLanguage::EnUs => "Name" });
-                                                ui.strong(match self.language { GuiLanguage::ZhCn => "本局分数", GuiLanguage::EnUs => "Session Score" });
-                                                ui.strong(match self.language { GuiLanguage::ZhCn => "本局时间", GuiLanguage::EnUs => "Session Time" });
-                                                ui.strong(match self.language { GuiLanguage::ZhCn => "总积分", GuiLanguage::EnUs => "Total Points" });
-                                                ui.strong(match self.language { GuiLanguage::ZhCn => "总时长", GuiLanguage::EnUs => "Total Time" });
+                                                ui.strong(match self.language {
+                                                    GuiLanguage::ZhCn => "名字",
+                                                    GuiLanguage::EnUs => "Name",
+                                                });
+                                                ui.strong(match self.language {
+                                                    GuiLanguage::ZhCn => "本局分数",
+                                                    GuiLanguage::EnUs => "Session Score",
+                                                });
+                                                ui.strong(match self.language {
+                                                    GuiLanguage::ZhCn => "本局时间",
+                                                    GuiLanguage::EnUs => "Session Time",
+                                                });
+                                                ui.strong(match self.language {
+                                                    GuiLanguage::ZhCn => "总积分",
+                                                    GuiLanguage::EnUs => "Total Points",
+                                                });
+                                                ui.strong(match self.language {
+                                                    GuiLanguage::ZhCn => "总时长",
+                                                    GuiLanguage::EnUs => "Total Time",
+                                                });
                                                 ui.strong("PPM");
+                                                ui.strong(match self.language {
+                                                    GuiLanguage::ZhCn => "季度分",
+                                                    GuiLanguage::EnUs => "Quarter",
+                                                });
                                                 ui.end_row();
-                                                
+
                                                 for p in &self.selected_server_players {
                                                     ui.label(p.index.to_string());
                                                     ui.label(&p.name);
                                                     ui.label(p.score.to_string());
                                                     ui.label(format_duration_seconds(p.duration));
-                                                    
-                                                    let pts_str = match p.points {
-                                                        Some(pts) => {
-                                                            let s = pts.to_string();
-                                                            let mut result = String::new();
-                                                            let mut count = 0;
-                                                            for c in s.chars().rev() {
-                                                                if count > 0 && count % 3 == 0 && c != '-' {
-                                                                    result.push(',');
-                                                                }
-                                                                result.push(c);
-                                                                count += 1;
-                                                            }
-                                                            result.chars().rev().collect()
-                                                        }
-                                                        None => "-".to_owned(),
-                                                    };
-                                                    ui.label(pts_str);
-                                                    
-                                                    ui.label(format_playtime_minutes(p.playtime_mins, self.language));
-                                                    
-                                                    let ppm_str = match p.ppm {
-                                                        Some(val) => format!("{val:.2}"),
-                                                        None => "-".to_owned(),
-                                                    };
-                                                    ui.label(ppm_str);
-                                                    
+                                                    ui.label(format_optional_number(p.points));
+                                                    ui.label(format_playtime_minutes(
+                                                        p.playtime_mins,
+                                                        self.language,
+                                                    ));
+                                                    ui.label(
+                                                        p.ppm
+                                                            .map(|ppm| format!("{ppm:.2}"))
+                                                            .unwrap_or_else(|| "-".to_owned()),
+                                                    );
+                                                    ui.label(format_optional_number(
+                                                        p.quarter_points,
+                                                    ));
                                                     ui.end_row();
                                                 }
                                             });
@@ -2858,15 +3238,28 @@ impl eframe::App for NativeGuiApp {
                                 ui.heading(self.text(TextKey::Rcon));
                                 ui.label(self.text(TextKey::RconPassword));
                                 ui.horizontal(|ui| {
-                                    ui.add(egui::TextEdit::singleline(&mut self.rcon_password).password(true).desired_width(260.0));
-                                    ui.checkbox(&mut self.save_rcon_password, match self.language { GuiLanguage::ZhCn => "保存", GuiLanguage::EnUs => "Save" });
+                                    ui.add(
+                                        egui::TextEdit::singleline(&mut self.rcon_password)
+                                            .password(true)
+                                            .desired_width(260.0),
+                                    );
+                                    ui.checkbox(
+                                        &mut self.save_rcon_password,
+                                        match self.language {
+                                            GuiLanguage::ZhCn => "保存",
+                                            GuiLanguage::EnUs => "Save",
+                                        },
+                                    );
                                 });
-                                
+
                                 ui.label(self.text(TextKey::Command));
                                 ui.text_edit_singleline(&mut self.rcon_command_text);
-                                
+
                                 ui.horizontal(|ui| {
-                                    if ui.button(format!("⌨ {}", self.text(TextKey::RunCommand))).clicked() {
+                                    if ui
+                                        .button(format!("⌨ {}", self.text(TextKey::RunCommand)))
+                                        .clicked()
+                                    {
                                         self.run_rcon();
                                     }
                                     if ui.button("status").clicked() {
@@ -2878,13 +3271,15 @@ impl eframe::App for NativeGuiApp {
                                         self.run_rcon();
                                     }
                                 });
-                                
+
                                 ui.separator();
                                 egui::ScrollArea::vertical().show(ui, |ui| {
-                                    ui.add(egui::TextEdit::multiline(&mut self.rcon_output)
-                                        .desired_rows(15)
-                                        .desired_width(f32::INFINITY)
-                                        .code_editor());
+                                    ui.add(
+                                        egui::TextEdit::multiline(&mut self.rcon_output)
+                                            .desired_rows(15)
+                                            .desired_width(f32::INFINITY)
+                                            .code_editor(),
+                                    );
                                 });
                             }
                             InspectorTab::Cvars => {
@@ -2894,21 +3289,28 @@ impl eframe::App for NativeGuiApp {
                                         self.read_cvars();
                                     }
                                 });
-                                
+
                                 ui.label(self.text(TextKey::OptionalRconPassword));
-                                ui.add(egui::TextEdit::singleline(&mut self.cvar_password).password(true));
+                                ui.add(
+                                    egui::TextEdit::singleline(&mut self.cvar_password)
+                                        .password(true),
+                                );
                                 ui.label(self.text(TextKey::CvarNamesHelp));
                                 ui.text_edit_singleline(&mut self.cvar_names);
-                                
+
                                 ui.separator();
-                                
+
+                                let cvar_search_placeholder =
+                                    self.text(TextKey::CvarSearchPlaceholder);
                                 ui.horizontal(|ui| {
                                     ui.label("🔍");
-                                    ui.add(egui::TextEdit::singleline(&mut self.cvar_search_query)
-                                        .hint_text(self.text(TextKey::CvarSearchPlaceholder))
-                                        .desired_width(ui.available_width()));
+                                    ui.add(
+                                        egui::TextEdit::singleline(&mut self.cvar_search_query)
+                                            .hint_text(cvar_search_placeholder)
+                                            .desired_width(ui.available_width()),
+                                    );
                                 });
-                                
+
                                 let mut kv_pairs = Vec::new();
                                 for line in self.cvar_output.lines() {
                                     if let Some(pos) = line.find(" = ") {
@@ -2919,12 +3321,15 @@ impl eframe::App for NativeGuiApp {
                                         kv_pairs.push(("", line));
                                     }
                                 }
-                                
+
                                 if !self.cvar_search_query.trim().is_empty() {
                                     let query = self.cvar_search_query.to_lowercase();
-                                    kv_pairs.retain(|(k, v)| k.to_lowercase().contains(&query) || v.to_lowercase().contains(&query));
+                                    kv_pairs.retain(|(k, v)| {
+                                        k.to_lowercase().contains(&query)
+                                            || v.to_lowercase().contains(&query)
+                                    });
                                 }
-                                
+
                                 egui::ScrollArea::vertical().show(ui, |ui| {
                                     egui::Grid::new("cvars_table_grid")
                                         .striped(true)
@@ -2932,7 +3337,11 @@ impl eframe::App for NativeGuiApp {
                                         .show(ui, |ui| {
                                             for (k, v) in kv_pairs {
                                                 if k.is_empty() {
-                                                    ui.add(egui::Label::new(egui::RichText::new(v).color(egui::Color32::from_rgb(148, 163, 184))));
+                                                    ui.add(egui::Label::new(
+                                                        egui::RichText::new(v).color(
+                                                            egui::Color32::from_rgb(148, 163, 184),
+                                                        ),
+                                                    ));
                                                     ui.label("");
                                                 } else {
                                                     ui.label(egui::RichText::new(k).strong());
@@ -2956,7 +3365,7 @@ impl eframe::App for NativeGuiApp {
                     let mut active_players = 0;
                     let mut total_slots = 0;
                     let mut low_ping_count = 0;
-                    
+
                     for s in &self.servers {
                         if let Some(info) = &s.info {
                             active_players += info.players as usize;
@@ -2968,39 +3377,39 @@ impl eframe::App for NativeGuiApp {
                             }
                         }
                     }
-                    
+
                     ui.horizontal(|ui| {
                         ui.spacing_mut().item_spacing = egui::vec2(16.0, 0.0);
-                        
+
                         egui::Frame::canvas(ui.style())
                             .fill(egui::Color32::from_rgb(17, 24, 39))
                             .stroke(egui::Stroke::new(1.0, egui::Color32::from_rgb(31, 41, 55)))
-                            .rounding(egui::Rounding::same(8.0))
-                            .inner_margin(egui::Margin::symmetric(14.0, 10.0))
+                            .corner_radius(egui::CornerRadius::same(8))
+                            .inner_margin(egui::Margin::symmetric(14, 10))
                             .show(ui, |ui| {
                                 ui.vertical(|ui| {
                                     ui.label(egui::RichText::new(self.text(TextKey::ActivePlayers)).size(11.0).color(egui::Color32::from_rgb(148, 163, 184)));
                                     ui.heading(egui::RichText::new(format!("{active_players} / {total_slots}")).size(18.0).strong().color(egui::Color32::from_rgb(248, 250, 252)));
                                 });
                             });
-                        
+
                         egui::Frame::canvas(ui.style())
                             .fill(egui::Color32::from_rgb(17, 24, 39))
                             .stroke(egui::Stroke::new(1.0, egui::Color32::from_rgb(31, 41, 55)))
-                            .rounding(egui::Rounding::same(8.0))
-                            .inner_margin(egui::Margin::symmetric(14.0, 10.0))
+                            .corner_radius(egui::CornerRadius::same(8))
+                            .inner_margin(egui::Margin::symmetric(14, 10))
                             .show(ui, |ui| {
                                 ui.vertical(|ui| {
                                     ui.label(egui::RichText::new(self.text(TextKey::TotalServers)).size(11.0).color(egui::Color32::from_rgb(148, 163, 184)));
                                     ui.heading(egui::RichText::new(format!("{total_servers}")).size(18.0).strong().color(egui::Color32::from_rgb(248, 250, 252)));
                                 });
                             });
-                        
+
                         egui::Frame::canvas(ui.style())
                             .fill(egui::Color32::from_rgb(17, 24, 39))
                             .stroke(egui::Stroke::new(1.0, egui::Color32::from_rgb(31, 41, 55)))
-                            .rounding(egui::Rounding::same(8.0))
-                            .inner_margin(egui::Margin::symmetric(14.0, 10.0))
+                            .corner_radius(egui::CornerRadius::same(8))
+                            .inner_margin(egui::Margin::symmetric(14, 10))
                             .show(ui, |ui| {
                                 ui.vertical(|ui| {
                                     let low_ping_label = match self.language {
@@ -3012,26 +3421,47 @@ impl eframe::App for NativeGuiApp {
                                 });
                             });
                     });
-                    
+
                     ui.add_space(8.0);
-                    
+
+                    let search_placeholder = self.text(TextKey::SearchPlaceholder);
+                    let filter_has_players_label = self.text(TextKey::FilterHasPlayers);
+                    let filter_empty_label = self.text(TextKey::FilterEmpty);
+                    let filter_hide_timeout_label = self.text(TextKey::FilterHideTimeout);
                     ui.horizontal(|ui| {
                         ui.label(egui::RichText::new("🔍").size(15.0));
-                        ui.add(egui::TextEdit::singleline(&mut self.ui_search_query)
-                            .hint_text(self.text(TextKey::SearchPlaceholder))
-                            .desired_width(280.0));
-                        
+                        ui.add(
+                            egui::TextEdit::singleline(&mut self.ui_search_query)
+                                .hint_text(search_placeholder)
+                                .desired_width(280.0),
+                        );
+
                         ui.separator();
-                        
-                        ui.checkbox(&mut self.ui_filter_has_players, self.text(TextKey::FilterHasPlayers));
-                        ui.checkbox(&mut self.ui_filter_empty, self.text(TextKey::FilterEmpty));
-                        ui.checkbox(&mut self.ui_filter_hide_timeout, self.text(TextKey::FilterHideTimeout));
+
+                        if ui
+                            .checkbox(
+                                &mut self.ui_filter_has_players,
+                                filter_has_players_label,
+                            )
+                            .changed()
+                            && self.ui_filter_has_players
+                        {
+                            self.ui_filter_empty = false;
+                        }
+                        if ui
+                            .checkbox(&mut self.ui_filter_empty, filter_empty_label)
+                            .changed()
+                            && self.ui_filter_empty
+                        {
+                            self.ui_filter_has_players = false;
+                        }
+                        ui.checkbox(&mut self.ui_filter_hide_timeout, filter_hide_timeout_label);
                     });
-                    
+
                     ui.separator();
-                    
+
                     let mut filtered_servers = self.servers.clone();
-                    
+
                     if !self.ui_search_query.trim().is_empty() {
                         let query = self.ui_search_query.to_lowercase();
                         filtered_servers.retain(|row| {
@@ -3045,7 +3475,7 @@ impl eframe::App for NativeGuiApp {
                             group_match || addr_match || name_match
                         });
                     }
-                    
+
                     if self.ui_filter_has_players {
                         filtered_servers.retain(|row| {
                             row.info.as_ref().map(|i| i.players > 0).unwrap_or(false)
@@ -3059,16 +3489,16 @@ impl eframe::App for NativeGuiApp {
                     if self.ui_filter_hide_timeout {
                         filtered_servers.retain(|row| row.info.is_some());
                     }
-                    
+
                     ui.horizontal(|ui| {
                         ui.heading(self.text(TextKey::ServerList));
                         ui.label(format!("({})", self.language.server_count_status(filtered_servers.len())));
                     });
-                    
+
                     ui.add_space(4.0);
-                    
+
                     let mut clicked_server = None;
-                    
+
                     egui::ScrollArea::both()
                         .auto_shrink([false, false])
                         .show(ui, |ui| {
@@ -3096,17 +3526,22 @@ impl eframe::App for NativeGuiApp {
                                         self.set_sort(SortKey::Name);
                                     }
                                     ui.end_row();
-                                    
+
                                     for row in &filtered_servers {
                                         let selected = self.selected_server.as_deref() == Some(row.address.as_str());
                                         let (players_text, fraction) = if let Some(info) = &row.info {
-                                            (format!("{}/{}", info.players, info.max_players), info.players as f32 / info.max_players as f32)
+                                            let fraction = if info.max_players == 0 {
+                                                0.0
+                                            } else {
+                                                info.players as f32 / info.max_players as f32
+                                            };
+                                            (format!("{}/{}", info.players, info.max_players), fraction)
                                         } else {
                                             ("-".to_owned(), 0.0)
                                         };
-                                        
+
                                         let map = row.info.as_ref().map(|info| info.map.clone()).unwrap_or_else(|| "-".to_owned());
-                                        
+
                                         let vac_text = if let Some(info) = &row.info {
                                             if info.vac { "🛡 Yes" } else { "No" }
                                         } else {
@@ -3117,13 +3552,13 @@ impl eframe::App for NativeGuiApp {
                                         } else {
                                             egui::Color32::from_rgb(148, 163, 184)
                                         };
-                                        
+
                                         let name = if let Some(info) = &row.info {
                                             info.name.clone()
                                         } else {
                                             row.error.clone().unwrap_or_else(|| self.text(TextKey::NotQueried).to_owned())
                                         };
-                                        
+
                                         let ping_text = row.ping_ms.map(|v| format!("{v} ms")).unwrap_or_else(|| "超时".to_owned());
                                         let ping_color = match row.ping_ms {
                                             None => egui::Color32::from_rgb(239, 68, 68),
@@ -3137,21 +3572,36 @@ impl eframe::App for NativeGuiApp {
                                                 }
                                             }
                                         };
-                                        
+
                                         let mut row_clicked = ui.selectable_label(selected, row.groups.join(",")).clicked();
-                                        
+
                                         row_clicked |= ui.add(egui::Label::new(egui::RichText::new(&row.address).monospace()).sense(egui::Sense::click())).clicked();
-                                        
+
                                         row_clicked |= ui.add(egui::Label::new(egui::RichText::new(ping_text).color(ping_color)).sense(egui::Sense::click())).clicked();
-                                        
-                                        row_clicked |= ui.add(egui::ProgressBar::new(fraction).text(players_text).desired_width(70.0).sense(egui::Sense::click())).clicked();
-                                        
+
+                                        let player_color = if fraction >= 0.8 {
+                                            egui::Color32::from_rgb(249, 115, 22)
+                                        } else if fraction > 0.0 {
+                                            egui::Color32::from_rgb(34, 197, 94)
+                                        } else {
+                                            egui::Color32::from_rgb(148, 163, 184)
+                                        };
+                                        row_clicked |= ui
+                                            .add(
+                                                egui::Label::new(
+                                                    egui::RichText::new(players_text)
+                                                        .color(player_color),
+                                                )
+                                                .sense(egui::Sense::click()),
+                                            )
+                                            .clicked();
+
                                         row_clicked |= ui.add(egui::Label::new(egui::RichText::new(map)).sense(egui::Sense::click())).clicked();
-                                        
+
                                         row_clicked |= ui.add(egui::Label::new(egui::RichText::new(vac_text).color(vac_color)).sense(egui::Sense::click())).clicked();
-                                        
+
                                         row_clicked |= ui.add(egui::Label::new(egui::RichText::new(name)).sense(egui::Sense::click())).clicked();
-                                        
+
                                         if row_clicked {
                                             clicked_server = Some(row.address.clone());
                                         }
@@ -3159,7 +3609,7 @@ impl eframe::App for NativeGuiApp {
                                     }
                                 });
                         });
-                    
+
                     if let Some(address) = clicked_server {
                         self.select_server(address);
                     }
@@ -3171,18 +3621,22 @@ impl eframe::App for NativeGuiApp {
                             self.refresh_global_players();
                         }
                     });
-                    
+
                     ui.label(&self.global_players_status);
-                    
+
                     ui.separator();
-                    
+
+                    let global_player_search_placeholder =
+                        self.text(TextKey::GlobalPlayerSearchPlaceholder);
                     ui.horizontal(|ui| {
                         ui.label("🔍");
-                        ui.add(egui::TextEdit::singleline(&mut self.global_player_search_query)
-                            .hint_text(self.text(TextKey::GlobalPlayerSearchPlaceholder))
-                            .desired_width(280.0));
+                        ui.add(
+                            egui::TextEdit::singleline(&mut self.global_player_search_query)
+                                .hint_text(global_player_search_placeholder)
+                                .desired_width(280.0),
+                        );
                     });
-                    
+
                     let mut filtered_players = self.global_players.clone();
                     if !self.global_player_search_query.trim().is_empty() {
                         let query = self.global_player_search_query.to_lowercase();
@@ -3190,77 +3644,65 @@ impl eframe::App for NativeGuiApp {
                             p.name.to_lowercase().contains(&query) || p.server_name.to_lowercase().contains(&query)
                         });
                     }
-                    
+
                     ui.columns(2, |columns| {
                         columns[0].vertical(|ui| {
                             egui::Frame::canvas(ui.style())
                                 .fill(egui::Color32::from_rgb(17, 24, 39))
                                 .stroke(egui::Stroke::new(1.0, egui::Color32::from_rgb(31, 41, 55)))
-                                .rounding(egui::Rounding::same(8.0))
-                                .inner_margin(egui::Margin::same(16.0))
+                                .corner_radius(egui::CornerRadius::same(8))
+                                .inner_margin(egui::Margin::same(16))
                                 .show(ui, |ui| {
                                     ui.vertical(|ui| {
                                         ui.label(egui::RichText::new("在线玩家总量统计").strong().size(14.0));
                                         ui.add_space(8.0);
-                                        
+
                                         ui.label(format!("在线玩家总数: {}", self.global_players.len()));
-                                        
+
                                         let active_servers_count = self.global_players.iter()
                                             .map(|p| &p.server_address)
                                             .collect::<std::collections::HashSet<_>>()
                                             .len();
                                         ui.label(format!("有玩家的服务器数: {active_servers_count}"));
-                                        
+
                                         ui.add_space(10.0);
                                         ui.label(egui::RichText::new("提示：在右侧列表选中玩家后，可查看玩家所在服务器并一键连入！").size(11.0).color(egui::Color32::from_rgb(148, 163, 184)));
                                     });
                                 });
                         });
-                        
+
                         columns[1].vertical(|ui| {
                             egui::ScrollArea::vertical().show(ui, |ui| {
                                 egui::Grid::new("global_players_table_grid")
                                     .striped(true)
-                                    .min_col_width(65.0)
-                                    .show(ui, |ui| {
-                                        ui.strong(match self.language { GuiLanguage::ZhCn => "玩家昵称", GuiLanguage::EnUs => "Player Name" });
-                                        ui.strong(match self.language { GuiLanguage::ZhCn => "本局时间", GuiLanguage::EnUs => "Session Time" });
-                                        ui.strong(match self.language { GuiLanguage::ZhCn => "总积分", GuiLanguage::EnUs => "Total Points" });
-                                        ui.strong(match self.language { GuiLanguage::ZhCn => "总时长", GuiLanguage::EnUs => "Total Time" });
+                                        .min_col_width(65.0)
+                                        .show(ui, |ui| {
+                                            ui.strong(match self.language { GuiLanguage::ZhCn => "玩家昵称", GuiLanguage::EnUs => "Player Name" });
+                                            ui.strong(match self.language { GuiLanguage::ZhCn => "本局分数", GuiLanguage::EnUs => "Session Score" });
+                                            ui.strong(match self.language { GuiLanguage::ZhCn => "本局时间", GuiLanguage::EnUs => "Session Time" });
+                                            ui.strong(match self.language { GuiLanguage::ZhCn => "总积分", GuiLanguage::EnUs => "Total Points" });
+                                            ui.strong(match self.language { GuiLanguage::ZhCn => "总时长", GuiLanguage::EnUs => "Total Time" });
                                         ui.strong("PPM");
+                                        ui.strong(match self.language { GuiLanguage::ZhCn => "季度分", GuiLanguage::EnUs => "Quarter" });
                                         ui.strong(match self.language { GuiLanguage::ZhCn => "所在服务器", GuiLanguage::EnUs => "Server" });
                                         ui.end_row();
-                                        
+
                                         for p in &filtered_players {
                                             ui.label(egui::RichText::new(&p.name).strong());
+                                            ui.label(p.score.to_string());
                                             ui.label(format_duration_seconds(p.duration));
-                                            
-                                            let pts_str = match p.points {
-                                                Some(pts) => {
-                                                    let s = pts.to_string();
-                                                    let mut result = String::new();
-                                                    let mut count = 0;
-                                                    for c in s.chars().rev() {
-                                                        if count > 0 && count % 3 == 0 && c != '-' {
-                                                            result.push(',');
-                                                        }
-                                                        result.push(c);
-                                                        count += 1;
-                                                    }
-                                                    result.chars().rev().collect()
-                                                }
-                                                None => "-".to_owned(),
-                                            };
-                                            ui.label(pts_str);
-                                            
+
+                                            ui.label(format_optional_number(p.points));
+
                                             ui.label(format_playtime_minutes(p.playtime_mins, self.language));
-                                            
+
                                             let ppm_str = match p.ppm {
                                                 Some(val) => format!("{val:.2}"),
                                                 None => "-".to_owned(),
                                             };
                                             ui.label(ppm_str);
-                                            
+                                            ui.label(format_optional_number(p.quarter_points));
+
                                             let connect_link = format!("steam://connect/{}", p.server_address);
                                             let btn = egui::Button::new(format!("🎮 {}", p.server_name)).frame(false);
                                             if ui.add(btn).on_hover_text(format!("双击或点击连入：{}", p.server_address)).clicked() {
@@ -3273,6 +3715,93 @@ impl eframe::App for NativeGuiApp {
                         });
                     });
                 }
+                NavTab::Broadcast => {
+                    ui.heading(self.text(TextKey::BroadcastTab));
+                    ui.horizontal(|ui| {
+                        ui.label(self.text(TextKey::ApiBaseUrl));
+                        let response = ui.add(
+                            egui::TextEdit::singleline(&mut self.api_base_url)
+                                .desired_width(320.0),
+                        );
+                        if response.changed() {
+                            let _ = save_api_config_to_config(
+                                &self.config_path,
+                                &self.api_base_url,
+                                if self.api_token.trim().is_empty() {
+                                    None
+                                } else {
+                                    Some(&self.api_token)
+                                },
+                            );
+                        }
+                    });
+
+                    ui.horizontal(|ui| {
+                        if ui
+                            .add_enabled(
+                                !self.steam_login_in_progress,
+                                egui::Button::new(self.text(TextKey::SteamLogin)),
+                            )
+                            .clicked()
+                        {
+                            self.start_steam_login();
+                        }
+                        if ui
+                            .add_enabled(
+                                !self.api_token.trim().is_empty(),
+                                egui::Button::new(self.text(TextKey::Logout)),
+                            )
+                            .clicked()
+                        {
+                            self.logout_api();
+                        }
+                    });
+
+                    if let Some(user) = &self.api_user {
+                        ui.label(match self.language {
+                            GuiLanguage::ZhCn => format!(
+                                "当前账号：{} / {}{}",
+                                user.name,
+                                user.steam_id,
+                                if user.is_admin { " / 管理员" } else { "" }
+                            ),
+                            GuiLanguage::EnUs => format!(
+                                "Current user: {} / {}{}",
+                                user.name,
+                                user.steam_id,
+                                if user.is_admin { " / admin" } else { "" }
+                            ),
+                        });
+                    }
+                    if !self.api_status.is_empty() {
+                        ui.label(&self.api_status);
+                    }
+
+                    ui.separator();
+                    ui.label(self.text(TextKey::BroadcastMessage));
+                    ui.add(
+                        egui::TextEdit::multiline(&mut self.broadcast_message)
+                            .desired_rows(4)
+                            .desired_width(f32::INFINITY),
+                    );
+                    if ui
+                        .add_enabled(
+                            !self.broadcast_sending,
+                            egui::Button::new(self.text(TextKey::SendBroadcast)),
+                        )
+                        .clicked()
+                    {
+                        self.send_broadcast();
+                    }
+
+                    ui.separator();
+                    ui.add(
+                        egui::TextEdit::multiline(&mut self.broadcast_output)
+                            .desired_rows(10)
+                            .desired_width(f32::INFINITY)
+                            .code_editor(),
+                    );
+                }
                 NavTab::AddServer => {
                     ui.heading(self.text(TextKey::AddServer));
                     ui.horizontal(|ui| {
@@ -3284,10 +3813,10 @@ impl eframe::App for NativeGuiApp {
                             self.save_server();
                         }
                     });
-                    
+
                     ui.separator();
                     ui.heading(self.text(TextKey::ManualServerList));
-                    
+
                     egui::ScrollArea::vertical().show(ui, |ui| {
                         if self.manual_servers.is_empty() {
                             ui.label("-");
@@ -3307,7 +3836,7 @@ impl eframe::App for NativeGuiApp {
                 }
                 NavTab::SourceBans => {
                     ui.heading(self.text(TextKey::SubscriptionList));
-                    
+
                     let mut clicked_subscription = None;
                     for (index, subscription) in self.sourcebans_entries.iter().enumerate() {
                         let selected = self.selected_sourcebans == Some(index);
@@ -3315,7 +3844,7 @@ impl eframe::App for NativeGuiApp {
                             clicked_subscription = Some(index);
                         }
                     }
-                    
+
                     if let Some(index) = clicked_subscription {
                         self.selected_sourcebans = Some(index);
                         if let Some(subscription) = self.sourcebans_entries.get(index) {
@@ -3323,7 +3852,7 @@ impl eframe::App for NativeGuiApp {
                             self.sourcebans_url = subscription.url.clone();
                         }
                     }
-                    
+
                     ui.horizontal(|ui| {
                         if ui.button(self.text(TextKey::NewSubscription)).clicked() {
                             self.selected_sourcebans = None;
@@ -3334,14 +3863,14 @@ impl eframe::App for NativeGuiApp {
                             self.delete_sourcebans();
                         }
                     });
-                    
+
                     ui.separator();
                     ui.heading(self.text(TextKey::SourceBansSubscription));
                     ui.label(self.text(TextKey::SubscriptionName));
                     ui.text_edit_singleline(&mut self.sourcebans_name);
                     ui.label(self.text(TextKey::PageUrl));
                     ui.text_edit_singleline(&mut self.sourcebans_url);
-                    
+
                     let save_label = if self.selected_sourcebans.is_some() {
                         self.text(TextKey::UpdateSubscription)
                     } else {
@@ -3354,9 +3883,55 @@ impl eframe::App for NativeGuiApp {
                 NavTab::Settings => {
                     ui.heading(self.text(TextKey::SettingsTab));
                     ui.label(&self.config_status);
-                    
+
                     ui.separator();
-                    
+
+                    ui.horizontal(|ui| {
+                        ui.label(self.text(TextKey::ApiBaseUrl));
+                        if ui
+                            .add(
+                                egui::TextEdit::singleline(&mut self.api_base_url)
+                                    .desired_width(320.0),
+                            )
+                            .changed()
+                        {
+                            let _ = save_api_config_to_config(
+                                &self.config_path,
+                                &self.api_base_url,
+                                if self.api_token.trim().is_empty() {
+                                    None
+                                } else {
+                                    Some(&self.api_token)
+                                },
+                            );
+                        }
+                    });
+                    ui.horizontal(|ui| {
+                        if ui
+                            .add_enabled(
+                                !self.steam_login_in_progress,
+                                egui::Button::new(self.text(TextKey::SteamLogin)),
+                            )
+                            .clicked()
+                        {
+                            self.start_steam_login();
+                        }
+                        if ui
+                            .add_enabled(
+                                !self.api_token.trim().is_empty(),
+                                egui::Button::new(self.text(TextKey::Logout)),
+                            )
+                            .clicked()
+                        {
+                            self.logout_api();
+                        }
+                    });
+                    if !self.api_status.is_empty() {
+                        ui.label(&self.api_status);
+                    }
+
+                    ui.separator();
+
                     ui.horizontal(|ui| {
                         ui.label(self.text(TextKey::Language));
                         let mut selected_language = self.language;
@@ -3379,14 +3954,14 @@ impl eframe::App for NativeGuiApp {
                             ));
                         }
                     });
-                    
+
                     ui.add_space(10.0);
-                    
+
                     let auto_update_label = self.text(TextKey::AutoUpdate);
                     if ui.checkbox(&mut self.updater_auto_check, auto_update_label).changed() {
                         self.save_updater_config();
                     }
-                    
+
                     ui.horizontal(|ui| {
                         if ui.button(self.text(TextKey::CheckUpdates)).clicked() {
                             self.check_updates();
@@ -3397,7 +3972,7 @@ impl eframe::App for NativeGuiApp {
                             }
                         }
                     });
-                    
+
                     if !self.update_status.is_empty() {
                         ui.label(&self.update_status);
                     }
@@ -3442,6 +4017,21 @@ fn format_duration_seconds(seconds: f32) -> String {
     let minutes = total / 60;
     let seconds = total % 60;
     format!("{minutes}:{seconds:02}")
+}
+
+fn format_optional_number(value: Option<i32>) -> String {
+    let Some(value) = value else {
+        return "-".to_owned();
+    };
+    let s = value.to_string();
+    let mut result = String::new();
+    for (index, ch) in s.chars().rev().enumerate() {
+        if index > 0 && index % 3 == 0 && ch != '-' {
+            result.push(',');
+        }
+        result.push(ch);
+    }
+    result.chars().rev().collect()
 }
 
 fn format_playtime_minutes(mins: Option<i32>, lang: GuiLanguage) -> String {
@@ -3580,6 +4170,20 @@ fn save_gui_language_to_config(path: &PathBuf, language: GuiLanguage) -> Result<
 fn save_updater_config_to_config(path: &PathBuf, auto_check: bool) -> Result<(), String> {
     let mut config = load_config_or_default(path)?;
     config.updater.auto_check = auto_check;
+    save_config(path, &config)
+}
+
+fn save_api_config_to_config(
+    path: &PathBuf,
+    base_url: &str,
+    token: Option<&str>,
+) -> Result<(), String> {
+    let mut config = load_config_or_default(path)?;
+    config.api.base_url = non_empty(base_url.trim().to_owned(), "api.base_url")?;
+    config.api.token = token
+        .map(str::trim)
+        .filter(|token| !token.is_empty())
+        .map(str::to_owned);
     save_config(path, &config)
 }
 
@@ -3840,7 +4444,7 @@ fn query_server_rules(
         "A2S_RULES",
     )?;
 
-    if let Some(challenge) = parse_challenge(packet) {
+    if let Some(challenge) = parse_challenge(&packet) {
         let packet = a2s_exchange(
             addr,
             timeout,
@@ -3968,96 +4572,244 @@ fn parse_player_response(packet: &[u8]) -> Result<Vec<PlayerInfo>, String> {
             points: None,
             playtime_mins: None,
             ppm: None,
+            quarter_points: None,
         });
     }
 
     Ok(players)
 }
 
-fn html_unescape(s: &str) -> String {
-    s.replace("&amp;", "&")
-        .replace("&quot;", "\"")
-        .replace("&#039;", "'")
-        .replace("&apos;", "'")
-        .replace("&lt;", "<")
-        .replace("&gt;", ">")
+fn api_client(timeout: Duration) -> Result<Client, String> {
+    Client::builder()
+        .timeout(timeout)
+        .user_agent(USER_AGENT)
+        .build()
+        .map_err(|err| format!("failed to build API client: {err}"))
 }
 
-fn parse_playtime_to_minutes(s: &str) -> i32 {
-    let re_min = Regex::new(r"(\d+)\s*分钟").unwrap();
-    let re_hour_min = Regex::new(r"(\d+)\s*小时\s*(\d+)\s*分").unwrap();
-    let re_day_hour = Regex::new(r"(\d+)\s*天\s*(\d+)\s*小时").unwrap();
-
-    if let Some(cap) = re_min.captures(s) {
-        cap[1].parse::<i32>().unwrap_or(0)
-    } else if let Some(cap) = re_day_hour.captures(s) {
-        let days = cap[1].parse::<i32>().unwrap_or(0);
-        let hours = cap[2].parse::<i32>().unwrap_or(0);
-        days * 1440 + hours * 60
-    } else if let Some(cap) = re_hour_min.captures(s) {
-        let hours = cap[1].parse::<i32>().unwrap_or(0);
-        let mins = cap[2].parse::<i32>().unwrap_or(0);
-        hours * 60 + mins
+fn api_url(base_url: &str, path: &str) -> Result<reqwest::Url, String> {
+    let base = base_url.trim();
+    let base = if base.contains("://") {
+        base.to_owned()
     } else {
-        0
+        format!("https://{base}")
+    };
+    let parsed =
+        reqwest::Url::parse(&base).map_err(|err| format!("invalid API URL {base}: {err}"))?;
+    parsed
+        .join(path)
+        .map_err(|err| format!("invalid API path {path}: {err}"))
+}
+
+fn response_json<T: for<'de> Deserialize<'de>>(
+    response: reqwest::blocking::Response,
+) -> Result<T, String> {
+    let status = response.status();
+    let text = response
+        .text()
+        .map_err(|err| format!("failed to read API response: {err}"))?;
+    if !status.is_success() {
+        return Err(
+            api_error_message(&text).unwrap_or_else(|| format!("API HTTP {status}: {text}"))
+        );
+    }
+    serde_json::from_str(&text)
+        .map_err(|err| format!("failed to parse API response: {err}: {text}"))
+}
+
+fn api_error_message(text: &str) -> Option<String> {
+    let value: serde_json::Value = serde_json::from_str(text).ok()?;
+    value
+        .get("message")
+        .and_then(|v| v.as_str())
+        .or_else(|| value.get("error").and_then(|v| v.as_str()))
+        .map(str::to_owned)
+}
+
+fn api_me(base_url: &str, token: &str) -> Result<ApiUser, String> {
+    let client = api_client(Duration::from_secs(10))?;
+    let url = api_url(base_url, "/api/auth/me.php")?;
+    let response: ApiMeResponse = response_json(
+        client
+            .get(url)
+            .bearer_auth(token)
+            .send()
+            .map_err(|err| format!("failed to query API user: {err}"))?,
+    )?;
+    if response.ok {
+        response
+            .user
+            .ok_or_else(|| "API did not return user".to_owned())
+    } else {
+        Err(response
+            .message
+            .unwrap_or_else(|| "API user query failed".to_owned()))
     }
 }
 
-fn fetch_player_stats_from_web(client: &Client, player_name: &str) -> Option<(i32, i32, f32)> {
-    if player_name.trim().is_empty() {
-        return None;
+fn api_logout(base_url: &str, token: &str) -> Result<(), String> {
+    let client = api_client(Duration::from_secs(10))?;
+    let url = api_url(base_url, "/api/auth/logout.php")?;
+    let _value: serde_json::Value = response_json(
+        client
+            .post(url)
+            .bearer_auth(token)
+            .json(&serde_json::json!({}))
+            .send()
+            .map_err(|err| format!("failed to logout API session: {err}"))?,
+    )?;
+    Ok(())
+}
+
+fn steam_device_login(
+    request: ApiLoginRequest,
+    tx: Sender<GuiMessage>,
+) -> Result<ApiLoginSession, String> {
+    let client = api_client(Duration::from_secs(10))?;
+    let start_url = api_url(&request.base_url, "/api/auth/device_start.php")?;
+    let start: DeviceStartResponse = response_json(
+        client
+            .post(start_url)
+            .json(&serde_json::json!({}))
+            .send()
+            .map_err(|err| format!("failed to start Steam login: {err}"))?,
+    )?;
+    if !start.ok {
+        return Err("Steam login start failed".to_owned());
     }
-    
-    let url = "https://anne.trygek.com/stats/l4d2.php";
-    let resp = client.get(url)
-        .query(&[("q", player_name)])
-        .timeout(Duration::from_secs(3))
-        .send();
-        
-    let resp = match resp {
-        Ok(r) => r,
-        Err(_) => return None,
-    };
-    
-    let html = match resp.text() {
-        Ok(t) => t,
-        Err(_) => return None,
-    };
-    
-    let re = Regex::new(
-        r"(?s)<tr>\s*<td>\s*\d+\s*</td>\s*<td>\s*(.*?)\s*<br>\s*<span\s+class=\x22hint\x22\s*>(.*?)</span>\s*</td>\s*<td>\s*(.*?)\s*</td>\s*<td>\s*(.*?)\s*</td>\s*</tr>"
-    ).unwrap();
-    
-    let mut best_match = None;
-    for cap in re.captures_iter(&html) {
-        let scraped_name_raw = &cap[1];
-        let scraped_name = html_unescape(scraped_name_raw);
-        let score_str = &cap[3];
-        let playtime_str = &cap[4];
-        
-        let exact = scraped_name == player_name;
-        let case_insensitive = scraped_name.to_lowercase() == player_name.to_lowercase();
-        
-        if exact || case_insensitive {
-            let clean_score = score_str.replace(",", "");
-            let score = clean_score.trim().parse::<i32>().unwrap_or(0);
-            let playtime_mins = parse_playtime_to_minutes(playtime_str);
-            let ppm = if playtime_mins > 0 {
-                score as f32 / playtime_mins as f32
-            } else {
-                0.0
-            };
-            
-            let entry = (score, playtime_mins, ppm);
-            if exact {
-                return Some(entry);
-            } else {
-                best_match = Some(entry);
+
+    let _ = tx.send(GuiMessage::SteamLoginStarted(Ok(start.clone())));
+    let poll_url = api_url(&request.base_url, "/api/auth/device_poll.php")?;
+    let started = Instant::now();
+    let expires = Duration::from_secs(start.expires_in.max(1));
+    let interval = Duration::from_secs(start.interval.clamp(1, 10));
+
+    loop {
+        if started.elapsed() > expires {
+            return Err("Steam login expired".to_owned());
+        }
+        thread::sleep(interval);
+
+        let response: DevicePollResponse = response_json(
+            client
+                .post(poll_url.clone())
+                .json(&serde_json::json!({ "device_code": start.device_code }))
+                .send()
+                .map_err(|err| format!("failed to poll Steam login: {err}"))?,
+        )?;
+
+        if response.ok {
+            let token = response
+                .access_token
+                .ok_or_else(|| "API did not return access token".to_owned())?;
+            let user = response
+                .user
+                .ok_or_else(|| "API did not return Steam user".to_owned())?;
+            return Ok(ApiLoginSession { token, user });
+        }
+
+        if response.error.as_deref() == Some("authorization_pending")
+            || response.status.as_deref() == Some("authorization_pending")
+        {
+            continue;
+        }
+
+        return Err(response
+            .message
+            .or(response.error)
+            .unwrap_or_else(|| "Steam login failed".to_owned()));
+    }
+}
+
+fn api_broadcast(request: BroadcastRequest) -> Result<ApiBroadcastResponse, String> {
+    let message = non_empty(request.message.trim().to_owned(), "message")?;
+    let client = api_client(Duration::from_secs(15))?;
+    let url = api_url(&request.base_url, "/api/server/broadcast.php")?;
+    response_json(
+        client
+            .post(url)
+            .bearer_auth(request.token)
+            .json(&serde_json::json!({ "message": message }))
+            .send()
+            .map_err(|err| format!("failed to send broadcast: {err}"))?,
+    )
+}
+
+fn fetch_player_stats_batch(
+    base_url: &str,
+    queries: &[String],
+) -> Result<HashMap<String, PlayerStats>, String> {
+    if queries.is_empty() {
+        return Ok(HashMap::new());
+    }
+
+    let client = api_client(Duration::from_secs(8))?;
+    let url = api_url(base_url, "/api/player/stats_batch.php")?;
+    let response: PlayerStatsBatchResponse = response_json(
+        client
+            .post(url)
+            .json(&serde_json::json!({ "queries": queries }))
+            .send()
+            .map_err(|err| format!("failed to query player stats: {err}"))?,
+    )?;
+
+    if !response.ok {
+        return Err("player stats API failed".to_owned());
+    }
+
+    let mut stats = HashMap::new();
+    for result in response.results {
+        if result.ok {
+            if let Some(player) = result.player {
+                stats.insert(result.query.to_lowercase(), player);
             }
         }
     }
-    
-    best_match
+    Ok(stats)
+}
+
+fn enrich_players_with_api_stats(base_url: &str, players: &mut [PlayerInfo]) {
+    let queries = players
+        .iter()
+        .map(|player| player.name.trim().to_owned())
+        .filter(|name| !name.is_empty())
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect::<Vec<_>>();
+    let Ok(stats) = fetch_player_stats_batch(base_url, &queries) else {
+        return;
+    };
+
+    for player in players {
+        if let Some(stat) = stats.get(&player.name.to_lowercase()) {
+            player.points = Some(stat.total_points);
+            player.playtime_mins = Some(stat.playtime_minutes);
+            player.ppm = Some(stat.ppm);
+            player.quarter_points = Some(stat.quarter_points);
+        }
+    }
+}
+
+fn enrich_global_players_with_api_stats(base_url: &str, players: &mut [GlobalPlayerEntry]) {
+    let queries = players
+        .iter()
+        .map(|player| player.name.trim().to_owned())
+        .filter(|name| !name.is_empty())
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect::<Vec<_>>();
+    let Ok(stats) = fetch_player_stats_batch(base_url, &queries) else {
+        return;
+    };
+
+    for player in players {
+        if let Some(stat) = stats.get(&player.name.to_lowercase()) {
+            player.points = Some(stat.total_points);
+            player.playtime_mins = Some(stat.playtime_minutes);
+            player.ppm = Some(stat.ppm);
+            player.quarter_points = Some(stat.quarter_points);
+        }
+    }
 }
 
 #[cfg(test)]

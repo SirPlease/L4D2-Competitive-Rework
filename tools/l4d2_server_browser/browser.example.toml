@@ -4,6 +4,11 @@ language = "zh-CN"
 [updater]
 auto_check = true
 
+[api]
+base_url = "https://anne.trygek.com"
+# Steam 登录后会自动写入 token。
+# token = "aw_xxx"
+
 [master]
 enabled = true
 group = "公网大厅"

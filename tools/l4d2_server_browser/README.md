@@ -32,6 +32,7 @@ cargo run --release -- --gui --config browser.example.toml
 ```
 
 会直接打开桌面窗口。GUI 支持添加服务器、添加 SourceBans 订阅、刷新服务器列表、执行 RCON 命令、读取 CVAR/公开 rules。
+如果配置了 AnneWeb API，还可以用 Steam 登录后发送全服消息，并通过 API 查询在线玩家的总积分、总时长、PPM 和季度积分。
 
 常用参数：
 
@@ -72,6 +73,11 @@ language = "zh-CN"
 
 [updater]
 auto_check = true
+
+[api]
+base_url = "https://anne.trygek.com"
+# Steam 登录后会自动写入 token。
+# token = "aw_xxx"
 
 [master]
 enabled = true
@@ -118,6 +124,14 @@ auto_check = true
 ```
 
 GUI 会在启动时检查 GitHub Release 是否有新版本，也可以点击顶部的“检查更新”。发现新版本后，点击“打开下载页”进入 Release 页面下载对应平台压缩包。
+
+## AnneWeb API / Steam 登录
+
+`[api].base_url` 指向 NewAnneWeb 站点。点击 GUI 里的“Steam 登录”后，工具会打开网页授权；授权完成后 token 会保存到本地配置。
+
+全服消息不会使用服务器 RCON。GUI 调用 NewAnneWeb 的 `/api/server/broadcast.php`，网页端写入 `chat` 数据库的 `anne_global_chat` 表，`global_chat.smx` 会按自己的轮询规则广播给所有服务器。
+
+玩家统计使用 `/api/player/stats_batch.php` 批量查询，避免逐个抓取网页 HTML。
 
 RCON 使用 Source RCON TCP 协议。读取 CVAR 有两种方式：
 
