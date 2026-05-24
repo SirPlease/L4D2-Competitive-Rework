@@ -3688,8 +3688,9 @@ impl eframe::App for NativeGuiApp {
                         });
                     }
 
-                    ui.columns(2, |columns| {
-                        columns[0].vertical(|ui| {
+                    ui.horizontal_top(|ui| {
+                        ui.vertical(|ui| {
+                            ui.set_width(240.0);
                             egui::Frame::canvas(ui.style())
                                 .fill(egui::Color32::from_rgb(17, 24, 39))
                                 .stroke(egui::Stroke::new(1.0, egui::Color32::from_rgb(31, 41, 55)))
@@ -3714,8 +3715,10 @@ impl eframe::App for NativeGuiApp {
                                 });
                         });
 
-                        columns[1].vertical(|ui| {
-                            egui::ScrollArea::vertical().show(ui, |ui| {
+                        ui.add_space(16.0);
+
+                        ui.vertical(|ui| {
+                            egui::ScrollArea::both().id_salt("global_players_table_scroll").show(ui, |ui| {
                                 egui::Grid::new("global_players_table_grid")
                                     .striped(true)
                                         .min_col_width(65.0)
@@ -4816,28 +4819,33 @@ fn fetch_player_stats_batch(
         return Ok(HashMap::new());
     }
 
-    let client = api_client(Duration::from_secs(8))?;
+    let client = api_client(Duration::from_secs(15))?;
     let url = api_url(base_url, "/api/player/stats_batch.php")?;
-    let response: PlayerStatsBatchResponse = response_json(
-        client
-            .post(url)
-            .json(&serde_json::json!({ "queries": queries }))
-            .send()
-            .map_err(|err| format!("failed to query player stats: {err}"))?,
-    )?;
-
-    if !response.ok {
-        return Err("player stats API failed".to_owned());
-    }
-
+    
     let mut stats = HashMap::new();
-    for result in response.results {
-        if result.ok {
-            if let Some(player) = result.player {
-                stats.insert(result.query.to_lowercase(), player);
+
+    for chunk in queries.chunks(100) {
+        let response: PlayerStatsBatchResponse = response_json(
+            client
+                .post(url.clone())
+                .json(&serde_json::json!({ "queries": chunk }))
+                .send()
+                .map_err(|err| format!("failed to query player stats chunk: {err}"))?,
+        )?;
+
+        if !response.ok {
+            return Err("player stats API failed".to_owned());
+        }
+
+        for result in response.results {
+            if result.ok {
+                if let Some(player) = result.player {
+                    stats.insert(result.query.to_lowercase(), player);
+                }
             }
         }
     }
+
     Ok(stats)
 }
 
