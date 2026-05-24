@@ -177,7 +177,7 @@ struct Cli {
     json: bool,
 }
 
-#[derive(Debug, Clone, Copy, ValueEnum)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
 enum SortKey {
     Players,
     Ping,
@@ -523,6 +523,23 @@ impl GuiLanguage {
                 TextKey::OpenDownloadPage => "打开下载页",
                 TextKey::AutoUpdate => "自动检查更新",
                 TextKey::CurrentVersion => "当前版本",
+                TextKey::PlayerList => "玩家列表",
+                TextKey::RefreshPlayers => "刷新玩家",
+                TextKey::NoPlayers => "没有公开玩家数据",
+                TextKey::FilterEmpty => "空房",
+                TextKey::FilterHasPlayers => "有人",
+                TextKey::FilterHideTimeout => "隐藏超时",
+                TextKey::FilterCustom => "自定义过滤",
+                TextKey::GlobalPlayersTab => "全局玩家",
+                TextKey::SettingsTab => "首选项",
+                TextKey::ActivePlayers => "活动玩家",
+                TextKey::ActiveServers => "活跃服务器",
+                TextKey::SearchPlaceholder => "实时过滤服务器（名称/地图/分组）...",
+                TextKey::TotalServers => "总服务器",
+                TextKey::ConnectGame => "一键连接",
+                TextKey::CvarSearchPlaceholder => "搜索 CVAR / 规则变量名...",
+                TextKey::GlobalPlayerSearchPlaceholder => "搜索在线玩家昵称...",
+                TextKey::Duration => "游戏时长",
             },
             Self::EnUs => match key {
                 TextKey::AppTitle => "Telecom Server Browser",
@@ -584,6 +601,23 @@ impl GuiLanguage {
                 TextKey::OpenDownloadPage => "Open download page",
                 TextKey::AutoUpdate => "Auto-check updates",
                 TextKey::CurrentVersion => "Current version",
+                TextKey::PlayerList => "Players",
+                TextKey::RefreshPlayers => "Refresh players",
+                TextKey::NoPlayers => "No public player data",
+                TextKey::FilterEmpty => "Empty Only",
+                TextKey::FilterHasPlayers => "Has Players",
+                TextKey::FilterHideTimeout => "Hide Timeouts",
+                TextKey::FilterCustom => "Custom Filter",
+                TextKey::GlobalPlayersTab => "Global Players",
+                TextKey::SettingsTab => "Settings",
+                TextKey::ActivePlayers => "Active Players",
+                TextKey::ActiveServers => "Active Servers",
+                TextKey::SearchPlaceholder => "Filter servers (name/map/group)...",
+                TextKey::TotalServers => "Total Servers",
+                TextKey::ConnectGame => "Connect Game",
+                TextKey::CvarSearchPlaceholder => "Filter CVAR names...",
+                TextKey::GlobalPlayerSearchPlaceholder => "Search player name...",
+                TextKey::Duration => "Duration",
             },
         }
     }
@@ -730,6 +764,23 @@ enum TextKey {
     OpenDownloadPage,
     AutoUpdate,
     CurrentVersion,
+    PlayerList,
+    RefreshPlayers,
+    NoPlayers,
+    FilterEmpty,
+    FilterHasPlayers,
+    FilterHideTimeout,
+    FilterCustom,
+    GlobalPlayersTab,
+    SettingsTab,
+    ActivePlayers,
+    ActiveServers,
+    SearchPlaceholder,
+    TotalServers,
+    ConnectGame,
+    CvarSearchPlaceholder,
+    GlobalPlayerSearchPlaceholder,
+    Duration,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, Default)]
@@ -1487,6 +1538,16 @@ impl<'a> PacketReader<'a> {
         Ok(u16::from_le_bytes([bytes[0], bytes[1]]))
     }
 
+    fn i32_le(&mut self) -> Result<i32, String> {
+        let bytes = self.take(4)?;
+        Ok(i32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]))
+    }
+
+    fn f32_le(&mut self) -> Result<f32, String> {
+        let bytes = self.take(4)?;
+        Ok(f32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]))
+    }
+
     fn u64_le(&mut self) -> Result<u64, String> {
         let bytes = self.take(8)?;
         Ok(u64::from_le_bytes([
@@ -1768,6 +1829,17 @@ struct CvarPayload {
     values: BTreeMap<String, String>,
 }
 
+#[derive(Clone, Serialize)]
+struct PlayerInfo {
+    index: u8,
+    name: String,
+    score: i32,
+    duration: f32,
+    points: Option<i32>,
+    playtime_mins: Option<i32>,
+    ppm: Option<f32>,
+}
+
 #[derive(Clone)]
 struct ManualServerEntry {
     group: String,
@@ -1788,9 +1860,31 @@ struct UpdateInfo {
 }
 
 #[derive(Clone, Copy, PartialEq, Eq)]
-enum GuiTab {
-    ManualServers,
+enum NavTab {
+    Servers,
+    GlobalPlayers,
+    AddServer,
     SourceBans,
+    Settings,
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum InspectorTab {
+    Players,
+    Rcon,
+    Cvars,
+}
+
+#[derive(Clone)]
+struct GlobalPlayerEntry {
+    name: String,
+    score: i32,
+    duration: f32,
+    server_name: String,
+    server_address: String,
+    points: Option<i32>,
+    playtime_mins: Option<i32>,
+    ppm: Option<f32>,
 }
 
 enum GuiMessage {
@@ -1803,13 +1897,16 @@ enum GuiMessage {
     UpdateCheck(Result<UpdateInfo, String>),
     Rcon(Result<String, String>),
     Cvars(Result<CvarPayload, String>),
+    Players(Result<Vec<PlayerInfo>, String>),
+    GlobalPlayers(Result<Vec<GlobalPlayerEntry>, String>),
 }
 
 struct NativeGuiApp {
     cli: Cli,
     config_path: PathBuf,
     language: GuiLanguage,
-    active_tab: GuiTab,
+    current_nav: NavTab,
+    inspector_tab: InspectorTab,
     tx: Sender<GuiMessage>,
     rx: Receiver<GuiMessage>,
     servers: Vec<ServerRowPayload>,
@@ -1817,6 +1914,8 @@ struct NativeGuiApp {
     sourcebans_entries: Vec<FileSourceBans>,
     selected_sourcebans: Option<usize>,
     selected_server: Option<String>,
+    gui_sort: SortKey,
+    gui_sort_desc: bool,
     updater_auto_check: bool,
     update_status: String,
     update_url: Option<String>,
@@ -1834,6 +1933,59 @@ struct NativeGuiApp {
     cvar_password: String,
     cvar_names: String,
     cvar_output: String,
+    player_output: String,
+    // 新增 UI 交互状态
+    ui_search_query: String,
+    ui_filter_empty: bool,
+    ui_filter_has_players: bool,
+    ui_filter_hide_timeout: bool,
+    ui_filter_custom: bool,
+    save_rcon_password: bool,
+    cvar_search_query: String,
+    global_player_search_query: String,
+    global_players: Vec<GlobalPlayerEntry>,
+    global_players_status: String,
+    global_players_querying: bool,
+    selected_player_index: Option<usize>,
+    selected_server_players: Vec<PlayerInfo>,
+}
+
+fn apply_dark_theme(ctx: &egui::Context) {
+    let mut style = (*ctx.style()).clone();
+    
+    style.spacing.item_spacing = egui::vec2(12.0, 10.0);
+    style.spacing.button_padding = egui::vec2(10.0, 6.0);
+    style.spacing.scroll = egui::style::ScrollStyle::solid();
+    
+    let mut visuals = egui::Visuals::dark();
+    
+    visuals.panel_fill = egui::Color32::from_rgb(11, 15, 25);
+    visuals.window_fill = egui::Color32::from_rgb(17, 24, 39);
+    visuals.widgets.noninteractive.bg_fill = egui::Color32::from_rgb(17, 24, 39);
+    visuals.widgets.noninteractive.bg_stroke = egui::Stroke::new(1.0, egui::Color32::from_rgb(31, 41, 55));
+    
+    visuals.widgets.inactive.bg_fill = egui::Color32::from_rgb(31, 41, 55);
+    visuals.widgets.inactive.bg_stroke = egui::Stroke::new(1.0, egui::Color32::from_rgb(55, 65, 81));
+    visuals.widgets.inactive.fg_stroke = egui::Stroke::new(1.0, egui::Color32::from_rgb(248, 250, 252));
+    visuals.widgets.inactive.rounding = egui::Rounding::same(6.0);
+    
+    visuals.widgets.hovered.bg_fill = egui::Color32::from_rgb(79, 70, 229);
+    visuals.widgets.hovered.bg_stroke = egui::Stroke::new(1.0, egui::Color32::from_rgb(99, 102, 241));
+    visuals.widgets.hovered.fg_stroke = egui::Stroke::new(1.0, egui::Color32::from_rgb(255, 255, 255));
+    visuals.widgets.hovered.rounding = egui::Rounding::same(6.0);
+    
+    visuals.widgets.active.bg_fill = egui::Color32::from_rgb(99, 102, 241);
+    visuals.widgets.active.bg_stroke = egui::Stroke::new(1.0, egui::Color32::from_rgb(129, 140, 248));
+    visuals.widgets.active.fg_stroke = egui::Stroke::new(1.0, egui::Color32::from_rgb(255, 255, 255));
+    visuals.widgets.active.rounding = egui::Rounding::same(6.0);
+    
+    visuals.selection.bg_fill = egui::Color32::from_rgb(99, 102, 241);
+    visuals.selection.stroke = egui::Stroke::new(1.0, egui::Color32::from_rgb(255, 255, 255));
+    
+    visuals.extreme_bg_fill = egui::Color32::from_rgb(3, 7, 18);
+    
+    style.visuals = visuals;
+    ctx.set_style(style);
 }
 
 fn start_gui(cli: Cli, config_path: PathBuf) -> Result<(), String> {
@@ -1848,6 +2000,7 @@ fn start_gui(cli: Cli, config_path: PathBuf) -> Result<(), String> {
         &title,
         options,
         Box::new(move |cc| {
+            apply_dark_theme(&cc.egui_ctx);
             install_cjk_fonts(&cc.egui_ctx);
             Ok(Box::new(NativeGuiApp::new(cli, config_path, language)))
         }),
@@ -1948,7 +2101,8 @@ impl NativeGuiApp {
             cli,
             config_path,
             language,
-            active_tab: GuiTab::ManualServers,
+            current_nav: NavTab::Servers,
+            inspector_tab: InspectorTab::Players,
             tx,
             rx,
             servers: Vec::new(),
@@ -1956,6 +2110,8 @@ impl NativeGuiApp {
             sourcebans_entries: Vec::new(),
             selected_sourcebans: None,
             selected_server: None,
+            gui_sort: SortKey::Ping,
+            gui_sort_desc: false,
             updater_auto_check: initial_config.updater.auto_check,
             update_status: String::new(),
             update_url: None,
@@ -1976,6 +2132,20 @@ impl NativeGuiApp {
             cvar_password: String::new(),
             cvar_names: "hostname,sv_tags,mp_gamemode".to_owned(),
             cvar_output: String::new(),
+            player_output: String::new(),
+            ui_search_query: String::new(),
+            ui_filter_empty: false,
+            ui_filter_has_players: false,
+            ui_filter_hide_timeout: false,
+            ui_filter_custom: false,
+            save_rcon_password: false,
+            cvar_search_query: String::new(),
+            global_player_search_query: String::new(),
+            global_players: Vec::new(),
+            global_players_status: String::new(),
+            global_players_querying: false,
+            selected_player_index: None,
+            selected_server_players: Vec::new(),
         };
         app.config_status = app.language.config_file_status(&app.config_path);
         app.refresh_config_lists();
@@ -1993,6 +2163,7 @@ impl NativeGuiApp {
                     Ok(rows) => {
                         self.server_status = self.language.server_count_status(rows.len());
                         self.servers = rows;
+                        self.sort_gui_servers();
                     }
                     Err(err) => self.server_status = self.language.refresh_failed_status(&err),
                 },
@@ -2081,6 +2252,41 @@ impl NativeGuiApp {
                         Err(err) => self.language.cvar_failed_output(&err),
                     };
                 }
+                GuiMessage::Players(result) => {
+                    match result {
+                        Ok(players) => {
+                            self.selected_server_players = players.clone();
+                            self.player_output = format_player_payload(&players, self.language);
+                        }
+                        Err(err) => {
+                            self.selected_server_players.clear();
+                            self.player_output = err;
+                        }
+                    }
+                }
+                GuiMessage::GlobalPlayers(result) => {
+                    self.global_players_querying = false;
+                    match result {
+                        Ok(players) => {
+                            self.global_players = players;
+                            let active_servers_count = self.global_players.iter()
+                                .map(|p| &p.server_address)
+                                .collect::<std::collections::HashSet<_>>()
+                                .len();
+                            self.global_players_status = match self.language {
+                                GuiLanguage::ZhCn => format!("共 {} 个在线玩家，分布在 {} 个服务器", self.global_players.len(), active_servers_count),
+                                GuiLanguage::EnUs => format!("{} players online across {} servers", self.global_players.len(), active_servers_count),
+                            };
+                        }
+                        Err(err) => {
+                            self.global_players.clear();
+                            self.global_players_status = match self.language {
+                                GuiLanguage::ZhCn => format!("抓取玩家失败: {}", err),
+                                GuiLanguage::EnUs => format!("Failed to query players: {}", err),
+                            };
+                        }
+                    }
+                }
             }
             ctx.request_repaint();
         }
@@ -2099,6 +2305,95 @@ impl NativeGuiApp {
                 })
                 .map(|rows| server_rows_payload(&rows));
             let _ = tx.send(GuiMessage::Servers(result));
+        });
+    }
+
+    fn refresh_global_players(&mut self) {
+        if self.global_players_querying {
+            return;
+        }
+        self.global_players_querying = true;
+        self.global_players_status = match self.language {
+            GuiLanguage::ZhCn => "正在获取全局玩家数据...".to_owned(),
+            GuiLanguage::EnUs => "Querying global players...".to_owned(),
+        };
+        self.global_players.clear();
+
+        let tx = self.tx.clone();
+        let servers_to_query = self.servers.iter()
+            .filter(|row| row.info.is_some())
+            .map(|row| {
+                let name = row.info.as_ref().map(|i| i.name.clone()).unwrap_or_default();
+                (row.address.clone(), name)
+            })
+            .collect::<Vec<_>>();
+
+        let client = Client::builder()
+            .timeout(Duration::from_secs(3))
+            .build()
+            .unwrap_or_default();
+        let client = Arc::new(client);
+
+        thread::spawn(move || {
+            if servers_to_query.is_empty() {
+                let _ = tx.send(GuiMessage::GlobalPlayers(Ok(Vec::new())));
+                return;
+            }
+
+            let queue = Arc::new(Mutex::new(VecDeque::from(servers_to_query)));
+            let results = Arc::new(Mutex::new(Vec::new()));
+            let mut workers = Vec::new();
+            
+            for _ in 0..16 {
+                let queue = Arc::clone(&queue);
+                let results = Arc::clone(&results);
+                let client = Arc::clone(&client);
+                let worker = thread::spawn(move || {
+                    loop {
+                        let item = {
+                            let mut q = queue.lock().unwrap();
+                            q.pop_front()
+                        };
+                        let Some((addr_str, server_name)) = item else {
+                            break;
+                        };
+                        
+                        if let Ok(socket_addr) = resolve_endpoint(&addr_str) {
+                            if let Ok(players) = query_server_players(socket_addr.socket, Duration::from_millis(2500)) {
+                                let mut res = results.lock().unwrap();
+                                for mut p in players {
+                                    if !p.name.trim().is_empty() {
+                                        if let Some((points, playtime_mins, ppm)) = fetch_player_stats_from_web(&client, &p.name) {
+                                            p.points = Some(points);
+                                            p.playtime_mins = Some(playtime_mins);
+                                            p.ppm = Some(ppm);
+                                        }
+                                        res.push(GlobalPlayerEntry {
+                                            name: p.name,
+                                            score: p.score,
+                                            duration: p.duration,
+                                            server_name: server_name.clone(),
+                                            server_address: addr_str.clone(),
+                                            points: p.points,
+                                            playtime_mins: p.playtime_mins,
+                                            ppm: p.ppm,
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                workers.push(worker);
+            }
+
+            for w in workers {
+                let _ = w.join();
+            }
+
+            let mut final_results = Arc::try_unwrap(results).unwrap().into_inner().unwrap();
+            final_results.sort_by(|a, b| b.duration.partial_cmp(&a.duration).unwrap_or(std::cmp::Ordering::Equal));
+            let _ = tx.send(GuiMessage::GlobalPlayers(Ok(final_results)));
         });
     }
 
@@ -2214,7 +2509,7 @@ impl NativeGuiApp {
                 Some(self.cvar_password.clone())
             },
             names: Some(names),
-            timeout_ms: Some(2500),
+            timeout_ms: Some(4500),
         };
         thread::spawn(move || {
             let result = read_cvars(input);
@@ -2230,7 +2525,83 @@ impl NativeGuiApp {
 
         if changed {
             self.read_cvars();
+            self.read_players();
         }
+    }
+
+    fn read_players(&mut self) {
+        let Some(address) = self.selected_server.clone() else {
+            self.player_output = self.language.text(TextKey::NoServerSelected).to_owned();
+            return;
+        };
+
+        self.player_output = self.language.text(TextKey::Reading).to_owned();
+        let tx = self.tx.clone();
+        thread::spawn(move || {
+            let mut result = resolve_endpoint(&address).and_then(|endpoint| {
+                query_server_players(endpoint.socket, Duration::from_millis(4500))
+            });
+            
+            if let Ok(ref mut players) = result {
+                let client = Client::builder()
+                    .timeout(Duration::from_secs(3))
+                    .build()
+                    .unwrap_or_default();
+                let client = Arc::new(client);
+                let mut handles = Vec::new();
+                for player in players.iter() {
+                    let player_name = player.name.clone();
+                    let client = Arc::clone(&client);
+                    let handle = thread::spawn(move || {
+                        fetch_player_stats_from_web(&client, &player_name)
+                    });
+                    handles.push(handle);
+                }
+                for (player, handle) in players.iter_mut().zip(handles) {
+                    if let Ok(Some((points, playtime_mins, ppm))) = handle.join() {
+                        player.points = Some(points);
+                        player.playtime_mins = Some(playtime_mins);
+                        player.ppm = Some(ppm);
+                    }
+                }
+            }
+            
+            let _ = tx.send(GuiMessage::Players(result));
+        });
+    }
+
+    fn set_sort(&mut self, sort: SortKey) {
+        if self.gui_sort == sort {
+            self.gui_sort_desc = !self.gui_sort_desc;
+        } else {
+            self.gui_sort = sort;
+            self.gui_sort_desc = matches!(sort, SortKey::Players);
+        }
+        self.sort_gui_servers();
+    }
+
+    fn sort_gui_servers(&mut self) {
+        let sort = self.gui_sort;
+        let desc = self.gui_sort_desc;
+        self.servers.sort_by(|a, b| {
+            let ordering = match sort {
+                SortKey::Players => server_payload_players(a)
+                    .cmp(&server_payload_players(b))
+                    .then_with(|| server_payload_ping(a).cmp(&server_payload_ping(b))),
+                SortKey::Ping => server_payload_ping(a)
+                    .cmp(&server_payload_ping(b))
+                    .then_with(|| server_payload_players(b).cmp(&server_payload_players(a))),
+                SortKey::Name => server_payload_name(a).cmp(&server_payload_name(b)),
+                SortKey::Map => server_payload_map(a).cmp(&server_payload_map(b)),
+                SortKey::Address => a.address.cmp(&b.address),
+                SortKey::Group => a.groups.join(",").cmp(&b.groups.join(",")),
+            };
+            if desc {
+                ordering.reverse()
+            } else {
+                ordering
+            }
+        });
     }
 
     fn check_updates(&mut self) {
@@ -2265,13 +2636,18 @@ impl eframe::App for NativeGuiApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         self.handle_messages(ctx);
 
+        // 1. 顶部面板 Top Bar
         egui::TopBottomPanel::top("top_bar").show(ctx, |ui| {
             ui.horizontal(|ui| {
                 ui.heading(self.text(TextKey::AppTitle));
+                ui.separator();
+                
                 if ui.button(self.text(TextKey::RefreshServers)).clicked() {
                     self.refresh_servers();
                 }
+                
                 ui.separator();
+                
                 ui.label(self.text(TextKey::Language));
                 let mut selected_language = self.language;
                 egui::ComboBox::from_id_salt("gui_language")
@@ -2292,6 +2668,7 @@ impl eframe::App for NativeGuiApp {
                         self.text(TextKey::AppTitle).to_owned(),
                     ));
                 }
+                
                 ui.separator();
                 ui.label(format!(
                     "{} {}",
@@ -2314,243 +2691,717 @@ impl eframe::App for NativeGuiApp {
                     }
                 }
             });
-            ui.label(&self.config_status);
-            if !self.update_status.is_empty() {
-                ui.label(&self.update_status);
-            }
+            ui.horizontal(|ui| {
+                ui.label(egui::RichText::new(&self.config_status).size(11.0).color(egui::Color32::from_rgb(148, 163, 184)));
+                if !self.update_status.is_empty() {
+                    ui.separator();
+                    ui.label(egui::RichText::new(&self.update_status).size(11.0).color(egui::Color32::from_rgb(234, 179, 8)));
+                }
+            });
         });
 
-        egui::SidePanel::left("controls")
-            .resizable(true)
-            .default_width(360.0)
+        // 2. 左侧导航面板 Sidebar Pane
+        egui::SidePanel::left("navigation_panel")
+            .resizable(false)
+            .default_width(220.0)
             .show(ctx, |ui| {
-                let manual_servers_tab = self.text(TextKey::ManualServersTab);
-                let sourcebans_tab = self.text(TextKey::SourceBansTab);
-                ui.horizontal(|ui| {
-                    ui.selectable_value(
-                        &mut self.active_tab,
-                        GuiTab::ManualServers,
-                        manual_servers_tab,
-                    );
-                    ui.selectable_value(&mut self.active_tab, GuiTab::SourceBans, sourcebans_tab);
+                ui.vertical(|ui| {
+                    ui.spacing_mut().item_spacing = egui::vec2(0.0, 10.0);
+                    ui.add_space(8.0);
+                    
+                    let servers_label = match self.language {
+                        GuiLanguage::ZhCn => "🌐 服务器浏览器",
+                        GuiLanguage::EnUs => "🌐 Server Browser",
+                    };
+                    if ui.selectable_value(&mut self.current_nav, NavTab::Servers, egui::RichText::new(servers_label).strong()).clicked() {
+                        // Clicked servers
+                    }
+                    
+                    let players_label = match self.language {
+                        GuiLanguage::ZhCn => "👥 全球在线玩家",
+                        GuiLanguage::EnUs => "👥 Global Players",
+                    };
+                    if ui.selectable_value(&mut self.current_nav, NavTab::GlobalPlayers, egui::RichText::new(players_label).strong()).clicked() {
+                        self.refresh_global_players();
+                    }
+                    
+                    let add_server_label = match self.language {
+                        GuiLanguage::ZhCn => "➕ 添加服务器",
+                        GuiLanguage::EnUs => "➕ Add Server",
+                    };
+                    if ui.selectable_value(&mut self.current_nav, NavTab::AddServer, egui::RichText::new(add_server_label).strong()).clicked() {
+                        self.config_status = self.language.config_file_status(&self.config_path);
+                    }
+                    
+                    let sourcebans_label = match self.language {
+                        GuiLanguage::ZhCn => "🔗 SourceBans 订阅",
+                        GuiLanguage::EnUs => "🔗 SourceBans Sub",
+                    };
+                    if ui.selectable_value(&mut self.current_nav, NavTab::SourceBans, egui::RichText::new(sourcebans_label).strong()).clicked() {
+                        self.config_status = self.language.config_file_status(&self.config_path);
+                    }
+                    
+                    let settings_label = match self.language {
+                        GuiLanguage::ZhCn => "⚙️ 首选项设置",
+                        GuiLanguage::EnUs => "⚙️ Preferences",
+                    };
+                    let _ = ui.selectable_value(&mut self.current_nav, NavTab::Settings, egui::RichText::new(settings_label).strong());
+                    
+                    let sponsor_label = match self.language {
+                        GuiLanguage::ZhCn => "💖 赞赞赞助支持",
+                        GuiLanguage::EnUs => "💖 Sponsor Anne",
+                    };
+                    ui.add_space(10.0);
+                    if ui.selectable_label(false, egui::RichText::new(sponsor_label).strong()).clicked() {
+                        ctx.open_url(egui::OpenUrl::new_tab("https://anne.trygek.com/sponsor/"));
+                    }
                 });
-                ui.separator();
+            });
 
-                egui::ScrollArea::vertical().show(ui, |ui| match self.active_tab {
-                    GuiTab::ManualServers => {
-                        ui.heading(self.text(TextKey::AddServer));
+        // 3. 右侧属性面板 Inspector Pane
+        let mut show_inspector = false;
+        if self.current_nav == NavTab::Servers && self.selected_server.is_some() {
+            show_inspector = true;
+        }
+
+        if show_inspector {
+            let address = self.selected_server.clone().unwrap();
+            egui::SidePanel::right("inspector_panel")
+                .resizable(true)
+                .default_width(450.0)
+                .show(ctx, |ui| {
+                    ui.vertical(|ui| {
+                        ui.spacing_mut().item_spacing = egui::vec2(0.0, 8.0);
+                        
+                        ui.heading(self.text(TextKey::SelectedServer));
+                        ui.monospace(&address);
+                        
+                        let connect_link = format!("steam://connect/{}", address);
+                        if ui.button(egui::RichText::new(format!("🎮 {}", self.text(TextKey::ConnectGame))).strong()).clicked() {
+                            ctx.open_url(egui::OpenUrl::new_tab(connect_link));
+                        }
+                        
+                        ui.separator();
+                        
+                        ui.horizontal(|ui| {
+                            ui.selectable_value(&mut self.inspector_tab, InspectorTab::Players, self.text(TextKey::PlayerList));
+                            ui.selectable_value(&mut self.inspector_tab, InspectorTab::Rcon, self.text(TextKey::Rcon));
+                            ui.selectable_value(&mut self.inspector_tab, InspectorTab::Cvars, self.text(TextKey::CvarRules));
+                        });
+                        ui.separator();
+                        
+                        match self.inspector_tab {
+                            InspectorTab::Players => {
+                                ui.horizontal(|ui| {
+                                    ui.heading(self.text(TextKey::PlayerList));
+                                    if ui.button(self.text(TextKey::RefreshPlayers)).clicked() {
+                                        self.read_players();
+                                    }
+                                });
+                                
+                                if self.selected_server_players.is_empty() {
+                                    ui.add(egui::Label::new(egui::RichText::new(&self.player_output).monospace()));
+                                } else {
+                                    egui::ScrollArea::vertical().show(ui, |ui| {
+                                        egui::Grid::new("selected_players_grid")
+                                            .striped(true)
+                                            .min_col_width(55.0)
+                                            .show(ui, |ui| {
+                                                ui.strong("#");
+                                                ui.strong(match self.language { GuiLanguage::ZhCn => "名字", GuiLanguage::EnUs => "Name" });
+                                                ui.strong(match self.language { GuiLanguage::ZhCn => "本局分数", GuiLanguage::EnUs => "Session Score" });
+                                                ui.strong(match self.language { GuiLanguage::ZhCn => "本局时间", GuiLanguage::EnUs => "Session Time" });
+                                                ui.strong(match self.language { GuiLanguage::ZhCn => "总积分", GuiLanguage::EnUs => "Total Points" });
+                                                ui.strong(match self.language { GuiLanguage::ZhCn => "总时长", GuiLanguage::EnUs => "Total Time" });
+                                                ui.strong("PPM");
+                                                ui.end_row();
+                                                
+                                                for p in &self.selected_server_players {
+                                                    ui.label(p.index.to_string());
+                                                    ui.label(&p.name);
+                                                    ui.label(p.score.to_string());
+                                                    ui.label(format_duration_seconds(p.duration));
+                                                    
+                                                    let pts_str = match p.points {
+                                                        Some(pts) => {
+                                                            let s = pts.to_string();
+                                                            let mut result = String::new();
+                                                            let mut count = 0;
+                                                            for c in s.chars().rev() {
+                                                                if count > 0 && count % 3 == 0 && c != '-' {
+                                                                    result.push(',');
+                                                                }
+                                                                result.push(c);
+                                                                count += 1;
+                                                            }
+                                                            result.chars().rev().collect()
+                                                        }
+                                                        None => "-".to_owned(),
+                                                    };
+                                                    ui.label(pts_str);
+                                                    
+                                                    ui.label(format_playtime_minutes(p.playtime_mins, self.language));
+                                                    
+                                                    let ppm_str = match p.ppm {
+                                                        Some(val) => format!("{val:.2}"),
+                                                        None => "-".to_owned(),
+                                                    };
+                                                    ui.label(ppm_str);
+                                                    
+                                                    ui.end_row();
+                                                }
+                                            });
+                                    });
+                                }
+                            }
+                            InspectorTab::Rcon => {
+                                ui.heading(self.text(TextKey::Rcon));
+                                ui.label(self.text(TextKey::RconPassword));
+                                ui.horizontal(|ui| {
+                                    ui.add(egui::TextEdit::singleline(&mut self.rcon_password).password(true).desired_width(260.0));
+                                    ui.checkbox(&mut self.save_rcon_password, match self.language { GuiLanguage::ZhCn => "保存", GuiLanguage::EnUs => "Save" });
+                                });
+                                
+                                ui.label(self.text(TextKey::Command));
+                                ui.text_edit_singleline(&mut self.rcon_command_text);
+                                
+                                ui.horizontal(|ui| {
+                                    if ui.button(format!("⌨ {}", self.text(TextKey::RunCommand))).clicked() {
+                                        self.run_rcon();
+                                    }
+                                    if ui.button("status").clicked() {
+                                        self.rcon_command_text = "status".to_owned();
+                                        self.run_rcon();
+                                    }
+                                    if ui.button("meta list").clicked() {
+                                        self.rcon_command_text = "meta list".to_owned();
+                                        self.run_rcon();
+                                    }
+                                });
+                                
+                                ui.separator();
+                                egui::ScrollArea::vertical().show(ui, |ui| {
+                                    ui.add(egui::TextEdit::multiline(&mut self.rcon_output)
+                                        .desired_rows(15)
+                                        .desired_width(f32::INFINITY)
+                                        .code_editor());
+                                });
+                            }
+                            InspectorTab::Cvars => {
+                                ui.horizontal(|ui| {
+                                    ui.heading(self.text(TextKey::CvarRules));
+                                    if ui.button(self.text(TextKey::RefreshRules)).clicked() {
+                                        self.read_cvars();
+                                    }
+                                });
+                                
+                                ui.label(self.text(TextKey::OptionalRconPassword));
+                                ui.add(egui::TextEdit::singleline(&mut self.cvar_password).password(true));
+                                ui.label(self.text(TextKey::CvarNamesHelp));
+                                ui.text_edit_singleline(&mut self.cvar_names);
+                                
+                                ui.separator();
+                                
+                                ui.horizontal(|ui| {
+                                    ui.label("🔍");
+                                    ui.add(egui::TextEdit::singleline(&mut self.cvar_search_query)
+                                        .hint_text(self.text(TextKey::CvarSearchPlaceholder))
+                                        .desired_width(ui.available_width()));
+                                });
+                                
+                                let mut kv_pairs = Vec::new();
+                                for line in self.cvar_output.lines() {
+                                    if let Some(pos) = line.find(" = ") {
+                                        let key = line[..pos].trim();
+                                        let val = line[pos + 3..].trim();
+                                        kv_pairs.push((key, val));
+                                    } else {
+                                        kv_pairs.push(("", line));
+                                    }
+                                }
+                                
+                                if !self.cvar_search_query.trim().is_empty() {
+                                    let query = self.cvar_search_query.to_lowercase();
+                                    kv_pairs.retain(|(k, v)| k.to_lowercase().contains(&query) || v.to_lowercase().contains(&query));
+                                }
+                                
+                                egui::ScrollArea::vertical().show(ui, |ui| {
+                                    egui::Grid::new("cvars_table_grid")
+                                        .striped(true)
+                                        .min_col_width(80.0)
+                                        .show(ui, |ui| {
+                                            for (k, v) in kv_pairs {
+                                                if k.is_empty() {
+                                                    ui.add(egui::Label::new(egui::RichText::new(v).color(egui::Color32::from_rgb(148, 163, 184))));
+                                                    ui.label("");
+                                                } else {
+                                                    ui.label(egui::RichText::new(k).strong());
+                                                    ui.monospace(v);
+                                                }
+                                                ui.end_row();
+                                            }
+                                        });
+                                });
+                            }
+                        }
+                    });
+                });
+        }
+
+        // 4. 中央面板 Central Panel
+        egui::CentralPanel::default().show(ctx, |ui| {
+            match self.current_nav {
+                NavTab::Servers => {
+                    let total_servers = self.servers.len();
+                    let mut active_players = 0;
+                    let mut total_slots = 0;
+                    let mut low_ping_count = 0;
+                    
+                    for s in &self.servers {
+                        if let Some(info) = &s.info {
+                            active_players += info.players as usize;
+                            total_slots += info.max_players as usize;
+                        }
+                        if let Some(ping) = s.ping_ms {
+                            if ping < 50 {
+                                low_ping_count += 1;
+                            }
+                        }
+                    }
+                    
+                    ui.horizontal(|ui| {
+                        ui.spacing_mut().item_spacing = egui::vec2(16.0, 0.0);
+                        
+                        egui::Frame::canvas(ui.style())
+                            .fill(egui::Color32::from_rgb(17, 24, 39))
+                            .stroke(egui::Stroke::new(1.0, egui::Color32::from_rgb(31, 41, 55)))
+                            .rounding(egui::Rounding::same(8.0))
+                            .inner_margin(egui::Margin::symmetric(14.0, 10.0))
+                            .show(ui, |ui| {
+                                ui.vertical(|ui| {
+                                    ui.label(egui::RichText::new(self.text(TextKey::ActivePlayers)).size(11.0).color(egui::Color32::from_rgb(148, 163, 184)));
+                                    ui.heading(egui::RichText::new(format!("{active_players} / {total_slots}")).size(18.0).strong().color(egui::Color32::from_rgb(248, 250, 252)));
+                                });
+                            });
+                        
+                        egui::Frame::canvas(ui.style())
+                            .fill(egui::Color32::from_rgb(17, 24, 39))
+                            .stroke(egui::Stroke::new(1.0, egui::Color32::from_rgb(31, 41, 55)))
+                            .rounding(egui::Rounding::same(8.0))
+                            .inner_margin(egui::Margin::symmetric(14.0, 10.0))
+                            .show(ui, |ui| {
+                                ui.vertical(|ui| {
+                                    ui.label(egui::RichText::new(self.text(TextKey::TotalServers)).size(11.0).color(egui::Color32::from_rgb(148, 163, 184)));
+                                    ui.heading(egui::RichText::new(format!("{total_servers}")).size(18.0).strong().color(egui::Color32::from_rgb(248, 250, 252)));
+                                });
+                            });
+                        
+                        egui::Frame::canvas(ui.style())
+                            .fill(egui::Color32::from_rgb(17, 24, 39))
+                            .stroke(egui::Stroke::new(1.0, egui::Color32::from_rgb(31, 41, 55)))
+                            .rounding(egui::Rounding::same(8.0))
+                            .inner_margin(egui::Margin::symmetric(14.0, 10.0))
+                            .show(ui, |ui| {
+                                ui.vertical(|ui| {
+                                    let low_ping_label = match self.language {
+                                        GuiLanguage::ZhCn => "低延迟 (≤50ms)",
+                                        GuiLanguage::EnUs => "Low Ping (≤50ms)",
+                                    };
+                                    ui.label(egui::RichText::new(low_ping_label).size(11.0).color(egui::Color32::from_rgb(148, 163, 184)));
+                                    ui.heading(egui::RichText::new(format!("{low_ping_count}")).size(18.0).strong().color(egui::Color32::from_rgb(34, 197, 94)));
+                                });
+                            });
+                    });
+                    
+                    ui.add_space(8.0);
+                    
+                    ui.horizontal(|ui| {
+                        ui.label(egui::RichText::new("🔍").size(15.0));
+                        ui.add(egui::TextEdit::singleline(&mut self.ui_search_query)
+                            .hint_text(self.text(TextKey::SearchPlaceholder))
+                            .desired_width(280.0));
+                        
+                        ui.separator();
+                        
+                        ui.checkbox(&mut self.ui_filter_has_players, self.text(TextKey::FilterHasPlayers));
+                        ui.checkbox(&mut self.ui_filter_empty, self.text(TextKey::FilterEmpty));
+                        ui.checkbox(&mut self.ui_filter_hide_timeout, self.text(TextKey::FilterHideTimeout));
+                    });
+                    
+                    ui.separator();
+                    
+                    let mut filtered_servers = self.servers.clone();
+                    
+                    if !self.ui_search_query.trim().is_empty() {
+                        let query = self.ui_search_query.to_lowercase();
+                        filtered_servers.retain(|row| {
+                            let group_match = row.groups.iter().any(|g| g.to_lowercase().contains(&query));
+                            let addr_match = row.address.to_lowercase().contains(&query);
+                            let name_match = if let Some(info) = &row.info {
+                                info.name.to_lowercase().contains(&query) || info.map.to_lowercase().contains(&query)
+                            } else {
+                                false
+                            };
+                            group_match || addr_match || name_match
+                        });
+                    }
+                    
+                    if self.ui_filter_has_players {
+                        filtered_servers.retain(|row| {
+                            row.info.as_ref().map(|i| i.players > 0).unwrap_or(false)
+                        });
+                    }
+                    if self.ui_filter_empty {
+                        filtered_servers.retain(|row| {
+                            row.info.as_ref().map(|i| i.players == 0).unwrap_or(false)
+                        });
+                    }
+                    if self.ui_filter_hide_timeout {
+                        filtered_servers.retain(|row| row.info.is_some());
+                    }
+                    
+                    ui.horizontal(|ui| {
+                        ui.heading(self.text(TextKey::ServerList));
+                        ui.label(format!("({})", self.language.server_count_status(filtered_servers.len())));
+                    });
+                    
+                    ui.add_space(4.0);
+                    
+                    let mut clicked_server = None;
+                    
+                    egui::ScrollArea::both()
+                        .auto_shrink([false, false])
+                        .show(ui, |ui| {
+                            egui::Grid::new("servers_grid")
+                                .striped(true)
+                                .min_col_width(70.0)
+                                .show(ui, |ui| {
+                                    if ui.button(sort_label(self.text(TextKey::HeaderGroup), self.gui_sort, self.gui_sort_desc, SortKey::Group)).clicked() {
+                                        self.set_sort(SortKey::Group);
+                                    }
+                                    if ui.button(sort_label(self.text(TextKey::HeaderAddress), self.gui_sort, self.gui_sort_desc, SortKey::Address)).clicked() {
+                                        self.set_sort(SortKey::Address);
+                                    }
+                                    if ui.button(sort_label(self.text(TextKey::HeaderPing), self.gui_sort, self.gui_sort_desc, SortKey::Ping)).clicked() {
+                                        self.set_sort(SortKey::Ping);
+                                    }
+                                    if ui.button(sort_label(self.text(TextKey::HeaderPlayers), self.gui_sort, self.gui_sort_desc, SortKey::Players)).clicked() {
+                                        self.set_sort(SortKey::Players);
+                                    }
+                                    if ui.button(sort_label(self.text(TextKey::HeaderMap), self.gui_sort, self.gui_sort_desc, SortKey::Map)).clicked() {
+                                        self.set_sort(SortKey::Map);
+                                    }
+                                    ui.strong(self.text(TextKey::HeaderVac));
+                                    if ui.button(sort_label(self.text(TextKey::HeaderNameOrError), self.gui_sort, self.gui_sort_desc, SortKey::Name)).clicked() {
+                                        self.set_sort(SortKey::Name);
+                                    }
+                                    ui.end_row();
+                                    
+                                    for row in &filtered_servers {
+                                        let selected = self.selected_server.as_deref() == Some(row.address.as_str());
+                                        let (players_text, fraction) = if let Some(info) = &row.info {
+                                            (format!("{}/{}", info.players, info.max_players), info.players as f32 / info.max_players as f32)
+                                        } else {
+                                            ("-".to_owned(), 0.0)
+                                        };
+                                        
+                                        let map = row.info.as_ref().map(|info| info.map.clone()).unwrap_or_else(|| "-".to_owned());
+                                        
+                                        let vac_text = if let Some(info) = &row.info {
+                                            if info.vac { "🛡 Yes" } else { "No" }
+                                        } else {
+                                            "-"
+                                        };
+                                        let vac_color = if let Some(info) = &row.info {
+                                            if info.vac { egui::Color32::from_rgb(34, 197, 94) } else { egui::Color32::from_rgb(148, 163, 184) }
+                                        } else {
+                                            egui::Color32::from_rgb(148, 163, 184)
+                                        };
+                                        
+                                        let name = if let Some(info) = &row.info {
+                                            info.name.clone()
+                                        } else {
+                                            row.error.clone().unwrap_or_else(|| self.text(TextKey::NotQueried).to_owned())
+                                        };
+                                        
+                                        let ping_text = row.ping_ms.map(|v| format!("{v} ms")).unwrap_or_else(|| "超时".to_owned());
+                                        let ping_color = match row.ping_ms {
+                                            None => egui::Color32::from_rgb(239, 68, 68),
+                                            Some(ping) => {
+                                                if ping < 50 {
+                                                    egui::Color32::from_rgb(34, 197, 94)
+                                                } else if ping < 120 {
+                                                    egui::Color32::from_rgb(234, 179, 8)
+                                                } else {
+                                                    egui::Color32::from_rgb(249, 115, 22)
+                                                }
+                                            }
+                                        };
+                                        
+                                        let mut row_clicked = ui.selectable_label(selected, row.groups.join(",")).clicked();
+                                        
+                                        row_clicked |= ui.add(egui::Label::new(egui::RichText::new(&row.address).monospace()).sense(egui::Sense::click())).clicked();
+                                        
+                                        row_clicked |= ui.add(egui::Label::new(egui::RichText::new(ping_text).color(ping_color)).sense(egui::Sense::click())).clicked();
+                                        
+                                        row_clicked |= ui.add(egui::ProgressBar::new(fraction).text(players_text).desired_width(70.0).sense(egui::Sense::click())).clicked();
+                                        
+                                        row_clicked |= ui.add(egui::Label::new(egui::RichText::new(map)).sense(egui::Sense::click())).clicked();
+                                        
+                                        row_clicked |= ui.add(egui::Label::new(egui::RichText::new(vac_text).color(vac_color)).sense(egui::Sense::click())).clicked();
+                                        
+                                        row_clicked |= ui.add(egui::Label::new(egui::RichText::new(name)).sense(egui::Sense::click())).clicked();
+                                        
+                                        if row_clicked {
+                                            clicked_server = Some(row.address.clone());
+                                        }
+                                        ui.end_row();
+                                    }
+                                });
+                        });
+                    
+                    if let Some(address) = clicked_server {
+                        self.select_server(address);
+                    }
+                }
+                NavTab::GlobalPlayers => {
+                    ui.horizontal(|ui| {
+                        ui.heading(self.text(TextKey::GlobalPlayersTab));
+                        if ui.button(self.text(TextKey::RefreshPlayers)).clicked() {
+                            self.refresh_global_players();
+                        }
+                    });
+                    
+                    ui.label(&self.global_players_status);
+                    
+                    ui.separator();
+                    
+                    ui.horizontal(|ui| {
+                        ui.label("🔍");
+                        ui.add(egui::TextEdit::singleline(&mut self.global_player_search_query)
+                            .hint_text(self.text(TextKey::GlobalPlayerSearchPlaceholder))
+                            .desired_width(280.0));
+                    });
+                    
+                    let mut filtered_players = self.global_players.clone();
+                    if !self.global_player_search_query.trim().is_empty() {
+                        let query = self.global_player_search_query.to_lowercase();
+                        filtered_players.retain(|p| {
+                            p.name.to_lowercase().contains(&query) || p.server_name.to_lowercase().contains(&query)
+                        });
+                    }
+                    
+                    ui.columns(2, |columns| {
+                        columns[0].vertical(|ui| {
+                            egui::Frame::canvas(ui.style())
+                                .fill(egui::Color32::from_rgb(17, 24, 39))
+                                .stroke(egui::Stroke::new(1.0, egui::Color32::from_rgb(31, 41, 55)))
+                                .rounding(egui::Rounding::same(8.0))
+                                .inner_margin(egui::Margin::same(16.0))
+                                .show(ui, |ui| {
+                                    ui.vertical(|ui| {
+                                        ui.label(egui::RichText::new("在线玩家总量统计").strong().size(14.0));
+                                        ui.add_space(8.0);
+                                        
+                                        ui.label(format!("在线玩家总数: {}", self.global_players.len()));
+                                        
+                                        let active_servers_count = self.global_players.iter()
+                                            .map(|p| &p.server_address)
+                                            .collect::<std::collections::HashSet<_>>()
+                                            .len();
+                                        ui.label(format!("有玩家的服务器数: {active_servers_count}"));
+                                        
+                                        ui.add_space(10.0);
+                                        ui.label(egui::RichText::new("提示：在右侧列表选中玩家后，可查看玩家所在服务器并一键连入！").size(11.0).color(egui::Color32::from_rgb(148, 163, 184)));
+                                    });
+                                });
+                        });
+                        
+                        columns[1].vertical(|ui| {
+                            egui::ScrollArea::vertical().show(ui, |ui| {
+                                egui::Grid::new("global_players_table_grid")
+                                    .striped(true)
+                                    .min_col_width(65.0)
+                                    .show(ui, |ui| {
+                                        ui.strong(match self.language { GuiLanguage::ZhCn => "玩家昵称", GuiLanguage::EnUs => "Player Name" });
+                                        ui.strong(match self.language { GuiLanguage::ZhCn => "本局时间", GuiLanguage::EnUs => "Session Time" });
+                                        ui.strong(match self.language { GuiLanguage::ZhCn => "总积分", GuiLanguage::EnUs => "Total Points" });
+                                        ui.strong(match self.language { GuiLanguage::ZhCn => "总时长", GuiLanguage::EnUs => "Total Time" });
+                                        ui.strong("PPM");
+                                        ui.strong(match self.language { GuiLanguage::ZhCn => "所在服务器", GuiLanguage::EnUs => "Server" });
+                                        ui.end_row();
+                                        
+                                        for p in &filtered_players {
+                                            ui.label(egui::RichText::new(&p.name).strong());
+                                            ui.label(format_duration_seconds(p.duration));
+                                            
+                                            let pts_str = match p.points {
+                                                Some(pts) => {
+                                                    let s = pts.to_string();
+                                                    let mut result = String::new();
+                                                    let mut count = 0;
+                                                    for c in s.chars().rev() {
+                                                        if count > 0 && count % 3 == 0 && c != '-' {
+                                                            result.push(',');
+                                                        }
+                                                        result.push(c);
+                                                        count += 1;
+                                                    }
+                                                    result.chars().rev().collect()
+                                                }
+                                                None => "-".to_owned(),
+                                            };
+                                            ui.label(pts_str);
+                                            
+                                            ui.label(format_playtime_minutes(p.playtime_mins, self.language));
+                                            
+                                            let ppm_str = match p.ppm {
+                                                Some(val) => format!("{val:.2}"),
+                                                None => "-".to_owned(),
+                                            };
+                                            ui.label(ppm_str);
+                                            
+                                            let connect_link = format!("steam://connect/{}", p.server_address);
+                                            let btn = egui::Button::new(format!("🎮 {}", p.server_name)).frame(false);
+                                            if ui.add(btn).on_hover_text(format!("双击或点击连入：{}", p.server_address)).clicked() {
+                                                ctx.open_url(egui::OpenUrl::new_tab(connect_link));
+                                            }
+                                            ui.end_row();
+                                        }
+                                    });
+                            });
+                        });
+                    });
+                }
+                NavTab::AddServer => {
+                    ui.heading(self.text(TextKey::AddServer));
+                    ui.horizontal(|ui| {
                         ui.label(self.text(TextKey::Group));
-                        ui.text_edit_singleline(&mut self.group_name);
+                        ui.add(egui::TextEdit::singleline(&mut self.group_name).desired_width(120.0));
                         ui.label(self.text(TextKey::ServerAddress));
-                        ui.text_edit_singleline(&mut self.server_address);
+                        ui.add(egui::TextEdit::singleline(&mut self.server_address).desired_width(200.0));
                         if ui.button(self.text(TextKey::SaveServer)).clicked() {
                             self.save_server();
                         }
-
-                        ui.separator();
-                        ui.heading(self.text(TextKey::ManualServerList));
+                    });
+                    
+                    ui.separator();
+                    ui.heading(self.text(TextKey::ManualServerList));
+                    
+                    egui::ScrollArea::vertical().show(ui, |ui| {
                         if self.manual_servers.is_empty() {
                             ui.label("-");
                         } else {
-                            for entry in &self.manual_servers {
-                                ui.label(format!("{}: {}", entry.group, entry.server));
-                            }
+                            egui::Grid::new("manual_servers_grid")
+                                .striped(true)
+                                .min_col_width(120.0)
+                                .show(ui, |ui| {
+                                    for entry in &self.manual_servers {
+                                        ui.label(egui::RichText::new(&entry.group).strong());
+                                        ui.monospace(&entry.server);
+                                        ui.end_row();
+                                    }
+                                });
+                        }
+                    });
+                }
+                NavTab::SourceBans => {
+                    ui.heading(self.text(TextKey::SubscriptionList));
+                    
+                    let mut clicked_subscription = None;
+                    for (index, subscription) in self.sourcebans_entries.iter().enumerate() {
+                        let selected = self.selected_sourcebans == Some(index);
+                        if ui.selectable_label(selected, &subscription.name).on_hover_text(&subscription.url).clicked() {
+                            clicked_subscription = Some(index);
                         }
                     }
-                    GuiTab::SourceBans => {
-                        ui.heading(self.text(TextKey::SubscriptionList));
-                        let mut clicked_subscription = None;
-                        for (index, subscription) in self.sourcebans_entries.iter().enumerate() {
-                            let selected = self.selected_sourcebans == Some(index);
-                            if ui
-                                .selectable_label(selected, &subscription.name)
-                                .on_hover_text(&subscription.url)
-                                .clicked()
-                            {
-                                clicked_subscription = Some(index);
-                            }
-                        }
-
-                        if let Some(index) = clicked_subscription {
-                            self.selected_sourcebans = Some(index);
-                            if let Some(subscription) = self.sourcebans_entries.get(index) {
-                                self.sourcebans_name = subscription.name.clone();
-                                self.sourcebans_url = subscription.url.clone();
-                            }
-                        }
-
-                        ui.horizontal(|ui| {
-                            if ui.button(self.text(TextKey::NewSubscription)).clicked() {
-                                self.selected_sourcebans = None;
-                                self.sourcebans_name = "SourceBans".to_owned();
-                                self.sourcebans_url.clear();
-                            }
-                            if ui
-                                .add_enabled(
-                                    self.selected_sourcebans.is_some(),
-                                    egui::Button::new(self.text(TextKey::DeleteSubscription)),
-                                )
-                                .clicked()
-                            {
-                                self.delete_sourcebans();
-                            }
-                        });
-
-                        ui.separator();
-                        ui.heading(self.text(TextKey::SourceBansSubscription));
-                        ui.label(self.text(TextKey::SubscriptionName));
-                        ui.text_edit_singleline(&mut self.sourcebans_name);
-                        ui.label(self.text(TextKey::PageUrl));
-                        ui.text_edit_singleline(&mut self.sourcebans_url);
-                        let save_label = if self.selected_sourcebans.is_some() {
-                            self.text(TextKey::UpdateSubscription)
-                        } else {
-                            self.text(TextKey::SaveSubscription)
-                        };
-                        if ui.button(save_label).clicked() {
-                            self.update_sourcebans();
+                    
+                    if let Some(index) = clicked_subscription {
+                        self.selected_sourcebans = Some(index);
+                        if let Some(subscription) = self.sourcebans_entries.get(index) {
+                            self.sourcebans_name = subscription.name.clone();
+                            self.sourcebans_url = subscription.url.clone();
                         }
                     }
-                });
-            });
-
-        egui::CentralPanel::default().show(ctx, |ui| {
-            ui.horizontal(|ui| {
-                ui.heading(self.text(TextKey::ServerList));
-                ui.label(&self.server_status);
-            });
-            ui.separator();
-            let mut clicked_server = None;
-            egui::ScrollArea::both()
-                .auto_shrink([false, false])
-                .max_height(380.0)
-                .show(ui, |ui| {
-                    egui::Grid::new("servers_grid")
-                        .striped(true)
-                        .min_col_width(80.0)
-                        .show(ui, |ui| {
-                            ui.strong(self.text(TextKey::HeaderGroup));
-                            ui.strong(self.text(TextKey::HeaderAddress));
-                            ui.strong(self.text(TextKey::HeaderPing));
-                            ui.strong(self.text(TextKey::HeaderPlayers));
-                            ui.strong(self.text(TextKey::HeaderMap));
-                            ui.strong(self.text(TextKey::HeaderVac));
-                            ui.strong(self.text(TextKey::HeaderNameOrError));
-                            ui.end_row();
-
-                            for row in &self.servers {
-                                let selected =
-                                    self.selected_server.as_deref() == Some(row.address.as_str());
-                                let (players, map, vac, name) = if let Some(info) = &row.info {
-                                    (
-                                        format!("{}/{}", info.players, info.max_players),
-                                        info.map.clone(),
-                                        if info.vac {
-                                            self.text(TextKey::Yes)
-                                        } else {
-                                            self.text(TextKey::No)
-                                        }
-                                        .to_owned(),
-                                        info.name.clone(),
-                                    )
-                                } else {
-                                    (
-                                        "-".to_owned(),
-                                        "-".to_owned(),
-                                        "-".to_owned(),
-                                        row.error.clone().unwrap_or_else(|| {
-                                            self.text(TextKey::NotQueried).to_owned()
-                                        }),
-                                    )
-                                };
-                                let mut row_clicked = ui
-                                    .selectable_label(selected, row.groups.join(","))
-                                    .clicked();
-                                row_clicked |= ui
-                                    .add(
-                                        egui::Label::new(
-                                            egui::RichText::new(&row.address).monospace(),
-                                        )
-                                        .sense(egui::Sense::click()),
-                                    )
-                                    .clicked();
-                                row_clicked |= ui
-                                    .add(
-                                        egui::Label::new(
-                                            row.ping_ms
-                                                .map(|v| v.to_string())
-                                                .unwrap_or_else(|| "-".to_owned()),
-                                        )
-                                        .sense(egui::Sense::click()),
-                                    )
-                                    .clicked();
-                                row_clicked |= ui
-                                    .add(egui::Label::new(players).sense(egui::Sense::click()))
-                                    .clicked();
-                                row_clicked |= ui
-                                    .add(egui::Label::new(map).sense(egui::Sense::click()))
-                                    .clicked();
-                                row_clicked |= ui
-                                    .add(egui::Label::new(vac).sense(egui::Sense::click()))
-                                    .clicked();
-                                row_clicked |= ui
-                                    .add(egui::Label::new(name).sense(egui::Sense::click()))
-                                    .clicked();
-                                if row_clicked {
-                                    clicked_server = Some(row.address.clone());
+                    
+                    ui.horizontal(|ui| {
+                        if ui.button(self.text(TextKey::NewSubscription)).clicked() {
+                            self.selected_sourcebans = None;
+                            self.sourcebans_name = "SourceBans".to_owned();
+                            self.sourcebans_url.clear();
+                        }
+                        if ui.add_enabled(self.selected_sourcebans.is_some(), egui::Button::new(self.text(TextKey::DeleteSubscription))).clicked() {
+                            self.delete_sourcebans();
+                        }
+                    });
+                    
+                    ui.separator();
+                    ui.heading(self.text(TextKey::SourceBansSubscription));
+                    ui.label(self.text(TextKey::SubscriptionName));
+                    ui.text_edit_singleline(&mut self.sourcebans_name);
+                    ui.label(self.text(TextKey::PageUrl));
+                    ui.text_edit_singleline(&mut self.sourcebans_url);
+                    
+                    let save_label = if self.selected_sourcebans.is_some() {
+                        self.text(TextKey::UpdateSubscription)
+                    } else {
+                        self.text(TextKey::SaveSubscription)
+                    };
+                    if ui.button(save_label).clicked() {
+                        self.update_sourcebans();
+                    }
+                }
+                NavTab::Settings => {
+                    ui.heading(self.text(TextKey::SettingsTab));
+                    ui.label(&self.config_status);
+                    
+                    ui.separator();
+                    
+                    ui.horizontal(|ui| {
+                        ui.label(self.text(TextKey::Language));
+                        let mut selected_language = self.language;
+                        egui::ComboBox::from_id_salt("settings_gui_language")
+                            .selected_text(selected_language.display_name())
+                            .show_ui(ui, |ui| {
+                                for language in GuiLanguage::ALL {
+                                    ui.selectable_value(
+                                        &mut selected_language,
+                                        language,
+                                        language.display_name(),
+                                    );
                                 }
-                                ui.end_row();
+                            });
+                        if selected_language != self.language {
+                            self.language = selected_language;
+                            self.save_gui_language();
+                            ctx.send_viewport_cmd(egui::ViewportCommand::Title(
+                                self.text(TextKey::AppTitle).to_owned(),
+                            ));
+                        }
+                    });
+                    
+                    ui.add_space(10.0);
+                    
+                    let auto_update_label = self.text(TextKey::AutoUpdate);
+                    if ui.checkbox(&mut self.updater_auto_check, auto_update_label).changed() {
+                        self.save_updater_config();
+                    }
+                    
+                    ui.horizontal(|ui| {
+                        if ui.button(self.text(TextKey::CheckUpdates)).clicked() {
+                            self.check_updates();
+                        }
+                        if let Some(url) = self.update_url.clone() {
+                            if ui.button(self.text(TextKey::OpenDownloadPage)).clicked() {
+                                ctx.open_url(egui::OpenUrl::new_tab(url));
                             }
-                        });
-                });
-
-            if let Some(address) = clicked_server {
-                self.select_server(address);
-            }
-
-            ui.separator();
-            if let Some(address) = self.selected_server.clone() {
-                ui.horizontal(|ui| {
-                    ui.heading(self.text(TextKey::SelectedServer));
-                    ui.monospace(address);
-                });
-
-                ui.columns(2, |columns| {
-                    columns[0].heading(self.text(TextKey::Rcon));
-                    columns[0].label(self.text(TextKey::RconPassword));
-                    columns[0]
-                        .add(egui::TextEdit::singleline(&mut self.rcon_password).password(true));
-                    columns[0].label(self.text(TextKey::Command));
-                    columns[0].text_edit_singleline(&mut self.rcon_command_text);
-                    if columns[0].button(self.text(TextKey::RunCommand)).clicked() {
-                        self.run_rcon();
+                        }
+                    });
+                    
+                    if !self.update_status.is_empty() {
+                        ui.label(&self.update_status);
                     }
-                    columns[0].add(
-                        egui::TextEdit::multiline(&mut self.rcon_output)
-                            .desired_rows(10)
-                            .code_editor(),
-                    );
-
-                    columns[1].heading(self.text(TextKey::CvarRules));
-                    columns[1].label(self.text(TextKey::OptionalRconPassword));
-                    columns[1]
-                        .add(egui::TextEdit::singleline(&mut self.cvar_password).password(true));
-                    columns[1].label(self.text(TextKey::CvarNamesHelp));
-                    columns[1].text_edit_singleline(&mut self.cvar_names);
-                    if columns[1]
-                        .button(self.text(TextKey::RefreshRules))
-                        .clicked()
-                    {
-                        self.read_cvars();
-                    }
-                    columns[1].add(
-                        egui::TextEdit::multiline(&mut self.cvar_output)
-                            .desired_rows(10)
-                            .code_editor(),
-                    );
-                });
-            } else {
-                ui.label(self.text(TextKey::SelectServerHint));
+                }
             }
         });
     }
@@ -2565,6 +3416,91 @@ fn format_cvar_payload(payload: &CvarPayload) -> String {
         output.push_str(value);
     }
     output
+}
+
+fn format_player_payload(players: &[PlayerInfo], language: GuiLanguage) -> String {
+    if players.is_empty() {
+        return language.text(TextKey::NoPlayers).to_owned();
+    }
+
+    let mut output = String::from("#  score  time     name");
+    for player in players {
+        output.push('\n');
+        output.push_str(&format!(
+            "{:<2} {:>6} {:>7}  {}",
+            player.index,
+            player.score,
+            format_duration_seconds(player.duration),
+            player.name
+        ));
+    }
+    output
+}
+
+fn format_duration_seconds(seconds: f32) -> String {
+    let total = seconds.max(0.0) as u64;
+    let minutes = total / 60;
+    let seconds = total % 60;
+    format!("{minutes}:{seconds:02}")
+}
+
+fn format_playtime_minutes(mins: Option<i32>, lang: GuiLanguage) -> String {
+    let Some(minutes) = mins else {
+        return "-".to_owned();
+    };
+    if minutes < 60 {
+        match lang {
+            GuiLanguage::ZhCn => format!("{minutes}分钟"),
+            GuiLanguage::EnUs => format!("{minutes}m"),
+        }
+    } else {
+        let hours = minutes / 60;
+        let rem_mins = minutes % 60;
+        if hours < 24 {
+            match lang {
+                GuiLanguage::ZhCn => format!("{hours}小时{rem_mins}分"),
+                GuiLanguage::EnUs => format!("{hours}h {rem_mins}m"),
+            }
+        } else {
+            let days = hours / 24;
+            let rem_hours = hours % 24;
+            match lang {
+                GuiLanguage::ZhCn => format!("{days}天{rem_hours}小时"),
+                GuiLanguage::EnUs => format!("{days}d {rem_hours}h"),
+            }
+        }
+    }
+}
+
+fn sort_label(label: &str, active: SortKey, desc: bool, key: SortKey) -> String {
+    if active == key {
+        let marker = if desc { "↓" } else { "↑" };
+        format!("{label} {marker}")
+    } else {
+        label.to_owned()
+    }
+}
+
+fn server_payload_players(row: &ServerRowPayload) -> u8 {
+    row.info.as_ref().map(|info| info.players).unwrap_or(0)
+}
+
+fn server_payload_ping(row: &ServerRowPayload) -> u64 {
+    row.ping_ms.unwrap_or(u64::MAX)
+}
+
+fn server_payload_name(row: &ServerRowPayload) -> String {
+    row.info
+        .as_ref()
+        .map(|info| info.name.to_lowercase())
+        .unwrap_or_else(|| row.error.clone().unwrap_or_default().to_lowercase())
+}
+
+fn server_payload_map(row: &ServerRowPayload) -> String {
+    row.info
+        .as_ref()
+        .map(|info| info.map.to_lowercase())
+        .unwrap_or_default()
 }
 
 fn add_server_to_config(path: &PathBuf, input: AddServerRequest) -> Result<(), String> {
@@ -2897,6 +3833,65 @@ fn query_server_rules(
     addr: SocketAddrV4,
     timeout: Duration,
 ) -> Result<BTreeMap<String, String>, String> {
+    let packet = a2s_exchange(
+        addr,
+        timeout,
+        &build_a2s_rules_request([0xFF, 0xFF, 0xFF, 0xFF]),
+        "A2S_RULES",
+    )?;
+
+    if let Some(challenge) = parse_challenge(packet) {
+        let packet = a2s_exchange(
+            addr,
+            timeout,
+            &build_a2s_rules_request(challenge),
+            "A2S_RULES",
+        )?;
+        return parse_rules_response(&packet);
+    }
+
+    parse_rules_response(&packet)
+}
+
+fn build_a2s_rules_request(challenge: [u8; 4]) -> Vec<u8> {
+    let mut request = Vec::from(&b"\xFF\xFF\xFF\xFFV"[..]);
+    request.extend_from_slice(&challenge);
+    request
+}
+
+fn query_server_players(addr: SocketAddrV4, timeout: Duration) -> Result<Vec<PlayerInfo>, String> {
+    let packet = a2s_exchange(
+        addr,
+        timeout,
+        &build_a2s_player_request([0xFF, 0xFF, 0xFF, 0xFF]),
+        "A2S_PLAYER",
+    )?;
+
+    if let Some(challenge) = parse_challenge(&packet) {
+        let packet = a2s_exchange(
+            addr,
+            timeout,
+            &build_a2s_player_request(challenge),
+            "A2S_PLAYER",
+        )?;
+        return parse_player_response(&packet);
+    }
+
+    parse_player_response(&packet)
+}
+
+fn build_a2s_player_request(challenge: [u8; 4]) -> Vec<u8> {
+    let mut request = Vec::from(&b"\xFF\xFF\xFF\xFFU"[..]);
+    request.extend_from_slice(&challenge);
+    request
+}
+
+fn a2s_exchange(
+    addr: SocketAddrV4,
+    timeout: Duration,
+    request: &[u8],
+    label: &str,
+) -> Result<Vec<u8>, String> {
     let socket = UdpSocket::bind("0.0.0.0:0").map_err(|err| err.to_string())?;
     socket
         .set_read_timeout(Some(timeout))
@@ -2904,32 +3899,27 @@ fn query_server_rules(
     socket
         .set_write_timeout(Some(timeout))
         .map_err(|err| err.to_string())?;
-    socket
-        .connect(SocketAddr::V4(addr))
-        .map_err(|err| err.to_string())?;
 
-    socket
-        .send(&build_a2s_rules_request([0xFF, 0xFF, 0xFF, 0xFF]))
-        .map_err(|err| err.to_string())?;
-    let mut buf = [0u8; 8192];
-    let size = socket.recv(&mut buf).map_err(|err| err.to_string())?;
-    let packet = &buf[..size];
-
-    if let Some(challenge) = parse_challenge(packet) {
+    let mut last_error = None;
+    for _ in 0..2 {
         socket
-            .send(&build_a2s_rules_request(challenge))
-            .map_err(|err| err.to_string())?;
-        let size = socket.recv(&mut buf).map_err(|err| err.to_string())?;
-        return parse_rules_response(&buf[..size]);
+            .send_to(request, SocketAddr::V4(addr))
+            .map_err(|err| format!("{label} request failed: {err}"))?;
+
+        let mut buf = [0u8; 8192];
+        match socket.recv_from(&mut buf) {
+            Ok((size, from)) if from == SocketAddr::V4(addr) => return Ok(buf[..size].to_vec()),
+            Ok((_size, _from)) => continue,
+            Err(err) => last_error = Some(err),
+        }
     }
 
-    parse_rules_response(packet)
-}
-
-fn build_a2s_rules_request(challenge: [u8; 4]) -> Vec<u8> {
-    let mut request = Vec::from(&b"\xFF\xFF\xFF\xFFV"[..]);
-    request.extend_from_slice(&challenge);
-    request
+    let err = last_error
+        .map(|err| err.to_string())
+        .unwrap_or_else(|| "no matching response".to_owned());
+    Err(format!(
+        "{label} 查询无响应；服务器可能屏蔽了公开查询、UDP 被防火墙拦截，或该查询需要用 RCON 兜底。底层错误：{err}"
+    ))
 }
 
 fn parse_rules_response(packet: &[u8]) -> Result<BTreeMap<String, String>, String> {
@@ -2953,6 +3943,121 @@ fn parse_rules_response(packet: &[u8]) -> Result<BTreeMap<String, String>, Strin
     }
 
     Ok(values)
+}
+
+fn parse_player_response(packet: &[u8]) -> Result<Vec<PlayerInfo>, String> {
+    if packet.len() >= 4 && packet.starts_with(&[0xFE, 0xFF, 0xFF, 0xFF]) {
+        return Err("split A2S_PLAYER response is not supported".to_owned());
+    }
+    if packet.len() < 6 || !packet.starts_with(&[0xFF, 0xFF, 0xFF, 0xFF]) || packet[4] != 0x44 {
+        return Err("invalid A2S_PLAYER response".to_owned());
+    }
+
+    let mut reader = PacketReader::new(&packet[5..]);
+    let count = reader.u8()? as usize;
+    let mut players = Vec::with_capacity(count);
+    for _ in 0..count {
+        if reader.remaining() == 0 {
+            break;
+        }
+        players.push(PlayerInfo {
+            index: reader.u8()?,
+            name: reader.string()?,
+            score: reader.i32_le()?,
+            duration: reader.f32_le()?,
+            points: None,
+            playtime_mins: None,
+            ppm: None,
+        });
+    }
+
+    Ok(players)
+}
+
+fn html_unescape(s: &str) -> String {
+    s.replace("&amp;", "&")
+        .replace("&quot;", "\"")
+        .replace("&#039;", "'")
+        .replace("&apos;", "'")
+        .replace("&lt;", "<")
+        .replace("&gt;", ">")
+}
+
+fn parse_playtime_to_minutes(s: &str) -> i32 {
+    let re_min = Regex::new(r"(\d+)\s*分钟").unwrap();
+    let re_hour_min = Regex::new(r"(\d+)\s*小时\s*(\d+)\s*分").unwrap();
+    let re_day_hour = Regex::new(r"(\d+)\s*天\s*(\d+)\s*小时").unwrap();
+
+    if let Some(cap) = re_min.captures(s) {
+        cap[1].parse::<i32>().unwrap_or(0)
+    } else if let Some(cap) = re_day_hour.captures(s) {
+        let days = cap[1].parse::<i32>().unwrap_or(0);
+        let hours = cap[2].parse::<i32>().unwrap_or(0);
+        days * 1440 + hours * 60
+    } else if let Some(cap) = re_hour_min.captures(s) {
+        let hours = cap[1].parse::<i32>().unwrap_or(0);
+        let mins = cap[2].parse::<i32>().unwrap_or(0);
+        hours * 60 + mins
+    } else {
+        0
+    }
+}
+
+fn fetch_player_stats_from_web(client: &Client, player_name: &str) -> Option<(i32, i32, f32)> {
+    if player_name.trim().is_empty() {
+        return None;
+    }
+    
+    let url = "https://anne.trygek.com/stats/l4d2.php";
+    let resp = client.get(url)
+        .query(&[("q", player_name)])
+        .timeout(Duration::from_secs(3))
+        .send();
+        
+    let resp = match resp {
+        Ok(r) => r,
+        Err(_) => return None,
+    };
+    
+    let html = match resp.text() {
+        Ok(t) => t,
+        Err(_) => return None,
+    };
+    
+    let re = Regex::new(
+        r"(?s)<tr>\s*<td>\s*\d+\s*</td>\s*<td>\s*(.*?)\s*<br>\s*<span\s+class=\x22hint\x22\s*>(.*?)</span>\s*</td>\s*<td>\s*(.*?)\s*</td>\s*<td>\s*(.*?)\s*</td>\s*</tr>"
+    ).unwrap();
+    
+    let mut best_match = None;
+    for cap in re.captures_iter(&html) {
+        let scraped_name_raw = &cap[1];
+        let scraped_name = html_unescape(scraped_name_raw);
+        let score_str = &cap[3];
+        let playtime_str = &cap[4];
+        
+        let exact = scraped_name == player_name;
+        let case_insensitive = scraped_name.to_lowercase() == player_name.to_lowercase();
+        
+        if exact || case_insensitive {
+            let clean_score = score_str.replace(",", "");
+            let score = clean_score.trim().parse::<i32>().unwrap_or(0);
+            let playtime_mins = parse_playtime_to_minutes(playtime_str);
+            let ppm = if playtime_mins > 0 {
+                score as f32 / playtime_mins as f32
+            } else {
+                0.0
+            };
+            
+            let entry = (score, playtime_mins, ppm);
+            if exact {
+                return Some(entry);
+            } else {
+                best_match = Some(entry);
+            }
+        }
+    }
+    
+    best_match
 }
 
 #[cfg(test)]
@@ -3061,5 +4166,21 @@ mod tests {
             rules.get("sv_tags").map(String::as_str),
             Some("confogl,anne")
         );
+    }
+
+    #[test]
+    fn parses_player_response() {
+        let mut packet = Vec::new();
+        packet.extend_from_slice(&[0xFF, 0xFF, 0xFF, 0xFF, 0x44, 1]);
+        packet.push(0);
+        packet.extend_from_slice(b"Anne\0");
+        packet.extend_from_slice(&42i32.to_le_bytes());
+        packet.extend_from_slice(&125.0f32.to_le_bytes());
+
+        let players = parse_player_response(&packet).expect("valid players");
+        assert_eq!(players.len(), 1);
+        assert_eq!(players[0].name, "Anne");
+        assert_eq!(players[0].score, 42);
+        assert_eq!(format_duration_seconds(players[0].duration), "2:05");
     }
 }
