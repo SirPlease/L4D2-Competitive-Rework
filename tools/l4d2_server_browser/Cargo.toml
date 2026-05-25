@@ -1,6 +1,6 @@
 [package]
-name = "电信服刷服器"
-version = "0.6.0"
+name = "Anne刷服器"
+version = "0.7.0"
 edition = "2021"
 description = "A small Left 4 Dead 2 server browser using Steam master server and A2S_INFO."
 license = "GPL-3.0-or-later"

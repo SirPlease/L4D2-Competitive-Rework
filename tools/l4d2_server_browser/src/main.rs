@@ -27,7 +27,7 @@ const DEFAULT_MASTER_GROUP: &str = "Steam Master";
 const DEFAULT_CONFIG_FILE: &str = "l4d2-browser.toml";
 const USER_AGENT: &str = "l4d2-server-browser/0.4";
 const UPDATE_REPO: &str = "fantasylidong/CompetitiveWithAnne";
-const UPDATE_TAG_PREFIX: &str = "l4d2-browser-v";
+const UPDATE_TAG_PREFIX: &str = "Anne刷服器-v";
 const DEFAULT_API_BASE_URL: &str = "https://anne.trygek.com";
 const ONLINE_STATS_CACHE_TTL: Duration = Duration::from_secs(60);
 
@@ -531,7 +531,7 @@ impl GuiLanguage {
     fn text(self, key: TextKey) -> &'static str {
         match self {
             Self::ZhCn => match key {
-                TextKey::AppTitle => "电信服刷服器",
+                TextKey::AppTitle => "Anne刷服器",
                 TextKey::RefreshServers => "刷新服务器",
                 TextKey::Language => "语言",
                 TextKey::AddServer => "添加服务器",
@@ -614,7 +614,7 @@ impl GuiLanguage {
                 TextKey::RefreshHistory => "刷新历史",
             },
             Self::EnUs => match key {
-                TextKey::AppTitle => "Telecom Server Browser",
+                TextKey::AppTitle => "Anne Server Browser",
                 TextKey::RefreshServers => "Refresh servers",
                 TextKey::Language => "Language",
                 TextKey::AddServer => "Add server",
@@ -2752,16 +2752,13 @@ fn primary_button(label: &str) -> egui::Button<'_> {
     .corner_radius(egui::CornerRadius::same(8))
 }
 
-fn telecom_window_icon(size: u32) -> egui::IconData {
+fn anne_window_icon(size: u32) -> egui::IconData {
     let size = size.max(16);
     let mut rgba = Vec::with_capacity((size * size * 4) as usize);
     let radius = size as f32 * 0.18;
-    let stroke = 0.052;
 
     for y in 0..size {
         for x in 0..size {
-            let fx = (x as f32 + 0.5) / size as f32;
-            let fy = (y as f32 + 0.5) / size as f32;
             let px = x as f32 + 0.5;
             let py = y as f32 + 0.5;
             let cx = px.clamp(radius, size as f32 - radius);
@@ -2773,18 +2770,49 @@ fn telecom_window_icon(size: u32) -> egui::IconData {
                 continue;
             }
 
-            let mut pixel = [37, 99, 235, 255];
-            let on_logo = ((0.24..=0.76).contains(&fx)
-                && ((fy - 0.22).abs() < stroke || (fy - 0.64).abs() < stroke))
-                || ((0.22..=0.64).contains(&fy)
-                    && ((fx - 0.24).abs() < stroke || (fx - 0.76).abs() < stroke))
-                || ((0.24..=0.76).contains(&fx) && (fy - 0.43).abs() < stroke)
-                || ((0.18..=0.84).contains(&fy) && (fx - 0.50).abs() < stroke)
-                || ((0.50..=0.78).contains(&fx) && (fy - 0.84).abs() < stroke);
-            if on_logo {
-                pixel = [255, 255, 255, 255];
+            let fx = px / size as f32;
+            let fy = py / size as f32;
+            // Gradient background: top #2563EB -> bottom #1D4ED8
+            let t = fy;
+            let bg_r = (37.0 + (29.0 - 37.0) * t) as u8;
+            let bg_g = (99.0 + (78.0 - 99.0) * t) as u8;
+            let bg_b = (235.0 + (216.0 - 235.0) * t) as u8;
+
+            let s = size as f32;
+            let stroke_w = (s * 0.045).max(1.5);
+            let half_w = stroke_w / s;
+
+            // Letter 'A' shape
+            let apex_x = 0.50;
+            let apex_y = 0.18;
+            let base_y = 0.82;
+            let base_left = 0.22;
+            let base_right = 0.78;
+            let bar_y = 0.58;
+
+            // Left leg: apex -> bottom-left
+            let leg_t = if fy >= apex_y && fy <= base_y {
+                (fy - apex_y) / (base_y - apex_y)
+            } else {
+                -1.0
+            };
+            let left_leg = apex_x + (base_left - apex_x) * leg_t;
+            let right_leg = apex_x + (base_right - apex_x) * leg_t;
+
+            let on_left_leg = leg_t >= 0.0 && (fx - left_leg).abs() < half_w;
+            let on_right_leg = leg_t >= 0.0 && (fx - right_leg).abs() < half_w;
+
+            // Horizontal bar
+            let bar_t = (bar_y - apex_y) / (base_y - apex_y);
+            let bar_left = apex_x + (base_left - apex_x) * bar_t;
+            let bar_right = apex_x + (base_right - apex_x) * bar_t;
+            let on_bar = (fy - bar_y).abs() < half_w && fx >= bar_left && fx <= bar_right;
+
+            if on_left_leg || on_right_leg || on_bar {
+                rgba.extend_from_slice(&[255, 255, 255, 255]);
+            } else {
+                rgba.extend_from_slice(&[bg_r, bg_g, bg_b, 255]);
             }
-            rgba.extend_from_slice(&pixel);
         }
     }
 
@@ -2795,7 +2823,7 @@ fn telecom_window_icon(size: u32) -> egui::IconData {
     }
 }
 
-fn draw_telecom_logo(ui: &mut egui::Ui, size: f32) {
+fn draw_anne_logo(ui: &mut egui::Ui, size: f32) {
     let (rect, _response) = ui.allocate_exact_size(egui::vec2(size, size), egui::Sense::hover());
     let painter = ui.painter_at(rect);
     painter.rect_filled(rect, egui::CornerRadius::same(8), accent_color());
@@ -2807,14 +2835,11 @@ fn draw_telecom_logo(ui: &mut egui::Ui, size: f32) {
         )
     };
     let stroke = egui::Stroke::new((size * 0.07).max(2.0), egui::Color32::WHITE);
+    // Letter 'A': left leg, right leg, horizontal bar
     for (a, b) in [
-        ((0.25, 0.24), (0.75, 0.24)),
-        ((0.25, 0.64), (0.75, 0.64)),
-        ((0.25, 0.24), (0.25, 0.64)),
-        ((0.75, 0.24), (0.75, 0.64)),
-        ((0.25, 0.44), (0.75, 0.44)),
-        ((0.50, 0.18), (0.50, 0.84)),
-        ((0.50, 0.84), (0.78, 0.84)),
+        ((0.50, 0.18), (0.22, 0.82)), // left leg
+        ((0.50, 0.18), (0.78, 0.82)), // right leg
+        ((0.33, 0.58), (0.67, 0.58)), // bar
     ] {
         painter.line_segment([point(a.0, a.1), point(b.0, b.1)], stroke);
     }
@@ -2873,7 +2898,7 @@ fn start_gui(cli: Cli, config_path: PathBuf) -> Result<(), String> {
         viewport: egui::ViewportBuilder::default()
             .with_title(title.clone())
             .with_inner_size([1180.0, 760.0])
-            .with_icon(Arc::new(telecom_window_icon(128))),
+            .with_icon(Arc::new(anne_window_icon(128))),
         ..Default::default()
     };
 
@@ -4552,7 +4577,7 @@ impl eframe::App for NativeGuiApp {
                     ui.spacing_mut().item_spacing = egui::vec2(0.0, 10.0);
 
                     ui.horizontal(|ui| {
-                        draw_telecom_logo(ui, 36.0);
+                        draw_anne_logo(ui, 36.0);
                         ui.vertical(|ui| {
                             ui.label(
                                 egui::RichText::new(self.text(TextKey::AppTitle))
@@ -6372,7 +6397,7 @@ fn fetch_latest_update_tag(client: &Client) -> Result<String, String> {
             )
         })
         .map(|tag| tag.name)
-        .ok_or_else(|| "no v* or l4d2-browser-v* update release found".to_owned())
+        .ok_or_else(|| format!("no v* or {UPDATE_TAG_PREFIX}* update release found"))
 }
 
 fn is_update_release_tag(tag: &str) -> bool {
