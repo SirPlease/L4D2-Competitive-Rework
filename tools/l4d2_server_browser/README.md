@@ -101,9 +101,16 @@ servers = [
 [[sourcebans]]
 name = "Anne 网页订阅"
 url = "https://example.com/sourcebans"
+
+[[sourcebans]]
+name = "粘贴文本订阅"
+text = """
+steam://connect/127.0.0.1:27017
+example.org:27018
+"""
 ```
 
-`sourcebans` 是兼容旧版本的配置字段，现在也用于普通网页订阅。`sourcebans.url` 可以填 SourceBans 站点根路径、直接填 `index.php?p=servers`，也可以填普通网页链接。普通网页链接会原样请求；工具会从页面正文和同源 `.js` / `.json` / `.txt` / `.csv` 资源里提取 `IP:port`、`域名:port` 和 `steam://connect/...` 链接。
+`sourcebans` 是兼容旧版本的配置字段，现在也用于普通网页订阅。`sourcebans.url` 可以填 SourceBans 站点根路径、直接填 `index.php?p=servers`，也可以填普通网页链接。普通网页链接会原样请求；工具会从页面正文和同源 `.js` / `.json` / `.txt` / `.csv` 资源里提取 `IP:port`、`域名:port` 和 `steam://connect/...` 链接。`sourcebans.text` 可以直接保存复制来的网页 HTML 或纯文本；如果同时填写 `url` 和 `text`，工具优先解析 `text`，不再请求 URL。
 
 ## GUI / RCON
 

@@ -29,6 +29,7 @@ const USER_AGENT: &str = "l4d2-server-browser/0.4";
 const UPDATE_REPO: &str = "fantasylidong/CompetitiveWithAnne";
 const UPDATE_TAG_PREFIX: &str = "l4d2-browser-v";
 const DEFAULT_API_BASE_URL: &str = "https://anne.trygek.com";
+const ONLINE_STATS_CACHE_TTL: Duration = Duration::from_secs(60);
 
 fn main() {
     if let Err(err) = run() {
@@ -359,6 +360,7 @@ fn build_runtime(
     subscriptions.extend(cli.sourcebans_url.iter().map(|url| SourceBansSubscription {
         name: subscription_group_name(url),
         url: url.to_owned(),
+        text: String::new(),
     }));
 
     Ok((settings, manual_groups, subscriptions))
@@ -429,6 +431,7 @@ impl Default for BrowserConfig {
             sourcebans: vec![FileSourceBans {
                 name: "Anne电信服".to_owned(),
                 url: "https://anne.trygek.com/bans/index.php?p=servers".to_owned(),
+                text: String::new(),
             }],
         }
     }
@@ -515,7 +518,8 @@ impl GuiLanguage {
                 TextKey::SaveServer => "保存服务器",
                 TextKey::SourceBansSubscription => "网页订阅",
                 TextKey::SubscriptionName => "订阅名称",
-                TextKey::PageUrl => "页面 URL",
+                TextKey::PageUrl => "页面 URL（可选）",
+                TextKey::PastedSubscriptionText => "粘贴 HTML / 文本（可选）",
                 TextKey::SaveSubscription => "保存订阅",
                 TextKey::Rcon => "RCON",
                 TextKey::RconPassword => "RCON 密码",
@@ -526,7 +530,7 @@ impl GuiLanguage {
                 TextKey::CvarNamesHelp => "CVAR 名称，逗号分隔；公开 rules 可留空",
                 TextKey::ServerList => "服务器列表",
                 TextKey::HeaderGroup => "分组",
-                TextKey::HeaderAddress => "地址",
+                TextKey::HeaderAddress => "IP",
                 TextKey::HeaderPing => "延迟",
                 TextKey::HeaderPlayers => "人数",
                 TextKey::HeaderMap => "地图",
@@ -597,7 +601,8 @@ impl GuiLanguage {
                 TextKey::SaveServer => "Save server",
                 TextKey::SourceBansSubscription => "Web page subscription",
                 TextKey::SubscriptionName => "Subscription name",
-                TextKey::PageUrl => "Page URL",
+                TextKey::PageUrl => "Page URL (optional)",
+                TextKey::PastedSubscriptionText => "Pasted HTML / text (optional)",
                 TextKey::SaveSubscription => "Save subscription",
                 TextKey::Rcon => "RCON",
                 TextKey::RconPassword => "RCON password",
@@ -610,7 +615,7 @@ impl GuiLanguage {
                 }
                 TextKey::ServerList => "Server list",
                 TextKey::HeaderGroup => "Group",
-                TextKey::HeaderAddress => "Address",
+                TextKey::HeaderAddress => "IP",
                 TextKey::HeaderPing => "Ping",
                 TextKey::HeaderPlayers => "Players",
                 TextKey::HeaderMap => "Map",
@@ -785,6 +790,7 @@ enum TextKey {
     SourceBansSubscription,
     SubscriptionName,
     PageUrl,
+    PastedSubscriptionText,
     SaveSubscription,
     Rcon,
     RconPassword,
@@ -878,7 +884,10 @@ struct FileGroup {
 #[derive(Debug, Clone, Deserialize, Serialize)]
 struct FileSourceBans {
     name: String,
+    #[serde(default, skip_serializing_if = "String::is_empty")]
     url: String,
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    text: String,
 }
 
 #[derive(Debug, Clone)]
@@ -891,6 +900,7 @@ struct ManualGroup {
 struct SourceBansSubscription {
     name: String,
     url: String,
+    text: String,
 }
 
 impl TryFrom<FileGroup> for ManualGroup {
@@ -908,9 +918,16 @@ impl TryFrom<FileSourceBans> for SourceBansSubscription {
     type Error = String;
 
     fn try_from(value: FileSourceBans) -> Result<Self, Self::Error> {
+        let url = value.url.trim().to_owned();
+        let text = value.text.trim().to_owned();
+        if url.is_empty() && text.is_empty() {
+            return Err("sourcebans.url or sourcebans.text cannot be empty".to_owned());
+        }
+
         Ok(Self {
             name: non_empty(value.name, "sourcebans.name")?,
-            url: non_empty(value.url, "sourcebans.url")?,
+            url,
+            text,
         })
     }
 }
@@ -989,7 +1006,11 @@ fn parse_cli_group(value: &str) -> Result<ManualGroup, String> {
 
 fn parse_cli_subscription(value: &str) -> Result<SourceBansSubscription, String> {
     let (name, url) = split_name_value(value, "--sourcebans")?;
-    Ok(SourceBansSubscription { name, url })
+    Ok(SourceBansSubscription {
+        name,
+        url,
+        text: String::new(),
+    })
 }
 
 fn split_name_value(value: &str, flag: &str) -> Result<(String, String), String> {
@@ -1253,6 +1274,17 @@ fn fetch_web_subscription(
     subscription: &SourceBansSubscription,
     timeout: Duration,
 ) -> Result<Vec<String>, String> {
+    if !subscription.text.trim().is_empty() {
+        return extract_pasted_subscription(&subscription.text, &subscription.name);
+    }
+
+    if subscription.url.trim().is_empty() {
+        return Err(format!(
+            "subscription {} requires a page URL or pasted text",
+            subscription.name
+        ));
+    }
+
     let url = normalize_subscription_url(&subscription.url)?;
     let client = Client::builder()
         .timeout(timeout)
@@ -1300,6 +1332,21 @@ fn fetch_web_subscription(
     }
 }
 
+fn extract_pasted_subscription(body: &str, name: &str) -> Result<Vec<String>, String> {
+    let mut addresses = Vec::new();
+    let mut seen_addresses = BTreeSet::new();
+    add_subscription_addresses(body, &mut addresses, &mut seen_addresses)?;
+
+    if addresses.is_empty() {
+        if let Some(reason) = detect_subscription_blocker(body) {
+            return Err(format!("no server addresses found in pasted text {name}: {reason}"));
+        }
+        Err(format!("no server addresses found in pasted text {name}"))
+    } else {
+        Ok(addresses)
+    }
+}
+
 fn add_subscription_addresses(
     body: &str,
     addresses: &mut Vec<String>,
@@ -1314,14 +1361,29 @@ fn add_subscription_addresses(
 }
 
 fn fetch_subscription_body(client: &Client, url: reqwest::Url) -> Result<String, String> {
-    client
+    let response = client
         .get(url)
         .send()
-        .map_err(|err| err.to_string())?
-        .error_for_status()
-        .map_err(|err| err.to_string())?
+        .map_err(|err| err.to_string())?;
+    let status = response.status();
+    let final_url = response.url().clone();
+    let headers = response.headers().clone();
+    let body = response
         .text()
-        .map_err(|err| err.to_string())
+        .map_err(|err| err.to_string())?;
+
+    if !status.is_success() {
+        if let Some(reason) = detect_subscription_response_blocker(&headers, &body) {
+            return Err(format!(
+                "subscription request blocked at {final_url}: HTTP {status}; {reason}"
+            ));
+        }
+        return Err(format!(
+            "subscription request failed at {final_url}: HTTP {status}"
+        ));
+    }
+
+    Ok(body)
 }
 
 fn normalize_subscription_url(input: &str) -> Result<reqwest::Url, String> {
@@ -1486,11 +1548,26 @@ fn extract_subscription_addresses(body: &str) -> Result<Vec<String>, String> {
     Ok(seen.into_iter().collect())
 }
 
+fn detect_subscription_response_blocker(
+    headers: &reqwest::header::HeaderMap,
+    body: &str,
+) -> Option<&'static str> {
+    if headers
+        .get("x-vercel-mitigated")
+        .and_then(|value| value.to_str().ok())
+        .map_or(false, |value| value.eq_ignore_ascii_case("challenge"))
+    {
+        return Some("site returned Vercel challenge; non-browser subscription requests are blocked");
+    }
+
+    detect_subscription_blocker(body)
+}
+
 fn detect_subscription_blocker(body: &str) -> Option<&'static str> {
     if body.contains("Vercel Security Checkpoint")
         || body.contains("We're verifying your browser")
     {
-        Some("page returned Vercel Security Checkpoint")
+        Some("site returned Vercel challenge; non-browser subscription requests are blocked")
     } else {
         None
     }
@@ -1871,8 +1948,7 @@ fn sort_rows(rows: &mut [ServerRow], sort: SortKey) {
                 .then_with(|| address_key(a).cmp(&address_key(b)))
         }),
         SortKey::Name => rows.sort_by(|a, b| {
-            name_key(a)
-                .cmp(&name_key(b))
+            cmp_natural_ci(&name_key(a), &name_key(b))
                 .then_with(|| address_key(a).cmp(&address_key(b)))
         }),
         SortKey::Map => rows.sort_by(|a, b| {
@@ -1910,6 +1986,81 @@ fn name_key(row: &ServerRow) -> String {
         .unwrap_or_else(|| "~".to_owned())
 }
 
+#[derive(Debug, PartialEq, Eq)]
+enum NaturalToken {
+    Text(String),
+    Number { value: u128, digits: usize },
+}
+
+fn cmp_natural_ci(left: &str, right: &str) -> std::cmp::Ordering {
+    let left_tokens = natural_tokens(left);
+    let right_tokens = natural_tokens(right);
+
+    for (left, right) in left_tokens.iter().zip(right_tokens.iter()) {
+        let ordering = match (left, right) {
+            (NaturalToken::Text(left), NaturalToken::Text(right)) => left.cmp(right),
+            (
+                NaturalToken::Number {
+                    value: left_value,
+                    digits: left_digits,
+                },
+                NaturalToken::Number {
+                    value: right_value,
+                    digits: right_digits,
+                },
+            ) => left_value
+                .cmp(right_value)
+                .then_with(|| left_digits.cmp(right_digits)),
+            (NaturalToken::Number { .. }, NaturalToken::Text(_)) => std::cmp::Ordering::Less,
+            (NaturalToken::Text(_), NaturalToken::Number { .. }) => std::cmp::Ordering::Greater,
+        };
+
+        if ordering != std::cmp::Ordering::Equal {
+            return ordering;
+        }
+    }
+
+    left_tokens.len().cmp(&right_tokens.len())
+}
+
+fn natural_tokens(value: &str) -> Vec<NaturalToken> {
+    let value = value.to_lowercase();
+    let mut tokens = Vec::new();
+    let mut current = String::new();
+    let mut current_is_digit: Option<bool> = None;
+
+    for ch in value.chars() {
+        let is_digit = ch.is_ascii_digit();
+        if current_is_digit == Some(is_digit) || current_is_digit.is_none() {
+            current.push(ch);
+            current_is_digit = Some(is_digit);
+            continue;
+        }
+
+        push_natural_token(&mut tokens, &current, current_is_digit.unwrap_or(false));
+        current.clear();
+        current.push(ch);
+        current_is_digit = Some(is_digit);
+    }
+
+    if !current.is_empty() {
+        push_natural_token(&mut tokens, &current, current_is_digit.unwrap_or(false));
+    }
+
+    tokens
+}
+
+fn push_natural_token(tokens: &mut Vec<NaturalToken>, value: &str, is_digit: bool) {
+    if is_digit {
+        tokens.push(NaturalToken::Number {
+            value: value.parse::<u128>().unwrap_or(u128::MAX),
+            digits: value.len(),
+        });
+    } else {
+        tokens.push(NaturalToken::Text(value.to_owned()));
+    }
+}
+
 fn map_key(row: &ServerRow) -> String {
     row.info
         .as_ref()
@@ -1932,10 +2083,10 @@ fn print_table(rows: &[ServerRow]) {
     }
 
     println!(
-        "{:<20} {:<21} {:>7} {:>7} {:>4} {:<22} {:<4} {:<7} {}",
-        "group", "address", "ping", "players", "bots", "map", "vac", "access", "name"
+        "{:<20} {:<48} {:>7} {:>7} {:>4} {:<22} {:<4} {:<7} {}",
+        "group", "name", "ping", "players", "bots", "map", "vac", "access", "address"
     );
-    println!("{}", "-".repeat(126));
+    println!("{}", "-".repeat(153));
 
     for row in rows {
         let groups = clip(&row.endpoint.groups.join(","), 20);
@@ -1950,31 +2101,31 @@ fn print_table(rows: &[ServerRow]) {
                 let access = if info.private { "private" } else { "public" };
 
                 println!(
-                    "{:<20} {:<21} {:>7} {:>7} {:>4} {:<22} {:<4} {:<7} {}",
+                    "{:<20} {:<48} {:>7} {:>7} {:>4} {:<22} {:<4} {:<7} {}",
                     groups,
-                    row.endpoint.display,
+                    clip(&info.name, 48),
                     ping,
                     players,
                     info.bots,
                     clip(&info.map, 22),
                     vac,
                     access,
-                    clip(&info.name, 48)
+                    row.endpoint.display
                 );
             }
             None => {
                 let error = row.error.as_deref().unwrap_or("not queried");
                 println!(
-                    "{:<20} {:<21} {:>7} {:>7} {:>4} {:<22} {:<4} {:<7} {}",
+                    "{:<20} {:<48} {:>7} {:>7} {:>4} {:<22} {:<4} {:<7} {}",
                     groups,
-                    row.endpoint.display,
+                    clip(error, 48),
                     "-",
                     "-",
                     "-",
                     "-",
                     "-",
                     "-",
-                    clip(error, 48)
+                    row.endpoint.display
                 );
             }
         }
@@ -2030,6 +2181,7 @@ struct AddServerRequest {
 struct AddSourceBansRequest {
     name: String,
     url: String,
+    text: String,
 }
 
 #[derive(Clone)]
@@ -2086,6 +2238,25 @@ fn server_group_counts(rows: &[ServerRowPayload]) -> Vec<(String, usize)> {
         }
     }
     counts.into_iter().collect()
+}
+
+fn subscription_source_label(subscription: &FileSourceBans, language: GuiLanguage) -> String {
+    if !subscription.text.trim().is_empty() {
+        let chars = subscription.text.chars().count();
+        return match language {
+            GuiLanguage::ZhCn => format!("粘贴文本（{chars} 字符）"),
+            GuiLanguage::EnUs => format!("Pasted text ({chars} chars)"),
+        };
+    }
+
+    if subscription.url.trim().is_empty() {
+        return match language {
+            GuiLanguage::ZhCn => "未设置来源".to_owned(),
+            GuiLanguage::EnUs => "No source set".to_owned(),
+        };
+    }
+
+    subscription.url.clone()
 }
 
 #[derive(Clone, Serialize)]
@@ -2249,6 +2420,15 @@ struct PlayerStats {
     updated: i64,
 }
 
+#[derive(Default)]
+struct OnlineStatsCache {
+    base_url: String,
+    fetched_at: Option<Instant>,
+    stats: HashMap<String, PlayerStats>,
+}
+
+type SharedOnlineStatsCache = Arc<Mutex<OnlineStatsCache>>;
+
 #[derive(Clone, Debug)]
 struct ServerNetworkInfo {
     address: String,
@@ -2286,8 +2466,9 @@ enum GuiMessage {
     UpdateCheck(Result<UpdateInfo, String>),
     Rcon(Result<String, String>),
     Cvars(Result<CvarPayload, String>),
-    Players(Result<(Vec<PlayerInfo>, bool), String>),
+    Players(String, Result<(Vec<PlayerInfo>, bool), String>),
     GlobalPlayers(Result<(Vec<GlobalPlayerEntry>, bool), String>),
+    OnlineStatsRefresh(Result<(), String>),
     DeleteServer(Result<(), String>),
     ApiMe(Result<ApiUser, String>),
     SteamLoginStarted(Result<DeviceStartResponse, String>),
@@ -2322,6 +2503,7 @@ struct NativeGuiApp {
     server_address: String,
     sourcebans_name: String,
     sourcebans_url: String,
+    sourcebans_text: String,
     rcon_address: String,
     rcon_password: String,
     rcon_command_text: String,
@@ -2347,6 +2529,9 @@ struct NativeGuiApp {
     global_players_status: String,
     global_players_querying: bool,
     selected_server_players: Vec<PlayerInfo>,
+    online_stats_cache: SharedOnlineStatsCache,
+    online_stats_refreshing: bool,
+    online_stats_last_attempt: Option<Instant>,
     api_base_url: String,
     api_token: String,
     api_user: Option<ApiUser>,
@@ -2727,7 +2912,7 @@ impl NativeGuiApp {
             sourcebans_entries: Vec::new(),
             selected_sourcebans: None,
             selected_server: None,
-            gui_sort: SortKey::Ping,
+            gui_sort: SortKey::Name,
             gui_sort_desc: false,
             updater_auto_check: initial_config.updater.auto_check,
             update_status: String::new(),
@@ -2744,6 +2929,7 @@ impl NativeGuiApp {
                 GuiLanguage::EnUs => "Web subscription".to_owned(),
             },
             sourcebans_url: String::new(),
+            sourcebans_text: String::new(),
             rcon_address: String::new(),
             rcon_password: String::new(),
             rcon_command_text: "status".to_owned(),
@@ -2768,6 +2954,9 @@ impl NativeGuiApp {
             global_players_status: String::new(),
             global_players_querying: false,
             selected_server_players: Vec::new(),
+            online_stats_cache: Arc::new(Mutex::new(OnlineStatsCache::default())),
+            online_stats_refreshing: false,
+            online_stats_last_attempt: None,
             api_base_url: initial_config.api.base_url,
             api_token: initial_config.api.token.unwrap_or_default(),
             api_user: None,
@@ -2889,6 +3078,7 @@ impl NativeGuiApp {
                         self.selected_sourcebans = None;
                         self.sourcebans_name.clear();
                         self.sourcebans_url.clear();
+                        self.sourcebans_text.clear();
                         self.refresh_config_lists();
                         self.refresh_servers();
                     }
@@ -2936,8 +3126,11 @@ impl NativeGuiApp {
                         Err(err) => self.language.cvar_failed_output(&err),
                     };
                 }
-                GuiMessage::Players(result) => match result {
+                GuiMessage::Players(address, result) => match result {
                     Ok((players, stats_ok)) => {
+                        if self.selected_server.as_deref() != Some(address.as_str()) {
+                            continue;
+                        }
                         self.selected_server_players = players.clone();
                         self.player_output = format_player_payload(&players, self.language);
                         if !stats_ok && !players.is_empty() {
@@ -2948,6 +3141,9 @@ impl NativeGuiApp {
                         }
                     }
                     Err(err) => {
+                        if self.selected_server.as_deref() != Some(address.as_str()) {
+                            continue;
+                        }
                         self.selected_server_players.clear();
                         self.player_output = err;
                     }
@@ -2989,6 +3185,13 @@ impl NativeGuiApp {
                                 GuiLanguage::EnUs => format!("Failed to query players: {}", err),
                             };
                         }
+                    }
+                }
+                GuiMessage::OnlineStatsRefresh(result) => {
+                    self.online_stats_refreshing = false;
+                    if result.is_ok() {
+                        self.apply_cached_stats_to_selected_players();
+                        self.apply_cached_stats_to_global_players();
                     }
                 }
                 GuiMessage::ApiMe(result) => match result {
@@ -3174,10 +3377,99 @@ impl NativeGuiApp {
         });
     }
 
+    fn maybe_refresh_online_stats_cache(&mut self) {
+        if self.online_stats_refreshing || !self.has_anne_servers() {
+            return;
+        }
+
+        let now = Instant::now();
+        if self
+            .online_stats_last_attempt
+            .is_some_and(|attempt| now.duration_since(attempt) < ONLINE_STATS_CACHE_TTL)
+        {
+            return;
+        }
+
+        if !online_stats_cache_needs_refresh(
+            &self.api_base_url,
+            &self.online_stats_cache,
+            ONLINE_STATS_CACHE_TTL,
+        ) {
+            return;
+        }
+
+        self.online_stats_refreshing = true;
+        self.online_stats_last_attempt = Some(now);
+        let tx = self.tx.clone();
+        let api_base_url = self.api_base_url.clone();
+        let cache = Arc::clone(&self.online_stats_cache);
+        thread::spawn(move || {
+            let result = refresh_online_player_stats_cache(&api_base_url, &cache);
+            let _ = tx.send(GuiMessage::OnlineStatsRefresh(result));
+        });
+    }
+
+    fn has_anne_servers(&self) -> bool {
+        self.servers.iter().any(|row| {
+            row.info
+                .as_ref()
+                .map(|info| is_anne_server_name(&info.name))
+                .unwrap_or(false)
+        })
+    }
+
+    fn selected_server_name(&self) -> Option<&str> {
+        let selected = self.selected_server.as_deref()?;
+        self.servers
+            .iter()
+            .find(|row| row.address == selected)
+            .and_then(|row| row.info.as_ref())
+            .map(|info| info.name.as_str())
+    }
+
+    fn selected_server_is_anne(&self) -> bool {
+        self.selected_server_name()
+            .map(is_anne_server_name)
+            .unwrap_or(false)
+    }
+
+    fn apply_cached_stats_to_selected_players(&mut self) {
+        if self.selected_server_players.is_empty() || !self.selected_server_is_anne() {
+            return;
+        }
+
+        let mut players = self.selected_server_players.clone();
+        if apply_cached_player_stats(
+            &self.api_base_url,
+            &self.online_stats_cache,
+            &mut players,
+        ) {
+            self.selected_server_players = players;
+            self.player_output =
+                format_player_payload(&self.selected_server_players, self.language);
+        }
+    }
+
+    fn apply_cached_stats_to_global_players(&mut self) {
+        if self.global_players.is_empty() {
+            return;
+        }
+
+        let mut players = self.global_players.clone();
+        if apply_cached_global_anne_player_stats(
+            &self.api_base_url,
+            &self.online_stats_cache,
+            &mut players,
+        ) {
+            self.global_players = players;
+        }
+    }
+
     fn refresh_global_players(&mut self) {
         if self.global_players_querying {
             return;
         }
+        self.maybe_refresh_online_stats_cache();
         self.global_players_querying = true;
         self.global_players_status = match self.language {
             GuiLanguage::ZhCn => "正在获取全服在线玩家数据...".to_owned(),
@@ -3201,6 +3493,7 @@ impl NativeGuiApp {
             .collect::<Vec<_>>();
 
         let api_base_url = self.api_base_url.clone();
+        let online_stats_cache = Arc::clone(&self.online_stats_cache);
 
         thread::spawn(move || {
             if servers_to_query.is_empty() {
@@ -3255,13 +3548,17 @@ impl NativeGuiApp {
             }
 
             let mut final_results = Arc::try_unwrap(results).unwrap().into_inner().unwrap();
-            let stats_ok = enrich_global_players_with_api_stats(&api_base_url, &mut final_results);
+            let _ = apply_cached_global_anne_player_stats(
+                &api_base_url,
+                &online_stats_cache,
+                &mut final_results,
+            );
             final_results.sort_by(|a, b| {
                 b.duration
                     .partial_cmp(&a.duration)
                     .unwrap_or(std::cmp::Ordering::Equal)
             });
-            let _ = tx.send(GuiMessage::GlobalPlayers(Ok((final_results, stats_ok))));
+            let _ = tx.send(GuiMessage::GlobalPlayers(Ok((final_results, true))));
         });
     }
 
@@ -3576,6 +3873,7 @@ impl NativeGuiApp {
         let input = AddSourceBansRequest {
             name: self.sourcebans_name.clone(),
             url: self.sourcebans_url.clone(),
+            text: self.sourcebans_text.clone(),
         };
         thread::spawn(move || {
             let result = add_sourcebans_to_config(&path, input);
@@ -3595,6 +3893,7 @@ impl NativeGuiApp {
         let input = AddSourceBansRequest {
             name: self.sourcebans_name.clone(),
             url: self.sourcebans_url.clone(),
+            text: self.sourcebans_text.clone(),
         };
         thread::spawn(move || {
             let result = update_sourcebans_in_config(&path, index, input);
@@ -3626,6 +3925,7 @@ impl NativeGuiApp {
                         GuiLanguage::EnUs => "Web subscription".to_owned(),
                     };
                     self.sourcebans_url.clear();
+                    self.sourcebans_text.clear();
                 }
                 if ui
                     .add_enabled(
@@ -3667,15 +3967,16 @@ impl NativeGuiApp {
                     for (index, subscription) in self.sourcebans_entries.iter().enumerate() {
                         let selected = self.selected_sourcebans == Some(index);
                         let label = egui::RichText::new(&subscription.name).strong();
+                        let source_label = subscription_source_label(subscription, self.language);
                         if ui
                             .selectable_label(selected, label)
-                            .on_hover_text(&subscription.url)
+                            .on_hover_text(&source_label)
                             .clicked()
                         {
                             clicked_subscription = Some(index);
                         }
                         ui.label(
-                            egui::RichText::new(&subscription.url)
+                            egui::RichText::new(source_label)
                                 .size(11.0)
                                 .color(text_muted_color()),
                         );
@@ -3688,6 +3989,7 @@ impl NativeGuiApp {
                 if let Some(subscription) = self.sourcebans_entries.get(index) {
                     self.sourcebans_name = subscription.name.clone();
                     self.sourcebans_url = subscription.url.clone();
+                    self.sourcebans_text = subscription.text.clone();
                 }
             }
         });
@@ -3698,9 +4000,9 @@ impl NativeGuiApp {
             ui.heading(self.text(TextKey::SourceBansSubscription));
             ui.label(
                 egui::RichText::new(match self.language {
-                    GuiLanguage::ZhCn => "订阅页面或同源 JS 资源里需要包含 IP:端口、域名:端口或 steam://connect 地址。",
+                    GuiLanguage::ZhCn => "填 URL 会抓取公开页面；粘贴 HTML / 文本时会直接从文本里提取 IP:端口、域名:端口或 steam://connect 地址。",
                     GuiLanguage::EnUs => {
-                        "The page or same-origin JS resources should contain IP:port, host:port, or steam://connect addresses."
+                        "Use a URL for public pages, or paste HTML/text to extract IP:port, host:port, or steam://connect addresses directly."
                     }
                 })
                 .color(text_muted_color()),
@@ -3714,6 +4016,13 @@ impl NativeGuiApp {
             ui.label(self.text(TextKey::PageUrl));
             ui.add(
                 egui::TextEdit::singleline(&mut self.sourcebans_url).desired_width(f32::INFINITY),
+            );
+            ui.label(self.text(TextKey::PastedSubscriptionText));
+            ui.add(
+                egui::TextEdit::multiline(&mut self.sourcebans_text)
+                    .desired_rows(8)
+                    .desired_width(f32::INFINITY)
+                    .code_editor(),
             );
 
             ui.add_space(8.0);
@@ -3801,15 +4110,26 @@ impl NativeGuiApp {
         self.player_output = self.language.text(TextKey::Reading).to_owned();
         let tx = self.tx.clone();
         let api_base_url = self.api_base_url.clone();
+        let online_stats_cache = Arc::clone(&self.online_stats_cache);
+        let should_apply_cached_stats = self.selected_server_is_anne();
+        if should_apply_cached_stats {
+            self.maybe_refresh_online_stats_cache();
+        }
         thread::spawn(move || {
             let result = resolve_endpoint(&address).and_then(|endpoint| {
                 let mut players =
                     query_server_players(endpoint.socket, Duration::from_millis(4500))?;
-                let stats_ok = enrich_players_with_api_stats(&api_base_url, &mut players);
-                Ok((players, stats_ok))
+                if should_apply_cached_stats {
+                    let _ = apply_cached_player_stats(
+                        &api_base_url,
+                        &online_stats_cache,
+                        &mut players,
+                    );
+                }
+                Ok((players, true))
             });
 
-            let _ = tx.send(GuiMessage::Players(result));
+            let _ = tx.send(GuiMessage::Players(address, result));
         });
     }
 
@@ -3855,7 +4175,7 @@ impl NativeGuiApp {
                 SortKey::Ping => server_payload_ping(a)
                     .cmp(&server_payload_ping(b))
                     .then_with(|| server_payload_players(b).cmp(&server_payload_players(a))),
-                SortKey::Name => server_payload_name(a).cmp(&server_payload_name(b)),
+                SortKey::Name => cmp_natural_ci(&server_payload_name(a), &server_payload_name(b)),
                 SortKey::Map => server_payload_map(a).cmp(&server_payload_map(b)),
                 SortKey::Address => a.address.cmp(&b.address),
                 SortKey::Group => a.groups.join(",").cmp(&b.groups.join(",")),
@@ -3942,6 +4262,8 @@ impl eframe::App for NativeGuiApp {
                 }
             });
         }
+
+        self.maybe_refresh_online_stats_cache();
 
         ctx.request_repaint_after(Duration::from_secs(1));
 
@@ -4812,14 +5134,14 @@ impl eframe::App for NativeGuiApp {
                                         }
                                         if ui
                                             .button(sort_label(
-                                                self.text(TextKey::HeaderAddress),
+                                                self.text(TextKey::HeaderNameOrError),
                                                 self.gui_sort,
                                                 self.gui_sort_desc,
-                                                SortKey::Address,
+                                                SortKey::Name,
                                             ))
                                             .clicked()
                                         {
-                                            self.set_sort(SortKey::Address);
+                                            self.set_sort(SortKey::Name);
                                         }
                                         if ui
                                             .button(sort_label(
@@ -4857,14 +5179,14 @@ impl eframe::App for NativeGuiApp {
                                         ui.strong(self.text(TextKey::HeaderVac));
                                         if ui
                                             .button(sort_label(
-                                                self.text(TextKey::HeaderNameOrError),
+                                                self.text(TextKey::HeaderAddress),
                                                 self.gui_sort,
                                                 self.gui_sort_desc,
-                                                SortKey::Name,
+                                                SortKey::Address,
                                             ))
                                             .clicked()
                                         {
-                                            self.set_sort(SortKey::Name);
+                                            self.set_sort(SortKey::Address);
                                         }
                                         ui.end_row();
 
@@ -4952,11 +5274,8 @@ impl eframe::App for NativeGuiApp {
 
                                             row_clicked |= ui
                                                 .add(
-                                                    egui::Label::new(
-                                                        egui::RichText::new(&row.address)
-                                                            .monospace(),
-                                                    )
-                                                    .sense(egui::Sense::click()),
+                                                    egui::Label::new(egui::RichText::new(name))
+                                                        .sense(egui::Sense::click()),
                                                 )
                                                 .clicked();
 
@@ -5006,8 +5325,11 @@ impl eframe::App for NativeGuiApp {
 
                                             row_clicked |= ui
                                                 .add(
-                                                    egui::Label::new(egui::RichText::new(name))
-                                                        .sense(egui::Sense::click()),
+                                                    egui::Label::new(
+                                                        egui::RichText::new(&row.address)
+                                                            .monospace(),
+                                                    )
+                                                    .sense(egui::Sense::click()),
                                                 )
                                                 .clicked();
 
@@ -5614,7 +5936,7 @@ fn delete_server_from_config(path: &PathBuf, group: &str, server: &str) -> Resul
 
 fn add_sourcebans_to_config(path: &PathBuf, input: AddSourceBansRequest) -> Result<(), String> {
     let name = non_empty(input.name.trim().to_owned(), "name")?;
-    let url = normalize_subscription_url(&input.url)?.to_string();
+    let (url, text) = normalize_subscription_source(&input)?;
     let mut config = load_config_or_default(path)?;
 
     if let Some(subscription) = config
@@ -5623,8 +5945,9 @@ fn add_sourcebans_to_config(path: &PathBuf, input: AddSourceBansRequest) -> Resu
         .find(|subscription| subscription.name == name)
     {
         subscription.url = url;
+        subscription.text = text;
     } else {
-        config.sourcebans.push(FileSourceBans { name, url });
+        config.sourcebans.push(FileSourceBans { name, url, text });
     }
 
     save_config(path, &config)
@@ -5636,7 +5959,7 @@ fn update_sourcebans_in_config(
     input: AddSourceBansRequest,
 ) -> Result<(), String> {
     let name = non_empty(input.name.trim().to_owned(), "name")?;
-    let url = normalize_subscription_url(&input.url)?.to_string();
+    let (url, text) = normalize_subscription_source(&input)?;
     let mut config = load_config_or_default(path)?;
     let Some(subscription) = config.sourcebans.get_mut(index) else {
         return Err(format!("sourcebans index {index} does not exist"));
@@ -5644,7 +5967,27 @@ fn update_sourcebans_in_config(
 
     subscription.name = name;
     subscription.url = url;
+    subscription.text = text;
     save_config(path, &config)
+}
+
+fn normalize_subscription_source(
+    input: &AddSourceBansRequest,
+) -> Result<(String, String), String> {
+    let url = input.url.trim();
+    let text = input.text.trim();
+
+    if url.is_empty() && text.is_empty() {
+        return Err("subscription requires a page URL or pasted text".to_owned());
+    }
+
+    let url = if url.is_empty() {
+        String::new()
+    } else {
+        normalize_subscription_url(url)?.to_string()
+    };
+
+    Ok((url, text.to_owned()))
 }
 
 fn delete_sourcebans_from_config(path: &PathBuf, index: usize) -> Result<(), String> {
@@ -6361,6 +6704,10 @@ fn normalized_player_name(name: &str) -> String {
     name.trim().to_lowercase()
 }
 
+fn is_anne_server_name(name: &str) -> bool {
+    name.trim_start().to_ascii_lowercase().starts_with("anne")
+}
+
 fn fetch_online_player_stats(base_url: &str) -> Result<HashMap<String, PlayerStats>, String> {
     let client = api_client(Duration::from_secs(15))?;
     let url = api_url(base_url, "/api/player/online.php")?;
@@ -6398,6 +6745,62 @@ fn fetch_online_player_stats(base_url: &str) -> Result<HashMap<String, PlayerSta
     Ok(stats)
 }
 
+fn online_stats_cache_needs_refresh(
+    base_url: &str,
+    cache: &SharedOnlineStatsCache,
+    max_age: Duration,
+) -> bool {
+    let Ok(cache) = cache.lock() else {
+        return false;
+    };
+    !online_stats_cache_is_fresh(&cache, base_url, max_age)
+}
+
+fn online_stats_cache_is_fresh(
+    cache: &OnlineStatsCache,
+    base_url: &str,
+    max_age: Duration,
+) -> bool {
+    cache.base_url == base_url
+        && cache
+            .fetched_at
+            .map(|fetched_at| fetched_at.elapsed() < max_age)
+            .unwrap_or(false)
+}
+
+fn cached_online_player_stats(
+    base_url: &str,
+    cache: &SharedOnlineStatsCache,
+    max_age: Duration,
+) -> Option<HashMap<String, PlayerStats>> {
+    let Ok(cache) = cache.lock() else {
+        return None;
+    };
+    if online_stats_cache_is_fresh(&cache, base_url, max_age) {
+        Some(cache.stats.clone())
+    } else {
+        None
+    }
+}
+
+fn refresh_online_player_stats_cache(
+    base_url: &str,
+    cache: &SharedOnlineStatsCache,
+) -> Result<(), String> {
+    if !online_stats_cache_needs_refresh(base_url, cache, ONLINE_STATS_CACHE_TTL) {
+        return Ok(());
+    }
+
+    let stats = fetch_online_player_stats(base_url)?;
+    let mut cache = cache
+        .lock()
+        .map_err(|_| "online stats cache lock poisoned".to_owned())?;
+    cache.base_url = base_url.to_owned();
+    cache.fetched_at = Some(Instant::now());
+    cache.stats = stats;
+    Ok(())
+}
+
 fn apply_player_stats(player: &mut PlayerInfo, stats: &HashMap<String, PlayerStats>) {
     if let Some(stat) = stats.get(&normalized_player_name(&player.name)) {
         player.points = Some(stat.total_points);
@@ -6407,7 +6810,10 @@ fn apply_player_stats(player: &mut PlayerInfo, stats: &HashMap<String, PlayerSta
     }
 }
 
-fn apply_global_player_stats(player: &mut GlobalPlayerEntry, stats: &HashMap<String, PlayerStats>) {
+fn apply_global_player_stats(
+    player: &mut GlobalPlayerEntry,
+    stats: &HashMap<String, PlayerStats>,
+) {
     if let Some(stat) = stats.get(&normalized_player_name(&player.name)) {
         player.points = Some(stat.total_points);
         player.playtime_mins = Some(stat.playtime_minutes);
@@ -6416,8 +6822,12 @@ fn apply_global_player_stats(player: &mut GlobalPlayerEntry, stats: &HashMap<Str
     }
 }
 
-fn enrich_players_with_api_stats(base_url: &str, players: &mut [PlayerInfo]) -> bool {
-    let Ok(stats) = fetch_online_player_stats(base_url) else {
+fn apply_cached_player_stats(
+    base_url: &str,
+    cache: &SharedOnlineStatsCache,
+    players: &mut [PlayerInfo],
+) -> bool {
+    let Some(stats) = cached_online_player_stats(base_url, cache, ONLINE_STATS_CACHE_TTL) else {
         return false;
     };
 
@@ -6427,13 +6837,26 @@ fn enrich_players_with_api_stats(base_url: &str, players: &mut [PlayerInfo]) -> 
     true
 }
 
-fn enrich_global_players_with_api_stats(base_url: &str, players: &mut [GlobalPlayerEntry]) -> bool {
-    let Ok(stats) = fetch_online_player_stats(base_url) else {
+fn apply_cached_global_anne_player_stats(
+    base_url: &str,
+    cache: &SharedOnlineStatsCache,
+    players: &mut [GlobalPlayerEntry],
+) -> bool {
+    if !players
+        .iter()
+        .any(|player| is_anne_server_name(&player.server_name))
+    {
+        return true;
+    }
+
+    let Some(stats) = cached_online_player_stats(base_url, cache, ONLINE_STATS_CACHE_TTL) else {
         return false;
     };
 
     for player in players {
-        apply_global_player_stats(player, &stats);
+        if is_anne_server_name(&player.server_name) {
+            apply_global_player_stats(player, &stats);
+        }
     }
     true
 }
@@ -6610,6 +7033,22 @@ mod tests {
     }
 
     #[test]
+    fn extracts_pasted_subscription_addresses() {
+        let text = r#"
+            steam://connect/45.125.45.95:28001
+            hbbgp.trygek.com:31001
+        "#;
+        let addresses = extract_pasted_subscription(text, "Pasted").expect("addresses");
+        assert_eq!(
+            addresses,
+            vec![
+                "45.125.45.95:28001".to_owned(),
+                "hbbgp.trygek.com:31001".to_owned()
+            ]
+        );
+    }
+
+    #[test]
     fn steam_connect_address_uses_resolved_ipv4() {
         assert_eq!(
             steam_connect_address("45.125.45.95:28001"),
@@ -6645,7 +7084,32 @@ mod tests {
         let body = "<title>Vercel Security Checkpoint</title>";
         assert_eq!(
             detect_subscription_blocker(body),
-            Some("page returned Vercel Security Checkpoint")
+            Some("site returned Vercel challenge; non-browser subscription requests are blocked")
+        );
+    }
+
+    #[test]
+    fn detects_vercel_mitigation_header() {
+        let mut headers = reqwest::header::HeaderMap::new();
+        headers.insert(
+            "x-vercel-mitigated",
+            reqwest::header::HeaderValue::from_static("challenge"),
+        );
+        assert_eq!(
+            detect_subscription_response_blocker(&headers, ""),
+            Some("site returned Vercel challenge; non-browser subscription requests are blocked")
+        );
+    }
+
+    #[test]
+    fn naturally_sorts_numbered_server_names() {
+        assert_eq!(
+            cmp_natural_ci("电信服 2", "电信服 10"),
+            std::cmp::Ordering::Less
+        );
+        assert_eq!(
+            cmp_natural_ci("电信服 40", "电信服 3"),
+            std::cmp::Ordering::Greater
         );
     }
 
