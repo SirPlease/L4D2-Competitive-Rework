@@ -457,6 +457,12 @@ impl Default for BrowserConfig {
 struct GuiConfig {
     #[serde(default)]
     language: GuiLanguage,
+    #[serde(default = "default_true")]
+    anne_stats: bool,
+}
+
+fn default_true() -> bool {
+    true
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -2300,6 +2306,8 @@ fn server_group_counts(rows: &[ServerRowPayload]) -> Vec<(String, usize)> {
 }
 
 fn subscription_source_label(subscription: &FileSourceBans, language: GuiLanguage) -> String {
+    let server_count = subscription.servers.len();
+
     if !subscription.text.trim().is_empty() {
         let chars = subscription.text.chars().count();
         return match language {
@@ -2308,14 +2316,24 @@ fn subscription_source_label(subscription: &FileSourceBans, language: GuiLanguag
         };
     }
 
-    if subscription.url.trim().is_empty() {
-        return match language {
+    let mut label = if subscription.url.trim().is_empty() {
+        match language {
             GuiLanguage::ZhCn => "未设置来源".to_owned(),
             GuiLanguage::EnUs => "No source set".to_owned(),
+        }
+    } else {
+        subscription.url.clone()
+    };
+
+    if server_count > 0 {
+        let suffix = match language {
+            GuiLanguage::ZhCn => format!(" · 已缓存 {server_count} 个服务器"),
+            GuiLanguage::EnUs => format!(" · {server_count} cached servers"),
         };
+        label.push_str(&suffix);
     }
 
-    subscription.url.clone()
+    label
 }
 
 #[derive(Clone, Serialize)]
@@ -2555,6 +2573,7 @@ struct NativeGuiApp {
     gui_sort: SortKey,
     gui_sort_desc: bool,
     updater_auto_check: bool,
+    anne_stats_enabled: bool,
     update_status: String,
     update_url: Option<String>,
     server_status: String,
@@ -2975,6 +2994,7 @@ impl NativeGuiApp {
             gui_sort: SortKey::Name,
             gui_sort_desc: false,
             updater_auto_check: initial_config.updater.auto_check,
+            anne_stats_enabled: initial_config.gui.anne_stats,
             update_status: String::new(),
             update_url: None,
             server_status: language.text(TextKey::WaitingRefresh).to_owned(),
@@ -3476,7 +3496,7 @@ impl NativeGuiApp {
     }
 
     fn maybe_refresh_online_stats_cache(&mut self) {
-        if self.online_stats_refreshing || !self.has_anne_servers() {
+        if self.online_stats_refreshing || !self.anne_stats_enabled {
             return;
         }
 
@@ -3507,14 +3527,6 @@ impl NativeGuiApp {
         });
     }
 
-    fn has_anne_servers(&self) -> bool {
-        self.servers.iter().any(|row| {
-            row.info
-                .as_ref()
-                .map(|info| is_anne_server_name(&info.name))
-                .unwrap_or(false)
-        })
-    }
 
     fn selected_server_name(&self) -> Option<&str> {
         let selected = self.selected_server.as_deref()?;
@@ -4098,9 +4110,9 @@ impl NativeGuiApp {
             ui.heading(self.text(TextKey::SourceBansSubscription));
             ui.label(
                 egui::RichText::new(match self.language {
-                    GuiLanguage::ZhCn => "填 URL 会抓取公开页面；粘贴 HTML / 文本时会直接从文本里提取 IP:端口、域名:端口或 steam://connect 地址。",
+                    GuiLanguage::ZhCn => "填 URL 会抓取公开页面；粘贴 HTML / 文本时会直接从文本里提取 IP:端口、域名:端口或 steam://connect 地址。保存后只保留解析出的服务器地址，不会存储原始文本。",
                     GuiLanguage::EnUs => {
-                        "Use a URL for public pages, or paste HTML/text to extract IP:port, host:port, or steam://connect addresses directly."
+                        "Use a URL for public pages, or paste HTML/text to extract IP:port, host:port, or steam://connect addresses. Only extracted addresses are saved, raw text is discarded."
                     }
                 })
                 .color(text_muted_color()),
@@ -4116,12 +4128,57 @@ impl NativeGuiApp {
                 egui::TextEdit::singleline(&mut self.sourcebans_url).desired_width(f32::INFINITY),
             );
 
+            ui.add_space(4.0);
+            ui.label(self.text(TextKey::PastedSubscriptionText));
+
+            // Truncate display for very long pasted text to avoid UI freeze
+            let text_len = self.sourcebans_text.len();
+            const MAX_DISPLAY_LEN: usize = 50_000;
+            if text_len > MAX_DISPLAY_LEN {
+                let truncated_chars = self.sourcebans_text.chars().count();
+                ui.label(
+                    egui::RichText::new(match self.language {
+                        GuiLanguage::ZhCn => format!("⚠ 文本过长（{truncated_chars} 字符），仅显示前 {MAX_DISPLAY_LEN} 字节。保存后将自动解析并清空原始文本。"),
+                        GuiLanguage::EnUs => format!("⚠ Text too long ({truncated_chars} chars), showing first {MAX_DISPLAY_LEN} bytes. Raw text will be parsed and discarded on save."),
+                    })
+                    .color(egui::Color32::from_rgb(255, 180, 80)),
+                );
+                let preview: String = self.sourcebans_text.chars().take(5000).collect();
+                let mut preview_display = preview;
+                egui::ScrollArea::vertical()
+                    .id_salt("sourcebans_text_scroll")
+                    .max_height(200.0)
+                    .auto_shrink([false, false])
+                    .show(ui, |ui| {
+                        ui.add(
+                            egui::TextEdit::multiline(&mut preview_display)
+                                .desired_rows(6)
+                                .desired_width(f32::INFINITY)
+                                .code_editor()
+                                .interactive(false),
+                        );
+                    });
+            } else {
+                egui::ScrollArea::vertical()
+                    .id_salt("sourcebans_text_scroll")
+                    .max_height(200.0)
+                    .auto_shrink([false, false])
+                    .show(ui, |ui| {
+                        ui.add(
+                            egui::TextEdit::multiline(&mut self.sourcebans_text)
+                                .desired_rows(6)
+                                .desired_width(f32::INFINITY)
+                                .code_editor(),
+                        );
+                    });
+            }
+
+            ui.add_space(8.0);
             let save_label = if self.selected_sourcebans.is_some() {
                 self.text(TextKey::UpdateSubscription)
             } else {
                 self.text(TextKey::SaveSubscription)
             };
-            ui.add_space(8.0);
             ui.horizontal_wrapped(|ui| {
                 if ui.add(primary_button(save_label)).clicked() {
                     self.update_sourcebans();
@@ -4137,20 +4194,6 @@ impl NativeGuiApp {
                     );
                 }
             });
-
-            ui.label(self.text(TextKey::PastedSubscriptionText));
-            ui.add_sized(
-                [ui.available_width(), 260.0],
-                egui::TextEdit::multiline(&mut self.sourcebans_text)
-                    .desired_rows(8)
-                    .desired_width(f32::INFINITY)
-                    .code_editor(),
-            );
-
-            ui.add_space(8.0);
-            if ui.add(primary_button(save_label)).clicked() {
-                self.update_sourcebans();
-            }
         });
     }
 
@@ -4325,6 +4368,14 @@ impl NativeGuiApp {
         if let Err(err) = save_updater_config_to_config(&self.config_path, self.updater_auto_check)
         {
             self.update_status = self.language.update_check_failed_status(&err);
+        }
+    }
+
+    fn save_anne_stats_config(&mut self) {
+        if let Err(err) =
+            save_anne_stats_to_config(&self.config_path, self.anne_stats_enabled)
+        {
+            eprintln!("warning: failed to save anne stats config: {err}");
         }
     }
 
@@ -5717,6 +5768,9 @@ impl eframe::App for NativeGuiApp {
                     });
 
                     ui.add_space(12.0);
+                    self.show_sourcebans_editor_card(ui);
+
+                    ui.add_space(12.0);
                     modern_card(ui, |ui| {
                         ui.heading(self.text(TextKey::ManualServerList));
 
@@ -5755,16 +5809,7 @@ impl eframe::App for NativeGuiApp {
                     });
                 }
                 NavTab::SourceBans => {
-                    if ui.available_width() < 760.0 {
-                        self.show_sourcebans_list_card(ui);
-                        ui.add_space(12.0);
-                        self.show_sourcebans_editor_card(ui);
-                    } else {
-                        ui.columns(2, |columns| {
-                            self.show_sourcebans_list_card(&mut columns[0]);
-                            self.show_sourcebans_editor_card(&mut columns[1]);
-                        });
-                    }
+                    self.show_sourcebans_list_card(ui);
                 }
                 NavTab::Settings => {
                     modern_card(ui, |ui| {
@@ -5852,6 +5897,17 @@ impl eframe::App for NativeGuiApp {
                             .changed()
                         {
                             self.save_updater_config();
+                        }
+
+                        let anne_stats_label = match self.language {
+                            GuiLanguage::ZhCn => "启用 Anne 服在线玩家数据",
+                            GuiLanguage::EnUs => "Enable Anne server online player stats",
+                        };
+                        if ui
+                            .checkbox(&mut self.anne_stats_enabled, anne_stats_label)
+                            .changed()
+                        {
+                            self.save_anne_stats_config();
                         }
 
                         ui.horizontal(|ui| {
@@ -6196,6 +6252,12 @@ fn save_gui_language_to_config(path: &PathBuf, language: GuiLanguage) -> Result<
 fn save_updater_config_to_config(path: &PathBuf, auto_check: bool) -> Result<(), String> {
     let mut config = load_config_or_default(path)?;
     config.updater.auto_check = auto_check;
+    save_config(path, &config)
+}
+
+fn save_anne_stats_to_config(path: &PathBuf, enabled: bool) -> Result<(), String> {
+    let mut config = load_config_or_default(path)?;
+    config.gui.anne_stats = enabled;
     save_config(path, &config)
 }
 
