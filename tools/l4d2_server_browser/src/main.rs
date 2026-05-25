@@ -4016,7 +4016,7 @@ impl eframe::App for NativeGuiApp {
                                         egui::RichText::new(&address).monospace().size(18.0),
                                     );
 
-                                    let connect_link = format!("steam://connect/{}", address);
+                                    let connect_link = format!("steam://rungameid/550//+connect%20{}", address);
                                     if ui
                                         .button(
                                             egui::RichText::new(self.text(TextKey::ConnectGame))
@@ -4981,7 +4981,7 @@ impl eframe::App for NativeGuiApp {
                                                 ui.label(format_optional_number(p.quarter_points));
 
                                                 let connect_link =
-                                                    format!("steam://connect/{}", p.server_address);
+                                                    format!("steam://rungameid/550//+connect%20{}", p.server_address);
                                                 let btn = egui::Button::new(format!(
                                                     "{} {}",
                                                     self.text(TextKey::ConnectGame),
@@ -6139,8 +6139,10 @@ fn enrich_global_players_with_api_stats(base_url: &str, players: &mut [GlobalPla
 fn launch_steam_url(url: &str) {
     #[cfg(target_os = "windows")]
     {
+        use std::os::windows::process::CommandExt;
         let _ = std::process::Command::new("cmd")
             .args(["/c", "start", "", url])
+            .creation_flags(0x08000000)
             .spawn();
     }
     #[cfg(target_os = "macos")]
