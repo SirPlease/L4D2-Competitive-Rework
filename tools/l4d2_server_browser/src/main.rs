@@ -3988,7 +3988,7 @@ impl eframe::App for NativeGuiApp {
             egui::SidePanel::right("inspector_panel")
                 .resizable(true)
                 .default_width(450.0)
-                .width_range(300.0..=650.0)
+                .width_range(300.0..=1200.0)
                 .frame(egui::Frame {
                     fill: app_bg(),
                     inner_margin: egui::Margin::same(12),
@@ -4161,7 +4161,7 @@ impl eframe::App for NativeGuiApp {
                                                     .monospace(),
                                             ));
                                         } else {
-                                            egui::ScrollArea::vertical().show(ui, |ui| {
+                                            egui::ScrollArea::both().id_salt("inspector_players_scroll").show(ui, |ui| {
                                                 for p in &self.selected_server_players {
                                                     egui::Frame::canvas(ui.style())
                                                         .fill(surface_color())
