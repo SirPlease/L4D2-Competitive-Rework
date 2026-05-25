@@ -131,7 +131,7 @@ GUI 会在启动时检查 GitHub Release 是否有新版本，也可以点击顶
 
 全服消息不会使用服务器 RCON。GUI 调用 NewAnneWeb 的 `/api/server/broadcast.php`，网页端写入 `chat` 数据库的 `anne_global_chat` 表，`global_chat.smx` 会按自己的轮询规则广播给所有服务器。
 
-玩家统计使用 `/api/player/stats_batch.php` 批量查询，避免逐个抓取网页 HTML。
+玩家统计使用 `/api/player/online.php` 一次读取最近 2 分钟在线统计，再由 GUI 按 A2S 玩家名本地匹配，避免逐个请求玩家接口。
 
 RCON 使用 Source RCON TCP 协议。读取 CVAR 有两种方式：
 
