@@ -1,10 +1,10 @@
 [package]
-name = "l4d2-server-browser"
-version = "0.4.0"
+name = "电信服刷服器"
+version = "0.5.0"
 edition = "2021"
 description = "A small Left 4 Dead 2 server browser using Steam master server and A2S_INFO."
 license = "GPL-3.0-or-later"
-publish = false
+publish = true
 
 [dependencies]
 clap = { version = "4.5", features = ["derive"] }

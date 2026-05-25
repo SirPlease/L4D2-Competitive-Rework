@@ -26,5 +26,6 @@ servers = [
 ]
 
 [[sourcebans]]
-name = "Anne SourceBans"
-url = "https://example.com/sourcebans"
+name = "Anne 网页订阅"
+url = "https://anne.trygek.com/bans/index.php?p=servers"
+

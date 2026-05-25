@@ -106,7 +106,7 @@ fn default_gui_config_path() -> PathBuf {
 
 #[derive(Parser, Debug, Clone)]
 #[command(name = "l4d2-server-browser")]
-#[command(about = "Left 4 Dead 2 server browser with groups and SourceBans subscriptions.")]
+#[command(about = "Left 4 Dead 2 server browser with groups and web page subscriptions.")]
 struct Cli {
     #[arg(long)]
     config: Option<PathBuf>,
@@ -162,10 +162,10 @@ struct Cli {
     #[arg(long)]
     group: Vec<String>,
 
-    #[arg(long)]
+    #[arg(long, alias = "subscription")]
     sourcebans: Vec<String>,
 
-    #[arg(long)]
+    #[arg(long, alias = "subscription-url")]
     sourcebans_url: Vec<String>,
 
     #[arg(long)]
@@ -357,7 +357,7 @@ fn build_runtime(
             .collect::<Result<Vec<_>, _>>()?,
     );
     subscriptions.extend(cli.sourcebans_url.iter().map(|url| SourceBansSubscription {
-        name: sourcebans_group_name(url),
+        name: subscription_group_name(url),
         url: url.to_owned(),
     }));
 
@@ -513,7 +513,7 @@ impl GuiLanguage {
                 TextKey::Group => "分组",
                 TextKey::ServerAddress => "服务器地址",
                 TextKey::SaveServer => "保存服务器",
-                TextKey::SourceBansSubscription => "SourceBans 订阅",
+                TextKey::SourceBansSubscription => "网页订阅",
                 TextKey::SubscriptionName => "订阅名称",
                 TextKey::PageUrl => "页面 URL",
                 TextKey::SaveSubscription => "保存订阅",
@@ -539,7 +539,7 @@ impl GuiLanguage {
                 TextKey::RunningCommand => "执行中...",
                 TextKey::Reading => "读取中...",
                 TextKey::ServerSaved => "服务器已保存",
-                TextKey::SubscriptionSaved => "SourceBans 订阅已保存",
+                TextKey::SubscriptionSaved => "网页订阅已保存",
                 TextKey::LanguageSaved => "语言设置已保存",
                 TextKey::NotQueried => "未查询",
                 TextKey::ManualServerList => "已保存服务器",
@@ -547,7 +547,7 @@ impl GuiLanguage {
                 TextKey::NewSubscription => "新建订阅",
                 TextKey::UpdateSubscription => "更新订阅",
                 TextKey::DeleteSubscription => "删除订阅",
-                TextKey::SubscriptionDeleted => "SourceBans 订阅已删除",
+                TextKey::SubscriptionDeleted => "网页订阅已删除",
                 TextKey::SelectedServer => "已选择服务器",
                 TextKey::NoServerSelected => "未选择服务器",
                 TextKey::RefreshRules => "刷新 Rules",
@@ -594,7 +594,7 @@ impl GuiLanguage {
                 TextKey::Group => "Group",
                 TextKey::ServerAddress => "Server address",
                 TextKey::SaveServer => "Save server",
-                TextKey::SourceBansSubscription => "SourceBans subscription",
+                TextKey::SourceBansSubscription => "Web page subscription",
                 TextKey::SubscriptionName => "Subscription name",
                 TextKey::PageUrl => "Page URL",
                 TextKey::SaveSubscription => "Save subscription",
@@ -622,7 +622,7 @@ impl GuiLanguage {
                 TextKey::RunningCommand => "Running...",
                 TextKey::Reading => "Reading...",
                 TextKey::ServerSaved => "Server saved",
-                TextKey::SubscriptionSaved => "SourceBans subscription saved",
+                TextKey::SubscriptionSaved => "Web page subscription saved",
                 TextKey::LanguageSaved => "Language setting saved",
                 TextKey::NotQueried => "not queried",
                 TextKey::ManualServerList => "Saved servers",
@@ -630,7 +630,7 @@ impl GuiLanguage {
                 TextKey::NewSubscription => "New subscription",
                 TextKey::UpdateSubscription => "Update subscription",
                 TextKey::DeleteSubscription => "Delete subscription",
-                TextKey::SubscriptionDeleted => "SourceBans subscription deleted",
+                TextKey::SubscriptionDeleted => "Web page subscription deleted",
                 TextKey::SelectedServer => "Selected server",
                 TextKey::NoServerSelected => "No server selected",
                 TextKey::RefreshRules => "Refresh Rules",
@@ -1055,20 +1055,20 @@ fn collect_sources(
     }
 
     for subscription in subscriptions {
-        match fetch_sourcebans_subscription(subscription, settings.http_timeout) {
+        match fetch_web_subscription(subscription, settings.http_timeout) {
             Ok(addresses) => {
                 for address in addresses {
                     match resolve_endpoint(&address) {
                         Ok(endpoint) => add_endpoint(&mut registry, endpoint, &subscription.name),
                         Err(err) => eprintln!(
-                            "warning: skipped {} from SourceBans {}: {err}",
+                            "warning: skipped {} from subscription {}: {err}",
                             address, subscription.url
                         ),
                     }
                 }
             }
             Err(err) => eprintln!(
-                "warning: SourceBans subscription {} failed: {err}",
+                "warning: web page subscription {} failed: {err}",
                 subscription.url
             ),
         }
@@ -1246,47 +1246,88 @@ fn parse_master_response(packet: &[u8]) -> Result<Vec<SocketAddrV4>, String> {
     Ok(addrs)
 }
 
-fn fetch_sourcebans_subscription(
+fn fetch_web_subscription(
     subscription: &SourceBansSubscription,
     timeout: Duration,
 ) -> Result<Vec<String>, String> {
-    let url = normalize_sourcebans_url(&subscription.url)?;
+    let url = normalize_subscription_url(&subscription.url)?;
     let client = Client::builder()
         .timeout(timeout)
         .user_agent(USER_AGENT)
         .build()
         .map_err(|err| err.to_string())?;
-    let body = client
-        .get(url.clone())
-        .send()
-        .map_err(|err| err.to_string())?
-        .error_for_status()
-        .map_err(|err| err.to_string())?
-        .text()
-        .map_err(|err| err.to_string())?;
-    let addresses = extract_sourcebans_addresses(&body)?;
+    let body = fetch_subscription_body(&client, url.clone())?;
+    let mut addresses = Vec::new();
+    let mut seen_addresses = BTreeSet::new();
+    add_subscription_addresses(&body, &mut addresses, &mut seen_addresses)?;
+    let mut data_urls = extract_subscription_data_urls(&url, &body)?;
+
+    if let Ok(resources) = extract_linked_subscription_resources(&url, &body) {
+        for resource_url in resources.into_iter().take(16) {
+            let Ok(resource_body) = fetch_subscription_body(&client, resource_url) else {
+                continue;
+            };
+            add_subscription_addresses(&resource_body, &mut addresses, &mut seen_addresses)?;
+            data_urls.extend(extract_subscription_data_urls(&url, &resource_body)?);
+        }
+    }
+
+    let mut seen_data_urls = BTreeSet::new();
+    for data_url in data_urls
+        .into_iter()
+        .filter(|url| {
+            let key = url.as_str().to_owned();
+            seen_data_urls.insert(key)
+        })
+        .take(16)
+    {
+        let Ok(data_body) = fetch_subscription_body(&client, data_url) else {
+            continue;
+        };
+        add_subscription_addresses(&data_body, &mut addresses, &mut seen_addresses)?;
+    }
 
     if addresses.is_empty() {
+        if let Some(reason) = detect_subscription_blocker(&body) {
+            return Err(format!("no server addresses found at {url}: {reason}"));
+        }
         Err(format!("no server addresses found at {url}"))
     } else {
         Ok(addresses)
     }
 }
 
-fn normalize_sourcebans_url(input: &str) -> Result<reqwest::Url, String> {
-    let input = input.trim();
-    let parse_input = if input.contains("://") {
-        input.to_owned()
-    } else {
-        format!("https://{input}")
-    };
-    let mut url =
-        reqwest::Url::parse(&parse_input).map_err(|err| format!("invalid URL {input}: {err}"))?;
-    let has_servers_page = url
-        .query_pairs()
-        .any(|(key, value)| key.eq_ignore_ascii_case("p") && value.eq_ignore_ascii_case("servers"));
+fn add_subscription_addresses(
+    body: &str,
+    addresses: &mut Vec<String>,
+    seen: &mut BTreeSet<String>,
+) -> Result<(), String> {
+    for address in extract_subscription_addresses(body)? {
+        if seen.insert(address.clone()) {
+            addresses.push(address);
+        }
+    }
+    Ok(())
+}
 
-    if has_servers_page {
+fn fetch_subscription_body(client: &Client, url: reqwest::Url) -> Result<String, String> {
+    client
+        .get(url)
+        .send()
+        .map_err(|err| err.to_string())?
+        .error_for_status()
+        .map_err(|err| err.to_string())?
+        .text()
+        .map_err(|err| err.to_string())
+}
+
+fn normalize_subscription_url(input: &str) -> Result<reqwest::Url, String> {
+    let mut url = parse_subscription_url(input)?;
+
+    if has_sourcebans_servers_page(&url) {
+        return Ok(url);
+    }
+    if !looks_like_sourcebans_url(&url) {
         return Ok(url);
     }
 
@@ -1299,8 +1340,106 @@ fn normalize_sourcebans_url(input: &str) -> Result<reqwest::Url, String> {
     Ok(url)
 }
 
-fn extract_sourcebans_addresses(body: &str) -> Result<Vec<String>, String> {
-    let body = decode_minimal_html_entities(body);
+fn parse_subscription_url(input: &str) -> Result<reqwest::Url, String> {
+    let input = input.trim();
+    let parse_input = if input.contains("://") {
+        input.to_owned()
+    } else {
+        format!("https://{input}")
+    };
+    reqwest::Url::parse(&parse_input).map_err(|err| format!("invalid URL {input}: {err}"))
+}
+
+fn has_sourcebans_servers_page(url: &reqwest::Url) -> bool {
+    url.query_pairs()
+        .any(|(key, value)| key.eq_ignore_ascii_case("p") && value.eq_ignore_ascii_case("servers"))
+}
+
+fn looks_like_sourcebans_url(url: &reqwest::Url) -> bool {
+    let path = url.path().trim_matches('/').to_ascii_lowercase();
+    path == "bans" || path.contains("sourcebans") || path.starts_with("bans/")
+}
+
+fn extract_linked_subscription_resources(
+    base_url: &reqwest::Url,
+    body: &str,
+) -> Result<Vec<reqwest::Url>, String> {
+    let body = decode_minimal_text_entities(body);
+    let resource_re =
+        Regex::new(r#"(?is)<(?:script|link)\b[^>]*\b(?:src|href)\s*=\s*["']([^"']+)["']"#)
+            .map_err(|err| err.to_string())?;
+    let mut seen = BTreeSet::new();
+    let mut resources = Vec::new();
+
+    for capture in resource_re.captures_iter(&body) {
+        let Some(raw) = capture.get(1) else {
+            continue;
+        };
+        let Ok(url) = base_url.join(raw.as_str().trim()) else {
+            continue;
+        };
+        if !same_origin(base_url, &url) || !is_subscription_resource(&url) {
+            continue;
+        }
+        let key = url.as_str().to_owned();
+        if seen.insert(key) {
+            resources.push(url);
+        }
+    }
+
+    Ok(resources)
+}
+
+fn extract_subscription_data_urls(
+    base_url: &reqwest::Url,
+    body: &str,
+) -> Result<Vec<reqwest::Url>, String> {
+    let body = decode_minimal_text_entities(body);
+    let url_re = Regex::new(
+        r#"(?i)["'`](/api/(?:all|servers?|server-list|status|list)[A-Za-z0-9_./?=&%-]*)["'`]"#,
+    )
+    .map_err(|err| err.to_string())?;
+    let mut seen = BTreeSet::new();
+    let mut urls = Vec::new();
+
+    for capture in url_re.captures_iter(&body) {
+        let Some(raw) = capture.get(1) else {
+            continue;
+        };
+        let value = raw.as_str().trim();
+        if value.contains('{') || value.contains('}') {
+            continue;
+        }
+        let Ok(url) = base_url.join(value) else {
+            continue;
+        };
+        if !same_origin(base_url, &url) {
+            continue;
+        }
+        let key = url.as_str().to_owned();
+        if seen.insert(key) {
+            urls.push(url);
+        }
+    }
+
+    Ok(urls)
+}
+
+fn same_origin(left: &reqwest::Url, right: &reqwest::Url) -> bool {
+    left.scheme() == right.scheme()
+        && left.host_str() == right.host_str()
+        && left.port_or_known_default() == right.port_or_known_default()
+}
+
+fn is_subscription_resource(url: &reqwest::Url) -> bool {
+    let path = url.path().to_ascii_lowercase();
+    [".js", ".json", ".txt", ".csv"]
+        .iter()
+        .any(|suffix| path.ends_with(suffix))
+}
+
+fn extract_subscription_addresses(body: &str) -> Result<Vec<String>, String> {
+    let body = decode_minimal_text_entities(body);
     let connect_re =
         Regex::new(r#"(?i)steam://connect/([^"'<>\s]+)"#).map_err(|err| err.to_string())?;
     let ip_re = Regex::new(
@@ -1344,7 +1483,17 @@ fn extract_sourcebans_addresses(body: &str) -> Result<Vec<String>, String> {
     Ok(seen.into_iter().collect())
 }
 
-fn decode_minimal_html_entities(value: &str) -> String {
+fn detect_subscription_blocker(body: &str) -> Option<&'static str> {
+    if body.contains("Vercel Security Checkpoint")
+        || body.contains("We're verifying your browser")
+    {
+        Some("page returned Vercel Security Checkpoint")
+    } else {
+        None
+    }
+}
+
+fn decode_minimal_text_entities(value: &str) -> String {
     value
         .replace("&amp;", "&")
         .replace("&#38;", "&")
@@ -1353,9 +1502,21 @@ fn decode_minimal_html_entities(value: &str) -> String {
         .replace("&#58;", ":")
         .replace("&#x3a;", ":")
         .replace("&#x3A;", ":")
+        .replace(r"\/", "/")
+        .replace(r"\:", ":")
+        .replace(r"\u002f", "/")
+        .replace(r"\u002F", "/")
+        .replace(r"\u003a", ":")
+        .replace(r"\u003A", ":")
+        .replace(r"\x3a", ":")
+        .replace(r"\x3A", ":")
+        .replace("%2F", "/")
+        .replace("%2f", "/")
+        .replace("%3A", ":")
+        .replace("%3a", ":")
 }
 
-fn sourcebans_group_name(url: &str) -> String {
+fn subscription_group_name(url: &str) -> String {
     let parse_input = if url.contains("://") {
         url.to_owned()
     } else {
@@ -1364,8 +1525,8 @@ fn sourcebans_group_name(url: &str) -> String {
 
     reqwest::Url::parse(&parse_input)
         .ok()
-        .and_then(|url| url.host_str().map(|host| format!("SourceBans:{host}")))
-        .unwrap_or_else(|| "SourceBans".to_owned())
+        .and_then(|url| url.host_str().map(|host| format!("Web:{host}")))
+        .unwrap_or_else(|| "Web".to_owned())
 }
 
 fn resolve_endpoint(input: &str) -> Result<Endpoint, String> {
@@ -1914,6 +2075,16 @@ struct ServerRowPayload {
     last_queried: Option<std::time::Instant>,
 }
 
+fn server_group_counts(rows: &[ServerRowPayload]) -> Vec<(String, usize)> {
+    let mut counts = BTreeMap::new();
+    for row in rows {
+        for group in &row.groups {
+            *counts.entry(group.clone()).or_insert(0usize) += 1;
+        }
+    }
+    counts.into_iter().collect()
+}
+
 #[derive(Clone, Serialize)]
 struct CvarPayload {
     source: String,
@@ -2162,6 +2333,7 @@ struct NativeGuiApp {
     network_info_status: String,
     // 新增 UI 交互状态
     ui_search_query: String,
+    ui_group_filter: Option<String>,
     ui_filter_empty: bool,
     ui_filter_has_players: bool,
     ui_filter_hide_timeout: bool,
@@ -2564,7 +2736,10 @@ impl NativeGuiApp {
                 GuiLanguage::EnUs => "My servers".to_owned(),
             },
             server_address: String::new(),
-            sourcebans_name: "SourceBans".to_owned(),
+            sourcebans_name: match language {
+                GuiLanguage::ZhCn => "网页订阅".to_owned(),
+                GuiLanguage::EnUs => "Web subscription".to_owned(),
+            },
             sourcebans_url: String::new(),
             rcon_address: String::new(),
             rcon_password: String::new(),
@@ -2579,6 +2754,7 @@ impl NativeGuiApp {
             network_info_cache: HashMap::new(),
             network_info_status: String::new(),
             ui_search_query: String::new(),
+            ui_group_filter: None,
             ui_filter_empty: false,
             ui_filter_has_players: false,
             ui_filter_hide_timeout: false,
@@ -3442,7 +3618,10 @@ impl NativeGuiApp {
                 ui.heading(self.text(TextKey::SubscriptionList));
                 if ui.button(self.text(TextKey::NewSubscription)).clicked() {
                     self.selected_sourcebans = None;
-                    self.sourcebans_name = "SourceBans".to_owned();
+                    self.sourcebans_name = match self.language {
+                        GuiLanguage::ZhCn => "网页订阅".to_owned(),
+                        GuiLanguage::EnUs => "Web subscription".to_owned(),
+                    };
                     self.sourcebans_url.clear();
                 }
                 if ui
@@ -3460,8 +3639,8 @@ impl NativeGuiApp {
             if self.sourcebans_entries.is_empty() {
                 ui.label(
                     egui::RichText::new(match self.language {
-                        GuiLanguage::ZhCn => "还没有保存 SourceBans 订阅。",
-                        GuiLanguage::EnUs => "No SourceBans subscriptions saved.",
+                        GuiLanguage::ZhCn => "还没有保存网页订阅。",
+                        GuiLanguage::EnUs => "No web page subscriptions saved.",
                     })
                     .color(text_muted_color()),
                 );
@@ -3507,8 +3686,10 @@ impl NativeGuiApp {
             ui.heading(self.text(TextKey::SourceBansSubscription));
             ui.label(
                 egui::RichText::new(match self.language {
-                    GuiLanguage::ZhCn => "订阅页面需要包含 SourceBans 服务器列表表格。",
-                    GuiLanguage::EnUs => "The page should contain a SourceBans server list.",
+                    GuiLanguage::ZhCn => "订阅页面或同源 JS 资源里需要包含 IP:端口、域名:端口或 steam://connect 地址。",
+                    GuiLanguage::EnUs => {
+                        "The page or same-origin JS resources should contain IP:port, host:port, or steam://connect addresses."
+                    }
                 })
                 .color(text_muted_color()),
             );
@@ -3928,8 +4109,8 @@ impl eframe::App for NativeGuiApp {
                     }
 
                     let sourcebans_label = match self.language {
-                        GuiLanguage::ZhCn => "SourceBans 订阅",
-                        GuiLanguage::EnUs => "SourceBans Sub",
+                        GuiLanguage::ZhCn => "网页订阅",
+                        GuiLanguage::EnUs => "Web Sub",
                     };
                     if nav_button(ui, self.current_nav == NavTab::SourceBans, sourcebans_label)
                         .clicked()
@@ -4509,9 +4690,55 @@ impl eframe::App for NativeGuiApp {
                             );
                         });
 
+                        let group_counts = server_group_counts(&self.servers);
+                        let selected_group_missing = match self.ui_group_filter.as_deref() {
+                            Some(group_filter) => {
+                                !group_counts.iter().any(|(group, _)| group == group_filter)
+                            }
+                            None => false,
+                        };
+                        if selected_group_missing {
+                            self.ui_group_filter = None;
+                        }
+                        ui.horizontal_wrapped(|ui| {
+                            ui.label(match self.language {
+                                GuiLanguage::ZhCn => "分组",
+                                GuiLanguage::EnUs => "Group",
+                            });
+                            let all_servers_label = match self.language {
+                                GuiLanguage::ZhCn => "全部服务器",
+                                GuiLanguage::EnUs => "All servers",
+                            };
+                            if ui
+                                .selectable_label(
+                                    self.ui_group_filter.is_none(),
+                                    format!("{all_servers_label} ({})", self.servers.len()),
+                                )
+                                .clicked()
+                            {
+                                self.ui_group_filter = None;
+                            }
+                            for (group, count) in &group_counts {
+                                let selected = self.ui_group_filter.as_deref()
+                                    == Some(group.as_str());
+                                if ui
+                                    .selectable_label(selected, format!("{group} ({count})"))
+                                    .clicked()
+                                {
+                                    self.ui_group_filter = Some(group.clone());
+                                }
+                            }
+                        });
+
                         ui.separator();
 
                         let mut filtered_servers = self.servers.clone();
+
+                        if let Some(group_filter) = &self.ui_group_filter {
+                            filtered_servers.retain(|row| {
+                                row.groups.iter().any(|group| group == group_filter)
+                            });
+                        }
 
                         if !self.ui_search_query.trim().is_empty() {
                             let query = self.ui_search_query.to_lowercase();
@@ -5375,7 +5602,7 @@ fn delete_server_from_config(path: &PathBuf, group: &str, server: &str) -> Resul
 
 fn add_sourcebans_to_config(path: &PathBuf, input: AddSourceBansRequest) -> Result<(), String> {
     let name = non_empty(input.name.trim().to_owned(), "name")?;
-    let url = normalize_sourcebans_url(&input.url)?.to_string();
+    let url = normalize_subscription_url(&input.url)?.to_string();
     let mut config = load_config_or_default(path)?;
 
     if let Some(subscription) = config
@@ -5397,7 +5624,7 @@ fn update_sourcebans_in_config(
     input: AddSourceBansRequest,
 ) -> Result<(), String> {
     let name = non_empty(input.name.trim().to_owned(), "name")?;
-    let url = normalize_sourcebans_url(&input.url)?.to_string();
+    let url = normalize_subscription_url(&input.url)?.to_string();
     let mut config = load_config_or_default(path)?;
     let Some(subscription) = config.sourcebans.get_mut(index) else {
         return Err(format!("sourcebans index {index} does not exist"));
@@ -6133,38 +6360,83 @@ fn enrich_global_players_with_api_stats(base_url: &str, players: &mut [GlobalPla
     true
 }
 
-fn is_l4d2_running() -> bool {
-    #[cfg(target_os = "windows")]
-    {
-        use std::os::windows::process::CommandExt;
-        if let Ok(output) = std::process::Command::new("tasklist")
-            .args(["/FI", "IMAGENAME eq left4dead2.exe"])
-            .creation_flags(0x08000000)
-            .output()
-        {
-            let stdout = String::from_utf8_lossy(&output.stdout);
-            return stdout.to_lowercase().contains("left4dead2.exe");
+fn is_fake_dns_ipv4(ip: &Ipv4Addr) -> bool {
+    let octets = ip.octets();
+    octets[0] == 198 && matches!(octets[1], 18 | 19)
+}
+
+fn split_host_port(address: &str) -> Option<(&str, u16)> {
+    let (host, port) = address.rsplit_once(':')?;
+    let port = port.parse::<u16>().ok()?;
+    let host = host
+        .trim()
+        .trim_start_matches('[')
+        .trim_end_matches(']');
+    if host.is_empty() {
+        None
+    } else {
+        Some((host, port))
+    }
+}
+
+fn resolve_public_ipv4(address: &str, timeout: Duration) -> Option<SocketAddrV4> {
+    let normalized = normalize_endpoint_input(address).ok()?;
+    let (host, port) = split_host_port(&normalized)?;
+    if let Ok(ip) = host.parse::<Ipv4Addr>() {
+        return Some(SocketAddrV4::new(ip, port));
+    }
+
+    let client = api_client(timeout).ok()?;
+    let mut url = reqwest::Url::parse("https://dns.alidns.com/resolve").ok()?;
+    url.query_pairs_mut()
+        .append_pair("name", host)
+        .append_pair("type", "A");
+    let value: serde_json::Value = response_json(client.get(url).send().ok()?).ok()?;
+    if value.get("Status").and_then(|status| status.as_i64()) != Some(0) {
+        return None;
+    }
+
+    let answers = value.get("Answer")?.as_array()?;
+    for answer in answers {
+        if answer.get("type").and_then(|value| value.as_u64()) != Some(1) {
+            continue;
+        }
+        let Some(data) = answer.get("data").and_then(|value| value.as_str()) else {
+            continue;
+        };
+        let Ok(ip) = data.parse::<Ipv4Addr>() else {
+            continue;
+        };
+        if !is_fake_dns_ipv4(&ip) {
+            return Some(SocketAddrV4::new(ip, port));
         }
     }
-    #[cfg(not(target_os = "windows"))]
-    {
-        if let Ok(output) = std::process::Command::new("pgrep")
-            .arg("-f")
-            .arg("left4dead2")
-            .output()
-        {
-            return output.status.success();
+
+    None
+}
+
+fn steam_connect_address(address: &str) -> String {
+    let normalized = match normalize_endpoint_input(address) {
+        Ok(address) => address,
+        Err(_) => return address.trim().to_owned(),
+    };
+
+    match resolve_endpoint(&normalized) {
+        Ok(endpoint) if is_fake_dns_ipv4(endpoint.socket.ip()) => {
+            resolve_public_ipv4(&normalized, Duration::from_millis(1800))
+                .unwrap_or(endpoint.socket)
+                .to_string()
         }
+        Ok(endpoint) => endpoint.socket.to_string(),
+        Err(_) => resolve_public_ipv4(&normalized, Duration::from_millis(1800))
+            .map(|socket| socket.to_string())
+            .unwrap_or(normalized),
     }
-    false
 }
 
 fn launch_steam_connect(address: &str) {
-    let url = if is_l4d2_running() {
-        format!("steam://connect/{}", address)
-    } else {
-        format!("steam://rungameid/550//+connect%20{}", address)
-    };
+    let connect_address = steam_connect_address(address);
+    let url = format!("steam://connect/{connect_address}");
 
     #[cfg(target_os = "windows")]
     {
@@ -6233,27 +6505,118 @@ mod tests {
     }
 
     #[test]
-    fn extracts_sourcebans_addresses() {
+    fn extracts_subscription_addresses() {
         let html = r#"
             <a href="steam://connect/51.79.176.131:27015">connect</a>
             <td>51.79.176.131:27025</td>
             <a href='steam://connect/example.org:27015/password'>host</a>
             <td>coop.l4d2zone.pl:27015</td>
+            <span>escaped.example.org\u003a27016</span>
+            <span>steam:\/\/connect\/10.0.0.2:27017</span>
         "#;
 
-        let addresses = extract_sourcebans_addresses(html).expect("addresses");
+        let addresses = extract_subscription_addresses(html).expect("addresses");
         assert!(addresses.contains(&"51.79.176.131:27015".to_owned()));
         assert!(addresses.contains(&"51.79.176.131:27025".to_owned()));
         assert!(addresses.contains(&"example.org:27015".to_owned()));
         assert!(addresses.contains(&"coop.l4d2zone.pl:27015".to_owned()));
+        assert!(addresses.contains(&"escaped.example.org:27016".to_owned()));
+        assert!(addresses.contains(&"10.0.0.2:27017".to_owned()));
+    }
+
+    #[test]
+    fn extracts_subscription_addresses_from_json_payload() {
+        let json = r#"{"server":{"address":"45.125.45.95:28001"}}"#;
+        let addresses = extract_subscription_addresses(json).expect("addresses");
+        assert!(addresses.contains(&"45.125.45.95:28001".to_owned()));
+    }
+
+    #[test]
+    fn steam_connect_address_uses_resolved_ipv4() {
+        assert_eq!(
+            steam_connect_address("45.125.45.95:28001"),
+            "45.125.45.95:28001"
+        );
+    }
+
+    #[test]
+    fn detects_fake_dns_ipv4_range() {
+        assert!(is_fake_dns_ipv4(&Ipv4Addr::new(198, 18, 0, 12)));
+        assert!(is_fake_dns_ipv4(&Ipv4Addr::new(198, 19, 255, 255)));
+        assert!(!is_fake_dns_ipv4(&Ipv4Addr::new(103, 39, 67, 29)));
     }
 
     #[test]
     fn normalizes_sourcebans_root_url() {
-        let url = normalize_sourcebans_url("https://example.com/sourcebans").expect("url");
+        let url = normalize_subscription_url("https://example.com/sourcebans").expect("url");
         assert_eq!(
             url.as_str(),
             "https://example.com/sourcebans/index.php?p=servers"
+        );
+    }
+
+    #[test]
+    fn preserves_generic_subscription_url() {
+        let url =
+            normalize_subscription_url("https://www.kitasoda.com/#/serverList").expect("url");
+        assert_eq!(url.as_str(), "https://www.kitasoda.com/#/serverList");
+    }
+
+    #[test]
+    fn detects_vercel_security_checkpoint() {
+        let body = "<title>Vercel Security Checkpoint</title>";
+        assert_eq!(
+            detect_subscription_blocker(body),
+            Some("page returned Vercel Security Checkpoint")
+        );
+    }
+
+    #[test]
+    fn extracts_same_origin_subscription_data_urls() {
+        let base = reqwest::Url::parse("http://heimiao520.cn/").expect("url");
+        let js = r#"
+            const all = "/api/all";
+            const servers = "/api/servers?region=cn";
+            const rank = "/api/rank/name/foo";
+            const top = `/api/top/${kind}`;
+            const external = "https://other.example/api/all";
+        "#;
+
+        let data_urls = extract_subscription_data_urls(&base, js).expect("data urls");
+        let urls = data_urls
+            .iter()
+            .map(|url| url.as_str())
+            .collect::<Vec<_>>();
+        assert_eq!(
+            urls,
+            vec![
+                "http://heimiao520.cn/api/all",
+                "http://heimiao520.cn/api/servers?region=cn",
+            ]
+        );
+    }
+
+    #[test]
+    fn extracts_same_origin_subscription_resources() {
+        let base = reqwest::Url::parse("https://www.kitasoda.com/#/serverList").expect("url");
+        let html = r#"
+            <script defer src="build/bundle.4d6786dee3cc5ca77387.js"></script>
+            <script src="https://other.example/app.js"></script>
+            <link href="/build/bundle.css" rel="stylesheet">
+            <link href="/data/servers.json" rel="preload">
+        "#;
+
+        let resources = extract_linked_subscription_resources(&base, html).expect("resources");
+        let urls = resources
+            .iter()
+            .map(|url| url.as_str())
+            .collect::<Vec<_>>();
+        assert_eq!(
+            urls,
+            vec![
+                "https://www.kitasoda.com/build/bundle.4d6786dee3cc5ca77387.js",
+                "https://www.kitasoda.com/data/servers.json",
+            ]
         );
     }
 
