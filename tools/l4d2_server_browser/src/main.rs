@@ -7273,6 +7273,7 @@ mod tests {
             name: "Kita".to_owned(),
             url: "https://www.kitasoda.com/#/serverList".to_owned(),
             text: String::new(),
+            servers: Vec::new(),
         };
         assert!(subscription_drops_timeout_servers(&generic));
 
@@ -7280,6 +7281,7 @@ mod tests {
             name: "Anne".to_owned(),
             url: "https://anne.trygek.com/bans/index.php?p=servers".to_owned(),
             text: String::new(),
+            servers: Vec::new(),
         };
         assert!(!subscription_drops_timeout_servers(&sourcebans));
     }
