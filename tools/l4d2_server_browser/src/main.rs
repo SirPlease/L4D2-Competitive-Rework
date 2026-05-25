@@ -4016,7 +4016,6 @@ impl eframe::App for NativeGuiApp {
                                         egui::RichText::new(&address).monospace().size(18.0),
                                     );
 
-                                    let connect_link = format!("steam://rungameid/550//+connect%20{}", address);
                                     if ui
                                         .button(
                                             egui::RichText::new(self.text(TextKey::ConnectGame))
@@ -4024,7 +4023,7 @@ impl eframe::App for NativeGuiApp {
                                         )
                                         .clicked()
                                     {
-                                        launch_steam_url(&connect_link);
+                                        launch_steam_connect(&address);
                                     }
 
                                     ui.add_space(8.0);
@@ -4980,8 +4979,6 @@ impl eframe::App for NativeGuiApp {
                                                 ui.label(ppm_str);
                                                 ui.label(format_optional_number(p.quarter_points));
 
-                                                let connect_link =
-                                                    format!("steam://rungameid/550//+connect%20{}", p.server_address);
                                                 let btn = egui::Button::new(format!(
                                                     "{} {}",
                                                     self.text(TextKey::ConnectGame),
@@ -4996,7 +4993,7 @@ impl eframe::App for NativeGuiApp {
                                                     ))
                                                     .clicked()
                                                 {
-                                                    launch_steam_url(&connect_link);
+                                                    launch_steam_connect(&p.server_address);
                                                 }
                                                 ui.end_row();
                                             }
@@ -6136,25 +6133,57 @@ fn enrich_global_players_with_api_stats(base_url: &str, players: &mut [GlobalPla
     true
 }
 
-fn launch_steam_url(url: &str) {
+fn is_l4d2_running() -> bool {
+    #[cfg(target_os = "windows")]
+    {
+        use std::os::windows::process::CommandExt;
+        if let Ok(output) = std::process::Command::new("tasklist")
+            .args(["/FI", "IMAGENAME eq left4dead2.exe"])
+            .creation_flags(0x08000000)
+            .output()
+        {
+            let stdout = String::from_utf8_lossy(&output.stdout);
+            return stdout.to_lowercase().contains("left4dead2.exe");
+        }
+    }
+    #[cfg(not(target_os = "windows"))]
+    {
+        if let Ok(output) = std::process::Command::new("pgrep")
+            .arg("-f")
+            .arg("left4dead2")
+            .output()
+        {
+            return output.status.success();
+        }
+    }
+    false
+}
+
+fn launch_steam_connect(address: &str) {
+    let url = if is_l4d2_running() {
+        format!("steam://connect/{}", address)
+    } else {
+        format!("steam://rungameid/550//+connect%20{}", address)
+    };
+
     #[cfg(target_os = "windows")]
     {
         use std::os::windows::process::CommandExt;
         let _ = std::process::Command::new("cmd")
-            .args(["/c", "start", "", url])
+            .args(["/c", "start", "", &url])
             .creation_flags(0x08000000)
             .spawn();
     }
     #[cfg(target_os = "macos")]
     {
         let _ = std::process::Command::new("open")
-            .arg(url)
+            .arg(&url)
             .spawn();
     }
     #[cfg(target_os = "linux")]
     {
         let _ = std::process::Command::new("xdg-open")
-            .arg(url)
+            .arg(&url)
             .spawn();
     }
 }
