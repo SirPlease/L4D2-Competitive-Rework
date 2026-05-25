@@ -2112,8 +2112,12 @@ fn accent_color() -> egui::Color32 {
     egui::Color32::from_rgb(37, 99, 235)
 }
 
-fn accent_soft_color() -> egui::Color32 {
-    egui::Color32::from_rgb(219, 234, 254)
+fn sidebar_bg_color() -> egui::Color32 {
+    egui::Color32::from_rgb(15, 23, 42)
+}
+
+fn sidebar_hover_color() -> egui::Color32 {
+    egui::Color32::from_rgb(30, 41, 59)
 }
 
 fn success_color() -> egui::Color32 {
@@ -2155,27 +2159,27 @@ fn stat_card(ui: &mut egui::Ui, label: &str, value: String, color: egui::Color32
 
 fn nav_button(ui: &mut egui::Ui, selected: bool, label: &str) -> egui::Response {
     let fill = if selected {
-        accent_soft_color()
+        egui::Color32::WHITE
     } else {
-        egui::Color32::TRANSPARENT
+        sidebar_hover_color()
     };
     let stroke = if selected {
-        egui::Stroke::new(1.0, egui::Color32::from_rgb(147, 197, 253))
+        egui::Stroke::new(1.0, egui::Color32::WHITE)
     } else {
-        egui::Stroke::NONE
+        egui::Stroke::new(1.0, egui::Color32::from_rgb(51, 65, 85))
     };
     let text_color = if selected {
         accent_color()
     } else {
-        text_primary_color()
+        egui::Color32::from_rgb(226, 232, 240)
     };
 
     ui.add_sized(
-        [ui.available_width(), 36.0],
+        [ui.available_width(), 40.0],
         egui::Button::new(egui::RichText::new(label).strong().color(text_color))
             .fill(fill)
             .stroke(stroke)
-            .corner_radius(egui::CornerRadius::same(8)),
+            .corner_radius(egui::CornerRadius::same(10)),
     )
 }
 
@@ -3196,9 +3200,17 @@ impl eframe::App for NativeGuiApp {
                 ..Default::default()
             })
             .show(ctx, |ui| {
-                ui.horizontal_centered(|ui| {
+                ui.horizontal(|ui| {
+                    let page_title = match self.current_nav {
+                        NavTab::Servers => self.text(TextKey::ServerList),
+                        NavTab::GlobalPlayers => self.text(TextKey::GlobalPlayersTab),
+                        NavTab::Broadcast => self.text(TextKey::BroadcastTab),
+                        NavTab::AddServer => self.text(TextKey::AddServer),
+                        NavTab::SourceBans => self.text(TextKey::SourceBansSubscription),
+                        NavTab::Settings => self.text(TextKey::SettingsTab),
+                    };
                     ui.heading(
-                        egui::RichText::new(self.text(TextKey::AppTitle))
+                        egui::RichText::new(page_title)
                             .size(22.0)
                             .strong()
                             .color(text_primary_color()),
@@ -3283,31 +3295,44 @@ impl eframe::App for NativeGuiApp {
         // 2. 左侧导航面板 Sidebar Pane
         egui::SidePanel::left("navigation_panel")
             .resizable(false)
-            .default_width(220.0)
+            .default_width(238.0)
             .frame(egui::Frame {
-                fill: surface_color(),
-                inner_margin: egui::Margin::same(12),
-                stroke: egui::Stroke::new(1.0, border_color()),
+                fill: sidebar_bg_color(),
+                inner_margin: egui::Margin::symmetric(14, 16),
+                stroke: egui::Stroke::NONE,
                 ..Default::default()
             })
             .show(ctx, |ui| {
                 ui.vertical(|ui| {
-                    ui.spacing_mut().item_spacing = egui::vec2(0.0, 8.0);
+                    ui.spacing_mut().item_spacing = egui::vec2(0.0, 10.0);
 
-                    ui.label(
-                        egui::RichText::new(match self.language {
-                            GuiLanguage::ZhCn => "导航",
-                            GuiLanguage::EnUs => "Navigation",
-                        })
-                        .size(12.0)
-                        .strong()
-                        .color(text_muted_color()),
-                    );
-                    ui.add_space(4.0);
+                    ui.horizontal(|ui| {
+                        ui.label(
+                            egui::RichText::new("e")
+                                .size(24.0)
+                                .strong()
+                                .color(egui::Color32::WHITE)
+                                .background_color(accent_color()),
+                        );
+                        ui.vertical(|ui| {
+                            ui.label(
+                                egui::RichText::new(self.text(TextKey::AppTitle))
+                                    .size(17.0)
+                                    .strong()
+                                    .color(egui::Color32::WHITE),
+                            );
+                            ui.label(
+                                egui::RichText::new("Left 4 Dead 2")
+                                    .size(11.0)
+                                    .color(egui::Color32::from_rgb(148, 163, 184)),
+                            );
+                        });
+                    });
+                    ui.add_space(12.0);
 
                     let servers_label = match self.language {
-                        GuiLanguage::ZhCn => "服务器浏览器",
-                        GuiLanguage::EnUs => "Server Browser",
+                        GuiLanguage::ZhCn => "▦ 服务器浏览器",
+                        GuiLanguage::EnUs => "▦ Server Browser",
                     };
                     if nav_button(ui, self.current_nav == NavTab::Servers, servers_label).clicked()
                     {
@@ -3315,8 +3340,8 @@ impl eframe::App for NativeGuiApp {
                     }
 
                     let players_label = match self.language {
-                        GuiLanguage::ZhCn => "全服在线玩家",
-                        GuiLanguage::EnUs => "All Server Players",
+                        GuiLanguage::ZhCn => "● 全服在线玩家",
+                        GuiLanguage::EnUs => "● All Server Players",
                     };
                     if nav_button(ui, self.current_nav == NavTab::GlobalPlayers, players_label)
                         .clicked()
@@ -3326,8 +3351,8 @@ impl eframe::App for NativeGuiApp {
                     }
 
                     let broadcast_label = match self.language {
-                        GuiLanguage::ZhCn => "全服消息",
-                        GuiLanguage::EnUs => "Broadcast",
+                        GuiLanguage::ZhCn => "◉ 全服消息",
+                        GuiLanguage::EnUs => "◉ Broadcast",
                     };
                     if nav_button(ui, self.current_nav == NavTab::Broadcast, broadcast_label)
                         .clicked()
@@ -3336,8 +3361,8 @@ impl eframe::App for NativeGuiApp {
                     }
 
                     let add_server_label = match self.language {
-                        GuiLanguage::ZhCn => "添加服务器",
-                        GuiLanguage::EnUs => "Add Server",
+                        GuiLanguage::ZhCn => "+ 添加服务器",
+                        GuiLanguage::EnUs => "+ Add Server",
                     };
                     if nav_button(ui, self.current_nav == NavTab::AddServer, add_server_label)
                         .clicked()
@@ -3347,8 +3372,8 @@ impl eframe::App for NativeGuiApp {
                     }
 
                     let sourcebans_label = match self.language {
-                        GuiLanguage::ZhCn => "SourceBans 订阅",
-                        GuiLanguage::EnUs => "SourceBans Sub",
+                        GuiLanguage::ZhCn => "◇ SourceBans 订阅",
+                        GuiLanguage::EnUs => "◇ SourceBans Sub",
                     };
                     if nav_button(ui, self.current_nav == NavTab::SourceBans, sourcebans_label)
                         .clicked()
@@ -3358,8 +3383,8 @@ impl eframe::App for NativeGuiApp {
                     }
 
                     let settings_label = match self.language {
-                        GuiLanguage::ZhCn => "首选项设置",
-                        GuiLanguage::EnUs => "Preferences",
+                        GuiLanguage::ZhCn => "⚙ 首选项设置",
+                        GuiLanguage::EnUs => "⚙ Preferences",
                     };
                     if nav_button(ui, self.current_nav == NavTab::Settings, settings_label)
                         .clicked()
@@ -3380,12 +3405,12 @@ impl eframe::App for NativeGuiApp {
                             egui::Button::new(
                                 egui::RichText::new(sponsor_label)
                                     .strong()
-                                    .color(accent_color()),
+                                    .color(egui::Color32::WHITE),
                             )
-                            .fill(egui::Color32::from_rgb(239, 246, 255))
+                            .fill(egui::Color32::from_rgb(37, 99, 235))
                             .stroke(egui::Stroke::new(
                                 1.0,
-                                egui::Color32::from_rgb(191, 219, 254),
+                                egui::Color32::from_rgb(96, 165, 250),
                             ))
                             .corner_radius(egui::CornerRadius::same(8)),
                         )
@@ -3408,6 +3433,12 @@ impl eframe::App for NativeGuiApp {
                 .resizable(true)
                 .default_width(450.0)
                 .width_range(300.0..=650.0)
+                .frame(egui::Frame {
+                    fill: app_bg(),
+                    inner_margin: egui::Margin::same(12),
+                    stroke: egui::Stroke::new(1.0, border_color()),
+                    ..Default::default()
+                })
                 .show(ctx, |ui| {
                     ui.vertical(|ui| {
                         ui.spacing_mut().item_spacing = egui::vec2(0.0, 10.0);
