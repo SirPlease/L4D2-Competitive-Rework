@@ -8,6 +8,9 @@ on:
   push:
     branches:
       - master
+    paths:
+      - 'tools/l4d2_server_browser/**'
+      - '.github/workflows/l4d2_server_browser.yml'
     tags:
       - 'l4d2-browser-v*'
   workflow_dispatch:
