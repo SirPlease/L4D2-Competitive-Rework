@@ -569,6 +569,13 @@ impl GuiLanguage {
                 TextKey::SearchPlaceholder => "实时过滤服务器（名称/地图/分组）...",
                 TextKey::TotalServers => "总服务器",
                 TextKey::ConnectGame => "一键连接",
+                TextKey::NetworkInfo => "网络信息",
+                TextKey::ResolveNetwork => "重新解析",
+                TextKey::IpAddress => "解析 IP",
+                TextKey::NetworkOperator => "运营商",
+                TextKey::Organization => "组织",
+                TextKey::Asn => "ASN",
+                TextKey::Region => "地区",
                 TextKey::CvarSearchPlaceholder => "搜索 CVAR / 规则变量名...",
                 TextKey::GlobalPlayerSearchPlaceholder => "搜索在线玩家昵称...",
                 TextKey::ApiBaseUrl => "AnneWeb API 地址",
@@ -643,6 +650,13 @@ impl GuiLanguage {
                 TextKey::SearchPlaceholder => "Filter servers (name/map/group)...",
                 TextKey::TotalServers => "Total Servers",
                 TextKey::ConnectGame => "Connect Game",
+                TextKey::NetworkInfo => "Network",
+                TextKey::ResolveNetwork => "Resolve again",
+                TextKey::IpAddress => "Resolved IP",
+                TextKey::NetworkOperator => "ISP",
+                TextKey::Organization => "Organization",
+                TextKey::Asn => "ASN",
+                TextKey::Region => "Region",
                 TextKey::CvarSearchPlaceholder => "Filter CVAR names...",
                 TextKey::GlobalPlayerSearchPlaceholder => "Search player name...",
                 TextKey::ApiBaseUrl => "AnneWeb API URL",
@@ -737,6 +751,20 @@ impl GuiLanguage {
             Self::EnUs => format!("Read failed: {err}"),
         }
     }
+
+    fn network_resolving_status(self) -> String {
+        match self {
+            Self::ZhCn => "正在解析服务器 IP 和网络信息...".to_owned(),
+            Self::EnUs => "Resolving server IP and network info...".to_owned(),
+        }
+    }
+
+    fn network_failed_status(self, err: &str) -> String {
+        match self {
+            Self::ZhCn => format!("网络信息解析失败：{err}"),
+            Self::EnUs => format!("Network lookup failed: {err}"),
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -804,6 +832,13 @@ enum TextKey {
     SearchPlaceholder,
     TotalServers,
     ConnectGame,
+    NetworkInfo,
+    ResolveNetwork,
+    IpAddress,
+    NetworkOperator,
+    Organization,
+    Asn,
+    Region,
     CvarSearchPlaceholder,
     GlobalPlayerSearchPlaceholder,
     ApiBaseUrl,
@@ -2009,6 +2044,33 @@ struct PlayerStats {
     updated: i64,
 }
 
+#[derive(Clone, Debug)]
+struct ServerNetworkInfo {
+    address: String,
+    ip: String,
+    country: String,
+    region: String,
+    city: String,
+    isp: String,
+    org: String,
+    asn: String,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+struct IpApiResponse {
+    status: String,
+    message: Option<String>,
+    country: Option<String>,
+    #[serde(rename = "regionName")]
+    region_name: Option<String>,
+    city: Option<String>,
+    isp: Option<String>,
+    org: Option<String>,
+    #[serde(rename = "as")]
+    asn: Option<String>,
+    query: Option<String>,
+}
+
 enum GuiMessage {
     Servers(Result<Vec<ServerRowPayload>, String>),
     ConfigLists(Result<GuiConfigLists, String>),
@@ -2027,6 +2089,7 @@ enum GuiMessage {
     SteamLoginFinished(Result<ApiLoginSession, String>),
     Broadcast(Result<ApiBroadcastResponse, String>),
     ServerUpdate(String, Result<ServerRowPayload, String>),
+    NetworkInfo(String, Result<ServerNetworkInfo, String>),
 }
 
 struct NativeGuiApp {
@@ -2062,6 +2125,9 @@ struct NativeGuiApp {
     cvar_names: String,
     cvar_output: String,
     player_output: String,
+    selected_server_network: Option<ServerNetworkInfo>,
+    network_info_cache: HashMap<String, ServerNetworkInfo>,
+    network_info_status: String,
     // 新增 UI 交互状态
     ui_search_query: String,
     ui_filter_empty: bool,
@@ -2385,6 +2451,9 @@ impl NativeGuiApp {
             cvar_names: "hostname,sv_tags,mp_gamemode".to_owned(),
             cvar_output: String::new(),
             player_output: String::new(),
+            selected_server_network: None,
+            network_info_cache: HashMap::new(),
+            network_info_status: String::new(),
             ui_search_query: String::new(),
             ui_filter_empty: false,
             ui_filter_has_players: false,
@@ -2441,6 +2510,23 @@ impl NativeGuiApp {
                             }
                         }
                         row.last_queried = Some(std::time::Instant::now());
+                    }
+                }
+                GuiMessage::NetworkInfo(address, result) => {
+                    let is_selected = self.selected_server.as_deref() == Some(address.as_str());
+                    match result {
+                        Ok(info) => {
+                            self.network_info_cache.insert(address, info.clone());
+                            if is_selected {
+                                self.selected_server_network = Some(info);
+                                self.network_info_status.clear();
+                            }
+                        }
+                        Err(err) if is_selected => {
+                            self.selected_server_network = None;
+                            self.network_info_status = self.language.network_failed_status(&err);
+                        }
+                        Err(_) => {}
                     }
                 }
                 GuiMessage::ConfigLists(result) => match result {
@@ -3051,9 +3137,10 @@ impl NativeGuiApp {
         let changed = self.selected_server.as_deref() != Some(address.as_str());
         self.selected_server = Some(address.clone());
         self.rcon_address = address.clone();
-        self.cvar_address = address;
+        self.cvar_address = address.clone();
 
         if changed {
+            self.read_network_info(address, false);
             self.read_cvars();
             self.read_players();
         }
@@ -3077,6 +3164,27 @@ impl NativeGuiApp {
             });
 
             let _ = tx.send(GuiMessage::Players(result));
+        });
+    }
+
+    fn read_network_info(&mut self, address: String, force: bool) {
+        if !force {
+            if let Some(info) = self.network_info_cache.get(&address).cloned() {
+                self.selected_server_network = Some(info);
+                self.network_info_status.clear();
+                return;
+            }
+        }
+
+        self.selected_server_network = None;
+        self.network_info_status = self.language.network_resolving_status();
+
+        let tx = self.tx.clone();
+        thread::spawn(move || {
+            let result = resolve_endpoint(&address).and_then(|endpoint| {
+                fetch_server_network_info(&address, &endpoint.socket.ip().to_string())
+            });
+            let _ = tx.send(GuiMessage::NetworkInfo(address, result));
         });
     }
 
@@ -3443,6 +3551,7 @@ impl eframe::App for NativeGuiApp {
                     ui.vertical(|ui| {
                         ui.spacing_mut().item_spacing = egui::vec2(0.0, 10.0);
 
+                        let mut refresh_network_info = false;
                         egui::Frame::canvas(ui.style())
                             .fill(surface_color())
                             .stroke(egui::Stroke::new(1.0, border_color()))
@@ -3472,8 +3581,94 @@ impl eframe::App for NativeGuiApp {
                                     {
                                         ctx.open_url(egui::OpenUrl::same_tab(connect_link));
                                     }
+
+                                    ui.add_space(8.0);
+                                    ui.separator();
+                                    ui.add_space(4.0);
+
+                                    ui.horizontal(|ui| {
+                                        ui.label(
+                                            egui::RichText::new(self.text(TextKey::NetworkInfo))
+                                                .strong()
+                                                .color(text_primary_color()),
+                                        );
+                                        ui.with_layout(
+                                            egui::Layout::right_to_left(egui::Align::Center),
+                                            |ui| {
+                                                if ui
+                                                    .small_button(
+                                                        self.text(TextKey::ResolveNetwork),
+                                                    )
+                                                    .clicked()
+                                                {
+                                                    refresh_network_info = true;
+                                                }
+                                            },
+                                        );
+                                    });
+
+                                    if let Some(info) = self
+                                        .selected_server_network
+                                        .as_ref()
+                                        .filter(|info| info.address.as_str() == address.as_str())
+                                    {
+                                        egui::Grid::new("selected_server_network_grid")
+                                            .striped(true)
+                                            .num_columns(2)
+                                            .spacing(egui::vec2(12.0, 4.0))
+                                            .show(ui, |ui| {
+                                                ui.label(
+                                                    egui::RichText::new(
+                                                        self.text(TextKey::IpAddress),
+                                                    )
+                                                    .color(text_muted_color()),
+                                                );
+                                                ui.monospace(display_network_field(&info.ip));
+                                                ui.end_row();
+
+                                                ui.label(
+                                                    egui::RichText::new(
+                                                        self.text(TextKey::NetworkOperator),
+                                                    )
+                                                    .color(text_muted_color()),
+                                                );
+                                                ui.label(display_network_field(&info.isp));
+                                                ui.end_row();
+
+                                                ui.label(
+                                                    egui::RichText::new(
+                                                        self.text(TextKey::Organization),
+                                                    )
+                                                    .color(text_muted_color()),
+                                                );
+                                                ui.label(display_network_field(&info.org));
+                                                ui.end_row();
+
+                                                ui.label(
+                                                    egui::RichText::new(self.text(TextKey::Asn))
+                                                        .color(text_muted_color()),
+                                                );
+                                                ui.monospace(display_network_field(&info.asn));
+                                                ui.end_row();
+
+                                                ui.label(
+                                                    egui::RichText::new(self.text(TextKey::Region))
+                                                        .color(text_muted_color()),
+                                                );
+                                                ui.label(format_network_location(info));
+                                                ui.end_row();
+                                            });
+                                    } else if !self.network_info_status.is_empty() {
+                                        ui.label(
+                                            egui::RichText::new(&self.network_info_status)
+                                                .color(text_muted_color()),
+                                        );
+                                    }
                                 });
                             });
+                        if refresh_network_info {
+                            self.read_network_info(address.clone(), true);
+                        }
 
                         egui::Frame::canvas(ui.style())
                             .fill(surface_color())
@@ -4680,6 +4875,28 @@ fn format_optional_number(value: Option<i32>) -> String {
     result.chars().rev().collect()
 }
 
+fn display_network_field(value: &str) -> &str {
+    if value.trim().is_empty() {
+        "-"
+    } else {
+        value
+    }
+}
+
+fn format_network_location(info: &ServerNetworkInfo) -> String {
+    let parts = [&info.country, &info.region, &info.city]
+        .into_iter()
+        .map(|part| part.trim())
+        .filter(|part| !part.is_empty())
+        .collect::<Vec<_>>();
+
+    if parts.is_empty() {
+        "-".to_owned()
+    } else {
+        parts.join(" / ")
+    }
+}
+
 fn format_playtime_minutes(mins: Option<i32>, lang: GuiLanguage) -> String {
     let Some(minutes) = mins else {
         return "-".to_owned();
@@ -5247,6 +5464,38 @@ fn parse_player_response(packet: &[u8]) -> Result<Vec<PlayerInfo>, String> {
     }
 
     Ok(players)
+}
+
+fn fetch_server_network_info(address: &str, ip: &str) -> Result<ServerNetworkInfo, String> {
+    const IP_API_FIELDS: &str = "status,message,country,regionName,city,isp,org,as,query";
+
+    let client = api_client(Duration::from_secs(8))?;
+    let url = reqwest::Url::parse(&format!("http://ip-api.com/json/{ip}"))
+        .map_err(|err| format!("failed to build IP lookup URL: {err}"))?;
+    let response: IpApiResponse = response_json(
+        client
+            .get(url)
+            .query(&[("fields", IP_API_FIELDS), ("lang", "zh-CN")])
+            .send()
+            .map_err(|err| format!("failed to query IP network info: {err}"))?,
+    )?;
+
+    if response.status != "success" {
+        return Err(response
+            .message
+            .unwrap_or_else(|| "IP lookup failed".to_owned()));
+    }
+
+    Ok(ServerNetworkInfo {
+        address: address.to_owned(),
+        ip: response.query.unwrap_or_else(|| ip.to_owned()),
+        country: response.country.unwrap_or_default(),
+        region: response.region_name.unwrap_or_default(),
+        city: response.city.unwrap_or_default(),
+        isp: response.isp.unwrap_or_default(),
+        org: response.org.unwrap_or_default(),
+        asn: response.asn.unwrap_or_default(),
+    })
 }
 
 fn api_client(timeout: Duration) -> Result<Client, String> {
