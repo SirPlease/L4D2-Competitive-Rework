@@ -4024,7 +4024,7 @@ impl eframe::App for NativeGuiApp {
                                         )
                                         .clicked()
                                     {
-                                        ctx.open_url(egui::OpenUrl::same_tab(connect_link));
+                                        launch_steam_url(&connect_link);
                                     }
 
                                     ui.add_space(8.0);
@@ -4996,9 +4996,7 @@ impl eframe::App for NativeGuiApp {
                                                     ))
                                                     .clicked()
                                                 {
-                                                    ctx.open_url(egui::OpenUrl::same_tab(
-                                                        connect_link,
-                                                    ));
+                                                    launch_steam_url(&connect_link);
                                                 }
                                                 ui.end_row();
                                             }
@@ -6136,6 +6134,27 @@ fn enrich_global_players_with_api_stats(base_url: &str, players: &mut [GlobalPla
         apply_global_player_stats(player, &stats);
     }
     true
+}
+
+fn launch_steam_url(url: &str) {
+    #[cfg(target_os = "windows")]
+    {
+        let _ = std::process::Command::new("cmd")
+            .args(["/c", "start", "", url])
+            .spawn();
+    }
+    #[cfg(target_os = "macos")]
+    {
+        let _ = std::process::Command::new("open")
+            .arg(url)
+            .spawn();
+    }
+    #[cfg(target_os = "linux")]
+    {
+        let _ = std::process::Command::new("xdg-open")
+            .arg(url)
+            .spawn();
+    }
 }
 
 #[cfg(test)]
