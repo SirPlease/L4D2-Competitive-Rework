@@ -545,7 +545,8 @@ impl GuiLanguage {
                 TextKey::ManualServerList => "已保存服务器",
                 TextKey::SubscriptionList => "已保存订阅",
                 TextKey::NewSubscription => "新建订阅",
-                TextKey::UpdateSubscription => "更新订阅",
+                TextKey::RefreshSubscriptions => "刷新订阅",
+                TextKey::UpdateSubscription => "保存修改",
                 TextKey::DeleteSubscription => "删除订阅",
                 TextKey::SubscriptionDeleted => "网页订阅已删除",
                 TextKey::SelectedServer => "已选择服务器",
@@ -628,7 +629,8 @@ impl GuiLanguage {
                 TextKey::ManualServerList => "Saved servers",
                 TextKey::SubscriptionList => "Saved subscriptions",
                 TextKey::NewSubscription => "New subscription",
-                TextKey::UpdateSubscription => "Update subscription",
+                TextKey::RefreshSubscriptions => "Refresh subscriptions",
+                TextKey::UpdateSubscription => "Save changes",
                 TextKey::DeleteSubscription => "Delete subscription",
                 TextKey::SubscriptionDeleted => "Web page subscription deleted",
                 TextKey::SelectedServer => "Selected server",
@@ -812,6 +814,7 @@ enum TextKey {
     ManualServerList,
     SubscriptionList,
     NewSubscription,
+    RefreshSubscriptions,
     UpdateSubscription,
     DeleteSubscription,
     SubscriptionDeleted,
@@ -3626,6 +3629,15 @@ impl NativeGuiApp {
                 }
                 if ui
                     .add_enabled(
+                        !self.sourcebans_entries.is_empty(),
+                        egui::Button::new(self.text(TextKey::RefreshSubscriptions)),
+                    )
+                    .clicked()
+                {
+                    self.refresh_servers();
+                }
+                if ui
+                    .add_enabled(
                         self.selected_sourcebans.is_some(),
                         egui::Button::new(self.text(TextKey::DeleteSubscription)),
                     )
@@ -5696,6 +5708,11 @@ struct GitHubRelease {
     html_url: String,
 }
 
+#[derive(Deserialize)]
+struct GitHubTag {
+    name: String,
+}
+
 fn check_latest_release() -> Result<UpdateInfo, String> {
     let url = format!("https://api.github.com/repos/{UPDATE_REPO}/releases?per_page=100");
     let client = Client::builder()
@@ -5715,16 +5732,75 @@ fn check_latest_release() -> Result<UpdateInfo, String> {
         .map_err(|err| format!("failed to parse latest release list: {err}"))?;
     let release = releases
         .into_iter()
-        .find(|release| release.tag_name.starts_with(UPDATE_TAG_PREFIX))
-        .ok_or_else(|| format!("no {UPDATE_TAG_PREFIX} release found"))?;
-    let latest_version = release_tag_version(&release.tag_name).to_owned();
+        .filter(|release| is_update_release_tag(&release.tag_name))
+        .max_by(|left, right| {
+            compare_versions(
+                release_tag_version(&left.tag_name),
+                release_tag_version(&right.tag_name),
+            )
+        });
+
+    let (tag_name, html_url) = if let Some(release) = release {
+        (release.tag_name, release.html_url)
+    } else {
+        let tag = fetch_latest_update_tag(&client)?;
+        let html_url = format!("https://github.com/{UPDATE_REPO}/tree/{tag}");
+        (tag, html_url)
+    };
+
+    let latest_version = release_tag_version(&tag_name).to_owned();
     let available = is_version_newer(&latest_version, env!("CARGO_PKG_VERSION"));
 
     Ok(UpdateInfo {
         latest_version,
-        html_url: release.html_url,
+        html_url,
         available,
     })
+}
+
+fn fetch_latest_update_tag(client: &Client) -> Result<String, String> {
+    let url = format!("https://api.github.com/repos/{UPDATE_REPO}/tags?per_page=100");
+    let text = client
+        .get(&url)
+        .header("User-Agent", USER_AGENT)
+        .send()
+        .map_err(|err| format!("failed to request release tags: {err}"))?
+        .error_for_status()
+        .map_err(|err| format!("release tags request failed: {err}"))?
+        .text()
+        .map_err(|err| format!("failed to read release tags: {err}"))?;
+    let tags: Vec<GitHubTag> =
+        serde_json::from_str(&text).map_err(|err| format!("failed to parse tag list: {err}"))?;
+    tags.into_iter()
+        .filter(|tag| is_update_release_tag(&tag.name))
+        .max_by(|left, right| {
+            compare_versions(
+                release_tag_version(&left.name),
+                release_tag_version(&right.name),
+            )
+        })
+        .map(|tag| tag.name)
+        .ok_or_else(|| "no v* or l4d2-browser-v* update release found".to_owned())
+}
+
+fn is_update_release_tag(tag: &str) -> bool {
+    tag.starts_with(UPDATE_TAG_PREFIX)
+        || tag
+            .strip_prefix('v')
+            .map(is_semver_tag_version)
+            .unwrap_or_else(|| is_semver_tag_version(tag))
+}
+
+fn is_semver_tag_version(value: &str) -> bool {
+    let core = value
+        .split(|ch| ch == '-' || ch == '+')
+        .next()
+        .unwrap_or(value);
+    let parts = core.split('.').collect::<Vec<_>>();
+    (2..=3).contains(&parts.len())
+        && parts
+            .iter()
+            .all(|part| !part.is_empty() && part.chars().all(|ch| ch.is_ascii_digit()))
 }
 
 fn release_tag_version(tag: &str) -> &str {
@@ -5733,23 +5809,25 @@ fn release_tag_version(tag: &str) -> &str {
         .unwrap_or(tag)
 }
 
-fn is_version_newer(latest: &str, current: &str) -> bool {
-    let latest_parts = version_parts(latest);
-    let current_parts = version_parts(current);
-    let max_len = latest_parts.len().max(current_parts.len()).max(1);
+fn compare_versions(left: &str, right: &str) -> std::cmp::Ordering {
+    let left_parts = version_parts(left);
+    let right_parts = version_parts(right);
+    let max_len = left_parts.len().max(right_parts.len()).max(1);
 
     for index in 0..max_len {
-        let latest_part = *latest_parts.get(index).unwrap_or(&0);
-        let current_part = *current_parts.get(index).unwrap_or(&0);
-        if latest_part > current_part {
-            return true;
-        }
-        if latest_part < current_part {
-            return false;
+        let left_part = *left_parts.get(index).unwrap_or(&0);
+        let right_part = *right_parts.get(index).unwrap_or(&0);
+        match left_part.cmp(&right_part) {
+            std::cmp::Ordering::Equal => {}
+            ordering => return ordering,
         }
     }
 
-    false
+    std::cmp::Ordering::Equal
+}
+
+fn is_version_newer(latest: &str, current: &str) -> bool {
+    compare_versions(latest, current) == std::cmp::Ordering::Greater
 }
 
 fn version_parts(version: &str) -> Vec<u64> {
@@ -6634,6 +6712,11 @@ mod tests {
     #[test]
     fn compares_release_versions() {
         assert_eq!(release_tag_version("l4d2-browser-v0.5.1"), "0.5.1");
+        assert_eq!(release_tag_version("v0.5.0"), "0.5.0");
+        assert!(is_update_release_tag("l4d2-browser-v0.5.0"));
+        assert!(is_update_release_tag("v0.5.0"));
+        assert!(is_update_release_tag("0.5.0"));
+        assert!(!is_update_release_tag("CompetitiveWithAnne-stable-release-2026-05-09"));
         assert!(is_version_newer("0.5.0", "0.4.0"));
         assert!(is_version_newer("0.4.1", "0.4.0"));
         assert!(!is_version_newer("0.4.0", "0.4.0"));
