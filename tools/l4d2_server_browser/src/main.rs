@@ -382,6 +382,7 @@ fn load_server_rows(
             display: entry.display,
             socket: entry.socket,
             groups: entry.groups.into_iter().collect(),
+            drop_on_timeout: entry.drop_on_timeout,
         })
         .collect();
 
@@ -398,6 +399,9 @@ fn load_server_rows(
     } else {
         query_servers(endpoints, settings.server_timeout, settings.jobs)
     };
+    if !settings.no_info {
+        rows.retain(|row| !(row.endpoint.drop_on_timeout && row.info.is_none()));
+    }
 
     rows = apply_filters(rows, settings);
     sort_rows(&mut rows, settings.sort);
@@ -1056,7 +1060,7 @@ fn collect_sources(
                 match master.fetch(settings.region, &settings.filter, settings.limit) {
                     Ok(endpoints) => {
                         for endpoint in endpoints {
-                            add_endpoint(&mut registry, endpoint, &settings.master_group);
+                            add_endpoint(&mut registry, endpoint, &settings.master_group, false);
                         }
                     }
                     Err(err) => eprintln!("warning: master server query failed: {err}"),
@@ -1072,18 +1076,26 @@ fn collect_sources(
     for group in manual_groups {
         for server in &group.servers {
             match resolve_endpoint(server) {
-                Ok(endpoint) => add_endpoint(&mut registry, endpoint, &group.name),
+                Ok(endpoint) => add_endpoint(&mut registry, endpoint, &group.name, false),
                 Err(err) => eprintln!("warning: skipped {} in group {}: {err}", server, group.name),
             }
         }
     }
 
     for subscription in subscriptions {
+        let drop_on_timeout = subscription_drops_timeout_servers(subscription);
         match fetch_web_subscription(subscription, settings.http_timeout) {
             Ok(addresses) => {
                 for address in addresses {
                     match resolve_endpoint(&address) {
-                        Ok(endpoint) => add_endpoint(&mut registry, endpoint, &subscription.name),
+                        Ok(endpoint) => {
+                            add_endpoint(
+                                &mut registry,
+                                endpoint,
+                                &subscription.name,
+                                drop_on_timeout,
+                            )
+                        }
                         Err(err) => eprintln!(
                             "warning: skipped {} from subscription {}: {err}",
                             address, subscription.url
@@ -1106,6 +1118,7 @@ struct RegistryEntry {
     display: String,
     socket: SocketAddrV4,
     groups: BTreeSet<String>,
+    drop_on_timeout: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -1113,12 +1126,14 @@ struct Endpoint {
     display: String,
     socket: SocketAddrV4,
     groups: Vec<String>,
+    drop_on_timeout: bool,
 }
 
 fn add_endpoint(
     registry: &mut HashMap<SocketAddrV4, RegistryEntry>,
     endpoint: Endpoint,
     group: &str,
+    drop_on_timeout: bool,
 ) {
     let entry = registry
         .entry(endpoint.socket)
@@ -1126,7 +1141,11 @@ fn add_endpoint(
             display: endpoint.display,
             socket: endpoint.socket,
             groups: BTreeSet::new(),
+            drop_on_timeout,
         });
+    if !drop_on_timeout {
+        entry.drop_on_timeout = false;
+    }
     entry.groups.insert(group.to_owned());
 }
 
@@ -1218,6 +1237,7 @@ impl MasterClient {
                         display: addr.to_string(),
                         socket: addr,
                         groups: Vec::new(),
+                        drop_on_timeout: false,
                     });
                     if results.len() >= limit {
                         break;
@@ -1425,6 +1445,16 @@ fn looks_like_sourcebans_url(url: &reqwest::Url) -> bool {
     path == "bans" || path.contains("sourcebans") || path.starts_with("bans/")
 }
 
+fn subscription_drops_timeout_servers(subscription: &SourceBansSubscription) -> bool {
+    if !subscription.text.trim().is_empty() {
+        return true;
+    }
+
+    parse_subscription_url(&subscription.url)
+        .map(|url| !looks_like_sourcebans_url(&url))
+        .unwrap_or(true)
+}
+
 fn extract_linked_subscription_resources(
     base_url: &reqwest::Url,
     body: &str,
@@ -1618,6 +1648,7 @@ fn resolve_endpoint(input: &str) -> Result<Endpoint, String> {
         display: address,
         socket,
         groups: Vec::new(),
+        drop_on_timeout: false,
     })
 }
 
@@ -2083,8 +2114,8 @@ fn print_table(rows: &[ServerRow]) {
     }
 
     println!(
-        "{:<20} {:<48} {:>7} {:>7} {:>4} {:<22} {:<4} {:<7} {}",
-        "group", "name", "ping", "players", "bots", "map", "vac", "access", "address"
+        "{:<48} {:<20} {:>7} {:>7} {:>4} {:<22} {:<4} {:<7} {}",
+        "name", "group", "ping", "players", "bots", "map", "vac", "access", "address"
     );
     println!("{}", "-".repeat(153));
 
@@ -2101,9 +2132,9 @@ fn print_table(rows: &[ServerRow]) {
                 let access = if info.private { "private" } else { "public" };
 
                 println!(
-                    "{:<20} {:<48} {:>7} {:>7} {:>4} {:<22} {:<4} {:<7} {}",
-                    groups,
+                    "{:<48} {:<20} {:>7} {:>7} {:>4} {:<22} {:<4} {:<7} {}",
                     clip(&info.name, 48),
+                    groups,
                     ping,
                     players,
                     info.bots,
@@ -2116,9 +2147,9 @@ fn print_table(rows: &[ServerRow]) {
             None => {
                 let error = row.error.as_deref().unwrap_or("not queried");
                 println!(
-                    "{:<20} {:<48} {:>7} {:>7} {:>4} {:<22} {:<4} {:<7} {}",
-                    groups,
+                    "{:<48} {:<20} {:>7} {:>7} {:>4} {:<22} {:<4} {:<7} {}",
                     clip(error, 48),
+                    groups,
                     "-",
                     "-",
                     "-",
@@ -2226,6 +2257,8 @@ struct ServerRowPayload {
     ping_ms: Option<u64>,
     info: Option<ServerInfo>,
     error: Option<String>,
+    #[serde(skip)]
+    drop_on_timeout: bool,
     #[serde(skip)]
     last_queried: Option<std::time::Instant>,
 }
@@ -2993,7 +3026,21 @@ impl NativeGuiApp {
                     Err(err) => self.server_status = self.language.refresh_failed_status(&err),
                 },
                 GuiMessage::ServerUpdate(address, result) => {
-                    if let Some(row) = self.servers.iter_mut().find(|r| r.address == address) {
+                    if let Some(index) = self.servers.iter().position(|r| r.address == address) {
+                        if result.is_err() && self.servers[index].drop_on_timeout {
+                            self.servers.remove(index);
+                            if self.selected_server.as_deref() == Some(address.as_str()) {
+                                self.selected_server = None;
+                                self.selected_server_players.clear();
+                                self.player_output =
+                                    self.language.text(TextKey::NoServerSelected).to_owned();
+                            }
+                            self.server_status =
+                                self.language.server_count_status(self.servers.len());
+                            continue;
+                        }
+
+                        let row = &mut self.servers[index];
                         match result {
                             Ok(new_payload) => {
                                 row.ping_ms = new_payload.ping_ms;
@@ -4017,8 +4064,32 @@ impl NativeGuiApp {
             ui.add(
                 egui::TextEdit::singleline(&mut self.sourcebans_url).desired_width(f32::INFINITY),
             );
+
+            let save_label = if self.selected_sourcebans.is_some() {
+                self.text(TextKey::UpdateSubscription)
+            } else {
+                self.text(TextKey::SaveSubscription)
+            };
+            ui.add_space(8.0);
+            ui.horizontal_wrapped(|ui| {
+                if ui.add(primary_button(save_label)).clicked() {
+                    self.update_sourcebans();
+                }
+                let chars = self.sourcebans_text.chars().count();
+                if chars > 0 {
+                    ui.label(
+                        egui::RichText::new(match self.language {
+                            GuiLanguage::ZhCn => format!("已粘贴 {chars} 个字符"),
+                            GuiLanguage::EnUs => format!("{chars} pasted chars"),
+                        })
+                        .color(text_muted_color()),
+                    );
+                }
+            });
+
             ui.label(self.text(TextKey::PastedSubscriptionText));
-            ui.add(
+            ui.add_sized(
+                [ui.available_width(), 260.0],
                 egui::TextEdit::multiline(&mut self.sourcebans_text)
                     .desired_rows(8)
                     .desired_width(f32::INFINITY)
@@ -4026,11 +4097,6 @@ impl NativeGuiApp {
             );
 
             ui.add_space(8.0);
-            let save_label = if self.selected_sourcebans.is_some() {
-                self.text(TextKey::UpdateSubscription)
-            } else {
-                self.text(TextKey::SaveSubscription)
-            };
             if ui.add(primary_button(save_label)).clicked() {
                 self.update_sourcebans();
             }
@@ -4254,6 +4320,7 @@ impl eframe::App for NativeGuiApp {
                                 ping_ms: Some(ping.as_millis() as u64),
                                 info: Some(info),
                                 error: None,
+                                drop_on_timeout: false,
                                 last_queried: Some(std::time::Instant::now()),
                             }),
                             Err(err) => Err(err),
@@ -5123,17 +5190,6 @@ impl eframe::App for NativeGuiApp {
                                     .show(ui, |ui| {
                                         if ui
                                             .button(sort_label(
-                                                self.text(TextKey::HeaderGroup),
-                                                self.gui_sort,
-                                                self.gui_sort_desc,
-                                                SortKey::Group,
-                                            ))
-                                            .clicked()
-                                        {
-                                            self.set_sort(SortKey::Group);
-                                        }
-                                        if ui
-                                            .button(sort_label(
                                                 self.text(TextKey::HeaderNameOrError),
                                                 self.gui_sort,
                                                 self.gui_sort_desc,
@@ -5142,6 +5198,17 @@ impl eframe::App for NativeGuiApp {
                                             .clicked()
                                         {
                                             self.set_sort(SortKey::Name);
+                                        }
+                                        if ui
+                                            .button(sort_label(
+                                                self.text(TextKey::HeaderGroup),
+                                                self.gui_sort,
+                                                self.gui_sort_desc,
+                                                SortKey::Group,
+                                            ))
+                                            .clicked()
+                                        {
+                                            self.set_sort(SortKey::Group);
                                         }
                                         if ui
                                             .button(sort_label(
@@ -5268,14 +5335,15 @@ impl eframe::App for NativeGuiApp {
                                                 }
                                             };
 
-                                            let mut row_clicked = ui
-                                                .selectable_label(selected, row.groups.join(","))
-                                                .clicked();
+                                            let mut row_clicked =
+                                                ui.selectable_label(selected, &name).clicked();
 
                                             row_clicked |= ui
                                                 .add(
-                                                    egui::Label::new(egui::RichText::new(name))
-                                                        .sense(egui::Sense::click()),
+                                                    egui::Label::new(egui::RichText::new(
+                                                        row.groups.join(","),
+                                                    ))
+                                                    .sense(egui::Sense::click()),
                                                 )
                                                 .clicked();
 
@@ -6190,6 +6258,7 @@ fn server_rows_payload(rows: &[ServerRow]) -> Vec<ServerRowPayload> {
             ping_ms: row.ping.map(|ping| ping.as_millis() as u64),
             info: row.info.clone(),
             error: row.error.clone(),
+            drop_on_timeout: row.endpoint.drop_on_timeout,
             last_queried: Some(std::time::Instant::now()),
         })
         .collect()
@@ -7077,6 +7146,23 @@ mod tests {
         let url =
             normalize_subscription_url("https://www.kitasoda.com/#/serverList").expect("url");
         assert_eq!(url.as_str(), "https://www.kitasoda.com/#/serverList");
+    }
+
+    #[test]
+    fn generic_subscription_drops_timeout_servers() {
+        let generic = SourceBansSubscription {
+            name: "Kita".to_owned(),
+            url: "https://www.kitasoda.com/#/serverList".to_owned(),
+            text: String::new(),
+        };
+        assert!(subscription_drops_timeout_servers(&generic));
+
+        let sourcebans = SourceBansSubscription {
+            name: "Anne".to_owned(),
+            url: "https://anne.trygek.com/bans/index.php?p=servers".to_owned(),
+            text: String::new(),
+        };
+        assert!(!subscription_drops_timeout_servers(&sourcebans));
     }
 
     #[test]
