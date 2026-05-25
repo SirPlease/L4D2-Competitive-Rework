@@ -1,8 +1,207 @@
--- Adminer 4.8.1 MySQL 5.7.41 dump
+-- Adminer 4.8.1 MySQL 5.7.44-log dump
 
 SET NAMES utf8;
 SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
+
+USE `Anne`;
+
+SET NAMES utf8mb4;
+
+DROP TABLE IF EXISTS `AnneServer`;
+CREATE TABLE `AnneServer` (
+  `AnneIP` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `AnneNAME` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `AnneTICK` int(10) NOT NULL,
+  PRIMARY KEY (`AnneIP`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `cdk`;
+CREATE TABLE `cdk` (
+  `Type` int(11) NOT NULL,
+  `Denomination` int(11) NOT NULL,
+  `Uuid` text NOT NULL,
+  `IsUsed` tinyint(1) NOT NULL,
+  `CreateTime` datetime NOT NULL,
+  `UsedTime` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+DROP TABLE IF EXISTS `infected`;
+CREATE TABLE `infected` (
+  `number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `health` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `speed` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slowspeed` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `damage1` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `damage2` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `bhop` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `teleport` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `anneset` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `l4d2`;
+CREATE TABLE `l4d2` (
+  `steam_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `steam_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `LELVEL_DATA` int(10) NOT NULL,
+  `EXPERIENCE_DATA` int(10) NOT NULL,
+  `MELEE_DATA` int(10) NOT NULL,
+  `BLOOD_DATA` int(10) NOT NULL,
+  `INFECTED_DATA` int(10) NOT NULL,
+  `MONEY_DATA` int(10) NOT NULL,
+  `STATUS` int(11) NOT NULL DEFAULT '0',
+  `Str_DATA` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `End_DATA` int(11) NOT NULL,
+  `Health_DATA` int(11) NOT NULL,
+  `Agi_DATA` int(11) NOT NULL,
+  `StatusPoint_DATA` int(11) NOT NULL,
+  PRIMARY KEY (`steam_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+DROP TABLE IF EXISTS `l4d3`;
+CREATE TABLE `l4d3` (
+  `steam_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `steam_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `LELVEL_DATA` int(10) NOT NULL,
+  `EXPERIENCE_DATA` int(10) NOT NULL,
+  `MELEE_DATA` int(10) NOT NULL,
+  `BLOOD_DATA` int(10) NOT NULL,
+  `INFECTED_DATA` int(10) NOT NULL,
+  `MONEY_DATA` int(10) NOT NULL,
+  `STATUS` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`steam_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+DROP TABLE IF EXISTS `ServerIP`;
+CREATE TABLE `ServerIP` (
+  `AnneIP` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `AnneNAME` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `AnneTICK` int(10) NOT NULL,
+  `Version` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`AnneIP`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `stats_presistence`;
+CREATE TABLE `stats_presistence` (
+  `steam_id` bigint(20) NOT NULL,
+  `exp` int(11) NOT NULL,
+  `level` int(11) NOT NULL,
+  `currency` int(11) NOT NULL,
+  `heal_when_kill` int(11) NOT NULL,
+  `common` int(11) NOT NULL,
+  `smoker` int(11) NOT NULL,
+  `boomer` int(11) NOT NULL,
+  `hunter` int(11) NOT NULL,
+  `spitter` int(11) NOT NULL,
+  `jockey` int(11) NOT NULL,
+  `charger` int(11) NOT NULL,
+  `witch` int(11) NOT NULL,
+  `tank` int(11) NOT NULL,
+  `help` int(11) NOT NULL,
+  PRIMARY KEY (`steam_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+DROP TABLE IF EXISTS `weapon`;
+CREATE TABLE `weapon` (
+  `number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `weapon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `damage` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `scatterpitch` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `scatteryaw` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `spreadpershot` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `maxmovespread` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `rangemod` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `reloadtime` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+USE `chat`;
+
+DROP TABLE IF EXISTS `anne_global_chat`;
+CREATE TABLE `anne_global_chat` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` datetime NOT NULL,
+  `server` varchar(126) NOT NULL,
+  `port` int(11) NOT NULL DEFAULT '0',
+  `steamid` varchar(32) NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `message` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `idx_anne_global_chat_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+DROP TABLE IF EXISTS `anne_global_chat_titles`;
+CREATE TABLE `anne_global_chat_titles` (
+  `steamid` varchar(32) NOT NULL,
+  `title` varchar(64) NOT NULL,
+  PRIMARY KEY (`steamid`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+DROP TABLE IF EXISTS `anne_global_chat_usage`;
+CREATE TABLE `anne_global_chat_usage` (
+  `steamid` varchar(32) NOT NULL,
+  `usage_date` date NOT NULL,
+  `used_count` int(10) unsigned NOT NULL DEFAULT '0',
+  `last_used_at` datetime NOT NULL,
+  PRIMARY KEY (`steamid`,`usage_date`) USING BTREE,
+  KEY `idx_anne_global_chat_usage_date` (`usage_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+DROP TABLE IF EXISTS `anne_lfg_chat_usage`;
+CREATE TABLE `anne_lfg_chat_usage` (
+  `steamid` varchar(32) NOT NULL,
+  `usage_date` date NOT NULL,
+  `used_count` int(10) unsigned NOT NULL DEFAULT '0',
+  `last_used_at` datetime NOT NULL,
+  PRIMARY KEY (`steamid`,`usage_date`) USING BTREE,
+  KEY `idx_anne_lfg_chat_usage_date` (`usage_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+DROP TABLE IF EXISTS `chat_log`;
+CREATE TABLE `chat_log` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `date` datetime DEFAULT NULL,
+  `map` varchar(128) NOT NULL,
+  `steamid` varchar(21) NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `message_style` tinyint(2) DEFAULT '0',
+  `message` varchar(126) NOT NULL,
+  `server` varchar(126) DEFAULT NULL,
+  `port` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `idx_chat_log_date` (`date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+USE `l4d2stats`;
+
+DROP TABLE IF EXISTS `ai_dynamic_ppm_thresholds`;
+CREATE TABLE `ai_dynamic_ppm_thresholds` (
+  `id` tinyint(3) unsigned NOT NULL DEFAULT '1',
+  `source` varchar(32) NOT NULL DEFAULT 'daily',
+  `sample_count` int(11) NOT NULL DEFAULT '0',
+  `ppm_p60` float NOT NULL DEFAULT '30.89',
+  `ppm_p75` float NOT NULL DEFAULT '43.23',
+  `ppm_p90` float NOT NULL DEFAULT '63.7',
+  `ppm_p95` float NOT NULL DEFAULT '77.57',
+  `updated_at` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 DROP TABLE IF EXISTS `ip2country`;
 CREATE TABLE `ip2country` (
@@ -41,7 +240,26 @@ CREATE TABLE `ip2country_locations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-SET NAMES utf8mb4;
+DROP TABLE IF EXISTS `l4d_peak_state`;
+CREATE TABLE `l4d_peak_state` (
+  `state_key` varchar(64) NOT NULL,
+  `hold_until` int(11) NOT NULL DEFAULT '0',
+  `updated_at` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`state_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+DROP TABLE IF EXISTS `l4d_server_status`;
+CREATE TABLE `l4d_server_status` (
+  `server_id` varchar(128) NOT NULL,
+  `hostname` varchar(128) NOT NULL DEFAULT '',
+  `players` int(11) NOT NULL DEFAULT '0',
+  `updated_at` int(11) NOT NULL DEFAULT '0',
+  `enabled` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`server_id`),
+  KEY `updated_at` (`updated_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 DROP TABLE IF EXISTS `lilac_detections`;
 CREATE TABLE `lilac_detections` (
@@ -264,49 +482,37 @@ CREATE TABLE `players` (
   `mutations_kills_survivors` int(11) NOT NULL DEFAULT '0',
   `playtime_mutations` int(11) NOT NULL DEFAULT '0',
   `points_mutations` int(11) NOT NULL DEFAULT '0',
-  `totalpoints` int(11) GENERATED ALWAYS AS (`points` + `points_survivors` + `points_infected` + `points_realism` + `points_survival` + `points_scavenge_survivors` + `points_scavenge_infected` + `points_realism_survivors` + `points_realism_infected` + `points_mutations`) STORED,
-  `totalplaytime` int(11) GENERATED ALWAYS AS (`playtime` + `playtime_versus` + `playtime_realism` + `playtime_survival` + `playtime_scavenge` + `playtime_realismversus` + `playtime_mutations`) STORED,
+  `totalpoints` int(11) GENERATED ALWAYS AS ((((((((((`points` + `points_survivors`) + `points_infected`) + `points_realism`) + `points_survival`) + `points_scavenge_survivors`) + `points_scavenge_infected`) + `points_realism_survivors`) + `points_realism_infected`) + `points_mutations`)) STORED,
+  `totalplaytime` int(11) GENERATED ALWAYS AS (((((((`playtime` + `playtime_versus`) + `playtime_realism`) + `playtime_survival`) + `playtime_scavenge`) + `playtime_realismversus`) + `playtime_mutations`)) STORED,
   PRIMARY KEY (`steamid`),
+  KEY `idx_lastontime` (`lastontime`),
   KEY `idx_players_totalpoints` (`totalpoints`),
   KEY `idx_players_totalplaytime` (`totalplaytime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS `score_quarter`;
-CREATE TABLE `score_quarter` (
-  `steamid` varchar(64) CHARACTER SET utf8mb4 NOT NULL,
-  `quarter_key` int(8) NOT NULL DEFAULT '0',
-  `points` int(11) NOT NULL DEFAULT '0',
-  `updated` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`steamid`),
-  KEY `quarter_points` (`quarter_key`,`points`),
-  KEY `points` (`points`)
+DROP TABLE IF EXISTS `player_blocks`;
+CREATE TABLE `player_blocks` (
+  `blocker` varchar(32) NOT NULL,
+  `blocked` varchar(32) NOT NULL,
+  `created_at` int(11) NOT NULL,
+  PRIMARY KEY (`blocker`,`blocked`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-DROP TABLE IF EXISTS `score_log`;
-CREATE TABLE `score_log` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `created` int(11) NOT NULL,
-  `steamid` varchar(64) CHARACTER SET utf8mb4 NOT NULL,
-  `name` varchar(128) CHARACTER SET utf8mb4 NOT NULL,
-  `map` varchar(128) CHARACTER SET utf8mb4 NOT NULL,
-  `gamemode` int(2) NOT NULL DEFAULT '0',
-  `difficulty` varchar(32) CHARACTER SET utf8mb4 NOT NULL DEFAULT '',
-  `team` int(2) NOT NULL DEFAULT '0',
-  `score` int(11) NOT NULL DEFAULT '0',
-  `score_after` int(11) NOT NULL DEFAULT '0',
-  `reason` varchar(64) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'unknown',
-  `formula` varchar(255) CHARACTER SET utf8mb4 NOT NULL DEFAULT '',
-  `round_valid` tinyint(1) NOT NULL DEFAULT '0',
-  `usebuy` tinyint(1) NOT NULL DEFAULT '0',
-  `newbie_count` int(4) NOT NULL DEFAULT '0',
-  `newbie_multiplier` double NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `steamid_created` (`steamid`,`created`),
-  KEY `reason_created` (`reason`,`created`),
-  KEY `map_created` (`map`,`created`),
-  KEY `score_created` (`score`,`created`)
+DROP TABLE IF EXISTS `player_mode_stats`;
+CREATE TABLE `player_mode_stats` (
+  `steamid` varchar(64) NOT NULL,
+  `mode_id` tinyint(4) NOT NULL,
+  `anne_mode` tinyint(4) NOT NULL DEFAULT '0',
+  `points` int(11) NOT NULL DEFAULT '0',
+  `playtime` int(11) NOT NULL DEFAULT '0',
+  `kills` int(11) NOT NULL DEFAULT '0',
+  `headshots` int(11) NOT NULL DEFAULT '0',
+  `updated` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`steamid`,`mode_id`,`anne_mode`),
+  KEY `mode_ppm` (`mode_id`,`anne_mode`,`playtime`,`points`),
+  KEY `mode_kpm` (`mode_id`,`anne_mode`,`playtime`,`kills`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -322,6 +528,14 @@ CREATE TABLE `RPG` (
   `CHATTAG` varchar(128) CHARACTER SET utf8mb4 DEFAULT NULL,
   `hitsound_cfg` tinyint(4) NOT NULL DEFAULT '0',
   `hitsound_overlay` tinyint(4) NOT NULL DEFAULT '0',
+  `hitsound_head` tinyint(4) NOT NULL DEFAULT '0',
+  `hitsound_hit` tinyint(4) NOT NULL DEFAULT '0',
+  `hitsound_kill` tinyint(4) NOT NULL DEFAULT '0',
+  `hiticon_head` tinyint(4) NOT NULL DEFAULT '0',
+  `hiticon_hit` tinyint(4) NOT NULL DEFAULT '0',
+  `hiticon_kill` tinyint(4) NOT NULL DEFAULT '0',
+  `hitsound_si_only` tinyint(4) NOT NULL DEFAULT '0',
+  `hiticon_si_only` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`steamid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -344,31 +558,132 @@ CREATE TABLE `rpgdamage` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
+DROP TABLE IF EXISTS `score_log`;
+CREATE TABLE `score_log` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `created` int(11) NOT NULL,
+  `steamid` varchar(64) NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `map` varchar(128) NOT NULL,
+  `gamemode` int(2) NOT NULL DEFAULT '0',
+  `difficulty` varchar(32) NOT NULL DEFAULT '',
+  `team` int(2) NOT NULL DEFAULT '0',
+  `score` int(11) NOT NULL DEFAULT '0',
+  `score_after` int(11) NOT NULL DEFAULT '0',
+  `reason` varchar(64) NOT NULL DEFAULT 'unknown',
+  `formula` varchar(255) NOT NULL DEFAULT '',
+  `round_valid` tinyint(1) NOT NULL DEFAULT '0',
+  `usebuy` tinyint(1) NOT NULL DEFAULT '0',
+  `newbie_count` int(4) NOT NULL DEFAULT '0',
+  `newbie_multiplier` double NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `steamid_created` (`steamid`,`created`),
+  KEY `reason_created` (`reason`,`created`),
+  KEY `map_created` (`map`,`created`),
+  KEY `score_created` (`score`,`created`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+DROP TABLE IF EXISTS `score_quarter`;
+CREATE TABLE `score_quarter` (
+  `steamid` varchar(64) NOT NULL,
+  `quarter_key` int(8) NOT NULL DEFAULT '0',
+  `points` int(11) NOT NULL DEFAULT '0',
+  `playtime` int(11) NOT NULL DEFAULT '0',
+  `updated` int(11) NOT NULL DEFAULT '0',
+  `points_coop` int(11) NOT NULL DEFAULT '0',
+  `points_survivors` int(11) NOT NULL DEFAULT '0',
+  `points_infected` int(11) NOT NULL DEFAULT '0',
+  `points_survival` int(11) NOT NULL DEFAULT '0',
+  `points_realism` int(11) NOT NULL DEFAULT '0',
+  `points_scavenge_survivors` int(11) NOT NULL DEFAULT '0',
+  `points_scavenge_infected` int(11) NOT NULL DEFAULT '0',
+  `points_realism_survivors` int(11) NOT NULL DEFAULT '0',
+  `points_realism_infected` int(11) NOT NULL DEFAULT '0',
+  `points_mutations` int(11) NOT NULL DEFAULT '0',
+  `kills` int(11) NOT NULL DEFAULT '0',
+  `headshots` int(11) NOT NULL DEFAULT '0',
+  `melee_kills` int(11) NOT NULL DEFAULT '0',
+  `kill_infected` int(11) NOT NULL DEFAULT '0',
+  `kill_hunter` int(11) NOT NULL DEFAULT '0',
+  `kill_smoker` int(11) NOT NULL DEFAULT '0',
+  `kill_boomer` int(11) NOT NULL DEFAULT '0',
+  `kill_spitter` int(11) NOT NULL DEFAULT '0',
+  `kill_jockey` int(11) NOT NULL DEFAULT '0',
+  `kill_charger` int(11) NOT NULL DEFAULT '0',
+  `award_medkit` int(11) NOT NULL DEFAULT '0',
+  `award_pills` int(11) NOT NULL DEFAULT '0',
+  `award_adrenaline` int(11) NOT NULL DEFAULT '0',
+  `award_revive` int(11) NOT NULL DEFAULT '0',
+  `award_defib` int(11) NOT NULL DEFAULT '0',
+  `award_rescue` int(11) NOT NULL DEFAULT '0',
+  `award_protect` int(11) NOT NULL DEFAULT '0',
+  `award_friendlyfire` int(11) NOT NULL DEFAULT '0',
+  `award_teamkill` int(11) NOT NULL DEFAULT '0',
+  `award_fincap` int(11) NOT NULL DEFAULT '0',
+  `award_left4dead` int(11) NOT NULL DEFAULT '0',
+  `award_letinsafehouse` int(11) NOT NULL DEFAULT '0',
+  `award_witchdisturb` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`steamid`),
+  KEY `quarter_points` (`quarter_key`,`points`),
+  KEY `points` (`points`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+DROP TABLE IF EXISTS `score_quarter_history`;
+CREATE TABLE `score_quarter_history` (
+  `quarter_key` int(10) unsigned NOT NULL,
+  `rank_num` smallint(5) unsigned NOT NULL,
+  `steamid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `points` int(11) NOT NULL DEFAULT '0',
+  `archived_at` int(10) unsigned NOT NULL,
+  `playtime` int(11) NOT NULL DEFAULT '0',
+  `points_coop` int(11) NOT NULL DEFAULT '0',
+  `points_survivors` int(11) NOT NULL DEFAULT '0',
+  `points_infected` int(11) NOT NULL DEFAULT '0',
+  `points_survival` int(11) NOT NULL DEFAULT '0',
+  `points_realism` int(11) NOT NULL DEFAULT '0',
+  `points_scavenge_survivors` int(11) NOT NULL DEFAULT '0',
+  `points_scavenge_infected` int(11) NOT NULL DEFAULT '0',
+  `points_realism_survivors` int(11) NOT NULL DEFAULT '0',
+  `points_realism_infected` int(11) NOT NULL DEFAULT '0',
+  `points_mutations` int(11) NOT NULL DEFAULT '0',
+  `kills` int(11) NOT NULL DEFAULT '0',
+  `headshots` int(11) NOT NULL DEFAULT '0',
+  `melee_kills` int(11) NOT NULL DEFAULT '0',
+  `kill_infected` int(11) NOT NULL DEFAULT '0',
+  `kill_hunter` int(11) NOT NULL DEFAULT '0',
+  `kill_smoker` int(11) NOT NULL DEFAULT '0',
+  `kill_boomer` int(11) NOT NULL DEFAULT '0',
+  `kill_spitter` int(11) NOT NULL DEFAULT '0',
+  `kill_jockey` int(11) NOT NULL DEFAULT '0',
+  `kill_charger` int(11) NOT NULL DEFAULT '0',
+  `award_medkit` int(11) NOT NULL DEFAULT '0',
+  `award_pills` int(11) NOT NULL DEFAULT '0',
+  `award_adrenaline` int(11) NOT NULL DEFAULT '0',
+  `award_revive` int(11) NOT NULL DEFAULT '0',
+  `award_defib` int(11) NOT NULL DEFAULT '0',
+  `award_rescue` int(11) NOT NULL DEFAULT '0',
+  `award_protect` int(11) NOT NULL DEFAULT '0',
+  `award_friendlyfire` int(11) NOT NULL DEFAULT '0',
+  `award_teamkill` int(11) NOT NULL DEFAULT '0',
+  `award_fincap` int(11) NOT NULL DEFAULT '0',
+  `award_left4dead` int(11) NOT NULL DEFAULT '0',
+  `award_letinsafehouse` int(11) NOT NULL DEFAULT '0',
+  `award_witchdisturb` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`quarter_key`,`rank_num`),
+  UNIQUE KEY `quarter_steamid` (`quarter_key`,`steamid`),
+  KEY `quarter_points` (`quarter_key`,`points`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
 DROP TABLE IF EXISTS `server_settings`;
 CREATE TABLE `server_settings` (
   `sname` varchar(64) CHARACTER SET utf8mb4 NOT NULL,
   `svalue` blob,
   PRIMARY KEY (`sname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS `l4d_server_status`;
-CREATE TABLE `l4d_server_status` (
-  `server_id` varchar(128) CHARACTER SET utf8mb4 NOT NULL,
-  `hostname` varchar(128) CHARACTER SET utf8mb4 NOT NULL DEFAULT '',
-  `players` int(11) NOT NULL DEFAULT '0',
-  `updated_at` int(11) NOT NULL DEFAULT '0',
-  `enabled` tinyint(4) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`server_id`),
-  KEY `updated_at` (`updated_at`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-DROP TABLE IF EXISTS `l4d_peak_state`;
-CREATE TABLE `l4d_peak_state` (
-  `state_key` varchar(64) CHARACTER SET utf8mb4 NOT NULL,
-  `hold_until` int(11) NOT NULL DEFAULT '0',
-  `updated_at` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`state_key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 DROP TABLE IF EXISTS `settings`;
@@ -398,9 +713,11 @@ CREATE TABLE `timedmaps` (
   `auto` int(1) unsigned NOT NULL DEFAULT '0',
   `anneversion` varchar(64) CHARACTER SET utf8mb4 NOT NULL DEFAULT 'None',
   PRIMARY KEY (`map`,`gamemode`,`difficulty`,`steamid`,`time`,`mutation`,`mode`,`sinum`,`sitime`,`usebuy`,`anneversion`,`auto`,`players`),
+  KEY `idx_steamid` (`steamid`),
   KEY `idx_timedmaps_filter_time` (`anneversion`,`sinum`,`sitime`,`usebuy`,`auto`,`mode`,`time`),
   KEY `idx_timedmaps_filter_players_time` (`anneversion`,`sinum`,`sitime`,`usebuy`,`auto`,`mode`,`players`,`time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 DROP TABLE IF EXISTS `timedmap_runs`;
 CREATE TABLE `timedmap_runs` (
@@ -425,270 +742,3 @@ CREATE TABLE `timedmap_runs` (
   KEY `idx_timedmap_runs_steamid` (`steamid`,`modified`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `sb_admins`;
-CREATE TABLE `sb_admins` (
-  `aid` int(6) NOT NULL AUTO_INCREMENT,
-  `user` varchar(64) NOT NULL,
-  `authid` varchar(64) NOT NULL DEFAULT '',
-  `password` varchar(128) NOT NULL,
-  `gid` int(6) NOT NULL,
-  `email` varchar(128) NOT NULL,
-  `validate` varchar(128) DEFAULT NULL,
-  `extraflags` int(10) NOT NULL,
-  `immunity` int(10) NOT NULL DEFAULT '0',
-  `srv_group` varchar(128) DEFAULT NULL,
-  `srv_flags` varchar(64) DEFAULT NULL,
-  `srv_password` varchar(128) DEFAULT NULL,
-  `lastvisit` int(11) DEFAULT NULL,
-  PRIMARY KEY (`aid`),
-  UNIQUE KEY `user` (`user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-DROP TABLE IF EXISTS `sb_admins_servers_groups`;
-CREATE TABLE `sb_admins_servers_groups` (
-  `admin_id` int(10) NOT NULL,
-  `group_id` int(10) NOT NULL,
-  `srv_group_id` int(10) NOT NULL,
-  `server_id` int(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-DROP TABLE IF EXISTS `sb_banlog`;
-CREATE TABLE `sb_banlog` (
-  `sid` int(6) NOT NULL,
-  `time` int(11) NOT NULL,
-  `name` varchar(128) NOT NULL,
-  `bid` int(6) NOT NULL,
-  PRIMARY KEY (`sid`,`time`,`bid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-DROP TABLE IF EXISTS `sb_bans`;
-CREATE TABLE `sb_bans` (
-  `bid` int(6) NOT NULL AUTO_INCREMENT,
-  `ip` varchar(32) DEFAULT NULL,
-  `authid` varchar(64) NOT NULL DEFAULT '',
-  `name` varchar(128) NOT NULL DEFAULT 'unnamed',
-  `created` int(11) NOT NULL DEFAULT '0',
-  `ends` int(11) NOT NULL DEFAULT '0',
-  `length` int(10) NOT NULL DEFAULT '0',
-  `reason` text NOT NULL,
-  `aid` int(6) NOT NULL DEFAULT '0',
-  `adminIp` varchar(32) NOT NULL DEFAULT '',
-  `sid` int(6) NOT NULL DEFAULT '0',
-  `country` varchar(4) DEFAULT NULL,
-  `RemovedBy` int(8) DEFAULT NULL,
-  `RemoveType` varchar(3) DEFAULT NULL,
-  `RemovedOn` int(10) DEFAULT NULL,
-  `type` tinyint(4) NOT NULL DEFAULT '0',
-  `ureason` text,
-  PRIMARY KEY (`bid`),
-  KEY `sid` (`sid`),
-  KEY `type_authid` (`type`,`authid`),
-  KEY `type_ip` (`type`,`ip`),
-  FULLTEXT KEY `reason` (`reason`),
-  FULLTEXT KEY `authid_2` (`authid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-DROP TABLE IF EXISTS `sb_comments`;
-CREATE TABLE `sb_comments` (
-  `cid` int(6) NOT NULL AUTO_INCREMENT,
-  `bid` int(6) NOT NULL,
-  `type` varchar(1) NOT NULL,
-  `aid` int(6) NOT NULL,
-  `commenttxt` longtext NOT NULL,
-  `added` int(11) NOT NULL,
-  `editaid` int(6) DEFAULT NULL,
-  `edittime` int(11) DEFAULT NULL,
-  KEY `cid` (`cid`),
-  FULLTEXT KEY `commenttxt` (`commenttxt`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-DROP TABLE IF EXISTS `sb_comms`;
-CREATE TABLE `sb_comms` (
-  `bid` int(6) NOT NULL AUTO_INCREMENT,
-  `authid` varchar(64) NOT NULL,
-  `name` varchar(128) NOT NULL DEFAULT 'unnamed',
-  `created` int(11) NOT NULL DEFAULT '0',
-  `ends` int(11) NOT NULL DEFAULT '0',
-  `length` int(10) NOT NULL DEFAULT '0',
-  `reason` text NOT NULL,
-  `aid` int(6) NOT NULL DEFAULT '0',
-  `adminIp` varchar(32) NOT NULL DEFAULT '',
-  `sid` int(6) NOT NULL DEFAULT '0',
-  `RemovedBy` int(8) DEFAULT NULL,
-  `RemoveType` varchar(3) DEFAULT NULL,
-  `RemovedOn` int(11) DEFAULT NULL,
-  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '1 - Mute, 2 - Gag',
-  `ureason` text,
-  PRIMARY KEY (`bid`),
-  KEY `sid` (`sid`),
-  KEY `type` (`type`),
-  KEY `RemoveType` (`RemoveType`),
-  KEY `authid` (`authid`),
-  KEY `created` (`created`),
-  KEY `aid` (`aid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-DROP TABLE IF EXISTS `sb_demos`;
-CREATE TABLE `sb_demos` (
-  `demid` int(6) NOT NULL,
-  `demtype` varchar(1) NOT NULL,
-  `filename` varchar(128) NOT NULL,
-  `origname` varchar(128) NOT NULL,
-  PRIMARY KEY (`demid`,`demtype`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-DROP TABLE IF EXISTS `sb_groups`;
-CREATE TABLE `sb_groups` (
-  `gid` int(6) NOT NULL AUTO_INCREMENT,
-  `type` smallint(6) NOT NULL DEFAULT '0',
-  `name` varchar(128) NOT NULL DEFAULT 'unnamed',
-  `flags` int(10) NOT NULL,
-  PRIMARY KEY (`gid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-DROP TABLE IF EXISTS `sb_log`;
-CREATE TABLE `sb_log` (
-  `lid` int(11) NOT NULL AUTO_INCREMENT,
-  `type` enum('m','w','e') NOT NULL,
-  `title` varchar(512) NOT NULL,
-  `message` text NOT NULL,
-  `function` text NOT NULL,
-  `query` text NOT NULL,
-  `aid` int(11) NOT NULL,
-  `host` text NOT NULL,
-  `created` int(11) NOT NULL,
-  PRIMARY KEY (`lid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-DROP TABLE IF EXISTS `sb_login_tokens`;
-CREATE TABLE `sb_login_tokens` (
-  `jti` varchar(16) NOT NULL,
-  `secret` varchar(64) NOT NULL,
-  `lastAccessed` int(11) NOT NULL,
-  PRIMARY KEY (`jti`),
-  UNIQUE KEY `secret` (`secret`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-DROP TABLE IF EXISTS `sb_mods`;
-CREATE TABLE `sb_mods` (
-  `mid` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(128) NOT NULL,
-  `icon` varchar(128) NOT NULL,
-  `modfolder` varchar(64) NOT NULL,
-  `steam_universe` tinyint(4) NOT NULL DEFAULT '0',
-  `enabled` tinyint(4) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`mid`),
-  UNIQUE KEY `modfolder` (`modfolder`),
-  UNIQUE KEY `name` (`name`),
-  KEY `steam_universe` (`steam_universe`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-DROP TABLE IF EXISTS `sb_overrides`;
-CREATE TABLE `sb_overrides` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` enum('command','group') NOT NULL,
-  `name` varchar(32) NOT NULL,
-  `flags` varchar(30) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `type` (`type`,`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-DROP TABLE IF EXISTS `sb_protests`;
-CREATE TABLE `sb_protests` (
-  `pid` int(6) NOT NULL AUTO_INCREMENT,
-  `bid` int(6) NOT NULL,
-  `datesubmitted` int(11) NOT NULL,
-  `reason` text NOT NULL,
-  `email` varchar(128) NOT NULL,
-  `archiv` tinyint(1) DEFAULT '0',
-  `archivedby` int(11) DEFAULT NULL,
-  `pip` varchar(64) NOT NULL,
-  PRIMARY KEY (`pid`),
-  KEY `bid` (`bid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-DROP TABLE IF EXISTS `sb_servers`;
-CREATE TABLE `sb_servers` (
-  `sid` int(6) NOT NULL AUTO_INCREMENT,
-  `ip` varchar(64) NOT NULL,
-  `port` int(5) NOT NULL,
-  `rcon` varchar(64) NOT NULL,
-  `modid` int(10) NOT NULL,
-  `enabled` tinyint(4) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`sid`),
-  UNIQUE KEY `ip` (`ip`,`port`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-DROP TABLE IF EXISTS `sb_servers_groups`;
-CREATE TABLE `sb_servers_groups` (
-  `server_id` int(10) NOT NULL,
-  `group_id` int(10) NOT NULL,
-  PRIMARY KEY (`server_id`,`group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-DROP TABLE IF EXISTS `sb_settings`;
-CREATE TABLE `sb_settings` (
-  `setting` varchar(128) NOT NULL,
-  `value` text NOT NULL,
-  UNIQUE KEY `setting` (`setting`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-DROP TABLE IF EXISTS `sb_srvgroups`;
-CREATE TABLE `sb_srvgroups` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `flags` varchar(30) NOT NULL,
-  `immunity` int(10) unsigned NOT NULL,
-  `name` varchar(120) NOT NULL,
-  `groups_immune` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-DROP TABLE IF EXISTS `sb_srvgroups_overrides`;
-CREATE TABLE `sb_srvgroups_overrides` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `group_id` smallint(5) unsigned NOT NULL,
-  `type` enum('command','group') NOT NULL,
-  `name` varchar(32) NOT NULL,
-  `access` enum('allow','deny') NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `group_id` (`group_id`,`type`,`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-DROP TABLE IF EXISTS `sb_submissions`;
-CREATE TABLE `sb_submissions` (
-  `subid` int(6) NOT NULL AUTO_INCREMENT,
-  `submitted` int(11) NOT NULL,
-  `ModID` int(6) NOT NULL,
-  `SteamId` varchar(64) NOT NULL DEFAULT 'unnamed',
-  `name` varchar(128) NOT NULL,
-  `email` varchar(128) NOT NULL,
-  `reason` text NOT NULL,
-  `ip` varchar(64) NOT NULL,
-  `subname` varchar(128) DEFAULT NULL,
-  `sip` varchar(64) DEFAULT NULL,
-  `archiv` tinyint(1) DEFAULT '0',
-  `archivedby` int(11) DEFAULT NULL,
-  `server` tinyint(3) DEFAULT NULL,
-  PRIMARY KEY (`subid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
--- 2025-09-27 04:08:16
