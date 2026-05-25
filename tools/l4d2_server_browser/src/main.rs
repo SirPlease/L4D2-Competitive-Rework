@@ -583,6 +583,8 @@ impl GuiLanguage {
                 TextKey::Logout => "退出登录",
                 TextKey::BroadcastMessage => "全服消息内容",
                 TextKey::SendBroadcast => "发送全服消息",
+                TextKey::BroadcastHistory => "最近一小时全服消息",
+                TextKey::RefreshHistory => "刷新历史",
             },
             Self::EnUs => match key {
                 TextKey::AppTitle => "Telecom Server Browser",
@@ -664,6 +666,8 @@ impl GuiLanguage {
                 TextKey::Logout => "Logout",
                 TextKey::BroadcastMessage => "Broadcast message",
                 TextKey::SendBroadcast => "Send broadcast",
+                TextKey::BroadcastHistory => "Last Hour Messages",
+                TextKey::RefreshHistory => "Refresh history",
             },
         }
     }
@@ -846,6 +850,8 @@ enum TextKey {
     Logout,
     BroadcastMessage,
     SendBroadcast,
+    BroadcastHistory,
+    RefreshHistory,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, Default)]
@@ -1890,6 +1896,12 @@ struct BroadcastRequest {
     message: String,
 }
 
+#[derive(Clone)]
+struct BroadcastHistoryRequest {
+    base_url: String,
+    token: String,
+}
+
 #[derive(Clone, Serialize)]
 struct ServerRowPayload {
     address: String,
@@ -2026,6 +2038,25 @@ struct ApiBroadcastResponse {
 }
 
 #[derive(Clone, Debug, Deserialize)]
+struct ApiBroadcastHistoryResponse {
+    ok: bool,
+    messages: Vec<BroadcastHistoryMessage>,
+    message: Option<String>,
+    error: Option<String>,
+}
+
+#[derive(Clone, Debug, Deserialize)]
+struct BroadcastHistoryMessage {
+    id: u64,
+    created_at: String,
+    server: String,
+    port: i32,
+    steamid: String,
+    name: String,
+    message: String,
+}
+
+#[derive(Clone, Debug, Deserialize)]
 struct OnlinePlayersResponse {
     ok: bool,
     players: Vec<PlayerStats>,
@@ -2088,6 +2119,7 @@ enum GuiMessage {
     SteamLoginStarted(Result<DeviceStartResponse, String>),
     SteamLoginFinished(Result<ApiLoginSession, String>),
     Broadcast(Result<ApiBroadcastResponse, String>),
+    BroadcastHistory(Result<Vec<BroadcastHistoryMessage>, String>),
     ServerUpdate(String, Result<ServerRowPayload, String>),
     NetworkInfo(String, Result<ServerNetworkInfo, String>),
 }
@@ -2148,6 +2180,9 @@ struct NativeGuiApp {
     broadcast_message: String,
     broadcast_output: String,
     broadcast_sending: bool,
+    broadcast_history: Vec<BroadcastHistoryMessage>,
+    broadcast_history_status: String,
+    broadcast_history_querying: bool,
 }
 
 fn app_bg() -> egui::Color32 {
@@ -2223,6 +2258,24 @@ fn stat_card(ui: &mut egui::Ui, label: &str, value: String, color: egui::Color32
     });
 }
 
+fn player_metric_chip(ui: &mut egui::Ui, label: &str, value: String, color: egui::Color32) {
+    egui::Frame::canvas(ui.style())
+        .fill(surface_alt_color())
+        .stroke(egui::Stroke::new(1.0, border_color()))
+        .corner_radius(egui::CornerRadius::same(8))
+        .inner_margin(egui::Margin::symmetric(10, 7))
+        .show(ui, |ui| {
+            ui.set_min_width(88.0);
+            ui.label(
+                egui::RichText::new(label)
+                    .size(11.0)
+                    .color(text_muted_color()),
+            );
+            ui.add_space(2.0);
+            ui.label(egui::RichText::new(value).strong().color(color));
+        });
+}
+
 fn nav_button(ui: &mut egui::Ui, selected: bool, label: &str) -> egui::Response {
     let fill = if selected {
         egui::Color32::WHITE
@@ -2258,6 +2311,74 @@ fn primary_button(label: &str) -> egui::Button<'_> {
     .fill(accent_color())
     .stroke(egui::Stroke::new(1.0, accent_color()))
     .corner_radius(egui::CornerRadius::same(8))
+}
+
+fn telecom_window_icon(size: u32) -> egui::IconData {
+    let size = size.max(16);
+    let mut rgba = Vec::with_capacity((size * size * 4) as usize);
+    let radius = size as f32 * 0.18;
+    let stroke = 0.052;
+
+    for y in 0..size {
+        for x in 0..size {
+            let fx = (x as f32 + 0.5) / size as f32;
+            let fy = (y as f32 + 0.5) / size as f32;
+            let px = x as f32 + 0.5;
+            let py = y as f32 + 0.5;
+            let cx = px.clamp(radius, size as f32 - radius);
+            let cy = py.clamp(radius, size as f32 - radius);
+            let inside = (px - cx).powi(2) + (py - cy).powi(2) <= radius.powi(2);
+
+            if !inside {
+                rgba.extend_from_slice(&[0, 0, 0, 0]);
+                continue;
+            }
+
+            let mut pixel = [37, 99, 235, 255];
+            let on_logo = ((0.24..=0.76).contains(&fx)
+                && ((fy - 0.22).abs() < stroke || (fy - 0.64).abs() < stroke))
+                || ((0.22..=0.64).contains(&fy)
+                    && ((fx - 0.24).abs() < stroke || (fx - 0.76).abs() < stroke))
+                || ((0.24..=0.76).contains(&fx) && (fy - 0.43).abs() < stroke)
+                || ((0.18..=0.84).contains(&fy) && (fx - 0.50).abs() < stroke)
+                || ((0.50..=0.78).contains(&fx) && (fy - 0.84).abs() < stroke);
+            if on_logo {
+                pixel = [255, 255, 255, 255];
+            }
+            rgba.extend_from_slice(&pixel);
+        }
+    }
+
+    egui::IconData {
+        rgba,
+        width: size,
+        height: size,
+    }
+}
+
+fn draw_telecom_logo(ui: &mut egui::Ui, size: f32) {
+    let (rect, _response) = ui.allocate_exact_size(egui::vec2(size, size), egui::Sense::hover());
+    let painter = ui.painter_at(rect);
+    painter.rect_filled(rect, egui::CornerRadius::same(8), accent_color());
+
+    let point = |x: f32, y: f32| {
+        egui::pos2(
+            rect.left() + x * rect.width(),
+            rect.top() + y * rect.height(),
+        )
+    };
+    let stroke = egui::Stroke::new((size * 0.07).max(2.0), egui::Color32::WHITE);
+    for (a, b) in [
+        ((0.25, 0.24), (0.75, 0.24)),
+        ((0.25, 0.64), (0.75, 0.64)),
+        ((0.25, 0.24), (0.25, 0.64)),
+        ((0.75, 0.24), (0.75, 0.64)),
+        ((0.25, 0.44), (0.75, 0.44)),
+        ((0.50, 0.18), (0.50, 0.84)),
+        ((0.50, 0.84), (0.78, 0.84)),
+    ] {
+        painter.line_segment([point(a.0, a.1), point(b.0, b.1)], stroke);
+    }
 }
 
 fn apply_modern_theme(ctx: &egui::Context) {
@@ -2308,11 +2429,14 @@ fn apply_modern_theme(ctx: &egui::Context) {
 
 fn start_gui(cli: Cli, config_path: PathBuf) -> Result<(), String> {
     let language = initial_gui_language(&config_path);
+    let title = language.text(TextKey::AppTitle).to_owned();
     let options = eframe::NativeOptions {
-        viewport: egui::ViewportBuilder::default().with_inner_size([1180.0, 760.0]),
+        viewport: egui::ViewportBuilder::default()
+            .with_title(title.clone())
+            .with_inner_size([1180.0, 760.0])
+            .with_icon(Arc::new(telecom_window_icon(128))),
         ..Default::default()
     };
-    let title = language.text(TextKey::AppTitle).to_owned();
 
     eframe::run_native(
         &title,
@@ -2473,6 +2597,9 @@ impl NativeGuiApp {
             broadcast_message: String::new(),
             broadcast_output: String::new(),
             broadcast_sending: false,
+            broadcast_history: Vec::new(),
+            broadcast_history_status: String::new(),
+            broadcast_history_querying: false,
         };
         app.config_status = app.language.config_file_status(&app.config_path);
         app.refresh_config_lists();
@@ -2636,8 +2763,8 @@ impl NativeGuiApp {
                         self.player_output = format_player_payload(&players, self.language);
                         if !stats_ok && !players.is_empty() {
                             self.player_output.push_str(match self.language {
-                                GuiLanguage::ZhCn => "\n⚠ 积分数据获取失败",
-                                GuiLanguage::EnUs => "\n⚠ Failed to fetch player stats",
+                                GuiLanguage::ZhCn => "\n[警告] 积分数据获取失败",
+                                GuiLanguage::EnUs => "\n[Warning] Failed to fetch player stats",
                             });
                         }
                     }
@@ -2671,8 +2798,8 @@ impl NativeGuiApp {
                             };
                             if !stats_ok && !self.global_players.is_empty() {
                                 self.global_players_status.push_str(match self.language {
-                                    GuiLanguage::ZhCn => " | ⚠ 积分数据获取失败",
-                                    GuiLanguage::EnUs => " | ⚠ Stats fetch failed",
+                                    GuiLanguage::ZhCn => " | [警告] 积分数据获取失败",
+                                    GuiLanguage::EnUs => " | [Warning] Stats fetch failed",
                                 });
                             }
                         }
@@ -2767,9 +2894,11 @@ impl NativeGuiApp {
                 }
                 GuiMessage::Broadcast(result) => {
                     self.broadcast_sending = false;
+                    let mut should_refresh_history = false;
                     self.broadcast_output = match result {
                         Ok(response) if response.ok => match self.language {
                             GuiLanguage::ZhCn => {
+                                should_refresh_history = true;
                                 let usage = if response.unlimited.unwrap_or(false) {
                                     "今日次数：不受限制".to_owned()
                                 } else {
@@ -2789,6 +2918,7 @@ impl NativeGuiApp {
                                 )
                             }
                             GuiLanguage::EnUs => {
+                                should_refresh_history = true;
                                 let usage = if response.unlimited.unwrap_or(false) {
                                     "Daily quota: unlimited".to_owned()
                                 } else {
@@ -2814,6 +2944,35 @@ impl NativeGuiApp {
                             .unwrap_or_else(|| "broadcast failed".to_owned()),
                         Err(err) => err,
                     };
+                    if should_refresh_history {
+                        self.refresh_broadcast_history();
+                    }
+                }
+                GuiMessage::BroadcastHistory(result) => {
+                    self.broadcast_history_querying = false;
+                    match result {
+                        Ok(messages) => {
+                            self.broadcast_history = messages;
+                            self.broadcast_history_status = match self.language {
+                                GuiLanguage::ZhCn => {
+                                    format!("最近一小时 {} 条消息", self.broadcast_history.len())
+                                }
+                                GuiLanguage::EnUs => format!(
+                                    "{} messages in the last hour",
+                                    self.broadcast_history.len()
+                                ),
+                            };
+                        }
+                        Err(err) => {
+                            self.broadcast_history.clear();
+                            self.broadcast_history_status = match self.language {
+                                GuiLanguage::ZhCn => format!("获取全服消息历史失败：{err}"),
+                                GuiLanguage::EnUs => {
+                                    format!("Failed to fetch broadcast history: {err}")
+                                }
+                            };
+                        }
+                    }
                 }
             }
             ctx.request_repaint();
@@ -2987,6 +3146,179 @@ impl NativeGuiApp {
         }
     }
 
+    fn show_broadcast_composer_card(&mut self, ui: &mut egui::Ui) {
+        modern_card(ui, |ui| {
+            ui.horizontal_wrapped(|ui| {
+                ui.heading(self.text(TextKey::BroadcastTab));
+                ui.label(
+                    egui::RichText::new(match self.language {
+                        GuiLanguage::ZhCn => "Steam 登录后发送普通全服聊天消息",
+                        GuiLanguage::EnUs => "Send global chat after Steam login",
+                    })
+                    .color(text_muted_color()),
+                );
+            });
+            ui.separator();
+            ui.label(self.text(TextKey::ApiBaseUrl));
+            let response = ui.add(
+                egui::TextEdit::singleline(&mut self.api_base_url).desired_width(f32::INFINITY),
+            );
+            if response.changed() {
+                let _ = save_api_config_to_config(
+                    &self.config_path,
+                    &self.api_base_url,
+                    if self.api_token.trim().is_empty() {
+                        None
+                    } else {
+                        Some(&self.api_token)
+                    },
+                );
+            }
+
+            ui.horizontal_wrapped(|ui| {
+                if ui
+                    .add_enabled(
+                        !self.steam_login_in_progress,
+                        primary_button(self.text(TextKey::SteamLogin)),
+                    )
+                    .clicked()
+                {
+                    self.start_steam_login();
+                }
+                if ui
+                    .add_enabled(
+                        !self.api_token.trim().is_empty(),
+                        egui::Button::new(self.text(TextKey::Logout)),
+                    )
+                    .clicked()
+                {
+                    self.logout_api();
+                }
+            });
+
+            if let Some(user) = &self.api_user {
+                ui.label(match self.language {
+                    GuiLanguage::ZhCn => format!(
+                        "当前账号：{} / {}{}",
+                        user.name,
+                        user.steam_id,
+                        if user.is_admin { " / 管理员" } else { "" }
+                    ),
+                    GuiLanguage::EnUs => format!(
+                        "Current user: {} / {}{}",
+                        user.name,
+                        user.steam_id,
+                        if user.is_admin { " / admin" } else { "" }
+                    ),
+                });
+            }
+            if !self.api_status.is_empty() {
+                ui.label(&self.api_status);
+            }
+
+            ui.separator();
+            ui.label(self.text(TextKey::BroadcastMessage));
+            ui.add(
+                egui::TextEdit::multiline(&mut self.broadcast_message)
+                    .desired_rows(4)
+                    .desired_width(f32::INFINITY),
+            );
+            if ui
+                .add_enabled(
+                    !self.broadcast_sending,
+                    primary_button(self.text(TextKey::SendBroadcast)),
+                )
+                .clicked()
+            {
+                self.send_broadcast();
+            }
+
+            if !self.broadcast_output.is_empty() {
+                ui.separator();
+                ui.add(
+                    egui::TextEdit::multiline(&mut self.broadcast_output)
+                        .desired_rows(6)
+                        .desired_width(f32::INFINITY)
+                        .code_editor(),
+                );
+            }
+        });
+    }
+
+    fn show_broadcast_history_card(&mut self, ui: &mut egui::Ui) {
+        modern_card(ui, |ui| {
+            ui.horizontal_wrapped(|ui| {
+                ui.heading(self.text(TextKey::BroadcastHistory));
+                if ui
+                    .add_enabled(
+                        !self.broadcast_history_querying,
+                        egui::Button::new(self.text(TextKey::RefreshHistory)),
+                    )
+                    .clicked()
+                {
+                    self.refresh_broadcast_history();
+                }
+            });
+            ui.label(egui::RichText::new(&self.broadcast_history_status).color(text_muted_color()));
+            ui.separator();
+
+            if self.broadcast_history.is_empty() {
+                ui.label(
+                    egui::RichText::new(match self.language {
+                        GuiLanguage::ZhCn => "暂无最近一小时全服消息。",
+                        GuiLanguage::EnUs => "No messages in the last hour.",
+                    })
+                    .color(text_muted_color()),
+                );
+                return;
+            }
+
+            egui::ScrollArea::vertical()
+                .max_height(360.0)
+                .auto_shrink([false, false])
+                .show(ui, |ui| {
+                    for message in &self.broadcast_history {
+                        egui::Frame::canvas(ui.style())
+                            .fill(surface_alt_color())
+                            .stroke(egui::Stroke::new(1.0, border_color()))
+                            .corner_radius(egui::CornerRadius::same(8))
+                            .inner_margin(egui::Margin::same(10))
+                            .show(ui, |ui| {
+                                ui.horizontal_wrapped(|ui| {
+                                    ui.label(
+                                        egui::RichText::new(&message.name)
+                                            .strong()
+                                            .color(text_primary_color()),
+                                    );
+                                    ui.label(
+                                        egui::RichText::new(&message.created_at)
+                                            .color(text_muted_color()),
+                                    );
+                                });
+                                ui.label(
+                                    egui::RichText::new(format!(
+                                        "#{} / {} / {}{}",
+                                        message.id,
+                                        message.steamid,
+                                        message.server,
+                                        if message.port > 0 {
+                                            format!(":{}", message.port)
+                                        } else {
+                                            String::new()
+                                        }
+                                    ))
+                                    .size(11.0)
+                                    .color(text_muted_color()),
+                                );
+                                ui.add_space(4.0);
+                                ui.label(&message.message);
+                            });
+                        ui.add_space(8.0);
+                    }
+                });
+        });
+    }
+
     fn send_broadcast(&mut self) {
         if self.broadcast_sending {
             return;
@@ -3010,6 +3342,28 @@ impl NativeGuiApp {
         thread::spawn(move || {
             let result = api_broadcast(request);
             let _ = tx.send(GuiMessage::Broadcast(result));
+        });
+    }
+
+    fn refresh_broadcast_history(&mut self) {
+        if self.broadcast_history_querying {
+            return;
+        }
+
+        self.broadcast_history_querying = true;
+        self.broadcast_history_status = match self.language {
+            GuiLanguage::ZhCn => "正在获取最近一小时全服消息...".to_owned(),
+            GuiLanguage::EnUs => "Fetching messages from the last hour...".to_owned(),
+        };
+
+        let tx = self.tx.clone();
+        let request = BroadcastHistoryRequest {
+            base_url: self.api_base_url.clone(),
+            token: self.api_token.clone(),
+        };
+        thread::spawn(move || {
+            let result = api_broadcast_history(request);
+            let _ = tx.send(GuiMessage::BroadcastHistory(result));
         });
     }
 
@@ -3079,6 +3433,105 @@ impl NativeGuiApp {
         thread::spawn(move || {
             let result = delete_sourcebans_from_config(&path, index);
             let _ = tx.send(GuiMessage::DeleteSourceBans(result));
+        });
+    }
+
+    fn show_sourcebans_list_card(&mut self, ui: &mut egui::Ui) {
+        modern_card(ui, |ui| {
+            ui.horizontal_wrapped(|ui| {
+                ui.heading(self.text(TextKey::SubscriptionList));
+                if ui.button(self.text(TextKey::NewSubscription)).clicked() {
+                    self.selected_sourcebans = None;
+                    self.sourcebans_name = "SourceBans".to_owned();
+                    self.sourcebans_url.clear();
+                }
+                if ui
+                    .add_enabled(
+                        self.selected_sourcebans.is_some(),
+                        egui::Button::new(self.text(TextKey::DeleteSubscription)),
+                    )
+                    .clicked()
+                {
+                    self.delete_sourcebans();
+                }
+            });
+            ui.separator();
+
+            if self.sourcebans_entries.is_empty() {
+                ui.label(
+                    egui::RichText::new(match self.language {
+                        GuiLanguage::ZhCn => "还没有保存 SourceBans 订阅。",
+                        GuiLanguage::EnUs => "No SourceBans subscriptions saved.",
+                    })
+                    .color(text_muted_color()),
+                );
+                return;
+            }
+
+            let mut clicked_subscription = None;
+            egui::ScrollArea::vertical()
+                .max_height(260.0)
+                .auto_shrink([false, false])
+                .show(ui, |ui| {
+                    for (index, subscription) in self.sourcebans_entries.iter().enumerate() {
+                        let selected = self.selected_sourcebans == Some(index);
+                        let label = egui::RichText::new(&subscription.name).strong();
+                        if ui
+                            .selectable_label(selected, label)
+                            .on_hover_text(&subscription.url)
+                            .clicked()
+                        {
+                            clicked_subscription = Some(index);
+                        }
+                        ui.label(
+                            egui::RichText::new(&subscription.url)
+                                .size(11.0)
+                                .color(text_muted_color()),
+                        );
+                        ui.add_space(6.0);
+                    }
+                });
+
+            if let Some(index) = clicked_subscription {
+                self.selected_sourcebans = Some(index);
+                if let Some(subscription) = self.sourcebans_entries.get(index) {
+                    self.sourcebans_name = subscription.name.clone();
+                    self.sourcebans_url = subscription.url.clone();
+                }
+            }
+        });
+    }
+
+    fn show_sourcebans_editor_card(&mut self, ui: &mut egui::Ui) {
+        modern_card(ui, |ui| {
+            ui.heading(self.text(TextKey::SourceBansSubscription));
+            ui.label(
+                egui::RichText::new(match self.language {
+                    GuiLanguage::ZhCn => "订阅页面需要包含 SourceBans 服务器列表表格。",
+                    GuiLanguage::EnUs => "The page should contain a SourceBans server list.",
+                })
+                .color(text_muted_color()),
+            );
+            ui.add_space(8.0);
+
+            ui.label(self.text(TextKey::SubscriptionName));
+            ui.add(
+                egui::TextEdit::singleline(&mut self.sourcebans_name).desired_width(f32::INFINITY),
+            );
+            ui.label(self.text(TextKey::PageUrl));
+            ui.add(
+                egui::TextEdit::singleline(&mut self.sourcebans_url).desired_width(f32::INFINITY),
+            );
+
+            ui.add_space(8.0);
+            let save_label = if self.selected_sourcebans.is_some() {
+                self.text(TextKey::UpdateSubscription)
+            } else {
+                self.text(TextKey::SaveSubscription)
+            };
+            if ui.add(primary_button(save_label)).clicked() {
+                self.update_sourcebans();
+            }
         });
     }
 
@@ -3415,13 +3868,7 @@ impl eframe::App for NativeGuiApp {
                     ui.spacing_mut().item_spacing = egui::vec2(0.0, 10.0);
 
                     ui.horizontal(|ui| {
-                        ui.label(
-                            egui::RichText::new("e")
-                                .size(24.0)
-                                .strong()
-                                .color(egui::Color32::WHITE)
-                                .background_color(accent_color()),
-                        );
+                        draw_telecom_logo(ui, 36.0);
                         ui.vertical(|ui| {
                             ui.label(
                                 egui::RichText::new(self.text(TextKey::AppTitle))
@@ -3439,8 +3886,8 @@ impl eframe::App for NativeGuiApp {
                     ui.add_space(12.0);
 
                     let servers_label = match self.language {
-                        GuiLanguage::ZhCn => "▦ 服务器浏览器",
-                        GuiLanguage::EnUs => "▦ Server Browser",
+                        GuiLanguage::ZhCn => "服务器浏览器",
+                        GuiLanguage::EnUs => "Server Browser",
                     };
                     if nav_button(ui, self.current_nav == NavTab::Servers, servers_label).clicked()
                     {
@@ -3448,8 +3895,8 @@ impl eframe::App for NativeGuiApp {
                     }
 
                     let players_label = match self.language {
-                        GuiLanguage::ZhCn => "● 全服在线玩家",
-                        GuiLanguage::EnUs => "● All Server Players",
+                        GuiLanguage::ZhCn => "全服在线玩家",
+                        GuiLanguage::EnUs => "All Server Players",
                     };
                     if nav_button(ui, self.current_nav == NavTab::GlobalPlayers, players_label)
                         .clicked()
@@ -3459,13 +3906,14 @@ impl eframe::App for NativeGuiApp {
                     }
 
                     let broadcast_label = match self.language {
-                        GuiLanguage::ZhCn => "◉ 全服消息",
-                        GuiLanguage::EnUs => "◉ Broadcast",
+                        GuiLanguage::ZhCn => "全服消息",
+                        GuiLanguage::EnUs => "Broadcast",
                     };
                     if nav_button(ui, self.current_nav == NavTab::Broadcast, broadcast_label)
                         .clicked()
                     {
                         self.current_nav = NavTab::Broadcast;
+                        self.refresh_broadcast_history();
                     }
 
                     let add_server_label = match self.language {
@@ -3480,8 +3928,8 @@ impl eframe::App for NativeGuiApp {
                     }
 
                     let sourcebans_label = match self.language {
-                        GuiLanguage::ZhCn => "◇ SourceBans 订阅",
-                        GuiLanguage::EnUs => "◇ SourceBans Sub",
+                        GuiLanguage::ZhCn => "SourceBans 订阅",
+                        GuiLanguage::EnUs => "SourceBans Sub",
                     };
                     if nav_button(ui, self.current_nav == NavTab::SourceBans, sourcebans_label)
                         .clicked()
@@ -3491,8 +3939,8 @@ impl eframe::App for NativeGuiApp {
                     }
 
                     let settings_label = match self.language {
-                        GuiLanguage::ZhCn => "⚙ 首选项设置",
-                        GuiLanguage::EnUs => "⚙ Preferences",
+                        GuiLanguage::ZhCn => "首选项设置",
+                        GuiLanguage::EnUs => "Preferences",
                     };
                     if nav_button(ui, self.current_nav == NavTab::Settings, settings_label)
                         .clicked()
@@ -3571,11 +4019,8 @@ impl eframe::App for NativeGuiApp {
                                     let connect_link = format!("steam://connect/{}", address);
                                     if ui
                                         .button(
-                                            egui::RichText::new(format!(
-                                                "🎮 {}",
-                                                self.text(TextKey::ConnectGame)
-                                            ))
-                                            .strong(),
+                                            egui::RichText::new(self.text(TextKey::ConnectGame))
+                                                .strong(),
                                         )
                                         .clicked()
                                     {
@@ -3717,67 +4162,124 @@ impl eframe::App for NativeGuiApp {
                                             ));
                                         } else {
                                             egui::ScrollArea::vertical().show(ui, |ui| {
-                                                egui::Grid::new("selected_players_grid")
-                                                    .striped(true)
-                                                    .min_col_width(55.0)
-                                                    .show(ui, |ui| {
-                                                        ui.strong("#");
-                                                        ui.strong(match self.language {
-                                                            GuiLanguage::ZhCn => "名字",
-                                                            GuiLanguage::EnUs => "Name",
+                                                for p in &self.selected_server_players {
+                                                    egui::Frame::canvas(ui.style())
+                                                        .fill(surface_color())
+                                                        .stroke(egui::Stroke::new(
+                                                            1.0,
+                                                            border_color(),
+                                                        ))
+                                                        .corner_radius(egui::CornerRadius::same(8))
+                                                        .inner_margin(egui::Margin::same(10))
+                                                        .show(ui, |ui| {
+                                                            ui.horizontal(|ui| {
+                                                                ui.label(
+                                                                    egui::RichText::new(&p.name)
+                                                                        .strong()
+                                                                        .color(text_primary_color()),
+                                                                );
+                                                                ui.label(
+                                                                    egui::RichText::new(format!(
+                                                                        "#{}",
+                                                                        p.index
+                                                                    ))
+                                                                    .color(text_muted_color()),
+                                                                );
+                                                            });
+                                                            ui.add_space(6.0);
+                                                            ui.horizontal_wrapped(|ui| {
+                                                                player_metric_chip(
+                                                                    ui,
+                                                                    match self.language {
+                                                                        GuiLanguage::ZhCn => {
+                                                                            "本局分数"
+                                                                        }
+                                                                        GuiLanguage::EnUs => {
+                                                                            "Session score"
+                                                                        }
+                                                                    },
+                                                                    format_optional_number(Some(
+                                                                        p.score,
+                                                                    )),
+                                                                    accent_color(),
+                                                                );
+                                                                player_metric_chip(
+                                                                    ui,
+                                                                    match self.language {
+                                                                        GuiLanguage::ZhCn => {
+                                                                            "本局时间"
+                                                                        }
+                                                                        GuiLanguage::EnUs => {
+                                                                            "Session time"
+                                                                        }
+                                                                    },
+                                                                    format_duration_seconds(
+                                                                        p.duration,
+                                                                    ),
+                                                                    text_primary_color(),
+                                                                );
+                                                                player_metric_chip(
+                                                                    ui,
+                                                                    match self.language {
+                                                                        GuiLanguage::ZhCn => {
+                                                                            "总积分"
+                                                                        }
+                                                                        GuiLanguage::EnUs => {
+                                                                            "Total points"
+                                                                        }
+                                                                    },
+                                                                    format_optional_number(
+                                                                        p.points,
+                                                                    ),
+                                                                    success_color(),
+                                                                );
+                                                                player_metric_chip(
+                                                                    ui,
+                                                                    match self.language {
+                                                                        GuiLanguage::ZhCn => {
+                                                                            "总时长"
+                                                                        }
+                                                                        GuiLanguage::EnUs => {
+                                                                            "Total time"
+                                                                        }
+                                                                    },
+                                                                    format_playtime_minutes(
+                                                                        p.playtime_mins,
+                                                                        self.language,
+                                                                    ),
+                                                                    text_primary_color(),
+                                                                );
+                                                                player_metric_chip(
+                                                                    ui,
+                                                                    "PPM",
+                                                                    p.ppm
+                                                                        .map(|ppm| {
+                                                                            format!("{ppm:.2}")
+                                                                        })
+                                                                        .unwrap_or_else(|| {
+                                                                            "-".to_owned()
+                                                                        }),
+                                                                    warning_color(),
+                                                                );
+                                                                player_metric_chip(
+                                                                    ui,
+                                                                    match self.language {
+                                                                        GuiLanguage::ZhCn => {
+                                                                            "季度分"
+                                                                        }
+                                                                        GuiLanguage::EnUs => {
+                                                                            "Quarter"
+                                                                        }
+                                                                    },
+                                                                    format_optional_number(
+                                                                        p.quarter_points,
+                                                                    ),
+                                                                    accent_color(),
+                                                                );
+                                                            });
                                                         });
-                                                        ui.strong(match self.language {
-                                                            GuiLanguage::ZhCn => "本局分数",
-                                                            GuiLanguage::EnUs => "Session Score",
-                                                        });
-                                                        ui.strong(match self.language {
-                                                            GuiLanguage::ZhCn => "本局时间",
-                                                            GuiLanguage::EnUs => "Session Time",
-                                                        });
-                                                        ui.strong(match self.language {
-                                                            GuiLanguage::ZhCn => "总积分",
-                                                            GuiLanguage::EnUs => "Total Points",
-                                                        });
-                                                        ui.strong(match self.language {
-                                                            GuiLanguage::ZhCn => "总时长",
-                                                            GuiLanguage::EnUs => "Total Time",
-                                                        });
-                                                        ui.strong("PPM");
-                                                        ui.strong(match self.language {
-                                                            GuiLanguage::ZhCn => "季度分",
-                                                            GuiLanguage::EnUs => "Quarter",
-                                                        });
-                                                        ui.end_row();
-
-                                                        for p in &self.selected_server_players {
-                                                            ui.label(p.index.to_string());
-                                                            ui.label(&p.name);
-                                                            ui.label(format_optional_number(Some(
-                                                                p.score,
-                                                            )));
-                                                            ui.label(format_duration_seconds(
-                                                                p.duration,
-                                                            ));
-                                                            ui.label(format_optional_number(
-                                                                p.points,
-                                                            ));
-                                                            ui.label(format_playtime_minutes(
-                                                                p.playtime_mins,
-                                                                self.language,
-                                                            ));
-                                                            ui.label(
-                                                                p.ppm
-                                                                    .map(|ppm| format!("{ppm:.2}"))
-                                                                    .unwrap_or_else(|| {
-                                                                        "-".to_owned()
-                                                                    }),
-                                                            );
-                                                            ui.label(format_optional_number(
-                                                                p.quarter_points,
-                                                            ));
-                                                            ui.end_row();
-                                                        }
-                                                    });
+                                                    ui.add_space(8.0);
+                                                }
                                             });
                                         }
                                     }
@@ -3804,10 +4306,7 @@ impl eframe::App for NativeGuiApp {
 
                                         ui.horizontal(|ui| {
                                             if ui
-                                                .button(format!(
-                                                    "⌨ {}",
-                                                    self.text(TextKey::RunCommand)
-                                                ))
+                                                .button(self.text(TextKey::RunCommand))
                                                 .clicked()
                                             {
                                                 self.run_rcon();
@@ -3858,7 +4357,10 @@ impl eframe::App for NativeGuiApp {
                                         let cvar_search_placeholder =
                                             self.text(TextKey::CvarSearchPlaceholder);
                                         ui.horizontal(|ui| {
-                                            ui.label("🔍");
+                                            ui.label(match self.language {
+                                                GuiLanguage::ZhCn => "搜索",
+                                                GuiLanguage::EnUs => "Search",
+                                            });
                                             ui.add(
                                                 egui::TextEdit::singleline(
                                                     &mut self.cvar_search_query,
@@ -3976,7 +4478,10 @@ impl eframe::App for NativeGuiApp {
                         let filter_empty_label = self.text(TextKey::FilterEmpty);
                         let filter_hide_timeout_label = self.text(TextKey::FilterHideTimeout);
                         ui.horizontal(|ui| {
-                            ui.label(egui::RichText::new("🔍").size(15.0));
+                            ui.label(match self.language {
+                                GuiLanguage::ZhCn => "搜索",
+                                GuiLanguage::EnUs => "Search",
+                            });
                             ui.add(
                                 egui::TextEdit::singleline(&mut self.ui_search_query)
                                     .hint_text(search_placeholder)
@@ -4155,9 +4660,15 @@ impl eframe::App for NativeGuiApp {
 
                                             let vac_text = if let Some(info) = &row.info {
                                                 if info.vac {
-                                                    "🛡 Yes"
+                                                    match self.language {
+                                                        GuiLanguage::ZhCn => "是",
+                                                        GuiLanguage::EnUs => "Yes",
+                                                    }
                                                 } else {
-                                                    "No"
+                                                    match self.language {
+                                                        GuiLanguage::ZhCn => "否",
+                                                        GuiLanguage::EnUs => "No",
+                                                    }
                                                 }
                                             } else {
                                                 "-"
@@ -4310,7 +4821,10 @@ impl eframe::App for NativeGuiApp {
                             );
                             ui.add_space(8.0);
                             ui.horizontal(|ui| {
-                                ui.label("🔍");
+                                ui.label(match self.language {
+                                    GuiLanguage::ZhCn => "搜索",
+                                    GuiLanguage::EnUs => "Search",
+                                });
                                 ui.add(
                                     egui::TextEdit::singleline(
                                         &mut self.global_player_search_query,
@@ -4469,7 +4983,8 @@ impl eframe::App for NativeGuiApp {
                                                 let connect_link =
                                                     format!("steam://connect/{}", p.server_address);
                                                 let btn = egui::Button::new(format!(
-                                                    "🎮 {}",
+                                                    "{} {}",
+                                                    self.text(TextKey::ConnectGame),
                                                     p.server_name
                                                 ))
                                                 .frame(false);
@@ -4492,103 +5007,16 @@ impl eframe::App for NativeGuiApp {
                         });
                 }
                 NavTab::Broadcast => {
-                    modern_card(ui, |ui| {
-                        ui.horizontal(|ui| {
-                            ui.heading(self.text(TextKey::BroadcastTab));
-                            ui.label(
-                                egui::RichText::new(match self.language {
-                                    GuiLanguage::ZhCn => "Steam 登录后发送普通全服聊天消息",
-                                    GuiLanguage::EnUs => "Send global chat after Steam login",
-                                })
-                                .color(text_muted_color()),
-                            );
+                    if ui.available_width() < 900.0 {
+                        self.show_broadcast_composer_card(ui);
+                        ui.add_space(12.0);
+                        self.show_broadcast_history_card(ui);
+                    } else {
+                        ui.columns(2, |columns| {
+                            self.show_broadcast_composer_card(&mut columns[0]);
+                            self.show_broadcast_history_card(&mut columns[1]);
                         });
-                        ui.separator();
-                        ui.horizontal(|ui| {
-                            ui.label(self.text(TextKey::ApiBaseUrl));
-                            let response = ui.add(
-                                egui::TextEdit::singleline(&mut self.api_base_url)
-                                    .desired_width(320.0),
-                            );
-                            if response.changed() {
-                                let _ = save_api_config_to_config(
-                                    &self.config_path,
-                                    &self.api_base_url,
-                                    if self.api_token.trim().is_empty() {
-                                        None
-                                    } else {
-                                        Some(&self.api_token)
-                                    },
-                                );
-                            }
-                        });
-
-                        ui.horizontal(|ui| {
-                            if ui
-                                .add_enabled(
-                                    !self.steam_login_in_progress,
-                                    primary_button(self.text(TextKey::SteamLogin)),
-                                )
-                                .clicked()
-                            {
-                                self.start_steam_login();
-                            }
-                            if ui
-                                .add_enabled(
-                                    !self.api_token.trim().is_empty(),
-                                    egui::Button::new(self.text(TextKey::Logout)),
-                                )
-                                .clicked()
-                            {
-                                self.logout_api();
-                            }
-                        });
-
-                        if let Some(user) = &self.api_user {
-                            ui.label(match self.language {
-                                GuiLanguage::ZhCn => format!(
-                                    "当前账号：{} / {}{}",
-                                    user.name,
-                                    user.steam_id,
-                                    if user.is_admin { " / 管理员" } else { "" }
-                                ),
-                                GuiLanguage::EnUs => format!(
-                                    "Current user: {} / {}{}",
-                                    user.name,
-                                    user.steam_id,
-                                    if user.is_admin { " / admin" } else { "" }
-                                ),
-                            });
-                        }
-                        if !self.api_status.is_empty() {
-                            ui.label(&self.api_status);
-                        }
-
-                        ui.separator();
-                        ui.label(self.text(TextKey::BroadcastMessage));
-                        ui.add(
-                            egui::TextEdit::multiline(&mut self.broadcast_message)
-                                .desired_rows(4)
-                                .desired_width(f32::INFINITY),
-                        );
-                        if ui
-                            .add_enabled(
-                                !self.broadcast_sending,
-                                primary_button(self.text(TextKey::SendBroadcast)),
-                            )
-                            .clicked()
-                        {
-                            self.send_broadcast();
-                        }
-
-                        ui.separator();
-                        ui.add(
-                            egui::TextEdit::multiline(&mut self.broadcast_output)
-                                .desired_rows(10)
-                                .desired_width(f32::INFINITY)
-                                .code_editor(),
-                        );
-                    });
+                    }
                 }
                 NavTab::AddServer => {
                     modern_card(ui, |ui| {
@@ -4629,7 +5057,13 @@ impl eframe::App for NativeGuiApp {
                                         for entry in &self.manual_servers {
                                             ui.label(egui::RichText::new(&entry.group).strong());
                                             ui.monospace(&entry.server);
-                                            if ui.button("❌").clicked() {
+                                            if ui
+                                                .button(match self.language {
+                                                    GuiLanguage::ZhCn => "删除",
+                                                    GuiLanguage::EnUs => "Delete",
+                                                })
+                                                .clicked()
+                                            {
                                                 delete_entry = Some((
                                                     entry.group.clone(),
                                                     entry.server.clone(),
@@ -4646,74 +5080,16 @@ impl eframe::App for NativeGuiApp {
                     });
                 }
                 NavTab::SourceBans => {
-                    ui.horizontal_top(|ui| {
-                        ui.set_min_width(280.0);
-                        modern_card(ui, |ui| {
-                            ui.heading(self.text(TextKey::SubscriptionList));
-
-                            let mut clicked_subscription = None;
-                            for (index, subscription) in self.sourcebans_entries.iter().enumerate()
-                            {
-                                let selected = self.selected_sourcebans == Some(index);
-                                if ui
-                                    .selectable_label(selected, &subscription.name)
-                                    .on_hover_text(&subscription.url)
-                                    .clicked()
-                                {
-                                    clicked_subscription = Some(index);
-                                }
-                            }
-
-                            if let Some(index) = clicked_subscription {
-                                self.selected_sourcebans = Some(index);
-                                if let Some(subscription) = self.sourcebans_entries.get(index) {
-                                    self.sourcebans_name = subscription.name.clone();
-                                    self.sourcebans_url = subscription.url.clone();
-                                }
-                            }
-
-                            ui.horizontal(|ui| {
-                                if ui.button(self.text(TextKey::NewSubscription)).clicked() {
-                                    self.selected_sourcebans = None;
-                                    self.sourcebans_name = "SourceBans".to_owned();
-                                    self.sourcebans_url.clear();
-                                }
-                                if ui
-                                    .add_enabled(
-                                        self.selected_sourcebans.is_some(),
-                                        egui::Button::new(self.text(TextKey::DeleteSubscription)),
-                                    )
-                                    .clicked()
-                                {
-                                    self.delete_sourcebans();
-                                }
-                            });
-                        });
-
+                    if ui.available_width() < 760.0 {
+                        self.show_sourcebans_list_card(ui);
                         ui.add_space(12.0);
-                        modern_card(ui, |ui| {
-                            ui.heading(self.text(TextKey::SourceBansSubscription));
-                            ui.label(self.text(TextKey::SubscriptionName));
-                            ui.add(
-                                egui::TextEdit::singleline(&mut self.sourcebans_name)
-                                    .desired_width(ui.available_width()),
-                            );
-                            ui.label(self.text(TextKey::PageUrl));
-                            ui.add(
-                                egui::TextEdit::singleline(&mut self.sourcebans_url)
-                                    .desired_width(ui.available_width()),
-                            );
-
-                            let save_label = if self.selected_sourcebans.is_some() {
-                                self.text(TextKey::UpdateSubscription)
-                            } else {
-                                self.text(TextKey::SaveSubscription)
-                            };
-                            if ui.add(primary_button(save_label)).clicked() {
-                                self.update_sourcebans();
-                            }
+                        self.show_sourcebans_editor_card(ui);
+                    } else {
+                        ui.columns(2, |columns| {
+                            self.show_sourcebans_list_card(&mut columns[0]);
+                            self.show_sourcebans_editor_card(&mut columns[1]);
                         });
-                    });
+                    }
                 }
                 NavTab::Settings => {
                     modern_card(ui, |ui| {
@@ -4927,7 +5303,7 @@ fn format_playtime_minutes(mins: Option<i32>, lang: GuiLanguage) -> String {
 
 fn sort_label(label: &str, active: SortKey, desc: bool, key: SortKey) -> String {
     if active == key {
-        let marker = if desc { "↓" } else { "↑" };
+        let marker = if desc { "DESC" } else { "ASC" };
         format!("{label} {marker}")
     } else {
         label.to_owned()
@@ -5652,6 +6028,33 @@ fn api_broadcast(request: BroadcastRequest) -> Result<ApiBroadcastResponse, Stri
             .send()
             .map_err(|err| format!("failed to send broadcast: {err}"))?,
     )
+}
+
+fn api_broadcast_history(
+    request: BroadcastHistoryRequest,
+) -> Result<Vec<BroadcastHistoryMessage>, String> {
+    let client = api_client(Duration::from_secs(10))?;
+    let url = api_url(&request.base_url, "/api/server/broadcast_history.php")?;
+    let mut builder = client
+        .get(url)
+        .query(&[("since", "3600"), ("limit", "120")]);
+    if !request.token.trim().is_empty() {
+        builder = builder.bearer_auth(request.token);
+    }
+    let response: ApiBroadcastHistoryResponse = response_json(
+        builder
+            .send()
+            .map_err(|err| format!("failed to query broadcast history: {err}"))?,
+    )?;
+
+    if response.ok {
+        Ok(response.messages)
+    } else {
+        Err(response
+            .message
+            .or(response.error)
+            .unwrap_or_else(|| "broadcast history API failed".to_owned()))
+    }
 }
 
 fn normalized_player_name(name: &str) -> String {

@@ -113,7 +113,7 @@ GUI 模式是原生桌面窗口，不启动网页服务。新增服务器和 Sou
 
 右侧服务器列表支持点击选中服务器。选中后，底部会直接显示该服务器的 RCON 和 CVAR / Rules 面板；CVAR / Rules 会主动查询一次，RCON 只需要输入密码和命令后执行。详情卡片会把域名解析成实际 IP，并通过 `ip-api.com` 查询运营商、组织、ASN 和地区；结果只在本次运行内缓存，避免刷新列表时批量请求外部 API。
 
-GUI 启动时会自动加载系统 CJK 字体，避免 Windows/Linux 上中文显示成方块。界面支持 i18n，目前内置 `简体中文` 和 `English`，可在顶部语言下拉框切换；选择会保存到配置文件：
+GUI 启动时会自动加载系统 CJK 字体，避免 Windows/Linux 上中文显示成方块；界面图标尽量使用程序绘制或普通文字，不依赖 emoji 字体。界面支持 i18n，目前内置 `简体中文` 和 `English`，可在顶部语言下拉框切换；选择会保存到配置文件：
 
 ```toml
 [gui]
@@ -129,7 +129,7 @@ GUI 会在启动时检查 GitHub Release 是否有新版本，也可以点击顶
 
 `[api].base_url` 指向 NewAnneWeb 站点。点击 GUI 里的“Steam 登录”后，工具会打开网页授权；授权完成后 token 会保存到本地配置。
 
-全服消息不会使用服务器 RCON。GUI 调用 NewAnneWeb 的 `/api/server/broadcast.php`，网页端写入 `chat` 数据库的 `anne_global_chat` 表，`global_chat.smx` 会按自己的轮询规则广播给所有服务器。
+全服消息不会使用服务器 RCON。GUI 调用 NewAnneWeb 的 `/api/server/broadcast.php`，网页端写入 `chat` 数据库的 `anne_global_chat` 表，`global_chat.smx` 会按自己的轮询规则广播给所有服务器。GUI 会额外调用 `/api/server/broadcast_history.php` 读取最近 1 小时全服消息；网页端会把 `since` 限制在 60 到 3600 秒、`limit` 限制在 1 到 200，避免大范围拉取聊天表。
 
 玩家统计使用 `/api/player/online.php` 一次读取最近 2 分钟在线统计，再由 GUI 按 A2S 玩家名本地匹配，避免逐个请求玩家接口。
 
