@@ -333,15 +333,25 @@ fn build_runtime(
         config
             .groups
             .into_iter()
-            .map(ManualGroup::try_from)
-            .collect::<Result<Vec<_>, _>>()?,
+            .filter_map(|g| match ManualGroup::try_from(g) {
+                Ok(group) => Some(group),
+                Err(err) => {
+                    eprintln!("warning: skipped invalid group: {err}");
+                    None
+                }
+            }),
     );
     subscriptions.extend(
         config
             .sourcebans
             .into_iter()
-            .map(SourceBansSubscription::try_from)
-            .collect::<Result<Vec<_>, _>>()?,
+            .filter_map(|s| match SourceBansSubscription::try_from(s) {
+                Ok(sub) => Some(sub),
+                Err(err) => {
+                    eprintln!("warning: skipped invalid subscription: {err}");
+                    None
+                }
+            }),
     );
 
     settings.apply_cli(cli)?;
@@ -361,6 +371,7 @@ fn build_runtime(
         name: subscription_group_name(url),
         url: url.to_owned(),
         text: String::new(),
+        servers: Vec::new(),
     }));
 
     Ok((settings, manual_groups, subscriptions))
@@ -436,6 +447,7 @@ impl Default for BrowserConfig {
                 name: "Anne电信服".to_owned(),
                 url: "https://anne.trygek.com/bans/index.php?p=servers".to_owned(),
                 text: String::new(),
+                servers: Vec::new(),
             }],
         }
     }
@@ -892,6 +904,8 @@ struct FileSourceBans {
     url: String,
     #[serde(default, skip_serializing_if = "String::is_empty")]
     text: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    servers: Vec<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -905,6 +919,7 @@ struct SourceBansSubscription {
     name: String,
     url: String,
     text: String,
+    servers: Vec<String>,
 }
 
 impl TryFrom<FileGroup> for ManualGroup {
@@ -924,14 +939,16 @@ impl TryFrom<FileSourceBans> for SourceBansSubscription {
     fn try_from(value: FileSourceBans) -> Result<Self, Self::Error> {
         let url = value.url.trim().to_owned();
         let text = value.text.trim().to_owned();
-        if url.is_empty() && text.is_empty() {
-            return Err("sourcebans.url or sourcebans.text cannot be empty".to_owned());
+        let servers = value.servers;
+        if url.is_empty() && text.is_empty() && servers.is_empty() {
+            return Err("sourcebans.url or sourcebans.text or sourcebans.servers cannot be empty".to_owned());
         }
 
         Ok(Self {
             name: non_empty(value.name, "sourcebans.name")?,
             url,
             text,
+            servers,
         })
     }
 }
@@ -1014,6 +1031,7 @@ fn parse_cli_subscription(value: &str) -> Result<SourceBansSubscription, String>
         name,
         url,
         text: String::new(),
+        servers: Vec::new(),
     })
 }
 
@@ -1084,7 +1102,15 @@ fn collect_sources(
 
     for subscription in subscriptions {
         let drop_on_timeout = subscription_drops_timeout_servers(subscription);
-        match fetch_web_subscription(subscription, settings.http_timeout) {
+
+        // Use cached servers if available, otherwise fetch from URL/text
+        let addresses = if !subscription.servers.is_empty() {
+            Ok(subscription.servers.clone())
+        } else {
+            fetch_web_subscription(subscription, settings.http_timeout)
+        };
+
+        match addresses {
             Ok(addresses) => {
                 for address in addresses {
                     match resolve_endpoint(&address) {
@@ -1098,7 +1124,7 @@ fn collect_sources(
                         }
                         Err(err) => eprintln!(
                             "warning: skipped {} from subscription {}: {err}",
-                            address, subscription.url
+                            address, subscription.name
                         ),
                     }
                 }
@@ -2510,6 +2536,7 @@ enum GuiMessage {
     BroadcastHistory(Result<Vec<BroadcastHistoryMessage>, String>),
     ServerUpdate(String, Result<ServerRowPayload, String>),
     NetworkInfo(String, Result<ServerNetworkInfo, String>),
+    SubscriptionRefresh(Result<(), String>),
 }
 
 struct NativeGuiApp {
@@ -3005,6 +3032,7 @@ impl NativeGuiApp {
         app.config_status = app.language.config_file_status(&app.config_path);
         app.refresh_config_lists();
         app.refresh_servers();
+        app.refresh_subscriptions_background();
         if !app.api_token.trim().is_empty() {
             app.refresh_api_user();
         }
@@ -3069,6 +3097,18 @@ impl NativeGuiApp {
                             self.network_info_status = self.language.network_failed_status(&err);
                         }
                         Err(_) => {}
+                    }
+                }
+                GuiMessage::SubscriptionRefresh(result) => {
+                    match result {
+                        Ok(()) => {
+                            // Subscriptions updated in config, reload everything
+                            self.refresh_servers();
+                            self.refresh_config_lists();
+                        }
+                        Err(err) => {
+                            eprintln!("warning: background subscription refresh failed: {err}");
+                        }
                     }
                 }
                 GuiMessage::ConfigLists(result) => match result {
@@ -3421,6 +3461,17 @@ impl NativeGuiApp {
                 })
                 .map(|rows| server_rows_payload(&rows));
             let _ = tx.send(GuiMessage::Servers(result));
+        });
+    }
+
+    /// Refresh subscription URLs in the background and update cached servers in config.
+    /// After completion, triggers a full server refresh with the new data.
+    fn refresh_subscriptions_background(&mut self) {
+        let tx = self.tx.clone();
+        let config_path = self.config_path.clone();
+        thread::spawn(move || {
+            let result = refresh_all_subscriptions_in_config(&config_path);
+            let _ = tx.send(GuiMessage::SubscriptionRefresh(result));
         });
     }
 
@@ -6004,7 +6055,7 @@ fn delete_server_from_config(path: &PathBuf, group: &str, server: &str) -> Resul
 
 fn add_sourcebans_to_config(path: &PathBuf, input: AddSourceBansRequest) -> Result<(), String> {
     let name = non_empty(input.name.trim().to_owned(), "name")?;
-    let (url, text) = normalize_subscription_source(&input)?;
+    let (url, servers) = resolve_subscription_servers(&input)?;
     let mut config = load_config_or_default(path)?;
 
     if let Some(subscription) = config
@@ -6013,9 +6064,15 @@ fn add_sourcebans_to_config(path: &PathBuf, input: AddSourceBansRequest) -> Resu
         .find(|subscription| subscription.name == name)
     {
         subscription.url = url;
-        subscription.text = text;
+        subscription.text = String::new();
+        subscription.servers = servers;
     } else {
-        config.sourcebans.push(FileSourceBans { name, url, text });
+        config.sourcebans.push(FileSourceBans {
+            name,
+            url,
+            text: String::new(),
+            servers,
+        });
     }
 
     save_config(path, &config)
@@ -6027,7 +6084,7 @@ fn update_sourcebans_in_config(
     input: AddSourceBansRequest,
 ) -> Result<(), String> {
     let name = non_empty(input.name.trim().to_owned(), "name")?;
-    let (url, text) = normalize_subscription_source(&input)?;
+    let (url, servers) = resolve_subscription_servers(&input)?;
     let mut config = load_config_or_default(path)?;
     let Some(subscription) = config.sourcebans.get_mut(index) else {
         return Err(format!("sourcebans index {index} does not exist"));
@@ -6035,13 +6092,16 @@ fn update_sourcebans_in_config(
 
     subscription.name = name;
     subscription.url = url;
-    subscription.text = text;
+    subscription.text = String::new();
+    subscription.servers = servers;
     save_config(path, &config)
 }
 
-fn normalize_subscription_source(
+/// Parse text/URL at save time and return (url_to_keep, extracted_servers).
+/// The raw text is NOT stored — only the extracted server addresses are kept.
+fn resolve_subscription_servers(
     input: &AddSourceBansRequest,
-) -> Result<(String, String), String> {
+) -> Result<(String, Vec<String>), String> {
     let url = input.url.trim();
     let text = input.text.trim();
 
@@ -6049,13 +6109,27 @@ fn normalize_subscription_source(
         return Err("subscription requires a page URL or pasted text".to_owned());
     }
 
-    let url = if url.is_empty() {
-        String::new()
-    } else {
-        normalize_subscription_url(url)?.to_string()
-    };
+    // If text is provided, parse it immediately to extract server addresses
+    if !text.is_empty() {
+        let servers = extract_pasted_subscription(text, &input.name)?;
+        let url = if url.is_empty() {
+            String::new()
+        } else {
+            normalize_subscription_url(url)?.to_string()
+        };
+        return Ok((url, servers));
+    }
 
-    Ok((url, text.to_owned()))
+    // If only URL is provided, fetch and parse it now
+    let normalized_url = normalize_subscription_url(url)?;
+    let sub = SourceBansSubscription {
+        name: input.name.clone(),
+        url: normalized_url.to_string(),
+        text: String::new(),
+        servers: Vec::new(),
+    };
+    let servers = fetch_web_subscription(&sub, Duration::from_secs(15))?;
+    Ok((normalized_url.to_string(), servers))
 }
 
 fn delete_sourcebans_from_config(path: &PathBuf, index: usize) -> Result<(), String> {
@@ -6066,6 +6140,51 @@ fn delete_sourcebans_from_config(path: &PathBuf, index: usize) -> Result<(), Str
 
     config.sourcebans.remove(index);
     save_config(path, &config)
+}
+
+/// Re-fetch all URL-based subscriptions and update cached server addresses in config.
+fn refresh_all_subscriptions_in_config(path: &PathBuf) -> Result<(), String> {
+    let mut config = load_config_or_default(path)?;
+    let mut any_updated = false;
+
+    for sub_config in config.sourcebans.iter_mut() {
+        let url = sub_config.url.trim();
+        if url.is_empty() {
+            continue;
+        }
+
+        let sub = SourceBansSubscription {
+            name: sub_config.name.clone(),
+            url: url.to_owned(),
+            text: String::new(),
+            servers: Vec::new(),
+        };
+
+        match fetch_web_subscription(&sub, Duration::from_secs(15)) {
+            Ok(servers) if !servers.is_empty() => {
+                sub_config.servers = servers;
+                sub_config.text = String::new();
+                any_updated = true;
+            }
+            Ok(_) => {
+                eprintln!(
+                    "warning: subscription {} returned no servers, keeping cache",
+                    sub_config.name
+                );
+            }
+            Err(err) => {
+                eprintln!(
+                    "warning: failed to refresh subscription {}: {err}, keeping cache",
+                    sub_config.name
+                );
+            }
+        }
+    }
+
+    if any_updated {
+        save_config(path, &config)?;
+    }
+    Ok(())
 }
 
 fn save_gui_language_to_config(path: &PathBuf, language: GuiLanguage) -> Result<(), String> {
