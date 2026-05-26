@@ -112,7 +112,8 @@ Action Cmd_WarpToSurvivor(int iClient, int iArgs)
 		return Plugin_Handled;
 	}
 
-	if (GetClientTeam(iClient) != L4D2Team_Infected
+	if (!IsClientInGame(iClient)
+		|| GetClientTeam(iClient) != L4D2Team_Infected
 		|| GetEntProp(iClient, Prop_Send, "m_isGhost", 1) < 1
 		|| !IsPlayerAlive(iClient)
 	) {
@@ -225,7 +226,8 @@ void Hook_OnPostThinkPost(int iClient)
 		return;
 	}
 
-	if (GetClientTeam(iClient) != L4D2Team_Infected
+	if (!IsClientInGame(iClient)
+		|| GetClientTeam(iClient) != L4D2Team_Infected
 		|| GetEntProp(iClient, Prop_Send, "m_isGhost", 1) < 1
 		|| !IsPlayerAlive(iClient)
 	) {

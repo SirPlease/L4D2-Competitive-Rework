@@ -560,6 +560,10 @@ stock int GetPummelQueueAttacker(int client)
 
 stock L4D2Team GetClientTeamEx(int client)
 {
+	if (!IsClientInGame(client))
+	{
+		return L4D2Team_None;
+	}
 	return view_as<L4D2Team>(GetClientTeam(client));
 }
 

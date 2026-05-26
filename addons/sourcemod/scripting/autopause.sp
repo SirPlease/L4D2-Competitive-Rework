@@ -242,7 +242,7 @@ void Event_PlayerDisconnect(Event hEvent, char[] sEventName, bool dontBroadcast)
     if (!teamPlayers.ContainsKey(sAuthId)) 
         return;
 
-    if (GetClientTeam(client) == L4D_TEAM_SURVIVOR && !IsPlayerAlive(client))
+    if (IsClientInGame(client) && GetClientTeam(client) == L4D_TEAM_SURVIVOR && !IsPlayerAlive(client))
     {
         if (convarDebug.BoolValue)
         {

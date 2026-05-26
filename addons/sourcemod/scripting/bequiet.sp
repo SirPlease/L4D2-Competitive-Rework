@@ -68,7 +68,7 @@ Action TeamSay_Callback(int client, char[] command, int args)
         return Plugin_Handled;
     }
     
-    if (bSpecSeeChat && GetClientTeam(client) != 1)
+    if (bSpecSeeChat && IsValidClient(client) && GetClientTeam(client) != 1)
     {
         char sChat[256];
         GetCmdArgString(sChat, 256);
