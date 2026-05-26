@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="google" content="notranslate" />
+    <title>Anne刷服器</title>
+    <link rel="icon" href="./assets/anne-icon.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="module" src="./app.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <img src="./assets/anne-icon.svg" alt="" />
+          <div>
+            <strong>Anne刷服器</strong>
+            <span id="configPath">配置加载中</span>
+          </div>
+        </div>
+        <nav class="nav">
+          <button class="nav-item active" data-tab="servers" type="button">服务器</button>
+          <button class="nav-item" data-tab="subscriptions" type="button">网页订阅</button>
+          <button class="nav-item" data-tab="settings" type="button">设置</button>
+        </nav>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div>
+            <h1 id="viewTitle">服务器</h1>
+            <p id="statusLine">等待刷新</p>
+          </div>
+          <div class="topbar-actions">
+            <button id="refreshBtn" class="primary" type="button">刷新</button>
+          </div>
+        </header>
+
+        <section id="serversView" class="view active">
+          <div class="toolbar">
+            <label class="field search-field">
+              <span>搜索</span>
+              <input id="searchInput" autocomplete="off" placeholder="名称 / 地址 / 地图" />
+            </label>
+            <label class="check">
+              <input id="onlyPlayersInput" type="checkbox" />
+              <span>只看有人</span>
+            </label>
+            <label class="check">
+              <input id="hideTimeoutInput" type="checkbox" checked />
+              <span>隐藏超时</span>
+            </label>
+          </div>
+
+          <div id="groupTabs" class="group-tabs"></div>
+
+          <div class="metrics">
+            <div class="metric">
+              <span>服务器</span>
+              <strong id="metricTotal">0</strong>
+            </div>
+            <div class="metric">
+              <span>在线</span>
+              <strong id="metricOnline">0</strong>
+            </div>
+            <div class="metric">
+              <span>玩家</span>
+              <strong id="metricPlayers">0</strong>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th class="name-col">服务器名称</th>
+                  <th>地址</th>
+                  <th>玩家</th>
+                  <th>延迟</th>
+                  <th>地图</th>
+                  <th>分组</th>
+                  <th class="action-col">操作</th>
+                </tr>
+              </thead>
+              <tbody id="serverRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="subscriptionsView" class="view">
+          <div class="split">
+            <section class="panel">
+              <div class="panel-head">
+                <h2>网页订阅</h2>
+                <button id="newSubscriptionBtn" type="button">新建</button>
+              </div>
+              <div id="subscriptionList" class="list"></div>
+            </section>
+
+            <section class="panel editor-panel">
+              <h2 id="subscriptionEditorTitle">新建订阅</h2>
+              <div class="form-grid">
+                <label class="field">
+                  <span>订阅名称</span>
+                  <input id="subscriptionNameInput" autocomplete="off" />
+                </label>
+                <label class="field">
+                  <span>页面 URL</span>
+                  <input id="subscriptionUrlInput" autocomplete="off" />
+                </label>
+                <label class="field wide">
+                  <span>HTML / 文本</span>
+                  <textarea id="subscriptionTextInput" spellcheck="false"></textarea>
+                </label>
+              </div>
+              <div class="form-actions">
+                <button id="saveSubscriptionBtn" class="primary" type="button">保存</button>
+                <button id="deleteSubscriptionBtn" class="danger" type="button">删除</button>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section id="settingsView" class="view">
+          <section class="panel settings-panel">
+            <h2>手动服务器</h2>
+            <div class="inline-form">
+              <label class="field">
+                <span>分组</span>
+                <input id="manualGroupInput" autocomplete="off" value="电信服刷服器" />
+              </label>
+              <label class="field">
+                <span>地址</span>
+                <input id="manualServerInput" autocomplete="off" placeholder="45.125.45.95:28001" />
+              </label>
+              <button id="addManualBtn" class="primary" type="button">添加</button>
+            </div>
+            <div id="manualList" class="manual-list"></div>
+          </section>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,6 +1,6 @@
 # Anne刷服器
 
-一个用 Rust 编写的求生之路 2 刷服/查服工具，默认打开原生 GUI，也保留命令行查询模式。它可以从 Steam Master Server、手动分组和网页订阅链接收集服务器地址，再对每个服务器发送 `A2S_INFO` 查询，输出分组、服务器名、地图、人数、延迟、VAC、标签等信息。
+一个用 Rust 编写的求生之路 2 刷服/查服工具，提供 Tauri 桌面界面，也保留原生 egui 界面和命令行查询模式。它可以从 Steam Master Server、手动分组和网页订阅链接收集服务器地址，再对每个服务器发送 `A2S_INFO` 查询，输出分组、服务器名、地图、人数、延迟、VAC、标签等信息。
 
 ## Usage
 
@@ -33,6 +33,15 @@ cargo run --release -- --gui --config browser.example.toml
 
 会直接打开桌面窗口。GUI 支持添加服务器、添加网页订阅、刷新服务器列表、执行 RCON 命令、读取 CVAR/公开 rules。
 如果配置了 AnneWeb API，还可以用 Steam 登录后发送全服消息，并通过 API 查询在线玩家的总积分、总时长、PPM 和季度积分。
+
+开发环境启动 Tauri UI：
+
+```bash
+npm install
+npm run dev
+```
+
+Tauri UI 位于 `tauri-ui/`，后端命令位于 `src-tauri/`，复用同一份 Rust 查询、订阅解析和配置保存逻辑。
 
 常用参数：
 
@@ -112,9 +121,11 @@ example.org:27018
 
 `sourcebans` 是兼容旧版本的配置字段，现在也用于普通网页订阅。`sourcebans.url` 可以填 SourceBans 站点根路径、直接填 `index.php?p=servers`，也可以填普通网页链接。普通网页链接会原样请求；工具会从页面正文和同源 `.js` / `.json` / `.txt` / `.csv` 资源里提取 `IP:port`、`域名:port` 和 `steam://connect/...` 链接。`sourcebans.text` 可以直接保存复制来的网页 HTML 或纯文本；如果同时填写 `url` 和 `text`，工具优先解析 `text`，不再请求 URL。
 
-## GUI / RCON
+## Tauri UI / GUI / RCON
 
-GUI 模式是原生桌面窗口，不启动网页服务。新增服务器和网页订阅会写入 `--config` 指定的 TOML 文件；如果没有传 `--config`，默认写入系统用户配置目录。
+Tauri UI 是新的桌面界面，服务器列表优先显示服务器名称，地址、人数、延迟、地图和分组保持在同一行；顶部提供搜索、分组标签、只看有人和隐藏超时筛选。新增服务器和网页订阅会写入同一个 TOML 配置；如果没有指定配置，默认写入系统用户配置目录。
+
+原生 egui GUI 仍可通过 `--gui` 使用。它不启动网页服务，新增服务器和网页订阅会写入 `--config` 指定的 TOML 文件；如果没有传 `--config`，默认写入系统用户配置目录。
 
 左侧使用标签页管理配置：
 
@@ -150,7 +161,7 @@ RCON 使用 Source RCON TCP 协议。读取 CVAR 有两种方式：
 
 ## Release Build
 
-仓库包含 `.github/workflows/l4d2_server_browser.yml`。它会构建这些平台的执行文件并上传 artifact：
+仓库包含 `.github/workflows/l4d2_server_browser.yml`。它会构建这些平台的执行文件和 Tauri bundle，并上传 artifact：
 
 - `x86_64-unknown-linux-gnu`
 - `x86_64-apple-darwin`

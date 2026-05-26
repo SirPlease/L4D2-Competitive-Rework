@@ -63,14 +63,31 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y \
             libasound2-dev \
+            libayatana-appindicator3-dev \
+            libglib2.0-dev \
             libgl1-mesa-dev \
+            librsvg2-dev \
             libwayland-dev \
+            libwebkit2gtk-4.1-dev \
             libx11-dev \
             libx11-xcb-dev \
+            libxdo-dev \
             libxcb-render0-dev \
             libxcb-shape0-dev \
             libxcb-xfixes0-dev \
-            libxkbcommon-dev
+            libxkbcommon-dev \
+            patchelf
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: tools/l4d2_server_browser/package-lock.json
+
+      - name: Install Tauri frontend dependencies
+        working-directory: tools/l4d2_server_browser
+        run: npm ci
 
       - name: Install Rust target
         run: rustup target add ${{ matrix.target }}
@@ -81,6 +98,10 @@ jobs:
 
       - name: Build
         run: cargo build --release --manifest-path tools/l4d2_server_browser/Cargo.toml --target ${{ matrix.target }}
+
+      - name: Build Tauri app
+        working-directory: tools/l4d2_server_browser
+        run: npm run build -- --target ${{ matrix.target }}
 
       - name: Stage package
         shell: bash
@@ -232,6 +253,7 @@ jobs:
           path: |
             Anne刷服器-${{ matrix.target }}.tar.gz
             Anne刷服器-${{ matrix.target }}.zip
+            target/${{ matrix.target }}/release/bundle/**/*
           if-no-files-found: ignore
 
   release:

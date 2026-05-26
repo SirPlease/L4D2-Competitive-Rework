@@ -37,3 +37,6 @@ scripts/mysql-install-clone-replica.env.example
 scripts/mysql-install-clone-replica.env
 mysql-install-clone-replica.env
 scripts/install-docker-monitoring.sh
+
+# Local L4D2 Docker deploy secrets
+scripts/l4d2-docker.env

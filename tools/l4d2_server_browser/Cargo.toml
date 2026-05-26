@@ -6,6 +6,14 @@ description = "Anne刷服器：a Left 4 Dead 2 server browser using Steam master
 license = "GPL-3.0-or-later"
 publish = true
 
+[lib]
+name = "anne_server_browser"
+path = "src/lib.rs"
+
+[[bin]]
+name = "Anne刷服器"
+path = "src/main.rs"
+
 [dependencies]
 clap = { version = "4.5", features = ["derive"] }
 eframe = "0.32"

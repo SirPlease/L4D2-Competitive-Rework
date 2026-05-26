@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Default desktop capability for Anne刷服器.",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}
