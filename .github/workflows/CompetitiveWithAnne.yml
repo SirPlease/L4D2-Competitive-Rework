@@ -11,8 +11,10 @@ on:
         required: false
   push:
     paths:
-      - '**/*.md'
-      - '**/*.sp'
+      - 'addons/**'
+      - 'cfgs/**'
+      - 'scripts/**'
+      - '*README.md'
     branches:
       - master
 
