@@ -27,6 +27,7 @@ jobs:
   build:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
+    if: matrix.release_only == false || startsWith(github.ref, 'refs/tags/Anne刷服器-v') || (github.event_name == 'workflow_dispatch' && inputs.release_tag != '')
     env:
       CARGO_TARGET_DIR: ${{ github.workspace }}/target
     strategy:
@@ -38,21 +39,25 @@ jobs:
             target: x86_64-unknown-linux-gnu
             binary: Anne刷服器
             archive: tar.gz
+            release_only: true
           - name: macos-x86_64
             os: macos-latest
             target: x86_64-apple-darwin
             binary: Anne刷服器
             archive: tar.gz
+            release_only: true
           - name: macos-aarch64
             os: macos-latest
             target: aarch64-apple-darwin
             binary: Anne刷服器
             archive: tar.gz
+            release_only: true
           - name: windows-x86_64
             os: windows-latest
             target: x86_64-pc-windows-msvc
             binary: Anne刷服器.exe
             archive: zip
+            release_only: false
 
     steps:
       - uses: actions/checkout@v5
