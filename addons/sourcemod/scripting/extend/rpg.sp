@@ -189,6 +189,34 @@ public any Native_GetGlobalValue(Handle plugin, int numParams)
 	return -1;
 }
 
+static bool SetRoundValid(bool newValue)
+{
+	if (valid == newValue)
+	{
+		return false;
+	}
+
+	valid = newValue;
+	Call_StartForward(IsValid);
+	Call_PushCell(valid);
+	Call_Finish();
+	return true;
+}
+
+static bool SetRoundUseBuy(bool newValue)
+{
+	if (UseBuy == newValue)
+	{
+		return false;
+	}
+
+	UseBuy = newValue;
+	Call_StartForward(IsUseBuy);
+	Call_PushCell(UseBuy);
+	Call_Finish();
+	return true;
+}
+
 public any Native_SetGlobalValue(Handle plugin, int numParams)
 {
 	int option = GetNativeCell(1);
@@ -196,8 +224,16 @@ public any Native_SetGlobalValue(Handle plugin, int numParams)
 	//Debug_Print("GetClientTargetNum Native called");
 	switch( view_as<TARGET_VALUE_INDEX>(option) )
 	{
-		case INDEX_VALID:			valid  = view_as<bool>(value);
-		case INDEX_USEBUY:			UseBuy = view_as<bool>(value);
+		case INDEX_VALID:
+		{
+			SetRoundValid(view_as<bool>(value));
+			return 1;
+		}
+		case INDEX_USEBUY:
+		{
+			SetRoundUseBuy(view_as<bool>(value));
+			return 1;
+		}
 	}
 	return -1;
 }
@@ -552,31 +588,28 @@ public void OnConfigsExecuted()
 void ConVarChanged_Cvars(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	// 先单独处理 rpg_allow_UseB（不依赖 infected_control）
-    if (convar == g_hAllowUseB)
-    {
-        g_bAllowUseB = g_hAllowUseB.BoolValue;
-        PrintToChatAll("\x01[\x04RPG\x01] %s",
-            g_bAllowUseB ? "允许使用B数购买商品" : "已禁止使用B数购买（仅允许 0B 商品）");
-        return;
-    }
-    if (!g_bInfectedControlAvailable || g_hInfectedLimit == null)
-    {
-        // 没有 infected_control，就当这局不计有效（保持你原始语义）
-        valid = false;
-        return;
-    }
+	if (convar == g_hAllowUseB)
+	{
+		g_bAllowUseB = g_hAllowUseB.BoolValue;
+		PrintToChatAll("\x01[\x04RPG\x01] %s",
+			g_bAllowUseB ? "允许使用B数购买商品" : "已禁止使用B数购买（仅允许 0B 商品）");
+		return;
+	}
+	if (!g_bInfectedControlAvailable || g_hInfectedLimit == null)
+	{
+		// 没有 infected_control，就当这局不计有效（保持你原始语义）
+		SetRoundValid(false);
+		return;
+	}
 
-    if (IsStart)
-    {
-        if(valid)PrintToChatAll("\x01[\x04RANK\x01]\x04判断额外积分所需变量发生变化，此局无法获得额外积分, 过关也不奖励额外分数");
-        valid = false;
-        Call_StartForward(IsValid);
-        Call_PushCell(false);
-        Call_Finish();
-    }
+	if (IsStart)
+	{
+		if(valid)PrintToChatAll("\x01[\x04RANK\x01]\x04判断额外积分所需变量发生变化，此局无法获得额外积分, 过关也不奖励额外分数");
+		SetRoundValid(false);
+	}
 
-    IsAllowBigGun = GetConVarBool(AllowBigGun);
-    g_bEnableGlow = GetConVarBool(g_hEnableGlow);
+	IsAllowBigGun = GetConVarBool(AllowBigGun);
+	g_bEnableGlow = GetConVarBool(g_hEnableGlow);
 }
 
 public void Event_PlayerDisconnectOrAFK( Event hEvent, const char[] sName, bool bDontBroadcast )
@@ -1087,7 +1120,7 @@ public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
 	GaoJiRenJi = FindConVar("sb_fix_enabled");
 	if(GaoJiRenJi != null && GaoJiRenJi.BoolValue){
 		PrintToChatAll("\x01[\x04RANK\x01]\x04由于开启了高级人机，不能获得额外积分，也不会更新地图记录");
-		valid = false;
+		SetRoundValid(false);
 	}
 	IsStart=true;
 	return Plugin_Continue;
@@ -1404,10 +1437,7 @@ public bool RemovePoints(int client, int costpoints,char bitem[64])
 	int actuallypoints = player[client].ClientPoints - costpoints;
 	if(!UseBuy && actuallypoints < 500)
 	{
-		Call_StartForward(IsUseBuy);//转发触发
-		Call_PushCell(false);//按顺序将参数push进forward传参列表里
-		Call_Finish();//转发结束
-		UseBuy = true;
+		SetRoundUseBuy(true);
 	}
 	if(IsVaildClient(client) && actuallypoints >= 0)
 	{	

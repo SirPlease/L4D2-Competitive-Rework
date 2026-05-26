@@ -210,7 +210,7 @@ public void OnLibraryAdded(const char[] name) {
 public void OnLibraryRemoved(const char[] name) {
 	if (strcmp(name, "WeaponHandling") == 0)
 		g_bWeaponHandling = false;
-	if (strcmp(name, "WeaponHandling") == 0)
+	if (strcmp(name, "rpg") == 0)
 		g_bRPG = false;
 }
 
@@ -220,6 +220,8 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 
 public void OnAllPluginsLoaded() {
+	g_bWeaponHandling = LibraryExists("WeaponHandling");
+	g_bRPG = LibraryExists("rpg");
 	g_pZombieManager = L4D_GetPointer(POINTER_ZOMBIEMANAGER);
 }
 
@@ -727,7 +729,8 @@ int _CreateInfected(const char[] zombie, const float vPos[3], const float vAng[3
 
 		TeleportEntity(ent, vPos, vAng, NULL_VECTOR);
 		DispatchSpawn(ent);
-		L4D_RPG_SetGlobalValue(INDEX_VALID, false);
+		if (g_bRPG)
+			L4D_RPG_SetGlobalValue(INDEX_VALID, false);
 
 		if (strlen(zombie) > 5)
 			SetEntityModel(ent, g_sSpecialModels[8]);

@@ -54,9 +54,53 @@ void DisplayKickMenu(int client)
 	menu.SetTitle(title);
 	menu.ExitBackButton = CheckCommandAccess(client, "sm_admin", ADMFLAG_GENERIC, false);
 	
-	AddTargetsToMenu(menu, client, false, false);
-	
+	AddKickTargetsToMenu(menu, client);
+
 	menu.Display(client, MENU_TIME_FOREVER);
+}
+
+int AddKickTargetsToMenu(Menu menu, int source_client)
+{
+	char info[16];
+	char name[MAX_NAME_LENGTH];
+	char display[128];
+	int count;
+
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (!IsClientConnected(i))
+		{
+			continue;
+		}
+
+		if (source_client != 0
+			&& GetClientAdminImmunity(source_client) <= 90
+			&& IsClientInGame(i)
+			&& IsFakeClient(i)
+			&& GetClientTeam(i) == 3)
+		{
+			continue;
+		}
+
+		if (source_client != 0 && !CanUserTarget(source_client, i))
+		{
+			continue;
+		}
+
+		int userid = GetClientUserId(i);
+		if (userid == 0)
+		{
+			continue;
+		}
+
+		GetClientName(i, name, sizeof(name));
+		FormatEx(info, sizeof(info), "%d", userid);
+		FormatEx(display, sizeof(display), "%s (%d)", name, userid);
+		menu.AddItem(info, display);
+		count++;
+	}
+
+	return count;
 }
 
 public void AdminMenu_Kick(TopMenu topmenu, 
@@ -105,9 +149,9 @@ public int MenuHandler_Kick(Menu menu, MenuAction action, int param1, int param2
 		{
 			PrintToChat(param1, "[SM] %t", "Unable to target");
 		}
-		else if(IsFakeClient(target) && GetClientAdminImmunity(param1) == 90 && GetClientTeam(target) == 3)
+		else if(IsFakeClient(target) && GetClientAdminImmunity(param1) <= 90 && GetClientTeam(target) == 3)
 		{
-			PrintToChat(param1, "[SM] 非超级管理员，无法踢出特感bot")
+			PrintToChat(param1, "[SM] 非超级管理员，无法踢出特感bot");
 		}
 		else
 		{

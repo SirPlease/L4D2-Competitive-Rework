@@ -423,6 +423,13 @@ witchparty 和 allcharger模式在普通药役的基础上小僵尸再减少17-2
 - 更新 `addons/sourcemod/configs/databases.cfg`，配合全服聊天、统计、伤害显示等插件的数据库连接与重连。
 - 更新 `.gitignore`，减少无关文件进入版本管理。
 
+### 2026年5月26日更新记录
+#### 管理菜单与 RPG 回合有效性
+- `basecommands.smx` 修复管理员踢人菜单的特感 Bot 显示规则：管理员免疫等级 `<=90` 时不显示感染者 Bot，免疫等级 `>90` 时仍可显示并处理。
+- `rygive.smx` 修复 RPG 插件先于 rygive 加载时 `g_bRPG` 没有正确初始化的问题，并修正 RPG library 卸载判断，保证处死特感等功能能正确更新 RPG 回合有效性。
+- `rpg.smx` 修复 `L4D_RPG_SetGlobalValue(INDEX_VALID/INDEX_USEBUY, ...)` 只改变量但不返回成功、也不触发 forward 的问题；现在统一走 setter，并在状态变化时通知监听插件。
+- 已同步重新编译并替换 `addons/sourcemod/plugins/basecommands.smx`、`addons/sourcemod/plugins/extend/rygive.smx` 和 `addons/sourcemod/plugins/extend/rpg.smx`。
+
 ### 2026年5月20日-5月22日更新记录
 #### 大厅管理与模式加载
 - 新增 `l4d2_lobby_match_manager.smx` 和 `l4d2_vote_returnlobby_patch.smx`，把大厅人数管理和回大厅投票补丁从原有插件逻辑中拆出独立处理。
