@@ -15,128 +15,278 @@
         <div class="brand">
           <img src="./assets/anne-icon.svg" alt="" />
           <div>
-            <strong>Anne刷服器</strong>
-            <span id="configPath">配置加载中</span>
+            <strong data-i18n="appTitle">Anne刷服器</strong>
+            <span id="configPath">...</span>
           </div>
         </div>
         <nav class="nav">
-          <button class="nav-item active" data-tab="servers" type="button">服务器</button>
-          <button class="nav-item" data-tab="subscriptions" type="button">网页订阅</button>
-          <button class="nav-item" data-tab="settings" type="button">设置</button>
+          <button class="nav-item active" data-tab="servers" type="button" data-i18n="navServers">服务器</button>
+          <button class="nav-item" data-tab="globalPlayers" type="button" data-i18n="navGlobalPlayers">全服玩家</button>
+          <button class="nav-item" data-tab="broadcast" type="button" data-i18n="navBroadcast">全服消息</button>
+          <button class="nav-item" data-tab="subscriptions" type="button" data-i18n="navSubscriptions">网页订阅</button>
+          <button class="nav-item" data-tab="settings" type="button" data-i18n="navSettings">设置</button>
         </nav>
       </aside>
 
       <main class="workspace">
         <header class="topbar">
           <div>
-            <h1 id="viewTitle">服务器</h1>
-            <p id="statusLine">等待刷新</p>
+            <h1 id="viewTitle" data-i18n="navServers">服务器</h1>
+            <p id="statusLine" data-i18n="statusWaitRefresh">等待刷新</p>
           </div>
           <div class="topbar-actions">
-            <button id="refreshBtn" class="primary" type="button">刷新</button>
+            <div id="steamUserInfo" class="steam-user" style="display: none;">
+              <img id="steamAvatar" src="" alt="avatar" />
+              <span id="steamName"></span>
+            </div>
+            <button id="refreshBtn" class="primary" type="button" data-i18n="btnRefresh">刷新</button>
           </div>
         </header>
 
-        <section id="serversView" class="view active">
-          <div class="toolbar">
-            <label class="field search-field">
-              <span>搜索</span>
-              <input id="searchInput" autocomplete="off" placeholder="名称 / 地址 / 地图" />
-            </label>
-            <label class="check">
-              <input id="onlyPlayersInput" type="checkbox" />
-              <span>只看有人</span>
-            </label>
-            <label class="check">
-              <input id="hideTimeoutInput" type="checkbox" checked />
-              <span>隐藏超时</span>
-            </label>
+        <!-- Servers View -->
+        <section id="serversView" class="view active split-view">
+          <div class="servers-main">
+            <div class="toolbar">
+              <label class="field search-field">
+                <span data-i18n="searchPlaceholder">搜索</span>
+                <input id="searchInput" autocomplete="off" data-i18n="searchPlaceholder" />
+              </label>
+              <label class="check">
+                <input id="onlyPlayersInput" type="checkbox" />
+                <span data-i18n="onlyPlayers">只看有人</span>
+              </label>
+              <label class="check">
+                <input id="hideTimeoutInput" type="checkbox" checked />
+                <span data-i18n="hideTimeout">隐藏超时</span>
+              </label>
+            </div>
+
+            <div id="groupTabs" class="group-tabs"></div>
+
+            <div class="metrics">
+              <div class="metric">
+                <span data-i18n="metricServers">服务器</span>
+                <strong id="metricTotal">0</strong>
+              </div>
+              <div class="metric">
+                <span data-i18n="metricOnline">在线</span>
+                <strong id="metricOnline">0</strong>
+              </div>
+              <div class="metric">
+                <span data-i18n="metricPlayers">玩家</span>
+                <strong id="metricPlayers">0</strong>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <table id="serversTable">
+                <thead>
+                  <tr>
+                    <th class="name-col sortable" data-sort="name" data-i18n="colServerName">服务器名称</th>
+                    <th class="sortable" data-sort="address" data-i18n="colAddress">地址</th>
+                    <th class="sortable" data-sort="players" data-i18n="colPlayers">玩家</th>
+                    <th class="sortable" data-sort="ping" data-i18n="colPing">延迟</th>
+                    <th class="sortable" data-sort="map" data-i18n="colMap">地图</th>
+                    <th class="sortable" data-sort="group" data-i18n="colGroup">分组</th>
+                    <th class="action-col" data-i18n="colAction">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="serverRows"></tbody>
+              </table>
+            </div>
           </div>
-
-          <div id="groupTabs" class="group-tabs"></div>
-
-          <div class="metrics">
-            <div class="metric">
-              <span>服务器</span>
-              <strong id="metricTotal">0</strong>
+          
+          <!-- Inspector Sidebar -->
+          <aside class="inspector" id="inspectorPanel" style="display: none;">
+            <div class="inspector-header">
+              <h3 id="inspectorTitle" class="server-name">Server</h3>
+              <button id="closeInspectorBtn" class="icon-btn">×</button>
             </div>
-            <div class="metric">
-              <span>在线</span>
-              <strong id="metricOnline">0</strong>
+            <div class="inspector-tabs">
+              <button class="ins-tab active" data-ins="players" data-i18n="inspectorPlayers">玩家</button>
+              <button class="ins-tab" data-ins="rcon" data-i18n="inspectorRcon">RCON</button>
+              <button class="ins-tab" data-ins="cvar" data-i18n="inspectorCvar">参数</button>
+              <button class="ins-tab" data-ins="network" data-i18n="inspectorNetwork">网络</button>
             </div>
-            <div class="metric">
-              <span>玩家</span>
-              <strong id="metricPlayers">0</strong>
+            <div class="inspector-content">
+              <div id="insPlayers" class="ins-view active">
+                <table class="ins-table">
+                  <thead>
+                    <tr>
+                      <th data-i18n="globalPlayersColName">玩家名</th>
+                      <th data-i18n="globalPlayersColScore">得分</th>
+                      <th data-i18n="globalPlayersColTime">时长</th>
+                    </tr>
+                  </thead>
+                  <tbody id="insPlayersRows"></tbody>
+                </table>
+              </div>
+              <div id="insRcon" class="ins-view">
+                <div class="rcon-terminal" id="rconTerminal"></div>
+                <div class="rcon-input-group">
+                  <input type="password" id="rconPassword" data-i18n="rconPassword" />
+                  <input type="text" id="rconCommand" data-i18n="rconCommand" />
+                  <button id="rconSendBtn" class="primary" data-i18n="inspectorSend">发送</button>
+                </div>
+              </div>
+              <div id="insCvar" class="ins-view">
+                <table class="ins-table">
+                  <thead>
+                    <tr>
+                      <th data-i18n="cvarName">名称</th>
+                      <th data-i18n="cvarValue">值</th>
+                    </tr>
+                  </thead>
+                  <tbody id="insCvarRows"></tbody>
+                </table>
+              </div>
+              <div id="insNetwork" class="ins-view">
+                <div class="network-info">
+                  <div class="field">
+                    <span data-i18n="networkIp">IP</span>
+                    <strong id="netIp">-</strong>
+                  </div>
+                  <div class="field">
+                    <span data-i18n="networkCountry">国家/地区</span>
+                    <strong id="netCountry">-</strong>
+                  </div>
+                  <div class="field">
+                    <span data-i18n="networkIsp">运营商</span>
+                    <strong id="netIsp">-</strong>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          </aside>
+        </section>
 
+        <!-- Global Players View -->
+        <section id="globalPlayersView" class="view">
+          <h2 data-i18n="globalPlayersTitle">全服在线玩家</h2>
           <div class="table-wrap">
             <table>
               <thead>
                 <tr>
-                  <th class="name-col">服务器名称</th>
-                  <th>地址</th>
-                  <th>玩家</th>
-                  <th>延迟</th>
-                  <th>地图</th>
-                  <th>分组</th>
-                  <th class="action-col">操作</th>
+                  <th data-i18n="globalPlayersColName">玩家名</th>
+                  <th data-i18n="globalPlayersColServer">所在服务器</th>
+                  <th data-i18n="globalPlayersColScore">得分</th>
+                  <th data-i18n="globalPlayersColTime">时长</th>
+                  <th data-i18n="globalPlayersColPoints">Anne积分</th>
                 </tr>
               </thead>
-              <tbody id="serverRows"></tbody>
+              <tbody id="globalPlayerRows"></tbody>
             </table>
           </div>
         </section>
 
+        <!-- Broadcast View -->
+        <section id="broadcastView" class="view">
+          <div class="panel">
+            <h2 data-i18n="broadcastTitle">全服消息</h2>
+            <div class="broadcast-form">
+              <textarea id="broadcastInput" data-i18n="broadcastInput" placeholder="输入要发送的全体消息..."></textarea>
+              <button id="broadcastSendBtn" class="primary" data-i18n="broadcastBtnSend">发送广播</button>
+            </div>
+          </div>
+          <div class="table-wrap mt-14">
+            <table>
+              <thead>
+                <tr>
+                  <th data-i18n="broadcastColTime">时间</th>
+                  <th data-i18n="broadcastColSender">发送人</th>
+                  <th data-i18n="broadcastColMessage">消息内容</th>
+                </tr>
+              </thead>
+              <tbody id="broadcastRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Subscriptions View -->
         <section id="subscriptionsView" class="view">
           <div class="split">
             <section class="panel">
               <div class="panel-head">
-                <h2>网页订阅</h2>
-                <button id="newSubscriptionBtn" type="button">新建</button>
+                <h2 data-i18n="navSubscriptions">网页订阅</h2>
+                <button id="newSubscriptionBtn" type="button" data-i18n="btnNew">新建</button>
               </div>
               <div id="subscriptionList" class="list"></div>
             </section>
 
             <section class="panel editor-panel">
-              <h2 id="subscriptionEditorTitle">新建订阅</h2>
+              <h2 id="subscriptionEditorTitle" data-i18n="btnNew">新建订阅</h2>
               <div class="form-grid">
                 <label class="field">
-                  <span>订阅名称</span>
+                  <span data-i18n="subscriptionName">订阅名称</span>
                   <input id="subscriptionNameInput" autocomplete="off" />
                 </label>
                 <label class="field">
-                  <span>页面 URL</span>
+                  <span data-i18n="subscriptionUrl">页面 URL</span>
                   <input id="subscriptionUrlInput" autocomplete="off" />
                 </label>
                 <label class="field wide">
-                  <span>HTML / 文本</span>
+                  <span data-i18n="subscriptionText">HTML / 文本</span>
                   <textarea id="subscriptionTextInput" spellcheck="false"></textarea>
                 </label>
               </div>
               <div class="form-actions">
-                <button id="saveSubscriptionBtn" class="primary" type="button">保存</button>
-                <button id="deleteSubscriptionBtn" class="danger" type="button">删除</button>
+                <button id="saveSubscriptionBtn" class="primary" type="button" data-i18n="btnSave">保存</button>
+                <button id="deleteSubscriptionBtn" class="danger" type="button" data-i18n="btnDelete">删除</button>
               </div>
             </section>
           </div>
         </section>
 
+        <!-- Settings View -->
         <section id="settingsView" class="view">
           <section class="panel settings-panel">
-            <h2>手动服务器</h2>
+            <h2 data-i18n="settingsManualServers">手动服务器</h2>
             <div class="inline-form">
               <label class="field">
-                <span>分组</span>
+                <span data-i18n="groupManual">分组</span>
                 <input id="manualGroupInput" autocomplete="off" value="电信服刷服器" />
               </label>
               <label class="field">
-                <span>地址</span>
+                <span data-i18n="addressManual">地址</span>
                 <input id="manualServerInput" autocomplete="off" placeholder="45.125.45.95:28001" />
               </label>
-              <button id="addManualBtn" class="primary" type="button">添加</button>
+              <button id="addManualBtn" class="primary" type="button" data-i18n="btnAdd">添加</button>
             </div>
-            <div id="manualList" class="manual-list"></div>
+            <div id="manualList" class="manual-list mt-14"></div>
+          </section>
+
+          <section class="panel settings-panel mt-14">
+            <h2 data-i18n="settingsApi">API 设置 & Steam 登录</h2>
+            <div class="form-grid">
+              <label class="field wide">
+                <span data-i18n="apiBaseUrlLabel">API Base URL</span>
+                <input id="apiBaseUrlInput" autocomplete="off" placeholder="https://api.example.com" />
+              </label>
+            </div>
+            <div class="form-actions mt-14">
+              <button id="steamLoginBtn" type="button" data-i18n="settingsSteamLogin">Steam 登录</button>
+              <button id="steamLogoutBtn" type="button" class="danger" data-i18n="settingsSteamLogout" style="display: none;">退出登录</button>
+              <span id="apiStatusMessage"></span>
+            </div>
+            <!-- Login Modal Container -->
+            <div id="steamLoginModal" class="login-modal" style="display: none;">
+              <p data-i18n="loginModalTitle">请在浏览器中打开以下链接，并输入代码：</p>
+              <a id="steamLoginUrl" href="#" target="_blank"></a>
+              <h3 id="steamLoginCode" class="mono"></h3>
+              <p data-i18n="loginModalWaiting">等待授权中...</p>
+            </div>
+          </section>
+
+          <section class="panel settings-panel mt-14">
+            <h2 data-i18n="settingsLanguage">语言 / 其它设置</h2>
+            <div class="inline-form">
+              <select id="languageSelect">
+                <option value="zh_CN">简体中文</option>
+                <option value="en_US">English</option>
+              </select>
+              <button id="checkUpdateBtn" type="button" data-i18n="settingsUpdate">检查更新</button>
+              <span id="updateStatusMessage"></span>
+            </div>
           </section>
         </section>
       </main>

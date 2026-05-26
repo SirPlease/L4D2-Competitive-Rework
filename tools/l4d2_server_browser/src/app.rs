@@ -2668,6 +2668,370 @@ fn tauri_server_summary(rows: &[TauriServerRow]) -> TauriServerSummary {
     }
 }
 
+// ── New Tauri public API ──────────────────────────────────────────────────────
+
+#[derive(Clone, Serialize)]
+pub struct TauriPlayerInfo {
+    pub name: String,
+    pub score: i32,
+    pub duration_secs: f32,
+    pub points: Option<i32>,
+    pub playtime_mins: Option<i32>,
+    pub ppm: Option<f32>,
+}
+
+#[derive(Clone, Deserialize)]
+pub struct TauriRconRequest {
+    pub config_path: Option<String>,
+    pub address: String,
+    pub password: String,
+    pub command: String,
+    pub timeout_ms: Option<u64>,
+}
+
+#[derive(Clone, Serialize)]
+pub struct TauriCvarEntry {
+    pub name: String,
+    pub value: String,
+}
+
+#[derive(Clone, Deserialize)]
+pub struct TauriCvarRequest {
+    pub config_path: Option<String>,
+    pub address: String,
+    pub password: Option<String>,
+    pub names: Option<Vec<String>>,
+    pub timeout_ms: Option<u64>,
+}
+
+#[derive(Clone, Serialize)]
+pub struct TauriNetworkInfo {
+    pub address: String,
+    pub ip: String,
+    pub country: String,
+    pub region: String,
+    pub city: String,
+    pub isp: String,
+    pub org: String,
+    pub asn: String,
+}
+
+#[derive(Clone, Serialize)]
+pub struct TauriUpdateInfo {
+    pub latest_version: String,
+    pub html_url: String,
+    pub available: bool,
+    pub current_version: String,
+}
+
+#[derive(Clone, Serialize)]
+pub struct TauriApiUser {
+    pub steam_id: String,
+    pub steam_name: String,
+    pub avatar: String,
+    pub is_admin: bool,
+}
+
+#[derive(Clone, Serialize)]
+pub struct TauriLoginStart {
+    pub user_code: String,
+    pub verification_url: String,
+    pub expires_in: u64,
+    pub interval: u64,
+    pub device_code: String,
+}
+
+#[derive(Clone, Deserialize)]
+pub struct TauriLoginPollRequest {
+    pub base_url: String,
+    pub device_code: String,
+}
+
+#[derive(Clone, Serialize)]
+pub struct TauriLoginResult {
+    pub token: String,
+    pub steam_name: String,
+    pub steam_id: String,
+    pub avatar: String,
+    pub is_admin: bool,
+}
+
+#[derive(Clone, Serialize)]
+pub struct TauriGlobalPlayer {
+    pub name: String,
+    pub server_name: String,
+    pub server_address: String,
+    pub score: i32,
+    pub duration_secs: f32,
+    pub points: Option<i32>,
+    pub playtime_mins: Option<i32>,
+    pub ppm: Option<f32>,
+}
+
+#[derive(Clone, Serialize)]
+pub struct TauriBroadcastMessage {
+    pub id: u64,
+    pub message: String,
+    pub sender_name: String,
+    pub sent_at: String,
+}
+
+#[derive(Clone, Deserialize)]
+pub struct TauriBroadcastRequest {
+    pub base_url: String,
+    pub token: String,
+    pub message: String,
+}
+
+#[derive(Clone, Deserialize)]
+pub struct TauriSaveApiConfigRequest {
+    pub config_path: Option<String>,
+    pub base_url: String,
+    pub token: Option<String>,
+}
+
+#[derive(Clone, Deserialize)]
+pub struct TauriDeleteManualServerRequest {
+    pub config_path: Option<String>,
+    pub group: String,
+    pub server: String,
+}
+
+pub fn tauri_delete_manual_server(req: TauriDeleteManualServerRequest) -> Result<TauriConfigLists, String> {
+    let path = tauri_path(req.config_path.clone());
+    delete_server_from_config(&path, &req.group, &req.server)?;
+    load_tauri_config_lists(req.config_path)
+}
+
+pub fn tauri_query_players(_config_path: Option<String>, address: String) -> Result<Vec<TauriPlayerInfo>, String> {
+    let endpoint = resolve_endpoint(&address)?;
+    let timeout = Duration::from_millis(2500);
+    let players = query_server_players(endpoint.socket, timeout)?;
+    Ok(players
+        .into_iter()
+        .map(|p| TauriPlayerInfo {
+            name: p.name,
+            score: p.score,
+            duration_secs: p.duration,
+            points: p.points,
+            playtime_mins: p.playtime_mins,
+            ppm: p.ppm,
+        })
+        .collect())
+}
+
+pub fn tauri_run_rcon(req: TauriRconRequest) -> Result<String, String> {
+    let timeout = Duration::from_millis(req.timeout_ms.unwrap_or(5000).max(500));
+    rcon_command(&req.address, &req.password, &req.command, timeout)
+}
+
+pub fn tauri_read_cvars(req: TauriCvarRequest) -> Result<Vec<TauriCvarEntry>, String> {
+    let payload = read_cvars(CvarRequest {
+        address: req.address,
+        password: req.password,
+        names: req.names,
+        timeout_ms: req.timeout_ms,
+    })?;
+    Ok(payload
+        .values
+        .into_iter()
+        .map(|(name, value)| TauriCvarEntry { name, value })
+        .collect())
+}
+
+pub fn tauri_fetch_network_info(address: String, ip: String) -> Result<TauriNetworkInfo, String> {
+    let info = fetch_server_network_info(&address, &ip)?;
+    Ok(TauriNetworkInfo {
+        address: info.address,
+        ip: info.ip,
+        country: info.country,
+        region: info.region,
+        city: info.city,
+        isp: info.isp,
+        org: info.org,
+        asn: info.asn,
+    })
+}
+
+pub fn tauri_check_update() -> Result<TauriUpdateInfo, String> {
+    let info = check_latest_release()?;
+    Ok(TauriUpdateInfo {
+        latest_version: info.latest_version,
+        html_url: info.html_url,
+        available: info.available,
+        current_version: env!("CARGO_PKG_VERSION").to_owned(),
+    })
+}
+
+pub fn tauri_api_me(base_url: String, token: String) -> Result<TauriApiUser, String> {
+    let user = api_me(&base_url, &token)?;
+    Ok(TauriApiUser {
+        steam_id: user.steam_id,
+        steam_name: user.name,
+        avatar: user.avatar,
+        is_admin: user.is_admin,
+    })
+}
+
+pub fn tauri_steam_login_start(base_url: String) -> Result<TauriLoginStart, String> {
+    let client = api_client(Duration::from_secs(10))?;
+    let start_url = api_url(&base_url, "/api/auth/device_start.php")?;
+    let start: DeviceStartResponse = response_json(
+        client
+            .post(start_url)
+            .json(&serde_json::json!({}))
+            .send()
+            .map_err(|err| format!("failed to start Steam login: {err}"))?,
+    )?;
+    if !start.ok {
+        return Err("Steam login start failed".to_owned());
+    }
+    Ok(TauriLoginStart {
+        user_code: start.user_code,
+        verification_url: start.verification_url,
+        expires_in: start.expires_in,
+        interval: start.interval,
+        device_code: start.device_code,
+    })
+}
+
+pub fn tauri_steam_login_poll(req: TauriLoginPollRequest) -> Result<Option<TauriLoginResult>, String> {
+    let client = api_client(Duration::from_secs(15))?;
+    let poll_url = api_url(&req.base_url, "/api/auth/device_poll.php")?;
+    let response: DevicePollResponse = response_json(
+        client
+            .post(poll_url)
+            .json(&serde_json::json!({ "device_code": req.device_code }))
+            .send()
+            .map_err(|err| format!("failed to poll Steam login: {err}"))?,
+    )?;
+
+    if response.ok {
+        let token = response
+            .access_token
+            .ok_or_else(|| "API did not return access token".to_owned())?;
+        let user = response
+            .user
+            .ok_or_else(|| "API did not return Steam user".to_owned())?;
+        return Ok(Some(TauriLoginResult {
+            token,
+            steam_name: user.name,
+            steam_id: user.steam_id,
+            avatar: user.avatar,
+            is_admin: user.is_admin,
+        }));
+    }
+
+    if response.error.as_deref() == Some("authorization_pending")
+        || response.status.as_deref() == Some("authorization_pending")
+    {
+        return Ok(None);
+    }
+
+    Err(response
+        .message
+        .or(response.error)
+        .unwrap_or_else(|| "Steam login failed".to_owned()))
+}
+
+pub fn tauri_api_logout(base_url: String, token: String) -> Result<(), String> {
+    api_logout(&base_url, &token)
+}
+
+pub fn tauri_send_broadcast(req: TauriBroadcastRequest) -> Result<String, String> {
+    let result = api_broadcast(BroadcastRequest {
+        base_url: req.base_url,
+        token: req.token,
+        message: req.message,
+    })?;
+    Ok(result.message.unwrap_or_else(|| "已发送".to_owned()))
+}
+
+pub fn tauri_load_broadcast_history(base_url: String, token: String) -> Result<Vec<TauriBroadcastMessage>, String> {
+    let messages = api_broadcast_history(BroadcastHistoryRequest {
+        base_url,
+        token,
+    })?;
+    Ok(messages
+        .into_iter()
+        .map(|m| TauriBroadcastMessage {
+            id: m.id,
+            message: m.message,
+            sender_name: m.name,
+            sent_at: m.created_at,
+        })
+        .collect())
+}
+
+pub fn tauri_load_global_players(base_url: String, _token: String, config_path: Option<String>) -> Result<Vec<TauriGlobalPlayer>, String> {
+    let path = tauri_path(config_path);
+    let config = load_config_or_default(&path)?;
+    let mut settings = RuntimeSettings::default();
+    settings.apply_file_master(config.master.clone())?;
+    settings.limit = 500;
+    settings.sort = SortKey::Players;
+
+    let manual_groups = config
+        .groups
+        .clone()
+        .into_iter()
+        .filter_map(|group| ManualGroup::try_from(group).ok())
+        .collect::<Vec<_>>();
+    let subscriptions = config
+        .sourcebans
+        .clone()
+        .into_iter()
+        .filter_map(|subscription| SourceBansSubscription::try_from(subscription).ok())
+        .collect::<Vec<_>>();
+
+    let rows = load_server_rows(&settings, &manual_groups, &subscriptions)?;
+    let timeout = Duration::from_millis(2500);
+    let api_base = if base_url.trim().is_empty() { config.api.base_url.clone() } else { base_url.clone() };
+
+    let stats = if !api_base.is_empty() {
+        fetch_online_player_stats(&api_base).unwrap_or_default()
+    } else {
+        HashMap::new()
+    };
+
+    let mut result = Vec::new();
+    for row in &rows {
+        if row.info.is_none() { continue; }
+        let server_name = row.info.as_ref().map(|i| i.name.clone()).unwrap_or_default();
+        let server_address = row.endpoint.display.clone();
+        let socket = row.endpoint.socket;
+        match query_server_players(socket, timeout) {
+            Ok(players) => {
+                for mut p in players {
+                    apply_player_stats(&mut p, &stats);
+                    result.push(TauriGlobalPlayer {
+                        name: p.name,
+                        server_name: server_name.clone(),
+                        server_address: server_address.clone(),
+                        score: p.score,
+                        duration_secs: p.duration,
+                        points: p.points,
+                        playtime_mins: p.playtime_mins,
+                        ppm: p.ppm,
+                    });
+                }
+            }
+            Err(_) => continue,
+        }
+    }
+    result.sort_by(|a, b| b.score.cmp(&a.score));
+    Ok(result)
+}
+
+pub fn tauri_save_api_config(req: TauriSaveApiConfigRequest) -> Result<(), String> {
+    let path = tauri_path(req.config_path);
+    save_api_config_to_config(
+        &path,
+        &req.base_url,
+        req.token.as_deref(),
+    )
+}
+
 #[derive(Clone)]
 struct UpdateInfo {
     latest_version: String,
