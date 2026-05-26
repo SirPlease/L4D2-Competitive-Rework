@@ -1,4 +1,4 @@
-# 电信服刷服器
+# Anne刷服器
 
 一个用 Rust 编写的求生之路 2 刷服/查服工具，默认打开原生 GUI，也保留命令行查询模式。它可以从 Steam Master Server、手动分组和网页订阅链接收集服务器地址，再对每个服务器发送 `A2S_INFO` 查询，输出分组、服务器名、地图、人数、延迟、VAC、标签等信息。
 
@@ -7,16 +7,16 @@
 直接启动 GUI：
 
 ```bash
-./l4d2-server-browser
+./Anne刷服器
 ```
 
-Windows 下双击 `l4d2-server-browser.exe` 会直接打开原生 GUI，release 版不会额外弹出控制台窗口。macOS 下载包里会包含 `电信服刷服器.app`，双击 `.app` 即可使用。
+Windows 下双击 `Anne刷服器.exe` 会直接打开原生 GUI，release 版不会额外弹出控制台窗口。macOS 下载包里会包含 `Anne刷服器.app`，双击 `.app` 即可使用。
 
 GUI 没有传 `--config` 时，会把配置写到用户配置目录：
 
-- macOS: `~/Library/Application Support/L4D2 Server Browser/l4d2-browser.toml`
-- Linux: `~/.config/l4d2-server-browser/l4d2-browser.toml`
-- Windows: `%APPDATA%\L4D2 Server Browser\l4d2-browser.toml`
+- macOS: `~/Library/Application Support/Anne刷服器/anne-server-browser.toml`
+- Linux: `~/.config/anne-server-browser/anne-server-browser.toml`
+- Windows: `%APPDATA%\Anne刷服器\anne-server-browser.toml`
 
 命令行查询模式需要显式传参数，例如：
 
@@ -157,9 +157,9 @@ RCON 使用 Source RCON TCP 协议。读取 CVAR 有两种方式：
 - `aarch64-apple-darwin`
 - `x86_64-pc-windows-msvc`
 
-手动运行 workflow 可以下载构建产物。推送 `l4d2-browser-v*` tag 时会自动创建 GitHub Release。
+手动运行 workflow 可以下载构建产物。推送 `Anne刷服器-v*` tag 时会自动创建 GitHub Release。
 
-macOS 压缩包会同时包含命令行二进制和 `电信服刷服器.app`；普通使用直接打开 `.app`。Windows 压缩包里的 `.exe` 默认就是 GUI 程序。
+macOS 压缩包会同时包含命令行二进制和 `Anne刷服器.app`；普通使用直接打开 `.app`。Windows 压缩包里的 `.exe` 默认就是 GUI 程序。
 
 ## Notes
 

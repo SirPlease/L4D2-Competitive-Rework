@@ -24,8 +24,9 @@ use std::time::{Duration, Instant};
 const DEFAULT_MASTER: &str = "hl2master.steampowered.com:27011";
 const DEFAULT_FILTER: &str = "\\appid\\550";
 const DEFAULT_MASTER_GROUP: &str = "Steam Master";
-const DEFAULT_CONFIG_FILE: &str = "l4d2-browser.toml";
-const USER_AGENT: &str = "l4d2-server-browser/0.4";
+const APP_NAME: &str = "Anne刷服器";
+const DEFAULT_CONFIG_FILE: &str = "anne-server-browser.toml";
+const USER_AGENT: &str = "AnneServerBrowser/0.7";
 const UPDATE_REPO: &str = "fantasylidong/CompetitiveWithAnne";
 const UPDATE_TAG_PREFIX: &str = "Anne刷服器-v";
 const DEFAULT_API_BASE_URL: &str = "https://anne.trygek.com";
@@ -63,50 +64,67 @@ fn default_gui_config_path() -> PathBuf {
     #[cfg(target_os = "windows")]
     {
         if let Some(appdata) = env::var_os("APPDATA") {
-            return PathBuf::from(appdata)
-                .join("L4D2 Server Browser")
-                .join(DEFAULT_CONFIG_FILE);
+            let base = PathBuf::from(appdata);
+            return existing_or_new_config_path(
+                base.join(APP_NAME).join(DEFAULT_CONFIG_FILE),
+                base.join("L4D2 Server Browser").join("l4d2-browser.toml"),
+            );
         }
         if let Some(profile) = env::var_os("USERPROFILE") {
-            return PathBuf::from(profile)
+            let base = PathBuf::from(profile)
                 .join("AppData")
-                .join("Roaming")
-                .join("L4D2 Server Browser")
-                .join(DEFAULT_CONFIG_FILE);
+                .join("Roaming");
+            return existing_or_new_config_path(
+                base.join(APP_NAME).join(DEFAULT_CONFIG_FILE),
+                base.join("L4D2 Server Browser").join("l4d2-browser.toml"),
+            );
         }
     }
 
     #[cfg(target_os = "macos")]
     {
         if let Some(home) = env::var_os("HOME") {
-            return PathBuf::from(home)
+            let base = PathBuf::from(home)
                 .join("Library")
-                .join("Application Support")
-                .join("L4D2 Server Browser")
-                .join(DEFAULT_CONFIG_FILE);
+                .join("Application Support");
+            return existing_or_new_config_path(
+                base.join(APP_NAME).join(DEFAULT_CONFIG_FILE),
+                base.join("L4D2 Server Browser").join("l4d2-browser.toml"),
+            );
         }
     }
 
     #[cfg(all(unix, not(target_os = "macos")))]
     {
         if let Some(xdg_config_home) = env::var_os("XDG_CONFIG_HOME") {
-            return PathBuf::from(xdg_config_home)
-                .join("l4d2-server-browser")
-                .join(DEFAULT_CONFIG_FILE);
+            let base = PathBuf::from(xdg_config_home);
+            return existing_or_new_config_path(
+                base.join("anne-server-browser").join(DEFAULT_CONFIG_FILE),
+                base.join("l4d2-server-browser").join("l4d2-browser.toml"),
+            );
         }
         if let Some(home) = env::var_os("HOME") {
-            return PathBuf::from(home)
-                .join(".config")
-                .join("l4d2-server-browser")
-                .join(DEFAULT_CONFIG_FILE);
+            let base = PathBuf::from(home).join(".config");
+            return existing_or_new_config_path(
+                base.join("anne-server-browser").join(DEFAULT_CONFIG_FILE),
+                base.join("l4d2-server-browser").join("l4d2-browser.toml"),
+            );
         }
     }
 
     PathBuf::from(DEFAULT_CONFIG_FILE)
 }
 
+fn existing_or_new_config_path(new_path: PathBuf, old_path: PathBuf) -> PathBuf {
+    if !new_path.exists() && old_path.exists() {
+        old_path
+    } else {
+        new_path
+    }
+}
+
 #[derive(Parser, Debug, Clone)]
-#[command(name = "l4d2-server-browser")]
+#[command(name = "Anne刷服器")]
 #[command(about = "Left 4 Dead 2 server browser with groups and web page subscriptions.")]
 struct Cli {
     #[arg(long)]
@@ -531,7 +549,7 @@ impl GuiLanguage {
     fn text(self, key: TextKey) -> &'static str {
         match self {
             Self::ZhCn => match key {
-                TextKey::AppTitle => "Anne刷服器",
+                TextKey::AppTitle => APP_NAME,
                 TextKey::RefreshServers => "刷新服务器",
                 TextKey::Language => "语言",
                 TextKey::AddServer => "添加服务器",
@@ -614,7 +632,7 @@ impl GuiLanguage {
                 TextKey::RefreshHistory => "刷新历史",
             },
             Self::EnUs => match key {
-                TextKey::AppTitle => "Anne Server Browser",
+                TextKey::AppTitle => APP_NAME,
                 TextKey::RefreshServers => "Refresh servers",
                 TextKey::Language => "Language",
                 TextKey::AddServer => "Add server",
@@ -7469,9 +7487,9 @@ mod tests {
 
     #[test]
     fn compares_release_versions() {
-        assert_eq!(release_tag_version("l4d2-browser-v0.5.1"), "0.5.1");
+        assert_eq!(release_tag_version("Anne刷服器-v0.5.1"), "0.5.1");
         assert_eq!(release_tag_version("v0.5.0"), "0.5.0");
-        assert!(is_update_release_tag("l4d2-browser-v0.5.0"));
+        assert!(is_update_release_tag("Anne刷服器-v0.5.0"));
         assert!(is_update_release_tag("v0.5.0"));
         assert!(is_update_release_tag("0.5.0"));
         assert!(!is_update_release_tag("CompetitiveWithAnne-stable-release-2026-05-09"));

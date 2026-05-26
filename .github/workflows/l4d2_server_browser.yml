@@ -1,4 +1,4 @@
-name: Build L4D2 server browser
+name: Build Anne刷服器
 
 on:
   pull_request:
@@ -12,11 +12,11 @@ on:
       - 'tools/l4d2_server_browser/**'
       - '.github/workflows/l4d2_server_browser.yml'
     tags:
-      - 'l4d2-browser-v*'
+      - 'Anne刷服器-v*'
   workflow_dispatch:
     inputs:
       release_tag:
-        description: 'Optional release tag, for example l4d2-browser-v0.4.0. Leave empty to only upload artifacts.'
+        description: 'Optional release tag, for example Anne刷服器-v0.7.0. Leave empty to only upload artifacts.'
         required: false
         type: string
 
@@ -36,22 +36,22 @@ jobs:
           - name: linux-x86_64
             os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-            binary: 电信服刷服器
+            binary: Anne刷服器
             archive: tar.gz
           - name: macos-x86_64
             os: macos-latest
             target: x86_64-apple-darwin
-            binary: 电信服刷服器
+            binary: Anne刷服器
             archive: tar.gz
           - name: macos-aarch64
             os: macos-latest
             target: aarch64-apple-darwin
-            binary: 电信服刷服器
+            binary: Anne刷服器
             archive: tar.gz
           - name: windows-x86_64
             os: windows-latest
             target: x86_64-pc-windows-msvc
-            binary: 电信服刷服器.exe
+            binary: Anne刷服器.exe
             archive: zip
 
     steps:
@@ -86,17 +86,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          DIST="l4d2-server-browser-${{ matrix.target }}"
+          DIST="Anne刷服器-${{ matrix.target }}"
           BIN="target/${{ matrix.target }}/release/${{ matrix.binary }}"
           mkdir -p "$DIST"
           cp "$BIN" "$DIST/"
           cp tools/l4d2_server_browser/README.md "$DIST/"
           cp tools/l4d2_server_browser/browser.example.toml "$DIST/"
           if [[ "${{ runner.os }}" == "macOS" ]]; then
-            APP="$DIST/电信服刷服器.app"
+            APP="$DIST/Anne刷服器.app"
             mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
-            cp "$BIN" "$APP/Contents/MacOS/l4d2-server-browser"
-            chmod +x "$APP/Contents/MacOS/l4d2-server-browser"
+            cp "$BIN" "$APP/Contents/MacOS/Anne刷服器"
+            chmod +x "$APP/Contents/MacOS/Anne刷服器"
             cat > "$APP/Contents/Info.plist" <<'PLIST'
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -105,21 +105,23 @@ jobs:
             <key>CFBundleDevelopmentRegion</key>
             <string>en</string>
             <key>CFBundleDisplayName</key>
-            <string>电信服刷服器</string>
+            <string>Anne刷服器</string>
             <key>CFBundleExecutable</key>
-            <string>l4d2-server-browser</string>
+            <string>Anne刷服器</string>
+            <key>CFBundleIconFile</key>
+            <string>Anne刷服器</string>
             <key>CFBundleIdentifier</key>
-            <string>io.github.competitivewithanne.l4d2-server-browser</string>
+            <string>io.github.competitivewithanne.anne-server-browser</string>
             <key>CFBundleInfoDictionaryVersion</key>
             <string>6.0</string>
             <key>CFBundleName</key>
-            <string>电信服刷服器</string>
+            <string>Anne刷服器</string>
             <key>CFBundlePackageType</key>
             <string>APPL</string>
             <key>CFBundleShortVersionString</key>
-            <string>0.4.0</string>
+            <string>0.7.0</string>
             <key>CFBundleVersion</key>
-            <string>0.4.0</string>
+            <string>0.7.0</string>
             <key>LSMinimumSystemVersion</key>
             <string>10.15</string>
             <key>NSHighResolutionCapable</key>
@@ -127,32 +129,116 @@ jobs:
           </dict>
           </plist>
           PLIST
+            ICONSET="$APP/Contents/Resources/Anne刷服器.iconset"
+            mkdir -p "$ICONSET"
+            python3 - "$ICONSET" <<'PY'
+          import pathlib
+          import struct
+          import sys
+          import zlib
+
+          def chunk(kind, data):
+              return (
+                  struct.pack(">I", len(data))
+                  + kind
+                  + data
+                  + struct.pack(">I", zlib.crc32(kind + data) & 0xFFFFFFFF)
+              )
+
+          def write_png(path, size):
+              rows = []
+              radius = size * 0.18
+              for y in range(size):
+                  row = bytearray([0])
+                  for x in range(size):
+                      px = x + 0.5
+                      py = y + 0.5
+                      cx = min(max(px, radius), size - radius)
+                      cy = min(max(py, radius), size - radius)
+                      inside = (px - cx) ** 2 + (py - cy) ** 2 <= radius ** 2
+                      if not inside:
+                          row.extend((0, 0, 0, 0))
+                          continue
+
+                      fx = px / size
+                      fy = py / size
+                      bg_r = int(37 + (29 - 37) * fy)
+                      bg_g = int(99 + (78 - 99) * fy)
+                      bg_b = int(235 + (216 - 235) * fy)
+
+                      stroke_w = max(size * 0.045, 1.5)
+                      half_w = stroke_w / size
+                      apex_x, apex_y = 0.50, 0.18
+                      base_y = 0.82
+                      base_left, base_right = 0.22, 0.78
+                      bar_y = 0.58
+
+                      leg_t = (fy - apex_y) / (base_y - apex_y) if apex_y <= fy <= base_y else -1.0
+                      left_leg = apex_x + (base_left - apex_x) * leg_t
+                      right_leg = apex_x + (base_right - apex_x) * leg_t
+                      on_left_leg = leg_t >= 0.0 and abs(fx - left_leg) < half_w
+                      on_right_leg = leg_t >= 0.0 and abs(fx - right_leg) < half_w
+
+                      bar_t = (bar_y - apex_y) / (base_y - apex_y)
+                      bar_left = apex_x + (base_left - apex_x) * bar_t
+                      bar_right = apex_x + (base_right - apex_x) * bar_t
+                      on_bar = abs(fy - bar_y) < half_w and bar_left <= fx <= bar_right
+
+                      row.extend((255, 255, 255, 255) if on_left_leg or on_right_leg or on_bar else (bg_r, bg_g, bg_b, 255))
+                  rows.append(bytes(row))
+
+              raw = b"".join(rows)
+              png = (
+                  b"\x89PNG\r\n\x1a\n"
+                  + chunk(b"IHDR", struct.pack(">IIBBBBB", size, size, 8, 6, 0, 0, 0))
+                  + chunk(b"IDAT", zlib.compress(raw, 9))
+                  + chunk(b"IEND", b"")
+              )
+              pathlib.Path(path).write_bytes(png)
+
+          iconset = pathlib.Path(sys.argv[1])
+          for name, size in [
+              ("icon_16x16.png", 16),
+              ("icon_16x16@2x.png", 32),
+              ("icon_32x32.png", 32),
+              ("icon_32x32@2x.png", 64),
+              ("icon_128x128.png", 128),
+              ("icon_128x128@2x.png", 256),
+              ("icon_256x256.png", 256),
+              ("icon_256x256@2x.png", 512),
+              ("icon_512x512.png", 512),
+              ("icon_512x512@2x.png", 1024),
+          ]:
+              write_png(iconset / name, size)
+          PY
+            iconutil -c icns "$ICONSET" -o "$APP/Contents/Resources/Anne刷服器.icns"
+            rm -rf "$ICONSET"
           fi
 
       - name: Archive tar.gz
         if: matrix.archive == 'tar.gz'
         shell: bash
-        run: tar -czf "l4d2-server-browser-${{ matrix.target }}.tar.gz" "l4d2-server-browser-${{ matrix.target }}"
+        run: tar -czf "Anne刷服器-${{ matrix.target }}.tar.gz" "Anne刷服器-${{ matrix.target }}"
 
       - name: Archive zip
         if: matrix.archive == 'zip'
         shell: pwsh
-        run: Compress-Archive -Path "l4d2-server-browser-${{ matrix.target }}" -DestinationPath "l4d2-server-browser-${{ matrix.target }}.zip"
+        run: Compress-Archive -Path "Anne刷服器-${{ matrix.target }}" -DestinationPath "Anne刷服器-${{ matrix.target }}.zip"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: l4d2-server-browser-${{ matrix.target }}
+          name: Anne刷服器-${{ matrix.target }}
           path: |
-            l4d2-server-browser-${{ matrix.target }}.tar.gz
-            l4d2-server-browser-${{ matrix.target }}.zip
+            Anne刷服器-${{ matrix.target }}.tar.gz
+            Anne刷服器-${{ matrix.target }}.zip
           if-no-files-found: ignore
 
   release:
     name: Publish release
     needs: build
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/l4d2-browser-v') || (github.event_name == 'workflow_dispatch' && inputs.release_tag != '')
+    if: startsWith(github.ref, 'refs/tags/Anne刷服器-v') || (github.event_name == 'workflow_dispatch' && inputs.release_tag != '')
     permissions:
       contents: write
 
