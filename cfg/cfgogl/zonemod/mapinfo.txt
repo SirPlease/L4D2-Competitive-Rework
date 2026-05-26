@@ -2989,7 +2989,7 @@
 	{
 		"ItemLimits"
 		{
-			"pain_pills"	"4"
+			"pain_pills"	"6"
 		}
 	}
 	
