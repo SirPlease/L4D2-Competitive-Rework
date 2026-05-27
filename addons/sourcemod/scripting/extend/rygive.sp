@@ -1615,7 +1615,7 @@ void SlayAllSI(int client) {
 		if (IsClientInGame(i) && GetClientTeam(i) == 3 && IsPlayerAlive(i))
 			ForcePlayerSuicide(i);
 	}
-	if(g_bRPG) L4D_RPG_SetGlobalValue(INDEX_VALID, false);
+	InvalidateRpgRoundForRygive("\x01管理员使用rygive处死特感，导致此局无效");
 	Miscell(client, g_iSelection[client]);
 }
 
@@ -2161,11 +2161,15 @@ void UpdateRpgRoundForRygiveItems() {
 }
 
 void InvalidateRpgRoundForRygiveItems() {
+	InvalidateRpgRoundForRygive("\x01管理员使用rygive刷物品，此局将无法再获得特感分和任何过关分数");
+}
+
+void InvalidateRpgRoundForRygive(const char[] message) {
 	if (!g_bRPG || !L4D_RPG_GetGlobalValue(INDEX_VALID))
 		return;
 
 	L4D_RPG_SetGlobalValue(INDEX_VALID, false);
-	PrintToChatAll("\x01管理员使用rygive刷物品，此局将无法再获得特感分和任何过关分数");
+	PrintToChatAll("%s", message);
 }
 
 int GetAnneModeForRygive() {

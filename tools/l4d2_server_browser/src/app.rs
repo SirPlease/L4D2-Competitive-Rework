@@ -233,7 +233,7 @@ impl Default for RuntimeSettings {
             limit: 100,
             jobs: 32,
             master_timeout: Duration::from_millis(2500),
-            server_timeout: Duration::from_millis(800),
+            server_timeout: Duration::from_millis(1500),
             http_timeout: Duration::from_millis(10_000),
             sort: SortKey::Players,
             min_players: None,
@@ -425,6 +425,38 @@ fn load_server_rows(
     Ok(rows)
 }
 
+fn load_selected_server_rows(
+    settings: &RuntimeSettings,
+    sockets: &[String],
+) -> Result<Vec<ServerRow>, String> {
+    let mut seen = BTreeSet::new();
+    let endpoints = sockets
+        .iter()
+        .filter_map(|socket| {
+            let socket = resolve_ipv4(socket).ok()?;
+            if !seen.insert(socket) {
+                return None;
+            }
+            Some(Endpoint {
+                display: socket.to_string(),
+                socket,
+                groups: Vec::new(),
+                drop_on_timeout: false,
+            })
+        })
+        .collect::<Vec<_>>();
+
+    if endpoints.is_empty() {
+        return Ok(Vec::new());
+    }
+
+    Ok(query_servers(
+        endpoints,
+        settings.server_timeout,
+        settings.jobs,
+    ))
+}
+
 #[derive(Debug, Clone, Deserialize, Serialize)]
 struct BrowserConfig {
     #[serde(default)]
@@ -475,6 +507,12 @@ struct GuiConfig {
     theme_mode: String,
     #[serde(default = "default_accent_color")]
     accent_color: String,
+    #[serde(default = "default_auto_refresh_empty_secs")]
+    auto_refresh_empty_secs: u64,
+    #[serde(default = "default_auto_refresh_active_secs")]
+    auto_refresh_active_secs: u64,
+    #[serde(default = "default_auto_refresh_selected_secs")]
+    auto_refresh_selected_secs: u64,
 }
 
 fn default_true() -> bool {
@@ -487,6 +525,18 @@ fn default_theme_mode() -> String {
 
 fn default_accent_color() -> String {
     "#0f766e".to_owned()
+}
+
+fn default_auto_refresh_empty_secs() -> u64 {
+    120
+}
+
+fn default_auto_refresh_active_secs() -> u64 {
+    30
+}
+
+fn default_auto_refresh_selected_secs() -> u64 {
+    10
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -1847,23 +1897,41 @@ fn query_server_info(
         .map_err(|err| err.to_string())?;
 
     let started = Instant::now();
-    let request = build_a2s_info_request(None);
-    socket.send(&request).map_err(|err| err.to_string())?;
-
     let mut buf = [0u8; 4096];
-    let size = socket.recv(&mut buf).map_err(|err| err.to_string())?;
-    let packet = &buf[..size];
-
-    if let Some(challenge) = parse_challenge(packet) {
-        let request = build_a2s_info_request(Some(challenge));
+    let mut last_error = None;
+    for _ in 0..3 {
+        let request = build_a2s_info_request(None);
         socket.send(&request).map_err(|err| err.to_string())?;
-        let size = socket.recv(&mut buf).map_err(|err| err.to_string())?;
-        let info = parse_server_info(&buf[..size])?;
+        let size = match socket.recv(&mut buf) {
+            Ok(size) => size,
+            Err(err) => {
+                last_error = Some(err);
+                continue;
+            }
+        };
+        let packet = &buf[..size];
+
+        if let Some(challenge) = parse_challenge(packet) {
+            let request = build_a2s_info_request(Some(challenge));
+            socket.send(&request).map_err(|err| err.to_string())?;
+            let size = match socket.recv(&mut buf) {
+                Ok(size) => size,
+                Err(err) => {
+                    last_error = Some(err);
+                    continue;
+                }
+            };
+            let info = parse_server_info(&buf[..size])?;
+            return Ok((info, started.elapsed()));
+        }
+
+        let info = parse_server_info(packet)?;
         return Ok((info, started.elapsed()));
     }
 
-    let info = parse_server_info(packet)?;
-    Ok((info, started.elapsed()))
+    Err(last_error
+        .map(|err| err.to_string())
+        .unwrap_or_else(|| "A2S_INFO 查询无响应".to_owned()))
 }
 
 fn build_a2s_info_request(challenge: Option<[u8; 4]>) -> Vec<u8> {
@@ -2464,6 +2532,9 @@ pub struct TauriConfigLists {
     rcon_passwords: BTreeMap<String, String>,
     theme_mode: String,
     accent_color: String,
+    auto_refresh_empty_secs: u64,
+    auto_refresh_active_secs: u64,
+    auto_refresh_selected_secs: u64,
 }
 
 #[derive(Clone, Deserialize)]
@@ -2484,6 +2555,7 @@ pub struct TauriServerQuery {
     only_empty: Option<bool>,
     hide_timeout: Option<bool>,
     limit: Option<usize>,
+    sockets: Option<Vec<String>>,
 }
 
 #[derive(Clone, Serialize)]
@@ -2565,6 +2637,9 @@ pub fn load_tauri_config_lists(config_path: Option<String>) -> Result<TauriConfi
         rcon_passwords: config.gui.rcon_passwords.clone(),
         theme_mode: config.gui.theme_mode.clone(),
         accent_color: config.gui.accent_color.clone(),
+        auto_refresh_empty_secs: config.gui.auto_refresh_empty_secs,
+        auto_refresh_active_secs: config.gui.auto_refresh_active_secs,
+        auto_refresh_selected_secs: config.gui.auto_refresh_selected_secs,
     })
 }
 
@@ -2588,7 +2663,11 @@ pub fn load_tauri_server_rows(query: TauriServerQuery) -> Result<TauriServerRows
         .into_iter()
         .filter_map(|subscription| SourceBansSubscription::try_from(subscription).ok())
         .collect::<Vec<_>>();
-    let rows = load_server_rows(&settings, &manual_groups, &subscriptions)?;
+    let rows = if let Some(sockets) = query.sockets.as_deref() {
+        load_selected_server_rows(&settings, sockets)?
+    } else {
+        load_server_rows(&settings, &manual_groups, &subscriptions)?
+    };
     let mut payload = server_rows_payload(&rows)
         .into_iter()
         .map(tauri_server_row)
@@ -2675,6 +2754,12 @@ pub fn delete_tauri_sourcebans(
 ) -> Result<TauriConfigLists, String> {
     let path = tauri_path(config_path.clone());
     delete_sourcebans_from_config(&path, index)?;
+    load_tauri_config_lists(config_path)
+}
+
+pub fn refresh_tauri_sourcebans(config_path: Option<String>) -> Result<TauriConfigLists, String> {
+    let path = tauri_path(config_path.clone());
+    refresh_all_subscriptions_in_config(&path)?;
     load_tauri_config_lists(config_path)
 }
 
@@ -2908,6 +2993,9 @@ pub struct TauriGuiSettingsRequest {
     pub anne_stats: Option<bool>,
     pub theme_mode: Option<String>,
     pub accent_color: Option<String>,
+    pub auto_refresh_empty_secs: Option<u64>,
+    pub auto_refresh_active_secs: Option<u64>,
+    pub auto_refresh_selected_secs: Option<u64>,
 }
 
 #[derive(Clone, Deserialize)]
@@ -3376,6 +3464,15 @@ pub fn tauri_save_gui_settings(req: TauriGuiSettingsRequest) -> Result<TauriConf
         if accent_color.starts_with('#') && accent_color.len() == 7 {
             config.gui.accent_color = accent_color.to_owned();
         }
+    }
+    if let Some(seconds) = req.auto_refresh_empty_secs {
+        config.gui.auto_refresh_empty_secs = seconds.max(15);
+    }
+    if let Some(seconds) = req.auto_refresh_active_secs {
+        config.gui.auto_refresh_active_secs = seconds.max(5);
+    }
+    if let Some(seconds) = req.auto_refresh_selected_secs {
+        config.gui.auto_refresh_selected_secs = seconds.max(3);
     }
     save_config(&path, &config)?;
     load_tauri_config_lists(Some(path.display().to_string()))
@@ -7359,7 +7456,8 @@ fn check_latest_release() -> Result<UpdateInfo, String> {
         .timeout(Duration::from_millis(10_000))
         .build()
         .map_err(|err| format!("failed to build update client: {err}"))?;
-    let tag_name = match fetch_latest_update_tag_from_atom(&client, "releases.atom", "release feed") {
+    let tag_name = match fetch_latest_update_tag_from_atom(&client, "releases.atom", "release feed")
+    {
         Ok(tag) => tag,
         Err(release_feed_err) => {
             match fetch_latest_update_tag_from_atom(&client, "tags.atom", "tag feed") {

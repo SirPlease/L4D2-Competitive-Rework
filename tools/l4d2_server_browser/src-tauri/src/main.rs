@@ -5,11 +5,11 @@
 
 use anne_server_browser::{
     add_tauri_manual_server, delete_tauri_sourcebans, load_tauri_config_lists,
-    load_tauri_server_rows, open_tauri_steam_connect, save_tauri_sourcebans, tauri_api_logout,
-    tauri_api_me, tauri_check_update, tauri_config_path, tauri_delete_manual_server,
-    tauri_fetch_network_info, tauri_load_broadcast_history, tauri_load_global_players,
-    tauri_query_players, tauri_read_cvars, tauri_run_rcon, tauri_save_api_config,
-    tauri_save_gui_settings, tauri_save_rcon_password, tauri_send_broadcast,
+    load_tauri_server_rows, open_tauri_steam_connect, refresh_tauri_sourcebans,
+    save_tauri_sourcebans, tauri_api_logout, tauri_api_me, tauri_check_update, tauri_config_path,
+    tauri_delete_manual_server, tauri_fetch_network_info, tauri_load_broadcast_history,
+    tauri_load_global_players, tauri_query_players, tauri_read_cvars, tauri_run_rcon,
+    tauri_save_api_config, tauri_save_gui_settings, tauri_save_rcon_password, tauri_send_broadcast,
     tauri_steam_login_poll, tauri_steam_login_start, TauriApiUser, TauriBroadcastMessage,
     TauriBroadcastRequest, TauriConfigLists, TauriCvarEntry, TauriCvarRequest,
     TauriDeleteManualServerRequest, TauriGlobalPlayer, TauriGuiSettingsRequest,
@@ -67,6 +67,11 @@ async fn save_sourcebans(input: TauriSourceBansInput) -> Result<TauriConfigLists
 #[tauri::command]
 async fn delete_sourcebans(path: Option<String>, index: usize) -> Result<TauriConfigLists, String> {
     run_blocking(move || delete_tauri_sourcebans(path, index)).await
+}
+
+#[tauri::command]
+async fn refresh_sourcebans(path: Option<String>) -> Result<TauriConfigLists, String> {
+    run_blocking(move || refresh_tauri_sourcebans(path)).await
 }
 
 #[tauri::command]
@@ -169,6 +174,7 @@ fn main() {
             delete_manual_server,
             save_sourcebans,
             delete_sourcebans,
+            refresh_sourcebans,
             open_steam_connect,
             query_players,
             run_rcon,

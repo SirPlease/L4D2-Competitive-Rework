@@ -9,6 +9,7 @@ pub use app::{
     load_tauri_config_lists,
     load_tauri_server_rows,
     open_tauri_steam_connect,
+    refresh_tauri_sourcebans,
     run_main,
     save_tauri_sourcebans,
     tauri_api_logout,

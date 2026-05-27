@@ -34,6 +34,12 @@ const state = {
   sortKey: "players",
   sortDesc: true,
   autoRefreshTimer: null,
+  autoRefreshEmptySecs: 120,
+  autoRefreshActiveSecs: 30,
+  autoRefreshSelectedSecs: 10,
+  lastFullRefreshAt: 0,
+  lastActiveRefreshAt: 0,
+  lastSelectedRefreshAt: 0,
   refreshInFlight: false,
   refreshSeq: 0
 };
@@ -79,6 +85,11 @@ function setBusy(value, labelKey = "btnRefresh") {
   $("#refreshBtn").textContent = value ? t("statusRefreshing") : t(labelKey);
 }
 
+function setRefreshButtonBusy(value, labelKey = "btnRefresh") {
+  $("#refreshBtn").disabled = false;
+  $("#refreshBtn").textContent = value ? t("statusRefreshing") : t(labelKey);
+}
+
 function setStatus(message) {
   $("#statusLine").textContent = message;
 }
@@ -100,6 +111,12 @@ function configLanguageFromLocale(value) {
 
 function boolText(value) {
   return value ? t("yes") : t("no");
+}
+
+function clampRefreshSeconds(value, fallback, min) {
+  const seconds = Number.parseInt(value, 10);
+  if (!Number.isFinite(seconds)) return fallback;
+  return Math.max(min, seconds);
 }
 
 function naturalCompare(left, right) {
@@ -145,6 +162,15 @@ function syncConfigPathUI() {
   const hint = $("#configPathHint");
   if (input) input.value = state.configPath || "";
   if (hint) hint.textContent = compactPath(state.configPath);
+}
+
+function syncAutoRefreshInputs() {
+  const empty = $("#autoRefreshEmptyInput");
+  const active = $("#autoRefreshActiveInput");
+  const selected = $("#autoRefreshSelectedInput");
+  if (empty) empty.value = state.autoRefreshEmptySecs;
+  if (active) active.value = state.autoRefreshActiveSecs;
+  if (selected) selected.value = state.autoRefreshSelectedSecs;
 }
 
 function hasSavedRconPassword(address = state.selectedAddress) {
@@ -261,6 +287,9 @@ async function saveGuiSettings(partial) {
     anne_stats: null,
     theme_mode: null,
     accent_color: null,
+    auto_refresh_empty_secs: null,
+    auto_refresh_active_secs: null,
+    auto_refresh_selected_secs: null,
     ...partial,
   };
   const lists = await invoke("save_gui_settings", { req });
@@ -273,8 +302,12 @@ async function saveGuiSettings(partial) {
     state.anneStatsEnabled = lists.anne_stats !== false;
     state.themeMode = normalizeThemeMode(lists.theme_mode);
     state.accentColor = isHexColor(lists.accent_color) ? lists.accent_color : state.accentColor;
+    state.autoRefreshEmptySecs = clampRefreshSeconds(lists.auto_refresh_empty_secs, 120, 15);
+    state.autoRefreshActiveSecs = clampRefreshSeconds(lists.auto_refresh_active_secs, 30, 5);
+    state.autoRefreshSelectedSecs = clampRefreshSeconds(lists.auto_refresh_selected_secs, 10, 3);
     state.rconPasswords = lists.rcon_passwords || {};
     applyTheme();
+    syncAutoRefreshInputs();
     syncConfigPathUI();
     syncRconPasswordControls();
   }
@@ -332,6 +365,9 @@ async function loadConfigLists() {
     state.rconPasswords = state.lists.rcon_passwords || {};
     state.themeMode = normalizeThemeMode(state.lists.theme_mode);
     state.accentColor = isHexColor(state.lists.accent_color) ? state.lists.accent_color : "#0f766e";
+    state.autoRefreshEmptySecs = clampRefreshSeconds(state.lists.auto_refresh_empty_secs, 120, 15);
+    state.autoRefreshActiveSecs = clampRefreshSeconds(state.lists.auto_refresh_active_secs, 30, 5);
+    state.autoRefreshSelectedSecs = clampRefreshSeconds(state.lists.auto_refresh_selected_secs, 10, 3);
     const locale = uiLocaleFromConfig(state.lists.gui_language);
     setLocale(locale);
     applyTheme();
@@ -340,6 +376,7 @@ async function loadConfigLists() {
     $("#languageSelect").value = locale;
     $("#autoUpdateInput").checked = state.autoCheckUpdate;
     $("#anneStatsInput").checked = state.anneStatsEnabled;
+    syncAutoRefreshInputs();
     syncRconPasswordControls();
     renderSubscriptions();
     renderManualServers();
@@ -407,12 +444,57 @@ function applyServerFiltersAndRender() {
   }
 }
 
-async function refreshServers({ silent = false } = {}) {
+function serverRowKey(row) {
+  return row?.socket || row?.address || "";
+}
+
+function mergeServerRows(nextRows) {
+  const nextByKey = new Map(nextRows.map((row) => [serverRowKey(row), row]));
+  const merged = state.allRows.map((row) => {
+    const next = nextByKey.get(serverRowKey(row));
+    if (!next) return row;
+    return {
+      ...row,
+      ...next,
+      address: row.address || next.address,
+      socket: row.socket || next.socket,
+      groups: Array.isArray(row.groups) && row.groups.length ? row.groups : next.groups,
+      group_label: row.group_label || next.group_label,
+      steam_url: row.steam_url || next.steam_url,
+    };
+  });
+  const existing = new Set(merged.map(serverRowKey));
+  for (const row of nextRows) {
+    if (!existing.has(serverRowKey(row))) merged.push(row);
+  }
+  return merged;
+}
+
+function mergeSilentRefreshRows(nextRows, partial = false) {
+  const rows = partial ? mergeServerRows(nextRows) : nextRows;
+  const previousRows = new Map(state.allRows.map((row) => [serverRowKey(row), row]));
+  return rows.map((row) => {
+    const key = serverRowKey(row);
+    const previous = key ? previousRows.get(key) : null;
+    if (!row.error || !previous || previous.error) return row;
+    return {
+      ...previous,
+      address: row.address,
+      socket: row.socket,
+      groups: row.groups,
+      group_label: row.group_label,
+      steam_url: row.steam_url,
+      status: previous.status || row.status,
+    };
+  });
+}
+
+async function refreshServers({ silent = false, sockets = null } = {}) {
   state.refreshInFlight = true;
   state.busy = true;
   const seq = ++state.refreshSeq;
-  setBusy(true);
-  if (!silent || state.tab === "servers") {
+  if (!silent) {
+    setRefreshButtonBusy(true);
     setStatus(t("statusRefreshing"));
   }
   try {
@@ -420,23 +502,84 @@ async function refreshServers({ silent = false } = {}) {
       query: {
         config_path: state.configPath || null,
         limit: 300,
+        sockets,
       },
     });
     if (!payload) return; // For mock safety
     if (seq !== state.refreshSeq) return;
     state.configPath = payload.config_path;
-    state.allRows = Array.isArray(payload.rows) ? payload.rows : [];
+    const nextRows = Array.isArray(payload.rows) ? payload.rows : [];
+    state.allRows = silent ? mergeSilentRefreshRows(nextRows, Array.isArray(sockets)) : nextRows;
+    if (!silent) {
+      const now = Date.now();
+      state.lastFullRefreshAt = now;
+      state.lastActiveRefreshAt = now;
+      state.lastSelectedRefreshAt = now;
+    }
     syncConfigPathUI();
     applyServerFiltersAndRender();
   } catch (error) {
-    setStatus(`Error: ${error}`);
+    if (!silent) setStatus(`Error: ${error}`);
   } finally {
     if (seq === state.refreshSeq) {
       state.refreshInFlight = false;
       state.busy = false;
-      setBusy(false);
+      if (!silent) setRefreshButtonBusy(false);
     }
   }
+}
+
+function activeServerSockets() {
+  return state.allRows
+    .filter((row) => !row.error && (row.players || 0) > 0)
+    .map(serverRowKey)
+    .filter(Boolean);
+}
+
+function selectedServerSocket() {
+  if (!state.selectedSocket) return null;
+  return state.allRows.some((row) => serverRowKey(row) === state.selectedSocket)
+    ? state.selectedSocket
+    : null;
+}
+
+function startAutoRefreshLoop() {
+  if (state.autoRefreshTimer) clearInterval(state.autoRefreshTimer);
+  state.lastFullRefreshAt = Date.now();
+  state.lastActiveRefreshAt = Date.now();
+  state.lastSelectedRefreshAt = Date.now();
+  state.autoRefreshTimer = setInterval(() => {
+    if (state.tab !== "servers" || state.busy) return;
+    const now = Date.now();
+    const selected = selectedServerSocket();
+    const selectedDue = selected && now - state.lastSelectedRefreshAt >= state.autoRefreshSelectedSecs * 1000;
+    const activeDue = now - state.lastActiveRefreshAt >= state.autoRefreshActiveSecs * 1000;
+    const fullDue = now - state.lastFullRefreshAt >= state.autoRefreshEmptySecs * 1000;
+
+    if (fullDue) {
+      state.lastFullRefreshAt = now;
+      state.lastActiveRefreshAt = now;
+      state.lastSelectedRefreshAt = now;
+      refreshServers({ silent: true });
+      return;
+    }
+
+    if (activeDue) {
+      const sockets = activeServerSockets();
+      if (selectedDue && selected && !sockets.includes(selected)) sockets.push(selected);
+      state.lastActiveRefreshAt = now;
+      if (sockets.length > 0) {
+        if (selectedDue) state.lastSelectedRefreshAt = now;
+        refreshServers({ silent: true, sockets });
+        return;
+      }
+    }
+
+    if (selectedDue) {
+      state.lastSelectedRefreshAt = now;
+      refreshServers({ silent: true, sockets: [selected] });
+    }
+  }, 1000);
 }
 
 function sortRowsClientSide() {
@@ -844,6 +987,26 @@ async function deleteSubscription() {
   }
 }
 
+async function refreshSubscriptions() {
+  const button = $("#refreshSubscriptionsBtn");
+  button.disabled = true;
+  button.textContent = t("refreshingWebSubscriptions");
+  setStatus(t("refreshingWebSubscriptions"));
+  try {
+    state.lists = await invoke("refresh_sourcebans", { path: state.configPath || null });
+    state.configPath = state.lists.config_path;
+    syncConfigPathUI();
+    renderSubscriptions();
+    setStatus(t("webSubscriptionsRefreshed"));
+    await refreshServers({ silent: true });
+  } catch (error) {
+    setStatus(`${t("refreshWebSubscriptionsFailed")}: ${error}`);
+  } finally {
+    button.disabled = false;
+    button.textContent = t("refreshWebSubscriptions");
+  }
+}
+
 async function addManualServer() {
   const group = $("#manualGroupInput").value.trim();
   const server = $("#manualServerInput").value.trim();
@@ -1121,6 +1284,7 @@ function bindEvents() {
   });
   
   // Settings
+  $("#refreshSubscriptionsBtn").addEventListener("click", refreshSubscriptions);
   $("#newSubscriptionBtn").addEventListener("click", clearSubscriptionEditor);
   $("#saveSubscriptionBtn").addEventListener("click", saveSubscription);
   $("#deleteSubscriptionBtn").addEventListener("click", deleteSubscription);
@@ -1259,6 +1423,39 @@ function bindEvents() {
       setStatus(`${t("saveFailed")}: ${error}`);
     }
   });
+  $("#autoRefreshEmptyInput").addEventListener("change", async (e) => {
+    state.autoRefreshEmptySecs = clampRefreshSeconds(e.currentTarget.value, 120, 15);
+    e.currentTarget.value = state.autoRefreshEmptySecs;
+    try {
+      await saveGuiSettings({ auto_refresh_empty_secs: state.autoRefreshEmptySecs });
+      startAutoRefreshLoop();
+      setStatus(t("statusSaved"));
+    } catch (error) {
+      setStatus(`${t("saveFailed")}: ${error}`);
+    }
+  });
+  $("#autoRefreshActiveInput").addEventListener("change", async (e) => {
+    state.autoRefreshActiveSecs = clampRefreshSeconds(e.currentTarget.value, 30, 5);
+    e.currentTarget.value = state.autoRefreshActiveSecs;
+    try {
+      await saveGuiSettings({ auto_refresh_active_secs: state.autoRefreshActiveSecs });
+      startAutoRefreshLoop();
+      setStatus(t("statusSaved"));
+    } catch (error) {
+      setStatus(`${t("saveFailed")}: ${error}`);
+    }
+  });
+  $("#autoRefreshSelectedInput").addEventListener("change", async (e) => {
+    state.autoRefreshSelectedSecs = clampRefreshSeconds(e.currentTarget.value, 10, 3);
+    e.currentTarget.value = state.autoRefreshSelectedSecs;
+    try {
+      await saveGuiSettings({ auto_refresh_selected_secs: state.autoRefreshSelectedSecs });
+      startAutoRefreshLoop();
+      setStatus(t("statusSaved"));
+    } catch (error) {
+      setStatus(`${t("saveFailed")}: ${error}`);
+    }
+  });
 }
 
 async function boot() {
@@ -1279,13 +1476,7 @@ async function boot() {
     await loadConfigLists();
     await refreshServers();
     await autoCheckUpdateIfDue();
-    
-    // Auto refresh every 10 seconds
-    setInterval(() => {
-      if (state.tab === "servers" && !state.busy) {
-        refreshServers({ silent: true });
-      }
-    }, 10000);
+    startAutoRefreshLoop();
     
   } catch (error) {
     setStatus(`${t("initFailed")}: ${error}`);

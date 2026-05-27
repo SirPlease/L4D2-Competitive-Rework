@@ -260,7 +260,10 @@
           <section class="panel subscription-panel">
             <div class="panel-head">
               <h2 data-i18n="webSubscriptions">网页订阅</h2>
-              <button id="newSubscriptionBtn" type="button" data-i18n="newWebSubscription">新建网页订阅</button>
+              <div class="header-actions">
+                <button id="refreshSubscriptionsBtn" type="button" data-i18n="refreshWebSubscriptions">更新网页订阅</button>
+                <button id="newSubscriptionBtn" type="button" data-i18n="newWebSubscription">新建网页订阅</button>
+              </div>
             </div>
             <p class="hint subscription-guide" data-i18n="subscriptionGuide">页面 URL 和 HTML / 文本任选一个填写；同时填写时会优先解析 HTML / 文本。</p>
             <div class="split subscription-split">
@@ -356,6 +359,18 @@
               <label class="field color-field">
                 <span data-i18n="customAccent">强调色</span>
                 <input id="customAccentInput" type="color" value="#0f766e" />
+              </label>
+              <label class="field">
+                <span data-i18n="autoRefreshEmpty">空服/全量刷新秒数</span>
+                <input id="autoRefreshEmptyInput" type="number" min="15" step="5" value="120" />
+              </label>
+              <label class="field">
+                <span data-i18n="autoRefreshActive">有人服务器刷新秒数</span>
+                <input id="autoRefreshActiveInput" type="number" min="5" step="5" value="30" />
+              </label>
+              <label class="field">
+                <span data-i18n="autoRefreshSelected">选中服务器刷新秒数</span>
+                <input id="autoRefreshSelectedInput" type="number" min="3" step="1" value="10" />
               </label>
               <div class="settings-toggles">
                 <label class="check">

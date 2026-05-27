@@ -591,6 +591,12 @@ tr:last-child td {
   margin-bottom: 12px;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .list,
 .manual-list {
   display: grid;
