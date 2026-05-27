@@ -2101,21 +2101,19 @@ int ShowAliveSur_MenuHandler(Menu menu, MenuAction action, int client, int param
 		case MenuAction_Select: {
 			char item[12];
 			menu.GetItem(param2, item, sizeof item);
+			bool executed = false;
 			if (item[0] == 'a') {
 				for (int i = 1; i <= MaxClients; i++) {
 					if (IsClientInGame(i) && GetClientTeam(i) == 2 && IsPlayerAlive(i))
-						CheatCommand(i, g_sNamedItem[client]);
+						executed = CheatCommand(i, g_sNamedItem[client]) || executed;
 				}
 			}
 			else
-				CheatCommand(GetClientOfUserId(StringToInt(item)), g_sNamedItem[client]);
-			
-			if(g_bRPG){
-				if(IsAnne() == 1)
-					L4D_RPG_SetGlobalValue(INDEX_USEBUY, true);
-				else if(IsAnne() == 2)
-					L4D_RPG_SetGlobalValue(INDEX_VALID, true);
-			}
+				executed = CheatCommand(GetClientOfUserId(StringToInt(item)), g_sNamedItem[client]);
+
+			if (executed)
+				UpdateRpgRoundForRygiveItems();
+
 			PageExitBack(client, g_iFunction[client], g_iSelection[client]);
 		}
 
@@ -2131,27 +2129,6 @@ int ShowAliveSur_MenuHandler(Menu menu, MenuAction action, int client, int param
 	return 0;
 }
 
-stock int IsAnne(){
-	char plugin_name[1024];
-	ConVar cvar_mode;
-	if(cvar_mode == null && FindConVar("l4d_ready_cfg_name"))
-	{
-		cvar_mode = FindConVar("l4d_ready_cfg_name");
-	}
-	if(cvar_mode == null) return 0;
-	GetConVarString(cvar_mode, plugin_name, sizeof(plugin_name));
-	if(StrContains(plugin_name, "AnneHappy", false) != -1)
-	{
-		if(StrContains(plugin_name, "HardCore", false) != -1)
-			return 2;
-		else
-			return 1;
-	}else
-	{
-		return 0;
-	}
-}
-
 void PageExitBack(int client, int func, int item) {
 	switch (func) {
 		case 1:
@@ -2161,6 +2138,50 @@ void PageExitBack(int client, int func, int item) {
 		case 3:
 			Item(client, item);
 	}
+}
+
+void UpdateRpgRoundForRygiveItems() {
+	if (!g_bRPG)
+		return;
+
+	switch (GetAnneModeForRygive()) {
+		case 1: {
+			L4D_RPG_SetGlobalValue(INDEX_USEBUY, true);
+		}
+		case 2: {
+			InvalidateRpgRoundForRygiveItems();
+		}
+		case 3: {
+			InvalidateRpgRoundForRygiveItems();
+		}
+		default: {
+			L4D_RPG_SetGlobalValue(INDEX_USEBUY, true);
+		}
+	}
+}
+
+void InvalidateRpgRoundForRygiveItems() {
+	if (!g_bRPG || !L4D_RPG_GetGlobalValue(INDEX_VALID))
+		return;
+
+	L4D_RPG_SetGlobalValue(INDEX_VALID, false);
+	PrintToChatAll("\x01管理员使用rygive刷物品，此局将无法再获得特感分和任何过关分数");
+}
+
+int GetAnneModeForRygive() {
+	ConVar cvarMode = FindConVar("l4d_ready_cfg_name");
+	if (cvarMode == null)
+		return 0;
+
+	char cfgName[1024];
+	cvarMode.GetString(cfgName, sizeof cfgName);
+	if (StrContains(cfgName, "AnneHappy", false) == -1)
+		return 0;
+
+	if (StrContains(cfgName, "Shotgun", false) != -1)
+		return 3;
+
+	return StrContains(cfgName, "HardCore", false) != -1 ? 2 : 1;
 }
 
 void ReloadAmmo(int client) {
@@ -2192,9 +2213,9 @@ void ReloadAmmo(int client) {
 	}
 }
 
-void CheatCommand(int client, const char[] command) {
+bool CheatCommand(int client, const char[] command) {
 	if (!client || !IsClientInGame(client))
-		return;
+		return false;
 
 	char cmd[32];
 	if (SplitString(command, " ", cmd, sizeof cmd) == -1)
@@ -2207,12 +2228,6 @@ void CheatCommand(int client, const char[] command) {
 			ForcePlayerSuicide(attacker);
 		}
 	}
-	if (strcmp(cmd, "give") == 0 && (strcmp(command[5], "health") == 0 || strcmp(command[5], "first_") == 0 || strcmp(command[5], "defibr") == 0 || strcmp(command[5], "adrena") == 0 || strcmp(command[5], "pain_p") == 0) && (g_bRPG && L4D_RPG_GetGlobalValue(INDEX_VALID))) 
-	{
-		L4D_RPG_SetGlobalValue(INDEX_VALID, false);
-		PrintToChatAll("\x01管理员使用回血或刷回血道具功能，此局将无法再获得特感分和额外过关分数");
-	}
-
 	int bits = GetUserFlagBits(client);
 	int flags = GetCommandFlags(cmd);
 	SetUserFlagBits(client, ADMFLAG_ROOT);
@@ -2227,6 +2242,8 @@ void CheatCommand(int client, const char[] command) {
 		else if (strcmp(command[5], "ammo") == 0)
 			ReloadAmmo(client); //榴弹发射器加子弹
 	}
+
+	return true;
 }
 
 void GoAFKTimer(int client, float flDuration) {

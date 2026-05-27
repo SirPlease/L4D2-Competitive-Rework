@@ -12,9 +12,11 @@ on:
   push:
     paths:
       - 'addons/**'
+      - 'cfg/**'
       - 'cfgs/**'
       - 'scripts/**'
-      - '*README.md'
+      - 'README.md'
+      - 'README-*.md'
     branches:
       - master
 
