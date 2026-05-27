@@ -11,7 +11,7 @@ use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4, TcpStream, ToSocketAddrs, Udp
 use std::path::{Path, PathBuf};
 use std::sync::{
     mpsc::{self, Receiver, Sender},
-    Arc, Mutex,
+    Arc, Mutex, OnceLock,
 };
 use std::thread;
 use std::time::{Duration, Instant};
@@ -21,11 +21,12 @@ const DEFAULT_FILTER: &str = "\\appid\\550";
 const DEFAULT_MASTER_GROUP: &str = "Steam Master";
 const APP_NAME: &str = "Anne刷服器";
 const DEFAULT_CONFIG_FILE: &str = "anne-server-browser.toml";
-const USER_AGENT: &str = "AnneServerBrowser/0.7";
+const USER_AGENT: &str = concat!("AnneServerBrowser/", env!("CARGO_PKG_VERSION"));
 const UPDATE_REPO: &str = "fantasylidong/CompetitiveWithAnne";
 const UPDATE_TAG_PREFIX: &str = "Anne刷服器-v";
 const DEFAULT_API_BASE_URL: &str = "https://anne.trygek.com";
 const ONLINE_STATS_CACHE_TTL: Duration = Duration::from_secs(60);
+const TAURI_PLAYER_CACHE_TTL: Duration = Duration::from_secs(60);
 
 pub fn run_main() {
     if let Err(err) = run() {
@@ -66,9 +67,7 @@ fn default_gui_config_path() -> PathBuf {
             );
         }
         if let Some(profile) = env::var_os("USERPROFILE") {
-            let base = PathBuf::from(profile)
-                .join("AppData")
-                .join("Roaming");
+            let base = PathBuf::from(profile).join("AppData").join("Roaming");
             return existing_or_new_config_path(
                 base.join(APP_NAME).join(DEFAULT_CONFIG_FILE),
                 base.join("L4D2 Server Browser").join("l4d2-browser.toml"),
@@ -342,30 +341,24 @@ fn build_runtime(
     let mut subscriptions = Vec::new();
 
     settings.apply_file_master(config.master)?;
-    manual_groups.extend(
-        config
-            .groups
-            .into_iter()
-            .filter_map(|g| match ManualGroup::try_from(g) {
-                Ok(group) => Some(group),
-                Err(err) => {
-                    eprintln!("warning: skipped invalid group: {err}");
-                    None
-                }
-            }),
-    );
-    subscriptions.extend(
-        config
-            .sourcebans
-            .into_iter()
-            .filter_map(|s| match SourceBansSubscription::try_from(s) {
-                Ok(sub) => Some(sub),
-                Err(err) => {
-                    eprintln!("warning: skipped invalid subscription: {err}");
-                    None
-                }
-            }),
-    );
+    manual_groups.extend(config.groups.into_iter().filter_map(|g| {
+        match ManualGroup::try_from(g) {
+            Ok(group) => Some(group),
+            Err(err) => {
+                eprintln!("warning: skipped invalid group: {err}");
+                None
+            }
+        }
+    }));
+    subscriptions.extend(config.sourcebans.into_iter().filter_map(|s| {
+        match SourceBansSubscription::try_from(s) {
+            Ok(sub) => Some(sub),
+            Err(err) => {
+                eprintln!("warning: skipped invalid subscription: {err}");
+                None
+            }
+        }
+    }));
 
     settings.apply_cli(cli)?;
     manual_groups.extend(
@@ -472,10 +465,28 @@ struct GuiConfig {
     language: GuiLanguage,
     #[serde(default = "default_true")]
     anne_stats: bool,
+    // Kept for compatibility with older config files. The Tauri UI writes
+    // per-server passwords to rcon_passwords instead.
+    #[serde(default)]
+    rcon_password: Option<String>,
+    #[serde(default)]
+    rcon_passwords: BTreeMap<String, String>,
+    #[serde(default = "default_theme_mode")]
+    theme_mode: String,
+    #[serde(default = "default_accent_color")]
+    accent_color: String,
 }
 
 fn default_true() -> bool {
     true
+}
+
+fn default_theme_mode() -> String {
+    "light".to_owned()
+}
+
+fn default_accent_color() -> String {
+    "#0f766e".to_owned()
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -813,6 +824,51 @@ impl GuiLanguage {
     }
 }
 
+fn gui_language_code(language: GuiLanguage) -> &'static str {
+    match language {
+        GuiLanguage::ZhCn => "zh-CN",
+        GuiLanguage::EnUs => "en-US",
+    }
+}
+
+fn parse_gui_language_setting(value: &str) -> Result<GuiLanguage, String> {
+    match value.trim().replace('_', "-").to_ascii_lowercase().as_str() {
+        "zh" | "zh-cn" => Ok(GuiLanguage::ZhCn),
+        "en" | "en-us" => Ok(GuiLanguage::EnUs),
+        _ => Err(format!("invalid GUI language: {value}")),
+    }
+}
+
+fn split_server_tags(value: &str) -> Vec<String> {
+    let mut seen = HashSet::new();
+    let mut tags = Vec::new();
+    for tag in value
+        .split(|ch: char| ch == ',' || ch == ';' || ch.is_whitespace())
+        .map(str::trim)
+        .filter(|tag| !tag.is_empty())
+    {
+        let normalized = tag.to_ascii_lowercase();
+        if seen.insert(normalized) {
+            tags.push(tag.to_owned());
+        }
+    }
+    tags
+}
+
+fn server_info_has_tag(info: &ServerInfo, tag: &str) -> bool {
+    let wanted = tag.to_ascii_lowercase();
+    info.keywords
+        .as_deref()
+        .map(split_server_tags)
+        .unwrap_or_default()
+        .into_iter()
+        .any(|item| item.to_ascii_lowercase() == wanted)
+}
+
+fn is_anne_server_info(info: &ServerInfo) -> bool {
+    is_anne_server_name(&info.name) || server_info_has_tag(info, "anne")
+}
+
 #[derive(Debug, Clone, Copy)]
 enum TextKey {
     AppTitle,
@@ -960,7 +1016,10 @@ impl TryFrom<FileSourceBans> for SourceBansSubscription {
         let text = value.text.trim().to_owned();
         let servers = value.servers;
         if url.is_empty() && text.is_empty() && servers.is_empty() {
-            return Err("sourcebans.url or sourcebans.text or sourcebans.servers cannot be empty".to_owned());
+            return Err(
+                "sourcebans.url or sourcebans.text or sourcebans.servers cannot be empty"
+                    .to_owned(),
+            );
         }
 
         Ok(Self {
@@ -1133,14 +1192,12 @@ fn collect_sources(
             Ok(addresses) => {
                 for address in addresses {
                     match resolve_endpoint(&address) {
-                        Ok(endpoint) => {
-                            add_endpoint(
-                                &mut registry,
-                                endpoint,
-                                &subscription.name,
-                                drop_on_timeout,
-                            )
-                        }
+                        Ok(endpoint) => add_endpoint(
+                            &mut registry,
+                            endpoint,
+                            &subscription.name,
+                            drop_on_timeout,
+                        ),
                         Err(err) => eprintln!(
                             "warning: skipped {} from subscription {}: {err}",
                             address, subscription.name
@@ -1404,7 +1461,9 @@ fn extract_pasted_subscription(body: &str, name: &str) -> Result<Vec<String>, St
 
     if addresses.is_empty() {
         if let Some(reason) = detect_subscription_blocker(body) {
-            return Err(format!("no server addresses found in pasted text {name}: {reason}"));
+            return Err(format!(
+                "no server addresses found in pasted text {name}: {reason}"
+            ));
         }
         Err(format!("no server addresses found in pasted text {name}"))
     } else {
@@ -1426,16 +1485,11 @@ fn add_subscription_addresses(
 }
 
 fn fetch_subscription_body(client: &Client, url: reqwest::Url) -> Result<String, String> {
-    let response = client
-        .get(url)
-        .send()
-        .map_err(|err| err.to_string())?;
+    let response = client.get(url).send().map_err(|err| err.to_string())?;
     let status = response.status();
     let final_url = response.url().clone();
     let headers = response.headers().clone();
-    let body = response
-        .text()
-        .map_err(|err| err.to_string())?;
+    let body = response.text().map_err(|err| err.to_string())?;
 
     if !status.is_success() {
         if let Some(reason) = detect_subscription_response_blocker(&headers, &body) {
@@ -1632,15 +1686,16 @@ fn detect_subscription_response_blocker(
         .and_then(|value| value.to_str().ok())
         .map_or(false, |value| value.eq_ignore_ascii_case("challenge"))
     {
-        return Some("site returned Vercel challenge; non-browser subscription requests are blocked");
+        return Some(
+            "site returned Vercel challenge; non-browser subscription requests are blocked",
+        );
     }
 
     detect_subscription_blocker(body)
 }
 
 fn detect_subscription_blocker(body: &str) -> Option<&'static str> {
-    if body.contains("Vercel Security Checkpoint")
-        || body.contains("We're verifying your browser")
+    if body.contains("Vercel Security Checkpoint") || body.contains("We're verifying your browser")
     {
         Some("site returned Vercel challenge; non-browser subscription requests are blocked")
     } else {
@@ -2401,6 +2456,14 @@ pub struct TauriConfigLists {
     manual_servers: Vec<TauriManualServer>,
     sourcebans: Vec<TauriSourceBans>,
     api_base_url: String,
+    api_token: Option<String>,
+    gui_language: String,
+    update_auto_check: bool,
+    anne_stats: bool,
+    rcon_password: Option<String>,
+    rcon_passwords: BTreeMap<String, String>,
+    theme_mode: String,
+    accent_color: String,
 }
 
 #[derive(Clone, Deserialize)]
@@ -2418,6 +2481,7 @@ pub struct TauriServerQuery {
     search: Option<String>,
     group: Option<String>,
     only_with_players: Option<bool>,
+    only_empty: Option<bool>,
     hide_timeout: Option<bool>,
     limit: Option<usize>,
 }
@@ -2442,6 +2506,9 @@ pub struct TauriServerRow {
     players: u8,
     max_players: u8,
     bots: u8,
+    vac: bool,
+    sv_tags: Option<String>,
+    tags: Vec<String>,
     error: Option<String>,
     status: String,
     steam_url: String,
@@ -2463,6 +2530,7 @@ pub fn load_tauri_config_lists(config_path: Option<String>) -> Result<TauriConfi
     let path = tauri_path(config_path);
     let lists = load_gui_config_lists(&path)?;
     let config = load_config_or_default(&path)?;
+    let gui_language = config.gui.language;
 
     Ok(TauriConfigLists {
         config_path: path.display().to_string(),
@@ -2484,11 +2552,19 @@ pub fn load_tauri_config_lists(config_path: Option<String>) -> Result<TauriConfi
                 index,
                 name: subscription.name.clone(),
                 url: subscription.url.clone(),
-                source_label: subscription_source_label(&subscription, GuiLanguage::ZhCn),
+                source_label: subscription_source_label(&subscription, gui_language),
                 server_count: subscription.servers.len(),
             })
             .collect(),
         api_base_url: config.api.base_url,
+        api_token: config.api.token,
+        gui_language: gui_language_code(gui_language).to_owned(),
+        update_auto_check: config.updater.auto_check,
+        anne_stats: config.gui.anne_stats,
+        rcon_password: config.gui.rcon_password.clone(),
+        rcon_passwords: config.gui.rcon_passwords.clone(),
+        theme_mode: config.gui.theme_mode.clone(),
+        accent_color: config.gui.accent_color.clone(),
     })
 }
 
@@ -2518,13 +2594,11 @@ pub fn load_tauri_server_rows(query: TauriServerQuery) -> Result<TauriServerRows
         .map(tauri_server_row)
         .collect::<Vec<_>>();
 
-    if let Some(group) = query.group.as_deref().map(str::trim).filter(|value| {
-        !value.is_empty() && *value != "全部服务器" && !value.eq_ignore_ascii_case("all")
-    }) {
-        payload.retain(|row| row.groups.iter().any(|item| item == group));
-    }
     if query.only_with_players.unwrap_or(false) {
         payload.retain(|row| row.players > 0);
+    }
+    if query.only_empty.unwrap_or(false) {
+        payload.retain(|row| row.error.is_none() && row.players == 0);
     }
     if query.hide_timeout.unwrap_or(false) {
         payload.retain(|row| row.error.is_none());
@@ -2542,13 +2616,27 @@ pub fn load_tauri_server_rows(query: TauriServerQuery) -> Result<TauriServerRows
                 || row.address.to_lowercase().contains(&search)
                 || row.socket.to_lowercase().contains(&search)
                 || row
+                    .tags
+                    .iter()
+                    .any(|tag| tag.to_lowercase().contains(&search))
+                || row
                     .groups
                     .iter()
                     .any(|group| group.to_lowercase().contains(&search))
         });
     }
 
-    let summary = tauri_server_summary(&payload);
+    let groups = tauri_server_summary(&payload).groups;
+    if let Some(group) = query.group.as_deref().map(str::trim).filter(|value| {
+        !value.is_empty() && *value != "全部服务器" && !value.eq_ignore_ascii_case("all")
+    }) {
+        payload.retain(|row| row.groups.iter().any(|item| item == group));
+    }
+
+    prefetch_tauri_player_cache(&config, &payload);
+
+    let mut summary = tauri_server_summary(&payload);
+    summary.groups = groups;
     Ok(TauriServerRows {
         config_path: path.display().to_string(),
         rows: payload,
@@ -2616,6 +2704,12 @@ fn tauri_server_row(row: ServerRowPayload) -> TauriServerRow {
     let players = row.info.as_ref().map(|info| info.players).unwrap_or(0);
     let max_players = row.info.as_ref().map(|info| info.max_players).unwrap_or(0);
     let bots = row.info.as_ref().map(|info| info.bots).unwrap_or(0);
+    let vac = row.info.as_ref().map(|info| info.vac).unwrap_or(false);
+    let sv_tags = row.info.as_ref().and_then(|info| info.keywords.clone());
+    let tags = sv_tags
+        .as_deref()
+        .map(split_server_tags)
+        .unwrap_or_default();
     let status = if row.error.is_some() {
         "超时".to_owned()
     } else if players > 0 {
@@ -2625,7 +2719,11 @@ fn tauri_server_row(row: ServerRowPayload) -> TauriServerRow {
     };
     let group_label = row.groups.join(" / ");
     let steam_url = format!("steam://connect/{}", row.socket);
-    let is_anne = name.starts_with("Anne");
+    let is_anne = row
+        .info
+        .as_ref()
+        .map(is_anne_server_info)
+        .unwrap_or_else(|| is_anne_server_name(&name));
 
     TauriServerRow {
         address: row.address,
@@ -2638,6 +2736,9 @@ fn tauri_server_row(row: ServerRowPayload) -> TauriServerRow {
         players,
         max_players,
         bots,
+        vac,
+        sv_tags,
+        tags,
         error: row.error,
         status,
         steam_url,
@@ -2678,6 +2779,7 @@ pub struct TauriPlayerInfo {
     pub points: Option<i32>,
     pub playtime_mins: Option<i32>,
     pub ppm: Option<f32>,
+    pub quarter_points: Option<i32>,
 }
 
 #[derive(Clone, Deserialize)]
@@ -2766,6 +2868,7 @@ pub struct TauriGlobalPlayer {
     pub points: Option<i32>,
     pub playtime_mins: Option<i32>,
     pub ppm: Option<f32>,
+    pub quarter_points: Option<i32>,
 }
 
 #[derive(Clone, Serialize)]
@@ -2791,33 +2894,156 @@ pub struct TauriSaveApiConfigRequest {
 }
 
 #[derive(Clone, Deserialize)]
+pub struct TauriSaveRconPasswordRequest {
+    pub config_path: Option<String>,
+    pub address: String,
+    pub password: Option<String>,
+}
+
+#[derive(Clone, Deserialize)]
+pub struct TauriGuiSettingsRequest {
+    pub config_path: Option<String>,
+    pub language: Option<String>,
+    pub update_auto_check: Option<bool>,
+    pub anne_stats: Option<bool>,
+    pub theme_mode: Option<String>,
+    pub accent_color: Option<String>,
+}
+
+#[derive(Clone, Deserialize)]
 pub struct TauriDeleteManualServerRequest {
     pub config_path: Option<String>,
     pub group: String,
     pub server: String,
 }
 
-pub fn tauri_delete_manual_server(req: TauriDeleteManualServerRequest) -> Result<TauriConfigLists, String> {
+pub fn tauri_delete_manual_server(
+    req: TauriDeleteManualServerRequest,
+) -> Result<TauriConfigLists, String> {
     let path = tauri_path(req.config_path.clone());
     delete_server_from_config(&path, &req.group, &req.server)?;
     load_tauri_config_lists(req.config_path)
 }
 
-pub fn tauri_query_players(_config_path: Option<String>, address: String) -> Result<Vec<TauriPlayerInfo>, String> {
-    let endpoint = resolve_endpoint(&address)?;
+fn cached_tauri_players(address: &str) -> Option<Vec<TauriPlayerInfo>> {
+    let cache = tauri_player_cache().lock().ok()?;
+    let entry = cache.get(address)?;
+    if entry.fetched_at.elapsed() < TAURI_PLAYER_CACHE_TTL {
+        Some(entry.players.clone())
+    } else {
+        None
+    }
+}
+
+fn store_tauri_players(address: &str, players: Vec<TauriPlayerInfo>) {
+    if let Ok(mut cache) = tauri_player_cache().lock() {
+        cache.insert(
+            address.to_owned(),
+            CachedTauriPlayers {
+                fetched_at: Instant::now(),
+                players,
+            },
+        );
+    }
+}
+
+fn player_info_to_tauri(player: PlayerInfo) -> TauriPlayerInfo {
+    TauriPlayerInfo {
+        name: player.name,
+        score: player.score,
+        duration_secs: player.duration,
+        points: player.points,
+        playtime_mins: player.playtime_mins,
+        ppm: player.ppm,
+        quarter_points: player.quarter_points,
+    }
+}
+
+fn query_tauri_players_uncached(
+    config: &BrowserConfig,
+    address: &str,
+    is_anne_server: Option<bool>,
+) -> Result<Vec<TauriPlayerInfo>, String> {
+    let endpoint = resolve_endpoint(address)?;
     let timeout = Duration::from_millis(2500);
-    let players = query_server_players(endpoint.socket, timeout)?;
-    Ok(players
-        .into_iter()
-        .map(|p| TauriPlayerInfo {
-            name: p.name,
-            score: p.score,
-            duration_secs: p.duration,
-            points: p.points,
-            playtime_mins: p.playtime_mins,
-            ppm: p.ppm,
-        })
-        .collect())
+    let mut players = query_server_players(endpoint.socket, timeout)?;
+    if config.gui.anne_stats {
+        let is_anne_server = is_anne_server.unwrap_or_else(|| {
+            query_server_info(endpoint.socket, Duration::from_millis(1500))
+                .map(|(info, _)| is_anne_server_info(&info))
+                .unwrap_or(false)
+        });
+        if is_anne_server && !config.api.base_url.trim().is_empty() {
+            let cache = tauri_online_stats_cache();
+            let _ = refresh_online_player_stats_cache(&config.api.base_url, cache);
+            let _ = apply_cached_player_stats(&config.api.base_url, cache, &mut players);
+        }
+    }
+    Ok(players.into_iter().map(player_info_to_tauri).collect())
+}
+
+fn prefetch_tauri_player_cache(config: &BrowserConfig, rows: &[TauriServerRow]) {
+    let queue = rows
+        .iter()
+        .filter(|row| row.error.is_none() && row.players > 0)
+        .map(|row| (row.address.clone(), row.is_anne))
+        .collect::<VecDeque<_>>();
+    if queue.is_empty() {
+        return;
+    }
+
+    let config = config.clone();
+    let _ = thread::spawn(move || {
+        let queue = Arc::new(Mutex::new(queue));
+        let config = Arc::new(config);
+        let mut workers = Vec::new();
+        let worker_count = queue
+            .lock()
+            .map(|queue| queue.len())
+            .unwrap_or(0)
+            .min(16)
+            .max(1);
+        for _ in 0..worker_count {
+            let queue = Arc::clone(&queue);
+            let config = Arc::clone(&config);
+            workers.push(thread::spawn(move || loop {
+                let item = {
+                    let Ok(mut queue) = queue.lock() else {
+                        break;
+                    };
+                    queue.pop_front()
+                };
+                let Some((address, is_anne_server)) = item else {
+                    break;
+                };
+                if cached_tauri_players(&address).is_some() {
+                    continue;
+                }
+                if let Ok(players) =
+                    query_tauri_players_uncached(&config, &address, Some(is_anne_server))
+                {
+                    store_tauri_players(&address, players);
+                }
+            }));
+        }
+        for worker in workers {
+            let _ = worker.join();
+        }
+    });
+}
+
+pub fn tauri_query_players(
+    config_path: Option<String>,
+    address: String,
+) -> Result<Vec<TauriPlayerInfo>, String> {
+    if let Some(players) = cached_tauri_players(&address) {
+        return Ok(players);
+    }
+    let path = tauri_path(config_path);
+    let config = load_config_or_default(&path)?;
+    let players = query_tauri_players_uncached(&config, &address, None)?;
+    store_tauri_players(&address, players.clone());
+    Ok(players)
 }
 
 pub fn tauri_run_rcon(req: TauriRconRequest) -> Result<String, String> {
@@ -2895,7 +3121,9 @@ pub fn tauri_steam_login_start(base_url: String) -> Result<TauriLoginStart, Stri
     })
 }
 
-pub fn tauri_steam_login_poll(req: TauriLoginPollRequest) -> Result<Option<TauriLoginResult>, String> {
+pub fn tauri_steam_login_poll(
+    req: TauriLoginPollRequest,
+) -> Result<Option<TauriLoginResult>, String> {
     let client = api_client(Duration::from_secs(15))?;
     let poll_url = api_url(&req.base_url, "/api/auth/device_poll.php")?;
     let response: DevicePollResponse = response_json(
@@ -2947,11 +3175,11 @@ pub fn tauri_send_broadcast(req: TauriBroadcastRequest) -> Result<String, String
     Ok(result.message.unwrap_or_else(|| "已发送".to_owned()))
 }
 
-pub fn tauri_load_broadcast_history(base_url: String, token: String) -> Result<Vec<TauriBroadcastMessage>, String> {
-    let messages = api_broadcast_history(BroadcastHistoryRequest {
-        base_url,
-        token,
-    })?;
+pub fn tauri_load_broadcast_history(
+    base_url: String,
+    token: String,
+) -> Result<Vec<TauriBroadcastMessage>, String> {
+    let messages = api_broadcast_history(BroadcastHistoryRequest { base_url, token })?;
     Ok(messages
         .into_iter()
         .map(|m| TauriBroadcastMessage {
@@ -2963,7 +3191,11 @@ pub fn tauri_load_broadcast_history(base_url: String, token: String) -> Result<V
         .collect())
 }
 
-pub fn tauri_load_global_players(base_url: String, _token: String, config_path: Option<String>) -> Result<Vec<TauriGlobalPlayer>, String> {
+pub fn tauri_load_global_players(
+    base_url: String,
+    _token: String,
+    config_path: Option<String>,
+) -> Result<Vec<TauriGlobalPlayer>, String> {
     let path = tauri_path(config_path);
     let config = load_config_or_default(&path)?;
     let mut settings = RuntimeSettings::default();
@@ -2985,51 +3217,168 @@ pub fn tauri_load_global_players(base_url: String, _token: String, config_path: 
         .collect::<Vec<_>>();
 
     let rows = load_server_rows(&settings, &manual_groups, &subscriptions)?;
-    let timeout = Duration::from_millis(2500);
-    let api_base = if base_url.trim().is_empty() { config.api.base_url.clone() } else { base_url.clone() };
-
-    let stats = if !api_base.is_empty() {
-        fetch_online_player_stats(&api_base).unwrap_or_default()
+    let api_base = if base_url.trim().is_empty() {
+        config.api.base_url.clone()
     } else {
-        HashMap::new()
+        base_url.clone()
     };
 
-    let mut result = Vec::new();
-    for row in &rows {
-        if row.info.is_none() { continue; }
-        let server_name = row.info.as_ref().map(|i| i.name.clone()).unwrap_or_default();
-        let server_address = row.endpoint.display.clone();
-        let socket = row.endpoint.socket;
-        match query_server_players(socket, timeout) {
-            Ok(players) => {
-                for mut p in players {
-                    apply_player_stats(&mut p, &stats);
-                    result.push(TauriGlobalPlayer {
-                        name: p.name,
-                        server_name: server_name.clone(),
-                        server_address: server_address.clone(),
-                        score: p.score,
-                        duration_secs: p.duration,
-                        points: p.points,
-                        playtime_mins: p.playtime_mins,
-                        ppm: p.ppm,
-                    });
-                }
-            }
-            Err(_) => continue,
-        }
+    let servers_to_query = rows
+        .iter()
+        .filter_map(|row| {
+            let info = row.info.as_ref()?;
+            Some((
+                row.endpoint.display.clone(),
+                info.name.clone(),
+                is_anne_server_info(info),
+            ))
+        })
+        .collect::<Vec<_>>();
+
+    if servers_to_query.is_empty() {
+        return Ok(Vec::new());
     }
-    result.sort_by(|a, b| b.score.cmp(&a.score));
+
+    if config.gui.anne_stats
+        && !api_base.trim().is_empty()
+        && servers_to_query.iter().any(|(_, _, is_anne)| *is_anne)
+    {
+        let cache = tauri_online_stats_cache();
+        let _ = refresh_online_player_stats_cache(&api_base, cache);
+    }
+
+    let config = Arc::new(config);
+    let queue = Arc::new(Mutex::new(VecDeque::from(servers_to_query)));
+    let result = Arc::new(Mutex::new(Vec::new()));
+    let worker_count = queue
+        .lock()
+        .map(|queue| queue.len())
+        .unwrap_or(0)
+        .min(16)
+        .max(1);
+    let mut workers = Vec::new();
+
+    for _ in 0..worker_count {
+        let queue = Arc::clone(&queue);
+        let result = Arc::clone(&result);
+        let config = Arc::clone(&config);
+        workers.push(thread::spawn(move || loop {
+            let item = {
+                let Ok(mut queue) = queue.lock() else {
+                    break;
+                };
+                queue.pop_front()
+            };
+            let Some((server_address, server_name, is_anne_server)) = item else {
+                break;
+            };
+
+            let players = if let Some(players) = cached_tauri_players(&server_address) {
+                players
+            } else {
+                let Ok(players) =
+                    query_tauri_players_uncached(&config, &server_address, Some(is_anne_server))
+                else {
+                    continue;
+                };
+                store_tauri_players(&server_address, players.clone());
+                players
+            };
+            let Ok(mut result) = result.lock() else {
+                break;
+            };
+            for p in players {
+                if p.name.trim().is_empty() {
+                    continue;
+                }
+                result.push(TauriGlobalPlayer {
+                    name: p.name,
+                    server_name: server_name.clone(),
+                    server_address: server_address.clone(),
+                    score: p.score,
+                    duration_secs: p.duration_secs,
+                    points: p.points,
+                    playtime_mins: p.playtime_mins,
+                    ppm: p.ppm,
+                    quarter_points: p.quarter_points,
+                });
+            }
+        }));
+    }
+
+    for worker in workers {
+        let _ = worker.join();
+    }
+
+    let mut result = Arc::try_unwrap(result)
+        .map_err(|_| "global player result still shared".to_owned())?
+        .into_inner()
+        .map_err(|_| "global player result lock poisoned".to_owned())?;
+    result.sort_by(|a, b| {
+        b.duration_secs
+            .partial_cmp(&a.duration_secs)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
     Ok(result)
+}
+
+pub fn tauri_save_rcon_password(
+    req: TauriSaveRconPasswordRequest,
+) -> Result<TauriConfigLists, String> {
+    let path = tauri_path(req.config_path.clone());
+    let mut config = load_config_or_default(&path)?;
+    let address = req.address.trim();
+    if address.is_empty() {
+        return Err("server address is required".to_owned());
+    }
+    if let Some(password) = req.password {
+        let password = password.trim().to_owned();
+        if password.is_empty() {
+            config.gui.rcon_passwords.remove(address);
+        } else {
+            config
+                .gui
+                .rcon_passwords
+                .insert(address.to_owned(), password);
+        }
+    } else {
+        config.gui.rcon_passwords.remove(address);
+    }
+    save_config(&path, &config)?;
+    load_tauri_config_lists(Some(path.display().to_string()))
 }
 
 pub fn tauri_save_api_config(req: TauriSaveApiConfigRequest) -> Result<(), String> {
     let path = tauri_path(req.config_path);
-    save_api_config_to_config(
-        &path,
-        &req.base_url,
-        req.token.as_deref(),
-    )
+    save_api_config_to_config(&path, &req.base_url, req.token.as_deref())
+}
+
+pub fn tauri_save_gui_settings(req: TauriGuiSettingsRequest) -> Result<TauriConfigLists, String> {
+    let path = tauri_path(req.config_path.clone());
+    let mut config = load_config_or_default(&path)?;
+    if let Some(language) = req.language {
+        config.gui.language = parse_gui_language_setting(&language)?;
+    }
+    if let Some(auto_check) = req.update_auto_check {
+        config.updater.auto_check = auto_check;
+    }
+    if let Some(anne_stats) = req.anne_stats {
+        config.gui.anne_stats = anne_stats;
+    }
+    if let Some(theme_mode) = req.theme_mode {
+        let theme_mode = theme_mode.trim();
+        if matches!(theme_mode, "light" | "dark" | "custom") {
+            config.gui.theme_mode = theme_mode.to_owned();
+        }
+    }
+    if let Some(accent_color) = req.accent_color {
+        let accent_color = accent_color.trim();
+        if accent_color.starts_with('#') && accent_color.len() == 7 {
+            config.gui.accent_color = accent_color.to_owned();
+        }
+    }
+    save_config(&path, &config)?;
+    load_tauri_config_lists(Some(path.display().to_string()))
 }
 
 #[derive(Clone)]
@@ -3171,6 +3520,26 @@ struct OnlineStatsCache {
 }
 
 type SharedOnlineStatsCache = Arc<Mutex<OnlineStatsCache>>;
+
+static TAURI_ONLINE_STATS_CACHE: OnceLock<SharedOnlineStatsCache> = OnceLock::new();
+
+fn tauri_online_stats_cache() -> &'static SharedOnlineStatsCache {
+    TAURI_ONLINE_STATS_CACHE.get_or_init(|| Arc::new(Mutex::new(OnlineStatsCache::default())))
+}
+
+#[derive(Clone)]
+struct CachedTauriPlayers {
+    fetched_at: Instant,
+    players: Vec<TauriPlayerInfo>,
+}
+
+type SharedTauriPlayerCache = Arc<Mutex<HashMap<String, CachedTauriPlayers>>>;
+
+static TAURI_PLAYER_CACHE: OnceLock<SharedTauriPlayerCache> = OnceLock::new();
+
+fn tauri_player_cache() -> &'static SharedTauriPlayerCache {
+    TAURI_PLAYER_CACHE.get_or_init(|| Arc::new(Mutex::new(HashMap::new())))
+}
 
 #[derive(Clone, Debug)]
 struct ServerNetworkInfo {
@@ -4224,7 +4593,6 @@ impl NativeGuiApp {
         });
     }
 
-
     fn selected_server_name(&self) -> Option<&str> {
         let selected = self.selected_server.as_deref()?;
         self.servers
@@ -4246,11 +4614,7 @@ impl NativeGuiApp {
         }
 
         let mut players = self.selected_server_players.clone();
-        if apply_cached_player_stats(
-            &self.api_base_url,
-            &self.online_stats_cache,
-            &mut players,
-        ) {
+        if apply_cached_player_stats(&self.api_base_url, &self.online_stats_cache, &mut players) {
             self.selected_server_players = players;
             self.player_output =
                 format_player_payload(&self.selected_server_players, self.language);
@@ -4977,11 +5341,8 @@ impl NativeGuiApp {
                 let mut players =
                     query_server_players(endpoint.socket, Duration::from_millis(4500))?;
                 if should_apply_cached_stats {
-                    let _ = apply_cached_player_stats(
-                        &api_base_url,
-                        &online_stats_cache,
-                        &mut players,
-                    );
+                    let _ =
+                        apply_cached_player_stats(&api_base_url, &online_stats_cache, &mut players);
                 }
                 Ok((players, true))
             });
@@ -5069,9 +5430,7 @@ impl NativeGuiApp {
     }
 
     fn save_anne_stats_config(&mut self) {
-        if let Err(err) =
-            save_anne_stats_to_config(&self.config_path, self.anne_stats_enabled)
-        {
+        if let Err(err) = save_anne_stats_to_config(&self.config_path, self.anne_stats_enabled) {
             eprintln!("warning: failed to save anne stats config: {err}");
         }
     }
@@ -5919,8 +6278,8 @@ impl eframe::App for NativeGuiApp {
                                 self.ui_group_filter = None;
                             }
                             for (group, count) in &group_counts {
-                                let selected = self.ui_group_filter.as_deref()
-                                    == Some(group.as_str());
+                                let selected =
+                                    self.ui_group_filter.as_deref() == Some(group.as_str());
                                 if ui
                                     .selectable_label(selected, format!("{group} ({count})"))
                                     .clicked()
@@ -5935,9 +6294,8 @@ impl eframe::App for NativeGuiApp {
                         let mut filtered_servers = self.servers.clone();
 
                         if let Some(group_filter) = &self.ui_group_filter {
-                            filtered_servers.retain(|row| {
-                                row.groups.iter().any(|group| group == group_filter)
-                            });
+                            filtered_servers
+                                .retain(|row| row.groups.iter().any(|group| group == group_filter));
                         }
 
                         if !self.ui_search_query.trim().is_empty() {
@@ -6992,50 +7350,29 @@ fn load_gui_config_lists(path: &PathBuf) -> Result<GuiConfigLists, String> {
 }
 
 #[derive(Deserialize)]
-struct GitHubRelease {
-    tag_name: String,
-    html_url: String,
-}
-
-#[derive(Deserialize)]
 struct GitHubTag {
     name: String,
 }
 
 fn check_latest_release() -> Result<UpdateInfo, String> {
-    let url = format!("https://api.github.com/repos/{UPDATE_REPO}/releases?per_page=100");
     let client = Client::builder()
         .timeout(Duration::from_millis(10_000))
         .build()
         .map_err(|err| format!("failed to build update client: {err}"))?;
-    let text = client
-        .get(&url)
-        .header("User-Agent", USER_AGENT)
-        .send()
-        .map_err(|err| format!("failed to request latest release: {err}"))?
-        .error_for_status()
-        .map_err(|err| format!("latest release request failed: {err}"))?
-        .text()
-        .map_err(|err| format!("failed to read latest release: {err}"))?;
-    let releases: Vec<GitHubRelease> = serde_json::from_str(&text)
-        .map_err(|err| format!("failed to parse latest release list: {err}"))?;
-    let release = releases
-        .into_iter()
-        .filter(|release| is_update_release_tag(&release.tag_name))
-        .max_by(|left, right| {
-            compare_versions(
-                release_tag_version(&left.tag_name),
-                release_tag_version(&right.tag_name),
-            )
-        });
-
-    let (tag_name, html_url) = if let Some(release) = release {
-        (release.tag_name, release.html_url)
-    } else {
-        let tag = fetch_latest_update_tag(&client)?;
-        let html_url = format!("https://github.com/{UPDATE_REPO}/tree/{tag}");
-        (tag, html_url)
+    let tag_name = match fetch_latest_update_tag_from_atom(&client, "releases.atom", "release feed") {
+        Ok(tag) => tag,
+        Err(release_feed_err) => {
+            match fetch_latest_update_tag_from_atom(&client, "tags.atom", "tag feed") {
+                Ok(tag) => tag,
+                Err(tag_feed_err) => fetch_latest_update_tag(&client).map_err(|api_err| {
+                    format!(
+                        "failed to check latest release: {release_feed_err}; tag feed failed: {tag_feed_err}; API fallback failed: {api_err}"
+                    )
+                })?,
+            }
+        }
     };
+    let html_url = format!("https://github.com/{UPDATE_REPO}/releases/tag/{tag_name}");
 
     let latest_version = release_tag_version(&tag_name).to_owned();
     let available = is_version_newer(&latest_version, env!("CARGO_PKG_VERSION"));
@@ -7045,6 +7382,25 @@ fn check_latest_release() -> Result<UpdateInfo, String> {
         html_url,
         available,
     })
+}
+
+fn fetch_latest_update_tag_from_atom(
+    client: &Client,
+    feed_path: &str,
+    label: &str,
+) -> Result<String, String> {
+    let url = format!("https://github.com/{UPDATE_REPO}/{feed_path}");
+    let text = client
+        .get(&url)
+        .header("User-Agent", USER_AGENT)
+        .send()
+        .map_err(|err| format!("failed to request {label}: {err}"))?
+        .error_for_status()
+        .map_err(|err| format!("{label} request failed: {err}"))?
+        .text()
+        .map_err(|err| format!("failed to read {label}: {err}"))?;
+    latest_update_tag_from_release_feed(&text)
+        .ok_or_else(|| format!("{label} did not contain an update release"))
 }
 
 fn fetch_latest_update_tag(client: &Client) -> Result<String, String> {
@@ -7070,6 +7426,44 @@ fn fetch_latest_update_tag(client: &Client) -> Result<String, String> {
         })
         .map(|tag| tag.name)
         .ok_or_else(|| format!("no v* or {UPDATE_TAG_PREFIX}* update release found"))
+}
+
+fn latest_update_tag_from_release_feed(feed: &str) -> Option<String> {
+    let tag_pattern = Regex::new(r#"/releases/tag/([^<\s"']+)"#).ok()?;
+    tag_pattern
+        .captures_iter(feed)
+        .filter_map(|captures| captures.get(1).map(|value| value.as_str()))
+        .filter_map(decode_release_tag)
+        .filter(|tag| is_update_release_tag(tag))
+        .max_by(|left, right| {
+            compare_versions(release_tag_version(left), release_tag_version(right))
+        })
+}
+
+fn decode_release_tag(value: &str) -> Option<String> {
+    let mut output = Vec::with_capacity(value.len());
+    let mut bytes = value.as_bytes().iter().copied().peekable();
+    while let Some(byte) = bytes.next() {
+        if byte == b'%' {
+            let high = bytes.next()?;
+            let low = bytes.next()?;
+            let high = hex_value(high)?;
+            let low = hex_value(low)?;
+            output.push(high << 4 | low);
+        } else {
+            output.push(byte);
+        }
+    }
+    String::from_utf8(output).ok()
+}
+
+fn hex_value(byte: u8) -> Option<u8> {
+    match byte {
+        b'0'..=b'9' => Some(byte - b'0'),
+        b'a'..=b'f' => Some(byte - b'a' + 10),
+        b'A'..=b'F' => Some(byte - b'A' + 10),
+        _ => None,
+    }
 }
 
 fn is_update_release_tag(tag: &str) -> bool {
@@ -7757,10 +8151,7 @@ fn apply_player_stats(player: &mut PlayerInfo, stats: &HashMap<String, PlayerSta
     }
 }
 
-fn apply_global_player_stats(
-    player: &mut GlobalPlayerEntry,
-    stats: &HashMap<String, PlayerStats>,
-) {
+fn apply_global_player_stats(player: &mut GlobalPlayerEntry, stats: &HashMap<String, PlayerStats>) {
     if let Some(stat) = stats.get(&normalized_player_name(&player.name)) {
         player.points = Some(stat.total_points);
         player.playtime_mins = Some(stat.playtime_minutes);
@@ -7816,10 +8207,7 @@ fn is_fake_dns_ipv4(ip: &Ipv4Addr) -> bool {
 fn split_host_port(address: &str) -> Option<(&str, u16)> {
     let (host, port) = address.rsplit_once(':')?;
     let port = port.parse::<u16>().ok()?;
-    let host = host
-        .trim()
-        .trim_start_matches('[')
-        .trim_end_matches(']');
+    let host = host.trim().trim_start_matches('[').trim_end_matches(']');
     if host.is_empty() {
         None
     } else {
@@ -7896,15 +8284,11 @@ fn launch_steam_connect(address: &str) {
     }
     #[cfg(target_os = "macos")]
     {
-        let _ = std::process::Command::new("open")
-            .arg(&url)
-            .spawn();
+        let _ = std::process::Command::new("open").arg(&url).spawn();
     }
     #[cfg(target_os = "linux")]
     {
-        let _ = std::process::Command::new("xdg-open")
-            .arg(&url)
-            .spawn();
+        let _ = std::process::Command::new("xdg-open").arg(&url).spawn();
     }
 }
 
@@ -8021,8 +8405,7 @@ mod tests {
 
     #[test]
     fn preserves_generic_subscription_url() {
-        let url =
-            normalize_subscription_url("https://www.kitasoda.com/#/serverList").expect("url");
+        let url = normalize_subscription_url("https://www.kitasoda.com/#/serverList").expect("url");
         assert_eq!(url.as_str(), "https://www.kitasoda.com/#/serverList");
     }
 
@@ -8091,10 +8474,7 @@ mod tests {
         "#;
 
         let data_urls = extract_subscription_data_urls(&base, js).expect("data urls");
-        let urls = data_urls
-            .iter()
-            .map(|url| url.as_str())
-            .collect::<Vec<_>>();
+        let urls = data_urls.iter().map(|url| url.as_str()).collect::<Vec<_>>();
         assert_eq!(
             urls,
             vec![
@@ -8115,10 +8495,7 @@ mod tests {
         "#;
 
         let resources = extract_linked_subscription_resources(&base, html).expect("resources");
-        let urls = resources
-            .iter()
-            .map(|url| url.as_str())
-            .collect::<Vec<_>>();
+        let urls = resources.iter().map(|url| url.as_str()).collect::<Vec<_>>();
         assert_eq!(
             urls,
             vec![
@@ -8146,11 +8523,35 @@ mod tests {
         assert!(is_update_release_tag("Anne刷服器-v0.5.0"));
         assert!(is_update_release_tag("v0.5.0"));
         assert!(is_update_release_tag("0.5.0"));
-        assert!(!is_update_release_tag("CompetitiveWithAnne-stable-release-2026-05-09"));
+        assert!(!is_update_release_tag(
+            "CompetitiveWithAnne-stable-release-2026-05-09"
+        ));
         assert!(is_version_newer("0.5.0", "0.4.0"));
         assert!(is_version_newer("0.4.1", "0.4.0"));
         assert!(!is_version_newer("0.4.0", "0.4.0"));
         assert!(!is_version_newer("0.3.9", "0.4.0"));
+    }
+
+    #[test]
+    fn extracts_latest_release_tag_from_atom_feed() {
+        let feed = r#"
+            <feed>
+              <entry>
+                <link href="https://github.com/fantasylidong/CompetitiveWithAnne/releases/tag/Anne%E5%88%B7%E6%9C%8D%E5%99%A8-v0.8.0"/>
+              </entry>
+              <entry>
+                <link href="https://github.com/fantasylidong/CompetitiveWithAnne/releases/tag/Anne%E5%88%B7%E6%9C%8D%E5%99%A8-v0.9.1"/>
+              </entry>
+              <entry>
+                <link href="https://github.com/fantasylidong/CompetitiveWithAnne/releases/tag/CompetitiveWithAnne-stable-release-2026-05-09"/>
+              </entry>
+            </feed>
+        "#;
+
+        assert_eq!(
+            latest_update_tag_from_release_feed(feed).as_deref(),
+            Some("Anne刷服器-v0.9.1")
+        );
     }
 
     #[test]

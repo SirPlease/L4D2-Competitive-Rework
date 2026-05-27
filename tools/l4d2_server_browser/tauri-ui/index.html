@@ -16,14 +16,14 @@
           <img src="./assets/anne-icon.svg" alt="" />
           <div>
             <strong data-i18n="appTitle">Anne刷服器</strong>
-            <span id="configPath">...</span>
+            <span data-i18n="appSubtitle">L4D2 Server Browser</span>
           </div>
         </div>
         <nav class="nav">
           <button class="nav-item active" data-tab="servers" type="button" data-i18n="navServers">服务器</button>
           <button class="nav-item" data-tab="globalPlayers" type="button" data-i18n="navGlobalPlayers">全服玩家</button>
           <button class="nav-item" data-tab="broadcast" type="button" data-i18n="navBroadcast">全服消息</button>
-          <button class="nav-item" data-tab="subscriptions" type="button" data-i18n="navSubscriptions">网页订阅</button>
+          <button class="nav-item" data-tab="subscriptions" type="button" data-i18n="navSubscriptions">添加服务器</button>
           <button class="nav-item" data-tab="settings" type="button" data-i18n="navSettings">设置</button>
         </nav>
       </aside>
@@ -49,11 +49,15 @@
             <div class="toolbar">
               <label class="field search-field">
                 <span data-i18n="searchPlaceholder">搜索</span>
-                <input id="searchInput" autocomplete="off" data-i18n="searchPlaceholder" />
+                <input id="searchInput" autocomplete="off" data-i18n="searchPlaceholder" placeholder="名称 / 地址 / 地图" />
               </label>
               <label class="check">
                 <input id="onlyPlayersInput" type="checkbox" />
                 <span data-i18n="onlyPlayers">只看有人</span>
+              </label>
+              <label class="check">
+                <input id="onlyEmptyInput" type="checkbox" />
+                <span data-i18n="onlyEmpty">只看空服</span>
               </label>
               <label class="check">
                 <input id="hideTimeoutInput" type="checkbox" checked />
@@ -88,6 +92,7 @@
                     <th class="sortable" data-sort="ping" data-i18n="colPing">延迟</th>
                     <th class="sortable" data-sort="map" data-i18n="colMap">地图</th>
                     <th class="sortable" data-sort="group" data-i18n="colGroup">分组</th>
+                    <th data-i18n="colVac">VAC</th>
                     <th class="action-col" data-i18n="colAction">操作</th>
                   </tr>
                 </thead>
@@ -108,6 +113,16 @@
               <button class="ins-tab" data-ins="cvar" data-i18n="inspectorCvar">参数</button>
               <button class="ins-tab" data-ins="network" data-i18n="inspectorNetwork">网络</button>
             </div>
+            <div class="rcon-auth-controls" id="rconAuthControls" hidden>
+              <label class="field">
+                <span data-i18n="rconPasswordLabel">RCON 密码</span>
+                <input type="password" id="rconPassword" data-i18n="rconPassword" placeholder="RCON 密码，可空" />
+              </label>
+              <label class="check rcon-save">
+                <input id="saveRconPasswordInput" type="checkbox" />
+                <span data-i18n="savePassword">保存密码</span>
+              </label>
+            </div>
             <div class="inspector-content">
               <div id="insPlayers" class="ins-view active">
                 <table class="ins-table">
@@ -116,6 +131,10 @@
                       <th data-i18n="globalPlayersColName">玩家名</th>
                       <th data-i18n="globalPlayersColScore">得分</th>
                       <th data-i18n="globalPlayersColTime">时长</th>
+                      <th data-i18n="globalPlayersColPoints">总积分</th>
+                      <th data-i18n="globalPlayersColPlaytime">总时长</th>
+                      <th data-i18n="globalPlayersColPpm">PPM</th>
+                      <th data-i18n="globalPlayersColQuarter">季度分</th>
                     </tr>
                   </thead>
                   <tbody id="insPlayersRows"></tbody>
@@ -124,12 +143,18 @@
               <div id="insRcon" class="ins-view">
                 <div class="rcon-terminal" id="rconTerminal"></div>
                 <div class="rcon-input-group">
-                  <input type="password" id="rconPassword" data-i18n="rconPassword" />
-                  <input type="text" id="rconCommand" data-i18n="rconCommand" />
+                  <input type="text" id="rconCommand" data-i18n="rconCommand" placeholder="输入命令..." />
                   <button id="rconSendBtn" class="primary" data-i18n="inspectorSend">发送</button>
                 </div>
               </div>
               <div id="insCvar" class="ins-view">
+                <div class="ins-controls">
+                  <label class="field">
+                    <span data-i18n="cvarNames">CVAR 名称</span>
+                    <input type="text" id="cvarNames" data-i18n="cvarNamesHint" placeholder="留空读取全部公开 rules" />
+                  </label>
+                  <button id="cvarRefreshBtn" type="button" data-i18n="inspectorRefresh">刷新</button>
+                </div>
                 <table class="ins-table">
                   <thead>
                     <tr>
@@ -154,6 +179,14 @@
                     <span data-i18n="networkIsp">运营商</span>
                     <strong id="netIsp">-</strong>
                   </div>
+                  <div class="field">
+                    <span data-i18n="networkOrg">组织</span>
+                    <strong id="netOrg">-</strong>
+                  </div>
+                  <div class="field">
+                    <span data-i18n="networkAsn">ASN</span>
+                    <strong id="netAsn">-</strong>
+                  </div>
                 </div>
               </div>
             </div>
@@ -171,7 +204,11 @@
                   <th data-i18n="globalPlayersColServer">所在服务器</th>
                   <th data-i18n="globalPlayersColScore">得分</th>
                   <th data-i18n="globalPlayersColTime">时长</th>
-                  <th data-i18n="globalPlayersColPoints">Anne积分</th>
+                  <th data-i18n="globalPlayersColPoints">总积分</th>
+                  <th data-i18n="globalPlayersColPlaytime">总时长</th>
+                  <th data-i18n="globalPlayersColPpm">PPM</th>
+                  <th data-i18n="globalPlayersColQuarter">季度分</th>
+                  <th data-i18n="colAction">操作</th>
                 </tr>
               </thead>
               <tbody id="globalPlayerRows"></tbody>
@@ -204,43 +241,8 @@
 
         <!-- Subscriptions View -->
         <section id="subscriptionsView" class="view">
-          <div class="split">
-            <section class="panel">
-              <div class="panel-head">
-                <h2 data-i18n="navSubscriptions">网页订阅</h2>
-                <button id="newSubscriptionBtn" type="button" data-i18n="btnNew">新建</button>
-              </div>
-              <div id="subscriptionList" class="list"></div>
-            </section>
-
-            <section class="panel editor-panel">
-              <h2 id="subscriptionEditorTitle" data-i18n="btnNew">新建订阅</h2>
-              <div class="form-grid">
-                <label class="field">
-                  <span data-i18n="subscriptionName">订阅名称</span>
-                  <input id="subscriptionNameInput" autocomplete="off" />
-                </label>
-                <label class="field">
-                  <span data-i18n="subscriptionUrl">页面 URL</span>
-                  <input id="subscriptionUrlInput" autocomplete="off" />
-                </label>
-                <label class="field wide">
-                  <span data-i18n="subscriptionText">HTML / 文本</span>
-                  <textarea id="subscriptionTextInput" spellcheck="false"></textarea>
-                </label>
-              </div>
-              <div class="form-actions">
-                <button id="saveSubscriptionBtn" class="primary" type="button" data-i18n="btnSave">保存</button>
-                <button id="deleteSubscriptionBtn" class="danger" type="button" data-i18n="btnDelete">删除</button>
-              </div>
-            </section>
-          </div>
-        </section>
-
-        <!-- Settings View -->
-        <section id="settingsView" class="view">
           <section class="panel settings-panel">
-            <h2 data-i18n="settingsManualServers">手动服务器</h2>
+            <h2 data-i18n="settingsManualServers">手动添加服务器</h2>
             <div class="inline-form">
               <label class="field">
                 <span data-i18n="groupManual">分组</span>
@@ -253,6 +255,62 @@
               <button id="addManualBtn" class="primary" type="button" data-i18n="btnAdd">添加</button>
             </div>
             <div id="manualList" class="manual-list mt-14"></div>
+          </section>
+
+          <section class="panel subscription-panel">
+            <div class="panel-head">
+              <h2 data-i18n="webSubscriptions">网页订阅</h2>
+              <button id="newSubscriptionBtn" type="button" data-i18n="newWebSubscription">新建网页订阅</button>
+            </div>
+            <p class="hint subscription-guide" data-i18n="subscriptionGuide">页面 URL 和 HTML / 文本任选一个填写；同时填写时会优先解析 HTML / 文本。</p>
+            <div class="split subscription-split">
+              <section class="subscription-column">
+                <div class="panel-head">
+                  <h3 data-i18n="subscriptionListTitle">已保存订阅</h3>
+                </div>
+                <div id="subscriptionList" class="list"></div>
+              </section>
+
+              <section class="subscription-column editor-panel">
+                <h2 id="subscriptionEditorTitle" data-i18n="btnNew">新建订阅</h2>
+                <div class="form-grid">
+                  <label class="field">
+                    <span data-i18n="subscriptionName">订阅名称</span>
+                    <input id="subscriptionNameInput" autocomplete="off" />
+                  </label>
+                  <label class="field">
+                    <span data-i18n="subscriptionUrl">页面 URL</span>
+                    <input id="subscriptionUrlInput" autocomplete="off" />
+                    <small data-i18n="subscriptionUrlHint">填写网页链接即可自动抓取并解析服务器地址。</small>
+                  </label>
+                  <label class="field wide">
+                    <span data-i18n="subscriptionText">HTML / 文本</span>
+                    <textarea id="subscriptionTextInput" spellcheck="false"></textarea>
+                    <small data-i18n="subscriptionTextHint">无法访问网页时，再粘贴 HTML 或纯文本；这里会优先于页面 URL。</small>
+                  </label>
+                </div>
+                <div class="form-actions">
+                  <button id="saveSubscriptionBtn" class="primary" type="button" data-i18n="btnSave">保存</button>
+                  <button id="deleteSubscriptionBtn" class="danger" type="button" data-i18n="btnDelete">删除</button>
+                </div>
+              </section>
+            </div>
+          </section>
+        </section>
+
+        <!-- Settings View -->
+        <section id="settingsView" class="view">
+          <section class="panel settings-panel">
+            <h2 data-i18n="settingsConfig">配置文件</h2>
+            <div class="inline-form">
+              <label class="field wide">
+                <span data-i18n="configPathLabel">配置路径</span>
+                <input id="configPathInput" autocomplete="off" />
+              </label>
+              <button id="applyConfigPathBtn" class="primary" type="button" data-i18n="btnApply">应用</button>
+              <button id="resetConfigPathBtn" type="button" data-i18n="btnReset">默认</button>
+            </div>
+            <p id="configPathHint" class="hint"></p>
           </section>
 
           <section class="panel settings-panel mt-14">
@@ -279,13 +337,40 @@
 
           <section class="panel settings-panel mt-14">
             <h2 data-i18n="settingsLanguage">语言 / 其它设置</h2>
-            <div class="inline-form">
-              <select id="languageSelect">
-                <option value="zh_CN">简体中文</option>
-                <option value="en_US">English</option>
-              </select>
-              <button id="checkUpdateBtn" type="button" data-i18n="settingsUpdate">检查更新</button>
-              <span id="updateStatusMessage"></span>
+            <div class="settings-grid">
+              <label class="field">
+                <span data-i18n="languageLabel">语言</span>
+                <select id="languageSelect">
+                  <option value="zh_CN">简体中文</option>
+                  <option value="en_US">English</option>
+                </select>
+              </label>
+              <label class="field">
+                <span data-i18n="themeMode">主题</span>
+                <select id="themeSelect">
+                  <option value="light" data-i18n="themeLight">白天</option>
+                  <option value="dark" data-i18n="themeDark">夜晚</option>
+                  <option value="custom" data-i18n="themeCustom">自定义颜色</option>
+                </select>
+              </label>
+              <label class="field color-field">
+                <span data-i18n="customAccent">强调色</span>
+                <input id="customAccentInput" type="color" value="#0f766e" />
+              </label>
+              <div class="settings-toggles">
+                <label class="check">
+                  <input id="autoUpdateInput" type="checkbox" />
+                  <span data-i18n="autoUpdate">自动检查更新</span>
+                </label>
+                <label class="check">
+                  <input id="anneStatsInput" type="checkbox" />
+                  <span data-i18n="anneStats">启用 Anne 玩家统计</span>
+                </label>
+              </div>
+              <div class="update-actions">
+                <button id="checkUpdateBtn" type="button" data-i18n="settingsUpdate">检查更新</button>
+                <span id="updateStatusMessage"></span>
+              </div>
             </div>
           </section>
         </section>

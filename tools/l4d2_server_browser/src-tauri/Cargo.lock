@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "Anne刷服器"
-version = "0.7.0"
+version = "0.9.0"
 dependencies = [
  "clap",
  "eframe",
@@ -200,7 +200,7 @@ dependencies = [
 
 [[package]]
 name = "anne-server-browser-tauri"
-version = "0.7.0"
+version = "0.9.0"
 dependencies = [
  "Anne刷服器",
  "serde",

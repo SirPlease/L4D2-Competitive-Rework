@@ -1,5 +1,11 @@
 [gui]
 language = "zh-CN"
+anne_stats = true
+theme_mode = "light"
+accent_color = "#0f766e"
+# RCON 密码可在 Tauri 界面勾选保存后自动写入。
+# [gui.rcon_passwords]
+# "127.0.0.1:27015" = "change-me"
 
 [updater]
 auto_check = true
@@ -28,4 +34,3 @@ servers = [
 [[sourcebans]]
 name = "Anne 网页订阅"
 url = "https://anne.trygek.com/bans/index.php?p=servers"
-

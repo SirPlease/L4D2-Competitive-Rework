@@ -1,17 +1,32 @@
+#![cfg_attr(
+    all(target_os = "windows", not(debug_assertions)),
+    windows_subsystem = "windows"
+)]
+
 use anne_server_browser::{
     add_tauri_manual_server, delete_tauri_sourcebans, load_tauri_config_lists,
-    load_tauri_server_rows, open_tauri_steam_connect, save_tauri_sourcebans, tauri_config_path,
-    tauri_delete_manual_server, tauri_query_players, tauri_run_rcon, tauri_read_cvars,
-    tauri_fetch_network_info, tauri_check_update, tauri_api_me, tauri_steam_login_start,
-    tauri_steam_login_poll, tauri_api_logout, tauri_send_broadcast,
-    tauri_load_broadcast_history, tauri_load_global_players, tauri_save_api_config,
-    TauriConfigLists, TauriServerQuery, TauriServerRows, TauriSourceBansInput,
-    TauriDeleteManualServerRequest, TauriPlayerInfo, TauriRconRequest,
-    TauriCvarRequest, TauriCvarEntry, TauriNetworkInfo, TauriUpdateInfo,
-    TauriApiUser, TauriLoginStart, TauriLoginPollRequest, TauriLoginResult,
-    TauriBroadcastRequest, TauriBroadcastMessage, TauriGlobalPlayer,
-    TauriSaveApiConfigRequest,
+    load_tauri_server_rows, open_tauri_steam_connect, save_tauri_sourcebans, tauri_api_logout,
+    tauri_api_me, tauri_check_update, tauri_config_path, tauri_delete_manual_server,
+    tauri_fetch_network_info, tauri_load_broadcast_history, tauri_load_global_players,
+    tauri_query_players, tauri_read_cvars, tauri_run_rcon, tauri_save_api_config,
+    tauri_save_gui_settings, tauri_save_rcon_password, tauri_send_broadcast,
+    tauri_steam_login_poll, tauri_steam_login_start, TauriApiUser, TauriBroadcastMessage,
+    TauriBroadcastRequest, TauriConfigLists, TauriCvarEntry, TauriCvarRequest,
+    TauriDeleteManualServerRequest, TauriGlobalPlayer, TauriGuiSettingsRequest,
+    TauriLoginPollRequest, TauriLoginResult, TauriLoginStart, TauriNetworkInfo, TauriPlayerInfo,
+    TauriRconRequest, TauriSaveApiConfigRequest, TauriSaveRconPasswordRequest, TauriServerQuery,
+    TauriServerRows, TauriSourceBansInput, TauriUpdateInfo,
 };
+
+async fn run_blocking<T, F>(task: F) -> Result<T, String>
+where
+    T: Send + 'static,
+    F: FnOnce() -> Result<T, String> + Send + 'static,
+{
+    tauri::async_runtime::spawn_blocking(task)
+        .await
+        .map_err(|err| format!("background task failed: {err}"))?
+}
 
 #[tauri::command]
 fn config_path() -> String {
@@ -19,37 +34,39 @@ fn config_path() -> String {
 }
 
 #[tauri::command]
-fn load_config_lists(path: Option<String>) -> Result<TauriConfigLists, String> {
-    load_tauri_config_lists(path)
+async fn load_config_lists(path: Option<String>) -> Result<TauriConfigLists, String> {
+    run_blocking(move || load_tauri_config_lists(path)).await
 }
 
 #[tauri::command]
-fn refresh_servers(query: TauriServerQuery) -> Result<TauriServerRows, String> {
-    load_tauri_server_rows(query)
+async fn refresh_servers(query: TauriServerQuery) -> Result<TauriServerRows, String> {
+    run_blocking(move || load_tauri_server_rows(query)).await
 }
 
 #[tauri::command]
-fn add_manual_server(
+async fn add_manual_server(
     path: Option<String>,
     group: String,
     server: String,
 ) -> Result<TauriConfigLists, String> {
-    add_tauri_manual_server(path, group, server)
+    run_blocking(move || add_tauri_manual_server(path, group, server)).await
 }
 
 #[tauri::command]
-fn delete_manual_server(req: TauriDeleteManualServerRequest) -> Result<TauriConfigLists, String> {
-    tauri_delete_manual_server(req)
+async fn delete_manual_server(
+    req: TauriDeleteManualServerRequest,
+) -> Result<TauriConfigLists, String> {
+    run_blocking(move || tauri_delete_manual_server(req)).await
 }
 
 #[tauri::command]
-fn save_sourcebans(input: TauriSourceBansInput) -> Result<TauriConfigLists, String> {
-    save_tauri_sourcebans(input)
+async fn save_sourcebans(input: TauriSourceBansInput) -> Result<TauriConfigLists, String> {
+    run_blocking(move || save_tauri_sourcebans(input)).await
 }
 
 #[tauri::command]
-fn delete_sourcebans(path: Option<String>, index: usize) -> Result<TauriConfigLists, String> {
-    delete_tauri_sourcebans(path, index)
+async fn delete_sourcebans(path: Option<String>, index: usize) -> Result<TauriConfigLists, String> {
+    run_blocking(move || delete_tauri_sourcebans(path, index)).await
 }
 
 #[tauri::command]
@@ -58,68 +75,88 @@ fn open_steam_connect(address: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn query_players(config_path: Option<String>, address: String) -> Result<Vec<TauriPlayerInfo>, String> {
-    tauri_query_players(config_path, address)
+async fn query_players(
+    config_path: Option<String>,
+    address: String,
+) -> Result<Vec<TauriPlayerInfo>, String> {
+    run_blocking(move || tauri_query_players(config_path, address)).await
 }
 
 #[tauri::command]
-fn run_rcon(req: TauriRconRequest) -> Result<String, String> {
-    tauri_run_rcon(req)
+async fn run_rcon(req: TauriRconRequest) -> Result<String, String> {
+    run_blocking(move || tauri_run_rcon(req)).await
 }
 
 #[tauri::command]
-fn read_cvars(req: TauriCvarRequest) -> Result<Vec<TauriCvarEntry>, String> {
-    tauri_read_cvars(req)
+async fn read_cvars(req: TauriCvarRequest) -> Result<Vec<TauriCvarEntry>, String> {
+    run_blocking(move || tauri_read_cvars(req)).await
 }
 
 #[tauri::command]
-fn fetch_network_info(address: String, ip: String) -> Result<TauriNetworkInfo, String> {
-    tauri_fetch_network_info(address, ip)
+async fn fetch_network_info(address: String, ip: String) -> Result<TauriNetworkInfo, String> {
+    run_blocking(move || tauri_fetch_network_info(address, ip)).await
 }
 
 #[tauri::command]
-fn check_update() -> Result<TauriUpdateInfo, String> {
-    tauri_check_update()
+async fn check_update() -> Result<TauriUpdateInfo, String> {
+    run_blocking(tauri_check_update).await
 }
 
 #[tauri::command]
-fn api_me(base_url: String, token: String) -> Result<TauriApiUser, String> {
-    tauri_api_me(base_url, token)
+async fn api_me(base_url: String, token: String) -> Result<TauriApiUser, String> {
+    run_blocking(move || tauri_api_me(base_url, token)).await
 }
 
 #[tauri::command]
-fn steam_login_start(base_url: String) -> Result<TauriLoginStart, String> {
-    tauri_steam_login_start(base_url)
+async fn steam_login_start(base_url: String) -> Result<TauriLoginStart, String> {
+    run_blocking(move || tauri_steam_login_start(base_url)).await
 }
 
 #[tauri::command]
-fn steam_login_poll(req: TauriLoginPollRequest) -> Result<Option<TauriLoginResult>, String> {
-    tauri_steam_login_poll(req)
+async fn steam_login_poll(req: TauriLoginPollRequest) -> Result<Option<TauriLoginResult>, String> {
+    run_blocking(move || tauri_steam_login_poll(req)).await
 }
 
 #[tauri::command]
-fn api_logout(base_url: String, token: String) -> Result<(), String> {
-    tauri_api_logout(base_url, token)
+async fn api_logout(base_url: String, token: String) -> Result<(), String> {
+    run_blocking(move || tauri_api_logout(base_url, token)).await
 }
 
 #[tauri::command]
-fn send_broadcast(req: TauriBroadcastRequest) -> Result<String, String> {
-    tauri_send_broadcast(req)
+async fn send_broadcast(req: TauriBroadcastRequest) -> Result<String, String> {
+    run_blocking(move || tauri_send_broadcast(req)).await
 }
 
 #[tauri::command]
-fn load_broadcast_history(base_url: String, token: String) -> Result<Vec<TauriBroadcastMessage>, String> {
-    tauri_load_broadcast_history(base_url, token)
+async fn load_broadcast_history(
+    base_url: String,
+    token: String,
+) -> Result<Vec<TauriBroadcastMessage>, String> {
+    run_blocking(move || tauri_load_broadcast_history(base_url, token)).await
 }
 
 #[tauri::command]
-fn load_global_players(base_url: String, token: String, config_path: Option<String>) -> Result<Vec<TauriGlobalPlayer>, String> {
-    tauri_load_global_players(base_url, token, config_path)
+async fn load_global_players(
+    base_url: String,
+    token: String,
+    config_path: Option<String>,
+) -> Result<Vec<TauriGlobalPlayer>, String> {
+    run_blocking(move || tauri_load_global_players(base_url, token, config_path)).await
 }
 
 #[tauri::command]
-fn save_api_config(req: TauriSaveApiConfigRequest) -> Result<(), String> {
-    tauri_save_api_config(req)
+async fn save_api_config(req: TauriSaveApiConfigRequest) -> Result<(), String> {
+    run_blocking(move || tauri_save_api_config(req)).await
+}
+
+#[tauri::command]
+async fn save_gui_settings(req: TauriGuiSettingsRequest) -> Result<TauriConfigLists, String> {
+    run_blocking(move || tauri_save_gui_settings(req)).await
+}
+
+#[tauri::command]
+async fn save_rcon_password(req: TauriSaveRconPasswordRequest) -> Result<TauriConfigLists, String> {
+    run_blocking(move || tauri_save_rcon_password(req)).await
 }
 
 fn main() {
@@ -146,6 +183,8 @@ fn main() {
             load_broadcast_history,
             load_global_players,
             save_api_config,
+            save_gui_settings,
+            save_rcon_password,
         ])
         .run(tauri::generate_context!())
         .expect("failed to run Anne刷服器");

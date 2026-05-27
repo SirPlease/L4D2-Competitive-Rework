@@ -1,20 +1,31 @@
-import { initI18n, setLocale, t } from './i18n.js';
+import { getLocale, initI18n, setLocale, t } from './i18n.js';
 
 const tauriInvoke = window.__TAURI__?.core?.invoke;
+const CONFIG_PATH_OVERRIDE_KEY = "configPathOverride";
+const UPDATE_CHECK_CACHE_KEY = "lastAutoUpdateCheckAt";
+const UPDATE_CHECK_INTERVAL_MS = 12 * 60 * 60 * 1000;
 
 const state = {
   tab: "servers",
   configPath: "",
   lists: null,
+  allRows: [],
   rows: [],
   group: null,
   search: "",
   onlyWithPlayers: false,
+  onlyEmpty: false,
   hideTimeout: true,
   selectedSourcebans: null,
   busy: false,
   apiToken: null,
   apiBaseUrl: "",
+  autoCheckUpdate: true,
+  anneStatsEnabled: true,
+  rconPasswords: {},
+  rconPasswordSaved: false,
+  themeMode: "light",
+  accentColor: "#0f766e",
   steamUser: null,
   inspectorOpen: false,
   selectedAddress: null,
@@ -22,8 +33,15 @@ const state = {
   inspectorTab: "players",
   sortKey: "players",
   sortDesc: true,
-  autoRefreshTimer: null
+  autoRefreshTimer: null,
+  refreshInFlight: false,
+  refreshSeq: 0
 };
+
+const naturalCollator = new Intl.Collator(undefined, {
+  numeric: true,
+  sensitivity: "base",
+});
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => Array.from(document.querySelectorAll(selector));
@@ -57,7 +75,7 @@ function summarizeRows(rows) {
 
 function setBusy(value, labelKey = "btnRefresh") {
   state.busy = value;
-  $("#refreshBtn").disabled = value;
+  $("#refreshBtn").disabled = false;
   $("#refreshBtn").textContent = value ? t("statusRefreshing") : t(labelKey);
 }
 
@@ -69,6 +87,215 @@ function compactPath(path) {
   if (!path) return t("configNotSet");
   if (path.length <= 44) return path;
   return `${path.slice(0, 18)}...${path.slice(-22)}`;
+}
+
+function uiLocaleFromConfig(value) {
+  const normalized = String(value || "").replace("-", "_");
+  return normalized === "en_US" ? "en_US" : "zh_CN";
+}
+
+function configLanguageFromLocale(value) {
+  return value === "en_US" ? "en-US" : "zh-CN";
+}
+
+function boolText(value) {
+  return value ? t("yes") : t("no");
+}
+
+function naturalCompare(left, right) {
+  return naturalCollator.compare(String(left || ""), String(right || ""));
+}
+
+function normalizeThemeMode(value) {
+  return ["light", "dark", "custom"].includes(value) ? value : "light";
+}
+
+function isHexColor(value) {
+  return /^#[0-9a-f]{6}$/i.test(String(value || ""));
+}
+
+function darkenHex(value, amount = 0.18) {
+  if (!isHexColor(value)) return "#0b5f59";
+  const parts = [1, 3, 5].map((index) => parseInt(value.slice(index, index + 2), 16));
+  const darkened = parts.map((part) => Math.max(0, Math.round(part * (1 - amount))));
+  return `#${darkened.map((part) => part.toString(16).padStart(2, "0")).join("")}`;
+}
+
+function applyTheme(mode = state.themeMode, accent = state.accentColor) {
+  state.themeMode = normalizeThemeMode(mode);
+  state.accentColor = isHexColor(accent) ? accent : "#0f766e";
+  document.body.dataset.theme = state.themeMode === "dark" ? "dark" : "light";
+  if (state.themeMode === "custom") {
+    document.body.style.setProperty("--accent", state.accentColor);
+    document.body.style.setProperty("--accent-strong", darkenHex(state.accentColor));
+  } else {
+    document.body.style.removeProperty("--accent");
+    document.body.style.removeProperty("--accent-strong");
+  }
+  const themeSelect = $("#themeSelect");
+  const colorInput = $("#customAccentInput");
+  if (themeSelect) themeSelect.value = state.themeMode;
+  if (colorInput) {
+    colorInput.value = state.accentColor;
+  }
+}
+
+function syncConfigPathUI() {
+  const input = $("#configPathInput");
+  const hint = $("#configPathHint");
+  if (input) input.value = state.configPath || "";
+  if (hint) hint.textContent = compactPath(state.configPath);
+}
+
+function hasSavedRconPassword(address = state.selectedAddress) {
+  return Boolean(
+    address
+    && Object.prototype.hasOwnProperty.call(state.rconPasswords || {}, address)
+    && state.rconPasswords[address]
+  );
+}
+
+function savedRconPassword(address = state.selectedAddress) {
+  return hasSavedRconPassword(address) ? state.rconPasswords[address] : "";
+}
+
+function syncRconPasswordControls(address = state.selectedAddress) {
+  const passwordInput = $("#rconPassword");
+  const saveInput = $("#saveRconPasswordInput");
+  const saved = hasSavedRconPassword(address);
+  state.rconPasswordSaved = saved;
+  if (passwordInput) passwordInput.value = savedRconPassword(address);
+  if (saveInput) saveInput.checked = saved;
+}
+
+function appendTextCell(row, value, className = "") {
+  const cell = document.createElement("td");
+  if (className) cell.className = className;
+  cell.textContent = value === null || value === undefined || value === "" ? "-" : String(value);
+  row.append(cell);
+  return cell;
+}
+
+function appendEmptyRow(tbody, colSpan, message) {
+  tbody.replaceChildren();
+  const row = document.createElement("tr");
+  const cell = document.createElement("td");
+  cell.colSpan = colSpan;
+  cell.className = "empty";
+  cell.textContent = message;
+  row.append(cell);
+  tbody.append(row);
+}
+
+function formatDuration(seconds) {
+  const totalSeconds = Math.max(0, Number(seconds) || 0);
+  const minutes = Math.round(totalSeconds / 60);
+  if (minutes < 60) return `${minutes}m`;
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  return rest ? `${hours}h ${rest}m` : `${hours}h`;
+}
+
+function formatPlaytime(minutes) {
+  if (minutes === null || minutes === undefined) return "-";
+  const totalMinutes = Math.max(0, Number(minutes) || 0);
+  if (totalMinutes < 60) return `${Math.round(totalMinutes)}m`;
+  const hours = totalMinutes / 60;
+  if (hours < 100) return `${hours.toFixed(1)}h`;
+  return `${Math.round(hours)}h`;
+}
+
+function formatOptionalNumber(value) {
+  return value === null || value === undefined ? "-" : String(value);
+}
+
+function formatPpm(value) {
+  return value === null || value === undefined ? "-" : Number(value).toFixed(2);
+}
+
+function parseCvarNames(value) {
+  const names = value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+  return names.length > 0 ? names : null;
+}
+
+function tagClassName(tag) {
+  const normalized = String(tag).toLowerCase();
+  if (normalized === "anne") return "server-tag anne-tag";
+  if (normalized.includes("confogl") || normalized.includes("zonemod")) return "server-tag mode-tag";
+  return "server-tag";
+}
+
+function renderServerTags(server) {
+  const tags = Array.isArray(server.tags) ? [...server.tags] : [];
+  if (server.is_anne && !tags.some((tag) => String(tag).toLowerCase() === "anne")) {
+    tags.unshift("Anne");
+  }
+  if (tags.length === 0) return null;
+
+  const wrap = document.createElement("div");
+  wrap.className = "server-tags";
+  wrap.title = server.sv_tags ? `sv_tags: ${server.sv_tags}` : "";
+  for (const tag of tags.slice(0, 6)) {
+    const badge = document.createElement("span");
+    badge.className = tagClassName(tag);
+    badge.textContent = tag;
+    wrap.append(badge);
+  }
+  if (tags.length > 6) {
+    const more = document.createElement("span");
+    more.className = "server-tag";
+    more.textContent = `+${tags.length - 6}`;
+    wrap.append(more);
+  }
+  return wrap;
+}
+
+async function saveGuiSettings(partial) {
+  const req = {
+    config_path: state.configPath || null,
+    language: null,
+    update_auto_check: null,
+    anne_stats: null,
+    theme_mode: null,
+    accent_color: null,
+    ...partial,
+  };
+  const lists = await invoke("save_gui_settings", { req });
+  if (lists) {
+    state.lists = lists;
+    state.configPath = lists.config_path;
+    state.apiBaseUrl = lists.api_base_url;
+    state.apiToken = lists.api_token || state.apiToken;
+    state.autoCheckUpdate = lists.update_auto_check !== false;
+    state.anneStatsEnabled = lists.anne_stats !== false;
+    state.themeMode = normalizeThemeMode(lists.theme_mode);
+    state.accentColor = isHexColor(lists.accent_color) ? lists.accent_color : state.accentColor;
+    state.rconPasswords = lists.rcon_passwords || {};
+    applyTheme();
+    syncConfigPathUI();
+    syncRconPasswordControls();
+  }
+}
+
+async function saveRconPassword(password, address = state.selectedAddress) {
+  if (!address) return;
+  const lists = await invoke("save_rcon_password", {
+    req: {
+      config_path: state.configPath || null,
+      address,
+      password: password ? password : null,
+    },
+  });
+  if (lists) {
+    state.lists = lists;
+    state.configPath = lists.config_path;
+    state.rconPasswords = lists.rcon_passwords || {};
+    syncConfigPathUI();
+    syncRconPasswordControls(address);
+  }
 }
 
 function setTab(tab) {
@@ -96,17 +323,31 @@ function setTab(tab) {
 async function loadConfigLists() {
   try {
     state.lists = await invoke("load_config_lists", { path: state.configPath || null });
+    if (!state.lists) return;
     state.configPath = state.lists.config_path;
     state.apiBaseUrl = state.lists.api_base_url;
-    $("#configPath").textContent = compactPath(state.configPath);
+    state.apiToken = state.lists.api_token || localStorage.getItem("apiToken") || null;
+    state.autoCheckUpdate = state.lists.update_auto_check !== false;
+    state.anneStatsEnabled = state.lists.anne_stats !== false;
+    state.rconPasswords = state.lists.rcon_passwords || {};
+    state.themeMode = normalizeThemeMode(state.lists.theme_mode);
+    state.accentColor = isHexColor(state.lists.accent_color) ? state.lists.accent_color : "#0f766e";
+    const locale = uiLocaleFromConfig(state.lists.gui_language);
+    setLocale(locale);
+    applyTheme();
+    syncConfigPathUI();
     $("#apiBaseUrlInput").value = state.apiBaseUrl;
+    $("#languageSelect").value = locale;
+    $("#autoUpdateInput").checked = state.autoCheckUpdate;
+    $("#anneStatsInput").checked = state.anneStatsEnabled;
+    syncRconPasswordControls();
     renderSubscriptions();
     renderManualServers();
     
-    // Attempt API Me if we have a token stored locally for now.
-    const savedToken = localStorage.getItem("apiToken");
-    if (savedToken && state.apiBaseUrl) {
-      state.apiToken = savedToken;
+    if (state.lists.api_token) {
+      localStorage.setItem("apiToken", state.lists.api_token);
+    }
+    if (state.apiToken && state.apiBaseUrl) {
       try {
         const user = await invoke("api_me", { baseUrl: state.apiBaseUrl, token: state.apiToken });
         state.steamUser = user;
@@ -116,52 +357,97 @@ async function loadConfigLists() {
         localStorage.removeItem("apiToken");
         updateSteamUserUI();
       }
+    } else {
+      updateSteamUserUI();
     }
   } catch (err) {
     console.error(err);
   }
 }
 
-async function refreshServers() {
-  if (state.tab !== "servers") return;
+function rowMatchesSearch(row, search) {
+  if (!search) return true;
+  const haystack = [
+    row.name,
+    row.map,
+    row.address,
+    row.socket,
+    row.group_label,
+    row.status,
+    row.sv_tags,
+    ...(row.tags || []),
+    ...(row.groups || []),
+  ].join(" ").toLowerCase();
+  return haystack.includes(search);
+}
+
+function baseFilteredRows() {
+  const search = state.search.trim().toLowerCase();
+  return [...state.allRows].filter((row) => {
+    if (state.hideTimeout && row.error) return false;
+    if (state.onlyWithPlayers && !(row.players > 0)) return false;
+    if (state.onlyEmpty && (row.error || row.players !== 0)) return false;
+    return rowMatchesSearch(row, search);
+  });
+}
+
+function applyServerFiltersAndRender() {
+  let rows = baseFilteredRows();
+  const groups = summarizeRows(rows).groups;
+  if (state.group) {
+    rows = rows.filter((row) => (row.groups || []).includes(state.group));
+  }
+  state.rows = rows;
+  sortRowsClientSide();
+  renderMetrics(summarizeRows(state.rows));
+  renderGroups(groups);
+  renderServerRows();
+  if (state.tab === "servers") {
+    setStatus(`${t("navServers")} : ${state.rows.length}`);
+  }
+}
+
+async function refreshServers({ silent = false } = {}) {
+  state.refreshInFlight = true;
+  state.busy = true;
+  const seq = ++state.refreshSeq;
   setBusy(true);
-  setStatus(t("statusRefreshing"));
+  if (!silent || state.tab === "servers") {
+    setStatus(t("statusRefreshing"));
+  }
   try {
     const payload = await invoke("refresh_servers", {
       query: {
         config_path: state.configPath || null,
-        search: state.search,
-        group: state.group || null,
-        only_with_players: state.onlyWithPlayers,
-        hide_timeout: state.hideTimeout,
         limit: 300,
       },
     });
     if (!payload) return; // For mock safety
+    if (seq !== state.refreshSeq) return;
     state.configPath = payload.config_path;
-    state.rows = payload.rows;
-    // apply basic client-side sorting since we didn't pass sort arguments
-    sortRowsClientSide();
-    renderMetrics(payload.summary);
-    renderGroups(payload.summary.groups);
-    renderServerRows();
-    setStatus(`${t("navServers")} : ${payload.rows.length}`);
+    state.allRows = Array.isArray(payload.rows) ? payload.rows : [];
+    syncConfigPathUI();
+    applyServerFiltersAndRender();
   } catch (error) {
     setStatus(`Error: ${error}`);
   } finally {
-    setBusy(false);
+    if (seq === state.refreshSeq) {
+      state.refreshInFlight = false;
+      state.busy = false;
+      setBusy(false);
+    }
   }
 }
 
 function sortRowsClientSide() {
   state.rows.sort((a, b) => {
     let cmp = 0;
-    if (state.sortKey === "name") cmp = a.name.localeCompare(b.name);
-    else if (state.sortKey === "address") cmp = a.address.localeCompare(b.address);
+    if (state.sortKey === "name") cmp = naturalCompare(a.name, b.name);
+    else if (state.sortKey === "address") cmp = naturalCompare(a.address, b.address);
     else if (state.sortKey === "players") cmp = (a.players || 0) - (b.players || 0);
     else if (state.sortKey === "ping") cmp = (a.ping_ms || 9999) - (b.ping_ms || 9999);
-    else if (state.sortKey === "map") cmp = a.map.localeCompare(b.map);
-    else if (state.sortKey === "group") cmp = a.group_label.localeCompare(b.group_label);
+    else if (state.sortKey === "map") cmp = naturalCompare(a.map, b.map);
+    else if (state.sortKey === "group") cmp = naturalCompare(a.group_label, b.group_label);
     
     return state.sortDesc ? -cmp : cmp;
   });
@@ -193,7 +479,7 @@ function renderGroups(groups) {
   all.textContent = t("allServers");
   all.addEventListener("click", () => {
     state.group = null;
-    refreshServers();
+    applyServerFiltersAndRender();
   });
   root.append(all);
 
@@ -204,7 +490,7 @@ function renderGroups(groups) {
     button.textContent = `${name} ${count}`;
     button.addEventListener("click", () => {
       state.group = name;
-      refreshServers();
+      applyServerFiltersAndRender();
     });
     root.append(button);
   }
@@ -216,7 +502,7 @@ function renderServerRows() {
   if (state.rows.length === 0) {
     const row = document.createElement("tr");
     const cell = document.createElement("td");
-    cell.colSpan = 7;
+    cell.colSpan = 8;
     cell.className = "empty";
     cell.textContent = t("noServers");
     row.append(cell);
@@ -241,6 +527,8 @@ function renderServerRows() {
     }`;
     status.textContent = server.error ? t("statusTimeout") : server.players > 0 ? t("statusActive") : t("statusEmpty");
     nameCell.append(name, status);
+    const tags = renderServerTags(server);
+    if (tags) nameCell.append(tags);
 
     const addressCell = document.createElement("td");
     addressCell.className = "mono";
@@ -257,6 +545,9 @@ function renderServerRows() {
 
     const groupCell = document.createElement("td");
     groupCell.textContent = server.group_label || "-";
+
+    const vacCell = document.createElement("td");
+    vacCell.textContent = boolText(server.vac);
 
     const actionCell = document.createElement("td");
     const connect = document.createElement("button");
@@ -275,6 +566,7 @@ function renderServerRows() {
       pingCell,
       mapCell,
       groupCell,
+      vacCell,
       actionCell,
     );
 
@@ -293,8 +585,13 @@ function renderServerRows() {
 
 function openInspector(name, address) {
   state.inspectorOpen = true;
+  state.selectedAddress = address;
   $("#inspectorPanel").style.display = "flex";
   $("#inspectorTitle").textContent = name;
+  syncRconPasswordControls(address);
+  $("#insPlayersRows").replaceChildren();
+  appendEmptyRow($("#insPlayersRows"), 7, t("statusRefreshing"));
+  $("#insCvarRows").replaceChildren();
   refreshInspector();
 }
 
@@ -311,6 +608,7 @@ function setInspectorTab(tab) {
   $$(".ins-tab").forEach(b => b.classList.toggle("active", b.dataset.ins === tab));
   $$(".ins-view").forEach(v => v.classList.remove("active"));
   $(`#ins${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add("active");
+  $("#rconAuthControls").hidden = !(tab === "rcon" || tab === "cvar");
   refreshInspector();
 }
 
@@ -319,39 +617,66 @@ async function refreshInspector() {
   const address = state.selectedAddress;
   
   if (state.inspectorTab === "players") {
+    const tbody = $("#insPlayersRows");
+    appendEmptyRow(tbody, 7, t("statusRefreshing"));
     try {
       const players = await invoke("query_players", { configPath: state.configPath, address });
-      const tbody = $("#insPlayersRows");
+      if (state.selectedAddress !== address || state.inspectorTab !== "players") return;
+      if (!players || players.length === 0) {
+        appendEmptyRow(tbody, 7, t("noPlayers"));
+        return;
+      }
       tbody.replaceChildren();
       for (const p of players) {
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${p.name}</td><td>${p.score}</td><td>${(p.duration_secs / 60).toFixed(0)}m</td>`;
+        appendTextCell(tr, p.name);
+        appendTextCell(tr, p.score);
+        appendTextCell(tr, formatDuration(p.duration_secs));
+        appendTextCell(tr, formatOptionalNumber(p.points));
+        appendTextCell(tr, formatPlaytime(p.playtime_mins));
+        appendTextCell(tr, formatPpm(p.ppm));
+        appendTextCell(tr, formatOptionalNumber(p.quarter_points));
         tbody.append(tr);
       }
     } catch (e) {
-      console.error(e);
+      if (state.selectedAddress !== address || state.inspectorTab !== "players") return;
+      appendEmptyRow(tbody, 7, String(e));
     }
   } else if (state.inspectorTab === "cvar") {
+    const tbody = $("#insCvarRows");
     try {
-      const cvars = await invoke("read_cvars", { req: { config_path: state.configPath, address, password: null, names: null, timeout_ms: 2500 }});
-      const tbody = $("#insCvarRows");
+      const password = $("#rconPassword").value.trim() || null;
+      const names = parseCvarNames($("#cvarNames").value);
+      const cvars = await invoke("read_cvars", {
+        req: { config_path: state.configPath, address, password, names, timeout_ms: 2500 }
+      });
+      if (state.selectedAddress !== address || state.inspectorTab !== "cvar") return;
+      if (!cvars || cvars.length === 0) {
+        appendEmptyRow(tbody, 2, t("emptyResult"));
+        return;
+      }
       tbody.replaceChildren();
       for (const c of cvars) {
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${c.name}</td><td>${c.value}</td>`;
+        appendTextCell(tr, c.name, "mono");
+        appendTextCell(tr, c.value);
         tbody.append(tr);
       }
     } catch (e) {
-      console.error(e);
+      if (state.selectedAddress !== address || state.inspectorTab !== "cvar") return;
+      appendEmptyRow(tbody, 2, String(e));
     }
   } else if (state.inspectorTab === "network") {
     try {
       // Assuming socket address is 'ip:port'
       const ip = state.selectedSocket ? state.selectedSocket.split(":")[0] : address.split(":")[0];
       const net = await invoke("fetch_network_info", { address, ip });
+      if (state.selectedAddress !== address || state.inspectorTab !== "network") return;
       $("#netIp").textContent = net.ip;
-      $("#netCountry").textContent = `${net.country} - ${net.region}`;
+      $("#netCountry").textContent = [net.country, net.region, net.city].filter(Boolean).join(" - ") || "-";
       $("#netIsp").textContent = net.isp;
+      $("#netOrg").textContent = net.org || "-";
+      $("#netAsn").textContent = net.asn || "-";
     } catch (e) {
       console.error(e);
     }
@@ -359,13 +684,16 @@ async function refreshInspector() {
 }
 
 async function sendRcon() {
-  const password = $("#rconPassword").value;
+  const password = $("#rconPassword").value.trim();
   const command = $("#rconCommand").value;
   if (!password || !command || !state.selectedAddress) return;
   
   const term = $("#rconTerminal");
   term.textContent += `\n> ${command}\n`;
   try {
+    if ($("#saveRconPasswordInput").checked) {
+      await saveRconPassword(password, state.selectedAddress);
+    }
     const res = await invoke("run_rcon", { req: {
       config_path: state.configPath,
       address: state.selectedAddress,
@@ -444,7 +772,7 @@ function renderManualServers() {
           server: item.server
         }});
         renderManualServers();
-        refreshServers();
+        refreshServers({ silent: true });
       } catch (e) {
         setStatus(`${t("deleteFailed")}: ${e}`);
       }
@@ -494,7 +822,7 @@ async function saveSubscription() {
     $("#subscriptionTextInput").value = "";
     renderSubscriptions();
     setStatus(t("statusSaved"));
-    refreshServers();
+    refreshServers({ silent: true });
   } catch (error) {
     setStatus(`${t("saveFailed")}: ${error}`);
   }
@@ -510,7 +838,7 @@ async function deleteSubscription() {
     clearSubscriptionEditor();
     renderSubscriptions();
     setStatus(t("statusDeleted"));
-    refreshServers();
+    refreshServers({ silent: true });
   } catch (error) {
     setStatus(`${t("deleteFailed")}: ${error}`);
   }
@@ -529,7 +857,7 @@ async function addManualServer() {
     $("#manualServerInput").value = "";
     renderManualServers();
     setStatus(t("statusAdded"));
-    refreshServers();
+    refreshServers({ silent: true });
   } catch (error) {
     setStatus(`${t("addFailed")}: ${error}`);
   }
@@ -544,10 +872,12 @@ async function startSteamLogin() {
   
   try {
     const start = await invoke("steam_login_start", { baseUrl });
+    await invoke("save_api_config", { req: { config_path: state.configPath, base_url: baseUrl, token: state.apiToken } });
     $("#steamLoginModal").style.display = "block";
     $("#steamLoginUrl").href = start.verification_url;
     $("#steamLoginUrl").textContent = start.verification_url;
     $("#steamLoginCode").textContent = start.user_code;
+    window.open(start.verification_url, "_blank");
     
     pollSteamLogin(baseUrl, start.device_code, start.expires_in, start.interval);
   } catch (e) {
@@ -619,27 +949,39 @@ function updateSteamUserUI() {
 // ----- Global Players -----
 
 async function loadGlobalPlayers() {
-  if (!state.apiToken) {
-    $("#globalPlayerRows").innerHTML = `<tr><td colspan="5" class="empty">${t("loginRequired")}</td></tr>`;
-    return;
-  }
+  const tbody = $("#globalPlayerRows");
   try {
-    const players = await invoke("load_global_players", { baseUrl: state.apiBaseUrl, token: state.apiToken, configPath: state.configPath });
-    const tbody = $("#globalPlayerRows");
+    const players = await invoke("load_global_players", {
+      baseUrl: state.apiBaseUrl,
+      token: state.apiToken || "",
+      configPath: state.configPath
+    });
+    if (!players || players.length === 0) {
+      appendEmptyRow(tbody, 9, t("noPlayers"));
+      return;
+    }
     tbody.replaceChildren();
     for (const p of players) {
       const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${p.name}</td>
-        <td>${p.server_name}</td>
-        <td>${p.score}</td>
-        <td>${(p.duration_secs / 60).toFixed(0)}m</td>
-        <td>${p.points ?? '-'}</td>
-      `;
+      appendTextCell(tr, p.name);
+      appendTextCell(tr, p.server_name);
+      appendTextCell(tr, p.score);
+      appendTextCell(tr, formatDuration(p.duration_secs));
+      appendTextCell(tr, formatOptionalNumber(p.points));
+      appendTextCell(tr, formatPlaytime(p.playtime_mins));
+      appendTextCell(tr, formatPpm(p.ppm));
+      appendTextCell(tr, formatOptionalNumber(p.quarter_points));
+      const actionCell = document.createElement("td");
+      const connect = document.createElement("button");
+      connect.type = "button";
+      connect.textContent = t("btnConnect");
+      connect.addEventListener("click", () => openSteam(p.server_address));
+      actionCell.append(connect);
+      tr.append(actionCell);
       tbody.append(tr);
     }
   } catch (e) {
-    $("#globalPlayerRows").innerHTML = `<tr><td colspan="5" class="empty">${e}</td></tr>`;
+    appendEmptyRow(tbody, 9, String(e));
   }
 }
 
@@ -647,7 +989,11 @@ async function loadGlobalPlayers() {
 
 async function sendBroadcastMessage() {
   const msg = $("#broadcastInput").value.trim();
-  if (!msg || !state.apiToken) return;
+  if (!msg) return;
+  if (!state.apiToken) {
+    setStatus(t("loginRequired"));
+    return;
+  }
   try {
     const res = await invoke("send_broadcast", { req: { base_url: state.apiBaseUrl, token: state.apiToken, message: msg } });
     $("#broadcastInput").value = "";
@@ -659,30 +1005,30 @@ async function sendBroadcastMessage() {
 }
 
 async function loadBroadcastHistory() {
-  if (!state.apiToken) {
-    $("#broadcastRows").innerHTML = `<tr><td colspan="3" class="empty">${t("loginRequired")}</td></tr>`;
-    return;
-  }
+  const tbody = $("#broadcastRows");
   try {
-    const msgs = await invoke("load_broadcast_history", { baseUrl: state.apiBaseUrl, token: state.apiToken });
-    const tbody = $("#broadcastRows");
+    const msgs = await invoke("load_broadcast_history", { baseUrl: state.apiBaseUrl, token: state.apiToken || "" });
+    if (!msgs || msgs.length === 0) {
+      appendEmptyRow(tbody, 3, t("emptyResult"));
+      return;
+    }
     tbody.replaceChildren();
     for (const m of msgs) {
       const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${new Date(m.sent_at).toLocaleString()}</td>
-        <td>${m.sender_name}</td>
-        <td>${m.message}</td>
-      `;
+      appendTextCell(tr, new Date(m.sent_at).toLocaleString());
+      appendTextCell(tr, m.sender_name);
+      appendTextCell(tr, m.message);
       tbody.append(tr);
     }
   } catch (e) {
-    $("#broadcastRows").innerHTML = `<tr><td colspan="3" class="empty">${e}</td></tr>`;
+    appendEmptyRow(tbody, 3, String(e));
   }
 }
 
 async function checkUpdate() {
   try {
+    $("#checkUpdateBtn").disabled = true;
+    $("#updateStatusMessage").textContent = t("checkingUpdate");
     const info = await invoke("check_update");
     if (info.available) {
       $("#updateStatusMessage").textContent = t("updateAvailable", { latest: info.latest_version, current: info.current_version });
@@ -691,7 +1037,41 @@ async function checkUpdate() {
     }
   } catch (e) {
     $("#updateStatusMessage").textContent = `${t("updateFailed")}: ${e}`;
+  } finally {
+    $("#checkUpdateBtn").disabled = false;
   }
+}
+
+async function autoCheckUpdateIfDue() {
+  if (!state.autoCheckUpdate) return;
+  const lastChecked = Number(localStorage.getItem(UPDATE_CHECK_CACHE_KEY) || 0);
+  if (Date.now() - lastChecked < UPDATE_CHECK_INTERVAL_MS) return;
+  localStorage.setItem(UPDATE_CHECK_CACHE_KEY, String(Date.now()));
+  await checkUpdate();
+}
+
+async function applyConfigPathOverride() {
+  const value = $("#configPathInput").value.trim();
+  if (value) {
+    state.configPath = value;
+    localStorage.setItem(CONFIG_PATH_OVERRIDE_KEY, value);
+  } else {
+    localStorage.removeItem(CONFIG_PATH_OVERRIDE_KEY);
+    state.configPath = tauriInvoke ? await invoke("config_path") : "";
+  }
+  syncConfigPathUI();
+  await loadConfigLists();
+  await refreshServers({ silent: true });
+  setStatus(t("statusSaved"));
+}
+
+async function resetConfigPathOverride() {
+  localStorage.removeItem(CONFIG_PATH_OVERRIDE_KEY);
+  state.configPath = tauriInvoke ? await invoke("config_path") : "";
+  syncConfigPathUI();
+  await loadConfigLists();
+  await refreshServers({ silent: true });
+  setStatus(t("statusSaved"));
 }
 
 async function openSteam(address) {
@@ -715,17 +1095,29 @@ function bindEvents() {
   
   $("#onlyPlayersInput").addEventListener("change", (event) => {
     state.onlyWithPlayers = event.currentTarget.checked;
-    refreshServers();
+    if (state.onlyWithPlayers) {
+      state.onlyEmpty = false;
+      $("#onlyEmptyInput").checked = false;
+    }
+    applyServerFiltersAndRender();
+  });
+  $("#onlyEmptyInput").addEventListener("change", (event) => {
+    state.onlyEmpty = event.currentTarget.checked;
+    if (state.onlyEmpty) {
+      state.onlyWithPlayers = false;
+      $("#onlyPlayersInput").checked = false;
+    }
+    applyServerFiltersAndRender();
   });
   $("#hideTimeoutInput").addEventListener("change", (event) => {
     state.hideTimeout = event.currentTarget.checked;
-    refreshServers();
+    applyServerFiltersAndRender();
   });
   let searchTimer = 0;
   $("#searchInput").addEventListener("input", (event) => {
     state.search = event.currentTarget.value;
     clearTimeout(searchTimer);
-    searchTimer = setTimeout(refreshServers, 220);
+    searchTimer = setTimeout(applyServerFiltersAndRender, 120);
   });
   
   // Settings
@@ -733,6 +1125,20 @@ function bindEvents() {
   $("#saveSubscriptionBtn").addEventListener("click", saveSubscription);
   $("#deleteSubscriptionBtn").addEventListener("click", deleteSubscription);
   $("#addManualBtn").addEventListener("click", addManualServer);
+  $("#applyConfigPathBtn").addEventListener("click", async () => {
+    try {
+      await applyConfigPathOverride();
+    } catch (error) {
+      setStatus(`${t("saveFailed")}: ${error}`);
+    }
+  });
+  $("#resetConfigPathBtn").addEventListener("click", async () => {
+    try {
+      await resetConfigPathOverride();
+    } catch (error) {
+      setStatus(`${t("saveFailed")}: ${error}`);
+    }
+  });
   
   // Sort
   $$("th.sortable").forEach(th => {
@@ -748,43 +1154,136 @@ function bindEvents() {
   $("#rconCommand").addEventListener("keypress", (e) => {
     if (e.key === 'Enter') sendRcon();
   });
+  $("#cvarRefreshBtn").addEventListener("click", refreshInspector);
+  $("#saveRconPasswordInput").addEventListener("change", async (e) => {
+    try {
+      if (e.currentTarget.checked) {
+        await saveRconPassword($("#rconPassword").value.trim(), state.selectedAddress);
+      } else {
+        await saveRconPassword(null, state.selectedAddress);
+      }
+      e.currentTarget.checked = state.rconPasswordSaved;
+      setStatus(t("statusSaved"));
+    } catch (error) {
+      e.currentTarget.checked = state.rconPasswordSaved;
+      setStatus(`${t("saveFailed")}: ${error}`);
+    }
+  });
+  $("#rconPassword").addEventListener("change", async (e) => {
+    if (!$("#saveRconPasswordInput").checked) return;
+    try {
+      await saveRconPassword(e.currentTarget.value.trim(), state.selectedAddress);
+      setStatus(t("statusSaved"));
+    } catch (error) {
+      setStatus(`${t("saveFailed")}: ${error}`);
+    }
+  });
   
   // Steam
   $("#steamLoginBtn").addEventListener("click", startSteamLogin);
   $("#steamLogoutBtn").addEventListener("click", logoutApi);
   $("#checkUpdateBtn").addEventListener("click", checkUpdate);
+  $("#apiBaseUrlInput").addEventListener("change", async (e) => {
+    state.apiBaseUrl = e.currentTarget.value.trim();
+    try {
+      await invoke("save_api_config", {
+        req: { config_path: state.configPath, base_url: state.apiBaseUrl, token: state.apiToken }
+      });
+      setStatus(t("statusSaved"));
+    } catch (error) {
+      setStatus(`${t("saveFailed")}: ${error}`);
+    }
+  });
   
   // Broadcast
   $("#broadcastSendBtn").addEventListener("click", sendBroadcastMessage);
   
   // i18n
-  $("#languageSelect").addEventListener("change", (e) => {
-    setLocale(e.target.value);
+  $("#languageSelect").addEventListener("change", async (e) => {
+    const locale = e.target.value;
+    setLocale(locale);
+    try {
+      await saveGuiSettings({ language: configLanguageFromLocale(locale) });
+      setStatus(t("statusSaved"));
+    } catch (error) {
+      setStatus(`${t("saveFailed")}: ${error}`);
+    }
+  });
+  $("#autoUpdateInput").addEventListener("change", async (e) => {
+    state.autoCheckUpdate = e.currentTarget.checked;
+    try {
+      await saveGuiSettings({ update_auto_check: state.autoCheckUpdate });
+      setStatus(t("statusSaved"));
+    } catch (error) {
+      setStatus(`${t("saveFailed")}: ${error}`);
+    }
+  });
+  $("#themeSelect").addEventListener("change", async (e) => {
+    state.themeMode = normalizeThemeMode(e.currentTarget.value);
+    applyTheme();
+    try {
+      await saveGuiSettings({ theme_mode: state.themeMode, accent_color: state.accentColor });
+      setStatus(t("statusSaved"));
+    } catch (error) {
+      setStatus(`${t("saveFailed")}: ${error}`);
+    }
+  });
+  $("#customAccentInput").addEventListener("input", (e) => {
+    state.accentColor = e.currentTarget.value;
+    if (state.themeMode !== "custom") {
+      state.themeMode = "custom";
+    }
+    applyTheme();
+  });
+  $("#customAccentInput").addEventListener("change", async (e) => {
+    state.accentColor = e.currentTarget.value;
+    if (state.themeMode !== "custom") {
+      state.themeMode = "custom";
+    }
+    applyTheme();
+    try {
+      await saveGuiSettings({ theme_mode: state.themeMode, accent_color: state.accentColor });
+      setStatus(t("statusSaved"));
+    } catch (error) {
+      setStatus(`${t("saveFailed")}: ${error}`);
+    }
+  });
+  $("#anneStatsInput").addEventListener("change", async (e) => {
+    state.anneStatsEnabled = e.currentTarget.checked;
+    try {
+      await saveGuiSettings({ anne_stats: state.anneStatsEnabled });
+      setStatus(t("statusSaved"));
+      if (state.inspectorOpen && state.inspectorTab === "players") refreshInspector();
+      if (state.tab === "globalPlayers") loadGlobalPlayers();
+    } catch (error) {
+      setStatus(`${t("saveFailed")}: ${error}`);
+    }
   });
 }
 
 async function boot() {
   initI18n();
-  // Set dropdown to match current locale
-  const savedLocale = localStorage.getItem("appLocale");
-  if (savedLocale) {
-    $("#languageSelect").value = savedLocale;
-  }
+  $("#languageSelect").value = getLocale();
+  applyTheme();
   
   bindEvents();
   clearSubscriptionEditor();
   try {
-    if (tauriInvoke) {
+    const configOverride = localStorage.getItem(CONFIG_PATH_OVERRIDE_KEY);
+    if (configOverride) {
+      state.configPath = configOverride;
+    } else if (tauriInvoke) {
       state.configPath = await invoke("config_path");
     }
-    $("#configPath").textContent = compactPath(state.configPath);
+    syncConfigPathUI();
     await loadConfigLists();
     await refreshServers();
+    await autoCheckUpdateIfDue();
     
     // Auto refresh every 10 seconds
     setInterval(() => {
       if (state.tab === "servers" && !state.busy) {
-        refreshServers();
+        refreshServers({ silent: true });
       }
     }, 10000);
     
