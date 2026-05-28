@@ -92,17 +92,29 @@ jobs:
         run: |
           set -euo pipefail
           DIST="Anne刷服器-${{ matrix.target }}"
-          BIN="target/${{ matrix.target }}/release/${{ matrix.binary }}"
+          TAURI_BIN="target/${{ matrix.target }}/release/anne-server-browser-tauri"
+          if [[ "${{ runner.os }}" == "Windows" ]]; then
+            TAURI_BIN="${TAURI_BIN}.exe"
+          fi
+          CLI_BIN="target/${{ matrix.target }}/release/${{ matrix.binary }}"
+          BIN="$TAURI_BIN"
+          if [[ ! -f "$BIN" ]]; then
+            BIN="$CLI_BIN"
+          fi
           mkdir -p "$DIST"
-          cp "$BIN" "$DIST/"
+          cp "$BIN" "$DIST/${{ matrix.binary }}"
           cp tools/l4d2_server_browser/README.md "$DIST/"
           cp tools/l4d2_server_browser/browser.example.toml "$DIST/"
           if [[ "${{ runner.os }}" == "macOS" ]]; then
-            APP="$DIST/Anne刷服器.app"
-            mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
-            cp "$BIN" "$APP/Contents/MacOS/Anne刷服器"
-            chmod +x "$APP/Contents/MacOS/Anne刷服器"
-            cat > "$APP/Contents/Info.plist" <<'PLIST'
+            TAURI_APP="target/${{ matrix.target }}/release/bundle/macos/Anne刷服器.app"
+            if [[ -d "$TAURI_APP" ]]; then
+              cp -R "$TAURI_APP" "$DIST/"
+            else
+              APP="$DIST/Anne刷服器.app"
+              mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
+              cp "$DIST/${{ matrix.binary }}" "$APP/Contents/MacOS/Anne刷服器"
+              chmod +x "$APP/Contents/MacOS/Anne刷服器"
+              cat > "$APP/Contents/Info.plist" <<'PLIST'
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
@@ -134,9 +146,9 @@ jobs:
           </dict>
           </plist>
           PLIST
-            ICONSET="$APP/Contents/Resources/Anne刷服器.iconset"
-            mkdir -p "$ICONSET"
-            python3 - "$ICONSET" <<'PY'
+              ICONSET="$APP/Contents/Resources/Anne刷服器.iconset"
+              mkdir -p "$ICONSET"
+              python3 - "$ICONSET" <<'PY'
           import pathlib
           import struct
           import sys
@@ -216,8 +228,9 @@ jobs:
           ]:
               write_png(iconset / name, size)
           PY
-            iconutil -c icns "$ICONSET" -o "$APP/Contents/Resources/Anne刷服器.icns"
-            rm -rf "$ICONSET"
+              iconutil -c icns "$ICONSET" -o "$APP/Contents/Resources/Anne刷服器.icns"
+              rm -rf "$ICONSET"
+            fi
           fi
 
       - name: Archive tar.gz

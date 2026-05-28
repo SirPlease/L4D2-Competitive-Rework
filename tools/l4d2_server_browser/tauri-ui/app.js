@@ -50,6 +50,10 @@ const state = {
   broadcastSending: false,
   broadcastHistory: [],
   broadcastHistoryInFlight: false,
+  updatePageUrl: "",
+  updateDownloadUrl: "",
+  updateDownloadName: "",
+  updateInstalling: false,
   lastFullRefreshAt: 0,
   lastActiveRefreshAt: 0,
   lastSelectedRefreshAt: 0,
@@ -1716,16 +1720,66 @@ async function checkUpdate() {
   try {
     $("#checkUpdateBtn").disabled = true;
     $("#updateStatusMessage").textContent = t("checkingUpdate");
+    state.updatePageUrl = "";
+    state.updateDownloadUrl = "";
+    state.updateDownloadName = "";
+    syncDownloadPageButton();
     const info = await invoke("check_update");
     if (info.available) {
+      state.updateDownloadUrl = info.download_url || "";
+      state.updateDownloadName = info.download_name || "";
+      state.updatePageUrl = info.html_url || "";
       $("#updateStatusMessage").textContent = t("updateAvailable", { latest: info.latest_version, current: info.current_version });
     } else {
+      state.updatePageUrl = "";
       $("#updateStatusMessage").textContent = t("updateCurrent", { current: info.current_version });
     }
+    syncDownloadPageButton();
   } catch (e) {
+    state.updatePageUrl = "";
+    state.updateDownloadUrl = "";
+    state.updateDownloadName = "";
+    syncDownloadPageButton();
     $("#updateStatusMessage").textContent = `${t("updateFailed")}: ${e}`;
   } finally {
     $("#checkUpdateBtn").disabled = false;
+  }
+}
+
+function syncDownloadPageButton() {
+  const installButton = $("#installUpdateBtn");
+  const pageButton = $("#openDownloadPageBtn");
+  if (installButton) {
+    installButton.hidden = !state.updateDownloadUrl;
+    installButton.disabled = state.updateInstalling;
+    installButton.textContent = state.updateInstalling ? t("installingUpdate") : t("installUpdate");
+  }
+  if (pageButton) pageButton.hidden = !(state.updatePageUrl || state.updateDownloadUrl);
+}
+
+async function installUpdate() {
+  if (!state.updateDownloadUrl || state.updateInstalling) return;
+  state.updateInstalling = true;
+  syncDownloadPageButton();
+  $("#updateStatusMessage").textContent = t("downloadingUpdate");
+  try {
+    const result = await invoke("install_update", {
+      req: {
+        url: state.updateDownloadUrl,
+        file_name: state.updateDownloadName || null,
+      },
+    });
+    $("#updateStatusMessage").textContent = result?.message || t("updateReadyToApply");
+    if (result?.should_exit) {
+      setTimeout(() => invoke("exit_app"), 700);
+    } else {
+      state.updateInstalling = false;
+      syncDownloadPageButton();
+    }
+  } catch (error) {
+    $("#updateStatusMessage").textContent = `${t("installUpdateFailed")}: ${error}`;
+    state.updateInstalling = false;
+    syncDownloadPageButton();
   }
 }
 
@@ -1871,6 +1925,10 @@ function bindEvents() {
   $("#steamLoginBtn").addEventListener("click", startSteamLogin);
   $("#steamLogoutBtn").addEventListener("click", logoutApi);
   $("#checkUpdateBtn").addEventListener("click", checkUpdate);
+  $("#installUpdateBtn").addEventListener("click", installUpdate);
+  $("#openDownloadPageBtn").addEventListener("click", () => {
+    if (state.updatePageUrl || state.updateDownloadUrl) openExternalUrl(state.updatePageUrl || state.updateDownloadUrl);
+  });
   $("#apiBaseUrlInput").addEventListener("change", async (e) => {
     state.apiBaseUrl = e.currentTarget.value.trim();
     try {

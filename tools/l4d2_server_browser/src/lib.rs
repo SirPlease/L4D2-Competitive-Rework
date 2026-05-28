@@ -20,6 +20,7 @@ pub use app::{
     // new
     tauri_delete_manual_server,
     tauri_fetch_network_info,
+    tauri_install_update,
     tauri_load_broadcast_history,
     tauri_load_global_players,
     tauri_query_players,
@@ -41,6 +42,8 @@ pub use app::{
     TauriDeleteManualServerRequest,
     TauriGlobalPlayer,
     TauriGuiSettingsRequest,
+    TauriInstallUpdateRequest,
+    TauriInstallUpdateResult,
     TauriLoginPollRequest,
     TauriLoginResult,
     TauriLoginStart,

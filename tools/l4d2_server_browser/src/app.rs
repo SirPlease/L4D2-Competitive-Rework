@@ -2989,6 +2989,20 @@ pub struct TauriUpdateInfo {
     pub html_url: String,
     pub available: bool,
     pub current_version: String,
+    pub download_url: Option<String>,
+    pub download_name: Option<String>,
+}
+
+#[derive(Clone, Deserialize)]
+pub struct TauriInstallUpdateRequest {
+    pub url: String,
+    pub file_name: Option<String>,
+}
+
+#[derive(Clone, Serialize)]
+pub struct TauriInstallUpdateResult {
+    pub message: String,
+    pub should_exit: bool,
 }
 
 #[derive(Clone, Serialize)]
@@ -3265,7 +3279,13 @@ pub fn tauri_check_update() -> Result<TauriUpdateInfo, String> {
         html_url: info.html_url,
         available: info.available,
         current_version: env!("CARGO_PKG_VERSION").to_owned(),
+        download_url: info.download_url,
+        download_name: info.download_name,
     })
+}
+
+pub fn tauri_install_update(req: TauriInstallUpdateRequest) -> Result<TauriInstallUpdateResult, String> {
+    download_and_launch_portable_update(req)
 }
 
 pub fn tauri_api_me(base_url: String, token: String) -> Result<TauriApiUser, String> {
@@ -3583,6 +3603,8 @@ struct UpdateInfo {
     latest_version: String,
     html_url: String,
     available: bool,
+    download_url: Option<String>,
+    download_name: Option<String>,
 }
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -7644,6 +7666,12 @@ struct GitHubTag {
     name: String,
 }
 
+#[derive(Clone, Debug)]
+struct ReleaseAsset {
+    name: String,
+    download_url: String,
+}
+
 fn check_latest_release() -> Result<UpdateInfo, String> {
     let client = Client::builder()
         .timeout(Duration::from_millis(10_000))
@@ -7664,6 +7692,8 @@ fn check_latest_release() -> Result<UpdateInfo, String> {
         }
     };
     let html_url = format!("https://github.com/{UPDATE_REPO}/releases/tag/{tag_name}");
+    let assets = fetch_release_assets(&client, &tag_name).unwrap_or_default();
+    let selected_asset = select_portable_update_asset(&assets);
 
     let latest_version = release_tag_version(&tag_name).to_owned();
     let available = is_version_newer(&latest_version, env!("CARGO_PKG_VERSION"));
@@ -7672,6 +7702,8 @@ fn check_latest_release() -> Result<UpdateInfo, String> {
         latest_version,
         html_url,
         available,
+        download_url: selected_asset.as_ref().map(|asset| asset.download_url.clone()),
+        download_name: selected_asset.map(|asset| asset.name),
     })
 }
 
@@ -7717,6 +7749,104 @@ fn fetch_latest_update_tag(client: &Client) -> Result<String, String> {
         })
         .map(|tag| tag.name)
         .ok_or_else(|| format!("no v* or {UPDATE_TAG_PREFIX}* update release found"))
+}
+
+fn fetch_release_assets(client: &Client, tag_name: &str) -> Result<Vec<ReleaseAsset>, String> {
+    let url = format!("https://github.com/{UPDATE_REPO}/releases/expanded_assets/{tag_name}");
+    let text = client
+        .get(&url)
+        .header("User-Agent", USER_AGENT)
+        .send()
+        .map_err(|err| format!("failed to request release assets: {err}"))?
+        .error_for_status()
+        .map_err(|err| format!("release assets request failed: {err}"))?
+        .text()
+        .map_err(|err| format!("failed to read release assets: {err}"))?;
+    parse_release_assets(&text)
+}
+
+fn parse_release_assets(html: &str) -> Result<Vec<ReleaseAsset>, String> {
+    let pattern = Regex::new(
+        r#"(?s)<a[^>]+href="([^"]+/releases/download/[^"]+)"[^>]*>.*?<span[^>]+class="[^"]*Truncate-text text-bold[^"]*"[^>]*>([^<]+)</span>"#,
+    )
+    .map_err(|err| err.to_string())?;
+    let mut assets = Vec::new();
+    for captures in pattern.captures_iter(html) {
+        let Some(href) = captures.get(1).map(|value| value.as_str()) else {
+            continue;
+        };
+        let Some(name) = captures.get(2).map(|value| value.as_str()) else {
+            continue;
+        };
+        if name.eq_ignore_ascii_case("source code") {
+            continue;
+        }
+        let download_url = if href.starts_with("https://") {
+            href.to_owned()
+        } else {
+            format!("https://github.com{href}")
+        };
+        assets.push(ReleaseAsset {
+            name: decode_html_entities(name),
+            download_url,
+        });
+    }
+    Ok(assets)
+}
+
+fn decode_html_entities(value: &str) -> String {
+    value
+        .replace("&amp;", "&")
+        .replace("&lt;", "<")
+        .replace("&gt;", ">")
+        .replace("&quot;", "\"")
+        .replace("&#39;", "'")
+}
+
+fn select_portable_update_asset(assets: &[ReleaseAsset]) -> Option<ReleaseAsset> {
+    let target = portable_update_target_key();
+    let mut candidates = assets
+        .iter()
+        .filter(|asset| {
+            let name = asset.name.to_ascii_lowercase();
+            name.contains(target) && (name.ends_with(".zip") || name.ends_with(".tar.gz"))
+        })
+        .cloned()
+        .collect::<Vec<_>>();
+    candidates.sort_by(|left, right| {
+        asset_update_score(&right.name).cmp(&asset_update_score(&left.name))
+    });
+    candidates.into_iter().next()
+}
+
+fn portable_update_target_key() -> &'static str {
+    #[cfg(target_os = "windows")]
+    {
+        "x86_64-pc-windows-msvc"
+    }
+    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    {
+        "aarch64-apple-darwin"
+    }
+    #[cfg(all(target_os = "macos", not(target_arch = "aarch64")))]
+    {
+        "x86_64-apple-darwin"
+    }
+    #[cfg(target_os = "linux")]
+    {
+        "x86_64-unknown-linux-gnu"
+    }
+}
+
+fn asset_update_score(name: &str) -> u8 {
+    let name = name.to_ascii_lowercase();
+    if name.ends_with(".zip") {
+        3
+    } else if name.ends_with(".tar.gz") {
+        2
+    } else {
+        1
+    }
 }
 
 fn latest_update_tag_from_release_feed(feed: &str) -> Option<String> {
@@ -8648,6 +8778,200 @@ pub fn open_tauri_url(url: String) -> Result<(), String> {
     }
     launch_url(parsed.as_str());
     Ok(())
+}
+
+fn download_and_launch_portable_update(req: TauriInstallUpdateRequest) -> Result<TauriInstallUpdateResult, String> {
+    let parsed = reqwest::Url::parse(req.url.trim()).map_err(|err| format!("invalid URL: {err}"))?;
+    if !matches!(parsed.scheme(), "http" | "https") {
+        return Err("only http and https update URLs can be downloaded".to_owned());
+    }
+
+    let file_name = req
+        .file_name
+        .as_deref()
+        .map(safe_update_file_name)
+        .filter(|name| !name.is_empty())
+        .unwrap_or_else(|| {
+            parsed
+                .path_segments()
+                .and_then(|mut segments| segments.next_back())
+                .map(safe_update_file_name)
+                .filter(|name| !name.is_empty())
+                .unwrap_or_else(|| "Anne刷服器-update.zip".to_owned())
+        });
+
+    let update_dir = env::temp_dir().join(format!(
+        "anne-server-browser-update-{}",
+        chrono::Utc::now().timestamp()
+    ));
+    fs::create_dir_all(&update_dir).map_err(|err| format!("failed to create update dir: {err}"))?;
+    let archive_path = update_dir.join(file_name);
+
+    let client = api_client(Duration::from_secs(120))?;
+    let mut response = client
+        .get(parsed)
+        .header("User-Agent", USER_AGENT)
+        .send()
+        .map_err(|err| format!("failed to download update: {err}"))?
+        .error_for_status()
+        .map_err(|err| format!("update download failed: {err}"))?;
+    let mut file =
+        fs::File::create(&archive_path).map_err(|err| format!("failed to create update file: {err}"))?;
+    io::copy(&mut response, &mut file).map_err(|err| format!("failed to save update: {err}"))?;
+    drop(file);
+
+    launch_portable_update(&archive_path, &update_dir)
+}
+
+fn safe_update_file_name(value: &str) -> String {
+    value
+        .chars()
+        .map(|ch| match ch {
+            '/' | '\\' | ':' | '*' | '?' | '"' | '<' | '>' | '|' => '_',
+            _ => ch,
+        })
+        .collect::<String>()
+        .trim()
+        .to_owned()
+}
+
+fn launch_portable_update(
+    archive_path: &Path,
+    update_dir: &Path,
+) -> Result<TauriInstallUpdateResult, String> {
+    #[cfg(target_os = "windows")]
+    {
+        launch_windows_portable_update(archive_path, update_dir)
+    }
+    #[cfg(target_os = "macos")]
+    {
+        launch_macos_portable_update(archive_path, update_dir)
+    }
+    #[cfg(target_os = "linux")]
+    {
+        launch_linux_portable_update(archive_path, update_dir)
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn launch_windows_portable_update(
+    archive_path: &Path,
+    update_dir: &Path,
+) -> Result<TauriInstallUpdateResult, String> {
+    use std::os::windows::process::CommandExt;
+
+    let current_exe = env::current_exe().map_err(|err| format!("failed to locate current exe: {err}"))?;
+    let app_dir = current_exe
+        .parent()
+        .ok_or_else(|| "failed to locate app directory".to_owned())?
+        .to_path_buf();
+    let extract_dir = update_dir.join("extracted");
+    let script_path = update_dir.join("apply-update.ps1");
+    let script = format!(
+        r#"
+$ErrorActionPreference = "Stop"
+$archive = {archive}
+$extract = {extract}
+$target = {target}
+$exe = {exe}
+$pidToWait = {pid}
+if ($pidToWait -gt 0) {{
+  while (Get-Process -Id $pidToWait -ErrorAction SilentlyContinue) {{
+    Start-Sleep -Milliseconds 500
+  }}
+}}
+if (Test-Path $extract) {{ Remove-Item -LiteralPath $extract -Recurse -Force }}
+New-Item -ItemType Directory -Path $extract -Force | Out-Null
+Expand-Archive -LiteralPath $archive -DestinationPath $extract -Force
+$root = Get-ChildItem -LiteralPath $extract | Where-Object {{ $_.PSIsContainer }} | Select-Object -First 1
+if ($null -eq $root) {{ throw "更新包内没有可替换目录" }}
+Get-ChildItem -LiteralPath $root.FullName -Force | ForEach-Object {{
+  Copy-Item -LiteralPath $_.FullName -Destination $target -Recurse -Force
+}}
+Start-Process -FilePath $exe -WorkingDirectory $target
+"#,
+        archive = ps_quote_path(archive_path),
+        extract = ps_quote_path(&extract_dir),
+        target = ps_quote_path(&app_dir),
+        exe = ps_quote_path(&current_exe),
+        pid = std::process::id(),
+    );
+    fs::write(&script_path, script).map_err(|err| format!("failed to write update script: {err}"))?;
+    let script_arg = script_path.display().to_string();
+    std::process::Command::new("powershell")
+        .args(["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", &script_arg])
+        .creation_flags(0x08000000)
+        .spawn()
+        .map_err(|err| format!("failed to start update script: {err}"))?;
+    Ok(TauriInstallUpdateResult {
+        message: "更新包已下载，程序退出后会自动替换并重新启动。".to_owned(),
+        should_exit: true,
+    })
+}
+
+#[cfg(target_os = "windows")]
+fn ps_quote_path(path: &Path) -> String {
+    format!("'{}'", path.display().to_string().replace('\'', "''"))
+}
+
+#[cfg(target_os = "macos")]
+fn launch_macos_portable_update(
+    archive_path: &Path,
+    update_dir: &Path,
+) -> Result<TauriInstallUpdateResult, String> {
+    let extract_dir = update_dir.join("extracted");
+    fs::create_dir_all(&extract_dir).map_err(|err| format!("failed to create extract dir: {err}"))?;
+    let archive_arg = archive_path.display().to_string();
+    let extract_arg = extract_dir.display().to_string();
+    std::process::Command::new("tar")
+        .args(["-xzf", &archive_arg, "-C", &extract_arg])
+        .status()
+        .map_err(|err| format!("failed to extract update: {err}"))
+        .and_then(|status| {
+            if status.success() {
+                Ok(())
+            } else {
+                Err(format!("update extract failed with status {status}"))
+            }
+        })?;
+    std::process::Command::new("open")
+        .arg(&extract_dir)
+        .spawn()
+        .map_err(|err| format!("failed to open extracted update: {err}"))?;
+    Ok(TauriInstallUpdateResult {
+        message: format!("更新包已下载并解压到 {}", extract_dir.display()),
+        should_exit: false,
+    })
+}
+
+#[cfg(target_os = "linux")]
+fn launch_linux_portable_update(
+    archive_path: &Path,
+    update_dir: &Path,
+) -> Result<TauriInstallUpdateResult, String> {
+    let extract_dir = update_dir.join("extracted");
+    fs::create_dir_all(&extract_dir).map_err(|err| format!("failed to create extract dir: {err}"))?;
+    let archive_arg = archive_path.display().to_string();
+    let extract_arg = extract_dir.display().to_string();
+    std::process::Command::new("tar")
+        .args(["-xzf", &archive_arg, "-C", &extract_arg])
+        .status()
+        .map_err(|err| format!("failed to extract update: {err}"))
+        .and_then(|status| {
+            if status.success() {
+                Ok(())
+            } else {
+                Err(format!("update extract failed with status {status}"))
+            }
+        })?;
+    std::process::Command::new("xdg-open")
+        .arg(&extract_dir)
+        .spawn()
+        .map_err(|err| format!("failed to open extracted update: {err}"))?;
+    Ok(TauriInstallUpdateResult {
+        message: format!("更新包已下载并解压到 {}", extract_dir.display()),
+        should_exit: false,
+    })
 }
 
 #[cfg(test)]

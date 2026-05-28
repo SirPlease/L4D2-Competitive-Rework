@@ -7,15 +7,15 @@ use anne_server_browser::{
     add_tauri_manual_server, delete_tauri_sourcebans, load_tauri_config_lists,
     load_tauri_server_rows, open_tauri_steam_connect, open_tauri_url, refresh_tauri_sourcebans,
     save_tauri_sourcebans, tauri_api_logout, tauri_api_me, tauri_check_update, tauri_config_path,
-    tauri_delete_manual_server, tauri_fetch_network_info, tauri_load_broadcast_history,
-    tauri_load_global_players, tauri_query_players, tauri_read_cvars, tauri_run_rcon,
+    tauri_delete_manual_server, tauri_fetch_network_info, tauri_install_update,
+    tauri_load_broadcast_history, tauri_load_global_players, tauri_query_players, tauri_read_cvars, tauri_run_rcon,
     tauri_save_api_config, tauri_save_gui_settings, tauri_save_rcon_password, tauri_send_broadcast,
     tauri_steam_login_poll, tauri_steam_login_start, TauriApiUser, TauriBroadcastMessage,
     TauriBroadcastHistoryRequest, TauriBroadcastRequest, TauriConfigLists, TauriCvarEntry,
     TauriCvarRequest, TauriDeleteManualServerRequest, TauriGlobalPlayer, TauriGuiSettingsRequest,
-    TauriLoginPollRequest, TauriLoginResult, TauriLoginStart, TauriNetworkInfo, TauriPlayerInfo,
-    TauriRconRequest, TauriSaveApiConfigRequest, TauriSaveRconPasswordRequest, TauriServerQuery,
-    TauriServerRows, TauriSourceBansInput, TauriUpdateInfo,
+    TauriInstallUpdateRequest, TauriInstallUpdateResult, TauriLoginPollRequest, TauriLoginResult,
+    TauriLoginStart, TauriNetworkInfo, TauriPlayerInfo, TauriRconRequest, TauriSaveApiConfigRequest,
+    TauriSaveRconPasswordRequest, TauriServerQuery, TauriServerRows, TauriSourceBansInput, TauriUpdateInfo,
 };
 
 async fn run_blocking<T, F>(task: F) -> Result<T, String>
@@ -113,6 +113,16 @@ async fn check_update() -> Result<TauriUpdateInfo, String> {
 }
 
 #[tauri::command]
+async fn install_update(req: TauriInstallUpdateRequest) -> Result<TauriInstallUpdateResult, String> {
+    run_blocking(move || tauri_install_update(req)).await
+}
+
+#[tauri::command]
+fn exit_app() {
+    std::process::exit(0);
+}
+
+#[tauri::command]
 async fn api_me(base_url: String, token: String) -> Result<TauriApiUser, String> {
     run_blocking(move || tauri_api_me(base_url, token)).await
 }
@@ -186,6 +196,8 @@ fn main() {
             read_cvars,
             fetch_network_info,
             check_update,
+            install_update,
+            exit_app,
             api_me,
             steam_login_start,
             steam_login_poll,

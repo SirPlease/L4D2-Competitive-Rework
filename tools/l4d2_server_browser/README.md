@@ -10,7 +10,7 @@
 ./Anne刷服器
 ```
 
-Windows 下双击 `Anne刷服器.exe` 会直接打开原生 GUI，release 版不会额外弹出控制台窗口。macOS 下载包里会包含 `Anne刷服器.app`，双击 `.app` 即可使用。
+Release 下载包是免安装绿色包：解压后双击 `Anne刷服器.exe` 或 `Anne刷服器.app` 即可运行，release 版不会额外弹出控制台窗口。
 
 GUI 没有传 `--config` 时，会把配置写到用户配置目录：
 
@@ -161,7 +161,7 @@ RCON 使用 Source RCON TCP 协议。读取 CVAR 有两种方式：
 
 ## Release Build
 
-仓库包含 `.github/workflows/l4d2_server_browser.yml`。它会构建这些平台的执行文件和 Tauri bundle，并上传 artifact：
+仓库包含 `.github/workflows/l4d2_server_browser.yml`。它会构建这些平台的免安装绿色包和 Tauri bundle，并上传 artifact：
 
 - `x86_64-unknown-linux-gnu`
 - `x86_64-apple-darwin`
@@ -170,7 +170,7 @@ RCON 使用 Source RCON TCP 协议。读取 CVAR 有两种方式：
 
 手动运行 workflow 可以下载构建产物。推送 `Anne刷服器-v*` tag 时会自动创建 GitHub Release。
 
-macOS 压缩包会同时包含命令行二进制和 `Anne刷服器.app`；普通使用直接打开 `.app`。Windows 压缩包里的 `.exe` 默认就是 GUI 程序。
+macOS 压缩包会包含 `Anne刷服器.app`；普通使用直接打开 `.app`。Windows 压缩包里的 `.exe` 默认就是 Tauri 桌面程序。
 
 ## Notes
 
