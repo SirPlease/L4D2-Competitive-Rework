@@ -424,6 +424,41 @@ td {
   height: 54px;
 }
 
+.player-stats-link {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  min-width: 0;
+  gap: 6px;
+  height: 28px;
+  margin: -4px 0 -4px -7px;
+  padding: 0 7px;
+  border-radius: 6px;
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.player-stats-link:hover,
+.player-stats-link:focus-visible {
+  color: var(--accent-strong);
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+  text-decoration: underline;
+  outline: none;
+}
+
+.player-stats-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.player-stats-icon {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 auto;
+}
+
 tr.selected td {
   background: color-mix(in srgb, var(--accent) 14%, var(--surface));
 }

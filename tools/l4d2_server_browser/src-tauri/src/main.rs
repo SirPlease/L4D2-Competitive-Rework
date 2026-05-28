@@ -5,7 +5,7 @@
 
 use anne_server_browser::{
     add_tauri_manual_server, delete_tauri_sourcebans, load_tauri_config_lists,
-    load_tauri_server_rows, open_tauri_steam_connect, refresh_tauri_sourcebans,
+    load_tauri_server_rows, open_tauri_steam_connect, open_tauri_url, refresh_tauri_sourcebans,
     save_tauri_sourcebans, tauri_api_logout, tauri_api_me, tauri_check_update, tauri_config_path,
     tauri_delete_manual_server, tauri_fetch_network_info, tauri_load_broadcast_history,
     tauri_load_global_players, tauri_query_players, tauri_read_cvars, tauri_run_rcon,
@@ -77,6 +77,11 @@ async fn refresh_sourcebans(path: Option<String>) -> Result<TauriConfigLists, St
 #[tauri::command]
 fn open_steam_connect(address: String) -> Result<(), String> {
     open_tauri_steam_connect(address)
+}
+
+#[tauri::command]
+fn open_url(url: String) -> Result<(), String> {
+    open_tauri_url(url)
 }
 
 #[tauri::command]
@@ -175,6 +180,7 @@ fn main() {
             delete_sourcebans,
             refresh_sourcebans,
             open_steam_connect,
+            open_url,
             query_players,
             run_rcon,
             read_cvars,

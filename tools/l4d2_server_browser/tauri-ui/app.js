@@ -8,6 +8,8 @@ const PING_MINI_WINDOW_MS = 5 * 60 * 1000;
 const PING_DETAIL_MIN_WINDOW_MS = 5 * 60 * 1000;
 const PING_MAX_CONNECT_GAP_MS = 45 * 1000;
 const SELECTED_REFRESH_DEFAULT_SECS = 5;
+const BROADCAST_REFRESH_INTERVAL_MS = 10 * 1000;
+const ANNE_PLAYER_STATS_BASE_URL = "https://anne.trygek.com/stats/ranking/player.php";
 
 const state = {
   tab: "servers",
@@ -38,6 +40,7 @@ const state = {
   sortKey: "players",
   sortDesc: true,
   autoRefreshTimer: null,
+  broadcastRefreshTimer: null,
   autoRefreshEmptySecs: 120,
   autoRefreshActiveSecs: 30,
   autoRefreshSelectedSecs: SELECTED_REFRESH_DEFAULT_SECS,
@@ -45,6 +48,8 @@ const state = {
   pingHistory: new Map(),
   appStartedAt: Date.now(),
   broadcastSending: false,
+  broadcastHistory: [],
+  broadcastHistoryInFlight: false,
   lastFullRefreshAt: 0,
   lastActiveRefreshAt: 0,
   lastSelectedRefreshAt: 0,
@@ -334,6 +339,60 @@ function appendTextCell(row, value, className = "") {
   return cell;
 }
 
+function annePlayerStatsUrl(player) {
+  const steamId = String(player?.steam_id || player?.steamid || "").trim();
+  if (!steamId || player?.points === null || player?.points === undefined) return null;
+  return `${ANNE_PLAYER_STATS_BASE_URL}?steamid=${encodeURIComponent(steamId)}`;
+}
+
+function appendPlayerNameCell(row, player) {
+  const cell = document.createElement("td");
+  const name = player?.name ? String(player.name) : "-";
+  const statsUrl = annePlayerStatsUrl(player);
+  if (!statsUrl) {
+    cell.textContent = name;
+    row.append(cell);
+    return cell;
+  }
+
+  const link = document.createElement("a");
+  link.className = "player-stats-link";
+  link.href = statsUrl;
+  link.title = t("openPlayerStats");
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    openExternalUrl(statsUrl);
+  });
+
+  const label = document.createElement("span");
+  label.className = "player-stats-name";
+  label.textContent = name;
+  link.append(label, createExternalLinkIcon());
+  cell.append(link);
+  row.append(cell);
+  return cell;
+}
+
+function createExternalLinkIcon() {
+  const svg = createSvgElement("svg", {
+    viewBox: "0 0 24 24",
+    class: "player-stats-icon",
+    "aria-hidden": "true",
+    focusable: "false",
+  });
+  svg.append(
+    createSvgElement("path", {
+      d: "M7 17 17 7M9 7h8v8",
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-width": "2",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round",
+    })
+  );
+  return svg;
+}
+
 function appendEmptyRow(tbody, colSpan, message) {
   tbody.replaceChildren();
   const row = document.createElement("tr");
@@ -369,6 +428,18 @@ function formatOptionalNumber(value) {
 
 function formatPpm(value) {
   return value === null || value === undefined ? "-" : Number(value).toFixed(2);
+}
+
+async function openExternalUrl(url) {
+  if (!tauriInvoke) {
+    window.open(url, "_blank", "noopener,noreferrer");
+    return;
+  }
+  try {
+    await invoke("open_url", { url });
+  } catch {
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
 }
 
 function parseCvarNames(value) {
@@ -750,7 +821,7 @@ function setTab(tab) {
   $("#refreshBtn").style.display = (tab === "servers" || tab === "globalPlayers" || tab === "broadcast") ? "" : "none";
 
   if (tab === "globalPlayers") loadGlobalPlayers();
-  if (tab === "broadcast") loadBroadcastHistory();
+  if (tab === "broadcast") loadBroadcastHistory({ showLoading: state.broadcastHistory.length === 0 });
 }
 
 async function loadConfigLists() {
@@ -1186,7 +1257,7 @@ async function refreshInspector() {
       tbody.replaceChildren();
       for (const p of players) {
         const tr = document.createElement("tr");
-        appendTextCell(tr, p.name);
+        appendPlayerNameCell(tr, p);
         appendTextCell(tr, p.score);
         appendTextCell(tr, formatDuration(p.duration_secs));
         appendTextCell(tr, formatOptionalNumber(p.points));
@@ -1542,7 +1613,7 @@ async function loadGlobalPlayers() {
     tbody.replaceChildren();
     for (const p of players) {
       const tr = document.createElement("tr");
-      appendTextCell(tr, p.name);
+      appendPlayerNameCell(tr, p);
       appendTextCell(tr, p.server_name);
       appendTextCell(tr, p.score);
       appendTextCell(tr, formatDuration(p.duration_secs));
@@ -1583,7 +1654,7 @@ async function sendBroadcastMessage() {
   try {
     const res = await invoke("send_broadcast", { req: { base_url: state.apiBaseUrl, token: state.apiToken, message: msg } });
     setStatus(`${t("statusBroadcastSent")}: ${res}`);
-    await loadBroadcastHistory();
+    await loadBroadcastHistory({ showLoading: false, force: true });
   } catch (e) {
     setStatus(`${t("broadcastSendFailed")}: ${e}`);
   } finally {
@@ -1592,28 +1663,53 @@ async function sendBroadcastMessage() {
   }
 }
 
-async function loadBroadcastHistory() {
+function renderBroadcastHistory(messages = state.broadcastHistory) {
   const tbody = $("#broadcastRows");
+  if (!messages || messages.length === 0) {
+    appendEmptyRow(tbody, 3, t("emptyResult"));
+    return;
+  }
+  tbody.replaceChildren();
+  for (const m of messages) {
+    const tr = document.createElement("tr");
+    appendTextCell(tr, m.sent_at_display || m.sent_at);
+    appendTextCell(tr, m.sender_name);
+    appendTextCell(tr, m.message);
+    tbody.append(tr);
+  }
+}
+
+async function loadBroadcastHistory({ showLoading = true, force = false } = {}) {
+  const tbody = $("#broadcastRows");
+  if (state.broadcastHistoryInFlight && !force) return;
+  if (!state.apiBaseUrl) {
+    if (showLoading) appendEmptyRow(tbody, 3, t("configNotSet"));
+    return;
+  }
+  state.broadcastHistoryInFlight = true;
   try {
-    appendEmptyRow(tbody, 3, t("broadcastLoading"));
+    if (showLoading && state.broadcastHistory.length === 0) {
+      appendEmptyRow(tbody, 3, t("broadcastLoading"));
+    }
     const msgs = await invoke("load_broadcast_history", {
       req: { base_url: state.apiBaseUrl, token: state.apiToken || "", time_zone: state.timeZone }
     });
-    if (!msgs || msgs.length === 0) {
-      appendEmptyRow(tbody, 3, t("emptyResult"));
-      return;
-    }
-    tbody.replaceChildren();
-    for (const m of msgs) {
-      const tr = document.createElement("tr");
-      appendTextCell(tr, m.sent_at_display || m.sent_at);
-      appendTextCell(tr, m.sender_name);
-      appendTextCell(tr, m.message);
-      tbody.append(tr);
-    }
+    state.broadcastHistory = Array.isArray(msgs) ? msgs : [];
+    renderBroadcastHistory();
   } catch (e) {
-    appendEmptyRow(tbody, 3, String(e));
+    if (showLoading || state.broadcastHistory.length === 0) {
+      appendEmptyRow(tbody, 3, String(e));
+    }
+  } finally {
+    state.broadcastHistoryInFlight = false;
   }
+}
+
+function startBroadcastRefreshLoop() {
+  if (state.broadcastRefreshTimer) clearInterval(state.broadcastRefreshTimer);
+  state.broadcastRefreshTimer = setInterval(() => {
+    loadBroadcastHistory({ showLoading: false });
+  }, BROADCAST_REFRESH_INTERVAL_MS);
 }
 
 async function checkUpdate() {
@@ -1681,7 +1777,7 @@ function bindEvents() {
   $("#refreshBtn").addEventListener("click", () => {
     if (state.tab === "servers") refreshServers();
     else if (state.tab === "globalPlayers") loadGlobalPlayers();
-    else if (state.tab === "broadcast") loadBroadcastHistory();
+    else if (state.tab === "broadcast") loadBroadcastHistory({ showLoading: true, force: true });
   });
   
   $("#onlyPlayersInput").addEventListener("change", (event) => {
@@ -1891,7 +1987,7 @@ function bindEvents() {
     try {
       await saveGuiSettings({ time_zone: state.timeZone });
       setStatus(t("statusSaved"));
-      if (state.tab === "broadcast") loadBroadcastHistory();
+      loadBroadcastHistory({ showLoading: state.tab === "broadcast", force: true });
     } catch (error) {
       setStatus(`${t("saveFailed")}: ${error}`);
     }
@@ -1915,9 +2011,11 @@ async function boot() {
     }
     syncConfigPathUI();
     await loadConfigLists();
+    await loadBroadcastHistory({ showLoading: false, force: true });
     await refreshServers();
     await autoCheckUpdateIfDue();
     startAutoRefreshLoop();
+    startBroadcastRefreshLoop();
     
   } catch (error) {
     setStatus(`${t("initFailed")}: ${error}`);

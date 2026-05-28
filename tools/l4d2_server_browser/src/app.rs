@@ -2560,6 +2560,7 @@ struct PlayerInfo {
     name: String,
     score: i32,
     duration: f32,
+    steam_id: Option<String>,
     points: Option<i32>,
     playtime_mins: Option<i32>,
     ppm: Option<f32>,
@@ -2939,6 +2940,7 @@ pub struct TauriPlayerInfo {
     pub name: String,
     pub score: i32,
     pub duration_secs: f32,
+    pub steam_id: Option<String>,
     pub points: Option<i32>,
     pub playtime_mins: Option<i32>,
     pub ppm: Option<f32>,
@@ -3028,6 +3030,7 @@ pub struct TauriGlobalPlayer {
     pub server_address: String,
     pub score: i32,
     pub duration_secs: f32,
+    pub steam_id: Option<String>,
     pub points: Option<i32>,
     pub playtime_mins: Option<i32>,
     pub ppm: Option<f32>,
@@ -3127,6 +3130,7 @@ fn player_info_to_tauri(player: PlayerInfo) -> TauriPlayerInfo {
         name: player.name,
         score: player.score,
         duration_secs: player.duration,
+        steam_id: player.steam_id,
         points: player.points,
         playtime_mins: player.playtime_mins,
         ppm: player.ppm,
@@ -3477,6 +3481,7 @@ pub fn tauri_load_global_players(
                     server_address: server_address.clone(),
                     score: p.score,
                     duration_secs: p.duration_secs,
+                    steam_id: p.steam_id,
                     points: p.points,
                     playtime_mins: p.playtime_mins,
                     ppm: p.ppm,
@@ -3604,6 +3609,7 @@ struct GlobalPlayerEntry {
     duration: f32,
     server_name: String,
     server_address: String,
+    steam_id: Option<String>,
     points: Option<i32>,
     playtime_mins: Option<i32>,
     ppm: Option<f32>,
@@ -3695,6 +3701,8 @@ struct OnlinePlayersResponse {
 
 #[derive(Clone, Debug, Deserialize)]
 struct PlayerStats {
+    #[serde(default)]
+    steamid: String,
     name: String,
     total_points: i32,
     playtime_minutes: i32,
@@ -4895,6 +4903,7 @@ impl NativeGuiApp {
                                         duration: p.duration,
                                         server_name: server_name.clone(),
                                         server_address: addr_str.clone(),
+                                        steam_id: None,
                                         points: None,
                                         playtime_mins: None,
                                         ppm: None,
@@ -8098,6 +8107,7 @@ fn parse_player_response(packet: &[u8]) -> Result<Vec<PlayerInfo>, String> {
             name: reader.string()?,
             score: reader.i32_le()?,
             duration: reader.f32_le()?,
+            steam_id: None,
             points: None,
             playtime_mins: None,
             ppm: None,
@@ -8477,6 +8487,7 @@ fn refresh_online_player_stats_cache(
 
 fn apply_player_stats(player: &mut PlayerInfo, stats: &HashMap<String, PlayerStats>) {
     if let Some(stat) = stats.get(&normalized_player_name(&player.name)) {
+        player.steam_id = non_empty(stat.steamid.trim().to_owned(), "steamid").ok();
         player.points = Some(stat.total_points);
         player.playtime_mins = Some(stat.playtime_minutes);
         player.ppm = Some(stat.ppm);
@@ -8486,6 +8497,7 @@ fn apply_player_stats(player: &mut PlayerInfo, stats: &HashMap<String, PlayerSta
 
 fn apply_global_player_stats(player: &mut GlobalPlayerEntry, stats: &HashMap<String, PlayerStats>) {
     if let Some(stat) = stats.get(&normalized_player_name(&player.name)) {
+        player.steam_id = non_empty(stat.steamid.trim().to_owned(), "steamid").ok();
         player.points = Some(stat.total_points);
         player.playtime_mins = Some(stat.playtime_minutes);
         player.ppm = Some(stat.ppm);
@@ -8606,23 +8618,36 @@ fn steam_connect_address(address: &str) -> String {
 fn launch_steam_connect(address: &str) {
     let connect_address = steam_connect_address(address);
     let url = format!("steam://connect/{connect_address}");
+    launch_url(&url);
+}
 
+fn launch_url(url: &str) {
     #[cfg(target_os = "windows")]
     {
         use std::os::windows::process::CommandExt;
         let _ = std::process::Command::new("cmd")
-            .args(["/c", "start", "", &url])
+            .args(["/c", "start", "", url])
             .creation_flags(0x08000000)
             .spawn();
     }
     #[cfg(target_os = "macos")]
     {
-        let _ = std::process::Command::new("open").arg(&url).spawn();
+        let _ = std::process::Command::new("open").arg(url).spawn();
     }
     #[cfg(target_os = "linux")]
     {
-        let _ = std::process::Command::new("xdg-open").arg(&url).spawn();
+        let _ = std::process::Command::new("xdg-open").arg(url).spawn();
     }
+}
+
+pub fn open_tauri_url(url: String) -> Result<(), String> {
+    let trimmed = url.trim();
+    let parsed = reqwest::Url::parse(trimmed).map_err(|err| format!("invalid URL: {err}"))?;
+    if !matches!(parsed.scheme(), "http" | "https") {
+        return Err("only http and https URLs can be opened".to_owned());
+    }
+    launch_url(parsed.as_str());
+    Ok(())
 }
 
 #[cfg(test)]
