@@ -109,6 +109,7 @@
             </div>
             <div class="inspector-tabs">
               <button class="ins-tab active" data-ins="players" data-i18n="inspectorPlayers">玩家</button>
+              <button class="ins-tab" data-ins="ping" data-i18n="inspectorPing">延迟</button>
               <button class="ins-tab" data-ins="rcon" data-i18n="inspectorRcon">RCON</button>
               <button class="ins-tab" data-ins="cvar" data-i18n="inspectorCvar">参数</button>
               <button class="ins-tab" data-ins="network" data-i18n="inspectorNetwork">网络</button>
@@ -140,6 +141,7 @@
                   <tbody id="insPlayersRows"></tbody>
                 </table>
               </div>
+              <div id="insPing" class="ins-view ping-history-view"></div>
               <div id="insRcon" class="ins-view">
                 <div class="rcon-terminal" id="rconTerminal"></div>
                 <div class="rcon-input-group">
@@ -375,7 +377,7 @@
               </label>
               <label class="field">
                 <span data-i18n="autoRefreshSelected">选中服务器刷新秒数</span>
-                <input id="autoRefreshSelectedInput" type="number" min="3" step="1" value="10" />
+                <input id="autoRefreshSelectedInput" type="number" min="3" step="1" value="5" />
               </label>
               <div class="settings-toggles">
                 <label class="check">

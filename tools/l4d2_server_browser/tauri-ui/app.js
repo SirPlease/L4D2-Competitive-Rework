@@ -4,6 +4,10 @@ const tauriInvoke = window.__TAURI__?.core?.invoke;
 const CONFIG_PATH_OVERRIDE_KEY = "configPathOverride";
 const UPDATE_CHECK_CACHE_KEY = "lastAutoUpdateCheckAt";
 const UPDATE_CHECK_INTERVAL_MS = 12 * 60 * 60 * 1000;
+const PING_MINI_WINDOW_MS = 5 * 60 * 1000;
+const PING_DETAIL_MIN_WINDOW_MS = 5 * 60 * 1000;
+const PING_MAX_CONNECT_GAP_MS = 45 * 1000;
+const SELECTED_REFRESH_DEFAULT_SECS = 5;
 
 const state = {
   tab: "servers",
@@ -36,8 +40,10 @@ const state = {
   autoRefreshTimer: null,
   autoRefreshEmptySecs: 120,
   autoRefreshActiveSecs: 30,
-  autoRefreshSelectedSecs: 10,
+  autoRefreshSelectedSecs: SELECTED_REFRESH_DEFAULT_SECS,
   timeZone: "system",
+  pingHistory: new Map(),
+  appStartedAt: Date.now(),
   broadcastSending: false,
   lastFullRefreshAt: 0,
   lastActiveRefreshAt: 0,
@@ -373,6 +379,271 @@ function parseCvarNames(value) {
   return names.length > 0 ? names : null;
 }
 
+function serverHistoryKey(rowOrAddress) {
+  if (typeof rowOrAddress === "string") return rowOrAddress || "";
+  return rowOrAddress?.socket || rowOrAddress?.address || "";
+}
+
+function prunePingHistory(now = Date.now()) {
+  const maxAge = Math.max(PING_MINI_WINDOW_MS, now - state.appStartedAt);
+  const cutoff = now - maxAge;
+  for (const [key, points] of state.pingHistory.entries()) {
+    const kept = points.filter((point) => point.t >= cutoff);
+    if (kept.length > 0) state.pingHistory.set(key, kept);
+    else state.pingHistory.delete(key);
+  }
+}
+
+function recordPingHistory(rows, sampledAt = Date.now()) {
+  for (const row of rows) {
+    const key = serverHistoryKey(row);
+    if (row?.ping_ms === null || row?.ping_ms === undefined) continue;
+    const ping = Number(row?.ping_ms);
+    if (!key || !Number.isFinite(ping) || ping < 0 || row.error) continue;
+    const points = state.pingHistory.get(key) || [];
+    const last = points[points.length - 1];
+    if (last && sampledAt - last.t < 800) {
+      last.ping = ping;
+    } else {
+      points.push({ t: sampledAt, ping });
+    }
+    state.pingHistory.set(key, points);
+  }
+  prunePingHistory(sampledAt);
+}
+
+function pingHistoryForServer(serverOrKey, windowMs = null) {
+  const key = serverHistoryKey(serverOrKey);
+  const points = state.pingHistory.get(key) || [];
+  if (!windowMs) return points;
+  const cutoff = Date.now() - windowMs;
+  return points.filter((point) => point.t >= cutoff);
+}
+
+function timeAgoLabel(timestamp) {
+  const diffSeconds = Math.max(0, Math.round((Date.now() - timestamp) / 1000));
+  if (diffSeconds < 60) return `${diffSeconds}s`;
+  const minutes = Math.round(diffSeconds / 60);
+  if (minutes < 60) return `${minutes}m`;
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  return rest ? `${hours}h ${rest}m` : `${hours}h`;
+}
+
+function pingStats(points) {
+  if (!points.length) return null;
+  const values = points.map((point) => point.ping);
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const avg = values.reduce((sum, value) => sum + value, 0) / values.length;
+  return { min, max, avg, latest: values[values.length - 1], count: values.length };
+}
+
+function createSvgElement(name, attrs = {}) {
+  const element = document.createElementNS("http://www.w3.org/2000/svg", name);
+  for (const [key, value] of Object.entries(attrs)) {
+    element.setAttribute(key, String(value));
+  }
+  return element;
+}
+
+function pingChartSegments(points, { width, height, paddingX = 0, paddingY = 0, start, end }) {
+  if (points.length < 2) return [];
+  const values = points.map((point) => point.ping);
+  let min = Math.min(...values);
+  let max = Math.max(...values);
+  const spread = Math.max(16, max - min);
+  min = Math.max(0, min - spread * 0.25);
+  max = max + spread * 0.25;
+  const innerWidth = Math.max(1, width - paddingX * 2);
+  const innerHeight = Math.max(1, height - paddingY * 2);
+  const span = Math.max(1, end - start);
+  const sorted = [...points].sort((a, b) => a.t - b.t);
+  const segments = [];
+  let current = [];
+  const toPoint = (point) => {
+    const x = paddingX + ((point.t - start) / span) * innerWidth;
+    const y = paddingY + (1 - ((point.ping - min) / Math.max(1, max - min))) * innerHeight;
+    return {
+      ...point,
+      x: Math.max(paddingX, Math.min(width - paddingX, x)),
+      y: Math.max(paddingY, Math.min(height - paddingY, y)),
+    };
+  };
+
+  sorted.forEach((point, index) => {
+    if (index > 0 && point.t - sorted[index - 1].t > PING_MAX_CONNECT_GAP_MS && current.length) {
+      segments.push(current);
+      current = [];
+    }
+    current.push(toPoint(point));
+  });
+  if (current.length) segments.push(current);
+  return segments;
+}
+
+function pointsToPath(points) {
+  return points
+    .map((point, index) => `${index === 0 ? "M" : "L"}${point.x.toFixed(1)} ${point.y.toFixed(1)}`)
+    .join(" ");
+}
+
+function createMiniPingChart(server) {
+  const width = 92;
+  const height = 26;
+  const svg = createSvgElement("svg", {
+    class: "ping-mini-chart",
+    viewBox: `0 0 ${width} ${height}`,
+    role: "img",
+    "aria-label": "ping history",
+  });
+  const now = Date.now();
+  const start = now - PING_MINI_WINDOW_MS;
+  const points = pingHistoryForServer(server, PING_MINI_WINDOW_MS);
+  svg.append(createSvgElement("rect", { x: 0, y: 0, width, height, rx: 4, class: "ping-chart-bg" }));
+  if (points.length < 2) {
+    svg.append(createSvgElement("line", { x1: 8, y1: height - 7, x2: width - 8, y2: height - 7, class: "ping-chart-empty-line" }));
+    return svg;
+  }
+  const segments = pingChartSegments(points, { width, height, paddingX: 5, paddingY: 4, start, end: now });
+  for (const segment of segments) {
+    if (segment.length >= 2) {
+      svg.append(createSvgElement("path", { d: pointsToPath(segment), class: "ping-chart-line" }));
+    } else {
+      const point = segment[0];
+      svg.append(createSvgElement("circle", { cx: point.x.toFixed(1), cy: point.y.toFixed(1), r: 1.8, class: "ping-chart-dot muted" }));
+    }
+  }
+  const flattened = segments.flat();
+  const latest = flattened[flattened.length - 1];
+  if (latest) {
+    svg.append(createSvgElement("circle", { cx: latest.x.toFixed(1), cy: latest.y.toFixed(1), r: 2.1, class: "ping-chart-dot" }));
+  }
+  return svg;
+}
+
+function createDetailPingChart(serverKey) {
+  const width = 560;
+  const height = 260;
+  const svg = createSvgElement("svg", {
+    class: "ping-detail-chart",
+    viewBox: `0 0 ${width} ${height}`,
+    role: "img",
+    "aria-label": "server ping history",
+  });
+  const now = Date.now();
+  const start = Math.min(state.appStartedAt, now - PING_DETAIL_MIN_WINDOW_MS);
+  const points = pingHistoryForServer(serverKey).filter((point) => point.t >= start);
+  const chartLeft = 48;
+  const chartRight = 14;
+  const chartTop = 18;
+  const chartBottom = 34;
+  const chartWidth = width - chartLeft - chartRight;
+  const chartHeight = height - chartTop - chartBottom;
+
+  svg.append(createSvgElement("rect", { x: 0, y: 0, width, height, rx: 7, class: "ping-detail-bg" }));
+  for (let i = 0; i <= 4; i += 1) {
+    const y = chartTop + (chartHeight / 4) * i;
+    svg.append(createSvgElement("line", { x1: chartLeft, y1: y.toFixed(1), x2: width - chartRight, y2: y.toFixed(1), class: "ping-grid-line" }));
+  }
+  for (let i = 0; i <= 4; i += 1) {
+    const x = chartLeft + (chartWidth / 4) * i;
+    svg.append(createSvgElement("line", { x1: x.toFixed(1), y1: chartTop, x2: x.toFixed(1), y2: chartTop + chartHeight, class: "ping-grid-line vertical" }));
+  }
+
+  if (points.length < 2) {
+    const text = createSvgElement("text", { x: width / 2, y: height / 2, "text-anchor": "middle", class: "ping-empty-text" });
+    text.textContent = t("pingNoHistory");
+    svg.append(text);
+    return svg;
+  }
+
+  const values = points.map((point) => point.ping);
+  let min = Math.min(...values);
+  let max = Math.max(...values);
+  const spread = Math.max(16, max - min);
+  min = Math.max(0, Math.floor(min - spread * 0.25));
+  max = Math.ceil(max + spread * 0.25);
+  const yLabels = [max, Math.round((max + min) / 2), min];
+  yLabels.forEach((value, index) => {
+    const y = index === 0 ? chartTop + 4 : index === 1 ? chartTop + chartHeight / 2 + 4 : chartTop + chartHeight + 4;
+    const text = createSvgElement("text", { x: 10, y: y.toFixed(1), class: "ping-axis-text" });
+    text.textContent = `${value}ms`;
+    svg.append(text);
+  });
+
+  const startText = createSvgElement("text", { x: chartLeft, y: height - 12, class: "ping-axis-text" });
+  startText.textContent = `-${timeAgoLabel(start)}`;
+  svg.append(startText);
+  const endText = createSvgElement("text", { x: width - chartRight, y: height - 12, "text-anchor": "end", class: "ping-axis-text" });
+  endText.textContent = "now";
+  svg.append(endText);
+
+  const segments = pingChartSegments(points, {
+    width,
+    height,
+    paddingX: chartLeft,
+    paddingY: chartTop,
+    start,
+    end: now,
+  }).map((segment) => segment.map((point) => {
+    const x = chartLeft + ((point.t - start) / Math.max(1, now - start)) * chartWidth;
+    const y = chartTop + (1 - ((point.ping - min) / Math.max(1, max - min))) * chartHeight;
+    return {
+      ...point,
+      x: Math.max(chartLeft, Math.min(width - chartRight, x)),
+      y: Math.max(chartTop, Math.min(chartTop + chartHeight, y)),
+    };
+  }));
+
+  for (const segment of segments) {
+    if (segment.length >= 2) {
+      const fillPath = `${pointsToPath(segment)} L${segment[segment.length - 1].x.toFixed(1)} ${chartTop + chartHeight} L${segment[0].x.toFixed(1)} ${chartTop + chartHeight} Z`;
+      svg.append(createSvgElement("path", { d: fillPath, class: "ping-detail-fill" }));
+      svg.append(createSvgElement("path", { d: pointsToPath(segment), class: "ping-detail-line" }));
+    } else {
+      const point = segment[0];
+      svg.append(createSvgElement("circle", { cx: point.x.toFixed(1), cy: point.y.toFixed(1), r: 2.8, class: "ping-detail-dot muted" }));
+    }
+  }
+  const flattened = segments.flat();
+  const latest = flattened[flattened.length - 1];
+  if (latest) {
+    svg.append(createSvgElement("circle", { cx: latest.x.toFixed(1), cy: latest.y.toFixed(1), r: 4, class: "ping-detail-dot" }));
+  }
+  return svg;
+}
+
+function renderPingHistoryPanel() {
+  const root = $("#insPing");
+  if (!root) return;
+  root.replaceChildren();
+  const key = state.selectedSocket || state.selectedAddress;
+  const points = pingHistoryForServer(key);
+  const stats = pingStats(points);
+  const summary = document.createElement("div");
+  summary.className = "ping-history-summary";
+  const items = [
+    [t("pingLatest"), stats ? `${Math.round(stats.latest)}ms` : "-"],
+    [t("pingAverage"), stats ? `${Math.round(stats.avg)}ms` : "-"],
+    [t("pingMinMax"), stats ? `${Math.round(stats.min)} / ${Math.round(stats.max)}ms` : "-"],
+    [t("pingSamples"), stats ? String(stats.count) : "0"],
+  ];
+  for (const [label, value] of items) {
+    const item = document.createElement("div");
+    const labelNode = document.createElement("span");
+    labelNode.textContent = label;
+    const valueNode = document.createElement("strong");
+    valueNode.textContent = value;
+    item.append(labelNode, valueNode);
+    summary.append(item);
+  }
+  const note = document.createElement("p");
+  note.className = "ping-history-note";
+  note.textContent = t("pingHistoryNote");
+  root.append(summary, createDetailPingChart(key), note);
+}
+
 function tagClassName(tag) {
   const normalized = String(tag).toLowerCase();
   if (normalized === "anne") return "server-tag anne-tag";
@@ -431,7 +702,7 @@ async function saveGuiSettings(partial) {
     state.accentColor = isHexColor(lists.accent_color) ? lists.accent_color : state.accentColor;
     state.autoRefreshEmptySecs = clampRefreshSeconds(lists.auto_refresh_empty_secs, 120, 15);
     state.autoRefreshActiveSecs = clampRefreshSeconds(lists.auto_refresh_active_secs, 30, 5);
-    state.autoRefreshSelectedSecs = clampRefreshSeconds(lists.auto_refresh_selected_secs, 10, 3);
+    state.autoRefreshSelectedSecs = clampRefreshSeconds(lists.auto_refresh_selected_secs, SELECTED_REFRESH_DEFAULT_SECS, 3);
     state.timeZone = normalizeTimeZone(lists.time_zone);
     state.rconPasswords = lists.rcon_passwords || {};
     applyTheme();
@@ -496,7 +767,7 @@ async function loadConfigLists() {
     state.accentColor = isHexColor(state.lists.accent_color) ? state.lists.accent_color : "#0f766e";
     state.autoRefreshEmptySecs = clampRefreshSeconds(state.lists.auto_refresh_empty_secs, 120, 15);
     state.autoRefreshActiveSecs = clampRefreshSeconds(state.lists.auto_refresh_active_secs, 30, 5);
-    state.autoRefreshSelectedSecs = clampRefreshSeconds(state.lists.auto_refresh_selected_secs, 10, 3);
+    state.autoRefreshSelectedSecs = clampRefreshSeconds(state.lists.auto_refresh_selected_secs, SELECTED_REFRESH_DEFAULT_SECS, 3);
     state.timeZone = normalizeTimeZone(state.lists.time_zone);
     const locale = uiLocaleFromConfig(state.lists.gui_language);
     setLocale(locale);
@@ -640,6 +911,7 @@ async function refreshServers({ silent = false, sockets = null } = {}) {
     if (seq !== state.refreshSeq) return;
     state.configPath = payload.config_path;
     const nextRows = Array.isArray(payload.rows) ? payload.rows : [];
+    recordPingHistory(nextRows);
     state.allRows = silent ? mergeSilentRefreshRows(nextRows, Array.isArray(sockets)) : nextRows;
     if (!silent) {
       const now = Date.now();
@@ -649,6 +921,9 @@ async function refreshServers({ silent = false, sockets = null } = {}) {
     }
     syncConfigPathUI();
     applyServerFiltersAndRender();
+    if (state.inspectorOpen && state.inspectorTab === "ping") {
+      renderPingHistoryPanel();
+    }
   } catch (error) {
     if (!silent) setStatus(`Error: ${error}`);
   } finally {
@@ -668,9 +943,10 @@ function activeServerSockets() {
 }
 
 function selectedServerSocket() {
-  if (!state.selectedSocket) return null;
-  return state.allRows.some((row) => serverRowKey(row) === state.selectedSocket)
-    ? state.selectedSocket
+  const selected = state.selectedSocket || state.selectedAddress;
+  if (!selected) return null;
+  return state.allRows.some((row) => serverRowKey(row) === selected)
+    ? selected
     : null;
 }
 
@@ -680,7 +956,7 @@ function startAutoRefreshLoop() {
   state.lastActiveRefreshAt = Date.now();
   state.lastSelectedRefreshAt = Date.now();
   state.autoRefreshTimer = setInterval(() => {
-    if (state.tab !== "servers" || state.busy) return;
+    if (state.busy) return;
     const now = Date.now();
     const selected = selectedServerSocket();
     const selectedDue = selected && now - state.lastSelectedRefreshAt >= state.autoRefreshSelectedSecs * 1000;
@@ -812,7 +1088,12 @@ function renderServerRows() {
     playersCell.textContent = `${server.players}/${server.max_players}`;
 
     const pingCell = document.createElement("td");
-    pingCell.textContent = server.ping_ms === null ? "-" : `${server.ping_ms}ms`;
+    const pingWrap = document.createElement("div");
+    pingWrap.className = "ping-cell";
+    const pingText = document.createElement("span");
+    pingText.textContent = server.ping_ms === null || server.ping_ms === undefined ? "-" : `${server.ping_ms}ms`;
+    pingWrap.append(pingText, createMiniPingChart(server));
+    pingCell.append(pingWrap);
 
     const mapCell = document.createElement("td");
     mapCell.textContent = server.map || "-";
@@ -846,7 +1127,8 @@ function renderServerRows() {
 
     row.addEventListener("click", () => {
       state.selectedAddress = server.address;
-      state.selectedSocket = server.socket;
+      state.selectedSocket = server.socket || server.address;
+      state.lastSelectedRefreshAt = 0;
       openInspector(server.name, server.address);
       renderServerRows(); // re-render to update selected class
     });
@@ -866,6 +1148,7 @@ function openInspector(name, address) {
   $("#insPlayersRows").replaceChildren();
   appendEmptyRow($("#insPlayersRows"), 7, t("statusRefreshing"));
   $("#insCvarRows").replaceChildren();
+  renderPingHistoryPanel();
   refreshInspector();
 }
 
@@ -916,6 +1199,8 @@ async function refreshInspector() {
       if (state.selectedAddress !== address || state.inspectorTab !== "players") return;
       appendEmptyRow(tbody, 7, String(e));
     }
+  } else if (state.inspectorTab === "ping") {
+    renderPingHistoryPanel();
   } else if (state.inspectorTab === "cvar") {
     const tbody = $("#insCvarRows");
     try {
@@ -1590,7 +1875,7 @@ function bindEvents() {
     }
   });
   $("#autoRefreshSelectedInput").addEventListener("change", async (e) => {
-    state.autoRefreshSelectedSecs = clampRefreshSeconds(e.currentTarget.value, 10, 3);
+    state.autoRefreshSelectedSecs = clampRefreshSeconds(e.currentTarget.value, SELECTED_REFRESH_DEFAULT_SECS, 3);
     e.currentTarget.value = state.autoRefreshSelectedSecs;
     try {
       await saveGuiSettings({ auto_refresh_selected_secs: state.autoRefreshSelectedSecs });

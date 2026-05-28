@@ -448,6 +448,53 @@ tr:last-child td {
   width: 92px;
 }
 
+.ping-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 128px;
+}
+
+.ping-cell > span {
+  min-width: 44px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ping-mini-chart {
+  width: 92px;
+  height: 26px;
+  flex: 0 0 92px;
+}
+
+.ping-chart-bg {
+  fill: color-mix(in srgb, var(--accent) 5%, var(--surface));
+  stroke: color-mix(in srgb, var(--accent) 18%, var(--border));
+}
+
+.ping-chart-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ping-chart-dot,
+.ping-detail-dot {
+  fill: var(--accent);
+}
+
+.ping-chart-dot.muted,
+.ping-detail-dot.muted {
+  opacity: 0.42;
+}
+
+.ping-chart-empty-line {
+  stroke: var(--border);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
 .server-name {
   display: block;
   max-width: 440px;
@@ -833,6 +880,83 @@ tr:last-child td {
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+
+.ping-history-view.active {
+  padding: 12px;
+  gap: 12px;
+}
+
+.ping-history-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.ping-history-summary > div {
+  display: grid;
+  gap: 3px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface-soft);
+}
+
+.ping-history-summary span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.ping-history-summary strong {
+  color: var(--text);
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.ping-detail-chart {
+  width: 100%;
+  min-height: 220px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+}
+
+.ping-detail-bg {
+  fill: var(--surface);
+}
+
+.ping-grid-line {
+  stroke: #e2e8f0;
+  stroke-width: 1;
+}
+
+.ping-grid-line.vertical {
+  stroke: #f1f5f9;
+}
+
+.ping-detail-fill {
+  fill: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+.ping-detail-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ping-axis-text,
+.ping-empty-text {
+  fill: var(--muted);
+  font-size: 12px;
+}
+
+.ping-history-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .ins-table {

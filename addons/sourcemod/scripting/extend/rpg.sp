@@ -1174,10 +1174,25 @@ public Action BuyMenu(int client,int args)
 	}
 	return Plugin_Continue;
 }
+
+static bool CanUseShop(int client)
+{
+	if (g_cShopEnable != null && g_cShopEnable.BoolValue)
+	{
+		return true;
+	}
+
+	if (IsValidClient(client))
+	{
+		PrintToChat(client, "\x03商店已关闭，无法使用该功能。");
+	}
+	return false;
+}
+
 //快速买子弹指令
 public Action BuyAmmo(int client,int args)
 {
-	if(IsVaildClient(client) && IsPlayerAlive(client) && g_cShopEnable.BoolValue)
+	if(IsVaildClient(client) && IsPlayerAlive(client) && CanUseShop(client))
 	{
     	GiveItems(client,"ammo");
     	PrintToChatAll("\x04%N \x03 补充了子弹",client);
@@ -1188,7 +1203,7 @@ public Action BuyAmmo(int client,int args)
 //快速买喷子指令
 public Action BuyPen(int client,int args)
 { 
-	if(IsVaildClient(client) && IsPlayerAlive(client) && g_cShopEnable.BoolValue)
+	if(IsVaildClient(client) && IsPlayerAlive(client) && CanUseShop(client))
 	{
 		if(player[client].ClientFirstBuy){
 			player[client].ClientFirstBuy=false;
@@ -1218,7 +1233,7 @@ public Action BuyPen(int client,int args)
 //快速买二代单喷指令
 public Action BuyChr(int client,int args)
 { 
-	if(IsVaildClient(client) && IsPlayerAlive(client) && g_cShopEnable.BoolValue)
+	if(IsVaildClient(client) && IsPlayerAlive(client) && CanUseShop(client))
 	{
 		if(player[client].ClientFirstBuy){
 			player[client].ClientFirstBuy=false;
@@ -1238,7 +1253,7 @@ public Action BuyChr(int client,int args)
 //快速买pump指令
 public Action BuyPum(int client,int args)
 { 
-	if(IsVaildClient(client) && IsPlayerAlive(client) && g_cShopEnable.BoolValue)
+	if(IsVaildClient(client) && IsPlayerAlive(client) && CanUseShop(client))
 	{
 		if(player[client].ClientFirstBuy){
 			player[client].ClientFirstBuy=false;
@@ -1258,7 +1273,7 @@ public Action BuyPum(int client,int args)
 //快速买机枪指令
 public Action BuySmg(int client,int args)
 { 
-	if(IsVaildClient(client) && IsPlayerAlive(client) && g_cShopEnable.BoolValue)
+	if(IsVaildClient(client) && IsPlayerAlive(client) && CanUseShop(client))
 	{ 
 		if(player[client].ClientFirstBuy){
 			player[client].ClientFirstBuy=false;
@@ -1278,7 +1293,7 @@ public Action BuySmg(int client,int args)
 //快速买uzi指令
 public Action BuyUzi(int client,int args)
 { 
-	if(IsVaildClient(client) && IsPlayerAlive(client) && g_cShopEnable.BoolValue)
+	if(IsVaildClient(client) && IsPlayerAlive(client) && CanUseShop(client))
 	{ 
 		if(player[client].ClientFirstBuy){
 			player[client].ClientFirstBuy=false;
@@ -1298,7 +1313,7 @@ public Action BuyUzi(int client,int args)
 //快速买药指令
 public Action BuyPill(int client,int args)
 { 
-	if(IsVaildClient(client) && IsPlayerAlive(client) && g_cShopEnable.BoolValue)
+	if(IsVaildClient(client) && IsPlayerAlive(client) && CanUseShop(client))
 	{
 		if(RemovePoints(client,400,"pain_pills"))
 		PrintToChatAll("\x04%N \x03快速花费400B数买了瓶药",client);
@@ -1423,6 +1438,11 @@ static bool CanSpendB(int client, int costpoints)
 //分数操作
 public bool RemovePoints(int client, int costpoints,char bitem[64])
 {
+	if (!CanUseShop(client))
+	{
+		return false;
+	}
+
 	if(!player[client].CanBuy)
 	{
 		PrintToChat(client,"\x03商店技能冷却中(冷却时间15s)");
@@ -1597,11 +1617,20 @@ public int TopMenu(Menu menu, MenuAction action, int param1, int param2)
 			char bitem[64];
 			menu.GetItem(param2, bitem, sizeof(bitem));
 			if( StrEqual(bitem, "gun") )
+			{
+				if (!CanUseShop(param1)) return 0;
 				gun(param1);
+			}
 			else if( StrEqual(bitem, "supply") )
+			{
+				if (!CanUseShop(param1)) return 0;
 				supply(param1);
+			}
 			else if( StrEqual(bitem, "ability") )
+			{
+				if (!CanUseShop(param1)) return 0;
 				ability(param1);
+			}
 			else if( StrEqual(bitem, "Blood") )
 				Blood(param1);
 			else if( StrEqual(bitem, "ChatTags") )
@@ -2244,6 +2273,8 @@ public int gun_back(Menu menu, MenuAction action, int param1, int param2)
 	{
 		case MenuAction_Select:
 		{
+			if (!CanUseShop(param1)) return 0;
+
 			char bitem[64];
 			menu.GetItem(param2, bitem, sizeof(bitem));
 			if( StrEqual(bitem, "smg") )
@@ -2425,6 +2456,8 @@ public int supply_back(Menu menu, MenuAction action, int param1, int param2)
 	{
 		case MenuAction_Select:
 		{
+			if (!CanUseShop(param1)) return 0;
+
 			char bitem[64];
 			menu.GetItem(param2, bitem, sizeof(bitem));
 			if( StrEqual(bitem, "first_aid_kit") ){				
@@ -2523,6 +2556,8 @@ public int ability_back(Menu menu, MenuAction action, int param1, int param2)
 	{
 		case MenuAction_Select:
 		{
+			if (!CanUseShop(param1)) return 0;
+
 			char bitem[64];
 			menu.GetItem(param2, bitem, sizeof(bitem));
 			if( StrEqual(bitem, "machete") ){		

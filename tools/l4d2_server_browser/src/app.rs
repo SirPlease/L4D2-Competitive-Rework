@@ -542,7 +542,7 @@ fn default_auto_refresh_active_secs() -> u64 {
 }
 
 fn default_auto_refresh_selected_secs() -> u64 {
-    10
+    5
 }
 
 fn default_time_zone() -> String {

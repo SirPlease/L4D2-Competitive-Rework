@@ -57,6 +57,7 @@ bool
 
 char
 	g_sDonateAmount[MAXPLAYERS + 1][16],
+	g_sDonateMethod[MAXPLAYERS + 1][16],
 	g_sDonateOptionAmount[DONATE_MAX_OPTIONS][16],
 	g_sDonateOptionDisplay[DONATE_MAX_OPTIONS][64];
 
@@ -98,6 +99,9 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_joingame", TurnClientToSurvivors);
 	RegConsoleCmd("sm_survivor", TurnClientToSurvivors);
 	RegConsoleCmd("sm_donate", DonateServer);
+	RegConsoleCmd("sm_wc", FinishDonatePayment);
+	RegConsoleCmd("sm_wanchen", FinishDonatePayment);
+	RegConsoleCmd("sm_finish", FinishDonatePayment);
 	RegAdminCmd("sm_donate_reload", ReloadDonateConfig, ADMFLAG_CONFIG, "Reload donate amount config");
 
 	AddCommandListener(Command_Setinfo, "jointeam");
@@ -317,6 +321,15 @@ public void OnClientPutInServer(int client)
 
 }
 
+public void OnClientDisconnect(int client)
+{
+	if(1 <= client <= MaxClients)
+	{
+		g_sDonateAmount[client][0] = '\0';
+		g_sDonateMethod[client][0] = '\0';
+	}
+}
+
 public Action Timer_CheckDetay(Handle Timer, int client)
 {
 	if(IsValidPlayerInTeam(client, 3))
@@ -431,16 +444,42 @@ public Action DonateServer(int client, int args)
 		char amount[16], method[16], note[128];
 		GetCmdArg(1, amount, sizeof(amount));
 		GetCmdArg(2, method, sizeof(method));
+		if(!IsDonateMethodAllowed(method))
+		{
+			CPrintToChat(client, "{green}[AnneDonate]{default} 支付方式只支持 wechat 或 alipay，请重新选择。");
+			ShowDonateMethodMenu(client);
+			return Plugin_Handled;
+		}
 		if(args >= 3)
 		{
 			GetCmdArg(3, note, sizeof(note));
 		}
+		strcopy(g_sDonateAmount[client], sizeof(g_sDonateAmount[]), amount);
+		strcopy(g_sDonateMethod[client], sizeof(g_sDonateMethod[]), method);
 		SubmitDonateRequest(client, amount, method, note);
-		ShowDonateWebToPlayer(client);
+		ShowDonateWebToPlayer(client, amount, method);
+		CPrintToChat(client, "{green}[AnneDonate]{default} 扫码支付完成后，请输入 {olive}!wc{default} / {olive}!wanchen{default} / {olive}!finish{default} 提醒管理员核实。");
 		return Plugin_Handled;
 	}
 
 	ShowDonateAmountMenu(client);
+	return Plugin_Handled;
+}
+
+public Action FinishDonatePayment(int client, int args)
+{
+	if(!IsValidClient(client) || IsFakeClient(client))
+		return Plugin_Handled;
+
+	if(g_sDonateAmount[client][0] == '\0' || g_sDonateMethod[client][0] == '\0')
+	{
+		CPrintToChat(client, "{green}[AnneDonate]{default} 暂未找到你的待确认赞助，请先输入 {olive}!donate{default} 选择档位和支付方式。");
+		ShowDonateAmountMenu(client);
+		return Plugin_Handled;
+	}
+
+	SubmitDonateFinishRequest(client, g_sDonateAmount[client], g_sDonateMethod[client]);
+	CPrintToChat(client, "{green}[AnneDonate]{default} 正在记录你的支付完成提示，请等待管理员核实到账。");
 	return Plugin_Handled;
 }
 
@@ -471,9 +510,9 @@ public void ShowMotdToPlayer(int client)
 	ShowMOTDPanel(client, title, url, MOTDPANEL_TYPE_URL);	
 }
 
-void ShowDonateWebToPlayer(int client)
+void ShowDonateWebToPlayer(int client, const char[] amount, const char[] method)
 {
-	char steam64[32], name[MAX_NAME_LENGTH], encodedName[MAX_NAME_LENGTH * 3 + 1];
+	char steam64[32], name[MAX_NAME_LENGTH], encodedName[MAX_NAME_LENGTH * 3 + 1], encodedAmount[48], encodedMethod[48];
 	if(!GetClientAuthId(client, AuthId_SteamID64, steam64, sizeof(steam64), true))
 	{
 		strcopy(steam64, sizeof(steam64), "");
@@ -481,12 +520,22 @@ void ShowDonateWebToPlayer(int client)
 
 	GetClientName(client, name, sizeof(name));
 	UrlEncode(name, encodedName, sizeof(encodedName));
+	UrlEncode(amount, encodedAmount, sizeof(encodedAmount));
+	UrlEncode(method, encodedMethod, sizeof(encodedMethod));
 
-	char title[64], baseUrl[192], url[384], separator[2];
+	char title[64], baseUrl[192], url[768], separator[2];
 	GetConVarString(hCvarMotdTitle, title, sizeof(title));
 	GetDonateBaseUrl(baseUrl, sizeof(baseUrl));
 	strcopy(separator, sizeof(separator), StrContains(baseUrl, "?", false) == -1 ? "?" : "&");
-	Format(url, sizeof(url), "%s%ssteam_id=%s&name=%s", baseUrl, separator, steam64, encodedName);
+
+	if(amount[0] != '\0' && method[0] != '\0')
+	{
+		Format(url, sizeof(url), "%s%ssteam_id=%s&name=%s&game=1&amount=%s&method=%s", baseUrl, separator, steam64, encodedName, encodedAmount, encodedMethod);
+	}
+	else
+	{
+		Format(url, sizeof(url), "%s%ssteam_id=%s&name=%s", baseUrl, separator, steam64, encodedName);
+	}
 
 	PrintToConsole(client, "[AnneDonate] Open donate url: %s", url);
 	ShowMOTDPanel(client, title, url, MOTDPANEL_TYPE_URL);
@@ -513,11 +562,12 @@ public int DonateAmountMenuHandler(Menu menu, MenuAction action, int client, int
 		menu.GetItem(item, amount, sizeof(amount));
 		if(StrEqual(amount, "web"))
 		{
-			ShowDonateWebToPlayer(client);
+			ShowDonateWebToPlayer(client, "", "");
 		}
 		else
 		{
 			strcopy(g_sDonateAmount[client], sizeof(g_sDonateAmount[]), amount);
+			g_sDonateMethod[client][0] = '\0';
 			ShowDonateMethodMenu(client);
 		}
 	}
@@ -534,9 +584,13 @@ void ShowDonateMethodMenu(int client)
 	menu.SetTitle("请选择支付方式：");
 	menu.AddItem("wechat", "微信支付");
 	menu.AddItem("alipay", "支付宝");
-	menu.AddItem("other", "其他");
 	menu.ExitButton = true;
 	menu.Display(client, 20);
+}
+
+bool IsDonateMethodAllowed(const char[] method)
+{
+	return StrEqual(method, "wechat", false) || StrEqual(method, "alipay", false);
 }
 
 public int DonateMethodMenuHandler(Menu menu, MenuAction action, int client, int item)
@@ -545,8 +599,10 @@ public int DonateMethodMenuHandler(Menu menu, MenuAction action, int client, int
 	{
 		char method[16];
 		menu.GetItem(item, method, sizeof(method));
+		strcopy(g_sDonateMethod[client], sizeof(g_sDonateMethod[]), method);
 		SubmitDonateRequest(client, g_sDonateAmount[client], method, "");
-		ShowDonateWebToPlayer(client);
+		ShowDonateWebToPlayer(client, g_sDonateAmount[client], method);
+		CPrintToChat(client, "{green}[AnneDonate]{default} 扫码支付完成后，请输入 {olive}!wc{default} / {olive}!wanchen{default} / {olive}!finish{default} 提醒管理员核实。");
 	}
 	else if(action == MenuAction_End)
 	{
@@ -585,6 +641,7 @@ void SubmitDonateRequest(int client, const char[] amount, const char[] method, c
 	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "amount", amount);
 	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "method", method);
 	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "note", note);
+	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "game", "1");
 	SteamWorks_SetHTTPRequestContextValue(request, GetClientUserId(client));
 	SteamWorks_SetHTTPCallbacks(request, DonateSubmitCompleted);
 
@@ -595,7 +652,7 @@ void SubmitDonateRequest(int client, const char[] amount, const char[] method, c
 		return;
 	}
 
-	CPrintToChat(client, "{green}[AnneDonate]{default} 正在提交赞助信息，赞助页面将用于扫码支付。");
+	CPrintToChat(client, "{green}[AnneDonate]{default} 正在创建赞助记录，赞助页面将直接显示对应收款码。");
 }
 
 public void DonateSubmitCompleted(Handle request, bool failure, bool requestSuccessful, EHTTPStatusCode statusCode, any userid)
@@ -609,7 +666,66 @@ public void DonateSubmitCompleted(Handle request, bool failure, bool requestSucc
 		}
 		else
 		{
-			CPrintToChat(client, "{green}[AnneDonate]{default} 赞助信息已提交，请在打开的赞助页面扫码支付。");
+			CPrintToChat(client, "{green}[AnneDonate]{default} 赞助记录已创建，请在打开的页面扫码支付。");
+		}
+	}
+	delete request;
+}
+
+void SubmitDonateFinishRequest(int client, const char[] amount, const char[] method)
+{
+	char baseUrl[192], steam64[32], name[MAX_NAME_LENGTH];
+	GetDonateBaseUrl(baseUrl, sizeof(baseUrl));
+	GetClientName(client, name, sizeof(name));
+
+	if(!GetClientAuthId(client, AuthId_SteamID64, steam64, sizeof(steam64), true))
+	{
+		CPrintToChat(client, "{green}[AnneDonate]{default} 无法获取 SteamID64，请联系管理员核实。");
+		return;
+	}
+
+	if(GetFeatureStatus(FeatureType_Native, "SteamWorks_CreateHTTPRequest") != FeatureStatus_Available)
+	{
+		CPrintToChat(client, "{green}[AnneDonate]{default} SteamWorks 不可用，请联系管理员核实到账。");
+		return;
+	}
+
+	Handle request = SteamWorks_CreateHTTPRequest(k_EHTTPMethodPOST, baseUrl);
+	if(request == null)
+	{
+		CPrintToChat(client, "{green}[AnneDonate]{default} 支付完成提示发送失败，请联系管理员核实。");
+		return;
+	}
+
+	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "direct_steam_id", steam64);
+	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "direct_name", name);
+	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "amount", amount);
+	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "method", method);
+	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "game", "1");
+	SteamWorks_SetHTTPRequestGetOrPostParameter(request, "game_action", "paid");
+	SteamWorks_SetHTTPRequestContextValue(request, GetClientUserId(client));
+	SteamWorks_SetHTTPCallbacks(request, DonateFinishCompleted);
+
+	if(!SteamWorks_SendHTTPRequest(request))
+	{
+		delete request;
+		CPrintToChat(client, "{green}[AnneDonate]{default} 支付完成提示发送失败，请联系管理员核实。");
+		return;
+	}
+}
+
+public void DonateFinishCompleted(Handle request, bool failure, bool requestSuccessful, EHTTPStatusCode statusCode, any userid)
+{
+	int client = GetClientOfUserId(userid);
+	if(IsValidClient(client) && !IsFakeClient(client))
+	{
+		if(failure || !requestSuccessful || statusCode < k_EHTTPStatusCode200OK || statusCode >= k_EHTTPStatusCode300MultipleChoices)
+		{
+			CPrintToChat(client, "{green}[AnneDonate]{default} 支付完成提示同步失败，HTTP 状态: %d。请联系管理员核实。", statusCode);
+		}
+		else
+		{
+			CPrintToChat(client, "{green}[AnneDonate]{default} 支付完成提示已同步，管理员核实到账后会开通权限。");
 		}
 	}
 	delete request;
