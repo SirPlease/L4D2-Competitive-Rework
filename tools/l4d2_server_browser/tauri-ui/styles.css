@@ -697,7 +697,7 @@ tr:last-child td {
 
 .settings-grid {
   display: grid;
-  grid-template-columns: minmax(160px, 220px) minmax(160px, 220px) minmax(120px, 180px) minmax(260px, 1fr);
+  grid-template-columns: minmax(160px, 220px) minmax(160px, 220px) minmax(220px, 280px) minmax(120px, 160px);
   gap: 12px;
   align-items: end;
 }

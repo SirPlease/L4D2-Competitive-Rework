@@ -339,7 +339,7 @@
           </section>
 
           <section class="panel settings-panel mt-14">
-            <h2 data-i18n="settingsLanguage">语言 / 其它设置</h2>
+            <h2 data-i18n="settingsLanguage">系统设置</h2>
             <div class="settings-grid">
               <label class="field">
                 <span data-i18n="languageLabel">语言</span>
@@ -358,7 +358,8 @@
               </label>
               <label class="field">
                 <span data-i18n="timeZoneLabel">时区</span>
-                <input id="timeZoneInput" autocomplete="off" placeholder="system / Asia/Shanghai" />
+                <select id="timeZoneInput"></select>
+                <small id="timeZoneHint"></small>
               </label>
               <label class="field color-field">
                 <span data-i18n="customAccent">强调色</span>

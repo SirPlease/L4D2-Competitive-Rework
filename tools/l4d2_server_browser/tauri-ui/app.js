@@ -51,6 +51,29 @@ const naturalCollator = new Intl.Collator(undefined, {
   sensitivity: "base",
 });
 
+const TIME_ZONE_OPTIONS = [
+  { value: "system", zh: "跟随系统时区", en: "Use system time zone" },
+  { value: "Asia/Shanghai", zh: "上海 / 北京", en: "Shanghai / Beijing" },
+  { value: "Asia/Hong_Kong", zh: "香港", en: "Hong Kong" },
+  { value: "Asia/Taipei", zh: "台北", en: "Taipei" },
+  { value: "Asia/Tokyo", zh: "东京", en: "Tokyo" },
+  { value: "Asia/Seoul", zh: "首尔", en: "Seoul" },
+  { value: "Asia/Singapore", zh: "新加坡", en: "Singapore" },
+  { value: "Asia/Bangkok", zh: "曼谷", en: "Bangkok" },
+  { value: "Asia/Dubai", zh: "迪拜", en: "Dubai" },
+  { value: "Europe/London", zh: "伦敦", en: "London" },
+  { value: "Europe/Berlin", zh: "柏林", en: "Berlin" },
+  { value: "Europe/Moscow", zh: "莫斯科", en: "Moscow" },
+  { value: "America/New_York", zh: "纽约", en: "New York" },
+  { value: "America/Chicago", zh: "芝加哥", en: "Chicago" },
+  { value: "America/Denver", zh: "丹佛", en: "Denver" },
+  { value: "America/Los_Angeles", zh: "洛杉矶", en: "Los Angeles" },
+  { value: "America/Vancouver", zh: "温哥华", en: "Vancouver" },
+  { value: "Australia/Sydney", zh: "悉尼", en: "Sydney" },
+  { value: "Pacific/Auckland", zh: "奥克兰", en: "Auckland" },
+  { value: "UTC", zh: "协调世界时", en: "UTC" },
+];
+
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => Array.from(document.querySelectorAll(selector));
 
@@ -132,6 +155,88 @@ function normalizeTimeZone(value) {
   }
 }
 
+function systemTimeZone() {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+}
+
+function timeZoneOffsetMinutes(timeZone, date = new Date()) {
+  try {
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone,
+      hour12: false,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    }).formatToParts(date);
+    const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+    const utcMillis = Date.UTC(
+      Number(values.year),
+      Number(values.month) - 1,
+      Number(values.day),
+      Number(values.hour) % 24,
+      Number(values.minute),
+      Number(values.second),
+    );
+    return Math.round((utcMillis - date.getTime()) / 60000);
+  } catch {
+    return 0;
+  }
+}
+
+function formatGmtOffset(timeZone) {
+  const minutes = timeZoneOffsetMinutes(timeZone);
+  if (minutes === 0) return "GMT+0";
+  const sign = minutes >= 0 ? "+" : "-";
+  const absolute = Math.abs(minutes);
+  const hours = Math.floor(absolute / 60);
+  const rest = absolute % 60;
+  return rest ? `GMT${sign}${hours}:${String(rest).padStart(2, "0")}` : `GMT${sign}${hours}`;
+}
+
+function timeZoneOptionLabel(option) {
+  const locale = getLocale();
+  const name = locale === "en_US" ? option.en : option.zh;
+  if (option.value === "system") {
+    const zone = systemTimeZone();
+    return `${name} (${zone}, ${formatGmtOffset(zone)})`;
+  }
+  return `${name} (${option.value}, ${formatGmtOffset(option.value)})`;
+}
+
+function timeZoneHintText(value) {
+  const zone = normalizeTimeZone(value);
+  if (zone === "system") {
+    const systemZone = systemTimeZone();
+    return getLocale() === "en_US"
+      ? `Current system: ${systemZone}, about ${formatGmtOffset(systemZone)}`
+      : `当前系统：${systemZone}，约 ${formatGmtOffset(systemZone)}`;
+  }
+  return getLocale() === "en_US"
+    ? `Selected: ${zone}, about ${formatGmtOffset(zone)}`
+    : `已选择：${zone}，约 ${formatGmtOffset(zone)}`;
+}
+
+function populateTimeZoneOptions() {
+  const select = $("#timeZoneInput");
+  if (!select) return;
+  const selected = normalizeTimeZone(state.timeZone);
+  select.replaceChildren();
+  const hasSelected = TIME_ZONE_OPTIONS.some((option) => option.value === selected);
+  const options = hasSelected || selected === "system"
+    ? TIME_ZONE_OPTIONS
+    : [{ value: selected, zh: selected, en: selected }, ...TIME_ZONE_OPTIONS];
+  for (const option of options) {
+    const element = document.createElement("option");
+    element.value = option.value;
+    element.textContent = timeZoneOptionLabel(option);
+    select.append(element);
+  }
+  select.value = selected;
+}
+
 function naturalCompare(left, right) {
   return naturalCollator.compare(String(left || ""), String(right || ""));
 }
@@ -187,8 +292,11 @@ function syncAutoRefreshInputs() {
 }
 
 function syncTimeZoneInput() {
+  populateTimeZoneOptions();
   const input = $("#timeZoneInput");
+  const hint = $("#timeZoneHint");
   if (input) input.value = state.timeZone || "system";
+  if (hint) hint.textContent = timeZoneHintText(state.timeZone);
 }
 
 function hasSavedRconPassword(address = state.selectedAddress) {
@@ -1401,6 +1509,7 @@ function bindEvents() {
   $("#languageSelect").addEventListener("change", async (e) => {
     const locale = e.target.value;
     setLocale(locale);
+    syncTimeZoneInput();
     try {
       await saveGuiSettings({ language: configLanguageFromLocale(locale) });
       setStatus(t("statusSaved"));
@@ -1508,6 +1617,7 @@ async function boot() {
   initI18n();
   $("#languageSelect").value = getLocale();
   applyTheme();
+  syncTimeZoneInput();
   
   bindEvents();
   clearSubscriptionEditor();
