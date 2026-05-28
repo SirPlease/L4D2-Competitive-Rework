@@ -37,6 +37,8 @@ const state = {
   autoRefreshEmptySecs: 120,
   autoRefreshActiveSecs: 30,
   autoRefreshSelectedSecs: 10,
+  timeZone: "system",
+  broadcastSending: false,
   lastFullRefreshAt: 0,
   lastActiveRefreshAt: 0,
   lastSelectedRefreshAt: 0,
@@ -119,6 +121,17 @@ function clampRefreshSeconds(value, fallback, min) {
   return Math.max(min, seconds);
 }
 
+function normalizeTimeZone(value) {
+  const trimmed = String(value || "").trim();
+  if (!trimmed || /^(system|local|auto)$/i.test(trimmed)) return "system";
+  try {
+    new Intl.DateTimeFormat(undefined, { timeZone: trimmed }).format(new Date());
+    return trimmed;
+  } catch {
+    return "system";
+  }
+}
+
 function naturalCompare(left, right) {
   return naturalCollator.compare(String(left || ""), String(right || ""));
 }
@@ -171,6 +184,11 @@ function syncAutoRefreshInputs() {
   if (empty) empty.value = state.autoRefreshEmptySecs;
   if (active) active.value = state.autoRefreshActiveSecs;
   if (selected) selected.value = state.autoRefreshSelectedSecs;
+}
+
+function syncTimeZoneInput() {
+  const input = $("#timeZoneInput");
+  if (input) input.value = state.timeZone || "system";
 }
 
 function hasSavedRconPassword(address = state.selectedAddress) {
@@ -290,6 +308,7 @@ async function saveGuiSettings(partial) {
     auto_refresh_empty_secs: null,
     auto_refresh_active_secs: null,
     auto_refresh_selected_secs: null,
+    time_zone: null,
     ...partial,
   };
   const lists = await invoke("save_gui_settings", { req });
@@ -305,9 +324,11 @@ async function saveGuiSettings(partial) {
     state.autoRefreshEmptySecs = clampRefreshSeconds(lists.auto_refresh_empty_secs, 120, 15);
     state.autoRefreshActiveSecs = clampRefreshSeconds(lists.auto_refresh_active_secs, 30, 5);
     state.autoRefreshSelectedSecs = clampRefreshSeconds(lists.auto_refresh_selected_secs, 10, 3);
+    state.timeZone = normalizeTimeZone(lists.time_zone);
     state.rconPasswords = lists.rcon_passwords || {};
     applyTheme();
     syncAutoRefreshInputs();
+    syncTimeZoneInput();
     syncConfigPathUI();
     syncRconPasswordControls();
   }
@@ -368,6 +389,7 @@ async function loadConfigLists() {
     state.autoRefreshEmptySecs = clampRefreshSeconds(state.lists.auto_refresh_empty_secs, 120, 15);
     state.autoRefreshActiveSecs = clampRefreshSeconds(state.lists.auto_refresh_active_secs, 30, 5);
     state.autoRefreshSelectedSecs = clampRefreshSeconds(state.lists.auto_refresh_selected_secs, 10, 3);
+    state.timeZone = normalizeTimeZone(state.lists.time_zone);
     const locale = uiLocaleFromConfig(state.lists.gui_language);
     setLocale(locale);
     applyTheme();
@@ -377,6 +399,7 @@ async function loadConfigLists() {
     $("#autoUpdateInput").checked = state.autoCheckUpdate;
     $("#anneStatsInput").checked = state.anneStatsEnabled;
     syncAutoRefreshInputs();
+    syncTimeZoneInput();
     syncRconPasswordControls();
     renderSubscriptions();
     renderManualServers();
@@ -1151,26 +1174,38 @@ async function loadGlobalPlayers() {
 // ----- Broadcast -----
 
 async function sendBroadcastMessage() {
-  const msg = $("#broadcastInput").value.trim();
+  if (state.broadcastSending) return;
+  const input = $("#broadcastInput");
+  const sendButton = $("#broadcastSendBtn");
+  const msg = input.value.trim();
   if (!msg) return;
   if (!state.apiToken) {
     setStatus(t("loginRequired"));
     return;
   }
+  input.value = "";
+  state.broadcastSending = true;
+  sendButton.disabled = true;
+  setStatus(t("broadcastSending"));
   try {
     const res = await invoke("send_broadcast", { req: { base_url: state.apiBaseUrl, token: state.apiToken, message: msg } });
-    $("#broadcastInput").value = "";
-    setStatus(res);
-    loadBroadcastHistory();
+    setStatus(`${t("statusBroadcastSent")}: ${res}`);
+    await loadBroadcastHistory();
   } catch (e) {
-    setStatus(`${t("saveFailed")}: ${e}`);
+    setStatus(`${t("broadcastSendFailed")}: ${e}`);
+  } finally {
+    state.broadcastSending = false;
+    sendButton.disabled = false;
   }
 }
 
 async function loadBroadcastHistory() {
   const tbody = $("#broadcastRows");
   try {
-    const msgs = await invoke("load_broadcast_history", { baseUrl: state.apiBaseUrl, token: state.apiToken || "" });
+    appendEmptyRow(tbody, 3, t("broadcastLoading"));
+    const msgs = await invoke("load_broadcast_history", {
+      req: { base_url: state.apiBaseUrl, token: state.apiToken || "", time_zone: state.timeZone }
+    });
     if (!msgs || msgs.length === 0) {
       appendEmptyRow(tbody, 3, t("emptyResult"));
       return;
@@ -1178,7 +1213,7 @@ async function loadBroadcastHistory() {
     tbody.replaceChildren();
     for (const m of msgs) {
       const tr = document.createElement("tr");
-      appendTextCell(tr, new Date(m.sent_at).toLocaleString());
+      appendTextCell(tr, m.sent_at_display || m.sent_at);
       appendTextCell(tr, m.sender_name);
       appendTextCell(tr, m.message);
       tbody.append(tr);
@@ -1452,6 +1487,17 @@ function bindEvents() {
       await saveGuiSettings({ auto_refresh_selected_secs: state.autoRefreshSelectedSecs });
       startAutoRefreshLoop();
       setStatus(t("statusSaved"));
+    } catch (error) {
+      setStatus(`${t("saveFailed")}: ${error}`);
+    }
+  });
+  $("#timeZoneInput").addEventListener("change", async (e) => {
+    state.timeZone = normalizeTimeZone(e.currentTarget.value);
+    e.currentTarget.value = state.timeZone;
+    try {
+      await saveGuiSettings({ time_zone: state.timeZone });
+      setStatus(t("statusSaved"));
+      if (state.tab === "broadcast") loadBroadcastHistory();
     } catch (error) {
       setStatus(`${t("saveFailed")}: ${error}`);
     }

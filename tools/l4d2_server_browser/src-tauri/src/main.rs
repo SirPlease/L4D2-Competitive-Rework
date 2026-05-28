@@ -11,8 +11,8 @@ use anne_server_browser::{
     tauri_load_global_players, tauri_query_players, tauri_read_cvars, tauri_run_rcon,
     tauri_save_api_config, tauri_save_gui_settings, tauri_save_rcon_password, tauri_send_broadcast,
     tauri_steam_login_poll, tauri_steam_login_start, TauriApiUser, TauriBroadcastMessage,
-    TauriBroadcastRequest, TauriConfigLists, TauriCvarEntry, TauriCvarRequest,
-    TauriDeleteManualServerRequest, TauriGlobalPlayer, TauriGuiSettingsRequest,
+    TauriBroadcastHistoryRequest, TauriBroadcastRequest, TauriConfigLists, TauriCvarEntry,
+    TauriCvarRequest, TauriDeleteManualServerRequest, TauriGlobalPlayer, TauriGuiSettingsRequest,
     TauriLoginPollRequest, TauriLoginResult, TauriLoginStart, TauriNetworkInfo, TauriPlayerInfo,
     TauriRconRequest, TauriSaveApiConfigRequest, TauriSaveRconPasswordRequest, TauriServerQuery,
     TauriServerRows, TauriSourceBansInput, TauriUpdateInfo,
@@ -134,10 +134,9 @@ async fn send_broadcast(req: TauriBroadcastRequest) -> Result<String, String> {
 
 #[tauri::command]
 async fn load_broadcast_history(
-    base_url: String,
-    token: String,
+    req: TauriBroadcastHistoryRequest,
 ) -> Result<Vec<TauriBroadcastMessage>, String> {
-    run_blocking(move || tauri_load_broadcast_history(base_url, token)).await
+    run_blocking(move || tauri_load_broadcast_history(req)).await
 }
 
 #[tauri::command]

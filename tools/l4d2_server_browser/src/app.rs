@@ -1,7 +1,10 @@
+use chrono::{DateTime, Local, NaiveDateTime, TimeZone as _, Utc};
+use chrono_tz::Tz;
 use clap::{Parser, ValueEnum};
 use eframe::egui;
 use regex::Regex;
-use reqwest::blocking::Client;
+use reqwest::blocking::{Client, Response};
+use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, VecDeque};
 use std::env;
@@ -25,6 +28,7 @@ const USER_AGENT: &str = concat!("AnneServerBrowser/", env!("CARGO_PKG_VERSION")
 const UPDATE_REPO: &str = "fantasylidong/CompetitiveWithAnne";
 const UPDATE_TAG_PREFIX: &str = "Anne刷服器-v";
 const DEFAULT_API_BASE_URL: &str = "https://anne.trygek.com";
+const SYSTEM_TIME_ZONE_VALUE: &str = "system";
 const ONLINE_STATS_CACHE_TTL: Duration = Duration::from_secs(60);
 const TAURI_PLAYER_CACHE_TTL: Duration = Duration::from_secs(60);
 
@@ -513,6 +517,8 @@ struct GuiConfig {
     auto_refresh_active_secs: u64,
     #[serde(default = "default_auto_refresh_selected_secs")]
     auto_refresh_selected_secs: u64,
+    #[serde(default = "default_time_zone")]
+    time_zone: String,
 }
 
 fn default_true() -> bool {
@@ -537,6 +543,10 @@ fn default_auto_refresh_active_secs() -> u64 {
 
 fn default_auto_refresh_selected_secs() -> u64 {
     10
+}
+
+fn default_time_zone() -> String {
+    SYSTEM_TIME_ZONE_VALUE.to_owned()
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -680,6 +690,7 @@ impl GuiLanguage {
                 TextKey::CvarSearchPlaceholder => "搜索 CVAR / 规则变量名...",
                 TextKey::GlobalPlayerSearchPlaceholder => "搜索在线玩家昵称...",
                 TextKey::ApiBaseUrl => "AnneWeb API 地址",
+                TextKey::TimeZone => "时区",
                 TextKey::SteamLogin => "Steam 登录",
                 TextKey::Logout => "退出登录",
                 TextKey::BroadcastMessage => "全服消息内容",
@@ -765,6 +776,7 @@ impl GuiLanguage {
                 TextKey::CvarSearchPlaceholder => "Filter CVAR names...",
                 TextKey::GlobalPlayerSearchPlaceholder => "Search player name...",
                 TextKey::ApiBaseUrl => "AnneWeb API URL",
+                TextKey::TimeZone => "Time zone",
                 TextKey::SteamLogin => "Steam login",
                 TextKey::Logout => "Logout",
                 TextKey::BroadcastMessage => "Broadcast message",
@@ -889,6 +901,68 @@ fn parse_gui_language_setting(value: &str) -> Result<GuiLanguage, String> {
     }
 }
 
+fn normalize_time_zone_setting(value: &str) -> String {
+    let value = value.trim();
+    if value.is_empty()
+        || value.eq_ignore_ascii_case("system")
+        || value.eq_ignore_ascii_case("local")
+        || value.eq_ignore_ascii_case("auto")
+    {
+        return SYSTEM_TIME_ZONE_VALUE.to_owned();
+    }
+
+    if value.parse::<Tz>().is_ok() {
+        value.to_owned()
+    } else {
+        SYSTEM_TIME_ZONE_VALUE.to_owned()
+    }
+}
+
+fn parse_broadcast_utc_time(value: &str) -> Option<DateTime<Utc>> {
+    let value = value.trim();
+    if value.is_empty() {
+        return None;
+    }
+
+    if let Ok(datetime) = DateTime::parse_from_rfc3339(value) {
+        return Some(datetime.with_timezone(&Utc));
+    }
+
+    for format in [
+        "%Y-%m-%d %H:%M:%S",
+        "%Y-%m-%dT%H:%M:%S",
+        "%Y-%m-%d %H:%M:%S%.f",
+        "%Y-%m-%dT%H:%M:%S%.f",
+    ] {
+        if let Ok(naive) = NaiveDateTime::parse_from_str(value, format) {
+            return Some(Utc.from_utc_datetime(&naive));
+        }
+    }
+
+    None
+}
+
+fn format_broadcast_time(value: &str, time_zone: &str) -> String {
+    let Some(utc_time) = parse_broadcast_utc_time(value) else {
+        return value.to_owned();
+    };
+
+    let time_zone = normalize_time_zone_setting(time_zone);
+    if time_zone == SYSTEM_TIME_ZONE_VALUE {
+        utc_time
+            .with_timezone(&Local)
+            .format("%Y-%m-%d %H:%M:%S %:z")
+            .to_string()
+    } else if let Ok(tz) = time_zone.parse::<Tz>() {
+        utc_time
+            .with_timezone(&tz)
+            .format("%Y-%m-%d %H:%M:%S %Z")
+            .to_string()
+    } else {
+        value.to_owned()
+    }
+}
+
 fn split_server_tags(value: &str) -> Vec<String> {
     let mut seen = HashSet::new();
     let mut tags = Vec::new();
@@ -996,6 +1070,7 @@ enum TextKey {
     CvarSearchPlaceholder,
     GlobalPlayerSearchPlaceholder,
     ApiBaseUrl,
+    TimeZone,
     SteamLogin,
     Logout,
     BroadcastMessage,
@@ -2415,6 +2490,7 @@ struct BroadcastRequest {
 struct BroadcastHistoryRequest {
     base_url: String,
     token: String,
+    time_zone: String,
 }
 
 #[derive(Clone, Serialize)]
@@ -2535,6 +2611,7 @@ pub struct TauriConfigLists {
     auto_refresh_empty_secs: u64,
     auto_refresh_active_secs: u64,
     auto_refresh_selected_secs: u64,
+    time_zone: String,
 }
 
 #[derive(Clone, Deserialize)]
@@ -2640,6 +2717,7 @@ pub fn load_tauri_config_lists(config_path: Option<String>) -> Result<TauriConfi
         auto_refresh_empty_secs: config.gui.auto_refresh_empty_secs,
         auto_refresh_active_secs: config.gui.auto_refresh_active_secs,
         auto_refresh_selected_secs: config.gui.auto_refresh_selected_secs,
+        time_zone: normalize_time_zone_setting(&config.gui.time_zone),
     })
 }
 
@@ -2962,6 +3040,7 @@ pub struct TauriBroadcastMessage {
     pub message: String,
     pub sender_name: String,
     pub sent_at: String,
+    pub sent_at_display: String,
 }
 
 #[derive(Clone, Deserialize)]
@@ -2969,6 +3048,13 @@ pub struct TauriBroadcastRequest {
     pub base_url: String,
     pub token: String,
     pub message: String,
+}
+
+#[derive(Clone, Deserialize)]
+pub struct TauriBroadcastHistoryRequest {
+    pub base_url: String,
+    pub token: String,
+    pub time_zone: Option<String>,
 }
 
 #[derive(Clone, Deserialize)]
@@ -2996,6 +3082,7 @@ pub struct TauriGuiSettingsRequest {
     pub auto_refresh_empty_secs: Option<u64>,
     pub auto_refresh_active_secs: Option<u64>,
     pub auto_refresh_selected_secs: Option<u64>,
+    pub time_zone: Option<String>,
 }
 
 #[derive(Clone, Deserialize)]
@@ -3264,16 +3351,21 @@ pub fn tauri_send_broadcast(req: TauriBroadcastRequest) -> Result<String, String
 }
 
 pub fn tauri_load_broadcast_history(
-    base_url: String,
-    token: String,
+    req: TauriBroadcastHistoryRequest,
 ) -> Result<Vec<TauriBroadcastMessage>, String> {
-    let messages = api_broadcast_history(BroadcastHistoryRequest { base_url, token })?;
+    let time_zone = normalize_time_zone_setting(req.time_zone.as_deref().unwrap_or(""));
+    let messages = api_broadcast_history(BroadcastHistoryRequest {
+        base_url: req.base_url,
+        token: req.token,
+        time_zone: time_zone.clone(),
+    })?;
     Ok(messages
         .into_iter()
         .map(|m| TauriBroadcastMessage {
             id: m.id,
             message: m.message,
             sender_name: m.name,
+            sent_at_display: format_broadcast_time(&m.created_at, &time_zone),
             sent_at: m.created_at,
         })
         .collect())
@@ -3473,6 +3565,9 @@ pub fn tauri_save_gui_settings(req: TauriGuiSettingsRequest) -> Result<TauriConf
     }
     if let Some(seconds) = req.auto_refresh_selected_secs {
         config.gui.auto_refresh_selected_secs = seconds.max(3);
+    }
+    if let Some(time_zone) = req.time_zone {
+        config.gui.time_zone = normalize_time_zone_setting(&time_zone);
     }
     save_config(&path, &config)?;
     load_tauri_config_lists(Some(path.display().to_string()))
@@ -3754,6 +3849,7 @@ struct NativeGuiApp {
     broadcast_history: Vec<BroadcastHistoryMessage>,
     broadcast_history_status: String,
     broadcast_history_querying: bool,
+    time_zone: String,
 }
 
 fn app_bg() -> egui::Color32 {
@@ -4211,6 +4307,7 @@ impl NativeGuiApp {
             broadcast_history: Vec::new(),
             broadcast_history_status: String::new(),
             broadcast_history_querying: false,
+            time_zone: normalize_time_zone_setting(&initial_config.gui.time_zone),
         };
         app.config_status = app.language.config_file_status(&app.config_path);
         app.refresh_config_lists();
@@ -4562,7 +4659,7 @@ impl NativeGuiApp {
                                     )
                                 };
                                 format!(
-                                    "已写入全服消息队列 #{}：{}\n{}\n总积分：{}",
+                                    "发送完成，已写入全服消息队列 #{}：{}\n{}\n总积分：{}",
                                     response.id.unwrap_or_default(),
                                     response.message.unwrap_or_default(),
                                     usage,
@@ -4582,7 +4679,7 @@ impl NativeGuiApp {
                                     )
                                 };
                                 format!(
-                                    "Broadcast queued #{}: {}\n{}\nTotal points: {}",
+                                    "Sent. Broadcast queued #{}: {}\n{}\nTotal points: {}",
                                     response.id.unwrap_or_default(),
                                     response.message.unwrap_or_default(),
                                     usage,
@@ -4961,6 +5058,39 @@ impl NativeGuiApp {
             }
 
             ui.separator();
+            ui.horizontal(|ui| {
+                ui.label(self.text(TextKey::TimeZone));
+                let response = ui.add(
+                    egui::TextEdit::singleline(&mut self.time_zone)
+                        .desired_width(220.0)
+                        .hint_text(match self.language {
+                            GuiLanguage::ZhCn => "system 或 Asia/Shanghai",
+                            GuiLanguage::EnUs => "system or Asia/Shanghai",
+                        }),
+                );
+                if response.lost_focus() && response.changed() {
+                    let normalized = normalize_time_zone_setting(&self.time_zone);
+                    if normalized != self.time_zone {
+                        self.time_zone = normalized;
+                    }
+                    if let Err(err) = save_time_zone_to_config(&self.config_path, &self.time_zone) {
+                        self.broadcast_history_status = match self.language {
+                            GuiLanguage::ZhCn => format!("保存时区失败：{err}"),
+                            GuiLanguage::EnUs => format!("Failed to save time zone: {err}"),
+                        };
+                    }
+                }
+            });
+            ui.label(
+                egui::RichText::new(match self.language {
+                    GuiLanguage::ZhCn => "历史消息时间会按此时区显示；system 表示跟随本机时区。",
+                    GuiLanguage::EnUs => {
+                        "History timestamps use this time zone; system follows this computer."
+                    }
+                })
+                .color(text_muted_color()),
+            );
+            ui.separator();
             ui.label(self.text(TextKey::BroadcastMessage));
             ui.add(
                 egui::TextEdit::multiline(&mut self.broadcast_message)
@@ -4970,7 +5100,14 @@ impl NativeGuiApp {
             if ui
                 .add_enabled(
                     !self.broadcast_sending,
-                    primary_button(self.text(TextKey::SendBroadcast)),
+                    primary_button(if self.broadcast_sending {
+                        match self.language {
+                            GuiLanguage::ZhCn => "后台发送中...",
+                            GuiLanguage::EnUs => "Sending...",
+                        }
+                    } else {
+                        self.text(TextKey::SendBroadcast)
+                    }),
                 )
                 .clicked()
             {
@@ -5035,8 +5172,11 @@ impl NativeGuiApp {
                                             .color(text_primary_color()),
                                     );
                                     ui.label(
-                                        egui::RichText::new(&message.created_at)
-                                            .color(text_muted_color()),
+                                        egui::RichText::new(format_broadcast_time(
+                                            &message.created_at,
+                                            &self.time_zone,
+                                        ))
+                                        .color(text_muted_color()),
                                     );
                                 });
                                 ui.label(
@@ -5075,13 +5215,23 @@ impl NativeGuiApp {
             return;
         }
 
+        let message = self.broadcast_message.trim().to_owned();
+        if message.is_empty() {
+            self.broadcast_output = match self.language {
+                GuiLanguage::ZhCn => "全服消息内容不能为空。".to_owned(),
+                GuiLanguage::EnUs => "Broadcast message cannot be empty.".to_owned(),
+            };
+            return;
+        }
+
         self.broadcast_sending = true;
         self.broadcast_output = self.language.text(TextKey::RunningCommand).to_owned();
+        self.broadcast_message.clear();
         let tx = self.tx.clone();
         let request = BroadcastRequest {
             base_url: self.api_base_url.clone(),
             token: self.api_token.clone(),
-            message: self.broadcast_message.clone(),
+            message,
         };
         thread::spawn(move || {
             let result = api_broadcast(request);
@@ -5104,6 +5254,7 @@ impl NativeGuiApp {
         let request = BroadcastHistoryRequest {
             base_url: self.api_base_url.clone(),
             token: self.api_token.clone(),
+            time_zone: self.time_zone.clone(),
         };
         thread::spawn(move || {
             let result = api_broadcast_history(request);
@@ -7017,6 +7168,33 @@ impl eframe::App for NativeGuiApp {
                         }
 
                         ui.separator();
+                        ui.horizontal(|ui| {
+                            ui.label(self.text(TextKey::TimeZone));
+                            let response = ui.add(
+                                egui::TextEdit::singleline(&mut self.time_zone)
+                                    .desired_width(220.0)
+                                    .hint_text(match self.language {
+                                        GuiLanguage::ZhCn => "system 或 Asia/Shanghai",
+                                        GuiLanguage::EnUs => "system or Asia/Shanghai",
+                                    }),
+                            );
+                            if response.lost_focus() && response.changed() {
+                                let normalized = normalize_time_zone_setting(&self.time_zone);
+                                if normalized != self.time_zone {
+                                    self.time_zone = normalized;
+                                }
+                                if let Err(err) =
+                                    save_time_zone_to_config(&self.config_path, &self.time_zone)
+                                {
+                                    self.config_status = match self.language {
+                                        GuiLanguage::ZhCn => format!("保存时区失败：{err}"),
+                                        GuiLanguage::EnUs => {
+                                            format!("Failed to save time zone: {err}")
+                                        }
+                                    };
+                                }
+                            }
+                        });
 
                         ui.horizontal(|ui| {
                             ui.label(self.text(TextKey::Language));
@@ -7410,6 +7588,12 @@ fn save_updater_config_to_config(path: &PathBuf, auto_check: bool) -> Result<(),
 fn save_anne_stats_to_config(path: &PathBuf, enabled: bool) -> Result<(), String> {
     let mut config = load_config_or_default(path)?;
     config.gui.anne_stats = enabled;
+    save_config(path, &config)
+}
+
+fn save_time_zone_to_config(path: &PathBuf, time_zone: &str) -> Result<(), String> {
+    let mut config = load_config_or_default(path)?;
+    config.gui.time_zone = normalize_time_zone_setting(time_zone);
     save_config(path, &config)
 }
 
@@ -8038,6 +8222,57 @@ fn api_logout(base_url: &str, token: &str) -> Result<(), String> {
     Ok(())
 }
 
+fn is_retryable_status(status: StatusCode) -> bool {
+    status == StatusCode::REQUEST_TIMEOUT
+        || status == StatusCode::TOO_MANY_REQUESTS
+        || status.is_server_error()
+}
+
+fn send_api_request_with_retry<F>(
+    label: &str,
+    attempts: usize,
+    mut send: F,
+) -> Result<Response, String>
+where
+    F: FnMut() -> reqwest::Result<Response>,
+{
+    let attempts = attempts.max(1);
+    let mut last_error = String::new();
+
+    for attempt in 1..=attempts {
+        match send() {
+            Ok(response) => {
+                if attempt < attempts && is_retryable_status(response.status()) {
+                    last_error = format!("API HTTP {}", response.status());
+                } else {
+                    return Ok(response);
+                }
+            }
+            Err(err) => {
+                let retryable = err.is_timeout() || err.is_connect() || err.is_request();
+                last_error = if err.is_timeout() {
+                    "request timed out".to_owned()
+                } else if err.is_connect() {
+                    "connection failed".to_owned()
+                } else {
+                    err.to_string()
+                };
+                if !retryable || attempt >= attempts {
+                    return Err(format!(
+                        "{label} failed after {attempt} attempt(s): {last_error}"
+                    ));
+                }
+            }
+        }
+
+        thread::sleep(Duration::from_millis(250 * attempt as u64));
+    }
+
+    Err(format!(
+        "{label} failed after {attempts} attempt(s): {last_error}"
+    ))
+}
+
 fn steam_device_login(
     request: ApiLoginRequest,
     tx: Sender<GuiMessage>,
@@ -8102,32 +8337,32 @@ fn api_broadcast(request: BroadcastRequest) -> Result<ApiBroadcastResponse, Stri
     let message = non_empty(request.message.trim().to_owned(), "message")?;
     let client = api_client(Duration::from_secs(15))?;
     let url = api_url(&request.base_url, "/api/server/broadcast.php")?;
-    response_json(
+    let response = send_api_request_with_retry("send broadcast", 3, || {
         client
-            .post(url)
-            .bearer_auth(request.token)
+            .post(url.clone())
+            .bearer_auth(&request.token)
             .json(&serde_json::json!({ "message": message }))
             .send()
-            .map_err(|err| format!("failed to send broadcast: {err}"))?,
-    )
+    })?;
+    response_json(response)
 }
 
 fn api_broadcast_history(
     request: BroadcastHistoryRequest,
 ) -> Result<Vec<BroadcastHistoryMessage>, String> {
+    let _time_zone = normalize_time_zone_setting(&request.time_zone);
     let client = api_client(Duration::from_secs(10))?;
     let url = api_url(&request.base_url, "/api/server/broadcast_history.php")?;
-    let mut builder = client
-        .get(url)
-        .query(&[("since", "3600"), ("limit", "120")]);
-    if !request.token.trim().is_empty() {
-        builder = builder.bearer_auth(request.token);
-    }
-    let response: ApiBroadcastHistoryResponse = response_json(
-        builder
-            .send()
-            .map_err(|err| format!("failed to query broadcast history: {err}"))?,
-    )?;
+    let response = send_api_request_with_retry("query broadcast history", 3, || {
+        let mut builder = client
+            .get(url.clone())
+            .query(&[("since", "3600"), ("limit", "120")]);
+        if !request.token.trim().is_empty() {
+            builder = builder.bearer_auth(&request.token);
+        }
+        builder.send()
+    })?;
+    let response: ApiBroadcastHistoryResponse = response_json(response)?;
 
     if response.ok {
         Ok(response.messages)
@@ -8612,6 +8847,29 @@ mod tests {
         let config: BrowserConfig =
             toml::from_str("[gui]\nlanguage = \"zh\"\n").expect("valid config");
         assert_eq!(config.gui.language, GuiLanguage::ZhCn);
+    }
+
+    #[test]
+    fn normalizes_time_zone_setting() {
+        assert_eq!(normalize_time_zone_setting(""), "system");
+        assert_eq!(normalize_time_zone_setting("local"), "system");
+        assert_eq!(
+            normalize_time_zone_setting("Asia/Shanghai"),
+            "Asia/Shanghai"
+        );
+        assert_eq!(normalize_time_zone_setting("Bad/Zone"), "system");
+    }
+
+    #[test]
+    fn formats_broadcast_time_in_configured_zone() {
+        assert_eq!(
+            format_broadcast_time("2026-05-27 12:34:56", "UTC"),
+            "2026-05-27 12:34:56 UTC"
+        );
+        assert_eq!(
+            format_broadcast_time("2026-05-27 12:34:56", "Asia/Shanghai"),
+            "2026-05-27 20:34:56 CST"
+        );
     }
 
     #[test]
