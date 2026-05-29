@@ -8,7 +8,9 @@ const PING_MINI_WINDOW_MS = 5 * 60 * 1000;
 const PING_DETAIL_MIN_WINDOW_MS = 5 * 60 * 1000;
 const PING_MAX_CONNECT_GAP_MS = 45 * 1000;
 const SELECTED_REFRESH_DEFAULT_SECS = 5;
-const BROADCAST_REFRESH_INTERVAL_MS = 10 * 1000;
+const BROADCAST_REFRESH_INTERVAL_MS = 30 * 1000;
+const ANON_READ_CACHE_MS = 10 * 60 * 1000;
+const AUTH_READ_CACHE_MS = 60 * 1000;
 const ANNE_PLAYER_STATS_BASE_URL = "https://anne.trygek.com/stats/ranking/player.php";
 
 const state = {
@@ -49,6 +51,9 @@ const state = {
   appStartedAt: Date.now(),
   broadcastSending: false,
   broadcastHistory: [],
+  broadcastHistoryFetchedAt: 0,
+  broadcastHistoryAuthKey: "",
+  broadcastHistoryNotice: "",
   broadcastHistoryInFlight: false,
   updatePageUrl: "",
   updateDownloadUrl: "",
@@ -132,6 +137,36 @@ function setRefreshButtonBusy(value, labelKey = "btnRefresh") {
 
 function setStatus(message) {
   $("#statusLine").textContent = message;
+}
+
+function currentApiAuthKey() {
+  return state.apiToken ? "steam" : "anonymous";
+}
+
+function readCacheTtlMs() {
+  return state.apiToken ? AUTH_READ_CACHE_MS : ANON_READ_CACHE_MS;
+}
+
+function secondsUntil(timestampMs) {
+  return Math.max(1, Math.ceil((timestampMs - Date.now()) / 1000));
+}
+
+function formatWaitTime(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const rest = seconds % 60;
+  if (minutes <= 0) return `${rest}秒`;
+  if (rest === 0) return `${minutes}分钟`;
+  return `${minutes}分${String(rest).padStart(2, "0")}秒`;
+}
+
+function anonymousReadNotice() {
+  return t("anonymousReadLimited");
+}
+
+function cachedReadNotice(seconds) {
+  return state.apiToken
+    ? t("loginReadCached", { seconds })
+    : t("anonymousReadCached", { seconds: formatWaitTime(seconds) });
 }
 
 function compactPath(path) {
@@ -1602,14 +1637,22 @@ function updateSteamUserUI() {
 
 // ----- Global Players -----
 
-async function loadGlobalPlayers() {
+async function loadGlobalPlayers({ force = false } = {}) {
   const tbody = $("#globalPlayerRows");
   try {
+    const showAnonNotice = !state.apiToken && state.anneStatsEnabled;
+    if (showAnonNotice) {
+      setStatus(anonymousReadNotice());
+    }
     const players = await invoke("load_global_players", {
       baseUrl: state.apiBaseUrl,
       token: state.apiToken || "",
+      forceStats: false,
       configPath: state.configPath
     });
+    if (showAnonNotice) {
+      setStatus(anonymousReadNotice());
+    }
     if (!players || players.length === 0) {
       appendEmptyRow(tbody, 9, t("noPlayers"));
       return;
@@ -1656,15 +1699,28 @@ async function sendBroadcastMessage() {
   sendButton.disabled = true;
   setStatus(t("broadcastSending"));
   try {
-    const res = await invoke("send_broadcast", { req: { base_url: state.apiBaseUrl, token: state.apiToken, message: msg } });
-    setStatus(`${t("statusBroadcastSent")}: ${res}`);
-    await loadBroadcastHistory({ showLoading: false, force: true });
+    const res = await invoke("send_broadcast", { req: { base_url: state.apiBaseUrl, token: state.apiToken, message: msg, time_zone: state.timeZone } });
+    const sentMessage = typeof res === "object" && res ? res : null;
+    if (sentMessage?.id) {
+      prependBroadcastMessage(sentMessage);
+      state.broadcastHistoryFetchedAt = Date.now();
+      state.broadcastHistoryAuthKey = currentApiAuthKey();
+      state.broadcastHistoryNotice = "";
+    }
+    setStatus(`${t("statusBroadcastSent")}: ${sentMessage?.message || res || msg}`);
   } catch (e) {
     setStatus(`${t("broadcastSendFailed")}: ${e}`);
   } finally {
     state.broadcastSending = false;
     sendButton.disabled = false;
   }
+}
+
+function prependBroadcastMessage(message) {
+  const id = Number(message.id || 0);
+  const withoutDuplicate = state.broadcastHistory.filter((item) => Number(item.id || 0) !== id);
+  state.broadcastHistory = [message, ...withoutDuplicate].slice(0, 120);
+  renderBroadcastHistory();
 }
 
 function renderBroadcastHistory(messages = state.broadcastHistory) {
@@ -1685,25 +1741,50 @@ function renderBroadcastHistory(messages = state.broadcastHistory) {
 
 async function loadBroadcastHistory({ showLoading = true, force = false } = {}) {
   const tbody = $("#broadcastRows");
-  if (state.broadcastHistoryInFlight && !force) return;
+  if (state.broadcastHistoryInFlight) return;
   if (!state.apiBaseUrl) {
     if (showLoading) appendEmptyRow(tbody, 3, t("configNotSet"));
     return;
+  }
+  const authKey = currentApiAuthKey();
+  const ttlMs = readCacheTtlMs();
+  const cacheExpiresAt = state.broadcastHistoryFetchedAt + ttlMs;
+  if (state.broadcastHistory.length > 0 && state.broadcastHistoryAuthKey === authKey && Date.now() < cacheExpiresAt) {
+    renderBroadcastHistory();
+    const notice = cachedReadNotice(secondsUntil(cacheExpiresAt));
+    state.broadcastHistoryNotice = notice;
+    if (state.tab === "broadcast") setStatus(notice);
+    return;
+  }
+  if (!state.apiToken) {
+    const notice = anonymousReadNotice();
+    state.broadcastHistoryNotice = notice;
+    if (state.tab === "broadcast") setStatus(notice);
   }
   state.broadcastHistoryInFlight = true;
   try {
     if (showLoading && state.broadcastHistory.length === 0) {
       appendEmptyRow(tbody, 3, t("broadcastLoading"));
     }
-    const msgs = await invoke("load_broadcast_history", {
+    const res = await invoke("load_broadcast_history", {
       req: { base_url: state.apiBaseUrl, token: state.apiToken || "", time_zone: state.timeZone }
     });
+    const msgs = Array.isArray(res) ? res : (res?.messages || []);
+    const returnedTtlMs = Number(res?.cache_ttl_secs || 0) * 1000;
     state.broadcastHistory = Array.isArray(msgs) ? msgs : [];
+    state.broadcastHistoryFetchedAt = Date.now();
+    state.broadcastHistoryAuthKey = authKey;
+    if (returnedTtlMs > 0) {
+      state.broadcastHistoryFetchedAt = Date.now() - Math.max(0, readCacheTtlMs() - returnedTtlMs);
+    }
+    state.broadcastHistoryNotice = res?.anonymous ? anonymousReadNotice() : t("loginReadNotice");
     renderBroadcastHistory();
+    if (state.tab === "broadcast") setStatus(state.broadcastHistoryNotice);
   } catch (e) {
     if (showLoading || state.broadcastHistory.length === 0) {
       appendEmptyRow(tbody, 3, String(e));
     }
+    setStatus(String(e));
   } finally {
     state.broadcastHistoryInFlight = false;
   }
@@ -1712,7 +1793,7 @@ async function loadBroadcastHistory({ showLoading = true, force = false } = {}) 
 function startBroadcastRefreshLoop() {
   if (state.broadcastRefreshTimer) clearInterval(state.broadcastRefreshTimer);
   state.broadcastRefreshTimer = setInterval(() => {
-    loadBroadcastHistory({ showLoading: false });
+    if (state.tab === "broadcast") loadBroadcastHistory({ showLoading: false });
   }, BROADCAST_REFRESH_INTERVAL_MS);
 }
 
@@ -1830,7 +1911,7 @@ function bindEvents() {
   
   $("#refreshBtn").addEventListener("click", () => {
     if (state.tab === "servers") refreshServers();
-    else if (state.tab === "globalPlayers") loadGlobalPlayers();
+    else if (state.tab === "globalPlayers") loadGlobalPlayers({ force: true });
     else if (state.tab === "broadcast") loadBroadcastHistory({ showLoading: true, force: true });
   });
   
@@ -2045,7 +2126,9 @@ function bindEvents() {
     try {
       await saveGuiSettings({ time_zone: state.timeZone });
       setStatus(t("statusSaved"));
-      loadBroadcastHistory({ showLoading: state.tab === "broadcast", force: true });
+      if (state.tab === "broadcast") {
+        loadBroadcastHistory({ showLoading: true, force: true });
+      }
     } catch (error) {
       setStatus(`${t("saveFailed")}: ${error}`);
     }
@@ -2069,7 +2152,9 @@ async function boot() {
     }
     syncConfigPathUI();
     await loadConfigLists();
-    await loadBroadcastHistory({ showLoading: false, force: true });
+    if (state.tab === "broadcast") {
+      await loadBroadcastHistory({ showLoading: false, force: true });
+    }
     await refreshServers();
     await autoCheckUpdateIfDue();
     startAutoRefreshLoop();

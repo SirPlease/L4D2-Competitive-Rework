@@ -40,3 +40,7 @@ scripts/install-docker-monitoring.sh
 
 # Local L4D2 Docker deploy secrets
 scripts/l4d2-docker.env
+
+# Local A2S debugging tools, not for GitHub
+tools/a2s-proxy/
+tools/a2s-gui/

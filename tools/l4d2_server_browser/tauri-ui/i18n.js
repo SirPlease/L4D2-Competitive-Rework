@@ -88,6 +88,10 @@ export const translations = {
     broadcastSending: "全服消息后台发送中...",
     broadcastLoading: "正在获取最近一小时全服消息...",
     broadcastSendFailed: "发送失败",
+    anonymousReadLimited: "未登录匿名读取按 IP 限制：每 10 分钟 1 次；Steam 登录后每 1 分钟 1 次。",
+    anonymousReadCached: "未登录匿名读取每 10 分钟 1 次，正在使用缓存，约 {seconds} 后可再次请求。",
+    loginReadNotice: "已登录读取缓存 1 分钟，避免频繁请求。",
+    loginReadCached: "已登录读取每 1 分钟 1 次，正在使用缓存，约 {seconds} 秒后可再次请求。",
     // New i18n keys
     allServers: "全部服务器",
     yes: "是",
@@ -243,6 +247,10 @@ export const translations = {
     broadcastSending: "Sending broadcast in background...",
     broadcastLoading: "Fetching messages from the last hour...",
     broadcastSendFailed: "Send Failed",
+    anonymousReadLimited: "Anonymous reads are limited by IP: once every 10 minutes. Steam login allows once per minute.",
+    anonymousReadCached: "Anonymous reads are once every 10 minutes. Using cache; try again in about {seconds}.",
+    loginReadNotice: "Logged-in reads are cached for 1 minute to avoid frequent requests.",
+    loginReadCached: "Logged-in reads are once per minute. Using cache; try again in about {seconds}s.",
     // New i18n keys
     allServers: "All Servers",
     yes: "Yes",

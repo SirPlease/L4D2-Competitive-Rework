@@ -8,10 +8,11 @@ use anne_server_browser::{
     load_tauri_server_rows, open_tauri_steam_connect, open_tauri_url, refresh_tauri_sourcebans,
     save_tauri_sourcebans, tauri_api_logout, tauri_api_me, tauri_check_update, tauri_config_path,
     tauri_delete_manual_server, tauri_fetch_network_info, tauri_install_update,
-    tauri_load_broadcast_history, tauri_load_global_players, tauri_query_players, tauri_read_cvars, tauri_run_rcon,
-    tauri_save_api_config, tauri_save_gui_settings, tauri_save_rcon_password, tauri_send_broadcast,
-    tauri_steam_login_poll, tauri_steam_login_start, TauriApiUser, TauriBroadcastMessage,
-    TauriBroadcastHistoryRequest, TauriBroadcastRequest, TauriConfigLists, TauriCvarEntry,
+    tauri_load_broadcast_history, tauri_load_global_players, tauri_query_players, tauri_read_cvars,
+    tauri_run_rcon, tauri_save_api_config, tauri_save_gui_settings, tauri_save_rcon_password,
+    tauri_send_broadcast, tauri_steam_login_poll, tauri_steam_login_start, TauriApiUser,
+    TauriBroadcastHistoryRequest, TauriBroadcastHistoryResult, TauriBroadcastMessage,
+    TauriBroadcastRequest, TauriConfigLists, TauriCvarEntry,
     TauriCvarRequest, TauriDeleteManualServerRequest, TauriGlobalPlayer, TauriGuiSettingsRequest,
     TauriInstallUpdateRequest, TauriInstallUpdateResult, TauriLoginPollRequest, TauriLoginResult,
     TauriLoginStart, TauriNetworkInfo, TauriPlayerInfo, TauriRconRequest, TauriSaveApiConfigRequest,
@@ -143,14 +144,14 @@ async fn api_logout(base_url: String, token: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-async fn send_broadcast(req: TauriBroadcastRequest) -> Result<String, String> {
+async fn send_broadcast(req: TauriBroadcastRequest) -> Result<TauriBroadcastMessage, String> {
     run_blocking(move || tauri_send_broadcast(req)).await
 }
 
 #[tauri::command]
 async fn load_broadcast_history(
     req: TauriBroadcastHistoryRequest,
-) -> Result<Vec<TauriBroadcastMessage>, String> {
+) -> Result<TauriBroadcastHistoryResult, String> {
     run_blocking(move || tauri_load_broadcast_history(req)).await
 }
 
@@ -158,9 +159,13 @@ async fn load_broadcast_history(
 async fn load_global_players(
     base_url: String,
     token: String,
+    force_stats: Option<bool>,
     config_path: Option<String>,
 ) -> Result<Vec<TauriGlobalPlayer>, String> {
-    run_blocking(move || tauri_load_global_players(base_url, token, config_path)).await
+    run_blocking(move || {
+        tauri_load_global_players(base_url, token, force_stats.unwrap_or(false), config_path)
+    })
+    .await
 }
 
 #[tauri::command]

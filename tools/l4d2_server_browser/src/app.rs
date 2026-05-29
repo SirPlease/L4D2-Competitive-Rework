@@ -6,9 +6,10 @@ use regex::Regex;
 use reqwest::blocking::{Client, Response};
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
-use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet, VecDeque};
+use std::collections::{hash_map::DefaultHasher, BTreeMap, BTreeSet, HashMap, HashSet, VecDeque};
 use std::env;
 use std::fs;
+use std::hash::{Hash, Hasher};
 use std::io::{self, Read, Write};
 use std::net::{Ipv4Addr, SocketAddr, SocketAddrV4, TcpStream, ToSocketAddrs, UdpSocket};
 use std::path::{Path, PathBuf};
@@ -30,7 +31,10 @@ const UPDATE_TAG_PREFIX: &str = "Anne刷服器-v";
 const DEFAULT_API_BASE_URL: &str = "https://anne.trygek.com";
 const SYSTEM_TIME_ZONE_VALUE: &str = "system";
 const ONLINE_STATS_CACHE_TTL: Duration = Duration::from_secs(60);
+const ONLINE_STATS_AUTH_CACHE_TTL: Duration = Duration::from_secs(60);
+const ONLINE_STATS_ANON_CACHE_TTL: Duration = Duration::from_secs(600);
 const TAURI_PLAYER_CACHE_TTL: Duration = Duration::from_secs(60);
+const ONLINE_STATS_PAGE_LIMIT: usize = 512;
 
 pub fn run_main() {
     if let Err(err) = run() {
@@ -2493,6 +2497,13 @@ struct BroadcastHistoryRequest {
     time_zone: String,
 }
 
+#[derive(Clone)]
+struct BroadcastHistoryResult {
+    messages: Vec<BroadcastHistoryMessage>,
+    auth_type: String,
+    cache_ttl: Duration,
+}
+
 #[derive(Clone, Serialize)]
 struct ServerRowPayload {
     address: String,
@@ -3060,11 +3071,19 @@ pub struct TauriBroadcastMessage {
     pub sent_at_display: String,
 }
 
+#[derive(Clone, Serialize)]
+pub struct TauriBroadcastHistoryResult {
+    pub messages: Vec<TauriBroadcastMessage>,
+    pub anonymous: bool,
+    pub cache_ttl_secs: u64,
+}
+
 #[derive(Clone, Deserialize)]
 pub struct TauriBroadcastRequest {
     pub base_url: String,
     pub token: String,
     pub message: String,
+    pub time_zone: Option<String>,
 }
 
 #[derive(Clone, Deserialize)]
@@ -3168,8 +3187,9 @@ fn query_tauri_players_uncached(
         });
         if is_anne_server && !config.api.base_url.trim().is_empty() {
             let cache = tauri_online_stats_cache();
-            let _ = refresh_online_player_stats_cache(&config.api.base_url, cache);
-            let _ = apply_cached_player_stats(&config.api.base_url, cache, &mut players);
+            let token = config.api.token.as_deref().unwrap_or("");
+            let _ = refresh_online_player_stats_cache(&config.api.base_url, token, cache, false);
+            let _ = apply_cached_player_stats(&config.api.base_url, token, cache, &mut players);
         }
     }
     Ok(players.into_iter().map(player_info_to_tauri).collect())
@@ -3284,7 +3304,9 @@ pub fn tauri_check_update() -> Result<TauriUpdateInfo, String> {
     })
 }
 
-pub fn tauri_install_update(req: TauriInstallUpdateRequest) -> Result<TauriInstallUpdateResult, String> {
+pub fn tauri_install_update(
+    req: TauriInstallUpdateRequest,
+) -> Result<TauriInstallUpdateResult, String> {
     download_and_launch_portable_update(req)
 }
 
@@ -3365,25 +3387,48 @@ pub fn tauri_api_logout(base_url: String, token: String) -> Result<(), String> {
     api_logout(&base_url, &token)
 }
 
-pub fn tauri_send_broadcast(req: TauriBroadcastRequest) -> Result<String, String> {
+pub fn tauri_send_broadcast(req: TauriBroadcastRequest) -> Result<TauriBroadcastMessage, String> {
+    let time_zone = normalize_time_zone_setting(req.time_zone.as_deref().unwrap_or(""));
     let result = api_broadcast(BroadcastRequest {
         base_url: req.base_url,
         token: req.token,
         message: req.message,
     })?;
-    Ok(result.message.unwrap_or_else(|| "已发送".to_owned()))
+    let created_at = result
+        .message_row
+        .as_ref()
+        .map(|message| message.created_at.as_str())
+        .or(result.created_at.as_deref())
+        .unwrap_or("");
+    Ok(TauriBroadcastMessage {
+        id: result.id.unwrap_or(0),
+        message: result
+            .message_row
+            .as_ref()
+            .map(|message| message.message.clone())
+            .unwrap_or_else(|| result.message.unwrap_or_else(|| "已发送".to_owned())),
+        sender_name: result
+            .message_row
+            .as_ref()
+            .map(|message| message.name.clone())
+            .or(result.sender_name)
+            .unwrap_or_default(),
+        sent_at: created_at.to_owned(),
+        sent_at_display: format_broadcast_time(created_at, &time_zone),
+    })
 }
 
 pub fn tauri_load_broadcast_history(
     req: TauriBroadcastHistoryRequest,
-) -> Result<Vec<TauriBroadcastMessage>, String> {
+) -> Result<TauriBroadcastHistoryResult, String> {
     let time_zone = normalize_time_zone_setting(req.time_zone.as_deref().unwrap_or(""));
-    let messages = api_broadcast_history(BroadcastHistoryRequest {
+    let result = api_broadcast_history(BroadcastHistoryRequest {
         base_url: req.base_url,
         token: req.token,
         time_zone: time_zone.clone(),
     })?;
-    Ok(messages
+    let messages = result
+        .messages
         .into_iter()
         .map(|m| TauriBroadcastMessage {
             id: m.id,
@@ -3392,16 +3437,22 @@ pub fn tauri_load_broadcast_history(
             sent_at_display: format_broadcast_time(&m.created_at, &time_zone),
             sent_at: m.created_at,
         })
-        .collect())
+        .collect();
+    Ok(TauriBroadcastHistoryResult {
+        messages,
+        anonymous: result.auth_type != "steam",
+        cache_ttl_secs: result.cache_ttl.as_secs(),
+    })
 }
 
 pub fn tauri_load_global_players(
     base_url: String,
-    _token: String,
+    token: String,
+    force_stats: bool,
     config_path: Option<String>,
 ) -> Result<Vec<TauriGlobalPlayer>, String> {
     let path = tauri_path(config_path);
-    let config = load_config_or_default(&path)?;
+    let mut config = load_config_or_default(&path)?;
     let mut settings = RuntimeSettings::default();
     settings.apply_file_master(config.master.clone())?;
     settings.limit = 500;
@@ -3426,6 +3477,13 @@ pub fn tauri_load_global_players(
     } else {
         base_url.clone()
     };
+    let api_token = if token.trim().is_empty() {
+        config.api.token.clone().unwrap_or_default()
+    } else {
+        token
+    };
+    config.api.base_url = api_base.clone();
+    config.api.token = non_empty(api_token.clone(), "api_token").ok();
 
     let servers_to_query = rows
         .iter()
@@ -3448,7 +3506,7 @@ pub fn tauri_load_global_players(
         && servers_to_query.iter().any(|(_, _, is_anne)| *is_anne)
     {
         let cache = tauri_online_stats_cache();
-        let _ = refresh_online_player_stats_cache(&api_base, cache);
+        let _ = refresh_online_player_stats_cache(&api_base, &api_token, cache, force_stats);
     }
 
     let config = Arc::new(config);
@@ -3686,6 +3744,9 @@ struct ApiBroadcastResponse {
     ok: bool,
     id: Option<u64>,
     message: Option<String>,
+    sender_name: Option<String>,
+    created_at: Option<String>,
+    message_row: Option<BroadcastHistoryMessage>,
     error: Option<String>,
     daily_limit: Option<i32>,
     daily_used: Option<i32>,
@@ -3698,6 +3759,8 @@ struct ApiBroadcastResponse {
 struct ApiBroadcastHistoryResponse {
     ok: bool,
     messages: Vec<BroadcastHistoryMessage>,
+    cache_ttl: Option<u64>,
+    auth_type: Option<String>,
     message: Option<String>,
     error: Option<String>,
 }
@@ -3717,6 +3780,10 @@ struct BroadcastHistoryMessage {
 struct OnlinePlayersResponse {
     ok: bool,
     players: Vec<PlayerStats>,
+    cache_ttl: Option<u64>,
+    limit: Option<usize>,
+    offset: Option<usize>,
+    has_more: Option<bool>,
     message: Option<String>,
     error: Option<String>,
 }
@@ -3737,7 +3804,9 @@ struct PlayerStats {
 #[derive(Default)]
 struct OnlineStatsCache {
     base_url: String,
+    token_key: String,
     fetched_at: Option<Instant>,
+    max_age: Duration,
     stats: HashMap<String, PlayerStats>,
 }
 
@@ -3808,7 +3877,7 @@ enum GuiMessage {
     SteamLoginStarted(Result<DeviceStartResponse, String>),
     SteamLoginFinished(Result<ApiLoginSession, String>),
     Broadcast(Result<ApiBroadcastResponse, String>),
-    BroadcastHistory(Result<Vec<BroadcastHistoryMessage>, String>),
+    BroadcastHistory(Result<BroadcastHistoryResult, String>),
     ServerUpdate(String, Result<ServerRowPayload, String>),
     NetworkInfo(String, Result<ServerNetworkInfo, String>),
     SubscriptionRefresh(Result<(), String>),
@@ -4730,15 +4799,22 @@ impl NativeGuiApp {
                 GuiMessage::BroadcastHistory(result) => {
                     self.broadcast_history_querying = false;
                     match result {
-                        Ok(messages) => {
-                            self.broadcast_history = messages;
+                        Ok(result) => {
+                            let anonymous = result.auth_type != "steam";
+                            let cache_ttl = result.cache_ttl.as_secs();
+                            self.broadcast_history = result.messages;
                             self.broadcast_history_status = match self.language {
-                                GuiLanguage::ZhCn => {
-                                    format!("最近一小时 {} 条消息", self.broadcast_history.len())
-                                }
+                                GuiLanguage::ZhCn => format!(
+                                    "最近一小时 {} 条消息 | {}读取缓存 {} 秒",
+                                    self.broadcast_history.len(),
+                                    if anonymous { "匿名" } else { "登录" },
+                                    cache_ttl
+                                ),
                                 GuiLanguage::EnUs => format!(
-                                    "{} messages in the last hour",
-                                    self.broadcast_history.len()
+                                    "{} messages in the last hour | {} cache {}s",
+                                    self.broadcast_history.len(),
+                                    if anonymous { "anonymous" } else { "logged-in" },
+                                    cache_ttl
                                 ),
                             };
                         }
@@ -4800,8 +4876,8 @@ impl NativeGuiApp {
 
         if !online_stats_cache_needs_refresh(
             &self.api_base_url,
+            &self.api_token,
             &self.online_stats_cache,
-            ONLINE_STATS_CACHE_TTL,
         ) {
             return;
         }
@@ -4810,9 +4886,11 @@ impl NativeGuiApp {
         self.online_stats_last_attempt = Some(now);
         let tx = self.tx.clone();
         let api_base_url = self.api_base_url.clone();
+        let api_token = self.api_token.clone();
         let cache = Arc::clone(&self.online_stats_cache);
         thread::spawn(move || {
-            let result = refresh_online_player_stats_cache(&api_base_url, &cache);
+            let result =
+                refresh_online_player_stats_cache(&api_base_url, &api_token, &cache, false);
             let _ = tx.send(GuiMessage::OnlineStatsRefresh(result));
         });
     }
@@ -4838,7 +4916,12 @@ impl NativeGuiApp {
         }
 
         let mut players = self.selected_server_players.clone();
-        if apply_cached_player_stats(&self.api_base_url, &self.online_stats_cache, &mut players) {
+        if apply_cached_player_stats(
+            &self.api_base_url,
+            &self.api_token,
+            &self.online_stats_cache,
+            &mut players,
+        ) {
             self.selected_server_players = players;
             self.player_output =
                 format_player_payload(&self.selected_server_players, self.language);
@@ -4853,6 +4936,7 @@ impl NativeGuiApp {
         let mut players = self.global_players.clone();
         if apply_cached_global_anne_player_stats(
             &self.api_base_url,
+            &self.api_token,
             &self.online_stats_cache,
             &mut players,
         ) {
@@ -4888,6 +4972,7 @@ impl NativeGuiApp {
             .collect::<Vec<_>>();
 
         let api_base_url = self.api_base_url.clone();
+        let api_token = self.api_token.clone();
         let online_stats_cache = Arc::clone(&self.online_stats_cache);
 
         thread::spawn(move || {
@@ -4946,6 +5031,7 @@ impl NativeGuiApp {
             let mut final_results = Arc::try_unwrap(results).unwrap().into_inner().unwrap();
             let _ = apply_cached_global_anne_player_stats(
                 &api_base_url,
+                &api_token,
                 &online_stats_cache,
                 &mut final_results,
             );
@@ -5610,6 +5696,7 @@ impl NativeGuiApp {
         self.player_output = self.language.text(TextKey::Reading).to_owned();
         let tx = self.tx.clone();
         let api_base_url = self.api_base_url.clone();
+        let api_token = self.api_token.clone();
         let online_stats_cache = Arc::clone(&self.online_stats_cache);
         let should_apply_cached_stats = self.selected_server_is_anne();
         if should_apply_cached_stats {
@@ -5620,8 +5707,12 @@ impl NativeGuiApp {
                 let mut players =
                     query_server_players(endpoint.socket, Duration::from_millis(4500))?;
                 if should_apply_cached_stats {
-                    let _ =
-                        apply_cached_player_stats(&api_base_url, &online_stats_cache, &mut players);
+                    let _ = apply_cached_player_stats(
+                        &api_base_url,
+                        &api_token,
+                        &online_stats_cache,
+                        &mut players,
+                    );
                 }
                 Ok((players, true))
             });
@@ -7702,7 +7793,9 @@ fn check_latest_release() -> Result<UpdateInfo, String> {
         latest_version,
         html_url,
         available,
-        download_url: selected_asset.as_ref().map(|asset| asset.download_url.clone()),
+        download_url: selected_asset
+            .as_ref()
+            .map(|asset| asset.download_url.clone()),
         download_name: selected_asset.map(|asset| asset.name),
     })
 }
@@ -8489,7 +8582,7 @@ fn api_broadcast(request: BroadcastRequest) -> Result<ApiBroadcastResponse, Stri
 
 fn api_broadcast_history(
     request: BroadcastHistoryRequest,
-) -> Result<Vec<BroadcastHistoryMessage>, String> {
+) -> Result<BroadcastHistoryResult, String> {
     let _time_zone = normalize_time_zone_setting(&request.time_zone);
     let client = api_client(Duration::from_secs(10))?;
     let url = api_url(&request.base_url, "/api/server/broadcast_history.php")?;
@@ -8505,7 +8598,21 @@ fn api_broadcast_history(
     let response: ApiBroadcastHistoryResponse = response_json(response)?;
 
     if response.ok {
-        Ok(response.messages)
+        Ok(BroadcastHistoryResult {
+            messages: response.messages,
+            auth_type: response.auth_type.unwrap_or_else(|| {
+                if request.token.trim().is_empty() {
+                    "anonymous".to_owned()
+                } else {
+                    "steam".to_owned()
+                }
+            }),
+            cache_ttl: if request.token.trim().is_empty() {
+                Duration::from_secs(600)
+            } else {
+                Duration::from_secs(response.cache_ttl.unwrap_or(60).max(60))
+            },
+        })
     } else {
         Err(response
             .message
@@ -8522,26 +8629,28 @@ fn is_anne_server_name(name: &str) -> bool {
     name.trim_start().to_ascii_lowercase().starts_with("anne")
 }
 
-fn fetch_online_player_stats(base_url: &str) -> Result<HashMap<String, PlayerStats>, String> {
-    let client = api_client(Duration::from_secs(15))?;
-    let url = api_url(base_url, "/api/player/online.php")?;
-    let response: OnlinePlayersResponse = response_json(
-        client
-            .get(url)
-            .query(&[("since", "120"), ("limit", "512")])
-            .send()
-            .map_err(|err| format!("failed to query online player stats: {err}"))?,
-    )?;
+fn api_token_key(token: &str) -> String {
+    let token = token.trim();
+    if token.is_empty() {
+        "anonymous".to_owned()
+    } else {
+        let mut hasher = DefaultHasher::new();
+        token.hash(&mut hasher);
+        format!("token:{:016x}", hasher.finish())
+    }
+}
 
-    if !response.ok {
-        return Err(response
-            .message
-            .or(response.error)
-            .unwrap_or_else(|| "online player stats API failed".to_owned()));
+fn online_stats_cache_ttl(token: &str, value: Option<u64>) -> Duration {
+    if token.trim().is_empty() {
+        return ONLINE_STATS_ANON_CACHE_TTL;
     }
 
-    let mut stats = HashMap::new();
-    for player in response.players {
+    let _ = value;
+    ONLINE_STATS_AUTH_CACHE_TTL
+}
+
+fn merge_player_stats(stats: &mut HashMap<String, PlayerStats>, players: Vec<PlayerStats>) {
+    for player in players {
         let key = normalized_player_name(&player.name);
         if key.is_empty() {
             continue;
@@ -8555,42 +8664,112 @@ fn fetch_online_player_stats(base_url: &str) -> Result<HashMap<String, PlayerSta
             stats.insert(key, player);
         }
     }
+}
 
-    Ok(stats)
+fn fetch_online_player_stats(
+    base_url: &str,
+    token: &str,
+) -> Result<(HashMap<String, PlayerStats>, Duration), String> {
+    let client = api_client(Duration::from_secs(15))?;
+    let url = api_url(base_url, "/api/player/online.php")?;
+    let mut stats = HashMap::new();
+    let mut cache_ttl = ONLINE_STATS_CACHE_TTL;
+    let mut offset = 0usize;
+    let page_session = format!(
+        "{}:{}",
+        std::process::id(),
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map(|duration| duration.as_nanos())
+            .unwrap_or_default()
+    );
+
+    for _ in 0..4 {
+        let limit = ONLINE_STATS_PAGE_LIMIT
+            .saturating_sub(offset)
+            .clamp(1, ONLINE_STATS_PAGE_LIMIT);
+        let limit_text = limit.to_string();
+        let offset_text = offset.to_string();
+        let mut request = client.get(url.clone()).query(&[
+            ("since", "120"),
+            ("limit", limit_text.as_str()),
+            ("offset", offset_text.as_str()),
+            ("page_session", page_session.as_str()),
+        ]);
+        if !token.trim().is_empty() {
+            request = request.bearer_auth(token);
+        }
+
+        let raw_response = request
+            .send()
+            .map_err(|err| format!("failed to query online player stats: {err}"))?;
+        if token.trim().is_empty() && raw_response.status() == StatusCode::UNAUTHORIZED {
+            return Ok((stats, ONLINE_STATS_ANON_CACHE_TTL));
+        }
+        let response: OnlinePlayersResponse = response_json(raw_response)?;
+
+        if !response.ok {
+            return Err(response
+                .message
+                .or(response.error)
+                .unwrap_or_else(|| "online player stats API failed".to_owned()));
+        }
+
+        let returned_len = response.players.len();
+        let api_limit = response.limit.unwrap_or(returned_len);
+        let response_offset = response.offset.unwrap_or(offset);
+        let has_more = response
+            .has_more
+            .unwrap_or(api_limit > 0 && returned_len >= api_limit);
+        let previous_count = stats.len();
+        cache_ttl = online_stats_cache_ttl(token, response.cache_ttl);
+        merge_player_stats(&mut stats, response.players);
+        let added_new_stats = stats.len() > previous_count;
+
+        if returned_len == 0
+            || !has_more
+            || response_offset.saturating_add(returned_len) >= ONLINE_STATS_PAGE_LIMIT
+        {
+            break;
+        }
+        if !added_new_stats && offset > 0 {
+            break;
+        }
+        offset = response_offset.saturating_add(returned_len);
+    }
+
+    Ok((stats, cache_ttl))
 }
 
 fn online_stats_cache_needs_refresh(
     base_url: &str,
+    token: &str,
     cache: &SharedOnlineStatsCache,
-    max_age: Duration,
 ) -> bool {
     let Ok(cache) = cache.lock() else {
         return false;
     };
-    !online_stats_cache_is_fresh(&cache, base_url, max_age)
+    !online_stats_cache_is_fresh(&cache, base_url, token)
 }
 
-fn online_stats_cache_is_fresh(
-    cache: &OnlineStatsCache,
-    base_url: &str,
-    max_age: Duration,
-) -> bool {
+fn online_stats_cache_is_fresh(cache: &OnlineStatsCache, base_url: &str, token: &str) -> bool {
     cache.base_url == base_url
+        && cache.token_key == api_token_key(token)
         && cache
             .fetched_at
-            .map(|fetched_at| fetched_at.elapsed() < max_age)
+            .map(|fetched_at| fetched_at.elapsed() < cache.max_age)
             .unwrap_or(false)
 }
 
 fn cached_online_player_stats(
     base_url: &str,
+    token: &str,
     cache: &SharedOnlineStatsCache,
-    max_age: Duration,
 ) -> Option<HashMap<String, PlayerStats>> {
     let Ok(cache) = cache.lock() else {
         return None;
     };
-    if online_stats_cache_is_fresh(&cache, base_url, max_age) {
+    if online_stats_cache_is_fresh(&cache, base_url, token) {
         Some(cache.stats.clone())
     } else {
         None
@@ -8599,18 +8778,22 @@ fn cached_online_player_stats(
 
 fn refresh_online_player_stats_cache(
     base_url: &str,
+    token: &str,
     cache: &SharedOnlineStatsCache,
+    force: bool,
 ) -> Result<(), String> {
-    if !online_stats_cache_needs_refresh(base_url, cache, ONLINE_STATS_CACHE_TTL) {
+    if !force && !online_stats_cache_needs_refresh(base_url, token, cache) {
         return Ok(());
     }
 
-    let stats = fetch_online_player_stats(base_url)?;
+    let (stats, max_age) = fetch_online_player_stats(base_url, token)?;
     let mut cache = cache
         .lock()
         .map_err(|_| "online stats cache lock poisoned".to_owned())?;
     cache.base_url = base_url.to_owned();
+    cache.token_key = api_token_key(token);
     cache.fetched_at = Some(Instant::now());
+    cache.max_age = max_age;
     cache.stats = stats;
     Ok(())
 }
@@ -8637,10 +8820,11 @@ fn apply_global_player_stats(player: &mut GlobalPlayerEntry, stats: &HashMap<Str
 
 fn apply_cached_player_stats(
     base_url: &str,
+    token: &str,
     cache: &SharedOnlineStatsCache,
     players: &mut [PlayerInfo],
 ) -> bool {
-    let Some(stats) = cached_online_player_stats(base_url, cache, ONLINE_STATS_CACHE_TTL) else {
+    let Some(stats) = cached_online_player_stats(base_url, token, cache) else {
         return false;
     };
 
@@ -8652,6 +8836,7 @@ fn apply_cached_player_stats(
 
 fn apply_cached_global_anne_player_stats(
     base_url: &str,
+    token: &str,
     cache: &SharedOnlineStatsCache,
     players: &mut [GlobalPlayerEntry],
 ) -> bool {
@@ -8662,7 +8847,7 @@ fn apply_cached_global_anne_player_stats(
         return true;
     }
 
-    let Some(stats) = cached_online_player_stats(base_url, cache, ONLINE_STATS_CACHE_TTL) else {
+    let Some(stats) = cached_online_player_stats(base_url, token, cache) else {
         return false;
     };
 
@@ -8780,8 +8965,11 @@ pub fn open_tauri_url(url: String) -> Result<(), String> {
     Ok(())
 }
 
-fn download_and_launch_portable_update(req: TauriInstallUpdateRequest) -> Result<TauriInstallUpdateResult, String> {
-    let parsed = reqwest::Url::parse(req.url.trim()).map_err(|err| format!("invalid URL: {err}"))?;
+fn download_and_launch_portable_update(
+    req: TauriInstallUpdateRequest,
+) -> Result<TauriInstallUpdateResult, String> {
+    let parsed =
+        reqwest::Url::parse(req.url.trim()).map_err(|err| format!("invalid URL: {err}"))?;
     if !matches!(parsed.scheme(), "http" | "https") {
         return Err("only http and https update URLs can be downloaded".to_owned());
     }
@@ -8815,8 +9003,8 @@ fn download_and_launch_portable_update(req: TauriInstallUpdateRequest) -> Result
         .map_err(|err| format!("failed to download update: {err}"))?
         .error_for_status()
         .map_err(|err| format!("update download failed: {err}"))?;
-    let mut file =
-        fs::File::create(&archive_path).map_err(|err| format!("failed to create update file: {err}"))?;
+    let mut file = fs::File::create(&archive_path)
+        .map_err(|err| format!("failed to create update file: {err}"))?;
     io::copy(&mut response, &mut file).map_err(|err| format!("failed to save update: {err}"))?;
     drop(file);
 
@@ -8860,7 +9048,8 @@ fn launch_windows_portable_update(
 ) -> Result<TauriInstallUpdateResult, String> {
     use std::os::windows::process::CommandExt;
 
-    let current_exe = env::current_exe().map_err(|err| format!("failed to locate current exe: {err}"))?;
+    let current_exe =
+        env::current_exe().map_err(|err| format!("failed to locate current exe: {err}"))?;
     let app_dir = current_exe
         .parent()
         .ok_or_else(|| "failed to locate app directory".to_owned())?
@@ -8896,10 +9085,17 @@ Start-Process -FilePath $exe -WorkingDirectory $target
         exe = ps_quote_path(&current_exe),
         pid = std::process::id(),
     );
-    fs::write(&script_path, script).map_err(|err| format!("failed to write update script: {err}"))?;
+    fs::write(&script_path, script)
+        .map_err(|err| format!("failed to write update script: {err}"))?;
     let script_arg = script_path.display().to_string();
     std::process::Command::new("powershell")
-        .args(["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", &script_arg])
+        .args([
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            &script_arg,
+        ])
         .creation_flags(0x08000000)
         .spawn()
         .map_err(|err| format!("failed to start update script: {err}"))?;
@@ -8920,7 +9116,8 @@ fn launch_macos_portable_update(
     update_dir: &Path,
 ) -> Result<TauriInstallUpdateResult, String> {
     let extract_dir = update_dir.join("extracted");
-    fs::create_dir_all(&extract_dir).map_err(|err| format!("failed to create extract dir: {err}"))?;
+    fs::create_dir_all(&extract_dir)
+        .map_err(|err| format!("failed to create extract dir: {err}"))?;
     let archive_arg = archive_path.display().to_string();
     let extract_arg = extract_dir.display().to_string();
     std::process::Command::new("tar")
@@ -8950,7 +9147,8 @@ fn launch_linux_portable_update(
     update_dir: &Path,
 ) -> Result<TauriInstallUpdateResult, String> {
     let extract_dir = update_dir.join("extracted");
-    fs::create_dir_all(&extract_dir).map_err(|err| format!("failed to create extract dir: {err}"))?;
+    fs::create_dir_all(&extract_dir)
+        .map_err(|err| format!("failed to create extract dir: {err}"))?;
     let archive_arg = archive_path.display().to_string();
     let extract_arg = extract_dir.display().to_string();
     std::process::Command::new("tar")
