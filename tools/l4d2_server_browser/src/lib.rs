@@ -34,6 +34,7 @@ pub use app::{
     tauri_steam_login_start,
     TauriApiUser,
     TauriBroadcastHistoryRequest,
+    TauriBroadcastHistoryResult,
     TauriBroadcastMessage,
     TauriBroadcastRequest,
     TauriConfigLists,

@@ -12,11 +12,12 @@ use anne_server_browser::{
     tauri_run_rcon, tauri_save_api_config, tauri_save_gui_settings, tauri_save_rcon_password,
     tauri_send_broadcast, tauri_steam_login_poll, tauri_steam_login_start, TauriApiUser,
     TauriBroadcastHistoryRequest, TauriBroadcastHistoryResult, TauriBroadcastMessage,
-    TauriBroadcastRequest, TauriConfigLists, TauriCvarEntry,
-    TauriCvarRequest, TauriDeleteManualServerRequest, TauriGlobalPlayer, TauriGuiSettingsRequest,
+    TauriBroadcastRequest, TauriConfigLists, TauriCvarEntry, TauriCvarRequest,
+    TauriDeleteManualServerRequest, TauriGlobalPlayer, TauriGuiSettingsRequest,
     TauriInstallUpdateRequest, TauriInstallUpdateResult, TauriLoginPollRequest, TauriLoginResult,
-    TauriLoginStart, TauriNetworkInfo, TauriPlayerInfo, TauriRconRequest, TauriSaveApiConfigRequest,
-    TauriSaveRconPasswordRequest, TauriServerQuery, TauriServerRows, TauriSourceBansInput, TauriUpdateInfo,
+    TauriLoginStart, TauriNetworkInfo, TauriPlayerInfo, TauriRconRequest,
+    TauriSaveApiConfigRequest, TauriSaveRconPasswordRequest, TauriServerQuery, TauriServerRows,
+    TauriSourceBansInput, TauriUpdateInfo,
 };
 
 async fn run_blocking<T, F>(task: F) -> Result<T, String>
@@ -114,7 +115,9 @@ async fn check_update() -> Result<TauriUpdateInfo, String> {
 }
 
 #[tauri::command]
-async fn install_update(req: TauriInstallUpdateRequest) -> Result<TauriInstallUpdateResult, String> {
+async fn install_update(
+    req: TauriInstallUpdateRequest,
+) -> Result<TauriInstallUpdateResult, String> {
     run_blocking(move || tauri_install_update(req)).await
 }
 
