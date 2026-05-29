@@ -1,0 +1,56 @@
+"Games"
+{
+	"left4dead2"
+	{
+		"Offsets"
+		{
+			/*
+			 * CountdownTimer read by CTerrorPlayer::UpdateHangingFromTongue
+			 * while the victim is being DRAGGED (m_isHangingFromTongue == 0).
+			 */
+			"CTerrorPlayer->m_tongueDragDamageTimer"
+			{
+				"linux"		"13312"
+				"windows"	"13332"
+			}
+
+			/* CountdownTimer read by CTerrorPlayer::UpdateHangingFromTongue
+			 * while the victim is HANGING/CHOKING (m_isHangingFromTongue == 1).
+			 */
+			"CTerrorPlayer->m_tongueChokeDamageTimer"
+			{
+				"linux"		"13288"
+				"windows"	"13308"
+			}
+		}
+
+		"Functions"
+		{
+			"CTerrorPlayer::OnStartHangingFromTongue"
+			{
+				"signature"	"CTerrorPlayer::OnStartHangingFromTongue"
+				"callconv"	"thiscall"
+				"return"	"void"
+				"this"		"entity"
+				"arguments"
+				{
+					"method"
+					{
+						"type"	"int"
+					}
+				}
+			}
+		}
+
+		"Signatures"
+		{
+			"CTerrorPlayer::OnStartHangingFromTongue"
+			{
+				"library"	"server"
+				"linux"		"@_ZN13CTerrorPlayer24OnStartHangingFromTongueEi"
+				"windows"	"\x55\x8B\xEC\x51\x8B\x45\x08\x53\x57\x8B\xF9"
+				/* 55 8B EC 51 8B 45 08 53 57 8B F9 */
+			}
+		}
+	}
+}
