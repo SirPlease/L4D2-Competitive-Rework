@@ -7,6 +7,7 @@ const UPDATE_CHECK_INTERVAL_MS = 12 * 60 * 60 * 1000;
 const PING_MINI_WINDOW_MS = 5 * 60 * 1000;
 const PING_DETAIL_MIN_WINDOW_MS = 5 * 60 * 1000;
 const PING_MAX_CONNECT_GAP_MS = 45 * 1000;
+const PING_SMOOTHING_WINDOW = 3;
 const SELECTED_REFRESH_DEFAULT_SECS = 5;
 const BROADCAST_REFRESH_INTERVAL_MS = 30 * 1000;
 const ANON_READ_CACHE_MS = 10 * 60 * 1000;
@@ -549,6 +550,41 @@ function pingStats(points) {
   return { min, max, avg, latest: values[values.length - 1], count: values.length };
 }
 
+function smoothPingPoints(points, windowSize = PING_SMOOTHING_WINDOW) {
+  if (points.length < 3 || windowSize < 2) return [...points];
+  const radius = Math.floor(windowSize / 2);
+  const sorted = [...points].sort((a, b) => a.t - b.t);
+  const smoothed = [];
+  let segment = [];
+
+  const flushSegment = () => {
+    if (!segment.length) return;
+    for (let index = 0; index < segment.length; index += 1) {
+      const start = Math.max(0, index - radius);
+      const end = Math.min(segment.length, index + radius + 1);
+      const values = segment
+        .slice(start, end)
+        .map((item) => item.ping)
+        .sort((a, b) => a - b);
+      const middle = Math.floor(values.length / 2);
+      const ping = values.length % 2 === 0
+        ? (values[middle - 1] + values[middle]) / 2
+        : values[middle];
+      smoothed.push({ ...segment[index], ping });
+    }
+    segment = [];
+  };
+
+  sorted.forEach((point, index) => {
+    if (index > 0 && point.t - sorted[index - 1].t > PING_MAX_CONNECT_GAP_MS) {
+      flushSegment();
+    }
+    segment.push(point);
+  });
+  flushSegment();
+  return smoothed;
+}
+
 function createSvgElement(name, attrs = {}) {
   const element = document.createElementNS("http://www.w3.org/2000/svg", name);
   for (const [key, value] of Object.entries(attrs)) {
@@ -610,12 +646,13 @@ function createMiniPingChart(server) {
   const now = Date.now();
   const start = now - PING_MINI_WINDOW_MS;
   const points = pingHistoryForServer(server, PING_MINI_WINDOW_MS);
+  const chartPoints = smoothPingPoints(points);
   svg.append(createSvgElement("rect", { x: 0, y: 0, width, height, rx: 4, class: "ping-chart-bg" }));
   if (points.length < 2) {
     svg.append(createSvgElement("line", { x1: 8, y1: height - 7, x2: width - 8, y2: height - 7, class: "ping-chart-empty-line" }));
     return svg;
   }
-  const segments = pingChartSegments(points, { width, height, paddingX: 5, paddingY: 4, start, end: now });
+  const segments = pingChartSegments(chartPoints, { width, height, paddingX: 5, paddingY: 4, start, end: now });
   for (const segment of segments) {
     if (segment.length >= 2) {
       svg.append(createSvgElement("path", { d: pointsToPath(segment), class: "ping-chart-line" }));
@@ -644,6 +681,7 @@ function createDetailPingChart(serverKey) {
   const now = Date.now();
   const start = Math.min(state.appStartedAt, now - PING_DETAIL_MIN_WINDOW_MS);
   const points = pingHistoryForServer(serverKey).filter((point) => point.t >= start);
+  const chartPoints = smoothPingPoints(points);
   const chartLeft = 48;
   const chartRight = 14;
   const chartTop = 18;
@@ -668,7 +706,7 @@ function createDetailPingChart(serverKey) {
     return svg;
   }
 
-  const values = points.map((point) => point.ping);
+  const values = chartPoints.map((point) => point.ping);
   let min = Math.min(...values);
   let max = Math.max(...values);
   const spread = Math.max(16, max - min);
@@ -689,7 +727,7 @@ function createDetailPingChart(serverKey) {
   endText.textContent = "now";
   svg.append(endText);
 
-  const segments = pingChartSegments(points, {
+  const segments = pingChartSegments(chartPoints, {
     width,
     height,
     paddingX: chartLeft,

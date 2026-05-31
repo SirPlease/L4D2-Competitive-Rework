@@ -544,7 +544,7 @@ fn is_default_anne_subscription_url(url: &str) -> bool {
         .unwrap_or(false)
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize, Default)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 struct GuiConfig {
     #[serde(default)]
     language: GuiLanguage,
@@ -568,6 +568,23 @@ struct GuiConfig {
     auto_refresh_selected_secs: u64,
     #[serde(default = "default_time_zone")]
     time_zone: String,
+}
+
+impl Default for GuiConfig {
+    fn default() -> Self {
+        Self {
+            language: GuiLanguage::default(),
+            anne_stats: default_true(),
+            rcon_password: None,
+            rcon_passwords: BTreeMap::new(),
+            theme_mode: default_theme_mode(),
+            accent_color: default_accent_color(),
+            auto_refresh_empty_secs: default_auto_refresh_empty_secs(),
+            auto_refresh_active_secs: default_auto_refresh_active_secs(),
+            auto_refresh_selected_secs: default_auto_refresh_selected_secs(),
+            time_zone: default_time_zone(),
+        }
+    }
 }
 
 fn default_true() -> bool {
@@ -2085,11 +2102,11 @@ fn query_server_info(
         .connect(SocketAddr::V4(addr))
         .map_err(|err| err.to_string())?;
 
-    let started = Instant::now();
     let mut buf = [0u8; 4096];
     let mut last_error = None;
     for _ in 0..3 {
         let request = build_a2s_info_request(None, a2s_probe);
+        let started = Instant::now();
         socket.send(&request).map_err(|err| err.to_string())?;
         let size = match socket.recv(&mut buf) {
             Ok(size) => size,
@@ -2102,6 +2119,7 @@ fn query_server_info(
 
         if let Some(challenge) = parse_challenge(packet) {
             let request = build_a2s_info_request(Some(challenge), a2s_probe);
+            let started = Instant::now();
             socket.send(&request).map_err(|err| err.to_string())?;
             let size = match socket.recv(&mut buf) {
                 Ok(size) => size,
