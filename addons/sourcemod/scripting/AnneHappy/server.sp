@@ -632,7 +632,7 @@ public Action Timer_AutoGive(Handle timer)
                 DeleteInventoryItem(i, s);
 
             BypassAndExecuteCommand(i, "give", "smg_silenced");
-            BypassAndExecuteCommand(i, "give", "pistol_magnum");
+            BypassAndExecuteCommand(i, "give", "pistol");
         }
     }
     return Plugin_Continue;

@@ -5,6 +5,7 @@
 
 #define RM_DEBUG	   false
 #define RM_MODULE_NAME "ReqMatch"
+#define RM_UNTRACKED_CVAR_RESET_PATH "configs/confogl_untracked_cvar_resets.txt"
 
 #define MAPRESTARTTIME 3.0
 #define RESETMINTIME   60.0
@@ -33,7 +34,9 @@ static ConVar
 	RM_hAutoCfg			   = null,
 	RM_hConfigFile_On	   = null,
 	RM_hConfigFile_Plugins = null,
-	RM_hConfigFile_Off	   = null;
+	RM_hConfigFile_Off	   = null,
+	RM_hUntrackedCvarResetFile = null,
+	RM_hUntrackedCvarResetDebug = null;
 
 void RM_APL()
 {
@@ -54,6 +57,8 @@ void RM_OnModuleStart()
 	// RM_hConfigFile_Plugins = CreateConVarEx("match_execcfg_plugins", "confogl_plugins.cfg", "Execute this config file upon match mode starts. This will only get executed once and meant for plugins that needs to be loaded."); //original
 	RM_hConfigFile_Plugins = CreateConVarEx("match_execcfg_plugins", "generalfixes.cfg;confogl_plugins.cfg;sharedplugins.cfg", "Execute this config file upon match mode starts. This will only get executed once and meant for plugins that needs to be loaded.");	   // rework
 	RM_hConfigFile_Off	   = CreateConVarEx("match_execcfg_off", "confogl_off.cfg", "Execute this config file upon match mode ends.");
+	RM_hUntrackedCvarResetFile = CreateConVarEx("match_untracked_cvar_reset_file", RM_UNTRACKED_CVAR_RESET_PATH, "File under addons/sourcemod listing untracked cvars restored on resetmatch.");
+	RM_hUntrackedCvarResetDebug = CreateConVarEx("match_untracked_cvar_reset_debug", "0", "Log untracked cvar reset details during resetmatch.", _, true, 0.0, true, 1.0);
 
 	// RegConsoleCmd("sm_match", RM_Cmd_Match);
 	RegAdminCmd("sm_forcematch", RM_Cmd_ForceMatch, ADMFLAG_CONFIG, "Forces the game to use match mode");
@@ -254,6 +259,8 @@ static void RM_Match_Unload(bool bForced = false)
 	Call_StartForward(RM_hFwdResetMode);
 	Call_Finish();
 
+	RM_RestoreUntrackedCvars();
+
 	//PrintToChatAll("\x01[\x05Confogl\x01] Match mode unloaded!");
 	CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} 比赛配置已卸载!");
 	//AddCustomServerTag("hidden");
@@ -277,6 +284,114 @@ static void RM_Match_Unload(bool bForced = false)
 	{
 		LogMessage("[%s] Match mode unloaded!", RM_MODULE_NAME);
 	}
+}
+
+static void RM_RestoreUntrackedCvars()
+{
+	char sRelativePath[PLATFORM_MAX_PATH];
+	RM_hUntrackedCvarResetFile.GetString(sRelativePath, sizeof(sRelativePath));
+	TrimString(sRelativePath);
+
+	if (sRelativePath[0] == '\0')
+	{
+		strcopy(sRelativePath, sizeof(sRelativePath), RM_UNTRACKED_CVAR_RESET_PATH);
+	}
+
+	char sPath[PLATFORM_MAX_PATH];
+	BuildPath(Path_SM, sPath, sizeof(sPath), "%s", sRelativePath);
+
+	File hFile = OpenFile(sPath, "r");
+	if (hFile == null)
+	{
+		if (RM_hUntrackedCvarResetDebug.BoolValue || RM_bDebugEnabled || IsDebugEnabled())
+		{
+			LogMessage("[%s] Untracked cvar reset file not found: %s", RM_MODULE_NAME, sPath);
+		}
+
+		return;
+	}
+
+	int iRestored = 0;
+	int iMissing = 0;
+	int iSkipped = 0;
+	char sLine[256];
+	char sCvar[128];
+
+	while (!hFile.EndOfFile() && hFile.ReadLine(sLine, sizeof(sLine)))
+	{
+		if (!RM_ParseResetCvarName(sLine, sCvar, sizeof(sCvar)))
+		{
+			iSkipped++;
+			continue;
+		}
+
+		ConVar hCvar = FindConVar(sCvar);
+		if (hCvar == null)
+		{
+			iMissing++;
+
+			if (RM_hUntrackedCvarResetDebug.BoolValue || RM_bDebugEnabled || IsDebugEnabled())
+			{
+				LogMessage("[%s] Untracked cvar missing, skip reset: %s", RM_MODULE_NAME, sCvar);
+			}
+
+			continue;
+		}
+
+		hCvar.RestoreDefault();
+		iRestored++;
+	}
+
+	delete hFile;
+
+	if (RM_hUntrackedCvarResetDebug.BoolValue || RM_bDebugEnabled || IsDebugEnabled())
+	{
+		LogMessage("[%s] Untracked cvar reset complete: restored %d, missing %d, skipped %d", RM_MODULE_NAME, iRestored, iMissing, iSkipped);
+	}
+}
+
+static bool RM_ParseResetCvarName(char[] sLine, char[] sCvar, int iMaxLength)
+{
+	TrimString(sLine);
+
+	if (sLine[0] == '\0' || sLine[0] == '#' || sLine[0] == ';')
+	{
+		return false;
+	}
+
+	if (sLine[0] == '/' && sLine[1] == '/')
+	{
+		return false;
+	}
+
+	int iComment = StrContains(sLine, "//");
+	if (iComment != -1)
+	{
+		sLine[iComment] = '\0';
+	}
+
+	iComment = StrContains(sLine, "#");
+	if (iComment != -1)
+	{
+		sLine[iComment] = '\0';
+	}
+
+	iComment = StrContains(sLine, ";");
+	if (iComment != -1)
+	{
+		sLine[iComment] = '\0';
+	}
+
+	TrimString(sLine);
+	if (sLine[0] == '\0')
+	{
+		return false;
+	}
+
+	BreakString(sLine, sCvar, iMaxLength);
+	TrimString(sCvar);
+
+	return sCvar[0] != '\0';
 }
 
 static Action RM_Match_MapRestart_Timer(Handle hTimer, DataPack hDp)

@@ -2,6 +2,10 @@
 
 	General Updates:
 
+ *	31-05-2026 > Version 2.11: Lock once after each non-first-map transition, not only chapter two.
+ *	31-05-2026 > Version 2.10: Keep survivor bot freeze independent from one-time door locking.
+ *	31-05-2026 > Version 2.9: Only lock once on the first round after transitioning into the second chapter.
+ *	31-05-2026 > Version 2.8: Only lock saferoom doors on the second chapter after the first map transition.
  *	24-05-2026 > Version 2.7: Clear stale timer handles across map changes to prevent invalid handle errors.
  *	16-05-2026 > Version 2.6: Skip first-map door locking but still freeze survivor bots until humans leave.
  *	16-05-2026 > Version 2.5: Skip saferoom locking on the first map of each scenario.
@@ -33,7 +37,7 @@
 
 #pragma semicolon 1
 #pragma newdecls required
-#define PLUGIN_VERSION "2.7"
+#define PLUGIN_VERSION "2.11"
 
 /* =============================================================================================================== *
  *										Bools, Handles, Integers and ConVars				   			 		   *
@@ -41,6 +45,8 @@
 
 bool g_bGameLeft4Dead;
 bool g_bFirstScenario;
+bool g_bLockThisMap;
+bool g_bLockUsedThisMap;
 bool g_bAdminTakeover;
 bool g_bSurvivorReady;
 bool g_bInfectedReady;
@@ -238,6 +244,8 @@ public void OnMapStart()
 	ClearDoorLockTimerRefs();
 
 	g_bFirstScenario = false;
+	g_bLockThisMap = false;
+	g_bLockUsedThisMap = false;
 	g_iCurrentMaps = 0;
 
 	char sMap[32];
@@ -328,13 +336,16 @@ void Event_RoundFreezeEnd(Event event, const char[] name, bool dontBroadcast)
 	g_iLoadersTime = Cvar_DoorLock_LoaderMax.IntValue;
 	g_iGiveUpsTime = Cvar_DoorLock_RdyTimeUp.IntValue;
 	g_iUnlocksTime = Cvar_DoorLock_Countdown.IntValue;
+	g_bLockThisMap = !g_bFirstScenario && !g_bLockUsedThisMap;
+
+	g_bSurvivorBotFreezeActive = true;
+	FreezeSurvivorBots();
 
 	if(g_bFirstScenario)
-	{
-		g_bSurvivorBotFreezeActive = true;
-		FreezeSurvivorBots();
 		return;
-	}
+
+	if(!g_bLockThisMap) return;
+	g_bLockUsedThisMap = true;
 
 	LockAllRotatingSaferoomDoors();
 	TriggerSafeAreaLocksFeatures();
@@ -489,6 +500,8 @@ Action Command_Lock(int client, int args)
 {
 	if(!L4D2_DoorLock_Enable()) return Plugin_Handled;
 	else if(g_bFirstScenario) CPrintToChat(client, "{olive}[DoorLock]{default} 第一关不启用锁门。");
+	else if(g_bLockUsedThisMap && !g_bLockThisMap) CPrintToChat(client, "{olive}[DoorLock]{default} 本图已经锁过一次，灭团重启不再锁门。");
+	else if(!g_bLockThisMap) CPrintToChat(client, "{olive}[DoorLock]{default} 只在每张非第一关过图后的第一次回合启用锁门。");
 	else if(g_bLeftSafeAreas) CPrintToChat(client, "%t", "Round Started");
 	else if(g_bLockSafeAreas) CPrintToChat(client, "%t", "Saferoom Locked");
 	else if(g_iGiveUpsTime <= 0) CPrintToChat(client, "%t", "Ready Up Time Ended");
@@ -529,7 +542,7 @@ Action Command_Unlock(int client, int args)
 
 Action Command_Ready(int client, int args)
 {
-	if(!L4D2_DoorLock_Enable() || !Cvar_DoorLock_EnableRdy.BoolValue) return Plugin_Handled;
+	if(!L4D2_DoorLock_Enable() || !g_bLockThisMap || !Cvar_DoorLock_EnableRdy.BoolValue) return Plugin_Handled;
 	else if(GetClientTeam(client) == 1) CPrintToChat(client, "%t", "Spectator Ready");
 	else if(g_bLeftSafeAreas) CPrintToChat(client, "%t", "Round Started");
 	else if(g_bClientIsReady[client])CPrintToChat(client, "%t", "You Are Ready");
@@ -555,7 +568,7 @@ Action Command_Ready(int client, int args)
 
 Action Command_Unready(int client, int args)
 {
-	if(!L4D2_DoorLock_Enable() || !Cvar_DoorLock_EnableRdy.BoolValue) return Plugin_Handled;
+	if(!L4D2_DoorLock_Enable() || !g_bLockThisMap || !Cvar_DoorLock_EnableRdy.BoolValue) return Plugin_Handled;
 	else if(GetClientTeam(client) == 1) CPrintToChat(client, "%t", "Spectator Ready");
 	else if(g_bLeftSafeAreas) CPrintToChat(client, "%t", "Round Started");
 	else if(!g_bClientIsReady[client]) CPrintToChat(client, "%t", "You Are Unready");
@@ -777,7 +790,7 @@ public void OnClientPutInServer(int client)
 
 	g_bClientIsReady[client] = false;
 
-	if(Cvar_DoorLock_EnableRdy.BoolValue)
+	if(g_bLockThisMap && Cvar_DoorLock_EnableRdy.BoolValue)
 		CreateTimer(5.0, Timer_DisplayPanelOnConnect, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 
 	if(g_bSurvivorBotFreezeActive && !g_bLeftSafeAreas)
@@ -893,8 +906,8 @@ public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
 		return Plugin_Handled;
 	}
 
-	// 非第一关、门还锁着、准备时间未到 → 拦截真人并传送回安全区
-	if(!g_bFirstScenario && g_bLockSafeAreas && !g_bLeftSafeAreas && g_iGiveUpsTime > 0)
+	// 只在本图第一次锁门期间拦截真人并传送回安全区
+	if(g_bLockThisMap && g_bLockSafeAreas && !g_bLeftSafeAreas && g_iGiveUpsTime > 0)
 	{
 		Activate_SurvivorTeleport(client);
 		return Plugin_Handled;
