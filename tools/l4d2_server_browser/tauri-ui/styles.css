@@ -321,21 +321,6 @@ select:focus {
   align-self: end;
 }
 
-.field-check {
-  display: grid;
-  grid-template-columns: 16px minmax(0, 1fr);
-  align-items: start;
-  height: auto;
-  white-space: normal;
-}
-
-.field-check small {
-  grid-column: 2;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.35;
-}
-
 .check input {
   width: 16px;
   height: 16px;

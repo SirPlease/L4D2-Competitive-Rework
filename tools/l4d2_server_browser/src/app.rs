@@ -498,6 +498,8 @@ struct BrowserConfig {
     sourcebans: Vec<FileSourceBans>,
 }
 
+const DEFAULT_ANNE_SUBSCRIPTION_URL: &str = "https://anne.trygek.com/bans/index.php?p=servers";
+
 impl Default for BrowserConfig {
     fn default() -> Self {
         Self {
@@ -508,7 +510,7 @@ impl Default for BrowserConfig {
             groups: Vec::new(),
             sourcebans: vec![FileSourceBans {
                 name: "Anne电信服".to_owned(),
-                url: "https://anne.trygek.com/bans/index.php?p=servers".to_owned(),
+                url: DEFAULT_ANNE_SUBSCRIPTION_URL.to_owned(),
                 text: String::new(),
                 servers: Vec::new(),
                 a2s_probe: true,
@@ -520,14 +522,11 @@ impl Default for BrowserConfig {
 fn parse_config_text(text: &str, path: &Path) -> Result<BrowserConfig, String> {
     let mut config: BrowserConfig = toml::from_str(text)
         .map_err(|err| format!("failed to parse config {}: {err}", path.display()))?;
-    apply_default_anne_subscription_probe(&mut config, text);
+    apply_default_anne_subscription_probe(&mut config);
     Ok(config)
 }
 
-fn apply_default_anne_subscription_probe(config: &mut BrowserConfig, raw_text: &str) {
-    if raw_text.contains("a2s_probe") {
-        return;
-    }
+fn apply_default_anne_subscription_probe(config: &mut BrowserConfig) {
     for subscription in &mut config.sourcebans {
         if is_default_anne_subscription(subscription) {
             subscription.a2s_probe = true;
@@ -536,10 +535,13 @@ fn apply_default_anne_subscription_probe(config: &mut BrowserConfig, raw_text: &
 }
 
 fn is_default_anne_subscription(subscription: &FileSourceBans) -> bool {
-    let name = subscription.name.trim();
-    let url = subscription.url.trim();
-    (name == "Anne电信服" || name == "Anne 网页订阅")
-        && url == "https://anne.trygek.com/bans/index.php?p=servers"
+    is_default_anne_subscription_url(&subscription.url)
+}
+
+fn is_default_anne_subscription_url(url: &str) -> bool {
+    normalize_subscription_url(url)
+        .map(|url| url.as_str() == DEFAULT_ANNE_SUBSCRIPTION_URL)
+        .unwrap_or(false)
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, Default)]
@@ -2577,7 +2579,6 @@ struct AddSourceBansRequest {
     name: String,
     url: String,
     text: String,
-    a2s_probe: bool,
 }
 
 #[derive(Clone)]
@@ -2770,7 +2771,6 @@ pub struct TauriSourceBansInput {
     name: String,
     url: String,
     text: String,
-    a2s_probe: Option<bool>,
 }
 
 #[derive(Clone, Deserialize)]
@@ -2983,7 +2983,6 @@ pub fn save_tauri_sourcebans(input: TauriSourceBansInput) -> Result<TauriConfigL
         name: input.name,
         url: input.url,
         text: input.text,
-        a2s_probe: input.a2s_probe.unwrap_or(false),
     };
     if let Some(index) = input.index {
         update_sourcebans_in_config(&path, index, request)?;
@@ -4066,7 +4065,6 @@ struct NativeGuiApp {
     sourcebans_name: String,
     sourcebans_url: String,
     sourcebans_text: String,
-    sourcebans_a2s_probe: bool,
     rcon_address: String,
     rcon_password: String,
     rcon_command_text: String,
@@ -4527,7 +4525,6 @@ impl NativeGuiApp {
             },
             sourcebans_url: String::new(),
             sourcebans_text: String::new(),
-            sourcebans_a2s_probe: false,
             rcon_address: String::new(),
             rcon_password: String::new(),
             rcon_command_text: "status".to_owned(),
@@ -4706,7 +4703,6 @@ impl NativeGuiApp {
                         self.sourcebans_name.clear();
                         self.sourcebans_url.clear();
                         self.sourcebans_text.clear();
-                        self.sourcebans_a2s_probe = false;
                         self.refresh_config_lists();
                         self.refresh_servers();
                     }
@@ -5573,7 +5569,6 @@ impl NativeGuiApp {
             name: self.sourcebans_name.clone(),
             url: self.sourcebans_url.clone(),
             text: self.sourcebans_text.clone(),
-            a2s_probe: self.sourcebans_a2s_probe,
         };
         thread::spawn(move || {
             let result = add_sourcebans_to_config(&path, input);
@@ -5594,7 +5589,6 @@ impl NativeGuiApp {
             name: self.sourcebans_name.clone(),
             url: self.sourcebans_url.clone(),
             text: self.sourcebans_text.clone(),
-            a2s_probe: self.sourcebans_a2s_probe,
         };
         thread::spawn(move || {
             let result = update_sourcebans_in_config(&path, index, input);
@@ -5627,7 +5621,6 @@ impl NativeGuiApp {
                     };
                     self.sourcebans_url.clear();
                     self.sourcebans_text.clear();
-                    self.sourcebans_a2s_probe = false;
                 }
                 if ui
                     .add_enabled(
@@ -5692,7 +5685,6 @@ impl NativeGuiApp {
                     self.sourcebans_name = subscription.name.clone();
                     self.sourcebans_url = subscription.url.clone();
                     self.sourcebans_text = subscription.text.clone();
-                    self.sourcebans_a2s_probe = subscription.a2s_probe;
                 }
             }
         });
@@ -5720,16 +5712,6 @@ impl NativeGuiApp {
             ui.add(
                 egui::TextEdit::singleline(&mut self.sourcebans_url).desired_width(f32::INFINITY),
             );
-            let a2s_probe_label = self.text(TextKey::A2sProbe).to_owned();
-            ui.checkbox(&mut self.sourcebans_a2s_probe, a2s_probe_label)
-                .on_hover_text(match self.language {
-                    GuiLanguage::ZhCn => {
-                        "勾选后，这个订阅里的服务器会发送带探测标记的 A2S 包，用于绕过 a2s-proxy 缓存测真实延迟。"
-                    }
-                    GuiLanguage::EnUs => {
-                        "When enabled, servers from this subscription send the marked A2S probe packet to bypass a2s-proxy cache for real latency."
-                    }
-                });
 
             ui.add_space(4.0);
             ui.label(self.text(TextKey::PastedSubscriptionText));
@@ -7786,6 +7768,7 @@ fn delete_server_from_config(path: &PathBuf, group: &str, server: &str) -> Resul
 fn add_sourcebans_to_config(path: &PathBuf, input: AddSourceBansRequest) -> Result<(), String> {
     let name = non_empty(input.name.trim().to_owned(), "name")?;
     let (url, servers) = resolve_subscription_servers(&input)?;
+    let a2s_probe = is_default_anne_subscription_url(&url);
     let mut config = load_config_or_default(path)?;
 
     if let Some(subscription) = config
@@ -7796,14 +7779,14 @@ fn add_sourcebans_to_config(path: &PathBuf, input: AddSourceBansRequest) -> Resu
         subscription.url = url;
         subscription.text = String::new();
         subscription.servers = servers;
-        subscription.a2s_probe = input.a2s_probe;
+        subscription.a2s_probe = a2s_probe;
     } else {
         config.sourcebans.push(FileSourceBans {
             name,
             url,
             text: String::new(),
             servers,
-            a2s_probe: input.a2s_probe,
+            a2s_probe,
         });
     }
 
@@ -7817,6 +7800,7 @@ fn update_sourcebans_in_config(
 ) -> Result<(), String> {
     let name = non_empty(input.name.trim().to_owned(), "name")?;
     let (url, servers) = resolve_subscription_servers(&input)?;
+    let a2s_probe = is_default_anne_subscription_url(&url);
     let mut config = load_config_or_default(path)?;
     let Some(subscription) = config.sourcebans.get_mut(index) else {
         return Err(format!("sourcebans index {index} does not exist"));
@@ -7826,7 +7810,7 @@ fn update_sourcebans_in_config(
     subscription.url = url;
     subscription.text = String::new();
     subscription.servers = servers;
-    subscription.a2s_probe = input.a2s_probe;
+    subscription.a2s_probe = a2s_probe;
     save_config(path, &config)
 }
 
@@ -7860,7 +7844,7 @@ fn resolve_subscription_servers(
         url: normalized_url.to_string(),
         text: String::new(),
         servers: Vec::new(),
-        a2s_probe: input.a2s_probe,
+        a2s_probe: is_default_anne_subscription_url(normalized_url.as_str()),
     };
     let servers = fetch_web_subscription(&sub, Duration::from_secs(15))?;
     Ok((normalized_url.to_string(), servers))

@@ -1482,7 +1482,6 @@ function selectSubscription(item) {
   $("#subscriptionNameInput").value = item.name;
   $("#subscriptionUrlInput").value = item.url;
   $("#subscriptionTextInput").value = "";
-  $("#subscriptionA2sProbeInput").checked = Boolean(item.a2s_probe);
   $("#deleteSubscriptionBtn").disabled = false;
   renderSubscriptions();
 }
@@ -1493,7 +1492,6 @@ function clearSubscriptionEditor() {
   $("#subscriptionNameInput").value = t("defaultGroup");
   $("#subscriptionUrlInput").value = "";
   $("#subscriptionTextInput").value = "";
-  $("#subscriptionA2sProbeInput").checked = false;
   $("#deleteSubscriptionBtn").disabled = true;
   renderSubscriptions();
 }
@@ -1505,7 +1503,6 @@ async function saveSubscription() {
     name: $("#subscriptionNameInput").value.trim(),
     url: $("#subscriptionUrlInput").value.trim(),
     text: $("#subscriptionTextInput").value,
-    a2s_probe: $("#subscriptionA2sProbeInput").checked,
   };
   if (!input.name) return;
   try {
