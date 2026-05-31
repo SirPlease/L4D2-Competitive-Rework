@@ -78,6 +78,9 @@ bool g_IcSpecialOnly [MAXPLAYERS + 1] = { false, ... };
 
 bool g_PrefsLoaded[MAXPLAYERS + 1] = { false, ... };
 bool g_PrefsDirty [MAXPLAYERS + 1] = { false, ... };
+bool g_DBLoadInFlight[MAXPLAYERS + 1] = { false, ... };
+bool g_DBSavePending[MAXPLAYERS + 1] = { false, ... };
+int  g_PrefsRevision[MAXPLAYERS + 1] = { 0, ... };
 
 Handle g_hDB = INVALID_HANDLE;
 bool   g_DBConnecting = false;
@@ -175,14 +178,23 @@ static void ClampSetIc(int &v)
 }
 static void MarkDirtyAndSave(int client)
 {
+    g_PrefsRevision[client]++;
     g_PrefsDirty[client] = true;
 
     if (GetConVarBool(cv_db_enable) && g_hDB != INVALID_HANDLE) {
+        g_DBSavePending[client] = true;
+        KV_SavePlayer(client);
+        KV_SetDBPendingFlag(client, true);
         DB_SavePlayerPrefs(client);         // 不再要求 g_PrefsLoaded==true
-        g_PrefsDirty[client] = false;
+    } else if (GetConVarBool(cv_db_enable)) {
+        g_DBSavePending[client] = true;
+        KV_SavePlayer(client);
+        KV_SetDBPendingFlag(client, true);
     } else {
         KV_SavePlayer(client);
         g_PrefsDirty[client] = false;
+        g_DBSavePending[client] = false;
+        KV_SetDBPendingFlag(client, false);
     }
 }
 
@@ -202,6 +214,43 @@ static bool ShouldShowIconFeedback(int attacker, bool specialTarget)
 static bool ShouldPlaySoundFeedback(int attacker, bool specialTarget)
 {
     return !g_SndSpecialOnly[attacker] || specialTarget;
+}
+
+static bool KV_HasPendingDBSave(int client)
+{
+    char uid[128] = "";
+    if (!GetClientAuthId(client, AuthId_Engine, uid, sizeof(uid), true) || uid[0] == '\0')
+        return false;
+
+    bool pending = false;
+    if (KvJumpToKey(g_SoundStore, uid, false))
+    {
+        pending = (KvGetNum(g_SoundStore, "DBPending", 0) != 0);
+        KvGoBack(g_SoundStore);
+    }
+    KvRewind(g_SoundStore);
+    return pending;
+}
+
+static void KV_SetDBPendingFlag(int client, bool pending)
+{
+    char uid[128] = "";
+    if (!GetClientAuthId(client, AuthId_Engine, uid, sizeof(uid), true) || uid[0] == '\0')
+        return;
+
+    if (!pending && !KvJumpToKey(g_SoundStore, uid, false))
+    {
+        KvRewind(g_SoundStore);
+        return;
+    }
+
+    if (pending)
+        KvJumpToKey(g_SoundStore, uid, true);
+
+    KvSetNum(g_SoundStore, "DBPending", pending ? 1 : 0);
+    KvGoBack(g_SoundStore);
+    KvRewind(g_SoundStore);
+    KeyValuesToFile(g_SoundStore, g_SavePath);
 }
 
 // 根据“音效套装ID(1..N)”与类型取路径：which 0=headshot, 1=hit, 2=kill
@@ -518,6 +567,8 @@ public void OnClientPutInServer(int client)
 {
     if (IsFakeClient(client)) return;
 
+    g_PrefsRevision[client]++;
+
     // 最近套装（仅内存）
     g_SndSuite[client] = 0;
     g_IcSuite [client] = (GetConVarBool(cv_overlay_default_enable) && g_OvCount >= 1) ? 1 : 0;
@@ -540,6 +591,8 @@ public void OnClientPutInServer(int client)
 
     g_PrefsLoaded[client] = false;
     g_PrefsDirty [client] = false;
+    g_DBLoadInFlight[client] = false;
+    g_DBSavePending[client] = false;
     if (GetConVarBool(cv_db_enable) && g_hDB != INVALID_HANDLE)
     {
         TryLoadPlayerPrefs(client);
@@ -568,7 +621,7 @@ public void OnClientDisconnect(int client)
 
     if (GetConVarBool(cv_db_enable) && g_hDB != INVALID_HANDLE)
     {
-        if (g_PrefsLoaded[client] && g_PrefsDirty[client])
+        if (g_PrefsDirty[client] || g_DBSavePending[client])
         {
             DB_SavePlayerPrefs(client);
         }
@@ -588,6 +641,9 @@ public void OnClientDisconnect(int client)
     }
     g_PrefsLoaded[client] = false;
     g_PrefsDirty [client] = false;
+    g_DBLoadInFlight[client] = false;
+    g_DBSavePending[client] = false;
+    g_PrefsRevision[client]++;
 }
 
 static void TryLoadPlayerPrefs(int client)
@@ -595,6 +651,7 @@ static void TryLoadPlayerPrefs(int client)
     if (client <= 0 || client > MaxClients) return;
     if (!IsClientInGame(client) || IsFakeClient(client)) return;
     if (g_PrefsLoaded[client]) return;
+    if (g_DBLoadInFlight[client]) return;
 
     if (!GetConVarBool(cv_db_enable))
     {
@@ -622,6 +679,16 @@ static void TryLoadPlayerPrefs(int client)
         return;
     }
 
+    if (KV_HasPendingDBSave(client))
+    {
+        KV_LoadPlayer(client);
+        g_PrefsLoaded[client] = true;
+        g_PrefsDirty [client] = true;
+        g_DBSavePending[client] = true;
+        DB_SavePlayerPrefs(client);
+        return;
+    }
+
     DB_RequestLoadPlayer(client, sid);
 }
 
@@ -642,7 +709,11 @@ public void DB_RequestLoadPlayer(int client, const char[] sid)
          LIMIT 1;",
         table, sid);
 
-    SQL_TQuery(g_hDB, SQL_OnLoadPrefs, q, GetClientUserId(client));
+    DataPack pack = new DataPack();
+    pack.WriteCell(GetClientUserId(client));
+    pack.WriteCell(g_PrefsRevision[client]);
+    g_DBLoadInFlight[client] = true;
+    SQL_TQuery(g_hDB, SQL_OnLoadPrefs, q, pack);
 }
 
 // 为所有在线玩家重新加载偏好（插件重载 / 执行模式 cfg 后调用）
@@ -653,12 +724,18 @@ public void ReloadAllPlayersPrefs()
         if (!IsClientInGame(i) || IsFakeClient(i))
             continue;
 
-        g_PrefsLoaded[i] = false;
-        g_PrefsDirty [i] = false;
-
         if (GetConVarBool(cv_db_enable) && g_hDB != INVALID_HANDLE)
         {
-            TryLoadPlayerPrefs(i);
+            if (g_DBSavePending[i] || g_PrefsDirty[i])
+            {
+                DB_SavePlayerPrefs(i);
+            }
+            else
+            {
+                g_PrefsLoaded[i] = false;
+                g_DBLoadInFlight[i] = false;
+                TryLoadPlayerPrefs(i);
+            }
         }
         else
         {
@@ -669,12 +746,28 @@ public void ReloadAllPlayersPrefs()
     }
 }
 
-public void SQL_OnLoadPrefs(Handle owner, Handle hndl, const char[] error, any userid)
+public void SQL_OnLoadPrefs(Handle owner, Handle hndl, const char[] error, any data)
 {
+    DataPack pack = view_as<DataPack>(data);
+    pack.Reset();
+    int userid = pack.ReadCell();
+    int loadRevision = pack.ReadCell();
+    delete pack;
+
     int client = GetClientOfUserId(userid);
     if (client <= 0 || !IsClientInGame(client)) return;
 
-    if (hndl == INVALID_HANDLE)
+    g_DBLoadInFlight[client] = false;
+
+    if (loadRevision != g_PrefsRevision[client] || g_DBSavePending[client] || g_PrefsDirty[client])
+    {
+        g_PrefsLoaded[client] = true;
+        if (GetConVarBool(cv_db_enable) && g_hDB != INVALID_HANDLE)
+            DB_SavePlayerPrefs(client);
+        return;
+    }
+
+    if (hndl == INVALID_HANDLE || error[0] != '\0')
     {
         LogError("[hitsound] 加载玩家配置失败: %s", error);
         KV_LoadPlayer(client);
@@ -727,9 +820,22 @@ public void SQL_OnLoadPrefs(Handle owner, Handle hndl, const char[] error, any u
 
 void DB_SavePlayerPrefs(int client)
 {
-    if (g_hDB == INVALID_HANDLE) return;
+    if (g_hDB == INVALID_HANDLE)
+    {
+        g_DBSavePending[client] = true;
+        g_PrefsDirty[client] = true;
+        KV_SetDBPendingFlag(client, true);
+        return;
+    }
 
-    char sid[64]; GetClientAuthId(client, AuthId_Steam2, sid, sizeof(sid), true);
+    char sid[64];
+    if (!GetClientAuthId(client, AuthId_Steam2, sid, sizeof(sid), true) || sid[0] == '\0')
+    {
+        g_DBSavePending[client] = true;
+        g_PrefsDirty[client] = true;
+        KV_SetDBPendingFlag(client, true);
+        return;
+    }
     char table[64]; GetDBTableName(table, sizeof(table));
 
     int hs_head = g_SndHead[client], hs_hit = g_SndHit[client], hs_kill = g_SndKill[client];
@@ -756,18 +862,41 @@ void DB_SavePlayerPrefs(int client)
             hiticon_si_only =VALUES(hiticon_si_only);",
         table, sid, hs_head, hs_hit, hs_kill, ic_head, ic_hit, ic_kill, snd_si_only, ic_si_only);
 
-    SQL_TQuery(g_hDB, SQL_OnSavePrefs, q, GetClientUserId(client));
+    DataPack pack = new DataPack();
+    pack.WriteCell(GetClientUserId(client));
+    pack.WriteCell(g_PrefsRevision[client]);
+    SQL_TQuery(g_hDB, SQL_OnSavePrefs, q, pack);
 }
 
 public void SQL_OnSavePrefs(Handle owner, Handle hndl, const char[] error, any data)
 {
-    if (hndl == INVALID_HANDLE)
+    DataPack pack = view_as<DataPack>(data);
+    pack.Reset();
+    int userid = pack.ReadCell();
+    int saveRevision = pack.ReadCell();
+    delete pack;
+
+    int client = GetClientOfUserId(userid);
+
+    if (hndl == INVALID_HANDLE || error[0] != '\0')
     {
-        int client = GetClientOfUserId(data);
-        if (client > 0 && IsClientInGame(client))
+        if (client > 0 && IsClientInGame(client) && saveRevision == g_PrefsRevision[client])
+        {
             g_PrefsDirty[client] = true;
+            g_DBSavePending[client] = true;
+            KV_SavePlayer(client);
+            KV_SetDBPendingFlag(client, true);
+        }
 
         LogError("[hitsound] 保存玩家配置失败: %s", error);
+        return;
+    }
+
+    if (client > 0 && IsClientInGame(client) && saveRevision == g_PrefsRevision[client])
+    {
+        g_PrefsDirty[client] = false;
+        g_DBSavePending[client] = false;
+        KV_SetDBPendingFlag(client, false);
     }
 }
 
