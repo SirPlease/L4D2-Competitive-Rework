@@ -3,10 +3,110 @@ set -euo pipefail
 
 export DEBIAN_FRONTEND=noninteractive
 
+# ══════════════════════════════════════════════════════════════
+# CONFIGURATION
+# ══════════════════════════════════════════════════════════════
+# All settings have sensible defaults. Override any variable by
+# passing  -c /path/to/config.sh  on the command line.
+# Variables marked CHANGE_ME *must* be set before --install.
+# ══════════════════════════════════════════════════════════════
+
+# ── Network ──────────────────────────────────────────────────
+L4D2_SERVER_IP="${L4D2_SERVER_IP:-}"
+L4D2_BIND_IP="${L4D2_BIND_IP:-}"
+
+# ── Server Layout ────────────────────────────────────────────
+L4D2_SERVER_COUNT="${L4D2_SERVER_COUNT:-8}"
+L4D2_GAME_PORTS="${L4D2_GAME_PORTS:-12001 12002 12003 12004 12005 12006 12007 12008}"
+L4D2_BACKEND_PORTS="${L4D2_BACKEND_PORTS:-12009 12010 12011 12012 12013 12014 12015 12016}"
+L4D2_CONTAINER_PREFIX="${L4D2_CONTAINER_PREFIX:-anne}"
+L4D2_HOSTNAME_START_INDEX="${L4D2_HOSTNAME_START_INDEX:-27}"
+L4D2_HOSTNAME_PREFIX="${L4D2_HOSTNAME_PREFIX:-Anne Server #}"
+
+# ── Docker Images ────────────────────────────────────────────
+L4D2_BASE_IMAGE_URL="${L4D2_BASE_IMAGE_URL:-docker.1panel.live/morzlee/l4d2:latest}"
+L4D2_BASE_CONTAINER_NAME="${L4D2_BASE_CONTAINER_NAME:-l4d2base}"
+L4D2_PROD_IMAGE_NAME="${L4D2_PROD_IMAGE_NAME:-morzlee/l4d2:base}"
+
+# ── Git Repository ───────────────────────────────────────────
+L4D2_GIT_DIR="${L4D2_GIT_DIR:-/home/louis/CompetitiveWithAnne}"
+L4D2_GIT_PROXY_URL="${L4D2_GIT_PROXY_URL:-https://gh-proxy.org/https://github.com/fantasylidong/CompetitiveWithAnne.git}"
+
+# ── Game Runtime ─────────────────────────────────────────────
+L4D2_TIMEZONE="${L4D2_TIMEZONE:-Asia/Shanghai}"
+L4D2_MAP_UPLOAD_DIR="${L4D2_MAP_UPLOAD_DIR:-/map/uploads}"
+L4D2_DEFAULT_MAP="${L4D2_DEFAULT_MAP:-c2m1_highway}"
+L4D2_REGION="${L4D2_REGION:-255}"
+L4D2_PLUGIN="${L4D2_PLUGIN:-zone}"
+L4D2_CLOUD="${L4D2_CLOUD:-true}"
+
+# ── Steam Settings (CHANGE_ME) ───────────────────────────────
+L4D2_STEAM_GROUP="${L4D2_STEAM_GROUP:-CHANGE_ME}"
+L4D2_STEAM_ADMIN="${L4D2_STEAM_ADMIN:-CHANGE_ME}"
+L4D2_OPTIONAL_STEAM_ID="${L4D2_OPTIONAL_STEAM_ID:-}"
+
+# ── Database & RCON (CHANGE_ME) ──────────────────────────────
+L4D2_MYSQL_HOST="${L4D2_MYSQL_HOST:-CHANGE_ME}"
+L4D2_MYSQL_PORT="${L4D2_MYSQL_PORT:-12345}"
+L4D2_MYSQL_USER="${L4D2_MYSQL_USER:-CHANGE_ME}"
+L4D2_MYSQL_PASSWORD="${L4D2_MYSQL_PASSWORD:-CHANGE_ME}"
+L4D2_RCON_PASSWORD="${L4D2_RCON_PASSWORD:-CHANGE_ME}"
+
+# ── Go Proxy Settings ───────────────────────────────────────
+L4D2_GO_PROXY_ENABLE="${L4D2_GO_PROXY_ENABLE:-false}"
+L4D2_GO_PROXY_URL="${L4D2_GO_PROXY_URL:-https://binaries.l4d2node.org/a2s-proxy-go-linux-amd64}"
+L4D2_GO_PROXY_VERSION_URL="${L4D2_GO_PROXY_VERSION_URL:-https://binaries.l4d2node.org/a2s-proxy-go-linux-amd64.version}"
+L4D2_GO_PROXY_BIN="${L4D2_GO_PROXY_BIN:-/usr/local/bin/a2s-proxy-go}"
+L4D2_GO_PROXY_CONFIG="${L4D2_GO_PROXY_CONFIG:-/etc/a2s-proxy-go/config.json}"
+L4D2_GO_PROXY_FORCE_DOWNLOAD="${L4D2_GO_PROXY_FORCE_DOWNLOAD:-false}"
+L4D2_GO_PROXY_BACKEND_IP="${L4D2_GO_PROXY_BACKEND_IP:-}"
+L4D2_GO_PROXY_CACHE_TTL_SECONDS="${L4D2_GO_PROXY_CACHE_TTL_SECONDS:-2}"
+L4D2_GO_PROXY_PLAYER_CACHE_TTL_SECONDS="${L4D2_GO_PROXY_PLAYER_CACHE_TTL_SECONDS:-2}"
+L4D2_GO_PROXY_RULES_CACHE_TTL_SECONDS="${L4D2_GO_PROXY_RULES_CACHE_TTL_SECONDS:-10}"
+L4D2_GO_PROXY_SESSION_IDLE_SECONDS="${L4D2_GO_PROXY_SESSION_IDLE_SECONDS:-30}"
+L4D2_GO_PROXY_WORKER_COUNT="${L4D2_GO_PROXY_WORKER_COUNT:-64}"
+L4D2_GO_PROXY_QUEUE_SIZE="${L4D2_GO_PROXY_QUEUE_SIZE:-4096}"
+L4D2_GO_PROXY_SOCKET_BUFFER_BYTES="${L4D2_GO_PROXY_SOCKET_BUFFER_BYTES:-4194304}"
+L4D2_GO_PROXY_MAX_SESSIONS="${L4D2_GO_PROXY_MAX_SESSIONS:-4096}"
+L4D2_GO_PROXY_MAX_SESSIONS_PER_IP="${L4D2_GO_PROXY_MAX_SESSIONS_PER_IP:-32}"
+L4D2_GO_PROXY_BYPASS_CACHE_IPS="${L4D2_GO_PROXY_BYPASS_CACHE_IPS:-}"
+L4D2_GO_PROXY_BYPASS_CACHE_PROBE="${L4D2_GO_PROXY_BYPASS_CACHE_PROBE:-false}"
+L4D2_GO_PROXY_MASTER_REGISTER="${L4D2_GO_PROXY_MASTER_REGISTER:-true}"
+L4D2_GO_PROXY_STATS_INTERVAL="${L4D2_GO_PROXY_STATS_INTERVAL:-10}"
+L4D2_GO_PROXY_STATS_LOG_FILE="${L4D2_GO_PROXY_STATS_LOG_FILE:-}"
+L4D2_GO_PROXY_STATS_THRESHOLD="${L4D2_GO_PROXY_STATS_THRESHOLD:-100}"
+
+# ── A2S Firewall Settings ───────────────────────────────────
+L4D2_A2S_FIREWALL_ENABLE="${L4D2_A2S_FIREWALL_ENABLE:-true}"
+L4D2_A2S_FIREWALL_PORTS="${L4D2_A2S_FIREWALL_PORTS:-auto}"
+L4D2_A2S_PLAYER_RATE="${L4D2_A2S_PLAYER_RATE:-15/second}"
+L4D2_A2S_PLAYER_BURST="${L4D2_A2S_PLAYER_BURST:-10}"
+L4D2_A2S_INFO_RATE="${L4D2_A2S_INFO_RATE:-15/second}"
+L4D2_A2S_INFO_BURST="${L4D2_A2S_INFO_BURST:-10}"
+L4D2_A2S_RULES_RATE="${L4D2_A2S_RULES_RATE:-10/second}"
+L4D2_A2S_RULES_BURST="${L4D2_A2S_RULES_BURST:-5}"
+L4D2_A2S_OTHER_RATE="${L4D2_A2S_OTHER_RATE:-10/second}"
+L4D2_A2S_OTHER_BURST="${L4D2_A2S_OTHER_BURST:-5}"
+L4D2_A2S_BAN_SECONDS="${L4D2_A2S_BAN_SECONDS:-60}"
+L4D2_A2S_BAN_HITCOUNT="${L4D2_A2S_BAN_HITCOUNT:-3}"
+L4D2_A2S_HASH_EXPIRE_MS="${L4D2_A2S_HASH_EXPIRE_MS:-60000}"
+L4D2_A2S_LOG_LIMIT="${L4D2_A2S_LOG_LIMIT:-5/min}"
+
+# ── Master SNAT Settings ────────────────────────────────────
+L4D2_MASTER_SNAT_ENABLE="${L4D2_MASTER_SNAT_ENABLE:-false}"
+L4D2_MASTER_SNAT_DEST="${L4D2_MASTER_SNAT_DEST:-hl2master.steampowered.com:27011}"
+L4D2_MASTER_SNAT_BIN="${L4D2_MASTER_SNAT_BIN:-/usr/local/bin/a2s-master-snat.sh}"
+
+# ── Misc ─────────────────────────────────────────────────────
+L4D2_APT_MIRROR="${L4D2_APT_MIRROR:-}"
+L4D2_ASSUME_YES="${L4D2_ASSUME_YES:-0}"
+L4D2_REMOVE_BASE_IMAGE="${L4D2_REMOVE_BASE_IMAGE:-1}"
+
+# ══════════════════════════════════════════════════════════════
+# INTERNAL STATE
+# ══════════════════════════════════════════════════════════════
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DEFAULT_ENV_FILE="${SCRIPT_DIR}/l4d2-docker.env"
-EXAMPLE_ENV_FILE="${SCRIPT_DIR}/l4d2-docker.env.example"
-ENV_FILE="${L4D2_ENV_FILE:-$DEFAULT_ENV_FILE}"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -17,12 +117,15 @@ NC='\033[0m'
 OS_ID=unknown
 OS_VERSION_ID=unknown
 OS_CODENAME=
-NEED_REBOOT=false
 TEMP_FILES=()
 GAME_PORTS_ARRAY=()
 BACKEND_PORTS_ARRAY=()
 A2S_PORT_ITEMS=()
 A2S_PORT_CHUNKS=()
+
+# ══════════════════════════════════════════════════════════════
+# UTILITIES
+# ══════════════════════════════════════════════════════════════
 
 log() { echo -e "${BLUE}[INFO]${NC} $*"; }
 ok() { echo -e "${GREEN}[OK]${NC} $*"; }
@@ -49,7 +152,7 @@ require_root() {
 }
 
 require_systemd() {
-  check_cmd systemctl || die "systemctl is required for sqproxy service management."
+  check_cmd systemctl || die "systemctl is required for service management."
 }
 
 configure_needrestart() {
@@ -58,69 +161,14 @@ configure_needrestart() {
   fi
 }
 
+# ══════════════════════════════════════════════════════════════
+# CONFIG LOADING
+# ══════════════════════════════════════════════════════════════
+
 load_config() {
-  if [[ -f "$ENV_FILE" ]]; then
-    # shellcheck source=/dev/null
-    set -a
-    source "$ENV_FILE"
-    set +a
-    ok "Loaded config: $ENV_FILE"
-  fi
-
-  L4D2_SERVER_IP="${L4D2_SERVER_IP:-}"
-  L4D2_BIND_IP="${L4D2_BIND_IP:-}"
-  L4D2_SERVER_COUNT="${L4D2_SERVER_COUNT:-8}"
-  L4D2_GAME_PORTS="${L4D2_GAME_PORTS:-12001 12002 12003 12004 12005 12006 12007 12008}"
-  L4D2_BACKEND_PORTS="${L4D2_BACKEND_PORTS:-12009 12010 12011 12012 12013 12014 12015 12016}"
-  L4D2_CONTAINER_PREFIX="${L4D2_CONTAINER_PREFIX:-anne}"
-  L4D2_HOSTNAME_START_INDEX="${L4D2_HOSTNAME_START_INDEX:-27}"
-  L4D2_HOSTNAME_PREFIX="${L4D2_HOSTNAME_PREFIX:-Anne Server #}"
-
-  L4D2_BASE_IMAGE_URL="${L4D2_BASE_IMAGE_URL:-docker.1panel.live/morzlee/l4d2:latest}"
-  L4D2_BASE_CONTAINER_NAME="${L4D2_BASE_CONTAINER_NAME:-l4d2base}"
-  L4D2_PROD_IMAGE_NAME="${L4D2_PROD_IMAGE_NAME:-morzlee/l4d2:base}"
-  L4D2_GIT_DIR="${L4D2_GIT_DIR:-/home/louis/CompetitiveWithAnne}"
-  L4D2_GIT_PROXY_URL="${L4D2_GIT_PROXY_URL:-https://gh-proxy.org/https://github.com/fantasylidong/CompetitiveWithAnne.git}"
-
-  L4D2_TIMEZONE="${L4D2_TIMEZONE:-Asia/Shanghai}"
-  L4D2_MAP_UPLOAD_DIR="${L4D2_MAP_UPLOAD_DIR:-/map/uploads}"
-  L4D2_DEFAULT_MAP="${L4D2_DEFAULT_MAP:-c2m1_highway}"
-  L4D2_REGION="${L4D2_REGION:-255}"
-  L4D2_PLUGIN="${L4D2_PLUGIN:-zone}"
-  L4D2_CLOUD="${L4D2_CLOUD:-true}"
-
-  L4D2_STEAM_GROUP="${L4D2_STEAM_GROUP:-}"
-  L4D2_STEAM_ADMIN="${L4D2_STEAM_ADMIN:-}"
-  L4D2_OPTIONAL_STEAM_ID="${L4D2_OPTIONAL_STEAM_ID:-}"
-
-  L4D2_MYSQL_HOST="${L4D2_MYSQL_HOST:-}"
-  L4D2_MYSQL_PORT="${L4D2_MYSQL_PORT:-12345}"
-  L4D2_MYSQL_USER="${L4D2_MYSQL_USER:-}"
-  L4D2_MYSQL_PASSWORD="${L4D2_MYSQL_PASSWORD:-}"
-  L4D2_RCON_PASSWORD="${L4D2_RCON_PASSWORD:-}"
-
-  L4D2_SQPROXY_ENABLE="${L4D2_SQPROXY_ENABLE:-true}"
-  L4D2_ENABLE_EBPF="${L4D2_ENABLE_EBPF:-true}"
-  L4D2_APT_MIRROR="${L4D2_APT_MIRROR:-}"
-  L4D2_SQPROXY_VERSION="${L4D2_SQPROXY_VERSION:-2.5.0}"
-  L4D2_SQPROXY_VENV="${L4D2_SQPROXY_VENV:-/opt/sqproxy/venv}"
-  L4D2_ASSUME_YES="${L4D2_ASSUME_YES:-0}"
-  L4D2_REMOVE_BASE_IMAGE="${L4D2_REMOVE_BASE_IMAGE:-1}"
-
-  L4D2_A2S_FIREWALL_ENABLE="${L4D2_A2S_FIREWALL_ENABLE:-true}"
-  L4D2_A2S_FIREWALL_PORTS="${L4D2_A2S_FIREWALL_PORTS:-auto}"
-  L4D2_A2S_PLAYER_RATE="${L4D2_A2S_PLAYER_RATE:-15/second}"
-  L4D2_A2S_PLAYER_BURST="${L4D2_A2S_PLAYER_BURST:-10}"
-  L4D2_A2S_INFO_RATE="${L4D2_A2S_INFO_RATE:-15/second}"
-  L4D2_A2S_INFO_BURST="${L4D2_A2S_INFO_BURST:-10}"
-  L4D2_A2S_RULES_RATE="${L4D2_A2S_RULES_RATE:-10/second}"
-  L4D2_A2S_RULES_BURST="${L4D2_A2S_RULES_BURST:-5}"
-  L4D2_A2S_OTHER_RATE="${L4D2_A2S_OTHER_RATE:-10/second}"
-  L4D2_A2S_OTHER_BURST="${L4D2_A2S_OTHER_BURST:-5}"
-  L4D2_A2S_BAN_SECONDS="${L4D2_A2S_BAN_SECONDS:-60}"
-  L4D2_A2S_BAN_HITCOUNT="${L4D2_A2S_BAN_HITCOUNT:-3}"
-  L4D2_A2S_HASH_EXPIRE_MS="${L4D2_A2S_HASH_EXPIRE_MS:-60000}"
-  L4D2_A2S_LOG_LIMIT="${L4D2_A2S_LOG_LIMIT:-5/min}"
+  # Variables are already set in the CONFIGURATION block above.
+  # If -c config.sh was given, it was sourced before this function,
+  # so any overrides are already in effect.
 
   local raw_game_ports raw_backend_ports
   raw_game_ports="${L4D2_GAME_PORTS//,/ }"
@@ -142,22 +190,16 @@ is_enabled() {
   esac
 }
 
-write_env_file() {
-  if [[ -e "$ENV_FILE" ]]; then
-    die "Config already exists: $ENV_FILE"
-  fi
-  [[ -f "$EXAMPLE_ENV_FILE" ]] || die "Missing example file: $EXAMPLE_ENV_FILE"
-  cp "$EXAMPLE_ENV_FILE" "$ENV_FILE"
-  chmod 600 "$ENV_FILE"
-  ok "Created local config: $ENV_FILE"
-}
-
 require_not_placeholder() {
   local name="$1"
   local value="${!name:-}"
-  [[ -n "$value" ]] || die "$name is required. Create and fill $ENV_FILE first."
-  [[ "$value" != CHANGE_ME* ]] || die "$name is still CHANGE_ME in $ENV_FILE."
+  [[ -n "$value" ]] || die "$name is required. Set it in the CONFIGURATION block or via -c config.sh."
+  [[ "$value" != CHANGE_ME* ]] || die "$name is still CHANGE_ME. Set it in the CONFIGURATION block or via -c config.sh."
 }
+
+# ══════════════════════════════════════════════════════════════
+# VALIDATION
+# ══════════════════════════════════════════════════════════════
 
 validate_port() {
   local name="$1"
@@ -183,6 +225,37 @@ validate_positive_number() {
   local value="$2"
   [[ "$value" =~ ^[0-9]+$ ]] || die "$name must be a number: $value"
   ((value > 0)) || die "$name must be greater than 0: $value"
+}
+
+json_escape() {
+  local value="$1"
+  value="${value//\\/\\\\}"
+  value="${value//\"/\\\"}"
+  value="${value//$'\n'/\\n}"
+  value="${value//$'\r'/\\r}"
+  value="${value//$'\t'/\\t}"
+  printf '%s' "$value"
+}
+
+json_string_array_from_words() {
+  local raw="$1"
+  raw="${raw//,/ }"
+  local items=()
+  local item
+  for item in $raw; do
+    [[ -n "$item" ]] || continue
+    items+=("$(json_escape "$item")")
+  done
+
+  printf '['
+  local i
+  for ((i = 0; i < ${#items[@]}; i++)); do
+    if ((i > 0)); then
+      printf ', '
+    fi
+    printf '"%s"' "${items[$i]}"
+  done
+  printf ']'
 }
 
 add_unique_a2s_port_item() {
@@ -256,7 +329,9 @@ validate_config() {
   [[ "$L4D2_HOSTNAME_START_INDEX" =~ ^[0-9]+$ ]] || die "L4D2_HOSTNAME_START_INDEX must be a number."
   [[ "$L4D2_GIT_DIR" == /* ]] || die "L4D2_GIT_DIR must be an absolute path."
   [[ "$L4D2_MAP_UPLOAD_DIR" == /* ]] || die "L4D2_MAP_UPLOAD_DIR must be an absolute path."
-  [[ "$L4D2_SQPROXY_VENV" == /* ]] || die "L4D2_SQPROXY_VENV must be an absolute path."
+  [[ "$L4D2_GO_PROXY_BIN" == /* ]] || die "L4D2_GO_PROXY_BIN must be an absolute path."
+  [[ "$L4D2_GO_PROXY_CONFIG" == /* ]] || die "L4D2_GO_PROXY_CONFIG must be an absolute path."
+  [[ "$L4D2_MASTER_SNAT_BIN" == /* ]] || die "L4D2_MASTER_SNAT_BIN must be an absolute path."
   validate_docker_name L4D2_CONTAINER_PREFIX "$L4D2_CONTAINER_PREFIX"
   validate_docker_name L4D2_BASE_CONTAINER_NAME "$L4D2_BASE_CONTAINER_NAME"
 
@@ -274,6 +349,28 @@ validate_config() {
   done
 
   validate_port "L4D2_MYSQL_PORT" "$L4D2_MYSQL_PORT"
+  validate_positive_number L4D2_GO_PROXY_CACHE_TTL_SECONDS "$L4D2_GO_PROXY_CACHE_TTL_SECONDS"
+  validate_positive_number L4D2_GO_PROXY_PLAYER_CACHE_TTL_SECONDS "$L4D2_GO_PROXY_PLAYER_CACHE_TTL_SECONDS"
+  validate_positive_number L4D2_GO_PROXY_RULES_CACHE_TTL_SECONDS "$L4D2_GO_PROXY_RULES_CACHE_TTL_SECONDS"
+  validate_positive_number L4D2_GO_PROXY_SESSION_IDLE_SECONDS "$L4D2_GO_PROXY_SESSION_IDLE_SECONDS"
+  validate_positive_number L4D2_GO_PROXY_WORKER_COUNT "$L4D2_GO_PROXY_WORKER_COUNT"
+  validate_positive_number L4D2_GO_PROXY_QUEUE_SIZE "$L4D2_GO_PROXY_QUEUE_SIZE"
+  validate_positive_number L4D2_GO_PROXY_SOCKET_BUFFER_BYTES "$L4D2_GO_PROXY_SOCKET_BUFFER_BYTES"
+  validate_positive_number L4D2_GO_PROXY_MAX_SESSIONS "$L4D2_GO_PROXY_MAX_SESSIONS"
+  validate_positive_number L4D2_GO_PROXY_MAX_SESSIONS_PER_IP "$L4D2_GO_PROXY_MAX_SESSIONS_PER_IP"
+
+  if is_enabled "$L4D2_MASTER_SNAT_ENABLE"; then
+    is_enabled "$L4D2_GO_PROXY_ENABLE" || die "L4D2_MASTER_SNAT_ENABLE requires L4D2_GO_PROXY_ENABLE=true."
+    [[ "$L4D2_MASTER_SNAT_DEST" == *:* ]] || die "L4D2_MASTER_SNAT_DEST must look like host:port."
+    local snat_dest_host snat_dest_port
+    snat_dest_host="${L4D2_MASTER_SNAT_DEST%:*}"
+    snat_dest_port="${L4D2_MASTER_SNAT_DEST##*:}"
+    [[ -n "$snat_dest_host" ]] || die "L4D2_MASTER_SNAT_DEST host is empty."
+    validate_port "L4D2_MASTER_SNAT_DEST port" "$snat_dest_port"
+    if is_enabled "$L4D2_GO_PROXY_MASTER_REGISTER"; then
+      warn "L4D2_MASTER_SNAT_ENABLE=true works best with L4D2_GO_PROXY_MASTER_REGISTER=false to avoid duplicate master registration."
+    fi
+  fi
 
   if is_enabled "$L4D2_A2S_FIREWALL_ENABLE"; then
     validate_rate L4D2_A2S_PLAYER_RATE "$L4D2_A2S_PLAYER_RATE"
@@ -299,6 +396,10 @@ require_deploy_config() {
   require_not_placeholder L4D2_MYSQL_PASSWORD
   require_not_placeholder L4D2_RCON_PASSWORD
 }
+
+# ══════════════════════════════════════════════════════════════
+# OS DETECTION
+# ══════════════════════════════════════════════════════════════
 
 detect_os() {
   if [[ -f /etc/os-release ]]; then
@@ -342,7 +443,7 @@ detect_server_ips() {
     if ! is_ipv4 "$detected_public"; then
       detected_public="$(default_route_ip)"
     fi
-    is_ipv4 "$detected_public" || die "Could not detect L4D2_SERVER_IP. Set it in $ENV_FILE."
+    is_ipv4 "$detected_public" || die "Could not detect L4D2_SERVER_IP. Set it via -c config.sh."
     L4D2_SERVER_IP="$detected_public"
     ok "Detected server IP: $L4D2_SERVER_IP"
   else
@@ -354,13 +455,17 @@ detect_server_ips() {
     if ! is_ipv4 "$detected_bind"; then
       detected_bind="$L4D2_SERVER_IP"
     fi
-    is_ipv4 "$detected_bind" || die "Could not detect L4D2_BIND_IP. Set it in $ENV_FILE."
+    is_ipv4 "$detected_bind" || die "Could not detect L4D2_BIND_IP. Set it via -c config.sh."
     L4D2_BIND_IP="$detected_bind"
     ok "Detected bind IP: $L4D2_BIND_IP"
   else
     ok "Using configured bind IP: $L4D2_BIND_IP"
   fi
 }
+
+# ══════════════════════════════════════════════════════════════
+# SYSTEM INSTALLATION
+# ══════════════════════════════════════════════════════════════
 
 apt_install() {
   apt-get \
@@ -436,132 +541,303 @@ install_system_env() {
     git
   )
 
-  if is_enabled "$L4D2_SQPROXY_ENABLE"; then
-    packages+=(
-      python3
-      python3-dev
-      python3-pip
-      python3-venv
-      gcc
-      build-essential
-      bpfcc-tools
-      linux-libc-dev
-    )
-  fi
-
   apt_install "${packages[@]}"
 
   configure_needrestart
   install_docker
 
-  if ! is_enabled "$L4D2_SQPROXY_ENABLE"; then
-    install -d -m 0755 "$L4D2_MAP_UPLOAD_DIR"
-    ok "System environment is ready."
-    return
-  fi
-
-  log "Installing sqproxy in an isolated Python venv."
-  install -d -m 0755 "$(dirname "$L4D2_SQPROXY_VENV")"
-  python3 -m venv "$L4D2_SQPROXY_VENV"
-  "$L4D2_SQPROXY_VENV/bin/python" -m pip install --upgrade pip setuptools wheel
-  "$L4D2_SQPROXY_VENV/bin/python" -m pip install --upgrade \
-    sqredirect \
-    "source-query-proxy==${L4D2_SQPROXY_VERSION}"
-
-  local current_kernel
-  current_kernel="$(uname -r)"
-  log "Current kernel: $current_kernel"
-  if apt-get install -y "linux-headers-${current_kernel}"; then
-    ok "Kernel headers installed."
-  else
-    warn "Current kernel headers were not found. Trying generic kernel headers."
-    if [[ "$OS_ID" == "ubuntu" ]]; then
-      apt-get install -y linux-image-generic linux-headers-generic >/dev/null 2>&1 || true
-    else
-      apt-get install -y linux-image-amd64 linux-headers-amd64 >/dev/null 2>&1 || true
-    fi
-    NEED_REBOOT=true
-    warn "Reboot may be required before eBPF works."
-  fi
-
   install -d -m 0755 "$L4D2_MAP_UPLOAD_DIR"
   ok "System environment is ready."
 }
 
-install_sqproxy() {
+# ══════════════════════════════════════════════════════════════
+# GO PROXY
+# ══════════════════════════════════════════════════════════════
+
+latest_go_proxy_version() {
+  [[ -n "$L4D2_GO_PROXY_VERSION_URL" ]] || return 1
+  local latest
+  latest="$(curl -fsSL --max-time 10 "$L4D2_GO_PROXY_VERSION_URL" 2>/dev/null | tr -d '[:space:]')"
+  [[ -n "$latest" ]] || return 1
+  printf '%s\n' "$latest"
+}
+
+installed_go_proxy_version() {
+  [[ -x "$L4D2_GO_PROXY_BIN" ]] || return 1
+  "$L4D2_GO_PROXY_BIN" --version 2>/dev/null | head -n1 | tr -d '[:space:]'
+}
+
+go_proxy_needs_download() {
+  is_enabled "$L4D2_GO_PROXY_FORCE_DOWNLOAD" && return 0
+  [[ -x "$L4D2_GO_PROXY_BIN" ]] || return 0
+
+  local latest installed
+  latest="$(latest_go_proxy_version || true)"
+  [[ -n "$latest" ]] || return 1
+  installed="$(installed_go_proxy_version || true)"
+  [[ -n "$installed" ]] || return 0
+  [[ "$installed" != "$latest" ]]
+}
+
+install_go_proxy() {
   require_root
   require_systemd
   detect_server_ips
 
-  local sqproxy_bin sqredirect_bin ebpf_enabled
-  sqproxy_bin="${L4D2_SQPROXY_VENV}/bin/sqproxy"
-  sqredirect_bin="${L4D2_SQPROXY_VENV}/bin/sqredirect"
-  [[ -x "$sqproxy_bin" ]] || die "sqproxy not found: $sqproxy_bin. Run --install first."
-  [[ -x "$sqredirect_bin" ]] || die "sqredirect not found: $sqredirect_bin. Run --install first."
-
-  ebpf_enabled=false
-  if [[ "$L4D2_ENABLE_EBPF" == "true" || "$L4D2_ENABLE_EBPF" == "1" ]]; then
-    ebpf_enabled=true
+  if go_proxy_needs_download; then
+    local latest
+    latest="$(latest_go_proxy_version || true)"
+    if [[ -n "$latest" ]]; then
+      log "Installing A2S Go proxy from: $L4D2_GO_PROXY_URL (latest: $latest)"
+    else
+      log "Installing A2S Go proxy from: $L4D2_GO_PROXY_URL"
+    fi
+    install -d -m 0755 "$(dirname "$L4D2_GO_PROXY_BIN")"
+    local tmp_bin
+    tmp_bin="$(mktemp)"
+    TEMP_FILES+=("$tmp_bin")
+    curl -fsSL "$L4D2_GO_PROXY_URL" -o "$tmp_bin"
+    install -m 0755 "$tmp_bin" "$L4D2_GO_PROXY_BIN"
+  else
+    local installed latest
+    installed="$(installed_go_proxy_version || true)"
+    latest="$(latest_go_proxy_version || true)"
+    if [[ -n "$installed" && -n "$latest" ]]; then
+      ok "A2S Go proxy is up to date: $installed"
+    else
+      ok "A2S Go proxy binary already exists: $L4D2_GO_PROXY_BIN"
+    fi
   fi
 
-  log "Writing sqproxy config."
-  install -d -m 0755 /etc/sqproxy/conf.d
-  cat >/etc/sqproxy/conf.d/sqproxy.yaml <<EOF
-defaults:
-  __global__: true
-  network:
-    server_ip: '${L4D2_SERVER_IP}'
-    bind_ip: '${L4D2_BIND_IP}'
-    server_port: 0
-    bind_port: 0
-    ebpf_no_redirect: false
-  a2s_info_cache_lifetime: 10
-  a2s_rules_cache_lifetime: 10
-  a2s_players_cache_lifetime: 2
-  a2s_response_timeout: 1
-  no_a2s_rules: true
-  wait_ready_graceful_period: 30
-  max_a2s_fails_before_offline: 20
-servers:
+  log "Writing A2S Go proxy config."
+  install -d -m 0755 "$(dirname "$L4D2_GO_PROXY_CONFIG")"
+  local backend_ip
+  backend_ip="$L4D2_GO_PROXY_BACKEND_IP"
+  if [[ -z "$backend_ip" ]]; then
+    backend_ip="$L4D2_SERVER_IP"
+  fi
+  local bypass_ips_json bypass_probe_json
+  bypass_ips_json="$(json_string_array_from_words "$L4D2_GO_PROXY_BYPASS_CACHE_IPS")"
+  bypass_probe_json=false
+  if is_enabled "$L4D2_GO_PROXY_BYPASS_CACHE_PROBE"; then
+    bypass_probe_json=true
+  fi
+  local stats_log_file_json
+  stats_log_file_json="$(json_escape "$L4D2_GO_PROXY_STATS_LOG_FILE")"
+  cat >"$L4D2_GO_PROXY_CONFIG" <<EOF
+{
+  "cache_ttl_seconds": ${L4D2_GO_PROXY_CACHE_TTL_SECONDS},
+  "player_cache_ttl_seconds": ${L4D2_GO_PROXY_PLAYER_CACHE_TTL_SECONDS},
+  "rules_cache_ttl_seconds": ${L4D2_GO_PROXY_RULES_CACHE_TTL_SECONDS},
+  "session_idle_timeout_seconds": ${L4D2_GO_PROXY_SESSION_IDLE_SECONDS},
+  "worker_count": ${L4D2_GO_PROXY_WORKER_COUNT},
+  "queue_size": ${L4D2_GO_PROXY_QUEUE_SIZE},
+  "socket_buffer_bytes": ${L4D2_GO_PROXY_SOCKET_BUFFER_BYTES},
+  "max_sessions": ${L4D2_GO_PROXY_MAX_SESSIONS},
+  "max_sessions_per_ip": ${L4D2_GO_PROXY_MAX_SESSIONS_PER_IP},
+  "bypass_cache_ips": ${bypass_ips_json},
+  "bypass_cache_probe": ${bypass_probe_json},
+  "stats_interval_seconds": ${L4D2_GO_PROXY_STATS_INTERVAL},
+  "stats_log_file": "${stats_log_file_json}",
+  "stats_attack_threshold": ${L4D2_GO_PROXY_STATS_THRESHOLD},
+  "servers": [
 EOF
 
-  local i
+  local i comma master_register
+  master_register=false
+  if is_enabled "$L4D2_GO_PROXY_MASTER_REGISTER"; then
+    master_register=true
+  fi
+
   for ((i = 0; i < L4D2_SERVER_COUNT; i++)); do
-    cat >>/etc/sqproxy/conf.d/sqproxy.yaml <<EOF
-  ${L4D2_CONTAINER_PREFIX}$((i + 1)):
-    network:
-      server_port: ${GAME_PORTS_ARRAY[$i]}
-      bind_port: ${BACKEND_PORTS_ARRAY[$i]}
+    comma=","
+    if ((i == L4D2_SERVER_COUNT - 1)); then
+      comma=""
+    fi
+    cat >>"$L4D2_GO_PROXY_CONFIG" <<EOF
+    {
+      "name": "${L4D2_CONTAINER_PREFIX}$((i + 1))",
+      "listen_addr": "${L4D2_BIND_IP}:${GAME_PORTS_ARRAY[$i]}",
+      "backend_addr": "${backend_ip}:${BACKEND_PORTS_ARRAY[$i]}",
+      "master_register": ${master_register},
+      "rewrite_info_port": true
+    }${comma}
 EOF
   done
 
-  cat >>/etc/sqproxy/conf.d/sqproxy.yaml <<EOF
-ebpf:
-  enabled: ${ebpf_enabled}
-  executable: '${sqredirect_bin}'
+  cat >>"$L4D2_GO_PROXY_CONFIG" <<EOF
+  ]
+}
 EOF
 
-  cat >/etc/systemd/system/sqproxy.service <<EOF
+  cat >/etc/systemd/system/a2s-proxy-go.service <<EOF
 [Unit]
-Description=source-query-proxy for L4D2
+Description=A2S Go proxy for L4D2
 After=network-online.target docker.service
 Wants=network-online.target
 
 [Service]
 Type=simple
-ExecStart=${sqproxy_bin} run
+ExecStart=${L4D2_GO_PROXY_BIN} -config ${L4D2_GO_PROXY_CONFIG}
 Restart=always
 RestartSec=5s
+LimitNOFILE=1048576
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
   systemctl daemon-reload
-  systemctl enable sqproxy >/dev/null
-  systemctl restart sqproxy
-  ok "sqproxy is running."
+  systemctl enable a2s-proxy-go >/dev/null
+  systemctl restart a2s-proxy-go
+  ok "A2S Go proxy is running."
 }
+
+# ══════════════════════════════════════════════════════════════
+# MASTER SNAT
+# ══════════════════════════════════════════════════════════════
+
+install_master_snat() {
+  require_root
+  require_systemd
+  detect_server_ips
+
+  local iptables_bin dest_host dest_port src_ip
+  iptables_bin="$(command -v iptables || true)"
+  [[ -n "$iptables_bin" ]] || die "iptables is not installed. Run --install first."
+
+  dest_host="${L4D2_MASTER_SNAT_DEST%:*}"
+  dest_port="${L4D2_MASTER_SNAT_DEST##*:}"
+  validate_port "L4D2_MASTER_SNAT_DEST port" "$dest_port"
+  getent ahostsv4 "$dest_host" >/dev/null || die "Could not resolve master server: $dest_host"
+  src_ip="$L4D2_SERVER_IP"
+
+  log "Writing master SNAT script for ${dest_host}:${dest_port}."
+  install -d -m 0755 "$(dirname "$L4D2_MASTER_SNAT_BIN")"
+  cat >"$L4D2_MASTER_SNAT_BIN" <<EOF
+#!/usr/bin/env bash
+set -euo pipefail
+
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+IPT="${iptables_bin}"
+CHAIN="A2S_MASTER_SNAT"
+DEST_HOST="${dest_host}"
+DEST_PORT="${dest_port}"
+SRC_IP="${src_ip}"
+
+BACKEND_PORTS=(
+EOF
+  local i
+  for ((i = 0; i < L4D2_SERVER_COUNT; i++)); do
+    printf "  '%s'\n" "${BACKEND_PORTS_ARRAY[$i]}" >>"$L4D2_MASTER_SNAT_BIN"
+  done
+  cat >>"$L4D2_MASTER_SNAT_BIN" <<'EOF'
+)
+
+PUBLIC_PORTS=(
+EOF
+  for ((i = 0; i < L4D2_SERVER_COUNT; i++)); do
+    printf "  '%s'\n" "${GAME_PORTS_ARRAY[$i]}" >>"$L4D2_MASTER_SNAT_BIN"
+  done
+  cat >>"$L4D2_MASTER_SNAT_BIN" <<'EOF'
+)
+
+ipt() {
+  "$IPT" -w "$@"
+}
+
+resolve_dest_ip() {
+  getent ahostsv4 "$DEST_HOST" | awk '{print $1; exit}'
+}
+
+ensure_chain() {
+  ipt -t nat -N "$CHAIN" 2>/dev/null || ipt -t nat -F "$CHAIN"
+}
+
+remove_refs() {
+  while ipt -t nat -D POSTROUTING -j "$CHAIN" 2>/dev/null; do
+    :
+  done
+}
+
+apply_rules() {
+  remove_refs
+  ensure_chain
+  local i backend_port public_port dest_ip
+  dest_ip="$(resolve_dest_ip)"
+  [[ -n "$dest_ip" ]] || {
+    echo "Could not resolve master server: $DEST_HOST" >&2
+    exit 1
+  }
+  for i in "${!BACKEND_PORTS[@]}"; do
+    backend_port="${BACKEND_PORTS[$i]}"
+    public_port="${PUBLIC_PORTS[$i]}"
+    ipt -t nat -A "$CHAIN" -p udp -d "$dest_ip" --dport "$DEST_PORT" --sport "$backend_port" \
+      -j SNAT --to-source "${SRC_IP}:${public_port}"
+  done
+  ipt -t nat -A "$CHAIN" -j RETURN
+  ipt -t nat -I POSTROUTING 1 -j "$CHAIN"
+}
+
+remove_rules() {
+  remove_refs
+  ipt -t nat -F "$CHAIN" 2>/dev/null || true
+  ipt -t nat -X "$CHAIN" 2>/dev/null || true
+}
+
+status_rules() {
+  echo "========== nat POSTROUTING =========="
+  ipt -t nat -L POSTROUTING -n -v --line-numbers || true
+  echo
+  echo "========== $CHAIN =========="
+  ipt -t nat -L "$CHAIN" -n -v --line-numbers || true
+}
+
+case "${1:-apply}" in
+  apply | start | reload)
+    apply_rules
+    ;;
+  remove | stop)
+    remove_rules
+    ;;
+  status)
+    status_rules
+    ;;
+  *)
+    echo "Usage: $0 [apply|remove|status]" >&2
+    exit 2
+    ;;
+esac
+EOF
+
+  chmod 0755 "$L4D2_MASTER_SNAT_BIN"
+
+  cat >/etc/systemd/system/a2s-master-snat.service <<EOF
+[Unit]
+Description=A2S master heartbeat SNAT rules
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=${L4D2_MASTER_SNAT_BIN} apply
+ExecReload=${L4D2_MASTER_SNAT_BIN} reload
+ExecStop=${L4D2_MASTER_SNAT_BIN} remove
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+  systemctl daemon-reload
+  systemctl enable a2s-master-snat >/dev/null
+  systemctl restart a2s-master-snat
+  ok "A2S master SNAT is running."
+}
+
+# ══════════════════════════════════════════════════════════════
+# A2S FIREWALL
+# ══════════════════════════════════════════════════════════════
 
 install_a2s_firewall() {
   require_root
@@ -769,6 +1045,10 @@ EOF
   ok "A2S firewall is running."
 }
 
+# ══════════════════════════════════════════════════════════════
+# DOCKER CONTAINERS
+# ══════════════════════════════════════════════════════════════
+
 container_exists() {
   docker inspect "$1" >/dev/null 2>&1
 }
@@ -885,9 +1165,13 @@ update_and_deploy() {
   runtime_dir="$(prepare_runtime_dir)"
 
   log "Starting game containers."
-  local i port name host_num hostname env_file
+  local i port public_port name host_num hostname env_file
   for ((i = 0; i < L4D2_SERVER_COUNT; i++)); do
     port="${GAME_PORTS_ARRAY[$i]}"
+    public_port="$port"
+    if is_enabled "$L4D2_GO_PROXY_ENABLE"; then
+      port="${BACKEND_PORTS_ARRAY[$i]}"
+    fi
     name="${L4D2_CONTAINER_PREFIX}$((i + 1))"
     host_num=$((L4D2_HOSTNAME_START_INDEX + i))
     hostname="${L4D2_HOSTNAME_PREFIX}${host_num}"
@@ -916,7 +1200,11 @@ update_and_deploy() {
       printf '%s\n' "steamid=${L4D2_OPTIONAL_STEAM_ID}" >>"$env_file"
     fi
 
-    log "Starting ${name} on port ${port}."
+    if is_enabled "$L4D2_GO_PROXY_ENABLE"; then
+      log "Starting ${name} backend on port ${port}; proxy listens on ${public_port}."
+    else
+      log "Starting ${name} on port ${port}."
+    fi
     docker run -d \
       --entrypoint /bin/bash \
       --ulimit core=0 \
@@ -934,7 +1222,15 @@ update_and_deploy() {
   done
 
   ok "Game containers deployed."
+
+  if is_enabled "$L4D2_GO_PROXY_ENABLE" && check_cmd systemctl; then
+    systemctl restart a2s-proxy-go || true
+  fi
 }
+
+# ══════════════════════════════════════════════════════════════
+# RESTART / STATUS / UNINSTALL
+# ══════════════════════════════════════════════════════════════
 
 restart_all() {
   require_root
@@ -950,8 +1246,11 @@ restart_all() {
   done
 
   if check_cmd systemctl; then
-    if is_enabled "$L4D2_SQPROXY_ENABLE"; then
-      systemctl restart sqproxy || true
+    if is_enabled "$L4D2_MASTER_SNAT_ENABLE"; then
+      systemctl reload a2s-master-snat || systemctl restart a2s-master-snat || true
+    fi
+    if is_enabled "$L4D2_GO_PROXY_ENABLE"; then
+      systemctl restart a2s-proxy-go || true
     fi
     if is_enabled "$L4D2_A2S_FIREWALL_ENABLE"; then
       systemctl reload a2s-firewall || systemctl restart a2s-firewall || true
@@ -982,11 +1281,26 @@ show_status() {
   fi
 
   echo
-  echo "================ sqproxy ================"
+  echo "================ A2S Go proxy ================"
   if check_cmd systemctl; then
-    systemctl --no-pager --full status sqproxy || true
+    systemctl --no-pager --full status a2s-proxy-go || true
   else
     warn "systemctl is not available."
+  fi
+  if [[ -f "$L4D2_GO_PROXY_CONFIG" ]]; then
+    echo
+    echo "A2S Go proxy config: $L4D2_GO_PROXY_CONFIG"
+  fi
+
+  echo
+  echo "================ Master SNAT ================"
+  if check_cmd systemctl; then
+    systemctl --no-pager --full status a2s-master-snat || true
+  else
+    warn "systemctl is not available."
+  fi
+  if [[ -x "$L4D2_MASTER_SNAT_BIN" ]]; then
+    "$L4D2_MASTER_SNAT_BIN" status || true
   fi
 
   echo
@@ -1016,32 +1330,35 @@ show_status() {
   echo
   warn "Server count: ${L4D2_SERVER_COUNT}"
   warn "Open these ports in the cloud firewall/security group, at least UDP:"
-  echo "  Game ports: ${GAME_PORTS_ARRAY[*]:0:${L4D2_SERVER_COUNT}}"
-  echo "  Backend ports: ${BACKEND_PORTS_ARRAY[*]:0:${L4D2_SERVER_COUNT}}"
-
-  if [[ "$NEED_REBOOT" == "true" ]]; then
-    echo
-    warn "A reboot may be required before eBPF works."
+  if is_enabled "$L4D2_GO_PROXY_ENABLE"; then
+    echo "  Public proxy/game ports: ${GAME_PORTS_ARRAY[*]:0:${L4D2_SERVER_COUNT}}"
+    echo "  Backend ports are internal only: ${BACKEND_PORTS_ARRAY[*]:0:${L4D2_SERVER_COUNT}}"
+  else
+    echo "  Game ports: ${GAME_PORTS_ARRAY[*]:0:${L4D2_SERVER_COUNT}}"
+    echo "  Backend ports: ${BACKEND_PORTS_ARRAY[*]:0:${L4D2_SERVER_COUNT}}"
   fi
 }
 
 uninstall_all() {
   require_root
-  warn "Removing sqproxy, game containers, and images."
+  warn "Removing proxy services, game containers, and images."
 
   if check_cmd systemctl; then
-    systemctl stop sqproxy >/dev/null 2>&1 || true
-    systemctl disable sqproxy >/dev/null 2>&1 || true
+    systemctl stop a2s-master-snat >/dev/null 2>&1 || true
+    systemctl disable a2s-master-snat >/dev/null 2>&1 || true
+    systemctl stop a2s-proxy-go >/dev/null 2>&1 || true
+    systemctl disable a2s-proxy-go >/dev/null 2>&1 || true
     systemctl stop a2s-firewall >/dev/null 2>&1 || true
     systemctl disable a2s-firewall >/dev/null 2>&1 || true
   fi
-  rm -f /etc/systemd/system/sqproxy.service
+  rm -f /etc/systemd/system/a2s-master-snat.service
+  rm -f /etc/systemd/system/a2s-proxy-go.service
   rm -f /etc/systemd/system/a2s-firewall.service
   rm -f /usr/local/bin/a2s-firewall.sh
   rm -f /usr/local/bin/a2s-monitor.sh
-  rm -rf /etc/sqproxy
-  rm -rf "$L4D2_SQPROXY_VENV"
-  rmdir "$(dirname "$L4D2_SQPROXY_VENV")" >/dev/null 2>&1 || true
+  rm -f "$L4D2_MASTER_SNAT_BIN"
+  rm -f "$L4D2_GO_PROXY_BIN"
+  rm -rf "$(dirname "$L4D2_GO_PROXY_CONFIG")"
 
   if check_cmd docker; then
     remove_game_containers
@@ -1068,33 +1385,50 @@ confirm_uninstall() {
   [[ "$answer" == "yes" ]] || die "Cancelled."
 }
 
+# ══════════════════════════════════════════════════════════════
+# HELP & MAIN
+# ══════════════════════════════════════════════════════════════
+
 show_help() {
   cat <<EOF
-Usage: $0 [command]
+Usage: $0 [-c config.sh] [command]
 
 Commands:
-  --write-env   Create scripts/l4d2-docker.env from the example template
-  --install     Install dependencies, optional A2S firewall/sqproxy, and deploy
+  --install     Install dependencies, optional A2S firewall/proxy, and deploy
   --install-a2s Install or reload only the A2S firewall
   --remove-a2s  Stop and remove only the A2S firewall
+  --install-snat Install or reload only the master heartbeat SNAT rules
+  --remove-snat  Stop and remove only the master heartbeat SNAT rules
   --update      git pull in the base container, rebuild image, and redeploy
-  --restart     Restart game containers, sqproxy, and A2S firewall if enabled
-  --status      Show Docker, sqproxy, A2S firewall, and port status
+  --restart     Restart game containers and enabled network services
+  --status      Show Docker, proxy, SNAT, A2S firewall, and port status
   --uninstall   Remove related services, containers, and images
   --help        Show this help
 
+Options:
+  -c FILE       Source FILE to override any configuration variable
+
 Config:
-  Default env file: $DEFAULT_ENV_FILE
-  Override with:    L4D2_ENV_FILE=/path/to/file $0 --install
+  All defaults are embedded in the script header.
+  Override with:  $0 -c /path/to/config.sh --install
 EOF
 }
 
 main() {
+  # Parse optional -c config.sh before the command
+  while [[ "${1:-}" == "-c" ]]; do
+    shift
+    local config_file="${1:-}"
+    [[ -n "$config_file" ]] || die "-c requires a config file argument."
+    [[ -f "$config_file" ]] || die "Config file not found: $config_file"
+    # shellcheck source=/dev/null
+    source "$config_file"
+    ok "Loaded config override: $config_file"
+    shift
+  done
+
   local command="${1:-}"
   case "$command" in
-    --write-env)
-      write_env_file
-      ;;
     --install)
       load_config
       validate_config
@@ -1105,10 +1439,15 @@ main() {
       else
         warn "A2S firewall is disabled by config."
       fi
-      if is_enabled "$L4D2_SQPROXY_ENABLE"; then
-        install_sqproxy
+      if is_enabled "$L4D2_GO_PROXY_ENABLE"; then
+        install_go_proxy
       else
-        warn "sqproxy is disabled by config."
+        warn "A2S Go proxy is disabled by config."
+      fi
+      if is_enabled "$L4D2_MASTER_SNAT_ENABLE"; then
+        install_master_snat
+      else
+        warn "A2S master SNAT is disabled by config."
       fi
       init_base_container
       update_and_deploy
@@ -1140,11 +1479,42 @@ main() {
       fi
       ok "A2S firewall removed."
       ;;
+    --install-snat)
+      load_config
+      validate_config
+      require_root
+      install_master_snat
+      show_status
+      ;;
+    --remove-snat)
+      load_config
+      validate_config
+      require_root
+      if check_cmd systemctl; then
+        systemctl stop a2s-master-snat >/dev/null 2>&1 || true
+        systemctl disable a2s-master-snat >/dev/null 2>&1 || true
+      fi
+      if [[ -x "$L4D2_MASTER_SNAT_BIN" ]]; then
+        "$L4D2_MASTER_SNAT_BIN" remove || true
+      fi
+      rm -f /etc/systemd/system/a2s-master-snat.service
+      rm -f "$L4D2_MASTER_SNAT_BIN"
+      if check_cmd systemctl; then
+        systemctl daemon-reload
+      fi
+      ok "A2S master SNAT removed."
+      ;;
     --update)
       load_config
       validate_config
       require_deploy_config
       require_root
+      if is_enabled "$L4D2_GO_PROXY_ENABLE"; then
+        install_go_proxy
+      fi
+      if is_enabled "$L4D2_MASTER_SNAT_ENABLE"; then
+        install_master_snat
+      fi
       init_base_container
       update_and_deploy
       show_status
