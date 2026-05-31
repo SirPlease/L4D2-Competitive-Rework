@@ -143,7 +143,40 @@ ON DUPLICATE KEY UPDATE
 
 ## 分档主要改动的属性
 
-插件不修改刷特数量、刷新间隔、章节刷特配置、刷点距离、传送距离或 Nav 桶参数。`l4d_infected_limit`、`versus_special_respawn_interval`、`inf_SpawnDistanceMin` 等仍由当前章节/配置固定控制。
+AI 难度插件本身只负责定档和应用 AI/Tank 行为 cvar；刷特插件会读取 `ah_ai_dynamic_current_level`，按当前档位调整“什么时候开始判定下一波”“什么时候允许补下一波”“刷点评分甜区”和 anti-baiter 压力。`l4d_infected_limit`、`versus_special_respawn_interval`、`inf_SpawnDistanceMin` 仍由当前章节/配置决定基础值，动态难度只在这些基础值上做策略缩放。
+
+### 刷特策略联动
+
+刷特插件新增了一个轻量策略层：
+
+| CVar | 默认 | 说明 |
+| --- | --- | --- |
+| `inf_ai_difficulty_link` | `1` | 是否读取 `ah_ai_dynamic_current_level` 联动刷特策略 |
+| `inf_ai_difficulty_fallback_level` | `3` | 动态难度未定档或插件缺失时使用的刷特策略档 |
+| `inf_ai_wave_check_ratio` | `0.90 0.80 0.65 0.50 0.35` | 1-5 档分别在刷新间隔的多少比例后开始判定下一波；专家档等于原来的半间隔 |
+| `inf_ai_wave_floor_ratio` | `1.35 1.25 1.12 1.00 1.00` | 1-5 档普通补波的最早时间，乘以 `versus_special_respawn_interval`；不会低于设定刷新间隔 |
+| `inf_ai_wave_low_si_ratio` | `0.12 0.20 0.27 0.34 0.50` | 场上存活特感低于该比例时允许补波 |
+| `inf_ai_dist_sweet_offset` | `0.00 0.00 0.00 0.00 0.00` | 刷点距离甜区偏移；默认不动各特感自己的甜点距离 |
+| `inf_ai_dist_width_scale` | `1.25 1.15 1.08 1.00 1.00` | 刷点距离评分宽度；低档更宽容，专家/极限保持当前基准，避免影响刷出速度 |
+| `inf_spawn_candidate_budget` | `8` | 单次刷点最多接受多少候选点进入评分 |
+| `inf_ai_spawn_budget_bonus` | `-3 -2 -1 0 0` | 1-5 档对候选预算的额外加减；专家/极限不增加服务器压力 |
+| `inf_FrameThinkStep` | `0.05` | 空闲刷特帧思考间隔，降低无队列时的单核负担 |
+| `inf_FrameThinkStepActive` | `0.02` | 有待补波/待刷/待传送时使用原版响应间隔 |
+| `inf_BucketCountCacheTTL` | `0.20` | Flow 桶存活特感计数缓存 TTL，减少候选点重复扫描 |
+
+以 16 秒刷新为例，专家档仍按原逻辑约 8 秒开始检查、16 秒作为普通补波基准；简单档约 14.4 秒才开始检查且普通补波要等到约 21.6 秒；极限档约 5.6 秒开始检查，但普通补波最低仍是 16 秒。anti-baiter 可以在可判定窗口内识别蹲点等刷，但真正普通补波不会早于设定刷新间隔。刷点距离甜点仍由特感类型决定，难度默认只让低档更宽容，不让极限更吃候选扫描。
+
+旧配置里的 `inf_AntiBaitMode` 和 `inf_TeleportDistance` 仍作为兼容别名读取；推荐新配置逐步迁移到 `inf_antibait_enable` 和 `inf_TeleportDistanceMin`。
+
+### Anti-baiter 重做
+
+新的 anti-baiter 不再单纯因为玩家停留就惩罚，而是同时看三件事：
+
+- 生还是否持续没有推进，默认 `inf_antibait_window 12.0` 秒。
+- 是否进入压力窗口：场上还有特感，或已经有待刷/待传送队列，或已经到达可判定下一波窗口。
+- 生还是否仍是互相覆盖的整体队形：硬抱团看 `inf_antibait_cluster_dist 650.0`，软队形看整体跨度、平均最近队友距离和是否断成多个小组。只要开始推进，或队伍分散到能被各个击破，就进入恢复状态。
+
+进入 Pressure 后，`inf_antibait_action 1` 会限制最晚开波时间，`2` 还会让不可见特感走快速传送，用于对抗“站在甜点等刷新”的打法；跑男仍会被单独标记并优先作为刷点目标。
 
 ### 特感和 Tank AI 强化
 
