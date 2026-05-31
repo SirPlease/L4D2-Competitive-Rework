@@ -50,8 +50,9 @@ async fn add_manual_server(
     path: Option<String>,
     group: String,
     server: String,
+    a2s_probe: Option<bool>,
 ) -> Result<TauriConfigLists, String> {
-    run_blocking(move || add_tauri_manual_server(path, group, server)).await
+    run_blocking(move || add_tauri_manual_server(path, group, server, a2s_probe)).await
 }
 
 #[tauri::command]

@@ -35,6 +35,7 @@ const ONLINE_STATS_AUTH_CACHE_TTL: Duration = Duration::from_secs(60);
 const ONLINE_STATS_ANON_CACHE_TTL: Duration = Duration::from_secs(600);
 const TAURI_PLAYER_CACHE_TTL: Duration = Duration::from_secs(60);
 const ONLINE_STATS_PAGE_LIMIT: usize = 512;
+const A2S_PROBE_MARKER: &[u8] = b"\0ANNE_A2S_PROBE";
 
 pub fn run_main() {
     if let Err(err) = run() {
@@ -228,6 +229,7 @@ struct RuntimeSettings {
     group_filter: Option<String>,
     no_info: bool,
     json: bool,
+    a2s_probe: bool,
 }
 
 impl Default for RuntimeSettings {
@@ -250,6 +252,7 @@ impl Default for RuntimeSettings {
             group_filter: None,
             no_info: false,
             json: false,
+            a2s_probe: false,
         }
     }
 }
@@ -281,6 +284,7 @@ impl RuntimeSettings {
         if let Some(limit) = master.limit {
             self.limit = positive(limit, "master.limit")?;
         }
+        self.a2s_probe = master.a2s_probe;
 
         Ok(())
     }
@@ -386,6 +390,7 @@ fn build_runtime(
         url: url.to_owned(),
         text: String::new(),
         servers: Vec::new(),
+        a2s_probe: false,
     }));
 
     Ok((settings, manual_groups, subscriptions))
@@ -408,6 +413,7 @@ fn load_server_rows(
             socket: entry.socket,
             groups: entry.groups.into_iter().collect(),
             drop_on_timeout: entry.drop_on_timeout,
+            a2s_probe: entry.a2s_probe,
         })
         .collect();
 
@@ -436,20 +442,31 @@ fn load_server_rows(
 fn load_selected_server_rows(
     settings: &RuntimeSettings,
     sockets: &[String],
+    a2s_probe_sockets: &[String],
 ) -> Result<Vec<ServerRow>, String> {
+    let a2s_probe_sockets = a2s_probe_sockets
+        .iter()
+        .map(|socket| socket.trim().to_owned())
+        .filter(|socket| !socket.is_empty())
+        .collect::<BTreeSet<_>>();
     let mut seen = BTreeSet::new();
     let endpoints = sockets
         .iter()
         .filter_map(|socket| {
-            let socket = resolve_ipv4(socket).ok()?;
+            let input = socket.trim();
+            let socket = resolve_ipv4(input).ok()?;
             if !seen.insert(socket) {
                 return None;
             }
+            let resolved = socket.to_string();
             Some(Endpoint {
-                display: socket.to_string(),
+                display: resolved.clone(),
                 socket,
                 groups: Vec::new(),
                 drop_on_timeout: false,
+                a2s_probe: settings.a2s_probe
+                    || a2s_probe_sockets.contains(input)
+                    || a2s_probe_sockets.contains(&resolved),
             })
         })
         .collect::<Vec<_>>();
@@ -494,6 +511,7 @@ impl Default for BrowserConfig {
                 url: "https://anne.trygek.com/bans/index.php?p=servers".to_owned(),
                 text: String::new(),
                 servers: Vec::new(),
+                a2s_probe: false,
             }],
         }
     }
@@ -630,6 +648,7 @@ impl GuiLanguage {
                 TextKey::SubscriptionName => "订阅名称",
                 TextKey::PageUrl => "页面 URL（可选）",
                 TextKey::PastedSubscriptionText => "粘贴 HTML / 文本（可选）",
+                TextKey::A2sProbe => "电信 Anne 服",
                 TextKey::SaveSubscription => "保存订阅",
                 TextKey::Rcon => "RCON",
                 TextKey::RconPassword => "RCON 密码",
@@ -714,6 +733,7 @@ impl GuiLanguage {
                 TextKey::SubscriptionName => "Subscription name",
                 TextKey::PageUrl => "Page URL (optional)",
                 TextKey::PastedSubscriptionText => "Pasted HTML / text (optional)",
+                TextKey::A2sProbe => "Telecom Anne server",
                 TextKey::SaveSubscription => "Save subscription",
                 TextKey::Rcon => "RCON",
                 TextKey::RconPassword => "RCON password",
@@ -1010,6 +1030,7 @@ enum TextKey {
     SubscriptionName,
     PageUrl,
     PastedSubscriptionText,
+    A2sProbe,
     SaveSubscription,
     Rcon,
     RconPassword,
@@ -1093,12 +1114,18 @@ struct FileMaster {
     #[serde(default)]
     extra_filter: Vec<String>,
     limit: Option<usize>,
+    #[serde(default, skip_serializing_if = "is_false")]
+    a2s_probe: bool,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 struct FileGroup {
     name: String,
     servers: Vec<String>,
+    #[serde(default, skip_serializing_if = "is_false")]
+    a2s_probe: bool,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    a2s_probe_servers: Vec<String>,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -1110,12 +1137,16 @@ struct FileSourceBans {
     text: String,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     servers: Vec<String>,
+    #[serde(default, skip_serializing_if = "is_false")]
+    a2s_probe: bool,
 }
 
 #[derive(Debug, Clone)]
 struct ManualGroup {
     name: String,
     servers: Vec<String>,
+    a2s_probe: bool,
+    a2s_probe_servers: BTreeSet<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -1124,6 +1155,7 @@ struct SourceBansSubscription {
     url: String,
     text: String,
     servers: Vec<String>,
+    a2s_probe: bool,
 }
 
 impl TryFrom<FileGroup> for ManualGroup {
@@ -1133,6 +1165,8 @@ impl TryFrom<FileGroup> for ManualGroup {
         Ok(Self {
             name: non_empty(value.name, "groups.name")?,
             servers: value.servers,
+            a2s_probe: value.a2s_probe,
+            a2s_probe_servers: value.a2s_probe_servers.into_iter().collect(),
         })
     }
 }
@@ -1156,6 +1190,7 @@ impl TryFrom<FileSourceBans> for SourceBansSubscription {
             url,
             text,
             servers,
+            a2s_probe: value.a2s_probe,
         })
     }
 }
@@ -1229,7 +1264,12 @@ fn parse_cli_group(value: &str) -> Result<ManualGroup, String> {
         return Err("--group requires at least one server address".to_owned());
     }
 
-    Ok(ManualGroup { name, servers })
+    Ok(ManualGroup {
+        name,
+        servers,
+        a2s_probe: false,
+        a2s_probe_servers: BTreeSet::new(),
+    })
 }
 
 fn parse_cli_subscription(value: &str) -> Result<SourceBansSubscription, String> {
@@ -1239,6 +1279,7 @@ fn parse_cli_subscription(value: &str) -> Result<SourceBansSubscription, String>
         url,
         text: String::new(),
         servers: Vec::new(),
+        a2s_probe: false,
     })
 }
 
@@ -1285,7 +1326,12 @@ fn collect_sources(
                 match master.fetch(settings.region, &settings.filter, settings.limit) {
                     Ok(endpoints) => {
                         for endpoint in endpoints {
-                            add_endpoint(&mut registry, endpoint, &settings.master_group, false);
+                            add_endpoint(
+                                &mut registry,
+                                with_a2s_probe(endpoint, settings.a2s_probe),
+                                &settings.master_group,
+                                false,
+                            );
                         }
                     }
                     Err(err) => eprintln!("warning: master server query failed: {err}"),
@@ -1299,9 +1345,26 @@ fn collect_sources(
     }
 
     for group in manual_groups {
+        let probe_servers = group
+            .a2s_probe_servers
+            .iter()
+            .map(|server| server.trim().to_owned())
+            .filter(|server| !server.is_empty())
+            .collect::<BTreeSet<_>>();
         for server in &group.servers {
             match resolve_endpoint(server) {
-                Ok(endpoint) => add_endpoint(&mut registry, endpoint, &group.name, false),
+                Ok(endpoint) => {
+                    let resolved = endpoint.socket.to_string();
+                    let a2s_probe = group.a2s_probe
+                        || probe_servers.contains(server.trim())
+                        || probe_servers.contains(&resolved);
+                    add_endpoint(
+                        &mut registry,
+                        with_a2s_probe(endpoint, a2s_probe),
+                        &group.name,
+                        false,
+                    )
+                }
                 Err(err) => eprintln!("warning: skipped {} in group {}: {err}", server, group.name),
             }
         }
@@ -1323,7 +1386,7 @@ fn collect_sources(
                     match resolve_endpoint(&address) {
                         Ok(endpoint) => add_endpoint(
                             &mut registry,
-                            endpoint,
+                            with_a2s_probe(endpoint, subscription.a2s_probe),
                             &subscription.name,
                             drop_on_timeout,
                         ),
@@ -1344,12 +1407,22 @@ fn collect_sources(
     Ok(registry)
 }
 
+fn is_false(value: &bool) -> bool {
+    !*value
+}
+
+fn with_a2s_probe(mut endpoint: Endpoint, a2s_probe: bool) -> Endpoint {
+    endpoint.a2s_probe = a2s_probe;
+    endpoint
+}
+
 #[derive(Debug, Clone)]
 struct RegistryEntry {
     display: String,
     socket: SocketAddrV4,
     groups: BTreeSet<String>,
     drop_on_timeout: bool,
+    a2s_probe: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -1358,6 +1431,7 @@ struct Endpoint {
     socket: SocketAddrV4,
     groups: Vec<String>,
     drop_on_timeout: bool,
+    a2s_probe: bool,
 }
 
 fn add_endpoint(
@@ -1366,6 +1440,7 @@ fn add_endpoint(
     group: &str,
     drop_on_timeout: bool,
 ) {
+    let endpoint_probe = endpoint.a2s_probe;
     let entry = registry
         .entry(endpoint.socket)
         .or_insert_with(|| RegistryEntry {
@@ -1373,9 +1448,13 @@ fn add_endpoint(
             socket: endpoint.socket,
             groups: BTreeSet::new(),
             drop_on_timeout,
+            a2s_probe: endpoint_probe,
         });
     if !drop_on_timeout {
         entry.drop_on_timeout = false;
+    }
+    if !entry.a2s_probe {
+        entry.a2s_probe = endpoint_probe;
     }
     entry.groups.insert(group.to_owned());
 }
@@ -1469,6 +1548,7 @@ impl MasterClient {
                         socket: addr,
                         groups: Vec::new(),
                         drop_on_timeout: false,
+                        a2s_probe: false,
                     });
                     if results.len() >= limit {
                         break;
@@ -1878,6 +1958,7 @@ fn resolve_endpoint(input: &str) -> Result<Endpoint, String> {
         socket,
         groups: Vec::new(),
         drop_on_timeout: false,
+        a2s_probe: false,
     })
 }
 
@@ -1933,7 +2014,11 @@ fn query_servers(endpoints: Vec<Endpoint>, timeout: Duration, jobs: usize) -> Ve
                 None => break,
             };
 
-            let row = match query_server_info(endpoint.socket, timeout) {
+            let row = match query_server_info(
+                endpoint.socket,
+                timeout,
+                endpoint.a2s_probe,
+            ) {
                 Ok((info, ping)) => ServerRow {
                     endpoint,
                     info: Some(info),
@@ -1963,6 +2048,7 @@ fn query_servers(endpoints: Vec<Endpoint>, timeout: Duration, jobs: usize) -> Ve
 fn query_server_info(
     addr: SocketAddrV4,
     timeout: Duration,
+    a2s_probe: bool,
 ) -> Result<(ServerInfo, Duration), String> {
     let socket = UdpSocket::bind("0.0.0.0:0").map_err(|err| err.to_string())?;
     socket
@@ -1979,7 +2065,7 @@ fn query_server_info(
     let mut buf = [0u8; 4096];
     let mut last_error = None;
     for _ in 0..3 {
-        let request = build_a2s_info_request(None);
+        let request = build_a2s_info_request(None, a2s_probe);
         socket.send(&request).map_err(|err| err.to_string())?;
         let size = match socket.recv(&mut buf) {
             Ok(size) => size,
@@ -1991,7 +2077,7 @@ fn query_server_info(
         let packet = &buf[..size];
 
         if let Some(challenge) = parse_challenge(packet) {
-            let request = build_a2s_info_request(Some(challenge));
+            let request = build_a2s_info_request(Some(challenge), a2s_probe);
             socket.send(&request).map_err(|err| err.to_string())?;
             let size = match socket.recv(&mut buf) {
                 Ok(size) => size,
@@ -2013,12 +2099,20 @@ fn query_server_info(
         .unwrap_or_else(|| "A2S_INFO 查询无响应".to_owned()))
 }
 
-fn build_a2s_info_request(challenge: Option<[u8; 4]>) -> Vec<u8> {
+fn build_a2s_info_request(challenge: Option<[u8; 4]>, a2s_probe: bool) -> Vec<u8> {
     let mut request = Vec::from(&b"\xFF\xFF\xFF\xFFTSource Engine Query\0"[..]);
     if let Some(challenge) = challenge {
         request.extend_from_slice(&challenge);
     }
+    append_a2s_probe(&mut request, a2s_probe);
     request
+}
+
+fn append_a2s_probe(request: &mut Vec<u8>, a2s_probe: bool) {
+    if !a2s_probe {
+        return;
+    }
+    request.extend_from_slice(A2S_PROBE_MARKER);
 }
 
 fn parse_challenge(packet: &[u8]) -> Option<[u8; 4]> {
@@ -2453,6 +2547,7 @@ fn print_json(rows: &[ServerRow]) -> Result<(), String> {
 struct AddServerRequest {
     group: String,
     server: String,
+    a2s_probe: bool,
 }
 
 #[derive(Clone)]
@@ -2460,6 +2555,7 @@ struct AddSourceBansRequest {
     name: String,
     url: String,
     text: String,
+    a2s_probe: bool,
 }
 
 #[derive(Clone)]
@@ -2516,6 +2612,8 @@ struct ServerRowPayload {
     drop_on_timeout: bool,
     #[serde(skip)]
     last_queried: Option<std::time::Instant>,
+    #[serde(skip)]
+    a2s_probe: bool,
 }
 
 fn server_group_counts(rows: &[ServerRowPayload]) -> Vec<(String, usize)> {
@@ -2533,10 +2631,12 @@ fn subscription_source_label(subscription: &FileSourceBans, language: GuiLanguag
 
     if !subscription.text.trim().is_empty() {
         let chars = subscription.text.chars().count();
-        return match language {
+        let mut label = match language {
             GuiLanguage::ZhCn => format!("粘贴文本（{chars} 字符）"),
             GuiLanguage::EnUs => format!("Pasted text ({chars} chars)"),
         };
+        append_a2s_probe_label(&mut label, subscription.a2s_probe, language);
+        return label;
     }
 
     let mut label = if subscription.url.trim().is_empty() {
@@ -2556,7 +2656,19 @@ fn subscription_source_label(subscription: &FileSourceBans, language: GuiLanguag
         label.push_str(&suffix);
     }
 
+    append_a2s_probe_label(&mut label, subscription.a2s_probe, language);
     label
+}
+
+fn append_a2s_probe_label(label: &mut String, a2s_probe: bool, language: GuiLanguage) {
+    if !a2s_probe {
+        return;
+    }
+    let suffix = match language {
+        GuiLanguage::ZhCn => " · 准确延迟",
+        GuiLanguage::EnUs => " · Accurate ping",
+    };
+    label.push_str(suffix);
 }
 
 #[derive(Clone, Serialize)]
@@ -2582,6 +2694,7 @@ struct PlayerInfo {
 struct ManualServerEntry {
     group: String,
     server: String,
+    a2s_probe: bool,
 }
 
 #[derive(Clone, Default)]
@@ -2595,6 +2708,7 @@ pub struct TauriManualServer {
     index: usize,
     group: String,
     server: String,
+    a2s_probe: bool,
 }
 
 #[derive(Clone, Serialize)]
@@ -2602,6 +2716,7 @@ pub struct TauriSourceBans {
     index: usize,
     name: String,
     url: String,
+    a2s_probe: bool,
     source_label: String,
     server_count: usize,
 }
@@ -2633,6 +2748,7 @@ pub struct TauriSourceBansInput {
     name: String,
     url: String,
     text: String,
+    a2s_probe: Option<bool>,
 }
 
 #[derive(Clone, Deserialize)]
@@ -2645,6 +2761,7 @@ pub struct TauriServerQuery {
     hide_timeout: Option<bool>,
     limit: Option<usize>,
     sockets: Option<Vec<String>>,
+    a2s_probe_sockets: Option<Vec<String>>,
 }
 
 #[derive(Clone, Serialize)]
@@ -2661,6 +2778,7 @@ pub struct TauriServerRow {
     socket: String,
     groups: Vec<String>,
     group_label: String,
+    a2s_probe: bool,
     name: String,
     map: String,
     ping_ms: Option<u64>,
@@ -2703,6 +2821,7 @@ pub fn load_tauri_config_lists(config_path: Option<String>) -> Result<TauriConfi
                 index,
                 group: entry.group,
                 server: entry.server,
+                a2s_probe: entry.a2s_probe,
             })
             .collect(),
         sourcebans: lists
@@ -2713,6 +2832,7 @@ pub fn load_tauri_config_lists(config_path: Option<String>) -> Result<TauriConfi
                 index,
                 name: subscription.name.clone(),
                 url: subscription.url.clone(),
+                a2s_probe: subscription.a2s_probe,
                 source_label: subscription_source_label(&subscription, gui_language),
                 server_count: subscription.servers.len(),
             })
@@ -2754,7 +2874,11 @@ pub fn load_tauri_server_rows(query: TauriServerQuery) -> Result<TauriServerRows
         .filter_map(|subscription| SourceBansSubscription::try_from(subscription).ok())
         .collect::<Vec<_>>();
     let rows = if let Some(sockets) = query.sockets.as_deref() {
-        load_selected_server_rows(&settings, sockets)?
+        load_selected_server_rows(
+            &settings,
+            sockets,
+            query.a2s_probe_sockets.as_deref().unwrap_or(&[]),
+        )?
     } else {
         load_server_rows(&settings, &manual_groups, &subscriptions)?
     };
@@ -2817,9 +2941,17 @@ pub fn add_tauri_manual_server(
     config_path: Option<String>,
     group: String,
     server: String,
+    a2s_probe: Option<bool>,
 ) -> Result<TauriConfigLists, String> {
     let path = tauri_path(config_path.clone());
-    add_server_to_config(&path, AddServerRequest { group, server })?;
+    add_server_to_config(
+        &path,
+        AddServerRequest {
+            group,
+            server,
+            a2s_probe: a2s_probe.unwrap_or(false),
+        },
+    )?;
     load_tauri_config_lists(config_path)
 }
 
@@ -2829,6 +2961,7 @@ pub fn save_tauri_sourcebans(input: TauriSourceBansInput) -> Result<TauriConfigL
         name: input.name,
         url: input.url,
         text: input.text,
+        a2s_probe: input.a2s_probe.unwrap_or(false),
     };
     if let Some(index) = input.index {
         update_sourcebans_in_config(&path, index, request)?;
@@ -2905,6 +3038,7 @@ fn tauri_server_row(row: ServerRowPayload) -> TauriServerRow {
         socket: row.socket,
         groups: row.groups,
         group_label,
+        a2s_probe: row.a2s_probe,
         name,
         map,
         ping_ms: row.ping_ms,
@@ -3181,7 +3315,7 @@ fn query_tauri_players_uncached(
     let mut players = query_server_players(endpoint.socket, timeout)?;
     if config.gui.anne_stats {
         let is_anne_server = is_anne_server.unwrap_or_else(|| {
-            query_server_info(endpoint.socket, Duration::from_millis(1500))
+            query_server_info(endpoint.socket, Duration::from_millis(1500), false)
                 .map(|(info, _)| is_anne_server_info(&info))
                 .unwrap_or(false)
         });
@@ -3906,9 +4040,11 @@ struct NativeGuiApp {
     config_status: String,
     group_name: String,
     server_address: String,
+    server_a2s_probe: bool,
     sourcebans_name: String,
     sourcebans_url: String,
     sourcebans_text: String,
+    sourcebans_a2s_probe: bool,
     rcon_address: String,
     rcon_password: String,
     rcon_command_text: String,
@@ -4362,12 +4498,14 @@ impl NativeGuiApp {
                 GuiLanguage::EnUs => "My servers".to_owned(),
             },
             server_address: String::new(),
+            server_a2s_probe: false,
             sourcebans_name: match language {
                 GuiLanguage::ZhCn => "网页订阅".to_owned(),
                 GuiLanguage::EnUs => "Web subscription".to_owned(),
             },
             sourcebans_url: String::new(),
             sourcebans_text: String::new(),
+            sourcebans_a2s_probe: false,
             rcon_address: String::new(),
             rcon_password: String::new(),
             rcon_command_text: "status".to_owned(),
@@ -4453,6 +4591,7 @@ impl NativeGuiApp {
                                 row.ping_ms = new_payload.ping_ms;
                                 row.info = new_payload.info;
                                 row.error = new_payload.error;
+                                row.a2s_probe = new_payload.a2s_probe;
                             }
                             Err(err) => {
                                 row.error = Some(err);
@@ -4545,6 +4684,7 @@ impl NativeGuiApp {
                         self.sourcebans_name.clear();
                         self.sourcebans_url.clear();
                         self.sourcebans_text.clear();
+                        self.sourcebans_a2s_probe = false;
                         self.refresh_config_lists();
                         self.refresh_servers();
                     }
@@ -5386,6 +5526,7 @@ impl NativeGuiApp {
         let input = AddServerRequest {
             group: self.group_name.clone(),
             server: self.server_address.clone(),
+            a2s_probe: self.server_a2s_probe,
         };
         thread::spawn(move || {
             let result = add_server_to_config(&path, input);
@@ -5410,6 +5551,7 @@ impl NativeGuiApp {
             name: self.sourcebans_name.clone(),
             url: self.sourcebans_url.clone(),
             text: self.sourcebans_text.clone(),
+            a2s_probe: self.sourcebans_a2s_probe,
         };
         thread::spawn(move || {
             let result = add_sourcebans_to_config(&path, input);
@@ -5430,6 +5572,7 @@ impl NativeGuiApp {
             name: self.sourcebans_name.clone(),
             url: self.sourcebans_url.clone(),
             text: self.sourcebans_text.clone(),
+            a2s_probe: self.sourcebans_a2s_probe,
         };
         thread::spawn(move || {
             let result = update_sourcebans_in_config(&path, index, input);
@@ -5462,6 +5605,7 @@ impl NativeGuiApp {
                     };
                     self.sourcebans_url.clear();
                     self.sourcebans_text.clear();
+                    self.sourcebans_a2s_probe = false;
                 }
                 if ui
                     .add_enabled(
@@ -5526,6 +5670,7 @@ impl NativeGuiApp {
                     self.sourcebans_name = subscription.name.clone();
                     self.sourcebans_url = subscription.url.clone();
                     self.sourcebans_text = subscription.text.clone();
+                    self.sourcebans_a2s_probe = subscription.a2s_probe;
                 }
             }
         });
@@ -5553,6 +5698,16 @@ impl NativeGuiApp {
             ui.add(
                 egui::TextEdit::singleline(&mut self.sourcebans_url).desired_width(f32::INFINITY),
             );
+            let a2s_probe_label = self.text(TextKey::A2sProbe).to_owned();
+            ui.checkbox(&mut self.sourcebans_a2s_probe, a2s_probe_label)
+                .on_hover_text(match self.language {
+                    GuiLanguage::ZhCn => {
+                        "勾选后，这个订阅里的服务器会发送带探测标记的 A2S 包，用于绕过 a2s-proxy 缓存测真实延迟。"
+                    }
+                    GuiLanguage::EnUs => {
+                        "When enabled, servers from this subscription send the marked A2S probe packet to bypass a2s-proxy cache for real latency."
+                    }
+                });
 
             ui.add_space(4.0);
             ui.label(self.text(TextKey::PastedSubscriptionText));
@@ -5831,28 +5986,32 @@ impl eframe::App for NativeGuiApp {
 
             if needs_update {
                 row.last_queried = Some(now);
-                servers_to_query.push(row.address.clone());
+                servers_to_query.push((row.address.clone(), row.a2s_probe));
             }
         }
 
-        for address in servers_to_query {
+        for (address, a2s_probe) in servers_to_query {
             let tx = self.tx.clone();
             thread::spawn(move || {
                 if let Ok(endpoint) = resolve_endpoint(&address) {
-                    let result =
-                        match query_server_info(endpoint.socket, Duration::from_millis(2500)) {
-                            Ok((info, ping)) => Ok(ServerRowPayload {
-                                address: address.clone(),
-                                socket: endpoint.socket.to_string(),
-                                groups: Vec::new(),
-                                ping_ms: Some(ping.as_millis() as u64),
-                                info: Some(info),
-                                error: None,
-                                drop_on_timeout: false,
-                                last_queried: Some(std::time::Instant::now()),
-                            }),
-                            Err(err) => Err(err),
-                        };
+                    let result = match query_server_info(
+                        endpoint.socket,
+                        Duration::from_millis(2500),
+                        a2s_probe,
+                    ) {
+                        Ok((info, ping)) => Ok(ServerRowPayload {
+                            address: address.clone(),
+                            socket: endpoint.socket.to_string(),
+                            groups: Vec::new(),
+                            ping_ms: Some(ping.as_millis() as u64),
+                            info: Some(info),
+                            error: None,
+                            drop_on_timeout: false,
+                            last_queried: Some(std::time::Instant::now()),
+                            a2s_probe: a2s_probe,
+                        }),
+                        Err(err) => Err(err),
+                    };
                     let _ = tx.send(GuiMessage::ServerUpdate(address, result));
                 }
             });
@@ -7183,6 +7342,16 @@ impl eframe::App for NativeGuiApp {
                                 egui::TextEdit::singleline(&mut self.server_address)
                                     .desired_width(200.0),
                             );
+                            let a2s_probe_label = self.text(TextKey::A2sProbe).to_owned();
+                            ui.checkbox(&mut self.server_a2s_probe, a2s_probe_label)
+                                .on_hover_text(match self.language {
+                                    GuiLanguage::ZhCn => {
+                                        "勾选后，这台手动服务器会发送带探测标记的 A2S 包。"
+                                    }
+                                    GuiLanguage::EnUs => {
+                                        "When enabled, this manual server sends the marked A2S probe packet."
+                                    }
+                                });
                             if ui
                                 .add(primary_button(self.text(TextKey::SaveServer)))
                                 .clicked()
@@ -7211,6 +7380,11 @@ impl eframe::App for NativeGuiApp {
                                         for entry in &self.manual_servers {
                                             ui.label(egui::RichText::new(&entry.group).strong());
                                             ui.monospace(&entry.server);
+                                            ui.label(if entry.a2s_probe {
+                                                self.text(TextKey::A2sProbe)
+                                            } else {
+                                                "-"
+                                            });
                                             if ui
                                                 .button(match self.language {
                                                     GuiLanguage::ZhCn => "删除",
@@ -7526,16 +7700,41 @@ fn add_server_to_config(path: &PathBuf, input: AddServerRequest) -> Result<(), S
         .find(|group| group.name == group_name)
     {
         if !group.servers.iter().any(|existing| existing == &server) {
-            group.servers.push(server);
+            group.servers.push(server.clone());
+        }
+        if input.a2s_probe {
+            add_a2s_probe_server(group, &server);
+        } else {
+            remove_a2s_probe_server(group, &server);
         }
     } else {
+        let mut a2s_probe_servers = Vec::new();
+        if input.a2s_probe {
+            a2s_probe_servers.push(server.clone());
+        }
         config.groups.push(FileGroup {
             name: group_name,
             servers: vec![server],
+            a2s_probe: false,
+            a2s_probe_servers,
         });
     }
 
     save_config(path, &config)
+}
+
+fn add_a2s_probe_server(group: &mut FileGroup, server: &str) {
+    if !group
+        .a2s_probe_servers
+        .iter()
+        .any(|existing| existing == server)
+    {
+        group.a2s_probe_servers.push(server.to_owned());
+    }
+}
+
+fn remove_a2s_probe_server(group: &mut FileGroup, server: &str) {
+    group.a2s_probe_servers.retain(|existing| existing != server);
 }
 
 fn delete_server_from_config(path: &PathBuf, group: &str, server: &str) -> Result<(), String> {
@@ -7546,6 +7745,7 @@ fn delete_server_from_config(path: &PathBuf, group: &str, server: &str) -> Resul
         if g.name == group {
             let before = g.servers.len();
             g.servers.retain(|s| s != server);
+            g.a2s_probe_servers.retain(|s| s != server);
             if g.servers.len() < before {
                 found = true;
             }
@@ -7574,12 +7774,14 @@ fn add_sourcebans_to_config(path: &PathBuf, input: AddSourceBansRequest) -> Resu
         subscription.url = url;
         subscription.text = String::new();
         subscription.servers = servers;
+        subscription.a2s_probe = input.a2s_probe;
     } else {
         config.sourcebans.push(FileSourceBans {
             name,
             url,
             text: String::new(),
             servers,
+            a2s_probe: input.a2s_probe,
         });
     }
 
@@ -7602,6 +7804,7 @@ fn update_sourcebans_in_config(
     subscription.url = url;
     subscription.text = String::new();
     subscription.servers = servers;
+    subscription.a2s_probe = input.a2s_probe;
     save_config(path, &config)
 }
 
@@ -7635,6 +7838,7 @@ fn resolve_subscription_servers(
         url: normalized_url.to_string(),
         text: String::new(),
         servers: Vec::new(),
+        a2s_probe: input.a2s_probe,
     };
     let servers = fetch_web_subscription(&sub, Duration::from_secs(15))?;
     Ok((normalized_url.to_string(), servers))
@@ -7666,6 +7870,7 @@ fn refresh_all_subscriptions_in_config(path: &PathBuf) -> Result<(), String> {
             url: url.to_owned(),
             text: String::new(),
             servers: Vec::new(),
+            a2s_probe: sub_config.a2s_probe,
         };
 
         match fetch_web_subscription(&sub, Duration::from_secs(15)) {
@@ -7739,9 +7944,22 @@ fn load_gui_config_lists(path: &PathBuf) -> Result<GuiConfigLists, String> {
         .groups
         .iter()
         .flat_map(|group| {
-            group.servers.iter().map(|server| ManualServerEntry {
+            let probe_servers = group
+                .a2s_probe_servers
+                .iter()
+                .map(|server| server.trim().to_owned())
+                .filter(|server| !server.is_empty())
+                .collect::<BTreeSet<_>>();
+            group.servers.iter().map(move |server| ManualServerEntry {
                 group: group.name.clone(),
                 server: server.clone(),
+                a2s_probe: group.a2s_probe
+                    || probe_servers.contains(server.trim())
+                    || normalize_endpoint_input(server)
+                        .ok()
+                        .and_then(|address| resolve_ipv4(&address).ok())
+                        .map(|socket| probe_servers.contains(&socket.to_string()))
+                        .unwrap_or(false),
             })
         })
         .collect();
@@ -8046,6 +8264,7 @@ fn server_rows_payload(rows: &[ServerRow]) -> Vec<ServerRowPayload> {
             error: row.error.clone(),
             drop_on_timeout: row.endpoint.drop_on_timeout,
             last_queried: Some(std::time::Instant::now()),
+            a2s_probe: row.endpoint.a2s_probe,
         })
         .collect()
 }
@@ -9296,6 +9515,7 @@ mod tests {
             url: "https://www.kitasoda.com/#/serverList".to_owned(),
             text: String::new(),
             servers: Vec::new(),
+            a2s_probe: false,
         };
         assert!(subscription_drops_timeout_servers(&generic));
 
@@ -9304,6 +9524,7 @@ mod tests {
             url: "https://anne.trygek.com/bans/index.php?p=servers".to_owned(),
             text: String::new(),
             servers: Vec::new(),
+            a2s_probe: false,
         };
         assert!(!subscription_drops_timeout_servers(&sourcebans));
     }

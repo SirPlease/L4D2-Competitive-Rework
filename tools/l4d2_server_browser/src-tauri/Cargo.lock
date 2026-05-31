@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "Anne刷服器"
-version = "1.1.0"
+version = "1.2.0"
 dependencies = [
  "chrono",
  "chrono-tz",
@@ -202,7 +202,7 @@ dependencies = [
 
 [[package]]
 name = "anne-server-browser-tauri"
-version = "1.1.0"
+version = "1.2.0"
 dependencies = [
  "Anne刷服器",
  "serde",

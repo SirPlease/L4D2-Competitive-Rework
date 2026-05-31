@@ -317,6 +317,25 @@ select:focus {
   white-space: nowrap;
 }
 
+.manual-check {
+  align-self: end;
+}
+
+.field-check {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  align-items: start;
+  height: auto;
+  white-space: normal;
+}
+
+.field-check small {
+  grid-column: 2;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
 .check input {
   width: 16px;
   height: 16px;
@@ -719,6 +738,19 @@ tr:last-child td {
   white-space: nowrap;
 }
 
+.manual-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 22px;
+  padding: 2px 7px;
+  border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  color: var(--accent-strong) !important;
+  font-size: 12px;
+}
+
 .editor-panel {
   display: flex;
   flex-direction: column;
@@ -734,6 +766,10 @@ tr:last-child td {
 }
 
 .field.wide {
+  grid-column: 1 / -1;
+}
+
+.check.wide {
   grid-column: 1 / -1;
 }
 
