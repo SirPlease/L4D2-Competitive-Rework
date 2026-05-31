@@ -109,7 +109,8 @@ servers = [
 
 [[sourcebans]]
 name = "Anne 网页订阅"
-url = "https://example.com/sourcebans"
+url = "https://anne.trygek.com/bans/index.php?p=servers"
+a2s_probe = true
 
 [[sourcebans]]
 name = "粘贴文本订阅"

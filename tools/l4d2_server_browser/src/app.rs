@@ -511,10 +511,35 @@ impl Default for BrowserConfig {
                 url: "https://anne.trygek.com/bans/index.php?p=servers".to_owned(),
                 text: String::new(),
                 servers: Vec::new(),
-                a2s_probe: false,
+                a2s_probe: true,
             }],
         }
     }
+}
+
+fn parse_config_text(text: &str, path: &Path) -> Result<BrowserConfig, String> {
+    let mut config: BrowserConfig = toml::from_str(text)
+        .map_err(|err| format!("failed to parse config {}: {err}", path.display()))?;
+    apply_default_anne_subscription_probe(&mut config, text);
+    Ok(config)
+}
+
+fn apply_default_anne_subscription_probe(config: &mut BrowserConfig, raw_text: &str) {
+    if raw_text.contains("a2s_probe") {
+        return;
+    }
+    for subscription in &mut config.sourcebans {
+        if is_default_anne_subscription(subscription) {
+            subscription.a2s_probe = true;
+        }
+    }
+}
+
+fn is_default_anne_subscription(subscription: &FileSourceBans) -> bool {
+    let name = subscription.name.trim();
+    let url = subscription.url.trim();
+    (name == "Anne电信服" || name == "Anne 网页订阅")
+        && url == "https://anne.trygek.com/bans/index.php?p=servers"
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize, Default)]
@@ -1202,15 +1227,12 @@ fn load_config(path: Option<&PathBuf>) -> Result<Option<BrowserConfig>, String> 
 
     let text = fs::read_to_string(path)
         .map_err(|err| format!("failed to read config {}: {err}", path.display()))?;
-    let config = toml::from_str(&text)
-        .map_err(|err| format!("failed to parse config {}: {err}", path.display()))?;
-    Ok(Some(config))
+    parse_config_text(&text, path).map(Some)
 }
 
 fn load_config_or_default(path: &PathBuf) -> Result<BrowserConfig, String> {
     match fs::read_to_string(path) {
-        Ok(text) => toml::from_str(&text)
-            .map_err(|err| format!("failed to parse config {}: {err}", path.display())),
+        Ok(text) => parse_config_text(&text, path),
         Err(err) if err.kind() == io::ErrorKind::NotFound => Ok(BrowserConfig::default()),
         Err(err) => Err(format!("failed to read config {}: {err}", path.display())),
     }
