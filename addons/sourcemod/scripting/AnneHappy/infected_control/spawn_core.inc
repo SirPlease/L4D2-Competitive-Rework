@@ -192,7 +192,6 @@ static bool SpawnCore_EvaluateNavCandidate(int zc,
 bool FindSpawnPosViaNavArea(int zc, int targetSurvivor, float searchRange, bool teleportMode,
                             float outPos[3], int &outAreaIdx, SpawnScoreDbg dbgOut)
 {
-    const int TOPK = 12;
     if (!GetSurPosData())
     {
         Debug_Print("[FIND FAIL] no survivor data");
@@ -256,6 +255,7 @@ bool FindSpawnPosViaNavArea(int zc, int targetSurvivor, float searchRange, bool 
     bool firstFit = gCV.bNavBucketFirstFit;
     float minScore = gCV.fSpawnScoreFloor;
     float firstFitScore = FloatMax(ComputeFFThresholdForClass(zc), minScore);
+    int candidateBudget = DifficultyStrategy_GetCandidateBudget();
 
     SpawnScoreDbg bestDbg;
     SpawnFilterStats stats;
@@ -276,7 +276,7 @@ bool FindSpawnPosViaNavArea(int zc, int targetSurvivor, float searchRange, bool 
             if (bucketLen <= 0)
                 continue;
 
-            for (int row = 0; row < bucketLen && acceptedHits < TOPK; row++)
+            for (int row = 0; row < bucketLen && acceptedHits < candidateBudget; row++)
             {
                 int areaIdx = g_FlowBuckets[bucketIdx].Get(row);
                 SpawnScoreDbg candDbg;
@@ -307,13 +307,13 @@ bool FindSpawnPosViaNavArea(int zc, int targetSurvivor, float searchRange, bool 
                     SpawnScore_CopyDbg(bestDbg, candDbg);
                 }
             }
-            if (acceptedHits >= TOPK)
+            if (acceptedHits >= candidateBudget)
                 break;
         }
     }
     else
     {
-        for (int areaIdx = 0; areaIdx < areaCount && acceptedHits < TOPK; areaIdx++)
+        for (int areaIdx = 0; areaIdx < areaCount && acceptedHits < candidateBudget; areaIdx++)
         {
             SpawnScoreDbg candDbg;
             if (!SpawnCore_EvaluateNavCandidate(zc, targetSurvivor, searchRange, teleportMode,
@@ -376,4 +376,3 @@ float GetMinEyeDistToAnySurvivor(const float pos[3])
     }
     return best;
 }
-

@@ -42,13 +42,13 @@ public Plugin myinfo =
 	name = "simple join",
 	author = "东",
 	description = "A plugin designed CompetitiveWithAnne package change player team.",
-	version = "1.1",
+	version = "1.2",
 	url = "https://github.com/fantasylidong/CompetitiveWithAnne"
 };
-#define UPDATE_URL_ANNE "http://dl.trygek.com/left4dead2/addons/sourcemod/Anne_Updater.txt"
-#define UPDATE_URL_NEKO "http://dl.trygek.com/left4dead2/addons/sourcemod/Neko_Updater.txt"
-#define UPDATE_URL_VERSUS "http://dl.trygek.com/left4dead2/addons/sourcemod/Versus_Updater.txt"
-#define UPDATE_URL_ANNEALL "http://dl.trygek.com/left4dead2/addons/sourcemod/Anne_Updater_All.txt"
+#define UPDATE_URL_ANNE "http://anne.trygek.com/plugin_update/Anne_Updater.txt"
+#define UPDATE_URL_NEKO "http://anne.trygek.com/plugin_update/Neko_Updater.txt"
+#define UPDATE_URL_VERSUS "http://anne.trygek.com/plugin_update/Versus_Updater.txt"
+#define UPDATE_URL_ANNEALL "http://anne.trygek.com/plugin_update/Anne_Updater_All.txt"
 
 bool  
 	g_bEnableGetbotCommand[MAXPLAYERS] = { false },
@@ -84,6 +84,7 @@ public void OnPluginStart()
 	hCvarIPUrl = CreateConVar("sm_cfgip_url", "http://anne.trygek.com/ip.php");	// 服务器ip页面，以后更换为数据库控制
 	hCvarDonateUrl = CreateConVar("sm_donate_url", "http://anne.trygek.com/sponsor/l4d2.php"); //赞助页面
 	hCvarEnableAutoupdate.AddChangeHook(UpdateStatuChange);
+	AutoExecConfig(true, "join");
 	RegConsoleCmd("sm_away", AFKTurnClientToSpe);
 	RegConsoleCmd("sm_afk", AFKTurnClientToSpe);
 	RegConsoleCmd("sm_spec", AFKTurnClientToSpe);
@@ -117,41 +118,65 @@ public void OnPluginStart()
 
 public void UpdateStatuChange(ConVar convar, const char[] oldValue, const char[] newValue)
 {
+	RefreshAutoUpdater();
+}
+
+void RefreshAutoUpdater()
+{
+	if (!g_bUpdateSystemAvailable)
+	{
+		return;
+	}
+
 	Updater_RemovePlugin();
-	if(g_bUpdateSystemAvailable && hCvarEnableAutoupdate.IntValue > 0){
-		//LogError("[updater]:%d", hCvarEnableAutoupdate.IntValue);
-		if(hCvarEnableAutoupdate.IntValue == 1)
+
+	switch (hCvarEnableAutoupdate.IntValue)
+	{
+		case 1:
 		{
 			Updater_AddPlugin(UPDATE_URL_ANNEALL);
-		}	
-		else if(hCvarEnableAutoupdate.IntValue == 2)
+		}
+		case 2:
 		{
 			Updater_AddPlugin(UPDATE_URL_NEKO);
-		}else if(hCvarEnableAutoupdate.IntValue == 3)
+		}
+		case 3:
 		{
 			Updater_AddPlugin(UPDATE_URL_VERSUS);
 		}
-		else if(hCvarEnableAutoupdate.IntValue == 4)
+		case 4:
 		{
 			Updater_AddPlugin(UPDATE_URL_ANNE);
 		}
-		Updater_ForceUpdate();
+		default:
+		{
+			return;
+		}
 	}
+
+	Updater_ForceUpdate();
 }
 
 public void OnAllPluginsLoaded(){
 	g_bGroupSystemAvailable = LibraryExists("veterans");
 	g_bUpdateSystemAvailable = LibraryExists("updater");
+	RefreshAutoUpdater();
 }
 public void OnLibraryAdded(const char[] name)
 {
     if ( StrEqual(name, "veterans") ) { g_bGroupSystemAvailable = true; }
-	else if(StrEqual(name, "updater")) { g_bUpdateSystemAvailable = true; }
+	else if(StrEqual(name, "updater")) { g_bUpdateSystemAvailable = true; RefreshAutoUpdater(); }
 }
 public void OnLibraryRemoved(const char[] name)
 {
     if ( StrEqual(name, "veterans") ) { g_bGroupSystemAvailable = false; }
 	else if (StrEqual(name, "updater")){ g_bUpdateSystemAvailable = false; }
+}
+
+public void Updater_OnLoaded()
+{
+	g_bUpdateSystemAvailable = true;
+	RefreshAutoUpdater();
 }
 
 public void SteamWorks_OnValidateClient(int ownerauthid, int authid)
