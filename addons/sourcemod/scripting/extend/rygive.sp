@@ -841,8 +841,7 @@ void Miscell(int client, int item) {
 	menu.AddItem("a", "倒地");
 	menu.AddItem("b", "剥夺");
 	menu.AddItem("c", "复活");
-	if(GetClientImmunityLevel(client) > 99)
-		menu.AddItem("d", "传送");
+	menu.AddItem("d", "传送");
 	menu.AddItem("e", "友伤");
 	if(GetClientImmunityLevel(client) > 90)
 		menu.AddItem("f", "伤害免疫");
@@ -1389,7 +1388,7 @@ int iTeleportTarget_MenuHandler(Menu menu, MenuAction action, int client, int pa
 			char item[32];
 			menu.GetItem(param2, item, sizeof item);
 			char info[2][16];
-			bool allow;
+			bool allow = false;
 			float vOrigin[3];
 			ExplodeString(item, "|", info, sizeof info, sizeof info[]);
 			int victim = GetClientOfUserId(StringToInt(info[0]));
@@ -1411,11 +1410,13 @@ int iTeleportTarget_MenuHandler(Menu menu, MenuAction action, int client, int pa
 				}
 			}
 
+			bool teleported = false;
 			if (allow) {
 				if (victim) {
 					ForceCrouch(victim);
 					TeleportFix(victim);
 					TeleportEntity(victim, vOrigin, NULL_VECTOR, NULL_VECTOR);
+					teleported = true;
 				}
 				else {
 					switch (targetTeam) {
@@ -1425,6 +1426,7 @@ int iTeleportTarget_MenuHandler(Menu menu, MenuAction action, int client, int pa
 									ForceCrouch(i);
 									TeleportFix(i);
 									TeleportEntity(i, vOrigin, NULL_VECTOR, NULL_VECTOR);
+									teleported = true;
 								}
 							}
 						}
@@ -1434,6 +1436,7 @@ int iTeleportTarget_MenuHandler(Menu menu, MenuAction action, int client, int pa
 								if (IsClientInGame(i) && GetClientTeam(i) == 3 && IsPlayerAlive(i)) {
 									ForceCrouch(i);
 									TeleportEntity(i, vOrigin, NULL_VECTOR, NULL_VECTOR);
+									teleported = true;
 								}
 							}
 						}
@@ -1442,6 +1445,9 @@ int iTeleportTarget_MenuHandler(Menu menu, MenuAction action, int client, int pa
 			}
 			else if (info[1][0] == 'c')
 				PrintToChat(client, "获取准心处位置失败! 请重新尝试.");
+
+			if (teleported)
+				InvalidateRpgRoundForRygiveTeleport();
 	
 			TeleportPlayer(client, g_iSelection[client]);
 		}
@@ -2162,6 +2168,10 @@ void UpdateRpgRoundForRygiveItems() {
 
 void InvalidateRpgRoundForRygiveItems() {
 	InvalidateRpgRoundForRygive("\x01管理员使用rygive刷物品，此局将无法再获得特感分和任何过关分数");
+}
+
+void InvalidateRpgRoundForRygiveTeleport() {
+	InvalidateRpgRoundForRygive("\x01管理员使用rygive传送玩家，此局将无法再获得特感分和任何过关分数");
 }
 
 void InvalidateRpgRoundForRygive(const char[] message) {
