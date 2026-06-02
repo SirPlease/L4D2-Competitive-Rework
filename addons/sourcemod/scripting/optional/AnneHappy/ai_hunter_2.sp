@@ -720,7 +720,7 @@ void getNoSightPounceRange()
     noSightPounceHeight = StringToFloat(tempStr[1]);
 }
 
-bool isVisibleTo(int hunter, int target, float offset) // 保留原 API，内部仍旧仅角度
+stock bool isVisibleTo(int hunter, int target, float offset) // 保留原 API，内部仍旧仅角度
 {
     return isWatchingBy(hunter, target, offset);
 }

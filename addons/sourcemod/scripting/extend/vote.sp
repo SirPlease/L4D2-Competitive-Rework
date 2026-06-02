@@ -55,8 +55,7 @@ char
 
 int 
 	banclient,
-	kickclient,
-	voteclient;
+	kickclient;
 
 
 
@@ -468,10 +467,9 @@ public int Menu_VotesBan(Handle menu, MenuAction action, int param1, int param2)
 	{
 		char name[128];
 		GetMenuItem(menu, param2, name, sizeof(name));
-		banclient = GetClientOfUserId(StringToInt(name));
-		CPrintToChatAll("[{olive}vote{default}] {blue}%N {default}发起投票封禁 {blue} %N 一天", param1, banclient);
-		voteclient = param1;
-		if (DisplayVoteBanMenu(param1))
+			banclient = GetClientOfUserId(StringToInt(name));
+			CPrintToChatAll("[{olive}vote{default}] {blue}%N {default}发起投票封禁 {blue} %N 一天", param1, banclient);
+			if (DisplayVoteBanMenu(param1))
 		{
 			FakeClientCommand(param1, "Vote Yes");
 		}

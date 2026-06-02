@@ -826,6 +826,7 @@ public int ReasonSelected(Handle menu, MenuAction action, int param1, int param2
 			}
 		}
 	}
+	return 0;
 }
 
 public int HackingSelected(Handle menu, MenuAction action, int param1, int param2)
@@ -874,6 +875,7 @@ public int HackingSelected(Handle menu, MenuAction action, int param1, int param
 			}
 		}
 	}
+	return 0;
 }
 
 public int MenuHandler_BanPlayerList(Handle menu, MenuAction action, int param1, int param2)
@@ -920,6 +922,7 @@ public int MenuHandler_BanPlayerList(Handle menu, MenuAction action, int param1,
 			}
 		}
 	}
+	return 0;
 }
 
 public int MenuHandler_BanTimeList(Handle menu, MenuAction action, int param1, int param2)
@@ -2366,6 +2369,7 @@ public int Native_SBReportPlayer(Handle plugin, int numParams)
 	ForwardPack.WriteString(sReason);
 
 	DB.Query(SQL_OnReportPlayer, sQuery, ForwardPack);
+	return 1;
 }
 
 public void SQL_OnReportPlayer(Database db, DBResultSet results, const char[] error, DataPack ForwardPack)
@@ -2587,6 +2591,8 @@ stock InsertServerInfo()
 
 stock void PrepareBan(int client, int target, int time, char[] reason, int size)
 {
+	#pragma unused size
+
 	#if defined DEBUG
 	LogToFile(logFile, "PrepareBan()");
 	#endif

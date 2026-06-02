@@ -144,6 +144,7 @@ Action Timer_CheckUpdates(Handle timer)	{
 	}
 	
 	_fLastUpdate = GetTickedTime();
+	return Plugin_Continue;
 }
 
 Action Command_Check(int client, int args)	{
@@ -156,11 +157,13 @@ Action Command_Check(int client, int args)	{
 			TriggerTimer(_hUpdateTimer, true);
 		}
 	}
+	return Plugin_Handled;
 }
 
 Action Command_ForceCheck(int client, int args)	{
 	ReplyToCommand(client, "[Updater] Force-checking for updates.");
 	CreateTimer(0.1, Timer_CheckUpdates);
+	return Plugin_Handled;
 }
 
 Action Command_Status(int client, int args)	{
@@ -182,6 +185,7 @@ Action Command_Status(int client, int args)	{
 	
 	ReplyToCommand(client, "Last update check was %.1f minutes ago.", (GetTickedTime() - _fLastUpdate) / 60.0);
 	ReplyToCommand(client, "[Updater] --- Status End ---");
+	return Plugin_Handled;
 }
 
 void OnVersionChanged(ConVar cvar, const char[] oldvalue, const char[] newvalue) { if(!StrEqual(newvalue, PLUGIN_VERSION)) cvar.SetString(PLUGIN_VERSION); }

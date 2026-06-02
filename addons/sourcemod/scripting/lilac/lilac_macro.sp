@@ -199,4 +199,5 @@ public Action timer_decrement_macro(Handle timer)
 				macro_detected[i][k]--;
 		}
 	}
+	return Plugin_Continue;
 }

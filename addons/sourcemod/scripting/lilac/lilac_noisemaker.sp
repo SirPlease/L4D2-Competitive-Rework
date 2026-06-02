@@ -35,6 +35,7 @@ public Action event_inventoryupdate(Event event, const char[] name, bool dontBro
 
 	client = GetClientOfUserId(GetEventInt(event, "userid", 0));
 	check_inventory_for_noisemaker(client);
+	return Plugin_Continue;
 }
 
 void check_inventory_for_noisemaker(int client)

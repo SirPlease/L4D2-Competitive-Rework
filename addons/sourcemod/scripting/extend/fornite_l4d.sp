@@ -799,6 +799,9 @@ void WeaponUnblock(int client)
 
 stock Action WeaponCanUseSwitch(int client, int weapon)
 {
+	#pragma unused client
+	#pragma unused weapon
+
 	return Plugin_Stop;
 }
 

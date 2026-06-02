@@ -23,7 +23,6 @@ char g_sCurrentGameMode[32];
 bool g_bMapChanger_L4D2Changelevel;
 bool g_bMapChanger_MapChanger;
 bool g_bLastMenuIsOfficial[MAXPLAYERS + 1];
-bool g_bLocalizerReady;
 
 Localizer g_loc;
 
@@ -130,8 +129,6 @@ void Init_Localizer() {
         return;
     }
     
-    // 直接标记为准备好并生成翻译文件
-    g_bLocalizerReady = true;
     CreateTimer(1.0, Timer_GenerateTranslations);
 }
 
@@ -144,7 +141,6 @@ public void OnMapStart() {
  */
 public void OnPhrasesReady() {
     LogMessage("Localizer is ready. Generating map and mission translation files...");
-    g_bLocalizerReady = true;
     GenerateTranslationFiles();
 }
 

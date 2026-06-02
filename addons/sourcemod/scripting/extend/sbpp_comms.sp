@@ -2223,10 +2223,10 @@ stock CreateBlock(client, targetId = 0, length = -1, type, const String:sReason[
 					continue;
 				}
 			}
-			//-------------------------------------------------------------------------------------------------
-			case TYPE_SILENCE:
-			{
-				if (!BaseComm_IsClientGagged(target) && !BaseComm_IsClientMuted(target))
+				//-------------------------------------------------------------------------------------------------
+				case TYPE_SILENCE:
+				{
+					if (!BaseComm_IsClientGagged(target) && !BaseComm_IsClientMuted(target))
 				{
 					#if defined DEBUG
 					PrintToServer("%s not silenced. Silence him, creating ungag & unmute timers and add records to DB", auth);
@@ -2261,6 +2261,8 @@ stock CreateBlock(client, targetId = 0, length = -1, type, const String:sReason[
 
 stock ProcessUnBlock(client, targetId = 0, type, String:sReason[] = "", const String:sArgs[] = "")
 {
+	#pragma unused sArgs
+
 	#if defined DEBUG
 	PrintToServer("ProcessUnBlock(admin: %d, target: %d, type: %d, reason: %s, args: %s)", client, targetId, type, sReason, sArgs);
 	#endif

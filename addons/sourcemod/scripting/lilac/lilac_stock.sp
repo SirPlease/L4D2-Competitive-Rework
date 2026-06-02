@@ -254,6 +254,7 @@ public Action timer_kick(Handle timer, int userid)
 
 	if (is_player_valid(client))
 		KickClient(client, "%T", "kick_ban_generic", client);
+	return Plugin_Stop;
 }
 
 int get_ban_length(int cheat)

@@ -128,34 +128,42 @@ int GetZoeyProp()
 public Action ZoeyUse(int client, int args)
 {
 	SurvivorChange(client, GetZoeyProp(), MODEL_ZOEY, "Zoey");
+	return Plugin_Handled;
 }
 public Action NickUse(int client, int args)
 {
 	SurvivorChange(client, NICK, MODEL_NICK, "Nick");
+	return Plugin_Handled;
 }
 public Action EllisUse(int client, int args)
 {
 	SurvivorChange(client, ELLIS, MODEL_ELLIS, "Ellis");
+	return Plugin_Handled;
 }
 public Action CoachUse(int client, int args)
 {
 	SurvivorChange(client, COACH, MODEL_COACH, "Coach");
+	return Plugin_Handled;
 }
 public Action RochelleUse(int client, int args)
 {
 	SurvivorChange(client, ROCHELLE, MODEL_ROCHELLE, "Rochelle");
+	return Plugin_Handled;
 }
 public Action BillUse(int client, int args)
 {
 	SurvivorChange(client, BILL, MODEL_BILL, "Bill");
+	return Plugin_Handled;
 }
 public Action BikerUse(int client, int args)
 {
 	SurvivorChange(client, FRANCIS, MODEL_FRANCIS, "Francis");
+	return Plugin_Handled;
 }
 public Action LouisUse(int client, int args)
 {
 	SurvivorChange(client, LOUIS, MODEL_LOUIS, "Louis");
+	return Plugin_Handled;
 }
 
 // Function changes the survivor
@@ -265,6 +273,7 @@ public int ShowMenu2(Handle menu, MenuAction action, int client, int param2)
 			CloseHandle(menu);
 		}
 	}
+	return 0;
 }
 
 public Action ShowMenuAdmin(int client, int args)
@@ -294,6 +303,7 @@ public Action ShowMenuAdmin(int client, int args)
 
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
+	return Plugin_Handled;
 }
 
 public int CharMenuAdmin(Handle menu, MenuAction action, int client, int param2)
@@ -320,6 +330,7 @@ public int CharMenuAdmin(Handle menu, MenuAction action, int client, int param2)
 		case MenuAction_Cancel: { }
 		case MenuAction_End:    {CloseHandle(menu); }
 	}
+	return 0;
 }
 
 public Action ShowMenu(int client, int args)
@@ -403,6 +414,7 @@ public int CharMenu(Handle menu, MenuAction action, int param1, int param2)
 			CloseHandle(menu);
 		}
 	}
+	return 0;
 }
 
 // *********************************************************************************
@@ -508,6 +520,7 @@ public Action Event_PlayerToBot(Handle event, char[] name, bool dontBroadcast)
 	{
 		FakeClientCommand(bot, survivor_commands[GetFewestSurvivor(bot)]);
 	}
+	return Plugin_Continue;
 }
 
 int GetFewestSurvivor(int clientignore = -1)
@@ -696,7 +709,7 @@ void ReEquipSlot1(int client, int iSlot1)
 			if (iSlot > 0) SetEntProp(iSlot, Prop_Send, "m_iClip1", Ammo, 4);
 		}
 	}
-}
+	}
 
 void DeletePlayerSlot(int client, int weapon)
 {

@@ -432,6 +432,7 @@ public void evt_ChargerChargeStart(Event event, const char[] name, bool dontBroa
 public Action ChargerEnable(Handle timer,int client) {
 	alreadycharged[client]=false;
 	g_bShouldCharge[client]=true;
+	return Plugin_Stop;
 }
 void ChargerPridiction(int charger, int survivor)
 {

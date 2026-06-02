@@ -683,6 +683,7 @@ public Action Timer_ShoveChance(Handle Timer)
 			}
 		}
 	}
+	return Plugin_Continue;
 }
 
 
@@ -777,6 +778,9 @@ public Action WeaponSwitch(int client, int weapon)
 
 stock Action onSBSlotActionCmd(int client, int &buttons, float vel[3], float angles[3])
 {
+	#pragma unused vel
+	#pragma unused angles
+
 	if (!isIncapacitated(client) && GetPlayerWeaponSlot(client, 0) > -1) {
 		int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon"); 
 		
@@ -817,6 +821,8 @@ stock Action onSBSlotActionCmd(int client, int &buttons, float vel[3], float ang
 ================================================================================================ */
 stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 {
+	#pragma unused vel
+
 	if (!isIncapacitated(client)
 		&& GetEntityMoveType(client) != MOVETYPE_LADDER)
 	{
@@ -1704,6 +1710,8 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 ================================================================================================ */
 stock Action onSBRunCmd_Incapacitated(int client, int &buttons, float vel[3], float angles[3])
 {
+	#pragma unused vel
+
 	if (isIncapacitated(client)) {
 		int aCapper = -1;
 		float min_dist_Cap = 100000.0;
@@ -1937,6 +1945,7 @@ public Action Event_WitchRage(Event event, const char[] name, bool dontBroadcast
 		// CallBotstoWitch(attacker);
 		g_bWitchActive = true;
 	}	
+	return Plugin_Continue;
 }
 
 public void OnEntityCreated(int entity, const char[] classname)

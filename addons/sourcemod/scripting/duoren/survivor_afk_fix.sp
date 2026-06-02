@@ -137,6 +137,7 @@ public MRESReturn OnGoAFKPre(int pThis, Handle hReturn)
 		LogError("Something wentwrong here 'CTerrorPlayer::GoAwayFromKeyboard' :(");
 	
 	g_bShouldFixAFK = true;
+	return MRES_Ignored;
 }
 
 //Only thing we need is the bot single threaded logic means we use the call order

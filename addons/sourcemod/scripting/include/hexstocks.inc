@@ -437,6 +437,8 @@ stock int GivePlayerItemAmmo(int client, const char[] weapon, int clip = -1, int
 */
 stock void SetPlayerWeaponAmmo(int client, int weaponEnt, int clip = -1, int ammo = -1)
 {
+	#pragma unused client
+
 	if (weaponEnt == INVALID_ENT_REFERENCE || !IsValidEdict(weaponEnt))
 		return;
 		
@@ -908,6 +910,10 @@ stock bool Debug_Setup(bool server = false, bool console = true, bool chat = tru
 	bLog = log
 	return true;
 	#else
+	#pragma unused server
+	#pragma unused console
+	#pragma unused chat
+	#pragma unused log
 	return false;
 	#endif
 }
@@ -918,6 +924,7 @@ stock bool Debug_Prefix(const char[] prefix)
 	strcopy(sPrefix, sizeof(sPrefix), prefix);
 	return true;
 	#else
+	#pragma unused prefix
 	return false;
 	#endif
 }
@@ -942,6 +949,7 @@ stock bool Debug_Print(char[] format, any ...)
 		
 	return true;
 	#else
+	#pragma unused format
 	return false;
 	#endif
 }
@@ -970,6 +978,7 @@ stock bool Debug_PrintVector(float vec[3])
 		
 	return true;
 	#else
+	#pragma unused vec
 	return false;
 	#endif
 }

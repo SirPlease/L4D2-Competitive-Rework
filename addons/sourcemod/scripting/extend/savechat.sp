@@ -88,21 +88,6 @@ Action CommandListener(int client, char[] command, int argc)
 	return Plugin_Continue;
 }
 
-/**
- * Converts the given string to lower case
- *
- * @param szString     Input string for conversion and also the output
- * @return             void
- */
-void StringToLowerCase(char[] szInput) 
-{
-	int iIterator;
-	while (szInput[iIterator] != EOS) {
-		szInput[iIterator] = CharToLower(szInput[iIterator]);
-		++iIterator;
-	}
-}
-
 public void OnMapEnd()
 {
 	char sTime[32];

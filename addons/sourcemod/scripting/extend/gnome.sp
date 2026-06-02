@@ -533,6 +533,7 @@ public Action TimerStart(Handle timer)
 				EquipPlayerWeapon(client, entity);
 		}
 	}
+	return Plugin_Stop;
 }
 
 public void Event_ItemPickup(Event event, const char[] name, bool dontBroadcast)
@@ -1394,6 +1395,7 @@ public int AngMenuHandler(Menu menu, MenuAction action, int client, int index)
 			SetAngle(client, index);
 		ShowMenuAng(client);
 	}
+	return 0;
 }
 
 void SetAngle(int client, int index)
@@ -1457,6 +1459,7 @@ public int PosMenuHandler(Menu menu, MenuAction action, int client, int index)
 			SetOrigin(client, index);
 		ShowMenuPos(client);
 	}
+	return 0;
 }
 
 void SetOrigin(int client, int index)

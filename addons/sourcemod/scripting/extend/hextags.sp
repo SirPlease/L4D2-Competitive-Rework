@@ -380,6 +380,7 @@ public Action Cmd_ToggleTags(int client, int args)
 	}
 	
 	SetClientCookie(client, hVibilityCookie, bHideTag[client] ? "0" : "1");
+	return Plugin_Handled;
 }
 
 public Action Cmd_TagsList(int client, int args)
@@ -544,11 +545,13 @@ public void OnClientCookiesCached(int client)
 public Action RankMe_OnPlayerLoaded(int client)
 {
 	RankMe_GetRank(client, RankMe_LoadTags);
+	return Plugin_Continue;
 }
 
 public Action RankMe_OnPlayerSaved(int client)
 {
 	RankMe_GetRank(client, RankMe_LoadTags);
+	return Plugin_Continue;
 }
 
 public Action RankMe_LoadTags(int client, int rank, any data)
@@ -589,6 +592,7 @@ public Action ChangeRoundStatus(Handle timer)
 {
 	bHasRoundEnded = false;
 	hRoundStatusTimer = null;
+	return Plugin_Stop;
 }
 
 public void OnMapEnd() // required, because forcible change level doesn't fire "round_end" event
@@ -837,6 +841,7 @@ void LoadKv()
 }
 public Action LoadTags1(Handle Timer,int client){
 	LoadTags(client);
+	return Plugin_Stop;
 }
 void LoadTags(int client)
 {

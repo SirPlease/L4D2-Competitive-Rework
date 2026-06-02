@@ -89,8 +89,9 @@ public Action tThirdPersonCheck(Handle hTimer)
 		if(!__IsValidClient(i) || IsFakeClient(i))
 			continue;
 		
-		QueryClientConVar(i, "c_thirdpersonshoulder", QueryClientConVarCallback);
-	}
+			QueryClientConVar(i, "c_thirdpersonshoulder", QueryClientConVarCallback);
+		}
+	return Plugin_Continue;
 }
 
 public void QueryClientConVarCallback(QueryCookie sCookie, int iClient, ConVarQueryResult sResult, const char[] sCvarName, const char[] sCvarValue)

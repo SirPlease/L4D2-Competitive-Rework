@@ -1136,6 +1136,9 @@ int IsBotTypeNeeded()
 
 stock void Debug_Print(char[] format, any ...)
 {
+#if DEBUG == 0
+	#pragma unused format
+#endif
 	#if (DEBUG)
 	{
 		char sBuffer[512];

@@ -95,6 +95,7 @@ public Action Command_ToggleHud(int client, int args)
 {
     bHudActive[client] = !bHudActive[client];
     CPrintToChat(client, "<{olive}HUD{default}> Ladder Editor HUD is now %s.", (bHudActive[client] ? "{blue}on{default}" : "{red}off{default}"));
+    return Plugin_Handled;
 }
 
 public Action HudDrawTimer(Handle hTimer) 
@@ -115,9 +116,13 @@ public Action HudDrawTimer(Handle hTimer)
             CPrintToChat(i, "<{olive}HUD{default}> Type {green}!togglehud{default} into chat to toggle the {blue}Ladder Editor HUD{default}.");
         }
     }
+    return Plugin_Continue;
 }
 
-public int DummyHudHandler(Handle hMenu, MenuAction action, int param1, int param2) {}
+public int DummyHudHandler(Handle hMenu, MenuAction action, int param1, int param2)
+{
+    return 0;
+}
 
 public void FillHudInfo(int client, Handle hHud)
 {
@@ -266,6 +271,7 @@ public Action PlayerTeam_Event(Handle event, const char[] name, bool dontBroadca
         bEditMode[client] = false;
         PrintToChat(client, "Exiting edit mode.");
     }
+    return Plugin_Continue;
 }
 
 public Action Command_Step(int client, int args)

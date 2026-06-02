@@ -225,6 +225,7 @@ public MRESReturn DeathModelCreatePost(int pThis, Handle hReturn)
 public MRESReturn DeathModelCreatePre(int pThis)
 {
 	g_iTempClient = pThis;
+	return MRES_Ignored;
 }
 
 public void OnEntityDestroyed(int iEntity)

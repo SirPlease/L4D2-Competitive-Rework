@@ -128,7 +128,10 @@ public Action Command_ReloadAds(int args)
 /**
  * Menu Handlers
  */
-public int MenuHandler_DoNothing(Menu menu, MenuAction action, int param1, int param2) {}
+public int MenuHandler_DoNothing(Menu menu, MenuAction action, int param1, int param2)
+{
+	return 0;
+}
 
 
 /**

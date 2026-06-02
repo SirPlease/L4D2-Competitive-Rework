@@ -835,7 +835,7 @@ public Action Timed_PostMapSet(Handle timer)
 
 // Returns a handle to the first array which is found to contain the specified mapname
 // (should be the first and only one)
-stock Handle GetPoolThatContainsMap(char[] map, int index, char[] tag) 
+stock Handle GetPoolThatContainsMap(char[] map, int &index, char[] tag)
 {
 	Handle hArrayMapPool;
 
@@ -843,7 +843,8 @@ stock Handle GetPoolThatContainsMap(char[] map, int index, char[] tag)
 	{
 		GetArrayString(g_hArrayTags, i, tag, BUF_SZ);
 		GetTrieValue(g_hTriePools, tag, hArrayMapPool);
-		if ((index = FindStringInArray(hArrayMapPool, map)) >= 0) {
+		index = FindStringInArray(hArrayMapPool, map);
+		if (index >= 0) {
 			return hArrayMapPool;
 		}
 	}

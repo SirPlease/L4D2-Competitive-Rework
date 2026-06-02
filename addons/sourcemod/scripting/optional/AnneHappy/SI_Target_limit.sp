@@ -35,7 +35,6 @@ ConVar
 char
 	g_sLogPath[PLATFORM_MAX_PATH];
 bool 
-	g_bPluginEnable = true,
 	g_bDetectRushMan = false;
 int 
 	g_iSI_enable_option = 0,
@@ -543,7 +542,6 @@ stock int GetMobileSurvivorNum()
 
 void GetCvars()
 {
-	g_bPluginEnable = GetConVarBool(g_hPluginEnable);
 	g_iSI_enable_option = GetConVarInt(g_hSI_enable_option);
 	g_iLimit_auto = GetConVarInt(g_hLimit_auto);
 	g_iLimit_manual = GetConVarInt(g_hLimit_manual);
@@ -569,6 +567,9 @@ stock bool IsReachLimit(int client){
 
 stock void Debug_Print(char[] format, any ...)
 {
+#if DEBUG == 0
+	#pragma unused format
+#endif
 	#if (DEBUG)
 	{
 		char sTime[32];

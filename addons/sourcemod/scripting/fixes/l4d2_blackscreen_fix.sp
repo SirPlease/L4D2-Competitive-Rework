@@ -36,6 +36,7 @@ public void OnMapStart()
 public Action Timer_SaveDownloadables(Handle timer)
 {
 	SaveDownloadables();
+	return Plugin_Stop;
 }
 
 void SaveDownloadables()
@@ -96,8 +97,9 @@ public Action tPlayers(Handle timer)
 		
 		DeleteStringTableData(FindStringTable("downloadables"));
 		
-		ReadRestrictedFiles();
-	}
+			ReadRestrictedFiles();
+		}
+	return Plugin_Stop;
 }
 
 public Action CMD_RestoreDownloadables(int client, int args)
