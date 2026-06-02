@@ -89,6 +89,7 @@ public Plugin:myinfo =
 
 public OnPluginStart()
 {
+	LoadTranslations("witch_announce.phrases");
 	cvar_witch_true_damage=CreateConVar("witch_show_true_damage", "0", "Show damage output rather than actual damage the witch receives? - 0 = Health Damage");
 
 	//In case Witch survives.
@@ -170,7 +171,7 @@ public WitchDeath_Event(Handle:event, const String:name[], bool:dontBroadcast)
 	//Check if Tank Killed the Witch.
 	if (IsValidClient(killer) && GetClientTeam(killer) == 3 && IsTank(killer))
 	{
-		CPrintToChatAll("{default}[{green}!{default}] {red}Tank {default}({olive}%N{default}) 杀死了 {red}Witch", killer);
+		CPrintToChatAll("%t", "WitchAnnounce_TankKilledWitch", killer);
 		bWitchSpawned = false;
 		ClearDamage();
 		return;
@@ -225,14 +226,14 @@ CalculateWitch()
 
 PrintWitchRemainingHealth()
 {
-	CPrintToChatAll("{default}[{green}!{default}] {blue}Witch {default}还剩下 {olive}%d {default}点血", RoundToFloor(g_fWitchHealth) - DamageWitchTotal);
+	CPrintToChatAll("%t", "WitchAnnounce_StillSomeBloodLeft", RoundToFloor(g_fWitchHealth) - DamageWitchTotal);
 }
 
 PrintWitchDamage()
 {
 	if (!bWitchSpawned)
 	{
-		CPrintToChatAll("{default}[{green}!{default}] 对{blue}女巫{default}产生的{blue}伤害");
+		CPrintToChatAll("%t", "WitchAnnounce_WitchDamageHeader");
 	}
 
 	new client;
@@ -286,7 +287,7 @@ PrintWitchDamage()
 		{
 			if (IsClientInGame(i))
 			{
-				CPrintToChat(i, "{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N", damage, percent_damage, client);
+				CPrintToChat(i, "%t", "WitchAnnounce_WitchDamageLine", damage, percent_damage, client);
 			}
 		}
 	}

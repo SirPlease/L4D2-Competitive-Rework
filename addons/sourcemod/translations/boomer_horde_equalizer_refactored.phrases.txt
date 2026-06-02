@@ -1,0 +1,52 @@
+"Phrases"
+{
+	"BoomerHordeEqualizer_PassedBiledSurvivor"
+	{
+		"en"		"%N passed on bBiledSurvivor to %N"
+		"chi"		"%N 将 bBiledSurvivor 传递给 %N"
+		"zho"		"%N 將 bBiledSurvivor 傳給 %N"
+		"jp"		"%N は bBiledSurvivor を %N に渡しました"
+		"ko"		"%N는 bBiledSurvivor를 %N에 전달했습니다."
+		"vi"		"%N đã chuyển bBiledSurvivor sang %N"
+	}
+
+	"BoomerHordeEqualizer_NoLongerBoomedSurvivorCount"
+	{
+		"en"		"%N no longer it (BoomedSurvivorCount: %i)"
+		"chi"		"%N 不再是它（BoomedSurvivorCount：%i）"
+		"zho"		"%N 不再是它（BoomedSurvivorCount：%i）"
+		"jp"		"%N ではなくなりました (BoomedSurvivorCount: %i)"
+		"ko"		"%N는 더 이상 그렇지 않습니다. (BoomedSurvivorCount: %i)"
+		"vi"		"%N không còn nữa (BoomedSurvivorCount: %i)"
+	}
+
+	"BoomerHordeEqualizer_BoomedTotal"
+	{
+		"en"		"%N boomed (Total: %d)"
+		"chi"		"%N 轰鸣（总计：%d）"
+		"zho"		"%N 轟鳴（總計：%d）"
+		"jp"		"%Nが好調（合計：%d）"
+		"ko"		"%N 붐 발생 (총계: %d)"
+		"vi"		"%N bùng nổ (Tổng cộng: %d)"
+	}
+
+	"BoomerHordeEqualizer_BoomHordeEventBoomedSurvivor"
+	{
+		"en"		"BoomHordeEvent[BoomedSurvivorCount] : %i"
+		"chi"		"BoomHordeEvent[BoomedSurvivorCount]：%i"
+		"zho"		"BoomHordeEvent[BoomedSurvivorCount]：%i"
+		"jp"		"BoomHordeEvent[BoomedSurvivorCount] : %i"
+		"ko"		"BoomHordeEvent[BoomedSurvivorCount] : %i"
+		"vi"		"BoomHordeEvent[BoomedSurvivorCount] : %i"
+	}
+
+	"BoomerHordeEqualizer_UncoveredBileEvent"
+	{
+		"en"		"Uncovered Bile Event"
+		"chi"		"胆汁暴露事件"
+		"zho"		"膽汁暴露事件"
+		"jp"		"胆汁イベントの発見"
+		"ko"		"발견된 담즙 사건"
+		"vi"		"Sự kiện mật được khám phá"
+	}
+}

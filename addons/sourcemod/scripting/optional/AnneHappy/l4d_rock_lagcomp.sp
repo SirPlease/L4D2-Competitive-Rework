@@ -48,6 +48,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d_rock_lagcomp.phrases");
 	g_cvRockPrint = CreateConVar("sm_rock_print", "0", "Toggle printing of rock damage and range values", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_cvRockHitbox = CreateConVar("sm_rock_hitbox", "1", "Toggle custom rock hitbox and damage handling", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_cvRockLagComp = CreateConVar("sm_rock_lagcomp", "1", "Toggle lag compensation for hitscan rock shots", FCVAR_NONE, true, 0.0, true, 1.0);
@@ -397,7 +398,7 @@ void ApplyDamageToRock(int rockIndex, int rockRef, const char[] weaponName, floa
 	rockDamage += appliedDamage;
 
 	if (g_cvRockPrint.BoolValue) {
-		PrintToChatAll("Weapon: %s | Range: %.2f | Damage: %.1f | Rock health: %.1f%%", weaponName, distance, appliedDamage, FloatMax(0.0, ROCK_HEALTH - rockDamage));
+		PrintToChatAll("%t", "L4DRockLagcomp_WeaponRangeDamageRockHealth", weaponName, distance, appliedDamage, FloatMax(0.0, ROCK_HEALTH - rockDamage));
 	}
 
 	if (rockDamage >= ROCK_HEALTH) {

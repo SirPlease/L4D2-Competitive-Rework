@@ -197,7 +197,7 @@ public int Menu_Listener(Handle hMenu, MenuAction iAction, int iClient, int iInd
 				}
 			}
 #if DEBUG
-			PrintToChat(iClient, "[SpecListener] You selected item: %d (found? %d info: %s)", iIndex, found, info);
+			PrintToChat(iClient, "%t", "SpecListener_SelectedItemFoundInfo", iIndex, found, info);
 #endif
 		}
 		case MenuAction_Cancel:
@@ -211,7 +211,7 @@ public int Menu_Listener(Handle hMenu, MenuAction iAction, int iClient, int iInd
 				PauseMenu(iClient, "sm_show");
 			}
 #if DEBUG
-			PrintToChat(iClient, "[SpecListener] Client %d' menu was cancelled.  Reason: %d", iClient, iIndex);
+			PrintToChat(iClient, "%t", "SpecListener_ClientMenuCancelledReason", iClient, iIndex);
 #endif
 		}
 	}
@@ -233,22 +233,22 @@ public void Event_PlayerTeam(Event hEvent, const char[] sEventName, bool bDontBr
 					SetClientListeningFlags(iclient, VOICE_LISTENALL);
 				}
 #if DEBUG
-				PrintToChat(iclient, "[SpecListener] Enabled");
-				PrintToChat(iclient, "[SpecListener] Cookie: %d", GetCookie(iclient));
+				PrintToChat(iclient, "%t", "SpecListener_Enabled");
+				PrintToChat(iclient, "%t", "SpecListener_Cookie", GetCookie(iclient));
 #endif
 			}
 			case view_as<int>(L4D2Team_Survivor):
 			{
 				SetClientListeningFlags(iclient, VOICE_NORMAL);
 #if DEBUG
-				PrintToChat(iclient, "[SpecListener] disable");
+				PrintToChat(iclient, "%t", "SpecListener_Disable");
 #endif
 			}
 			case view_as<int>(L4D2Team_Infected):
 			{
 				SetClientListeningFlags(iclient, VOICE_NORMAL);
 #if DEBUG
-				PrintToChat(iclient, "[SpecListener] disable");
+				PrintToChat(iclient, "%t", "SpecListener_Disable");
 #endif
 			}
 		}
@@ -265,7 +265,7 @@ public void OnConvarChange_Alltalk(Handle cvar, const char[] oldValue, const cha
 			{
 				SetClientListeningFlags(i, VOICE_LISTENALL);
 #if DEBUG
-				PrintToChat(i, "[SpecListener] Re-Enable Listen Because of All-Talk");
+				PrintToChat(i, "%t", "SpecListener_ReEnableListenAllTalk");
 #endif
 			}
 		}
@@ -309,7 +309,7 @@ public void ReadyUpMenu(int iClient, char[] sConVar)
 	{
 		FakeClientCommand(iClient, sConVar);
 #if DEBUG
-		PrintToChat(iClient, "[SpecListener] %s was executed", sConVar);
+		PrintToChat(iClient, "%t", "SpecListener_Executed", sConVar);
 #endif
 	}
 }
@@ -320,7 +320,7 @@ public void PauseMenu(int iClient, char[] sConVar)
 	{
 		FakeClientCommand(iClient, sConVar);
 #if DEBUG
-		PrintToChat(iClient, "[SpecListener] %s was executed", sConVar);
+		PrintToChat(iClient, "%t", "SpecListener_Executed", sConVar);
 #endif
 	}
 }

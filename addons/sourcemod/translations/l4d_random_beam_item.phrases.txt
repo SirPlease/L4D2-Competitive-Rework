@@ -1,0 +1,72 @@
+"Phrases"
+{
+	"L4DRandomBeamItem_InvalidTarget"
+	{
+		"en"		"\\x04Invalid target."
+		"chi"		"\\x04目标无效。"
+		"zho"		"\\x04目標無效。"
+		"jp"		"\\x04ターゲットが無効です。"
+		"ko"		"\\x04잘못된 대상입니다."
+		"vi"		"\\x04Mục tiêu không hợp lệ."
+	}
+
+	"L4DRandomBeamItem_TargetEntityNoBeam"
+	{
+		"en"		"\\x04Target entity has no beam."
+		"chi"		"\\x04T目标实体没有光束。"
+		"zho"		"\\x04T目標實體沒有光束。"
+		"jp"		"\\x04ターゲット エンティティにはビームがありません。"
+		"ko"		"\\x04Target 엔터티에 빔이 없습니다."
+		"vi"		"Thực thể \\x04Target không có chùm tia."
+	}
+
+	"L4DRandomBeamItem_BeamIndexTargetIndexClassname"
+	{
+		"en"		"\\x05Beam Index: \\x03%i \\x05Target Index: \\x03%i \\x05Classname: \\x03%s \\x05Model: \\x03%s \\x05Beam Color (RGB|Integer): \\x03%i %i %i|%i \\x05Brightness: \\x03%.1f \\x05Length: \\x03%i \\x05Width: \\x03%i \\x05HDR Color Scale: \\x03%.1f"
+		"chi"		"\\x05光束索引：\\x03%i \\x05目标索引：\\x03%i \\x05类名：\\x03%s \\x05型号： \\x03%s \\x05光束颜色（RGB|整数）：\\x03%i %i %i|%i \\x05B亮度：\\x03%.1f \\x05长度：\\x03%i \\x05宽度：\\x03%i \\x05HDR色标：\\x03%.1f"
+		"zho"		"\\x05Beam Index: \\x03%i \\x05Target Index: \\x03%i \\x05Classname: \\x03%s \\x05Model: \\x03%s \\x05Beam Color (RGB|Integer): \\x03%i %i %i|%i \\x05Brightness: \\x03%.1f \\x05Length: \\x03%i \\x05Width: \\x03%i \\x05HDR Color Scale: \\x03%.1f"
+		"jp"		"\\x05ビームインデックス: \\x03%i \\x05ターゲットインデックス: \\x03%i \\x05クラス名: \\x03%s \\x05モデル: \\x03%s \\x05ビームカラー(RGB|整数): \\x03%i %i %i|%i \\x05B明るさ: \\x03%.1f \\x05長さ: \\x03%i \\x05幅: \\x03%i \\x05HDR カラースケール: \\x03%.1f"
+		"ko"		"\\x05빔 지수: \\x03%i \\x05T대상 지수: \\x03%i \\x05클래스 이름: \\x03%s \\x05모델: \\x03%s \\x05빔 색상(RGB|정수): \\x03%i %i %i|%i \\x05밝기: \\x03%.1f \\x05L길이: \\x03%i \\x05폭: \\x03%i \\x05HDR 컬러 스케일: \\x03%.1f"
+		"vi"		"Chỉ số \\x05Beam: \\x03%i \\x05Chỉ mục mục tiêu: \\x03%i \\x05Tên lớp: \\x03%s \\x05Mẫu: \\x03%s \\x05Màu tia (RGB|Số nguyên): \\x03%i %i %i|%i \\x05Độ sáng: \\x03%.1f \\x05LĐộ dài: \\x03%i \\x05Width: \\x03%i Thang màu \\x05HDR: \\x03%.1f"
+	}
+
+	"L4DRandomBeamItem_BeamConfigsReloaded"
+	{
+		"en"		"\\x04Beam configs reloaded."
+		"chi"		"\\x04Beam 配置已重新加载。"
+		"zho"		"\\x04Beam 設定已重新載入。"
+		"jp"		"\\x04Beam 構成がリロードされました。"
+		"ko"		"\\x04Beam 구성이 다시 로드되었습니다."
+		"vi"		"Đã tải lại cấu hình \\x04Beam."
+	}
+
+	"L4DRandomBeamItem_RemovedTargetEntityPluginBeam"
+	{
+		"en"		"\\x04Removed target entity plugin beam."
+		"chi"		"\\x04删除了目标实体插件梁。"
+		"zho"		"\\x04刪除了目標實體插件梁。"
+		"jp"		"\\x04ターゲット エンティティ プラグイン ビームを削除しました。"
+		"ko"		"\\x04대상 엔터티 플러그인 빔을 제거했습니다."
+		"vi"		"\\x04Đã xóa chùm plugin thực thể mục tiêu."
+	}
+
+	"L4DRandomBeamItem_RemovedAllBeamsCreatedPlugin"
+	{
+		"en"		"\\x04Removed all beams created by the plugin."
+		"chi"		"\\x04删除了插件创建的所有梁。"
+		"zho"		"\\x04刪除了插件所建立的所有梁。"
+		"jp"		"\\x04プラグインによって作成されたすべてのビームを削除しました。"
+		"ko"		"\\x04플러그인으로 생성된 모든 빔을 제거했습니다."
+		"vi"		"\\x04Đã xóa tất cả các dầm được tạo bởi plugin."
+	}
+
+	"L4DRandomBeamItem_BeamAddedTargetEntity"
+	{
+		"en"		"\\x04Beam added to target entity."
+		"chi"		"\\x04Beam 添加到目标实体。"
+		"zho"		"\\x04Beam 新增到目標實體。"
+		"jp"		"\\x04Beam がターゲット エンティティに追加されました。"
+		"ko"		"\\x04Beam이 대상 엔터티에 추가되었습니다."
+		"vi"		"\\x04Beam được thêm vào thực thể mục tiêu."
+	}
+}

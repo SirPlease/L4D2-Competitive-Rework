@@ -26,6 +26,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_tank_flying_incap.phrases");
     convarDebug = CreateConVar("l4d2_tank_flying_incap_debug", "0", "Are we debugging?");
     convarAnim = CreateConVar("l4d2_tank_flying_incap_anim_fix", "0", "Remove the getting-up animation at the end of fly. (NOTE: Survivors will be able to shoot as soon as they land.)");
     bDebug = convarDebug.BoolValue;
@@ -85,7 +86,7 @@ Action AnimHook_PunchFly(int client, int &activity)
         char curActName[64], lastActName[64];
         AnimGetActivity(activity, curActName, sizeof(curActName));
         AnimGetActivity(last, lastActName, sizeof(lastActName));
-        PrintToChatAll("\x01[FlyingIncap]: (%.1f) (%N) [\x05%s\x01] [\x04%s\x01]", GetGameTime(), client, curActName, lastActName);
+        PrintToChatAll("%t", "L4D2TankFlyingIncap_FlyingIncapStateLine", GetGameTime(), client, curActName, lastActName);
 
         last = activity;
     }

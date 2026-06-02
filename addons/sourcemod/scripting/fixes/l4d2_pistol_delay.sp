@@ -64,6 +64,7 @@ public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErr
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_pistol_delay.phrases");
 	InitGameData();
 
 	// Value 'DEF_RITE_OF_FIRE_DUALIES' probably too low for a high tickrate
@@ -186,7 +187,7 @@ public void OnEntityCreated(int iEntity, const char[] sEntityName)
 	g_hRateOfFire.HookEntity(Hook_Pre, iEntity, CPistol_OnGetRiteOfFire);
 
 #if DEBUG
-	PrintToChatAll("[OnEntityCreated] iEntity: %s (%d)", sEntityName, iEntity);
+	PrintToChatAll("%t", "L4D2PistolDelay_EntityCreatedEntity", sEntityName, iEntity);
 
 	g_hIsFullyAutomatic.HookEntity(Hook_Pre, iEntity, CPistol_OnFullyAutomatic);
 #endif
@@ -248,7 +249,7 @@ void Event_WeaponFire(Event hEvent, const char[] sEventName, bool bDontBroadcast
 	char sEntityName[ENTITY_MAX_NAME_LENGTH];
 	GetEdictClassname(iActiveWeapon, sEntityName, sizeof(sEntityName));
 
-	PrintToChat(iClient, "Weapon: %s (%d), old fire time: %f, current fire time: %f, Diff: %f", \
+	PrintToChat(iClient, "%t", "L4D2PistolDelay_WeaponOldFireTimeCurrent", \
 						sEntityName, iActiveWeapon, fOldValue, fNow, fNow - fOldValue);
 
 	g_fOldFireRate[iClient][iActiveWeapon] = fNow;

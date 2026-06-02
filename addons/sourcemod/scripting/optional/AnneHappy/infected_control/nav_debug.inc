@@ -14,7 +14,7 @@ public Action Cmd_NavPeek(int client, int args)
     float hit[3];
     if (!NavDebug_GetAimHitPos(client, hit))
     {
-        PrintToChat(client, "\x04[IC]\x01 未能获取准星命中点。");
+        PrintToChat(client, "%t", "InfectedControl_ICFailedObtainCrosshairHit");
         return Plugin_Handled;
     }
 
@@ -25,7 +25,7 @@ public Action Cmd_NavPeek(int client, int args)
 
     if (area == Address_Null)
     {
-        PrintToChat(client, "\x04[IC]\x01 附近没有 NavArea。");
+        PrintToChat(client, "%t", "InfectedControl_ICNoNavAreaNearby");
         return Plugin_Handled;
     }
 
@@ -80,9 +80,9 @@ public Action Cmd_NavPeek(int client, int args)
 
     // —— 聊天简要 —— //
     if (bucketC >= 0)
-        PrintToChat(client, "\x04[IC]\x01 navid=%d  桶=%d(算) / %d(归)  flag=%s", navid, bucketC, bucketA, flagBuf);
+        PrintToChat(client, "%t", "InfectedControl_ICNavidBucketCalculationReturn", navid, bucketC, bucketA, flagBuf);
     else
-        PrintToChat(client, "\x04[IC]\x01 navid=%d  桶=N/A / %d(归)  flag=%s", navid, bucketA, flagBuf);
+        PrintToChat(client, "%t", "InfectedControl_ICNavidBucketReturnFlag", navid, bucketA, flagBuf);
 
     // DebugMode>=3：画一条短暂的准星射线，直观确认命中点
     if (gCV.iDebugMode >= 3)
@@ -122,7 +122,7 @@ public Action Cmd_NavTest(int client, int args)
     float hit[3];
     if (!NavDebug_GetAimHitPos(client, hit))
     {
-        PrintToChat(client, "\x04[IC]\x01 未能获取准星命中点。");
+        PrintToChat(client, "%t", "InfectedControl_ICFailedObtainCrosshairHit");
         return Plugin_Handled;
     }
 
@@ -132,7 +132,7 @@ public Action Cmd_NavTest(int client, int args)
 
     if (area == Address_Null)
     {
-        PrintToChat(client, "\x04[IC]\x01 附近没有 NavArea。");
+        PrintToChat(client, "%t", "InfectedControl_ICNoNavAreaNearby");
         return Plugin_Handled;
     }
 
@@ -290,9 +290,9 @@ public Action Cmd_NavTest(int client, int args)
     PrintToConsole(client, "========================================");
 
     if (canSpawn)
-        PrintToChat(client, "\x04[IC]\x01 Nav %d \x05可以生成\x01 | 总分: \x03%.1f\x01 | 详情见控制台", navid, totalScore);
+        PrintToChat(client, "%t", "InfectedControl_ICNavCanGenerateTotal", navid, totalScore);
     else
-        PrintToChat(client, "\x04[IC]\x01 Nav %d \x03不能生成\x01 | 详情见控制台", navid);
+        PrintToChat(client, "%t", "InfectedControl_ICNavCannotGenerateSee", navid);
 
     if (gCV.iDebugMode >= 3)
     {

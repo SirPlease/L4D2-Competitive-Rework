@@ -45,6 +45,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_nobhaps.phrases");
 #if NEW_METHOD_GET_MAX_SPEED
 	LoadSDK();
 #endif
@@ -171,7 +172,7 @@ public Action OnPlayerRunCmd(int iClient, int& iButtons, int& iImpulse, float fV
 
 			if (GetVectorLength(CurVelVec) > g_fLeftGroundMaxSpeed[iClient]) {
 				#if DEBUG
-					PrintToChat(iClient, "Speed: %f {%.02f, %.02f, %.02f}, MaxSpeed: %f", \
+					PrintToChat(iClient, "%t", "L4D2Nobhaps_SpeedMaxSpeed", \
 											GetVectorLength(CurVelVec), CurVelVec[0], CurVelVec[1], CurVelVec[2], g_fLeftGroundMaxSpeed[iClient]);
 				#endif
 

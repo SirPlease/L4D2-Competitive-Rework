@@ -54,7 +54,7 @@ public Action timer_check_ping(Handle timer)
 			if (ping_high[i] < ping_warn[i] - 2 && ping_warn[i] > 0) {
 
 				ping_warn[i] = 0;
-				PrintToChat(i, "[Lilac] Your ping appears to be fine again, it is safe to rejoin a team and play.");
+				PrintToChat(i, "%t", "LILAC_PingAppearsFineAgainSafe");
 			}
 
 			continue;
@@ -66,9 +66,7 @@ public Action timer_check_ping(Handle timer)
 
 			ping_warn[i] = ping_high[i];
 
-			PrintToChat(i, "[Lilac] WARNING: You will be kicked in %d seconds if your ping stays too high! (%.0f / %d max)",
-				100 - (ping_high[i] * 5),
-				ping, icvar[CVAR_MAX_PING]);
+			PrintToChat(i, "%t", "LILAC_WarningKickedSecondsondsPingStays", 100 - (ping_high[i] * 5), ping, icvar[CVAR_MAX_PING]);
 		}
 
 		// Player has a higher ping than maximum for 100 seconds.

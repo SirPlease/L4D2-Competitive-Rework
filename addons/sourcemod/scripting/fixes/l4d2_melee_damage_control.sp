@@ -73,6 +73,7 @@ public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErr
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_melee_damage_control.phrases");
 	g_hCvarMeleeDmgFix = CreateConVar( \
 		"l4d2_melee_damage_fix", \
 		"1.0", \
@@ -153,7 +154,7 @@ Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fD
 		
 			#if DEBUG
 				float fHealth = float(GetClientHealth(iVictim));
-				PrintToChatAll("[MeleeDmgFix] Infected: (%N) %d, Class: %s (%d), attacker: (%N) %d , inflictor: %d, damage: %f, damagetype: %d, set damage: %f", \
+				PrintToChatAll("%t", "L4D2MeleeDamageControl_MeleeDmgFixInfectedClass", \
 										iVictim, iVictim, L4D2_InfectedNames[iZclass], iZclass, iAttacker, iAttacker, iInflictor, fDamage, iDamagetype, fHealth);
 			#endif
 			
@@ -166,7 +167,7 @@ Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fD
 			
 			#if DEBUG
 				float fNewDamage = (fHealth < g_fChargerMeleeDamage) ? fHealth : g_fChargerMeleeDamage;
-				PrintToChatAll("[MeleeDmgControl] Charger: (%N) %d, attacker: (%N) %d , inflictor: %d, damage: %f, damagetype: %d, set damage: %f", \
+				PrintToChatAll("%t", "L4D2MeleeDamageControl_MeleeDmgControlChargerAttacker", \
 										iVictim, iVictim, iAttacker, iAttacker, iInflictor, fDamage, iDamagetype, fNewDamage);
 			#endif
 			
@@ -179,7 +180,7 @@ Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fD
 		
 			#if DEBUG
 				float fNewDamage = (fDamage * (100.0 - g_fTankMeleeNerfDamage)) / 100.0;
-				PrintToChatAll("[MeleeDmgControl] Tank: (%N) %d, attacker: (%N) %d, inflictor: %d, damage: %f, damagetype: %d, set damage: %f", \
+				PrintToChatAll("%t", "L4D2MeleeDamageControl_MeleeDmgControlTankAttacker", \
 										iVictim, iVictim, iAttacker, iAttacker, iInflictor, fDamage, iDamagetype, fNewDamage);
 			#endif
 			
@@ -198,7 +199,7 @@ bool IsMelee(int iEntity)
 		GetEntityClassname(iEntity, sClassName, sizeof(sClassName));
 		
 		#if DEBUG
-			PrintToChatAll("sClassName: %s (%d)", sClassName, iEntity);
+			PrintToChatAll("%t", "L4D2MeleeDamageControl_ClassName", sClassName, iEntity);
 		#endif
 		
 		//weapon_ - 7

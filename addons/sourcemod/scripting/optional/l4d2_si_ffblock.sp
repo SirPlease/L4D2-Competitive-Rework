@@ -37,6 +37,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_si_ffblock.phrases");
 	g_hCvarFFBlock = CreateConVar("l4d2_block_infected_ff", "1", "Disable SI->SI friendly fire", _, true, 0.0, true, 1.0);
 	g_hCvarAllowTankFF = CreateConVar("l4d2_infected_ff_allow_tank", "1", "Do not disable friendly fire for tanks on other SI", _, true, 0.0, true, 1.0);
 	g_hCvarBlockWitchFF = CreateConVar("l4d2_infected_ff_block_witch", "0", "Disable FF towards witches", _, true, 0.0, true, 1.0);
@@ -100,7 +101,7 @@ Action Hook_WitchOnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, floa
 #if DEBUG
 	char sClassName[MAX_ENTITY_NAME_SIZE];
 	GetEdictClassname(iVictim, sClassName, sizeof(sClassName));
-	PrintToChatAll("Hook_WitchOnTakeDamage. iVictim: %s (%d), iAttacker: %N (%d), ZClass: %s (%d), iInflictor: %d, fDamage: %f, iDamagetype: %d", \
+	PrintToChatAll("%t", "L4D2SIFfblock_HookWitchTakeDamageVictim", \
 							sClassName, iVictim, iAttacker, iAttacker, L4D2_InfectedNames[iZClass], iZClass, iInflictor, fDamage, iDamagetype);
 #endif
 
@@ -125,7 +126,7 @@ Action Hook_PlayerOnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, flo
 	int iZClass = GetEntProp(iAttacker, Prop_Send, "m_zombieClass");
 
 #if DEBUG
-	PrintToChatAll("Hook_PlayerOnTakeDamage. iVictim: %N (%d), iAttacker: %N (%d), ZClass: %s (%d), iInflictor: %d, fDamage: %f, iDamagetype: %d", \
+	PrintToChatAll("%t", "L4D2SIFfblock_HookPlayerTakeDamageVictim", \
 							iVictim, iVictim, iAttacker, iAttacker, L4D2_InfectedNames[iZClass], iZClass, iInflictor, fDamage, iDamagetype);
 #endif
 

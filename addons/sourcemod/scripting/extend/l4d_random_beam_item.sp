@@ -231,6 +231,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d_random_beam_item.phrases");
     g_alPluginEntities = new ArrayList();
     g_smWeaponIdToClassname = new StringMap();
     g_smMeleeModelToName = new StringMap();
@@ -1039,13 +1040,13 @@ Action CmdInfo(int client, int args)
 
     if (entity == -1)
     {
-        PrintToChat(client, "\x04Invalid target.");
+        PrintToChat(client, "%t", "L4DRandomBeamItem_InvalidTarget");
         return Plugin_Handled;
     }
 
     if (ge_iChildEntRef[entity] == INVALID_ENT_REFERENCE)
     {
-        PrintToChat(client, "\x04Target entity has no beam.");
+        PrintToChat(client, "%t", "L4DRandomBeamItem_TargetEntityNoBeam");
         return Plugin_Handled;
     }
 
@@ -1053,7 +1054,7 @@ Action CmdInfo(int client, int args)
     if (beam == INVALID_ENT_REFERENCE)
     {
         ge_iChildEntRef[entity] = INVALID_ENT_REFERENCE;
-        PrintToChat(client, "\x04Target entity has no beam.");
+        PrintToChat(client, "%t", "L4DRandomBeamItem_TargetEntityNoBeam");
         return Plugin_Handled;
     }
 
@@ -1073,7 +1074,7 @@ Action CmdInfo(int client, int args)
     char modelname[PLATFORM_MAX_PATH];
     GetEntPropString(entity, Prop_Data, "m_ModelName", modelname, sizeof(modelname));
 
-    PrintToChat(client, "\x05Beam Index: \x03%i \x05Target Index: \x03%i \x05Classname: \x03%s \x05Model: \x03%s \x05Beam Color (RGB|Integer): \x03%i %i %i|%i \x05Brightness: \x03%.1f \x05Length: \x03%i \x05Width: \x03%i \x05HDR Color Scale: \x03%.1f", beam, entity, classname, modelname, rgb[0], rgb[1], rgb[2], color, GetRGB_Brightness(rgb), RoundFloat(length), RoundFloat(width), hdrColorScale);
+    PrintToChat(client, "%t", "L4DRandomBeamItem_BeamIndexTargetIndexClassname", beam, entity, classname, modelname, rgb[0], rgb[1], rgb[2], color, GetRGB_Brightness(rgb), RoundFloat(length), RoundFloat(width), hdrColorScale);
 
     return Plugin_Handled;
 }
@@ -1089,7 +1090,7 @@ Action CmdReload(int client, int args)
     LateLoad();
 
     if (IsValidClient(client))
-        PrintToChat(client, "\x04Beam configs reloaded.");
+        PrintToChat(client, "%t", "L4DRandomBeamItem_BeamConfigsReloaded");
 
     return Plugin_Handled;
 }
@@ -1105,13 +1106,13 @@ Action CmdRemove(int client, int args)
 
     if (entity == -1)
     {
-        PrintToChat(client, "\x04Invalid target.");
+        PrintToChat(client, "%t", "L4DRandomBeamItem_InvalidTarget");
         return Plugin_Handled;
     }
 
     if (ge_iChildEntRef[entity] == INVALID_ENT_REFERENCE)
     {
-        PrintToChat(client, "\x04Target entity has no beam.");
+        PrintToChat(client, "%t", "L4DRandomBeamItem_TargetEntityNoBeam");
         return Plugin_Handled;
     }
 
@@ -1119,13 +1120,13 @@ Action CmdRemove(int client, int args)
     if (beam == INVALID_ENT_REFERENCE)
     {
         ge_iChildEntRef[entity] = INVALID_ENT_REFERENCE;
-        PrintToChat(client, "\x04Target entity has no beam.");
+        PrintToChat(client, "%t", "L4DRandomBeamItem_TargetEntityNoBeam");
         return Plugin_Handled;
     }
     else
     {
         AcceptEntityInput(beam, "Kill");
-        PrintToChat(client, "\x04Removed target entity plugin beam.");
+        PrintToChat(client, "%t", "L4DRandomBeamItem_RemovedTargetEntityPluginBeam");
         return Plugin_Handled;
     }
 }
@@ -1137,7 +1138,7 @@ Action CmdRemoveAll(int client, int args)
     RemoveAll();
 
     if (IsValidClient(client))
-        PrintToChat(client, "\x04Removed all beams created by the plugin.");
+        PrintToChat(client, "%t", "L4DRandomBeamItem_RemovedAllBeamsCreatedPlugin");
 
     return Plugin_Handled;
 }
@@ -1153,7 +1154,7 @@ Action CmdAdd(int client, int args)
 
     if (entity == -1)
     {
-        PrintToChat(client, "\x04Invalid target.");
+        PrintToChat(client, "%t", "L4DRandomBeamItem_InvalidTarget");
         return Plugin_Handled;
     }
 
@@ -1192,7 +1193,7 @@ Action CmdAdd(int client, int args)
 
     CreateBeam(entity, g_iDefaultConfig);
 
-    PrintToChat(client, "\x04Beam added to target entity.");
+    PrintToChat(client, "%t", "L4DRandomBeamItem_BeamAddedTargetEntity");
 
     return Plugin_Handled;
 }

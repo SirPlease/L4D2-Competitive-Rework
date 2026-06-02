@@ -31,6 +31,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_explosiondmg_prev.phrases");
 	if (g_bLateLoad) {
 		for (int i = 1; i <= MaxClients; i++) {
 			if (IsClientInGame(i)) {
@@ -57,7 +58,7 @@ Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, in
 		#if DEBUG
 			char sEntityName[MAX_ENTITY_NAME_SIZE];
 			GetEntityClassname(attacker, sEntityName, sizeof(sEntityName));
-			PrintToChatAll("hOnTakeDamage victim: %d, attacker: %d (%s), inflictor: %d, damage: %f, damagetype: %d", \
+			PrintToChatAll("%t", "L4D2ExplosiondmgPrev_TakeDamageVictimAttackerInflictor", \
 								victim, attacker, sEntityName, inflictor, damage, damagetype);
 		#endif
 		return Plugin_Handled;

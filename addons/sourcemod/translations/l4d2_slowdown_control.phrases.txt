@@ -1,0 +1,22 @@
+"Phrases"
+{
+	"L4D2SlowdownControl_WaterSlowdownWaterSlowdownEffect"
+	{
+		"en"		"{default}[{olive}Water Slowdown{default}] {green} Water Slowdown {default} The effect is weakened due to tank generation."
+		"chi"		"{default}[{olive}Water Slowdown{default}]  {green}水中减速{default} 效果因tank生成被减弱."
+		"zho"		"{default}[{olive}Water Slowdown{default}] {green}水中減速{default} 效果因tank生成而減弱."
+		"jp"		"{default}[{olive}水減速{default}] {green}水減速 {default} タンク生成により効果が弱まります。"
+		"ko"		"{default}[{olive}물 감속{default}] {green} 물 감속 {default} 탱크 생성으로 인해 효과가 약화됩니다."
+		"vi"		"{default}[{olive}Làm chậm nước{default}] {green} Làm chậm nước {default} Hiệu ứng bị suy yếu do tạo ra bể."
+	}
+
+	"L4D2SlowdownControl_WaterSlowdownWaterSlowdownEffectRestored"
+	{
+		"en"		"{default}[{olive}Water Slowdown{default}] {green}Water Slowdown{default} The effect has been restored to normal levels."
+		"chi"		"{default}[{olive}Water Slowdown{default}]  {green}水中减速{default} 效果已恢复到正常水平。"
+		"zho"		"{default}[{olive}Water Slowdown{default}] {green}水中減速{default} 效果已恢復到正常水準。"
+		"jp"		"{default}[{olive}ウォータースローダウン{default}] {green}ウォータースローダウン{default} 効果が通常レベルに戻りました。"
+		"ko"		"{default}[{olive}물 감속{default}] {green}물 감속{default} 효과가 정상 수준으로 복원되었습니다."
+		"vi"		"{default}[{olive}Water Slowdown{default}] {green}Water Slowdown{default} Hiệu ứng đã được khôi phục về mức bình thường."
+	}
+}

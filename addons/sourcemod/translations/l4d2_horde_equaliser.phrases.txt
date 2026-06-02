@@ -4,25 +4,41 @@
 	{
 		"en"		"<{olive}Horde{default}>"
 		"chi"		"<{olive}尸潮{default}>"
+		"zho"		"<{olive}Horde{default}>"
+		"jp"		"<{olive}Horde{default}>"
+		"ko"		"<{olive}Horde{default}>"
+		"vi"		"<{olive}Horde{default}>"
 	}
 
 	"NoCommonRemaining"
 	{
 		"en"		"{red}No {default}common remaining!"
 		"chi"		"{red}没有{default}普通感染者了！"
-	}
+	
+		"zho"		"{red}No {default}common remaining!"
+		"jp"		"{red}No {default}common remaining!"
+		"ko"		"{red}No {default}common remaining!"
+		"vi"		"{red}No {default}common remaining!"}
 
 	"CommonRemaining"
 	{
 		"#format"	"{1:i}"
 		"en"		"{red}{1} {default}common remaining.."
 		"chi"		"{red}{1} {default}个普通感染者剩余.."
-	}
+	
+		"zho"		"{red}{1} {default}common remaining.."
+		"jp"		"{red}{1} {default}common remaining.."
+		"ko"		"{red}{1} {default}common remaining.."
+		"vi"		"{red}{1} {default}common remaining.."}
 
 	"FiniteEventStarted"
 	{
 		"#format"	"{1:i}"
 		"en"		"A {blue}finite event{default} of {olive}{1}{default} commons has started! Rush or wait it out, the choice is yours!"
 		"chi"		"一场{blue}有限尸潮{default}开始了！本轮共有{olive}{1}{default}个普通感染者！是冲还是等，你来决定！"
-	}
+	
+		"zho"		"A {blue}finite event{default} of {olive}{1}{default} commons has started! Rush or wait it out, the choice is yours!"
+		"jp"		"A {blue}finite event{default} of {olive}{1}{default} commons has started! Rush or wait it out, the choice is yours!"
+		"ko"		"A {blue}finite event{default} of {olive}{1}{default} commons has started! Rush or wait it out, the choice is yours!"
+		"vi"		"A {blue}finite event{default} of {olive}{1}{default} commons has started! Rush or wait it out, the choice is yours!"}
 }

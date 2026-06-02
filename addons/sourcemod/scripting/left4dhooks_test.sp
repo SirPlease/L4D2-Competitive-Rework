@@ -108,6 +108,7 @@ public void OnAllPluginsLoaded()
 
 public void OnPluginStart()
 {
+	LoadTranslations("left4dhooks_test.phrases");
 	RegAdminCmd("sm_l4df", sm_l4df, ADMFLAG_ROOT);
 	RegAdminCmd("sm_l4dd", sm_l4dd, ADMFLAG_ROOT);
 	RegAdminCmd("sm_l4dd_calls", sm_calls, ADMFLAG_ROOT, "Increase the number of calls forwards are allowed to log by 1.");
@@ -2752,9 +2753,9 @@ stock Action TimerDetonateVomitjar(Handle timer, int entity)
 	{
 		float vPos[3];
 		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", vPos);
-		PrintToChatAll("DETON A (%0.0f %0.0f %0.0f)", vPos[0], vPos[1], vPos[2]);
+		PrintToChatAll("%t", "Left4DHooksTest_Deton", vPos[0], vPos[1], vPos[2]);
 		GetGroundAngles(vPos);
-		PrintToChatAll("DETON B (%0.0f %0.0f %0.0f)", vPos[0], vPos[1], vPos[2]);
+		PrintToChatAll("%t", "Left4DHooksTest_Deton_2", vPos[0], vPos[1], vPos[2]);
 		vPos[2] += 1.0;
 		TeleportEntity(entity, vPos, NULL_VECTOR, view_as<float>({ 0.0, 0.0, -1.0}));
 	}
@@ -2779,7 +2780,7 @@ stock void GetGroundAngles(float vOrigin[3])
 	if( TR_DidHit(trace) )
 	{
 		TR_GetEndPosition(vOrigin, trace); // retrieve our trace endpoint
-		PrintToChatAll("Trace (%0.0f %0.0f %0.0f)", vOrigin[0], vOrigin[1], vOrigin[2]);
+		PrintToChatAll("%t", "Left4DHooksTest_Trace", vOrigin[0], vOrigin[1], vOrigin[2]);
 	}
 
 	delete trace;

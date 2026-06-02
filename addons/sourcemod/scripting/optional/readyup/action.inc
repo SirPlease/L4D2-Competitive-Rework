@@ -291,7 +291,7 @@ bool AddUnReadyCount(int client)
 
 	if (unReadyLimit > 0 && unReadyCount >= unReadyLimit)
 	{
-		CPrintToChat(client, "%t %t", "Tag", "UnReadyLimit", unReadyLimit);
+		CPrintToChat(client, "%t %t", "Tag", "Readyup_CanOnlyUnreadyTimesRound", unReadyLimit);
 		return false;
     }
 

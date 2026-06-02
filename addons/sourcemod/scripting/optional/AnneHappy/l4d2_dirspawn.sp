@@ -615,12 +615,12 @@ public Action Cmd_GenKV(int client, int args)
     if (ok)
     {
         PrintToServer("[DirSpawn] 已生成 KV: %s (范围 %d..%d)", path, min, max);
-        if (client > 0) PrintToChat(client, "[DirSpawn] KV 已生成: %s", path);
+        if (client > 0) PrintToChat(client, "%t", "L4D2Dirspawn_DirSpawnKVGenerated", path);
     }
     else
     {
         PrintToServer("[DirSpawn] 写入 KV 失败: %s", path);
-        if (client > 0) PrintToChat(client, "[DirSpawn] 写入 KV 失败: %s", path);
+        if (client > 0) PrintToChat(client, "%t", "L4D2Dirspawn_DirSpawnFailedWriteKV", path);
     }
     return Plugin_Handled;
 }
@@ -824,6 +824,7 @@ public void CvarChanged(ConVar cvar, const char[] oldValue, const char[] newValu
 // ---------------------------- Lifecycle --------------------------------
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_dirspawn.phrases");
     // 基础
     gCvarEnable            = CreateConVar("dirspawn_enable", "1", "启用导演特感控制（0/1）", FCVAR_NOTIFY, true, 0.0, true, 1.0);
     gCvarCount             = CreateConVar("dirspawn_count", "4", "并发特感总数（cm_MaxSpecials）", FCVAR_NOTIFY, true, 0.0, true, 30.0);

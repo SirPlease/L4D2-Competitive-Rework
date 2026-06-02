@@ -43,6 +43,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("starting_items.phrases");
 	g_hCvarItemType = CreateConVar("starting_item_flags", \
 		"0", \
 		"Item flags to give on leaving the saferoom (0: Disable, 1: Kit, 2: Defib, 4: Pills, 8: Adren, 16: Pipebomb, 32: Molotov, 64: Bile)", \
@@ -172,7 +173,7 @@ void GivePlayerWeaponByName(int iClient, const char[] sWeaponName)
 Action Cmd_GiveStartingItems(int iClient, int iArgs)
 {
 	DetermineItems();
-	PrintToChat(iClient, "DetermineItems()");
+	PrintToChat(iClient, "%t", "StartingItems_DetermineItems");
 
 	return Plugin_Handled;
 }

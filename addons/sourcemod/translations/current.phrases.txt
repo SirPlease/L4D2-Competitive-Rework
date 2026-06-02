@@ -3,11 +3,20 @@
 	"Tag"
 	{
 		"en"		"<{olive}Current{default}>"
+		"chi"		"<{olive}Current{default}>"
+		"zho"		"<{olive}Current{default}>"
+		"jp"		"<{olive}Current{default}>"
+		"ko"		"<{olive}Current{default}>"
+		"vi"		"<{olive}Current{default}>"
 	}
 	"Current"
 	{
 		"en"		"Current: {green}%d%%{default}"
 		"es"		"Progreso: {green}%d%%{default}"
 		"chi"		"当前进度: {green}%d%%{default}"
-	}
+	
+		"zho"		"Current: {green}%d%%{default}"
+		"jp"		"Current: {green}%d%%{default}"
+		"ko"		"Current: {green}%d%%{default}"
+		"vi"		"Current: {green}%d%%{default}"}
 }

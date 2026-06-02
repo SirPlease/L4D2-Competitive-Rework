@@ -29,4 +29,55 @@
 		"en"		"Addon Missions"
 		"chi"		"三方战役"
 	}
+
+
+	"L4D2MMAdminMenu_SMFailedGetMissionList"
+	{
+		"en"		"[SM] Failed to get mission list."
+		"chi"		"[SM]获取任务列表失败。"
+		"zho"		"[SM]取得任務清單失敗。"
+		"jp"		"[SM] ミッションリストの取得に失敗しました。"
+		"ko"		"[SM] 미션 목록을 가져오지 못했습니다."
+		"vi"		"[SM] Không lấy được danh sách nhiệm vụ."
+	}
+
+	"L4D2MMAdminMenu_SMNoMapsFoundCurrent"
+	{
+		"en"		"[SM] No maps found for current game mode."
+		"chi"		"[SM] 没有找到适合当前游戏模式的地图。"
+		"zho"		"[SM] 沒有找到適合當前遊戲模式的地圖。"
+		"jp"		"[SM] 現在のゲーム モードのマップが見つかりません。"
+		"ko"		"[SM] 현재 게임 모드에 대한 지도를 찾을 수 없습니다."
+		"vi"		"[SM] Không tìm thấy bản đồ nào cho chế độ trò chơi hiện tại."
+	}
+
+	"L4D2MMAdminMenu_SMNoValidMapsFound"
+	{
+		"en"		"[SM] No valid maps found for this mission."
+		"chi"		"[SM] 未找到此任务的有效地图。"
+		"zho"		"[SM] 未找到此任務的有效地圖。"
+		"jp"		"[SM] このミッションに有効なマップが見つかりません。"
+		"ko"		"[SM] 이 임무에 유효한 지도를 찾을 수 없습니다."
+		"vi"		"[SM] Không tìm thấy bản đồ hợp lệ cho nhiệm vụ này."
+	}
+
+	"L4D2MMAdminMenu_SMAdminForcingMapChange"
+	{
+		"en"		"\\x04[SM]\\x01 Admin is forcing a map change to \\x03%s\\x01."
+		"chi"		"\\x04[SM]\\x01 管理员正在强制将地图更改为 \\x03%s\\x01。"
+		"zho"		"\\x04[SM]\\x01 管理員正在強制將地圖變更為 \\x03%s\\x01。"
+		"jp"		"\\x04[SM]\\x01 管理者はマップを \\x03%s\\x01 に強制的に変更しています。"
+		"ko"		"\\x04[SM]\\x01 관리자가 \\x03%s\\x01로 지도를 강제로 변경하고 있습니다."
+		"vi"		"\\x04[SM]\\x01 Quản trị viên đang buộc thay đổi bản đồ thành \\x03%s\\x01."
+	}
+
+	"L4D2MMAdminMenu_SMAdminReloadingVPKs"
+	{
+		"en"		"\\x04[SM]\\x01 Admin is reloading VPKs and mission list..."
+		"chi"		"\\x04[SM]\\x01 管理员正在重新加载 VPK 和任务列表..."
+		"zho"		"\\x04[SM]\\x01 管理員正在重新載入 VPK 和任務清單..."
+		"jp"		"\\x04[SM]\\x01 管理者が VPK とミッション リストをリロードしています..."
+		"ko"		"\\x04[SM]\\x01 관리자가 VPK 및 임무 목록을 다시 로드하는 중입니다..."
+		"vi"		"\\x04[SM]\\x01 Admin đang tải lại VPK và danh sách nhiệm vụ..."
+	}
 }

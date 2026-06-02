@@ -53,6 +53,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_nosey_parker.phrases");
 	HookEvent("player_hurt", Event_PlayerHurt);
 	HookEvent("player_death", Event_PlayerDeath);
 	HookEvent("charger_carry_start", Event_CHJ_Attack);
@@ -226,7 +227,7 @@ void PrintInflictedDamage(int iSurvivor, int iInfected)
 	
 	int iZClass = GetEntProp(iInfected, Prop_Send, "m_zombieClass");
 	
-	PrintToChat(iSurvivor, "\x04[DmgReport]\x01 \x03%N\x01(\x04%s\x01) took \x05%d\x01 damage from you!", iInfected, L4D2_InfectedNames[iZClass], g_iDamage[iSurvivor][iInfected]);
+	PrintToChat(iSurvivor, "%t", "L4D2NoseyParker_DmgReportTookDamage", iInfected, L4D2_InfectedNames[iZClass], g_iDamage[iSurvivor][iInfected]);
 
 	g_fReported[iSurvivor][iInfected] = GetGameTime();
 	g_iDamage[iSurvivor][iInfected] = 0;

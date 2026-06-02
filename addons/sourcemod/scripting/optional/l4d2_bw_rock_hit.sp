@@ -52,6 +52,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_bw_rock_hit.phrases");
 	InitGameData();
 
 	g_hSurvivorMaxIncapCount = FindConVar("survivor_max_incapacitated_count");
@@ -133,11 +134,9 @@ Action OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fDamage
 #if DEBUG
 	char sClassName[MAX_ENTITY_NAME_SIZE];
 	GetEdictClassname(iInflictor, sClassName, sizeof(sClassName));
-	PrintToChatAll("Victim %d attacker %d inflictor %d damageType %d weapon %d", 
-								iVictim, iAttacker, iInflictor, iDamagetype, iWeapon);
+	PrintToChatAll("%t", "L4D2BWRockHit_VictimAttackerInflictorDamageType", iVictim, iAttacker, iInflictor, iDamagetype, iWeapon);
 			
-	PrintToChatAll("Victim %N(%i/%i) attacker %N classname %s", 
-								iVictim, GetSurvivorPermanentHealth(iVictim), GetSurvivorTemporaryHealth(iVictim), iAttacker, sClassName);
+	PrintToChatAll("%t", "L4D2BWRockHit_VictimAttackerClassname", iVictim, GetSurvivorPermanentHealth(iVictim), GetSurvivorTemporaryHealth(iVictim), iAttacker, sClassName);
 #endif
 
 	// Not b&w
@@ -196,7 +195,7 @@ bool IsTankRock(int iEntity)
 void CTankRock__Detonate(int iTankRock)
 {
 #if DEBUG
-	PrintToChatAll("CTankRock__Detonate: %d", iTankRock);
+	PrintToChatAll("%t", "L4D2BWRockHit_TankRockDetonate", iTankRock);
 #endif
 
 	SDKCall(g_hTankRockDetonateCall, iTankRock);
@@ -212,9 +211,9 @@ Action Cmd_DetonateRock(int iClient, int iArgs)
 		CTankRock__Detonate(iEntity);
 		
 		if (iOwner > 0 && IsClientInGame(iOwner)) {
-			PrintToChatAll("Owner: %N (%d). Tank rock %d detonate)", iOwner, iOwner, iEntity);
+			PrintToChatAll("%t", "L4D2BWRockHit_OwnerTankRockDetonate", iOwner, iOwner, iEntity);
 		} else {
-			PrintToChatAll("Unknown owner: %d. Tank rock %d detonate)", iOwner, iEntity);
+			PrintToChatAll("%t", "L4D2BWRockHit_UnknownOwnerTankRockDetonate", iOwner, iEntity);
 		}
 	}
 

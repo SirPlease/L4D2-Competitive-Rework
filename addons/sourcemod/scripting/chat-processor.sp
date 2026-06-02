@@ -108,6 +108,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 // On Plugin Start
 public void OnPluginStart()
 {
+	LoadTranslations("chat-processor.phrases");
 	LoadTranslations("common.phrases");
 	
 	CreateConVar("sm_chatprocessor_version", PLUGIN_VERSION, PLUGIN_DESCRIPTION, FCVAR_REPLICATED | FCVAR_NOTIFY | FCVAR_SPONLY | FCVAR_DONTRECORD);
@@ -372,7 +373,7 @@ public void Frame_OnChatMessage(DataPack pack)
 	delete pack;
 
 	if (bRestrictDeadChat)
-		PrintToChat(author, "Dead chat is currently restricted.");
+		PrintToChat(author, "%t", "ChatProcessor_DeadChatCurrentlyRestricted");
 
 	//Make a copy of the format buffer and use that as the print so the format string stays the same.
 	char sBuffer[MAXLENGTH_BUFFER];

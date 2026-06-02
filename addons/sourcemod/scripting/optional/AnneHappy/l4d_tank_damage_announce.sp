@@ -62,6 +62,7 @@ PlayerHurt playerHurts[MAXPLAYERS + 1][MAXPLAYERS + 1];
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d_tank_damage_announce.phrases");
 	g_hAllowAnnounce = CreateConVar("tank_damage_enable", "1", "是否允许在 Tank 死亡后输出生还者对 Tank 的伤害统计", CVAR_FLAG, true, 0.0, true, 1.0);
 	g_hAllowForceKillAnnounce = CreateConVar("tank_damage_force_kill_announce", "0", "Tank 被强制处死或自杀时是否输出生还者对 Tank 的伤害统计", CVAR_FLAG, true, 0.0, true, 1.0);
 	g_hAllowPrintLiveTime = CreateConVar("tank_damage_print_livetime", "1", "是否显示 Tank 存活时间", CVAR_FLAG, true, 0.0, true, 1.0);
@@ -235,7 +236,7 @@ public void roundEndHandler(Event event, const char[] name, bool dontBroadcast)
 			if (!isTank(i) || !IsPlayerAlive(i)) { continue; }
 			/* 坦克还存在，计算存在时长 */
 			tankLiveTime[i] = GetGameTime() - tankLiveTime[i];
-			CPrintToChatAll("[{green}!{default}] {green}%N {default}剩余 {green}%d{default}({green}%d%%{default}) {blue}血量", i, GetClientHealth(i), RoundToNearest(float(GetClientHealth(i)) / float(tankHealth[i]) * 100.0));
+			CPrintToChatAll("%t", "L4DTankDamageAnnounce_RemainingBloodVolume", i, GetClientHealth(i), RoundToNearest(float(GetClientHealth(i)) / float(tankHealth[i]) * 100.0));
 			/* 如果已经显示过了 Tank 伤害，则不再显示 */
 			if (hasPrintDamage[i]) { continue; }
 			CreateTimer(DAMAGE_DISPLAY_DELAY, printTankDamageHandler, i);
@@ -254,13 +255,13 @@ void printTankDamage(int client)
 {
 	if (!g_hAllowAnnounce.BoolValue) { return; }
 	/* 显示标题 */
-	if (!IsFakeClient(client)) { CPrintToChatAll("[{green}!{default}] {blue}生还者对 {green}Tank {default}({green}%N{default}) {blue}的伤害统计", client); }
-	else { CPrintToChatAll("[{green}!{default}] {blue}生还者对 {green}Tank {default}({green}AI{default}) {blue}的伤害统计"); }
+	if (!IsFakeClient(client)) { CPrintToChatAll("%t", "L4DTankDamageAnnounce_SurvivorDamageStatisticsTank", client); }
+	else { CPrintToChatAll("%t", "L4DTankDamageAnnounce_SurvivorDamageStatisticsTankAI"); }
 	/* 显示 Tank 存活时间 */
 	if (g_hAllowPrintLiveTime.BoolValue)
 	{
-		if (!IsFakeClient(client)) { CPrintToChatAll("[{green}!{default}] {green}%N {blue}存活时间：{green}%s", getTime(tankLiveTime[client])); }
-		else { CPrintToChatAll("[{green}!{default}] {green}Tank {blue}存活时间：{green}%s", getTime(tankLiveTime[client])); }
+		if (!IsFakeClient(client)) { CPrintToChatAll("%t", "L4DTankDamageAnnounce_SurvivalTime", getTime(tankLiveTime[client])); }
+		else { CPrintToChatAll("%t", "L4DTankDamageAnnounce_TankSurvivalTime", getTime(tankLiveTime[client])); }
 	}
 	/* 显示详细伤害统计 */
 	/* 计算每个玩家对 Tank 伤害、吃拳、吃石、吃铁的百分比 */
@@ -302,13 +303,7 @@ void printTankDamage(int client)
 		/* 允许显示零伤人员或不允许显示零伤人员但这个人的伤害大于 0，允许输出 */
 		if (g_hAllowPrintZeroDamage.BoolValue || (!g_hAllowPrintZeroDamage.BoolValue && damage > 0))
 		{
-			CPrintToChatAll("{blue}[{default}%d{blue}({default}%d%%{blue})][{green}拳:{default}%d{blue}][{green}石:{default}%d{blue}][{green}铁:{default}%d{blue}][{green}承伤:{default}%d{blue}({default}%d%%{blue})] {green}%N",
-			damage, damagePercent,
-			playerHurts[client][survivor].punch,
-			playerHurts[client][survivor].rock,
-			playerHurts[client][survivor].iron,
-			playerHurts[client][survivor].gotDamage, totalGotDamage == 0 ? 0 : RoundToNearest(float(playerHurts[client][survivor].gotDamage) / float(totalGotDamage) * 100.0),
-			survivor);
+			CPrintToChatAll("%t", "L4DTankDamageAnnounce_TankDamageSummaryLine", damage, damagePercent, playerHurts[client][survivor].punch, playerHurts[client][survivor].rock, playerHurts[client][survivor].iron, playerHurts[client][survivor].gotDamage, totalGotDamage == 0 ? 0 : RoundToNearest(float(playerHurts[client][survivor].gotDamage) / float(totalGotDamage) * 100.0), survivor);
 		}
 		/* 不允许显示零伤人员时但这个人伤害是 0，不输出 */
 		else if (!g_hAllowPrintZeroDamage.BoolValue && damage == 0) { continue; }

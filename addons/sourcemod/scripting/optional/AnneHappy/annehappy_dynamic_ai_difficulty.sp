@@ -74,6 +74,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("annehappy_dynamic_ai_difficulty.phrases");
     g_cvEnable = CreateConVar("ah_ai_dynamic_enable", "1", "是否启用 AnneHappy 动态难度", FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_cvCheckInterval = CreateConVar("ah_ai_dynamic_check_interval", "5.0", "回合定档前，每隔多少秒从 l4d_stats 重试检查一次平均 PPM", FCVAR_NOTIFY, true, 1.0, true, 60.0);
     g_cvLevel2PPM = CreateConVar("ah_ai_dynamic_ppm_normal", "30.89", "进入普通难度的 l4d_stats 平均 PPM 阈值", FCVAR_NOTIFY, true, 0.0);
@@ -183,7 +184,7 @@ public void Event_PlayerLeftStartArea(Event event, const char[] name, bool dontB
     {
         char levelName[16];
         GetLevelName(g_iCurrentLevel, levelName, sizeof(levelName));
-        PrintToChatAll("\x04[AnneHappyAI]\x01 本回合动态难度已锁定为 \x03%s\x01。", levelName);
+        PrintToChatAll("%t", "DynamicAIDifficulty_DynamicDifficultyRoundLocked", levelName);
     }
 }
 
@@ -266,7 +267,7 @@ bool ApplyFixedDifficultyIfNeeded(bool silent)
     {
         char levelName[16];
         GetLevelName(g_iCurrentLevel, levelName, sizeof(levelName));
-        PrintToChatAll("\x04[AnneHappyAI]\x01 固定动态难度：\x03%s\x01。", levelName);
+        PrintToChatAll("%t", "DynamicAIDifficulty_FixedDynamicDifficulty", levelName);
     }
 
     return true;
@@ -367,7 +368,7 @@ public Action Cmd_SetDifficulty(int client, int args)
         {
             ReplyToCommand(client, "[AnneHappyAI] 已切换为自动难度，将从下一回合开始生效；当前回合难度不变。");
             if (g_cvAnnounce.BoolValue)
-                PrintToChatAll("\x04[AnneHappyAI]\x01 已切换为自动难度，将从下一回合开始生效；当前回合难度不变。");
+                PrintToChatAll("%t", "DynamicAIDifficulty_SwitchedAutomaticDifficultyTakeEffect");
             return Plugin_Handled;
         }
 
@@ -381,7 +382,7 @@ public Action Cmd_SetDifficulty(int client, int args)
 
         ReplyToCommand(client, "[AnneHappyAI] 已切换为自动难度。");
         if (g_cvAnnounce.BoolValue)
-            PrintToChatAll("\x04[AnneHappyAI]\x01 已切换为自动难度。");
+            PrintToChatAll("%t", "DynamicAIDifficulty_SwitchedAutomaticDifficulty");
         return Plugin_Handled;
     }
 
@@ -393,7 +394,7 @@ public Action Cmd_SetDifficulty(int client, int args)
         GetLevelName(level, levelName, sizeof(levelName));
         ReplyToCommand(client, "[AnneHappyAI] 已固定难度为 %d(%s)，将从下一回合开始生效；当前回合难度不变。", level, levelName);
         if (g_cvAnnounce.BoolValue)
-            PrintToChatAll("\x04[AnneHappyAI]\x01 已固定下一回合难度为 \x03%s\x01；当前回合难度不变。", levelName);
+            PrintToChatAll("%t", "DynamicAIDifficulty_DifficultyNextRoundFixedDifficulty", levelName);
         return Plugin_Handled;
     }
 
@@ -408,7 +409,7 @@ public Action Cmd_SetDifficulty(int client, int args)
     GetLevelName(level, levelName, sizeof(levelName));
     ReplyToCommand(client, "[AnneHappyAI] 已固定难度为 %d(%s)", level, levelName);
     if (g_cvAnnounce.BoolValue)
-        PrintToChatAll("\x04[AnneHappyAI]\x01 已固定当前回合难度为 \x03%s\x01。", levelName);
+        PrintToChatAll("%t", "DynamicAIDifficulty_DifficultyCurrentRoundFixed", levelName);
     return Plugin_Handled;
 }
 
@@ -991,7 +992,7 @@ void ApplyDifficulty(int level, bool force, float ppm = 0.0, int score = 0, int 
     {
         char levelName[16];
         GetLevelName(level, levelName, sizeof(levelName));
-        PrintToChatAll("\x04[AnneHappyAI]\x01 l4d_stats 平均个人PPM %.2f，%d人积分 %d / %d分钟（季度%d人/总榜回退%d人），动态难度调整为 \x03%s\x01。", ppm, players, score, minutes, quarterPlayers, fallbackPlayers, levelName);
+        PrintToChatAll("%t", "DynamicAIDifficulty_L4DStatsAveragePersonalPPM", ppm, players, score, minutes, quarterPlayers, fallbackPlayers, levelName);
     }
 }
 

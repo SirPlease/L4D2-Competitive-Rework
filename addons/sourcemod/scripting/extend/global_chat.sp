@@ -97,6 +97,7 @@ public int Native_GlobalChatBroadcast(Handle plugin, int numParams)
 
 public void OnPluginStart()
 {
+	LoadTranslations("global_chat.phrases");
 	g_cvEnabled = CreateConVar("sm_qf_enabled", "1", "是否启用全服聊天。", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_cvDatabaseConfig = CreateConVar("sm_qf_database", "globalchat", "databases.cfg 里的数据库配置名称。");
 	g_cvPollInterval = CreateConVar("sm_qf_poll_interval", "5.0", "全服聊天轮询间隔，单位秒。", FCVAR_NONE, true, 2.0, true, 30.0);
@@ -414,13 +415,13 @@ public int MenuHandler_GlobalChatMenu(Menu menu, MenuAction action, int client, 
 	if (StrEqual(info, "toggle_global"))
 	{
 		g_bClientSeeGlobal[client] = !g_bClientSeeGlobal[client];
-		PrintToChat(client, "\x04[全服]\x01 你已%s普通全服聊天。", g_bClientSeeGlobal[client] ? "接收" : "屏蔽");
+		PrintToChat(client, "%t", "GlobalChat_FullServerNormalFullServer", g_bClientSeeGlobal[client] ? "接收" : "屏蔽");
 		ShowGlobalChatMenu(client);
 	}
 	else if (StrEqual(info, "toggle_lfg") && CanToggleLFGPreference(client))
 	{
 		g_bClientSeeLFG[client] = !g_bClientSeeLFG[client];
-		PrintToChat(client, "\x04[全服]\x01 你已%s找队友提示。", g_bClientSeeLFG[client] ? "接收" : "屏蔽");
+		PrintToChat(client, "%t", "GlobalChat_AllServersAskedTipTeammates", g_bClientSeeLFG[client] ? "接收" : "屏蔽");
 		ShowGlobalChatMenu(client);
 	}
 
@@ -1386,12 +1387,12 @@ void DispatchGlobalChatMessage(const char[] senderSteam64, const char[] server, 
 				if (count < 2 || parts[1][0] == '\0')
 				{
 					PrintCenterText(i, "%s 玩家在 %s 召唤队友", parts[0], server);
-					PrintToChat(i, "\x04%s \x05%s \x01玩家在 \x03%s \x01召唤队友", prefix, parts[0], server);
+					PrintToChat(i, "%t", "GlobalChat_SummonTeammates", prefix, parts[0], server);
 				}
 				else
 				{
 					PrintCenterText(i, "%s 玩家在 %s 召唤队友", parts[0], server);
-					PrintToChat(i, "\x04%s \x05%s \x01玩家在 \x03%s \x01召唤队友\n\x01留言: \x05%s", prefix, parts[0], server, parts[1]);
+					PrintToChat(i, "%t", "GlobalChat_SummonTeammatesWithMessage", prefix, parts[0], server, parts[1]);
 				}
 			}
 		}

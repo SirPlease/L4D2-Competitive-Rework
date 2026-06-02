@@ -1,0 +1,202 @@
+"Phrases"
+{
+	"Gnome_ErrorAddAnymoreGnomesUsed"
+	{
+		"en"		"%sError: Cannot add anymore gnomes. Used: (\\x05%d/%d\\x01)."
+		"chi"		"%sError：无法再添加侏儒。使用：（\\x05%d/%d\\x01）。"
+		"zho"		"%sError：無法再增加侏儒。使用：（\\x05%d/%d\\x01）。"
+		"jp"		"%sエラー: これ以上ノームを追加できません。中古: (\\x05%d/%d\\x01)。"
+		"ko"		"%sError: 더 이상 노움을 추가할 수 없습니다. 중고: (\\x05%d/%d\\x01)."
+		"vi"		"%sError: Không thể thêm thần lùn nữa. Đã sử dụng: (\\x05%d/%d\\x01)."
+	}
+
+	"Gnome_CannotPlaceGnomeTryAgain"
+	{
+		"en"		"%sCannot place gnome, please try again."
+		"chi"		"%s无法放置 gnome，请重试。"
+		"zho"		"%s無法放置 gnome，請重試。"
+		"jp"		"%sgnome を配置できません。もう一度お試しください。"
+		"ko"		"%s그놈을 배치할 수 없습니다. 다시 시도해 주세요."
+		"vi"		"%sKhông thể đặt thần lùn, vui lòng thử lại."
+	}
+
+	"Gnome_ErrorCannotReadGnomeConfig"
+	{
+		"en"		"%sError: Cannot read the gnome config, assuming empty file. (\\x05%s\\x01)."
+		"chi"		"%sError：无法读取 gnome 配置，假设文件为空。 （\\x05%s\\x01）。"
+		"zho"		"%sError：無法讀取 gnome 配置，假設檔案為空。 （\\x05%s\\x01）。"
+		"jp"		"%sError: ファイルが空であると想定されるため、gnome 構成を読み取ることができません。 (\\x05%s\\x01)。"
+		"ko"		"%sError: 빈 파일로 가정하여 그놈 구성을 읽을 수 없습니다. (\\x05%s\\x01)."
+		"vi"		"%sError: Không thể đọc cấu hình gnome, giả sử tệp trống. (\\x05%s\\x01)."
+	}
+
+	"Gnome_ErrorFailedAddMapGnome"
+	{
+		"en"		"%sError: Failed to add map to gnome spawn config."
+		"chi"		"%sError：无法将地图添加到 gnome 生成配置。"
+		"zho"		"%sError：無法將地圖新增至 gnome 生成配置。"
+		"jp"		"%sエラー: gnome スポーン構成にマップを追加できませんでした。"
+		"ko"		"%sError: 그놈 생성 구성에 지도를 추가하지 못했습니다."
+		"vi"		"%sError: Không thể thêm bản đồ vào cấu hình sinh sản của gnome."
+	}
+
+	"Gnome_SavedPosAng"
+	{
+		"en"		"%s(\\x05%d/%d\\x01) - Saved at pos:[\\x05%f %f %f\\x01] ang:[\\x05%f %f %f\\x01]"
+		"chi"		"%s(\\x05%d/%d\\x01) - 保存位置：[\\x05%f %f %f\\x01] ang:[\\x05%f %f %f\\x01]"
+		"zho"		"%s(\\x05%d/%d\\x01) - Saved at pos:[\\x05%f %f %f\\x01] ang:[\\x05%f %f %f\\x01]"
+		"jp"		"%s(\\x05%d/%d\\x01) - 保存場所:[\\x05%f %f %f\\x01] ang:[\\x05%f %f] %f\\x01]"
+		"ko"		"%s(\\x05%d/%d\\x01) - 위치에 저장됨:[\\x05%f %f %f\\x01] 중앙:[\\x05%f %f %f\\x01]"
+		"vi"		"%s(\\x05%d/%d\\x01) - Đã lưu tại pos:[\\x05%f %f %f\\x01] ang:[\\x05%f %f %f\\x01]"
+	}
+
+	"Gnome_FailedSaveGnome"
+	{
+		"en"		"%s(\\x05%d/%d\\x01) - Failed to save Gnome."
+		"chi"		"%s(\\x05%d/%d\\x01) - 无法保存 Gnome。"
+		"zho"		"%s(\\x05%d/%d\\x01) - 無法儲存 Gnome。"
+		"jp"		"%s(\\x05%d/%d\\x01) - Gnome の保存に失敗しました。"
+		"ko"		"%s(\\x05%d/%d\\x01) - 그놈을 저장하지 못했습니다."
+		"vi"		"%s(\\x05%d/%d\\x01) - Không lưu được Gnome."
+	}
+
+	"Gnome_ErrorCannotFindGnomeConfig"
+	{
+		"en"		"%sError: Cannot find the gnome config (\\x05%s\\x01)."
+		"chi"		"%sError：找不到 gnome 配置（\\x05%s\\x01）。"
+		"zho"		"%sError：找不到 gnome 配置（\\x05%s\\x01）。"
+		"jp"		"%sエラー: gnome 構成が見つかりません (\\x05%s\\x01)。"
+		"ko"		"%sError: 그놈 구성(\\x05%s\\x01)을 찾을 수 없습니다."
+		"vi"		"%sError: Không thể tìm thấy cấu hình gnome (\\x05%s\\x01)."
+	}
+
+	"Gnome_ErrorCannotLoadGnomeConfig"
+	{
+		"en"		"%sError: Cannot load the gnome config (\\x05%s\\x01)."
+		"chi"		"%sError：无法加载 gnome 配置（\\x05%s\\x01）。"
+		"zho"		"%sError：無法載入 gnome 配置（\\x05%s\\x01）。"
+		"jp"		"%sエラー: gnome 構成をロードできません (\\x05%s\\x01)。"
+		"ko"		"%sError: gnome 구성(\\x05%s\\x01)을 로드할 수 없습니다."
+		"vi"		"%sError: Không thể tải cấu hình gnome (\\x05%s\\x01)."
+	}
+
+	"Gnome_ErrorCurrentMapNotGnome"
+	{
+		"en"		"%sError: Current map not in the gnome config."
+		"chi"		"%sError：当前地图不在 gnome 配置中。"
+		"zho"		"%sError：目前地圖不在 gnome 配置中。"
+		"jp"		"%sエラー: 現在のマップは gnome 設定にありません。"
+		"ko"		"%sError: 현재 지도가 그놈 구성에 없습니다."
+		"vi"		"%sError: Bản đồ hiện tại không có trong cấu hình gnome."
+	}
+
+	"Gnome_RemovedConfig"
+	{
+		"en"		"%s(\\x05%d/%d\\x01) - Gnome removed from config."
+		"chi"		"%s(\\x05%d/%d\\x01) - Gnome 从配置中删除。"
+		"zho"		"%s(\\x05%d/%d\\x01) - Gnome 從設定中刪除。"
+		"jp"		"%s(\\x05%d/%d\\x01) - Gnome が設定から削除されました。"
+		"ko"		"%s(\\x05%d/%d\\x01) - 그놈이 구성에서 제거되었습니다."
+		"vi"		"%s(\\x05%d/%d\\x01) - Gnome đã bị xóa khỏi config."
+	}
+
+	"Gnome_FailedRemoveGnomeConfig"
+	{
+		"en"		"%s(\\x05%d/%d\\x01) - Failed to remove Gnome from config."
+		"chi"		"%s(\\x05%d/%d\\x01) - 无法从配置中删除 Gnome。"
+		"zho"		"%s(\\x05%d/%d\\x01) - 無法從設定中刪除 Gnome。"
+		"jp"		"%s(\\x05%d/%d\\x01) - 構成から Gnome を削除できませんでした。"
+		"ko"		"%s(\\x05%d/%d\\x01) - 구성에서 Gnome을 제거하지 못했습니다."
+		"vi"		"%s(\\x05%d/%d\\x01) - Không thể xóa Gnome khỏi config."
+	}
+
+	"Gnome_0AllGnomesRemovedConfig"
+	{
+		"en"		"%s(0/%d) - All gnomes removed from config, add with \\x05sm_gnomesave\\x01."
+		"chi"		"%s(0/%d) - 从配置中删除所有侏儒，添加 \\x05sm_gnomesave\\x01。"
+		"zho"		"%s(0/%d) - 從設定中刪除所有侏儒，新增 \\x05sm_gnomesave\\x01。"
+		"jp"		"%s(0/%d) - すべてのノームが設定から削除され、\\x05sm_gnomesave\\x01 で追加されます。"
+		"ko"		"%s(0/%d) - 구성에서 모든 노움이 제거되었습니다. \\x05sm_gnomesave\\x01로 추가하세요."
+		"vi"		"%s(0/%d) - Tất cả các thần lùn bị xóa khỏi cấu hình, thêm bằng \\x05sm_gnomesave\\x01."
+	}
+
+	"Gnome_GlowTurned"
+	{
+		"en"		"%sGlow has been turned %s"
+		"chi"		"%sGlow已变成%s"
+		"zho"		"%sGlow已變成%s"
+		"jp"		"%sグローが%sになりました"
+		"ko"		"%sGlow가 %s로 바뀌었습니다."
+		"vi"		"%sGlow đã được chuyển thành %s"
+	}
+
+	"Gnome_Total"
+	{
+		"en"		"%sTotal: %d."
+		"chi"		"%s 总计：%d。"
+		"zho"		"%s 總計：%d。"
+		"jp"		"%s合計: %d。"
+		"ko"		"%s총계: %d."
+		"vi"		"%s Tổng cộng: %d."
+	}
+
+	"Gnome_Teleported"
+	{
+		"en"		"%sTeleported to %d."
+		"chi"		"%s传送到%d。"
+		"zho"		"%s傳送到%d。"
+		"jp"		"%sが%dにテレポートしました。"
+		"ko"		"%s%d로 텔레포트되었습니다."
+		"vi"		"%sTĐã chuyển sang %d."
+	}
+
+	"Gnome_CouldNotFindIndexTeleportation"
+	{
+		"en"		"%sCould not find index for teleportation."
+		"chi"		"%s找不到传送索引。"
+		"zho"		"%s找不到傳送索引。"
+		"jp"		"%sテレポートのインデックスが見つかりませんでした。"
+		"ko"		"%s순간이동에 대한 색인을 찾을 수 없습니다."
+		"vi"		"%sKhông thể tìm thấy chỉ mục cho dịch chuyển tức thời."
+	}
+
+	"Gnome_UsageSMGnometeleIndex1"
+	{
+		"en"		"%sUsage: sm_gnometele <index 1-%d>."
+		"chi"		"%sU用法：sm_gnometele <索引1-%d>。"
+		"zho"		"%sU用法：sm_gnometele <索引1-%d>。"
+		"jp"		"%s使用法: sm_gnometele <インデックス 1-%d>。"
+		"ko"		"%sUsage: sm_gnometele <색인 1-%d>."
+		"vi"		"%sUsử dụng: sm_gnometele <chỉ mục 1-%d>."
+	}
+
+	"Gnome_NewAngles"
+	{
+		"en"		"%sNew angles: %f %f %f"
+		"chi"		"%s新角度：%f %f %f"
+		"zho"		"%s新角度：%f %f %f"
+		"jp"		"%s新しいアングル: %f %f %f"
+		"ko"		"%s새로운 각도: %f %f %f"
+		"vi"		"%sGóc mới: %f %f %f"
+	}
+
+	"Gnome_NewOrigin"
+	{
+		"en"		"%sNew origin: %f %f %f"
+		"chi"		"%s新产地：%f %f %f"
+		"zho"		"%s新產地：%f %f %f"
+		"jp"		"%s新しい起源: %f %f %f"
+		"ko"		"%s새로운 원산지: %f %f %f"
+		"vi"		"%sXuất xứ mới: %f %f %f"
+	}
+
+	"Gnome_SavedOriginAnglesDataConfig"
+	{
+		"en"		"%sSaved origin and angles to the data config"
+		"chi"		"%s保存数据配置的原点和角度"
+		"zho"		"%s保存資料配置的原點和角度"
+		"jp"		"%s原点と角度をデータ構成に保存"
+		"ko"		"%sS원점과 각도를 데이터 구성에 저장했습니다."
+		"vi"		"%sĐã lưu gốc và góc vào cấu hình dữ liệu"
+	}
+}

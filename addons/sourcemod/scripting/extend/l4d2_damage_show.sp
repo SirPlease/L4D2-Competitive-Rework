@@ -649,7 +649,7 @@ static int DB_Save(int client, bool force = false)
         g_PendingSave[client] = true;
 
         Cookie_Save(client, true); // 强制写 Cookie 防丢
-        CPrintToChat(client, "{olive}[HUD]{default} 已保存到本地（Cookie），并已排队，待加载完成后写入数据库。");
+        CPrintToChat(client, "%t", "L4D2DamageShow_HUDSavedLocallyCookieQueued");
         LogInfo("[Save] Queued (not ready). client=%d state=%d", client, view_as<int>(g_LoadState[client]));
         return 1;
     }
@@ -661,7 +661,7 @@ static int DB_Save(int client, bool force = false)
         g_PendingSave[client] = true;
         Cookie_Save(client);
         DB_BeginConnect();
-        CPrintToChat(client, "{olive}[HUD]{default} 设置已保存到本地（Cookie）。MySQL 未启用或不可用。");
+        CPrintToChat(client, "%t", "L4D2DamageShow_HUDSettingsSavedLocallyCookie");
         LogInfo("[Save] DB not available, saved to Cookie and queued. client=%d", client);
         return 1;
     }
@@ -671,7 +671,7 @@ static int DB_Save(int client, bool force = false)
     if (!GetClientAuthId(client, AuthId_Steam2, sid2, sizeof sid2) || StrEqual(sid2, "BOT"))
     {
         Cookie_Save(client);
-        CPrintToChat(client, "{olive}[HUD]{default} 设置已保存到本地（Cookie）。无法获取有效 SteamID。");
+        CPrintToChat(client, "%t", "L4D2DamageShow_HUDSettingsSavedLocallyCookieUnable");
         LogErr("[Save] No valid Steam2, saved to Cookie. client=%d", client);
         return 1;
     }
@@ -705,7 +705,7 @@ static int DB_Save(int client, bool force = false)
 
     // 双写 Cookie：本地立即生效
     Cookie_Save(client);
-    CPrintToChat(client, "{olive}[HUD]{default} 设置已保存（本地 Cookie + 数据库）。");
+    CPrintToChat(client, "%t", "L4D2DamageShow_HUDSettingsSavedLocalCookie");
     return 2;
 }
 
@@ -758,6 +758,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_damage_show.phrases");
     g_hMaxTE = FindConVar("sv_multiplayer_maxtempentities");
     if (g_hMaxTE != null) g_hMaxTE.SetInt(512);
 
@@ -1064,7 +1065,7 @@ public Action Cmd_Menu(int client, int args)
     if (!Gate_ClientAllowed(client))
     {
         Gate_EnforceFor(client, "open-menu");
-        CPrintToChat(client, "{olive}[HUD]{default} 未满足管理员 Flag 要求，无法使用此菜单。");
+        CPrintToChat(client, "%t", "L4D2DamageShow_HUDMenuCannotUsedAdministrator");
         return Plugin_Handled;
     }
 
@@ -1111,7 +1112,7 @@ public int Menu_Root(Menu menu, MenuAction action, int client, int param2)
     {
         ClampStyle(client);
         DB_Save(client, true);
-        CPrintToChat(client, "{olive}[HUD]{default} 设置已保存。");
+        CPrintToChat(client, "%t", "L4D2DamageShow_HUDSettingsSaved");
         OpenRootMenu(client);
     }
     return 0;
@@ -1238,28 +1239,27 @@ public int Menu_Share(Menu menu, MenuAction action, int client, int param2)
             persistentChanged = true;
         }
         else
-            CPrintToChat(client, "{olive}[HUD]{default} 只有管理员可以修改分享范围。");
+            CPrintToChat(client, "%t", "L4D2DamageShow_HUDOnlyAdministratorsCanModify");
     }
     else if (StrEqual(key, "admin_showother"))
     {
         if (IsAdminOrRoot(client))
         {
             g_Plr[client].show_other = !g_Plr[client].show_other;
-            CPrintToChat(client, "{olive}[HUD]{default} 管理员对外分享已%s。", g_Plr[client].show_other ? "开启" : "关闭");
+            CPrintToChat(client, "%t", "L4D2DamageShow_HUDAdministratorSharedExternally", g_Plr[client].show_other ? "开启" : "关闭");
         }
-        else CPrintToChat(client, "{olive}[HUD]{default} 只有管理员可开启该选项。");
+        else CPrintToChat(client, "%t", "L4D2DamageShow_HUDOnlyAdministratorsCanTurn");
     }
     else if (StrEqual(key, "spec_view_all"))
     {
         if (GetClientTeam(client) == 1 && IsAdminOrRoot(client))
         {
             g_bAdminObsViewAll[client] = !g_bAdminObsViewAll[client];
-            PrintToChat(client, "\x04旁观显示\x01已切换：\x05%s",
-                g_bAdminObsViewAll[client] ? "查看所有人生还者伤害【开】" : "查看所有人生还者伤害【关】");
+            PrintToChat(client, "%t", "L4D2DamageShow_SpectatorDisplayToggled", g_bAdminObsViewAll[client] ? "查看所有人生还者伤害【开】" : "查看所有人生还者伤害【关】");
         }
         else
         {
-            PrintToChat(client, "\x03只有旁观中的管理员可以使用该开关。");
+            PrintToChat(client, "%t", "L4D2DamageShow_OnlyAdministratorsWatchingCanUse");
         }
     }
     else if (StrEqual(key, "back")) { OpenRootMenu(client); return 0; }
@@ -1796,8 +1796,7 @@ static void Gate_EnforceFor(int client, const char[] reason = "")
 
         if (IsClientInGame(client))
         {
-            CPrintToChat(client, "{olive}[HUD]{default} 功能已禁用：未满足管理员 Flag 要求（%s）。",
-                g_sAllowedFlags[0] ? g_sAllowedFlags : "无");
+            CPrintToChat(client, "%t", "L4D2DamageShow_HUDFunctionDisabledAdministratorFlag", g_sAllowedFlags[0] ? g_sAllowedFlags : "无");
         }
         LogInfo("[Gate] client=%d blocked (%s), settings saved.", client, reason);
     }

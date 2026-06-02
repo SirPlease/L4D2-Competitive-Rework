@@ -252,6 +252,7 @@ public any Native_GetNextSpawnTime(Handle plugin, int numParams)
 // =========================
 public void OnPluginStart()
 {
+	LoadTranslations("infected_control.phrases");
     gCV.Create();
     gQ.Create();
     gST.Reset();

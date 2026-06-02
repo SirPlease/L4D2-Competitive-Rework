@@ -1,0 +1,32 @@
+"Phrases"
+{
+	"L4D2JockeySkeet_Skeeted"
+	{
+		"en"		"{green}★★{default} You were {blue}skeeted{default} by {olive}%N{default}."
+		"chi"		"{green}★★{default} 您是 {olive}%N{default} 的 {blue}skeeted{default}。"
+		"zho"		"{green}★★{default} 您是 {olive}%N{default} 的 {blue}skeeted{default}。"
+		"jp"		"{green}★★{default} あなたは、{olive}%N{default} によって {blue}skeeted{default} されました。"
+		"ko"		"{green}★★{default} 당신은 {olive}%N{default}에 의해 {blue}skeeted{default}였습니다."
+		"vi"		"{green}★★{default} Bạn đã là {blue}skeeted{default} bởi {olive}%N{default}."
+	}
+
+	"L4D2JockeySkeet_SkeetedJockey"
+	{
+		"en"		"{green}★★{default} You {blue}skeeted {olive}%N{default}'s Jockey."
+		"chi"		"{green}★★{default} 您{blue}skeeted {olive}%N{default} 的骑师。"
+		"zho"		"{green}★★{default} 您{blue}skeeted {olive}%N{default} 的騎士。"
+		"jp"		"{green}★★{default} {blue}スキートした{olive}%N{default}のジョッキーです。"
+		"ko"		"{green}★★{default} 당신은 {blue}skeet {olive}%N{default}의 기수입니다."
+		"vi"		"{green}★★{default} Bạn {blue}skeeded {olive}%N{default}'s Jockey."
+	}
+
+	"L4D2JockeySkeet_JockeySkeeted"
+	{
+		"en"		"{green}★★{default} {olive}%N{default}'s Jockey was {blue}skeeted{default} by {olive}%N{default}."
+		"chi"		"{green}★★{default} {olive}%N{default} 的骑师是 {blue}skeeted{default} 的 {olive}%N{default}。"
+		"zho"		"{green}★★{default} {olive}%N{default}'s Jockey was {blue}skeeted{default} by {olive}%N{default}."
+		"jp"		"{green}★★{default} {olive}%N{default}の騎手は{olive}%N{default}の{blue}skeeted{default}でした。"
+		"ko"		"{green}★★{default} {olive}%N{default}의 기수는 {olive}%N{default}의 {blue}skeeted{default}였습니다."
+		"vi"		"Tay đua của {green}★★{default} {olive}%N{default}'s Jockey là {blue}skeeted{default} bởi {olive}%N{default}."
+	}
+}

@@ -34,6 +34,7 @@ bool
 
 public OnPluginStart()
 {
+	LoadTranslations("HitStatistics.phrases");
 	decl String:Game_Name[64];
 	GetGameFolderName(Game_Name, sizeof(Game_Name));
 	if(!StrEqual(Game_Name, "left4dead2", false))
@@ -101,7 +102,7 @@ public MyKillsStatistic(Client)
 	}
 	else
 	{
-		CPrintToChat(Client, "You are not a survivor.");
+		CPrintToChat(Client, "%t", "HitStatistics_NotSurvivor");
 	}
 }
 

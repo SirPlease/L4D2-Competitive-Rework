@@ -58,6 +58,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
+	LoadTranslations("lerpmonitor.phrases");
     cVarAllowedLerpChanges = CreateConVar("sm_allowed_lerp_changes", "1", "Allowed number of lerp changes for a half", _, true, 0.0, true, 20.0);
     cVarLerpChangeSpec = CreateConVar("sm_lerp_change_spec", "1", "Move to spectators on exceeding lerp changes count?", _, true, 0.0, true, 1.0);
     cVarBadLerpAction = CreateConVar("sm_bad_lerp_action", "1", "What to do with a player if he is out of allowed lerp range? 1 - move to spectators, 0 - kick from server", _, true, 0.0, true, 1.0);
@@ -257,7 +258,7 @@ void ProcessPlayerLerp(int client, bool load = false, bool team = false)
         }
 
         if (g_hLerpWarningTimer[client] == null) {
-            CPrintToChatEx(client, client, "{default}<{olive}Lerp{default}> {teamcolor}警告:{default} 你的Lerp值非法 (最小: {teamcolor}%.01f{default}, 最大: {teamcolor}%.01f{default})! 请在 5 秒内改回来。", cVarMinLerp.FloatValue * 1000, cVarMaxLerp.FloatValue * 1000);
+            CPrintToChatEx(client, client, "%t", "Lerpmonitor_LerpWarningLerpValueIllegal", cVarMinLerp.FloatValue * 1000, cVarMaxLerp.FloatValue * 1000);
             g_hLerpWarningTimer[client] = CreateTimer(5.0, Timer_CheckBadLerpRange, GetClientUserId(client));
         }
         return;
@@ -267,14 +268,14 @@ void ProcessPlayerLerp(int client, bool load = false, bool team = false)
         if (g_hLerpWarningTimer[client] != null) {
             KillTimer(g_hLerpWarningTimer[client]);
             g_hLerpWarningTimer[client] = null;
-            CPrintToChatEx(client, client, "{default}<{olive}Lerp{default}> 感谢配合, Lerp已恢复到合法范围。");
+            CPrintToChatEx(client, client, "%t", "Lerpmonitor_LerpThanksCooperationLerpRestored");
         }
     }
 
     float currentLerpTime = 0.0;
     if (!ArrLerpsValue.GetValue(steamID, currentLerpTime)) {
         if (team && cVarShowLerpTeamChange.BoolValue) {
-            CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f", client, newLerpTime * 1000);
+            CPrintToChatAllEx(client, "%t", "Lerpmonitor_Lerp", client, newLerpTime * 1000);
         }
         ArrLerpsValue.SetValue(steamID, newLerpTime, true);
         return;
@@ -282,7 +283,7 @@ void ProcessPlayerLerp(int client, bool load = false, bool team = false)
 
     if (currentLerpTime == newLerpTime) { 
         if (team && cVarShowLerpTeamChange.BoolValue) {
-            CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f", client, newLerpTime * 1000);
+            CPrintToChatAllEx(client, "%t", "Lerpmonitor_Lerp", client, newLerpTime * 1000);
         }
         return;
     }
@@ -293,18 +294,18 @@ void ProcessPlayerLerp(int client, bool load = false, bool team = false)
         count++;
 
         int max = cVarAllowedLerpChanges.IntValue;
-        CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f {default}[%s%d{default}/%d {olive}changes]", client, newLerpTime * 1000, currentLerpTime * 1000, ((count > max) ? "{teamcolor} ": ""), count, max);
+        CPrintToChatAllEx(client, "%t", "Lerpmonitor_LerpChanges", client, newLerpTime * 1000, currentLerpTime * 1000, ((count > max) ? "{teamcolor} ": ""), count, max);
 
         if (cVarLerpChangeSpec.BoolValue && (count > max)) {
-            CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}被移动到旁观者 (不合法的lerp改变)!", client);
+            CPrintToChatAllEx(client, "%t", "Lerpmonitor_LerpMovedSpectatorIllegalLerp", client);
             ChangeClientTeam(client, L4D_TEAM_SPECTATE);
-            CPrintToChatEx(client, client, "{default}<{olive}Lerp{default}> 游戏里不合法的更改lerp! 将lerp改回 {teamcolor}%.01f", currentLerpTime * 1000);
+            CPrintToChatEx(client, client, "%t", "Lerpmonitor_LerpIllegalChangeLerpGame", currentLerpTime * 1000);
             return;
         }
 
         ArrLerpsCountChanges.SetValue(steamID, count); 
     } else {
-        CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f", client, newLerpTime * 1000, currentLerpTime * 1000);
+        CPrintToChatAllEx(client, "%t", "Lerpmonitor_Lerp_2", client, newLerpTime * 1000, currentLerpTime * 1000);
     }
 
     ArrLerpsValue.SetValue(steamID, newLerpTime); 
@@ -327,10 +328,10 @@ Action Timer_CheckBadLerpRange(Handle timer, int userid) {
         // 5秒后再次判断，如果还是非法值，则执行对应惩罚
         if ((FloatCompare(newLerpTime, cVarMinLerp.FloatValue) == -1)  || (FloatCompare(newLerpTime, cVarMaxLerp.FloatValue) == 1)) {
             if (cVarBadLerpAction.IntValue == 1) {
-                CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}因未在5秒内调整Lerp至合法范围，被移至旁观者", client);
+                CPrintToChatAllEx(client, "%t", "Lerpmonitor_LerpMovedBystanderDueFailure", client);
                 ChangeClientTeam(client, L4D_TEAM_SPECTATE);
             } else {
-                CPrintToChatAllEx(client, "{default}<{olive}Lerp{default}> {teamcolor}%N {default}因未在5秒内调整Lerp至合法范围，被踢出游戏", client);
+                CPrintToChatAllEx(client, "%t", "Lerpmonitor_LerpKickedGameHeFailed", client);
                 KickClient(client, "Illegal lerp value (min: %.01f, max: %.01f)", cVarMinLerp.FloatValue * 1000, cVarMaxLerp.FloatValue * 1000);
             }
         }

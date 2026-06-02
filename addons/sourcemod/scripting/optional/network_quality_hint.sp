@@ -43,6 +43,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("network_quality_hint.phrases");
 	CreateConVar("nqh_version", PLUGIN_VERSION, "Network Quality Hint version.", FCVAR_NOTIFY | FCVAR_DONTRECORD);
 
 	g_hEnable = CreateConVar("nqh_enable", "1", "Enable network quality checks.", _, true, 0.0, true, 1.0);
@@ -221,14 +222,14 @@ void PrintClientStatus(int client, bool includeRouteHint)
 	float loss = GetClientLossPct(client);
 	float choke = GetClientChokePct(client);
 
-	PrintToChat(client, "%s 当前网络：ping \x05%dms\x01，loss \x05%.2f%%\x01，choke \x05%.2f%%\x01。", CHAT_TAG, ping, loss, choke);
+	PrintToChat(client, "%t", "NetworkQualityHint_CurrentNetworkPingMSLoss", CHAT_TAG, ping, loss, choke);
 
 	if (includeRouteHint) {
 		float clientChoke = GetClientIncomingChokePct(client);
 		char pageUrl[512];
 		BuildServerPageUrl(pageUrl, sizeof(pageUrl));
-		PrintToChat(client, "%s 检测口径：choke 使用服务器发给你的方向；你发给服务器方向当前为 \x05%.2f%%\x01。", CHAT_TAG, clientChoke);
-		PrintToChat(client, "%s 如果延迟或丢包异常，请打开 IP 页面复制当前服务器地址后重新连接：\x04%s\x01", CHAT_TAG, pageUrl);
+		PrintToChat(client, "%t", "NetworkQualityHint_DetectionCaliberChokeUseDirection", CHAT_TAG, clientChoke);
+		PrintToChat(client, "%t", "NetworkQualityHint_AbnormalDelayPacketLossOpen", CHAT_TAG, pageUrl);
 	}
 }
 
@@ -239,9 +240,9 @@ void PrintNetworkWarning(int client, int ping, float loss, float choke, bool bad
 	BuildReason(reason, sizeof(reason), badPing, badLoss, badChoke);
 	BuildServerPageUrl(pageUrl, sizeof(pageUrl));
 
-	PrintToChat(client, "%s 检测到你的网络状态异常：\x05%s\x01。当前 ping \x05%dms\x01，loss \x05%.2f%%\x01，choke \x05%.2f%%\x01。", CHAT_TAG, reason, ping, loss, choke);
-	PrintToChat(client, "%s 请打开 IP 页面，复制当前服务器对应的 connect 命令，粘贴到控制台重新连接：\x04%s\x01", CHAT_TAG, pageUrl);
-	PrintToChat(client, "%s 三线服务器请优先使用网页展示的分流入口，避免从收藏或历史记录走错线路。", CHAT_TAG);
+	PrintToChat(client, "%t", "NetworkQualityHint_AbnormalityNetworkStatusDetectedCurrent", CHAT_TAG, reason, ping, loss, choke);
+	PrintToChat(client, "%t", "NetworkQualityHint_OpenIPPageCopyConnect", CHAT_TAG, pageUrl);
+	PrintToChat(client, "%t", "NetworkQualityHint_ThirdLineServersGivePriority", CHAT_TAG);
 }
 
 void BuildServerPageUrl(char[] buffer, int maxlen)

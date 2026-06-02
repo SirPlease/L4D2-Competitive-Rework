@@ -1,0 +1,22 @@
+"Phrases"
+{
+	"Text_NotExceed10SpecialAnne"
+	{
+		"en"		"\\x03 Because it does not exceed 10 special, the AnneHappy+ weapon has been automatically switched to the AnneHappy weapon"
+		"chi"		"\\x03因为不超过10特，AnneHappy+武器已经自动切换为AnneHappy武器"
+		"zho"		"\\x03因為不超過10特，AnneHappy+武器已經自動切換為AnneHappy武器"
+		"jp"		"\\x03 スペシャル10を超えないため、アンハッピー+武器はアンハッピー武器に自動的に切り替わりました"
+		"ko"		"\\x03 특수 10개를 초과하지 않기 때문에 AnneHappy+ 무기가 AnneHappy 무기로 자동 전환되었습니다."
+		"vi"		"\\x03 Vì không vượt quá 10 đặc biệt nên vũ khí AnneHappy+ được tự động chuyển sang vũ khí AnneHappy"
+	}
+
+	"Text_CannotUseAnneHappyPlus"
+	{
+		"en"		"\\x03 cannot use AnneHappyPlus weapons because it does not exceed 10 special"
+		"chi"		"\\x03因为不超过10特，无法使用AnneHappyPlus武器"
+		"zho"		"\\x03因為不超過10特，無法使用AnneHappyPlus武器"
+		"jp"		"\\x03はアンハッピープラス武器がスペシャル10を超えないため使用できません"
+		"ko"		"\\x03는 특수무기 10개를 초과하지 않기 때문에 AnneHappyPlus 무기를 사용할 수 없습니다."
+		"vi"		"\\x03 không thể sử dụng vũ khí AnneHappyPlus vì không vượt quá 10 đặc biệt"
+	}
+}

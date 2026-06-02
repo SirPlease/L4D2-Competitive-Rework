@@ -52,6 +52,7 @@ ConVar director_allow_infected_bots, z_max_player_zombies;
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_fix_spawn_order.phrases");
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
 	
@@ -640,6 +641,6 @@ stock void PrintDebug(const char[] format, any ...)
 	{
 		char msg[255];
 		VFormat(msg, sizeof(msg), format, 2);
-		PrintToChatAll("\x04[DEBUG]\x01 %s", msg);
+		PrintToChatAll("%t", "L4D2FixSpawnOrder_DebugMessage", msg);
 	}
 }

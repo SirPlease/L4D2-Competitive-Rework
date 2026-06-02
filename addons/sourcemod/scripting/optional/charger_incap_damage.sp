@@ -35,6 +35,7 @@ public APLRes AskPluginLoad2(Handle hMyself, bool bLate, char[] sError, int iErr
 
 public void OnPluginStart()
 {
+	LoadTranslations("charger_incap_damage.phrases");
 	g_hCvarDmgIncappedPound = CreateConVar("charger_dmg_incapped", "-1.0", "Pound Damage dealt to incapped Survivors.");
 
 	g_hCvarZChargerPoundDmg = FindConVar("z_charger_pound_dmg");
@@ -102,9 +103,9 @@ Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fD
 	}
 
 #if DEBUG
-	PrintToChatAll("[Hook_OnTakeDamage] Victim: (%N) %d, attacker: (%N) %d, inflictor: %d, damage: %f, damagetype: %d ", \
+	PrintToChatAll("%t", "ChargerIncapDamage_HookTakeDamageVictimAttacker", \
 										iVictim, iVictim, iAttacker, iAttacker, iInflictor, fDamage, iDamagetype);
-	PrintToChatAll("[Hook_OnTakeDamage] Weapon: %d, damageforce: %f %f %f, damageposition: %f %f %f", \
+	PrintToChatAll("%t", "ChargerIncapDamage_HookTakeDamageWeaponDamage", \
 										iWeapon, fDamageForce[0], fDamageForce[1], fDamageForce[2], fDamagePosition[0], fDamagePosition[1], fDamagePosition[2]);
 #endif
 

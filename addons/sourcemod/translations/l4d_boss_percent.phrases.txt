@@ -3,10 +3,18 @@
 	"TagTank"
 	{
 		"en"	"<{olive}Tank{default}>"
+		"zho"		"<{olive}Tank{default}>"
+		"jp"		"<{olive}Tank{default}>"
+		"ko"		"<{olive}Tank{default}>"
+		"vi"		"<{olive}Tank{default}>"
 	}
 	"TagWitch"
 	{
 		"en"	"<{olive}Witch{default}>"
+		"zho"		"<{olive}Witch{default}>"
+		"jp"		"<{olive}Witch{default}>"
+		"ko"		"<{olive}Witch{default}>"
+		"vi"		"<{olive}Witch{default}>"
 	}
 	"TankOn"
 	{

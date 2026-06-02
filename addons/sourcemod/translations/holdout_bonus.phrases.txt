@@ -1,0 +1,32 @@
+"Phrases"
+{
+	"HoldoutBonus_EventStartsBonusSecondsonds"
+	{
+		"en"		"\\x01Holdout event starts... (\\x04%i\\x01 bonus over \\x05%i\\x01 seconds)"
+		"chi"		"\\x01Holdout 活动开始...（\\x04%i\\x01 奖金超过 \\x05%i\\x01 秒）"
+		"zho"		"\\x01Holdout 活動開始...（\\x04%i\\x01 獎金超過 \\x05%i\\x01 秒）"
+		"jp"		"\\x01ホールドアウト イベント開始... (\\x04%i\\x01 ボーナス \\x05%i\\x01 秒以上)"
+		"ko"		"\\x01Holdout 이벤트 시작... (\\x04%i\\x01 보너스는 \\x05%i\\x01초 이상)"
+		"vi"		"Sự kiện \\x01Holdout bắt đầu... (\\x04%i\\x01 tiền thưởng trên \\x05%i\\x01 giây)"
+	}
+
+	"HoldoutBonus_DynamicBonusSummary"
+	{
+		"en"		"\\x01Holdout Bonus: %s"
+		"chi"		"\\x01保留奖金：%s"
+		"zho"		"\\x01保留獎金：%s"
+		"jp"		"\\x01ホールドアウトボーナス: %s"
+		"ko"		"\\x01홀드아웃 보너스: %s"
+		"vi"		"\\x01Holdout Tiền thưởng: %s"
+	}
+
+	"HoldoutBonus_DynamicBonusSummary_2"
+	{
+		"en"		"\\x01Holdout Bonus: \\x04%i\\x01 out of \\x05%i\\x01."
+		"chi"		"\\x01保留奖金：\\x05%i\\x01 中的 \\x04%i\\x01。"
+		"zho"		"\\x01保留獎金：\\x05%i\\x01 中的 \\x04%i\\x01。"
+		"jp"		"\\x01ホールドアウトボーナス: \\x05%i\\x01のうち、\\x04%i\\x01。"
+		"ko"		"\\x01홀드아웃 보너스: \\x05%i\\x01 중 \\x04%i\\x01."
+		"vi"		"\\x01Holdout Tiền thưởng: \\x04%i\\x01 trong tổng số \\x05%i\\x01."
+	}
+}

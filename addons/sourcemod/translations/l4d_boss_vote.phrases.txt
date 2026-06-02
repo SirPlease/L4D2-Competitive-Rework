@@ -3,32 +3,60 @@
     "Tag"
     {
         "en"        "{blue}<{green}BossVote{blue}>{default}"
+		"zho"		"{blue}<{green}BossVote{blue}>{default}"
+		"jp"		"{blue}<{green}BossVote{blue}>{default}"
+		"ko"		"{blue}<{green}BossVote{blue}>{default}"
+		"vi"		"{blue}<{green}BossVote{blue}>{default}"
     }
     // RunVoteChecks
     "NotAvailable"
     {
         "en"        "Boss voting is not available on this map."
-    }
+    
+		"zho"		"Boss voting is not available on this map."
+		"jp"		"Boss voting is not available on this map."
+		"ko"		"Boss voting is not available on this map."
+		"vi"		"Boss voting is not available on this map."}
     "Available"
     {
         "en"        "Boss voting is only available during ready up."
-    }
+    
+		"zho"		"Boss voting is only available during ready up."
+		"jp"		"Boss voting is only available during ready up."
+		"ko"		"Boss voting is only available during ready up."
+		"vi"		"Boss voting is only available during ready up."}
     "FirstRound"
     {
         "en"        "Boss voting is only available during the first round of a map."
-    }
+    
+		"zho"		"Boss voting is only available during the first round of a map."
+		"jp"		"Boss voting is only available during the first round of a map."
+		"ko"		"Boss voting is only available during the first round of a map."
+		"vi"		"Boss voting is only available during the first round of a map."}
     "NotAvailableForSpec"
     {
         "en"        "Boss voting is not available for spectators."
-    }
+    
+		"zho"		"Boss voting is not available for spectators."
+		"jp"		"Boss voting is not available for spectators."
+		"ko"		"Boss voting is not available for spectators."
+		"vi"		"Boss voting is not available for spectators."}
     "CannotBeCalled"
     {
         "en"        "Boss Vote cannot be called right now..."
-    }
+    
+		"zho"		"Boss Vote cannot be called right now..."
+		"jp"		"Boss Vote cannot be called right now..."
+		"ko"		"Boss Vote cannot be called right now..."
+		"vi"		"Boss Vote cannot be called right now..."}
     // VoteBossCmd
     "Usage"
     {
         "en"        "Usage: !voteboss {olive}<{default}tank{olive}> <{default}witch{olive}>{default}."
+		"zho"		"Usage: !voteboss {olive}<{default}tank{olive}> <{default}witch{olive}>{default}."
+		"jp"		"Usage: !voteboss {olive}<{default}tank{olive}> <{default}witch{olive}>{default}."
+		"ko"		"Usage: !voteboss {olive}<{default}tank{olive}> <{default}witch{olive}>{default}."
+		"vi"		"Usage: !voteboss {olive}<{default}tank{olive}> <{default}witch{olive}>{default}."
     }
     "Usage2"
     {
@@ -90,6 +118,10 @@
     "OnlyReadyUp"
     {
         "en"        "Spawns can only be set during ready up."
+		"zho"		"Spawns can only be set during ready up."
+		"jp"		"Spawns can only be set during ready up."
+		"ko"		"Spawns can only be set during ready up."
+		"vi"		"Spawns can only be set during ready up."
     }
     "SettingBoss"
     {
@@ -111,32 +143,71 @@
     "CommandNotAvailable"
     {
         "en"        "Command not available on this map."
+		"zho"		"Command not available on this map."
+		"jp"		"Command not available on this map."
+		"ko"		"Command not available on this map."
+		"vi"		"Command not available on this map."
     }
     "TankSpawnStatic"
     {
         "en"        "Tank spawn is static and can not be changed on this map."
+		"zho"		"Tank spawn is static and can not be changed on this map."
+		"jp"		"Tank spawn is static and can not be changed on this map."
+		"ko"		"Tank spawn is static and can not be changed on this map."
+		"vi"		"Tank spawn is static and can not be changed on this map."
     }
     "PercentageInvalid"
     {
         "en"        "Percentage is {blue}invalid{default}."
+		"zho"		"Percentage is {blue}invalid{default}."
+		"jp"		"Percentage is {blue}invalid{default}."
+		"ko"		"Percentage is {blue}invalid{default}."
+		"vi"		"Percentage is {blue}invalid{default}."
     }
     "Percentagebanned"
     {
         "en"        "Percentage is {blue}banned{default}."
+		"zho"		"Percentage is {blue}banned{default}."
+		"jp"		"Percentage is {blue}banned{default}."
+		"ko"		"Percentage is {blue}banned{default}."
+		"vi"		"Percentage is {blue}banned{default}."
     }
     "TankSpawnAdmin"
     {
 		"#format"   "{1:i},{2:s}" // 1:p_iRequestedPercent 2:clientName
         "en"        "Tank spawn set to {olive}{1}%{default} by Admin {blue}{2}{default}."
+		"zho"		"Tank spawn set to {olive}{1}%{default} by Admin {blue}{2}{default}."
+		"jp"		"Tank spawn set to {olive}{1}%{default} by Admin {blue}{2}{default}."
+		"ko"		"Tank spawn set to {olive}{1}%{default} by Admin {blue}{2}{default}."
+		"vi"		"Tank spawn set to {olive}{1}%{default} by Admin {blue}{2}{default}."
     }
     // ForceWitchCommand
     "WitchSpawnStatic"
     {
         "en"        "Witch spawn is static and can not be changed on this map."
+		"zho"		"Witch spawn is static and can not be changed on this map."
+		"jp"		"Witch spawn is static and can not be changed on this map."
+		"ko"		"Witch spawn is static and can not be changed on this map."
+		"vi"		"Witch spawn is static and can not be changed on this map."
     }
     "WitchSpawnAdmin"
     {
 		"#format"   "{1:i},{2:s}" // 1:p_iRequestedPercent 2:clientName
         "en"        "Witch spawn set to {olive}{1}%{default} by Admin {blue}{2}{default}."
+		"zho"		"Witch spawn set to {olive}{1}%{default} by Admin {blue}{2}{default}."
+		"jp"		"Witch spawn set to {olive}{1}%{default} by Admin {blue}{2}{default}."
+		"ko"		"Witch spawn set to {olive}{1}%{default} by Admin {blue}{2}{default}."
+		"vi"		"Witch spawn set to {olive}{1}%{default} by Admin {blue}{2}{default}."
     }
+
+	"RoundNotReachLimit"
+	{
+		"#format"		"{1:i}"
+		"en"		"您这个难度就想马上逃课了？不行呢！(你还需要尝试{blue}{1}次{default}无法通过后才能使用{olive}boss投票功能{default})."
+		"chi"		"您这个难度就想马上逃课了？不行呢！(你还需要尝试{blue}{1}次{default}无法通过后才能使用{olive}boss投票功能{default})."
+		"zho"		"您這個難度就想馬上逃課了？不行呢！(你還需要嘗試{blue}{1}次{default}無法通過後才能使用{olive}boss投票功能{default})."
+		"jp"		"この難易度でもう楽をしたいですか？だめです！({olive}boss 投票機能{default}を使うには、あと {blue}{1} 回{default}クリア失敗する必要があります)."
+		"ko"		"이 난이도에서 바로 건너뛰고 싶나요? 안 됩니다! ({olive}boss 투표 기능{default}을 사용하려면 아직 {blue}{1}번{default} 더 실패해야 합니다)."
+		"vi"		"Bạn muốn bỏ qua ngay ở độ khó này sao? Chưa được đâu! (Bạn cần thất bại thêm {blue}{1} lần{default} nữa mới có thể dùng {olive}chức năng bỏ phiếu boss{default})."
+	}
 }

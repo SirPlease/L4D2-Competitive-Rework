@@ -329,7 +329,7 @@ static void ClearClientGlow(int client, bool persist, bool notify = false)
 		ClientSaveToFileSave(client);
 
 	if (notify)
-		CPrintToChat(client, "\x01[\x04RPG\x01] \x05你的轮廓权限已失效，已自动关闭。");
+		CPrintToChat(client, "%t", "RPG_ProfilePermissionExpiredAutomaticallyClosed");
 }
 
 static bool ValidateClientGlow(int client, bool persist, bool notify = false)
@@ -492,6 +492,7 @@ public void OnMapStart()
 
 public void  OnPluginStart()
 {
+	LoadTranslations("rpg.phrases");
 //	LoadTranslations("menu_shop.phrases.txt");
 	HookEvent("round_start", 	EventRoundStart, 				EventHookMode_Pre);
 	HookEvent("player_death", 	EventReturnBlood, 				EventHookMode_Pre);
@@ -591,8 +592,7 @@ void ConVarChanged_Cvars(ConVar convar, const char[] oldValue, const char[] newV
 	if (convar == g_hAllowUseB)
 	{
 		g_bAllowUseB = g_hAllowUseB.BoolValue;
-		PrintToChatAll("\x01[\x04RPG\x01] %s",
-			g_bAllowUseB ? "允许使用B数购买商品" : "已禁止使用B数购买（仅允许 0B 商品）");
+		PrintToChatAll("%t", "RPG_Message", g_bAllowUseB ? "允许使用B数购买商品" : "已禁止使用B数购买（仅允许 0B 商品）");
 		return;
 	}
 	if (!g_bInfectedControlAvailable || g_hInfectedLimit == null)
@@ -604,7 +604,7 @@ void ConVarChanged_Cvars(ConVar convar, const char[] oldValue, const char[] newV
 
 	if (IsStart)
 	{
-		if(valid)PrintToChatAll("\x01[\x04RANK\x01]\x04判断额外积分所需变量发生变化，此局无法获得额外积分, 过关也不奖励额外分数");
+		if(valid)PrintToChatAll("%t", "RPG_RANKVariablesRequiredDetermineExtra");
 		SetRoundValid(false);
 	}
 
@@ -1075,9 +1075,9 @@ public void ClientTagsSaveToFileSave(int Client)
     if (StrEqual(SteamID, "BOT")) return;
 
     if (player[Client].tags.ChatTag[0] == '\0')
-        CPrintToChat(Client, "\x04你的称号取消设置");
+        CPrintToChat(Client, "%t", "RPG_TitleUnset");
     else
-        CPrintToChat(Client, "\x04你的称号更新成功，新称号为：\x03%s", player[Client].tags.ChatTag);
+        CPrintToChat(Client, "%t", "RPG_TitleUpdatedSuccessfullyNewTitle", player[Client].tags.ChatTag);
 
     char query[512];
     SQL_FormatQuery(db, query, sizeof(query), "UPDATE RPG SET CHATTAG='%s' WHERE steamid = '%s'", player[Client].tags.ChatTag, SteamID);
@@ -1119,7 +1119,7 @@ public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
 	}
 	GaoJiRenJi = FindConVar("sb_fix_enabled");
 	if(GaoJiRenJi != null && GaoJiRenJi.BoolValue){
-		PrintToChatAll("\x01[\x04RANK\x01]\x04由于开启了高级人机，不能获得额外积分，也不会更新地图记录");
+		PrintToChatAll("%t", "RPG_RANKCannotObtainAdditionalPoints");
 		SetRoundValid(false);
 	}
 	IsStart=true;
@@ -1184,7 +1184,7 @@ static bool CanUseShop(int client)
 
 	if (IsValidClient(client))
 	{
-		PrintToChat(client, "\x03商店已关闭，无法使用该功能。");
+		PrintToChat(client, "%t", "RPG_StoreClosedFunctionCannotUsed");
 	}
 	return false;
 }
@@ -1195,7 +1195,7 @@ public Action BuyAmmo(int client,int args)
 	if(IsVaildClient(client) && IsPlayerAlive(client) && CanUseShop(client))
 	{
     	GiveItems(client,"ammo");
-    	PrintToChatAll("\x04%N \x03 补充了子弹",client);
+    	PrintToChatAll("%t", "RPG_AddedBullets", client);
 	}
 	return Plugin_Continue;
 }
@@ -1213,7 +1213,7 @@ public Action BuyPen(int client,int args)
 			else
 				result = RemovePoints(client,0,"shotgun_chrome");
 			if(result)
-			PrintToChatAll("\x04%N \x03第一次随机白嫖一把喷子",client);
+			PrintToChatAll("%t", "RPG_FirstTimeRandomTrollFree", client);
 		}else if(player[client].ClientPoints>49)
 		{
 			bool result = false;
@@ -1222,9 +1222,9 @@ public Action BuyPen(int client,int args)
 			else
 				result = RemovePoints(client,50,"shotgun_chrome");
 			if(result)
-			PrintToChatAll("\x04%N \x03快速花费50B数随机购买一把单喷",client);
+			PrintToChatAll("%t", "RPG_QuicklySpend50BuySingle", client);
 		}else{
-			PrintToChat(client,"\x03没钱你买个屁喷子，心里没点B数");
+			PrintToChat(client, "%t", "RPG_NotEnoughMoneyForShotgun");
 		}
 	}
 	return Plugin_Continue;
@@ -1238,13 +1238,13 @@ public Action BuyChr(int client,int args)
 		if(player[client].ClientFirstBuy){
 			player[client].ClientFirstBuy=false;
 			if(RemovePoints(client,0,"shotgun_chrome"))
-			PrintToChatAll("\x04%N \x03第一次白嫖一把二代单喷",client);
+			PrintToChatAll("%t", "RPG_FirstTimeGotSecondsondGeneration", client);
 		}else if(player[client].ClientPoints>49)
 		{
 			if(RemovePoints(client,50,"shotgun_chrome"))
-			PrintToChatAll("\x04%N \x03快速花费50B数购买一把二代单喷",client);
+			PrintToChatAll("%t", "RPG_QuicklySpend50BuySecondsond", client);
 		}else{
-			PrintToChat(client,"\x03没钱你买个屁喷子，心里没点B数");
+			PrintToChat(client, "%t", "RPG_NotEnoughMoneyForShotgun");
 		}
 	}
 	return Plugin_Continue;
@@ -1258,13 +1258,13 @@ public Action BuyPum(int client,int args)
 		if(player[client].ClientFirstBuy){
 			player[client].ClientFirstBuy=false;
 			if(RemovePoints(client,0,"pumpshotgun"))
-			PrintToChatAll("\x04%N \x03第一次白嫖一把一代单喷",client);
+			PrintToChatAll("%t", "RPG_FirstGenerationSingleSpray", client);
 		}else if(player[client].ClientPoints>49)
 		{
 			if(RemovePoints(client,50,"pumpshotgun"))
-			PrintToChatAll("\x04%N \x03快速花费50B数随机购买一把一代单喷",client);
+			PrintToChatAll("%t", "RPG_QuicklySpend50BuyFirst", client);
 		}else{
-			PrintToChat(client,"\x03没钱你买个屁喷子，心里没点B数");
+			PrintToChat(client, "%t", "RPG_NotEnoughMoneyForShotgun");
 		}
 	}
 	return Plugin_Continue;
@@ -1278,13 +1278,13 @@ public Action BuySmg(int client,int args)
 		if(player[client].ClientFirstBuy){
 			player[client].ClientFirstBuy=false;
 			if(RemovePoints(client,0,"smg_silenced"))
-			PrintToChatAll("\x04%N \x03第一次白嫖一把消音smg机枪",client);
+			PrintToChatAll("%t", "RPG_FirstTimeBoughtSilencedSMG", client);
 		}else if(player[client].ClientPoints>49)
 		{
 			if(RemovePoints(client,50,"smg_silenced"))
-			PrintToChatAll("\x04%N \x03快速花费50B数购买一把消音smg机枪",client);
+			PrintToChatAll("%t", "RPG_QuicklySpend50BuySilenced", client);
 		}else{
-			PrintToChat(client,"\x03没钱你买个屁机枪，心里没点B数");
+			PrintToChat(client, "%t", "RPG_DonMoneyCanBuyCrappy");
 		}
 	}
 	return Plugin_Continue;
@@ -1298,13 +1298,13 @@ public Action BuyUzi(int client,int args)
 		if(player[client].ClientFirstBuy){
 			player[client].ClientFirstBuy=false;
 			if(RemovePoints(client,0,"smg"))
-			PrintToChatAll("\x04%N \x03第一次白嫖一把Uzi",client);
+			PrintToChatAll("%t", "RPG_FirstTimeFreeUzi", client);
 		}else if(player[client].ClientPoints>49)
 		{
 			if(RemovePoints(client,50,"smg"))
-			PrintToChatAll("\x04%N \x03快速花费50B数随机购买一把Uzi机枪",client);
+			PrintToChatAll("%t", "RPG_QuicklySpend50RandomlyBuy", client);
 		}else{
-			PrintToChat(client,"\x03没钱你买个屁机枪，心里没点B数");
+			PrintToChat(client, "%t", "RPG_DonMoneyCanBuyCrappy");
 		}
 	}
 	return Plugin_Continue;
@@ -1316,7 +1316,7 @@ public Action BuyPill(int client,int args)
 	if(IsVaildClient(client) && IsPlayerAlive(client) && CanUseShop(client))
 	{
 		if(RemovePoints(client,400,"pain_pills"))
-		PrintToChatAll("\x04%N \x03快速花费400B数买了瓶药",client);
+		PrintToChatAll("%t", "RPG_QuicklySpent400BuyBottle", client);
 	}
 	return Plugin_Continue;
 }
@@ -1327,7 +1327,7 @@ public Action ApplyTags(int client,int args)
 	if(player[client].tags.ChatTag[0] != '\0')
 		SetTags(client,player[client].tags.ChatTag);
 	else
-		CPrintToChat(client,"\x04你必须先用\x03!setch \"你想要的称号名字\" \x04设置好你的自定义称号");
+		CPrintToChat(client, "%t", "RPG_FirstUseSetchTitleName");
 	return Plugin_Continue;
 }
 
@@ -1403,7 +1403,7 @@ public void SetTags(int client, char[] tagsname)
 {
     if (!g_bHextagsSystemAvailable)
     {
-        CPrintToChat(client, "\x04称号模块未启用，无法设置称号");
+        CPrintToChat(client, "%t", "RPG_TitleModuleNotEnabledTitle");
         return;
     }
     char temp[32];
@@ -1431,7 +1431,7 @@ static bool CanSpendB(int client, int costpoints)
     // >0B 时需开关允许
     if (g_bAllowUseB) return true;
 
-    PrintToChat(client, "\x03当前已禁止使用B数购买商品（仅允许 0B 物品）。");
+    PrintToChat(client, "%t", "RPG_CurrentlyProhibitedUseNumberPurchase");
     return false;
 }
 
@@ -1445,13 +1445,13 @@ public bool RemovePoints(int client, int costpoints,char bitem[64])
 
 	if(!player[client].CanBuy)
 	{
-		PrintToChat(client,"\x03商店技能冷却中(冷却时间15s)");
+		PrintToChat(client, "%t", "RPG_ShopSkillsCoolingDownCooling");
 		return false;
 	}
 	// 新增：消费开关判定（>0B 时禁止）
     if (!CanSpendB(client, costpoints))
     {
-		PrintToChat(client, "服务器关闭了B币使用通道，如需使用请投票开启");
+		PrintToChat(client, "%t", "RPG_ServerClosedCoinUsageChannel");
 		return false;
 	}
 	int actuallypoints = player[client].ClientPoints - costpoints;
@@ -1469,7 +1469,7 @@ public bool RemovePoints(int client, int costpoints,char bitem[64])
 	}
 	else
 	{
-		PrintToChat(client,"\x03你自己心里没有点B数吗?");
+		PrintToChat(client, "%t", "RPG_DonPointMind");
 		return false;
 	}
 
@@ -1510,7 +1510,7 @@ public void ShowMelee(Handle owner, Handle hndl, const char []error, any data)
 	}
 	else
 	{
-		PrintToChat(client,"\x04新用户，正在创建数据库");
+		PrintToChat(client, "%t", "RPG_NewUserCreatingDatabase");
 		ClientSaveToFileCreate(client);
 	}
 }
@@ -1755,97 +1755,97 @@ void GetAura(int client, int id)
         case 1: 
         {
             SetEntProp(client, Prop_Send, "m_glowColorOverride", 0 + (255 * 256) + (0 * 65536));
-            CPrintToChat(client, "\x05你 \x04将轮廓颜色改为\x01: \x04绿色 \x01!");
+            CPrintToChat(client, "%t", "RPG_ChangeOutlineColorGreen");
         }
         case 2: 
         {
             SetEntProp(client, Prop_Send, "m_glowColorOverride", 7 + (19 * 256) + (250 * 65536));
-            CPrintToChat(client, "\x05你 \x04将轮廓颜色改为\x01: \x04蓝色 \x01!");
+            CPrintToChat(client, "%t", "RPG_SetOutlineColorBlue");
         }
         case 3: 
         {
             SetEntProp(client, Prop_Send, "m_glowColorOverride", 249 + (19 * 256) + (250 * 65536));
-            CPrintToChat(client, "\x05你 \x04将轮廓颜色改为\x01: \x04蓝紫色 \x01!");
+            CPrintToChat(client, "%t", "RPG_SetOutlineColorBlueViolet");
         }
         case 4: 
         {
             SetEntProp(client, Prop_Send, "m_glowColorOverride", 66 + (250 * 256) + (250 * 65536));
-            CPrintToChat(client, "\x05你 \x04将轮廓颜色改为\x01: \x04青色 \x01!");
+            CPrintToChat(client, "%t", "RPG_ChangeOutlineColorCyan");
         }
         case 5: 
         {
             SetEntProp(client, Prop_Send, "m_glowColorOverride", 249 + (155 * 256) + (84 * 65536));
-            CPrintToChat(client, "\x05你 \x04将轮廓颜色改为\x01: \x04橘黄色 \x01!");
+            CPrintToChat(client, "%t", "RPG_SetOutlineColorOrange");
         }
         case 6: 
         {
             SetEntProp(client, Prop_Send, "m_glowColorOverride", 255 + (0 * 256) + (0 * 65536));
-            CPrintToChat(client, "\x05你 \x04将轮廓颜色改为\x01: \x04红色 \x01!");
+            CPrintToChat(client, "%t", "RPG_SetOutlineColorRed");
         }
         case 7: 
         {
             SetEntProp(client, Prop_Send, "m_glowColorOverride", 50 + (50 * 256) + (50 * 65536));
-            CPrintToChat(client, "\x05你 \x04将轮廓颜色改为\x01: \x04灰色 \x01!");
+            CPrintToChat(client, "%t", "RPG_SetOutlineColorGray");
         }
         case 8: 
         {
             SetEntProp(client, Prop_Send, "m_glowColorOverride", 255 + (255 * 256) + (0 * 65536));
-            CPrintToChat(client, "\x05你 \x04将轮廓颜色改为\x01: \x04黄色 \x01!");
+            CPrintToChat(client, "%t", "RPG_SetOutlineColorYellow");
         }
         case 9: 
         {
             SetEntProp(client, Prop_Send, "m_glowColorOverride", 128 + (255 * 256) + (0 * 65536));
-            CPrintToChat(client, "\x05你 \x04将轮廓颜色改为\x01: \x04酸橙色 \x01!");
+            CPrintToChat(client, "%t", "RPG_SetOutlineColorLime");
         }
         case 10: 
         {
             SetEntProp(client, Prop_Send, "m_glowColorOverride", 128 + (0 * 256) + (0 * 65536));
-            CPrintToChat(client, "\x05你 \x04将轮廓颜色改为\x01: \x04栗色 \x01!");
+            CPrintToChat(client, "%t", "RPG_SetOutlineColorMaroon");
         }
         case 11: 
         {
             SetEntProp(client, Prop_Send, "m_glowColorOverride", 0 + (128 * 256) + (128 * 65536));
-            CPrintToChat(client, "\x05你 \x04将轮廓颜色改为\x01: \x04藍綠色 \x01!");
+            CPrintToChat(client, "%t", "RPG_SetOutlineColorTeal");
         }
         case 12:
         {
             SetEntProp(client, Prop_Send, "m_glowColorOverride", 255 + (0 * 256) + (150 * 65536));
-            CPrintToChat(client, "\x05你 \x04将轮廓颜色改为\x01: \x04粉红色 \x01!");
+            CPrintToChat(client, "%t", "RPG_SetOutlineColorPink");
         }
         case 13:
         {        
             SetEntProp(client, Prop_Send, "m_glowColorOverride", 155 + (0 * 256) + (255 * 65536));
-            CPrintToChat(client, "\x05你 \x04将轮廓颜色改为\x01: \x04紫色 \x01!");
+            CPrintToChat(client, "%t", "RPG_SetOutlineColorPurple");
         }
         case 14: 
         {
             SetEntProp(client, Prop_Send, "m_glowColorOverride", -1 + (-1 * 256) + (-1 * 65536));
-            CPrintToChat(client, "\x05你 \x04将轮廓颜色改为\x01: \x04白色 \x01!");
+            CPrintToChat(client, "%t", "RPG_SetOutlineColorWhite");
         }
         case 15: 
         {
             SetEntProp(client, Prop_Send, "m_glowColorOverride", 255 + (155 * 256) + (0 * 65536));
-            CPrintToChat(client, "\x05你 \x04将轮廓颜色改为\x01: \x04金黄色 \x01!");
+            CPrintToChat(client, "%t", "RPG_SetOutlineColorGold");
         }
         case 16: 
         {
             SDKHook(client, SDKHook_PreThink, RainbowPlayer);
-            CPrintToChat(client, "\x05你 \x04将轮廓颜色改为\x01: \x04彩虹色 \x01!");
+            CPrintToChat(client, "%t", "RPG_SetOutlineColorRainbow");
         }
 		case 17:
 		{
             SetEntProp(client, Prop_Send, "m_glowColorOverride", 255 + (69 * 256) + (0 * 65536));
-            CPrintToChat(client, "\x05你 \x04将轮廓颜色改为您的\x01: \x04定制颜色轮廓 \x01!");
+            CPrintToChat(client, "%t", "RPG_SetOutlineColorCustomOutline");
 		}
 		case 18:
 		{
             SetEntProp(client, Prop_Send, "m_glowColorOverride", 255 + (110 * 256) + (156 * 65536));
-            CPrintToChat(client, "\x05你 \x04将轮廓颜色改为您的\x01: \x04定制颜色轮廓 \x01!");
+            CPrintToChat(client, "%t", "RPG_SetOutlineColorCustomOutline");
 		}
 		case 19:
 		{
             SetEntProp(client, Prop_Send, "m_glowColorOverride", 255 + (115 * 256) + (215 * 65536));
-            CPrintToChat(client, "\x05你 \x04将轮廓颜色改为您的\x01: \x04定制颜色轮廓 \x01!");
+            CPrintToChat(client, "%t", "RPG_SetOutlineColorCustomOutline");
 		}
     }
 
@@ -1984,7 +1984,7 @@ void GetSkin(int client, int id, bool broadcast = true)
             DisableSkin( client );
             player[client].SkinType = id;
             if(broadcast)
-            	PrintToChat(client, "\x05你关闭了生还者轮廓");
+            	PrintToChat(client, "%t", "RPG_ClosedSurvivorProfile");
             return;
         }
         case 1: 
@@ -1992,140 +1992,140 @@ void GetSkin(int client, int id, bool broadcast = true)
             SetEntityRenderMode(client, RENDER_GLOW);
             SetEntityRenderColor(client, 0, 255, 0, 255);
             if(broadcast)
-            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04绿色 \x01!");
+            	CPrintToChat(client, "%t", "RPG_ChangeSkinColorGreen");
         }
         case 2: 
         {
             SetEntityRenderMode(client, RENDER_GLOW);
             SetEntityRenderColor(client, 7, 19, 250, 255);
             if(broadcast)
-            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04蓝色 \x01!");
+            	CPrintToChat(client, "%t", "RPG_SetSkinColorBlue");
         }
         case 3: 
         {
             SetEntityRenderMode(client, RENDER_GLOW);
             SetEntityRenderColor(client, 249, 19, 250, 255);
             if(broadcast)
-            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04蓝紫色 \x01!");
+            	CPrintToChat(client, "%t", "RPG_SetSkinColorBlueViolet");
         }
         case 4: 
         {
             SetEntityRenderMode(client, RENDER_GLOW);
             SetEntityRenderColor(client, 66, 250, 250, 255);
             if(broadcast)
-            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04青色 \x01!");
+            	CPrintToChat(client, "%t", "RPG_SetSkinColorCyan");
         }
         case 5: 
         {
             SetEntityRenderMode(client, RENDER_GLOW);
             SetEntityRenderColor(client, 249, 155, 84, 255);
             if(broadcast)
-            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04橘黄色 \x01!");
+            	CPrintToChat(client, "%t", "RPG_SetSkinColorOrange");
         }
         case 6: 
         {
             SetEntityRenderMode(client, RENDER_GLOW);
             SetEntityRenderColor(client, 255, 0, 0, 255);
             if(broadcast)
-            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04红色 \x01!");
+            	CPrintToChat(client, "%t", "RPG_SetSkinColorRed");
         }
         case 7: 
         {
             SetEntityRenderMode(client, RENDER_GLOW);
             SetEntityRenderColor(client, 50, 50, 50, 255);
             if(broadcast)
-            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04灰色 \x01!");
+            	CPrintToChat(client, "%t", "RPG_SetSkinColorGray");
         }
         case 8: 
         {
             SetEntityRenderMode(client, RENDER_GLOW);
             SetEntityRenderColor(client, 255, 255, 0, 255);
             if(broadcast)
-            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04黄色 \x01!");
+            	CPrintToChat(client, "%t", "RPG_SetSkinColorYellow");
         }
         case 9: 
         {
             SetEntityRenderMode(client, RENDER_GLOW);
             SetEntityRenderColor(client, 128, 255, 0, 255);
             if(broadcast)
-            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04酸橙色 \x01!");
+            	CPrintToChat(client, "%t", "RPG_SetSkinColorLime");
         }
         case 10: 
         {
             SetEntityRenderMode(client, RENDER_GLOW);
             SetEntityRenderColor(client, 128, 0, 0, 255);
             if(broadcast)
-            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04栗色 \x01!");
+            	CPrintToChat(client, "%t", "RPG_SetSkinColorMaroon");
         }
         case 11: 
         {
             SetEntityRenderMode(client, RENDER_GLOW);
             SetEntityRenderColor(client, 0, 128, 128, 255);
             if(broadcast)
-            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04藍綠色 \x01!");
+            	CPrintToChat(client, "%t", "RPG_SetSkinColorTeal");
         }
         case 12:
         {
             SetEntityRenderMode(client, RENDER_GLOW);
             SetEntityRenderColor(client, 255, 0, 150, 255);
             if(broadcast)
-            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04粉红色 \x01!");
+            	CPrintToChat(client, "%t", "RPG_SetSkinColorPink");
         }
         case 13:
         {        
             SetEntityRenderMode(client, RENDER_GLOW);
             SetEntityRenderColor(client, 155, 0, 255, 255);
             if(broadcast)
-            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04紫色 \x01!");
+            	CPrintToChat(client, "%t", "RPG_SetSkinColorPurple");
         }
         case 14: 
         {
             SetEntityRenderMode(client, RENDER_GLOW);
             SetEntityRenderColor(client, 0, 0, 0, 255);
             if(broadcast)
-            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04黑色 \x01!");
+            	CPrintToChat(client, "%t", "RPG_SetSkinColorBlack");
         }
         case 15: 
         {
             SetEntityRenderMode(client, RENDER_GLOW);
             SetEntityRenderColor(client, 255, 155, 0, 255);
             if(broadcast)
-            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04金黄色 \x01!");
+            	CPrintToChat(client, "%t", "RPG_SetSkinColorGold");
         }
         case 16: 
         {
             SetEntityRenderMode(client, RENDER_GLOW);
             SetEntityRenderColor(client, 0, 0, 0, 30);
             if(broadcast)
-            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04透明色 \x01!");
+            	CPrintToChat(client, "%t", "RPG_ChangeSkinColorTransparentColor");
         }
 		case 17:
 		{
             SetEntityRenderMode(client, RENDER_GLOW);
             SetEntityRenderColor(client, 139, 101, 8, 255);
             if(broadcast)
-            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04您的定制皮肤 \x01!");
+            	CPrintToChat(client, "%t", "RPG_SetSkinColorCustomSkin");
 		}
 		case 18:
 		{
             SetEntityRenderMode(client, RENDER_GLOW);
             SetEntityRenderColor(client, 0, 0, 0, 60);
             if(broadcast)
-            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04您的定制皮肤 \x01!");
+            	CPrintToChat(client, "%t", "RPG_SetSkinColorCustomSkin");
 		}
 		case 19: 
         {
             SetEntityRenderMode(client, RENDER_GLOW);
             SetEntityRenderColor(client, 0, 0, 0, 60);
             if(broadcast)
-            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04您的定制皮肤 \x01!");
+            	CPrintToChat(client, "%t", "RPG_SetSkinColorCustomSkin");
         }
 		case 20: 
         {
             SetEntityRenderMode(client, RENDER_GLOW);
             SetEntityRenderColor(client, 0, 0, 0, 60);
             if(broadcast)
-            	CPrintToChat(client, "\x05你 \x04将皮肤颜色改为\x01: \x04您的定制皮肤 \x01!");
+            	CPrintToChat(client, "%t", "RPG_SetSkinColorCustomSkin");
         }
     }
     
@@ -2283,10 +2283,10 @@ public int gun_back(Menu menu, MenuAction action, int param1, int param2)
 				if(player[param1].ClientFirstBuy){
 					player[param1].ClientFirstBuy=false;
 					RemovePoints(param1, 0, bitem);
-					PrintToChatAll("\x04%N\x03第一次白嫖了一把%s，还剩%d的B数",param1,"Uzi",player[param1].ClientPoints);
+					PrintToChatAll("%t", "RPG_FirstFreePurchase", param1, "Uzi", player[param1].ClientPoints);
 				}
 				else if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostUzi,"Uzi",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostUzi, "Uzi", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "smg_silenced") )
 			{
@@ -2295,40 +2295,40 @@ public int gun_back(Menu menu, MenuAction action, int param1, int param2)
 				if(player[param1].ClientFirstBuy){
 					player[param1].ClientFirstBuy=false;
 					RemovePoints(param1, 0, bitem);
-					PrintToChatAll("\x04%N\x03第一次白嫖了一把%s，还剩%d的B数",param1,"消音smg",player[param1].ClientPoints);
+					PrintToChatAll("%t", "RPG_FirstFreePurchase", param1, "消音smg", player[param1].ClientPoints);
 				}
 				else if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostSilenced,"消音smg",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostSilenced, "消音smg", player[param1].ClientPoints);
 			}				
 			else if( StrEqual(bitem, "smg_mp5") )
 			{
 				
 				int costpoints = CostMP5;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostMP5,"mp5",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostMP5, "mp5", player[param1].ClientPoints);
 			}	
 			else if( StrEqual(bitem, "rifle") ){
 				//
 				int costpoints = CostM16;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostM16,"m16步枪",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostM16, "m16步枪", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "rifle_ak47") ){
 				int costpoints = CostAK47;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostAK47,"ak47步枪",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostAK47, "ak47步枪", player[param1].ClientPoints);
 			}
 				
 			else if( StrEqual(bitem, "rifle_sg552") ){
 				int costpoints = CostSG552;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostSG552,"sg552步枪",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostSG552, "sg552步枪", player[param1].ClientPoints);
 			}
 				
 			else if( StrEqual(bitem, "rifle_desert") ){
 				int costpoints = CostSCAR;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostSCAR,"scar步枪",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostSCAR, "scar步枪", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "pumpshotgun") ){
 				int costpoints = CostPumpShotgun;
@@ -2336,70 +2336,70 @@ public int gun_back(Menu menu, MenuAction action, int param1, int param2)
 				if(player[param1].ClientFirstBuy){
 					player[param1].ClientFirstBuy=false;
 					RemovePoints(param1, 0, bitem);
-					PrintToChatAll("\x04%N\x03第一次白嫖了一把%s，还剩%d的B数",param1,"一代单喷",player[param1].ClientPoints);
+					PrintToChatAll("%t", "RPG_FirstFreePurchase", param1, "一代单喷", player[param1].ClientPoints);
 				}
 				else if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostPumpShotgun,"一代单喷",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostPumpShotgun, "一代单喷", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "shotgun_chrome") ){
 				int costpoints = CostChromeShotgun;
 				if(player[param1].ClientFirstBuy){
 					player[param1].ClientFirstBuy=false;
 					RemovePoints(param1, 0, bitem);
-					PrintToChatAll("\x04%N\x03第一次白嫖了一把%s，还剩%d的B数",param1,"二代单喷",player[param1].ClientPoints);
+					PrintToChatAll("%t", "RPG_FirstFreePurchase", param1, "二代单喷", player[param1].ClientPoints);
 				}
 				else if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostChromeShotgun,"二代单喷",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostChromeShotgun, "二代单喷", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "autoshotgun") ){
 				int costpoints = CostAuto;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostAuto,"一代连喷",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostAuto, "一代连喷", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "shotgun_spas") ){
 				int costpoints = CostSPAS;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostSPAS,"二代连喷",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostSPAS, "二代连喷", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "hunting_rifle") ){
 				int costpoints = CostHunting;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostHunting,"一代连狙",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostHunting, "一代连狙", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "sniper_military") ){
 				int costpoints = CostMilitary;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostMilitary,"二代连狙",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostMilitary, "二代连狙", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "sniper_scout") ){
 				int costpoints = CostScout;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostScout,"鸟狙",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostScout, "鸟狙", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "sniper_awp") ){
 				int costpoints = CostAWP;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostAWP,"AWP狙击枪",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostAWP, "AWP狙击枪", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "rifle_m60") ){
 				int costpoints = CostM60;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostM60,"m60",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostM60, "m60", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "grenade_launcher") ){
 				int costpoints = CostGrenadeLuanch;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostGrenadeLuanch,"榴弹发射器",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostGrenadeLuanch, "榴弹发射器", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "pistol") ){			
 				int costpoints = CostP220;
 				if(player[param1].ClientFirstBuy){
 					player[param1].ClientFirstBuy=false;
 					RemovePoints(param1, 0, bitem);
-					PrintToChatAll("\x04%N\x03第一次白嫖了一把%s，还剩%d的B数",param1,"小手枪",player[param1].ClientPoints);
+					PrintToChatAll("%t", "RPG_FirstFreePurchase", param1, "小手枪", player[param1].ClientPoints);
 				}
 				else if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostP220,"小手枪",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostP220, "小手枪", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "pistol_magnum") ){
 				
@@ -2407,10 +2407,10 @@ public int gun_back(Menu menu, MenuAction action, int param1, int param2)
 				if(player[param1].ClientFirstBuy){
 					player[param1].ClientFirstBuy=false;
 					RemovePoints(param1, 0, bitem);
-					PrintToChatAll("\x04%N\x03第一次白嫖了一把%s，还剩%d的B数",param1,"马格南",player[param1].ClientPoints);
+					PrintToChatAll("%t", "RPG_FirstFreePurchase", param1, "马格南", player[param1].ClientPoints);
 				}
 				else if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostMagnum,"马格南",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostMagnum, "马格南", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "ammo") ){
 				ClientCommand(param1, "sm_ammo");
@@ -2463,29 +2463,29 @@ public int supply_back(Menu menu, MenuAction action, int param1, int param2)
 			if( StrEqual(bitem, "first_aid_kit") ){				
 				int costpoints = CostFirstAidKit;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostFirstAidKit,"医疗包",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostFirstAidKit, "医疗包", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "pain_pills") ){				
 				int costpoints = CostPills;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostPills,"药丸",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostPills, "药丸", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "adrenaline") ){				
 				int costpoints = CostAdren;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostAdren,"肾上腺素",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostAdren, "肾上腺素", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "gascan") ){
 				
 				int costpoints = CostGascan;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostGascan,"油桶",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostGascan, "油桶", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "weapon_gnome") ){
 				
 				int costpoints = CostGnome;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("\x04%N\x03B数-%d,购买了%s，还剩%d的B数",param1,CostGnome,"治疗小侏儒",player[param1].ClientPoints);
+				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostGnome, "治疗小侏儒", player[param1].ClientPoints);
 			}
 		}
 		case MenuAction_End:
@@ -2563,75 +2563,75 @@ public int ability_back(Menu menu, MenuAction action, int param1, int param2)
 			if( StrEqual(bitem, "machete") ){		
 				player[param1].ClientMelee=1;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1,"\x04您的出门近战武器设为砍刀");
+				PrintToChat(param1, "%t", "RPG_MeleeWeaponSetMacheteGo");
 			}
 			else if( StrEqual(bitem, "fireaxe") ){
 				player[param1].ClientMelee=2;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1,"\x04您的出门近战武器设为消防斧");
+				PrintToChat(param1, "%t", "RPG_MeleeWeaponSetFireAx");
 			}
 			else if( StrEqual(bitem, "knife") ){
 				player[param1].ClientMelee=3;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1,"\x04您的出门近战武器设为小刀");
+				PrintToChat(param1, "%t", "RPG_SetMeleeWeaponKnifeGo");
 			}
 			else if( StrEqual(bitem, "katana") ){
 				player[param1].ClientMelee=4;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1,"\x04您的出门近战武器设为武士刀");
+				PrintToChat(param1, "%t", "RPG_MeleeWeaponSetKatana");
 			}
 			else if( StrEqual(bitem, "pistol_magnum") ){
 				player[param1].ClientMelee=5;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1,"\x04您的出门近战武器设为马格南");
+				PrintToChat(param1, "%t", "RPG_MeleeWeaponSetMagnum");
 			}
 			else if( StrEqual(bitem, "electric_guitar") ){
 				player[param1].ClientMelee=6;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1,"\x04您的出门近战武器设为电吉他");
+				PrintToChat(param1, "%t", "RPG_SetMeleeWeaponGoingElectric");
 			}
 			else if( StrEqual(bitem, "tonfa") ){
 				player[param1].ClientMelee=7;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1,"\x04您的出门近战武器设为警棍");
+				PrintToChat(param1, "%t", "RPG_SetMeleeWeaponGoingBaton");
 			}
 			else if( StrEqual(bitem, "pitchfork") ){
 				player[param1].ClientMelee=8;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1,"\x04您的出门近战武器设为草叉");
+				PrintToChat(param1, "%t", "RPG_SetOutgoingMeleeWeaponPitchfork");
 			}
 			else if( StrEqual(bitem, "shovel") ){
 				player[param1].ClientMelee=9;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1,"\x04您的出门近战武器设为铲子");
+				PrintToChat(param1, "%t", "RPG_SetExitMeleeWeaponShovel");
 			}
 			else if( StrEqual(bitem, "pistol") ){
 				player[param1].ClientMelee=10;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1,"\x04您的出门近战武器设为小手枪");
+				PrintToChat(param1, "%t", "RPG_SetMeleeWeaponGoingSmall");
 			}else if( StrEqual(bitem, "frying_pan") ){
 				player[param1].ClientMelee=11;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1,"\x04您的出门近战武器设为平底锅");
+				PrintToChat(param1, "%t", "RPG_SetExitMeleeWeaponPan");
 			}else if( StrEqual(bitem, "crowbar") ){
 				player[param1].ClientMelee=12;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1,"\x04您的出门近战武器设为撬棍");
+				PrintToChat(param1, "%t", "RPG_SetMeleeWeaponGoingCrowbar");
 			}else if( StrEqual(bitem, "cricket_bat") ){
 				player[param1].ClientMelee=13;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1,"\x04您的出门近战武器设为板球拍");
+				PrintToChat(param1, "%t", "RPG_SetMeleeWeaponCricketBat");
 			}else if( StrEqual(bitem, "random_secondweapon") ){
 				player[param1].ClientMelee=14;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1,"\x04您的出门近战武器设为板球拍");
+				PrintToChat(param1, "%t", "RPG_SetMeleeWeaponCricketBat");
 			}else if( StrEqual(bitem, "none") ){
 				player[param1].ClientMelee = 0;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1,"\x04您取消了出门近战武器");
+				PrintToChat(param1, "%t", "RPG_CanceledMeleeWeaponGoing");
 			}else 
 			{
-				PrintToChat(param1,"\x03您的出门近战武器设置失败，超出限制");
+				PrintToChat(param1, "%t", "RPG_MeleeWeaponSettingFailedExceeded");
 			}
 		}
 		case MenuAction_End:
@@ -2671,12 +2671,12 @@ public int Blood_back(Menu menu, MenuAction action, int param1, int param2)
 				
 				player[param1].ClientBlood=1;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1,"\x04你已经开启了杀特回血，杀一只特感回2滴血，不超过血量上限");
+				PrintToChat(param1, "%t", "RPG_TurnedBloodRecoveryFunctionKilling");
 			}
 			else {				
 				player[param1].ClientBlood=0;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1,"\x04你已经关闭了杀特回血.");
+				PrintToChat(param1, "%t", "RPG_TurnedOffBloodRecoverySpecial");
 			}
 		}
 		case MenuAction_End:
@@ -2847,7 +2847,7 @@ public Action OnCallVote(int client, const char[] command, int argc)
         GetClientName(target, tname, sizeof(tname));
         GetClientName(client, cname, sizeof(cname));
 
-        CPrintToChat(client, "\x04[AntiKick]\x01 该玩家 \x05%N\x01 为管理员，已启用防踢，投票无效。", target);
+        CPrintToChat(client, "%t", "RPG_AntiKickPlayerAdministratorAnti", target);
         PrintToServer("[AntiKick] %s attempted votekick on admin %s, blocked.", cname, tname);
         return Plugin_Handled;   // 直接拦截投票
     }
@@ -2880,7 +2880,7 @@ public Action OnSmKick(int client, const char[] command, int argc)
     {
         char tname[64];
         GetClientName(target, tname, sizeof(tname));
-        CPrintToChat(client, "\x04[AntiKick]\x01 你无权踢出受保护管理员：\x05%N\x01。", target);
+        CPrintToChat(client, "%t", "RPG_AntiKickNotPermissionKick", target);
         return Plugin_Handled;
     }
 

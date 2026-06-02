@@ -67,6 +67,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d_multi_witches.phrases");
 	CreateConVar("l4d_multi_witches_version", PLUGIN_VERSION, "Plugin Version", CVAR_FLAGS | FCVAR_DONTRECORD);
 
 	g_hCvarCountWitchInRound 	= CreateConVar("l4d_witches_limit", 			"20", 		"Sets the limit for witches spawned. If 0, the plugin will not check count witches", CVAR_FLAGS);
@@ -135,7 +136,7 @@ public void Event_WitchSpawned(Event event, char[] name, bool dontBroadcast)
 		countAliveWitch++;
 		
 		#if DEBUG
-		PrintToChatAll("%s Witch spawned # %d, max = %d, alive: %i", "[l4d_witches]", countRoundWitch, maxCountWitchInRound, countAliveWitch);
+		PrintToChatAll("%t", "L4DMultiWitches_WitchSpawnedMaxAlive", "[l4d_witches]", countRoundWitch, maxCountWitchInRound, countAliveWitch);
 		#endif
 	}
 }
@@ -179,7 +180,7 @@ void Start_Timer()
 	CreateTimer(GetRandomFloat(WitchTimeMin, WitchTimeMax), Timer_SpawnAWitch, _, TIMER_FLAG_NO_MAPCHANGE);
 	
 	#if DEBUG
-	PrintToChatAll("[l4d_witches]: Start_Timer. Min: %f, Max: %f", WitchTimeMin, WitchTimeMax);
+	PrintToChatAll("%t", "L4DMultiWitches_L4DWitchesStartTimerMin", WitchTimeMin, WitchTimeMax);
 	#endif
 }
 
@@ -226,7 +227,7 @@ int GetCountWitchesInRange()
 	}
 	
 	#if DEBUG
-	PrintToChatAll("[l4d_witches]: Alive witches: %i", countWitchAlive);
+	PrintToChatAll("%t", "L4DMultiWitches_L4DWitchesAliveWitches", countWitchAlive);
 	#endif
 	
 	return countWitchAlive;
@@ -235,7 +236,7 @@ int GetCountWitchesInRange()
 public Action Timer_SpawnAWitch(Handle timer)
 {
 	#if DEBUG
-	PrintToChatAll("[l4d_witches]: Timer triggered");
+	PrintToChatAll("%t", "L4DMultiWitches_L4DWitchesTimerTriggered");
 	#endif
 
 	if( runTimer )
@@ -264,7 +265,7 @@ public Action Timer_SpawnAWitch(Handle timer)
 		bWitchSpawnByPlugin = true;
 		
 		#if DEBUG
-		PrintToChatAll("[l4d_witches]: Try to spawn");
+		PrintToChatAll("%t", "L4DMultiWitches_L4DWitchesTrySpawn");
 		#endif
 		
 		if( g_bLeft4dead2 )

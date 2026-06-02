@@ -1456,7 +1456,7 @@ Action Command_Admin_Emotes(int client, int args)
 {
 	if (args < 1)
 	{
-		CPrintToChat(client, "[SM] Usage: sm_setemotes <#userid|name> [Emote ID]");
+		CPrintToChat(client, "%t", "FNEmotes_SMUsageSMSetEmotes");
 		return Plugin_Handled;
 	}
 	

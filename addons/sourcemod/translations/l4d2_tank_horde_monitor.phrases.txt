@@ -3,6 +3,11 @@
 	"Tag"
 	{
 		"en"		"<{olive}Horde{default}>"
+		"chi"		"<{olive}Horde{default}>"
+		"zho"		"<{olive}Horde{default}>"
+		"jp"		"<{olive}Horde{default}>"
+		"ko"		"<{olive}Horde{default}>"
+		"vi"		"<{olive}Horde{default}>"
 	}
 	"TankPlay"
 	{
@@ -23,5 +28,56 @@
 	"HordeVeryStrength"
 	{
 		"en"		"{red}Survivors have pushed too far{default}, horde is at {green}100%% strength{default}!"
+	}
+
+
+	"L4D2TankHordeMonitor_HordeZombieWaveTemporarilySuspended"
+	{
+		"en"		"<{olive}Horde{default}> The zombie wave is temporarily suspended due to the presence of Tank {blue}{default}! If you continue forward {blue}%0.1f%%{default}, the zombie wave will start again."
+		"chi"		"<{olive}Horde{default}> 尸潮暂时因为Tank在场 {blue}暂停{default} ! 再往前走 {blue}%0.1f%%{default} 路程将会重新开始刷出尸潮."
+		"zho"		"<{olive}Horde{default}> The zombie wave is temporarily suspended due to the presence of Tank {blue}{default}! If you continue forward {blue}%0.1f%%{default}, the zombie wave will start again."
+		"jp"		"<{olive}Horde{default}> タンク {blue}{default} の存在により、ゾンビ ウェーブが一時的に停止されます。 {blue}%0.1f%%{default} と進むと、再びゾンビウェーブが始まります。"
+		"ko"		"<{olive}Horde{default}> 탱크 {blue}{default}의 존재로 인해 좀비 웨이브가 일시적으로 중단되었습니다! {blue}%0.1f%%{default} 앞으로 계속 진행하면 좀비 웨이브가 다시 시작됩니다."
+		"vi"		"<{olive}orde{default}> Làn sóng zombie tạm thời bị đình chỉ do sự hiện diện của Tank {blue}{default}! Nếu bạn tiếp tục chuyển tiếp {blue}%0.1f%%{default}, làn sóng zombie sẽ bắt đầu lại."
+	}
+
+	"L4D2TankHordeMonitor_HordeNoteWaveZombiesStarted"
+	{
+		"en"		"<{olive}Horde{default}> Please note! The wave of zombies has started again with the remaining {blue}%0.1f%%{default} journey..."
+		"chi"		"<{olive}Horde{default}> 请注意！离尸潮再次开启剩余{blue}%0.1f%%{default} 路程..."
+		"zho"		"<{olive}Horde{default}> 請注意！離屍潮再次開啟剩餘{blue}%0.1f%%{default} 路程..."
+		"jp"		"<{olive}Horde{default}> ご注意ください！残りの {blue}%0.1f%%{default} の旅で、ゾンビの波が再び始まりました..."
+		"ko"		"<{olive}Horde{default}> 참고하세요! 남은 {blue}%0.1f%%{default} 여정으로 좀비들의 물결이 다시 시작됐다..."
+		"vi"		"<{olive}orde{default}> Xin lưu ý! Làn sóng zombie lại bắt đầu với hành trình {blue}%0.1f%%{default} còn lại..."
+	}
+
+	"L4D2TankHordeMonitor_HordeZombieTideRestoredCurrent"
+	{
+		"en"		"<{olive}Horde{default}> The zombie tide has {blue} restored to {default}. The current strength is {green}%i%%. Continuing to advance will increase the intensity of the zombie tide."
+		"chi"		"<{olive}Horde{default}> 尸潮已经 {blue}恢复{default}， 当前为 {green}%i%% 强度{default}, 继续推进会增加尸潮的强度."
+		"zho"		"<{olive}Horde{default}> 屍潮已經 {blue}恢復{default}， 目前為 {green}%i%% 強度"
+		"jp"		"<{olive}Horde{default}> ゾンビタイドでは、{blue}が{default}に復元されました。現在の強さは{green}%i%%です。前進を続けると、ゾンビの潮流が激化します。"
+		"ko"		"<{olive}Horde{default}> 좀비 조수가 {blue}를 {default}로 복원했습니다. 현재 강도는 {green}%i%%입니다. 계속 전진하면 좀비 조수의 강도가 높아집니다."
+		"vi"		"<{olive}orde{default}> Làn sóng zombie đã {blue} được khôi phục thành {default}. Sức mạnh hiện tại là {green}%i%%. Tiếp tục tiến lên sẽ làm tăng cường độ của làn sóng zombie."
+	}
+
+	"L4D2TankHordeMonitor_HordeCurrentZombieWaveIntensity"
+	{
+		"en"		"<{olive}Horde{default}> The current zombie wave is {green}%i%% intensity {default}..."
+		"chi"		"<{olive}Horde{default}> 尸潮当前为 {green}%i%% 强度{default}..."
+		"zho"		"<{olive}Horde{default}> 屍潮目前為 {green}%i%% 強度{default}..."
+		"jp"		"<{olive}Horde{default}> 現在のゾンビ ウェーブは {green}%i%% 強度 {default}..."
+		"ko"		"<{olive}Horde{default}> 현재 좀비 웨이브는 {green}%i%% 강도 {default}..."
+		"vi"		"<{olive}orde{default}> Làn sóng zombie hiện tại là {green}%i%% cường độ {default}..."
+	}
+
+	"L4D2TankHordeMonitor_HordeSurvivorsAdvancedTooFar"
+	{
+		"en"		"<{olive}Horde{default}> The survivors advanced too far, and the intensity of the zombie wave was changed to {green}100%% {default}!"
+		"chi"		"<{olive}Horde{default}> 生还者推进过远, 尸潮强度更改为 {green}100%% {default}!"
+		"zho"		"<{olive}Horde{default}> 生還者推進過遠, 屍潮強度改為 {green}100%% {default}!"
+		"jp"		"<{olive}Horde{default}> 生存者が進みすぎて、ゾンビウェーブの強さが{green}100%% {default}に変化しました！"
+		"ko"		"<{olive}Horde{default}> 생존자들이 너무 멀리 전진해 좀비 웨이브의 강도가 {green}100%% {default}로 변경되었습니다!"
+		"vi"		"<{olive}orde{default}> Những người sống sót đã tiến quá xa và cường độ của làn sóng zombie đã được đổi thành {green}100%% {default}!"
 	}
 }

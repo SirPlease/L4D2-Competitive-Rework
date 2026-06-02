@@ -32,6 +32,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_tank_damage_cvars.phrases");
 	g_hCvarVsTankPoundDamage = CreateConVar("vs_tank_pound_damage", "24.0", "Amount of damage done by a vs tank's melee attack on incapped survivors (a zero and negative value disables this).");
 	g_hCvarVsTankRockDamage = CreateConVar("vs_tank_rock_damage", "24.0", "Amount of damage done by a vs tank's rock (a zero and negative value disables this).");
 
@@ -72,7 +73,7 @@ Action Hook_OnTakeDamage(int iVictim, int &iAttacker, int &iInflictor, float &fD
 	GetEdictClassname(iInflictor, sClassName, sizeof(sClassName));
 
 #if DEBUG
-	PrintToChatAll("iVictim: %N, iAttacker: %N, iInflictor, %s (%d), fDamage: %f, iDamagetype: %d", \
+	PrintToChatAll("%t", "L4D2TankDamageCvars_VictimAttackerInflictorDamageType", \
 							iVictim, iAttacker, sClassName, iInflictor, fDamage, iDamagetype);
 #endif
 

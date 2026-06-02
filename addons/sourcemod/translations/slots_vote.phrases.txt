@@ -3,6 +3,10 @@
 	"Tag"
 	{
 		"en"    	"{blue}[{default}Slots{blue}]{default}"
+		"zho"		"{blue}[{default}Slots{blue}]{default}"
+		"jp"		"{blue}[{default}Slots{blue}]{default}"
+		"ko"		"{blue}[{default}Slots{blue}]{default}"
+		"vi"		"{blue}[{default}Slots{blue}]{default}"
 	}
 	"NotConsoleVote"
 	{
@@ -11,24 +15,44 @@
 	"LimitSlotsAbove"
 	{
 		"en"		"You can't limit slots above {olive}%i{default} on this Server."
-	}
+	
+		"zho"		"You can't limit slots above {olive}%i{default} on this Server."
+		"jp"		"You can't limit slots above {olive}%i{default} on this Server."
+		"ko"		"You can't limit slots above {olive}%i{default} on this Server."
+		"vi"		"You can't limit slots above {olive}%i{default} on this Server."}
 	"LimitedSlotsTo"
 	{
 		"#format"   "{1:s},{2:i}" // 1:sName 2:Int
 		"en"		"{olive}{1}{default} has limited Slots to {blue}{2}{default}"
-	}
+	
+		"zho"		"{olive}{1}{default} has limited Slots to {blue}{2}{default}"
+		"jp"		"{olive}{1}{default} has limited Slots to {blue}{2}{default}"
+		"ko"		"{olive}{1}{default} has limited Slots to {blue}{2}{default}"
+		"vi"		"{olive}{1}{default} has limited Slots to {blue}{2}{default}"}
 	"RequiredPlayers"
 	{
 		"en"		"You can't limit Slots lower than required Players."
-	}
+	
+		"zho"		"You can't limit Slots lower than required Players."
+		"jp"		"You can't limit Slots lower than required Players."
+		"ko"		"You can't limit Slots lower than required Players."
+		"vi"		"You can't limit Slots lower than required Players."}
 	"SlotsUsage"
 	{
 		"en"		"Usage: {olive}!slots{default} <{olive}number{default}> {blue}|{default} Example: {olive}!slots 8{default}"
-	}
+	
+		"zho"		"Usage: {olive}!slots{default} <{olive}number{default}> {blue}|{default} Example: {olive}!slots 8{default}"
+		"jp"		"Usage: {olive}!slots{default} <{olive}number{default}> {blue}|{default} Example: {olive}!slots 8{default}"
+		"ko"		"Usage: {olive}!slots{default} <{olive}number{default}> {blue}|{default} Example: {olive}!slots 8{default}"
+		"vi"		"Usage: {olive}!slots{default} <{olive}number{default}> {blue}|{default} Example: {olive}!slots 8{default}"}
 	"Spectators"
 	{
 		"en"		"Voting isn't allowed for spectators."
-	}
+	
+		"zho"		"Voting isn't allowed for spectators."
+		"jp"		"Voting isn't allowed for spectators."
+		"ko"		"Voting isn't allowed for spectators."
+		"vi"		"Voting isn't allowed for spectators."}
 	"LimitSlots"
 	{
 		"en"		"Limit Slots to '%s'?"
@@ -36,9 +60,24 @@
 	"CannotBeStarted"
 	{
 		"en"		"Vote cannot be started now."
-	}
+	
+		"zho"		"Vote cannot be started now."
+		"jp"		"Vote cannot be started now."
+		"ko"		"Vote cannot be started now."
+		"vi"		"Vote cannot be started now."}
 	"LimitingSlots"
 	{
 		"en"		"Limiting Slots..."
+	}
+
+	"SlotsVote_AdminOnlyBelowMinimumSlots"
+	{
+		"#format"		"{1:i}"
+		"en"		"只有管理员才能将位置设为小于 {blue}{1}{default}人"
+		"chi"		"只有管理员才能将位置设为小于 {blue}{1}{default}人"
+		"zho"		"只有管理员才能将位置设为小于 {blue}{1}{default}人"
+		"jp"		"只有管理员才能将位置设为小于 {blue}{1}{default}人"
+		"ko"		"只有管理员才能将位置设为小于 {blue}{1}{default}人"
+		"vi"		"只有管理员才能将位置设为小于 {blue}{1}{default}人"
 	}
 }

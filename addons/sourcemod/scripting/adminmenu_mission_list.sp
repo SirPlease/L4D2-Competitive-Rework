@@ -231,7 +231,7 @@ void Display_MissionListMenu(int client, bool official) {
 
     SourceKeyValues kvMissions = SDKCall(g_hSDK_GetAllMissions, g_pMatchExtL4D);
     if (kvMissions.IsNull()) {
-        PrintToChat(client, "[SM] Failed to get mission list.");
+        PrintToChat(client, "%t", "L4D2MMAdminMenu_SMFailedGetMissionList");
         delete menu;
         return;
     }
@@ -263,7 +263,7 @@ void Display_MissionListMenu(int client, bool official) {
     }
 
     if (itemCount == 0) {
-        PrintToChat(client, "[SM] No maps found for current game mode.");
+        PrintToChat(client, "%t", "L4D2MMAdminMenu_SMNoMapsFoundCurrent");
         delete menu;
         return;
     }
@@ -331,7 +331,7 @@ void Display_ChapterListMenu(int client, const char[] missionName) {
     }
 
     if (itemCount == 0) {
-        PrintToChat(client, "[SM] No valid maps found for this mission.");
+        PrintToChat(client, "%t", "L4D2MMAdminMenu_SMNoValidMapsFound");
         delete menu;
         return;
     }
@@ -381,7 +381,7 @@ void TriggerMapChange(const char[] map) {
         strcopy(mapDisplayName, sizeof(mapDisplayName), map);
     }
     
-    PrintToChatAll("\x04[SM]\x01 Admin is forcing a map change to \x03%s\x01.", mapDisplayName);
+    PrintToChatAll("%t", "L4D2MMAdminMenu_SMAdminForcingMapChange", mapDisplayName);
     
     DataPack dp = new DataPack();
     dp.WriteString(map);
@@ -406,7 +406,7 @@ public Action Timer_ChangeMap(Handle timer, DataPack dp) {
 }
 
 Action Cmd_ReloadMissions(int client, int args) {
-    PrintToChatAll("\x04[SM]\x01 Admin is reloading VPKs and mission list...");
+    PrintToChatAll("%t", "L4D2MMAdminMenu_SMAdminReloadingVPKs");
     ServerCommand("update_addon_paths; mission_reload");
     ServerExecute();
     ReplyToCommand(client, "VPKs and missions reloaded.");

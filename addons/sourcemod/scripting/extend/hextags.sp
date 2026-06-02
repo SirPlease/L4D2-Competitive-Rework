@@ -135,6 +135,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
+	LoadTranslations("hextags.phrases");
 	//ConVars
 	CreateConVar("sm_hextags_version", PLUGIN_VERSION, "HexTags plugin version", FCVAR_SPONLY | FCVAR_REPLICATED | FCVAR_NOTIFY);
 	cv_sDefaultGang = CreateConVar("sm_hextags_nogang", "", "Text to use if user has no tag - needs hl_gangs.");
@@ -450,7 +451,7 @@ public int Handler_TagsMenu(Menu menu, MenuAction action, int param1, int param2
 		static char sValue[32];
 		IntToString(iSelTagId[param1], sValue, sizeof(sValue));
 		SetClientCookie(param1, hSelTagCookie, sValue);
-		PrintToChat(param1, "[SM] 称号 %s 设置成功", selectedTags[param1].TagName);
+		PrintToChat(param1, "%t", "Hextags_SMTitleSetSuccessfully", selectedTags[param1].TagName);
 	}
 	return 0;
 }

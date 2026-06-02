@@ -437,6 +437,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_scripted_hud.phrases");
     LoadPluginData();
 
     g_hCvar_pain_pills_decay_rate = FindConVar("pain_pills_decay_rate");
@@ -1614,7 +1615,7 @@ public Action CmdReloadData(int client, int args)
     LoadPluginData();
 
     if (IsValidClient(client))
-        PrintToChat(client, "\x04[HUD texts from data file reloaded]");
+        PrintToChat(client, "%t", "L4D2ScriptedHUD_HUDTextsDataFileReloaded");
 
     return Plugin_Handled;
 }

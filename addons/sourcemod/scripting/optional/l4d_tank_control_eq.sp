@@ -59,6 +59,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d_tank_control_eq.phrases");
     // Load translations (for targeting player)
     LoadTranslations("common.phrases");
     
@@ -128,9 +129,9 @@ public Action L4D_OnTryOfferingTankBot(int tank_index, bool &enterStatis)
                 continue;
 
             if (tank_index == i) 
-                CPrintToChat(i, "{red}<{default}Tank Rage{red}> {olive}Rage Meter {red}Refilled");
+                CPrintToChat(i, "%t", "L4DTankControlEq_TankRageMeterRefilled");
             else 
-                CPrintToChat(i, "{red}<{default}Tank Rage{red}> {default}({green}%N{default}'s) {olive}Rage Meter {red}Refilled", tank_index);
+                CPrintToChat(i, "%t", "L4DTankControlEq_TankRageMeterRefilled_2", tank_index);
         }
         
         SetTankFrustration(tank_index, 100);
@@ -369,9 +370,9 @@ Action Tank_Cmd(int client, int args)
     if (tankClientId != -1 && (hTankPrint.BoolValue || IS_INFECTED(client) || IS_SPECTATOR(client)))
     {
         if (client == tankClientId) 
-            CPrintToChat(client, "{red}<{default}Tank Selection{red}> {green}You {default}will become the {red}Tank{default}!");
+            CPrintToChat(client, "%t", "L4DTankControlEq_TankSelectionBecomeTank");
         else 
-            CPrintToChat(client, "{red}<{default}Tank Selection{red}> {olive}%N {default}will become the {red}Tank!", tankClientId);
+            CPrintToChat(client, "%t", "L4DTankControlEq_TankSelectionBecomeTank_2", tankClientId);
     }
     
     return Plugin_Handled;
@@ -405,14 +406,14 @@ Action GiveTank_Cmd(int client, int args)
 
     if (target == -1 || !IsClientInGame(target) || IsFakeClient(target))
     {
-        CPrintToChat(client, "{green}[{olive}Tank Control{green}] {default}Invalid Target. Unable to give tank");
+        CPrintToChat(client, "%t", "L4DTankControlEq_TankControlInvalidTargetUnable");
         return Plugin_Handled;
     }
 
     // Checking if on our desired team
     if (!IS_INFECTED(target))
     {
-        CPrintToChat(client, "{green}[{olive}Tank Control{green}] {olive}%N {default}is not on the infected team. Unable to give tank", target);
+        CPrintToChat(client, "%t", "L4DTankControlEq_TankControlNotInfectedTeam", target);
         return Plugin_Handled;
     }
     
@@ -523,9 +524,9 @@ void outputTankToAll(any data)
                 continue;
 
             if (tankClientId == i) 
-                CPrintToChat(i, "{red}<{default}Tank Selection{red}> {green}You {default}will become the {red}Tank{default}!");
+                CPrintToChat(i, "%t", "L4DTankControlEq_TankSelectionBecomeTank");
             else 
-                CPrintToChat(i, "{red}<{default}Tank Selection{red}> {olive}%N {default}will become the {red}Tank!", tankClientId);
+                CPrintToChat(i, "%t", "L4DTankControlEq_TankSelectionBecomeTank_2", tankClientId);
         }
     }
 }

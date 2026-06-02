@@ -12,6 +12,10 @@
 		"de"			"Sie wurden im Voice-Chat gesperrt!"
 		"fr"			"Vous avez été muté!"
 		"chi"			"你已被静音!"
+		"zho"		"You have been muted!"
+		"jp"		"You have been muted!"
+		"ko"		"You have been muted!"
+		"vi"		"You have been muted!"
 	}
 	"Gagged on connect"
 	{
@@ -24,6 +28,10 @@
 		"de"			"Sie wurden im Chat gesperrt!"
 		"fr"			"Vous avez été mis en muté du chat!"
 		"chi"			"你已被禁言!"
+		"zho"		"You have been gagged!"
+		"jp"		"You have been gagged!"
+		"ko"		"You have been gagged!"
+		"vi"		"You have been gagged!"
 	}
 	//--------------------------------------------------------------------------------
 	"Mute expired"
@@ -37,6 +45,10 @@
 		"de"			"Sie wurden im Voice-Chat entsperrt (Die Sperrzeit ist abgelaufen)."
 		"fr"			"Votre mute a expiré."
 		"chi"			"静音已过期."
+		"zho"		"Your mute has expired."
+		"jp"		"Your mute has expired."
+		"ko"		"Your mute has expired."
+		"vi"		"Your mute has expired."
 	}
 	"Gag expired"
 	{
@@ -49,6 +61,10 @@
 		"de"			"Sie wurden im Chat entsperrt. (Die Sperrzeit ist abgelaufen)."
 		"fr"			"Votre mute du chat a expiré."
 		"chi"			"禁言已过期."
+		"zho"		"Your gag has expired."
+		"jp"		"Your gag has expired."
+		"ko"		"Your gag has expired."
+		"vi"		"Your gag has expired."
 	}
 	//--------------------------------------------------------------------------------
 	"FWUnmute"
@@ -62,6 +78,10 @@
 		"de"			"Sie wurden im Voice-Chat entsperrt."
 		"fr"			"Votre mute a été supprimée."
 		"chi"			"对你的静音已取消."
+		"zho"		"Your mute has been removed."
+		"jp"		"Your mute has been removed."
+		"ko"		"Your mute has been removed."
+		"vi"		"Your mute has been removed."
 	}
 	"FWUngag"
 	{
@@ -74,6 +94,10 @@
 		"de"			"Sie wurden im Chat entsperrt."
 		"fr"			"Votre mute du chat a été supprimé."
 		"chi"			"对你的禁言已取消."
+		"zho"		"Your gag has been removed."
+		"jp"		"Your gag has been removed."
+		"ko"		"Your gag has been removed."
+		"vi"		"Your gag has been removed."
 	}
 	//--------------------------------------------------------------------------------
 	"Usage_time"
@@ -390,6 +414,10 @@
 		"de"			"Es ist ein Fehler bei der Anfrage der Sperren für {1} aus der Datenbank passiert"
 		"fr"			"Une erreur s'est produite lors de la demande de blocs pour {1} à partir de DB."
 		"chi"			"在数据库中对 {1} 进行禁止时出现错误."
+		"zho"		"An error occurred while requesting blocks for {1} from DB."
+		"jp"		"An error occurred while requesting blocks for {1} from DB."
+		"ko"		"An error occurred while requesting blocks for {1} from DB."
+		"vi"		"An error occurred while requesting blocks for {1} from DB."
 	}
 	"No blocks found"
 	{
@@ -403,6 +431,10 @@
 		"de"			"Es wurde keine gültige Sperre für {1}in der Datenbank gefunden."
 		"fr"			"Aucun bloc actif trouvé dans DB pour {1}."
 		"chi"			"在数据库中未找到对 {1} 的禁止."
+		"zho"		"No active blocks found in DB for {1}."
+		"jp"		"No active blocks found in DB for {1}."
+		"ko"		"No active blocks found in DB for {1}."
+		"vi"		"No active blocks found in DB for {1}."
 	}
 	"No db error unlock perm"
 	{
@@ -415,6 +447,10 @@
 		"de"			"Sie haben keine Erlaubnis zur Entsperrung bei den Fehlern in der Datenbank."
 		"fr"			"Vous n'avez pas la permission de débloquer avec des erreurs de DB."
 		"chi"			"你没有权限解除对 {1} 的封禁."
+		"zho"		"You lack the permission to unblocking with DB errors."
+		"jp"		"You lack the permission to unblocking with DB errors."
+		"ko"		"You lack the permission to unblocking with DB errors."
+		"vi"		"You lack the permission to unblocking with DB errors."
 	}
 	"No permission unmute"
 	{
@@ -428,6 +464,10 @@
 		"de"			"Es ist unmöglich {1} im Voice-Chat zu entsperren, weil er von höherem Administrator gesperrt wurde!"
 		"fr"			"Le mute sur {1} n'a pas pu être supprimé en raison qu'il a été appliqué par un administrateur supérieur!"
 		"chi"			"对玩家 {1} 的静音是由更高级别的管理员完成的,因此你无法解除对此玩家的静音."
+		"zho"		"The mute on {1} was unable to be removed due to being muted by a higher administrator!"
+		"jp"		"The mute on {1} was unable to be removed due to being muted by a higher administrator!"
+		"ko"		"The mute on {1} was unable to be removed due to being muted by a higher administrator!"
+		"vi"		"The mute on {1} was unable to be removed due to being muted by a higher administrator!"
 	}
 	"No permission ungag"
 	{
@@ -441,6 +481,10 @@
 		"de"			"Es ist unmöglich {1}im Chat zu entsperren, weil er von höherem Administrator gesperrt wurde!"
 		"fr"			"Le mute du chat sur {1} n'a pas pu être supprimé en raison qu'il a été appliqué par un administrateur supérieur!"
 		"chi"			"对玩家 {1} 的禁言是由更高级别的管理员完成的,因此你无法解除对此玩家的静音."
+		"zho"		"The gag on {1} was unable to be removed due to being muted by a higher administrator!"
+		"jp"		"The gag on {1} was unable to be removed due to being muted by a higher administrator!"
+		"ko"		"The gag on {1} was unable to be removed due to being muted by a higher administrator!"
+		"vi"		"The gag on {1} was unable to be removed due to being muted by a higher administrator!"
 	}
 	"Unmuted player"
 	{
@@ -479,6 +523,10 @@
 		"de"			"Es ist ein Fehler beim Entfernen der Sperre aus der Datenbank passiert."
 		"fr"			"Impossible de supprimer le bloc de la base de données."
 		"chi"			"从数据库中取消禁止失败."
+		"zho"		"Failed to remove block from DB."
+		"jp"		"Failed to remove block from DB."
+		"ko"		"Failed to remove block from DB."
+		"vi"		"Failed to remove block from DB."
 	}
 	"successfully unmuted"
 	{
@@ -492,6 +540,10 @@
 		"de"			"Die Sperre {1} im Voice-Chat wurde erfolgreich aus der Datenbank entfernt."
 		"fr"			"Suppression réussie du mute pour {1} de la base de données."
 		"chi"			"已成功从数据库中取消对 {1} 的静音."
+		"zho"		"Successfully removed mute for {1} from DB."
+		"jp"		"Successfully removed mute for {1} from DB."
+		"ko"		"Successfully removed mute for {1} from DB."
+		"vi"		"Successfully removed mute for {1} from DB."
 	}
 	"successfully ungagged"
 	{
@@ -505,6 +557,10 @@
 		"de"			"Die Sperre {1} im Chat wurde erfolgreich aus der Datenbank entfernt."
 		"fr"			"Suppression réussie du mute du chat pour {1} de la base de données."
 		"chi"			"已成功从数据库中取消对 {1} 的禁言."
+		"zho"		"Successfully removed gag for {1} from DB."
+		"jp"		"Successfully removed gag for {1} from DB."
+		"ko"		"Successfully removed gag for {1} from DB."
+		"vi"		"Successfully removed gag for {1} from DB."
 	}
 	//--------------------------------------------------------------------------------
 	"AdminMenu_Display_None"
@@ -848,6 +904,10 @@
 		"de"		"Der Spieler ist nicht zugänglich."
 		"fr"		"Le joueur que vous avez sélectionné n'est plus disponible."
 		"chi"		"你选择的玩家目前不可用."
+		"zho"		"The player you selected is no longer available."
+		"jp"		"The player you selected is no longer available."
+		"ko"		"The player you selected is no longer available."
+		"vi"		"The player you selected is no longer available."
 	}
 	"Command_Target_Not_Targetable"
 	{
@@ -860,6 +920,10 @@
 		"de"		"Sie können diesen Spieler nicht auswählen."
 		"fr"		"Vous ne pouvez pas attendre ce joueur."
 		"chi"		"你无法选择此玩家."
+		"zho"		"You cannot target this player."
+		"jp"		"You cannot target this player."
+		"ko"		"You cannot target this player."
+		"vi"		"You cannot target this player."
 	}
 	//---------------------------------------------------------------------------------
 	"ListMenu_Option_Mute"

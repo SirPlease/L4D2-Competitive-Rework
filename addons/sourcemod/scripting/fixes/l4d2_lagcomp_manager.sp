@@ -119,6 +119,7 @@ any Ntv_RemoveAdditionalEntity(Handle plugin, int numParams)
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_lagcomp_manager.phrases");
 	Handle hGameConf = LoadGameConfigFile(GAMEDATA);
 	if (!hGameConf) {
 		SetFailState("Gamedata '%s.txt' missing or corrupt.", GAMEDATA);
@@ -234,9 +235,9 @@ public void OnEntityCreated(int iEntity, const char[] sClassName)
 		
 		#if DEBUG
 			if (IsFindEntity(iEntity)) {
-				PrintToChatAll("[Successfully] The entity '%s (%d)' was successfully added to the array for lag compensation!", sClassName, iEntity);
+				PrintToChatAll("%t", "L4D2LagcompManager_SuccessfullyEntitySuccessfullyAddedArray", sClassName, iEntity);
 			} else {
-				PrintToChatAll("[Error] Could not find the entity '%s (%d)' in the array for lag compensation!", sClassName, iEntity);
+				PrintToChatAll("%t", "L4D2LagcompManager_ErrorCouldNotFindEntity", sClassName, iEntity);
 			}
 		#endif
 	}
@@ -257,12 +258,12 @@ public void OnEntityDestroyed(int iEntity)
 			
 			if (IsFind) {
 				if (IsFindEntity(iEntity)) {
-					PrintToChatAll("[Error] The entity '%s (%d)' is not removed after being destroyed from the array for lag compensation!", sClassName, iEntity);
+					PrintToChatAll("%t", "L4D2LagcompManager_ErrorEntityNotRemovedAfter", sClassName, iEntity);
 				} else {
-					PrintToChatAll("[Successfully] The entity '%s (%d)' was removed after being destroyed from the array for lag compensation!", sClassName, iEntity);
+					PrintToChatAll("%t", "L4D2LagcompManager_SuccessfullyEntityRemovedAfterDestroyed", sClassName, iEntity);
 				}
 			} else {
-				PrintToChatAll("[Error] The entity '%s (%d)' has never been added to the array for lag compensation!", sClassName, iEntity);
+				PrintToChatAll("%t", "L4D2LagcompManager_ErrorEntityNeverAddedArray", sClassName, iEntity);
 			}
 		#endif
 	}

@@ -87,6 +87,7 @@ bool   bCvarChange, bNameChange, bSpecNameChange, bSpecSeeChat;
 
 public void OnPluginStart()
 {
+	LoadTranslations("server.phrases");
     // ---- 声音屏蔽（烟花/演唱会）----
     AddNormalSoundHook(view_as<NormalSHook>(OnNormalSound));
     AddAmbientSoundHook(view_as<AmbientSHook>(OnAmbientSound));
@@ -288,9 +289,9 @@ public Action TeamSay_Callback(int client, const char[] command, int args)
         {
             if (!IsValidClient(i) || GetClientTeam(i) != 1) continue;
             if (GetClientTeam(client) == 2)
-                CPrintToChat(i, "[{olive}旁观{default}] {blue}%N{default}：%s", client, sChat);
+                CPrintToChat(i, "%t", "Server_WatchingChatBlue", client, sChat);
             else
-                CPrintToChat(i, "[{olive}旁观{default}] {red}%N{default}：%s", client, sChat);
+                CPrintToChat(i, "%t", "Server_WatchingChatRed", client, sChat);
         }
     }
     return Plugin_Continue;
@@ -302,7 +303,7 @@ public Action L4D2_OnEndVersusModeRound(bool countSurvivors)
     if (!countSurvivors && L4D_HasAnySurvivorLeftSafeArea())
     {
         g_RoundWipeCount++;
-        CPrintToChatAll("[{olive}提示{default}] 这是你们第 {blue}%d{default} 次团灭，请继续努力", g_RoundWipeCount);
+        CPrintToChatAll("%t", "Server_PromptFirstGroupWipeoutContinue", g_RoundWipeCount);
     }
     return Plugin_Continue;
 }
@@ -361,25 +362,25 @@ public Action ADMAddBot(int client, int args)
 
     if (IsAnySurvivorBotExists())
     {
-        PrintToChat(client, "还有未接管的Bot，请先接管或等生还队满再试。");
+        PrintToChat(client, "%t", "Server_StillUntakenBotsTakeThem");
         return Plugin_Handled;
     }
 
     ConVar surLimit = FindConVar("survivor_limit");
     if (surLimit.IntValue < 8)
     {
-        PrintToChat(client, "不是 8 人运动，还没达到上限呢！");
+        PrintToChat(client, "%t", "Server_Not8PlayerSportHasn");
         return Plugin_Handled;
     }
 
     if (SpawnFakeClientNearRandomSurvivor())
     {
-        PrintToChat(client, "一个生还者Bot已生成。");
+        PrintToChat(client, "%t", "Server_SurvivorBotGenerated");
         SetConVarInt(surLimit, surLimit.IntValue + 1);
     }
     else
     {
-        PrintToChat(client, "暂时无法生成生还者Bot。");
+        PrintToChat(client, "%t", "Server_SurvivorBotCannotGeneratedMoment");
     }
     return Plugin_Handled;
 }
@@ -394,7 +395,7 @@ public Action ADMDelBot(int client, int args)
 
     if (!KickAnySurvivorBot())
     {
-        PrintToChat(client, "不存在未接管的Bot。");
+        PrintToChat(client, "%t", "Server_NoBotNotTaken");
     }
     else
     {
@@ -516,7 +517,7 @@ void KickMoreTank(bool autoKick)
     if (tn <= 1)
     {
         if (!autoKick)
-            PrintToChatAll("一切正常，还想踢克逃课？");
+            PrintToChatAll("%t", "Server_EverythingNormalStillWantSkip");
         return;
     }
 
@@ -529,7 +530,7 @@ void KickMoreTank(bool autoKick)
         if (c == keep) continue;
         KickClient(c, "过分了啊，一个克就够难了, %N 被踢出", c);
     }
-    PrintToChatAll("已经踢出多余的克");
+    PrintToChatAll("%t", "Server_ExcessGramsKicked");
 }
 
 bool IsAiTank(int client)
@@ -748,14 +749,14 @@ void AnnounceBW(int client)
 
     if (teamBroadcast)
     {
-        CPrintToChatAll("[{olive}提示{default}] {green}%N{default} 已经 {olive}黑白{default}，请优先保护并治疗！", client);
+        CPrintToChatAll("%t", "Server_PromptsAlreadyBlackWhiteGive", client);
         for (int i = 1; i <= MaxClients; i++)
             if (IsValidClient(i) && GetClientTeam(i) == 2)
                 PrintHintText(i, "%N 已经黑白（再次倒地会直接死亡）！", client);
     }
     else
     {
-        CPrintToChat(client, "[{olive}提示{default}] 你现在 {green}黑白{default}，请尽快治疗！");
+        CPrintToChat(client, "%t", "Server_PromptBlackWhiteTreatSoon");
         PrintHintText(client, "你现在黑白（再次倒地会直接死亡）！");
     }
 

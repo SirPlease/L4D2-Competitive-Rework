@@ -1,0 +1,42 @@
+"Phrases"
+{
+	"L4DRockLagcomp_WeaponRange"
+	{
+		"en"		"Weapon: %s | Range: %.2f"
+		"chi"		"武器：%s |范围：%.2f"
+		"zho"		"武器：%s |範圍：%.2f"
+		"jp"		"武器：%s |範囲: %.2f"
+		"ko"		"무기: %s | 범위: %.2f"
+		"vi"		"Vũ khí: %s | Phạm vi: %.2f"
+	}
+
+	"L4DRockLagcomp_RockHealth"
+	{
+		"en"		"Rock health: %d\\%"
+		"chi"		"岩石健康度：%d\\%"
+		"zho"		"岩石健康度：%d\\%"
+		"jp"		"岩の健康: %d\\%"
+		"ko"		"암석 상태: %d\\%"
+		"vi"		"Sức khỏe đá: %d\\%"
+	}
+
+	"L4DRockLagcomp_EntityLocation"
+	{
+		"en"		"Entity %s (%d) is at location: (%.2f, %.2f, %.2f)"
+		"chi"		"实体 %s (%d) 位于以下位置：(%.2f、%.2f、%.2f)"
+		"zho"		"實體 %s (%d) 位於下列位置：(%.2f、%.2f、%.2f)"
+		"jp"		"エンティティ %s (%d) の場所: (%.2f、%.2f、%.2f)"
+		"ko"		"엔티티 %s(%d)는 다음 위치에 있습니다: (%.2f, %.2f, %.2f)"
+		"vi"		"Thực thể %s (%d) ở vị trí: (%.2f, %.2f, %.2f)"
+	}
+
+	"L4DRockLagcomp_WeaponRangeDamageRockHealth"
+	{
+		"en"		"Weapon: %s | Range: %.2f | Damage: %.1f | Rock health: %.1f%%"
+		"chi"		"武器：%s |范围：%.2f |损坏：%.1f |岩石健康：%.1f%%"
+		"zho"		"武器：%s |範圍：%.2f |損壞：%.1f |岩石健康：%.1f%%"
+		"jp"		"武器：%s |範囲: %.2f |ダメージ: %.1f |岩の健康: %.1f%%"
+		"ko"		"무기: %s | 범위: %.2f | 손상: %.1f | 암석 상태: %.1f%%"
+		"vi"		"Vũ khí: %s | Phạm vi: %.2f | Thiệt hại: %.1f | Sức khỏe đá: %.1f%%"
+	}
+}

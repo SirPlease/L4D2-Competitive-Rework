@@ -1,0 +1,52 @@
+"Phrases"
+{
+	"L4D2Setscores_ScoreVotingIsnAllowedSpectators"
+	{
+		"en"		"Score voting isn't allowed for spectators."
+		"chi"		"观众不允许进行分数投票。"
+		"zho"		"觀眾不准進行分數投票。"
+		"jp"		"観客によるスコア投票は禁止されています。"
+		"ko"		"관중의 점수투표는 허용되지 않습니다."
+		"vi"		"Việc bỏ phiếu điểm không được phép đối với khán giả."
+	}
+
+	"L4D2Setscores_ScoreVoteCannotStartedNot"
+	{
+		"en"		"Score vote cannot be started. Not enough players."
+		"chi"		"无法开始评分投票。玩家不够。"
+		"zho"		"無法開始評分投票。玩家不夠。"
+		"jp"		"スコア投票を開始できません。選手が足りない。"
+		"ko"		"점수 투표를 시작할 수 없습니다. 플레이어가 부족합니다."
+		"vi"		"Không thể bắt đầu bỏ phiếu theo điểm. Không đủ người chơi."
+	}
+
+	"L4D2Setscores_ScoreVoteCannotStarted"
+	{
+		"en"		"Score vote cannot be started now."
+		"chi"		"现在无法开始评分投票。"
+		"zho"		"現在無法開始評分投票。"
+		"jp"		"現在スコア投票を開始できません。"
+		"ko"		"지금은 점수 투표를 시작할 수 없습니다."
+		"vi"		"Việc bỏ phiếu cho điểm không thể bắt đầu ngay bây giờ."
+	}
+
+	"L4D2Setscores_ScoresSetSurInf"
+	{
+		"en"		"\\x01Scores set to \\x05%d \\x01 (\\x04Sur\\x01) - \\x05%d \\x01 (\\x04Inf\\x01) by \\x03%s\\x01."
+		"chi"		"\\x01Scores 设置为 \\x05%d \\x01 (\\x04Sur\\x01) - \\x05%d \\x01 (\\x04Inf\\x01) \\x03%s\\x01。"
+		"zho"		"\\x01Scores set to \\x05%d \\x01 (\\x04Sur\\x01) - \\x05%d \\x01 (\\x04Inf\\x01) by \\x03%s\\x01."
+		"jp"		"\\x01Sスコアは \\x05%d \\x01 (\\x04Sur\\x01) - \\x05%d \\x01 (\\x04Inf\\x01) によって設定されました\\x03%s\\x01。"
+		"ko"		"\\x01Scores는 \\x05%d \\x01(\\x04Sur\\x01) - \\x05%d \\x01(\\x04Inf\\x01)로 설정됩니다. \\x03%s\\x01."
+		"vi"		"\\x01Scores được đặt thành \\x05%d \\x01 (\\x04Sur\\x01) - \\x05%d \\x01 (\\x04Inf\\x01) bởi \\x03%s\\x01."
+	}
+
+	"L4D2Setscores_ScoresSetSurInfVote"
+	{
+		"en"		"\\x01Scores set to \\x05%d \\x01 (\\x04Sur\\x01) - \\x05%d \\x01 (\\x04Inf\\x01) by vote."
+		"chi"		"通过投票将 \\x01Scores 设置为 \\x05%d \\x01 (\\x04Sur\\x01) - \\x05%d \\x01 (\\x04Inf\\x01)。"
+		"zho"		"\\x01Scores set to \\x05%d \\x01 (\\x04Sur\\x01) - \\x05%d \\x01 (\\x04Inf\\x01) by vote."
+		"jp"		"\\x01Sスコアは投票により \\x05%d \\x01 (\\x04Sur\\x01) - \\x05%d \\x01 (\\x04Inf\\x01) に設定されます。"
+		"ko"		"\\x01S점수는 투표에 의해 \\x05%d \\x01(\\x04Sur\\x01) - \\x05%d \\x01(\\x04Inf\\x01)로 설정됩니다."
+		"vi"		"\\x01Scores được đặt thành \\x05%d \\x01 (\\x04Sur\\x01) - \\x05%d \\x01 (\\x04Inf\\x01) bằng phiếu bầu."
+	}
+}

@@ -1,0 +1,92 @@
+"Phrases"
+{
+	"SAMVS_DebugChatting"
+	{
+		"en"		"[debug] %N chatting"
+		"chi"		"[调试] %N 聊天"
+		"zho"		"[調試] %N 聊天"
+		"jp"		"[デバッグ] %N チャット"
+		"ko"		"[디버그] %N 채팅 중"
+		"vi"		"[gỡ lỗi] Trò chuyện %N"
+	}
+
+	"SAMVS_DebugPressedButton"
+	{
+		"en"		"[debug] %N pressed a button (%d)"
+		"chi"		"[调试] %N 按下了一个按钮 (%d)"
+		"zho"		"[調試] %N 按下了一個按鈕 (%d)"
+		"jp"		"[デバッグ] %N がボタンを押しました (%d)"
+		"ko"		"[디버그] %N가 버튼을 눌렀습니다 (%d)"
+		"vi"		"[gỡ lỗi] %N đã nhấn nút (%d)"
+	}
+
+	"SAMVS_DebugSAMCheckIdlesFired"
+	{
+		"en"		"[debug] SAM_t_CheckIdles()-> fired, RUP = %b!"
+		"chi"		"[调试] SAM_t_CheckIdles()-> 触发，RUP = %b！"
+		"zho"		"[調試] SAM_t_CheckIdles()-> 觸發，RUP = %b！"
+		"jp"		"[デバッグ] SAM_t_CheckIdles()-> 起動、RUP = %b!"
+		"ko"		"[디버그] SAM_t_CheckIdles()-> 실행됨, RUP = %b!"
+		"vi"		"[gỡ lỗi] SAM_t_CheckIdles()-> đã kích hoạt, RUP = %b!"
+	}
+
+	"SAMVS_DebugSAMCheckIdlesBussy"
+	{
+		"en"		"[debug] SAM_t_CheckIdles()-> %N are bussy/tank. We skip him..."
+		"chi"		"[调试] SAM_t_CheckIdles()-> %N 为bussy/tank。我们跳过他..."
+		"zho"		"[調試] SAM_t_CheckIdles()-> %N 為bussy/tank。我們跳過他..."
+		"jp"		"[デバッグ] SAM_t_CheckIdles()-> %N はビジー/タンクです。私たちは彼をスキップします..."
+		"ko"		"[디버그] SAM_t_CheckIdles()-> %N는 버스/탱크입니다. 우리는 그를 건너뛴다..."
+		"vi"		"[gỡ lỗi] SAM_t_CheckIdles()-> %N đang bận/tăng. Chúng ta bỏ qua anh ấy..."
+	}
+
+	"SAMVS_DebugSAMCheckIdlesDancing"
+	{
+		"en"		"[debug] SAM_t_CheckIdles()-> %N are dancing, skip he..."
+		"chi"		"[调试] SAM_t_CheckIdles()-> %N 正在跳舞，跳过他..."
+		"zho"		"[調試] SAM_t_CheckIdles()-> %N 正在跳舞，跳過他..."
+		"jp"		"[デバッグ] SAM_t_CheckIdles()-> %N が踊っています。スキップしてください..."
+		"ko"		"[디버그] SAM_t_CheckIdles()-> %N가 춤을 추고 있습니다. 건너뛰세요..."
+		"vi"		"[gỡ lỗi] SAM_t_CheckIdles()-> %N đang nhảy múa, bỏ qua anh ấy..."
+	}
+
+	"SAMVS_DebugSAMCheckIdlesMoved"
+	{
+		"en"		"[debug] SAM_t_CheckIdles()-> %N moved to spec (Was AFK for %.1fsec)"
+		"chi"		"[调试] SAM_t_CheckIdles()-> %N 移至规范（%.1fsec 为 AFK）"
+		"zho"		"[調試] SAM_t_CheckIdles()-> %N 移至規格（%.1fsec 為 AFK）"
+		"jp"		"[デバッグ] SAM_t_CheckIdles() -> %N が仕様に移動されました (%.1fsec の AFK でした)"
+		"ko"		"[디버그] SAM_t_CheckIdles()-> %N가 사양으로 이동되었습니다(%.1fsec의 경우 AFK였습니다)."
+		"vi"		"[gỡ lỗi] SAM_t_CheckIdles()-> %N đã được chuyển sang thông số kỹ thuật (Là AFK cho %.1fsec)"
+	}
+
+	"SAMVS_DebugSAMCheckIdlesAFK"
+	{
+		"en"		"[debug] SAM_t_CheckIdles()-> %N AFK, timer %x hndl"
+		"chi"		"[调试] SAM_t_CheckIdles()-> %N AFK，定时器 %x hndl"
+		"zho"		"[調試] SAM_t_CheckIdles()-> %N AFK，定時器 %x hndl"
+		"jp"		"[デバッグ] SAM_t_CheckIdles() -> %N AFK、タイマー %x hndl"
+		"ko"		"[디버그] SAM_t_CheckIdles()-> %N AFK, 타이머 %x hndl"
+		"vi"		"[gỡ lỗi] SAM_t_CheckIdles()-> %N AFK, hẹn giờ %x hndl"
+	}
+
+	"SAMVS_DebugSAMTimeKillTimer"
+	{
+		"en"		"[debug] SAM_TimeToKill(%N)-> Kill %x timer hndl"
+		"chi"		"[调试] SAM_TimeToKill(%N)-> 杀死 %x 定时器 hndl"
+		"zho"		"[調試] SAM_TimeToKill(%N)-> 殺死 %x 定時器 hndl"
+		"jp"		"[デバッグ] SAM_TimeToKill(%N)-> %x タイマー hndl を強制終了します。"
+		"ko"		"[디버그] SAM_TimeToKill(%N)-> %x 타이머 hndl 종료"
+		"vi"		"[gỡ lỗi] SAM_TimeToKill(%N)-> Tắt bộ đếm thời gian %x hndl"
+	}
+
+	"SAMVS_DebugSAMActionKickPlayer"
+	{
+		"en"		"[debug] SAM_t_ActionKick(%N) Kick player"
+		"chi"		"[调试] SAM_t_ActionKick(%N) 踢球员"
+		"zho"		"[調試] SAM_t_ActionKick(%N) 踢球員"
+		"jp"		"[デバッグ] SAM_t_ActionKick(%N) プレーヤーをキックします"
+		"ko"		"[디버그] SAM_t_ActionKick(%N) 플레이어 킥"
+		"vi"		"[gỡ lỗi] Trình phát đá SAM_t_ActionKick(%N)"
+	}
+}

@@ -1,0 +1,142 @@
+"Phrases"
+{
+	"L4D2MapVote_MapnextChatPrompt"
+	{
+		"en"		"Enter \\x01 in the chat bar \\x05!mapnext \\x01 to vote for the next map."
+		"chi"		"\\x01聊天栏输入 \\x05!mapnext \\x01投票下一张地图."
+		"zho"		"\\x01聊天欄輸入 \\x05!mapnext \\x01投票下一張地圖."
+		"jp"		"次のマップに投票するには、チャット バーに「\\x01」「\\x05!mapnext \\x01」と入力します。"
+		"ko"		"다음 맵에 투표하려면 채팅창 \\x05!mapnext \\x01에 \\x01를 입력하세요."
+		"vi"		"Nhập \\x01 vào thanh trò chuyện \\x05!mapnext \\x01 để bỏ phiếu cho bản đồ tiếp theo."
+	}
+
+	"L4D2MapVote_VPKCampaignListsRefreshed"
+	{
+		"en"		"{olive}[MapVote]{default} The VPK and campaign lists have been refreshed."
+		"chi"		"{olive}[MapVote]{default} 已刷新 VPK 与战役列表。"
+		"zho"		"{olive}[MapVote]{default} 已刷新 VPK 與戰役清單。"
+		"jp"		"{olive}[MapVote]{default} VPK とキャンペーンのリストが更新されました。"
+		"ko"		"{olive}[MapVote]{default} VPK 및 캠페인 목록이 새로 고쳐졌습니다."
+		"vi"		"{olive}[MapVote]{default} Danh sách VPK và chiến dịch đã được làm mới."
+	}
+
+	"L4D2MapVote_VPKRefreshCooldownRemaining"
+	{
+		"en"		"The VPK refresh is cooling down and it will take %.1f seconds."
+		"chi"		"VPK 刷新冷却中，还需 %.1f 秒。"
+		"zho"		"VPK 刷新冷卻中，還需 %.1f 秒。"
+		"jp"		"VPK のリフレッシュが冷却されており、%.1f 秒かかります。"
+		"ko"		"VPK 새로 고침이 냉각 중이며 %.1f초가 소요됩니다."
+		"vi"		"Quá trình làm mới VPK đang nguội dần và sẽ mất %.1f giây."
+	}
+
+	"L4D2MapVote_PrePluginNotInstalled"
+	{
+		"en"		"Pre-plugin not installed"
+		"chi"		"前置插件未安装"
+		"zho"		"前置插件未安裝"
+		"jp"		"プリプラグインがインストールされていません"
+		"ko"		"사전 플러그인이 설치되지 않았습니다."
+		"vi"		"Plugin trước chưa được cài đặt"
+	}
+
+	"L4D2MapVote_CurrentMapNotFinalMap"
+	{
+		"en"		"The current map is not the final map"
+		"chi"		"当前地图非终局地图"
+		"zho"		"目前地圖非終局地圖"
+		"jp"		"現在のマップは最終マップではありません"
+		"ko"		"현재 지도는 최종 지도가 아닙니다."
+		"vi"		"Bản đồ hiện tại không phải là bản đồ cuối cùng"
+	}
+
+	"L4D2MapVote_SpectatorsCannotVote"
+	{
+		"en"		"Spectators cannot vote"
+		"chi"		"旁观者无法进行投票"
+		"zho"		"旁觀者無法進行投票"
+		"jp"		"観客は投票できない"
+		"ko"		"관객은 투표할 수 없다"
+		"vi"		"Khán giả không thể bỏ phiếu"
+	}
+
+	"L4D2MapVote_VotingInProgressCannotStartNewVote"
+	{
+		"en"		"The voting is in progress, new voting cannot be initiated yet"
+		"chi"		"投票正在进行中, 暂不能发起新的投票"
+		"zho"		"投票正在進行中, 暫不能發起新的投票"
+		"jp"		"投票は進行中です。新しい投票はまだ開始できません"
+		"ko"		"투표가 진행 중입니다. 아직 새 투표를 시작할 수 없습니다."
+		"vi"		"Đang tiến hành bỏ phiếu, chưa thể bắt đầu bỏ phiếu mới"
+	}
+
+	"L4D2MapVote_NoValidChapterMapExists"
+	{
+		"en"		"No valid chapter map exists"
+		"chi"		"无有效的章节地图存在"
+		"zho"		"無有效的章節地圖存在"
+		"jp"		"有効なチャプター マップが存在しません"
+		"ko"		"유효한 챕터 맵이 없습니다."
+		"vi"		"Không tồn tại bản đồ chương hợp lệ"
+	}
+
+	"L4D2MapVote_InitiatesVoteSetsNextMap"
+	{
+		"en"		"{blue}%N {default} initiates a vote {olive} sets the next map to: %s"
+		"chi"		"{blue}%N {default}发起投票 {olive}设置下一张地图为: %s"
+		"zho"		"{blue}%N {default}發起投票 {olive}設定下一張地圖為: %s"
+		"jp"		"{blue}%N {default} が投票を開始します {olive} 次のマップを %s に設定します"
+		"ko"		"{blue}%N {default}가 투표를 시작합니다. {olive}는 다음 맵을 %s로 설정합니다."
+		"vi"		"{blue}%N {default} bắt đầu bỏ phiếu {olive} đặt bản đồ tiếp theo thành: %s"
+	}
+
+	"L4D2MapVote_Voted"
+	{
+		"en"		"{blue}%N {default} has voted"
+		"chi"		"{blue}%N {default}已投票"
+		"zho"		"{blue}%N {default}已投票"
+		"jp"		"{blue}%N {default} が投票しました"
+		"ko"		"{blue}%N {default}가 투표했습니다"
+		"vi"		"{blue}%N {default} đã bình chọn"
+	}
+
+	"L4D2MapVote_SetupFailed"
+	{
+		"en"		"Setup failed"
+		"chi"		"设置失败"
+		"zho"		"設定失敗"
+		"jp"		"セットアップに失敗しました"
+		"ko"		"설정 실패"
+		"vi"		"Thiết lập không thành công"
+	}
+
+	"L4D2MapVote_NextMapSet"
+	{
+		"en"		"\\x01The next map has been set to \\x05%s"
+		"chi"		"\\x01下一张地图已设置为 \\x05%s"
+		"zho"		"\\x01下一張地圖已設定為 \\x05%s"
+		"jp"		"\\x01次のマップは \\x05%s に設定されました"
+		"ko"		"\\x01다음 맵이 \\x05%s로 설정되었습니다."
+		"vi"		"\\x01Bản đồ tiếp theo đã được đặt thành \\x05%s"
+	}
+
+	"L4D2MapVote_InitiatesVoteReplacementCampaign"
+	{
+		"en"		"{blue}%N {default} initiates a vote {olive} Replacement campaign: %s"
+		"chi"		"{blue}%N {default}发起投票 {olive}更换战役: %s"
+		"zho"		"{blue}%N {default}發起投票 {olive}更換戰役: %s"
+		"jp"		"{blue}%N {default} が投票を開始します {olive} 置換キャンペーン: %s"
+		"ko"		"{blue}%N {default}가 투표를 시작합니다. {olive} 교체 캠페인: %s"
+		"vi"		"{blue}%N {default} bắt đầu bỏ phiếu {olive} Chiến dịch thay thế: %s"
+	}
+
+	"L4D2MapVote_InitiatesVoteChangeMap"
+	{
+		"en"		"{blue}%N {default} initiates a vote {olive} Change map: %s (%s)"
+		"chi"		"{blue}%N {default}发起投票 {olive}更换地图: %s (%s)"
+		"zho"		"{blue}%N {default}發起投票 {olive}更換地圖: %s (%s)"
+		"jp"		"{blue}%N {default} が投票を開始します {olive} マップを変更します: %s (%s)"
+		"ko"		"{blue}%N {default}가 투표를 시작합니다 {olive} 지도 변경: %s (%s)"
+		"vi"		"{blue}%N {default} bắt đầu bỏ phiếu {olive} Thay đổi bản đồ: %s (%s)"
+	}
+}

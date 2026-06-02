@@ -1,0 +1,52 @@
+"Phrases"
+{
+	"L4DMultiWitches_WitchSpawnedMaxAlive"
+	{
+		"en"		"%s Witch spawned # %d, max = %d, alive: %i"
+		"chi"		"%s 女巫生成 # %d，最大值 = %d，活着：%i"
+		"zho"		"%s 女巫生成 # %d，最大值 = %d，活體：%i"
+		"jp"		"%s 魔女がスポーン # %d、最大 = %d、生存: %i"
+		"ko"		"%s 마녀 생성 # %d, 최대 = %d, 살아 있음: %i"
+		"vi"		"%s Phù thủy sinh ra # %d, max = %d, còn sống: %i"
+	}
+
+	"L4DMultiWitches_L4DWitchesStartTimerMin"
+	{
+		"en"		"[l4d_witches]: Start_Timer. Min: %f, Max: %f"
+		"chi"		"[l4d_witches]：开始计时器。最小值：%f，最大值：%f"
+		"zho"		"[l4d_witches]：開始計時器。最小值：%f，最大值：%f"
+		"jp"		"[l4d_witches]: Start_Timer。最小: %f、最大: %f"
+		"ko"		"[l4d_witches]: Start_Timer. 최소: %f, 최대: %f"
+		"vi"		"[l4d_witches]: Start_Timer. Tối thiểu: %f, Tối đa: %f"
+	}
+
+	"L4DMultiWitches_L4DWitchesAliveWitches"
+	{
+		"en"		"[l4d_witches]: Alive witches: %i"
+		"chi"		"[l4d_witches]：活着的女巫：%i"
+		"zho"		"[l4d_witches]：活生生的女巫：%i"
+		"jp"		"[l4d_witches]: アライブウィッチーズ: %i"
+		"ko"		"[l4d_witches]: 살아있는 마녀들: %i"
+		"vi"		"[l4d_witches]: Phù thủy còn sống: %i"
+	}
+
+	"L4DMultiWitches_L4DWitchesTimerTriggered"
+	{
+		"en"		"[l4d_witches]: Timer triggered"
+		"chi"		"[l4d_witches]：计时器已触发"
+		"zho"		"[l4d_witches]：計時器已觸發"
+		"jp"		"[l4d_witches]: タイマーがトリガーされました"
+		"ko"		"[l4d_witches]: 타이머가 작동됨"
+		"vi"		"[l4d_witches]: Đã kích hoạt bộ hẹn giờ"
+	}
+
+	"L4DMultiWitches_L4DWitchesTrySpawn"
+	{
+		"en"		"[l4d_witches]: Try to spawn"
+		"chi"		"[l4d_witches]：尝试生成"
+		"zho"		"[l4d_witches]：嘗試生成"
+		"jp"		"[l4d_witches]: スポーンしてみます"
+		"ko"		"[l4d_witches]: 스폰을 시도합니다"
+		"vi"		"[l4d_witches]: Cố gắng sinh sản"
+	}
+}

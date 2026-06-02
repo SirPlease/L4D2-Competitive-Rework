@@ -26,6 +26,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_tank_announce.phrases");
 	// CreateConVar
 	g_hPlaySound = CreateConVar("l4d2_tankannounce_playsound", "1", "是否在Tank生成时播放声音", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	g_hMessageType = CreateConVar("l4d2_tankannounce_messagetype", "1", "Tank生成提示的类型：0=不提示，1=聊天框提示，2=中央提示框提示，3=中央文字提示", FCVAR_NOTIFY, true, 0.0, true, 3.0);
@@ -58,11 +59,11 @@ public void evt_PlayerSpawn(Event event, char[] name, bool dontBroadcast)
 				// 非对抗模式下无法使用红色
 				if (StrEqual(sGameMod, "versus", false))
 				{
-					CPrintToChatAll("{default}[{red}!{default}] {green}Tank {default}({red}控制者：%s{default}) 已经生成！", sTankName);
+					CPrintToChatAll("%t", "L4D2TankAnnounce_TankControllerGenerated", sTankName);
 				}
 				else
 				{
-					CPrintToChatAll("{default}[{blue}!{default}] {green}Tank {default}({blue}控制者：%s{default}) 已经生成！", sTankName);
+					CPrintToChatAll("%t", "L4D2TankAnnounce_TankControllerGenerated_2", sTankName);
 				}
 			}
 			case 2:

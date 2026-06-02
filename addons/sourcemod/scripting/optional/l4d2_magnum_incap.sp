@@ -23,6 +23,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_magnum_incap.phrases");
 	g_iOffs_m_hSecondaryWeaponRestore = FindSendPropInfo("CTerrorPlayer", "m_iVersusTeam") - 20;
 
 	g_hReplaceMagnum = CreateConVar("l4d2_replace_magnum_incap", "1.0", "Replace magnum with single (1) or double (2) pistols when incapacitated. 0 to disable.");
@@ -47,7 +48,7 @@ void PlayerIncap_Event(Event hEvent, char[] name, bool dontBroadcast)
 	GetEdictClassname(secWeaponIndex, sWeaponName, sizeof(sWeaponName));
 
 #if DEBUG
-	PrintToChatAll("client %d -> weapon %s", client, sWeaponName);
+	PrintToChatAll("%t", "L4D2MagnumIncap_ClientWeapon", client, sWeaponName);
 #endif
 
 	if (!strcmp(sWeaponName, "weapon_pistol_magnum") && GetPlayerSecondaryWeaponRestore(client) == -1) {

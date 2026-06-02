@@ -913,7 +913,7 @@ stock void PrintToTeam(int author, int team, const char[] buffer)
     {
         if (IsClientInGame(client) && GetClientTeam(client) == team)
         {
-            CPrintToChatEx(client, author, "(%s) {teamcolor}%N{default} :  %s", L4D2_TeamName[GetClientTeam(author)], author, buffer);
+            CPrintToChatEx(client, author, "%t", "Pause_PauseChatMessage", L4D2_TeamName[GetClientTeam(author)], author, buffer);
         }
     }
 }

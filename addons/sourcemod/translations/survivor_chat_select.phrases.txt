@@ -1,0 +1,32 @@
+"Phrases"
+{
+	"SurvivorChatSelect_TeamUseCommand"
+	{
+		"en"		"You must be in the survivor team to use this command!"
+		"chi"		"您必须在幸存者队伍中才能使用此命令！"
+		"zho"		"您必須在倖存者隊伍中才能使用此指令！"
+		"jp"		"このコマンドを使用するには、サバイバー チームに参加している必要があります。"
+		"ko"		"이 명령을 사용하려면 생존자 팀에 속해 있어야 합니다!"
+		"vi"		"Bạn phải ở trong nhóm sống sót để sử dụng lệnh này!"
+	}
+
+	"SurvivorChatSelect_DefaultCharacterSet"
+	{
+		"en"		"%s Your \\x05default \\x01character is now set to \\x03%s\\x01."
+		"chi"		"%s 您的 \\x05 默认 \\x01 字符现已设置为 \\x03%s\\x01。"
+		"zho"		"%s 您的 \\x05 預設 \\x01 字元現已設定為 \\x03%s\\x01。"
+		"jp"		"%s \\x05 のデフォルトの \\x01 文字が \\x03%s\\x01 に設定されました。"
+		"ko"		"%s \\x05기본 \\x01문자가 이제 \\x03%s\\x01로 설정되었습니다."
+		"vi"		"%sKý tự \\x05mặc định \\x01 của bạn hiện được đặt thành \\x03%s\\x01."
+	}
+
+	"SurvivorChatSelect_CouldnLoadDefaultCharacterType"
+	{
+		"en"		"%s Couldn't load your default character. Type \\x05!csm \\x01to choose your \\x03default \\x01character."
+		"chi"		"%s 无法加载您的默认字符。输入 \\x05!csm \\x01 选择您的 \\x03 默认 \\x01 字符。"
+		"zho"		"%s 无法加载您的默认字符。输入 \\x05!csm \\x01 选择您的 \\x03 默认 \\x01 字符。"
+		"jp"		"%s デフォルトのキャラクターをロードできませんでした。 「\\x05!csm \\x01」と入力して、\\x03デフォルトの\\x01文字を選択します。"
+		"ko"		"%s 기본 캐릭터를 로드할 수 없습니다. \\x05!csm \\x01를 입력하여 \\x03기본 \\x01 문자를 선택하세요."
+		"vi"		"%s Không thể tải ký tự mặc định của bạn. Nhập \\x05!csm \\x01 để chọn ký tự \\x03 mặc định \\x01 của bạn."
+	}
+}

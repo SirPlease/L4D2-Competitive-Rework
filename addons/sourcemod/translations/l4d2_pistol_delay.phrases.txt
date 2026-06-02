@@ -1,0 +1,22 @@
+"Phrases"
+{
+	"L4D2PistolDelay_EntityCreatedEntity"
+	{
+		"en"		"[OnEntityCreated] iEntity: %s (%d)"
+		"chi"		"[OnEntityCreated] iEntity: %s (%d)"
+		"zho"		"[OnEntityCreated] iEntity: %s (%d)"
+		"jp"		"[OnEntityCreated] iEntity: %s (%d)"
+		"ko"		"[OnEntityCreated] iEntity: %s(%d)"
+		"vi"		"[OnEntityCreated] iEntity: %s (%d)"
+	}
+
+	"L4D2PistolDelay_WeaponOldFireTimeCurrent"
+	{
+		"en"		"Weapon: %s (%d), old fire time: %f, current fire time: %f, Diff: %f"
+		"chi"		"武器：%s（%d），旧开火时间：%f，当前开火时间：%f，差异：%f"
+		"zho"		"武器：%s（%d），舊開火時間：%f，目前開火時間：%f，差異：%f"
+		"jp"		"武器: %s (%d)、古い発射時間: %f、現在の発射時間: %f、差分: %f"
+		"ko"		"무기: %s (%d), 이전 발사 시간: %f, 현재 발사 시간: %f, 차이: %f"
+		"vi"		"Vũ khí: %s (%d), thời gian bắn cũ: %f, thời gian bắn hiện tại: %f, Khác biệt: %f"
+	}
+}

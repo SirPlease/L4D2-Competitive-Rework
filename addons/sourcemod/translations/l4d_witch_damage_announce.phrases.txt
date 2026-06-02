@@ -75,4 +75,45 @@
 		"en"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}Tank"
 		"chi"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}Tank"
 	}
+
+
+	"L4DWitchDamageAnnounce_TankKilledWitch"
+	{
+		"en"		"{default}[{green}!{default}] {red}Tank {default}({olive}%N{default}) killed the {red}Witch"
+		"chi"		"{default}[{green}!{default}] {red}T坦克 {default}({olive}%N{default}) 杀死了 {red}Witch"
+		"zho"		"{default}[{green}!{default}] {red}Tank {default}({olive}%N{default}) killed the {red}Witch"
+		"jp"		"{default}[{green}!{default}] {red}タンク {default}({olive}%N{default}) {red}魔女を倒しました"
+		"ko"		"{default}[{green}!{default}] {red}Tank {default}({olive}%N{default})가 {red}Witch를 죽였습니다."
+		"vi"		"{default}[{green}!{default}] {red}Tank {default}({olive}%N{default}) đã tiêu diệt {red}Witch"
+	}
+
+	"L4DWitchDamageAnnounce_WitchHealthRemaining"
+	{
+		"en"		"{default}[{green}!{default}] {blue}Witch {default}had {olive}%d {default}health remaining"
+		"chi"		"{default}[{green}!{default}] {blue}女巫 {default}had {olive}%d {default} 剩余生命值"
+		"zho"		"{default}[{green}!{default}] {blue}Witch {default}had {olive}%d {default}health remaining"
+		"jp"		"{default}[{green}!{default}] {blue}魔女 {default}は{olive}%d {default}健康状態が残っています"
+		"ko"		"{default}[{green}!{default}] {blue}마녀 {default}had {olive}%d {default}건강 남음"
+		"vi"		"{default}[{green}!{default}] {blue}Witch {default}had {olive}%d {default}sức khỏe còn lại"
+	}
+
+	"L4DWitchDamageAnnounce_DamageDealtWitch"
+	{
+		"en"		"{default}[{green}!{default}] {blue}Damage {default}dealt to {blue}Witch:"
+		"chi"		"{default}[{green}!{default}] {blue}伤害{default}对{blue}女巫造成："
+		"zho"		"{default}[{green}!{default}] {blue}傷害{default}對{blue}女巫造成："
+		"jp"		"{default}[{green}!{default}] {blue}ダメージ {default}{blue}魔女に与えた:"
+		"ko"		"{default}[{green}!{default}] {blue}{default}가 {blue}마녀에게 처리한 피해:"
+		"vi"		"{default}[{green}!{default}] {blue}Damage {default}xử lý {blue}Witch:"
+	}
+
+	"L4DWitchDamageAnnounce_WitchDamageLine"
+	{
+		"en"		"{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N"
+		"chi"		"{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N"
+		"zho"		"{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N"
+		"jp"		"{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N"
+		"ko"		"{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N"
+		"vi"		"{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N"
+	}
 }

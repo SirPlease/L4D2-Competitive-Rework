@@ -95,6 +95,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_smoker_drag_damage_interval.phrases");
 	InitGameData();
 
 	HookEvent("tongue_grab", Event_OnTongueGrab);
@@ -293,7 +294,7 @@ MRESReturn Detour_OnStartHangingFromTongue_Post(int client, DHookParam hParams)
 #if DEBUG
 	float fEngineChokeTs = GetEntDataFloat(client, g_iTongueChokeDamageTimerTimeStampOffset);
 	float fEngineWouldFireIn = fEngineChokeTs - fNow;
-	PrintToChatAll("[tongue_continuity] %N drag->choke: damage clock CONTINUED - next damage in %.2fs (vanilla would have reset to %.2fs)", \
+	PrintToChatAll("%t", "L4D2SmokerDragDamageInterval_TongueContinuityDragChokeDamage", \
 		client, fRemaining, fEngineWouldFireIn);
 #endif
 
@@ -339,7 +340,7 @@ void Event_OnChokeEnd(Event hEvent, const char[] eName, bool bDontBroadcast)
 	SetEntDataFloat(iVictim, g_iTongueDragDamageTimerTimeStampOffset, fNow + fRemaining, false);
 
 #if DEBUG
-	PrintToChatAll("[tongue_continuity] %N choke->drag: damage clock CONTINUED - next damage in %.2fs (vanilla would have fired immediately)", \
+	PrintToChatAll("%t", "L4D2SmokerDragDamageInterval_TongueContinuityChokeDragDamage", \
 		iVictim, fRemaining);
 #endif
 }
@@ -366,7 +367,7 @@ void SetDragDamageTimer(int iClient, float fDuration)
 #if DEBUG
 void DebugPrint(int iVictim, float fDamage, bool bFirstDamage)
 {
-	PrintToChatAll("[DEBUG] Victim: %N, %sdamage: %f, time: %f, game time: %f", \
+	PrintToChatAll("%t", "L4D2SmokerDragDamageInterval_DebugVictimDamageTimeGame", \
 						iVictim, (bFirstDamage) ? "first " : "", fDamage, GetGameTime() - g_fDebugDamageInterval, GetGameTime());
 
 	g_fDebugDamageInterval = GetGameTime();

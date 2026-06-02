@@ -1,0 +1,12 @@
+"Phrases"
+{
+	"ChatProcessor_DeadChatCurrentlyRestricted"
+	{
+		"en"		"Dead chat is currently restricted."
+		"chi"		"死聊目前受到限制。"
+		"zho"		"死聊目前受到限制。"
+		"jp"		"現在、デッドチャットは制限されています。"
+		"ko"		"현재 데드채팅이 제한되어 있습니다."
+		"vi"		"Trò chuyện chết hiện đang bị hạn chế."
+	}
+}

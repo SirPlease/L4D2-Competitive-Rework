@@ -1,0 +1,12 @@
+"Phrases"
+{
+	"SimpleWitchBonus_KillingWitchAwardedPoints"
+	{
+		"en"		"\\x01Killing the witch has awarded: \\x05%d \\x01points!"
+		"chi"		"\\x01杀死魔女已奖励：\\x05%d \\x01积分！"
+		"zho"		"\\x01殺死魔女已獎勵：\\x05%d \\x01積分！"
+		"jp"		"\\x01魔女を倒すと獲得したポイント: \\x05%d \\x01ポイント!"
+		"ko"		"\\x01마녀를 죽여 다음 보상을 받았습니다: \\x05%d \\x01포인트!"
+		"vi"		"\\x01Giết phù thủy đã nhận được: \\x05%d \\x01 điểm!"
+	}
+}

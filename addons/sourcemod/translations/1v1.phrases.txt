@@ -3,6 +3,10 @@
 	"Tag"
 	{
 		"en"		"[{olive}1v1{default}]"
+		"zho"		"[{olive}1v1{default}]"
+		"jp"		"[{olive}1v1{default}]"
+		"ko"		"[{olive}1v1{default}]"
+		"vi"		"[{olive}1v1{default}]"
 	}
 	"TagPvE"
 	{
@@ -12,15 +16,28 @@
 	{
 		"#format"   "{1:N},{2:s},{3:d}" // 1:iAttacker 2:L4D2_InfectedNames[iZclass] 3:iRemainingHealth
 		"en"		"{red}{1}{default} ({green}{2}{default}) had {olive}{3}{default} health remaining!"
-	}
+	
+		"zho"		"{red}{1}{default} ({green}{2}{default}) had {olive}{3}{default} health remaining!"
+		"jp"		"{red}{1}{default} ({green}{2}{default}) had {olive}{3}{default} health remaining!"
+		"ko"		"{red}{1}{default} ({green}{2}{default}) had {olive}{3}{default} health remaining!"
+		"vi"		"{red}{1}{default} ({green}{2}{default}) had {olive}{3}{default} health remaining!"}
 	"HealthRemainingAI"
 	{
 		"#format"   "{1:s},{2:d}" // 1:L4D2_InfectedNames[iZclass] 2:iRemainingHealth
 		"en"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default} had {olive}{2}{default} health remaining!"
-	}
+	
+		"chi"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default} had {olive}{2}{default} health remaining!"
+		"zho"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default} had {olive}{2}{default} health remaining!"
+		"jp"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default} had {olive}{2}{default} health remaining!"
+		"ko"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default} had {olive}{2}{default} health remaining!"
+		"vi"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default} had {olive}{2}{default} health remaining!"}
 	"UMad"
 	{
 		"en"		"You don't have to be mad..."
+		"zho"		"You don't have to be mad..."
+		"jp"		"You don't have to be mad..."
+		"ko"		"You don't have to be mad..."
+		"vi"		"You don't have to be mad..."
 	}
 	"Sad"
 	{

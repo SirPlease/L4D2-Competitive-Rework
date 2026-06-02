@@ -51,6 +51,7 @@ bool
 //Beginning of our plugin, verifies the game is l4d2 and sets up our convars/command
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_setscores.phrases");
 	CheckGame();
 
 	minimumPlayersForVote = CreateConVar("setscore_player_limit", "2", "Minimum # of players in game to start the vote");
@@ -115,7 +116,7 @@ void StartScoreVote(const int survScore, const int infectScore, const int initia
 {
 	//Disallow spectator voting
 	if (!IsAdmin && GetClientTeam(initiator) == L4D_TEAM_SPECTATE) {
-		PrintToChat(initiator, "Score voting isn't allowed for spectators.");
+		PrintToChat(initiator, "%t", "L4D2Setscores_ScoreVotingIsnAllowedSpectators");
 		return;
 	}
 
@@ -132,7 +133,7 @@ void StartScoreVote(const int survScore, const int infectScore, const int initia
 
 		//If there aren't enough players for the vote indicate so to the user
 		if (iNumPlayers < minimumPlayersForVote.IntValue) {
-			PrintToChat(initiator, "Score vote cannot be started. Not enough players.");
+			PrintToChat(initiator, "%t", "L4D2Setscores_ScoreVoteCannotStartedNot");
 			return;
 		}
 		
@@ -156,7 +157,7 @@ void StartScoreVote(const int survScore, const int infectScore, const int initia
 		return;
 	}
 
-	PrintToChat(initiator, "Score vote cannot be started now.");
+	PrintToChat(initiator, "%t", "L4D2Setscores_ScoreVoteCannotStarted");
 }
 
 //Actually sets the scores of the teams and print the results to all chat
@@ -177,9 +178,9 @@ void SetScores(const int survScore, const int infectScore, const int iAdminIndex
 	if (iAdminIndex != -1) { //This works well for an index '0' as well, if the initiator is CONSOLE
 		char client_name[32];
 		GetClientName(iAdminIndex, client_name, sizeof(client_name));
-		PrintToChatAll("\x01Scores set to \x05%d \x01 (\x04Sur\x01) - \x05%d \x01 (\x04Inf\x01) by \x03%s\x01.", survScore, infectScore, client_name);
+		PrintToChatAll("%t", "L4D2Setscores_ScoresSetSurInf", survScore, infectScore, client_name);
 	} else {
-		PrintToChatAll("\x01Scores set to \x05%d \x01 (\x04Sur\x01) - \x05%d \x01 (\x04Inf\x01) by vote.", survScore, infectScore);
+		PrintToChatAll("%t", "L4D2Setscores_ScoresSetSurInfVote", survScore, infectScore);
 	}
 }
 

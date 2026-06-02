@@ -61,6 +61,7 @@ int
 
 public void OnPluginStart()
 {
+	LoadTranslations("vote.phrases");
 	char g_sBuffer[128];
 	g_hVoteFilelocation = CreateConVar("votecfgfile", "configs/cfgs.txt", "投票文件的位置(位于sourcemod/文件夹)", FCVAR_NOTIFY);
 	//GetGameFolderName(g_sBuffer, sizeof(g_sBuffer));
@@ -95,7 +96,7 @@ public Action VoteCancle(int client, int args)
 	if (IsBuiltinVoteInProgress())
 	{
 		CancelBuiltinVote();
-		CPrintToChatAll("[{olive}vote{default}] {blue}管理员取消了当前投票!");
+		CPrintToChatAll("%t", "Vote_AdministratorCanceledCurrentVote");
 		return Plugin_Handled;
 	}
 	ReplyToCommand(client, "没有投票在进行!");
@@ -132,7 +133,7 @@ public Action VoteRequest(int client, int args)
 	}
 	if (IsValidClient(client) && !IsPlayer(client))
 	{
-		CPrintToChat(client, "[{olive}vote{default}] {blue}旁观者不允许投票执行命令或cfg文件!");
+		CPrintToChat(client, "%t", "Vote_BystandersNotAllowedVoteExecute");
 		return Plugin_Handled;
 	}
 	if (args > 0)
@@ -216,7 +217,7 @@ public int VoteMenuHandler(Handle menu, MenuAction action, int param1, int param
 		}
 		else
 		{
-			CPrintToChat(param1, "[{olive}vote{default}] {red}没有相关的文件存在.");
+			CPrintToChat(param1, "%t", "Vote_NoRelatedFilesExist");
 			ShowVoteMenu(param1);
 		}
 	}
@@ -276,7 +277,7 @@ bool StartVote(int client, const char[] cfgname, const char[] command)
 {
 	if (L4D_HasAnySurvivorLeftSafeArea() && IsRestartMapVoteCommand(command))
 	{
-		CPrintToChat(client, "[{olive}vote{default}] {red}对局开始后不能投票重置当前地图.");
+		CPrintToChat(client, "%t", "Vote_CannotVoteResetCurrentMap");
 		return false;
 	}
 
@@ -291,10 +292,10 @@ bool StartVote(int client, const char[] cfgname, const char[] command)
 		SetBuiltinVoteResultCallback(g_hVote, VoteResultHandler);
 		DisplayBuiltinVoteToAllNonSpectators(g_hVote, 20);
 		FakeClientCommand(client, "Vote Yes");
-		CPrintToChatAll("[{olive}vote{default}] {blue}%N 发起了一个投票", client);
+		CPrintToChatAll("%t", "Vote_InitiatedVote", client);
 		return true;
 	}
-	CPrintToChat(client, "[{olive}vote{default}] {red}已经有一个投票正在进行.");
+	CPrintToChat(client, "%t", "Vote_AlreadyVoteProgress");
 	return false;
 }
 
@@ -391,7 +392,7 @@ public int Menu_Voteskick(Handle menu, MenuAction action, int param1, int param2
 		char name[128];
 		GetMenuItem(menu, param2, name, sizeof(name));
 		kickclient = GetClientOfUserId(StringToInt(name));
-		CPrintToChatAll("[{olive}vote{default}] {blue}%N {default}发起投票踢出 {blue} %N", param1, kickclient);
+		CPrintToChatAll("%t", "Vote_InitiatesVoteKick", param1, kickclient);
 		if (DisplayVoteKickMenu(param1))
 		{
 			FakeClientCommand(param1, "Vote Yes");
@@ -412,10 +413,10 @@ public bool DisplayVoteKickMenu(int client)
 		SetBuiltinVoteResultCallback(g_hVoteKick, VoteResultHandler);
 		DisplayBuiltinVoteToAllNonSpectators(g_hVoteKick, 20);
 		FakeClientCommand(client, "Vote Yes");
-		CPrintToChatAll("[{olive}vote{default}] {blue}%N 发起了一个投票", client);
+		CPrintToChatAll("%t", "Vote_InitiatedVote", client);
 		return true;
 	}
-	CPrintToChat(client, "[{olive}vote{default}] {red}已经有一个投票正在进行.");
+	CPrintToChat(client, "%t", "Vote_AlreadyVoteProgress");
 	return false;
 }
 
@@ -423,10 +424,10 @@ public Action BanRequest(int client, int args)
 {
 	if(g_bl4dstatsSystemAvailable){
 		if(l4dstats_GetClientScore(client) < 100000){
-			CPrintToChat(client, "[{olive}vote{default}] {red}未防止封禁被乱用，需要10w以上积分玩家才能使用.");
+			CPrintToChat(client, "%t", "Vote_NotPreventBanMisusedRequires");
 			return Plugin_Handled;
 		}else{
-			CPrintToChat(client, "[{olive}vote{default}] {red}请谨慎使用您的权力，乱用封禁会导致您的账户面临封禁（首次7天，第二次一个月，第三次永久）.");
+			CPrintToChat(client, "%t", "Vote_UsePowerCautionAbuseBans");
 		}
 	}
 	if (client && client <= MaxClients)
@@ -468,7 +469,7 @@ public int Menu_VotesBan(Handle menu, MenuAction action, int param1, int param2)
 		char name[128];
 		GetMenuItem(menu, param2, name, sizeof(name));
 			banclient = GetClientOfUserId(StringToInt(name));
-			CPrintToChatAll("[{olive}vote{default}] {blue}%N {default}发起投票封禁 {blue} %N 一天", param1, banclient);
+			CPrintToChatAll("%t", "Vote_InitiatesVoteBanOneDay", param1, banclient);
 			if (DisplayVoteBanMenu(param1))
 		{
 			FakeClientCommand(param1, "Vote Yes");
@@ -501,9 +502,9 @@ public bool DisplayVoteBanMenu(int client)
 		SetBuiltinVoteResultCallback(g_hVoteBan, VoteResultHandler);
 		DisplayBuiltinVoteToAll(g_hVoteBan, 20);
 		FakeClientCommand(client, "Vote Yes");
-		CPrintToChatAll("[{olive}vote{default}] {blue}%N 发起了一个投票", client);
+		CPrintToChatAll("%t", "Vote_InitiatedVote", client);
 		return true;
 	}
-	CPrintToChat(client, "[{olive}vote{default}] {red}已经有一个投票正在进行.");
+	CPrintToChat(client, "%t", "Vote_AlreadyVoteProgress");
 	return false;
 }

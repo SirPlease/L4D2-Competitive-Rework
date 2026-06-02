@@ -102,6 +102,7 @@ public void OnLibraryRemoved(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_item_hint.phrases");
 	GameData hGameData = new GameData("l4d2_item_hint");
 	if (hGameData != null)
 	{
@@ -516,7 +517,7 @@ public Action Vocalize_Listener(int client, const char[] command, int argc)
 			{
 				if(g_bl4dstatsAvailable && l4dstats_GetClientScore(client) < 50000)
 				{
-					PrintToChat(client, "\x01[\x04标记系统\x01]你的积分不足5w，无法使用标记系统");
+					PrintToChat(client, "%t", "L4D2ItemHint_MarkingSystemPointsLess5W");
 					return Plugin_Continue;
 				}
 				int clientAim;
@@ -1211,7 +1212,7 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintToChat(i, "\x01[\x04标记系统\x01] \x05%N\x01: %s", client, sItemName);
+						PrintToChat(i, "%t", "L4D2ItemHint_PlayerMarkedItem", client, sItemName);
 					}
 				}
 			}
@@ -1245,7 +1246,7 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintToChat(i, "\x01[\x04标记系统\x01] \x05%N\x01: \x04%s", client, sItemName);
+						PrintToChat(i, "%t", "L4D2ItemHint_PlayerMarkedItemHighlighted", client, sItemName);
 					}
 				}
 			}
@@ -1279,7 +1280,7 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintToChat(i, "\x01[\x04标记系统\x01] \x05%N\x01: \x04%s", client, sItemName);
+						PrintToChat(i, "%t", "L4D2ItemHint_PlayerMarkedItemHighlighted", client, sItemName);
 					}
 				}
 			}

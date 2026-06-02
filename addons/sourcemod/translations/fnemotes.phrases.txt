@@ -10,18 +10,30 @@
 		"en"			"[{olive}Emotes{default}]{darkred} You don't have access to use dances!!"
 		"tr"			"[{olive}Emotes{default}]{darkred} Dances kullanmaya erişiminiz yok!!"
 		"es"			"[{olive}Emotes{default}]{darkred} No tienes acceso a usar dances!!"
+		"zho"		"[{olive}Emotes{default}]{darkred} You don't have access to use dances!!"
+		"jp"		"[{olive}Emotes{default}]{darkred} You don't have access to use dances!!"
+		"ko"		"[{olive}Emotes{default}]{darkred} You don't have access to use dances!!"
+		"vi"		"[{olive}Emotes{default}]{darkred} You don't have access to use dances!!"
 	}
 	"NO_EMOTES_ACCESS_FLAG"
 	{
 		"en"			"[{olive}Emotes{default}]{darkred} You don't have access to use emotes!!"
 		"tr"			"[{olive}Emotes{default}]{darkred} Emotes kullanmaya erişiminiz yok!!"
 		"es"			"[{olive}Emotes{default}]{darkred} No tienes acceso a usar emotes!!"
+		"zho"		"[{olive}Emotes{default}]{darkred} You don't have access to use emotes!!"
+		"jp"		"[{olive}Emotes{default}]{darkred} You don't have access to use emotes!!"
+		"ko"		"[{olive}Emotes{default}]{darkred} You don't have access to use emotes!!"
+		"vi"		"[{olive}Emotes{default}]{darkred} You don't have access to use emotes!!"
 	}
 	"MUST_BE_ALIVE"
 	{
 		"en"			"[{olive}Emotes{default}]{darkred} You must be alive to use this!"
 		"tr"			"[{olive}Emotes{default}]{darkred} Bunu kullanmak için hayatta olmalısın!"	
 		"es"			"[{olive}Emotes{default}]{darkred} Debes estar vivo para usar eso!"
+		"zho"		"[{olive}Emotes{default}]{darkred} You must be alive to use this!"
+		"jp"		"[{olive}Emotes{default}]{darkred} You must be alive to use this!"
+		"ko"		"[{olive}Emotes{default}]{darkred} You must be alive to use this!"
+		"vi"		"[{olive}Emotes{default}]{darkred} You must be alive to use this!"
 	}
 
 	"STAY_ON_GROUND"
@@ -29,6 +41,10 @@
 		"en"			"[{olive}Emotes{default}]{darkred} You must stay on the ground to use this!"
 		"tr"			"[{olive}Emotes{default}]{darkred} Bunu kullanmak için haraket etmemelisin!"		
 		"es"			"[{olive}Emotes{default}]{darkred} Debes estar en el suelo para usar eso!"
+		"zho"		"[{olive}Emotes{default}]{darkred} You must stay on the ground to use this!"
+		"jp"		"[{olive}Emotes{default}]{darkred} You must stay on the ground to use this!"
+		"ko"		"[{olive}Emotes{default}]{darkred} You must stay on the ground to use this!"
+		"vi"		"[{olive}Emotes{default}]{darkred} You must stay on the ground to use this!"
 	}
 
 	"COOLDOWN_EMOTES"
@@ -36,6 +52,10 @@
 		"en"			"[{olive}Emotes{default}]{darkred} It is on cooldown!"
 		"tr"			"[{olive}Emotes{default}]{darkred} Biraz bekle!"		
 		"es"			"[{olive}Emotes{default}]{darkred} Está enfriándose!"
+		"zho"		"[{olive}Emotes{default}]{darkred} It is on cooldown!"
+		"jp"		"[{olive}Emotes{default}]{darkred} It is on cooldown!"
+		"ko"		"[{olive}Emotes{default}]{darkred} It is on cooldown!"
+		"vi"		"[{olive}Emotes{default}]{darkred} It is on cooldown!"
 	}
 
 	"AMIN_1_INVALID"
@@ -43,6 +63,10 @@
 		"en"			"[{olive}Emotes{default}]{darkred} Argument 1 is invalid!!!"
 		"tr"			"[{olive}Emotes{default}]{darkred} Bağımsız değişken 1 geçersiz!!!"		
 		"es"			"[{olive}Emotes{default}]{darkred} El Argumento 1 es inválido"
+		"zho"		"[{olive}Emotes{default}]{darkred} Argument 1 is invalid!!!"
+		"jp"		"[{olive}Emotes{default}]{darkred} Argument 1 is invalid!!!"
+		"ko"		"[{olive}Emotes{default}]{darkred} Argument 1 is invalid!!!"
+		"vi"		"[{olive}Emotes{default}]{darkred} Argument 1 is invalid!!!"
 	}
 	
 	"CANNOT_USE_NOW"
@@ -50,6 +74,10 @@
 		"en"			"[{olive}Emotes{default}]{darkred} You can't use it right now!"
 		"tr"			"[{olive}Emotes{default}]{darkred} Şu anda kullanamazsın!"		
 		"es"			"[{olive}Emotes{default}]{darkred} No puedes usar eso ahora mismo!"
+		"zho"		"[{olive}Emotes{default}]{darkred} You can't use it right now!"
+		"jp"		"[{olive}Emotes{default}]{darkred} You can't use it right now!"
+		"ko"		"[{olive}Emotes{default}]{darkred} You can't use it right now!"
+		"vi"		"[{olive}Emotes{default}]{darkred} You can't use it right now!"
 	}
 
 	"INVALID_EMOTE_ID"
@@ -57,6 +85,10 @@
 		"en"			"[{olive}Emotes{default}]{darkred} Invalid Emote ID, Should be between (1-86)"
 		"tr"			"[{olive}Emotes{default}]{darkred} Geçersiz Emote ID, (1-86) arasında olmalıdır"	
 		"es"			"[{olive}Emotes{default}]{darkred} Emote ID inválida, Debe estar entre (1-86)"
+		"zho"		"[{olive}Emotes{default}]{darkred} Invalid Emote ID, Should be between (1-86)"
+		"jp"		"[{olive}Emotes{default}]{darkred} Invalid Emote ID, Should be between (1-86)"
+		"ko"		"[{olive}Emotes{default}]{darkred} Invalid Emote ID, Should be between (1-86)"
+		"vi"		"[{olive}Emotes{default}]{darkred} Invalid Emote ID, Should be between (1-86)"
 	}
 
 	"RANDOM_EMOTE"
@@ -708,4 +740,15 @@
 		"es"			"Eres Increíble"
 	}
 
+
+
+	"FNEmotes_SMUsageSMSetEmotes"
+	{
+		"en"		"[SM] Usage: sm_setemotes <#userid|name> [Emote ID]"
+		"chi"		"[SM] 用法：sm_setemotes <#userid|name> [表情 ID]"
+		"zho"		"[SM] 用法：sm_setemotes <#userid|name> [表情 ID]"
+		"jp"		"[SM] 使用法: sm_setemotes <#userid|name> [エモート ID]"
+		"ko"		"[SM] 사용법: sm_setemotes <#userid|name> [Emote ID]"
+		"vi"		"[SM] Cách sử dụng: sm_setemotes <#userid|name> [ID biểu tượng cảm xúc]"
+	}
 }

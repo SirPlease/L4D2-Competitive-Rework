@@ -16,6 +16,7 @@ new Handle:linkCVar;
 
 public OnPluginStart()
 {
+	LoadTranslations("changelog.phrases");
 	linkCVar = CreateConVar("l4d2_cl_link", "https://github.com/spoon-l4d2/NextMod", "The to your change log");
 	RegConsoleCmd("sm_changelog", ChangeLog_CMD);
 }
@@ -24,5 +25,5 @@ Action:ChangeLog_CMD(client, args)
 {
 	new String:link[128];
 	GetConVarString(linkCVar, link, sizeof(link));
-	CPrintToChat(client, "{blue}[{green}ChangeLog{blue}]{default} You can view the change log @ {blue}%s", link);
+	CPrintToChat(client, "%t", "Changelog_ChangeLogViewChangeLog", link);
 }

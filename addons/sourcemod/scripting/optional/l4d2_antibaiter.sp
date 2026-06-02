@@ -74,6 +74,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_antibaiter.phrases");
 	InitGameData();
 	
 	hCvarTimerStartDelay = CreateConVar("l4d2_antibaiter_delay", "20", "Delay in seconds before the antibait algorithm kicks in");
@@ -220,7 +221,7 @@ Action AntibaiterThink(Handle hTimer)
 				&& aliveSince[i] != -1.0 && GetGameTime() - aliveSince[i] >= timerStartDelay
 			) {
 				#if DEBUG
-				PrintToChatAll("\x03[Antibaiter DEBUG] Eligible player \x04%N\x01 is a zombieclass \x05%d\x01 alive for \x05%fs\x01", i, zombieclass[i], GetGameTime() - aliveSince[i]);
+				PrintToChatAll("%t", "L4D2Antibaiter_AntibaiterDebugEligiblePlayerZombieclass", i, zombieclass[i], GetGameTime() - aliveSince[i]);
 				#endif
 				
 				eligibleZombies++;
@@ -236,7 +237,7 @@ Action AntibaiterThink(Handle hTimer)
 	// 5th SI / spectator bug workaround
 	if (eligibleZombies > z_max_player_zombies) {
 	#if DEBUG
-		PrintToChatAll("\x03[Antibaiter DEBUG] Spectator bug detected: \x04eligibleZombies\x01=\x05%d\x01, \x04z_max_player_zombies\x01=\x05%d\x01", eligibleZombies, z_max_player_zombies);
+		PrintToChatAll("%t", "L4D2Antibaiter_AntibaiterDebugSpectatorBugDetected", eligibleZombies, z_max_player_zombies);
 	#endif
 		return Plugin_Continue;
 	}
@@ -249,27 +250,27 @@ Action AntibaiterThink(Handle hTimer)
 			&& hordeDelayChecks >= RoundToNearest(timerStartDelay)
 		) {
 			#if DEBUG
-			PrintToChatAll("\x03[Antibaiter DEBUG] Minimum progress unsatisfied during \x05%d\x01 checks: \x04initial\x01=\x05%f\x01, \x04current\x01=\x05%f\x01, \x04progress\x01=\x05%f\x01", hordeDelayChecks, startingSurvivorCompletion, survivorCompletion, progress);
+			PrintToChatAll("%t", "L4D2Antibaiter_AntibaiterDebugMinimumProgressUnsatisfied", hordeDelayChecks, startingSurvivorCompletion, survivorCompletion, progress);
 			#endif
 			
 			if (IsCountdownRunning()) {
 				#if DEBUG
-				PrintToChatAll("\x03[Antibaiter DEBUG] Countdown is \x05running\x01");
+				PrintToChatAll("%t", "L4D2Antibaiter_AntibaiterDebugCountdownRunning");
 				#endif
 				
 				if (HasCountdownElapsed()) {
 					#if DEBUG
-					PrintToChatAll("\x03[Antibaiter DEBUG] Countdown has \x04elapsed\x01! Launching horde and resetting checks counter");
+					PrintToChatAll("%t", "L4D2Antibaiter_AntibaiterDebugCountdownElapsedLaunching");
 					#endif
 					
 					HideCountdown();
 					LaunchHorde();
 					hordeDelayChecks = 0;
-					CPrintToChatAll("{blue}[{default}Anti-baiter{blue}]{default} Prepare for the incoming horde!");
+					CPrintToChatAll("%t", "L4D2Antibaiter_AntiBaiterPrepareIncomingHorde");
 				}
 			} else {
 				#if DEBUG
-				PrintToChatAll("\x03[Antibaiter DEBUG] Countdown is \x05not running\x01. Initiating it...");
+				PrintToChatAll("%t", "L4D2Antibaiter_AntibaiterDebugCountdownNotRunning");
 				#endif
 				
 				InitiateCountdown();
@@ -281,7 +282,7 @@ Action AntibaiterThink(Handle hTimer)
 			
 			if (progress > minProgress) {
 				#if DEBUG
-				PrintToChatAll("\x03[Antibaiter DEBUG] Survivor progress has \x05increased\x01 beyond the minimum threshold. Resetting the algorithm...");
+				PrintToChatAll("%t", "L4D2Antibaiter_AntibaiterDebugSurvivorProgressIncreased");
 				#endif
 
 				startingSurvivorCompletion = survivorCompletion;
@@ -357,7 +358,7 @@ void LaunchHorde()
 	}
 	
 	#if DEBUG
-	PrintToChatAll("m_PanicTimer - duration: %f, timestamp: %f", CTimer_GetDuration(PanicTimer()), CTimer_GetTimestamp(PanicTimer()));
+	PrintToChatAll("%t", "L4D2Antibaiter_PanicTimerDurationTimestamp", CTimer_GetDuration(PanicTimer()), CTimer_GetTimestamp(PanicTimer()));
 	#endif
 	
 	int info_director = MaxClients+1;
@@ -400,7 +401,7 @@ bool IsPanicEventInProgress()
 	CountdownTimer pPanicCountdown = PostMobDelayTimer();
 	
 	#if DEBUG
-	PrintToChatAll("m_PostMobDelay - duration: %f, timestamp: %f", CTimer_GetDuration(pPanicCountdown), CTimer_GetTimestamp(pPanicCountdown));
+	PrintToChatAll("%t", "L4D2Antibaiter_PostMobDelayDurationTimestamp", CTimer_GetDuration(pPanicCountdown), CTimer_GetTimestamp(pPanicCountdown));
 	#endif
 	
 	if (!CTimer_IsElapsed(pPanicCountdown)) {

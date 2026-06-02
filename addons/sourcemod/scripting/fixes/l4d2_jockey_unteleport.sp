@@ -31,6 +31,7 @@ public Plugin:myinfo =
 
 public OnPluginStart()
 {
+	LoadTranslations("l4d2_jockey_unteleport.phrases");
 	HookEvent("jockey_ride", Event_JockeyRide);
 	HookEvent("jockey_ride_end", Event_JockeyRideEnd);
 	HookEvent("jockey_killed", Event_JockeyDeath);
@@ -168,7 +169,7 @@ void TeleportToPreviousPosition(int victim){
 	char map[128];
 	GetCurrentMap(map,sizeof(map));
 	TeleportEntity(victim, victimPrevPos[victim], NULL_VECTOR, NULL_VECTOR);
-	CPrintToChatAll("{blue}[虚空猴修复]{default} 传送回了被虚空猴传送的%N.", victim);
+	CPrintToChatAll("%t", "L4D2JockeyUnteleport_VoidMonkeyRepairTeleportedBack", victim);
 	Debug_Print("虚空猴修复log: 当前地图：%s, 将%N传回位置为 %f %f %f", map, victim, victimPrevPos[victim][0], victimPrevPos[victim][1], victimPrevPos[victim][2]);
 }
 

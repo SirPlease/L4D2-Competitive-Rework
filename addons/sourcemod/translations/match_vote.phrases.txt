@@ -3,11 +3,19 @@
     "Tag"
     {
         "en"    "[{olive}!{default}]"
+		"zho"		"[{olive}!{default}]"
+		"jp"		"[{olive}!{default}]"
+		"ko"		"[{olive}!{default}]"
+		"vi"		"[{olive}!{default}]"
     }
     "Disabled"
     {
         "en"    "Plugin is {red}Disabled{default}"
-    }
+    
+		"zho"		"Plugin is {red}Disabled{default}"
+		"jp"		"Plugin is {red}Disabled{default}"
+		"ko"		"Plugin is {red}Disabled{default}"
+		"vi"		"Plugin is {red}Disabled{default}"}
     "NoConsole"
     {
         "en"    "This command can't be used from console."
@@ -15,11 +23,19 @@
     "ConfoglNotAvailable"
     {
         "en"    "Confogl is {red}not available{default}."
-    }
+    
+		"zho"		"Confogl is {red}not available{default}."
+		"jp"		"Confogl is {red}not available{default}."
+		"ko"		"Confogl is {red}not available{default}."
+		"vi"		"Confogl is {red}not available{default}."}
     "CedaGame"
     {
         "en"    "It is not allowed to run this command in a {red}cedapug match{default}"
-    }
+    
+		"zho"		"It is not allowed to run this command in a {red}cedapug match{default}"
+		"jp"		"It is not allowed to run this command in a {red}cedapug match{default}"
+		"ko"		"It is not allowed to run this command in a {red}cedapug match{default}"
+		"vi"		"It is not allowed to run this command in a {red}cedapug match{default}"}
     "Title_Match"
     {
         "en"    "Select match mode:"
@@ -31,11 +47,19 @@
     "ConfigNotFound"
     {
         "en"    "No configs for such mode were found."
-    }
+    
+		"zho"		"No configs for such mode were found."
+		"jp"		"No configs for such mode were found."
+		"ko"		"No configs for such mode were found."
+		"vi"		"No configs for such mode were found."}
     "NoSpec"
     {
         "en"    "Voting cannot be initiated by spectators."
-    }
+    
+		"zho"		"Voting cannot be initiated by spectators."
+		"jp"		"Voting cannot be initiated by spectators."
+		"ko"		"Voting cannot be initiated by spectators."
+		"vi"		"Voting cannot be initiated by spectators."}
     "MatchLoaded"
     {
         "en"    "Matchmode already loaded!"
@@ -43,7 +67,11 @@
     "NotEnoughPlayers"
     {
         "en"    "Vote cannot be started. {red}Not enough players{default} ({red}%d{default}/{green}%d{default})."
-    }
+    
+		"zho"		"Vote cannot be started. {red}Not enough players{default} ({red}%d{default}/{green}%d{default})."
+		"jp"		"Vote cannot be started. {red}Not enough players{default} ({red}%d{default}/{green}%d{default})."
+		"ko"		"Vote cannot be started. {red}Not enough players{default} ({red}%d{default}/{green}%d{default})."
+		"vi"		"Vote cannot be started. {red}Not enough players{default} ({red}%d{default}/{green}%d{default})."}
     "Title_LoadConfig"
     {
         "en"    "Load confogl '%s' config?"
@@ -51,6 +79,10 @@
     "VoteInProgress"
     {
         "en"    "{red}Vote in progress{default}, please wait {green}%d{default} seconds."
+		"zho"		"{red}Vote in progress{default}, please wait {green}%d{default} seconds."
+		"jp"		"{red}Vote in progress{default}, please wait {green}%d{default} seconds."
+		"ko"		"{red}Vote in progress{default}, please wait {green}%d{default} seconds."
+		"vi"		"{red}Vote in progress{default}, please wait {green}%d{default} seconds."
     }
     "VotePass_Loading"
     {
@@ -59,11 +91,19 @@
     "MatchNotLoaded"
     {
         "en"    "{red}No matchmode{default} loaded."
-    }
+    
+		"zho"		"{red}No matchmode{default} loaded."
+		"jp"		"{red}No matchmode{default} loaded."
+		"ko"		"{red}No matchmode{default} loaded."
+		"vi"		"{red}No matchmode{default} loaded."}
     "PlayersConnecting"
     {
         "en"    "Vote cannot be started. Players are connecting."
-    }
+    
+		"zho"		"Vote cannot be started. Players are connecting."
+		"jp"		"Vote cannot be started. Players are connecting."
+		"ko"		"Vote cannot be started. Players are connecting."
+		"vi"		"Vote cannot be started. Players are connecting."}
     "Title_OffConfogl"
     {
         "en"    "Turn off Confogl?"

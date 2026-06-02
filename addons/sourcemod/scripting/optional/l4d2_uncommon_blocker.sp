@@ -106,6 +106,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_uncommon_blocker.phrases");
 	g_hPluginEnabled = CreateConVar("sm_uncinfblock_enabled", "1", "Enable uncommon blocker plugin?", _, true, 0.0, true, 1.0 );
 
 	// 1 + 2 + 4 + 8 + 16 + 32 + 64 = 127 - Block all
@@ -161,7 +162,7 @@ void OnNextFrame(int iEntity)
 #if DEBUG
 	char sModel[PLATFORM_MAX_PATH];
 	GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-	PrintToChatAll("Uncommon infected spawned! Entity: %d, model: %s, gender: %d, plugin flag: %d, blocked: %s.", \
+	PrintToChatAll("%t", "L4D2UncommonBlocker_UncommonInfectedSpawnedEntityModel", \
 						EntRefToEntIndex(iEntity), sModel, GetGender(iEntity), (1 << iUncommonInfected), (IsUncommonInfectedBlocked(iUncommonInfected)) ? "true" : "false");
 #endif
 
@@ -176,7 +177,7 @@ void OnNextFrame(int iEntity)
 	bool mobRush = GetEntProp(iEntity, Prop_Send, "m_mobRush") == 1;
 
 #if DEBUG
-	PrintToChatAll("2 Blocked uncommon infected! Entity: %d, location: %.0f %.0f %.0f, mobRush: %s.", EntRefToEntIndex(iEntity), fLocation[0], fLocation[1], fLocation[2], mobRush ? "true" : "false");
+	PrintToChatAll("%t", "L4D2UncommonBlocker_2BlockedUncommonInfectedEntity", EntRefToEntIndex(iEntity), fLocation[0], fLocation[1], fLocation[2], mobRush ? "true" : "false");
 #endif
 
 	// kill the uncommon infected
@@ -210,7 +211,7 @@ void SpawnNewInfected(const float fLocation[3], bool mobRush)
 		SetEntProp(iInfected, Prop_Send, "m_mobRush", mobRush);
 
 #if DEBUG
-	PrintToChatAll("Spawned new infected! Entity: %d, location: %.0f %.0f %.0f, mobRush: %s.", iInfected, fLocation[0], fLocation[1], fLocation[2], mobRush ? "true" : "false");
+	PrintToChatAll("%t", "L4D2UncommonBlocker_SpawnedNewInfectedEntityLocation", iInfected, fLocation[0], fLocation[1], fLocation[2], mobRush ? "true" : "false");
 #endif
 }
 

@@ -1,0 +1,152 @@
+"Phrases"
+{
+	"RYGive_TryingKickDeadInfectedRobot"
+	{
+		"en"		"Trying to kick out the dead infected robot..."
+		"chi"		"尝试踢出死亡的感染机器人..."
+		"zho"		"嘗試踢出死亡的感染機器人..."
+		"jp"		"死んだ感染ロボットを追い出そうとしています..."
+		"ko"		"죽은 감염된 로봇을 쫓아내려고 하는데..."
+		"vi"		"Đang cố gắng đuổi con robot bị nhiễm bệnh đã chết ra ngoài..."
+	}
+
+	"RYGive_KickedBots"
+	{
+		"en"		"Kicked %i bots."
+		"chi"		"踢掉 %i 机器人。"
+		"zho"		"踢掉 %i 機器人。"
+		"jp"		"%i ボットをキックしました。"
+		"ko"		"%i 봇을 쫓아냈습니다."
+		"vi"		"Đã loại bỏ bot %i."
+	}
+
+	"RYGive_AdminSpawnedInfected"
+	{
+		"en"		"\\x03管理员\\x01[\\x05%N\\x01]刷出一只\\x05%s"
+		"chi"		"\\x03管理员\\x01[\\x05%N\\x01]刷出一只\\x05%s"
+		"zho"		"\\x03管理員\\x01[\\x05%N\\x01]刷出一隻\\x05%s"
+		"jp"		"\\x03管理员\\x01[\\x05%N\\x01]刷出一只\\x05%s"
+		"ko"		"\\x03管理员\\x01[\\x05%N\\x01]刷出一只\\x05%s"
+		"vi"		"\\x03管理员\\x01[\\x05%N\\x01]刷出一只\\x05%s"
+	}
+
+	"RYGive_FriendlyDamageCoefficientResetDefault"
+	{
+		"en"		"Friendly damage coefficient has been reset to default value"
+		"chi"		"友伤系数已被重置为默认值"
+		"zho"		"友傷係數已被重設為預設值"
+		"jp"		"味方ダメージ係数がデフォルト値にリセットされました"
+		"ko"		"아군 피해 계수가 기본값으로 재설정되었습니다."
+		"vi"		"Hệ số sát thương thân thiện đã được đặt lại về giá trị mặc định"
+	}
+
+	"RYGive_FriendlyDamageCoefficientSet"
+	{
+		"en"		"\\x01 friendly damage coefficient has been set to \\x04%.1f"
+		"chi"		"\\x01友伤系数已被设置为 \\x04%.1f"
+		"zho"		"\\x01友傷係數已被設定為 \\x04%.1f"
+		"jp"		"\\x01 味方ダメージ係数が \\x04%.1f に設定されました"
+		"ko"		"\\x01 아군 피해 계수가 \\x04%.1f로 설정되었습니다."
+		"vi"		"Hệ số sát thương thân thiện \\x01 đã được đặt thành \\x04%.1f"
+	}
+
+	"RYGive_FailedObtainCrosshairPositionTry"
+	{
+		"en"		"Failed to obtain the crosshair position! Please try again."
+		"chi"		"获取准心处位置失败! 请重新尝试."
+		"zho"		"取得準心處位置失敗! 請重新嘗試."
+		"jp"		"十字線の位置を取得できませんでした。もう一度試してください。"
+		"ko"		"십자선 위치 획득에 실패했습니다! 다시 시도해 주세요."
+		"vi"		"Không thể lấy được vị trí tâm ngắm! Vui lòng thử lại."
+	}
+
+	"RYGive_ImmuneDamage"
+	{
+		"en"		"\\x04 is immune to damage from %s \\x05%N \\x01"
+		"chi"		"\\x04已%s \\x05%N \\x01的伤害免疫"
+		"zho"		"\\x04已%s \\x05%N \\x01的傷害免疫"
+		"jp"		"\\x04 は %s \\x05%N \\x01 によるダメージを受けません"
+		"ko"		"\\x04는 %s \\x05%N \\x01의 피해에 면역입니다."
+		"vi"		"\\x04 miễn nhiễm với sát thương từ %s \\x05%N \\x01"
+	}
+
+	"RYGive_TargetPlayerExpired"
+	{
+		"en"		"The target player has expired"
+		"chi"		"目标玩家已失效"
+		"zho"		"目標玩家失效"
+		"jp"		"対象プレイヤーの有効期限が切れています"
+		"ko"		"대상 플레이어가 만료되었습니다"
+		"vi"		"Người chơi mục tiêu đã hết hạn"
+	}
+
+	"RYGive_ImmuneSpecialSenseControl"
+	{
+		"en"		"\\x04 is immune to the special sense control of %s \\x05%N"
+		"chi"		"\\x04已%s \\x05%N \\x01的特感控制免疫"
+		"zho"		"\\x04已%s \\x05%N \\x01的特感控制免疫"
+		"jp"		"\\x04 は、%s \\x05%N の特殊なセンス制御の影響を受けません。"
+		"ko"		"\\x04는 %s \\x05%N의 특수 감지 제어에 면역입니다."
+		"vi"		"\\x04 miễn nhiễm với sự điều khiển cảm giác đặc biệt của %s \\x05%N"
+	}
+
+	"RYGive_OnlySurvivorsCanIdle"
+	{
+		"en"		"Only survivors can idle"
+		"chi"		"只有生还者才能进行闲置"
+		"zho"		"只有生還者才能閒置"
+		"jp"		"生存者だけがアイドル状態にできる"
+		"ko"		"생존자만 유휴 상태일 수 있습니다."
+		"vi"		"Chỉ những người sống sót mới có thể nhàn rỗi"
+	}
+
+	"RYGive_Survival"
+	{
+		"en"		"Survival is over"
+		"chi"		"生还已满"
+		"zho"		"生還已滿"
+		"jp"		"サバイバルは終わった"
+		"ko"		"생존은 끝났다"
+		"vi"		"Sự sống còn đã kết thúc"
+	}
+
+	"RYGive_NumberInfectedPeopleFull"
+	{
+		"en"		"The number of infected people is full"
+		"chi"		"感染者已满"
+		"zho"		"感染者已滿"
+		"jp"		"感染者数がいっぱい"
+		"ko"		"감염자 수가 꽉 찼습니다."
+		"vi"		"Số người nhiễm bệnh đã đầy"
+	}
+
+	"RYGive_PlayerAlreadyTargetTeam"
+	{
+		"en"		"The player is already in the target team"
+		"chi"		"玩家已在目标队伍中"
+		"zho"		"玩家已在目標隊伍中"
+		"jp"		"プレーヤーはすでにターゲットチームに所属しています"
+		"ko"		"플레이어가 이미 대상 팀에 있습니다"
+		"vi"		"Người chơi đã ở trong đội mục tiêu"
+	}
+
+	"RYGive_AllPlayersWeaponManeuverabilitySet"
+	{
+		"en"		"\\x05 All players The weapon maneuverability of \\x01 has been set to \\x04%.1fx"
+		"chi"		"\\x05所有玩家 \\x01的武器操纵性已被设置为 \\x04%.1fx"
+		"zho"		"\\x05所有玩家 \\x01的武器操控性已被設定為 \\x04%.1fx"
+		"jp"		"\\x05 全プレイヤー \\x01 の武器操作性を \\x04%.1fx に設定しました"
+		"ko"		"\\x05 모든 플레이어 \\x01의 무기 기동성이 \\x04%.1fx로 설정되었습니다."
+		"vi"		"\\x05 Tất cả người chơi Khả năng cơ động của vũ khí của \\x01 đã được đặt thành \\x04%.1fx"
+	}
+
+	"RYGive_WeaponManeuverabilitySet"
+	{
+		"en"		"\\x05%N The weapon maneuverability of \\x01 has been set to \\x04%.1fx"
+		"chi"		"\\x05%N \\x01的武器操纵性已被设置为 \\x04%.1fx"
+		"zho"		"\\x05%N \\x01的武器操控性已設定為 \\x04%.1fx"
+		"jp"		"\\x05%N \\x01の武器操作性が\\x04%.1fxに設定されました"
+		"ko"		"\\x05%N \\x01의 무기 기동성이 \\x04%.1fx로 설정되었습니다."
+		"vi"		"\\x05%N Khả năng cơ động của vũ khí của \\x01 đã được đặt thành \\x04%.1fx"
+	}
+}

@@ -38,6 +38,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("fix_fastmelee.phrases");
 	HookEvent("round_start", Event_Reset, EventHookMode_PostNoCopy);
 	//HookEvent("round_end", Event_Reset, EventHookMode_PostNoCopy);
 	HookEvent("weapon_fire", Event_WeaponFire, EventHookMode_Post);
@@ -84,7 +85,7 @@ void Event_WeaponFire(Event hEvent, const char[] sEventName, bool bDontBroadcast
 #if DEBUG
 	char sWeaponName[ENTITY_MAX_NAME_LENGTH];
 	hEvent.GetString("weapon", sWeaponName, sizeof(sWeaponName));
-	PrintToChatAll("Event_WeaponFire: %N, weapon: %s, time: %f, iWeaponId: %d", iClient, sWeaponName, g_fLastMeleeSwing[iClient], iWeaponId);
+	PrintToChatAll("%t", "FixFastMelee_EventWeaponFireWeaponTime", iClient, sWeaponName, g_fLastMeleeSwing[iClient], iWeaponId);
 #endif
 }
 
@@ -111,6 +112,6 @@ void OnWeaponSwitched(int iClient, int iWeapon)
 	Call_Finish();*/
 
 #if DEBUG
-	PrintToChatAll("OnWeaponSwitched: %N, weapon: %d (%s), fNextAttack: %f", iClient, iWeapon, sWeaponName, fNextAttack);
+	PrintToChatAll("%t", "FixFastMelee_WeaponSwitchedWeaponNextAttack", iClient, iWeapon, sWeaponName, fNextAttack);
 #endif
 }

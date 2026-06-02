@@ -1,0 +1,12 @@
+"Phrases"
+{
+	"Changelog_ChangeLogViewChangeLog"
+	{
+		"en"		"{blue}[{green}ChangeLog{blue}]{default} You can view the change log @ {blue}%s"
+		"chi"		"{blue}[{green}ChangeLog{blue}]{default} 可以查看变更日志@{blue}%s"
+		"zho"		"{blue}[{green}ChangeLog{blue}]{default} 可以查看變更日誌@{blue}%s"
+		"jp"		"{blue}[{green}ChangeLog{blue}]{default} @ {blue}%s で変更ログが表示されます。"
+		"ko"		"{blue}[{green}ChangeLog{blue}]{default} {blue}%s에서 변경 로그를 볼 수 있습니다."
+		"vi"		"{blue}[{green}ChangeLog{blue}]{default} Bạn có thể xem nhật ký thay đổi @ {blue}%s"
+	}
+}

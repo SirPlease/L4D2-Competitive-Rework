@@ -1,0 +1,12 @@
+"Phrases"
+{
+	"L4DTextureManagerBlock_MathackDetectorKickedUsingMathack"
+	{
+		"en"		"\\x04[\\x01Mathack Detector\\x04] \\x03%s \\x01has been kicked for using mathack!"
+		"chi"		"\\x04[\\x01MMathack探测器\\x04] \\x03%s \\x01因使用mathack而被踢！"
+		"zho"		"\\x04[\\x01MMathack探測器\\x04] \\x03%s \\x01因使用mathack而被踢！"
+		"jp"		"\\x04[\\x01Mathack Detector\\x04] \\x03%s \\x01がMathack使用でキックされました！"
+		"ko"		"\\x04[\\x01Mathack Detector\\x04] \\x03%s \\x01가 mathack을 사용하여 쫓겨났습니다!"
+		"vi"		"\\x04[\\x01Mathack Detector\\x04] \\x03%s \\x01đã bị kick vì sử dụng mathack!"
+	}
+}

@@ -41,6 +41,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("survivor_mvp_test.phrases");
 	RegConsoleCmd("sm_mvptest", Cmd_MVP, "Shows all available stats for Survivor MVP");
 }
 
@@ -62,12 +63,12 @@ public Action Cmd_MVP(int client, int args)
 		GetMVPDmgPercent	= SURVMVP_GetMVPDmgPercent(client),
 		GetMVPCIPercent		= SURVMVP_GetMVPCIPercent(client);
 
-	CPrintToChat(client, "Current round MVP: {olive}%N{default}", GetMVP);
-	CPrintToChat(client, "Damage of client: {olive}%d{default}", GetMVPDmgCount);
-	CPrintToChat(client, "SI kills of client: {olive}%d{default}", GetMVPKills);
-	CPrintToChat(client, "Damage percent of client: {olive}%f{default}", GetMVPDmgPercent);
-	CPrintToChat(client, "Current round MVP client (Common): {olive}%N{default}", GetMVPCI);
-	CPrintToChat(client, "Common kills for client: {olive}%d{default}", GetMVPCIKills);
-	CPrintToChat(client, "CI percent of client: {olive}%f{default}", GetMVPCIPercent);
+	CPrintToChat(client, "%t", "SurvivorMVPTest_CurrentRoundMVP", GetMVP);
+	CPrintToChat(client, "%t", "SurvivorMVPTest_DamageClient", GetMVPDmgCount);
+	CPrintToChat(client, "%t", "SurvivorMVPTest_SIKillsClient", GetMVPKills);
+	CPrintToChat(client, "%t", "SurvivorMVPTest_DamagePercentClient", GetMVPDmgPercent);
+	CPrintToChat(client, "%t", "SurvivorMVPTest_CurrentRoundMVPClientCommon", GetMVPCI);
+	CPrintToChat(client, "%t", "SurvivorMVPTest_CommonKillsClient", GetMVPCIKills);
+	CPrintToChat(client, "%t", "SurvivorMVPTest_CIPercentClient", GetMVPCIPercent);
 	return Plugin_Handled;
 }

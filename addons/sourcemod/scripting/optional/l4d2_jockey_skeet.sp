@@ -40,6 +40,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_jockey_skeet.phrases");
 	z_leap_damage_interrupt = CreateConVar("z_leap_damage_interrupt", "195.0", "Taking this much damage interrupts a leap attempt", _, true, 10.0, true, 325.0);
 	jockey_skeet_report = CreateConVar("jockey_skeet_report", "1", "Report jockey skeets in chat?", _, true, 0.0, true, 1.0);
 	z_jockey_health = FindConVar("z_jockey_health");
@@ -81,15 +82,15 @@ Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, in
 		inflictedDamage[victim][attacker] += damage;
 		if (inflictedDamage[victim][attacker] >= jockeySkeetDmg) {
 			if (reportJockeySkeets) {
-				CPrintToChat(victim, "{green}★★{default} You were {blue}skeeted{default} by {olive}%N{default}.", attacker);
-				CPrintToChat(attacker, "{green}★★{default} You {blue}skeeted {olive}%N{default}'s Jockey.", victim);
+				CPrintToChat(victim, "%t", "L4D2JockeySkeet_Skeeted", attacker);
+				CPrintToChat(attacker, "%t", "L4D2JockeySkeet_SkeetedJockey", victim);
 				
 				for (int i = 1; i <= MaxClients; i++)  {
 					if (i == victim || i == attacker)
 						continue;
 
 					if (IsClientInGame(i) && !IsFakeClient(i)) {
-						CPrintToChat(i, "{green}★★{default} {olive}%N{default}'s Jockey was {blue}skeeted{default} by {olive}%N{default}.", victim, attacker);
+						CPrintToChat(i, "%t", "L4D2JockeySkeet_JockeySkeeted", victim, attacker);
 					}
 				}
 			}

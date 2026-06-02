@@ -33,6 +33,7 @@ char PLUGIN_VERSION[32];
 
 public void OnPluginStart()
 {
+	LoadTranslations("text.phrases");
 	g_hCvarInfectedTime = FindConVar("versus_special_respawn_interval");
 	g_hCvarInfectedLimit = FindConVar("l4d_infected_limit");
 	g_hCvarTankBhop = FindConVar("ai_Tank_Bhop");
@@ -125,7 +126,7 @@ public void Cvar_InfectedLimit(ConVar convar, const char[] oldValue, const char[
 	if (Weapon == 2 && CommonLimit< 10 && ( StrContains(tags, "WitchParty", false) != -1 || StrContains(tags, "AllCharger", false) != -1 || StrContains(tags, "AnneHappy", false) != -1))
 	{
 		ServerCommand("sm_cvar ZonemodWeapon 0");
-		PrintToChatAll("\x03因为不超过10特，AnneHappy+武器已经自动切换为AnneHappy武器");
+		PrintToChatAll("%t", "Text_NotExceed10SpecialAnne");
 	}
 }
 public void CvarTankBhop(ConVar convar, const char[] oldValue, const char[] newValue)
@@ -160,7 +161,7 @@ public void CvarWeapon(ConVar convar, const char[] oldValue, const char[] newVal
 			ServerCommand("exec vote/weapon/AnneHappyPlus.cfg");
 		else
 		{
-			PrintToChatAll("\x03因为不超过10特，无法使用AnneHappyPlus武器");
+			PrintToChatAll("%t", "Text_CannotUseAnneHappyPlus");
 			ServerCommand("sm_cvar ZonemodWeapon 0");
 		}
 			

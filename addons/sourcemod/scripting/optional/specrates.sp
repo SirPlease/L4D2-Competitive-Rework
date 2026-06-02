@@ -93,6 +93,7 @@ public void OnLibraryAdded(const char[] name)
 
 public void OnPluginStart()
 {
+	LoadTranslations("specrates.phrases");
 	sv_mincmdrate               = FindConVar("sv_mincmdrate");
 	sv_maxcmdrate               = FindConVar("sv_maxcmdrate");
 	sv_minupdaterate            = FindConVar("sv_minupdaterate");
@@ -195,18 +196,18 @@ public Action Cmd_SetRates60(int client, int args)
 
 	if (!g_bL4DStatsAvail || l4dstats_GetClientScore(client) < 300000)
 	{
-		PrintToChat(client, "\x04[SpecRates]\x01 你的分数小于 30W，无法设置旁观速率。");
+		PrintToChat(client, "%t", "Specrates_SpecRatesScoreLess30");
 		return Plugin_Handled;
 	}
 	if (GetSpecCount() > cv_fullSpecNum.IntValue)
 	{
-		PrintToChat(client, "\x04[SpecRates]\x01 旁观人数超过 %d，人满仅允许 30tick。", cv_fullSpecNum.IntValue);
+		PrintToChat(client, "%t", "Specrates_SpecRatesNumberSpectatorsExceeds", cv_fullSpecNum.IntValue);
 		return Plugin_Handled;
 	}
 
 	// 强制 60tick 旁观
 	SetSpectator60(client);
-	PrintToChat(client, "\x04[SpecRates]\x01 已设置为 \x0360tick\x01 旁观。");
+	PrintToChat(client, "%t", "Specrates_SpecRatesSet60tick");
 	return Plugin_Handled;
 }
 
@@ -219,12 +220,12 @@ public Action Cmd_AdminRates(int client, int args)
 	if (team == L4DTeam_Survivor || team == L4DTeam_Infected)
 	{
 		SetFull128(client);
-		PrintToChat(client, "\x04[SpecRates]\x01 管理员（对局）已设置为 \x03128tick\x01。");
+		PrintToChat(client, "%t", "Specrates_SpecRatesAdministratorMatchSet");
 	}
 	else
 	{
 		ResetToServerDefaults(client); // 旁观：默认=100tick（或服配置）
-		PrintToChat(client, "\x04[SpecRates]\x01 管理员（旁观）已设置为 \x03100tick\x01。");
+		PrintToChat(client, "%t", "Specrates_SpecRatesAdministratorSpectatorSet");
 	}
 	return Plugin_Handled;
 }

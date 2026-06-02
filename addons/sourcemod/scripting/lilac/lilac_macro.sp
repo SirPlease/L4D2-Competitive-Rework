@@ -152,7 +152,7 @@ static void lilac_detected_macro(int client, int type)
 		switch (icvar[CVAR_MACRO_WARNING]) {
 		case 1: {
 			PrintCenterText(client, "[Little Anti-Cheat] Warning: Macro usage isn't allowed!");
-			PrintToChat(client, "[Little Anti-Cheat] Warning: Macro usage isn't allowed!");
+			PrintToChat(client, "%t", "LILAC_LittleAntiCheatWarningMacro");
 		}
 		case 2: {
 			for (int i = 1; macro_detected[client][type] == 2 && i <= MaxClients; i++) {
@@ -162,15 +162,13 @@ static void lilac_detected_macro(int client, int type)
 				if (!is_player_admin(i))
 					continue;
 
-				PrintToChat(i, "[Little Anti-Cheat] %N was detected of using Macro %s.",
-					client, string);
+				PrintToChat(i, "%t", "LILAC_LittleAntiCheatDetectedUsing", client, string);
 			}
 		}
 		case 3: {
 			// Warn everyone once...
 			if (macro_detected[client][type] == 2)
-				PrintToChatAll("[Little Anti-Cheat] %N was detected of using Macro %s.",
-					client, string);
+				PrintToChatAll("%t", "LILAC_LittleAntiCheatDetectedUsing", client, string);
 		}
 		}
 	}

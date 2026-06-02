@@ -32,6 +32,7 @@ new bool:status[8];
 
 public OnPluginStart()
 {
+	LoadTranslations("l4d_blackandwhite.phrases");
 	//create version convar
 	CreateConVar("l4d_blackandwhite_version", PLUGIN_VERSION, "Version of L4D Black and White Notifier", FCVAR_REPLICATED|FCVAR_NOTIFY);
 	
@@ -130,7 +131,7 @@ void EventReviveSuccess(Handle:event, const String:name[], bool:dontBroadcast)
 		else if(bandw_notice == 2) 
 		{
 			if(bandw_type == 1) PrintHintTextToAll("%s (\x04%s\x01) is black and white.", targetName, charName);
-			else CPrintToChatAll("{blue}[{default}!{blue}]{default} {olive}%s{default} is black and white.", targetName);
+			else CPrintToChatAll("%t", "L4DBlackandwhite_BlackWhite", targetName);
 		}
 		//print to infected
 		else if(bandw_notice == 3)
@@ -140,7 +141,7 @@ void EventReviveSuccess(Handle:event, const String:name[], bool:dontBroadcast)
 				if(!IsClientInGame(x) || GetClientTeam(x) == GetClientTeam(target) || x == target || IsFakeClient(x))
 					continue;
 				if(bandw_type == 1) PrintHintText(x, "%s (\x04%s\x01) is black and white.", targetName, charName);
-				else CPrintToChat(x, "{blue}[{default}!{blue}]{default} {olive}%s{default} is black and white.", targetName);
+				else CPrintToChat(x, "%t", "L4DBlackandwhite_BlackWhite", targetName);
 			}
 		}
 		//print to survivors
@@ -152,7 +153,7 @@ void EventReviveSuccess(Handle:event, const String:name[], bool:dontBroadcast)
 					continue;
 					
 				if(bandw_type == 1) PrintHintText(x, "%s (\x04%s\x01) is black and white.", targetName, charName);
-				else CPrintToChat(x, "{blue}[{default}!{blue}]{default} {olive}%s{default} is black and white.", targetName);
+				else CPrintToChat(x, "%t", "L4DBlackandwhite_BlackWhite", targetName);
 			}
 		}	
 	}

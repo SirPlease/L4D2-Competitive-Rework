@@ -1,0 +1,52 @@
+"Phrases"
+{
+	"Specrates_SpecRatesScoreLess30"
+	{
+		"en"		"\\x04[SpecRates]\\x01 Your score is less than 30W and the viewing rate cannot be set."
+		"chi"		"\\x04[SpecRates]\\x01 你的分数小于 30W，无法设置旁观速率。"
+		"zho"		"\\x04[SpecRates]\\x01 你的分數小於 30W，無法設定旁觀速率。"
+		"jp"		"\\x04[SpecRates]\\x01 スコアが 30W 未満のため、視聴レートを設定できません。"
+		"ko"		"\\x04[SpecRates]\\x01 점수가 30W 미만이므로 시청률을 설정할 수 없습니다."
+		"vi"		"\\x04[SpecRates]\\x01 Điểm của bạn dưới 30W và không thể đặt tốc độ xem."
+	}
+
+	"Specrates_SpecRatesNumberSpectatorsExceeds"
+	{
+		"en"		"\\x04[SpecRates]\\x01 The number of spectators exceeds %d. Only 30 ticks are allowed when the crowd is full."
+		"chi"		"\\x04[SpecRates]\\x01 旁观人数超过 %d，人满仅允许 30tick。"
+		"zho"		"\\x04[SpecRates]\\x01 旁觀人數超過 %d，人滿僅允許 30tick。"
+		"jp"		"\\x04[SpecRates]\\x01 観客数が%dを超えています。混雑時は 30 ティックのみ許可されます。"
+		"ko"		"\\x04[SpecRates]\\x01 관중 수가 %d를 초과했습니다. 군중이 가득 차면 30틱만 허용됩니다."
+		"vi"		"\\x04[SpecRates]\\x01 Số lượng khán giả vượt quá %d. Chỉ cho phép 30 tích tắc khi đám đông đã đầy."
+	}
+
+	"Specrates_SpecRatesSet60tick"
+	{
+		"en"		"\\x04[SpecRates]\\x01 has been set to \\x0360tick\\x01."
+		"chi"		"\\x04[SpecRates]\\x01 已设置为 \\x0360tick\\x01 旁观。"
+		"zho"		"\\x04[SpecRates]\\x01 已設定為 \\x0360tick\\x01 旁觀。"
+		"jp"		"\\x04[スペックレート]\\x01が\\x0360tick\\x01に設定されました。"
+		"ko"		"\\x04[SpecRates]\\x01가 \\x0360tick\\x01로 설정되었습니다."
+		"vi"		"\\x04[SpecRates]\\x01 đã được đặt thành \\x0360tick\\x01."
+	}
+
+	"Specrates_SpecRatesAdministratorMatchSet"
+	{
+		"en"		"\\x04[SpecRates]\\x01 Administrator (match) has been set to \\x03128tick\\x01."
+		"chi"		"\\x04[SpecRates]\\x01 管理员（对局）已设置为 \\x03128tick\\x01。"
+		"zho"		"\\x04[SpecRates]\\x01 管理員（對局）已設定為 \\x03128tick\\x01。"
+		"jp"		"\\x04[SpecRates]\\x01 管理者 (一致) が \\x03128tick\\x01 に設定されました。"
+		"ko"		"\\x04[SpecRates]\\x01 관리자(일치)가 \\x03128tick\\x01로 설정되었습니다."
+		"vi"		"\\x04[SpecRates]\\x01 Quản trị viên (khớp) đã được đặt thành \\x03128tick\\x01."
+	}
+
+	"Specrates_SpecRatesAdministratorSpectatorSet"
+	{
+		"en"		"\\x04[SpecRates]\\x01 Administrator (spectator) has been set to \\x03100tick\\x01."
+		"chi"		"\\x04[SpecRates]\\x01 管理员（旁观）已设置为 \\x03100tick\\x01。"
+		"zho"		"\\x04[SpecRates]\\x01 管理員（旁觀）已設定為 \\x03100tick\\x01。"
+		"jp"		"\\x04[SpecRates]\\x01 管理者 (観客) が \\x03100tick\\x01 に設定されました。"
+		"ko"		"\\x04[SpecRates]\\x01 관리자(관전자)가 \\x03100tick\\x01로 설정되었습니다."
+		"vi"		"\\x04[SpecRates]\\x01 Quản trị viên (khán giả) đã được đặt thành \\x03100tick\\x01."
+	}
+}

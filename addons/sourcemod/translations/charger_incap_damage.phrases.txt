@@ -1,0 +1,22 @@
+"Phrases"
+{
+	"ChargerIncapDamage_HookTakeDamageVictimAttacker"
+	{
+		"en"		"[Hook_OnTakeDamage] Victim: (%N) %d, attacker: (%N) %d, inflictor: %d, damage: %f, damagetype: %d "
+		"chi"		"[Hook_OnTakeDamage] 受害者：(%N) %d，攻击者：(%N) %d，加害者：%d，伤害：%f，伤害类型：%d"
+		"zho"		"[Hook_OnTakeDamage] Victim: (%N) %d, attacker: (%N) %d, inflictor: %d, damage: %f, damagetype: %d "
+		"jp"		"[Hook_OnTakeDamage] 被害者: (%N) %d、攻撃者: (%N) %d、加害者: %d、ダメージ: %f、ダメージタイプ: %d"
+		"ko"		"[Hook_OnTakeDamage] 피해자: (%N) %d, 공격자: (%N) %d, 가해자: %d, 피해: %f, 피해 유형: %d"
+		"vi"		"[Hook_OnTakeDamage] Nạn nhân: (%N) %d, kẻ tấn công: (%N) %d, kẻ gây ra: %d, sát thương: %f, loại sát thương: %d"
+	}
+
+	"ChargerIncapDamage_HookTakeDamageWeaponDamage"
+	{
+		"en"		"[Hook_OnTakeDamage] Weapon: %d, damageforce: %f %f %f, damageposition: %f %f %f"
+		"chi"		"[Hook_OnTakeDamage] 武器：%d，伤害力：%f %f %f，伤害位置：%f %f %f"
+		"zho"		"[Hook_OnTakeDamage] Weapon: %d, damageforce: %f %f %f, damageposition: %f %f %f"
+		"jp"		"[Hook_OnTakeDamage] 武器: %d、ダメージフォース: %f %f %f、ダメージポジション: %f %f %f"
+		"ko"		"[Hook_OnTakeDamage] 무기: %d, 데미지 포스: %f %f %f, 데미지 위치: %f %f %f"
+		"vi"		"[Hook_OnTakeDamage] Vũ khí: %d, lực sát thương: %f %f %f, vị trí sát thương: %f %f %f"
+	}
+}

@@ -4,11 +4,19 @@
     {
         "#format"   "{1:N},{2:s}"   // 1:client, 2:sChat(the content the client said)
         "en"        "{default}(Survivor) {blue}{1} {default}: {2}"
+		"zho"		"{default}(Survivor) {blue}{1} {default}: {2}"
+		"jp"		"{default}(Survivor) {blue}{1} {default}: {2}"
+		"ko"		"{default}(Survivor) {blue}{1} {default}: {2}"
+		"vi"		"{default}(Survivor) {blue}{1} {default}: {2}"
     }
 
     "InfectedSay"
     {
         "#format"   "{1:N},{2:s}"
         "en"        "{default}(Infected) {red}{1} {default}: {2}"
+		"zho"		"{default}(Infected) {red}{1} {default}: {2}"
+		"jp"		"{default}(Infected) {red}{1} {default}: {2}"
+		"ko"		"{default}(Infected) {red}{1} {default}: {2}"
+		"vi"		"{default}(Infected) {red}{1} {default}: {2}"
     }
 }

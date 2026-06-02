@@ -1,0 +1,12 @@
+"Phrases"
+{
+	"SurvivorLegs_ClientSequenceLegsSequence"
+	{
+		"en"		"Client(m_nSquence)[%i] Legs(m_nSequence)[%i]"
+		"chi"		"客户端(m_nSequence)[%i] 腿(m_nSequence)[%i]"
+		"zho"		"客戶端(m_nSequence)[%i] 腿(m_nSequence)[%i]"
+		"jp"		"クライアント(m_nシーケンス)[%i] 脚(m_nシーケンス)[%i]"
+		"ko"		"클라이언트(m_nSequence)[%i] 다리(m_nSequence)[%i]"
+		"vi"		"Khách hàng(m_nSquence)[%i] Chân(m_nSequence)[%i]"
+	}
+}

@@ -102,7 +102,7 @@ public any Native_GetValve(Handle plugin, int numParams)
 
 // --------------------------------- PLUGIN LOGIC ---------------------------------
 public OnPluginStart()
-{	
+{
 	//AddServerTag2("Veterans");
 	LoadTranslations("veterans.phrases");	
 	CreateConVar("sm_veterans_version", PLUGIN_VERSION, "Veterans Only Version", FCVAR_NOTIFY | FCVAR_DONTRECORD);
@@ -232,7 +232,7 @@ public Action:event_PlayerTeam(Handle:event, const String:name[], bool:dontBroad
 		//QueryCachedData(SteamIdToInt(steamId), player[Player].totalplaytime, player[Player].last2weektime, player[Player].isGroupMember, player[Player].servertime, player[Player].realplaytime);
 		if(!HasEnoughPlaytime(player[Player].servertime) && player[Player].isGroupMember && !GetConVarBool(cvar_excludeGroupMemberPlay))
 		{
-			CPrintToChat(Player, "{default}[{green}玩家时长检测{default}] 你因为 {blue}不满足 {default}时长要求，只允许观战.");
+			CPrintToChat(Player, "%t", "Veterans_PlayerDurationDetectionNotMeet");
 			return Plugin_Stop;
 		}
 	}
@@ -245,9 +245,9 @@ public Action announcetime(Handle timer, any client){
 	if(IsClientConnected(client) && !IsFakeClient(client) )
 	{
 		if(player[client].totalplaytime || player[client].realplaytime)
-			CPrintToChatAll("{default}[{green}玩家时长检测{default}] 玩家 {blue}%N {default}总共游玩时间共：{green}%.1f小时{default}(实际：{green}%.1f小时{default})，本服务器内游玩总时长为：{green}%.1f小时{default}.",client, player[client].totalplaytime/60.0, player[client].realplaytime/60.0, player[client].servertime/60.0);
+			CPrintToChatAll("%t", "Veterans_PlayerTimeDetectionPlayerTotal", client, player[client].totalplaytime/60.0, player[client].realplaytime/60.0, player[client].servertime/60.0);
 		else
-			CPrintToChatAll("{default}[{green}玩家时长检测{default}] 玩家 {blue}%N {default}游玩时间：{green}未知{default}，本服务器内游玩总时长为：{green}%.1f小时{default}.",client, player[client].servertime/60.0);
+			CPrintToChatAll("%t", "Veterans_PlayerTimeDetectionPlayerPlaying", client, player[client].servertime/60.0);
 	}
 	return Plugin_Continue;
 }
@@ -295,19 +295,19 @@ public OnClientAuthorized(client, const String:steamId[])
 	if (adminId != INVALID_ADMIN_ID) {
 		// Exclude privileged
 		if (GetConVarBool(cvar_excludePrivileged)) {
-			CPrintToChatAll("{default}[{green}玩家时长检测{default}] 管理员 {blue}%N {default}免去时长检测.",client);
+			CPrintToChatAll("%t", "Veterans_PlayerDurationDetectionAdministratorExempt", client);
 			return;
 		}
 		
 		// Exclude reserved slots
 		if (GetConVarBool(cvar_excludeReservedSlots) && GetAdminFlag(adminId, Admin_Reservation)) {
-			CPrintToChatAll("{default}[{green}玩家时长检测{default}] 管理员 {blue}%N {default}免去时长检测.",client);
+			CPrintToChatAll("%t", "Veterans_PlayerDurationDetectionAdministratorExempt", client);
 			return;
 		}
 
 		// Exclude admins
 		if (GetAdminFlag(adminId, Admin_Generic) || GetAdminFlag(adminId, Admin_Root)) {
-			CPrintToChatAll("{default}[{green}玩家时长检测{default}] 管理员 {blue}%N {default}免去时长检测.",client);
+			CPrintToChatAll("%t", "Veterans_PlayerDurationDetectionAdministratorExempt", client);
 			return;
 		}
 	}
@@ -345,14 +345,14 @@ CheckIfUserQualified(client)
 		if (GetConVarBool(cvar_excludeGroupMember) && player[client].isGroupMember)
 		{
 			if(GetConVarBool(cvar_excludeGroupMemberPlay))
-				CPrintToChatAll("{default}[{green}玩家时长检测{default}] 玩家 {blue}%N {{default}在本服务器游戏时长{green}不达标{default}，是电信服务器组玩家，允许正常游玩", client);
+				CPrintToChatAll("%t", "Veterans_PlayerDurationDetectionPlayerGame", client);
 			else
-				CPrintToChatAll("{default}[{green}玩家时长检测{default}] 玩家 {blue}%N {{default}在本服务器游戏时长{green}不达标{default}，是电信服务器组玩家，允许旁观不允许游玩", client);
+				CPrintToChatAll("%t", "Veterans_PlayerTimeDetectionPlayerGame", client);
 			//PrintToServer("VeteransOnly: Excluded for being a group member");
 			return;
 		}
 		else{
-			CPrintToChatAll("{default}[{green}玩家时长检测{default}] 玩家 {blue}%N {default}在本服务器游戏时长{green}不达标{default}，且不为电信服务器组玩家，已经自动请去休息.",client);
+			CPrintToChatAll("%t", "Veterans_PlayerTimeDetectionPlayerGameTime", client);
 		}		
 	}
 
@@ -887,14 +887,14 @@ public Action:ClearPlaytimeCache(client, int args)
 
 public Action:showplayertime(client, int args)
 {
-	CPrintToChat(client, "{default}[{green}玩家时长检测{default}] 玩家 {blue}%N {default}总共游玩时间共：{green}%.1f小时{default}(实际：{green}%.1f小时{default})，本服务器内游玩总时长为：{green}%.1f小时{default}.",client, player[client].totalplaytime/60.0, player[client].realplaytime/60.0, player[client].servertime/60.0);
+	CPrintToChat(client, "%t", "Veterans_PlayerTimeDetectionPlayerTotal", client, player[client].totalplaytime/60.0, player[client].realplaytime/60.0, player[client].servertime/60.0);
 }
 
 public Action:showallplayertime(client, int args)
 {
 	for(int i=1; i <= MaxClients ; i ++)
 		if(IsClientConnected(i) && !IsFakeClient(i))
-			CPrintToChat(client, "{default}[{green}玩家时长检测{default}] 玩家 {blue}%N {default}总共游玩时间共：{green}%.1f小时{default}(实际：{green}%.1f小时{default})，本服务器内游玩总时长为：{green}%.1f小时{default}.",i, player[i].totalplaytime/60.0, player[i].realplaytime/60.0, player[i].servertime/60.0);
+			CPrintToChat(client, "%t", "Veterans_PlayerTimeDetectionPlayerTotal", i, player[i].totalplaytime/60.0, player[i].realplaytime/60.0, player[i].servertime/60.0);
 }
 
 CleanupPlaytimeCache(bool:clearAll)

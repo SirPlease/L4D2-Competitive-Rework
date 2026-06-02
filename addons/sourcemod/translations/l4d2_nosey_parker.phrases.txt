@@ -1,0 +1,12 @@
+"Phrases"
+{
+	"L4D2NoseyParker_DmgReportTookDamage"
+	{
+		"en"		"\\x04[DmgReport]\\x01 \\x03%N\\x01(\\x04%s\\x01) took \\x05%d\\x01 damage from you!"
+		"chi"		"\\x04[DmgReport]\\x01 \\x03%N\\x01(\\x04%s\\x01) 受到了 \\x05%d\\x01 的伤害！"
+		"zho"		"\\x04[DmgReport]\\x01 \\x03%N\\x01(\\x04%s\\x01) 受到了\\x05%d\\x01 的傷害！"
+		"jp"		"\\x04[DmgReport]\\x01 \\x03%N\\x01(\\x04%s\\x01)はあなたから\\x05%d\\x01ダメージを受けました!"
+		"ko"		"\\x04[DmgReport]\\x01 \\x03%N\\x01(\\x04%s\\x01)가 당신에게서 \\x05%d\\x01 피해를 입었습니다!"
+		"vi"		"\\x04[DmgReport]\\x01 \\x03%N\\x01(\\x04%s\\x01) đã nhận thiệt hại \\x05%d\\x01 từ bạn!"
+	}
+}

@@ -4,5 +4,10 @@
 	{
 		"#format"	"{1:N}"
 		"en"		"{red}[{default}Exploit{red}] {olive}{1} {default}tried skipping the Death Timer."
+		"chi"		"{red}[{default}Exploit{red}] {olive}{1} {default}tried skipping the Death Timer."
+		"zho"		"{red}[{default}Exploit{red}] {olive}{1} {default}tried skipping the Death Timer."
+		"jp"		"{red}[{default}Exploit{red}] {olive}{1} {default}tried skipping the Death Timer."
+		"ko"		"{red}[{default}Exploit{red}] {olive}{1} {default}tried skipping the Death Timer."
+		"vi"		"{red}[{default}Exploit{red}] {olive}{1} {default}tried skipping the Death Timer."
 	}
 }

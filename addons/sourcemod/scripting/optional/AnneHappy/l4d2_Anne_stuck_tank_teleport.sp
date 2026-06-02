@@ -99,6 +99,7 @@ bool   g_bSuccessTeleport = true;
 // ───────────────────────────────────────────────────────────────────────────────
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_Anne_stuck_tank_teleport.phrases");
     CreateConVar("l4d2_Anne_stuck_tank_teleport", PLUGIN_VERSION, "Plugin version", FCVAR_DONTRECORD);
 
     g_hEnable          = CreateConVar("l4d2_astt_enable",                   "1",   "Enable plugin (1/0)", CVAR_FLAGS);
@@ -346,7 +347,7 @@ public Action Timer_CheckRusher(Handle timer)
             {
                 bool ok = TeleportNearOrDoor_ByThreshold(tank, i);
                 if (ok)
-                    PrintToChatAll("\x03%N \x04 跑太快，按门口阈值传送 Tank。", i);
+                    PrintToChatAll("%t", "L4D2StuckTankTeleport_RunningTooFastTeleportTank", i);
                 g_iRushTimes[i] = 0;
             }
         }

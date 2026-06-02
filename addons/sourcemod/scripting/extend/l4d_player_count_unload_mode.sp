@@ -130,7 +130,8 @@ int g_iLastStatusWriteTime, g_iLastStatusPlayerCount = -1;
 int g_iPeakHoldUntil;
 
 public void OnPluginStart()
-{ 
+{
+	LoadTranslations("l4d_player_count_unload_mode.phrases");
     survivor_limit = FindConVar("survivor_limit");
     z_max_player_zombies = FindConVar("z_max_player_zombies");
 
@@ -437,12 +438,11 @@ void ApplyPeakRestriction()
     if (g_iCvarPeakMode == 1 && g_bLastPeakKnown)
     {
         int iRemain = GetPeakHoldRemaining();
-        CPrintToChatAll("管理员不在场，当前全服 {green}%d/%d{default} 台服务器有玩家，高峰期限制({green}%.0f%%{default})剩余 {green}%d{default} 分钟；本模式人数不足 {green}%d{default} 人，{green}强制卸载模式!!!!",
-            g_iLastActiveServers, g_iLastTotalServers, g_fCvarPeakRatio * 100.0, RoundToCeil(float(iRemain) / 60.0), g_iCvarCount);
+        CPrintToChatAll("%t", "L4DPlayerCountUnloadMode_AdministratorNotPresentPlayersAll", g_iLastActiveServers, g_iLastTotalServers, g_fCvarPeakRatio * 100.0, RoundToCeil(float(iRemain) / 60.0), g_iCvarCount);
     }
     else
     {
-        CPrintToChatAll("管理员不在场，当前处于限制时间段；本模式人数不足 {green}%d{default} 人，{green}强制卸载模式!!!!", g_iCvarCount);
+        CPrintToChatAll("%t", "L4DPlayerCountUnloadMode_AdministratorNotPresentCurrentlyRestricted", g_iCvarCount);
     }
 }
 

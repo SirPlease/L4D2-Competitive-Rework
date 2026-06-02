@@ -21,6 +21,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_block_bot_pills.phrases");
 	// ====================
 	// Validate extensions
 	// ====================
@@ -53,7 +54,7 @@ void playerBotReplace_Event(Event hEvent, char[] sEventName, bool dontBroadcast)
 		EquipPlayerWeapon(bot, newPills);
 
 		if (g_cvDebugModeEnabled.BoolValue)
-			CPrintToChatAll("{green}[{default}Bot Block Pills{green}]{default}: Prevented accidental pills take by %N", bot);
+			CPrintToChatAll("%t", "L4D2BlockBotPills_BotBlockPillsPreventedAccidental", bot);
 	}
 }
 
@@ -70,7 +71,7 @@ public void OnActionCreated(BehaviorAction action, int actor, const char[] name)
 public Action OnSelfActionPills(BehaviorAction action, int actor, BehaviorAction priorAction, ActionResult result)
 {
 	if (g_cvDebugModeEnabled.BoolValue)
-		CPrintToChatAll("{green}[{default}Bot Block Pills{green}]{default}: Bot {blue}%N{default} wants to use pain pills. Blocking this action...", actor);
+		CPrintToChatAll("%t", "L4D2BlockBotPills_BotBlockPillsBotWants", actor);
 
 	result.type = DONE;
 	return Plugin_Changed;

@@ -131,7 +131,7 @@ public Action:ReloadListCallBack(client, args)
 
 	if (client != 0)
 	{
-		PrintToChat(client, "[SourceSleuth] WhiteList has been reloaded!");
+		PrintToChat(client, "%t", "SourceSleuth_WhiteListReloaded");
 	}
 
 	return Plugin_Continue;

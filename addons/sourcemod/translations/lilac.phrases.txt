@@ -4,6 +4,10 @@
 	{
 		"#format"	"{1:s}"
 		"en"		"This server is protected by Little Anti-Cheat {1}"
+		"zho"		"This server is protected by Little Anti-Cheat {1}"
+		"jp"		"This server is protected by Little Anti-Cheat {1}"
+		"ko"		"This server is protected by Little Anti-Cheat {1}"
+		"vi"		"This server is protected by Little Anti-Cheat {1}"
 	}
 
 	"kick_query_failure"
@@ -87,11 +91,21 @@
 	"chat_invalid_characters"
 	{
 		"en" 		"Your chat message has been blocked (Reason: Invalid Characters)."
+		"chi"		"Your chat message has been blocked (Reason: Invalid Characters)."
+		"zho"		"Your chat message has been blocked (Reason: Invalid Characters)."
+		"jp"		"Your chat message has been blocked (Reason: Invalid Characters)."
+		"ko"		"Your chat message has been blocked (Reason: Invalid Characters)."
+		"vi"		"Your chat message has been blocked (Reason: Invalid Characters)."
 	}
 
 	"chat_wide_char_spam"
 	{
 		"en"		"Your chat message has been blocked (Reason: Wide-Char Spam)."
+		"chi"		"Your chat message has been blocked (Reason: Wide-Char Spam)."
+		"zho"		"Your chat message has been blocked (Reason: Wide-Char Spam)."
+		"jp"		"Your chat message has been blocked (Reason: Wide-Char Spam)."
+		"ko"		"Your chat message has been blocked (Reason: Wide-Char Spam)."
+		"vi"		"Your chat message has been blocked (Reason: Wide-Char Spam)."
 	}
 
 	"kick_bad_name"
@@ -102,5 +116,46 @@
 	"ban_name_newline"
 	{
 		"en"		"Name Newlines Detected"
+	}
+
+
+	"LILAC_LittleAntiCheatWarningMacro"
+	{
+		"en"		"[Little Anti-Cheat] Warning: Macro usage isn't allowed!"
+		"chi"		"【小反作弊】警告：不允许使用宏！"
+		"zho"		"【小反作弊】警告：不允許使用巨集！"
+		"jp"		"[ちょっとしたチート対策] 警告: マクロの使用は許可されていません。"
+		"ko"		"[리틀 안티 치트] 경고: 매크로 사용은 허용되지 않습니다!"
+		"vi"		"[Chống gian lận nhỏ] Cảnh báo: Không được phép sử dụng macro!"
+	}
+
+	"LILAC_LittleAntiCheatDetectedUsing"
+	{
+		"en"		"[Little Anti-Cheat] %N was detected of using Macro %s."
+		"chi"		"[Little Anti-Cheat] %N was detected of using Macro %s."
+		"zho"		"[Little Anti-Cheat] %N was detected of using Macro %s."
+		"jp"		"[ちょっとしたチート対策] %N がマクロ %s を使用していることが検出されました。"
+		"ko"		"[리틀 치트 방지] %N가 매크로 %s를 사용하는 것이 감지되었습니다."
+		"vi"		"[Chống gian lận nhỏ] %N bị phát hiện sử dụng Macro %s."
+	}
+
+	"LILAC_PingAppearsFineAgainSafe"
+	{
+		"en"		"[Lilac] Your ping appears to be fine again, it is safe to rejoin a team and play."
+		"chi"		"[Lilac] 你的 ping 似乎再次正常，可以安全地重新加入队伍并进行比赛。"
+		"zho"		"[Lilac] 你的 ping 似乎再次正常，可以安全地重新加入隊伍並進行比賽。"
+		"jp"		"[ライラック] ping は再び正常になったようです。安全にチームに再参加してプレイできます。"
+		"ko"		"[라일락] 핑이 다시 괜찮아진 것 같습니다. 다시 팀에 합류하여 플레이해도 안전합니다."
+		"vi"		"[Lilac] Ping của bạn có vẻ ổn trở lại, bạn có thể tham gia lại một đội và chơi một cách an toàn."
+	}
+
+	"LILAC_WarningKickedSecondsondsPingStays"
+	{
+		"en"		"[Lilac] WARNING: You will be kicked in %d seconds if your ping stays too high! (%.0f / %d max)"
+		"chi"		"[Lilac] 警告：如果你的 ping 值太高，你将在 %d 秒内被踢！ (%.0f / %d 最大)"
+		"zho"		"[Lilac] 警告：如果你的 ping 值太高，你將在 %d 秒內被踢！ (%.0f / %d 最大)"
+		"jp"		"[ライラック] 警告: ping が高すぎると、%d 秒以内にキックされます。 (%.0f / %d最大)"
+		"ko"		"[Lilac] 경고: 핑이 너무 높게 유지되면 %d초 안에 쫓겨날 것입니다! (%.0f / %d 최대)"
+		"vi"		"[Lilac] CẢNH BÁO: Bạn sẽ bị kick sau %d giây nếu ping của bạn quá cao! (Tối đa %.0f / %d)"
 	}
 }

@@ -17,6 +17,10 @@
 	{
 		"#format"	"{1:N},{2:d}"
 		"en"		"* {olive}{1} {default}did {blue}FF {default}to {green}you {default}@ {green}{2}HP"
+		"zho"		"* {olive}{1} {default}did {blue}FF {default}to {green}you {default}@ {green}{2}HP"
+		"jp"		"* {olive}{1} {default}did {blue}FF {default}to {green}you {default}@ {green}{2}HP"
+		"ko"		"* {olive}{1} {default}did {blue}FF {default}to {green}you {default}@ {green}{2}HP"
+		"vi"		"* {olive}{1} {default}did {blue}FF {default}to {green}you {default}@ {green}{2}HP"
 	}
 	
 	/**

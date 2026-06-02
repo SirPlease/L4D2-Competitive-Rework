@@ -305,6 +305,7 @@ static void ShowOverlayBySet(int client, int setId, int which)
 // ========================================================
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_hitsound.phrases");
     char game[64];
     GetGameFolderName(game, sizeof(game));
     if (!StrEqual(game, "left4dead2", false))
@@ -1251,12 +1252,12 @@ public Action Cmd_ToggleUI(int client, int args)
         g_IcHead[client]  = v;
         g_IcHit[client]   = v;
         g_IcKill[client]  = v;
-        PrintToChat(client, "覆盖图标：%s（%s）", turnOn ? "开启" : "关闭", turnOn ? "套装1" : "禁用");
+        PrintToChat(client, "%t", "L4D2Hitsound_OverlayIcon", turnOn ? "开启" : "关闭", turnOn ? "套装1" : "禁用");
         MarkDirtyAndSave(client);
     }
     else
     {
-        PrintToChat(client, "当前没有可用的图标套装。");
+        PrintToChat(client, "%t", "L4D2Hitsound_CurrentlyNoIconSetsAvailable");
     }
     return Plugin_Handled;
 }
@@ -1360,7 +1361,7 @@ public int MenuHandler_Main(Handle menu, MenuAction action, int client, int item
         if (StrEqual(info, "snd_special_only"))
         {
             g_SndSpecialOnly[client] = !g_SndSpecialOnly[client];
-            PrintToChat(client, "音效范围：%s", g_SndSpecialOnly[client] ? "仅特感/Tank" : "全部感染者");
+            PrintToChat(client, "%t", "L4D2Hitsound_SoundEffectRange", g_SndSpecialOnly[client] ? "仅特感/Tank" : "全部感染者");
             MarkDirtyAndSave(client);
             Cmd_MenuMain(client, 0);
             return 0;
@@ -1368,7 +1369,7 @@ public int MenuHandler_Main(Handle menu, MenuAction action, int client, int item
         if (StrEqual(info, "ico_special_only"))
         {
             g_IcSpecialOnly[client] = !g_IcSpecialOnly[client];
-            PrintToChat(client, "图标范围：%s", g_IcSpecialOnly[client] ? "仅特感/Tank" : "全部感染者");
+            PrintToChat(client, "%t", "L4D2Hitsound_IconRange", g_IcSpecialOnly[client] ? "仅特感/Tank" : "全部感染者");
             MarkDirtyAndSave(client);
             Cmd_MenuMain(client, 0);
             return 0;
@@ -1431,7 +1432,7 @@ public int MenuHandler_SndSets_Player(Handle menu, MenuAction action, int client
             g_SndSuite[client] = val; // 记住最近套装（非管理员开关用）
             g_SndHead[client] = g_SndHit[client] = g_SndKill[client] = val;
 
-            PrintToChat(client, "[Hitsound] 音效套装(三项)已设置为: %d", val);
+            PrintToChat(client, "%t", "L4D2Hitsound_HitsoundSoundEffectPackageThree", val);
             MarkDirtyAndSave(client);
 
             OpenSoundSetMenu_Player(client);
@@ -1488,7 +1489,7 @@ public int MenuHandler_OvSets_Player(Handle menu, MenuAction action, int client,
 
             char name[64] = "关闭";
             if (val >= 1 && val <= g_OvCount) GetArrayString(g_OvNames, val-1, name, sizeof(name));
-            PrintToChat(client, "[Hitsound] 图标套装(三项)已设置为: %d - %s", val, name);
+            PrintToChat(client, "%t", "L4D2Hitsound_HitsoundIconSetThreeItems", val, name);
 
             MarkDirtyAndSave(client);
             OpenIconSetMenu_Player(client);
@@ -1527,10 +1528,10 @@ public int MenuHandler_ToggleEach(Handle menu, MenuAction action, int client, in
         if (StrEqual(info, "tgsnd_hit"))
         {
             if (g_SndHit[client] == 0) {
-                if (g_SndSuite[client] <= 0) { PrintToChat(client, "请先在『音效套装（玩家）』里选择一个套装。"); }
-                else { g_SndHit[client] = g_SndSuite[client]; PrintToChat(client, "命中音效：已开启（套装 %d）", g_SndHit[client]); MarkDirtyAndSave(client); }
+                if (g_SndSuite[client] <= 0) { PrintToChat(client, "%t", "L4D2Hitsound_SelectSetSoundEffectSet"); }
+                else { g_SndHit[client] = g_SndSuite[client]; PrintToChat(client, "%t", "L4D2Hitsound_HitSoundEffectTurnedSet", g_SndHit[client]); MarkDirtyAndSave(client); }
             } else {
-                g_SndHit[client] = 0; PrintToChat(client, "命中音效：已关闭"); MarkDirtyAndSave(client);
+                g_SndHit[client] = 0; PrintToChat(client, "%t", "L4D2Hitsound_HitSoundEffectTurnedOff"); MarkDirtyAndSave(client);
             }
             OpenToggleEachMenu(client, true);
             return 0;
@@ -1538,10 +1539,10 @@ public int MenuHandler_ToggleEach(Handle menu, MenuAction action, int client, in
         if (StrEqual(info, "tgsnd_kill"))
         {
             if (g_SndKill[client] == 0) {
-                if (g_SndSuite[client] <= 0) { PrintToChat(client, "请先在『音效套装（玩家）』里选择一个套装。"); }
-                else { g_SndKill[client] = g_SndSuite[client]; PrintToChat(client, "击杀音效：已开启（套装 %d）", g_SndKill[client]); MarkDirtyAndSave(client); }
+                if (g_SndSuite[client] <= 0) { PrintToChat(client, "%t", "L4D2Hitsound_SelectSetSoundEffectSet"); }
+                else { g_SndKill[client] = g_SndSuite[client]; PrintToChat(client, "%t", "L4D2Hitsound_KillSoundEffectTurnedSet", g_SndKill[client]); MarkDirtyAndSave(client); }
             } else {
-                g_SndKill[client] = 0; PrintToChat(client, "击杀音效：已关闭"); MarkDirtyAndSave(client);
+                g_SndKill[client] = 0; PrintToChat(client, "%t", "L4D2Hitsound_KillSoundEffectTurnedOff"); MarkDirtyAndSave(client);
             }
             OpenToggleEachMenu(client, true);
             return 0;
@@ -1549,10 +1550,10 @@ public int MenuHandler_ToggleEach(Handle menu, MenuAction action, int client, in
         if (StrEqual(info, "tgsnd_head"))
         {
             if (g_SndHead[client] == 0) {
-                if (g_SndSuite[client] <= 0) { PrintToChat(client, "请先在『音效套装（玩家）』里选择一个套装。"); }
-                else { g_SndHead[client] = g_SndSuite[client]; PrintToChat(client, "爆头音效：已开启（套装 %d）", g_SndHead[client]); MarkDirtyAndSave(client); }
+                if (g_SndSuite[client] <= 0) { PrintToChat(client, "%t", "L4D2Hitsound_SelectSetSoundEffectSet"); }
+                else { g_SndHead[client] = g_SndSuite[client]; PrintToChat(client, "%t", "L4D2Hitsound_HeadshotSoundEffectTurnedSet", g_SndHead[client]); MarkDirtyAndSave(client); }
             } else {
-                g_SndHead[client] = 0; PrintToChat(client, "爆头音效：已关闭"); MarkDirtyAndSave(client);
+                g_SndHead[client] = 0; PrintToChat(client, "%t", "L4D2Hitsound_HeadshotSoundEffectTurnedOff"); MarkDirtyAndSave(client);
             }
             OpenToggleEachMenu(client, true);
             return 0;
@@ -1562,10 +1563,10 @@ public int MenuHandler_ToggleEach(Handle menu, MenuAction action, int client, in
         if (StrEqual(info, "tgico_hit"))
         {
             if (g_IcHit[client] == 0) {
-                if (g_IcSuite[client] <= 0) { PrintToChat(client, "请先在『图标套装（玩家）』里选择一个套装。"); }
-                else { g_IcHit[client] = g_IcSuite[client]; PrintToChat(client, "命中图标：已开启（套装 %d）", g_IcHit[client]); MarkDirtyAndSave(client); }
+                if (g_IcSuite[client] <= 0) { PrintToChat(client, "%t", "L4D2Hitsound_SelectSuitIconSuitPlayer"); }
+                else { g_IcHit[client] = g_IcSuite[client]; PrintToChat(client, "%t", "L4D2Hitsound_HitIconTurnedSet", g_IcHit[client]); MarkDirtyAndSave(client); }
             } else {
-                g_IcHit[client] = 0; PrintToChat(client, "命中图标：已关闭"); MarkDirtyAndSave(client);
+                g_IcHit[client] = 0; PrintToChat(client, "%t", "L4D2Hitsound_HitIconClosed"); MarkDirtyAndSave(client);
             }
             OpenToggleEachMenu(client, false);
             return 0;
@@ -1573,10 +1574,10 @@ public int MenuHandler_ToggleEach(Handle menu, MenuAction action, int client, in
         if (StrEqual(info, "tgico_kill"))
         {
             if (g_IcKill[client] == 0) {
-                if (g_IcSuite[client] <= 0) { PrintToChat(client, "请先在『图标套装（玩家）』里选择一个套装。"); }
-                else { g_IcKill[client] = g_IcSuite[client]; PrintToChat(client, "击杀图标：已开启（套装 %d）", g_IcKill[client]); MarkDirtyAndSave(client); }
+                if (g_IcSuite[client] <= 0) { PrintToChat(client, "%t", "L4D2Hitsound_SelectSuitIconSuitPlayer"); }
+                else { g_IcKill[client] = g_IcSuite[client]; PrintToChat(client, "%t", "L4D2Hitsound_KillIconTurnedSet", g_IcKill[client]); MarkDirtyAndSave(client); }
             } else {
-                g_IcKill[client] = 0; PrintToChat(client, "击杀图标：已关闭"); MarkDirtyAndSave(client);
+                g_IcKill[client] = 0; PrintToChat(client, "%t", "L4D2Hitsound_KillIconClosed"); MarkDirtyAndSave(client);
             }
             OpenToggleEachMenu(client, false);
             return 0;
@@ -1584,10 +1585,10 @@ public int MenuHandler_ToggleEach(Handle menu, MenuAction action, int client, in
         if (StrEqual(info, "tgico_head"))
         {
             if (g_IcHead[client] == 0) {
-                if (g_IcSuite[client] <= 0) { PrintToChat(client, "请先在『图标套装（玩家）』里选择一个套装。"); }
-                else { g_IcHead[client] = g_IcSuite[client]; PrintToChat(client, "爆头图标：已开启（套装 %d）", g_IcHead[client]); MarkDirtyAndSave(client); }
+                if (g_IcSuite[client] <= 0) { PrintToChat(client, "%t", "L4D2Hitsound_SelectSuitIconSuitPlayer"); }
+                else { g_IcHead[client] = g_IcSuite[client]; PrintToChat(client, "%t", "L4D2Hitsound_HeadshotIconTurnedSet", g_IcHead[client]); MarkDirtyAndSave(client); }
             } else {
-                g_IcHead[client] = 0; PrintToChat(client, "爆头图标：已关闭"); MarkDirtyAndSave(client);
+                g_IcHead[client] = 0; PrintToChat(client, "%t", "L4D2Hitsound_HeadshotIconClosed"); MarkDirtyAndSave(client);
             }
             OpenToggleEachMenu(client, false);
             return 0;
@@ -1600,7 +1601,7 @@ public int MenuHandler_ToggleEach(Handle menu, MenuAction action, int client, in
 static void OpenAdminSelectSetMenu(int client, bool sound, int which) // which: 0=head/1=hit/2=kill
 {
     if (!CheckCommandAccess(client, "hitsound_admin", ADMFLAG_GENERIC, true)) {
-        PrintToChat(client, "你没有权限使用此菜单。");
+        PrintToChat(client, "%t", "L4D2Hitsound_NotPermissionUseMenu");
         Cmd_MenuMain(client, 0);
         return;
     }
@@ -1681,12 +1682,12 @@ public int MenuHandler_AdminPick(Handle menu, MenuAction action, int client, int
         {
             if (which == -1) { // 关闭单项需要知道是哪一项，这里统一为三项都关，请管理员回到主菜单单项分别设置。
                 g_SndHead[client]=g_SndHit[client]=g_SndKill[client]=0;
-                PrintToChat(client, "音效三项：已全部关闭");
+                PrintToChat(client, "%t", "L4D2Hitsound_ThreeSoundEffectsAllTurned");
             } else {
                 ClampSetSnd(setId);
-                if (which==0) { g_SndHead[client]=setId; PrintToChat(client, "爆头音效：已设置为 %d", setId); }
-                if (which==1) { g_SndHit [client]=setId; PrintToChat(client, "命中音效：已设置为 %d", setId); }
-                if (which==2) { g_SndKill[client]=setId; PrintToChat(client, "击杀音效：已设置为 %d", setId); }
+                if (which==0) { g_SndHead[client]=setId; PrintToChat(client, "%t", "L4D2Hitsound_HeadshotSoundEffectSet", setId); }
+                if (which==1) { g_SndHit [client]=setId; PrintToChat(client, "%t", "L4D2Hitsound_HitSoundEffectSet", setId); }
+                if (which==2) { g_SndKill[client]=setId; PrintToChat(client, "%t", "L4D2Hitsound_KillSoundEffectSet", setId); }
                 if (g_SndHead[client]>0 && g_SndHead[client]==g_SndHit[client] && g_SndHead[client]==g_SndKill[client]) g_SndSuite[client]=g_SndHead[client];
             }
         }
@@ -1694,12 +1695,12 @@ public int MenuHandler_AdminPick(Handle menu, MenuAction action, int client, int
         {
             if (which == -1) {
                 g_IcHead[client]=g_IcHit[client]=g_IcKill[client]=0;
-                PrintToChat(client, "图标三项：已全部关闭");
+                PrintToChat(client, "%t", "L4D2Hitsound_ThreeIconsAllClosed");
             } else {
                 ClampSetIc(setId);
-                if (which==0) { g_IcHead[client]=setId; PrintToChat(client, "爆头图标：已设置为 %d", setId); }
-                if (which==1) { g_IcHit [client]=setId; PrintToChat(client, "命中图标：已设置为 %d", setId); }
-                if (which==2) { g_IcKill[client]=setId; PrintToChat(client, "击杀图标：已设置为 %d", setId); }
+                if (which==0) { g_IcHead[client]=setId; PrintToChat(client, "%t", "L4D2Hitsound_HeadshotIconSet", setId); }
+                if (which==1) { g_IcHit [client]=setId; PrintToChat(client, "%t", "L4D2Hitsound_HitIconSet", setId); }
+                if (which==2) { g_IcKill[client]=setId; PrintToChat(client, "%t", "L4D2Hitsound_KillIconSet", setId); }
                 if (g_IcHead[client]>0 && g_IcHead[client]==g_IcHit[client] && g_IcHead[client]==g_IcKill[client]) g_IcSuite[client]=g_IcHead[client];
             }
         }

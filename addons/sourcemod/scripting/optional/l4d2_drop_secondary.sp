@@ -37,6 +37,7 @@ public Plugin myinfo =
 
 public void OnPluginStart() 
 {
+	LoadTranslations("l4d2_drop_secondary.phrases");
 	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 	HookEvent("player_use", Event_OnPlayerUse, EventHookMode_Post);
 	HookEvent("player_death", Event_OnPlayerDeath, EventHookMode_Pre);
@@ -85,7 +86,7 @@ void Event_OnPlayerReplacedByBot(Event event, const char[] name, bool dontBroadc
 	sSecondary[player] = SECONDARY_PISTOL;
 	sMeleeScript[player] = MELEE_NONE;
 
-	if (bDebug) CPrintToChatAll("{green}[{olive}OnPlayerReplacedByBot{green}] {default}- {blue}BOT {default}replaced {blue}%N {default}({green}Secondary: {olive}%s{default})", player, sSecondary[bot]);
+	if (bDebug) CPrintToChatAll("%t", "L4D2DropSecondary_PlayerReplacedBotReplacedSecondary", player, sSecondary[bot]);
 }
 
 void Event_OnBotReplacedByPlayer(Event event, const char[] name, bool dontBroadcast)
@@ -98,7 +99,7 @@ void Event_OnBotReplacedByPlayer(Event event, const char[] name, bool dontBroadc
 	sSecondary[bot] = SECONDARY_PISTOL;
 	sMeleeScript[bot] = MELEE_NONE;
 
-	if (bDebug) CPrintToChatAll("{green}[{olive}OnBotReplacedByPlayer{green}] {default}- {blue}%N {default}replaced {blue}BOT {default}({green}Secondary: {olive}%s{default})", player, sSecondary[player]);
+	if (bDebug) CPrintToChatAll("%t", "L4D2DropSecondary_BotReplacedPlayerReplacedBOT", player, sSecondary[player]);
 }
 
 /*****************************************************************************************
@@ -137,7 +138,7 @@ void Event_OnPlayerUse(Event event, const char[] name, bool dontBroadcast)
 				else if (StrEqual(sWeaponName, "weapon_pistol_magnum")) sSecondary[client] = SECONDARY_PISTOL_MAGNUM;
 				else if (StrEqual(sWeaponName, "weapon_melee")) DetermineMeleeScript(client, iWeaponIndex);
 
-				if (bDebug) CPrintToChatAll("{green}[{olive}OnPlayerUse{green}] {default}- {blue}%N{default}'s picked up a secondary: ({green}Secondary: {olive}%s{default})", client, sSecondary[client]);
+				if (bDebug) CPrintToChatAll("%t", "L4D2DropSecondary_PlayerUsePickedSecondsondarySecondary", client, sSecondary[client]);
 			}
 		}
 	}
@@ -154,7 +155,7 @@ Action Event_OnPlayerDeath(Event event, const char[] name, bool dontBroadcast)
 	int victim = GetClientOfUserId(event.GetInt("userid"));
 	if (IsValidSurvivor(victim))
 	{
-		if (bDebug) CPrintToChatAll("{green}[{olive}OnPlayerDeath{green}] {default}- {blue}%N {default}({green}Secondary: {olive}%s{default})", victim, sSecondary[victim]);
+		if (bDebug) CPrintToChatAll("%t", "L4D2DropSecondary_PlayerDeathSecondary", victim, sSecondary[victim]);
 		SpawnSecondary(victim);
 	}
 
@@ -179,7 +180,7 @@ void SpawnSecondary(int client)
 	{
 		if (StrEqual(sMeleeScript[client], MELEE_NONE))
 		{
-			CPrintToChat(client, "{blue}[{default}L4D2 Drop Secondary{blue}]{default}: {green}ERROR {default}- Something went wrong determining the melee script for your secondary weapon, report this issue to the {olive}Plugin Author{default}.");
+			CPrintToChat(client, "%t", "L4D2DropSecondary_ErrorSomethingWentWrongDetermining");
 			return;
 		}
 
@@ -206,11 +207,11 @@ void DetermineMeleeScript(int client, int iWeaponIndex)
 
 	sMeleeScript[client] = buffScriptName;
 
-	if (bDebug) CPrintToChatAll("{green}[{olive}DetermineMeleeScript{green}] {default}- {blue}%N {default}has {olive}%s {default}- MS: {olive}%s", client, buffScriptName, sMeleeScript[client]);
+	if (bDebug) CPrintToChatAll("%t", "L4D2DropSecondary_DetermineMeleeScriptMS", client, buffScriptName, sMeleeScript[client]);
 }
 
 void DebugChanged(ConVar convar, const char[] oldValue, const char[] newValue)
 {
 	bDebug = l4d2_drop_secondary_debug.BoolValue;
-	CPrintToChatAll("{blue}[{default}L4D2 Drop Secondary{blue}]{default}: {green}Debugging {olive}%s", bDebug ? "Enabled" : "Disabled");
+	CPrintToChatAll("%t", "L4D2DropSecondary_Debugging", bDebug ? "Enabled" : "Disabled");
 }

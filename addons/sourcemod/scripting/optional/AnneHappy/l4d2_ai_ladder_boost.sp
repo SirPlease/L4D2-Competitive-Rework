@@ -37,6 +37,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_ai_ladder_boost.phrases");
     // 创建ConVars
     g_cvEnabled = CreateConVar("l4d2_ladder_boost_enabled", "1", "启用特感爬梯速度增强 (0=禁用, 1=启用)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
     g_cvSpeedMultiplier = CreateConVar("l4d2_ladder_boost_multiplier", "10.0", "爬梯速度倍数", FCVAR_NOTIFY, true, 1.0, true, 20.0);
@@ -633,7 +634,7 @@ void BoostPlayerSpeed(int client)
         char name[64];
         GetClientName(client, name, sizeof(name));
         PrintToServer("[调试] ✅ %s 获得爬梯加速 (%.1fx)", name, g_cvSpeedMultiplier.FloatValue);
-        PrintToChatAll("[梯子加速] %s 获得爬梯加速", name);
+        PrintToChatAll("%t", "L4D2AILadderBoost_LadderAccelerationGetLadderAcceleration", name);
     }
 }
 
@@ -657,7 +658,7 @@ void RestorePlayerSpeed(int client)
         char name[64];
         GetClientName(client, name, sizeof(name));
         PrintToServer("[调试] ⭕ %s 恢复原始爬梯速度", name);
-        PrintToChatAll("[梯子加速] %s 恢复原始速度", name);
+        PrintToChatAll("%t", "L4D2AILadderBoost_LadderAccelerationRestoreOriginalSpeed", name);
     }
     
     g_bSpeedBoosted[client] = false;

@@ -51,6 +51,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_tank_horde_monitor.phrases");
 	InitGameData();
 	
 	g_hBypassFlowDistance = FindConVar("director_tank_bypass_max_flow_travel");
@@ -173,7 +174,7 @@ public Action Timer_CheckTank(Handle timer)
 public void AnnounceTankSpawn()
 {
 	fProgressFlowPercent = GetFlowUntilBypass(fFurthestFlow, fBypassFlow);
-	CPrintToChatAll("<{olive}Horde{default}> 尸潮暂时因为Tank在场 {blue}暂停{default} ! 再往前走 {blue}%0.1f%%{default} 路程将会重新开始刷出尸潮.", fProgressFlowPercent);
+	CPrintToChatAll("%t", "L4D2TankHordeMonitor_HordeZombieWaveTemporarilySuspended", fProgressFlowPercent);
 	announcedTankSpawn = true;
 
 	// Begin repeating flow checker
@@ -200,7 +201,7 @@ public Action FlowCheckTimer(Handle hTimer)
 
 	if (fProgressFlowPercent - fWarningPercent >= 1.0){
 		fProgressFlowPercent = fWarningPercent;
-		CPrintToChatAll("<{olive}Horde{default}> 请注意！离尸潮再次开启剩余{blue}%0.1f%%{default} 路程...", fWarningPercent);
+		CPrintToChatAll("%t", "L4D2TankHordeMonitor_HordeNoteWaveZombiesStarted", fWarningPercent);
 	}
 
 	return Plugin_Continue;
@@ -241,7 +242,7 @@ public Action L4D_OnSpawnMob(int &amount)
 			if (!announcedHordeResume && tankInPlayDelay && fPushAmount >= 0.05){
 				fPushWarningPercent = fPushAmount;
 				int iPushPercent = RoundToNearest(fPushAmount * 100.0);
-				CPrintToChatAll("<{olive}Horde{default}> 尸潮已经 {blue}恢复{default}， 当前为 {green}%i%% 强度{default}, 继续推进会增加尸潮的强度.", iPushPercent);
+				CPrintToChatAll("%t", "L4D2TankHordeMonitor_HordeZombieTideRestoredCurrent", iPushPercent);
 				announcedHordeResume = true;
 			}
 
@@ -249,12 +250,12 @@ public Action L4D_OnSpawnMob(int &amount)
 			if (fPushAmount - fPushWarningPercent >= 0.20 && fPushAmount != 1.0 && announcedHordeResume){
 				fPushWarningPercent = fPushAmount;
 				int iPushPercent = RoundToNearest(fPushAmount * 100.0);
-				CPrintToChatAll("<{olive}Horde{default}> 尸潮当前为 {green}%i%% 强度{default}...", iPushPercent);
+				CPrintToChatAll("%t", "L4D2TankHordeMonitor_HordeCurrentZombieWaveIntensity", iPushPercent);
 			}
 
 			// Have survivors have pushed past the extra distance we allow?
 			if (fPushAmount == 1.0){
-				CPrintToChatAll("<{olive}Horde{default}> 生还者推进过远, 尸潮强度更改为 {green}100%% {default}!");
+				CPrintToChatAll("%t", "L4D2TankHordeMonitor_HordeSurvivorsAdvancedTooFar");
 				announcedHordeMax = true;
 				RestoreDeferredMobCount();
 				return Plugin_Continue;

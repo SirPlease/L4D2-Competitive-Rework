@@ -49,6 +49,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_ghost_warp.phrases");
 	InitTrie();
 
 	g_hCvarGhostWarpFlag = CreateConVar( \
@@ -108,7 +109,7 @@ Action Cmd_WarpToSurvivor(int iClient, int iArgs)
 	}
 
 	if (!(g_hCvarGhostWarpFlag.IntValue & eAllowCommand)) {
-		PrintToChat(iClient, "%s This command is \x04disabled\x01 now.", PLUGIN_TAG_COLOR);
+		PrintToChat(iClient, "%t", "L4D2GhostWarp_CommandDisabled", PLUGIN_TAG_COLOR);
 		return Plugin_Handled;
 	}
 
@@ -120,13 +121,13 @@ Action Cmd_WarpToSurvivor(int iClient, int iArgs)
 	}
 
 	if (g_fGhostWarpDelay[iClient] >= GetGameTime()) {
-		PrintToChat(iClient, "%s You can't use this command that often, wait another \x04%.01f\x01 sec.", PLUGIN_TAG_COLOR, g_fGhostWarpDelay[iClient] - GetGameTime());
+		PrintToChat(iClient, "%t", "L4D2GhostWarp_CanUseCommandOftenWait", PLUGIN_TAG_COLOR, g_fGhostWarpDelay[iClient] - GetGameTime());
 		return Plugin_Handled;
 	}
 
 	if (iArgs < 1) {
 		if (!WarpToRandomSurvivor(iClient, g_iLastTargetSurvivor[iClient])) {
-			PrintToChat(iClient, "%s No \x04survivors\x01 found!", PLUGIN_TAG_COLOR);
+			PrintToChat(iClient, "%t", "L4D2GhostWarp_NoSurvivorsFound", PLUGIN_TAG_COLOR);
 		}
 
 		return Plugin_Handled;
@@ -142,7 +143,7 @@ Action Cmd_WarpToSurvivor(int iClient, int iArgs)
 			int iSurvivorIndex = GetSurvivorOfFlowRank(iSurvivorFlowRank);
 
 			if (iSurvivorIndex == 0) {
-				PrintToChat(iClient, "%s No \x04survivors\x01 found!", PLUGIN_TAG_COLOR);
+				PrintToChat(iClient, "%t", "L4D2GhostWarp_NoSurvivorsFound", PLUGIN_TAG_COLOR);
 
 				return Plugin_Handled;
 			}
@@ -157,8 +158,8 @@ Action Cmd_WarpToSurvivor(int iClient, int iArgs)
 		char sCmdName[18];
 		GetCmdArg(0, sCmdName, sizeof(sCmdName));
 
-		PrintToChat(iClient, "%s You entered an \x04invalid\x01 survivor index!%s", PLUGIN_TAG_COLOR, (!bWarp) ? "" : " Teleport to a \x04random\x01 survivor!");
-		PrintToChat(iClient, "%s Usage: \x04%s\x01 <1 - %d>", PLUGIN_TAG_COLOR, sCmdName, g_hCvarSurvivorLimit.IntValue);
+		PrintToChat(iClient, "%t", "L4D2GhostWarp_EnteredInvalidSurvivorIndex", PLUGIN_TAG_COLOR, (!bWarp) ? "" : " Teleport to a \x04random\x01 survivor!");
+		PrintToChat(iClient, "%t", "L4D2GhostWarp_Usage1", PLUGIN_TAG_COLOR, sCmdName, g_hCvarSurvivorLimit.IntValue);
 
 		return Plugin_Handled;
 	}
@@ -172,8 +173,8 @@ Action Cmd_WarpToSurvivor(int iClient, int iArgs)
 		char sCmdName[18];
 		GetCmdArg(0, sCmdName, sizeof(sCmdName));
 
-		PrintToChat(iClient, "%s You entered the \x04wrong\x01 survivor name!%s", PLUGIN_TAG_COLOR, (!bWarp) ? "" : " Teleport to a \x04random\x01 survivor!");
-		PrintToChat(iClient, "%s Usage: \x04%s\x01 <survivor name> ", PLUGIN_TAG_COLOR, sCmdName);
+		PrintToChat(iClient, "%t", "L4D2GhostWarp_EnteredWrongSurvivorName", PLUGIN_TAG_COLOR, (!bWarp) ? "" : " Teleport to a \x04random\x01 survivor!");
+		PrintToChat(iClient, "%t", "L4D2GhostWarp_UsageSurvivorName", PLUGIN_TAG_COLOR, sCmdName);
 
 		return Plugin_Handled;
 	}
@@ -182,12 +183,12 @@ Action Cmd_WarpToSurvivor(int iClient, int iArgs)
 	int iSurvivorIndex = GetGenderOfSurvivor(iGender, iSurvivorCount);
 
 	if (iSurvivorCount == 0) {
-		PrintToChat(iClient, "%s No \x04survivors\x01 found!", PLUGIN_TAG_COLOR);
+		PrintToChat(iClient, "%t", "L4D2GhostWarp_NoSurvivorsFound", PLUGIN_TAG_COLOR);
 		return Plugin_Handled;
 	}
 
 	if (iSurvivorIndex == 0) {
-		PrintToChat(iClient, "%s The \x04survivor\x01 you specified was \x04not found\x01!", PLUGIN_TAG_COLOR);
+		PrintToChat(iClient, "%t", "L4D2GhostWarp_SurvivorSpecifiedNotFound", PLUGIN_TAG_COLOR);
 		return Plugin_Handled;
 	}
 
@@ -221,7 +222,7 @@ void Hook_OnPostThinkPost(int iClient)
 	// For some reason, the game resets button 'IN_ATTACK2' for infected ghosts at some point.
 	// So we need spam protection.
 	if (g_fGhostWarpDelay[iClient] >= GetGameTime()) {
-		//PrintToChat(iClient, "%s You can't use this command that often, wait another \x04%.01f\x01 sec.", PLUGIN_TAG_COLOR, g_fGhostWarpDelay[iClient] - GetGameTime());
+		//PrintToChat(iClient, "%t", "L4D2GhostWarp_CanUseCommandOftenWait", PLUGIN_TAG_COLOR, g_fGhostWarpDelay[iClient] - GetGameTime());
 		return;
 	}
 

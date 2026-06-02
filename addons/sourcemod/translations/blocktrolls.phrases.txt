@@ -3,11 +3,20 @@
 	"Tag"
 	{
 		"en"    "[{green}!{default}]"
+		"chi"		"[{green}!{default}]"
+		"zho"		"[{green}!{default}]"
+		"jp"		"[{green}!{default}]"
+		"ko"		"[{green}!{default}]"
+		"vi"		"[{green}!{default}]"
 	}
 	"VotingNotEnabled"
 	{
 		"en"	"Voting is not enabled until {olive}40s{default} into the round."
-	}
+	
+		"zho"		"Voting is not enabled until {olive}40s{default} into the round."
+		"jp"		"Voting is not enabled until {olive}40s{default} into the round."
+		"ko"		"Voting is not enabled until {olive}40s{default} into the round."
+		"vi"		"Voting is not enabled until {olive}40s{default} into the round."}
 	"NotConsoleVote"
 	{
 		"en"	"[!] You must be ingame to vote."
@@ -15,5 +24,9 @@
 	"NotSpectatorVote"
 	{
 		"en"	"{olive}Spectator{default} can't vote."
-	}
+	
+		"zho"		"{olive}Spectator{default} can't vote."
+		"jp"		"{olive}Spectator{default} can't vote."
+		"ko"		"{olive}Spectator{default} can't vote."
+		"vi"		"{olive}Spectator{default} can't vote."}
 }

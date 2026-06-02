@@ -4,28 +4,38 @@
 	"PanelHide"
 	{
 		"en"		"[{olive}Readyup{default}] Panel is now {red}off{default}"
+		"zho"		"[{olive}Readyup{default}] Panel is now {red}off{default}"
+		"vi"		"[{olive}Readyup{default}] Panel is now {red}off{default}"
 	}
 	
 	"PanelShow"
 	{
 		"en"		"[{olive}Readyup{default}] Panel is now {blue}on{default}"
+		"zho"		"[{olive}Readyup{default}] Panel is now {blue}on{default}"
+		"vi"		"[{olive}Readyup{default}] Panel is now {blue}on{default}"
 	}
 	
 	"ForceStartAdmin"
 	{
 		"#format"	"{1:N}"
 		"en"		"[{green}!{default}] {blue}Game {default}start is {green}forced {default}by {blue}Admin {default}({olive}{1}{default})"
+		"zho"		"[{green}!{default}] {blue}Game {default}start is {green}forced {default}by {blue}Admin {default}({olive}{1}{default})"
+		"vi"		"[{green}!{default}] {blue}Game {default}start is {green}forced {default}by {blue}Admin {default}({olive}{1}{default})"
 	}
 	
 	"VoteInProgress"
 	{
 		"en"		"[{olive}Readyup{default}] There's {olive}a vote {green}in progress{default}."
+		"zho"		"[{olive}Readyup{default}] There's {olive}a vote {green}in progress{default}."
+		"vi"		"[{olive}Readyup{default}] There's {olive}a vote {green}in progress{default}."
 	}
 	
 	"VoteDelay"
 	{
 		"#format"	"{1:d}"
 		"en"		"[{olive}Readyup{default}] Wait for another {blue}{1}s {default}to call a vote."
+		"zho"		"[{olive}Readyup{default}] Wait for another {blue}{1}s {default}to call a vote."
+		"vi"		"[{olive}Readyup{default}] Wait for another {blue}{1}s {default}to call a vote."
 	}
 	
 	"Player marked unready"
@@ -104,5 +114,15 @@
 	"AutoStartNotEnoughPlayers"
 	{
 		"en"		"More players are required..."
+	}
+
+	"Readyup_CanOnlyUnreadyTimesRound"
+	{
+		"en"		"[{olive}Readyup{default}] You can only unready {blue}%d{default} times this round."
+		"chi"		"[{olive}Readyup{default}] 本回合你最多只能取消准备 {blue}%d{default} 次。"
+		"zho"		"[{olive}Readyup{default}] 本回合你最多只能取消準備 {blue}%d{default} 次。"
+		"jp"		"[{olive}Readyup{default}] このラウンドで準備解除できるのは {blue}%d{default} 回までです。"
+		"ko"		"[{olive}Readyup{default}] 이번 라운드에서 준비 해제는 최대 {blue}%d{default}번만 가능합니다."
+		"vi"		"[{olive}Readyup{default}] Bạn chỉ có thể bỏ sẵn sàng tối đa {blue}%d{default} lần trong vòng này."
 	}
 }

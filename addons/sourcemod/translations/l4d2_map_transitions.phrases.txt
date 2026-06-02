@@ -1,0 +1,22 @@
+"Phrases"
+{
+	"L4D2MapTransitions_EndVersusModeRoundPost"
+	{
+		"en"		"L4D2_OnEndVersusModeRound_Post"
+		"chi"		"L4D2_OnEndVersusModeRound_Post"
+		"zho"		"L4D2_OnEndVersusModeRound_Post"
+		"jp"		"L4D2_OnEndVersusModeRound_Post"
+		"ko"		"L4D2_OnEndVersusModeRound_Post"
+		"vi"		"L4D2_OnEndVersusModeRound_Post"
+	}
+
+	"L4D2MapTransitions_MTStartingTransition"
+	{
+		"en"		"{olive}[MT]{default} Starting transition from: {blue}%s{default} to: {blue}%s"
+		"chi"		"{olive}[MT]{default} 从：{blue}%s{default} 开始过渡到：{blue}%s"
+		"zho"		"{olive}[MT]{default} 從：{blue}%s{default} 開始過渡到：{blue}%s"
+		"jp"		"{olive}[MT]{default} 移行開始: {blue}%s{default} から: {blue}%s"
+		"ko"		"{olive}[MT]{default} 전환 시작: {blue}%s{default}에서: {blue}%s"
+		"vi"		"{olive}[MT]{default} Bắt đầu chuyển đổi từ: {blue}%s{default} sang: {blue}%s"
+	}
+}

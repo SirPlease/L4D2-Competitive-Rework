@@ -132,6 +132,10 @@
 		"no"			"Vennligst skriv din grunn for utestengelse i chaten og trykk enter. Skriv 'noreason' for og annulere."
 		"hu"			"Írd be a chatre az indokot, majd nyomj entert. Írd '!noreason' a megszakításhoz."
 		"chi"			"请在聊天框中填写封禁理由并提交或输入 '!noreason' 放弃操作."
+		"zho"		"Please type the reason for ban in chat and press enter. Type '!noreason' to abort."
+		"jp"		"Please type the reason for ban in chat and press enter. Type '!noreason' to abort."
+		"ko"		"Please type the reason for ban in chat and press enter. Type '!noreason' to abort."
+		"vi"		"Please type the reason for ban in chat and press enter. Type '!noreason' to abort."
 	}
 	"Chat Reason Aborted"
 	{
@@ -145,5 +149,90 @@
 		"no"			"Utestengelses prossedyren ble stoppet vellykket."
 		"hu"			"A ban eljárás sikeresen leállítva."
 		"chi"			"封禁操作已成功取消."
+		"zho"		"The ban procedure has been stopped successfully."
+		"jp"		"The ban procedure has been stopped successfully."
+		"ko"		"The ban procedure has been stopped successfully."
+		"vi"		"The ban procedure has been stopped successfully."
+	}
+
+
+	"SourceBans_FailedBan"
+	{
+		"en"		"%sFailed to ban %s."
+		"chi"		"%s 封禁 %s 失败。"
+		"zho"		"%s 封鎖 %s 失敗。"
+		"jp"		"%sF%s を禁止できませんでした。"
+		"ko"		"%s%s를 차단하지 못했습니다."
+		"vi"		"%sFailed to ban %s."
+	}
+
+	"SourceBans_AlreadyBanned"
+	{
+		"en"		"%s%s is already banned."
+		"chi"		"%s%s 已被禁止。"
+		"zho"		"%s%s 已被禁止。"
+		"jp"		"%s%s はすでに禁止されています。"
+		"ko"		"%s%s는 이미 금지되었습니다."
+		"vi"		"%s%s đã bị cấm."
+	}
+
+	"SourceBans_SMBanipFailed"
+	{
+		"en"		"%ssm_banip failed"
+		"chi"		"%ssm_banip 失败"
+		"zho"		"%ssm_banip 失敗"
+		"jp"		"%ssm_banip が失敗しました"
+		"ko"		"%ssm_banip 실패"
+		"vi"		"%ssm_banip không thành công"
+	}
+
+	"SourceBans_SuccessfullyBanned"
+	{
+		"en"		"%s%s successfully banned"
+		"chi"		"%s%s 成功封禁"
+		"zho"		"%s%s 成功封鎖"
+		"jp"		"%s%s は正常に禁止されました"
+		"ko"		"%s%s가 성공적으로 차단되었습니다."
+		"vi"		"%s%s đã cấm thành công"
+	}
+
+	"SourceBans_SMUnbanFailed"
+	{
+		"en"		"%ssm_unban failed"
+		"chi"		"%ssm_unban 失败"
+		"zho"		"%ssm_unban 失敗"
+		"jp"		"%ssm_unban が失敗しました"
+		"ko"		"%ssm_unban 실패"
+		"vi"		"%ssm_unban không thành công"
+	}
+
+	"SourceBans_NoActiveBansFoundFilter"
+	{
+		"en"		"%sNo active bans found for that filter"
+		"chi"		"%s 未找到该过滤器的有效禁令"
+		"zho"		"%s 找不到該過濾器的有效禁令"
+		"jp"		"%sそのフィルターに対するアクティブな禁止は見つかりませんでした"
+		"ko"		"%s해당 필터에 대한 활성 차단이 없습니다."
+		"vi"		"%sKhông tìm thấy lệnh cấm hoạt động nào cho bộ lọc đó"
+	}
+
+	"SourceBans_SuccessfullyUnbanned"
+	{
+		"en"		"%s%s successfully unbanned"
+		"chi"		"%s%s成功解禁"
+		"zho"		"%s%s成功解禁"
+		"jp"		"%s%s が正常に禁止解除されました"
+		"ko"		"%s%s가 성공적으로 차단 해제되었습니다."
+		"vi"		"%s%s đã được bỏ cấm thành công"
+	}
+
+	"SourceBans_SMAddbanFailed"
+	{
+		"en"		"%ssm_addban failed"
+		"chi"		"%ssm_addban 失败"
+		"zho"		"%ssm_addban 失敗"
+		"jp"		"%ssm_addban が失敗しました"
+		"ko"		"%ssm_addban 실패"
+		"vi"		"%ssm_addban không thành công"
 	}
 }

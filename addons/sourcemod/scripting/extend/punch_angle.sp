@@ -159,7 +159,7 @@ public Action Cmd_Recoil(int client, int args)
 		int iv = StringToInt(sArg);
 		if (iv != 0 && iv != 1)
 		{
-			PrintToChat(client, "[Recoil] 用法: !recoil 或 !recoil 0/1 （0=抖动，1=不抖动）");
+			PrintToChat(client, "%t", "PunchAngle_RecoilUsageRecoil01");
 			return Plugin_Handled;
 		}
 		// 1 = 不抖动（去抖） → anti=true；0 = 抖动 → anti=false
@@ -176,9 +176,9 @@ public Action Cmd_Recoil(int client, int args)
 
 	// 反馈
 	if (anti)
-		PrintToChat(client, "[抖动] 已关闭（去抖 / 无视角抖动）");
+		PrintToChat(client, "%t", "PunchAngle_JitterTurnedOffDebounceNo");
 	else
-		PrintToChat(client, "[抖动] 已开启（原版效果）");
+		PrintToChat(client, "%t", "PunchAngle_JitterOriginalEffect");
 
 	return Plugin_Handled;
 }

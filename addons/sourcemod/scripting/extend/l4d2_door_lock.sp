@@ -499,9 +499,9 @@ Action Timer_WaitingForUnreadyPlayers(Handle timer)
 Action Command_Lock(int client, int args)
 {
 	if(!L4D2_DoorLock_Enable()) return Plugin_Handled;
-	else if(g_bFirstScenario) CPrintToChat(client, "{olive}[DoorLock]{default} 第一关不启用锁门。");
-	else if(g_bLockUsedThisMap && !g_bLockThisMap) CPrintToChat(client, "{olive}[DoorLock]{default} 本图已经锁过一次，灭团重启不再锁门。");
-	else if(!g_bLockThisMap) CPrintToChat(client, "{olive}[DoorLock]{default} 只在每张非第一关过图后的第一次回合启用锁门。");
+	else if(g_bFirstScenario) CPrintToChat(client, "%t", "L4D2DoorLock_DoorLockDoorLockNot");
+	else if(g_bLockUsedThisMap && !g_bLockThisMap) CPrintToChat(client, "%t", "L4D2DoorLock_DoorLockPictureLockedOnce");
+	else if(!g_bLockThisMap) CPrintToChat(client, "%t", "L4D2DoorLock_DoorLockDoorLockOnly");
 	else if(g_bLeftSafeAreas) CPrintToChat(client, "%t", "Round Started");
 	else if(g_bLockSafeAreas) CPrintToChat(client, "%t", "Saferoom Locked");
 	else if(g_iGiveUpsTime <= 0) CPrintToChat(client, "%t", "Ready Up Time Ended");
@@ -522,7 +522,7 @@ Action Command_Unlock(int client, int args)
 	{
 		g_bSurvivorBotFreezeActive = false;
 		UnFreezeSurvivorBots();
-		CPrintToChat(client, "{olive}[DoorLock]{default} 第一关已解冻生还者Bot。");
+		CPrintToChat(client, "%t", "L4D2DoorLock_DoorLockSurvivorBotUnfrozen");
 	}
 	else if(!g_bLockSafeAreas) CPrintToChat(client, "%t", "Saferoom Unlocked");
 	else

@@ -46,6 +46,7 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 
 public OnPluginStart()
 {
+	LoadTranslations("simple_witch_bonus.phrases");
     HookEvent("witch_spawn", Event_WitchSpawned, EventHookMode_Post);
     HookEvent("witch_killed", Event_WitchKilled, EventHookMode_Post);
 
@@ -135,7 +136,7 @@ stock GiveWitchBonus()
     new iBonus = GetConVarInt(g_hCvarBonus);
     if(GetConVarBool(g_hCvarPrint) == true)
 	{
-        PrintToChatAll("\x01Killing the witch has awarded: \x05%d \x01points!", iBonus);
+        PrintToChatAll("%t", "SimpleWitchBonus_KillingWitchAwardedPoints", iBonus);
     }
     PBONUS_AddRoundBonus(iBonus, true);
 }

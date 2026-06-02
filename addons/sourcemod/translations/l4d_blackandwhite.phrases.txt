@@ -1,0 +1,12 @@
+"Phrases"
+{
+	"L4DBlackandwhite_BlackWhite"
+	{
+		"en"		"{blue}[{default}!{blue}]{default} {olive}%s{default} is black and white."
+		"chi"		"{blue}[{default}!{blue}]{default} {olive}%s{default} 为黑白。"
+		"zho"		"{blue}[{default}!{blue}]{default} {olive}%s{default} 為黑白。"
+		"jp"		"{blue}[{default}!{blue}]{default} {olive}%s{default}は白黒です。"
+		"ko"		"{blue}[{default}!{blue}]{default} {olive}%s{default}는 흑백입니다."
+		"vi"		"{blue}[{default}!{blue}]{default} {olive}%s{default} có màu đen và trắng."
+	}
+}

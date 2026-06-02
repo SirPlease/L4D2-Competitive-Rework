@@ -249,6 +249,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_sb_fix.phrases");
 	// Notes:
 	// If "~_enabled" of the group is not set to 1, other Cvars in that group will not work.
 	// If the plugin is too heavy, Try disable searching for "Entities" other than Client. (CI, Witch and tank rock)
@@ -1200,7 +1201,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 			TeleportEntity(client, NULL_VECTOR, angles, NULL_VECTOR);
 			buttons |= IN_ATTACK2;
 			if (c_bDebug_Enabled) {
-				PrintToChatAll("\x01[%.2f] \x05%N \x01shoved: \x04flying %N (%d)", GetGameTime(), client, aHunterJockey, aHunterJockey);
+				PrintToChatAll("%t", "L4D2SBFix_ShovedFlying", GetGameTime(), client, aHunterJockey, aHunterJockey);
 				EmitSoundToAll(SOUND_SWING, client);
 			}
 			return Plugin_Changed;
@@ -1232,7 +1233,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 			MakeVectorFromPoints(c_pos, e_pos, lookat);
 			GetVectorAngles(lookat, angles);
 			
-			if (c_bDebug_Enabled) PrintToChatAll("\x01[%.2f] \x05%N \x01Cap Smoker: \x04%N (%d)", GetGameTime(), client, aCapSmoker, aCapSmoker);
+			if (c_bDebug_Enabled) PrintToChatAll("%t", "L4D2SBFix_CapSmoker", GetGameTime(), client, aCapSmoker, aCapSmoker);
 
 			TeleportEntity(client, NULL_VECTOR, angles, NULL_VECTOR);
 			
@@ -1276,7 +1277,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 			MakeVectorFromPoints(c_pos, e_pos, lookat);
 			GetVectorAngles(lookat, angles);
 			
-			if (c_bDebug_Enabled) PrintToChatAll("\x01[%.2f] \x05%N \x01Cap Survivor: \x04%N (%d)", GetGameTime(), client, aCap_Survivor, aCap_Survivor);
+			if (c_bDebug_Enabled) PrintToChatAll("%t", "L4D2SBFix_CapSurvivor", GetGameTime(), client, aCap_Survivor, aCap_Survivor);
 			
 			/****************************************************************************************************/
 			
@@ -1339,7 +1340,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 			MakeVectorFromPoints(c_pos, e_pos, lookat);
 			GetVectorAngles(lookat, angles);
 			
-			if (c_bDebug_Enabled) PrintToChatAll("\x01[%.2f] \x05%N \x01Cap Infected: \x04%N (%d)", GetGameTime(), client, aCap_Infected, aCap_Infected);
+			if (c_bDebug_Enabled) PrintToChatAll("%t", "L4D2SBFix_CapInfected", GetGameTime(), client, aCap_Infected, aCap_Infected);
 			
 			/****************************************************************************************************/
 			
@@ -1426,7 +1427,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 			MakeVectorFromPoints(c_pos, witch_e_pos, lookat);
 			GetVectorAngles(lookat, angles);
 			
-			if (c_bDebug_Enabled) PrintToChatAll("\x01[%.2f] \x05%N \x01Witch: \x05(%d)", GetGameTime(), client, aWitch);
+			if (c_bDebug_Enabled) PrintToChatAll("%t", "L4D2SBFix_Witch", GetGameTime(), client, aWitch);
 			
 			TeleportEntity(client, NULL_VECTOR, angles, NULL_VECTOR);
 			
@@ -1501,7 +1502,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 					
 					g_Stock_NextThinkTick[client] = iNextThinkTick; // Set the current m_nNextThinkTick
 					
-					if (c_bDebug_Enabled) PrintToChatAll("\x01[%.2f] \x05%N\x01 Commons: \x04(%d)\x01  |  Dist: \x04%.1f\x01  |  Melee Count: \x04%d", GetGameTime(), client, aCommonInfected, aimdist, iCI_MeleeCount);
+					if (c_bDebug_Enabled) PrintToChatAll("%t", "L4D2SBFix_CommonsDistMeleeCount", GetGameTime(), client, aCommonInfected, aimdist, iCI_MeleeCount);
 					
 					// iCI_MeleeCount is from ci_melee_range
 					if (c_bCI_MeleeEnabled
@@ -1668,7 +1669,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 					TeleportEntity(client, NULL_VECTOR, angles, NULL_VECTOR);
 					buttons |= IN_ATTACK2;
 					if (c_bDebug_Enabled) {
-						PrintToChatAll("\x01[%.2f] \x05%N\x01 new_target shoved: \x04%N (%d)", GetGameTime(), client, new_target, new_target);
+						PrintToChatAll("%t", "L4D2SBFix_NewTargetShoved", GetGameTime(), client, new_target, new_target);
 						EmitSoundToAll(SOUND_SWING, client);
 					}
 					return Plugin_Changed;
@@ -1679,8 +1680,8 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 				|| (aimdist < 100.0 && isHaveItem(AW_Classname, "weapon_melee")))
 			{
 				if (c_bDebug_Enabled) {
-					if (!isTargetBoomer) PrintToChatAll("\x01[%.2f] \x05%N\x01 new_target: \x04%N (%d)", GetGameTime(), client, new_target, new_target);
-					else PrintToChatAll("\x01[%.2f] \x05%N\x01 new_target: \x04%N (%d) (Shoot: %s)", GetGameTime(), client, new_target, new_target, (isBoomer_Shoot_OK) ? "OK" : "NO");
+					if (!isTargetBoomer) PrintToChatAll("%t", "L4D2SBFix_NewTarget", GetGameTime(), client, new_target, new_target);
+					else PrintToChatAll("%t", "L4D2SBFix_NewTargetShoot", GetGameTime(), client, new_target, new_target, (isBoomer_Shoot_OK) ? "OK" : "NO");
 				}
 			
 				if (!isTargetBoomer || (isTargetBoomer && isBoomer_Shoot_OK)) {
@@ -1770,8 +1771,8 @@ stock Action onSBRunCmd_Incapacitated(int client, int &buttons, float vel[3], fl
 			GetVectorAngles(lookat, angles);
 			
 			if (c_bDebug_Enabled) {
-				if (isSurvivor(aCapper)) PrintToChatAll("\x01[%.2f] \x05%N \x01Cap Survivor Incapacitated: \x04%N", GetGameTime(), client, aCapper);
-				else PrintToChatAll("\x01[%.2f] \x05%N \x01Cap Infected Incapacitated: \x04%N", GetGameTime(), client, aCapper);
+				if (isSurvivor(aCapper)) PrintToChatAll("%t", "L4D2SBFix_CapSurvivorIncapacitated", GetGameTime(), client, aCapper);
+				else PrintToChatAll("%t", "L4D2SBFix_CapInfectedIncapacitated", GetGameTime(), client, aCapper);
 			}
 			TeleportEntity(client, NULL_VECTOR, angles, NULL_VECTOR);
 			
@@ -1837,7 +1838,7 @@ stock Action onSBRunCmd_Incapacitated(int client, int &buttons, float vel[3], fl
 			
 			/****************************************************************************************************/
 			
-			if (c_bDebug_Enabled) PrintToChatAll("\x01[%.2f] \x05%N\x01 Commons Incapacitated Dist: %.1f", GetGameTime(), client, aimdist);
+			if (c_bDebug_Enabled) PrintToChatAll("%t", "L4D2SBFix_CommonsIncapacitatedDist", GetGameTime(), client, aimdist);
 			
 			TeleportEntity(client, NULL_VECTOR, angles, NULL_VECTOR);
 			
@@ -1866,7 +1867,7 @@ stock Action onSBRunCmd_Incapacitated(int client, int &buttons, float vel[3], fl
 			MakeVectorFromPoints(c_pos, e_pos, lookat);
 			GetVectorAngles(lookat, angles);
 			
-			if (c_bDebug_Enabled) PrintToChatAll("\x01[%.2f] \x05%N \x01int target Incapacitated: \x04%N", GetGameTime(), client, new_target);
+			if (c_bDebug_Enabled) PrintToChatAll("%t", "L4D2SBFix_IntTargetIncapacitated", GetGameTime(), client, new_target);
 			
 			TeleportEntity(client, NULL_VECTOR, angles, NULL_VECTOR);
 			

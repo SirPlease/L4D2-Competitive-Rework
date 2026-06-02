@@ -504,6 +504,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_playstats.phrases");
 	InitPlugin();
 
 	// cvars
@@ -1322,9 +1323,9 @@ Action Cmd_StatsDisplayGeneral(int client, int args)
 		if (StrEqual(sArg, "help", false) || StrEqual(sArg, "?", false)) {
 			// show help
 			if (IS_VALID_INGAME(client)) {
-				PrintToChat(client, "\x01Use: /stats [<type>] [\x05round\x01/\x05game\x01/\x05team\x01/\x05all\x01/\x05other\x01]");
-				PrintToChat(client, "\x01 or: /stats [<type>] [\x05r\x01/\x05g\x01/\x05t\x01/\x05a\x01/\x05o\x01]");
-				PrintToChat(client, "\x01 where <type> is '\x04mvp\x01', '\x04skill\x01', '\x04ff\x01', '\x04acc\x01' or '\x04inf\x01'. (for more, see console)");
+				PrintToChat(client, "%t", "L4D2Playstats_UseStatsTypeRoundGame");
+				PrintToChat(client, "%t", "L4D2Playstats_StatsType");
+				PrintToChat(client, "%t", "L4D2Playstats_TypeMVPSkillFFAcc");
 			}
 
 			char bufBasic[CONBUFSIZELARGE];
@@ -1427,7 +1428,7 @@ Action Cmd_StatsDisplayGeneral(int client, int args)
 				bMy = true;
 			} else {
 				if (IS_VALID_INGAME(client)) {
-					PrintToChat(client, "Stats command: unknown argument: '%s'. Type '/stats help' for possible arguments.", sArg);
+					PrintToChat(client, "%t", "L4D2Playstats_StatsCommandUnknownArgumentType", sArg);
 				}
 			}
 		}
@@ -1493,7 +1494,7 @@ Action Cmd_StatsDisplayGeneral(int client, int args)
 Action Cmd_StatsReset(int client, int args)
 {
 	ResetStats(false, -1);
-	PrintToChatAll("Player statistics reset.");
+	PrintToChatAll("%t", "L4D2Playstats_PlayerStatisticsReset");
 	return Plugin_Handled;
 }
 
@@ -1509,7 +1510,7 @@ Action Cmd_Cookie_SetPrintFlags(int client, int args)
 	}
 
 	if (args <= 0) {
-		PrintToChat(client, "\x01Use: \x04/stats_auto <flags>\x01. Type \x04/stats_auto help\x01 for more info.");
+		PrintToChat(client, "%t", "L4D2Playstats_UseStatsAutoFlagsType");
 		return Plugin_Handled;
 	}
 
@@ -1518,15 +1519,15 @@ Action Cmd_Cookie_SetPrintFlags(int client, int args)
 	int iFlags = StringToInt(sArg);
 
 	if (StrEqual(sArg, "?", false) || StrEqual(sArg, "help", false)) {
-		PrintToChat(client, "\x01Use: \x04/stats_auto <flags>\x01. Flags is an integer that is the sum of all printouts to be displayed at round-end.");
-		PrintToChat(client, "\x01Set flags to 0 to use server autoprint default; set to -1 to not display anything at all.");
-		PrintToChat(client, "\x01See: \x05https://github.com/Tabbernaut/L4D2-Plugins/blob/master/stats/README.md\x01 for a list of flags.");
+		PrintToChat(client, "%t", "L4D2Playstats_UseStatsAutoFlagsInteger");
+		PrintToChat(client, "%t", "L4D2Playstats_SetFlags0UseServer");
+		PrintToChat(client, "%t", "L4D2Playstats_SeeURLListFlags");
 		return Plugin_Handled;
 	} 
 	
 	if (StrEqual(sArg, "test", false) || StrEqual(sArg, "preview", false)) {
 		if (g_iCookieValue[client] < 1) {
-			PrintToChat(client, "\x01Stats Preview: No flags set. First set flags with \x04/stats_auto <flags>\x01. Type \x04/stats_auto help\x01 for more info.");
+			PrintToChat(client, "%t", "L4D2Playstats_StatsPreviewNoFlagsSet");
 			return Plugin_Handled;
 		}
 	
@@ -1535,14 +1536,14 @@ Action Cmd_Cookie_SetPrintFlags(int client, int args)
 	}
 
 	if (iFlags < -1) {
-		PrintToChat(client, "Stats Pref.: invalid value: '%s'. Type '/stats_auto help' for more info.", sArg);
+		PrintToChat(client, "%t", "L4D2Playstats_StatsPrefInvalidValueType", sArg);
 		return Plugin_Handled;
 	}
 
 	if (iFlags == -1) {
-		PrintToChat(client, "\x01Stats Pref.: \x04no round end prints at all\x01.");
+		PrintToChat(client, "%t", "L4D2Playstats_StatsPrefNoRoundEnd");
 	} else if (iFlags == 0) {
-		PrintToChat(client, "\x01Stats Pref.: \x04server default\x01.");
+		PrintToChat(client, "%t", "L4D2Playstats_StatsPrefServerDefault");
 	} else {
 		char tmpStr[14][24], tmpPrint[256];
 		int part = 0;
@@ -1622,7 +1623,7 @@ Action Cmd_Cookie_SetPrintFlags(int client, int args)
 			part++;
 		}
 
-		PrintToChat(client, "\x01Stats Pref.: Flags set for:", tmpStr);
+		PrintToChat(client, "%t", "L4D2Playstats_StatsPrefFlagsSet", tmpStr);
 		
 		// print all parts
 		int tmpCnt = 0;
@@ -1638,7 +1639,7 @@ Action Cmd_Cookie_SetPrintFlags(int client, int args)
 			}
 		}
 		
-		PrintToChat(client, "\x01Use \x04/stats_auto test\x01 to get a report preview.");
+		PrintToChat(client, "%t", "L4D2Playstats_UseStatsAutoTestGet");
 	}
 
 	g_iCookieValue[client] = iFlags;
@@ -1648,7 +1649,7 @@ Action Cmd_Cookie_SetPrintFlags(int client, int args)
 		IntToString(iFlags, sCookieValue, sizeof(sCookieValue));
 		SetClientCookie(client, g_hCookiePrint, sCookieValue);
 	} else {
-		PrintToChat(client, "Stats Pref.: Error: cookie not cached yet (try again in a bit).");
+		PrintToChat(client, "%t", "L4D2Playstats_StatsPrefErrorCookieNot");
 	}
 
 	return Plugin_Handled;

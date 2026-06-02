@@ -4,11 +4,17 @@
 	{
 		"#format"		"{1:s},{2:s},{3:s}"
 		"en"			"{1} gave {2} to {3}"
+		"jp"		"{1} gave {2} to {3}"
+		"ko"		"{1} gave {2} to {3}"
+		"vi"		"{1} gave {2} to {3}"
 	}
 	"Grabbed"
 	{
 		"#format"		"{1:s},{2:s},{3:s}"
 		"en"			"{1} grabbed {2} from {3}"
+		"jp"		"{1} grabbed {2} from {3}"
+		"ko"		"{1} grabbed {2} from {3}"
+		"vi"		"{1} grabbed {2} from {3}"
 	}
 	"BotGrabbed"
 	{
@@ -19,6 +25,9 @@
 	{
 		"#format"		"{1:s},{2:s},{3:s}"
 		"en"			"{1} switched {2} with {3}"
+		"jp"		"{1} switched {2} with {3}"
+		"ko"		"{1} switched {2} with {3}"
+		"vi"		"{1} switched {2} with {3}"
 	}
 	"weapon_molotov"
 	{

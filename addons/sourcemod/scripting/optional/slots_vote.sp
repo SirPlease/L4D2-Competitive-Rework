@@ -59,7 +59,7 @@ Action SlotsRequest(int client, int args)
 			}
 			else if(Int < NonAdminMinSlots)
 			{
-				CPrintToChat(client, "%t %t", "Tag", "LimitSlotsBelow", NonAdminMinSlots);
+				CPrintToChat(client, "%t %t", "Tag", "SlotsVote_AdminOnlyBelowMinimumSlots", NonAdminMinSlots);
 			}
 			else
 			{

@@ -50,6 +50,7 @@ int
 
 public void OnPluginStart()
 {
+	LoadTranslations("fix_engine.phrases");
 	ConVar hCvarDecayRate = FindConVar("pain_pills_decay_rate");
 
 	CreateConVar("engine_fix_version", PLUGIN_VERSION, "Engine Fix plugin version", FCVAR_REPLICATED|FCVAR_NOTIFY);
@@ -219,7 +220,7 @@ void EF_ev_PlayerHurt(Event event, const char[] name, bool dontBroadcast)
 
 			g_iHealthToRestore[client] += damage;
 #if debug
-			PrintToChatAll("m_idrowndmg = %d, dmg = %d, temp hp to restote = %d", GetEntProp(client, Prop_Data, "m_idrowndmg"), damage, g_iHealthToRestore[client]);
+			PrintToChatAll("%t", "FixEngine_IdrowndamageDamageTempHPRestore", GetEntProp(client, Prop_Data, "m_idrowndmg"), damage, g_iHealthToRestore[client]);
 #endif
 			DataPack hdataPack;
 			CreateDataTimer(0.1, EF_t_SetDrownDmg, hdataPack, TIMER_FLAG_NO_MAPCHANGE);
@@ -261,7 +262,7 @@ Action EF_t_CheckRestoring(Handle timer, int client)
 
 	if (fHealthToRestore <= 0){
 #if debug
-		PrintToChatAll("restoring started (player using glitch while have 1-10hp");
+		PrintToChatAll("%t", "FixEngine_RestoringStartedPlayerUsingGlitch");
 #endif
 		g_hRestoreTimer[client] = CreateTimer(RESTORE_TIME, EF_t_RestoreTempHealth, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Stop;
@@ -270,7 +271,7 @@ Action EF_t_CheckRestoring(Handle timer, int client)
 	int iRestoreCount = RoundToCeil(fHealthToRestore / MAX_HEALTH_PER_RESTORE);
 	float fRestoreTimeEnd = RESTORE_TIME * float(iRestoreCount);
 #if debug
-	PrintToChatAll("restore count = %d (beginning in %.0f sec.)", iRestoreCount, fRestoreTimeEnd);
+	PrintToChatAll("%t", "FixEngine_RestoreCountBeginningSeconds", iRestoreCount, fRestoreTimeEnd);
 #endif
 	CreateTimer(fRestoreTimeEnd, EF_t_StartRestoreTempHealth, client, TIMER_FLAG_NO_MAPCHANGE);
 	return Plugin_Stop;
@@ -280,7 +281,7 @@ Action EF_t_StartRestoreTempHealth(Handle timer, int client)
 {
 	if (g_iHealthToRestore[client] <= 0 || !IsSurvivor(client)) return Plugin_Stop;
 #if debug
-	PrintToChatAll("restoring started");
+	PrintToChatAll("%t", "FixEngine_RestoringStarted");
 #endif
 	g_hRestoreTimer[client] = CreateTimer(RESTORE_TIME, EF_t_RestoreTempHealth, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	return Plugin_Stop;
@@ -302,7 +303,7 @@ Action EF_t_RestoreTempHealth(Handle timer, int client)
 
 		if (iTempToRestore > iLimit){
 #if debug
-			PrintToChatAll("temp health limit is exceeded");
+			PrintToChatAll("%t", "FixEngine_TempHealthLimitExceeded");
 #endif
 			iTempToRestore = iLimit;
 			g_iHealthToRestore[client] = 0;
@@ -326,7 +327,7 @@ void EF_ev_HealSuccess(Event event, const char[] name, bool dontBroadcast)
 
 	if (IsDrownPropNotEqual(client)){
 #if debug
-		PrintToChatAll("reset drownrestored prop %N", client);
+		PrintToChatAll("%t", "FixEngine_ResetDrownRestoredProp", client);
 #endif
 		EF_ClearVars(client);
 		ForceEqualDrownProp(client);
@@ -360,7 +361,7 @@ Action EF_t_FixTempHpGlitch(Handle timer, int client)
 
 				EF_GlitchWarnFunc(client);
 #if debug
-				PrintToChatAll("temp glitch fixed");
+				PrintToChatAll("%t", "FixEngine_TempGlitchFixed");
 #endif
 			}
 		}
@@ -368,7 +369,7 @@ Action EF_t_FixTempHpGlitch(Handle timer, int client)
 			return Plugin_Continue;
 	}
 #if debug
-	PrintToChatAll("stopped temp glich fix timer");
+	PrintToChatAll("%t", "FixEngine_StoppedTempGlitchFixTimer");
 #endif
 	g_hFixGlitchTimer[client] = INVALID_HANDLE;
 	return Plugin_Stop;
@@ -388,7 +389,7 @@ void EF_KillRestoreTimer(int client)
 {
 	if (g_hRestoreTimer[client] != INVALID_HANDLE){
 #if debug
-		PrintToChatAll("restoring stopped");
+		PrintToChatAll("%t", "FixEngine_RestoringStopped");
 #endif
 		KillTimer(g_hRestoreTimer[client]);
 		g_hRestoreTimer[client] = INVALID_HANDLE;
@@ -463,13 +464,13 @@ void WarningsMsg(int client, int msg)
 	switch (msg){
 
 		case 1:
-			PrintToChatAll("%N (%s) attempted to use a ladder speed glitch.", client, STEAM_ID);
+			PrintToChatAll("%t", "FixEngine_AttemptedUseLadderSpeedGlitch", client, STEAM_ID);
 		case 2:
-			PrintToChatAll("%N (%s) is suspected of using a no fall damage bug.", client, STEAM_ID);
+			PrintToChatAll("%t", "FixEngine_SuspectedUsingNoFallDamage", client, STEAM_ID);
 		case 3:
-			PrintToChatAll("%N (%s) attempted to use a health boost glitch.", client, STEAM_ID);
+			PrintToChatAll("%t", "FixEngine_AttemptedUseHealthBoostGlitch", client, STEAM_ID);
 		case 4:
-			PrintToChatAll("%N (%s) attempted to use a ladder reload glitch.", client, STEAM_ID);
+			PrintToChatAll("%t", "FixEngine_AttemptedUseLadderReloadGlitch", client, STEAM_ID);
 	}
 }
 

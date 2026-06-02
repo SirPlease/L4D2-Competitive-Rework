@@ -1,0 +1,72 @@
+"Phrases"
+{
+	"L4D2DropSecondary_PlayerReplacedBotReplacedSecondary"
+	{
+		"en"		"{green}[{olive}OnPlayerReplacedByBot{green}] {default}- {blue}BOT {default}replaced {blue}%N {default}({green}Secondary: {olive}%s{default})"
+		"chi"		"{green}[{olive}OnPlayer 替换为 Bot{green}] {default}- {blue}BOT {default} 替换为 {blue}%N {default}({green}次要: {olive}%s{default}）"
+		"zho"		"{green}[{olive}OnPlayerReplacedByBot{green}] {default}- {blue}BOT {default}replaced {blue}%N {default}({green}Secondary: {olive}%s{default})"
+		"jp"		"{green}[{olive}OnPlayerReplacedByBot{green}] {default}- {blue}BOT {default}Replaced {blue}%N {default}({green}セカンダリ: {olive}%s{default})"
+		"ko"		"{green}[{olive}OnPlayerReplacedByBot{green}] {default}- {blue}BOT {default}{blue}%N {default}({green}S보조: {olive}%s{default})"
+		"vi"		"{green}[{olive}OnPlayerReplacedByBot{green}] {default}- {blue}BOT {default}thay thế {blue}%N {default}({green}Thứ cấp: {olive}%s{default})"
+	}
+
+	"L4D2DropSecondary_BotReplacedPlayerReplacedBOT"
+	{
+		"en"		"{green}[{olive}OnBotReplacedByPlayer{green}] {default}- {blue}%N {default}replaced {blue}BOT {default}({green}Secondary: {olive}%s{default})"
+		"chi"		"{green}[{olive}OnBot 被玩家替换为 {green}] {default}- {blue}%N {default} 替换为 {blue}BOT {default}({green}次要: {olive}%s{default}）"
+		"zho"		"{green}[{olive}OnBot 被玩家替換為 {green}] {default}- {blue}%N {default} 替換為 ZXOTX0Z1 {olive}%s{default}）"
+		"jp"		"{green}[{olive}OnBotReplacedByPlayer{green}] {default}- {blue}%N {default}置き換えられた {blue}BOT {default}({green}セカンダリ: {olive}%s{default})"
+		"ko"		"{green}[{olive}OnBotReplacedByPlayer{green}] {default}- {blue}%N {default}교체된 {blue}BOT {default}({green}S보조: {olive}%s{default})"
+		"vi"		"{green}[{olive}OnBotReplacedByPlayer{green}] {default}- {blue}%N {default}thay thế {blue}BOT {default}({green}Thứ cấp: {olive}%s{default})"
+	}
+
+	"L4D2DropSecondary_PlayerUsePickedSecondsondarySecondary"
+	{
+		"en"		"{green}[{olive}OnPlayerUse{green}] {default}- {blue}%N{default}'s picked up a secondary: ({green}Secondary: {olive}%s{default})"
+		"chi"		"{green}[{olive}OnPlayerUse{green}] {default}- {blue}%N{default} 拾取了辅助：（{green}辅助： {olive}%s{default})"
+		"zho"		"{green}[{olive}OnPlayerUse{green}] {default}- {blue}%N{default}'s picked up a secondary: ({green}Secondary: {olive}%s{default})"
+		"jp"		"{green}[{olive}OnPlayerUse{green}] {default}- {blue}%N{default} がセカンダリを選択しました: ({green}セカンダリ: {olive}%s{default})"
+		"ko"		"{green}[{olive}OnPlayerUse{green}] {default}- {blue}%N{default}가 보조 장치를 선택했습니다: ({green}S보조 장치: {olive}%s{default})"
+		"vi"		"{green}[{olive}OnPlayerUse{green}] {default}- {blue}%N{default} đã chọn thứ cấp: ({green}Thứ cấp: {olive}%s{default})"
+	}
+
+	"L4D2DropSecondary_PlayerDeathSecondary"
+	{
+		"en"		"{green}[{olive}OnPlayerDeath{green}] {default}- {blue}%N {default}({green}Secondary: {olive}%s{default})"
+		"chi"		"{green}[{olive}On玩家死亡{green}] {default}- {blue}%N {default}({green}次要：{olive}%s{default})"
+		"zho"		"{green}[{olive}OnPlayerDeath{green}] {default}- {blue}%N {default}({green}Secondary: {olive}%s{default})"
+		"jp"		"{green}[{olive}OnPlayerDeath{green}] {default}- {blue}%N {default}({green}セカンダリ: {olive}%s{default})"
+		"ko"		"{green}[{olive}OnPlayerDeath{green}] {default}- {blue}%N {default}({green}보조: {olive}%s{default})"
+		"vi"		"{green}[{olive}OnPlayerDeath{green}] {default}- {blue}%N {default}({green}Phụ: {olive}%s{default})"
+	}
+
+	"L4D2DropSecondary_ErrorSomethingWentWrongDetermining"
+	{
+		"en"		"{blue}[{default}L4D2 Drop Secondary{blue}]{default}: {green}ERROR {default}- Something went wrong determining the melee script for your secondary weapon, report this issue to the {olive}Plugin Author{default}."
+		"chi"		"{blue}[{default}L4D2 Drop secondary{blue}]{default}：{green}ERROR {default} - 确定辅助武器的近战脚本时出现问题，请向 {olive}Plugin 作者 {default} 报告此问题。"
+		"zho"		"{blue}[{default}L4D2 Drop Secondary{blue}]{default}: {green}ERROR {default}- Something went wrong determining the melee script for your secondary weapon, report this issue to the {olive}Plugin Author{default}."
+		"jp"		"{blue}[{default}L4D2 Drop Secondary{blue}]{default}: {green}ERROR {default}- セカンダリ武器の近接スクリプトの決定中に問題が発生しました。この問題を {olive}Plugin 作者 {default} に報告してください。"
+		"ko"		"{blue}[{default}L4D2 Drop Secondary{blue}]{default}: {green}ERROR {default}- 보조 무기에 대한 근접 스크립트를 결정하는 데 문제가 발생했습니다. 이 문제를 {olive}Plugin Author{default}에게 보고하세요."
+		"vi"		"{blue}[{default}L4D2 Drop thứ cấp{blue}]{default}: {green}ERROR {default}- Đã xảy ra lỗi khi xác định tập lệnh cận chiến cho vũ khí phụ của bạn, hãy báo cáo vấn đề này với Tác giả {olive}Plugin{default}."
+	}
+
+	"L4D2DropSecondary_DetermineMeleeScriptMS"
+	{
+		"en"		"{green}[{olive}DetermineMeleeScript{green}] {default}- {blue}%N {default}has {olive}%s {default}- MS: {olive}%s"
+		"chi"		"{green}[{olive}D确定近战脚本{green}] {default}- {blue}%N {default}有 {olive}%s {default}- MS: {olive}%s"
+		"zho"		"{green}[{olive}DetermineMeleeScript{green}] {default}- {blue}%N {default}has {olive}%s {default}- MS: {olive}%s"
+		"jp"		"{green}[{olive}DetermineMeleeScript{green}] {default}- {blue}%N {default} は {olive}%s {default}- MS: {olive}%s"
+		"ko"		"{green}[{olive}DDetermineMeleeScript{green}] {default}- {blue}%N {default}가 {olive}%s {default}- MS: {olive}%s"
+		"vi"		"{green}[{olive}Xác địnhMeleeScript{green}] {default}- {blue}%N {default}has {olive}%s {default}- MS: {olive}%s"
+	}
+
+	"L4D2DropSecondary_Debugging"
+	{
+		"en"		"{blue}[{default}L4D2 Drop Secondary{blue}]{default}: {green}Debugging {olive}%s"
+		"chi"		"{blue}[{default}L4D2 Drop secondary{blue}]{default}：{green}调试{olive}%s"
+		"zho"		"{blue}[{default}L4D2 Drop secondary{blue}]{default}：{green}調試{olive}%s"
+		"jp"		"{blue}[{default}L4D2 セカンダリをドロップ{blue}]{default}: {green}デバッグ {olive}%s"
+		"ko"		"{blue}[{default}L4D2 드롭 보조{blue}]{default}: {green}{olive}%s 디버깅"
+		"vi"		"{blue}[{default}L4D2 Thả phụ{blue}]{default}: {green}Gỡ lỗi {olive}%s"
+	}
+}

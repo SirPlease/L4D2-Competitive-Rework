@@ -1,0 +1,22 @@
+"Phrases"
+{
+	"L4D2BlockBotPills_BotBlockPillsPreventedAccidental"
+	{
+		"en"		"{green}[{default}Bot Block Pills{green}]{default}: Prevented accidental pills take by %N"
+		"chi"		"{green}[{default}Bot Block Pills{green}]{default}：%N 预防意外服用的药丸"
+		"zho"		"{green}[{default}Bot Block Pills{green}]{default}：%N 預防意外服用的藥丸"
+		"jp"		"{green}[{default}ボットブロックピル{green}]{default}: %Nによる誤って錠剤の摂取を防止"
+		"ko"		"{green}[{default}Bot Block Pills{green}]{default}: %N로 실수로 약을 복용하는 것을 방지합니다."
+		"vi"		"{green}[{default}Bot Block Pills{green}]{default}: Thuốc vô tình được ngăn chặn bởi %N"
+	}
+
+	"L4D2BlockBotPills_BotBlockPillsBotWants"
+	{
+		"en"		"{green}[{default}Bot Block Pills{green}]{default}: Bot {blue}%N{default} wants to use pain pills. Blocking this action..."
+		"chi"		"{green}[{default}Bot Block Pills{green}]{default}：机器人 {blue}%N{default} 想要使用止痛药。阻止此操作..."
+		"zho"		"{green}[{default}Bot Block Pills{green}]{default}：機器人 {blue}%N{default} 想要使用止痛藥。阻止此操作..."
+		"jp"		"{green}[{default}ボットブロック丸薬{green}]{default}: ボット{blue}%N{default}は鎮痛剤の使用を希望しています。このアクションをブロックしています..."
+		"ko"		"{green}[{default}Bot Block Pills{green}]{default}: 봇 {blue}%N{default}는 진통제를 사용하고 싶어합니다. 이 작업을 차단하는 중..."
+		"vi"		"{green}[{default}Bot Block Pills{green}]{default}: Bot {blue}%N{default} muốn sử dụng thuốc giảm đau. Đang chặn hành động này..."
+	}
+}

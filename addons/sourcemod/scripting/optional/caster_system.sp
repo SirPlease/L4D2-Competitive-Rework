@@ -395,7 +395,7 @@ Action PrintCasters_Cmd(int client, int args)
 	
 	if (GetCmdReplySource() == SM_REPLY_TO_CHAT)
 	{
-		if (client > 0) PrintToChat(client, "[casters_database] List is printed in console");
+		if (client > 0) PrintToChat(client, "%t", "CasterSystem_CastersDatabaseListPrintedConsole");
 	}
 	
 	PrintToConsole(client, "/***********[casters_database]***********\\");

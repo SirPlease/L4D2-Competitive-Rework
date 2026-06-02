@@ -147,6 +147,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d_rock_lagcomp.phrases");
     cvarRockPrint = CreateConVar("sm_rock_print", "0", "Toggle printing of rock damage and range values", FCVAR_NONE, true, 0.0, true, 1.0);
     cvarRockHitbox = CreateConVar("sm_rock_hitbox", "1", "Toggle for rock custom hitbox", FCVAR_NONE, true, 0.0, true, 1.0);
     cvarRockTankLagComp = CreateConVar("sm_rock_lagcomp", "1", "Toggle for lag compensation", FCVAR_NONE, true, 0.0, true, 1.0);
@@ -414,7 +415,7 @@ void ApplyDamageOnRock(rockIndex, float eyePos[3], float c[3], Event event, rock
 	new Float:range = GetVectorDistance(eyePos, c);
 	
 	if (ROCK_PRINT) {
-		PrintToChatAll("Weapon: %s | Range: %.2f", weaponName, range);
+		PrintToChatAll("%t", "L4DRockLagcomp_WeaponRange", weaponName, range);
 	}
 	
 	if ((!ROCK_HITBOX_ENABLED) || range > RANGE_MAX_ALL || (range < RANGE_MIN_ALL && !IsMelee(weaponName))) {
@@ -473,7 +474,7 @@ void ApplyBulletToRock(rockIndex, rockEntity, float damage, float range)
 	}
 	
 	if (ROCK_PRINT) {
-		PrintToChatAll("Rock health: %d\%", RoundFloat(ROCK_HEALTH - rockDamage));
+		PrintToChatAll("%t", "L4DRockLagcomp_RockHealth", RoundFloat(ROCK_HEALTH - rockDamage));
 	}
 }
 
@@ -548,8 +549,7 @@ stock void PrintEntityLocation(int entity)
 		new Float:position[3];
 		GetEntPropVector(entity, Prop_Send, "m_vecOrigin", position);
 		GetEntityClassname(entity, classname, MAX_STR_LEN);
-		PrintToChatAll("Entity %s (%d) is at location: (%.2f, %.2f, %.2f)",
-				classname, entity, position[0], position[1], position[2]);
+		PrintToChatAll("%t", "L4DRockLagcomp_EntityLocation", classname, entity, position[0], position[1], position[2]);
 	}
 }
 

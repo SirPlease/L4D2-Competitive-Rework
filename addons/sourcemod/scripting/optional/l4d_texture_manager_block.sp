@@ -14,6 +14,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d_texture_manager_block.phrases");
 	float fRand = GetRandomFloat(2.5, 3.5);
 	CreateTimer(fRand, CheckClients, _, TIMER_REPEAT);
 }
@@ -56,7 +57,7 @@ void ClientQueryCallback(QueryCookie cookie, int client, ConVarQueryResult resul
 				
 				BuildPath(Path_SM, path, 256, "logs/mathack_cheaters.txt");
 				LogToFile(path, ".:[Name: %s | STEAMID: %s | IP: %s]:.", t_name, t_steamid, t_ip);
-				PrintToChatAll("\x04[\x01Mathack Detector\x04] \x03%s \x01has been kicked for using mathack!", t_name);
+				PrintToChatAll("%t", "L4DTextureManagerBlock_MathackDetectorKickedUsingMathack", t_name);
 				KickClient(client, "You have been kicked for using hacks. No rest for the wicked.");
 			}
 		}

@@ -29,6 +29,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d_no_cans.phrases");
 	g_hCvarNoCans = CreateConVar("l4d_no_cans", "1", "Remove Gascans?", _, true, 0.0, true, 1.0);
 	g_hCvarNoPropane = CreateConVar("l4d_no_propane", "1", "Remove Propane Tanks?", _, true, 0.0, true, 1.0);
 	g_hCvarNoOxygen = CreateConVar("l4d_no_oxygen", "1", "Remove Oxygen Tanks?", _, true, 0.0, true, 1.0);
@@ -71,7 +72,7 @@ bool IsCan(int iEntity)
 #if DEBUG
 	char sEntityName[64];
 	GetEdictClassname(iEntity, sEntityName, sizeof(sEntityName));
-	PrintToChatAll("iEntity: %d (%s), model: %s", iEntity, sEntityName, sModelName);
+	PrintToChatAll("%t", "L4DNoCans_EntityModel", iEntity, sEntityName, sModelName);
 #endif
 
 	if (strcmp(sModelName, CAN_GASCAN, false) == 0) {

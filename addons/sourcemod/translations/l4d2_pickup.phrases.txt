@@ -10,6 +10,10 @@
 	{
 		"en"		"{blue}[{default}ItemSwitch{blue}] {default}Switch to {olive}Secondary {default}on pick-up: {blue}ON"
 		"chi"		"{blue}[{default}物品切换{blue}] {default}拾取时切换为{olive}副武器{default}：{blue}开启"
+		"zho"		"{blue}[{default}ItemSwitch{blue}] {default}Switch to {olive}Secondary {default}on pick-up: {blue}ON"
+		"jp"		"{blue}[{default}ItemSwitch{blue}] {default}Switch to {olive}Secondary {default}on pick-up: {blue}ON"
+		"ko"		"{blue}[{default}ItemSwitch{blue}] {default}Switch to {olive}Secondary {default}on pick-up: {blue}ON"
+		"vi"		"{blue}[{default}ItemSwitch{blue}] {default}Switch to {olive}Secondary {default}on pick-up: {blue}ON"
 	}
 	
 	"Command_SwitchPrimaryOff"
@@ -22,5 +26,9 @@
 	{
 		"en"		"{blue}[{default}ItemSwitch{blue}] {default}Switch to {olive}Primary {default}on pick-up: {blue}ON"
 		"chi"		"{blue}[{default}物品切换{blue}] {default}拾取时切换为{olive}主武器{default}：{blue}开启"
+		"zho"		"{blue}[{default}ItemSwitch{blue}] {default}Switch to {olive}Primary {default}on pick-up: {blue}ON"
+		"jp"		"{blue}[{default}ItemSwitch{blue}] {default}Switch to {olive}Primary {default}on pick-up: {blue}ON"
+		"ko"		"{blue}[{default}ItemSwitch{blue}] {default}Switch to {olive}Primary {default}on pick-up: {blue}ON"
+		"vi"		"{blue}[{default}ItemSwitch{blue}] {default}Switch to {olive}Primary {default}on pick-up: {blue}ON"
 	}
 }

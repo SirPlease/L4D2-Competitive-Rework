@@ -83,6 +83,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_slowdown_control.phrases");
 	hCvarSdGunfireSi = CreateConVar("l4d2_slowdown_gunfire_si", "0.0", "Maximum slowdown from gunfire for SI (-1: native slowdown; 0.0: No slowdown, 0.01-1.0: 1%%-100%% slowdown)", _, true, -1.0, true, 1.0);
 	hCvarSdGunfireTank = CreateConVar("l4d2_slowdown_gunfire_tank", "0.2", "Maximum slowdown from gunfire for the Tank (-1: native slowdown; 0.0: No slowdown, 0.01-1.0: 1%%-100%% slowdown)", _, true, -1.0, true, 1.0);
 	hCvarSdInwaterTank = CreateConVar("l4d2_slowdown_water_tank", "-1", "Maximum tank speed in the water (-1: ignore setting; 0: default; 210: default Tank Speed)", _, true, -1.0);
@@ -148,7 +149,7 @@ public void TankSpawn(Event event, const char[] name, bool dontBroadcast)
 	if (!tankInPlay) {
 		tankInPlay = true;
 		if (fSurvWaterSpeedDuringTank > 0.0) {
-			CPrintToChatAll("{default}[{olive}Water Slowdown{default}]  {green}水中减速{default} 效果因tank生成被减弱.");
+			CPrintToChatAll("%t", "L4D2SlowdownControl_WaterSlowdownWaterSlowdownEffect");
 		}
 	}
 }
@@ -167,7 +168,7 @@ public Action Timer_CheckTank(Handle timer)
 	if (!tankclient || !IsPlayerAlive(tankclient)) {
 		tankInPlay = false;
 		if (fSurvWaterSpeedDuringTank > 0.0) {
-			CPrintToChatAll("{default}[{olive}Water Slowdown{default}]  {green}水中减速{default} 效果已恢复到正常水平。");
+			CPrintToChatAll("%t", "L4D2SlowdownControl_WaterSlowdownWaterSlowdownEffectRestored");
 		}
 	}
 

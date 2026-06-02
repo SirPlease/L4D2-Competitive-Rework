@@ -178,6 +178,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
+	LoadTranslations("gnome.phrases");
 	g_hCvarAllow =		CreateConVar(	"l4d2_gnome_allow",			"1",			"0=Plugin off, 1=Plugin on.", CVAR_FLAGS );
 	g_hCvarGlow =		CreateConVar(	"l4d2_gnome_glow",			"200",			"0=Off. Sets the max range at which the gnome glows.", CVAR_FLAGS );
 	g_hCvarGlowCol =	CreateConVar(	"l4d2_gnome_glow_color",	"255 0 0",		"0=Default glow color. Three values between 0-255 separated by spaces. RGB: Red Green Blue.", CVAR_FLAGS );
@@ -1006,14 +1007,14 @@ public Action CmdGnomeTemp(int client, int args)
 	}
 	else if( g_iGnomeCount >= MAX_GNOMES )
 	{
-		PrintToChat(client, "%sError: Cannot add anymore gnomes. Used: (\x05%d/%d\x01).", CHAT_TAG, g_iGnomeCount, MAX_GNOMES);
+		PrintToChat(client, "%t", "Gnome_ErrorAddAnymoreGnomesUsed", CHAT_TAG, g_iGnomeCount, MAX_GNOMES);
 		return Plugin_Handled;
 	}
 
 	float vPos[3], vAng[3];
 	if( !SetTeleportEndPoint(client, vPos, vAng) )
 	{
-		PrintToChat(client, "%sCannot place gnome, please try again.", CHAT_TAG);
+		PrintToChat(client, "%t", "Gnome_CannotPlaceGnomeTryAgain", CHAT_TAG);
 		return Plugin_Handled;
 	}
 
@@ -1033,7 +1034,7 @@ public Action CmdGnomeSave(int client, int args)
 	}
 	else if( g_iGnomeCount >= MAX_GNOMES )
 	{
-		PrintToChat(client, "%sError: Cannot add anymore gnomes. Used: (\x05%d/%d\x01).", CHAT_TAG, g_iGnomeCount, MAX_GNOMES);
+		PrintToChat(client, "%t", "Gnome_ErrorAddAnymoreGnomesUsed", CHAT_TAG, g_iGnomeCount, MAX_GNOMES);
 		return Plugin_Handled;
 	}
 
@@ -1050,7 +1051,7 @@ public Action CmdGnomeSave(int client, int args)
 	KeyValues hFile = new KeyValues("gnomes");
 	if( !hFile.ImportFromFile(sPath) )
 	{
-		PrintToChat(client, "%sError: Cannot read the gnome config, assuming empty file. (\x05%s\x01).", CHAT_TAG, sPath);
+		PrintToChat(client, "%t", "Gnome_ErrorCannotReadGnomeConfig", CHAT_TAG, sPath);
 	}
 
 	// Check for current map in the config
@@ -1058,7 +1059,7 @@ public Action CmdGnomeSave(int client, int args)
 	GetCurrentMap(sMap, sizeof(sMap));
 	if( !hFile.JumpToKey(sMap, true) )
 	{
-		PrintToChat(client, "%sError: Failed to add map to gnome spawn config.", CHAT_TAG);
+		PrintToChat(client, "%t", "Gnome_ErrorFailedAddMapGnome", CHAT_TAG);
 		delete hFile;
 		return Plugin_Handled;
 	}
@@ -1067,7 +1068,7 @@ public Action CmdGnomeSave(int client, int args)
 	int iCount = hFile.GetNum("num", 0);
 	if( iCount >= MAX_GNOMES )
 	{
-		PrintToChat(client, "%sError: Cannot add anymore gnomes. Used: (\x05%d/%d\x01).", CHAT_TAG, iCount, MAX_GNOMES);
+		PrintToChat(client, "%t", "Gnome_ErrorAddAnymoreGnomesUsed", CHAT_TAG, iCount, MAX_GNOMES);
 		delete hFile;
 		return Plugin_Handled;
 	}
@@ -1085,7 +1086,7 @@ public Action CmdGnomeSave(int client, int args)
 		float vPos[3], vAng[3];
 		if( !SetTeleportEndPoint(client, vPos, vAng) )
 		{
-			PrintToChat(client, "%sCannot place gnome, please try again.", CHAT_TAG);
+			PrintToChat(client, "%t", "Gnome_CannotPlaceGnomeTryAgain", CHAT_TAG);
 			delete hFile;
 			return Plugin_Handled;
 		}
@@ -1100,10 +1101,10 @@ public Action CmdGnomeSave(int client, int args)
 		hFile.Rewind();
 		hFile.ExportToFile(sPath);
 
-		PrintToChat(client, "%s(\x05%d/%d\x01) - Saved at pos:[\x05%f %f %f\x01] ang:[\x05%f %f %f\x01]", CHAT_TAG, iCount, MAX_GNOMES, vPos[0], vPos[1], vPos[2], vAng[0], vAng[1], vAng[2]);
+		PrintToChat(client, "%t", "Gnome_SavedPosAng", CHAT_TAG, iCount, MAX_GNOMES, vPos[0], vPos[1], vPos[2], vAng[0], vAng[1], vAng[2]);
 	}
 	else
-		PrintToChat(client, "%s(\x05%d/%d\x01) - Failed to save Gnome.", CHAT_TAG, iCount, MAX_GNOMES);
+		PrintToChat(client, "%t", "Gnome_FailedSaveGnome", CHAT_TAG, iCount, MAX_GNOMES);
 
 	delete hFile;
 	return Plugin_Handled;
@@ -1163,14 +1164,14 @@ public Action CmdGnomeDelete(int client, int args)
 	BuildPath(Path_SM, sPath, sizeof(sPath), CONFIG_SPAWNS);
 	if( !FileExists(sPath) )
 	{
-		PrintToChat(client, "%sError: Cannot find the gnome config (\x05%s\x01).", CHAT_TAG, CONFIG_SPAWNS);
+		PrintToChat(client, "%t", "Gnome_ErrorCannotFindGnomeConfig", CHAT_TAG, CONFIG_SPAWNS);
 		return Plugin_Handled;
 	}
 
 	KeyValues hFile = new KeyValues("gnomes");
 	if( !hFile.ImportFromFile(sPath) )
 	{
-		PrintToChat(client, "%sError: Cannot load the gnome config (\x05%s\x01).", CHAT_TAG, sPath);
+		PrintToChat(client, "%t", "Gnome_ErrorCannotLoadGnomeConfig", CHAT_TAG, sPath);
 		delete hFile;
 		return Plugin_Handled;
 	}
@@ -1181,7 +1182,7 @@ public Action CmdGnomeDelete(int client, int args)
 
 	if( !hFile.JumpToKey(sMap) )
 	{
-		PrintToChat(client, "%sError: Current map not in the gnome config.", CHAT_TAG);
+		PrintToChat(client, "%t", "Gnome_ErrorCurrentMapNotGnome", CHAT_TAG);
 		delete hFile;
 		return Plugin_Handled;
 	}
@@ -1230,10 +1231,10 @@ public Action CmdGnomeDelete(int client, int args)
 		hFile.Rewind();
 		hFile.ExportToFile(sPath);
 
-		PrintToChat(client, "%s(\x05%d/%d\x01) - Gnome removed from config.", CHAT_TAG, iCount, MAX_GNOMES);
+		PrintToChat(client, "%t", "Gnome_RemovedConfig", CHAT_TAG, iCount, MAX_GNOMES);
 	}
 	else
-		PrintToChat(client, "%s(\x05%d/%d\x01) - Failed to remove Gnome from config.", CHAT_TAG, iCount, MAX_GNOMES);
+		PrintToChat(client, "%t", "Gnome_FailedRemoveGnomeConfig", CHAT_TAG, iCount, MAX_GNOMES);
 
 	delete hFile;
 	return Plugin_Handled;
@@ -1254,7 +1255,7 @@ public Action CmdGnomeWipe(int client, int args)
 	BuildPath(Path_SM, sPath, sizeof(sPath), CONFIG_SPAWNS);
 	if( !FileExists(sPath) )
 	{
-		PrintToChat(client, "%sError: Cannot find the gnome config (\x05%s\x01).", CHAT_TAG, sPath);
+		PrintToChat(client, "%t", "Gnome_ErrorCannotFindGnomeConfig", CHAT_TAG, sPath);
 		return Plugin_Handled;
 	}
 
@@ -1262,7 +1263,7 @@ public Action CmdGnomeWipe(int client, int args)
 	KeyValues hFile = new KeyValues("gnomes");
 	if( !hFile.ImportFromFile(sPath) )
 	{
-		PrintToChat(client, "%sError: Cannot load the gnome config (\x05%s\x01).", CHAT_TAG, sPath);
+		PrintToChat(client, "%t", "Gnome_ErrorCannotLoadGnomeConfig", CHAT_TAG, sPath);
 		delete hFile;
 		return Plugin_Handled;
 	}
@@ -1273,7 +1274,7 @@ public Action CmdGnomeWipe(int client, int args)
 
 	if( !hFile.JumpToKey(sMap, false) )
 	{
-		PrintToChat(client, "%sError: Current map not in the gnome config.", CHAT_TAG);
+		PrintToChat(client, "%t", "Gnome_ErrorCurrentMapNotGnome", CHAT_TAG);
 		delete hFile;
 		return Plugin_Handled;
 	}
@@ -1286,7 +1287,7 @@ public Action CmdGnomeWipe(int client, int args)
 	hFile.ExportToFile(sPath);
 	delete hFile;
 
-	PrintToChat(client, "%s(0/%d) - All gnomes removed from config, add with \x05sm_gnomesave\x01.", CHAT_TAG, MAX_GNOMES);
+	PrintToChat(client, "%t", "Gnome_0AllGnomesRemovedConfig", CHAT_TAG, MAX_GNOMES);
 	return Plugin_Handled;
 }
 
@@ -1297,7 +1298,7 @@ public Action CmdGnomeGlow(int client, int args)
 {
 	static bool glow;
 	glow = !glow;
-	PrintToChat(client, "%sGlow has been turned %s", CHAT_TAG, glow ? "on" : "off");
+	PrintToChat(client, "%t", "Gnome_GlowTurned", CHAT_TAG, glow ? "on" : "off");
 
 	VendorGlow(glow);
 	return Plugin_Handled;
@@ -1338,7 +1339,7 @@ public Action CmdGnomeList(int client, int args)
 		}
 	}
 
-	if( client )	PrintToChat(client, "%sTotal: %d.", CHAT_TAG, count);
+	if( client )	PrintToChat(client, "%t", "Gnome_Total", CHAT_TAG, count);
 	else			PrintToConsole(client, "[Gnome] Total: %d.", count);
 	return Plugin_Handled;
 }
@@ -1359,14 +1360,14 @@ public Action CmdGnomeTele(int client, int args)
 			GetEntPropVector(g_iGnomes[index][0], Prop_Data, "m_vecOrigin", vPos);
 			vPos[2] += 20.0;
 			TeleportEntity(client, vPos, NULL_VECTOR, NULL_VECTOR);
-			PrintToChat(client, "%sTeleported to %d.", CHAT_TAG, index + 1);
+			PrintToChat(client, "%t", "Gnome_Teleported", CHAT_TAG, index + 1);
 			return Plugin_Handled;
 		}
 
-		PrintToChat(client, "%sCould not find index for teleportation.", CHAT_TAG);
+		PrintToChat(client, "%t", "Gnome_CouldNotFindIndexTeleportation", CHAT_TAG);
 	}
 	else
-		PrintToChat(client, "%sUsage: sm_gnometele <index 1-%d>.", CHAT_TAG, MAX_GNOMES);
+		PrintToChat(client, "%t", "Gnome_UsageSMGnometeleIndex1", CHAT_TAG, MAX_GNOMES);
 	return Plugin_Handled;
 }
 
@@ -1427,7 +1428,7 @@ void SetAngle(int client, int index)
 
 				TeleportEntity(entity, NULL_VECTOR, vAng, NULL_VECTOR);
 
-				PrintToChat(client, "%sNew angles: %f %f %f", CHAT_TAG, vAng[0], vAng[1], vAng[2]);
+				PrintToChat(client, "%t", "Gnome_NewAngles", CHAT_TAG, vAng[0], vAng[1], vAng[2]);
 				break;
 			}
 		}
@@ -1491,7 +1492,7 @@ void SetOrigin(int client, int index)
 
 				TeleportEntity(entity, vPos, NULL_VECTOR, NULL_VECTOR);
 
-				PrintToChat(client, "%sNew origin: %f %f %f", CHAT_TAG, vPos[0], vPos[1], vPos[2]);
+				PrintToChat(client, "%t", "Gnome_NewOrigin", CHAT_TAG, vPos[0], vPos[1], vPos[2]);
 				break;
 			}
 		}
@@ -1526,14 +1527,14 @@ void SaveData(int client)
 	BuildPath(Path_SM, sPath, sizeof(sPath), CONFIG_SPAWNS);
 	if( !FileExists(sPath) )
 	{
-		PrintToChat(client, "%sError: Cannot find the gnome config (\x05%s\x01).", CHAT_TAG, CONFIG_SPAWNS);
+		PrintToChat(client, "%t", "Gnome_ErrorCannotFindGnomeConfig", CHAT_TAG, CONFIG_SPAWNS);
 		return;
 	}
 
 	KeyValues hFile = new KeyValues("gnomes");
 	if( !hFile.ImportFromFile(sPath) )
 	{
-		PrintToChat(client, "%sError: Cannot load the gnome config (\x05%s\x01).", CHAT_TAG, sPath);
+		PrintToChat(client, "%t", "Gnome_ErrorCannotLoadGnomeConfig", CHAT_TAG, sPath);
 		delete hFile;
 		return;
 	}
@@ -1544,7 +1545,7 @@ void SaveData(int client)
 
 	if( !hFile.JumpToKey(sMap) )
 	{
-		PrintToChat(client, "%sError: Current map not in the gnome config.", CHAT_TAG);
+		PrintToChat(client, "%t", "Gnome_ErrorCurrentMapNotGnome", CHAT_TAG);
 		delete hFile;
 		return;
 	}
@@ -1564,7 +1565,7 @@ void SaveData(int client)
 		hFile.Rewind();
 		hFile.ExportToFile(sPath);
 
-		PrintToChat(client, "%sSaved origin and angles to the data config", CHAT_TAG);
+		PrintToChat(client, "%t", "Gnome_SavedOriginAnglesDataConfig", CHAT_TAG);
 	}
 }
 

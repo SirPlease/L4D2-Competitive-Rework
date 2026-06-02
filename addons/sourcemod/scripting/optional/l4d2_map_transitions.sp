@@ -37,6 +37,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_map_transitions.phrases");
 	CheckGame();
 
 	g_hMapTransitionPair = new StringMap();
@@ -58,7 +59,7 @@ public void L4D2_OnEndVersusModeRound_Post() //left4dhooks
 		g_hTransitionTimer = CreateTimer(15.0, OnRoundEnd_Post);
 
 		#if DEBUG
-			PrintToChatAll("L4D2_OnEndVersusModeRound_Post");
+			PrintToChatAll("%t", "L4D2MapTransitions_EndVersusModeRoundPost");
 		#endif
 	}
 }
@@ -82,7 +83,7 @@ Action OnRoundEnd_Post(Handle hTimer)
 			LogMessage("Map transitioned from: %s to: %s", sCurrentMapName, sNextMapName);
 		#endif
 
-		CPrintToChatAll("{olive}[MT]{default} Starting transition from: {blue}%s{default} to: {blue}%s", sCurrentMapName, sNextMapName);
+		CPrintToChatAll("%t", "L4D2MapTransitions_MTStartingTransition", sCurrentMapName, sNextMapName);
 		ForceChangeLevel(sNextMapName, "Map Transitions");
 	}
 

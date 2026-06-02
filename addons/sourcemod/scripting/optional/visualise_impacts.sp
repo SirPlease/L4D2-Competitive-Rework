@@ -51,6 +51,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("visualise_impacts.phrases");
 	g_hCvarRemoveDecalsTime = CreateConVar("l4d_remove_decals_time", "20.0", "After what time will the decals be removed? (0 for disable)", _, true, 0.0, true, 320.0);
 
 	InitPlugin();
@@ -212,7 +213,7 @@ void RemoveAllDecalsForAll()
 
 void RemoveAllDecals(int iClient)
 {
-	PrintToChat(iClient, "[Note] Use command `r_removedecals` for client to clean old decals.");
+	PrintToChat(iClient, "%t", "VisualiseImpacts_NoteUseCommandRemovedecalsClient");
 }
 
 void ClearAllData()

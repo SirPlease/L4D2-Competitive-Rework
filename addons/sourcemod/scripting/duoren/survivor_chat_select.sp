@@ -71,6 +71,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("survivor_chat_select.phrases");
 	g_hClientID 	= RegClientCookie("Player_Character", "Player's default character ID.", CookieAccess_Protected);
 	g_hClientModel  = RegClientCookie("Player_Model", "Player's default character model.", CookieAccess_Protected);
 
@@ -170,7 +171,7 @@ public Action LouisUse(int client, int args)
 void SurvivorChange(int client, int prop, char[] model,  char[] name, bool save = true)
 {
 	if( client == 0		)  { PrintToServer("You must be in the survivor team to use this command!"); return;}
-	if(!IsSurvivor(client)){ PrintToChat(client, "You must be in the survivor team to use this command!"); 	return; }
+	if(!IsSurvivor(client)){ PrintToChat(client, "%t", "SurvivorChatSelect_TeamUseCommand"); 	return; }
 
 	if (IsFakeClient(client))  // if bot, change name
 	{
@@ -186,7 +187,7 @@ void SurvivorChange(int client, int prop, char[] model,  char[] name, bool save 
 		char sprop[2]; IntToString(prop, sprop, 2);
 		SetClientCookie(client, g_hClientID, sprop);
 		SetClientCookie(client, g_hClientModel, model);
-		PrintToChat(client, "%s Your \x05default \x01character is now set to \x03%s\x01.", PLUGIN_PREFIX, name);
+		PrintToChat(client, "%t", "SurvivorChatSelect_DefaultCharacterSet", PLUGIN_PREFIX, name);
 	}
 }
 
@@ -485,7 +486,7 @@ public Action Timer_LoadCookie(Handle timer, int userid)
 
 	if (!AreClientCookiesCached(client))
 	{
-		PrintToChat(client, "%s Couldn't load your default character. Type \x05!csm \x01to choose your \x03default \x01character.", PLUGIN_PREFIX);
+		PrintToChat(client, "%t", "SurvivorChatSelect_CouldnLoadDefaultCharacterType", PLUGIN_PREFIX);
 		return Plugin_Stop;
 	}
 

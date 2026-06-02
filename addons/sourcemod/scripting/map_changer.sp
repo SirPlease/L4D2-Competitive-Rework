@@ -127,6 +127,7 @@ int Native_SetNextMap(Handle plugin, int numParams) {
 }
 
 public void OnPluginStart() {
+	LoadTranslations("map_changer.phrases");
 	g_smNextMap = new StringMap();
 	g_smTranslation = new StringMap();
 	g_aRandomNextMap = new ArrayList(ByteCountToCells(64));
@@ -383,12 +384,12 @@ Action Timer_StartFinaleFailureVote(Handle timer) {
 void FinaleFailureVote_Handler(L4D2NativeVote vote, VoteAction action, int param1, int param2) {
 	switch (action) {
 		case VoteAction_Start: {
-			PrintToChatAll("\x04[MapChanger]\x01 投票：是否启用本救援图失败 \x05%d\x01 次自动换图？", g_iFinaleFailureCount);
+			PrintToChatAll("%t", "MapChanger_VoteWhetherEnableRescueMap", g_iFinaleFailureCount);
 		}
 
 		case VoteAction_PlayerVoted: {
 			if (IsClientInGame(param1) && !IsFakeClient(param1))
-				PrintToChatAll("\x04[MapChanger]\x01 %N 已投票。", param1);
+				PrintToChatAll("%t", "MapChanger_Voted", param1);
 		}
 
 		case VoteAction_End: {
@@ -397,12 +398,12 @@ void FinaleFailureVote_Handler(L4D2NativeVote vote, VoteAction action, int param
 			if (vote.YesCount > vote.PlayerCount / 2) {
 				g_bFinaleFailureChangeEnabled = true;
 				vote.SetPass("已启用");
-				PrintToChatAll("\x04[MapChanger]\x01 已启用本救援图失败 \x05%d\x01 次自动换图。", g_iFinaleFailureCount);
+				PrintToChatAll("%t", "MapChanger_RescueMapEnabledFailedAutomatically", g_iFinaleFailureCount);
 			}
 			else {
 				g_bFinaleFailureChangeEnabled = false;
 				vote.SetFail();
-				PrintToChatAll("\x04[MapChanger]\x01 本救援图已关闭失败次数自动换图。");
+				PrintToChatAll("%t", "MapChanger_RescueMapTurnedOffAutomatically");
 			}
 		}
 	}

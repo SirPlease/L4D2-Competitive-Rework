@@ -8,6 +8,7 @@
 // Here we go!
 public OnPluginStart()
 {
+	LoadTranslations("l4d_stats.phrases");
 	CommandsRegistered = false;
 	// Require Left 4 Dead (2)
 	decl String:game_name[64];

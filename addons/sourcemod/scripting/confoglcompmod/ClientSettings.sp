@@ -113,7 +113,7 @@ static void _EnforceCliSettings_QueryReply(QueryCookie cookie, int client, ConVa
 									CLS_MODULE_NAME, client, cvarName, fCvarVal, clsetting.CLSE_hasMin, \
 										clsetting.CLSE_min, clsetting.CLSE_hasMax, clsetting.CLSE_max);
 
-				CPrintToChatAll("{blue}[{default}Confogl{blue}] {olive}%L{default} was kicked for having an illegal value for '{green}%s{default}' {blue}({default}%f{blue})", \
+				CPrintToChatAll("%t", "ConfoglCompMod_KickedIllegalValue", \
 									client, cvarName, fCvarVal);
 
 				char kickMessage[256] = "Illegal Client Value for ";

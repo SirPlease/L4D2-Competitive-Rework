@@ -118,6 +118,7 @@ bool g_bSISystem = false;
 
 public void OnPluginStart()
 {
+	LoadTranslations("ai_tank_2.phrases");
 	// 连跳相关
 	g_hAllowBhop = CreateConVar("ai_Tank_Bhop", "1", "是否开启坦克连跳", CVAR_FLAG, true, 0.0, true, 1.0);
 	g_hBhopSpeed = CreateConVar("ai_TankBhopSpeed", "60", "坦克连跳速度", CVAR_FLAG, true, 0.0);
@@ -187,7 +188,7 @@ public Action CalculateLadderNum(int client, int args){
 			laddercount++;
 		}
 	}
-	PrintToChatAll("本地图共有：%d 个梯子 %d个初始化检测梯子", laddercount, ladderList.Length);
+	PrintToChatAll("%t", "AITank2_MapTotalLaddersInitializationDetection", laddercount, ladderList.Length);
 	return Plugin_Handled;
 }
 #endif

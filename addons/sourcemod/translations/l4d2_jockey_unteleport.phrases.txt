@@ -1,0 +1,12 @@
+"Phrases"
+{
+	"L4D2JockeyUnteleport_VoidMonkeyRepairTeleportedBack"
+	{
+		"en"		"{blue}[Void Monkey Repair] {default} teleported back %N that was teleported by Void Monkey."
+		"chi"		"{blue}[虚空猴修复]{default} 传送回了被虚空猴传送的%N."
+		"zho"		"{blue}[虛空猴子修復]{default} 傳送回了被虛空猴傳送的%N."
+		"jp"		"{blue}[Void Monkey Repair] {default}は、Void Monkeyによってテレポートされた%Nをテレポートさせました。"
+		"ko"		"{blue}[공허 원숭이 수리] {default}는 공허 원숭이가 순간이동한 %N를 다시 ​​순간이동시켰습니다."
+		"vi"		"{blue}[Void Monkey Repair] {default} đã dịch chuyển trở lại %N đã được dịch chuyển bởi Void Monkey."
+	}
+}

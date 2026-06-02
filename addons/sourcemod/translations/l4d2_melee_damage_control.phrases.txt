@@ -1,0 +1,42 @@
+"Phrases"
+{
+	"L4D2MeleeDamageControl_MeleeDmgFixInfectedClass"
+	{
+		"en"		"[MeleeDmgFix] Infected: (%N) %d, Class: %s (%d), attacker: (%N) %d , inflictor: %d, damage: %f, damagetype: %d, set damage: %f"
+		"chi"		"[MeleeDmgFix] 感染者：(%N) %d，等级：%s (%d)，攻击者：(%N) %d，伤害者：%d，伤害：%f，伤害类型： %d，设定伤害：%f"
+		"zho"		"[MeleeDmgFix] Infected: (%N) %d, Class: %s (%d), attacker: (%N) %d , inflictor: %d, damage: %f, damagetype: %d, set damage: %f"
+		"jp"		"[MeleeDmgFix] 感染者: (%N) %d、クラス: %s (%d)、攻撃者: (%N) %d、加害者: %d、ダメージ: %f、ダメージタイプ: %d、セットダメージ: %f"
+		"ko"		"[MeleeDmgFix] 감염됨: (%N) %d, 클래스: %s (%d), 공격자: (%N) %d, 침해자: %d, 피해: %f, 피해 유형: %d, 세트 데미지: %f"
+		"vi"		"[MeleeDmgFix] Bị nhiễm: (%N) %d, Lớp: %s (%d), kẻ tấn công: (%N) %d , kẻ gây ra: %d, sát thương: %f, loại sát thương: %d, sát thương đặt: %f"
+	}
+
+	"L4D2MeleeDamageControl_MeleeDmgControlChargerAttacker"
+	{
+		"en"		"[MeleeDmgControl] Charger: (%N) %d, attacker: (%N) %d , inflictor: %d, damage: %f, damagetype: %d, set damage: %f"
+		"chi"		"[MeleeDmgControl] 充电器：(%N) %d，攻击者：(%N) %d，加害者：%d，伤害：%f，伤害类型：%d，设定伤害：%f"
+		"zho"		"[MeleeDmgControl] Charger: (%N) %d, attacker: (%N) %d , inflictor: %d, damage: %f, damagetype: %d, set damage: %f"
+		"jp"		"[MeleeDmgControl] チャージャー: (%N) %d、アタッカー: (%N) %d、インフリクター: %d、ダメージ: %f、ダメージタイプ: %d、セットダメージ: %f"
+		"ko"		"[MeleeDmgControl] 충전기: (%N) %d, 공격자: (%N) %d, 적용자: %d, 데미지: %f, 데미지 유형: %d, 세트 데미지: %f"
+		"vi"		"[MeleeDmgControl] Bộ sạc: (%N) %d, kẻ tấn công: (%N) %d , kẻ gây ra: %d, sát thương: %f, loại sát thương: %d, sát thương đặt: %f"
+	}
+
+	"L4D2MeleeDamageControl_MeleeDmgControlTankAttacker"
+	{
+		"en"		"[MeleeDmgControl] Tank: (%N) %d, attacker: (%N) %d, inflictor: %d, damage: %f, damagetype: %d, set damage: %f"
+		"chi"		"[MeleeDmgControl] 坦克：(%N) %d，攻击者：(%N) %d，加害者：%d，伤害：%f，伤害类型：%d，设定伤害：%f"
+		"zho"		"[MeleeDmgControl] 坦克：(%N) %d，攻擊者：(%N) %d，加害者：%d，傷害：%f，加害者：%d，傷害：%f，傷害類型：ZX"
+		"jp"		"[MeleeDmgControl] タンク: (%N) %d、攻撃者: (%N) %d、加害者: %d、ダメージ: %f、ダメージタイプ: %d、セットダメージ: %f"
+		"ko"		"[MeleeDmgControl] 탱크: (%N) %d, 공격자: (%N) %d, 적용자: %d, 데미지: %f, 데미지 유형: %d, 세트 데미지: %f"
+		"vi"		"[MeleeDmgControl] Xe tăng: (%N) %d, kẻ tấn công: (%N) %d, kẻ gây ra: %d, sát thương: %f, loại sát thương: %d, sát thương cố định: %f"
+	}
+
+	"L4D2MeleeDamageControl_ClassName"
+	{
+		"en"		"sClassName: %s (%d)"
+		"chi"		"类名：%s (%d)"
+		"zho"		"類別名稱：%s (%d)"
+		"jp"		"sクラス名: %s (%d)"
+		"ko"		"s클래스 이름: %s (%d)"
+		"vi"		"sClassName: %s (%d)"
+	}
+}

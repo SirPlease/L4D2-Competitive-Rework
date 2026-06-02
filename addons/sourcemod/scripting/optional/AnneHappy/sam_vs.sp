@@ -36,6 +36,7 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 
 public OnPluginStart()
 {
+	LoadTranslations("sam_vs.phrases");
 	decl String:sGameFolder[32];
 	GetGameFolderName(sGameFolder, 32);
 	g_bLeft4Dead2 = StrEqual(sGameFolder, "left4dead2");
@@ -105,7 +106,7 @@ public SAM_ev_PlayerSay(Handle:event, String:event_name[], bool:dontBroadcast)
 	if (GetClientTeam(client) != 1){
 
 		#if debug
-			PrintToChatAll("[debug] %N chatting", client);
+			PrintToChatAll("%t", "SAMVS_DebugChatting", client);
 		#endif
 
 		SetEngineTime(client);
@@ -134,7 +135,7 @@ public Action:OnPlayerRunCmd(client, &buttons)
 SAM_PluseTime(client)
 {
 	#if debug
-		PrintToChatAll("[debug] %N pressed a button (%d)", client, GetClientButtons(client));
+		PrintToChatAll("%t", "SAMVS_DebugPressedButton", client, GetClientButtons(client));
 	#endif
 
 	SetEngineTime(client);
@@ -154,7 +155,7 @@ public Action:SAM_t_CheckIdles(Handle:timer)
 	fTheTime = GetEngineTime(), bRUP = IsReadyUpActive();
 
 	#if debug
-		PrintToChatAll("[debug] SAM_t_CheckIdles()-> fired, RUP = %b!", bRUP);
+		PrintToChatAll("%t", "SAMVS_DebugSAMCheckIdlesFired", bRUP);
 	#endif
 
 	for (new i = 1; i <= MaxClients; i++){
@@ -172,7 +173,7 @@ public Action:SAM_t_CheckIdles(Handle:timer)
 				if (IsPlayerBussy(i, iTeam) || g_bCvarTank && iTeam == 3 && IsPlayerTank(i)){
 
 					#if debug
-						PrintToChatAll("[debug] SAM_t_CheckIdles()-> %N are bussy/tank. We skip him...", i);
+						PrintToChatAll("%t", "SAMVS_DebugSAMCheckIdlesBussy", i);
 					#endif
 
 					g_fButtonTime[i] = fTheTime;
@@ -182,7 +183,7 @@ public Action:SAM_t_CheckIdles(Handle:timer)
 				if (fnemotes_IsClientEmoting(i))
 				{
 					#if debug
-						PrintToChatAll("[debug] SAM_t_CheckIdles()-> %N are dancing, skip he...", i);
+						PrintToChatAll("%t", "SAMVS_DebugSAMCheckIdlesDancing", i);
 					#endif
 					g_fButtonTime[i] = fTheTime;
 					continue;
@@ -201,7 +202,7 @@ public Action:SAM_t_CheckIdles(Handle:timer)
 				ChangeClientTeam(i, 1);
 
 				#if debug
-					PrintToChatAll("[debug] SAM_t_CheckIdles()-> %N moved to spec (Was AFK for %.1fsec)", i, fTheTime - g_fButtonTime[i]);
+					PrintToChatAll("%t", "SAMVS_DebugSAMCheckIdlesMoved", i, fTheTime - g_fButtonTime[i]);
 				#endif
 
 				if (bWhoAmI(i) || !g_fCvarKickT) continue;
@@ -209,7 +210,7 @@ public Action:SAM_t_CheckIdles(Handle:timer)
 				g_hTimer[i] = CreateTimer(g_fCvarKickT, SAM_t_ActionKick, i, TIMER_FLAG_NO_MAPCHANGE);
 
 				#if debug
-					PrintToChatAll("[debug] SAM_t_CheckIdles()-> %N AFK, timer %x hndl", i, g_hTimer[i]);
+					PrintToChatAll("%t", "SAMVS_DebugSAMCheckIdlesAFK", i, g_hTimer[i]);
 				#endif
 			}
 			else
@@ -245,7 +246,7 @@ SAM_TimeToKill(client)
 	if (g_hTimer[client] != INVALID_HANDLE){
 
 		#if debug
-			PrintToChatAll("[debug] SAM_TimeToKill(%N)-> Kill %x timer hndl", client, g_hTimer[client]);
+			PrintToChatAll("%t", "SAMVS_DebugSAMTimeKillTimer", client, g_hTimer[client]);
 		#endif
 
 		KillTimer(g_hTimer[client]);
@@ -256,7 +257,7 @@ SAM_TimeToKill(client)
 public Action:SAM_t_ActionKick(Handle:timer, any:client)
 {
 	#if debug
-		PrintToChatAll("[debug] SAM_t_ActionKick(%N) Kick player", client);
+		PrintToChatAll("%t", "SAMVS_DebugSAMActionKickPlayer", client);
 	#endif
 
 	if (IsClientInGame(client) && !bWhoAmI(client))

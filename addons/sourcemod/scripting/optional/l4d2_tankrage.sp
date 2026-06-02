@@ -67,7 +67,7 @@ void Event_TankSpawn(Event hEvent, char[] sEventName, bool dontBroadcast)
     iTank = GetClientOfUserId(hEvent.GetInt("userid"));
 
     if (convarDebug.BoolValue) 
-        PrintToChatAll("[%s]: %N is Tank", sEventName, iTank);
+        PrintToChatAll("%t", "L4D2Tankrage_Tank", sEventName, iTank);
 
     if (bHaveHadFlowOrStaticTank)
         return;
@@ -110,7 +110,7 @@ void Event_ResetTank(Event hEvent, char[] sEventName, bool dontBroadcast)
         iTank = -1;
 
         if (convarDebug.BoolValue) 
-            PrintToChatAll("[%s]: Everything is reset!", sEventName);
+            PrintToChatAll("%t", "L4D2Tankrage_EverythingReset", sEventName);
     }
     
     delete hTankTimer;
@@ -145,9 +145,9 @@ Action timerTank(Handle timer)
 
             if (convarDebug.BoolValue)
             {
-                PrintToChatAll("\x04[\x03%N\x04]\x01: Flow Difference since last check: %i", iTank, diff);
-                PrintToChatAll("\x04[\x03%N\x04]\x01: Frus: \x03%i \x01- Grace: \x03%f\x04s", iTank, tankFrustration, fTankGrace);
-                PrintToChatAll("\x04[\x03%N\x04]\x01: Set Grace To: \x03%f\x04s", iTank, fTankGrace + fTimeToAdd);
+                PrintToChatAll("%t", "L4D2Tankrage_FlowDifferenceSinceLastCheck", iTank, diff);
+                PrintToChatAll("%t", "L4D2Tankrage_FrusGrace", iTank, tankFrustration, fTankGrace);
+                PrintToChatAll("%t", "L4D2Tankrage_SetGrace", iTank, fTankGrace + fTimeToAdd);
             }
 
             fTankGrace += fTimeToAdd;

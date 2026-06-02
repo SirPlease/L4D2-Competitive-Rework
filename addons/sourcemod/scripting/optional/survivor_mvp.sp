@@ -234,6 +234,7 @@ int Native_GetMVPCIPercent(Handle:plugin, numParams)
 
 public OnPluginStart()
 {
+	LoadTranslations("survivor_mvp.phrases");
     // Round triggers
     //HookEvent("door_close", DoorClose_Event);
     HookEvent("finale_vehicle_leaving", FinaleEnd_Event, EventHookMode_PostNoCopy);
@@ -768,11 +769,11 @@ void PrintAnneHappyMVPReport(client)
 
     if (client > 0 && IsClientAndInGame(client))
     {
-        CPrintToChat(client, "{blue}[{default}药役MVP统计{blue}]");
+        CPrintToChat(client, "%t", "SurvivorMVP_PharmacyMVPStatisticsHeader");
     }
     else
     {
-        CPrintToChatAll("{blue}[{default}药役MVP统计{blue}]");
+        CPrintToChatAll("%t", "SurvivorMVP_PharmacyMVPStatisticsHeader");
     }
 
     for (new i = 0; i < players && i < 8; i++)
@@ -786,13 +787,11 @@ void PrintAnneHappyMVPReport(client)
         new score = iAnneDidDamage[target] + iAnneGotCommon[target] * ANNE_COMMON_INFECTED_BONUS;
         if (client > 0 && IsClientAndInGame(client))
         {
-            CPrintToChat(client, "{olive}特感{green}%2d {olive}丧尸{green}%3d {olive}黑/被黑{green}%2d/%2d {olive}伤害{green}%4d {default}%N",
-                iAnneGotKills[target], iAnneGotCommon[target], iAnneDidFF[target], iAnneTookFF[target], score, target);
+            CPrintToChat(client, "%t", "SurvivorMVP_PharmacyMVPStatisticsLine", iAnneGotKills[target], iAnneGotCommon[target], iAnneDidFF[target], iAnneTookFF[target], score, target);
         }
         else
         {
-            CPrintToChatAll("{olive}特感{green}%2d {olive}丧尸{green}%3d {olive}黑/被黑{green}%2d/%2d {olive}伤害{green}%4d {default}%N",
-                iAnneGotKills[target], iAnneGotCommon[target], iAnneDidFF[target], iAnneTookFF[target], score, target);
+            CPrintToChatAll("%t", "SurvivorMVP_PharmacyMVPStatisticsLine", iAnneGotKills[target], iAnneGotCommon[target], iAnneDidFF[target], iAnneTookFF[target], score, target);
         }
     }
 }

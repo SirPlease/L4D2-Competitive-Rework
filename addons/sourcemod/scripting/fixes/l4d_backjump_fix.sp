@@ -25,6 +25,7 @@ int iCLunge_BlockMidPounce;
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d_backjump_fix.phrases");
 	Handle conf = LoadGameConfigFile(GAMEDATA_FILE);
 	if (conf == null)
 		SetFailState("Missing gamedata \"" ... GAMEDATA_FILE ... "\"");
@@ -72,7 +73,7 @@ MRESReturn CLunge_OnTouch(int pThis, Handle hParams)
 	{
 		static char cls[64];
 		GetEntityClassname(other, cls, 64);
-		PrintToChat(hunter, "other: %s (%i), solid: %i", cls, other, Entity_IsSolid(other));
+		PrintToChat(hunter, "%t", "L4DBackjumpFix_OtherSolid", cls, other, Entity_IsSolid(other));
 		iLast = other;
 	}
 #endif

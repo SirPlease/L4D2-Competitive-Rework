@@ -90,6 +90,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
+	LoadTranslations("ai_tank_new.phrases");
 	g_hTankBhopSpeed = CreateConVar("ai_Tank_BhopSpeed", "60.0", "Tank连跳的速度", FCVAR_NOTIFY, true, 0.0);
 	g_hTankStopDistance = CreateConVar("ai_Tank_StopDistance", "130", "Tank在距离目标多远位置停下来", FCVAR_NOTIFY, true, 0.0);
 	g_hTankBhop = CreateConVar("ai_Tank_Bhop", "1", "是否开启Tank连跳功能：0=关闭，1=开启", FCVAR_NOTIFY, true, 0.0, true, 1.0);
@@ -891,7 +892,7 @@ public Action L4D2_OnChooseVictim(int specialInfected, int &curTarget)
 						float fNewTargetPos[3], fNewTargetAngles[3];
 						GetClientAbsOrigin(curTarget, fNewTargetPos);	GetClientEyeAngles(curTarget, fNewTargetAngles);
 						TeleportEntity(specialInfected, fNewTargetPos, fNewTargetAngles, NULL_VECTOR);
-						CPrintToChat(curTarget, "{R}<Tank>：{G}喜欢绕树是吧？");
+						CPrintToChat(curTarget, "%t", "AITankNew_TankLikesWalkAroundTrees");
 						return Plugin_Continue;
 					}
 				}

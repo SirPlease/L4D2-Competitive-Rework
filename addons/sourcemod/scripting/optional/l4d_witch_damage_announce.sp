@@ -92,6 +92,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d_witch_damage_announce.phrases");
     HookEvent("player_death", PlayerDied_Event, EventHookMode_Post);
     HookEvent("round_start", RoundStart_Event, EventHookMode_PostNoCopy);
     HookEvent("round_end", RoundEnd_Event, EventHookMode_PostNoCopy);
@@ -167,7 +168,7 @@ public void WitchDeath_Event(Event hEvent, const char[] name, bool dontBroadcast
     //Check if Tank Killed the Witch.
     if (IsClientAndInGame(killer) && GetClientTeam(killer) == TEAM_INFECTED && IsTank(killer))
     {
-        CPrintToChatAll("{default}[{green}!{default}] {red}Tank {default}({olive}%N{default}) killed the {red}Witch", killer);
+        CPrintToChatAll("%t", "L4DWitchDamageAnnounce_TankKilledWitch", killer);
         bWitchSpawned = false;
         ClearDamage();
         return;
@@ -224,14 +225,14 @@ void CalculateWitch()
 
 void PrintWitchRemainingHealth()
 {
-    CPrintToChatAll("{default}[{green}!{default}] {blue}Witch {default}had {olive}%d {default}health remaining", RoundToFloor(fHealthWitch) - damageWitchTotal);
+    CPrintToChatAll("%t", "L4DWitchDamageAnnounce_WitchHealthRemaining", RoundToFloor(fHealthWitch) - damageWitchTotal);
 }
 
 void PrintWitchDamage()
 {
     if (!bWitchSpawned)
     {
-        CPrintToChatAll("{default}[{green}!{default}] {blue}Damage {default}dealt to {blue}Witch:");
+        CPrintToChatAll("%t", "L4DWitchDamageAnnounce_DamageDealtWitch");
     }
 
     int 
@@ -283,7 +284,7 @@ void PrintWitchDamage()
         {
             if (IsClientInGame(i))
             {
-                CPrintToChat(i, "{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N", damage, percentDamage, client);
+                CPrintToChat(i, "%t", "L4DWitchDamageAnnounce_WitchDamageLine", damage, percentDamage, client);
             }
         }
     }

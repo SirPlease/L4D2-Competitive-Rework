@@ -74,6 +74,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("boomer_horde_equalizer_refactored.phrases");
 	InitGameData();
 
 	// Events
@@ -166,7 +167,7 @@ void Event_PlayerBotReplace(Event event, const char[] name, bool dontBroadcast)
 		bBiledSurvivor[bot] = true;
 
 		#if defined _DEBUG
-			PrintToChatAll("%N passed on bBiledSurvivor to %N", player, bot);
+			PrintToChatAll("%t", "BoomerHordeEqualizer_PassedBiledSurvivor", player, bot);
 		#endif
 	}
 }
@@ -182,7 +183,7 @@ void Event_BotPlayerReplace(Event event, const char[] name, bool dontBroadcast)
 		bBiledSurvivor[player] = true;
 
 		#if defined _DEBUG
-			PrintToChatAll("%N passed on bBiledSurvivor to %N", bot, player);
+			PrintToChatAll("%t", "BoomerHordeEqualizer_PassedBiledSurvivor", bot, player);
 		#endif
 	}
 }
@@ -199,7 +200,7 @@ void Event_PlayerBoomedExpired(Event event, const char[] name, bool dontBroadcas
 		bBiledSurvivor[nolongerit] = false;
 
 		#if defined _DEBUG
-			PrintToChatAll("%N no longer it (BoomedSurvivorCount: %i)", nolongerit, BoomedSurvivorCount);
+			PrintToChatAll("%t", "BoomerHordeEqualizer_NoLongerBoomedSurvivorCount", nolongerit, BoomedSurvivorCount);
 		#endif
 	}
 }
@@ -243,7 +244,7 @@ public Action L4D_OnSpawnITMob(int &iAmount)
 			clientPassed = i;
 
 			#if defined _DEBUG
-				PrintToChatAll("%N boomed (Total: %d)", i, BoomedSurvivorCount);
+				PrintToChatAll("%t", "BoomerHordeEqualizer_BoomedTotal", i, BoomedSurvivorCount);
 			#endif
 
 			break;
@@ -259,7 +260,7 @@ public Action L4D_OnSpawnITMob(int &iAmount)
 			HordeToQueue = BoomHordeEvent[BoomedSurvivorCount];
 
 			#if defined _DEBUG
-				PrintToChatAll("BoomHordeEvent[BoomedSurvivorCount] : %i", BoomHordeEvent[BoomedSurvivorCount]);
+				PrintToChatAll("%t", "BoomerHordeEqualizer_BoomHordeEventBoomedSurvivor", BoomHordeEvent[BoomedSurvivorCount]);
 			#endif
 		}
 	}
@@ -269,7 +270,7 @@ public Action L4D_OnSpawnITMob(int &iAmount)
 	else {
 
 		#if defined _DEBUG
-			PrintToChatAll("Uncovered Bile Event");
+			PrintToChatAll("%t", "BoomerHordeEqualizer_UncoveredBileEvent");
 		#endif
 
 		iAmount = HordeToQueue;

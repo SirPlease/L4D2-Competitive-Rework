@@ -35,6 +35,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d2_sniper_bodyshot.phrases");
 	if (g_bLateLoad) {
 		for (int i = 1; i <= MaxClients; i++) {
 			if (IsClientInGame(i)) {
@@ -74,7 +75,7 @@ Action TraceAttack(int iVictim, int &iAttacker, int &iInflictor, float &fDamage,
 #if DEBUG
 	char szHitgroup[32];
 	HitgroupToString(iHitGroup, szHitgroup, sizeof(szHitgroup));
-	PrintToChatAll("Victim %N, attacker %N, hitgroup %s (%d), weapon: %s, ", iVictim, iAttacker, szHitgroup, iHitGroup, sClassName);
+	PrintToChatAll("%t", "L4D2SniperBodyshot_VictimAttackerHitgroupWeapon", iVictim, iAttacker, szHitgroup, iHitGroup, sClassName);
 #endif
 
 	fDamage = L4D2_GetIntWeaponAttribute(sClassName, L4D2IWA_Damage) / 1.25;

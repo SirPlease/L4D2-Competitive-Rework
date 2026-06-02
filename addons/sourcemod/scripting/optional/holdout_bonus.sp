@@ -112,6 +112,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
+	LoadTranslations("holdout_bonus.phrases");
 	// events
 	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 	HookEvent("player_death", Event_PlayerDeath, EventHookMode_Post);
@@ -387,7 +388,7 @@ void HoldOutStarts(const char[] output, int caller, int activator, float delay)
 	// report
 	int iReport = GetConVarInt(g_hCvarReportMode);
 	if (iReport > 2 && iReport != REPORT_ONLYEVENT) {
-		PrintToChatAll("\x01Holdout event starts... (\x04%i\x01 bonus over \x05%i\x01 seconds)", g_iPointsBonus, g_iHoldoutTime);
+		PrintToChatAll("%t", "HoldoutBonus_EventStartsBonusSecondsonds", g_iPointsBonus, g_iHoldoutTime);
 	}
 
 	Call_StartForward(g_hForwardStart);
@@ -584,7 +585,7 @@ Action Cmd_DisplayBonus(int client, int args)
 
 	// display message
 	if (IS_VALID_INGAME(client)) {
-		PrintToChat(client, "\x01Holdout Bonus: %s", sMsg);
+		PrintToChat(client, "%t", "HoldoutBonus_DynamicBonusSummary", sMsg);
 	} else {
 		PrintToServer("\x01Holdout Bonus: %s", sMsg);
 	}
@@ -595,7 +596,7 @@ Action Cmd_DisplayBonus(int client, int args)
 void DisplayBonusToAll()
 {
 	if (g_iActualBonus) {
-		PrintToChatAll("\x01Holdout Bonus: \x04%i\x01 out of \x05%i\x01.", g_iActualBonus, g_iPointsBonus);
+		PrintToChatAll("%t", "HoldoutBonus_DynamicBonusSummary_2", g_iActualBonus, g_iPointsBonus);
 	}
 }
 

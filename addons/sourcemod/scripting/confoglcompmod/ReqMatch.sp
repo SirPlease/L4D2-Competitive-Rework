@@ -190,7 +190,7 @@ static void RM_Match_Load()
 	IsPluginEnabled(true, true);
 
 	//PrintToChatAll("\x01[\x05Confogl\x01] Match mode loaded!");
-	CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} 比赛模式已加载!");
+	CPrintToChatAll("%t", "ConfoglCompMod_CompetitionModeLoaded");
 
 	if (!RM_bIsMapRestarted && RM_hDoRestart.BoolValue)
 	{
@@ -199,10 +199,10 @@ static void RM_Match_Load()
 
 
 		if (strlen(sMap) > 0)
-		  CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} 更改地图为 {green}%s{default}!", sMap);
+		  CPrintToChatAll("%t", "ConfoglCompMod_ChangeMap", sMap);
 		else {
 			GetCurrentMap(sMap, sizeof(sMap));
-			CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} 重启地图!");
+			CPrintToChatAll("%t", "ConfoglCompMod_RestartMap");
 
 		}
 
@@ -262,7 +262,7 @@ static void RM_Match_Unload(bool bForced = false)
 	RM_RestoreUntrackedCvars();
 
 	//PrintToChatAll("\x01[\x05Confogl\x01] Match mode unloaded!");
-	CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} 比赛配置已卸载!");
+	CPrintToChatAll("%t", "ConfoglCompMod_CompetitionConfigurationUninstalled");
 	//AddCustomServerTag("hidden");
 
 	RM_hConfigFile_Off.GetString(sBuffer, sizeof(sBuffer));
@@ -418,7 +418,7 @@ static bool RM_UpdateCfgOn(const char[] cfgfile, bool bIsPrint = true)
 {
 	if (SetCustomCfg(cfgfile)) {
 		//PrintToChatAll("\x01[\x05Confogl\x01] Using \"\x04%s\x01\" config.", cfgfile);
-		CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} 加载配置 '{olive}%s{default}'.", cfgfile);
+		CPrintToChatAll("%t", "ConfoglCompMod_LoadConfiguration", cfgfile);
 
 		if (RM_bDebugEnabled || IsDebugEnabled())
 		{
@@ -430,7 +430,7 @@ static bool RM_UpdateCfgOn(const char[] cfgfile, bool bIsPrint = true)
 
 	if (bIsPrint) {
 		//PrintToChatAll("\x01[\x05Confogl\x01] Config \"\x04%s\x01\" not found, using default config!", cfgfile);
-		CPrintToChatAll("{blue}[{default}Confogl{blue}]{default} 配置 '{olive}%s{default}' 没找到, 使用默认配置!", cfgfile);
+		CPrintToChatAll("%t", "ConfoglCompMod_ConfigurationNotFoundUseDefault", cfgfile);
 	}
 
 	return false;
@@ -459,7 +459,7 @@ static Action RM_Cmd_ForceMatch(int client, int args)
 		}
 		else {
 			// PrintToChat(client, "\x01[\x05Confogl\x01] Please specify a \x04config\x01 to load.");
-			CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Please specify a {olive}config{default} to load.");
+			CPrintToChat(client, "%t", "ConfoglCompMod_SpecifyConfigLoad");
 		}
 		return Plugin_Handled;
 	}
@@ -477,7 +477,7 @@ static Action RM_Cmd_ForceMatch(int client, int args)
 		}
 		else {
 			// PrintToChat(client, "\x01[\x05Confogl\x01] Please specify a \"\x04%s\x01\" to load.", sBuffer);
-			CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Config '{olive}%s{default}' not found!", sBuffer);
+			CPrintToChat(client, "%t", "ConfoglCompMod_ConfigNotFound", sBuffer);
 		}
 
 		return Plugin_Handled;
@@ -496,7 +496,7 @@ static Action RM_Cmd_ForceMatch(int client, int args)
 				PrintToServer("[Confogl] Map %s not found!", sMap);
 			}
 			else {
-				CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Map '{olive}%s{default}' not found!", sMap);
+				CPrintToChat(client, "%t", "ConfoglCompMod_MapNotFound", sMap);
 			}
 			return Plugin_Handled;
 		}
@@ -536,7 +536,7 @@ static Action RM_CMD_ChangeMatch(int client, int args)
 			PrintToServer("[Confogl] Please specify a config to load.");
 		}
 		else {
-			CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Please specify a {olive}config{default} to load.");
+			CPrintToChat(client, "%t", "ConfoglCompMod_SpecifyConfigLoad");
 		}
 		return Plugin_Handled;
 	}
@@ -551,7 +551,7 @@ static Action RM_CMD_ChangeMatch(int client, int args)
 			PrintToServer("[Confogl] Config %s not found!", sBuffer);
 		}
 		else {
-			CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Config '{olive}%s{default}' not found!", sBuffer);
+			CPrintToChat(client, "%t", "ConfoglCompMod_ConfigNotFound", sBuffer);
 		}
 
 		return Plugin_Handled;
@@ -570,7 +570,7 @@ static Action RM_CMD_ChangeMatch(int client, int args)
 				PrintToServer("[Confogl] Map %s not found!", sMap);
 			}
 			else {
-				CPrintToChat(client, "{blue}[{default}Confogl{blue}]{default} Map '{olive}%s{default}' not found!", sMap);
+				CPrintToChat(client, "%t", "ConfoglCompMod_MapNotFound", sMap);
 			}
 			return Plugin_Handled;
 		}

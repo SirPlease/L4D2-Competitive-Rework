@@ -147,6 +147,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
+	LoadTranslations("confoglcompmod.phrases");
 	// Plugin functions
 	Fns_OnModuleStart();		// functions
 	Debug_OnModuleStart();		// debug

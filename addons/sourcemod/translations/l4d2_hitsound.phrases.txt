@@ -1,0 +1,292 @@
+"Phrases"
+{
+	"L4D2Hitsound_OverlayIcon"
+	{
+		"en"		"Overlay icon: %s (%s)"
+		"chi"		"覆盖图标：%s（%s）"
+		"zho"		"覆蓋圖示：%s（%s）"
+		"jp"		"オーバーレイアイコン: %s (%s)"
+		"ko"		"오버레이 아이콘: %s(%s)"
+		"vi"		"Biểu tượng lớp phủ: %s (%s)"
+	}
+
+	"L4D2Hitsound_CurrentlyNoIconSetsAvailable"
+	{
+		"en"		"There are currently no icon sets available."
+		"chi"		"当前没有可用的图标套装。"
+		"zho"		"目前沒有可用的圖示套裝。"
+		"jp"		"現在利用可能なアイコン セットはありません。"
+		"ko"		"현재 사용 가능한 아이콘 세트가 없습니다."
+		"vi"		"Hiện tại không có bộ biểu tượng nào có sẵn."
+	}
+
+	"L4D2Hitsound_SoundEffectRange"
+	{
+		"en"		"Sound effect range: %s"
+		"chi"		"音效范围：%s"
+		"zho"		"音效範圍：%s"
+		"jp"		"効果音範囲：%s"
+		"ko"		"음향 효과 범위: %s"
+		"vi"		"Phạm vi hiệu ứng âm thanh: %s"
+	}
+
+	"L4D2Hitsound_IconRange"
+	{
+		"en"		"Icon range: %s"
+		"chi"		"图标范围：%s"
+		"zho"		"圖示範圍：%s"
+		"jp"		"アイコン範囲: %s"
+		"ko"		"아이콘 범위: %s"
+		"vi"		"Phạm vi biểu tượng: %s"
+	}
+
+	"L4D2Hitsound_HitsoundSoundEffectPackageThree"
+	{
+		"en"		"[Hitsound] Sound effect package (three items) has been set to: %d"
+		"chi"		"[Hitsound] 音效套装(三项)已设置为: %d"
+		"zho"		"[Hitsound] 音效組(三項)已設定為: %d"
+		"jp"		"[Hitsound] 効果音パッケージ(3点)を%dに設定しました"
+		"ko"		"[Hitsound] 음향 효과 패키지(3개 항목)가 %d로 설정되었습니다."
+		"vi"		"[Hitsound] Gói hiệu ứng âm thanh (ba mục) đã được đặt thành: %d"
+	}
+
+	"L4D2Hitsound_HitsoundIconSetThreeItems"
+	{
+		"en"		"[Hitsound] Icon set (three items) has been set to: %d - %s"
+		"chi"		"[Hitsound] 图标套装(三项)已设置为: %d - %s"
+		"zho"		"[Hitsound] 圖示套裝(三項)已設定為: %d - %s"
+		"jp"		"[Hitsound] アイコンセット(3個)が%d～%sに設定されました"
+		"ko"		"[Hitsound] 아이콘 세트(3개 항목)가 %d - %s로 설정되었습니다."
+		"vi"		"[Hitsound] Bộ biểu tượng (ba mục) đã được đặt thành: %d - %s"
+	}
+
+	"L4D2Hitsound_SelectSetSoundEffectSet"
+	{
+		"en"		"Please select a set in \"Sound Effect Set (Player)\" first."
+		"chi"		"请先在『音效套装（玩家）』里选择一个套装。"
+		"zho"		"請先在『音效套裝（玩家）』裡選出一個套裝。"
+		"jp"		"まずは「効果音セット（プレーヤー）」でセットを選択してください。"
+		"ko"		"먼저 \"효과음 세트(플레이어)\"에서 세트를 선택해 주세요."
+		"vi"		"Trước tiên hãy chọn một bộ trong \"Bộ hiệu ứng âm thanh (Trình phát)\"."
+	}
+
+	"L4D2Hitsound_HitSoundEffectTurnedSet"
+	{
+		"en"		"Hit sound effect: turned on (Set %d)"
+		"chi"		"命中音效：已开启（套装 %d）"
+		"zho"		"命中音效：已開啟（套裝 %d）"
+		"jp"		"ヒット音：ON（%d設定）"
+		"ko"		"타격음 효과: 켜짐(%d 설정)"
+		"vi"		"Hiệu ứng âm thanh nhấn: đã bật (Đặt %d)"
+	}
+
+	"L4D2Hitsound_HitSoundEffectTurnedOff"
+	{
+		"en"		"Hit sound effect: turned off"
+		"chi"		"命中音效：已关闭"
+		"zho"		"命中音效：已關閉"
+		"jp"		"ヒット音：OFF"
+		"ko"		"타격음 효과 : 꺼짐"
+		"vi"		"Hiệu ứng âm thanh nhấn: đã tắt"
+	}
+
+	"L4D2Hitsound_KillSoundEffectTurnedSet"
+	{
+		"en"		"Kill sound effect: turned on (Set %d)"
+		"chi"		"击杀音效：已开启（套装 %d）"
+		"zho"		"擊殺音效：已開啟（套裝 %d）"
+		"jp"		"キル効果音：オン（%dを設定）"
+		"ko"		"킬 사운드 효과: 켜짐(%d 설정)"
+		"vi"		"Hiệu ứng âm thanh tiêu diệt: đã bật (Đặt %d)"
+	}
+
+	"L4D2Hitsound_KillSoundEffectTurnedOff"
+	{
+		"en"		"Kill sound effect: turned off"
+		"chi"		"击杀音效：已关闭"
+		"zho"		"擊殺音效：已關閉"
+		"jp"		"キル効果音: オフ"
+		"ko"		"킬 사운드 효과: 꺼짐"
+		"vi"		"Hiệu ứng âm thanh tiêu diệt: đã tắt"
+	}
+
+	"L4D2Hitsound_HeadshotSoundEffectTurnedSet"
+	{
+		"en"		"Headshot sound effect: turned on (Set %d)"
+		"chi"		"爆头音效：已开启（套装 %d）"
+		"zho"		"爆頭音效：已開啟（套裝 %d）"
+		"jp"		"ヘッドショット効果音：オン（%d設定）"
+		"ko"		"헤드샷 사운드 효과: 켜짐(%d 설정)"
+		"vi"		"Hiệu ứng âm thanh headshot: đã bật (Đặt %d)"
+	}
+
+	"L4D2Hitsound_HeadshotSoundEffectTurnedOff"
+	{
+		"en"		"Headshot sound effect: turned off"
+		"chi"		"爆头音效：已关闭"
+		"zho"		"爆頭音效：已關閉"
+		"jp"		"ヘッドショット効果音：オフ"
+		"ko"		"헤드샷 음향 효과: 꺼짐"
+		"vi"		"Hiệu ứng âm thanh headshot: đã tắt"
+	}
+
+	"L4D2Hitsound_SelectSuitIconSuitPlayer"
+	{
+		"en"		"Please select a suit in \"Icon Suit (Player)\" first."
+		"chi"		"请先在『图标套装（玩家）』里选择一个套装。"
+		"zho"		"請先在『圖示套裝（玩家）』裡選擇一個套裝。"
+		"jp"		"まずは「アイコンスーツ(プレイヤー)」でスーツを選択してください。"
+		"ko"		"먼저 \"아이콘 슈트(플레이어)\"에서 슈트를 선택해 주세요."
+		"vi"		"Trước tiên hãy chọn một bộ đồ trong \"Bộ đồ biểu tượng (Người chơi)\"."
+	}
+
+	"L4D2Hitsound_HitIconTurnedSet"
+	{
+		"en"		"Hit icon: turned on (Set %d)"
+		"chi"		"命中图标：已开启（套装 %d）"
+		"zho"		"命中圖示：已開啟（套裝 %d）"
+		"jp"		"ヒットアイコン：オン（%dを設定）"
+		"ko"		"히트 아이콘: 켜짐(%d 설정)"
+		"vi"		"Biểu tượng nhấn: đã bật (Đặt %d)"
+	}
+
+	"L4D2Hitsound_HitIconClosed"
+	{
+		"en"		"Hit icon: Closed"
+		"chi"		"命中图标：已关闭"
+		"zho"		"命中圖示：已關閉"
+		"jp"		"ヒットアイコン: クローズ"
+		"ko"		"조회 아이콘: 종료됨"
+		"vi"		"Biểu tượng lượt truy cập: Đã đóng"
+	}
+
+	"L4D2Hitsound_KillIconTurnedSet"
+	{
+		"en"		"Kill icon: turned on (Set %d)"
+		"chi"		"击杀图标：已开启（套装 %d）"
+		"zho"		"擊殺圖示：已開啟（套裝 %d）"
+		"jp"		"キルアイコン: オン (%d を設定)"
+		"ko"		"킬 아이콘: 켜짐(%d 설정)"
+		"vi"		"Biểu tượng tiêu diệt: đã bật (Đặt %d)"
+	}
+
+	"L4D2Hitsound_KillIconClosed"
+	{
+		"en"		"Kill icon: Closed"
+		"chi"		"击杀图标：已关闭"
+		"zho"		"擊殺圖示：已關閉"
+		"jp"		"キルアイコン: 終了"
+		"ko"		"처치 아이콘: 닫힘"
+		"vi"		"Biểu tượng tiêu diệt: Đã đóng"
+	}
+
+	"L4D2Hitsound_HeadshotIconTurnedSet"
+	{
+		"en"		"Headshot icon: turned on (Set %d)"
+		"chi"		"爆头图标：已开启（套装 %d）"
+		"zho"		"爆頭圖示：已開啟（套裝 %d）"
+		"jp"		"ヘッドショットアイコン：オン（%dに設定）"
+		"ko"		"얼굴 사진 아이콘: 켜짐(%d 설정)"
+		"vi"		"Biểu tượng headshot: đã bật (Đặt %d)"
+	}
+
+	"L4D2Hitsound_HeadshotIconClosed"
+	{
+		"en"		"Headshot icon: Closed"
+		"chi"		"爆头图标：已关闭"
+		"zho"		"爆頭圖示：已關閉"
+		"jp"		"ヘッドショットアイコン: 閉じています"
+		"ko"		"얼굴 사진 아이콘: 폐쇄됨"
+		"vi"		"Biểu tượng headshot: Đã đóng"
+	}
+
+	"L4D2Hitsound_NotPermissionUseMenu"
+	{
+		"en"		"You do not have permission to use this menu."
+		"chi"		"你没有权限使用此菜单。"
+		"zho"		"你沒有權限使用此選單。"
+		"jp"		"このメニューを使用する権限がありません。"
+		"ko"		"이 메뉴를 사용할 수 있는 권한이 없습니다."
+		"vi"		"Bạn không có quyền sử dụng menu này."
+	}
+
+	"L4D2Hitsound_ThreeSoundEffectsAllTurned"
+	{
+		"en"		"Three sound effects: all turned off"
+		"chi"		"音效三项：已全部关闭"
+		"zho"		"音效三項：已全部關閉"
+		"jp"		"3 つの効果音: すべてオフ"
+		"ko"		"세 가지 음향 효과: 모두 꺼짐"
+		"vi"		"Ba hiệu ứng âm thanh: tất cả đã tắt"
+	}
+
+	"L4D2Hitsound_HeadshotSoundEffectSet"
+	{
+		"en"		"Headshot sound effect: set to %d"
+		"chi"		"爆头音效：已设置为 %d"
+		"zho"		"爆頭音效：已設定為 %d"
+		"jp"		"ヘッドショット効果音：%dに設定"
+		"ko"		"헤드샷 사운드 효과: %d로 설정"
+		"vi"		"Hiệu ứng âm thanh headshot: đặt thành %d"
+	}
+
+	"L4D2Hitsound_HitSoundEffectSet"
+	{
+		"en"		"Hit sound effect: set to %d"
+		"chi"		"命中音效：已设置为 %d"
+		"zho"		"命中音效：已設定為 %d"
+		"jp"		"ヒット音：%dに設定"
+		"ko"		"타격음 효과 : %d로 설정"
+		"vi"		"Hiệu ứng âm thanh nhấn: đặt thành %d"
+	}
+
+	"L4D2Hitsound_KillSoundEffectSet"
+	{
+		"en"		"Kill sound effect: set to %d"
+		"chi"		"击杀音效：已设置为 %d"
+		"zho"		"擊殺音效：已設定為 %d"
+		"jp"		"キル効果音：%dに設定"
+		"ko"		"킬 사운드 효과: %d로 설정"
+		"vi"		"Hiệu ứng âm thanh tiêu diệt: đặt thành %d"
+	}
+
+	"L4D2Hitsound_ThreeIconsAllClosed"
+	{
+		"en"		"Three icons: All closed"
+		"chi"		"图标三项：已全部关闭"
+		"zho"		"圖示三項：已全部關閉"
+		"jp"		"3 つのアイコン: すべて閉じています"
+		"ko"		"아이콘 3개: 모두 닫힘"
+		"vi"		"Ba biểu tượng: Tất cả đã đóng"
+	}
+
+	"L4D2Hitsound_HeadshotIconSet"
+	{
+		"en"		"Headshot icon: set to %d"
+		"chi"		"爆头图标：已设置为 %d"
+		"zho"		"爆頭圖示：已設定為 %d"
+		"jp"		"ヘッドショットアイコン：%dに設定"
+		"ko"		"얼굴 사진 아이콘: %d로 설정"
+		"vi"		"Biểu tượng headshot: đặt thành %d"
+	}
+
+	"L4D2Hitsound_HitIconSet"
+	{
+		"en"		"Hit icon: set to %d"
+		"chi"		"命中图标：已设置为 %d"
+		"zho"		"命中圖示：已設定為 %d"
+		"jp"		"ヒットアイコン：%dに設定"
+		"ko"		"히트 아이콘: %d로 설정"
+		"vi"		"Biểu tượng lượt truy cập: đặt thành %d"
+	}
+
+	"L4D2Hitsound_KillIconSet"
+	{
+		"en"		"Kill icon: set to %d"
+		"chi"		"击杀图标：已设置为 %d"
+		"zho"		"擊殺圖示：已設定為 %d"
+		"jp"		"キルアイコン: %dに設定"
+		"ko"		"킬 아이콘: %d로 설정"
+		"vi"		"Biểu tượng tiêu diệt: đặt thành %d"
+	}
+}

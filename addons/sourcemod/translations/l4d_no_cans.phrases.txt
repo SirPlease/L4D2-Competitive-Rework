@@ -1,0 +1,12 @@
+"Phrases"
+{
+	"L4DNoCans_EntityModel"
+	{
+		"en"		"iEntity: %d (%s), model: %s"
+		"chi"		"iEntity：%d（%s），型号：%s"
+		"zho"		"iEntity：%d（%s），型號：%s"
+		"jp"		"iエンティティ: %d (%s)、モデル: %s"
+		"ko"		"iEntity: %d(%s), 모델: %s"
+		"vi"		"iEntity: %d (%s), model: %s"
+	}
+}

@@ -961,7 +961,7 @@ public StatsPrintToChatPreFormatted2(Client, bool:Forced, const String:Message[]
 		return;
 	}
 
-	PrintToChat(Client, "\x04[\x03RANK\x04] \x01%s", Message);
+	PrintToChat(Client, "%t", "L4DStats_RankMessage", Message);
 }
 
 stock StatsGetClientTeam(client)

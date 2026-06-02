@@ -1204,7 +1204,7 @@ public SelectBanIpCallback(Handle:owner, Handle:hndl, const String:error[], any:
 	{
 		LogToFile(logFile, "Ban IP Select Query Failed: %s", error);
 		if (admin && IsClientInGame(admin))
-			PrintToChat(admin, "%sFailed to ban %s.", Prefix, ip);
+			PrintToChat(admin, "%t", "SourceBans_FailedBan", Prefix, ip);
 		else
 			PrintToServer("%sFailed to ban %s.", Prefix, ip);
 		return;
@@ -1212,7 +1212,7 @@ public SelectBanIpCallback(Handle:owner, Handle:hndl, const String:error[], any:
 	if (SQL_GetRowCount(hndl))
 	{
 		if (admin && IsClientInGame(admin))
-			PrintToChat(admin, "%s%s is already banned.", Prefix, ip);
+			PrintToChat(admin, "%t", "SourceBans_AlreadyBanned", Prefix, ip);
 		else
 			PrintToServer("%s%s is already banned.", Prefix, ip);
 		return;
@@ -1257,7 +1257,7 @@ public InsertBanIpCallback(Handle:owner, Handle:hndl, const String:error[], any:
 	{
 		LogToFile(logFile, "Ban IP Insert Query Failed: %s", error);
 		if (admin && IsClientInGame(admin))
-			PrintToChat(admin, "%ssm_banip failed", Prefix);
+			PrintToChat(admin, "%t", "SourceBans_SMBanipFailed", Prefix);
 		return;
 	}
 
@@ -1269,7 +1269,7 @@ public InsertBanIpCallback(Handle:owner, Handle:hndl, const String:error[], any:
 		arg,
 		reason);
 	if (admin && IsClientInGame(admin))
-		PrintToChat(admin, "%s%s successfully banned", Prefix, arg);
+		PrintToChat(admin, "%t", "SourceBans_SuccessfullyBanned", Prefix, arg);
 	else
 		PrintToServer("%s%s successfully banned", Prefix, arg);
 }
@@ -1291,7 +1291,7 @@ public SelectUnbanCallback(Handle:owner, Handle:hndl, const String:error[], any:
 		LogToFile(logFile, "Unban Select Query Failed: %s", error);
 		if (admin && IsClientInGame(admin))
 		{
-			PrintToChat(admin, "%ssm_unban failed", Prefix);
+			PrintToChat(admin, "%t", "SourceBans_SMUnbanFailed", Prefix);
 		}
 		return;
 	}
@@ -1301,7 +1301,7 @@ public SelectUnbanCallback(Handle:owner, Handle:hndl, const String:error[], any:
 	{
 		if (admin && IsClientInGame(admin))
 		{
-			PrintToChat(admin, "%sNo active bans found for that filter", Prefix);
+			PrintToChat(admin, "%t", "SourceBans_NoActiveBansFoundFilter", Prefix);
 		} else {
 			PrintToServer("%sNo active bans found for that filter", Prefix);
 		}
@@ -1346,7 +1346,7 @@ public InsertUnbanCallback(Handle:owner, Handle:hndl, const String:error[], any:
 		LogToFile(logFile, "Unban Insert Query Failed: %s", error);
 		if (admin && IsClientInGame(admin))
 		{
-			PrintToChat(admin, "%ssm_unban failed", Prefix);
+			PrintToChat(admin, "%t", "SourceBans_SMUnbanFailed", Prefix);
 		}
 		return;
 	}
@@ -1354,7 +1354,7 @@ public InsertUnbanCallback(Handle:owner, Handle:hndl, const String:error[], any:
 	LogAction(admin, -1, "\"%L\" removed ban (filter \"%s\") (reason \"%s\")", admin, arg, reason);
 	if (admin && IsClientInGame(admin))
 	{
-		PrintToChat(admin, "%s%s successfully unbanned", Prefix, arg);
+		PrintToChat(admin, "%t", "SourceBans_SuccessfullyUnbanned", Prefix, arg);
 	} else {
 		PrintToServer("%s%s successfully unbanned", Prefix, arg);
 	}
@@ -1377,7 +1377,7 @@ public SelectAddbanCallback(Handle:owner, Handle:hndl, const String:error[], any
 	{
 		LogToFile(logFile, "Add Ban Select Query Failed: %s", error);
 		if (admin && IsClientInGame(admin))
-			PrintToChat(admin, "%sFailed to ban %s.", Prefix, authid);
+			PrintToChat(admin, "%t", "SourceBans_FailedBan", Prefix, authid);
 		else
 			PrintToServer("%sFailed to ban %s.", Prefix, authid);
 		return;
@@ -1385,7 +1385,7 @@ public SelectAddbanCallback(Handle:owner, Handle:hndl, const String:error[], any
 	if (SQL_GetRowCount(hndl))
 	{
 		if (admin && IsClientInGame(admin))
-			PrintToChat(admin, "%s%s is already banned.", Prefix, authid);
+			PrintToChat(admin, "%t", "SourceBans_AlreadyBanned", Prefix, authid);
 		else
 			PrintToServer("%s%s is already banned.", Prefix, authid);
 		return;
@@ -1422,7 +1422,7 @@ public InsertAddbanCallback(Handle:owner, Handle:hndl, const String:error[], any
 		LogToFile(logFile, "Add Ban Insert Query Failed: %s", error);
 		if (admin && IsClientInGame(admin))
 		{
-			PrintToChat(admin, "%ssm_addban failed", Prefix);
+			PrintToChat(admin, "%t", "SourceBans_SMAddbanFailed", Prefix);
 		}
 		return;
 	}
@@ -1436,7 +1436,7 @@ public InsertAddbanCallback(Handle:owner, Handle:hndl, const String:error[], any
 		reason);
 	if (admin && IsClientInGame(admin))
 	{
-		PrintToChat(admin, "%s%s successfully banned", Prefix, authid);
+		PrintToChat(admin, "%t", "SourceBans_SuccessfullyBanned", Prefix, authid);
 	} else {
 		PrintToServer("%s%s successfully banned", Prefix, authid);
 	}

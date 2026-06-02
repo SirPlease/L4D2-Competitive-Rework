@@ -14,16 +14,28 @@
     {
         "en"    "[BlockList] Database not ready."
         "chi"   "[BlockList] 数据库未就绪。"
+		"zho"		"[BlockList] Database not ready."
+		"jp"		"[BlockList] Database not ready."
+		"ko"		"[BlockList] Database not ready."
+		"vi"		"[BlockList] Database not ready."
     }
     "Resolve_Failed"
     {
         "en"    "[BlockList] Target resolve failed. Use #userid / steam64 / name."
         "chi"   "[BlockList] 目标解析失败，请使用 #userid / steam64 / 名字。"
+		"zho"		"[BlockList] Target resolve failed. Use #userid / steam64 / name."
+		"jp"		"[BlockList] Target resolve failed. Use #userid / steam64 / name."
+		"ko"		"[BlockList] Target resolve failed. Use #userid / steam64 / name."
+		"vi"		"[BlockList] Target resolve failed. Use #userid / steam64 / name."
     }
     "Self_Steam_Failed"
     {
         "en"    "[BlockList] Your SteamID cannot be resolved."
         "chi"   "[BlockList] 你的 SteamID 解析失败。"
+		"zho"		"[BlockList] Your SteamID cannot be resolved."
+		"jp"		"[BlockList] Your SteamID cannot be resolved."
+		"ko"		"[BlockList] Your SteamID cannot be resolved."
+		"vi"		"[BlockList] Your SteamID cannot be resolved."
     }
     "Block_SelfDenied"
     {
@@ -66,6 +78,10 @@
     {
         "en"    "[BlockList] Query failed."
         "chi"   "[BlockList] 查询失败。"
+		"zho"		"[BlockList] Query failed."
+		"jp"		"[BlockList] Query failed."
+		"ko"		"[BlockList] Query failed."
+		"vi"		"[BlockList] Query failed."
     }
     "BlockList_Header"
     {
@@ -84,6 +100,10 @@
         "#format"   "{1:N}"
         "en"        "[BlockList] Your block prevented {1} from joining."
         "chi"       "[BlockList] 你的屏蔽已阻止 {1} 加入。"
+		"zho"		"[BlockList] Your block prevented {1} from joining."
+		"jp"		"[BlockList] Your block prevented {1} from joining."
+		"ko"		"[BlockList] Your block prevented {1} from joining."
+		"vi"		"[BlockList] Your block prevented {1} from joining."
     }
     "Kick_By_Blocked"
     {
@@ -127,6 +147,10 @@
     {
         "en"    "[BlockList] Target is no longer valid."
         "chi"   "[BlockList] 目标已不在服务器。"
+		"zho"		"[BlockList] Target is no longer valid."
+		"jp"		"[BlockList] Target is no longer valid."
+		"ko"		"[BlockList] Target is no longer valid."
+		"vi"		"[BlockList] Target is no longer valid."
     }
     "Kick_By_SelfBlocked"
     {

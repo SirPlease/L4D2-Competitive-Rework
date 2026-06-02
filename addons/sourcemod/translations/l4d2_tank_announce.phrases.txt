@@ -3,13 +3,46 @@
 	"Tag"
 	{
 		"en"	"{red}[{default}!{red}]"
+		"zho"		"{red}[{default}!{red}]"
+		"jp"		"{red}[{default}!{red}]"
+		"ko"		"{red}[{default}!{red}]"
+		"vi"		"{red}[{default}!{red}]"
 	}
 	"Spawned"
 	{
 		"en"	"{olive}Tank {default}({red}Control: %s{default}) has spawned!"
+		"zho"		"{olive}Tank {default}({red}Control: %s{default}) has spawned!"
+		"jp"		"{olive}Tank {default}({red}Control: %s{default}) has spawned!"
+		"ko"		"{olive}Tank {default}({red}Control: %s{default}) has spawned!"
+		"vi"		"{olive}Tank {default}({red}Control: %s{default}) has spawned!"
 	}
 	"Spawned2"
 	{
 		"en"	"{olive}Tank {default}({red}Control: %N{default}) has spawned!"
+		"zho"		"{olive}Tank {default}({red}Control: %N{default}) has spawned!"
+		"jp"		"{olive}Tank {default}({red}Control: %N{default}) has spawned!"
+		"ko"		"{olive}Tank {default}({red}Control: %N{default}) has spawned!"
+		"vi"		"{olive}Tank {default}({red}Control: %N{default}) has spawned!"
+	}
+
+
+	"L4D2TankAnnounce_TankControllerGenerated"
+	{
+		"en"		"{default}[{red}!{default}] {green}Tank {default}({red} controller: %s{default}) has been generated!"
+		"chi"		"{default}[{red}!{default}] {green}Tank {default}({red}控制者：%s{default}) 已经生成！"
+		"zho"		"{default}[{red}!{default}] {green}Tank {default}({red}控制者：%s{default}) 已經產生！"
+		"jp"		"{default}[{red}!{default}] {green}タンク {default}({red}コントローラー：%s{default})が生成されました！"
+		"ko"		"{default}[{red}!{default}] {green}Tank {default}({red} 컨트롤러: %s{default})가 생성되었습니다!"
+		"vi"		"{default}[{red}!{default}] {green}Tank {default}(Bộ điều khiển {red}: %s{default}) đã được tạo!"
+	}
+
+	"L4D2TankAnnounce_TankControllerGenerated_2"
+	{
+		"en"		"{default}[{blue}!{default}] {green}Tank {default}({blue} controller: %s{default}) has been generated!"
+		"chi"		"{default}[{blue}!{default}] {green}Tank {default}({blue}控制者：%s{default}) 已经生成！"
+		"zho"		"{default}[{blue}!{default}] {green}Tank {default}({blue}控制者：%s{default}) 已經產生！"
+		"jp"		"{default}[{blue}!{default}] {green}タンク {default}({blue}コントローラー：%s{default})が生成されました！"
+		"ko"		"{default}[{blue}!{default}] {green}Tank {default}({blue} 컨트롤러: %s{default})가 생성되었습니다!"
+		"vi"		"{default}[{blue}!{default}] {green}Tank {default}(Bộ điều khiển {blue}: %s{default}) đã được tạo!"
 	}
 }

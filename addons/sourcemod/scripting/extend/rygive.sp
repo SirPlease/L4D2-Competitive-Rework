@@ -234,6 +234,7 @@ public Plugin myinfo = {
 };
 
 public void OnPluginStart() {
+	LoadTranslations("rygive.phrases");
 	InitData();
 
 	g_smSteamIDs = new StringMap();
@@ -657,7 +658,7 @@ int Infected_MenuHandler(Menu menu, MenuAction action, int client, int param2) {
 			menu.GetItem(param2, item, sizeof item);
 			int kicked;
 			if (GetClientCount(false) >= MaxClients - 1) {
-				PrintToChat(client, "尝试踢出死亡的感染机器人...");
+				PrintToChat(client, "%t", "RYGive_TryingKickDeadInfectedRobot");
 				kicked = KickDeadInfectedBots(client);
 			}
 
@@ -696,7 +697,7 @@ int KickDeadInfectedBots(int client) {
 	}
 
 	if (kickedBots > 0)
-		PrintToChat(client, "Kicked %i bots.", kickedBots);
+		PrintToChat(client, "%t", "RYGive_KickedBots", kickedBots);
 
 	return kickedBots;
 }
@@ -716,7 +717,7 @@ int CreateInfected(int client, const char[] zombie) {
 	float vEnd[3];
 	if (!GetTeleportEndPoint(client, vEnd))
 		return -1;
-	PrintToChatAll("\x03管理员\x01[\x05%N\x01]刷出一只\x05%s", client, zombie);
+	PrintToChatAll("%t", "RYGive_AdminSpawnedInfected", client, zombie);
 	return _CreateInfected(zombie, vEnd, NULL_VECTOR);
 }
 
@@ -1293,7 +1294,7 @@ int SetFriendlyFire_MenuHandler(Menu menu, MenuAction action, int client, int pa
 					FindConVar("survivor_friendly_fire_factor_normal").RestoreDefault();
 					FindConVar("survivor_friendly_fire_factor_hard").RestoreDefault();
 					FindConVar("survivor_friendly_fire_factor_expert").RestoreDefault();
-					PrintToChat(client, "友伤系数已被重置为默认值");
+					PrintToChat(client, "%t", "RYGive_FriendlyDamageCoefficientResetDefault");
 				}
 
 				default: {
@@ -1302,7 +1303,7 @@ int SetFriendlyFire_MenuHandler(Menu menu, MenuAction action, int client, int pa
 					FindConVar("survivor_friendly_fire_factor_normal").SetFloat(fPercent);
 					FindConVar("survivor_friendly_fire_factor_hard").SetFloat(fPercent);
 					FindConVar("survivor_friendly_fire_factor_expert").SetFloat(fPercent);
-					PrintToChat(client, "\x01友伤系数已被设置为 \x04%.1f", fPercent);
+					PrintToChat(client, "%t", "RYGive_FriendlyDamageCoefficientSet", fPercent);
 				}
 			}
 			Miscell(client, 0);
@@ -1444,7 +1445,7 @@ int iTeleportTarget_MenuHandler(Menu menu, MenuAction action, int client, int pa
 				}
 			}
 			else if (info[1][0] == 'c')
-				PrintToChat(client, "获取准心处位置失败! 请重新尝试.");
+				PrintToChat(client, "%t", "RYGive_FailedObtainCrosshairPositionTry");
 
 			if (teleported)
 				InvalidateRpgRoundForRygiveTeleport();
@@ -1582,10 +1583,10 @@ int GodMode_MenuHandler(Menu menu, MenuAction action, int client, int param2) {
 			int target = GetClientOfUserId(StringToInt(item));
 			if (target && IsClientInGame(target)) {
 				g_bGodMode[target] = !g_bGodMode[target];
-				PrintToChat(client, "\x04已%s \x05%N \x01的伤害免疫", g_bGodMode[target] ? "启用" : "禁用", target);
+				PrintToChat(client, "%t", "RYGive_ImmuneDamage", g_bGodMode[target] ? "启用" : "禁用", target);
 			}
 			else
-				PrintToChat(client, "目标玩家已失效");
+				PrintToChat(client, "%t", "RYGive_TargetPlayerExpired");
 
 			GodMode(client, menu.Selection);
 		}
@@ -1649,10 +1650,10 @@ int IgnoreAbility_MenuHandler(Menu menu, MenuAction action, int client, int para
 			int target = GetClientOfUserId(StringToInt(item));
 			if (target && IsClientInGame(target)) {
 				g_bIgnoreAbility[target] = !g_bIgnoreAbility[target];
-				PrintToChat(client, "\x04已%s \x05%N \x01的特感控制免疫", g_bIgnoreAbility[target] ? "启用" : "禁用", target);
+				PrintToChat(client, "%t", "RYGive_ImmuneSpecialSenseControl", g_bIgnoreAbility[target] ? "启用" : "禁用", target);
 			}
 			else
-				PrintToChat(client, "目标玩家已失效");
+				PrintToChat(client, "%t", "RYGive_TargetPlayerExpired");
 
 			IgnoreAbility(client, menu.Selection);
 		}
@@ -1757,7 +1758,7 @@ int SwitchTeam_MenuHandler(Menu menu, MenuAction action, int client, int param2)
 			if (target && IsClientInGame(target))
 				SwitchPlayerTeam(client, target);
 			else
-				PrintToChat(client, "目标玩家已失效");
+				PrintToChat(client, "%t", "RYGive_TargetPlayerExpired");
 		}
 
 		case MenuAction_Cancel: {
@@ -1816,7 +1817,7 @@ int SwitchPlayerTeam_MenuHandler(Menu menu, MenuAction action, int client, int p
 							if (team == 2)
 								GoAFKTimer(target, 0.0);
 							else
-								PrintToChat(client, "只有生还者才能进行闲置");
+								PrintToChat(client, "%t", "RYGive_OnlySurvivorsCanIdle");
 						}
 
 						case 1: {
@@ -1829,7 +1830,7 @@ int SwitchPlayerTeam_MenuHandler(Menu menu, MenuAction action, int client, int p
 						case 2:
 							{
 								if(IsSuivivorTeamFull())
-									PrintToChat(client, "生还已满");
+									PrintToChat(client, "%t", "RYGive_Survival");
 								else
 									ChangeTeamToSurvivor(target, team);
 							}
@@ -1837,19 +1838,19 @@ int SwitchPlayerTeam_MenuHandler(Menu menu, MenuAction action, int client, int p
 						case 3:
 							{
 								if(IsInfectTeamFull())
-									PrintToChat(client, "感染者已满");
+									PrintToChat(client, "%t", "RYGive_NumberInfectedPeopleFull");
 								else
 									ChangeClientTeam(target, targetTeam);
 							}
 					}
 				}
 				else
-					PrintToChat(client, "玩家已在目标队伍中");
+					PrintToChat(client, "%t", "RYGive_PlayerAlreadyTargetTeam");
 						
 				SwitchTeam(client, g_iSelection[client]);
 			}
 			else
-				PrintToChat(client, "目标玩家已失效");
+				PrintToChat(client, "%t", "RYGive_TargetPlayerExpired");
 		}
 	
 		case MenuAction_Cancel: {
@@ -2035,17 +2036,17 @@ int WeaponSpeedUp_MenuHandler(Menu menu, MenuAction action, int client, int para
 					if (IsClientInGame(i))
 						g_fSpeedUp[i] = fSpeedUp;
 				}
-				PrintToChat(client, "\x05所有玩家 \x01的武器操纵性已被设置为 \x04%.1fx", fSpeedUp);
+				PrintToChat(client, "%t", "RYGive_AllPlayersWeaponManeuverabilitySet", fSpeedUp);
 				Rygive(client);
 			}
 			else {
 				int target = GetClientOfUserId(StringToInt(info[1]));
 				if (target && IsClientInGame(target)) {
 						g_fSpeedUp[target] = fSpeedUp;
-						PrintToChat(client, "\x05%N \x01的武器操纵性已被设置为 \x04%.1fx", target, fSpeedUp);
+						PrintToChat(client, "%t", "RYGive_WeaponManeuverabilitySet", target, fSpeedUp);
 				}
 				else
-					PrintToChat(client, "目标玩家已失效");
+					PrintToChat(client, "%t", "RYGive_TargetPlayerExpired");
 						
 				SpeedUp(client, g_iSelection[client]);
 			}

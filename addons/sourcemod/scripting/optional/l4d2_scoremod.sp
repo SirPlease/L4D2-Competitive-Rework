@@ -76,6 +76,7 @@ int _Native_HealthBonus(Handle plugin, int numParams)
 
 public OnPluginStart()
 {
+	LoadTranslations("l4d2_scoremod.phrases");
 	SM_hEnable = CreateConVar("SM_enable", "1", "L4D2 Custom Scoring - Enable/Disable", FCVAR_NONE);
 	HookConVarChange(SM_hEnable, SM_ConVarChanged_Enable);
 	
@@ -281,8 +282,8 @@ void SM_RoundEnd_Event(Handle:event, const String:name[], bool:dontBroadcast)
 		
 		// If the score is nonzero, trust the SurvivalBonus var.
 		SM_iFirstScore = (SM_iFirstScore ? GetConVarInt(SM_hSurvivalBonus) *iAliveCount : 0);
-		CPrintToChatAll("{blue}[{default}!{blue}] {default}Round {blue}1 {default}Bonus: {olive}%d", SM_iFirstScore);
-		if (GetConVarBool(SM_hCustomMaxDistance) && GetCustomMapMaxScore() > -1) CPrintToChatAll("{blue}[{default}!{blue}] {default}Custom Max Distance: {olive}%d", GetCustomMapMaxScore());
+		CPrintToChatAll("%t", "L4D2Scoremod_Round1Bonus", SM_iFirstScore);
+		if (GetConVarBool(SM_hCustomMaxDistance) && GetCustomMapMaxScore() > -1) CPrintToChatAll("%t", "L4D2Scoremod_CustomMaxDistance", GetCustomMapMaxScore());
 	}
 	else if (SM_bIsSecondRoundStarted && !SM_bIsSecondRoundOver)
 	{
@@ -293,12 +294,12 @@ void SM_RoundEnd_Event(Handle:event, const String:name[], bool:dontBroadcast)
 		new iScore = RoundToFloor(SM_CalculateAvgHealth(iAliveCount) * SM_fMapMulti * SM_fHBRatio + 400 * SM_fMapMulti * SM_fSurvivalBonusRatio);
 		// If the score is nonzero, trust the SurvivalBonus var.
 		iScore = iScore ? GetConVarInt(SM_hSurvivalBonus) * iAliveCount : 0; 
-		CPrintToChatAll("{blue}[{default}!{blue}] {default}Round {blue}1 {default}Bonus: {olive}%d", SM_iFirstScore);
-		CPrintToChatAll("{blue}[{default}!{blue}] {default}Round {blue}2 {default}Bonus: {olive}%d", iScore);
+		CPrintToChatAll("%t", "L4D2Scoremod_Round1Bonus", SM_iFirstScore);
+		CPrintToChatAll("%t", "L4D2Scoremod_Round2Bonus", iScore);
 		iDifference = SM_iFirstScore - iScore;
 		if (iScore > SM_iFirstScore) iDifference = (~iDifference) + 1;
-		CPrintToChatAll("{red}[{default}!{red}] {default}Difference: {olive}%d", iDifference);
-		if (GetConVarBool(SM_hCustomMaxDistance) && GetCustomMapMaxScore() > -1) CPrintToChatAll("{blue}[{default}!{blue}] {default}Custom Max Distance: {olive}%d", GetCustomMapMaxScore());
+		CPrintToChatAll("%t", "L4D2Scoremod_Difference", iDifference);
+		if (GetConVarBool(SM_hCustomMaxDistance) && GetCustomMapMaxScore() > -1) CPrintToChatAll("%t", "L4D2Scoremod_CustomMaxDistance", GetCustomMapMaxScore());
 	}
 }
 
@@ -337,7 +338,7 @@ Action SM_Cmd_Health(client, args)
     {
 		iDifference = SM_iFirstScore - iScore;
 		if (iScore > SM_iFirstScore) iDifference = (~iDifference) + 1;
-		CPrintToChat(client, "{blue}[{default}!{blue}] {default}Round {blue}1 {default}Bonus: {olive}%d {default}({green}Difference: {olive}%d{default})", SM_iFirstScore, iDifference);
+		CPrintToChat(client, "%t", "L4D2Scoremod_Round1BonusDifference", SM_iFirstScore, iDifference);
 	}
 	
 	#if DEBUG_SM
@@ -346,7 +347,7 @@ Action SM_Cmd_Health(client, args)
 	
 	if (client)
 	{
-		CPrintToChat(client, "{blue}[{default}!{blue}] {default}Health Bonus: {olive}%d", iScore );
+		CPrintToChat(client, "%t", "L4D2Scoremod_HealthBonus", iScore);
 	}
 	else
 	{
@@ -355,7 +356,7 @@ Action SM_Cmd_Health(client, args)
 
 	if (GetConVarBool(SM_hCustomMaxDistance) && GetCustomMapMaxScore() > -1) {
 		if (client) {
-			CPrintToChat(client, "{blue}[{default}!{blue}] {default}Custom Max Distance: {olive}%d", GetCustomMapMaxScore());
+			CPrintToChat(client, "%t", "L4D2Scoremod_CustomMaxDistance", GetCustomMapMaxScore());
 		}
 		else {
 			PrintToServer("[ScoreMod] Custom Max Distance: %d", GetCustomMapMaxScore());

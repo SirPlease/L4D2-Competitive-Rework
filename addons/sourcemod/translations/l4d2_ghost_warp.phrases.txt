@@ -1,0 +1,82 @@
+"Phrases"
+{
+	"L4D2GhostWarp_CommandDisabled"
+	{
+		"en"		"%s This command is \\x04disabled\\x01 now."
+		"chi"		"%s 该命令现在为 \\x04disabled\\x01。"
+		"zho"		"%s 此指令現在為 \\x04disabled\\x01。"
+		"jp"		"%s 現在、このコマンドは \\x04disabled\\x01 です。"
+		"ko"		"%s 이 명령은 이제 \\x04disabled\\x01입니다."
+		"vi"		"%s Lệnh này bây giờ là \\x04disabled\\x01."
+	}
+
+	"L4D2GhostWarp_CanUseCommandOftenWait"
+	{
+		"en"		"%s You can't use this command that often, wait another \\x04%.01f\\x01 sec."
+		"chi"		"%s 您不能经常使用此命令，请再等待 \\x04%.01f\\x01 秒。"
+		"zho"		"%s 您無法經常使用此指令，請再等待 \\x04%.01f\\x01 秒。"
+		"jp"		"%s このコマンドは頻繁に使用することはできません。さらに \\x04%.01f\\x01 秒待ってください。"
+		"ko"		"%s 이 명령을 자주 사용할 수 없으므로 \\x04%.01f\\x01초를 더 기다리십시오."
+		"vi"		"%s Bạn không thể sử dụng lệnh này thường xuyên, hãy đợi một \\x04%.01f\\x01 giây."
+	}
+
+	"L4D2GhostWarp_NoSurvivorsFound"
+	{
+		"en"		"%s No \\x04survivors\\x01 found!"
+		"chi"		"%s 未找到 \\x04 幸存者 \\x01！"
+		"zho"		"%s 找不到 \\x04 倖存者 \\x01！"
+		"jp"		"%s \\x04生存者\\x01が見つかりません!"
+		"ko"		"%s \\x04survivors\\x01를 찾을 수 없습니다!"
+		"vi"		"%s Không tìm thấy \\x04survivors\\x01!"
+	}
+
+	"L4D2GhostWarp_EnteredInvalidSurvivorIndex"
+	{
+		"en"		"%s You entered an \\x04invalid\\x01 survivor index!%s"
+		"chi"		"%s 您输入了 \\x04 无效的 \\x01 幸存者索引！%s"
+		"zho"		"%s 您輸入了 \\x04 無效的 \\x01 倖存者索引！ %s"
+		"jp"		"%s 無効な \\x04 生存者インデックスを入力しました!%s"
+		"ko"		"%s \\x04invalid\\x01 생존자 인덱스를 입력했습니다!%s"
+		"vi"		"%s Bạn đã nhập chỉ số người sống sót \\x04không hợp lệ\\x01!%s"
+	}
+
+	"L4D2GhostWarp_Usage1"
+	{
+		"en"		"%s Usage: \\x04%s\\x01 <1 - %d>"
+		"chi"		"%s 用法：\\x04%s\\x01 <1 - %d>"
+		"zho"		"%s 用法：\\x04%s\\x01 <1 - %d>"
+		"jp"		"%s 用途: \\x04%s\\x01 <1 - %d>"
+		"ko"		"%s 사용법: \\x04%s\\x01 <1 - %d>"
+		"vi"		"%s Cách sử dụng: \\x04%s\\x01 <1 - %d>"
+	}
+
+	"L4D2GhostWarp_EnteredWrongSurvivorName"
+	{
+		"en"		"%s You entered the \\x04wrong\\x01 survivor name!%s"
+		"chi"		"%s 您输入的\\x04错误\\x01幸存者姓名！%s"
+		"zho"		"%s 您輸入的\\x04錯誤\\x01倖存者姓名！ %s"
+		"jp"		"%s \\x04間違った\\x01生存者名を入力しました!%s"
+		"ko"		"%s \\x04wrong\\x01 생존자 이름을 입력하셨습니다!%s"
+		"vi"		"%s Bạn đã nhập tên người sống sót \\x04sai\\x01!%s"
+	}
+
+	"L4D2GhostWarp_UsageSurvivorName"
+	{
+		"en"		"%s Usage: \\x04%s\\x01 <survivor name> "
+		"chi"		"%s 用法：\\x04%s\\x01 <幸存者名称>"
+		"zho"		"%s 用法：\\x04%s\\x01 <倖存者名稱>"
+		"jp"		"%s 使用法: \\x04%s\\x01 <生存者名>"
+		"ko"		"%s 사용법: \\x04%s\\x01 <생존자 이름>"
+		"vi"		"%s Cách sử dụng: \\x04%s\\x01 <tên người sống sót>"
+	}
+
+	"L4D2GhostWarp_SurvivorSpecifiedNotFound"
+	{
+		"en"		"%s The \\x04survivor\\x01 you specified was \\x04not found\\x01!"
+		"chi"		"%s 您指定的\\x04survivor\\x01是\\x04未找到\\x01！"
+		"zho"		"%s 您指定的\\x04survivor\\x01是\\x04找不到\\x01！"
+		"jp"		"%s あなたが指定した \\x04survivor\\x01 は \\x04 見つかりません \\x01!"
+		"ko"		"%s 귀하가 지정한 \\x04survivor\\x01는 \\x04찾을 수 없습니다\\x01입니다!"
+		"vi"		"%s \\x04survivor\\x01 bạn đã chỉ định là \\x04không tìm thấy\\x01!"
+	}
+}

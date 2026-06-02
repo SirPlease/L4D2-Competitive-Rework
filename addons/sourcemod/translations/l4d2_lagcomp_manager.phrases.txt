@@ -1,0 +1,52 @@
+"Phrases"
+{
+	"L4D2LagcompManager_SuccessfullyEntitySuccessfullyAddedArray"
+	{
+		"en"		"[Successfully] The entity '%s (%d)' was successfully added to the array for lag compensation!"
+		"chi"		"【成功】实体‘%s(%d)’已成功添加到延迟补偿数组中！"
+		"zho"		"【成功】實體‘%s(%d)’已成功加入延遲補償數組！"
+		"jp"		"[成功] エンティティ「%s (%d)」がラグ補正のために配列に正常に追加されました。"
+		"ko"		"[성공] '%s(%d)' 엔터티가 지연 보상을 위해 배열에 추가되었습니다!"
+		"vi"		"[Thành công] Thực thể '%s (%d)' đã được thêm thành công vào mảng để bù độ trễ!"
+	}
+
+	"L4D2LagcompManager_ErrorCouldNotFindEntity"
+	{
+		"en"		"[Error] Could not find the entity '%s (%d)' in the array for lag compensation!"
+		"chi"		"[错误] 在延迟补偿数组中找不到实体“%s (%d)”！"
+		"zho"		"[錯誤] 在延遲補償數組中找不到實體「%s (%d)」！"
+		"jp"		"[エラー] ラグ補正用の配列内にエンティティ '%s (%d)' が見つかりませんでした。"
+		"ko"		"[오류] 지연 보상을 위한 배열에서 '%s(%d)' 엔터티를 찾을 수 없습니다!"
+		"vi"		"[Lỗi] Không thể tìm thấy thực thể '%s (%d)' trong mảng để bù độ trễ!"
+	}
+
+	"L4D2LagcompManager_ErrorEntityNotRemovedAfter"
+	{
+		"en"		"[Error] The entity '%s (%d)' is not removed after being destroyed from the array for lag compensation!"
+		"chi"		"[错误] 实体“%s (%d)”在从数组中销毁以进行延迟补偿后并未被删除！"
+		"zho"		"[錯誤] 實體「%s (%d)」在從陣列中銷毀以進行延遲補償後並未被刪除！"
+		"jp"		"[エラー] エンティティ「%s (%d)」は、ラグ補正のために配列から破棄された後も削除されません。"
+		"ko"		"[오류] '%s(%d)' 엔터티는 지연 보상을 위해 배열에서 삭제된 후 제거되지 않습니다!"
+		"vi"		"[Lỗi] Thực thể '%s (%d)' không bị xóa sau khi bị hủy khỏi mảng để bù độ trễ!"
+	}
+
+	"L4D2LagcompManager_SuccessfullyEntityRemovedAfterDestroyed"
+	{
+		"en"		"[Successfully] The entity '%s (%d)' was removed after being destroyed from the array for lag compensation!"
+		"chi"		"【成功】实体“%s（%d）”被从阵列中摧毁后被移除以进行延迟补偿！"
+		"zho"		"【成功】實體「%s（%d）」被從陣列中摧毀後被移除以進行延遲補償！"
+		"jp"		"[成功] エンティティ「%s (%d)」は、ラグ補正のために配列から破棄された後、削除されました。"
+		"ko"		"[성공] '%s(%d)' 개체가 지연 보상을 위해 배열에서 삭제된 후 제거되었습니다!"
+		"vi"		"[Thành công] Thực thể '%s (%d)' đã bị xóa sau khi bị phá hủy khỏi mảng để bù độ trễ!"
+	}
+
+	"L4D2LagcompManager_ErrorEntityNeverAddedArray"
+	{
+		"en"		"[Error] The entity '%s (%d)' has never been added to the array for lag compensation!"
+		"chi"		"[错误] 实体“%s (%d)”从未添加到数组中进行滞后补偿！"
+		"zho"		"[錯誤] 實體「%s (%d)」從未加入到陣列中進行滯後補償！"
+		"jp"		"[エラー] エンティティ '%s (%d)' は、ラグ補正のために配列に追加されていません。"
+		"ko"		"[오류] '%s(%d)' 엔터티가 지연 보상을 위해 배열에 추가된 적이 없습니다!"
+		"vi"		"[Lỗi] Thực thể '%s (%d)' chưa bao giờ được thêm vào mảng để bù độ trễ!"
+	}
+}

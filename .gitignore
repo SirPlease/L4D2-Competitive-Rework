@@ -44,6 +44,8 @@ mysql-install-clone-replica.env
 scripts/install-docker-monitoring.sh
 
 # Local L4D2 Docker deploy secrets
+scripts/l4d2-docker.sh
+scripts/l4d2-docker.env.example
 scripts/l4d2-docker.env
 
 # Local A2S debugging tools, not for GitHub

@@ -1,0 +1,12 @@
+"Phrases"
+{
+	"Hextags_SMTitleSetSuccessfully"
+	{
+		"en"		"[SM] Title %s set successfully"
+		"chi"		"[SM] 称号 %s 设置成功"
+		"zho"		"[SM] 頭銜 %s 設定成功"
+		"jp"		"[SM] タイトル %s が正常に設定されました"
+		"ko"		"[SM] 타이틀 %s가 설정되었습니다."
+		"vi"		"[SM] Tiêu đề %s được đặt thành công"
+	}
+}

@@ -22,4 +22,15 @@
 		"pl"		"Gracz {1} (ID: {2} | IP: {3}) ma aktywne blokady na IP"
 		"chi"		"玩家 {1} (ID: {2} | IP: {3}) 目前有多次IP封禁"
 	}
+
+
+	"SourceSleuth_WhiteListReloaded"
+	{
+		"en"		"[SourceSleuth] WhiteList has been reloaded!"
+		"chi"		"[SourceSleuth] 白名单已重新加载！"
+		"zho"		"[SourceSleuth] 白名單已重新載入！"
+		"jp"		"[SourceSleuth] ホワイトリストがリロードされました!"
+		"ko"		"[SourceSleuth] 화이트리스트가 리로드되었습니다!"
+		"vi"		"[SourceSleuth] Danh sách trắng đã được tải lại!"
+	}
 }

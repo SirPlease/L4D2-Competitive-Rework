@@ -83,6 +83,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("Survivor_Legs.phrases");
 	CreateConVar("survivor_legs_version", PLUGIN_VERSION, "[L4D2]Survivor_Legs_version", FCVAR_SPONLY|FCVAR_DONTRECORD|FCVAR_NOTIFY);
 	
 	HookEvent("player_death", ePlayerDeath, EventHookMode_Pre);
@@ -355,7 +356,7 @@ public void Hook_OnPostThinkPost(int iClient)
 	int seq = GetEntProp(iClient, Prop_Send, "m_nSequence", 2);
 	if(seq != lastanim[iClient])
 	{
-		PrintToChat(iClient, "Client(m_nSquence)[%i] Legs(m_nSequence)[%i]", seq, GetEntProp(iEntity, Prop_Send, "m_nSequence", 2));
+		PrintToChat(iClient, "%t", "SurvivorLegs_ClientSequenceLegsSequence", seq, GetEntProp(iEntity, Prop_Send, "m_nSequence", 2));
 		lastanim[iClient] = seq;
 	}
 #endif

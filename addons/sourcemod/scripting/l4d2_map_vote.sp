@@ -97,6 +97,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 
 public void OnPluginStart() {
+	LoadTranslations("l4d2_map_vote.phrases");
     Init();
     g_smFirstMap = new StringMap();
 
@@ -364,7 +365,7 @@ void OnFinaleStart(const char[] output, int caller, int activator, float delay) 
         g_bOnce = true;
 
         if (g_iNotifyMapNext & NOTIFY_CHAT)
-            PrintToChatAll("\x01聊天栏输入 \x05!mapnext \x01投票下一张地图.");
+            PrintToChatAll("%t", "L4D2MapVote_MapnextChatPrompt");
 
         if (g_iNotifyMapNext & NOTIFY_HINT)
             PrintHintTextToAll("聊天栏输入 !mapnext 投票下一张地图");
@@ -435,7 +436,7 @@ void DoReloadVPKAndMissions()
     SetFirstMapString();
 
     // 反馈给所有真人玩家
-    CPrintToChatAll("{olive}[MapVote]{default} 已刷新 VPK 与战役列表。");
+    CPrintToChatAll("%t", "L4D2MapVote_VPKCampaignListsRefreshed");
 }
 
 bool MaybeAutoReloadOnMapvote(int client)
@@ -456,7 +457,7 @@ bool MaybeAutoReloadOnMapvote(int client)
         // 冷却中只对发起者提示一下（避免刷屏）
         float left = g_fNextReloadAt - now;
         if (left < 0.1) left = 0.1;
-        PrintToChat(client, "VPK 刷新冷却中，还需 %.1f 秒。", left);
+        PrintToChat(client, "%t", "L4D2MapVote_VPKRefreshCooldownRemaining", left);
         return false;
     }
 
@@ -496,17 +497,17 @@ Action cmdMapNext(int client, int args) {
         return Plugin_Handled;
 
     if (!g_bMapChanger) {
-        PrintToChat(client, "前置插件未安装");
+        PrintToChat(client, "%t", "L4D2MapVote_PrePluginNotInstalled");
         return Plugin_Handled;
     }
 
     if (!L4D_IsMissionFinalMap()) {
-        PrintToChat(client, "当前地图非终局地图");
+        PrintToChat(client, "%t", "L4D2MapVote_CurrentMapNotFinalMap");
         return Plugin_Handled;
     }
 
     if (GetClientTeam(client) == 1) {
-        PrintToChat(client, "旁观者无法进行投票");
+        PrintToChat(client, "%t", "L4D2MapVote_SpectatorsCannotVote");
         return Plugin_Handled;
     }
 
@@ -591,7 +592,7 @@ int ShowNextMap_MenuHandler(Menu menu, MenuAction action, int client, int param2
 
 void VoteNextMap(int client, const char[] item) {
     if (!L4D2NativeVote_IsAllowNewVote()) {
-        PrintToChat(client, "投票正在进行中, 暂不能发起新的投票");
+        PrintToChat(client, "%t", "L4D2MapVote_VotingInProgressCannotStartNewVote");
         return;
     }
 
@@ -600,7 +601,7 @@ void VoteNextMap(int client, const char[] item) {
     SourceKeyValues kvMissions = SDKCall(g_hSDK_GetAllMissions, g_pMatchExtL4D);
     SourceKeyValues kvChapters = kvMissions.FindKey(buffer);
     if (kvChapters.IsNull()) {
-        PrintToChat(client, "无有效的章节地图存在");
+        PrintToChat(client, "%t", "L4D2MapVote_NoValidChapterMapExists");
         return;
     }
 
@@ -616,7 +617,7 @@ void VoteNextMap(int client, const char[] item) {
     }
 
     if (!find) {
-        PrintToChat(client, "无有效的章节地图存在");
+        PrintToChat(client, "%t", "L4D2MapVote_NoValidChapterMapExists");
         return;
     }
 
@@ -652,13 +653,13 @@ void NextMap_Handler(L4D2NativeVote vote, VoteAction action, int param1, int par
             for (int i = 1; i <= MaxClients; i++) {
                 if (IsClientInGame(i) && !IsFakeClient(i)) {
                     fmt_Translate(info[0], info[0], sizeof info[], i, info[0]);
-                    CPrintToChat(i, "{blue}%N {default}发起投票 {olive}设置下一张地图为: %s", param1, info[0]);
+                    CPrintToChat(i, "%t", "L4D2MapVote_InitiatesVoteSetsNextMap", param1, info[0]);
                 }
             }
         }
 
         case VoteAction_PlayerVoted:
-            CPrintToChatAll("{blue}%N {default}已投票", param1);
+            CPrintToChatAll("%t", "L4D2MapVote_Voted", param1);
 
         case VoteAction_End: {
             if (vote.YesCount > vote.PlayerCount / 2) {
@@ -670,12 +671,12 @@ void NextMap_Handler(L4D2NativeVote vote, VoteAction action, int param1, int par
                 ExplodeString(buffer, "//", info, sizeof info, sizeof info[]);
 
                 if (!g_bMapChanger || !MC_SetNextMap(info[1]))
-                    PrintToChatAll("设置失败");
+                    PrintToChatAll("%t", "L4D2MapVote_SetupFailed");
                 else {
                     for (int i = 1; i <= MaxClients; i++) {
                         if (IsClientInGame(i) && !IsFakeClient(i)) {
                             fmt_Translate(info[0], info[0], sizeof info[], i, info[0]);
-                            PrintToChat(i, "\x01下一张地图已设置为 \x05%s", info[0]);
+                            PrintToChat(i, "%t", "L4D2MapVote_NextMapSet", info[0]);
                         }
                     }
                 }
@@ -697,7 +698,7 @@ Action cmdMapVote(int client, int args) {
         return Plugin_Handled;
 
     if (GetClientTeam(client) == 1) {
-        PrintToChat(client, "旁观者无法进行投票");
+        PrintToChat(client, "%t", "L4D2MapVote_SpectatorsCannotVote");
         return Plugin_Handled;
     }
     // 在弹出菜单之前，按配置尝试自动刷新 VPK/战役列表
@@ -799,7 +800,7 @@ bool IsAdminCanPickChapter(int client) {
 // MOD: 新增 — 战役级投票（不选章节）
 void VoteChangeMission(int client, const char[] mission) {
     if (!L4D2NativeVote_IsAllowNewVote()) {
-        PrintToChat(client, "投票正在进行中, 暂不能发起新的投票");
+        PrintToChat(client, "%t", "L4D2MapVote_VotingInProgressCannotStartNewVote");
         return;
     }
 
@@ -835,13 +836,13 @@ void ChangeMission_Handler(L4D2NativeVote vote, VoteAction action, int param1, i
             for (int i = 1; i <= MaxClients; i++) {
                 if (IsClientInGame(i) && !IsFakeClient(i)) {
                     fmt_Translate(mission, disp, sizeof disp, i, mission);
-                    CPrintToChat(i, "{blue}%N {default}发起投票 {olive}更换战役: %s", param1, disp);
+                    CPrintToChat(i, "%t", "L4D2MapVote_InitiatesVoteReplacementCampaign", param1, disp);
                 }
             }
         }
 
         case VoteAction_PlayerVoted:
-            CPrintToChatAll("{blue}%N {default}已投票", param1);
+            CPrintToChatAll("%t", "L4D2MapVote_Voted", param1);
 
         case VoteAction_End: {
             if (vote.YesCount > vote.PlayerCount / 2) {
@@ -870,7 +871,7 @@ void ShowChaptersMenu(int client, const char[] item) {
     SourceKeyValues kvMissions = SDKCall(g_hSDK_GetAllMissions, g_pMatchExtL4D);
     SourceKeyValues kvChapters = kvMissions.FindKey(buffer);
     if (kvChapters.IsNull()) {
-        PrintToChat(client, "无有效的章节地图存在");
+        PrintToChat(client, "%t", "L4D2MapVote_NoValidChapterMapExists");
         return;
     }
 
@@ -891,7 +892,7 @@ void ShowChaptersMenu(int client, const char[] item) {
     }
 
     if (!valid_map)
-        PrintToChat(client, "无有效的章节地图存在");
+        PrintToChat(client, "%t", "L4D2MapVote_NoValidChapterMapExists");
 
     menu.ExitBackButton = true;
     menu.Display(client, 30);
@@ -919,7 +920,7 @@ int Chapters_MenuHandler(Menu menu, MenuAction action, int client, int param2) {
 
 void VoteChangeMap(int client, const char[] item) {
     if (!L4D2NativeVote_IsAllowNewVote()) {
-        PrintToChat(client, "投票正在进行中, 暂不能发起新的投票");
+        PrintToChat(client, "%t", "L4D2MapVote_VotingInProgressCannotStartNewVote");
         return;
     }
 
@@ -957,13 +958,13 @@ void ChangeMap_Handler(L4D2NativeVote vote, VoteAction action, int param1, int p
                 if (IsClientInGame(i) && !IsFakeClient(i)) {
                     fmt_Translate(info[0], info[0], sizeof info[], i, info[0]);
                     fmt_Translate(info[1], info[1], sizeof info[], i, info[1]);
-                    CPrintToChat(i, "{blue}%N {default}发起投票 {olive}更换地图: %s (%s)", param1, info[0], info[1]);
+                    CPrintToChat(i, "%t", "L4D2MapVote_InitiatesVoteChangeMap", param1, info[0], info[1]);
                 }
             }
         }
 
         case VoteAction_PlayerVoted:
-            CPrintToChatAll("{blue}%N {default}已投票", param1);
+            CPrintToChatAll("%t", "L4D2MapVote_Voted", param1);
 
         case VoteAction_End: {
             if (vote.YesCount > vote.PlayerCount / 2) {

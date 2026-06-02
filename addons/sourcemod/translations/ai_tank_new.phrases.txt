@@ -1,0 +1,12 @@
+"Phrases"
+{
+	"AITankNew_TankLikesWalkAroundTrees"
+	{
+		"en"		"{R}<Tank>: {G} likes to walk around trees, right?"
+		"chi"		"{R}<Tank>：{G}喜欢绕树是吧？"
+		"zho"		"{R}<Tank>：{G}喜歡繞樹吧？"
+		"jp"		"{R}<タンク>：{G}は木の周りを歩くのが好きですよね？"
+		"ko"		"{R}<탱크>: {G}는 나무 주위를 걷는 걸 좋아하죠?"
+		"vi"		"{R}<Tank>: {G} thích đi dạo quanh cây phải không?"
+	}
+}

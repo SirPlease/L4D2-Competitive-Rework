@@ -4,18 +4,30 @@
 	{
 		"en"		"{olive}<Mixmap>{default}Using Mixmap plugin (show maplist{orange}!maplist{default})."
 		"chi"		"{olive}<Mixmap>{default}正在使用Mixmap插件（地图一览指令{orange}!maplist{default})。"
+		"zho"		"{olive}<Mixmap>{default}Using Mixmap plugin (show maplist{orange}!maplist{default})."
+		"jp"		"{olive}<Mixmap>{default}Using Mixmap plugin (show maplist{orange}!maplist{default})."
+		"ko"		"{olive}<Mixmap>{default}Using Mixmap plugin (show maplist{orange}!maplist{default})."
+		"vi"		"{olive}<Mixmap>{default}Using Mixmap plugin (show maplist{orange}!maplist{default})."
 	}
 
 	"Differ_Abort"
 	{
 		"en"		"{olive}<Mixmap>{default}Current map differs from disigned map，abort……"
 		"chi"		"{olive}<Mixmap>{default}当前地图与设计地图不一致，插件中止……"
+		"zho"		"{olive}<Mixmap>{default}Current map differs from disigned map，abort……"
+		"jp"		"{olive}<Mixmap>{default}Current map differs from disigned map，abort……"
+		"ko"		"{olive}<Mixmap>{default}Current map differs from disigned map，abort……"
+		"vi"		"{olive}<Mixmap>{default}Current map differs from disigned map，abort……"
 	}
 
 	"Show_Next_Map"
 	{
 		"en"		"{olive}<Mixmap>{default}Changing next map: %s"
 		"chi"		"{olive}<Mixmap>{default}切换下一张地图: %s"
+		"zho"		"{olive}<Mixmap>{default}Changing next map: %s"
+		"jp"		"{olive}<Mixmap>{default}Changing next map: %s"
+		"ko"		"{olive}<Mixmap>{default}Changing next map: %s"
+		"vi"		"{olive}<Mixmap>{default}Changing next map: %s"
 	}
 
 	"Already_Start_Admin"
@@ -28,104 +40,176 @@
 	{
 		"en"		"{olive}<Mixmap>{default}Admin {teamcolor}%N {default}forces to start Mixmap{orange}(%s)."
 		"chi"		"{olive}<Mixmap>{default}管理员 {teamcolor}%N {default}强制启用Mixmap{orange}(%s)。"
+		"zho"		"{olive}<Mixmap>{default}Admin {teamcolor}%N {default}forces to start Mixmap{orange}(%s)."
+		"jp"		"{olive}<Mixmap>{default}Admin {teamcolor}%N {default}forces to start Mixmap{orange}(%s)."
+		"ko"		"{olive}<Mixmap>{default}Admin {teamcolor}%N {default}forces to start Mixmap{orange}(%s)."
+		"vi"		"{olive}<Mixmap>{default}Admin {teamcolor}%N {default}forces to start Mixmap{orange}(%s)."
 	}
 
 	"Manualmixmap_Syntax"
 	{
 		"en"		"Syntax: !manualmixmap <map1> <map2> <map3> <...>"
 		"chi"		"用法: !manualmixmap <map1> <map2> <map3> <...>"
+		"zho"		"Syntax: !manualmixmap <map1> <map2> <map3> <...>"
+		"jp"		"Syntax: !manualmixmap <map1> <map2> <map3> <...>"
+		"ko"		"Syntax: !manualmixmap <map1> <map2> <map3> <...>"
+		"vi"		"Syntax: !manualmixmap <map1> <map2> <map3> <...>"
 	}
 
 	"Invalid_Cfg"
 	{
 		"en"		"{olive}<Mixmap>{default}Invalid map pool！"
 		"chi"		"{olive}<Mixmap>{default}无效地图池！"
+		"zho"		"{olive}<Mixmap>{default}Invalid map pool！"
+		"jp"		"{olive}<Mixmap>{default}Invalid map pool！"
+		"ko"		"{olive}<Mixmap>{default}Invalid map pool！"
+		"vi"		"{olive}<Mixmap>{default}Invalid map pool！"
 	}
 
 	"Not_Start"
 	{
 		"en"		"{olive}<Mixmap>{default}Plugin did not start, no need to stop."
 		"chi"		"{olive}<Mixmap>{default}插件尚未启用，无需中止。"
+		"zho"		"{olive}<Mixmap>{default}Plugin did not start, no need to stop."
+		"jp"		"{olive}<Mixmap>{default}Plugin did not start, no need to stop."
+		"ko"		"{olive}<Mixmap>{default}Plugin did not start, no need to stop."
+		"vi"		"{olive}<Mixmap>{default}Plugin did not start, no need to stop."
 	}
 
 	"Vote_Stop"
 	{
 		"en"		"{olive}<Mixmap>{default}Player {teamcolor}%N{default} initiates a vote to stop Mixmap."
 		"chi"		"{olive}<Mixmap>{default}玩家 {teamcolor}%N{default} 发起投票关闭Mixmap。"
+		"zho"		"{olive}<Mixmap>{default}Player {teamcolor}%N{default} initiates a vote to stop Mixmap."
+		"jp"		"{olive}<Mixmap>{default}Player {teamcolor}%N{default} initiates a vote to stop Mixmap."
+		"ko"		"{olive}<Mixmap>{default}Player {teamcolor}%N{default} initiates a vote to stop Mixmap."
+		"vi"		"{olive}<Mixmap>{default}Player {teamcolor}%N{default} initiates a vote to stop Mixmap."
 	}
 
 	"Vote_Progress"
 	{
 		"en"		"[SM] There is a vote in progress!"
 		"chi"		"[SM] 有投票正在进行！"
+		"zho"		"[SM] There is a vote in progress!"
+		"jp"		"[SM] There is a vote in progress!"
+		"ko"		"[SM] There is a vote in progress!"
+		"vi"		"[SM] There is a vote in progress!"
 	}
 
 	"Vote_Progress_delay"
 	{
 		"en"		"{olive}<Mixmap>{default}There is a vote in progress! Changing map delays {orange} 15 {default}seconds! "
 		"chi"		"{olive}<Mixmap>{default}有投票正在进行！地图切换延迟{orange} 20 {default}秒！ "
+		"zho"		"{olive}<Mixmap>{default}There is a vote in progress! Changing map delays {orange} 15 {default}seconds! "
+		"jp"		"{olive}<Mixmap>{default}There is a vote in progress! Changing map delays {orange} 15 {default}seconds! "
+		"ko"		"{olive}<Mixmap>{default}There is a vote in progress! Changing map delays {orange} 15 {default}seconds! "
+		"vi"		"{olive}<Mixmap>{default}There is a vote in progress! Changing map delays {orange} 15 {default}seconds! "
 	}
 
 	"Stop_Mixmap"
 	{
 		"en"		"{olive}<Mixmap>{default}Maps initiated, abort……"
 		"chi"		"{olive}<Mixmap>{default}地图初始化，插件中止……"
+		"zho"		"{olive}<Mixmap>{default}Maps initiated, abort……"
+		"jp"		"{olive}<Mixmap>{default}Maps initiated, abort……"
+		"ko"		"{olive}<Mixmap>{default}Maps initiated, abort……"
+		"vi"		"{olive}<Mixmap>{default}Maps initiated, abort……"
 	}
 
 	"Stop_Mixmap_Admin"
 	{
 		"en"		"{olive}<Mixmap>{default} Admin{teamcolor} %N {default}force-stop Mixmap and Maps initiate，abort……"
 		"chi"		"{olive}<Mixmap>{default} 管理员{teamcolor} %N {default}强制关闭Mixmap，地图初始化，插件中止……"
+		"zho"		"{olive}<Mixmap>{default} Admin{teamcolor} %N {default}force-stop Mixmap and Maps initiate，abort……"
+		"jp"		"{olive}<Mixmap>{default} Admin{teamcolor} %N {default}force-stop Mixmap and Maps initiate，abort……"
+		"ko"		"{olive}<Mixmap>{default} Admin{teamcolor} %N {default}force-stop Mixmap and Maps initiate，abort……"
+		"vi"		"{olive}<Mixmap>{default} Admin{teamcolor} %N {default}force-stop Mixmap and Maps initiate，abort……"
 	}
 
 	"Start_Mixmap"
 	{
 		"en"		"{olive}<Mixmap>{default}Player {teamcolor}%N{default} initiates a vote to start Mixmap{orange}(%s)."
 		"chi"		"{olive}<Mixmap>{default}玩家  {teamcolor}%N{default} 发起投票启用Mixmap{orange}(%s)。"
+		"zho"		"{olive}<Mixmap>{default}Player {teamcolor}%N{default} initiates a vote to start Mixmap{orange}(%s)."
+		"jp"		"{olive}<Mixmap>{default}Player {teamcolor}%N{default} initiates a vote to start Mixmap{orange}(%s)."
+		"ko"		"{olive}<Mixmap>{default}Player {teamcolor}%N{default} initiates a vote to start Mixmap{orange}(%s)."
+		"vi"		"{olive}<Mixmap>{default}Player {teamcolor}%N{default} initiates a vote to start Mixmap{orange}(%s)."
 	}
 
 	"Show_Maplist_Not_Start"
 	{
 		"en"		"{olive}<Mixmap>{default}Plugin did not start, there is not a maplist."
 		"chi"		"{olive}<Mixmap>{default}插件未启用，无法查看地图列表。"
+		"zho"		"{olive}<Mixmap>{default}Plugin did not start, there is not a maplist."
+		"jp"		"{olive}<Mixmap>{default}Plugin did not start, there is not a maplist."
+		"ko"		"{olive}<Mixmap>{default}Plugin did not start, there is not a maplist."
+		"vi"		"{olive}<Mixmap>{default}Plugin did not start, there is not a maplist."
 	}
 	
 	"Show_Maplist_Cmd"
 	{
 		"en"		"{olive}Show maplist {orange}!maplist {default}| {olive}Abort Cmd{orange}!stopmixmap"
 		"chi"		"{olive}地图一览指令 {orange}!maplist {default}| {olive}中止指令{orange} !stopmixmap"
+		"zho"		"{olive}Show maplist {orange}!maplist {default}| {olive}Abort Cmd{orange}!stopmixmap"
+		"jp"		"{olive}Show maplist {orange}!maplist {default}| {olive}Abort Cmd{orange}!stopmixmap"
+		"ko"		"{olive}Show maplist {orange}!maplist {default}| {olive}Abort Cmd{orange}!stopmixmap"
+		"vi"		"{olive}Show maplist {orange}!maplist {default}| {olive}Abort Cmd{orange}!stopmixmap"
 	}
 
 	"Select_Maps_Succeed"
 	{
 		"en"		"{olive}<Mixmap>{default}Selecting maps randomly succeeds."
 		"chi"		"{olive}<Mixmap>{default}地图已成功抽取！"
+		"zho"		"{olive}<Mixmap>{default}Selecting maps randomly succeeds."
+		"jp"		"{olive}<Mixmap>{default}Selecting maps randomly succeeds."
+		"ko"		"{olive}<Mixmap>{default}Selecting maps randomly succeeds."
+		"vi"		"{olive}<Mixmap>{default}Selecting maps randomly succeeds."
 	}
 
 	"Change_Map_First"
 	{
 		"en"		"{olive}<Mixmap>{default}Changing map after {orange} %d {default}seconds."
 		"chi"		"{olive}<Mixmap>{default}将在{orange} %d {default}秒后开始切换地图。"
+		"zho"		"{olive}<Mixmap>{default}Changing map after {orange} %d {default}seconds."
+		"jp"		"{olive}<Mixmap>{default}Changing map after {orange} %d {default}seconds."
+		"ko"		"{olive}<Mixmap>{default}Changing map after {orange} %d {default}seconds."
+		"vi"		"{olive}<Mixmap>{default}Changing map after {orange} %d {default}seconds."
 	}
 	"AllMaps_Official"
 	{
 		"en"		"{orange}[-----list of all official maps-----]"
 		"chi"		"{orange}[-----所有官方地图代码列表-----]"
+		"zho"		"{orange}[-----list of all official maps-----]"
+		"jp"		"{orange}[-----list of all official maps-----]"
+		"ko"		"{orange}[-----list of all official maps-----]"
+		"vi"		"{orange}[-----list of all official maps-----]"
 	}
 	"AllMaps_Usage"
 	{
 		"en"		"{orange}Usage: {default}!manualmixmap <map1> <map2>..."
 		"chi"		"{orange}用法：{default}!manualmixmap <地图1> <地图2>......"
+		"zho"		"{orange}Usage: {default}!manualmixmap <map1> <map2>..."
+		"jp"		"{orange}Usage: {default}!manualmixmap <map1> <map2>..."
+		"ko"		"{orange}Usage: {default}!manualmixmap <map1> <map2>..."
+		"vi"		"{orange}Usage: {default}!manualmixmap <map1> <map2>..."
 	}
 	"Fail_Load_Preset"
 	{
 		"en"		"{olive}<Mixmap>{default}Failed to load preset!"
 		"chi"		"{olive}<Mixmap>{default}地图组未成功加载！"
+		"zho"		"{olive}<Mixmap>{default}Failed to load preset!"
+		"jp"		"{olive}<Mixmap>{default}Failed to load preset!"
+		"ko"		"{olive}<Mixmap>{default}Failed to load preset!"
+		"vi"		"{olive}<Mixmap>{default}Failed to load preset!"
 	}
 	"Maps_Not_Match_Rank"
 	{
 		"en"		"{olive}<Mixmap>{default}Preset has {orange}improper tagranks{default}: the number of maps to be played does not match the highest rank. Should have N+1 tagranks for highest rank N."
 		"chi"		"{olive}<Mixmap>{default}地图组的{orange}标签有误{default}：设定的地图数量和标签数量不一致。当标签最大值为N+1时，地图数量应为N。"
+		"zho"		"{olive}<Mixmap>{default}Preset has {orange}improper tagranks{default}: the number of maps to be played does not match the highest rank. Should have N+1 tagranks for highest rank N."
+		"jp"		"{olive}<Mixmap>{default}Preset has {orange}improper tagranks{default}: the number of maps to be played does not match the highest rank. Should have N+1 tagranks for highest rank N."
+		"ko"		"{olive}<Mixmap>{default}Preset has {orange}improper tagranks{default}: the number of maps to be played does not match the highest rank. Should have N+1 tagranks for highest rank N."
+		"vi"		"{olive}<Mixmap>{default}Preset has {orange}improper tagranks{default}: the number of maps to be played does not match the highest rank. Should have N+1 tagranks for highest rank N."
 	}
 	"Cvote_Title"
 	{
@@ -146,10 +230,138 @@
 	{
 		"en"		"{olive}[-------- Maplist --------]"
 		"chi"		"{olive}[-------- 地图列表 --------]"
+		"zho"		"{olive}[-------- Maplist --------]"
+		"jp"		"{olive}[-------- Maplist --------]"
+		"ko"		"{olive}[-------- Maplist --------]"
+		"vi"		"{olive}[-------- Maplist --------]"
 	}
 	"Secret"
 	{
 		"en"		"Secret"
 		"chi"		"秘密"
+	
+		"zho"		"Secret"
+		"jp"		"Secret"
+		"ko"		"Secret"
+		"vi"		"Secret"}
+
+	"L4D2Mixmap_OfficialMapsDeadCenter"
+	{
+		"en"		"c1m1_hotel,c1m2_streets,c1m3_mall,c1m4_atrium"
+		"chi"		"c1m1_hotel,c1m2_streets,c1m3_mall,c1m4_atrium"
+		"zho"		"c1m1_hotel,c1m2_streets,c1m3_mall,c1m4_atrium"
+		"jp"		"c1m1_hotel,c1m2_streets,c1m3_mall,c1m4_atrium"
+		"ko"		"c1m1_hotel,c1m2_streets,c1m3_mall,c1m4_atrium"
+		"vi"		"c1m1_hotel,c1m2_streets,c1m3_mall,c1m4_atrium"
+	}
+
+	"L4D2Mixmap_C2m1HighwayC2m2FairgroundsC2m3"
+	{
+		"en"		"c2m1_highway,c2m2_fairgrounds,c2m3_coaster,c2m4_barns,c2m5_concert"
+		"chi"		"c2m1_highway,c2m2_fairgrounds,c2m3_coaster,c2m4_barns,c2m5_concert"
+		"zho"		"c2m1_highway,c2m2_fairgrounds,c2m3_coaster,c2m4_barns,c2m5_concert"
+		"jp"		"c2m1_highway,c2m2_fairgrounds,c2m3_coaster,c2m4_barns,c2m5_concert"
+		"ko"		"c2m1_highway,c2m2_fairgrounds,c2m3_coaster,c2m4_barns,c2m5_concert"
+		"vi"		"c2m1_highway,c2m2_fairgrounds,c2m3_coaster,c2m4_barns,c2m5_concert"
+	}
+
+	"L4D2Mixmap_C3m1PlankcountryC3m2SwampC3m3"
+	{
+		"en"		"c3m1_plankcountry,c3m2_swamp,c3m3_shantytown,c3m4_plantation"
+		"chi"		"c3m1_plankcountry,c3m2_swamp,c3m3_shantytown,c3m4_plantation"
+		"zho"		"c3m1_plankcountry,c3m2_swamp,c3m3_shantytown,c3m4_plantation"
+		"jp"		"c3m1_plankcountry,c3m2_swamp,c3m3_shantytown,c3m4_plantation"
+		"ko"		"c3m1_plankcountry,c3m2_swamp,c3m3_shantytown,c3m4_plantation"
+		"vi"		"c3m1_plankcountry,c3m2_swamp,c3m3_shantytown,c3m4_plantation"
+	}
+
+	"L4D2Mixmap_C4m1MilltownC4m2SugarmillC4m3"
+	{
+		"en"		"c4m1_milltown_a,c4m2_sugarmill_a,c4m3_sugarmill_b,c4m4_milltown_b,c4m5_milltown_escape"
+		"chi"		"c4m1_milltown_a,c4m2_sugarmill_a,c4m3_sugarmill_b,c4m4_milltown_b,c4m5_milltown_escape"
+		"zho"		"c4m1_milltown_a,c4m2_sugarmill_a,c4m3_sugarmill_b,c4m4_milltown_b,c4m5_milltown_escape"
+		"jp"		"c4m1_milltown_a,c4m2_sugarmill_a,c4m3_sugarmill_b,c4m4_milltown_b,c4m5_milltown_escape"
+		"ko"		"c4m1_milltown_a,c4m2_sugarmill_a,c4m3_sugarmill_b,c4m4_milltown_b,c4m5_milltown_escape"
+		"vi"		"c4m1_milltown_a,c4m2_sugarmill_a,c4m3_sugarmill_b,c4m4_milltown_b,c4m5_milltown_escape"
+	}
+
+	"L4D2Mixmap_C5m1WaterfrontC5m2ParkC5m3"
+	{
+		"en"		"c5m1_waterfront,c5m2_park,c5m3_cemetery,c5m4_quarter,c5m5_bridge"
+		"chi"		"c5m1_waterfront,c5m2_park,c5m3_cemetery,c5m4_quarter,c5m5_bridge"
+		"zho"		"c5m1_waterfront,c5m2_park,c5m3_cemetery,c5m4_quarter,c5m5_bridge"
+		"jp"		"c5m1_waterfront,c5m2_park,c5m3_cemetery,c5m4_quarter,c5m5_bridge"
+		"ko"		"c5m1_waterfront,c5m2_park,c5m3_cemetery,c5m4_quarter,c5m5_bridge"
+		"vi"		"c5m1_waterfront,c5m2_park,c5m3_cemetery,c5m4_quarter,c5m5_bridge"
+	}
+
+	"L4D2Mixmap_C6m1RiverbankC6m2BedlamC7m1"
+	{
+		"en"		"c6m1_riverbank,c6m2_bedlam,c7m1_docks,c7m2_barge,c7m3_port"
+		"chi"		"c6m1_riverbank,c6m2_bedlam,c7m1_docks,c7m2_barge,c7m3_port"
+		"zho"		"c6m1_riverbank,c6m2_bedlam,c7m1_docks,c7m2_barge,c7m3_port"
+		"jp"		"c6m1_riverbank,c6m2_bedlam,c7m1_docks,c7m2_barge,c7m3_port"
+		"ko"		"c6m1_riverbank,c6m2_bedlam,c7m1_docks,c7m2_barge,c7m3_port"
+		"vi"		"c6m1_riverbank,c6m2_bedlam,c7m1_docks,c7m2_barge,c7m3_port"
+	}
+
+	"L4D2Mixmap_C8m1ApartmentC8m2SubwayC8m3"
+	{
+		"en"		"c8m1_apartment,c8m2_subway,c8m3_sewers,c8m4_interior,c8m5_rooftop"
+		"chi"		"c8m1_apartment,c8m2_subway,c8m3_sewers,c8m4_interior,c8m5_rooftop"
+		"zho"		"c8m1_apartment,c8m2_subway,c8m3_sewers,c8m4_interior,c8m5_rooftop"
+		"jp"		"c8m1_apartment,c8m2_subway,c8m3_sewers,c8m4_interior,c8m5_rooftop"
+		"ko"		"c8m1_apartment,c8m2_subway,c8m3_sewers,c8m4_interior,c8m5_rooftop"
+		"vi"		"c8m1_apartment,c8m2_subway,c8m3_sewers,c8m4_interior,c8m5_rooftop"
+	}
+
+	"L4D2Mixmap_C9m1AlleysC9m2LotsC14m1"
+	{
+		"en"		"c9m1_alleys,c9m2_lots,c14m1_junkyard,c14m2_lighthouse"
+		"chi"		"c9m1_alleys,c9m2_lots,c14m1_junkyard,c14m2_lighthouse"
+		"zho"		"c9m1_alleys,c9m2_lots,c14m1_junkyard,c14m2_lighthouse"
+		"jp"		"c9m1_alleys,c9m2_lots,c14m1_junkyard,c14m2_lighthouse"
+		"ko"		"c9m1_alleys,c9m2_lots,c14m1_junkyard,c14m2_lighthouse"
+		"vi"		"c9m1_alleys,c9m2_lots,c14m1_junkyard,c14m2_lighthouse"
+	}
+
+	"L4D2Mixmap_C10m1CavesC10m2DrainageC10m3"
+	{
+		"en"		"c10m1_caves,c10m2_drainage,c10m3_ranchhouse,c10m4_mainstreet,c10m5_houseboat"
+		"chi"		"c10m1_caves,c10m2_drainage,c10m3_ranchhouse,c10m4_mainstreet,c10m5_houseboat"
+		"zho"		"c10m1_caves,c10m2_drainage,c10m3_ranchhouse,c10m4_mainstreet,c10m5_houseboat"
+		"jp"		"c10m1_caves,c10m2_drainage,c10m3_ranchhouse,c10m4_mainstreet,c10m5_houseboat"
+		"ko"		"c10m1_caves,c10m2_drainage,c10m3_ranchhouse,c10m4_mainstreet,c10m5_houseboat"
+		"vi"		"c10m1_caves,c10m2_drainage,c10m3_ranchhouse,c10m4_mainstreet,c10m5_houseboat"
+	}
+
+	"L4D2Mixmap_C11m1GreenhouseC11m2OfficesC11m3"
+	{
+		"en"		"c11m1_greenhouse,c11m2_offices,c11m3_garage,c11m4_terminal,c11m5_runway"
+		"chi"		"c11m1_greenhouse,c11m2_offices,c11m3_garage,c11m4_terminal,c11m5_runway"
+		"zho"		"c11m1_greenhouse,c11m2_offices,c11m3_garage,c11m4_terminal,c11m5_runway"
+		"jp"		"c11m1_greenhouse,c11m2_offices,c11m3_garage,c11m4_terminal,c11m5_runway"
+		"ko"		"c11m1_greenhouse,c11m2_offices,c11m3_garage,c11m4_terminal,c11m5_runway"
+		"vi"		"c11m1_greenhouse,c11m2_offices,c11m3_garage,c11m4_terminal,c11m5_runway"
+	}
+
+	"L4D2Mixmap_C12m1HilltopC12m2TraintunnelC12m3"
+	{
+		"en"		"c12m1_hilltop,c12m2_traintunnel,c12m3_bridge,c12m4_barn,c12m5_cornfield"
+		"chi"		"c12m1_hilltop,c12m2_traintunnel,c12m3_bridge,c12m4_barn,c12m5_cornfield"
+		"zho"		"c12m1_hilltop,c12m2_traintunnel,c12m3_bridge,c12m4_barn,c12m5_cornfield"
+		"jp"		"c12m1_hilltop,c12m2_traintunnel,c12m3_bridge,c12m4_barn,c12m5_cornfield"
+		"ko"		"c12m1_hilltop,c12m2_traintunnel,c12m3_bridge,c12m4_barn,c12m5_cornfield"
+		"vi"		"c12m1_hilltop,c12m2_traintunnel,c12m3_bridge,c12m4_barn,c12m5_cornfield"
+	}
+
+	"L4D2Mixmap_C13m1AlpinecreekC13m2SouthpinestreamC13m3"
+	{
+		"en"		"c13m1_alpinecreek,c13m2_southpinestream,c13m3_memorialbridge,c13m4_cutthroatcreek"
+		"chi"		"c13m1_alpinecreek,c13m2_southpinestream,c13m3_memorialbridge,c13m4_cutthroatcreek"
+		"zho"		"c13m1_alpinecreek,c13m2_southpinestream,c13m3_memorialbridge,c13m4_cutthroatcreek"
+		"jp"		"c13m1_alpinecreek,c13m2_southpinestream,c13m3_memorialbridge,c13m4_cutthroatcreek"
+		"ko"		"c13m1_alpinecreek,c13m2_southpinestream,c13m3_memorialbridge,c13m4_cutthroatcreek"
+		"vi"		"c13m1_alpinecreek,c13m2_southpinestream,c13m3_memorialbridge,c13m4_cutthroatcreek"
 	}
 }

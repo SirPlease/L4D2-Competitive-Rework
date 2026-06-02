@@ -76,6 +76,7 @@ ConVar
 
 public void OnPluginStart()
 {
+	LoadTranslations("join.phrases");
 	hCvarEnableInf = CreateConVar("join_enable_inf", "1", "是否可以开启加入特感", _, true, 0.0, true, 1.0);
 	hCvarKickFamilyAccount = CreateConVar("join_enable_kickfamilyaccount", "1", "是否开启踢出家庭共享账户", _, true, 0.0, true, 1.0);
 	hCvarEnableAutoupdate = CreateConVar("join_autoupdate", "0", "是否开启AnneHappy核心插件自动更新（不常更新插件包的建议关闭）", _, true, 0.0, true, 4.0);
@@ -224,7 +225,7 @@ public void OnClientConnected(int client)
 {
 	if(!IsFakeClient(client))
 	{
-		PrintToChatAll("\x04 %N \x05正在爬进服务器",client);
+		PrintToChatAll("%t", "Join_CrawlingServer", client);
 	}
 }
 
@@ -297,7 +298,7 @@ public Action PlayerDisconnect_Event(Handle event, const char[] name, bool dontB
         message = reason;
     }
 
-    CPrintToChatAll("{green}%N {olive}离开了游戏 - 理由: [{green}%s{olive}]", client, message);
+    CPrintToChatAll("%t", "Join_LeftGameReason", client, message);
     return Plugin_Handled;
 } 
 
@@ -471,7 +472,7 @@ public Action DonateServer(int client, int args)
 		GetCmdArg(2, method, sizeof(method));
 		if(!IsDonateMethodAllowed(method))
 		{
-			CPrintToChat(client, "{green}[AnneDonate]{default} 支付方式只支持 wechat 或 alipay，请重新选择。");
+			CPrintToChat(client, "%t", "Join_AnneDonatePaymentMethodOnly");
 			ShowDonateMethodMenu(client);
 			return Plugin_Handled;
 		}
@@ -483,7 +484,7 @@ public Action DonateServer(int client, int args)
 		strcopy(g_sDonateMethod[client], sizeof(g_sDonateMethod[]), method);
 		SubmitDonateRequest(client, amount, method, note);
 		ShowDonateWebToPlayer(client, amount, method);
-		CPrintToChat(client, "{green}[AnneDonate]{default} 扫码支付完成后，请输入 {olive}!wc{default} / {olive}!wanchen{default} / {olive}!finish{default} 提醒管理员核实。");
+		CPrintToChat(client, "%t", "Join_FinishRemindsAdministratorVerify");
 		return Plugin_Handled;
 	}
 
@@ -498,13 +499,13 @@ public Action FinishDonatePayment(int client, int args)
 
 	if(g_sDonateAmount[client][0] == '\0' || g_sDonateMethod[client][0] == '\0')
 	{
-		CPrintToChat(client, "{green}[AnneDonate]{default} 暂未找到你的待确认赞助，请先输入 {olive}!donate{default} 选择档位和支付方式。");
+		CPrintToChat(client, "%t", "Join_AnneDonateSponsorshipConfirmedNot");
 		ShowDonateAmountMenu(client);
 		return Plugin_Handled;
 	}
 
 	SubmitDonateFinishRequest(client, g_sDonateAmount[client], g_sDonateMethod[client]);
-	CPrintToChat(client, "{green}[AnneDonate]{default} 正在记录你的支付完成提示，请等待管理员核实到账。");
+	CPrintToChat(client, "%t", "Join_AnneDonateRecordingPaymentCompletion");
 	return Plugin_Handled;
 }
 
@@ -521,7 +522,7 @@ public void ResetMode()
 	{
 		if(IsValidClient(i) && !IsFakeClient(i))
 		{
-			CPrintToChat(i, "{green}[AnneDonate]{default} 当前属于高峰期，仅管理员可以游玩。请赞助管理员后继续游玩。");
+			CPrintToChat(i, "%t", "Join_AnneDonateCurrentlyPeakPeriod");
 			ShowDonateAmountMenu(i);
 		}
 	}
@@ -627,7 +628,7 @@ public int DonateMethodMenuHandler(Menu menu, MenuAction action, int client, int
 		strcopy(g_sDonateMethod[client], sizeof(g_sDonateMethod[]), method);
 		SubmitDonateRequest(client, g_sDonateAmount[client], method, "");
 		ShowDonateWebToPlayer(client, g_sDonateAmount[client], method);
-		CPrintToChat(client, "{green}[AnneDonate]{default} 扫码支付完成后，请输入 {olive}!wc{default} / {olive}!wanchen{default} / {olive}!finish{default} 提醒管理员核实。");
+		CPrintToChat(client, "%t", "Join_FinishRemindsAdministratorVerify");
 	}
 	else if(action == MenuAction_End)
 	{
@@ -644,20 +645,20 @@ void SubmitDonateRequest(int client, const char[] amount, const char[] method, c
 
 	if(!GetClientAuthId(client, AuthId_SteamID64, steam64, sizeof(steam64), true))
 	{
-		CPrintToChat(client, "{green}[AnneDonate]{default} 无法获取 SteamID64，请稍后重试。");
+		CPrintToChat(client, "%t", "Join_AnneDonateUnableObtainSteam");
 		return;
 	}
 
 	if(GetFeatureStatus(FeatureType_Native, "SteamWorks_CreateHTTPRequest") != FeatureStatus_Available)
 	{
-		CPrintToChat(client, "{green}[AnneDonate]{default} SteamWorks 不可用，已打开赞助页面，请扫码支付后联系管理员核实。");
+		CPrintToChat(client, "%t", "Join_AnneDonateSteamWorksNot");
 		return;
 	}
 
 	Handle request = SteamWorks_CreateHTTPRequest(k_EHTTPMethodPOST, baseUrl);
 	if(request == null)
 	{
-		CPrintToChat(client, "{green}[AnneDonate]{default} 创建赞助申请失败，请稍后重试。");
+		CPrintToChat(client, "%t", "Join_AnneDonateFailedCreateSponsorship");
 		return;
 	}
 
@@ -673,11 +674,11 @@ void SubmitDonateRequest(int client, const char[] amount, const char[] method, c
 	if(!SteamWorks_SendHTTPRequest(request))
 	{
 		delete request;
-		CPrintToChat(client, "{green}[AnneDonate]{default} 发送赞助申请失败，请稍后重试。");
+		CPrintToChat(client, "%t", "Join_AnneDonateFailedSendSponsorship");
 		return;
 	}
 
-	CPrintToChat(client, "{green}[AnneDonate]{default} 正在创建赞助记录，赞助页面将直接显示对应收款码。");
+	CPrintToChat(client, "%t", "Join_AnneDonateSponsorshipRecordCreated");
 }
 
 public void DonateSubmitCompleted(Handle request, bool failure, bool requestSuccessful, EHTTPStatusCode statusCode, any userid)
@@ -687,11 +688,11 @@ public void DonateSubmitCompleted(Handle request, bool failure, bool requestSucc
 	{
 		if(failure || !requestSuccessful || statusCode < k_EHTTPStatusCode200OK || statusCode >= k_EHTTPStatusCode300MultipleChoices)
 		{
-			CPrintToChat(client, "{green}[AnneDonate]{default} 赞助信息提交失败，HTTP 状态: %d。请扫码支付后联系管理员核实。", statusCode);
+			CPrintToChat(client, "%t", "Join_AnneDonateSponsorshipInformationSubmission", statusCode);
 		}
 		else
 		{
-			CPrintToChat(client, "{green}[AnneDonate]{default} 赞助记录已创建，请在打开的页面扫码支付。");
+			CPrintToChat(client, "%t", "Join_AnneDonateSponsorshipRecordCreatedScan");
 		}
 	}
 	delete request;
@@ -705,20 +706,20 @@ void SubmitDonateFinishRequest(int client, const char[] amount, const char[] met
 
 	if(!GetClientAuthId(client, AuthId_SteamID64, steam64, sizeof(steam64), true))
 	{
-		CPrintToChat(client, "{green}[AnneDonate]{default} 无法获取 SteamID64，请联系管理员核实。");
+		CPrintToChat(client, "%t", "Join_AnneDonateUnableObtainSteamID64");
 		return;
 	}
 
 	if(GetFeatureStatus(FeatureType_Native, "SteamWorks_CreateHTTPRequest") != FeatureStatus_Available)
 	{
-		CPrintToChat(client, "{green}[AnneDonate]{default} SteamWorks 不可用，请联系管理员核实到账。");
+		CPrintToChat(client, "%t", "Join_AnneDonateSteamWorksNotAvailable");
 		return;
 	}
 
 	Handle request = SteamWorks_CreateHTTPRequest(k_EHTTPMethodPOST, baseUrl);
 	if(request == null)
 	{
-		CPrintToChat(client, "{green}[AnneDonate]{default} 支付完成提示发送失败，请联系管理员核实。");
+		CPrintToChat(client, "%t", "Join_AnneDonatePaymentCompletionPrompt");
 		return;
 	}
 
@@ -734,7 +735,7 @@ void SubmitDonateFinishRequest(int client, const char[] amount, const char[] met
 	if(!SteamWorks_SendHTTPRequest(request))
 	{
 		delete request;
-		CPrintToChat(client, "{green}[AnneDonate]{default} 支付完成提示发送失败，请联系管理员核实。");
+		CPrintToChat(client, "%t", "Join_AnneDonatePaymentCompletionPrompt");
 		return;
 	}
 }
@@ -746,11 +747,11 @@ public void DonateFinishCompleted(Handle request, bool failure, bool requestSucc
 	{
 		if(failure || !requestSuccessful || statusCode < k_EHTTPStatusCode200OK || statusCode >= k_EHTTPStatusCode300MultipleChoices)
 		{
-			CPrintToChat(client, "{green}[AnneDonate]{default} 支付完成提示同步失败，HTTP 状态: %d。请联系管理员核实。", statusCode);
+			CPrintToChat(client, "%t", "Join_AnneDonatePaymentCompletionPrompts", statusCode);
 		}
 		else
 		{
-			CPrintToChat(client, "{green}[AnneDonate]{default} 支付完成提示已同步，管理员核实到账后会开通权限。");
+			CPrintToChat(client, "%t", "Join_AnneDonatePaymentCompletionPromptSynchronized");
 		}
 	}
 	delete request;
@@ -837,10 +838,10 @@ public Action GetBot(int client, int args)
 	if(!IsValidClient(client))
 		return Plugin_Handled;
 	if(!g_bEnableGetbotCommand[client]){
-		PrintToChat(client,"\x03 你使用命令的速度太快了");
+		PrintToChat(client, "%t", "Join_UseCommandsTooFast");
 	}
 	else if(IsSuivivorTeamFull()){
-		PrintToChat(client,"\x03 生还者团队已满，无其他生还者bot可供接管");
+		PrintToChat(client, "%t", "Join_SurvivorTeamFullNoOther");
 	}else{
 		DrawSwitchCharacterMenu(client);
 		g_bEnableGetbotCommand[client] = false;

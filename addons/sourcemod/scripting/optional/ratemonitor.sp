@@ -60,6 +60,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
+	LoadTranslations("ratemonitor.phrases");
 	hCvarAllowedRateChanges = CreateConVar("rm_allowed_rate_changes", "-1", "Allowed number of rate changes during a live round(-1: no limit)");
 	hCvarPublicNotice = CreateConVar ("rm_public_notice", "0", "Print Rate Changes to the Public? (rm_countermeasure 1 and 3 will still be Public Notice)");
 	hCvarMinRate = CreateConVar("rm_min_rate", "20000", "Minimum allowed value of rate(-1: none)");
@@ -255,7 +256,7 @@ void RegisterSettings(int client)
 		}
 		
 		if (bPublic) {
-			CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N{default}'s netsettings changed from {teamcolor}%d/%d/%d {default}to {teamcolor}%d/%d/%d {olive}%s", \
+			CPrintToChatAllEx(client, "%t", "Ratemonitor_RatesNetsettingsChanged", \
 						client, player.Client_Cmdrate, player.Client_Updaterate, player.Client_Rate, iCmdRate, iUpdateRate, iRate, sCounter);
 		}
 		
@@ -273,7 +274,7 @@ void RegisterSettings(int client)
 		
 		hClientSettingsArray.PushArray(player, sizeof(NetsettingsStruct));
 		if (bPublic) {
-			CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N{default}'s netsettings set to {teamcolor}%d/%d/%d", \
+			CPrintToChatAllEx(client, "%t", "Ratemonitor_RatesNetsettingsSet", \
 						client, player.Client_Cmdrate, player.Client_Updaterate, player.Client_Rate);
 		}
 	}
@@ -287,10 +288,10 @@ void PunishPlayer(int client, const char[] sCmdRate, const char[] sUpdateRate, c
 	{
 		case 1: {// Just notify all players(zero punishment)
 			if (bInitialRegister) {
-				CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N{default}'s netsettings set to illegal values: {teamcolor}%s/%s/%s {olive}%s", \
+				CPrintToChatAllEx(client, "%t", "Ratemonitor_RatesNetsettingsSetIllegalValues", \
 								client, sCmdRate, sUpdateRate, sRate, sCounter);
 			} else {
-				CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N{default}'s illegaly changed netsettings midgame: {teamcolor}%s/%s/%s {olive}%s", \
+				CPrintToChatAllEx(client, "%t", "Ratemonitor_RatesIllegalyChangedNetsettingsMidgame", \
 								client, sCmdRate, sUpdateRate, sRate, sCounter);
 			}
 		}
@@ -299,21 +300,21 @@ void PunishPlayer(int client, const char[] sCmdRate, const char[] sUpdateRate, c
 			
 			if (bInitialRegister) {
 				if (bPublic) {
-					CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N {default}was moved to spectators for illegal netsettings: {teamcolor}%s/%s/%s {olive}%s", \
+					CPrintToChatAllEx(client, "%t", "Ratemonitor_RatesMovedSpectatorsIllegalNetsettings", \
 								client, sCmdRate, sUpdateRate, sRate, sCounter);
 				}
 
-				CPrintToChatEx(client, client, "{default}<{olive}Rates{default}> Please adjust your rates to values higher than {olive}%d/%d/%d%s", \
+				CPrintToChatEx(client, client, "%t", "Ratemonitor_RatesAdjustRatesValuesHigher", \
 								iMinCmd, iMinUpd, iMinRate, bProhibitFakePing ? " and remove any non-digital characters" : "");
 			} else {
 				NetsettingsStruct player;
 				hClientSettingsArray.GetArray(iIndex, player, sizeof(NetsettingsStruct));
 		
 				if (bPublic) {
-					CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N {default}was moved to spectators for illegal netsettings: {teamcolor}%s/%s/%s {olive}%s", \
+					CPrintToChatAllEx(client, "%t", "Ratemonitor_RatesMovedSpectatorsIllegalNetsettings", \
 							client, sCmdRate, sUpdateRate, sRate, sCounter);
 				}
-				CPrintToChatEx(client, client, "{default}<{olive}Rates{default}> Change your netsettings back to: {teamcolor}%d/%d/%d", \
+				CPrintToChatEx(client, client, "%t", "Ratemonitor_RatesChangeNetsettingsBack", \
 							player.Client_Cmdrate, player.Client_Updaterate, player.Client_Rate);
 			}
 		}
@@ -322,7 +323,7 @@ void PunishPlayer(int client, const char[] sCmdRate, const char[] sUpdateRate, c
 				KickClient(client, "Please use rates higher than %d/%d/%d%s", \
 								iMinCmd, iMinUpd, iMinRate, bProhibitFakePing ? " and remove any non-digits" : "");
 
-				CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N {default}was kicked for illegal netsettings: {teamcolor}%s/%s/%s {olive}%s", \
+				CPrintToChatAllEx(client, "%t", "Ratemonitor_RatesKickedIllegalNetsettings", \
 								client, sCmdRate, sUpdateRate, sRate, sCounter);
 			} else {
 				NetsettingsStruct player;
@@ -331,7 +332,7 @@ void PunishPlayer(int client, const char[] sCmdRate, const char[] sUpdateRate, c
 				KickClient(client, "Change your rates to previous values and remove non-digits: %d/%d/%d", \
 							player.Client_Cmdrate, player.Client_Updaterate, player.Client_Rate);
 				
-				CPrintToChatAllEx(client, "{default}<{olive}Rates{default}> {teamcolor}%N {default}was kicked due to illegal netsettings change: {teamcolor}%s/%s/%s {olive}%s", \
+				CPrintToChatAllEx(client, "%t", "Ratemonitor_RatesKickedDueIllegalNetsettings", \
 									client, sCmdRate, sUpdateRate, sRate, sCounter);
 			}
 		}

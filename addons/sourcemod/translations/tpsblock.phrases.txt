@@ -3,15 +3,27 @@
 	"Tag"
 	{
 		"en"		"[{green}!{default}]"
+		"zho"		"[{green}!{default}]"
+		"jp"		"[{green}!{default}]"
+		"ko"		"[{green}!{default}]"
+		"vi"		"[{green}!{default}]"
 	}
 	"Cvar_Invalid"
 	{
 		"en"		"The command {olive}c_thirdpersonshoulder{default} be invalid or protected."
-	}
+	
+		"zho"		"The command {olive}c_thirdpersonshoulder{default} be invalid or protected."
+		"jp"		"The command {olive}c_thirdpersonshoulder{default} be invalid or protected."
+		"ko"		"The command {olive}c_thirdpersonshoulder{default} be invalid or protected."
+		"vi"		"The command {olive}c_thirdpersonshoulder{default} be invalid or protected."}
 	"Cvar_Value1"
 	{
 		"en"		"In order to play enter {olive}c_thirdpersonshoulder 0{default} on your console."
-	}
+	
+		"zho"		"In order to play enter {olive}c_thirdpersonshoulder 0{default} on your console."
+		"jp"		"In order to play enter {olive}c_thirdpersonshoulder 0{default} on your console."
+		"ko"		"In order to play enter {olive}c_thirdpersonshoulder 0{default} on your console."
+		"vi"		"In order to play enter {olive}c_thirdpersonshoulder 0{default} on your console."}
 	"Cvar_Invalid_Nocolor"
 	{
 		"en"		"The command c_thirdpersonshoulder be invalid or protected."
