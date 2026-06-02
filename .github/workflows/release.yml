@@ -83,6 +83,7 @@ jobs:
           }
 
           include_args=(
+            -i "$SCRIPTING"
             -i "$SCRIPTING/include"
             -i "$SCRIPTING/sourcemod/include"
             -i "$SCRIPTING/confoglcompmod/include"

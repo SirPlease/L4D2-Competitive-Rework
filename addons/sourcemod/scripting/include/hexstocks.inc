@@ -460,10 +460,11 @@ stock void SetPlayerWeaponAmmo(int client, int weaponEnt, int clip = -1, int amm
 */
 stock int GivePlayerItemRemove(int client, const char[] weapon, int slot)
 {
-	if ((weapon = GetPlayerWeaponSlot(client, slot)) != -1)
+	int weaponEnt = GetPlayerWeaponSlot(client, slot);
+	if (weaponEnt != -1)
 	{
-		RemovePlayerItem(client, weapon);
-		AcceptEntityInput(weapon, "Kill");
+		RemovePlayerItem(client, weaponEnt);
+		AcceptEntityInput(weaponEnt, "Kill");
 	}
 	return GivePlayerItem(client, weapon);
 }
@@ -562,12 +563,14 @@ stock int GetCmdArgInt(int argnum)
 * @param argnum			Arg number
 * @return					Float Value of Arg
 */
+#if SOURCEMOD_V_MINOR < 11
 stock float GetCmdArgFloat(int argnum)
 {
 	char value[256];
 	GetCmdArg(argnum, value, sizeof(value));
 	return StringToFloat(value);
 }
+#endif
 
 /**
 * Retrives a command argument given its index as bool, from the console or server command
@@ -646,12 +649,12 @@ stock void SetCvarString(char[] cvarName, char[] value)
 	if (StringCvar == null)return;
 	
 	int flags = StringCvar.Flags;
-	StringCvar &= ~FCVAR_NOTIFY;
+	flags &= ~FCVAR_NOTIFY;
 	StringCvar.Flags = flags;
-	StringCvar.SetString(value)
+	StringCvar.SetString(value);
 	
 	flags |= FCVAR_NOTIFY;
-	FloatCvar.Flags = flags;
+	StringCvar.Flags = flags;
 }
 
 
@@ -911,7 +914,12 @@ stock bool Debug_Setup(bool server = false, bool console = true, bool chat = tru
 
 stock bool Debug_Prefix(const char[] prefix)
 {
+	#if defined DEBUG
 	strcopy(sPrefix, sizeof(sPrefix), prefix);
+	return true;
+	#else
+	return false;
+	#endif
 }
 stock bool Debug_Print(char[] format, any ...)
 {

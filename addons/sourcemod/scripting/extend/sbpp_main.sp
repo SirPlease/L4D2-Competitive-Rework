@@ -200,7 +200,7 @@ public OnPluginStart()
 		SetMenuExitBackButton(HackingMenuHandle, true);
 	}
 
-	g_FlagLetters = CreateFlagLetters();
+	CreateFlagLetters(g_FlagLetters);
 
 	BuildPath(Path_SM, logFile, sizeof(logFile), "logs/sourcebans.log");
 	g_bConnecting = true;
@@ -795,14 +795,14 @@ public int ReasonSelected(Handle menu, MenuAction action, int param1, int param2
 			if (StrEqual("Hacking", key))
 			{
 				DisplayMenu(HackingMenuHandle, param1, MENU_TIME_FOREVER);
-				return;
+				return 0;
 			}
 
 			else if (StrEqual("Own Reason", key)) // admin wants to use his own reason
 			{
 				g_ownReasons[param1] = true;
 				PrintToChat(param1, "%c[%cSourceBans%c]%c %t", GREEN, NAMECOLOR, GREEN, NAMECOLOR, "Chat Reason");
-				return;
+				return 0;
 			}
 
 			else if (g_BanTarget[param1] != -1 && g_BanTime[param1] != -1)
@@ -2282,7 +2282,7 @@ public SMCResult:ReadConfig_EndSection(Handle:smc)
  * @param reason	The reason to ban the player from the server
  * @noreturn
  *********************************************************/
-public Native_SBBanPlayer(Handle plugin, int numParams)
+	public Native_SBBanPlayer(Handle plugin, int numParams)
 {
 	int client = GetNativeCell(1);
 	int target = GetNativeCell(2);
@@ -2318,7 +2318,7 @@ public int Native_SBReportPlayer(Handle plugin, int numParams)
 	if (numParams < 3)
 	{
 		ThrowNativeError(SP_ERROR_NATIVE, "Invalid amount of arguments. Received %d arguments", numParams);
-		return;
+		return 0;
 	}
 
 	int iReporter = GetNativeCell(1)
@@ -2701,10 +2701,8 @@ stock void ParseBackupConfig_Overrides()
 	CloseHandle(hKV);
 }
 
-stock AdminFlag CreateFlagLetters()
+stock void CreateFlagLetters(AdminFlag FlagLetters[FLAG_LETTERS_SIZE])
 {
-	AdminFlag FlagLetters[FLAG_LETTERS_SIZE];
-
 	FlagLetters['a'-'a'] = Admin_Reservation;
 	FlagLetters['b'-'a'] = Admin_Generic;
 	FlagLetters['c'-'a'] = Admin_Kick;
@@ -2726,15 +2724,13 @@ stock AdminFlag CreateFlagLetters()
 	FlagLetters['s'-'a'] = Admin_Custom5;
 	FlagLetters['t'-'a'] = Admin_Custom6;
 	FlagLetters['z'-'a'] = Admin_Root;
-
-	return FlagLetters;
 }
 
 stock AccountForLateLoading()
 {
 	char auth[30];
 
-	for (new i = 1; i <= GetMaxClients(); i++)
+	for (new i = 1; i <= MaxClients; i++)
 	{
 		if (IsClientConnected(i) && !IsFakeClient(i))
 		{

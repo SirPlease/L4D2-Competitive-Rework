@@ -95,9 +95,7 @@ public HeadShotHook(Handle event, const char[] name, bool dontBroadcast) {
 		g_sB = g_HeadShot;
 	}
 
-	if (!IsSoundPrecached(g_sB)) {
-		PrecacheSound(g_sB, false);
-	}
+	PrecacheSound(g_sB, false);
 
 	int attacker = GetEventInt(event, "attacker");
 	int type = GetEventInt(event, "type");

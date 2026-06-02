@@ -5,7 +5,7 @@
 #include <sdktools>
 #include <sdkhooks>
 #include <left4dhooks>
-#include <steamworks>
+#include <SteamWorks>
 #define IsValidClient(%1)		(1 <= %1 <= MaxClients && IsClientInGame(%1))
 
 //#include <smlib>

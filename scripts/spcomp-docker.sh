@@ -81,6 +81,7 @@ if [[ "$source_dir_in_scripting" != "." ]]; then
 fi
 
 include_args=(
+  -i/work/$scripting_dir
   -i/work/$scripting_dir/include
   -i/work/$scripting_dir/sourcemod/include
   -i/work/$scripting_dir/confoglcompmod/include

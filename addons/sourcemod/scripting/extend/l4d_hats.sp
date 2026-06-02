@@ -3022,7 +3022,7 @@ stock void TranslateHatnames()
 {
 	int maxIndex = 95; // Searches from "1" to maxIndex (including max) in the "hatnames" file. Matches to the data config.
 
-	char sLang[4] = "zho/"; // Language folder to translate. Blank for "en"
+	char sLang[5] = "zho/"; // Language folder to translate. Blank for "en"
 	char sText[256];
 	char sModel[PLATFORM_MAX_PATH];
 	char sTran[PLATFORM_MAX_PATH];

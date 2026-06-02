@@ -58,8 +58,7 @@ void SaveDownloadables()
 	
 	PrintToServer("[FixScreen] All strings has been saved and deleted from stringtable");
 	
-	INetworkStringTable table = INetworkStringTable(iTable);
-	table.DeleteStrings();
+	DeleteStringTableData(iTable);
 	
 	int index = ReadRestrictedFiles();
 		
@@ -95,8 +94,7 @@ public Action tPlayers(Handle timer)
 	{
 		g_bEmpty = true;
 		
-		INetworkStringTable table = INetworkStringTable(FindStringTable("downloadables"));
-		table.DeleteStrings();
+		DeleteStringTableData(FindStringTable("downloadables"));
 		
 		ReadRestrictedFiles();
 	}

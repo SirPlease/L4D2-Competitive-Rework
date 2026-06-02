@@ -92,7 +92,7 @@ enum struct AiSmoker {
 }
 AiSmoker g_AiSmokers[MAXPLAYERS + 1];
 
-#include "./stocks.sp"
+#include "../../archive/AnneHappy/stocks.sp"
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max) {
 	EngineVersion test = GetEngineVersion();

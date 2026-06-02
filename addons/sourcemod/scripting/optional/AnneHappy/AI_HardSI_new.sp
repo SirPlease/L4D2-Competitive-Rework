@@ -65,7 +65,7 @@ int g_iState[MAXPLAYERS + 1][8];
 // Floats
 float g_fPlayBackRate, g_fDelay[MAXPLAYERS + 1][8], g_fMoveGrad[MAXPLAYERS + 1][3], g_fMoveSpeed[MAXPLAYERS + 1], g_fPos[MAXPLAYERS + 1][3];
 // Bools
-bool g_bAiEnable[MAXPLAYERS + 1], g_bTankDelay[MAXPLAYERS + 1] = false;
+bool g_bAiEnable[MAXPLAYERS + 1], g_bTankDelay[MAXPLAYERS + 1];
 
 public Plugin myinfo = 
 {
@@ -101,11 +101,13 @@ void ConVarChanged_Cvars(ConVar convar, const char[] oldValue, const char[] newV
 public Action L4D_OnFirstSurvivorLeftSafeArea(int firstSurvivor) 
 {
 	CreateTimer( 0.3, Timer_ForceInfectedAssault, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE );
+	return Plugin_Continue;
 }
 
 public Action Timer_ForceInfectedAssault( Handle timer) 
 {
 	BypassAndExecuteCommand("nb_assault");
+	return Plugin_Continue;
 }
 public int BypassAndExecuteCommand(char []strCommand)
 {
@@ -113,6 +115,7 @@ public int BypassAndExecuteCommand(char []strCommand)
 	SetCommandFlags(strCommand, flags & ~ FCVAR_CHEAT);
 	FakeClientCommand(GetRandomSurvivor(), "%s", strCommand);
 	SetCommandFlags(strCommand, flags);
+	return 0;
 }
 public void OnMapStart()
 {
@@ -470,7 +473,7 @@ public Action OnTankRunCmd(int client, int &buttons, float vel[3], float angles[
 				else
 				{
 					int entity = -1;
-					char classname[64] = '\0';
+					char classname[64];
 					entity = TR_GetEntityIndex(hTrace);
 					GetEntityClassname(entity, classname, sizeof(classname));
 					if (strcmp(classname, "player") != 0 && strcmp(classname, "env_physics_blocker") != 0 && strcmp(classname, "tank_rock") != 0)

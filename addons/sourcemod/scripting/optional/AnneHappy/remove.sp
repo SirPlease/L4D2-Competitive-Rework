@@ -156,7 +156,9 @@ public Action RemoveOrReplaceKits()
 		}
 		arrDef.Erase(0);
 	}
-	delete arrDef, arrPills, arrMed;
+		delete arrDef;
+		delete arrPills;
+		delete arrMed;
 	return Plugin_Continue;
 }
 

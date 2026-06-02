@@ -10,7 +10,7 @@
 #include <treeutil>
 #include <logger2>
 // 你自己的公共方法、工具函数（判定AI Tank / 可见性 / 贴图等）都在这里
-#include "./stocks.sp"
+#include "../../archive/AnneHappy/stocks.sp"
 
 // ===== 常量 / 宏 =====
 #define CVAR_FLAGS                 FCVAR_NOTIFY

@@ -1,7 +1,11 @@
 #pragma semicolon 1
 #pragma dynamic 645221
+#if !defined AUTOLOAD_EXTENSIONS
 #define AUTOLOAD_EXTENSIONS
+#endif
+#if !defined REQUIRE_EXTENSIONS
 #define REQUIRE_EXTENSIONS
+#endif
 #define PLUGIN_VERSION "1.4"
 #define MAX_FLOAT 99999999.0
 

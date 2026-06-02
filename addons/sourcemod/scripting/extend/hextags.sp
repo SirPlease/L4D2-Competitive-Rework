@@ -562,11 +562,12 @@ public Action RankMe_LoadTags(int client, int rank, any data)
 		IntToString(iRank[client], sRank, sizeof(sRank));
 		
 		if (selectedTags[client].ScoreTag[0] == '\0')
-			return;
+			return Plugin_Continue;
 		
 		ReplaceString(selectedTags[client].ScoreTag, sizeof(CustomTags::ScoreTag), "{rmRank}", sRank);
 		CS_SetClientClanTag(client, selectedTags[client].ScoreTag); //Instantly load the score-tag
 	}
+	return Plugin_Continue;
 }
 
 public void Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
@@ -1121,7 +1122,7 @@ bool CheckSelector(const char[] selector, int client)
 public Action Timer_ForceTag(Handle timer)
 {
 	if (!bCSGO)
-		return;
+		return Plugin_Continue;
 	
 	for (int i = 1; i <= MaxClients; i++)if (IsClientInGame(i) && selectedTags[i].ForceTag && selectedTags[i].ScoreTag[0] != '\0' && !bHideTag[i])
 	{
@@ -1136,6 +1137,7 @@ public Action Timer_ForceTag(Handle timer)
 		
 		CS_SetClientClanTag(i, selectedTags[i].ScoreTag);
 	}
+	return Plugin_Continue;
 }
 
 //Frames

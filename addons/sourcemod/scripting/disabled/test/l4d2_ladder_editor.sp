@@ -262,7 +262,6 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 public Action PlayerTeam_Event(Handle event, const char[] name, bool dontBroadcast)
 {
     int client = GetClientOfUserId(GetEventInt(event, "userid"));
-    int team = GetEventInt(event, "team");
     if (bEditMode[client]) {
         bEditMode[client] = false;
         PrintToChat(client, "Exiting edit mode.");

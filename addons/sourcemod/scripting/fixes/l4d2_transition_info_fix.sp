@@ -50,6 +50,7 @@ public void OnGameMode(const char[] output, int caller, int activator, float del
 public MRESReturn DH_ChangeLevelNow(int i, Handle hReturn, Handle hParams)
 {
 	bTransition = true
+	return MRES_Ignored
 }
 
 public void OnMapEnd()

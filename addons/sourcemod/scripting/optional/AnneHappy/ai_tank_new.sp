@@ -58,21 +58,21 @@ ConVar g_hTankBhop, g_hTankThrow, g_hTankThrowDist,g_hTankBlockThrowDist, g_hTan
 , g_hVsBossFlowBuffer, g_hTankConsumeLimitNum, g_hTankThrowForce, g_hTankConsume, g_hTankConsumeType, g_hTankRetreatAirAngles, g_hTankConsumeAction, g_hTankConsumeDamagePercent
 , g_hTankForceAttackDistance, g_hTankConsumeHealthLimit, g_hTankAttackIncapped, g_hTankConsumeValidRaidus, g_hTankConsumeDistance, g_hSiLimit, g_hTankStopDistance;
 // Ints
-int g_iTankTarget, g_iTankThrowDist, g_iTankBlockThrowDist, g_iTreeDetect, g_iTreePlayer[MAXPLAYERS + 1] = -1, g_iTreeNewTarget, g_iTankConsumeLimit
-, g_iTankConsumeRaidus, g_iTankAttackVomitedNum, g_iVomitedPlayer = 0, g_iTeleportForwardPercent, g_iTankConsumeSurvivorProgress[MAXPLAYERS + 1] = 0
-, g_iTankConsumeNum, g_iTankConsumeLimitNum[MAXPLAYERS + 1] = 0, g_iTankConsumeType, g_iTankConsumeAction, g_iTankConsumeDamagePercent, g_iTankForceAttackDistance, g_iTankConsumeHealthLimit, g_iTankAttackIncapped
+int g_iTankTarget, g_iTankThrowDist, g_iTankBlockThrowDist, g_iTreeDetect, g_iTreePlayer[MAXPLAYERS + 1] = {-1, ...}, g_iTreeNewTarget, g_iTankConsumeLimit
+, g_iTankConsumeRaidus, g_iTankAttackVomitedNum, g_iVomitedPlayer = 0, g_iTeleportForwardPercent, g_iTankConsumeSurvivorProgress[MAXPLAYERS + 1]
+, g_iTankConsumeNum, g_iTankConsumeLimitNum[MAXPLAYERS + 1], g_iTankConsumeType, g_iTankConsumeAction, g_iTankConsumeDamagePercent, g_iTankForceAttackDistance, g_iTankConsumeHealthLimit, g_iTankAttackIncapped
 , g_iTankConsumeValidRaidus, g_iTankConsumeDistance, g_iTankIncappedCount[MAXPLAYERS + 1][1], g_iTankConsumeValidPos[MAXPLAYERS + 1][1], g_iTankSecondAttackDistance[MAXPLAYERS + 1][1]
 , g_iDistanceCount[MAXPLAYERS + 1][1], g_iTankUnstuckTimes[MAXPLAYERS + 1][2], g_iSiLimit = 0, g_iTankStopDistance;
 
 // Bools
-bool g_bTankBhop, g_bTankThrow, g_bCanTankConsume[MAXPLAYERS + 1] = false, g_bInConsumePlace[MAXPLAYERS + 1] = false, g_bReturnConsumePlace[MAXPLAYERS + 1] = false, g_bCanTankAttack[MAXPLAYERS + 1] = true
-, g_bVomitCanInstantAttack, g_bVomitCanConsume[MAXPLAYERS + 1] = false, g_bTankConsume, g_bIsFirstConsumeCheck[MAXPLAYERS + 1] = true, g_bDistanceHandle[MAXPLAYERS + 1] = false
-, g_bTankActionReset[MAXPLAYERS + 1] = false;
+bool g_bTankBhop, g_bTankThrow, g_bCanTankConsume[MAXPLAYERS + 1], g_bInConsumePlace[MAXPLAYERS + 1], g_bReturnConsumePlace[MAXPLAYERS + 1], g_bCanTankAttack[MAXPLAYERS + 1] = {true, ...}
+, g_bVomitCanInstantAttack, g_bVomitCanConsume[MAXPLAYERS + 1], g_bTankConsume, g_bIsFirstConsumeCheck[MAXPLAYERS + 1] = {true, ...}, g_bDistanceHandle[MAXPLAYERS + 1]
+, g_bTankActionReset[MAXPLAYERS + 1];
 // Floats
 float g_fTankBhopSpeed, g_fTankAirAngles, g_fTankAttackRange, g_fTreePlayerOriginPos[3], g_fTankConsumeHeight, g_fConsumePosition[MAXPLAYERS + 1][3]
 , g_fTeleportPosition[MAXPLAYERS + 1][3], g_fVomitAttackInterval, g_fRunTopSpeed[MAXPLAYERS + 1], g_fTankRetreatAirAngles;
 // Handles
-Handle g_hDistanceTimer[MAXPLAYERS + 1] = INVALID_HANDLE;
+Handle g_hDistanceTimer[MAXPLAYERS + 1] = {INVALID_HANDLE, ...};
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -181,9 +181,9 @@ public void OnPluginStart()
 //		指令
 // **************
 public Action Cmd_Consume(int client, int args)
-{
-	if (client && client <= MaxClients && IsClientInGame(client))
 	{
+		if (client && client <= MaxClients && IsClientInGame(client))
+		{
 		int iTank;
 		for (int i = 1; i <= MaxClients; i++)
 		{
@@ -194,9 +194,10 @@ public Action Cmd_Consume(int client, int args)
 		}
 		float tankpos[3] = {0.0};
 		GetClientAbsOrigin(iTank, tankpos);
-		DoConsume(iTank, tankpos);
+			DoConsume(iTank, tankpos);
+		}
+		return Plugin_Handled;
 	}
-}
 
 // 向量绘制
 #include "vector/vector_show.sp"
@@ -285,7 +286,7 @@ void NextFrame_JumpRock(int tankclient)
 			int flags = GetEntityFlags(tankclient);
 			if (flags & FL_ONGROUND)
 			{
-				float eyeangles[3] = 0.0, lookat[3] = 0.0;
+				float eyeangles[3] = {0.0}, lookat[3] = {0.0};
 				GetClientEyeAngles(tankclient, eyeangles);
 				GetAngleVectors(eyeangles, lookat, NULL_VECTOR, NULL_VECTOR);
 				NormalizeVector(lookat, lookat);
@@ -337,7 +338,7 @@ public Action OnPlayerRunCmd(int tank, int &buttons, int &impulse, float vel[3],
 				// 计算坦克与目标之间的距离
 				float fBuffer[3] = {0.0}, fTargetPos[3] = {0.0};
 				GetClientAbsOrigin(iTarget, fTargetPos);
-				fBuffer = UpdatePosition(tank, iTarget, g_fTankBhopSpeed);
+				UpdatePosition(tank, iTarget, g_fTankBhopSpeed, fBuffer);
 				if (g_iTankStopDistance < iSurvivorDistance < 2000 && fCurrentSpeed > 190.0)
 				{
 					if (iFlags & FL_ONGROUND)
@@ -479,8 +480,10 @@ public Action OnPlayerRunCmd(int tank, int &buttons, int &impulse, float vel[3],
 								#endif
 								if (!TR_DidHit(hSecondTrace))
 								{
-									if (GetVectorDistance(endpos, survivoreyepos) >= float(g_iTankConsumeDistance) 
-									&& L4D2_VScriptWrapper_NavAreaBuildPath(fTankPos, endpos, g_iTankConsumeValidRaidus + 1000.0, false, false, TEAM_INFECTED, false) && !IsPlayerStuck(endpos, tank) 
+										Address navStart = L4D_GetNearestNavArea(fTankPos, 120.0, false, false, false, TEAM_INFECTED);
+										Address navEnd = L4D_GetNearestNavArea(endpos, 120.0, false, false, false, TEAM_INFECTED);
+										if (GetVectorDistance(endpos, survivoreyepos) >= float(g_iTankConsumeDistance) 
+										&& navStart != Address_Null && navEnd != Address_Null && L4D2_NavAreaBuildPath(navStart, navEnd, g_iTankConsumeValidRaidus + 1000.0, TEAM_INFECTED, false) && !IsPlayerStuck(endpos, tank) 
 									&& IsPosAhead(endpos) && endpos[2] - fTankPos[2] >= g_fTankConsumeHeight)
 									{
 										PrintToConsoleAll("[Ai-Tank]：当前消耗位置无法直视生还，新位置：%.2f，%.2f，%.2f，距离：%.2f，是否在生还路程前？%b"
@@ -800,11 +803,12 @@ public Action Timer_DistanceTrack(Handle timer, int client)
 		GetClientAbsOrigin(client, tankpos);
 		int distance = GetSurvivorDistance(tankpos);
 		if (distance < g_iTankSecondAttackDistance[client][0])
-		{
-			g_iDistanceCount[client][0] += 1;
+			{
+				g_iDistanceCount[client][0] += 1;
+			}
 		}
+		return Plugin_Continue;
 	}
-}
 
 void DoConsume(int client, float tankpos[3])
 {
@@ -826,18 +830,18 @@ void DoConsume(int client, float tankpos[3])
 	}
 }
 
-public Action Timer_VomitAttackAgain(Handle timer)
-{
-	g_iVomitedPlayer = 0;
-}
+	public Action Timer_VomitAttackAgain(Handle timer)
+	{
+		g_iVomitedPlayer = 0;
+		return Plugin_Continue;
+	}
 
 // 选择目标时
 public Action L4D2_OnChooseVictim(int specialInfected, int &curTarget)
-{
-	if (IsAiTank(specialInfected))
+	{
+		if (IsAiTank(specialInfected))
 	{
 		int newtarget = -1;
-		int iButtons = GetClientButtons(specialInfected);
 		// 有目标的情况
 		if (IsSurvivor(curTarget))
 		{
@@ -918,9 +922,9 @@ public Action L4D2_OnChooseVictim(int specialInfected, int &curTarget)
 					{
 						if (GetSurvivorDistance(fTankPos, g_iTreePlayer[specialInfected]) < g_iTreeNewTarget)
 						{
-							SetEntProp(specialInfected, Prop_Data, "m_nButtons", iButtons |= IN_BACK);
-							SetEntProp(specialInfected, Prop_Data, "m_nButtons", iButtons |= IN_FORWARD);
-							SetEntProp(specialInfected, Prop_Data, "m_nButtons", iButtons |= IN_JUMP);
+								SetEntProp(specialInfected, Prop_Data, "m_nButtons", GetClientButtons(specialInfected) | IN_BACK);
+								SetEntProp(specialInfected, Prop_Data, "m_nButtons", GetClientButtons(specialInfected) | IN_FORWARD);
+								SetEntProp(specialInfected, Prop_Data, "m_nButtons", GetClientButtons(specialInfected) | IN_JUMP);
 							// 检测绕树目标与坦克之间的距离，终于出来了
 							g_iTreePlayer[specialInfected] = -1;
 							for (int i = 0; i < 3; i++)
@@ -1078,10 +1082,11 @@ public Action Timer_CheckCanConsume(Handle timer, int client)
 		float tankpos[3] = {0.0};	GetClientAbsOrigin(client, tankpos);
 		int dist = GetSurvivorDistance(tankpos);
 		int iInfectedCount = GetInfectedCount();
-		CheckCanTankConsume(client, dist, iInfectedCount);
-		g_bIsFirstConsumeCheck[client] = false;
+			CheckCanTankConsume(client, dist, iInfectedCount);
+			g_bIsFirstConsumeCheck[client] = false;
+		}
+		return Plugin_Continue;
 	}
-}
 
 public void evt_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
@@ -1176,16 +1181,15 @@ bool bHasLeftRoundPoint(float originPos[3], float nowPos[3], int radius)
 }
 
 // 计算加速后的向量
-float UpdatePosition(int tank, int target, float fForce)
+void UpdatePosition(int tank, int target, float fForce, float fBuffer[3])
 {
-	float fBuffer[3] = {0.0}, fTankPos[3] = {0.0}, fTargetPos[3] = {0.0};
+	float fTankPos[3] = {0.0}, fTargetPos[3] = {0.0};
 	GetClientAbsOrigin(tank, fTankPos);
 	GetClientAbsOrigin(target, fTargetPos);
 	SubtractVectors(fTargetPos, fTankPos, fBuffer);
 	fBuffer[2] = 0.0;
 	NormalizeVector(fBuffer, fBuffer);
 	ScaleVector(fBuffer, fForce);
-	return fBuffer;
 }
 
 // 连跳操作
@@ -1394,7 +1398,7 @@ int GetClosestSurvivor(float refpos[3], int excludeSur = -1)
 	return closetSur;
 }
 
-bool TankIsPinned(int client)
+stock bool TankIsPinned(int client)
 {
 	bool bIsPinned = false;
 	if (IsSurvivor(client))
@@ -1569,7 +1573,7 @@ public bool Trace_FilterNoPlayers(int entity, int mask, any data)
     return true;
 }
 
-stock float CopyVectors(float origin[3], float result[3])
+stock void CopyVectors(float origin[3], float result[3])
 {
 	result[0] = origin[0];
 	result[1] = origin[1];

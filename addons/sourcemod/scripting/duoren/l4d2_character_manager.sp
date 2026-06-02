@@ -12,7 +12,9 @@
 #include <sdktools>
 #include <sdkhooks>
 
+#if !defined REQUIRE_EXTENSIONS
 #define REQUIRE_EXTENSIONS
+#endif
 #include <dhooks>
 #undef REQUIRE_EXTENSIONS
 

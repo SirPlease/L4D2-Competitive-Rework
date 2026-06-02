@@ -114,20 +114,15 @@ new Handle:g_SceneStack
 new bool:g_HasAnyVocalizeCommandsToProcess
 new Handle:g_VocalizeArray
 
-enum SceneData
-{
-	SceneStages:SceneData_Stage,
-	bool:SceneData_IsInFakePostSpawn,
-	Float:SceneData_StartTimeStamp,
-	SceneData_Actor,
-	SceneData_Initiator,
-	String:SceneData_File[MAX_SCENEFILE_LENGTH],
-	String:SceneData_Vocalize[MAX_VOCALIZE_LENGTH],
-	Float:SceneData_PreDelay,
-	Float:SceneData_Pitch
-}
-
-new g_SceneDataArray[MAXENTITIES + 1][SceneData]
+new SceneStages:g_SceneDataStage[MAXENTITIES + 1]
+new bool:g_SceneDataIsInFakePostSpawn[MAXENTITIES + 1]
+new Float:g_SceneDataStartTimeStamp[MAXENTITIES + 1]
+new g_SceneDataActor[MAXENTITIES + 1]
+new g_SceneDataInitiator[MAXENTITIES + 1]
+new String:g_SceneDataFile[MAXENTITIES + 1][MAX_SCENEFILE_LENGTH]
+new String:g_SceneDataVocalize[MAXENTITIES + 1][MAX_VOCALIZE_LENGTH]
+new Float:g_SceneDataPreDelay[MAXENTITIES + 1]
+new Float:g_SceneDataPitch[MAXENTITIES + 1]
 
 public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 {
@@ -562,7 +557,7 @@ public OnSceneCanceled_EntOutput(const String:output[], caller, activator, Float
 
 static stock SceneStages:SceneData_GetStage(scene)
 {
-	return g_SceneDataArray[scene][SceneData_Stage]
+	return g_SceneDataStage[scene]
 }
 
 public N_GetSceneStage(Handle:plugin, numParams)
@@ -583,7 +578,7 @@ public N_GetSceneStage(Handle:plugin, numParams)
 
 static stock SceneData_SetStage(scene, SceneStages:stage)
 {
-	g_SceneDataArray[scene][SceneData_Stage] = stage
+	g_SceneDataStage[scene] = stage
 	
 	if (stage != SceneStages:0)
 	{
@@ -647,17 +642,17 @@ static stock SceneData_SetStage(scene, SceneStages:stage)
 
 static stock SceneData_SetIsInFakePostSpawn(scene, bool:fake)
 {
-	g_SceneDataArray[scene][SceneData_IsInFakePostSpawn] = fake
+	g_SceneDataIsInFakePostSpawn[scene] = fake
 }
 
 static stock bool:SceneData_InFakePostSpawn(scene)
 {
-	return g_SceneDataArray[scene][SceneData_IsInFakePostSpawn]
+	return g_SceneDataIsInFakePostSpawn[scene]
 }
 
 static stock Float:SceneData_GetStartTimeStamp(scene)
 {
-	return g_SceneDataArray[scene][SceneData_StartTimeStamp]
+	return g_SceneDataStartTimeStamp[scene]
 }
 
 public N_GetSceneStartTimeStamp(Handle:plugin, numParams)
@@ -678,12 +673,12 @@ public N_GetSceneStartTimeStamp(Handle:plugin, numParams)
 
 static stock SceneData_SetStartTimeStamp(scene, Float:timeStamp)
 {
-	g_SceneDataArray[scene][SceneData_StartTimeStamp] = timeStamp
+	g_SceneDataStartTimeStamp[scene] = timeStamp
 }
 
 static stock SceneData_GetActor(scene)
 {
-	return g_SceneDataArray[scene][SceneData_Actor]
+	return g_SceneDataActor[scene]
 }
 
 public N_GetSceneActor(Handle:plugin, numParams)
@@ -720,12 +715,12 @@ public N_GetActorScene(Handle:plugin, numParams)
 
 static stock SceneData_SetActor(scene, actor)
 {
-	g_SceneDataArray[scene][SceneData_Actor] = actor
+	g_SceneDataActor[scene] = actor
 }
 
 static stock SceneData_GetInitiator(scene)
 {
-	return g_SceneDataArray[scene][SceneData_Initiator]
+	return g_SceneDataInitiator[scene]
 }
 
 public N_GetSceneInitiator(Handle:plugin, numParams)
@@ -746,12 +741,12 @@ public N_GetSceneInitiator(Handle:plugin, numParams)
 
 static stock SceneData_SetInitiator(scene, initiator)
 {
-	g_SceneDataArray[scene][SceneData_Initiator] = initiator
+	g_SceneDataInitiator[scene] = initiator
 }
 
 static stock SceneData_GetFile(scene, String:dest[], len)
 {
-	return strcopy(dest, len, g_SceneDataArray[scene][SceneData_File])
+	return strcopy(dest, len, g_SceneDataFile[scene])
 }
 
 public N_GetSceneFile(Handle:plugin, numParams)
@@ -769,18 +764,18 @@ public N_GetSceneFile(Handle:plugin, numParams)
 	
 	new len = GetNativeCell(3)
 	new bytesWritten
-	SetNativeString(2, g_SceneDataArray[scene][SceneData_File], len, _, bytesWritten)
+	SetNativeString(2, g_SceneDataFile[scene], len, _, bytesWritten)
 	return bytesWritten
 }
 
 static stock SceneData_SetFile(scene, const String:file[])
 {
-	strcopy(g_SceneDataArray[scene][SceneData_File], MAX_SCENEFILE_LENGTH, file)
+	strcopy(g_SceneDataFile[scene], MAX_SCENEFILE_LENGTH, file)
 }
 
 static stock SceneData_GetVocalize(scene, String:dest[], len)
 {
-	return strcopy(dest, len, g_SceneDataArray[scene][SceneData_Vocalize])
+	return strcopy(dest, len, g_SceneDataVocalize[scene])
 }
 
 public N_GetSceneVocalize(Handle:plugin, numParams)
@@ -798,18 +793,18 @@ public N_GetSceneVocalize(Handle:plugin, numParams)
 	
 	new len = GetNativeCell(3)
 	new bytesWritten
-	SetNativeString(2, g_SceneDataArray[scene][SceneData_Vocalize], len, _, bytesWritten)
+	SetNativeString(2, g_SceneDataVocalize[scene], len, _, bytesWritten)
 	return bytesWritten
 }
 
 static stock SceneData_SetVocalize(scene, const String:vocalize[])
 {
-	strcopy(g_SceneDataArray[scene][SceneData_Vocalize], MAX_VOCALIZE_LENGTH, vocalize)
+	strcopy(g_SceneDataVocalize[scene], MAX_VOCALIZE_LENGTH, vocalize)
 }
 
 static stock Float:SceneData_GetPreDelay(scene)
 {
-	return g_SceneDataArray[scene][SceneData_PreDelay]
+	return g_SceneDataPreDelay[scene]
 }
 
 public N_GetScenePreDelay(Handle:plugin, numParams)
@@ -830,7 +825,7 @@ public N_GetScenePreDelay(Handle:plugin, numParams)
 
 static stock SceneData_SetPreDelay(scene, Float:preDelay)
 {
-	g_SceneDataArray[scene][SceneData_PreDelay] = preDelay
+	g_SceneDataPreDelay[scene] = preDelay
 }
 
 public N_SetScenePreDelay(Handle:plugin, numParams)
@@ -853,7 +848,7 @@ public N_SetScenePreDelay(Handle:plugin, numParams)
 
 static stock Float:SceneData_GetPitch(scene)
 {
-	return g_SceneDataArray[scene][SceneData_Pitch]
+	return g_SceneDataPitch[scene]
 }
 
 public N_GetScenePitch(Handle:plugin, numParams)
@@ -874,7 +869,7 @@ public N_GetScenePitch(Handle:plugin, numParams)
 
 static stock SceneData_SetPitch(scene, Float:pitch)
 {
-	g_SceneDataArray[scene][SceneData_Pitch] = pitch
+	g_SceneDataPitch[scene] = pitch
 }
 
 public N_SetScenePitch(Handle:plugin, numParams)

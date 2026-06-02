@@ -120,10 +120,11 @@ public Action event_namechange(Event event, const char[] name, bool dontBroadcas
 	client = GetClientOfUserId(GetEventInt(event, "userid", 0));
 
 	if (skip_name_check(client))
-		return;
+		return Plugin_Continue;
 
 	GetEventString(event, "newname", client_name, sizeof(client_name), "");
 	check_name(client, client_name);
+	return Plugin_Continue;
 }
 
 void lilac_string_check_name(int client)

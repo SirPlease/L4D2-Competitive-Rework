@@ -74,6 +74,7 @@ jobs:
           }
 
           include_args=(
+            -i "$SCRIPTS_PATH"
             -i "$SCRIPTS_PATH/include"
             -i "$SCRIPTS_PATH/sourcemod/include"
             -i "$SCRIPTS_PATH/confoglcompmod/include"

@@ -216,11 +216,11 @@ int g_Stock_NextThinkTick[MAXPLAYERS1];
 // ====================================================================================================
 bool g_bFixTarget[MAXPLAYERS1];
 
-bool g_bDanger[MAXPLAYERS1] = false;
+bool g_bDanger[MAXPLAYERS1];
 
 bool g_bWitchActive = false;
 
-bool g_bCommonWithinMelee[MAXPLAYERS1] = false;
+bool g_bCommonWithinMelee[MAXPLAYERS1];
 bool g_bShove[MAXPLAYERS1][MAXPLAYERS1];
 
 // ====================================================================================================
@@ -512,16 +512,18 @@ public Action Event_RoundStart(Event event, const char[] name, bool dontBroadcas
 	}
 	
 	InitTimers();
+	return Plugin_Continue;
 }
 
 public Action Event_BotAndPlayerReplace(Event event, const char[] name, bool dontBroadcast)
 {
-	if (!LeftSafeRoom) return;
+	if (!LeftSafeRoom) return Plugin_Continue;
 	
 	int bot = GetClientOfUserId(event.GetInt("bot"));
 	if (g_bFixTarget[bot]) {
 		SelectImprovedTarget();
 	}
+	return Plugin_Continue;
 }
 
 void InitTimers()
@@ -1990,12 +1992,12 @@ stock void ScriptCommand(int client, const char[] command, const char[] argument
 	int flags = GetCommandFlags(command);
 	SetCommandFlags(command, flags & ~FCVAR_CHEAT);
 	FakeClientCommand(client, "%s %s", command, vscript);
-	SetCommandFlags(command, flags)
+	SetCommandFlags(command, flags);
 }
 
 stock void L4D2_RunScript(const char[] sCode, any ...)
 {
-	static iScriptLogic = INVALID_ENT_REFERENCE;
+	static int iScriptLogic = INVALID_ENT_REFERENCE;
 	if(iScriptLogic == INVALID_ENT_REFERENCE || !IsValidEntity(iScriptLogic)) {
 		iScriptLogic = EntIndexToEntRef(CreateEntityByName("logic_script"));
 		if(iScriptLogic == INVALID_ENT_REFERENCE || !IsValidEntity(iScriptLogic))
@@ -2004,7 +2006,7 @@ stock void L4D2_RunScript(const char[] sCode, any ...)
 		DispatchSpawn(iScriptLogic);
 	}
 	
-	static String:sBuffer[512];
+	static char sBuffer[512];
 	VFormat(sBuffer, sizeof(sBuffer), sCode, 2);
 	
 	SetVariantString(sBuffer);

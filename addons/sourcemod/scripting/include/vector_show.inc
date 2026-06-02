@@ -1,3 +1,20 @@
+#if !defined _vector_show_included
+#define _vector_show_included
+
+#include <sdktools_tempents>
+#include <sdktools_tempents_stocks>
+
+static int g_sprite = -1;
+
+stock int GetVectorShowSprite()
+{
+	if (g_sprite == -1)
+	{
+		g_sprite = PrecacheModel("materials/sprites/laserbeam.vmt", true);
+	}
+	return g_sprite;
+}
+
 stock void ShowPos(int ColorType, float pos1[3], float pos2[3], float life = 10.0, float length = 0.0, float width1 = 1.0, float width2 = 11.0)
 {
 	float copy[3];
@@ -73,6 +90,8 @@ stock void ShowLaser(int ColorType, float pos1[3], float pos2[3], float life = 1
 		color[2] = 200;
 		color[3] = 230;
 	}
-	TE_SetupBeamPoints(pos1, pos2, g_sprite, 0, 0, 0, life, width1, width2, 1, 0.0, color, 0);
+	TE_SetupBeamPoints(pos1, pos2, GetVectorShowSprite(), 0, 0, 0, life, width1, width2, 1, 0.0, color, 0);
 	TE_SendToAll();
 }
+
+#endif

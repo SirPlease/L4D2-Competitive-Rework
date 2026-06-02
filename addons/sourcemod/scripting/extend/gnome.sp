@@ -292,37 +292,29 @@ int GetColor(ConVar hCvar)
 	return color;
 }
 
-int[] GetColors(char[] sColor)
+void GetColors(char[] sColor, int colors[4])
 {
-	int colors[4];
-
 	if( sColor[0] == 0 )
-		return colors;
+		return;
 
 	char sColors[3][4];
 	int color = ExplodeString(sColor, " ", sColors, sizeof(sColors), sizeof(sColors[]));
 
 	if( color != 3 )
-		return colors;
+		return;
 
 	colors[0] = StringToInt(sColors[0]);
 	colors[1] = StringToInt(sColors[1]);
 	colors[2] = StringToInt(sColors[2]);
 	colors[3] = 255;
-
-	return colors;
 }
 
-int[] GetRandomColors()
+void GetRandomColors(int colors[4])
 {
-	int colors[4];
-
 	colors[0] = GetRandomInt(0, 255);
 	colors[1] = GetRandomInt(0, 255);
 	colors[2] = GetRandomInt(0, 255);
 	colors[3] = 255;
-
-	return colors;
 }
 
 
@@ -368,7 +360,7 @@ void GetCvars()
 	g_bCvarFieldBeacon = g_hCvarFieldBeacon.BoolValue;
 	g_hCvarFieldColor.GetString(g_sCvarFieldColor, sizeof(g_sCvarFieldColor));
 	g_bCvarFieldColorRandom = StrEqual(g_sCvarFieldColor, "random");
-	g_iCvarFieldColor = GetColors(g_sCvarFieldColor);
+	GetColors(g_sCvarFieldColor, g_iCvarFieldColor);
 	g_fCvarFieldStartRadius = g_hCvarFieldStartRadius.FloatValue;
 	g_fCvarFieldEndRadius = g_hCvarFieldEndRadius.FloatValue;
 	g_fCvarFieldDuration = g_hCvarFieldDuration.FloatValue;
@@ -853,9 +845,14 @@ void CreateBeamRing(float vPos[3])
 	int colors[4];
 
 	if( g_bCvarFieldColorRandom )
-		colors = GetRandomColors();
+		GetRandomColors(colors);
 	else
-		colors = g_iCvarFieldColor;
+	{
+		colors[0] = g_iCvarFieldColor[0];
+		colors[1] = g_iCvarFieldColor[1];
+		colors[2] = g_iCvarFieldColor[2];
+		colors[3] = g_iCvarFieldColor[3];
+	}
 
 	vPos[2] += 10.0;
 	TE_SetupBeamRingPoint(vPos, g_fCvarFieldStartRadius, g_fCvarFieldEndRadius, g_iBeamSprite, g_iHaloSprite, 0, 0, g_fCvarFieldDuration, g_fCvarFieldWidth, g_fCvarFieldAmplitude, colors, 0, 0 );

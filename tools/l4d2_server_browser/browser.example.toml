@@ -23,12 +23,9 @@ region = "all"
 filter = "\\appid\\550"
 extra_filter = ["\\secure\\1"]
 limit = 200
-# 只给自己的代理服开启；服务端需 L4D2_GO_PROXY_BYPASS_CACHE_PROBE=true。
-# a2s_probe = true
 
 [[groups]]
 name = "我的服务器"
-# a2s_probe = true
 servers = [
   "127.0.0.1:27015",
   "steam://connect/127.0.0.1:27016",

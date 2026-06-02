@@ -16,7 +16,7 @@
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#warning Messy code!
+// Messy code!
 // I might wanna organize this...
 
 static int ping_high[MAXPLAYERS + 1];
@@ -99,4 +99,3 @@ public Action timer_check_ping(Handle timer)
 
 	return Plugin_Continue;
 }
-

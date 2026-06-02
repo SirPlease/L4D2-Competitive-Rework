@@ -110,7 +110,7 @@ public Action OnPlayerRunCmd(int charger, int &buttons, int &impulse, float vel[
 			// 连跳操作
 			float fBuffer[3] = {0.0}, fTargetPos[3] = {0.0};
 			GetClientAbsOrigin(iTarget, fTargetPos);
-			fBuffer = UpdatePosition(charger, iTarget, g_fChargerBhopSpeed);
+			UpdatePosition(charger, iTarget, g_fChargerBhopSpeed, fBuffer);
 			if (g_bChargerBhop)
 			{
 				if (iFlags & FL_ONGROUND)
@@ -281,7 +281,7 @@ int TeamMeleeCheck()
 			int iActiveWeapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 			if (IsValidEntity(iActiveWeapon) && IsValidEdict(iActiveWeapon))
 			{
-				char sWeaponName[32] = '\0';
+				char sWeaponName[32];
 				GetEdictClassname(iActiveWeapon, sWeaponName, sizeof(sWeaponName));
 				if (strcmp(sWeaponName[7], "melee") == 0 || strcmp(sWeaponName, "weapon_chainsaw") == 0)
 				{
@@ -301,7 +301,7 @@ int GetCrowdPlace()
 	{
 		int index = 0, iTarget = 0;
 		int[] iSurvivors = new int[iCount];
-		float fDistance[MAXPLAYERS + 1] = -1.0;
+		float fDistance[MAXPLAYERS + 1] = {-1.0, ...};
 		for (int client = 1; client <= MaxClients; client++)
 		{
 			if (IsValidClient(client) && GetClientTeam(client) == TEAM_SURVIVOR)
@@ -314,11 +314,11 @@ int GetCrowdPlace()
 			if (IsValidClient(client) && IsPlayerAlive(client) && GetClientTeam(client) == TEAM_SURVIVOR)
 			{
 				fDistance[client] = 0.0;
-				float fClientPos[3] = 0.0;
+				float fClientPos[3] = {0.0};
 				GetClientAbsOrigin(client, fClientPos);
 				for (int i = 0; i < iCount; i++)
 				{
-					float fPos[3] = 0.0;
+					float fPos[3] = {0.0};
 					GetClientAbsOrigin(iSurvivors[i], fPos);
 					fDistance[client] += GetVectorDistance(fClientPos, fPos, true);
 				}
@@ -385,7 +385,7 @@ public void evt_ChargerChargeStart(Event event, const char[] name, bool dontBroa
 	{
 		g_bShouldCharge[client]=false;
 		alreadycharged[client]=true;
-		CreateTimer(g_iChargerCoolTime, ChargerEnable, client, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(float(g_iChargerCoolTime), ChargerEnable, client, TIMER_FLAG_NO_MAPCHANGE);
 		int iTarget = GetClientAimTarget(client, true);
 		if (!IsSurvivor(iTarget) || IsIncapped(iTarget) || IsPinned(iTarget) || IsTargetWatchingAttacker(client, g_iChargerAimOffset))
 		{
@@ -526,14 +526,13 @@ bool IsPinned(int client)
 	return bIsPinned;
 }
 
-float UpdatePosition(int charger, int target, float fForce)
+void UpdatePosition(int charger, int target, float fForce, float fBuffer[3])
 {
-	float fBuffer[3], fChargerPos[3], fTargetPos[3];
+	float fChargerPos[3], fTargetPos[3];
 	GetClientAbsOrigin(charger, fChargerPos);	GetClientAbsOrigin(target, fTargetPos);
 	SubtractVectors(fTargetPos, fChargerPos, fBuffer);
 	NormalizeVector(fBuffer, fBuffer);
 	ScaleVector(fBuffer, fForce);
-	return fBuffer;
 }
 
 void ClientPush(int client, float fForwardVec[3])

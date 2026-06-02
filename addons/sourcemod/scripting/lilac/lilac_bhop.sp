@@ -157,8 +157,9 @@ public Action timer_decrement_bhop(Handle timer, int userid)
 	client = GetClientOfUserId(userid);
 
 	if (!is_player_valid(client))
-		return;
+		return Plugin_Stop;
 
 	if (detections[client] > 0)
 		detections[client]--;
+	return Plugin_Stop;
 }

@@ -215,7 +215,7 @@ public Action InitiateMenuAdmin(int client, int args)
 	if (client == 0)
 	{
 		ReplyToCommand(client, "Menu is in-game only.");
-		return;
+		return Plugin_Handled;
 	}
 
 	char name[MAX_NAME_LENGTH]; char number[10];
@@ -237,6 +237,7 @@ public Action InitiateMenuAdmin(int client, int args)
 
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
+	return Plugin_Handled;
 }
 
 public int ShowMenu2(Handle menu, MenuAction action, int client, int param2)
@@ -326,22 +327,22 @@ public Action ShowMenu(int client, int args)
 	if (client == 0)
 	{
 		ReplyToCommand(client, "[SCS] Character Select Menu is in-game only.");
-		return;
+		return Plugin_Handled;
 	}
 	if (GetClientTeam(client) != 2)
 	{
 		ReplyToCommand(client, "[SCS] Character Select Menu is only available to survivors.");
-		return;
+		return Plugin_Handled;
 	}
 	if (!IsPlayerAlive(client))
 	{
 		ReplyToCommand(client, "[SCS] You must be alive to use the Character Select Menu!");
-		return;
+		return Plugin_Handled;
 	}
 	if (GetUserFlagBits(client) == 0 && convarAdminsOnly.BoolValue)
 	{
 		ReplyToCommand(client, "[SCS] Character Select Menu is only available to admins.");
-		return;
+		return Plugin_Handled;
 	}
 	char sMenuEntry[8];
 
@@ -368,6 +369,7 @@ public Action ShowMenu(int client, int args)
 
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
+	return Plugin_Handled;
 }
 
 public int CharMenu(Handle menu, MenuAction action, int param1, int param2)
@@ -458,21 +460,21 @@ public Action Timer_LoadCookie(Handle timer, int userid)
 	int client = GetClientOfUserId(userid);
 
 	if (client == 0)
-		return;
+		return Plugin_Stop;
 
 	if (!IsClientInGame(client))
-		return;
+		return Plugin_Stop;
 
 	if (IsFakeClient(client))
-		return;
+		return Plugin_Stop;
 
 	if (GetClientTeam(client) != 2)
-		return;
+		return Plugin_Stop;
 
 	if (!AreClientCookiesCached(client))
 	{
 		PrintToChat(client, "%s Couldn't load your default character. Type \x05!csm \x01to choose your \x03default \x01character.", PLUGIN_PREFIX);
-		return;
+		return Plugin_Stop;
 	}
 
 	char sID[2];
@@ -486,6 +488,7 @@ public Action Timer_LoadCookie(Handle timer, int userid)
 		SetEntProp(client, Prop_Send, "m_survivorCharacter", StringToInt(sID));
 		SetEntityModel(client, sModel);
 	}
+	return Plugin_Stop;
 }
 
 // *********************************************************************************
@@ -770,4 +773,3 @@ int GetWeaponOffset(char[] weapon)
 
 	return weapon_offset;
 }
-

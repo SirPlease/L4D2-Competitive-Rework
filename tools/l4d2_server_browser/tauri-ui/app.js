@@ -1048,19 +1048,11 @@ async function refreshServers({ silent = false, sockets = null } = {}) {
     setStatus(t("statusRefreshing"));
   }
   try {
-    const selectedSockets = Array.isArray(sockets) ? sockets : null;
-    const probeSockets = selectedSockets
-      ? selectedSockets.filter((socket) => {
-          const row = state.allRows.find((item) => serverRowKey(item) === socket || item.address === socket);
-          return Boolean(row?.a2s_probe);
-        })
-      : null;
     const payload = await invoke("refresh_servers", {
       query: {
         config_path: state.configPath || null,
         limit: 300,
         sockets,
-        a2s_probe_sockets: probeSockets,
       },
     });
     if (!payload) return; // For mock safety
@@ -1482,12 +1474,6 @@ function renderSubscriptions() {
     const detail = document.createElement("span");
     detail.textContent = item.source_label;
     button.append(title, detail);
-    if (item.a2s_probe) {
-      const badge = document.createElement("span");
-      badge.className = "manual-badge";
-      badge.textContent = t("telecomAnneBadge");
-      button.append(badge);
-    }
     button.addEventListener("click", () => selectSubscription(item));
     list.append(button);
   }
@@ -1514,12 +1500,6 @@ function renderManualServers() {
     const detail = document.createElement("span");
     detail.textContent = item.group;
     info.append(title, detail);
-    if (item.a2s_probe) {
-      const badge = document.createElement("span");
-      badge.className = "manual-badge";
-      badge.textContent = t("telecomAnneBadge");
-      info.append(badge);
-    }
     
     const delBtn = document.createElement("button");
     delBtn.className = "danger";
@@ -1627,14 +1607,12 @@ async function refreshSubscriptions() {
 async function addManualServer() {
   const group = $("#manualGroupInput").value.trim();
   const server = $("#manualServerInput").value.trim();
-  const a2sProbe = $("#manualA2sProbeInput").checked;
   if (!group || !server) return;
   try {
     state.lists = await invoke("add_manual_server", {
       path: state.configPath || null,
       group,
       server,
-      a2sProbe,
     });
     $("#manualServerInput").value = "";
     renderManualServers();

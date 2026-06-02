@@ -137,7 +137,7 @@ public int MenuHandler_DoNothing(Menu menu, MenuAction action, int param1, int p
 public Action Timer_DisplayAd(Handle timer)
 {
     if (!g_hEnabled.BoolValue) {
-        return;
+        return Plugin_Continue;
     }
 
     Advertisement ad;
@@ -233,6 +233,7 @@ public Action Timer_DisplayAd(Handle timer)
     if (++g_iCurrentAd >= g_hAdvertisements.Length) {
         g_iCurrentAd = 0;
     }
+    return Plugin_Continue;
 }
 
 public Action Timer_CenterAd(Handle timer, DataPack pack)

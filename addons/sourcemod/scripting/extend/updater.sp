@@ -2,7 +2,9 @@
 #pragma newdecls required
 
 /* SM Includes */
+#if !defined REQUIRE_EXTENSIONS
 #define REQUIRE_EXTENSIONS
+#endif
 #include <SteamWorks>
 
 /* Plugin Info */
