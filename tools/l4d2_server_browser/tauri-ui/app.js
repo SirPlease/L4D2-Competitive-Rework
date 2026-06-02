@@ -1091,6 +1091,39 @@ async function refreshServers({ silent = false, sockets = null } = {}) {
   }
 }
 
+async function loadCachedServers() {
+  try {
+    const payload = await invoke("load_cached_servers", { path: state.configPath || null });
+    if (!payload || !Array.isArray(payload.rows) || payload.rows.length === 0) return false;
+    state.configPath = payload.config_path || state.configPath;
+    const cachedRows = payload.rows;
+    recordPingHistory(cachedRows);
+    state.allRows = cachedRows;
+    syncConfigPathUI();
+    applyServerFiltersAndRender();
+    setStatus(t("serverCacheLoaded"));
+    return true;
+  } catch (error) {
+    console.info("No cached server list available yet.", error);
+    return false;
+  }
+}
+
+async function refreshStartupDataInBackground() {
+  try {
+    state.lists = await invoke("refresh_sourcebans", { path: state.configPath || null });
+    if (state.lists) {
+      state.configPath = state.lists.config_path;
+      syncConfigPathUI();
+      renderSubscriptions();
+      renderManualServers();
+    }
+  } catch (error) {
+    console.info("Background subscription refresh failed.", error);
+  }
+  await refreshServers({ silent: true });
+}
+
 function activeServerSockets() {
   return state.allRows
     .filter((row) => !row.error && (row.players || 0) > 0)
@@ -2212,13 +2245,19 @@ async function boot() {
     }
     syncConfigPathUI();
     await loadConfigLists();
+    const loadedCache = await loadCachedServers();
     if (state.tab === "broadcast") {
       await loadBroadcastHistory({ showLoading: false, force: true });
     }
-    await refreshServers();
-    await autoCheckUpdateIfDue();
     startAutoRefreshLoop();
     startBroadcastRefreshLoop();
+    if (loadedCache) {
+      refreshStartupDataInBackground();
+    } else {
+      await refreshServers();
+      refreshStartupDataInBackground();
+    }
+    await autoCheckUpdateIfDue();
     
   } catch (error) {
     setStatus(`${t("initFailed")}: ${error}`);

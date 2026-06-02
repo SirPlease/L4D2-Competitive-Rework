@@ -110,7 +110,7 @@ void DisplayBlindMenu(int client)
 	menu.SetTitle(title);
 	menu.ExitBackButton = true;
 	
-	AddTargetsToMenu(menu, client, true, true);
+	AddFunTargetsToMenu(menu, client, true, true, true);
 	
 	menu.Display(client, MENU_TIME_FOREVER);
 }
@@ -160,13 +160,17 @@ public int MenuHandler_Blind(Menu menu, MenuAction action, int param1, int param
 		{
 			PrintToChat(param1, "[SM] %t", "Unable to target");
 		}
+		else if (!CanUseFunCommandOnTarget(param1, target, true))
+		{
+			ReplyFunCommandTargetDenied(param1);
+		}
 		else
 		{
 			g_BlindTarget[param1] = userid;
 			DisplayAmountMenu(param1);
 			return 0;	// Return, because we went to a new menu and don't want the re-draw to occur.
 		}
-		
+
 		/* Re-draw the menu if they're still valid */
 		if (IsClientInGame(param1) && !IsClientInKickQueue(param1))
 		{
@@ -205,6 +209,10 @@ public int MenuHandler_Amount(Menu menu, MenuAction action, int param1, int para
 		else if (!CanUserTarget(param1, target))
 		{
 			PrintToChat(param1, "[SM] %t", "Unable to target");
+		}
+		else if (!CanUseFunCommandOnTarget(param1, target, true))
+		{
+			ReplyFunCommandTargetDenied(param1);
 		}
 		else
 		{
@@ -273,7 +281,14 @@ public Action Command_Blind(int client, int args)
 		ReplyToTargetError(client, target_count);
 		return Plugin_Handled;
 	}
-	
+
+	target_count = FilterFunCommandTargets(client, target_list, target_count, true);
+	if (target_count <= 0)
+	{
+		ReplyFunCommandTargetDenied(client);
+		return Plugin_Handled;
+	}
+
 	for (int i = 0; i < target_count; i++)
 	{
 		PerformBlind(client, target_list[i], amount);

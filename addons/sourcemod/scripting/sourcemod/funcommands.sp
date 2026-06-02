@@ -90,6 +90,120 @@ EngineVersion g_GameEngine = Engine_Unknown;
 
 // Flags used in various timers
 #define DEFAULT_TIMER_FLAGS TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE
+#define FUNCOMMAND_IMMUNITY_THRESHOLD 90
+#define TEAM_INFECTED 3
+
+int GetFunCommandClientImmunityLevel(int client)
+{
+	if (client <= 0)
+	{
+		return 0;
+	}
+
+	AdminId admin = GetUserAdmin(client);
+	if (admin == INVALID_ADMIN_ID)
+	{
+		return 0;
+	}
+
+	return GetAdminImmunityLevel(admin);
+}
+
+bool HasHighFunCommandImmunity(int client)
+{
+	return client == 0 || GetFunCommandClientImmunityLevel(client) > FUNCOMMAND_IMMUNITY_THRESHOLD;
+}
+
+void ReplyFunCommandHighImmunityRequired(int client, const char[] commandName)
+{
+	ReplyToCommand(client, "[SM] %s requires immunity level greater than %d.", commandName, FUNCOMMAND_IMMUNITY_THRESHOLD);
+}
+
+bool IsInfectedBotTarget(int target)
+{
+	return target > 0
+		&& target <= MaxClients
+		&& IsClientInGame(target)
+		&& IsFakeClient(target)
+		&& GetClientTeam(target) == TEAM_INFECTED;
+}
+
+bool CanUseFunCommandOnTarget(int client, int target, bool blockLowImmunityInfectedBots)
+{
+	if (!blockLowImmunityInfectedBots)
+	{
+		return true;
+	}
+
+	return HasHighFunCommandImmunity(client) || !IsInfectedBotTarget(target);
+}
+
+void ReplyFunCommandTargetDenied(int client)
+{
+	ReplyToCommand(client, "[SM] Immunity level <= %d cannot target infected bots with this command.", FUNCOMMAND_IMMUNITY_THRESHOLD);
+}
+
+int AddFunTargetsToMenu(Menu menu, int sourceClient, bool inGameOnly, bool aliveOnly, bool blockLowImmunityInfectedBots)
+{
+	char info[16];
+	char name[MAX_NAME_LENGTH];
+	char display[128];
+	int count;
+
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if ((inGameOnly && !IsClientInGame(i)) || (!inGameOnly && !IsClientConnected(i)))
+		{
+			continue;
+		}
+
+		if (aliveOnly && !IsPlayerAlive(i))
+		{
+			continue;
+		}
+
+		if (sourceClient != 0 && !CanUserTarget(sourceClient, i))
+		{
+			continue;
+		}
+
+		if (!CanUseFunCommandOnTarget(sourceClient, i, blockLowImmunityInfectedBots))
+		{
+			continue;
+		}
+
+		int userid = GetClientUserId(i);
+		if (userid == 0)
+		{
+			continue;
+		}
+
+		GetClientName(i, name, sizeof(name));
+		FormatEx(info, sizeof(info), "%d", userid);
+		FormatEx(display, sizeof(display), "%s (%d)", name, userid);
+		menu.AddItem(info, display);
+		count++;
+	}
+
+	return count;
+}
+
+int FilterFunCommandTargets(int client, int[] targetList, int targetCount, bool blockLowImmunityInfectedBots)
+{
+	int writeIndex;
+
+	for (int i = 0; i < targetCount; i++)
+	{
+		if (!CanUseFunCommandOnTarget(client, targetList[i], blockLowImmunityInfectedBots))
+		{
+			continue;
+		}
+
+		targetList[writeIndex++] = targetList[i];
+	}
+
+	return writeIndex;
+}
 
 // Include various commands and supporting functions
 #include "funcommands/beacon.sp"
@@ -324,7 +438,7 @@ public void OnAdminMenuReady(Handle aTopMenu)
 		hTopMenu.AddItem("sm_freezebomb", AdminMenu_FreezeBomb, player_commands, "sm_freezebomb", ADMFLAG_SLAY);
 		hTopMenu.AddItem("sm_gravity", AdminMenu_Gravity, player_commands, "sm_gravity", ADMFLAG_SLAY);
 		hTopMenu.AddItem("sm_blind", AdminMenu_Blind, player_commands, "sm_blind", ADMFLAG_SLAY);
-		hTopMenu.AddItem("sm_noclip", AdminMenu_NoClip, player_commands, "sm_noclip", ADMFLAG_ROOT);
+		hTopMenu.AddItem("sm_noclip", AdminMenu_NoClip, player_commands, "sm_noclip", ADMFLAG_SLAY|ADMFLAG_CHEATS);
 		hTopMenu.AddItem("sm_drug", AdminMenu_Drug, player_commands, "sm_drug", ADMFLAG_SLAY);
 	}
 }

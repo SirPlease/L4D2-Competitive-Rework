@@ -39,28 +39,86 @@ jobs:
       - name: Set environment variables
         run: |
           echo "SCRIPTS_PATH=$GITHUB_WORKSPACE/addons/sourcemod/scripting" >> $GITHUB_ENV
+          echo "PLUGINS_PATH=$GITHUB_WORKSPACE/addons/sourcemod/plugins" >> $GITHUB_ENV
 
-      - name: Setup SourcePawn Compiler ${{ matrix.SM_VERSION }}
+      - name: Setup SourcePawn Compiler ${{ matrix.sm_version }}
         uses: rumblefrog/setup-sp@master
         with:
-          version: ${{ matrix.SM_VERSION }}
+          version: ${{ matrix.sm_version }}
 
       - name: Compile plugins
         run: |
+          set -euo pipefail
+          declare -A BUILT
           errors=0
-          for file in *.sp
-          do
-            echo -e "\nCompiling $file..."
-            spcomp -E -w234 -w217 -O2 -v2 -i $SCRIPTS_PATH/include $file || {
+          skipped=0
+
+          resolve_source() {
+            local plugin_rel="$1"
+            local name="$2"
+            local candidate
+
+            candidate="${plugin_rel%.smx}.sp"
+            if [ -f "$SCRIPTS_PATH/$candidate" ]; then
+              printf '%s\n' "$candidate"
+              return 0
+            fi
+
+            candidate="sourcemod/$name.sp"
+            if [ -f "$SCRIPTS_PATH/$candidate" ]; then
+              printf '%s\n' "$candidate"
+              return 0
+            fi
+
+            return 1
+          }
+
+          include_args=(
+            -i "$SCRIPTS_PATH/include"
+            -i "$SCRIPTS_PATH/sourcemod/include"
+            -i "$SCRIPTS_PATH/confoglcompmod/include"
+            -i "$SCRIPTS_PATH/confoglcompmod/includes"
+            -i "$SCRIPTS_PATH/archive/include"
+            -i "$SCRIPTS_PATH/archive/includes"
+            -i "$SCRIPTS_PATH/extend"
+            -i "$SCRIPTS_PATH/optional"
+            -i "$SCRIPTS_PATH/optional/AnneHappy"
+            -i "$SCRIPTS_PATH/include/multicolors"
+            -i "$SCRIPTS_PATH/include/ripext"
+          )
+
+          build_dir="$(mktemp -d)"
+
+          while IFS= read -r -d '' smx; do
+            name="$(basename "$smx" .smx)"
+            plugin_rel="${smx#"$PLUGINS_PATH"/}"
+            if ! source_rel="$(resolve_source "$plugin_rel" "$name")"; then
+              echo "::warning::No .sp source found for shipped plugin '$plugin_rel'; skipping compile check."
+              skipped=$((skipped + 1))
+              continue
+            fi
+
+            if [ -n "${BUILT[$source_rel]:-}" ]; then
+              continue
+            fi
+
+            source_abs="$SCRIPTS_PATH/$source_rel"
+            source_dir="$(dirname "$source_abs")"
+            source_file="$(basename "$source_abs")"
+            output_key="${source_rel%.sp}"
+            output_key="${output_key//\//__}"
+            echo -e "\nCompiling $source_rel..."
+            ( cd "$source_dir" && spcomp -E -w234 -w217 -O2 -v2 "${include_args[@]}" "-o$build_dir/$output_key.smx" "$source_file" ) || {
               errors=$((errors + 1))
               continue
             }
-          done
+            BUILT[$source_rel]=1
+          done < <(find "$PLUGINS_PATH" -type f -name '*.smx' -print0)
+
           if [ "$errors" -gt 0 ]; then
             echo -e "\n$errors plugin(s) failed to compile."
             exit 1
           else
-            echo -e "\nAll plugins compiled successfully."
+            echo -e "\nAll ${#BUILT[@]} source-backed plugin(s) compiled successfully; skipped $skipped binary-only plugin(s)."
             exit 0
           fi
-        working-directory: ${{ env.SCRIPTS_PATH }}/

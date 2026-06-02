@@ -56,48 +56,85 @@ jobs:
           declare -A BUILT
           FAILED=""
           COUNT=0
+          SKIPPED=0
+
+          resolve_source() {
+            local plugin_rel="$1"
+            local name="$2"
+            local candidate
+
+            # Project sources mirror the shipped plugin layout:
+            #   plugins/extend/foo.smx -> scripting/extend/foo.sp
+            #   plugins/optional/AnneHappy/foo.smx -> scripting/optional/AnneHappy/foo.sp
+            candidate="${plugin_rel%.smx}.sp"
+            if [ -f "$SCRIPTING/$candidate" ]; then
+              printf '%s\n' "$candidate"
+              return 0
+            fi
+
+            # Upstream SourceMod stock plugins keep their original source tree.
+            candidate="sourcemod/$name.sp"
+            if [ -f "$SCRIPTING/$candidate" ]; then
+              printf '%s\n' "$candidate"
+              return 0
+            fi
+
+            return 1
+          }
+
+          include_args=(
+            -i "$SCRIPTING/include"
+            -i "$SCRIPTING/sourcemod/include"
+            -i "$SCRIPTING/confoglcompmod/include"
+            -i "$SCRIPTING/confoglcompmod/includes"
+            -i "$SCRIPTING/archive/include"
+            -i "$SCRIPTING/archive/includes"
+            -i "$SCRIPTING/extend"
+            -i "$SCRIPTING/optional"
+            -i "$SCRIPTING/optional/AnneHappy"
+            -i "$SCRIPTING/include/multicolors"
+            -i "$SCRIPTING/include/ripext"
+          )
 
           # Drive off the .smx files that ship in the repo: each one is
-          # rebuilt from its same-named .sp source and written straight back
-          # to its original path (root / fixes / optional / disabled / etc.).
+          # rebuilt from the matching SourcePawn source and written straight
+          # back to its original path (root / fixes / optional / disabled / etc.).
           while IFS= read -r -d '' smx; do
             name="$(basename "$smx" .smx)"
+            plugin_rel="${smx#"$PLUGINS"/}"
+            if ! source_rel="$(resolve_source "$plugin_rel" "$name")"; then
+              echo "::warning::No .sp source found for shipped plugin '$plugin_rel'; keeping existing binary."
+              SKIPPED=$((SKIPPED + 1))
+              continue
+            fi
 
-            if [ -z "${BUILT[$name]:-}" ]; then
-              if [ -f "$SCRIPTING/$name.sp" ]; then
-                base="$SCRIPTING"
-                inc="$SCRIPTING/include"
-              elif [ -f "$SCRIPTING/sourcemod/$name.sp" ]; then
-                # Stock SourceMod plugins live one level down with their
-                # own include tree.
-                base="$SCRIPTING/sourcemod"
-                inc="$SCRIPTING/sourcemod/include"
-              else
-                echo "::error::No .sp source found for shipped plugin '$name' ($smx)"
-                FAILED="$FAILED $name"
-                continue
-              fi
+            if [ -z "${BUILT[$source_rel]:-}" ]; then
+              source_abs="$SCRIPTING/$source_rel"
+              source_dir="$(dirname "$source_abs")"
+              source_file="$(basename "$source_abs")"
+              output_key="${source_rel%.sp}"
+              output_key="${output_key//\//__}"
+              output_smx="$BUILD/$output_key.smx"
 
-              echo "Compiling $name ..."
-              # Run with cwd = the scripting dir and a bare source filename,
-              # exactly like check_plugins.yml: some plugins (e.g. readyup)
-              # use working-directory-relative quoted #includes that only
-              # resolve from there. -i / -o / $BUILD are absolute, so the
-              # subshell cd does not affect them.
-              if ( cd "$base" && "$COMPILER" -E -w234 -w217 -O2 -v2 -i "$inc" "-o$BUILD/$name.smx" "$name.sp" ); then
-                BUILT[$name]="$BUILD/$name.smx"
+              echo "Compiling $source_rel -> $plugin_rel ..."
+              # Run from the source file's own directory so quoted relative
+              # includes like "readyup/footer.inc" or
+              # "infected_control/nav_types.inc" keep resolving naturally.
+              if ( cd "$source_dir" && "$COMPILER" -E -w234 -w217 -O2 -v2 "${include_args[@]}" "-o$output_smx" "$source_file" ); then
+                BUILT[$source_rel]="$output_smx"
               else
-                echo "::error::Failed to compile '$name' ($base/$name.sp)"
-                FAILED="$FAILED $name"
+                echo "::error::Failed to compile '$source_rel' for '$plugin_rel'"
+                FAILED="$FAILED $source_rel"
                 continue
               fi
             fi
 
-            cp -f "${BUILT[$name]}" "$smx"
+            cp -f "${BUILT[$source_rel]}" "$smx"
             COUNT=$((COUNT + 1))
           done < <(find "$PLUGINS" -name '*.smx' -print0)
 
           echo "Refreshed $COUNT plugin file(s) from ${#BUILT[@]} unique source(s)."
+          echo "Kept $SKIPPED binary-only plugin file(s) without source changes."
           if [ -n "$FAILED" ]; then
             echo "::error::One or more plugins failed to build:$FAILED"
             exit 1
@@ -159,10 +196,10 @@ jobs:
             printf 'Automated build of `%s`.\n\n' "$VER"
             printf -- '- **Linux** (`*-linux.tar.gz`): `.so` natives only.\n'
             printf -- '- **Windows** (`*-windows.zip`): `.dll` natives only.\n\n'
-            printf 'Drop-in overlay for `left4dead2/`. All `.smx` plugins are recompiled '
-            printf 'from source with the upstream SourceMod 1.12 compiler '
-            printf '(rumblefrog/setup-sp); SourcePawn sources are not included in the '
-            printf 'archives.\n'
+            printf 'Drop-in overlay for `left4dead2/`. `.smx` plugins with matching '
+            printf 'SourcePawn sources are recompiled with the upstream SourceMod 1.12 '
+            printf 'compiler (rumblefrog/setup-sp); binary-only plugins are preserved. '
+            printf 'SourcePawn sources are not included in the archives.\n'
           } > "$NOTES"
 
           # --draft: nothing goes public (and the git tag is NOT created)

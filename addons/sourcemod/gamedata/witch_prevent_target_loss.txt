@@ -51,7 +51,7 @@
 			}
 			"WitchAttack::OnMoveToFailure_2"
 			{
-				"linux"		"93"	//0x74
+				"linux"		"36"	//0x75
 				"windows"	"12"	//0x75
 			}
 		}

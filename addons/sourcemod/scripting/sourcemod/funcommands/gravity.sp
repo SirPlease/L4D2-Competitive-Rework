@@ -40,8 +40,8 @@ void PerformGravity(int client, int target, float amount)
 }
 
 public void AdminMenu_Gravity(TopMenu topmenu, 
-					  TopMenuAction action,
-					  TopMenuObject object_id,
+						  TopMenuAction action,
+						  TopMenuObject object_id,
 					  int param,
 					  char[] buffer,
 					  int maxlength)
@@ -50,8 +50,18 @@ public void AdminMenu_Gravity(TopMenu topmenu,
 	{
 		Format(buffer, maxlength, "%T", "Gravity player", param);
 	}
+	else if (action == TopMenuAction_DrawOption)
+	{
+		buffer[0] = HasHighFunCommandImmunity(param) ? ITEMDRAW_DEFAULT : ITEMDRAW_IGNORE;
+	}
 	else if (action == TopMenuAction_SelectOption)
 	{
+		if (!HasHighFunCommandImmunity(param))
+		{
+			ReplyFunCommandHighImmunityRequired(param, "Gravity");
+			return;
+		}
+
 		DisplayGravityMenu(param);
 	}
 }
@@ -105,6 +115,12 @@ public int MenuHandler_Gravity(Menu menu, MenuAction action, int param1, int par
 	{
 		char info[32];
 		int userid, target;
+
+		if (!HasHighFunCommandImmunity(param1))
+		{
+			ReplyFunCommandHighImmunityRequired(param1, "Gravity");
+			return 0;
+		}
 		
 		menu.GetItem(param2, info, sizeof(info));
 		userid = StringToInt(info);
@@ -152,6 +168,12 @@ public int MenuHandler_GravityAmount(Menu menu, MenuAction action, int param1, i
 		char info[32];
 		float amount;
 		int target;
+
+		if (!HasHighFunCommandImmunity(param1))
+		{
+			ReplyFunCommandHighImmunityRequired(param1, "Gravity");
+			return 0;
+		}
 		
 		menu.GetItem(param2, info, sizeof(info));
 		amount = StringToFloat(info);
@@ -185,6 +207,12 @@ public int MenuHandler_GravityAmount(Menu menu, MenuAction action, int param1, i
 
 public Action Command_Gravity(int client, int args)
 {
+	if (!HasHighFunCommandImmunity(client))
+	{
+		ReplyFunCommandHighImmunityRequired(client, "Gravity");
+		return Plugin_Handled;
+	}
+
 	if (args < 1)
 	{
 		ReplyToCommand(client, "[SM] Usage: sm_gravity <#userid|name> [amount]");

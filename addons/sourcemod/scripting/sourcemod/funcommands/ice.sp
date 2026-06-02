@@ -353,8 +353,18 @@ public void AdminMenu_FreezeBomb(TopMenu topmenu,
 	{
 		Format(buffer, maxlength, "%T", "FreezeBomb player", param);
 	}
+	else if (action == TopMenuAction_DrawOption)
+	{
+		buffer[0] = HasHighFunCommandImmunity(param) ? ITEMDRAW_DEFAULT : ITEMDRAW_IGNORE;
+	}
 	else if (action == TopMenuAction_SelectOption)
 	{
+		if (!HasHighFunCommandImmunity(param))
+		{
+			ReplyFunCommandHighImmunityRequired(param, "FreezeBomb");
+			return;
+		}
+
 		DisplayFreezeBombMenu(param);
 	}
 }
@@ -368,7 +378,7 @@ void DisplayFreezeMenu(int client)
 	menu.SetTitle(title);
 	menu.ExitBackButton = true;
 	
-	AddTargetsToMenu(menu, client, true, true);
+	AddFunTargetsToMenu(menu, client, true, true, true);
 	
 	menu.Display(client, MENU_TIME_FOREVER);
 }
@@ -416,6 +426,10 @@ public int MenuHandler_Freeze(Menu menu, MenuAction action, int param1, int para
 		{
 			PrintToChat(param1, "[SM] %t", "Unable to target");
 		}
+		else if (!CanUseFunCommandOnTarget(param1, target, true))
+		{
+			ReplyFunCommandTargetDenied(param1);
+		}
 		else
 		{
 			char name[MAX_NAME_LENGTH];
@@ -452,6 +466,12 @@ public int MenuHandler_FreezeBomb(Menu menu, MenuAction action, int param1, int 
 	{
 		char info[32];
 		int userid, target;
+
+		if (!HasHighFunCommandImmunity(param1))
+		{
+			ReplyFunCommandHighImmunityRequired(param1, "FreezeBomb");
+			return 0;
+		}
 		
 		menu.GetItem(param2, info, sizeof(info));
 		userid = StringToInt(info);
@@ -519,7 +539,14 @@ public Action Command_Freeze(int client, int args)
 		ReplyToTargetError(client, target_count);
 		return Plugin_Handled;
 	}
-	
+
+	target_count = FilterFunCommandTargets(client, target_list, target_count, true);
+	if (target_count <= 0)
+	{
+		ReplyFunCommandTargetDenied(client);
+		return Plugin_Handled;
+	}
+
 	for (int i = 0; i < target_count; i++)
 	{
 		PerformFreeze(client, target_list[i], seconds);
@@ -539,6 +566,12 @@ public Action Command_Freeze(int client, int args)
 
 public Action Command_FreezeBomb(int client, int args)
 {
+	if (!HasHighFunCommandImmunity(client))
+	{
+		ReplyFunCommandHighImmunityRequired(client, "FreezeBomb");
+		return Plugin_Handled;
+	}
+
 	if (args < 1)
 	{
 		ReplyToCommand(client, "[SM] Usage: sm_freezebomb <#userid|name>");

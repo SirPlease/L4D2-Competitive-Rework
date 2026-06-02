@@ -27,6 +27,11 @@ $RECYCLE.BIN/
 # Visual Studio Code files
 /.vscode
 
+# SourcePawn local build output. Shipped plugins live in
+# addons/sourcemod/plugins/, not in the scripting source tree.
+addons/sourcemod/scripting/compiled/
+addons/sourcemod/scripting/**/*.smx
+
 # Local database migration config with passwords
 scripts/01-cloud-mariadb-migrate.sh
 scripts/02-home-docker-mariadb-replica.sh

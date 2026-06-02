@@ -111,7 +111,7 @@
 		{
 			"WitchAttack::GetVictim"
 			{
-				"linux"		"26"	//0x74 --> 0xEB
+				"linux"		"25"	//0x74 --> 0xEB
 				"windows"	"6"		//0x75 --> 0x90
 			}
 			"WitchAttack::OnStart"
@@ -121,17 +121,17 @@
 			}
 			"WitchAttack::OnAnimationEvent"
 			{
-				"linux"		"78"	//0x75 --> 0x76
+				"linux"		"76"	//0x75 --> 0x90
 				"windows"	"15"	//0x75 --> 0x90
 			}
 			"WitchAttack::Update"
 			{
-				"linux"		"74"	//0x04 --> 0x08
+				"linux"		"59"	//0x04 --> 0x08
 				"windows"	"61"	//0x75 --> 0x90
 			}
 			"WitchAttack::OnContact"
 			{
-				"linux"		"235"	//0x0F --> 0x90
+				"linux"		"231"	//0x0F85 --> 0x90EB
 			}
 		}
 		"Signatures"

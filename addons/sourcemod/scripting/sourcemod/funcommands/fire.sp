@@ -239,8 +239,18 @@ public void AdminMenu_FireBomb(TopMenu topmenu,
 	{
 		Format(buffer, maxlength, "%T", "FireBomb player", param);
 	}
+	else if (action == TopMenuAction_DrawOption)
+	{
+		buffer[0] = HasHighFunCommandImmunity(param) ? ITEMDRAW_DEFAULT : ITEMDRAW_IGNORE;
+	}
 	else if (action == TopMenuAction_SelectOption)
 	{
+		if (!HasHighFunCommandImmunity(param))
+		{
+			ReplyFunCommandHighImmunityRequired(param, "FireBomb");
+			return;
+		}
+
 		DisplayFireBombMenu(param);
 	}
 }
@@ -337,6 +347,12 @@ public int MenuHandler_FireBomb(Menu menu, MenuAction action, int param1, int pa
 	{
 		char info[32];
 		int userid, target;
+
+		if (!HasHighFunCommandImmunity(param1))
+		{
+			ReplyFunCommandHighImmunityRequired(param1, "FireBomb");
+			return 0;
+		}
 		
 		menu.GetItem(param2, info, sizeof(info));
 		userid = StringToInt(info);
@@ -407,7 +423,7 @@ public Action Command_Burn(int client, int args)
 		ReplyToTargetError(client, target_count);
 		return Plugin_Handled;
 	}
-	
+
 	for (int i = 0; i < target_count; i++)
 	{
 		PerformBurn(client, target_list[i], seconds);
@@ -427,6 +443,12 @@ public Action Command_Burn(int client, int args)
 
 public Action Command_FireBomb(int client, int args)
 {
+	if (!HasHighFunCommandImmunity(client))
+	{
+		ReplyFunCommandHighImmunityRequired(client, "FireBomb");
+		return Plugin_Handled;
+	}
+
 	if (args < 1)
 	{
 		ReplyToCommand(client, "[SM] Usage: sm_firebomb <#userid|name>");

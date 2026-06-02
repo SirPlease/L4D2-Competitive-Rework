@@ -6,6 +6,7 @@ pub use app::{
     // existing
     add_tauri_manual_server,
     delete_tauri_sourcebans,
+    load_tauri_cached_server_rows,
     load_tauri_config_lists,
     load_tauri_server_rows,
     open_tauri_steam_connect,

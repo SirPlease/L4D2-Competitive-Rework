@@ -423,6 +423,20 @@ witchparty 和 allcharger模式在普通药役的基础上小僵尸再减少17-2
 - 更新 `addons/sourcemod/configs/databases.cfg`，配合全服聊天、统计、伤害显示等插件的数据库连接与重连。
 - 更新 `.gitignore`，减少无关文件进入版本管理。
 
+### 2026年6月2日更新记录
+#### 插件与源码目录整理
+- 按上游 SourceMod 插件目录重新整理 `.smx` 与 `.sp`：运行插件位于 `addons/sourcemod/plugins/`，源码按相同相对路径放在 `addons/sourcemod/scripting/`，方便 release 重新编译后直接覆盖。
+- 更新 GitHub Actions 与 `scripts/spcomp-docker.sh` 编译流程，支持按插件路径查找对应源码；SourceMod 官方自带插件源码保留在 `addons/sourcemod/scripting/sourcemod/` 作为例外。
+- 补齐一批原二进制插件源码；保留 `AI_HardSI_2_old.smx`、`ai_charger_boomer.smx`、`l4d2_tank_throw.smx` 以及 `infected_control*` 历史版本作为二进制保留项。
+- 删除确认不用的 `l4d2_server_update_checker.smx`、`l4d2_mapchanger.smx`、`l4d2_abbw_votemap.smx` 等旧插件，并移除相关模式加载项。
+
+#### AnneHappy 重复插件统一
+- 合并 `servercleanup.smx`、`1v1.smx`、`survivor_mvp.smx`、`1v1_skeetstats.smx`、`l4d2_melee_spawn_control.smx` 的 `optional/AnneHappy` 重复副本，统一使用 `plugins/optional/` 根目录版本。
+- `survivor_mvp.smx` 合并 AnneHappy 轻量 `[药役MVP统计]` 输出，保留 `sm_mvp` / `sm_kills` 统计功能，并重新编译覆盖根目录插件。
+- `alone`、`hunters` 改用 `optional/1v1_skeetstats.smx`，并在模式配置中显式写入 `sm_skeetstat_counttank`、`sm_skeetstat_countwitch`、`sm_skeetstat_brevity`。
+- `annehappy`、`coop` 及相关 Anne 系模式改用 `optional/l4d2_melee_spawn_control.smx`，并在 shared_settings 中写入 `l4d2_melee_spawn`、`l4d2_add_melee`，保持原 AnneHappy 默认近战解锁行为。
+- 修正迁移后的配置路径：`l4d_tongue_block_fix.smx` 改为从 `fixes/` 加载，`deadman` 中的 `l4d2_lagcomp_manager.smx` 也改为从 `fixes/` 加载。
+
 ### 2026年5月26日更新记录
 #### 管理菜单与 RPG 回合有效性
 - `basecommands.smx` 修复管理员踢人菜单的特感 Bot 显示规则：管理员免疫等级 `<=90` 时不显示感染者 Bot，免疫等级 `>90` 时仍可显示并处理。

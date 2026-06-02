@@ -36,14 +36,26 @@
 
 ---
 
+## **目录结构**
+* 运行时插件 `.smx` 放在 `addons/sourcemod/plugins/`，保持和上游 `master` 一样的 SourceMod 插件目录结构
+* AnneHappy 专属定制插件放在 `addons/sourcemod/plugins/optional/AnneHappy/`；通用或上游同步插件即使被 Anne 模式加载，也优先放在 `addons/sourcemod/plugins/optional/`
+* 常规扩展插件放在 `addons/sourcemod/plugins/extend/`
+* 项目 SourcePawn 源码 `.sp` 按插件相对路径镜像放在 `addons/sourcemod/scripting/`，例如 `plugins/extend/join.smx` 对应 `scripting/extend/join.sp`
+* AnneHappy 专属定制源码放在 `addons/sourcemod/scripting/optional/AnneHappy/`，例如 `infected_control.sp` 的拆分模块放在 `addons/sourcemod/scripting/optional/AnneHappy/infected_control/`
+* SourceMod 官方自带插件源码保留在 `addons/sourcemod/scripting/sourcemod/`，作为上游结构例外
+* 使用 `scripts/spcomp-docker.sh` 编译时，不传第二个参数会按源码相对路径把 `.smx` 写回对应插件目录；发布 release 时也按这个规则重新编译并覆盖
+* 仓库里没有 `.sp` 的旧二进制插件会在 release 时原样保留，不参与重新编译
+
+---
+
 ## **重要内容**
-* 其中Anne插件放到了optional/AnneHappy文件夹中，源码位于script/AnneHappy文件夹中
-* 其中extend文件夹中的插件为电信服扩展所用，包括帽子、积分和商店娱乐等功能（默认启用）
+* Anne 专属定制插件放到 `plugins/optional/AnneHappy`，源码位于 `scripting/optional/AnneHappy`；通用插件放到 `plugins/optional`，源码位于 `scripting/optional`
+* 其中`plugins/extend`文件夹中的插件为电信服扩展所用，包括帽子、积分和商店娱乐等功能（默认启用）
 * 本插件尽量在不影响Zonemod同步上游更新的基础进行更新（方便自己偷懒）
 * 如果需要数据库，请使用项目里的database.sql创表，并且根据wiki里的文档进行数据库调优（尤其是服务器较多的情况）
 * 正常情况下，请不要加载任何一个test插件文件夹内的插件，你加载一个文件夹内的一个插件，sourcemod的bug可能会把那个文件夹内的所有插件全部加载（感谢Harry提醒，我确实碰到这个问题）
 * 对抗模式默认不开启mod，如果需要玩对抗请手动关闭mod
-* 常规要加载的拓展插件放到extend文件夹，测试插件放到test文件夹，投票加载卸载的插件放到optional文件夹，Anne模式的放到optional/Annehappy文件夹
+* 常规要加载的拓展插件放到 `plugins/extend` 文件夹，测试插件放到 `plugins/disabled/test` 文件夹，投票加载卸载和通用模式插件放到 `plugins/optional` 文件夹，Anne 专属定制插件放到 `plugins/optional/AnneHappy` 文件夹
 ---
 
 ## **已知问题:**

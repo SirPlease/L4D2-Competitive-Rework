@@ -229,7 +229,7 @@ void DisplayDrugMenu(int client)
 	menu.SetTitle(title);
 	menu.ExitBackButton = true;
 	
-	AddTargetsToMenu(menu, client, true, true);
+	AddFunTargetsToMenu(menu, client, true, true, true);
 	
 	menu.Display(client, MENU_TIME_FOREVER);
 }
@@ -262,6 +262,10 @@ public int MenuHandler_Drug(Menu menu, MenuAction action, int param1, int param2
 		else if (!CanUserTarget(param1, target))
 		{
 			PrintToChat(param1, "[SM] %t", "Unable to target");
+		}
+		else if (!CanUseFunCommandOnTarget(param1, target, true))
+		{
+			ReplyFunCommandTargetDenied(param1);
 		}
 		else
 		{
@@ -325,7 +329,14 @@ public Action Command_Drug(int client, int args)
 		ReplyToTargetError(client, target_count);
 		return Plugin_Handled;
 	}
-	
+
+	target_count = FilterFunCommandTargets(client, target_list, target_count, true);
+	if (target_count <= 0)
+	{
+		ReplyFunCommandTargetDenied(client);
+		return Plugin_Handled;
+	}
+
 	for (int i = 0; i < target_count; i++)
 	{
 		PerformDrug(client, target_list[i], toggle);

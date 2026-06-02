@@ -20,8 +20,8 @@
 			{
 				"library"		"server"
 				"linux"			"@_ZN9CTankRock8DetonateEv"
-				"windows"		"\x55\x8B\xEC\x83\xEC\x34\x53\x56\x8B\xF1\x80\xBE\x9C\x1A\x00\x00\x00"
-								/* 55 8B EC 83 EC 34 53 56  8B F1 80 BE 9C 1A 00 00 00 */
+				"windows"		"\x2A\x2A\x2A\x2A\x2A\x2A\x53\x56\x8B\x2A\x80\xBE\x2A\x2A\x2A\x2A\x2A\x57\x0F\x84\x2A\x2A\x2A\x2A\xA1"
+								/* ? ? ? ? ? ? 53 56 8B ? 80 BE ? ? ? ? ? 57 0F 84 ? ? ? ? A1 */
 			}
 		}
 	}
@@ -34,8 +34,8 @@
 			{
 				"library"		"server"
 				"linux"			"@_ZN9CTankRock8DetonateEv"
-				"windows"		"\x83\xEC\x30\x53\x55\x56\x8B\xF1\x80\xBE\xD4\x08\x00\x00\x00"
-								/* 83 EC 30 53 55 56 8B F1 80 BE D4 08 00 00 00 */
+				"windows"		"\x2A\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x80\xBE\x2A\x2A\x2A\x2A\x2A\x57\x0F\x84\x2A\x2A\x2A\x2A\xD9"
+								/* ? ? ? ? ? ? 8B ? 80 BE ? ? ? ? ? 57 0F 84 ? ? ? ? D9 */
 			}
 		}
 	}

@@ -25,6 +25,7 @@ const DEFAULT_FILTER: &str = "\\appid\\550";
 const DEFAULT_MASTER_GROUP: &str = "Steam Master";
 const APP_NAME: &str = "Anne刷服器";
 const DEFAULT_CONFIG_FILE: &str = "anne-server-browser.toml";
+const SERVER_ROWS_CACHE_FILE: &str = "anne-server-browser-servers.json";
 const USER_AGENT: &str = concat!("AnneServerBrowser/", env!("CARGO_PKG_VERSION"));
 const UPDATE_REPO: &str = "fantasylidong/CompetitiveWithAnne";
 const UPDATE_TAG_PREFIX: &str = "Anne刷服器-v";
@@ -1508,7 +1509,7 @@ struct ServerRow {
     error: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 struct ServerInfo {
     protocol: u8,
     name: String,
@@ -2804,7 +2805,7 @@ pub struct TauriServerQuery {
     a2s_probe_sockets: Option<Vec<String>>,
 }
 
-#[derive(Clone, Serialize)]
+#[derive(Clone, Deserialize, Serialize)]
 pub struct TauriServerSummary {
     total: usize,
     online: usize,
@@ -2812,7 +2813,7 @@ pub struct TauriServerSummary {
     groups: Vec<(String, usize)>,
 }
 
-#[derive(Clone, Serialize)]
+#[derive(Clone, Deserialize, Serialize)]
 pub struct TauriServerRow {
     address: String,
     socket: String,
@@ -2834,7 +2835,7 @@ pub struct TauriServerRow {
     is_anne: bool,
 }
 
-#[derive(Clone, Serialize)]
+#[derive(Clone, Deserialize, Serialize)]
 pub struct TauriServerRows {
     config_path: String,
     rows: Vec<TauriServerRow>,
@@ -2970,11 +2971,22 @@ pub fn load_tauri_server_rows(query: TauriServerQuery) -> Result<TauriServerRows
 
     let mut summary = tauri_server_summary(&payload);
     summary.groups = groups;
-    Ok(TauriServerRows {
+    let result = TauriServerRows {
         config_path: path.display().to_string(),
         rows: payload,
         summary,
-    })
+    };
+    if query.sockets.is_some() {
+        return Ok(result);
+    }
+    Ok(save_tauri_server_rows_cache(&path, &result).unwrap_or(result))
+}
+
+pub fn load_tauri_cached_server_rows(
+    config_path: Option<String>,
+) -> Result<TauriServerRows, String> {
+    let path = tauri_path(config_path);
+    load_tauri_server_rows_cache(&path)
 }
 
 pub fn add_tauri_manual_server(
@@ -3035,6 +3047,101 @@ fn tauri_path(config_path: Option<String>) -> PathBuf {
         .filter(|value| !value.trim().is_empty())
         .map(PathBuf::from)
         .unwrap_or_else(default_gui_config_path)
+}
+
+fn tauri_server_rows_cache_path(config_path: &Path) -> PathBuf {
+    config_path
+        .parent()
+        .filter(|parent| !parent.as_os_str().is_empty())
+        .unwrap_or_else(|| Path::new("."))
+        .join(SERVER_ROWS_CACHE_FILE)
+}
+
+fn load_tauri_server_rows_cache(config_path: &Path) -> Result<TauriServerRows, String> {
+    let cache_path = tauri_server_rows_cache_path(config_path);
+    let text = fs::read_to_string(&cache_path).map_err(|err| {
+        if err.kind() == io::ErrorKind::NotFound {
+            format!("server cache not found at {}", cache_path.display())
+        } else {
+            format!("failed to read server cache {}: {err}", cache_path.display())
+        }
+    })?;
+    let mut payload: TauriServerRows = serde_json::from_str(&text)
+        .map_err(|err| format!("failed to parse server cache {}: {err}", cache_path.display()))?;
+    payload.config_path = config_path.display().to_string();
+    Ok(payload)
+}
+
+fn save_tauri_server_rows_cache(
+    config_path: &Path,
+    rows: &TauriServerRows,
+) -> Result<TauriServerRows, String> {
+    let cache_path = tauri_server_rows_cache_path(config_path);
+    if let Some(parent) = cache_path.parent() {
+        if !parent.as_os_str().is_empty() {
+            fs::create_dir_all(parent).map_err(|err| {
+                format!(
+                    "failed to create server cache directory {}: {err}",
+                    parent.display()
+                )
+            })?;
+        }
+    }
+    let rows = match load_tauri_server_rows_cache(config_path) {
+        Ok(previous) => merge_tauri_server_rows_cache(previous, rows.clone()),
+        Err(_) => rows.clone(),
+    };
+    let text = serde_json::to_string_pretty(&rows)
+        .map_err(|err| format!("failed to serialize server cache: {err}"))?;
+    fs::write(&cache_path, text)
+        .map_err(|err| format!("failed to write server cache {}: {err}", cache_path.display()))?;
+    Ok(rows)
+}
+
+fn merge_tauri_server_rows_cache(
+    previous: TauriServerRows,
+    mut next: TauriServerRows,
+) -> TauriServerRows {
+    let previous_rows = previous
+        .rows
+        .into_iter()
+        .map(|row| (tauri_server_row_key(&row), row))
+        .collect::<HashMap<_, _>>();
+
+    next.rows = next
+        .rows
+        .into_iter()
+        .map(|row| {
+            if row.error.is_none() {
+                return row;
+            }
+            let Some(previous) = previous_rows.get(&tauri_server_row_key(&row)) else {
+                return row;
+            };
+            if previous.error.is_some() {
+                return row;
+            }
+
+            let mut merged = previous.clone();
+            merged.address = row.address;
+            merged.socket = row.socket;
+            merged.groups = row.groups;
+            merged.group_label = row.group_label;
+            merged.a2s_probe = row.a2s_probe;
+            merged.steam_url = row.steam_url;
+            merged
+        })
+        .collect();
+    next.summary = tauri_server_summary(&next.rows);
+    next
+}
+
+fn tauri_server_row_key(row: &TauriServerRow) -> String {
+    if row.socket.is_empty() {
+        row.address.clone()
+    } else {
+        row.socket.clone()
+    }
 }
 
 fn tauri_server_row(row: ServerRowPayload) -> TauriServerRow {

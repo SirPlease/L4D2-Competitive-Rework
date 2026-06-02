@@ -47,19 +47,39 @@ void PerformNoClip(int client, int target)
 	LogAction(client, target, "\"%L\" toggled noclip on \"%L\"", client, target);
 }
 
+bool CanUseNoClip(int client)
+{
+	return HasHighFunCommandImmunity(client);
+}
+
+void ReplyNoClipAccessDenied(int client)
+{
+	ReplyFunCommandHighImmunityRequired(client, "Noclip");
+}
+
 public void AdminMenu_NoClip(TopMenu topmenu, 
-					  TopMenuAction action,
-					  TopMenuObject object_id,
-					  int param,
-					  char[] buffer,
-					  int maxlength)
+						  TopMenuAction action,
+						  TopMenuObject object_id,
+						  int param,
+						  char[] buffer,
+						  int maxlength)
 {
 	if (action == TopMenuAction_DisplayOption)
 	{
 		Format(buffer, maxlength, "%T", "NoClip player", param);
 	}
+	else if (action == TopMenuAction_DrawOption)
+	{
+		buffer[0] = CanUseNoClip(param) ? ITEMDRAW_DEFAULT : ITEMDRAW_IGNORE;
+	}
 	else if (action == TopMenuAction_SelectOption)
 	{
+		if (!CanUseNoClip(param))
+		{
+			ReplyNoClipAccessDenied(param);
+			return;
+		}
+
 		DisplayNoClipMenu(param);
 	}
 }
@@ -106,7 +126,13 @@ public int MenuHandler_NoClip(Menu menu, MenuAction action, int param1, int para
 	{
 		char info[32];
 		int userid, target;
-		
+
+		if (!CanUseNoClip(param1))
+		{
+			ReplyNoClipAccessDenied(param1);
+			return 0;
+		}
+
 		menu.GetItem(param2, info, sizeof(info));
 		userid = StringToInt(info);
 
@@ -122,10 +148,10 @@ public int MenuHandler_NoClip(Menu menu, MenuAction action, int param1, int para
 		{
 			char name[MAX_NAME_LENGTH];
 			GetClientName(target, name, sizeof(name));
-			
+
 			PerformNoClip(param1, target);
 			ShowActivity2(param1, "[SM] ", "%t", "Toggled noclip on target", "_s", name);
-			if(g_bRPG && GetUserAdmin(target).ImmunityLevel < 100 )
+			if (g_bRPG && GetFunCommandClientImmunityLevel(target) < 100)
 				L4D_RPG_SetGlobalValue(INDEX_VALID, false);
 		}
 		
@@ -141,6 +167,12 @@ public int MenuHandler_NoClip(Menu menu, MenuAction action, int param1, int para
 
 public Action Command_NoClip(int client, int args)
 {
+	if (!CanUseNoClip(client))
+	{
+		ReplyNoClipAccessDenied(client);
+		return Plugin_Handled;
+	}
+
 	if (args < 1)
 	{
 		ReplyToCommand(client, "[SM] Usage: sm_noclip <#userid|name>");

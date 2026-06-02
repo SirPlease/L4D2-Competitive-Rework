@@ -224,8 +224,18 @@ public void AdminMenu_TimeBomb(TopMenu topmenu,
 	{
 		Format(buffer, maxlength, "%T", "TimeBomb player", param);
 	}
+	else if (action == TopMenuAction_DrawOption)
+	{
+		buffer[0] = HasHighFunCommandImmunity(param) ? ITEMDRAW_DEFAULT : ITEMDRAW_IGNORE;
+	}
 	else if (action == TopMenuAction_SelectOption)
 	{
+		if (!HasHighFunCommandImmunity(param))
+		{
+			ReplyFunCommandHighImmunityRequired(param, "TimeBomb");
+			return;
+		}
+
 		DisplayTimeBombMenu(param);
 	}
 }
@@ -261,6 +271,12 @@ public int MenuHandler_TimeBomb(Menu menu, MenuAction action, int param1, int pa
 	{
 		char info[32];
 		int userid, target;
+
+		if (!HasHighFunCommandImmunity(param1))
+		{
+			ReplyFunCommandHighImmunityRequired(param1, "TimeBomb");
+			return 0;
+		}
 		
 		menu.GetItem(param2, info, sizeof(info));
 		userid = StringToInt(info);
@@ -294,6 +310,12 @@ public int MenuHandler_TimeBomb(Menu menu, MenuAction action, int param1, int pa
 
 public Action Command_TimeBomb(int client, int args)
 {
+	if (!HasHighFunCommandImmunity(client))
+	{
+		ReplyFunCommandHighImmunityRequired(client, "TimeBomb");
+		return Plugin_Handled;
+	}
+
 	if (args < 1)
 	{
 		ReplyToCommand(client, "[SM] Usage: sm_timebomb <#userid|name>");
