@@ -49,3 +49,6 @@ scripts/l4d2-docker.env
 # Local A2S debugging tools, not for GitHub
 tools/a2s-proxy/
 tools/a2s-gui/
+
+# Local Go proxy tool, not for GitHub
+tools/a2s-proxy-go/
