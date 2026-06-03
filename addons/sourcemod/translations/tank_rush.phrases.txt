@@ -15,7 +15,8 @@
 		"zho"		"{red}Tank {default}has spawned. {olive}Freezing {default}distance points!"
 		"jp"		"{red}Tank {default}has spawned. {olive}Freezing {default}distance points!"
 		"ko"		"{red}Tank {default}has spawned. {olive}Freezing {default}distance points!"
-		"vi"		"{red}Tank {default}has spawned. {olive}Freezing {default}distance points!"}
+		"vi"		"{red}Tank {default}has spawned. {olive}Freezing {default}distance points!"
+	}
 	"unfreeze"
 	{
 		"en"		"{red}Tank {default}is dead. {olive}Unfreezing {default}distance points!"
@@ -23,7 +24,8 @@
 		"zho"		"{red}Tank {default}is dead. {olive}Unfreezing {default}distance points!"
 		"jp"		"{red}Tank {default}is dead. {olive}Unfreezing {default}distance points!"
 		"ko"		"{red}Tank {default}is dead. {olive}Unfreezing {default}distance points!"
-		"vi"		"{red}Tank {default}is dead. {olive}Unfreezing {default}distance points!"}
+		"vi"		"{red}Tank {default}is dead. {olive}Unfreezing {default}distance points!"
+	}
 	"saferoom"
 	{
 		"en"		"{red}Survivors {default}made it to the saferoom. {olive}Unfreezing {default}distance points!"
@@ -31,5 +33,6 @@
 		"zho"		"{red}Survivors {default}made it to the saferoom. {olive}Unfreezing {default}distance points!"
 		"jp"		"{red}Survivors {default}made it to the saferoom. {olive}Unfreezing {default}distance points!"
 		"ko"		"{red}Survivors {default}made it to the saferoom. {olive}Unfreezing {default}distance points!"
-		"vi"		"{red}Survivors {default}made it to the saferoom. {olive}Unfreezing {default}distance points!"}
+		"vi"		"{red}Survivors {default}made it to the saferoom. {olive}Unfreezing {default}distance points!"
+	}
 }

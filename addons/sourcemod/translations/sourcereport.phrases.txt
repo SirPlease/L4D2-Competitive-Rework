@@ -41,7 +41,7 @@
 	"Reason Prompt"
 	{
 		"en"	"Please enter the reason for the report or \"cancel\" to cancel"
-		"fr"	"Veuillez entrer la raison du rapport ou \"cancel\" pour annuler
+		"fr"	"Veuillez entrer la raison du rapport ou \"cancel\" pour annuler"
 		"pl"	"Podaj przyczynę zgłoszenia lub \"cancel\", aby anulować"
 		"chi"	"请填写报告填写理由或者 \"cancel\" 来取消"
 		"zho"		"Please enter the reason for the report or \"cancel\" to cancel"

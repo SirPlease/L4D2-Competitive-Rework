@@ -20,7 +20,8 @@
 		"zho"		"{red}{1}{default} ({green}{2}{default}) had {olive}{3}{default} health remaining!"
 		"jp"		"{red}{1}{default} ({green}{2}{default}) had {olive}{3}{default} health remaining!"
 		"ko"		"{red}{1}{default} ({green}{2}{default}) had {olive}{3}{default} health remaining!"
-		"vi"		"{red}{1}{default} ({green}{2}{default}) had {olive}{3}{default} health remaining!"}
+		"vi"		"{red}{1}{default} ({green}{2}{default}) had {olive}{3}{default} health remaining!"
+	}
 	"HealthRemainingAI"
 	{
 		"#format"   "{1:s},{2:d}" // 1:L4D2_InfectedNames[iZclass] 2:iRemainingHealth
@@ -30,7 +31,8 @@
 		"zho"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default} had {olive}{2}{default} health remaining!"
 		"jp"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default} had {olive}{2}{default} health remaining!"
 		"ko"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default} had {olive}{2}{default} health remaining!"
-		"vi"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default} had {olive}{2}{default} health remaining!"}
+		"vi"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default} had {olive}{2}{default} health remaining!"
+	}
 	"UMad"
 	{
 		"en"		"You don't have to be mad..."

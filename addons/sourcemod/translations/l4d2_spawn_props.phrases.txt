@@ -574,7 +574,7 @@
 		"zho"	"成功地刪除了上一個生成的物件"
 		"chi"	"成功地删除了上一个生成的物件"
 	}
-	"The last spawned object index is not an object anymore!
+	"The last spawned object index is not an object anymore!"
 	{
 		"#format"	"{1:d}"
 		"en"	"The last spawned object index {1} is not an object anymore!"
@@ -604,11 +604,5 @@
 		"en"	"Succesfully saved the map data"
 		"zho"	"已成功儲存所有物件"
 		"chi"	"已成功储存所有物件"
-	}
-	"The last spawned object index is not an object anymore!"
-	{
-		"en"	"The last spawned object index is not an object anymore!"
-		"zho"	"上一個生成的物件已不再是物體!"
-		"chi"	"上一个生成的物件已不再是物体!"
 	}
 }

@@ -243,7 +243,8 @@
 		"zho"		"Secret"
 		"jp"		"Secret"
 		"ko"		"Secret"
-		"vi"		"Secret"}
+		"vi"		"Secret"
+	}
 
 	"L4D2Mixmap_OfficialMapsDeadCenter"
 	{

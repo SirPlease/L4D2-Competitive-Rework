@@ -15,7 +15,8 @@
 		"zho"		"You can only call for the vote during the first ready-up of a round."
 		"jp"		"You can only call for the vote during the first ready-up of a round."
 		"ko"		"You can only call for the vote during the first ready-up of a round."
-		"vi"		"You can only call for the vote during the first ready-up of a round."}
+		"vi"		"You can only call for the vote during the first ready-up of a round."
+	}
 	"CannotCalled"
 	{
 		"en"		"A vote cannot be called at this moment, try again in a second or five."
@@ -31,7 +32,8 @@
 		"zho"		"Both teams need to be full."
 		"jp"		"Both teams need to be full."
 		"ko"		"Both teams need to be full."
-		"vi"		"Both teams need to be full."}
+		"vi"		"Both teams need to be full."
+	}
 	"SurvivorsGet"
 	{
 		"en"		"Survivors get %s?"
@@ -43,7 +45,8 @@
 		"zho"		"Vote didn't pass before you left ready-up."
 		"jp"		"Vote didn't pass before you left ready-up."
 		"ko"		"Vote didn't pass before you left ready-up."
-		"vi"		"Vote didn't pass before you left ready-up."}
+		"vi"		"Vote didn't pass before you left ready-up."
+	}
 	"WeaponsSet"
 	{
 		"en"		"Survivor Weapons Set!"
@@ -55,7 +58,8 @@
 		"zho"		"Welcome to {blue}Zone{green}Hunters{default}."
 		"jp"		"Welcome to {blue}Zone{green}Hunters{default}."
 		"ko"		"Welcome to {blue}Zone{green}Hunters{default}."
-		"vi"		"Welcome to {blue}Zone{green}Hunters{default}."}
+		"vi"		"Welcome to {blue}Zone{green}Hunters{default}."
+	}
 	"Type"
 	{
 		"en"		"Type {olive}!mode{default} in chat to vote on weapons used."
@@ -63,5 +67,6 @@
 		"zho"		"Type {olive}!mode{default} in chat to vote on weapons used."
 		"jp"		"Type {olive}!mode{default} in chat to vote on weapons used."
 		"ko"		"Type {olive}!mode{default} in chat to vote on weapons used."
-		"vi"		"Type {olive}!mode{default} in chat to vote on weapons used."}
+		"vi"		"Type {olive}!mode{default} in chat to vote on weapons used."
+	}
 }

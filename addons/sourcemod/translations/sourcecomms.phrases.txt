@@ -267,7 +267,7 @@
 		"pt"			"{1} foi permanentemente emudecido."
 		"de"			"Der Spieler {1} ist für immer im Voice-Chat gesperrt."
 		"fr"			"Un mute permanent a été appliqué a {1}."
-		"en"			"已对玩家 {1} 永久静音."
+		"chi"			"已对玩家 {1} 永久静音."
 	}
 	"Permamuted player reason"
 	{
@@ -280,7 +280,7 @@
 		"pt"			"{1} foi permanentemente emudecido, (motivo: {2})."
 		"de"			"Der Spieler {1} ist für immer im Voice-Chat gesperrt (Grund: {2})."
 		"fr"			"Un mute permanent a été appliqué a {1} (raison: {2})."
-		"chi"			"已对玩家 {1} 永久静音 (原因: {3})."
+		"chi"			"已对玩家 {1} 永久静音 (原因: {2})."
 	}
 	"Muted player"
 	{

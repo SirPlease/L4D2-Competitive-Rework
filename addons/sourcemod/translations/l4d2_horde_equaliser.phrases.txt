@@ -18,7 +18,8 @@
 		"zho"		"{red}No {default}common remaining!"
 		"jp"		"{red}No {default}common remaining!"
 		"ko"		"{red}No {default}common remaining!"
-		"vi"		"{red}No {default}common remaining!"}
+		"vi"		"{red}No {default}common remaining!"
+	}
 
 	"CommonRemaining"
 	{
@@ -29,7 +30,8 @@
 		"zho"		"{red}{1} {default}common remaining.."
 		"jp"		"{red}{1} {default}common remaining.."
 		"ko"		"{red}{1} {default}common remaining.."
-		"vi"		"{red}{1} {default}common remaining.."}
+		"vi"		"{red}{1} {default}common remaining.."
+	}
 
 	"FiniteEventStarted"
 	{
@@ -40,5 +42,6 @@
 		"zho"		"A {blue}finite event{default} of {olive}{1}{default} commons has started! Rush or wait it out, the choice is yours!"
 		"jp"		"A {blue}finite event{default} of {olive}{1}{default} commons has started! Rush or wait it out, the choice is yours!"
 		"ko"		"A {blue}finite event{default} of {olive}{1}{default} commons has started! Rush or wait it out, the choice is yours!"
-		"vi"		"A {blue}finite event{default} of {olive}{1}{default} commons has started! Rush or wait it out, the choice is yours!"}
+		"vi"		"A {blue}finite event{default} of {olive}{1}{default} commons has started! Rush or wait it out, the choice is yours!"
+	}
 }

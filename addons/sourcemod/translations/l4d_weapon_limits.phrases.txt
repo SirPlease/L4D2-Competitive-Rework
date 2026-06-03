@@ -15,5 +15,6 @@
 		"zho"		"This weapon group has reached its max of {green}%d{default}!"
 		"jp"		"This weapon group has reached its max of {green}%d{default}!"
 		"ko"		"This weapon group has reached its max of {green}%d{default}!"
-		"vi"		"This weapon group has reached its max of {green}%d{default}!"}
+		"vi"		"This weapon group has reached its max of {green}%d{default}!"
+	}
 }

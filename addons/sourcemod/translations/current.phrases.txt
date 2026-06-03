@@ -18,5 +18,6 @@
 		"zho"		"Current: {green}%d%%{default}"
 		"jp"		"Current: {green}%d%%{default}"
 		"ko"		"Current: {green}%d%%{default}"
-		"vi"		"Current: {green}%d%%{default}"}
+		"vi"		"Current: {green}%d%%{default}"
+	}
 }

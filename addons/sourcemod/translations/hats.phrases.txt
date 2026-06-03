@@ -7,7 +7,8 @@
 	
 		"jp"		"You are now wearing the {ORANGE}[{1}] {DEFAULT}hat."
 		"ko"		"You are now wearing the {ORANGE}[{1}] {DEFAULT}hat."
-		"vi"		"You are now wearing the {ORANGE}[{1}] {DEFAULT}hat."}
+		"vi"		"You are now wearing the {ORANGE}[{1}] {DEFAULT}hat."
+	}
 	"Hat_Changed"
 	{
 		"#format"		"{1:s}"
@@ -15,7 +16,8 @@
 	
 		"jp"		"Changed hat on {ORANGE}{1}{DEFAULT}."
 		"ko"		"Changed hat on {ORANGE}{1}{DEFAULT}."
-		"vi"		"Changed hat on {ORANGE}{1}{DEFAULT}."}
+		"vi"		"Changed hat on {ORANGE}{1}{DEFAULT}."
+	}
 	"Hat_No_Index"
 	{
 		"#format"		"{1:d}{2:d}"
@@ -23,7 +25,8 @@
 	
 		"jp"		"Cannot find the hat index {ORANGE}{1}{DEFAULT}, values between {ORANGE}1{DEFAULT} and {ORANGE}{2}{DEFAULT}."
 		"ko"		"Cannot find the hat index {ORANGE}{1}{DEFAULT}, values between {ORANGE}1{DEFAULT} and {ORANGE}{2}{DEFAULT}."
-		"vi"		"Cannot find the hat index {ORANGE}{1}{DEFAULT}, values between {ORANGE}1{DEFAULT} and {ORANGE}{2}{DEFAULT}."}
+		"vi"		"Cannot find the hat index {ORANGE}{1}{DEFAULT}, values between {ORANGE}1{DEFAULT} and {ORANGE}{2}{DEFAULT}."
+	}
 	"Hat_Not_Found"
 	{
 		"#format"		"{1:s}"
@@ -31,14 +34,16 @@
 	
 		"jp"		"Cannot find the hat {ORANGE}{1}{DEFAULT}."
 		"ko"		"Cannot find the hat {ORANGE}{1}{DEFAULT}."
-		"vi"		"Cannot find the hat {ORANGE}{1}{DEFAULT}."}
+		"vi"		"Cannot find the hat {ORANGE}{1}{DEFAULT}."
+	}
 	"Hat_Invalid"
 	{
 		"en"			"Invalid player selected."
 	
 		"jp"		"Invalid player selected."
 		"ko"		"Invalid player selected."
-		"vi"		"Invalid player selected."}
+		"vi"		"Invalid player selected."
+	}
 	"Hat_Unblocked"
 	{
 		"#format"		"{1:s}"
@@ -46,7 +51,8 @@
 	
 		"jp"		"Unblocked hats for {ORANGE}{1}{DEFAULT}."
 		"ko"		"Unblocked hats for {ORANGE}{1}{DEFAULT}."
-		"vi"		"Unblocked hats for {ORANGE}{1}{DEFAULT}."}
+		"vi"		"Unblocked hats for {ORANGE}{1}{DEFAULT}."
+	}
 	"Hat_Blocked"
 	{
 		"#format"		"{1:s}"
@@ -54,7 +60,8 @@
 	
 		"jp"		"Blocked hats for {ORANGE}{1}{DEFAULT}."
 		"ko"		"Blocked hats for {ORANGE}{1}{DEFAULT}."
-		"vi"		"Blocked hats for {ORANGE}{1}{DEFAULT}."}
+		"vi"		"Blocked hats for {ORANGE}{1}{DEFAULT}."
+	}
 	"Hat_View"
 	{
 		"#format"		"{1:s}"
@@ -62,7 +69,8 @@
 	
 		"jp"		"Personal hat view has been turned {ORANGE}{1}{DEFAULT}."
 		"ko"		"Personal hat view has been turned {ORANGE}{1}{DEFAULT}."
-		"vi"		"Personal hat view has been turned {ORANGE}{1}{DEFAULT}."}
+		"vi"		"Personal hat view has been turned {ORANGE}{1}{DEFAULT}."
+	}
 	"Hat_Ability"
 	{
 		"#format"		"{1:s}"
@@ -70,7 +78,8 @@
 	
 		"jp"		"You have turned {ORANGE}{1}{DEFAULT} the ability to wear hats."
 		"ko"		"You have turned {ORANGE}{1}{DEFAULT} the ability to wear hats."
-		"vi"		"You have turned {ORANGE}{1}{DEFAULT} the ability to wear hats."}
+		"vi"		"You have turned {ORANGE}{1}{DEFAULT} the ability to wear hats."
+	}
 	"Hat_On"
 	{
 		"en"			"on"
@@ -81,7 +90,8 @@
 	
 		"jp"		"off"
 		"ko"		"off"
-		"vi"		"off"}
+		"vi"		"off"
+	}
 	"Hat_Menu_Title"
 	{
 		"en"			"Select your hat."
@@ -92,7 +102,8 @@
 	
 		"jp"		"You're not wearing a hat!"
 		"ko"		"You're not wearing a hat!"
-		"vi"		"You're not wearing a hat!"}
+		"vi"		"You're not wearing a hat!"
+	}
 
 	"HAT_SYSTEM"
 	{
@@ -107,7 +118,8 @@
 	
 		"jp"		"Can't use this command at the moment."
 		"ko"		"Can't use this command at the moment."
-		"vi"		"Can't use this command at the moment."}
+		"vi"		"Can't use this command at the moment."
+	}
 	"ADMIN_DISABLE_HAT"
 	{
 		"en"			"Select player to disable hats:"
@@ -171,7 +183,8 @@
 	
 		"jp"		"Third person hat view has been turned {ORANGE}{1}{DEFAULT}."
 		"ko"		"Third person hat view has been turned {ORANGE}{1}{DEFAULT}."
-		"vi"		"Third person hat view has been turned {ORANGE}{1}{DEFAULT}."}
+		"vi"		"Third person hat view has been turned {ORANGE}{1}{DEFAULT}."
+	}
 	"Hat_ViewSet"
 	{
 		"#format"		"{1:s}{2:s}"
@@ -179,7 +192,8 @@
 	
 		"jp"		"General hat visibility for {ORANGE}{1}{DEFAULT} has been turned {ORANGE}{2}{DEFAULT}."
 		"ko"		"General hat visibility for {ORANGE}{1}{DEFAULT} has been turned {ORANGE}{2}{DEFAULT}."
-		"vi"		"General hat visibility for {ORANGE}{1}{DEFAULT} has been turned {ORANGE}{2}{DEFAULT}."}
+		"vi"		"General hat visibility for {ORANGE}{1}{DEFAULT} has been turned {ORANGE}{2}{DEFAULT}."
+	}
 	"Hat_Visibility_Set"
 	{
 		"#format"		"{1:s}"
@@ -187,5 +201,6 @@
 	
 		"jp"		"You have turned the visibility of hats to {ORANGE}{1}{DEFAULT}."
 		"ko"		"You have turned the visibility of hats to {ORANGE}{1}{DEFAULT}."
-		"vi"		"You have turned the visibility of hats to {ORANGE}{1}{DEFAULT}."}
+		"vi"		"You have turned the visibility of hats to {ORANGE}{1}{DEFAULT}."
+	}
 }

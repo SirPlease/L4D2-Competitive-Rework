@@ -17,7 +17,8 @@
 		"zho"		"For every {olive}%i{green}%% {default}Survivors run back, the Tank will have their frustration frozen for {olive}%0.1f {green}seconds{default}."
 		"jp"		"For every {olive}%i{green}%% {default}Survivors run back, the Tank will have their frustration frozen for {olive}%0.1f {green}seconds{default}."
 		"ko"		"For every {olive}%i{green}%% {default}Survivors run back, the Tank will have their frustration frozen for {olive}%0.1f {green}seconds{default}."
-		"vi"		"For every {olive}%i{green}%% {default}Survivors run back, the Tank will have their frustration frozen for {olive}%0.1f {green}seconds{default}."}
+		"vi"		"For every {olive}%i{green}%% {default}Survivors run back, the Tank will have their frustration frozen for {olive}%0.1f {green}seconds{default}."
+	}
 
 
 	"L4D2Tankrage_Tank"

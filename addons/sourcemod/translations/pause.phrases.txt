@@ -17,7 +17,8 @@
 		"zho"		"{olive}%N {default}has fully loaded"
 		"jp"		"{olive}%N {default}has fully loaded"
 		"ko"		"{olive}%N {default}has fully loaded"
-		"vi"		"{olive}%N {default}has fully loaded"}
+		"vi"		"{olive}%N {default}has fully loaded"
+	}
 
 	"PauseCommand"
 	{
@@ -27,7 +28,8 @@
 		"zho"		"{olive}%N {blue}Paused{default}."
 		"jp"		"{olive}%N {blue}Paused{default}."
 		"ko"		"{olive}%N {blue}Paused{default}."
-		"vi"		"{olive}%N {blue}Paused{default}."}
+		"vi"		"{olive}%N {blue}Paused{default}."
+	}
 
 	// PauseDelay_Timer
 	"PauseAction"
@@ -37,7 +39,8 @@
 		"zho"		"{red}PAUSED"
 		"jp"		"{red}PAUSED"
 		"ko"		"{red}PAUSED"
-		"vi"		"{red}PAUSED"}
+		"vi"		"{red}PAUSED"
+	}
 
 	"PauseDelay"
 	{
@@ -47,7 +50,8 @@
 		"zho"		"{blue}Pausing in{default}: {olive}%d"
 		"jp"		"{blue}Pausing in{default}: {olive}%d"
 		"ko"		"{blue}Pausing in{default}: {olive}%d"
-		"vi"		"{blue}Pausing in{default}: {olive}%d"}
+		"vi"		"{blue}Pausing in{default}: {olive}%d"
+	}
 
 	// ForcePause_Cmd
 	"Crashed"
@@ -67,7 +71,8 @@
 		"zho"		"A {green}force pause {default}is issued by {blue}Admin {default}({olive}%N{default})"
 		"jp"		"A {green}force pause {default}is issued by {blue}Admin {default}({olive}%N{default})"
 		"ko"		"A {green}force pause {default}is issued by {blue}Admin {default}({olive}%N{default})"
-		"vi"		"A {green}force pause {default}is issued by {blue}Admin {default}({olive}%N{default})"}
+		"vi"		"A {green}force pause {default}is issued by {blue}Admin {default}({olive}%N{default})"
+	}
 
 	// Unpause_Cmd
 	"UnpauseSurvivors"
@@ -78,7 +83,8 @@
 		"zho"		"{olive}%N %s{default}marked {blue}%s {default}ready."
 		"jp"		"{olive}%N %s{default}marked {blue}%s {default}ready."
 		"ko"		"{olive}%N %s{default}marked {blue}%s {default}ready."
-		"vi"		"{olive}%N %s{default}marked {blue}%s {default}ready."}
+		"vi"		"{olive}%N %s{default}marked {blue}%s {default}ready."
+	}
 
 	"UnpauseInfected"
 	{
@@ -88,7 +94,8 @@
 		"zho"		"{olive}%N %s{default}marked {red}%s {default}ready."
 		"jp"		"{olive}%N %s{default}marked {red}%s {default}ready."
 		"ko"		"{olive}%N %s{default}marked {red}%s {default}ready."
-		"vi"		"{olive}%N %s{default}marked {red}%s {default}ready."}
+		"vi"		"{olive}%N %s{default}marked {red}%s {default}ready."
+	}
 
 	"UnpauseInitiator"
 	{
@@ -98,7 +105,8 @@
 		"zho"		"{olive}%N {default}marked {green}Initiator {default}ready."
 		"jp"		"{olive}%N {default}marked {green}Initiator {default}ready."
 		"ko"		"{olive}%N {default}marked {green}Initiator {default}ready."
-		"vi"		"{olive}%N {default}marked {green}Initiator {default}ready."}
+		"vi"		"{olive}%N {default}marked {green}Initiator {default}ready."
+	}
 
 	"UnpauseAdminConfirm"
 	{
@@ -107,7 +115,8 @@
 		"zho"		"{olive}Teams {default}are ready. Wait for {blue}Admin {default}to {green}confirm{default}."
 		"jp"		"{olive}Teams {default}are ready. Wait for {blue}Admin {default}to {green}confirm{default}."
 		"ko"		"{olive}Teams {default}are ready. Wait for {blue}Admin {default}to {green}confirm{default}."
-		"vi"		"{olive}Teams {default}are ready. Wait for {blue}Admin {default}to {green}confirm{default}."}
+		"vi"		"{olive}Teams {default}are ready. Wait for {blue}Admin {default}to {green}confirm{default}."
+	}
 
 	// Unready_Cmd
 	"UnreadySurvivors"
@@ -118,7 +127,8 @@
 		"zho"		"{olive}%N %s{default}marked {blue}%s {default}not ready."
 		"jp"		"{olive}%N %s{default}marked {blue}%s {default}not ready."
 		"ko"		"{olive}%N %s{default}marked {blue}%s {default}not ready."
-		"vi"		"{olive}%N %s{default}marked {blue}%s {default}not ready."}
+		"vi"		"{olive}%N %s{default}marked {blue}%s {default}not ready."
+	}
 
 	"UnreadyInfected"
 	{
@@ -134,7 +144,8 @@
 		"zho"		"{olive}%N {default}marked {green}Initiator {default}not ready."
 		"jp"		"{olive}%N {default}marked {green}Initiator {default}not ready."
 		"ko"		"{olive}%N {default}marked {green}Initiator {default}not ready."
-		"vi"		"{olive}%N {default}marked {green}Initiator {default}not ready."}
+		"vi"		"{olive}%N {default}marked {green}Initiator {default}not ready."
+	}
 
 	// void AsInitiator()
 	"AsInitiator"
@@ -151,7 +162,8 @@
 		"zho"		"A {green}force unpause {default}is issued by {blue}Admin {default}({olive}%N{default})"
 		"jp"		"A {green}force unpause {default}is issued by {blue}Admin {default}({olive}%N{default})"
 		"ko"		"A {green}force unpause {default}is issued by {blue}Admin {default}({olive}%N{default})"
-		"vi"		"A {green}force unpause {default}is issued by {blue}Admin {default}({olive}%N{default})"}
+		"vi"		"A {green}force unpause {default}is issued by {blue}Admin {default}({olive}%N{default})"
+	}
 
 	// AddPauseCount
 	"PauseLimit"
@@ -161,7 +173,8 @@
 		"zho"		"You have reached your pause limit."
 		"jp"		"You have reached your pause limit."
 		"ko"		"You have reached your pause limit."
-		"vi"		"You have reached your pause limit."}
+		"vi"		"You have reached your pause limit."
+	}
 
 	// AttemptPause
 	"PauseDeferred"
@@ -171,7 +184,8 @@
 		"zho"		"{red}Pause has been delayed due to a pick-up in progress!"
 		"jp"		"{red}Pause has been delayed due to a pick-up in progress!"
 		"ko"		"{red}Pause has been delayed due to a pick-up in progress!"
-		"vi"		"{red}Pause has been delayed due to a pick-up in progress!"}
+		"vi"		"{red}Pause has been delayed due to a pick-up in progress!"
+	}
 
 	// Pause
 	"PausePreventSpawn"
@@ -181,7 +195,8 @@
 		"zho"		"{default}Your {red}Spawn {default}has been prevented because of the Pause"
 		"jp"		"{default}Your {red}Spawn {default}has been prevented because of the Pause"
 		"ko"		"{default}Your {red}Spawn {default}has been prevented because of the Pause"
-		"vi"		"{default}Your {red}Spawn {default}has been prevented because of the Pause"}
+		"vi"		"{default}Your {red}Spawn {default}has been prevented because of the Pause"
+	}
 
 	// Show_Cmd
 	"PanelShow"
@@ -285,7 +300,8 @@
 		"zho"		"Say {olive}!unready {default}to cancel"
 		"jp"		"Say {olive}!unready {default}to cancel"
 		"ko"		"Say {olive}!unready {default}to cancel"
-		"vi"		"Say {olive}!unready {default}to cancel"}
+		"vi"		"Say {olive}!unready {default}to cancel"
+	}
 
 	"GameisLive"
 	{
@@ -300,7 +316,8 @@
 		"zho"		"{blue}Live in{default}: {olive}%d{default}..."
 		"jp"		"{blue}Live in{default}: {olive}%d{default}..."
 		"ko"		"{blue}Live in{default}: {olive}%d{default}..."
-		"vi"		"{blue}Live in{default}: {olive}%d{default}..."}
+		"vi"		"{blue}Live in{default}: {olive}%d{default}..."
+	}
 
 	// CancelFullReady
 	"CountdownCancelled"
@@ -311,7 +328,8 @@
 		"zho"		"{olive}%N {default}cancelled the countdown!"
 		"jp"		"{olive}%N {default}cancelled the countdown!"
 		"ko"		"{olive}%N {default}cancelled the countdown!"
-		"vi"		"{olive}%N {default}cancelled the countdown!"}
+		"vi"		"{olive}%N {default}cancelled the countdown!"
+	}
 
 	// Callvote_Callback
 	"CallvoteNoSpec"
@@ -321,7 +339,8 @@
 		"zho"		"You're unable to call votes as a spectator."
 		"jp"		"You're unable to call votes as a spectator."
 		"ko"		"You're unable to call votes as a spectator."
-		"vi"		"You're unable to call votes as a spectator."}
+		"vi"		"You're unable to call votes as a spectator."
+	}
 
 	"CallvoteNoExploit"
 	{
@@ -330,7 +349,8 @@
 		"zho"		"You've just switched Teams, you are unable to vote for a few seconds."
 		"jp"		"You've just switched Teams, you are unable to vote for a few seconds."
 		"ko"		"You've just switched Teams, you are unable to vote for a few seconds."
-		"vi"		"You've just switched Teams, you are unable to vote for a few seconds."}
+		"vi"		"You've just switched Teams, you are unable to vote for a few seconds."
+	}
 
 	"CallvoteCannotTargetAdmin"
 	{
@@ -339,7 +359,8 @@
 		"zho"		"You may not kick Admins."
 		"jp"		"You may not kick Admins."
 		"ko"		"You may not kick Admins."
-		"vi"		"You may not kick Admins."}
+		"vi"		"You may not kick Admins."
+	}
 
 
 	"Pause_PauseChatMessage"

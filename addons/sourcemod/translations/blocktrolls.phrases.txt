@@ -16,7 +16,8 @@
 		"zho"		"Voting is not enabled until {olive}40s{default} into the round."
 		"jp"		"Voting is not enabled until {olive}40s{default} into the round."
 		"ko"		"Voting is not enabled until {olive}40s{default} into the round."
-		"vi"		"Voting is not enabled until {olive}40s{default} into the round."}
+		"vi"		"Voting is not enabled until {olive}40s{default} into the round."
+	}
 	"NotConsoleVote"
 	{
 		"en"	"[!] You must be ingame to vote."
@@ -28,5 +29,6 @@
 		"zho"		"{olive}Spectator{default} can't vote."
 		"jp"		"{olive}Spectator{default} can't vote."
 		"ko"		"{olive}Spectator{default} can't vote."
-		"vi"		"{olive}Spectator{default} can't vote."}
+		"vi"		"{olive}Spectator{default} can't vote."
+	}
 }

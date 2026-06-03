@@ -14,7 +14,7 @@
     {
         "#format"   "{1:i},{2:t}"   // 1: remainingCrashers 2: remainingCrashers > 1 ? "players" : "player"
         "en"        "{blue}[{default}AutoPause{blue}] {default}Waiting for {olive}{1} {default}more {green}crashed {default}{2} before automatic {blue}Unpause{default}!"
-        "chi"        "{blue}[{default}AutoPause{blue}] {default}正在等待 {olive}{1} {default}位 {green}游戏玩家{default}重新连接来 {blue}解除暂停{default}!"
+        "chi"        "{blue}[{default}AutoPause{blue}] {default}正在等待 {olive}{1}{default}{2}{green}游戏崩溃玩家{default}重新连接来 {blue}解除暂停{default}!"
 		"zho"		"{blue}[{default}AutoPause{blue}] {default}Waiting for {olive}{1} {default}more {green}crashed {default}{2} before automatic {blue}Unpause{default}!"
 		"jp"		"{blue}[{default}AutoPause{blue}] {default}Waiting for {olive}{1} {default}more {green}crashed {default}{2} before automatic {blue}Unpause{default}!"
 		"ko"		"{blue}[{default}AutoPause{blue}] {default}Waiting for {olive}{1} {default}more {green}crashed {default}{2} before automatic {blue}Unpause{default}!"
@@ -25,7 +25,7 @@
     {
         "#format"   "{1:N}"         // 1: client
         "en"        "{blue}[{default}AutoPause{blue}] {olive}{1} {default}crashed."
-        "en"        "{blue}[{default}AutoPause{blue}] {olive}{1} {default}游戏崩溃."
+        "chi"       "{blue}[{default}AutoPause{blue}] {olive}{1} {default}游戏崩溃."
 		"zho"		"{blue}[{default}AutoPause{blue}] {olive}{1} {default}游戏崩溃."
 		"jp"		"{blue}[{default}AutoPause{blue}] {olive}{1} {default}游戏崩溃."
 		"ko"		"{blue}[{default}AutoPause{blue}] {olive}{1} {default}游戏崩溃."
@@ -35,10 +35,12 @@
     "players"
     {
         "en"        "players"
+        "chi"       "位"
     }
 
     "player"
     {
         "en"        "player"
+        "chi"       "位"
     }
 }

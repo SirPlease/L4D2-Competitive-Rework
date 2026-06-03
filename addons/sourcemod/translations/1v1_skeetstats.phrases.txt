@@ -29,7 +29,8 @@
 		"zho"		"{olive}{1}{default} damage | {olive}{2}{default} kills | {olive}{3}{default} common\n"
 		"jp"		"{olive}{1}{default} damage | {olive}{2}{default} kills | {olive}{3}{default} common\n"
 		"ko"		"{olive}{1}{default} damage | {olive}{2}{default} kills | {olive}{3}{default} common\n"
-		"vi"		"{olive}{1}{default} damage | {olive}{2}{default} kills | {olive}{3}{default} common\n"}
+		"vi"		"{olive}{1}{default} damage | {olive}{2}{default} kills | {olive}{3}{default} common\n"
+	}
 	"SI_DMG"
 	{
 		"#format"   "{1:d},{2:d}" // 1:iDidDamageAll[iClientPlaying] 2:iGotKills[iClientPlaying]
@@ -38,7 +39,8 @@
 		"zho"		"{olive}{1}{default} damage | {olive}{2}{default} kills\n"
 		"jp"		"{olive}{1}{default} damage | {olive}{2}{default} kills\n"
 		"ko"		"{olive}{1}{default} damage | {olive}{2}{default} kills\n"
-		"vi"		"{olive}{1}{default} damage | {olive}{2}{default} kills\n"}
+		"vi"		"{olive}{1}{default} damage | {olive}{2}{default} kills\n"
+	}
 	"SI_CI"
 	{
 		"#format"   "{1:d},{2:d}" // 1:iGotKills[iClientPlaying] 2:iGotCommon[iClientPlaying]
@@ -47,7 +49,8 @@
 		"zho"		"{olive}{1}{default} kills | {olive}{2}{default} common\n"
 		"jp"		"{olive}{1}{default} kills | {olive}{2}{default} common\n"
 		"ko"		"{olive}{1}{default} kills | {olive}{2}{default} common\n"
-		"vi"		"{olive}{1}{default} kills | {olive}{2}{default} common\n"}
+		"vi"		"{olive}{1}{default} kills | {olive}{2}{default} common\n"
+	}
 	"SI"
 	{
 		"en"		"{olive}%d{default} kills\n"
@@ -55,7 +58,8 @@
 		"zho"		"{olive}%d{default} kills\n"
 		"jp"		"{olive}%d{default} kills\n"
 		"ko"		"{olive}%d{default} kills\n"
-		"vi"		"{olive}%d{default} kills\n"}
+		"vi"		"{olive}%d{default} kills\n"
+	}
     // 2. skeets
 	"SKEET"
 	{
@@ -65,7 +69,8 @@
 		"zho"		"{olive}{1}{default} normal | {olive}{2}{default} hurt | {olive}{3}{default} deadstops\n"
 		"jp"		"{olive}{1}{default} normal | {olive}{2}{default} hurt | {olive}{3}{default} deadstops\n"
 		"ko"		"{olive}{1}{default} normal | {olive}{2}{default} hurt | {olive}{3}{default} deadstops\n"
-		"vi"		"{olive}{1}{default} normal | {olive}{2}{default} hurt | {olive}{3}{default} deadstops\n"}
+		"vi"		"{olive}{1}{default} normal | {olive}{2}{default} hurt | {olive}{3}{default} deadstops\n"
+	}
 	//  3. accuracy
 	"ACC_AllShots"
 	{

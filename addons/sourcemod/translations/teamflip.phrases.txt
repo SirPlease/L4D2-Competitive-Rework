@@ -15,7 +15,8 @@
 		"zho"		"{green}%s{default} flipped a team and is on the {blue}Survivor{default} team!"
 		"jp"		"{green}%s{default} flipped a team and is on the {blue}Survivor{default} team!"
 		"ko"		"{green}%s{default} flipped a team and is on the {blue}Survivor{default} team!"
-		"vi"		"{green}%s{default} flipped a team and is on the {blue}Survivor{default} team!"}
+		"vi"		"{green}%s{default} flipped a team and is on the {blue}Survivor{default} team!"
+	}
 	"FlippedInfected"
 	{
 		"en"		"{green}%s{default} flipped a team and is on the {red}Infected{default} team!"
@@ -23,7 +24,8 @@
 		"zho"		"{green}%s{default} flipped a team and is on the {red}Infected{default} team!"
 		"jp"		"{green}%s{default} flipped a team and is on the {red}Infected{default} team!"
 		"ko"		"{green}%s{default} flipped a team and is on the {red}Infected{default} team!"
-		"vi"		"{green}%s{default} flipped a team and is on the {red}Infected{default} team!"}
+		"vi"		"{green}%s{default} flipped a team and is on the {red}Infected{default} team!"
+	}
 	"Wait"
 	{
 		"en"		"[Teamflip] Whoa there buddy, slow down. Wait at least %d seconds."

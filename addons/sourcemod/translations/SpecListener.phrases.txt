@@ -17,7 +17,8 @@
 		"zho"		"Only spectator can listen."
 		"jp"		"Only spectator can listen."
 		"ko"		"Only spectator can listen."
-		"vi"		"Only spectator can listen."}
+		"vi"		"Only spectator can listen."
+	}
 	"PanelTitle"
 	{
 		"en"		"SpecListener"
@@ -46,7 +47,8 @@
 		"zho"		"{green}Enable{default}"
 		"jp"		"{green}Enable{default}"
 		"ko"		"{green}Enable{default}"
-		"vi"		"{green}Enable{default}"}
+		"vi"		"{green}Enable{default}"
+	}
 	"Disable"
 	{
 		"en"		"{green}Disable{default}"
@@ -55,7 +57,8 @@
 		"zho"		"{green}Disable{default}"
 		"jp"		"{green}Disable{default}"
 		"ko"		"{green}Disable{default}"
-		"vi"		"{green}Disable{default}"}
+		"vi"		"{green}Disable{default}"
+	}
 	"Usage"
 	{
 		"en"		"Usage: sm_listen <enable/disable/status>"
@@ -73,7 +76,8 @@
 		"zho"		"Error: section voice flags."
 		"jp"		"Error: section voice flags."
 		"ko"		"Error: section voice flags."
-		"vi"		"Error: section voice flags."}
+		"vi"		"Error: section voice flags."
+	}
 	"ErrorCookie"
 	{
 		"en"		"Error: cookie not cached yet (try again in a bit)."
@@ -82,7 +86,8 @@
 		"zho"		"Error: cookie not cached yet (try again in a bit)."
 		"jp"		"Error: cookie not cached yet (try again in a bit)."
 		"ko"		"Error: cookie not cached yet (try again in a bit)."
-		"vi"		"Error: cookie not cached yet (try again in a bit)."}
+		"vi"		"Error: cookie not cached yet (try again in a bit)."
+	}
 
 
 	"SpecListener_SelectedItemFoundInfo"

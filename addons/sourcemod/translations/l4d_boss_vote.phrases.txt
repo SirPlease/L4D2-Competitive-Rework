@@ -16,7 +16,8 @@
 		"zho"		"Boss voting is not available on this map."
 		"jp"		"Boss voting is not available on this map."
 		"ko"		"Boss voting is not available on this map."
-		"vi"		"Boss voting is not available on this map."}
+		"vi"		"Boss voting is not available on this map."
+	}
     "Available"
     {
         "en"        "Boss voting is only available during ready up."
@@ -24,7 +25,8 @@
 		"zho"		"Boss voting is only available during ready up."
 		"jp"		"Boss voting is only available during ready up."
 		"ko"		"Boss voting is only available during ready up."
-		"vi"		"Boss voting is only available during ready up."}
+		"vi"		"Boss voting is only available during ready up."
+	}
     "FirstRound"
     {
         "en"        "Boss voting is only available during the first round of a map."
@@ -32,7 +34,8 @@
 		"zho"		"Boss voting is only available during the first round of a map."
 		"jp"		"Boss voting is only available during the first round of a map."
 		"ko"		"Boss voting is only available during the first round of a map."
-		"vi"		"Boss voting is only available during the first round of a map."}
+		"vi"		"Boss voting is only available during the first round of a map."
+	}
     "NotAvailableForSpec"
     {
         "en"        "Boss voting is not available for spectators."
@@ -40,7 +43,8 @@
 		"zho"		"Boss voting is not available for spectators."
 		"jp"		"Boss voting is not available for spectators."
 		"ko"		"Boss voting is not available for spectators."
-		"vi"		"Boss voting is not available for spectators."}
+		"vi"		"Boss voting is not available for spectators."
+	}
     "CannotBeCalled"
     {
         "en"        "Boss Vote cannot be called right now..."
@@ -48,7 +52,8 @@
 		"zho"		"Boss Vote cannot be called right now..."
 		"jp"		"Boss Vote cannot be called right now..."
 		"ko"		"Boss Vote cannot be called right now..."
-		"vi"		"Boss Vote cannot be called right now..."}
+		"vi"		"Boss Vote cannot be called right now..."
+	}
     // VoteBossCmd
     "Usage"
     {

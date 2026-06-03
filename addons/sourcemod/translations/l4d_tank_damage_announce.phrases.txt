@@ -19,7 +19,8 @@
 		"zho"		"{blue}Tank{default} ({olive}%s{default}) had {green}%d{default} health remaining"
 		"jp"		"{blue}Tank{default} ({olive}%s{default}) had {green}%d{default} health remaining"
 		"ko"		"{blue}Tank{default} ({olive}%s{default}) had {green}%d{default} health remaining"
-		"vi"		"{blue}Tank{default} ({olive}%s{default}) had {green}%d{default} health remaining"}
+		"vi"		"{blue}Tank{default} ({olive}%s{default}) had {green}%d{default} health remaining"
+	}
 	"DealtToTank"
 	{
 		"en"		"{blue}Damage{default} dealt to {blue}Tank{default} ({olive}%s{default})"
@@ -27,7 +28,8 @@
 		"zho"		"{blue}Damage{default} dealt to {blue}Tank{default} ({olive}%s{default})"
 		"jp"		"{blue}Damage{default} dealt to {blue}Tank{default} ({olive}%s{default})"
 		"ko"		"{blue}Damage{default} dealt to {blue}Tank{default} ({olive}%s{default})"
-		"vi"		"{blue}Damage{default} dealt to {blue}Tank{default} ({olive}%s{default})"}
+		"vi"		"{blue}Damage{default} dealt to {blue}Tank{default} ({olive}%s{default})"
+	}
 	"PercentDamage"
 	{
 		"en"		"{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N"
