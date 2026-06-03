@@ -46,8 +46,6 @@ public Plugin myinfo =
 	url = "https://github.com/fantasylidong/CompetitiveWithAnne"
 };
 #define UPDATE_URL_ANNE "http://anne.trygek.com/plugin_update/Anne_Updater.txt"
-#define UPDATE_URL_NEKO "http://anne.trygek.com/plugin_update/Neko_Updater.txt"
-#define UPDATE_URL_VERSUS "http://anne.trygek.com/plugin_update/Versus_Updater.txt"
 #define UPDATE_URL_ANNEALL "http://anne.trygek.com/plugin_update/Anne_Updater_All.txt"
 
 bool  
@@ -79,7 +77,7 @@ public void OnPluginStart()
 	LoadTranslations("join.phrases");
 	hCvarEnableInf = CreateConVar("join_enable_inf", "1", "是否可以开启加入特感", _, true, 0.0, true, 1.0);
 	hCvarKickFamilyAccount = CreateConVar("join_enable_kickfamilyaccount", "1", "是否开启踢出家庭共享账户", _, true, 0.0, true, 1.0);
-	hCvarEnableAutoupdate = CreateConVar("join_autoupdate", "0", "是否开启AnneHappy核心插件自动更新（不常更新插件包的建议关闭）", _, true, 0.0, true, 4.0);
+	hCvarEnableAutoupdate = CreateConVar("join_autoupdate", "0", "是否开启AnneHappy核心插件自动更新：0关闭，1核心全量，2/3兼容旧配置，4常用插件", _, true, 0.0, true, 4.0);
 	hCvarMotdTitle = CreateConVar("sm_cfgmotd_title", "AnneHappy电信服");
 	hCvarMotdUrl = CreateConVar("sm_cfgmotd_url", "http://anne.trygek.com/l4d2/");  // 主页以后更换为数据库控制
 	hCvarIPUrl = CreateConVar("sm_cfgip_url", "http://anne.trygek.com/ip.php");	// 服务器ip页面，以后更换为数据库控制
@@ -139,11 +137,11 @@ void RefreshAutoUpdater()
 		}
 		case 2:
 		{
-			Updater_AddPlugin(UPDATE_URL_NEKO);
+			Updater_AddPlugin(UPDATE_URL_ANNE);
 		}
 		case 3:
 		{
-			Updater_AddPlugin(UPDATE_URL_VERSUS);
+			Updater_AddPlugin(UPDATE_URL_ANNE);
 		}
 		case 4:
 		{
