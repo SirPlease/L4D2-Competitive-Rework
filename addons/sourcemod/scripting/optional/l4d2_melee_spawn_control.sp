@@ -79,6 +79,8 @@ MRESReturn DH_OnGetMissionInfo(Handle hReturn)
 	int kvModes = SDKCall(hKvFindKey, i, "modes", false)
 	if(!kvModes) return MRES_Ignored
 	int kvMode = SDKCall(hKvFindKey, kvModes, m, false)
+	if(!kvMode && !StrEqual(m, "coop", false)) kvMode = SDKCall(hKvFindKey, kvModes, "coop", false)
+	if(!kvMode && !StrEqual(m, "versus", false)) kvMode = SDKCall(hKvFindKey, kvModes, "versus", false)
 	if(!kvMode) return MRES_Ignored
 	int kvFirstChapter = SDKCall(hKvFindKey, kvMode, "1", false)
 	if(!kvFirstChapter) return MRES_Ignored
