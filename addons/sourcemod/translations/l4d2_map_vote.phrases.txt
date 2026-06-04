@@ -2,12 +2,12 @@
 {
 	"L4D2MapVote_MapnextChatPrompt"
 	{
-		"en"		"Enter \\x01 in the chat bar \\x05!mapnext \\x01 to vote for the next map."
-		"chi"		"\\x01聊天栏输入 \\x05!mapnext \\x01投票下一张地图."
-		"zho"		"\\x01聊天欄輸入 \\x05!mapnext \\x01投票下一張地圖."
-		"jp"		"次のマップに投票するには、チャット バーに「\\x01」「\\x05!mapnext \\x01」と入力します。"
-		"ko"		"다음 맵에 투표하려면 채팅창 \\x05!mapnext \\x01에 \\x01를 입력하세요."
-		"vi"		"Nhập \\x01 vào thanh trò chuyện \\x05!mapnext \\x01 để bỏ phiếu cho bản đồ tiếp theo."
+		"en"		"Enter {default} in the chat bar {olive}!mapnext {default} to vote for the next map."
+		"chi"		"{default}聊天栏输入 {olive}!mapnext {default}投票下一张地图."
+		"zho"		"{default}聊天欄輸入 {olive}!mapnext {default}投票下一張地圖."
+		"jp"		"次のマップに投票するには、チャット バーに「{default}」「{olive}!mapnext {default}」と入力します。"
+		"ko"		"다음 맵에 투표하려면 채팅창 {olive}!mapnext {default}에 {default}를 입력하세요."
+		"vi"		"Nhập {default} vào thanh trò chuyện {olive}!mapnext {default} để bỏ phiếu cho bản đồ tiếp theo."
 	}
 
 	"L4D2MapVote_VPKCampaignListsRefreshed"
@@ -112,12 +112,12 @@
 
 	"L4D2MapVote_NextMapSet"
 	{
-		"en"		"\\x01The next map has been set to \\x05%s"
-		"chi"		"\\x01下一张地图已设置为 \\x05%s"
-		"zho"		"\\x01下一張地圖已設定為 \\x05%s"
-		"jp"		"\\x01次のマップは \\x05%s に設定されました"
-		"ko"		"\\x01다음 맵이 \\x05%s로 설정되었습니다."
-		"vi"		"\\x01Bản đồ tiếp theo đã được đặt thành \\x05%s"
+		"en"		"{default}The next map has been set to {olive}%s"
+		"chi"		"{default}下一张地图已设置为 {olive}%s"
+		"zho"		"{default}下一張地圖已設定為 {olive}%s"
+		"jp"		"{default}次のマップは {olive}%s に設定されました"
+		"ko"		"{default}다음 맵이 {olive}%s로 설정되었습니다."
+		"vi"		"{default}Bản đồ tiếp theo đã được đặt thành {olive}%s"
 	}
 
 	"L4D2MapVote_InitiatesVoteReplacementCampaign"

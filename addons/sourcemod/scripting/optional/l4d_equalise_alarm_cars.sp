@@ -22,6 +22,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <colors>
 #include <sdktools>
 
 #define PLUGIN_VERSION "3.8.1"
@@ -138,7 +139,7 @@ Action Timer_RoundStartDelay(Handle timer)
 			
 			float pos[3];
 			GetEntPropVector(ent, Prop_Data, "m_vecAbsOrigin", pos);
-			PrintDebug("\x05(ALARM) #%i: caralarm_car1 [%s] [%.0f %.0f %.0f]", index, sKey, pos[0], pos[1], pos[2]);
+			PrintDebug("{olive}(ALARM) #%i: caralarm_car1 [%s] [%.0f %.0f %.0f]", index, sKey, pos[0], pos[1], pos[2]);
 		}
 	}
 	
@@ -173,7 +174,7 @@ Action Timer_RoundStartDelay(Handle timer)
 				HookSingleEntityOutput(ent, "OnTrigger", func);
 			}
 			
-			PrintDebug("\x05(ALARM) #%i: %s [%s]", index, entry == ENTRY_RELAY_ON ? "relay_caralarm_on" : "relay_caralarm_off", sKey);
+			PrintDebug("{olive}(ALARM) #%i: %s [%s]", index, entry == ENTRY_RELAY_ON ? "relay_caralarm_on" : "relay_caralarm_off", sKey);
 		}
 	}
 	
@@ -215,7 +216,7 @@ void EntO_AlarmRelayOnTriggered(const char[] output, int caller, int activator, 
 		ThrowEntryError(ENTRY_RELAY_ON, caller);
 	}
 	
-	PrintDebug("\x03(ALARM) #%i: relay_on [activator: %i | delay: %.2f]", entry, activator, delay);
+	PrintDebug("{lightgreen}(ALARM) #%i: relay_on [activator: %i | delay: %.2f]", entry, activator, delay);
 	
 	if (IsValidEntity(activator) && !activator)
 	{
@@ -250,7 +251,7 @@ void EntO_AlarmRelayOffTriggered(const char[] output, int caller, int activator,
 		ThrowEntryError(ENTRY_RELAY_OFF, caller);
 	}
 	
-	PrintDebug("\x05(ALARM) #%i: relay_off [activator: %i | delay: %.2f]", entry, activator, delay);
+	PrintDebug("{olive}(ALARM) #%i: relay_off [activator: %i | delay: %.2f]", entry, activator, delay);
 	
 	// If a car is turned off because of a tank punch or because it was
 	// triggered the activator is the car itself. When the cars get
@@ -424,7 +425,7 @@ Action Timer_DebugPrints(Handle timer)
 		int r, g, b, a;
 		ExtractColorBytes(g_aAlarmArray.Get(entry, ENTRY_COLOR), r, g, b, a);
 		
-		PrintDebug("\x04(ALARM) #%i [ %s | %s | %s | %s | %i %i %i ]",
+		PrintDebug("{green}(ALARM) #%i [ %s | %s | %s | %s | %i %i %i ]",
 					entry,
 					g_aAlarmArray.Get(entry, ENTRY_RELAY_ON) == -1 ? "null" : "valid",
 					g_aAlarmArray.Get(entry, ENTRY_RELAY_OFF) == -1 ? "null" : "valid",
@@ -444,7 +445,7 @@ void PrintDebug(const char[] format, any ...)
 	{
 		char msg[256];
 		VFormat(msg, sizeof(msg), format, 2);
-		PrintToChatAll("%s", msg);
+		CPrintToChatAll("%s", msg);
 	}
 }
 

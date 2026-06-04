@@ -2,11 +2,11 @@
 {
 	"L4D2FixSpawnOrder_DebugMessage"
 	{
-		"en"		"\\x04[DEBUG]\\x01 %s"
-		"chi"		"\\x04[调试]\\x01 %s"
-		"zho"		"\\x04[調試]\\x01 %s"
-		"jp"		"\\x04[デバッグ]\\x01 %s"
-		"ko"		"\\x04[디버그]\\x01 %s"
-		"vi"		"\\x04[GỠ LỖI]\\x01 %s"
+		"en"		"{green}[DEBUG]{default} %s"
+		"chi"		"{green}[调试]{default} %s"
+		"zho"		"{green}[調試]{default} %s"
+		"jp"		"{green}[デバッグ]{default} %s"
+		"ko"		"{green}[디버그]{default} %s"
+		"vi"		"{green}[GỠ LỖI]{default} %s"
 	}
 }

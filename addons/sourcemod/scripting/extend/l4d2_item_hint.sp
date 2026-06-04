@@ -7,6 +7,7 @@
 #include <sdkhooks>
 #include <sdktools>
 #include <sourcemod>
+#include <colors>
 #undef REQUIRE_PLUGIN
 #include <l4dstats>
 
@@ -517,7 +518,7 @@ public Action Vocalize_Listener(int client, const char[] command, int argc)
 			{
 				if(g_bl4dstatsAvailable && l4dstats_GetClientScore(client) < 50000)
 				{
-					PrintToChat(client, "%t", "L4D2ItemHint_MarkingSystemPointsLess5W");
+					CPrintToChat(client, "%t", "L4D2ItemHint_MarkingSystemPointsLess5W");
 					return Plugin_Continue;
 				}
 				int clientAim;
@@ -544,7 +545,7 @@ public Action Vocalize_Listener(int client, const char[] command, int argc)
 
 				static int iEntity;
 				iEntity = GetUseEntity(client, g_fItemUseHintRange);
-				//PrintToChatAll("%N is looking at %d", client, iEntity);
+				//CPrintToChatAll("%N is looking at %d", client, iEntity);
 				if ( !bIsAimInfeced && !bIsAimWitch && IsValidEntityIndex(iEntity) && IsValidEntity(iEntity) && HasParentClient(iEntity) == false )
 				{
 					static char targetname[128];
@@ -558,7 +559,7 @@ public Action Vocalize_Listener(int client, const char[] command, int argc)
 					{
 						if (GetEntPropString(iEntity, Prop_Data, "m_ModelName", sEntModelName, sizeof(sEntModelName)) > 1)
 						{
-							//PrintToChatAll("Model - %s", sEntModelName);
+							//CPrintToChatAll("Model - %s", sEntModelName);
 							StringToLowerCase(sEntModelName);
 							float fHeight = 10.0;
 							if (g_smModelToName.GetString(sEntModelName, sItemName, sizeof(sItemName)))
@@ -1212,7 +1213,7 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintToChat(i, "%t", "L4D2ItemHint_PlayerMarkedItem", client, sItemName);
+						CPrintToChat(i, "%t", "L4D2ItemHint_PlayerMarkedItem", client, sItemName);
 					}
 				}
 			}
@@ -1221,7 +1222,7 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintHintText(i, "\x01[\x04标记系统\x01] \x05%N\x01: %s", client, sItemName);
+						PrintHintText(i, "{default}[{green}标记系统{default}] {olive}%N{default}: %s", client, sItemName);
 					}
 				}
 			}
@@ -1230,7 +1231,7 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintCenterText(i, "\x01[\x04标记系统\x01] \x05%N\x01: %s", client, sItemName);
+						PrintCenterText(i, "{default}[{green}标记系统{default}] {olive}%N{default}: %s", client, sItemName);
 					}
 				}
 			}
@@ -1246,7 +1247,7 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintToChat(i, "%t", "L4D2ItemHint_PlayerMarkedItemHighlighted", client, sItemName);
+						CPrintToChat(i, "%t", "L4D2ItemHint_PlayerMarkedItemHighlighted", client, sItemName);
 					}
 				}
 			}
@@ -1255,7 +1256,7 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintHintText(i, "\x01[\x04标记系统\x01] \x05%N\x01: \x04%s", client, sItemName);
+						PrintHintText(i, "{default}[{green}标记系统{default}] {olive}%N{default}: {green}%s", client, sItemName);
 					}
 				}
 			}
@@ -1264,7 +1265,7 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintCenterText(i, "\x01[\x04标记系统\x01] \x05%N\x01: \x04%s", client, sItemName);
+						PrintCenterText(i, "{default}[{green}标记系统{default}] {olive}%N{default}: {green}%s", client, sItemName);
 					}
 				}
 			}
@@ -1280,7 +1281,7 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintToChat(i, "%t", "L4D2ItemHint_PlayerMarkedItemHighlighted", client, sItemName);
+						CPrintToChat(i, "%t", "L4D2ItemHint_PlayerMarkedItemHighlighted", client, sItemName);
 					}
 				}
 			}
@@ -1289,7 +1290,7 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintHintText(i, "\x01[\x04标记系统\x01] \x05%N\x01: \x04%s", client, sItemName);
+						PrintHintText(i, "{default}[{green}标记系统{default}] {olive}%N{default}: {green}%s", client, sItemName);
 					}
 				}
 			}
@@ -1298,7 +1299,7 @@ void NotifyMessage(int client, const char[] sItemName, EHintType eType)
 				{
 					if (IsClientInGame(i) && !IsFakeClient(i) && GetClientTeam(i) != TEAM_INFECTED)
 					{
-						PrintCenterText(i, "\x01[\x04标记系统\x01] \x05%N\x01: \x04%s", client, sItemName);
+						PrintCenterText(i, "{default}[{green}标记系统{default}] {olive}%N{default}: {green}%s", client, sItemName);
 					}
 				}
 			}
@@ -1539,7 +1540,7 @@ bool HasParentClient(int entity)
 	if(HasEntProp(entity, Prop_Data, "m_pParent"))
 	{
 		int parent_entity = GetEntPropEnt(entity, Prop_Data, "m_pParent");
-		//PrintToChatAll("%d m_pParent: %d", entity, parent_entity);
+		//CPrintToChatAll("%d m_pParent: %d", entity, parent_entity);
 		if (1 <= parent_entity <= MaxClients && IsClientInGame(parent_entity))
 		{
 			return true;

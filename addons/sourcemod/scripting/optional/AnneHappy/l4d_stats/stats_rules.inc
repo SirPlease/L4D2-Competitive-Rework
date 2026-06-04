@@ -79,7 +79,7 @@ HunterSmokerSave(Savior, Victim, BasePoints, AdvMult, ExpertMult, String:SaveFro
 		return;
 
 	if (Mode)
-		StatsPrintToChat(Savior, "你因把 \x05%s\x01 从 \x04%s\x01 里救了出来获得 \x04%i \x01分!", VictimName, SaveFrom, Score);
+		StatsPrintToChat(Savior, "你因把 {olive}%s{default} 从 {green}%s{default} 里救了出来获得 {green}%i {default}分!", VictimName, SaveFrom, Score);
 
 	UpdateMapStat("points", Score);
 	decl String:ScoreFormula[MAX_MESSAGE_WIDTH];
@@ -591,7 +591,7 @@ public UpdateChargerDamage(Client, Damage)
 
 public CheckSurvivorsWin()
 {
-	//StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03有调用CheckSurvivorsWin方法!");
+	//StatsPrintToChatTeam(TEAM_SURVIVORS, "{lightgreen}有调用CheckSurvivorsWin方法!");
 	if (CampaignOver)
 		return;
 	if (!Isstart)
@@ -609,14 +609,14 @@ public CheckSurvivorsWin()
 		return;
 	}
 
-	//StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03CampaignOver值没问题!");
+	//StatsPrintToChatTeam(TEAM_SURVIVORS, "{lightgreen}CampaignOver值没问题!");
 	StopMapTiming();
 	CurrentGamemodeID = GetCurrentGamemodeID();
 	// Return if gamemode is Scavenge or Survival
 	if (CurrentGamemodeID == GAMEMODE_SCAVENGE ||
 			CurrentGamemodeID == GAMEMODE_SURVIVAL)
 		return;
-	//StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03Gameid没问题");
+	//StatsPrintToChatTeam(TEAM_SURVIVORS, "{lightgreen}Gameid没问题");
 	new Score = ModifyScoreDifficulty(GetConVarInt(cvar_Witch), 5, 10, TEAM_SURVIVORS);
 	new Mode = GetConVarInt(cvar_AnnounceMode);
 	decl String:iID[MAX_LINE_WIDTH];
@@ -650,7 +650,7 @@ public CheckSurvivorsWin()
 			Format(UpdatePoints, sizeof(UpdatePoints), "points");
 		}
 	}
-	//StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03Witch分数为%d",Score);
+	//StatsPrintToChatTeam(TEAM_SURVIVORS, "{lightgreen}Witch分数为%d",Score);
 	if (Score > 0 && WitchExists && !WitchDisturb)
 	{
 		for (new i = 1; i <= maxplayers; i++)
@@ -667,9 +667,9 @@ public CheckSurvivorsWin()
 		}
 
 		if (Mode)
-			StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03所有幸存者因 \x05没有惊扰Witch \x01获得\x04%i \x01额外过关分!", Score);
+			StatsPrintToChatTeam(TEAM_SURVIVORS, "{lightgreen}所有幸存者因 {olive}没有惊扰Witch {default}获得{green}%i {default}额外过关分!", Score);
 	}
-	//StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03过关分数为%d",Score);
+	//StatsPrintToChatTeam(TEAM_SURVIVORS, "{lightgreen}过关分数为%d",Score);
 	Score = 0;
 	new Deaths = 0;
 	new BaseScore = ModifyScoreDifficulty(GetConVarInt(cvar_SafeHouse), 2, 2, TEAM_SURVIVORS);
@@ -694,7 +694,7 @@ public CheckSurvivorsWin()
 			addScore = (GetAnneInfectedNumber() - 3) * 100;
 		}
 		char buffer[256];
-		Format(buffer, sizeof(buffer), "\x03单人模式 \x01没有\x04特感击杀奖励，所以过关奖励分数\x053倍");
+		Format(buffer, sizeof(buffer), "{lightgreen}单人模式 {default}没有{green}特感击杀奖励，所以过关奖励分数{olive}3倍");
 		if(addScore > 0){
 			Format(buffer, sizeof(buffer), "%s, 获得难度分数补贴 %d 分", buffer, addScore);
 		}
@@ -775,11 +775,11 @@ public CheckSurvivorsWin()
 
 	if (Mode && Score > 0)
 	{
-		StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03所有幸存者因 \x05%i 死亡到达安全门 \x01获得 \x04%i \x01分!", Deaths, Score);
+		StatsPrintToChatTeam(TEAM_SURVIVORS, "{lightgreen}所有幸存者因 {olive}%i 死亡到达安全门 {default}获得 {green}%i {default}分!", Deaths, Score);
 		NewPlayerBonus_AnnounceMultiplier("安全屋", Score);
 
 		if (NegativeScore)
-			StatsPrintToChatTeam(TEAM_INFECTED, "\x03所有感染者因 \x05让幸存者进了安全门 \x01失去了 \x04%i \x01分!", Score);
+			StatsPrintToChatTeam(TEAM_INFECTED, "{lightgreen}所有感染者因 {olive}让幸存者进了安全门 {default}失去了 {green}%i {default}分!", Score);
 	}
 
 	NoBuyBonus_TryAwardSurvivors();
@@ -921,7 +921,7 @@ CheckSurvivorsAllDown()
 		UpdateMapStat("points_infected", Score);
 
 	if (Score > 0 && Mode)
-		StatsPrintToChatTeam(TEAM_INFECTED, "\x03所有感染者 \x05因杀死了所有幸存者 \x01获得 \x04%i \x01分!", Score);
+		StatsPrintToChatTeam(TEAM_INFECTED, "{lightgreen}所有感染者 {olive}因杀死了所有幸存者 {default}获得 {green}%i {default}分!", Score);
 
 	if (!GetConVarBool(cvar_EnableNegativeScore))
 		return;
@@ -960,7 +960,7 @@ CheckSurvivorsAllDown()
 	}
 
 	if (Mode && Score > 0)
-		StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03所有幸存者 \x01 \x03失去了 \x04%i \x01分 by \x03全部坐牢\x01!", Score);
+		StatsPrintToChatTeam(TEAM_SURVIVORS, "{lightgreen}所有幸存者 {default} {lightgreen}失去了 {green}%i {default}分 by {lightgreen}全部坐牢{default}!", Score);
 }
 
 bool:IsClientIncapacitated(client)
@@ -1214,12 +1214,12 @@ TankDamage(Client, Damage)
 				new Mode = GetConVarInt(cvar_AnnounceMode);
 
 				if (Mode == 1 || Mode == 2)
-					StatsPrintToChat(Client, "你给幸存者造成了价值 \x04%i\x01 分的伤害获得 \x04%i \x01分!", TankDamageTotal, Score);
+					StatsPrintToChat(Client, "你给幸存者造成了价值 {green}%i{default} 分的伤害获得 {green}%i {default}分!", TankDamageTotal, Score);
 				else if (Mode == 3)
 				{
 					decl String:Name[MAX_LINE_WIDTH];
 					GetClientName(Client, Name, sizeof(Name));
-					StatsPrintToChatAll("\x05%s \x01给幸存者造成了价值 \x04%i\x01 分的伤害获得 \x04%i \x01分!", Name, TankDamageTotal, Score);
+					StatsPrintToChatAll("{olive}%s {default}给幸存者造成了价值 {green}%i{default} 分的伤害获得 {green}%i {default}分!", Name, TankDamageTotal, Score);
 				}
 
 				if (EnableSounds_Tank_Bulldozer && GetConVarBool(cvar_SoundsEnabled))
@@ -1313,9 +1313,9 @@ UpdateFriendlyFire(Attacker, Victim)
 		Mode = GetConVarInt(cvar_AnnounceMode);
 
 	if (Mode == 1 || Mode == 2)
-		StatsPrintToChat(Attacker, "你已经 \x03失去了 \x04%i \x01分 by \x03黑枪了 \x05%s\x01!", Score, VictimName);
+		StatsPrintToChat(Attacker, "你已经 {lightgreen}失去了 {green}%i {default}分 by {lightgreen}黑枪了 {olive}%s{default}!", Score, VictimName);
 	else if (Mode == 3)
-		StatsPrintToChatAll("\x05%s \x01已经 \x03失去了 \x04%i \x01分 by \x03黑枪了 \x05%s\x01!", AttackerName, Score, VictimName);
+		StatsPrintToChatAll("{olive}%s {default}已经 {lightgreen}失去了 {green}%i {default}分 by {lightgreen}黑枪了 {olive}%s{default}!", AttackerName, Score, VictimName);
 }
 
 UpdateHunterDamage(Client, Damage)
@@ -1533,10 +1533,10 @@ SurvivorDiedNamed(Attacker, Victim, const String:VictimName[], const String:Atta
 		{
 			decl String:AttackerName[MAX_LINE_WIDTH];
 			GetClientName(Attacker, AttackerName, sizeof(AttackerName));
-			StatsPrintToChatAll("\x05%s 杀了 \x05%s \x01获得了 \x04%i \x01分!", AttackerName, VictimName, Score);
+			StatsPrintToChatAll("{olive}%s 杀了 {olive}%s {default}获得了 {green}%i {default}分!", AttackerName, VictimName, Score);
 		}
 		else
-			StatsPrintToChat(Attacker, "你杀了 \x05%s \x01获得了 \x04%i \x01分!", VictimName, Score);
+			StatsPrintToChat(Attacker, "你杀了 {olive}%s {default}获得了 {green}%i {default}分!", VictimName, Score);
 	}
 
 	UpdateMapStat("survivor_kills", 1);
@@ -1613,12 +1613,12 @@ SurvivorHurt(Attacker, Victim, Damage, AttackerInfType = -1, Handle:event = INVA
 			new Mode = GetConVarInt(cvar_AnnounceMode);
 
 			if (Mode == 1 || Mode == 2)
-				StatsPrintToChat(Attacker, "你因为丢石头到 \x05%s\x01头上获得 \x04%i \x01分!", VictimName, RockHit);
+				StatsPrintToChat(Attacker, "你因为丢石头到 {olive}%s{default}头上获得 {green}%i {default}分!", VictimName, RockHit);
 			else if (Mode == 3)
 			{
 				decl String:AttackerName[MAX_LINE_WIDTH];
 				GetClientName(Attacker, AttackerName, sizeof(AttackerName));
-				StatsPrintToChatAll("\x05%s \x01丢石头到\x05%s\x01头上获得 \x04%i \x01分!", AttackerName, VictimName, RockHit);
+				StatsPrintToChatAll("{olive}%s {default}丢石头到{olive}%s{default}头上获得 {green}%i {default}分!", AttackerName, VictimName, RockHit);
 			}
 		}
 	}
@@ -1833,9 +1833,9 @@ SurvivorIncappedByInfected(Attacker, Victim, Mode = -1)
 		Mode = GetConVarInt(cvar_AnnounceMode);
 
 	if (Mode == 1 || Mode == 2)
-		StatsPrintToChat(Attacker, "你制伏 \x05%s \x01获得 \x04%i \x01分!", VictimName, Score);
+		StatsPrintToChat(Attacker, "你制伏 {olive}%s {default}获得 {green}%i {default}分!", VictimName, Score);
 	else if (Mode == 3)
-		StatsPrintToChatAll("\x05%s 制伏 \x05%s \x01获得 \x04%i \x01分!", AttackerName, VictimName, Score);
+		StatsPrintToChatAll("{olive}%s 制伏 {olive}%s {default}获得 {green}%i {default}分!", AttackerName, VictimName, Score);
 }
 
 Float:GetMedkitPointReductionFactor()
@@ -1896,7 +1896,7 @@ AnnounceMedkitPenalty(Mode = -1)
 		Mode = GetConVarInt(cvar_AnnounceMode);
 
 	if (Mode)
-		StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03所有幸存者 \x01现在只能获得正常分数的百分之 \x04%i \x01，因为用了他们的第 \x05%i 个医疗包%s\x01!", RoundToNearest(ReductionFactor * 100), MedkitsUsedCounter,  (EngineVersion1 == Engine_Left4Dead ? "" : "或电击器"));
+		StatsPrintToChatTeam(TEAM_SURVIVORS, "{lightgreen}所有幸存者 {default}现在只能获得正常分数的百分之 {green}%i {default}，因为用了他们的第 {olive}%i 个医疗包%s{default}!", RoundToNearest(ReductionFactor * 100), MedkitsUsedCounter,  (EngineVersion1 == Engine_Left4Dead ? "" : "或电击器"));
 }
 
 GetClientInfectedType(Client)

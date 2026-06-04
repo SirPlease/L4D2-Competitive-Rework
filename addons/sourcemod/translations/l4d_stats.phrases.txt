@@ -2,11 +2,11 @@
 {
 	"L4DStats_RankMessage"
 	{
-		"en"		"\\x04[\\x03RANK\\x04] \\x01%s"
-		"chi"		"\\x04[\\x03RANK\\x04] \\x01%s"
-		"zho"		"\\x04[\\x03RANK\\x04] \\x01%s"
-		"jp"		"\\x04[\\x03RANK\\x04] \\x01%s"
-		"ko"		"\\x04[\\x03RANK\\x04] \\x01%s"
-		"vi"		"\\x04[\\x03RANK\\x04] \\x01%s"
+		"en"		"{green}[{lightgreen}RANK{green}] {default}%s"
+		"chi"		"{green}[{lightgreen}RANK{green}] {default}%s"
+		"zho"		"{green}[{lightgreen}RANK{green}] {default}%s"
+		"jp"		"{green}[{lightgreen}RANK{green}] {default}%s"
+		"ko"		"{green}[{lightgreen}RANK{green}] {default}%s"
+		"vi"		"{green}[{lightgreen}RANK{green}] {default}%s"
 	}
 }

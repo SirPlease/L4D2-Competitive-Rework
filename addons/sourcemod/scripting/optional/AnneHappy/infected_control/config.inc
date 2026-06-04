@@ -4,7 +4,7 @@
 #define _infected_control_config_included
 
 static const float DEFAULT_AI_WAVE_CHECK_RATIO[AI_LEVEL_SLOTS] = { 0.0, 0.90, 0.80, 0.65, 0.50, 0.35 };
-static const float DEFAULT_AI_WAVE_FLOOR_RATIO[AI_LEVEL_SLOTS] = { 0.0, 1.35, 1.25, 1.12, 1.00, 1.00 };
+static const float DEFAULT_AI_WAVE_FLOOR_RATIO[AI_LEVEL_SLOTS] = { 0.0, 1.50, 1.40, 1.25, 1.15, 1.10 };
 static const float DEFAULT_AI_WAVE_LOW_SI_RATIO[AI_LEVEL_SLOTS] = { 0.0, 0.12, 0.20, 0.27, 0.34, 0.50 };
 static const float DEFAULT_AI_DIST_SWEET_OFFSET[AI_LEVEL_SLOTS] = { 0.0, 0.00, 0.00, 0.00, 0.00, 0.00 };
 static const float DEFAULT_AI_DIST_WIDTH_SCALE[AI_LEVEL_SLOTS] = { 0.0, 1.25, 1.15, 1.08, 1.00, 1.00 };
@@ -277,7 +277,7 @@ enum struct Config
             CVAR_FLAG
         );
         this.AiWaveFloorRatio = CreateConVar(
-            "inf_ai_wave_floor_ratio", "1.35 1.25 1.12 1.00 1.00",
+            "inf_ai_wave_floor_ratio", "1.50 1.40 1.25 1.15 1.10",
             "Per AI level: earliest normal next-wave time, as respawn interval ratio",
             CVAR_FLAG
         );
@@ -346,10 +346,10 @@ enum struct Config
             "Enable on-disk cache for Nav flow buckets (0=off,1=on)",
             CVAR_FLAG, true, 0.0, true, 1.0);
         // 评分系统权重
-        this.Score_w_dist = CreateConVar("inf_score_w_dist", "1.35 1.10 1.20 1.05 1.20 1.25", "距离分权重(S,H,P,B,J,C)", CVAR_FLAG);
-        this.Score_w_hght = CreateConVar("inf_score_w_hght", "2.20 1.10 1.60 1.40 0.60 0.60", "高度分权重(S,H,P,B,J,C)", CVAR_FLAG);
-        this.Score_w_flow = CreateConVar("inf_score_w_flow", "1.40 1.00 1.20 1.35 1.10 1.20", "流程分权重(S,H,P,B,J,C)", CVAR_FLAG);
-        this.Score_w_disp = CreateConVar("inf_score_w_disp", "1.25 1.05 1.15 1.30 0.90 0.80", "分散度分权重(S,H,P,B,J,C)", CVAR_FLAG);
+        this.Score_w_dist = CreateConVar("inf_score_w_dist", "1.35 1.10 1.20 1.05 1.20 1.25", "距离分权重(S,B,H,P,J,C)", CVAR_FLAG);
+        this.Score_w_hght = CreateConVar("inf_score_w_hght", "2.20 1.10 1.60 1.40 0.60 0.60", "高度分权重(S,B,H,P,J,C)", CVAR_FLAG);
+        this.Score_w_flow = CreateConVar("inf_score_w_flow", "1.40 1.00 1.20 1.35 1.10 1.20", "流程分权重(S,B,H,P,J,C)", CVAR_FLAG);
+        this.Score_w_disp = CreateConVar("inf_score_w_disp", "1.25 1.05 1.15 1.30 0.90 0.80", "分散度分权重(S,B,H,P,J,C)", CVAR_FLAG);
         this.PathCacheEnable   = CreateConVar("inf_PathCacheEnable", "1",
             "Enable PathPenalty_NoBuild cache (0/1)", CVAR_FLAG, true, 0.0, true, 1.0);
         this.PathCacheQuantize = CreateConVar("inf_PathCacheQuantize", "50.0",

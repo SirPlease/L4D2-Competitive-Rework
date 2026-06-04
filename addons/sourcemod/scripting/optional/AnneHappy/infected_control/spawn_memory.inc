@@ -113,6 +113,10 @@ stock bool PassRealPositionCheck(float candPos[3], int targetSur, int si = 0)
             surPercent = fpct;
     }
 
+    // 所有进度获取方式均失败：无法判断身前/身后，放行以避免卡住刷特
+    if (surPercent < 0)
+        return true;
+
     if (candPercent < surPercent - 6)
         return false;
 
@@ -193,7 +197,7 @@ stock void GetSectorCenter(float outCenter[3], int targetSur)
 
     for (int i = 1; i <= MaxClients; i++)
     {
-        if (IsValidSurvivor(i))
+        if (IsValidSurvivor(i) && IsPlayerAlive(i))
         {
             GetClientAbsOrigin(i, outCenter);
             return;

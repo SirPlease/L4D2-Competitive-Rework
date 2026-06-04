@@ -1,6 +1,7 @@
 #pragma semicolon 1
 
 #include <sourcemod>
+#include <colors>
 #include <sdktools>
 #include <sdkhooks>
 #include <l4d2_penalty_bonus>
@@ -136,7 +137,7 @@ stock GiveWitchBonus()
     new iBonus = GetConVarInt(g_hCvarBonus);
     if(GetConVarBool(g_hCvarPrint) == true)
 	{
-        PrintToChatAll("%t", "SimpleWitchBonus_KillingWitchAwardedPoints", iBonus);
+        CPrintToChatAll("%t", "SimpleWitchBonus_KillingWitchAwardedPoints", iBonus);
     }
     PBONUS_AddRoundBonus(iBonus, true);
 }

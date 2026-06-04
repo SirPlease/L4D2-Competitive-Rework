@@ -2,61 +2,61 @@
 {
 	"InfectedControl_ICFailedObtainCrosshairHit"
 	{
-		"en"		"\\x04[IC]\\x01 failed to obtain the crosshair hit point."
-		"chi"		"\\x04[IC]\\x01 未能获取准星命中点。"
-		"zho"		"\\x04[IC]\\x01 未能取得準星命中點。"
-		"jp"		"\\x04[IC]\\x01 は十字線のヒット ポイントを取得できませんでした。"
-		"ko"		"\\x04[IC]\\x01가 십자선 적중점을 획득하지 못했습니다."
-		"vi"		"\\x04[IC]\\x01 không đạt được điểm trúng tâm ngắm."
+		"en"		"{green}[IC]{default} failed to obtain the crosshair hit point."
+		"chi"		"{green}[IC]{default} 未能获取准星命中点。"
+		"zho"		"{green}[IC]{default} 未能取得準星命中點。"
+		"jp"		"{green}[IC]{default} は十字線のヒット ポイントを取得できませんでした。"
+		"ko"		"{green}[IC]{default}가 십자선 적중점을 획득하지 못했습니다."
+		"vi"		"{green}[IC]{default} không đạt được điểm trúng tâm ngắm."
 	}
 
 	"InfectedControl_ICNoNavAreaNearby"
 	{
-		"en"		"\\x04[IC]\\x01 There is no NavArea nearby."
-		"chi"		"\\x04[IC]\\x01 附近没有 NavArea。"
-		"zho"		"\\x04[IC]\\x01 附近沒有 NavArea。"
-		"jp"		"\\x04[IC]\\x01 近くに NavArea がありません。"
-		"ko"		"\\x04[IC]\\x01 근처에 NavArea가 없습니다."
-		"vi"		"\\x04[IC]\\x01 Không có NavArea nào gần đó."
+		"en"		"{green}[IC]{default} There is no NavArea nearby."
+		"chi"		"{green}[IC]{default} 附近没有 NavArea。"
+		"zho"		"{green}[IC]{default} 附近沒有 NavArea。"
+		"jp"		"{green}[IC]{default} 近くに NavArea がありません。"
+		"ko"		"{green}[IC]{default} 근처에 NavArea가 없습니다."
+		"vi"		"{green}[IC]{default} Không có NavArea nào gần đó."
 	}
 
 	"InfectedControl_ICNavidBucketCalculationReturn"
 	{
-		"en"		"\\x04[IC]\\x01 navid=%d bucket=%d(calculation) / %d(return) flag=%s"
-		"chi"		"\\x04[IC]\\x01 navid=%d  桶=%d(算) / %d(归)  flag=%s"
-		"zho"		"\\x04[IC]\\x01 navid=%d 桶=%d(算) / %d(歸) flag=%s"
-		"jp"		"\\x04[IC]\\x01 ナビッド=%d バケット=%d(計算) / %d(リターン) フラグ=%s"
-		"ko"		"\\x04[IC]\\x01 navid=%d 버킷=%d(계산) / %d(반환) 플래그=%s"
-		"vi"		"\\x04[IC]\\x01 navid=%d xô=%d(tính toán) / %d(trả về) cờ=%s"
+		"en"		"{green}[IC]{default} navid=%d bucket=%d(calculation) / %d(return) flag=%s"
+		"chi"		"{green}[IC]{default} navid=%d  桶=%d(算) / %d(归)  flag=%s"
+		"zho"		"{green}[IC]{default} navid=%d 桶=%d(算) / %d(歸) flag=%s"
+		"jp"		"{green}[IC]{default} ナビッド=%d バケット=%d(計算) / %d(リターン) フラグ=%s"
+		"ko"		"{green}[IC]{default} navid=%d 버킷=%d(계산) / %d(반환) 플래그=%s"
+		"vi"		"{green}[IC]{default} navid=%d xô=%d(tính toán) / %d(trả về) cờ=%s"
 	}
 
 	"InfectedControl_ICNavidBucketReturnFlag"
 	{
-		"en"		"\\x04[IC]\\x01 navid=%d bucket=N/A / %d(return) flag=%s"
-		"chi"		"\\x04[IC]\\x01 navid=%d  桶=N/A / %d(归)  flag=%s"
-		"zho"		"\\x04[IC]\\x01 navid=%d 桶=N/A / %d(歸) flag=%s"
-		"jp"		"\\x04[IC]\\x01 ナビッド=%d バケット=N/A / %d(リターン) フラグ=%s"
-		"ko"		"\\x04[IC]\\x01 navid=%d 버킷=N/A / %d(반환) 플래그=%s"
-		"vi"		"\\x04[IC]\\x01 navid=%d xô=N/A / %d(trở lại) cờ=%s"
+		"en"		"{green}[IC]{default} navid=%d bucket=N/A / %d(return) flag=%s"
+		"chi"		"{green}[IC]{default} navid=%d  桶=N/A / %d(归)  flag=%s"
+		"zho"		"{green}[IC]{default} navid=%d 桶=N/A / %d(歸) flag=%s"
+		"jp"		"{green}[IC]{default} ナビッド=%d バケット=N/A / %d(リターン) フラグ=%s"
+		"ko"		"{green}[IC]{default} navid=%d 버킷=N/A / %d(반환) 플래그=%s"
+		"vi"		"{green}[IC]{default} navid=%d xô=N/A / %d(trở lại) cờ=%s"
 	}
 
 	"InfectedControl_ICNavCanGenerateTotal"
 	{
-		"en"		"\\x04[IC]\\x01 Nav %d \\x05 can generate \\x01 | Total score: \\x03%.1f\\x01 | See the console for details"
-		"chi"		"\\x04[IC]\\x01 Nav %d \\x05可以生成\\x01 | 总分: \\x03%.1f\\x01 | 详情见控制台"
-		"zho"		"\\x04[IC]\\x01 Nav %d \\x05 can generate \\x01 | Total score: \\x03%.1f\\x01 | See the console for details"
-		"jp"		"\\x04[IC]\\x01 ナビ %d \\x05 は \\x01 を生成できます |合計スコア: \\x03%.1f\\x01 |詳細についてはコンソールを参照してください"
-		"ko"		"\\x04[IC]\\x01 Nav %d \\x05는 \\x01 | 총점: \\x03%.1f\\x01 | 자세한 내용은 콘솔을 참조하세요."
-		"vi"		"\\x04[IC]\\x01 Nav %d \\x05 có thể tạo \\x01 | Tổng số điểm: \\x03%.1f\\x01 | Xem bảng điều khiển để biết chi tiết"
+		"en"		"{green}[IC]{default} Nav %d {olive} can generate {default} | Total score: {lightgreen}%.1f{default} | See the console for details"
+		"chi"		"{green}[IC]{default} Nav %d {olive}可以生成{default} | 总分: {lightgreen}%.1f{default} | 详情见控制台"
+		"zho"		"{green}[IC]{default} Nav %d {olive} can generate {default} | Total score: {lightgreen}%.1f{default} | See the console for details"
+		"jp"		"{green}[IC]{default} ナビ %d {olive} は {default} を生成できます |合計スコア: {lightgreen}%.1f{default} |詳細についてはコンソールを参照してください"
+		"ko"		"{green}[IC]{default} Nav %d {olive}는 {default} | 총점: {lightgreen}%.1f{default} | 자세한 내용은 콘솔을 참조하세요."
+		"vi"		"{green}[IC]{default} Nav %d {olive} có thể tạo {default} | Tổng số điểm: {lightgreen}%.1f{default} | Xem bảng điều khiển để biết chi tiết"
 	}
 
 	"InfectedControl_ICNavCannotGenerateSee"
 	{
-		"en"		"\\x04[IC]\\x01 Nav %d \\x03 cannot generate \\x01 | See the console for details"
-		"chi"		"\\x04[IC]\\x01 Nav %d \\x03不能生成\\x01 | 详情见控制台"
-		"zho"		"\\x04[IC]\\x01 Nav %d \\x03不能產生\\x01 | 詳情請見控制台"
-		"jp"		"\\x04[IC]\\x01 ナビ %d \\x03 は \\x01 を生成できません |詳細についてはコンソールを参照してください"
-		"ko"		"\\x04[IC]\\x01 Nav %d \\x03는 \\x01를 생성할 수 없습니다 | 자세한 내용은 콘솔을 참조하세요."
-		"vi"		"\\x04[IC]\\x01 Nav %d \\x03 không thể tạo \\x01 | Xem bảng điều khiển để biết chi tiết"
+		"en"		"{green}[IC]{default} Nav %d {lightgreen} cannot generate {default} | See the console for details"
+		"chi"		"{green}[IC]{default} Nav %d {lightgreen}不能生成{default} | 详情见控制台"
+		"zho"		"{green}[IC]{default} Nav %d {lightgreen}不能產生{default} | 詳情請見控制台"
+		"jp"		"{green}[IC]{default} ナビ %d {lightgreen} は {default} を生成できません |詳細についてはコンソールを参照してください"
+		"ko"		"{green}[IC]{default} Nav %d {lightgreen}는 {default}를 생성할 수 없습니다 | 자세한 내용은 콘솔을 참조하세요."
+		"vi"		"{green}[IC]{default} Nav %d {lightgreen} không thể tạo {default} | Xem bảng điều khiển để biết chi tiết"
 	}
 }

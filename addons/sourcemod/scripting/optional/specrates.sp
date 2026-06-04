@@ -2,6 +2,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <colors>
 #include <sdktools>
 
 #undef REQUIRE_PLUGIN
@@ -196,18 +197,18 @@ public Action Cmd_SetRates60(int client, int args)
 
 	if (!g_bL4DStatsAvail || l4dstats_GetClientScore(client) < 300000)
 	{
-		PrintToChat(client, "%t", "Specrates_SpecRatesScoreLess30");
+		CPrintToChat(client, "%t", "Specrates_SpecRatesScoreLess30");
 		return Plugin_Handled;
 	}
 	if (GetSpecCount() > cv_fullSpecNum.IntValue)
 	{
-		PrintToChat(client, "%t", "Specrates_SpecRatesNumberSpectatorsExceeds", cv_fullSpecNum.IntValue);
+		CPrintToChat(client, "%t", "Specrates_SpecRatesNumberSpectatorsExceeds", cv_fullSpecNum.IntValue);
 		return Plugin_Handled;
 	}
 
 	// 强制 60tick 旁观
 	SetSpectator60(client);
-	PrintToChat(client, "%t", "Specrates_SpecRatesSet60tick");
+	CPrintToChat(client, "%t", "Specrates_SpecRatesSet60tick");
 	return Plugin_Handled;
 }
 
@@ -220,12 +221,12 @@ public Action Cmd_AdminRates(int client, int args)
 	if (team == L4DTeam_Survivor || team == L4DTeam_Infected)
 	{
 		SetFull128(client);
-		PrintToChat(client, "%t", "Specrates_SpecRatesAdministratorMatchSet");
+		CPrintToChat(client, "%t", "Specrates_SpecRatesAdministratorMatchSet");
 	}
 	else
 	{
 		ResetToServerDefaults(client); // 旁观：默认=100tick（或服配置）
-		PrintToChat(client, "%t", "Specrates_SpecRatesAdministratorSpectatorSet");
+		CPrintToChat(client, "%t", "Specrates_SpecRatesAdministratorSpectatorSet");
 	}
 	return Plugin_Handled;
 }

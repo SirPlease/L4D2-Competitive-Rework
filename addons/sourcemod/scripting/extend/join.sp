@@ -223,7 +223,7 @@ public void OnClientConnected(int client)
 {
 	if(!IsFakeClient(client))
 	{
-		PrintToChatAll("%t", "Join_CrawlingServer", client);
+		CPrintToChatAll("%t", "Join_CrawlingServer", client);
 	}
 }
 
@@ -836,10 +836,10 @@ public Action GetBot(int client, int args)
 	if(!IsValidClient(client))
 		return Plugin_Handled;
 	if(!g_bEnableGetbotCommand[client]){
-		PrintToChat(client, "%t", "Join_UseCommandsTooFast");
+		CPrintToChat(client, "%t", "Join_UseCommandsTooFast");
 	}
 	else if(IsSuivivorTeamFull()){
-		PrintToChat(client, "%t", "Join_SurvivorTeamFullNoOther");
+		CPrintToChat(client, "%t", "Join_SurvivorTeamFullNoOther");
 	}else{
 		DrawSwitchCharacterMenu(client);
 		g_bEnableGetbotCommand[client] = false;

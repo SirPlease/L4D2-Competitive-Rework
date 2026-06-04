@@ -33,6 +33,7 @@
  */
 
 #include <sourcemod>
+#include <colors>
 #include <sdktools>
 #include <sdktools_tempents>
 #include <left4dhooks>
@@ -243,8 +244,9 @@ public any Native_GetNextSpawnTime(Handle plugin, int numParams)
         return view_as<any>(rem);
     }
 
-    // 没有定时器则表示由窗口逻辑随时可能触发，返回 刷特间隔
-    return view_as<any>(gCV.fSiInterval);
+    float rem = DifficultyStrategy_GetWaveFloorDelay() - float(gST.lastSpawnSecs);
+    if (rem < 0.0) rem = 0.0;
+    return view_as<any>(rem);
 }
 
 // =========================

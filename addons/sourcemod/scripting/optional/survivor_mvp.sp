@@ -1228,7 +1228,7 @@ void GetMVPString(char[] printBuffer, const int iSize)
                 GetClientName(mvp_SI, tmpName, sizeof(tmpName));
                 if (IsFakeClient(mvp_SI))
                 {
-                    StrCat(tmpName, 64, " \x01[机器人]");
+                    StrCat(tmpName, 64, " {default}[机器人]");
                 }
             } 
             else 
@@ -1254,7 +1254,7 @@ void GetMVPString(char[] printBuffer, const int iSize)
                 GetClientName(mvp_Common, tmpName, sizeof(tmpName));
                 if (IsFakeClient(mvp_Common))
                 {
-                    StrCat(tmpName, 64, " \x01[机器人]");
+                    StrCat(tmpName, 64, " {default}[机器人]");
                 }
             } 
             else 
@@ -1280,7 +1280,7 @@ void GetMVPString(char[] printBuffer, const int iSize)
                 GetClientName(mvp_FF, tmpName, sizeof(tmpName));
                 if (IsFakeClient(mvp_FF))
                 {
-                    StrCat(tmpName, 64, " \x01[机器人]");
+                    StrCat(tmpName, 64, " {default}[机器人]");
                 }
             } 
             else 
@@ -1312,13 +1312,13 @@ void GetMVPString(char[] printBuffer, const int iSize)
                 if (iBrevityFlags & BREV_PERCENT) 
                 {
                     // 只显示绝对值
-                    Format(tmpBuffer, sizeof(tmpBuffer), "[MVP] 特感:\x03 %s \x01(\x05%d \x01伤害,\x05 %d \x01击杀)\n",
+                    Format(tmpBuffer, sizeof(tmpBuffer), "[MVP] 特感:{lightgreen} %s {default}({olive}%d {default}伤害,{olive} %d {default}击杀)\n",
                         mvp_SI_name, iDidDamageAll[mvp_SI], iGotKills[mvp_SI]);
                 } 
                 else if (iBrevityFlags & BREV_ABSOLUTE) 
                 {
                     // 只显示百分比（沿用原含义）
-                    Format(tmpBuffer, sizeof(tmpBuffer), "[MVP] 特感:\x03 %s \x01(伤害 \x04%2.0f%%\x01, 击杀 \x04%.0f%%\x01)\n",
+                    Format(tmpBuffer, sizeof(tmpBuffer), "[MVP] 特感:{lightgreen} %s {default}(伤害 {green}%2.0f%%{default}, 击杀 {green}%.0f%%{default})\n",
                         mvp_SI_name,
                         (float(iDidDamageAll[mvp_SI]) / float(iTotalDamageAll)) * 100.0,
                         (float(iGotKills[mvp_SI]) / float(iTotalKills)) * 100.0);
@@ -1350,12 +1350,12 @@ void GetMVPString(char[] printBuffer, const int iSize)
             {
                 if (iBrevityFlags & BREV_PERCENT) 
                 {
-                    Format(tmpBuffer, sizeof(tmpBuffer), "[MVP] 小僵尸:\x03 %s \x01(\x05%d \x01击杀)\n",
+                    Format(tmpBuffer, sizeof(tmpBuffer), "[MVP] 小僵尸:{lightgreen} %s {default}({olive}%d {default}击杀)\n",
                         mvp_Common_name, iGotCommon[mvp_Common]);
                 } 
                 else if (iBrevityFlags & BREV_ABSOLUTE) 
                 {
-                    Format(tmpBuffer, sizeof(tmpBuffer), "[MVP] 小僵尸:\x03 %s \x01(\x04%.0f%%\x01)\n",
+                    Format(tmpBuffer, sizeof(tmpBuffer), "[MVP] 小僵尸:{lightgreen} %s {default}({green}%.0f%%{default})\n",
                         mvp_Common_name,
                         (float(iGotCommon[mvp_Common]) / float(iTotalCommon)) * 100.0);
                 } 
@@ -1385,12 +1385,12 @@ void GetMVPString(char[] printBuffer, const int iSize)
         {
             if (iBrevityFlags & BREV_PERCENT) 
             {
-                Format(tmpBuffer, sizeof(tmpBuffer), "[LVP] 友伤:\x03 %s \x01(\x05%d \x01友伤)\n",
+                Format(tmpBuffer, sizeof(tmpBuffer), "[LVP] 友伤:{lightgreen} %s {default}({olive}%d {default}友伤)\n",
                     mvp_FF_name, iDidFF[mvp_FF]);
             } 
             else if (iBrevityFlags & BREV_ABSOLUTE) 
             {
-                Format(tmpBuffer, sizeof(tmpBuffer), "[LVP] 友伤:\x03 %s \x01(\x04%.0f%%\x01)\n",
+                Format(tmpBuffer, sizeof(tmpBuffer), "[LVP] 友伤:{lightgreen} %s {default}({green}%.0f%%{default})\n",
                     mvp_FF_name,
                     (float(iDidFF[mvp_FF]) / float(iTotalFF)) * 100.0);
             } 

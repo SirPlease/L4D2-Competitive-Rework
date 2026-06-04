@@ -260,7 +260,7 @@ public bool StopMapTiming()
 	{
 		if (GetConVarInt(cvar_AnnounceMode))
 		{
-			StatsPrintToChatAll("此次结果因修改难度或开启高级人机或使用管理员功能导致 \x04无效 \x01，不记录这张地图游戏时间!");
+			StatsPrintToChatAll("此次结果因修改难度或开启高级人机或使用管理员功能导致 {green}无效 {default}，不记录这张地图游戏时间!");
 		}
 		MapTimingStartTime = -1.0;
 		MapTimingBlocked = true;
@@ -270,7 +270,7 @@ public bool StopMapTiming()
 	{
 		if (GetConVarInt(cvar_AnnounceMode))
 		{
-			StatsPrintToChatAll("此次结果因关闭tank连跳导致 \x04无效 \x01，不记录这张地图游戏时间!");
+			StatsPrintToChatAll("此次结果因关闭tank连跳导致 {green}无效 {default}，不记录这张地图游戏时间!");
 		}
 		MapTimingStartTime = -1.0;
 		MapTimingBlocked = true;
@@ -491,7 +491,7 @@ public SQL_OnCheckAnneNoBuyFastest(Handle:owner, Handle:hndl, const String:error
 	SetTimeLabel(TotalTime, TimeLabel, sizeof(TimeLabel));
 	GetMapTimingDifficultyName(GameDifficulty, DifficultyName, sizeof(DifficultyName));
 	GetMapTimingModeName(Mode, ModeName, sizeof(ModeName));
-	Format(Message, sizeof(Message), "\x05[%s地图记录刷新通告]\x01: \x05%s\x01 在 \x03[%s]\x01 刷新 \x04%d特16秒无商店%s难度记录\x01，新纪录为 \x04%s\x01。",
+	Format(Message, sizeof(Message), "{olive}[%s地图记录刷新通告]{default}: {olive}%s{default} 在 {lightgreen}[%s]{default} 刷新 {green}%d特16秒无商店%s难度记录{default}，新纪录为 {green}%s{default}。",
 		ModeName, RunPlayers, MapName, InfectedNumber, DifficultyName, TimeLabel);
 
 	if (GetFeatureStatus(FeatureType_Native, "GlobalChat_Broadcast") == FeatureStatus_Available && GlobalChat_Broadcast(Message))
@@ -511,7 +511,7 @@ public GetFastTime(Handle:owner, Handle:hndl, const String:error[], any:dp)
 		SetTimeLabel(FastestTime, TimeLabel, sizeof(TimeLabel));
 		if (Mode)
 		{
-			StatsPrintToChatAll("当前模式该难度\x04 [%s使用B数] \x01最快通关速度为\x04 %s \x01." , (g_brpgAvailable && L4D_RPG_GetGlobalValue(INDEX_USEBUY))?"":"不", TimeLabel);
+			StatsPrintToChatAll("当前模式该难度{green} [%s使用B数] {default}最快通关速度为{green} %s {default}." , (g_brpgAvailable && L4D_RPG_GetGlobalValue(INDEX_USEBUY))?"":"不", TimeLabel);
 		}
 	}
 	else{
@@ -564,11 +564,11 @@ public UpdateMapTimingStat(Handle:owner, Handle:hndl, const String:error[], any:
 				SetTimeLabel(OldTime, TimeLabel, sizeof(TimeLabel));
 				if(mode > 0)
 				{
-					StatsPrintToChat(Client, "下次继续努力哦，这张图 \x04Anne%s \x01版本该难度的最快完成时间 \x04%s \x01 并没有提升!", GetAnneVersion(), TimeLabel);
+					StatsPrintToChat(Client, "下次继续努力哦，这张图 {green}Anne%s {default}版本该难度的最快完成时间 {green}%s {default} 并没有提升!", GetAnneVersion(), TimeLabel);
 				}
 				else
 				{
-					StatsPrintToChat(Client, "下次继续努力哦，这张图最快完成时间 \x04%s \x01 并没有提升!", TimeLabel);
+					StatsPrintToChat(Client, "下次继续努力哦，这张图最快完成时间 {green}%s {default} 并没有提升!", TimeLabel);
 				}
 			}
 			if(mode > 0)
@@ -585,7 +585,7 @@ public UpdateMapTimingStat(Handle:owner, Handle:hndl, const String:error[], any:
 			if (Mode)
 			{
 				SetTimeLabel(TotalTime, TimeLabel, sizeof(TimeLabel));
-				StatsPrintToChat(Client, "牛逼，你刷新了%s这张图 \x04Anne%s \x01版本该难度的最快完成时间，目前是 \x04%s\x01!", FastestTime < TotalTime?"目前":"你", GetAnneVersion(), TimeLabel);
+				StatsPrintToChat(Client, "牛逼，你刷新了%s这张图 {green}Anne%s {default}版本该难度的最快完成时间，目前是 {green}%s{default}!", FastestTime < TotalTime?"目前":"你", GetAnneVersion(), TimeLabel);
 
 			}
 
@@ -607,7 +607,7 @@ public UpdateMapTimingStat(Handle:owner, Handle:hndl, const String:error[], any:
 		if (Mode)
 		{
 			SetTimeLabel(TotalTime, TimeLabel, sizeof(TimeLabel));
-			StatsPrintToChat(Client, "你花费了 \x04%s \x01来完成这张地图!", TimeLabel);
+			StatsPrintToChat(Client, "你花费了 {green}%s {default}来完成这张地图!", TimeLabel);
 		}
 
 		if(mode > 0)
@@ -676,11 +676,11 @@ public InitializeRankVote(client)
 		{
 			if (EngineVersion1 == Engine_Left4Dead)
 			{
-				StatsPrintToChatPreFormatted2(client, true, "The \x04Rank Vote \x01is enabled in \x03Versus \x01gamemode!");
+				StatsPrintToChatPreFormatted2(client, true, "The {green}Rank Vote {default}is enabled in {lightgreen}Versus {default}gamemode!");
 			}
 			else
 			{
-				StatsPrintToChatPreFormatted2(client, true, "The \x04Rank Vote \x01is enabled in \x03Versus\x01, \x03Realism Versus \x01and \x03Scavenge \x01gamemodes!");
+				StatsPrintToChatPreFormatted2(client, true, "The {green}Rank Vote {default}is enabled in {lightgreen}Versus{default}, {lightgreen}Realism Versus {default}and {lightgreen}Scavenge {default}gamemodes!");
 			}
 		}
 
@@ -708,7 +708,7 @@ public InitializeRankVote(client)
 
 	if (!IsAdmin && client > 0 && GetTrieValue(PlayerRankVoteTrie, ClientID, team))
 	{
-		StatsPrintToChatPreFormatted2(client, true, "You can initiate a \x04Rank Vote \x01only once per map!");
+		StatsPrintToChatPreFormatted2(client, true, "You can initiate a {green}Rank Vote {default}only once per map!");
 		return;
 	}
 
@@ -747,11 +747,11 @@ public InitializeRankVote(client)
 		decl String:UserName[MAX_LINE_WIDTH];
 		GetClientName(client, UserName, sizeof(UserName));
 
-		StatsPrintToChatAll2(true, "The \x04Rank Vote \x01was initiated by \x05%s\x01!", UserName);
+		StatsPrintToChatAll2(true, "The {green}Rank Vote {default}was initiated by {olive}%s{default}!", UserName);
 	}
 	else
 	{
-		StatsPrintToChatAllPreFormatted2(true, "The \x04Rank Vote \x01was initiated from Server Console!");
+		StatsPrintToChatAllPreFormatted2(true, "The {green}Rank Vote {default}was initiated from Server Console!");
 	}
 }
 
@@ -961,7 +961,7 @@ public StatsPrintToChatPreFormatted2(Client, bool:Forced, const String:Message[]
 		return;
 	}
 
-	PrintToChat(Client, "%t", "L4DStats_RankMessage", Message);
+	CPrintToChat(Client, "%t", "L4DStats_RankMessage", Message);
 }
 
 stock StatsGetClientTeam(client)
@@ -1055,7 +1055,7 @@ ShowMOTD(client, bool:forced=false)
 		return;
 	}
 
-	StatsPrintToChat2(client, forced, "\x05%s: \x01%s", MOTD_TITLE, MessageOfTheDay);
+	StatsPrintToChat2(client, forced, "{olive}%s: {default}%s", MOTD_TITLE, MessageOfTheDay);
 }
 
 AnnouncePlayerConnect(client)

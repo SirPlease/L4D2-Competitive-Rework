@@ -48,6 +48,7 @@ public Plugin myinfo =
 // Includes
 // ====================================================================================================
 #include <sourcemod>
+#include <colors>
 #include <sdktools>
 #include <sdkhooks>
 
@@ -1040,13 +1041,13 @@ Action CmdInfo(int client, int args)
 
     if (entity == -1)
     {
-        PrintToChat(client, "%t", "L4DRandomBeamItem_InvalidTarget");
+        CPrintToChat(client, "%t", "L4DRandomBeamItem_InvalidTarget");
         return Plugin_Handled;
     }
 
     if (ge_iChildEntRef[entity] == INVALID_ENT_REFERENCE)
     {
-        PrintToChat(client, "%t", "L4DRandomBeamItem_TargetEntityNoBeam");
+        CPrintToChat(client, "%t", "L4DRandomBeamItem_TargetEntityNoBeam");
         return Plugin_Handled;
     }
 
@@ -1054,7 +1055,7 @@ Action CmdInfo(int client, int args)
     if (beam == INVALID_ENT_REFERENCE)
     {
         ge_iChildEntRef[entity] = INVALID_ENT_REFERENCE;
-        PrintToChat(client, "%t", "L4DRandomBeamItem_TargetEntityNoBeam");
+        CPrintToChat(client, "%t", "L4DRandomBeamItem_TargetEntityNoBeam");
         return Plugin_Handled;
     }
 
@@ -1074,7 +1075,7 @@ Action CmdInfo(int client, int args)
     char modelname[PLATFORM_MAX_PATH];
     GetEntPropString(entity, Prop_Data, "m_ModelName", modelname, sizeof(modelname));
 
-    PrintToChat(client, "%t", "L4DRandomBeamItem_BeamIndexTargetIndexClassname", beam, entity, classname, modelname, rgb[0], rgb[1], rgb[2], color, GetRGB_Brightness(rgb), RoundFloat(length), RoundFloat(width), hdrColorScale);
+    CPrintToChat(client, "%t", "L4DRandomBeamItem_BeamIndexTargetIndexClassname", beam, entity, classname, modelname, rgb[0], rgb[1], rgb[2], color, GetRGB_Brightness(rgb), RoundFloat(length), RoundFloat(width), hdrColorScale);
 
     return Plugin_Handled;
 }
@@ -1090,7 +1091,7 @@ Action CmdReload(int client, int args)
     LateLoad();
 
     if (IsValidClient(client))
-        PrintToChat(client, "%t", "L4DRandomBeamItem_BeamConfigsReloaded");
+        CPrintToChat(client, "%t", "L4DRandomBeamItem_BeamConfigsReloaded");
 
     return Plugin_Handled;
 }
@@ -1106,13 +1107,13 @@ Action CmdRemove(int client, int args)
 
     if (entity == -1)
     {
-        PrintToChat(client, "%t", "L4DRandomBeamItem_InvalidTarget");
+        CPrintToChat(client, "%t", "L4DRandomBeamItem_InvalidTarget");
         return Plugin_Handled;
     }
 
     if (ge_iChildEntRef[entity] == INVALID_ENT_REFERENCE)
     {
-        PrintToChat(client, "%t", "L4DRandomBeamItem_TargetEntityNoBeam");
+        CPrintToChat(client, "%t", "L4DRandomBeamItem_TargetEntityNoBeam");
         return Plugin_Handled;
     }
 
@@ -1120,13 +1121,13 @@ Action CmdRemove(int client, int args)
     if (beam == INVALID_ENT_REFERENCE)
     {
         ge_iChildEntRef[entity] = INVALID_ENT_REFERENCE;
-        PrintToChat(client, "%t", "L4DRandomBeamItem_TargetEntityNoBeam");
+        CPrintToChat(client, "%t", "L4DRandomBeamItem_TargetEntityNoBeam");
         return Plugin_Handled;
     }
     else
     {
         AcceptEntityInput(beam, "Kill");
-        PrintToChat(client, "%t", "L4DRandomBeamItem_RemovedTargetEntityPluginBeam");
+        CPrintToChat(client, "%t", "L4DRandomBeamItem_RemovedTargetEntityPluginBeam");
         return Plugin_Handled;
     }
 }
@@ -1138,7 +1139,7 @@ Action CmdRemoveAll(int client, int args)
     RemoveAll();
 
     if (IsValidClient(client))
-        PrintToChat(client, "%t", "L4DRandomBeamItem_RemovedAllBeamsCreatedPlugin");
+        CPrintToChat(client, "%t", "L4DRandomBeamItem_RemovedAllBeamsCreatedPlugin");
 
     return Plugin_Handled;
 }
@@ -1154,7 +1155,7 @@ Action CmdAdd(int client, int args)
 
     if (entity == -1)
     {
-        PrintToChat(client, "%t", "L4DRandomBeamItem_InvalidTarget");
+        CPrintToChat(client, "%t", "L4DRandomBeamItem_InvalidTarget");
         return Plugin_Handled;
     }
 
@@ -1193,7 +1194,7 @@ Action CmdAdd(int client, int args)
 
     CreateBeam(entity, g_iDefaultConfig);
 
-    PrintToChat(client, "%t", "L4DRandomBeamItem_BeamAddedTargetEntity");
+    CPrintToChat(client, "%t", "L4DRandomBeamItem_BeamAddedTargetEntity");
 
     return Plugin_Handled;
 }

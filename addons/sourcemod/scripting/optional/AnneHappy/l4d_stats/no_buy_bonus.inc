@@ -77,13 +77,13 @@ stock NoBuyBonus_TryAwardSurvivors()
 
 	if (IsGaoJiRenJiEnabled())
 	{
-		StatsPrintToChatAll("\x01[\x04RANK\x01]\x04由于开启了高级人机，不能获得额外过关积分");
+		StatsPrintToChatAll("{default}[{green}RANK{default}]{green}由于开启了高级人机，不能获得额外过关积分");
 		return;
 	}
 
 	if (!IsThisRoundValid())
 	{
-		StatsPrintToChatAll("\x01[\x04RANK\x01]\x04由于关闭了tank连跳，不能获得额外过关积分");
+		StatsPrintToChatAll("{default}[{green}RANK{default}]{green}由于关闭了tank连跳，不能获得额外过关积分");
 		return;
 	}
 
@@ -106,5 +106,5 @@ stock NoBuyBonus_TryAwardSurvivors()
 	ScoreLog_ClearContext();
 
 	if (Awarded > 0)
-		StatsPrintToChatAll("\x01[\x04RANK\x01]\x04幸存者强势通过当前关卡，没花费任何B数，获得额外%d过关积分", Score);
+		StatsPrintToChatAll("{default}[{green}RANK{default}]{green}幸存者强势通过当前关卡，没花费任何B数，获得额外%d过关积分", Score);
 }

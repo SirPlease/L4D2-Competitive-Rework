@@ -95,12 +95,12 @@ public Action:timer_EndCharge(Handle:timer, any:data)
 		Mode = GetConVarInt(cvar_AnnounceMode);
 
 	if ((Mode == 1 || Mode == 2) && IsClientConnected(data) && IsClientInGame(data))
-		StatsPrintToChat(data, "你用牛撞了\x03%i \x01幸存者获得了 \x04%i \x01分!", Counter, Score);
+		StatsPrintToChat(data, "你用牛撞了{lightgreen}%i {default}幸存者获得了 {green}%i {default}分!", Counter, Score);
 	else if (Mode == 3)
 	{
 		decl String:AttackerName[MAX_LINE_WIDTH];
 		GetClientName(data, AttackerName, sizeof(AttackerName));
-		StatsPrintToChatAll("\x05%s \x01用牛撞了\x03%i \x01幸存者获得了 \x04%i \x01分s!", AttackerName, Counter, Score);
+		StatsPrintToChatAll("{olive}%s {default}用牛撞了{lightgreen}%i {default}幸存者获得了 {green}%i {default}分s!", AttackerName, Counter, Score);
 	}
 }
 
@@ -205,14 +205,14 @@ public Action:timer_FriendlyFireDamageEnd(Handle:timer, any:dp)
 	        QuarterRank_RecordField(Attacker, "award_friendlyfire", 1);
 	        QuarterRank_RecordScore(Attacker, Score * (-1));
 
-        new Mode = 0;
-        if (Score > 0)
-        	Mode = GetConVarInt(cvar_AnnounceMode);
-        
-        if ((Mode == 1 || Mode == 2) && IsClientConnected(Attacker) && IsClientInGame(Attacker))
-        	StatsPrintToChat(Attacker, "你因为造成了\x05(%i 血)的友伤\x01  \x03失去了 \x04%i \x01分!", HumanDamage + BotDamage, Score);
-        else if (Mode == 3)
-        	StatsPrintToChatAll("\x05%s \x01因为造成了\x05(%i 血)的友伤\x01  \x03失去了 \x04%i \x01分!", AttackerName,HumanDamage + BotDamage, Score );
+		new Mode = 0;
+		if (Score > 0)
+			Mode = GetConVarInt(cvar_AnnounceMode);
+
+		if ((Mode == 1 || Mode == 2) && IsClientConnected(Attacker) && IsClientInGame(Attacker))
+			StatsPrintToChat(Attacker, "你因为造成了{olive}(%i 血)的友伤{default}  {lightgreen}失去了 {green}%i {default}分!", HumanDamage + BotDamage, Score);
+		else if (Mode == 3)
+			StatsPrintToChatAll("{olive}%s {default}因为造成了{olive}(%i 血)的友伤{default}  {lightgreen}失去了 {green}%i {default}分!", AttackerName,HumanDamage + BotDamage, Score );
 
 }
 
@@ -250,7 +250,7 @@ public Action:timer_ShuffleTeams(Handle:timer, any:data)
 
 	if (counter <= 1)
 	{
-		StatsPrintToChatAllPreFormatted2(true, "Team shuffle by player PPM failed because there was \x03not enough players\x01!");
+		StatsPrintToChatAllPreFormatted2(true, "Team shuffle by player PPM failed because there was {lightgreen}not enough players{default}!");
 		return;
 	}
 
@@ -272,7 +272,7 @@ public Action:timer_RankVote(Handle:timer, any:data)
 
 		CheckRankVotes(humans, votes, yesvotes, novotes, WinningVoteCount);
 
-		StatsPrintToChatAll2(true, "Vote to shuffle teams by player PPM \x03%s \x01with \x04%i (yes) against %i (no)\x01.", (yesvotes > novotes ? "PASSED" : "DID NOT PASS"), yesvotes, novotes);
+		StatsPrintToChatAll2(true, "Vote to shuffle teams by player PPM {lightgreen}%s {default}with {green}%i (yes) against %i (no){default}.", (yesvotes > novotes ? "PASSED" : "DID NOT PASS"), yesvotes, novotes);
 
 		if (yesvotes > novotes)
 		{
@@ -316,7 +316,7 @@ public Action:timer_UpdatePlayers(Handle:timer, Handle:hndl)
 	{
 		if (GetConVarBool(cvar_DisabledMessages))
 		{
-			StatsPrintToChatAllPreFormatted("求生之路排名系统现在处于 \x04关闭\x01 状态, 没有足够玩家!");
+			StatsPrintToChatAllPreFormatted("求生之路排名系统现在处于 {green}关闭{default} 状态, 没有足够玩家!");
 		}
 
 		return;
@@ -443,12 +443,12 @@ public Action:timer_ShowTimerScore(Handle:timer, Handle:hndl)
 			{
 				if (Mode == 1 || Mode == 2)
 				{
-					StatsPrintToChat(i, "你击杀了 \x05%i \x01 个感染者获得\x04%i \x01分!", TimerKills[i], TimerPoints[i]);
+					StatsPrintToChat(i, "你击杀了 {olive}%i {default} 个感染者获得{green}%i {default}分!", TimerKills[i], TimerPoints[i]);
 				}
 				else if (Mode == 3)
 				{
 					GetClientName(i, Name, sizeof(Name));
-					StatsPrintToChatAll("\x05%s \x01击杀了 \x05%i \x01 个感染者获得\x04%i \x01分!", Name, TimerKills[i], TimerPoints[i]);
+					StatsPrintToChatAll("{olive}%s {default}击杀了 {olive}%i {default} 个感染者获得{green}%i {default}分!", Name, TimerKills[i], TimerPoints[i]);
 				}
 			}
 

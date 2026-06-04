@@ -1,6 +1,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 #include <sourcemod>
+#include <colors>
 #include <left4dhooks>
 #include <l4d2_nativevote>
 
@@ -165,7 +166,7 @@ Action cmdSetNext(int client, int args) {
 	}
 		
 	if (args != 1) {
-		ReplyToCommand(client, "\x01!setnext/sm_setnext <\x05第一章节地图代码\x01>.");
+		ReplyToCommand(client, "{default}!setnext/sm_setnext <{olive}第一章节地图代码{default}>.");
 		return Plugin_Handled;
 	}
 
@@ -180,9 +181,9 @@ Action cmdSetNext(int client, int args) {
 	int Id = FindMapId(map, FIRST);
 	strcopy(g_sNextMap, sizeof g_sNextMap, map);
 	if (Id == -1)
-		Format(buffer, sizeof buffer, "\x01下一张地图已设置为 \x05%s\x01.", map);
+		Format(buffer, sizeof buffer, "{default}下一张地图已设置为 {olive}%s{default}.", map);
 	else
-		Format(buffer, sizeof buffer, "\x01下一张地图已设置为 \x05%s \x01(\x05%s\x01)\x01.", map, g_sValveMaps[Id][TRANSLATE]);
+		Format(buffer, sizeof buffer, "{default}下一张地图已设置为 {olive}%s {default}({olive}%s{default}){default}.", map, g_sValveMaps[Id][TRANSLATE]);
 
 	ReplyToCommand(client, "%s", buffer);
 	return Plugin_Handled;
@@ -384,12 +385,12 @@ Action Timer_StartFinaleFailureVote(Handle timer) {
 void FinaleFailureVote_Handler(L4D2NativeVote vote, VoteAction action, int param1, int param2) {
 	switch (action) {
 		case VoteAction_Start: {
-			PrintToChatAll("%t", "MapChanger_VoteWhetherEnableRescueMap", g_iFinaleFailureCount);
+			CPrintToChatAll("%t", "MapChanger_VoteWhetherEnableRescueMap", g_iFinaleFailureCount);
 		}
 
 		case VoteAction_PlayerVoted: {
 			if (IsClientInGame(param1) && !IsFakeClient(param1))
-				PrintToChatAll("%t", "MapChanger_Voted", param1);
+				CPrintToChatAll("%t", "MapChanger_Voted", param1);
 		}
 
 		case VoteAction_End: {
@@ -398,12 +399,12 @@ void FinaleFailureVote_Handler(L4D2NativeVote vote, VoteAction action, int param
 			if (vote.YesCount > vote.PlayerCount / 2) {
 				g_bFinaleFailureChangeEnabled = true;
 				vote.SetPass("已启用");
-				PrintToChatAll("%t", "MapChanger_RescueMapEnabledFailedAutomatically", g_iFinaleFailureCount);
+				CPrintToChatAll("%t", "MapChanger_RescueMapEnabledFailedAutomatically", g_iFinaleFailureCount);
 			}
 			else {
 				g_bFinaleFailureChangeEnabled = false;
 				vote.SetFail();
-				PrintToChatAll("%t", "MapChanger_RescueMapTurnedOffAutomatically");
+				CPrintToChatAll("%t", "MapChanger_RescueMapTurnedOffAutomatically");
 			}
 		}
 	}

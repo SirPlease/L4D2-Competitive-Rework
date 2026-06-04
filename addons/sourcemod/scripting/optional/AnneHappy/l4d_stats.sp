@@ -1,5 +1,6 @@
 #pragma semicolon 1
 #include <sourcemod>
+#include <colors>
 #include <clientprefs>
 #include <sdktools>
 #include <left4dhooks>

@@ -2,41 +2,41 @@
 {
 	"GlobalChat_FullServerNormalFullServer"
 	{
-		"en"		"\\x04[Full server]\\x01 You have %s normal full server chat."
-		"chi"		"\\x04[全服]\\x01 你已%s普通全服聊天。"
-		"zho"		"\\x04[全服]\\x01 你已%s普通全服聊天。"
-		"jp"		"\\x04[フルサーバー]\\x01 %s の通常のフルサーバーチャットがあります。"
-		"ko"		"\\x04[풀서버]\\x01 %s 일반 풀서버 채팅이 있습니다."
-		"vi"		"\\x04[Máy chủ đầy đủ]\\x01 Bạn có trò chuyện bình thường trên toàn máy chủ %s."
+		"en"		"{green}[Full server]{default} You have %s normal full server chat."
+		"chi"		"{green}[全服]{default} 你已%s普通全服聊天。"
+		"zho"		"{green}[全服]{default} 你已%s普通全服聊天。"
+		"jp"		"{green}[フルサーバー]{default} %s の通常のフルサーバーチャットがあります。"
+		"ko"		"{green}[풀서버]{default} %s 일반 풀서버 채팅이 있습니다."
+		"vi"		"{green}[Máy chủ đầy đủ]{default} Bạn có trò chuyện bình thường trên toàn máy chủ %s."
 	}
 
 	"GlobalChat_AllServersAskedTipTeammates"
 	{
-		"en"		"\\x04[All servers]\\x01 You have %s asked for a tip from your teammates."
-		"chi"		"\\x04[全服]\\x01 你已%s找队友提示。"
-		"zho"		"\\x04[全服]\\x01 你已%s找隊友提示。"
-		"jp"		"\\x04[全サーバー]\\x01 %s がチームメイトからのヒントを求めています。"
-		"ko"		"\\x04[모든 서버]\\x01 %s가 팀원에게 팁을 요청했습니다."
-		"vi"		"\\x04[Tất cả máy chủ]\\x01 Bạn có %s đã xin tiền boa từ đồng đội của mình."
+		"en"		"{green}[All servers]{default} You have %s asked for a tip from your teammates."
+		"chi"		"{green}[全服]{default} 你已%s找队友提示。"
+		"zho"		"{green}[全服]{default} 你已%s找隊友提示。"
+		"jp"		"{green}[全サーバー]{default} %s がチームメイトからのヒントを求めています。"
+		"ko"		"{green}[모든 서버]{default} %s가 팀원에게 팁을 요청했습니다."
+		"vi"		"{green}[Tất cả máy chủ]{default} Bạn có %s đã xin tiền boa từ đồng đội của mình."
 	}
 
 	"GlobalChat_SummonTeammates"
 	{
-		"en"		"\\x04%s \\x05%s \\x01玩家在 \\x03%s \\x01召唤队友"
-		"chi"		"\\x04%s \\x05%s \\x01玩家在 \\x03%s \\x01召唤队友"
-		"zho"		"\\x04%s \\x05%s \\x01玩家在 \\x03%s \\x01召唤队友"
-		"jp"		"\\x04%s \\x05%s \\x01玩家在 \\x03%s \\x01召唤队友"
-		"ko"		"\\x04%s \\x05%s \\x01玩家在 \\x03%s \\x01召唤队友"
-		"vi"		"\\x04%s \\x05%s \\x01玩家在 \\x03%s \\x01召唤队友"
+		"en"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友"
+		"chi"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友"
+		"zho"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友"
+		"jp"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友"
+		"ko"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友"
+		"vi"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友"
 	}
 
 	"GlobalChat_SummonTeammatesWithMessage"
 	{
-		"en"		"\\x04%s \\x05%s \\x01玩家在 \\x03%s \\x01召唤队友\n\\x01留言: \\x05%s"
-		"chi"		"\\x04%s \\x05%s \\x01玩家在 \\x03%s \\x01召唤队友\n\\x01留言: \\x05%s"
-		"zho"		"\\x04%s \\x05%s \\x01玩家在 \\x03%s \\x01召唤队友\n\\x01留言: \\x05%s"
-		"jp"		"\\x04%s \\x05%s \\x01玩家在 \\x03%s \\x01召唤队友\n\\x01留言: \\x05%s"
-		"ko"		"\\x04%s \\x05%s \\x01玩家在 \\x03%s \\x01召唤队友\n\\x01留言: \\x05%s"
-		"vi"		"\\x04%s \\x05%s \\x01玩家在 \\x03%s \\x01召唤队友\n\\x01留言: \\x05%s"
+		"en"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友\n{default}留言: {olive}%s"
+		"chi"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友\n{default}留言: {olive}%s"
+		"zho"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友\n{default}留言: {olive}%s"
+		"jp"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友\n{default}留言: {olive}%s"
+		"ko"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友\n{default}留言: {olive}%s"
+		"vi"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友\n{default}留言: {olive}%s"
 	}
 }

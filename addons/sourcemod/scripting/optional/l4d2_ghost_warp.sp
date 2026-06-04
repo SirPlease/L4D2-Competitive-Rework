@@ -2,13 +2,14 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <colors>
 #include <sdkhooks>
 #include <sdktools>
 #include <left4dhooks>
 #include <l4d2util_constants>
 
 #define PLUGIN_TAG					"[GhostWarp]"
-#define PLUGIN_TAG_COLOR			"\x01[\x03GhostWarp\x01]"
+#define PLUGIN_TAG_COLOR			"{default}[{lightgreen}GhostWarp{default}]"
 
 enum struct eSurvFlow
 {
@@ -109,7 +110,7 @@ Action Cmd_WarpToSurvivor(int iClient, int iArgs)
 	}
 
 	if (!(g_hCvarGhostWarpFlag.IntValue & eAllowCommand)) {
-		PrintToChat(iClient, "%t", "L4D2GhostWarp_CommandDisabled", PLUGIN_TAG_COLOR);
+		CPrintToChat(iClient, "%t", "L4D2GhostWarp_CommandDisabled", PLUGIN_TAG_COLOR);
 		return Plugin_Handled;
 	}
 
@@ -121,13 +122,13 @@ Action Cmd_WarpToSurvivor(int iClient, int iArgs)
 	}
 
 	if (g_fGhostWarpDelay[iClient] >= GetGameTime()) {
-		PrintToChat(iClient, "%t", "L4D2GhostWarp_CanUseCommandOftenWait", PLUGIN_TAG_COLOR, g_fGhostWarpDelay[iClient] - GetGameTime());
+		CPrintToChat(iClient, "%t", "L4D2GhostWarp_CanUseCommandOftenWait", PLUGIN_TAG_COLOR, g_fGhostWarpDelay[iClient] - GetGameTime());
 		return Plugin_Handled;
 	}
 
 	if (iArgs < 1) {
 		if (!WarpToRandomSurvivor(iClient, g_iLastTargetSurvivor[iClient])) {
-			PrintToChat(iClient, "%t", "L4D2GhostWarp_NoSurvivorsFound", PLUGIN_TAG_COLOR);
+			CPrintToChat(iClient, "%t", "L4D2GhostWarp_NoSurvivorsFound", PLUGIN_TAG_COLOR);
 		}
 
 		return Plugin_Handled;
@@ -143,7 +144,7 @@ Action Cmd_WarpToSurvivor(int iClient, int iArgs)
 			int iSurvivorIndex = GetSurvivorOfFlowRank(iSurvivorFlowRank);
 
 			if (iSurvivorIndex == 0) {
-				PrintToChat(iClient, "%t", "L4D2GhostWarp_NoSurvivorsFound", PLUGIN_TAG_COLOR);
+				CPrintToChat(iClient, "%t", "L4D2GhostWarp_NoSurvivorsFound", PLUGIN_TAG_COLOR);
 
 				return Plugin_Handled;
 			}
@@ -158,8 +159,8 @@ Action Cmd_WarpToSurvivor(int iClient, int iArgs)
 		char sCmdName[18];
 		GetCmdArg(0, sCmdName, sizeof(sCmdName));
 
-		PrintToChat(iClient, "%t", "L4D2GhostWarp_EnteredInvalidSurvivorIndex", PLUGIN_TAG_COLOR, (!bWarp) ? "" : " Teleport to a \x04random\x01 survivor!");
-		PrintToChat(iClient, "%t", "L4D2GhostWarp_Usage1", PLUGIN_TAG_COLOR, sCmdName, g_hCvarSurvivorLimit.IntValue);
+		CPrintToChat(iClient, "%t", "L4D2GhostWarp_EnteredInvalidSurvivorIndex", PLUGIN_TAG_COLOR, (!bWarp) ? "" : " Teleport to a {green}random{default} survivor!");
+		CPrintToChat(iClient, "%t", "L4D2GhostWarp_Usage1", PLUGIN_TAG_COLOR, sCmdName, g_hCvarSurvivorLimit.IntValue);
 
 		return Plugin_Handled;
 	}
@@ -173,8 +174,8 @@ Action Cmd_WarpToSurvivor(int iClient, int iArgs)
 		char sCmdName[18];
 		GetCmdArg(0, sCmdName, sizeof(sCmdName));
 
-		PrintToChat(iClient, "%t", "L4D2GhostWarp_EnteredWrongSurvivorName", PLUGIN_TAG_COLOR, (!bWarp) ? "" : " Teleport to a \x04random\x01 survivor!");
-		PrintToChat(iClient, "%t", "L4D2GhostWarp_UsageSurvivorName", PLUGIN_TAG_COLOR, sCmdName);
+		CPrintToChat(iClient, "%t", "L4D2GhostWarp_EnteredWrongSurvivorName", PLUGIN_TAG_COLOR, (!bWarp) ? "" : " Teleport to a {green}random{default} survivor!");
+		CPrintToChat(iClient, "%t", "L4D2GhostWarp_UsageSurvivorName", PLUGIN_TAG_COLOR, sCmdName);
 
 		return Plugin_Handled;
 	}
@@ -183,12 +184,12 @@ Action Cmd_WarpToSurvivor(int iClient, int iArgs)
 	int iSurvivorIndex = GetGenderOfSurvivor(iGender, iSurvivorCount);
 
 	if (iSurvivorCount == 0) {
-		PrintToChat(iClient, "%t", "L4D2GhostWarp_NoSurvivorsFound", PLUGIN_TAG_COLOR);
+		CPrintToChat(iClient, "%t", "L4D2GhostWarp_NoSurvivorsFound", PLUGIN_TAG_COLOR);
 		return Plugin_Handled;
 	}
 
 	if (iSurvivorIndex == 0) {
-		PrintToChat(iClient, "%t", "L4D2GhostWarp_SurvivorSpecifiedNotFound", PLUGIN_TAG_COLOR);
+		CPrintToChat(iClient, "%t", "L4D2GhostWarp_SurvivorSpecifiedNotFound", PLUGIN_TAG_COLOR);
 		return Plugin_Handled;
 	}
 
@@ -222,7 +223,7 @@ void Hook_OnPostThinkPost(int iClient)
 	// For some reason, the game resets button 'IN_ATTACK2' for infected ghosts at some point.
 	// So we need spam protection.
 	if (g_fGhostWarpDelay[iClient] >= GetGameTime()) {
-		//PrintToChat(iClient, "%t", "L4D2GhostWarp_CanUseCommandOftenWait", PLUGIN_TAG_COLOR, g_fGhostWarpDelay[iClient] - GetGameTime());
+		//CPrintToChat(iClient, "%t", "L4D2GhostWarp_CanUseCommandOftenWait", PLUGIN_TAG_COLOR, g_fGhostWarpDelay[iClient] - GetGameTime());
 		return;
 	}
 

@@ -63,21 +63,21 @@
 
 	"L4D2MMAdminMenu_SMAdminForcingMapChange"
 	{
-		"en"		"\\x04[SM]\\x01 Admin is forcing a map change to \\x03%s\\x01."
-		"chi"		"\\x04[SM]\\x01 管理员正在强制将地图更改为 \\x03%s\\x01。"
-		"zho"		"\\x04[SM]\\x01 管理員正在強制將地圖變更為 \\x03%s\\x01。"
-		"jp"		"\\x04[SM]\\x01 管理者はマップを \\x03%s\\x01 に強制的に変更しています。"
-		"ko"		"\\x04[SM]\\x01 관리자가 \\x03%s\\x01로 지도를 강제로 변경하고 있습니다."
-		"vi"		"\\x04[SM]\\x01 Quản trị viên đang buộc thay đổi bản đồ thành \\x03%s\\x01."
+		"en"		"{green}[SM]{default} Admin is forcing a map change to {lightgreen}%s{default}."
+		"chi"		"{green}[SM]{default} 管理员正在强制将地图更改为 {lightgreen}%s{default}。"
+		"zho"		"{green}[SM]{default} 管理員正在強制將地圖變更為 {lightgreen}%s{default}。"
+		"jp"		"{green}[SM]{default} 管理者はマップを {lightgreen}%s{default} に強制的に変更しています。"
+		"ko"		"{green}[SM]{default} 관리자가 {lightgreen}%s{default}로 지도를 강제로 변경하고 있습니다."
+		"vi"		"{green}[SM]{default} Quản trị viên đang buộc thay đổi bản đồ thành {lightgreen}%s{default}."
 	}
 
 	"L4D2MMAdminMenu_SMAdminReloadingVPKs"
 	{
-		"en"		"\\x04[SM]\\x01 Admin is reloading VPKs and mission list..."
-		"chi"		"\\x04[SM]\\x01 管理员正在重新加载 VPK 和任务列表..."
-		"zho"		"\\x04[SM]\\x01 管理員正在重新載入 VPK 和任務清單..."
-		"jp"		"\\x04[SM]\\x01 管理者が VPK とミッション リストをリロードしています..."
-		"ko"		"\\x04[SM]\\x01 관리자가 VPK 및 임무 목록을 다시 로드하는 중입니다..."
-		"vi"		"\\x04[SM]\\x01 Admin đang tải lại VPK và danh sách nhiệm vụ..."
+		"en"		"{green}[SM]{default} Admin is reloading VPKs and mission list..."
+		"chi"		"{green}[SM]{default} 管理员正在重新加载 VPK 和任务列表..."
+		"zho"		"{green}[SM]{default} 管理員正在重新載入 VPK 和任務清單..."
+		"jp"		"{green}[SM]{default} 管理者が VPK とミッション リストをリロードしています..."
+		"ko"		"{green}[SM]{default} 관리자가 VPK 및 임무 목록을 다시 로드하는 중입니다..."
+		"vi"		"{green}[SM]{default} Admin đang tải lại VPK và danh sách nhiệm vụ..."
 	}
 }

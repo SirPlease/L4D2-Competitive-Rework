@@ -2,52 +2,52 @@
 {
 	"L4D2Antibaiter_AntibaiterDebugEligiblePlayerZombieclass"
 	{
-		"en"		"\\x03[Antibaiter DEBUG] Eligible player \\x04%N\\x01 is a zombieclass \\x05%d\\x01 alive for \\x05%fs\\x01"
-		"chi"		"\\x03[Antibaiter DEBUG] 符合条件的玩家 \\x04%N\\x01 是 \\x05%d\\x01 的僵尸类 \\x05%fs\\x01"
-		"zho"		"\\x03[Antibaiter DEBUG] 符合條件的玩家 \\x04%N\\x01 是 \\x05%d\\x01 的殭屍類\\x05%fs\\x01"
-		"jp"		"\\x03[アンチバイター デバッグ] 対象となるプレイヤー \\x04%N\\x01 はゾンビクラス \\x05%d\\x01 で \\x05%fs\\x01 に生存しています"
-		"ko"		"\\x03[Antibaiter DEBUG] Eligible player \\x04%N\\x01 is a zombieclass \\x05%d\\x01 alive for \\x05%fs\\x01"
-		"vi"		"\\x03[GỠ LỖI Antibaiter] Người chơi đủ điều kiện \\x04%N\\x01 là một lớp zombie \\x05%d\\x01 còn sống cho \\x05%fs\\x01"
+		"en"		"{lightgreen}[Antibaiter DEBUG] Eligible player {green}%N{default} is a zombieclass {olive}%d{default} alive for {olive}%fs{default}"
+		"chi"		"{lightgreen}[Antibaiter DEBUG] 符合条件的玩家 {green}%N{default} 是 {olive}%d{default} 的僵尸类 {olive}%fs{default}"
+		"zho"		"{lightgreen}[Antibaiter DEBUG] 符合條件的玩家 {green}%N{default} 是 {olive}%d{default} 的殭屍類{olive}%fs{default}"
+		"jp"		"{lightgreen}[アンチバイター デバッグ] 対象となるプレイヤー {green}%N{default} はゾンビクラス {olive}%d{default} で {olive}%fs{default} に生存しています"
+		"ko"		"{lightgreen}[Antibaiter DEBUG] Eligible player {green}%N{default} is a zombieclass {olive}%d{default} alive for {olive}%fs{default}"
+		"vi"		"{lightgreen}[GỠ LỖI Antibaiter] Người chơi đủ điều kiện {green}%N{default} là một lớp zombie {olive}%d{default} còn sống cho {olive}%fs{default}"
 	}
 
 	"L4D2Antibaiter_AntibaiterDebugSpectatorBugDetected"
 	{
-		"en"		"\\x03[Antibaiter DEBUG] Spectator bug detected: \\x04eligibleZombies\\x01=\\x05%d\\x01, \\x04z_max_player_zombies\\x01=\\x05%d\\x01"
-		"chi"		"\\x03[Antibaiter DEBUG] 检测到观众错误：\\x04eligibleZombies\\x01=\\x05%d\\x01， \\x04z_max_player_zombies\\x01=\\x05%d\\x01"
-		"zho"		"\\x03[Antibaiter DEBUG] 偵測到觀眾錯誤：\\x04eligibleZombies\\x01=\\x05%d\\x01， \\x04z_max_player_zombies\\x01=\\x05%d\\x01"
-		"jp"		"\\x03[Antibaiter DEBUG] 観客のバグが検出されました: \\x04eligibleZombies\\x01=\\x05%d\\x01、\\x04z_max_player_zombies\\x01=\\x05%d\\x01"
-		"ko"		"\\x03[안티베이터 디버그] 관중 버그 감지: \\x04eligibleZombies\\x01=\\x05%d\\x01, \\x04z_max_player_zombies\\x01=\\x05%d\\x01"
-		"vi"		"\\x03[GỠ LỖI Antibaiter] Đã phát hiện lỗi khán giả: \\x04eligibleZombies\\x01=\\x05%d\\x01, \\x04z_max_player_zombies\\x01=\\x05%d\\x01"
+		"en"		"{lightgreen}[Antibaiter DEBUG] Spectator bug detected: {green}eligibleZombies{default}={olive}%d{default}, {green}z_max_player_zombies{default}={olive}%d{default}"
+		"chi"		"{lightgreen}[Antibaiter DEBUG] 检测到观众错误：{green}eligibleZombies{default}={olive}%d{default}， {green}z_max_player_zombies{default}={olive}%d{default}"
+		"zho"		"{lightgreen}[Antibaiter DEBUG] 偵測到觀眾錯誤：{green}eligibleZombies{default}={olive}%d{default}， {green}z_max_player_zombies{default}={olive}%d{default}"
+		"jp"		"{lightgreen}[Antibaiter DEBUG] 観客のバグが検出されました: {green}eligibleZombies{default}={olive}%d{default}、{green}z_max_player_zombies{default}={olive}%d{default}"
+		"ko"		"{lightgreen}[안티베이터 디버그] 관중 버그 감지: {green}eligibleZombies{default}={olive}%d{default}, {green}z_max_player_zombies{default}={olive}%d{default}"
+		"vi"		"{lightgreen}[GỠ LỖI Antibaiter] Đã phát hiện lỗi khán giả: {green}eligibleZombies{default}={olive}%d{default}, {green}z_max_player_zombies{default}={olive}%d{default}"
 	}
 
 	"L4D2Antibaiter_AntibaiterDebugMinimumProgressUnsatisfied"
 	{
-		"en"		"\\x03[Antibaiter DEBUG] Minimum progress unsatisfied during \\x05%d\\x01 checks: \\x04initial\\x01=\\x05%f\\x01, \\x04current\\x01=\\x05%f\\x01, \\x04progress\\x01=\\x05%f\\x01"
-		"chi"		"\\x03[Antibaiter DEBUG] \\x05%d\\x01 检查期间未满足的最小进度：\\x04initial\\x01=\\x05%f\\x01， \\x04当前\\x01=\\x05%f\\x01、\\x04进度\\x01=\\x05%f\\x01"
-		"zho"		"\\x03[Antibaiter DEBUG] Minimum progress unsatisfied during \\x05%d\\x01 checks: \\x04initial\\x01=\\x05%f\\x01, \\x04current\\x01=\\x05%f\\x01, \\x04progress\\x01=\\x05%f\\x01"
-		"jp"		"\\x03[Antibaiter DEBUG] \\x05%d\\x01 チェック中に最小限の進行状況が満たされていません: \\x04initial\\x01=\\x05%f\\x01、 \\x04現在\\x01=\\x05%f\\x01、\\x04進捗状況\\x01=\\x05%f\\x01"
-		"ko"		"\\x03[안티베이터 디버그] \\x05%d\\x01 검사 중 최소 진행 상황이 충족되지 않음: \\x04initial\\x01=\\x05%f\\x01, \\x04current\\x01=\\x05%f\\x01, \\x04progress\\x01=\\x05%f\\x01"
-		"vi"		"\\x03[GỠ LỖI Antibaiter] Không đạt tiến độ tối thiểu trong quá trình kiểm tra \\x05%d\\x01: \\x04initial\\x01=\\x05%f\\x01, \\x04current\\x01=\\x05%f\\x01, \\x04progress\\x01=\\x05%f\\x01"
+		"en"		"{lightgreen}[Antibaiter DEBUG] Minimum progress unsatisfied during {olive}%d{default} checks: {green}initial{default}={olive}%f{default}, {green}current{default}={olive}%f{default}, {green}progress{default}={olive}%f{default}"
+		"chi"		"{lightgreen}[Antibaiter DEBUG] {olive}%d{default} 检查期间未满足的最小进度：{green}initial{default}={olive}%f{default}， {green}当前{default}={olive}%f{default}、{green}进度{default}={olive}%f{default}"
+		"zho"		"{lightgreen}[Antibaiter DEBUG] Minimum progress unsatisfied during {olive}%d{default} checks: {green}initial{default}={olive}%f{default}, {green}current{default}={olive}%f{default}, {green}progress{default}={olive}%f{default}"
+		"jp"		"{lightgreen}[Antibaiter DEBUG] {olive}%d{default} チェック中に最小限の進行状況が満たされていません: {green}initial{default}={olive}%f{default}、 {green}現在{default}={olive}%f{default}、{green}進捗状況{default}={olive}%f{default}"
+		"ko"		"{lightgreen}[안티베이터 디버그] {olive}%d{default} 검사 중 최소 진행 상황이 충족되지 않음: {green}initial{default}={olive}%f{default}, {green}current{default}={olive}%f{default}, {green}progress{default}={olive}%f{default}"
+		"vi"		"{lightgreen}[GỠ LỖI Antibaiter] Không đạt tiến độ tối thiểu trong quá trình kiểm tra {olive}%d{default}: {green}initial{default}={olive}%f{default}, {green}current{default}={olive}%f{default}, {green}progress{default}={olive}%f{default}"
 	}
 
 	"L4D2Antibaiter_AntibaiterDebugCountdownRunning"
 	{
-		"en"		"\\x03[Antibaiter DEBUG] Countdown is \\x05running\\x01"
-		"chi"		"\\x03[反诱饵调试] 倒计时为 \\x05running\\x01"
-		"zho"		"\\x03[反誘餌調試] 倒數計時為 \\x05running\\x01"
-		"jp"		"\\x03[アンチバイター デバッグ] カウントダウンは \\x05running\\x01"
-		"ko"		"\\x03[안티베이터 DEBUG] 카운트다운은 \\x05running\\x01입니다"
-		"vi"		"\\x03[GỠ LỖI Antibaiter] Đếm ngược là \\x05running\\x01"
+		"en"		"{lightgreen}[Antibaiter DEBUG] Countdown is {olive}running{default}"
+		"chi"		"{lightgreen}[反诱饵调试] 倒计时为 {olive}running{default}"
+		"zho"		"{lightgreen}[反誘餌調試] 倒數計時為 {olive}running{default}"
+		"jp"		"{lightgreen}[アンチバイター デバッグ] カウントダウンは {olive}running{default}"
+		"ko"		"{lightgreen}[안티베이터 DEBUG] 카운트다운은 {olive}running{default}입니다"
+		"vi"		"{lightgreen}[GỠ LỖI Antibaiter] Đếm ngược là {olive}running{default}"
 	}
 
 	"L4D2Antibaiter_AntibaiterDebugCountdownElapsedLaunching"
 	{
-		"en"		"\\x03[Antibaiter DEBUG] Countdown has \\x04elapsed\\x01! Launching horde and resetting checks counter"
-		"chi"		"\\x03[反诱饵调试] 倒计时有\\x04elapsed\\x01！启动部落并重置检查计数器"
-		"zho"		"\\x03[反誘餌調試] 倒數計時有\\x04elapsed\\x01！啟動部落並重置檢查計數器"
-		"jp"		"\\x03[アンチバイター デバッグ] カウントダウンには \\x04elapsed\\x01 があります!大群を起動してチェックカウンターをリセットする"
-		"ko"		"\\x03[안티베이터 디버그] 카운트다운에 \\x04elapsed\\x01가 발생했습니다! 호드 시작 및 수표 카운터 재설정"
-		"vi"		"\\x03[GỠ LỖI Antibaiter] Đếm ngược có \\x04elapsed\\x01! Khởi chạy nhóm và đặt lại bộ đếm séc"
+		"en"		"{lightgreen}[Antibaiter DEBUG] Countdown has {green}elapsed{default}! Launching horde and resetting checks counter"
+		"chi"		"{lightgreen}[反诱饵调试] 倒计时有{green}elapsed{default}！启动部落并重置检查计数器"
+		"zho"		"{lightgreen}[反誘餌調試] 倒數計時有{green}elapsed{default}！啟動部落並重置檢查計數器"
+		"jp"		"{lightgreen}[アンチバイター デバッグ] カウントダウンには {green}elapsed{default} があります!大群を起動してチェックカウンターをリセットする"
+		"ko"		"{lightgreen}[안티베이터 디버그] 카운트다운에 {green}elapsed{default}가 발생했습니다! 호드 시작 및 수표 카운터 재설정"
+		"vi"		"{lightgreen}[GỠ LỖI Antibaiter] Đếm ngược có {green}elapsed{default}! Khởi chạy nhóm và đặt lại bộ đếm séc"
 	}
 
 	"L4D2Antibaiter_AntiBaiterPrepareIncomingHorde"
@@ -62,22 +62,22 @@
 
 	"L4D2Antibaiter_AntibaiterDebugCountdownNotRunning"
 	{
-		"en"		"\\x03[Antibaiter DEBUG] Countdown is \\x05not running\\x01. Initiating it..."
-		"chi"		"\\x03[反诱饵调试] 倒计时为 \\x05 未运行 \\x01。正在启动它..."
-		"zho"		"\\x03[反誘餌調試] 倒數計時為 \\x05 未運行 \\x01。正在啟動它..."
-		"jp"		"\\x03[Antibaiter DEBUG] カウントダウンは \\x05 実行されていません \\x01。それを開始しています..."
-		"ko"		"\\x03[Antibaiter DEBUG] 카운트다운은 \\x05가 실행되지 않음\\x01입니다. 시작하는 중..."
-		"vi"		"\\x03[GỠ LỖI Antibaiter] Đếm ngược là \\x05không chạy\\x01. Bắt đầu nó..."
+		"en"		"{lightgreen}[Antibaiter DEBUG] Countdown is {olive}not running{default}. Initiating it..."
+		"chi"		"{lightgreen}[反诱饵调试] 倒计时为 {olive} 未运行 {default}。正在启动它..."
+		"zho"		"{lightgreen}[反誘餌調試] 倒數計時為 {olive} 未運行 {default}。正在啟動它..."
+		"jp"		"{lightgreen}[Antibaiter DEBUG] カウントダウンは {olive} 実行されていません {default}。それを開始しています..."
+		"ko"		"{lightgreen}[Antibaiter DEBUG] 카운트다운은 {olive}가 실행되지 않음{default}입니다. 시작하는 중..."
+		"vi"		"{lightgreen}[GỠ LỖI Antibaiter] Đếm ngược là {olive}không chạy{default}. Bắt đầu nó..."
 	}
 
 	"L4D2Antibaiter_AntibaiterDebugSurvivorProgressIncreased"
 	{
-		"en"		"\\x03[Antibaiter DEBUG] Survivor progress has \\x05increased\\x01 beyond the minimum threshold. Resetting the algorithm..."
-		"chi"		"\\x03[Antibaiter DEBUG] 幸存者进度\\x05增加\\x01超出最小阈值。重置算法..."
-		"zho"		"\\x03[Antibaiter DEBUG] 倖存者進度\\x05增加\\x01超出最小閾值。重置演算法..."
-		"jp"		"\\x03[Antibaiter DEBUG] サバイバーの進行状況は \\x05 増加し、最小しきい値を超えています。アルゴリズムをリセットしています..."
-		"ko"		"\\x03[Antibaiter DEBUG] 생존자 진행 상황에서 \\x05increased\\x01가 최소 임계값을 초과했습니다. 알고리즘 재설정 중..."
-		"vi"		"\\x03[Antibaiter DEBUG] Tiến trình sống sót có \\x05increased\\x01 vượt quá ngưỡng tối thiểu. Đặt lại thuật toán..."
+		"en"		"{lightgreen}[Antibaiter DEBUG] Survivor progress has {olive}increased{default} beyond the minimum threshold. Resetting the algorithm..."
+		"chi"		"{lightgreen}[Antibaiter DEBUG] 幸存者进度{olive}增加{default}超出最小阈值。重置算法..."
+		"zho"		"{lightgreen}[Antibaiter DEBUG] 倖存者進度{olive}增加{default}超出最小閾值。重置演算法..."
+		"jp"		"{lightgreen}[Antibaiter DEBUG] サバイバーの進行状況は {olive} 増加し、最小しきい値を超えています。アルゴリズムをリセットしています..."
+		"ko"		"{lightgreen}[Antibaiter DEBUG] 생존자 진행 상황에서 {olive}increased{default}가 최소 임계값을 초과했습니다. 알고리즘 재설정 중..."
+		"vi"		"{lightgreen}[Antibaiter DEBUG] Tiến trình sống sót có {olive}increased{default} vượt quá ngưỡng tối thiểu. Đặt lại thuật toán..."
 	}
 
 	"L4D2Antibaiter_PanicTimerDurationTimestamp"

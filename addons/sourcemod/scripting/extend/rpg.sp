@@ -592,7 +592,7 @@ void ConVarChanged_Cvars(ConVar convar, const char[] oldValue, const char[] newV
 	if (convar == g_hAllowUseB)
 	{
 		g_bAllowUseB = g_hAllowUseB.BoolValue;
-		PrintToChatAll("%t", "RPG_Message", g_bAllowUseB ? "允许使用B数购买商品" : "已禁止使用B数购买（仅允许 0B 商品）");
+		CPrintToChatAll("%t", "RPG_Message", g_bAllowUseB ? "允许使用B数购买商品" : "已禁止使用B数购买（仅允许 0B 商品）");
 		return;
 	}
 	if (!g_bInfectedControlAvailable || g_hInfectedLimit == null)
@@ -604,7 +604,7 @@ void ConVarChanged_Cvars(ConVar convar, const char[] oldValue, const char[] newV
 
 	if (IsStart)
 	{
-		if(valid)PrintToChatAll("%t", "RPG_RANKVariablesRequiredDetermineExtra");
+		if(valid)CPrintToChatAll("%t", "RPG_RANKVariablesRequiredDetermineExtra");
 		SetRoundValid(false);
 	}
 
@@ -1119,7 +1119,7 @@ public Action L4D_OnFirstSurvivorLeftSafeArea(int client)
 	}
 	GaoJiRenJi = FindConVar("sb_fix_enabled");
 	if(GaoJiRenJi != null && GaoJiRenJi.BoolValue){
-		PrintToChatAll("%t", "RPG_RANKCannotObtainAdditionalPoints");
+		CPrintToChatAll("%t", "RPG_RANKCannotObtainAdditionalPoints");
 		SetRoundValid(false);
 	}
 	IsStart=true;
@@ -1184,7 +1184,7 @@ static bool CanUseShop(int client)
 
 	if (IsValidClient(client))
 	{
-		PrintToChat(client, "%t", "RPG_StoreClosedFunctionCannotUsed");
+		CPrintToChat(client, "%t", "RPG_StoreClosedFunctionCannotUsed");
 	}
 	return false;
 }
@@ -1194,8 +1194,8 @@ public Action BuyAmmo(int client,int args)
 {
 	if(IsVaildClient(client) && IsPlayerAlive(client) && CanUseShop(client))
 	{
-    	GiveItems(client,"ammo");
-    	PrintToChatAll("%t", "RPG_AddedBullets", client);
+		GiveItems(client,"ammo");
+		CPrintToChatAll("%t", "RPG_AddedBullets", client);
 	}
 	return Plugin_Continue;
 }
@@ -1213,7 +1213,7 @@ public Action BuyPen(int client,int args)
 			else
 				result = RemovePoints(client,0,"shotgun_chrome");
 			if(result)
-			PrintToChatAll("%t", "RPG_FirstTimeRandomTrollFree", client);
+			CPrintToChatAll("%t", "RPG_FirstTimeRandomTrollFree", client);
 		}else if(player[client].ClientPoints>49)
 		{
 			bool result = false;
@@ -1222,9 +1222,9 @@ public Action BuyPen(int client,int args)
 			else
 				result = RemovePoints(client,50,"shotgun_chrome");
 			if(result)
-			PrintToChatAll("%t", "RPG_QuicklySpend50BuySingle", client);
+			CPrintToChatAll("%t", "RPG_QuicklySpend50BuySingle", client);
 		}else{
-			PrintToChat(client, "%t", "RPG_NotEnoughMoneyForShotgun");
+			CPrintToChat(client, "%t", "RPG_NotEnoughMoneyForShotgun");
 		}
 	}
 	return Plugin_Continue;
@@ -1238,13 +1238,13 @@ public Action BuyChr(int client,int args)
 		if(player[client].ClientFirstBuy){
 			player[client].ClientFirstBuy=false;
 			if(RemovePoints(client,0,"shotgun_chrome"))
-			PrintToChatAll("%t", "RPG_FirstTimeGotSecondsondGeneration", client);
+			CPrintToChatAll("%t", "RPG_FirstTimeGotSecondsondGeneration", client);
 		}else if(player[client].ClientPoints>49)
 		{
 			if(RemovePoints(client,50,"shotgun_chrome"))
-			PrintToChatAll("%t", "RPG_QuicklySpend50BuySecondsond", client);
+			CPrintToChatAll("%t", "RPG_QuicklySpend50BuySecondsond", client);
 		}else{
-			PrintToChat(client, "%t", "RPG_NotEnoughMoneyForShotgun");
+			CPrintToChat(client, "%t", "RPG_NotEnoughMoneyForShotgun");
 		}
 	}
 	return Plugin_Continue;
@@ -1258,13 +1258,13 @@ public Action BuyPum(int client,int args)
 		if(player[client].ClientFirstBuy){
 			player[client].ClientFirstBuy=false;
 			if(RemovePoints(client,0,"pumpshotgun"))
-			PrintToChatAll("%t", "RPG_FirstGenerationSingleSpray", client);
+			CPrintToChatAll("%t", "RPG_FirstGenerationSingleSpray", client);
 		}else if(player[client].ClientPoints>49)
 		{
 			if(RemovePoints(client,50,"pumpshotgun"))
-			PrintToChatAll("%t", "RPG_QuicklySpend50BuyFirst", client);
+			CPrintToChatAll("%t", "RPG_QuicklySpend50BuyFirst", client);
 		}else{
-			PrintToChat(client, "%t", "RPG_NotEnoughMoneyForShotgun");
+			CPrintToChat(client, "%t", "RPG_NotEnoughMoneyForShotgun");
 		}
 	}
 	return Plugin_Continue;
@@ -1278,13 +1278,13 @@ public Action BuySmg(int client,int args)
 		if(player[client].ClientFirstBuy){
 			player[client].ClientFirstBuy=false;
 			if(RemovePoints(client,0,"smg_silenced"))
-			PrintToChatAll("%t", "RPG_FirstTimeBoughtSilencedSMG", client);
+			CPrintToChatAll("%t", "RPG_FirstTimeBoughtSilencedSMG", client);
 		}else if(player[client].ClientPoints>49)
 		{
 			if(RemovePoints(client,50,"smg_silenced"))
-			PrintToChatAll("%t", "RPG_QuicklySpend50BuySilenced", client);
+			CPrintToChatAll("%t", "RPG_QuicklySpend50BuySilenced", client);
 		}else{
-			PrintToChat(client, "%t", "RPG_DonMoneyCanBuyCrappy");
+			CPrintToChat(client, "%t", "RPG_DonMoneyCanBuyCrappy");
 		}
 	}
 	return Plugin_Continue;
@@ -1298,13 +1298,13 @@ public Action BuyUzi(int client,int args)
 		if(player[client].ClientFirstBuy){
 			player[client].ClientFirstBuy=false;
 			if(RemovePoints(client,0,"smg"))
-			PrintToChatAll("%t", "RPG_FirstTimeFreeUzi", client);
+			CPrintToChatAll("%t", "RPG_FirstTimeFreeUzi", client);
 		}else if(player[client].ClientPoints>49)
 		{
 			if(RemovePoints(client,50,"smg"))
-			PrintToChatAll("%t", "RPG_QuicklySpend50RandomlyBuy", client);
+			CPrintToChatAll("%t", "RPG_QuicklySpend50RandomlyBuy", client);
 		}else{
-			PrintToChat(client, "%t", "RPG_DonMoneyCanBuyCrappy");
+			CPrintToChat(client, "%t", "RPG_DonMoneyCanBuyCrappy");
 		}
 	}
 	return Plugin_Continue;
@@ -1316,7 +1316,7 @@ public Action BuyPill(int client,int args)
 	if(IsVaildClient(client) && IsPlayerAlive(client) && CanUseShop(client))
 	{
 		if(RemovePoints(client,400,"pain_pills"))
-		PrintToChatAll("%t", "RPG_QuicklySpent400BuyBottle", client);
+		CPrintToChatAll("%t", "RPG_QuicklySpent400BuyBottle", client);
 	}
 	return Plugin_Continue;
 }
@@ -1341,18 +1341,18 @@ public Action SetCH(int client,int args)
 		return Plugin_Handled;
 	}
 	if(args!=1){
-		ReplyToCommand(client,"\x03错误参数，使用方式为!setch \"你想要的称号名字\"");
+		ReplyToCommand(client,"{lightgreen}错误参数，使用方式为!setch \"你想要的称号名字\"");
 		return Plugin_Handled;
 	}
 	if(!IsValidClient(client) || IsFakeClient(client))
 	{
-		ReplyToCommand(client,"\x03错误index");
+		ReplyToCommand(client,"{lightgreen}错误index");
 		return Plugin_Handled;
 	}
 	GetCmdArg(1, player[client].tags.ChatTag, 24);
 	if(IsNullString(player[client].tags.ChatTag) || strlen(player[client].tags.ChatTag) == 0 || player[client].tags.ChatTag[0] == '\0')
 	{
-		ReplyToCommand(client,"\x03错误名字长度");
+		ReplyToCommand(client,"{lightgreen}错误名字长度");
  		return Plugin_Handled;
 	}
 	SetTags(client,player[client].tags.ChatTag);
@@ -1380,7 +1380,7 @@ public Action UnSetCH(int client,int args)
 	}
 	if(!IsValidClient(client) || IsFakeClient(client))
 	{
-		ReplyToCommand(client,"\x03错误index");
+		ReplyToCommand(client,"{lightgreen}错误index");
 		return Plugin_Handled;
 	}
 	player[client].tags.ChatTag = NULL_STRING;
@@ -1431,7 +1431,7 @@ static bool CanSpendB(int client, int costpoints)
     // >0B 时需开关允许
     if (g_bAllowUseB) return true;
 
-    PrintToChat(client, "%t", "RPG_CurrentlyProhibitedUseNumberPurchase");
+    CPrintToChat(client, "%t", "RPG_CurrentlyProhibitedUseNumberPurchase");
     return false;
 }
 
@@ -1445,13 +1445,13 @@ public bool RemovePoints(int client, int costpoints,char bitem[64])
 
 	if(!player[client].CanBuy)
 	{
-		PrintToChat(client, "%t", "RPG_ShopSkillsCoolingDownCooling");
+		CPrintToChat(client, "%t", "RPG_ShopSkillsCoolingDownCooling");
 		return false;
 	}
 	// 新增：消费开关判定（>0B 时禁止）
     if (!CanSpendB(client, costpoints))
     {
-		PrintToChat(client, "%t", "RPG_ServerClosedCoinUsageChannel");
+		CPrintToChat(client, "%t", "RPG_ServerClosedCoinUsageChannel");
 		return false;
 	}
 	int actuallypoints = player[client].ClientPoints - costpoints;
@@ -1469,7 +1469,7 @@ public bool RemovePoints(int client, int costpoints,char bitem[64])
 	}
 	else
 	{
-		PrintToChat(client, "%t", "RPG_DonPointMind");
+		CPrintToChat(client, "%t", "RPG_DonPointMind");
 		return false;
 	}
 
@@ -1510,7 +1510,7 @@ public void ShowMelee(Handle owner, Handle hndl, const char []error, any data)
 	}
 	else
 	{
-		PrintToChat(client, "%t", "RPG_NewUserCreatingDatabase");
+		CPrintToChat(client, "%t", "RPG_NewUserCreatingDatabase");
 		ClientSaveToFileCreate(client);
 	}
 }
@@ -1749,7 +1749,7 @@ void GetAura(int client, int id)
         {    
             DisableGlow( client );
             player[client].GlowType = id;
-//          PrintToChat(client, "\x05你 have turned off the Glow");
+//          CPrintToChat(client, "{olive}你 have turned off the Glow");
             return;
         }
         case 1: 
@@ -1984,7 +1984,7 @@ void GetSkin(int client, int id, bool broadcast = true)
             DisableSkin( client );
             player[client].SkinType = id;
             if(broadcast)
-            	PrintToChat(client, "%t", "RPG_ClosedSurvivorProfile");
+                CPrintToChat(client, "%t", "RPG_ClosedSurvivorProfile");
             return;
         }
         case 1: 
@@ -2283,10 +2283,10 @@ public int gun_back(Menu menu, MenuAction action, int param1, int param2)
 				if(player[param1].ClientFirstBuy){
 					player[param1].ClientFirstBuy=false;
 					RemovePoints(param1, 0, bitem);
-					PrintToChatAll("%t", "RPG_FirstFreePurchase", param1, "Uzi", player[param1].ClientPoints);
+					CPrintToChatAll("%t", "RPG_FirstFreePurchase", param1, "Uzi", player[param1].ClientPoints);
 				}
 				else if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostUzi, "Uzi", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostUzi, "Uzi", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "smg_silenced") )
 			{
@@ -2295,40 +2295,40 @@ public int gun_back(Menu menu, MenuAction action, int param1, int param2)
 				if(player[param1].ClientFirstBuy){
 					player[param1].ClientFirstBuy=false;
 					RemovePoints(param1, 0, bitem);
-					PrintToChatAll("%t", "RPG_FirstFreePurchase", param1, "消音smg", player[param1].ClientPoints);
+					CPrintToChatAll("%t", "RPG_FirstFreePurchase", param1, "消音smg", player[param1].ClientPoints);
 				}
 				else if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostSilenced, "消音smg", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostSilenced, "消音smg", player[param1].ClientPoints);
 			}				
 			else if( StrEqual(bitem, "smg_mp5") )
 			{
 				
 				int costpoints = CostMP5;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostMP5, "mp5", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostMP5, "mp5", player[param1].ClientPoints);
 			}	
 			else if( StrEqual(bitem, "rifle") ){
 				//
 				int costpoints = CostM16;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostM16, "m16步枪", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostM16, "m16步枪", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "rifle_ak47") ){
 				int costpoints = CostAK47;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostAK47, "ak47步枪", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostAK47, "ak47步枪", player[param1].ClientPoints);
 			}
 				
 			else if( StrEqual(bitem, "rifle_sg552") ){
 				int costpoints = CostSG552;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostSG552, "sg552步枪", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostSG552, "sg552步枪", player[param1].ClientPoints);
 			}
 				
 			else if( StrEqual(bitem, "rifle_desert") ){
 				int costpoints = CostSCAR;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostSCAR, "scar步枪", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostSCAR, "scar步枪", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "pumpshotgun") ){
 				int costpoints = CostPumpShotgun;
@@ -2336,70 +2336,70 @@ public int gun_back(Menu menu, MenuAction action, int param1, int param2)
 				if(player[param1].ClientFirstBuy){
 					player[param1].ClientFirstBuy=false;
 					RemovePoints(param1, 0, bitem);
-					PrintToChatAll("%t", "RPG_FirstFreePurchase", param1, "一代单喷", player[param1].ClientPoints);
+					CPrintToChatAll("%t", "RPG_FirstFreePurchase", param1, "一代单喷", player[param1].ClientPoints);
 				}
 				else if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostPumpShotgun, "一代单喷", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostPumpShotgun, "一代单喷", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "shotgun_chrome") ){
 				int costpoints = CostChromeShotgun;
 				if(player[param1].ClientFirstBuy){
 					player[param1].ClientFirstBuy=false;
 					RemovePoints(param1, 0, bitem);
-					PrintToChatAll("%t", "RPG_FirstFreePurchase", param1, "二代单喷", player[param1].ClientPoints);
+					CPrintToChatAll("%t", "RPG_FirstFreePurchase", param1, "二代单喷", player[param1].ClientPoints);
 				}
 				else if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostChromeShotgun, "二代单喷", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostChromeShotgun, "二代单喷", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "autoshotgun") ){
 				int costpoints = CostAuto;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostAuto, "一代连喷", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostAuto, "一代连喷", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "shotgun_spas") ){
 				int costpoints = CostSPAS;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostSPAS, "二代连喷", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostSPAS, "二代连喷", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "hunting_rifle") ){
 				int costpoints = CostHunting;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostHunting, "一代连狙", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostHunting, "一代连狙", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "sniper_military") ){
 				int costpoints = CostMilitary;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostMilitary, "二代连狙", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostMilitary, "二代连狙", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "sniper_scout") ){
 				int costpoints = CostScout;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostScout, "鸟狙", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostScout, "鸟狙", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "sniper_awp") ){
 				int costpoints = CostAWP;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostAWP, "AWP狙击枪", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostAWP, "AWP狙击枪", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "rifle_m60") ){
 				int costpoints = CostM60;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostM60, "m60", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostM60, "m60", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "grenade_launcher") ){
 				int costpoints = CostGrenadeLuanch;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostGrenadeLuanch, "榴弹发射器", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostGrenadeLuanch, "榴弹发射器", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "pistol") ){			
 				int costpoints = CostP220;
 				if(player[param1].ClientFirstBuy){
 					player[param1].ClientFirstBuy=false;
 					RemovePoints(param1, 0, bitem);
-					PrintToChatAll("%t", "RPG_FirstFreePurchase", param1, "小手枪", player[param1].ClientPoints);
+					CPrintToChatAll("%t", "RPG_FirstFreePurchase", param1, "小手枪", player[param1].ClientPoints);
 				}
 				else if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostP220, "小手枪", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostP220, "小手枪", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "pistol_magnum") ){
 				
@@ -2407,10 +2407,10 @@ public int gun_back(Menu menu, MenuAction action, int param1, int param2)
 				if(player[param1].ClientFirstBuy){
 					player[param1].ClientFirstBuy=false;
 					RemovePoints(param1, 0, bitem);
-					PrintToChatAll("%t", "RPG_FirstFreePurchase", param1, "马格南", player[param1].ClientPoints);
+					CPrintToChatAll("%t", "RPG_FirstFreePurchase", param1, "马格南", player[param1].ClientPoints);
 				}
 				else if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostMagnum, "马格南", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostMagnum, "马格南", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "ammo") ){
 				ClientCommand(param1, "sm_ammo");
@@ -2463,29 +2463,29 @@ public int supply_back(Menu menu, MenuAction action, int param1, int param2)
 			if( StrEqual(bitem, "first_aid_kit") ){				
 				int costpoints = CostFirstAidKit;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostFirstAidKit, "医疗包", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostFirstAidKit, "医疗包", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "pain_pills") ){				
 				int costpoints = CostPills;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostPills, "药丸", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostPills, "药丸", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "adrenaline") ){				
 				int costpoints = CostAdren;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostAdren, "肾上腺素", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostAdren, "肾上腺素", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "gascan") ){
 				
 				int costpoints = CostGascan;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostGascan, "油桶", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostGascan, "油桶", player[param1].ClientPoints);
 			}
 			else if( StrEqual(bitem, "weapon_gnome") ){
 				
 				int costpoints = CostGnome;
 				if(RemovePoints(param1, costpoints, bitem))
-				PrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostGnome, "治疗小侏儒", player[param1].ClientPoints);
+				CPrintToChatAll("%t", "RPG_BoughtItemWithPoints", param1, CostGnome, "治疗小侏儒", player[param1].ClientPoints);
 			}
 		}
 		case MenuAction_End:
@@ -2563,75 +2563,75 @@ public int ability_back(Menu menu, MenuAction action, int param1, int param2)
 			if( StrEqual(bitem, "machete") ){		
 				player[param1].ClientMelee=1;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1, "%t", "RPG_MeleeWeaponSetMacheteGo");
+				CPrintToChat(param1, "%t", "RPG_MeleeWeaponSetMacheteGo");
 			}
 			else if( StrEqual(bitem, "fireaxe") ){
 				player[param1].ClientMelee=2;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1, "%t", "RPG_MeleeWeaponSetFireAx");
+				CPrintToChat(param1, "%t", "RPG_MeleeWeaponSetFireAx");
 			}
 			else if( StrEqual(bitem, "knife") ){
 				player[param1].ClientMelee=3;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1, "%t", "RPG_SetMeleeWeaponKnifeGo");
+				CPrintToChat(param1, "%t", "RPG_SetMeleeWeaponKnifeGo");
 			}
 			else if( StrEqual(bitem, "katana") ){
 				player[param1].ClientMelee=4;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1, "%t", "RPG_MeleeWeaponSetKatana");
+				CPrintToChat(param1, "%t", "RPG_MeleeWeaponSetKatana");
 			}
 			else if( StrEqual(bitem, "pistol_magnum") ){
 				player[param1].ClientMelee=5;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1, "%t", "RPG_MeleeWeaponSetMagnum");
+				CPrintToChat(param1, "%t", "RPG_MeleeWeaponSetMagnum");
 			}
 			else if( StrEqual(bitem, "electric_guitar") ){
 				player[param1].ClientMelee=6;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1, "%t", "RPG_SetMeleeWeaponGoingElectric");
+				CPrintToChat(param1, "%t", "RPG_SetMeleeWeaponGoingElectric");
 			}
 			else if( StrEqual(bitem, "tonfa") ){
 				player[param1].ClientMelee=7;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1, "%t", "RPG_SetMeleeWeaponGoingBaton");
+				CPrintToChat(param1, "%t", "RPG_SetMeleeWeaponGoingBaton");
 			}
 			else if( StrEqual(bitem, "pitchfork") ){
 				player[param1].ClientMelee=8;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1, "%t", "RPG_SetOutgoingMeleeWeaponPitchfork");
+				CPrintToChat(param1, "%t", "RPG_SetOutgoingMeleeWeaponPitchfork");
 			}
 			else if( StrEqual(bitem, "shovel") ){
 				player[param1].ClientMelee=9;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1, "%t", "RPG_SetExitMeleeWeaponShovel");
+				CPrintToChat(param1, "%t", "RPG_SetExitMeleeWeaponShovel");
 			}
 			else if( StrEqual(bitem, "pistol") ){
 				player[param1].ClientMelee=10;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1, "%t", "RPG_SetMeleeWeaponGoingSmall");
+				CPrintToChat(param1, "%t", "RPG_SetMeleeWeaponGoingSmall");
 			}else if( StrEqual(bitem, "frying_pan") ){
 				player[param1].ClientMelee=11;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1, "%t", "RPG_SetExitMeleeWeaponPan");
+				CPrintToChat(param1, "%t", "RPG_SetExitMeleeWeaponPan");
 			}else if( StrEqual(bitem, "crowbar") ){
 				player[param1].ClientMelee=12;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1, "%t", "RPG_SetMeleeWeaponGoingCrowbar");
+				CPrintToChat(param1, "%t", "RPG_SetMeleeWeaponGoingCrowbar");
 			}else if( StrEqual(bitem, "cricket_bat") ){
 				player[param1].ClientMelee=13;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1, "%t", "RPG_SetMeleeWeaponCricketBat");
+				CPrintToChat(param1, "%t", "RPG_SetMeleeWeaponCricketBat");
 			}else if( StrEqual(bitem, "random_secondweapon") ){
 				player[param1].ClientMelee=14;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1, "%t", "RPG_SetMeleeWeaponCricketBat");
+				CPrintToChat(param1, "%t", "RPG_SetMeleeWeaponCricketBat");
 			}else if( StrEqual(bitem, "none") ){
 				player[param1].ClientMelee = 0;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1, "%t", "RPG_CanceledMeleeWeaponGoing");
+				CPrintToChat(param1, "%t", "RPG_CanceledMeleeWeaponGoing");
 			}else 
 			{
-				PrintToChat(param1, "%t", "RPG_MeleeWeaponSettingFailedExceeded");
+				CPrintToChat(param1, "%t", "RPG_MeleeWeaponSettingFailedExceeded");
 			}
 		}
 		case MenuAction_End:
@@ -2671,12 +2671,12 @@ public int Blood_back(Menu menu, MenuAction action, int param1, int param2)
 				
 				player[param1].ClientBlood=1;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1, "%t", "RPG_TurnedBloodRecoveryFunctionKilling");
+				CPrintToChat(param1, "%t", "RPG_TurnedBloodRecoveryFunctionKilling");
 			}
 			else {				
 				player[param1].ClientBlood=0;
 				ClientSaveToFileSave(param1);
-				PrintToChat(param1, "%t", "RPG_TurnedOffBloodRecoverySpecial");
+				CPrintToChat(param1, "%t", "RPG_TurnedOffBloodRecoverySpecial");
 			}
 		}
 		case MenuAction_End:

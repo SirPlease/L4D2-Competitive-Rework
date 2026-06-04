@@ -2,6 +2,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <colors>
 #include <left4dhooks>
 #include <l4d2util_infected>
 
@@ -148,7 +149,7 @@ void ToggleEvents(bool isEnable)
 
 public Action L4D_OnMaterializeFromGhostPre(int client)
 {
-	PrintDebug("\x05%N \x05materialized \x01as (\x04%s\x01)", client, L4D2_InfectedNames[GetInfectedClass(client)]);
+	PrintDebug("{olive}%N {olive}materialized {default}as ({green}%s{default})", client, L4D2_InfectedNames[GetInfectedClass(client)]);
 
 	g_bPlayerSpawned[client] = true;
 	return Plugin_Continue;
@@ -156,7 +157,7 @@ public Action L4D_OnMaterializeFromGhostPre(int client)
 
 public void L4D_OnMaterializeFromGhost_PostHandled(int client)
 {
-	PrintDebug("\x05%N \x05got de-materialized because of other plugins' handling.", client);
+	PrintDebug("{olive}%N {olive}got de-materialized because of other plugins' handling.", client);
 	
 	g_bPlayerSpawned[client] = false;
 }
@@ -183,7 +184,7 @@ void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 		if (GetSICount(false) + 1 <= z_max_player_zombies.IntValue)
 			return;
 		
-		PrintDebug("Infected Team is \x04going over capacity \x01after \x05%N \x01joined", client);
+		PrintDebug("Infected Team is {green}going over capacity {default}after {olive}%N {default}joined", client);
 		
 		int lastUserId = 0;
 		for (int i = 1; i <= MaxClients; ++i)
@@ -209,7 +210,7 @@ void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 		{
 			int lastBot = GetClientOfUserId(lastUserId);
 			
-			PrintDebug("\x05%N is selected to cull", lastBot);
+			PrintDebug("{olive}%N is selected to cull", lastBot);
 			ForcePlayerSuicide(lastBot);
 		}
 	}
@@ -218,7 +219,7 @@ void Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 		if (!IsPlayerAlive(client))
 			return;
 		
-		PrintDebug("\x05%N \x01left Infected Team \x01as (\x04%s\x01)", client, L4D2_InfectedNames[GetInfectedClass(client)]);
+		PrintDebug("{olive}%N {default}left Infected Team {default}as ({green}%s{default})", client, L4D2_InfectedNames[GetInfectedClass(client)]);
 		
 		QueuePlayerSI(client);
 	}
@@ -233,7 +234,7 @@ void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 	if (GetClientTeam(client) != 3)
 		return;
 	
-	PrintDebug("\x05%N \x01died \x01as (\x04%s\x01)", client, L4D2_InfectedNames[GetInfectedClass(client)]);
+	PrintDebug("{olive}%N {default}died {default}as ({green}%s{default})", client, L4D2_InfectedNames[GetInfectedClass(client)]);
 	
 	QueuePlayerSI(client);
 }
@@ -258,11 +259,11 @@ void HandlePlayerReplace(int replacer, int replacee)
 	if (GetClientTeam(replacer) != 3)
 		return;
 	
-	PrintDebug("\x05%N \x01replaced \x05%N \x01as (\x04%s\x01)", replacer, replacee, L4D2_InfectedNames[GetInfectedClass(replacer)]);
+	PrintDebug("{olive}%N {default}replaced {olive}%N {default}as ({green}%s{default})", replacer, replacee, L4D2_InfectedNames[GetInfectedClass(replacer)]);
 	
 	if (GetInfectedClass(replacer) == L4D2Infected_Tank && !IsFakeClient(replacer))
 	{
-		PrintDebug("\x05%N \x01(\x04%s\x01) \x01replaced an \x04AI Tank", replacer, L4D2_InfectedNames[g_iStoredClass[replacer]]);
+		PrintDebug("{olive}%N {default}({green}%s{default}) {default}replaced an {green}AI Tank", replacer, L4D2_InfectedNames[g_iStoredClass[replacer]]);
 		
 		QueuePlayerSI(replacer);
 		return;
@@ -292,7 +293,7 @@ public void L4D_OnReplaceTank(int tank, int newtank)
 	if (GetClientTeam(newtank) != 3)
 		return;
 	
-	PrintDebug("\x05%N \x01(\x04%s\x01) \x01is going to replace \x05%N\x01's \x04Tank", newtank, L4D2_InfectedNames[GetInfectedClass(newtank)], tank);
+	PrintDebug("{olive}%N {default}({green}%s{default}) {default}is going to replace {olive}%N{default}'s {green}Tank", newtank, L4D2_InfectedNames[GetInfectedClass(newtank)], tank);
 	
 	QueuePlayerSI(newtank);
 }
@@ -330,7 +331,7 @@ public void L4D_OnEnterGhostState(int client)
 		}
 	}
 	
-	PrintDebug("%N %s \x01as (\x04%s\x01)", client, isCulling ? "\x05respawned" : "\x01spawned", L4D2_InfectedNames[SI]);
+	PrintDebug("%N %s {default}as ({green}%s{default})", client, isCulling ? "{olive}respawned" : "{default}spawned", L4D2_InfectedNames[SI]);
 	
 	g_iStoredClass[client] = SI;
 	g_bPlayerSpawned[client] = false;
@@ -344,33 +345,33 @@ public void L4D_OnEnterGhostState(int client)
 int g_ZombieClass = SI_None;
 public Action L4D_OnSpawnSpecial(int &zombieClass, const float vecPos[3], const float vecAng[3])
 {
-	PrintDebug("Director attempting to spawn (\x04%s\x01)", L4D2_InfectedNames[zombieClass]);
+	PrintDebug("Director attempting to spawn ({green}%s{default})", L4D2_InfectedNames[zombieClass]);
 	
 	if (!director_allow_infected_bots.BoolValue)
 		return Plugin_Continue;
 	
 	if (GetSICount(false) + 1 > z_max_player_zombies.IntValue)
 	{
-		PrintDebug("Blocking director spawn for \x03going over player limit\x01.");
+		PrintDebug("Blocking director spawn for {lightgreen}going over player limit{default}.");
 		return Plugin_Handled;
 	}
 	
 	g_ZombieClass = PopQueuedSI(-1);
 	if (g_ZombieClass == SI_None)
 	{
-		PrintDebug("Blocking director spawn for \x04running out of available SI\x01.");
+		PrintDebug("Blocking director spawn for {green}running out of available SI{default}.");
 		return Plugin_Handled;
 	}
 	
 	zombieClass = g_ZombieClass;
-	PrintDebug("Overriding director spawn to (\x04%s\x01)", L4D2_InfectedNames[g_ZombieClass]);
+	PrintDebug("Overriding director spawn to ({green}%s{default})", L4D2_InfectedNames[g_ZombieClass]);
 	
 	return Plugin_Changed;
 }
 
 public void L4D_OnSpawnSpecial_Post(int client, int zombieClass, const float vecPos[3], const float vecAng[3])
 {
-	PrintDebug("Director spawned a bot (expected \x05%s\x01, got %s%s\x01)", L4D2_InfectedNames[g_ZombieClass], g_ZombieClass == zombieClass ? "\x05" : "\x04", L4D2_InfectedNames[zombieClass]);
+	PrintDebug("Director spawned a bot (expected {olive}%s{default}, got %s%s{default})", L4D2_InfectedNames[g_ZombieClass], g_ZombieClass == zombieClass ? "{olive}" : "{green}", L4D2_InfectedNames[zombieClass]);
 	
 	if (!director_allow_infected_bots.BoolValue)
 		return;
@@ -382,7 +383,7 @@ public void L4D_OnSpawnSpecial_Post(int client, int zombieClass, const float vec
 
 public void L4D_OnSpawnSpecial_PostHandled(int client, int zombieClass, const float vecPos[3], const float vecAng[3])
 {
-	PrintDebug("Director's spawn was \x04blocked \x01(expected \x05%s\x01, got %s%s\x01)", L4D2_InfectedNames[g_ZombieClass], g_ZombieClass == zombieClass ? "\x05" : "\x04", L4D2_InfectedNames[zombieClass]);
+	PrintDebug("Director's spawn was {green}blocked {default}(expected {olive}%s{default}, got %s%s{default})", L4D2_InfectedNames[g_ZombieClass], g_ZombieClass == zombieClass ? "{olive}" : "{green}", L4D2_InfectedNames[zombieClass]);
 	
 	if (!director_allow_infected_bots.BoolValue)
 		return;
@@ -420,7 +421,7 @@ void QueueSI(int SI, bool front)
 		g_SpawnsArray.Push(SI);
 	}
 	
-	PrintDebug("Queuing (\x05%s\x01) to \x04%s", L4D2_InfectedNames[SI], front ? "the front" : "the end");
+	PrintDebug("Queuing ({olive}%s{default}) to {green}%s", L4D2_InfectedNames[SI], front ? "the front" : "the end");
 }
 
 int PopQueuedSI(int skip_client)
@@ -437,16 +438,16 @@ int PopQueuedSI(int skip_client)
 		if (status == OverLimit_OK)
 		{
 			g_SpawnsArray.Erase(i);
-			PrintDebug("Popped (\x05%s\x01) after \x04%i \x01%s", L4D2_InfectedNames[QueuedSI], i+1, i+1 > 1 ? "tries" : "try");
+			PrintDebug("Popped ({olive}%s{default}) after {green}%i {default}%s", L4D2_InfectedNames[QueuedSI], i+1, i+1 > 1 ? "tries" : "try");
 			return QueuedSI;
 		}
 		else
 		{
-			PrintDebug("Popping (\x05%s\x01) but \x03over limit \x01(\x03reason: %s\x01)", L4D2_InfectedNames[QueuedSI], g_sOverLimitReason[status]);
+			PrintDebug("Popping ({olive}%s{default}) but {lightgreen}over limit {default}({lightgreen}reason: %s{default})", L4D2_InfectedNames[QueuedSI], g_sOverLimitReason[status]);
 		}
 	}
 	
-	PrintDebug("\x04Failed to pop queued SI! \x01(size = \x05%i\x01)", size);
+	PrintDebug("{green}Failed to pop queued SI! {default}(size = {olive}%i{default})", size);
 	return SI_None;
 }
 
@@ -502,7 +503,7 @@ bool IsAbleToQueue(int SI, int skip_client)
 			return true;
 	}
 	
-	PrintDebug("\x04Unexpected class \x01(\x05%s\x01)", SI == -1 ? "INVALID" : L4D2_InfectedNames[SI]);
+	PrintDebug("{green}Unexpected class {default}({olive}%s{default})", SI == -1 ? "INVALID" : L4D2_InfectedNames[SI]);
 	return false;
 }
 
@@ -641,6 +642,6 @@ stock void PrintDebug(const char[] format, any ...)
 	{
 		char msg[255];
 		VFormat(msg, sizeof(msg), format, 2);
-		PrintToChatAll("%t", "L4D2FixSpawnOrder_DebugMessage", msg);
+		CPrintToChatAll("%t", "L4D2FixSpawnOrder_DebugMessage", msg);
 	}
 }

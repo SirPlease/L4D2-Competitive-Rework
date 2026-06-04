@@ -3,41 +3,46 @@
 	"L4D_Chat_Infected"
 	{
 		"#format"	"{1:s},{2:s}"
-		"chi"			"(感染者) {1} :  {2}"
+		"chi"			"{default}(感染�
+) {1} {default}:  {2}"
 	}
 	"L4D_Chat_Survivor"
 	{
 		"#format"	"{1:s},{2:s}"
-		"chi"			"(生还者) {1} :  {2}"
+		"chi"			"{default}(生还�
+) {1} {default}:  {2}"
 	}
 	"L4D_Chat_Infected_Dead"
 	{
 		"#format"	"{1:s},{2:s}"
-		"chi"			"*DEAD*(感染者) {1} :  {2}"
+		"chi"			"{default}*DEAD*(感染�
+) {1} {default}:  {2}"
 	}
 	"L4D_Chat_Survivor_Dead"
 	{
 		"#format"	"{1:s},{2:s}"
-		"chi"			"*DEAD*(生还者) {1} :  {2}"
+		"chi"			"{default}*DEAD*(生还�
+) {1} {default}:  {2}"
 	}
 	"L4D_Chat_Spec"
 	{
 		"#format"	"{1:s},{2:s}"
-		"chi"			"(旁观者) {1} :  {2}"
+		"chi"			"{default}(旁观�
+) {1} {default}:  {2}"
 	}
 	"L4D_Chat_All"
 	{
 		"#format"	"{1:s},{2:s}"
-		"chi"			"{1} :  {2}"
+		"chi"			"{default}{1} {default}:  {2}"
 	}
 	"L4D_Chat_AllDead"
 	{
 		"#format"	"{1:s},{2:s}"
-		"chi"			"*死亡* {1} :  {2}"
+		"chi"			"{default}*死亡* {1} {default}:  {2}"
 	}
 	"L4D_Chat_AllSpec"
 	{
 		"#format"	"{1:s},{2:s}"
-		"chi"			"*旁观* {1} :  {2}"
+		"chi"			"{default}*旁观* {1} {default}:  {2}"
 	}
 }

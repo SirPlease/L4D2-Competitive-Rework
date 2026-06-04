@@ -25,6 +25,7 @@
 // *************************************************************************
 
 #include <sourcemod>
+#include <colors>
 
 #define VERSION "1.6.4"
 #define LISTBANS_USAGE "sm_listbans <#userid|name> - Lists a user's prior bans from Sourcebans"
@@ -102,15 +103,15 @@ public OnConnectBanCheck(Handle:owner, Handle:hndl, const String:error[], any:us
     if (bancount > 0 || commcount > 0)
     {
         if(bancount == 0){
-            PrintToBanAdmins("\x04[SourceBans++]\x01 Warning: Player \"%N\" has %d previous commban%s.",
+            PrintToBanAdmins("{green}[SourceBans++]{default} Warning: Player \"%N\" has %d previous commban%s.",
                 client,commcount,((commcount > 1 || commcount == 0) ? "s":""));
         }
         else if(commcount == 0){
-            PrintToBanAdmins("\x04[SourceBans++]\x01 Warning: Player \"%N\" has %d previous ban%s.",
+            PrintToBanAdmins("{green}[SourceBans++]{default} Warning: Player \"%N\" has %d previous ban%s.",
                 client, bancount, ((bancount > 1 || bancount == 0) ? "s":""));
         }
         else{
-            PrintToBanAdmins("\x04[SourceBans++]\x01 Warning: Player \"%N\" has %d previous ban%s and %d previous commban%s.",
+            PrintToBanAdmins("{green}[SourceBans++]{default} Warning: Player \"%N\" has %d previous ban%s and %d previous commban%s.",
                 client, bancount, ((bancount > 1 || bancount == 0) ? "s":""),commcount,((commcount > 1 || commcount == 0) ? "s":""));
         }
     }
@@ -170,7 +171,7 @@ public Action:OnListSourceBansCmd(client, args)
 	}
 	else
 	{
-		ReplyToCommand(client, "\x04[SourceBans++]\x01 Look for %N's ban results in console.", target);
+		CReplyToCommand(client, "{green}[SourceBans++]{default} Look for %N's ban results in console.", target);
 	}
 
 	return Plugin_Handled;
@@ -335,7 +336,7 @@ public Action:OnListSourceCommsCmd(client, args)
 	}
 	else
 	{
-		ReplyToCommand(client, "\x04[SourceBans++]\x01 Look for %N's comm results in console.", target);
+		CReplyToCommand(client, "{green}[SourceBans++]{default} Look for %N's comm results in console.", target);
 	}
 
 	return Plugin_Handled;
@@ -489,7 +490,7 @@ PrintToBanAdmins(const String:format[], any:...)
 			 && CheckCommandAccess(i, "sm_listsourcebans", ADMFLAG_BAN)
 			)
 		{
-			PrintToChat(i, "%s", msg);
+			CPrintToChat(i, "%s", msg);
 		}
 	}
 }

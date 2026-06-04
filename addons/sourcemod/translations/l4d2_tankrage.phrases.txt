@@ -43,31 +43,31 @@
 
 	"L4D2Tankrage_FlowDifferenceSinceLastCheck"
 	{
-		"en"		"\\x04[\\x03%N\\x04]\\x01: Flow Difference since last check: %i"
-		"chi"		"\\x04[\\x03%N\\x04]\\x01：自上次检查以来的流量差异：%i"
-		"zho"		"\\x04[\\x03%N\\x04]\\x01：自上次檢查以來的流量差異：%i"
-		"jp"		"\\x04[\\x03%N\\x04]\\x01: 前回のチェック以降のフローの差: %i"
-		"ko"		"\\x04[\\x03%N\\x04]\\x01: 마지막 점검 이후 유량 차이: %i"
-		"vi"		"\\x04[\\x03%N\\x04]\\x01: Sự khác biệt về lưu lượng kể từ lần kiểm tra cuối cùng: %i"
+		"en"		"{green}[{lightgreen}%N{green}]{default}: Flow Difference since last check: %i"
+		"chi"		"{green}[{lightgreen}%N{green}]{default}：自上次检查以来的流量差异：%i"
+		"zho"		"{green}[{lightgreen}%N{green}]{default}：自上次檢查以來的流量差異：%i"
+		"jp"		"{green}[{lightgreen}%N{green}]{default}: 前回のチェック以降のフローの差: %i"
+		"ko"		"{green}[{lightgreen}%N{green}]{default}: 마지막 점검 이후 유량 차이: %i"
+		"vi"		"{green}[{lightgreen}%N{green}]{default}: Sự khác biệt về lưu lượng kể từ lần kiểm tra cuối cùng: %i"
 	}
 
 	"L4D2Tankrage_FrusGrace"
 	{
-		"en"		"\\x04[\\x03%N\\x04]\\x01: Frus: \\x03%i \\x01- Grace: \\x03%f\\x04s"
-		"chi"		"\\x04[\\x03%N\\x04]\\x01： 弗鲁斯：\\x03%i \\x01- 恩典：\\x03%f\\x04s"
-		"zho"		"\\x04[\\x03%N\\x04]\\x01: Frus: \\x03%i \\x01- Grace: \\x03%f\\x04s"
-		"jp"		"\\x04[\\x03%N\\x04]\\x01: フルス: \\x03%i \\x01- グレース: \\x03%f\\x04s"
-		"ko"		"\\x04[\\x03%N\\x04]\\x01: 프러스: \\x03%i \\x01- 그레이스: \\x03%f\\x04s"
-		"vi"		"\\x04[\\x03%N\\x04]\\x01: Frus: \\x03%i \\x01- Grace: \\x03%f\\x04s"
+		"en"		"{green}[{lightgreen}%N{green}]{default}: Frus: {lightgreen}%i {default}- Grace: {lightgreen}%f{green}s"
+		"chi"		"{green}[{lightgreen}%N{green}]{default}： 弗鲁斯：{lightgreen}%i {default}- 恩典：{lightgreen}%f{green}s"
+		"zho"		"{green}[{lightgreen}%N{green}]{default}: Frus: {lightgreen}%i {default}- Grace: {lightgreen}%f{green}s"
+		"jp"		"{green}[{lightgreen}%N{green}]{default}: フルス: {lightgreen}%i {default}- グレース: {lightgreen}%f{green}s"
+		"ko"		"{green}[{lightgreen}%N{green}]{default}: 프러스: {lightgreen}%i {default}- 그레이스: {lightgreen}%f{green}s"
+		"vi"		"{green}[{lightgreen}%N{green}]{default}: Frus: {lightgreen}%i {default}- Grace: {lightgreen}%f{green}s"
 	}
 
 	"L4D2Tankrage_SetGrace"
 	{
-		"en"		"\\x04[\\x03%N\\x04]\\x01: Set Grace To: \\x03%f\\x04s"
-		"chi"		"\\x04[\\x03%N\\x04]\\x01：将宽限设置为：\\x03%f\\x04s"
-		"zho"		"\\x04[\\x03%N\\x04]\\x01：將寬限設定為：\\x03%f\\x04s"
-		"jp"		"\\x04[\\x03%N\\x04]\\x01: 猶予期間を次のように設定します: \\x03%f\\x04s"
-		"ko"		"\\x04[\\x03%N\\x04]\\x01: 유예 설정: \\x03%f\\x04s"
-		"vi"		"\\x04[\\x03%N\\x04]\\x01: Đặt ân hạn thành: \\x03%f\\x04s"
+		"en"		"{green}[{lightgreen}%N{green}]{default}: Set Grace To: {lightgreen}%f{green}s"
+		"chi"		"{green}[{lightgreen}%N{green}]{default}：将宽限设置为：{lightgreen}%f{green}s"
+		"zho"		"{green}[{lightgreen}%N{green}]{default}：將寬限設定為：{lightgreen}%f{green}s"
+		"jp"		"{green}[{lightgreen}%N{green}]{default}: 猶予期間を次のように設定します: {lightgreen}%f{green}s"
+		"ko"		"{green}[{lightgreen}%N{green}]{default}: 유예 설정: {lightgreen}%f{green}s"
+		"vi"		"{green}[{lightgreen}%N{green}]{default}: Đặt ân hạn thành: {lightgreen}%f{green}s"
 	}
 }

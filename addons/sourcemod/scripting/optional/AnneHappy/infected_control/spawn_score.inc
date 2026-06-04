@@ -248,6 +248,7 @@ static void SpawnScore_CopyPos(float dest[3], const float src[3])
     dest[2] = src[2];
 }
 
+// 注意：SourcePawn enum struct 参数为引用传递，dest 的修改会反映到调用方。
 void SpawnScore_CopyDbg(SpawnScoreDbg dest, const SpawnScoreDbg src)
 {
     dest.total = src.total;

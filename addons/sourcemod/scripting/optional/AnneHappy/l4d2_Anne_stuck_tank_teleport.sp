@@ -10,6 +10,7 @@
  */
 
 #include <sourcemod>
+#include <colors>
 #include <sdktools>
 #include <sdkhooks>
 #include <left4dhooks>
@@ -347,7 +348,7 @@ public Action Timer_CheckRusher(Handle timer)
             {
                 bool ok = TeleportNearOrDoor_ByThreshold(tank, i);
                 if (ok)
-                    PrintToChatAll("%t", "L4D2StuckTankTeleport_RunningTooFastTeleportTank", i);
+                    CPrintToChatAll("%t", "L4D2StuckTankTeleport_RunningTooFastTeleportTank", i);
                 g_iRushTimes[i] = 0;
             }
         }

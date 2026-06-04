@@ -143,7 +143,7 @@ public Action:AnnounceConnect(Handle:timer, any:client)
 	Call_Finish();//转发结束
 
 	ShowMOTD(client);
-	StatsPrintToChat2(client, true, "输入 \x05rankmenu \x01来操作 \x04%s\x01!", PLUGIN_NAME);
+	StatsPrintToChat2(client, true, "输入 {olive}rankmenu {default}来操作 {green}%s{default}!", PLUGIN_NAME);
 }
 
 // Update the player's interstitial stats, since they may have

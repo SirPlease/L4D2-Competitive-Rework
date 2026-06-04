@@ -31,6 +31,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <colors>
 #include <sdktools>
 #define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util> //IsTank
@@ -326,21 +327,21 @@ void DisplayBonus(int iClient = -1)
 
 	for (int iRound = 0; iRound <= iRoundNum; iRound++) {
 		if (g_bRoundOver[iRound]) {
-			Format(sMsgPartHdr, sizeof(sMsgPartHdr), "Round \x05%i\x01 extra bonus", iRound + 1);
+			Format(sMsgPartHdr, sizeof(sMsgPartHdr), "Round {olive}%i{default} extra bonus", iRound + 1);
 		} else {
 			Format(sMsgPartHdr, sizeof(sMsgPartHdr), "Current extra bonus");
 		}
 
-		Format(sMsgPartBon, sizeof(sMsgPartBon), "\x04%4d\x01", g_iBonus[iRound]);
+		Format(sMsgPartBon, sizeof(sMsgPartBon), "{green}%4d{default}", g_iBonus[iRound]);
 
 		if (g_iDefibsUsed[iRound]) {
-			Format(sMsgPartBon, sizeof(sMsgPartBon), "%s (- \x04%d\x01 defib penalty)", sMsgPartBon, g_iOriginalPenalty * g_iDefibsUsed[iRound]);
+			Format(sMsgPartBon, sizeof(sMsgPartBon), "%s (- {green}%d{default} defib penalty)", sMsgPartBon, g_iOriginalPenalty * g_iDefibsUsed[iRound]);
 		}
 
 		if (iClient == -1) {
-			PrintToChatAll("\x01%s: %s", sMsgPartHdr, sMsgPartBon);
+			CPrintToChatAll("{default}%s: %s", sMsgPartHdr, sMsgPartBon);
 		} else if (iClient) {
-			PrintToChat(iClient, "\x01%s: %s", sMsgPartHdr, sMsgPartBon);
+			CPrintToChat(iClient, "{default}%s: %s", sMsgPartHdr, sMsgPartBon);
 		}
 	}
 }
@@ -354,15 +355,15 @@ void ReportChange(int iBonusChange, int iClient = -1, bool bAbsoluteSet = false)
 	// report bonus to all
 	char sMsgPartBon[48];
 	if (bAbsoluteSet) { // set to a specific value
-		Format(sMsgPartBon, sizeof(sMsgPartBon), "Extra bonus set to: \x04%i\x01", g_iBonus[RoundNum()]);
+		Format(sMsgPartBon, sizeof(sMsgPartBon), "Extra bonus set to: {green}%i{default}", g_iBonus[RoundNum()]);
 	} else {
-		Format(sMsgPartBon, sizeof(sMsgPartBon), "Extra bonus change: %s\x04%i\x01", (iBonusChange > 0) ? "\x04+\x01" : "\x03-\x01", RoundFloat(FloatAbs(float(iBonusChange))));
+		Format(sMsgPartBon, sizeof(sMsgPartBon), "Extra bonus change: %s{green}%i{default}", (iBonusChange > 0) ? "{green}+{default}" : "{lightgreen}-{default}", RoundFloat(FloatAbs(float(iBonusChange))));
 	}
 
 	if (iClient == -1) {
-		PrintToChatAll("\x01%s", sMsgPartBon);
+		CPrintToChatAll("{default}%s", sMsgPartBon);
 	} else if (iClient) {
-		PrintToChat(iClient, "\x01%s", sMsgPartBon);
+		CPrintToChat(iClient, "{default}%s", sMsgPartBon);
 	}
 }
 

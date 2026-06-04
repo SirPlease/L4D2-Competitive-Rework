@@ -109,7 +109,7 @@ stock NewPlayerBonus_AnnounceMultiplier(const String:Reason[], BaseScore)
 	if (NewPlayerCount <= 0 || Multiplier <= 1.0)
 		return;
 
-	StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03带新玩家%s倍率: \x05%i \x01名新人, 非新人幸存者获得 \x04%.1fx \x01分数倍率!", Reason, NewPlayerCount, Multiplier);
+	StatsPrintToChatTeam(TEAM_SURVIVORS, "{lightgreen}带新玩家%s倍率: {olive}%i {default}名新人, 非新人幸存者获得 {green}%.1fx {default}分数倍率!", Reason, NewPlayerCount, Multiplier);
 }
 
 stock NewPlayerBonus_AnnounceRoundStart()
@@ -129,8 +129,8 @@ stock NewPlayerBonus_AnnounceRoundStart()
 		if (!NewPlayerBonus_IsNewPlayer(i))
 			continue;
 
-		StatsPrintToChat(i, "\x03你当前被判定为新人，本局非新人幸存者会获得 \x04%.1fx \x01带新分数倍率。", Multiplier);
+		StatsPrintToChat(i, "{lightgreen}你当前被判定为新人，本局非新人幸存者会获得 {green}%.1fx {default}带新分数倍率。", Multiplier);
 	}
 
-	StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03本局检测到 \x05%i \x01名新人，带新系数为 \x04%.1fx\x01；新人本身不吃倍率，非新人幸存者获得加成。", NewPlayerCount, Multiplier);
+	StatsPrintToChatTeam(TEAM_SURVIVORS, "{lightgreen}本局检测到 {olive}%i {default}名新人，带新系数为 {green}%.1fx{default}；新人本身不吃倍率，非新人幸存者获得加成。", NewPlayerCount, Multiplier);
 }

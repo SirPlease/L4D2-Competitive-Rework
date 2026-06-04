@@ -2,6 +2,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <colors>
 #include <left4dhooks>
 
 bool 
@@ -86,7 +87,7 @@ Action AnimHook_PunchFly(int client, int &activity)
         char curActName[64], lastActName[64];
         AnimGetActivity(activity, curActName, sizeof(curActName));
         AnimGetActivity(last, lastActName, sizeof(lastActName));
-        PrintToChatAll("%t", "L4D2TankFlyingIncap_FlyingIncapStateLine", GetGameTime(), client, curActName, lastActName);
+        CPrintToChatAll("%t", "L4D2TankFlyingIncap_FlyingIncapStateLine", GetGameTime(), client, curActName, lastActName);
 
         last = activity;
     }

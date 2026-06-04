@@ -27,6 +27,7 @@
 #pragma semicolon 1
 
 #include <sourcemod>
+#include <colors>
 #include <basecomm>
 #include <sourcecomms>
 
@@ -43,7 +44,7 @@
 //-----------------------------//
 
 #define PLUGIN_VERSION "1.6.4"
-#define PREFIX "\x04[SourceComms++]\x01 "
+#define PREFIX "{green}[SourceComms++]{default} "
 
 #define MAX_TIME_MULTI 30 // maximum mass-target punishment length
 // session mute will expire after this if it hasn't already (fallback)
@@ -386,14 +387,14 @@ public Action:CommandComms(client, args)
 {
 	if (!client)
 	{
-		ReplyToCommand(client, "%s%t", PREFIX, "CommandComms_na");
+		CReplyToCommand(client, "%s%t", PREFIX, "CommandComms_na");
 		return Plugin_Continue;
 	}
 
 	if (g_MuteType[client] > bNot || g_GagType[client] > bNot)
 		AdminMenu_ListTarget(client, client, 0);
 	else
-		ReplyToCommand(client, "%s%t", PREFIX, "CommandComms_nb");
+		CReplyToCommand(client, "%s%t", PREFIX, "CommandComms_nb");
 
 	return Plugin_Handled;
 }
@@ -466,7 +467,7 @@ public Action:FWUngag(args)
 				if (g_GagType[i] > bNot)
 				{
 					PerformUnGag(i);
-					PrintToChat(i, "%s%t", PREFIX, "FWUngag");
+					CPrintToChat(i, "%s%t", PREFIX, "FWUngag");
 					LogMessage("%s is ungagged from web", clientAuth);
 				}
 				else
@@ -506,7 +507,7 @@ public Action:FWUnmute(args)
 				if (g_MuteType[i] > bNot)
 				{
 					PerformUnMute(i);
-					PrintToChat(i, "%s%t", PREFIX, "FWUnmute");
+					CPrintToChat(i, "%s%t", PREFIX, "FWUnmute");
 					LogMessage("%s is unmuted from web", clientAuth);
 				}
 				else
@@ -542,9 +543,9 @@ public Action:CommandCallback(client, const String:command[], args)
 
 	if (args < 1)
 	{
-		ReplyToCommand(client, "%sUsage: %s <#userid|name> %s", PREFIX, command, type <= TYPE_SILENCE ? "[time|0] [reason]" : "[reason]");
+		CReplyToCommand(client, "%sUsage: %s <#userid|name> %s", PREFIX, command, type <= TYPE_SILENCE ? "[time|0] [reason]" : "[reason]");
 		if (type <= TYPE_SILENCE)
-			ReplyToCommand(client, "%sUsage: %s <#userid|name> [reason]", PREFIX, command);
+			CReplyToCommand(client, "%sUsage: %s <#userid|name> [reason]", PREFIX, command);
 		return Plugin_Stop;
 	}
 
@@ -1313,7 +1314,7 @@ public Query_UnBlockSelect(Handle:owner, Handle:hndl, const String:error[], any:
 		LogError("Query_UnBlockSelect failed: %s", error);
 		if (admin && IsClientInGame(admin))
 		{
-			PrintToChat(admin, "%s%T", PREFIX, "Unblock Select Failed", admin, targetAuth);
+			CPrintToChat(admin, "%s%T", PREFIX, "Unblock Select Failed", admin, targetAuth);
 			PrintToConsole(admin, "%s%T", PREFIX, "Unblock Select Failed", admin, targetAuth);
 		}
 		else
@@ -1328,7 +1329,7 @@ public Query_UnBlockSelect(Handle:owner, Handle:hndl, const String:error[], any:
 	{
 		if (admin && IsClientInGame(admin))
 		{
-			PrintToChat(admin, "%s%t", PREFIX, "No blocks found", targetAuth);
+			CPrintToChat(admin, "%s%t", PREFIX, "No blocks found", targetAuth);
 			PrintToConsole(admin, "%s%t", PREFIX, "No blocks found", targetAuth);
 		}
 		else
@@ -1436,7 +1437,7 @@ public Query_UnBlockSelect(Handle:owner, Handle:hndl, const String:error[], any:
 					{
 						if (admin && IsClientInGame(admin))
 						{
-							PrintToChat(admin, "%s%t", PREFIX, "No permission unmute", targetName);
+							CPrintToChat(admin, "%s%t", PREFIX, "No permission unmute", targetName);
 							PrintToConsole(admin, "%s%t", PREFIX, "No permission unmute", targetName);
 						}
 						LogAction(admin, target, "\"%L\" tried (and didn't have permission) to unmute %s (reason \"%s\")", admin, targetAuth, reason);
@@ -1446,7 +1447,7 @@ public Query_UnBlockSelect(Handle:owner, Handle:hndl, const String:error[], any:
 					{
 						if (admin && IsClientInGame(admin))
 						{
-							PrintToChat(admin, "%s%t", PREFIX, "No permission ungag", targetName);
+							CPrintToChat(admin, "%s%t", PREFIX, "No permission ungag", targetName);
 							PrintToConsole(admin, "%s%t", PREFIX, "No permission ungag", targetName);
 						}
 						LogAction(admin, target, "\"%L\" tried (and didn't have permission) to ungag %s (reason \"%s\")", admin, targetAuth, reason);
@@ -1508,7 +1509,7 @@ public Query_UnBlockUpdate(Handle:owner, Handle:hndl, const String:error[], any:
 		LogError("Query_UnBlockUpdate failed: %s", error);
 		if (admin && IsClientInGame(admin))
 		{
-			PrintToChat(admin, "%s%t", PREFIX, "Unblock insert failed");
+			CPrintToChat(admin, "%s%t", PREFIX, "Unblock insert failed");
 			PrintToConsole(admin, "%s%t", PREFIX, "Unblock insert failed");
 		}
 		return;
@@ -1521,7 +1522,7 @@ public Query_UnBlockUpdate(Handle:owner, Handle:hndl, const String:error[], any:
 			LogAction(admin, -1, "\"%L\" removed mute for %s from DB", admin, targetAuth);
 			if (admin && IsClientInGame(admin))
 			{
-				PrintToChat(admin, "%s%t", PREFIX, "successfully unmuted", targetName);
+				CPrintToChat(admin, "%s%t", PREFIX, "successfully unmuted", targetName);
 				PrintToConsole(admin, "%s%t", PREFIX, "successfully unmuted", targetName);
 			}
 			else
@@ -1534,7 +1535,7 @@ public Query_UnBlockUpdate(Handle:owner, Handle:hndl, const String:error[], any:
 		{
 			LogAction(admin, -1, "\"%L\" removed gag for %s from DB", admin, targetAuth);
 			if (admin && IsClientInGame(admin)) {
-				PrintToChat(admin, "%s%t", PREFIX, "successfully ungagged", targetName);
+				CPrintToChat(admin, "%s%t", PREFIX, "successfully ungagged", targetName);
 				PrintToConsole(admin, "%s%t", PREFIX, "successfully ungagged", targetName);
 			}
 			else
@@ -1705,7 +1706,7 @@ public Query_VerifyBlock(Handle:owner, Handle:hndl, const String:error[], any:us
 					else if (g_MuteType[client] > bSess)
 					{
 						PerformMute(client, time, length / 60, sAdmName, sAdmAuth, immunity, sReason, remaining_time);
-						PrintToChat(client, "%s%t", PREFIX, "Muted on connect");
+						CPrintToChat(client, "%s%t", PREFIX, "Muted on connect");
 					}
 				}
 				case TYPE_GAG:
@@ -1726,7 +1727,7 @@ public Query_VerifyBlock(Handle:owner, Handle:hndl, const String:error[], any:us
 					else if (g_GagType[client] > bSess)
 					{
 						PerformGag(client, time, length / 60, sAdmName, sAdmAuth, immunity, sReason, remaining_time);
-						PrintToChat(client, "%s%t", PREFIX, "Gagged on connect");
+						CPrintToChat(client, "%s%t", PREFIX, "Gagged on connect");
 					}
 				}
 			}
@@ -1770,7 +1771,7 @@ public Action:Timer_MuteExpire(Handle:timer, Handle:hPack)
 	PrintToServer("Mute expired for %s", clientAuth);
 	#endif
 
-	PrintToChat(client, "%s%t", PREFIX, "Mute expired");
+	CPrintToChat(client, "%s%t", PREFIX, "Mute expired");
 
 	MarkClientAsUnMuted(client);
 	if (IsClientInGame(client))
@@ -1792,7 +1793,7 @@ public Action:Timer_GagExpire(Handle:timer, Handle:hPack)
 	PrintToServer("Gag expired for %s", clientAuth);
 	#endif
 
-	PrintToChat(client, "%s%t", PREFIX, "Gag expired");
+	CPrintToChat(client, "%s%t", PREFIX, "Gag expired");
 
 	MarkClientAsUnGagged(client);
 	if (IsClientInGame(client))
@@ -1978,7 +1979,7 @@ stock setGag(client, length, const String:clientAuth[])
 	if (g_GagType[client] == bNot)
 	{
 		PerformGag(client, _, length / 60, _, _, _, _);
-		PrintToChat(client, "%s%t", PREFIX, "Gagged on connect");
+		CPrintToChat(client, "%s%t", PREFIX, "Gagged on connect");
 		LogMessage("%s is gagged from web", clientAuth);
 	}
 }
@@ -1988,7 +1989,7 @@ stock setMute(client, length, const String:clientAuth[])
 	if (g_MuteType[client] == bNot)
 	{
 		PerformMute(client, _, length / 60, _, _, _, _);
-		PrintToChat(client, "%s%t", PREFIX, "Muted on connect");
+		CPrintToChat(client, "%s%t", PREFIX, "Muted on connect");
 		LogMessage("%s is muted from web", clientAuth);
 	}
 }
@@ -2132,7 +2133,7 @@ stock CreateBlock(client, targetId = 0, length = -1, type, const String:sReason[
 
 		if (!IsAllowedBlockLength(client, length, target_count))
 		{
-			ReplyToCommand(client, "%s%t", PREFIX, "no access");
+			CReplyToCommand(client, "%s%t", PREFIX, "no access");
 			return;
 		}
 	}
@@ -2167,7 +2168,7 @@ stock CreateBlock(client, targetId = 0, length = -1, type, const String:sReason[
 		if (!g_bPlayerStatus[target])
 		{
 			// The target has not been blocks verify. It must be completed before you can block anyone.
-			ReplyToCommand(client, "%s%t", PREFIX, "Player Comms Not Verified");
+			CReplyToCommand(client, "%s%t", PREFIX, "Player Comms Not Verified");
 			skipped = true;
 			continue; // skip
 		}
@@ -2192,7 +2193,7 @@ stock CreateBlock(client, targetId = 0, length = -1, type, const String:sReason[
 					PrintToServer("%s already muted", auth);
 					#endif
 
-					ReplyToCommand(client, "%s%t", PREFIX, "Player already muted", g_sName[target]);
+					CReplyToCommand(client, "%s%t", PREFIX, "Player already muted", g_sName[target]);
 
 					skipped = true;
 					continue;
@@ -2217,7 +2218,7 @@ stock CreateBlock(client, targetId = 0, length = -1, type, const String:sReason[
 					PrintToServer("%s already gagged", auth);
 					#endif
 
-					ReplyToCommand(client, "%s%t", PREFIX, "Player already gagged", g_sName[target]);
+					CReplyToCommand(client, "%s%t", PREFIX, "Player already gagged", g_sName[target]);
 
 					skipped = true;
 					continue;
@@ -2243,7 +2244,7 @@ stock CreateBlock(client, targetId = 0, length = -1, type, const String:sReason[
 					PrintToServer("%s already gagged or/and muted", auth);
 					#endif
 
-					ReplyToCommand(client, "%s%t", PREFIX, "Player already silenced", g_sName[target]);
+					CReplyToCommand(client, "%s%t", PREFIX, "Player already silenced", g_sName[target]);
 
 					skipped = true;
 					continue;
@@ -2399,7 +2400,7 @@ stock ProcessUnBlock(client, targetId = 0, type, String:sReason[] = "", const St
 			{
 				if (!BaseComm_IsClientMuted(target))
 				{
-					ReplyToCommand(client, "%s%t", PREFIX, "Player not muted");
+					CReplyToCommand(client, "%s%t", PREFIX, "Player not muted");
 					return;
 				}
 				else
@@ -2410,7 +2411,7 @@ stock ProcessUnBlock(client, targetId = 0, type, String:sReason[] = "", const St
 			{
 				if (!BaseComm_IsClientGagged(target))
 				{
-					ReplyToCommand(client, "%s%t", PREFIX, "Player not gagged");
+					CReplyToCommand(client, "%s%t", PREFIX, "Player not gagged");
 					return;
 				}
 				else
@@ -2421,7 +2422,7 @@ stock ProcessUnBlock(client, targetId = 0, type, String:sReason[] = "", const St
 			{
 				if (!BaseComm_IsClientMuted(target) || !BaseComm_IsClientGagged(target))
 				{
-					ReplyToCommand(client, "%s%t", PREFIX, "Player not silenced");
+					CReplyToCommand(client, "%s%t", PREFIX, "Player not silenced");
 					return;
 				}
 				else
@@ -2578,7 +2579,7 @@ stock bool:TempUnBlock(Handle:data)
 	{
 		if (admin && IsClientInGame(admin))
 		{
-			PrintToChat(admin, "%s%t", PREFIX, "No db error unlock perm");
+			CPrintToChat(admin, "%s%t", PREFIX, "No db error unlock perm");
 			PrintToConsole(admin, "%s%t", PREFIX, "No db error unlock perm");
 		}
 		return false;
@@ -2716,18 +2717,18 @@ bool:Bool_ValidMenuTarget(client, target)
 	if (target <= 0)
 	{
 		if (client)
-			PrintToChat(client, "%s%t", PREFIX, "AdminMenu_Not_Available");
+			CPrintToChat(client, "%s%t", PREFIX, "AdminMenu_Not_Available");
 		else
-			ReplyToCommand(client, "%s%t", PREFIX, "AdminMenu_Not_Available");
+			CReplyToCommand(client, "%s%t", PREFIX, "AdminMenu_Not_Available");
 
 		return false;
 	}
 	else if (!CanUserTarget(client, target))
 	{
 		if (client)
-			PrintToChat(client, "%s%t", PREFIX, "Command_Target_Not_Targetable");
+			CPrintToChat(client, "%s%t", PREFIX, "Command_Target_Not_Targetable");
 		else
-			ReplyToCommand(client, "%s%t", PREFIX, "Command_Target_Not_Targetable");
+			CReplyToCommand(client, "%s%t", PREFIX, "Command_Target_Not_Targetable");
 
 		return false;
 	}

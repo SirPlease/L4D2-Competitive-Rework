@@ -2,6 +2,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <colors>
 
 public Plugin myinfo =
 {
@@ -57,7 +58,7 @@ void ClientQueryCallback(QueryCookie cookie, int client, ConVarQueryResult resul
 				
 				BuildPath(Path_SM, path, 256, "logs/mathack_cheaters.txt");
 				LogToFile(path, ".:[Name: %s | STEAMID: %s | IP: %s]:.", t_name, t_steamid, t_ip);
-				PrintToChatAll("%t", "L4DTextureManagerBlock_MathackDetectorKickedUsingMathack", t_name);
+				CPrintToChatAll("%t", "L4DTextureManagerBlock_MathackDetectorKickedUsingMathack", t_name);
 				KickClient(client, "You have been kicked for using hacks. No rest for the wicked.");
 			}
 		}

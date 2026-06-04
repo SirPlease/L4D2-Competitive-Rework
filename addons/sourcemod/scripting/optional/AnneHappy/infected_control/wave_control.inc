@@ -64,12 +64,13 @@ Action Timer_CheckSpawnWindow(Handle timer)
     if (survivorLimit >= 2 && IsAnyTankOrAboveHalfSurvivorDownOrDied(1) && !DifficultyStrategy_CanEvaluateWave())
         return Plugin_Continue;
 
-    bool canEvaluateWave = DifficultyStrategy_CanEvaluateWave();
     bool reachedSpawnFloor = DifficultyStrategy_CanStartNormalWave();
     bool lowSiPressure = DifficultyStrategy_IsLowSiPressure();
     bool shouldStartByLatest = AntiBait_ShouldStartWaveByLatest();
     bool shouldStartByPressure = AntiBait_ShouldStartWaveEarly();
 
+    // 注意：0.1s 定时器只用于延迟调用，真正的间隔保护由
+    // DifficultyStrategy_GetWaveFloorDelay() 的难度 floor 负责。
     if (!gCV.bAutoSpawn)
     {
         if (gST.siQueueCount == gCV.iSiLimit)
@@ -97,11 +98,6 @@ Action Timer_CheckSpawnWindow(Handle timer)
             gST.bShouldCheck = false;
             gST.hSpawn = CreateTimer(0.1, Timer_StartNewWave);
         }
-    }
-    else if (canEvaluateWave && shouldStartByPressure)
-    {
-        gST.bShouldCheck = false;
-        gST.hSpawn = CreateTimer(0.1, Timer_StartNewWave);
     }
 
     return Plugin_Continue;

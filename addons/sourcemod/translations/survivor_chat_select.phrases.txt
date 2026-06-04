@@ -12,21 +12,21 @@
 
 	"SurvivorChatSelect_DefaultCharacterSet"
 	{
-		"en"		"%s Your \\x05default \\x01character is now set to \\x03%s\\x01."
-		"chi"		"%s 您的 \\x05 默认 \\x01 字符现已设置为 \\x03%s\\x01。"
-		"zho"		"%s 您的 \\x05 預設 \\x01 字元現已設定為 \\x03%s\\x01。"
-		"jp"		"%s \\x05 のデフォルトの \\x01 文字が \\x03%s\\x01 に設定されました。"
-		"ko"		"%s \\x05기본 \\x01문자가 이제 \\x03%s\\x01로 설정되었습니다."
-		"vi"		"%sKý tự \\x05mặc định \\x01 của bạn hiện được đặt thành \\x03%s\\x01."
+		"en"		"%s Your {olive}default {default}character is now set to {lightgreen}%s{default}."
+		"chi"		"%s 您的 {olive} 默认 {default} 字符现已设置为 {lightgreen}%s{default}。"
+		"zho"		"%s 您的 {olive} 預設 {default} 字元現已設定為 {lightgreen}%s{default}。"
+		"jp"		"%s {olive} のデフォルトの {default} 文字が {lightgreen}%s{default} に設定されました。"
+		"ko"		"%s {olive}기본 {default}문자가 이제 {lightgreen}%s{default}로 설정되었습니다."
+		"vi"		"%sKý tự {olive}mặc định {default} của bạn hiện được đặt thành {lightgreen}%s{default}."
 	}
 
 	"SurvivorChatSelect_CouldnLoadDefaultCharacterType"
 	{
-		"en"		"%s Couldn't load your default character. Type \\x05!csm \\x01to choose your \\x03default \\x01character."
-		"chi"		"%s 无法加载您的默认字符。输入 \\x05!csm \\x01 选择您的 \\x03 默认 \\x01 字符。"
-		"zho"		"%s 无法加载您的默认字符。输入 \\x05!csm \\x01 选择您的 \\x03 默认 \\x01 字符。"
-		"jp"		"%s デフォルトのキャラクターをロードできませんでした。 「\\x05!csm \\x01」と入力して、\\x03デフォルトの\\x01文字を選択します。"
-		"ko"		"%s 기본 캐릭터를 로드할 수 없습니다. \\x05!csm \\x01를 입력하여 \\x03기본 \\x01 문자를 선택하세요."
-		"vi"		"%s Không thể tải ký tự mặc định của bạn. Nhập \\x05!csm \\x01 để chọn ký tự \\x03 mặc định \\x01 của bạn."
+		"en"		"%s Couldn't load your default character. Type {olive}!csm {default}to choose your {lightgreen}default {default}character."
+		"chi"		"%s 无法加载您的默认字符。输入 {olive}!csm {default} 选择您的 {lightgreen} 默认 {default} 字符。"
+		"zho"		"%s 无法加载您的默认字符。输入 {olive}!csm {default} 选择您的 {lightgreen} 默认 {default} 字符。"
+		"jp"		"%s デフォルトのキャラクターをロードできませんでした。 「{olive}!csm {default}」と入力して、{lightgreen}デフォルトの{default}文字を選択します。"
+		"ko"		"%s 기본 캐릭터를 로드할 수 없습니다. {olive}!csm {default}를 입력하여 {lightgreen}기본 {default} 문자를 선택하세요."
+		"vi"		"%s Không thể tải ký tự mặc định của bạn. Nhập {olive}!csm {default} để chọn ký tự {lightgreen} mặc định {default} của bạn."
 	}
 }

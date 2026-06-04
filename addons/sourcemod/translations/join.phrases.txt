@@ -2,12 +2,12 @@
 {
 	"Join_CrawlingServer"
 	{
-		"en"		"\\x04 %N \\x05 is crawling into the server"
-		"chi"		"\\x04 %N \\x05正在爬进服务器"
-		"zho"		"\\x04 %N \\x05正在爬進伺服器"
-		"jp"		"\\x04 %N \\x05 がサーバーにクロールしています"
-		"ko"		"\\x04 %N \\x05가 서버로 크롤링 중입니다."
-		"vi"		"\\x04 %N \\x05 đang thu thập dữ liệu vào máy chủ"
+		"en"		"{green} %N {olive} is crawling into the server"
+		"chi"		"{green} %N {olive}正在爬进服务器"
+		"zho"		"{green} %N {olive}正在爬進伺服器"
+		"jp"		"{green} %N {olive} がサーバーにクロールしています"
+		"ko"		"{green} %N {olive}가 서버로 크롤링 중입니다."
+		"vi"		"{green} %N {olive} đang thu thập dữ liệu vào máy chủ"
 	}
 
 	"Join_LeftGameReason"
@@ -192,21 +192,21 @@
 
 	"Join_UseCommandsTooFast"
 	{
-		"en"		"\\x03 You use commands too fast"
-		"chi"		"\\x03 你使用命令的速度太快了"
-		"zho"		"\\x03 你使用指令的速度太快了"
-		"jp"		"\\x03 コマンドの使用が早すぎます"
-		"ko"		"\\x03 명령을 너무 빨리 사용합니다"
-		"vi"		"\\x03 Bạn dùng lệnh quá nhanh"
+		"en"		"{lightgreen} You use commands too fast"
+		"chi"		"{lightgreen} 你使用命令的速度太快了"
+		"zho"		"{lightgreen} 你使用指令的速度太快了"
+		"jp"		"{lightgreen} コマンドの使用が早すぎます"
+		"ko"		"{lightgreen} 명령을 너무 빨리 사용합니다"
+		"vi"		"{lightgreen} Bạn dùng lệnh quá nhanh"
 	}
 
 	"Join_SurvivorTeamFullNoOther"
 	{
-		"en"		"\\x03 The survivor team is full and there are no other survivor bots available to take over."
-		"chi"		"\\x03 生还者团队已满，无其他生还者bot可供接管"
-		"zho"		"\\x03 生還者團隊已滿，無其他生還者bot可供接管"
-		"jp"		"\\x03 サバイバー チームは満員で、他に引き継ぐことができるサバイバー ボットはありません。"
-		"ko"		"\\x03 생존자 팀이 꽉 찼으며 인계받을 수 있는 다른 생존자 봇이 없습니다."
-		"vi"		"\\x03 Đội sống sót đã đầy đủ và không có bot sống sót nào khác để tiếp quản."
+		"en"		"{lightgreen} The survivor team is full and there are no other survivor bots available to take over."
+		"chi"		"{lightgreen} 生还者团队已满，无其他生还者bot可供接管"
+		"zho"		"{lightgreen} 生還者團隊已滿，無其他生還者bot可供接管"
+		"jp"		"{lightgreen} サバイバー チームは満員で、他に引き継ぐことができるサバイバー ボットはありません。"
+		"ko"		"{lightgreen} 생존자 팀이 꽉 찼으며 인계받을 수 있는 다른 생존자 봇이 없습니다."
+		"vi"		"{lightgreen} Đội sống sót đã đầy đủ và không có bot sống sót nào khác để tiếp quản."
 	}
 }

@@ -362,25 +362,25 @@ public Action ADMAddBot(int client, int args)
 
     if (IsAnySurvivorBotExists())
     {
-        PrintToChat(client, "%t", "Server_StillUntakenBotsTakeThem");
+        CPrintToChat(client, "%t", "Server_StillUntakenBotsTakeThem");
         return Plugin_Handled;
     }
 
     ConVar surLimit = FindConVar("survivor_limit");
     if (surLimit.IntValue < 8)
     {
-        PrintToChat(client, "%t", "Server_Not8PlayerSportHasn");
+        CPrintToChat(client, "%t", "Server_Not8PlayerSportHasn");
         return Plugin_Handled;
     }
 
     if (SpawnFakeClientNearRandomSurvivor())
     {
-        PrintToChat(client, "%t", "Server_SurvivorBotGenerated");
+        CPrintToChat(client, "%t", "Server_SurvivorBotGenerated");
         SetConVarInt(surLimit, surLimit.IntValue + 1);
     }
     else
     {
-        PrintToChat(client, "%t", "Server_SurvivorBotCannotGeneratedMoment");
+        CPrintToChat(client, "%t", "Server_SurvivorBotCannotGeneratedMoment");
     }
     return Plugin_Handled;
 }
@@ -395,7 +395,7 @@ public Action ADMDelBot(int client, int args)
 
     if (!KickAnySurvivorBot())
     {
-        PrintToChat(client, "%t", "Server_NoBotNotTaken");
+        CPrintToChat(client, "%t", "Server_NoBotNotTaken");
     }
     else
     {
@@ -517,7 +517,7 @@ void KickMoreTank(bool autoKick)
     if (tn <= 1)
     {
         if (!autoKick)
-            PrintToChatAll("%t", "Server_EverythingNormalStillWantSkip");
+            CPrintToChatAll("%t", "Server_EverythingNormalStillWantSkip");
         return;
     }
 
@@ -530,7 +530,7 @@ void KickMoreTank(bool autoKick)
         if (c == keep) continue;
         KickClient(c, "过分了啊，一个克就够难了, %N 被踢出", c);
     }
-    PrintToChatAll("%t", "Server_ExcessGramsKicked");
+    CPrintToChatAll("%t", "Server_ExcessGramsKicked");
 }
 
 bool IsAiTank(int client)

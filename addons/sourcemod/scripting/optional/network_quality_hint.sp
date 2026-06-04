@@ -2,9 +2,10 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <colors>
 
 #define PLUGIN_VERSION "1.0.2"
-#define CHAT_TAG "\x04[网络]\x01"
+#define CHAT_TAG "{green}[网络]{default}"
 
 ConVar
 	g_hEnable,
@@ -222,14 +223,14 @@ void PrintClientStatus(int client, bool includeRouteHint)
 	float loss = GetClientLossPct(client);
 	float choke = GetClientChokePct(client);
 
-	PrintToChat(client, "%t", "NetworkQualityHint_CurrentNetworkPingMSLoss", CHAT_TAG, ping, loss, choke);
+	CPrintToChat(client, "%t", "NetworkQualityHint_CurrentNetworkPingMSLoss", CHAT_TAG, ping, loss, choke);
 
 	if (includeRouteHint) {
 		float clientChoke = GetClientIncomingChokePct(client);
 		char pageUrl[512];
 		BuildServerPageUrl(pageUrl, sizeof(pageUrl));
-		PrintToChat(client, "%t", "NetworkQualityHint_DetectionCaliberChokeUseDirection", CHAT_TAG, clientChoke);
-		PrintToChat(client, "%t", "NetworkQualityHint_AbnormalDelayPacketLossOpen", CHAT_TAG, pageUrl);
+		CPrintToChat(client, "%t", "NetworkQualityHint_DetectionCaliberChokeUseDirection", CHAT_TAG, clientChoke);
+		CPrintToChat(client, "%t", "NetworkQualityHint_AbnormalDelayPacketLossOpen", CHAT_TAG, pageUrl);
 	}
 }
 
@@ -240,9 +241,9 @@ void PrintNetworkWarning(int client, int ping, float loss, float choke, bool bad
 	BuildReason(reason, sizeof(reason), badPing, badLoss, badChoke);
 	BuildServerPageUrl(pageUrl, sizeof(pageUrl));
 
-	PrintToChat(client, "%t", "NetworkQualityHint_AbnormalityNetworkStatusDetectedCurrent", CHAT_TAG, reason, ping, loss, choke);
-	PrintToChat(client, "%t", "NetworkQualityHint_OpenIPPageCopyConnect", CHAT_TAG, pageUrl);
-	PrintToChat(client, "%t", "NetworkQualityHint_ThirdLineServersGivePriority", CHAT_TAG);
+	CPrintToChat(client, "%t", "NetworkQualityHint_AbnormalityNetworkStatusDetectedCurrent", CHAT_TAG, reason, ping, loss, choke);
+	CPrintToChat(client, "%t", "NetworkQualityHint_OpenIPPageCopyConnect", CHAT_TAG, pageUrl);
+	CPrintToChat(client, "%t", "NetworkQualityHint_ThirdLineServersGivePriority", CHAT_TAG);
 }
 
 void BuildServerPageUrl(char[] buffer, int maxlen)

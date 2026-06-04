@@ -55,7 +55,9 @@ public void OnPluginStart()
 	PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 	if(!(hKvFindKey = EndPrepSDKCall())) SetFailState("KeyValues::FindKey sig invalid.");
 
-	DHookEnableDetour(DHookCreateFromConf(h, "OnGetMissionInfo"), true, DH_OnGetMissionInfo)
+	Handle hDetour = DHookCreateFromConf(h, "OnGetMissionInfo")
+	if(!hDetour) SetFailState("Could not create detour for CTerrorGameRules::GetMissionInfo.")
+	if(!DHookEnableDetour(hDetour, true, DH_OnGetMissionInfo)) SetFailState("Could not enable detour for CTerrorGameRules::GetMissionInfo.")
 
 	hMapInitMelee = new StringMap()
 
@@ -66,11 +68,22 @@ public void OnPluginStart()
 
 MRESReturn DH_OnGetMissionInfo(Handle hReturn)
 {
-	if(GetGameTime() > 5.0) return MRES_Ignored;
 	char t[255], s[255], f[255], m[64]
 	int i = DHookGetReturn(hReturn)
-	GetConVarString(FindConVar("mp_gamemode"), m, 64)
-	SDKCall(hKvGetString, SDKCall(hKvFindKey, SDKCall(hKvFindKey, SDKCall(hKvFindKey, i, "modes", false), m, false), "1", false), m, 64, "Map", "N/A");
+	if(!i) return MRES_Ignored
+
+	ConVar hGameMode = FindConVar("mp_gamemode")
+	if(!hGameMode) return MRES_Ignored
+	hGameMode.GetString(m, 64)
+
+	int kvModes = SDKCall(hKvFindKey, i, "modes", false)
+	if(!kvModes) return MRES_Ignored
+	int kvMode = SDKCall(hKvFindKey, kvModes, m, false)
+	if(!kvMode) return MRES_Ignored
+	int kvFirstChapter = SDKCall(hKvFindKey, kvMode, "1", false)
+	if(!kvFirstChapter) return MRES_Ignored
+
+	SDKCall(hKvGetString, kvFirstChapter, m, 64, "Map", "N/A");
 	if(!hMapInitMelee.GetString(m, t, 255))
 	{
 		SDKCall(hKvGetString, i, t, 255, "meleeweapons", "");

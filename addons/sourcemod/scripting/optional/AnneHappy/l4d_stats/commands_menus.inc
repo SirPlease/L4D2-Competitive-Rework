@@ -15,7 +15,7 @@
 //	PrintToConsole(0, "Added 10 seconds to maps table current map.");
 //	new Float:ReductionFactor = GetMedkitPointReductionFactor();
 //
-//	StatsPrintToChat(client, "\x03ALL SURVIVORS \x01now earns only \x04%i percent \x01of their normal points after using their \x05%i%s Medkit\x01!", RoundToNearest(ReductionFactor * 100), MedkitsUsedCounter, (MedkitsUsedCounter == 1 ? "st" : (MedkitsUsedCounter == 2 ? "nd" : (MedkitsUsedCounter == 3 ? "rd" : "th"))), GetClientTeam(client));
+//	StatsPrintToChat(client, "{lightgreen}ALL SURVIVORS {default}now earns only {green}%i percent {default}of their normal points after using their {olive}%i%s Medkit{default}!", RoundToNearest(ReductionFactor * 100), MedkitsUsedCounter, (MedkitsUsedCounter == 1 ? "st" : (MedkitsUsedCounter == 2 ? "nd" : (MedkitsUsedCounter == 3 ? "rd" : "th"))), GetClientTeam(client));
 //}
 
 /*
@@ -195,7 +195,7 @@ public Action:cmd_ShowTimedMapsTimer(client, args)
 	if (client == 0)
 		PrintToConsole(0, "[RANK] 当前地图时间: %s", TimeLabel);
 	else
-		StatsPrintToChat(client, "当前地图时间: \x04%s", TimeLabel);
+		StatsPrintToChat(client, "当前地图时间: {green}%s", TimeLabel);
 
 	return Plugin_Handled;
 }
@@ -758,7 +758,7 @@ public GetClientRankRankChange(Handle:owner, Handle:hndl, const String:error[], 
 		}
 
 		if (!IsClientBot(client) && IsClientConnected(client) && IsClientInGame(client))
-			StatsPrintToChat(client, "你的排名%s了 \x04%i 名\x01! \x05(Rank: %i)", Label, RankChange,  RankChangeLastRank[client]);
+			StatsPrintToChat(client, "你的排名%s了 {green}%i 名{default}! {olive}(Rank: %i)", Label, RankChange,  RankChangeLastRank[client]);
 	}
 }
 
@@ -810,13 +810,13 @@ public GetClientQuarterRankRankChange(Handle:owner, Handle:hndl, const String:er
 
 	if (CurrentRank <= 0)
 	{
-		StatsPrintToChat(client, "你已离开 \x05%s\x01 排行榜。", QuarterLabel);
+		StatsPrintToChat(client, "你已离开 {olive}%s{default} 排行榜。", QuarterLabel);
 		return;
 	}
 
 	if (LastRank <= 0)
 	{
-		StatsPrintToChat(client, "你进入了 \x05%s\x01 排行榜! 当前季度排名 \x04%i\x01, 季度分数 \x04%i\x01。", QuarterLabel, CurrentRank, ClientQuarterPoints[client]);
+		StatsPrintToChat(client, "你进入了 {olive}%s{default} 排行榜! 当前季度排名 {green}%i{default}, 季度分数 {green}%i{default}。", QuarterLabel, CurrentRank, ClientQuarterPoints[client]);
 		return;
 	}
 
@@ -832,7 +832,7 @@ public GetClientQuarterRankRankChange(Handle:owner, Handle:hndl, const String:er
 		Format(Label, sizeof(Label), "下降");
 	}
 
-	StatsPrintToChat(client, "你的 \x05%s\x01 排名%s了 \x04%i 名\x01! \x05(季度排名: %i / 季度分数: %i)", QuarterLabel, Label, RankChange, CurrentRank, ClientQuarterPoints[client]);
+	StatsPrintToChat(client, "你的 {olive}%s{default} 排名%s了 {green}%i 名{default}! {olive}(季度排名: %i / 季度分数: %i)", QuarterLabel, Label, RankChange, CurrentRank, ClientQuarterPoints[client]);
 }
 
 QueryClientStatsDP_PlayerJoined(Client, const String:SteamID[])
@@ -852,11 +852,11 @@ QueryClientStatsDP_PlayerJoined(Client, const String:SteamID[])
 
 	if (ClientRank[Client] > 0)
 	{
-		StatsPrintToChatAll("玩家 \x05%s \x01进入游戏! (总榜: \x03%i/%i\x01, 总分: \x03%i\x01)", userName, ClientRank[Client], RankTotal, ClientPoints[Client]);
+		StatsPrintToChatAll("玩家 {olive}%s {default}进入游戏! (总榜: {lightgreen}%i/%i{default}, 总分: {lightgreen}%i{default})", userName, ClientRank[Client], RankTotal, ClientPoints[Client]);
 	}
 	else
 	{
-		StatsPrintToChatAll("玩家 \x05%s \x01进入游戏! (总榜未上榜)", userName);
+		StatsPrintToChatAll("玩家 {olive}%s {default}进入游戏! (总榜未上榜)", userName);
 	}
 
 	if (!QuarterRank_Enabled())
@@ -866,11 +866,11 @@ QueryClientStatsDP_PlayerJoined(Client, const String:SteamID[])
 
 	if (ClientQuarterRank[Client] > 0)
 	{
-		StatsPrintToChatAll("当前 \x05%s\x01: 季度排名 \x03%i/%i\x01, 季度分 \x03%i\x01", QuarterLabel, ClientQuarterRank[Client], QuarterRankTotal, ClientQuarterPoints[Client]);
+		StatsPrintToChatAll("当前 {olive}%s{default}: 季度排名 {lightgreen}%i/%i{default}, 季度分 {lightgreen}%i{default}", QuarterLabel, ClientQuarterRank[Client], QuarterRankTotal, ClientQuarterPoints[Client]);
 	}
 	else
 	{
-		StatsPrintToChatAll("当前 \x05%s\x01: 季度未上榜", QuarterLabel);
+		StatsPrintToChatAll("当前 {olive}%s{default}: 季度未上榜", QuarterLabel);
 	}
 }
 
@@ -895,11 +895,11 @@ public GetClientRankPlayerJoined(Handle:owner, Handle:hndl, const String:error[]
 
 	if (ClientRank[client] > 0)
 	{
-		StatsPrintToChatAll("玩家 \x05%s \x01进入游戏! (排名: \x03%i \x01/ 分数: \x03%i\x01)", userName, ClientRank[client], ClientPoints[client]);
+		StatsPrintToChatAll("玩家 {olive}%s {default}进入游戏! (排名: {lightgreen}%i {default}/ 分数: {lightgreen}%i{default})", userName, ClientRank[client], ClientPoints[client]);
 	}
 	else
 	{
-		StatsPrintToChatAll("玩家 \x05%s \x01进入游戏! (未进入排行榜)", userName);
+		StatsPrintToChatAll("玩家 {olive}%s {default}进入游戏! (未进入排行榜)", userName);
 	}
 }
 
@@ -1279,7 +1279,7 @@ public StartRankVote(client)
 	{
 		if (client > 0)
 		{
-			StatsPrintToChatPreFormatted(client, "\x04Rank投票\x01是 \x03关闭的\x01. \x05插件设置失败.");
+			StatsPrintToChatPreFormatted(client, "{green}Rank投票{default}是 {lightgreen}关闭的{default}. {olive}插件设置失败.");
 		}
 		else
 		{
@@ -1291,7 +1291,7 @@ public StartRankVote(client)
 	{
 		if (client > 0)
 		{
-			StatsPrintToChatPreFormatted(client, "The \x04Rank Vote \x01is \x03DISABLED\x01.");
+			StatsPrintToChatPreFormatted(client, "The {green}Rank Vote {default}is {lightgreen}DISABLED{default}.");
 		}
 		else
 		{
@@ -1379,7 +1379,7 @@ public Action:cmd_ClientRankMute(client, args)
 
 AnnounceClientRankMute(client)
 {
-	StatsPrintToChat2(client, true, "你 %s \x01the \x05%s\x01.", (ClientRankMute[client] ? "\x04已经禁用" : "\x03解除禁用"), PLUGIN_NAME);
+	StatsPrintToChat2(client, true, "你 %s {default}the {olive}%s{default}.", (ClientRankMute[client] ? "{green}已经禁用" : "{lightgreen}解除禁用"), PLUGIN_NAME);
 }
 
 // Start RANKVOTE.
@@ -1403,7 +1403,7 @@ public Action:cmd_RankVote(client, args)
 
 	if (!IsAdmin && ClientTeam != TEAM_SURVIVORS && ClientTeam != TEAM_INFECTED)
 	{
-		StatsPrintToChatPreFormatted2(client, true, "The spectators cannot initiate the \x04Rank Vote\x01.");
+		StatsPrintToChatPreFormatted2(client, true, "The spectators cannot initiate the {green}Rank Vote{default}.");
 		return Plugin_Handled;
 	}
 
@@ -1447,7 +1447,7 @@ public Action:cmd_ShowMapTimes(client, args)
 	if (client == 0 || !IsClientConnected(client) && !IsClientInGame(client) && IsClientBot(client))
 		return Plugin_Handled;
 
-	StatsPrintToChatPreFormatted2(client, true, "\x05NOT IMPLEMENTED YET");
+	StatsPrintToChatPreFormatted2(client, true, "{olive}NOT IMPLEMENTED YET");
 
 	return Plugin_Handled;
 }
@@ -1781,7 +1781,7 @@ public ExecuteTeamShuffle(Handle:owner, Handle:hndl, const String:error[], any:d
 
 				ChangeRankPlayerTeam(client, TEAM_SURVIVORS);
 
-				StatsPrintToChatAll2(true, "\x05%s \x01加入到了 \x03Survivors\x01阵营!", Name);
+				StatsPrintToChatAll2(true, "{olive}%s {default}加入到了 {lightgreen}Survivors{default}阵营!", Name);
 			}
 
 			// Change Spectators (TEMPORARILY) team to Infected
@@ -1792,10 +1792,10 @@ public ExecuteTeamShuffle(Handle:owner, Handle:hndl, const String:error[], any:d
 
 				ChangeRankPlayerTeam(client, TEAM_INFECTED);
 
-				StatsPrintToChatAll2(true, "\x05%s \x01加入到了 \x03Infected\x01阵营!", Name);
+				StatsPrintToChatAll2(true, "{olive}%s {default}加入到了 {lightgreen}Infected{default}阵营!", Name);
 			}
 
-			StatsPrintToChatAllPreFormatted2(true, "Team shuffle by player PPM \x03DONE\x01.");
+			StatsPrintToChatAllPreFormatted2(true, "Team shuffle by player PPM {lightgreen}DONE{default}.");
 
 			if (EnableSounds_Rankvote && GetConVarBool(cvar_SoundsEnabled))
 				EmitSoundToAll(SOUND_RANKVOTE);
@@ -2808,7 +2808,7 @@ public RankVotePanelHandler(Handle:menu, MenuAction:action, param1, param2)
 				RankVoteTimer = INVALID_HANDLE;
 			}
 
-			StatsPrintToChatAll("Vote to shuffle teams by player PPM \x03%s \x01with \x04%i (yes) against %i (no)\x01.", (yesvotes >= WinningVoteCount ? "PASSED" : "DID NOT PASS"), yesvotes, novotes);
+			StatsPrintToChatAll("Vote to shuffle teams by player PPM {lightgreen}%s {default}with {green}%i (yes) against %i (no){default}.", (yesvotes >= WinningVoteCount ? "PASSED" : "DID NOT PASS"), yesvotes, novotes);
 
 			if (yesvotes >= WinningVoteCount)
 				CreateTimer(2.0, timer_ShuffleTeams);
@@ -2820,7 +2820,7 @@ public RankVotePanelHandler(Handle:menu, MenuAction:action, param1, param2)
 		decl String:Name[32];
 		GetClientName(param1, Name, sizeof(Name));
 
-		StatsPrintToChatAll("\x05%s \x01voted. \x04%i/%i \x01players have voted.", Name, votes, humans);
+		StatsPrintToChatAll("{olive}%s {default}voted. {green}%i/%i {default}players have voted.", Name, votes, humans);
 	}
 }
 
@@ -2926,7 +2926,7 @@ public DisplayClearPanelHandler(Handle:menu, MenuAction:action, param1, param2)
 
 		StatsPrintToChatPreFormatted(client, "你的游玩记录已被清除!");
 		if (client != param1)
-			StatsPrintToChat(param1, "玩家 \x05%s \x01游玩记录清除!", Name);
+			StatsPrintToChat(param1, "玩家 {olive}%s {default}游玩记录清除!", Name);
 	}
 	else
 		StatsPrintToChatPreFormatted(param1, "清除玩家游玩记录失败!");

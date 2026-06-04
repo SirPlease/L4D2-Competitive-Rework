@@ -48,6 +48,7 @@ public Plugin myinfo =
 // Includes
 // ====================================================================================================
 #include <sourcemod>
+#include <colors>
 #include <sdktools>
 #include <sdkhooks>
 #include <basecomm>
@@ -1615,7 +1616,7 @@ public Action CmdReloadData(int client, int args)
     LoadPluginData();
 
     if (IsValidClient(client))
-        PrintToChat(client, "%t", "L4D2ScriptedHUD_HUDTextsDataFileReloaded");
+        CPrintToChat(client, "%t", "L4D2ScriptedHUD_HUDTextsDataFileReloaded");
 
     return Plugin_Handled;
 }

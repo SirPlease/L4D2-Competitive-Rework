@@ -142,13 +142,20 @@ bool TryLoadBucketsFromCache()
             g_AreaCX.Set(areaIdx, kv.GetFloat("cx", 0.0));
             g_AreaCY.Set(areaIdx, kv.GetFloat("cy", 0.0));
             g_AreaZCore.Set(areaIdx, kv.GetFloat("zCore", 0.0));
-            g_AreaZMin.Set(areaIdx, kv.GetFloat("zMin", 0.0));
-            g_AreaZMax.Set(areaIdx, kv.GetFloat("zMax", 0.0));
+
+            float zMin = kv.GetFloat("zMin", 0.0);
+            float zMax = kv.GetFloat("zMax", 0.0);
+            g_AreaZMin.Set(areaIdx, zMin);
+            g_AreaZMax.Set(areaIdx, zMax);
             g_AreaPct.Set(areaIdx, bucketIdx);
 
             if (g_FlowBuckets[bucketIdx] == null)
                 g_FlowBuckets[bucketIdx] = new ArrayList();
             g_FlowBuckets[bucketIdx].Push(areaIdx);
+
+            // 冗余保护：确保桶高度范围即使 bucket_zrange 缺失也能正确构建
+            if (zMin < g_BucketMinZ[bucketIdx]) g_BucketMinZ[bucketIdx] = zMin;
+            if (zMax > g_BucketMaxZ[bucketIdx]) g_BucketMaxZ[bucketIdx] = zMax;
 
         } while (kv.GotoNextKey(false));
         kv.GoBack();

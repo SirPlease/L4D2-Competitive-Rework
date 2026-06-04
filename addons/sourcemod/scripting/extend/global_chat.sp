@@ -2,6 +2,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <colors>
 #undef REQUIRE_PLUGIN
 #include <l4dstats>
 
@@ -415,13 +416,13 @@ public int MenuHandler_GlobalChatMenu(Menu menu, MenuAction action, int client, 
 	if (StrEqual(info, "toggle_global"))
 	{
 		g_bClientSeeGlobal[client] = !g_bClientSeeGlobal[client];
-		PrintToChat(client, "%t", "GlobalChat_FullServerNormalFullServer", g_bClientSeeGlobal[client] ? "接收" : "屏蔽");
+		CPrintToChat(client, "%t", "GlobalChat_FullServerNormalFullServer", g_bClientSeeGlobal[client] ? "接收" : "屏蔽");
 		ShowGlobalChatMenu(client);
 	}
 	else if (StrEqual(info, "toggle_lfg") && CanToggleLFGPreference(client))
 	{
 		g_bClientSeeLFG[client] = !g_bClientSeeLFG[client];
-		PrintToChat(client, "%t", "GlobalChat_AllServersAskedTipTeammates", g_bClientSeeLFG[client] ? "接收" : "屏蔽");
+		CPrintToChat(client, "%t", "GlobalChat_AllServersAskedTipTeammates", g_bClientSeeLFG[client] ? "接收" : "屏蔽");
 		ShowGlobalChatMenu(client);
 	}
 
@@ -1367,7 +1368,7 @@ void DispatchGlobalChatMessage(const char[] senderSteam64, const char[] server, 
 		for (int i = 1; i <= MaxClients; i++)
 		{
 			if (CanReceiveGlobalMessage(i, senderSteam64))
-				PrintToChat(i, "\x04%s %s", prefix, message);
+				CPrintToChat(i, "{green}%s %s", prefix, message);
 		}
 
 		return;
@@ -1387,12 +1388,12 @@ void DispatchGlobalChatMessage(const char[] senderSteam64, const char[] server, 
 				if (count < 2 || parts[1][0] == '\0')
 				{
 					PrintCenterText(i, "%s 玩家在 %s 召唤队友", parts[0], server);
-					PrintToChat(i, "%t", "GlobalChat_SummonTeammates", prefix, parts[0], server);
+					CPrintToChat(i, "%t", "GlobalChat_SummonTeammates", prefix, parts[0], server);
 				}
 				else
 				{
 					PrintCenterText(i, "%s 玩家在 %s 召唤队友", parts[0], server);
-					PrintToChat(i, "%t", "GlobalChat_SummonTeammatesWithMessage", prefix, parts[0], server, parts[1]);
+					CPrintToChat(i, "%t", "GlobalChat_SummonTeammatesWithMessage", prefix, parts[0], server, parts[1]);
 				}
 			}
 		}
@@ -1405,7 +1406,7 @@ void DispatchGlobalChatMessage(const char[] senderSteam64, const char[] server, 
 		for (int i = 1; i <= MaxClients; i++)
 		{
 			if (CanReceiveGlobalBroadcast(i))
-				PrintToChat(i, "\x01%s", message);
+				CPrintToChat(i, "{default}%s", message);
 		}
 
 		return;
@@ -1415,7 +1416,7 @@ void DispatchGlobalChatMessage(const char[] senderSteam64, const char[] server, 
 	for (int i = 1; i <= MaxClients; i++)
 	{
 		if (CanReceiveGlobalMessage(i, senderSteam64))
-			PrintToChat(i, "\x04%s \x03[%s] \x05%s\x01: %s", prefix, shortServer, name, message);
+			CPrintToChat(i, "{green}%s {lightgreen}[%s] {olive}%s{default}: %s", prefix, shortServer, name, message);
 	}
 }
 
@@ -1484,7 +1485,7 @@ public void SQL_OnCheckLoginTitle(Database database, DBResultSet results, const 
 			GetShortServerName(hostname, shortServer, sizeof(shortServer));
 
 			char formattedMsg[256];
-			FormatEx(formattedMsg, sizeof(formattedMsg), "\x01%s \x05%s \x01在 \x03%s \x01上线了！", title, clientName, shortServer);
+			FormatEx(formattedMsg, sizeof(formattedMsg), "{default}%s {olive}%s {default}在 {lightgreen}%s {default}上线了！", title, clientName, shortServer);
 
 			InsertGlobalMessage(steamId64, "@LOGIN", formattedMsg);
 		}

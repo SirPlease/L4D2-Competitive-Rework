@@ -160,7 +160,7 @@ public void OnClientSettingsChanged(int client)
 
 Action ListRates(int client, int args)
 {
-	ReplyToCommand(client, "\x01[RateMonitor] List of player netsettings(\x03cmd\x01/\x04upd\x01/\x05rate\x01):");
+	CReplyToCommand(client, "{default}[RateMonitor] List of player netsettings({lightgreen}cmd{default}/{green}upd{default}/{olive}rate{default}):");
 	
 	int iSize = hClientSettingsArray.Length;
 
@@ -170,7 +170,7 @@ Action ListRates(int client, int args)
 
 		int iClient = GetClientBySteamId(player.Client_SteamId);
 		if (iClient > 0 && GetClientTeam(client) > L4D2Team_Spectator) {
-			ReplyToCommand(client, "\x03%N\x01 : %d/%d/%d", iClient, player.Client_Cmdrate, player.Client_Updaterate, player.Client_Rate);
+			CReplyToCommand(client, "{lightgreen}%N{default} : %d/%d/%d", iClient, player.Client_Cmdrate, player.Client_Updaterate, player.Client_Rate);
 		}
 	}
 
@@ -247,8 +247,8 @@ void RegisterSettings(int client)
 			// If not punished for bad rate settings yet, punish for overlimit rate change(if any)
 			if (player.Client_Changes > iAllowedRateChanges) {
 				Format(sCmdRate, sizeof(sCmdRate), "%s%d", iCmdRate != player.Client_Cmdrate ? "*" : "", iCmdRate);
-				Format(sUpdateRate, sizeof(sUpdateRate), "%s%d\x01", iUpdateRate != player.Client_Updaterate ? "*" : "", iUpdateRate);
-				Format(sRate, sizeof(sRate), "%s%d\x01", iRate != player.Client_Rate ? "*" : "", iRate);
+				Format(sUpdateRate, sizeof(sUpdateRate), "%s%d{default}", iUpdateRate != player.Client_Updaterate ? "*" : "", iUpdateRate);
+				Format(sRate, sizeof(sRate), "%s%d{default}", iRate != player.Client_Rate ? "*" : "", iRate);
 			
 				PunishPlayer(client, sCmdRate, sUpdateRate, sRate, sCounter, iIndex);
 				return;

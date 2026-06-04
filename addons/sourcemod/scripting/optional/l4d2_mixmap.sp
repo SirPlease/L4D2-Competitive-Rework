@@ -627,7 +627,7 @@ public Action StartVoteMixmap_Timer(Handle timer)
 public Action Mixmap() 
 {
 	ServerCommand("exec %s%s.cfg", DIR_CFGS, cfg_exec);
-//	PrintToChatAll("\x01Loading \x05random \x01preset...");
+//	CPrintToChatAll("{default}Loading {olive}random {default}preset...");
 	g_bMapsetInitialized = true;
 	CreateTimer(0.1, Timed_PostMapSet);
 	
@@ -652,19 +652,19 @@ public Action Maplist(int client, int args)
 	{
 		GetArrayString(g_hArrayMapOrder, i, buffer, BUF_SZ);
 		if (g_iMapsPlayed == i)
-			FormatEx(output, BUF_SZ, "\x04 %d - %s", i + 1, buffer);
+			FormatEx(output, BUF_SZ, "{green} %d - %s", i + 1, buffer);
 		else if (!g_cvNextMapPrint.IntValue && g_iMapsPlayed < i)
 		{
-			FormatEx(output, BUF_SZ, "\x01 %d - %T", i + 1, "Secret", client);
+			FormatEx(output, BUF_SZ, "{default} %d - %T", i + 1, "Secret", client);
 			CPrintToChat(client, "%s", output);
 			continue;
 		}
-		else FormatEx(output, BUF_SZ, "\x01 %d - %s", i + 1, buffer);
+		else FormatEx(output, BUF_SZ, "{default} %d - %s", i + 1, buffer);
 
 		if (GetPrettyName(buffer)) 
 		{
 			if (g_iMapsPlayed == i) 
-				FormatEx(output, BUF_SZ, "\x04%d - %s", i + 1, buffer);
+				FormatEx(output, BUF_SZ, "{green}%d - %s", i + 1, buffer);
 			else
 				FormatEx(output, BUF_SZ, "%d - %s ", i + 1, buffer);
 		}

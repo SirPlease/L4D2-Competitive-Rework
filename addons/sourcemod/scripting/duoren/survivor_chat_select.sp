@@ -21,9 +21,10 @@
 #pragma semicolon 1
 #define PLUGIN_VERSION "1.6.1.1"
 #define PLUGIN_NAME "Survivor Chat Select"
-#define PLUGIN_PREFIX "\x01[\x04SCS\x01]"
+#define PLUGIN_PREFIX "{default}[{green}SCS{default}]"
 
 #include <sourcemod>
+#include <colors>
 #include <sdktools>
 #include <clientprefs>
 #include <adminmenu>
@@ -171,7 +172,7 @@ public Action LouisUse(int client, int args)
 void SurvivorChange(int client, int prop, char[] model,  char[] name, bool save = true)
 {
 	if( client == 0		)  { PrintToServer("You must be in the survivor team to use this command!"); return;}
-	if(!IsSurvivor(client)){ PrintToChat(client, "%t", "SurvivorChatSelect_TeamUseCommand"); 	return; }
+	if(!IsSurvivor(client)){ CPrintToChat(client, "%t", "SurvivorChatSelect_TeamUseCommand"); 	return; }
 
 	if (IsFakeClient(client))  // if bot, change name
 	{
@@ -187,7 +188,7 @@ void SurvivorChange(int client, int prop, char[] model,  char[] name, bool save 
 		char sprop[2]; IntToString(prop, sprop, 2);
 		SetClientCookie(client, g_hClientID, sprop);
 		SetClientCookie(client, g_hClientModel, model);
-		PrintToChat(client, "%t", "SurvivorChatSelect_DefaultCharacterSet", PLUGIN_PREFIX, name);
+		CPrintToChat(client, "%t", "SurvivorChatSelect_DefaultCharacterSet", PLUGIN_PREFIX, name);
 	}
 }
 
@@ -486,7 +487,7 @@ public Action Timer_LoadCookie(Handle timer, int userid)
 
 	if (!AreClientCookiesCached(client))
 	{
-		PrintToChat(client, "%t", "SurvivorChatSelect_CouldnLoadDefaultCharacterType", PLUGIN_PREFIX);
+		CPrintToChat(client, "%t", "SurvivorChatSelect_CouldnLoadDefaultCharacterType", PLUGIN_PREFIX);
 		return Plugin_Stop;
 	}
 

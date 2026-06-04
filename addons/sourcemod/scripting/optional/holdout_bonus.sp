@@ -13,6 +13,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <colors>
 #include <sdktools>
 #include <sdkhooks>
 #include <left4dhooks>
@@ -388,7 +389,7 @@ void HoldOutStarts(const char[] output, int caller, int activator, float delay)
 	// report
 	int iReport = GetConVarInt(g_hCvarReportMode);
 	if (iReport > 2 && iReport != REPORT_ONLYEVENT) {
-		PrintToChatAll("%t", "HoldoutBonus_EventStartsBonusSecondsonds", g_iPointsBonus, g_iHoldoutTime);
+		CPrintToChatAll("%t", "HoldoutBonus_EventStartsBonusSecondsonds", g_iPointsBonus, g_iHoldoutTime);
 	}
 
 	Call_StartForward(g_hForwardStart);
@@ -575,19 +576,19 @@ Action Cmd_DisplayBonus(int client, int args)
 		Format(sMsg, sizeof(sMsg), "no holdout event this round.");
 	} else {
 		if (g_bHoldoutActive) {
-			Format(sMsg, sizeof(sMsg), "\x04%i\x01 out of \x05%i\x01 [\x04%i\x01/\x05%i\x01 sec].", CalculateHoldOutBonus(), g_iPointsBonus, g_iProgress, g_iHoldoutTime);
+			Format(sMsg, sizeof(sMsg), "{green}%i{default} out of {olive}%i{default} [{green}%i{default}/{olive}%i{default} sec].", CalculateHoldOutBonus(), g_iPointsBonus, g_iProgress, g_iHoldoutTime);
 		} else if (g_iActualBonus) {
-			Format(sMsg, sizeof(sMsg), "\x04%i\x01 out of \x05%i\x01 [event over].", g_iActualBonus, g_iPointsBonus);
+			Format(sMsg, sizeof(sMsg), "{green}%i{default} out of {olive}%i{default} [event over].", g_iActualBonus, g_iPointsBonus);
 		} else {
-			Format(sMsg, sizeof(sMsg), "\x04%i\x01 out of \x05%i\x01 [not started yet].", g_iActualBonus, g_iPointsBonus);
+			Format(sMsg, sizeof(sMsg), "{green}%i{default} out of {olive}%i{default} [not started yet].", g_iActualBonus, g_iPointsBonus);
 		}
 	}
 
 	// display message
 	if (IS_VALID_INGAME(client)) {
-		PrintToChat(client, "%t", "HoldoutBonus_DynamicBonusSummary", sMsg);
+		CPrintToChat(client, "%t", "HoldoutBonus_DynamicBonusSummary", sMsg);
 	} else {
-		PrintToServer("\x01Holdout Bonus: %s", sMsg);
+		PrintToServer("{default}Holdout Bonus: %s", sMsg);
 	}
 
 	return Plugin_Handled;
@@ -596,7 +597,7 @@ Action Cmd_DisplayBonus(int client, int args)
 void DisplayBonusToAll()
 {
 	if (g_iActualBonus) {
-		PrintToChatAll("%t", "HoldoutBonus_DynamicBonusSummary_2", g_iActualBonus, g_iPointsBonus);
+		CPrintToChatAll("%t", "HoldoutBonus_DynamicBonusSummary_2", g_iActualBonus, g_iPointsBonus);
 	}
 }
 

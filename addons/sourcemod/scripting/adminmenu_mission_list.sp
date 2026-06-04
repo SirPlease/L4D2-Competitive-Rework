@@ -1,8 +1,8 @@
 #include <sourcemod>
+#include <colors>
 #include <adminmenu>
 #include <l4d2_source_keyvalues>
 #include <left4dhooks>
-#include <localizer>
 
 #pragma semicolon 1
 #pragma newdecls required
@@ -23,8 +23,6 @@ char g_sCurrentGameMode[32];
 bool g_bMapChanger_L4D2Changelevel;
 bool g_bMapChanger_MapChanger;
 bool g_bLastMenuIsOfficial[MAXPLAYERS + 1];
-
-Localizer g_loc;
 
 // --- 插件信息 ---
 public Plugin myinfo = {
@@ -74,6 +72,7 @@ public void OnLibraryRemoved(const char[] name) {
 public void OnPluginStart() {
     LoadTranslations("common.phrases");
     LoadTranslations("l4d2_mm_adminmenu.phrases");
+    LoadGeneratedTranslations();
 
     if (!Init_GameData()) {
         SetFailState("Failed to initialize game data");
@@ -89,14 +88,7 @@ public void OnPluginStart() {
         OnAdminMenuReady(topmenu);
     }
 
-    // 初始化 Localizer
-    if (LibraryExists("localizer")) {
-        Init_Localizer();
-    } else {
-        LogMessage("Localizer not found, using fallback translation method");
-        // 延迟生成翻译文件
-        CreateTimer(3.0, Timer_GenerateTranslations);
-    }
+    CreateTimer(3.0, Timer_GenerateTranslations, _, TIMER_FLAG_NO_MAPCHANGE);
 }
 
 void Init_ExcludeList() {
@@ -121,32 +113,13 @@ void Init_Commands() {
     RegAdminCmd("sm_adminmap_gentrans", Cmd_GenerateTranslations, ADMFLAG_RCON, "Force regenerates map translation files.");
 }
 
-// 直接调用初始化
-void Init_Localizer() {
-    g_loc = new Localizer();
-    if (g_loc == null) {
-        LogError("Failed to create Localizer instance");
-        return;
-    }
-    
-    CreateTimer(1.0, Timer_GenerateTranslations);
-}
-
 public void OnMapStart() {
     UpdateCurrentGameMode();
 }
 
-/**
- * 当 Localizer 准备好后，开始生成地图翻译文件
- */
-public void OnPhrasesReady() {
-    LogMessage("Localizer is ready. Generating map and mission translation files...");
-    GenerateTranslationFiles();
-}
-
 public Action Timer_GenerateTranslations(Handle timer) {
     GenerateTranslationFiles();
-    return Plugin_Continue;
+    return Plugin_Stop;
 }
 
 public void OnAdminMenuReady(Handle hTopMenu) {
@@ -231,7 +204,7 @@ void Display_MissionListMenu(int client, bool official) {
 
     SourceKeyValues kvMissions = SDKCall(g_hSDK_GetAllMissions, g_pMatchExtL4D);
     if (kvMissions.IsNull()) {
-        PrintToChat(client, "%t", "L4D2MMAdminMenu_SMFailedGetMissionList");
+        CPrintToChat(client, "%t", "L4D2MMAdminMenu_SMFailedGetMissionList");
         delete menu;
         return;
     }
@@ -263,7 +236,7 @@ void Display_MissionListMenu(int client, bool official) {
     }
 
     if (itemCount == 0) {
-        PrintToChat(client, "%t", "L4D2MMAdminMenu_SMNoMapsFoundCurrent");
+        CPrintToChat(client, "%t", "L4D2MMAdminMenu_SMNoMapsFoundCurrent");
         delete menu;
         return;
     }
@@ -331,7 +304,7 @@ void Display_ChapterListMenu(int client, const char[] missionName) {
     }
 
     if (itemCount == 0) {
-        PrintToChat(client, "%t", "L4D2MMAdminMenu_SMNoValidMapsFound");
+        CPrintToChat(client, "%t", "L4D2MMAdminMenu_SMNoValidMapsFound");
         delete menu;
         return;
     }
@@ -362,15 +335,14 @@ bool IsClientValid(int client) {
 }
 
 bool TranslatePhrase(int client, const char[] phrase, char[] buffer, int maxlen) {
+    if (!TranslationPhraseExists(phrase)) {
+        return false;
+    }
+
     // 尝试使用SourceMod翻译系统
     char temp[256];
     Format(temp, sizeof(temp), "%T", phrase, client);
-    
-    // 如果翻译失败，temp会等于格式字符串，这时返回false
-    if (StrContains(temp, "%T") != -1) {
-        return false;
-    }
-    
+
     strcopy(buffer, maxlen, temp);
     return true;
 }
@@ -381,7 +353,7 @@ void TriggerMapChange(const char[] map) {
         strcopy(mapDisplayName, sizeof(mapDisplayName), map);
     }
     
-    PrintToChatAll("%t", "L4D2MMAdminMenu_SMAdminForcingMapChange", mapDisplayName);
+    CPrintToChatAll("%t", "L4D2MMAdminMenu_SMAdminForcingMapChange", mapDisplayName);
     
     DataPack dp = new DataPack();
     dp.WriteString(map);
@@ -406,7 +378,7 @@ public Action Timer_ChangeMap(Handle timer, DataPack dp) {
 }
 
 Action Cmd_ReloadMissions(int client, int args) {
-    PrintToChatAll("%t", "L4D2MMAdminMenu_SMAdminReloadingVPKs");
+    CPrintToChatAll("%t", "L4D2MMAdminMenu_SMAdminReloadingVPKs");
     ServerCommand("update_addon_paths; mission_reload");
     ServerExecute();
     ReplyToCommand(client, "VPKs and missions reloaded.");
@@ -453,7 +425,7 @@ void GenerateTranslationFiles() {
     }
 
     SourceKeyValues kvAllMissions = SDKCall(g_hSDK_GetAllMissions, g_pMatchExtL4D);
-    if (kvMissions == null) {
+    if (kvAllMissions.IsNull()) {
         LogError("Could not get mission list from game.");
         delete kvMissions;
         delete kvChapters;
@@ -506,10 +478,24 @@ void GenerateTranslationFiles() {
     LogMessage("Translation files updated successfully.");
     
     // 重新加载翻译
-    LoadTranslations(TRANSLATION_MISSIONS);
-    LoadTranslations(TRANSLATION_CHAPTERS);
+    LoadGeneratedTranslations();
 }
 
+void LoadGeneratedTranslations() {
+    char pathMissions[PLATFORM_MAX_PATH];
+    char pathChapters[PLATFORM_MAX_PATH];
+
+    BuildPath(Path_SM, pathMissions, sizeof(pathMissions), "translations/%s", TRANSLATION_MISSIONS);
+    BuildPath(Path_SM, pathChapters, sizeof(pathChapters), "translations/%s", TRANSLATION_CHAPTERS);
+
+    if (FileExists(pathMissions)) {
+        LoadTranslations(TRANSLATION_MISSIONS);
+    }
+
+    if (FileExists(pathChapters)) {
+        LoadTranslations(TRANSLATION_CHAPTERS);
+    }
+}
 
 void AddTranslationEntry(KeyValues kv, const char[] key, const char[] displayName) {
     kv.JumpToKey(key, true);

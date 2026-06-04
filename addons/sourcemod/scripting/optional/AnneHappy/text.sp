@@ -2,6 +2,7 @@
 #pragma newdecls required
 #pragma tabsize 0
 #include <sourcemod>
+#include <colors>
 #include <sdktools>
 #include <sdkhooks>
 #include <left4dhooks>
@@ -126,7 +127,7 @@ public void Cvar_InfectedLimit(ConVar convar, const char[] oldValue, const char[
 	if (Weapon == 2 && CommonLimit< 10 && ( StrContains(tags, "WitchParty", false) != -1 || StrContains(tags, "AllCharger", false) != -1 || StrContains(tags, "AnneHappy", false) != -1))
 	{
 		ServerCommand("sm_cvar ZonemodWeapon 0");
-		PrintToChatAll("%t", "Text_NotExceed10SpecialAnne");
+		CPrintToChatAll("%t", "Text_NotExceed10SpecialAnne");
 	}
 }
 public void CvarTankBhop(ConVar convar, const char[] oldValue, const char[] newValue)
@@ -161,7 +162,7 @@ public void CvarWeapon(ConVar convar, const char[] oldValue, const char[] newVal
 			ServerCommand("exec vote/weapon/AnneHappyPlus.cfg");
 		else
 		{
-			PrintToChatAll("%t", "Text_CannotUseAnneHappyPlus");
+			CPrintToChatAll("%t", "Text_CannotUseAnneHappyPlus");
 			ServerCommand("sm_cvar ZonemodWeapon 0");
 		}
 			
@@ -175,11 +176,11 @@ void printinfo(int client = 0, bool All = true){
 	char buffer2[256];
 	char aiBuffer[64];
 	if(g_hCvarTankBhop != null){
-		Format(buffer, sizeof(buffer), "\x03Tank连跳\x05[\x04%s\x05]", TankBhop > 0?"开启":"关闭");
-		Format(buffer, sizeof(buffer), "%s \x03武器\x05[\x04%s\x05]", buffer, Weapon > 0?(Weapon > 1?"Anne+":"Zone"):"Anne");
+		Format(buffer, sizeof(buffer), "{lightgreen}Tank连跳{olive}[{green}%s{olive}]", TankBhop > 0?"开启":"关闭");
+		Format(buffer, sizeof(buffer), "%s {lightgreen}武器{olive}[{green}%s{olive}]", buffer, Weapon > 0?(Weapon > 1?"Anne+":"Zone"):"Anne");
 	}else
 	{
-		Format(buffer, sizeof(buffer), "\x03武器\x05[\x04%s\x05]",  Weapon > 0?(Weapon > 1?"Anne+":"Zone"):"Anne");
+		Format(buffer, sizeof(buffer), "{lightgreen}武器{olive}[{green}%s{olive}]",  Weapon > 0?(Weapon > 1?"Anne+":"Zone"):"Anne");
 	}
 
 	if(BuildAiDifficultyText(aiBuffer, sizeof(aiBuffer)))
@@ -187,28 +188,28 @@ void printinfo(int client = 0, bool All = true){
 		
 	if(PLUGIN_VERSION[0] == '\0')
 	GetConVarString(g_hCvarPluginVersion, PLUGIN_VERSION, sizeof(PLUGIN_VERSION));
-	Format(buffer, sizeof(buffer), "%s \x03特感\x05[\x04%s%i特%i秒\x05] \x03电信服\x05[\x04%s\x05]", buffer, (g_hAutoSpawnTimeControl != null && g_hAutoSpawnTimeControl.BoolValue)?"自动":"固定", CommonLimit, CommonTime, PLUGIN_VERSION);
+	Format(buffer, sizeof(buffer), "%s {lightgreen}特感{olive}[{green}%s%i特%i秒{olive}] {lightgreen}电信服{olive}[{green}%s{olive}]", buffer, (g_hAutoSpawnTimeControl != null && g_hAutoSpawnTimeControl.BoolValue)?"自动":"固定", CommonLimit, CommonTime, PLUGIN_VERSION);
 	int max_dist = GetConVarInt(FindConVar("inf_SpawnDistanceMin"));
-	Format(buffer2, sizeof(buffer2), "\x03特感最近生成距离\x05[\x04%d\x05]", max_dist);
+	Format(buffer2, sizeof(buffer2), "{lightgreen}特感最近生成距离{olive}[{green}%d{olive}]", max_dist);
 	if(FindConVar("inf_TeleportCheckTime")){
 		int Teleport_CheckTime = GetConVarInt(FindConVar("inf_TeleportCheckTime"));
-		Format(buffer2, sizeof(buffer2), "%s \x03特感传送条件\x05[\x04%d秒不可见\x05]", buffer2, Teleport_CheckTime);
+		Format(buffer2, sizeof(buffer2), "%s {lightgreen}特感传送条件{olive}[{green}%d秒不可见{olive}]", buffer2, Teleport_CheckTime);
 	}
 	if(FindConVar("ReturnBlood") && GetConVarInt(FindConVar("ReturnBlood")) > 0)
-		Format(buffer2, sizeof(buffer2), "%s \x03回血\x05[\x04开启\x05]", buffer2);
+		Format(buffer2, sizeof(buffer2), "%s {lightgreen}回血{olive}[{green}开启{olive}]", buffer2);
 	if(FindConVar("ai_TankConsume") && GetConVarInt(FindConVar("ai_TankConsume")) > 0)
-		Format(buffer2, sizeof(buffer2), "%s \x03坦克消耗\x05[\x04开启\x05]", buffer2);
+		Format(buffer2, sizeof(buffer2), "%s {lightgreen}坦克消耗{olive}[{green}开启{olive}]", buffer2);
 	else if(FindConVar("ai_TankSneakTime") && GetConVarFloat(FindConVar("ai_TankSneakTime")) > 0.0)
 	{
-		Format(buffer2, sizeof(buffer2), "%s \x03狡猾坦克\x05[\x04开启\x05]", buffer2);
+		Format(buffer2, sizeof(buffer2), "%s {lightgreen}狡猾坦克{olive}[{green}开启{olive}]", buffer2);
 	}
 	if(All){
-		PrintToChatAll(buffer);
-		PrintToChatAll(buffer2);
+		CPrintToChatAll(buffer);
+		CPrintToChatAll(buffer2);
 	}else
 	{
-		PrintToChat(client, buffer);
-		PrintToChat(client, buffer2);
+		CPrintToChat(client, buffer);
+		CPrintToChat(client, buffer2);
 	}
 }
 
@@ -245,7 +246,7 @@ bool BuildAiDifficultyText(char[] buffer, int maxlen)
 
 	char levelName[16];
 	GetAiLevelName(level, levelName, sizeof(levelName));
-	Format(buffer, maxlen, "\x03动态难度\x05[\x04%s-%s\x05]", mode > 0 ? "固定" : "自动", levelName);
+	Format(buffer, maxlen, "{lightgreen}动态难度{olive}[{green}%s-%s{olive}]", mode > 0 ? "固定" : "自动", levelName);
 	return true;
 }
 

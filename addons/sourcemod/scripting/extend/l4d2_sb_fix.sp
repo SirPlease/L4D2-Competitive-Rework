@@ -2,6 +2,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <colors>
 #include <sdktools>
 #include <sdkhooks>
 
@@ -545,7 +546,7 @@ public Action Timer_PlayerLeftCheck(Handle Timer)
 		if (!LeftSafeRoom) {
 			LeftSafeRoom = true;
 			SelectImprovedTarget();
-			// PrintToChatAll("[sb_fix] Survivors left the safe area.");
+			// CPrintToChatAll("[sb_fix] Survivors left the safe area.");
 		}
 		
 		TimerAlreadyWorking = false;
@@ -591,7 +592,7 @@ bool LeftStartArea()
 
 void SelectImprovedTarget()
 {
-	// PrintToChatAll("type %i, leftsaferoom %b", c_iSelectType, LeftSafeRoom);
+	// CPrintToChatAll("type %i, leftsaferoom %b", c_iSelectType, LeftSafeRoom);
 	
 	if (!g_bEnabled || !LeftSafeRoom) return; // Select targets when left the safe area.
 	
@@ -599,17 +600,17 @@ void SelectImprovedTarget()
 	
 	static char bufferChat[512];
 	static char bufferHintText[512];
-	Format(bufferChat, sizeof(bufferChat), "\x05[sb_fix] \x01Improved targets:");
+	Format(bufferChat, sizeof(bufferChat), "{olive}[sb_fix] {default}Improved targets:");
 	Format(bufferHintText, sizeof(bufferHintText), "[sb_fix] Improved targets:");
 	
 	if (c_iSelectType == 0) {
-		//PrintToChatAll("\x04Type0 - ALL bots");
-		Format(bufferChat, sizeof(bufferChat), "%s\x04\nType0 - ALL bots", bufferChat);
+		//CPrintToChatAll("{green}Type0 - ALL bots");
+		Format(bufferChat, sizeof(bufferChat), "%s{green}\nType0 - ALL bots", bufferChat);
 		Format(bufferHintText, sizeof(bufferHintText), "%s\nType0 - ALL bots", bufferHintText);
 	}
 	else if (c_iSelectType == 1) {
-		//PrintToChatAll("\x04Type1 - %d bot%s", c_iSelectNumber, (c_iSelectNumber == 1) ? "" : "s");
-		Format(bufferChat, sizeof(bufferChat), "%s\x04\nType1 - %d bot%s", bufferChat, c_iSelectNumber, (c_iSelectNumber == 1) ? "" : "s");
+		//CPrintToChatAll("{green}Type1 - %d bot%s", c_iSelectNumber, (c_iSelectNumber == 1) ? "" : "s");
+		Format(bufferChat, sizeof(bufferChat), "%s{green}\nType1 - %d bot%s", bufferChat, c_iSelectNumber, (c_iSelectNumber == 1) ? "" : "s");
 		Format(bufferHintText, sizeof(bufferHintText), "%s\nType1 - %d bot%s", bufferHintText, c_iSelectNumber, (c_iSelectNumber == 1) ? "" : "s");
 		
 		int count;
@@ -617,8 +618,8 @@ void SelectImprovedTarget()
 			if (isSurvivorBot(x)) {
 				g_bFixTarget[x] = true;
 				count++;
-				//PrintToChatAll("\x04(%d/%d)\x05. %N", count, c_iSelectNumber, x);
-				Format(bufferChat, sizeof(bufferChat), "%s\x04\n(%d/%d)\x05. %N", bufferChat, count, c_iSelectNumber, x);
+				//CPrintToChatAll("{green}(%d/%d){olive}. %N", count, c_iSelectNumber, x);
+				Format(bufferChat, sizeof(bufferChat), "%s{green}\n(%d/%d){olive}. %N", bufferChat, count, c_iSelectNumber, x);
 				Format(bufferHintText, sizeof(bufferHintText), "%s%s(%d/%d). %N", bufferHintText, (count == 1) ? "\n" : ", ", count, c_iSelectNumber, x);
 			}
 			
@@ -630,8 +631,8 @@ void SelectImprovedTarget()
 		static char sSelectName[256];
 		GetConVarString(sb_fix_select_character_name, sSelectName, sizeof(sSelectName));
 		
-		//PrintToChatAll("\x04Type2 - \"%s\"", sSelectName);
-		Format(bufferChat, sizeof(bufferChat), "%s\x04\nType2 - \"%s\"", bufferChat, sSelectName);
+		//CPrintToChatAll("{green}Type2 - \"%s\"", sSelectName);
+		Format(bufferChat, sizeof(bufferChat), "%s{green}\nType2 - \"%s\"", bufferChat, sSelectName);
 		Format(bufferHintText, sizeof(bufferHintText), "%s\nType2 - \"%s\"", bufferHintText, sSelectName);
 		
 		int count;
@@ -643,8 +644,8 @@ void SelectImprovedTarget()
 				if (strcmp(sSelectName, sName) == 0) {
 					g_bFixTarget[x] = true;
 					count++;
-					//PrintToChatAll("\x04%d\x05. %N", count, x);
-					Format(bufferChat, sizeof(bufferChat), "%s\x04\n%d\x05. %N", bufferChat, count, x);
+					//CPrintToChatAll("{green}%d{olive}. %N", count, x);
+					Format(bufferChat, sizeof(bufferChat), "%s{green}\n%d{olive}. %N", bufferChat, count, x);
 					Format(bufferHintText, sizeof(bufferHintText), "%s%s%d. %N", bufferHintText, (count == 1) ? "\n" : ", ", count, x);
 				} else {
 					g_bFixTarget[x] = false;
@@ -654,7 +655,7 @@ void SelectImprovedTarget()
 		}
 	}
 	
-	//PrintToChatAll(bufferChat);
+	//CPrintToChatAll(bufferChat);
 	//PrintHintTextToAll(bufferHintText);
 }
 
@@ -671,13 +672,13 @@ public Action Timer_ShoveChance(Handle Timer)
 							if (GetRandomInt(0, 100) <= c_iBash_HunterChance) g_bShove[sb][x] = true;
 							else g_bShove[sb][x] = false;
 							
-							// PrintToChatAll("%N's Shove to %N: %b", sb, x, g_bShove[sb][x]);
+							// CPrintToChatAll("%N's Shove to %N: %b", sb, x, g_bShove[sb][x]);
 						}
 						else if (zombieClass == ZC_JOCKEY) {
 							if (GetRandomInt(0, 100) <= c_iBash_JockeyChance) g_bShove[sb][x] = true;
 							else g_bShove[sb][x] = false;
 							
-							// PrintToChatAll("%N's Shove to %N: %b", sb, x, g_bShove[sb][x]);
+							// CPrintToChatAll("%N's Shove to %N: %b", sb, x, g_bShove[sb][x]);
 						}
 					}
 				}
@@ -757,12 +758,12 @@ public Action WeaponSwitch(int client, int weapon)
 			clip = GetEntProp(slot0, Prop_Send, "m_iClip1");
 			extra_ammo = PrimaryExtraAmmoCheck(client, slot0); // check
 			
-			//PrintToChatAll("[%N's] clip: %d, extra_ammo: %d", client, clip, extra_ammo);
+			//CPrintToChatAll("[%N's] clip: %d, extra_ammo: %d", client, clip, extra_ammo);
 			
-			//if (!g_bCommonWithinMelee[client] && (clip != 0 || extra_ammo != 0)) PrintToChatAll("switch Stoped");
+			//if (!g_bCommonWithinMelee[client] && (clip != 0 || extra_ammo != 0)) CPrintToChatAll("switch Stoped");
 			
 			if (clip == 0 && extra_ammo == 0) {
-				//PrintToChatAll("\x05[sb_fix] \x04%N\x01 ammo is now zero.", client);
+				//CPrintToChatAll("{olive}[sb_fix] {green}%N{default} ammo is now zero.", client);
 			}
 			
 			if (!g_bCommonWithinMelee[client] && (clip != 0 || extra_ammo != 0)) return Plugin_Handled;
@@ -1201,7 +1202,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 			TeleportEntity(client, NULL_VECTOR, angles, NULL_VECTOR);
 			buttons |= IN_ATTACK2;
 			if (c_bDebug_Enabled) {
-				PrintToChatAll("%t", "L4D2SBFix_ShovedFlying", GetGameTime(), client, aHunterJockey, aHunterJockey);
+				CPrintToChatAll("%t", "L4D2SBFix_ShovedFlying", GetGameTime(), client, aHunterJockey, aHunterJockey);
 				EmitSoundToAll(SOUND_SWING, client);
 			}
 			return Plugin_Changed;
@@ -1223,8 +1224,8 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 			GetEntPropVector(aCapSmoker, Prop_Data, "m_vecOrigin", e_pos);
 			e_pos[2] += 5.0;
 			
-			//PrintToChatAll("c_pos[0] %.1f  |  [1] %.1f  |  [2] %.1f", c_pos[0], c_pos[1], c_pos[2]);
-			//PrintToChatAll("e_pos[0] %.1f  |  [1] %.1f  |  [2] %.1f", e_pos[0], e_pos[1], e_pos[2]);
+			//CPrintToChatAll("c_pos[0] %.1f  |  [1] %.1f  |  [2] %.1f", c_pos[0], c_pos[1], c_pos[2]);
+			//CPrintToChatAll("e_pos[0] %.1f  |  [1] %.1f  |  [2] %.1f", e_pos[0], e_pos[1], e_pos[2]);
 			
 			// GetClientEyePosition(client, c_pos);
 			// GetClientEyePosition(aCapSmoker, e_pos);
@@ -1233,7 +1234,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 			MakeVectorFromPoints(c_pos, e_pos, lookat);
 			GetVectorAngles(lookat, angles);
 			
-			if (c_bDebug_Enabled) PrintToChatAll("%t", "L4D2SBFix_CapSmoker", GetGameTime(), client, aCapSmoker, aCapSmoker);
+			if (c_bDebug_Enabled) CPrintToChatAll("%t", "L4D2SBFix_CapSmoker", GetGameTime(), client, aCapSmoker, aCapSmoker);
 
 			TeleportEntity(client, NULL_VECTOR, angles, NULL_VECTOR);
 			
@@ -1277,7 +1278,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 			MakeVectorFromPoints(c_pos, e_pos, lookat);
 			GetVectorAngles(lookat, angles);
 			
-			if (c_bDebug_Enabled) PrintToChatAll("%t", "L4D2SBFix_CapSurvivor", GetGameTime(), client, aCap_Survivor, aCap_Survivor);
+			if (c_bDebug_Enabled) CPrintToChatAll("%t", "L4D2SBFix_CapSurvivor", GetGameTime(), client, aCap_Survivor, aCap_Survivor);
 			
 			/****************************************************************************************************/
 			
@@ -1340,7 +1341,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 			MakeVectorFromPoints(c_pos, e_pos, lookat);
 			GetVectorAngles(lookat, angles);
 			
-			if (c_bDebug_Enabled) PrintToChatAll("%t", "L4D2SBFix_CapInfected", GetGameTime(), client, aCap_Infected, aCap_Infected);
+			if (c_bDebug_Enabled) CPrintToChatAll("%t", "L4D2SBFix_CapInfected", GetGameTime(), client, aCap_Infected, aCap_Infected);
 			
 			/****************************************************************************************************/
 			
@@ -1399,9 +1400,9 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 			GetVectorAngles(lookat, angles);
 			
 			if (c_bDebug_Enabled) {
-				// PrintToChatAll("\x01rock : \x01[0] - \x04%.2f \x01, [1] - \x04%.2f \x01, [2] - \x04%.2f", rock_e_pos[0], rock_e_pos[1], rock_e_pos[2]);
-				// PrintToChatAll("\x01client(%N) : \x01[0] - \x04%.2f \x01, [1] - \x04%.2f \x01, [2] - \x04%.2f", client, c_pos[0], c_pos[1], c_pos[2]);
-				// PrintToChatAll("---");
+				// CPrintToChatAll("{default}rock : {default}[0] - {green}%.2f {default}, [1] - {green}%.2f {default}, [2] - {green}%.2f", rock_e_pos[0], rock_e_pos[1], rock_e_pos[2]);
+				// CPrintToChatAll("{default}client(%N) : {default}[0] - {green}%.2f {default}, [1] - {green}%.2f {default}, [2] - {green}%.2f", client, c_pos[0], c_pos[1], c_pos[2]);
+				// CPrintToChatAll("---");
 			}
 			
 			float aimdist = GetVectorDistance(c_pos, rock_e_pos);
@@ -1427,7 +1428,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 			MakeVectorFromPoints(c_pos, witch_e_pos, lookat);
 			GetVectorAngles(lookat, angles);
 			
-			if (c_bDebug_Enabled) PrintToChatAll("%t", "L4D2SBFix_Witch", GetGameTime(), client, aWitch);
+			if (c_bDebug_Enabled) CPrintToChatAll("%t", "L4D2SBFix_Witch", GetGameTime(), client, aWitch);
 			
 			TeleportEntity(client, NULL_VECTOR, angles, NULL_VECTOR);
 			
@@ -1439,10 +1440,10 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 				if (aimdist < c_fWitch_Shotgun_Range_Min || aimdist > c_fWitch_Shotgun_Range_Max) { // 70 ~ 300
 					if (GetRandomInt(0, 4) == 0) buttons &= ~IN_ATTACK;
 					else buttons |= IN_ATTACK;
-					//PrintToChatAll("\x05%N %.2f", client, aimdist);
+					//CPrintToChatAll("{olive}%N %.2f", client, aimdist);
 				} else {
 					buttons &= ~IN_ATTACK;
-					//PrintToChatAll("\x04%N Attack Stop %.2f", client, aimdist);
+					//CPrintToChatAll("{green}%N Attack Stop %.2f", client, aimdist);
 				}
 				return Plugin_Changed;
 			}
@@ -1502,7 +1503,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 					
 					g_Stock_NextThinkTick[client] = iNextThinkTick; // Set the current m_nNextThinkTick
 					
-					if (c_bDebug_Enabled) PrintToChatAll("%t", "L4D2SBFix_CommonsDistMeleeCount", GetGameTime(), client, aCommonInfected, aimdist, iCI_MeleeCount);
+					if (c_bDebug_Enabled) CPrintToChatAll("%t", "L4D2SBFix_CommonsDistMeleeCount", GetGameTime(), client, aCommonInfected, aimdist, iCI_MeleeCount);
 					
 					// iCI_MeleeCount is from ci_melee_range
 					if (c_bCI_MeleeEnabled
@@ -1572,7 +1573,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 				}
 				else // Skip if aCommonInfected is not visible
 				{
-					// PrintToChatAll("stock %i  |  next %i", g_Stock_NextThinkTick[client], iNextThinkTick);
+					// CPrintToChatAll("stock %i  |  next %i", g_Stock_NextThinkTick[client], iNextThinkTick);
 				}
 			}
 		}
@@ -1669,7 +1670,7 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 					TeleportEntity(client, NULL_VECTOR, angles, NULL_VECTOR);
 					buttons |= IN_ATTACK2;
 					if (c_bDebug_Enabled) {
-						PrintToChatAll("%t", "L4D2SBFix_NewTargetShoved", GetGameTime(), client, new_target, new_target);
+						CPrintToChatAll("%t", "L4D2SBFix_NewTargetShoved", GetGameTime(), client, new_target, new_target);
 						EmitSoundToAll(SOUND_SWING, client);
 					}
 					return Plugin_Changed;
@@ -1680,8 +1681,8 @@ stock Action onSBRunCmd(int client, int &buttons, float vel[3], float angles[3])
 				|| (aimdist < 100.0 && isHaveItem(AW_Classname, "weapon_melee")))
 			{
 				if (c_bDebug_Enabled) {
-					if (!isTargetBoomer) PrintToChatAll("%t", "L4D2SBFix_NewTarget", GetGameTime(), client, new_target, new_target);
-					else PrintToChatAll("%t", "L4D2SBFix_NewTargetShoot", GetGameTime(), client, new_target, new_target, (isBoomer_Shoot_OK) ? "OK" : "NO");
+					if (!isTargetBoomer) CPrintToChatAll("%t", "L4D2SBFix_NewTarget", GetGameTime(), client, new_target, new_target);
+					else CPrintToChatAll("%t", "L4D2SBFix_NewTargetShoot", GetGameTime(), client, new_target, new_target, (isBoomer_Shoot_OK) ? "OK" : "NO");
 				}
 			
 				if (!isTargetBoomer || (isTargetBoomer && isBoomer_Shoot_OK)) {
@@ -1771,8 +1772,8 @@ stock Action onSBRunCmd_Incapacitated(int client, int &buttons, float vel[3], fl
 			GetVectorAngles(lookat, angles);
 			
 			if (c_bDebug_Enabled) {
-				if (isSurvivor(aCapper)) PrintToChatAll("%t", "L4D2SBFix_CapSurvivorIncapacitated", GetGameTime(), client, aCapper);
-				else PrintToChatAll("%t", "L4D2SBFix_CapInfectedIncapacitated", GetGameTime(), client, aCapper);
+				if (isSurvivor(aCapper)) CPrintToChatAll("%t", "L4D2SBFix_CapSurvivorIncapacitated", GetGameTime(), client, aCapper);
+				else CPrintToChatAll("%t", "L4D2SBFix_CapInfectedIncapacitated", GetGameTime(), client, aCapper);
 			}
 			TeleportEntity(client, NULL_VECTOR, angles, NULL_VECTOR);
 			
@@ -1838,7 +1839,7 @@ stock Action onSBRunCmd_Incapacitated(int client, int &buttons, float vel[3], fl
 			
 			/****************************************************************************************************/
 			
-			if (c_bDebug_Enabled) PrintToChatAll("%t", "L4D2SBFix_CommonsIncapacitatedDist", GetGameTime(), client, aimdist);
+			if (c_bDebug_Enabled) CPrintToChatAll("%t", "L4D2SBFix_CommonsIncapacitatedDist", GetGameTime(), client, aimdist);
 			
 			TeleportEntity(client, NULL_VECTOR, angles, NULL_VECTOR);
 			
@@ -1867,7 +1868,7 @@ stock Action onSBRunCmd_Incapacitated(int client, int &buttons, float vel[3], fl
 			MakeVectorFromPoints(c_pos, e_pos, lookat);
 			GetVectorAngles(lookat, angles);
 			
-			if (c_bDebug_Enabled) PrintToChatAll("%t", "L4D2SBFix_IntTargetIncapacitated", GetGameTime(), client, new_target);
+			if (c_bDebug_Enabled) CPrintToChatAll("%t", "L4D2SBFix_IntTargetIncapacitated", GetGameTime(), client, new_target);
 			
 			TeleportEntity(client, NULL_VECTOR, angles, NULL_VECTOR);
 			
@@ -1895,17 +1896,17 @@ public Action Event_PlayerIncapacitated(Event event, const char[] name, bool don
 	int attackerentid = event.GetInt("attackerentid");
 	
 	// int type = event.GetInt("type");
-	// PrintToChatAll("\x04PlayerIncapacitated");
-	// PrintToChatAll("type %i", type);
+	// CPrintToChatAll("{green}PlayerIncapacitated");
+	// CPrintToChatAll("type %i", type);
 	
 	if (isSurvivor(victim) && IsWitch(attackerentid))
 	{
 		g_iWitch_Process[attackerentid] = WITCH_INCAPACITATED;
 		
-		// PrintToChatAll("attackerentid %i attacked %N", attackerentid, victim);
+		// CPrintToChatAll("attackerentid %i attacked %N", attackerentid, victim);
 		// int health = event.GetInt("health");
 		// int dmg_health = event.GetInt("dmg_health");
-		// PrintToChatAll("health: %i, damage: %i", health, dmg_health);
+		// CPrintToChatAll("health: %i, damage: %i", health, dmg_health);
 	}
 	
 	return Plugin_Handled;
@@ -1919,17 +1920,17 @@ public Action Event_PlayerDeath(Event event, const char[] name, bool dontBroadca
 	int attackerentid = event.GetInt("attackerentid");
 	
 	// int type = event.GetInt("type");
-	// PrintToChatAll("\x04PlayerDeath");
-	// PrintToChatAll("type %i", type);
+	// CPrintToChatAll("{green}PlayerDeath");
+	// CPrintToChatAll("type %i", type);
 	
 	if (isSurvivor(victim) && IsWitch(attackerentid))
 	{
 		g_iWitch_Process[attackerentid] = WITCH_KILLED;
 		
-		// PrintToChatAll("attackerentid %i attacked %N", attackerentid, victim);
+		// CPrintToChatAll("attackerentid %i attacked %N", attackerentid, victim);
 		// int health = event.GetInt("health");
 		// int dmg_health = event.GetInt("dmg_health");
-		// PrintToChatAll("health: %i, damage: %i", health, dmg_health);
+		// CPrintToChatAll("health: %i, damage: %i", health, dmg_health);
 	}
 	
 	// Witch Damage type: 4
@@ -1980,7 +1981,7 @@ public void OnEntityDestroyed(int entity)
 					iWitch_Count++;
 				}
 				
-				//PrintToChatAll("witch count %d", iWitch_Count);
+				//CPrintToChatAll("witch count %d", iWitch_Count);
 				
 				if (iWitch_Count == 0) {g_bWitchActive = false;}
 			}
@@ -2205,7 +2206,7 @@ int PrimaryExtraAmmoCheck(int client, int weapon_index)
 		extra_ammo = GetEntData(client, g_iOffsetAmmo + offset);
 	}
 	
-	//PrintToChatAll("%N Gun Name: %d, Offset: %i, ExtraAmmo: %i:", client, weapon_index, offset, extra_ammo);
+	//CPrintToChatAll("%N Gun Name: %d, Offset: %i, ExtraAmmo: %i:", client, weapon_index, offset, extra_ammo);
 	
 	return extra_ammo;
 }

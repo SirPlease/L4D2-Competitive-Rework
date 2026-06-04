@@ -92,22 +92,22 @@
 
 	"L4D2DamageShow_SpectatorDisplayToggled"
 	{
-		"en"		"\\x04旁观显示\\x01已切换：\\x05%s"
-		"chi"		"\\x04旁观显示\\x01已切换：\\x05%s"
-		"zho"		"\\x04旁觀顯示\\x01已切換：\\x05%s"
-		"jp"		"\\x04旁观显示\\x01已切换：\\x05%s"
-		"ko"		"\\x04旁观显示\\x01已切换：\\x05%s"
-		"vi"		"\\x04旁观显示\\x01已切换：\\x05%s"
+		"en"		"{green}旁观显示{default}已切换：{olive}%s"
+		"chi"		"{green}旁观显示{default}已切换：{olive}%s"
+		"zho"		"{green}旁觀顯示{default}已切換：{olive}%s"
+		"jp"		"{green}旁观显示{default}已切换：{olive}%s"
+		"ko"		"{green}旁观显示{default}已切换：{olive}%s"
+		"vi"		"{green}旁观显示{default}已切换：{olive}%s"
 	}
 
 	"L4D2DamageShow_OnlyAdministratorsWatchingCanUse"
 	{
-		"en"		"\\x03Only administrators who are watching can use this switch."
-		"chi"		"\\x03只有旁观中的管理员可以使用该开关。"
-		"zho"		"\\x03只有旁觀的管理員可以使用此開關。"
-		"jp"		"\\x03監視している管理者のみがこのスイッチを使用できます。"
-		"ko"		"\\x03 감시 중인 관리자만 이 스위치를 사용할 수 있습니다."
-		"vi"		"\\x03Chỉ quản trị viên đang xem mới có thể sử dụng nút chuyển này."
+		"en"		"{lightgreen}Only administrators who are watching can use this switch."
+		"chi"		"{lightgreen}只有旁观中的管理员可以使用该开关。"
+		"zho"		"{lightgreen}只有旁觀的管理員可以使用此開關。"
+		"jp"		"{lightgreen}監視している管理者のみがこのスイッチを使用できます。"
+		"ko"		"{lightgreen} 감시 중인 관리자만 이 스위치를 사용할 수 있습니다."
+		"vi"		"{lightgreen}Chỉ quản trị viên đang xem mới có thể sử dụng nút chuyển này."
 	}
 
 	"L4D2DamageShow_HUDFunctionDisabledAdministratorFlag"

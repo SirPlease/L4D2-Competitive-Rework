@@ -2,11 +2,11 @@
 {
 	"L4D2StuckTankTeleport_RunningTooFastTeleportTank"
 	{
-		"en"		"\\x03%N \\x04 Running too fast, teleport Tank according to the door threshold."
-		"chi"		"\\x03%N \\x04 跑太快，按门口阈值传送 Tank。"
-		"zho"		"\\x03%N \\x04 跑太快，按門口閾值傳送 Tank。"
-		"jp"		"\\x03%N \\x04 走るのが速すぎます。ドアの敷居に従ってタンクをテレポートします。"
-		"ko"		"\\x03%N \\x04 너무 빨리 달리면 문지방에 따라 탱크를 텔레포트합니다."
-		"vi"		"\\x03%N \\x04 Chạy quá nhanh, dịch chuyển Tank theo ngưỡng cửa."
+		"en"		"{lightgreen}%N {green} Running too fast, teleport Tank according to the door threshold."
+		"chi"		"{lightgreen}%N {green} 跑太快，按门口阈值传送 Tank。"
+		"zho"		"{lightgreen}%N {green} 跑太快，按門口閾值傳送 Tank。"
+		"jp"		"{lightgreen}%N {green} 走るのが速すぎます。ドアの敷居に従ってタンクをテレポートします。"
+		"ko"		"{lightgreen}%N {green} 너무 빨리 달리면 문지방에 따라 탱크를 텔레포트합니다."
+		"vi"		"{lightgreen}%N {green} Chạy quá nhanh, dịch chuyển Tank theo ngưỡng cửa."
 	}
 }

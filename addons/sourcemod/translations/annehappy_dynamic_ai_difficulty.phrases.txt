@@ -2,71 +2,71 @@
 {
 	"DynamicAIDifficulty_DynamicDifficultyRoundLocked"
 	{
-		"en"		"\\x04[AnneHappyAI]\\x01 The dynamic difficulty of this round has been locked to \\x03%s\\x01."
-		"chi"		"\\x04[AnneHappyAI]\\x01 本回合动态难度已锁定为 \\x03%s\\x01。"
-		"zho"		"\\x04[AnneHappyAI]\\x01 本回合動態難度已鎖定為 \\x03%s\\x01。"
-		"jp"		"\\x04[AnneHappyAI]\\x01 このラウンドのダイナミック難易度は \\x03%s\\x01 にロックされています。"
-		"ko"		"\\x04[AnneHappyAI]\\x01 이번 라운드의 동적 난이도는 \\x03%s\\x01로 고정되었습니다."
-		"vi"		"\\x04[AnneHappyAI]\\x01 Độ khó linh hoạt của vòng này đã bị khóa ở \\x03%s\\x01."
+		"en"		"{green}[AnneHappyAI]{default} The dynamic difficulty of this round has been locked to {lightgreen}%s{default}."
+		"chi"		"{green}[AnneHappyAI]{default} 本回合动态难度已锁定为 {lightgreen}%s{default}。"
+		"zho"		"{green}[AnneHappyAI]{default} 本回合動態難度已鎖定為 {lightgreen}%s{default}。"
+		"jp"		"{green}[AnneHappyAI]{default} このラウンドのダイナミック難易度は {lightgreen}%s{default} にロックされています。"
+		"ko"		"{green}[AnneHappyAI]{default} 이번 라운드의 동적 난이도는 {lightgreen}%s{default}로 고정되었습니다."
+		"vi"		"{green}[AnneHappyAI]{default} Độ khó linh hoạt của vòng này đã bị khóa ở {lightgreen}%s{default}."
 	}
 
 	"DynamicAIDifficulty_FixedDynamicDifficulty"
 	{
-		"en"		"\\x04[AnneHappyAI]\\x01 Fixed dynamic difficulty: \\x03%s\\x01."
-		"chi"		"\\x04[AnneHappyAI]\\x01 固定动态难度：\\x03%s\\x01。"
-		"zho"		"\\x04[AnneHappyAI]\\x01 固定動態難度：\\x03%s\\x01。"
-		"jp"		"\\x04[AnneHappyAI]\\x01 動的難易度を修正しました: \\x03%s\\x01。"
-		"ko"		"\\x04[AnneHappyAI]\\x01 고정 동적 난이도: \\x03%s\\x01."
-		"vi"		"\\x04[AnneHappyAI]\\x01 Đã sửa lỗi độ khó động: \\x03%s\\x01."
+		"en"		"{green}[AnneHappyAI]{default} Fixed dynamic difficulty: {lightgreen}%s{default}."
+		"chi"		"{green}[AnneHappyAI]{default} 固定动态难度：{lightgreen}%s{default}。"
+		"zho"		"{green}[AnneHappyAI]{default} 固定動態難度：{lightgreen}%s{default}。"
+		"jp"		"{green}[AnneHappyAI]{default} 動的難易度を修正しました: {lightgreen}%s{default}。"
+		"ko"		"{green}[AnneHappyAI]{default} 고정 동적 난이도: {lightgreen}%s{default}."
+		"vi"		"{green}[AnneHappyAI]{default} Đã sửa lỗi độ khó động: {lightgreen}%s{default}."
 	}
 
 	"DynamicAIDifficulty_SwitchedAutomaticDifficultyTakeEffect"
 	{
-		"en"		"\\x04[AnneHappyAI]\\x01 has been switched to automatic difficulty, which will take effect from the next round; the difficulty of the current round remains unchanged."
-		"chi"		"\\x04[AnneHappyAI]\\x01 已切换为自动难度，将从下一回合开始生效；当前回合难度不变。"
-		"zho"		"\\x04[AnneHappyAI]\\x01 已切換為自動難度，將從下一回合開始生效；目前回合難度不變。"
-		"jp"		"\\x04[AnneHappyAI]\\x01 は自動難易度に切り替えられ、次のラウンドから有効になります。現在のラウンドの難易度は変わりません。"
-		"ko"		"\\x04[AnneHappyAI]\\x01가 자동 난이도로 전환되었으며, 이는 다음 라운드부터 적용됩니다. 현재 라운드의 난이도는 변경되지 않습니다."
-		"vi"		"\\x04[AnneHappyAI]\\x01 đã được chuyển sang độ khó tự động, độ khó này sẽ có hiệu lực từ vòng tiếp theo; độ khó của vòng hiện tại không thay đổi."
+		"en"		"{green}[AnneHappyAI]{default} has been switched to automatic difficulty, which will take effect from the next round; the difficulty of the current round remains unchanged."
+		"chi"		"{green}[AnneHappyAI]{default} 已切换为自动难度，将从下一回合开始生效；当前回合难度不变。"
+		"zho"		"{green}[AnneHappyAI]{default} 已切換為自動難度，將從下一回合開始生效；目前回合難度不變。"
+		"jp"		"{green}[AnneHappyAI]{default} は自動難易度に切り替えられ、次のラウンドから有効になります。現在のラウンドの難易度は変わりません。"
+		"ko"		"{green}[AnneHappyAI]{default}가 자동 난이도로 전환되었으며, 이는 다음 라운드부터 적용됩니다. 현재 라운드의 난이도는 변경되지 않습니다."
+		"vi"		"{green}[AnneHappyAI]{default} đã được chuyển sang độ khó tự động, độ khó này sẽ có hiệu lực từ vòng tiếp theo; độ khó của vòng hiện tại không thay đổi."
 	}
 
 	"DynamicAIDifficulty_SwitchedAutomaticDifficulty"
 	{
-		"en"		"\\x04[AnneHappyAI]\\x01 has been switched to automatic difficulty."
-		"chi"		"\\x04[AnneHappyAI]\\x01 已切换为自动难度。"
-		"zho"		"\\x04[AnneHappyAI]\\x01 已切換為自動難度。"
-		"jp"		"\\x04[AnneHappyAI]\\x01は難易度が自動に切り替わりました。"
-		"ko"		"\\x04[AnneHappyAI]\\x01가 자동 난이도로 전환되었습니다."
-		"vi"		"\\x04[AnneHappyAI]\\x01 đã được chuyển sang độ khó tự động."
+		"en"		"{green}[AnneHappyAI]{default} has been switched to automatic difficulty."
+		"chi"		"{green}[AnneHappyAI]{default} 已切换为自动难度。"
+		"zho"		"{green}[AnneHappyAI]{default} 已切換為自動難度。"
+		"jp"		"{green}[AnneHappyAI]{default}は難易度が自動に切り替わりました。"
+		"ko"		"{green}[AnneHappyAI]{default}가 자동 난이도로 전환되었습니다."
+		"vi"		"{green}[AnneHappyAI]{default} đã được chuyển sang độ khó tự động."
 	}
 
 	"DynamicAIDifficulty_DifficultyNextRoundFixedDifficulty"
 	{
-		"en"		"\\x04[AnneHappyAI]\\x01 The difficulty of the next round has been fixed to \\x03%s\\x01; the difficulty of the current round remains unchanged."
-		"chi"		"\\x04[AnneHappyAI]\\x01 已固定下一回合难度为 \\x03%s\\x01；当前回合难度不变。"
-		"zho"		"\\x04[AnneHappyAI]\\x01 已固定下一回合難度為 \\x03%s\\x01；目前回合難度不變。"
-		"jp"		"\\x04[AnneHappyAI]\\x01 次のラウンドの難易度は \\x03%s\\x01 に修正されました。現在のラウンドの難易度は変わりません。"
-		"ko"		"\\x04[AnneHappyAI]\\x01 다음 라운드의 난이도가 \\x03%s\\x01로 수정되었습니다. 현재 라운드의 난이도는 변경되지 않습니다."
-		"vi"		"\\x04[AnneHappyAI]\\x01 Độ khó của vòng tiếp theo đã được sửa thành \\x03%s\\x01; độ khó của vòng hiện tại không thay đổi."
+		"en"		"{green}[AnneHappyAI]{default} The difficulty of the next round has been fixed to {lightgreen}%s{default}; the difficulty of the current round remains unchanged."
+		"chi"		"{green}[AnneHappyAI]{default} 已固定下一回合难度为 {lightgreen}%s{default}；当前回合难度不变。"
+		"zho"		"{green}[AnneHappyAI]{default} 已固定下一回合難度為 {lightgreen}%s{default}；目前回合難度不變。"
+		"jp"		"{green}[AnneHappyAI]{default} 次のラウンドの難易度は {lightgreen}%s{default} に修正されました。現在のラウンドの難易度は変わりません。"
+		"ko"		"{green}[AnneHappyAI]{default} 다음 라운드의 난이도가 {lightgreen}%s{default}로 수정되었습니다. 현재 라운드의 난이도는 변경되지 않습니다."
+		"vi"		"{green}[AnneHappyAI]{default} Độ khó của vòng tiếp theo đã được sửa thành {lightgreen}%s{default}; độ khó của vòng hiện tại không thay đổi."
 	}
 
 	"DynamicAIDifficulty_DifficultyCurrentRoundFixed"
 	{
-		"en"		"\\x04[AnneHappyAI]\\x01 The difficulty of the current round has been fixed to \\x03%s\\x01."
-		"chi"		"\\x04[AnneHappyAI]\\x01 已固定当前回合难度为 \\x03%s\\x01。"
-		"zho"		"\\x04[AnneHappyAI]\\x01 已固定目前回合難度為 \\x03%s\\x01。"
-		"jp"		"\\x04[AnneHappyAI]\\x01 現在のラウンドの難易度は\\x03%s\\x01に修正されました。"
-		"ko"		"\\x04[AnneHappyAI]\\x01 현재 라운드의 난이도가 \\x03%s\\x01로 수정되었습니다."
-		"vi"		"\\x04[AnneHappyAI]\\x01 Độ khó của vòng hiện tại đã được sửa thành \\x03%s\\x01."
+		"en"		"{green}[AnneHappyAI]{default} The difficulty of the current round has been fixed to {lightgreen}%s{default}."
+		"chi"		"{green}[AnneHappyAI]{default} 已固定当前回合难度为 {lightgreen}%s{default}。"
+		"zho"		"{green}[AnneHappyAI]{default} 已固定目前回合難度為 {lightgreen}%s{default}。"
+		"jp"		"{green}[AnneHappyAI]{default} 現在のラウンドの難易度は{lightgreen}%s{default}に修正されました。"
+		"ko"		"{green}[AnneHappyAI]{default} 현재 라운드의 난이도가 {lightgreen}%s{default}로 수정되었습니다."
+		"vi"		"{green}[AnneHappyAI]{default} Độ khó của vòng hiện tại đã được sửa thành {lightgreen}%s{default}."
 	}
 
 	"DynamicAIDifficulty_L4DStatsAveragePersonalPPM"
 	{
-		"en"		"\\x04[AnneHappyAI]\\x01 l4d_stats Average personal PPM %.2f, %d person points %d / %d minutes (%d people in the quarter/%d people in the overall rankings), and the dynamic difficulty is adjusted to \\x03%s\\x01."
-		"chi"		"\\x04[AnneHappyAI]\\x01 l4d_stats 平均个人PPM %.2f，%d人积分 %d / %d分钟（季度%d人/总榜回退%d人），动态难度调整为 \\x03%s\\x01。"
-		"zho"		"\\x04[AnneHappyAI]\\x01 l4d_stats 平均個人PPM %.2f，%d人積分 %d / %d分鐘（季度%d人/總榜回退%d人），動態難度調整為 \\x03%s\\x01。"
-		"jp"		"\\x04[AnneHappyAI]\\x01 l4d_stats 平均個人 PPM %.2f、%d 人ポイント %d / %d 分 (四半期の %d 人/総合ランキングの %d 人)、および動的難易度は次のように調整されます。 \\x03%s\\x01。"
-		"ko"		"\\x04[AnneHappyAI]\\x01 l4d_stats 평균 개인 PPM %.2f, %d인 포인트 %d / %d분(분기 내 %d명/전체 순위 %d명)으로 동적 난이도가 조정됩니다. \\x03%s\\x01."
-		"vi"		"\\x04[AnneHappyAI]\\x01 l4d_stats PPM cá nhân trung bình %.2f, %d điểm người %d / %d phút (%d người trong quý/%d người trong bảng xếp hạng tổng thể) và độ khó động được điều chỉnh thành \\x03%s\\x01."
+		"en"		"{green}[AnneHappyAI]{default} l4d_stats Average personal PPM %.2f, %d person points %d / %d minutes (%d people in the quarter/%d people in the overall rankings), and the dynamic difficulty is adjusted to {lightgreen}%s{default}."
+		"chi"		"{green}[AnneHappyAI]{default} l4d_stats 平均个人PPM %.2f，%d人积分 %d / %d分钟（季度%d人/总榜回退%d人），动态难度调整为 {lightgreen}%s{default}。"
+		"zho"		"{green}[AnneHappyAI]{default} l4d_stats 平均個人PPM %.2f，%d人積分 %d / %d分鐘（季度%d人/總榜回退%d人），動態難度調整為 {lightgreen}%s{default}。"
+		"jp"		"{green}[AnneHappyAI]{default} l4d_stats 平均個人 PPM %.2f、%d 人ポイント %d / %d 分 (四半期の %d 人/総合ランキングの %d 人)、および動的難易度は次のように調整されます。 {lightgreen}%s{default}。"
+		"ko"		"{green}[AnneHappyAI]{default} l4d_stats 평균 개인 PPM %.2f, %d인 포인트 %d / %d분(분기 내 %d명/전체 순위 %d명)으로 동적 난이도가 조정됩니다. {lightgreen}%s{default}."
+		"vi"		"{green}[AnneHappyAI]{default} l4d_stats PPM cá nhân trung bình %.2f, %d điểm người %d / %d phút (%d người trong quý/%d người trong bảng xếp hạng tổng thể) và độ khó động được điều chỉnh thành {lightgreen}%s{default}."
 	}
 }

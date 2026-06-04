@@ -221,7 +221,7 @@ Action AntibaiterThink(Handle hTimer)
 				&& aliveSince[i] != -1.0 && GetGameTime() - aliveSince[i] >= timerStartDelay
 			) {
 				#if DEBUG
-				PrintToChatAll("%t", "L4D2Antibaiter_AntibaiterDebugEligiblePlayerZombieclass", i, zombieclass[i], GetGameTime() - aliveSince[i]);
+				CPrintToChatAll("%t", "L4D2Antibaiter_AntibaiterDebugEligiblePlayerZombieclass", i, zombieclass[i], GetGameTime() - aliveSince[i]);
 				#endif
 				
 				eligibleZombies++;
@@ -237,7 +237,7 @@ Action AntibaiterThink(Handle hTimer)
 	// 5th SI / spectator bug workaround
 	if (eligibleZombies > z_max_player_zombies) {
 	#if DEBUG
-		PrintToChatAll("%t", "L4D2Antibaiter_AntibaiterDebugSpectatorBugDetected", eligibleZombies, z_max_player_zombies);
+		CPrintToChatAll("%t", "L4D2Antibaiter_AntibaiterDebugSpectatorBugDetected", eligibleZombies, z_max_player_zombies);
 	#endif
 		return Plugin_Continue;
 	}
@@ -250,17 +250,17 @@ Action AntibaiterThink(Handle hTimer)
 			&& hordeDelayChecks >= RoundToNearest(timerStartDelay)
 		) {
 			#if DEBUG
-			PrintToChatAll("%t", "L4D2Antibaiter_AntibaiterDebugMinimumProgressUnsatisfied", hordeDelayChecks, startingSurvivorCompletion, survivorCompletion, progress);
+			CPrintToChatAll("%t", "L4D2Antibaiter_AntibaiterDebugMinimumProgressUnsatisfied", hordeDelayChecks, startingSurvivorCompletion, survivorCompletion, progress);
 			#endif
 			
 			if (IsCountdownRunning()) {
 				#if DEBUG
-				PrintToChatAll("%t", "L4D2Antibaiter_AntibaiterDebugCountdownRunning");
+				CPrintToChatAll("%t", "L4D2Antibaiter_AntibaiterDebugCountdownRunning");
 				#endif
 				
 				if (HasCountdownElapsed()) {
 					#if DEBUG
-					PrintToChatAll("%t", "L4D2Antibaiter_AntibaiterDebugCountdownElapsedLaunching");
+					CPrintToChatAll("%t", "L4D2Antibaiter_AntibaiterDebugCountdownElapsedLaunching");
 					#endif
 					
 					HideCountdown();
@@ -270,7 +270,7 @@ Action AntibaiterThink(Handle hTimer)
 				}
 			} else {
 				#if DEBUG
-				PrintToChatAll("%t", "L4D2Antibaiter_AntibaiterDebugCountdownNotRunning");
+				CPrintToChatAll("%t", "L4D2Antibaiter_AntibaiterDebugCountdownNotRunning");
 				#endif
 				
 				InitiateCountdown();
@@ -282,7 +282,7 @@ Action AntibaiterThink(Handle hTimer)
 			
 			if (progress > minProgress) {
 				#if DEBUG
-				PrintToChatAll("%t", "L4D2Antibaiter_AntibaiterDebugSurvivorProgressIncreased");
+				CPrintToChatAll("%t", "L4D2Antibaiter_AntibaiterDebugSurvivorProgressIncreased");
 				#endif
 
 				startingSurvivorCompletion = survivorCompletion;
@@ -358,7 +358,7 @@ void LaunchHorde()
 	}
 	
 	#if DEBUG
-	PrintToChatAll("%t", "L4D2Antibaiter_PanicTimerDurationTimestamp", CTimer_GetDuration(PanicTimer()), CTimer_GetTimestamp(PanicTimer()));
+	CPrintToChatAll("%t", "L4D2Antibaiter_PanicTimerDurationTimestamp", CTimer_GetDuration(PanicTimer()), CTimer_GetTimestamp(PanicTimer()));
 	#endif
 	
 	int info_director = MaxClients+1;
@@ -401,7 +401,7 @@ bool IsPanicEventInProgress()
 	CountdownTimer pPanicCountdown = PostMobDelayTimer();
 	
 	#if DEBUG
-	PrintToChatAll("%t", "L4D2Antibaiter_PostMobDelayDurationTimestamp", CTimer_GetDuration(pPanicCountdown), CTimer_GetTimestamp(pPanicCountdown));
+	CPrintToChatAll("%t", "L4D2Antibaiter_PostMobDelayDurationTimestamp", CTimer_GetDuration(pPanicCountdown), CTimer_GetTimestamp(pPanicCountdown));
 	#endif
 	
 	if (!CTimer_IsElapsed(pPanicCountdown)) {

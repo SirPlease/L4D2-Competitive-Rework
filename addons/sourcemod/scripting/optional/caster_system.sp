@@ -264,7 +264,7 @@ Action Caster_Cmd(int client, int args)
 		if (GetClientAuthId(target, AuthId_Steam2, buffer, sizeof(buffer)))
 		{
 			casterTrie.SetValue(buffer, true);
-			ReplyToCommand(client, "\x01%t", "RegCasterReply", target);
+			CReplyToCommand(client, "{default}%t", "RegCasterReply", target);
 			CPrintToChat(target, "%t", "RegCasterTarget", client);
 			CPrintToChat(target, "%t", "SelfCast2");
 
@@ -274,7 +274,7 @@ Action Caster_Cmd(int client, int args)
 		}
 		else
 		{
-			ReplyToCommand(client, "\x01%t", "CasterSteamIDError");
+			CReplyToCommand(client, "{default}%t", "CasterSteamIDError");
 		}
 	}
 	
@@ -306,7 +306,7 @@ Action NotCasting_Cmd(int client, int args)
 		AdminId id = GetUserAdmin(client);
 		if (id == INVALID_ADMIN_ID || !GetAdminFlag(id, Admin_Ban)) // Check for specific admin flag
 		{
-			ReplyToCommand(client, "\x01%t", "UnregCasterNonAdmin");
+			CReplyToCommand(client, "{default}%t", "UnregCasterNonAdmin");
 			return Plugin_Handled;
 		}
 		
@@ -326,11 +326,11 @@ Action NotCasting_Cmd(int client, int args)
 					Call_PushCell(target);
 					Call_Finish();
 				}
-				ReplyToCommand(client, "\x01%t", "UnregCasterSuccess", target);
+				CReplyToCommand(client, "{default}%t", "UnregCasterSuccess", target);
 			}
 			else
 			{
-				ReplyToCommand(client, "\x01%t", "CasterSteamIDError");
+				CReplyToCommand(client, "{default}%t", "CasterSteamIDError");
 			}
 		}
 	}
@@ -348,7 +348,7 @@ Action ResetCaster_Cmd(int client, int args)
 {
 	casterTrie.Clear();
 	forbidSelfRegister = false;
-	ReplyToCommand(client, "\x01%t", "CasterDBReset");
+	CReplyToCommand(client, "{default}%t", "CasterDBReset");
 	return Plugin_Handled;
 }
 
@@ -361,11 +361,11 @@ Action AddCasterSteamID_Cmd(int client, int args)
 		forbidSelfRegister = true;
 		if (allowedCastersTrie.SetValue(buffer, 1, false))
 		{
-			ReplyToCommand(client, "\x01%t", "CasterDBAdd", buffer);
+			CReplyToCommand(client, "{default}%t", "CasterDBAdd", buffer);
 		}
-		else ReplyToCommand(client, "\x01%t", "CasterDBFound", buffer);
+		else CReplyToCommand(client, "{default}%t", "CasterDBFound", buffer);
 	}
-	else ReplyToCommand(client, "\x01%t", "CasterDBError");
+	else CReplyToCommand(client, "{default}%t", "CasterDBError");
 	return Plugin_Handled;
 }
 
@@ -380,11 +380,11 @@ Action RemoveCasterSteamID_Cmd(int client, int args)
 		{
 			allowedCastersTrie.Remove(buffer);
 			if (allowedCastersTrie.Size == 0) forbidSelfRegister = false;
-			ReplyToCommand(client, "\x01%t", "CasterDBRemove", buffer);
+			CReplyToCommand(client, "{default}%t", "CasterDBRemove", buffer);
 		}
-		else ReplyToCommand(client, "\x01%t", "CasterDBFound", buffer);
+		else CReplyToCommand(client, "{default}%t", "CasterDBFound", buffer);
 	}
-	else ReplyToCommand(client, "\x01%t", "CasterDBError");
+	else CReplyToCommand(client, "{default}%t", "CasterDBError");
 	return Plugin_Handled;
 }
 

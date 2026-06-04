@@ -33,6 +33,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <colors>
 #include <sdktools>
 #include <sdkhooks>
 #include <left4dhooks>
@@ -1323,9 +1324,9 @@ Action Cmd_StatsDisplayGeneral(int client, int args)
 		if (StrEqual(sArg, "help", false) || StrEqual(sArg, "?", false)) {
 			// show help
 			if (IS_VALID_INGAME(client)) {
-				PrintToChat(client, "%t", "L4D2Playstats_UseStatsTypeRoundGame");
-				PrintToChat(client, "%t", "L4D2Playstats_StatsType");
-				PrintToChat(client, "%t", "L4D2Playstats_TypeMVPSkillFFAcc");
+				CPrintToChat(client, "%t", "L4D2Playstats_UseStatsTypeRoundGame");
+				CPrintToChat(client, "%t", "L4D2Playstats_StatsType");
+				CPrintToChat(client, "%t", "L4D2Playstats_TypeMVPSkillFFAcc");
 			}
 
 			char bufBasic[CONBUFSIZELARGE];
@@ -1428,7 +1429,7 @@ Action Cmd_StatsDisplayGeneral(int client, int args)
 				bMy = true;
 			} else {
 				if (IS_VALID_INGAME(client)) {
-					PrintToChat(client, "%t", "L4D2Playstats_StatsCommandUnknownArgumentType", sArg);
+					CPrintToChat(client, "%t", "L4D2Playstats_StatsCommandUnknownArgumentType", sArg);
 				}
 			}
 		}
@@ -1494,7 +1495,7 @@ Action Cmd_StatsDisplayGeneral(int client, int args)
 Action Cmd_StatsReset(int client, int args)
 {
 	ResetStats(false, -1);
-	PrintToChatAll("%t", "L4D2Playstats_PlayerStatisticsReset");
+	CPrintToChatAll("%t", "L4D2Playstats_PlayerStatisticsReset");
 	return Plugin_Handled;
 }
 
@@ -1510,7 +1511,7 @@ Action Cmd_Cookie_SetPrintFlags(int client, int args)
 	}
 
 	if (args <= 0) {
-		PrintToChat(client, "%t", "L4D2Playstats_UseStatsAutoFlagsType");
+		CPrintToChat(client, "%t", "L4D2Playstats_UseStatsAutoFlagsType");
 		return Plugin_Handled;
 	}
 
@@ -1519,15 +1520,15 @@ Action Cmd_Cookie_SetPrintFlags(int client, int args)
 	int iFlags = StringToInt(sArg);
 
 	if (StrEqual(sArg, "?", false) || StrEqual(sArg, "help", false)) {
-		PrintToChat(client, "%t", "L4D2Playstats_UseStatsAutoFlagsInteger");
-		PrintToChat(client, "%t", "L4D2Playstats_SetFlags0UseServer");
-		PrintToChat(client, "%t", "L4D2Playstats_SeeURLListFlags");
+		CPrintToChat(client, "%t", "L4D2Playstats_UseStatsAutoFlagsInteger");
+		CPrintToChat(client, "%t", "L4D2Playstats_SetFlags0UseServer");
+		CPrintToChat(client, "%t", "L4D2Playstats_SeeURLListFlags");
 		return Plugin_Handled;
 	} 
 	
 	if (StrEqual(sArg, "test", false) || StrEqual(sArg, "preview", false)) {
 		if (g_iCookieValue[client] < 1) {
-			PrintToChat(client, "%t", "L4D2Playstats_StatsPreviewNoFlagsSet");
+			CPrintToChat(client, "%t", "L4D2Playstats_StatsPreviewNoFlagsSet");
 			return Plugin_Handled;
 		}
 	
@@ -1536,14 +1537,14 @@ Action Cmd_Cookie_SetPrintFlags(int client, int args)
 	}
 
 	if (iFlags < -1) {
-		PrintToChat(client, "%t", "L4D2Playstats_StatsPrefInvalidValueType", sArg);
+		CPrintToChat(client, "%t", "L4D2Playstats_StatsPrefInvalidValueType", sArg);
 		return Plugin_Handled;
 	}
 
 	if (iFlags == -1) {
-		PrintToChat(client, "%t", "L4D2Playstats_StatsPrefNoRoundEnd");
+		CPrintToChat(client, "%t", "L4D2Playstats_StatsPrefNoRoundEnd");
 	} else if (iFlags == 0) {
-		PrintToChat(client, "%t", "L4D2Playstats_StatsPrefServerDefault");
+		CPrintToChat(client, "%t", "L4D2Playstats_StatsPrefServerDefault");
 	} else {
 		char tmpStr[14][24], tmpPrint[256];
 		int part = 0;
@@ -1623,7 +1624,7 @@ Action Cmd_Cookie_SetPrintFlags(int client, int args)
 			part++;
 		}
 
-		PrintToChat(client, "%t", "L4D2Playstats_StatsPrefFlagsSet", tmpStr);
+		CPrintToChat(client, "%t", "L4D2Playstats_StatsPrefFlagsSet", tmpStr);
 		
 		// print all parts
 		int tmpCnt = 0;
@@ -1633,13 +1634,13 @@ Action Cmd_Cookie_SetPrintFlags(int client, int args)
 
 			// print each chunk of 6
 			if (tmpCnt >= 6 || i == part - 1) {
-				PrintToChat(client, "\x04%s%s\x01", tmpPrint, (i < part - 1) ? "," : "");
+				CPrintToChat(client, "{green}%s%s{default}", tmpPrint, (i < part - 1) ? "," : "");
 				tmpCnt = 0;
 				tmpPrint = "";
 			}
 		}
 		
-		PrintToChat(client, "%t", "L4D2Playstats_UseStatsAutoTestGet");
+		CPrintToChat(client, "%t", "L4D2Playstats_UseStatsAutoTestGet");
 	}
 
 	g_iCookieValue[client] = iFlags;
@@ -1649,7 +1650,7 @@ Action Cmd_Cookie_SetPrintFlags(int client, int args)
 		IntToString(iFlags, sCookieValue, sizeof(sCookieValue));
 		SetClientCookie(client, g_hCookiePrint, sCookieValue);
 	} else {
-		PrintToChat(client, "%t", "L4D2Playstats_StatsPrefErrorCookieNot");
+		CPrintToChat(client, "%t", "L4D2Playstats_StatsPrefErrorCookieNot");
 	}
 
 	return Plugin_Handled;
@@ -3367,7 +3368,7 @@ void DisplayStatsMVPChat(int client, bool bRound = true, bool bTeam = true, int 
 	int intPieces = ExplodeString(printBuffer, "\n", strLines, sizeof(strLines), sizeof(strLines[]));
 	if (client > 0) {
 		for (i = 0; i < intPieces; i++) {
-			PrintToChat(client, "\x01%s", strLines[i]);
+			CPrintToChat(client, "{default}%s", strLines[i]);
 		}
 	} else {
 		for (j = 1; j <= MaxClients; j++) {
@@ -3375,7 +3376,7 @@ void DisplayStatsMVPChat(int client, bool bRound = true, bool bTeam = true, int 
 				if (!IsClientInGame(j) || g_iCookieValue[j] != 0) { 
 					continue; 
 				}
-				PrintToChat(j, "\x01%s", strLines[i]);
+				CPrintToChat(j, "{default}%s", strLines[i]);
 			}
 		}
 	}
@@ -3428,14 +3429,14 @@ void DisplayStatsMVPChat(int client, bool bRound = true, bool bTeam = true, int 
 
 			if (listNumber && (client == -1 || client == found) && IS_VALID_CLIENT(found) && !IsFakeClient(found) && g_iCookieValue[found] != -1) {
 				if (iBrevityFlags & BREV_PERCENT) {
-					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] Your rank - SI: #\x03%d \x01(\x05%d \x01dmg,\x05 %d \x01kills)",
+					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] Your rank - SI: #{lightgreen}%d {default}({olive}%d {default}dmg,{olive} %d {default}kills)",
 							(bRound) ? "" : " - Game",
 							(i + 1),
 							(bRound) ? g_strRoundPlayerData[index][team][plySIDamage] : g_strPlayerData[index][plySIDamage],
 							(bRound) ? g_strRoundPlayerData[index][team][plySIKilled] : g_strPlayerData[index][plySIKilled]
 					  );
 				} else if (iBrevityFlags & BREV_ABSOLUTE) {
-					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] Your rank - SI: #\x03%d \x01(dmg \x04%i%%\x01, kills \x04%i%%\x01)",
+					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] Your rank - SI: #{lightgreen}%d {default}(dmg {green}%i%%{default}, kills {green}%i%%{default})",
 							(bRound) ? "" : " - Game",
 							(i + 1),
 							RoundFloat((bRound) ?
@@ -3447,7 +3448,7 @@ void DisplayStatsMVPChat(int client, bool bRound = true, bool bTeam = true, int 
 									((float(g_strPlayerData[index][plySIKilled]) / float(g_strAllRoundData[team][rndSIKilled])) * 100))
 							);
 				} else {
-					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] Your rank - SI: #\x03%d \x01(\x05%d \x01dmg [\x04%i%%\x01],\x05 %d \x01kills [\x04%i%%\x01])",
+					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] Your rank - SI: #{lightgreen}%d {default}({olive}%d {default}dmg [{green}%i%%{default}],{olive} %d {default}kills [{green}%i%%{default}])",
 							(bRound) ? "" : " - Game",
 							(i + 1),
 							(bRound) ? g_strRoundPlayerData[index][team][plySIDamage] : g_strPlayerData[index][plySIDamage],
@@ -3462,7 +3463,7 @@ void DisplayStatsMVPChat(int client, bool bRound = true, bool bTeam = true, int 
 							)
 					);
 				}
-				PrintToChat(found, "\x01%s", tmpBuffer);
+				CPrintToChat(found, "{default}%s", tmpBuffer);
 			}
 
 			listNumber++;
@@ -3506,13 +3507,13 @@ void DisplayStatsMVPChat(int client, bool bRound = true, bool bTeam = true, int 
 
 			if (listNumber && (client == -1 || client == found) && IS_VALID_CLIENT(found) && !IsFakeClient(found) && g_iCookieValue[found] != -1) {
 				if (iBrevityFlags & BREV_PERCENT) {
-					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] Your rank - CI: #\x03%d \x01(\x05 %d \x01kills)",
+					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] Your rank - CI: #{lightgreen}%d {default}({olive} %d {default}kills)",
 							(bRound) ? "" : " - Game",
 							(i + 1),
 							(bRound) ? g_strRoundPlayerData[index][team][plyCommon] : g_strPlayerData[index][plyCommon]
 					);
 				} else if (iBrevityFlags & BREV_ABSOLUTE) {
-					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] Your rank - CI: #\x03%d \x01(kills \x04%i%%\x01)",
+					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] Your rank - CI: #{lightgreen}%d {default}(kills {green}%i%%{default})",
 							(bRound) ? "" : " - Game",
 							(i + 1),
 							RoundFloat((bRound) ?
@@ -3521,7 +3522,7 @@ void DisplayStatsMVPChat(int client, bool bRound = true, bool bTeam = true, int 
 							)
 					);
 				} else {
-					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] Your rank - CI: #\x03%d \x01(\x05 %d \x01kills [\x04%i%%\x01])",
+					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] Your rank - CI: #{lightgreen}%d {default}({olive} %d {default}kills [{green}%i%%{default}])",
 							(bRound) ? "" : " - Game",
 							(i + 1),
 							(bRound) ? g_strRoundPlayerData[index][team][plyCommon] : g_strPlayerData[index][plyCommon],
@@ -3531,7 +3532,7 @@ void DisplayStatsMVPChat(int client, bool bRound = true, bool bTeam = true, int 
 							)
 					);
 				}
-				PrintToChat(found, "\x01%s", tmpBuffer);
+				CPrintToChat(found, "{default}%s", tmpBuffer);
 			}
 
 			listNumber++;
@@ -3575,13 +3576,13 @@ void DisplayStatsMVPChat(int client, bool bRound = true, bool bTeam = true, int 
 			}
 
 			if (listNumber && (client == -1 || client == found) && IS_VALID_CLIENT(found) && !IsFakeClient(found) && g_iCookieValue[found] != -1) {
-				Format(tmpBuffer, sizeof(tmpBuffer), "[LVP%s] Your rank - FF: #\x03%d \x01(\x05%d \x01dmg)",
+				Format(tmpBuffer, sizeof(tmpBuffer), "[LVP%s] Your rank - FF: #{lightgreen}%d {default}({olive}%d {default}dmg)",
 						(bRound) ? "" : " - Game",
 						(i + 1),
 						(bRound) ? g_strRoundPlayerData[index][team][plyFFGiven] : g_strPlayerData[index][plyFFGiven]
 				);
 
-				PrintToChat(found, "\x01%s", tmpBuffer);
+				CPrintToChat(found, "{default}%s", tmpBuffer);
 			}
 
 			listNumber++;
@@ -3640,14 +3641,14 @@ void GetMVPChatString(char[] printBuffer, const int iLen, bool bRound = true, bo
 		if (!(iBrevityFlags & BREV_SI)) {
 			if (mvp_SI > -1) {
 				if (iBrevityFlags & BREV_PERCENT) {
-					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] SI:\x03 %s \x01(\x05%d \x01dmg,\x05 %d \x01kills)\n",
+					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] SI:{lightgreen} %s {default}({olive}%d {default}dmg,{olive} %d {default}kills)\n",
 							(bRound) ? "" : " - Game",
 							g_sPlayerName[mvp_SI],
 							(bRound) ? g_strRoundPlayerData[mvp_SI][team][plySIDamage] : g_strPlayerData[mvp_SI][plySIDamage],
 							(bRound) ? g_strRoundPlayerData[mvp_SI][team][plySIKilled] : g_strPlayerData[mvp_SI][plySIKilled]
 					);
 				} else if (iBrevityFlags & BREV_ABSOLUTE) {
-					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] SI:\x03 %s \x01(dmg \x04%i%%\x01, kills \x04%i%%\x01)\n",
+					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] SI:{lightgreen} %s {default}(dmg {green}%i%%{default}, kills {green}%i%%{default})\n",
 							(bRound) ? "" : " - Game",
 							g_sPlayerName[mvp_SI],
 							RoundFloat((bRound) ?
@@ -3660,7 +3661,7 @@ void GetMVPChatString(char[] printBuffer, const int iLen, bool bRound = true, bo
 							)
 					);
 				} else {
-					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] SI:\x03 %s \x01(\x05%d \x01dmg[\x04%i%%\x01],\x05 %d \x01kills [\x04%i%%\x01])\n",
+					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] SI:{lightgreen} %s {default}({olive}%d {default}dmg[{green}%i%%{default}],{olive} %d {default}kills [{green}%i%%{default}])\n",
 							(bRound) ? "" : " - Game",
 							g_sPlayerName[mvp_SI],
 							(bRound) ? g_strRoundPlayerData[mvp_SI][team][plySIDamage] : g_strPlayerData[mvp_SI][plySIDamage],
@@ -3678,7 +3679,7 @@ void GetMVPChatString(char[] printBuffer, const int iLen, bool bRound = true, bo
 				
 				StrCat(printBuffer, iLen, tmpBuffer);
 			} else {
-				Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] SI: \x03(nobody)\x01\n", (bRound) ? "" : " - Game");
+				Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] SI: {lightgreen}(nobody){default}\n", (bRound) ? "" : " - Game");
 				StrCat(printBuffer, iLen, tmpBuffer);
 			}
 		}
@@ -3688,13 +3689,13 @@ void GetMVPChatString(char[] printBuffer, const int iLen, bool bRound = true, bo
 			//  safeguarded to only show if total common kills logged in scope
 			if (mvp_Common > -1 &&  (bRound && g_strRoundData[g_iRound][team][rndCommon] || !bRound && g_strAllRoundData[team][rndCommon])) {
 				if (iBrevityFlags & BREV_PERCENT) {
-					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] CI:\x03 %s \x01(\x05%d \x01common)\n",
+					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] CI:{lightgreen} %s {default}({olive}%d {default}common)\n",
 							(bRound) ? "" : " - Game",
 							g_sPlayerName[mvp_Common],
 							(bRound) ? g_strRoundPlayerData[mvp_Common][team][plyCommon] : g_strPlayerData[mvp_Common][plyCommon]
 					);
 				} else if (iBrevityFlags & BREV_ABSOLUTE) {
-					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] CI:\x03 %s \x01(\x04%i%%\x01)\n",
+					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] CI:{lightgreen} %s {default}({green}%i%%{default})\n",
 							(bRound) ? "" : " - Game",
 							g_sPlayerName[mvp_Common],
 							RoundFloat((bRound) ?
@@ -3703,7 +3704,7 @@ void GetMVPChatString(char[] printBuffer, const int iLen, bool bRound = true, bo
 							)
 					);
 				} else {
-					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] CI:\x03 %s \x01(\x05%d \x01common [\x04%i%%\x01])\n",
+					Format(tmpBuffer, sizeof(tmpBuffer), "[MVP%s] CI:{lightgreen} %s {default}({olive}%d {default}common [{green}%i%%{default}])\n",
 							(bRound) ? "" : " - Game",
 							g_sPlayerName[mvp_Common],
 							(bRound) ? g_strRoundPlayerData[mvp_Common][team][plyCommon] : g_strPlayerData[mvp_Common][plyCommon],
@@ -3728,7 +3729,7 @@ void GetMVPChatString(char[] printBuffer, const int iLen, bool bRound = true, bo
 			
 			StrCat(printBuffer, iLen, tmpBuffer);
 		} else {
-			Format(tmpBuffer, sizeof(tmpBuffer), "[LVP%s] FF:\x03 %s \x01(\x05%d \x01dmg)\n",
+			Format(tmpBuffer, sizeof(tmpBuffer), "[LVP%s] FF:{lightgreen} %s {default}({olive}%d {default}dmg)\n",
 					(bRound) ? "" : " - Game",
 					g_sPlayerName[mvp_FF],
 					(bRound) ? g_strRoundPlayerData[mvp_FF][team][plyFFGiven] : g_strPlayerData[mvp_FF][plyFFGiven]
@@ -3967,7 +3968,7 @@ void DisplayStatsFunFactChat(int client, bool bRound = true, bool bTeam = true, 
 	}
 
 	if (client == -1) {
-		PrintToServer("\x01%s", printBuffer);
+		PrintToServer("{default}%s", printBuffer);
 	}
 
 	// PrintToChatAll has a max length. Split it in to individual lines to output separately
@@ -3975,11 +3976,11 @@ void DisplayStatsFunFactChat(int client, bool bRound = true, bool bTeam = true, 
 
 	if (client > 0) {
 		for (i = 0; i < intPieces; i++) {
-			PrintToChat(client, "\x01%s", strLines[i]);
+			CPrintToChat(client, "{default}%s", strLines[i]);
 		}
 	} else if (client == 0) {
 		for (i = 0; i < intPieces; i++) {
-			PrintToServer("\x01%s", strLines[i]);
+			PrintToServer("{default}%s", strLines[i]);
 		}
 	} else {
 		for (j = 1; j <= MaxClients; j++) {
@@ -3988,7 +3989,7 @@ void DisplayStatsFunFactChat(int client, bool bRound = true, bool bTeam = true, 
 					continue; 
 				}
 
-				PrintToChat(j, "\x01%s", strLines[i]);
+				CPrintToChat(j, "{default}%s", strLines[i]);
 			}
 		}
 	}
@@ -4168,28 +4169,28 @@ void GetFunFactChatString(char[] printBuffer, const int iLen, bool bRound = true
 	switch (wPick)
 	{
 		case FFACT_TYPE_CROWN: {
-			Format(printBuffer, iLen, "[%s fact] \x04%s \x01crowned \x05%d \x01witches.\n",
+			Format(printBuffer, iLen, "[%s fact] {green}%s {default}crowned {olive}%d {default}witches.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_DRAWCROWN: {
-			Format(printBuffer, iLen, "[%s fact] \x04%s \x01draw-crowned \x05%d \x01witches.\n",
+			Format(printBuffer, iLen, "[%s fact] {green}%s {default}draw-crowned {olive}%d {default}witches.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_SKEETS: {
-			Format(printBuffer, iLen, "[%s fact] \x04%s \x01skeeted \x05%d \x01hunters.\n",
+			Format(printBuffer, iLen, "[%s fact] {green}%s {default}skeeted {olive}%d {default}hunters.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_MELEESKEETS: {
-			Format(printBuffer, iLen, "[%s fact] \x04%s \x01skeeted \x05%d \x01hunter%s with a melee weapon.\n",
+			Format(printBuffer, iLen, "[%s fact] {green}%s {default}skeeted {olive}%d {default}hunter%s with a melee weapon.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick],
@@ -4197,42 +4198,42 @@ void GetFunFactChatString(char[] printBuffer, const int iLen, bool bRound = true
 			);
 		}
 		case FFACT_TYPE_M2: {
-			Format(printBuffer, iLen, "[%s fact] \x04%s \x01shoved \x05%d \x01special infected.\n",
+			Format(printBuffer, iLen, "[%s fact] {green}%s {default}shoved {olive}%d {default}special infected.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_MELEETANK: {
-			Format(printBuffer, iLen, "[%s fact] \x04%s \x01got \x05%d \x01melee swings on the tank.\n",
+			Format(printBuffer, iLen, "[%s fact] {green}%s {default}got {olive}%d {default}melee swings on the tank.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_CUT: {
-			Format(printBuffer, iLen, "[%s fact] \x04%s \x01cut \x05%d \x01tongue cuts.\n",
+			Format(printBuffer, iLen, "[%s fact] {green}%s {default}cut {olive}%d {default}tongue cuts.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_POP: {
-			Format(printBuffer, iLen, "[%s fact] \x04%s \x01popped \x05%d \x01boomers.\n",
+			Format(printBuffer, iLen, "[%s fact] {green}%s {default}popped {olive}%d {default}boomers.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_DEADSTOP: {
-			Format(printBuffer, iLen, "[%s fact] \x04%s \x01deadstopped \x05%d \x01hunters.\n",
+			Format(printBuffer, iLen, "[%s fact] {green}%s {default}deadstopped {olive}%d {default}hunters.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_LEVELS: {
-			Format(printBuffer, iLen, "[%s fact] \x04%s \x01fully leveled \x05%d \x01chargers.\n",
+			Format(printBuffer, iLen, "[%s fact] {green}%s {default}fully leveled {olive}%d {default}chargers.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
@@ -4240,21 +4241,21 @@ void GetFunFactChatString(char[] printBuffer, const int iLen, bool bRound = true
 		}
 		// infected
 		case FFACT_TYPE_HUNTERDP: {
-			Format(printBuffer, iLen, "[%s fact] \x04%s \x01landed \x05%d \x01highpounces with hunters.\n",
+			Format(printBuffer, iLen, "[%s fact] {green}%s {default}landed {olive}%d {default}highpounces with hunters.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_JOCKEYDP: {
-			Format(printBuffer, iLen, "[%s fact] \x04%s \x01landed \x05%d \x01highpounces with jockeys.\n",
+			Format(printBuffer, iLen, "[%s fact] {green}%s {default}landed {olive}%d {default}highpounces with jockeys.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_DCHARGE: {
-			Format(printBuffer, iLen, "[%s fact] \x04%s \x01death-charged \x05%d \x01 survivor%s.\n",
+			Format(printBuffer, iLen, "[%s fact] {green}%s {default}death-charged {olive}%d {default} survivor%s.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick],
@@ -4262,21 +4263,21 @@ void GetFunFactChatString(char[] printBuffer, const int iLen, bool bRound = true
 			);
 		}
 		case FFACT_TYPE_SCRATCH: {
-			Format(printBuffer, iLen, "[%s fact] \x04%s \x01did a total of \x05%d \x01damage by scratching (standing) survivors.\n",
+			Format(printBuffer, iLen, "[%s fact] {green}%s {default}did a total of {olive}%d {default}damage by scratching (standing) survivors.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_BOOMDMG: {
-			Format(printBuffer, iLen, "[%s fact] \x04%s \x01got a total of \x05%d \x01damage by common hits on boomed (standing) survivors.\n",
+			Format(printBuffer, iLen, "[%s fact] {green}%s {default}got a total of {olive}%d {default}damage by common hits on boomed (standing) survivors.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]
 			);
 		}
 		case FFACT_TYPE_SPITDMG: {
-			Format(printBuffer, iLen, "[%s fact] \x04%s \x01did a total of \x05%d \x01spit-damage on (standing) survivors.\n",
+			Format(printBuffer, iLen, "[%s fact] {green}%s {default}did a total of {olive}%d {default}spit-damage on (standing) survivors.\n",
 				(bRound) ? "Round" : "Game",
 				g_sPlayerName[ wTypeHighPly[wPick] ],
 				wTypeHighVal[wPick]

@@ -2,11 +2,11 @@
 {
 	"L4D2TankFlyingIncap_FlyingIncapStateLine"
 	{
-		"en"		"\\x01[FlyingIncap]: (%.1f) (%N) [\\x05%s\\x01] [\\x04%s\\x01]"
-		"chi"		"\\x01[FlyingIncap]: (%.1f) (%N) [\\x05%s\\x01] [\\x04%s\\x01]"
-		"zho"		"\\x01[FlyingIncap]: (%.1f) (%N) [\\x05%s\\x01] [\\x04%s\\x01]"
-		"jp"		"\\x01[フライングインキャップ]: (%.1f) (%N) [\\x05%s\\x01] [\\x04%s\\x01]"
-		"ko"		"\\x01[플라잉인캡]: (%.1f) (%N) [\\x05%s\\x01] [\\x04%s\\x01]"
-		"vi"		"\\x01[FlyingIncap]: (%.1f) (%N) [\\x05%s\\x01] [\\x04%s\\x01]"
+		"en"		"{default}[FlyingIncap]: (%.1f) (%N) [{olive}%s{default}] [{green}%s{default}]"
+		"chi"		"{default}[FlyingIncap]: (%.1f) (%N) [{olive}%s{default}] [{green}%s{default}]"
+		"zho"		"{default}[FlyingIncap]: (%.1f) (%N) [{olive}%s{default}] [{green}%s{default}]"
+		"jp"		"{default}[フライングインキャップ]: (%.1f) (%N) [{olive}%s{default}] [{green}%s{default}]"
+		"ko"		"{default}[플라잉인캡]: (%.1f) (%N) [{olive}%s{default}] [{green}%s{default}]"
+		"vi"		"{default}[FlyingIncap]: (%.1f) (%N) [{olive}%s{default}] [{green}%s{default}]"
 	}
 }

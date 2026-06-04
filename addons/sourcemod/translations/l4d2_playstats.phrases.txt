@@ -2,32 +2,32 @@
 {
 	"L4D2Playstats_UseStatsTypeRoundGame"
 	{
-		"en"		"\\x01Use: /stats [<type>] [\\x05round\\x01/\\x05game\\x01/\\x05team\\x01/\\x05all\\x01/\\x05other\\x01]"
-		"chi"		"\\x01使用：/stats [<类型>] [\\x05round\\x01/\\x05game\\x01/\\x05team\\x01/\\x05all\\x01/\\x05other\\x01]"
-		"zho"		"\\x01Use: /stats [<type>] [\\x05round\\x01/\\x05game\\x01/\\x05team\\x01/\\x05all\\x01/\\x05other\\x01]"
-		"jp"		"\\x01Use: /stats [<タイプ>] [\\x05round\\x01/\\x05game\\x01/\\x05team\\x01/\\x05all\\x01/\\x05other\\x01]"
-		"ko"		"\\x01사용: /stats [<유형>] [\\x05round\\x01/\\x05game\\x01/\\x05team\\x01/\\x05all\\x01/\\x05other\\x01]"
-		"vi"		"\\x01Sử dụng: /stats [<type>] [\\x05round\\x01/\\x05game\\x01/\\x05team\\x01/\\x05all\\x01/\\x05other\\x01]"
+		"en"		"{default}Use: /stats [<type>] [{olive}round{default}/{olive}game{default}/{olive}team{default}/{olive}all{default}/{olive}other{default}]"
+		"chi"		"{default}使用：/stats [<类型>] [{olive}round{default}/{olive}game{default}/{olive}team{default}/{olive}all{default}/{olive}other{default}]"
+		"zho"		"{default}Use: /stats [<type>] [{olive}round{default}/{olive}game{default}/{olive}team{default}/{olive}all{default}/{olive}other{default}]"
+		"jp"		"{default}Use: /stats [<タイプ>] [{olive}round{default}/{olive}game{default}/{olive}team{default}/{olive}all{default}/{olive}other{default}]"
+		"ko"		"{default}사용: /stats [<유형>] [{olive}round{default}/{olive}game{default}/{olive}team{default}/{olive}all{default}/{olive}other{default}]"
+		"vi"		"{default}Sử dụng: /stats [<type>] [{olive}round{default}/{olive}game{default}/{olive}team{default}/{olive}all{default}/{olive}other{default}]"
 	}
 
 	"L4D2Playstats_StatsType"
 	{
-		"en"		"\\x01 or: /stats [<type>] [\\x05r\\x01/\\x05g\\x01/\\x05t\\x01/\\x05a\\x01/\\x05o\\x01]"
-		"chi"		"\\x01 或：/stats [<类型>] [\\x05r\\x01/\\x05g\\x01/\\x05t\\x01/\\x05a\\x01/\\x05o\\x01]"
-		"zho"		"\\x01 or: /stats [<type>] [\\x05r\\x01/\\x05g\\x01/\\x05t\\x01/\\x05a\\x01/\\x05o\\x01]"
-		"jp"		"\\x01 または: /stats [<タイプ>] [\\x05r\\x01/\\x05g\\x01/\\x05t\\x01/\\x05a\\x01/\\x05o\\x01]"
-		"ko"		"\\x01 또는: /stats [<유형>] [\\x05r\\x01/\\x05g\\x01/\\x05t\\x01/\\x05a\\x01/\\x05o\\x01]"
-		"vi"		"\\x01 hoặc: /stats [<type>] [\\x05r\\x01/\\x05g\\x01/\\x05t\\x01/\\x05a\\x01/\\x05o\\x01]"
+		"en"		"{default} or: /stats [<type>] [{olive}r{default}/{olive}g{default}/{olive}t{default}/{olive}a{default}/{olive}o{default}]"
+		"chi"		"{default} 或：/stats [<类型>] [{olive}r{default}/{olive}g{default}/{olive}t{default}/{olive}a{default}/{olive}o{default}]"
+		"zho"		"{default} or: /stats [<type>] [{olive}r{default}/{olive}g{default}/{olive}t{default}/{olive}a{default}/{olive}o{default}]"
+		"jp"		"{default} または: /stats [<タイプ>] [{olive}r{default}/{olive}g{default}/{olive}t{default}/{olive}a{default}/{olive}o{default}]"
+		"ko"		"{default} 또는: /stats [<유형>] [{olive}r{default}/{olive}g{default}/{olive}t{default}/{olive}a{default}/{olive}o{default}]"
+		"vi"		"{default} hoặc: /stats [<type>] [{olive}r{default}/{olive}g{default}/{olive}t{default}/{olive}a{default}/{olive}o{default}]"
 	}
 
 	"L4D2Playstats_TypeMVPSkillFFAcc"
 	{
-		"en"		"\\x01 where <type> is '\\x04mvp\\x01', '\\x04skill\\x01', '\\x04ff\\x01', '\\x04acc\\x01' or '\\x04inf\\x01'. (for more, see console)"
-		"chi"		"\\x01，其中 <类型> 为“\\x04mvp\\x01”、“\\x04skill\\x01”、“\\x04ff\\x01”、“\\x04acc\\x01”或'\\x04inf\\x01'。 （更多信息请参见控制台）"
-		"zho"		"\\x01 where <type> is '\\x04mvp\\x01', '\\x04skill\\x01', '\\x04ff\\x01', '\\x04acc\\x01' or '\\x04inf\\x01'. (for more, see console)"
-		"jp"		"\\x01 ここで、<タイプ> は「\\x04mvp\\x01」、「\\x04skill\\x01」、「\\x04ff\\x01」、「\\x04acc\\x01」または「\\x04inf\\x01」です。 (詳細については、コンソールを参照してください)"
-		"ko"		"\\x01 여기서 <유형>은 '\\x04mvp\\x01', '\\x04skill\\x01', '\\x04ff\\x01', '\\x04acc\\x01' 또는 '\\x04inf\\x01'. (자세한 내용은 콘솔 참조)"
-		"vi"		"\\x01 trong đó <loại> là '\\x04mvp\\x01', '\\x04skill\\x01', '\\x04ff\\x01', '\\x04acc\\x01' hoặc '\\x04inf\\x01'. (để biết thêm, xem bảng điều khiển)"
+		"en"		"{default} where <type> is '{green}mvp{default}', '{green}skill{default}', '{green}ff{default}', '{green}acc{default}' or '{green}inf{default}'. (for more, see console)"
+		"chi"		"{default}，其中 <类型> 为“{green}mvp{default}”、“{green}skill{default}”、“{green}ff{default}”、“{green}acc{default}”或'{green}inf{default}'。 （更多信息请参见控制台）"
+		"zho"		"{default} where <type> is '{green}mvp{default}', '{green}skill{default}', '{green}ff{default}', '{green}acc{default}' or '{green}inf{default}'. (for more, see console)"
+		"jp"		"{default} ここで、<タイプ> は「{green}mvp{default}」、「{green}skill{default}」、「{green}ff{default}」、「{green}acc{default}」または「{green}inf{default}」です。 (詳細については、コンソールを参照してください)"
+		"ko"		"{default} 여기서 <유형>은 '{green}mvp{default}', '{green}skill{default}', '{green}ff{default}', '{green}acc{default}' 또는 '{green}inf{default}'. (자세한 내용은 콘솔 참조)"
+		"vi"		"{default} trong đó <loại> là '{green}mvp{default}', '{green}skill{default}', '{green}ff{default}', '{green}acc{default}' hoặc '{green}inf{default}'. (để biết thêm, xem bảng điều khiển)"
 	}
 
 	"L4D2Playstats_StatsCommandUnknownArgumentType"
@@ -52,42 +52,42 @@
 
 	"L4D2Playstats_UseStatsAutoFlagsType"
 	{
-		"en"		"\\x01Use: \\x04/stats_auto <flags>\\x01. Type \\x04/stats_auto help\\x01 for more info."
-		"chi"		"\\x01使用：\\x04/stats_auto <flags>\\x01。输入 \\x04/stats_auto help\\x01 了解更多信息。"
-		"zho"		"\\x01使用：\\x04/stats_auto <flags>\\x01。輸入 \\x04/stats_auto help\\x01 以了解更多資訊。"
-		"jp"		"\\x01使用: \\x04/stats_auto <フラグ>\\x01。詳細については、「\\x04/stats_auto help\\x01」と入力してください。"
-		"ko"		"\\x01사용: \\x04/stats_auto <플래그>\\x01. 자세한 내용을 보려면 \\x04/stats_auto help\\x01를 입력하세요."
-		"vi"		"\\x01Sử dụng: \\x04/stats_auto <flags>\\x01. Nhập \\x04/stats_auto help\\x01 để biết thêm thông tin."
+		"en"		"{default}Use: {green}/stats_auto <flags>{default}. Type {green}/stats_auto help{default} for more info."
+		"chi"		"{default}使用：{green}/stats_auto <flags>{default}。输入 {green}/stats_auto help{default} 了解更多信息。"
+		"zho"		"{default}使用：{green}/stats_auto <flags>{default}。輸入 {green}/stats_auto help{default} 以了解更多資訊。"
+		"jp"		"{default}使用: {green}/stats_auto <フラグ>{default}。詳細については、「{green}/stats_auto help{default}」と入力してください。"
+		"ko"		"{default}사용: {green}/stats_auto <플래그>{default}. 자세한 내용을 보려면 {green}/stats_auto help{default}를 입력하세요."
+		"vi"		"{default}Sử dụng: {green}/stats_auto <flags>{default}. Nhập {green}/stats_auto help{default} để biết thêm thông tin."
 	}
 
 	"L4D2Playstats_UseStatsAutoFlagsInteger"
 	{
-		"en"		"\\x01Use: \\x04/stats_auto <flags>\\x01. Flags is an integer that is the sum of all printouts to be displayed at round-end."
-		"chi"		"\\x01使用：\\x04/stats_auto <flags>\\x01。 Flags 是一个整数，是回合结束时显示的所有打印输出的总和。"
-		"zho"		"\\x01使用：\\x04/stats_auto <flags>\\x01。 Flags 是一個整數，是回合結束時顯示的所有列印輸出的總和。"
-		"jp"		"\\x01使用: \\x04/stats_auto <フラグ>\\x01。 Flags は、ラウンドエンドで表示されるすべての印刷出力の合計である整数です。"
-		"ko"		"\\x01사용: \\x04/stats_auto <플래그>\\x01. Flags는 라운드 종료 시 표시될 모든 인쇄물의 합계인 정수입니다."
-		"vi"		"\\x01Sử dụng: \\x04/stats_auto <flags>\\x01. Cờ là một số nguyên là tổng của tất cả các bản in được hiển thị ở cuối."
+		"en"		"{default}Use: {green}/stats_auto <flags>{default}. Flags is an integer that is the sum of all printouts to be displayed at round-end."
+		"chi"		"{default}使用：{green}/stats_auto <flags>{default}。 Flags 是一个整数，是回合结束时显示的所有打印输出的总和。"
+		"zho"		"{default}使用：{green}/stats_auto <flags>{default}。 Flags 是一個整數，是回合結束時顯示的所有列印輸出的總和。"
+		"jp"		"{default}使用: {green}/stats_auto <フラグ>{default}。 Flags は、ラウンドエンドで表示されるすべての印刷出力の合計である整数です。"
+		"ko"		"{default}사용: {green}/stats_auto <플래그>{default}. Flags는 라운드 종료 시 표시될 모든 인쇄물의 합계인 정수입니다."
+		"vi"		"{default}Sử dụng: {green}/stats_auto <flags>{default}. Cờ là một số nguyên là tổng của tất cả các bản in được hiển thị ở cuối."
 	}
 
 	"L4D2Playstats_SetFlags0UseServer"
 	{
-		"en"		"\\x01Set flags to 0 to use server autoprint default; set to -1 to not display anything at all."
-		"chi"		"\\x01将标志设置为 0 以使用服务器自动打印默认值；设置为 -1 则根本不显示任何内容。"
-		"zho"		"\\x01將標誌設為 0 以使用伺服器自動列印預設值；設定為 -1 則完全不顯示任何內容。"
-		"jp"		"\\x01サーバーの自動印刷のデフォルトを使用するには、フラグを 0 に設定します。何も表示しない場合は -1 に設定します。"
-		"ko"		"서버 자동 인쇄 기본값을 사용하려면 \\x01S 플래그를 0으로 설정합니다. 아무것도 표시하지 않으려면 -1로 설정하십시오."
-		"vi"		"\\x01Đặt cờ thành 0 để sử dụng mặc định tự động in của máy chủ; đặt thành -1 để không hiển thị gì cả."
+		"en"		"{default}Set flags to 0 to use server autoprint default; set to -1 to not display anything at all."
+		"chi"		"{default}将标志设置为 0 以使用服务器自动打印默认值；设置为 -1 则根本不显示任何内容。"
+		"zho"		"{default}將標誌設為 0 以使用伺服器自動列印預設值；設定為 -1 則完全不顯示任何內容。"
+		"jp"		"{default}サーバーの自動印刷のデフォルトを使用するには、フラグを 0 に設定します。何も表示しない場合は -1 に設定します。"
+		"ko"		"서버 자동 인쇄 기본값을 사용하려면 {default}S 플래그를 0으로 설정합니다. 아무것도 표시하지 않으려면 -1로 설정하십시오."
+		"vi"		"{default}Đặt cờ thành 0 để sử dụng mặc định tự động in của máy chủ; đặt thành -1 để không hiển thị gì cả."
 	}
 
 	"L4D2Playstats_StatsPreviewNoFlagsSet"
 	{
-		"en"		"\\x01Stats Preview: No flags set. First set flags with \\x04/stats_auto <flags>\\x01. Type \\x04/stats_auto help\\x01 for more info."
-		"chi"		"\\x01Stats 预览：未设置标志。首先使用 \\x04/stats_auto <flags>\\x01 设置标志。输入 \\x04/stats_auto help\\x01 了解更多信息。"
-		"zho"		"\\x01Stats 預覽：未設定標誌。首先使用 \\x04/stats_auto <flags>\\x01 設定標誌。輸入 \\x04/stats_auto help\\x01 以了解更多資訊。"
-		"jp"		"\\x01Stats プレビュー: フラグが設定されていません。まず、\\x04/stats_auto <flags>\\x01 でフラグを設定します。詳細については、「\\x04/stats_auto help\\x01」と入力してください。"
-		"ko"		"\\x01Stats 미리보기: 설정된 플래그가 없습니다. 먼저 \\x04/stats_auto <flags>\\x01를 사용하여 플래그를 설정합니다. 자세한 내용을 보려면 \\x04/stats_auto help\\x01를 입력하세요."
-		"vi"		"Xem trước \\x01Stats: Không có cờ nào được đặt. Đặt cờ đầu tiên với \\x04/stats_auto <flags>\\x01. Nhập \\x04/stats_auto help\\x01 để biết thêm thông tin."
+		"en"		"{default}Stats Preview: No flags set. First set flags with {green}/stats_auto <flags>{default}. Type {green}/stats_auto help{default} for more info."
+		"chi"		"{default}Stats 预览：未设置标志。首先使用 {green}/stats_auto <flags>{default} 设置标志。输入 {green}/stats_auto help{default} 了解更多信息。"
+		"zho"		"{default}Stats 預覽：未設定標誌。首先使用 {green}/stats_auto <flags>{default} 設定標誌。輸入 {green}/stats_auto help{default} 以了解更多資訊。"
+		"jp"		"{default}Stats プレビュー: フラグが設定されていません。まず、{green}/stats_auto <flags>{default} でフラグを設定します。詳細については、「{green}/stats_auto help{default}」と入力してください。"
+		"ko"		"{default}Stats 미리보기: 설정된 플래그가 없습니다. 먼저 {green}/stats_auto <flags>{default}를 사용하여 플래그를 설정합니다. 자세한 내용을 보려면 {green}/stats_auto help{default}를 입력하세요."
+		"vi"		"Xem trước {default}Stats: Không có cờ nào được đặt. Đặt cờ đầu tiên với {green}/stats_auto <flags>{default}. Nhập {green}/stats_auto help{default} để biết thêm thông tin."
 	}
 
 	"L4D2Playstats_StatsPrefInvalidValueType"
@@ -102,42 +102,42 @@
 
 	"L4D2Playstats_StatsPrefNoRoundEnd"
 	{
-		"en"		"\\x01Stats Pref.: \\x04no round end prints at all\\x01."
-		"chi"		"\\x01 统计首选：\\x04 根本没有圆端印刷 \\x01。"
-		"zho"		"\\x01 統計首選：\\x04 根本沒有圓端印刷 \\x01。"
-		"jp"		"\\x01統計県: \\x04ラウンドエンドプリントが全くありません\\x01。"
-		"ko"		"\\x01Stats Pref.: \\x04모든 \\x01에는 둥근 끝이 인쇄되지 않습니다."
-		"vi"		"\\x01Stats Pref.: \\x04Không có bản in đầu tròn nào cả\\x01."
+		"en"		"{default}Stats Pref.: {green}no round end prints at all{default}."
+		"chi"		"{default} 统计首选：{green} 根本没有圆端印刷 {default}。"
+		"zho"		"{default} 統計首選：{green} 根本沒有圓端印刷 {default}。"
+		"jp"		"{default}統計県: {green}ラウンドエンドプリントが全くありません{default}。"
+		"ko"		"{default}Stats Pref.: {green}모든 {default}에는 둥근 끝이 인쇄되지 않습니다."
+		"vi"		"{default}Stats Pref.: {green}Không có bản in đầu tròn nào cả{default}."
 	}
 
 	"L4D2Playstats_StatsPrefServerDefault"
 	{
-		"en"		"\\x01Stats Pref.: \\x04server default\\x01."
-		"chi"		"\\x01统计偏好：\\x04服务器默认\\x01。"
-		"zho"		"\\x01統計偏好：\\x04伺服器預設\\x01。"
-		"jp"		"\\x01Stats 都道府県: \\x04サーバーのデフォルト\\x01。"
-		"ko"		"\\x01Stats 기본 설정: \\x04서버 기본값\\x01."
-		"vi"		"\\x01Stats Tùy chọn: \\x04máy chủ mặc định\\x01."
+		"en"		"{default}Stats Pref.: {green}server default{default}."
+		"chi"		"{default}统计偏好：{green}服务器默认{default}。"
+		"zho"		"{default}統計偏好：{green}伺服器預設{default}。"
+		"jp"		"{default}Stats 都道府県: {green}サーバーのデフォルト{default}。"
+		"ko"		"{default}Stats 기본 설정: {green}서버 기본값{default}."
+		"vi"		"{default}Stats Tùy chọn: {green}máy chủ mặc định{default}."
 	}
 
 	"L4D2Playstats_StatsPrefFlagsSet"
 	{
-		"en"		"\\x01Stats Pref.: Flags set for:"
-		"chi"		"\\x01Stats 首选项：标记设置为："
-		"zho"		"\\x01Stats 首選項：標記設定為："
-		"jp"		"\\x01Stats 都道府県: フラグが設定されています:"
-		"ko"		"\\x01Stats Pref.: 다음에 대해 설정된 플래그:"
-		"vi"		"\\x01Stats Pref.: Cờ được đặt cho:"
+		"en"		"{default}Stats Pref.: Flags set for:"
+		"chi"		"{default}Stats 首选项：标记设置为："
+		"zho"		"{default}Stats 首選項：標記設定為："
+		"jp"		"{default}Stats 都道府県: フラグが設定されています:"
+		"ko"		"{default}Stats Pref.: 다음에 대해 설정된 플래그:"
+		"vi"		"{default}Stats Pref.: Cờ được đặt cho:"
 	}
 
 	"L4D2Playstats_UseStatsAutoTestGet"
 	{
-		"en"		"\\x01Use \\x04/stats_auto test\\x01 to get a report preview."
-		"chi"		"\\x01使用 \\x04/stats_auto test\\x01 获取报告预览。"
-		"zho"		"\\x01使用 \\x04/stats_auto test\\x01 取得報表預覽。"
-		"jp"		"\\x01レポートのプレビューを取得するには、\\x04/stats_auto test\\x01 を使用します。"
-		"ko"		"\\x01\\x04/stats_auto test\\x01를 사용하여 보고서 미리보기를 받으세요."
-		"vi"		"\\x01Sử dụng \\x04/stats_auto test\\x01 để xem trước báo cáo."
+		"en"		"{default}Use {green}/stats_auto test{default} to get a report preview."
+		"chi"		"{default}使用 {green}/stats_auto test{default} 获取报告预览。"
+		"zho"		"{default}使用 {green}/stats_auto test{default} 取得報表預覽。"
+		"jp"		"{default}レポートのプレビューを取得するには、{green}/stats_auto test{default} を使用します。"
+		"ko"		"{default}{green}/stats_auto test{default}를 사용하여 보고서 미리보기를 받으세요."
+		"vi"		"{default}Sử dụng {green}/stats_auto test{default} để xem trước báo cáo."
 	}
 
 	"L4D2Playstats_StatsPrefErrorCookieNot"
@@ -152,11 +152,11 @@
 
 	"L4D2Playstats_SeeURLListFlags"
 	{
-		"en"		"\\x01See: \\x05https://github.com/Tabbernaut/L4D2-Plugins/blob/master/stats/README.md\\x01 for a list of flags."
-		"chi"		"\\x01查看：\\x05https://github.com/Tabbernaut/L4D2-Plugins/blob/master/stats/README.md\\x01 获取 flags 列表。"
-		"zho"		"\\x01查看：\\x05https://github.com/Tabbernaut/L4D2-Plugins/blob/master/stats/README.md\\x01 取得 flags 清單。"
-		"jp"		"\\x01flags の一覧は \\x05https://github.com/Tabbernaut/L4D2-Plugins/blob/master/stats/README.md\\x01 を参照してください。"
-		"ko"		"\\x01flags 목록은 \\x05https://github.com/Tabbernaut/L4D2-Plugins/blob/master/stats/README.md\\x01 을 참조하세요."
-		"vi"		"\\x01Xem danh sách flags tại: \\x05https://github.com/Tabbernaut/L4D2-Plugins/blob/master/stats/README.md\\x01."
+		"en"		"{default}See: {olive}https://github.com/Tabbernaut/L4D2-Plugins/blob/master/stats/README.md{default} for a list of flags."
+		"chi"		"{default}查看：{olive}https://github.com/Tabbernaut/L4D2-Plugins/blob/master/stats/README.md{default} 获取 flags 列表。"
+		"zho"		"{default}查看：{olive}https://github.com/Tabbernaut/L4D2-Plugins/blob/master/stats/README.md{default} 取得 flags 清單。"
+		"jp"		"{default}flags の一覧は {olive}https://github.com/Tabbernaut/L4D2-Plugins/blob/master/stats/README.md{default} を参照してください。"
+		"ko"		"{default}flags 목록은 {olive}https://github.com/Tabbernaut/L4D2-Plugins/blob/master/stats/README.md{default} 을 참조하세요."
+		"vi"		"{default}Xem danh sách flags tại: {olive}https://github.com/Tabbernaut/L4D2-Plugins/blob/master/stats/README.md{default}."
 	}
 }

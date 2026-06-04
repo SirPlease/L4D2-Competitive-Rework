@@ -152,11 +152,11 @@ public Action:event_CampaignWin(Handle:event, const String:name[], bool:dontBroa
 
 	if (Mode && Score > 0)
 	{
-		StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03所有幸存者因 \x05%i 幸存者\x04完成了救援关 \x01获得了 \x04%i \x01分!", SurvivorCount, Score);
+		StatsPrintToChatTeam(TEAM_SURVIVORS, "{lightgreen}所有幸存者因 {olive}%i 幸存者{green}完成了救援关 {default}获得了 {green}%i {default}分!", SurvivorCount, Score);
 		NewPlayerBonus_AnnounceMultiplier("救援关", Score);
 
 		if (NegativeScore)
-			StatsPrintToChatTeam(TEAM_INFECTED, "\x03所有感染者因 \x04没能阻拦幸存者完成救援关\x01! \x03失去了 \x04%i \x01分", Score);
+			StatsPrintToChatTeam(TEAM_INFECTED, "{lightgreen}所有感染者因 {green}没能阻拦幸存者完成救援关{default}! {lightgreen}失去了 {green}%i {default}分", Score);
 	}
 }
 
@@ -262,7 +262,7 @@ public Action:timer_PanicEventEnd(Handle:timer, Handle:hndl)
 			}
 
 			if (Mode)
-				StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03所有幸存者因 \x05尸潮事件过后没有倒地或者死亡 \x01获得了 \x04%i \x01分!", Score);
+				StatsPrintToChatTeam(TEAM_SURVIVORS, "{lightgreen}所有幸存者因 {olive}尸潮事件过后没有倒地或者死亡 {default}获得了 {green}%i {default}分!", Score);
 		}
 	}
 
@@ -385,7 +385,7 @@ public Action:event_PlayerBlindEnd(Handle:event, const String:name[], bool:dontB
 				}
 			}
 			if (Mode)
-				StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03所有幸存者因 \x05boomer爆炸后无人死亡 \x01获得了 \x04%i \x01分!", Score);
+				StatsPrintToChatTeam(TEAM_SURVIVORS, "{lightgreen}所有幸存者因 {olive}boomer爆炸后无人死亡 {default}获得了 {green}%i {default}分!", Score);
 		}
 	}
 
@@ -507,9 +507,9 @@ PlayerIncap(Attacker, Victim)
 			QuarterRank_RecordScore(Attacker, Score * (-1));
 
 		if (Mode == 1 || Mode == 2)
-			StatsPrintToChat(Attacker, "你 \x03失去了 \x04%i \x01分 by \x03黑倒了 \x05%s\x01!", Score, VictimName);
+			StatsPrintToChat(Attacker, "你 {lightgreen}失去了 {green}%i {default}分 by {lightgreen}黑倒了 {olive}%s{default}!", Score, VictimName);
 		else if (Mode == 3)
-			StatsPrintToChatAll("\x05%s \x01 \x03失去了\x04%i \x01分 by \x03黒倒了 \x05%s\x01!", AttackerName, Score, VictimName);
+			StatsPrintToChatAll("{olive}%s {default} {lightgreen}失去了{green}%i {default}分 by {lightgreen}黒倒了 {olive}%s{default}!", AttackerName, Score, VictimName);
 	}
 
 	// Attacker is an Infected
@@ -668,12 +668,12 @@ public Action:event_PlayerLedge(Handle:event, const String:name[], bool:dontBroa
 		UpdateMapStat("points_infected", Score);
 
 		if (Mode == 1 || Mode == 2)
-			StatsPrintToChat(Attacker, "你造成玩家 \x05%s\x01 挂边获得 \x04%i \x01分!", VictimName, Score);
+			StatsPrintToChat(Attacker, "你造成玩家 {olive}%s{default} 挂边获得 {green}%i {default}分!", VictimName, Score);
 		else if (Mode == 3)
 		{
 			decl String:AttackerName[MAX_LINE_WIDTH];
 			GetClientName(Attacker, AttackerName, sizeof(AttackerName));
-			StatsPrintToChatAll("\x05%s \x01造成玩家 \x05%s\x01 挂边获得 \x04%i \x01分!", AttackerName, VictimName, Score);
+			StatsPrintToChatAll("{olive}%s {default}造成玩家 {olive}%s{default} 挂边获得 {green}%i {default}分!", AttackerName, VictimName, Score);
 		}
 	}
 }
@@ -862,12 +862,12 @@ public Action:event_PlayerHurt(Handle:event, const String:name[], bool:dontBroad
 //		Mode = GetConVarInt(cvar_AnnounceMode);
 //
 //		if (Mode == 1 || Mode == 2)
-//			StatsPrintToChat(Attacker, "You have \x03LOST \x04%i \x01points for \x03Friendly Firing \x05%s\x01!", Score, VictimName);
+//			StatsPrintToChat(Attacker, "You have {lightgreen}LOST {green}%i {default}points for {lightgreen}Friendly Firing {olive}%s{default}!", Score, VictimName);
 //		else if (Mode == 3)
 //		{
 //			decl String:AttackerName[MAX_LINE_WIDTH];
 //			GetClientName(Attacker, AttackerName, sizeof(AttackerName));
-//			StatsPrintToChatAll("\x05%s \x01has \x03LOST \x04%i \x01points for \x03Friendly Firing \x05%s\x01!", AttackerName, Score, VictimName);
+//			StatsPrintToChatAll("{olive}%s {default}has {lightgreen}LOST {green}%i {default}points for {lightgreen}Friendly Firing {olive}%s{default}!", AttackerName, Score, VictimName);
 //		}
 //
 //		return;
@@ -987,11 +987,11 @@ public Action:event_JockeyRelease(Handle:event, const String:name[], bool:dontBr
 		if (Score > 0)
 		{
 			if (Mode == 1 || Mode == 2)
-				StatsPrintToChat(Rescuer, "你将 \x05%s \x01从 \x04%s\x01 手里救下获得\x04%i \x01分!", VictimName, JockeyName, Score);
+				StatsPrintToChat(Rescuer, "你将 {olive}%s {default}从 {green}%s{default} 手里救下获得{green}%i {default}分!", VictimName, JockeyName, Score);
 			else if (Mode == 3)
 			{
 				GetClientName(Rescuer, RescuerName, sizeof(RescuerName));
-				StatsPrintToChatAll("\x05%s \x01将 \x05%s \x01从 \x04%s\x01 手里救下获得\x04%i \x01分!", RescuerName, VictimName, JockeyName, Score);
+				StatsPrintToChatAll("{olive}%s {default}将 {olive}%s {default}从 {green}%s{default} 手里救下获得{green}%i {default}分!", RescuerName, VictimName, JockeyName, Score);
 			}
 		}
 	}
@@ -1115,9 +1115,9 @@ public Action:event_ChargerKilled(Handle:event, const String:name[], bool:dontBr
 			if(IsFunGame() == 2)
 				return Plugin_Continue;
 			if (Mode == 1 || Mode == 2)
-				StatsPrintToChat(Killer, "你 \x04秒了个牛\x01 获得 \x04%i \x01分!", Score);
+				StatsPrintToChat(Killer, "你 {green}秒了个牛{default} 获得 {green}%i {default}分!", Score);
 			else if (Mode == 3)
-				StatsPrintToChatAll("\x05%s \x01 \x04秒了个牛\x01 获得 \x04%i \x01分!", KillerName, Score);
+				StatsPrintToChatAll("{olive}%s {default} {green}秒了个牛{default} 获得 {green}%i {default}分!", KillerName, Score);
 		}
 		else
 		{
@@ -1128,7 +1128,7 @@ public Action:event_ChargerKilled(Handle:event, const String:name[], bool:dontBr
 			if (ChargerCarryVictim[Charger] > 0 && (IsClientBot(ChargerCarryVictim[Charger]) || (IsClientConnected(ChargerCarryVictim[Charger]) && IsClientInGame(ChargerCarryVictim[Charger]))))
 			{
 				GetClientName(ChargerCarryVictim[Charger], VictimName, sizeof(VictimName));
-				Format(VictimName, sizeof(VictimName), "\x05%s\x01", VictimName);
+				Format(VictimName, sizeof(VictimName), "{olive}%s{default}", VictimName);
 			}
 			else
 				Format(VictimName, sizeof(VictimName), "a survivor");
@@ -1136,9 +1136,9 @@ public Action:event_ChargerKilled(Handle:event, const String:name[], bool:dontBr
 				return Plugin_Continue;
 
 			if (Mode == 1 || Mode == 2)
-				StatsPrintToChat(Killer, "你将 \x05%s\x01 从 \x04%s\x01 手里救下获得 \x04%i \x01分!", VictimName, ChargerName, Score);
+				StatsPrintToChat(Killer, "你将 {olive}%s{default} 从 {green}%s{default} 手里救下获得 {green}%i {default}分!", VictimName, ChargerName, Score);
 			else if (Mode == 3)
-				StatsPrintToChatAll("\x05%s \x01将 \x05%s\x01 从 \x04%s\x01 手里救下获得 \x04%i \x01分!", KillerName, VictimName, ChargerName, Score);
+				StatsPrintToChatAll("{olive}%s {default}将 {olive}%s{default} 从 {green}%s{default} 手里救下获得 {green}%i {default}分!", KillerName, VictimName, ChargerName, Score);
 		}
 	}
 }
@@ -1354,12 +1354,12 @@ public Action:event_UpgradePackAdded(Handle:event, const String:name[], bool:don
 			strcopy(ModelName, sizeof(ModelName), "UNKNOWN");
 
 		if (Mode == 1 || Mode == 2)
-			StatsPrintToChat(Player, "你部署一个 \x05%s\x01获得 \x04%i \x01分!", ModelName, Score);
+			StatsPrintToChat(Player, "你部署一个 {olive}%s{default}获得 {green}%i {default}分!", ModelName, Score);
 		else if (Mode == 3)
 		{
 			decl String:PlayerName[MAX_LINE_WIDTH];
 			GetClientName(Player, PlayerName, sizeof(PlayerName));
-			StatsPrintToChatAll("\x05%s \x01部署一个 \x05%s\x01获得 \x04%i \x01分!", PlayerName, ModelName, Score);
+			StatsPrintToChatAll("{olive}%s {default}部署一个 {olive}%s{default}获得 {green}%i {default}分!", PlayerName, ModelName, Score);
 		}
 	}
 }
@@ -1432,12 +1432,12 @@ public Action:event_GascanPoured(Handle:event, const String:name[], bool:dontBro
 		new Mode = GetConVarInt(cvar_AnnounceMode);
 
 		if (Mode == 1 || Mode == 2)
-			StatsPrintToChat(Player, "你成功 \x04灌了桶油\x01 获得了 \x04%i \x01分!", Score);
+			StatsPrintToChat(Player, "你成功 {green}灌了桶油{default} 获得了 {green}%i {default}分!", Score);
 		else if (Mode == 3)
 		{
 			decl String:PlayerName[MAX_LINE_WIDTH];
 			GetClientName(Player, PlayerName, sizeof(PlayerName));
-			StatsPrintToChatAll("\x05%s \x01成功 \x04灌了桶油\x01 获得了 \x04%i \x01分!", PlayerName, Score);
+			StatsPrintToChatAll("{olive}%s {default}成功 {green}灌了桶油{default} 获得了 {green}%i {default}分!", PlayerName, Score);
 		}
 	}
 }
@@ -1704,9 +1704,9 @@ public Action:event_PlayerPounced(Handle:event, const String:name[], bool:dontBr
 	UpdateMapStat("points_infected", Score);
 
 	if (Mode == 1 || Mode == 2)
-		StatsPrintToChat(Attacker, "你在\x05%s\x01身上完成了一个 \x05%s \x01扑倒，获得 \x04%i \x01分!", VictimName, Label, Score);
+		StatsPrintToChat(Attacker, "你在{olive}%s{default}身上完成了一个 {olive}%s {default}扑倒，获得 {green}%i {default}分!", VictimName, Label, Score);
 	else if (Mode == 3)
-		StatsPrintToChatAll("\x05%s 在\x05%s\x01身上完成了一个 \x05%s \x01扑倒，获得 \x04%i \x01分!", AttackerName, VictimName, Label, Score);
+		StatsPrintToChatAll("{olive}%s 在{olive}%s{default}身上完成了一个 {olive}%s {default}扑倒，获得 {green}%i {default}分!", AttackerName, VictimName, Label, Score);
 }
 
 // Revive friendly code.
@@ -1796,9 +1796,9 @@ public Action:event_RevivePlayer(Handle:event, const String:name[], bool:dontBro
 	if (Score > 0)
 	{
 		if (Mode == 1 || Mode == 2)
-			StatsPrintToChat(Savior, "你因拉起 \x05%s\x01 获得 \x04%i \x01分!", VictimName, Score);
+			StatsPrintToChat(Savior, "你因拉起 {olive}%s{default} 获得 {green}%i {default}分!", VictimName, Score);
 		else if (Mode == 3)
-			StatsPrintToChatAll("\x05%s \x01因拉起 \x05%s\x01 获得 \x04%i \x01分!", SaviorName, VictimName, Score);
+			StatsPrintToChatAll("{olive}%s {default}因拉起 {olive}%s{default} 获得 {green}%i {default}分!", SaviorName, VictimName, Score);
 	}
 }
 
@@ -2053,11 +2053,11 @@ public Action:event_Award_L4D2(Handle:event, const String:name[], bool:dontBroad
 		{
 			if (Mode == 1 || Mode == 2)
 			{
-				StatsPrintToChat(User, "你解救  \x05%s\x01获得 \x04%i \x01分!", RecipientName, Score);
+				StatsPrintToChat(User, "你解救  {olive}%s{default}获得 {green}%i {default}分!", RecipientName, Score);
 			}
 			else if (Mode == 3)
 			{
-				StatsPrintToChatAll("\x05%s 解救  \x05%s\x01获得 \x04%i \x01分!", UserName, RecipientName, Score);
+				StatsPrintToChatAll("{olive}%s 解救  {olive}%s{default}获得 {green}%i {default}分!", UserName, RecipientName, Score);
 			}
 		}
 	}
@@ -2079,9 +2079,9 @@ public Action:event_Award_L4D2(Handle:event, const String:name[], bool:dontBroad
 //		Score = Score * -1;
 //
 //		if (Mode == 1 || Mode == 2)
-//			StatsPrintToChat(User, "You have \x03LOST \x04%i \x01points for \x03Team Killing!", Score);
+//			StatsPrintToChat(User, "You have {lightgreen}LOST {green}%i {default}points for {lightgreen}Team Killing!", Score);
 //		else if (Mode == 3)
-//			StatsPrintToChatAll("\x05%s \x01has \x03LOST \x04%i \x01points for \x03Team Killing!", UserName, Score);
+//			StatsPrintToChatAll("{olive}%s {default}has {lightgreen}LOST {green}%i {default}points for {lightgreen}Team Killing!", UserName, Score);
 //	}
 	else if (AwardID == 86) // Left friendly for dead
 	{
@@ -2099,9 +2099,9 @@ public Action:event_Award_L4D2(Handle:event, const String:name[], bool:dontBroad
 			Mode = 0;
 
 		if (Mode == 1 || Mode == 2)
-			StatsPrintToChat(User, "你 \x03失去了 \x04%i \x01分 by 让\x03感染者进入安全门!", Score);
+			StatsPrintToChat(User, "你 {lightgreen}失去了 {green}%i {default}分 by 让{lightgreen}感染者进入安全门!", Score);
 		else if (Mode == 3)
-			StatsPrintToChatAll("\x05%s \x01has \x03失去了 \x04%i \x01分 by 让\x03感染者进入安全门!", UserName, Score);
+			StatsPrintToChatAll("{olive}%s {default}has {lightgreen}失去了 {green}%i {default}分 by 让{lightgreen}感染者进入安全门!", UserName, Score);
 
 		Score = Score * -1;
 	}
@@ -2129,7 +2129,7 @@ public Action:event_Award_L4D2(Handle:event, const String:name[], bool:dontBroad
 			Score = RoundToFloor(view_as<float>(Score) * 0.4);			
 		}
 		if (Mode && Score > 0)
-			StatsPrintToChat(User, "\x03所有幸存者 \x01都 \x03掉了 \x04%i \x01分 by \x03大家又坐牢了!", Score);
+			StatsPrintToChat(User, "{lightgreen}所有幸存者 {default}都 {lightgreen}掉了 {green}%i {default}分 by {lightgreen}大家又坐牢了!", Score);
 		Mode=0;
 		Score = Score * -1;
 		Isstart=false;
@@ -2318,7 +2318,7 @@ public Action:event_CarAlarm(Handle:event, const String:name[], bool:dontBroadca
 		SendSQLUpdate(query);
 
 		if (Mode)
-			StatsPrintToChatAll("\x04%N \x03失去了 \x04%i \x01分 by \x03又特么打警报车是吧.jpg\x01!", attacker, Score);
+			StatsPrintToChatAll("{green}%N {lightgreen}失去了 {green}%i {default}分 by {lightgreen}又特么打警报车是吧.jpg{default}!", attacker, Score);
 	}
 }
 
@@ -2403,7 +2403,7 @@ public Action:event_WitchCrowned(Handle:event, const String:name[], bool:dontBro
 			decl String:Name[MAX_LINE_WIDTH];
 			GetClientName(Killer, Name, sizeof(Name));
 
-			StatsPrintToChatTeam(TEAM_SURVIVORS, "\x05%s \x04对Witch洒洒水 \x01获得\x04%i \x01分!", Name, Score);
+			StatsPrintToChatTeam(TEAM_SURVIVORS, "{olive}%s {green}对Witch洒洒水 {default}获得{green}%i {default}分!", Name, Score);
 		}
 	}
 }

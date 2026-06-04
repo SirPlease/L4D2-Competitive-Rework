@@ -1255,11 +1255,11 @@ public int Menu_Share(Menu menu, MenuAction action, int client, int param2)
         if (GetClientTeam(client) == 1 && IsAdminOrRoot(client))
         {
             g_bAdminObsViewAll[client] = !g_bAdminObsViewAll[client];
-            PrintToChat(client, "%t", "L4D2DamageShow_SpectatorDisplayToggled", g_bAdminObsViewAll[client] ? "查看所有人生还者伤害【开】" : "查看所有人生还者伤害【关】");
+            CPrintToChat(client, "%t", "L4D2DamageShow_SpectatorDisplayToggled", g_bAdminObsViewAll[client] ? "查看所有人生还者伤害【开】" : "查看所有人生还者伤害【关】");
         }
         else
         {
-            PrintToChat(client, "%t", "L4D2DamageShow_OnlyAdministratorsWatchingCanUse");
+            CPrintToChat(client, "%t", "L4D2DamageShow_OnlyAdministratorsWatchingCanUse");
         }
     }
     else if (StrEqual(key, "back")) { OpenRootMenu(client); return 0; }
@@ -1274,7 +1274,7 @@ public int Menu_Share(Menu menu, MenuAction action, int client, int param2)
 // ============ 提示 ============
 void E_LeftSafe(Event event, const char[] name, bool dontBroadcast)
 {
-    // PrintToChatAll("\x04[伤害显示]\x05 输入 !dmgmenu 打开设置菜单。");
+    // CPrintToChatAll("{green}[伤害显示]{olive} 输入 !dmgmenu 打开设置菜单。");
 }
 
 // ============ 事件/绘制 ============

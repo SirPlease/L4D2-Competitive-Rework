@@ -139,9 +139,9 @@ public Action:timer_ProtectedFriendly(Handle:timer, any:data)
 		new Mode = GetConVarInt(cvar_AnnounceMode);
 
 		if (Mode == 1 || Mode == 2)
-			StatsPrintToChat(client, "你\x05 保护队友 \x01获得了 \x04%i \x01分！!", Score);
+			StatsPrintToChat(client, "你{olive} 保护队友 {default}获得了 {green}%i {default}分！!", Score);
 		else if (Mode == 3)
-			StatsPrintToChatAll("\x05%s\x05 保护队友 \x01获得了 \x04%i \x01分！\x01!", UserName, Score);
+			StatsPrintToChatAll("{olive}%s{olive} 保护队友 {default}获得了 {green}%i {default}分！{default}!", UserName, Score);
 	}
 }
 // Team infected damage score
@@ -215,14 +215,14 @@ public Action:timer_InfectedDamageCheck(Handle:timer, any:data)
 		if (Mode == 1 || Mode == 2)
 		{
 			if (InfectedDamage > 1)
-				StatsPrintToChat(data, "你因给生还者造成了 \x04%i \x01分的伤害获得了 \x04%i \x01分！", DamageCounter, Score);
+				StatsPrintToChat(data, "你因给生还者造成了 {green}%i {default}分的伤害获得了 {green}%i {default}分！", DamageCounter, Score);
 		}
 		else if (Mode == 3)
 		{
 			decl String:Name[MAX_LINE_WIDTH];
 			GetClientName(data, Name, sizeof(Name));
 			if (InfectedDamage > 1)
-				StatsPrintToChatAll("\x05%s 因给生还者造成了 \x04%i \x01分的伤害获得了 \x04%i \x01分!", Name, DamageCounter, Score);
+				StatsPrintToChatAll("{olive}%s 因给生还者造成了 {green}%i {default}分的伤害获得了 {green}%i {default}分!", Name, DamageCounter, Score);
 		}
 	}
 }
@@ -297,18 +297,18 @@ public Action:timer_BoomerBlindnessCheck(Handle:timer, any:data)
 			if (Mode == 1 || Mode == 2)
 			{
 				if (AwardCounter > 0)
-					StatsPrintToChat(data, "你完美的糊生还者的眼，获得 \x04%i \x01 分!", Score);
+					StatsPrintToChat(data, "你完美的糊生还者的眼，获得 {green}%i {default} 分!", Score);
 				else
-					StatsPrintToChat(data, "你获得了 \x04%i \x01分!", Score);
+					StatsPrintToChat(data, "你获得了 {green}%i {default}分!", Score);
 			}
 			else if (Mode == 3)
 			{
 				decl String:Name[MAX_LINE_WIDTH];
 				GetClientName(data, Name, sizeof(Name));
 				if (AwardCounter > 0)
-					StatsPrintToChatAll("\x05%s \x01完美的糊生还者的眼，获得 \x04%i \x01 分!", Name, Score);
+					StatsPrintToChatAll("{olive}%s {default}完美的糊生还者的眼，获得 {green}%i {default} 分!", Name, Score);
 				else
-					StatsPrintToChatAll("\x05%s \x01获得了 \x04%i \x01分!", Name, Score);
+					StatsPrintToChatAll("{olive}%s {default}获得了 {green}%i {default}分!", Name, Score);
 			}
 		}
 

@@ -22,12 +22,12 @@
 
 	"RYGive_AdminSpawnedInfected"
 	{
-		"en"		"\\x03管理员\\x01[\\x05%N\\x01]刷出一只\\x05%s"
-		"chi"		"\\x03管理员\\x01[\\x05%N\\x01]刷出一只\\x05%s"
-		"zho"		"\\x03管理員\\x01[\\x05%N\\x01]刷出一隻\\x05%s"
-		"jp"		"\\x03管理员\\x01[\\x05%N\\x01]刷出一只\\x05%s"
-		"ko"		"\\x03管理员\\x01[\\x05%N\\x01]刷出一只\\x05%s"
-		"vi"		"\\x03管理员\\x01[\\x05%N\\x01]刷出一只\\x05%s"
+		"en"		"{lightgreen}管理员{default}[{olive}%N{default}]刷出一只{olive}%s"
+		"chi"		"{lightgreen}管理员{default}[{olive}%N{default}]刷出一只{olive}%s"
+		"zho"		"{lightgreen}管理員{default}[{olive}%N{default}]刷出一隻{olive}%s"
+		"jp"		"{lightgreen}管理员{default}[{olive}%N{default}]刷出一只{olive}%s"
+		"ko"		"{lightgreen}管理员{default}[{olive}%N{default}]刷出一只{olive}%s"
+		"vi"		"{lightgreen}管理员{default}[{olive}%N{default}]刷出一只{olive}%s"
 	}
 
 	"RYGive_FriendlyDamageCoefficientResetDefault"
@@ -42,12 +42,12 @@
 
 	"RYGive_FriendlyDamageCoefficientSet"
 	{
-		"en"		"\\x01 friendly damage coefficient has been set to \\x04%.1f"
-		"chi"		"\\x01友伤系数已被设置为 \\x04%.1f"
-		"zho"		"\\x01友傷係數已被設定為 \\x04%.1f"
-		"jp"		"\\x01 味方ダメージ係数が \\x04%.1f に設定されました"
-		"ko"		"\\x01 아군 피해 계수가 \\x04%.1f로 설정되었습니다."
-		"vi"		"Hệ số sát thương thân thiện \\x01 đã được đặt thành \\x04%.1f"
+		"en"		"{default} friendly damage coefficient has been set to {green}%.1f"
+		"chi"		"{default}友伤系数已被设置为 {green}%.1f"
+		"zho"		"{default}友傷係數已被設定為 {green}%.1f"
+		"jp"		"{default} 味方ダメージ係数が {green}%.1f に設定されました"
+		"ko"		"{default} 아군 피해 계수가 {green}%.1f로 설정되었습니다."
+		"vi"		"Hệ số sát thương thân thiện {default} đã được đặt thành {green}%.1f"
 	}
 
 	"RYGive_FailedObtainCrosshairPositionTry"
@@ -62,12 +62,12 @@
 
 	"RYGive_ImmuneDamage"
 	{
-		"en"		"\\x04 is immune to damage from %s \\x05%N \\x01"
-		"chi"		"\\x04已%s \\x05%N \\x01的伤害免疫"
-		"zho"		"\\x04已%s \\x05%N \\x01的傷害免疫"
-		"jp"		"\\x04 は %s \\x05%N \\x01 によるダメージを受けません"
-		"ko"		"\\x04는 %s \\x05%N \\x01의 피해에 면역입니다."
-		"vi"		"\\x04 miễn nhiễm với sát thương từ %s \\x05%N \\x01"
+		"en"		"{green} is immune to damage from %s {olive}%N {default}"
+		"chi"		"{green}已%s {olive}%N {default}的伤害免疫"
+		"zho"		"{green}已%s {olive}%N {default}的傷害免疫"
+		"jp"		"{green} は %s {olive}%N {default} によるダメージを受けません"
+		"ko"		"{green}는 %s {olive}%N {default}의 피해에 면역입니다."
+		"vi"		"{green} miễn nhiễm với sát thương từ %s {olive}%N {default}"
 	}
 
 	"RYGive_TargetPlayerExpired"
@@ -82,12 +82,12 @@
 
 	"RYGive_ImmuneSpecialSenseControl"
 	{
-		"en"		"\\x04 is immune to the special sense control of %s \\x05%N"
-		"chi"		"\\x04已%s \\x05%N \\x01的特感控制免疫"
-		"zho"		"\\x04已%s \\x05%N \\x01的特感控制免疫"
-		"jp"		"\\x04 は、%s \\x05%N の特殊なセンス制御の影響を受けません。"
-		"ko"		"\\x04는 %s \\x05%N의 특수 감지 제어에 면역입니다."
-		"vi"		"\\x04 miễn nhiễm với sự điều khiển cảm giác đặc biệt của %s \\x05%N"
+		"en"		"{green} is immune to the special sense control of %s {olive}%N"
+		"chi"		"{green}已%s {olive}%N {default}的特感控制免疫"
+		"zho"		"{green}已%s {olive}%N {default}的特感控制免疫"
+		"jp"		"{green} は、%s {olive}%N の特殊なセンス制御の影響を受けません。"
+		"ko"		"{green}는 %s {olive}%N의 특수 감지 제어에 면역입니다."
+		"vi"		"{green} miễn nhiễm với sự điều khiển cảm giác đặc biệt của %s {olive}%N"
 	}
 
 	"RYGive_OnlySurvivorsCanIdle"
@@ -132,21 +132,21 @@
 
 	"RYGive_AllPlayersWeaponManeuverabilitySet"
 	{
-		"en"		"\\x05 All players The weapon maneuverability of \\x01 has been set to \\x04%.1fx"
-		"chi"		"\\x05所有玩家 \\x01的武器操纵性已被设置为 \\x04%.1fx"
-		"zho"		"\\x05所有玩家 \\x01的武器操控性已被設定為 \\x04%.1fx"
-		"jp"		"\\x05 全プレイヤー \\x01 の武器操作性を \\x04%.1fx に設定しました"
-		"ko"		"\\x05 모든 플레이어 \\x01의 무기 기동성이 \\x04%.1fx로 설정되었습니다."
-		"vi"		"\\x05 Tất cả người chơi Khả năng cơ động của vũ khí của \\x01 đã được đặt thành \\x04%.1fx"
+		"en"		"{olive} All players The weapon maneuverability of {default} has been set to {green}%.1fx"
+		"chi"		"{olive}所有玩家 {default}的武器操纵性已被设置为 {green}%.1fx"
+		"zho"		"{olive}所有玩家 {default}的武器操控性已被設定為 {green}%.1fx"
+		"jp"		"{olive} 全プレイヤー {default} の武器操作性を {green}%.1fx に設定しました"
+		"ko"		"{olive} 모든 플레이어 {default}의 무기 기동성이 {green}%.1fx로 설정되었습니다."
+		"vi"		"{olive} Tất cả người chơi Khả năng cơ động của vũ khí của {default} đã được đặt thành {green}%.1fx"
 	}
 
 	"RYGive_WeaponManeuverabilitySet"
 	{
-		"en"		"\\x05%N The weapon maneuverability of \\x01 has been set to \\x04%.1fx"
-		"chi"		"\\x05%N \\x01的武器操纵性已被设置为 \\x04%.1fx"
-		"zho"		"\\x05%N \\x01的武器操控性已設定為 \\x04%.1fx"
-		"jp"		"\\x05%N \\x01の武器操作性が\\x04%.1fxに設定されました"
-		"ko"		"\\x05%N \\x01의 무기 기동성이 \\x04%.1fx로 설정되었습니다."
-		"vi"		"\\x05%N Khả năng cơ động của vũ khí của \\x01 đã được đặt thành \\x04%.1fx"
+		"en"		"{olive}%N The weapon maneuverability of {default} has been set to {green}%.1fx"
+		"chi"		"{olive}%N {default}的武器操纵性已被设置为 {green}%.1fx"
+		"zho"		"{olive}%N {default}的武器操控性已設定為 {green}%.1fx"
+		"jp"		"{olive}%N {default}の武器操作性が{green}%.1fxに設定されました"
+		"ko"		"{olive}%N {default}의 무기 기동성이 {green}%.1fx로 설정되었습니다."
+		"vi"		"{olive}%N Khả năng cơ động của vũ khí của {default} đã được đặt thành {green}%.1fx"
 	}
 }

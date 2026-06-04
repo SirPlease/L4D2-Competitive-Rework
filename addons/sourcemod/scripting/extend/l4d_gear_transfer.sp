@@ -383,6 +383,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <colors>
 #include <sdktools>
 #include <sdkhooks>
 
@@ -1269,7 +1270,7 @@ void Event_WeaponGiven(Event event, const char[] name, bool dontBroadcast)
 			}
 			else
 			{
-				CPrintToChatAll(client, "\x05%N \x01%t \x04%t \x01%t \x05%N", giver, "Gave", g_sPickups[type], "To", client);
+				GearTransferPrintToChatAll(client, "{olive}%N {default}%t {green}%t {default}%t {olive}%N", giver, "Gave", g_sPickups[type], "To", client);
 			}
 		}
 
@@ -1597,7 +1598,7 @@ void GiveItem(int client, int target, int item, int slot, int type, int transfer
 				if( g_bTranslationNew )
 					MPrintToChatAll(client, "Gave", g_sPickups[type], target);
 				else
-					CPrintToChatAll(target, "\x05%N \x01%t \x04%t \x01%t \x05%N", client, "Gave", g_sPickups[type], "To", target);
+					GearTransferPrintToChatAll(target, "{olive}%N {default}%t {green}%t {default}%t {olive}%N", client, "Gave", g_sPickups[type], "To", target);
 			}
 		}
 		else if( transferType == METHOD_GRAB && g_iCvarNotifies & NOTIFY_GRAB )
@@ -1607,7 +1608,7 @@ void GiveItem(int client, int target, int item, int slot, int type, int transfer
 				if( g_bTranslationNew )
 					MPrintToChatAll(client, "Grabbed", g_sPickups[type], target);
 				else
-					CPrintToChatAll(target, "\x05%N \x01%t \x04%t \x01%t \x05%N", client, "Grabbed", g_sPickups[type], "From", target);
+					GearTransferPrintToChatAll(target, "{olive}%N {default}%t {green}%t {default}%t {olive}%N", client, "Grabbed", g_sPickups[type], "From", target);
 			}
 		}
 		else if( transferType == METHOD_SWAP && g_iCvarNotifies & NOTIFY_SWITCH )
@@ -1619,7 +1620,7 @@ void GiveItem(int client, int target, int item, int slot, int type, int transfer
 				if( g_bTranslationNew )
 					MPrintToChatAll(client, "Switched", g_sPickups[type], target);
 				else
-					CPrintToChatAll(target, "\x05%N \x01%t \x04%t \x01%t \x05%N", client, "Switched", g_sPickups[type], "With", target);
+					GearTransferPrintToChatAll(target, "{olive}%N {default}%t {green}%t {default}%t {olive}%N", client, "Switched", g_sPickups[type], "With", target);
 			}
 
 			type = g_iClientType[target][slot] - 1;
@@ -1629,7 +1630,7 @@ void GiveItem(int client, int target, int item, int slot, int type, int transfer
 				if( g_bTranslationNew )
 					MPrintToChatAll(target, "Gave", g_sPickups[type], client);
 				else
-					CPrintToChatAll(client, "\x05%N \x01%t \x04%t \x01%t \x05%N", target, "Gave", g_sPickups[type], "To", client);
+					GearTransferPrintToChatAll(client, "{olive}%N {default}%t {green}%t {default}%t {olive}%N", target, "Gave", g_sPickups[type], "To", client);
 			}
 		}
 	}
@@ -2341,7 +2342,7 @@ Action TimerAutoGrab(Handle timer)
 							if( g_bTranslationNew )
 								MPrintToChatAll(bot, "BotGrabbed", g_sPickups[type], 0);
 							else
-								CPrintToChatAll(0, "\x05%N \x01%t \x04%t", bot, "Grabbed", g_sPickups[type]);
+								GearTransferPrintToChatAll(0, "{olive}%N {default}%t {green}%t", bot, "Grabbed", g_sPickups[type]);
 						}
 
 						// break;
@@ -2689,7 +2690,7 @@ void PlaySound(int client, const char sound[32])
 // ====================================================================================================
 // Taken from:
 // https://docs.sourcemod.net/api/index.php?fastload=show&id=151&
-void CPrintToChatAll(int client, const char[] format, any ...)
+void GearTransferPrintToChatAll(int client, const char[] format, any ...)
 {
 	static char buffer[192];
 
@@ -2699,7 +2700,7 @@ void CPrintToChatAll(int client, const char[] format, any ...)
 		{
 			SetGlobalTransTarget(client);
 			VFormat(buffer, sizeof(buffer), format, 3);
-			PrintToChat(client, buffer);
+			CPrintToChat(client, "%s", buffer);
 		}
 	}
 	else
@@ -2710,7 +2711,7 @@ void CPrintToChatAll(int client, const char[] format, any ...)
 			{
 				SetGlobalTransTarget(i);
 				VFormat(buffer, sizeof(buffer), format, 3);
-				PrintToChat(i, buffer);
+				CPrintToChat(i, "%s", buffer);
 			}
 		}
 	}
@@ -2742,17 +2743,17 @@ void MPrintToChatAll(int client, const char[] phrase, const char[] item, int tar
 		if( IsClientInGame(user) && !IsFakeClient(user) )
 		{
 			SetGlobalTransTarget(user);
-			pickupItem = Translate(user, "\x04%t\x01", item);
-			clientName = Translate(user, "\x05%N\x01", client);
+			pickupItem = Translate(user, "{green}%t{default}", item);
+			clientName = Translate(user, "{olive}%N{default}", client);
 
 			if( target == 0 )	// Announcing Bot auto-grabs an item
 			{
-				PrintToChat(user, "%t", phrase, clientName, pickupItem);
+				CPrintToChat(user, "%t", phrase, clientName, pickupItem);
 			}
 			else
 			{
-				targetName = Translate(user, "\x05%N\x01", target);
-				PrintToChat(user, "%t", phrase, clientName, pickupItem, targetName);
+				targetName = Translate(user, "{olive}%N{default}", target);
+				CPrintToChat(user, "%t", phrase, clientName, pickupItem, targetName);
 			}
 		}
 	}

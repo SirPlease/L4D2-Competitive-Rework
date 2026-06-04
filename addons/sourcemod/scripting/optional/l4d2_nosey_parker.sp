@@ -23,6 +23,7 @@
 #pragma newdecls required
 
 #include <sourcemod>
+#include <colors>
 #include <sdktools>
 #define L4D2UTIL_STOCKS_ONLY 1
 #include <l4d2util>
@@ -227,7 +228,7 @@ void PrintInflictedDamage(int iSurvivor, int iInfected)
 	
 	int iZClass = GetEntProp(iInfected, Prop_Send, "m_zombieClass");
 	
-	PrintToChat(iSurvivor, "%t", "L4D2NoseyParker_DmgReportTookDamage", iInfected, L4D2_InfectedNames[iZClass], g_iDamage[iSurvivor][iInfected]);
+	CPrintToChat(iSurvivor, "%t", "L4D2NoseyParker_DmgReportTookDamage", iInfected, L4D2_InfectedNames[iZClass], g_iDamage[iSurvivor][iInfected]);
 
 	g_fReported[iSurvivor][iInfected] = GetGameTime();
 	g_iDamage[iSurvivor][iInfected] = 0;

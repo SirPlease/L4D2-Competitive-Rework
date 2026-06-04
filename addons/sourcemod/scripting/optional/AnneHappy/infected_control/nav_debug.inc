@@ -14,7 +14,7 @@ public Action Cmd_NavPeek(int client, int args)
     float hit[3];
     if (!NavDebug_GetAimHitPos(client, hit))
     {
-        PrintToChat(client, "%t", "InfectedControl_ICFailedObtainCrosshairHit");
+        CPrintToChat(client, "%t", "InfectedControl_ICFailedObtainCrosshairHit");
         return Plugin_Handled;
     }
 
@@ -25,7 +25,7 @@ public Action Cmd_NavPeek(int client, int args)
 
     if (area == Address_Null)
     {
-        PrintToChat(client, "%t", "InfectedControl_ICNoNavAreaNearby");
+        CPrintToChat(client, "%t", "InfectedControl_ICNoNavAreaNearby");
         return Plugin_Handled;
     }
 
@@ -80,9 +80,9 @@ public Action Cmd_NavPeek(int client, int args)
 
     // —— 聊天简要 —— //
     if (bucketC >= 0)
-        PrintToChat(client, "%t", "InfectedControl_ICNavidBucketCalculationReturn", navid, bucketC, bucketA, flagBuf);
+        CPrintToChat(client, "%t", "InfectedControl_ICNavidBucketCalculationReturn", navid, bucketC, bucketA, flagBuf);
     else
-        PrintToChat(client, "%t", "InfectedControl_ICNavidBucketReturnFlag", navid, bucketA, flagBuf);
+        CPrintToChat(client, "%t", "InfectedControl_ICNavidBucketReturnFlag", navid, bucketA, flagBuf);
 
     // DebugMode>=3：画一条短暂的准星射线，直观确认命中点
     if (gCV.iDebugMode >= 3)
@@ -122,7 +122,7 @@ public Action Cmd_NavTest(int client, int args)
     float hit[3];
     if (!NavDebug_GetAimHitPos(client, hit))
     {
-        PrintToChat(client, "%t", "InfectedControl_ICFailedObtainCrosshairHit");
+        CPrintToChat(client, "%t", "InfectedControl_ICFailedObtainCrosshairHit");
         return Plugin_Handled;
     }
 
@@ -132,7 +132,7 @@ public Action Cmd_NavTest(int client, int args)
 
     if (area == Address_Null)
     {
-        PrintToChat(client, "%t", "InfectedControl_ICNoNavAreaNearby");
+        CPrintToChat(client, "%t", "InfectedControl_ICNoNavAreaNearby");
         return Plugin_Handled;
     }
 
@@ -290,9 +290,9 @@ public Action Cmd_NavTest(int client, int args)
     PrintToConsole(client, "========================================");
 
     if (canSpawn)
-        PrintToChat(client, "%t", "InfectedControl_ICNavCanGenerateTotal", navid, totalScore);
+        CPrintToChat(client, "%t", "InfectedControl_ICNavCanGenerateTotal", navid, totalScore);
     else
-        PrintToChat(client, "%t", "InfectedControl_ICNavCannotGenerateSee", navid);
+        CPrintToChat(client, "%t", "InfectedControl_ICNavCannotGenerateSee", navid);
 
     if (gCV.iDebugMode >= 3)
     {

@@ -1,13 +1,14 @@
 #pragma semicolon 1
 
 #include <sourcemod>
+#include <colors>
 #include <sdkhooks>
 #include <left4dhooks>
 #include <sdktools>
 #include <l4d2lib>
 #include <l4d2util_stocks>
 
-#define PLUGIN_TAG "" // \x04[Hybrid Bonus]
+#define PLUGIN_TAG "" // {green}[Hybrid Bonus]
 
 #define SM2_DEBUG    0
 
@@ -134,7 +135,7 @@ public OnConfigsExecuted()
 	fTempHpWorth = fMapBonus * fTempHealthProportion / fMapTempHealthBonus; // this should be almost equal to the perm hp worth, but for accuracy we'll keep it separate
 	iPillWorth = L4D2Util_Clamp(RoundToNearest(50 * (fPermHpWorth / GetConVarFloat(hCvarPillsHpFactor)) / 5) * 5, 5, GetConVarInt(hCvarPillsMaxBonus)); // make it pretty
 #if SM2_DEBUG
-	PrintToChatAll("%t", "L4D2HybridScoremodZone_MapHealthBonusTempHealth", fMapBonus, fMapTempHealthBonus, fPermHpWorth, fTempHpWorth, iPillWorth);
+	CPrintToChatAll("%t", "L4D2HybridScoremodZone_MapHealthBonusTempHealth", fMapBonus, fMapTempHealthBonus, fPermHpWorth, fTempHpWorth, iPillWorth);
 #endif
 }
 
@@ -223,23 +224,23 @@ Action:CmdBonus(client, args)
 	{
 		if (InSecondHalfOfRound())
 		{
-			PrintToChat(client, "%t", "L4D2HybridScoremodZone_1Bonus", PLUGIN_TAG, RoundToFloor(fSurvivorBonus[0]), RoundToFloor(fMapBonus + fMaxPillsBonus), CalculateBonusPercent(fSurvivorBonus[0]), sSurvivorState[0]);
+			CPrintToChat(client, "%t", "L4D2HybridScoremodZone_1Bonus", PLUGIN_TAG, RoundToFloor(fSurvivorBonus[0]), RoundToFloor(fMapBonus + fMaxPillsBonus), CalculateBonusPercent(fSurvivorBonus[0]), sSurvivorState[0]);
 		}
-		PrintToChat(client, "%t", "L4D2HybridScoremodZone_BonusHBDBPills", PLUGIN_TAG, InSecondHalfOfRound() + 1, RoundToFloor(fHealthBonus + fDamageBonus + fPillsBonus), CalculateBonusPercent(fHealthBonus + fDamageBonus + fPillsBonus, fMapHealthBonus + fMapDamageBonus + fMaxPillsBonus), RoundToFloor(fHealthBonus), CalculateBonusPercent(fHealthBonus, fMapHealthBonus), RoundToFloor(fDamageBonus), CalculateBonusPercent(fDamageBonus, fMapDamageBonus), RoundToFloor(fPillsBonus), CalculateBonusPercent(fPillsBonus, fMaxPillsBonus));
+		CPrintToChat(client, "%t", "L4D2HybridScoremodZone_BonusHBDBPills", PLUGIN_TAG, InSecondHalfOfRound() + 1, RoundToFloor(fHealthBonus + fDamageBonus + fPillsBonus), CalculateBonusPercent(fHealthBonus + fDamageBonus + fPillsBonus, fMapHealthBonus + fMapDamageBonus + fMaxPillsBonus), RoundToFloor(fHealthBonus), CalculateBonusPercent(fHealthBonus, fMapHealthBonus), RoundToFloor(fDamageBonus), CalculateBonusPercent(fDamageBonus, fMapDamageBonus), RoundToFloor(fPillsBonus), CalculateBonusPercent(fPillsBonus, fMaxPillsBonus));
 		// R#1 Bonus: 556 <69.5%> [HB: 439 <73.1%> | DB: 117 <58.5%> | Pills: 90 <75.0%>]
 	}
 	else if (StrEqual(sCmdType, "lite"))
 	{
-		PrintToChat(client, "%t", "L4D2HybridScoremodZone_Bonus", PLUGIN_TAG, InSecondHalfOfRound() + 1, RoundToFloor(fHealthBonus + fDamageBonus + fPillsBonus), CalculateBonusPercent(fHealthBonus + fDamageBonus + fPillsBonus, fMapHealthBonus + fMapDamageBonus + fMaxPillsBonus));
+		CPrintToChat(client, "%t", "L4D2HybridScoremodZone_Bonus", PLUGIN_TAG, InSecondHalfOfRound() + 1, RoundToFloor(fHealthBonus + fDamageBonus + fPillsBonus), CalculateBonusPercent(fHealthBonus + fDamageBonus + fPillsBonus, fMapHealthBonus + fMapDamageBonus + fMaxPillsBonus));
 		// R#1 Bonus: 556 <69.5%>
 	}
 	else
 	{
 		if (InSecondHalfOfRound())
 		{
-			PrintToChat(client, "%t", "L4D2HybridScoremodZone_1Bonus_2", PLUGIN_TAG, RoundToFloor(fSurvivorBonus[0]), CalculateBonusPercent(fSurvivorBonus[0]));
+			CPrintToChat(client, "%t", "L4D2HybridScoremodZone_1Bonus_2", PLUGIN_TAG, RoundToFloor(fSurvivorBonus[0]), CalculateBonusPercent(fSurvivorBonus[0]));
 		}
-		PrintToChat(client, "%t", "L4D2HybridScoremodZone_BonusHBDBPills_2", PLUGIN_TAG, InSecondHalfOfRound() + 1, RoundToFloor(fHealthBonus + fDamageBonus + fPillsBonus), CalculateBonusPercent(fHealthBonus + fDamageBonus + fPillsBonus, fMapHealthBonus + fMapDamageBonus + fMaxPillsBonus), CalculateBonusPercent(fHealthBonus, fMapHealthBonus), CalculateBonusPercent(fDamageBonus, fMapDamageBonus), CalculateBonusPercent(fPillsBonus, fMaxPillsBonus));
+		CPrintToChat(client, "%t", "L4D2HybridScoremodZone_BonusHBDBPills_2", PLUGIN_TAG, InSecondHalfOfRound() + 1, RoundToFloor(fHealthBonus + fDamageBonus + fPillsBonus), CalculateBonusPercent(fHealthBonus + fDamageBonus + fPillsBonus, fMapHealthBonus + fMapDamageBonus + fMaxPillsBonus), CalculateBonusPercent(fHealthBonus, fMapHealthBonus), CalculateBonusPercent(fDamageBonus, fMapDamageBonus), CalculateBonusPercent(fPillsBonus, fMaxPillsBonus));
 		// R#1 Bonus: 556 <69.5%> [HB: 73% | DB: 58% | Pills: 75%]
 	}
 	return Plugin_Handled;
@@ -249,13 +250,13 @@ Action:CmdMapInfo(client, args)
 {
 	new Float:fMaxPillsBonus = float(iPillWorth * iTeamSize);
 	new Float:fTotalBonus = fMapBonus + fMaxPillsBonus;
-	PrintToChat(client, "%t", "L4D2HybridScoremodZone_HybridBonusMapInfo", iTeamSize, iTeamSize);
-	PrintToChat(client, "%t", "L4D2HybridScoremodZone_Distance", iMapDistance);
-	PrintToChat(client, "%t", "L4D2HybridScoremodZone_TotalBonus1000", RoundToFloor(fTotalBonus));
-	PrintToChat(client, "%t", "L4D2HybridScoremodZone_HealthBonus", RoundToFloor(fMapHealthBonus), CalculateBonusPercent(fMapHealthBonus, fTotalBonus));
-	PrintToChat(client, "%t", "L4D2HybridScoremodZone_DamageBonus", RoundToFloor(fMapDamageBonus), CalculateBonusPercent(fMapDamageBonus, fTotalBonus));
-	PrintToChat(client, "%t", "L4D2HybridScoremodZone_PillsBonusMax", iPillWorth, RoundToFloor(fMaxPillsBonus), CalculateBonusPercent(fMaxPillsBonus, fTotalBonus));
-	PrintToChat(client, "%t", "L4D2HybridScoremodZone_Tiebreaker", iPillWorth);
+	CPrintToChat(client, "%t", "L4D2HybridScoremodZone_HybridBonusMapInfo", iTeamSize, iTeamSize);
+	CPrintToChat(client, "%t", "L4D2HybridScoremodZone_Distance", iMapDistance);
+	CPrintToChat(client, "%t", "L4D2HybridScoremodZone_TotalBonus1000", RoundToFloor(fTotalBonus));
+	CPrintToChat(client, "%t", "L4D2HybridScoremodZone_HealthBonus", RoundToFloor(fMapHealthBonus), CalculateBonusPercent(fMapHealthBonus, fTotalBonus));
+	CPrintToChat(client, "%t", "L4D2HybridScoremodZone_DamageBonus", RoundToFloor(fMapDamageBonus), CalculateBonusPercent(fMapDamageBonus, fTotalBonus));
+	CPrintToChat(client, "%t", "L4D2HybridScoremodZone_PillsBonusMax", iPillWorth, RoundToFloor(fMaxPillsBonus), CalculateBonusPercent(fMaxPillsBonus, fTotalBonus));
+	CPrintToChat(client, "%t", "L4D2HybridScoremodZone_Tiebreaker", iPillWorth);
 	// [ScoreMod 2 :: 4v4] Map Info
 	// Distance: 400
 	// Bonus: 920 <100.0%>
@@ -271,7 +272,7 @@ Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damagetype)
 	if (!IsSurvivor(victim) || IsPlayerIncap(victim)) return Plugin_Continue;
 
 #if SM2_DEBUG
-	if (GetSurvivorTemporaryHealth(victim) > 0) PrintToChatAll("%t", "L4D2HybridScoremodZone_TempHPDamage", victim, GetSurvivorTemporaryHealth(victim), damage);
+	if (GetSurvivorTemporaryHealth(victim) > 0) CPrintToChatAll("%t", "L4D2HybridScoremodZone_TempHPDamage", victim, GetSurvivorTemporaryHealth(victim), damage);
 #endif
 	iTempHealth[victim] = GetSurvivorTemporaryHealth(victim);
 	
@@ -304,7 +305,7 @@ void OnPlayerDeath(Event hEvent, const char[] sEventName, bool bDontBroadcast)
 		iLostTempHealth[InSecondHalfOfRound()] += penalty;
 		
 		#if SM2_DEBUG
-			PrintToChatAll("%t", "L4D2HybridScoremodZone_ValidDeathIncapsTotalPenalty", victim, incaps, penalty);
+			CPrintToChatAll("%t", "L4D2HybridScoremodZone_ValidDeathIncapsTotalPenalty", victim, incaps, penalty);
 		#endif
 	}
 }
@@ -368,7 +369,7 @@ void OnTakeDamagePost(victim, attacker, inflictor, Float:damage, damagetype)
 	if (!IsSurvivor(victim)) return;
 		
 #if SM2_DEBUG
-	PrintToChatAll("%t", "L4D2HybridScoremodZone_LostTempHPAfterAttacked", victim, iTempHealth[victim] - (IsPlayerAlive(victim) ? GetSurvivorTemporaryHealth(victim) : 0), damage);
+	CPrintToChatAll("%t", "L4D2HybridScoremodZone_LostTempHPAfterAttacked", victim, iTempHealth[victim] - (IsPlayerAlive(victim) ? GetSurvivorTemporaryHealth(victim) : 0), damage);
 #endif
 	if (!IsPlayerAlive(victim) || (IsPlayerIncap(victim) && !IsPlayerLedged(victim)))
 	{
@@ -394,7 +395,7 @@ public L4D2_ADM_OnTemporaryHealthSubtracted(client, oldHealth, newHealth)
 public Action:L4D2_OnEndVersusModeRound(bool:countSurvivors)
 {
 #if SM2_DEBUG
-	PrintToChatAll("%t", "L4D2HybridScoremodZone_DirectorEndVersusModeRound", InSecondHalfOfRound(), countSurvivors);
+	CPrintToChatAll("%t", "L4D2HybridScoremodZone_DirectorEndVersusModeRound", InSecondHalfOfRound(), countSurvivors);
 #endif
 	if (bRoundOver)
 		return Plugin_Continue;
@@ -407,16 +408,16 @@ public Action:L4D2_OnEndVersusModeRound(bool:countSurvivors)
 	{
 		SetConVarInt(hCvarValveSurvivalBonus, RoundToFloor(fSurvivorBonus[team] / iSurvivalMultiplier));
 		fSurvivorBonus[team] = float(GetConVarInt(hCvarValveSurvivalBonus) * iSurvivalMultiplier);    // workaround for the discrepancy caused by RoundToFloor()
-		Format(sSurvivorState[team], 32, "%s%i\x01/\x05%i\x01", (iSurvivalMultiplier == iTeamSize ? "\x05" : "\x04"), iSurvivalMultiplier, iTeamSize);
+		Format(sSurvivorState[team], 32, "%s%i{default}/{olive}%i{default}", (iSurvivalMultiplier == iTeamSize ? "{olive}" : "{green}"), iSurvivalMultiplier, iTeamSize);
 	#if SM2_DEBUG
-		PrintToChatAll("%t", "L4D2HybridScoremodZone_SurvivalBonusCvarUpdatedValue", GetConVarInt(hCvarValveSurvivalBonus), iSurvivalMultiplier);
+		CPrintToChatAll("%t", "L4D2HybridScoremodZone_SurvivalBonusCvarUpdatedValue", GetConVarInt(hCvarValveSurvivalBonus), iSurvivalMultiplier);
 	#endif
 	}
 	else
 	{
 		fSurvivorBonus[team] = 0.0;
 		SetConVarInt(hCvarValveSurvivalBonus, 0);
-		Format(sSurvivorState[team], 32, "\x04%s\x01", (iSurvivalMultiplier == 0 ? "wiped out" : "bonus depleted"));
+		Format(sSurvivorState[team], 32, "{green}%s{default}", (iSurvivalMultiplier == 0 ? "wiped out" : "bonus depleted"));
 		bTiebreakerEligibility[team] = (iSurvivalMultiplier == iTeamSize);
 	}
 
@@ -444,16 +445,16 @@ Action:PrintRoundEndStats(Handle:timer)
 {
 	for (new i = 0; i <= InSecondHalfOfRound(); i++)
 	{
-		PrintToChatAll("%t", "L4D2HybridScoremodZone_RoundBonus", PLUGIN_TAG, (i + 1), RoundToFloor(fSurvivorBonus[i]), RoundToFloor(fMapBonus + float(iPillWorth * iTeamSize)), CalculateBonusPercent(fSurvivorBonus[i]), sSurvivorState[i]);
+		CPrintToChatAll("%t", "L4D2HybridScoremodZone_RoundBonus", PLUGIN_TAG, (i + 1), RoundToFloor(fSurvivorBonus[i]), RoundToFloor(fMapBonus + float(iPillWorth * iTeamSize)), CalculateBonusPercent(fSurvivorBonus[i]), sSurvivorState[i]);
 		// [EQSM :: Round 1] Bonus: 487/1200 <42.7%> [3/4]
 	}
 	
 	if (InSecondHalfOfRound() && bTiebreakerEligibility[0] && bTiebreakerEligibility[1])
 	{
-		PrintToChatAll("%t", "L4D2HybridScoremodZone_TiebreakerTeam1Team2", PLUGIN_TAG, iSiDamage[0], iSiDamage[1]);
+		CPrintToChatAll("%t", "L4D2HybridScoremodZone_TiebreakerTeam1Team2", PLUGIN_TAG, iSiDamage[0], iSiDamage[1]);
 		if (iSiDamage[0] == iSiDamage[1])
 		{
-			PrintToChatAll("%t", "L4D2HybridScoremodZone_TeamsPerformedAbsolutelyEqualImpossible", PLUGIN_TAG);
+			CPrintToChatAll("%t", "L4D2HybridScoremodZone_TeamsPerformedAbsolutelyEqualImpossible", PLUGIN_TAG);
 		}
 	}
 
@@ -475,7 +476,7 @@ Float:GetSurvivorHealthBonus()
 				survivalMultiplier++;
 				fHealthBonus += GetSurvivorPermanentHealth(i) * fPermHpWorth;
 			#if SM2_DEBUG
-				PrintToChatAll("%t", "L4D2HybridScoremodZone_AddingPermHPBonusContribution", i, GetSurvivorPermanentHealth(i), GetSurvivorPermanentHealth(i) * fPermHpWorth, fHealthBonus);
+				CPrintToChatAll("%t", "L4D2HybridScoremodZone_AddingPermHPBonusContribution", i, GetSurvivorPermanentHealth(i), GetSurvivorPermanentHealth(i) * fPermHpWorth, fHealthBonus);
 			#endif
 			}
 		}
@@ -488,7 +489,7 @@ Float:GetSurvivorDamageBonus()
 	new survivalMultiplier = GetAliveSurvivorCount();
 	new Float:fDamageBonus = (fMapTempHealthBonus - float(iLostTempHealth[InSecondHalfOfRound()])) * fTempHpWorth / iTeamSize * survivalMultiplier;
 #if SM2_DEBUG
-	PrintToChatAll("%t", "L4D2HybridScoremodZone_AddingTempHPBonusEligible", fDamageBonus, survivalMultiplier);
+	CPrintToChatAll("%t", "L4D2HybridScoremodZone_AddingTempHPBonusEligible", fDamageBonus, survivalMultiplier);
 #endif
 	return (fDamageBonus > 0.0 && survivalMultiplier > 0) ? fDamageBonus : 0.0;
 }
@@ -506,7 +507,7 @@ Float:GetSurvivorPillBonus()
 			{
 				pillsBonus += iPillWorth;
 			#if SM2_DEBUG
-				PrintToChatAll("%t", "L4D2HybridScoremodZone_AddingPillsContributionTotalBonus", i, pillsBonus);
+				CPrintToChatAll("%t", "L4D2HybridScoremodZone_AddingPillsContributionTotalBonus", i, pillsBonus);
 			#endif
 			}
 		}

@@ -178,9 +178,9 @@ public Action:event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
 			QuarterRank_RecordScore(Attacker, Score * (-1));
 
 		if (Mode == 1 || Mode == 2)
-			StatsPrintToChat(Attacker, "你因为队内误杀 \x05%s\x01 \x03失去了 \x04%i \x01分!", VictimName, Score);
+			StatsPrintToChat(Attacker, "你因为队内误杀 {olive}%s{default} {lightgreen}失去了 {green}%i {default}分!", VictimName, Score);
 		else if (Mode == 3)
-			StatsPrintToChatAll("\x05%s \x01因为队内误杀 \x05%s\x01 \x03失去了 \x04%i \x01分!!", AttackerName, VictimName, Score);
+			StatsPrintToChatAll("{olive}%s {default}因为队内误杀 {olive}%s{default} {lightgreen}失去了 {green}%i {default}分!!", AttackerName, VictimName, Score);
 	}
 
 	// Attacker is a Survivor
@@ -288,20 +288,20 @@ public Action:event_PlayerDeath(Handle:event, const String:name[], bool:dontBroa
 				if (Mode > 1)
 				{
 					GetClientName(Attacker, AttackerName, sizeof(AttackerName));
-					StatsPrintToChatAll("\x05%s \x04爆头杀死 \x05%s \x01获得 \x04%i \x01分 !", AttackerName, VictimName, Score);
+					StatsPrintToChatAll("{olive}%s {green}爆头杀死 {olive}%s {default}获得 {green}%i {default}分 !", AttackerName, VictimName, Score);
 				}
 				else
-					StatsPrintToChat(Attacker, "你 \x04爆头杀死 \x05%s \x01 获得 \x04%i \x01分!", VictimName, Score);
+					StatsPrintToChat(Attacker, "你 {green}爆头杀死 {olive}%s {default} 获得 {green}%i {default}分!", VictimName, Score);
 			}
 			else
 			{
 				if (Mode > 1)
 				{
 					GetClientName(Attacker, AttackerName, sizeof(AttackerName));
-					StatsPrintToChatAll("\x05%s \x04杀死 \x05%s \x01获得 \x04%i \x01分 !", AttackerName, VictimName, Score);
+					StatsPrintToChatAll("{olive}%s {green}杀死 {olive}%s {default}获得 {green}%i {default}分 !", AttackerName, VictimName, Score);
 				}
 				else
-					StatsPrintToChat(Attacker, "你 \x04杀死 \x05%s \x01 获得 \x04%i \x01分!", VictimName, Score);
+					StatsPrintToChat(Attacker, "你 {green}杀死 {olive}%s {default} 获得 {green}%i {default}分!", VictimName, Score);
 			}
 		}
 
@@ -684,7 +684,7 @@ public Action:event_TankKilled(Handle:event, const String:name[], bool:dontBroad
 
 	if (Mode && Score > 0)
 	{
-		StatsPrintToChatTeam(TEAM_SURVIVORS, "\x03所有幸存者因 \x05%i 死亡击杀一个Tank \x01获得 \x04%i \x01分 !", Deaths, Score);
+		StatsPrintToChatTeam(TEAM_SURVIVORS, "{lightgreen}所有幸存者因 {olive}%i 死亡击杀一个Tank {default}获得 {green}%i {default}分 !", Deaths, Score);
 	}
 
 	UpdateMapStat("kills", 1);
@@ -1228,9 +1228,9 @@ GiveAdrenaline(Giver, Recipient, AdrenalineID = -1)
 		new Mode = GetConVarInt(cvar_AnnounceMode);
 
 		if (Mode == 1 || Mode == 2)
-			StatsPrintToChat(Giver, "你赠送肾上腺素给 \x05%s \x01获得了 \x04%i \x01分!", RecipientName, Score);
+			StatsPrintToChat(Giver, "你赠送肾上腺素给 {olive}%s {default}获得了 {green}%i {default}分!", RecipientName, Score);
 		else if (Mode == 3)
-			StatsPrintToChatAll("\x05%s 赠送肾上腺素给 \x05%s \x01获得了 \x04%i \x01分!", GiverName, RecipientName, Score);
+			StatsPrintToChatAll("{olive}%s 赠送肾上腺素给 {olive}%s {default}获得了 {green}%i {default}分!", GiverName, RecipientName, Score);
 	}
 }
 
@@ -1345,9 +1345,9 @@ GivePills(Giver, Recipient, PillsID = -1)
 		new Mode = GetConVarInt(cvar_AnnounceMode);
 
 		if (Mode == 1 || Mode == 2)
-			StatsPrintToChat(Giver, "你赠送药丸给 \x05%s \x01获得了 \x04%i \x01分!", RecipientName, Score);
+			StatsPrintToChat(Giver, "你赠送药丸给 {olive}%s {default}获得了 {green}%i {default}分!", RecipientName, Score);
 		else if (Mode == 3)
-			StatsPrintToChatAll("\x05%s \x01赠送药丸给 \x05%s \x01获得了 \x04%i \x01分!", GiverName, RecipientName, Score);
+			StatsPrintToChatAll("{olive}%s {default}赠送药丸给 {olive}%s {default}获得了 {green}%i {default}分!", GiverName, RecipientName, Score);
 	}
 }
 
@@ -1450,9 +1450,9 @@ public Action:event_DefibPlayer(Handle:event, const String:name[], bool:dontBroa
 	{
 		new Mode = GetConVarInt(cvar_AnnounceMode);
 		if (Mode == 1 || Mode == 2)
-			StatsPrintToChat(Giver, "你用电击器复活了 \x05%s\x01 获得了 \x04%i \x01分!", RecipientName, Score);
+			StatsPrintToChat(Giver, "你用电击器复活了 {olive}%s{default} 获得了 {green}%i {default}分!", RecipientName, Score);
 		else if (Mode == 3)
-			StatsPrintToChatAll("\x05%s \x01用电击器复活了 \x05%s\x01 获得了 \x04%i \x01分!", GiverName, RecipientName, Score);
+			StatsPrintToChatAll("{olive}%s {default}用电击器复活了 {olive}%s{default} 获得了 {green}%i {default}分!", GiverName, RecipientName, Score);
 	}
 }
 
@@ -1564,9 +1564,9 @@ public Action:event_HealPlayer(Handle:event, const String:name[], bool:dontBroad
 	{
 		new Mode = GetConVarInt(cvar_AnnounceMode);
 		if (Mode == 1 || Mode == 2) 
-			StatsPrintToChat(Giver, "你用医疗包治疗了 \x05%s\x01 获得了 \x04%i \x01分!", RecipientName, Score);
+			StatsPrintToChat(Giver, "你用医疗包治疗了 {olive}%s{default} 获得了 {green}%i {default}分!", RecipientName, Score);
 		else if (Mode == 3)
-			StatsPrintToChatAll("\x05%s \x01用医疗包治疗了 \x05%s\x01 获得了 \x04%i \x01分!", GiverName, RecipientName, Score);
+			StatsPrintToChatAll("{olive}%s {default}用医疗包治疗了 {olive}%s{default} 获得了 {green}%i {default}分!", GiverName, RecipientName, Score);
 	}
 }
 

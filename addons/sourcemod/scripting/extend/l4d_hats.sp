@@ -2090,7 +2090,7 @@ Action CmdHatAdd(int client, int args)
 				SaveConfig(hFile);
 				delete hFile;
 				g_iCount++;
-				ReplyToCommand(client, "%TAdded hat '\05%s\x03' %d/%d", "HAT_SYSTEM", client, sTemp, g_iCount, MAX_HATS);
+				CPrintToChat(client, "%TAdded hat '{OLIVE}%s{LIGHTGREEN}' %d/%d", "HAT_SYSTEM", client, sTemp, g_iCount, MAX_HATS);
 
 				if( g_bTranslation )
 				{
@@ -2164,7 +2164,7 @@ Action CmdHatDel(int client, int args)
 					hFile.GetString("mod", sModel, sizeof(sModel));
 					if( StrContains(sModel, sTemp) != -1 )
 					{
-						ReplyToCommand(client, "%TYou have deleted the hat '\x05%s\x03'", "HAT_SYSTEM", client, sModel);
+					CPrintToChat(client, "%TYou have deleted the hat '{OLIVE}%s{LIGHTGREEN}'", "HAT_SYSTEM", client, sModel);
 						hFile.DeleteThis();
 
 						g_iCount--;
@@ -2194,7 +2194,7 @@ Action CmdHatDel(int client, int args)
 				if( bDeleted )
 					SaveConfig(hFile);
 				else
-					ReplyToCommand(client, "%TCould not delete hat, did not find model '\x05%s\x03'", "HAT_SYSTEM", client, sTemp);
+					CPrintToChat(client, "%TCould not delete hat, did not find model '{OLIVE}%s{LIGHTGREEN}'", "HAT_SYSTEM", client, sTemp);
 			}
 		}
 		delete hFile;
@@ -2255,7 +2255,7 @@ Action CmdHatLoad(int client, int args)
 	if( g_bCvarAllow && HatsValidClient(client) )
 	{
 		int selected = g_iSelected[client];
-		PrintToChat(client, "%TLoaded hat '\x05%s\x03' on all players.", "HAT_SYSTEM", client, g_sModels[selected]);
+		CPrintToChat(client, "%TLoaded hat '{OLIVE}%s{LIGHTGREEN}' on all players.", "HAT_SYSTEM", client, g_sModels[selected]);
 
 		for( int i = 1; i <= MaxClients; i++ )
 		{
@@ -2315,11 +2315,11 @@ Action CmdHatSave(int client, int args)
 				}
 
 				SaveConfig(hFile);
-				PrintToChat(client, "%TSaved '\x05%s\x03' hat origin and angles.", "HAT_SYSTEM", client, g_sModels[index]);
+				CPrintToChat(client, "%TSaved '{OLIVE}%s{LIGHTGREEN}' hat origin and angles.", "HAT_SYSTEM", client, g_sModels[index]);
 			}
 			else
 			{
-				PrintToChat(client, "%T\x04Warning: \x03Could not save '\x05%s\x03' hat origin and angles.", "HAT_SYSTEM", client, g_sModels[index]);
+				CPrintToChat(client, "%T{GREEN}Warning: {LIGHTGREEN}Could not save '{OLIVE}%s{LIGHTGREEN}' hat origin and angles.", "HAT_SYSTEM", client, g_sModels[index]);
 			}
 			delete hFile;
 		}
