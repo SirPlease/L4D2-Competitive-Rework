@@ -1,0 +1,283 @@
+"Phrases"
+{
+	"L4D2C1"
+	{
+		"ko"		"사점"
+	}
+	"L4D2C2"
+	{
+		"ko"		"다크 카니발"
+	}
+	"L4D2C3"
+	{
+		"ko"		"늪 열병"
+	}
+	"L4D2C4"
+	{
+		"ko"		"강한 비"
+	}
+	"L4D2C5"
+	{
+		"ko"		"교구"
+	}
+	"L4D2C6"
+	{
+		"ko"		"패싱"
+	}
+	"L4D2C7"
+	{
+		"ko"		"희생"
+	}
+	"L4D2C8"
+	{
+		"ko"		"자비 없음"
+	}
+	"L4D2C9"
+	{
+		"ko"		"집중 코스"
+	}
+	"L4D2C10"
+	{
+		"ko"		"사망자 수"
+	}
+	"L4D2C11"
+	{
+		"ko"		"데드 에어"
+	}
+	"L4D2C12"
+	{
+		"ko"		"혈액 수확"
+	}
+	"L4D2C13"
+	{
+		"ko"		"콜드 스트림"
+	}
+	"L4D2C14"
+	{
+		"ko"		"최후의 저항"
+	}
+	"Zengchengone"
+	{
+		"ko"		"광저우 Zengcheng Lv7.3"
+	}
+	"2019"
+	{
+		"ko"		"2019(주년 에디션)"
+	}
+	"JTB2"
+	{
+		"ko"		"벨두라 2"
+	}
+	"bts"
+	{
+		"ko"		"학교로 돌아가다"
+	}
+	"CityOfTheDeadBeta"
+	{
+		"ko"		"죽음의 도시"
+	}
+	"City17l4d2"
+	{
+		"ko"		"시티 17 v3.2"
+	}
+	"crashbandicoot"
+	{
+		"ko"		"크래쉬 밴디쿳 코스 2"
+	}
+	"Cure2"
+	{
+		"ko"		"큐어 2"
+	}
+	"damitcomplete"
+	{
+		"ko"		"댐 잇 컴플리트 L4D2"
+	}
+	"darkwood"
+	{
+		"ko"		"다크 우드(확장)"
+	}
+	"DayBreak"
+	{
+		"ko"		"데이 브레이크"
+	}
+	"deadvacation"
+	{
+		"ko"		"데드 베케이션 L4D2"
+	}
+	"deathaboard2"
+	{
+		"ko"		"죽음의 배 II"
+	}
+	"DevilMountain"
+	{
+		"ko"		"데빌 마운틴"
+	}
+	"Escansion"
+	{
+		"ko"		"에스칸션"
+	}
+	"escfromtoronto"
+	{
+		"ko"		"토론토 L4D2에서 탈출"
+	}
+	"GettingOut"
+	{
+		"ko"		"외출"
+	}
+	"hauntedforest"
+	{
+		"ko"		"유령의 숲"
+	}
+	"Highway17L4D2"
+	{
+		"ko"		"하프라이프 2: 17번 고속도로(L4D2)"
+	}
+	"ihatemountains2"
+	{
+		"ko"		"산이 싫어 2 (1.5)"
+	}
+	"JourneyToSplashMountain"
+	{
+		"ko"		"스플래시 마운틴으로의 여행"
+	}
+	"Diescraper361"
+	{
+		"ko"		"다이스크래퍼 Redux 3.61"
+	}
+	"One4Nine"
+	{
+		"ko"		"하나 4 나인"
+	}
+	"TanksPlayground"
+	{
+		"ko"		"탱크 플레이그라운드 v3.0"
+	}
+	"YamaMSE"
+	{
+		"ko"		"야마"
+	}
+	"leftinprypiat"
+	{
+		"ko"		"프리피아트에 남겨짐"
+	}
+	"LeftTurnSilentHill3"
+	{
+		"ko"		"좌회전 사일런트 힐 3"
+	}
+	"mic3"
+	{
+		"ko"		"군사 산업 단지 III v666"
+	}
+	"necrovirusfacility"
+	{
+		"ko"		"네크로바이러스 시설"
+	}
+	"NightPresence"
+	{
+		"ko"		"밤의 존재"
+	}
+	"QuestionableEthicsAlphaTest"
+	{
+		"ko"		"의심스러운 윤리: 알파 테스트"
+	}
+	"re3"
+	{
+		"ko"		"레지던트 이블 3"
+	}
+	"SaltHellPark"
+	{
+		"ko"		"솔트헬 파크"
+	}
+	"shenmejb2"
+	{
+		"ko"		"쉔메즈2"
+	}
+	"ajsSilentFear"
+	{
+		"ko"		"침묵의 공포"
+	}
+	"shool"
+	{
+		"ko"		"사일런트 힐: 아더사이드 오브 라이프 V4.7"
+	}
+	"TheHive"
+	{
+		"ko"		"더 하이브"
+	}
+	"ThereIsOnlyOneWay"
+	{
+		"ko"		"방법은 오직 하나뿐이다"
+	}
+	"undeadzone"
+	{
+		"ko"		"언데드 존"
+	}
+	"WhiteForest"
+	{
+		"ko"		"화이트 포레스트"
+	}
+	"2evileyes"
+	{
+		"ko"		"2 사악한 눈"
+	}
+	"BloodTracks"
+	{
+		"ko"		"혈액 트랙"
+	}
+	"CrashBandicootTheReturn"
+	{
+		"ko"		"크래쉬 밴디쿳: 더 리턴"
+	}
+	"DeadSeries"
+	{
+		"ko"		"데드 시리즈"
+	}
+	"Derailed"
+	{
+		"ko"		"탈선"
+	}
+	"Diescraper36"
+	{
+		"ko"		"다이스크래퍼 Redux 3.6"
+	}
+	"FarewellChenming"
+	{
+		"ko"		"첸밍 작별 인사"
+	}
+	"HighwayToHell"
+	{
+		"ko"		"지옥으로 가는 고속도로"
+	}
+	"QuestionableEthics"
+	{
+		"ko"		"의심스러운 윤리"
+	}
+	"TheBloodyMoors"
+	{
+		"ko"		"블러디 무어스"
+	}
+	"TheCure"
+	{
+		"ko"		"치료법"
+	}
+	"ddntr1"
+	{
+		"ko"		"죽음의 함정"
+	}
+	"deadvacation2"
+	{
+		"ko"		"데드 베케이션 2"
+	}
+	"drdegov21"
+	{
+		"ko"		"드롭 데드 협곡 v2.1"
+	}
+	"fallen"
+	{
+		"ko"		"타락한"
+	}
+	"l4d2CrashBandicoot2"
+	{
+		"ko"		"크래쉬 밴디쿳 코스 2"
+	}
+}

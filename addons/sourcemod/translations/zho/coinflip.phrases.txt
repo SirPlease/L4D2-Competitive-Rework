@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"zho"		"[{olive}硬幣翻轉{default}]"
+	}
+	"Heads"
+	{
+		"zho"		"{lightgreen}%s{default} flipped a coin!\\nIt's {green}Heads{default}!"
+	}
+	"Tails"
+	{
+		"zho"		"{lightgreen}%s{default} flipped a coin!\\nIt's {green}Tails{default}!"
+	}
+	"rolled"
+	{
+		"zho"		"{lightgreen}%s{default} rolled a {teamcolor}%d{default} sided die!\\nIt's {green}%d{default}!"
+	}
+}

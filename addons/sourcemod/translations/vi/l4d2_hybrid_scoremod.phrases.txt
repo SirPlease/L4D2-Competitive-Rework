@@ -1,0 +1,95 @@
+"Phrases"
+{
+	"L4D2HybridScoremod_MapHealthBonusTempHealth"
+	{
+		"vi"		"{default} Phần thưởng sức khỏe bản đồ: {olive} %.1f {default}, phần thưởng sức khỏe tạm thời: {olive} %.1f {default}, giá trị hp perm: {lightgreen} %.1f {default}, phần thưởng sức khỏe tạm thời: {lightgreen} %.1f {default}, giá trị viên thuốc: {lightgreen} %i {default}"
+	}
+	"L4D2HybridScoremod_1Bonus"
+	{
+		"vi"		"%s{default}R{green}#1{default} Tiền thưởng: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
+	}
+	"L4D2HybridScoremod_BonusHBDBPills"
+	{
+		"vi"		"%s{default}R{green}#%i{default} Tiền thưởng: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | ĐB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | Thuốc: {olive}%d{default} <{lightgreen}%.1f%%{default}>]"
+	}
+	"L4D2HybridScoremod_Bonus"
+	{
+		"vi"		"%s{default}R{green}#%i{default} Tiền thưởng: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+	"L4D2HybridScoremod_1Bonus_2"
+	{
+		"vi"		"%s{default}R{green}#1{default} Tiền thưởng: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+	"L4D2HybridScoremod_BonusHBDBPills_2"
+	{
+		"vi"		"%s{default}R{green}#%i{default} Tiền thưởng: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {lightgreen}%.0f%%{default} | ĐB: {lightgreen}%.0f%%{default} | Thuốc: {lightgreen}%.0f%%{default}]"
+	}
+	"L4D2HybridScoremod_HybridBonusMapInfo"
+	{
+		"vi"		"{default}[{green}Phần thưởng kết hợp{default} :: {lightgreen}%iv%i{default}] Thông tin bản đồ"
+	}
+	"L4D2HybridScoremod_Distance"
+	{
+		"vi"		"{default}Khoảng cách: {olive}%d{default}"
+	}
+	"L4D2HybridScoremod_TotalBonus1000"
+	{
+		"vi"		"{default}Tổng tiền thưởng: {olive}%d{default} <{lightgreen}100.0%%{default}>"
+	}
+	"L4D2HybridScoremod_HealthBonus"
+	{
+		"vi"		"Phần thưởng {default}Health: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+	"L4D2HybridScoremod_DamageBonus"
+	{
+		"vi"		"Phần thưởng thiệt hại {default}D: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+	"L4D2HybridScoremod_PillsBonusMax"
+	{
+		"vi"		"Phần thưởng {default}Pills: {olive}%d{default}(tối đa {olive}%d{default}) <{lightgreen}%.1f%%{default}>"
+	}
+	"L4D2HybridScoremod_Tiebreaker"
+	{
+		"vi"		"{default}TTiebreaker: {olive}%d{default}"
+	}
+	"L4D2HybridScoremod_TempHPDamage"
+	{
+		"vi"		"{green}%N{default} hiện có {olive}%d{default} HP tạm thời (thiệt hại: {lightgreen}%.1f{default})"
+	}
+	"L4D2HybridScoremod_LostTempHPAfterAttacked"
+	{
+		"vi"		"{lightgreen}%N{default}{olive} mất %i{default} HP tạm thời sau khi bị tấn công (sát thương arg: {lightgreen}%.1f{default})"
+	}
+	"L4D2HybridScoremod_DirectorEndVersusModeRound"
+	{
+		"vi"		"CDirector::OnEndVersusModeRound() đã gọi. InSecondHalfOfRound(): %d, countSurvivors: %d"
+	}
+	"L4D2HybridScoremod_SurvivalBonusCvarUpdatedValue"
+	{
+		"vi"		"Đã cập nhật cvar phần thưởng sinh tồn {default}. Giá trị: {olive}%i{default} [hệ số nhân: {olive}%i{default}]"
+	}
+	"L4D2HybridScoremod_RoundBonus"
+	{
+		"vi"		"%s{default}Round {green}%i{default} Tiền thưởng: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
+	}
+	"L4D2HybridScoremod_TiebreakerTeam1Team2"
+	{
+		"vi"		"%s{lightgreen}TIEBREAKER{default}: Đội {green}%#1{default} - {olive}%i{default}, Đội {green}%#2{default} - {olive}%i{default}"
+	}
+	"L4D2HybridScoremod_TeamsPerformedAbsolutelyEqualImpossible"
+	{
+		"vi"		"%s{olive}Teams đã hoạt động hoàn toàn ngang nhau! Không thể quyết định người chiến thắng vòng rõ ràng"
+	}
+	"L4D2HybridScoremod_AddingPermHPBonusContribution"
+	{
+		"vi"		"{default}Thêm {olive}%N's{default} đóng góp tiền thưởng perm hp: {olive}%d{default} HP perm -> {lightgreen}%.1f{default} tiền thưởng; tổng số mới: {olive}%.1f{default}"
+	}
+	"L4D2HybridScoremod_AddingTempHPBonusEligible"
+	{
+		"vi"		"{default}Thêm phần thưởng hp tạm thời: {olive}%.1f{default} (những người sống sót đủ điều kiện: {olive}%d{default})"
+	}
+	"L4D2HybridScoremod_AddingPillsContributionTotalBonus"
+	{
+		"vi"		"{default}Thêm đóng góp thuốc {olive}%N's{default}, tổng tiền thưởng: {olive}%d{default} điểm"
+	}
+}

@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"L4D2Setscores_ScoreVotingIsnAllowedSpectators"
+	{
+		"zho"		"觀眾不准進行分數投票。"
+	}
+	"L4D2Setscores_ScoreVoteCannotStartedNot"
+	{
+		"zho"		"無法開始評分投票。玩家不夠。"
+	}
+	"L4D2Setscores_ScoreVoteCannotStarted"
+	{
+		"zho"		"現在無法開始評分投票。"
+	}
+	"L4D2Setscores_ScoresSetSurInf"
+	{
+		"zho"		"{default}Scores set to {olive}%d {default} ({green}Sur{default}) - {olive}%d {default} ({green}Inf{default}) by {lightgreen}%s{default}."
+	}
+	"L4D2Setscores_ScoresSetSurInfVote"
+	{
+		"zho"		"{default} 分數透過投票設定為 {olive} %d {default} ({green} Sur {default}) - {olive} %d {default} ({green} Inf {default})。"
+	}
+}

@@ -1,0 +1,114 @@
+"Phrases"
+{
+	"Usage_Block"
+	{
+		"zho"		"用法：sm_block <#userid|steam64|name>"
+	}
+	"Usage_Unblock"
+	{
+		"zho"		"用法：sm_unblock <#userid|steam64|name>"
+	}
+	"DB_NotReady"
+	{
+		"zho"		"[BlockList] 資料庫未準備好。"
+	}
+	"Resolve_Failed"
+	{
+		"zho"		"[阻止清單] 目標解析失敗。使用#userid / steam64 /名稱。"
+	}
+	"Self_Steam_Failed"
+	{
+		"zho"		"[封鎖清單] 無法解析您的 SteamID。"
+	}
+	"Block_SelfDenied"
+	{
+		"zho"		"[封鎖清單] 您無法封鎖自己。"
+	}
+	"Block_LimitReached"
+	{
+		"#format"	"{1:i}"
+		"zho"		"[封鎖清單] 您已達到封鎖限制 ( {1} )。"
+	}
+	"Block_Added"
+	{
+		"#format"	"{1:s}"
+		"zho"		"[區塊列表] 已新增區塊：{1}"
+	}
+	"Block_Failed_Generic"
+	{
+		"zho"		"[BlockList] 區塊操作失敗。"
+	}
+	"Unblock_Removed"
+	{
+		"zho"		"[封鎖清單] 已解除封鎖。"
+	}
+	"Unblock_NotFound"
+	{
+		"zho"		"[BlockList] 沒有這樣的區塊記錄。"
+	}
+	"Unblock_Failed_Generic"
+	{
+		"zho"		"[封鎖清單] 取消阻止操作失敗。"
+	}
+	"Query_Failed_Generic"
+	{
+		"zho"		"[封鎖清單] 查詢失敗。"
+	}
+	"BlockList_Header"
+	{
+		"#format"	"{1:i}"
+		"zho"		"[封鎖清單] {1} 記錄："
+	}
+	"BlockLimit_Info"
+	{
+		"#format"	"{1:i}"
+		"zho"		"[屏蔽清單] 您的屏蔽限制：{1}"
+	}
+	"Notify_Blocker"
+	{
+		"#format"	"{1:N}"
+		"zho"		"[封鎖清單] 您的封鎖阻止了 {1} 加入。"
+	}
+	"Kick_By_Blocked"
+	{
+		"zho"		"該伺服器中有人封鎖了您。你不能加入。"
+	}
+	"Kick_By_Blocked_With_Blocker"
+	{
+		"#format"	"{1:s}"
+		"zho"		"您被本服务器的玩家（ID：{1}）屏蔽。加入被拒絕。"
+	}
+	"Menu_Title"
+	{
+		"zho"		"阻止清單選單"
+	}
+	"Menu_BlockOnline"
+	{
+		"zho"		"阻止/取消阻止線上玩家"
+	}
+	"Menu_MyBlockList"
+	{
+		"zho"		"查看/刪除我的封鎖列表"
+	}
+	"Menu_BlockOnline_Title"
+	{
+		"zho"		"線上玩家（選擇切換區塊）"
+	}
+	"Menu_MyBlockList_Title"
+	{
+		"zho"		"我的黑名單（選擇刪除）"
+	}
+	"Target_Left"
+	{
+		"zho"		"[封鎖清單] 目標不再有效。"
+	}
+	"Kick_By_SelfBlocked"
+	{
+		"zho"		"您已封鎖目前在此伺服器中的玩家。你不能加入。"
+	}
+	"Kick_By_SelfBlocked_With_Target"
+	{
+		"#format"	"{1:s}"
+		"zho"		"您已經封鎖了該伺服器目前的玩家（ID：{1}）。加入被拒絕。"
+	}
+}

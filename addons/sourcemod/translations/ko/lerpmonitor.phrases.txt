@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Lerpmonitor_LerpWarningLerpValueIllegal"
+	{
+		"ko"		"{default}<{olive}Lerp{default}> {teamcolor} 경고: {default} Lerp 값이 잘못되었습니다(최소: {teamcolor}%.01f{default}, 최대: {teamcolor}%.01f{default})! 5초 이내에 다시 바꿔주세요."
+	}
+	"Lerpmonitor_LerpThanksCooperationLerpRestored"
+	{
+		"ko"		"{default}<{olive}Lerp{default}> 귀하의 협조에 감사드립니다. Lerp가 법적 범위로 복원되었습니다."
+	}
+	"Lerpmonitor_Lerp"
+	{
+		"ko"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f"
+	}
+	"Lerpmonitor_LerpChanges"
+	{
+		"ko"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f {default}[%s%d{default}/%d {olive}변경]"
+	}
+	"Lerpmonitor_LerpMovedSpectatorIllegalLerp"
+	{
+		"ko"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}가 관전자로 이동되었습니다(불법적인 러프 변경)!"
+	}
+	"Lerpmonitor_LerpIllegalChangeLerpGame"
+	{
+		"ko"		"{default}<{olive}Lerp{default}> 게임 내에서 불법적인 lerp 변경이 발생했습니다! Lerp를 다시 {teamcolor}%.01f로 변경합니다."
+	}
+	"Lerpmonitor_Lerp_2"
+	{
+		"ko"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f"
+	}
+	"Lerpmonitor_LerpMovedBystanderDueFailure"
+	{
+		"ko"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}는 5초 이내에 Lerp를 합법적 범위로 조정하지 못해 방관자에게 이동되었습니다."
+	}
+	"Lerpmonitor_LerpKickedGameHeFailed"
+	{
+		"ko"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}가 5초 이내에 Lerp를 합법적인 범위로 조정하지 못해 게임에서 퇴장당했습니다."
+	}
+}

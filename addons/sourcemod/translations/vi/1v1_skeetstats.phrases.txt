@@ -1,0 +1,55 @@
+"Phrases"
+{
+	"TagKills"
+	{
+		"vi"		"[{olive}1v1Stat{default}] {green}giết chết{default}:"
+	}
+	"TagSkeet"
+	{
+		"vi"		"[{olive}1v1Stat{default}] {green}Skeet{default}:"
+	}
+	"TagAcc"
+	{
+		"vi"		"[{olive}1v1Stat{default}] {green}{default}:"
+	}
+	"SI_DMG_CI"
+	{
+		"#format"	"{1:d},{2:d},{3:d}"
+		"vi"		"{olive}{1}{default} damage | {olive}{2}{default} kills | {olive}{3}{default} common\\n"
+	}
+	"SI_DMG"
+	{
+		"#format"	"{1:d},{2:d}"
+		"vi"		"{olive}{1}{default} damage | {olive}{2}{default} kills\\n"
+	}
+	"SI_CI"
+	{
+		"#format"	"{1:d},{2:d}"
+		"vi"		"{olive}{1}{default} kills | {olive}{2}{default} common\\n"
+	}
+	"SI"
+	{
+		"vi"		"{olive}%d{default} kills\\n"
+	}
+	"SKEET"
+	{
+		"#format"	"{1:d},{2:d},{3:d}"
+		"vi"		"{olive}{1}{default} normal | {olive}{2}{default} hurt | {olive}{3}{default} deadstops\\n"
+	}
+	"ACC_AllShots"
+	{
+		"vi"		"tất cả ảnh ({blue}%.0f%%{default})"
+	}
+	"ACC_BuckShot"
+	{
+		"vi"		"| ảnh chụp ngược ({blue}%.0f%%{default})"
+	}
+	"ACC_Melee"
+	{
+		"vi"		"| cận chiến ({blue}%.0f%%{default})"
+	}
+	"ACC_NoShotsFired"
+	{
+		"vi"		"No shots fired\\n"
+	}
+}

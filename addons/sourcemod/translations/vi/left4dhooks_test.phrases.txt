@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"Left4DHooksTest_Deton"
+	{
+		"vi"		"DETON A (%0.0f %0.0f %0.0f)"
+	}
+	"Left4DHooksTest_Deton_2"
+	{
+		"vi"		"DETON B (%0.0f %0.0f %0.0f)"
+	}
+	"Left4DHooksTest_Trace"
+	{
+		"vi"		"Dấu vết (%0.0f %0.0f %0.0f)"
+	}
+}

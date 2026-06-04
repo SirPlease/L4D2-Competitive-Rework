@@ -1,0 +1,142 @@
+"Phrases"
+{
+	"Hat_Wearing"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Bây giờ bạn đang đội chiếc mũ {ORANGE} [ {1}] {DEFAULT}."
+	}
+	"Hat_Changed"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Đã thay đổi mũ trên {ORANGE} {1} {DEFAULT}."
+	}
+	"Hat_No_Index"
+	{
+		"#format"	"{1:d}{2:d}"
+		"vi"		"Không thể tìm thấy chỉ số mũ {ORANGE} {1} {DEFAULT}, giá trị nằm giữa {ORANGE} 1 {DEFAULT} và {ORANGE} {2} {DEFAULT}."
+	}
+	"Hat_Not_Found"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Không thể tìm thấy chiếc mũ {ORANGE} {1} {DEFAULT}."
+	}
+	"Hat_Invalid"
+	{
+		"vi"		"Người chơi được chọn không hợp lệ."
+	}
+	"Hat_Unblocked"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Mũ được bỏ chặn cho {ORANGE} {1} {DEFAULT}."
+	}
+	"Hat_Blocked"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Mũ bị chặn cho {ORANGE} {1} {DEFAULT}."
+	}
+	"Hat_View"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Chế độ xem mũ cá nhân đã được bật {ORANGE} {1} {DEFAULT}."
+	}
+	"Hat_Ability"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Bạn đã biến {ORANGE} {1} {DEFAULT} khả năng đội mũ."
+	}
+	"Hat_On"
+	{
+		"vi"		"on"
+	}
+	"Hat_Off"
+	{
+		"vi"		"tắt"
+	}
+	"Hat_Menu_Title"
+	{
+		"vi"		"Chọn mũ của bạn."
+	}
+	"Hat_Missing"
+	{
+		"vi"		"Bạn không đội mũ!"
+	}
+	"HAT_SYSTEM"
+	{
+		"vi"		"{GREEN} [MŨ] {DEFAULT}"
+	}
+	"HAT_NOT_RIGHT_NOW"
+	{
+		"vi"		"Không thể sử dụng lệnh này vào lúc này."
+	}
+	"ADMIN_DISABLE_HAT"
+	{
+		"vi"		"Chọn người chơi để tắt mũ:"
+	}
+	"ADMIN_CHANGE_HAT"
+	{
+		"vi"		"Chọn cầu thủ đổi mũ:"
+	}
+	"ADMIN_VISIBILITY"
+	{
+		"vi"		"Chọn người chơi để đặt mức độ hiển thị của mũ:"
+	}
+	"HAT_SET_ANGLE"
+	{
+		"vi"		"Đặt góc:"
+	}
+	"HAT_SET_POSITION"
+	{
+		"vi"		"Đặt vị trí:"
+	}
+	"HAT_SET_SIZE"
+	{
+		"vi"		"Đặt kích thước:"
+	}
+	"HAT_MAIN"
+	{
+		"vi"		"Cài đặt mũ:"
+	}
+	"HAT_MENU"
+	{
+		"vi"		"Mở Menu Mũ"
+	}
+	"HAT_WORE"
+	{
+		"vi"		"Đội mũ"
+	}
+	"HAT_VIEWABLE"
+	{
+		"vi"		"Chế độ xem mũ cá nhân"
+	}
+	"HAT_ENABLED"
+	{
+		"vi"		"On"
+	}
+	"HAT_DISABLED"
+	{
+		"vi"		"Tắt"
+	}
+	"HAT_VIEWABLE_TP"
+	{
+		"vi"		"Chế độ xem mũ cá nhân thứ ba"
+	}
+	"HAT_VISIBILITY"
+	{
+		"vi"		"Khả năng hiển thị chung của mũ"
+	}
+	"Hat_ViewTP"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Chế độ xem mũ của người thứ ba đã được chuyển sang {ORANGE} {1} {DEFAULT}."
+	}
+	"Hat_ViewSet"
+	{
+		"#format"	"{1:s}{2:s}"
+		"vi"		"Mũ hiển thị chung cho {ORANGE} {1} {DEFAULT} đã được chuyển thành {ORANGE} {2} {DEFAULT}."
+	}
+	"Hat_Visibility_Set"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Bạn đã chuyển khả năng hiển thị của mũ thành {ORANGE} {1} {DEFAULT}."
+	}
+}

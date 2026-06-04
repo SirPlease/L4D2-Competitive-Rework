@@ -1,0 +1,29 @@
+"Phrases"
+{
+	"on"
+	{
+		"jp"		"{blue}上{default}"
+	}
+	"off"
+	{
+		"jp"		"{red}オフ{default}"
+	}
+	"Notify_SpechudState"
+	{
+		"#format"	"{1:t}"
+		"jp"		"<{olive}HUD{default}> 観客の HUD は {1} になりました"
+	}
+	"Notify_TankhudState"
+	{
+		"#format"	"{1:t}"
+		"jp"		"<{olive}HUD{default}> 戦車の HUD は {1} になりました"
+	}
+	"Notify_SpechudUsage"
+	{
+		"jp"		"<{olive}HUD{default}> チャットに「{green}!spechud{default}」と入力して、{blue}観客 HUD を切り替えます"
+	}
+	"Notify_TankhudUsage"
+	{
+		"jp"		"<{olive}HUD{default}> チャットに「{green}!tankhud{default}」と入力して、{red}Tank HUD を切り替えます"
+	}
+}

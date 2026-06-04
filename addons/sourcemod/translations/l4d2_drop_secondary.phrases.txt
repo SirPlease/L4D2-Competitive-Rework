@@ -14,7 +14,7 @@
 	{
 		"en"		"{green}[{olive}OnBotReplacedByPlayer{green}] {default}- {blue}%N {default}replaced {blue}BOT {default}({green}Secondary: {olive}%s{default})"
 		"chi"		"{green}[{olive}OnBot 被玩家替换为 {green}] {default}- {blue}%N {default} 替换为 {blue}BOT {default}({green}次要: {olive}%s{default}）"
-		"zho"		"{green}[{olive}OnBot 被玩家替換為 {green}] {default}- {blue}%N {default} 替換為 ZXOTX0Z1 {olive}%s{default}）"
+		"zho"		"{green}[{olive}OnBotReplacedByPlayer{green}] {default}- {blue}%N {default}替換了 {blue}BOT {default}({green}副武器: {olive}%s{default})"
 		"jp"		"{green}[{olive}OnBotReplacedByPlayer{green}] {default}- {blue}%N {default}置き換えられた {blue}BOT {default}({green}セカンダリ: {olive}%s{default})"
 		"ko"		"{green}[{olive}OnBotReplacedByPlayer{green}] {default}- {blue}%N {default}교체된 {blue}BOT {default}({green}S보조: {olive}%s{default})"
 		"vi"		"{green}[{olive}OnBotReplacedByPlayer{green}] {default}- {blue}%N {default}thay thế {blue}BOT {default}({green}Thứ cấp: {olive}%s{default})"

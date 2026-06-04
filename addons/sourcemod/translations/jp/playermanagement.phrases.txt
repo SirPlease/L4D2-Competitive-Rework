@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"jp"		"[{olive}!{default}]"
+	}
+	"Usage"
+	{
+		"jp"		"{blue} 使用法 {default}"
+	}
+	"NoSnoop"
+	{
+		"jp"		"戦車の {red} {default} を盗み見してはいけません。"
+	}
+	"BecomeSpectator"
+	{
+		"jp"		"{teamcolor} %N {default} が観客になりました!"
+	}
+	"WhileCapped"
+	{
+		"jp"		"{red} キャップ中は {default} を観戦できません!"
+	}
+	"FixBot"
+	{
+		"jp"		"{teamcolor} %N {default} はボット数を修正しようとしています"
+	}
+	"FixBotConsole"
+	{
+		"jp"		"コンソールは {red} ボット数を修正しようとしています {default}"
+	}
+	"ValidTeams"
+	{
+		"jp"		"有効なチーム: %d = 観客、%d = 生存者、%d = 感染者"
+	}
+	"CouldNotSwitched"
+	{
+		"jp"		"{teamcolor} %N {default} は、ターゲット チームが満員であるか、引き継ぐボットが存在しないため、切り替えることができませんでした。"
+	}
+}

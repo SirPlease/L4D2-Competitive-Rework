@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"zho"		"[{green}!{default}]"
+	}
+	"Cvar_Invalid"
+	{
+		"zho"		"命令 {olive} c_thirdpersonshoulder {default} 無效或受保護。"
+	}
+	"Cvar_Value1"
+	{
+		"zho"		"要玩遊戲，請在控制台上輸入 {olive} c_thirdpersonshoulder 0 {default}。"
+	}
+	"Cvar_Invalid_Nocolor"
+	{
+		"zho"		"指令 c_thirdperson 應該無效或受保護。"
+	}
+	"Cvar_Value1_Nocolor"
+	{
+		"zho"		"要玩遊戲，請在控制台上輸入 c_thirdpersonshoulder 0。"
+	}
+}

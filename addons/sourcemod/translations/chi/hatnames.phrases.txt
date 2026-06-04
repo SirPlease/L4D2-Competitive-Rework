@@ -262,7 +262,7 @@
 	}
 	"models/infected/jockey.mdl"
 	{
-		"chi"		"Jockey"
+		"chi"		"骑师"
 	}
 	"models/items/l4d_gift.mdl"
 	{

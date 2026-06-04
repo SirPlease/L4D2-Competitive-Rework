@@ -1,0 +1,135 @@
+"Phrases"
+{
+	"Ready Up Countdown"
+	{
+		"#format"	"{1:d}"
+		"zho"		"準備時間：{1}"
+	}
+	"Round Begin Countdown"
+	{
+		"#format"	"{1:d}"
+		"zho"		"回合開始時間：{1}"
+	}
+	"Move Out"
+	{
+		"zho"		"搬出去！"
+	}
+	"Leavers Message"
+	{
+		"zho"		"玩家尚未準備好，請稍候..."
+	}
+	"Round Started"
+	{
+		"zho"		"[鎖定]錯誤：回合已經開始。"
+	}
+	"Saferoom Locked"
+	{
+		"zho"		"[鎖定]錯誤：安全區域已被鎖定。"
+	}
+	"Saferoom Unlocked"
+	{
+		"zho"		"[鎖定]錯誤：安全區域已解鎖。"
+	}
+	"Ready Up Time Ended"
+	{
+		"zho"		"[鎖定] 錯誤：準備時間已結束。"
+	}
+	"Admin Locks"
+	{
+		"#format"	"{1:N}"
+		"zho"		"[鎖定] 管理員{1}已鎖定安全區域。"
+	}
+	"Admin Unlocks"
+	{
+		"#format"	"{1:N}"
+		"zho"		"[鎖定] 管理員{1}已解鎖安全區域。"
+	}
+	"Spectator Ready"
+	{
+		"zho"		"[鎖定]錯誤：您需要加入團隊才能使用此命令。"
+	}
+	"You Are Ready"
+	{
+		"zho"		"[鎖定] 錯誤：您已準備好。"
+	}
+	"You Are Unready"
+	{
+		"zho"		"[鎖定] 錯誤：你還沒準備好。"
+	}
+	"Ready Up Limit"
+	{
+		"zho"		"[鎖定]錯誤：您不能再使用此命令。"
+	}
+	"Admin Controls"
+	{
+		"zho"		"[鎖定]錯誤：管理員正在控制安全區域。"
+	}
+	"Player Is Ready"
+	{
+		"zho"		"你準備好了。"
+	}
+	"Player Is Unready"
+	{
+		"zho"		"你還沒準備好。"
+	}
+	"Notify Survivors Ready"
+	{
+		"#format"	"{1:d},{2:d},{3:.1f%%}"
+		"zho"		"[鎖定] 倖存者小隊已準備就緒 ({1}/{2} - {3})。"
+	}
+	"Notify Infected Ready"
+	{
+		"#format"	"{1:d},{2:d},{3:.1f%%}"
+		"zho"		"[鎖定] 受感染的團隊已準備就緒 ({1}/{2} - {3})。"
+	}
+	"Notify Survivors Unready"
+	{
+		"#format"	"{1:d},{2:d},{3:.1f%%}"
+		"zho"		"[鎖定] 倖存者隊伍尚未準備好 ({1}/{2} - {3})。"
+	}
+	"Notify Infected Unready"
+	{
+		"#format"	"{1:d},{2:d},{3:.1f%%}"
+		"zho"		"[鎖定] 受感染的團隊尚未準備好 ({1}/{2} - {3})。"
+	}
+	"Menu Title"
+	{
+		"zho"		"您準備好開始了嗎："
+	}
+	"Menu Ready"
+	{
+		"zho"		"準備好"
+	}
+	"Menu Unready"
+	{
+		"zho"		"未準備好"
+	}
+	"Menu Survivor"
+	{
+		"zho"		"倖存者"
+	}
+	"Menu Infected"
+	{
+		"zho"		"受感染"
+	}
+	"Menu Close"
+	{
+		"zho"		"關閉"
+	}
+	"L4D2DoorLock_DoorLockDoorLockNot"
+	{
+		"zho"		"{olive}[DoorLock]{default} 第一關不啟用鎖門。"
+	}
+	"L4D2DoorLock_DoorLockPictureLockedOnce"
+	{
+		"zho"		"{olive}[DoorLock]{default} 本圖已經鎖過一次，滅團重啟不再鎖門。"
+	}
+	"L4D2DoorLock_DoorLockDoorLockOnly"
+	{
+		"zho"		"{olive}[DoorLock]{default} 只在每張非第一關過圖後的第一次回合啟用鎖門。"
+	}
+	"L4D2DoorLock_DoorLockSurvivorBotUnfrozen"
+	{
+		"zho"		"{olive}[DoorLock]{default} 第一關已解凍生還者Bot。"
+	}
+}

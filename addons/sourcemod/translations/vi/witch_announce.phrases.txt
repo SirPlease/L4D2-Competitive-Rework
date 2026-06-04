@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"WitchAnnounce_WitchDamageLine"
+	{
+		"vi"		"{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N"
+	}
+	"WitchAnnounce_TankKilledWitch"
+	{
+		"vi"		"{default}[{green}!{default}] {red}Tank {default}({olive}%N{default}) đã giết {red}Witch"
+	}
+	"WitchAnnounce_StillSomeBloodLeft"
+	{
+		"vi"		"{default}[{green}!{default}] {blue}Witch {default} vẫn còn một ít máu {olive}%d {default}"
+	}
+	"WitchAnnounce_WitchDamageHeader"
+	{
+		"vi"		"{default}[{green}!{default}] 对{blue}女巫{default}产生的{blue}伤害"
+	}
+}

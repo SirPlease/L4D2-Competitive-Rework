@@ -1,0 +1,57 @@
+"Phrases"
+{
+	"Tag+"
+	{
+		"ko"		"{green}★{default}"
+	}
+	"Tag++"
+	{
+		"ko"		"{green}★★{default}"
+	}
+	"Tag+++"
+	{
+		"ko"		"{green}★★★{default}"
+	}
+	"MeleeSkeeted"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ko"		"{olive} {1} {default}는 {blue} 근접전 {default} -skeeted {default} by {olive} {2} {default}였습니다."
+	}
+	"Headshotted"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ko"		"{olive} {1} {default}는 {blue}의 헤드샷 {default}였습니다. {olive} {2} {default}입니다."
+	}
+	"TeamSkeeted"
+	{
+		"#format"	"{1:N},{2:N},{3:d},{4:d},{5:s},{6:s}"
+		"ko"		"{olive} {1} {default} teamkeeted {olive} {2} {default} {blue} {3} 손상 {default} in {blue} {4} {default} {5}. 보조자: {olive} {6} {default}"
+	}
+	"Skeeted"
+	{
+		"#format"	"{1:N},{2:N},{3:d},{4:s}"
+		"ko"		"{olive} {1} {default}는 {olive} {2} {default}는 {blue} {3} {default}는 {4}를 튀겼습니다."
+	}
+	"ShutBoomer"
+	{
+		"#format"	"{1:N},{2:s},{3:.1f}"
+		"ko"		"{olive} {1} {default}가 종료되었습니다. {olive} {2} {default}의 부머가 {blue} {3} {default}에 있습니다."
+	}
+	"AlarmedCar"
+	{
+		"ko"		"{olive} %N {default}가 {olive} 경보 차량 {default}를 트리거했습니다."
+	}
+	"AssistShotsPlural"
+	{
+		"ko"		"s"
+	}
+	"AssistShotsSingular"
+	{
+		"ko"		""
+	}
+	"assister"
+	{
+		"#format"	"{1:N},{2:d},{3:d},{4:s}"
+		"ko"		"{1} ( {2} / {3} 샷 {4} )"
+	}
+}

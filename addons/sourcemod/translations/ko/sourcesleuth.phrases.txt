@@ -1,0 +1,17 @@
+"Phrases"
+{
+	"sourcesleuth_banreason"
+	{
+		"#format"	""
+		"ko"		"중복 계정"
+	}
+	"sourcesleuth_admintext"
+	{
+		"#format"	"{1:N},{2:s},{3:s}"
+		"ko"		"플레이어 {1}(ID: {2} | IP: {3} )의 IP 차단이 활성화되었습니다."
+	}
+	"SourceSleuth_WhiteListReloaded"
+	{
+		"ko"		"[SourceSleuth] 화이트리스트가 리로드되었습니다!"
+	}
+}

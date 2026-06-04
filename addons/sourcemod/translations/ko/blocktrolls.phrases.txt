@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"ko"		"[{green}!{default}]"
+	}
+	"VotingNotEnabled"
+	{
+		"ko"		"투표는 라운드 시작 후 {olive}40초{default}까지 활성화되지 않습니다."
+	}
+	"NotConsoleVote"
+	{
+		"ko"		"[!] 투표하려면 게임 중이어야 합니다."
+	}
+	"NotSpectatorVote"
+	{
+		"ko"		"{olive}관전자{default}는 투표할 수 없습니다."
+	}
+}

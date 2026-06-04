@@ -1,0 +1,83 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"jp"		"{blue} [ {default} MVP {blue} ] {default}"
+	}
+	"YourRankSI"
+	{
+		"jp"		"{blue} ランク {green} SI: {olive} # %d {blue} ( {default} %d {green} dmg {blue} [ {default} %.0f%% {blue} ] {default}, %d {green} は {blue} をキルします[ {default} %.0f%% {blue} ])"
+	}
+	"YourRankCI"
+	{
+		"jp"		"{blue} ランク {green} CI: {olive} # %d {blue} ( {default} %d {green} 共通 {blue} [ {default} %.0f%% {blue} ])"
+	}
+	"YourRankFF"
+	{
+		"jp"		"{blue} ランク {green} FF: {olive} # %d {blue} ( {default} %d {green} フレンドリーファイア {blue} [ {default} %.0f%% {blue} ])"
+	}
+	"BotName"
+	{
+		"jp"		"[ボット]"
+	}
+	"NobodyName"
+	{
+		"jp"		"{blue} ( {default} 誰も {blue} )"
+	}
+	"NotEnoughAction"
+	{
+		"jp"		"{blue} ( {default} はまだ十分なアクションがありません {blue} )"
+	}
+	"ReportSI_Absolute"
+	{
+		"jp"		"{green} SI: {olive} %s {blue} ( {default} %d {green} dmg {default} 、 %d {green} kills {blue} )"
+	}
+	"ReportSI_Percent"
+	{
+		"jp"		"{green} SI: {olive} %s {blue} ( {green} dmg {blue} [ {default} %.0f%% {blue} ] {default} 、 {green} は {blue} をキルします [ {default} %.0f%% {blue} ])"
+	}
+	"ReportSI_Full"
+	{
+		"jp"		"{green} SI: {olive} %s {blue} ( {default} %d {green} dmg {blue} [ {default} %.0f%% {blue} ] {default}, %d {green} は {blue} をキルします [ {default} %.0f%% {blue} ])"
+	}
+	"ReportSI_Nobody"
+	{
+		"jp"		"{green} SI: {blue} ( {default} 誰も {blue} )"
+	}
+	"ReportCI_Absolute"
+	{
+		"jp"		"{green} CI: {olive} %s {blue} ( {default} %d {green} 共通 {blue} )"
+	}
+	"ReportCI_Percent"
+	{
+		"jp"		"{green} CI: {olive} %s {blue} ( {green} 共通 {blue} [ {default} %.0f%% {blue} ])"
+	}
+	"ReportCI_Full"
+	{
+		"jp"		"{green} CI: {olive} %s {blue} ( {default} %d {green} 共通 {blue} [ {default} %.0f%% {blue} ])"
+	}
+	"NoFF"
+	{
+		"jp"		"{blue} ( {default} フレンドリーファイアはまったくありません! {blue} )"
+	}
+	"ReportFF_Absolute"
+	{
+		"jp"		"{green} FF: {olive} %s {blue} ( {default} %d {green} フレンドリーファイア {blue} )"
+	}
+	"ReportFF_Percent"
+	{
+		"jp"		"{green} FF: {olive} %s {blue} ( {green} フレンドリーファイア {blue} [ {default} %.0f%% {blue} ])"
+	}
+	"ReportFF_Full"
+	{
+		"jp"		"{green} FF: {olive} %s {blue} ( {default} %d {green} フレンドリーファイア {blue} [ {default} %.0f%% {blue} ])"
+	}
+	"SurvivorMVP_PharmacyMVPStatisticsHeader"
+	{
+		"jp"		"{blue}[{default}薬局MVP統計 {blue}]"
+	}
+	"SurvivorMVP_PharmacyMVPStatisticsLine"
+	{
+		"jp"		"{olive}特感{green}%2d {olive}丧尸{green}%3d {olive}黑/被黑{green}%2d/%2d {olive}伤害{green}%4d {default}%N"
+	}
+}

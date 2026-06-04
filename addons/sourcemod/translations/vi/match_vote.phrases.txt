@@ -1,0 +1,83 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"vi"		"[{olive}!{default}]"
+	}
+	"Disabled"
+	{
+		"vi"		"Plugin là {red} bị vô hiệu hóa {default}"
+	}
+	"NoConsole"
+	{
+		"vi"		"Lệnh này không thể được sử dụng từ bảng điều khiển."
+	}
+	"ConfoglNotAvailable"
+	{
+		"vi"		"Confogl là {red} không có {default}."
+	}
+	"CedaGame"
+	{
+		"vi"		"Không được phép chạy lệnh này trong trận đấu cedapug {red} {default}"
+	}
+	"Title_Match"
+	{
+		"vi"		"Chọn chế độ trận đấu:"
+	}
+	"Title_Config"
+	{
+		"vi"		"Chọn loại %s:"
+	}
+	"ConfigNotFound"
+	{
+		"vi"		"Không tìm thấy cấu hình nào cho chế độ như vậy."
+	}
+	"NoSpec"
+	{
+		"vi"		"Việc bỏ phiếu không thể được bắt đầu bởi khán giả."
+	}
+	"MatchLoaded"
+	{
+		"vi"		"Matchmode đã được tải!"
+	}
+	"NotEnoughPlayers"
+	{
+		"vi"		"Không thể bắt đầu bỏ phiếu. {red} Không đủ người chơi {default} ( {red} %d {default} / {green} %d {default} )."
+	}
+	"Title_LoadConfig"
+	{
+		"vi"		"Tải cấu hình confogl ' %s '?"
+	}
+	"VoteInProgress"
+	{
+		"vi"		"{red} Đang bình chọn {default}, vui lòng đợi {green} %d {default} giây."
+	}
+	"VotePass_Loading"
+	{
+		"vi"		"Đang tải chế độ trận đấu..."
+	}
+	"MatchNotLoaded"
+	{
+		"vi"		"{red} Không tải được matchmode {default}."
+	}
+	"PlayersConnecting"
+	{
+		"vi"		"Không thể bắt đầu bỏ phiếu. Người chơi đang kết nối."
+	}
+	"Title_OffConfogl"
+	{
+		"vi"		"Tắt Confogl?"
+	}
+	"VotePass_Unloading"
+	{
+		"vi"		"Đang dỡ tải confogl..."
+	}
+	"Title_ChangeConfogl"
+	{
+		"vi"		"Thay đổi cấu hình confogl thành '%s'?"
+	}
+	"VotePass_Changed"
+	{
+		"vi"		"Chế độ trận đấu đã thay đổi..."
+	}
+}

@@ -1,0 +1,55 @@
+"Phrases"
+{
+	"TagTank"
+	{
+		"jp"		"< {olive} タンク {default} >"
+	}
+	"TagWitch"
+	{
+		"jp"		"< {olive} 魔女 {default} >"
+	}
+	"TankOn"
+	{
+		"jp"		"タンク: %d%%"
+	}
+	"WitchOn"
+	{
+		"jp"		"魔女: %d%%"
+	}
+	"Disabled"
+	{
+		"jp"		"無効"
+	}
+	"StaticSpawn"
+	{
+		"jp"		"静的スポーン"
+	}
+	"None"
+	{
+		"jp"		"なし"
+	}
+	"TankDisabled"
+	{
+		"jp"		"タンク: 無効"
+	}
+	"TankStatic"
+	{
+		"jp"		"タンク: スタティックスポーン"
+	}
+	"TankNone"
+	{
+		"jp"		"タンク：なし"
+	}
+	"WitchDisabled"
+	{
+		"jp"		"魔女：無効化"
+	}
+	"WitchStatic"
+	{
+		"jp"		"ウィッチ: スタティックスポーン"
+	}
+	"WitchNone"
+	{
+		"jp"		"魔女：なし"
+	}
+}

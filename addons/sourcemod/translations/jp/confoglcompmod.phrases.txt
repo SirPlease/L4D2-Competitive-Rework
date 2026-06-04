@@ -1,0 +1,71 @@
+"Phrases"
+{
+	"ConfoglCompMod_KickedIllegalValue"
+	{
+		"jp"		"{blue}[{default}Confogl{blue}] {olive}%L{default} は、「{green}%s{default}」の値が不正であるためキックされました {blue}({default}%f{blue})"
+	}
+	"ConfoglCompMod_MaximumSniperRifleEnforced"
+	{
+		"jp"		"{blue}[{default}Confogl{blue}]{default} 最大 {blue}%d {olive}狙撃ライフル {default} が適用されます。"
+	}
+	"ConfoglCompMod_CompetitionModeLoaded"
+	{
+		"jp"		"{blue}[{default}Confogl{blue}]{default} 競技モードがロードされました!"
+	}
+	"ConfoglCompMod_ChangeMap"
+	{
+		"jp"		"{blue}[{default}Confogl{blue}]{default} マップを {green}%s{default} に変更します!"
+	}
+	"ConfoglCompMod_RestartMap"
+	{
+		"jp"		"{blue}[{default}Confogl{blue}]{default} マップを再起動してください!"
+	}
+	"ConfoglCompMod_CompetitionConfigurationUninstalled"
+	{
+		"jp"		"{blue}[{default}Confogl{blue}]{default} コンペティション構成はアンインストールされました。"
+	}
+	"ConfoglCompMod_LoadConfiguration"
+	{
+		"jp"		"{blue}[{default}Confogl{blue}]{default} 構成「{olive}%s{default}」をロードします。"
+	}
+	"ConfoglCompMod_ConfigurationNotFoundUseDefault"
+	{
+		"jp"		"{blue}[{default}Confogl{blue}]{default} 構成 '{olive}%s{default}' が見つかりません。デフォルト構成を使用してください。"
+	}
+	"ConfoglCompMod_SpecifyConfigLoad"
+	{
+		"jp"		"{blue}[{default}Confogl{blue}]{default} ロードする {olive}config{default} を指定してください。"
+	}
+	"ConfoglCompMod_ConfigNotFound"
+	{
+		"jp"		"{blue}[{default}Confogl{blue}]{default} 構成 '{olive}%s{default}' が見つかりません。"
+	}
+	"ConfoglCompMod_MapNotFound"
+	{
+		"jp"		"{blue}[{default}Confogl{blue}]{default} マップ「{olive}%s{default}」が見つかりません。"
+	}
+	"ConfoglCompMod_Round1Bonus"
+	{
+		"jp"		"{blue}[{default}Configl{blue}]{default} ラウンド 1 ボーナス: {olive}%d"
+	}
+	"ConfoglCompMod_CustomMaxDistance"
+	{
+		"jp"		"{blue}[{default}Confogl{blue}]{default}カスタム最大距離: {olive}%d"
+	}
+	"ConfoglCompMod_Round2Bonus"
+	{
+		"jp"		"{blue}[{default}Configl{blue}]{default} ラウンド 2 ボーナス: {olive}%d"
+	}
+	"ConfoglCompMod_AverageHealth"
+	{
+		"jp"		"{blue}[{default}Confogl{blue}]{default} 平均健康状態: {olive}%.02f"
+	}
+	"ConfoglCompMod_HealthBonus"
+	{
+		"jp"		"{blue}[{default}Confogl{blue}]{default} 健康ボーナス: {olive}%d"
+	}
+	"ConfoglCompMod_StaticSurvivalBonusPerSurvivor"
+	{
+		"jp"		"{blue}[{default}Confogl{blue}]{default} 生存者ごとの静的生存ボーナス: {olive}%d"
+	}
+}

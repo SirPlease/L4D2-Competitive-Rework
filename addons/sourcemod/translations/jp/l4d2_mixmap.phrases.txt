@@ -1,0 +1,159 @@
+"Phrases"
+{
+	"Auto_Show_Maplist"
+	{
+		"jp"		"{olive} <Mixmap> {default} Mixmap プラグインを使用します (マップリストを表示 {orange}!maplist {default} )。"
+	}
+	"Differ_Abort"
+	{
+		"jp"		"{olive} <ミックスマップ> {default} 現在のマップは設計されたマップと異なります，中止……"
+	}
+	"Show_Next_Map"
+	{
+		"jp"		"{olive} <ミックスマップ> {default} 次のマップの変更: %s"
+	}
+	"Already_Start_Admin"
+	{
+		"jp"		"{olive} <Mixmap> {default} プラグインはすでに起動しています。再起動する必要がある場合は、最初に!fstopmixmap と入力します。"
+	}
+	"Force_Start"
+	{
+		"jp"		"{olive} <Mixmap> {default} Admin {teamcolor} %N {default} は、Mixmap {orange} ( %s ) を強制的に開始します。"
+	}
+	"Manualmixmap_Syntax"
+	{
+		"jp"		"構文:!manualmixmap <マップ1> <マップ2> <マップ3> <...>"
+	}
+	"Invalid_Cfg"
+	{
+		"jp"		"{olive} <ミックスマップ> {default} マップ プールが無効です！"
+	}
+	"Not_Start"
+	{
+		"jp"		"{olive} <Mixmap> {default} プラグインが起動しませんでした。停止する必要はありません。"
+	}
+	"Vote_Stop"
+	{
+		"jp"		"{olive} <Mixmap> {default} プレーヤー {teamcolor} %N {default} は Mixmap を停止するための投票を開始します。"
+	}
+	"Vote_Progress"
+	{
+		"jp"		"[SM] 投票中です!"
+	}
+	"Vote_Progress_delay"
+	{
+		"jp"		"{olive} <ミックスマップ> {default} 投票中です!マップの変更は {orange} 15 {default} 秒遅れます!"
+	}
+	"Stop_Mixmap"
+	{
+		"jp"		"{olive} <ミックスマップ> {default} マップが開始されました、中止……"
+	}
+	"Stop_Mixmap_Admin"
+	{
+		"jp"		"{olive} <Mixmap> {default} 管理者 {teamcolor} %N {default} 強制停止 ミックスマップとマップの開始、中止……"
+	}
+	"Start_Mixmap"
+	{
+		"jp"		"{olive} <Mixmap> {default} プレーヤー {teamcolor} %N {default} は、Mixmap {orange} ( %s ) を開始するための投票を開始します。"
+	}
+	"Show_Maplist_Not_Start"
+	{
+		"jp"		"{olive} <Mixmap> {default} プラグインが開始されませんでした。マップリストがありません。"
+	}
+	"Show_Maplist_Cmd"
+	{
+		"jp"		"{olive} マップリストを表示 {orange}!maplist {default} | {olive} コマンドの中止 {orange}!stopmixmap"
+	}
+	"Select_Maps_Succeed"
+	{
+		"jp"		"{olive} <Mixmap> {default} マップのランダムな選択は成功します。"
+	}
+	"Change_Map_First"
+	{
+		"jp"		"{olive} <Mixmap> {default} {orange} %d {default} 秒後にマップを変更します。"
+	}
+	"AllMaps_Official"
+	{
+		"jp"		"{orange} [-----すべての公式地図のリスト-----]"
+	}
+	"AllMaps_Usage"
+	{
+		"jp"		"{orange} 使用法: {default}!manualmixmap <マップ 1> <マップ 2>..."
+	}
+	"Fail_Load_Preset"
+	{
+		"jp"		"{olive} <ミックスマップ> {default} プリセットのロードに失敗しました!"
+	}
+	"Maps_Not_Match_Rank"
+	{
+		"jp"		"{olive} <Mixmap> {default} プリセットには {orange} 不適切なタグランクがあります {default}: 再生されるマップの数が最高ランクと一致しません。最高ランク N には N+1 のタグランクが必要です。"
+	}
+	"Cvote_Title"
+	{
+		"jp"		"ミックスマップを始めますか? ( %s )"
+	}
+	"Cvote_Title_Off"
+	{
+		"jp"		"ミックスマップを停止しますか?"
+	}
+	"Cexec_Title"
+	{
+		"jp"		"マップをランダムに選択中……"
+	}
+	"Maplist_Title"
+	{
+		"jp"		"{olive} [---------- マップリスト --------]"
+	}
+	"Secret"
+	{
+		"jp"		"秘密"
+	}
+	"L4D2Mixmap_OfficialMapsDeadCenter"
+	{
+		"jp"		"c1m1_ホテル、c1m2_ストリート、c1m3_モール、c1m4_アトリウム"
+	}
+	"L4D2Mixmap_C2m1HighwayC2m2FairgroundsC2m3"
+	{
+		"jp"		"c2m1_ハイウェイ、c2m2_フェアグラウンド、c2m3_コースター、c2m4_納屋、c2m5_コンサート"
+	}
+	"L4D2Mixmap_C3m1PlankcountryC3m2SwampC3m3"
+	{
+		"jp"		"c3m1_プランクカントリー、c3m2_沼地、c3m3_シャンティタウン、c3m4_プランテーション"
+	}
+	"L4D2Mixmap_C4m1MilltownC4m2SugarmillC4m3"
+	{
+		"jp"		"c4m1_ミルタウン_a、c4m2_シュガーミル_a、c4m3_シュガーミル_b、c4m4_ミルタウン_b、c4m5_ミルタウン_エスケープ"
+	}
+	"L4D2Mixmap_C5m1WaterfrontC5m2ParkC5m3"
+	{
+		"jp"		"c5m1_ウォーターフロント、c5m2_公園、c5m3_墓地、c5m4_クォーター、c5m5_橋"
+	}
+	"L4D2Mixmap_C6m1RiverbankC6m2BedlamC7m1"
+	{
+		"jp"		"c6m1_riverbank、c6m2_bedlam、c7m1_docks、c7m2_barge、c7m3_port"
+	}
+	"L4D2Mixmap_C8m1ApartmentC8m2SubwayC8m3"
+	{
+		"jp"		"c8m1_アパート、c8m2_地下鉄、c8m3_下水道、c8m4_内装、c8m5_屋上"
+	}
+	"L4D2Mixmap_C9m1AlleysC9m2LotsC14m1"
+	{
+		"jp"		"c9m1_路地、c9m2_ロット、c14m1_廃品置き場、c14m2_灯台"
+	}
+	"L4D2Mixmap_C10m1CavesC10m2DrainageC10m3"
+	{
+		"jp"		"c10m1_洞窟、c10m2_排水路、c10m3_牧場、c10m4_メインストリート、c10m5_ハウスボート"
+	}
+	"L4D2Mixmap_C11m1GreenhouseC11m2OfficesC11m3"
+	{
+		"jp"		"c11m1_温室、c11m2_オフィス、c11m3_ガレージ、c11m4_ターミナル、c11m5_滑走路"
+	}
+	"L4D2Mixmap_C12m1HilltopC12m2TraintunnelC12m3"
+	{
+		"jp"		"c12m1_ヒルトップ、c12m2_トレイントンネル、c12m3_ブリッジ、c12m4_納屋、c12m5_コーンフィールド"
+	}
+	"L4D2Mixmap_C13m1AlpinecreekC13m2SouthpinestreamC13m3"
+	{
+		"jp"		"c13m1_アルパインクリーク、c13m2_サウスパインストリーム、c13m3_メモリアルブリッジ、c13m4_カットスロートクリーク"
+	}
+}

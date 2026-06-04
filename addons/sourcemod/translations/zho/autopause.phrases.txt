@@ -1,0 +1,25 @@
+"Phrases"
+{
+	"Unpausing"
+	{
+		"zho"		"{blue}[{default}自動暫停{blue}] {default}所有{green}崩潰的{default}玩家已重新連線.. {blue}取消暫停{default}！"
+	}
+	"Waiting"
+	{
+		"#format"	"{1:i},{2:t}"
+		"zho"		"{blue}[{default}自動暫停{blue}] {default}等待{olive}{1} {default}更多{green}崩潰{default}{2}，然後自動{blue}取消暫停{default}！"
+	}
+	"Crashed"
+	{
+		"#format"	"{1:N}"
+		"zho"		"{blue}[{default}AutoPause{blue}] {olive}{1} {default}游戏崩溃."
+	}
+	"players"
+	{
+		"zho"		"玩家"
+	}
+	"player"
+	{
+		"zho"		"玩家"
+	}
+}

@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2MapTransitions_EndVersusModeRoundPost"
+	{
+		"ko"		"L4D2_OnEndVersusModeRound_Post"
+	}
+	"L4D2MapTransitions_MTStartingTransition"
+	{
+		"ko"		"{olive}[MT]{default} 전환 시작: {blue}%s{default}에서: {blue}%s"
+	}
+}

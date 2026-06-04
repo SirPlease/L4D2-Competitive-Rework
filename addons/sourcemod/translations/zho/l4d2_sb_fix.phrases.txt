@@ -1,0 +1,55 @@
+"Phrases"
+{
+	"L4D2SBFix_ShovedFlying"
+	{
+		"zho"		"{default}[%.2f] {olive}%N {default}已推：{green}飛行 %N (%d)"
+	}
+	"L4D2SBFix_CapSmoker"
+	{
+		"zho"		"{default}[%.2f] {olive}%N {default} 吸菸帽：{green}%N (%d)"
+	}
+	"L4D2SBFix_CapSurvivor"
+	{
+		"zho"		"{default}[%.2f] {olive}%N {default}Cap 倖存者：{green}%N (%d)"
+	}
+	"L4D2SBFix_CapInfected"
+	{
+		"zho"		"{default}[%.2f] {olive}%N {default}Cap 感染：{green}%N (%d)"
+	}
+	"L4D2SBFix_Witch"
+	{
+		"zho"		"{default}[%.2f] {olive}%N {default}女巫：{olive}(%d)"
+	}
+	"L4D2SBFix_CommonsDistMeleeCount"
+	{
+		"zho"		"{default}[%.2f] {olive}%N{default} 共享：{green}(%d){default} |距離：{green}%.1f{default} | Melee Count: {green}%d"
+	}
+	"L4D2SBFix_NewTargetShoved"
+	{
+		"zho"		"{default} [ %.2f ] {olive} %N {default} 新目標推： {green} %N ( %d )"
+	}
+	"L4D2SBFix_NewTarget"
+	{
+		"zho"		"{default} [ %.2f ] {olive} %N {default} new_target: {green} %N ( %d )"
+	}
+	"L4D2SBFix_NewTargetShoot"
+	{
+		"zho"		"{default} [ %.2f ] {olive} %N {default} new_target: {green} %N ( %d ) (拍攝: %s )"
+	}
+	"L4D2SBFix_CapSurvivorIncapacitated"
+	{
+		"zho"		"{default} [ %.2f ] {olive} %N {default} 倖存者喪失行為能力：{green} %N"
+	}
+	"L4D2SBFix_CapInfectedIncapacitated"
+	{
+		"zho"		"{default}[%.2f] {olive}%N {default}Cap 感染後喪失行為能力：{green}%N"
+	}
+	"L4D2SBFix_CommonsIncapacitatedDist"
+	{
+		"zho"		"{default}[%.2f] {olive}%N{default} 公共無行為能力區：%.1f"
+	}
+	"L4D2SBFix_IntTargetIncapacitated"
+	{
+		"zho"		"{default} [ %.2f ] {olive} %N {default} int 目標喪失能力：{green} %N"
+	}
+}

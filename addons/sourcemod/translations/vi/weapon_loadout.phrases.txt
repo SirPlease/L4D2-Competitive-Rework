@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"vi"		"{blue} [ {green} Vùng {blue} ] {default}:"
+	}
+	"OnlyFirstReadyup"
+	{
+		"vi"		"Bạn chỉ có thể kêu gọi bỏ phiếu trong thời gian chuẩn bị đầu tiên của vòng đấu."
+	}
+	"CannotCalled"
+	{
+		"vi"		"Không thể tiến hành bỏ phiếu vào lúc này, hãy thử lại sau một hoặc năm giây."
+	}
+	"NeedFull"
+	{
+		"vi"		"Cả hai đội đều cần phải đầy đủ."
+	}
+	"SurvivorsGet"
+	{
+		"vi"		"Những người sống sót nhận được %s?"
+	}
+	"BeforeReadyup"
+	{
+		"vi"		"Cuộc bỏ phiếu đã không thành công trước khi bạn chuẩn bị xong."
+	}
+	"WeaponsSet"
+	{
+		"vi"		"Bộ vũ khí sống sót!"
+	}
+	"Welcome"
+	{
+		"vi"		"Chào mừng đến với Khu {blue} Thợ săn {green} {default}."
+	}
+	"Type"
+	{
+		"vi"		"Nhập {olive}!mode {default} trong phần trò chuyện để bỏ phiếu về vũ khí được sử dụng."
+	}
+}

@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"jp"		"{blue} [ {green} ゾーン {blue} ] {default}:"
+	}
+	"OnlyFirstReadyup"
+	{
+		"jp"		"投票を求めることができるのは、ラウンドの最初の準備中にのみです。"
+	}
+	"CannotCalled"
+	{
+		"jp"		"現時点では投票を行うことができません。1 ～ 5 秒後にもう一度お試しください。"
+	}
+	"NeedFull"
+	{
+		"jp"		"両チームとも満席である必要があります。"
+	}
+	"SurvivorsGet"
+	{
+		"jp"		"生存者は %s を取得しますか?"
+	}
+	"BeforeReadyup"
+	{
+		"jp"		"あなたが準備を整えて出発する前に投票は通過しませんでした。"
+	}
+	"WeaponsSet"
+	{
+		"jp"		"サバイバー武器セット！"
+	}
+	"Welcome"
+	{
+		"jp"		"{blue} ゾーン {green} ハンター {default} へようこそ。"
+	}
+	"Type"
+	{
+		"jp"		"チャットに「{olive}!mode {default}」と入力して、使用される武器に投票します。"
+	}
+}

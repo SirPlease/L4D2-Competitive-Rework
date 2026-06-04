@@ -1,0 +1,43 @@
+"Phrases"
+{
+	"Switch Map/Mission"
+	{
+		"jp"		"マップ/ミッション切り替え"
+	}
+	"Official Maps"
+	{
+		"jp"		"公式地図"
+	}
+	"Addon Maps"
+	{
+		"jp"		"アドオンマップ"
+	}
+	"Official Missions"
+	{
+		"jp"		"公式任務"
+	}
+	"Addon Missions"
+	{
+		"jp"		"アドオンミッション"
+	}
+	"L4D2MMAdminMenu_SMFailedGetMissionList"
+	{
+		"jp"		"[SM] ミッションリストの取得に失敗しました。"
+	}
+	"L4D2MMAdminMenu_SMNoMapsFoundCurrent"
+	{
+		"jp"		"[SM] 現在のゲーム モードのマップが見つかりません。"
+	}
+	"L4D2MMAdminMenu_SMNoValidMapsFound"
+	{
+		"jp"		"[SM] このミッションに有効なマップが見つかりません。"
+	}
+	"L4D2MMAdminMenu_SMAdminForcingMapChange"
+	{
+		"jp"		"{green}[SM]{default} 管理者はマップを {lightgreen}%s{default} に強制的に変更しています。"
+	}
+	"L4D2MMAdminMenu_SMAdminReloadingVPKs"
+	{
+		"jp"		"{green}[SM]{default} 管理者が VPK とミッション リストをリロードしています..."
+	}
+}

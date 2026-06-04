@@ -4,65 +4,61 @@
 	{
 		"jp"		"すでにマップをノミネートしています。"
 	}
-
 	"Max Nominations"
 	{
 		"jp"		"ノミネート制限に到達しました。"
 	}
-
 	"Map Already In Vote"
 	{
+		"#format"	"{1:s}"
 		"jp"		"マップ '{1}' はすでにノミネートリストにはいっています。"
 	}
-
 	"Map Inserted"
 	{
+		"#format"	"{1:s}"
 		"jp"		"マップ '{1}' をノミネートリストに追加しました。"
 	}
-
 	"Map Already Nominated"
 	{
 		"jp"		"そのマップはすでにノミネートしています。"
 	}
-
 	"Map Nominated"
 	{
+		"#format"	"{1:s},{2:s}"
 		"jp"		"{1}は{2}をノミネートしました。"
 	}
-
 	"Map Nomination Changed"
 	{
+		"#format"	"{1:s},{2:s}"
 		"jp"		"{1}はノミネートを{2}に変更しました。"
 	}
-
 	"Nominate Title"
 	{
 		"jp"		"マップノミネート:"
 	}
-
 	"Can't Nominate Current Map"
 	{
 		"jp"		"現在のマップはノミネート出来ません。"
 	}
-
 	"Map in Exclude List"
 	{
 		"jp"		"そのマップは最近プレイしているためノミネートすることは出来ません。"
 	}
-
 	"Current Map"
 	{
 		"jp"		"現在のマップ"
 	}
-
 	"Recently Played"
 	{
 		"jp"		"最近のプレイ"
 	}
-
 	"Nominated"
 	{
 		"jp"		"ノミネートしました。"
 	}
-
+	"Map Not In Pool"
+	{
+		"#format"	"{1:s}"
+		"jp"		"マップ ' {1} ' は候補プールにありません。"
+	}
 }

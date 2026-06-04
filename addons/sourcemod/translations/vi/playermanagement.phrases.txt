@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"vi"		"[{olive}!{default}]"
+	}
+	"Usage"
+	{
+		"vi"		"{blue} Cách sử dụng {default}"
+	}
+	"NoSnoop"
+	{
+		"vi"		"Bạn Không Nên {red} Rình mò {default} trên Xe Tăng!"
+	}
+	"BecomeSpectator"
+	{
+		"vi"		"{teamcolor} %N {default} đã trở thành khán giả!"
+	}
+	"WhileCapped"
+	{
+		"vi"		"{red} Không xem {default} khi bị giới hạn!"
+	}
+	"FixBot"
+	{
+		"vi"		"{teamcolor} %N {default} đang cố gắng khắc phục số lượng bot"
+	}
+	"FixBotConsole"
+	{
+		"vi"		"Bảng điều khiển đang cố gắng sửa lỗi {red} số lượng bot {default}"
+	}
+	"ValidTeams"
+	{
+		"vi"		"Các đội hợp lệ: %d = Khán giả, %d = Người sống sót, %d = Bị nhiễm bệnh"
+	}
+	"CouldNotSwitched"
+	{
+		"vi"		"{teamcolor} %N {default} không thể chuyển đổi vì nhóm mục tiêu đã đầy hoặc không có bot để tiếp quản."
+	}
+}

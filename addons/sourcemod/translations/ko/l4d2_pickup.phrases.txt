@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Command_SwitchOff"
+	{
+		"ko"		"{blue}[{default}ItemSwitch{blue}] {default}수령 시 {olive}보조 {default}로 전환: {blue}OFF"
+	}
+	"Command_SwitchOn"
+	{
+		"ko"		"{blue}[{default}ItemSwitch{blue}] {default}수령 시 {olive}보조 {default}로 전환: {blue}ON"
+	}
+	"Command_SwitchPrimaryOff"
+	{
+		"ko"		"{blue}[{default}ItemSwitch{blue}] {default}수령 시 {olive}기본 {default}전환: {blue}OFF"
+	}
+	"Command_SwitchPrimaryOn"
+	{
+		"ko"		"{blue}[{default}ItemSwitch{blue}] {default}수령 시 {olive}기본 {default}로 전환: {blue}ON"
+	}
+}

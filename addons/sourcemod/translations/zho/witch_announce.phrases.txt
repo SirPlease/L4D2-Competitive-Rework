@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"WitchAnnounce_WitchDamageLine"
+	{
+		"zho"		"{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N"
+	}
+	"WitchAnnounce_TankKilledWitch"
+	{
+		"zho"		"{default}【{green}！ {default}] {red} 坦克 {default} ({olive} %N {default}) 殺死{red} 女巫"
+	}
+	"WitchAnnounce_StillSomeBloodLeft"
+	{
+		"zho"		"{default}[{green}!{default}] {blue}Witch {default}還剩下 {olive}%d {default}"
+	}
+	"WitchAnnounce_WitchDamageHeader"
+	{
+		"zho"		"{default}[{green}!{default}] 對{blue}女巫{default}產生的{blue}傷害"
+	}
+}

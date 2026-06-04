@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Command_SwitchOff"
+	{
+		"jp"		"{blue}[{default}ItemSwitch{blue}] {default}受け取り時に {olive} セカンダリ {default} に切り替える: {blue}OFF"
+	}
+	"Command_SwitchOn"
+	{
+		"jp"		"{blue}[{default}ItemSwitch{blue}] {default}受け取り時に {olive} セカンダリ {default} に切り替える: {blue}ON"
+	}
+	"Command_SwitchPrimaryOff"
+	{
+		"jp"		"{blue}[{default}ItemSwitch{blue}] {default}受け取り時に {olive} プライマリ {default} に切り替える: {blue}OFF"
+	}
+	"Command_SwitchPrimaryOn"
+	{
+		"jp"		"{blue}[{default}ItemSwitch{blue}] {default}受け取り時に {olive} プライマリ {default} に切り替える: {blue}ON"
+	}
+}

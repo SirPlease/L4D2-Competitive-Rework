@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Title"
+	{
+		"ko"		"{blue}[{default}탱크 록 선택기{blue}]"
+	}
+	"Reload"
+	{
+		"ko"		"{olive}Reload{default}/{olive}!overhand{default} = {blue}2 Handed Overhand{default}"
+	}
+	"Use"
+	{
+		"ko"		"{olive}사용{default}/{olive}!underhand{default} = {blue}Underhand{default}"
+	}
+	"M2"
+	{
+		"ko"		"{olive}M2{default}/{olive}!overonehand{default} = {blue}1 Handed Overhand{default}"
+	}
+}

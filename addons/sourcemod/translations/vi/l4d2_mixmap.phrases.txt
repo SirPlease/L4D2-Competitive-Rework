@@ -1,0 +1,159 @@
+"Phrases"
+{
+	"Auto_Show_Maplist"
+	{
+		"vi"		"{olive} <Mixmap> {default} Sử dụng plugin Mixmap (hiển thị danh sách bản đồ {orange}!maplist {default} )."
+	}
+	"Differ_Abort"
+	{
+		"vi"		"{olive} <Mixmap> {default} Bản đồ hiện tại khác với bản đồ đã được ký hiệu, hủy bỏ……"
+	}
+	"Show_Next_Map"
+	{
+		"vi"		"{olive} <Mixmap> {default} Thay đổi bản đồ tiếp theo: %s"
+	}
+	"Already_Start_Admin"
+	{
+		"vi"		"{olive} <Mixmap> Plugin {default} đã khởi động, hãy nhập!fstopmixmap trước nếu cần khởi động lại."
+	}
+	"Force_Start"
+	{
+		"vi"		"{olive} <Mixmap> {default} Quản trị viên {teamcolor} %N {default} buộc phải khởi động Mixmap {orange} ( %s )."
+	}
+	"Manualmixmap_Syntax"
+	{
+		"vi"		"Cú pháp:!manualmixmap <map1> <map2> <map3> <...>"
+	}
+	"Invalid_Cfg"
+	{
+		"vi"		"{olive} <Mixmap> {default} Nhóm bản đồ không hợp lệ!"
+	}
+	"Not_Start"
+	{
+		"vi"		"{olive} <Mixmap> Plugin {default} không khởi động, không cần dừng."
+	}
+	"Vote_Stop"
+	{
+		"vi"		"{olive} <Mixmap> {default} Người chơi {teamcolor} %N {default} bắt đầu bỏ phiếu để dừng Mixmap."
+	}
+	"Vote_Progress"
+	{
+		"vi"		"[SM] Đang có một cuộc bỏ phiếu!"
+	}
+	"Vote_Progress_delay"
+	{
+		"vi"		"{olive} <Mixmap> {default} Đang có một cuộc bỏ phiếu! Thay đổi độ trễ bản đồ {orange} 15 {default} giây!"
+	}
+	"Stop_Mixmap"
+	{
+		"vi"		"{olive} <Mixmap> Bản đồ {default} được khởi tạo, hủy bỏ……"
+	}
+	"Stop_Mixmap_Admin"
+	{
+		"vi"		"{olive} <Mixmap> {default} Quản trị viên {teamcolor} %N {default} buộc dừng Mixmap và Bản đồ bắt đầu, hủy bỏ……"
+	}
+	"Start_Mixmap"
+	{
+		"vi"		"{olive} <Mixmap> {default} Người chơi {teamcolor} %N {default} bắt đầu bỏ phiếu để bắt đầu Mixmap {orange} ( %s )."
+	}
+	"Show_Maplist_Not_Start"
+	{
+		"vi"		"{olive} <Mixmap> Plugin {default} không khởi động, không có danh sách bản đồ."
+	}
+	"Show_Maplist_Cmd"
+	{
+		"vi"		"{olive} Hiển thị danh sách bản đồ {orange}!maplist {default} | {olive} Hủy bỏ lệnh {orange}!stopmixmap"
+	}
+	"Select_Maps_Succeed"
+	{
+		"vi"		"{olive} <Trộn bản đồ> {default} Chọn bản đồ ngẫu nhiên thành công."
+	}
+	"Change_Map_First"
+	{
+		"vi"		"{olive} <Mixmap> {default} Thay đổi bản đồ sau {orange} %d {default} giây."
+	}
+	"AllMaps_Official"
+	{
+		"vi"		"{orange} [------danh sách tất cả các bản đồ chính thức-----]"
+	}
+	"AllMaps_Usage"
+	{
+		"vi"		"{orange} Cách sử dụng: {default}!manualmixmap <map1> <map2>..."
+	}
+	"Fail_Load_Preset"
+	{
+		"vi"		"{olive} <Mixmap> {default} Không tải được giá trị đặt trước!"
+	}
+	"Maps_Not_Match_Rank"
+	{
+		"vi"		"{olive} <Mixmap> {default} Preset có thứ hạng gắn thẻ {orange} không đúng {default}: số lượng bản đồ được chơi không khớp với thứ hạng cao nhất. Nên có thẻ tag N+1 cho thứ hạng N cao nhất."
+	}
+	"Cvote_Title"
+	{
+		"vi"		"Bắt đầu một bản đồ hỗn hợp? ( %s )"
+	}
+	"Cvote_Title_Off"
+	{
+		"vi"		"Dừng Mixmap?"
+	}
+	"Cexec_Title"
+	{
+		"vi"		"Chọn bản đồ ngẫu nhiên……"
+	}
+	"Maplist_Title"
+	{
+		"vi"		"{olive} [-------- Danh sách bản đồ --------]"
+	}
+	"Secret"
+	{
+		"vi"		"Bí mật"
+	}
+	"L4D2Mixmap_OfficialMapsDeadCenter"
+	{
+		"vi"		"c1m1_hotel,c1m2_streets,c1m3_mall,c1m4_atrium"
+	}
+	"L4D2Mixmap_C2m1HighwayC2m2FairgroundsC2m3"
+	{
+		"vi"		"c2m1_highway,c2m2_fairgrounds,c2m3_coaster,c2m4_barns,c2m5_concert"
+	}
+	"L4D2Mixmap_C3m1PlankcountryC3m2SwampC3m3"
+	{
+		"vi"		"c3m1_plankcountry,c3m2_swamp,c3m3_shantytown,c3m4_plantation"
+	}
+	"L4D2Mixmap_C4m1MilltownC4m2SugarmillC4m3"
+	{
+		"vi"		"c4m1_milltown_a,c4m2_sugarmill_a,c4m3_sugarmill_b,c4m4_milltown_b,c4m5_milltown_escape"
+	}
+	"L4D2Mixmap_C5m1WaterfrontC5m2ParkC5m3"
+	{
+		"vi"		"c5m1_waterfront,c5m2_park,c5m3_cemetery,c5m4_quarter,c5m5_bridge"
+	}
+	"L4D2Mixmap_C6m1RiverbankC6m2BedlamC7m1"
+	{
+		"vi"		"c6m1_riverbank,c6m2_bedlam,c7m1_docks,c7m2_sà lan,c7m3_port"
+	}
+	"L4D2Mixmap_C8m1ApartmentC8m2SubwayC8m3"
+	{
+		"vi"		"c8m1_apartment,c8m2_subway,c8m3_sewers,c8m4_interior,c8m5_rooftop"
+	}
+	"L4D2Mixmap_C9m1AlleysC9m2LotsC14m1"
+	{
+		"vi"		"c9m1_alleys,c9m2_lots,c14m1_junkyard,c14m2_lighthouse"
+	}
+	"L4D2Mixmap_C10m1CavesC10m2DrainageC10m3"
+	{
+		"vi"		"c10m1_caves,c10m2_thoát nước,c10m3_ranchhouse,c10m4_mainstreet,c10m5_houseboat"
+	}
+	"L4D2Mixmap_C11m1GreenhouseC11m2OfficesC11m3"
+	{
+		"vi"		"c11m1_greenhouse,c11m2_offices,c11m3_garage,c11m4_terminal,c11m5_runway"
+	}
+	"L4D2Mixmap_C12m1HilltopC12m2TraintunnelC12m3"
+	{
+		"vi"		"c12m1_hilltop,c12m2_traintunnel,c12m3_bridge,c12m4_barn,c12m5_cornfield"
+	}
+	"L4D2Mixmap_C13m1AlpinecreekC13m2SouthpinestreamC13m3"
+	{
+		"vi"		"c13m1_alpinecreek,c13m2_southpinestream,c13m3_memorialbridge,c13m4_cutthroatcreek"
+	}
+}

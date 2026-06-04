@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"jp"		"[{green}!{default}]"
+	}
+	"VotingNotEnabled"
+	{
+		"jp"		"投票はラウンドが始まる {olive}40s{default} まで有効になりません。"
+	}
+	"NotConsoleVote"
+	{
+		"jp"		"[!] 投票するにはゲーム内にログインする必要があります。"
+	}
+	"NotSpectatorVote"
+	{
+		"jp"		"{olive}観客{default}は投票できません。"
+	}
+}

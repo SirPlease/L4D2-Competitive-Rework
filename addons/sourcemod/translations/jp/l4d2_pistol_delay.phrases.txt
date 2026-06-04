@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2PistolDelay_EntityCreatedEntity"
+	{
+		"jp"		"[OnEntityCreated] iEntity: %s ( %d )"
+	}
+	"L4D2PistolDelay_WeaponOldFireTimeCurrent"
+	{
+		"jp"		"武器: %s (%d)、古い発射時間: %f、現在の発射時間: %f、差分: %f"
+	}
+}

@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"SI"
+	{
+		"vi"		"SI: "
+	}
+	"SpecialInfected"
+	{
+		"vi"		"Người bị nhiễm đặc biệt:"
+	}
+}

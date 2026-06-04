@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"zho"		"<{olive}目前{default}>"
+	}
+	"Current"
+	{
+		"zho"		"目前： {green}%d%%{default}"
+	}
+}

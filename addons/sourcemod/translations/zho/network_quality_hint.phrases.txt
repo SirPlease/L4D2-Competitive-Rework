@@ -1,0 +1,27 @@
+"Phrases"
+{
+	"NetworkQualityHint_CurrentNetworkPingMSLoss"
+	{
+		"zho"		"%s 目前網路：ping {olive} %d ms {default}，丟{olive} %.2f%% {default}，窒息{olive} %.2f%% {default}。"
+	}
+	"NetworkQualityHint_DetectionCaliberChokeUseDirection"
+	{
+		"zho"		"%s 偵測口徑：choke 使用伺服器寄給你的方向；你寄給伺服器方向目前為 {olive}%.2f%%{default}。"
+	}
+	"NetworkQualityHint_AbnormalDelayPacketLossOpen"
+	{
+		"zho"		"%s 如果延遲或丟包異常，請開啟 IP 頁面複製目前伺服器位址後重新連線：{green}%s{default}"
+	}
+	"NetworkQualityHint_AbnormalityNetworkStatusDetectedCurrent"
+	{
+		"zho"		"%s 偵測到您的網路狀態異常：{olive} %s {default} 。目前ping {olive} %d ms {default}，丟{olive} %.2f%% {default}，窒息{olive} %.2f%% {default}。"
+	}
+	"NetworkQualityHint_OpenIPPageCopyConnect"
+	{
+		"zho"		"%s 請開啟 IP 頁面，複製目前伺服器對應的 connect 指令，貼上到控制台重新連線：{green}%s{default}"
+	}
+	"NetworkQualityHint_ThirdLineServersGivePriority"
+	{
+		"zho"		"%s 三線伺服器請優先使用網頁展示的分流入口，避免從收藏或歷史記錄走錯線路。"
+	}
+}

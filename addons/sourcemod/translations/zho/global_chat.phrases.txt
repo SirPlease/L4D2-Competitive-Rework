@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"GlobalChat_FullServerNormalFullServer"
+	{
+		"zho"		"{green}[全服]{default} 你已%s普通全服聊天。"
+	}
+	"GlobalChat_AllServersAskedTipTeammates"
+	{
+		"zho"		"{green}[全服]{default} 你已%s找隊友提示。"
+	}
+	"GlobalChat_SummonTeammates"
+	{
+		"zho"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友"
+	}
+	"GlobalChat_SummonTeammatesWithMessage"
+	{
+		"zho"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友\\n{default}留言: {olive}%s"
+	}
+}

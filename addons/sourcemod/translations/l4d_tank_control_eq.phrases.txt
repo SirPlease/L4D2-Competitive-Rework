@@ -104,4 +104,29 @@
 		"ko"		"{green}[{olive}Tank Control{green}] {olive}%N {default}i는 감염된 팀에 없습니다. 탱크를 줄 수 없습니다"
 		"vi"		"{green}[{olive}Tank Control{green}] {olive}%N {default}không thuộc nhóm bị nhiễm. Không thể tặng xe tăng"
 	}
+
+	"Hit_RageMeterRefilled"
+	{
+		"en"		"First tank pass ended, second tank pass started"
+	}
+	"RageMeterRefilled"
+	{
+		"en"		"({green}%N{default}) {olive}First tank pass ended, {red}second tank pass started"
+	}
+	"Tag_Rage"
+	{
+		"en"		"{red}<{default}Tank Rage{red}>{default}"
+	}
+	"Tag_Selecion"
+	{
+		"en"		"{red}<{default}Tank Selection{red}>{default}"
+	}
+	"UnableGiveTank"
+	{
+		"en"		"[{olive}SM{default}] %s is not infected. Unable to give Tank"
+	}
+	"YouRageMeterRefilled"
+	{
+		"en"		"{olive}First tank pass ended, {red}second tank pass started{default}"
+	}
 }

@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"L4D2BWRockHit_VictimAttackerInflictorDamageType"
+	{
+		"jp"		"被害者 %d 攻撃者 %d 加害者 %d ダメージタイプ %d 武器 %d"
+	}
+	"L4D2BWRockHit_VictimAttackerClassname"
+	{
+		"jp"		"被害者 %N(%i/%i) 攻撃者 %N クラス名 %s"
+	}
+	"L4D2BWRockHit_TankRockDetonate"
+	{
+		"jp"		"CTankRock__Detonate: %d"
+	}
+	"L4D2BWRockHit_OwnerTankRockDetonate"
+	{
+		"jp"		"所有者: %N (%d)。タンクロック %d 爆発)"
+	}
+	"L4D2BWRockHit_UnknownOwnerTankRockDetonate"
+	{
+		"jp"		"不明な所有者: %d。タンクロック %d 爆発)"
+	}
+}

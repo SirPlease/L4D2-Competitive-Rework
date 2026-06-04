@@ -1,0 +1,142 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"vi"		"{blue} < {green} BossVote {blue} > {default}"
+	}
+	"NotAvailable"
+	{
+		"vi"		"Bỏ phiếu ông chủ không có sẵn trên bản đồ này."
+	}
+	"Available"
+	{
+		"vi"		"Việc bỏ phiếu của ông chủ chỉ có sẵn trong quá trình sẵn sàng."
+	}
+	"FirstRound"
+	{
+		"vi"		"Bỏ phiếu Boss chỉ có sẵn trong vòng đầu tiên của bản đồ."
+	}
+	"NotAvailableForSpec"
+	{
+		"vi"		"Việc bình chọn ông chủ không có sẵn cho khán giả."
+	}
+	"CannotBeCalled"
+	{
+		"vi"		"Boss Vote không thể được gọi ngay bây giờ..."
+	}
+	"Usage"
+	{
+		"vi"		"Cách sử dụng:!voteboss {olive} < {default} bể {olive} > < {default} phù thủy {olive} > {default}."
+	}
+	"Usage2"
+	{
+		"vi"		"Sử dụng {default} \\\\\\\" {blue} 0 {default} \\\\\\\" cho {olive} Không sinh sản {default}, \\\\\\\" {blue} -1 {default} \\\\\\\" cho {olive} Sự thiếu hiểu biết."
+	}
+	"Invalid"
+	{
+		"vi"		"Tỷ lệ {olive} không hợp lệ là {default}."
+	}
+	"TankStatic"
+	{
+		"vi"		"Xe tăng sinh sản là tĩnh và không thể thay đổi trên bản đồ này."
+	}
+	"WitchStatic"
+	{
+		"vi"		"Nơi sinh sản của phù thủy là tĩnh và không thể thay đổi trên bản đồ này."
+	}
+	"TankBanned"
+	{
+		"vi"		"Tỷ lệ xe tăng là {blue} bị cấm {default}."
+	}
+	"WitchBanned"
+	{
+		"vi"		"Tỷ lệ phù thủy là {blue} bị cấm {default}."
+	}
+	"SetBosses"
+	{
+		"vi"		"Đặt Tank thành: %s và Witch thành: %s?"
+	}
+	"SetTank"
+	{
+		"vi"		"Đặt Tank thành: %s và Witch thành: Vô hiệu hóa?"
+	}
+	"SetOnlyTank"
+	{
+		"vi"		"Đặt bể thành: %s?"
+	}
+	"SetWitch"
+	{
+		"vi"		"Đặt Tank thành: Vô hiệu hóa và Witch thành: %s?"
+	}
+	"SetOnlyWitch"
+	{
+		"vi"		"Đặt Phù thủy thành: %s?"
+	}
+	"SetBossesDisabled"
+	{
+		"vi"		"Đặt Boss thành: Vô hiệu hóa?"
+	}
+	"SetTankDisabled"
+	{
+		"vi"		"Đặt Tank thành: Đã tắt?"
+	}
+	"SetWitchDisabled"
+	{
+		"vi"		"Đặt Witch thành: Vô hiệu hóa?"
+	}
+	"OnlyReadyUp"
+	{
+		"vi"		"Sinh sản chỉ có thể được thiết lập trong khi sẵn sàng."
+	}
+	"SettingBoss"
+	{
+		"vi"		"Thiết lập thời gian sinh sản của Boss..."
+	}
+	"SettingTank"
+	{
+		"vi"		"Đang thiết lập khả năng sinh sản của xe tăng..."
+	}
+	"SettingWitch"
+	{
+		"vi"		"Thiết lập sự xuất hiện của phù thủy..."
+	}
+	"SettingBossDisabled"
+	{
+		"vi"		"Đặt Boss bị vô hiệu hóa..."
+	}
+	"CommandNotAvailable"
+	{
+		"vi"		"Lệnh không có sẵn trên bản đồ này."
+	}
+	"TankSpawnStatic"
+	{
+		"vi"		"Xe tăng sinh sản là tĩnh và không thể thay đổi trên bản đồ này."
+	}
+	"PercentageInvalid"
+	{
+		"vi"		"Tỷ lệ {blue} không hợp lệ là {default}."
+	}
+	"Percentagebanned"
+	{
+		"vi"		"Tỷ lệ {blue} bị cấm là {default}."
+	}
+	"TankSpawnAdmin"
+	{
+		"#format"	"{1:i},{2:s}"
+		"vi"		"Sinh sản của xe tăng được đặt thành {olive} {1} % {default} bởi Quản trị viên {blue} {2} {default}."
+	}
+	"WitchSpawnStatic"
+	{
+		"vi"		"Nơi sinh sản của phù thủy là tĩnh và không thể thay đổi trên bản đồ này."
+	}
+	"WitchSpawnAdmin"
+	{
+		"#format"	"{1:i},{2:s}"
+		"vi"		"Sinh sản phù thủy được đặt thành {olive} {1} % {default} bởi Quản trị viên {blue} {2} {default}."
+	}
+	"RoundNotReachLimit"
+	{
+		"#format"	"{1:i}"
+		"vi"		"Bạn muốn bỏ qua ngay ở độ khó này sao? Chưa được đâu! (Bạn cần thất bại thêm {blue}{1} lần{default} nữa mới có thể dùng {olive}chức năng bỏ phiếu boss{default})."
+	}
+}

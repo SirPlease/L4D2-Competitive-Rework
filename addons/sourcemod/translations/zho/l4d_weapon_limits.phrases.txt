@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"zho"		"{default}[{olive}武器限制{default}]"
+	}
+	"Full"
+	{
+		"zho"		"該武器組已達到{green}%d{default}的最大值！"
+	}
+}

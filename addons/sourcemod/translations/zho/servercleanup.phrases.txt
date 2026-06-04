@@ -1,0 +1,115 @@
+"Phrases"
+{
+	"srvcln_version"
+	{
+		"zho"		"伺服器清理版本。"
+	}
+	"srvcln_enable"
+	{
+		"zho"		"啟用自動伺服器清理（1 - 啟用，0 - 停用，僅限手動清理命令）。"
+	}
+	"srvcln_logs"
+	{
+		"zho"		"清理常規伺服器日誌。"
+	}
+	"srvcln_logging_mode"
+	{
+		"zho"		"記錄伺服器清理刪除的內容。"
+	}
+	"srvcln_smlogs"
+	{
+		"zho"		"清理 SourceMod 伺服器日誌。"
+	}
+	"srvcln_sprays"
+	{
+		"zho"		"清理上傳的噴霧。"
+	}
+	"srvcln_demos"
+	{
+		"zho"		"清理自動錄製的簡報檔。"
+	}
+	"srvcln_replays"
+	{
+		"zho"		"清理生成的重播檔案。"
+	}
+	"srvcln_roundbackups"
+	{
+		"zho"		"清理 CS:GO 回合備份檔（注意：僅當回合備份的預設設定未變更任何命名選項時）。"
+	}
+	"srvcln_demos_archives"
+	{
+		"zho"		"刪除舊演示時包括存檔（如果您的伺服器自動壓縮它們，請偵測到：bz2、zip、rar 和 7z）。"
+	}
+	"srvcln_replays_archives"
+	{
+		"zho"		"刪除舊重播時包括存檔（如果您的伺服器自動壓縮它們，請偵測到：bz2、zip、rar 和 7z）。"
+	}
+	"srvcln_smlogs_type"
+	{
+		"zho"		"若要從 SM 日誌資料夾中刪除哪種類型的日誌（0 - 僅正常日誌，1 - 正常日誌和錯誤日誌，2 - 所有日誌）。"
+	}
+	"srvcln_logs_time"
+	{
+		"zho"		"保留常規伺服器日誌的時間（以小時為單位）（預設為一周，最小值為 12 小時，設定為 -1 僅保留當天）。"
+	}
+	"srvcln_replays_time"
+	{
+		"zho"		"保留產生的重播檔案的時間（以小時為單位）（預設為一周，最小值為 12 小時，設定為 -1 僅保留當天）。"
+	}
+	"srvcln_roundbackups_time"
+	{
+		"zho"		"CS:GO 中保留回合備份的時間（以小時為單位）（預設為一周，最小值為 12 小時，設定為 -1 僅保留當天）。"
+	}
+	"srvcln_sprays_time"
+	{
+		"zho"		"保留上傳噴霧的時間（以小時為單位）（預設為一周，最小值為 12 小時，設定為 -1 僅保留當天）。"
+	}
+	"srvcln_smlogs_time"
+	{
+		"zho"		"保留 SourceMod 伺服器日誌的時間（以小時為單位）（預設為一周，最小值為 12 小時，設定為 -1 僅保留當天）。"
+	}
+	"srvcln_demos_time"
+	{
+		"zho"		"保留演示文件的時間（以小時為單位）（預設為一周，最小值為 12 小時，設定為 -1 僅保留當天）。"
+	}
+	"srvcln_demos_path"
+	{
+		"zho"		"如果您手動將演示檔案儲存在其他位置，則可選的演示檔案目錄路徑。"
+	}
+	"srvcln_now"
+	{
+		"zho"		"手動運行伺服器清理。"
+	}
+	"Command Now Start"
+	{
+		"zho"		"[SM] 開始伺服器清理。"
+	}
+	"Command Now End"
+	{
+		"zho"		"[SM]伺服器清理完成。"
+	}
+	"Command Now Log"
+	{
+		"zho"		"手動運行伺服器清理。"
+	}
+	"CL Error TS"
+	{
+		"#format"	"{1:s}"
+		"zho"		"讀取“{1}”的時間戳記時發生致命錯誤。"
+	}
+	"CL Error Del"
+	{
+		"#format"	"{1:s}"
+		"zho"		"無法刪除“{1}”，請檢查權限。"
+	}
+	"CL Deleted File"
+	{
+		"#format"	"{1:s}"
+		"zho"		"已刪除檔案“{1}”"
+	}
+	"CL Deleted Folder"
+	{
+		"#format"	"{1:s}"
+		"zho"		"已刪除資料夾“{1}”"
+	}
+}

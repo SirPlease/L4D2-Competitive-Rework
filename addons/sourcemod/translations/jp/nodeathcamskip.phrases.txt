@@ -1,0 +1,8 @@
+"Phrases"
+{
+	"WarnExploiting"
+	{
+		"#format"	"{1:N}"
+		"jp"		"{red} [ {default} Exploit {red} ] {olive} {1} {default} はデス タイマーをスキップしようとしました。"
+	}
+}

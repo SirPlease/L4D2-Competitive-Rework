@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Lerpmonitor_LerpWarningLerpValueIllegal"
+	{
+		"vi"		"{default}<{olive}Lerp{default}> Cảnh báo {teamcolor}: {default} Giá trị Lerp của bạn là bất hợp pháp (tối thiểu: {teamcolor}%.01f{default}, tối đa: {teamcolor}%.01f{default})! Vui lòng thay đổi lại trong vòng 5 giây."
+	}
+	"Lerpmonitor_LerpThanksCooperationLerpRestored"
+	{
+		"vi"		"{default}<{olive}Lerp{default}> Cảm ơn sự hợp tác của bạn, Lerp đã được khôi phục về phạm vi pháp lý."
+	}
+	"Lerpmonitor_Lerp"
+	{
+		"vi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f"
+	}
+	"Lerpmonitor_LerpChanges"
+	{
+		"vi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f {default}[%s%d{default}/%d {olive}thay đổi]"
+	}
+	"Lerpmonitor_LerpMovedSpectatorIllegalLerp"
+	{
+		"vi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default} đã được chuyển sang khán giả (thay đổi lerp bất hợp pháp)!"
+	}
+	"Lerpmonitor_LerpIllegalChangeLerpGame"
+	{
+		"vi"		"{default}<{olive}Lerp{default}> Thay đổi trái phép lerp trong trò chơi! Thay đổi lerp trở lại {teamcolor}%.01f"
+	}
+	"Lerpmonitor_Lerp_2"
+	{
+		"vi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f"
+	}
+	"Lerpmonitor_LerpMovedBystanderDueFailure"
+	{
+		"vi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default} đã được chuyển sang người ngoài cuộc do không điều chỉnh Lerp về phạm vi pháp lý trong vòng 5 giây"
+	}
+	"Lerpmonitor_LerpKickedGameHeFailed"
+	{
+		"vi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default} đã bị đuổi khỏi trò chơi vì không điều chỉnh Lerp về phạm vi hợp pháp trong vòng 5 giây."
+	}
+}

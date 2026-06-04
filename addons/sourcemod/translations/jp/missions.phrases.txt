@@ -1,0 +1,283 @@
+"Phrases"
+{
+	"L4D2C1"
+	{
+		"jp"		"デッドセンター"
+	}
+	"L4D2C2"
+	{
+		"jp"		"ダークカーニバル"
+	}
+	"L4D2C3"
+	{
+		"jp"		"スワンプフィーバー"
+	}
+	"L4D2C4"
+	{
+		"jp"		"激しい雨"
+	}
+	"L4D2C5"
+	{
+		"jp"		"教区"
+	}
+	"L4D2C6"
+	{
+		"jp"		"ザ・パッシング"
+	}
+	"L4D2C7"
+	{
+		"jp"		"犠牲"
+	}
+	"L4D2C8"
+	{
+		"jp"		"容赦なし"
+	}
+	"L4D2C9"
+	{
+		"jp"		"クラッシュコース"
+	}
+	"L4D2C10"
+	{
+		"jp"		"死者数"
+	}
+	"L4D2C11"
+	{
+		"jp"		"デッドエア"
+	}
+	"L4D2C12"
+	{
+		"jp"		"採血"
+	}
+	"L4D2C13"
+	{
+		"jp"		"コールドストリーム"
+	}
+	"L4D2C14"
+	{
+		"jp"		"ラストスタンド"
+	}
+	"Zengchengone"
+	{
+		"jp"		"広州曾城 Lv7.3"
+	}
+	"2019"
+	{
+		"jp"		"2019（アニバーサリーエディション）"
+	}
+	"JTB2"
+	{
+		"jp"		"ベルデュラ2"
+	}
+	"bts"
+	{
+		"jp"		"学校に戻る"
+	}
+	"CityOfTheDeadBeta"
+	{
+		"jp"		"死者の街"
+	}
+	"City17l4d2"
+	{
+		"jp"		"シティ 17 v3.2"
+	}
+	"crashbandicoot"
+	{
+		"jp"		"クラッシュバンディクー コース2"
+	}
+	"Cure2"
+	{
+		"jp"		"キュア2"
+	}
+	"damitcomplete"
+	{
+		"jp"		"ダムイットコンプリート L4D2"
+	}
+	"darkwood"
+	{
+		"jp"		"ダークウッド (エクステンデッド)"
+	}
+	"DayBreak"
+	{
+		"jp"		"デイブレイク"
+	}
+	"deadvacation"
+	{
+		"jp"		"デッドバケーション L4D2"
+	}
+	"deathaboard2"
+	{
+		"jp"		"デス・アボード II"
+	}
+	"DevilMountain"
+	{
+		"jp"		"デビルマウンテン"
+	}
+	"Escansion"
+	{
+		"jp"		"エスカンション"
+	}
+	"escfromtoronto"
+	{
+		"jp"		"トロントからの脱出 L4D2"
+	}
+	"GettingOut"
+	{
+		"jp"		"外出"
+	}
+	"hauntedforest"
+	{
+		"jp"		"幽霊の森"
+	}
+	"Highway17L4D2"
+	{
+		"jp"		"Half-Life 2: ハイウェイ 17(L4D2)"
+	}
+	"ihatemountains2"
+	{
+		"jp"		"山は嫌い 2 (1.5)"
+	}
+	"JourneyToSplashMountain"
+	{
+		"jp"		"スプラッシュ マウンテンへの旅"
+	}
+	"Diescraper361"
+	{
+		"jp"		"デスクレーパー Redux 3.61"
+	}
+	"One4Nine"
+	{
+		"jp"		"ワンフォーナイン"
+	}
+	"TanksPlayground"
+	{
+		"jp"		"タンク プレイグラウンド v3.0"
+	}
+	"YamaMSE"
+	{
+		"jp"		"ヤマ"
+	}
+	"leftinprypiat"
+	{
+		"jp"		"プリピャチに残された"
+	}
+	"LeftTurnSilentHill3"
+	{
+		"jp"		"左折サイレントヒル 3"
+	}
+	"mic3"
+	{
+		"jp"		"軍産複合体 III v666"
+	}
+	"necrovirusfacility"
+	{
+		"jp"		"ネクロウイルス施設"
+	}
+	"NightPresence"
+	{
+		"jp"		"夜の存在"
+	}
+	"QuestionableEthicsAlphaTest"
+	{
+		"jp"		"疑わしい倫理: アルファテスト"
+	}
+	"re3"
+	{
+		"jp"		"バイオハザード3"
+	}
+	"SaltHellPark"
+	{
+		"jp"		"ソルトヘル パーク"
+	}
+	"shenmejb2"
+	{
+		"jp"		"シェンメジブ2"
+	}
+	"ajsSilentFear"
+	{
+		"jp"		"静かな恐怖"
+	}
+	"shool"
+	{
+		"jp"		"サイレントヒル: 人生の向こう側 V4.7"
+	}
+	"TheHive"
+	{
+		"jp"		"ザ・ハイブ"
+	}
+	"ThereIsOnlyOneWay"
+	{
+		"jp"		"方法は1つだけです"
+	}
+	"undeadzone"
+	{
+		"jp"		"アンデッドゾーン"
+	}
+	"WhiteForest"
+	{
+		"jp"		"ホワイトフォレスト"
+	}
+	"2evileyes"
+	{
+		"jp"		"2 邪眼"
+	}
+	"BloodTracks"
+	{
+		"jp"		"血の跡"
+	}
+	"CrashBandicootTheReturn"
+	{
+		"jp"		"クラッシュ・バンディクー ザ・リターン"
+	}
+	"DeadSeries"
+	{
+		"jp"		"デッドシリーズ"
+	}
+	"Derailed"
+	{
+		"jp"		"脱線した"
+	}
+	"Diescraper36"
+	{
+		"jp"		"デスクレーパー Redux 3.6"
+	}
+	"FarewellChenming"
+	{
+		"jp"		"さらばチェンミン"
+	}
+	"HighwayToHell"
+	{
+		"jp"		"地獄へのハイウエイ"
+	}
+	"QuestionableEthics"
+	{
+		"jp"		"疑わしい倫理"
+	}
+	"TheBloodyMoors"
+	{
+		"jp"		"ブラッディ・ムーア人"
+	}
+	"TheCure"
+	{
+		"jp"		"ザ・キュア"
+	}
+	"ddntr1"
+	{
+		"jp"		"死の罠"
+	}
+	"deadvacation2"
+	{
+		"jp"		"デッドバケーション2"
+	}
+	"drdegov21"
+	{
+		"jp"		"ドロップデッドゴージv2.1"
+	}
+	"fallen"
+	{
+		"jp"		"落ちた"
+	}
+	"l4d2CrashBandicoot2"
+	{
+		"jp"		"クラッシュバンディクー コース2"
+	}
+}

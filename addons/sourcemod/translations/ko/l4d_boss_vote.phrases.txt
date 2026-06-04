@@ -1,0 +1,142 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"ko"		"{blue} < {green} BossVote {blue} > {default}"
+	}
+	"NotAvailable"
+	{
+		"ko"		"이 맵에서는 보스 투표가 불가능합니다."
+	}
+	"Available"
+	{
+		"ko"		"보스 투표는 준비 기간에만 가능합니다."
+	}
+	"FirstRound"
+	{
+		"ko"		"보스 투표는 맵의 첫 번째 라운드에서만 가능합니다."
+	}
+	"NotAvailableForSpec"
+	{
+		"ko"		"관전자는 보스투표를 할 수 없습니다."
+	}
+	"CannotBeCalled"
+	{
+		"ko"		"지금은 보스 투표를 호출할 수 없습니다..."
+	}
+	"Usage"
+	{
+		"ko"		"사용법:!voteboss {olive} < {default} 탱크 {olive} > < {default} 마녀 {olive} > {default}."
+	}
+	"Usage2"
+	{
+		"ko"		"{olive} 생성 없음 {default} 의 경우 {default} \\\\\" {blue} 0 {default} \\\\\" 를 사용하고, {olive} 무지의 경우 \\\\\" {blue} -1 {default} \\\\\" 를 사용합니다."
+	}
+	"Invalid"
+	{
+		"ko"		"백분율은 {olive} 유효하지 않은 {default} 입니다."
+	}
+	"TankStatic"
+	{
+		"ko"		"탱크 생성은 정적이며 이 지도에서는 ​​변경할 수 없습니다."
+	}
+	"WitchStatic"
+	{
+		"ko"		"마녀 생성은 정적이며 이 지도에서는 ​​변경할 수 없습니다."
+	}
+	"TankBanned"
+	{
+		"ko"		"탱크 비율은 {blue} 금지 {default} 입니다."
+	}
+	"WitchBanned"
+	{
+		"ko"		"마녀 비율은 {blue} 금지된 {default} 입니다."
+	}
+	"SetBosses"
+	{
+		"ko"		"탱크를 %s로 설정하고 마녀를 %s로 설정 하시겠습니까?"
+	}
+	"SetTank"
+	{
+		"ko"		"탱크를 %s로 설정하고 마녀를 비활성화하시겠습니까?"
+	}
+	"SetOnlyTank"
+	{
+		"ko"		"탱크를 %s로 설정 하시겠습니까?"
+	}
+	"SetWitch"
+	{
+		"ko"		"탱크 설정: 비활성화 및 위치: %s?"
+	}
+	"SetOnlyWitch"
+	{
+		"ko"		"마녀를 다음으로 설정: %s?"
+	}
+	"SetBossesDisabled"
+	{
+		"ko"		"보스 설정: 비활성화?"
+	}
+	"SetTankDisabled"
+	{
+		"ko"		"탱크 설정: 비활성화?"
+	}
+	"SetWitchDisabled"
+	{
+		"ko"		"마녀 설정: 비활성화?"
+	}
+	"OnlyReadyUp"
+	{
+		"ko"		"스폰은 준비 중에만 설정할 수 있습니다."
+	}
+	"SettingBoss"
+	{
+		"ko"		"보스 스폰 설정 중..."
+	}
+	"SettingTank"
+	{
+		"ko"		"탱크 생성 설정 중..."
+	}
+	"SettingWitch"
+	{
+		"ko"		"마녀 생성 설정 중..."
+	}
+	"SettingBossDisabled"
+	{
+		"ko"		"보스 비활성화 설정..."
+	}
+	"CommandNotAvailable"
+	{
+		"ko"		"이 맵에서는 명령을 사용할 수 없습니다."
+	}
+	"TankSpawnStatic"
+	{
+		"ko"		"탱크 생성은 정적이며 이 지도에서는 ​​변경할 수 없습니다."
+	}
+	"PercentageInvalid"
+	{
+		"ko"		"백분율은 {blue} 유효하지 않은 {default} 입니다."
+	}
+	"Percentagebanned"
+	{
+		"ko"		"백분율은 {blue} 금지 {default} 입니다."
+	}
+	"TankSpawnAdmin"
+	{
+		"#format"	"{1:i},{2:s}"
+		"ko"		"관리자 {blue} {2} {default} 에 의해 탱크 스폰이 {olive} {1} % {default} 로 설정되었습니다."
+	}
+	"WitchSpawnStatic"
+	{
+		"ko"		"마녀 생성은 정적이며 이 지도에서는 ​​변경할 수 없습니다."
+	}
+	"WitchSpawnAdmin"
+	{
+		"#format"	"{1:i},{2:s}"
+		"ko"		"관리자 {blue} {2} {default} 에 의해 마녀 생성이 {olive} {1} % {default} 로 설정되었습니다."
+	}
+	"RoundNotReachLimit"
+	{
+		"#format"	"{1:i}"
+		"ko"		"이 난이도에서 바로 건너뛰고 싶나요? 안 됩니다! ({olive}boss 투표 기능{default}을 사용하려면 아직 {blue}{1}번{default} 더 실패해야 합니다)."
+	}
+}

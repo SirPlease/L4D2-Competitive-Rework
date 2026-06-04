@@ -1,0 +1,33 @@
+"Phrases"
+{
+	"You"
+	{
+		"ko"		"{green}당신"
+	}
+	"FFAnnounceToVictim"
+	{
+		"#format"	"{1:N},{2:d}"
+		"ko"		"* {olive}{1} {default}가 {blue}FF {default}를 {green}에게 {default}@ {green}{2}HP로 보냈습니다."
+	}
+	"FFAnnounceToGuiltyTotal"
+	{
+		"#format"	"{1:d}"
+		"ko"		"* 총 피해량: {green}{1}"
+	}
+	"FFAnnounceToGuilty1"
+	{
+		"ko"		"* {olive}{GUILTY} {default}가 {olive}{VICTIM1_NAME}에게 {blue}FF {default}를 수행했습니다. {default}@ {green}{VICTIM1_DMG}HP"
+	}
+	"FFAnnounceToGuilty2"
+	{
+		"ko"		"* {olive}{GUILTY} {default}가 {blue}FF {default}를 {olive}{VICTIM1_NAME}에게 {default}@ {green}{VICTIM1_DMG}HP{default}, {olive}{VICTIM2_NAME} {default}@ {green}{VICTIM2_DMG}HP로 수행했습니다."
+	}
+	"FFAnnounceToGuilty3"
+	{
+		"ko"		"* {olive}{GUILTY} {default}가 그랬어 {blue}FF {default}~ {olive}{VICTIM1_NAME} {default}@ {green}{VICTIM1_DMG}HP{default}, {olive}{VICTIM2_NAME} {default}@ {green}{VICTIM2_DMG}HP{default}, {olive}{VICTIM3_NAME} {default}@ {green}{VICTIM3_DMG}HP"
+	}
+	"FFAnnounceToGuilty4"
+	{
+		"ko"		"* {olive}{GUILTY} {default}가 그랬어 {blue}FF {default}~ {olive}{VICTIM1_NAME} {default}@ {green}{VICTIM1_DMG}HP{default}, {olive}{VICTIM2_NAME} {default}@ {green}{VICTIM2_DMG}HP{default}, {olive}{VICTIM3_NAME} {default}@ {green}{VICTIM3_DMG}HP{default}, {olive}{VICTIM4_NAME} {default}@ {green}{VICTIM4_DMG}HP"
+	}
+}

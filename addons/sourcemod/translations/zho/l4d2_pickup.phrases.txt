@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Command_SwitchOff"
+	{
+		"zho"		"{blue}[{default}ItemSwitch{blue}] {default}切換到{olive}次要{default}：{blue}關閉"
+	}
+	"Command_SwitchOn"
+	{
+		"zho"		"{blue}[{default}ItemSwitch{blue}] {default}拾取時切換到 {olive}輔助 {default}：{blue}ON"
+	}
+	"Command_SwitchPrimaryOff"
+	{
+		"zho"		"{blue}[{default}ItemSwitch{blue}] {default}拾取時切換到 {olive}主要 {default}：{blue}OFF"
+	}
+	"Command_SwitchPrimaryOn"
+	{
+		"zho"		"{blue}[{default}ItemSwitch{blue}] {default}拾取時切換到 {olive}主要 {default}：{blue}ON"
+	}
+}

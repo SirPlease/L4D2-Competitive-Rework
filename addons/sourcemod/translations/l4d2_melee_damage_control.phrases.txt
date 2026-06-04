@@ -24,7 +24,7 @@
 	{
 		"en"		"[MeleeDmgControl] Tank: (%N) %d, attacker: (%N) %d, inflictor: %d, damage: %f, damagetype: %d, set damage: %f"
 		"chi"		"[MeleeDmgControl] 坦克：(%N) %d，攻击者：(%N) %d，加害者：%d，伤害：%f，伤害类型：%d，设定伤害：%f"
-		"zho"		"[MeleeDmgControl] 坦克：(%N) %d，攻擊者：(%N) %d，加害者：%d，傷害：%f，加害者：%d，傷害：%f，傷害類型：ZX"
+		"zho"		"[MeleeDmgControl] 坦克：(%N) %d，攻擊者：(%N) %d，加害者：%d，傷害：%f，傷害類型：%d，設定傷害：%f"
 		"jp"		"[MeleeDmgControl] タンク: (%N) %d、攻撃者: (%N) %d、加害者: %d、ダメージ: %f、ダメージタイプ: %d、セットダメージ: %f"
 		"ko"		"[MeleeDmgControl] 탱크: (%N) %d, 공격자: (%N) %d, 적용자: %d, 데미지: %f, 데미지 유형: %d, 세트 데미지: %f"
 		"vi"		"[MeleeDmgControl] Xe tăng: (%N) %d, kẻ tấn công: (%N) %d, kẻ gây ra: %d, sát thương: %f, loại sát thương: %d, sát thương cố định: %f"

@@ -1,0 +1,41 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"vi"		"[{olive}1v1{default}]"
+	}
+	"TagPvE"
+	{
+		"vi"		"[{olive}Báo cáo sát thương{default}]"
+	}
+	"HealthRemaining"
+	{
+		"#format"	"{1:s},{2:s},{3:d}"
+		"vi"		"{red}{1}{default} ({green}{2}{default}) còn {olive}{3}{default} máu!"
+	}
+	"HealthRemainingAI"
+	{
+		"#format"	"{1:s},{2:d}"
+		"vi"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default} còn {olive}{2}{default} máu!"
+	}
+	"UMad"
+	{
+		"vi"		"Không cần phải tức giận đâu..."
+	}
+	"Sad"
+	{
+		"vi"		"Trông bạn có vẻ buồn...."
+	}
+	"Close"
+	{
+		"vi"		"Suýt được rồi!"
+	}
+	"NBad"
+	{
+		"vi"		"Không tệ."
+	}
+	"AI"
+	{
+		"vi"		"AI"
+	}
+}

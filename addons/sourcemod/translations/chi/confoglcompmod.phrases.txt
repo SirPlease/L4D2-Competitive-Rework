@@ -1,0 +1,71 @@
+"Phrases"
+{
+	"ConfoglCompMod_KickedIllegalValue"
+	{
+		"chi"		"{blue}[{default}Confogl{blue}] {olive}%L{default} 因“{green}%s{default}”值非法而被踢出{blue}({default}%f{blue})"
+	}
+	"ConfoglCompMod_MaximumSniperRifleEnforced"
+	{
+		"chi"		"{blue}[{default}Confogl{blue}]{default} 已强制限制最多 {blue}%d {olive}把狙击枪 {default}。"
+	}
+	"ConfoglCompMod_CompetitionModeLoaded"
+	{
+		"chi"		"{blue}[{default}Confogl{blue}]{default} 比赛模式已加载!"
+	}
+	"ConfoglCompMod_ChangeMap"
+	{
+		"chi"		"{blue}[{default}Confogl{blue}]{default} 更改地图为 {green}%s{default}!"
+	}
+	"ConfoglCompMod_RestartMap"
+	{
+		"chi"		"{blue}[{default}Confogl{blue}]{default} 重启地图!"
+	}
+	"ConfoglCompMod_CompetitionConfigurationUninstalled"
+	{
+		"chi"		"{blue}[{default}Confogl{blue}]{default} 比赛配置已卸载!"
+	}
+	"ConfoglCompMod_LoadConfiguration"
+	{
+		"chi"		"{blue}[{default}Confogl{blue}]{default} 加载配置 '{olive}%s{default}'."
+	}
+	"ConfoglCompMod_ConfigurationNotFoundUseDefault"
+	{
+		"chi"		"{blue}[{default}Confogl{blue}]{default} 配置 '{olive}%s{default}' 没找到, 使用默认配置!"
+	}
+	"ConfoglCompMod_SpecifyConfigLoad"
+	{
+		"chi"		"{blue}[{default}Confogl{blue}]{default} 请指定要加载的 {olive}config{default}。"
+	}
+	"ConfoglCompMod_ConfigNotFound"
+	{
+		"chi"		"{blue}[{default}Confogl{blue}]{default} 未找到配置“{olive}%s{default}”！"
+	}
+	"ConfoglCompMod_MapNotFound"
+	{
+		"chi"		"{blue}[{default}Confogl{blue}]{default} 地图“{olive}%s{default}”未找到！"
+	}
+	"ConfoglCompMod_Round1Bonus"
+	{
+		"chi"		"{blue}[{default}Confogl{blue}]{default} 第 1 轮奖金：{olive}%d"
+	}
+	"ConfoglCompMod_CustomMaxDistance"
+	{
+		"chi"		"{blue}[{default}Confogl{blue}]{default} 自定义最大距离：{olive}%d"
+	}
+	"ConfoglCompMod_Round2Bonus"
+	{
+		"chi"		"{blue}[{default}Confogl{blue}]{default} 第 2 轮奖金：{olive}%d"
+	}
+	"ConfoglCompMod_AverageHealth"
+	{
+		"chi"		"{blue}[{default}Confogl{blue}]{default} 平均健康状况：{olive}%.02f"
+	}
+	"ConfoglCompMod_HealthBonus"
+	{
+		"chi"		"{blue}[{default}Confogl{blue}]{default} 健康奖励：{olive}%d"
+	}
+	"ConfoglCompMod_StaticSurvivalBonusPerSurvivor"
+	{
+		"chi"		"{blue}[{default}Confogl{blue}]{default} 每个幸存者的静态生存奖励：{olive}%d"
+	}
+}

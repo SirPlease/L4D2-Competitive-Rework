@@ -1,0 +1,75 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"zho"		"[{olive}規範監聽器{default}]"
+	}
+	"OnlySpec"
+	{
+		"zho"		"只有旁觀者才能聽。"
+	}
+	"PanelTitle"
+	{
+		"zho"		"規範監聽器"
+	}
+	"PanelEnable"
+	{
+		"zho"		"使能夠"
+	}
+	"PanelDisable"
+	{
+		"zho"		"停用"
+	}
+	"PanelStatus"
+	{
+		"zho"		"地位"
+	}
+	"Enable"
+	{
+		"zho"		"{green}啟用{default}"
+	}
+	"Disable"
+	{
+		"zho"		"{green}停用{default}"
+	}
+	"Usage"
+	{
+		"zho"		"用法：sm_listen <啟用/停用/狀態>"
+	}
+	"ErrorFlags"
+	{
+		"zho"		"錯誤：部分語音標誌。"
+	}
+	"ErrorCookie"
+	{
+		"zho"		"錯誤：cookie 尚未快取（稍後重試）。"
+	}
+	"SpecListener_SelectedItemFoundInfo"
+	{
+		"zho"		"[SpecListener] 您選擇的項目：%d（找到？%d 資訊：%s）"
+	}
+	"SpecListener_ClientMenuCancelledReason"
+	{
+		"zho"		"[SpecListener] 客戶端 %d 的選單被取消。  原因：%d"
+	}
+	"SpecListener_Enabled"
+	{
+		"zho"		"[SpecListener] 已啟用"
+	}
+	"SpecListener_Cookie"
+	{
+		"zho"		"[SpecListener] Cookie：%d"
+	}
+	"SpecListener_Disable"
+	{
+		"zho"		"[SpecListener] 停用"
+	}
+	"SpecListener_ReEnableListenAllTalk"
+	{
+		"zho"		"[SpecListener] 由於 All-Talk 重新啟用監聽"
+	}
+	"SpecListener_Executed"
+	{
+		"zho"		"[SpecListener] %s 已執行"
+	}
+}

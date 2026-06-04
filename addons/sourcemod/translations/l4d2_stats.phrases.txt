@@ -83,6 +83,20 @@
 		"ko"		"{olive}%N{default} triggered an {olive}Alarmed Car{default}"
 		"vi"		"{olive}%N{default} triggered an {olive}Alarmed Car{default}"
 	}
+
+	"AssistShotsPlural"
+	{
+		"en"		"s"
+	}
+	"AssistShotsSingular"
+	{
+		"en"		""
+	}
+	"assister"
+	{
+		"#format"	"{1:N},{2:d},{3:d},{4:s}"
+		"en"		"{1} ({2}/{3} shot{4})"
+	}
 }
 
 

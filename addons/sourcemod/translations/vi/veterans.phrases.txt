@@ -1,0 +1,58 @@
+"Phrases"
+{
+	"ERROR"
+	{
+		"vi"		"Không thể truy xuất thời gian chơi của bạn"
+	}
+	"PRIVATEPROFILE"
+	{
+		"vi"		"Bạn cần đặt hồ sơ cộng đồng steam của mình ở chế độ công khai để chúng tôi có thể trích xuất thời gian chơi của bạn"
+	}
+	"REJECTED"
+	{
+		"#format"	"{1:.1f},{2:.1f},{3:.1f}"
+		"vi"		"Bạn cần có ít nhất số giờ chơi {1} trong myserverhours, số giờ {2} trong tổng thời gian chơi và tổng thời gian chơi trừ đi thời gian chơi nhiều hơn {3} trong hai tuần qua của bạn để có thể tham gia máy chủ này"
+	}
+	"EXCLUDED"
+	{
+		"#format"	"{1:s}"
+		"vi"		"SteamId {1} được thêm vào danh sách loại trừ"
+	}
+	"INCLUDED"
+	{
+		"#format"	"{1:s}"
+		"vi"		"SteamId {1} bị xóa khỏi danh sách loại trừ"
+	}
+	"PRIMENEEDED"
+	{
+		"vi"		"Bạn cần có trạng thái tốt nhất để có thể chơi trên máy chủ này"
+	}
+	"Veterans_PlayerDurationDetectionNotMeet"
+	{
+		"vi"		"{default}[{green} phát hiện thời lượng người chơi {default}] Vì {blue} không đáp ứng yêu cầu về thời lượng {default} nên bạn chỉ được phép xem trò chơi."
+	}
+	"Veterans_PlayerTimeDetectionPlayerTotal"
+	{
+		"vi"		"{default}[{green} phát hiện thời gian của người chơi {default}] người chơi {blue}%N Tổng thời gian chơi của {default} là: {green}%.1f giờ {default} (thực tế: {green}%.1f giờ {default}). Tổng thời gian chơi trên máy chủ này là: {green}%.1f giờ {default}."
+	}
+	"Veterans_PlayerTimeDetectionPlayerPlaying"
+	{
+		"vi"		"{default}[{green} phát hiện thời gian của người chơi {default}] người chơi {blue}%N {default} thời gian chơi: {green} không xác định {default}, tổng thời gian chơi trên máy chủ này là: {green}%.1f giờ {default}."
+	}
+	"Veterans_PlayerDurationDetectionAdministratorExempt"
+	{
+		"vi"		"{default}[{green} phát hiện thời lượng người chơi {default}] Quản trị viên {blue}%N {default} được miễn phát hiện thời lượng."
+	}
+	"Veterans_PlayerDurationDetectionPlayerGame"
+	{
+		"vi"		"{default} [{green} phát hiện thời lượng người chơi {default}] Người chơi {blue}%N {Thời lượng trò chơi của {default} trên máy chủ này {green} không đáp ứng tiêu chuẩn {default}, là người chơi trong nhóm máy chủ viễn thông và được phép chơi bình thường"
+	}
+	"Veterans_PlayerTimeDetectionPlayerGame"
+	{
+		"vi"		"{default} [{green} phát hiện thời gian của người chơi {default}] Người chơi {blue}%N {Thời gian chơi game của {default} trên máy chủ này {green} không đạt tiêu chuẩn {default}, người chơi thuộc nhóm máy chủ viễn thông, được phép xem nhưng không được phép chơi"
+	}
+	"Veterans_PlayerTimeDetectionPlayerGameTime"
+	{
+		"vi"		"{default}[{green} phát hiện thời gian của người chơi {default}] Người chơi {blue}%N {default} Thời gian chơi trò chơi của người chơi trên máy chủ này {green} không đáp ứng tiêu chuẩn {default} và không phải là người chơi trong nhóm máy chủ viễn thông và đã tự động được yêu cầu nghỉ ngơi."
+	}
+}

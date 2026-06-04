@@ -1,0 +1,53 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"zho"		"{blue} [ {default} 老虎機 {blue} ] {default}"
+	}
+	"NotConsoleVote"
+	{
+		"zho"		"[老虎機] 你必須在遊戲中。"
+	}
+	"LimitSlotsAbove"
+	{
+		"zho"		"您無法在此伺服器上限制 {olive} %i {default} 以上的插槽。"
+	}
+	"LimitedSlotsTo"
+	{
+		"#format"	"{1:s},{2:i}"
+		"zho"		"{olive} {1} {default} 老虎機僅限{blue} {2} {default}"
+	}
+	"RequiredPlayers"
+	{
+		"zho"		"您不能限制插槽數量低於所需的玩家數量。"
+	}
+	"SlotsUsage"
+	{
+		"zho"		"用法： {olive}!slots {default} < {olive} 號碼 {default} > {blue} | {default} 範例：{olive}!slots 8 {default}"
+	}
+	"Spectators"
+	{
+		"zho"		"不允許觀眾投票。"
+	}
+	"LimitSlots"
+	{
+		"zho"		"將插槽限制為“%s”？"
+	}
+	"CannotBeStarted"
+	{
+		"zho"		"現在無法開始投票。"
+	}
+	"LimitingSlots"
+	{
+		"zho"		"限制插槽..."
+	}
+	"SlotsVote_AdminOnlyBelowMinimumSlots"
+	{
+		"#format"	"{1:i}"
+		"zho"		"只有管理员才能将位置设为小于 {blue}{1}{default}人"
+	}
+	"LimitSlotsBelow"
+	{
+		"zho"		"只有管​​理員可以設定{blue} {1} {default}以下玩家的插槽"
+	}
+}

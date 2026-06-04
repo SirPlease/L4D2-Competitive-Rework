@@ -1,0 +1,59 @@
+"Phrases"
+{
+	"Gave"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"ko"		"{1}는 {2}를 {3}에 제공했습니다."
+	}
+	"Grabbed"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"ko"		"{1}는 {3}에서 {2}를 빼앗았습니다."
+	}
+	"BotGrabbed"
+	{
+		"#format"	"{1:s},{2:s}"
+		"ko"		"{1}가 {2}를 잡았습니다."
+	}
+	"Switched"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"ko"		"{1}는 {2}를 {3}로 전환했습니다."
+	}
+	"weapon_molotov"
+	{
+		"ko"		"화염병"
+	}
+	"weapon_pipe_bomb"
+	{
+		"ko"		"파이프폭탄"
+	}
+	"weapon_vomitjar"
+	{
+		"ko"		"토사물"
+	}
+	"weapon_first_aid_kit"
+	{
+		"ko"		"구급상자"
+	}
+	"weapon_pain_pills"
+	{
+		"ko"		"진통제"
+	}
+	"weapon_adrenaline"
+	{
+		"ko"		"아드레날린"
+	}
+	"weapon_upgradepack_explosive"
+	{
+		"ko"		"폭발성 탄약"
+	}
+	"weapon_upgradepack_incendiary"
+	{
+		"ko"		"방화 탄약"
+	}
+	"weapon_defibrillator"
+	{
+		"ko"		"제세동기"
+	}
+}

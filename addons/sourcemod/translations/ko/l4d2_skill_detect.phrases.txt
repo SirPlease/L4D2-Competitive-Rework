@@ -1,0 +1,273 @@
+"Phrases"
+{
+	"Tag+"
+	{
+		"ko"		"{green}★{default}"
+	}
+	"Tag++"
+	{
+		"ko"		"{green}★★{default}"
+	}
+	"Tag+++"
+	{
+		"ko"		"{green}★★★{default}"
+	}
+	"Tag++++"
+	{
+		"ko"		"{green}★★★★{default}"
+	}
+	"Popped"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ko"		"{olive}{1}{default} 가 터졌습니다. {olive}{2}{default}."
+	}
+	"PoppedBot"
+	{
+		"ko"		"{olive}%N{default}가 부머를 터뜨렸습니다."
+	}
+	"Leveled"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ko"		"{olive}{1}{default} {blue}full{default} 수준의 {olive}{2}{default}"
+	}
+	"LeveledBot"
+	{
+		"ko"		"{olive}%N{default} {blue}완전히{default} 레벨링 {olive}충전기{default}"
+	}
+	"LeveledHurt"
+	{
+		"#format"	"{1:N},{2:N},{3:i}"
+		"ko"		"{olive}{1}{default} {blue}칩 수준{default} {olive}{2}{default} ({blue}{3} dmg{default})"
+	}
+	"LeveledHurtBot"
+	{
+		"#format"	"{1:N},{2:i}"
+		"ko"		"{olive}{1}{default} {blue}칩 수준{default} 충전기({blue}{2} dmg{default})"
+	}
+	"Deadstopped"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ko"		"{olive}{1}{default} {blue}deadstopped{default} {olive}{2}{default}"
+	}
+	"DeadstoppedBot"
+	{
+		"ko"		"{olive}%N{default} {blue}deadstopped{default} {olive}사냥꾼{default}"
+	}
+	"Shoved"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ko"		"{olive}{1}{default} {blue}밀쳐짐{default} {olive}{2}{default}."
+	}
+	"ShovedBot"
+	{
+		"ko"		"{olive}%N{default} {blue}shoved{default}가 {olive}SI{default}를 밀어냈습니다."
+	}
+	"TeamSkeeted"
+	{
+		"ko"		"{olive}%N{default}는 {blue}팀 기반{default}이었습니다."
+	}
+	"TeamSkeetedBot"
+	{
+		"ko"		"{olive}hunter{default}는 {blue}팀 기반{default}이었습니다."
+	}
+	"Skeeted"
+	{
+		"#format"	"{1:N},{2:s},{3:N}"
+		"ko"		"{olive}{1}{default} {blue}{2}스키트{default} {olive}{3}{default}."
+	}
+	"SkeetedBot"
+	{
+		"#format"	"{1:N},{2:s}"
+		"ko"		"{olive}{1}{default} {blue}{2}skeeted{default} {olive}hunter{default}."
+	}
+	"Melee"
+	{
+		"ko"		"난투-"
+	}
+	"HeadShot"
+	{
+		"ko"		"얼굴 사진-"
+	}
+	"Grenade"
+	{
+		"ko"		"수류탄-"
+	}
+	"HurtSkeet"
+	{
+		"#format"	"{1:N},{2:i},{3:s}"
+		"ko"		"{olive}{1}{default}  {green}아님{default} 스키트({blue}{2}{default} 손상).{3}"
+	}
+	"HurtSkeetBot"
+	{
+		"#format"	"{1:i},{2:s}"
+		"ko"		"{olive}헌터{default}  {green}아님{default} 스키트({blue}{1}{default} 손상).{2}"
+	}
+	"Unchipped"
+	{
+		"ko"		"(헌터가 칩이 없었다면 스키트를 했을 것입니다!)"
+	}
+	"CrownedWitch"
+	{
+		"#format"	"{1:N},{2:i}"
+		"ko"		"{olive}{1}{default}가 마녀의 왕관을 썼습니다({blue}{2}{default} 피해)."
+	}
+	"CrownedWitch2"
+	{
+		"ko"		"마녀는 {blue}선정{default}."
+	}
+	"DrawCrowned"
+	{
+		"#format"	"{1:N},{2:i},{3:i}"
+		"ko"		"{olive}{1}{default}가 마녀를 뽑았습니다({blue}{2}{default} 데미지, {olive}{3}{default} 칩)."
+	}
+	"DrawCrowned2"
+	{
+		"#format"	"{1:i},{2:i}"
+		"ko"		"마녀가 왕관을 썼습니다({blue}{1}{default} 데미지, {olive}{2}{default} 칩)."
+	}
+	"CutTongue"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ko"		"{olive}{1}{default} {blue}cut{default} {olive}{2}{default}의 혀"
+	}
+	"CutTongueBot"
+	{
+		"ko"		"{olive}%N{default} {blue}cut{default} 스모커 혀"
+	}
+	"SelfClearedTongue"
+	{
+		"#format"	"{1:N},{2:N},{3:s}"
+		"ko"		"{olive}{1}{default} {blue}자가 삭제된{default} {olive}{2}{default}의 혀 {blue}{3}{default}"
+	}
+	"SelfClearedTongueBot"
+	{
+		"#format"	"{1:N},{2:s}"
+		"ko"		"{olive}{1}{default} {blue}스모커 혀에서 자동 삭제{default} {blue}{2}{default}"
+	}
+	"Shoving"
+	{
+		"ko"		"밀어서"
+	}
+	"SkeetedRock"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ko"		"{olive}{1}{default} {blue}skeeted{default} {olive}{2}{default}의 바위입니다."
+	}
+	"SkeetedRockBot"
+	{
+		"ko"		"{olive}%N{default} {blue}skeet{default} 탱크 바위"
+	}
+	"HunterHP"
+	{
+		"#format"	"{1:N},{2:N},{3:i},{4:i}"
+		"ko"		"{olive}{1}{default} {red}high-pounced{default} {olive}{2}{default} ({red}{3}{default} 데미지, 높이: {red}{4}{default})"
+	}
+	"HunterHPBot"
+	{
+		"#format"	"{1:N},{2:i},{3:i}"
+		"ko"		"{olive}hunter{default} {red}high-pounced{default} {olive}{1}{default} ({red}{2}{default} 데미지, 높이: {red}{3}{default})"
+	}
+	"JockeyHP"
+	{
+		"#format"	"{1:N},{2:N},{3:i}"
+		"ko"		"{olive}{1}{default} {red}high-pounced{default} {olive}{2}{default} ({red}height{default}: {red}{3}{default})"
+	}
+	"JockeyHPBot"
+	{
+		"#format"	"{1:N},{2:i}"
+		"ko"		"{olive}기수{default} {red}높은 점프{default} {olive}{1}{default} ({red}높이{default}: {red}{2}{default})"
+	}
+	"DeathCharged"
+	{
+		"#format"	"{1:N},{2:N},{3:s},{4:i}"
+		"ko"		"{olive}{1}{default} {red}죽음의 충전{default} {olive}{2}{default} {3}({red}height{default}: {red}{4}{default})"
+	}
+	"DeathChargedBot"
+	{
+		"#format"	"{1:N},{2:s},{3:i}"
+		"ko"		"{olive}충전기{default} {red}죽음 충전{default} {olive}{1}{default} {2}({red}height{default}: {red}{3}{default})"
+	}
+	"Bowling"
+	{
+		"ko"		"볼링으로"
+	}
+	"SIClear"
+	{
+		"#format"	"{1:N},{2:N},{3:N},{4:s},{5:.2f}"
+		"ko"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}{3}{default}의 {4}에서 {olive}{2}{default}({blue}{5} {default}초)"
+	}
+	"SIClearTeammate"
+	{
+		"#format"	"{1:N},{2:N},{3:s},{4:.2f}"
+		"ko"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}팀원{default} {olive}{2}{default}의 {3}({blue}{4} {default}초)"
+	}
+	"SIClearBot"
+	{
+		"#format"	"{1:N},{2:N},{3:s},{4:.2f}"
+		"ko"		"{3}에서 {olive}{1}{default} {blue}insta-cleared{default} {olive}{2}{default}({blue}{4} {default}초)"
+	}
+	"SIClearTeammateBot"
+	{
+		"#format"	"{1:N},{2:s},{3:.2f}"
+		"ko"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}팀원{default}({2})({blue}{3} {default}초)"
+	}
+	"BunnyHop"
+	{
+		"#format"	"{1:i},{2:s},{3:.1f}"
+		"ko"		"{olive}당신은{default} 연속으로 {blue}{1} Bunnyhop{2}{default}을 획득했습니다({blue}최고 속도{default}: {olive}{3}{default})"
+	}
+	"PluralCount"
+	{
+		"ko"		"s"
+	}
+	"Empty"
+	{
+		"ko"		""
+	}
+	"CalarmHit"
+	{
+		"ko"		"{olive}%N{default}가 적중과 함께 경보를 트리거했습니다."
+	}
+	"CalarmTouched"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ko"		"{olive}{1}{default}로 인해 {olive}{2}{default}가 알람을 트리거했습니다."
+	}
+	"CalarmTouchedHunter"
+	{
+		"ko"		"{olive}hunter{default}가 {olive}%N{default}가 경보를 울리도록 했습니다."
+	}
+	"CalarmTouchedJockey"
+	{
+		"ko"		"{olive}jockey{default}로 인해 {olive}%N{default}가 경보를 트리거했습니다."
+	}
+	"CalarmTouchedCharger"
+	{
+		"ko"		"{olive}충전기{default}로 인해 {olive}%N{default}가 알람을 트리거합니다."
+	}
+	"CalarmTouchedInfected"
+	{
+		"ko"		"{olive}봇이 감염{default}되어 {olive}%N{default}가 경보를 트리거했습니다."
+	}
+	"CalarmTouchedBot"
+	{
+		"ko"		"{olive}%N{default}가 경보를 받은 차량을 터치했습니다."
+	}
+	"CalarmExplosion"
+	{
+		"ko"		"{olive}%N{default}가 폭발음과 함께 경보를 발령했습니다."
+	}
+	"CalarmBoomer"
+	{
+		"#format"	"{1:N},{2:N}"
+		"ko"		"{olive}{1}{default}는 부머 {olive}{2}{default}를 죽임으로써 경보를 발령했습니다."
+	}
+	"CalarmBoomerBot"
+	{
+		"ko"		"{olive}%N{default}가 {olive}부머{default}를 발사하여 경보를 발령했습니다."
+	}
+	"Calarm"
+	{
+		"ko"		"{olive}%N{default}가 경보를 트리거했습니다."
+	}
+}

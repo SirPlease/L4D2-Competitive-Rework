@@ -1,0 +1,408 @@
+"Phrases"
+{
+	"Spawn Objects"
+	{
+		"ko"		"스폰 객체"
+	}
+	"Select a task:"
+	{
+		"ko"		"작업을 선택하세요:"
+	}
+	"Select the delete task"
+	{
+		"ko"		"삭제 작업을 선택하세요"
+	}
+	"Delete All Objects"
+	{
+		"ko"		"모든 객체 삭제"
+	}
+	"Delete Looking Object"
+	{
+		"ko"		"찾고 있는 객체 삭제"
+	}
+	"Delete Last Object"
+	{
+		"ko"		"마지막 개체 삭제"
+	}
+	"Are you sure(Delete All)?"
+	{
+		"ko"		"모든 개체를 삭제하시겠습니까?"
+	}
+	"Yes"
+	{
+		"ko"		"예"
+	}
+	"No"
+	{
+		"ko"		"No"
+	}
+	"Successfully deleted all spawned objects"
+	{
+		"ko"		"생성된 모든 개체를 성공적으로 삭제했습니다."
+	}
+	"Canceled"
+	{
+		"ko"		"취소"
+	}
+	"delete all the spawned objects?"
+	{
+		"ko"		"생성된 개체를 모두 삭제하시겠습니까?"
+	}
+	"Edit Object"
+	{
+		"ko"		"개체 편집"
+	}
+	"Delete Object"
+	{
+		"ko"		"객체 삭제"
+	}
+	"Select the spawn method"
+	{
+		"ko"		"스폰 방법을 선택하세요"
+	}
+	"Spawn Physics On Cursor"
+	{
+		"ko"		"커서에 물리학 생성"
+	}
+	"Spawn Physics On Origin"
+	{
+		"ko"		"원점에서 물리학 생성"
+	}
+	"Spawn Non-solid On Cursor"
+	{
+		"ko"		"커서에 비고체 생성"
+	}
+	"Spawn Non-solid On Origin"
+	{
+		"ko"		"원점에서 비고체 생성"
+	}
+	"Spawn Solid On Cursor"
+	{
+		"ko"		"커서에 솔리드 생성"
+	}
+	"Spawn Solid On Origin"
+	{
+		"ko"		"원점에서 솔리드 생성"
+	}
+	"Save Objects"
+	{
+		"ko"		"객체 저장"
+	}
+	"Select The Save Method"
+	{
+		"ko"		"저장 방법을 선택하세요"
+	}
+	"Save Stripper File"
+	{
+		"ko"		"스트리퍼 파일 저장"
+	}
+	"Save Routing File"
+	{
+		"ko"		"라우팅 파일 저장"
+	}
+	"Save Spawn Objects File"
+	{
+		"ko"		"생성 개체 파일 저장"
+	}
+	"Select Path Difficulty"
+	{
+		"ko"		"경로 난이도 선택"
+	}
+	"Easy Path"
+	{
+		"ko"		"쉬운 길"
+	}
+	"Medium Path"
+	{
+		"ko"		"중간 경로"
+	}
+	"Hard Path"
+	{
+		"ko"		"하드 경로"
+	}
+	"Load Objects"
+	{
+		"ko"		"객체 로드"
+	}
+	"load the map data cache?"
+	{
+		"ko"		"지도 데이터 캐시를 로드하시겠습니까?"
+	}
+	"Are you sure?"
+	{
+		"ko"		"확실합니까?"
+	}
+	"Choose a map number please"
+	{
+		"ko"		"지도번호를 선택해주세요"
+	}
+	"Vehicles"
+	{
+		"ko"		"차량"
+	}
+	"Foliage"
+	{
+		"ko"		"잎"
+	}
+	"Interior"
+	{
+		"ko"		"내부"
+	}
+	"Exterior"
+	{
+		"ko"		"외부"
+	}
+	"Decorative"
+	{
+		"ko"		"장식적인"
+	}
+	"Misc"
+	{
+		"ko"		"기타"
+	}
+	"Select an action:"
+	{
+		"ko"		"작업을 선택하세요:"
+	}
+	"Rotate"
+	{
+		"ko"		"회전"
+	}
+	"Move"
+	{
+		"ko"		"이동하다"
+	}
+	"Rotate 1 degree (X axys)"
+	{
+		"ko"		"1도 회전(X축)"
+	}
+	"Rotate 10 degree (X axys)"
+	{
+		"ko"		"10도 회전(X축)"
+	}
+	"Rotate 15 degree (X axys)"
+	{
+		"ko"		"15도 회전(X축)"
+	}
+	"Rotate 45 degree (X axys)"
+	{
+		"ko"		"40도 회전(X축)"
+	}
+	"Rotate 90 degree (X axys)"
+	{
+		"ko"		"90도 회전(X축)"
+	}
+	"Rotate 180 degree (X axys)"
+	{
+		"ko"		"180도 회전(X축)"
+	}
+	"Back 1 degree (X axys)"
+	{
+		"ko"		"뒤로 1도(X축)"
+	}
+	"Back 10 degree (X axys)"
+	{
+		"ko"		"뒤로 10도(X축)"
+	}
+	"Back 15 degree (X axys)"
+	{
+		"ko"		"뒤로 15도(X축)"
+	}
+	"Rotate 1 degree (Y axys)"
+	{
+		"ko"		"1도 회전(Y축)"
+	}
+	"Rotate 10 degree (Y axys)"
+	{
+		"ko"		"10도 회전(Y축)"
+	}
+	"Rotate 15 degree (Y axys)"
+	{
+		"ko"		"15도 회전(Y축)"
+	}
+	"Rotate 45 degree (Y axys)"
+	{
+		"ko"		"40도 회전(Y축)"
+	}
+	"Rotate 90 degree (Y axys)"
+	{
+		"ko"		"90도 회전(Y축)"
+	}
+	"Rotate 180 degree (Y axys)"
+	{
+		"ko"		"180도 회전(Y축)"
+	}
+	"Back 1 degree (Y axys)"
+	{
+		"ko"		"뒤로 1도(Y축)"
+	}
+	"Back 10 degree (Y axys)"
+	{
+		"ko"		"뒤로 10도(Y축)"
+	}
+	"Back 15 degree (Y axys)"
+	{
+		"ko"		"뒤로 15도(Y축)"
+	}
+	"Rotate 1 degree (Z axys)"
+	{
+		"ko"		"1도 회전(Z축)"
+	}
+	"Rotate 10 degree (Z axys)"
+	{
+		"ko"		"10도 회전(Z축)"
+	}
+	"Rotate 15 degree (Z axys)"
+	{
+		"ko"		"15도 회전(Z축)"
+	}
+	"Rotate 45 degree (Z axys)"
+	{
+		"ko"		"40도 회전(Z축)"
+	}
+	"Rotate 90 degree (Z axys)"
+	{
+		"ko"		"90도 회전(Z축)"
+	}
+	"Rotate 180 degree (Z axys)"
+	{
+		"ko"		"180도 회전(Z축)"
+	}
+	"Back 1 degree (Z axys)"
+	{
+		"ko"		"뒤로 1도(Z축)"
+	}
+	"Back 10 degree (Z axys)"
+	{
+		"ko"		"뒤로 10도(Z축)"
+	}
+	"Back 15 degree (Z axys)"
+	{
+		"ko"		"뒤로 15도(Z축)"
+	}
+	"Move Up 1 Unit"
+	{
+		"ko"		"1단위 위로 이동"
+	}
+	"Move Up 10 Unit"
+	{
+		"ko"		"10단위 위로 이동"
+	}
+	"Move Up 30 Unit"
+	{
+		"ko"		"30 단위 위로 이동"
+	}
+	"Move Down 1 Unit"
+	{
+		"ko"		"1단위 아래로 이동"
+	}
+	"Move Down 10 Unit"
+	{
+		"ko"		"10단위 아래로 이동"
+	}
+	"Move Down 30 Unit"
+	{
+		"ko"		"아래로 30단위 이동"
+	}
+	"Move Right 1 Unit"
+	{
+		"ko"		"오른쪽으로 1단위 이동"
+	}
+	"Move Right 10 Unit"
+	{
+		"ko"		"오른쪽으로 10단위 이동"
+	}
+	"Move Right 30 Unit"
+	{
+		"ko"		"오른쪽으로 30단위 이동"
+	}
+	"Move Left 1 Unit"
+	{
+		"ko"		"왼쪽으로 1단위 이동"
+	}
+	"Move Left 10 Unit"
+	{
+		"ko"		"왼쪽으로 10단위 이동"
+	}
+	"Move Left 30 Unit"
+	{
+		"ko"		"왼쪽으로 30단위 이동"
+	}
+	"Move Forward 1 Unit"
+	{
+		"ko"		"1단위 앞으로 이동"
+	}
+	"Move Forward 10 Unit"
+	{
+		"ko"		"10단위 앞으로 이동"
+	}
+	"Move Forward 30 Unit"
+	{
+		"ko"		"전진 30단위"
+	}
+	"Move Backward 1 Unit"
+	{
+		"ko"		"뒤로 1단위 이동"
+	}
+	"Move Backward 10 Unit"
+	{
+		"ko"		"뒤로 10단위 이동"
+	}
+	"Move Backward 30 Unit"
+	{
+		"ko"		"뒤로 30단위 이동"
+	}
+	"Object Model"
+	{
+		"#format"	"{1:d},{2:s}"
+		"ko"		"객체( {1} ) 모델: {2}"
+	}
+	"Object Position"
+	{
+		"#format"	"{1:d},{2:f},{3:f},{4:f}"
+		"ko"		"객체( {1} ) 위치: {2}, {3}, {4}"
+	}
+	"Object Angle"
+	{
+		"#format"	"{1:d},{2:f},{3:f},{4:f}"
+		"ko"		"객체( {1} ) 각도: {2}, {3}, {4}"
+	}
+	"Successfully removed an object"
+	{
+		"#format"	"{1:d}"
+		"ko"		"객체를 성공적으로 제거했습니다( {1} )"
+	}
+	"This plugin won't work in this game"
+	{
+		"ko"		"이 플러그인은 이 게임에서 작동하지 않습니다"
+	}
+	"You are not looking to a valid object"
+	{
+		"ko"		"유효한 개체를 찾고 있지 않습니다."
+	}
+	"Succesfully deleted the last spawned object"
+	{
+		"ko"		"마지막으로 생성된 개체를 성공적으로 삭제했습니다."
+	}
+	"The last spawned object index is not an object anymore!"
+	{
+		"#format"	"{1:d}"
+		"ko"		"마지막으로 생성된 객체 인덱스 {1}는 더 이상 객체가 아닙니다!"
+	}
+	"The last object is not valid anymore"
+	{
+		"ko"		"마지막 개체는 더 이상 유효하지 않습니다."
+	}
+	"You haven't spawned anything yet"
+	{
+		"ko"		"아직 아무것도 생성하지 않았습니다."
+	}
+	"The file already exists."
+	{
+		"ko"		"파일이 이미 존재합니다. 오래된 콘텐츠는 삭제되지 않습니다."
+	}
+	"Succesfully saved the map data"
+	{
+		"ko"		"지도 데이터를 성공적으로 저장했습니다."
+	}
+}

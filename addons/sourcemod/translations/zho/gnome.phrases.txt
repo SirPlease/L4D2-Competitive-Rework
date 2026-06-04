@@ -1,0 +1,83 @@
+"Phrases"
+{
+	"Gnome_ErrorAddAnymoreGnomesUsed"
+	{
+		"zho"		"%sError：無法再增加侏儒。使用：（{olive}%d/%d{default}）。"
+	}
+	"Gnome_CannotPlaceGnomeTryAgain"
+	{
+		"zho"		"%s無法放置 gnome，請重試。"
+	}
+	"Gnome_ErrorCannotReadGnomeConfig"
+	{
+		"zho"		"%sError：無法讀取 gnome 配置，假設檔案為空。 （{olive}%s{default}）。"
+	}
+	"Gnome_ErrorFailedAddMapGnome"
+	{
+		"zho"		"%sError：無法將地圖新增至 gnome 生成配置。"
+	}
+	"Gnome_SavedPosAng"
+	{
+		"zho"		"%s({olive}%d/%d{default}) - 保存在 pos:[{olive}%f %f %f{default}] ang:[{olive}%f %f %f{default}]"
+	}
+	"Gnome_FailedSaveGnome"
+	{
+		"zho"		"%s({olive}%d/%d{default}) - 無法儲存 Gnome。"
+	}
+	"Gnome_ErrorCannotFindGnomeConfig"
+	{
+		"zho"		"%sError：找不到 gnome 配置（{olive}%s{default}）。"
+	}
+	"Gnome_ErrorCannotLoadGnomeConfig"
+	{
+		"zho"		"%sError：無法載入 gnome 配置（{olive}%s{default}）。"
+	}
+	"Gnome_ErrorCurrentMapNotGnome"
+	{
+		"zho"		"%sError：目前地圖不在 gnome 配置中。"
+	}
+	"Gnome_RemovedConfig"
+	{
+		"zho"		"%s({olive}%d/%d{default}) - Gnome 從設定中刪除。"
+	}
+	"Gnome_FailedRemoveGnomeConfig"
+	{
+		"zho"		"%s({olive}%d/%d{default}) - 無法從設定中刪除 Gnome。"
+	}
+	"Gnome_0AllGnomesRemovedConfig"
+	{
+		"zho"		"%s(0/%d) - 從設定中刪除所有侏儒，新增 {olive}sm_gnomesave{default}。"
+	}
+	"Gnome_GlowTurned"
+	{
+		"zho"		"%sGlow已變成%s"
+	}
+	"Gnome_Total"
+	{
+		"zho"		"%s 總計：%d。"
+	}
+	"Gnome_Teleported"
+	{
+		"zho"		"%s傳送到%d。"
+	}
+	"Gnome_CouldNotFindIndexTeleportation"
+	{
+		"zho"		"%s找不到傳送索引。"
+	}
+	"Gnome_UsageSMGnometeleIndex1"
+	{
+		"zho"		"%sU用法：sm_gnometele <索引1-%d>。"
+	}
+	"Gnome_NewAngles"
+	{
+		"zho"		"%s新角度：%f %f %f"
+	}
+	"Gnome_NewOrigin"
+	{
+		"zho"		"%s新產地：%f %f %f"
+	}
+	"Gnome_SavedOriginAnglesDataConfig"
+	{
+		"zho"		"%s保存資料配置的原點和角度"
+	}
+}

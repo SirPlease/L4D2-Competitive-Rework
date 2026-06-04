@@ -1,0 +1,58 @@
+"Phrases"
+{
+	"ERROR"
+	{
+		"ko"		"플레이 시간을 검색하지 못했습니다."
+	}
+	"PRIVATEPROFILE"
+	{
+		"ko"		"플레이 시간을 추출할 수 있도록 Steam 커뮤니티 프로필을 공개해야 합니다."
+	}
+	"REJECTED"
+	{
+		"#format"	"{1:.1f},{2:.1f},{3:.1f}"
+		"ko"		"이 서버에 참여하려면 myserverhours에서 최소한 {1}시간을 플레이해야 하며, {2}시간의 총 플레이 시간과 총 플레이 시간에서 지난 2주간의 플레이 시간을 뺀 {3}시간 이상이 필요합니다."
+	}
+	"EXCLUDED"
+	{
+		"#format"	"{1:s}"
+		"ko"		"제외 목록에 SteamId {1}가 추가되었습니다."
+	}
+	"INCLUDED"
+	{
+		"#format"	"{1:s}"
+		"ko"		"제외 목록에서 SteamId {1}가 제거되었습니다."
+	}
+	"PRIMENEEDED"
+	{
+		"ko"		"이 서버에서 플레이하려면 프라임 상태가 필요합니다."
+	}
+	"Veterans_PlayerDurationDetectionNotMeet"
+	{
+		"ko"		"{default}[{green} 플레이어 지속 시간 감지 {default}] {blue}는 {default} 지속 시간 요구 사항을 충족하지 않으므로 게임 시청만 허용됩니다."
+	}
+	"Veterans_PlayerTimeDetectionPlayerTotal"
+	{
+		"ko"		"{default}[{green} 플레이어 시간 감지 {default}] 플레이어 {blue}%N {default}의 총 플레이 시간은 {green}%.1f 시간 {default} (실제: {green}%.1f) 시간 {default}). 이 서버의 총 플레이 시간은 {green}%.1f시간 {default}입니다."
+	}
+	"Veterans_PlayerTimeDetectionPlayerPlaying"
+	{
+		"ko"		"{default}[{green} 플레이어 시간 감지 {default}] 플레이어 {blue}%N {default} 플레이 시간: {green} 알 수 없음 {default}, 이 서버의 총 플레이 시간: {green}%.1f 시간 {default}."
+	}
+	"Veterans_PlayerDurationDetectionAdministratorExempt"
+	{
+		"ko"		"{default}[{green} 플레이어 지속 시간 감지 {default}] 관리자 {blue}%N {default}는 지속 시간 감지에서 제외됩니다."
+	}
+	"Veterans_PlayerDurationDetectionPlayerGame"
+	{
+		"ko"		"{default} [{green} 플레이어 지속 시간 감지 {default}] 플레이어 {blue}%N {{default}의 이 서버에서의 게임 지속 시간은 {green}가 표준 {default}를 충족하지 않습니다. 해당 플레이어는 통신 서버 그룹에 속한 플레이어이며 정상적으로 플레이가 허용됩니다."
+	}
+	"Veterans_PlayerTimeDetectionPlayerGame"
+	{
+		"ko"		"{default} [{green} 플레이어 시간 감지 {default}] 플레이어 {blue}%N {default}의 이 서버 플레이 시간이 기준을 충족하지 않습니다{green}, 통신 서버 그룹 플레이어이므로 관전은 허용되지만 플레이는 허용되지 않습니다{default}"
+	}
+	"Veterans_PlayerTimeDetectionPlayerGameTime"
+	{
+		"ko"		"{default}[{green} 플레이어 시간 감지 {default}] 플레이어 {blue}%N {default}의 이 서버 플레이 시간이 기준을 충족하지 않습니다{green}, 통신 서버 그룹 플레이어가 아니므로 자동으로 휴식 요청을 받았습니다{default}."
+	}
+}

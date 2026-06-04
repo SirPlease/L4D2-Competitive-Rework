@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4DPlayerCountUnloadMode_AdministratorNotPresentPlayersAll"
+	{
+		"zho"		"管理員不在，當前所有 {green}%d/%d{default} 台伺服器都有玩家，高峰期限制（{green}%.0f%%{default}）仍剩 {green}%d{default} 分鐘；此模式人數不足 {green}%d{default}，{green}強制卸載模式!!!!"
+	}
+	"L4DPlayerCountUnloadMode_AdministratorNotPresentCurrentlyRestricted"
+	{
+		"zho"		"管理員不在場，目前處於限制時段；本模式人數不足 {green}%d{default} 人，{green}強制卸載模式!!!!"
+	}
+}

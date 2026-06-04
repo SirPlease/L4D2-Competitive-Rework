@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4DNoCans_EntityModel"
+	{
+		"vi"		"iEntity: %d ( %s ), model: %s"
+	}
+}

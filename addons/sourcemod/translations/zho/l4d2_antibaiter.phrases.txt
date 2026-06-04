@@ -1,0 +1,43 @@
+"Phrases"
+{
+	"L4D2Antibaiter_AntibaiterDebugEligiblePlayerZombieclass"
+	{
+		"zho"		"{lightgreen}[Antibaiter DEBUG] 符合條件的玩家 {green}%N{default} 是 {olive}%d{default} 的殭屍類{olive}%fs{default}"
+	}
+	"L4D2Antibaiter_AntibaiterDebugSpectatorBugDetected"
+	{
+		"zho"		"{lightgreen}[Antibaiter DEBUG] 偵測到觀眾錯誤：{green}eligibleZombies{default}={olive}%d{default}， {green}z_max_player_zombies{default}={olive}%d{default}"
+	}
+	"L4D2Antibaiter_AntibaiterDebugMinimumProgressUnsatisfied"
+	{
+		"zho"		"{lightgreen}[Antibaiter DEBUG] 期間未滿足最低進度 {olive}%d{default} 檢查： {green}初始{default}={olive}%f{default}, {green}電流{default}={olive}%f{default}, {green}進展{default}={olive}%f{default}"
+	}
+	"L4D2Antibaiter_AntibaiterDebugCountdownRunning"
+	{
+		"zho"		"{lightgreen}[反誘餌調試] 倒數計時為 {olive}running{default}"
+	}
+	"L4D2Antibaiter_AntibaiterDebugCountdownElapsedLaunching"
+	{
+		"zho"		"{lightgreen}[反誘餌調試] 倒數計時有{green}elapsed{default}！啟動部落並重置檢查計數器"
+	}
+	"L4D2Antibaiter_AntiBaiterPrepareIncomingHorde"
+	{
+		"zho"		"{blue}[{default}反誘餌{blue}]{default} 為即將到來的部落做好準備！"
+	}
+	"L4D2Antibaiter_AntibaiterDebugCountdownNotRunning"
+	{
+		"zho"		"{lightgreen}[反誘餌調試] 倒數計時為 {olive} 未運行 {default}。正在啟動它..."
+	}
+	"L4D2Antibaiter_AntibaiterDebugSurvivorProgressIncreased"
+	{
+		"zho"		"{lightgreen}[Antibaiter DEBUG] 倖存者進度{olive}增加{default}超出最小閾值。重置演算法..."
+	}
+	"L4D2Antibaiter_PanicTimerDurationTimestamp"
+	{
+		"zho"		"m_PanicTimer - 持續時間：%f，時間戳：%f"
+	}
+	"L4D2Antibaiter_PostMobDelayDurationTimestamp"
+	{
+		"zho"		"m_PostMobDelay - 持續時間：%f，時間戳：%f"
+	}
+}

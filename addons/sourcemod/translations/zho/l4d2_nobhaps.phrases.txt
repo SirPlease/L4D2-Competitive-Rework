@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2Nobhaps_SpeedMaxSpeed"
+	{
+		"zho"		"速度：%f {%.02f, %.02f, %.02f}，最大速度：%f"
+	}
+}

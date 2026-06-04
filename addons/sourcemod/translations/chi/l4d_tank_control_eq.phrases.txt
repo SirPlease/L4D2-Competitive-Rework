@@ -1,12 +1,20 @@
 "Phrases"
 {
-	"Tag_Selecion"
+	"TagRage"
 	{
-		"chi"		"{red}<{default}Tank 选择系统{red}>{default}"
+		"chi"		"{red} < {default} 坦克狂暴 {red} >"
 	}
-	"Tag_Rage"
+	"Refilled"
 	{
-		"chi"		"{red}<{default}Tank 控制权{red}>{default}"
+		"chi"		"{default} ( {green} %N {default} 的) {olive} 愤怒计 {red} 补充装"
+	}
+	"RefilledBot"
+	{
+		"chi"		"{olive} 愤怒计 {red} 补充装"
+	}
+	"TagSelection"
+	{
+		"chi"		"{red} < {default} 坦克选择 {red} >"
 	}
 	"YouBecomeTank"
 	{
@@ -14,22 +22,70 @@
 	}
 	"BecomeTank"
 	{
-		"chi"		"{olive}%s{default} 将会成为 {red}Tank{default}!"
+		"chi"		"{olive}%N {default}将成为 {red}坦克！"
 	}
-	"UnableGiveTank"
+	"TagControl"
 	{
-		"chi"		"[{olive}SM{default}] %s 不是感染者. 无法给予Tank"
+		"chi"		"{green} [ {olive} 坦克控制 {green} ]"
+	}
+	"InvalidTarget"
+	{
+		"chi"		"{default} 目标无效。无法给予坦克"
+	}
+	"NoInfected"
+	{
+		"chi"		"{olive} %N {default} 不在受感染团队中。无法给予坦克"
+	}
+	"HintText"
+	{
+		"chi"		"愤怒计重新填充"
+	}
+	"L4DTankControlEq_TankRageMeterRefilled"
+	{
+		"chi"		"{red}<{default}T坦克怒气{red}> {olive}R怒气计{red}补充装"
+	}
+	"L4DTankControlEq_TankRageMeterRefilled_2"
+	{
+		"chi"		"{red}<{default}T坦克愤怒{red}> {default}({green}%N{default}'s) {olive}R愤怒计{red}重新填充"
+	}
+	"L4DTankControlEq_TankSelectionBecomeTank"
+	{
+		"chi"		"{red}<{default}T坦克选择{red}> {green}您的{default}将成为{red}T坦克{default}！"
+	}
+	"L4DTankControlEq_TankSelectionBecomeTank_2"
+	{
+		"chi"		"{red}<{default}T坦克选择{red}> {olive}%N {default}将成为{red}T坦克！"
+	}
+	"L4DTankControlEq_TankControlInvalidTargetUnable"
+	{
+		"chi"		"{green}[{olive}T坦克控制{green}] {default}无效目标。无法给予坦克"
+	}
+	"L4DTankControlEq_TankControlNotInfectedTeam"
+	{
+		"chi"		"{green} [ {olive} 坦克控制 {green} ] {olive} %N {default} 不在受感染队伍中。无法给予坦克"
 	}
 	"Hit_RageMeterRefilled"
 	{
 		"chi"		"第一次控制权结束，第二次控制权开始"
 	}
-	"YouRageMeterRefilled"
-	{
-		"chi"		"{olive}第一次控制权结束， {red}第二次控制权开始{default}"
-	}
 	"RageMeterRefilled"
 	{
 		"chi"		"({green}%N{default}) {olive}第一次控制权结束， {red}第二次控制权开始"
+	}
+	"Tag_Rage"
+	{
+		"chi"		"{red}<{default}Tank 控制权{red}>{default}"
+	}
+	"Tag_Selecion"
+	{
+		"chi"		"{red}<{default}Tank 选择系统{red}>{default}"
+	}
+	"UnableGiveTank"
+	{
+		"chi"		"[{olive}SM{default}] %s 不是感染者. 无法给予Tank"
+	}
+	"YouRageMeterRefilled"
+	{
+		"chi"		"{olive}第一次控制权结束， {red}第二次控制权开始{default}"
 	}
 }

@@ -1,0 +1,57 @@
+"Phrases"
+{
+	"FailWitchCrown"
+	{
+		"#format"	"{1:N}"
+		"vi"		"{default} [ {green}! {default} ] {red} {1} {default} ( {olive} đăng quang phù thủy thất bại {default} ) và bị phù thủy {red} lật đổ."
+	}
+	"TankKillWitch"
+	{
+		"#format"	"{1:N}"
+		"vi"		"{default} [ {green}! {default} ] {red} Xe tăng {default} ( {olive} {1} {default} ) tiêu diệt mụ phù thủy {red}"
+	}
+	"WitchRemainedHealth"
+	{
+		"#format"	"{1:d}"
+		"vi"		"{default} [ {green}! {default} ] {blue} Phù thủy {default} còn {olive} {1} {default} máu còn lại"
+	}
+	"DamageToWitch"
+	{
+		"vi"		"{default} [ {green}! {default} ] {blue} Sát thương {default} gây ra cho Phù Thủy {blue}:"
+	}
+	"PrefectWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"vi"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3} ★★"
+	}
+	"FinalShotWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"vi"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3} ★"
+	}
+	"AssistanceWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"vi"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3}"
+	}
+	"FinalShotInfWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"vi"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} Bị nhiễm {olive} ☆"
+	}
+	"AssistanceInfWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"vi"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} Bị Nhiễm"
+	}
+	"FinalShotTankWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"vi"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} Xe tăng {olive} ☆"
+	}
+	"AssistanceTankWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"vi"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) Xe tăng {red}"
+	}
+}

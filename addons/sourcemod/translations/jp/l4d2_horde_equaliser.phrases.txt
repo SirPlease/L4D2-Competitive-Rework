@@ -1,0 +1,21 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"jp"		"< {olive} 大群 {default} >"
+	}
+	"NoCommonRemaining"
+	{
+		"jp"		"{red} {default} コモンが残りません!"
+	}
+	"CommonRemaining"
+	{
+		"#format"	"{1:i}"
+		"jp"		"{red} {1} {default} 共通残り.."
+	}
+	"FiniteEventStarted"
+	{
+		"#format"	"{1:i}"
+		"jp"		"{olive} {1} {default} コモンズの {blue} 有限イベント {default} が開始されました。急ぐか待つか、選択はあなた次第です!"
+	}
+}

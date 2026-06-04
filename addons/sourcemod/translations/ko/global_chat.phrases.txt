@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"GlobalChat_FullServerNormalFullServer"
+	{
+		"ko"		"{green}[풀서버]{default} %s 일반 풀서버 채팅이 있습니다."
+	}
+	"GlobalChat_AllServersAskedTipTeammates"
+	{
+		"ko"		"{green}[모든 서버]{default} %s가 팀원에게 팁을 요청했습니다."
+	}
+	"GlobalChat_SummonTeammates"
+	{
+		"ko"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友"
+	}
+	"GlobalChat_SummonTeammatesWithMessage"
+	{
+		"ko"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友\\n{default}留言: {olive}%s"
+	}
+}

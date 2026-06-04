@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"zho"		"{default}[{green}8球{default}]"
+	}
+	"Usage"
+	{
+		"zho"		"用法：!8ball <問題>"
+	}
+	"Asked"
+	{
+		"zho"		"{teamcolor}%N{default} 問：{olive}%s{default}"
+	}
+	"WithYes"
+	{
+		"zho"		"我選{olive}是{default}！"
+	}
+	"WithNo"
+	{
+		"zho"		"我選擇{red}否{default}！"
+	}
+	"Yikes"
+	{
+		"zho"		"哎呀。 {red}無{default}!"
+	}
+	"Sure"
+	{
+		"zho"		"呃呃呃… {olive}可以{default}?"
+	}
+	"AbsolutelyNot"
+	{
+		"zho"		"哈哈 {red}絕對不是{default}!"
+	}
+	"Yeah"
+	{
+		"zho"		"你知道嗎？ {olive}是的{default}!"
+	}
+}

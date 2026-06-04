@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"WitchAnnounce_WitchDamageLine"
+	{
+		"jp"		"{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N"
+	}
+	"WitchAnnounce_TankKilledWitch"
+	{
+		"jp"		"{default}[{green}!{default}] {red}戦車 {default}({olive}%N{default}) {red}魔女を殺した"
+	}
+	"WitchAnnounce_StillSomeBloodLeft"
+	{
+		"jp"		"{default}[{green}!{default}] {blue}魔女 {default}にはまだ血が残っています {olive}%d {default}"
+	}
+	"WitchAnnounce_WitchDamageHeader"
+	{
+		"jp"		"{default}[{green}!{default}] 对{blue}女巫{default}产生的{blue}伤害"
+	}
+}

@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Lerpmonitor_LerpWarningLerpValueIllegal"
+	{
+		"jp"		"{default}<{olive}Lerp{default}> {teamcolor} 警告: {default} Lerp 値が不正です (最小値: {teamcolor}%.01f{default}、最大値: {teamcolor}%.01f{default})! 5 秒以内に元に戻してください。"
+	}
+	"Lerpmonitor_LerpThanksCooperationLerpRestored"
+	{
+		"jp"		"{default}<{olive}Lerp{default}> ご協力のおかげで、Lerp が法定範囲に戻りました。"
+	}
+	"Lerpmonitor_Lerp"
+	{
+		"jp"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f"
+	}
+	"Lerpmonitor_LerpChanges"
+	{
+		"jp"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f {default}[%s%d{default}/%d {olive}変更点]"
+	}
+	"Lerpmonitor_LerpMovedSpectatorIllegalLerp"
+	{
+		"jp"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default} が観客に移動されました (違法な lerp 変更)!"
+	}
+	"Lerpmonitor_LerpIllegalChangeLerpGame"
+	{
+		"jp"		"{default}<{olive}Lerp{default}> ゲーム内のlerp変更が不正です！ lerp を {teamcolor}%.01f に戻します"
+	}
+	"Lerpmonitor_Lerp_2"
+	{
+		"jp"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f"
+	}
+	"Lerpmonitor_LerpMovedBystanderDueFailure"
+	{
+		"jp"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default} は、5 秒以内に Lerp を正当な範囲に調整できなかったため、バイスタンダーに移動されました"
+	}
+	"Lerpmonitor_LerpKickedGameHeFailed"
+	{
+		"jp"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default} は、5 秒以内に Lerp を合法範囲に調整できなかったため、ゲームから追放されました。"
+	}
+}

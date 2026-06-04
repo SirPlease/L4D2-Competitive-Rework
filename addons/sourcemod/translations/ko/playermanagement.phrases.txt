@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"ko"		"[{olive}!{default}]"
+	}
+	"Usage"
+	{
+		"ko"		"{blue} 사용법 {default}"
+	}
+	"NoSnoop"
+	{
+		"ko"		"탱크에서 {red} 스눕 {default}를 해서는 안 됩니다!"
+	}
+	"BecomeSpectator"
+	{
+		"ko"		"{teamcolor} %N {default}가 관객이 되었습니다!"
+	}
+	"WhileCapped"
+	{
+		"ko"		"{red} 제한이 있는 동안 {default}를 관전하지 마세요!"
+	}
+	"FixBot"
+	{
+		"ko"		"{teamcolor} %N {default}가 봇 수를 수정하려고 시도 중입니다."
+	}
+	"FixBotConsole"
+	{
+		"ko"		"콘솔이 {red} 수정 봇을 시도하고 있으며 {default}를 계산합니다."
+	}
+	"ValidTeams"
+	{
+		"ko"		"유효한 팀: %d = 관중, %d = 생존자, %d = 감염됨"
+	}
+	"CouldNotSwitched"
+	{
+		"ko"		"{teamcolor} %N {default}는 대상 팀이 꽉 찼거나 대신할 봇이 없어서 전환할 수 없습니다."
+	}
+}

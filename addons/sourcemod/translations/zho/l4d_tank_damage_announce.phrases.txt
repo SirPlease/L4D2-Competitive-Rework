@@ -1,0 +1,47 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"zho"		"[{green}!{default}]"
+	}
+	"AI"
+	{
+		"zho"		"AI"
+	}
+	"HealthRemaining"
+	{
+		"zho"		"{blue} 坦克 {default} ( {olive} %s {default} ) 已有 {green} %d {default} 剩餘生命值"
+	}
+	"DealtToTank"
+	{
+		"zho"		"{blue} 對 {blue} 坦克 {default} 造成的傷害 {default} ( {olive} %s {default} )"
+	}
+	"PercentDamage"
+	{
+		"zho"		"{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N"
+	}
+	"L4DTankDamageAnnounce_RemainingBloodVolume"
+	{
+		"zho"		"[{green}!{default}] {green}%N {default}剩餘{green}%d{default}({green}%d%%{default}) {blue}血量"
+	}
+	"L4DTankDamageAnnounce_SurvivorDamageStatisticsTank"
+	{
+		"zho"		"[{green}！ {default} ] {blue} 倖存者對 {green} 坦克 {default} ( {green} %N {default} ) {blue} 的傷害統計"
+	}
+	"L4DTankDamageAnnounce_SurvivorDamageStatisticsTankAI"
+	{
+		"zho"		"[{green}！ {default}] {blue} 倖存者對 {green} 坦克 {default} ({green} AI {default}) {blue} 的傷害統計"
+	}
+	"L4DTankDamageAnnounce_SurvivalTime"
+	{
+		"zho"		"[{green}!{default}] {green}%N {blue}存活時間：{green}%s"
+	}
+	"L4DTankDamageAnnounce_TankSurvivalTime"
+	{
+		"zho"		"[{green}!{default}] {green}Tank {blue}存活時間：{green}%s"
+	}
+	"L4DTankDamageAnnounce_TankDamageSummaryLine"
+	{
+		"zho"		"{blue}[{default}%d{blue}({default}%d%%{blue})][{green}拳:{default}%d{blue}][{green}石:{default} %d{blue}][{green}鐵:{default}%d{blue}][{green}承傷:{default}%d{blue}({default}%d%%{blue})] {green}%N"
+	}
+}

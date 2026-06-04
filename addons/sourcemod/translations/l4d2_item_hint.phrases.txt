@@ -22,7 +22,7 @@
 
 	"L4D2ItemHint_PlayerMarkedItemHighlighted"
 	{
-		"en"		"{default}[{green}标记系统{default}] {olive}%N{default}: {green}%s"
+		"en"		"{default}[{green}Tagging system{default}] {olive}%N{default}: {green}%s"
 		"chi"		"{default}[{green}标记系统{default}] {olive}%N{default}: {green}%s"
 		"zho"		"{default}[{green}标记系统{default}] {olive}%N{default}: {green}%s"
 		"jp"		"{default}[{green}标记系统{default}] {olive}%N{default}: {green}%s"

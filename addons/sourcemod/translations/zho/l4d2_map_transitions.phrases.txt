@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2MapTransitions_EndVersusModeRoundPost"
+	{
+		"zho"		"L4D2_OnEndVersusModeRound_Post"
+	}
+	"L4D2MapTransitions_MTStartingTransition"
+	{
+		"zho"		"{olive}[MT]{default} 從：{blue}%s{default} 開始過渡到：{blue}%s"
+	}
+}

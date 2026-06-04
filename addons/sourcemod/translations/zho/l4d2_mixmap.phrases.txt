@@ -1,0 +1,159 @@
+"Phrases"
+{
+	"Auto_Show_Maplist"
+	{
+		"zho"		"{olive} <Mixmap> {default} 使用 Mixmap 外掛程式（顯示映射清單 {orange}!maplist {default} ）。"
+	}
+	"Differ_Abort"
+	{
+		"zho"		"{olive} <Mixmap> {default} 目前地圖與設計地圖不同，中止…"
+	}
+	"Show_Next_Map"
+	{
+		"zho"		"{olive} <Mixmap> {default} 更改下一張地圖：%s"
+	}
+	"Already_Start_Admin"
+	{
+		"zho"		"{olive} <Mixmap> {default} 外掛程式已經啟動，如果需要重新啟動，請先輸入!fstopmixmap。"
+	}
+	"Force_Start"
+	{
+		"zho"		"{olive} <Mixmap> {default} 管理員 {teamcolor} %N {default} 強制啟動 Mixmap {orange} (%s)。"
+	}
+	"Manualmixmap_Syntax"
+	{
+		"zho"		"語法：!manualmixmap <map1> <map2> <map3> <...>"
+	}
+	"Invalid_Cfg"
+	{
+		"zho"		"{olive} <Mixmap> {default} 無效圖池！"
+	}
+	"Not_Start"
+	{
+		"zho"		"{olive} <Mixmap> {default} 外掛程式未啟動，無需停止。"
+	}
+	"Vote_Stop"
+	{
+		"zho"		"{olive} <Mixmap> {default} 播放器 {teamcolor} %N {default} 發起投票停止 Mixmap。"
+	}
+	"Vote_Progress"
+	{
+		"zho"		"[SM] 投票正在進行中！"
+	}
+	"Vote_Progress_delay"
+	{
+		"zho"		"{olive} <Mixmap> {default} 正在進行投票！換地圖延遲{orange} 15 {default} 秒！"
+	}
+	"Stop_Mixmap"
+	{
+		"zho"		"{olive} <Mixmap> {default} 地圖啟動，中止…"
+	}
+	"Stop_Mixmap_Admin"
+	{
+		"zho"		"{olive} <Mixmap> {default} Admin {teamcolor} %N {default} 強制停止 Mixmap 和 Maps 啟動，中止…"
+	}
+	"Start_Mixmap"
+	{
+		"zho"		"{olive} <Mixmap> {default} 播放器 {teamcolor} %N {default} 發起投票啟動 Mixmap {orange} ( %s )。"
+	}
+	"Show_Maplist_Not_Start"
+	{
+		"zho"		"{olive} <Mixmap> {default} 外掛程式沒有啟動，沒有映射列表。"
+	}
+	"Show_Maplist_Cmd"
+	{
+		"zho"		"{olive} 顯示地圖清單 {orange}!maplist {default} | {olive} 中止指令 {orange}!stopmixmap"
+	}
+	"Select_Maps_Succeed"
+	{
+		"zho"		"{olive} <Mixmap> {default} 隨機選擇地圖成功。"
+	}
+	"Change_Map_First"
+	{
+		"zho"		"{olive} <Mixmap> {default} 在 {orange} %d {default} 秒後更改地圖。"
+	}
+	"AllMaps_Official"
+	{
+		"zho"		"{orange}【-----所有官方地圖列表-----】"
+	}
+	"AllMaps_Usage"
+	{
+		"zho"		"{orange} 用法： {default}!manualmixmap <地圖1> <地圖2>..."
+	}
+	"Fail_Load_Preset"
+	{
+		"zho"		"{olive} <Mixmap> {default} 載入預設失敗！"
+	}
+	"Maps_Not_Match_Rank"
+	{
+		"zho"		"{olive} <Mixmap> {default} 預設有 {orange} 不正確的標記等級 {default} ：要播放的地圖數量與最高等級不符。最高等級 N 應該有 N+1 個標籤等級。"
+	}
+	"Cvote_Title"
+	{
+		"zho"		"開始混合貼圖？ (%s)"
+	}
+	"Cvote_Title_Off"
+	{
+		"zho"		"停止混合貼圖？"
+	}
+	"Cexec_Title"
+	{
+		"zho"		"隨機選擇地圖…"
+	}
+	"Maplist_Title"
+	{
+		"zho"		"{olive} [-------- 地圖列表 --------]"
+	}
+	"Secret"
+	{
+		"zho"		"秘密"
+	}
+	"L4D2Mixmap_OfficialMapsDeadCenter"
+	{
+		"zho"		"c1m1_酒店、c1m2_街道、c1m3_購物中心、c1m4_中庭"
+	}
+	"L4D2Mixmap_C2m1HighwayC2m2FairgroundsC2m3"
+	{
+		"zho"		"c2m1_高速公路、c2m2_遊樂場、c2m3_雲霄飛車、c2m4_穀倉、c2m5_音樂會"
+	}
+	"L4D2Mixmap_C3m1PlankcountryC3m2SwampC3m3"
+	{
+		"zho"		"c3m1_plankcountry、c3m2_swamp、c3m3_shantytown、c3m4_plantation"
+	}
+	"L4D2Mixmap_C4m1MilltownC4m2SugarmillC4m3"
+	{
+		"zho"		"c4m1_milltown_a、c4m2_sugarmill_a、c4m3_sugarmill_b、c4m4_milltown_b、c4m5_milltown_escape"
+	}
+	"L4D2Mixmap_C5m1WaterfrontC5m2ParkC5m3"
+	{
+		"zho"		"c5m1_海濱、c5m2_公園、c5m3_墓地、c5m4_季度、c5m5_橋"
+	}
+	"L4D2Mixmap_C6m1RiverbankC6m2BedlamC7m1"
+	{
+		"zho"		"c6m1_河岸、c6m2_bedlam、c7m1_碼頭、c7m2_駁船、c7m3_端口"
+	}
+	"L4D2Mixmap_C8m1ApartmentC8m2SubwayC8m3"
+	{
+		"zho"		"c8m1_公寓、c8m2_地鐵、c8m3_下水道、c8m4_內部、c8m5_屋頂"
+	}
+	"L4D2Mixmap_C9m1AlleysC9m2LotsC14m1"
+	{
+		"zho"		"c9m1_小巷、c9m2_地段、c14m1_垃圾場、c14m2_燈塔"
+	}
+	"L4D2Mixmap_C10m1CavesC10m2DrainageC10m3"
+	{
+		"zho"		"c10m1_洞穴、c10m2_排水、c10m3_牧場、c10m4_主街、c10m5_船屋"
+	}
+	"L4D2Mixmap_C11m1GreenhouseC11m2OfficesC11m3"
+	{
+		"zho"		"c11m1_溫室、c11m2_辦公室、c11m3_車庫、c11m4_航廈、c11m5_跑道"
+	}
+	"L4D2Mixmap_C12m1HilltopC12m2TraintunnelC12m3"
+	{
+		"zho"		"c12m1_hilltop、c12m2_traintunnel、c12m3_bridge、c12m4_barn、c12m5_cornfield"
+	}
+	"L4D2Mixmap_C13m1AlpinecreekC13m2SouthpinestreamC13m3"
+	{
+		"zho"		"c13m1_alpinecreek、c13m2_southpinestream、c13m3_memorialbridge、c13m4_cutthroatcreek"
+	}
+}

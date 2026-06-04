@@ -102,7 +102,7 @@
 
 	"RPG_NotEnoughMoneyForShotgun"
 	{
-		"en"		"{lightgreen}没钱你买个屁喷子，心里没点B数"
+		"en"		"{lightgreen}If you don’t have money, you can buy a piece of shit, and you don’t have any ideas in mind."
 		"chi"		"{lightgreen}没钱你买个屁喷子，心里没点B数"
 		"zho"		"{lightgreen}沒錢你買個屁噴子，心裡沒點B數"
 		"jp"		"{lightgreen}没钱你买个屁喷子，心里没点B数"
@@ -292,7 +292,7 @@
 
 	"RPG_SetOutlineColorBlue"
 	{
-		"en"		"{olive}你 {green}将轮廓颜色改为{default}: {green}蓝色 {default}!"
+		"en"		"{olive}You {green}change the outline color to {default}: {green}blue {default}!"
 		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}蓝色 {default}!"
 		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}藍色 {default}!"
 		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}蓝色 {default}!"
@@ -302,7 +302,7 @@
 
 	"RPG_SetOutlineColorBlueViolet"
 	{
-		"en"		"{olive}你 {green}将轮廓颜色改为{default}: {green}蓝紫色 {default}!"
+		"en"		"{olive}You {green}change the outline color to {default}: {green}blue-purple {default}!"
 		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}蓝紫色 {default}!"
 		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}藍紫色 {default}!"
 		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}蓝紫色 {default}!"
@@ -322,7 +322,7 @@
 
 	"RPG_SetOutlineColorOrange"
 	{
-		"en"		"{olive}你 {green}将轮廓颜色改为{default}: {green}橘黄色 {default}!"
+		"en"		"{olive}You {green}change the outline color to {default}: {green}orange {default}!"
 		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}橘黄色 {default}!"
 		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}橘黃 {default}!"
 		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}橘黄色 {default}!"
@@ -332,7 +332,7 @@
 
 	"RPG_SetOutlineColorRed"
 	{
-		"en"		"{olive}你 {green}将轮廓颜色改为{default}: {green}红色 {default}!"
+		"en"		"{olive}You {green}change the outline color to {default}: {green}red {default}!"
 		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}红色 {default}!"
 		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}紅色 {default}!"
 		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}红色 {default}!"
@@ -342,7 +342,7 @@
 
 	"RPG_SetOutlineColorGray"
 	{
-		"en"		"{olive}你 {green}将轮廓颜色改为{default}: {green}灰色 {default}!"
+		"en"		"{olive}You {green}change the outline color to {default}: {green}gray {default}!"
 		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}灰色 {default}!"
 		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}灰色 {default}!"
 		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}灰色 {default}!"
@@ -352,7 +352,7 @@
 
 	"RPG_SetOutlineColorYellow"
 	{
-		"en"		"{olive}你 {green}将轮廓颜色改为{default}: {green}黄色 {default}!"
+		"en"		"{olive}You {green}change the outline color to {default}: {green}yellow {default}!"
 		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}黄色 {default}!"
 		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}黃色 {default}!"
 		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}黄色 {default}!"
@@ -362,7 +362,7 @@
 
 	"RPG_SetOutlineColorLime"
 	{
-		"en"		"{olive}你 {green}将轮廓颜色改为{default}: {green}酸橙色 {default}!"
+		"en"		"{olive}You {green}change the outline color to {default}: {green}lime {default}!"
 		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}酸橙色 {default}!"
 		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}酸橙色 {default}!"
 		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}酸橙色 {default}!"
@@ -372,7 +372,7 @@
 
 	"RPG_SetOutlineColorMaroon"
 	{
-		"en"		"{olive}你 {green}将轮廓颜色改为{default}: {green}栗色 {default}!"
+		"en"		"{olive}You {green}change the outline color to {default}: {green}maroon {default}!"
 		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}栗色 {default}!"
 		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}栗子 {default}!"
 		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}栗色 {default}!"
@@ -382,7 +382,7 @@
 
 	"RPG_SetOutlineColorTeal"
 	{
-		"en"		"{olive}你 {green}将轮廓颜色改为{default}: {green}藍綠色 {default}!"
+		"en"		"{olive}You {green}change the outline color to {default}: {green}turquoise {default}!"
 		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}藍綠色 {default}!"
 		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}藍綠色 {default}!"
 		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}藍綠色 {default}!"
@@ -392,7 +392,7 @@
 
 	"RPG_SetOutlineColorPink"
 	{
-		"en"		"{olive}你 {green}将轮廓颜色改为{default}: {green}粉红色 {default}!"
+		"en"		"{olive}You {green}change the outline color to {default}: {green}pink {default}!"
 		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}粉红色 {default}!"
 		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}粉紅 {default}!"
 		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}粉红色 {default}!"
@@ -402,7 +402,7 @@
 
 	"RPG_SetOutlineColorPurple"
 	{
-		"en"		"{olive}你 {green}将轮廓颜色改为{default}: {green}紫色 {default}!"
+		"en"		"{olive}You {green}change the outline color to {default}: {green}purple {default}!"
 		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}紫色 {default}!"
 		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}紫色 {default}!"
 		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}紫色 {default}!"
@@ -412,7 +412,7 @@
 
 	"RPG_SetOutlineColorWhite"
 	{
-		"en"		"{olive}你 {green}将轮廓颜色改为{default}: {green}白色 {default}!"
+		"en"		"{olive}You {green}change the outline color to {default}: {green}white {default}!"
 		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}白色 {default}!"
 		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}白色 {default}!"
 		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}白色 {default}!"
@@ -422,7 +422,7 @@
 
 	"RPG_SetOutlineColorGold"
 	{
-		"en"		"{olive}你 {green}将轮廓颜色改为{default}: {green}金黄色 {default}!"
+		"en"		"{olive}You {green}change the outline color to {default}: {green}gold {default}!"
 		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}金黄色 {default}!"
 		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}金黃色 {default}!"
 		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}金黄色 {default}!"
@@ -432,7 +432,7 @@
 
 	"RPG_SetOutlineColorRainbow"
 	{
-		"en"		"{olive}你 {green}将轮廓颜色改为{default}: {green}彩虹色 {default}!"
+		"en"		"{olive}You {green}change the outline color to {default}: {green}rainbow color {default}!"
 		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}彩虹色 {default}!"
 		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}彩虹色 {default}!"
 		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}彩虹色 {default}!"
@@ -442,7 +442,7 @@
 
 	"RPG_SetOutlineColorCustomOutline"
 	{
-		"en"		"{olive}你 {green}将轮廓颜色改为您的{default}: {green}定制颜色轮廓 {default}!"
+		"en"		"{olive}You {green}change the outline color to your {default}: {green}custom color outline {default}!"
 		"chi"		"{olive}你 {green}将轮廓颜色改为您的{default}: {green}定制颜色轮廓 {default}!"
 		"zho"		"{olive}你 {green}將輪廓顏色改為您的{default}: {green}客製顏色輪廓 {default}!"
 		"jp"		"{olive}你 {green}将轮廓颜色改为您的{default}: {green}定制颜色轮廓 {default}!"
@@ -472,7 +472,7 @@
 
 	"RPG_SetSkinColorBlue"
 	{
-		"en"		"{olive}你 {green}将皮肤颜色改为{default}: {green}蓝色 {default}!"
+		"en"		"{olive}You {green}change your skin color to {default}: {green}blue {default}!"
 		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}蓝色 {default}!"
 		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}藍色 {default}!"
 		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}蓝色 {default}!"
@@ -482,7 +482,7 @@
 
 	"RPG_SetSkinColorBlueViolet"
 	{
-		"en"		"{olive}你 {green}将皮肤颜色改为{default}: {green}蓝紫色 {default}!"
+		"en"		"{olive}You {green}change your skin color to {default}: {green}blue-purple {default}!"
 		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}蓝紫色 {default}!"
 		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}藍紫色 {default}!"
 		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}蓝紫色 {default}!"
@@ -492,7 +492,7 @@
 
 	"RPG_SetSkinColorCyan"
 	{
-		"en"		"{olive}你 {green}将皮肤颜色改为{default}: {green}青色 {default}!"
+		"en"		"{olive}You {green}change your skin color to {default}: {green}Cyan {default}!"
 		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}青色 {default}!"
 		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}青色 {default}!"
 		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}青色 {default}!"
@@ -502,7 +502,7 @@
 
 	"RPG_SetSkinColorOrange"
 	{
-		"en"		"{olive}你 {green}将皮肤颜色改为{default}: {green}橘黄色 {default}!"
+		"en"		"{olive}You {green}change your skin color to {default}: {green}orange {default}!"
 		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}橘黄色 {default}!"
 		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}橘黃 {default}!"
 		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}橘黄色 {default}!"
@@ -512,7 +512,7 @@
 
 	"RPG_SetSkinColorRed"
 	{
-		"en"		"{olive}你 {green}将皮肤颜色改为{default}: {green}红色 {default}!"
+		"en"		"{olive}You {green}change your skin color to {default}: {green}red {default}!"
 		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}红色 {default}!"
 		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}紅色 {default}!"
 		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}红色 {default}!"
@@ -522,7 +522,7 @@
 
 	"RPG_SetSkinColorGray"
 	{
-		"en"		"{olive}你 {green}将皮肤颜色改为{default}: {green}灰色 {default}!"
+		"en"		"{olive}You {green}change your skin color to {default}: {green}gray {default}!"
 		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}灰色 {default}!"
 		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}灰色 {default}!"
 		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}灰色 {default}!"
@@ -532,7 +532,7 @@
 
 	"RPG_SetSkinColorYellow"
 	{
-		"en"		"{olive}你 {green}将皮肤颜色改为{default}: {green}黄色 {default}!"
+		"en"		"{olive}You {green}change your skin color to {default}: {green}yellow {default}!"
 		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}黄色 {default}!"
 		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}黃色 {default}!"
 		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}黄色 {default}!"
@@ -542,7 +542,7 @@
 
 	"RPG_SetSkinColorLime"
 	{
-		"en"		"{olive}你 {green}将皮肤颜色改为{default}: {green}酸橙色 {default}!"
+		"en"		"{olive}You {green}change your skin color to {default}: {green}lime {default}!"
 		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}酸橙色 {default}!"
 		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}酸橙色 {default}!"
 		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}酸橙色 {default}!"
@@ -552,7 +552,7 @@
 
 	"RPG_SetSkinColorMaroon"
 	{
-		"en"		"{olive}你 {green}将皮肤颜色改为{default}: {green}栗色 {default}!"
+		"en"		"{olive}You {green}change your skin color to {default}: {green}maroon {default}!"
 		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}栗色 {default}!"
 		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}栗色 {default}!"
 		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}栗色 {default}!"
@@ -562,7 +562,7 @@
 
 	"RPG_SetSkinColorTeal"
 	{
-		"en"		"{olive}你 {green}将皮肤颜色改为{default}: {green}藍綠色 {default}!"
+		"en"		"{olive}You {green}change your skin color to {default}: {green}turquoise {default}!"
 		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}藍綠色 {default}!"
 		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}藍綠色 {default}!"
 		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}藍綠色 {default}!"
@@ -572,7 +572,7 @@
 
 	"RPG_SetSkinColorPink"
 	{
-		"en"		"{olive}你 {green}将皮肤颜色改为{default}: {green}粉红色 {default}!"
+		"en"		"{olive}You {green}change your skin color to {default}: {green}pink {default}!"
 		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}粉红色 {default}!"
 		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}粉紅色 {default}!"
 		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}粉红色 {default}!"
@@ -582,7 +582,7 @@
 
 	"RPG_SetSkinColorPurple"
 	{
-		"en"		"{olive}你 {green}将皮肤颜色改为{default}: {green}紫色 {default}!"
+		"en"		"{olive}You {green}change your skin color to {default}: {green}purple {default}!"
 		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}紫色 {default}!"
 		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}紫色 {default}!"
 		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}紫色 {default}!"
@@ -592,7 +592,7 @@
 
 	"RPG_SetSkinColorBlack"
 	{
-		"en"		"{olive}你 {green}将皮肤颜色改为{default}: {green}黑色 {default}!"
+		"en"		"{olive}You {green}change your skin color to {default}: {green}black {default}!"
 		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}黑色 {default}!"
 		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}黑色 {default}!"
 		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}黑色 {default}!"
@@ -602,7 +602,7 @@
 
 	"RPG_SetSkinColorGold"
 	{
-		"en"		"{olive}你 {green}将皮肤颜色改为{default}: {green}金黄色 {default}!"
+		"en"		"{olive}You {green}change your skin color to {default}: {green}gold {default}!"
 		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}金黄色 {default}!"
 		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}金黃色 {default}!"
 		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}金黄色 {default}!"
@@ -622,7 +622,7 @@
 
 	"RPG_SetSkinColorCustomSkin"
 	{
-		"en"		"{olive}你 {green}将皮肤颜色改为{default}: {green}您的定制皮肤 {default}!"
+		"en"		"{olive}You {green}change your skin color to {default}: {green}your custom skin {default}!"
 		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}您的定制皮肤 {default}!"
 		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}您的客製化皮膚 {default}!"
 		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}您的定制皮肤 {default}!"
@@ -632,7 +632,7 @@
 
 	"RPG_FirstFreePurchase"
 	{
-		"en"		"{green}%N{lightgreen}第一次白嫖了一把%s，还剩%d的B数"
+		"en"		"{green}%N{lightgreen} got a handful of %s for nothing for the first time, and there are still B numbers of %d"
 		"chi"		"{green}%N{lightgreen}第一次白嫖了一把%s，还剩%d的B数"
 		"zho"		"{green}%N{lightgreen}第一次白嫖了一把%s，還剩%d的B數"
 		"jp"		"{green}%N{lightgreen}第一次白嫖了一把%s，还剩%d的B数"
@@ -642,7 +642,7 @@
 
 	"RPG_BoughtItemWithPoints"
 	{
-		"en"		"{green}%N{lightgreen}B数-%d,购买了%s，还剩%d的B数"
+		"en"		"{green}%N{lightgreen}B number-%d, purchased %s, left %d B number"
 		"chi"		"{green}%N{lightgreen}B数-%d,购买了%s，还剩%d的B数"
 		"zho"		"{green}%N{lightgreen}B數-%d,購買了%s，還剩%d的B數"
 		"jp"		"{green}%N{lightgreen}B数-%d,购买了%s，还剩%d的B数"

@@ -1,0 +1,41 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"ko"		"[{olive}1v1{default}]"
+	}
+	"TagPvE"
+	{
+		"ko"		"[{olive}피해 보고{default}]"
+	}
+	"HealthRemaining"
+	{
+		"#format"	"{1:s},{2:s},{3:d}"
+		"ko"		"{red}{1}{default}({green}{2}{default})의 체력이 {olive}{3}{default} 남았습니다!"
+	}
+	"HealthRemainingAI"
+	{
+		"#format"	"{1:s},{2:d}"
+		"ko"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default}의 체력이 {olive}{2}{default} 남았습니다!"
+	}
+	"UMad"
+	{
+		"ko"		"화낼 필요는 없어요..."
+	}
+	"Sad"
+	{
+		"ko"		"슬퍼 보이네요...."
+	}
+	"Close"
+	{
+		"ko"		"아까웠어요!"
+	}
+	"NBad"
+	{
+		"ko"		"나쁘지 않아요."
+	}
+	"AI"
+	{
+		"ko"		"AI"
+	}
+}

@@ -1,0 +1,115 @@
+"Phrases"
+{
+	"srvcln_version"
+	{
+		"vi"		"Phiên bản dọn dẹp máy chủ."
+	}
+	"srvcln_enable"
+	{
+		"vi"		"Bật tính năng dọn dẹp máy chủ tự động (1 - bật, 0 - tắt, chỉ có lệnh dọn dẹp thủ công)."
+	}
+	"srvcln_logs"
+	{
+		"vi"		"Dọn dẹp nhật ký máy chủ thông thường."
+	}
+	"srvcln_logging_mode"
+	{
+		"vi"		"Ghi lại những gì Server Clean Up xóa."
+	}
+	"srvcln_smlogs"
+	{
+		"vi"		"Dọn dẹp nhật ký máy chủ SourceMod."
+	}
+	"srvcln_sprays"
+	{
+		"vi"		"Dọn dẹp các bình xịt đã tải lên."
+	}
+	"srvcln_demos"
+	{
+		"vi"		"Dọn dẹp các tập tin demo được ghi tự động."
+	}
+	"srvcln_replays"
+	{
+		"vi"		"Dọn dẹp các tập tin phát lại được tạo."
+	}
+	"srvcln_roundbackups"
+	{
+		"vi"		"Dọn dẹp các tệp sao lưu vòng CS:GO (lưu ý: chỉ khi không có tùy chọn đặt tên nào được thay đổi so với cài đặt mặc định cho các bản sao lưu vòng)."
+	}
+	"srvcln_demos_archives"
+	{
+		"vi"		"Bao gồm các kho lưu trữ khi xóa các bản demo cũ (nếu máy chủ của bạn tự động nén chúng, sẽ phát hiện: bz2, zip, rar và 7z)."
+	}
+	"srvcln_replays_archives"
+	{
+		"vi"		"Bao gồm các kho lưu trữ khi xóa các replay cũ (nếu máy chủ của bạn tự động nén chúng, sẽ phát hiện: bz2, zip, rar và 7z)."
+	}
+	"srvcln_smlogs_type"
+	{
+		"vi"		"Loại nhật ký nào cần xóa khỏi thư mục nhật ký SM (0 - chỉ nhật ký bình thường, 1 - nhật ký bình thường và nhật ký lỗi, 2 - tất cả nhật ký)."
+	}
+	"srvcln_logs_time"
+	{
+		"vi"		"Thời gian (tính bằng giờ) để lưu giữ nhật ký máy chủ thông thường (mặc định là một tuần, giá trị tối thiểu là 12 giờ, đặt thành -1 để chỉ giữ ngày hiện tại)."
+	}
+	"srvcln_replays_time"
+	{
+		"vi"		"Thời gian (tính bằng giờ) để giữ các tệp phát lại đã tạo (mặc định là một tuần, giá trị tối thiểu là 12 giờ, được đặt thành -1 để chỉ giữ ngày hiện tại)."
+	}
+	"srvcln_roundbackups_time"
+	{
+		"vi"		"Thời gian (tính bằng giờ) để giữ bản sao lưu vòng trong CS:GO (mặc định là một tuần, giá trị tối thiểu là 12 giờ, được đặt thành -1 để chỉ giữ ngày hiện tại)."
+	}
+	"srvcln_sprays_time"
+	{
+		"vi"		"Thời gian (tính bằng giờ) để lưu giữ các lượt phun đã tải lên (mặc định là một tuần, giá trị tối thiểu là 12 giờ, được đặt thành -1 để chỉ giữ lại ngày hiện tại)."
+	}
+	"srvcln_smlogs_time"
+	{
+		"vi"		"Thời gian (tính bằng giờ) để lưu giữ nhật ký máy chủ SourceMod (mặc định là một tuần, giá trị tối thiểu là 12 giờ, được đặt thành -1 để chỉ giữ ngày hiện tại)."
+	}
+	"srvcln_demos_time"
+	{
+		"vi"		"Thời gian (tính bằng giờ) để giữ các tệp demo (mặc định là một tuần, giá trị tối thiểu là 12 giờ, đặt thành -1 để chỉ giữ ngày hiện tại)."
+	}
+	"srvcln_demos_path"
+	{
+		"vi"		"Đường dẫn thư mục tùy chọn tới các tệp demo của bạn nếu bạn lưu chúng ở nơi khác theo cách thủ công."
+	}
+	"srvcln_now"
+	{
+		"vi"		"Chạy dọn dẹp máy chủ theo cách thủ công."
+	}
+	"Command Now Start"
+	{
+		"vi"		"[SM] Đang khởi động dọn dẹp máy chủ."
+	}
+	"Command Now End"
+	{
+		"vi"		"[SM] Quá trình dọn dẹp máy chủ đã hoàn tất."
+	}
+	"Command Now Log"
+	{
+		"vi"		"Chạy dọn dẹp máy chủ theo cách thủ công."
+	}
+	"CL Error TS"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Lỗi nghiêm trọng khi đọc dấu thời gian cho \"{1}\"."
+	}
+	"CL Error Del"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Không thể xóa \"{1}\", vui lòng kiểm tra quyền."
+	}
+	"CL Deleted File"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Đã xóa tệp \"{1}\""
+	}
+	"CL Deleted Folder"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Đã xóa thư mục \"{1}\""
+	}
+}

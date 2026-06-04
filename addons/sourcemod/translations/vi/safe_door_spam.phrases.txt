@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Door_Open"
+	{
+		"vi"		"{olive} [Phòng an toàn] {white} được mở bởi {orange} %N"
+	}
+	"Door_Close"
+	{
+		"vi"		"{olive} [Phòng an toàn] {white} bị đóng bởi {orange} %N"
+	}
+	"Door_Wait"
+	{
+		"vi"		"{olive} [Phòng an toàn] Cửa {white} sẽ mở khóa sau {orange} %d {white} giây"
+	}
+	"Door_Unlocked"
+	{
+		"vi"		"{olive} [Phòng an toàn] Cửa {white} {orange} đã mở"
+	}
+}

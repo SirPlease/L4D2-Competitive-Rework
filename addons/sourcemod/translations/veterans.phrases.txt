@@ -84,7 +84,7 @@
 	{
 		"en"		"{default} [{green} player duration detection {default}] Player {blue}%N {{default}'s game duration on this server {green} does not meet the standard {default}, who is a player in the telecommunications server group and is allowed to play normally"
 		"chi"		"{default}[{green}玩家时长检测{default}] 玩家 {blue}%N {{default}在本服务器游戏时长{green}不达标{default}，是电信服务器组玩家，允许正常游玩"
-		"zho"		"{default}[{green}玩家時長檢測{default}] 玩家 {blue}%N {{default}在本伺服器遊戲時長{green}006ZX"
+		"zho"		"{default}[{green}玩家時長檢測{default}] 玩家 {blue}%N {{default}在本伺服器遊戲時長{green}不達標{default}，是電信伺服器組玩家，允許正常遊玩"
 		"jp"		"{default} [{green} プレーヤー継続時間検出 {default}] プレーヤー {blue}%N {このサーバー上の {default} のゲーム継続時間 {green} は、電気通信サーバー グループのプレーヤーであり、通常のプレイが許可されている {default} の基準を満たしていません"
 		"ko"		"{default} [{green} 플레이어 지속 시간 감지 {default}] 플레이어 {blue}%N {{default}의 이 서버에서의 게임 지속 시간은 {green}가 표준 {default}를 충족하지 않습니다. 해당 플레이어는 통신 서버 그룹에 속한 플레이어이며 정상적으로 플레이가 허용됩니다."
 		"vi"		"{default} [{green} phát hiện thời lượng người chơi {default}] Người chơi {blue}%N {Thời lượng trò chơi của {default} trên máy chủ này {green} không đáp ứng tiêu chuẩn {default}, là người chơi trong nhóm máy chủ viễn thông và được phép chơi bình thường"
@@ -104,7 +104,7 @@
 	{
 		"en"		"{default}[{green} player time detection {default}] Player {blue}%N {default}'s game time on this server {green} does not meet the standard {default}, and is not a player in the telecommunications server group, and has been automatically asked to take a rest."
 		"chi"		"{default}[{green}玩家时长检测{default}] 玩家 {blue}%N {default}在本服务器游戏时长{green}不达标{default}，且不为电信服务器组玩家，已经自动请去休息."
-		"zho"		"{default}[{green}玩家時長檢測{default}] 玩家 {blue}%N {default}在本伺服器遊戲時長{green}006ZX"
+		"zho"		"{default}[{green}玩家時長檢測{default}] 玩家 {blue}%N {default}在本伺服器遊戲時長{green}不達標{default}，且不是電信伺服器組玩家，已自動請去休息."
 		"jp"		"{default}[{green} プレイヤー時間検出 {default}] プレイヤー {blue}%N {default} のこのサーバー {green} のゲーム時間は基準 {default} を満たしておらず、通信サーバー グループのプレイヤーではないため、自動的に休憩するように求められました。"
 		"ko"		"{default}[{green} 플레이어 시간 감지 {default}] 플레이어 {blue}%N {default}의 이 서버 {default}의 게임 시간은 {default} 표준을 충족하지 않으며 통신 서버 그룹에 속한 플레이어가 아니며 자동으로 휴식을 요청 받았습니다."
 		"vi"		"{default}[{green} phát hiện thời gian của người chơi {default}] Người chơi {blue}%N {default} Thời gian chơi trò chơi của người chơi trên máy chủ này {green} không đáp ứng tiêu chuẩn {default} và không phải là người chơi trong nhóm máy chủ viễn thông và đã tự động được yêu cầu nghỉ ngơi."

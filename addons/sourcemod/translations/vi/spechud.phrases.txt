@@ -1,0 +1,29 @@
+"Phrases"
+{
+	"on"
+	{
+		"vi"		"{blue}bật{default}"
+	}
+	"off"
+	{
+		"vi"		"{red}{default}"
+	}
+	"Notify_SpechudState"
+	{
+		"#format"	"{1:t}"
+		"vi"		"<{olive}HUD{default}> HUD của khán giả hiện là {1}"
+	}
+	"Notify_TankhudState"
+	{
+		"#format"	"{1:t}"
+		"vi"		"<{olive}HUD{default}> HUD xe tăng hiện là {1}"
+	}
+	"Notify_SpechudUsage"
+	{
+		"vi"		"<{olive}HUD{default}> Nhập {green}!spechud{default} vào cuộc trò chuyện để chuyển đổi {blue}HUD khán giả"
+	}
+	"Notify_TankhudUsage"
+	{
+		"vi"		"<{olive}HUD{default}> Nhập {green}!tankhud{default} vào cuộc trò chuyện để chuyển đổi {red}HUD xe tăng"
+	}
+}

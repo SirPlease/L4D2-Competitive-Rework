@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4DStats_RankMessage"
+	{
+		"jp"		"{green} [ {lightgreen} ランク {green} ] {default} %s"
+	}
+}

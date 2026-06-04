@@ -1,0 +1,114 @@
+"Phrases"
+{
+	"Usage_Block"
+	{
+		"vi"		"Cách sử dụng: sm_block <#userid|steam64|name>"
+	}
+	"Usage_Unblock"
+	{
+		"vi"		"Cách sử dụng: sm_unblock <#userid|steam64|name>"
+	}
+	"DB_NotReady"
+	{
+		"vi"		"[BlockList] Cơ sở dữ liệu chưa sẵn sàng."
+	}
+	"Resolve_Failed"
+	{
+		"vi"		"[BlockList] Giải quyết mục tiêu không thành công. Sử dụng #userid/steam64/tên."
+	}
+	"Self_Steam_Failed"
+	{
+		"vi"		"[BlockList] SteamID của bạn không thể giải quyết được."
+	}
+	"Block_SelfDenied"
+	{
+		"vi"		"[BlockList] Bạn không thể tự chặn mình."
+	}
+	"Block_LimitReached"
+	{
+		"#format"	"{1:i}"
+		"vi"		"[BlockList] Bạn đã đạt đến giới hạn khối của mình ( {1} )."
+	}
+	"Block_Added"
+	{
+		"#format"	"{1:s}"
+		"vi"		"[BlockList] Khối đã thêm: {1}"
+	}
+	"Block_Failed_Generic"
+	{
+		"vi"		"[BlockList] Thao tác chặn không thành công."
+	}
+	"Unblock_Removed"
+	{
+		"vi"		"[BlockList] Đã bỏ chặn."
+	}
+	"Unblock_NotFound"
+	{
+		"vi"		"[BlockList] Không có bản ghi khối nào như vậy."
+	}
+	"Unblock_Failed_Generic"
+	{
+		"vi"		"[BlockList] Thao tác bỏ chặn không thành công."
+	}
+	"Query_Failed_Generic"
+	{
+		"vi"		"[BlockList] Truy vấn không thành công."
+	}
+	"BlockList_Header"
+	{
+		"#format"	"{1:i}"
+		"vi"		"[BlockList] (các) bản ghi {1}:"
+	}
+	"BlockLimit_Info"
+	{
+		"#format"	"{1:i}"
+		"vi"		"[BlockList] Giới hạn khối của bạn: {1}"
+	}
+	"Notify_Blocker"
+	{
+		"#format"	"{1:N}"
+		"vi"		"[BlockList] Khối của bạn đã ngăn {1} tham gia."
+	}
+	"Kick_By_Blocked"
+	{
+		"vi"		"Ai đó trong máy chủ này đã chặn bạn. Bạn không thể tham gia."
+	}
+	"Kick_By_Blocked_With_Blocker"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Bạn bị chặn bởi một người chơi trong máy chủ này (ID: {1} ). Tham gia bị từ chối."
+	}
+	"Menu_Title"
+	{
+		"vi"		"Menu danh sách khối"
+	}
+	"Menu_BlockOnline"
+	{
+		"vi"		"Chặn/Bỏ chặn người chơi trực tuyến"
+	}
+	"Menu_MyBlockList"
+	{
+		"vi"		"Xem/Xóa danh sách chặn của tôi"
+	}
+	"Menu_BlockOnline_Title"
+	{
+		"vi"		"Người chơi trực tuyến (chọn để chuyển đổi khối)"
+	}
+	"Menu_MyBlockList_Title"
+	{
+		"vi"		"Danh sách chặn của tôi (chọn để xóa)"
+	}
+	"Target_Left"
+	{
+		"vi"		"[BlockList] Mục tiêu không còn hợp lệ."
+	}
+	"Kick_By_SelfBlocked"
+	{
+		"vi"		"Bạn đã chặn một người chơi hiện đang ở máy chủ này. Bạn không thể tham gia."
+	}
+	"Kick_By_SelfBlocked_With_Target"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Bạn đã chặn một người chơi hiện đang ở máy chủ này (ID: {1} ). Tham gia bị từ chối."
+	}
+}

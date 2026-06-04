@@ -1,0 +1,124 @@
+"Phrases"
+{
+	"SelfCastNotAllowed"
+	{
+		"zho"		"{blue}[{default}Cast{blue}] {default}您無法在此伺服器{default}上註冊為施法者{green}。"
+	}
+	"SelfCast1"
+	{
+		"zho"		"{blue}[{default}Cast{blue}] {default}您已將自己註冊為施法者。"
+	}
+	"SelfCast2"
+	{
+		"zho"		"{blue}[{default}Cast{blue}] {default}重新連線以讓您的外掛程式正常運作。"
+	}
+	"RegCasterTarget"
+	{
+		"#format"	"{1:N}"
+		"zho"		"{default}[{olive}!{default}] {blue}管理員 {default}({olive}{1}{default}) 已將您註冊為施法者"
+	}
+	"Reconnect1"
+	{
+		"zho"		"{blue}[{default}重新連線{blue}] {default}您將重新連線到伺服器。"
+	}
+	"Reconnect2"
+	{
+		"zho"		"{blue}[{default}重新連接{blue}] {default}出現黑畫面而不是載入欄！"
+	}
+	"UnregCasterTarget"
+	{
+		"#format"	"{1:N}"
+		"zho"		"{default}[{olive}!{default}] {default}您已被 {blue}Admin {default} 取消註冊為施法者({olive}{1}{default})"
+	}
+	"KickSpecsAdmin"
+	{
+		"#format"	"{1:N}"
+		"zho"		"[{green}!{default}] {blue}觀眾{default}被{blue}管理員{default}踢出({olive}{1}{default})"
+	}
+	"KickSpecsVoteSpec"
+	{
+		"zho"		"[{olive}演員{default}] {blue}觀眾{default}不得對{green}踢球規格{default}進行投票。"
+	}
+	"VoteInProgress"
+	{
+		"zho"		"[{olive}Cast{default}] 有{olive}投票{green}正在進行中{default}。"
+	}
+	"VoteDelay"
+	{
+		"#format"	"{1:d}"
+		"zho"		"[{olive}Cast{default}] 等待另一個 {blue}{1} 的 {default} 進行投票。"
+	}
+	"ForbidAddons"
+	{
+		"zho"		"{blue}[{default}!{blue}] {default}外掛程式現在對腳輪{green}禁止{default}。"
+	}
+	"AllowAddons"
+	{
+		"zho"		"{blue}[{default}!{blue}] {default}外掛程式現在{green}允許{default}供腳輪使用。"
+	}
+	"CasterCheck1"
+	{
+		"zho"		"{default}<{olive}Cast{default}> 在播放之前先取消註冊投射。"
+	}
+	"CasterCheck2"
+	{
+		"zho"		"{default}<{olive}Cast{default}> 使用 {green}!notcasting {default}/ {green}!uncast"
+	}
+	"RegCasterReply"
+	{
+		"#format"	"{1:N}"
+		"zho"		"已註冊{1}為施法者"
+	}
+	"CasterSteamIDError"
+	{
+		"zho"		"找不到 Steam ID。 檢查拼字錯誤並讓玩家完全連線。"
+	}
+	"UnregCasterNonAdmin"
+	{
+		"zho"		"只有管​​理員才能刪除其他施法者。如果您想刪除自己，請使用不含參數的 sm_notcasting。"
+	}
+	"UnregCasterSuccess"
+	{
+		"#format"	"{1:N}"
+		"zho"		"{1} 不再是施法者"
+	}
+	"CasterDBReset"
+	{
+		"zho"		"[casters_database]重置成功"
+	}
+	"CasterDBAdd"
+	{
+		"#format"	"{1:s}"
+		"zho"		"[casters_database] 新增了“{1}”"
+	}
+	"CasterDBRemove"
+	{
+		"#format"	"{1:s}"
+		"zho"		"[casters_database] 已刪除“{1}”"
+	}
+	"CasterDBFound"
+	{
+		"#format"	"{1:s}"
+		"zho"		"[casters_database]「{1}」已存在"
+	}
+	"CasterDBError"
+	{
+		"zho"		"[casters_database] 未指定參數/空緩衝區"
+	}
+	"KickSpecsVoteTitle"
+	{
+		"zho"		"踢掉非管理員和非選角觀眾？"
+	}
+	"KickSpecsVoteSuccess"
+	{
+		"zho"		"各位觀眾再見！"
+	}
+	"KickSpecsReason"
+	{
+		"zho"		"請無觀眾！"
+	}
+	"CasterSystem_CastersDatabaseListPrintedConsole"
+	{
+		"zho"		"[casters_database] 清單列印在控制台中"
+	}
+}

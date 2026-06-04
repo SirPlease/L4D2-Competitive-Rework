@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"Players Speaking:"
+	{
+		"ko"		"플레이어 발언:"
+	}
+}

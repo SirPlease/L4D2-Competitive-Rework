@@ -1,0 +1,135 @@
+"Phrases"
+{
+	"Ready Up Countdown"
+	{
+		"#format"	"{1:d}"
+		"vi"		"Thời gian sẵn sàng: {1}"
+	}
+	"Round Begin Countdown"
+	{
+		"#format"	"{1:d}"
+		"vi"		"Vòng sẽ bắt đầu vào: {1}"
+	}
+	"Move Out"
+	{
+		"vi"		"Di chuyển ra ngoài!"
+	}
+	"Leavers Message"
+	{
+		"vi"		"Người chơi chưa sẵn sàng, vui lòng đợi..."
+	}
+	"Round Started"
+	{
+		"vi"		"[Khóa] Lỗi: vòng chơi đã bắt đầu."
+	}
+	"Saferoom Locked"
+	{
+		"vi"		"[Khóa] Lỗi: Vùng an toàn đã bị khóa."
+	}
+	"Saferoom Unlocked"
+	{
+		"vi"		"[Khóa] Lỗi: Vùng an toàn đã được mở khóa."
+	}
+	"Ready Up Time Ended"
+	{
+		"vi"		"[Khóa] Lỗi: thời gian sẵn sàng đã kết thúc."
+	}
+	"Admin Locks"
+	{
+		"#format"	"{1:N}"
+		"vi"		"[Khóa] Admin {1} đã khóa vùng an toàn."
+	}
+	"Admin Unlocks"
+	{
+		"#format"	"{1:N}"
+		"vi"		"[Khóa] Admin {1} đã mở khóa vùng an toàn."
+	}
+	"Spectator Ready"
+	{
+		"vi"		"[Khóa] Lỗi: bạn cần tham gia một nhóm để sử dụng lệnh này."
+	}
+	"You Are Ready"
+	{
+		"vi"		"[Khóa] Lỗi: bạn đã sẵn sàng."
+	}
+	"You Are Unready"
+	{
+		"vi"		"[Khóa] Lỗi: bạn chưa sẵn sàng."
+	}
+	"Ready Up Limit"
+	{
+		"vi"		"[Khóa] Lỗi: bạn không thể sử dụng lệnh này nữa."
+	}
+	"Admin Controls"
+	{
+		"vi"		"[Khóa] Lỗi: admin đang kiểm soát vùng an toàn."
+	}
+	"Player Is Ready"
+	{
+		"vi"		"Bạn đã sẵn sàng."
+	}
+	"Player Is Unready"
+	{
+		"vi"		"Bạn chưa sẵn sàng."
+	}
+	"Notify Survivors Ready"
+	{
+		"#format"	"{1:d},{2:d},{3:.1f%%}"
+		"vi"		"[Khóa] Đội sống sót đã sẵn sàng ( {1} / {2} - {3} )."
+	}
+	"Notify Infected Ready"
+	{
+		"#format"	"{1:d},{2:d},{3:.1f%%}"
+		"vi"		"[Khóa] Nhóm bị nhiễm đã sẵn sàng ( {1}/{2} - {3})."
+	}
+	"Notify Survivors Unready"
+	{
+		"#format"	"{1:d},{2:d},{3:.1f%%}"
+		"vi"		"[Khóa] Đội sống sót chưa sẵn sàng ( {1} / {2} - {3} )."
+	}
+	"Notify Infected Unready"
+	{
+		"#format"	"{1:d},{2:d},{3:.1f%%}"
+		"vi"		"[Khóa] Nhóm bị nhiễm chưa sẵn sàng ( {1} / {2} - {3} )."
+	}
+	"Menu Title"
+	{
+		"vi"		"Bạn đã sẵn sàng để bắt đầu:"
+	}
+	"Menu Ready"
+	{
+		"vi"		"Sẵn sàng"
+	}
+	"Menu Unready"
+	{
+		"vi"		"Chưa sẵn sàng"
+	}
+	"Menu Survivor"
+	{
+		"vi"		"Người sống sót"
+	}
+	"Menu Infected"
+	{
+		"vi"		"Bị lây nhiễm"
+	}
+	"Menu Close"
+	{
+		"vi"		"Đóng"
+	}
+	"L4D2DoorLock_DoorLockDoorLockNot"
+	{
+		"vi"		"{olive}[DoorLock]{default} Khóa cửa không được bật ở cấp độ đầu tiên."
+	}
+	"L4D2DoorLock_DoorLockPictureLockedOnce"
+	{
+		"vi"		"{olive}[DoorLock]{default} Hình ảnh này đã bị khóa một lần. Sau khi tiêu diệt nhóm và khởi động lại, cửa sẽ không còn bị khóa nữa."
+	}
+	"L4D2DoorLock_DoorLockDoorLockOnly"
+	{
+		"vi"		"{olive}[DoorLock]{default} Khóa cửa chỉ được kích hoạt ở vòng đầu tiên sau mỗi bản đồ không phải cấp một."
+	}
+	"L4D2DoorLock_DoorLockSurvivorBotUnfrozen"
+	{
+		"vi"		"{olive}[DoorLock]{default} Bot sống sót đã được gỡ đóng băng ở cấp độ đầu tiên."
+	}
+}

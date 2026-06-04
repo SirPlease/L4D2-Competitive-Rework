@@ -1,0 +1,107 @@
+"Phrases"
+{
+	"welcome_msg"
+	{
+		"#format"	"{1:s}"
+		"jp"		"このサーバーは Little Anti-Cheat {1} によって保護されています"
+	}
+	"kick_query_failure"
+	{
+		"jp"		"エラー: クエリの応答に失敗しました。この問題が解決しない場合は、ゲームを再起動してください。"
+	}
+	"kick_interp_exploit"
+	{
+		"#format"	"{1:.0f},{2:d},{3:.3f}"
+		"jp"		"エクスプロイトが検出されました: interp が高すぎます ({1} ミリ秒 / {2} ミリ秒最大)。 cl_interp を {3} 以下に設定してください。"
+	}
+	"tban_ping_high"
+	{
+		"#format"	"{1:.0f},{2:d}"
+		"jp"		"ping が高すぎます ({1} / {2} 最大)"
+	}
+	"kick_ban_generic"
+	{
+		"jp"		"あなたはこのサーバーから禁止されました"
+	}
+	"ban_angle"
+	{
+		"jp"		"角度の不正行為が検出されました"
+	}
+	"ban_chat_clear"
+	{
+		"jp"		"チャットクリアが検出されました"
+	}
+	"ban_convar"
+	{
+		"jp"		"無効な ConVar が検出されました"
+	}
+	"ban_nolerp"
+	{
+		"jp"		"NoLerp が検出されました"
+	}
+	"ban_bhop"
+	{
+		"jp"		"Bホップが検出されました"
+	}
+	"ban_aimbot"
+	{
+		"jp"		"エイムボットが検出されました"
+	}
+	"ban_aimlock"
+	{
+		"jp"		"エイムロックが検出されました"
+	}
+	"ban_anti_duck_delay"
+	{
+		"jp"		"アンチダック遅延が検出されました"
+	}
+	"ban_noisemaker"
+	{
+		"jp"		"無限ノイズメーカーが検出されました"
+	}
+	"ban_macro"
+	{
+		"jp"		"マクロが検出されました"
+	}
+	"kick_macro"
+	{
+		"#format"	"{1:s}"
+		"jp"		"{1} マクロはこのサーバーでは許可されていません"
+	}
+	"chat_invalid_characters"
+	{
+		"jp"		"チャット メッセージはブロックされました (理由: 無効な文字)。"
+	}
+	"chat_wide_char_spam"
+	{
+		"jp"		"チャット メッセージはブロックされました (理由: ワイド文字スパム)。"
+	}
+	"kick_bad_name"
+	{
+		"jp"		"名前に無効な文字が含まれています。名前を変更してください"
+	}
+	"ban_name_newline"
+	{
+		"jp"		"名前の改行が検出されました"
+	}
+	"LILAC_LittleAntiCheatWarningMacro"
+	{
+		"jp"		"[ちょっとしたチート対策] 警告: マクロの使用は許可されていません。"
+	}
+	"LILAC_LittleAntiCheatDetectedUsing"
+	{
+		"jp"		"[ちょっとしたチート対策] %N がマクロ %s を使用していることが検出されました。"
+	}
+	"LILAC_PingAppearsFineAgainSafe"
+	{
+		"jp"		"[ライラック] ping は再び正常になったようです。安全にチームに再参加してプレイできます。"
+	}
+	"LILAC_WarningKickedSecondsondsPingStays"
+	{
+		"jp"		"[ライラック] 警告: ping が高すぎると、%d 秒以内にキックされます。 (%.0f / %d最大)"
+	}
+	"kick_ban_genetic"
+	{
+		"jp"		"あなたはこのサーバーから禁止されました。"
+	}
+}

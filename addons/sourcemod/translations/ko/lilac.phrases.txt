@@ -1,0 +1,107 @@
+"Phrases"
+{
+	"welcome_msg"
+	{
+		"#format"	"{1:s}"
+		"ko"		"이 서버는 Little Anti-Cheat {1}로 보호됩니다."
+	}
+	"kick_query_failure"
+	{
+		"ko"		"오류: 쿼리 응답 실패. 이 문제가 지속되면 게임을 다시 시작하세요."
+	}
+	"kick_interp_exploit"
+	{
+		"#format"	"{1:.0f},{2:d},{3:.3f}"
+		"ko"		"익스플로잇 감지됨: Interp가 너무 높습니다(최대 {1}ms / {2}ms). cl_interp를 다시 {3} 이하로 설정하세요."
+	}
+	"tban_ping_high"
+	{
+		"#format"	"{1:.0f},{2:d}"
+		"ko"		"핑이 너무 높습니다(최대 {1} / {2})."
+	}
+	"kick_ban_generic"
+	{
+		"ko"		"당신은 이 서버에서 차단되었습니다"
+	}
+	"ban_angle"
+	{
+		"ko"		"앵글 치트가 감지되었습니다"
+	}
+	"ban_chat_clear"
+	{
+		"ko"		"채팅 클리어 감지됨"
+	}
+	"ban_convar"
+	{
+		"ko"		"잘못된 ConVar가 감지되었습니다."
+	}
+	"ban_nolerp"
+	{
+		"ko"		"NoLerp가 감지되었습니다."
+	}
+	"ban_bhop"
+	{
+		"ko"		"Bhop이 감지됨"
+	}
+	"ban_aimbot"
+	{
+		"ko"		"에임봇 감지됨"
+	}
+	"ban_aimlock"
+	{
+		"ko"		"조준 잠금 감지"
+	}
+	"ban_anti_duck_delay"
+	{
+		"ko"		"오리 지연 방지 감지됨"
+	}
+	"ban_noisemaker"
+	{
+		"ko"		"무한 소음 발생기가 감지됨"
+	}
+	"ban_macro"
+	{
+		"ko"		"매크로가 감지되었습니다."
+	}
+	"kick_macro"
+	{
+		"#format"	"{1:s}"
+		"ko"		"{1} 이 서버에서는 매크로가 허용되지 않습니다."
+	}
+	"chat_invalid_characters"
+	{
+		"ko"		"귀하의 채팅 메시지가 차단되었습니다(이유: 잘못된 문자)."
+	}
+	"chat_wide_char_spam"
+	{
+		"ko"		"귀하의 채팅 메시지가 차단되었습니다(이유: 와이드 문자 스팸)."
+	}
+	"kick_bad_name"
+	{
+		"ko"		"이름에 잘못된 문자가 포함되어 있습니다. 이름을 변경하세요."
+	}
+	"ban_name_newline"
+	{
+		"ko"		"이름 개행이 감지되었습니다."
+	}
+	"LILAC_LittleAntiCheatWarningMacro"
+	{
+		"ko"		"[리틀 안티 치트] 경고: 매크로 사용은 허용되지 않습니다!"
+	}
+	"LILAC_LittleAntiCheatDetectedUsing"
+	{
+		"ko"		"[리틀 치트 방지] %N가 매크로 %s를 사용하는 것이 감지되었습니다."
+	}
+	"LILAC_PingAppearsFineAgainSafe"
+	{
+		"ko"		"[라일락] 핑이 다시 괜찮아진 것 같습니다. 다시 팀에 합류하여 플레이해도 안전합니다."
+	}
+	"LILAC_WarningKickedSecondsondsPingStays"
+	{
+		"ko"		"[Lilac] 경고: 핑이 너무 높게 유지되면 %d초 안에 쫓겨날 것입니다! (%.0f / %d 최대)"
+	}
+	"kick_ban_genetic"
+	{
+		"ko"		"귀하는 이 서버에서 차단되었습니다."
+	}
+}

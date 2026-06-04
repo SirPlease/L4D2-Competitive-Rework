@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"L4D2JockeySkeet_Skeeted"
+	{
+		"zho"		"{green}★★{default} 您是 {olive}%N{default} 的 {blue}skeeted{default}。"
+	}
+	"L4D2JockeySkeet_SkeetedJockey"
+	{
+		"zho"		"{green}★★{default} 您{blue}skeeted {olive}%N{default} 的騎士。"
+	}
+	"L4D2JockeySkeet_JockeySkeeted"
+	{
+		"zho"		"{green} ★★ {default} {olive} %N {default} 的騎師是{blue} 被{olive} %N {default} 拋在了{default} 上。"
+	}
+}

@@ -1,0 +1,21 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"vi"		"< {olive} Đại Tộc {default} >"
+	}
+	"NoCommonRemaining"
+	{
+		"vi"		"{red} Không còn {default} chung!"
+	}
+	"CommonRemaining"
+	{
+		"#format"	"{1:i}"
+		"vi"		"{red} {1} {default} còn lại phổ biến.."
+	}
+	"FiniteEventStarted"
+	{
+		"#format"	"{1:i}"
+		"vi"		"Một sự kiện hữu hạn {blue} {default} của {olive} {1} {default} chung đã bắt đầu! Vội vàng hay chờ đợi, sự lựa chọn là của bạn!"
+	}
+}

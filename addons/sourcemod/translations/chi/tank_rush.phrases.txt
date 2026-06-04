@@ -2,7 +2,7 @@
 {
 	"Tag"
 	{
-		"chi"		"{red}[{default}NoTankRush{red}]"
+		"chi"		"{red} [ {default} NoTankRush {red} ]"
 	}
 	"freeze"
 	{

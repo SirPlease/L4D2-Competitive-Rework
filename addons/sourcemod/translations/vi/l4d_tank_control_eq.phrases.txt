@@ -1,0 +1,91 @@
+"Phrases"
+{
+	"TagRage"
+	{
+		"vi"		"{red} < {default} Cơn thịnh nộ của xe tăng {red} >"
+	}
+	"Refilled"
+	{
+		"vi"		"{default} ( {green} %N {default} 's) Máy đo cơn thịnh nộ {olive} {red} được nạp lại"
+	}
+	"RefilledBot"
+	{
+		"vi"		"Máy đo cơn thịnh nộ {olive} {red} được nạp lại"
+	}
+	"TagSelection"
+	{
+		"vi"		"{red} < {default} Lựa chọn xe tăng {red} >"
+	}
+	"YouBecomeTank"
+	{
+		"vi"		"{green} Bạn {default} sẽ trở thành xe tăng {red} {default}!"
+	}
+	"BecomeTank"
+	{
+		"vi"		"{olive} %N {default} sẽ trở thành Xe tăng {red}!"
+	}
+	"TagControl"
+	{
+		"vi"		"{green} [ {olive} Điều khiển xe tăng {green} ]"
+	}
+	"InvalidTarget"
+	{
+		"vi"		"{default} Mục tiêu không hợp lệ. Không thể tặng xe tăng"
+	}
+	"NoInfected"
+	{
+		"vi"		"{olive} %N {default} không thuộc nhóm bị nhiễm. Không thể tặng xe tăng"
+	}
+	"HintText"
+	{
+		"vi"		"Đồng hồ đo cơn thịnh nộ được nạp lại"
+	}
+	"L4DTankControlEq_TankRageMeterRefilled"
+	{
+		"vi"		"{red}<{default}Tank Rage{red}> {olive}R Máy đo cường độ {red}Được nạp lại"
+	}
+	"L4DTankControlEq_TankRageMeterRefilled_2"
+	{
+		"vi"		"{red}<{default}Tank Rage{red}> {default}({green}%N{default}'s) {olive}Rage Meter {red}Refill"
+	}
+	"L4DTankControlEq_TankSelectionBecomeTank"
+	{
+		"vi"		"{red}<{default}Tank Selection{red}> {green}Bạn {default}sẽ trở thành {red}Tank{default}!"
+	}
+	"L4DTankControlEq_TankSelectionBecomeTank_2"
+	{
+		"vi"		"{red}<{default}Tank Selection{red}> {olive}%N {default}sẽ trở thành {red}Tank!"
+	}
+	"L4DTankControlEq_TankControlInvalidTargetUnable"
+	{
+		"vi"		"{green}[{olive}Tank Control{green}] {default}Mục tiêu không hợp lệ. Không thể tặng xe tăng"
+	}
+	"L4DTankControlEq_TankControlNotInfectedTeam"
+	{
+		"vi"		"{green}[{olive}Tank Control{green}] {olive}%N {default}không thuộc nhóm bị nhiễm. Không thể tặng xe tăng"
+	}
+	"Hit_RageMeterRefilled"
+	{
+		"vi"		"Đường chuyền xe tăng đầu tiên đã kết thúc, đường chuyền xe tăng thứ hai bắt đầu"
+	}
+	"RageMeterRefilled"
+	{
+		"vi"		"( {green} %N {default} ) {olive} Chuyến xe tăng đầu tiên đã kết thúc, lượt xe tăng thứ hai {red} bắt đầu"
+	}
+	"Tag_Rage"
+	{
+		"vi"		"{red} < {default} Cơn thịnh nộ của xe tăng {red} > {default}"
+	}
+	"Tag_Selecion"
+	{
+		"vi"		"{red} < {default} Lựa chọn xe tăng {red} > {default}"
+	}
+	"UnableGiveTank"
+	{
+		"vi"		"[ {olive} SM {default} ] %s không bị nhiễm. Không thể cho Tank"
+	}
+	"YouRageMeterRefilled"
+	{
+		"vi"		"{olive} Đường chuyền xe tăng đầu tiên đã kết thúc, Đường chuyền xe tăng thứ hai {red} đã bắt đầu {default}"
+	}
+}

@@ -1,0 +1,339 @@
+"Phrases"
+{
+	"RPG_ProfilePermissionExpiredAutomaticallyClosed"
+	{
+		"zho"		"{default}[{green}RPG{default}] {olive}你的輪廓權限已失效，已自動關閉。"
+	}
+	"RPG_Message"
+	{
+		"zho"		"{default} [ {green} RPG {default} ] %s"
+	}
+	"RPG_RANKVariablesRequiredDetermineExtra"
+	{
+		"zho"		"{default}[{green}RANK{default}]{green}判斷額外積分所需變數發生變化，此局無法獲得額外積分, 過關也不獎勵額外分數"
+	}
+	"RPG_TitleUnset"
+	{
+		"zho"		"{green}你的頭銜取消設置"
+	}
+	"RPG_TitleUpdatedSuccessfullyNewTitle"
+	{
+		"zho"		"{green}你的頭銜更新成功，新頭銜為：{lightgreen}%s"
+	}
+	"RPG_RANKCannotObtainAdditionalPoints"
+	{
+		"zho"		"{default}[{green}RANK{default}]{green}由於開啟了高階人機，無法獲得額外積分，也不會更新地圖記錄"
+	}
+	"RPG_StoreClosedFunctionCannotUsed"
+	{
+		"zho"		"{lightgreen}商店已關閉，無法使用此功能。"
+	}
+	"RPG_AddedBullets"
+	{
+		"zho"		"{green}%N {lightgreen} 補充了子彈"
+	}
+	"RPG_FirstTimeRandomTrollFree"
+	{
+		"zho"		"{green}%N {lightgreen}第一次隨機白嫖一把噴子"
+	}
+	"RPG_QuicklySpend50BuySingle"
+	{
+		"zho"		"{green}%N {lightgreen}快速花費50B數隨機購買一把單噴"
+	}
+	"RPG_NotEnoughMoneyForShotgun"
+	{
+		"zho"		"{lightgreen}沒錢你買個屁噴子，心裡沒點B數"
+	}
+	"RPG_FirstTimeGotSecondsondGeneration"
+	{
+		"zho"		"{green}%N {lightgreen}第一次白嫖一把二代單噴"
+	}
+	"RPG_QuicklySpend50BuySecondsond"
+	{
+		"zho"		"{green}%N {lightgreen}快速花費50B數購買一把二代單噴"
+	}
+	"RPG_FirstGenerationSingleSpray"
+	{
+		"zho"		"{green}%N {lightgreen}第一次白嫖一把一代單噴"
+	}
+	"RPG_QuicklySpend50BuyFirst"
+	{
+		"zho"		"{green}%N {lightgreen}快速花費50B數隨機購買一把一代單噴"
+	}
+	"RPG_FirstTimeBoughtSilencedSMG"
+	{
+		"zho"		"{green}%N {lightgreen}第一次白嫖一把消音smg機槍"
+	}
+	"RPG_QuicklySpend50BuySilenced"
+	{
+		"zho"		"{green}%N {lightgreen}快速花費50B數購買一把消音smg機槍"
+	}
+	"RPG_DonMoneyCanBuyCrappy"
+	{
+		"zho"		"{lightgreen}沒錢你買屁機槍，心裡沒點B數"
+	}
+	"RPG_FirstTimeFreeUzi"
+	{
+		"zho"		"{green}%N {lightgreen}第一次白嫖一把Uzi"
+	}
+	"RPG_QuicklySpend50RandomlyBuy"
+	{
+		"zho"		"{green}%N {lightgreen}快速花費50B數隨機購買一把Uzi機槍"
+	}
+	"RPG_QuicklySpent400BuyBottle"
+	{
+		"zho"		"{green}%N {lightgreen}快速花費400B數買了瓶藥"
+	}
+	"RPG_FirstUseSetchTitleName"
+	{
+		"zho"		"{green}你必須先用{lightgreen}!setch \\\\\\\"你想要的稱號名字\\\\\\\" {green}設定好你的自訂稱號"
+	}
+	"RPG_TitleModuleNotEnabledTitle"
+	{
+		"zho"		"{green}稱號模組未啟用，無法設定稱號"
+	}
+	"RPG_CurrentlyProhibitedUseNumberPurchase"
+	{
+		"zho"		"{lightgreen}目前已禁止使用B數購買商品（僅允許 0B 物品）。"
+	}
+	"RPG_ShopSkillsCoolingDownCooling"
+	{
+		"zho"		"{lightgreen}商店技能冷卻中(冷卻時間15s)"
+	}
+	"RPG_ServerClosedCoinUsageChannel"
+	{
+		"zho"		"伺服器關閉了B幣使用通道，如需使用請投票開啟"
+	}
+	"RPG_DonPointMind"
+	{
+		"zho"		"{lightgreen}你自己心裡沒有點B數嗎?"
+	}
+	"RPG_NewUserCreatingDatabase"
+	{
+		"zho"		"{green}新用戶，正在建立資料庫"
+	}
+	"RPG_ChangeOutlineColorGreen"
+	{
+		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}綠色 {default}!"
+	}
+	"RPG_SetOutlineColorBlue"
+	{
+		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}藍色 {default}!"
+	}
+	"RPG_SetOutlineColorBlueViolet"
+	{
+		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}藍紫色 {default}!"
+	}
+	"RPG_ChangeOutlineColorCyan"
+	{
+		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}青色 {default}!"
+	}
+	"RPG_SetOutlineColorOrange"
+	{
+		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}橘黃 {default}!"
+	}
+	"RPG_SetOutlineColorRed"
+	{
+		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}紅色 {default}!"
+	}
+	"RPG_SetOutlineColorGray"
+	{
+		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}灰色 {default}!"
+	}
+	"RPG_SetOutlineColorYellow"
+	{
+		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}黃色 {default}!"
+	}
+	"RPG_SetOutlineColorLime"
+	{
+		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}酸橙色 {default}!"
+	}
+	"RPG_SetOutlineColorMaroon"
+	{
+		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}栗子 {default}!"
+	}
+	"RPG_SetOutlineColorTeal"
+	{
+		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}藍綠色 {default}!"
+	}
+	"RPG_SetOutlineColorPink"
+	{
+		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}粉紅 {default}!"
+	}
+	"RPG_SetOutlineColorPurple"
+	{
+		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}紫色 {default}!"
+	}
+	"RPG_SetOutlineColorWhite"
+	{
+		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}白色 {default}!"
+	}
+	"RPG_SetOutlineColorGold"
+	{
+		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}金黃色 {default}!"
+	}
+	"RPG_SetOutlineColorRainbow"
+	{
+		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}彩虹色 {default}!"
+	}
+	"RPG_SetOutlineColorCustomOutline"
+	{
+		"zho"		"{olive}你 {green}將輪廓顏色改為您的{default}: {green}客製顏色輪廓 {default}!"
+	}
+	"RPG_ClosedSurvivorProfile"
+	{
+		"zho"		"{olive}你關掉了生還者輪廓"
+	}
+	"RPG_ChangeSkinColorGreen"
+	{
+		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}綠色 {default}!"
+	}
+	"RPG_SetSkinColorBlue"
+	{
+		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}藍色 {default}!"
+	}
+	"RPG_SetSkinColorBlueViolet"
+	{
+		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}藍紫色 {default}!"
+	}
+	"RPG_SetSkinColorCyan"
+	{
+		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}青色 {default}!"
+	}
+	"RPG_SetSkinColorOrange"
+	{
+		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}橘黃 {default}!"
+	}
+	"RPG_SetSkinColorRed"
+	{
+		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}紅色 {default}!"
+	}
+	"RPG_SetSkinColorGray"
+	{
+		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}灰色 {default}!"
+	}
+	"RPG_SetSkinColorYellow"
+	{
+		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}黃色 {default}!"
+	}
+	"RPG_SetSkinColorLime"
+	{
+		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}酸橙色 {default}!"
+	}
+	"RPG_SetSkinColorMaroon"
+	{
+		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}栗色 {default}!"
+	}
+	"RPG_SetSkinColorTeal"
+	{
+		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}藍綠色 {default}!"
+	}
+	"RPG_SetSkinColorPink"
+	{
+		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}粉紅色 {default}!"
+	}
+	"RPG_SetSkinColorPurple"
+	{
+		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}紫色 {default}!"
+	}
+	"RPG_SetSkinColorBlack"
+	{
+		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}黑色 {default}!"
+	}
+	"RPG_SetSkinColorGold"
+	{
+		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}金黃色 {default}!"
+	}
+	"RPG_ChangeSkinColorTransparentColor"
+	{
+		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}透明色 {default}!"
+	}
+	"RPG_SetSkinColorCustomSkin"
+	{
+		"zho"		"{olive}你 {green}將皮膚顏色改為{default}: {green}您的客製化皮膚 {default}!"
+	}
+	"RPG_FirstFreePurchase"
+	{
+		"zho"		"{green}%N{lightgreen}第一次白嫖了一把%s，還剩%d的B數"
+	}
+	"RPG_BoughtItemWithPoints"
+	{
+		"zho"		"{green}%N{lightgreen}B數-%d,購買了%s，還剩%d的B數"
+	}
+	"RPG_MeleeWeaponSetMacheteGo"
+	{
+		"zho"		"{green}您的出門近戰武器設定為砍刀"
+	}
+	"RPG_MeleeWeaponSetFireAx"
+	{
+		"zho"		"{green}您的出門近戰武器設為消防斧"
+	}
+	"RPG_SetMeleeWeaponKnifeGo"
+	{
+		"zho"		"{green}您的出門近戰武器設定為小刀"
+	}
+	"RPG_MeleeWeaponSetKatana"
+	{
+		"zho"		"{green}您的出門近戰武器設為武士刀"
+	}
+	"RPG_MeleeWeaponSetMagnum"
+	{
+		"zho"		"{green}您的出門近戰武器設為馬格南"
+	}
+	"RPG_SetMeleeWeaponGoingElectric"
+	{
+		"zho"		"{green}您的出門近戰武器設為電吉他"
+	}
+	"RPG_SetMeleeWeaponGoingBaton"
+	{
+		"zho"		"{green}您的出門近戰武器設為警棍"
+	}
+	"RPG_SetOutgoingMeleeWeaponPitchfork"
+	{
+		"zho"		"{green}您的出門近戰武器設定為草叉"
+	}
+	"RPG_SetExitMeleeWeaponShovel"
+	{
+		"zho"		"{green}您的出門近戰武器設為鏟子"
+	}
+	"RPG_SetMeleeWeaponGoingSmall"
+	{
+		"zho"		"{green}您的出門近戰武器設定為小手槍"
+	}
+	"RPG_SetExitMeleeWeaponPan"
+	{
+		"zho"		"{green}您的出門近戰武器設為平底鍋"
+	}
+	"RPG_SetMeleeWeaponGoingCrowbar"
+	{
+		"zho"		"{green}您的出門近戰武器設定為撬棍"
+	}
+	"RPG_SetMeleeWeaponCricketBat"
+	{
+		"zho"		"{green}您的出門近戰武器設定為板球拍"
+	}
+	"RPG_CanceledMeleeWeaponGoing"
+	{
+		"zho"		"{green}您取消了出門近戰武器"
+	}
+	"RPG_MeleeWeaponSettingFailedExceeded"
+	{
+		"zho"		"{lightgreen}您的出門近戰武器設定失敗，超出限制"
+	}
+	"RPG_TurnedBloodRecoveryFunctionKilling"
+	{
+		"zho"		"{green}你已經開啟了殺特回血，殺一隻特感回2滴血，不超過血量上限"
+	}
+	"RPG_TurnedOffBloodRecoverySpecial"
+	{
+		"zho"		"{green}你已經關閉了殺特回血."
+	}
+	"RPG_AntiKickPlayerAdministratorAnti"
+	{
+		"zho"		"{green}[AntiKick]{default} 該玩家 {olive}%N{default} 為管理員，已啟用防踢，投票無效。"
+	}
+	"RPG_AntiKickNotPermissionKick"
+	{
+		"zho"		"{green}[AntiKick]{default} 你無權踢出受保護管理員：{olive}%N{default}。"
+	}
+}

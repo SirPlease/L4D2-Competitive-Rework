@@ -1,0 +1,31 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"{red} [ {default} 坦克狂暴 {red} ] {default}"
+	}
+	"SurvivorsRunBack"
+	{
+		"chi"		"每有 {olive} %i {green} %% {default} 幸存者跑回来，坦克的挫败感就会被冻结 {olive} %0.1f {green} 秒 {default} 。"
+	}
+	"L4D2Tankrage_Tank"
+	{
+		"chi"		"[%s]：%N是坦克"
+	}
+	"L4D2Tankrage_EverythingReset"
+	{
+		"chi"		"[%s]：一切都重置了！"
+	}
+	"L4D2Tankrage_FlowDifferenceSinceLastCheck"
+	{
+		"chi"		"{green}[{lightgreen}%N{green}]{default}：自上次检查以来的流量差异：%i"
+	}
+	"L4D2Tankrage_FrusGrace"
+	{
+		"chi"		"{green}[{lightgreen}%N{green}]{default}： 弗鲁斯：{lightgreen}%i {default}- 恩典：{lightgreen}%f{green}s"
+	}
+	"L4D2Tankrage_SetGrace"
+	{
+		"chi"		"{green}[{lightgreen}%N{green}]{default}：将宽限设置为：{lightgreen}%f{green}s"
+	}
+}

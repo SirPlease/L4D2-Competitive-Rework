@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"jp"		"[{green}!{default}]"
+	}
+	"Cvar_Invalid"
+	{
+		"jp"		"コマンド {olive} c_thirdpersonShoulder {default} は無効であるか、保護されています。"
+	}
+	"Cvar_Value1"
+	{
+		"jp"		"プレイするには、コンソールで {olive} c_thirdpersonShoulder 0 {default} と入力します。"
+	}
+	"Cvar_Invalid_Nocolor"
+	{
+		"jp"		"コマンド c_thirdpersonShoulder は無効であるか、保護されています。"
+	}
+	"Cvar_Value1_Nocolor"
+	{
+		"jp"		"プレイするには、コンソールで「c_thirdpersonShoulder 0」と入力します。"
+	}
+}

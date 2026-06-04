@@ -1,0 +1,142 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"jp"		"{blue} < {green} ボス投票 {blue} > {default}"
+	}
+	"NotAvailable"
+	{
+		"jp"		"このマップではボス投票はできません。"
+	}
+	"Available"
+	{
+		"jp"		"ボスの投票は準備中のみ可能です。"
+	}
+	"FirstRound"
+	{
+		"jp"		"ボスの投票は、マップの最初のラウンド中にのみ利用できます。"
+	}
+	"NotAvailableForSpec"
+	{
+		"jp"		"観客はボス投票を利用できません。"
+	}
+	"CannotBeCalled"
+	{
+		"jp"		"現在、ボス投票を呼び出すことができません..."
+	}
+	"Usage"
+	{
+		"jp"		"使用法:!voteboss {olive} < {default} タンク {olive} > < {default} ウィッチ {olive} > {default} 。"
+	}
+	"Usage2"
+	{
+		"jp"		"{olive} スポーンなし {default} には {default} \\\\\\\" {blue} 0 {default} \\\\\\\" を、{olive} 無知には \\\\\\\" {blue} -1 {default} \\\\\\\" を使用します。"
+	}
+	"Invalid"
+	{
+		"jp"		"パーセンテージは {olive} 無効な {default} です。"
+	}
+	"TankStatic"
+	{
+		"jp"		"戦車のスポーンは静的であり、このマップ上では変更できません。"
+	}
+	"WitchStatic"
+	{
+		"jp"		"魔女のスポーンは静的であり、このマップ上では変更できません。"
+	}
+	"TankBanned"
+	{
+		"jp"		"タンクの割合は {blue} 禁止 {default} です。"
+	}
+	"WitchBanned"
+	{
+		"jp"		"魔女の割合は {blue} 禁止 {default} です。"
+	}
+	"SetBosses"
+	{
+		"jp"		"タンクを %s に設定し、ウィッチを %s に設定しますか?"
+	}
+	"SetTank"
+	{
+		"jp"		"タンクを %s に設定し、ウィッチを無効に設定しますか?"
+	}
+	"SetOnlyTank"
+	{
+		"jp"		"タンクを %s に設定しますか?"
+	}
+	"SetWitch"
+	{
+		"jp"		"タンクを無効に設定し、ウィッチを %s に設定しますか?"
+	}
+	"SetOnlyWitch"
+	{
+		"jp"		"ウィッチを %s に設定しますか?"
+	}
+	"SetBossesDisabled"
+	{
+		"jp"		"ボスを次のように設定します: 無効ですか?"
+	}
+	"SetTankDisabled"
+	{
+		"jp"		"タンクを次のように設定します: 無効ですか?"
+	}
+	"SetWitchDisabled"
+	{
+		"jp"		"ウィッチを次のように設定します: 無効ですか?"
+	}
+	"OnlyReadyUp"
+	{
+		"jp"		"スポーンは準備中にのみ設定できます。"
+	}
+	"SettingBoss"
+	{
+		"jp"		"ボスのスポーンを設定..."
+	}
+	"SettingTank"
+	{
+		"jp"		"タンクスポーンの設定..."
+	}
+	"SettingWitch"
+	{
+		"jp"		"ウィッチスポーンの設定..."
+	}
+	"SettingBossDisabled"
+	{
+		"jp"		"ボスを無効に設定しています..."
+	}
+	"CommandNotAvailable"
+	{
+		"jp"		"このマップではコマンドを使用できません。"
+	}
+	"TankSpawnStatic"
+	{
+		"jp"		"戦車のスポーンは静的であり、このマップ上では変更できません。"
+	}
+	"PercentageInvalid"
+	{
+		"jp"		"パーセンテージは {blue} 無効な {default} です。"
+	}
+	"Percentagebanned"
+	{
+		"jp"		"パーセンテージは {blue} 禁止 {default} です。"
+	}
+	"TankSpawnAdmin"
+	{
+		"#format"	"{1:i},{2:s}"
+		"jp"		"管理者によって、タンクのスポーンが {olive} {1} % {default} に設定されました {blue} {2} {default} 。"
+	}
+	"WitchSpawnStatic"
+	{
+		"jp"		"魔女のスポーンは静的であり、このマップ上では変更できません。"
+	}
+	"WitchSpawnAdmin"
+	{
+		"#format"	"{1:i},{2:s}"
+		"jp"		"ウィッチのスポーンは、管理者 {blue} {2} {default} によって {olive} {1} % {default} に設定されました。"
+	}
+	"RoundNotReachLimit"
+	{
+		"#format"	"{1:i}"
+		"jp"		"この難易度でもう楽をしたいですか？だめです！({olive}boss 投票機能{default}を使うには、あと {blue}{1} 回{default}クリア失敗する必要があります)."
+	}
+}

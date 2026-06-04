@@ -1,0 +1,55 @@
+"Phrases"
+{
+	"TagTank"
+	{
+		"vi"		"< Xe tăng {olive} {default} >"
+	}
+	"TagWitch"
+	{
+		"vi"		"< {olive} Phù Thủy {default} >"
+	}
+	"TankOn"
+	{
+		"vi"		"Xe tăng: %d%%"
+	}
+	"WitchOn"
+	{
+		"vi"		"Phù Thủy: %d%%"
+	}
+	"Disabled"
+	{
+		"vi"		"Tàn tật"
+	}
+	"StaticSpawn"
+	{
+		"vi"		"Sinh sản tĩnh"
+	}
+	"None"
+	{
+		"vi"		"Không có"
+	}
+	"TankDisabled"
+	{
+		"vi"		"Xe tăng: Vô hiệu hóa"
+	}
+	"TankStatic"
+	{
+		"vi"		"Xe tăng: Sinh sản tĩnh"
+	}
+	"TankNone"
+	{
+		"vi"		"Xe tăng: Không có"
+	}
+	"WitchDisabled"
+	{
+		"vi"		"Phù thủy: Vô hiệu hóa"
+	}
+	"WitchStatic"
+	{
+		"vi"		"Phù thủy: Sinh sản tĩnh"
+	}
+	"WitchNone"
+	{
+		"vi"		"Phù thủy: Không có"
+	}
+}

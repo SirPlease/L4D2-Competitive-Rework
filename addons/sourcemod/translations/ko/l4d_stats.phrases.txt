@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4DStats_RankMessage"
+	{
+		"ko"		"{green} [ {lightgreen} 순위 {green} ] {default} %s"
+	}
+}

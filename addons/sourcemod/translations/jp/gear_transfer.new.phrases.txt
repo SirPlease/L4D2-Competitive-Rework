@@ -1,0 +1,59 @@
+"Phrases"
+{
+	"Gave"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"jp"		"{1} は {2} を {3} に与えました"
+	}
+	"Grabbed"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"jp"		"{1} は {3} から {2} を取得しました"
+	}
+	"BotGrabbed"
+	{
+		"#format"	"{1:s},{2:s}"
+		"jp"		"{1} が {2} を掴みました"
+	}
+	"Switched"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"jp"		"{1} は {2} を {3} と切り替えました"
+	}
+	"weapon_molotov"
+	{
+		"jp"		"火炎瓶"
+	}
+	"weapon_pipe_bomb"
+	{
+		"jp"		"パイプ爆弾"
+	}
+	"weapon_vomitjar"
+	{
+		"jp"		"嘔吐物"
+	}
+	"weapon_first_aid_kit"
+	{
+		"jp"		"医療キット"
+	}
+	"weapon_pain_pills"
+	{
+		"jp"		"鎮痛剤"
+	}
+	"weapon_adrenaline"
+	{
+		"jp"		"アドレナリン"
+	}
+	"weapon_upgradepack_explosive"
+	{
+		"jp"		"爆発弾"
+	}
+	"weapon_upgradepack_incendiary"
+	{
+		"jp"		"焼夷弾"
+	}
+	"weapon_defibrillator"
+	{
+		"jp"		"除細動器"
+	}
+}

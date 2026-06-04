@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"ko"		"{red}[{default}NoTankRush{red}]"
+	}
+	"freeze"
+	{
+		"ko"		"{red}탱크가 {default}스폰되었습니다. {olive}얼어붙는 {default}거리 포인트!"
+	}
+	"unfreeze"
+	{
+		"ko"		"{red}탱크가 {default}죽었습니다. {olive}동결 해제된 {default}거리 포인트!"
+	}
+	"saferoom"
+	{
+		"ko"		"{red}생존자들이 {default}안전실에 도착했습니다. {olive}동결 해제된 {default}거리 포인트!"
+	}
+}

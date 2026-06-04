@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"vi"		"[ {olive} Teamflip {default} ]"
+	}
+	"FlippedSurvivor"
+	{
+		"vi"		"{green} %s {default} đã lật đổ một đội và nằm trong đội {default} Người sống sót {blue}!"
+	}
+	"FlippedInfected"
+	{
+		"vi"		"{green} %s {default} đã lật đổ một đội và nằm trong đội {default} bị nhiễm {red}!"
+	}
+	"Wait"
+	{
+		"vi"		"[Teamflip] Này anh bạn, chậm lại đi. Đợi ít nhất %d giây."
+	}
+}

@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"ko"		"[{green}!{default}]"
+	}
+	"Cvar_Invalid"
+	{
+		"ko"		"{olive} c_thirdpersonshoulder {default} 명령이 유효하지 않거나 보호됩니다."
+	}
+	"Cvar_Value1"
+	{
+		"ko"		"플레이하려면 콘솔에 {olive} c_thirdpersonshoulder 0 {default}를 입력하세요."
+	}
+	"Cvar_Invalid_Nocolor"
+	{
+		"ko"		"c_thirdperson 명령이 유효하지 않거나 보호되어야 합니다."
+	}
+	"Cvar_Value1_Nocolor"
+	{
+		"ko"		"플레이하려면 콘솔에 c_thirdpersonshoulder 0을 입력하세요."
+	}
+}

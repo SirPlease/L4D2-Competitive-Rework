@@ -1,0 +1,415 @@
+"Phrases"
+{
+	"SCOPE_DETECTED"
+	{
+		"jp"		"[{olive}エモート{default}]{darkred} スコープ中はエモートを使用できません。"
+	}
+	"NO_DANCES_ACCESS_FLAG"
+	{
+		"jp"		"[{olive}エモート{default}]{darkred} ダンスを使用するアクセス権がありません!!"
+	}
+	"NO_EMOTES_ACCESS_FLAG"
+	{
+		"jp"		"[{olive}エモート{default}]{darkred} エモートを使用するアクセス権がありません!!"
+	}
+	"MUST_BE_ALIVE"
+	{
+		"jp"		"[{olive}エモート{default}]{darkred} これを使用するには生きている必要があります!"
+	}
+	"STAY_ON_GROUND"
+	{
+		"jp"		"[{olive}エモート{default}]{darkred} これを使用するには地面に留まらなければなりません!"
+	}
+	"COOLDOWN_EMOTES"
+	{
+		"jp"		"[{olive}エモート{default}]{darkred} クールダウン中です!"
+	}
+	"AMIN_1_INVALID"
+	{
+		"jp"		"[{olive}エモート{default}]{darkred} 引数 1 は無効です!!!"
+	}
+	"CANNOT_USE_NOW"
+	{
+		"jp"		"[{olive}エモート{default}]{darkred} 現在は使用できません。"
+	}
+	"INVALID_EMOTE_ID"
+	{
+		"jp"		"[{olive}エモート{default}]{darkred} 無効なエモート ID、(1 ～ 86) の間である必要があります"
+	}
+	"RANDOM_EMOTE"
+	{
+		"jp"		"ランダムエモート"
+	}
+	"RANDOM_DANCE"
+	{
+		"jp"		"ランダムダンス"
+	}
+	"EMOTES_LIST"
+	{
+		"jp"		"エモートリスト"
+	}
+	"DANCES_LIST"
+	{
+		"jp"		"ダンスリスト"
+	}
+	"EMOTE_PLAYER"
+	{
+		"jp"		"エモートプレイヤー"
+	}
+	"SELECT_EMOTE"
+	{
+		"jp"		"エモートを選択"
+	}
+	"TITLE_MAIM_MENU"
+	{
+		"jp"		"エモートとダンス"
+	}
+	"TITLE_EMOTES_MENU"
+	{
+		"jp"		"エモート"
+	}
+	"TITLE_DANCES_MENU"
+	{
+		"jp"		"ダンス"
+	}
+	"Emote_Fonzie_Pistol"
+	{
+		"jp"		"フィンガーガン"
+	}
+	"Emote_Bring_It_On"
+	{
+		"jp"		"うちにおいで"
+	}
+	"Emote_ThumbsDown"
+	{
+		"jp"		"サムズダウン"
+	}
+	"Emote_Celebration_Loop"
+	{
+		"jp"		"お祝い"
+	}
+	"Emote_BlowKiss"
+	{
+		"jp"		"投げキッス"
+	}
+	"Emote_Calculated"
+	{
+		"jp"		"計算された"
+	}
+	"Emote_Confused"
+	{
+		"jp"		"混乱した"
+	}
+	"Emote_Chug"
+	{
+		"jp"		"チャグ"
+	}
+	"Emote_Cry"
+	{
+		"jp"		"泣く"
+	}
+	"Emote_DustingOffHands"
+	{
+		"jp"		"砦のバンド"
+	}
+	"Emote_DustOffShoulders"
+	{
+		"jp"		"シェイクイットアップ2"
+	}
+	"Emote_Facepalm"
+	{
+		"jp"		"フェイスパーム"
+	}
+	"Emote_Fishing"
+	{
+		"jp"		"オン・ザ・フック"
+	}
+	"Emote_Flex"
+	{
+		"jp"		"フレックス"
+	}
+	"Emote_golfclap"
+	{
+		"jp"		"ゴルフクラップ"
+	}
+	"Emote_HandSignals"
+	{
+		"jp"		"手信号"
+	}
+	"Emote_HeelClick"
+	{
+		"jp"		"クリック！"
+	}
+	"Emote_Hotstuff"
+	{
+		"jp"		"ホットスタッフ"
+	}
+	"Emote_IBreakYou"
+	{
+		"jp"		"ブレークポイント"
+	}
+	"Emote_IHeartYou"
+	{
+		"jp"		"真の愛"
+	}
+	"Emote_Kung-Fu_Salute"
+	{
+		"jp"		"カンフー敬礼"
+	}
+	"Emote_Laugh"
+	{
+		"jp"		"笑う"
+	}
+	"Emote_Luchador"
+	{
+		"jp"		"ルチャドール"
+	}
+	"Emote_Make_It_Rain"
+	{
+		"jp"		"雨を降らせよう"
+	}
+	"Emote_NotToday"
+	{
+		"jp"		"いやいや"
+	}
+	"Emote_RockPaperScissor_Paper"
+	{
+		"jp"		"紙"
+	}
+	"Emote_RockPaperScissor_Rock"
+	{
+		"jp"		"ロック"
+	}
+	"Emote_RockPaperScissor_Scissor"
+	{
+		"jp"		"ハサミ"
+	}
+	"Emote_Salt"
+	{
+		"jp"		"塩"
+	}
+	"Emote_Salute"
+	{
+		"jp"		"敬礼"
+	}
+	"Emote_SmoothDrive"
+	{
+		"jp"		"車を運転する"
+	}
+	"Emote_Snap"
+	{
+		"jp"		"スナップ"
+	}
+	"Emote_StageBow"
+	{
+		"jp"		"ステージボウ"
+	}
+	"Emote_ThumbsUp"
+	{
+		"jp"		"いいぞ"
+	}
+	"Emote_Wave2"
+	{
+		"jp"		"敬礼2"
+	}
+	"Emote_Yeet"
+	{
+		"jp"		"イエット"
+	}
+	"DanceMoves"
+	{
+		"jp"		"ダンスの動き"
+	}
+	"Emote_Mask_Off_Intro"
+	{
+		"jp"		"オレンジジャスティス"
+	}
+	"Emote_Zippy_Dance"
+	{
+		"jp"		"やんちゃ"
+	}
+	"ElectroShuffle"
+	{
+		"jp"		"エレクトロシャッフル"
+	}
+	"Emote_AerobicChamp"
+	{
+		"jp"		"エアロビック"
+	}
+	"Emote_Bendy"
+	{
+		"jp"		"曲がりくねった"
+	}
+	"Emote_BandOfTheFort"
+	{
+		"jp"		"ベストメイト"
+	}
+	"Emote_Boogie_Down_Intro"
+	{
+		"jp"		"ブギー"
+	}
+	"Emote_Capoeira"
+	{
+		"jp"		"カポエイラ"
+	}
+	"Emote_Charleston"
+	{
+		"jp"		"フラッパー"
+	}
+	"Emote_Chicken"
+	{
+		"jp"		"チキン"
+	}
+	"Emote_Dance_NoBones"
+	{
+		"jp"		"骨なし"
+	}
+	"Emote_Dance_Shoot"
+	{
+		"jp"		"誇大広告"
+	}
+	"Emote_Dance_SwipeIt"
+	{
+		"jp"		"シェイク・イット・アップ"
+	}
+	"Emote_Dance_Disco_T3"
+	{
+		"jp"		"ディスコフィーバー"
+	}
+	"Emote_DG_Disco"
+	{
+		"jp"		"ディスコフィーバー2"
+	}
+	"Emote_Dance_Worm"
+	{
+		"jp"		"ワーム"
+	}
+	"Emote_Dance_Loser"
+	{
+		"jp"		"テイク・ザ・L"
+	}
+	"Emote_Dance_Breakdance"
+	{
+		"jp"		"ブレイクダンス"
+	}
+	"Emote_Dance_Pump"
+	{
+		"jp"		"ポンプ"
+	}
+	"Emote_Dance_RideThePony"
+	{
+		"jp"		"ポニーに乗って"
+	}
+	"Emote_Dab"
+	{
+		"jp"		"軽くたたく"
+	}
+	"Emote_EasternBloc_Start"
+	{
+		"jp"		"東側ブロック"
+	}
+	"Emote_FancyFeet"
+	{
+		"jp"		"ドリームフィート"
+	}
+	"Emote_FlossDance"
+	{
+		"jp"		"フロス"
+	}
+	"Emote_FlippnSexy"
+	{
+		"jp"		"フリッペン"
+	}
+	"Emote_Fresh"
+	{
+		"jp"		"新鮮な"
+	}
+	"Emote_GrooveJam"
+	{
+		"jp"		"グレフグ"
+	}
+	"Emote_guitar"
+	{
+		"jp"		"ギター"
+	}
+	"Emote_Hillbilly_Shuffle_Intro"
+	{
+		"jp"		"シャッフル"
+	}
+	"Emote_Hiphop_01"
+	{
+		"jp"		"ヒップホップ"
+	}
+	"Emote_Hula_Start"
+	{
+		"jp"		"フラホップ"
+	}
+	"Emote_InfiniDab_Intro"
+	{
+		"jp"		"無限の軽打"
+	}
+	"Emote_Intensity_Start"
+	{
+		"jp"		"強度"
+	}
+	"Emote_IrishJig_Start"
+	{
+		"jp"		"トルコ語 ダブケ"
+	}
+	"Emote_KoreanEagle"
+	{
+		"jp"		"イーグル"
+	}
+	"Emote_Kpop_02"
+	{
+		"jp"		"トゥルーハート"
+	}
+	"Emote_LivingLarge"
+	{
+		"jp"		"大きく生きる"
+	}
+	"Emote_Maracas"
+	{
+		"jp"		"マラカス"
+	}
+	"Emote_PopLock"
+	{
+		"jp"		"ポップロック"
+	}
+	"Emote_PopRock"
+	{
+		"jp"		"スターパワー"
+	}
+	"Emote_RobotDance"
+	{
+		"jp"		"ロボット"
+	}
+	"Emote_T-Rex"
+	{
+		"jp"		"ティラノサウルス"
+	}
+	"Emote_TechnoZombie"
+	{
+		"jp"		"蘇生された"
+	}
+	"Emote_Twist"
+	{
+		"jp"		"ねじれ"
+	}
+	"Emote_WarehouseDance_Start"
+	{
+		"jp"		"倉庫"
+	}
+	"Emote_Wiggle"
+	{
+		"jp"		"小刻みに動く"
+	}
+	"Emote_Youre_Awesome"
+	{
+		"jp"		"あなたは素晴らしいです"
+	}
+	"FNEmotes_SMUsageSMSetEmotes"
+	{
+		"jp"		"[SM] 使用法: sm_setemotes <#userid|name> [エモート ID]"
+	}
+}

@@ -1,0 +1,82 @@
+"Phrases"
+{
+	"Banned Check Site"
+	{
+		"#format"	"{1:s}"
+		"ko"		"귀하는 이 서버에 의해 차단되었습니다. 자세한 내용은 {1}를 확인하세요."
+	}
+	"DB Connect Fail"
+	{
+		"ko"		"데이터베이스 연결에 실패했습니다. 서버운영자에게 문의하세요."
+	}
+	"Not In Game"
+	{
+		"ko"		"플레이어가 게임 중이 아닙니다. 웹 패널을 방문하여 해당 플레이어를 차단하세요."
+	}
+	"Ban Not Verified"
+	{
+		"ko"		"이 플레이어는 확인되지 않았습니다. 다시 시도하기 전에 30초 정도 기다리십시오."
+	}
+	"Can Not Unban"
+	{
+		"#format"	"{1:s}"
+		"ko"		"서버에서는 차단을 해제할 수 없습니다. 차단을 해제하려면 {1}를 방문하세요."
+	}
+	"Can Not Add Ban"
+	{
+		"#format"	"{1:s}"
+		"ko"		"서버에서는 차단을 추가할 수 없습니다. 차단을 추가하려면 {1}를 방문하세요."
+	}
+	"Check Menu"
+	{
+		"ko"		"차단 사유를 선택하려면 메뉴를 확인하세요."
+	}
+	"Include Reason"
+	{
+		"ko"		"클라이언트를 차단하는 이유를 포함해 주세요."
+	}
+	"Ban Fail"
+	{
+		"ko"		"플레이어를 차단하지 못했습니다. 다시 시도해 주세요."
+	}
+	"Chat Reason"
+	{
+		"ko"		"채팅창에 차단 사유를 입력하고 엔터를 눌러주세요. 중단하려면 '!noreason '를 입력하세요."
+	}
+	"Chat Reason Aborted"
+	{
+		"ko"		"금지 절차가 성공적으로 중지되었습니다."
+	}
+	"SourceBans_FailedBan"
+	{
+		"ko"		"%s%s를 차단하지 못했습니다."
+	}
+	"SourceBans_AlreadyBanned"
+	{
+		"ko"		"%s%s는 이미 금지되었습니다."
+	}
+	"SourceBans_SMBanipFailed"
+	{
+		"ko"		"%ssm_banip 실패"
+	}
+	"SourceBans_SuccessfullyBanned"
+	{
+		"ko"		"%s%s가 성공적으로 차단되었습니다."
+	}
+	"SourceBans_SMUnbanFailed"
+	{
+		"ko"		"%ssm_unban 실패"
+	}
+	"SourceBans_NoActiveBansFoundFilter"
+	{
+		"ko"		"%s해당 필터에 대한 활성 차단이 없습니다."
+	}
+	"SourceBans_SuccessfullyUnbanned"
+	{
+		"ko"		"%s%s가 성공적으로 차단 해제되었습니다."
+	}
+	"SourceBans_SMAddbanFailed"
+	{
+		"ko"		"%ssm_addban 실패"
+	}
+}

@@ -92,7 +92,7 @@
 
 	"L4D2DamageShow_SpectatorDisplayToggled"
 	{
-		"en"		"{green}旁观显示{default}已切换：{olive}%s"
+		"en"		"{green}View display {default} switched: {olive}%s"
 		"chi"		"{green}旁观显示{default}已切换：{olive}%s"
 		"zho"		"{green}旁觀顯示{default}已切換：{olive}%s"
 		"jp"		"{green}旁观显示{default}已切换：{olive}%s"

@@ -1,0 +1,115 @@
+"Phrases"
+{
+	"srvcln_version"
+	{
+		"ko"		"서버 정리 버전."
+	}
+	"srvcln_enable"
+	{
+		"ko"		"자동 서버 정리를 활성화합니다(1 - 활성화, 0 - 비활성화, 수동 정리 명령만 해당)."
+	}
+	"srvcln_logs"
+	{
+		"ko"		"일반 서버 로그를 정리합니다."
+	}
+	"srvcln_logging_mode"
+	{
+		"ko"		"서버 정리가 삭제한 항목을 기록합니다."
+	}
+	"srvcln_smlogs"
+	{
+		"ko"		"SourceMod 서버 로그를 정리합니다."
+	}
+	"srvcln_sprays"
+	{
+		"ko"		"업로드된 스프레이를 정리합니다."
+	}
+	"srvcln_demos"
+	{
+		"ko"		"자동으로 녹음된 데모 파일을 정리합니다."
+	}
+	"srvcln_replays"
+	{
+		"ko"		"생성된 재생 파일을 정리합니다."
+	}
+	"srvcln_roundbackups"
+	{
+		"ko"		"CS:GO 라운드 백업 파일을 정리합니다(참고: 라운드 백업의 기본 설정에서 이름 지정 옵션이 변경되지 않은 경우에만)."
+	}
+	"srvcln_demos_archives"
+	{
+		"ko"		"오래된 데모를 삭제할 때 아카이브를 포함합니다(서버가 자동으로 압축하는 경우 bz2, zip, rar 및 7z를 감지합니다)."
+	}
+	"srvcln_replays_archives"
+	{
+		"ko"		"오래된 리플레이를 삭제할 때 아카이브를 포함합니다(서버가 자동으로 압축하는 경우 bz2, zip, rar 및 7z를 감지합니다)."
+	}
+	"srvcln_smlogs_type"
+	{
+		"ko"		"SM 로그 폴더에서 삭제할 로그 유형(0 - 일반 로그만, 1 - 일반 로그 및 오류 로그, 2 - 모든 로그)"
+	}
+	"srvcln_logs_time"
+	{
+		"ko"		"일반 서버 로그를 보관하는 시간(시간)(기본값은 1주, 최소값은 12시간, 현재 날짜만 보관하려면 -1로 설정)"
+	}
+	"srvcln_replays_time"
+	{
+		"ko"		"생성된 재생 파일을 보관하는 시간(시간)(기본값은 1주, 최소값은 12시간, 현재 날짜만 보관하려면 -1로 설정)"
+	}
+	"srvcln_roundbackups_time"
+	{
+		"ko"		"CS:GO에서 라운드 백업을 유지하는 시간(시간)(기본값은 1주일, 최소값은 12시간, 현재 날짜만 유지하려면 -1로 설정)"
+	}
+	"srvcln_sprays_time"
+	{
+		"ko"		"업로드된 스프레이를 보관하는 시간(시간)(기본값은 1주, 최소값은 12시간, 현재 날짜만 보관하려면 -1로 설정)."
+	}
+	"srvcln_smlogs_time"
+	{
+		"ko"		"SourceMod 서버 로그를 보관하는 시간(시간)(기본값은 1주, 최소값은 12시간, 현재 날짜만 보관하려면 -1로 설정)."
+	}
+	"srvcln_demos_time"
+	{
+		"ko"		"데모 파일을 보관하는 시간(시간)(기본값은 1주, 최소값은 12시간, 현재 날짜만 보관하려면 -1로 설정)"
+	}
+	"srvcln_demos_path"
+	{
+		"ko"		"데모 파일을 다른 곳에 수동으로 저장하는 경우 데모 파일의 선택적 디렉터리 경로입니다."
+	}
+	"srvcln_now"
+	{
+		"ko"		"서버 정리를 수동으로 실행합니다."
+	}
+	"Command Now Start"
+	{
+		"ko"		"[SM] 서버 정리를 시작합니다."
+	}
+	"Command Now End"
+	{
+		"ko"		"[SM] 서버 정리가 완료되었습니다."
+	}
+	"Command Now Log"
+	{
+		"ko"		"서버 정리를 수동으로 실행했습니다."
+	}
+	"CL Error TS"
+	{
+		"#format"	"{1:s}"
+		"ko"		"\"{1}\"에 대한 타임스탬프를 읽는 데 치명적인 오류가 발생했습니다."
+	}
+	"CL Error Del"
+	{
+		"#format"	"{1:s}"
+		"ko"		"\"{1}\"을(를) 삭제할 수 없습니다. 권한을 확인하세요."
+	}
+	"CL Deleted File"
+	{
+		"#format"	"{1:s}"
+		"ko"		"삭제된 파일 \"{1}\""
+	}
+	"CL Deleted Folder"
+	{
+		"#format"	"{1:s}"
+		"ko"		"삭제된 폴더 \"{1}\""
+	}
+}

@@ -2,7 +2,7 @@
 {
 	"Tag"
 	{
-		"chi"		"{blue}[{green}Zone{blue}]{default}:"
+		"chi"		"{blue} [ {green} 区 {blue} ] {default}:"
 	}
 	"OnlyFirstReadyup"
 	{

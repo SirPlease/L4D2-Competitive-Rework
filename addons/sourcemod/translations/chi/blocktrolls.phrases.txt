@@ -2,18 +2,18 @@
 {
 	"Tag"
 	{
-		"en"    "[{green}!{default}]"
+		"chi"		"[{green}!{default}]"
 	}
 	"VotingNotEnabled"
 	{
-		"en"	"投票将在回合开始后 {olive}40秒{default} 后启用."
+		"chi"		"直到一轮{olive}40s{default}后才启用投票。"
 	}
 	"NotConsoleVote"
 	{
-		"en"	"[!] 你必须在游戏中投票."
+		"chi"		"[!] 您必须在游戏中才能投票。"
 	}
 	"NotSpectatorVote"
 	{
-		"en"	"{olive}旁观者{default} 不能投票."
+		"chi"		"{olive}观众{default}无法投票。"
 	}
 }

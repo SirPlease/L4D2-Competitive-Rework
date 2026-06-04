@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"vi"		"{red}[{default}NoTankRush{red}]"
+	}
+	"freeze"
+	{
+		"vi"		"{red}Tank {default}đã xuất hiện. {olive}Đang đóng băng {default}điểm khoảng cách!"
+	}
+	"unfreeze"
+	{
+		"vi"		"{red} {default}đã chết. {olive}rã đông {default}!"
+	}
+	"saferoom"
+	{
+		"vi"		"{red} {default}đã vào được phòng an toàn. {olive}rã đông {default}!"
+	}
+}

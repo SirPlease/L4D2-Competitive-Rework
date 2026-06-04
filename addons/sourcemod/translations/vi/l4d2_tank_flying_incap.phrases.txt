@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2TankFlyingIncap_FlyingIncapStateLine"
+	{
+		"vi"		"{default} [FlyingIncap]: ( %.1f ) ( %N ) [ {olive} %s {default} ] [ {green} %s {default} ]"
+	}
+}

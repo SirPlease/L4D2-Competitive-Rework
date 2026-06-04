@@ -372,4 +372,10 @@
 		"ko"		"(%s) {teamcolor}%N{default} : %s"
 		"vi"		"(%s) {teamcolor}%N{default} : %s"
 	}
+
+	"PauseCountFormat"
+	{
+		"#format"	"{1:d},{2:d}"
+		"en"		" [{green}{1}{default}/{green}{2}{default}]."
+	}
 }

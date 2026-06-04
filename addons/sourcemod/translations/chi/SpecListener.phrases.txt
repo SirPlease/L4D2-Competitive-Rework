@@ -1,0 +1,75 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"[{olive}规范监听器{default}]"
+	}
+	"OnlySpec"
+	{
+		"chi"		"只有旁观者可以听."
+	}
+	"PanelTitle"
+	{
+		"chi"		"规范监听器"
+	}
+	"PanelEnable"
+	{
+		"chi"		"开启"
+	}
+	"PanelDisable"
+	{
+		"chi"		"关闭"
+	}
+	"PanelStatus"
+	{
+		"chi"		"状态"
+	}
+	"Enable"
+	{
+		"chi"		"{green}开启{default}"
+	}
+	"Disable"
+	{
+		"chi"		"{green}关闭{default}"
+	}
+	"Usage"
+	{
+		"chi"		"用法: sm_listen <enable/disable/status>"
+	}
+	"ErrorFlags"
+	{
+		"chi"		"错误: section voice flags"
+	}
+	"ErrorCookie"
+	{
+		"chi"		"错误: cookie 还没有缓存 (请过会再进行尝试)."
+	}
+	"SpecListener_SelectedItemFoundInfo"
+	{
+		"chi"		"[SpecListener] 您选择的项目：%d（找到？%d 信息：%s）"
+	}
+	"SpecListener_ClientMenuCancelledReason"
+	{
+		"chi"		"[SpecListener] 客户端 %d 的菜单被取消。  原因：%d"
+	}
+	"SpecListener_Enabled"
+	{
+		"chi"		"[SpecListener] 已启用"
+	}
+	"SpecListener_Cookie"
+	{
+		"chi"		"[SpecListener] Cookie：%d"
+	}
+	"SpecListener_Disable"
+	{
+		"chi"		"[SpecListener] 禁用"
+	}
+	"SpecListener_ReEnableListenAllTalk"
+	{
+		"chi"		"[SpecListener] 由于 All-Talk 重新启用监听"
+	}
+	"SpecListener_Executed"
+	{
+		"chi"		"[SpecListener] %s 已执行"
+	}
+}

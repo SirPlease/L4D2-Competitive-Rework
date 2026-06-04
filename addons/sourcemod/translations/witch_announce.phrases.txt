@@ -32,7 +32,7 @@
 
 	"WitchAnnounce_WitchDamageHeader"
 	{
-		"en"		"{default}[{green}!{default}] 对{blue}女巫{default}产生的{blue}伤害"
+		"en"		"{default}[{green}!{default}] {blue} damage to {blue}witch {default}"
 		"chi"		"{default}[{green}!{default}] 对{blue}女巫{default}产生的{blue}伤害"
 		"zho"		"{default}[{green}!{default}] 對{blue}女巫{default}產生的{blue}傷害"
 		"jp"		"{default}[{green}!{default}] 对{blue}女巫{default}产生的{blue}伤害"

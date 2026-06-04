@@ -1,0 +1,142 @@
+"Phrases"
+{
+	"Hat_Wearing"
+	{
+		"#format"	"{1:s}"
+		"jp"		"あなたは現在、{ORANGE} [ {1} ] {DEFAULT} 帽子をかぶっています。"
+	}
+	"Hat_Changed"
+	{
+		"#format"	"{1:s}"
+		"jp"		"{ORANGE} {1} {DEFAULT} の帽子を変更しました。"
+	}
+	"Hat_No_Index"
+	{
+		"#format"	"{1:d}{2:d}"
+		"jp"		"ハット インデックス {ORANGE} {1} {DEFAULT} 、 {ORANGE} 1 {DEFAULT} と {ORANGE} {2} {DEFAULT} の間の値が見つかりません。"
+	}
+	"Hat_Not_Found"
+	{
+		"#format"	"{1:s}"
+		"jp"		"帽子 {ORANGE} {1} {DEFAULT} が見つかりません。"
+	}
+	"Hat_Invalid"
+	{
+		"jp"		"無効なプレーヤーが選択されました。"
+	}
+	"Hat_Unblocked"
+	{
+		"#format"	"{1:s}"
+		"jp"		"{ORANGE} {1} {DEFAULT} のブロックされていない帽子。"
+	}
+	"Hat_Blocked"
+	{
+		"#format"	"{1:s}"
+		"jp"		"{ORANGE} {1} {DEFAULT} のブロックされたハット。"
+	}
+	"Hat_View"
+	{
+		"#format"	"{1:s}"
+		"jp"		"個人的なハット ビューは {ORANGE} {1} {DEFAULT} になりました。"
+	}
+	"Hat_Ability"
+	{
+		"#format"	"{1:s}"
+		"jp"		"{ORANGE} {1} {DEFAULT} 帽子をかぶれるようになりました。"
+	}
+	"Hat_On"
+	{
+		"jp"		"on"
+	}
+	"Hat_Off"
+	{
+		"jp"		"オフ"
+	}
+	"Hat_Menu_Title"
+	{
+		"jp"		"帽子をお選びください。"
+	}
+	"Hat_Missing"
+	{
+		"jp"		"帽子をかぶっていないんですね！"
+	}
+	"HAT_SYSTEM"
+	{
+		"jp"		"{GREEN} [ハット] {DEFAULT}"
+	}
+	"HAT_NOT_RIGHT_NOW"
+	{
+		"jp"		"現在このコマンドは使用できません。"
+	}
+	"ADMIN_DISABLE_HAT"
+	{
+		"jp"		"帽子を無効にするプレーヤーを選択してください:"
+	}
+	"ADMIN_CHANGE_HAT"
+	{
+		"jp"		"帽子を変更するプレーヤーを選択してください:"
+	}
+	"ADMIN_VISIBILITY"
+	{
+		"jp"		"帽子の可視性を設定するプレーヤーを選択してください:"
+	}
+	"HAT_SET_ANGLE"
+	{
+		"jp"		"角度を設定:"
+	}
+	"HAT_SET_POSITION"
+	{
+		"jp"		"設定位置:"
+	}
+	"HAT_SET_SIZE"
+	{
+		"jp"		"セットサイズ:"
+	}
+	"HAT_MAIN"
+	{
+		"jp"		"帽子の設定:"
+	}
+	"HAT_MENU"
+	{
+		"jp"		"帽子メニューを開く"
+	}
+	"HAT_WORE"
+	{
+		"jp"		"帽子をかぶっている"
+	}
+	"HAT_VIEWABLE"
+	{
+		"jp"		"パーソナルハットビュー"
+	}
+	"HAT_ENABLED"
+	{
+		"jp"		"On"
+	}
+	"HAT_DISABLED"
+	{
+		"jp"		"オフ"
+	}
+	"HAT_VIEWABLE_TP"
+	{
+		"jp"		"第三の個人的な帽子の見方"
+	}
+	"HAT_VISIBILITY"
+	{
+		"jp"		"一般的な帽子の可視性"
+	}
+	"Hat_ViewTP"
+	{
+		"#format"	"{1:s}"
+		"jp"		"三人称ハット ビューが {ORANGE} {1} {DEFAULT} になりました。"
+	}
+	"Hat_ViewSet"
+	{
+		"#format"	"{1:s}{2:s}"
+		"jp"		"{ORANGE} {1} {DEFAULT} の一般的なハットの可視性は {ORANGE} {2} {DEFAULT} になりました。"
+	}
+	"Hat_Visibility_Set"
+	{
+		"#format"	"{1:s}"
+		"jp"		"帽子の表示設定を {ORANGE} {1} {DEFAULT} に切り替えました。"
+	}
+}

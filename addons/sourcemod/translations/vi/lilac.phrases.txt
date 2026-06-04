@@ -1,0 +1,107 @@
+"Phrases"
+{
+	"welcome_msg"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Máy chủ này được bảo vệ bởi Little Anti-Cheat {1}"
+	}
+	"kick_query_failure"
+	{
+		"vi"		"Lỗi: Phản hồi truy vấn không thành công, vui lòng khởi động lại trò chơi của bạn nếu sự cố này vẫn tiếp diễn"
+	}
+	"kick_interp_exploit"
+	{
+		"#format"	"{1:.0f},{2:d},{3:.3f}"
+		"vi"		"Đã phát hiện hành vi khai thác: Interp của bạn quá cao (tối đa {1} ms / {2} ms tối đa). Vui lòng đặt cl_interp của bạn trở lại {3} hoặc thấp hơn"
+	}
+	"tban_ping_high"
+	{
+		"#format"	"{1:.0f},{2:d}"
+		"vi"		"Ping của bạn quá cao (tối đa {1} / {2})"
+	}
+	"kick_ban_generic"
+	{
+		"vi"		"Bạn đã bị cấm từ máy chủ này"
+	}
+	"ban_angle"
+	{
+		"vi"		"Đã phát hiện gian lận góc"
+	}
+	"ban_chat_clear"
+	{
+		"vi"		"Đã phát hiện xóa trò chuyện"
+	}
+	"ban_convar"
+	{
+		"vi"		"Đã phát hiện ConVar không hợp lệ"
+	}
+	"ban_nolerp"
+	{
+		"vi"		"Đã phát hiện NoLerp"
+	}
+	"ban_bhop"
+	{
+		"vi"		"Đã phát hiện Bhop"
+	}
+	"ban_aimbot"
+	{
+		"vi"		"Đã phát hiện Aimbot"
+	}
+	"ban_aimlock"
+	{
+		"vi"		"Đã phát hiện khóa mục tiêu"
+	}
+	"ban_anti_duck_delay"
+	{
+		"vi"		"Đã phát hiện độ trễ chống vịt"
+	}
+	"ban_noisemaker"
+	{
+		"vi"		"Đã phát hiện bộ tạo tiếng ồn vô hạn"
+	}
+	"ban_macro"
+	{
+		"vi"		"Đã phát hiện macro"
+	}
+	"kick_macro"
+	{
+		"#format"	"{1:s}"
+		"vi"		"{1} Macro không được phép trên máy chủ này"
+	}
+	"chat_invalid_characters"
+	{
+		"vi"		"Tin nhắn trò chuyện của bạn đã bị chặn (Lý do: Ký tự không hợp lệ)."
+	}
+	"chat_wide_char_spam"
+	{
+		"vi"		"Tin nhắn trò chuyện của bạn đã bị chặn (Lý do: Thư rác Wide-Char)."
+	}
+	"kick_bad_name"
+	{
+		"vi"		"Tên của bạn chứa ký tự không hợp lệ, vui lòng đổi tên của bạn"
+	}
+	"ban_name_newline"
+	{
+		"vi"		"Đã phát hiện tên dòng mới"
+	}
+	"LILAC_LittleAntiCheatWarningMacro"
+	{
+		"vi"		"[Chống gian lận nhỏ] Cảnh báo: Không được phép sử dụng macro!"
+	}
+	"LILAC_LittleAntiCheatDetectedUsing"
+	{
+		"vi"		"[Chống gian lận nhỏ] %N bị phát hiện sử dụng Macro %s."
+	}
+	"LILAC_PingAppearsFineAgainSafe"
+	{
+		"vi"		"[Lilac] Ping của bạn có vẻ ổn trở lại, bạn có thể tham gia lại một đội và chơi một cách an toàn."
+	}
+	"LILAC_WarningKickedSecondsondsPingStays"
+	{
+		"vi"		"[Lilac] CẢNH BÁO: Bạn sẽ bị kick sau %d giây nếu ping của bạn quá cao! (Tối đa %.0f / %d)"
+	}
+	"kick_ban_genetic"
+	{
+		"vi"		"Bạn đã bị cấm từ máy chủ này."
+	}
+}

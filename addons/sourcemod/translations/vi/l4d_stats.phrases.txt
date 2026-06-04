@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4DStats_RankMessage"
+	{
+		"vi"		"{green} [ {lightgreen} HẠNG {green} ] {default} %s"
+	}
+}

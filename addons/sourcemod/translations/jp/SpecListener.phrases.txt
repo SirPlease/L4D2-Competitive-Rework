@@ -1,0 +1,75 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"jp"		"[{olive}SpecListener{default}]"
+	}
+	"OnlySpec"
+	{
+		"jp"		"観客のみが聞くことができます。"
+	}
+	"PanelTitle"
+	{
+		"jp"		"スペックリスナー"
+	}
+	"PanelEnable"
+	{
+		"jp"		"有効にする"
+	}
+	"PanelDisable"
+	{
+		"jp"		"無効にする"
+	}
+	"PanelStatus"
+	{
+		"jp"		"状態"
+	}
+	"Enable"
+	{
+		"jp"		"{green}を有効にする{default}"
+	}
+	"Disable"
+	{
+		"jp"		"{green}無効化{default}"
+	}
+	"Usage"
+	{
+		"jp"		"使用法: sm_listen <有効/無効/ステータス>"
+	}
+	"ErrorFlags"
+	{
+		"jp"		"エラー: セクション音声フラグ。"
+	}
+	"ErrorCookie"
+	{
+		"jp"		"エラー: Cookie はまだキャッシュされていません (しばらくしてからもう一度お試しください)。"
+	}
+	"SpecListener_SelectedItemFoundInfo"
+	{
+		"jp"		"[SpecListener] 選択したアイテム: %d (見つかりましたか? %d 情報: %s)"
+	}
+	"SpecListener_ClientMenuCancelledReason"
+	{
+		"jp"		"[SpecListener]クライアント「%d」メニューがキャンセルされました。  理由: %d"
+	}
+	"SpecListener_Enabled"
+	{
+		"jp"		"[SpecListener] 有効"
+	}
+	"SpecListener_Cookie"
+	{
+		"jp"		"[SpecListener] クッキー: %d"
+	}
+	"SpecListener_Disable"
+	{
+		"jp"		"[SpecListener]を無効にする"
+	}
+	"SpecListener_ReEnableListenAllTalk"
+	{
+		"jp"		"[SpecListener] オールトークのためリッスンを再度有効にする"
+	}
+	"SpecListener_Executed"
+	{
+		"jp"		"[SpecListener] %sが実行されました"
+	}
+}

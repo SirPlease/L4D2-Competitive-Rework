@@ -1,0 +1,339 @@
+"Phrases"
+{
+	"RPG_ProfilePermissionExpiredAutomaticallyClosed"
+	{
+		"chi"		"{default}[{green}RPG{default}] {olive}你的轮廓权限已失效，已自动关闭。"
+	}
+	"RPG_Message"
+	{
+		"chi"		"{default} [ {green} RPG {default} ] %s"
+	}
+	"RPG_RANKVariablesRequiredDetermineExtra"
+	{
+		"chi"		"{default}[{green}RANK{default}]{green}判断额外积分所需变量发生变化，此局无法获得额外积分, 过关也不奖励额外分数"
+	}
+	"RPG_TitleUnset"
+	{
+		"chi"		"{green}你的称号取消设置"
+	}
+	"RPG_TitleUpdatedSuccessfullyNewTitle"
+	{
+		"chi"		"{green}你的称号更新成功，新称号为：{lightgreen}%s"
+	}
+	"RPG_RANKCannotObtainAdditionalPoints"
+	{
+		"chi"		"{default}[{green}RANK{default}]{green}由于开启了高级人机，不能获得额外积分，也不会更新地图记录"
+	}
+	"RPG_StoreClosedFunctionCannotUsed"
+	{
+		"chi"		"{lightgreen}商店已关闭，无法使用该功能。"
+	}
+	"RPG_AddedBullets"
+	{
+		"chi"		"{green}%N {lightgreen} 补充了子弹"
+	}
+	"RPG_FirstTimeRandomTrollFree"
+	{
+		"chi"		"{green}%N {lightgreen}第一次随机白嫖一把喷子"
+	}
+	"RPG_QuicklySpend50BuySingle"
+	{
+		"chi"		"{green}%N {lightgreen}快速花费50B数随机购买一把单喷"
+	}
+	"RPG_NotEnoughMoneyForShotgun"
+	{
+		"chi"		"{lightgreen}没钱你买个屁喷子，心里没点B数"
+	}
+	"RPG_FirstTimeGotSecondsondGeneration"
+	{
+		"chi"		"{green}%N {lightgreen}第一次白嫖一把二代单喷"
+	}
+	"RPG_QuicklySpend50BuySecondsond"
+	{
+		"chi"		"{green}%N {lightgreen}快速花费50B数购买一把二代单喷"
+	}
+	"RPG_FirstGenerationSingleSpray"
+	{
+		"chi"		"{green}%N {lightgreen}第一次白嫖一把一代单喷"
+	}
+	"RPG_QuicklySpend50BuyFirst"
+	{
+		"chi"		"{green}%N {lightgreen}快速花费50B数随机购买一把一代单喷"
+	}
+	"RPG_FirstTimeBoughtSilencedSMG"
+	{
+		"chi"		"{green}%N {lightgreen}第一次白嫖一把消音smg机枪"
+	}
+	"RPG_QuicklySpend50BuySilenced"
+	{
+		"chi"		"{green}%N {lightgreen}快速花费50B数购买一把消音smg机枪"
+	}
+	"RPG_DonMoneyCanBuyCrappy"
+	{
+		"chi"		"{lightgreen}没钱你买个屁机枪，心里没点B数"
+	}
+	"RPG_FirstTimeFreeUzi"
+	{
+		"chi"		"{green}%N {lightgreen}第一次白嫖一把Uzi"
+	}
+	"RPG_QuicklySpend50RandomlyBuy"
+	{
+		"chi"		"{green}%N {lightgreen}快速花费50B数随机购买一把Uzi机枪"
+	}
+	"RPG_QuicklySpent400BuyBottle"
+	{
+		"chi"		"{green}%N {lightgreen}快速花费400B数买了瓶药"
+	}
+	"RPG_FirstUseSetchTitleName"
+	{
+		"chi"		"{green}你必须先用{lightgreen}!setch \\\\\\\"你想要的称号名字\\\\\\\" {green}设置好你的自定义称号"
+	}
+	"RPG_TitleModuleNotEnabledTitle"
+	{
+		"chi"		"{green}称号模块未启用，无法设置称号"
+	}
+	"RPG_CurrentlyProhibitedUseNumberPurchase"
+	{
+		"chi"		"{lightgreen}当前已禁止使用B数购买商品（仅允许 0B 物品）。"
+	}
+	"RPG_ShopSkillsCoolingDownCooling"
+	{
+		"chi"		"{lightgreen}商店技能冷却中(冷却时间15s)"
+	}
+	"RPG_ServerClosedCoinUsageChannel"
+	{
+		"chi"		"服务器关闭了B币使用通道，如需使用请投票开启"
+	}
+	"RPG_DonPointMind"
+	{
+		"chi"		"{lightgreen}你自己心里没有点B数吗?"
+	}
+	"RPG_NewUserCreatingDatabase"
+	{
+		"chi"		"{green}新用户，正在创建数据库"
+	}
+	"RPG_ChangeOutlineColorGreen"
+	{
+		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}绿色 {default}!"
+	}
+	"RPG_SetOutlineColorBlue"
+	{
+		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}蓝色 {default}!"
+	}
+	"RPG_SetOutlineColorBlueViolet"
+	{
+		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}蓝紫色 {default}!"
+	}
+	"RPG_ChangeOutlineColorCyan"
+	{
+		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}青色 {default}!"
+	}
+	"RPG_SetOutlineColorOrange"
+	{
+		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}橘黄色 {default}!"
+	}
+	"RPG_SetOutlineColorRed"
+	{
+		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}红色 {default}!"
+	}
+	"RPG_SetOutlineColorGray"
+	{
+		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}灰色 {default}!"
+	}
+	"RPG_SetOutlineColorYellow"
+	{
+		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}黄色 {default}!"
+	}
+	"RPG_SetOutlineColorLime"
+	{
+		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}酸橙色 {default}!"
+	}
+	"RPG_SetOutlineColorMaroon"
+	{
+		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}栗色 {default}!"
+	}
+	"RPG_SetOutlineColorTeal"
+	{
+		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}藍綠色 {default}!"
+	}
+	"RPG_SetOutlineColorPink"
+	{
+		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}粉红色 {default}!"
+	}
+	"RPG_SetOutlineColorPurple"
+	{
+		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}紫色 {default}!"
+	}
+	"RPG_SetOutlineColorWhite"
+	{
+		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}白色 {default}!"
+	}
+	"RPG_SetOutlineColorGold"
+	{
+		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}金黄色 {default}!"
+	}
+	"RPG_SetOutlineColorRainbow"
+	{
+		"chi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}彩虹色 {default}!"
+	}
+	"RPG_SetOutlineColorCustomOutline"
+	{
+		"chi"		"{olive}你 {green}将轮廓颜色改为您的{default}: {green}定制颜色轮廓 {default}!"
+	}
+	"RPG_ClosedSurvivorProfile"
+	{
+		"chi"		"{olive}你关闭了生还者轮廓"
+	}
+	"RPG_ChangeSkinColorGreen"
+	{
+		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}绿色 {default}!"
+	}
+	"RPG_SetSkinColorBlue"
+	{
+		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}蓝色 {default}!"
+	}
+	"RPG_SetSkinColorBlueViolet"
+	{
+		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}蓝紫色 {default}!"
+	}
+	"RPG_SetSkinColorCyan"
+	{
+		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}青色 {default}!"
+	}
+	"RPG_SetSkinColorOrange"
+	{
+		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}橘黄色 {default}!"
+	}
+	"RPG_SetSkinColorRed"
+	{
+		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}红色 {default}!"
+	}
+	"RPG_SetSkinColorGray"
+	{
+		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}灰色 {default}!"
+	}
+	"RPG_SetSkinColorYellow"
+	{
+		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}黄色 {default}!"
+	}
+	"RPG_SetSkinColorLime"
+	{
+		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}酸橙色 {default}!"
+	}
+	"RPG_SetSkinColorMaroon"
+	{
+		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}栗色 {default}!"
+	}
+	"RPG_SetSkinColorTeal"
+	{
+		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}藍綠色 {default}!"
+	}
+	"RPG_SetSkinColorPink"
+	{
+		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}粉红色 {default}!"
+	}
+	"RPG_SetSkinColorPurple"
+	{
+		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}紫色 {default}!"
+	}
+	"RPG_SetSkinColorBlack"
+	{
+		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}黑色 {default}!"
+	}
+	"RPG_SetSkinColorGold"
+	{
+		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}金黄色 {default}!"
+	}
+	"RPG_ChangeSkinColorTransparentColor"
+	{
+		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}透明色 {default}!"
+	}
+	"RPG_SetSkinColorCustomSkin"
+	{
+		"chi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}您的定制皮肤 {default}!"
+	}
+	"RPG_FirstFreePurchase"
+	{
+		"chi"		"{green}%N{lightgreen}第一次白嫖了一把%s，还剩%d的B数"
+	}
+	"RPG_BoughtItemWithPoints"
+	{
+		"chi"		"{green}%N{lightgreen}B数-%d,购买了%s，还剩%d的B数"
+	}
+	"RPG_MeleeWeaponSetMacheteGo"
+	{
+		"chi"		"{green}您的出门近战武器设为砍刀"
+	}
+	"RPG_MeleeWeaponSetFireAx"
+	{
+		"chi"		"{green}您的出门近战武器设为消防斧"
+	}
+	"RPG_SetMeleeWeaponKnifeGo"
+	{
+		"chi"		"{green}您的出门近战武器设为小刀"
+	}
+	"RPG_MeleeWeaponSetKatana"
+	{
+		"chi"		"{green}您的出门近战武器设为武士刀"
+	}
+	"RPG_MeleeWeaponSetMagnum"
+	{
+		"chi"		"{green}您的出门近战武器设为马格南"
+	}
+	"RPG_SetMeleeWeaponGoingElectric"
+	{
+		"chi"		"{green}您的出门近战武器设为电吉他"
+	}
+	"RPG_SetMeleeWeaponGoingBaton"
+	{
+		"chi"		"{green}您的出门近战武器设为警棍"
+	}
+	"RPG_SetOutgoingMeleeWeaponPitchfork"
+	{
+		"chi"		"{green}您的出门近战武器设为草叉"
+	}
+	"RPG_SetExitMeleeWeaponShovel"
+	{
+		"chi"		"{green}您的出门近战武器设为铲子"
+	}
+	"RPG_SetMeleeWeaponGoingSmall"
+	{
+		"chi"		"{green}您的出门近战武器设为小手枪"
+	}
+	"RPG_SetExitMeleeWeaponPan"
+	{
+		"chi"		"{green}您的出门近战武器设为平底锅"
+	}
+	"RPG_SetMeleeWeaponGoingCrowbar"
+	{
+		"chi"		"{green}您的出门近战武器设为撬棍"
+	}
+	"RPG_SetMeleeWeaponCricketBat"
+	{
+		"chi"		"{green}您的出门近战武器设为板球拍"
+	}
+	"RPG_CanceledMeleeWeaponGoing"
+	{
+		"chi"		"{green}您取消了出门近战武器"
+	}
+	"RPG_MeleeWeaponSettingFailedExceeded"
+	{
+		"chi"		"{lightgreen}您的出门近战武器设置失败，超出限制"
+	}
+	"RPG_TurnedBloodRecoveryFunctionKilling"
+	{
+		"chi"		"{green}你已经开启了杀特回血，杀一只特感回2滴血，不超过血量上限"
+	}
+	"RPG_TurnedOffBloodRecoverySpecial"
+	{
+		"chi"		"{green}你已经关闭了杀特回血."
+	}
+	"RPG_AntiKickPlayerAdministratorAnti"
+	{
+		"chi"		"{green}[AntiKick]{default} 该玩家 {olive}%N{default} 为管理员，已启用防踢，投票无效。"
+	}
+	"RPG_AntiKickNotPermissionKick"
+	{
+		"chi"		"{green}[AntiKick]{default} 你无权踢出受保护管理员：{olive}%N{default}。"
+	}
+}

@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"vi"		"{red}[{default}!{red}]"
+	}
+	"Spawned"
+	{
+		"vi"		"{olive}Xe tăng {default}({red}Control: %s{default}) đã xuất hiện!"
+	}
+	"Spawned2"
+	{
+		"vi"		"{olive}Xe tăng {default}({red}Control: %N{default}) đã xuất hiện!"
+	}
+	"L4D2TankAnnounce_TankControllerGenerated"
+	{
+		"vi"		"{default}[{red}!{default}] {green}Tank {default}(Bộ điều khiển {red}: %s{default}) đã được tạo!"
+	}
+	"L4D2TankAnnounce_TankControllerGenerated_2"
+	{
+		"vi"		"{default}[{blue}!{default}] {green}Tank {default}(Bộ điều khiển {blue}: %s{default}) đã được tạo!"
+	}
+}

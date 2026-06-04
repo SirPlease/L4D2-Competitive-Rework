@@ -4,105 +4,98 @@
 	{
 		"jp"		"このマップの残り時間:"
 	}
-
 	"Thetime"
 	{
+		"#format"	"{1:s}"
 		"jp"		"現在のサーバ時刻は{1}です。"
 	}
-
 	"Friendly Fire On"
 	{
 		"jp"		"Friendly Fireを有効にしました。"
 	}
-
 	"Friendly Fire Off"
 	{
 		"jp"		"Friendly Fireを無効にしました。"
 	}
-
+	"Friendly Fire Percent"
+	{
+		"#format"	"{1:0.0f}"
+		"jp"		"フレンドリーファイアは{1}%です。"
+	}
 	"Current Map"
 	{
+		"#format"	"{1:s}"
 		"jp"		"現在のマップは{1}です。"
 	}
-
-	"LastRound"
-	{
-		"jp"		"最後のラウンドです！"
-	}
-
-	"NoTimelimit"
-	{
-		"jp"		"このマップは時間制限がありません。"
-	}
-
-	"Next Map"
-	{
-		"jp"		"次のマップ: {1}"
-	}
-
-	"Pending Vote"
-	{
-		"jp"		"ペンディング投票"
-	}
-
 	"WinLimitAppend"
 	{
 		"jp"		"、またはあと1回チームが勝利した時にマップを変更します。"
 	}
-
 	"WinLimit"
 	{
 		"jp"		"あと1回チームが勝利した時にマップを変更します。"
 	}
-
 	"MaxRoundsAppend"
 	{
 		"jp"		"、またはあと1回のラウンドでマップを変更します。"
 	}
-
 	"MaxRounds"
 	{
 		"jp"		"あと1回のラウンドでマップを変更します。"
 	}
-
 	"FragLimitAppend"
 	{
 		"jp"		"、またはプレイヤーが1フラッグ取得した時にマップを変更します。"
 	}
-
 	"FragLimit"
 	{
 		"jp"		"プレイヤーが1フラッグ取得した時にマップを変更します。"
 	}
-
 	"WinLimitAppendPlural"
 	{
+		"#format"	"{1:i}"
 		"jp"		"、またはあと{1}回チームが勝利した時にマップを変更します。"
 	}
-
 	"WinLimitPlural"
 	{
+		"#format"	"{1:i}"
 		"jp"		"あと{1}回チームが勝利した時にマップを変更します。"
 	}
-
 	"MaxRoundsAppendPlural"
 	{
+		"#format"	"{1:i}"
 		"jp"		"、またはあと{1}回のラウンドでマップを変更します。"
 	}
-
 	"MaxRoundsPlural"
 	{
+		"#format"	"{1:i}"
 		"jp"		"あと{1}回のラウンドでマップを変更します。"
 	}
-
 	"FragLimitAppendPlural"
 	{
+		"#format"	"{1:i}"
 		"jp"		"、またはプレイヤーが{1}フラッグ取得した時にマップを変更します。"
 	}
-
 	"FragLimitPlural"
 	{
+		"#format"	"{1:i}"
 		"jp"		"プレイヤーが{1}フラッグ取得した時にマップを変更します。"
 	}
-
+	"LastRound"
+	{
+		"jp"		"最後のラウンドです！"
+	}
+	"NoTimelimit"
+	{
+		"jp"		"このマップは時間制限がありません。"
+	}
+	"Next Map"
+	{
+		"#format"	"{1:s}"
+		"jp"		"次のマップ: {1}"
+	}
+	"Pending Vote"
+	{
+		"jp"		"ペンディング投票"
+	}
 }

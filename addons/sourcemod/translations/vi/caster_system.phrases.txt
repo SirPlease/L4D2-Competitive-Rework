@@ -1,0 +1,124 @@
+"Phrases"
+{
+	"SelfCastNotAllowed"
+	{
+		"vi"		"{blue}[{default}{blue}] {default}Bạn không được phép đăng ký làm caster {green}trên máy chủ này{default}."
+	}
+	"SelfCast1"
+	{
+		"vi"		"{blue}[{default}{blue}] {default}Bạn đã đăng ký làm người dẫn chương trình."
+	}
+	"SelfCast2"
+	{
+		"vi"		"{blue}[{default}{blue}] {default}Kết nối lại để các Addon của bạn hoạt động."
+	}
+	"RegCasterTarget"
+	{
+		"#format"	"{1:N}"
+		"vi"		"{default}[{olive}!{default}] {blue} {default}({olive}{1}{default}) đã đăng ký bạn làm caster"
+	}
+	"Reconnect1"
+	{
+		"vi"		"{blue}[{default}Kết nối lại{blue}] {default}Bạn sẽ được kết nối lại với máy chủ.."
+	}
+	"Reconnect2"
+	{
+		"vi"		"{blue}[{default}Kết nối lại{blue}] {default}Có màn hình đen thay vì thanh tải!"
+	}
+	"UnregCasterTarget"
+	{
+		"#format"	"{1:N}"
+		"vi"		"{default}[{olive}!{default}] {default}Bạn đã hủy đăng ký làm người phát ngôn bởi {blue} {default}({olive}{1}{default})"
+	}
+	"KickSpecsAdmin"
+	{
+		"#format"	"{1:N}"
+		"vi"		"[{green}!{default}] {blue}Khán giả {default}bị đá bởi {blue}Quản trị viên {default}({olive}{1}{default})"
+	}
+	"KickSpecsVoteSpec"
+	{
+		"vi"		"[{olive}Cast{default}] {blue}Khán giả {default}không được phép gọi vote {green}kick khán giả{default}."
+	}
+	"VoteInProgress"
+	{
+		"vi"		"[{olive}Cast{default}] Đang có {olive}một vote {green}đang chạy{default}."
+	}
+	"VoteDelay"
+	{
+		"#format"	"{1:d}"
+		"vi"		"[{olive}{default}] Đợi cái khác {blue}{1}s {default}để kêu gọi biểu quyết."
+	}
+	"ForbidAddons"
+	{
+		"vi"		"{blue}[{default}!{blue}] {default}hiện đã có {green}bị cấm {default}dành cho bánh xe."
+	}
+	"AllowAddons"
+	{
+		"vi"		"{blue}[{default}!{blue}] {default}hiện đã có {green} {default}dành cho bánh xe."
+	}
+	"CasterCheck1"
+	{
+		"vi"		"{default}<{olive}{default}> Hủy đăng ký truyền trước khi chơi."
+	}
+	"CasterCheck2"
+	{
+		"vi"		"{default}<{olive}{default}> Sử dụng {green}!notcasting {default}/ {green}!uncast"
+	}
+	"RegCasterReply"
+	{
+		"#format"	"{1:N}"
+		"vi"		"Đã đăng ký {1} làm người dẫn chương trình"
+	}
+	"CasterSteamIDError"
+	{
+		"vi"		"Không thể tìm thấy ID Steam. Kiểm tra lỗi chính tả và cho phép người chơi kết nối đầy đủ."
+	}
+	"UnregCasterNonAdmin"
+	{
+		"vi"		"Chỉ quản trị viên mới có thể loại bỏ các caster khác. Sử dụng sm_notcasting không có đối số nếu bạn muốn tự xóa."
+	}
+	"UnregCasterSuccess"
+	{
+		"#format"	"{1:N}"
+		"vi"		"{1} không còn là người điều khiển nữa"
+	}
+	"CasterDBReset"
+	{
+		"vi"		"[casters_database] Đặt lại thành công"
+	}
+	"CasterDBAdd"
+	{
+		"#format"	"{1:s}"
+		"vi"		"[casters_database] Đã thêm '{1}'"
+	}
+	"CasterDBRemove"
+	{
+		"#format"	"{1:s}"
+		"vi"		"[casters_database] Đã xóa '{1}'"
+	}
+	"CasterDBFound"
+	{
+		"#format"	"{1:s}"
+		"vi"		"[casters_database] '{1}' đã tồn tại"
+	}
+	"CasterDBError"
+	{
+		"vi"		"[casters_database] Không có đối số nào được chỉ định/bộ đệm trống"
+	}
+	"KickSpecsVoteTitle"
+	{
+		"vi"		"Đá khán giả không phải quản trị viên và không casting?"
+	}
+	"KickSpecsVoteSuccess"
+	{
+		"vi"		"Ciao Khán giả!"
+	}
+	"KickSpecsReason"
+	{
+		"vi"		"Xin vui lòng không có khán giả!"
+	}
+	"CasterSystem_CastersDatabaseListPrintedConsole"
+	{
+		"vi"		"[casters_database] Danh sách được in trong bảng điều khiển"
+	}
+}

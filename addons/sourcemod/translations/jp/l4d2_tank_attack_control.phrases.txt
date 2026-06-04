@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Title"
+	{
+		"jp"		"{blue}[{default}タンクロックセレクター{blue}]"
+	}
+	"Reload"
+	{
+		"jp"		"{olive}リロード{default}/{olive}!overhand{default} = {blue}2 ハンド オーバーハンド{default}"
+	}
+	"Use"
+	{
+		"jp"		"{olive}使用{default}/{olive}!underhand{default} = {blue}アンダーハンド{default}"
+	}
+	"M2"
+	{
+		"jp"		"{olive}M2{default}/{olive}!overonehand{default} = {blue}1 ハンドド オーバーハンド{default}"
+	}
+}

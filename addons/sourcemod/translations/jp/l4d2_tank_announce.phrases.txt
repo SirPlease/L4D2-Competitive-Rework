@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"jp"		"{red}[{default}!{red}]"
+	}
+	"Spawned"
+	{
+		"jp"		"{olive} タンク {default} ( {red} コントロール: %s {default} ) がスポーンしました。"
+	}
+	"Spawned2"
+	{
+		"jp"		"{olive} タンク {default} ( {red} コントロール: %N {default} ) がスポーンしました。"
+	}
+	"L4D2TankAnnounce_TankControllerGenerated"
+	{
+		"jp"		"{default}[{red}!{default}] {green}タンク {default}({red}コントローラー：%s{default})が生成されました！"
+	}
+	"L4D2TankAnnounce_TankControllerGenerated_2"
+	{
+		"jp"		"{default}[{blue}!{default}] {green}タンク {default}({blue}コントローラー：%s{default})が生成されました！"
+	}
+}

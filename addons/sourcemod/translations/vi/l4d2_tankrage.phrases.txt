@@ -1,0 +1,31 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"vi"		"{red} [ {default} Cơn thịnh nộ của xe tăng {red} ] {default}"
+	}
+	"SurvivorsRunBack"
+	{
+		"vi"		"Với mỗi {olive} %i {green} %% {default} Người sống sót chạy về, Xe tăng sẽ bị đóng băng sự thất vọng trong {olive} %0.1f {green} giây {default}."
+	}
+	"L4D2Tankrage_Tank"
+	{
+		"vi"		"[%s]: %N là xe tăng"
+	}
+	"L4D2Tankrage_EverythingReset"
+	{
+		"vi"		"[%s]: Mọi thứ đã được đặt lại!"
+	}
+	"L4D2Tankrage_FlowDifferenceSinceLastCheck"
+	{
+		"vi"		"{green}[{lightgreen}%N{green}]{default}: Sự khác biệt về lưu lượng kể từ lần kiểm tra cuối cùng: %i"
+	}
+	"L4D2Tankrage_FrusGrace"
+	{
+		"vi"		"{green} [ {lightgreen} %N {green} ] {default}: Frus: {lightgreen} %i {default} - Grace: {lightgreen} %f {green} s"
+	}
+	"L4D2Tankrage_SetGrace"
+	{
+		"vi"		"{green}[{lightgreen}%N{green}]{default}: Đặt ân hạn thành: {lightgreen}%f{green}s"
+	}
+}

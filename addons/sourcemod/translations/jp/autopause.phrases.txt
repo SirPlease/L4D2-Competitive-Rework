@@ -1,0 +1,25 @@
+"Phrases"
+{
+	"Unpausing"
+	{
+		"jp"		"{blue}[{default}AutoPause{blue}] {default}すべての {green} クラッシュした {default} プレイヤーが再接続しました。{blue}一時停止を解除しています{default}!"
+	}
+	"Waiting"
+	{
+		"#format"	"{1:i},{2:t}"
+		"jp"		"{blue}[{default}AutoPause{blue}] {default}{olive}{1} {default}さらに待機中、自動の{blue}一時停止解除{default}前に{green}がクラッシュしました。{default}{2}!"
+	}
+	"Crashed"
+	{
+		"#format"	"{1:N}"
+		"jp"		"{blue}[{default}AutoPause{blue}] {olive}{1} {default}游戏崩溃."
+	}
+	"players"
+	{
+		"jp"		"選手"
+	}
+	"player"
+	{
+		"jp"		"プレーヤー"
+	}
+}

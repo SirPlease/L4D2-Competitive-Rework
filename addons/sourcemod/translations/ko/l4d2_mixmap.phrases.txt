@@ -1,0 +1,159 @@
+"Phrases"
+{
+	"Auto_Show_Maplist"
+	{
+		"ko"		"{olive} <Mixmap> {default} Mixmap 플러그인 사용(맵리스트 {orange}!maplist {default} 표시)."
+	}
+	"Differ_Abort"
+	{
+		"ko"		"{olive} <Mixmap> {default} 현재 맵이 표시된 맵과 다릅니다.，중단…"
+	}
+	"Show_Next_Map"
+	{
+		"ko"		"{olive} <Mixmap> {default} 다음 맵 변경: %s"
+	}
+	"Already_Start_Admin"
+	{
+		"ko"		"{olive} <Mixmap> {default} 플러그인이 이미 시작되었습니다. 다시 시작해야 하는 경우 먼저!fstopmixmap를 입력하세요."
+	}
+	"Force_Start"
+	{
+		"ko"		"{olive} <Mixmap> {default} Admin {teamcolor} %N {default}는 Mixmap {orange}( %s )를 강제로 시작합니다."
+	}
+	"Manualmixmap_Syntax"
+	{
+		"ko"		"구문:!manualmixmap <map1> <map2> <map3> <...>"
+	}
+	"Invalid_Cfg"
+	{
+		"ko"		"{olive} <Mixmap> {default} 잘못된 맵 풀입니다!"
+	}
+	"Not_Start"
+	{
+		"ko"		"{olive} <Mixmap> {default} 플러그인이 시작되지 않았습니다. 중지할 필요가 없습니다."
+	}
+	"Vote_Stop"
+	{
+		"ko"		"{olive} <Mixmap> {default} Player {teamcolor} %N {default}는 Mixmap을 중지하기 위한 투표를 시작합니다."
+	}
+	"Vote_Progress"
+	{
+		"ko"		"[SM] 투표가 진행 중이에요!"
+	}
+	"Vote_Progress_delay"
+	{
+		"ko"		"{olive} <Mixmap> {default} 투표가 진행 중입니다! 지도 변경이 {orange} 15 {default}초 지연됩니다!"
+	}
+	"Stop_Mixmap"
+	{
+		"ko"		"{olive} <Mixmap> {default} 맵 시작, 중단…"
+	}
+	"Stop_Mixmap_Admin"
+	{
+		"ko"		"{olive} <Mixmap> {default} Admin {teamcolor} %N {default} 강제 중지 Mixmap 및 Maps 시작, 중단…"
+	}
+	"Start_Mixmap"
+	{
+		"ko"		"{olive} <Mixmap> {default} Player {teamcolor} %N {default}는 Mixmap {orange}( %s )를 시작하기 위해 투표를 시작합니다."
+	}
+	"Show_Maplist_Not_Start"
+	{
+		"ko"		"{olive} <Mixmap> {default} 플러그인이 시작되지 않았습니다. 맵리스트가 없습니다."
+	}
+	"Show_Maplist_Cmd"
+	{
+		"ko"		"{olive} 맵리스트 보기 {orange}!maplist {default} | {olive} 중단 명령 {orange}!stopmixmap"
+	}
+	"Select_Maps_Succeed"
+	{
+		"ko"		"{olive} <Mixmap> {default} 맵을 무작위로 선택하면 성공합니다."
+	}
+	"Change_Map_First"
+	{
+		"ko"		"{olive} <Mixmap> {default} {orange} %d {default} 초 후에 맵을 변경합니다."
+	}
+	"AllMaps_Official"
+	{
+		"ko"		"{orange} [------모든 공식 지도 목록-----]"
+	}
+	"AllMaps_Usage"
+	{
+		"ko"		"{orange} 사용법: {default}!manualmixmap <map1> <map2>..."
+	}
+	"Fail_Load_Preset"
+	{
+		"ko"		"{olive} <Mixmap> {default} 프리셋 로드에 실패했습니다!"
+	}
+	"Maps_Not_Match_Rank"
+	{
+		"ko"		"{olive} <Mixmap> {default} 프리셋에 {orange} 태그 순위가 잘못되었습니다. {default}: 플레이할 맵 수가 최고 순위와 일치하지 않습니다. 가장 높은 순위 N에 대해 N+1 태그 순위가 있어야 합니다."
+	}
+	"Cvote_Title"
+	{
+		"ko"		"믹스맵을 시작하시겠습니까? (%s)"
+	}
+	"Cvote_Title_Off"
+	{
+		"ko"		"믹스맵을 중지하시겠습니까?"
+	}
+	"Cexec_Title"
+	{
+		"ko"		"무작위로 지도를 선택합니다…"
+	}
+	"Maplist_Title"
+	{
+		"ko"		"{olive} [--------- 맵리스트 --------]"
+	}
+	"Secret"
+	{
+		"ko"		"비밀"
+	}
+	"L4D2Mixmap_OfficialMapsDeadCenter"
+	{
+		"ko"		"c1m1_호텔,c1m2_거리,c1m3_mall,c1m4_atrium"
+	}
+	"L4D2Mixmap_C2m1HighwayC2m2FairgroundsC2m3"
+	{
+		"ko"		"c2m1_highway,c2m2_fairgrounds,c2m3_coaster,c2m4_barns,c2m5_concert"
+	}
+	"L4D2Mixmap_C3m1PlankcountryC3m2SwampC3m3"
+	{
+		"ko"		"c3m1_plankcountry,c3m2_swamp,c3m3_shantytown,c3m4_plantation"
+	}
+	"L4D2Mixmap_C4m1MilltownC4m2SugarmillC4m3"
+	{
+		"ko"		"c4m1_milltown_a,c4m2_sugarmill_a,c4m3_sugarmill_b,c4m4_milltown_b,c4m5_milltown_escape"
+	}
+	"L4D2Mixmap_C5m1WaterfrontC5m2ParkC5m3"
+	{
+		"ko"		"c5m1_waterfront,c5m2_park,c5m3_cemetery,c5m4_quarter,c5m5_bridge"
+	}
+	"L4D2Mixmap_C6m1RiverbankC6m2BedlamC7m1"
+	{
+		"ko"		"c6m1_riverbank,c6m2_bedlam,c7m1_docks,c7m2_barge,c7m3_port"
+	}
+	"L4D2Mixmap_C8m1ApartmentC8m2SubwayC8m3"
+	{
+		"ko"		"c8m1_apartment,c8m2_subway,c8m3_sewers,c8m4_interior,c8m5_rooftop"
+	}
+	"L4D2Mixmap_C9m1AlleysC9m2LotsC14m1"
+	{
+		"ko"		"c9m1_alleys,c9m2_lots,c14m1_junkyard,c14m2_lighthouse"
+	}
+	"L4D2Mixmap_C10m1CavesC10m2DrainageC10m3"
+	{
+		"ko"		"c10m1_동굴,c10m2_배수,c10m3_ranchhouse,c10m4_mainstreet,c10m5_houseboat"
+	}
+	"L4D2Mixmap_C11m1GreenhouseC11m2OfficesC11m3"
+	{
+		"ko"		"c11m1_그린하우스,c11m2_사무실,c11m3_차고,c11m4_터미널,c11m5_활주로"
+	}
+	"L4D2Mixmap_C12m1HilltopC12m2TraintunnelC12m3"
+	{
+		"ko"		"c12m1_hilltop,c12m2_traintunnel,c12m3_bridge,c12m4_barn,c12m5_cornfield"
+	}
+	"L4D2Mixmap_C13m1AlpinecreekC13m2SouthpinestreamC13m3"
+	{
+		"ko"		"c13m1_alpinecreek,c13m2_southpinestream,c13m3_memorialbridge,c13m4_cutthroatcreek"
+	}
+}

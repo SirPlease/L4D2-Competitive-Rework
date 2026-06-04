@@ -1,0 +1,33 @@
+"Phrases"
+{
+	"You"
+	{
+		"jp"		"{green} あなた"
+	}
+	"FFAnnounceToVictim"
+	{
+		"#format"	"{1:N},{2:d}"
+		"jp"		"* {olive} {1} {default} は {blue} FF {default} から {green} まで {default} @ {green} {2} HP を行いました"
+	}
+	"FFAnnounceToGuiltyTotal"
+	{
+		"#format"	"{1:d}"
+		"jp"		"* 合計ダメージ: {green} {1}"
+	}
+	"FFAnnounceToGuilty1"
+	{
+		"jp"		"* {olive} {GUILTY} {default} は {blue} FF {default} から {olive} {VICTIM1_NAME} {default} @ {green} {VICTIM1_DMG} HP を実行しました"
+	}
+	"FFAnnounceToGuilty2"
+	{
+		"jp"		"* {olive} {GUILTY} {default} は {blue} FF {default} から {olive} {VICTIM1_NAME} {default} @ {green} {VICTIM1_DMG} HP {default} 、 {olive} {VICTIM2_NAME} {default} @ {green} {VICTIM2_DMG} HP"
+	}
+	"FFAnnounceToGuilty3"
+	{
+		"jp"		"* {olive} {GUILTY} {default} は {blue} FF {default} から {olive} {VICTIM1_NAME} {default} @ {green} {VICTIM1_DMG} HP {default} 、 {olive} {VICTIM2_NAME} {default} @ {green} {VICTIM2_DMG} HP {default} 、 {olive} {VICTIM3_NAME} {default} @ {green} {VICTIM3_DMG} HP"
+	}
+	"FFAnnounceToGuilty4"
+	{
+		"jp"		"* {olive} {GUILTY} {default} は {blue} FF {default} から {olive} {VICTIM1_NAME} {default} @ {green} {VICTIM1_DMG} HP {default} 、 {olive} {VICTIM2_NAME} {default} @ {green} {VICTIM2_DMG} HP {default} 、 {olive} {VICTIM3_NAME} {default} @ {green} {VICTIM3_DMG} HP {default} 、 {olive} {VICTIM4_NAME} {default} @ {green} {VICTIM4_DMG} HP"
+	}
+}

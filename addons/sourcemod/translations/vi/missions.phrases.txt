@@ -1,0 +1,283 @@
+"Phrases"
+{
+	"L4D2C1"
+	{
+		"vi"		"Trung tâm chết"
+	}
+	"L4D2C2"
+	{
+		"vi"		"Lễ hội đen tối"
+	}
+	"L4D2C3"
+	{
+		"vi"		"Sốt đầm lầy"
+	}
+	"L4D2C4"
+	{
+		"vi"		"Mưa Khó"
+	}
+	"L4D2C5"
+	{
+		"vi"		"Giáo xứ"
+	}
+	"L4D2C6"
+	{
+		"vi"		"Sự Đi Qua"
+	}
+	"L4D2C7"
+	{
+		"vi"		"Sự hy sinh"
+	}
+	"L4D2C8"
+	{
+		"vi"		"Không thương xót"
+	}
+	"L4D2C9"
+	{
+		"vi"		"Khóa học cấp tốc"
+	}
+	"L4D2C10"
+	{
+		"vi"		"Số người chết"
+	}
+	"L4D2C11"
+	{
+		"vi"		"Không khí chết"
+	}
+	"L4D2C12"
+	{
+		"vi"		"Thu hoạch máu"
+	}
+	"L4D2C13"
+	{
+		"vi"		"Dòng lạnh"
+	}
+	"L4D2C14"
+	{
+		"vi"		"Đứng cuối cùng"
+	}
+	"Zengchengone"
+	{
+		"vi"		"Quảng Châu Tăng Thành Lv7.3"
+	}
+	"2019"
+	{
+		"vi"		"2019 (Phiên bản kỷ niệm)"
+	}
+	"JTB2"
+	{
+		"vi"		"Beldura 2"
+	}
+	"bts"
+	{
+		"vi"		"Trở lại trường học"
+	}
+	"CityOfTheDeadBeta"
+	{
+		"vi"		"Thành phố của người chết"
+	}
+	"City17l4d2"
+	{
+		"vi"		"Thành phố 17 v3.2"
+	}
+	"crashbandicoot"
+	{
+		"vi"		"Khóa học Crash Bandicoot 2"
+	}
+	"Cure2"
+	{
+		"vi"		"Chữa bệnh 2"
+	}
+	"damitcomplete"
+	{
+		"vi"		"Đập Nó Hoàn Thành L4D2"
+	}
+	"darkwood"
+	{
+		"vi"		"Gỗ tối màu (Mở rộng)"
+	}
+	"DayBreak"
+	{
+		"vi"		"Ngày nghỉ"
+	}
+	"deadvacation"
+	{
+		"vi"		"Kỳ nghỉ chết L4D2"
+	}
+	"deathaboard2"
+	{
+		"vi"		"Cái chết trên tàu II"
+	}
+	"DevilMountain"
+	{
+		"vi"		"Núi quỷ"
+	}
+	"Escansion"
+	{
+		"vi"		"Trốn thoát"
+	}
+	"escfromtoronto"
+	{
+		"vi"		"Thoát khỏi Toronto L4D2"
+	}
+	"GettingOut"
+	{
+		"vi"		"Đi ra ngoài"
+	}
+	"hauntedforest"
+	{
+		"vi"		"Rừng ma ám"
+	}
+	"Highway17L4D2"
+	{
+		"vi"		"Nửa Đời 2: Quốc Lộ 17(L4D2)"
+	}
+	"ihatemountains2"
+	{
+		"vi"		"Tôi Ghét Núi 2 (1.5)"
+	}
+	"JourneyToSplashMountain"
+	{
+		"vi"		"Hành trình tới núi Splash"
+	}
+	"Diescraper361"
+	{
+		"vi"		"Diescraper Redux 3.61"
+	}
+	"One4Nine"
+	{
+		"vi"		"Một 4 Chín"
+	}
+	"TanksPlayground"
+	{
+		"vi"		"Sân chơi xe tăng v3.0"
+	}
+	"YamaMSE"
+	{
+		"vi"		"Yama"
+	}
+	"leftinprypiat"
+	{
+		"vi"		"Còn lại ở Prypiat"
+	}
+	"LeftTurnSilentHill3"
+	{
+		"vi"		"Rẽ trái Silent Hill 3"
+	}
+	"mic3"
+	{
+		"vi"		"Tổ hợp công nghiệp quân sự III v666"
+	}
+	"necrovirusfacility"
+	{
+		"vi"		"Cơ sở NecroVirus"
+	}
+	"NightPresence"
+	{
+		"vi"		"ĐêmHiện diện"
+	}
+	"QuestionableEthicsAlphaTest"
+	{
+		"vi"		"Đạo đức đáng nghi vấn: Bài kiểm tra Alpha"
+	}
+	"re3"
+	{
+		"vi"		"Cư dân ác 3"
+	}
+	"SaltHellPark"
+	{
+		"vi"		"Công viên SaltHell"
+	}
+	"shenmejb2"
+	{
+		"vi"		"shenmejb2"
+	}
+	"ajsSilentFear"
+	{
+		"vi"		"Nỗi sợ thầm lặng"
+	}
+	"shool"
+	{
+		"vi"		"Silent Hill: Bên kia cuộc sống V4.7"
+	}
+	"TheHive"
+	{
+		"vi"		"tổ ong"
+	}
+	"ThereIsOnlyOneWay"
+	{
+		"vi"		"Chỉ có một cách"
+	}
+	"undeadzone"
+	{
+		"vi"		"Khu vực xác sống"
+	}
+	"WhiteForest"
+	{
+		"vi"		"Rừng Trắng"
+	}
+	"2evileyes"
+	{
+		"vi"		"2 Mắt Ác"
+	}
+	"BloodTracks"
+	{
+		"vi"		"Dấu vết máu"
+	}
+	"CrashBandicootTheReturn"
+	{
+		"vi"		"Crash Bandicoot: Sự trở lại"
+	}
+	"DeadSeries"
+	{
+		"vi"		"Dòng chết"
+	}
+	"Derailed"
+	{
+		"vi"		"Trật bánh"
+	}
+	"Diescraper36"
+	{
+		"vi"		"Diescraper Redux 3.6"
+	}
+	"FarewellChenming"
+	{
+		"vi"		"Tạm biệt Chenming"
+	}
+	"HighwayToHell"
+	{
+		"vi"		"Đường cao tốc tới địa ngục"
+	}
+	"QuestionableEthics"
+	{
+		"vi"		"Đạo đức có vấn đề"
+	}
+	"TheBloodyMoors"
+	{
+		"vi"		"Đồng hoang đẫm máu"
+	}
+	"TheCure"
+	{
+		"vi"		"chữa bệnh"
+	}
+	"ddntr1"
+	{
+		"vi"		"Bẫy Tử Thần"
+	}
+	"deadvacation2"
+	{
+		"vi"		"Kỳ nghỉ chết 2"
+	}
+	"drdegov21"
+	{
+		"vi"		"Thả Dead Gorges v2.1"
+	}
+	"fallen"
+	{
+		"vi"		"Rơi"
+	}
+	"l4d2CrashBandicoot2"
+	{
+		"vi"		"Khóa học Crash Bandicoot 2"
+	}
+}

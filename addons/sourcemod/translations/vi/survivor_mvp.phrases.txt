@@ -1,0 +1,83 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"vi"		"{blue} [ {default} MVP {blue}] {default}"
+	}
+	"YourRankSI"
+	{
+		"vi"		"{blue} Xếp hạng {green} SI: {olive} # %d {blue} ( {default} %d {green} dmg {blue} [ {default} %.0f%% {blue} ] {default}, %d {green} tiêu diệt {blue} [ {default} %.0f%% {blue} ])"
+	}
+	"YourRankCI"
+	{
+		"vi"		"{blue} Xếp hạng {green} CI: {olive} # %d {blue} ( {default} %d {green} chung {blue} [ {default} %.0f%% {blue} ])"
+	}
+	"YourRankFF"
+	{
+		"vi"		"{blue} Hạng {green} FF: {olive} # %d {blue} ( {default} %d {green} hỏa lực thiện chiến {blue} [ {default} %.0f%% {blue} ])"
+	}
+	"BotName"
+	{
+		"vi"		"[BOT]"
+	}
+	"NobodyName"
+	{
+		"vi"		"{blue} ( {default} không có {blue} )"
+	}
+	"NotEnoughAction"
+	{
+		"vi"		"{blue} ( {default} chưa đủ hành động {blue} )"
+	}
+	"ReportSI_Absolute"
+	{
+		"vi"		"{green} SI: {olive} %s {blue} ( {default} %d {green} dmg {default}, %d {green} giết chết {blue} )"
+	}
+	"ReportSI_Percent"
+	{
+		"vi"		"{green} SI: {olive} %s {blue} ( {green} dmg {blue} [ {default} %.0f%% {blue} ] {default}, {green} giết {blue} [ {default} %.0f%% {blue} ])"
+	}
+	"ReportSI_Full"
+	{
+		"vi"		"{green} SI: {olive} %s {blue} ( {default} %d {green} dmg {blue} [ {default} %.0f%% {blue} ] {default}, %d {green} giết chết {blue} [ {default} %.0f%% {blue} ])"
+	}
+	"ReportSI_Nobody"
+	{
+		"vi"		"{green} SI: {blue} ( {default} Không ai {blue} )"
+	}
+	"ReportCI_Absolute"
+	{
+		"vi"		"{green} CI: {olive} %s {blue} ( {default} %d {green} chung {blue} )"
+	}
+	"ReportCI_Percent"
+	{
+		"vi"		"{green} CI: {olive} %s {blue} ( {green} chung {blue} [ {default} %.0f%% {blue} ])"
+	}
+	"ReportCI_Full"
+	{
+		"vi"		"{green} CI: {olive} %s {blue} ( {default} %d {green} chung {blue} [ {default} %.0f%% {blue} ])"
+	}
+	"NoFF"
+	{
+		"vi"		"{blue} ( {default} Không có hỏa lực thân thiện nào cả! {blue} )"
+	}
+	"ReportFF_Absolute"
+	{
+		"vi"		"{green} FF: {olive} %s {blue} ( {default} %d {green} hỏa lực thiện chiến {blue} )"
+	}
+	"ReportFF_Percent"
+	{
+		"vi"		"{green} FF: {olive} %s {blue} ( {green} hỏa lực thiện chiến {blue} [ {default} %.0f%% {blue} ])"
+	}
+	"ReportFF_Full"
+	{
+		"vi"		"{green} FF: {olive} %s {blue} ( {default} %d {green} hỏa lực thiện chiến {blue} [ {default} %.0f%% {blue} ])"
+	}
+	"SurvivorMVP_PharmacyMVPStatisticsHeader"
+	{
+		"vi"		"{blue}[{default} Thống kê MVP Dược phẩm {blue}]"
+	}
+	"SurvivorMVP_PharmacyMVPStatisticsLine"
+	{
+		"vi"		"{olive}特感{green}%2d {olive}丧尸{green}%3d {olive}黑/被黑{green}%2d/%2d {olive}伤害{green}%4d {default}%N"
+	}
+}

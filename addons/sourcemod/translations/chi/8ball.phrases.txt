@@ -2,7 +2,7 @@
 {
 	"Tag"
 	{
-		"chi"		"{default}[{green}8Ball{default}]"
+		"chi"		"{default}[{green}8球{default}]"
 	}
 	"Usage"
 	{

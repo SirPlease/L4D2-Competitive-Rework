@@ -1,0 +1,43 @@
+"Phrases"
+{
+	"Switch Map/Mission"
+	{
+		"vi"		"Chuyển đổi bản đồ/nhiệm vụ"
+	}
+	"Official Maps"
+	{
+		"vi"		"Bản đồ chính thức"
+	}
+	"Addon Maps"
+	{
+		"vi"		"Bản đồ bổ trợ"
+	}
+	"Official Missions"
+	{
+		"vi"		"Nhiệm vụ chính thức"
+	}
+	"Addon Missions"
+	{
+		"vi"		"Nhiệm vụ bổ trợ"
+	}
+	"L4D2MMAdminMenu_SMFailedGetMissionList"
+	{
+		"vi"		"[SM] Không lấy được danh sách nhiệm vụ."
+	}
+	"L4D2MMAdminMenu_SMNoMapsFoundCurrent"
+	{
+		"vi"		"[SM] Không tìm thấy bản đồ nào cho chế độ trò chơi hiện tại."
+	}
+	"L4D2MMAdminMenu_SMNoValidMapsFound"
+	{
+		"vi"		"[SM] Không tìm thấy bản đồ hợp lệ cho nhiệm vụ này."
+	}
+	"L4D2MMAdminMenu_SMAdminForcingMapChange"
+	{
+		"vi"		"{green}[SM]{default} Quản trị viên đang buộc thay đổi bản đồ thành {lightgreen}%s{default}."
+	}
+	"L4D2MMAdminMenu_SMAdminReloadingVPKs"
+	{
+		"vi"		"{green}[SM]{default} Admin đang tải lại VPK và danh sách nhiệm vụ..."
+	}
+}

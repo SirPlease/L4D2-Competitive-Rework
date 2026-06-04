@@ -1,0 +1,142 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"zho"		"{blue} < {green} 老闆投票 {blue} > {default}"
+	}
+	"NotAvailable"
+	{
+		"zho"		"此地圖上不支援 Boss 投票。"
+	}
+	"Available"
+	{
+		"zho"		"Boss 投票僅在準備期間可用。"
+	}
+	"FirstRound"
+	{
+		"zho"		"Boss 投票僅在地圖的第一輪期間可用。"
+	}
+	"NotAvailableForSpec"
+	{
+		"zho"		"觀眾不可以進行 Boss 投票。"
+	}
+	"CannotBeCalled"
+	{
+		"zho"		"現在無法呼叫 Boss 投票..."
+	}
+	"Usage"
+	{
+		"zho"		"用法：!voteboss {olive}<{default}坦克{olive}><{default}魔女{olive}>{default}。"
+	}
+	"Usage2"
+	{
+		"zho"		"使用 {default} \\\\\\\" {blue} 0 {default} \\\\\\\" 表示 {olive} 無生成 {default} ， \\\\\\\" {blue} -1 {default} \\\\\\\" 表示 {olive} 無知。"
+	}
+	"Invalid"
+	{
+		"zho"		"百分比為{olive}，無效{default}。"
+	}
+	"TankStatic"
+	{
+		"zho"		"坦克的生成是靜態的，在此地圖上無法更改。"
+	}
+	"WitchStatic"
+	{
+		"zho"		"女巫的生成是靜態的，在此地圖上無法更改。"
+	}
+	"TankBanned"
+	{
+		"zho"		"坦克百分比是{blue}，封鎖{default}。"
+	}
+	"WitchBanned"
+	{
+		"zho"		"女巫百分比是{blue} 封禁{default} 。"
+	}
+	"SetBosses"
+	{
+		"zho"		"將坦克設定為：%s，將女巫設定為：%s ？"
+	}
+	"SetTank"
+	{
+		"zho"		"將坦克設定為：%s，將女巫設定為：停用？"
+	}
+	"SetOnlyTank"
+	{
+		"zho"		"將坦克設定為：%s?"
+	}
+	"SetWitch"
+	{
+		"zho"		"將坦克設定為：停用，將女巫設定為：%s ？"
+	}
+	"SetOnlyWitch"
+	{
+		"zho"		"將女巫設定為：%s？"
+	}
+	"SetBossesDisabled"
+	{
+		"zho"		"將 Boss 設定為：停用？"
+	}
+	"SetTankDisabled"
+	{
+		"zho"		"將 Tank 設定為：禁用？"
+	}
+	"SetWitchDisabled"
+	{
+		"zho"		"將女巫設定為：停用？"
+	}
+	"OnlyReadyUp"
+	{
+		"zho"		"生成點只能在準備期間設定。"
+	}
+	"SettingBoss"
+	{
+		"zho"		"設定 Boss 生成..."
+	}
+	"SettingTank"
+	{
+		"zho"		"設定坦克生成..."
+	}
+	"SettingWitch"
+	{
+		"zho"		"設定女巫生成..."
+	}
+	"SettingBossDisabled"
+	{
+		"zho"		"設定 Boss 停用..."
+	}
+	"CommandNotAvailable"
+	{
+		"zho"		"命令在此地圖上不可用。"
+	}
+	"TankSpawnStatic"
+	{
+		"zho"		"坦克的生成是靜態的，在此地圖上無法更改。"
+	}
+	"PercentageInvalid"
+	{
+		"zho"		"百分比為 {blue} 無效 {default} 。"
+	}
+	"Percentagebanned"
+	{
+		"zho"		"百分比是{blue} 封禁{default}。"
+	}
+	"TankSpawnAdmin"
+	{
+		"#format"	"{1:i},{2:s}"
+		"zho"		"坦克生成點由管理員 {blue} {2} {default} 設定為 {olive} {1} % {default} 。"
+	}
+	"WitchSpawnStatic"
+	{
+		"zho"		"女巫的生成是靜態的，在此地圖上無法更改。"
+	}
+	"WitchSpawnAdmin"
+	{
+		"#format"	"{1:i},{2:s}"
+		"zho"		"管理員 {blue} {2} {default} 將女巫生成設定為 {olive} {1} % {default} 。"
+	}
+	"RoundNotReachLimit"
+	{
+		"#format"	"{1:i}"
+		"zho"		"您這個難度就想馬上逃課了？不行呢！(你還需要嘗試{blue}{1}次{default}無法通過後才能使用{olive}boss投票功能{default})."
+	}
+}

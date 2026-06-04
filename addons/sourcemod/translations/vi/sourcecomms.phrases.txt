@@ -1,0 +1,438 @@
+"Phrases"
+{
+	"Muted on connect"
+	{
+		"vi"		"Bạn đã bị tắt tiếng!"
+	}
+	"Gagged on connect"
+	{
+		"vi"		"Bạn đã bị bịt miệng!"
+	}
+	"Mute expired"
+	{
+		"vi"		"Tắt tiếng của bạn đã hết hạn."
+	}
+	"Gag expired"
+	{
+		"vi"		"Trò đùa của bạn đã hết hạn."
+	}
+	"FWUnmute"
+	{
+		"vi"		"Tính năng tắt tiếng của bạn đã bị xóa."
+	}
+	"FWUngag"
+	{
+		"vi"		"Trò đùa của bạn đã được gỡ bỏ."
+	}
+	"Usage_time"
+	{
+		"#format"	"{1:d}"
+		"vi"		"Time: {1} minutes, if unspecified; permanent, if 0.\\nIf < 0, blocks for session."
+	}
+	"Player Comms Not Verified"
+	{
+		"vi"		"Người chơi này chưa được xác minh. Vui lòng đợi ba mươi giây trước khi thử lại."
+	}
+	"Player already muted"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Người chơi {1} đã bị tắt tiếng!"
+	}
+	"Player already gagged"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Người chơi {1} đã bịt miệng rồi!"
+	}
+	"Player already silenced"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Người chơi {1} đã bịt miệng hoặc tắt tiếng!"
+	}
+	"Player not muted"
+	{
+		"vi"		"Người chơi không bị tắt tiếng."
+	}
+	"Player not gagged"
+	{
+		"vi"		"Người chơi không bịt miệng."
+	}
+	"Player not silenced"
+	{
+		"vi"		"Người chơi không im lặng."
+	}
+	"Permagagged player"
+	{
+		"#format"	"{1:t}"
+		"vi"		"Đã ban hành một lệnh bịt miệng vĩnh viễn trên {1}."
+	}
+	"Permagagged player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"vi"		"Đã ban hành lệnh bịt miệng vĩnh viễn đối với {1} (lý do: {2} )."
+	}
+	"Gagged player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"vi"		"Đã ban hành lệnh bịt miệng kéo dài trên {1} trong số phút {2}."
+	}
+	"Gagged player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"vi"		"Đã ban hành lệnh bịt miệng kéo dài trên {1} trong số phút {2} (lý do: {3} )."
+	}
+	"Permamuted player"
+	{
+		"#format"	"{1:t}"
+		"vi"		"Đã ban hành chế độ tắt tiếng vĩnh viễn trên {1}."
+	}
+	"Permamuted player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"vi"		"Đã ban hành chế độ tắt tiếng vĩnh viễn trên {1} (lý do: {2} )."
+	}
+	"Muted player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"vi"		"Đã phát hành chế độ tắt tiếng kéo dài trên {1} trong số phút {2}."
+	}
+	"Muted player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"vi"		"Đã phát hành chế độ tắt tiếng kéo dài trên {1} trong số phút {2} (lý do: {3} )."
+	}
+	"Permasilenced player"
+	{
+		"#format"	"{1:t}"
+		"vi"		"Đã ban hành lệnh im lặng vĩnh viễn đối với {1}."
+	}
+	"Permasilenced player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"vi"		"Đã ban hành lệnh im lặng vĩnh viễn đối với {1} (lý do: {2} )."
+	}
+	"Silenced player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"vi"		"Đã ban hành thời gian im lặng kéo dài trên {1} trong số phút {2}."
+	}
+	"Silenced player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"vi"		"Đã ban hành thời gian im lặng kéo dài trên {1} trong số phút {2} (lý do: {3} )."
+	}
+	"Temp unmuted player"
+	{
+		"#format"	"{1:t}"
+		"vi"		"Tạm thời loại bỏ tắt tiếng khỏi {1}."
+	}
+	"Temp ungagged player"
+	{
+		"#format"	"{1:t}"
+		"vi"		"Tạm thời loại bỏ gag khỏi {1}."
+	}
+	"Temp unsilenced player"
+	{
+		"#format"	"{1:t}"
+		"vi"		"Tạm thời loại bỏ sự im lặng khỏi {1}."
+	}
+	"Unblock Select Failed"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Đã xảy ra lỗi khi yêu cầu chặn {1} từ DB."
+	}
+	"No blocks found"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Không tìm thấy khối hoạt động nào trong DB cho {1}."
+	}
+	"No db error unlock perm"
+	{
+		"vi"		"Bạn không có quyền bỏ chặn lỗi DB."
+	}
+	"No permission unmute"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Không thể xóa tính năng tắt tiếng trên {1} do quản trị viên cấp cao hơn đã tắt tiếng!"
+	}
+	"No permission ungag"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Trò đùa trên {1} không thể xóa được do quản trị viên cấp cao hơn đã tắt tiếng!"
+	}
+	"Unmuted player"
+	{
+		"#format"	"{1:t}"
+		"vi"		"Đã xóa chế độ tắt tiếng mở rộng khỏi {1}."
+	}
+	"Ungagged player"
+	{
+		"#format"	"{1:t}"
+		"vi"		"Đã xóa một trò đùa mở rộng khỏi {1}."
+	}
+	"Unblock insert failed"
+	{
+		"vi"		"Không thể xóa khối khỏi DB."
+	}
+	"successfully unmuted"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Đã loại bỏ thành công tính năng tắt tiếng cho {1} khỏi DB."
+	}
+	"successfully ungagged"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Đã loại bỏ thành công gag cho {1} khỏi DB."
+	}
+	"AdminMenu_Display_None"
+	{
+		"#format"	"{1:s}"
+		"vi"		"[  ] {1}"
+	}
+	"AdminMenu_Display_Muted"
+	{
+		"#format"	"{1:s}"
+		"vi"		"[M] {1}"
+	}
+	"AdminMenu_Display_Gagged"
+	{
+		"#format"	"{1:s}"
+		"vi"		"[G] {1}"
+	}
+	"AdminMenu_Display_Silenced"
+	{
+		"#format"	"{1:s}"
+		"vi"		"[S] {1}"
+	}
+	"AdminMenu_Main"
+	{
+		"vi"		"Lệnh giao tiếp"
+	}
+	"AdminMenu_Select_Main"
+	{
+		"vi"		"Lệnh giao tiếp:"
+	}
+	"AdminMenu_List"
+	{
+		"vi"		"Xem hình phạt"
+	}
+	"AdminMenu_Select_List"
+	{
+		"vi"		"Chọn Người chơi:"
+	}
+	"AdminMenu_Gag"
+	{
+		"vi"		"vấn đề bịt miệng"
+	}
+	"AdminMenu_Select_Gag"
+	{
+		"vi"		"Chọn Người chơi:"
+	}
+	"AdminMenu_Select_Mute"
+	{
+		"vi"		"Chọn Người chơi:"
+	}
+	"AdminMenu_Select_Silence"
+	{
+		"vi"		"Chọn Người chơi:"
+	}
+	"AdminMenu_Select_Ungag"
+	{
+		"vi"		"Chọn Người chơi:"
+	}
+	"AdminMenu_Select_Unmute"
+	{
+		"vi"		"Chọn Người chơi:"
+	}
+	"AdminMenu_Select_Unsilence"
+	{
+		"vi"		"Chọn Người chơi:"
+	}
+	"AdminMenu_Option_Mute_Empty"
+	{
+		"vi"		"Không có người chơi bị tắt tiếng"
+	}
+	"AdminMenu_Option_Gag_Empty"
+	{
+		"vi"		"Không có người chơi bị bịt miệng"
+	}
+	"AdminMenu_Option_Silence_Empty"
+	{
+		"vi"		"Không có người chơi im lặng"
+	}
+	"ListMenu_Option_Empty"
+	{
+		"vi"		"Không có khách hàng bị trừng phạt"
+	}
+	"AdminMenu_Option_Empty"
+	{
+		"vi"		"Không có người chơi nào"
+	}
+	"AdminMenu_UnGag"
+	{
+		"vi"		"Xóa trò đùa"
+	}
+	"AdminMenu_Title_Durations"
+	{
+		"vi"		"Chọn thời lượng:"
+	}
+	"AdminMenu_Title_Reasons"
+	{
+		"vi"		"Chọn lý do:"
+	}
+	"AdminMenu_Mute"
+	{
+		"vi"		"Tắt tiếng vấn đề"
+	}
+	"AdminMenu_UnMute"
+	{
+		"vi"		"Xóa tắt tiếng"
+	}
+	"AdminMenu_Silence"
+	{
+		"vi"		"Vấn đề im lặng"
+	}
+	"AdminMenu_UnSilence"
+	{
+		"vi"		"Xóa im lặng"
+	}
+	"AdminMenu_Not_Available"
+	{
+		"vi"		"Trình phát bạn đã chọn không còn khả dụng."
+	}
+	"Command_Target_Not_Targetable"
+	{
+		"vi"		"Bạn không thể nhắm mục tiêu người chơi này."
+	}
+	"ListMenu_Option_Mute"
+	{
+		"vi"		"Đã tắt tiếng"
+	}
+	"ListMenu_Option_Gag"
+	{
+		"vi"		"Bịt miệng"
+	}
+	"ListMenu_Option_Duration"
+	{
+		"vi"		"- Khoảng thời gian:"
+	}
+	"ListMenu_Option_Duration_Perm"
+	{
+		"vi"		"Vĩnh viễn"
+	}
+	"ListMenu_Option_Duration_Time"
+	{
+		"#format"	"{1:d}"
+		"vi"		"{1} Phút"
+	}
+	"ListMenu_Option_Duration_Temp"
+	{
+		"vi"		"Tạm thời"
+	}
+	"ListMenu_Option_Expire"
+	{
+		"vi"		"- Hết hạn:"
+	}
+	"ListMenu_Option_Expire_Perm"
+	{
+		"vi"		"Không bao giờ"
+	}
+	"ListMenu_Option_Expire_Time"
+	{
+		"#format"	"{1:s}"
+		"vi"		"{1}"
+	}
+	"ListMenu_Option_Expire_Temp_Reconnect"
+	{
+		"vi"		"Kết nối lại"
+	}
+	"ListMenu_Option_Admin"
+	{
+		"#format"	"{1:s}"
+		"vi"		"- Quản trị viên: {1}"
+	}
+	"ListMenu_Option_Issue"
+	{
+		"#format"	"{1:s}"
+		"vi"		"- Số phát hành: {1}"
+	}
+	"ListMenu_Option_Reason"
+	{
+		"vi"		"- Xem lý do"
+	}
+	"ListMenu_Option_Reason_None"
+	{
+		"vi"		"- Lý do: Không có"
+	}
+	"ReasonPanel_Punishment_Mute"
+	{
+		"vi"		"Đã tắt tiếng:"
+	}
+	"ReasonPanel_Punishment_Gag"
+	{
+		"vi"		"bịt miệng:"
+	}
+	"ReasonPanel_Perm"
+	{
+		"vi"		"Vĩnh viễn"
+	}
+	"ReasonPanel_Time"
+	{
+		"#format"	"{1:d}"
+		"vi"		"{1} Phút"
+	}
+	"ReasonPanel_Temp"
+	{
+		"vi"		"Tạm thời"
+	}
+	"ReasonPanel_Reason"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Lý do: {1}"
+	}
+	"ReasonPanel_Back"
+	{
+		"vi"		"Ra"
+	}
+	"Temp muted player"
+	{
+		"#format"	"{1:t}"
+		"vi"		"{1} bị tắt tiếng."
+	}
+	"Temp muted player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"vi"		"Đã tắt tiếng {1} (lý do: {2} )."
+	}
+	"Temp gagged player"
+	{
+		"#format"	"{1:t}"
+		"vi"		"Bịt miệng {1}."
+	}
+	"Temp gagged player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"vi"		"Bịt miệng {1} (lý do: {2} )."
+	}
+	"Temp silenced player"
+	{
+		"#format"	"{1:t}"
+		"vi"		"{1} im lặng."
+	}
+	"Temp silenced player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"vi"		"{1} im lặng (lý do: {2} )."
+	}
+	"CommandComms_na"
+	{
+		"vi"		"Chỉ dành cho người chơi trên máy chủ."
+	}
+	"CommandComms_nb"
+	{
+		"vi"		"Cuộc trò chuyện và giọng nói của bạn không bị chặn."
+	}
+	"no access"
+	{
+		"vi"		"Hình phạt trong thời gian quy định không được phép đối với bạn."
+	}
+}

@@ -1,0 +1,408 @@
+"Phrases"
+{
+	"Spawn Objects"
+	{
+		"jp"		"オブジェクトのスポーン"
+	}
+	"Select a task:"
+	{
+		"jp"		"タスクを選択します。"
+	}
+	"Select the delete task"
+	{
+		"jp"		"削除タスクを選択します"
+	}
+	"Delete All Objects"
+	{
+		"jp"		"すべてのオブジェクトを削除"
+	}
+	"Delete Looking Object"
+	{
+		"jp"		"探しているオブジェクトを削除"
+	}
+	"Delete Last Object"
+	{
+		"jp"		"最後のオブジェクトを削除"
+	}
+	"Are you sure(Delete All)?"
+	{
+		"jp"		"すべてのオブジェクトを削除してもよろしいですか?"
+	}
+	"Yes"
+	{
+		"jp"		"はい"
+	}
+	"No"
+	{
+		"jp"		"No"
+	}
+	"Successfully deleted all spawned objects"
+	{
+		"jp"		"生成されたすべてのオブジェクトが正常に削除されました"
+	}
+	"Canceled"
+	{
+		"jp"		"キャンセル"
+	}
+	"delete all the spawned objects?"
+	{
+		"jp"		"生成されたオブジェクトをすべて削除してもよろしいですか?"
+	}
+	"Edit Object"
+	{
+		"jp"		"オブジェクトの編集"
+	}
+	"Delete Object"
+	{
+		"jp"		"オブジェクトの削除"
+	}
+	"Select the spawn method"
+	{
+		"jp"		"生成方法を選択します"
+	}
+	"Spawn Physics On Cursor"
+	{
+		"jp"		"カーソル上に物理をスポーン"
+	}
+	"Spawn Physics On Origin"
+	{
+		"jp"		"Origin で物理をスポーンする"
+	}
+	"Spawn Non-solid On Cursor"
+	{
+		"jp"		"カーソル上に非ソリッドをスポーン"
+	}
+	"Spawn Non-solid On Origin"
+	{
+		"jp"		"原点上に非ソリッドをスポーン"
+	}
+	"Spawn Solid On Cursor"
+	{
+		"jp"		"カーソル上にソリッドをスポーン"
+	}
+	"Spawn Solid On Origin"
+	{
+		"jp"		"原点上にソリッドをスポーン"
+	}
+	"Save Objects"
+	{
+		"jp"		"オブジェクトの保存"
+	}
+	"Select The Save Method"
+	{
+		"jp"		"保存方法の選択"
+	}
+	"Save Stripper File"
+	{
+		"jp"		"ストリッパーファイルの保存"
+	}
+	"Save Routing File"
+	{
+		"jp"		"ルーティングファイルの保存"
+	}
+	"Save Spawn Objects File"
+	{
+		"jp"		"スポーンオブジェクトファイルの保存"
+	}
+	"Select Path Difficulty"
+	{
+		"jp"		"パスの難易度を選択してください"
+	}
+	"Easy Path"
+	{
+		"jp"		"簡単な道"
+	}
+	"Medium Path"
+	{
+		"jp"		"中パス"
+	}
+	"Hard Path"
+	{
+		"jp"		"ハードパス"
+	}
+	"Load Objects"
+	{
+		"jp"		"オブジェクトのロード"
+	}
+	"load the map data cache?"
+	{
+		"jp"		"マップ データ キャッシュをロードしてもよろしいですか?"
+	}
+	"Are you sure?"
+	{
+		"jp"		"本気ですか？"
+	}
+	"Choose a map number please"
+	{
+		"jp"		"地図番号を選択してください"
+	}
+	"Vehicles"
+	{
+		"jp"		"乗り物"
+	}
+	"Foliage"
+	{
+		"jp"		"紅葉"
+	}
+	"Interior"
+	{
+		"jp"		"インテリア"
+	}
+	"Exterior"
+	{
+		"jp"		"外観"
+	}
+	"Decorative"
+	{
+		"jp"		"装飾的な"
+	}
+	"Misc"
+	{
+		"jp"		"その他"
+	}
+	"Select an action:"
+	{
+		"jp"		"アクションを選択します:"
+	}
+	"Rotate"
+	{
+		"jp"		"回転"
+	}
+	"Move"
+	{
+		"jp"		"動く"
+	}
+	"Rotate 1 degree (X axys)"
+	{
+		"jp"		"1度回転(X軸)"
+	}
+	"Rotate 10 degree (X axys)"
+	{
+		"jp"		"10度回転(X軸)"
+	}
+	"Rotate 15 degree (X axys)"
+	{
+		"jp"		"15 度回転 (X 軸)"
+	}
+	"Rotate 45 degree (X axys)"
+	{
+		"jp"		"40度回転(X軸)"
+	}
+	"Rotate 90 degree (X axys)"
+	{
+		"jp"		"90度回転(X軸)"
+	}
+	"Rotate 180 degree (X axys)"
+	{
+		"jp"		"180 度回転 (X 軸)"
+	}
+	"Back 1 degree (X axys)"
+	{
+		"jp"		"1度後退(X軸)"
+	}
+	"Back 10 degree (X axys)"
+	{
+		"jp"		"後方10度(X軸)"
+	}
+	"Back 15 degree (X axys)"
+	{
+		"jp"		"後方15度(X軸)"
+	}
+	"Rotate 1 degree (Y axys)"
+	{
+		"jp"		"1度回転(Y軸)"
+	}
+	"Rotate 10 degree (Y axys)"
+	{
+		"jp"		"10度回転(Y軸)"
+	}
+	"Rotate 15 degree (Y axys)"
+	{
+		"jp"		"15 度回転 (Y 軸)"
+	}
+	"Rotate 45 degree (Y axys)"
+	{
+		"jp"		"40度回転(Y軸)"
+	}
+	"Rotate 90 degree (Y axys)"
+	{
+		"jp"		"90度回転(Y軸)"
+	}
+	"Rotate 180 degree (Y axys)"
+	{
+		"jp"		"180 度回転 (Y 軸)"
+	}
+	"Back 1 degree (Y axys)"
+	{
+		"jp"		"1度後退(Y軸)"
+	}
+	"Back 10 degree (Y axys)"
+	{
+		"jp"		"後10度(Y軸)"
+	}
+	"Back 15 degree (Y axys)"
+	{
+		"jp"		"後方15度(Y軸)"
+	}
+	"Rotate 1 degree (Z axys)"
+	{
+		"jp"		"1度回転(Z軸)"
+	}
+	"Rotate 10 degree (Z axys)"
+	{
+		"jp"		"10度回転(Z軸)"
+	}
+	"Rotate 15 degree (Z axys)"
+	{
+		"jp"		"15 度回転 (Z 軸)"
+	}
+	"Rotate 45 degree (Z axys)"
+	{
+		"jp"		"40度回転(Z軸)"
+	}
+	"Rotate 90 degree (Z axys)"
+	{
+		"jp"		"90度回転(Z軸)"
+	}
+	"Rotate 180 degree (Z axys)"
+	{
+		"jp"		"180 度回転 (Z 軸)"
+	}
+	"Back 1 degree (Z axys)"
+	{
+		"jp"		"1度後退（Z軸）"
+	}
+	"Back 10 degree (Z axys)"
+	{
+		"jp"		"後方10度(Z軸)"
+	}
+	"Back 15 degree (Z axys)"
+	{
+		"jp"		"後方 15 度 (Z 軸)"
+	}
+	"Move Up 1 Unit"
+	{
+		"jp"		"1単位上に移動"
+	}
+	"Move Up 10 Unit"
+	{
+		"jp"		"10 ユニット上に移動"
+	}
+	"Move Up 30 Unit"
+	{
+		"jp"		"30 単位を上に移動"
+	}
+	"Move Down 1 Unit"
+	{
+		"jp"		"1 ユニット下に移動"
+	}
+	"Move Down 10 Unit"
+	{
+		"jp"		"10 ユニット下に移動"
+	}
+	"Move Down 30 Unit"
+	{
+		"jp"		"30 単位を下に移動"
+	}
+	"Move Right 1 Unit"
+	{
+		"jp"		"右に 1 ユニット移動"
+	}
+	"Move Right 10 Unit"
+	{
+		"jp"		"右に10ユニット移動"
+	}
+	"Move Right 30 Unit"
+	{
+		"jp"		"右に移動 30 ユニット"
+	}
+	"Move Left 1 Unit"
+	{
+		"jp"		"1 ユニット左に移動"
+	}
+	"Move Left 10 Unit"
+	{
+		"jp"		"10単位左に移動"
+	}
+	"Move Left 30 Unit"
+	{
+		"jp"		"30単位を左に移動"
+	}
+	"Move Forward 1 Unit"
+	{
+		"jp"		"1ユニット前進"
+	}
+	"Move Forward 10 Unit"
+	{
+		"jp"		"10ユニット前進"
+	}
+	"Move Forward 30 Unit"
+	{
+		"jp"		"30 ユニットを前進させる"
+	}
+	"Move Backward 1 Unit"
+	{
+		"jp"		"1 ユニット後ろに移動"
+	}
+	"Move Backward 10 Unit"
+	{
+		"jp"		"10 ユニット後方へ移動"
+	}
+	"Move Backward 30 Unit"
+	{
+		"jp"		"30 単位後方へ移動"
+	}
+	"Object Model"
+	{
+		"#format"	"{1:d},{2:s}"
+		"jp"		"オブジェクト( {1} ) モデル: {2}"
+	}
+	"Object Position"
+	{
+		"#format"	"{1:d},{2:f},{3:f},{4:f}"
+		"jp"		"オブジェクト( {1} ) 位置: {2} 、 {3} 、 {4}"
+	}
+	"Object Angle"
+	{
+		"#format"	"{1:d},{2:f},{3:f},{4:f}"
+		"jp"		"オブジェクト( {1} ) 角度: {2} 、 {3} 、 {4}"
+	}
+	"Successfully removed an object"
+	{
+		"#format"	"{1:d}"
+		"jp"		"オブジェクト( {1} )が正常に削除されました"
+	}
+	"This plugin won't work in this game"
+	{
+		"jp"		"このプラグインはこのゲームでは動作しません"
+	}
+	"You are not looking to a valid object"
+	{
+		"jp"		"有効なオブジェクトを探していません"
+	}
+	"Succesfully deleted the last spawned object"
+	{
+		"jp"		"最後に生成されたオブジェクトが正常に削除されました"
+	}
+	"The last spawned object index is not an object anymore!"
+	{
+		"#format"	"{1:d}"
+		"jp"		"最後に生成されたオブジェクト インデックス {1} はもうオブジェクトではありません。"
+	}
+	"The last object is not valid anymore"
+	{
+		"jp"		"最後のオブジェクトはもう無効です"
+	}
+	"You haven't spawned anything yet"
+	{
+		"jp"		"まだ何も生まれていません"
+	}
+	"The file already exists."
+	{
+		"jp"		"ファイルはすでに存在します。古いコンテンツは削除されません。"
+	}
+	"Succesfully saved the map data"
+	{
+		"jp"		"地図データの保存に成功しました"
+	}
+}

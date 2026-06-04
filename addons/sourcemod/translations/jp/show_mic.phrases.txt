@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"Players Speaking:"
+	{
+		"jp"		"選手たちの発言:"
+	}
+}

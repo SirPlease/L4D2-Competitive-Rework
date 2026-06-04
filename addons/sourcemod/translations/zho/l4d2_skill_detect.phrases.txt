@@ -1,0 +1,273 @@
+"Phrases"
+{
+	"Tag+"
+	{
+		"zho"		"{green}★{default}"
+	}
+	"Tag++"
+	{
+		"zho"		"{green}★★{default}"
+	}
+	"Tag+++"
+	{
+		"zho"		"{green}★★★{default}"
+	}
+	"Tag++++"
+	{
+		"zho"		"{green}★★★★{default}"
+	}
+	"Popped"
+	{
+		"#format"	"{1:N},{2:N}"
+		"zho"		"{olive}{1}{default} 彈出了 {olive}{2}{default}。"
+	}
+	"PoppedBot"
+	{
+		"zho"		"{olive}%N{default} 出現了嬰兒潮世代。"
+	}
+	"Leveled"
+	{
+		"#format"	"{1:N},{2:N}"
+		"zho"		"{olive}{1}{default} {blue}完全{default}水平{olive}{2}{default}"
+	}
+	"LeveledBot"
+	{
+		"zho"		"{olive}%N{default} {blue}完全{default}已平整的{olive}充電器{default}"
+	}
+	"LeveledHurt"
+	{
+		"#format"	"{1:N},{2:N},{3:i}"
+		"zho"		"{olive}{1}{default} {blue}晶片等級{default} {olive}{2}{default} ({blue}{3} dmg{default})"
+	}
+	"LeveledHurtBot"
+	{
+		"#format"	"{1:N},{2:i}"
+		"zho"		"{olive}{1}{default} {blue}晶片等級{default}充電器 ({blue}{2} dmg{default})"
+	}
+	"Deadstopped"
+	{
+		"#format"	"{1:N},{2:N}"
+		"zho"		"{olive}{1}{default} {blue}停頓{default} {olive}{2}{default}"
+	}
+	"DeadstoppedBot"
+	{
+		"zho"		"{olive}%N{default} {blue}停頓{default} {olive}獵人{default}"
+	}
+	"Shoved"
+	{
+		"#format"	"{1:N},{2:N}"
+		"zho"		"{olive}{1}{default} {blue}推了{default} {olive}{2}{default}."
+	}
+	"ShovedBot"
+	{
+		"zho"		"{olive}%N{default} {blue}推了{default} 一個 {olive}SI{default}."
+	}
+	"TeamSkeeted"
+	{
+		"zho"		"{olive}%N{default} 是 {blue}team-sketed{default}。"
+	}
+	"TeamSkeetedBot"
+	{
+		"zho"		"{olive}hunter{default} 是 {blue}team-sketed{default}。"
+	}
+	"Skeeted"
+	{
+		"#format"	"{1:N},{2:s},{3:N}"
+		"zho"		"{olive}{1}{default} {blue}{2}碟式{default} {olive}{3}{default}."
+	}
+	"SkeetedBot"
+	{
+		"#format"	"{1:N},{2:s}"
+		"zho"		"{olive}{1}{default} {blue}{2}追蹤{default}一位{olive}獵人{default}。"
+	}
+	"Melee"
+	{
+		"zho"		"近戰-"
+	}
+	"HeadShot"
+	{
+		"zho"		"爆頭-"
+	}
+	"Grenade"
+	{
+		"zho"		"手榴彈-"
+	}
+	"HurtSkeet"
+	{
+		"#format"	"{1:N},{2:i},{3:s}"
+		"zho"		"{olive}{1}{default} {green}沒有{default}被瞄準（{blue}{2}{default} 損壞）。 {3}"
+	}
+	"HurtSkeetBot"
+	{
+		"#format"	"{1:i},{2:s}"
+		"zho"		"{olive}Hunter{default} {green}沒有{default}被瞄準（{blue}{1}{default} 損壞）。 {2}"
+	}
+	"Unchipped"
+	{
+		"zho"		"（如果獵人沒有傷痕的話，就會被飛碟擊中！）"
+	}
+	"CrownedWitch"
+	{
+		"#format"	"{1:N},{2:i}"
+		"zho"		"{olive}{1}{default} 加冕為女巫（{blue}{2}{default} 傷害）。"
+	}
+	"CrownedWitch2"
+	{
+		"zho"		"女巫是 {blue}加冕{default}."
+	}
+	"DrawCrowned"
+	{
+		"#format"	"{1:N},{2:i},{3:i}"
+		"zho"		"{olive}{1}{default} 抽籤為女巫加冕（{blue}{2}{default} 傷害，{olive}{3}{default} 籌碼）。"
+	}
+	"DrawCrowned2"
+	{
+		"#format"	"{1:i},{2:i}"
+		"zho"		"女巫被平手加冕（{blue}{1}{default} 傷害，{olive}{2}{default} 碎片）。"
+	}
+	"CutTongue"
+	{
+		"#format"	"{1:N},{2:N}"
+		"zho"		"{olive}{1}{default} {blue}切{default} {olive}{2}{default}的舌頭"
+	}
+	"CutTongueBot"
+	{
+		"zho"		"{olive}%N{default} {blue}切{default} 煙舌"
+	}
+	"SelfClearedTongue"
+	{
+		"#format"	"{1:N},{2:N},{3:s}"
+		"zho"		"{olive}{1}{default} {blue}自行清除 {olive}{2}{default} 的舌頭 {blue}{3}{default} {default}"
+	}
+	"SelfClearedTongueBot"
+	{
+		"#format"	"{1:N},{2:s}"
+		"zho"		"{olive}{1}{default} {blue}自清零{default} 來自吸煙者的舌頭 {blue}{2}{default}"
+	}
+	"Shoving"
+	{
+		"zho"		"透過推搡"
+	}
+	"SkeetedRock"
+	{
+		"#format"	"{1:N},{2:N}"
+		"zho"		"{olive}{1}{default} {blue}skeeted{default} {olive}{2}{default} 的搖滾。"
+	}
+	"SkeetedRockBot"
+	{
+		"zho"		"{olive}%N{default} {blue}sketed{default} 坦克岩石"
+	}
+	"HunterHP"
+	{
+		"#format"	"{1:N},{2:N},{3:i},{4:i}"
+		"zho"		"{olive}{1}{default} {red}高位攻擊{default} {olive}{2}{default}（{red}{3}{default} dmg，高度：{red}{4}{default}）"
+	}
+	"HunterHPBot"
+	{
+		"#format"	"{1:N},{2:i},{3:i}"
+		"zho"		"{olive}獵人{default} {red}高位猛撲{default} {olive}{1}{default}（{red}{2}{default} 傷害，高度：{red}{3}{default}）"
+	}
+	"JockeyHP"
+	{
+		"#format"	"{1:N},{2:N},{3:i}"
+		"zho"		"{olive}{1}{default} {red}高撲{default} {olive}{2}{default} ({red}高度{default}: {red}{3}{default})"
+	}
+	"JockeyHPBot"
+	{
+		"#format"	"{1:N},{2:i}"
+		"zho"		"一位{olive}騎師{default} {red}高位猛撲{default} {olive}{1}{default}（{red}身高{default}：{red}{2}{default}）"
+	}
+	"DeathCharged"
+	{
+		"#format"	"{1:N},{2:N},{3:s},{4:i}"
+		"zho"		"{olive}{1}{default} {red}死亡控訴{default} {olive}{2}{default} {3}({red}高度{default}: {red}{4}{default})"
+	}
+	"DeathChargedBot"
+	{
+		"#format"	"{1:N},{2:s},{3:i}"
+		"zho"		"{olive}充電器{default} {red}死亡充電{default} {olive}{1}{default} {2}（{red}高度{default}：{red}{3}{default}）"
+	}
+	"Bowling"
+	{
+		"zho"		"透過保齡球"
+	}
+	"SIClear"
+	{
+		"#format"	"{1:N},{2:N},{3:N},{4:s},{5:.2f}"
+		"zho"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}{2}{default} 來自 {olive}{3}{default} 的 {4}（{blue}{5} {default}秒）"
+	}
+	"SIClearTeammate"
+	{
+		"#format"	"{1:N},{2:N},{3:s},{4:.2f}"
+		"zho"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}隊友{default}，來自 {olive}{2}{default} 的 {3}（{blue}{4} {default}秒）"
+	}
+	"SIClearBot"
+	{
+		"#format"	"{1:N},{2:N},{3:s},{4:.2f}"
+		"zho"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}{2}{default} 從 {3}（{blue}{4} {default}秒）"
+	}
+	"SIClearTeammateBot"
+	{
+		"#format"	"{1:N},{2:s},{3:.2f}"
+		"zho"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}隊友{default}從{2}（{blue}{3} {default}秒）"
+	}
+	"BunnyHop"
+	{
+		"#format"	"{1:i},{2:s},{3:.1f}"
+		"zho"		"{olive}您{default}連續得到了{blue}{1} bunnyhop{2}{default}（{blue}最高速率{default}：{olive}{3}{default}）"
+	}
+	"PluralCount"
+	{
+		"zho"		"s"
+	}
+	"Empty"
+	{
+		"zho"		""
+	}
+	"CalarmHit"
+	{
+		"zho"		"{olive}%N{default}點擊觸發了警報。"
+	}
+	"CalarmTouched"
+	{
+		"#format"	"{1:N},{2:N}"
+		"zho"		"{olive}{1}{default} 讓 {olive}{2}{default} 觸發了警報。"
+	}
+	"CalarmTouchedHunter"
+	{
+		"zho"		"一位{olive}獵人{default}讓{olive}%N{default}觸發了警報。"
+	}
+	"CalarmTouchedJockey"
+	{
+		"zho"		"一位{olive}騎師{default}讓{olive}%N{default}觸發了警報。"
+	}
+	"CalarmTouchedCharger"
+	{
+		"zho"		"{olive}充電器{default}導致{olive}%N{default}觸發警報。"
+	}
+	"CalarmTouchedInfected"
+	{
+		"zho"		"受{olive}機器人感染{default}導致{olive}%N{default}觸發警報。"
+	}
+	"CalarmTouchedBot"
+	{
+		"zho"		"{olive}%N{default}碰到了一輛報警的汽車。"
+	}
+	"CalarmExplosion"
+	{
+		"zho"		"{olive}%N{default} 觸發了爆炸警報。"
+	}
+	"CalarmBoomer"
+	{
+		"#format"	"{1:N},{2:N}"
+		"zho"		"{olive}{1}{default} 殺死嬰兒潮世代 {olive}{2}{default} 觸發了警報。"
+	}
+	"CalarmBoomerBot"
+	{
+		"zho"		"{olive}%N{default} 拍攝了 {olive}boomer{default} 觸發了警報。"
+	}
+	"Calarm"
+	{
+		"zho"		"{olive}%N{default} 觸發了警報。"
+	}
+}

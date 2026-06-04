@@ -1,0 +1,57 @@
+"Phrases"
+{
+	"Tag+"
+	{
+		"jp"		"{green}★{default}"
+	}
+	"Tag++"
+	{
+		"jp"		"{green}★★{default}"
+	}
+	"Tag+++"
+	{
+		"jp"		"{green}★★★{default}"
+	}
+	"MeleeSkeeted"
+	{
+		"#format"	"{1:N},{2:N}"
+		"jp"		"{olive} {1} {default} は {blue} の白兵戦でした {default} - {default} を {olive} でスキートしました {2} {default}"
+	}
+	"Headshotted"
+	{
+		"#format"	"{1:N},{2:N}"
+		"jp"		"{olive} {1} {default} は {blue} にヘッドショットされました {default} によって {olive} {2} {default}"
+	}
+	"TeamSkeeted"
+	{
+		"#format"	"{1:N},{2:N},{3:d},{4:d},{5:s},{6:s}"
+		"jp"		"{olive} {1} {default} チームは {olive} {2} {default} を {blue} に対して {3} ダメージ {default} を {blue} {4} {default} にショット {5} しました。支援者: {olive} {6} {default}"
+	}
+	"Skeeted"
+	{
+		"#format"	"{1:N},{2:N},{3:d},{4:s}"
+		"jp"		"{olive} {1} {default} スキート {olive} {2} {default} で {blue} {3} {default} ショット {4}"
+	}
+	"ShutBoomer"
+	{
+		"#format"	"{1:N},{2:s},{3:.1f}"
+		"jp"		"{olive} {1} {default} はシャットダウンしました {olive} {2} {default} の {blue} {3} {default} のブーマー"
+	}
+	"AlarmedCar"
+	{
+		"jp"		"{olive} %N {default} が {olive} をトリガーしました 警報車 {default}"
+	}
+	"AssistShotsPlural"
+	{
+		"jp"		"s"
+	}
+	"AssistShotsSingular"
+	{
+		"jp"		""
+	}
+	"assister"
+	{
+		"#format"	"{1:N},{2:d},{3:d},{4:s}"
+		"jp"		"{1} ( {2} / {3} ショット {4} )"
+	}
+}

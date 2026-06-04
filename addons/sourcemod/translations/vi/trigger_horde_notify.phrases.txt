@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Alarmed_Car"
+	{
+		"vi"		"{olive} %N {green} đã kích hoạt xe báo động!"
+	}
+	"Horde"
+	{
+		"vi"		"{olive} %N {green} đã kích hoạt một sự kiện đông đảo!"
+	}
+	"Final Rescue Start"
+	{
+		"vi"		"{green} Cuộc giải cứu cuối cùng đã bắt đầu!"
+	}
+	"Final Rescue"
+	{
+		"vi"		"{blue} %N {olive} đã kích hoạt cuộc giải cứu cuối cùng!"
+	}
+}

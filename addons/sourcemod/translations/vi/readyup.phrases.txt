@@ -1,0 +1,91 @@
+"Phrases"
+{
+	"PanelHide"
+	{
+		"vi"		"[ {olive} Sẵn sàng {default} ] Bảng điều khiển hiện đã tắt {red} {default}"
+	}
+	"PanelShow"
+	{
+		"vi"		"[ {olive} Sẵn sàng {default} ] Bảng điều khiển hiện là {blue} trên {default}"
+	}
+	"ForceStartAdmin"
+	{
+		"#format"	"{1:N}"
+		"vi"		"[ {green}! {default} ] {blue} Trò chơi {default} bắt đầu là {green} bị {default} ép buộc bởi {blue} Admin {default} ( {olive} {1} {default} )"
+	}
+	"VoteInProgress"
+	{
+		"vi"		"[ {olive} Sẵn sàng {default} ] Có {olive} đang tiến hành bình chọn {green} {default}."
+	}
+	"VoteDelay"
+	{
+		"#format"	"{1:d}"
+		"vi"		"[ {olive} Sẵn sàng {default} ] Đợi {blue} {1} s {default} khác gọi biểu quyết."
+	}
+	"Player marked unready"
+	{
+		"#format"	"{1:N}"
+		"vi"		"{default} [ {green}! {default} ] Đã hủy đếm ngược {green}! {default} ( {teamcolor} {1} {green} được đánh dấu là {default} chưa sẵn sàng )"
+	}
+	"Player switched team"
+	{
+		"#format"	"{1:N}"
+		"vi"		"{default} [ {green}! {default} ] Đã hủy đếm ngược {green}! {default} ( {teamcolor} {1} {olive} chuyển đội {default} )"
+	}
+	"Player disconnected"
+	{
+		"#format"	"{1:N}"
+		"vi"		"{default} [ {green}! {default} ] Đã hủy đếm ngược {green}! {default} ( {teamcolor} {1} {green} đã ngắt kết nối {default} )"
+	}
+	"Admin aborted"
+	{
+		"#format"	"{1:N}"
+		"vi"		"{default} [ {green}! {default} ] {green} Lực lượng bắt đầu bị hủy bỏ! {default} ( {olive} {1} {green} ban hành {default} )"
+	}
+	"HintReady"
+	{
+		"vi"		"You are ready.\\nSay !unready / Press F2 to unready."
+	}
+	"HintUnready"
+	{
+		"vi"		"You are not ready.\\nSay !ready / Press F1 to ready up."
+	}
+	"LiveCountdownBegin"
+	{
+		"vi"		"Going live!\\nSay !unready / Press F2 to cancel"
+	}
+	"LiveCountdown"
+	{
+		"#format"	"{1:d}"
+		"vi"		"Live in: {1}\\nSay !unready / Press F2 to cancel"
+	}
+	"LiveCountdownCancelled"
+	{
+		"vi"		"Đếm ngược đã bị hủy!"
+	}
+	"RoundIsLive"
+	{
+		"vi"		"Vòng đang trực tiếp!"
+	}
+	"InitiateAutoStart"
+	{
+		"vi"		"Trò chơi sẽ tự động bắt đầu!"
+	}
+	"AutoStartCountdown"
+	{
+		"#format"	"{1:d}"
+		"vi"		"Trò chơi bắt đầu sau: {1}"
+	}
+	"AutoStartWaiting"
+	{
+		"vi"		"Đang chờ tải người chơi..."
+	}
+	"AutoStartNotEnoughPlayers"
+	{
+		"vi"		"Cần thêm người chơi..."
+	}
+	"Readyup_CanOnlyUnreadyTimesRound"
+	{
+		"vi"		"[{olive}Readyup{default}] Bạn chỉ có thể bỏ sẵn sàng tối đa {blue}%d{default} lần trong vòng này."
+	}
+}

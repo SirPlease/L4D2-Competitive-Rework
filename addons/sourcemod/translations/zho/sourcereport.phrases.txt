@@ -1,0 +1,24 @@
+"Phrases"
+{
+	"In Cooldown"
+	{
+		"#format"	"{1:.0f}"
+		"zho"		"請等待 {1} 秒後再報告"
+	}
+	"Report Canceled"
+	{
+		"zho"		"報告已取消"
+	}
+	"Report Sent"
+	{
+		"zho"		"您的報告已發送"
+	}
+	"Reason Prompt"
+	{
+		"zho"		"請輸入檢舉原因或「取消」取消"
+	}
+	"Reason Short Need More"
+	{
+		"zho"		"原因太短，需要更多細節"
+	}
+}

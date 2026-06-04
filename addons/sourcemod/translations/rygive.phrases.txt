@@ -22,7 +22,7 @@
 
 	"RYGive_AdminSpawnedInfected"
 	{
-		"en"		"{lightgreen}管理员{default}[{olive}%N{default}]刷出一只{olive}%s"
+		"en"		"{lightgreen}admin{default}[{olive}%N{default}] spawned a {olive}%s"
 		"chi"		"{lightgreen}管理员{default}[{olive}%N{default}]刷出一只{olive}%s"
 		"zho"		"{lightgreen}管理員{default}[{olive}%N{default}]刷出一隻{olive}%s"
 		"jp"		"{lightgreen}管理员{default}[{olive}%N{default}]刷出一只{olive}%s"
@@ -83,8 +83,8 @@
 	"RYGive_ImmuneSpecialSenseControl"
 	{
 		"en"		"{green} is immune to the special sense control of %s {olive}%N"
-		"chi"		"{green}已%s {olive}%N {default}的特感控制免疫"
-		"zho"		"{green}已%s {olive}%N {default}的特感控制免疫"
+		"chi"		"{green}%s {olive}%N 已免疫特感控制"
+		"zho"		"{green}%s {olive}%N 已免疫特感控制"
 		"jp"		"{green} は、%s {olive}%N の特殊なセンス制御の影響を受けません。"
 		"ko"		"{green}는 %s {olive}%N의 특수 감지 제어에 면역입니다."
 		"vi"		"{green} miễn nhiễm với sự điều khiển cảm giác đặc biệt của %s {olive}%N"

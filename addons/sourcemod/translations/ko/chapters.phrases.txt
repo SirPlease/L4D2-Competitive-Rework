@@ -1,0 +1,231 @@
+"Phrases"
+{
+	"c1m1_hotel"
+	{
+		"ko"		"1: 호텔"
+	}
+	"c1m2_streets"
+	{
+		"ko"		"2: 거리"
+	}
+	"c1m3_mall"
+	{
+		"ko"		"3: 쇼핑몰"
+	}
+	"c1m4_atrium"
+	{
+		"ko"		"4: 아트리움"
+	}
+	"c2m1_highway"
+	{
+		"ko"		"1: 고속도로"
+	}
+	"c2m2_fairgrounds"
+	{
+		"ko"		"2: 박람회장"
+	}
+	"c2m3_coaster"
+	{
+		"ko"		"3: 코스터"
+	}
+	"c2m4_barns"
+	{
+		"ko"		"4: 헛간"
+	}
+	"c2m5_concert"
+	{
+		"ko"		"5: 콘서트"
+	}
+	"c3m1_plankcountry"
+	{
+		"ko"		"1: 판자 국가"
+	}
+	"c3m2_swamp"
+	{
+		"ko"		"2: 늪"
+	}
+	"c3m3_shantytown"
+	{
+		"ko"		"3: 판자촌"
+	}
+	"c3m4_plantation"
+	{
+		"ko"		"4: 농장"
+	}
+	"c4m1_milltown_a"
+	{
+		"ko"		"1: 밀타운"
+	}
+	"c4m2_sugarmill_a"
+	{
+		"ko"		"2: 슈가밀"
+	}
+	"c4m3_sugarmill_b"
+	{
+		"ko"		"3: 밀 탈출"
+	}
+	"c4m4_milltown_b"
+	{
+		"ko"		"4: 마을로 돌아가기"
+	}
+	"c4m5_milltown_escape"
+	{
+		"ko"		"5: 마을 탈출"
+	}
+	"c5m1_waterfront"
+	{
+		"ko"		"1: 물가"
+	}
+	"c5m2_park"
+	{
+		"ko"		"2: 공원"
+	}
+	"c5m3_cemetery"
+	{
+		"ko"		"3: 묘지"
+	}
+	"c5m4_quarter"
+	{
+		"ko"		"4: 분기"
+	}
+	"c5m5_bridge"
+	{
+		"ko"		"5: 브리지"
+	}
+	"c6m1_riverbank"
+	{
+		"ko"		"1: 강둑"
+	}
+	"c6m2_bedlam"
+	{
+		"ko"		"2: 지하"
+	}
+	"c6m3_port"
+	{
+		"ko"		"3: 포트"
+	}
+	"c7m1_docks"
+	{
+		"ko"		"1: 도크"
+	}
+	"c7m2_barge"
+	{
+		"ko"		"2: 바지선"
+	}
+	"c7m3_port"
+	{
+		"ko"		"3: 포트"
+	}
+	"c8m1_apartment"
+	{
+		"ko"		"1: 아파트"
+	}
+	"c8m2_subway"
+	{
+		"ko"		"2: 지하철"
+	}
+	"c8m3_sewers"
+	{
+		"ko"		"3: 하수구"
+	}
+	"c8m4_interior"
+	{
+		"ko"		"4: 병원"
+	}
+	"c8m5_rooftop"
+	{
+		"ko"		"5: 옥상 피날레"
+	}
+	"c9m1_alleys"
+	{
+		"ko"		"1: 골목"
+	}
+	"c9m2_lots"
+	{
+		"ko"		"2: 트럭 창고 피날레"
+	}
+	"c10m1_caves"
+	{
+		"ko"		"1: 유료도로"
+	}
+	"c10m2_drainage"
+	{
+		"ko"		"2: 배수구"
+	}
+	"c10m3_ranchhouse"
+	{
+		"ko"		"3: 교회"
+	}
+	"c10m4_mainstreet"
+	{
+		"ko"		"4: 마을"
+	}
+	"c10m5_houseboat"
+	{
+		"ko"		"5: 보트하우스 피날레"
+	}
+	"c11m1_greenhouse"
+	{
+		"ko"		"1: 온실"
+	}
+	"c11m2_offices"
+	{
+		"ko"		"2: 크레인"
+	}
+	"c11m3_garage"
+	{
+		"ko"		"3: 건설 현장"
+	}
+	"c11m4_terminal"
+	{
+		"ko"		"4: 터미널"
+	}
+	"c11m5_runway"
+	{
+		"ko"		"5: 런웨이 피날레"
+	}
+	"c12m1_hilltop"
+	{
+		"ko"		"1: 숲"
+	}
+	"c12m2_traintunnel"
+	{
+		"ko"		"2: 터널"
+	}
+	"c12m3_bridge"
+	{
+		"ko"		"3: 다리"
+	}
+	"c12m4_barn"
+	{
+		"ko"		"4: 기차역"
+	}
+	"c12m5_cornfield"
+	{
+		"ko"		"5: 농가 피날레"
+	}
+	"c13m1_alpinecreek"
+	{
+		"ko"		"1: 알파인 크릭"
+	}
+	"c13m2_southpinestream"
+	{
+		"ko"		"2: 사우스 파인 스트림"
+	}
+	"c13m3_memorialbridge"
+	{
+		"ko"		"3: 메모리얼 브릿지"
+	}
+	"c13m4_cutthroatcreek"
+	{
+		"ko"		"4: 컷스로트 크릭"
+	}
+	"c14m1_junkyard"
+	{
+		"ko"		"1: 폐차장"
+	}
+	"c14m2_lighthouse"
+	{
+		"ko"		"2: 등대 피날레"
+	}
+}

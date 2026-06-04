@@ -1,0 +1,31 @@
+"Phrases"
+{
+	"L4D2DropSecondary_PlayerReplacedBotReplacedSecondary"
+	{
+		"zho"		"{green}[{olive}OnPlayerReplacedByBot{green}] {default}- {blue}BOT {default}replaced {blue}%N {default}({green}Secondary: {olive}%s{default})"
+	}
+	"L4D2DropSecondary_BotReplacedPlayerReplacedBOT"
+	{
+		"zho"		"{green}[{olive}OnBotReplacedByPlayer{green}] {default}- {blue}%N {default}替換了 {blue}BOT {default}({green}副武器: {olive}%s{default})"
+	}
+	"L4D2DropSecondary_PlayerUsePickedSecondsondarySecondary"
+	{
+		"zho"		"{green} [ {olive} OnPlayerUse {green} ] {default} - {blue} %N {default} 的撿到了一個輔助：（ {green} 輔助：{olive} %s {default} ）"
+	}
+	"L4D2DropSecondary_PlayerDeathSecondary"
+	{
+		"zho"		"{green} [ {olive} OnPlayerDeath {green} ] {default} - {blue} %N {default} ( {green} 次要: {olive} %s {default} )"
+	}
+	"L4D2DropSecondary_ErrorSomethingWentWrongDetermining"
+	{
+		"zho"		"{blue} [{default} L4D2 刪除輔助 {blue}] {default}: {green} 錯誤 {default} - 確定輔助武器的近戰腳本時出現問題，請將此問題報告給 {olive} 插件作者 {default} 。"
+	}
+	"L4D2DropSecondary_DetermineMeleeScriptMS"
+	{
+		"zho"		"{green} [ {olive} JudgeMeleeScript {green} ] {default} - {blue} %N {default} 有 {olive} %s {default} - MS: {olive} %s"
+	}
+	"L4D2DropSecondary_Debugging"
+	{
+		"zho"		"{blue}[{default}L4D2 Drop secondary{blue}]{default}：{green}調試{olive}%s"
+	}
+}

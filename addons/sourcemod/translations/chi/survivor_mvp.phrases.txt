@@ -18,7 +18,7 @@
 	}
 	"BotName"
 	{
-		"chi"		"[BOT]"
+		"chi"		"[机器人]"
 	}
 	"NobodyName"
 	{
@@ -58,7 +58,7 @@
 	}
 	"NoFF"
 	{
-		"chi"		"{blue}({default}完全没有黑枪!{blue})" 
+		"chi"		"{blue}({default}完全没有黑枪!{blue})"
 	}
 	"ReportFF_Absolute"
 	{
@@ -71,5 +71,13 @@
 	"ReportFF_Full"
 	{
 		"chi"		"{green}友伤: {olive}%s {blue}({default}%d {green}友伤 {blue}[{default}%.0f%%{blue}])"
+	}
+	"SurvivorMVP_PharmacyMVPStatisticsHeader"
+	{
+		"chi"		"{blue}[{default}药役MVP统计{blue}]"
+	}
+	"SurvivorMVP_PharmacyMVPStatisticsLine"
+	{
+		"chi"		"{olive}特感{green}%2d {olive}丧尸{green}%3d {olive}黑/被黑{green}%2d/%2d {olive}伤害{green}%4d {default}%N"
 	}
 }

@@ -1,0 +1,415 @@
+"Phrases"
+{
+	"SCOPE_DETECTED"
+	{
+		"zho"		"[{olive}Emotes{default}]{darkred} 確定範圍時不能使用表情！"
+	}
+	"NO_DANCES_ACCESS_FLAG"
+	{
+		"zho"		"[{olive}Emotes{default}]{darkred} 您無權使用舞蹈！"
+	}
+	"NO_EMOTES_ACCESS_FLAG"
+	{
+		"zho"		"[{olive}表情{default}]{darkred} 您無權使用表情！"
+	}
+	"MUST_BE_ALIVE"
+	{
+		"zho"		"[{olive}Emotes{default}]{darkred} 您必須活著才能使用此功能！"
+	}
+	"STAY_ON_GROUND"
+	{
+		"zho"		"[{olive}表情{default}]{darkred} 您必須留在地面上才能使用此功能！"
+	}
+	"COOLDOWN_EMOTES"
+	{
+		"zho"		"[{olive}表情{default}]{darkred} 正在冷卻！"
+	}
+	"AMIN_1_INVALID"
+	{
+		"zho"		"[{olive}Emotes{default}]{darkred} 參數 1 無效！ ！ ！"
+	}
+	"CANNOT_USE_NOW"
+	{
+		"zho"		"[{olive}Emotes{default}]{darkred} 您現在無法使用它！"
+	}
+	"INVALID_EMOTE_ID"
+	{
+		"zho"		"[{olive}Emotes{default}]{darkred} 表情 ID 無效，應介於 (1-86) 之間"
+	}
+	"RANDOM_EMOTE"
+	{
+		"zho"		"隨機表情"
+	}
+	"RANDOM_DANCE"
+	{
+		"zho"		"隨機舞蹈"
+	}
+	"EMOTES_LIST"
+	{
+		"zho"		"表情列表"
+	}
+	"DANCES_LIST"
+	{
+		"zho"		"舞蹈列表"
+	}
+	"EMOTE_PLAYER"
+	{
+		"zho"		"表情玩家"
+	}
+	"SELECT_EMOTE"
+	{
+		"zho"		"選擇表情"
+	}
+	"TITLE_MAIM_MENU"
+	{
+		"zho"		"表情和舞蹈"
+	}
+	"TITLE_EMOTES_MENU"
+	{
+		"zho"		"表情"
+	}
+	"TITLE_DANCES_MENU"
+	{
+		"zho"		"舞蹈"
+	}
+	"Emote_Fonzie_Pistol"
+	{
+		"zho"		"手指槍"
+	}
+	"Emote_Bring_It_On"
+	{
+		"zho"		"到我這裡來"
+	}
+	"Emote_ThumbsDown"
+	{
+		"zho"		"拇指朝下"
+	}
+	"Emote_Celebration_Loop"
+	{
+		"zho"		"慶典"
+	}
+	"Emote_BlowKiss"
+	{
+		"zho"		"飛吻"
+	}
+	"Emote_Calculated"
+	{
+		"zho"		"已計算"
+	}
+	"Emote_Confused"
+	{
+		"zho"		"使困惑"
+	}
+	"Emote_Chug"
+	{
+		"zho"		"突突"
+	}
+	"Emote_Cry"
+	{
+		"zho"		"哭"
+	}
+	"Emote_DustingOffHands"
+	{
+		"zho"		"堡壘樂隊"
+	}
+	"Emote_DustOffShoulders"
+	{
+		"zho"		"搖起來2"
+	}
+	"Emote_Facepalm"
+	{
+		"zho"		"摀臉"
+	}
+	"Emote_Fishing"
+	{
+		"zho"		"上鉤了"
+	}
+	"Emote_Flex"
+	{
+		"zho"		"柔性"
+	}
+	"Emote_golfclap"
+	{
+		"zho"		"高爾夫拍手"
+	}
+	"Emote_HandSignals"
+	{
+		"zho"		"手勢訊號"
+	}
+	"Emote_HeelClick"
+	{
+		"zho"		"點擊！"
+	}
+	"Emote_Hotstuff"
+	{
+		"zho"		"熱門內容"
+	}
+	"Emote_IBreakYou"
+	{
+		"zho"		"突破點"
+	}
+	"Emote_IHeartYou"
+	{
+		"zho"		"真正的愛情"
+	}
+	"Emote_Kung-Fu_Salute"
+	{
+		"zho"		"功夫致敬"
+	}
+	"Emote_Laugh"
+	{
+		"zho"		"笑"
+	}
+	"Emote_Luchador"
+	{
+		"zho"		"摔角手"
+	}
+	"Emote_Make_It_Rain"
+	{
+		"zho"		"讓它下雨"
+	}
+	"Emote_NotToday"
+	{
+		"zho"		"沒有霍伊"
+	}
+	"Emote_RockPaperScissor_Paper"
+	{
+		"zho"		"紙"
+	}
+	"Emote_RockPaperScissor_Rock"
+	{
+		"zho"		"岩石"
+	}
+	"Emote_RockPaperScissor_Scissor"
+	{
+		"zho"		"剪刀"
+	}
+	"Emote_Salt"
+	{
+		"zho"		"鹽"
+	}
+	"Emote_Salute"
+	{
+		"zho"		"禮炮"
+	}
+	"Emote_SmoothDrive"
+	{
+		"zho"		"駕駛汽車"
+	}
+	"Emote_Snap"
+	{
+		"zho"		"折斷"
+	}
+	"Emote_StageBow"
+	{
+		"zho"		"舞台弓"
+	}
+	"Emote_ThumbsUp"
+	{
+		"zho"		"豎起大拇指"
+	}
+	"Emote_Wave2"
+	{
+		"zho"		"敬禮2"
+	}
+	"Emote_Yeet"
+	{
+		"zho"		"葉特"
+	}
+	"DanceMoves"
+	{
+		"zho"		"舞蹈動作"
+	}
+	"Emote_Mask_Off_Intro"
+	{
+		"zho"		"橙色正義"
+	}
+	"Emote_Zippy_Dance"
+	{
+		"zho"		"粗暴的"
+	}
+	"ElectroShuffle"
+	{
+		"zho"		"電子洗牌"
+	}
+	"Emote_AerobicChamp"
+	{
+		"zho"		"有氧運動"
+	}
+	"Emote_Bendy"
+	{
+		"zho"		"班迪"
+	}
+	"Emote_BandOfTheFort"
+	{
+		"zho"		"最好的夥伴"
+	}
+	"Emote_Boogie_Down_Intro"
+	{
+		"zho"		"布吉"
+	}
+	"Emote_Capoeira"
+	{
+		"zho"		"卡波耶拉"
+	}
+	"Emote_Charleston"
+	{
+		"zho"		"擋板"
+	}
+	"Emote_Chicken"
+	{
+		"zho"		"雞"
+	}
+	"Emote_Dance_NoBones"
+	{
+		"zho"		"無骨"
+	}
+	"Emote_Dance_Shoot"
+	{
+		"zho"		"炒作"
+	}
+	"Emote_Dance_SwipeIt"
+	{
+		"zho"		"振作起來"
+	}
+	"Emote_Dance_Disco_T3"
+	{
+		"zho"		"迪斯可狂熱"
+	}
+	"Emote_DG_Disco"
+	{
+		"zho"		"迪斯可狂熱2"
+	}
+	"Emote_Dance_Worm"
+	{
+		"zho"		"蠕蟲"
+	}
+	"Emote_Dance_Loser"
+	{
+		"zho"		"採取L"
+	}
+	"Emote_Dance_Breakdance"
+	{
+		"zho"		"霹靂舞"
+	}
+	"Emote_Dance_Pump"
+	{
+		"zho"		"泵浦"
+	}
+	"Emote_Dance_RideThePony"
+	{
+		"zho"		"騎小馬"
+	}
+	"Emote_Dab"
+	{
+		"zho"		"輕拍"
+	}
+	"Emote_EasternBloc_Start"
+	{
+		"zho"		"東方集團"
+	}
+	"Emote_FancyFeet"
+	{
+		"zho"		"夢想的腳"
+	}
+	"Emote_FlossDance"
+	{
+		"zho"		"牙線"
+	}
+	"Emote_FlippnSexy"
+	{
+		"zho"		"翻轉"
+	}
+	"Emote_Fresh"
+	{
+		"zho"		"新鮮的"
+	}
+	"Emote_GrooveJam"
+	{
+		"zho"		"格雷夫格"
+	}
+	"Emote_guitar"
+	{
+		"zho"		"吉他"
+	}
+	"Emote_Hillbilly_Shuffle_Intro"
+	{
+		"zho"		"隨機播放"
+	}
+	"Emote_Hiphop_01"
+	{
+		"zho"		"嘻哈音樂"
+	}
+	"Emote_Hula_Start"
+	{
+		"zho"		"呼啦舞"
+	}
+	"Emote_InfiniDab_Intro"
+	{
+		"zho"		"無限輕拍"
+	}
+	"Emote_Intensity_Start"
+	{
+		"zho"		"強度"
+	}
+	"Emote_IrishJig_Start"
+	{
+		"zho"		"土耳其達布克"
+	}
+	"Emote_KoreanEagle"
+	{
+		"zho"		"鷹"
+	}
+	"Emote_Kpop_02"
+	{
+		"zho"		"真心"
+	}
+	"Emote_LivingLarge"
+	{
+		"zho"		"生活大"
+	}
+	"Emote_Maracas"
+	{
+		"zho"		"馬拉卡斯"
+	}
+	"Emote_PopLock"
+	{
+		"zho"		"彈出鎖"
+	}
+	"Emote_PopRock"
+	{
+		"zho"		"星力"
+	}
+	"Emote_RobotDance"
+	{
+		"zho"		"機器人"
+	}
+	"Emote_T-Rex"
+	{
+		"zho"		"霸王龍"
+	}
+	"Emote_TechnoZombie"
+	{
+		"zho"		"復活"
+	}
+	"Emote_Twist"
+	{
+		"zho"		"捻"
+	}
+	"Emote_WarehouseDance_Start"
+	{
+		"zho"		"倉庫"
+	}
+	"Emote_Wiggle"
+	{
+		"zho"		"擺動"
+	}
+	"Emote_Youre_Awesome"
+	{
+		"zho"		"你太棒了"
+	}
+	"FNEmotes_SMUsageSMSetEmotes"
+	{
+		"zho"		"[SM] 用法：sm_setemotes <#userid|name> [表情 ID]"
+	}
+}

@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"ko"		"<{olive}전류{default}>"
+	}
+	"Current"
+	{
+		"ko"		"현재: {green}%d%%{default}"
+	}
+}

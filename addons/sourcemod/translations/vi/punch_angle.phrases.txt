@@ -1,0 +1,40 @@
+"Phrases"
+{
+	"Select"
+	{
+		"vi"		"[Góc đấm] Chọn một tùy chọn để lưu cài đặt của bạn và bật/tắt độ giật"
+	}
+	"CookieSlected"
+	{
+		"#format"	"{1:s}"
+		"vi"		"[Góc đột] Chuyển đổi góc đột: {1:t}"
+	}
+	"On"
+	{
+		"vi"		"On"
+	}
+	"Off"
+	{
+		"vi"		"Tắt"
+	}
+	"Recoil_On"
+	{
+		"vi"		"[Recoil] ON (không có cú đấm)"
+	}
+	"Recoil_Off"
+	{
+		"vi"		"[Recoil] TẮT (vani)"
+	}
+	"PunchAngle_RecoilUsageRecoil01"
+	{
+		"vi"		"[Recoil] Cách sử dụng: !recoil hoặc !recoil 0/1 (0=jitter, 1=không jitter)"
+	}
+	"PunchAngle_JitterTurnedOffDebounceNo"
+	{
+		"vi"		"[Jitter] bị tắt (gỡ lỗi/không có jitter góc nhìn)"
+	}
+	"PunchAngle_JitterOriginalEffect"
+	{
+		"vi"		"[Jitter] đang bật (hiệu ứng gốc)"
+	}
+}

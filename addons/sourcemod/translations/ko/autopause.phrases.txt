@@ -1,0 +1,25 @@
+"Phrases"
+{
+	"Unpausing"
+	{
+		"ko"		"{blue}[{default}AutoPause{blue}] {default}모든 {green}충돌된 {default}플레이어가 다시 연결되었습니다.. {blue}일시중지 해제 중{default}!"
+	}
+	"Waiting"
+	{
+		"#format"	"{1:i},{2:t}"
+		"ko"		"{blue}[{default}AutoPause{blue}] {default}자동 {blue}Unpause{default} 전에 {olive}{1} {default}더 많은 {green}충돌 {default}{2}을 기다리는 중입니다!"
+	}
+	"Crashed"
+	{
+		"#format"	"{1:N}"
+		"ko"		"{blue}[{default}AutoPause{blue}] {olive}{1} {default}游戏崩溃."
+	}
+	"players"
+	{
+		"ko"		"선수"
+	}
+	"player"
+	{
+		"ko"		"플레이어"
+	}
+}

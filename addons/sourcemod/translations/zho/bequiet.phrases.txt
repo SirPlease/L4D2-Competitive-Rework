@@ -1,0 +1,13 @@
+"Phrases"
+{
+	"SurvivorSay"
+	{
+		"#format"	"{1:N},{2:s}"
+		"zho"		"{default}（倖存者） {blue}{1} {default}: {2}"
+	}
+	"InfectedSay"
+	{
+		"#format"	"{1:N},{2:s}"
+		"zho"		"{default}（已感染） {red}{1} {default}: {2}"
+	}
+}

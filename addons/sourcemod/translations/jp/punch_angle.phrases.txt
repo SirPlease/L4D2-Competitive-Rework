@@ -1,0 +1,40 @@
+"Phrases"
+{
+	"Select"
+	{
+		"jp"		"[パンチ角度] オプションを選択して設定を保存し、反動のオン/オフを切り替えます。"
+	}
+	"CookieSlected"
+	{
+		"#format"	"{1:s}"
+		"jp"		"[パンチ角度] パンチ角度切り替え: {1:t}"
+	}
+	"On"
+	{
+		"jp"		"On"
+	}
+	"Off"
+	{
+		"jp"		"オフ"
+	}
+	"Recoil_On"
+	{
+		"jp"		"[リコイル]ON(パンチなし)"
+	}
+	"Recoil_Off"
+	{
+		"jp"		"[反動] OFF (バニラ)"
+	}
+	"PunchAngle_RecoilUsageRecoil01"
+	{
+		"jp"		"[リコイル] 使用法: !recoil または !recoil 0/1 (0=ジッター、1=ジッターなし)"
+	}
+	"PunchAngle_JitterTurnedOffDebounceNo"
+	{
+		"jp"		"［ジッター］がオフ（デバウンス/視野角ジッターなし）"
+	}
+	"PunchAngle_JitterOriginalEffect"
+	{
+		"jp"		"［ジッター］オン（オリジナルエフェクト）"
+	}
+}

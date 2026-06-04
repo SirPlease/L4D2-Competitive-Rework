@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"zho"		"{red} [ {default} NoTankRush {red} ]"
+	}
+	"freeze"
+	{
+		"zho"		"{red} 坦克 {default} 已產生。 {olive}凍結{default}距離積分！"
+	}
+	"unfreeze"
+	{
+		"zho"		"{red} 坦克{default} 死了。 {olive}解凍{default}距離積分！"
+	}
+	"saferoom"
+	{
+		"zho"		"{red} 倖存者 {default} 成功到達安全室。 {olive}解凍{default}距離積分！"
+	}
+}

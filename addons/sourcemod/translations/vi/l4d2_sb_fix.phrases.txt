@@ -1,0 +1,55 @@
+"Phrases"
+{
+	"L4D2SBFix_ShovedFlying"
+	{
+		"vi"		"{default} [ %.2f ] {olive} %N {default} đẩy: {green} bay %N ( %d )"
+	}
+	"L4D2SBFix_CapSmoker"
+	{
+		"vi"		"{default}[%.2f] {olive}%N {default}Cap Thuốc hút: {green}%N (%d)"
+	}
+	"L4D2SBFix_CapSurvivor"
+	{
+		"vi"		"{default}[%.2f] {olive}%N {default}Cap Người sống sót: {green}%N (%d)"
+	}
+	"L4D2SBFix_CapInfected"
+	{
+		"vi"		"{default}[%.2f] {olive}%N {default}Cap Bị nhiễm: {green}%N (%d)"
+	}
+	"L4D2SBFix_Witch"
+	{
+		"vi"		"{default} [ %.2f ] {olive} %N {default} Phù Thủy: {olive} ( %d )"
+	}
+	"L4D2SBFix_CommonsDistMeleeCount"
+	{
+		"vi"		"{default}[%.2f] {olive}%N{default} Commons: {green}(%d){default} |  Quận: {green}%.1f{default} |  Số cận chiến: {green}%d"
+	}
+	"L4D2SBFix_NewTargetShoved"
+	{
+		"vi"		"{default}[%.2f] {olive}%N{default} new_target đã đẩy: {green}%N (%d)"
+	}
+	"L4D2SBFix_NewTarget"
+	{
+		"vi"		"{default} [ %.2f ] {olive} %N {default} new_target: {green} %N ( %d )"
+	}
+	"L4D2SBFix_NewTargetShoot"
+	{
+		"vi"		"{default}[%.2f] {olive}%N{default} new_target: {green}%N (%d) (Bắn: %s)"
+	}
+	"L4D2SBFix_CapSurvivorIncapacitated"
+	{
+		"vi"		"{default}[%.2f] {olive}%N {default}Cap Người sống sót mất năng lực: {green}%N"
+	}
+	"L4D2SBFix_CapInfectedIncapacitated"
+	{
+		"vi"		"{default}[%.2f] {olive}%N {default}Cap Bị nhiễm bệnh Mất khả năng hoạt động: {green}%N"
+	}
+	"L4D2SBFix_CommonsIncapacitatedDist"
+	{
+		"vi"		"{default}[%.2f] {olive}%N{default} Commons Người mất năng lực Quận: %.1f"
+	}
+	"L4D2SBFix_IntTargetIncapacitated"
+	{
+		"vi"		"{default}[%.2f] {olive}%N {default}int mục tiêu Không có khả năng: {green}%N"
+	}
+}

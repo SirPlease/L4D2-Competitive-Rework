@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"L4D2MeleeDamageControl_MeleeDmgFixInfectedClass"
+	{
+		"zho"		"[MeleeDmgFix] 感染: (%N) %d，等級： %s (%d），攻擊者：（%N) %d ，加害者： %d，損壞： %f，損壞類型： %d，設定傷害： %f"
+	}
+	"L4D2MeleeDamageControl_MeleeDmgControlChargerAttacker"
+	{
+		"zho"		"[MeleeDmgControl] 充電器：(%N) %d，攻擊者：（%N) %d ，加害者： %d，損壞： %f，損壞類型： %d，設定傷害： %f"
+	}
+	"L4D2MeleeDamageControl_MeleeDmgControlTankAttacker"
+	{
+		"zho"		"[MeleeDmgControl] 坦克：(%N) %d，攻擊者：（%N) %d，加害者： %d，損壞： %f，損壞類型： %d，設定傷害： %f"
+	}
+	"L4D2MeleeDamageControl_ClassName"
+	{
+		"zho"		"類別名稱：%s (%d)"
+	}
+}

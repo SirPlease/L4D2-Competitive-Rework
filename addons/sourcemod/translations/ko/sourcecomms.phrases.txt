@@ -1,0 +1,438 @@
+"Phrases"
+{
+	"Muted on connect"
+	{
+		"ko"		"음소거되었습니다!"
+	}
+	"Gagged on connect"
+	{
+		"ko"		"재갈을 물렸어요!"
+	}
+	"Mute expired"
+	{
+		"ko"		"음소거가 만료되었습니다."
+	}
+	"Gag expired"
+	{
+		"ko"		"귀하의 개그가 만료되었습니다."
+	}
+	"FWUnmute"
+	{
+		"ko"		"음소거가 제거되었습니다."
+	}
+	"FWUngag"
+	{
+		"ko"		"귀하의 개그가 제거되었습니다."
+	}
+	"Usage_time"
+	{
+		"#format"	"{1:d}"
+		"ko"		"Time: {1} minutes, if unspecified; permanent, if 0.\\nIf < 0, blocks for session."
+	}
+	"Player Comms Not Verified"
+	{
+		"ko"		"이 플레이어는 확인되지 않았습니다. 다시 시도하기 전에 30초 정도 기다리십시오."
+	}
+	"Player already muted"
+	{
+		"#format"	"{1:s}"
+		"ko"		"플레이어 {1}가 이미 음소거되었습니다!"
+	}
+	"Player already gagged"
+	{
+		"#format"	"{1:s}"
+		"ko"		"플레이어 {1}는 이미 재갈을 물었습니다!"
+	}
+	"Player already silenced"
+	{
+		"#format"	"{1:s}"
+		"ko"		"플레이어 {1}는 이미 재갈을 물렸거나 음소거되었습니다!"
+	}
+	"Player not muted"
+	{
+		"ko"		"플레이어가 음소거되지 않았습니다."
+	}
+	"Player not gagged"
+	{
+		"ko"		"플레이어는 재갈을 물지 않았습니다."
+	}
+	"Player not silenced"
+	{
+		"ko"		"플레이어가 침묵하지 않았습니다."
+	}
+	"Permagagged player"
+	{
+		"#format"	"{1:t}"
+		"ko"		"{1}에 영구 개그를 발행했습니다."
+	}
+	"Permagagged player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"ko"		"{1}에 영구 개그가 발생했습니다(이유: {2} )."
+	}
+	"Gagged player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"ko"		"{2}분 동안 {1}에 확장된 개그를 발행했습니다."
+	}
+	"Gagged player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"ko"		"{2}분 동안 {1}에 확장된 개그가 발생했습니다(이유: {3})."
+	}
+	"Permamuted player"
+	{
+		"#format"	"{1:t}"
+		"ko"		"{1}에서 영구 음소거가 실행되었습니다."
+	}
+	"Permamuted player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"ko"		"{1}에 영구 음소거가 발생했습니다(이유: {2} )."
+	}
+	"Muted player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"ko"		"{2}분 동안 {1}에서 확장된 음소거를 실행했습니다."
+	}
+	"Muted player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"ko"		"{2}분 동안 {1}에 대한 음소거가 확장되었습니다(이유: {3})."
+	}
+	"Permasilenced player"
+	{
+		"#format"	"{1:t}"
+		"ko"		"{1}에 대해 영구 침묵이 발생했습니다."
+	}
+	"Permasilenced player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"ko"		"{1}에 대해 영구적인 침묵이 발생했습니다(이유: {2} )."
+	}
+	"Silenced player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"ko"		"{2}분 동안 {1}에 대해 확장된 무음이 발생했습니다."
+	}
+	"Silenced player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"ko"		"{2}분 동안 {1}에 대한 무음이 연장되었습니다(이유: {3} )."
+	}
+	"Temp unmuted player"
+	{
+		"#format"	"{1:t}"
+		"ko"		"{1}에서 일시적으로 음소거를 제거했습니다."
+	}
+	"Temp ungagged player"
+	{
+		"#format"	"{1:t}"
+		"ko"		"{1}에서 개그를 일시적으로 제거했습니다."
+	}
+	"Temp unsilenced player"
+	{
+		"#format"	"{1:t}"
+		"ko"		"{1} 에서 일시적으로 침묵을 제거했습니다."
+	}
+	"Unblock Select Failed"
+	{
+		"#format"	"{1:s}"
+		"ko"		"DB에서 {1}에 대한 블록을 요청하는 중 오류가 발생했습니다."
+	}
+	"No blocks found"
+	{
+		"#format"	"{1:s}"
+		"ko"		"{1}에 대한 DB에서 활성 블록을 찾을 수 없습니다."
+	}
+	"No db error unlock perm"
+	{
+		"ko"		"DB 오류로 인한 차단 해제 권한이 없습니다."
+	}
+	"No permission unmute"
+	{
+		"#format"	"{1:s}"
+		"ko"		"{1}의 음소거는 상위 관리자가 음소거했기 때문에 제거할 수 없습니다!"
+	}
+	"No permission ungag"
+	{
+		"#format"	"{1:s}"
+		"ko"		"{1}의 개그는 상위 관리자의 음소거로 인해 제거되지 않았습니다!"
+	}
+	"Unmuted player"
+	{
+		"#format"	"{1:t}"
+		"ko"		"{1}에서 확장된 음소거를 제거했습니다."
+	}
+	"Ungagged player"
+	{
+		"#format"	"{1:t}"
+		"ko"		"{1}에서 확장된 개그를 제거했습니다."
+	}
+	"Unblock insert failed"
+	{
+		"ko"		"DB에서 블록을 제거하지 못했습니다."
+	}
+	"successfully unmuted"
+	{
+		"#format"	"{1:s}"
+		"ko"		"DB에서 {1}에 대한 음소거를 성공적으로 제거했습니다."
+	}
+	"successfully ungagged"
+	{
+		"#format"	"{1:s}"
+		"ko"		"DB에서 {1}에 대한 개그를 성공적으로 제거했습니다."
+	}
+	"AdminMenu_Display_None"
+	{
+		"#format"	"{1:s}"
+		"ko"		"[  ] {1}"
+	}
+	"AdminMenu_Display_Muted"
+	{
+		"#format"	"{1:s}"
+		"ko"		"[M] {1}"
+	}
+	"AdminMenu_Display_Gagged"
+	{
+		"#format"	"{1:s}"
+		"ko"		"[G] {1}"
+	}
+	"AdminMenu_Display_Silenced"
+	{
+		"#format"	"{1:s}"
+		"ko"		"[S] {1}"
+	}
+	"AdminMenu_Main"
+	{
+		"ko"		"통신 명령"
+	}
+	"AdminMenu_Select_Main"
+	{
+		"ko"		"통신 명령:"
+	}
+	"AdminMenu_List"
+	{
+		"ko"		"처벌 보기"
+	}
+	"AdminMenu_Select_List"
+	{
+		"ko"		"플레이어 선택:"
+	}
+	"AdminMenu_Gag"
+	{
+		"ko"		"이슈 개그"
+	}
+	"AdminMenu_Select_Gag"
+	{
+		"ko"		"플레이어 선택:"
+	}
+	"AdminMenu_Select_Mute"
+	{
+		"ko"		"플레이어 선택:"
+	}
+	"AdminMenu_Select_Silence"
+	{
+		"ko"		"플레이어 선택:"
+	}
+	"AdminMenu_Select_Ungag"
+	{
+		"ko"		"플레이어 선택:"
+	}
+	"AdminMenu_Select_Unmute"
+	{
+		"ko"		"플레이어 선택:"
+	}
+	"AdminMenu_Select_Unsilence"
+	{
+		"ko"		"플레이어 선택:"
+	}
+	"AdminMenu_Option_Mute_Empty"
+	{
+		"ko"		"음소거된 플레이어 없음"
+	}
+	"AdminMenu_Option_Gag_Empty"
+	{
+		"ko"		"재갈을 물린 플레이어 없음"
+	}
+	"AdminMenu_Option_Silence_Empty"
+	{
+		"ko"		"침묵된 플레이어 없음"
+	}
+	"ListMenu_Option_Empty"
+	{
+		"ko"		"처벌받은 고객 없음"
+	}
+	"AdminMenu_Option_Empty"
+	{
+		"ko"		"사용 가능한 플레이어가 없습니다."
+	}
+	"AdminMenu_UnGag"
+	{
+		"ko"		"개그 제거"
+	}
+	"AdminMenu_Title_Durations"
+	{
+		"ko"		"기간 선택:"
+	}
+	"AdminMenu_Title_Reasons"
+	{
+		"ko"		"이유 선택:"
+	}
+	"AdminMenu_Mute"
+	{
+		"ko"		"문제 음소거"
+	}
+	"AdminMenu_UnMute"
+	{
+		"ko"		"음소거 제거"
+	}
+	"AdminMenu_Silence"
+	{
+		"ko"		"문제 침묵"
+	}
+	"AdminMenu_UnSilence"
+	{
+		"ko"		"침묵 제거"
+	}
+	"AdminMenu_Not_Available"
+	{
+		"ko"		"선택한 플레이어는 더 이상 사용할 수 없습니다."
+	}
+	"Command_Target_Not_Targetable"
+	{
+		"ko"		"이 플레이어를 타겟팅할 수 없습니다."
+	}
+	"ListMenu_Option_Mute"
+	{
+		"ko"		"음소거됨"
+	}
+	"ListMenu_Option_Gag"
+	{
+		"ko"		"재갈을 물린"
+	}
+	"ListMenu_Option_Duration"
+	{
+		"ko"		"- 지속:"
+	}
+	"ListMenu_Option_Duration_Perm"
+	{
+		"ko"		"영구적인"
+	}
+	"ListMenu_Option_Duration_Time"
+	{
+		"#format"	"{1:d}"
+		"ko"		"{1} 분"
+	}
+	"ListMenu_Option_Duration_Temp"
+	{
+		"ko"		"일시적인"
+	}
+	"ListMenu_Option_Expire"
+	{
+		"ko"		"- 만료:"
+	}
+	"ListMenu_Option_Expire_Perm"
+	{
+		"ko"		"절대"
+	}
+	"ListMenu_Option_Expire_Time"
+	{
+		"#format"	"{1:s}"
+		"ko"		"{1}"
+	}
+	"ListMenu_Option_Expire_Temp_Reconnect"
+	{
+		"ko"		"다시 연결"
+	}
+	"ListMenu_Option_Admin"
+	{
+		"#format"	"{1:s}"
+		"ko"		"- 관리자: {1}"
+	}
+	"ListMenu_Option_Issue"
+	{
+		"#format"	"{1:s}"
+		"ko"		"- 발행: {1}"
+	}
+	"ListMenu_Option_Reason"
+	{
+		"ko"		"- 사유 보기"
+	}
+	"ListMenu_Option_Reason_None"
+	{
+		"ko"		"- 사유: 없음"
+	}
+	"ReasonPanel_Punishment_Mute"
+	{
+		"ko"		"음소거됨:"
+	}
+	"ReasonPanel_Punishment_Gag"
+	{
+		"ko"		"재갈을 물리다:"
+	}
+	"ReasonPanel_Perm"
+	{
+		"ko"		"영구적인"
+	}
+	"ReasonPanel_Time"
+	{
+		"#format"	"{1:d}"
+		"ko"		"{1} 분"
+	}
+	"ReasonPanel_Temp"
+	{
+		"ko"		"일시적인"
+	}
+	"ReasonPanel_Reason"
+	{
+		"#format"	"{1:s}"
+		"ko"		"이유: {1}"
+	}
+	"ReasonPanel_Back"
+	{
+		"ko"		"출구"
+	}
+	"Temp muted player"
+	{
+		"#format"	"{1:t}"
+		"ko"		"음소거된 {1}."
+	}
+	"Temp muted player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"ko"		"{1}를 음소거했습니다(이유: {2})."
+	}
+	"Temp gagged player"
+	{
+		"#format"	"{1:t}"
+		"ko"		"재갈이 물린 {1}."
+	}
+	"Temp gagged player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"ko"		"재갈이 달린 {1}(이유: {2})."
+	}
+	"Temp silenced player"
+	{
+		"#format"	"{1:t}"
+		"ko"		"{1}를 침묵시켰습니다."
+	}
+	"Temp silenced player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"ko"		"{1}를 침묵시켰습니다(이유: {2} )."
+	}
+	"CommandComms_na"
+	{
+		"ko"		"서버에 있는 플레이어만 사용할 수 있습니다."
+	}
+	"CommandComms_nb"
+	{
+		"ko"		"채팅과 음성은 차단되지 않습니다."
+	}
+	"no access"
+	{
+		"ko"		"지정된 시간 동안의 처벌은 허용되지 않습니다."
+	}
+}

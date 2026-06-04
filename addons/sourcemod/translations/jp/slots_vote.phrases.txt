@@ -1,0 +1,53 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"jp"		"{blue} [ {default} スロット {blue} ] {default}"
+	}
+	"NotConsoleVote"
+	{
+		"jp"		"[スロット] ゲームに参加している必要があります。"
+	}
+	"LimitSlotsAbove"
+	{
+		"jp"		"このサーバーでは、{olive} %i {default} を超えるスロットを制限することはできません。"
+	}
+	"LimitedSlotsTo"
+	{
+		"#format"	"{1:s},{2:i}"
+		"jp"		"{olive} {1} {default} のスロットは {blue} {2} {default} に制限されています"
+	}
+	"RequiredPlayers"
+	{
+		"jp"		"必要なプレイヤー数よりも低いスロットを制限することはできません。"
+	}
+	"SlotsUsage"
+	{
+		"jp"		"使用法: {olive}!slots {default} < {olive} 番号 {default} > {blue} | {default} 例: {olive}!slots 8 {default}"
+	}
+	"Spectators"
+	{
+		"jp"		"観客の投票は許可されていません。"
+	}
+	"LimitSlots"
+	{
+		"jp"		"スロットを「 %s 」に制限しますか?"
+	}
+	"CannotBeStarted"
+	{
+		"jp"		"現在投票を開始できません。"
+	}
+	"LimitingSlots"
+	{
+		"jp"		"スロットを制限中..."
+	}
+	"SlotsVote_AdminOnlyBelowMinimumSlots"
+	{
+		"#format"	"{1:i}"
+		"jp"		"只有管理员才能将位置设为小于 {blue}{1}{default}人"
+	}
+	"LimitSlotsBelow"
+	{
+		"jp"		"{blue} {1} {default} プレーヤー以下のスロットを設定できるのは管理者のみです"
+	}
+}

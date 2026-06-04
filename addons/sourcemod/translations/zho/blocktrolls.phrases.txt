@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"zho"		"[{green}!{default}]"
+	}
+	"VotingNotEnabled"
+	{
+		"zho"		"直到一輪{olive}40s{default}後才啟用投票。"
+	}
+	"NotConsoleVote"
+	{
+		"zho"		"[!] 您必須在遊戲中才能投票。"
+	}
+	"NotSpectatorVote"
+	{
+		"zho"		"{olive}觀眾{default}無法投票。"
+	}
+}

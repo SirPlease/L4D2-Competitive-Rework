@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"jp"		"{default}[{olive}武器の制限{default}]"
+	}
+	"Full"
+	{
+		"jp"		"この武器グループは最大値の {green}%d{default} に達しました。"
+	}
+}

@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"vi"		"[{olive}{default}]"
+	}
+	"Heads"
+	{
+		"vi"		"{lightgreen}%s{default} flipped a coin!\\nIt's {green}Heads{default}!"
+	}
+	"Tails"
+	{
+		"vi"		"{lightgreen}%s{default} flipped a coin!\\nIt's {green}Tails{default}!"
+	}
+	"rolled"
+	{
+		"vi"		"{lightgreen}%s{default} rolled a {teamcolor}%d{default} sided die!\\nIt's {green}%d{default}!"
+	}
+}

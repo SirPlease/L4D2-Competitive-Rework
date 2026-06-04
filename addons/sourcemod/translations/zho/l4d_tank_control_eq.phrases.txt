@@ -1,0 +1,91 @@
+"Phrases"
+{
+	"TagRage"
+	{
+		"zho"		"{red} < {default} 坦克狂暴 {red} >"
+	}
+	"Refilled"
+	{
+		"zho"		"{default} ( {green} %N {default} 的) {olive} 憤怒計 {red} 補充裝"
+	}
+	"RefilledBot"
+	{
+		"zho"		"{olive} 憤怒計 {red} 補充裝"
+	}
+	"TagSelection"
+	{
+		"zho"		"{red} < {default} 戰車選擇 {red} >"
+	}
+	"YouBecomeTank"
+	{
+		"zho"		"{green} 你{default}將成為{red}坦克{default}！"
+	}
+	"BecomeTank"
+	{
+		"zho"		"{olive} %N {default} 將成為{red} 坦克！"
+	}
+	"TagControl"
+	{
+		"zho"		"{green} [ {olive} 戰車控制 {green} ]"
+	}
+	"InvalidTarget"
+	{
+		"zho"		"{default} 目標無效。無法給予坦克"
+	}
+	"NoInfected"
+	{
+		"zho"		"{olive} %N {default} 不在受感染團隊中。無法給予坦克"
+	}
+	"HintText"
+	{
+		"zho"		"憤怒計重新填充"
+	}
+	"L4DTankControlEq_TankRageMeterRefilled"
+	{
+		"zho"		"{red}<{default}T戰車怒氣{red}> {olive}R怒氣計{red}補充裝"
+	}
+	"L4DTankControlEq_TankRageMeterRefilled_2"
+	{
+		"zho"		"{red}<{default}坦克狂怒{red}> {default}({green}%N{default}'s) {olive}憤怒計 {red}補充裝"
+	}
+	"L4DTankControlEq_TankSelectionBecomeTank"
+	{
+		"zho"		"{red}<{default}T戰車選擇{red}> {green}您的{default}將成為{red}T戰車{default}！"
+	}
+	"L4DTankControlEq_TankSelectionBecomeTank_2"
+	{
+		"zho"		"{red}<{default}T戰車選擇{red}> {olive}%N {default}將成為{red}T戰車！"
+	}
+	"L4DTankControlEq_TankControlInvalidTargetUnable"
+	{
+		"zho"		"{green}[{olive}T戰車控制{green}] {default}無效目標。無法給予坦克"
+	}
+	"L4DTankControlEq_TankControlNotInfectedTeam"
+	{
+		"zho"		"{green} [ {olive} 坦克控制 {green} ] {olive} %N {default} 不在受感染隊伍中。無法給予坦克"
+	}
+	"Hit_RageMeterRefilled"
+	{
+		"zho"		"第一次坦克通過結束，第二次坦克通過開始"
+	}
+	"RageMeterRefilled"
+	{
+		"zho"		"( {green} %N {default} ) {olive} 第一個坦克通行證結束，{red} 第二個坦克通行證開始"
+	}
+	"Tag_Rage"
+	{
+		"zho"		"{red} < {default} 戰車狂暴 {red} > {default}"
+	}
+	"Tag_Selecion"
+	{
+		"zho"		"{red} < {default} 戰車選擇 {red} > {default}"
+	}
+	"UnableGiveTank"
+	{
+		"zho"		"[ {olive} SM {default} ] %s 没有被感染。無法給予坦克"
+	}
+	"YouRageMeterRefilled"
+	{
+		"zho"		"{olive} 第一個坦克通行證結束，{red} 第二個坦克通行證開始 {default}"
+	}
+}

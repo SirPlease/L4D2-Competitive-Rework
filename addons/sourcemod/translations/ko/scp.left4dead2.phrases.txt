@@ -1,0 +1,43 @@
+"Phrases"
+{
+	"L4D_Chat_Infected"
+	{
+		"#format"	"{1:s},{2:s}"
+		"ko"		"{default}(감염) {1} {default}:  {2}"
+	}
+	"L4D_Chat_Survivor"
+	{
+		"#format"	"{1:s},{2:s}"
+		"ko"		"{default}(생존자) {1} {default}:  {2}"
+	}
+	"L4D_Chat_Infected_Dead"
+	{
+		"#format"	"{1:s},{2:s}"
+		"ko"		"{default}*사망*(감염) {1} {default}:  {2}"
+	}
+	"L4D_Chat_Survivor_Dead"
+	{
+		"#format"	"{1:s},{2:s}"
+		"ko"		"{default}*죽음*(생존자) {1} {default}:  {2}"
+	}
+	"L4D_Chat_Spec"
+	{
+		"#format"	"{1:s},{2:s}"
+		"ko"		"{default}(관전자) {1} {default}:  {2}"
+	}
+	"L4D_Chat_All"
+	{
+		"#format"	"{1:s},{2:s}"
+		"ko"		"{default}{1} {default}:  {2}"
+	}
+	"L4D_Chat_AllDead"
+	{
+		"#format"	"{1:s},{2:s}"
+		"ko"		"{default}*죽음* {1} {default}:  {2}"
+	}
+	"L4D_Chat_AllSpec"
+	{
+		"#format"	"{1:s},{2:s}"
+		"ko"		"{default}*사양* {1} {default}:  {2}"
+	}
+}

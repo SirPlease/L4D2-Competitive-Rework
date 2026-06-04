@@ -14,10 +14,34 @@
 	}
 	"DealtToTank"
 	{
-		"chi"		"对{blue}Tank{default} ({olive}%s{default}) 造成的{blue}伤害"
+		"chi"		"{blue}伤害{default} 发给 {blue}坦克{default} ({olive}%s{default})"
 	}
 	"PercentDamage"
 	{
 		"chi"		"{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N"
+	}
+	"L4DTankDamageAnnounce_RemainingBloodVolume"
+	{
+		"chi"		"[{green}!{default}] {green}%N {default}剩余 {green}%d{default}({green}%d%%{default}) {blue}血量"
+	}
+	"L4DTankDamageAnnounce_SurvivorDamageStatisticsTank"
+	{
+		"chi"		"[{green}!{default}] {blue}生还者对 {green}Tank {default}({green}%N{default}) {blue}的伤害统计"
+	}
+	"L4DTankDamageAnnounce_SurvivorDamageStatisticsTankAI"
+	{
+		"chi"		"[{green}!{default}] {blue}生还者对 {green}Tank {default}({green}AI{default}) {blue}的伤害统计"
+	}
+	"L4DTankDamageAnnounce_SurvivalTime"
+	{
+		"chi"		"[{green}!{default}] {green}%N {blue}存活时间：{green}%s"
+	}
+	"L4DTankDamageAnnounce_TankSurvivalTime"
+	{
+		"chi"		"[{green}!{default}] {green}Tank {blue}存活时间：{green}%s"
+	}
+	"L4DTankDamageAnnounce_TankDamageSummaryLine"
+	{
+		"chi"		"{blue}[{default}%d{blue}({default}%d%%{blue})][{green}拳:{default}%d{blue}][{green}石:{default}%d{blue}][{green}铁:{default}%d{blue}][{green}承伤:{default}%d{blue}({default}%d%%{blue})] {green}%N"
 	}
 }

@@ -1,0 +1,283 @@
+"Phrases"
+{
+	"L4D2C1"
+	{
+		"zho"		"死點"
+	}
+	"L4D2C2"
+	{
+		"zho"		"黑暗嘉年華"
+	}
+	"L4D2C3"
+	{
+		"zho"		"沼澤熱病"
+	}
+	"L4D2C4"
+	{
+		"zho"		"大雨"
+	}
+	"L4D2C5"
+	{
+		"zho"		"教區"
+	}
+	"L4D2C6"
+	{
+		"zho"		"逝去的"
+	}
+	"L4D2C7"
+	{
+		"zho"		"犧牲"
+	}
+	"L4D2C8"
+	{
+		"zho"		"毫不留情"
+	}
+	"L4D2C9"
+	{
+		"zho"		"速成班"
+	}
+	"L4D2C10"
+	{
+		"zho"		"死亡人數"
+	}
+	"L4D2C11"
+	{
+		"zho"		"死亡空氣"
+	}
+	"L4D2C12"
+	{
+		"zho"		"鮮血收穫"
+	}
+	"L4D2C13"
+	{
+		"zho"		"冷流"
+	}
+	"L4D2C14"
+	{
+		"zho"		"最後的車站"
+	}
+	"Zengchengone"
+	{
+		"zho"		"廣州增城Lv7.3"
+	}
+	"2019"
+	{
+		"zho"		"2019（週年紀念版）"
+	}
+	"JTB2"
+	{
+		"zho"		"貝爾杜拉 2"
+	}
+	"bts"
+	{
+		"zho"		"回到學校"
+	}
+	"CityOfTheDeadBeta"
+	{
+		"zho"		"亡靈之城"
+	}
+	"City17l4d2"
+	{
+		"zho"		"城市17 v3.2"
+	}
+	"crashbandicoot"
+	{
+		"zho"		"古惑狼課程 2"
+	}
+	"Cure2"
+	{
+		"zho"		"治癒2"
+	}
+	"damitcomplete"
+	{
+		"zho"		"完成L4D2"
+	}
+	"darkwood"
+	{
+		"zho"		"深色木色（擴展）"
+	}
+	"DayBreak"
+	{
+		"zho"		"黎明"
+	}
+	"deadvacation"
+	{
+		"zho"		"死亡假期L4D2"
+	}
+	"deathaboard2"
+	{
+		"zho"		"船上死亡 II"
+	}
+	"DevilMountain"
+	{
+		"zho"		"魔鬼山"
+	}
+	"Escansion"
+	{
+		"zho"		"埃斯坎森"
+	}
+	"escfromtoronto"
+	{
+		"zho"		"逃離多倫多 L4D2"
+	}
+	"GettingOut"
+	{
+		"zho"		"出去"
+	}
+	"hauntedforest"
+	{
+		"zho"		"鬧鬼的森林"
+	}
+	"Highway17L4D2"
+	{
+		"zho"		"半條命 2：17 號高速公路(L4D2)"
+	}
+	"ihatemountains2"
+	{
+		"zho"		"我討厭山2 (1.5)"
+	}
+	"JourneyToSplashMountain"
+	{
+		"zho"		"飛濺山之旅"
+	}
+	"Diescraper361"
+	{
+		"zho"		"刮刀終極版 3.61"
+	}
+	"One4Nine"
+	{
+		"zho"		"一 4 九"
+	}
+	"TanksPlayground"
+	{
+		"zho"		"坦克遊樂場 v3.0"
+	}
+	"YamaMSE"
+	{
+		"zho"		"閻王"
+	}
+	"leftinprypiat"
+	{
+		"zho"		"留在普里皮亞季"
+	}
+	"LeftTurnSilentHill3"
+	{
+		"zho"		"寂靜嶺3左轉"
+	}
+	"mic3"
+	{
+		"zho"		"軍工複合體 III v666"
+	}
+	"necrovirusfacility"
+	{
+		"zho"		"壞死病毒設施"
+	}
+	"NightPresence"
+	{
+		"zho"		"夜場"
+	}
+	"QuestionableEthicsAlphaTest"
+	{
+		"zho"		"道德可疑：Alpha 測試"
+	}
+	"re3"
+	{
+		"zho"		"生化危機3"
+	}
+	"SaltHellPark"
+	{
+		"zho"		"鹽地獄公園"
+	}
+	"shenmejb2"
+	{
+		"zho"		"神美jb2"
+	}
+	"ajsSilentFear"
+	{
+		"zho"		"沉默的恐懼"
+	}
+	"shool"
+	{
+		"zho"		"寂靜嶺：生命的彼岸 V4.7"
+	}
+	"TheHive"
+	{
+		"zho"		"蜂巢"
+	}
+	"ThereIsOnlyOneWay"
+	{
+		"zho"		"只有一種方法"
+	}
+	"undeadzone"
+	{
+		"zho"		"不死區"
+	}
+	"WhiteForest"
+	{
+		"zho"		"白森林"
+	}
+	"2evileyes"
+	{
+		"zho"		"2 邪惡之眼"
+	}
+	"BloodTracks"
+	{
+		"zho"		"血跡"
+	}
+	"CrashBandicootTheReturn"
+	{
+		"zho"		"古惑狼：歸來"
+	}
+	"DeadSeries"
+	{
+		"zho"		"死亡系列"
+	}
+	"Derailed"
+	{
+		"zho"		"出軌"
+	}
+	"Diescraper36"
+	{
+		"zho"		"刮刀終極版 3.6"
+	}
+	"FarewellChenming"
+	{
+		"zho"		"告別陳明"
+	}
+	"HighwayToHell"
+	{
+		"zho"		"通往地獄的公路"
+	}
+	"QuestionableEthics"
+	{
+		"zho"		"道德可疑"
+	}
+	"TheBloodyMoors"
+	{
+		"zho"		"血荒原"
+	}
+	"TheCure"
+	{
+		"zho"		"治癒方法"
+	}
+	"ddntr1"
+	{
+		"zho"		"死亡陷阱"
+	}
+	"deadvacation2"
+	{
+		"zho"		"死亡假期2"
+	}
+	"drdegov21"
+	{
+		"zho"		"死亡峽谷 v2.1"
+	}
+	"fallen"
+	{
+		"zho"		"墮落者"
+	}
+	"l4d2CrashBandicoot2"
+	{
+		"zho"		"古惑狼課程 2"
+	}
+}

@@ -1,0 +1,91 @@
+"Phrases"
+{
+	"TagRage"
+	{
+		"jp"		"{red} < {default} タンクレイジ {red} >"
+	}
+	"Refilled"
+	{
+		"jp"		"{default} ( {green} %N {default} の) {olive} レイジメーター {red} 補充"
+	}
+	"RefilledBot"
+	{
+		"jp"		"{olive} レイジメーター {red} 補充済み"
+	}
+	"TagSelection"
+	{
+		"jp"		"{red} < {default} タンク選択 {red} >"
+	}
+	"YouBecomeTank"
+	{
+		"jp"		"{green} あなた {default} が {red} タンク {default} になります！"
+	}
+	"BecomeTank"
+	{
+		"jp"		"{olive} %N {default} が {red} 戦車になります!"
+	}
+	"TagControl"
+	{
+		"jp"		"{green} [ {olive} タンク制御 {green} ]"
+	}
+	"InvalidTarget"
+	{
+		"jp"		"{default} ターゲットが無効です。タンクを提供できません"
+	}
+	"NoInfected"
+	{
+		"jp"		"{olive} %N {default} は感染チームに属していません。タンクを提供できません"
+	}
+	"HintText"
+	{
+		"jp"		"怒りメーターが補充されました"
+	}
+	"L4DTankControlEq_TankRageMeterRefilled"
+	{
+		"jp"		"{red}<{default}タンクレイジ{red}> {olive}レイジメーター {red}補充"
+	}
+	"L4DTankControlEq_TankRageMeterRefilled_2"
+	{
+		"jp"		"{red}<{default}タンクレイジ{red}> {default}({green}%N{default}さん) {olive}レイジメーター {red}補充"
+	}
+	"L4DTankControlEq_TankSelectionBecomeTank"
+	{
+		"jp"		"{red}<{default}タンクセレクション{red}> {green}あなたの{default}が{red}タンク{default}になります！"
+	}
+	"L4DTankControlEq_TankSelectionBecomeTank_2"
+	{
+		"jp"		"{red}<{default}タンクセレクション{red}> {olive}%N {default}が{red}タンクになります！"
+	}
+	"L4DTankControlEq_TankControlInvalidTargetUnable"
+	{
+		"jp"		"{green}[{olive}タンクコントロール{green}] {default}ターゲットが無効です。タンクを提供できません"
+	}
+	"L4DTankControlEq_TankControlNotInfectedTeam"
+	{
+		"jp"		"{green} [ {olive} タンク コントロール {green} ] {olive} %N {default} は感染チームに属していません。タンクを提供できません"
+	}
+	"Hit_RageMeterRefilled"
+	{
+		"jp"		"最初のタンク パスが終了し、2 番目のタンク パスが開始されました"
+	}
+	"RageMeterRefilled"
+	{
+		"jp"		"( {green} %N {default} ) {olive} 最初のタンク パスが終了し、{red} 2 番目のタンク パスが開始されました"
+	}
+	"Tag_Rage"
+	{
+		"jp"		"{red} < {default} タンクレイジ {red} > {default}"
+	}
+	"Tag_Selecion"
+	{
+		"jp"		"{red} < {default} タンク選択 {red} > {default}"
+	}
+	"UnableGiveTank"
+	{
+		"jp"		"[ {olive} SM {default} ] %s は感染していません。タンクを与えることができません"
+	}
+	"YouRageMeterRefilled"
+	{
+		"jp"		"{olive} 最初のタンク パスが終了し、{red} 2 番目のタンク パスが開始されました {default}"
+	}
+}

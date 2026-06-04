@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4DStats_RankMessage"
+	{
+		"chi"		"{green} [ {lightgreen} 排名 {green} ] {default} %s"
+	}
+}

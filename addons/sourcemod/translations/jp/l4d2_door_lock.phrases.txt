@@ -1,0 +1,135 @@
+"Phrases"
+{
+	"Ready Up Countdown"
+	{
+		"#format"	"{1:d}"
+		"jp"		"準備完了時間: {1}"
+	}
+	"Round Begin Countdown"
+	{
+		"#format"	"{1:d}"
+		"jp"		"ラウンド開始日: {1}"
+	}
+	"Move Out"
+	{
+		"jp"		"出て行け！"
+	}
+	"Leavers Message"
+	{
+		"jp"		"プレイヤーの準備ができていません。お待ちください..."
+	}
+	"Round Started"
+	{
+		"jp"		"[ロック] エラー: ラウンドはすでに開始されています。"
+	}
+	"Saferoom Locked"
+	{
+		"jp"		"[ロック]エラー: セーフエリアはすでにロックされています。"
+	}
+	"Saferoom Unlocked"
+	{
+		"jp"		"[ロック]エラー: セーフエリアはすでにロックが解除されています。"
+	}
+	"Ready Up Time Ended"
+	{
+		"jp"		"[ロック] エラー: 準備時間が終了しました。"
+	}
+	"Admin Locks"
+	{
+		"#format"	"{1:N}"
+		"jp"		"[ロック] 管理者 {1} がセーフエリアをロックしました。"
+	}
+	"Admin Unlocks"
+	{
+		"#format"	"{1:N}"
+		"jp"		"[ロック] 管理者 {1} がセーフエリアのロックを解除しました。"
+	}
+	"Spectator Ready"
+	{
+		"jp"		"[ロック] エラー: このコマンドを使用するにはチームに参加する必要があります。"
+	}
+	"You Are Ready"
+	{
+		"jp"		"[ロック] エラー: 準備は完了です。"
+	}
+	"You Are Unready"
+	{
+		"jp"		"[ロック] エラー: 準備ができていません。"
+	}
+	"Ready Up Limit"
+	{
+		"jp"		"[ロック] エラー: このコマンドはもう使用できません。"
+	}
+	"Admin Controls"
+	{
+		"jp"		"[ロック] エラー: 管理者が安全領域を制御しています。"
+	}
+	"Player Is Ready"
+	{
+		"jp"		"準備は完了です。"
+	}
+	"Player Is Unready"
+	{
+		"jp"		"準備ができていません。"
+	}
+	"Notify Survivors Ready"
+	{
+		"#format"	"{1:d},{2:d},{3:.1f%%}"
+		"jp"		"[ロック] サバイバーチームの準備が整いました ( {1} / {2} - {3} )。"
+	}
+	"Notify Infected Ready"
+	{
+		"#format"	"{1:d},{2:d},{3:.1f%%}"
+		"jp"		"[ロック] 感染チームの準備が完了しました ( {1} / {2} - {3} )。"
+	}
+	"Notify Survivors Unready"
+	{
+		"#format"	"{1:d},{2:d},{3:.1f%%}"
+		"jp"		"[ロック] サバイバー チームの準備ができていません ( {1} / {2} - {3} )。"
+	}
+	"Notify Infected Unready"
+	{
+		"#format"	"{1:d},{2:d},{3:.1f%%}"
+		"jp"		"[ロック] 感染したチームは準備ができていません ( {1} / {2} - {3} )。"
+	}
+	"Menu Title"
+	{
+		"jp"		"始める準備はできていますか:"
+	}
+	"Menu Ready"
+	{
+		"jp"		"準備ができて"
+	}
+	"Menu Unready"
+	{
+		"jp"		"準備ができていません"
+	}
+	"Menu Survivor"
+	{
+		"jp"		"生存者"
+	}
+	"Menu Infected"
+	{
+		"jp"		"感染した"
+	}
+	"Menu Close"
+	{
+		"jp"		"近い"
+	}
+	"L4D2DoorLock_DoorLockDoorLockNot"
+	{
+		"jp"		"{olive}[ドアロック]{default} 1段階目ではドアロックが解除されています。"
+	}
+	"L4D2DoorLock_DoorLockPictureLockedOnce"
+	{
+		"jp"		"{olive}[ドアロック]{default} この画像は一度ロックされています。グループを殺して再起動すると、ドアはロックされなくなります。"
+	}
+	"L4D2DoorLock_DoorLockDoorLockOnly"
+	{
+		"jp"		"{olive}[ドアロック]{default} ドアロックは、第 1 レベル以外の各マップ後の最初のラウンドでのみ有効になります。"
+	}
+	"L4D2DoorLock_DoorLockSurvivorBotUnfrozen"
+	{
+		"jp"		"{olive}[ドアロック]{default} サバイバーボットは最初のレベルで凍結が解除されました。"
+	}
+}

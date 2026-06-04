@@ -1,0 +1,99 @@
+"Phrases"
+{
+	"L4D2HybridScoremodZone_MapHealthBonusTempHealth"
+	{
+		"zho"		"{default}地圖生命值加成： {olive}%.1f{default}，臨時健康獎勵： {olive}%.1f{default}，燙髮馬力值： {lightgreen}%.1f{default}，臨時馬力值： {lightgreen}%.1f{default}，藥丸價值： {lightgreen}%i{default}"
+	}
+	"L4D2HybridScoremodZone_1Bonus"
+	{
+		"zho"		"%s{default}R{green}#1{default} 獎金： {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
+	}
+	"L4D2HybridScoremodZone_BonusHBDBPills"
+	{
+		"zho"		"%s{default}R{green}#%i{default} 獎金： {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {olive}%d{default} <{lightgreen}%.1f%%{default}> |資料庫： {olive}%d{default} <{lightgreen}%.1f%%{default}> |丸劑： {olive}%d{default} <{lightgreen}%.1f%%{default}>]"
+	}
+	"L4D2HybridScoremodZone_Bonus"
+	{
+		"zho"		"%s{default}R{green}#%i{default} 獎金：{olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+	"L4D2HybridScoremodZone_1Bonus_2"
+	{
+		"zho"		"%s {default} R {green} #1 {default} 獎金：{olive} %d {default} < {lightgreen} %.1f%% {default} >"
+	}
+	"L4D2HybridScoremodZone_BonusHBDBPills_2"
+	{
+		"zho"		"%s{default}R{green}#%i{default} 獎金： {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {lightgreen}%.0f%%{default} |資料庫： {lightgreen}%.0f%%{default} |丸劑： {lightgreen}%.0f%%{default}]"
+	}
+	"L4D2HybridScoremodZone_HybridBonusMapInfo"
+	{
+		"zho"		"{default}[{green}混合獎金{default} :: {lightgreen}%iv%i{default}] 地圖資訊"
+	}
+	"L4D2HybridScoremodZone_Distance"
+	{
+		"zho"		"{default} 距離： {olive} %d {default}"
+	}
+	"L4D2HybridScoremodZone_TotalBonus1000"
+	{
+		"zho"		"{default}總獎金：{olive}%d{default} <{lightgreen}100.0%%{default}>"
+	}
+	"L4D2HybridScoremodZone_HealthBonus"
+	{
+		"zho"		"{default} 健康獎勵： {olive} %d {default} < {lightgreen} %.1f%% {default} >"
+	}
+	"L4D2HybridScoremodZone_DamageBonus"
+	{
+		"zho"		"{default} 傷害加成： {olive} %d {default} < {lightgreen} %.1f%% {default} >"
+	}
+	"L4D2HybridScoremodZone_PillsBonusMax"
+	{
+		"zho"		"{default} 藥丸獎勵：{olive} %d {default} (最大 {olive} %d {default} ) < {lightgreen} %.1f%% {default} >"
+	}
+	"L4D2HybridScoremodZone_Tiebreaker"
+	{
+		"zho"		"{default}T決賽：{olive}%d{default}"
+	}
+	"L4D2HybridScoremodZone_TempHPDamage"
+	{
+		"zho"		"{green} %N {default} 現在有{olive} %d {default} 臨時HP（損壞：{lightgreen} %.1f {default} ）"
+	}
+	"L4D2HybridScoremodZone_ValidDeathIncapsTotalPenalty"
+	{
+		"zho"		"{green}[{default}有效死亡{green}] {lightgreen}%N {default}had {lightgreen}%i {default}incaps，總罰款現在為{lightgreen}%i"
+	}
+	"L4D2HybridScoremodZone_LostTempHPAfterAttacked"
+	{
+		"zho"		"{lightgreen} %N {default} {olive} 被攻擊後失去 %i {default} 暫時生命值(arg 傷害: {lightgreen} %.1f {default} )"
+	}
+	"L4D2HybridScoremodZone_DirectorEndVersusModeRound"
+	{
+		"zho"		"CDirector::OnEndVersusModeRound() called. InSecondHalfOfRound()：%d，計數倖存者：%d"
+	}
+	"L4D2HybridScoremodZone_SurvivalBonusCvarUpdatedValue"
+	{
+		"zho"		"{default}生存獎金 cvar 已更新。值：{olive}%i{default} [乘數：{olive}%i{default}]"
+	}
+	"L4D2HybridScoremodZone_RoundBonus"
+	{
+		"zho"		"%s{default}圓形 {green}%i{default} 獎金： {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
+	}
+	"L4D2HybridScoremodZone_TiebreakerTeam1Team2"
+	{
+		"zho"		"%s{lightgreen}決勝局{default}：團隊 {green}%#1{default} - {olive}%i{default}, 團隊 {green}%#2{default} - {olive}%i{default}"
+	}
+	"L4D2HybridScoremodZone_TeamsPerformedAbsolutelyEqualImpossible"
+	{
+		"zho"		"%s{olive}團隊表現絕對平等！ Impossible to decide a clear round winner"
+	}
+	"L4D2HybridScoremodZone_AddingPermHPBonusContribution"
+	{
+		"zho"		"{default}Adding {olive}%N's{default} perm hp bonus contribution: {olive}%d{default} perm HP -> {lightgreen}%.1f{default} bonus; new total: {olive}%.1f{default}"
+	}
+	"L4D2HybridScoremodZone_AddingTempHPBonusEligible"
+	{
+		"zho"		"{default}A新增臨時生命值獎勵：{olive}%.1f{default}（符合條件的倖存者：{olive}%d{default}）"
+	}
+	"L4D2HybridScoremodZone_AddingPillsContributionTotalBonus"
+	{
+		"zho"		"{default}A添加{olive}%N的{default}藥丸貢獻，總獎金：{olive}%d{default} 分"
+	}
+}

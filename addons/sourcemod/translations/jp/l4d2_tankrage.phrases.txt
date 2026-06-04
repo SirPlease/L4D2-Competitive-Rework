@@ -1,0 +1,31 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"jp"		"{red} [ {default} タンク レイジ {red} ] {default}"
+	}
+	"SurvivorsRunBack"
+	{
+		"jp"		"{olive} %i {green} %% {default} 生存者が逃げ出すたびに、タンクは {olive} %0.1f {green} 秒間 {default} の間、彼らの不満を凍結させます。"
+	}
+	"L4D2Tankrage_Tank"
+	{
+		"jp"		"[%s]: %Nはタンクです"
+	}
+	"L4D2Tankrage_EverythingReset"
+	{
+		"jp"		"[%s]: すべてがリセットされました!"
+	}
+	"L4D2Tankrage_FlowDifferenceSinceLastCheck"
+	{
+		"jp"		"{green}[{lightgreen}%N{green}]{default}: 前回のチェック以降のフローの差: %i"
+	}
+	"L4D2Tankrage_FrusGrace"
+	{
+		"jp"		"{green}[{lightgreen}%N{green}]{default}: フルス: {lightgreen}%i {default}- グレース: {lightgreen}%f{green}s"
+	}
+	"L4D2Tankrage_SetGrace"
+	{
+		"jp"		"{green}[{lightgreen}%N{green}]{default}: 猶予期間を次のように設定します: {lightgreen}%f{green}s"
+	}
+}

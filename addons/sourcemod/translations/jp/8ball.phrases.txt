@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"jp"		"{default}[{green}8ボール{default}]"
+	}
+	"Usage"
+	{
+		"jp"		"使用法: !8ball <質問>"
+	}
+	"Asked"
+	{
+		"jp"		"{teamcolor}%N{default} 質問: {olive}%s{default}"
+	}
+	"WithYes"
+	{
+		"jp"		"私は {olive}Yes{default} を選択します。"
+	}
+	"WithNo"
+	{
+		"jp"		"私は {red}No{default} を選択します。"
+	}
+	"Yikes"
+	{
+		"jp"		"そうだね。 {red}いいえ{default}!"
+	}
+	"Sure"
+	{
+		"jp"		"うーん…。 {olive}確かに{default}?"
+	}
+	"AbsolutelyNot"
+	{
+		"jp"		"笑 {red}絶対に違います{default}!"
+	}
+	"Yeah"
+	{
+		"jp"		"ご存知ですか？ {olive}はい{default}!"
+	}
+}

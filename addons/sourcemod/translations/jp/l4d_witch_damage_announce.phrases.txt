@@ -1,0 +1,73 @@
+"Phrases"
+{
+	"FailWitchCrown"
+	{
+		"#format"	"{1:N}"
+		"jp"		"{default}[{green}!{default}] {red}{1} {default}({olive}戴冠した魔女の失敗{default})、{red}魔女によってキャップを外されました。"
+	}
+	"TankKillWitch"
+	{
+		"#format"	"{1:N}"
+		"jp"		"{default}[{green}!{default}] {red}タンク {default}({olive}{1}{default}) が {red} 魔女を倒した"
+	}
+	"WitchRemainedHealth"
+	{
+		"#format"	"{1:d}"
+		"jp"		"{default}[{green}!{default}] {blue}魔女 {default}が持っていた {olive}{1} {default}残り体力"
+	}
+	"DamageToWitch"
+	{
+		"jp"		"{default}[{green}!{default}] {blue}ダメージ {default}を取り扱いました {blue}魔女:"
+	}
+	"PrefectWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"jp"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3} ★★"
+	}
+	"FinalShotWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"jp"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3} ★"
+	}
+	"AssistanceWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"jp"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3}"
+	}
+	"FinalShotInfWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"jp"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}感染者 {olive} ☆"
+	}
+	"AssistanceInfWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"jp"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}感染しました"
+	}
+	"FinalShotTankWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"jp"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}タンク {olive} ☆"
+	}
+	"AssistanceTankWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"jp"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}タンク"
+	}
+	"L4DWitchDamageAnnounce_TankKilledWitch"
+	{
+		"jp"		"{default}[{green}!{default}] {red}タンク {default}({olive}%N{default}) {red}魔女を倒しました"
+	}
+	"L4DWitchDamageAnnounce_WitchHealthRemaining"
+	{
+		"jp"		"{default}[{green}!{default}] {blue}魔女 {default}は{olive}%d {default}健康状態が残っています"
+	}
+	"L4DWitchDamageAnnounce_DamageDealtWitch"
+	{
+		"jp"		"{default}[{green}!{default}] {blue}ダメージ {default}{blue}魔女に与えた:"
+	}
+	"L4DWitchDamageAnnounce_WitchDamageLine"
+	{
+		"jp"		"{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N"
+	}
+}

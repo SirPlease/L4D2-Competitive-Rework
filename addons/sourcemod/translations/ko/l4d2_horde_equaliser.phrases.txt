@@ -1,0 +1,21 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"ko"		"< {olive} 호드 {default} >"
+	}
+	"NoCommonRemaining"
+	{
+		"ko"		"{red} {default} 공통이 남아 있지 않습니다!"
+	}
+	"CommonRemaining"
+	{
+		"#format"	"{1:i}"
+		"ko"		"{red} {1} {default} 공통 남은.."
+	}
+	"FiniteEventStarted"
+	{
+		"#format"	"{1:i}"
+		"ko"		"{olive} {1} {default} 커먼즈의 {blue} 유한 이벤트 {default}가 시작되었습니다! 서두르거나 기다리거나 선택은 귀하의 몫입니다!"
+	}
+}

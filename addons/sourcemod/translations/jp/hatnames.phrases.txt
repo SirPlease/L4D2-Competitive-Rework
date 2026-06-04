@@ -1,0 +1,383 @@
+"Phrases"
+{
+	"models/infected/gibs/gibs.mdl"
+	{
+		"jp"		"ハンドギブ"
+	}
+	"models/infected/limbs/exploded_boomer_head.mdl"
+	{
+		"jp"		"ブーマーヘッド"
+	}
+	"models/infected/limbs/limb_male_head01.mdl"
+	{
+		"jp"		"ヘッドギブ"
+	}
+	"models/props/cs_militia/circularsaw01.mdl"
+	{
+		"jp"		"丸鋸"
+	}
+	"models/props/de_nuke/emergency_lighta.mdl"
+	{
+		"jp"		"赤色の非常灯"
+	}
+	"models/props_fairgrounds/alligator.mdl"
+	{
+		"jp"		"アリゲーター"
+	}
+	"models/props_fairgrounds/mr_mustachio.mdl"
+	{
+		"jp"		"ミスター・ムスタチオ"
+	}
+	"models/props_fortifications/orange_cone001_clientside.mdl"
+	{
+		"jp"		"トラフィックコーン"
+	}
+	"models/props_interiors/teddy_bear.mdl"
+	{
+		"jp"		"テディベア"
+	}
+	"models/props_interiors/toilet_b_breakable01_part13.mdl"
+	{
+		"jp"		"便座"
+	}
+	"models/props_interiors/waterbottle.mdl"
+	{
+		"jp"		"水筒"
+	}
+	"models/props_urban/dock_pylon_cap001.mdl"
+	{
+		"jp"		"ドックパイロン"
+	}
+	"models/props_urban/life_ring001.mdl"
+	{
+		"jp"		"ライフリング"
+	}
+	"models/props_lighting/light_construction02.mdl"
+	{
+		"jp"		"工事用照明"
+	}
+	"models/extras/info_speech.mdl"
+	{
+		"jp"		"スピーチの引用"
+	}
+	"models/infected/smoker_tongue_attach.mdl"
+	{
+		"jp"		"スモーカータン"
+	}
+	"models/props/de_inferno/ceiling_fan_blade.mdl"
+	{
+		"jp"		"シーリングファンブレード"
+	}
+	"models/f18/f18_placeholder.mdl"
+	{
+		"jp"		"F-18 ジェット機"
+	}
+	"models/deadbodies/dead_male_civilian_radio.mdl"
+	{
+		"jp"		"民間ラジオ"
+	}
+	"models/infected/cim_riot_faceplate.mdl"
+	{
+		"jp"		"ライオットのフェイスプレート"
+	}
+	"models/props_interiors/styrofoam_cups.mdl"
+	{
+		"jp"		"発泡スチロールカップ"
+	}
+	"models/props_shacks/bug_lamp01.mdl"
+	{
+		"jp"		"バグランプザッパー"
+	}
+	"models/props_unique/grill_campground.mdl"
+	{
+		"jp"		"バーベキューグリル"
+	}
+	"models/props_unique/luggagecart01.mdl"
+	{
+		"jp"		"荷物カート"
+	}
+	"models/props_unique/spawn_apartment/lantern.mdl"
+	{
+		"jp"		"ランタン"
+	}
+	"models/props_urban/exit_sign002.mdl"
+	{
+		"jp"		"出口標識"
+	}
+	"models/props_urban/garden_hose001.mdl"
+	{
+		"jp"		"ガーデンホース"
+	}
+	"models/props_urban/plastic_flamingo001.mdl"
+	{
+		"jp"		"ピンクフラミンゴ"
+	}
+	"models/props_waterfront/money_pile.mdl"
+	{
+		"jp"		"お金の山"
+	}
+	"models/props_fairgrounds/elephant.mdl"
+	{
+		"jp"		"象"
+	}
+	"models/props_fairgrounds/giraffe.mdl"
+	{
+		"jp"		"キリン"
+	}
+	"models/props_fairgrounds/garbage_popcorn_box.mdl"
+	{
+		"jp"		"ポップコーンボックス"
+	}
+	"models/props_fairgrounds/gnome_closet.mdl"
+	{
+		"jp"		"ノームクローゼット"
+	}
+	"models/props_fairgrounds/snake.mdl"
+	{
+		"jp"		"蛇"
+	}
+	"models/props_interiors/toaster.mdl"
+	{
+		"jp"		"トースター"
+	}
+	"models/props_unique/doll01.mdl"
+	{
+		"jp"		"人形"
+	}
+	"models/props_junk/garbage_hubcap01a.mdl"
+	{
+		"jp"		"ハブキャップ"
+	}
+	"models/props_mall/mall_mannequin_rhand.mdl"
+	{
+		"jp"		"マネキンの手"
+	}
+	"models/props_lab/desklamp01.mdl"
+	{
+		"jp"		"電気スタンド"
+	}
+	"models/props_vehicles/helicopter_rescue.mdl"
+	{
+		"jp"		"大きなヘリコプター"
+	}
+	"models/hybridphysx/news_helicoptor_map1_intro_v1.mdl"
+	{
+		"jp"		"ニュースヘリコプター"
+	}
+	"models/missiles/f18_agm65maverick.mdl"
+	{
+		"jp"		"ミサイル"
+	}
+	"models/props_vehicles/boat_fishing02.mdl"
+	{
+		"jp"		"漁船"
+	}
+	"models/props_urban/big_wheel001.mdl"
+	{
+		"jp"		"チャイルドトライク"
+	}
+	"models/props_interiors/mounteddeerhead01.mdl"
+	{
+		"jp"		"鹿の頭"
+	}
+	"models/props_misc/pot-1.mdl"
+	{
+		"jp"		"鍋"
+	}
+	"models/props_c17/metalpot002a.mdl"
+	{
+		"jp"		"フライパン"
+	}
+	"models/gibs/hgibs.mdl"
+	{
+		"jp"		"頭蓋骨"
+	}
+	"models/props/cs_militia/caseofbeer01.mdl"
+	{
+		"jp"		"ビールのケース"
+	}
+	"models/props/cs_office/chair_office.mdl"
+	{
+		"jp"		"オフィスチェア"
+	}
+	"models/props_cemetery/crypts_top02.mdl"
+	{
+		"jp"		"墓地の十字架"
+	}
+	"models/props_fairgrounds/kiddyland_riderocket_small.mdl"
+	{
+		"jp"		"キディランドロケット"
+	}
+	"models/props_interiors/toilet_b_breakable01.mdl"
+	{
+		"jp"		"トイレ"
+	}
+	"models/props_misc/lamp-1_gib1.mdl"
+	{
+		"jp"		"ランプシェード"
+	}
+	"models/props_misc/saddle-1.mdl"
+	{
+		"jp"		"サドル"
+	}
+	"models/props_unique/wheelchair01.mdl"
+	{
+		"jp"		"車椅子"
+	}
+	"models/props_urban/mega_phone001.mdl"
+	{
+		"jp"		"メガホン"
+	}
+	"models/props/de_train/de_train_floodlights_01.mdl"
+	{
+		"jp"		"投光器"
+	}
+	"models/props_vehicles/tire001c_car.mdl"
+	{
+		"jp"		"車のタイヤ"
+	}
+	"models/props/de_inferno/ceiling_fan.mdl"
+	{
+		"jp"		"シーリングファン"
+	}
+	"models/props/de_prodigy/fan.mdl"
+	{
+		"jp"		"ファン"
+	}
+	"models/props_foliage/urban_pot_clay01.mdl"
+	{
+		"jp"		"鉢植え 1"
+	}
+	"models/props_foliage/urban_pot_clay02.mdl"
+	{
+		"jp"		"鉢植え2"
+	}
+	"models/props_downtown/ironing_board_flat.mdl"
+	{
+		"jp"		"アイロン台"
+	}
+	"models/props_collectables/coin.mdl"
+	{
+		"jp"		"コイン"
+	}
+	"models/infected/jockey.mdl"
+	{
+		"jp"		"騎手"
+	}
+	"models/items/l4d_gift.mdl"
+	{
+		"jp"		"贈り物"
+	}
+	"models/props_street/firehydrant.mdl"
+	{
+		"jp"		"消火栓"
+	}
+	"models/props_junk/gnome.mdl"
+	{
+		"jp"		"ノーム"
+	}
+	"models/bunny/b_sailboat.mdl"
+	{
+		"jp"		"帆船"
+	}
+	"models/props/de_nuke/light_red2.mdl"
+	{
+		"jp"		"レッドバルクヘッドライト"
+	}
+	"models/props_buildables/mine.mdl"
+	{
+		"jp"		"ホイールホイールキャップ"
+	}
+	"models/props_cemetery/crypts_top01.mdl"
+	{
+		"jp"		"墓地の十字架"
+	}
+	"models/props_misc/tea_pot-1.mdl"
+	{
+		"jp"		"ティーポット"
+	}
+	"models/props_fairgrounds/pyrotechnics_launcher.mdl"
+	{
+		"jp"		"花火"
+	}
+	"models/props_interiors/coffee_maker.mdl"
+	{
+		"jp"		"コーヒーメーカー"
+	}
+	"models/props_interiors/pot01a.mdl"
+	{
+		"jp"		"ケトル"
+	}
+	"models/props_interiors/tv.mdl"
+	{
+		"jp"		"TV"
+	}
+	"models/props_interiors/lamp_floor_gib2.mdl"
+	{
+		"jp"		"ランプシェード 1"
+	}
+	"models/props_interiors/lamp_table02_gib2.mdl"
+	{
+		"jp"		"ランプシェード 2"
+	}
+	"models/props_lighting/semi_flush_001.mdl"
+	{
+		"jp"		"ランプシェード 3"
+	}
+	"models/props_junk/petfoodbag01.mdl"
+	{
+		"jp"		"ドッグフード"
+	}
+	"models/props_lighting/flashlight_dropped_01.mdl"
+	{
+		"jp"		"ダーレク フラッシュ ライト"
+	}
+	"models/props_lighting/lightfixture03.mdl"
+	{
+		"jp"		"ボールライト"
+	}
+	"models/props_mall/cash_register.mdl"
+	{
+		"jp"		"レジ"
+	}
+	"models/props_placeable/tier1_guns_trophy.mdl"
+	{
+		"jp"		"ガントロフィー 1"
+	}
+	"models/props_placeable/tier2_guns_trophy.mdl"
+	{
+		"jp"		"ガントロフィー2"
+	}
+	"models/weapons/arms/v_spitter_arms.mdl"
+	{
+		"jp"		"スピッターアーム"
+	}
+	"models/weapons/arms/v_jockey_arms.mdl"
+	{
+		"jp"		"ジョッキークロー"
+	}
+	"models/v_models/weapons/v_claw_hulk.mdl"
+	{
+		"jp"		"タンククロー"
+	}
+	"models/w_models/weapons/w_he_grenade.mdl"
+	{
+		"jp"		"手榴弾の弾"
+	}
+	"models/props_junk/propanecanister001a.mdl"
+	{
+		"jp"		"プロパンボンベ"
+	}
+	"models/w_models/weapons/w_eq_medkit.mdl"
+	{
+		"jp"		"メディキットキャップ"
+	}
+	"models/weapons/melee/w_riotshield.mdl"
+	{
+		"jp"		"ライオットシールド"
+	}
+	"models/props_skybox/boat_rescue_tug_sunshine.mdl"
+	{
+		"jp"		"タグボート"
+	}
+}

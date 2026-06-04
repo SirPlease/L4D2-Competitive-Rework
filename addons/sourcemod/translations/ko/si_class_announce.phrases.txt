@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"SI"
+	{
+		"ko"		"SI: "
+	}
+	"SpecialInfected"
+	{
+		"ko"		"특수 감염자:"
+	}
+}

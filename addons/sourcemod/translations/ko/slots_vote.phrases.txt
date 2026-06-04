@@ -1,0 +1,53 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"ko"		"{blue} [ {default} 슬롯 {blue} ] {default}"
+	}
+	"NotConsoleVote"
+	{
+		"ko"		"[슬롯] 게임 중이어야 합니다."
+	}
+	"LimitSlotsAbove"
+	{
+		"ko"		"이 서버에서는 {olive} %i {default} 이상의 슬롯을 제한할 수 없습니다."
+	}
+	"LimitedSlotsTo"
+	{
+		"#format"	"{1:s},{2:i}"
+		"ko"		"{olive} {1} {default}의 슬롯은 {blue} {2} {default}로 제한되어 있습니다."
+	}
+	"RequiredPlayers"
+	{
+		"ko"		"필요한 플레이어보다 적은 슬롯을 제한할 수 없습니다."
+	}
+	"SlotsUsage"
+	{
+		"ko"		"사용법: {olive}!slots {default} < {olive} 번호 {default} > {blue} | {default} 예: {olive}!slots 8 {default}"
+	}
+	"Spectators"
+	{
+		"ko"		"관객 투표는 불가능합니다."
+	}
+	"LimitSlots"
+	{
+		"ko"		"슬롯을 ' %s '로 제한하시겠습니까?"
+	}
+	"CannotBeStarted"
+	{
+		"ko"		"지금은 투표를 시작할 수 없습니다."
+	}
+	"LimitingSlots"
+	{
+		"ko"		"슬롯 제한..."
+	}
+	"SlotsVote_AdminOnlyBelowMinimumSlots"
+	{
+		"#format"	"{1:i}"
+		"ko"		"只有管理员才能将位置设为小于 {blue}{1}{default}人"
+	}
+	"LimitSlotsBelow"
+	{
+		"ko"		"관리자만 {blue} {1} {default} 플레이어 아래에 슬롯을 설정할 수 있습니다."
+	}
+}

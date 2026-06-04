@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Alarmed_Car"
+	{
+		"ko"		"{olive} %N {green}가 경보 차량을 작동시켰습니다!"
+	}
+	"Horde"
+	{
+		"ko"		"{olive} %N {green}가 호드 이벤트를 발동시켰습니다!"
+	}
+	"Final Rescue Start"
+	{
+		"ko"		"{green} 최종 구출이 시작되었습니다!"
+	}
+	"Final Rescue"
+	{
+		"ko"		"{blue} %N {olive}가 최후의 구출을 발동시켰습니다!"
+	}
+}

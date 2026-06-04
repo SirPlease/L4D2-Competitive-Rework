@@ -1,0 +1,27 @@
+"Phrases"
+{
+	"InfectedControl_ICFailedObtainCrosshairHit"
+	{
+		"zho"		"{green}[IC]{default} 未能取得準星命中點。"
+	}
+	"InfectedControl_ICNoNavAreaNearby"
+	{
+		"zho"		"{green}[IC]{default} 附近沒有 NavArea。"
+	}
+	"InfectedControl_ICNavidBucketCalculationReturn"
+	{
+		"zho"		"{green}[IC]{default} navid=%d 桶=%d(算) / %d(歸) flag=%s"
+	}
+	"InfectedControl_ICNavidBucketReturnFlag"
+	{
+		"zho"		"{green}[IC]{default} navid=%d 桶=N/A / %d(歸) flag=%s"
+	}
+	"InfectedControl_ICNavCanGenerateTotal"
+	{
+		"zho"		"{green} [IC] {default} 導覽 %d {olive} 可以產生{default} |總分：{lightgreen} %.1f {default} |詳情請參閱控制台"
+	}
+	"InfectedControl_ICNavCannotGenerateSee"
+	{
+		"zho"		"{green}[IC]{default} Nav %d {lightgreen}不能產生{default} | 詳情請見控制台"
+	}
+}

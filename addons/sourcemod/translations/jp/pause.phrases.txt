@@ -1,0 +1,197 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"jp"		"{default}[{green}!{default}]"
+	}
+	"ClientFullyLoaded"
+	{
+		"#format"	"{1:N}"
+		"jp"		"{olive}%N {default} は完全にロードされました"
+	}
+	"PauseCommand"
+	{
+		"#format"	"{1:N},{2:s}"
+		"jp"		"{olive}%N {blue}一時停止中{default}."
+	}
+	"PauseAction"
+	{
+		"jp"		"{red}一時停止中"
+	}
+	"PauseDelay"
+	{
+		"#format"	"{1:d}"
+		"jp"		"{blue}一時停止中{default}: {olive}%d"
+	}
+	"Crashed"
+	{
+		"jp"		"{olive}ゲーム {default} は、プレーヤーが {blue}クラッシュ{default}したため、{green}強制的に一時停止されました {default}。"
+	}
+	"ForcePause"
+	{
+		"#format"	"{1:N}"
+		"jp"		"{green}強制一時停止 {default} は、{blue}管理者 {default}({olive}%N{default}) によって発行されました"
+	}
+	"UnpauseSurvivors"
+	{
+		"#format"	"{1:N},{2:s},{3:s}"
+		"jp"		"{olive}%N %s{default}マーク {blue}%s {default}準備完了です。"
+	}
+	"UnpauseInfected"
+	{
+		"#format"	"{1:N},{2:s},{3:s}"
+		"jp"		"{olive}%N %s{default}マーク {red}%s {default}準備完了です。"
+	}
+	"UnpauseInitiator"
+	{
+		"#format"	"{1:N}"
+		"jp"		"{olive}%N {default}は、{green}イニシエータ {default} 準備完了とマークされました。"
+	}
+	"UnpauseAdminConfirm"
+	{
+		"jp"		"{olive}チームの{default}は準備ができています。 {blue}管理者{default}が{green}確認{default}するまで待ちます。"
+	}
+	"UnreadySurvivors"
+	{
+		"#format"	"{1:N},{2:s},{3:s}"
+		"jp"		"{olive}%N %s{default}マーク {blue}%s {default}の準備ができていません。"
+	}
+	"UnreadyInfected"
+	{
+		"#format"	"{1:N},{2:s},{3:s}"
+		"jp"		"{olive}%N %s{default}マーク {red}%s {default}の準備ができていません。"
+	}
+	"UnreadyInitiator"
+	{
+		"#format"	"{1:N}"
+		"jp"		"{olive}%N {default}は、{green}イニシエータ {default} の準備ができていないとマークされました。"
+	}
+	"AsInitiator"
+	{
+		"jp"		"{default}として {green}イニシエーター "
+	}
+	"ForceUnpause"
+	{
+		"#format"	"{1:N}"
+		"jp"		"{green}強制一時停止解除 {default} は、{blue}管理者 {default}({olive}%N{default}) によって発行されました"
+	}
+	"PauseLimit"
+	{
+		"jp"		"一時停止の制限に達しました。"
+	}
+	"PauseDeferred"
+	{
+		"jp"		"{red}ピックアップが進行中のため、一時停止が遅れています。"
+	}
+	"PausePreventSpawn"
+	{
+		"jp"		"{default}一時停止のため、あなたの {red} スポーン {default} は阻止されました"
+	}
+	"PanelShow"
+	{
+		"jp"		"パネルは現在 {blue}上{default}."
+	}
+	"PanelHide"
+	{
+		"jp"		"パネルは現在 {red}オフ{default}."
+	}
+	"PanelSlots"
+	{
+		"#format"	"{1:s},{2:d},{3:d}"
+		"jp"		"▸ Server: %s\\n▸ Slots: %d/%d"
+	}
+	"PanelDate"
+	{
+		"jp"		"▸ %m/%d/%Y - %I:%M%p"
+	}
+	"PanelTitle"
+	{
+		"jp"		"▸ 準備完了ステータス"
+	}
+	"RequireAdmin"
+	{
+		"jp"		"->0。管理者に一時停止の解除を要求する"
+	}
+	"SurvivorUnPaused"
+	{
+		"jp"		"→1.生存者: [√]"
+	}
+	"SurvivorPaused"
+	{
+		"jp"		"→1.生存者: [X]"
+	}
+	"InfectedUnPaused"
+	{
+		"jp"		"→2.感染者: [√]"
+	}
+	"InfectedPaused"
+	{
+		"jp"		"→2.感染者: [X]"
+	}
+	"InitiatorUnPaused"
+	{
+		"jp"		"->0。イニシエーター: [√]"
+	}
+	"InitiatorPaused"
+	{
+		"jp"		"->0。イニシエーター: [X]"
+	}
+	"AutoPauseCrash"
+	{
+		"jp"		"▸ 強制自動一時停止 -> クラッシュ"
+	}
+	"ForcePauseAdmin"
+	{
+		"#format"	"{1:s}"
+		"jp"		"▸ 強制一時停止 -> %s (管理者)"
+	}
+	"InitiatorPause"
+	{
+		"#format"	"{1:s},{2:s}"
+		"jp"		"▸ イニシエーター -> %s (%s)"
+	}
+	"DurationPause"
+	{
+		"#format"	"{1:d},{2:d}"
+		"jp"		"▸ 期間: %02d:%02d"
+	}
+	"CountdownCancelNotify"
+	{
+		"jp"		"キャンセルするには「{olive}!unready {default}」と言ってください"
+	}
+	"GameisLive"
+	{
+		"jp"		"ゲームは生放送中です！"
+	}
+	"CountdownReadyDelay"
+	{
+		"#format"	"{1:d}"
+		"jp"		"{blue}住んでいる場所{default}: {olive}%d{default}..."
+	}
+	"CountdownCancelled"
+	{
+		"#format"	"{1:N}"
+		"jp"		"{olive}%N {default} がカウントダウンをキャンセルしました!"
+	}
+	"CallvoteNoSpec"
+	{
+		"jp"		"観客として投票することはできません。"
+	}
+	"CallvoteNoExploit"
+	{
+		"jp"		"チームを切り替えたばかりなので、数秒間投票できません。"
+	}
+	"CallvoteCannotTargetAdmin"
+	{
+		"jp"		"管理者をキックすることはできません。"
+	}
+	"Pause_PauseChatMessage"
+	{
+		"jp"		"(%s) {teamcolor}%N{default} : %s"
+	}
+	"PauseCountFormat"
+	{
+		"#format"	"{1:d},{2:d}"
+		"jp"		" [{green}{1}{default}/{green}{2}{default}]."
+	}
+}

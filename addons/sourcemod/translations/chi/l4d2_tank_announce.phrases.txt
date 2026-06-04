@@ -2,14 +2,22 @@
 {
 	"Tag"
 	{
-		"chi"	"{red}[{default}!{red}]"
+		"chi"		"{red}[{default}!{red}]"
 	}
 	"Spawned"
 	{
-		"chi"	"{olive}Tank {default}({red}控制人: %s{default}) 已经生成!"
+		"chi"		"{olive}Tank {default}({red}控制人: %s{default}) 已经生成!"
 	}
 	"Spawned2"
 	{
-		"chi"	"{olive}Tank {default}({red}控制人: %N{default}) 已经生成!"
+		"chi"		"{olive}Tank {default}({red}控制人: %N{default}) 已经生成!"
+	}
+	"L4D2TankAnnounce_TankControllerGenerated"
+	{
+		"chi"		"{default}[{red}!{default}] {green}Tank {default}({red}控制者：%s{default}) 已经生成！"
+	}
+	"L4D2TankAnnounce_TankControllerGenerated_2"
+	{
+		"chi"		"{default}[{blue}!{default}] {green}Tank {default}({blue}控制者：%s{default}) 已经生成！"
 	}
 }

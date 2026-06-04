@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Door_Open"
+	{
+		"jp"		"{olive} [セーフルーム] {white} が {orange} %N によって開かれました"
+	}
+	"Door_Close"
+	{
+		"jp"		"{olive} [セーフルーム] {white} は {orange} %N によって閉鎖されました"
+	}
+	"Door_Wait"
+	{
+		"jp"		"{olive} [セーフルーム] {white} ドアは {orange} %d {white} 秒後にロック解除されます"
+	}
+	"Door_Unlocked"
+	{
+		"jp"		"{olive} [セーフルーム] {white} ドア {orange} が開きました"
+	}
+}

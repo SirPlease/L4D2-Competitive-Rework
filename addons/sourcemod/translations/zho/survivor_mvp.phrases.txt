@@ -1,0 +1,83 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"zho"		"{blue} [ {default} MVP {blue} ] {default}"
+	}
+	"YourRankSI"
+	{
+		"zho"		"{blue}排名 {green}SI： {olive}#%d {blue}({default}%d {green}dmg {blue}[{default}%.0f%%{blue}]{default}, %d {green}擊殺 {blue}[{default}%.0f%%{blue}])"
+	}
+	"YourRankCI"
+	{
+		"zho"		"{blue} 排名 {green} CI: {olive} # %d {blue} ( {default} %d {green} 常用{blue} [ {default} %.0f%% {blue} ])"
+	}
+	"YourRankFF"
+	{
+		"zho"		"{blue}排名 {green}FF: {olive}#%d {blue}({default}%d {green}友軍火力 {blue}[{default}%.0f%%{blue}])"
+	}
+	"BotName"
+	{
+		"zho"		"[機器人]"
+	}
+	"NobodyName"
+	{
+		"zho"		"{blue} ( {default} 沒人 {blue} )"
+	}
+	"NotEnoughAction"
+	{
+		"zho"		"{blue} ( {default} 行動還不夠 {blue} )"
+	}
+	"ReportSI_Absolute"
+	{
+		"zho"		"{green} SI: {olive} %s {blue} ({default} %d {green} dmg {default}, %d {green} 殺出 {blue} )"
+	}
+	"ReportSI_Percent"
+	{
+		"zho"		"{green}SI： {olive}%s {blue}({green}dmg {blue}[{default}%.0f%%{blue}]{default}, {green}擊殺 {blue}[{default}%.0f%%{blue}])"
+	}
+	"ReportSI_Full"
+	{
+		"zho"		"{green}SI： {olive}%s {blue}({default}%d {green}dmg {blue}[{default}%.0f%%{blue}]{default}, %d {green}擊殺 {blue}[{default}%.0f%%{blue}])"
+	}
+	"ReportSI_Nobody"
+	{
+		"zho"		"{green} SI: {blue} ( {default} 沒人 {blue} )"
+	}
+	"ReportCI_Absolute"
+	{
+		"zho"		"{green} CI: {olive} %s {blue} ({default} %d {green} 常用{blue})"
+	}
+	"ReportCI_Percent"
+	{
+		"zho"		"{green} CI: {olive} %s {blue} ( {green} 通用 {blue} [ {default} %.0f%% {blue} ])"
+	}
+	"ReportCI_Full"
+	{
+		"zho"		"{green} CI: {olive} %s {blue} ( {default} %d {green} 常用{blue} [ {default} %.0f%% {blue} ])"
+	}
+	"NoFF"
+	{
+		"zho"		"{blue} ( {default} 完全沒有友軍火力！{blue} )"
+	}
+	"ReportFF_Absolute"
+	{
+		"zho"		"{green} FF: {olive} %s {blue} ( {default} %d {green} 友軍火力 {blue} )"
+	}
+	"ReportFF_Percent"
+	{
+		"zho"		"{green} FF: {olive} %s {blue} ( {green} 友軍火力 {blue} [ {default} %.0f%% {blue} ])"
+	}
+	"ReportFF_Full"
+	{
+		"zho"		"{green} FF: {olive} %s {blue} ( {default} %d {green} 友軍火力 {blue} [ {default} %.0f%% {blue} ])"
+	}
+	"SurvivorMVP_PharmacyMVPStatisticsHeader"
+	{
+		"zho"		"{blue}[{default}藥役MVP統計{blue}]"
+	}
+	"SurvivorMVP_PharmacyMVPStatisticsLine"
+	{
+		"zho"		"{olive}特感{green}%2d {olive}丧尸{green}%3d {olive}黑/被黑{green}%2d/%2d {olive}伤害{green}%4d {default}%N"
+	}
+}

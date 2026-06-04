@@ -1,0 +1,8 @@
+"Phrases"
+{
+	"IncapSurSpawnAWitch"
+	{
+		"#format"	"{1:N}"
+		"jp"		"{olive} {1} {default} がダウンして魔女を生み出しました。"
+	}
+}

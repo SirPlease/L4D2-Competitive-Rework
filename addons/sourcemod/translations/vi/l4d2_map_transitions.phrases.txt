@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2MapTransitions_EndVersusModeRoundPost"
+	{
+		"vi"		"L4D2_OnEndVersusModeRound_Post"
+	}
+	"L4D2MapTransitions_MTStartingTransition"
+	{
+		"vi"		"{olive}[MT]{default} Bắt đầu chuyển đổi từ: {blue}%s{default} sang: {blue}%s"
+	}
+}

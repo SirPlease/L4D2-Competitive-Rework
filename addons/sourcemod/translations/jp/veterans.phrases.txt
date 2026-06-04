@@ -1,0 +1,58 @@
+"Phrases"
+{
+	"ERROR"
+	{
+		"jp"		"プレイ時間を取得できませんでした"
+	}
+	"PRIVATEPROFILE"
+	{
+		"jp"		"プレイ時間を抽出できるように、Steam コミュニティのプロフィールを公開する必要があります"
+	}
+	"REJECTED"
+	{
+		"#format"	"{1:.1f},{2:.1f},{3:.1f}"
+		"jp"		"このサーバーに参加するには、myserverhours で少なくとも {1} 時間、合計プレイ時間 {2} 時間、および合計プレイ時間から過去 2 週間のプレイ時間を差し引いた時間が {3} 時間以上である必要があります。"
+	}
+	"EXCLUDED"
+	{
+		"#format"	"{1:s}"
+		"jp"		"SteamId {1} が除外リストに追加されました"
+	}
+	"INCLUDED"
+	{
+		"#format"	"{1:s}"
+		"jp"		"SteamId {1} が除外リストから削除されました"
+	}
+	"PRIMENEEDED"
+	{
+		"jp"		"このサーバーでプレイするにはプライムステータスが必要です"
+	}
+	"Veterans_PlayerDurationDetectionNotMeet"
+	{
+		"jp"		"{default}[{green} プレーヤーの継続時間検出 {default}] {blue} は {default} の継続時間要件を満たしていないため、試合の視聴のみが許可されます。"
+	}
+	"Veterans_PlayerTimeDetectionPlayerTotal"
+	{
+		"jp"		"{default}[{green} プレーヤー時間検出 {default}] プレーヤー {blue}%N {default} の合計再生時間は、{green}%.1f 時間 {default} (実際: {green}%.1f 時間 {default}) です。このサーバーでの合計プレイ時間は、{green}%.1f 時間 {default} です。"
+	}
+	"Veterans_PlayerTimeDetectionPlayerPlaying"
+	{
+		"jp"		"{default}[{green} プレイヤー時間検出 {default}] プレイヤー {blue}%N {default} プレイ時間: {green} 不明 {default}、このサーバーの合計プレイ時間: {green}%.1f 時間 {default}。"
+	}
+	"Veterans_PlayerDurationDetectionAdministratorExempt"
+	{
+		"jp"		"{default}[{green} プレーヤー継続時間検出 {default}] 管理者 {blue}%N {default} は継続時間検出の対象外です。"
+	}
+	"Veterans_PlayerDurationDetectionPlayerGame"
+	{
+		"jp"		"{default} [{green} プレーヤー継続時間検出 {default}] プレーヤー {blue}%N {このサーバー上の {default} のゲーム継続時間 {green} は、電気通信サーバー グループのプレーヤーであり、通常のプレイが許可されている {default} の基準を満たしていません"
+	}
+	"Veterans_PlayerTimeDetectionPlayerGame"
+	{
+		"jp"		"{default} [{green} プレーヤー時間検出 {default}] プレーヤー {blue}%N {このサーバー上の {default} のゲーム時間 {green} は基準を満たしていません 通信サーバー グループのプレーヤーである {default} は、視聴は許可されていますが、プレイは許可されていません"
+	}
+	"Veterans_PlayerTimeDetectionPlayerGameTime"
+	{
+		"jp"		"{default}[{green} プレイヤー時間検出 {default}] プレイヤー {blue}%N {default} のこのサーバー {green} のゲーム時間は基準 {default} を満たしておらず、通信サーバー グループのプレイヤーではないため、自動的に休憩するように求められました。"
+	}
+}

@@ -5,54 +5,48 @@
 		"#format"	"{1:s}"
 		"chi"		"本服务器受到LAC反作弊系统保护 {1}"
 	}
-
 	"kick_query_failure"
 	{
 		"chi"		"错误：查询未响应，如果此问题仍然存在，请重新启动游戏"
 	}
-
 	"kick_interp_exploit"
 	{
 		"#format"	"{1:.0f},{2:d},{3:.3f}"
 		"chi"		"检测到参数利用：您的interp过高({1}ms / {2}ms 最高)。请设置您的 cl_interp 参数至 {3} 或更低。"
 	}
-
 	"tban_ping_high"
 	{
 		"#format"	"{1:.0f},{2:d}"
 		"chi"		"您的Ping值过高！ ({1} / {2} 最高)"
 	}
-
-	"kick_ban_genetic"
+	"kick_ban_generic"
 	{
-		"chi"		"您已经被此服务器封禁。"
+		"chi"		"您已被禁止使用该服务器"
 	}
-
 	"ban_angle"
 	{
 		"chi"		"检测到异常角度"
 	}
-
 	"ban_chat_clear"
 	{
 		"chi"		"检测到清屏作弊"
 	}
-
 	"ban_convar"
 	{
 		"chi"		"检测到非法变量"
 	}
-
+	"ban_nolerp"
+	{
+		"chi"		"未检测到 Lerp"
+	}
 	"ban_bhop"
 	{
 		"chi"		"检测到连跳脚本"
 	}
-
 	"ban_aimbot"
 	{
 		"chi"		"检测到自瞄"
 	}
-
 	"ban_aimlock"
 	{
 		"chi"		"检测到暴力锁头"
@@ -61,9 +55,53 @@
 	{
 		"chi"		"检测到下蹲辅助"
 	}
-
 	"ban_noisemaker"
 	{
 		"chi"		"检测到刷屏"
+	}
+	"ban_macro"
+	{
+		"chi"		"检测到宏"
+	}
+	"kick_macro"
+	{
+		"#format"	"{1:s}"
+		"chi"		"{1} 此服务器上不允许宏"
+	}
+	"chat_invalid_characters"
+	{
+		"chi"		"您的聊天消息已被阻止（原因：无效字符）。"
+	}
+	"chat_wide_char_spam"
+	{
+		"chi"		"您的聊天消息已被阻止（原因：Wide-Char 垃圾邮件）。"
+	}
+	"kick_bad_name"
+	{
+		"chi"		"您的姓名包含无效字符，请更改您的姓名"
+	}
+	"ban_name_newline"
+	{
+		"chi"		"检测到名称换行符"
+	}
+	"LILAC_LittleAntiCheatWarningMacro"
+	{
+		"chi"		"【小反作弊】警告：不允许使用宏！"
+	}
+	"LILAC_LittleAntiCheatDetectedUsing"
+	{
+		"chi"		"[小反作弊] 检测到%N使用了宏%s。"
+	}
+	"LILAC_PingAppearsFineAgainSafe"
+	{
+		"chi"		"[Lilac] 你的 ping 似乎再次正常，可以安全地重新加入队伍并进行比赛。"
+	}
+	"LILAC_WarningKickedSecondsondsPingStays"
+	{
+		"chi"		"[Lilac] 警告：如果你的 ping 值太高，你将在 %d 秒内被踢！ (%.0f / %d 最大)"
+	}
+	"kick_ban_genetic"
+	{
+		"chi"		"您已经被此服务器封禁。"
 	}
 }

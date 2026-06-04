@@ -1,0 +1,73 @@
+"Phrases"
+{
+	"FailWitchCrown"
+	{
+		"#format"	"{1:N}"
+		"ko"		"{default}[{green}!{default}] {red}{1} {default}({olive}왕관 마녀 실패{default}) 그리고 {red}마녀에 의해 봉쇄되었습니다."
+	}
+	"TankKillWitch"
+	{
+		"#format"	"{1:N}"
+		"ko"		"{default}[{green}!{default}] {red}탱크 {default}({olive}{1}{default})가 {red}마녀를 죽였습니다."
+	}
+	"WitchRemainedHealth"
+	{
+		"#format"	"{1:d}"
+		"ko"		"{default}[{green}!{default}] {blue}마녀 {default}의 체력은 {olive}{1} {default}남았습니다."
+	}
+	"DamageToWitch"
+	{
+		"ko"		"{default}[{green}!{default}] {blue}{blue}마녀에게 준 피해 {default}:"
+	}
+	"PrefectWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"ko"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3} ★★"
+	}
+	"FinalShotWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"ko"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3} ★"
+	}
+	"AssistanceWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"ko"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3}"
+	}
+	"FinalShotInfWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"ko"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}감염된 {olive} ☆"
+	}
+	"AssistanceInfWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"ko"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}감염됨"
+	}
+	"FinalShotTankWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"ko"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}탱크 {olive} ☆"
+	}
+	"AssistanceTankWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"ko"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}탱크"
+	}
+	"L4DWitchDamageAnnounce_TankKilledWitch"
+	{
+		"ko"		"{default}[{green}!{default}] {red}Tank {default}({olive}%N{default})가 {red}Witch를 죽였습니다."
+	}
+	"L4DWitchDamageAnnounce_WitchHealthRemaining"
+	{
+		"ko"		"{default}[{green}!{default}] {blue}마녀 {default}had {olive}%d {default}건강 남음"
+	}
+	"L4DWitchDamageAnnounce_DamageDealtWitch"
+	{
+		"ko"		"{default}[{green}!{default}] {blue}{default}가 {blue}마녀에게 처리한 피해:"
+	}
+	"L4DWitchDamageAnnounce_WitchDamageLine"
+	{
+		"ko"		"{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N"
+	}
+}

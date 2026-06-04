@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"ko"		"[{green}!{default}]"
+	}
+	"LoseFrustration"
+	{
+		"ko"		"생존자가 {olive}안전실{default}에 있는 동안 {red}탱크{default}는 {green}여전히 좌절감을 잃습니다{default}."
+	}
+	"KeepFrustration"
+	{
+		"ko"		"{red}탱크{default}는 생존자가 {olive}saferoom{default}에 있는 동안 좌절감을 {green}잃지 않습니다{default}."
+	}
+}

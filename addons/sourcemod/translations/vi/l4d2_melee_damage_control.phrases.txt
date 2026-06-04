@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"L4D2MeleeDamageControl_MeleeDmgFixInfectedClass"
+	{
+		"vi"		"[MeleeDmgFix] Bị nhiễm: (%N) %d, Lớp: %s (%d), kẻ tấn công: (%N) %d , kẻ gây ra: %d, sát thương: %f, loại sát thương: %d, sát thương đặt: %f"
+	}
+	"L4D2MeleeDamageControl_MeleeDmgControlChargerAttacker"
+	{
+		"vi"		"[MeleeDmgControl] Bộ sạc: (%N) %d, kẻ tấn công: (%N) %d , kẻ gây ra: %d, sát thương: %f, loại sát thương: %d, sát thương đặt: %f"
+	}
+	"L4D2MeleeDamageControl_MeleeDmgControlTankAttacker"
+	{
+		"vi"		"[MeleeDmgControl] Xe tăng: (%N) %d, kẻ tấn công: (%N) %d, kẻ gây ra: %d, sát thương: %f, loại sát thương: %d, sát thương cố định: %f"
+	}
+	"L4D2MeleeDamageControl_ClassName"
+	{
+		"vi"		"sClassName: %s ( %d )"
+	}
+}

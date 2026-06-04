@@ -1,0 +1,142 @@
+"Phrases"
+{
+	"Hat_Wearing"
+	{
+		"#format"	"{1:s}"
+		"ko"		"이제 {ORANGE} [ {1} ] {DEFAULT} 모자를 착용하고 계십니다."
+	}
+	"Hat_Changed"
+	{
+		"#format"	"{1:s}"
+		"ko"		"{ORANGE} {1} {DEFAULT} 에서 모자를 변경했습니다."
+	}
+	"Hat_No_Index"
+	{
+		"#format"	"{1:d}{2:d}"
+		"ko"		"모자 인덱스 {ORANGE} {1} {DEFAULT}, {ORANGE} 1 {DEFAULT} 와 {ORANGE} {2} {DEFAULT} 사이의 값을 찾을 수 없습니다."
+	}
+	"Hat_Not_Found"
+	{
+		"#format"	"{1:s}"
+		"ko"		"{ORANGE} {1} {DEFAULT} 모자를 찾을 수 없습니다."
+	}
+	"Hat_Invalid"
+	{
+		"ko"		"잘못된 플레이어가 선택되었습니다."
+	}
+	"Hat_Unblocked"
+	{
+		"#format"	"{1:s}"
+		"ko"		"{ORANGE} {1} {DEFAULT}용 차단 해제된 모자."
+	}
+	"Hat_Blocked"
+	{
+		"#format"	"{1:s}"
+		"ko"		"{ORANGE} {1} {DEFAULT} 의 모자가 막혔습니다."
+	}
+	"Hat_View"
+	{
+		"#format"	"{1:s}"
+		"ko"		"개인 모자뷰가 {ORANGE} {1} {DEFAULT} 로 바뀌었습니다."
+	}
+	"Hat_Ability"
+	{
+		"#format"	"{1:s}"
+		"ko"		"{ORANGE} {1} {DEFAULT} 모자 착용 능력을 바꾸셨습니다."
+	}
+	"Hat_On"
+	{
+		"ko"		"on"
+	}
+	"Hat_Off"
+	{
+		"ko"		"끄다"
+	}
+	"Hat_Menu_Title"
+	{
+		"ko"		"모자를 선택하세요."
+	}
+	"Hat_Missing"
+	{
+		"ko"		"당신은 모자를 쓰고 있지 않습니다!"
+	}
+	"HAT_SYSTEM"
+	{
+		"ko"		"{GREEN} [모자] {DEFAULT}"
+	}
+	"HAT_NOT_RIGHT_NOW"
+	{
+		"ko"		"지금은 이 명령을 사용할 수 없습니다."
+	}
+	"ADMIN_DISABLE_HAT"
+	{
+		"ko"		"모자를 비활성화할 선수를 선택하세요:"
+	}
+	"ADMIN_CHANGE_HAT"
+	{
+		"ko"		"모자를 바꿀 선수를 선택하세요:"
+	}
+	"ADMIN_VISIBILITY"
+	{
+		"ko"		"모자 표시 여부를 설정할 선수를 선택하세요."
+	}
+	"HAT_SET_ANGLE"
+	{
+		"ko"		"각도 설정:"
+	}
+	"HAT_SET_POSITION"
+	{
+		"ko"		"위치 설정:"
+	}
+	"HAT_SET_SIZE"
+	{
+		"ko"		"세트 크기:"
+	}
+	"HAT_MAIN"
+	{
+		"ko"		"모자 설정:"
+	}
+	"HAT_MENU"
+	{
+		"ko"		"모자 메뉴 열기"
+	}
+	"HAT_WORE"
+	{
+		"ko"		"모자 착용"
+	}
+	"HAT_VIEWABLE"
+	{
+		"ko"		"개인 모자 보기"
+	}
+	"HAT_ENABLED"
+	{
+		"ko"		"On"
+	}
+	"HAT_DISABLED"
+	{
+		"ko"		"끄다"
+	}
+	"HAT_VIEWABLE_TP"
+	{
+		"ko"		"세 번째 개인 모자 보기"
+	}
+	"HAT_VISIBILITY"
+	{
+		"ko"		"일반 모자 가시성"
+	}
+	"Hat_ViewTP"
+	{
+		"#format"	"{1:s}"
+		"ko"		"3인칭 모자 보기가 {ORANGE} {1} {DEFAULT} 로 바뀌었습니다."
+	}
+	"Hat_ViewSet"
+	{
+		"#format"	"{1:s}{2:s}"
+		"ko"		"{ORANGE} {1} {DEFAULT}에 대한 일반 모자 가시성이 {ORANGE} {2} {DEFAULT}로 바뀌었습니다."
+	}
+	"Hat_Visibility_Set"
+	{
+		"#format"	"{1:s}"
+		"ko"		"모자의 표시 여부를 {ORANGE} {1} {DEFAULT} 로 설정했습니다."
+	}
+}

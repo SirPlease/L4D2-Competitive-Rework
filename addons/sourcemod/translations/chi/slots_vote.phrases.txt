@@ -2,7 +2,7 @@
 {
 	"Tag"
 	{
-		"chi"    	"{blue}[{default}Slots{blue}]{default}"
+		"chi"		"{blue} [ {default} 老虎机 {blue} ] {default}"
 	}
 	"NotConsoleVote"
 	{
@@ -14,7 +14,7 @@
 	}
 	"LimitedSlotsTo"
 	{
-		"#format"   "{1:s},{2:i}" // 1:sName 2:Int
+		"#format"	"{1:s},{2:i}"
 		"chi"		"{olive}{1}{default} 将位置设置为 {blue}{2}{default}"
 	}
 	"RequiredPlayers"
@@ -40,6 +40,11 @@
 	"LimitingSlots"
 	{
 		"chi"		"设置服务器位置中..."
+	}
+	"SlotsVote_AdminOnlyBelowMinimumSlots"
+	{
+		"#format"	"{1:i}"
+		"chi"		"只有管理员才能将位置设为小于 {blue}{1}{default}人"
 	}
 	"LimitSlotsBelow"
 	{

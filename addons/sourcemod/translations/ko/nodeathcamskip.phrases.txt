@@ -1,0 +1,8 @@
+"Phrases"
+{
+	"WarnExploiting"
+	{
+		"#format"	"{1:N}"
+		"ko"		"{red} [ {default} Exploit {red} ] {olive} {1} {default}가 데스 타이머를 건너뛰려고 했습니다."
+	}
+}

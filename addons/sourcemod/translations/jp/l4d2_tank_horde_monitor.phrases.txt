@@ -1,0 +1,47 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"jp"		"< {olive} 大群 {default} >"
+	}
+	"TankPlay"
+	{
+		"jp"		"Horde は戦車がプレイ中のため、{blue} が {default} を一時停止しました! {blue} %0.1f%% {default} と進むと大群が開始されます。"
+	}
+	"UntilHordeStarts"
+	{
+		"jp"		"大群が始まるまで {blue} %0.1f%% {default} 残っています..."
+	}
+	"HordeResumed"
+	{
+		"jp"		"大群は {blue} 再開 {default} で {green} %i%% 強さ {default} を持ち、押すと大群が増加します。"
+	}
+	"HordeStrength"
+	{
+		"jp"		"Horde は {green} %i%% の強さ {default} にあります..."
+	}
+	"HordeVeryStrength"
+	{
+		"jp"		"{red} 生存者は押しすぎました {default}、大群は {green} 100 %% の強さ {default} です！"
+	}
+	"L4D2TankHordeMonitor_HordeZombieWaveTemporarilySuspended"
+	{
+		"jp"		"<{olive}Horde{default}> タンク {blue}{default} の存在により、ゾンビ ウェーブが一時的に停止されます。 {blue}%0.1f%%{default} と進むと、再びゾンビウェーブが始まります。"
+	}
+	"L4D2TankHordeMonitor_HordeNoteWaveZombiesStarted"
+	{
+		"jp"		"<{olive}Horde{default}> ご注意ください！残りの {blue}%0.1f%%{default} の旅で、ゾンビの波が再び始まりました..."
+	}
+	"L4D2TankHordeMonitor_HordeZombieTideRestoredCurrent"
+	{
+		"jp"		"<{olive}Horde{default}> ゾンビタイドでは、{blue}が{default}に復元されました。現在の強さは{green}%i%%です。前進を続けると、ゾンビの潮流が激化します。"
+	}
+	"L4D2TankHordeMonitor_HordeCurrentZombieWaveIntensity"
+	{
+		"jp"		"<{olive}Horde{default}> 現在のゾンビ ウェーブは {green}%i%% 強度 {default}..."
+	}
+	"L4D2TankHordeMonitor_HordeSurvivorsAdvancedTooFar"
+	{
+		"jp"		"<{olive}Horde{default}> 生存者が進みすぎて、ゾンビウェーブの強さが{green}100%% {default}に変化しました！"
+	}
+}

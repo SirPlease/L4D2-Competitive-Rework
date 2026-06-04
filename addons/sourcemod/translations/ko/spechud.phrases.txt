@@ -1,0 +1,29 @@
+"Phrases"
+{
+	"on"
+	{
+		"ko"		"{blue}켜짐{default}"
+	}
+	"off"
+	{
+		"ko"		"{red}꺼짐{default}"
+	}
+	"Notify_SpechudState"
+	{
+		"#format"	"{1:t}"
+		"ko"		"<{olive}HUD{default}> 관전자 HUD는 이제 {1}입니다."
+	}
+	"Notify_TankhudState"
+	{
+		"#format"	"{1:t}"
+		"ko"		"<{olive}HUD{default}> 탱크 HUD는 이제 {1}입니다."
+	}
+	"Notify_SpechudUsage"
+	{
+		"ko"		"<{olive}HUD{default}> {blue}관전 HUD를 전환하려면 채팅에 {green}!spechud{default}를 입력하세요."
+	}
+	"Notify_TankhudUsage"
+	{
+		"ko"		"<{olive}HUD{default}> 채팅에 {green}!tankhud{default}를 입력하여 {red}탱크 HUD를 전환하세요."
+	}
+}

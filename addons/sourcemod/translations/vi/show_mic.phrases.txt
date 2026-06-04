@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"Players Speaking:"
+	{
+		"vi"		"Người chơi phát biểu:"
+	}
+}

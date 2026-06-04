@@ -1,0 +1,415 @@
+"Phrases"
+{
+	"SCOPE_DETECTED"
+	{
+		"vi"		"[{olive}Biểu tượng cảm xúc{default}]{darkred} Bạn không thể sử dụng biểu tượng cảm xúc khi đang xác định phạm vi!"
+	}
+	"NO_DANCES_ACCESS_FLAG"
+	{
+		"vi"		"[{olive}Biểu tượng cảm xúc{default}]{darkred} Bạn không có quyền sử dụng các điệu nhảy!!"
+	}
+	"NO_EMOTES_ACCESS_FLAG"
+	{
+		"vi"		"[{olive}Biểu tượng cảm xúc{default}]{darkred} Bạn không có quyền sử dụng biểu tượng cảm xúc!!"
+	}
+	"MUST_BE_ALIVE"
+	{
+		"vi"		"[{olive}Biểu tượng cảm xúc{default}]{darkred} Bạn phải còn sống để sử dụng tính năng này!"
+	}
+	"STAY_ON_GROUND"
+	{
+		"vi"		"[{olive}Biểu tượng cảm xúc{default}]{darkred} Bạn phải đứng trên mặt đất để sử dụng biểu tượng này!"
+	}
+	"COOLDOWN_EMOTES"
+	{
+		"vi"		"[{olive}{default}]{darkred} Nó đang trong thời gian hồi chiêu!"
+	}
+	"AMIN_1_INVALID"
+	{
+		"vi"		"[{olive}Biểu tượng cảm xúc{default}]{darkred} Đối số 1 không hợp lệ!!!"
+	}
+	"CANNOT_USE_NOW"
+	{
+		"vi"		"[{olive}Biểu tượng cảm xúc{default}]{darkred} Bạn không thể sử dụng nó ngay bây giờ!"
+	}
+	"INVALID_EMOTE_ID"
+	{
+		"vi"		"[{olive}Biểu tượng cảm xúc{default}]{darkred} ID biểu tượng cảm xúc không hợp lệ, phải nằm trong khoảng (1-86)"
+	}
+	"RANDOM_EMOTE"
+	{
+		"vi"		"Biểu cảm ngẫu nhiên"
+	}
+	"RANDOM_DANCE"
+	{
+		"vi"		"Điệu nhảy ngẫu nhiên"
+	}
+	"EMOTES_LIST"
+	{
+		"vi"		"Danh sách biểu tượng cảm xúc"
+	}
+	"DANCES_LIST"
+	{
+		"vi"		"Danh sách khiêu vũ"
+	}
+	"EMOTE_PLAYER"
+	{
+		"vi"		"Trình phát biểu cảm"
+	}
+	"SELECT_EMOTE"
+	{
+		"vi"		"Chọn biểu tượng cảm xúc"
+	}
+	"TITLE_MAIM_MENU"
+	{
+		"vi"		"Biểu cảm và điệu nhảy"
+	}
+	"TITLE_EMOTES_MENU"
+	{
+		"vi"		"Biểu tượng cảm xúc"
+	}
+	"TITLE_DANCES_MENU"
+	{
+		"vi"		"Khiêu vũ"
+	}
+	"Emote_Fonzie_Pistol"
+	{
+		"vi"		"Súng bắn ngón tay"
+	}
+	"Emote_Bring_It_On"
+	{
+		"vi"		"Hãy Đến Với Tôi"
+	}
+	"Emote_ThumbsDown"
+	{
+		"vi"		"Không thích"
+	}
+	"Emote_Celebration_Loop"
+	{
+		"vi"		"Lễ ăn mừng"
+	}
+	"Emote_BlowKiss"
+	{
+		"vi"		"Hôn gió"
+	}
+	"Emote_Calculated"
+	{
+		"vi"		"Đã tính toán"
+	}
+	"Emote_Confused"
+	{
+		"vi"		"Bối rối"
+	}
+	"Emote_Chug"
+	{
+		"vi"		"Chug"
+	}
+	"Emote_Cry"
+	{
+		"vi"		"Khóc"
+	}
+	"Emote_DustingOffHands"
+	{
+		"vi"		"Ban nhạc của pháo đài"
+	}
+	"Emote_DustOffShoulders"
+	{
+		"vi"		"Lắc nó lên 2"
+	}
+	"Emote_Facepalm"
+	{
+		"vi"		"Lòng bàn tay"
+	}
+	"Emote_Fishing"
+	{
+		"vi"		"trên móc"
+	}
+	"Emote_Flex"
+	{
+		"vi"		"Uốn cong"
+	}
+	"Emote_golfclap"
+	{
+		"vi"		"tiếng vỗ tay chơi gôn"
+	}
+	"Emote_HandSignals"
+	{
+		"vi"		"Tín hiệu tay"
+	}
+	"Emote_HeelClick"
+	{
+		"vi"		"Bấm vào!"
+	}
+	"Emote_Hotstuff"
+	{
+		"vi"		"Nội dung nóng"
+	}
+	"Emote_IBreakYou"
+	{
+		"vi"		"Điểm đột phá"
+	}
+	"Emote_IHeartYou"
+	{
+		"vi"		"Tình yêu đích thực"
+	}
+	"Emote_Kung-Fu_Salute"
+	{
+		"vi"		"Chào Kung-Fu"
+	}
+	"Emote_Laugh"
+	{
+		"vi"		"Cười"
+	}
+	"Emote_Luchador"
+	{
+		"vi"		"Luchador"
+	}
+	"Emote_Make_It_Rain"
+	{
+		"vi"		"Làm trời mưa"
+	}
+	"Emote_NotToday"
+	{
+		"vi"		"không, chào bạn"
+	}
+	"Emote_RockPaperScissor_Paper"
+	{
+		"vi"		"Giấy"
+	}
+	"Emote_RockPaperScissor_Rock"
+	{
+		"vi"		"Đá"
+	}
+	"Emote_RockPaperScissor_Scissor"
+	{
+		"vi"		"Kéo"
+	}
+	"Emote_Salt"
+	{
+		"vi"		"Muối"
+	}
+	"Emote_Salute"
+	{
+		"vi"		"Chào"
+	}
+	"Emote_SmoothDrive"
+	{
+		"vi"		"Lái xe ô tô"
+	}
+	"Emote_Snap"
+	{
+		"vi"		"Chụp nhanh"
+	}
+	"Emote_StageBow"
+	{
+		"vi"		"Cung sân khấu"
+	}
+	"Emote_ThumbsUp"
+	{
+		"vi"		"Thích"
+	}
+	"Emote_Wave2"
+	{
+		"vi"		"Chào 2"
+	}
+	"Emote_Yeet"
+	{
+		"vi"		"Yeet"
+	}
+	"DanceMoves"
+	{
+		"vi"		"Bước nhảy"
+	}
+	"Emote_Mask_Off_Intro"
+	{
+		"vi"		"Công lý màu cam"
+	}
+	"Emote_Zippy_Dance"
+	{
+		"vi"		"hung hãn"
+	}
+	"ElectroShuffle"
+	{
+		"vi"		"Trộn điện"
+	}
+	"Emote_AerobicChamp"
+	{
+		"vi"		"hiếu khí"
+	}
+	"Emote_Bendy"
+	{
+		"vi"		"uốn cong"
+	}
+	"Emote_BandOfTheFort"
+	{
+		"vi"		"Bạn tình tốt nhất"
+	}
+	"Emote_Boogie_Down_Intro"
+	{
+		"vi"		"Boogie"
+	}
+	"Emote_Capoeira"
+	{
+		"vi"		"Capoeira"
+	}
+	"Emote_Charleston"
+	{
+		"vi"		"cái mỏ"
+	}
+	"Emote_Chicken"
+	{
+		"vi"		"Thịt gà"
+	}
+	"Emote_Dance_NoBones"
+	{
+		"vi"		"Không xương"
+	}
+	"Emote_Dance_Shoot"
+	{
+		"vi"		"cường điệu"
+	}
+	"Emote_Dance_SwipeIt"
+	{
+		"vi"		"Lắc nó lên"
+	}
+	"Emote_Dance_Disco_T3"
+	{
+		"vi"		"Sốt vũ trường"
+	}
+	"Emote_DG_Disco"
+	{
+		"vi"		"Sốt vũ trường 2"
+	}
+	"Emote_Dance_Worm"
+	{
+		"vi"		"con sâu"
+	}
+	"Emote_Dance_Loser"
+	{
+		"vi"		"Đi theo chữ L"
+	}
+	"Emote_Dance_Breakdance"
+	{
+		"vi"		"BreakDance"
+	}
+	"Emote_Dance_Pump"
+	{
+		"vi"		"Bơm"
+	}
+	"Emote_Dance_RideThePony"
+	{
+		"vi"		"Cưỡi ngựa"
+	}
+	"Emote_Dab"
+	{
+		"vi"		"Thoa"
+	}
+	"Emote_EasternBloc_Start"
+	{
+		"vi"		"Khối phía Đông"
+	}
+	"Emote_FancyFeet"
+	{
+		"vi"		"Đôi chân mơ ước"
+	}
+	"Emote_FlossDance"
+	{
+		"vi"		"xỉa răng"
+	}
+	"Emote_FlippnSexy"
+	{
+		"vi"		"lật"
+	}
+	"Emote_Fresh"
+	{
+		"vi"		"Tươi"
+	}
+	"Emote_GrooveJam"
+	{
+		"vi"		"grefg"
+	}
+	"Emote_guitar"
+	{
+		"vi"		"đàn ghi-ta"
+	}
+	"Emote_Hillbilly_Shuffle_Intro"
+	{
+		"vi"		"Trộn bài"
+	}
+	"Emote_Hiphop_01"
+	{
+		"vi"		"Hip Hop"
+	}
+	"Emote_Hula_Start"
+	{
+		"vi"		"Hula Hop"
+	}
+	"Emote_InfiniDab_Intro"
+	{
+		"vi"		"Dab vô hạn"
+	}
+	"Emote_Intensity_Start"
+	{
+		"vi"		"Cường độ"
+	}
+	"Emote_IrishJig_Start"
+	{
+		"vi"		"Dabke Thổ Nhĩ Kỳ"
+	}
+	"Emote_KoreanEagle"
+	{
+		"vi"		"Chim ưng"
+	}
+	"Emote_Kpop_02"
+	{
+		"vi"		"Trái Tim Chân Thật"
+	}
+	"Emote_LivingLarge"
+	{
+		"vi"		"Sống lớn"
+	}
+	"Emote_Maracas"
+	{
+		"vi"		"Maraca"
+	}
+	"Emote_PopLock"
+	{
+		"vi"		"Khóa cửa sổ bật lên"
+	}
+	"Emote_PopRock"
+	{
+		"vi"		"Sức mạnh ngôi sao"
+	}
+	"Emote_RobotDance"
+	{
+		"vi"		"người máy"
+	}
+	"Emote_T-Rex"
+	{
+		"vi"		"T-Rex"
+	}
+	"Emote_TechnoZombie"
+	{
+		"vi"		"được hồi sinh"
+	}
+	"Emote_Twist"
+	{
+		"vi"		"xoắn"
+	}
+	"Emote_WarehouseDance_Start"
+	{
+		"vi"		"Kho"
+	}
+	"Emote_Wiggle"
+	{
+		"vi"		"ngọ nguậy"
+	}
+	"Emote_Youre_Awesome"
+	{
+		"vi"		"Bạn thật tuyệt vời"
+	}
+	"FNEmotes_SMUsageSMSetEmotes"
+	{
+		"vi"		"[SM] Cách sử dụng: sm_setemotes <#userid|name> [ID biểu tượng cảm xúc]"
+	}
+}

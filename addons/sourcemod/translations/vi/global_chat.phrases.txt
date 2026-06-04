@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"GlobalChat_FullServerNormalFullServer"
+	{
+		"vi"		"{green}[Máy chủ đầy đủ]{default} Bạn có trò chuyện bình thường trên toàn máy chủ %s."
+	}
+	"GlobalChat_AllServersAskedTipTeammates"
+	{
+		"vi"		"{green}[Tất cả máy chủ]{default} Bạn có %s đã xin tiền boa từ đồng đội của mình."
+	}
+	"GlobalChat_SummonTeammates"
+	{
+		"vi"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友"
+	}
+	"GlobalChat_SummonTeammatesWithMessage"
+	{
+		"vi"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友\\n{default}留言: {olive}%s"
+	}
+}

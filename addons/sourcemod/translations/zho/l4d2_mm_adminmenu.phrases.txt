@@ -1,0 +1,43 @@
+"Phrases"
+{
+	"Switch Map/Mission"
+	{
+		"zho"		"切換地圖/任務"
+	}
+	"Official Maps"
+	{
+		"zho"		"官方地圖"
+	}
+	"Addon Maps"
+	{
+		"zho"		"插件地圖"
+	}
+	"Official Missions"
+	{
+		"zho"		"官方代表團"
+	}
+	"Addon Missions"
+	{
+		"zho"		"附加任務"
+	}
+	"L4D2MMAdminMenu_SMFailedGetMissionList"
+	{
+		"zho"		"[SM]取得任務清單失敗。"
+	}
+	"L4D2MMAdminMenu_SMNoMapsFoundCurrent"
+	{
+		"zho"		"[SM] 沒有找到適合當前遊戲模式的地圖。"
+	}
+	"L4D2MMAdminMenu_SMNoValidMapsFound"
+	{
+		"zho"		"[SM] 未找到此任務的有效地圖。"
+	}
+	"L4D2MMAdminMenu_SMAdminForcingMapChange"
+	{
+		"zho"		"{green}[SM]{default} 管理員正在強制將地圖變更為 {lightgreen}%s{default}。"
+	}
+	"L4D2MMAdminMenu_SMAdminReloadingVPKs"
+	{
+		"zho"		"{green}[SM]{default} 管理員正在重新載入 VPK 和任務清單..."
+	}
+}

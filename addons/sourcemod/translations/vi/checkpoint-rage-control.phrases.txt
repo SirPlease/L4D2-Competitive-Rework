@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"vi"		"[{green}!{default}]"
+	}
+	"LoseFrustration"
+	{
+		"vi"		"{red}Tank{default} vẫn sẽ {green}mất{default} frustration khi survivor đang trong {olive}saferoom{default}."
+	}
+	"KeepFrustration"
+	{
+		"vi"		"{red}Tank{default} sẽ {green}không mất{default} frustration khi survivor đang trong {olive}saferoom{default}."
+	}
+}

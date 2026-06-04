@@ -1,0 +1,57 @@
+"Phrases"
+{
+	"Tag+"
+	{
+		"zho"		"{green}★{default}"
+	}
+	"Tag++"
+	{
+		"zho"		"{green}★★{default}"
+	}
+	"Tag+++"
+	{
+		"zho"		"{green}★★★{default}"
+	}
+	"MeleeSkeeted"
+	{
+		"#format"	"{1:N},{2:N}"
+		"zho"		"{olive} {1} {default} 是 {blue} 混戰 {default} - {default} 被 {olive} {2} {default}"
+	}
+	"Headshotted"
+	{
+		"#format"	"{1:N},{2:N}"
+		"zho"		"{olive} {1} {default} 被 {blue} 爆頭 {default} 被 {olive} {2} {default}"
+	}
+	"TeamSkeeted"
+	{
+		"#format"	"{1:N},{2:N},{3:d},{4:d},{5:s},{6:s}"
+		"zho"		"{olive}{1}{default} teamskeeted {olive}{2}{default} for {blue}{3} damage{default} in {blue}{4}{default} shot{5}. Assisted by: {olive}{6}{default}"
+	}
+	"Skeeted"
+	{
+		"#format"	"{1:N},{2:N},{3:d},{4:s}"
+		"zho"		"{olive} {1} {default} {olive} {2} {default} 中 {blue} {3} {default} 射擊 {4}"
+	}
+	"ShutBoomer"
+	{
+		"#format"	"{1:N},{2:s},{3:.1f}"
+		"zho"		"{olive} {1} {default} 已關閉 {olive} {2} {default} 的 {blue} {3} {default} 的 Boomer"
+	}
+	"AlarmedCar"
+	{
+		"zho"		"{olive} %N {default} 觸發{olive} 警報車 {default}"
+	}
+	"AssistShotsPlural"
+	{
+		"zho"		"s"
+	}
+	"AssistShotsSingular"
+	{
+		"zho"		""
+	}
+	"assister"
+	{
+		"#format"	"{1:N},{2:d},{3:d},{4:s}"
+		"zho"		"{1}（{2} / {3} 拍{4}）"
+	}
+}

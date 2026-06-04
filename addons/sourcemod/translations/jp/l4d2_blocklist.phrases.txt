@@ -1,0 +1,114 @@
+"Phrases"
+{
+	"Usage_Block"
+	{
+		"jp"		"使用法: sm_block <#userid|steam64|name>"
+	}
+	"Usage_Unblock"
+	{
+		"jp"		"使用法: sm_unblock <#userid|steam64|name>"
+	}
+	"DB_NotReady"
+	{
+		"jp"		"[ブロックリスト] データベースの準備ができていません。"
+	}
+	"Resolve_Failed"
+	{
+		"jp"		"[ブロックリスト] ターゲットの解決に失敗しました。 #userid / steam64 / 名前を使用します。"
+	}
+	"Self_Steam_Failed"
+	{
+		"jp"		"[ブロックリスト] SteamID を解決できません。"
+	}
+	"Block_SelfDenied"
+	{
+		"jp"		"[ブロックリスト] 自分自身をブロックすることはできません。"
+	}
+	"Block_LimitReached"
+	{
+		"#format"	"{1:i}"
+		"jp"		"[ブロックリスト] ブロック制限 ( {1} ) に達しました。"
+	}
+	"Block_Added"
+	{
+		"#format"	"{1:s}"
+		"jp"		"[ブロックリスト] 追加されたブロック: {1}"
+	}
+	"Block_Failed_Generic"
+	{
+		"jp"		"[BlockList] ブロック操作に失敗しました。"
+	}
+	"Unblock_Removed"
+	{
+		"jp"		"[ブロックリスト] ブロックが解除されました。"
+	}
+	"Unblock_NotFound"
+	{
+		"jp"		"[BlockList] そのようなブロック レコードはありません。"
+	}
+	"Unblock_Failed_Generic"
+	{
+		"jp"		"[BlockList] ブロック解除操作が失敗しました。"
+	}
+	"Query_Failed_Generic"
+	{
+		"jp"		"[ブロックリスト] クエリが失敗しました。"
+	}
+	"BlockList_Header"
+	{
+		"#format"	"{1:i}"
+		"jp"		"[ブロックリスト] {1} レコード:"
+	}
+	"BlockLimit_Info"
+	{
+		"#format"	"{1:i}"
+		"jp"		"[ブロックリスト] ブロック制限: {1}"
+	}
+	"Notify_Blocker"
+	{
+		"#format"	"{1:N}"
+		"jp"		"[ブロックリスト] あなたのブロックにより {1} が参加できなくなりました。"
+	}
+	"Kick_By_Blocked"
+	{
+		"jp"		"このサーバー内の誰かがあなたをブロックしました。参加することはできません。"
+	}
+	"Kick_By_Blocked_With_Blocker"
+	{
+		"#format"	"{1:s}"
+		"jp"		"あなたはこのサーバーのプレイヤー (ID: {1} ) によってブロックされています。参加が拒否されました。"
+	}
+	"Menu_Title"
+	{
+		"jp"		"ブロックリストメニュー"
+	}
+	"Menu_BlockOnline"
+	{
+		"jp"		"オンラインプレイヤーのブロック/ブロック解除"
+	}
+	"Menu_MyBlockList"
+	{
+		"jp"		"ブロックリストの表示/削除"
+	}
+	"Menu_BlockOnline_Title"
+	{
+		"jp"		"オンライン プレーヤー (選択してブロックを切り替えます)"
+	}
+	"Menu_MyBlockList_Title"
+	{
+		"jp"		"私のブロックリスト (削除することを選択)"
+	}
+	"Target_Left"
+	{
+		"jp"		"[ブロックリスト] ターゲットは無効になりました。"
+	}
+	"Kick_By_SelfBlocked"
+	{
+		"jp"		"現在このサーバーにいるプレイヤーをブロックしました。参加することはできません。"
+	}
+	"Kick_By_SelfBlocked_With_Target"
+	{
+		"#format"	"{1:s}"
+		"jp"		"現在このサーバーにいるプレイヤー (ID: {1} ) をブロックしました。参加が拒否されました。"
+	}
+}

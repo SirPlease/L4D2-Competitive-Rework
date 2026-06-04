@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"zho"		"[{olive}!{default}]"
+	}
+	"Usage"
+	{
+		"zho"		"{blue} 用法 {default}"
+	}
+	"NoSnoop"
+	{
+		"zho"		"You Should Not {red}Snoop{default} on The Tank!"
+	}
+	"BecomeSpectator"
+	{
+		"zho"		"{teamcolor} %N {default} 已成為旁觀者！"
+	}
+	"WhileCapped"
+	{
+		"zho"		"{red} 上限期間沒有觀看 {default}！"
+	}
+	"FixBot"
+	{
+		"zho"		"{teamcolor} %N {default} 正在嘗試修復機器人計數"
+	}
+	"FixBotConsole"
+	{
+		"zho"		"控制台正在嘗試 {red} 修復機器人計數 {default}"
+	}
+	"ValidTeams"
+	{
+		"zho"		"有效隊伍：%d = 觀眾，%d = 倖存者，%d = 感染者"
+	}
+	"CouldNotSwitched"
+	{
+		"zho"		"{teamcolor} %N {default} 無法切換，因為目標團隊已滿或沒有機器人可以接手。"
+	}
+}

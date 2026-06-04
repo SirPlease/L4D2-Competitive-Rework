@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"ko"		"[ {olive} 팀플립 {default} ]"
+	}
+	"FlippedSurvivor"
+	{
+		"ko"		"{green} %s {default}가 팀을 뒤집어 {blue} 생존자 {default} 팀에 속해 있습니다!"
+	}
+	"FlippedInfected"
+	{
+		"ko"		"{green} %s {default}가 팀을 뒤집었고 {red} 감염된 {default} 팀에 속해 있습니다!"
+	}
+	"Wait"
+	{
+		"ko"		"[Teamflip] 우와 친구, 천천히 하세요. 최소 %d초를 기다리세요."
+	}
+}

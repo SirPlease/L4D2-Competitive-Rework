@@ -1,0 +1,71 @@
+"Phrases"
+{
+	"ConfoglCompMod_KickedIllegalValue"
+	{
+		"zho"		"{blue}[{default}Confogl{blue}] {olive}%L{default} 因“{green}%s{default}”值非法而被踢出{blue}({default}%f{blue})"
+	}
+	"ConfoglCompMod_MaximumSniperRifleEnforced"
+	{
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 已強制限制最多 {blue}%d {olive}把狙擊槍 {default}。"
+	}
+	"ConfoglCompMod_CompetitionModeLoaded"
+	{
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 比賽模式已載入!"
+	}
+	"ConfoglCompMod_ChangeMap"
+	{
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 更改地圖為 {green}%s{default}!"
+	}
+	"ConfoglCompMod_RestartMap"
+	{
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 重啟地圖!"
+	}
+	"ConfoglCompMod_CompetitionConfigurationUninstalled"
+	{
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 比賽配置已卸載!"
+	}
+	"ConfoglCompMod_LoadConfiguration"
+	{
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 載入設定 '{olive}%s{default}'."
+	}
+	"ConfoglCompMod_ConfigurationNotFoundUseDefault"
+	{
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 設定 '{olive}%s{default}' 找不到, 使用預設設定!"
+	}
+	"ConfoglCompMod_SpecifyConfigLoad"
+	{
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 請指定要載入的 {olive}config{default}。"
+	}
+	"ConfoglCompMod_ConfigNotFound"
+	{
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 找不到設定「{olive}%s{default}」！"
+	}
+	"ConfoglCompMod_MapNotFound"
+	{
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 地圖「{olive}%s{default}」找不到！"
+	}
+	"ConfoglCompMod_Round1Bonus"
+	{
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 第 1 輪獎金：{olive}%d"
+	}
+	"ConfoglCompMod_CustomMaxDistance"
+	{
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 自訂最距離：{olive}%d"
+	}
+	"ConfoglCompMod_Round2Bonus"
+	{
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 第 2 輪獎金：{olive}%d"
+	}
+	"ConfoglCompMod_AverageHealth"
+	{
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 平均健康狀況：{olive}%.02f"
+	}
+	"ConfoglCompMod_HealthBonus"
+	{
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 健康獎勵：{olive}%d"
+	}
+	"ConfoglCompMod_StaticSurvivalBonusPerSurvivor"
+	{
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 每位倖存者的靜態生存獎勵：{olive}%d"
+	}
+}

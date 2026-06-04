@@ -1,0 +1,415 @@
+"Phrases"
+{
+	"SCOPE_DETECTED"
+	{
+		"ko"		"[{olive}Emotes{default}]{darkred} 범위 지정 중에는 이모티콘을 사용할 수 없습니다!"
+	}
+	"NO_DANCES_ACCESS_FLAG"
+	{
+		"ko"		"[{olive}Emotes{default}]{darkred} 댄스를 사용할 수 없습니다!!"
+	}
+	"NO_EMOTES_ACCESS_FLAG"
+	{
+		"ko"		"[{olive}Emotes{default}]{darkred} 이모티콘을 사용할 수 있는 권한이 없습니다!!"
+	}
+	"MUST_BE_ALIVE"
+	{
+		"ko"		"[{olive}Emotes{default}]{darkred} 이것을 사용하려면 살아 있어야 합니다!"
+	}
+	"STAY_ON_GROUND"
+	{
+		"ko"		"[{olive}Emotes{default}]{darkred} 이것을 사용하려면 지상에 있어야 합니다!"
+	}
+	"COOLDOWN_EMOTES"
+	{
+		"ko"		"[{olive}Emotes{default}]{darkred} 쿨다운 중입니다!"
+	}
+	"AMIN_1_INVALID"
+	{
+		"ko"		"[{olive}Emotes{default}]{darkred} 인수 1이 유효하지 않습니다!!!"
+	}
+	"CANNOT_USE_NOW"
+	{
+		"ko"		"[{olive}Emotes{default}]{darkred} 지금은 사용할 수 없습니다!"
+	}
+	"INVALID_EMOTE_ID"
+	{
+		"ko"		"[{olive}Emotes{default}]{darkred} 잘못된 Emote ID입니다. (1-86) 사이여야 합니다."
+	}
+	"RANDOM_EMOTE"
+	{
+		"ko"		"무작위 감정 표현"
+	}
+	"RANDOM_DANCE"
+	{
+		"ko"		"랜덤댄스"
+	}
+	"EMOTES_LIST"
+	{
+		"ko"		"이모티콘 목록"
+	}
+	"DANCES_LIST"
+	{
+		"ko"		"댄스 목록"
+	}
+	"EMOTE_PLAYER"
+	{
+		"ko"		"감정 표현 플레이어"
+	}
+	"SELECT_EMOTE"
+	{
+		"ko"		"감정 표현 선택"
+	}
+	"TITLE_MAIM_MENU"
+	{
+		"ko"		"감정 표현과 춤"
+	}
+	"TITLE_EMOTES_MENU"
+	{
+		"ko"		"감정 표현"
+	}
+	"TITLE_DANCES_MENU"
+	{
+		"ko"		"춤"
+	}
+	"Emote_Fonzie_Pistol"
+	{
+		"ko"		"핑거건"
+	}
+	"Emote_Bring_It_On"
+	{
+		"ko"		"나에게로 오세요"
+	}
+	"Emote_ThumbsDown"
+	{
+		"ko"		"엄지손가락을 아래로"
+	}
+	"Emote_Celebration_Loop"
+	{
+		"ko"		"축하"
+	}
+	"Emote_BlowKiss"
+	{
+		"ko"		"불어 키스"
+	}
+	"Emote_Calculated"
+	{
+		"ko"		"계획된"
+	}
+	"Emote_Confused"
+	{
+		"ko"		"혼란스러운"
+	}
+	"Emote_Chug"
+	{
+		"ko"		"처그"
+	}
+	"Emote_Cry"
+	{
+		"ko"		"울다"
+	}
+	"Emote_DustingOffHands"
+	{
+		"ko"		"요새의 밴드"
+	}
+	"Emote_DustOffShoulders"
+	{
+		"ko"		"쉐이크 잇 업 2"
+	}
+	"Emote_Facepalm"
+	{
+		"ko"		"페이스팜"
+	}
+	"Emote_Fishing"
+	{
+		"ko"		"후크에"
+	}
+	"Emote_Flex"
+	{
+		"ko"		"몸을 풀다"
+	}
+	"Emote_golfclap"
+	{
+		"ko"		"골프 박수"
+	}
+	"Emote_HandSignals"
+	{
+		"ko"		"수신호"
+	}
+	"Emote_HeelClick"
+	{
+		"ko"		"딸깍 하는 소리!"
+	}
+	"Emote_Hotstuff"
+	{
+		"ko"		"핫한 것들"
+	}
+	"Emote_IBreakYou"
+	{
+		"ko"		"한계점"
+	}
+	"Emote_IHeartYou"
+	{
+		"ko"		"진정한 사랑"
+	}
+	"Emote_Kung-Fu_Salute"
+	{
+		"ko"		"쿵푸 경례"
+	}
+	"Emote_Laugh"
+	{
+		"ko"		"웃다"
+	}
+	"Emote_Luchador"
+	{
+		"ko"		"루차도르"
+	}
+	"Emote_Make_It_Rain"
+	{
+		"ko"		"비를 내리게 해라"
+	}
+	"Emote_NotToday"
+	{
+		"ko"		"안돼 이봐"
+	}
+	"Emote_RockPaperScissor_Paper"
+	{
+		"ko"		"종이"
+	}
+	"Emote_RockPaperScissor_Rock"
+	{
+		"ko"		"바위"
+	}
+	"Emote_RockPaperScissor_Scissor"
+	{
+		"ko"		"가위"
+	}
+	"Emote_Salt"
+	{
+		"ko"		"소금"
+	}
+	"Emote_Salute"
+	{
+		"ko"		"경례"
+	}
+	"Emote_SmoothDrive"
+	{
+		"ko"		"자동차 운전"
+	}
+	"Emote_Snap"
+	{
+		"ko"		"스냅"
+	}
+	"Emote_StageBow"
+	{
+		"ko"		"무대 활"
+	}
+	"Emote_ThumbsUp"
+	{
+		"ko"		"엄지손가락"
+	}
+	"Emote_Wave2"
+	{
+		"ko"		"경례 2"
+	}
+	"Emote_Yeet"
+	{
+		"ko"		"예엣"
+	}
+	"DanceMoves"
+	{
+		"ko"		"댄스 동작"
+	}
+	"Emote_Mask_Off_Intro"
+	{
+		"ko"		"오렌지 저스티스"
+	}
+	"Emote_Zippy_Dance"
+	{
+		"ko"		"난잡한"
+	}
+	"ElectroShuffle"
+	{
+		"ko"		"일렉트로 셔플"
+	}
+	"Emote_AerobicChamp"
+	{
+		"ko"		"에어로빅 체조"
+	}
+	"Emote_Bendy"
+	{
+		"ko"		"벤디"
+	}
+	"Emote_BandOfTheFort"
+	{
+		"ko"		"최고의 친구"
+	}
+	"Emote_Boogie_Down_Intro"
+	{
+		"ko"		"부기"
+	}
+	"Emote_Capoeira"
+	{
+		"ko"		"카포에라"
+	}
+	"Emote_Charleston"
+	{
+		"ko"		"파리채"
+	}
+	"Emote_Chicken"
+	{
+		"ko"		"닭"
+	}
+	"Emote_Dance_NoBones"
+	{
+		"ko"		"뼈없는"
+	}
+	"Emote_Dance_Shoot"
+	{
+		"ko"		"과대광고"
+	}
+	"Emote_Dance_SwipeIt"
+	{
+		"ko"		"흔들어보세요"
+	}
+	"Emote_Dance_Disco_T3"
+	{
+		"ko"		"디스코 열풍"
+	}
+	"Emote_DG_Disco"
+	{
+		"ko"		"디스코 피버 2"
+	}
+	"Emote_Dance_Worm"
+	{
+		"ko"		"벌레"
+	}
+	"Emote_Dance_Loser"
+	{
+		"ko"		"L을 가져 가라."
+	}
+	"Emote_Dance_Breakdance"
+	{
+		"ko"		"브레이크댄스"
+	}
+	"Emote_Dance_Pump"
+	{
+		"ko"		"펌프"
+	}
+	"Emote_Dance_RideThePony"
+	{
+		"ko"		"조랑말을 타고"
+	}
+	"Emote_Dab"
+	{
+		"ko"		"소량"
+	}
+	"Emote_EasternBloc_Start"
+	{
+		"ko"		"동부권"
+	}
+	"Emote_FancyFeet"
+	{
+		"ko"		"꿈의 발"
+	}
+	"Emote_FlossDance"
+	{
+		"ko"		"풀솜"
+	}
+	"Emote_FlippnSexy"
+	{
+		"ko"		"플립"
+	}
+	"Emote_Fresh"
+	{
+		"ko"		"신선한"
+	}
+	"Emote_GrooveJam"
+	{
+		"ko"		"그레그"
+	}
+	"Emote_guitar"
+	{
+		"ko"		"기타"
+	}
+	"Emote_Hillbilly_Shuffle_Intro"
+	{
+		"ko"		"혼합"
+	}
+	"Emote_Hiphop_01"
+	{
+		"ko"		"힙합"
+	}
+	"Emote_Hula_Start"
+	{
+		"ko"		"훌라홉"
+	}
+	"Emote_InfiniDab_Intro"
+	{
+		"ko"		"무한대접"
+	}
+	"Emote_Intensity_Start"
+	{
+		"ko"		"강함"
+	}
+	"Emote_IrishJig_Start"
+	{
+		"ko"		"터키 다브케"
+	}
+	"Emote_KoreanEagle"
+	{
+		"ko"		"독수리"
+	}
+	"Emote_Kpop_02"
+	{
+		"ko"		"진심"
+	}
+	"Emote_LivingLarge"
+	{
+		"ko"		"큰 생활"
+	}
+	"Emote_Maracas"
+	{
+		"ko"		"마라카스"
+	}
+	"Emote_PopLock"
+	{
+		"ko"		"팝락"
+	}
+	"Emote_PopRock"
+	{
+		"ko"		"스타파워"
+	}
+	"Emote_RobotDance"
+	{
+		"ko"		"기계 인간"
+	}
+	"Emote_T-Rex"
+	{
+		"ko"		"티렉스"
+	}
+	"Emote_TechnoZombie"
+	{
+		"ko"		"되살아난"
+	}
+	"Emote_Twist"
+	{
+		"ko"		"트위스트"
+	}
+	"Emote_WarehouseDance_Start"
+	{
+		"ko"		"웨어하우스"
+	}
+	"Emote_Wiggle"
+	{
+		"ko"		"뒤흔들다"
+	}
+	"Emote_Youre_Awesome"
+	{
+		"ko"		"당신은 정말 대단해요"
+	}
+	"FNEmotes_SMUsageSMSetEmotes"
+	{
+		"ko"		"[SM] 사용법: sm_setemotes <#userid|name> [Emote ID]"
+	}
+}

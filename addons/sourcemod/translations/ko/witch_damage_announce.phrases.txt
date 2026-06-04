@@ -1,0 +1,57 @@
+"Phrases"
+{
+	"FailWitchCrown"
+	{
+		"#format"	"{1:N}"
+		"ko"		"{default} [ {green}! {default} ] {red} {1} {default} ( {olive} 마녀 실패 {default} ) 그리고 {red} 마녀에 의해 봉쇄되었습니다."
+	}
+	"TankKillWitch"
+	{
+		"#format"	"{1:N}"
+		"ko"		"{default} [ {green}! {default} ] {red} 탱크 {default} ( {olive} {1} {default} )가 {red} 마녀를 죽였습니다."
+	}
+	"WitchRemainedHealth"
+	{
+		"#format"	"{1:d}"
+		"ko"		"{default} [ {green}! {default} ] {blue} 마녀 {default}는 {olive} {1} {default} 체력이 남아있었습니다"
+	}
+	"DamageToWitch"
+	{
+		"ko"		"{default} [ {green}! {default} ] {blue} 피해 {default}가 {blue} 마녀에게 가해졌습니다:"
+	}
+	"PrefectWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"ko"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3} ★★"
+	}
+	"FinalShotWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"ko"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3} ★"
+	}
+	"AssistanceWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"ko"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3}"
+	}
+	"FinalShotInfWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"ko"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} 감염됨 {olive} ☆"
+	}
+	"AssistanceInfWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"ko"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} 감염됨"
+	}
+	"FinalShotTankWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"ko"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} 탱크 {olive} ☆"
+	}
+	"AssistanceTankWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"ko"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} 탱크"
+	}
+}

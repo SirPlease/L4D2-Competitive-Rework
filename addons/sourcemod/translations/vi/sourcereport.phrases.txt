@@ -1,0 +1,24 @@
+"Phrases"
+{
+	"In Cooldown"
+	{
+		"#format"	"{1:.0f}"
+		"vi"		"Vui lòng đợi {1} giây trước khi báo cáo lại"
+	}
+	"Report Canceled"
+	{
+		"vi"		"Đã hủy báo cáo"
+	}
+	"Report Sent"
+	{
+		"vi"		"Báo cáo của bạn đã được gửi"
+	}
+	"Reason Prompt"
+	{
+		"vi"		"Vui lòng nhập lý do báo cáo hoặc \\\"hủy\\\" để hủy"
+	}
+	"Reason Short Need More"
+	{
+		"vi"		"Lý do quá ngắn, cần thêm chi tiết"
+	}
+}

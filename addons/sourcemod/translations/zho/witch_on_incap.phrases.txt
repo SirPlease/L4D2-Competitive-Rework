@@ -1,0 +1,8 @@
+"Phrases"
+{
+	"IncapSurSpawnAWitch"
+	{
+		"#format"	"{1:N}"
+		"zho"		"{olive} {1} {default} 下去並產生了一個女巫！"
+	}
+}

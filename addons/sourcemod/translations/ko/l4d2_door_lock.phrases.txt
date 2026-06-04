@@ -1,0 +1,135 @@
+"Phrases"
+{
+	"Ready Up Countdown"
+	{
+		"#format"	"{1:d}"
+		"ko"		"준비 시간: {1}"
+	}
+	"Round Begin Countdown"
+	{
+		"#format"	"{1:d}"
+		"ko"		"라운드 시작 시간: {1}"
+	}
+	"Move Out"
+	{
+		"ko"		"밖으로 나가세요!"
+	}
+	"Leavers Message"
+	{
+		"ko"		"플레이어가 준비되지 않았습니다. 잠시 기다려 주세요..."
+	}
+	"Round Started"
+	{
+		"ko"		"[잠금] 오류: 라운드가 이미 시작되었습니다."
+	}
+	"Saferoom Locked"
+	{
+		"ko"		"[잠금] 오류: 안전 영역이 이미 잠겨 있습니다."
+	}
+	"Saferoom Unlocked"
+	{
+		"ko"		"[잠금] 오류: 안전 영역이 이미 잠금 해제되었습니다."
+	}
+	"Ready Up Time Ended"
+	{
+		"ko"		"[잠금] 오류: 준비 시간이 종료되었습니다."
+	}
+	"Admin Locks"
+	{
+		"#format"	"{1:N}"
+		"ko"		"[잠금] 관리자 {1}이(가) 안전 영역을 잠갔습니다."
+	}
+	"Admin Unlocks"
+	{
+		"#format"	"{1:N}"
+		"ko"		"[잠금] 관리자 {1}이(가) 안전 영역을 잠금 해제했습니다."
+	}
+	"Spectator Ready"
+	{
+		"ko"		"[잠금] 오류: 이 명령을 사용하려면 팀에 가입해야 합니다."
+	}
+	"You Are Ready"
+	{
+		"ko"		"[잠금] 오류: 준비가 되었습니다."
+	}
+	"You Are Unready"
+	{
+		"ko"		"[잠금] 오류: 아직 준비가 되지 않았습니다."
+	}
+	"Ready Up Limit"
+	{
+		"ko"		"[잠금] 오류: 이 명령을 더 이상 사용할 수 없습니다."
+	}
+	"Admin Controls"
+	{
+		"ko"		"[잠금] 오류: 관리자가 안전 영역을 제어하고 있습니다."
+	}
+	"Player Is Ready"
+	{
+		"ko"		"이제 준비가 되었습니다."
+	}
+	"Player Is Unready"
+	{
+		"ko"		"당신은 아직 준비가 되지 않았습니다."
+	}
+	"Notify Survivors Ready"
+	{
+		"#format"	"{1:d},{2:d},{3:.1f%%}"
+		"ko"		"[잠금] 생존자 팀이 준비되었습니다({1}/{2} - {3})."
+	}
+	"Notify Infected Ready"
+	{
+		"#format"	"{1:d},{2:d},{3:.1f%%}"
+		"ko"		"[잠금] 감염된 팀이 준비되었습니다({1}/{2} - {3})."
+	}
+	"Notify Survivors Unready"
+	{
+		"#format"	"{1:d},{2:d},{3:.1f%%}"
+		"ko"		"[잠금] 생존자 팀이 준비되지 않았습니다({1}/{2} - {3})."
+	}
+	"Notify Infected Unready"
+	{
+		"#format"	"{1:d},{2:d},{3:.1f%%}"
+		"ko"		"[잠금] 감염된 팀이 준비되지 않았습니다({1}/{2} - {3})."
+	}
+	"Menu Title"
+	{
+		"ko"		"시작할 준비가 되셨나요:"
+	}
+	"Menu Ready"
+	{
+		"ko"		"준비가 된"
+	}
+	"Menu Unready"
+	{
+		"ko"		"준비되지 않음"
+	}
+	"Menu Survivor"
+	{
+		"ko"		"살아남은 사람"
+	}
+	"Menu Infected"
+	{
+		"ko"		"감염된"
+	}
+	"Menu Close"
+	{
+		"ko"		"닫다"
+	}
+	"L4D2DoorLock_DoorLockDoorLockNot"
+	{
+		"ko"		"{olive}[DoorLock]{default} 1단계에서는 도어 잠금 장치가 활성화되지 않습니다."
+	}
+	"L4D2DoorLock_DoorLockPictureLockedOnce"
+	{
+		"ko"		"{olive}[DoorLock]{default} 이 사진은 한 번 잠겼습니다. 그룹을 종료하고 다시 시작하면 문이 더 이상 잠기지 않습니다."
+	}
+	"L4D2DoorLock_DoorLockDoorLockOnly"
+	{
+		"ko"		"{olive}[DoorLock]{default} 도어 잠금은 첫 번째가 아닌 각 레벨 맵 이후 첫 번째 라운드에서만 활성화됩니다."
+	}
+	"L4D2DoorLock_DoorLockSurvivorBotUnfrozen"
+	{
+		"ko"		"{olive}[DoorLock]{default} 생존자 봇이 첫 번째 레벨에서 동결 해제되었습니다."
+	}
+}

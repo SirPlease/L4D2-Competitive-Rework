@@ -1,0 +1,73 @@
+"Phrases"
+{
+	"FailWitchCrown"
+	{
+		"#format"	"{1:N}"
+		"vi"		"{default}[{green}!{default}] {red}{1} {default}({olive}crowned witch fail{default}) và bị {red}Witch hạ gục."
+	}
+	"TankKillWitch"
+	{
+		"#format"	"{1:N}"
+		"vi"		"{default}[{green}!{default}] {red}Tank {default}({olive}{1}{default}) đã giết {red}Witch"
+	}
+	"WitchRemainedHealth"
+	{
+		"#format"	"{1:d}"
+		"vi"		"{default}[{green}!{default}] {blue}Witch {default}còn {olive}{1} {default}máu"
+	}
+	"DamageToWitch"
+	{
+		"vi"		"{default}[{green}!{default}] {blue}Sát thương {default}gây lên {blue}Witch:"
+	}
+	"PrefectWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"vi"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3} ★★"
+	}
+	"FinalShotWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"vi"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3} ★"
+	}
+	"AssistanceWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"vi"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3}"
+	}
+	"FinalShotInfWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"vi"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}bị nhiễm bệnh {olive} ☆"
+	}
+	"AssistanceInfWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"vi"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}bị nhiễm bệnh"
+	}
+	"FinalShotTankWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"vi"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red} {olive} ☆"
+	}
+	"AssistanceTankWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"vi"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}"
+	}
+	"L4DWitchDamageAnnounce_TankKilledWitch"
+	{
+		"vi"		"{default}[{green}!{default}] {red}Tank {default}({olive}%N{default}) đã tiêu diệt {red}Witch"
+	}
+	"L4DWitchDamageAnnounce_WitchHealthRemaining"
+	{
+		"vi"		"{default}[{green}!{default}] {blue}Witch {default}had {olive}%d {default}sức khỏe còn lại"
+	}
+	"L4DWitchDamageAnnounce_DamageDealtWitch"
+	{
+		"vi"		"{default}[{green}!{default}] {blue}Damage {default}xử lý {blue}Witch:"
+	}
+	"L4DWitchDamageAnnounce_WitchDamageLine"
+	{
+		"vi"		"{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N"
+	}
+}

@@ -1,0 +1,41 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"jp"		"[{olive}1v1{default}]"
+	}
+	"TagPvE"
+	{
+		"jp"		"[{olive}ダメージレポート{default}]"
+	}
+	"HealthRemaining"
+	{
+		"#format"	"{1:s},{2:s},{3:d}"
+		"jp"		"{red}{1}{default}（{green}{2}{default}）の体力は残り {olive}{3}{default} です!"
+	}
+	"HealthRemainingAI"
+	{
+		"#format"	"{1:s},{2:d}"
+		"jp"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default} の体力は残り {olive}{2}{default} です!"
+	}
+	"UMad"
+	{
+		"jp"		"怒らなくても大丈夫です..."
+	}
+	"Sad"
+	{
+		"jp"		"悲しそうですね...."
+	}
+	"Close"
+	{
+		"jp"		"惜しい!"
+	}
+	"NBad"
+	{
+		"jp"		"悪くない."
+	}
+	"AI"
+	{
+		"jp"		"AI"
+	}
+}

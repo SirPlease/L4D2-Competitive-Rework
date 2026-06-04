@@ -1,0 +1,383 @@
+"Phrases"
+{
+	"models/infected/gibs/gibs.mdl"
+	{
+		"vi"		"Gib tay"
+	}
+	"models/infected/limbs/exploded_boomer_head.mdl"
+	{
+		"vi"		"đầu bùng nổ"
+	}
+	"models/infected/limbs/limb_male_head01.mdl"
+	{
+		"vi"		"đầu Gib"
+	}
+	"models/props/cs_militia/circularsaw01.mdl"
+	{
+		"vi"		"Cưa tròn"
+	}
+	"models/props/de_nuke/emergency_lighta.mdl"
+	{
+		"vi"		"Đèn khẩn cấp màu đỏ"
+	}
+	"models/props_fairgrounds/alligator.mdl"
+	{
+		"vi"		"cá sấu"
+	}
+	"models/props_fairgrounds/mr_mustachio.mdl"
+	{
+		"vi"		"Ông Mustachio"
+	}
+	"models/props_fortifications/orange_cone001_clientside.mdl"
+	{
+		"vi"		"nón giao thông"
+	}
+	"models/props_interiors/teddy_bear.mdl"
+	{
+		"vi"		"gấu bông"
+	}
+	"models/props_interiors/toilet_b_breakable01_part13.mdl"
+	{
+		"vi"		"Ghế vệ sinh"
+	}
+	"models/props_interiors/waterbottle.mdl"
+	{
+		"vi"		"chai nước"
+	}
+	"models/props_urban/dock_pylon_cap001.mdl"
+	{
+		"vi"		"Bến tàu"
+	}
+	"models/props_urban/life_ring001.mdl"
+	{
+		"vi"		"Chiếc nhẫn cuộc sống"
+	}
+	"models/props_lighting/light_construction02.mdl"
+	{
+		"vi"		"Đèn xây dựng"
+	}
+	"models/extras/info_speech.mdl"
+	{
+		"vi"		"Trích dẫn bài phát biểu"
+	}
+	"models/infected/smoker_tongue_attach.mdl"
+	{
+		"vi"		"Lưỡi hút thuốc"
+	}
+	"models/props/de_inferno/ceiling_fan_blade.mdl"
+	{
+		"vi"		"Cánh quạt trần"
+	}
+	"models/f18/f18_placeholder.mdl"
+	{
+		"vi"		"Máy bay phản lực F-18"
+	}
+	"models/deadbodies/dead_male_civilian_radio.mdl"
+	{
+		"vi"		"Đài phát thanh dân sự"
+	}
+	"models/infected/cim_riot_faceplate.mdl"
+	{
+		"vi"		"Tấm che mặt chống bạo động"
+	}
+	"models/props_interiors/styrofoam_cups.mdl"
+	{
+		"vi"		"Cốc xốp"
+	}
+	"models/props_shacks/bug_lamp01.mdl"
+	{
+		"vi"		"Đèn diệt côn trùng"
+	}
+	"models/props_unique/grill_campground.mdl"
+	{
+		"vi"		"BBQ nướng"
+	}
+	"models/props_unique/luggagecart01.mdl"
+	{
+		"vi"		"Xe đẩy hành lý"
+	}
+	"models/props_unique/spawn_apartment/lantern.mdl"
+	{
+		"vi"		"đèn lồng"
+	}
+	"models/props_urban/exit_sign002.mdl"
+	{
+		"vi"		"Dấu hiệu thoát"
+	}
+	"models/props_urban/garden_hose001.mdl"
+	{
+		"vi"		"Vòi vườn"
+	}
+	"models/props_urban/plastic_flamingo001.mdl"
+	{
+		"vi"		"Hồng hạc"
+	}
+	"models/props_waterfront/money_pile.mdl"
+	{
+		"vi"		"Đống tiền"
+	}
+	"models/props_fairgrounds/elephant.mdl"
+	{
+		"vi"		"Con voi"
+	}
+	"models/props_fairgrounds/giraffe.mdl"
+	{
+		"vi"		"Hươu cao cổ"
+	}
+	"models/props_fairgrounds/garbage_popcorn_box.mdl"
+	{
+		"vi"		"Hộp bỏng ngô"
+	}
+	"models/props_fairgrounds/gnome_closet.mdl"
+	{
+		"vi"		"Tủ quần áo thần lùn"
+	}
+	"models/props_fairgrounds/snake.mdl"
+	{
+		"vi"		"Rắn"
+	}
+	"models/props_interiors/toaster.mdl"
+	{
+		"vi"		"Máy nướng bánh mì"
+	}
+	"models/props_unique/doll01.mdl"
+	{
+		"vi"		"BÚP BÊ"
+	}
+	"models/props_junk/garbage_hubcap01a.mdl"
+	{
+		"vi"		"Nắp trung tâm"
+	}
+	"models/props_mall/mall_mannequin_rhand.mdl"
+	{
+		"vi"		"Tay manơcanh"
+	}
+	"models/props_lab/desklamp01.mdl"
+	{
+		"vi"		"Đèn bàn"
+	}
+	"models/props_vehicles/helicopter_rescue.mdl"
+	{
+		"vi"		"Trực thăng lớn"
+	}
+	"models/hybridphysx/news_helicoptor_map1_intro_v1.mdl"
+	{
+		"vi"		"Tin tức trực thăng"
+	}
+	"models/missiles/f18_agm65maverick.mdl"
+	{
+		"vi"		"tên lửa"
+	}
+	"models/props_vehicles/boat_fishing02.mdl"
+	{
+		"vi"		"Thuyền đánh cá"
+	}
+	"models/props_urban/big_wheel001.mdl"
+	{
+		"vi"		"Xe ba bánh trẻ em"
+	}
+	"models/props_interiors/mounteddeerhead01.mdl"
+	{
+		"vi"		"đầu hươu"
+	}
+	"models/props_misc/pot-1.mdl"
+	{
+		"vi"		"Cái chảo"
+	}
+	"models/props_c17/metalpot002a.mdl"
+	{
+		"vi"		"chảo rán"
+	}
+	"models/gibs/hgibs.mdl"
+	{
+		"vi"		"hộp sọ"
+	}
+	"models/props/cs_militia/caseofbeer01.mdl"
+	{
+		"vi"		"Hộp bia"
+	}
+	"models/props/cs_office/chair_office.mdl"
+	{
+		"vi"		"Ghế văn phòng"
+	}
+	"models/props_cemetery/crypts_top02.mdl"
+	{
+		"vi"		"Chữ thập nghĩa địa"
+	}
+	"models/props_fairgrounds/kiddyland_riderocket_small.mdl"
+	{
+		"vi"		"Tên lửa Kiddyland"
+	}
+	"models/props_interiors/toilet_b_breakable01.mdl"
+	{
+		"vi"		"nhà vệ sinh"
+	}
+	"models/props_misc/lamp-1_gib1.mdl"
+	{
+		"vi"		"bóng đèn"
+	}
+	"models/props_misc/saddle-1.mdl"
+	{
+		"vi"		"Yên xe"
+	}
+	"models/props_unique/wheelchair01.mdl"
+	{
+		"vi"		"Xe lăn"
+	}
+	"models/props_urban/mega_phone001.mdl"
+	{
+		"vi"		"Điện thoại lớn"
+	}
+	"models/props/de_train/de_train_floodlights_01.mdl"
+	{
+		"vi"		"Đèn lũ"
+	}
+	"models/props_vehicles/tire001c_car.mdl"
+	{
+		"vi"		"Lốp ô tô"
+	}
+	"models/props/de_inferno/ceiling_fan.mdl"
+	{
+		"vi"		"Quạt trần"
+	}
+	"models/props/de_prodigy/fan.mdl"
+	{
+		"vi"		"Cái quạt"
+	}
+	"models/props_foliage/urban_pot_clay01.mdl"
+	{
+		"vi"		"Chậu cây 1"
+	}
+	"models/props_foliage/urban_pot_clay02.mdl"
+	{
+		"vi"		"Chậu cây 2"
+	}
+	"models/props_downtown/ironing_board_flat.mdl"
+	{
+		"vi"		"Bàn ủi"
+	}
+	"models/props_collectables/coin.mdl"
+	{
+		"vi"		"đồng xu"
+	}
+	"models/infected/jockey.mdl"
+	{
+		"vi"		"Đua ngựa"
+	}
+	"models/items/l4d_gift.mdl"
+	{
+		"vi"		"Quà"
+	}
+	"models/props_street/firehydrant.mdl"
+	{
+		"vi"		"Vòi chữa cháy"
+	}
+	"models/props_junk/gnome.mdl"
+	{
+		"vi"		"thần lùn"
+	}
+	"models/bunny/b_sailboat.mdl"
+	{
+		"vi"		"Thuyền Buồm"
+	}
+	"models/props/de_nuke/light_red2.mdl"
+	{
+		"vi"		"Đèn vách ngăn màu đỏ"
+	}
+	"models/props_buildables/mine.mdl"
+	{
+		"vi"		"Nắp trục bánh xe"
+	}
+	"models/props_cemetery/crypts_top01.mdl"
+	{
+		"vi"		"Chữ thập nghĩa địa"
+	}
+	"models/props_misc/tea_pot-1.mdl"
+	{
+		"vi"		"Bình trà"
+	}
+	"models/props_fairgrounds/pyrotechnics_launcher.mdl"
+	{
+		"vi"		"Pháo hoa"
+	}
+	"models/props_interiors/coffee_maker.mdl"
+	{
+		"vi"		"Máy pha cà phê"
+	}
+	"models/props_interiors/pot01a.mdl"
+	{
+		"vi"		"Ấm đun nước"
+	}
+	"models/props_interiors/tv.mdl"
+	{
+		"vi"		"TV"
+	}
+	"models/props_interiors/lamp_floor_gib2.mdl"
+	{
+		"vi"		"Bóng đèn 1"
+	}
+	"models/props_interiors/lamp_table02_gib2.mdl"
+	{
+		"vi"		"Bóng đèn 2"
+	}
+	"models/props_lighting/semi_flush_001.mdl"
+	{
+		"vi"		"Bóng đèn 3"
+	}
+	"models/props_junk/petfoodbag01.mdl"
+	{
+		"vi"		"Thức ăn cho chó"
+	}
+	"models/props_lighting/flashlight_dropped_01.mdl"
+	{
+		"vi"		"Đèn Flash Dalek"
+	}
+	"models/props_lighting/lightfixture03.mdl"
+	{
+		"vi"		"Bóng đèn"
+	}
+	"models/props_mall/cash_register.mdl"
+	{
+		"vi"		"Máy tính tiền"
+	}
+	"models/props_placeable/tier1_guns_trophy.mdl"
+	{
+		"vi"		"Cúp súng 1"
+	}
+	"models/props_placeable/tier2_guns_trophy.mdl"
+	{
+		"vi"		"Cúp súng 2"
+	}
+	"models/weapons/arms/v_spitter_arms.mdl"
+	{
+		"vi"		"Cánh tay phun"
+	}
+	"models/weapons/arms/v_jockey_arms.mdl"
+	{
+		"vi"		"Móng vuốt đua ngựa"
+	}
+	"models/v_models/weapons/v_claw_hulk.mdl"
+	{
+		"vi"		"Móng vuốt xe tăng"
+	}
+	"models/w_models/weapons/w_he_grenade.mdl"
+	{
+		"vi"		"Vỏ lựu đạn"
+	}
+	"models/props_junk/propanecanister001a.mdl"
+	{
+		"vi"		"Xi lanh propan"
+	}
+	"models/w_models/weapons/w_eq_medkit.mdl"
+	{
+		"vi"		"Mũ Medkit"
+	}
+	"models/weapons/melee/w_riotshield.mdl"
+	{
+		"vi"		"Lá chắn chống bạo động"
+	}
+	"models/props_skybox/boat_rescue_tug_sunshine.mdl"
+	{
+		"vi"		"Tàu kéo"
+	}
+}

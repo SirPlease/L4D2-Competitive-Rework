@@ -1,0 +1,231 @@
+"Phrases"
+{
+	"c1m1_hotel"
+	{
+		"jp"		"1: ホテル"
+	}
+	"c1m2_streets"
+	{
+		"jp"		"2: 街路"
+	}
+	"c1m3_mall"
+	{
+		"jp"		"3: モール"
+	}
+	"c1m4_atrium"
+	{
+		"jp"		"4：アトリウム"
+	}
+	"c2m1_highway"
+	{
+		"jp"		"1: 高速道路"
+	}
+	"c2m2_fairgrounds"
+	{
+		"jp"		"2: 遊園地"
+	}
+	"c2m3_coaster"
+	{
+		"jp"		"3：コースター"
+	}
+	"c2m4_barns"
+	{
+		"jp"		"4: 納屋"
+	}
+	"c2m5_concert"
+	{
+		"jp"		"5: コンサート"
+	}
+	"c3m1_plankcountry"
+	{
+		"jp"		"1: プランクカントリー"
+	}
+	"c3m2_swamp"
+	{
+		"jp"		"2: 沼地"
+	}
+	"c3m3_shantytown"
+	{
+		"jp"		"3: シャンティタウン"
+	}
+	"c3m4_plantation"
+	{
+		"jp"		"4: プランテーション"
+	}
+	"c4m1_milltown_a"
+	{
+		"jp"		"1: ミルタウン"
+	}
+	"c4m2_sugarmill_a"
+	{
+		"jp"		"2: 製糖所"
+	}
+	"c4m3_sugarmill_b"
+	{
+		"jp"		"3: 工場からの脱出"
+	}
+	"c4m4_milltown_b"
+	{
+		"jp"		"4: 街に戻る"
+	}
+	"c4m5_milltown_escape"
+	{
+		"jp"		"5: タウンエスケープ"
+	}
+	"c5m1_waterfront"
+	{
+		"jp"		"1: ウォーターフロント"
+	}
+	"c5m2_park"
+	{
+		"jp"		"2: 公園"
+	}
+	"c5m3_cemetery"
+	{
+		"jp"		"3: 墓地"
+	}
+	"c5m4_quarter"
+	{
+		"jp"		"4: クォーター"
+	}
+	"c5m5_bridge"
+	{
+		"jp"		"5: ブリッジ"
+	}
+	"c6m1_riverbank"
+	{
+		"jp"		"1: 川岸"
+	}
+	"c6m2_bedlam"
+	{
+		"jp"		"2: 地下"
+	}
+	"c6m3_port"
+	{
+		"jp"		"3: ポート"
+	}
+	"c7m1_docks"
+	{
+		"jp"		"1: ドック"
+	}
+	"c7m2_barge"
+	{
+		"jp"		"2: バージ"
+	}
+	"c7m3_port"
+	{
+		"jp"		"3: ポート"
+	}
+	"c8m1_apartment"
+	{
+		"jp"		"1: アパートメント"
+	}
+	"c8m2_subway"
+	{
+		"jp"		"2: 地下鉄"
+	}
+	"c8m3_sewers"
+	{
+		"jp"		"3: 下水道"
+	}
+	"c8m4_interior"
+	{
+		"jp"		"4: 病院"
+	}
+	"c8m5_rooftop"
+	{
+		"jp"		"5: 屋上のフィナーレ"
+	}
+	"c9m1_alleys"
+	{
+		"jp"		"1: 路地"
+	}
+	"c9m2_lots"
+	{
+		"jp"		"2: トラック基地のフィナーレ"
+	}
+	"c10m1_caves"
+	{
+		"jp"		"1: ターンパイク"
+	}
+	"c10m2_drainage"
+	{
+		"jp"		"2: 排水溝"
+	}
+	"c10m3_ranchhouse"
+	{
+		"jp"		"3: 教会"
+	}
+	"c10m4_mainstreet"
+	{
+		"jp"		"4: 街"
+	}
+	"c10m5_houseboat"
+	{
+		"jp"		"5: ボートハウスのフィナーレ"
+	}
+	"c11m1_greenhouse"
+	{
+		"jp"		"1: 温室"
+	}
+	"c11m2_offices"
+	{
+		"jp"		"2: クレーン"
+	}
+	"c11m3_garage"
+	{
+		"jp"		"3: 建設現場"
+	}
+	"c11m4_terminal"
+	{
+		"jp"		"4: ターミナル"
+	}
+	"c11m5_runway"
+	{
+		"jp"		"5: ランウェイフィナーレ"
+	}
+	"c12m1_hilltop"
+	{
+		"jp"		"1: 森"
+	}
+	"c12m2_traintunnel"
+	{
+		"jp"		"2: トンネル"
+	}
+	"c12m3_bridge"
+	{
+		"jp"		"3: 橋"
+	}
+	"c12m4_barn"
+	{
+		"jp"		"4: 駅"
+	}
+	"c12m5_cornfield"
+	{
+		"jp"		"5: 農家のフィナーレ"
+	}
+	"c13m1_alpinecreek"
+	{
+		"jp"		"1: アルパインクリーク"
+	}
+	"c13m2_southpinestream"
+	{
+		"jp"		"2: サウスパインストリーム"
+	}
+	"c13m3_memorialbridge"
+	{
+		"jp"		"3: メモリアルブリッジ"
+	}
+	"c13m4_cutthroatcreek"
+	{
+		"jp"		"4: カットスロークリーク"
+	}
+	"c14m1_junkyard"
+	{
+		"jp"		"1: ジャンクヤード"
+	}
+	"c14m2_lighthouse"
+	{
+		"jp"		"2: 灯台のフィナーレ"
+	}
+}

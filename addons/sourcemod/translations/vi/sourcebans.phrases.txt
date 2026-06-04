@@ -1,0 +1,82 @@
+"Phrases"
+{
+	"Banned Check Site"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Bạn đã bị máy chủ này cấm, hãy kiểm tra {1} để biết thêm thông tin"
+	}
+	"DB Connect Fail"
+	{
+		"vi"		"Kết nối cơ sở dữ liệu không thành công. Vui lòng liên hệ với nhà điều hành máy chủ."
+	}
+	"Not In Game"
+	{
+		"vi"		"Người chơi không tham gia trò chơi, vui lòng truy cập bảng điều khiển web để cấm họ."
+	}
+	"Ban Not Verified"
+	{
+		"vi"		"Người chơi này chưa được xác minh. Vui lòng đợi ba mươi giây trước khi thử lại."
+	}
+	"Can Not Unban"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Bạn không thể bỏ cấm trong máy chủ, hãy truy cập {1} để bỏ cấm."
+	}
+	"Can Not Add Ban"
+	{
+		"#format"	"{1:s}"
+		"vi"		"Bạn không thể thêm lệnh cấm từ trong máy chủ, hãy truy cập {1} để thêm lệnh cấm."
+	}
+	"Check Menu"
+	{
+		"vi"		"Vui lòng kiểm tra menu để chọn lý do cấm."
+	}
+	"Include Reason"
+	{
+		"vi"		"Vui lòng bao gồm lý do cấm khách hàng."
+	}
+	"Ban Fail"
+	{
+		"vi"		"Không cấm được người chơi, vui lòng thử lại."
+	}
+	"Chat Reason"
+	{
+		"vi"		"Vui lòng nhập lý do cấm trò chuyện và nhấn enter. Gõ '!noreason' để hủy bỏ."
+	}
+	"Chat Reason Aborted"
+	{
+		"vi"		"Thủ tục cấm đã được dừng thành công."
+	}
+	"SourceBans_FailedBan"
+	{
+		"vi"		"%s Không thể cấm %s."
+	}
+	"SourceBans_AlreadyBanned"
+	{
+		"vi"		"%s%s đã bị cấm."
+	}
+	"SourceBans_SMBanipFailed"
+	{
+		"vi"		"%ssm_banip không thành công"
+	}
+	"SourceBans_SuccessfullyBanned"
+	{
+		"vi"		"%s%s đã cấm thành công"
+	}
+	"SourceBans_SMUnbanFailed"
+	{
+		"vi"		"%ssm_unban không thành công"
+	}
+	"SourceBans_NoActiveBansFoundFilter"
+	{
+		"vi"		"%sKhông tìm thấy lệnh cấm hoạt động nào cho bộ lọc đó"
+	}
+	"SourceBans_SuccessfullyUnbanned"
+	{
+		"vi"		"%s%s đã được bỏ cấm thành công"
+	}
+	"SourceBans_SMAddbanFailed"
+	{
+		"vi"		"%ssm_addban không thành công"
+	}
+}

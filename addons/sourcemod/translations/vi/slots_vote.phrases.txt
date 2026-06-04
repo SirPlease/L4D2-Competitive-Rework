@@ -1,0 +1,53 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"vi"		"{blue} [ Khe cắm {default} {blue} ] {default}"
+	}
+	"NotConsoleVote"
+	{
+		"vi"		"[Slots] Bạn phải tham gia trò chơi."
+	}
+	"LimitSlotsAbove"
+	{
+		"vi"		"Bạn không thể giới hạn các vị trí trên {olive} %i {default} trên Máy chủ này."
+	}
+	"LimitedSlotsTo"
+	{
+		"#format"	"{1:s},{2:i}"
+		"vi"		"{olive} {1} {default} có số slot giới hạn ở {blue} {2} {default}"
+	}
+	"RequiredPlayers"
+	{
+		"vi"		"Bạn không thể giới hạn Slots thấp hơn số lượng Người chơi được yêu cầu."
+	}
+	"SlotsUsage"
+	{
+		"vi"		"Cách sử dụng: {olive}!slots {default} < số {olive} {default} > {blue} | {default} Ví dụ: {olive}!slots 8 {default}"
+	}
+	"Spectators"
+	{
+		"vi"		"Việc bỏ phiếu không được phép cho khán giả."
+	}
+	"LimitSlots"
+	{
+		"vi"		"Giới hạn các vị trí ở '%s'?"
+	}
+	"CannotBeStarted"
+	{
+		"vi"		"Không thể bắt đầu bỏ phiếu ngay bây giờ."
+	}
+	"LimitingSlots"
+	{
+		"vi"		"Giới hạn số slot..."
+	}
+	"SlotsVote_AdminOnlyBelowMinimumSlots"
+	{
+		"#format"	"{1:i}"
+		"vi"		"只有管理员才能将位置设为小于 {blue}{1}{default}人"
+	}
+	"LimitSlotsBelow"
+	{
+		"vi"		"Chỉ quản trị viên mới có thể đặt vị trí bên dưới người chơi {blue} {1} {default}"
+	}
+}

@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"BoomerHordeEqualizer_PassedBiledSurvivor"
+	{
+		"jp"		"%N は bBiledSurvivor を %N に渡しました"
+	}
+	"BoomerHordeEqualizer_NoLongerBoomedSurvivorCount"
+	{
+		"jp"		"%N ではなくなりました (BoomedSurvivorCount: %i)"
+	}
+	"BoomerHordeEqualizer_BoomedTotal"
+	{
+		"jp"		"%Nが好調（合計：%d）"
+	}
+	"BoomerHordeEqualizer_BoomHordeEventBoomedSurvivor"
+	{
+		"jp"		"BoomHordeEvent[BoomedSurvivorCount] : %i"
+	}
+	"BoomerHordeEqualizer_UncoveredBileEvent"
+	{
+		"jp"		"胆汁イベントの発見"
+	}
+}

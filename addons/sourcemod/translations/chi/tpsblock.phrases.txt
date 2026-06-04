@@ -12,4 +12,12 @@
 	{
 		"chi"		"服务器不允许开启第三人称， 为了正常游玩，请在控制台输入 {olive}c_thirdpersonshoulder 0{default}."
 	}
+	"Cvar_Invalid_Nocolor"
+	{
+		"chi"		"命令 c_thirdperson 应该无效或受保护。"
+	}
+	"Cvar_Value1_Nocolor"
+	{
+		"chi"		"要玩游戏，请在控制台上输入 c_thirdpersonshoulder 0。"
+	}
 }

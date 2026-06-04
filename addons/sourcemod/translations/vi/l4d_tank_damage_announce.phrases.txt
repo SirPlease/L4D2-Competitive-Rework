@@ -1,0 +1,47 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"vi"		"[{green}!{default}]"
+	}
+	"AI"
+	{
+		"vi"		"AI"
+	}
+	"HealthRemaining"
+	{
+		"vi"		"{blue}Xe tăng{default} ({olive}%s{default}) còn lại máu {green}%d{default}"
+	}
+	"DealtToTank"
+	{
+		"vi"		"{blue}Sát thương{default} gây ra cho {blue}Xe tăng{default} ({olive}%s{default})"
+	}
+	"PercentDamage"
+	{
+		"vi"		"{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N"
+	}
+	"L4DTankDamageAnnounce_RemainingBloodVolume"
+	{
+		"vi"		"[{green}!{default}] {green}%N {default} còn lại {green}%d{default}({green}%d%%{default}) thể tích máu {blue}"
+	}
+	"L4DTankDamageAnnounce_SurvivorDamageStatisticsTank"
+	{
+		"vi"		"[{green}!{default}] Thống kê thiệt hại của người sống sót {blue} đối với {green}Tank {default}({green}%N{default}) {blue}"
+	}
+	"L4DTankDamageAnnounce_SurvivorDamageStatisticsTankAI"
+	{
+		"vi"		"[{green}!{default}] Thống kê thiệt hại của người sống sót {blue} đối với {green}Tank {default}({green}AI{default}) {blue}"
+	}
+	"L4DTankDamageAnnounce_SurvivalTime"
+	{
+		"vi"		"[{green}!{default}] {green}%N {blue} Thời gian tồn tại: {green}%s"
+	}
+	"L4DTankDamageAnnounce_TankSurvivalTime"
+	{
+		"vi"		"[{green}!{default}] {green}Tank {blue} Thời gian tồn tại: {green}%s"
+	}
+	"L4DTankDamageAnnounce_TankDamageSummaryLine"
+	{
+		"vi"		"{blue}[{default}%d{blue}({default}%d%%{blue})][{green} đục lỗ:{default}%d{blue}][{green} đá:{default} %d{blue}][{green}iron:{default}%d{blue}][{green} Chấn thương: {default}%d{blue}({default}%d%%{blue})] {green}%N"
+	}
+}

@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2PistolDelay_EntityCreatedEntity"
+	{
+		"chi"		"[OnEntityCreated] iEntity: %s (%d)"
+	}
+	"L4D2PistolDelay_WeaponOldFireTimeCurrent"
+	{
+		"chi"		"武器：%s（%d），旧开火时间：%f，当前开火时间：%f，差异：%f"
+	}
+}

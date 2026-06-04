@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"BoomerHordeEqualizer_PassedBiledSurvivor"
+	{
+		"vi"		"%N đã chuyển bBiledSurvivor sang %N"
+	}
+	"BoomerHordeEqualizer_NoLongerBoomedSurvivorCount"
+	{
+		"vi"		"%N không còn nữa (BoomedSurvivorCount: %i)"
+	}
+	"BoomerHordeEqualizer_BoomedTotal"
+	{
+		"vi"		"%N bùng nổ (Tổng cộng: %d)"
+	}
+	"BoomerHordeEqualizer_BoomHordeEventBoomedSurvivor"
+	{
+		"vi"		"BoomHordeEvent[BoomedSurvivorCount] : %i"
+	}
+	"BoomerHordeEqualizer_UncoveredBileEvent"
+	{
+		"vi"		"Sự kiện mật được khám phá"
+	}
+}

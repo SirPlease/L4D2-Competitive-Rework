@@ -1,0 +1,91 @@
+"Phrases"
+{
+	"PanelHide"
+	{
+		"zho"		"[ {olive} Readyup {default} ] 面板現已 {red} 關閉 {default}"
+	}
+	"PanelShow"
+	{
+		"zho"		"[ {olive} Readyup {default} ] 面板現在是 {default} 上的 {blue}"
+	}
+	"ForceStartAdmin"
+	{
+		"#format"	"{1:N}"
+		"zho"		"[{green}！ {default}]{blue}遊戲{default}啟動是{green}強制{default}透過{blue}管理員{default}（{olive} {1} {default}）"
+	}
+	"VoteInProgress"
+	{
+		"zho"		"[{olive} 準備好 {default} ] 有 {olive} 投票 {green} 進行中 {default} 。"
+	}
+	"VoteDelay"
+	{
+		"#format"	"{1:d}"
+		"zho"		"[ {olive} Readyup {default} ] 等待另一個{blue} {1} s {default} 發起投票。"
+	}
+	"Player marked unready"
+	{
+		"#format"	"{1:N}"
+		"zho"		"{default}【{green}！ {default} ] {green} 倒數計時取消！ {default} ( {teamcolor} {1} {green} 標示為未就緒 {default} )"
+	}
+	"Player switched team"
+	{
+		"#format"	"{1:N}"
+		"zho"		"{default}【{green}！ {default} ] {green} 倒數計時取消！ {default}（{teamcolor} {1} {olive} 轉隊{default}）"
+	}
+	"Player disconnected"
+	{
+		"#format"	"{1:N}"
+		"zho"		"{default}【{green}！ {default} ] {green} 倒數計時取消！ {default} ( {teamcolor} {1} {green} 已中斷 {default} )"
+	}
+	"Admin aborted"
+	{
+		"#format"	"{1:N}"
+		"zho"		"{default}【{green}！ {default} ] {green} 強制啟動中止！ {default}（{olive} {1} {green} 已發{default}）"
+	}
+	"HintReady"
+	{
+		"zho"		"You are ready.\\nSay !unready / Press F2 to unready."
+	}
+	"HintUnready"
+	{
+		"zho"		"You are not ready.\\nSay !ready / Press F1 to ready up."
+	}
+	"LiveCountdownBegin"
+	{
+		"zho"		"Going live!\\nSay !unready / Press F2 to cancel"
+	}
+	"LiveCountdown"
+	{
+		"#format"	"{1:d}"
+		"zho"		"Live in: {1}\\nSay !unready / Press F2 to cancel"
+	}
+	"LiveCountdownCancelled"
+	{
+		"zho"		"倒數取消！"
+	}
+	"RoundIsLive"
+	{
+		"zho"		"回合直播啦！"
+	}
+	"InitiateAutoStart"
+	{
+		"zho"		"遊戲將自動開始！"
+	}
+	"AutoStartCountdown"
+	{
+		"#format"	"{1:d}"
+		"zho"		"遊戲開始時間：{1}"
+	}
+	"AutoStartWaiting"
+	{
+		"zho"		"正在等待載入玩家..."
+	}
+	"AutoStartNotEnoughPlayers"
+	{
+		"zho"		"需要更多玩家..."
+	}
+	"Readyup_CanOnlyUnreadyTimesRound"
+	{
+		"zho"		"[{olive}Readyup{default}] 本回合你最多只能取消準備 {blue}%d{default} 次。"
+	}
+}

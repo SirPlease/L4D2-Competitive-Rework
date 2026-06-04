@@ -1,0 +1,75 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"ko"		"[{olive}SpecListener{default}]"
+	}
+	"OnlySpec"
+	{
+		"ko"		"관객만 들을 수 있습니다."
+	}
+	"PanelTitle"
+	{
+		"ko"		"SpecListener"
+	}
+	"PanelEnable"
+	{
+		"ko"		"할 수 있게 하다"
+	}
+	"PanelDisable"
+	{
+		"ko"		"장애를 입히다"
+	}
+	"PanelStatus"
+	{
+		"ko"		"상태"
+	}
+	"Enable"
+	{
+		"ko"		"{green}활성화{default}"
+	}
+	"Disable"
+	{
+		"ko"		"{green}비활성화{default}"
+	}
+	"Usage"
+	{
+		"ko"		"사용법: sm_listen <활성화/비활성화/상태>"
+	}
+	"ErrorFlags"
+	{
+		"ko"		"오류: 섹션 음성 플래그입니다."
+	}
+	"ErrorCookie"
+	{
+		"ko"		"오류: 쿠키가 아직 캐시되지 않았습니다. 잠시 후 다시 시도하세요."
+	}
+	"SpecListener_SelectedItemFoundInfo"
+	{
+		"ko"		"[SpecListener] 선택한 항목: %d (발견? %d 정보: %s)"
+	}
+	"SpecListener_ClientMenuCancelledReason"
+	{
+		"ko"		"[SpecListener] 클라이언트 %d' 메뉴가 취소되었습니다.  이유: %d"
+	}
+	"SpecListener_Enabled"
+	{
+		"ko"		"[SpecListener] 활성화됨"
+	}
+	"SpecListener_Cookie"
+	{
+		"ko"		"[SpecListener] 쿠키: %d"
+	}
+	"SpecListener_Disable"
+	{
+		"ko"		"[SpecListener] 비활성화"
+	}
+	"SpecListener_ReEnableListenAllTalk"
+	{
+		"ko"		"[SpecListener] All-Talk 때문에 Listen을 다시 활성화합니다."
+	}
+	"SpecListener_Executed"
+	{
+		"ko"		"[SpecListener] %s가 실행되었습니다"
+	}
+}

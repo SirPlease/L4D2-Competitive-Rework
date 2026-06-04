@@ -1,0 +1,231 @@
+"Phrases"
+{
+	"c1m1_hotel"
+	{
+		"zho"		"1：酒店"
+	}
+	"c1m2_streets"
+	{
+		"zho"		"2：街道"
+	}
+	"c1m3_mall"
+	{
+		"zho"		"3：商場"
+	}
+	"c1m4_atrium"
+	{
+		"zho"		"4：中庭"
+	}
+	"c2m1_highway"
+	{
+		"zho"		"1：高速公路"
+	}
+	"c2m2_fairgrounds"
+	{
+		"zho"		"2：遊樂場"
+	}
+	"c2m3_coaster"
+	{
+		"zho"		"3：杯墊"
+	}
+	"c2m4_barns"
+	{
+		"zho"		"4：穀倉"
+	}
+	"c2m5_concert"
+	{
+		"zho"		"5：音樂會"
+	}
+	"c3m1_plankcountry"
+	{
+		"zho"		"1：平板支撐國家"
+	}
+	"c3m2_swamp"
+	{
+		"zho"		"2：沼澤"
+	}
+	"c3m3_shantytown"
+	{
+		"zho"		"3：棚戶區"
+	}
+	"c3m4_plantation"
+	{
+		"zho"		"4：種植園"
+	}
+	"c4m1_milltown_a"
+	{
+		"zho"		"1：米爾敦"
+	}
+	"c4m2_sugarmill_a"
+	{
+		"zho"		"2：糖廠"
+	}
+	"c4m3_sugarmill_b"
+	{
+		"zho"		"3：密室逃脫"
+	}
+	"c4m4_milltown_b"
+	{
+		"zho"		"4：返回城鎮"
+	}
+	"c4m5_milltown_escape"
+	{
+		"zho"		"5：逃離城鎮"
+	}
+	"c5m1_waterfront"
+	{
+		"zho"		"1：海濱"
+	}
+	"c5m2_park"
+	{
+		"zho"		"2：公園"
+	}
+	"c5m3_cemetery"
+	{
+		"zho"		"3：墓地"
+	}
+	"c5m4_quarter"
+	{
+		"zho"		"4：四分之一"
+	}
+	"c5m5_bridge"
+	{
+		"zho"		"5：橋"
+	}
+	"c6m1_riverbank"
+	{
+		"zho"		"1：河岸"
+	}
+	"c6m2_bedlam"
+	{
+		"zho"		"2：地下"
+	}
+	"c6m3_port"
+	{
+		"zho"		"3：連接埠"
+	}
+	"c7m1_docks"
+	{
+		"zho"		"1：碼頭"
+	}
+	"c7m2_barge"
+	{
+		"zho"		"2：駁船"
+	}
+	"c7m3_port"
+	{
+		"zho"		"3：連接埠"
+	}
+	"c8m1_apartment"
+	{
+		"zho"		"1：公寓"
+	}
+	"c8m2_subway"
+	{
+		"zho"		"2：地鐵"
+	}
+	"c8m3_sewers"
+	{
+		"zho"		"3：下水道"
+	}
+	"c8m4_interior"
+	{
+		"zho"		"4：醫院"
+	}
+	"c8m5_rooftop"
+	{
+		"zho"		"5：屋頂結局"
+	}
+	"c9m1_alleys"
+	{
+		"zho"		"1：小巷"
+	}
+	"c9m2_lots"
+	{
+		"zho"		"2：卡車倉庫結局"
+	}
+	"c10m1_caves"
+	{
+		"zho"		"1：收費公路"
+	}
+	"c10m2_drainage"
+	{
+		"zho"		"2: 排水溝"
+	}
+	"c10m3_ranchhouse"
+	{
+		"zho"		"3: 教堂"
+	}
+	"c10m4_mainstreet"
+	{
+		"zho"		"4: 小鎮"
+	}
+	"c10m5_houseboat"
+	{
+		"zho"		"5：船庫結局"
+	}
+	"c11m1_greenhouse"
+	{
+		"zho"		"1：溫室"
+	}
+	"c11m2_offices"
+	{
+		"zho"		"2：起重機"
+	}
+	"c11m3_garage"
+	{
+		"zho"		"3：施工現場"
+	}
+	"c11m4_terminal"
+	{
+		"zho"		"4：航廈"
+	}
+	"c11m5_runway"
+	{
+		"zho"		"5：跑道結局"
+	}
+	"c12m1_hilltop"
+	{
+		"zho"		"1：樹林"
+	}
+	"c12m2_traintunnel"
+	{
+		"zho"		"2：隧道"
+	}
+	"c12m3_bridge"
+	{
+		"zho"		"3: 橋"
+	}
+	"c12m4_barn"
+	{
+		"zho"		"4：火車站"
+	}
+	"c12m5_cornfield"
+	{
+		"zho"		"5：農舍結局"
+	}
+	"c13m1_alpinecreek"
+	{
+		"zho"		"1：高山溪"
+	}
+	"c13m2_southpinestream"
+	{
+		"zho"		"2：南松溪"
+	}
+	"c13m3_memorialbridge"
+	{
+		"zho"		"3：紀念橋"
+	}
+	"c13m4_cutthroatcreek"
+	{
+		"zho"		"4：兇險的小溪"
+	}
+	"c14m1_junkyard"
+	{
+		"zho"		"1：垃圾場"
+	}
+	"c14m2_lighthouse"
+	{
+		"zho"		"2：燈塔結局"
+	}
+}

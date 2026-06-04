@@ -1,0 +1,57 @@
+"Phrases"
+{
+	"Tag+"
+	{
+		"vi"		"{green}★{default}"
+	}
+	"Tag++"
+	{
+		"vi"		"{green}★★{default}"
+	}
+	"Tag+++"
+	{
+		"vi"		"{green}★★★{default}"
+	}
+	"MeleeSkeeted"
+	{
+		"#format"	"{1:N},{2:N}"
+		"vi"		"{olive} {1} {default} là {blue} cận chiến {default} -skeet {default} bởi {olive} {2} {default}"
+	}
+	"Headshotted"
+	{
+		"#format"	"{1:N},{2:N}"
+		"vi"		"{olive} {1} {default} bị {blue} hạ gục {default} bởi {olive} {2} {default}"
+	}
+	"TeamSkeeted"
+	{
+		"#format"	"{1:N},{2:N},{3:d},{4:d},{5:s},{6:s}"
+		"vi"		"{olive} {1} {default} đã yêu cầu {olive} {2} {default} để {blue} {3} gây sát thương {default} trong {blue} {4} {default} bắn {5}. Hỗ trợ bởi: {olive} {6} {default}"
+	}
+	"Skeeted"
+	{
+		"#format"	"{1:N},{2:N},{3:d},{4:s}"
+		"vi"		"{olive} {1} {default} xiên {olive} {2} {default} trong {blue} {3} {default} bắn {4}"
+	}
+	"ShutBoomer"
+	{
+		"#format"	"{1:N},{2:s},{3:.1f}"
+		"vi"		"{olive} {1} {default} đã tắt {olive} {2} {default} của Boomer trong {blue} {3} {default}"
+	}
+	"AlarmedCar"
+	{
+		"vi"		"{olive} %N {default} đã kích hoạt Xe báo động {olive} {default}"
+	}
+	"AssistShotsPlural"
+	{
+		"vi"		"s"
+	}
+	"AssistShotsSingular"
+	{
+		"vi"		""
+	}
+	"assister"
+	{
+		"#format"	"{1:N},{2:d},{3:d},{4:s}"
+		"vi"		"{1} ( {2} / {3} bắn {4} )"
+	}
+}

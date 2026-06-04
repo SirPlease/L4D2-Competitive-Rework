@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"vi"		"[{green}!{default}]"
+	}
+	"VotingNotEnabled"
+	{
+		"vi"		"Bỏ phiếu không được kích hoạt cho đến khi {olive}40s{default} vào vòng trong."
+	}
+	"NotConsoleVote"
+	{
+		"vi"		"[!] Bạn phải vào game để bình chọn."
+	}
+	"NotSpectatorVote"
+	{
+		"vi"		"{olive}{default} không thể bỏ phiếu."
+	}
+}

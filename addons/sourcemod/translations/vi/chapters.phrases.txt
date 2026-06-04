@@ -1,0 +1,231 @@
+"Phrases"
+{
+	"c1m1_hotel"
+	{
+		"vi"		"1: Khách sạn"
+	}
+	"c1m2_streets"
+	{
+		"vi"		"2: Đường phố"
+	}
+	"c1m3_mall"
+	{
+		"vi"		"3: Trung tâm mua sắm"
+	}
+	"c1m4_atrium"
+	{
+		"vi"		"4: Tâm nhĩ"
+	}
+	"c2m1_highway"
+	{
+		"vi"		"1: Đường cao tốc"
+	}
+	"c2m2_fairgrounds"
+	{
+		"vi"		"2: Khu hội chợ"
+	}
+	"c2m3_coaster"
+	{
+		"vi"		"3: Tàu lượn"
+	}
+	"c2m4_barns"
+	{
+		"vi"		"4: Chuồng trại"
+	}
+	"c2m5_concert"
+	{
+		"vi"		"5: Buổi hòa nhạc"
+	}
+	"c3m1_plankcountry"
+	{
+		"vi"		"1: Đất nước ván"
+	}
+	"c3m2_swamp"
+	{
+		"vi"		"2: Đầm lầy"
+	}
+	"c3m3_shantytown"
+	{
+		"vi"		"3: Thị trấn tồi tàn"
+	}
+	"c3m4_plantation"
+	{
+		"vi"		"4: đồn điền"
+	}
+	"c4m1_milltown_a"
+	{
+		"vi"		"1: Cối xay gió"
+	}
+	"c4m2_sugarmill_a"
+	{
+		"vi"		"2: Nhà máy đường"
+	}
+	"c4m3_sugarmill_b"
+	{
+		"vi"		"3: Thoát khỏi nhà máy"
+	}
+	"c4m4_milltown_b"
+	{
+		"vi"		"4: Trở về thị trấn"
+	}
+	"c4m5_milltown_escape"
+	{
+		"vi"		"5: Thoát khỏi thị trấn"
+	}
+	"c5m1_waterfront"
+	{
+		"vi"		"1: Bờ sông"
+	}
+	"c5m2_park"
+	{
+		"vi"		"2: Công viên"
+	}
+	"c5m3_cemetery"
+	{
+		"vi"		"3: Nghĩa trang"
+	}
+	"c5m4_quarter"
+	{
+		"vi"		"4: Quý"
+	}
+	"c5m5_bridge"
+	{
+		"vi"		"5: Cầu"
+	}
+	"c6m1_riverbank"
+	{
+		"vi"		"1: Bờ sông"
+	}
+	"c6m2_bedlam"
+	{
+		"vi"		"2: Ngầm"
+	}
+	"c6m3_port"
+	{
+		"vi"		"3: Cảng"
+	}
+	"c7m1_docks"
+	{
+		"vi"		"1: Bến tàu"
+	}
+	"c7m2_barge"
+	{
+		"vi"		"2: Sà lan"
+	}
+	"c7m3_port"
+	{
+		"vi"		"3: Cảng"
+	}
+	"c8m1_apartment"
+	{
+		"vi"		"1: Căn hộ"
+	}
+	"c8m2_subway"
+	{
+		"vi"		"2: Tàu điện ngầm"
+	}
+	"c8m3_sewers"
+	{
+		"vi"		"3: Cống thoát nước"
+	}
+	"c8m4_interior"
+	{
+		"vi"		"4: Bệnh viện"
+	}
+	"c8m5_rooftop"
+	{
+		"vi"		"5: Đêm chung kết trên sân thượng"
+	}
+	"c9m1_alleys"
+	{
+		"vi"		"1: Những con hẻm"
+	}
+	"c9m2_lots"
+	{
+		"vi"		"2: Đoạn cuối của kho xe tải"
+	}
+	"c10m1_caves"
+	{
+		"vi"		"1: Đường quay vòng"
+	}
+	"c10m2_drainage"
+	{
+		"vi"		"2: Cống thoát nước"
+	}
+	"c10m3_ranchhouse"
+	{
+		"vi"		"3: Nhà thờ"
+	}
+	"c10m4_mainstreet"
+	{
+		"vi"		"4: Thị trấn"
+	}
+	"c10m5_houseboat"
+	{
+		"vi"		"5: Chung kết nhà thuyền"
+	}
+	"c11m1_greenhouse"
+	{
+		"vi"		"1: Nhà kính"
+	}
+	"c11m2_offices"
+	{
+		"vi"		"2: Cần cẩu"
+	}
+	"c11m3_garage"
+	{
+		"vi"		"3: Công trường"
+	}
+	"c11m4_terminal"
+	{
+		"vi"		"4: Nhà ga"
+	}
+	"c11m5_runway"
+	{
+		"vi"		"5: Đêm chung kết đường băng"
+	}
+	"c12m1_hilltop"
+	{
+		"vi"		"1: Rừng"
+	}
+	"c12m2_traintunnel"
+	{
+		"vi"		"2: Đường hầm"
+	}
+	"c12m3_bridge"
+	{
+		"vi"		"3: Cây cầu"
+	}
+	"c12m4_barn"
+	{
+		"vi"		"4: Nhà ga xe lửa"
+	}
+	"c12m5_cornfield"
+	{
+		"vi"		"5: Chung kết trang trại"
+	}
+	"c13m1_alpinecreek"
+	{
+		"vi"		"1: Lạch Alpine"
+	}
+	"c13m2_southpinestream"
+	{
+		"vi"		"2: Suối Thông Nam"
+	}
+	"c13m3_memorialbridge"
+	{
+		"vi"		"3: Cầu tưởng niệm"
+	}
+	"c13m4_cutthroatcreek"
+	{
+		"vi"		"4: Lạch cắt cổ"
+	}
+	"c14m1_junkyard"
+	{
+		"vi"		"1: Bãi rác"
+	}
+	"c14m2_lighthouse"
+	{
+		"vi"		"2: Đêm chung kết ngọn hải đăng"
+	}
+}

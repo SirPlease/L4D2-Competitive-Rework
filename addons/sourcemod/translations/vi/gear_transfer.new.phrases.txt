@@ -1,0 +1,59 @@
+"Phrases"
+{
+	"Gave"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"vi"		"{1} đã trao {2} cho {3}"
+	}
+	"Grabbed"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"vi"		"{1} đã lấy {2} từ {3}"
+	}
+	"BotGrabbed"
+	{
+		"#format"	"{1:s},{2:s}"
+		"vi"		"{1} đã lấy {2}"
+	}
+	"Switched"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"vi"		"{1} đã chuyển đổi {2} bằng {3}"
+	}
+	"weapon_molotov"
+	{
+		"vi"		"một vụ molotov"
+	}
+	"weapon_pipe_bomb"
+	{
+		"vi"		"một quả bom ống"
+	}
+	"weapon_vomitjar"
+	{
+		"vi"		"một bình nôn"
+	}
+	"weapon_first_aid_kit"
+	{
+		"vi"		"một hộp thuốc"
+	}
+	"weapon_pain_pills"
+	{
+		"vi"		"thuốc giảm đau"
+	}
+	"weapon_adrenaline"
+	{
+		"vi"		"adrenaline"
+	}
+	"weapon_upgradepack_explosive"
+	{
+		"vi"		"đạn nổ"
+	}
+	"weapon_upgradepack_incendiary"
+	{
+		"vi"		"đạn gây cháy"
+	}
+	"weapon_defibrillator"
+	{
+		"vi"		"máy khử rung tim"
+	}
+}

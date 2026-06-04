@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2PistolDelay_EntityCreatedEntity"
+	{
+		"vi"		"[OnEntityCreated] iEntity: %s ( %d )"
+	}
+	"L4D2PistolDelay_WeaponOldFireTimeCurrent"
+	{
+		"vi"		"Vũ khí: %s (%d), thời gian bắn cũ: %f, thời gian bắn hiện tại: %f, Khác biệt: %f"
+	}
+}

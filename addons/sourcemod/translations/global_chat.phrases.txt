@@ -22,7 +22,7 @@
 
 	"GlobalChat_SummonTeammates"
 	{
-		"en"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友"
+		"en"		"{green}%s {olive}%s {default}The player summons teammates in {lightgreen}%s {default}"
 		"chi"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友"
 		"zho"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友"
 		"jp"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友"

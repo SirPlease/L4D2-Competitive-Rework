@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Door_Open"
+	{
+		"zho"		"{olive} [Saferoom] {white} 由 {orange} %N 打開"
+	}
+	"Door_Close"
+	{
+		"zho"		"{olive} [Saferoom] {white} 被 {orange} %N 關閉"
+	}
+	"Door_Wait"
+	{
+		"zho"		"{olive} [Saferoom] {white} 門將在 {orange} %d {white} 秒後解鎖"
+	}
+	"Door_Unlocked"
+	{
+		"zho"		"{olive} [安全室] {white} 門 {orange} 打開"
+	}
+}

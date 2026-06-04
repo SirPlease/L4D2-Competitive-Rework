@@ -1,0 +1,24 @@
+"Phrases"
+{
+	"In Cooldown"
+	{
+		"#format"	"{1:.0f}"
+		"jp"		"再度報告する前に {1} 秒待ってください"
+	}
+	"Report Canceled"
+	{
+		"jp"		"レポートがキャンセルされました"
+	}
+	"Report Sent"
+	{
+		"jp"		"レポートが送信されました"
+	}
+	"Reason Prompt"
+	{
+		"jp"		"レポートの理由を入力するか、「キャンセル」してキャンセルしてください"
+	}
+	"Reason Short Need More"
+	{
+		"jp"		"理由が短すぎます。詳細が必要です"
+	}
+}

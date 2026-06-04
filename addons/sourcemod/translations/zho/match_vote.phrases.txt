@@ -1,0 +1,83 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"zho"		"[{olive}!{default}]"
+	}
+	"Disabled"
+	{
+		"zho"		"插件被 {red} 停用 {default}"
+	}
+	"NoConsole"
+	{
+		"zho"		"無法從控制台使用此命令。"
+	}
+	"ConfoglNotAvailable"
+	{
+		"zho"		"Confogl 是 {red} 不可用 {default} 。"
+	}
+	"CedaGame"
+	{
+		"zho"		"不允許在 {red} cedapug 匹配 {default} 中執行此命令"
+	}
+	"Title_Match"
+	{
+		"zho"		"選擇匹配模式："
+	}
+	"Title_Config"
+	{
+		"zho"		"選擇類型 %s:"
+	}
+	"ConfigNotFound"
+	{
+		"zho"		"未找到此類模式的配置。"
+	}
+	"NoSpec"
+	{
+		"zho"		"觀眾不能發起投票。"
+	}
+	"MatchLoaded"
+	{
+		"zho"		"比賽模式已載入！"
+	}
+	"NotEnoughPlayers"
+	{
+		"zho"		"無法開始投票。 {red} {default} 玩家不足（{red} %d {default} / {green} %d {default}）。"
+	}
+	"Title_LoadConfig"
+	{
+		"zho"		"載入confogl'%s'配置？"
+	}
+	"VoteInProgress"
+	{
+		"zho"		"{red} 投票正在進行中 {default} ，請等待 {green} %d {default} 秒。"
+	}
+	"VotePass_Loading"
+	{
+		"zho"		"比賽模式載入中..."
+	}
+	"MatchNotLoaded"
+	{
+		"zho"		"{red} 未載入匹配模式 {default}。"
+	}
+	"PlayersConnecting"
+	{
+		"zho"		"無法開始投票。玩家正在連線。"
+	}
+	"Title_OffConfogl"
+	{
+		"zho"		"關閉 Confogl？"
+	}
+	"VotePass_Unloading"
+	{
+		"zho"		"康福格爾正在卸載..."
+	}
+	"Title_ChangeConfogl"
+	{
+		"zho"		"將confogl 配置更改為“%s”？"
+	}
+	"VotePass_Changed"
+	{
+		"zho"		"比賽模式已更改..."
+	}
+}

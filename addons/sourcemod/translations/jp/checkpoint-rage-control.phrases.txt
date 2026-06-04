@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"jp"		"[{green}!{default}]"
+	}
+	"LoseFrustration"
+	{
+		"jp"		"生存者が{olive}セーフルーム{default}にいる間、{red}タンク{default}は{green}イライラを失います{default}。"
+	}
+	"KeepFrustration"
+	{
+		"jp"		"生存者が{olive}セーフルーム{default}にいる間、{red}タンク{default}は{green}イライラを失うことはありません{default}。"
+	}
+}

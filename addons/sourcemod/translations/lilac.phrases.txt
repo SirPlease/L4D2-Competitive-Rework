@@ -158,4 +158,9 @@
 		"ko"		"[Lilac] 경고: 핑이 너무 높게 유지되면 %d초 안에 쫓겨날 것입니다! (%.0f / %d 최대)"
 		"vi"		"[Lilac] CẢNH BÁO: Bạn sẽ bị kick sau %d giây nếu ping của bạn quá cao! (Tối đa %.0f / %d)"
 	}
+
+	"kick_ban_genetic"
+	{
+		"en"		"You have been banned from this server."
+	}
 }

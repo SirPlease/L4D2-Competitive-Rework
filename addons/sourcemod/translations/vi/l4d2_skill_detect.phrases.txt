@@ -1,0 +1,273 @@
+"Phrases"
+{
+	"Tag+"
+	{
+		"vi"		"{green}★{default}"
+	}
+	"Tag++"
+	{
+		"vi"		"{green}★★{default}"
+	}
+	"Tag+++"
+	{
+		"vi"		"{green}★★★{default}"
+	}
+	"Tag++++"
+	{
+		"vi"		"{green}★★★★{default}"
+	}
+	"Popped"
+	{
+		"#format"	"{1:N},{2:N}"
+		"vi"		"{olive}{1}{default} xuất hiện {olive}{2}{default}."
+	}
+	"PoppedBot"
+	{
+		"vi"		"{olive}%N{default} đã xuất hiện một chiếc boomer."
+	}
+	"Leveled"
+	{
+		"#format"	"{1:N},{2:N}"
+		"vi"		"{olive}{1}{default} {blue}đầy đủ{default} được san bằng {olive}{2}{default}"
+	}
+	"LeveledBot"
+	{
+		"vi"		"{olive}%N{default} {blue}đầy đủ{default} được san bằng {olive}một bộ sạc{default}"
+	}
+	"LeveledHurt"
+	{
+		"#format"	"{1:N},{2:N},{3:i}"
+		"vi"		"{olive}{1}{default} {blue}cấp chip{default} {olive}{2}{default} ({blue}{3} dmg{default})"
+	}
+	"LeveledHurtBot"
+	{
+		"#format"	"{1:N},{2:i}"
+		"vi"		"{olive}{1}{default} {blue}{default} một bộ sạc ({blue}{2} dmg{default})"
+	}
+	"Deadstopped"
+	{
+		"#format"	"{1:N},{2:N}"
+		"vi"		"{olive}{1}{default} {blue}deadstopped{default} {olive}{2}{default}"
+	}
+	"DeadstoppedBot"
+	{
+		"vi"		"{olive}%N{default} {blue}deadstopped{default} {olive}một thợ săn{default}"
+	}
+	"Shoved"
+	{
+		"#format"	"{1:N},{2:N}"
+		"vi"		"{olive}{1}{default} {blue}bị đẩy{default} {olive}{2}{default}."
+	}
+	"ShovedBot"
+	{
+		"vi"		"{olive}%N{default} {blue}đã đẩy{default} vào {olive}SI{default}."
+	}
+	"TeamSkeeted"
+	{
+		"vi"		"{olive}%N{default} được {blue}xây dựng theo nhóm{default}."
+	}
+	"TeamSkeetedBot"
+	{
+		"vi"		"Một {olive}thợ săn{default} đã được {blue}xây dựng theo nhóm{default}."
+	}
+	"Skeeted"
+	{
+		"#format"	"{1:N},{2:s},{3:N}"
+		"vi"		"{olive}{1}{default} {blue}{2}nghiêng{default} {olive}{3}{default}."
+	}
+	"SkeetedBot"
+	{
+		"#format"	"{1:N},{2:s}"
+		"vi"		"{olive}{1}{default} {blue}{2}đã chọn{default} một {olive}thợ săn{default}."
+	}
+	"Melee"
+	{
+		"vi"		"cận chiến-"
+	}
+	"HeadShot"
+	{
+		"vi"		"cú đánh đầu-"
+	}
+	"Grenade"
+	{
+		"vi"		"lựu đạn-"
+	}
+	"HurtSkeet"
+	{
+		"#format"	"{1:N},{2:i},{3:s}"
+		"vi"		"{olive}{1}{default} {green}không{default} bị lệch (thiệt hại {blue}{2}{default}).{3}"
+	}
+	"HurtSkeetBot"
+	{
+		"#format"	"{1:i},{2:s}"
+		"vi"		"{olive}Hunter{default} {green}không{default} bị lệch (thiệt hại {blue}{1}{default}).{2}"
+	}
+	"Unchipped"
+	{
+		"vi"		"(Sẽ bị trượt nếu thợ săn không bị sứt mẻ!)"
+	}
+	"CrownedWitch"
+	{
+		"#format"	"{1:N},{2:i}"
+		"vi"		"{olive}{1}{default} trao vương miện cho phù thủy ({blue}{2}{default} sát thương)."
+	}
+	"CrownedWitch2"
+	{
+		"vi"		"Một phù thủy đã {blue}đăng quang{default}."
+	}
+	"DrawCrowned"
+	{
+		"#format"	"{1:N},{2:i},{3:i}"
+		"vi"		"{olive}{1}{default} đã hạ gục một phù thủy ({blue}{2}{default} sát thương, chip {olive}{3}{default})."
+	}
+	"DrawCrowned2"
+	{
+		"#format"	"{1:i},{2:i}"
+		"vi"		"Một phù thủy đã được trao vương miện ({blue}{1}{default} sát thương, chip {olive}{2}{default})."
+	}
+	"CutTongue"
+	{
+		"#format"	"{1:N},{2:N}"
+		"vi"		"{olive}{1}{default} {blue}Lưỡi của{default} {olive}{2}{default}"
+	}
+	"CutTongueBot"
+	{
+		"vi"		"{olive}%N{default} {blue}Lưỡi của{default} "
+	}
+	"SelfClearedTongue"
+	{
+		"#format"	"{1:N},{2:N},{3:s}"
+		"vi"		"{olive}{1}{default} {blue}tự xóa{default} từ lưỡi của {olive}{2}{default} {blue}{3}{default}"
+	}
+	"SelfClearedTongueBot"
+	{
+		"#format"	"{1:N},{2:s}"
+		"vi"		"{olive}{1}{default} {blue}tự xóa{default} từ lưỡi của người hút thuốc {blue}{2}{default}"
+	}
+	"Shoving"
+	{
+		"vi"		"bằng cách xô đẩy"
+	}
+	"SkeetedRock"
+	{
+		"#format"	"{1:N},{2:N}"
+		"vi"		"Đá của {olive}{1}{default} {blue}sketed{default} {olive}{2}{default}."
+	}
+	"SkeetedRockBot"
+	{
+		"vi"		"{olive}%N{default} {blue}nghiêng{default} một tảng đá xe tăng"
+	}
+	"HunterHP"
+	{
+		"#format"	"{1:N},{2:N},{3:i},{4:i}"
+		"vi"		"{olive}{1}{default} {red}high-pounced{default} {olive}{2}{default} ({red}{3}{default} dmg, chiều cao: {red}{4}{default})"
+	}
+	"HunterHPBot"
+	{
+		"#format"	"{1:N},{2:i},{3:i}"
+		"vi"		"Một {olive}thợ săn{default} {red}vồ cao{default} {olive}{1}{default} ({red}{2}{default} dmg, chiều cao: {red}{3}{default})"
+	}
+	"JockeyHP"
+	{
+		"#format"	"{1:N},{2:N},{3:i}"
+		"vi"		"{olive}{1}{default} {red}vồ cao{default} {olive}{2}{default} ({red}độ cao{default}: {red}{3}{default})"
+	}
+	"JockeyHPBot"
+	{
+		"#format"	"{1:N},{2:i}"
+		"vi"		"Một {olive}jockey{default} {red}vồ cao{default} {olive}{1}{default} ({red}độ cao{default}: {red}{2}{default})"
+	}
+	"DeathCharged"
+	{
+		"#format"	"{1:N},{2:N},{3:s},{4:i}"
+		"vi"		"{olive}{1}{default} {red}tử vong{default} {olive}{2}{default} {3}({red}height{default}: {red}{4}{default})"
+	}
+	"DeathChargedBot"
+	{
+		"#format"	"{1:N},{2:s},{3:i}"
+		"vi"		"A {olive}{default} {red}bị buộc tội tử hình{default} {olive}{1}{default} {2}({red}{default}: {red}{3}{default})"
+	}
+	"Bowling"
+	{
+		"vi"		"bằng cách chơi bowling"
+	}
+	"SIClear"
+	{
+		"#format"	"{1:N},{2:N},{3:N},{4:s},{5:.2f}"
+		"vi"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}{2}{default} từ {4} của {olive}{3}{default} ({blue}{5} {default}giây)"
+	}
+	"SIClearTeammate"
+	{
+		"#format"	"{1:N},{2:N},{3:s},{4:.2f}"
+		"vi"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}một đồng đội{default} từ {3} của {olive}{2}{default} ({blue}{4} {default}giây)"
+	}
+	"SIClearBot"
+	{
+		"#format"	"{1:N},{2:N},{3:s},{4:.2f}"
+		"vi"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}{2}{default} từ {3} ({blue}{4} {default}giây)"
+	}
+	"SIClearTeammateBot"
+	{
+		"#format"	"{1:N},{2:s},{3:.2f}"
+		"vi"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}một đồng đội{default} từ {2} ({blue}{3} {default}giây)"
+	}
+	"BunnyHop"
+	{
+		"#format"	"{1:i},{2:s},{3:.1f}"
+		"vi"		"{olive}Bạn{default} đạt {blue}{1} bunnyhop{2}{default} liên tiếp ({blue}tốc độ cao nhất{default}: {olive}{3}{default})"
+	}
+	"PluralCount"
+	{
+		"vi"		"s"
+	}
+	"Empty"
+	{
+		"vi"		""
+	}
+	"CalarmHit"
+	{
+		"vi"		"{olive}%N{default} đã kích hoạt cảnh báo bằng một cú đánh."
+	}
+	"CalarmTouched"
+	{
+		"#format"	"{1:N},{2:N}"
+		"vi"		"{olive}{1}{default} đã khiến {olive}{2}{default} kích hoạt cảnh báo."
+	}
+	"CalarmTouchedHunter"
+	{
+		"vi"		"Một {olive}hunter{default} đã khiến {olive}%N{default} kích hoạt cảnh báo."
+	}
+	"CalarmTouchedJockey"
+	{
+		"vi"		"Một {olive}tay đua{default} đã khiến {olive}%N{default} kích hoạt cảnh báo."
+	}
+	"CalarmTouchedCharger"
+	{
+		"vi"		"A {olive}{default} đã thực hiện {olive}%N{default} kích hoạt báo động."
+	}
+	"CalarmTouchedInfected"
+	{
+		"vi"		"Một {olive}bot bị nhiễm{default} đã khiến {olive}%N{default} kích hoạt cảnh báo."
+	}
+	"CalarmTouchedBot"
+	{
+		"vi"		"{olive}%N{default} đã chạm vào một chiếc ô tô được báo động."
+	}
+	"CalarmExplosion"
+	{
+		"vi"		"{olive}%N{default} đã kích hoạt cảnh báo bằng một vụ nổ."
+	}
+	"CalarmBoomer"
+	{
+		"#format"	"{1:N},{2:N}"
+		"vi"		"{olive}{1}{default} đã gây ra cảnh báo bằng cách tiêu diệt một người bùng nổ {olive}{2}{default}."
+	}
+	"CalarmBoomerBot"
+	{
+		"vi"		"{olive}%N{default} đã kích hoạt cảnh báo bằng cách bắn {olive}boomer{default}."
+	}
+	"Calarm"
+	{
+		"vi"		"{olive}%N{default} đã kích hoạt cảnh báo."
+	}
+}

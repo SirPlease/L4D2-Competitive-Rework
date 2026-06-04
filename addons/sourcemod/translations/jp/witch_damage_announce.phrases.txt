@@ -1,0 +1,57 @@
+"Phrases"
+{
+	"FailWitchCrown"
+	{
+		"#format"	"{1:N}"
+		"jp"		"{default} [{green}! {default} ] {red} {1} {default} ( {olive} 戴冠魔女失敗 {default} ) そして {red} 魔女によってキャップを奪われました。"
+	}
+	"TankKillWitch"
+	{
+		"#format"	"{1:N}"
+		"jp"		"{default} [{green}! {default} ] {red} 戦車 {default} ( {olive} {1} {default} ) が {red} 魔女を倒した"
+	}
+	"WitchRemainedHealth"
+	{
+		"#format"	"{1:d}"
+		"jp"		"{default} [{green}! {default} ] {blue} 魔女 {default} には {olive} {1} {default} の体力が残っていました"
+	}
+	"DamageToWitch"
+	{
+		"jp"		"{default} [{green}! {default} ] {blue} {default} が {blue} 魔女に与えたダメージ:"
+	}
+	"PrefectWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"jp"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3} ★★"
+	}
+	"FinalShotWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"jp"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3} ★"
+	}
+	"AssistanceWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}{3:N}"
+		"jp"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3}"
+	}
+	"FinalShotInfWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"jp"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} 感染 {olive} ☆"
+	}
+	"AssistanceInfWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"jp"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} 感染しました"
+	}
+	"FinalShotTankWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"jp"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} タンク {olive} ☆"
+	}
+	"AssistanceTankWitchCrown"
+	{
+		"#format"	"{1:d}{2:d}"
+		"jp"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} タンク"
+	}
+}

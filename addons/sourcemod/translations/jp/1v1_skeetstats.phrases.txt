@@ -1,0 +1,55 @@
+"Phrases"
+{
+	"TagKills"
+	{
+		"jp"		"[{olive}1v1Stat{default}] {green}キル数{default}:"
+	}
+	"TagSkeet"
+	{
+		"jp"		"[{olive}1v1ステータス{default}] {green}スキート{default}:"
+	}
+	"TagAcc"
+	{
+		"jp"		"[{olive}1v1Stat{default}] {green}精度{default}:"
+	}
+	"SI_DMG_CI"
+	{
+		"#format"	"{1:d},{2:d},{3:d}"
+		"jp"		"{olive}{1}{default} damage | {olive}{2}{default} kills | {olive}{3}{default} common\\n"
+	}
+	"SI_DMG"
+	{
+		"#format"	"{1:d},{2:d}"
+		"jp"		"{olive}{1}{default} damage | {olive}{2}{default} kills\\n"
+	}
+	"SI_CI"
+	{
+		"#format"	"{1:d},{2:d}"
+		"jp"		"{olive}{1}{default} kills | {olive}{2}{default} common\\n"
+	}
+	"SI"
+	{
+		"jp"		"{olive}%d{default} kills\\n"
+	}
+	"SKEET"
+	{
+		"#format"	"{1:d},{2:d},{3:d}"
+		"jp"		"{olive}{1}{default} normal | {olive}{2}{default} hurt | {olive}{3}{default} deadstops\\n"
+	}
+	"ACC_AllShots"
+	{
+		"jp"		"すべてのショット ({blue}%.0f%%{default})"
+	}
+	"ACC_BuckShot"
+	{
+		"jp"		" |バックショット ({blue}%.0f%%{default})"
+	}
+	"ACC_Melee"
+	{
+		"jp"		" |近接攻撃（{blue}%.0f%%{default})"
+	}
+	"ACC_NoShotsFired"
+	{
+		"jp"		"No shots fired\\n"
+	}
+}

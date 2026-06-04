@@ -208,7 +208,7 @@
 	"RoundNotReachLimit"
 	{
 		"#format"		"{1:i}"
-		"en"		"您这个难度就想马上逃课了？不行呢！(你还需要尝试{blue}{1}次{default}无法通过后才能使用{olive}boss投票功能{default})."
+		"en"		"At this level of difficulty, you want to skip class right away? No! (You still need to try {blue}{1} times {default} and fail before you can use the {olive}boss voting function {default})."
 		"chi"		"您这个难度就想马上逃课了？不行呢！(你还需要尝试{blue}{1}次{default}无法通过后才能使用{olive}boss投票功能{default})."
 		"zho"		"您這個難度就想馬上逃課了？不行呢！(你還需要嘗試{blue}{1}次{default}無法通過後才能使用{olive}boss投票功能{default})."
 		"jp"		"この難易度でもう楽をしたいですか？だめです！({olive}boss 投票機能{default}を使うには、あと {blue}{1} 回{default}クリア失敗する必要があります)."

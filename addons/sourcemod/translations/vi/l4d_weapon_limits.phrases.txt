@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"vi"		"{default}[{olive}{default}]"
+	}
+	"Full"
+	{
+		"vi"		"Nhóm vũ khí này đã đạt mức tối đa {green}%d{default}!"
+	}
+}

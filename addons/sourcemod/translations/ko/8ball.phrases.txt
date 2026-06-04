@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"ko"		"{default}[{green}8볼{default}]"
+	}
+	"Usage"
+	{
+		"ko"		"사용법: !8ball <질문>"
+	}
+	"Asked"
+	{
+		"ko"		"{teamcolor}%N{default} 질문: {olive}%s{default}"
+	}
+	"WithYes"
+	{
+		"ko"		"저는 {olive}로 가겠습니다{default}!"
+	}
+	"WithNo"
+	{
+		"ko"		"저는 {red}No{default}를 선택하겠습니다!"
+	}
+	"Yikes"
+	{
+		"ko"		"그렇군요. {red}아니요{default}!"
+	}
+	"Sure"
+	{
+		"ko"		"으아아아... {olive}물론이죠{default}?"
+	}
+	"AbsolutelyNot"
+	{
+		"ko"		"ㅋㅋㅋ {red}절대 아닙니다{default}!"
+	}
+	"Yeah"
+	{
+		"ko"		"그거 알아요? {olive}네{default}!"
+	}
+}

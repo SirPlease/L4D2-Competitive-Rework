@@ -1,0 +1,408 @@
+"Phrases"
+{
+	"Spawn Objects"
+	{
+		"vi"		"Đối tượng sinh sản"
+	}
+	"Select a task:"
+	{
+		"vi"		"Chọn một nhiệm vụ:"
+	}
+	"Select the delete task"
+	{
+		"vi"		"Chọn tác vụ xóa"
+	}
+	"Delete All Objects"
+	{
+		"vi"		"Xóa tất cả các đối tượng"
+	}
+	"Delete Looking Object"
+	{
+		"vi"		"Xóa đối tượng tìm kiếm"
+	}
+	"Delete Last Object"
+	{
+		"vi"		"Xóa đối tượng cuối cùng"
+	}
+	"Are you sure(Delete All)?"
+	{
+		"vi"		"Bạn có chắc chắn xóa tất cả các đối tượng?"
+	}
+	"Yes"
+	{
+		"vi"		"Đúng"
+	}
+	"No"
+	{
+		"vi"		"No"
+	}
+	"Successfully deleted all spawned objects"
+	{
+		"vi"		"Đã xóa thành công tất cả các đối tượng được sinh ra"
+	}
+	"Canceled"
+	{
+		"vi"		"Đã hủy"
+	}
+	"delete all the spawned objects?"
+	{
+		"vi"		"Bạn có chắc chắn muốn xóa tất cả các đối tượng được sinh ra không?"
+	}
+	"Edit Object"
+	{
+		"vi"		"Chỉnh sửa đối tượng"
+	}
+	"Delete Object"
+	{
+		"vi"		"Xóa đối tượng"
+	}
+	"Select the spawn method"
+	{
+		"vi"		"Chọn phương pháp sinh sản"
+	}
+	"Spawn Physics On Cursor"
+	{
+		"vi"		"Vật lý sinh sản trên con trỏ"
+	}
+	"Spawn Physics On Origin"
+	{
+		"vi"		"Vật lý sinh sản trên nguồn gốc"
+	}
+	"Spawn Non-solid On Cursor"
+	{
+		"vi"		"Sinh sản không rắn trên con trỏ"
+	}
+	"Spawn Non-solid On Origin"
+	{
+		"vi"		"Sinh sản không rắn về nguồn gốc"
+	}
+	"Spawn Solid On Cursor"
+	{
+		"vi"		"Sinh sản rắn trên con trỏ"
+	}
+	"Spawn Solid On Origin"
+	{
+		"vi"		"Sinh sản rắn trên nguồn gốc"
+	}
+	"Save Objects"
+	{
+		"vi"		"Lưu đối tượng"
+	}
+	"Select The Save Method"
+	{
+		"vi"		"Chọn phương pháp lưu"
+	}
+	"Save Stripper File"
+	{
+		"vi"		"Lưu tập tin vũ nữ thoát y"
+	}
+	"Save Routing File"
+	{
+		"vi"		"Lưu tập tin định tuyến"
+	}
+	"Save Spawn Objects File"
+	{
+		"vi"		"Lưu tệp đối tượng sinh sản"
+	}
+	"Select Path Difficulty"
+	{
+		"vi"		"Chọn độ khó của đường dẫn"
+	}
+	"Easy Path"
+	{
+		"vi"		"Con đường dễ dàng"
+	}
+	"Medium Path"
+	{
+		"vi"		"Đường dẫn trung bình"
+	}
+	"Hard Path"
+	{
+		"vi"		"Con đường cứng"
+	}
+	"Load Objects"
+	{
+		"vi"		"Tải đối tượng"
+	}
+	"load the map data cache?"
+	{
+		"vi"		"Bạn có chắc chắn muốn tải bộ đệm dữ liệu bản đồ không?"
+	}
+	"Are you sure?"
+	{
+		"vi"		"Bạn có chắc không?"
+	}
+	"Choose a map number please"
+	{
+		"vi"		"Vui lòng chọn số bản đồ"
+	}
+	"Vehicles"
+	{
+		"vi"		"Xe cộ"
+	}
+	"Foliage"
+	{
+		"vi"		"Tán lá"
+	}
+	"Interior"
+	{
+		"vi"		"nội thất"
+	}
+	"Exterior"
+	{
+		"vi"		"ngoại thất"
+	}
+	"Decorative"
+	{
+		"vi"		"trang trí"
+	}
+	"Misc"
+	{
+		"vi"		"linh tinh"
+	}
+	"Select an action:"
+	{
+		"vi"		"Chọn một hành động:"
+	}
+	"Rotate"
+	{
+		"vi"		"Quay"
+	}
+	"Move"
+	{
+		"vi"		"Di chuyển"
+	}
+	"Rotate 1 degree (X axys)"
+	{
+		"vi"		"Xoay 1 độ (X trục)"
+	}
+	"Rotate 10 degree (X axys)"
+	{
+		"vi"		"Xoay 10 độ (X trục)"
+	}
+	"Rotate 15 degree (X axys)"
+	{
+		"vi"		"Xoay 15 độ (X trục)"
+	}
+	"Rotate 45 degree (X axys)"
+	{
+		"vi"		"Xoay 40 độ (X trục)"
+	}
+	"Rotate 90 degree (X axys)"
+	{
+		"vi"		"Xoay 90 độ (trục X)"
+	}
+	"Rotate 180 degree (X axys)"
+	{
+		"vi"		"Xoay 180 độ (trục X)"
+	}
+	"Back 1 degree (X axys)"
+	{
+		"vi"		"Lùi lại 1 độ (X trục)"
+	}
+	"Back 10 degree (X axys)"
+	{
+		"vi"		"Lùi lại 10 độ (X trục)"
+	}
+	"Back 15 degree (X axys)"
+	{
+		"vi"		"Quay lại 15 độ (X trục)"
+	}
+	"Rotate 1 degree (Y axys)"
+	{
+		"vi"		"Xoay 1 độ (trục Y)"
+	}
+	"Rotate 10 degree (Y axys)"
+	{
+		"vi"		"Xoay 10 độ (trục Y)"
+	}
+	"Rotate 15 degree (Y axys)"
+	{
+		"vi"		"Xoay 15 độ (trục Y)"
+	}
+	"Rotate 45 degree (Y axys)"
+	{
+		"vi"		"Xoay 40 độ (trục Y)"
+	}
+	"Rotate 90 degree (Y axys)"
+	{
+		"vi"		"Xoay 90 độ (trục Y)"
+	}
+	"Rotate 180 degree (Y axys)"
+	{
+		"vi"		"Xoay 180 độ (trục Y)"
+	}
+	"Back 1 degree (Y axys)"
+	{
+		"vi"		"Lùi lại 1 độ (trục Y)"
+	}
+	"Back 10 degree (Y axys)"
+	{
+		"vi"		"Lùi lại 10 độ (trục Y)"
+	}
+	"Back 15 degree (Y axys)"
+	{
+		"vi"		"Quay lại 15 độ (trục Y)"
+	}
+	"Rotate 1 degree (Z axys)"
+	{
+		"vi"		"Xoay 1 độ (trục Z)"
+	}
+	"Rotate 10 degree (Z axys)"
+	{
+		"vi"		"Xoay 10 độ (trục Z)"
+	}
+	"Rotate 15 degree (Z axys)"
+	{
+		"vi"		"Xoay 15 độ (trục Z)"
+	}
+	"Rotate 45 degree (Z axys)"
+	{
+		"vi"		"Xoay 40 độ (trục Z)"
+	}
+	"Rotate 90 degree (Z axys)"
+	{
+		"vi"		"Xoay 90 độ (trục Z)"
+	}
+	"Rotate 180 degree (Z axys)"
+	{
+		"vi"		"Xoay 180 độ (trục Z)"
+	}
+	"Back 1 degree (Z axys)"
+	{
+		"vi"		"Lùi lại 1 độ (trục Z)"
+	}
+	"Back 10 degree (Z axys)"
+	{
+		"vi"		"Quay lại 10 độ (trục Z)"
+	}
+	"Back 15 degree (Z axys)"
+	{
+		"vi"		"Quay lại 15 độ (trục Z)"
+	}
+	"Move Up 1 Unit"
+	{
+		"vi"		"Di chuyển lên 1 đơn vị"
+	}
+	"Move Up 10 Unit"
+	{
+		"vi"		"Di chuyển lên 10 đơn vị"
+	}
+	"Move Up 30 Unit"
+	{
+		"vi"		"Di chuyển lên 30 đơn vị"
+	}
+	"Move Down 1 Unit"
+	{
+		"vi"		"Di chuyển xuống 1 đơn vị"
+	}
+	"Move Down 10 Unit"
+	{
+		"vi"		"Di chuyển xuống 10 đơn vị"
+	}
+	"Move Down 30 Unit"
+	{
+		"vi"		"Di chuyển xuống 30 đơn vị"
+	}
+	"Move Right 1 Unit"
+	{
+		"vi"		"Di chuyển sang phải 1 đơn vị"
+	}
+	"Move Right 10 Unit"
+	{
+		"vi"		"Di chuyển sang phải 10 đơn vị"
+	}
+	"Move Right 30 Unit"
+	{
+		"vi"		"Di chuyển sang phải 30 đơn vị"
+	}
+	"Move Left 1 Unit"
+	{
+		"vi"		"Di chuyển sang trái 1 đơn vị"
+	}
+	"Move Left 10 Unit"
+	{
+		"vi"		"Di chuyển sang trái 10 đơn vị"
+	}
+	"Move Left 30 Unit"
+	{
+		"vi"		"Di chuyển sang trái 30 đơn vị"
+	}
+	"Move Forward 1 Unit"
+	{
+		"vi"		"Tiến lên 1 đơn vị"
+	}
+	"Move Forward 10 Unit"
+	{
+		"vi"		"Tiến lên 10 đơn vị"
+	}
+	"Move Forward 30 Unit"
+	{
+		"vi"		"Tiến lên 30 đơn vị"
+	}
+	"Move Backward 1 Unit"
+	{
+		"vi"		"Lùi lại 1 đơn vị"
+	}
+	"Move Backward 10 Unit"
+	{
+		"vi"		"Di chuyển lùi 10 đơn vị"
+	}
+	"Move Backward 30 Unit"
+	{
+		"vi"		"Lùi lại 30 đơn vị"
+	}
+	"Object Model"
+	{
+		"#format"	"{1:d},{2:s}"
+		"vi"		"Đối tượng( {1} ) Model: {2}"
+	}
+	"Object Position"
+	{
+		"#format"	"{1:d},{2:f},{3:f},{4:f}"
+		"vi"		"Đối tượng( {1} ) Vị trí: {2}, {3}, {4}"
+	}
+	"Object Angle"
+	{
+		"#format"	"{1:d},{2:f},{3:f},{4:f}"
+		"vi"		"Đối tượng( {1} ) Góc: {2}, {3}, {4}"
+	}
+	"Successfully removed an object"
+	{
+		"#format"	"{1:d}"
+		"vi"		"Đã xóa thành công một đối tượng ( {1} )"
+	}
+	"This plugin won't work in this game"
+	{
+		"vi"		"Plugin này sẽ không hoạt động trong trò chơi này"
+	}
+	"You are not looking to a valid object"
+	{
+		"vi"		"Bạn không tìm kiếm một đối tượng hợp lệ"
+	}
+	"Succesfully deleted the last spawned object"
+	{
+		"vi"		"Đã xóa thành công đối tượng được sinh ra cuối cùng"
+	}
+	"The last spawned object index is not an object anymore!"
+	{
+		"#format"	"{1:d}"
+		"vi"		"Chỉ mục đối tượng được sinh ra cuối cùng {1} không còn là đối tượng nữa!"
+	}
+	"The last object is not valid anymore"
+	{
+		"vi"		"Đối tượng cuối cùng không còn hợp lệ nữa"
+	}
+	"You haven't spawned anything yet"
+	{
+		"vi"		"Bạn chưa sinh ra bất cứ thứ gì"
+	}
+	"The file already exists."
+	{
+		"vi"		"Tệp đã tồn tại. Nội dung cũ hơn sẽ không bị xóa."
+	}
+	"Succesfully saved the map data"
+	{
+		"vi"		"Đã lưu thành công dữ liệu bản đồ"
+	}
+}

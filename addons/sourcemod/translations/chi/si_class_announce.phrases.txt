@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"SI"
+	{
+		"chi"		"SI: "
+	}
+	"SpecialInfected"
+	{
+		"chi"		"特殊感染者："
+	}
+}

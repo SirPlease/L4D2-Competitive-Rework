@@ -1,0 +1,13 @@
+"Phrases"
+{
+	"SurvivorSay"
+	{
+		"#format"	"{1:N},{2:s}"
+		"vi"		"{default}(Người sống sót) {blue}{1} {default}: {2}"
+	}
+	"InfectedSay"
+	{
+		"#format"	"{1:N},{2:s}"
+		"vi"		"{default}(Bị nhiễm) {red}{1} {default}: {2}"
+	}
+}

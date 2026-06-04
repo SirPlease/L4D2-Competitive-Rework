@@ -1,0 +1,47 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"vi"		"< {olive} Đại Tộc {default} >"
+	}
+	"TankPlay"
+	{
+		"vi"		"Horde đã yêu cầu {blue} tạm dừng {default} do xe tăng đang hoạt động! Tiến lên theo {blue} %0.1f%% {default} sẽ bắt đầu đám đông."
+	}
+	"UntilHordeStarts"
+	{
+		"vi"		"{blue} %0.1f%% {default} còn lại cho đến khi đám đông bắt đầu..."
+	}
+	"HordeResumed"
+	{
+		"vi"		"Horde đã {blue} nối lại {default} ở mức {green} %i%% sức mạnh {default}, đẩy mạnh sẽ làm tăng số lượng."
+	}
+	"HordeStrength"
+	{
+		"vi"		"Horde đang ở mức {green} %i%% sức mạnh {default}..."
+	}
+	"HordeVeryStrength"
+	{
+		"vi"		"{red} Những người sống sót đã đẩy quá xa {default}, đám đông đang ở {green} 100 %% sức mạnh {default}!"
+	}
+	"L4D2TankHordeMonitor_HordeZombieWaveTemporarilySuspended"
+	{
+		"vi"		"<{olive}orde{default}> Làn sóng zombie tạm thời bị đình chỉ do sự hiện diện của Tank {blue}{default}! Nếu bạn tiếp tục chuyển tiếp {blue}%0.1f%%{default}, làn sóng zombie sẽ bắt đầu lại."
+	}
+	"L4D2TankHordeMonitor_HordeNoteWaveZombiesStarted"
+	{
+		"vi"		"<{olive}orde{default}> Xin lưu ý! Làn sóng zombie lại bắt đầu với hành trình {blue}%0.1f%%{default} còn lại..."
+	}
+	"L4D2TankHordeMonitor_HordeZombieTideRestoredCurrent"
+	{
+		"vi"		"<{olive}orde{default}> Làn sóng zombie đã {blue} được khôi phục thành {default}. Sức mạnh hiện tại là {green}%i%%. Tiếp tục tiến lên sẽ làm tăng cường độ của làn sóng zombie."
+	}
+	"L4D2TankHordeMonitor_HordeCurrentZombieWaveIntensity"
+	{
+		"vi"		"<{olive}orde{default}> Làn sóng zombie hiện tại là {green}%i%% cường độ {default}..."
+	}
+	"L4D2TankHordeMonitor_HordeSurvivorsAdvancedTooFar"
+	{
+		"vi"		"<{olive}orde{default}> Những người sống sót đã tiến quá xa và cường độ của làn sóng zombie đã được đổi thành {green}100%% {default}!"
+	}
+}

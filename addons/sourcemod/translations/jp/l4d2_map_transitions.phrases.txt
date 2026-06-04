@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2MapTransitions_EndVersusModeRoundPost"
+	{
+		"jp"		"L4D2_OnEndVersusModeRound_Post"
+	}
+	"L4D2MapTransitions_MTStartingTransition"
+	{
+		"jp"		"{olive}[MT]{default} 移行開始: {blue}%s{default} から: {blue}%s"
+	}
+}

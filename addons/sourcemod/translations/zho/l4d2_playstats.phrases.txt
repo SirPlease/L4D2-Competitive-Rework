@@ -1,0 +1,67 @@
+"Phrases"
+{
+	"L4D2Playstats_UseStatsTypeRoundGame"
+	{
+		"zho"		"{default}使用：/stats [<類型>] [{olive}圓形{default}/{olive}遊戲{default}/{olive}團隊{default}/{olive}全部{default}/{olive}其他{default}]"
+	}
+	"L4D2Playstats_StatsType"
+	{
+		"zho"		"{default} 或：/stats [<類型>] [{olive}r{default}/{olive}g{default}/{olive}t{default}/{olive}a{default}/{olive}o{default}]"
+	}
+	"L4D2Playstats_TypeMVPSkillFFAcc"
+	{
+		"zho"		"{default} 其中 <類型> 是 '{green}MVP{default}', '{green}技能{default}', '{green}ff{default}', '{green}符合{default}'或'{green}訊息{default}'。 （更多資訊請參閱控制台）"
+	}
+	"L4D2Playstats_StatsCommandUnknownArgumentType"
+	{
+		"zho"		"統計指令：未知參數：「%s」。輸入“/stats help”以取得可能的參數。"
+	}
+	"L4D2Playstats_PlayerStatisticsReset"
+	{
+		"zho"		"玩家統計數據重置。"
+	}
+	"L4D2Playstats_UseStatsAutoFlagsType"
+	{
+		"zho"		"{default}使用：{green}/stats_auto <flags>{default}。輸入 {green}/stats_auto help{default} 以了解更多資訊。"
+	}
+	"L4D2Playstats_UseStatsAutoFlagsInteger"
+	{
+		"zho"		"{default}使用：{green}/stats_auto <flags>{default}。 Flags 是一個整數，是回合結束時顯示的所有列印輸出的總和。"
+	}
+	"L4D2Playstats_SetFlags0UseServer"
+	{
+		"zho"		"{default}將標誌設為 0 以使用伺服器自動列印預設值；設定為 -1 則完全不顯示任何內容。"
+	}
+	"L4D2Playstats_StatsPreviewNoFlagsSet"
+	{
+		"zho"		"{default}Stats 預覽：未設定標誌。首先使用 {green}/stats_auto <flags>{default} 設定標誌。輸入 {green}/stats_auto help{default} 以了解更多資訊。"
+	}
+	"L4D2Playstats_StatsPrefInvalidValueType"
+	{
+		"zho"		"統計首選項：無效值：「%s」。輸入“/stats_auto help”以獲取更多資訊。"
+	}
+	"L4D2Playstats_StatsPrefNoRoundEnd"
+	{
+		"zho"		"{default} 統計首選：{green} 根本沒有圓端印刷 {default}。"
+	}
+	"L4D2Playstats_StatsPrefServerDefault"
+	{
+		"zho"		"{default}統計偏好：{green}伺服器預設{default}。"
+	}
+	"L4D2Playstats_StatsPrefFlagsSet"
+	{
+		"zho"		"{default}Stats 首選項：標記設定為："
+	}
+	"L4D2Playstats_UseStatsAutoTestGet"
+	{
+		"zho"		"{default}使用 {green}/stats_auto test{default} 取得報表預覽。"
+	}
+	"L4D2Playstats_StatsPrefErrorCookieNot"
+	{
+		"zho"		"統計首選項：錯誤：cookie 尚未快取（稍後重試）。"
+	}
+	"L4D2Playstats_SeeURLListFlags"
+	{
+		"zho"		"{default}查看：{olive}https://github.com/Tabbernaut/L4D2-Plugins/blob/master/stats/README.md{default} 取得 flags 清單。"
+	}
+}

@@ -79,11 +79,16 @@
 	"SlotsVote_AdminOnlyBelowMinimumSlots"
 	{
 		"#format"		"{1:i}"
-		"en"		"只有管理员才能将位置设为小于 {blue}{1}{default}人"
+		"en"		"Only admins can set slots below {blue}{1}{default} players"
 		"chi"		"只有管理员才能将位置设为小于 {blue}{1}{default}人"
 		"zho"		"只有管理员才能将位置设为小于 {blue}{1}{default}人"
 		"jp"		"只有管理员才能将位置设为小于 {blue}{1}{default}人"
 		"ko"		"只有管理员才能将位置设为小于 {blue}{1}{default}人"
 		"vi"		"只有管理员才能将位置设为小于 {blue}{1}{default}人"
+	}
+
+	"LimitSlotsBelow"
+	{
+		"en"		"Only admins can set slots below {blue}{1}{default} players"
 	}
 }

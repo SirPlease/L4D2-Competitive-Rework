@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Lerpmonitor_LerpWarningLerpValueIllegal"
+	{
+		"chi"		"{default}<{olive}Lerp{default}> {teamcolor}警告:{default} 你的Lerp值非法 (最小: {teamcolor}%.01f{default}, 最大: {teamcolor}%.01f{default})! 请在 5 秒内改回来。"
+	}
+	"Lerpmonitor_LerpThanksCooperationLerpRestored"
+	{
+		"chi"		"{default}<{olive}Lerp{default}> 感谢配合, Lerp已恢复到合法范围。"
+	}
+	"Lerpmonitor_Lerp"
+	{
+		"chi"		"{default}<{olive}勒普{default}> {teamcolor}%N {default}@ {teamcolor}%.01f"
+	}
+	"Lerpmonitor_LerpChanges"
+	{
+		"chi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f {default}[%s%d{default}/%d {olive}变更]"
+	}
+	"Lerpmonitor_LerpMovedSpectatorIllegalLerp"
+	{
+		"chi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}被移动到旁观者 (不合法的lerp改变)!"
+	}
+	"Lerpmonitor_LerpIllegalChangeLerpGame"
+	{
+		"chi"		"{default}<{olive}Lerp{default}> 游戏里不合法的更改lerp! 将lerp改回 {teamcolor}%.01f"
+	}
+	"Lerpmonitor_Lerp_2"
+	{
+		"chi"		"{default}<{olive}勒普{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f"
+	}
+	"Lerpmonitor_LerpMovedBystanderDueFailure"
+	{
+		"chi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}因未在5秒内调整Lerp至合法范围，被移至旁观者"
+	}
+	"Lerpmonitor_LerpKickedGameHeFailed"
+	{
+		"chi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}因未在5秒内调整Lerp至合法范围，被踢出游戏"
+	}
+}

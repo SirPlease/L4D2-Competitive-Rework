@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"ko"		"{red}[{default}!{red}]"
+	}
+	"Spawned"
+	{
+		"ko"		"{olive}탱크{default}({red}컨트롤: %s{default})가 생성되었습니다!"
+	}
+	"Spawned2"
+	{
+		"ko"		"{olive}탱크{default}({red}컨트롤: %N{default})가 생성되었습니다!"
+	}
+	"L4D2TankAnnounce_TankControllerGenerated"
+	{
+		"ko"		"{default}[{red}!{default}] {green}Tank {default}({red} 컨트롤러: %s{default})가 생성되었습니다!"
+	}
+	"L4D2TankAnnounce_TankControllerGenerated_2"
+	{
+		"ko"		"{default}[{blue}!{default}] {green}Tank {default}({blue} 컨트롤러: %s{default})가 생성되었습니다!"
+	}
+}

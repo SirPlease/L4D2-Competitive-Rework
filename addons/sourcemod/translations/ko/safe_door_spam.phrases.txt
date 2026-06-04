@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Door_Open"
+	{
+		"ko"		"{olive} [세이프룸] {orange} %N 님이 오픈한 {white}"
+	}
+	"Door_Close"
+	{
+		"ko"		"{olive} [세이프룸] {white}가 {orange} %N에 의해 폐쇄되었습니다."
+	}
+	"Door_Wait"
+	{
+		"ko"		"{olive} [세이프룸] {white} 문은 {orange} %d {white} 초 후에 잠금 해제됩니다."
+	}
+	"Door_Unlocked"
+	{
+		"ko"		"{olive} [세이프룸] {white} 문 {orange} 열림"
+	}
+}

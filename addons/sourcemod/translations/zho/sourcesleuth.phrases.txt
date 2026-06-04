@@ -1,0 +1,17 @@
+"Phrases"
+{
+	"sourcesleuth_banreason"
+	{
+		"#format"	""
+		"zho"		"重複帳戶"
+	}
+	"sourcesleuth_admintext"
+	{
+		"#format"	"{1:N},{2:s},{3:s}"
+		"zho"		"玩家{1}（ID：{2} | IP：{3}）已主動封鎖IP"
+	}
+	"SourceSleuth_WhiteListReloaded"
+	{
+		"zho"		"[SourceSleuth] 白名單已重新載入！"
+	}
+}

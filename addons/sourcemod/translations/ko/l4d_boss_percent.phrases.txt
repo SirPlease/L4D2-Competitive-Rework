@@ -1,0 +1,55 @@
+"Phrases"
+{
+	"TagTank"
+	{
+		"ko"		"< {olive} 탱크 {default} >"
+	}
+	"TagWitch"
+	{
+		"ko"		"< {olive} 마녀 {default} >"
+	}
+	"TankOn"
+	{
+		"ko"		"탱크: %d%%"
+	}
+	"WitchOn"
+	{
+		"ko"		"마녀: %d%%"
+	}
+	"Disabled"
+	{
+		"ko"		"장애가 있는"
+	}
+	"StaticSpawn"
+	{
+		"ko"		"정적 생성"
+	}
+	"None"
+	{
+		"ko"		"없음"
+	}
+	"TankDisabled"
+	{
+		"ko"		"탱크: 비활성화"
+	}
+	"TankStatic"
+	{
+		"ko"		"탱크: 정적 생성"
+	}
+	"TankNone"
+	{
+		"ko"		"탱크: 없음"
+	}
+	"WitchDisabled"
+	{
+		"ko"		"마녀: 장애인"
+	}
+	"WitchStatic"
+	{
+		"ko"		"마녀: 정적 산란"
+	}
+	"WitchNone"
+	{
+		"ko"		"마녀: 없음"
+	}
+}

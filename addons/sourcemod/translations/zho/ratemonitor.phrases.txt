@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Ratemonitor_RatesNetsettingsChanged"
+	{
+		"zho"		"{default}<{olive}價格{default}> {teamcolor}%N{default}的網路設定變更為 {teamcolor}%d/%d/%d {default}至 {teamcolor}%d/%d/%d {olive}%s"
+	}
+	"Ratemonitor_RatesNetsettingsSet"
+	{
+		"zho"		"{default} < {olive} 價格 {default} > {teamcolor} %N {default} 的網路設定設定為 {teamcolor} %d / %d / %d"
+	}
+	"Ratemonitor_RatesNetsettingsSetIllegalValues"
+	{
+		"zho"		"{default} < {olive} 費率 {default} > {teamcolor} %N {default} 的網路設定設定為非法值： {teamcolor} %s / %s / %s {olive}%s"
+	}
+	"Ratemonitor_RatesIllegalyChangedNetsettingsMidgame"
+	{
+		"zho"		"{default} < {olive} 匯率 {default} > {teamcolor} %N {default} 遊戲中非法更改網路設定： {teamcolor} %s / %s / %s {olive}%s"
+	}
+	"Ratemonitor_RatesMovedSpectatorsIllegalNetsettings"
+	{
+		"zho"		"{default}<{olive}價格{default}> {teamcolor}%N {default}因非法網路設定而被移至觀眾席： {teamcolor}%s/%s/%s {olive}%s"
+	}
+	"Ratemonitor_RatesAdjustRatesValuesHigher"
+	{
+		"zho"		"{default} < {olive} 費率 {default} > 請將您的費率調整為高於 {olive} %d / %d / %d %s 的值"
+	}
+	"Ratemonitor_RatesChangeNetsettingsBack"
+	{
+		"zho"		"{default}<{olive}Rates{default}> 將網路設定變更回：{teamcolor}%d/%d/%d"
+	}
+	"Ratemonitor_RatesKickedIllegalNetsettings"
+	{
+		"zho"		"{default} < {olive} 匯率 {default} > {teamcolor} %N {default} 因非法上網被踢： {teamcolor} %s / %s / %s {olive}%s"
+	}
+	"Ratemonitor_RatesKickedDueIllegalNetsettings"
+	{
+		"zho"		"{default}<{olive}價格{default}> {teamcolor}%N {default}因非法網路設定變更而被踢： {teamcolor}%s/%s/%s {olive}%s"
+	}
+}

@@ -90,7 +90,7 @@
 
 	"SurvivorMVP_PharmacyMVPStatisticsLine"
 	{
-		"en"		"{olive}特感{green}%2d {olive}丧尸{green}%3d {olive}黑/被黑{green}%2d/%2d {olive}伤害{green}%4d {default}%N"
+		"en"		"{olive}Special feeling{green}%2d {olive}Zombies{green}%3d {olive}Black/Being hacked{green}%2d/%2d {olive}Damage{green}%4d {default}%N"
 		"chi"		"{olive}特感{green}%2d {olive}丧尸{green}%3d {olive}黑/被黑{green}%2d/%2d {olive}伤害{green}%4d {default}%N"
 		"zho"		"{olive}特感{green}%2d {olive}丧尸{green}%3d {olive}黑/被黑{green}%2d/%2d {olive}伤害{green}%4d {default}%N"
 		"jp"		"{olive}特感{green}%2d {olive}丧尸{green}%3d {olive}黑/被黑{green}%2d/%2d {olive}伤害{green}%4d {default}%N"

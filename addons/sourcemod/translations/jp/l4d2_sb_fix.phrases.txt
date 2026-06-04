@@ -1,0 +1,55 @@
+"Phrases"
+{
+	"L4D2SBFix_ShovedFlying"
+	{
+		"jp"		"{default}[%.2f] {olive}%N {default}ショブ: {green}フライング %N (%d)"
+	}
+	"L4D2SBFix_CapSmoker"
+	{
+		"jp"		"{default}[%.2f] {olive}%N {default}キャップスモーカー：{green}%N(%d)"
+	}
+	"L4D2SBFix_CapSurvivor"
+	{
+		"jp"		"{default}[%.2f] {olive}%N {default}キャップサバイバー: {green}%N (%d)"
+	}
+	"L4D2SBFix_CapInfected"
+	{
+		"jp"		"{default}[%.2f] {olive}%N {default}キャップ感染: {green}%N (%d)"
+	}
+	"L4D2SBFix_Witch"
+	{
+		"jp"		"{default}[%.2f] {olive}%N {default}魔女：{olive}(%d)"
+	}
+	"L4D2SBFix_CommonsDistMeleeCount"
+	{
+		"jp"		"{default}[%.2f] {olive}%N{default} コモンズ: {green}(%d){default} |  距離: {green}%.1f{default} |  近接カウント: {green}%d"
+	}
+	"L4D2SBFix_NewTargetShoved"
+	{
+		"jp"		"{default}[%.2f] {olive}%N{default} 新しいターゲットが押し込まれました: {green}%N (%d)"
+	}
+	"L4D2SBFix_NewTarget"
+	{
+		"jp"		"{default}[%.2f] {olive}%N{default}新規対象: {green}%N (%d)"
+	}
+	"L4D2SBFix_NewTargetShoot"
+	{
+		"jp"		"{default}[%.2f] {olive}%N{default}新規対象：{green}%N（%d）（撮影：%s）"
+	}
+	"L4D2SBFix_CapSurvivorIncapacitated"
+	{
+		"jp"		"{default}[%.2f] {olive}%N {default}無力化サバイバーキャップ: {green}%N"
+	}
+	"L4D2SBFix_CapInfectedIncapacitated"
+	{
+		"jp"		"{default}[%.2f] {olive}%N {default}キャップ感染無力化：{green}%N"
+	}
+	"L4D2SBFix_CommonsIncapacitatedDist"
+	{
+		"jp"		"{default}[%.2f] {olive}%N{default}コモンズ無力化距離: %.1f"
+	}
+	"L4D2SBFix_IntTargetIncapacitated"
+	{
+		"jp"		"{default} [ %.2f ] {olive} %N {default} int ターゲット 無効化: {green} %N"
+	}
+}

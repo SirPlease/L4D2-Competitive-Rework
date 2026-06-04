@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"ko"		"{blue} [ {green} 영역 {blue} ] {default}:"
+	}
+	"OnlyFirstReadyup"
+	{
+		"ko"		"라운드의 첫 번째 준비 중에만 투표를 요청할 수 있습니다."
+	}
+	"CannotCalled"
+	{
+		"ko"		"지금은 투표를 요청할 수 없습니다. 1~5초 후에 다시 시도하세요."
+	}
+	"NeedFull"
+	{
+		"ko"		"두 팀 모두 꽉 차 있어야 합니다."
+	}
+	"SurvivorsGet"
+	{
+		"ko"		"생존자는 %s를 얻습니까?"
+	}
+	"BeforeReadyup"
+	{
+		"ko"		"준비를 마치기 전에 투표가 통과되지 않았습니다."
+	}
+	"WeaponsSet"
+	{
+		"ko"		"생존자 무기 세트!"
+	}
+	"Welcome"
+	{
+		"ko"		"{blue} 존 {green} 헌터 {default}에 오신 것을 환영합니다."
+	}
+	"Type"
+	{
+		"ko"		"사용된 무기에 투표하려면 채팅에 {olive}!mode {default}를 입력하세요."
+	}
+}

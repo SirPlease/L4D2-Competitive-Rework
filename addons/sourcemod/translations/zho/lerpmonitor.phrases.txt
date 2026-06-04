@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Lerpmonitor_LerpWarningLerpValueIllegal"
+	{
+		"zho"		"{default}<{olive}Lerp{default}> {teamcolor} 警告：{default} 您的 Lerp 值非法（最小值：{teamcolor}%.01f{default}，最大值：{teamcolor}%.01f{default}）！請在5秒內改回來。"
+	}
+	"Lerpmonitor_LerpThanksCooperationLerpRestored"
+	{
+		"zho"		"{default}<{olive}Lerp{default}> 感謝配合, Lerp已恢復到合法範圍。"
+	}
+	"Lerpmonitor_Lerp"
+	{
+		"zho"		"{default}<{olive}勒普{default}> {teamcolor}%N {default}@ {teamcolor}%.01f"
+	}
+	"Lerpmonitor_LerpChanges"
+	{
+		"zho"		"{default}<{olive}勒普{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f {default}[%s%d{default}/%d {olive}變化]"
+	}
+	"Lerpmonitor_LerpMovedSpectatorIllegalLerp"
+	{
+		"zho"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}被移到旁觀者 (不合法的lerp改變)!"
+	}
+	"Lerpmonitor_LerpIllegalChangeLerpGame"
+	{
+		"zho"		"{default}<{olive}Lerp{default}> 遊戲裡不合法的更改lerp! 將lerp改回 {teamcolor}%.01f"
+	}
+	"Lerpmonitor_Lerp_2"
+	{
+		"zho"		"{default}<{olive}勒普{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f"
+	}
+	"Lerpmonitor_LerpMovedBystanderDueFailure"
+	{
+		"zho"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}因未在5秒內調整Lerp至合法範圍，被移至旁觀者"
+	}
+	"Lerpmonitor_LerpKickedGameHeFailed"
+	{
+		"zho"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}因未在5秒內調整Lerp"
+	}
+}

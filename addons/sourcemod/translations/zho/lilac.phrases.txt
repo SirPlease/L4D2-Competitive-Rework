@@ -1,0 +1,107 @@
+"Phrases"
+{
+	"welcome_msg"
+	{
+		"#format"	"{1:s}"
+		"zho"		"該伺服器受小反作弊{1}保護"
+	}
+	"kick_query_failure"
+	{
+		"zho"		"錯誤：查詢回應失敗，如果問題仍然存在，請重新啟動遊戲"
+	}
+	"kick_interp_exploit"
+	{
+		"#format"	"{1:.0f},{2:d},{3:.3f}"
+		"zho"		"偵測到漏洞：您的 interp 太高（{1} ms / {2} ms max）。請將您的cl_interp設定回{3}或更低"
+	}
+	"tban_ping_high"
+	{
+		"#format"	"{1:.0f},{2:d}"
+		"zho"		"您的 ping 值太高（{1} / {2} 最大值）"
+	}
+	"kick_ban_generic"
+	{
+		"zho"		"您已被禁止使用該伺服器"
+	}
+	"ban_angle"
+	{
+		"zho"		"偵測到角度作弊"
+	}
+	"ban_chat_clear"
+	{
+		"zho"		"偵測到聊天清除"
+	}
+	"ban_convar"
+	{
+		"zho"		"偵測到無效的 ConVar"
+	}
+	"ban_nolerp"
+	{
+		"zho"		"未偵測到 Lerp"
+	}
+	"ban_bhop"
+	{
+		"zho"		"偵測到跳頻"
+	}
+	"ban_aimbot"
+	{
+		"zho"		"偵測到瞄準機器人"
+	}
+	"ban_aimlock"
+	{
+		"zho"		"偵測到瞄準器"
+	}
+	"ban_anti_duck_delay"
+	{
+		"zho"		"偵測到反鴨子延遲"
+	}
+	"ban_noisemaker"
+	{
+		"zho"		"偵測到無限噪音源"
+	}
+	"ban_macro"
+	{
+		"zho"		"偵測到巨集"
+	}
+	"kick_macro"
+	{
+		"#format"	"{1:s}"
+		"zho"		"此伺服器不允許使用 {1} 巨集"
+	}
+	"chat_invalid_characters"
+	{
+		"zho"		"您的聊天訊息已被封鎖（原因：無效字元）。"
+	}
+	"chat_wide_char_spam"
+	{
+		"zho"		"您的聊天訊息已被阻止（原因：Wide-Char 垃圾郵件）。"
+	}
+	"kick_bad_name"
+	{
+		"zho"		"您的姓名包含無效字符，請更改您的姓名"
+	}
+	"ban_name_newline"
+	{
+		"zho"		"偵測到名稱換行符"
+	}
+	"LILAC_LittleAntiCheatWarningMacro"
+	{
+		"zho"		"【小反作弊】警告：不允許使用巨集！"
+	}
+	"LILAC_LittleAntiCheatDetectedUsing"
+	{
+		"zho"		"[小反作弊] %N 被偵測出使用了巨集 %s 。"
+	}
+	"LILAC_PingAppearsFineAgainSafe"
+	{
+		"zho"		"[Lilac] 你的 ping 似乎再次正常，可以安全地重新加入隊伍並進行比賽。"
+	}
+	"LILAC_WarningKickedSecondsondsPingStays"
+	{
+		"zho"		"[Lilac] 警告：如果你的 ping 值太高，你將在 %d 秒內被踢！ (%.0f / %d 最大)"
+	}
+	"kick_ban_genetic"
+	{
+		"zho"		"您已被禁止使用該伺服器。"
+	}
+}

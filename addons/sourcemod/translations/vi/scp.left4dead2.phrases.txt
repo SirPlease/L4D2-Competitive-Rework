@@ -1,0 +1,43 @@
+"Phrases"
+{
+	"L4D_Chat_Infected"
+	{
+		"#format"	"{1:s},{2:s}"
+		"vi"		"{default}(Bị nhiễm) {1} {default}: {2}"
+	}
+	"L4D_Chat_Survivor"
+	{
+		"#format"	"{1:s},{2:s}"
+		"vi"		"{default}(Người sống sót) {1} {default}:  {2}"
+	}
+	"L4D_Chat_Infected_Dead"
+	{
+		"#format"	"{1:s},{2:s}"
+		"vi"		"{default}*CHẾT*(Bị nhiễm) {1} {default}: {2}"
+	}
+	"L4D_Chat_Survivor_Dead"
+	{
+		"#format"	"{1:s},{2:s}"
+		"vi"		"{default}*CHẾT*(Người sống sót) {1} {default}:  {2}"
+	}
+	"L4D_Chat_Spec"
+	{
+		"#format"	"{1:s},{2:s}"
+		"vi"		"{default}(Khán giả) {1} {default}: {2}"
+	}
+	"L4D_Chat_All"
+	{
+		"#format"	"{1:s},{2:s}"
+		"vi"		"{default}{1} {default}:  {2}"
+	}
+	"L4D_Chat_AllDead"
+	{
+		"#format"	"{1:s},{2:s}"
+		"vi"		"{default}*CHẾT* {1} {default}:  {2}"
+	}
+	"L4D_Chat_AllSpec"
+	{
+		"#format"	"{1:s},{2:s}"
+		"vi"		"{default}*Thông số kỹ thuật* {1} {default}:  {2}"
+	}
+}

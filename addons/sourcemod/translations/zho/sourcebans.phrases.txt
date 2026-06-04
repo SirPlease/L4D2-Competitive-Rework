@@ -1,0 +1,82 @@
+"Phrases"
+{
+	"Banned Check Site"
+	{
+		"#format"	"{1:s}"
+		"zho"		"您已被該伺服器禁止，請查看{1}以了解更多信息"
+	}
+	"DB Connect Fail"
+	{
+		"zho"		"資料庫連線失敗。請聯絡伺服器運營商。"
+	}
+	"Not In Game"
+	{
+		"zho"		"該玩家不在遊戲中，請造訪網頁面板禁止他們。"
+	}
+	"Ban Not Verified"
+	{
+		"zho"		"該玩家尚未得到驗證。請等待三十秒再重試。"
+	}
+	"Can Not Unban"
+	{
+		"#format"	"{1:s}"
+		"zho"		"您無法在伺服器中解封，請造訪{1}解封。"
+	}
+	"Can Not Add Ban"
+	{
+		"#format"	"{1:s}"
+		"zho"		"您無法在伺服器中新增封鎖，請造訪{1}新增封鎖。"
+	}
+	"Check Menu"
+	{
+		"zho"		"請檢查選單以選擇禁止原因。"
+	}
+	"Include Reason"
+	{
+		"zho"		"請附上禁止該客戶端的原因。"
+	}
+	"Ban Fail"
+	{
+		"zho"		"禁止玩家失敗，請重試。"
+	}
+	"Chat Reason"
+	{
+		"zho"		"請在聊天中輸入禁止原因，然後按 Enter 鍵。輸入“!noreason”即可中止。"
+	}
+	"Chat Reason Aborted"
+	{
+		"zho"		"禁令程序已成功停止。"
+	}
+	"SourceBans_FailedBan"
+	{
+		"zho"		"%s 封鎖 %s 失敗。"
+	}
+	"SourceBans_AlreadyBanned"
+	{
+		"zho"		"%s%s 已被禁止。"
+	}
+	"SourceBans_SMBanipFailed"
+	{
+		"zho"		"%ssm_banip 失敗"
+	}
+	"SourceBans_SuccessfullyBanned"
+	{
+		"zho"		"%s%s 成功封鎖"
+	}
+	"SourceBans_SMUnbanFailed"
+	{
+		"zho"		"%ssm_unban 失敗"
+	}
+	"SourceBans_NoActiveBansFoundFilter"
+	{
+		"zho"		"%s 找不到該過濾器的有效禁令"
+	}
+	"SourceBans_SuccessfullyUnbanned"
+	{
+		"zho"		"%s%s成功解禁"
+	}
+	"SourceBans_SMAddbanFailed"
+	{
+		"zho"		"%ssm_addban 失敗"
+	}
+}

@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"BoomerHordeEqualizer_PassedBiledSurvivor"
+	{
+		"ko"		"%N는 bBiledSurvivor를 %N에 전달했습니다."
+	}
+	"BoomerHordeEqualizer_NoLongerBoomedSurvivorCount"
+	{
+		"ko"		"%N는 더 이상 그렇지 않습니다. (BoomedSurvivorCount: %i)"
+	}
+	"BoomerHordeEqualizer_BoomedTotal"
+	{
+		"ko"		"%N 붐 발생 (총계: %d)"
+	}
+	"BoomerHordeEqualizer_BoomHordeEventBoomedSurvivor"
+	{
+		"ko"		"BoomHordeEvent[BoomedSurvivorCount] : %i"
+	}
+	"BoomerHordeEqualizer_UncoveredBileEvent"
+	{
+		"ko"		"발견된 담즙 사건"
+	}
+}

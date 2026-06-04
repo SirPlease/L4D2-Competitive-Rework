@@ -1,0 +1,13 @@
+"Phrases"
+{
+	"SurvivorSay"
+	{
+		"#format"	"{1:N},{2:s}"
+		"jp"		"{default}(サバイバー) {blue}{1} {default}: {2}"
+	}
+	"InfectedSay"
+	{
+		"#format"	"{1:N},{2:s}"
+		"jp"		"{default}(感染者) {red}{1} {default}: {2}"
+	}
+}

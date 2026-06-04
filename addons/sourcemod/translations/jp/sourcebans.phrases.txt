@@ -1,0 +1,82 @@
+"Phrases"
+{
+	"Banned Check Site"
+	{
+		"#format"	"{1:s}"
+		"jp"		"あなたはこのサーバーによって禁止されています。詳細については {1} を確認してください"
+	}
+	"DB Connect Fail"
+	{
+		"jp"		"データベース接続に失敗しました。サーバー運営者にお問い合わせください。"
+	}
+	"Not In Game"
+	{
+		"jp"		"プレーヤーはゲームに参加していません。プレーヤーを禁止するには、Web パネルにアクセスしてください。"
+	}
+	"Ban Not Verified"
+	{
+		"jp"		"このプレイヤーは認証されていません。 30 秒待ってから再試行してください。"
+	}
+	"Can Not Unban"
+	{
+		"#format"	"{1:s}"
+		"jp"		"サーバーから禁止を解除することはできません。禁止を解除するには、{1} にアクセスしてください。"
+	}
+	"Can Not Add Ban"
+	{
+		"#format"	"{1:s}"
+		"jp"		"サーバーから禁止を追加することはできません。禁止を追加するには、{1} にアクセスしてください。"
+	}
+	"Check Menu"
+	{
+		"jp"		"メニューを確認して禁止理由を選択してください。"
+	}
+	"Include Reason"
+	{
+		"jp"		"クライアントを禁止する理由を含めてください。"
+	}
+	"Ban Fail"
+	{
+		"jp"		"プレーヤーを禁止できませんでした。もう一度お試しください。"
+	}
+	"Chat Reason"
+	{
+		"jp"		"チャットに禁止の理由を入力して Enter キーを押してください。中止するには「!noreason 」と入力します。"
+	}
+	"Chat Reason Aborted"
+	{
+		"jp"		"禁止手続きは正常に停止されました。"
+	}
+	"SourceBans_FailedBan"
+	{
+		"jp"		"%sF%s を禁止できませんでした。"
+	}
+	"SourceBans_AlreadyBanned"
+	{
+		"jp"		"%s%s はすでに禁止されています。"
+	}
+	"SourceBans_SMBanipFailed"
+	{
+		"jp"		"%ssm_banip が失敗しました"
+	}
+	"SourceBans_SuccessfullyBanned"
+	{
+		"jp"		"%s%s は正常に禁止されました"
+	}
+	"SourceBans_SMUnbanFailed"
+	{
+		"jp"		"%ssm_unban が失敗しました"
+	}
+	"SourceBans_NoActiveBansFoundFilter"
+	{
+		"jp"		"%sそのフィルターに対するアクティブな禁止は見つかりませんでした"
+	}
+	"SourceBans_SuccessfullyUnbanned"
+	{
+		"jp"		"%s%s が正常に禁止解除されました"
+	}
+	"SourceBans_SMAddbanFailed"
+	{
+		"jp"		"%ssm_addban が失敗しました"
+	}
+}

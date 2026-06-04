@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Title"
+	{
+		"vi"		"{blue}[{default}{blue}]"
+	}
+	"Reload"
+	{
+		"vi"		"{olive}Tải lại{default}/{olive}!overhand{default} = {blue}2 tay được trao tay{default}"
+	}
+	"Use"
+	{
+		"vi"		"{olive}Sử dụng{default}/{olive}!underhand{default} = {blue}Âm mưu{default}"
+	}
+	"M2"
+	{
+		"vi"		"{olive}M2{default}/{olive}!overonehand{default} = {blue}1 Handed Overhand{default}"
+	}
+}

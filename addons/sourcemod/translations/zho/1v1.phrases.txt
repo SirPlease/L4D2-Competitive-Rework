@@ -1,0 +1,41 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"zho"		"[{olive}1v1{default}]"
+	}
+	"TagPvE"
+	{
+		"zho"		"[{olive}傷害報告{default}]"
+	}
+	"HealthRemaining"
+	{
+		"#format"	"{1:s},{2:s},{3:d}"
+		"zho"		"{red}{1}{default}（{green}{2}{default}）還剩 {olive}{3}{default} 點生命值!"
+	}
+	"HealthRemainingAI"
+	{
+		"#format"	"{1:s},{2:d}"
+		"zho"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default} 還剩 {olive}{2}{default} 點生命值!"
+	}
+	"UMad"
+	{
+		"zho"		"不用生氣，下次記得瞄準頭部..."
+	}
+	"Sad"
+	{
+		"zho"		"你看起來很沮喪...."
+	}
+	"Close"
+	{
+		"zho"		"差一點!"
+	}
+	"NBad"
+	{
+		"zho"		"還不錯."
+	}
+	"AI"
+	{
+		"zho"		"AI"
+	}
+}

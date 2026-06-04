@@ -1,0 +1,24 @@
+"Phrases"
+{
+	"In Cooldown"
+	{
+		"#format"	"{1:.0f}"
+		"ko"		"다시 보고하기 전에 {1}초를 기다리십시오."
+	}
+	"Report Canceled"
+	{
+		"ko"		"신고가 취소되었습니다."
+	}
+	"Report Sent"
+	{
+		"ko"		"귀하의 보고서가 전송되었습니다"
+	}
+	"Reason Prompt"
+	{
+		"ko"		"신고 사유를 입력하세요. 취소하려면 \\\"취소\\\"하세요."
+	}
+	"Reason Short Need More"
+	{
+		"ko"		"이유가 너무 짧습니다. 자세한 내용이 필요합니다."
+	}
+}

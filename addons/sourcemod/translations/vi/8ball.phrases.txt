@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"vi"		"{default}[{green}8Bóng{default}]"
+	}
+	"Usage"
+	{
+		"vi"		"Cách sử dụng: !8ball <câu hỏi>"
+	}
+	"Asked"
+	{
+		"vi"		"{teamcolor}%N{default} Đã hỏi: {olive}%s{default}"
+	}
+	"WithYes"
+	{
+		"vi"		"Tôi sẽ chọn {olive}Có{default}!"
+	}
+	"WithNo"
+	{
+		"vi"		"Tôi sẽ sử dụng {red}Không{default}!"
+	}
+	"Yikes"
+	{
+		"vi"		"Rất tiếc. {red}Không{default}!"
+	}
+	"Sure"
+	{
+		"vi"		"Uhhhh... {olive}Chắc chắn rồi{default}?"
+	}
+	"AbsolutelyNot"
+	{
+		"vi"		"LOL {red}Hoàn toàn không{default}!"
+	}
+	"Yeah"
+	{
+		"vi"		"Bạn biết gì không? {olive}Vâng{default}!"
+	}
+}

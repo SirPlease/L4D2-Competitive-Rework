@@ -1,0 +1,114 @@
+"Phrases"
+{
+	"Usage_Block"
+	{
+		"ko"		"사용법: sm_block <#userid|steam64|name>"
+	}
+	"Usage_Unblock"
+	{
+		"ko"		"사용법: sm_unblock <#userid|steam64|name>"
+	}
+	"DB_NotReady"
+	{
+		"ko"		"[BlockList] 데이터베이스가 준비되지 않았습니다."
+	}
+	"Resolve_Failed"
+	{
+		"ko"		"[BlockList] 대상 확인에 실패했습니다. #userid / steam64 / 이름을 사용하세요."
+	}
+	"Self_Steam_Failed"
+	{
+		"ko"		"[차단 목록] 귀하의 SteamID를 확인할 수 없습니다."
+	}
+	"Block_SelfDenied"
+	{
+		"ko"		"[차단목록] 자신을 차단할 수 없습니다."
+	}
+	"Block_LimitReached"
+	{
+		"#format"	"{1:i}"
+		"ko"		"[BlockList] 차단 한도( {1} )에 도달했습니다."
+	}
+	"Block_Added"
+	{
+		"#format"	"{1:s}"
+		"ko"		"[블록리스트] 추가된 블록: {1}"
+	}
+	"Block_Failed_Generic"
+	{
+		"ko"		"[BlockList] 차단 작업이 실패했습니다."
+	}
+	"Unblock_Removed"
+	{
+		"ko"		"[차단목록] 차단이 해제되었습니다."
+	}
+	"Unblock_NotFound"
+	{
+		"ko"		"[차단목록] 해당 차단기록이 없습니다."
+	}
+	"Unblock_Failed_Generic"
+	{
+		"ko"		"[BlockList] 차단 해제 작업이 실패했습니다."
+	}
+	"Query_Failed_Generic"
+	{
+		"ko"		"[차단목록] 쿼리가 실패했습니다."
+	}
+	"BlockList_Header"
+	{
+		"#format"	"{1:i}"
+		"ko"		"[차단 목록] {1} 레코드:"
+	}
+	"BlockLimit_Info"
+	{
+		"#format"	"{1:i}"
+		"ko"		"[차단목록] 귀하의 차단 한도: {1}"
+	}
+	"Notify_Blocker"
+	{
+		"#format"	"{1:N}"
+		"ko"		"[차단 목록] 귀하의 차단으로 인해 {1}가 합류하지 못했습니다."
+	}
+	"Kick_By_Blocked"
+	{
+		"ko"		"이 서버의 누군가가 당신을 차단했습니다. 가입할 수 없습니다."
+	}
+	"Kick_By_Blocked_With_Blocker"
+	{
+		"#format"	"{1:s}"
+		"ko"		"귀하는 이 서버(ID: {1})의 플레이어에 의해 차단되었습니다. 가입이 거부되었습니다."
+	}
+	"Menu_Title"
+	{
+		"ko"		"차단 목록 메뉴"
+	}
+	"Menu_BlockOnline"
+	{
+		"ko"		"온라인 플레이어 차단/차단 해제"
+	}
+	"Menu_MyBlockList"
+	{
+		"ko"		"내 차단 목록 보기/제거"
+	}
+	"Menu_BlockOnline_Title"
+	{
+		"ko"		"온라인 플레이어(차단을 전환하려면 선택)"
+	}
+	"Menu_MyBlockList_Title"
+	{
+		"ko"		"내 차단 목록(제거하려면 선택)"
+	}
+	"Target_Left"
+	{
+		"ko"		"[BlockList] 대상이 더 이상 유효하지 않습니다."
+	}
+	"Kick_By_SelfBlocked"
+	{
+		"ko"		"현재 이 서버에 있는 플레이어를 차단했습니다. 가입할 수 없습니다."
+	}
+	"Kick_By_SelfBlocked_With_Target"
+	{
+		"#format"	"{1:s}"
+		"ko"		"현재 이 서버에 있는 플레이어(ID: {1})를 차단했습니다. 가입이 거부되었습니다."
+	}
+}

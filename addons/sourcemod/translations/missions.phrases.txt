@@ -58,7 +58,7 @@
 	}
 	"Zengchengone"
 	{
-		"en"		"广州增城Lv7.3"
+		"en"		"Guangzhou Zengcheng Lv7.3"
 	}
 	"2019"
 	{
@@ -215,5 +215,70 @@
 	"WhiteForest"
 	{
 		"en"		"White Forest"
+	}
+
+	"2evileyes"
+	{
+		"en"		"2 Evil Eyes"
+	}
+	"BloodTracks"
+	{
+		"en"		"Blood Tracks"
+	}
+	"CrashBandicootTheReturn"
+	{
+		"en"		"Crash Bandicoot: The Return"
+	}
+	"DeadSeries"
+	{
+		"en"		"Dead Series"
+	}
+	"Derailed"
+	{
+		"en"		"Derailed"
+	}
+	"Diescraper36"
+	{
+		"en"		"Diescraper Redux 3.6"
+	}
+	"FarewellChenming"
+	{
+		"en"		"Farewell Chenming"
+	}
+	"HighwayToHell"
+	{
+		"en"		"Highway to Hell"
+	}
+	"QuestionableEthics"
+	{
+		"en"		"Questionable Ethics"
+	}
+	"TheBloodyMoors"
+	{
+		"en"		"The Bloody Moors"
+	}
+	"TheCure"
+	{
+		"en"		"The Cure"
+	}
+	"ddntr1"
+	{
+		"en"		"Death Trap"
+	}
+	"deadvacation2"
+	{
+		"en"		"Dead Vacation 2"
+	}
+	"drdegov21"
+	{
+		"en"		"Drop Dead Gorges v2.1"
+	}
+	"fallen"
+	{
+		"en"		"Fallen"
+	}
+	"l4d2CrashBandicoot2"
+	{
+		"en"		"Crash Bandicoot Course 2"
 	}
 }

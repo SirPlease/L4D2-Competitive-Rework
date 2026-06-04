@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"vi"		"[{green}!{default}]"
+	}
+	"Cvar_Invalid"
+	{
+		"vi"		"Lệnh {olive} c_thirdpersonwhicher {default} không hợp lệ hoặc được bảo vệ."
+	}
+	"Cvar_Value1"
+	{
+		"vi"		"Để chơi, hãy nhập {olive} c_thirdpersonwhicher 0 {default} trên bảng điều khiển của bạn."
+	}
+	"Cvar_Invalid_Nocolor"
+	{
+		"vi"		"Lệnh c_thirdpersonshore không hợp lệ hoặc được bảo vệ."
+	}
+	"Cvar_Value1_Nocolor"
+	{
+		"vi"		"Để chơi, hãy nhập c_thirdpersonwhicher 0 trên bảng điều khiển của bạn."
+	}
+}

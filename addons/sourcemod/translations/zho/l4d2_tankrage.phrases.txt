@@ -1,0 +1,31 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"zho"		"{red} [ {default} 戰車狂暴 {red} ] {default}"
+	}
+	"SurvivorsRunBack"
+	{
+		"zho"		"每 {olive} %i {green} %% {default} 倖存者跑回來，坦克的挫敗感就會被凍結 {olive} %0.1f {green} 秒 {default} 。"
+	}
+	"L4D2Tankrage_Tank"
+	{
+		"zho"		"[%s]：%N是坦克"
+	}
+	"L4D2Tankrage_EverythingReset"
+	{
+		"zho"		"[%s]：一切都重置了！"
+	}
+	"L4D2Tankrage_FlowDifferenceSinceLastCheck"
+	{
+		"zho"		"{green}[{lightgreen}%N{green}]{default}：自上次檢查以來的流量差異：%i"
+	}
+	"L4D2Tankrage_FrusGrace"
+	{
+		"zho"		"{green} [ {lightgreen} %N {green} ] {default}: Frus: {lightgreen} %i {default} - Grace: {lightgreen} %f {green} s"
+	}
+	"L4D2Tankrage_SetGrace"
+	{
+		"zho"		"{green}[{lightgreen}%N{green}]{default}：將寬限設定為：{lightgreen}%f{green}s"
+	}
+}

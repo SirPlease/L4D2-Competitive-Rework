@@ -1,0 +1,29 @@
+"Phrases"
+{
+	"on"
+	{
+		"zho"		"{blue}開啟{default}"
+	}
+	"off"
+	{
+		"zho"		"{red}關閉{default}"
+	}
+	"Notify_SpechudState"
+	{
+		"#format"	"{1:t}"
+		"zho"		"<{olive}HUD{default}> 觀眾 HUD 現在為 {1}"
+	}
+	"Notify_TankhudState"
+	{
+		"#format"	"{1:t}"
+		"zho"		"<{olive}HUD{default}> 坦克 HUD 現在為 {1}"
+	}
+	"Notify_SpechudUsage"
+	{
+		"zho"		"<{olive}HUD{default}> 在聊天中輸入 {green}!spechud{default} 以切換 {blue}旁觀者 HUD"
+	}
+	"Notify_TankhudUsage"
+	{
+		"zho"		"<{olive}HUD{default}> 在聊天中輸入 {green}!tankhud{default} 切換{red}坦克 HUD"
+	}
+}

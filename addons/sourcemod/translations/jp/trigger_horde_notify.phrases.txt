@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Alarmed_Car"
+	{
+		"jp"		"{olive} %N {green} が警報を発した車を作動させました。"
+	}
+	"Horde"
+	{
+		"jp"		"{olive} %N {green} は大群イベントを引き起こしました!"
+	}
+	"Final Rescue Start"
+	{
+		"jp"		"{green} 最終救出が始まりました！"
+	}
+	"Final Rescue"
+	{
+		"jp"		"{blue} %N {olive} が最後の救出を引き起こしました!"
+	}
+}

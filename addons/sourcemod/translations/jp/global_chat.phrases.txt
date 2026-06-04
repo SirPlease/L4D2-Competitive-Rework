@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"GlobalChat_FullServerNormalFullServer"
+	{
+		"jp"		"{green}[フルサーバー]{default} %s の通常のフルサーバーチャットがあります。"
+	}
+	"GlobalChat_AllServersAskedTipTeammates"
+	{
+		"jp"		"{green}[全サーバー]{default} %s がチームメイトからのヒントを求めています。"
+	}
+	"GlobalChat_SummonTeammates"
+	{
+		"jp"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友"
+	}
+	"GlobalChat_SummonTeammatesWithMessage"
+	{
+		"jp"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友\\n{default}留言: {olive}%s"
+	}
+}

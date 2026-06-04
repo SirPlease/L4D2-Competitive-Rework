@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"zho"		"[{green}!{default}]"
+	}
+	"LoseFrustration"
+	{
+		"zho"		"當倖存者在{olive}安全室{default}時，{red}坦克{default}將{green}仍然失去{default}挫敗感。"
+	}
+	"KeepFrustration"
+	{
+		"zho"		"當倖存者在{olive}安全室{default}時，{red}坦克{default}將{green}不會失去{default}挫敗感。"
+	}
+}

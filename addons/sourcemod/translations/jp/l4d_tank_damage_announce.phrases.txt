@@ -1,0 +1,47 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"jp"		"[{green}!{default}]"
+	}
+	"AI"
+	{
+		"jp"		"AI"
+	}
+	"HealthRemaining"
+	{
+		"jp"		"{blue}タンク{default} ({olive}%s{default}) がありました {green}%d{default} 残り体力"
+	}
+	"DealtToTank"
+	{
+		"jp"		"{blue}Tank{default} に与えられた {blue}ダメージ{default} ({olive}%s{default})"
+	}
+	"PercentDamage"
+	{
+		"jp"		"{blue}[{default}%d{blue}] ({default}%i%%{blue}) {olive}%N"
+	}
+	"L4DTankDamageAnnounce_RemainingBloodVolume"
+	{
+		"jp"		"[{green}!{default}] {green}%N {default} 残り {green}%d{default}({green}%d%%{default}) {blue} 血液量"
+	}
+	"L4DTankDamageAnnounce_SurvivorDamageStatisticsTank"
+	{
+		"jp"		"[{green}!{default}] {blue} {green}Tank への生存者ダメージ統計 {default}({green}%N{default}) {blue}"
+	}
+	"L4DTankDamageAnnounce_SurvivorDamageStatisticsTankAI"
+	{
+		"jp"		"[{green}!{default}] {blue} {green}Tank への生存者ダメージ統計 {default}({green}AI{default}) {blue}"
+	}
+	"L4DTankDamageAnnounce_SurvivalTime"
+	{
+		"jp"		"[{green}!{default}] {green}%N {blue} 生存時間: {green}%s"
+	}
+	"L4DTankDamageAnnounce_TankSurvivalTime"
+	{
+		"jp"		"[{green}!{default}] {green}タンク {blue} 生存時間: {green}%s"
+	}
+	"L4DTankDamageAnnounce_TankDamageSummaryLine"
+	{
+		"jp"		"{blue}[{default}%d{blue}({default}%d%%{blue})][{green} パンチ：{default}%d{blue}][{green} 石:{default} %d{blue}][{green}アイアン：{default}%d{blue}][{green} 負傷: {default}%d{blue}({default}%d%%{blue})] {green}%N"
+	}
+}

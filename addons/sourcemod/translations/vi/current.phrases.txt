@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"vi"		"<{olive}hiện tại{default}>"
+	}
+	"Current"
+	{
+		"vi"		"Hiện tại: {green}%d%%{default}"
+	}
+}
