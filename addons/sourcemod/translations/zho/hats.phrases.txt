@@ -27,12 +27,12 @@
 	"Hat_Unblocked"
 	{
 		"#format"	"{1:s}"
-		"zho"		"{ORANGE} {1} {DEFAULT} 的解鎖帽子。"
+		"zho"		"Unblocked hats for {ORANGE}{1}{DEFAULT}."
 	}
 	"Hat_Blocked"
 	{
 		"#format"	"{1:s}"
-		"zho"		"{ORANGE} {1} {DEFAULT} 的屏蔽帽子。"
+		"zho"		"Blocked hats for {ORANGE}{1}{DEFAULT}."
 	}
 	"Hat_View"
 	{
@@ -78,7 +78,7 @@
 	}
 	"ADMIN_VISIBILITY"
 	{
-		"zho"		"選擇玩家設定帽子可見度："
+		"zho"		"Select player to set hat visibility:"
 	}
 	"HAT_SET_ANGLE"
 	{

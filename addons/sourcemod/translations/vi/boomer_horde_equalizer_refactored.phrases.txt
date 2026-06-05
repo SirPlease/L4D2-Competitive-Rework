@@ -2,22 +2,22 @@
 {
 	"BoomerHordeEqualizer_PassedBiledSurvivor"
 	{
-		"vi"		"%N đã chuyển bBiledSurvivor sang %N"
+		"vi"		"Trạng thái mật của %N đã được chuyển sang %N"
 	}
 	"BoomerHordeEqualizer_NoLongerBoomedSurvivorCount"
 	{
-		"vi"		"%N không còn nữa (BoomedSurvivorCount: %i)"
+		"vi"		"Trạng thái mật của %N đã kết thúc (số người được phun hiện tại: %i)"
 	}
 	"BoomerHordeEqualizer_BoomedTotal"
 	{
-		"vi"		"%N bùng nổ (Tổng cộng: %d)"
+		"vi"		"%N đã được phun mật (Tổng cộng: %d)"
 	}
 	"BoomerHordeEqualizer_BoomHordeEventBoomedSurvivor"
 	{
-		"vi"		"BoomHordeEvent[BoomedSurvivorCount] : %i"
+		"vi"		"BoomHordeEvent[BoomedSurvivorCount]:%i"
 	}
 	"BoomerHordeEqualizer_UncoveredBileEvent"
 	{
-		"vi"		"Sự kiện mật được khám phá"
+		"vi"		"Đã phát hiện sự kiện mật không sống sót"
 	}
 }

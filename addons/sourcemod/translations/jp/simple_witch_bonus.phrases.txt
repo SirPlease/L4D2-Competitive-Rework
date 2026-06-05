@@ -2,6 +2,6 @@
 {
 	"SimpleWitchBonus_KillingWitchAwardedPoints"
 	{
-		"jp"		"{default}魔女を倒すと獲得したポイント: {olive}%d {default}ポイント!"
+		"jp"		"{default} が Witch をキルすると、{olive}%d {default} ボーナス ポイントを獲得します。"
 	}
 }

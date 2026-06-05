@@ -2,7 +2,7 @@
 {
 	"Tag"
 	{
-		"chi"		"{default}[{green}!{default}]"
+		"chi"		"[{green}!{default}]"
 	}
 	"ClientFullyLoaded"
 	{
@@ -12,11 +12,11 @@
 	"PauseCommand"
 	{
 		"#format"	"{1:N},{2:s}"
-		"chi"		"{olive}%N {blue}已暂停{default}."
+		"chi"		"{olive}{1}{default} {blue}暂停游戏{default}{2}"
 	}
 	"PauseAction"
 	{
-		"chi"		"{red}已暂停"
+		"chi"		"{red}暂停游戏{default}"
 	}
 	"PauseDelay"
 	{
@@ -25,7 +25,7 @@
 	}
 	"Crashed"
 	{
-		"chi"		"{olive}游戏 {default}是 {green}强制暂停 {default}因为玩家有 {blue}崩溃{default}."
+		"chi"		"{olive}游戏 {default} 因为一个玩家客户端{blue}崩溃{default} 所以被 {green}强行暂停."
 	}
 	"ForcePause"
 	{
@@ -35,12 +35,12 @@
 	"UnpauseSurvivors"
 	{
 		"#format"	"{1:N},{2:s},{3:s}"
-		"chi"		"{olive}%N %s{default}标记 {blue}%s {default}准备就绪。"
+		"chi"		"{olive}{1} {2}{default} 表示 {blue}{3}{default} 准备完毕."
 	}
 	"UnpauseInfected"
 	{
 		"#format"	"{1:N},{2:s},{3:s}"
-		"chi"		"{olive}%N %s{default}标记 {red}%s {default}准备就绪。"
+		"chi"		"{olive}{1} {2}{default} 表示 {red}{3}{default} 准备完毕."
 	}
 	"UnpauseInitiator"
 	{
@@ -49,17 +49,17 @@
 	}
 	"UnpauseAdminConfirm"
 	{
-		"chi"		"{olive}团队 {default}已准备就绪。等待 {blue}管理员 {default}至 {green}确认{default}."
+		"chi"		"{olive}双方团队 {default}都已准备. 等待 {blue}管理员 {green}确认开始{default}."
 	}
 	"UnreadySurvivors"
 	{
 		"#format"	"{1:N},{2:s},{3:s}"
-		"chi"		"{olive}%N %s{default}标记 {blue}%s {default}尚未准备好。"
+		"chi"		"{olive}{1} {2}{default} 表示 {blue}{3}{default} 还未准备完毕."
 	}
 	"UnreadyInfected"
 	{
 		"#format"	"{1:N},{2:s},{3:s}"
-		"chi"		"{olive}%N %s{default}标记 {red}%s {default}尚未准备好。"
+		"chi"		"{olive}{1} {2}{default} 表示 {red}{3}{default} 还未准备完毕."
 	}
 	"UnreadyInitiator"
 	{
@@ -77,7 +77,8 @@
 	}
 	"PauseLimit"
 	{
-		"chi"		"您已达到暂停限制。"
+		"#format"	"{1:d}"
+		"chi"		"你已经达到你的 {red}暂停次数上限{default} [{green}%d{default}]."
 	}
 	"PauseDeferred"
 	{
@@ -85,7 +86,7 @@
 	}
 	"PausePreventSpawn"
 	{
-		"chi"		"{default}您的 {red}生成 {default}由于暂停而被阻止"
+		"chi"		"{default}你因为暂停被阻止{red}生成"
 	}
 	"PanelShow"
 	{
@@ -98,7 +99,7 @@
 	"PanelSlots"
 	{
 		"#format"	"{1:s},{2:d},{3:d}"
-		"chi"		"▸ 服务器： %s\n▸ 插槽： %d/%d"
+		"chi"		"▸ 服务器: {1}\n▸ 位置: {2}/{3}"
 	}
 	"PanelDate"
 	{

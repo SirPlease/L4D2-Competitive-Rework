@@ -2,18 +2,18 @@
 {
 	"Title"
 	{
-		"zho"		"{blue}[{default}坦克岩石選擇器{blue}]"
+		"zho"		"{blue}[{default}Tank 石頭選擇器{blue}]"
 	}
 	"Reload"
 	{
-		"zho"		"{olive}重新載入{default}/{olive}!overhand{default} = {blue}2 上手{default}"
+		"zho"		"{olive}裝彈{default}/{olive}!overhand{default} = {blue}高拋磚{default}"
 	}
 	"Use"
 	{
-		"zho"		"{olive}用途{default}/{olive}!underhand{default} = {blue}下手{default}"
+		"zho"		"{olive}使用鍵{default}/{olive}!underhand{default} = {blue}低拋磚{default}"
 	}
 	"M2"
 	{
-		"zho"		"{olive}M2{default}/{olive}!overonehand{default} = {blue}1 上手{default}"
+		"zho"		"{olive}滑鼠右鍵{default}/{olive}!overonehand{default} = {blue}右鍵磚{default}"
 	}
 }

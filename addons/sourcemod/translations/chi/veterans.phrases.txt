@@ -45,14 +45,14 @@
 	}
 	"Veterans_PlayerDurationDetectionPlayerGame"
 	{
-		"chi"		"{default}[{green}玩家时长检测{default}] 玩家 {blue}%N {{default}在本服务器游戏时长{green}不达标{default}，是电信服务器组玩家，允许正常游玩"
+		"chi"		"{default}[{green}玩家时长检测{default}] 玩家 {blue}%N{default} 在本服务器组游戏时长{green}不达标{default}，但属于电信服务器组玩家，允许正常游玩。"
 	}
 	"Veterans_PlayerTimeDetectionPlayerGame"
 	{
-		"chi"		"{default}[{green}玩家时长检测{default}] 玩家 {blue}%N {{default}在本服务器游戏时长{green}不达标{default}，是电信服务器组玩家，允许旁观不允许游玩"
+		"chi"		"{default}[{green}玩家时长检测{default}] 玩家 {blue}%N{default} 在本服务器组游戏时长{green}不达标{default}，但属于电信服务器组玩家，只允许旁观。"
 	}
 	"Veterans_PlayerTimeDetectionPlayerGameTime"
 	{
-		"chi"		"{default}[{green}玩家时长检测{default}] 玩家 {blue}%N {default}在本服务器游戏时长{green}不达标{default}，且不为电信服务器组玩家，已经自动请去休息."
+		"chi"		"{default}[{green}玩家时长检测{default}] 玩家 {blue}%N{default} 在本服务器组游戏时长{green}不达标{default}，且不属于电信服务器组玩家，已自动请去休息。"
 	}
 }

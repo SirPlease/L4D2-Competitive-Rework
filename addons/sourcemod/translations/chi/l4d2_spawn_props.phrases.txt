@@ -186,7 +186,7 @@
 	}
 	"Rotate 45 degree (X axys)"
 	{
-		"chi"		"旋转 40 度 (X 轴)"
+		"chi"		"旋转 45 度 (X 轴)"
 	}
 	"Rotate 90 degree (X axys)"
 	{
@@ -222,7 +222,7 @@
 	}
 	"Rotate 45 degree (Y axys)"
 	{
-		"chi"		"旋转 40 度 (Y 轴)"
+		"chi"		"旋转 45 度 (Y 轴)"
 	}
 	"Rotate 90 degree (Y axys)"
 	{
@@ -258,7 +258,7 @@
 	}
 	"Rotate 45 degree (Z axys)"
 	{
-		"chi"		"旋转 40 度 (Z 轴)"
+		"chi"		"旋转 45 度 (Z 轴)"
 	}
 	"Rotate 90 degree (Z axys)"
 	{
@@ -387,7 +387,7 @@
 	"The last spawned object index is not an object anymore!"
 	{
 		"#format"	"{1:d}"
-		"chi"		"上一个生成的物件 {1} 已经不再是一个合法的东西!"
+		"chi"		"最后生成的物体索引 {1} 已不再是有效物体！"
 	}
 	"The last object is not valid anymore"
 	{

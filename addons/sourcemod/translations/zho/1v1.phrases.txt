@@ -10,8 +10,8 @@
 	}
 	"HealthRemaining"
 	{
-		"#format"	"{1:s},{2:s},{3:d}"
-		"zho"		"{red}{1}{default}（{green}{2}{default}）還剩 {olive}{3}{default} 點生命值!"
+		"#format"	"{1:N},{2:s},{3:d}"
+		"zho"		"{red}{1}{default} ({green}{2}{default}) 還剩餘 {olive}{3}{default} 血量!"
 	}
 	"HealthRemainingAI"
 	{
@@ -20,7 +20,7 @@
 	}
 	"UMad"
 	{
-		"zho"		"不用生氣，下次記得瞄準頭部..."
+		"zho"		"不需生氣，下次記得瞄準頭部..."
 	}
 	"Sad"
 	{
@@ -28,7 +28,7 @@
 	}
 	"Close"
 	{
-		"zho"		"差一點!"
+		"zho"		"接近了!"
 	}
 	"NBad"
 	{

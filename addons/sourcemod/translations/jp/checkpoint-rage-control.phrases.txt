@@ -6,10 +6,10 @@
 	}
 	"LoseFrustration"
 	{
-		"jp"		"生存者が{olive}セーフルーム{default}にいる間、{red}タンク{default}は{green}イライラを失います{default}。"
+		"jp"		"{red}Tank{default} すべての生存者が {olive} セーフ ルーム {default} にいる場合でも、{green} は徐々に {default} の制御を失います。"
 	}
 	"KeepFrustration"
 	{
-		"jp"		"生存者が{olive}セーフルーム{default}にいる間、{red}タンク{default}は{green}イライラを失うことはありません{default}。"
+		"jp"		"{red}Tank{default} {green} は、生存者全員が {olive} セーフ ルーム {default} にいる場合、{default} の制御を失いません。"
 	}
 }

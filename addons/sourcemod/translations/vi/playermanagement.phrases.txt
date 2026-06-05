@@ -10,23 +10,23 @@
 	}
 	"NoSnoop"
 	{
-		"vi"		"Bạn Không Nên {red} Rình mò {default} trên Xe Tăng!"
+		"vi"		"Bạn không nên {red} xem trộm {default} Tank!"
 	}
 	"BecomeSpectator"
 	{
-		"vi"		"{teamcolor} %N {default} đã trở thành khán giả!"
+		"vi"		"{teamcolor} %N {default} đã trở thành người ngoài cuộc!"
 	}
 	"WhileCapped"
 	{
-		"vi"		"{red} Không xem {default} khi bị giới hạn!"
+		"vi"		"Bạn không thể xem {default} trong khi {red} đang được sạc!"
 	}
 	"FixBot"
 	{
-		"vi"		"{teamcolor} %N {default} đang cố gắng khắc phục số lượng bot"
+		"vi"		"{teamcolor} %N {default} Đang cố gắng sửa số lượng bot"
 	}
 	"FixBotConsole"
 	{
-		"vi"		"Bảng điều khiển đang cố gắng sửa lỗi {red} số lượng bot {default}"
+		"vi"		"Bảng điều khiển đang thử {red} Sửa số lượng bot {default}"
 	}
 	"ValidTeams"
 	{
@@ -34,6 +34,6 @@
 	}
 	"CouldNotSwitched"
 	{
-		"vi"		"{teamcolor} %N {default} không thể chuyển đổi vì nhóm mục tiêu đã đầy hoặc không có bot để tiếp quản."
+		"vi"		"{teamcolor} %N {default} Không thể chuyển đổi vì nhóm mục tiêu đã đầy hoặc không có bot nào để tiếp quản."
 	}
 }

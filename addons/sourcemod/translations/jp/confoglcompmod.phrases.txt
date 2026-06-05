@@ -6,7 +6,7 @@
 	}
 	"ConfoglCompMod_MaximumSniperRifleEnforced"
 	{
-		"jp"		"{blue}[{default}Confogl{blue}]{default} 最大 {blue}%d {olive}狙撃ライフル {default} が適用されます。"
+		"jp"		"{blue}[{default}Confogl{blue}]{default} は、{blue}%d {olive} スナイパーライフル {default} までの制限を強制されました。"
 	}
 	"ConfoglCompMod_CompetitionModeLoaded"
 	{
@@ -14,7 +14,7 @@
 	}
 	"ConfoglCompMod_ChangeMap"
 	{
-		"jp"		"{blue}[{default}Confogl{blue}]{default} マップを {green}%s{default} に変更します!"
+		"jp"		"{blue}[{default}Confogl{blue}]{default} マップを {green}%s{default} に変更します。"
 	}
 	"ConfoglCompMod_RestartMap"
 	{
@@ -22,23 +22,23 @@
 	}
 	"ConfoglCompMod_CompetitionConfigurationUninstalled"
 	{
-		"jp"		"{blue}[{default}Confogl{blue}]{default} コンペティション構成はアンインストールされました。"
+		"jp"		"{blue}[{default}Confogl{blue}]{default} コンペティション構成がアンインストールされました。"
 	}
 	"ConfoglCompMod_LoadConfiguration"
 	{
-		"jp"		"{blue}[{default}Confogl{blue}]{default} 構成「{olive}%s{default}」をロードします。"
+		"jp"		"{blue}[{default}Confogl{blue}]{default} は構成 '{olive}%s{default}' をロードします。"
 	}
 	"ConfoglCompMod_ConfigurationNotFoundUseDefault"
 	{
-		"jp"		"{blue}[{default}Confogl{blue}]{default} 構成 '{olive}%s{default}' が見つかりません。デフォルト構成を使用してください。"
+		"jp"		"{blue}[{default}Confogl{blue}]{default} 構成 '{olive}%s{default}' が見つかりません。デフォルトの構成を使用してください。"
 	}
 	"ConfoglCompMod_SpecifyConfigLoad"
 	{
-		"jp"		"{blue}[{default}Confogl{blue}]{default} ロードする {olive}config{default} を指定してください。"
+		"jp"		"{blue}[{default}Confogl{blue}]{default} ロードするには、{olive}config{default} を指定してください。"
 	}
 	"ConfoglCompMod_ConfigNotFound"
 	{
-		"jp"		"{blue}[{default}Confogl{blue}]{default} 構成 '{olive}%s{default}' が見つかりません。"
+		"jp"		"{blue}[{default}Confogl{blue}]{default} 構成 \"{olive}%s{default}\" が見つかりません。"
 	}
 	"ConfoglCompMod_MapNotFound"
 	{
@@ -46,26 +46,26 @@
 	}
 	"ConfoglCompMod_Round1Bonus"
 	{
-		"jp"		"{blue}[{default}Configl{blue}]{default} ラウンド 1 ボーナス: {olive}%d"
+		"jp"		"{blue}[{default}Confogl{blue}]{default} ラウンド 1 ボーナスポイント: {olive}%d"
 	}
 	"ConfoglCompMod_CustomMaxDistance"
 	{
-		"jp"		"{blue}[{default}Confogl{blue}]{default}カスタム最大距離: {olive}%d"
+		"jp"		"{blue}[{default}Confogl{blue}]{default} カスタム最大距離: {olive}%d"
 	}
 	"ConfoglCompMod_Round2Bonus"
 	{
-		"jp"		"{blue}[{default}Configl{blue}]{default} ラウンド 2 ボーナス: {olive}%d"
+		"jp"		"{blue}[{default}Confogl{blue}]{default} ラウンド 2 ボーナスポイント: {olive}%d"
 	}
 	"ConfoglCompMod_AverageHealth"
 	{
-		"jp"		"{blue}[{default}Confogl{blue}]{default} 平均健康状態: {olive}%.02f"
+		"jp"		"{blue}[{default}Confogl{blue}]{default} 平均血液量: {olive}%.02f"
 	}
 	"ConfoglCompMod_HealthBonus"
 	{
-		"jp"		"{blue}[{default}Confogl{blue}]{default} 健康ボーナス: {olive}%d"
+		"jp"		"{blue}[{default}Confogl{blue}]{default} HPボーナスポイント：{olive}%d"
 	}
 	"ConfoglCompMod_StaticSurvivalBonusPerSurvivor"
 	{
-		"jp"		"{blue}[{default}Confogl{blue}]{default} 生存者ごとの静的生存ボーナス: {olive}%d"
+		"jp"		"{blue}[{default}Confogl{blue}]{default} 各生存者の固定生存ボーナスポイント: {olive}%d"
 	}
 }

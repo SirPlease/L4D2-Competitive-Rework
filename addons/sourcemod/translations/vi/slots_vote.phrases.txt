@@ -2,52 +2,52 @@
 {
 	"Tag"
 	{
-		"vi"		"{blue} [ Khe cắm {default} {blue} ] {default}"
+		"vi"		"{blue}[{default}Slots{blue}]{default}"
 	}
 	"NotConsoleVote"
 	{
-		"vi"		"[Slots] Bạn phải tham gia trò chơi."
+		"vi"		"[Slots] Lệnh slot phải được sử dụng trong trò chơi."
 	}
 	"LimitSlotsAbove"
 	{
-		"vi"		"Bạn không thể giới hạn các vị trí trên {olive} %i {default} trên Máy chủ này."
+		"vi"		"Bạn không thể đặt vị trí cho nhiều hơn {olive}%i{default} người trên máy chủ này."
 	}
 	"LimitedSlotsTo"
 	{
 		"#format"	"{1:s},{2:i}"
-		"vi"		"{olive} {1} {default} có số slot giới hạn ở {blue} {2} {default}"
+		"vi"		"{olive}{1}{default} Đặt vị trí thành {blue}{2}{default}"
 	}
 	"RequiredPlayers"
 	{
-		"vi"		"Bạn không thể giới hạn Slots thấp hơn số lượng Người chơi được yêu cầu."
+		"vi"		"Bạn không thể đặt vị trí tối thiểu ít hơn số lượng người cần thiết cho chế độ."
 	}
 	"SlotsUsage"
 	{
-		"vi"		"Cách sử dụng: {olive}!slots {default} < số {olive} {default} > {blue} | {default} Ví dụ: {olive}!slots 8 {default}"
+		"vi"		"Cách sử dụng: {olive}!slots{default} <{olive}Số lượng vị trí bạn muốn đặt {default}> {blue}|{default} Ví dụ: {olive}!slots 8{default}"
 	}
 	"Spectators"
 	{
-		"vi"		"Việc bỏ phiếu không được phép cho khán giả."
+		"vi"		"Khán giả không được phép sử dụng lệnh vị trí."
 	}
 	"LimitSlots"
 	{
-		"vi"		"Giới hạn các vị trí ở '%s'?"
+		"vi"		"Vị trí bị giới hạn ở '%s'?"
 	}
 	"CannotBeStarted"
 	{
-		"vi"		"Không thể bắt đầu bỏ phiếu ngay bây giờ."
+		"vi"		"Bỏ phiếu tạm thời không có sẵn."
 	}
 	"LimitingSlots"
 	{
-		"vi"		"Giới hạn số slot..."
+		"vi"		"Đang đặt vị trí máy chủ..."
 	}
 	"SlotsVote_AdminOnlyBelowMinimumSlots"
 	{
 		"#format"	"{1:i}"
-		"vi"		"只有管理员才能将位置设为小于 {blue}{1}{default}人"
+		"vi"		"Chỉ quản trị viên mới có thể đặt Slots thấp hơn {blue}{1}{default} mọi người"
 	}
 	"LimitSlotsBelow"
 	{
-		"vi"		"Chỉ quản trị viên mới có thể đặt vị trí bên dưới người chơi {blue} {1} {default}"
+		"vi"		"Chỉ quản trị viên mới có thể đặt vị trí ít hơn {blue}{1}{default} người"
 	}
 }

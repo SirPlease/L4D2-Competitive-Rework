@@ -6,18 +6,18 @@
 	}
 	"Spawned"
 	{
-		"vi"		"{olive}Xe tăng {default}({red}Control: %s{default}) đã xuất hiện!"
+		"vi"		"{olive}Tank {default}({red} được điều khiển bởi: %s{default}) đã được tạo!"
 	}
 	"Spawned2"
 	{
-		"vi"		"{olive}Xe tăng {default}({red}Control: %N{default}) đã xuất hiện!"
+		"vi"		"{olive}Tank {default}({red} được kiểm soát bởi: %N{default}) đã được tạo!"
 	}
 	"L4D2TankAnnounce_TankControllerGenerated"
 	{
-		"vi"		"{default}[{red}!{default}] {green}Tank {default}(Bộ điều khiển {red}: %s{default}) đã được tạo!"
+		"vi"		"{default}[{red}!{default}] {green}Tank {default}({red} được điều khiển bởi: %s{default}) đã được tạo!"
 	}
 	"L4D2TankAnnounce_TankControllerGenerated_2"
 	{
-		"vi"		"{default}[{blue}!{default}] {green}Tank {default}(Bộ điều khiển {blue}: %s{default}) đã được tạo!"
+		"vi"		"{default}[{blue}!{default}] {green}Tank {default}({blue} được điều khiển bởi: %s{default}) đã được tạo!"
 	}
 }

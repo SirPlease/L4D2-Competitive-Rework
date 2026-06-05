@@ -3,6 +3,6 @@
 	"IncapSurSpawnAWitch"
 	{
 		"#format"	"{1:N}"
-		"jp"		"{olive} {1} {default} がダウンして魔女を生み出しました。"
+		"jp"		"{olive}{1} {default} が地面に落ちて、Witch が生成されました。"
 	}
 }

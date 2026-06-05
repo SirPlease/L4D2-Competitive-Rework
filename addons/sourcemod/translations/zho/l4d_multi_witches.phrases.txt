@@ -2,7 +2,7 @@
 {
 	"L4DMultiWitches_WitchSpawnedMaxAlive"
 	{
-		"zho"		"%s 女巫生成 # %d，最大值 = %d，活體：%i"
+		"zho"		"%s Witch 生成 # %d，最大值 = %d，存活中：%i"
 	}
 	"L4DMultiWitches_L4DWitchesStartTimerMin"
 	{
@@ -10,7 +10,7 @@
 	}
 	"L4DMultiWitches_L4DWitchesAliveWitches"
 	{
-		"zho"		"[l4d_witches]：活生生的女巫：%i"
+		"zho"		"[l4d_witches]：存活中的 Witch：%i"
 	}
 	"L4DMultiWitches_L4DWitchesTimerTriggered"
 	{

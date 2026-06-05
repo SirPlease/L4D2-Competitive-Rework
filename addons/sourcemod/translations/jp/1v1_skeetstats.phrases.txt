@@ -2,30 +2,30 @@
 {
 	"TagKills"
 	{
-		"jp"		"[{olive}1v1Stat{default}] {green}キル数{default}:"
+		"jp"		"[{olive}1v1 データ {default}] {green} キル番号 {default}:"
 	}
 	"TagSkeet"
 	{
-		"jp"		"[{olive}1v1Stat{default}] {green}空爆数{default}:"
+		"jp"		"[{olive}1v1 データ {default}] {green} エアバースト番号 {default}:"
 	}
 	"TagAcc"
 	{
-		"jp"		"[{olive}1v1Stat{default}] {green}命中率{default}:"
+		"jp"		"[{olive}1v1 データ {default}] {green} 精度 {default}:"
 	}
 	"SI_DMG_CI"
 	{
 		"#format"	"{1:d},{2:d},{3:d}"
-		"jp"		"{olive}{1}{default} ダメージ | {olive}{2}{default} キル | {olive}{3}{default} 通常感染者\n"
+		"jp"		"{olive}{1}{default} ダメージ | {olive}{2}{default} キル | {olive}{3}{default} ゾンビ\n"
 	}
 	"SI_DMG"
 	{
 		"#format"	"{1:d},{2:d}"
-		"jp"		"{olive}{1}{default} ダメージ | {olive}{2}{default} キル\n"
+		"jp"		"{olive}{1}{default} ダメージ | {olive}{2}{default} \n を殺す"
 	}
 	"SI_CI"
 	{
 		"#format"	"{1:d},{2:d}"
-		"jp"		"{olive}{1}{default} キル | {olive}{2}{default} 通常感染者\n"
+		"jp"		"{olive}{1}{default}特別感 | {olive}{2}{default}ゾンビ \n"
 	}
 	"SI"
 	{
@@ -34,22 +34,22 @@
 	"SKEET"
 	{
 		"#format"	"{1:d},{2:d},{3:d}"
-		"jp"		"{olive}{1}{default} 満血 | {olive}{2}{default} 負傷 | {olive}{3}{default} デッドストップ\n"
+		"jp"		"{olive}{1}{default} 完全な健康 | {olive}{2}{default} 残存健康状態 | {olive}{3}{default} 押して停止 \n"
 	}
 	"ACC_AllShots"
 	{
-		"jp"		"すべてのショット ({blue}%.0f%%{default})"
+		"jp"		"合計ヒット率 ({blue}%3.0f%%{default})"
 	}
 	"ACC_BuckShot"
 	{
-		"jp"		" |バックショット ({blue}%.0f%%{default})"
+		"jp"		"|鉛弾命中率 ({blue}%3.0f%%{default})"
 	}
 	"ACC_Melee"
 	{
-		"jp"		" |近接攻撃（{blue}%.0f%%{default})"
+		"jp"		"|近接命中率 ({blue}%3.0f%%{default})"
 	}
 	"ACC_NoShotsFired"
 	{
-		"jp"		"発砲なし\n"
+		"jp"		"ノーショット\n"
 	}
 }

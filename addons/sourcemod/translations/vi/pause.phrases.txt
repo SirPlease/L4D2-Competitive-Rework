@@ -2,103 +2,104 @@
 {
 	"Tag"
 	{
-		"vi"		"{default}[{green}!{default}]"
+		"vi"		"[{green}!{default}]"
 	}
 	"ClientFullyLoaded"
 	{
 		"#format"	"{1:N}"
-		"vi"		"{olive}%N {default}đã tải đầy đủ"
+		"vi"		"{olive}%N {default} đã được tải đầy đủ"
 	}
 	"PauseCommand"
 	{
 		"#format"	"{1:N},{2:s}"
-		"vi"		"{olive}%N {blue}Đã tạm dừng{default}."
+		"vi"		"{olive}{1}{default} {blue}Tạm dừng trò chơi{default}{2}"
 	}
 	"PauseAction"
 	{
-		"vi"		"{red}ĐÃ TẠM DỪNG"
+		"vi"		"{red}Tạm dừng trò chơi{default}"
 	}
 	"PauseDelay"
 	{
 		"#format"	"{1:d}"
-		"vi"		"{blue}Đang tạm dừng{default}: {olive}%d"
+		"vi"		"{olive}%d vài giây sau {blue} sẽ tạm dừng trò chơi {default}"
 	}
 	"Crashed"
 	{
-		"vi"		"{olive}Game {default}đã bị {green}buộc tạm dừng {default}vì một người chơi đã {blue}crash{default}."
+		"vi"		"Trò chơi {olive} {default} đã bị {green} buộc phải đình chỉ vì một ứng dụng người chơi {blue} đã làm hỏng {default}."
 	}
 	"ForcePause"
 	{
 		"#format"	"{1:N}"
-		"vi"		"A {green}tạm dừng lực lượng {default}được phát hành bởi {blue} {default}({olive}%N{default})"
+		"vi"		"{blue} Quản trị viên {default}({olive}%N{default}) {green} Buộc tạm dừng trò chơi {default}."
 	}
 	"UnpauseSurvivors"
 	{
 		"#format"	"{1:N},{2:s},{3:s}"
-		"vi"		"{olive}%N %s{default}được đánh dấu {blue}%s {default}đã sẵn sàng."
+		"vi"		"{olive}{1} {2}{default} có nghĩa là {blue}{3}{default} đã sẵn sàng."
 	}
 	"UnpauseInfected"
 	{
 		"#format"	"{1:N},{2:s},{3:s}"
-		"vi"		"{olive}%N %s{default}được đánh dấu {red}%s {default}đã sẵn sàng."
+		"vi"		"{olive}{1} {2}{default} có nghĩa là {red}{3}{default} đã sẵn sàng."
 	}
 	"UnpauseInitiator"
 	{
 		"#format"	"{1:N}"
-		"vi"		"{olive}%N {default}được đánh dấu {green} {default}đã sẵn sàng."
+		"vi"		"{olive}%N {default} có nghĩa là bộ khởi tạo {green} {default} đã sẵn sàng."
 	}
 	"UnpauseAdminConfirm"
 	{
-		"vi"		"{olive} {default}đã sẵn sàng. Chờ cho {blue} {default}tới {green}xác nhận{default}."
+		"vi"		"{olive} Cả hai đội {default} đều đã sẵn sàng. Đang chờ quản trị viên {blue} {green} xác nhận khởi động {default}."
 	}
 	"UnreadySurvivors"
 	{
 		"#format"	"{1:N},{2:s},{3:s}"
-		"vi"		"{olive}%N %s{default}được đánh dấu {blue}%s {default}chưa sẵn sàng."
+		"vi"		"{olive}{1} {2}{default} có nghĩa là {blue}{3}{default} chưa sẵn sàng."
 	}
 	"UnreadyInfected"
 	{
 		"#format"	"{1:N},{2:s},{3:s}"
-		"vi"		"{olive}%N %s{default}được đánh dấu {red}%s {default}chưa sẵn sàng."
+		"vi"		"{olive}{1} {2}{default} có nghĩa là {red}{3}{default} chưa sẵn sàng."
 	}
 	"UnreadyInitiator"
 	{
 		"#format"	"{1:N}"
-		"vi"		"{olive}%N {default}được đánh dấu {green} {default}chưa sẵn sàng."
+		"vi"		"{olive}%N {default} có nghĩa là bộ khởi tạo {green} {default} chưa sẵn sàng."
 	}
 	"AsInitiator"
 	{
-		"vi"		"{default}như {green} "
+		"vi"		"{default} là người khởi xướng {green}"
 	}
 	"ForceUnpause"
 	{
 		"#format"	"{1:N}"
-		"vi"		"{green}buộc bỏ tạm dừng {default}do {blue}Quản trị viên {default}({olive}%N{default}) đưa ra"
+		"vi"		"Quản trị viên {blue} {default}({olive}%N{default}) {green} buộc phải hủy tạm dừng trò chơi {default}."
 	}
 	"PauseLimit"
 	{
-		"vi"		"Bạn đã đạt đến giới hạn tạm dừng của mình."
+		"#format"	"{1:d}"
+		"vi"		"Bạn đã đạt đến giới hạn tạm dừng {red} {default} [{green}%d{default}]."
 	}
 	"PauseDeferred"
 	{
-		"vi"		"{red}Việc tạm dừng đã bị trì hoãn do đang tiến hành lấy hàng!"
+		"vi"		"{red} Việc tạm dừng đã bị hoãn lại vì những người sống sót đang tuyển người!"
 	}
 	"PausePreventSpawn"
 	{
-		"vi"		"{default}{red}Spawn {default}của bạn đã bị ngăn do tạm dừng"
+		"vi"		"{default}Bạn bị chặn do hệ thống treo{red}"
 	}
 	"PanelShow"
 	{
-		"vi"		"hiện đã có {blue}bật{default}."
+		"vi"		"Chuẩn bị bảng điều khiển: [{blue} mở {default}]."
 	}
 	"PanelHide"
 	{
-		"vi"		"hiện đã có {red}{default}."
+		"vi"		"Chuẩn bị bảng điều khiển: [{red} tắt {default}]."
 	}
 	"PanelSlots"
 	{
 		"#format"	"{1:s},{2:d},{3:d}"
-		"vi"		"▸ Server: %s\n▸ Slots: %d/%d"
+		"vi"		"▸ Máy chủ: {1}\n ▸ Vị trí: {2}/{3}"
 	}
 	"PanelDate"
 	{
@@ -110,7 +111,7 @@
 	}
 	"RequireAdmin"
 	{
-		"vi"		"->0. Yêu cầu quản trị viên hủy tạm dừng"
+		"vi"		"->0. Quản trị viên được yêu cầu dỡ bỏ việc đình chỉ"
 	}
 	"SurvivorUnPaused"
 	{
@@ -122,7 +123,7 @@
 	}
 	"InfectedUnPaused"
 	{
-		"vi"		"->2. Bị nhiễm bệnh: [√]"
+		"vi"		"->2. Người bị nhiễm bệnh: [√]"
 	}
 	"InfectedPaused"
 	{
@@ -138,12 +139,12 @@
 	}
 	"AutoPauseCrash"
 	{
-		"vi"		"▸ Tự động tạm dừng bắt buộc -> Sự cố"
+		"vi"		"▸ Lý do buộc phải tạm dừng -> sự cố máy khách"
 	}
 	"ForcePauseAdmin"
 	{
 		"#format"	"{1:s}"
-		"vi"		"▸ Buộc tạm dừng -> %s (Quản trị viên)"
+		"vi"		"▸ Lý do buộc tạm dừng -> %s (Đình chỉ quản trị viên)"
 	}
 	"InitiatorPause"
 	{
@@ -153,37 +154,37 @@
 	"DurationPause"
 	{
 		"#format"	"{1:d},{2:d}"
-		"vi"		"▸ Thời lượng: %02d:%02d"
+		"vi"		"▸ Thời lượng tạm dừng: %02d:%02d"
 	}
 	"CountdownCancelNotify"
 	{
-		"vi"		"Nói {olive}!unready {default}để hủy"
+		"vi"		"Nhập {olive}!unready {default} để hủy đếm ngược"
 	}
 	"GameisLive"
 	{
-		"vi"		"Trò chơi đang trực tiếp!"
+		"vi"		"Trò chơi tiếp tục!"
 	}
 	"CountdownReadyDelay"
 	{
 		"#format"	"{1:d}"
-		"vi"		"{blue}Trực tiếp{default}: {olive}%d{default}..."
+		"vi"		"{blue} Trò chơi bắt đầu đếm ngược {default}: {olive}%d{default}..."
 	}
 	"CountdownCancelled"
 	{
 		"#format"	"{1:N}"
-		"vi"		"{olive}%N {default}đã hủy đếm ngược!"
+		"vi"		"{olive}%N {default}Hủy việc đếm ngược này!"
 	}
 	"CallvoteNoSpec"
 	{
-		"vi"		"Bạn không thể gọi phiếu bầu với tư cách là khán giả."
+		"vi"		"Với tư cách là khán giả, bạn không thể bắt đầu thời gian chờ."
 	}
 	"CallvoteNoExploit"
 	{
-		"vi"		"Bạn vừa chuyển Nhóm, bạn không thể bỏ phiếu trong vài giây."
+		"vi"		"Bạn vừa thay đổi đội và tạm thời không thể bỏ phiếu."
 	}
 	"CallvoteCannotTargetAdmin"
 	{
-		"vi"		"Bạn không được đá Quản trị viên."
+		"vi"		"Bạn có thể không đuổi được quản trị viên..."
 	}
 	"Pause_PauseChatMessage"
 	{

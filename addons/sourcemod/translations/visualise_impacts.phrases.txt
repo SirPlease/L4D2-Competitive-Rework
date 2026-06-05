@@ -2,6 +2,6 @@
 {
 	"VisualiseImpacts_NoteUseCommandRemovedecalsClient"
 	{
-		"en"		"[Note] Use command `r_removedecals` for client to clean old decals."
+		"en"		"[Note] Clients can use `r_removedecals` to clean up old decals."
 	}
 }

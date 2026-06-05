@@ -2,14 +2,14 @@
 {
 	"L4D2JockeySkeet_Skeeted"
 	{
-		"jp"		"{green}★★{default} あなたは、{olive}%N{default} によって {blue}skeeted{default} されました。"
+		"jp"		"{green}★★{default} あなたは {olive}%N{default} {blue}skeet{default} でした。"
 	}
 	"L4D2JockeySkeet_SkeetedJockey"
 	{
-		"jp"		"{green}★★{default} {blue}スキートした{olive}%N{default}のジョッキーです。"
+		"jp"		"{green}★★{default} あなた、{blue}skeet{default} {olive}%N{default} の Jockey。"
 	}
 	"L4D2JockeySkeet_JockeySkeeted"
 	{
-		"jp"		"{green}★★{default} {olive}%N{default}の騎手は{olive}%N{default}の{blue}skeeted{default}でした。"
+		"jp"		"{green}★★{default} {olive}%N{default} の Jockey は、{olive}%N{default} {blue}skeet{default} に置き換えられました。"
 	}
 }

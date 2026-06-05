@@ -18,11 +18,11 @@
 	}
 	"Ratemonitor_RatesMovedSpectatorsIllegalNetsettings"
 	{
-		"chi"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}因非法下网而被移至观众：{teamcolor}%s/%s/%s {olive}%s"
+		"chi"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}因非法网络设置而被移至观众：{teamcolor}%s/%s/%s {olive}%s"
 	}
 	"Ratemonitor_RatesAdjustRatesValuesHigher"
 	{
-		"chi"		"{default}<{olive}Rates{default}> 请将您的费率调整为高于 {olive}%d/%d/%d%s 的值"
+		"chi"		"{default}<{olive}Rates{default}> 请将您的 rates 调整为高于 {olive}%d/%d/%d%s 的值"
 	}
 	"Ratemonitor_RatesChangeNetsettingsBack"
 	{
@@ -30,7 +30,7 @@
 	}
 	"Ratemonitor_RatesKickedIllegalNetsettings"
 	{
-		"chi"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}因非法组网被踢：{teamcolor}%s/%s/%s {olive}%s"
+		"chi"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}因非法网络设置而被踢：{teamcolor}%s/%s/%s {olive}%s"
 	}
 	"Ratemonitor_RatesKickedDueIllegalNetsettings"
 	{

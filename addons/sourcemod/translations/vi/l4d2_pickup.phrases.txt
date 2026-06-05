@@ -2,18 +2,18 @@
 {
 	"Command_SwitchOff"
 	{
-		"vi"		"{blue}[{default}{blue}] {default}Chuyển sang {olive}thứ cấp {default}khi nhận hàng: {blue}TẮT"
+		"vi"		"{blue}[{default} chuyển đổi vật phẩm {blue}] {default} chuyển sang vũ khí phụ {olive} khi nhặt {default}: {blue} đã đóng"
 	}
 	"Command_SwitchOn"
 	{
-		"vi"		"{blue}[{default}{blue}] {default}Chuyển sang {olive}thứ cấp {default}khi nhận hàng: {blue}BẬT"
+		"vi"		"{blue}[{default} chuyển đổi vật phẩm {blue}] {default} chuyển sang vũ khí phụ {olive} khi nhặt được {default}: {blue} được bật"
 	}
 	"Command_SwitchPrimaryOff"
 	{
-		"vi"		"{blue}[{default}{blue}] {default}Chuyển sang {olive}sơ cấp {default}khi nhận hàng: {blue}TẮT"
+		"vi"		"{blue} [Chuyển đổi vật phẩm {default} {blue}] {default} chuyển sang {olive} khi nhặt được Vũ khí chính {default}: {blue} đã đóng"
 	}
 	"Command_SwitchPrimaryOn"
 	{
-		"vi"		"{blue}[{default}{blue}] {default}Chuyển sang {olive}sơ cấp {default}khi nhận hàng: {blue}BẬT"
+		"vi"		"{blue}[{default} chuyển đổi vật phẩm {blue}] {default} chuyển sang {olive} khi nhặt được Vũ khí chính {default}: {blue} đang bật"
 	}
 }

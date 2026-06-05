@@ -3,53 +3,53 @@
 	"Banned Check Site"
 	{
 		"#format"	"{1:s}"
-		"vi"		"Bạn đã bị máy chủ này cấm, hãy kiểm tra {1} để biết thêm thông tin"
+		"vi"		"Bạn đã bị cấm từ máy chủ này. Để biết chi tiết, vui lòng xem: {1}."
 	}
 	"DB Connect Fail"
 	{
-		"vi"		"Kết nối cơ sở dữ liệu không thành công. Vui lòng liên hệ với nhà điều hành máy chủ."
+		"vi"		"Kết nối cơ sở dữ liệu không thành công, vui lòng liên hệ với quản trị viên máy chủ."
 	}
 	"Not In Game"
 	{
-		"vi"		"Người chơi không tham gia trò chơi, vui lòng truy cập bảng điều khiển web để cấm họ."
+		"vi"		"Người chơi này hiện không có trong trò chơi. Hãy cấm nó thông qua bảng quản lý web."
 	}
 	"Ban Not Verified"
 	{
-		"vi"		"Người chơi này chưa được xác minh. Vui lòng đợi ba mươi giây trước khi thử lại."
+		"vi"		"Người chơi này chưa được xác thực, vui lòng đợi 30 giây và thử lại."
 	}
 	"Can Not Unban"
 	{
 		"#format"	"{1:s}"
-		"vi"		"Bạn không thể bỏ cấm trong máy chủ, hãy truy cập {1} để bỏ cấm."
+		"vi"		"Bạn không thể bỏ cấm khỏi trò chơi, vui lòng truy cập liên kết này để bỏ cấm: {1} ."
 	}
 	"Can Not Add Ban"
 	{
 		"#format"	"{1:s}"
-		"vi"		"Bạn không thể thêm lệnh cấm từ trong máy chủ, hãy truy cập {1} để thêm lệnh cấm."
+		"vi"		"Bạn không thể thêm lệnh cấm trong trò chơi, vui lòng truy cập liên kết này để cấm: {1}."
 	}
 	"Check Menu"
 	{
-		"vi"		"Vui lòng kiểm tra menu để chọn lý do cấm."
+		"vi"		"Vui lòng chọn lý do cấm từ menu."
 	}
 	"Include Reason"
 	{
-		"vi"		"Vui lòng bao gồm lý do cấm khách hàng."
+		"vi"		"Vui lòng điền lý do cấm người chơi này."
 	}
 	"Ban Fail"
 	{
-		"vi"		"Không cấm được người chơi, vui lòng thử lại."
+		"vi"		"Không thể cấm người chơi này, vui lòng thử lại."
 	}
 	"Chat Reason"
 	{
-		"vi"		"Vui lòng nhập lý do cấm trò chuyện và nhấn enter. Gõ '!noreason' để hủy bỏ."
+		"vi"		"Vui lòng điền lý do cấm vào hộp trò chuyện và gửi hoặc nhập '!noreason' để từ bỏ thao tác."
 	}
 	"Chat Reason Aborted"
 	{
-		"vi"		"Thủ tục cấm đã được dừng thành công."
+		"vi"		"Lệnh cấm đã được hủy thành công."
 	}
 	"SourceBans_FailedBan"
 	{
-		"vi"		"%s Không thể cấm %s."
+		"vi"		"%s không cấm được %s."
 	}
 	"SourceBans_AlreadyBanned"
 	{
@@ -69,11 +69,11 @@
 	}
 	"SourceBans_NoActiveBansFoundFilter"
 	{
-		"vi"		"%sKhông tìm thấy lệnh cấm hoạt động nào cho bộ lọc đó"
+		"vi"		"%s Không tìm thấy lệnh cấm hợp lệ cho bộ lọc này"
 	}
 	"SourceBans_SuccessfullyUnbanned"
 	{
-		"vi"		"%s%s đã được bỏ cấm thành công"
+		"vi"		"%s%s đã dỡ bỏ lệnh cấm thành công"
 	}
 	"SourceBans_SMAddbanFailed"
 	{

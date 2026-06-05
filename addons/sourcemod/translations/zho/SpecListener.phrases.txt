@@ -2,51 +2,51 @@
 {
 	"Tag"
 	{
-		"zho"		"[{olive}規範監聽器{default}]"
+		"zho"		"[{olive}SpecListener{default}]"
 	}
 	"OnlySpec"
 	{
-		"zho"		"只有旁觀者才能聽。"
+		"zho"		"只有旁觀者可以聽."
 	}
 	"PanelTitle"
 	{
-		"zho"		"規範監聽器"
+		"zho"		"SpecListener"
 	}
 	"PanelEnable"
 	{
-		"zho"		"使能夠"
+		"zho"		"開啟"
 	}
 	"PanelDisable"
 	{
-		"zho"		"停用"
+		"zho"		"關閉"
 	}
 	"PanelStatus"
 	{
-		"zho"		"地位"
+		"zho"		"狀態"
 	}
 	"Enable"
 	{
-		"zho"		"{green}啟用{default}"
+		"zho"		"{green}開啟{default}"
 	}
 	"Disable"
 	{
-		"zho"		"{green}停用{default}"
+		"zho"		"{green}關閉{default}"
 	}
 	"Usage"
 	{
-		"zho"		"用法：sm_listen <啟用/停用/狀態>"
+		"zho"		"用法: sm_listen <enable/disable/status>"
 	}
 	"ErrorFlags"
 	{
-		"zho"		"錯誤：部分語音標誌。"
+		"zho"		"錯誤: section voice flags"
 	}
 	"ErrorCookie"
 	{
-		"zho"		"錯誤：cookie 尚未快取（稍後重試）。"
+		"zho"		"錯誤: cookie 還沒有快取 (請過會再進行嘗試)."
 	}
 	"SpecListener_SelectedItemFoundInfo"
 	{
-		"zho"		"[SpecListener] 您選擇的項目：%d（找到？%d 資訊：%s）"
+		"zho"		"[SpecListener] 您選擇的專案：%d（找到？%d 資訊：%s）"
 	}
 	"SpecListener_ClientMenuCancelledReason"
 	{
@@ -62,7 +62,7 @@
 	}
 	"SpecListener_Disable"
 	{
-		"zho"		"[SpecListener] 停用"
+		"zho"		"[SpecListener] 禁用"
 	}
 	"SpecListener_ReEnableListenAllTalk"
 	{

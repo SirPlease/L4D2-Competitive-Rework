@@ -2,6 +2,6 @@
 {
 	"L4D2ExplosiondmgPrev_TakeDamageVictimAttackerInflictor"
 	{
-		"vi"		"hOnTakeThiệt hại nạn nhân: %d, kẻ tấn công: %d (%s), kẻ gây ra: %d, sát thương: %f, loại sát thương: %d"
+		"vi"		"hOnTakeDamage Nạn nhân: %d, Kẻ tấn công: %d (%s), Kẻ gây thương tích: %d, Sát thương: %f, Loại sát thương: %d"
 	}
 }

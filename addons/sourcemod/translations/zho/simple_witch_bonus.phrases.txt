@@ -2,6 +2,6 @@
 {
 	"SimpleWitchBonus_KillingWitchAwardedPoints"
 	{
-		"zho"		"{default}殺死魔女已獎勵：{olive}%d {default}積分！"
+		"zho"		"{default}擊殺 Witch 獲得：{olive}%d {default}獎勵分！"
 	}
 }

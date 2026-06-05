@@ -2,18 +2,18 @@
 {
 	"Tag"
 	{
-		"zho"		"[ {olive} Teamflip {default} ]"
+		"zho"		"[{olive}Teamflip{default}]"
 	}
 	"FlippedSurvivor"
 	{
-		"zho"		"{green} %s {default} 翻轉了一支隊伍，進入了 {blue} 倖存者 {default} 隊伍！"
+		"zho"		"{green}%s{default}  隨機挑選了一個隊伍，是 {blue}倖存者{default} 隊伍!"
 	}
 	"FlippedInfected"
 	{
-		"zho"		"{green} %s {default} 翻轉了一個團隊，並且在 {red} 上 感染了 {default} 團隊！"
+		"zho"		"{green}%s{default} 隨機挑選了一個隊伍，是 {red}感染者{default} 隊伍!"
 	}
 	"Wait"
 	{
-		"zho"		"[Teamflip] 哇，夥計，慢點。至少等待 %d 秒。"
+		"zho"		"[Teamflip] 哇，夥計，慢點。至少要等 %d 秒。"
 	}
 }

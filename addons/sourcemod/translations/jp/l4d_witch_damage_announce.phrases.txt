@@ -3,21 +3,21 @@
 	"FailWitchCrown"
 	{
 		"#format"	"{1:N}"
-		"jp"		"{default}[{green}!{default}] {red}{1} {default}({olive}戴冠した魔女の失敗{default})、{red}魔女によってキャップを外されました。"
+		"jp"		"{default}[{green}!{default}] {red}{1} {default}({olive} 二番目の妹が失敗した {default})、{red}Witch {default} はスクラッチダウンされました"
 	}
 	"TankKillWitch"
 	{
 		"#format"	"{1:N}"
-		"jp"		"{default}[{green}!{default}] {red}タンク {default}({olive}{1}{default}) が {red} 魔女を倒した"
+		"jp"		"{default}[{green}!{default}] {red}Tank {default}({olive}{1}{default}) が {red}Witch を倒しました"
 	}
 	"WitchRemainedHealth"
 	{
 		"#format"	"{1:d}"
-		"jp"		"{default}[{green}!{default}] {blue}魔女 {default}が持っていた {olive}{1} {default}残り体力"
+		"jp"		"{default}[{green}!{default}] {blue}Witch {default} 血がまだ残っています {olive}{1} {default}"
 	}
 	"DamageToWitch"
 	{
-		"jp"		"{default}[{green}!{default}] {blue}ダメージ {default}を取り扱いました {blue}魔女:"
+		"jp"		"{default}[{green}!{default}] {blue} から Witch{default} による損害:"
 	}
 	"PrefectWitchCrown"
 	{
@@ -27,7 +27,7 @@
 	"FinalShotWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}{3:N}"
-		"jp"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3} ★"
+		"jp"		"{blue}[{default}{1}{blue}]({default}{2}%%{blue}){olive}{3}★"
 	}
 	"AssistanceWitchCrown"
 	{
@@ -37,34 +37,34 @@
 	"FinalShotInfWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"jp"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}感染者 {olive} ☆"
+		"jp"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red} 感染者 {olive} ☆"
 	}
 	"AssistanceInfWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"jp"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}感染しました"
+		"jp"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red} 感染者"
 	}
 	"FinalShotTankWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"jp"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}タンク {olive} ☆"
+		"jp"		"{red}[{default}{1}{red}] ({default}{2}%%{red}){red}Tank {olive}☆"
 	}
 	"AssistanceTankWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"jp"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}タンク"
+		"jp"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}Tank"
 	}
 	"L4DWitchDamageAnnounce_TankKilledWitch"
 	{
-		"jp"		"{default}[{green}!{default}] {red}タンク {default}({olive}%N{default}) {red}魔女を倒しました"
+		"jp"		"{default}[{green}!{default}] {red}Tank {default}({olive}%N{default}) {red}Witch を殺しました"
 	}
 	"L4DWitchDamageAnnounce_WitchHealthRemaining"
 	{
-		"jp"		"{default}[{green}!{default}] {blue}魔女 {default}は{olive}%d {default}健康状態が残っています"
+		"jp"		"{default}[{green}!{default}] {blue}Witch {default}残血量 {olive}%d {default}"
 	}
 	"L4DWitchDamageAnnounce_DamageDealtWitch"
 	{
-		"jp"		"{default}[{green}!{default}] {blue}ダメージ {default}{blue}魔女に与えた:"
+		"jp"		"{default}[{green}!{default}] {blue} から Witch{default} による損害:"
 	}
 	"L4DWitchDamageAnnounce_WitchDamageLine"
 	{

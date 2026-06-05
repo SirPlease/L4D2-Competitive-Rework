@@ -6,26 +6,26 @@
 	}
 	"SurvivorMVPTest_DamageClient"
 	{
-		"chi"		"客户损坏：{olive}%d{default}"
+		"chi"		"玩家伤害: {olive}%d{default}"
 	}
 	"SurvivorMVPTest_SIKillsClient"
 	{
-		"chi"		"SI 杀死客户端：{olive}%d{default}"
+		"chi"		"玩家特感击杀: {olive}%d{default}"
 	}
 	"SurvivorMVPTest_DamagePercentClient"
 	{
-		"chi"		"客户损坏百分比：{olive}%f{default}"
+		"chi"		"玩家伤害占比: {olive}%f{default}"
 	}
 	"SurvivorMVPTest_CurrentRoundMVPClientCommon"
 	{
-		"chi"		"本轮MVP客户（普通）：{olive}%N{default}"
+		"chi"		"本轮普感 MVP 玩家: {olive}%N{default}"
 	}
 	"SurvivorMVPTest_CommonKillsClient"
 	{
-		"chi"		"客户端常见击杀：{olive}%d{default}"
+		"chi"		"玩家普感击杀: {olive}%d{default}"
 	}
 	"SurvivorMVPTest_CIPercentClient"
 	{
-		"chi"		"客户 CI 百分比：{olive}%f{default}"
+		"chi"		"玩家普感击杀占比: {olive}%f{default}"
 	}
 }

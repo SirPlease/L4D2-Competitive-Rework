@@ -2,12 +2,12 @@
 {
 	"Select"
 	{
-		"ko"		"[펀치 각도] 설정을 저장하고 반동을 켜거나 끄는 옵션을 선택하세요"
+		"ko"		"[펀치 각도] 설정을 저장하고 반동을 전환하는 옵션을 선택하세요"
 	}
 	"CookieSlected"
 	{
-		"#format"	"{1:s}"
-		"ko"		"[펀치 각도] 펀치 각도 전환: {1:t}"
+		"#format"		"{1:s}"
+		"ko"		"[펀치 각도] 반동 전환: {1}"
 	}
 	"On"
 	{
@@ -19,11 +19,11 @@
 	}
 	"Recoil_On"
 	{
-		"ko"		"[반동] ON (펀치 없음)"
+		"ko"		"[지터]가 꺼짐(시야각 지터 없음)"
 	}
 	"Recoil_Off"
 	{
-		"ko"		"[반동] OFF(바닐라)"
+		"ko"		"[디더링] 켜짐(원래 효과)"
 	}
 	"PunchAngle_RecoilUsageRecoil01"
 	{
@@ -31,10 +31,10 @@
 	}
 	"PunchAngle_JitterTurnedOffDebounceNo"
 	{
-		"ko"		"[지터]가 꺼졌습니다(디바운스/시야각 지터 없음)"
+		"ko"		"[지터] 끄기(디바운스/각도 지터 없음)"
 	}
 	"PunchAngle_JitterOriginalEffect"
 	{
-		"ko"		"[지터] 켜짐(원래 효과)"
+		"ko"		"[디더링] 켜짐(원래 효과)"
 	}
 }

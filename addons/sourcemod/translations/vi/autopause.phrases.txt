@@ -2,17 +2,17 @@
 {
 	"Unpausing"
 	{
-		"vi"		"{blue}[{default}AutoPause{blue}] {default}Tất cả người chơi {green}crash {default}đã kết nối lại.. {blue}Bỏ tạm dừng{default}!"
+		"vi"		"{blue} [{default} tự động tạm dừng {blue}] {default} Tất cả {green} bị lỗi Người chơi {default} đã kết nối lại.. {blue} Hủy tạm dừng {default}!"
 	}
 	"Waiting"
 	{
 		"#format"	"{1:i},{2:t}"
-		"vi"		"{blue}[{default}AutoPause{blue}] {default}Đang chờ thêm {olive}{1} {default}{green}người chơi crash {default}{2} trước khi tự động {blue}bỏ tạm dừng{default}!"
+		"vi"		"{blue}[{default} tự động tạm dừng {blue}] {default} đang chờ {olive}{1} {default} tên {green} bị lỗi {default}{2} để bắt đầu {blue} tạm dừng để nâng {default}!"
 	}
 	"Crashed"
 	{
 		"#format"	"{1:N}"
-		"vi"		"{blue}[{default}AutoPause{blue}] {olive}{1} {default}游戏崩溃."
+		"vi"		"{blue}[{default}Tự động tạm dừng{blue}] {olive}{1} {default}Trò chơi đã bị lỗi."
 	}
 	"players"
 	{

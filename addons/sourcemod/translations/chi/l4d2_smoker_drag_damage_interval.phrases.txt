@@ -2,11 +2,11 @@
 {
 	"L4D2SmokerDragDamageInterval_TongueContinuityDragChokeDamage"
 	{
-		"chi"		"[tongue_continuity] %N 拖动->扼流：损坏时钟继续 - %.2fs 中的下一个损坏（原版将重置为 %.2fs）"
+		"chi"		"[tongue_continuity] %N 拖拽->窒息: 伤害计时继续 - 下次伤害将在 %.2fs 后触发（原版会重置为 %.2fs）"
 	}
 	"L4D2SmokerDragDamageInterval_TongueContinuityChokeDragDamage"
 	{
-		"chi"		"[tongue_连续性] %N 窒息->拖动：伤害时钟继续 - %.2f 中的下一个伤害（原版会立即发射）"
+		"chi"		"[tongue_continuity] %N 窒息->拖拽: 伤害计时继续 - 下次伤害将在 %.2fs 后触发（原版会立刻触发）"
 	}
 	"L4D2SmokerDragDamageInterval_DebugVictimDamageTimeGame"
 	{

@@ -2,18 +2,18 @@
 {
 	"Tag"
 	{
-		"jp"		"{red}[{default}NoTankRush{red}]"
+		"jp"		"{red} [ {default} ノータンクラッシュ {red} ]"
 	}
 	"freeze"
 	{
-		"jp"		"{red}戦車 {default} が出現しました。 {olive}{default}距離ポイントを凍結します!"
+		"jp"		"{red}Tank {default} が生成されました。 {olive} 凍結 {default} 距離ポイント!"
 	}
 	"unfreeze"
 	{
-		"jp"		"{red}戦車{default}は死亡しました。 {olive}{default}距離ポイントの凍結を解除します!"
+		"jp"		"{red}Tank {default} が死亡しました。 {olive} 解凍 {default} 距離分!"
 	}
 	"saferoom"
 	{
-		"jp"		"{red}生存者は{default}セーフルームに到着しました。 {olive}{default}距離ポイントの凍結を解除します!"
+		"jp"		"{red} 生存者 {default} が安全ゲートに到着しました。 {olive} 解凍 {default} 距離分!"
 	}
 }

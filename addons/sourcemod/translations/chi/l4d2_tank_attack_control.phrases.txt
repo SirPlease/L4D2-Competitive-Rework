@@ -6,14 +6,14 @@
 	}
 	"Reload"
 	{
-		"chi"	"{olive}装弹{default}/{olive}!overhand{default} = {blue}双手高抛{default}"
+		"chi"	"{olive}装弹{default}/{olive}!overhand{default} = {blue}高抛砖{default}"
 	}
 	"Use"
 	{
-		"chi"	"{olive}使用键{default}/{olive}!underhand{default} = {blue}低抛{default}"
+		"chi"	"{olive}使用键{default}/{olive}!underhand{default} = {blue}低抛砖{default}"
 	}
 	"M2"
 	{
-		"chi"	"{olive}鼠标右键{default}/{olive}!overonehand{default} = {blue}单手高抛{default}"
+		"chi"	"{olive}鼠标右键{default}/{olive}!overonehand{default} = {blue}右键砖{default}"
 	}
 }

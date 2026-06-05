@@ -2,70 +2,70 @@
 {
 	"PanelHide"
 	{
-		"vi"		"[ {olive} Sẵn sàng {default} ] Bảng điều khiển hiện đã tắt {red} {default}"
+		"vi"		"[{olive}Readyup{default}] Bảng chuẩn bị đã được đóng {red}{default}"
 	}
 	"PanelShow"
 	{
-		"vi"		"[ {olive} Sẵn sàng {default} ] Bảng điều khiển hiện là {blue} trên {default}"
+		"vi"		"[{olive}Readyup{default}] Bảng chuẩn bị đã được mở {blue}{default}"
 	}
 	"ForceStartAdmin"
 	{
 		"#format"	"{1:N}"
-		"vi"		"[ {green}! {default} ] {blue} Trò chơi {default} bắt đầu là {green} bị {default} ép buộc bởi {blue} Admin {default} ( {olive} {1} {default} )"
+		"vi"		"[{green}!{default}] Quản trị viên {blue} {default}({olive}{1}{default}) {green} buộc trò chơi {default} {blue} bắt đầu"
 	}
 	"VoteInProgress"
 	{
-		"vi"		"[ {olive} Sẵn sàng {default} ] Có {olive} đang tiến hành bình chọn {green} {default}."
+		"vi"		"[{olive}Readyup{default}] Hiện đang có {olive} bỏ phiếu {green}{default}"
 	}
 	"VoteDelay"
 	{
 		"#format"	"{1:d}"
-		"vi"		"[ {olive} Sẵn sàng {default} ] Đợi {blue} {1} s {default} khác gọi biểu quyết."
+		"vi"		"[{olive}Readyup{default}] Vui lòng đợi {blue}{1} giây {default} để bắt đầu vòng bỏ phiếu tiếp theo"
 	}
 	"Player marked unready"
 	{
 		"#format"	"{1:N}"
-		"vi"		"{default} [ {green}! {default} ] Đã hủy đếm ngược {green}! {default} ( {teamcolor} {1} {green} được đánh dấu là {default} chưa sẵn sàng )"
+		"vi"		"{default}[{green}!{default}] Việc đếm ngược {green} đã bị hủy bỏ! {default}({teamcolor}{1} {green} đã hủy chuẩn bị {default})"
 	}
 	"Player switched team"
 	{
 		"#format"	"{1:N}"
-		"vi"		"{default} [ {green}! {default} ] Đã hủy đếm ngược {green}! {default} ( {teamcolor} {1} {olive} chuyển đội {default} )"
+		"vi"		"{default}[{green}!{default}] Việc đếm ngược {green} đã bị hủy bỏ! {default}({teamcolor}{1} {olive} đã chuyển trại {default})"
 	}
 	"Player disconnected"
 	{
 		"#format"	"{1:N}"
-		"vi"		"{default} [ {green}! {default} ] Đã hủy đếm ngược {green}! {default} ( {teamcolor} {1} {green} đã ngắt kết nối {default} )"
+		"vi"		"{default}[{green}!{default}] Việc đếm ngược {green} đã bị hủy bỏ! {default}({teamcolor}{1} {green} đã rời khỏi trò chơi {default})"
 	}
 	"Admin aborted"
 	{
 		"#format"	"{1:N}"
-		"vi"		"{default} [ {green}! {default} ] {green} Lực lượng bắt đầu bị hủy bỏ! {default} ( {olive} {1} {green} ban hành {default} )"
+		"vi"		"{default}[{green}!{default}] {green} Dừng và buộc khởi động! {default}({green} do {olive}{1} {green}{default} khởi xướng)"
 	}
 	"HintReady"
 	{
-		"vi"		"Bạn đã sẵn sàng.\nGõ !unready hoặc nhấn F2 để hủy sẵn sàng."
+		"vi"		"Bạn đã chuẩn bị \n. Nhập !unready / nhấn F2 để hủy việc chuẩn bị."
 	}
 	"HintUnready"
 	{
-		"vi"		"Bạn chưa sẵn sàng.\nGõ !ready hoặc nhấn F1 để sẵn sàng."
+		"vi"		"Bạn chưa sẵn sàng \n Nhập !ready / Nhấn F1 để xác nhận chuẩn bị"
 	}
 	"LiveCountdownBegin"
 	{
-		"vi"		"Sắp bắt đầu!\nGõ !unready hoặc nhấn F2 để hủy"
+		"vi"		"Trò chơi sắp bắt đầu! \n nhập !unready / nhấn F2 để ngắt đếm ngược"
 	}
 	"LiveCountdown"
 	{
 		"#format"	"{1:d}"
-		"vi"		"Bắt đầu sau: {1}\nGõ !unready hoặc nhấn F2 để hủy"
+		"vi"		"Vui lòng đảm nhận vị trí của bạn: {1} \n Nhập !unready / Nhấn F2 để làm gián đoạn quá trình đếm ngược"
 	}
 	"LiveCountdownCancelled"
 	{
-		"vi"		"Đếm ngược đã bị hủy!"
+		"vi"		"Việc đếm ngược bị đình chỉ!"
 	}
 	"RoundIsLive"
 	{
-		"vi"		"Vòng đang trực tiếp!"
+		"vi"		"Trò chơi bắt đầu!"
 	}
 	"InitiateAutoStart"
 	{
@@ -74,18 +74,18 @@
 	"AutoStartCountdown"
 	{
 		"#format"	"{1:d}"
-		"vi"		"Trò chơi bắt đầu sau: {1}"
+		"vi"		"Trò chơi bắt đầu lúc: {1}"
 	}
 	"AutoStartWaiting"
 	{
-		"vi"		"Đang chờ tải người chơi..."
+		"vi"		"Đang chờ người chơi tham gia..."
 	}
 	"AutoStartNotEnoughPlayers"
 	{
-		"vi"		"Cần thêm người chơi..."
+		"vi"		"Không đủ người chơi..."
 	}
 	"Readyup_CanOnlyUnreadyTimesRound"
 	{
-		"vi"		"[{olive}Readyup{default}] Bạn chỉ có thể bỏ sẵn sàng tối đa {blue}%d{default} lần trong vòng này."
+		"vi"		"[{olive}Readyup{default}] Bạn chỉ có thể hủy việc chuẩn bị tối đa {blue}%d{default} lần trong vòng này."
 	}
 }

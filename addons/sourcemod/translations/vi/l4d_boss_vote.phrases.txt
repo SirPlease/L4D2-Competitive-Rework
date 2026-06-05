@@ -2,141 +2,141 @@
 {
 	"Tag"
 	{
-		"vi"		"{blue} < {green} BossVote {blue} > {default}"
+		"vi"		"{blue}<{green}BossVote{blue}>{default}"
 	}
 	"NotAvailable"
 	{
-		"vi"		"Bỏ phiếu ông chủ không có sẵn trên bản đồ này."
+		"vi"		"Bạn không thể bỏ phiếu để thay đổi vị trí ông chủ trên bản đồ này."
 	}
 	"Available"
 	{
-		"vi"		"Việc bỏ phiếu của ông chủ chỉ có sẵn trong quá trình sẵn sàng."
+		"vi"		"Việc bỏ phiếu vị trí ông chủ chỉ có thể được thực hiện trước khi bắt đầu chuẩn bị."
 	}
 	"FirstRound"
 	{
-		"vi"		"Bỏ phiếu Boss chỉ có sẵn trong vòng đầu tiên của bản đồ."
+		"vi"		"Việc bỏ phiếu vị trí Boss chỉ có thể được thực hiện ở vòng đầu tiên."
 	}
 	"NotAvailableForSpec"
 	{
-		"vi"		"Việc bình chọn ông chủ không có sẵn cho khán giả."
+		"vi"		"Việc bình chọn vị trí ông chủ không được mở cho khán giả."
 	}
 	"CannotBeCalled"
 	{
-		"vi"		"Boss Vote không thể được gọi ngay bây giờ..."
+		"vi"		"Việc bỏ phiếu vị trí ông chủ tạm thời không khả dụng..."
 	}
 	"Usage"
 	{
-		"vi"		"Cách sử dụng:!voteboss {olive} < {default} bể {olive} > < {default} phù thủy {olive} > {default}."
+		"vi"		"Cách dùng: !voteboss {olive}<{default}tank{olive}> <{default}witch{olive}>{default}."
 	}
 	"Usage2"
 	{
-		"vi"		"Sử dụng {default} \" {blue} 0 {default} \" cho {olive} Không sinh sản {default}, \" {blue} -1 {default} \" cho {olive} Sự thiếu hiểu biết."
+		"vi"		"Sử dụng {default}\"{blue}0{default}\" để chỉ ra rằng {olive} không tạo ra {default} và \"{blue}-1{default}\" để chỉ ra rằng {olive} không thay đổi."
 	}
 	"Invalid"
 	{
-		"vi"		"Tỷ lệ {olive} không hợp lệ là {default}."
+		"vi"		"Tỷ lệ phần trăm là {olive}, {default} không hợp lệ."
 	}
 	"TankStatic"
 	{
-		"vi"		"Xe tăng sinh sản là tĩnh và không thể thay đổi trên bản đồ này."
+		"vi"		"Vị trí của Tank trên bản đồ này là cố định và không thể thay đổi."
 	}
 	"WitchStatic"
 	{
-		"vi"		"Nơi sinh sản của phù thủy là tĩnh và không thể thay đổi trên bản đồ này."
+		"vi"		"Vị trí của Witch trên bản đồ này là cố định và không thể thay đổi."
 	}
 	"TankBanned"
 	{
-		"vi"		"Tỷ lệ xe tăng là {blue} bị cấm {default}."
+		"vi"		"Tiến trình Tank này đã bị {blue} và {default} vô hiệu hóa."
 	}
 	"WitchBanned"
 	{
-		"vi"		"Tỷ lệ phù thủy là {blue} bị cấm {default}."
+		"vi"		"Tiến trình Witch này đã bị {blue} và {default} vô hiệu hóa."
 	}
 	"SetBosses"
 	{
-		"vi"		"Đặt Tank thành: %s và Witch thành: %s?"
+		"vi"		"Đặt tiến trình của Tank thành: %s và tiến trình của Witch thành: %s?"
 	}
 	"SetTank"
 	{
-		"vi"		"Đặt Tank thành: %s và Witch thành: Vô hiệu hóa?"
+		"vi"		"Đặt tiến trình Tank thành: %s và tắt Witch?"
 	}
 	"SetOnlyTank"
 	{
-		"vi"		"Đặt bể thành: %s?"
+		"vi"		"Đặt tiến trình Tank thành: %s?"
 	}
 	"SetWitch"
 	{
-		"vi"		"Đặt Tank thành: Vô hiệu hóa và Witch thành: %s?"
+		"vi"		"Tắt Tank và đặt tiến trình Witch thành: %s?"
 	}
 	"SetOnlyWitch"
 	{
-		"vi"		"Đặt Phù thủy thành: %s?"
+		"vi"		"Đặt tiến trình Witch thành: %s?"
 	}
 	"SetBossesDisabled"
 	{
-		"vi"		"Đặt Boss thành: Vô hiệu hóa?"
+		"vi"		"Tắt cả thế hệ Tank và Witch?"
 	}
 	"SetTankDisabled"
 	{
-		"vi"		"Đặt Tank thành: Đã tắt?"
+		"vi"		"Tắt thế hệ Tank?"
 	}
 	"SetWitchDisabled"
 	{
-		"vi"		"Đặt Witch thành: Vô hiệu hóa?"
+		"vi"		"Tắt thế hệ Witch?"
 	}
 	"OnlyReadyUp"
 	{
-		"vi"		"Sinh sản chỉ có thể được thiết lập trong khi sẵn sàng."
+		"vi"		"Việc tạo xe tăng chỉ có thể được thiết lập trước khi chuẩn bị."
 	}
 	"SettingBoss"
 	{
-		"vi"		"Thiết lập thời gian sinh sản của Boss..."
+		"vi"		"Thiết lập sự xuất hiện của Boss..."
 	}
 	"SettingTank"
 	{
-		"vi"		"Đang thiết lập khả năng sinh sản của xe tăng..."
+		"vi"		"Đặt Tank để tạo..."
 	}
 	"SettingWitch"
 	{
-		"vi"		"Thiết lập sự xuất hiện của phù thủy..."
+		"vi"		"Đặt Witch để tạo..."
 	}
 	"SettingBossDisabled"
 	{
-		"vi"		"Đặt Boss bị vô hiệu hóa..."
+		"vi"		"Đặt Boss để tắt..."
 	}
 	"CommandNotAvailable"
 	{
-		"vi"		"Lệnh không có sẵn trên bản đồ này."
+		"vi"		"Lệnh không thể được sử dụng cho hình ảnh này."
 	}
 	"TankSpawnStatic"
 	{
-		"vi"		"Xe tăng sinh sản là tĩnh và không thể thay đổi trên bản đồ này."
+		"vi"		"Vị trí của Tank trên bản đồ này là cố định và không thể thay đổi."
 	}
 	"PercentageInvalid"
 	{
-		"vi"		"Tỷ lệ {blue} không hợp lệ là {default}."
+		"vi"		"Tiến trình này là {blue} và {default} không hợp lệ."
 	}
 	"Percentagebanned"
 	{
-		"vi"		"Tỷ lệ {blue} bị cấm là {default}."
+		"vi"		"Tiến trình này bị vô hiệu hóa bởi {blue}{default}."
 	}
 	"TankSpawnAdmin"
 	{
 		"#format"	"{1:i},{2:s}"
-		"vi"		"Sinh sản của xe tăng được đặt thành {olive} {1} % {default} bởi Quản trị viên {blue} {2} {default}."
+		"vi"		"Vị trí Tank được quản trị viên {blue}{2}{default} đặt thành: {olive}{1}%{default}."
 	}
 	"WitchSpawnStatic"
 	{
-		"vi"		"Nơi sinh sản của phù thủy là tĩnh và không thể thay đổi trên bản đồ này."
+		"vi"		"Vị trí của Witch trên bản đồ này là cố định và không thể thay đổi."
 	}
 	"WitchSpawnAdmin"
 	{
 		"#format"	"{1:i},{2:s}"
-		"vi"		"Sinh sản phù thủy được đặt thành {olive} {1} % {default} bởi Quản trị viên {blue} {2} {default}."
+		"vi"		"Vị trí Witch được quản trị viên {blue}{2}{default} đặt thành: {olive}{1}%{default}."
 	}
 	"RoundNotReachLimit"
 	{
 		"#format"	"{1:i}"
-		"vi"		"Bạn muốn bỏ qua ngay ở độ khó này sao? Chưa được đâu! (Bạn cần thất bại thêm {blue}{1} lần{default} nữa mới có thể dùng {olive}chức năng bỏ phiếu boss{default})."
+		"vi"		"Độ khó này cũng không cho phép bạn bỏ qua hạn chế bầu chọn của Boss. Bạn cũng sẽ cần phải thử và thất bại {blue}{1}{default} nhiều lần trước khi có thể sử dụng tính năng bỏ phiếu {olive}Boss {default}."
 	}
 }

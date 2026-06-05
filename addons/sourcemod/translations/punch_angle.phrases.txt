@@ -6,8 +6,8 @@
 	}
 	"CookieSlected"
 	{
-		"#format"	"{1:t}"
-		"en"		"[Punch Angle] Punch Angle Toggle: {1:t}"
+		"#format"	"{1:s}"
+		"en"		"[Punch Angle] Punch Angle Toggle: {1}"
 	}
 	"On"
 	{

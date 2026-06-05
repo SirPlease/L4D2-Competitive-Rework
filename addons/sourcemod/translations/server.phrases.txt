@@ -2,50 +2,50 @@
 {
 	"Server_WatchingChatBlue"
 	{
-		"en"		"[{olive} watching {default}] {blue}%N{default}：%s"
+		"en"		"[{olive}Spectator{default}] {blue}%N{default}: %s"
 	}
 	"Server_WatchingChatRed"
 	{
-		"en"		"[{olive} watching {default}] {red}%N{default}：%s"
+		"en"		"[{olive}Spectator{default}] {red}%N{default}: %s"
 	}
 	"Server_PromptFirstGroupWipeoutContinue"
 	{
-		"en"		"[{olive} prompt {default}] This is your {blue}%d{default} first group wipeout, please continue to work hard."
+		"en"		"[{olive}Notice{default}] This is your team wipe number {blue}%d{default}. Keep going."
 	}
 	"Server_StillUntakenBotsTakeThem"
 	{
-		"en"		"There are still untaken Bots, please take them over first or wait until the survivor team is full and try again."
+		"en"		"{green}There are still unclaimed survivor bots. Take them first, or wait until the survivor team is full and try again."
 	}
 	"Server_Not8PlayerSportHasn"
 	{
-		"en"		"It’s not an 8-player sport, it hasn’t reached the upper limit yet!"
+		"en"		"{green}This is not 8-player mode yet, and the player limit has not been reached!"
 	}
 	"Server_SurvivorBotGenerated"
 	{
-		"en"		"A survivor Bot has been generated."
+		"en"		"{green}A survivor bot has been spawned."
 	}
 	"Server_SurvivorBotCannotGeneratedMoment"
 	{
-		"en"		"The survivor Bot cannot be generated at the moment."
+		"en"		"{green}Unable to spawn a survivor bot right now."
 	}
 	"Server_NoBotNotTaken"
 	{
-		"en"		"There is no Bot that has not taken over."
+		"en"		"{green}There are no unclaimed survivor bots."
 	}
 	"Server_EverythingNormalStillWantSkip"
 	{
-		"en"		"Everything is normal, but you still want to skip class?"
+		"en"		"{green}Everything is normal. Still trying to skip it?"
 	}
 	"Server_ExcessGramsKicked"
 	{
-		"en"		"The excess grams have been kicked out"
+		"en"		"{green}Removed extra players."
 	}
 	"Server_PromptsAlreadyBlackWhiteGive"
 	{
-		"en"		"[{olive} prompts {default}] {green}%N{default} Already {olive} black and white {default}, please give priority to protection and treatment!"
+		"en"		"[{olive}Notice{default}] {green}%N{default} is already {olive}black and white{default}. Protect and heal them first!"
 	}
 	"Server_PromptBlackWhiteTreatSoon"
 	{
-		"en"		"[{olive} prompt {default}] You are now {green} black and white {default}, please treat it as soon as possible!"
+		"en"		"[{olive}Notice{default}] You are now {green}black and white{default}. Heal as soon as possible!"
 	}
 }

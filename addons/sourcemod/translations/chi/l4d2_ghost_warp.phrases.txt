@@ -2,7 +2,7 @@
 {
 	"L4D2GhostWarp_CommandDisabled"
 	{
-		"chi"		"%s 该命令现在为 {green}disabled{default}。"
+		"chi"		"%s 该命令现在已{green}禁用{default}。"
 	}
 	"L4D2GhostWarp_CanUseCommandOftenWait"
 	{
@@ -30,6 +30,6 @@
 	}
 	"L4D2GhostWarp_SurvivorSpecifiedNotFound"
 	{
-		"chi"		"%s 您指定的{green}survivor{default}是{green}未找到{default}！"
+		"chi"		"%s 未找到您指定的{green}幸存者{default}！"
 	}
 }

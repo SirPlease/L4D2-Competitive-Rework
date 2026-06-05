@@ -2,7 +2,7 @@
 {
 	"Tag"
 	{
-		"ko"		"{default}[{green}!{default}]"
+		"ko"		"[{green}!{default}]"
 	}
 	"ClientFullyLoaded"
 	{
@@ -12,93 +12,94 @@
 	"PauseCommand"
 	{
 		"#format"	"{1:N},{2:s}"
-		"ko"		"{olive}%N {blue}일시중지됨{default}."
+		"ko"		"{olive}{1}{default} {blue}게임 일시 중지{default}{2}"
 	}
 	"PauseAction"
 	{
-		"ko"		"{red}일시중지됨"
+		"ko"		"{red}게임 일시 중지{default}"
 	}
 	"PauseDelay"
 	{
 		"#format"	"{1:d}"
-		"ko"		"{blue}일시중지 중{default}: {olive}%d"
+		"ko"		"{olive}%d 초 후에 {blue}가 게임을 일시 중지합니다 {default}"
 	}
 	"Crashed"
 	{
-		"ko"		"{olive}게임은 {default}플레이어가 {blue}충돌{default}했기 때문에 {green}강제 일시중지되었습니다. {default}."
+		"ko"		"플레이어 클라이언트 {blue}가 {default}를 충돌시켰기 때문에 {olive} 게임 {default}가 {green}에 의해 강제로 중단되었습니다."
 	}
 	"ForcePause"
 	{
 		"#format"	"{1:N}"
-		"ko"		"{green}강제 일시 중지{default}는 {blue}Admin {default}({olive}%N{default})에 의해 실행됩니다."
+		"ko"		"{blue} 관리자 {default}({olive}%N{default}) {green} {default} 게임을 강제로 일시 중지합니다."
 	}
 	"UnpauseSurvivors"
 	{
 		"#format"	"{1:N},{2:s},{3:s}"
-		"ko"		"{olive}%N %s{default}는 {blue}%s {default}준비로 표시되었습니다."
+		"ko"		"{olive}{1} {2}{default}는 {blue}{3}{default}가 준비되었음을 의미합니다."
 	}
 	"UnpauseInfected"
 	{
 		"#format"	"{1:N},{2:s},{3:s}"
-		"ko"		"{olive}%N %s{default}는 {red}%s {default}준비를 표시했습니다."
+		"ko"		"{olive}{1} {2}{default}는 {red}{3}{default}가 준비되었음을 의미합니다."
 	}
 	"UnpauseInitiator"
 	{
 		"#format"	"{1:N}"
-		"ko"		"{olive}%N {default}는 {green}Initiator {default}준비로 표시되었습니다."
+		"ko"		"{olive}%N {default}는 {green} 개시자 {default}가 준비되었음을 의미합니다."
 	}
 	"UnpauseAdminConfirm"
 	{
-		"ko"		"{olive}팀 {default}가 준비되었습니다. 기다려 {blue}관리자 {default}~ {green}확인{default}."
+		"ko"		"{olive} 두 팀 모두 {default}가 준비되었습니다. {blue} 관리자 {green}가 {default} 시작을 확인하기를 기다리는 중입니다."
 	}
 	"UnreadySurvivors"
 	{
 		"#format"	"{1:N},{2:s},{3:s}"
-		"ko"		"{olive}%N %s{default}로 표시됨 {blue}%s {default}준비되지 않음."
+		"ko"		"{olive}{1} {2}{default}는 {blue}{3}{default}가 아직 준비되지 않았음을 의미합니다."
 	}
 	"UnreadyInfected"
 	{
 		"#format"	"{1:N},{2:s},{3:s}"
-		"ko"		"{olive}%N %s{default}는 {red}%s {default}준비되지 않음으로 표시되었습니다."
+		"ko"		"{olive}{1} {2}{default}는 {red}{3}{default}가 아직 준비되지 않았음을 의미합니다."
 	}
 	"UnreadyInitiator"
 	{
 		"#format"	"{1:N}"
-		"ko"		"{olive}%N {default}로 표시됨 {green}Initiator {default}준비되지 않음."
+		"ko"		"{olive}%N {default}는 {green} 개시자 {default}가 아직 준비되지 않았음을 의미합니다."
 	}
 	"AsInitiator"
 	{
-		"ko"		"{default}는 {green}개시자로"
+		"ko"		"{green}의 개시자인 {default}"
 	}
 	"ForceUnpause"
 	{
 		"#format"	"{1:N}"
-		"ko"		"{green}force unpause {default}는 {blue}Admin {default}({olive}%N{default})에 의해 실행됩니다."
+		"ko"		"{blue} 관리자 {default}({olive}%N{default}) {green}는 {default} 게임 일시중지를 강제로 해제합니다."
 	}
 	"PauseLimit"
 	{
-		"ko"		"일시중지 한도에 도달했습니다."
+		"#format"	"{1:d}"
+		"ko"		"{red} 일시중지 한도 {default} [{green}%d{default}]에 도달했습니다."
 	}
 	"PauseDeferred"
 	{
-		"ko"		"{red}픽업 진행으로 인해 일시중지가 지연되었습니다!"
+		"ko"		"{red} 생존자들 모집중이라 일시정지가 연기되었습니다!"
 	}
 	"PausePreventSpawn"
 	{
-		"ko"		"{default}귀하의 {red}Spawn {default}은(는) 일시정지 때문에 방지되었습니다"
+		"ko"		"{default}정지 조치로 인해 차단되었습니다{red} 생성"
 	}
 	"PanelShow"
 	{
-		"ko"		"패널은 이제 {blue}켜짐{default}."
+		"ko"		"패널 준비: [{blue}가 {default}를 엽니다]."
 	}
 	"PanelHide"
 	{
-		"ko"		"패널은 이제 {red}꺼짐{default}."
+		"ko"		"패널 준비: [{red} off {default}]."
 	}
 	"PanelSlots"
 	{
 		"#format"	"{1:s},{2:d},{3:d}"
-		"ko"		"▸ Server: %s\n▸ Slots: %d/%d"
+		"ko"		"▸ 서버: {1}\n ▸ 위치: {2}/{3}"
 	}
 	"PanelDate"
 	{
@@ -106,11 +107,11 @@
 	}
 	"PanelTitle"
 	{
-		"ko"		"▸ 준비 상태"
+		"ko"		"▸ 준비상태"
 	}
 	"RequireAdmin"
 	{
-		"ko"		"->0. 일시중지를 해제하려면 관리자에게 요청"
+		"ko"		"->0. 관리자는 정지를 해제해야 합니다."
 	}
 	"SurvivorUnPaused"
 	{
@@ -122,7 +123,7 @@
 	}
 	"InfectedUnPaused"
 	{
-		"ko"		"->2. 감염됨: [√]"
+		"ko"		"->2. 감염자 : [√]"
 	}
 	"InfectedPaused"
 	{
@@ -138,12 +139,12 @@
 	}
 	"AutoPauseCrash"
 	{
-		"ko"		"▸ 강제 자동 일시 중지 -> 충돌"
+		"ko"		"▸ 강제 정지 사유 -> 클라이언트 충돌"
 	}
 	"ForcePauseAdmin"
 	{
 		"#format"	"{1:s}"
-		"ko"		"▸ 강제 일시 중지 -> %s (관리자)"
+		"ko"		"▸ 강제 정지 사유 -> %s (관리자 정지)"
 	}
 	"InitiatorPause"
 	{
@@ -153,37 +154,37 @@
 	"DurationPause"
 	{
 		"#format"	"{1:d},{2:d}"
-		"ko"		"▸ 기간: %02d:%02d"
+		"ko"		"▸ 일시 정지 기간: %02d:%02d"
 	}
 	"CountdownCancelNotify"
 	{
-		"ko"		"취소하려면 {olive}!unready {default}라고 말하세요."
+		"ko"		"카운트다운을 취소하려면 {olive}!unready {default}를 입력하세요."
 	}
 	"GameisLive"
 	{
-		"ko"		"게임이 실시간으로 진행됩니다!"
+		"ko"		"게임은 계속됩니다!"
 	}
 	"CountdownReadyDelay"
 	{
 		"#format"	"{1:d}"
-		"ko"		"{blue}거주지{default}: {olive}%d{default}..."
+		"ko"		"{blue} 게임이 카운트다운을 시작합니다. {default}: {olive}%d{default}..."
 	}
 	"CountdownCancelled"
 	{
 		"#format"	"{1:N}"
-		"ko"		"{olive}%N {default}카운트다운을 취소했습니다!"
+		"ko"		"{olive}%N {default}이 카운트다운을 취소하세요!"
 	}
 	"CallvoteNoSpec"
 	{
-		"ko"		"관중으로서 투표를 할 수 없습니다."
+		"ko"		"관전자는 시간 초과를 시작할 수 없습니다."
 	}
 	"CallvoteNoExploit"
 	{
-		"ko"		"방금 팀을 전환하셨으므로 몇 초 동안 투표할 수 없습니다."
+		"ko"		"방금 팀을 변경하여 일시적으로 투표할 수 없습니다."
 	}
 	"CallvoteCannotTargetAdmin"
 	{
-		"ko"		"관리자를 추방할 수 없습니다."
+		"ko"		"관리자를 쫓아낼 수 없을 수도 있습니다."
 	}
 	"Pause_PauseChatMessage"
 	{
@@ -192,6 +193,6 @@
 	"PauseCountFormat"
 	{
 		"#format"	"{1:d},{2:d}"
-		"ko"		" [{green}{1}{default}/{green}{2}{default}]."
+		"ko"		"[{green}{1}{default}/{green}{2}{default}]."
 	}
 }

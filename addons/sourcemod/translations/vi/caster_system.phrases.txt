@@ -2,94 +2,94 @@
 {
 	"SelfCastNotAllowed"
 	{
-		"vi"		"{blue}[{default}{blue}] {default}Bạn không được phép đăng ký làm caster {green}trên máy chủ này{default}."
+		"vi"		"{blue}[{default}Cast{blue}] {green}Máy chủ{default} đã từ chối chứng nhận caster của bạn"
 	}
 	"SelfCast1"
 	{
-		"vi"		"{blue}[{default}{blue}] {default}Bạn đã đăng ký làm người dẫn chương trình."
+		"vi"		"{blue}[{default}Cast{blue}] Bạn đã được chứng nhận là người phát ngôn"
 	}
 	"SelfCast2"
 	{
-		"vi"		"{blue}[{default}{blue}] {default}Kết nối lại để các Addon của bạn hoạt động."
+		"vi"		"{blue}[{default}Cast{blue}] Kết nối lại với máy chủ để tải MOD"
 	}
 	"RegCasterTarget"
 	{
 		"#format"	"{1:N}"
-		"vi"		"{default}[{olive}!{default}] {blue} {default}({olive}{1}{default}) đã đăng ký bạn làm caster"
+		"vi"		"{default}[{olive}!{default}] {blue} quản trị viên {default}({olive}{1}{default}) đã chứng nhận bạn là bình luận viên"
 	}
 	"Reconnect1"
 	{
-		"vi"		"{blue}[{default}Kết nối lại{blue}] {default}Bạn sẽ được kết nối lại với máy chủ.."
+		"vi"		"{blue}[{default}Reconnect{blue}] Bạn sẽ được kết nối lại với máy chủ..."
 	}
 	"Reconnect2"
 	{
-		"vi"		"{blue}[{default}Kết nối lại{blue}] {default}Có màn hình đen thay vì thanh tải!"
+		"vi"		"Trong {blue}[{default}Reconnect{blue}], màn hình sẽ có màu đen khi không có thanh tải!"
 	}
 	"UnregCasterTarget"
 	{
 		"#format"	"{1:N}"
-		"vi"		"{default}[{olive}!{default}] {default}Bạn đã hủy đăng ký làm người phát ngôn bởi {blue} {default}({olive}{1}{default})"
+		"vi"		"{default}[{olive}!{default}] Quản trị viên {blue} {default}({olive}{1}{default}) đã xóa trạng thái bình luận viên của bạn"
 	}
 	"KickSpecsAdmin"
 	{
 		"#format"	"{1:N}"
-		"vi"		"[{green}!{default}] {blue}Khán giả {default}bị đá bởi {blue}Quản trị viên {default}({olive}{1}{default})"
+		"vi"		"[{green}!{default}] Quản trị viên {blue} {default}({olive}{1}{default}) {default} đã đuổi tất cả những người ngoài cuộc của {blue}"
 	}
 	"KickSpecsVoteSpec"
 	{
-		"vi"		"[{olive}Cast{default}] {blue}Khán giả {default}không được phép gọi vote {green}kick khán giả{default}."
+		"vi"		"[{olive}Cast{default}] {blue} bên lề {default} không thể bỏ phiếu {green} bị loại bên lề {default}"
 	}
 	"VoteInProgress"
 	{
-		"vi"		"[{olive}Cast{default}] Đang có {olive}một vote {green}đang chạy{default}."
+		"vi"		"[{olive}Cast{default}] Hiện đang có {olive} bỏ phiếu {green} {default}"
 	}
 	"VoteDelay"
 	{
 		"#format"	"{1:d}"
-		"vi"		"[{olive}{default}] Đợi cái khác {blue}{1}s {default}để kêu gọi biểu quyết."
+		"vi"		"[{olive}Cast{default}] Vui lòng đợi {blue}{1} giây {default} để bắt đầu vòng bỏ phiếu tiếp theo"
 	}
 	"ForbidAddons"
 	{
-		"vi"		"{blue}[{default}!{blue}] {default}hiện đã có {green}bị cấm {default}dành cho bánh xe."
+		"vi"		"{blue}[{default}!{blue}] Quản trị viên {default} {green} đã cấm sử dụng MOD bình luận {default}"
 	}
 	"AllowAddons"
 	{
-		"vi"		"{blue}[{default}!{blue}] {default}hiện đã có {green} {default}dành cho bánh xe."
+		"vi"		"{blue}[{default}!{blue}] Quản trị viên {default} {green} đã mở bình luận {default} bằng MOD"
 	}
 	"CasterCheck1"
 	{
-		"vi"		"{default}<{olive}{default}> Hủy đăng ký truyền trước khi chơi."
+		"vi"		"{default}<{olive}Cast{default}> Vui lòng hủy trạng thái bình luận viên của bạn trước"
 	}
 	"CasterCheck2"
 	{
-		"vi"		"{default}<{olive}{default}> Sử dụng {green}!notcasting {default}/ {green}!uncast"
+		"vi"		"{default}<{olive}Cast{default}> Lệnh là {green}!notcasting {default}/ {green}!uncast"
 	}
 	"RegCasterReply"
 	{
 		"#format"	"{1:N}"
-		"vi"		"Đã đăng ký {1} làm người dẫn chương trình"
+		"vi"		"Được chứng nhận {1} là bình luận viên"
 	}
 	"CasterSteamIDError"
 	{
-		"vi"		"Không thể tìm thấy ID Steam. Kiểm tra lỗi chính tả và cho phép người chơi kết nối đầy đủ."
+		"vi"		"Truy vấn Steam ID không thành công.  Vui lòng kiểm tra lỗi chính tả và đợi người chơi tải."
 	}
 	"UnregCasterNonAdmin"
 	{
-		"vi"		"Chỉ quản trị viên mới có thể loại bỏ các caster khác. Sử dụng sm_notcasting không có đối số nếu bạn muốn tự xóa."
+		"vi"		"Chỉ quản trị viên mới có thể thu hồi trạng thái truyền của người khác. Nhập sm_notcasting không có đối số để xóa trạng thái caster."
 	}
 	"UnregCasterSuccess"
 	{
 		"#format"	"{1:N}"
-		"vi"		"{1} không còn là người điều khiển nữa"
+		"vi"		"{1} không còn là bình luận viên nữa."
 	}
 	"CasterDBReset"
 	{
-		"vi"		"[casters_database] Đặt lại thành công"
+		"vi"		"[casters_database] đã đặt lại thành công"
 	}
 	"CasterDBAdd"
 	{
 		"#format"	"{1:s}"
-		"vi"		"[casters_database] Đã thêm '{1}'"
+		"vi"		"[casters_database] đã thêm '{1}'"
 	}
 	"CasterDBRemove"
 	{
@@ -103,22 +103,22 @@
 	}
 	"CasterDBError"
 	{
-		"vi"		"[casters_database] Không có đối số nào được chỉ định/bộ đệm trống"
+		"vi"		"[casters_database] thiếu tham số/chuỗi trống"
 	}
 	"KickSpecsVoteTitle"
 	{
-		"vi"		"Đá khán giả không phải quản trị viên và không casting?"
+		"vi"		"Loại bỏ tất cả những người không phải là quản trị viên và người thực hiện?"
 	}
 	"KickSpecsVoteSuccess"
 	{
-		"vi"		"Ciao Khán giả!"
+		"vi"		"Sayunara"
 	}
 	"KickSpecsReason"
 	{
-		"vi"		"Xin vui lòng không có khán giả!"
+		"vi"		"Khán giả không được phép vào trò chơi này"
 	}
 	"CasterSystem_CastersDatabaseListPrintedConsole"
 	{
-		"vi"		"[casters_database] Danh sách được in trong bảng điều khiển"
+		"vi"		"Danh sách [casters_database] được in trong bảng điều khiển"
 	}
 }

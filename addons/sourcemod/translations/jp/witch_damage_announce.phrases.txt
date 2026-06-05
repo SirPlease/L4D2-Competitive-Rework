@@ -3,21 +3,21 @@
 	"FailWitchCrown"
 	{
 		"#format"	"{1:N}"
-		"jp"		"{default} [{green}! {default} ] {red} {1} {default} ( {olive} 戴冠魔女失敗 {default} ) そして {red} 魔女によってキャップを奪われました。"
+		"jp"		"{default}[{green}!{default}] {red}{1} {default}({olive} 二番目の妹が失敗した {default})、{red}Witch {default} はスクラッチダウンされました"
 	}
 	"TankKillWitch"
 	{
 		"#format"	"{1:N}"
-		"jp"		"{default} [{green}! {default} ] {red} 戦車 {default} ( {olive} {1} {default} ) が {red} 魔女を倒した"
+		"jp"		"{default} [{green}! {default} ] {red} Tank {default} ( {olive} {1} {default} ) が {red} Witch を倒した"
 	}
 	"WitchRemainedHealth"
 	{
 		"#format"	"{1:d}"
-		"jp"		"{default} [{green}! {default} ] {blue} 魔女 {default} には {olive} {1} {default} の体力が残っていました"
+		"jp"		"{default}[{green}!{default}] {blue}Witch {default} 血がまだ残っています {olive}{1} {default}"
 	}
 	"DamageToWitch"
 	{
-		"jp"		"{default} [{green}! {default} ] {blue} {default} が {blue} 魔女に与えたダメージ:"
+		"jp"		"{default}[{green}!{default}] {blue} から Witch{default} による損害:"
 	}
 	"PrefectWitchCrown"
 	{
@@ -27,7 +27,7 @@
 	"FinalShotWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}{3:N}"
-		"jp"		"{blue}[{default}{1}{blue}] ({default}{2}%%{blue}) {olive}{3} ★"
+		"jp"		"{blue}[{default}{1}{blue}]({default}{2}%%{blue}){olive}{3}★"
 	}
 	"AssistanceWitchCrown"
 	{
@@ -37,21 +37,21 @@
 	"FinalShotInfWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"jp"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} 感染 {olive} ☆"
+		"jp"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red} 感染者 {olive} ☆"
 	}
 	"AssistanceInfWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"jp"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} 感染しました"
+		"jp"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red} 感染者"
 	}
 	"FinalShotTankWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"jp"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} タンク {olive} ☆"
+		"jp"		"{red}[{default}{1}{red}] ({default}{2}%%{red}){red}Tank {olive}☆"
 	}
 	"AssistanceTankWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"jp"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} タンク"
+		"jp"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}Tank"
 	}
 }

@@ -14,7 +14,7 @@
 	}
 	"DealtToTank"
 	{
-		"chi"		"{blue}伤害{default} 发给 {blue}坦克{default} ({olive}%s{default})"
+		"chi"		"对{blue}Tank{default} ({olive}%s{default}) 造成的{blue}伤害"
 	}
 	"PercentDamage"
 	{

@@ -2,19 +2,19 @@
 {
 	"L4D2C1"
 	{
-		"vi"		"Trung tâm chết"
+		"vi"		"trung tâm tử thần"
 	}
 	"L4D2C2"
 	{
-		"vi"		"Lễ hội đen tối"
+		"vi"		"lễ hội đen"
 	}
 	"L4D2C3"
 	{
-		"vi"		"Sốt đầm lầy"
+		"vi"		"trận chiến đầm lầy"
 	}
 	"L4D2C4"
 	{
-		"vi"		"Mưa Khó"
+		"vi"		"cơn bão"
 	}
 	"L4D2C5"
 	{
@@ -22,7 +22,7 @@
 	}
 	"L4D2C6"
 	{
-		"vi"		"Sự Đi Qua"
+		"vi"		"khoảnh khắc ngắn ngủi"
 	}
 	"L4D2C7"
 	{
@@ -30,31 +30,31 @@
 	}
 	"L4D2C8"
 	{
-		"vi"		"Không thương xót"
+		"vi"		"không tỏ ra thương xót"
 	}
 	"L4D2C9"
 	{
-		"vi"		"Khóa học cấp tốc"
+		"vi"		"Tai nạn máy bay nguy hiểm"
 	}
 	"L4D2C10"
 	{
-		"vi"		"Số người chết"
+		"vi"		"hồi chuông báo tử"
 	}
 	"L4D2C11"
 	{
-		"vi"		"Không khí chết"
+		"vi"		"thời gian yên tĩnh"
 	}
 	"L4D2C12"
 	{
-		"vi"		"Thu hoạch máu"
+		"vi"		"thu hoạch đẫm máu"
 	}
 	"L4D2C13"
 	{
-		"vi"		"Dòng lạnh"
+		"vi"		"Dòng suối lạnh buốt"
 	}
 	"L4D2C14"
 	{
-		"vi"		"Đứng cuối cùng"
+		"vi"		"Một cuộc chiến đến chết"
 	}
 	"Zengchengone"
 	{
@@ -70,11 +70,11 @@
 	}
 	"bts"
 	{
-		"vi"		"Trở lại trường học"
+		"vi"		"trở lại trường học"
 	}
 	"CityOfTheDeadBeta"
 	{
-		"vi"		"Thành phố của người chết"
+		"vi"		"thành phố chết chóc"
 	}
 	"City17l4d2"
 	{
@@ -82,7 +82,7 @@
 	}
 	"crashbandicoot"
 	{
-		"vi"		"Khóa học Crash Bandicoot 2"
+		"vi"		"Tiến sĩ Sụp đổ 2"
 	}
 	"Cure2"
 	{
@@ -90,11 +90,11 @@
 	}
 	"damitcomplete"
 	{
-		"vi"		"Đập Nó Hoàn Thành L4D2"
+		"vi"		"Đập phiên bản đầy đủ"
 	}
 	"darkwood"
 	{
-		"vi"		"Gỗ tối màu (Mở rộng)"
+		"vi"		"rừng tối"
 	}
 	"DayBreak"
 	{
@@ -102,11 +102,11 @@
 	}
 	"deadvacation"
 	{
-		"vi"		"Kỳ nghỉ chết L4D2"
+		"vi"		"kỳ nghỉ tử vong"
 	}
 	"deathaboard2"
 	{
-		"vi"		"Cái chết trên tàu II"
+		"vi"		"con tàu ma 2"
 	}
 	"DevilMountain"
 	{
@@ -114,11 +114,11 @@
 	}
 	"Escansion"
 	{
-		"vi"		"Trốn thoát"
+		"vi"		"Escanson"
 	}
 	"escfromtoronto"
 	{
-		"vi"		"Thoát khỏi Toronto L4D2"
+		"vi"		"Thoát khỏi Toronto"
 	}
 	"GettingOut"
 	{
@@ -126,23 +126,23 @@
 	}
 	"hauntedforest"
 	{
-		"vi"		"Rừng ma ám"
+		"vi"		"Rừng rung chuyển"
 	}
 	"Highway17L4D2"
 	{
-		"vi"		"Nửa Đời 2: Quốc Lộ 17(L4D2)"
+		"vi"		"Nửa Đời 2: Quốc Lộ 17"
 	}
 	"ihatemountains2"
 	{
-		"vi"		"Tôi Ghét Núi 2 (1.5)"
+		"vi"		"Tôi ghét núi 2"
 	}
 	"JourneyToSplashMountain"
 	{
-		"vi"		"Hành trình tới núi Splash"
+		"vi"		"Chuyến tham quan núi Splash"
 	}
 	"Diescraper361"
 	{
-		"vi"		"Diescraper Redux 3.61"
+		"vi"		"Ảo ảnh đẫm máu 3.61"
 	}
 	"One4Nine"
 	{
@@ -150,35 +150,35 @@
 	}
 	"TanksPlayground"
 	{
-		"vi"		"Sân chơi xe tăng v3.0"
+		"vi"		"Sân chơi xe tăng"
 	}
 	"YamaMSE"
 	{
-		"vi"		"Yama"
+		"vi"		"Khủng hoảng Maya"
 	}
 	"leftinprypiat"
 	{
-		"vi"		"Còn lại ở Prypiat"
+		"vi"		"Thoát khỏi Pripyat"
 	}
 	"LeftTurnSilentHill3"
 	{
-		"vi"		"Rẽ trái Silent Hill 3"
+		"vi"		"Quay trở lại Silent Hill 3"
 	}
 	"mic3"
 	{
-		"vi"		"Tổ hợp công nghiệp quân sự III v666"
+		"vi"		"Nhà máy quân sự 3 v666"
 	}
 	"necrovirusfacility"
 	{
-		"vi"		"Cơ sở NecroVirus"
+		"vi"		"cơ sở virus hoại tử"
 	}
 	"NightPresence"
 	{
-		"vi"		"ĐêmHiện diện"
+		"vi"		"màn đêm buông xuống"
 	}
 	"QuestionableEthicsAlphaTest"
 	{
-		"vi"		"Đạo đức đáng nghi vấn: Bài kiểm tra Alpha"
+		"vi"		"Vấn đề đạo đức 2"
 	}
 	"re3"
 	{
@@ -186,19 +186,19 @@
 	}
 	"SaltHellPark"
 	{
-		"vi"		"Công viên SaltHell"
+		"vi"		"Công viên Jigoku Yên Kinh"
 	}
 	"shenmejb2"
 	{
-		"vi"		"shenmejb2"
+		"vi"		"Gửi gì 2"
 	}
 	"ajsSilentFear"
 	{
-		"vi"		"Nỗi sợ thầm lặng"
+		"vi"		"nỗi sợ hãi sâu sắc"
 	}
 	"shool"
 	{
-		"vi"		"Silent Hill: Bên kia cuộc sống V4.7"
+		"vi"		"Silent Hill: Cuộc sống ở phía bên kia V4.7"
 	}
 	"TheHive"
 	{
@@ -206,31 +206,31 @@
 	}
 	"ThereIsOnlyOneWay"
 	{
-		"vi"		"Chỉ có một cách"
+		"vi"		"Chỉ có cách này"
 	}
 	"undeadzone"
 	{
-		"vi"		"Khu vực xác sống"
+		"vi"		"Khu vực của người chết"
 	}
 	"WhiteForest"
 	{
-		"vi"		"Rừng Trắng"
+		"vi"		"rừng trắng"
 	}
 	"2evileyes"
 	{
-		"vi"		"2 Mắt Ác"
+		"vi"		"đôi mắt ác quỷ"
 	}
 	"BloodTracks"
 	{
-		"vi"		"Dấu vết máu"
+		"vi"		"vết máu"
 	}
 	"CrashBandicootTheReturn"
 	{
-		"vi"		"Crash Bandicoot: Sự trở lại"
+		"vi"		"Tiến sĩ Sụp đổ 1"
 	}
 	"DeadSeries"
 	{
-		"vi"		"Dòng chết"
+		"vi"		"cái chết liên tục"
 	}
 	"Derailed"
 	{
@@ -238,23 +238,23 @@
 	}
 	"Diescraper36"
 	{
-		"vi"		"Diescraper Redux 3.6"
+		"vi"		"Ảo ảnh đẫm máu"
 	}
 	"FarewellChenming"
 	{
-		"vi"		"Tạm biệt Chenming"
+		"vi"		"Tạm biệt trà buổi sáng"
 	}
 	"HighwayToHell"
 	{
-		"vi"		"Đường cao tốc tới địa ngục"
+		"vi"		"đường đến địa ngục"
 	}
 	"QuestionableEthics"
 	{
-		"vi"		"Đạo đức có vấn đề"
+		"vi"		"Vấn đề đạo đức 1"
 	}
 	"TheBloodyMoors"
 	{
-		"vi"		"Đồng hoang đẫm máu"
+		"vi"		"nơi hoang dã đẫm máu"
 	}
 	"TheCure"
 	{
@@ -262,15 +262,15 @@
 	}
 	"ddntr1"
 	{
-		"vi"		"Bẫy Tử Thần"
+		"vi"		"cái bẫy chết"
 	}
 	"deadvacation2"
 	{
-		"vi"		"Kỳ nghỉ chết 2"
+		"vi"		"Kỳ Nghỉ Chết 2"
 	}
 	"drdegov21"
 	{
-		"vi"		"Thả Dead Gorges v2.1"
+		"vi"		"Hẻm núi tử thần"
 	}
 	"fallen"
 	{
@@ -278,6 +278,6 @@
 	}
 	"l4d2CrashBandicoot2"
 	{
-		"vi"		"Khóa học Crash Bandicoot 2"
+		"vi"		"Tiến sĩ Sụp đổ 2"
 	}
 }

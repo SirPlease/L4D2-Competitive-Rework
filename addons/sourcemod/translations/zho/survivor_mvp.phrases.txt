@@ -2,75 +2,75 @@
 {
 	"Tag"
 	{
-		"zho"		"{blue} [ {default} MVP {blue} ] {default}"
+		"zho"		"{blue}[{default}MVP{blue}]{default}"
 	}
 	"YourRankSI"
 	{
-		"zho"		"{blue}排名 {green}SI： {olive}#%d {blue}({default}%d {green}dmg {blue}[{default}%.0f%%{blue}]{default}, %d {green}擊殺 {blue}[{default}%.0f%%{blue}])"
+		"zho"		"{green}特感{blue}排名: {olive}#%d {blue}({default}%d {green}傷害 {blue}[{default}%.0f%%{blue}]{default}, %d {green}擊殺 {blue}[{default}%.0f%%{blue}])"
 	}
 	"YourRankCI"
 	{
-		"zho"		"{blue} 排名 {green} CI: {olive} # %d {blue} ( {default} %d {green} 常用{blue} [ {default} %.0f%% {blue} ])"
+		"zho"		"{green}喪屍{blue}排名: {olive}#%d {blue}({default}%d {green}喪屍 {blue}[{default}%.0f%%{blue}])"
 	}
 	"YourRankFF"
 	{
-		"zho"		"{blue}排名 {green}FF: {olive}#%d {blue}({default}%d {green}友軍火力 {blue}[{default}%.0f%%{blue}])"
+		"zho"		"{green}黑槍{blue}排名: {olive}#%d {blue}({default}%d {green}友傷 {blue}[{default}%.0f%%{blue}])"
 	}
 	"BotName"
 	{
-		"zho"		"[機器人]"
+		"zho"		"[BOT]"
 	}
 	"NobodyName"
 	{
-		"zho"		"{blue} ( {default} 沒人 {blue} )"
+		"zho"		"{blue}({default}沒有人{blue})"
 	}
 	"NotEnoughAction"
 	{
-		"zho"		"{blue} ( {default} 行動還不夠 {blue} )"
+		"zho"		"{blue}({default}還沒有足夠多的操作{blue})"
 	}
 	"ReportSI_Absolute"
 	{
-		"zho"		"{green} SI: {olive} %s {blue} ({default} %d {green} dmg {default}, %d {green} 殺出 {blue} )"
+		"zho"		"{green}特感: {olive}%s {blue}({default}%d {green}傷害{default}, %d {green}擊殺{blue})"
 	}
 	"ReportSI_Percent"
 	{
-		"zho"		"{green}SI： {olive}%s {blue}({green}dmg {blue}[{default}%.0f%%{blue}]{default}, {green}擊殺 {blue}[{default}%.0f%%{blue}])"
+		"zho"		"{green}特感: {olive}%s {blue}({green}傷害 {blue}[{default}%.0f%%{blue}]{default}, {green}擊殺 {blue}[{default}%.0f%%{blue}])"
 	}
 	"ReportSI_Full"
 	{
-		"zho"		"{green}SI： {olive}%s {blue}({default}%d {green}dmg {blue}[{default}%.0f%%{blue}]{default}, %d {green}擊殺 {blue}[{default}%.0f%%{blue}])"
+		"zho"		"{green}特感: {olive}%s {blue}({default}%d {green}傷害 {blue}[{default}%.0f%%{blue}]{default}, %d {green}擊殺 {blue}[{default}%.0f%%{blue}])"
 	}
 	"ReportSI_Nobody"
 	{
-		"zho"		"{green} SI: {blue} ( {default} 沒人 {blue} )"
+		"zho"		"{green}特感: {blue}({default}無{blue})"
 	}
 	"ReportCI_Absolute"
 	{
-		"zho"		"{green} CI: {olive} %s {blue} ({default} %d {green} 常用{blue})"
+		"zho"		"{green}喪屍: {olive}%s {blue}({default}%d {green}喪屍{blue})"
 	}
 	"ReportCI_Percent"
 	{
-		"zho"		"{green} CI: {olive} %s {blue} ( {green} 通用 {blue} [ {default} %.0f%% {blue} ])"
+		"zho"		"{green}喪屍: {olive}%s {blue}({green}喪屍 {blue}[{default}%.0f%%{blue}])"
 	}
 	"ReportCI_Full"
 	{
-		"zho"		"{green} CI: {olive} %s {blue} ( {default} %d {green} 常用{blue} [ {default} %.0f%% {blue} ])"
+		"zho"		"{green}喪屍: {olive}%s {blue}({default}%d {green}喪屍 {blue}[{default}%.0f%%{blue}])"
 	}
 	"NoFF"
 	{
-		"zho"		"{blue} ( {default} 完全沒有友軍火力！{blue} )"
+		"zho"		"{blue}({default}完全沒有黑槍!{blue})"
 	}
 	"ReportFF_Absolute"
 	{
-		"zho"		"{green} FF: {olive} %s {blue} ( {default} %d {green} 友軍火力 {blue} )"
+		"zho"		"{green}友傷: {olive}%s {blue}({default}%d {green}友傷{blue})"
 	}
 	"ReportFF_Percent"
 	{
-		"zho"		"{green} FF: {olive} %s {blue} ( {green} 友軍火力 {blue} [ {default} %.0f%% {blue} ])"
+		"zho"		"{green}友傷: {olive}%s {blue}({green}友傷 {blue}[{default}%.0f%%{blue}])"
 	}
 	"ReportFF_Full"
 	{
-		"zho"		"{green} FF: {olive} %s {blue} ( {default} %d {green} 友軍火力 {blue} [ {default} %.0f%% {blue} ])"
+		"zho"		"{green}友傷: {olive}%s {blue}({default}%d {green}友傷 {blue}[{default}%.0f%%{blue}])"
 	}
 	"SurvivorMVP_PharmacyMVPStatisticsHeader"
 	{
@@ -78,6 +78,6 @@
 	}
 	"SurvivorMVP_PharmacyMVPStatisticsLine"
 	{
-		"zho"		"{olive}特感{green}%2d {olive}丧尸{green}%3d {olive}黑/被黑{green}%2d/%2d {olive}伤害{green}%4d {default}%N"
+		"zho"		"{olive}特感{green}%2d {olive}普感{green}%3d {olive}黑/被黑{green}%2d/%2d {olive}傷害{green}%4d {default}%N"
 	}
 }

@@ -58,7 +58,7 @@
 	}
 	"RPG_QuicklySpend50BuyFirst"
 	{
-		"zho"		"{green}%N {lightgreen}快速花費50B數隨機購買一把一代單噴"
+		"zho"		"{green}%N {lightgreen}快速花費50B數購買一把一代單噴"
 	}
 	"RPG_FirstTimeBoughtSilencedSMG"
 	{
@@ -78,7 +78,7 @@
 	}
 	"RPG_QuicklySpend50RandomlyBuy"
 	{
-		"zho"		"{green}%N {lightgreen}快速花費50B數隨機購買一把Uzi機槍"
+		"zho"		"{green}%N {lightgreen}快速花費50B數購買一把Uzi機槍"
 	}
 	"RPG_QuicklySpent400BuyBottle"
 	{
@@ -150,7 +150,7 @@
 	}
 	"RPG_SetOutlineColorMaroon"
 	{
-		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}栗子 {default}!"
+		"zho"		"{olive}你 {green}將輪廓顏色改為{default}: {green}栗色 {default}!"
 	}
 	"RPG_SetOutlineColorTeal"
 	{
@@ -322,7 +322,7 @@
 	}
 	"RPG_TurnedBloodRecoveryFunctionKilling"
 	{
-		"zho"		"{green}你已經開啟了殺特回血，殺一隻特感回2滴血，不超過血量上限"
+		"zho"		"{green}你已經開啟了殺特回血，殺一隻特感回2滴血，無法恢復血量超過血量上限"
 	}
 	"RPG_TurnedOffBloodRecoverySpecial"
 	{

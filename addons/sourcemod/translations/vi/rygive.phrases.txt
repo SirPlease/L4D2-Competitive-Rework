@@ -2,15 +2,15 @@
 {
 	"RYGive_TryingKickDeadInfectedRobot"
 	{
-		"vi"		"Đang cố gắng đuổi con robot bị nhiễm bệnh đã chết ra ngoài..."
+		"vi"		"Hãy thử loại bỏ bot bị nhiễm bệnh đã chết..."
 	}
 	"RYGive_KickedBots"
 	{
-		"vi"		"Đã loại bỏ bot %i."
+		"vi"		"Hãy khởi động bot %i."
 	}
 	"RYGive_AdminSpawnedInfected"
 	{
-		"vi"		"{lightgreen}管理员{default}[{olive}%N{default}]刷出一只{olive}%s"
+		"vi"		"Quản trị viên {lightgreen} {default}[{olive}%N{default}] đã sinh ra {olive}%s"
 	}
 	"RYGive_FriendlyDamageCoefficientResetDefault"
 	{
@@ -34,7 +34,7 @@
 	}
 	"RYGive_ImmuneSpecialSenseControl"
 	{
-		"vi"		"{green} miễn nhiễm với sự điều khiển cảm giác đặc biệt của %s {olive}%N"
+		"vi"		"{green}%s {olive}%N Miễn nhiễm với sự kiểm soát giác quan đặc biệt"
 	}
 	"RYGive_OnlySurvivorsCanIdle"
 	{
@@ -46,7 +46,7 @@
 	}
 	"RYGive_NumberInfectedPeopleFull"
 	{
-		"vi"		"Số người nhiễm bệnh đã đầy"
+		"vi"		"Người nhiễm bệnh đầy rẫy"
 	}
 	"RYGive_PlayerAlreadyTargetTeam"
 	{
@@ -54,10 +54,10 @@
 	}
 	"RYGive_AllPlayersWeaponManeuverabilitySet"
 	{
-		"vi"		"{olive} Tất cả người chơi Khả năng cơ động của vũ khí của {default} đã được đặt thành {green}%.1fx"
+		"vi"		"{olive} Khả năng cơ động của vũ khí của tất cả người chơi {default} đã được đặt thành {green}%.1fx"
 	}
 	"RYGive_WeaponManeuverabilitySet"
 	{
-		"vi"		"{olive}%N Khả năng cơ động của vũ khí của {default} đã được đặt thành {green}%.1fx"
+		"vi"		"Khả năng cơ động của vũ khí {olive}%N {default} đã được đặt thành {green}%.1fx"
 	}
 }

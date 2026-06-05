@@ -2,141 +2,141 @@
 {
 	"Tag"
 	{
-		"zho"		"{blue} < {green} 老闆投票 {blue} > {default}"
+		"zho"		"{blue}<{green}BossVote{blue}>{default}"
 	}
 	"NotAvailable"
 	{
-		"zho"		"此地圖上不支援 Boss 投票。"
+		"zho"		"這張地圖不能投票更改boss位置."
 	}
 	"Available"
 	{
-		"zho"		"Boss 投票僅在準備期間可用。"
+		"zho"		"Boss位置投票只能在準備開始前."
 	}
 	"FirstRound"
 	{
-		"zho"		"Boss 投票僅在地圖的第一輪期間可用。"
+		"zho"		"Boss位置投票只能在第一回合."
 	}
 	"NotAvailableForSpec"
 	{
-		"zho"		"觀眾不可以進行 Boss 投票。"
+		"zho"		"Boss位置投票不開放給旁觀者."
 	}
 	"CannotBeCalled"
 	{
-		"zho"		"現在無法呼叫 Boss 投票..."
+		"zho"		"Boss位置投票暫時不能使用..."
 	}
 	"Usage"
 	{
-		"zho"		"用法：!voteboss {olive}<{default}坦克{olive}><{default}魔女{olive}>{default}。"
+		"zho"		"用法: !voteboss {olive}<{default}tank{olive}> <{default}witch{olive}>{default}."
 	}
 	"Usage2"
 	{
-		"zho"		"使用 {default} \" {blue} 0 {default} \" 表示 {olive} 無生成 {default} ， \" {blue} -1 {default} \" 表示 {olive} 無知。"
+		"zho"		"用 {default}\"{blue}0{default}\" 表示 {olive}不生成{default}, \"{blue}-1{default}\" 表示 {olive}不更改."
 	}
 	"Invalid"
 	{
-		"zho"		"百分比為{olive}，無效{default}。"
+		"zho"		"百分比是 {olive}無效的{default}."
 	}
 	"TankStatic"
 	{
-		"zho"		"坦克的生成是靜態的，在此地圖上無法更改。"
+		"zho"		"這張地圖Tank位置是固定的，所以不能進行更改."
 	}
 	"WitchStatic"
 	{
-		"zho"		"女巫的生成是靜態的，在此地圖上無法更改。"
+		"zho"		"這張地圖Witch位置是固定的，所以不能進行更改."
 	}
 	"TankBanned"
 	{
-		"zho"		"坦克百分比是{blue}，封鎖{default}。"
+		"zho"		"這個Tank進度被 {blue}禁用了{default}."
 	}
 	"WitchBanned"
 	{
-		"zho"		"女巫百分比是{blue} 封禁{default} 。"
+		"zho"		"這個Witch進度被 {blue}禁用了{default}."
 	}
 	"SetBosses"
 	{
-		"zho"		"將坦克設定為：%s，將女巫設定為：%s ？"
+		"zho"		"設定Tank進度為: %s , Witch進度為: %s?"
 	}
 	"SetTank"
 	{
-		"zho"		"將坦克設定為：%s，將女巫設定為：停用？"
+		"zho"		"設定Tank進度為: %s 並且禁用 Witch?"
 	}
 	"SetOnlyTank"
 	{
-		"zho"		"將坦克設定為：%s?"
+		"zho"		"設定Tank進度為: %s?"
 	}
 	"SetWitch"
 	{
-		"zho"		"將坦克設定為：停用，將女巫設定為：%s ？"
+		"zho"		"禁用Tank 並且設定Witch進度為: %s?"
 	}
 	"SetOnlyWitch"
 	{
-		"zho"		"將女巫設定為：%s？"
+		"zho"		"設定Witch進度為: %s?"
 	}
 	"SetBossesDisabled"
 	{
-		"zho"		"將 Boss 設定為：停用？"
+		"zho"		"將Tank和Witch生成都關閉?"
 	}
 	"SetTankDisabled"
 	{
-		"zho"		"將 Tank 設定為：禁用？"
+		"zho"		"將Tank生成設為關閉?"
 	}
 	"SetWitchDisabled"
 	{
-		"zho"		"將女巫設定為：停用？"
+		"zho"		"將Witch生成設為關閉?"
 	}
 	"OnlyReadyUp"
 	{
-		"zho"		"生成點只能在準備期間設定。"
+		"zho"		"tank生成只能再準備前設定."
 	}
 	"SettingBoss"
 	{
-		"zho"		"設定 Boss 生成..."
+		"zho"		"設定Boss生成..."
 	}
 	"SettingTank"
 	{
-		"zho"		"設定坦克生成..."
+		"zho"		"設定Tank生成..."
 	}
 	"SettingWitch"
 	{
-		"zho"		"設定女巫生成..."
+		"zho"		"設定Witch生成..."
 	}
 	"SettingBossDisabled"
 	{
-		"zho"		"設定 Boss 停用..."
+		"zho"		"設定Boss禁用..."
 	}
 	"CommandNotAvailable"
 	{
-		"zho"		"命令在此地圖上不可用。"
+		"zho"		"指令不能用於這張圖."
 	}
 	"TankSpawnStatic"
 	{
-		"zho"		"坦克的生成是靜態的，在此地圖上無法更改。"
+		"zho"		"這張地圖Tank位置是固定的，所以不能進行更改."
 	}
 	"PercentageInvalid"
 	{
-		"zho"		"百分比為 {blue} 無效 {default} 。"
+		"zho"		"這個進度是 {blue}無效的{default}."
 	}
 	"Percentagebanned"
 	{
-		"zho"		"百分比是{blue} 封禁{default}。"
+		"zho"		"這個進度被 {blue}禁用了{default}."
 	}
 	"TankSpawnAdmin"
 	{
 		"#format"	"{1:i},{2:s}"
-		"zho"		"坦克生成點由管理員 {blue} {2} {default} 設定為 {olive} {1} % {default} 。"
+		"zho"		"Tank位置被管理員 {blue}{2}{default}設定為：{olive}{1}%{default}."
 	}
 	"WitchSpawnStatic"
 	{
-		"zho"		"女巫的生成是靜態的，在此地圖上無法更改。"
+		"zho"		"這張地圖Witch位置是固定的，所以不能進行更改."
 	}
 	"WitchSpawnAdmin"
 	{
 		"#format"	"{1:i},{2:s}"
-		"zho"		"管理員 {blue} {2} {default} 將女巫生成設定為 {olive} {1} % {default} 。"
+		"zho"		"Witch位置被管理員 {blue}{2}{default}設定為：{olive}{1}%{default}."
 	}
 	"RoundNotReachLimit"
 	{
 		"#format"	"{1:i}"
-		"zho"		"您這個難度就想馬上逃課了？不行呢！(你還需要嘗試{blue}{1}次{default}無法通過後才能使用{olive}boss投票功能{default})."
+		"zho"		"這個難度還不能跳過 Boss 投票限制。你還需要嘗試並失敗 {blue}{1}{default} 次，才能使用 {olive}Boss 投票功能{default}。"
 	}
 }

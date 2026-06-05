@@ -19,66 +19,66 @@
 	"Popped"
 	{
 		"#format"	"{1:N},{2:N}"
-		"vi"		"{olive}{1}{default} xuất hiện {olive}{2}{default}."
+		"vi"		"{olive}{1}{default} đã lặng lẽ giải quyết nó {olive}{2}{default}."
 	}
 	"PoppedBot"
 	{
-		"vi"		"{olive}%N{default} đã xuất hiện một chiếc boomer."
+		"vi"		"{olive}%N{default} Âm thầm hạ gục một chiếc boomer."
 	}
 	"Leveled"
 	{
 		"#format"	"{1:N},{2:N}"
-		"vi"		"{olive}{1}{default} {blue}đầy đủ{default} được san bằng {olive}{2}{default}"
+		"vi"		"{olive}{1}{default} Sử dụng {blue} để tiêu diệt ngay lập tức {default} trong cận chiến với đầy đủ máu {olive}{2}{default}"
 	}
 	"LeveledBot"
 	{
-		"vi"		"{olive}%N{default} {blue}đầy đủ{default} được san bằng {olive}một bộ sạc{default}"
+		"vi"		"{olive}%N{default} Sử dụng {blue} để tiêu diệt {default}{olive} trong trận cận chiến với đầy đủ máu. Một bộ sạc{default}"
 	}
 	"LeveledHurt"
 	{
 		"#format"	"{1:N},{2:N},{3:i}"
-		"vi"		"{olive}{1}{default} {blue}cấp chip{default} {olive}{2}{default} ({blue}{3} dmg{default})"
+		"vi"		"{olive}{1}{default} Sử dụng {blue} để tiêu diệt {default} trong cận chiến. {2}{default} đang sạc ở mức {olive} ({blue}{3} Damage{default})"
 	}
 	"LeveledHurtBot"
 	{
 		"#format"	"{1:N},{2:i}"
-		"vi"		"{olive}{1}{default} {blue}{default} một bộ sạc ({blue}{2} dmg{default})"
+		"vi"		"{olive}{1}{default} Sử dụng {blue} để tiêu diệt {default} trong cận chiến {olive} Một con bò đực đang sạc {default}({blue}{2} Thiệt hại {default})"
 	}
 	"Deadstopped"
 	{
 		"#format"	"{1:N},{2:N}"
-		"vi"		"{olive}{1}{default} {blue}deadstopped{default} {olive}{2}{default}"
+		"vi"		"{olive}{1}{default} {blue}đẩy {default} {olive}{2}{default}"
 	}
 	"DeadstoppedBot"
 	{
-		"vi"		"{olive}%N{default} {blue}deadstopped{default} {olive}một thợ săn{default}"
+		"vi"		"{olive}%N{default} {blue}đẩy {default} {olive}one thợ săn{default}"
 	}
 	"Shoved"
 	{
 		"#format"	"{1:N},{2:N}"
-		"vi"		"{olive}{1}{default} {blue}bị đẩy{default} {olive}{2}{default}."
+		"vi"		"{olive}{1}{default} {blue} đã được đẩy lên {default} {olive}{2}{default}."
 	}
 	"ShovedBot"
 	{
-		"vi"		"{olive}%N{default} {blue}đã đẩy{default} vào {olive}SI{default}."
+		"vi"		"{olive}%N{default} {blue} được đẩy lên {default} a {olive} có ý nghĩa đặc biệt {default}."
 	}
 	"TeamSkeeted"
 	{
-		"vi"		"{olive}%N{default} được {blue}xây dựng theo nhóm{default}."
+		"vi"		"{olive}%N{default} đã được phát sóng bởi nhóm {blue} {default}."
 	}
 	"TeamSkeetedBot"
 	{
-		"vi"		"Một {olive}thợ săn{default} đã được {blue}xây dựng theo nhóm{default}."
+		"vi"		"{olive}Hunter{default} đã được thổi khí bởi đội {blue} {default}."
 	}
 	"Skeeted"
 	{
-		"#format"	"{1:N},{2:s},{3:N}"
-		"vi"		"{olive}{1}{default} {blue}{2}nghiêng{default} {olive}{3}{default}."
+		"#format"		"{1:N},{2:t},{3:N}"
+		"vi"		"{olive}{1}{default} {blue}{2} vụ nổ không khí {default} {olive}{3}{default}."
 	}
 	"SkeetedBot"
 	{
-		"#format"	"{1:N},{2:s}"
-		"vi"		"{olive}{1}{default} {blue}{2}đã chọn{default} một {olive}thợ săn{default}."
+		"#format"		"{1:N},{2:t}"
+		"vi"		"{olive}{1}{default} {blue}{2} vụ nổ không khí{default}{olive}a thợ săn{default}."
 	}
 	"Melee"
 	{
@@ -90,59 +90,59 @@
 	}
 	"Grenade"
 	{
-		"vi"		"lựu đạn-"
+		"vi"		"Ném vũ khí"
 	}
 	"HurtSkeet"
 	{
-		"#format"	"{1:N},{2:i},{3:s}"
-		"vi"		"{olive}{1}{default} {green}không{default} bị lệch (thiệt hại {blue}{2}{default}).{3}"
+		"#format"		"{1:N},{2:i},{3:t}"
+		"vi"		"{olive}{1}{default} bị {green}skeet khi còn ít máu{default} ({blue}{2}{default} sát thương).{3}"
 	}
 	"HurtSkeetBot"
 	{
-		"#format"	"{1:i},{2:s}"
-		"vi"		"{olive}Hunter{default} {green}không{default} bị lệch (thiệt hại {blue}{1}{default}).{2}"
+		"#format"		"{1:i},{2:t}"
+		"vi"		"{olive}Hunter{default} bị {green}skeet khi còn ít máu{default} ({blue}{1}{default} sát thương).{2}"
 	}
 	"Unchipped"
 	{
-		"vi"		"(Sẽ bị trượt nếu thợ săn không bị sứt mẻ!)"
+		"vi"		"(Nếu thợ săn bị giết trên không, đó là một vụ nổ trên không!)"
 	}
 	"CrownedWitch"
 	{
 		"#format"	"{1:N},{2:i}"
-		"vi"		"{olive}{1}{default} trao vương miện cho phù thủy ({blue}{2}{default} sát thương)."
+		"vi"		"{olive}{1}{default} giây phù thủy ({blue}{2}{default} sát thương)."
 	}
 	"CrownedWitch2"
 	{
-		"vi"		"Một phù thủy đã {blue}đăng quang{default}."
+		"vi"		"Phù thủy {blue} đã bị giết {default}."
 	}
 	"DrawCrowned"
 	{
 		"#format"	"{1:N},{2:i},{3:i}"
-		"vi"		"{olive}{1}{default} đã hạ gục một phù thủy ({blue}{2}{default} sát thương, chip {olive}{3}{default})."
+		"vi"		"{olive}{1}{default} khiến phù thủy gây sát thương trong vài giây ({blue}{2}{default} gây sát thương, {olive}{3}{default} gây sát thương trong vài giây)."
 	}
 	"DrawCrowned2"
 	{
 		"#format"	"{1:i},{2:i}"
-		"vi"		"Một phù thủy đã được trao vương miện ({blue}{1}{default} sát thương, chip {olive}{2}{default})."
+		"vi"		"Witch được tính trong vài giây ({blue}{1}{default} cho sát thương, {olive}{2}{default} cho sát thương trong vài giây)."
 	}
 	"CutTongue"
 	{
 		"#format"	"{1:N},{2:N}"
-		"vi"		"{olive}{1}{default} {blue}Lưỡi của{default} {olive}{2}{default}"
+		"vi"		"{olive}{1}{default} {blue} Cắt lưỡi của {default} {olive}{2}{default}"
 	}
 	"CutTongueBot"
 	{
-		"vi"		"{olive}%N{default} {blue}Lưỡi của{default} "
+		"vi"		"{olive}%N{default} {blue} cắt lưỡi người hút thuốc {default}"
 	}
 	"SelfClearedTongue"
 	{
-		"#format"	"{1:N},{2:N},{3:s}"
-		"vi"		"{olive}{1}{default} {blue}tự xóa{default} từ lưỡi của {olive}{2}{default} {blue}{3}{default}"
+		"#format"		"{1:N},{2:N},{3:t}"
+		"vi"		"{olive}{1}{default} {blue}tự gỡ{default} khỏi lưỡi của {olive}{2}{default} {blue}{3}{default}"
 	}
 	"SelfClearedTongueBot"
 	{
-		"#format"	"{1:N},{2:s}"
-		"vi"		"{olive}{1}{default} {blue}tự xóa{default} từ lưỡi của người hút thuốc {blue}{2}{default}"
+		"#format"		"{1:N},{2:t}"
+		"vi"		"{olive}{1}{default} Từ dưới lưỡi của {olive}smoker{default} {blue}{2}{default} {blue}tự cứu{default}"
 	}
 	"Shoving"
 	{
@@ -151,45 +151,45 @@
 	"SkeetedRock"
 	{
 		"#format"	"{1:N},{2:N}"
-		"vi"		"Đá của {olive}{1}{default} {blue}sketed{default} {olive}{2}{default}."
+		"vi"		"{olive}{1}{default} {blue} Airblast {default} {olive}{2}{default} bằng đá."
 	}
 	"SkeetedRockBot"
 	{
-		"vi"		"{olive}%N{default} {blue}nghiêng{default} một tảng đá xe tăng"
+		"vi"		"{olive}%N{default} {blue} vụ nổ không khí {default} đá bể"
 	}
 	"HunterHP"
 	{
 		"#format"	"{1:N},{2:N},{3:i},{4:i}"
-		"vi"		"{olive}{1}{default} {red}high-pounced{default} {olive}{2}{default} ({red}{3}{default} dmg, chiều cao: {red}{4}{default})"
+		"vi"		"{olive}{1}{default} {red} tấn công cao {default} {olive}{2}{default} ({red}{3}{default} sát thương, Chiều cao: {red}{4}{default})"
 	}
 	"HunterHPBot"
 	{
 		"#format"	"{1:N},{2:i},{3:i}"
-		"vi"		"Một {olive}thợ săn{default} {red}vồ cao{default} {olive}{1}{default} ({red}{2}{default} dmg, chiều cao: {red}{3}{default})"
+		"vi"		"{olive}Hunter{default} {red} tấn công cao {default} {olive}{1}{default} ({red}{2}{default} sát thương, Chiều cao: {red}{3}{default})"
 	}
 	"JockeyHP"
 	{
 		"#format"	"{1:N},{2:N},{3:i}"
-		"vi"		"{olive}{1}{default} {red}vồ cao{default} {olive}{2}{default} ({red}độ cao{default}: {red}{3}{default})"
+		"vi"		"{olive}{1}{default} {red} rơi khỏi độ cao và cưỡi {default} {olive}{2}{default} ({red} chiều cao {default}: {red}{3}{default})"
 	}
 	"JockeyHPBot"
 	{
 		"#format"	"{1:N},{2:i}"
-		"vi"		"Một {olive}jockey{default} {red}vồ cao{default} {olive}{1}{default} ({red}độ cao{default}: {red}{2}{default})"
+		"vi"		"{olive}Jockey{default} {red} rơi khỏi độ cao và cưỡi {default} {olive}{1}{default} ({red} chiều cao {default}: {red}{2}{default})"
 	}
 	"DeathCharged"
 	{
-		"#format"	"{1:N},{2:N},{3:s},{4:i}"
-		"vi"		"{olive}{1}{default} {red}tử vong{default} {olive}{2}{default} {3}({red}height{default}: {red}{4}{default})"
+		"#format"		"{1:N},{2:N},{3:t},{4:i}"
+		"vi"		"{olive}{1}{default} {red} Sạc {default} Nguyên nhân {olive}{2} Death{default} ({3})({red} chiều cao {default}: {red}{4}{default})"
 	}
 	"DeathChargedBot"
 	{
-		"#format"	"{1:N},{2:s},{3:i}"
-		"vi"		"A {olive}{default} {red}bị buộc tội tử hình{default} {olive}{1}{default} {2}({red}{default}: {red}{3}{default})"
+		"#format"		"{1:N},{2:t},{3:i}"
+		"vi"		"{olive}Charger{default} {red} Sạc {default} Nguyên nhân {olive}{1}{default} Chết({2})({red} chiều cao {default}: {red}{3}{default})"
 	}
 	"Bowling"
 	{
-		"vi"		"bằng cách chơi bowling"
+		"vi"		"được mang theo"
 	}
 	"SIClear"
 	{
@@ -204,21 +204,21 @@
 	"SIClearBot"
 	{
 		"#format"	"{1:N},{2:N},{3:s},{4:.2f}"
-		"vi"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}{2}{default} từ {3} ({blue}{4} {default}giây)"
+		"vi"		"{olive}{1}{default} Chỉ mất {blue}{4} giây để tiêu diệt {default} {olive} và một {3}{default}, đồng thời giải phóng quyền kiểm soát {olive}{2}{default}"
 	}
 	"SIClearTeammateBot"
 	{
 		"#format"	"{1:N},{2:s},{3:.2f}"
-		"vi"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}một đồng đội{default} từ {2} ({blue}{3} {default}giây)"
+		"vi"		"{olive}{1}{default} {blue}{3} giây để tiêu diệt {default} {olive}{2}{default}"
 	}
 	"BunnyHop"
 	{
-		"#format"	"{1:i},{2:s},{3:.1f}"
-		"vi"		"{olive}Bạn{default} đạt {blue}{1} bunnyhop{2}{default} liên tiếp ({blue}tốc độ cao nhất{default}: {olive}{3}{default})"
+		"#format"		"{1:i},{2:t},{3:.1f}"
+		"vi"		"{olive}Bạn{default} đã thực hiện thành công {blue}{1} lần bunny hop{2}{default} ({blue}tốc độ cao nhất{default}: {olive}{3}{default})"
 	}
 	"PluralCount"
 	{
-		"vi"		"s"
+		"vi"		""
 	}
 	"Empty"
 	{
@@ -226,48 +226,48 @@
 	}
 	"CalarmHit"
 	{
-		"vi"		"{olive}%N{default} đã kích hoạt cảnh báo bằng một cú đánh."
+		"vi"		"{olive}%N{default} đã kích hoạt còi báo động của ô tô."
 	}
 	"CalarmTouched"
 	{
 		"#format"	"{1:N},{2:N}"
-		"vi"		"{olive}{1}{default} đã khiến {olive}{2}{default} kích hoạt cảnh báo."
+		"vi"		"{olive}{1}{default} khiến {olive}{2}{default} kích hoạt cảnh báo."
 	}
 	"CalarmTouchedHunter"
 	{
-		"vi"		"Một {olive}hunter{default} đã khiến {olive}%N{default} kích hoạt cảnh báo."
+		"vi"		"{olive}Hunter{default} khiến {olive}%N{default} kích hoạt cảnh báo."
 	}
 	"CalarmTouchedJockey"
 	{
-		"vi"		"Một {olive}tay đua{default} đã khiến {olive}%N{default} kích hoạt cảnh báo."
+		"vi"		"{olive}Jockey{default} khiến {olive}%N{default} kích hoạt cảnh báo."
 	}
 	"CalarmTouchedCharger"
 	{
-		"vi"		"A {olive}{default} đã thực hiện {olive}%N{default} kích hoạt báo động."
+		"vi"		"{olive}Charger{default} khiến {olive}%N{default} kích hoạt cảnh báo."
 	}
 	"CalarmTouchedInfected"
 	{
-		"vi"		"Một {olive}bot bị nhiễm{default} đã khiến {olive}%N{default} kích hoạt cảnh báo."
+		"vi"		"{olive}Bot bị nhiễm{default} khiến {olive}%N{default} kích hoạt cảnh báo."
 	}
 	"CalarmTouchedBot"
 	{
-		"vi"		"{olive}%N{default} đã chạm vào một chiếc ô tô được báo động."
+		"vi"		"{olive}%N{default} đã kích hoạt còi báo động của ô tô."
 	}
 	"CalarmExplosion"
 	{
-		"vi"		"{olive}%N{default} đã kích hoạt cảnh báo bằng một vụ nổ."
+		"vi"		"{olive}%N{default} Sử dụng vụ nổ để kích hoạt còi báo động ô tô."
 	}
 	"CalarmBoomer"
 	{
 		"#format"	"{1:N},{2:N}"
-		"vi"		"{olive}{1}{default} đã gây ra cảnh báo bằng cách tiêu diệt một người bùng nổ {olive}{2}{default}."
+		"vi"		"{olive}{1}{default} Đã giết chết một chiếc boomer {olive}{2}{default} Đặt còi báo động cho ô tô."
 	}
 	"CalarmBoomerBot"
 	{
-		"vi"		"{olive}%N{default} đã kích hoạt cảnh báo bằng cách bắn {olive}boomer{default}."
+		"vi"		"{olive}%N{default} đã giết chết một {olive}boomer{default} đã kích hoạt xe báo động."
 	}
 	"Calarm"
 	{
-		"vi"		"{olive}%N{default} đã kích hoạt cảnh báo."
+		"vi"		"{olive}%N{default} đã kích hoạt còi báo động của ô tô."
 	}
 }

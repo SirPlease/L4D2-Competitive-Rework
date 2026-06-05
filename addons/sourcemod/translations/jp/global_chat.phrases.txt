@@ -2,18 +2,50 @@
 {
 	"GlobalChat_FullServerNormalFullServer"
 	{
-		"jp"		"{green}[フルサーバー]{default} %s の通常のフルサーバーチャットがあります。"
+		"jp"		"{green}[フルサーバー]{default} 通常のフルサーバーチャット: %s。"
 	}
 	"GlobalChat_AllServersAskedTipTeammates"
 	{
-		"jp"		"{green}[全サーバー]{default} %s がチームメイトからのヒントを求めています。"
+		"jp"		"{green}[全サーバー]{default} チームメイトを見つけるためのヒント: %s。"
 	}
 	"GlobalChat_SummonTeammates"
 	{
-		"jp"		"{green}%s {olive}%s {default}プレイヤーが {lightgreen}%s {default}でチームメイトを呼んでいます"
+		"jp"		"{green}%s {olive}%s {default}プレイヤーは {lightgreen}%s {default} でチームメイトを召喚します"
 	}
 	"GlobalChat_SummonTeammatesWithMessage"
 	{
-		"jp"		"{green}%s {olive}%s {default}プレイヤーが {lightgreen}%s {default}でチームメイトを呼んでいます\n{default}メッセージ: {olive}%s"
+		"jp"		"{green}%s {olive}%s {default}プレイヤーは {lightgreen}%s {default} にチームメイトを召喚するメッセージを残しました \n{default}: {olive}%s"
+	}
+	"GlobalChat_StatusReceive"
+	{
+		"jp"		"受信"
+	}
+	"GlobalChat_StatusBlock"
+	{
+		"jp"		"ブロック"
+	}
+	"GlobalChat_MenuTitle"
+	{
+		"jp"		"フルサーバーチャット受信設定 \n 通常のフルサーバー：%s\n チームメイト探しのヒント：%s"
+	}
+	"GlobalChat_MenuReceiveNormal"
+	{
+		"jp"		"通常のサーバー全体のチャットを受信する"
+	}
+	"GlobalChat_MenuBlockNormal"
+	{
+		"jp"		"通常のサーバー全体のチャットをブロックする"
+	}
+	"GlobalChat_MenuReceiveLFG"
+	{
+		"jp"		"チームメイトを見つけるためのリマインダーを受け取る"
+	}
+	"GlobalChat_MenuBlockLFG"
+	{
+		"jp"		"チームメイトを探すプロンプトをブロックする"
+	}
+	"GlobalChat_MenuLFGLocked"
+	{
+		"jp"		"チームメイトを見つけるためのヒント: 管理者のみがブロックできます"
 	}
 }

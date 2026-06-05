@@ -2,18 +2,50 @@
 {
 	"GlobalChat_FullServerNormalFullServer"
 	{
-		"vi"		"{green}[Máy chủ đầy đủ]{default} Bạn có trò chuyện bình thường trên toàn máy chủ %s."
+		"vi"		"{green}[Máy chủ đầy đủ]{default} Trò chuyện toàn máy chủ thông thường: %s."
 	}
 	"GlobalChat_AllServersAskedTipTeammates"
 	{
-		"vi"		"{green}[Tất cả máy chủ]{default} Bạn có %s đã xin tiền boa từ đồng đội của mình."
+		"vi"		"{green}[Tất cả máy chủ]{default} Mẹo tìm đồng đội: %s."
 	}
 	"GlobalChat_SummonTeammates"
 	{
-		"vi"		"{green}%s {olive}%s {default}người chơi đang gọi đồng đội tại {lightgreen}%s {default}"
+		"vi"		"{green}%s {olive}%s {default}Người chơi triệu tập đồng đội tại {lightgreen}%s {default}"
 	}
 	"GlobalChat_SummonTeammatesWithMessage"
 	{
-		"vi"		"{green}%s {olive}%s {default}người chơi đang gọi đồng đội tại {lightgreen}%s {default}\n{default}Tin nhắn: {olive}%s"
+		"vi"		"{green}%s {olive}%s {default}Người chơi để lại lời nhắn tại {lightgreen}%s {default} để triệu hồi đồng đội \n{default}: {olive}%s"
+	}
+	"GlobalChat_StatusReceive"
+	{
+		"vi"		"nhận"
+	}
+	"GlobalChat_StatusBlock"
+	{
+		"vi"		"chặn"
+	}
+	"GlobalChat_MenuTitle"
+	{
+		"vi"		"Cài đặt tiếp nhận trò chuyện trên máy chủ đầy đủ \n Máy chủ đầy đủ thông thường: %s\n Mẹo tìm đồng đội: %s"
+	}
+	"GlobalChat_MenuReceiveNormal"
+	{
+		"vi"		"Nhận trò chuyện bình thường trên toàn máy chủ"
+	}
+	"GlobalChat_MenuBlockNormal"
+	{
+		"vi"		"Chặn trò chuyện thông thường trên toàn máy chủ"
+	}
+	"GlobalChat_MenuReceiveLFG"
+	{
+		"vi"		"Nhận lời nhắc tìm đồng đội"
+	}
+	"GlobalChat_MenuBlockLFG"
+	{
+		"vi"		"Chặn lời nhắc tìm đồng đội"
+	}
+	"GlobalChat_MenuLFGLocked"
+	{
+		"vi"		"Mẹo tìm đồng đội: Chỉ quản trị viên mới có thể chặn"
 	}
 }

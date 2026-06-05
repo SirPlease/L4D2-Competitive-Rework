@@ -15,35 +15,35 @@
 	"MeleeSkeeted"
 	{
 		"#format"	"{1:N},{2:N}"
-		"vi"		"{olive} {1} {default} là {blue} cận chiến {default} -skeet {default} bởi {olive} {2} {default}"
+		"vi"		"{olive}{1}{default} được sử dụng bởi {olive}{2}{default} {blue} vụ nổ không khí cận chiến{default}"
 	}
 	"Headshotted"
 	{
 		"#format"	"{1:N},{2:N}"
-		"vi"		"{olive} {1} {default} bị {blue} hạ gục {default} bởi {olive} {2} {default}"
+		"vi"		"{olive}{1}{default} đã bị giết bởi {olive}{2}{default} {blue} bằng một phát đạn vào đầu {default}"
 	}
 	"TeamSkeeted"
 	{
 		"#format"	"{1:N},{2:N},{3:d},{4:d},{5:s},{6:s}"
-		"vi"		"{olive} {1} {default} đã yêu cầu {olive} {2} {default} để {blue} {3} gây sát thương {default} trong {blue} {4} {default} bắn {5}. Hỗ trợ bởi: {olive} {6} {default}"
+		"vi"		"{olive}{1}{default} cùng đội đã skeet {olive}{2}{default}, gây {blue}{3}{default} sát thương bằng {blue}{4}{default} phát bắn{5}. Hỗ trợ: {olive}{6}{default}"
 	}
 	"Skeeted"
 	{
 		"#format"	"{1:N},{2:N},{3:d},{4:s}"
-		"vi"		"{olive} {1} {default} xiên {olive} {2} {default} trong {blue} {3} {default} bắn {4}"
+		"vi"		"{olive}{1}{default} skeet {olive}{2}{default} bằng {blue}{3}{default} phát bắn{4}"
 	}
 	"ShutBoomer"
 	{
 		"#format"	"{1:N},{2:s},{3:.1f}"
-		"vi"		"{olive} {1} {default} đã tắt {olive} {2} {default} của Boomer trong {blue} {3} {default}"
+		"vi"		"{olive}{1}{default} ngay lập tức tiêu diệt Boomer [{olive}{2}{default}] được tạo vài giây trước {blue}{3} {default}"
 	}
 	"AlarmedCar"
 	{
-		"vi"		"{olive} %N {default} đã kích hoạt Xe báo động {olive} {default}"
+		"vi"		"{olive}%N{default} tông vào xe báo động {olive}{default}"
 	}
 	"AssistShotsPlural"
 	{
-		"vi"		"s"
+		"vi"		"S"
 	}
 	"AssistShotsSingular"
 	{
@@ -52,6 +52,6 @@
 	"assister"
 	{
 		"#format"	"{1:N},{2:d},{3:d},{4:s}"
-		"vi"		"{1} ( {2} / {3} bắn {4} )"
+		"vi"		"{1} ({2}/{3} phát{4})"
 	}
 }

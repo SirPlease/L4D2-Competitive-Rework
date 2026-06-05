@@ -6,7 +6,7 @@
 	}
 	"L4D2SBFix_CapSmoker"
 	{
-		"chi"		"{default}[%.2f] {olive}%N {default} 吸烟帽：{green}%N (%d)"
+		"chi"		"{default}[%.2f] {olive}%N {default}Cap Smoker：{green}%N (%d)"
 	}
 	"L4D2SBFix_CapSurvivor"
 	{
@@ -18,11 +18,11 @@
 	}
 	"L4D2SBFix_Witch"
 	{
-		"chi"		"{default}[%.2f] {olive}%N {default}女巫：{olive}(%d)"
+		"chi"		"{default}[%.2f] {olive}%N {default}Witch：{olive}(%d)"
 	}
 	"L4D2SBFix_CommonsDistMeleeCount"
 	{
-		"chi"		"{default}[%.2f] {olive}%N{default} 共享：{green}(%d){default} |  距离：{green}%.1f{default} |  近战计数：{green}%d"
+		"chi"		"{default}[%.2f] {olive}%N{default} 普感: {green}(%d){default} | 距离: {green}%.1f{default} | 近战计数: {green}%d"
 	}
 	"L4D2SBFix_NewTargetShoved"
 	{
@@ -46,7 +46,7 @@
 	}
 	"L4D2SBFix_CommonsIncapacitatedDist"
 	{
-		"chi"		"{default}[%.2f] {olive}%N{default} 公共无行为能力区：%.1f"
+		"chi"		"{default}[%.2f] {olive}%N{default} 普感倒地距离：%.1f"
 	}
 	"L4D2SBFix_IntTargetIncapacitated"
 	{

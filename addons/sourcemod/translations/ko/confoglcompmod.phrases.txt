@@ -6,7 +6,7 @@
 	}
 	"ConfoglCompMod_MaximumSniperRifleEnforced"
 	{
-		"ko"		"{blue}[{default}Confogl{blue}]{default} 최대 {blue}%d {olive}저격총 {default}이 적용됩니다."
+		"ko"		"{blue}[{default}Confogl{blue}]{default}는 강제로 {blue}%d {olive} 저격소총 {default}까지 제한되었습니다."
 	}
 	"ConfoglCompMod_CompetitionModeLoaded"
 	{
@@ -26,7 +26,7 @@
 	}
 	"ConfoglCompMod_LoadConfiguration"
 	{
-		"ko"		"{blue}[{default}Confogl{blue}]{default} '{olive}%s{default}' 구성을 로드합니다."
+		"ko"		"{blue}[{default}Confogl{blue}]{default}는 '{olive}%s{default}' 구성을 로드합니다."
 	}
 	"ConfoglCompMod_ConfigurationNotFoundUseDefault"
 	{
@@ -38,7 +38,7 @@
 	}
 	"ConfoglCompMod_ConfigNotFound"
 	{
-		"ko"		"{blue}[{default}Confogl{blue}]{default} 구성 '{olive}%s{default}'를 찾을 수 없습니다!"
+		"ko"		"{blue}[{default}Confogl{blue}]{default} 구성 \"{olive}%s{default}\"를 찾을 수 없습니다!"
 	}
 	"ConfoglCompMod_MapNotFound"
 	{
@@ -46,7 +46,7 @@
 	}
 	"ConfoglCompMod_Round1Bonus"
 	{
-		"ko"		"{blue}[{default}Confogl{blue}]{default} 1라운드 보너스: {olive}%d"
+		"ko"		"{blue}[{default}Confogl{blue}]{default} 1라운드 보너스 포인트: {olive}%d"
 	}
 	"ConfoglCompMod_CustomMaxDistance"
 	{
@@ -54,18 +54,18 @@
 	}
 	"ConfoglCompMod_Round2Bonus"
 	{
-		"ko"		"{blue}[{default}Confogl{blue}]{default} 2라운드 보너스: {olive}%d"
+		"ko"		"{blue}[{default}Confogl{blue}]{default} 2라운드 보너스 포인트: {olive}%d"
 	}
 	"ConfoglCompMod_AverageHealth"
 	{
-		"ko"		"{blue}[{default}Confogl{blue}]{default} 평균 체력: {olive}%.02f"
+		"ko"		"{blue}[{default}Confogl{blue}]{default} 평균 혈액량: {olive}%.02f"
 	}
 	"ConfoglCompMod_HealthBonus"
 	{
-		"ko"		"{blue}[{default}Confogl{blue}]{default} 체력 보너스: {olive}%d"
+		"ko"		"{blue}[{default}Confogl{blue}]{default} HP 보너스 포인트: {olive}%d"
 	}
 	"ConfoglCompMod_StaticSurvivalBonusPerSurvivor"
 	{
-		"ko"		"{blue}[{default}Confogl{blue}]{default} 생존자당 정적 생존 보너스: {olive}%d"
+		"ko"		"{blue}[{default}Confogl{blue}]{default} 각 생존자의 고정 생존 보너스 포인트: {olive}%d"
 	}
 }

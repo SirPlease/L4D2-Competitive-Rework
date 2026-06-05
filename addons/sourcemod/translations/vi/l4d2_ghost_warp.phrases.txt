@@ -2,19 +2,19 @@
 {
 	"L4D2GhostWarp_CommandDisabled"
 	{
-		"vi"		"%s Lệnh này bây giờ là {green}disabled{default}."
+		"vi"		"%s Lệnh này hiện đã bị vô hiệu hóa {green} {default}."
 	}
 	"L4D2GhostWarp_CanUseCommandOftenWait"
 	{
-		"vi"		"%s Bạn không thể sử dụng lệnh này thường xuyên, hãy đợi một {green}%.01f{default} giây."
+		"vi"		"%s Bạn không thể sử dụng lệnh này thường xuyên, vui lòng đợi thêm {green}%.01f{default} giây nữa."
 	}
 	"L4D2GhostWarp_NoSurvivorsFound"
 	{
-		"vi"		"%s Không tìm thấy {green}survivors{default}!"
+		"vi"		"Không tìm thấy %s {green} người sống sót {default}!"
 	}
 	"L4D2GhostWarp_EnteredInvalidSurvivorIndex"
 	{
-		"vi"		"%s Bạn đã nhập chỉ số người sống sót {green}không hợp lệ{default}!%s"
+		"vi"		"%s Bạn đã nhập {green} một chỉ số người sống sót {default} không hợp lệ! %s"
 	}
 	"L4D2GhostWarp_Usage1"
 	{
@@ -22,7 +22,7 @@
 	}
 	"L4D2GhostWarp_EnteredWrongSurvivorName"
 	{
-		"vi"		"%s Bạn đã nhập tên người sống sót {green}sai{default}!%s"
+		"vi"		"%s {green} bạn nhập sai tên {default} Người sống sót! %s"
 	}
 	"L4D2GhostWarp_UsageSurvivorName"
 	{
@@ -30,6 +30,6 @@
 	}
 	"L4D2GhostWarp_SurvivorSpecifiedNotFound"
 	{
-		"vi"		"%s {green}survivor{default} bạn đã chỉ định là {green}không tìm thấy{default}!"
+		"vi"		"%s Người sống sót {green} mà bạn đã chỉ định, {default}, không được tìm thấy!"
 	}
 }

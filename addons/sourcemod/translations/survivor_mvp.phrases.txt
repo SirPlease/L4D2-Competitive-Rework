@@ -74,10 +74,10 @@
 	}
 	"SurvivorMVP_PharmacyMVPStatisticsHeader"
 	{
-		"en"		"{blue}[{default} Pharmacy MVP statistics {blue}]"
+		"en"		"{blue}[{default}Anne MVP statistics{blue}]"
 	}
 	"SurvivorMVP_PharmacyMVPStatisticsLine"
 	{
-		"en"		"{olive}Special feeling{green}%2d {olive}Zombies{green}%3d {olive}Black/Being hacked{green}%2d/%2d {olive}Damage{green}%4d {default}%N"
+		"en"		"{olive}SI{green}%2d {olive}Common{green}%3d {olive}FF/Taken{green}%2d/%2d {olive}Damage{green}%4d {default}%N"
 	}
 }

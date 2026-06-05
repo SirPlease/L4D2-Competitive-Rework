@@ -2,141 +2,141 @@
 {
 	"Tag"
 	{
-		"ko"		"{blue} < {green} BossVote {blue} > {default}"
+		"ko"		"{blue}<{green}BossVote{blue}>{default}"
 	}
 	"NotAvailable"
 	{
-		"ko"		"이 맵에서는 보스 투표가 불가능합니다."
+		"ko"		"이 지도에서 보스 위치를 변경하기 위해 투표할 수 없습니다."
 	}
 	"Available"
 	{
-		"ko"		"보스 투표는 준비 기간에만 가능합니다."
+		"ko"		"보스 포지션 투표는 준비 시작 전에만 가능합니다."
 	}
 	"FirstRound"
 	{
-		"ko"		"보스 투표는 맵의 첫 번째 라운드에서만 가능합니다."
+		"ko"		"보스 포지션 투표는 1라운드에서만 가능합니다."
 	}
 	"NotAvailableForSpec"
 	{
-		"ko"		"관전자는 보스투표를 할 수 없습니다."
+		"ko"		"보스 포지션 투표는 관중에게 공개되지 않습니다."
 	}
 	"CannotBeCalled"
 	{
-		"ko"		"지금은 보스 투표를 호출할 수 없습니다..."
+		"ko"		"일시적으로 보스 직위 투표가 불가능합니다..."
 	}
 	"Usage"
 	{
-		"ko"		"사용법:!voteboss {olive} < {default} 탱크 {olive} > < {default} 마녀 {olive} > {default}."
+		"ko"		"사용법: !voteboss {olive}<{default}tank{olive}> <{default}witch{olive}>{default}."
 	}
 	"Usage2"
 	{
-		"ko"		"{olive} 생성 없음 {default} 의 경우 {default} \" {blue} 0 {default} \" 를 사용하고, {olive} 무지의 경우 \" {blue} -1 {default} \" 를 사용합니다."
+		"ko"		"{default}\"{blue}0{default}\"를 사용하여 {olive}가 {default}를 생성하지 않음을 나타내고, \"{blue}-1{default}\"를 사용하여 {olive}가 변경되지 않음을 나타냅니다."
 	}
 	"Invalid"
 	{
-		"ko"		"백분율은 {olive} 유효하지 않은 {default} 입니다."
+		"ko"		"백분율은 잘못된 {default}인 {olive}입니다."
 	}
 	"TankStatic"
 	{
-		"ko"		"탱크 생성은 정적이며 이 지도에서는 ​​변경할 수 없습니다."
+		"ko"		"이 지도에서 Tank의 위치는 고정되어 있으며 변경할 수 없습니다."
 	}
 	"WitchStatic"
 	{
-		"ko"		"마녀 생성은 정적이며 이 지도에서는 ​​변경할 수 없습니다."
+		"ko"		"이 지도에서 Witch의 위치는 고정되어 있으며 변경할 수 없습니다."
 	}
 	"TankBanned"
 	{
-		"ko"		"탱크 비율은 {blue} 금지 {default} 입니다."
+		"ko"		"이 Tank 진행은 {blue} 및 {default}에 의해 비활성화되었습니다."
 	}
 	"WitchBanned"
 	{
-		"ko"		"마녀 비율은 {blue} 금지된 {default} 입니다."
+		"ko"		"이 Witch 진행은 {blue} 및 {default}에 의해 비활성화되었습니다."
 	}
 	"SetBosses"
 	{
-		"ko"		"탱크를 %s로 설정하고 마녀를 %s로 설정 하시겠습니까?"
+		"ko"		"Tank의 진행률을 %s로 설정하고 Witch의 진행률을 %s로 설정하시겠습니까?"
 	}
 	"SetTank"
 	{
-		"ko"		"탱크를 %s로 설정하고 마녀를 비활성화하시겠습니까?"
+		"ko"		"Tank 진행률을 %s로 설정하고 Witch를 비활성화하시겠습니까?"
 	}
 	"SetOnlyTank"
 	{
-		"ko"		"탱크를 %s로 설정 하시겠습니까?"
+		"ko"		"Tank 진행률을 다음으로 설정합니다: %s?"
 	}
 	"SetWitch"
 	{
-		"ko"		"탱크 설정: 비활성화 및 위치: %s?"
+		"ko"		"Tank를 비활성화하고 Witch 진행률을 다음으로 설정합니다: %s?"
 	}
 	"SetOnlyWitch"
 	{
-		"ko"		"마녀를 다음으로 설정: %s?"
+		"ko"		"Witch 진행률을 다음으로 설정합니다: %s?"
 	}
 	"SetBossesDisabled"
 	{
-		"ko"		"보스 설정: 비활성화?"
+		"ko"		"Tank 및 Witch 생성을 모두 끄시겠습니까?"
 	}
 	"SetTankDisabled"
 	{
-		"ko"		"탱크 설정: 비활성화?"
+		"ko"		"Tank 생성을 끄기로 설정하시겠습니까?"
 	}
 	"SetWitchDisabled"
 	{
-		"ko"		"마녀 설정: 비활성화?"
+		"ko"		"Witch 생성을 끄기로 설정하시겠습니까?"
 	}
 	"OnlyReadyUp"
 	{
-		"ko"		"스폰은 준비 중에만 설정할 수 있습니다."
+		"ko"		"탱크 생성은 준비 전에만 설정할 수 있습니다."
 	}
 	"SettingBoss"
 	{
-		"ko"		"보스 스폰 설정 중..."
+		"ko"		"보스 스폰 설정..."
 	}
 	"SettingTank"
 	{
-		"ko"		"탱크 생성 설정 중..."
+		"ko"		"생성하려면 Tank를 설정하세요..."
 	}
 	"SettingWitch"
 	{
-		"ko"		"마녀 생성 설정 중..."
+		"ko"		"생성하려면 Witch를 설정하세요..."
 	}
 	"SettingBossDisabled"
 	{
-		"ko"		"보스 비활성화 설정..."
+		"ko"		"보스를 비활성화로 설정하세요..."
 	}
 	"CommandNotAvailable"
 	{
-		"ko"		"이 맵에서는 명령을 사용할 수 없습니다."
+		"ko"		"이 이미지에는 명령을 사용할 수 없습니다."
 	}
 	"TankSpawnStatic"
 	{
-		"ko"		"탱크 생성은 정적이며 이 지도에서는 ​​변경할 수 없습니다."
+		"ko"		"이 지도에서 Tank의 위치는 고정되어 있으며 변경할 수 없습니다."
 	}
 	"PercentageInvalid"
 	{
-		"ko"		"백분율은 {blue} 유효하지 않은 {default} 입니다."
+		"ko"		"이 진행 상황은 잘못된 {default}인 {blue}입니다."
 	}
 	"Percentagebanned"
 	{
-		"ko"		"백분율은 {blue} 금지 {default} 입니다."
+		"ko"		"이 진행 상황은 {blue}{default}에 의해 비활성화됩니다."
 	}
 	"TankSpawnAdmin"
 	{
 		"#format"	"{1:i},{2:s}"
-		"ko"		"관리자 {blue} {2} {default} 에 의해 탱크 스폰이 {olive} {1} % {default} 로 설정되었습니다."
+		"ko"		"Tank 위치는 관리자 {blue}{2}{default}에 의해 {olive}{1}%{default}로 설정되었습니다."
 	}
 	"WitchSpawnStatic"
 	{
-		"ko"		"마녀 생성은 정적이며 이 지도에서는 ​​변경할 수 없습니다."
+		"ko"		"이 지도에서 Witch의 위치는 고정되어 있으며 변경할 수 없습니다."
 	}
 	"WitchSpawnAdmin"
 	{
 		"#format"	"{1:i},{2:s}"
-		"ko"		"관리자 {blue} {2} {default} 에 의해 마녀 생성이 {olive} {1} % {default} 로 설정되었습니다."
+		"ko"		"Witch 위치는 관리자 {blue}{2}{default}에 의해 {olive}{1}%{default}로 설정되었습니다."
 	}
 	"RoundNotReachLimit"
 	{
 		"#format"	"{1:i}"
-		"ko"		"이 난이도에서 바로 건너뛰고 싶나요? 안 됩니다! ({olive}boss 투표 기능{default}을 사용하려면 아직 {blue}{1}번{default} 더 실패해야 합니다)."
+		"ko"		"이 난이도에서는 보스 투표 제한을 건너뛸 수도 없습니다. 또한 {olive}Boss 투표 기능 {default}를 사용하려면 먼저 {blue}{1}{default}를 여러 번 시도하고 실패해야 합니다."
 	}
 }

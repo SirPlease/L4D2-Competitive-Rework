@@ -6,16 +6,16 @@
 	}
 	"NoCommonRemaining"
 	{
-		"zho"		"{red} 沒有{default} 共同剩餘！"
+		"zho"		"{red}沒有{default}普通感染者了！"
 	}
 	"CommonRemaining"
 	{
 		"#format"	"{1:i}"
-		"zho"		"{red} {1} {default} 共同剩餘.."
+		"zho"		"{red}{1} {default}個普通感染者剩餘.."
 	}
 	"FiniteEventStarted"
 	{
 		"#format"	"{1:i}"
-		"zho"		"{olive} {1} {default} 共享區{blue}限時活動{default}已經開始囉！是匆忙還是等待，選擇權在你！"
+		"zho"		"一場{blue}有限屍潮{default}開始了！本輪共有{olive}{1}{default}個普通感染者！是衝還是等，你來決定！"
 	}
 }

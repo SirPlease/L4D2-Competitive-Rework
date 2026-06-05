@@ -2,186 +2,186 @@
 {
 	"Muted on connect"
 	{
-		"zho"		"你已經被靜音了！"
+		"zho"		"你已被靜音!"
 	}
 	"Gagged on connect"
 	{
-		"zho"		"你已經被封嘴了！"
+		"zho"		"你已被禁言!"
 	}
 	"Mute expired"
 	{
-		"zho"		"你的靜音已過期。"
+		"zho"		"靜音已過期."
 	}
 	"Gag expired"
 	{
-		"zho"		"你的惡作劇已經過期了。"
+		"zho"		"禁言已過期."
 	}
 	"FWUnmute"
 	{
-		"zho"		"您的靜音已刪除。"
+		"zho"		"對你的靜音已取消."
 	}
 	"FWUngag"
 	{
-		"zho"		"你的堵嘴已經被移除了。"
+		"zho"		"對你的禁言已取消."
 	}
 	"Usage_time"
 	{
 		"#format"	"{1:d}"
-		"zho"		"時間：{1} 分鐘；未指定時使用此值；若為 0 則永久。\n若小於 0，則只封鎖本次連線。"
+		"zho"		"時間: {1} 分鐘, 如果未做選擇的話; 如果 0.\n 永久; 如果 < 0, 則在此局中封禁."
 	}
 	"Player Comms Not Verified"
 	{
-		"zho"		"該玩家尚未得到驗證。請等待三十秒再重試。"
+		"zho"		"此使用者尚未認證,請等待30秒後再試."
 	}
 	"Player already muted"
 	{
 		"#format"	"{1:s}"
-		"zho"		"玩家{1}已靜音！"
+		"zho"		"玩家 {1} 已被靜音!"
 	}
 	"Player already gagged"
 	{
 		"#format"	"{1:s}"
-		"zho"		"玩家{1}已經封嘴了！"
+		"zho"		"玩家 {1} 已被禁言!"
 	}
 	"Player already silenced"
 	{
 		"#format"	"{1:s}"
-		"zho"		"玩家{1}已被堵嘴或靜音！"
+		"zho"		"玩家 {1} 已被禁言或靜音!"
 	}
 	"Player not muted"
 	{
-		"zho"		"播放器未靜音。"
+		"zho"		"玩家尚未被靜音."
 	}
 	"Player not gagged"
 	{
-		"zho"		"玩家沒有被封嘴。"
+		"zho"		"玩家尚未被禁言."
 	}
 	"Player not silenced"
 	{
-		"zho"		"玩家未沉默。"
+		"zho"		"玩家尚未被禁言或靜音."
 	}
 	"Permagagged player"
 	{
 		"#format"	"{1:t}"
-		"zho"		"在 {1} 上發出了永久的惡作劇。"
+		"zho"		"已對玩家 {1} 做永久禁言."
 	}
 	"Permagagged player reason"
 	{
 		"#format"	"{1:t},{2:s}"
-		"zho"		"在 {1} 上發布了永久封鎖言論（原因：{2}）。"
+		"zho"		"已對玩家 {1} 做永久禁言 (原因: {2})."
 	}
 	"Gagged player"
 	{
 		"#format"	"{1:t},{2:d}"
-		"zho"		"在 {1} 上發布了長達 {2} 分鐘的長篇笑話。"
+		"zho"		"已對玩家 {1} 的禁言延長了 {2} 分鐘."
 	}
 	"Gagged player reason"
 	{
 		"#format"	"{1:t},{2:d},{3:s}"
-		"zho"		"在 {1} 上發布了長達 {2} 分鐘的長篇笑話（原因：{3}）。"
+		"zho"		"已對玩家 {1} 的禁言延長了 {2} 分鐘 (原因: {3})."
 	}
 	"Permamuted player"
 	{
 		"#format"	"{1:t}"
-		"zho"		"對{1}發出永久靜音。"
+		"zho"		"已對玩家 {1} 永久靜音."
 	}
 	"Permamuted player reason"
 	{
 		"#format"	"{1:t},{2:s}"
-		"zho"		"對{1}發出永久靜音（原因：{2}）。"
+		"zho"		"已對玩家 {1} 永久靜音 (原因: {2})."
 	}
 	"Muted player"
 	{
 		"#format"	"{1:t},{2:d}"
-		"zho"		"對 {1} 發出延長靜音 {2} 分鐘。"
+		"zho"		"已對玩家 {1} 的靜音延長了 {2} 分鐘."
 	}
 	"Muted player reason"
 	{
 		"#format"	"{1:t},{2:d},{3:s}"
-		"zho"		"在 {1} 上發出了 {2} 分鐘的延長靜音（原因： {3} ）。"
+		"zho"		"已對玩家 {1} 的靜音延長了 {2} 分鐘 (原因: {3})."
 	}
 	"Permasilenced player"
 	{
 		"#format"	"{1:t}"
-		"zho"		"{1}永久沉默。"
+		"zho"		"已對玩家 {1} 進行永久禁言和靜音."
 	}
 	"Permasilenced player reason"
 	{
 		"#format"	"{1:t},{2:s}"
-		"zho"		"對{1}發出永久沉默（原因：{2}）。"
+		"zho"		"已對玩家 {1} 進行永久禁言和靜音 (原因: {2})."
 	}
 	"Silenced player"
 	{
 		"#format"	"{1:t},{2:d}"
-		"zho"		"在 {1} 上發出了長達 {2} 分鐘的沉默。"
+		"zho"		"已對玩家 {1} 的禁言和靜音延長了 {2} 分鐘."
 	}
 	"Silenced player reason"
 	{
 		"#format"	"{1:t},{2:d},{3:s}"
-		"zho"		"在 {1} 上發出了長達 {2} 分鐘的長時間沉默（原因： {3} ）。"
+		"zho"		"已對玩家 {1} 的禁言和靜音延長了 {2} 分鐘 (原因: {3})."
 	}
 	"Temp unmuted player"
 	{
 		"#format"	"{1:t}"
-		"zho"		"暫時取消了{1}的靜音。"
+		"zho"		"已對玩家 {1} 暫時解除靜音."
 	}
 	"Temp ungagged player"
 	{
 		"#format"	"{1:t}"
-		"zho"		"暫時刪除了 {1} 的堵嘴。"
+		"zho"		"已對玩家 {1} 暫時解除禁言."
 	}
 	"Temp unsilenced player"
 	{
 		"#format"	"{1:t}"
-		"zho"		"暫時解除了{1}的沉默。"
+		"zho"		"已對玩家 {1} 暫時解除禁言和靜音."
 	}
 	"Unblock Select Failed"
 	{
 		"#format"	"{1:s}"
-		"zho"		"從資料庫請求 {1} 的區塊時發生錯誤。"
+		"zho"		"在資料庫中對 {1} 進行禁止時出現錯誤."
 	}
 	"No blocks found"
 	{
 		"#format"	"{1:s}"
-		"zho"		"在 {1} 的資料庫中找不到活動區塊。"
+		"zho"		"在資料庫中未找到對 {1} 的禁止."
 	}
 	"No db error unlock perm"
 	{
-		"zho"		"您缺少因資料庫錯誤而解鎖的權限。"
+		"zho"		"你沒有許可權在資料庫出錯時解除通訊封禁."
 	}
 	"No permission unmute"
 	{
 		"#format"	"{1:s}"
-		"zho"		"{1}因為被上級管理員靜音，無法解除靜音！"
+		"zho"		"對玩家 {1} 的靜音是由更高階別的管理員完成的,因此你無法解除對此玩家的靜音."
 	}
 	"No permission ungag"
 	{
 		"#format"	"{1:s}"
-		"zho"		"由於被上級管理員靜音，{1}上的惡搞無法刪除！"
+		"zho"		"對玩家 {1} 的禁言是由更高階別的管理員完成的,因此你無法解除對此玩家的禁言."
 	}
 	"Unmuted player"
 	{
 		"#format"	"{1:t}"
-		"zho"		"刪除了 {1} 的延長靜音。"
+		"zho"		"已取消對玩家 {1} 的靜音延長."
 	}
 	"Ungagged player"
 	{
 		"#format"	"{1:t}"
-		"zho"		"刪除了 {1} 中的一個擴展笑話。"
+		"zho"		"已取消對玩家 {1} 的禁言延長."
 	}
 	"Unblock insert failed"
 	{
-		"zho"		"無法從資料庫中刪除區塊。"
+		"zho"		"從資料庫中取消禁止失敗."
 	}
 	"successfully unmuted"
 	{
 		"#format"	"{1:s}"
-		"zho"		"已成功從資料庫中刪除 {1} 的靜音。"
+		"zho"		"已成功從資料庫中取消對 {1} 的靜音."
 	}
 	"successfully ungagged"
 	{
 		"#format"	"{1:s}"
-		"zho"		"已成功從資料庫中刪除 {1} 的堵嘴。"
+		"zho"		"已成功從資料庫中取消對 {1} 的禁言."
 	}
 	"AdminMenu_Display_None"
 	{
@@ -205,63 +205,63 @@
 	}
 	"AdminMenu_Main"
 	{
-		"zho"		"通訊命令"
+		"zho"		"禁言和靜音"
 	}
 	"AdminMenu_Select_Main"
 	{
-		"zho"		"通訊命令："
+		"zho"		"禁言和靜音:"
 	}
 	"AdminMenu_List"
 	{
-		"zho"		"查看處罰"
+		"zho"		"顯示懲罰"
 	}
 	"AdminMenu_Select_List"
 	{
-		"zho"		"選擇玩家："
+		"zho"		"選擇玩家:"
 	}
 	"AdminMenu_Gag"
 	{
-		"zho"		"問題搞笑"
+		"zho"		"進行禁言"
 	}
 	"AdminMenu_Select_Gag"
 	{
-		"zho"		"選擇玩家："
+		"zho"		"選擇玩家:"
 	}
 	"AdminMenu_Select_Mute"
 	{
-		"zho"		"選擇玩家："
+		"zho"		"選擇玩家:"
 	}
 	"AdminMenu_Select_Silence"
 	{
-		"zho"		"選擇玩家："
+		"zho"		"選擇玩家:"
 	}
 	"AdminMenu_Select_Ungag"
 	{
-		"zho"		"選擇玩家："
+		"zho"		"選擇玩家:"
 	}
 	"AdminMenu_Select_Unmute"
 	{
-		"zho"		"選擇玩家："
+		"zho"		"選擇玩家:"
 	}
 	"AdminMenu_Select_Unsilence"
 	{
-		"zho"		"選擇玩家："
+		"zho"		"選擇玩家:"
 	}
 	"AdminMenu_Option_Mute_Empty"
 	{
-		"zho"		"沒有靜音的玩家"
+		"zho"		"沒有玩家被靜音"
 	}
 	"AdminMenu_Option_Gag_Empty"
 	{
-		"zho"		"沒有封嘴的玩家"
+		"zho"		"沒有玩家被禁言"
 	}
 	"AdminMenu_Option_Silence_Empty"
 	{
-		"zho"		"沒有沉默的玩家"
+		"zho"		"沒有玩家被禁言和靜音"
 	}
 	"ListMenu_Option_Empty"
 	{
-		"zho"		"沒有受到懲罰的客戶"
+		"zho"		"沒有玩家被懲罰"
 	}
 	"AdminMenu_Option_Empty"
 	{
@@ -269,39 +269,39 @@
 	}
 	"AdminMenu_UnGag"
 	{
-		"zho"		"移除堵嘴"
+		"zho"		"取消禁言"
 	}
 	"AdminMenu_Title_Durations"
 	{
-		"zho"		"選擇持續時間："
+		"zho"		"選擇時長:"
 	}
 	"AdminMenu_Title_Reasons"
 	{
-		"zho"		"選擇理由："
+		"zho"		"選擇原因:"
 	}
 	"AdminMenu_Mute"
 	{
-		"zho"		"發出靜音"
+		"zho"		"進行靜音"
 	}
 	"AdminMenu_UnMute"
 	{
-		"zho"		"刪除靜音"
+		"zho"		"取消靜音"
 	}
 	"AdminMenu_Silence"
 	{
-		"zho"		"發出沉默"
+		"zho"		"進行禁言和靜音"
 	}
 	"AdminMenu_UnSilence"
 	{
-		"zho"		"消除沉默"
+		"zho"		"取消禁言和靜音"
 	}
 	"AdminMenu_Not_Available"
 	{
-		"zho"		"您選擇的播放器不再可用。"
+		"zho"		"你選擇的玩家目前不可用."
 	}
 	"Command_Target_Not_Targetable"
 	{
-		"zho"		"您不能以該玩家為目標。"
+		"zho"		"你無法選擇此玩家."
 	}
 	"ListMenu_Option_Mute"
 	{
@@ -309,15 +309,15 @@
 	}
 	"ListMenu_Option_Gag"
 	{
-		"zho"		"堵嘴"
+		"zho"		"禁言"
 	}
 	"ListMenu_Option_Duration"
 	{
-		"zho"		"- 期間："
+		"zho"		"- 時長:"
 	}
 	"ListMenu_Option_Duration_Perm"
 	{
-		"zho"		"永恆的"
+		"zho"		"永久"
 	}
 	"ListMenu_Option_Duration_Time"
 	{
@@ -326,15 +326,15 @@
 	}
 	"ListMenu_Option_Duration_Temp"
 	{
-		"zho"		"暫時的"
+		"zho"		"臨時"
 	}
 	"ListMenu_Option_Expire"
 	{
-		"zho"		"- 到期時間："
+		"zho"		"- 解除: "
 	}
 	"ListMenu_Option_Expire_Perm"
 	{
-		"zho"		"絕不"
+		"zho"		"永不"
 	}
 	"ListMenu_Option_Expire_Time"
 	{
@@ -343,37 +343,37 @@
 	}
 	"ListMenu_Option_Expire_Temp_Reconnect"
 	{
-		"zho"		"重新連接"
+		"zho"		"重新連線"
 	}
 	"ListMenu_Option_Admin"
 	{
 		"#format"	"{1:s}"
-		"zho"		"- 管理員：{1}"
+		"zho"		"- 管理員: {1}"
 	}
 	"ListMenu_Option_Issue"
 	{
 		"#format"	"{1:s}"
-		"zho"		"- 發佈：{1}"
+		"zho"		"- 已封禁: {1}"
 	}
 	"ListMenu_Option_Reason"
 	{
-		"zho"		"- 查看原因"
+		"zho"		"- 檢視原因"
 	}
 	"ListMenu_Option_Reason_None"
 	{
-		"zho"		"- 原因：無"
+		"zho"		"- 原因: 無"
 	}
 	"ReasonPanel_Punishment_Mute"
 	{
-		"zho"		"靜音："
+		"zho"		"靜音: "
 	}
 	"ReasonPanel_Punishment_Gag"
 	{
-		"zho"		"堵嘴："
+		"zho"		"禁言: "
 	}
 	"ReasonPanel_Perm"
 	{
-		"zho"		"永恆的"
+		"zho"		"永久"
 	}
 	"ReasonPanel_Time"
 	{
@@ -382,57 +382,57 @@
 	}
 	"ReasonPanel_Temp"
 	{
-		"zho"		"暫時的"
+		"zho"		"臨時"
 	}
 	"ReasonPanel_Reason"
 	{
 		"#format"	"{1:s}"
-		"zho"		"原因：{1}"
+		"zho"		"原因: {1}"
 	}
 	"ReasonPanel_Back"
 	{
-		"zho"		"出口"
+		"zho"		"退出"
 	}
 	"Temp muted player"
 	{
 		"#format"	"{1:t}"
-		"zho"		"靜音{1}。"
+		"zho"		"玩家 {1} 已被靜音."
 	}
 	"Temp muted player reason"
 	{
 		"#format"	"{1:t},{2:s}"
-		"zho"		"{1} 靜音（原因： {2} ）。"
+		"zho"		"玩家 {1} 已被靜音 (原因: {2})."
 	}
 	"Temp gagged player"
 	{
 		"#format"	"{1:t}"
-		"zho"		"堵嘴{1}。"
+		"zho"		"玩家 {1} 已被禁言."
 	}
 	"Temp gagged player reason"
 	{
 		"#format"	"{1:t},{2:s}"
-		"zho"		"封住{1}（原因：{2}）。"
+		"zho"		"玩家 {1} 已被禁言 (原因: {2})."
 	}
 	"Temp silenced player"
 	{
 		"#format"	"{1:t}"
-		"zho"		"沉默了{1}。"
+		"zho"		"玩家 {1} 已被禁言和靜音."
 	}
 	"Temp silenced player reason"
 	{
 		"#format"	"{1:t},{2:s}"
-		"zho"		"{1} 被靜音（原因： {2} ）。"
+		"zho"		"玩家 {1} 已被禁言和靜音 (原因: {2})."
 	}
 	"CommandComms_na"
 	{
-		"zho"		"僅適用於伺服器上的玩家。"
+		"zho"		"只對在遊戲中的玩家可用."
 	}
 	"CommandComms_nb"
 	{
-		"zho"		"您的聊天和聲音不會被阻止。"
+		"zho"		"你沒有被禁言或靜音."
 	}
 	"no access"
 	{
-		"zho"		"規定時間的處罰是不允許的。"
+		"zho"		"你不能指定懲罰時長."
 	}
 }

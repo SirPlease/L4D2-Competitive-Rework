@@ -3,7 +3,7 @@
 	"FailWitchCrown"
 	{
 		"#format"	"{1:N}"
-		"chi"		"{default}[{green}!{default}] {red}{1} {default}({olive}加冕女巫失败{default}) 并被限制为 {red}女巫。"
+		"chi"		"{default}[{green}!{default}] {red}{1} {default}({olive}秒妹失败{default}) ，被 {red}Witch {default}挠倒了"
 	}
 	"TankKillWitch"
 	{
@@ -47,11 +47,11 @@
 	"FinalShotTankWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"chi"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} 坦克{olive} ☆"
+		"chi"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}Tank {olive} ☆"
 	}
 	"AssistanceTankWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"chi"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} 坦克"
+		"chi"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}Tank"
 	}
 }

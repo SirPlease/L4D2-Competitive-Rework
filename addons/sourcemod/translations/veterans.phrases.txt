@@ -29,15 +29,15 @@
 	}
 	"Veterans_PlayerDurationDetectionNotMeet"
 	{
-		"en"		"{default}[{green} player duration detection {default}] Because {blue} does not meet the {default} duration requirement, you are only allowed to watch the game."
+		"en"		"{default}[{green}Playtime Check{default}] You do not meet the playtime requirement and may only spectate."
 	}
 	"Veterans_PlayerTimeDetectionPlayerTotal"
 	{
-		"en"		"{default}[{green} player time detection {default}] player {blue}%N The total playing time of {default} is: {green}%.1f hours {default} (actual: {green}%.1f hours {default}). The total playing time in this server is: {green}%.1f hours {default}."
+		"en"		"{default}[{green}Playtime Check{default}] Player {blue}%N{default} total playtime: {green}%.1f hours{default} (actual: {green}%.1f hours{default}); playtime in this server group: {green}%.1f hours{default}."
 	}
 	"Veterans_PlayerTimeDetectionPlayerPlaying"
 	{
-		"en"		"{default}[{green} player time detection {default}] player {blue}%N {default} playing time: {green} unknown {default}, the total playing time in this server is: {green}%.1f hours {default}."
+		"en"		"{default}[{green}Playtime Check{default}] Player {blue}%N{default} playtime: {green}unknown{default}; playtime in this server group: {green}%.1f hours{default}."
 	}
 	"Veterans_PlayerDurationDetectionAdministratorExempt"
 	{
@@ -45,14 +45,14 @@
 	}
 	"Veterans_PlayerDurationDetectionPlayerGame"
 	{
-		"en"		"{default} [{green} player duration detection {default}] Player {blue}%N {{default}'s game duration on this server {green} does not meet the standard {default}, who is a player in the telecommunications server group and is allowed to play normally"
+		"en"		"{default}[{green}Playtime Check{default}] Player {blue}%N{default} does not meet the playtime requirement for this server group, but is in the Telecom server group and may play normally."
 	}
 	"Veterans_PlayerTimeDetectionPlayerGame"
 	{
-		"en"		"{default} [{green} player time detection {default}] Player {blue}%N {{default}’s game time on this server {green} does not meet the standard {default}, a player in the telecommunications server group, allowed to watch but not allowed to play"
+		"en"		"{default}[{green}Playtime Check{default}] Player {blue}%N{default} does not meet the playtime requirement for this server group, but is in the Telecom server group and may only spectate."
 	}
 	"Veterans_PlayerTimeDetectionPlayerGameTime"
 	{
-		"en"		"{default}[{green} player time detection {default}] Player {blue}%N {default}'s game time on this server {green} does not meet the standard {default}, and is not a player in the telecommunications server group, and has been automatically asked to take a rest."
+		"en"		"{default}[{green}Playtime Check{default}] Player {blue}%N{default} does not meet the playtime requirement for this server group and is not in the Telecom server group, so they have been moved out automatically."
 	}
 }

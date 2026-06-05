@@ -6,18 +6,18 @@
 	}
 	"Spawned"
 	{
-		"ko"		"{olive}탱크{default}({red}컨트롤: %s{default})가 생성되었습니다!"
+		"ko"		"{olive}Tank {default}({red}에 의해 제어됨: %s{default})가 생성되었습니다!"
 	}
 	"Spawned2"
 	{
-		"ko"		"{olive}탱크{default}({red}컨트롤: %N{default})가 생성되었습니다!"
+		"ko"		"{olive}Tank {default}({red} 제어 대상: %N{default})가 생성되었습니다!"
 	}
 	"L4D2TankAnnounce_TankControllerGenerated"
 	{
-		"ko"		"{default}[{red}!{default}] {green}Tank {default}({red} 컨트롤러: %s{default})가 생성되었습니다!"
+		"ko"		"{default}[{red}!{default}] {green}Tank {default}({red} 제어 대상: %s{default})이 생성되었습니다!"
 	}
 	"L4D2TankAnnounce_TankControllerGenerated_2"
 	{
-		"ko"		"{default}[{blue}!{default}] {green}Tank {default}({blue} 컨트롤러: %s{default})가 생성되었습니다!"
+		"ko"		"{default}[{blue}!{default}] {green}Tank {default}({blue} 제어 대상: %s{default})이 생성되었습니다!"
 	}
 }

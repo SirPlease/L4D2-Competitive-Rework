@@ -15,7 +15,7 @@
 	"MeleeSkeeted"
 	{
 		"#format"	"{1:N},{2:N}"
-		"chi"		"{olive}{1}{default} 是 {blue}近战{default}-带护套{default} 由 {olive}{2}{default}"
+		"chi"		"{olive}{1}{default} 被 {olive}{2}{default} 用 {blue}近战空爆{default}"
 	}
 	"Headshotted"
 	{
@@ -25,12 +25,12 @@
 	"TeamSkeeted"
 	{
 		"#format"	"{1:N},{2:N},{3:d},{4:d},{5:s},{6:s}"
-		"chi"		"{olive}{1}{default} 和团队空爆了 {olive}{2}{default}，造成 {blue}{3}{default} 伤害，{blue}{4}{default} 枪{5}. 助攻: {olive}{6}{default}"
+		"chi"		"{olive}{1}{default} 和团队空爆了 {olive}{2}{default} {blue}{4} {default}枪{5} {3} {default}伤害 {default} . 助攻: {olive}{6}{default}"
 	}
 	"Skeeted"
 	{
 		"#format"	"{1:N},{2:N},{3:d},{4:s}"
-		"chi"		"{olive}{1}{default} 用 {blue}{3}{default} 枪{4}空爆了 {olive}{2}{default}"
+		"chi"		"{olive}{1}{default} {blue}{3}{default} 枪{4} 空爆了 {olive}{2}{default}"
 	}
 	"ShutBoomer"
 	{
@@ -43,7 +43,7 @@
 	}
 	"AssistShotsPlural"
 	{
-		"chi"		""
+		"chi"		"s"
 	}
 	"AssistShotsSingular"
 	{

@@ -2,11 +2,11 @@
 {
 	"FixEngine_IdrowndamageDamageTempHPRestore"
 	{
-		"chi"		"m_idrowndmg = %d，dmg = %d，要恢复的临时马力 = %d"
+		"chi"		"m_idrowndmg = %d，dmg = %d，要恢复的临时血量 = %d"
 	}
 	"FixEngine_RestoringStartedPlayerUsingGlitch"
 	{
-		"chi"		"恢复开始（玩家在拥有 1-10hp 时使用故障"
+		"chi"		"开始恢复（玩家在 1-10 HP 时使用了漏洞）"
 	}
 	"FixEngine_RestoreCountBeginningSeconds"
 	{
@@ -14,31 +14,31 @@
 	}
 	"FixEngine_RestoringStarted"
 	{
-		"chi"		"恢复开始"
+		"chi"		"开始恢复"
 	}
 	"FixEngine_TempHealthLimitExceeded"
 	{
-		"chi"		"超出温度健康限制"
+		"chi"		"超出临时血量上限"
 	}
 	"FixEngine_ResetDrownRestoredProp"
 	{
-		"chi"		"重置溺水恢复道具 %N"
+		"chi"		"重置溺水恢复的血量 %N"
 	}
 	"FixEngine_TempGlitchFixed"
 	{
-		"chi"		"温度故障已修复"
+		"chi"		"临时血量漏洞已修复"
 	}
 	"FixEngine_StoppedTempGlitchFixTimer"
 	{
-		"chi"		"停止温度故障修复计时器"
+		"chi"		"已停止临时血量漏洞修复计时器"
 	}
 	"FixEngine_RestoringStopped"
 	{
-		"chi"		"恢复已停止"
+		"chi"		"已停止恢复"
 	}
 	"FixEngine_AttemptedUseLadderSpeedGlitch"
 	{
-		"chi"		"%N (%s) 尝试使用梯形速度故障。"
+		"chi"		"%N (%s) 尝试使用梯子加速漏洞。"
 	}
 	"FixEngine_SuspectedUsingNoFallDamage"
 	{
@@ -46,10 +46,10 @@
 	}
 	"FixEngine_AttemptedUseHealthBoostGlitch"
 	{
-		"chi"		"%N (%s) 尝试使用生命值提升故障。"
+		"chi"		"%N (%s) 尝试使用血量提升漏洞。"
 	}
 	"FixEngine_AttemptedUseLadderReloadGlitch"
 	{
-		"chi"		"%N (%s) 尝试使用梯子重新加载故障。"
+		"chi"		"%N (%s) 尝试使用梯子换弹漏洞。"
 	}
 }

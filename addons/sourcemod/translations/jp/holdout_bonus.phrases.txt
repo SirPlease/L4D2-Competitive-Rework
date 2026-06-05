@@ -2,14 +2,14 @@
 {
 	"HoldoutBonus_EventStartsBonusSecondsonds"
 	{
-		"jp"		"{default}ホールドアウト イベント開始... ({green}%i{default} ボーナス {olive}%i{default} 秒以上)"
+		"jp"		"{default}Holdout イベントが始まります... ({green}%i{default} ボーナス ポイント、{olive}%i{default} 秒間継続します)"
 	}
 	"HoldoutBonus_DynamicBonusSummary"
 	{
-		"jp"		"{default}ホールドアウトボーナス: %s"
+		"jp"		"{default}Holdout ボーナスポイント: %s"
 	}
 	"HoldoutBonus_DynamicBonusSummary_2"
 	{
-		"jp"		"{default}ホールドアウトボーナス: {olive}%i{default}のうち、{green}%i{default}。"
+		"jp"		"{default}Holdout ボーナスポイント: {green}%i{default}/{olive}%i{default}。"
 	}
 }

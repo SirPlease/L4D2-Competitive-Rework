@@ -6,7 +6,7 @@
 	}
 	"RPG_Message"
 	{
-		"vi"		"{default} [ {green} RPG {default} ] %s"
+		"vi"		"{default} [ {green} RPG {default}] %s"
 	}
 	"RPG_RANKVariablesRequiredDetermineExtra"
 	{
@@ -14,7 +14,7 @@
 	}
 	"RPG_TitleUnset"
 	{
-		"vi"		"{green} Tiêu đề của bạn chưa được đặt"
+		"vi"		"{green}Tiêu đề của bạn chưa được đặt"
 	}
 	"RPG_TitleUpdatedSuccessfullyNewTitle"
 	{
@@ -22,59 +22,59 @@
 	}
 	"RPG_RANKCannotObtainAdditionalPoints"
 	{
-		"vi"		"{default}[{green}RANK{default}]{green} không thể nhận thêm điểm và sẽ không cập nhật bản ghi bản đồ do HMI nâng cao đang được bật."
+		"vi"		"{default}[{green}RANK{default}]{green} không thể nhận thêm điểm và sẽ không cập nhật bản ghi bản đồ vì máy móc tiên tiến của con người đã được bật."
 	}
 	"RPG_StoreClosedFunctionCannotUsed"
 	{
-		"vi"		"{lightgreen} Cửa hàng đã đóng cửa và không thể sử dụng chức năng này."
+		"vi"		"Cửa hàng {lightgreen} đã đóng và không thể sử dụng chức năng này."
 	}
 	"RPG_AddedBullets"
 	{
-		"vi"		"{green}%N {lightgreen} thêm đạn"
+		"vi"		"{green}%N {lightgreen} đã thêm đạn"
 	}
 	"RPG_FirstTimeRandomTrollFree"
 	{
-		"vi"		"{green}%N {lightgreen} Lần đầu tiên được troll ngẫu nhiên miễn phí"
+		"vi"		"{green}%N {lightgreen} Lần đầu tiên ngẫu nhiên được troll miễn phí"
 	}
 	"RPG_QuicklySpend50BuySingle"
 	{
-		"vi"		"{green}%N {lightgreen} Nhanh tay bỏ ra 50 tỷ mua ngẫu nhiên một bình xịt duy nhất"
+		"vi"		"{green}%N {lightgreen} Nhanh tay chi 50B mua ngẫu nhiên một bình xịt duy nhất"
 	}
 	"RPG_NotEnoughMoneyForShotgun"
 	{
-		"vi"		"{lightgreen}没钱你买个屁喷子，心里没点B数"
+		"vi"		"{lightgreen} Không có tiền thì mua một thứ vớ vẩn cũng không có ý kiến ​​gì."
 	}
 	"RPG_FirstTimeGotSecondsondGeneration"
 	{
-		"vi"		"{green}%N {lightgreen} Lần đầu tiên tôi nhận được bình xịt đơn thế hệ thứ hai miễn phí"
+		"vi"		"{green}%N {lightgreen} Đây là lần đầu tiên bạn được nhận miễn phí một bình xịt đơn thế hệ thứ hai"
 	}
 	"RPG_QuicklySpend50BuySecondsond"
 	{
-		"vi"		"{green}%N {lightgreen} Nhanh tay bỏ ra 50 tỷ mua máy phun đơn thế hệ thứ hai"
+		"vi"		"{green}%N {lightgreen} Nhanh tay bỏ ra 50 tỷ mua bình xịt đơn thế hệ thứ hai"
 	}
 	"RPG_FirstGenerationSingleSpray"
 	{
-		"vi"		"{green}%N {lightgreen} Bình xịt đơn thế hệ đầu tiên"
+		"vi"		"{green}%N {lightgreen} Lần đầu tiên miễn phí, bình xịt đơn thế hệ đầu tiên"
 	}
 	"RPG_QuicklySpend50BuyFirst"
 	{
-		"vi"		"{green}%N {lightgreen} Nhanh tay bỏ ra 50 tỷ mua ngẫu nhiên một bình xịt đơn thế hệ đầu tiên"
+		"vi"		"{green}%N {lightgreen} Nhanh tay chi 50B mua ngẫu nhiên một bình xịt duy nhất thế hệ đầu tiên"
 	}
 	"RPG_FirstTimeBoughtSilencedSMG"
 	{
-		"vi"		"{green}%N {lightgreen} Lần đầu tiên mua súng máy giảm thanh SMG miễn phí"
+		"vi"		"{green}%N {lightgreen} Lần đầu tiên tôi mua miễn phí một khẩu súng máy giảm thanh SMG"
 	}
 	"RPG_QuicklySpend50BuySilenced"
 	{
-		"vi"		"{green}%N {lightgreen} Nhanh tay bỏ 50 tỷ mua súng máy giảm thanh SMG"
+		"vi"		"{green}%N {lightgreen} Nhanh tay bỏ 50B mua súng máy giảm thanh SMG"
 	}
 	"RPG_DonMoneyCanBuyCrappy"
 	{
-		"vi"		"{lightgreen} Nếu không có tiền, bạn có thể mua một khẩu súng máy dở tệ. Bạn không có ý tưởng nào"
+		"vi"		"{lightgreen}Nếu không có tiền, bạn có thể mua một khẩu súng máy dở tệ. Bạn không có ý tưởng nào cả."
 	}
 	"RPG_FirstTimeFreeUzi"
 	{
-		"vi"		"{green}%N {lightgreen} Lần đầu tiên tôi có Uzi miễn phí"
+		"vi"		"{green}%N {lightgreen}Lần đầu tiên tôi làm tình với Uzi mà chẳng được gì"
 	}
 	"RPG_QuicklySpend50RandomlyBuy"
 	{
@@ -82,11 +82,11 @@
 	}
 	"RPG_QuicklySpent400BuyBottle"
 	{
-		"vi"		"{green}%N {lightgreen} nhanh tay bỏ ra 400B mua một lọ thuốc"
+		"vi"		"{green}%N {lightgreen} nhanh chóng bỏ ra 400 tỷ mua một lọ thuốc"
 	}
 	"RPG_FirstUseSetchTitleName"
 	{
-		"vi"		"{green} Trước tiên, bạn phải sử dụng {lightgreen}!setch \"tên tiêu đề bạn muốn\" {green} để đặt tiêu đề tùy chỉnh của mình"
+		"vi"		"{green} Trước tiên bạn phải sử dụng {lightgreen}!setch \"tên tiêu đề bạn muốn\" {green} để đặt tiêu đề tùy chỉnh của bạn"
 	}
 	"RPG_TitleModuleNotEnabledTitle"
 	{
@@ -94,11 +94,11 @@
 	}
 	"RPG_CurrentlyProhibitedUseNumberPurchase"
 	{
-		"vi"		"{lightgreen} Hiện tại, việc sử dụng số B để mua hàng bị cấm (chỉ được phép sử dụng mặt hàng 0B)."
+		"vi"		"{lightgreen} Hiện tại, việc sử dụng số B để mua hàng bị cấm (chỉ cho phép các mặt hàng 0B)."
 	}
 	"RPG_ShopSkillsCoolingDownCooling"
 	{
-		"vi"		"Kỹ năng cửa hàng {lightgreen} đang hạ nhiệt (thời gian hồi chiêu 15 giây)"
+		"vi"		"Kỹ năng lưu trữ {lightgreen} đang hạ nhiệt (thời gian hồi chiêu 15 giây)"
 	}
 	"RPG_ServerClosedCoinUsageChannel"
 	{
@@ -106,215 +106,215 @@
 	}
 	"RPG_DonPointMind"
 	{
-		"vi"		"{lightgreen} Bạn không có ý gì sao?"
+		"vi"		"{lightgreen}Bạn không có ý tưởng nào trong đầu sao?"
 	}
 	"RPG_NewUserCreatingDatabase"
 	{
-		"vi"		"{green} Người dùng mới, tạo cơ sở dữ liệu"
+		"vi"		"{green} người dùng mới, tạo cơ sở dữ liệu"
 	}
 	"RPG_ChangeOutlineColorGreen"
 	{
-		"vi"		"{olive}bạn {green} đổi màu đường viền thành {default}: {green} xanh {default}!"
+		"vi"		"{olive} bạn {green} đổi màu đường viền thành {default}: {green} xanh {default}!"
 	}
 	"RPG_SetOutlineColorBlue"
 	{
-		"vi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}蓝色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu đường viền thành {default}: {green} xanh {default}!"
 	}
 	"RPG_SetOutlineColorBlueViolet"
 	{
-		"vi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}蓝紫色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu đường viền thành {default}: {green} xanh tím {default}!"
 	}
 	"RPG_ChangeOutlineColorCyan"
 	{
-		"vi"		"{olive}bạn {green} thay đổi màu đường viền thành {default}: {green} màu lục lam {default}!"
+		"vi"		"{olive} bạn {green} thay đổi màu đường viền thành {default}: {green} màu lục lam {default}!"
 	}
 	"RPG_SetOutlineColorOrange"
 	{
-		"vi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}橘黄色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu đường viền thành {default}: {green} màu cam {default}!"
 	}
 	"RPG_SetOutlineColorRed"
 	{
-		"vi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}红色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu đường viền thành {default}: {green} màu đỏ {default}!"
 	}
 	"RPG_SetOutlineColorGray"
 	{
-		"vi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}灰色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu đường viền thành {default}: {green} xám {default}!"
 	}
 	"RPG_SetOutlineColorYellow"
 	{
-		"vi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}黄色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu đường viền thành {default}: {green} màu vàng {default}!"
 	}
 	"RPG_SetOutlineColorLime"
 	{
-		"vi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}酸橙色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu đường viền thành {default}: {green} cam chanh {default}!"
 	}
 	"RPG_SetOutlineColorMaroon"
 	{
-		"vi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}栗色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu đường viền thành {default}: {green} màu hạt dẻ {default}!"
 	}
 	"RPG_SetOutlineColorTeal"
 	{
-		"vi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}藍綠色 {default}!"
+		"vi"		"{olive} bạn {green} thay đổi màu đường viền thành {default}: {green} màu mòng két {default}!"
 	}
 	"RPG_SetOutlineColorPink"
 	{
-		"vi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}粉红色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu đường viền thành {default}: {green} màu hồng {default}!"
 	}
 	"RPG_SetOutlineColorPurple"
 	{
-		"vi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}紫色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu đường viền thành {default}: {green} tím {default}!"
 	}
 	"RPG_SetOutlineColorWhite"
 	{
-		"vi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}白色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu đường viền thành {default}: {green} màu trắng {default}!"
 	}
 	"RPG_SetOutlineColorGold"
 	{
-		"vi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}金黄色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu đường viền thành {default}: {green} vàng vàng {default}!"
 	}
 	"RPG_SetOutlineColorRainbow"
 	{
-		"vi"		"{olive}你 {green}将轮廓颜色改为{default}: {green}彩虹色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu đường viền thành {default}: {green} màu cầu vồng {default}!"
 	}
 	"RPG_SetOutlineColorCustomOutline"
 	{
-		"vi"		"{olive}你 {green}将轮廓颜色改为您的{default}: {green}定制颜色轮廓 {default}!"
+		"vi"		"{olive} Bạn {green} Thay đổi màu đường viền thành {default}: {green} Đường viền màu tùy chỉnh {default}!"
 	}
 	"RPG_ClosedSurvivorProfile"
 	{
-		"vi"		"{olive} Bạn đã đóng hồ sơ người sống sót"
+		"vi"		"{olive}Bạn đã đóng hồ sơ người sống sót"
 	}
 	"RPG_ChangeSkinColorGreen"
 	{
-		"vi"		"{olive}Bạn {green} đổi màu da thành {default}: {green} xanh {default}!"
+		"vi"		"{olive} bạn {green} đổi màu skin thành {default}: {green} xanh {default}!"
 	}
 	"RPG_SetSkinColorBlue"
 	{
-		"vi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}蓝色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu skin thành {default}: {green} xanh {default}!"
 	}
 	"RPG_SetSkinColorBlueViolet"
 	{
-		"vi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}蓝紫色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu skin thành {default}: {green} xanh tím {default}!"
 	}
 	"RPG_SetSkinColorCyan"
 	{
-		"vi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}青色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu da thành {default}: {green} màu lục lam {default}!"
 	}
 	"RPG_SetSkinColorOrange"
 	{
-		"vi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}橘黄色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu da thành {default}: {green} cam {default}!"
 	}
 	"RPG_SetSkinColorRed"
 	{
-		"vi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}红色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu skin thành {default}: {green} màu đỏ {default}!"
 	}
 	"RPG_SetSkinColorGray"
 	{
-		"vi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}灰色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu skin thành {default}: {green} xám {default}!"
 	}
 	"RPG_SetSkinColorYellow"
 	{
-		"vi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}黄色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu skin thành {default}: {green} màu vàng {default}!"
 	}
 	"RPG_SetSkinColorLime"
 	{
-		"vi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}酸橙色 {default}!"
+		"vi"		"{olive}you {green} đổi màu da thành {default}: {green}lime cam {default}!"
 	}
 	"RPG_SetSkinColorMaroon"
 	{
-		"vi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}栗色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu da thành {default}: {green}maroon {default}!"
 	}
 	"RPG_SetSkinColorTeal"
 	{
-		"vi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}藍綠色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu da thành {default}: {green} xanh-xanh {default}!"
 	}
 	"RPG_SetSkinColorPink"
 	{
-		"vi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}粉红色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu da thành {default}: {green} hồng {default}!"
 	}
 	"RPG_SetSkinColorPurple"
 	{
-		"vi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}紫色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu skin thành {default}: {green} tím {default}!"
 	}
 	"RPG_SetSkinColorBlack"
 	{
-		"vi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}黑色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu da thành {default}: {green} đen {default}!"
 	}
 	"RPG_SetSkinColorGold"
 	{
-		"vi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}金黄色 {default}!"
+		"vi"		"{olive} bạn {green} đổi màu skin thành {default}: {green} vàng vàng {default}!"
 	}
 	"RPG_ChangeSkinColorTransparentColor"
 	{
-		"vi"		"{olive}You {green} đổi màu da thành {default}: {green} màu trong suốt {default}!"
+		"vi"		"{olive} bạn {green} đổi màu skin thành {default}: {green} màu trong suốt {default}!"
 	}
 	"RPG_SetSkinColorCustomSkin"
 	{
-		"vi"		"{olive}你 {green}将皮肤颜色改为{default}: {green}您的定制皮肤 {default}!"
+		"vi"		"{olive} {green} của bạn Thay đổi màu da thành {default}: {green} Da tùy chỉnh của bạn {default}!"
 	}
 	"RPG_FirstFreePurchase"
 	{
-		"vi"		"{green}%N{lightgreen}第一次白嫖了一把%s，还剩%d的B数"
+		"vi"		"{green}%N{lightgreen} lần đầu nhận miễn phí %s, còn %d điểm B"
 	}
 	"RPG_BoughtItemWithPoints"
 	{
-		"vi"		"{green}%N{lightgreen}B数-%d,购买了%s，还剩%d的B数"
+		"vi"		"Số {green}%N{lightgreen}B-%d, đã mua %s và vẫn còn B số %d"
 	}
 	"RPG_MeleeWeaponSetMacheteGo"
 	{
-		"vi"		"{green} Vũ khí cận chiến của bạn được đặt thành dao rựa khi bạn ra ngoài."
+		"vi"		"{green}Đặt vũ khí cận chiến của bạn làm dao rựa."
 	}
 	"RPG_MeleeWeaponSetFireAx"
 	{
-		"vi"		"{green} Vũ khí cận chiến của bạn được thiết lập để bắn rìu khi bạn ra ngoài."
+		"vi"		"{green}Đặt vũ khí cận chiến của bạn làm rìu lửa khi bạn ra ngoài."
 	}
 	"RPG_SetMeleeWeaponKnifeGo"
 	{
-		"vi"		"{green} Hãy đặt vũ khí cận chiến của bạn như một con dao khi ra ngoài."
+		"vi"		"{green}Đặt vũ khí cận chiến của bạn như một con dao khi bạn ra ngoài."
 	}
 	"RPG_MeleeWeaponSetKatana"
 	{
-		"vi"		"{green} Vũ khí cận chiến của bạn được đặt thành katana."
+		"vi"		"{green}Đặt vũ khí cận chiến của bạn là katana."
 	}
 	"RPG_MeleeWeaponSetMagnum"
 	{
-		"vi"		"{green} Vũ khí cận chiến của bạn được đặt thành Magnum."
+		"vi"		"{green} Vũ khí cận chiến của bạn được đặt ở mức Magnum."
 	}
 	"RPG_SetMeleeWeaponGoingElectric"
 	{
-		"vi"		"{green} Đặt vũ khí cận chiến của bạn khi đi chơi guitar điện"
+		"vi"		"{green}Đặt vũ khí cận chiến của bạn là một cây đàn guitar điện."
 	}
 	"RPG_SetMeleeWeaponGoingBaton"
 	{
-		"vi"		"{green} Đặt vũ khí cận chiến của bạn khi ra ngoài cầm dùi cui"
+		"vi"		"{green}Đặt vũ khí cận chiến của bạn khi rời nhà thành dùi cui"
 	}
 	"RPG_SetOutgoingMeleeWeaponPitchfork"
 	{
-		"vi"		"{green} Đặt vũ khí cận chiến sắp ra mắt của bạn thành một cây chĩa"
+		"vi"		"{green}Đặt vũ khí cận chiến sắp ra mắt của bạn thành một cây chĩa"
 	}
 	"RPG_SetExitMeleeWeaponShovel"
 	{
-		"vi"		"{green} Đặt vũ khí cận chiến thoát hiểm của bạn thành một cái xẻng"
+		"vi"		"{green}Đặt vũ khí cận chiến của bạn là một cái xẻng."
 	}
 	"RPG_SetMeleeWeaponGoingSmall"
 	{
-		"vi"		"{green} Hãy trang bị vũ khí cận chiến khi ra ngoài với khẩu súng lục nhỏ"
+		"vi"		"{green}Đặt vũ khí cận chiến của bạn khi ra ngoài với một khẩu súng lục nhỏ"
 	}
 	"RPG_SetExitMeleeWeaponPan"
 	{
-		"vi"		"{green} Đặt vũ khí cận chiến thoát ra của bạn vào một cái chảo"
+		"vi"		"{green} Đặt vũ khí cận chiến thoát ra của bạn thành một cái chảo"
 	}
 	"RPG_SetMeleeWeaponGoingCrowbar"
 	{
-		"vi"		"{green} Đặt vũ khí cận chiến khi đi ra xà beng"
+		"vi"		"{green}Đặt vũ khí cận chiến thoát hiểm của bạn thành xà beng"
 	}
 	"RPG_SetMeleeWeaponCricketBat"
 	{
-		"vi"		"{green} Đặt vũ khí cận chiến của bạn làm gậy cricket khi rời khỏi nhà"
+		"vi"		"{green}Đặt vũ khí cận chiến của bạn làm gậy cricket."
 	}
 	"RPG_CanceledMeleeWeaponGoing"
 	{
-		"vi"		"{green} Bạn đã hủy vũ khí cận chiến khi đi ra ngoài"
+		"vi"		"{green}Bạn đã hủy vũ khí cận chiến khi đi ra ngoài"
 	}
 	"RPG_MeleeWeaponSettingFailedExceeded"
 	{
@@ -322,11 +322,11 @@
 	}
 	"RPG_TurnedBloodRecoveryFunctionKilling"
 	{
-		"vi"		"{green} Bạn đã bật chức năng phục hồi máu khi giết một người đặc biệt. Giết một người đặc biệt sẽ trả lại 2 giọt máu, lượng máu không vượt quá giới hạn trên."
+		"vi"		"{green} Bạn đã bật chức năng phục hồi máu để giết một người đặc biệt. Giết một người đặc biệt sẽ trả lại 2 giọt máu, lượng máu không vượt quá giới hạn trên."
 	}
 	"RPG_TurnedOffBloodRecoverySpecial"
 	{
-		"vi"		"{green} Bạn đã tắt tính năng hồi máu cho những lần tiêu diệt đặc biệt."
+		"vi"		"{green} Bạn đã tắt tính năng phục hồi máu cho những lần tiêu diệt đặc biệt."
 	}
 	"RPG_AntiKickPlayerAdministratorAnti"
 	{
@@ -334,6 +334,6 @@
 	}
 	"RPG_AntiKickNotPermissionKick"
 	{
-		"vi"		"{green}[AntiKick]{default} Bạn không có quyền loại bỏ các quản trị viên được bảo vệ: {olive}%N{default}."
+		"vi"		"{green}[AntiKick]{default} Bạn không có quyền loại bỏ quản trị viên được bảo vệ: {olive}%N{default}."
 	}
 }

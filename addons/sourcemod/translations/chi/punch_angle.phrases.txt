@@ -6,8 +6,8 @@
 	}
 	"CookieSlected"
 	{
-		"#format"	"{1:t}"
-		"chi"		"[Punch Angle] 后坐力开关: {1:t}"
+		"#format"	"{1:s}"
+		"chi"		"[Punch Angle] 后坐力开关: {1}"
 	}
 	"On"
 	{

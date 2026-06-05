@@ -2,31 +2,31 @@
 {
 	"L4D2HybridScoremod_MapHealthBonusTempHealth"
 	{
-		"ko"		"{default}Map 체력 보너스: {olive}%.1f{default}, 임시 체력 보너스: {olive}%.1f{default}, 영구 HP 가치: {lightgreen}%.1f{default}, 임시 HP 가치: {lightgreen}%.1f{default}, 알약 가치: {lightgreen}%i{default}"
+		"ko"		"{default} 맵 혈액량 보너스 포인트: {olive}%.1f{default}, 임시 혈액량 보너스 포인트: {olive}%.1f{default}, 영구 HP 값: {lightgreen}%.1f{default}, 임시 HP 값: {lightgreen}%.1f{default}, 약품 값: {lightgreen}%i{default}"
 	}
 	"L4D2HybridScoremod_1Bonus"
 	{
-		"ko"		"%s{default}R{green}#1{default} 보너스: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
+		"ko"		"%s{default}R{green}#1{default} 보너스 포인트: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
 	}
 	"L4D2HybridScoremod_BonusHBDBPills"
 	{
-		"ko"		"%s{default}R{green}#%i{default} 보너스: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | DB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | 알약: {olive}%d{default} <{lightgreen}%.1f%%{default}>]"
+		"ko"		"%s{default}R{green}#%i{default} 보너스 포인트: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | DB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | 약물 : {olive}%d{default} <{lightgreen}%.1f%%{default}>]"
 	}
 	"L4D2HybridScoremod_Bonus"
 	{
-		"ko"		"%s{default}R{green}#%i{default} 보너스: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+		"ko"		"%s{default}R{green}#%i{default} 보너스 포인트: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
 	}
 	"L4D2HybridScoremod_1Bonus_2"
 	{
-		"ko"		"%s{default}R{green}#1{default} 보너스: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+		"ko"		"%s{default}R{green}#1{default} 보너스 포인트: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
 	}
 	"L4D2HybridScoremod_BonusHBDBPills_2"
 	{
-		"ko"		"%s{default}R{green}#%i{default} 보너스: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {lightgreen}%.0f%%{default} | DB: {lightgreen}%.0f%%{default} | 알약: {lightgreen}%.0f%%{default}]"
+		"ko"		"%s{default}R{green}#%i{default} 보너스 포인트: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {lightgreen}%.0f%%{default} | DB: {lightgreen}%.0f%%{default} | 약물 : {lightgreen}%.0f%%{default}]"
 	}
 	"L4D2HybridScoremod_HybridBonusMapInfo"
 	{
-		"ko"		"{default}[{green}Hybrid Bonus{default} :: {lightgreen}%iv%i{default}] 지도 정보"
+		"ko"		"{default}[{green} 혼합 보너스 포인트 {default}::{lightgreen}%iv%i{default}] 지도 정보"
 	}
 	"L4D2HybridScoremod_Distance"
 	{
@@ -34,62 +34,62 @@
 	}
 	"L4D2HybridScoremod_TotalBonus1000"
 	{
-		"ko"		"{default}총 보너스: {olive}%d{default} <{lightgreen}100.0%%{default}>"
+		"ko"		"{default} 총 보상 포인트: {olive}%d{default} <{lightgreen}100.0%%{default}>"
 	}
 	"L4D2HybridScoremod_HealthBonus"
 	{
-		"ko"		"{default}건강 보너스: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+		"ko"		"{default} 혈액량 보너스 포인트: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
 	}
 	"L4D2HybridScoremod_DamageBonus"
 	{
-		"ko"		"{default}데미지 보너스: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+		"ko"		"{default} 피해 보너스 포인트: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
 	}
 	"L4D2HybridScoremod_PillsBonusMax"
 	{
-		"ko"		"{default}P약 보너스: {olive}%d{default}(최대 {olive}%d{default}) <{lightgreen}%.1f%%{default}>"
+		"ko"		"{default} 약물 보상 포인트: {olive}%d{default} (최대 {olive}%d{default}) <{lightgreen}%.1f%%{default}>"
 	}
 	"L4D2HybridScoremod_Tiebreaker"
 	{
-		"ko"		"{default}T타이브레이커: {olive}%d{default}"
+		"ko"		"{default} 타이오프 점수: {olive}%d{default}"
 	}
 	"L4D2HybridScoremod_TempHPDamage"
 	{
-		"ko"		"{green}%N{default}에는 현재 {olive}%d{default} 임시 HP가 있습니다(손상: {lightgreen}%.1f{default})"
+		"ko"		"{green}%N{default} 이제 {olive}%d{default} 임시 HP가 있습니다(손상: {lightgreen}%.1f{default})"
 	}
 	"L4D2HybridScoremod_LostTempHPAfterAttacked"
 	{
-		"ko"		"{lightgreen}%N{default}{olive}는 공격을 받은 후 %i{default} 임시 HP를 잃었습니다(인수 피해: {lightgreen}%.1f{default})"
+		"ko"		"{lightgreen}%N{default}{olive} 공격을 받은 후 분실 %i{default} 임시 HP (매개변수 손상: {lightgreen}%.1f{default})"
 	}
 	"L4D2HybridScoremod_DirectorEndVersusModeRound"
 	{
-		"ko"		"CDirector::OnEndVersusModeRound()가 호출되었습니다. InSecondHalfOfRound(): %d, 생존자 수: %d"
+		"ko"		"CDirector::OnEndVersusModeRound()가 호출되었습니다. InSecondHalfOfRound(): %d, countSurvivors: %d"
 	}
 	"L4D2HybridScoremod_SurvivalBonusCvarUpdatedValue"
 	{
-		"ko"		"{default}S생존 보너스 cvar가 업데이트되었습니다. 값: {olive}%i{default} [승수: {olive}%i{default}]"
+		"ko"		"{default} 생존 보너스 포인트 cvar가 업데이트되었습니다. 값: {olive}%i{default} [배율: {olive}%i{default}]"
 	}
 	"L4D2HybridScoremod_RoundBonus"
 	{
-		"ko"		"%s{default}R라운드 {green}%i{default} 보너스: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
+		"ko"		"%s{default} 번호 {green}%i{default} 라운드 보너스 포인트: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
 	}
 	"L4D2HybridScoremod_TiebreakerTeam1Team2"
 	{
-		"ko"		"%s{lightgreen}TIEBREAKER{default}: 팀 {green}%#1{default} - {olive}%i{default}, 팀 {green}%#2{default} - {olive}%i{default}"
+		"ko"		"%s{lightgreen}TIEBREAKER{default}:팀 {green}%#1{default} - {olive}%i{default},팀 {green}%#2{default} - {olive}%i{default}"
 	}
 	"L4D2HybridScoremod_TeamsPerformedAbsolutelyEqualImpossible"
 	{
-		"ko"		"%s{olive}팀은 완전히 동등한 성과를 거두었습니다! 확실한 라운드 승자를 결정하는 것은 불가능합니다"
+		"ko"		"%s{olive}두 팀의 경기력은 똑같았습니다! 이번 라운드에서는 확실한 승자를 결정할 수 없습니다."
 	}
 	"L4D2HybridScoremod_AddingPermHPBonusContribution"
 	{
-		"ko"		"{default}{olive}%N{default}의 영구 HP 보너스 기여 추가: {olive}%d{default} 영구 HP -> {lightgreen}%.1f{default} 보너스; 새 합계: {olive}%.1f{default}"
+		"ko"		"{default}는 {olive}%N{default}의 영구 HP 보너스 포인트 기여에 합류합니다: {olive}%d{default} 영구 HP -> {lightgreen}%.1f{default} 보너스 포인트; 새로운 합계: {olive}%.1f{default}"
 	}
 	"L4D2HybridScoremod_AddingTempHPBonusEligible"
 	{
-		"ko"		"{default}A임시 HP 보너스 추가: {olive}%.1f{default} (적격 생존자: {olive}%d{default})"
+		"ko"		"{default}가 임시 HP에 합류합니다 보너스 포인트: {olive}%.1f{default} (적격 생존자: {olive}%d{default})"
 	}
 	"L4D2HybridScoremod_AddingPillsContributionTotalBonus"
 	{
-		"ko"		"{default}A{olive}%N's{default} 알약 기여 추가, 총 보너스: {olive}%d{default} 포인트"
+		"ko"		"{default}는 {olive}%N{default}의 약물 기여에 참여하고 있으며 총 보상 포인트는 다음과 같습니다: {olive}%d{default} 포인트"
 	}
 }

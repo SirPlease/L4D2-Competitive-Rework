@@ -6,7 +6,7 @@
 	}
 	"OnlySpec"
 	{
-		"vi"		"Chỉ có khán giả mới có thể lắng nghe."
+		"vi"		"Chỉ người ngoài cuộc mới có thể nghe được."
 	}
 	"PanelTitle"
 	{
@@ -26,7 +26,7 @@
 	}
 	"Enable"
 	{
-		"vi"		"{green}{default}"
+		"vi"		"{green}Bật{default}"
 	}
 	"Disable"
 	{
@@ -42,19 +42,19 @@
 	}
 	"ErrorCookie"
 	{
-		"vi"		"Lỗi: cookie chưa được lưu vào bộ nhớ đệm (hãy thử lại sau một lát)."
+		"vi"		"Lỗi: Cookie chưa được lưu vào bộ nhớ đệm (vui lòng thử lại sau)."
 	}
 	"SpecListener_SelectedItemFoundInfo"
 	{
-		"vi"		"[SpecListener] Bạn đã chọn mục: %d (tìm thấy? Thông tin %d: %s)"
+		"vi"		"[SpecListener] Mục bạn đã chọn: %d (Đã tìm thấy? Thông tin về %d: %s)"
 	}
 	"SpecListener_ClientMenuCancelledReason"
 	{
-		"vi"		"[SpecListener] Menu %d của khách hàng đã bị hủy.  Lý do: %d"
+		"vi"		"[SpecListener] Menu cho máy khách %d đã bị hủy.  Lý do: %d"
 	}
 	"SpecListener_Enabled"
 	{
-		"vi"		"[SpecListener] Đã bật"
+		"vi"		"[SpecListener] đã bật"
 	}
 	"SpecListener_Cookie"
 	{
@@ -66,7 +66,7 @@
 	}
 	"SpecListener_ReEnableListenAllTalk"
 	{
-		"vi"		"[SpecListener] Kích hoạt lại tính năng Nghe vì All-Talk"
+		"vi"		"[SpecListener] Tính năng nghe được bật lại do All-Talk"
 	}
 	"SpecListener_Executed"
 	{

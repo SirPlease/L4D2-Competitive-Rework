@@ -2,18 +2,18 @@
 {
 	"Title"
 	{
-		"jp"		"{blue}[{default}タンクロックセレクター{blue}]"
+		"jp"		"{blue}[{default}Tankストーンセレクター {blue}]"
 	}
 	"Reload"
 	{
-		"jp"		"{olive}リロード{default}/{olive}!overhand{default} = {blue}2 ハンド オーバーハンド{default}"
+		"jp"		"{olive} リロード {default}/{olive}!overhand{default} = {blue} 両手で高く投げる {default}"
 	}
 	"Use"
 	{
-		"jp"		"{olive}使用{default}/{olive}!underhand{default} = {blue}アンダーハンド{default}"
+		"jp"		"{olive} はキー {default}/{olive}!underhand{default} を使用します = {blue} は {default} を安く販売します"
 	}
 	"M2"
 	{
-		"jp"		"{olive}M2{default}/{olive}!overonehand{default} = {blue}1 ハンドド オーバーハンド{default}"
+		"jp"		"{olive} マウスの右ボタン {default}/{olive}!overonehand{default} = {blue} 片手ハイスロー {default}"
 	}
 }

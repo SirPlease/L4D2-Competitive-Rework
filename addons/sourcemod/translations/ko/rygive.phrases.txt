@@ -2,15 +2,15 @@
 {
 	"RYGive_TryingKickDeadInfectedRobot"
 	{
-		"ko"		"죽은 감염된 로봇을 쫓아내려고 하는데..."
+		"ko"		"죽은 감염된 봇을 쫓아내보세요..."
 	}
 	"RYGive_KickedBots"
 	{
-		"ko"		"%i 봇을 쫓아냈습니다."
+		"ko"		"%i 봇을 걷어차세요."
 	}
 	"RYGive_AdminSpawnedInfected"
 	{
-		"ko"		"{lightgreen}管理员{default}[{olive}%N{default}]刷出一只{olive}%s"
+		"ko"		"{lightgreen} 관리자 {default}[{olive}%N{default}]가 {olive}%s를 생성했습니다."
 	}
 	"RYGive_FriendlyDamageCoefficientResetDefault"
 	{
@@ -34,7 +34,7 @@
 	}
 	"RYGive_ImmuneSpecialSenseControl"
 	{
-		"ko"		"{green}는 %s {olive}%N의 특수 감지 제어에 면역입니다."
+		"ko"		"{green}%s {olive}%N 특수 감각 제어에 면역"
 	}
 	"RYGive_OnlySurvivorsCanIdle"
 	{
@@ -46,7 +46,7 @@
 	}
 	"RYGive_NumberInfectedPeopleFull"
 	{
-		"ko"		"감염자 수가 꽉 찼습니다."
+		"ko"		"감염된 사람이 가득 찼습니다."
 	}
 	"RYGive_PlayerAlreadyTargetTeam"
 	{

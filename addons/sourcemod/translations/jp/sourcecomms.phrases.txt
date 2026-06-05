@@ -6,7 +6,7 @@
 	}
 	"Gagged on connect"
 	{
-		"jp"		"あなたは猿ぐつわをされています！"
+		"jp"		"あなたは禁止されています！"
 	}
 	"Mute expired"
 	{
@@ -14,7 +14,7 @@
 	}
 	"Gag expired"
 	{
-		"jp"		"ギャグの有効期限が切れました。"
+		"jp"		"禁止期間は終了しました。"
 	}
 	"FWUnmute"
 	{
@@ -22,171 +22,171 @@
 	}
 	"FWUngag"
 	{
-		"jp"		"あなたのギャグは削除されました。"
+		"jp"		"あなたの禁止は解除されました。"
 	}
 	"Usage_time"
 	{
 		"#format"	"{1:d}"
-		"jp"		"時間: {1} 分。未指定の場合はこの値を使用します。0 の場合は永久です。\n0 未満の場合はこのセッションのみブロックします。"
+		"jp"		"時間: {1} 分 (選択が行われていない場合)。 0.\n 永久の場合。 < 0 の場合、このラウンドでは禁止されます。"
 	}
 	"Player Comms Not Verified"
 	{
-		"jp"		"このプレイヤーは認証されていません。 30 秒待ってから再試行してください。"
+		"jp"		"このユーザーはまだ認証されていません。30 秒待ってから再試行してください。"
 	}
 	"Player already muted"
 	{
 		"#format"	"{1:s}"
-		"jp"		"プレーヤー {1} はすでにミュートされています。"
+		"jp"		"プレーヤー {1} がミュートされました。"
 	}
 	"Player already gagged"
 	{
 		"#format"	"{1:s}"
-		"jp"		"プレイヤー {1} はすでに猿ぐつわをされています!"
+		"jp"		"プレイヤー {1} は禁止されました!"
 	}
 	"Player already silenced"
 	{
 		"#format"	"{1:s}"
-		"jp"		"プレイヤー {1} はすでに猿ぐつわを付けられているか、ミュートされています。"
+		"jp"		"プレーヤー {1} は禁止またはミュートされました!"
 	}
 	"Player not muted"
 	{
-		"jp"		"プレーヤーがミュートされていません。"
+		"jp"		"プレーヤーはミュートされていません。"
 	}
 	"Player not gagged"
 	{
-		"jp"		"プレイヤーは猿轡をしていません。"
+		"jp"		"そのプレイヤーはまだ禁止されていません。"
 	}
 	"Player not silenced"
 	{
-		"jp"		"プレイヤーは沈黙していません。"
+		"jp"		"プレーヤーは禁止またはミュートされていません。"
 	}
 	"Permagagged player"
 	{
 		"#format"	"{1:t}"
-		"jp"		"{1} で恒久的なギャグを発行しました。"
+		"jp"		"プレーヤー {1} は永久追放されました。"
 	}
 	"Permagagged player reason"
 	{
 		"#format"	"{1:t},{2:s}"
-		"jp"		"{1} で永続的なギャグを発行しました (理由: {2} )。"
+		"jp"		"プレーヤー {1} は永久追放されました (理由: {2})。"
 	}
 	"Gagged player"
 	{
 		"#format"	"{1:t},{2:d}"
-		"jp"		"{1} で {2} 分間の延長ギャグを発行しました。"
+		"jp"		"プレーヤー {1} は {2} 分間禁止されました。"
 	}
 	"Gagged player reason"
 	{
 		"#format"	"{1:t},{2:d},{3:s}"
-		"jp"		"{1} で {2} 分間の延長ギャグを発行しました (理由: {3} )。"
+		"jp"		"プレーヤー {1} は {2} 分間禁止されました (理由: {3})。"
 	}
 	"Permamuted player"
 	{
 		"#format"	"{1:t}"
-		"jp"		"{1} で永久ミュートを発行しました。"
+		"jp"		"プレーヤー {1} は永久にミュートされています。"
 	}
 	"Permamuted player reason"
 	{
 		"#format"	"{1:t},{2:s}"
-		"jp"		"{1} で永久ミュートを発行しました (理由: {2} )。"
+		"jp"		"プレーヤー {1} は永久にミュートされています (理由: {2})。"
 	}
 	"Muted player"
 	{
 		"#format"	"{1:t},{2:d}"
-		"jp"		"{1} で {2} 分間の延長ミュートを発行しました。"
+		"jp"		"プレーヤー {1} は {2} 分間ミュートされています。"
 	}
 	"Muted player reason"
 	{
 		"#format"	"{1:t},{2:d},{3:s}"
-		"jp"		"{1} で {2} 分間の延長ミュートを発行しました (理由: {3} )。"
+		"jp"		"プレーヤー {1} は {2} 分間ミュートされています (理由: {3})。"
 	}
 	"Permasilenced player"
 	{
 		"#format"	"{1:t}"
-		"jp"		"{1} で永久沈黙を発行しました。"
+		"jp"		"プレーヤー {1} は永久に禁止され、ミュートされました。"
 	}
 	"Permasilenced player reason"
 	{
 		"#format"	"{1:t},{2:s}"
-		"jp"		"{1} で永久沈黙を発行しました (理由: {2} )。"
+		"jp"		"プレーヤー {1} は永久に禁止され、ミュートされました (理由: {2})。"
 	}
 	"Silenced player"
 	{
 		"#format"	"{1:t},{2:d}"
-		"jp"		"{1} で {2} 分間の延長沈黙を発行しました。"
+		"jp"		"プレーヤー {1} は禁止され、{2} 分間ミュートされています。"
 	}
 	"Silenced player reason"
 	{
 		"#format"	"{1:t},{2:d},{3:s}"
-		"jp"		"{1} で {2} 分間の延長沈黙を発行しました (理由: {3} )。"
+		"jp"		"プレーヤー {1} は禁止され、{2} 分間ミュートされています (理由: {3})。"
 	}
 	"Temp unmuted player"
 	{
 		"#format"	"{1:t}"
-		"jp"		"{1} から一時的にミュートを解除しました。"
+		"jp"		"プレーヤー {1} は一時的にミュートが解除されました。"
 	}
 	"Temp ungagged player"
 	{
 		"#format"	"{1:t}"
-		"jp"		"{1} から一時的にギャグを削除しました。"
+		"jp"		"プレーヤー {1} は一時的に禁止解除されました。"
 	}
 	"Temp unsilenced player"
 	{
 		"#format"	"{1:t}"
-		"jp"		"{1} から沈黙を一時的に削除しました。"
+		"jp"		"プレイヤー {1} は一時的に禁止が解除され、ミュートされました。"
 	}
 	"Unblock Select Failed"
 	{
 		"#format"	"{1:s}"
-		"jp"		"DB から {1} のブロックを要求中にエラーが発生しました。"
+		"jp"		"データベースで {1} を抑制中にエラーが発生しました。"
 	}
 	"No blocks found"
 	{
 		"#format"	"{1:s}"
-		"jp"		"{1} の DB にアクティブなブロックが見つかりません。"
+		"jp"		"データベースに {1} の禁止は見つかりませんでした。"
 	}
 	"No db error unlock perm"
 	{
-		"jp"		"DB エラーによるブロックを解除する権限がありません。"
+		"jp"		"データベースエラー時の通信のブロックを解除する権限がありません。"
 	}
 	"No permission unmute"
 	{
 		"#format"	"{1:s}"
-		"jp"		"上級管理者によってミュートされているため、{1} のミュートを削除できませんでした。"
+		"jp"		"プレーヤー {1} のミュートは上位レベルの管理者によって行われたため、このプレーヤーのミュートを解除することはできません。"
 	}
 	"No permission ungag"
 	{
 		"#format"	"{1:s}"
-		"jp"		"{1} のギャグは上級管理者によってミュートされているため削除できませんでした。"
+		"jp"		"プレーヤー {1} の禁止は上級管理者によって行われたため、このプレーヤーの禁止を解除することはできません。"
 	}
 	"Unmuted player"
 	{
 		"#format"	"{1:t}"
-		"jp"		"{1} から拡張ミュートを削除しました。"
+		"jp"		"プレーヤー {1} のミュート延長がキャンセルされました。"
 	}
 	"Ungagged player"
 	{
 		"#format"	"{1:t}"
-		"jp"		"{1} から拡張ギャグを削除しました。"
+		"jp"		"{1} プレイヤーの禁止延長はキャンセルされました。"
 	}
 	"Unblock insert failed"
 	{
-		"jp"		"DBからブロックを削除できませんでした。"
+		"jp"		"データベースからの禁止解除に失敗しました。"
 	}
 	"successfully unmuted"
 	{
 		"#format"	"{1:s}"
-		"jp"		"{1} のミュートが DB から正常に削除されました。"
+		"jp"		"データベースから {1} のミュートが正常に解除されました。"
 	}
 	"successfully ungagged"
 	{
 		"#format"	"{1:s}"
-		"jp"		"DB から {1} のギャグが正常に削除されました。"
+		"jp"		"{1} をデータベースから正常に禁止解除しました。"
 	}
 	"AdminMenu_Display_None"
 	{
 		"#format"	"{1:s}"
-		"jp"		"[  ] {1}"
+		"jp"		"[ ] {1}"
 	}
 	"AdminMenu_Display_Muted"
 	{
@@ -205,15 +205,15 @@
 	}
 	"AdminMenu_Main"
 	{
-		"jp"		"通信コマンド"
+		"jp"		"禁止とミュート"
 	}
 	"AdminMenu_Select_Main"
 	{
-		"jp"		"通信コマンド:"
+		"jp"		"禁止とミュート:"
 	}
 	"AdminMenu_List"
 	{
-		"jp"		"罰を見る"
+		"jp"		"ペナルティを表示"
 	}
 	"AdminMenu_Select_List"
 	{
@@ -221,7 +221,7 @@
 	}
 	"AdminMenu_Gag"
 	{
-		"jp"		"ギャグを発行する"
+		"jp"		"禁止"
 	}
 	"AdminMenu_Select_Gag"
 	{
@@ -249,19 +249,19 @@
 	}
 	"AdminMenu_Option_Mute_Empty"
 	{
-		"jp"		"ミュートされたプレーヤーはいません"
+		"jp"		"ミュートされているプレイヤーはいません"
 	}
 	"AdminMenu_Option_Gag_Empty"
 	{
-		"jp"		"猿ぐつわをされたプレイヤーはいない"
+		"jp"		"禁止されたプレイヤーはいない"
 	}
 	"AdminMenu_Option_Silence_Empty"
 	{
-		"jp"		"サイレントプレイヤーはいない"
+		"jp"		"禁止またはミュートされたプレイヤーはいません"
 	}
 	"ListMenu_Option_Empty"
 	{
-		"jp"		"罰せられるクライアントはいません"
+		"jp"		"罰せられた選手はいなかった"
 	}
 	"AdminMenu_Option_Empty"
 	{
@@ -269,7 +269,7 @@
 	}
 	"AdminMenu_UnGag"
 	{
-		"jp"		"ギャグを外す"
+		"jp"		"禁止を解除する"
 	}
 	"AdminMenu_Title_Durations"
 	{
@@ -277,11 +277,11 @@
 	}
 	"AdminMenu_Title_Reasons"
 	{
-		"jp"		"理由を選択してください:"
+		"jp"		"選定理由："
 	}
 	"AdminMenu_Mute"
 	{
-		"jp"		"ミュートを発行する"
+		"jp"		"ミュート"
 	}
 	"AdminMenu_UnMute"
 	{
@@ -289,19 +289,19 @@
 	}
 	"AdminMenu_Silence"
 	{
-		"jp"		"沈黙を発する"
+		"jp"		"禁止とミュート"
 	}
 	"AdminMenu_UnSilence"
 	{
-		"jp"		"沈黙を取り除く"
+		"jp"		"禁止解除とミュート"
 	}
 	"AdminMenu_Not_Available"
 	{
-		"jp"		"選択したプレーヤーはもう使用できません。"
+		"jp"		"選択したプレーヤーは現在利用できません。"
 	}
 	"Command_Target_Not_Targetable"
 	{
-		"jp"		"このプレイヤーをターゲットにすることはできません。"
+		"jp"		"このプレイヤーは選択できません。"
 	}
 	"ListMenu_Option_Mute"
 	{
@@ -309,7 +309,7 @@
 	}
 	"ListMenu_Option_Gag"
 	{
-		"jp"		"猿ぐつわ"
+		"jp"		"チャット禁止"
 	}
 	"ListMenu_Option_Duration"
 	{
@@ -343,7 +343,7 @@
 	}
 	"ListMenu_Option_Expire_Temp_Reconnect"
 	{
-		"jp"		"再接続"
+		"jp"		"再接続する"
 	}
 	"ListMenu_Option_Admin"
 	{
@@ -353,11 +353,11 @@
 	"ListMenu_Option_Issue"
 	{
 		"#format"	"{1:s}"
-		"jp"		"- 発行: {1}"
+		"jp"		"- 禁止: {1}"
 	}
 	"ListMenu_Option_Reason"
 	{
-		"jp"		"- 理由を表示"
+		"jp"		"- その理由を見てみましょう"
 	}
 	"ListMenu_Option_Reason_None"
 	{
@@ -369,7 +369,7 @@
 	}
 	"ReasonPanel_Punishment_Gag"
 	{
-		"jp"		"猿ぐつわ:"
+		"jp"		"チャット禁止:"
 	}
 	"ReasonPanel_Perm"
 	{
@@ -396,43 +396,43 @@
 	"Temp muted player"
 	{
 		"#format"	"{1:t}"
-		"jp"		"{1} をミュートしました。"
+		"jp"		"プレーヤー {1} はミュートされています。"
 	}
 	"Temp muted player reason"
 	{
 		"#format"	"{1:t},{2:s}"
-		"jp"		"{1} をミュートしました (理由: {2} )。"
+		"jp"		"プレーヤー {1} はミュートされています (理由: {2})。"
 	}
 	"Temp gagged player"
 	{
 		"#format"	"{1:t}"
-		"jp"		"猿ぐつわ{1} 。"
+		"jp"		"プレーヤー {1} は禁止されました。"
 	}
 	"Temp gagged player reason"
 	{
 		"#format"	"{1:t},{2:s}"
-		"jp"		"猿ぐつわ {1} (理由: {2} )。"
+		"jp"		"プレーヤー {1} は禁止されました (理由: {2})。"
 	}
 	"Temp silenced player"
 	{
 		"#format"	"{1:t}"
-		"jp"		"{1} を沈黙させました。"
+		"jp"		"プレーヤー {1} は禁止され、ミュートされました。"
 	}
 	"Temp silenced player reason"
 	{
 		"#format"	"{1:t},{2:s}"
-		"jp"		"{1} を沈黙させました (理由: {2} )。"
+		"jp"		"プレーヤー {1} は禁止され、ミュートされています (理由: {2})。"
 	}
 	"CommandComms_na"
 	{
-		"jp"		"サーバー上のプレイヤーのみが利用できます。"
+		"jp"		"ゲーム内のプレイヤーのみが利用できます。"
 	}
 	"CommandComms_nb"
 	{
-		"jp"		"チャットと音声はブロックされません。"
+		"jp"		"あなたは禁止またはミュートされていません。"
 	}
 	"no access"
 	{
-		"jp"		"一定時間の懲罰は許されない。"
+		"jp"		"ペナルティの長さを指定することはできません。"
 	}
 }

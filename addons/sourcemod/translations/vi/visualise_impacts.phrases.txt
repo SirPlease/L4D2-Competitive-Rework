@@ -2,6 +2,6 @@
 {
 	"VisualiseImpacts_NoteUseCommandRemovedecalsClient"
 	{
-		"vi"		"[Lưu ý] Sử dụng lệnh `r_removedecals` để khách hàng xóa đề can cũ."
+		"vi"		"[Lưu ý] Khách hàng có thể sử dụng `r_removedecals` để dọn sạch decal cũ."
 	}
 }

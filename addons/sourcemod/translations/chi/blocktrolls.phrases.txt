@@ -6,14 +6,14 @@
 	}
 	"VotingNotEnabled"
 	{
-		"chi"		"直到一轮{olive}40s{default}后才启用投票。"
+		"chi"		"投票将在回合开始后 {olive}40秒{default} 后启用."
 	}
 	"NotConsoleVote"
 	{
-		"chi"		"[!] 您必须在游戏中才能投票。"
+		"chi"		"[!] 你必须在游戏中投票."
 	}
 	"NotSpectatorVote"
 	{
-		"chi"		"{olive}观众{default}无法投票。"
+		"chi"		"{olive}旁观者{default} 不能投票."
 	}
 }

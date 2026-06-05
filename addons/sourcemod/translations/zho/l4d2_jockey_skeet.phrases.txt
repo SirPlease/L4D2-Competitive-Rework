@@ -2,14 +2,14 @@
 {
 	"L4D2JockeySkeet_Skeeted"
 	{
-		"zho"		"{green}★★{default} 您是 {olive}%N{default} 的 {blue}skeeted{default}。"
+		"zho"		"{green}★★{default} 你被 {olive}%N{default} {blue}skeet{default} 了."
 	}
 	"L4D2JockeySkeet_SkeetedJockey"
 	{
-		"zho"		"{green}★★{default} 您{blue}skeeted {olive}%N{default} 的騎士。"
+		"zho"		"{green}★★{default} 你 {blue}skeet{default} 了 {olive}%N{default} 的 Jockey."
 	}
 	"L4D2JockeySkeet_JockeySkeeted"
 	{
-		"zho"		"{green} ★★ {default} {olive} %N {default} 的騎師是{blue} 被{olive} %N {default} 拋在了{default} 上。"
+		"zho"		"{green}★★{default} {olive}%N{default} 的 Jockey 被 {olive}%N{default} {blue}skeet{default} 了."
 	}
 }

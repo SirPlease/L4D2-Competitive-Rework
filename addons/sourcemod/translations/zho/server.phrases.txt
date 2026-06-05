@@ -14,31 +14,31 @@
 	}
 	"Server_StillUntakenBotsTakeThem"
 	{
-		"zho"		"還有未接管的Bot，請先接管或等生還隊滿再試。"
+		"zho"		"{green}還有未接管的生還 Bot，請先接管或等生還隊滿再試。"
 	}
 	"Server_Not8PlayerSportHasn"
 	{
-		"zho"		"不是 8 人運動，還沒達到上限！"
+		"zho"		"{green}當前不是 8 人模式，而且還沒達到人數上限！"
 	}
 	"Server_SurvivorBotGenerated"
 	{
-		"zho"		"一個生還者Bot已產生。"
+		"zho"		"{green}一個生還者Bot已生成。"
 	}
 	"Server_SurvivorBotCannotGeneratedMoment"
 	{
-		"zho"		"暫時無法產生生還者Bot。"
+		"zho"		"{green}暫時無法生成生還者Bot。"
 	}
 	"Server_NoBotNotTaken"
 	{
-		"zho"		"不存在未接管的Bot。"
+		"zho"		"{green}沒有未接管的生還 Bot。"
 	}
 	"Server_EverythingNormalStillWantSkip"
 	{
-		"zho"		"一切正常，還想踢克逃課？"
+		"zho"		"{green}一切正常，還想跳過嗎？"
 	}
 	"Server_ExcessGramsKicked"
 	{
-		"zho"		"已經踢出多餘的克"
+		"zho"		"{green}已移出多餘玩家"
 	}
 	"Server_PromptsAlreadyBlackWhiteGive"
 	{
@@ -46,6 +46,6 @@
 	}
 	"Server_PromptBlackWhiteTreatSoon"
 	{
-		"zho"		"[{olive}提示{default}] 你現在 {green}黑白{default}，請盡快治療！"
+		"zho"		"[{olive}提示{default}] 你現在 {green}黑白{default}，請儘快治療！"
 	}
 }

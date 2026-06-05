@@ -2,7 +2,7 @@
 {
 	"RPG_ProfilePermissionExpiredAutomaticallyClosed"
 	{
-		"jp"		"{default}[{green}RPG{default}] {olive}あなたのプロフィール権限は有効期限が切れたため、自動的に閉じられました。"
+		"jp"		"{default}[{green}RPG{default}] {olive}あなたのプロフィール権限は有効期限が切れており、自動的に閉じられています。"
 	}
 	"RPG_Message"
 	{
@@ -14,7 +14,7 @@
 	}
 	"RPG_TitleUnset"
 	{
-		"jp"		"{green} タイトルが未設定です"
+		"jp"		"{green}タイトルが未設定です"
 	}
 	"RPG_TitleUpdatedSuccessfullyNewTitle"
 	{
@@ -22,71 +22,71 @@
 	}
 	"RPG_RANKCannotObtainAdditionalPoints"
 	{
-		"jp"		"{default}[{green}RANK{default}]{green}は、アドバンスドHMIがオンになっているため、追加ポイントを取得できず、地図レコードを更新しません。"
+		"jp"		"{default}[{green}RANK{default}]{green} は、高度なヒューマンマシンがオンになっているため、追加のポイントを取得できず、マップ レコードを更新しません。"
 	}
 	"RPG_StoreClosedFunctionCannotUsed"
 	{
-		"jp"		"{lightgreen} ストアは閉店しているため、この機能はご利用いただけません。"
+		"jp"		"{lightgreen}ストアは閉店しているため、この機能はご利用いただけません。"
 	}
 	"RPG_AddedBullets"
 	{
-		"jp"		"{green}%N {lightgreen} 弾を追加"
+		"jp"		"{green}%N {lightgreen} 弾丸を追加しました"
 	}
 	"RPG_FirstTimeRandomTrollFree"
 	{
-		"jp"		"{green}%N {lightgreen} 初めてランダムトロールを無料で手に入れました"
+		"jp"		"{green}%N {lightgreen} 初めてランダムに無料でトロルを手に入れたとき"
 	}
 	"RPG_QuicklySpend50BuySingle"
 	{
-		"jp"		"{green}%N {lightgreen} 50B をすぐに使って、ランダムに 1 つのスプレーを購入します"
+		"jp"		"{green}%N {lightgreen} すぐに 50B を使ってスプレーを 1 つランダムに購入します"
 	}
 	"RPG_NotEnoughMoneyForShotgun"
 	{
-		"jp"		"{lightgreen}没钱你买个屁喷子，心里没点B数"
+		"jp"		"{lightgreen} お金がないなら、クソみたいなものを買ってもいいし、何も考えていない。"
 	}
 	"RPG_FirstTimeGotSecondsondGeneration"
 	{
-		"jp"		"{green}%N {lightgreen} 初めて第二世代シングルスプレーを無料でもらいました"
+		"jp"		"{green}%N {lightgreen} 第二世代のシングルスプレーを無料で手に入れるのは初めてです"
 	}
 	"RPG_QuicklySpend50BuySecondsond"
 	{
-		"jp"		"{green}%N {lightgreen} すぐに500億出して第二世代のシングル噴霧器を購入"
+		"jp"		"{green}%N {lightgreen} 50B すぐに使って第 2 世代のシングル スプレーを購入する"
 	}
 	"RPG_FirstGenerationSingleSpray"
 	{
-		"jp"		"{green}%N {lightgreen} 初代シングルスプレー"
+		"jp"		"{green}%N {lightgreen} 初回無料、初代シングルスプレー"
 	}
 	"RPG_QuicklySpend50BuyFirst"
 	{
-		"jp"		"{green}%N {lightgreen} すぐに50Bを使って第一世代のシングルスプレーをランダムに購入します"
+		"jp"		"{green}%N {lightgreen} すぐに 50B を使って第一世代のシングル スプレーをランダムに購入します"
 	}
 	"RPG_FirstTimeBoughtSilencedSMG"
 	{
-		"jp"		"{green}%N {lightgreen} 初めて消音機能付きSMGマシンガンを無料で購入しました"
+		"jp"		"{green}%N {lightgreen} 初めて消音機能付き SMG マシンガンを無料で購入しました"
 	}
 	"RPG_QuicklySpend50BuySilenced"
 	{
-		"jp"		"{green}%N {lightgreen} すぐに50Bを使ってサイレンサー付きSMGマシンガンを購入しましょう"
+		"jp"		"{green}%N {lightgreen} すぐに 50B 使って消音機能付き SMG マシンガンを購入しましょう"
 	}
 	"RPG_DonMoneyCanBuyCrappy"
 	{
-		"jp"		"{lightgreen} お金がないなら、くだらないマシンガンを買えばいい。あなたには何のアイデアもありません"
+		"jp"		"{lightgreen}お金がないなら、くだらない機関銃を買うこともできます。あなたには何の考えもありません。"
 	}
 	"RPG_FirstTimeFreeUzi"
 	{
-		"jp"		"{green}%N {lightgreen} 初めて無料のUziを持ったとき"
+		"jp"		"{green}%N {lightgreen}初めてUziと無償でセックスしたときのこと"
 	}
 	"RPG_QuicklySpend50RandomlyBuy"
 	{
-		"jp"		"{green}%N {lightgreen} すぐに50Bを使ってUziマシンガンをランダムに購入します"
+		"jp"		"{green}%N {lightgreen} すぐに 50B を使って Uzi マシンガンをランダムに購入します"
 	}
 	"RPG_QuicklySpent400BuyBottle"
 	{
-		"jp"		"{green}%N {lightgreen} すぐに 400B 使って薬のボトルを購入しました"
+		"jp"		"{green}%N {lightgreen} はすぐに 400B を使って薬のボトルを購入しました"
 	}
 	"RPG_FirstUseSetchTitleName"
 	{
-		"jp"		"{green} カスタム タイトルを設定するには、最初に {lightgreen}!setch 「希望のタイトル名」 {green} を使用する必要があります。"
+		"jp"		"{green} カスタム タイトルを設定するには、最初に {lightgreen}!setch 「必要なタイトル名」 {green} を使用する必要があります。"
 	}
 	"RPG_TitleModuleNotEnabledTitle"
 	{
@@ -98,7 +98,7 @@
 	}
 	"RPG_ShopSkillsCoolingDownCooling"
 	{
-		"jp"		"{lightgreen} ショップスキル冷却中（冷却時間15秒）"
+		"jp"		"{lightgreen} ストアスキルが冷却中（冷却時間 15 秒）"
 	}
 	"RPG_ServerClosedCoinUsageChannel"
 	{
@@ -106,7 +106,7 @@
 	}
 	"RPG_DonPointMind"
 	{
-		"jp"		"{lightgreen} 何か思い当たることはありませんか？"
+		"jp"		"{lightgreen}何かアイデアはありませんか?"
 	}
 	"RPG_NewUserCreatingDatabase"
 	{
@@ -114,167 +114,167 @@
 	}
 	"RPG_ChangeOutlineColorGreen"
 	{
-		"jp"		"{olive}you {green} アウトラインの色を {default}: {green} 緑 {default} に変更します!"
+		"jp"		"{olive} {green} は、アウトラインの色を {default}: {green} 緑 {default} に変更します。"
 	}
 	"RPG_SetOutlineColorBlue"
 	{
-		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}蓝色 {default}!"
+		"jp"		"{olive} {green} は、アウトラインの色を {default}: {green} 青 {default} に変更します。"
 	}
 	"RPG_SetOutlineColorBlueViolet"
 	{
-		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}蓝紫色 {default}!"
+		"jp"		"{olive} {green} は、アウトラインの色を {default}: {green} 青紫 {default} に変更します。"
 	}
 	"RPG_ChangeOutlineColorCyan"
 	{
-		"jp"		"{olive}you {green} アウトラインの色を {default}: {green} シアン {default} に変更します!"
+		"jp"		"{olive} {green} は、アウトラインの色を {default}: {green} シアン {default} に変更します。"
 	}
 	"RPG_SetOutlineColorOrange"
 	{
-		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}橘黄色 {default}!"
+		"jp"		"{olive} {green} は、アウトラインの色を {default}: {green} オレンジ {default} に変更します。"
 	}
 	"RPG_SetOutlineColorRed"
 	{
-		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}红色 {default}!"
+		"jp"		"{olive} {green} は、アウトラインの色を {default}: {green} 赤 {default} に変更します。"
 	}
 	"RPG_SetOutlineColorGray"
 	{
-		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}灰色 {default}!"
+		"jp"		"{olive} {green} は、アウトラインの色を {default}: {green} グレー {default} に変更します。"
 	}
 	"RPG_SetOutlineColorYellow"
 	{
-		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}黄色 {default}!"
+		"jp"		"{olive} {green} は、アウトラインの色を {default}: {green} 黄色 {default} に変更します。"
 	}
 	"RPG_SetOutlineColorLime"
 	{
-		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}酸橙色 {default}!"
+		"jp"		"{olive} {green} は、アウトラインの色を {default}: {green} ライム オレンジ {default} に変更します。"
 	}
 	"RPG_SetOutlineColorMaroon"
 	{
-		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}栗色 {default}!"
+		"jp"		"{olive} {green} は、アウトラインの色を {default}: {green} マルーン {default} に変更します。"
 	}
 	"RPG_SetOutlineColorTeal"
 	{
-		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}藍綠色 {default}!"
+		"jp"		"{olive} {green} は、アウトラインの色を {default}: {green} ティール {default} に変更します。"
 	}
 	"RPG_SetOutlineColorPink"
 	{
-		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}粉红色 {default}!"
+		"jp"		"{olive} {green} は、アウトラインの色を {default}: {green} ピンク {default} に変更します。"
 	}
 	"RPG_SetOutlineColorPurple"
 	{
-		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}紫色 {default}!"
+		"jp"		"{olive} {green} は、アウトラインの色を {default}: {green} 紫 {default} に変更します。"
 	}
 	"RPG_SetOutlineColorWhite"
 	{
-		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}白色 {default}!"
+		"jp"		"{olive} {green} は、アウトラインの色を {default}: {green} 白 {default} に変更します。"
 	}
 	"RPG_SetOutlineColorGold"
 	{
-		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}金黄色 {default}!"
+		"jp"		"{olive} {green} は、アウトラインの色を {default}: {green} ゴールデンイエロー {default} に変更します。"
 	}
 	"RPG_SetOutlineColorRainbow"
 	{
-		"jp"		"{olive}你 {green}将轮廓颜色改为{default}: {green}彩虹色 {default}!"
+		"jp"		"{olive} あなたは {green} 輪郭の色を {default} に変更します: {green} 虹色 {default}!"
 	}
 	"RPG_SetOutlineColorCustomOutline"
 	{
-		"jp"		"{olive}你 {green}将轮廓颜色改为您的{default}: {green}定制颜色轮廓 {default}!"
+		"jp"		"{olive} あなた {green} アウトラインの色を {default} に変更します: {green} カスタム カラーのアウトライン {default}!"
 	}
 	"RPG_ClosedSurvivorProfile"
 	{
-		"jp"		"{olive} 生存者プロフィールを閉じました"
+		"jp"		"{olive}生存者プロフィールを閉じました"
 	}
 	"RPG_ChangeSkinColorGreen"
 	{
-		"jp"		"{olive}{green} の肌の色を {default} に変更します: {green} 緑 {default}!"
+		"jp"		"{olive} あなた、{green} 肌の色を {default}: {green} 緑 {default} に変更してください!"
 	}
 	"RPG_SetSkinColorBlue"
 	{
-		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}蓝色 {default}!"
+		"jp"		"{olive} あなたは {green} 肌の色を {default}: {green} ブルー {default} に変更します!"
 	}
 	"RPG_SetSkinColorBlueViolet"
 	{
-		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}蓝紫色 {default}!"
+		"jp"		"{olive} あなたは {green} 肌の色を {default}: {green} 青紫 {default} に変更します!"
 	}
 	"RPG_SetSkinColorCyan"
 	{
-		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}青色 {default}!"
+		"jp"		"{olive} あなた {green} は、肌の色を {default}: {green} シアン {default} に変更します。"
 	}
 	"RPG_SetSkinColorOrange"
 	{
-		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}橘黄色 {default}!"
+		"jp"		"{olive} あなた {green} は、肌の色を {default}: {green} オレンジ {default} に変更します。"
 	}
 	"RPG_SetSkinColorRed"
 	{
-		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}红色 {default}!"
+		"jp"		"{olive} あなた、{green} 肌の色を {default}: {green} 赤 {default} に変更してください!"
 	}
 	"RPG_SetSkinColorGray"
 	{
-		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}灰色 {default}!"
+		"jp"		"{olive} あなた {green} は、肌の色を {default}: {green} グレー {default} に変更します。"
 	}
 	"RPG_SetSkinColorYellow"
 	{
-		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}黄色 {default}!"
+		"jp"		"{olive} あなたは {green} 肌の色を {default}: {green} 黄色 {default} に変更します!"
 	}
 	"RPG_SetSkinColorLime"
 	{
-		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}酸橙色 {default}!"
+		"jp"		"{olive}you {green} 肌の色を {default}: {green}ライムオレンジ {default} に変更してください!"
 	}
 	"RPG_SetSkinColorMaroon"
 	{
-		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}栗色 {default}!"
+		"jp"		"{olive} あなた、{green} 肌の色を {default}: {green}マルーン {default} に変更してください!"
 	}
 	"RPG_SetSkinColorTeal"
 	{
-		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}藍綠色 {default}!"
+		"jp"		"{olive} あなたは {green} 肌の色を {default}: {green} 青緑 {default} に変更します!"
 	}
 	"RPG_SetSkinColorPink"
 	{
-		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}粉红色 {default}!"
+		"jp"		"{olive} {green} 肌の色を {default}: {green} ピンク {default} に変更してください!"
 	}
 	"RPG_SetSkinColorPurple"
 	{
-		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}紫色 {default}!"
+		"jp"		"{olive} あなた {green} 肌の色を {default}: {green} 紫 {default} に変更してください!"
 	}
 	"RPG_SetSkinColorBlack"
 	{
-		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}黑色 {default}!"
+		"jp"		"{olive} あなたは {green} 肌の色を {default}: {green} 黒 {default} に変更します!"
 	}
 	"RPG_SetSkinColorGold"
 	{
-		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}金黄色 {default}!"
+		"jp"		"{olive} あなたは {green} 肌の色を {default}: {green} ゴールデンイエロー {default} に変更します!"
 	}
 	"RPG_ChangeSkinColorTransparentColor"
 	{
-		"jp"		"{olive}肌の色を{green}から{default}に変更します：{green}透明色{default}！"
+		"jp"		"{olive} あなたは {green} 肌の色を {default} に変更します: {green} 透明色 {default}!"
 	}
 	"RPG_SetSkinColorCustomSkin"
 	{
-		"jp"		"{olive}你 {green}将皮肤颜色改为{default}: {green}您的定制皮肤 {default}!"
+		"jp"		"{olive} あなたの {green} スキンの色を {default} に変更します: {green} カスタム スキン {default}!"
 	}
 	"RPG_FirstFreePurchase"
 	{
-		"jp"		"{green}%N{lightgreen}第一次白嫖了一把%s，还剩%d的B数"
+		"jp"		"{green}%N{lightgreen} は初回無料で %s を入手しました。残りB数: %d"
 	}
 	"RPG_BoughtItemWithPoints"
 	{
-		"jp"		"{green}%N{lightgreen}B数-%d,购买了%s，还剩%d的B数"
+		"jp"		"{green}%N{lightgreen}B 番号 - %d、%s を購入、%d の B 番号がまだあります"
 	}
 	"RPG_MeleeWeaponSetMacheteGo"
 	{
-		"jp"		"{green} 外出時は近接武器がマチェーテに設定されています。"
+		"jp"		"{green}近接武器をマチェーテとして設定します。"
 	}
 	"RPG_MeleeWeaponSetFireAx"
 	{
-		"jp"		"{green} 外出時に近接武器が斧を発射するように設定されています。"
+		"jp"		"{green}外出するときは近接武器を火斧として設定します。"
 	}
 	"RPG_SetMeleeWeaponKnifeGo"
 	{
-		"jp"		"{green} 外出時は近接武器をナイフに設定します。"
+		"jp"		"{green}外出時は近接武器をナイフとしてセットします。"
 	}
 	"RPG_MeleeWeaponSetKatana"
 	{
-		"jp"		"{green} 近接武器は刀に設定されています。"
+		"jp"		"{green}近接武器を刀に設定します。"
 	}
 	"RPG_MeleeWeaponSetMagnum"
 	{
@@ -282,23 +282,23 @@
 	}
 	"RPG_SetMeleeWeaponGoingElectric"
 	{
-		"jp"		"{green} 外出時は近接武器をエレキギターにセット"
+		"jp"		"{green}近接武器をエレキギターとして設定します。"
 	}
 	"RPG_SetMeleeWeaponGoingBaton"
 	{
-		"jp"		"{green} バトンに出かけるときは近接武器をセットしてください"
+		"jp"		"{green}家を出るときは近接武器を警棒にセットしてください"
 	}
 	"RPG_SetOutgoingMeleeWeaponPitchfork"
 	{
-		"jp"		"{green} 発信用の近接武器を熊手にセットします"
+		"jp"		"{green}発信用の近接武器を熊手にセットします"
 	}
 	"RPG_SetExitMeleeWeaponShovel"
 	{
-		"jp"		"{green} 出口近接武器をシャベルに設定します"
+		"jp"		"{green}近接武器をシャベルとして設定します。"
 	}
 	"RPG_SetMeleeWeaponGoingSmall"
 	{
-		"jp"		"{green} 外出時は近接武器を小型ピストルにセットしてください"
+		"jp"		"{green}外出時は近接武器を小型ピストルにセットしてください"
 	}
 	"RPG_SetExitMeleeWeaponPan"
 	{
@@ -306,15 +306,15 @@
 	}
 	"RPG_SetMeleeWeaponGoingCrowbar"
 	{
-		"jp"		"{green} バールに出かけるときは近接武器をセットしてください"
+		"jp"		"{green}出口近接武器をバールに設定します"
 	}
 	"RPG_SetMeleeWeaponCricketBat"
 	{
-		"jp"		"{green} 家を出るときに近接武器をクリケットのバットに設定します"
+		"jp"		"{green}近接武器をクリケットのバットとして設定します。"
 	}
 	"RPG_CanceledMeleeWeaponGoing"
 	{
-		"jp"		"{green} 外出時に近接武器をキャンセルしました"
+		"jp"		"{green}外出時に近接武器をキャンセルしました"
 	}
 	"RPG_MeleeWeaponSettingFailedExceeded"
 	{

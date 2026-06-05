@@ -2,18 +2,18 @@
 {
 	"Tag"
 	{
-		"vi"		"[ {olive} Teamflip {default} ]"
+		"vi"		"[{olive}Teamflip{default}]"
 	}
 	"FlippedSurvivor"
 	{
-		"vi"		"{green} %s {default} đã lật đổ một đội và nằm trong đội {default} Người sống sót {blue}!"
+		"vi"		"{green}%s{default} đã chọn ngẫu nhiên một đội, đó là đội sống sót {blue} {default}!"
 	}
 	"FlippedInfected"
 	{
-		"vi"		"{green} %s {default} đã lật đổ một đội và nằm trong đội {default} bị nhiễm {red}!"
+		"vi"		"{green}%s{default} đã chọn ngẫu nhiên một đội, đó là đội bị nhiễm {red} {default}!"
 	}
 	"Wait"
 	{
-		"vi"		"[Teamflip] Này anh bạn, chậm lại đi. Đợi ít nhất %d giây."
+		"vi"		"[Teamflip] Này, chậm lại đi anh bạn. Đợi ít nhất %d giây."
 	}
 }

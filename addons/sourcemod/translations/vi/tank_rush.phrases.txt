@@ -2,18 +2,18 @@
 {
 	"Tag"
 	{
-		"vi"		"{red}[{default}NoTankRush{red}]"
+		"vi"		"{red} [ {default} NoTankRush {red}]"
 	}
 	"freeze"
 	{
-		"vi"		"{red}Tank {default}đã xuất hiện. {olive}Đang đóng băng {default}điểm khoảng cách!"
+		"vi"		"{red}Tank {default} đã được tạo. {olive} đã đóng băng các điểm khoảng cách {default}!"
 	}
 	"unfreeze"
 	{
-		"vi"		"{red} {default}đã chết. {olive}rã đông {default}!"
+		"vi"		"{red}Tank {default} đã chết. {olive} không đóng băng khoảng cách {default} phút!"
 	}
 	"saferoom"
 	{
-		"vi"		"{red} {default}đã vào được phòng an toàn. {olive}rã đông {default}!"
+		"vi"		"{red} Người sống sót {default} đã đến được cổng an toàn. {olive} Giải phóng {default} Khoảng cách phút!"
 	}
 }

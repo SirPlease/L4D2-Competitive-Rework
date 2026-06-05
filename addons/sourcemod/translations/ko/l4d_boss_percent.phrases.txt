@@ -2,19 +2,19 @@
 {
 	"TagTank"
 	{
-		"ko"		"< {olive} 탱크 {default} >"
+		"ko"		"<{olive}Tank{default}>"
 	}
 	"TagWitch"
 	{
-		"ko"		"< {olive} 마녀 {default} >"
+		"ko"		"<{olive}Witch{default}>"
 	}
 	"TankOn"
 	{
-		"ko"		"탱크: %d%%"
+		"ko"		"Tank: %d%%"
 	}
 	"WitchOn"
 	{
-		"ko"		"마녀: %d%%"
+		"ko"		"Witch: %d%%"
 	}
 	"Disabled"
 	{
@@ -22,7 +22,7 @@
 	}
 	"StaticSpawn"
 	{
-		"ko"		"정적 생성"
+		"ko"		"자위"
 	}
 	"None"
 	{
@@ -30,26 +30,26 @@
 	}
 	"TankDisabled"
 	{
-		"ko"		"탱크: 비활성화"
+		"ko"		"Tank: 비활성화됨"
 	}
 	"TankStatic"
 	{
-		"ko"		"탱크: 정적 생성"
+		"ko"		"Tank: 고정 위치"
 	}
 	"TankNone"
 	{
-		"ko"		"탱크: 없음"
+		"ko"		"Tank: 없음"
 	}
 	"WitchDisabled"
 	{
-		"ko"		"마녀: 장애인"
+		"ko"		"Witch: 비활성화됨"
 	}
 	"WitchStatic"
 	{
-		"ko"		"마녀: 정적 산란"
+		"ko"		"Witch: 고정 위치"
 	}
 	"WitchNone"
 	{
-		"ko"		"마녀: 없음"
+		"ko"		"Witch: 없음"
 	}
 }

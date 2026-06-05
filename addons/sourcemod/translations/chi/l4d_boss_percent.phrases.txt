@@ -2,19 +2,19 @@
 {
 	"TagTank"
 	{
-		"chi"		"< {olive} 坦克 {default} >"
+		"chi"		"<{olive}Tank{default}>"
 	}
 	"TagWitch"
 	{
-		"chi"		"< {olive} 魔女{default} >"
+		"chi"		"<{olive}Witch{default}>"
 	}
 	"TankOn"
 	{
-		"chi"		"坦克：%d%%"
+		"chi"		"Tank: %d%%"
 	}
 	"WitchOn"
 	{
-		"chi"		"女巫：%d%%"
+		"chi"		"Witch: %d%%"
 	}
 	"Disabled"
 	{

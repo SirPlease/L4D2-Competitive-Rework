@@ -2,54 +2,54 @@
 {
 	"TagTank"
 	{
-		"zho"		"< {olive} 坦克 {default} >"
+		"zho"		"<{olive}Tank{default}>"
 	}
 	"TagWitch"
 	{
-		"zho"		"< {olive} 魔女{default} >"
+		"zho"		"<{olive}Witch{default}>"
 	}
 	"TankOn"
 	{
-		"zho"		"坦克：%d%%"
+		"zho"		"Tank: %d%%"
 	}
 	"WitchOn"
 	{
-		"zho"		"女巫：%d%%"
+		"zho"		"Witch: %d%%"
 	}
 	"Disabled"
 	{
-		"zho"		"殘障人士"
+		"zho"		"已禁用"
 	}
 	"StaticSpawn"
 	{
-		"zho"		"靜態生成"
+		"zho"		"固定位置"
 	}
 	"None"
 	{
-		"zho"		"沒有任何"
+		"zho"		"無"
 	}
 	"TankDisabled"
 	{
-		"zho"		"坦克：已禁用"
+		"zho"		"Tank: 已禁用"
 	}
 	"TankStatic"
 	{
-		"zho"		"坦克：靜態生成"
+		"zho"		"Tank: 固定位置"
 	}
 	"TankNone"
 	{
-		"zho"		"坦克：無"
+		"zho"		"Tank: 無"
 	}
 	"WitchDisabled"
 	{
-		"zho"		"女巫：殘疾"
+		"zho"		"Witch: 已禁用"
 	}
 	"WitchStatic"
 	{
-		"zho"		"女巫：靜態生成"
+		"zho"		"Witch: 固定位置"
 	}
 	"WitchNone"
 	{
-		"zho"		"女巫：無"
+		"zho"		"Witch: 無"
 	}
 }

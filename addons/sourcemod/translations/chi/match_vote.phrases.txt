@@ -78,6 +78,6 @@
 	}
 	"VotePass_Changed"
 	{
-		"chi"		"比赛模式已更改..."
+		"chi"		"Matchmode Changed..."
 	}
 }

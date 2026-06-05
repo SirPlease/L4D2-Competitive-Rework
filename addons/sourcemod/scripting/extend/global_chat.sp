@@ -384,16 +384,35 @@ bool CanToggleLFGPreference(int client)
 void ShowGlobalChatMenu(int client)
 {
 	Menu menu = new Menu(MenuHandler_GlobalChatMenu);
-	menu.SetTitle("全服聊天接收设置\n普通全服: %s\n找队友提示: %s", g_bClientSeeGlobal[client] ? "接收" : "屏蔽", g_bClientSeeLFG[client] ? "接收" : "屏蔽");
-	menu.AddItem("toggle_global", g_bClientSeeGlobal[client] ? "屏蔽普通全服聊天" : "接收普通全服聊天");
+
+	char globalStatus[32], lfgStatus[32], text[192];
+	FormatGlobalChatStatus(client, g_bClientSeeGlobal[client], globalStatus, sizeof(globalStatus));
+	FormatGlobalChatStatus(client, g_bClientSeeLFG[client], lfgStatus, sizeof(lfgStatus));
+
+	FormatEx(text, sizeof(text), "%T", "GlobalChat_MenuTitle", client, globalStatus, lfgStatus);
+	menu.SetTitle("%s", text);
+
+	FormatEx(text, sizeof(text), "%T", g_bClientSeeGlobal[client] ? "GlobalChat_MenuBlockNormal" : "GlobalChat_MenuReceiveNormal", client);
+	menu.AddItem("toggle_global", text);
 
 	if (CanToggleLFGPreference(client))
-		menu.AddItem("toggle_lfg", g_bClientSeeLFG[client] ? "屏蔽找队友提示" : "接收找队友提示");
+	{
+		FormatEx(text, sizeof(text), "%T", g_bClientSeeLFG[client] ? "GlobalChat_MenuBlockLFG" : "GlobalChat_MenuReceiveLFG", client);
+		menu.AddItem("toggle_lfg", text);
+	}
 	else
-		menu.AddItem("lfg_locked", "找队友提示: 仅管理员可屏蔽", ITEMDRAW_DISABLED);
+	{
+		FormatEx(text, sizeof(text), "%T", "GlobalChat_MenuLFGLocked", client);
+		menu.AddItem("lfg_locked", text, ITEMDRAW_DISABLED);
+	}
 
 	menu.ExitButton = true;
 	menu.Display(client, MENU_TIME_FOREVER);
+}
+
+void FormatGlobalChatStatus(int client, bool enabled, char[] buffer, int maxlen)
+{
+	FormatEx(buffer, maxlen, "%T", enabled ? "GlobalChat_StatusReceive" : "GlobalChat_StatusBlock", client);
 }
 
 public int MenuHandler_GlobalChatMenu(Menu menu, MenuAction action, int client, int item)
@@ -416,13 +435,17 @@ public int MenuHandler_GlobalChatMenu(Menu menu, MenuAction action, int client, 
 	if (StrEqual(info, "toggle_global"))
 	{
 		g_bClientSeeGlobal[client] = !g_bClientSeeGlobal[client];
-		CPrintToChat(client, "%t", "GlobalChat_FullServerNormalFullServer", g_bClientSeeGlobal[client] ? "接收" : "屏蔽");
+		char status[32];
+		FormatGlobalChatStatus(client, g_bClientSeeGlobal[client], status, sizeof(status));
+		CPrintToChat(client, "%t", "GlobalChat_FullServerNormalFullServer", status);
 		ShowGlobalChatMenu(client);
 	}
 	else if (StrEqual(info, "toggle_lfg") && CanToggleLFGPreference(client))
 	{
 		g_bClientSeeLFG[client] = !g_bClientSeeLFG[client];
-		CPrintToChat(client, "%t", "GlobalChat_AllServersAskedTipTeammates", g_bClientSeeLFG[client] ? "接收" : "屏蔽");
+		char status[32];
+		FormatGlobalChatStatus(client, g_bClientSeeLFG[client], status, sizeof(status));
+		CPrintToChat(client, "%t", "GlobalChat_AllServersAskedTipTeammates", status);
 		ShowGlobalChatMenu(client);
 	}
 

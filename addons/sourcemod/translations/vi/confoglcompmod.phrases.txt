@@ -2,11 +2,11 @@
 {
 	"ConfoglCompMod_KickedIllegalValue"
 	{
-		"vi"		"{blue}[{default}Confogl{blue}] {olive}%L{default} đã bị kick vì có giá trị bất hợp pháp cho '{green}%s{default}' {blue}({default}%f{blue})"
+		"vi"		"{blue}[{default}Confogl{blue}] {olive}%L{default} đã bị kick vì '{green}%s{default}' có giá trị không hợp lệ {blue}({default}%f{blue})"
 	}
 	"ConfoglCompMod_MaximumSniperRifleEnforced"
 	{
-		"vi"		"{blue}[{default}Confogl{blue}]{default} Tối đa {blue}%d {olive}súng trường bắn tỉa {default}is được thi hành."
+		"vi"		"{blue}[{default}Confogl{blue}]{default} đã buộc phải giới hạn tối đa {blue}%d {olive} súng bắn tỉa {default}."
 	}
 	"ConfoglCompMod_CompetitionModeLoaded"
 	{
@@ -26,11 +26,11 @@
 	}
 	"ConfoglCompMod_LoadConfiguration"
 	{
-		"vi"		"{blue}[{default}Confogl{blue}]{default} Tải cấu hình '{olive}%s{default}'."
+		"vi"		"{blue}[{default}Confogl{blue}]{default} tải cấu hình '{olive}%s{default}'."
 	}
 	"ConfoglCompMod_ConfigurationNotFoundUseDefault"
 	{
-		"vi"		"{blue}[{default}Confogl{blue}]{default} cấu hình '{olive}%s{default}' không tìm thấy, hãy sử dụng cấu hình mặc định!"
+		"vi"		"Không tìm thấy cấu hình {blue}[{default}Confogl{blue}]{default} '{olive}%s{default}', hãy sử dụng cấu hình mặc định!"
 	}
 	"ConfoglCompMod_SpecifyConfigLoad"
 	{
@@ -38,15 +38,15 @@
 	}
 	"ConfoglCompMod_ConfigNotFound"
 	{
-		"vi"		"{blue}[{default}Confogl{blue}]{default} Cấu hình '{olive}%s{default}' không tìm thấy!"
+		"vi"		"Không tìm thấy {blue}[{default}Confogl{blue}]{default} Cấu hình \"{olive}%s{default}\"!"
 	}
 	"ConfoglCompMod_MapNotFound"
 	{
-		"vi"		"Không tìm thấy {blue}[{default}Confogl{blue}]{default} Bản đồ '{olive}%s{default}'!"
+		"vi"		"{blue}[{default}Confogl{blue}]{default} Không tìm thấy bản đồ '{olive}%s{default}'!"
 	}
 	"ConfoglCompMod_Round1Bonus"
 	{
-		"vi"		"{blue}[{default}Confogl{blue}]{default} Phần thưởng vòng 1: {olive}%d"
+		"vi"		"{blue}[{default}Confogl{blue}]{default} Điểm thưởng vòng 1: {olive}%d"
 	}
 	"ConfoglCompMod_CustomMaxDistance"
 	{
@@ -54,18 +54,18 @@
 	}
 	"ConfoglCompMod_Round2Bonus"
 	{
-		"vi"		"{blue}[{default}Confogl{blue}]{default} Phần thưởng vòng 2: {olive}%d"
+		"vi"		"{blue}[{default}Confogl{blue}]{default} Điểm thưởng vòng 2: {olive}%d"
 	}
 	"ConfoglCompMod_AverageHealth"
 	{
-		"vi"		"{blue}[{default}Confogl{blue}]{default} Sức khỏe trung bình: {olive}%.02f"
+		"vi"		"{blue}[{default}Confogl{blue}]{default} Lượng máu trung bình: {olive}%.02f"
 	}
 	"ConfoglCompMod_HealthBonus"
 	{
-		"vi"		"{blue}[{default}Confogl{blue}]{default} Phần thưởng sức khỏe: {olive}%d"
+		"vi"		"{blue}[{default}Confogl{blue}]{default} Điểm thưởng HP: {olive}%d"
 	}
 	"ConfoglCompMod_StaticSurvivalBonusPerSurvivor"
 	{
-		"vi"		"{blue}[{default}Confogl{blue}]{default} Tiền thưởng sinh tồn tĩnh cho mỗi người sống sót: {olive}%d"
+		"vi"		"{blue}[{default}Confogl{blue}]{default} Điểm thưởng sinh tồn cố định cho mỗi người sống sót: {olive}%d"
 	}
 }

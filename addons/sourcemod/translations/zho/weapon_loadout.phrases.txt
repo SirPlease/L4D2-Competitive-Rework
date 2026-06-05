@@ -2,38 +2,38 @@
 {
 	"Tag"
 	{
-		"zho"		"{blue} [ {green} 區 {blue} ] {default}:"
+		"zho"		"{blue}[{green}Zone{blue}]{default}:"
 	}
 	"OnlyFirstReadyup"
 	{
-		"zho"		"您只能在一輪的第一次準備期間要求投票。"
+		"zho"		"你只能在第一回合Readyup前使用這個命令."
 	}
 	"CannotCalled"
 	{
-		"zho"		"此時無法進行投票，請在一秒或五秒後重試。"
+		"zho"		"暫時無法發起一個投票，請稍等幾秒鐘..."
 	}
 	"NeedFull"
 	{
-		"zho"		"兩隊都需要滿員。"
+		"zho"		"所有隊伍需要滿人."
 	}
 	"SurvivorsGet"
 	{
-		"zho"		"倖存者得到%s？"
+		"zho"		"生還者獲得 %s?"
 	}
 	"BeforeReadyup"
 	{
-		"zho"		"在你準備離開之前投票沒有通過。"
+		"zho"		"準備完畢後無法使用."
 	}
 	"WeaponsSet"
 	{
-		"zho"		"倖存者武器套裝！"
+		"zho"		"生還者武器設定完成!"
 	}
 	"Welcome"
 	{
-		"zho"		"歡迎來到{blue}專區{green}獵人{default}。"
+		"zho"		"歡迎來到 {blue}Zone{green}Hunters模式{default}."
 	}
 	"Type"
 	{
-		"zho"		"在聊天中輸入{olive}!mode {default} 即可對使用的武器進行投票。"
+		"zho"		"在聊天欄輸入 {olive}!mode{default} 來投票選取武器的使用."
 	}
 }

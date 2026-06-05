@@ -6,26 +6,26 @@
 	}
 	"SurvivorMVPTest_DamageClient"
 	{
-		"vi"		"Thiệt hại của khách hàng: {olive}%d{default}"
+		"vi"		"Sát thương của người chơi: {olive}%d{default}"
 	}
 	"SurvivorMVPTest_SIKillsClient"
 	{
-		"vi"		"SI giết chết khách hàng: {olive}%d{default}"
+		"vi"		"Tiêu diệt đặc biệt của người chơi: {olive}%d{default}"
 	}
 	"SurvivorMVPTest_DamagePercentClient"
 	{
-		"vi"		"Phần trăm thiệt hại của khách hàng: {olive}%f{default}"
+		"vi"		"Tỷ lệ sát thương của người chơi: {olive}%f{default}"
 	}
 	"SurvivorMVPTest_CurrentRoundMVPClientCommon"
 	{
-		"vi"		"Khách hàng MVP vòng hiện tại (Thông thường): {olive}%N{default}"
+		"vi"		"Vòng cảm giác chung này MVP Người chơi: {olive}%N{default}"
 	}
 	"SurvivorMVPTest_CommonKillsClient"
 	{
-		"vi"		"Các lần giết phổ biến cho khách hàng: {olive}%d{default}"
+		"vi"		"Tiêu diệt cảm giác chung của người chơi: {olive}%d{default}"
 	}
 	"SurvivorMVPTest_CIPercentClient"
 	{
-		"vi"		"Phần trăm CI của khách hàng: {olive}%f{default}"
+		"vi"		"Tỷ lệ tiêu diệt theo lẽ thường của người chơi: {olive}%f{default}"
 	}
 }

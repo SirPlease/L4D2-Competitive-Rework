@@ -6,59 +6,59 @@
 	}
 	"Disabled"
 	{
-		"ko"		"플러그인은 {red} 비활성화된 {default}입니다."
+		"ko"		"플러그인 {red} 비활성화{default}"
 	}
 	"NoConsole"
 	{
-		"ko"		"이 명령은 콘솔에서 사용할 수 없습니다."
+		"ko"		"이 명령은 콘솔을 통해 사용할 수 없습니다."
 	}
 	"ConfoglNotAvailable"
 	{
-		"ko"		"Confogl은 {red} 사용할 수 없습니다 {default}."
+		"ko"		"경쟁 구성 {red}는 {default}가 존재하지 않습니다."
 	}
 	"CedaGame"
 	{
-		"ko"		"{red} cedapug 일치 {default}에서는 이 명령을 실행할 수 없습니다."
+		"ko"		"이 명령은 {red}cedapug 대회에서 {default}에 허용되지 않습니다."
 	}
 	"Title_Match"
 	{
-		"ko"		"매치 모드 선택:"
+		"ko"		"게임 모드 선택:"
 	}
 	"Title_Config"
 	{
-		"ko"		"%s 유형 선택:"
+		"ko"		"%s 모드 선택:"
 	}
 	"ConfigNotFound"
 	{
-		"ko"		"해당 모드에 대한 구성을 찾을 수 없습니다."
+		"ko"		"이 경쟁 모드를 찾을 수 없습니다."
 	}
 	"NoSpec"
 	{
-		"ko"		"관중은 투표를 시작할 수 없습니다."
+		"ko"		"방관자는 투표를 시작할 수 없습니다."
 	}
 	"MatchLoaded"
 	{
-		"ko"		"매치 모드가 이미 로드되었습니다!"
+		"ko"		"경쟁 모드가 로드되었습니다!"
 	}
 	"NotEnoughPlayers"
 	{
-		"ko"		"투표를 시작할 수 없습니다. {red} 플레이어가 부족합니다 {default} ( {red} %d {default} / {green} %d {default} )."
+		"ko"		"투표를 열 수 없습니다. {red}에는 {default}({red}%d{default}/{green}%d{default})에 대한 충분한 플레이어가 없습니다."
 	}
 	"Title_LoadConfig"
 	{
-		"ko"		"configl '%s' 구성을 로드하시겠습니까?"
+		"ko"		"'%s' 구성을 로드하시겠습니까?"
 	}
 	"VoteInProgress"
 	{
-		"ko"		"{red} 투표 진행 중 {default}, {green} %d {default} 초를 기다려주세요."
+		"ko"		"{red} 투표가 진행 중입니다. {default}, {green}%d{default}초만 기다려주세요."
 	}
 	"VotePass_Loading"
 	{
-		"ko"		"매치 모드 로드 중..."
+		"ko"		"경쟁 구성을 로드하는 중입니다..."
 	}
 	"MatchNotLoaded"
 	{
-		"ko"		"{red} 일치 모드 {default}가 로드되지 않았습니다."
+		"ko"		"{red} 일치 구성 {default}가 로드되지 않았습니다."
 	}
 	"PlayersConnecting"
 	{
@@ -66,18 +66,18 @@
 	}
 	"Title_OffConfogl"
 	{
-		"ko"		"Confogl을 끄시겠습니까?"
+		"ko"		"일치 구성이 일치합니까?"
 	}
 	"VotePass_Unloading"
 	{
-		"ko"		"구성 언로드 중..."
+		"ko"		"경쟁 구성을 제거하는 중..."
 	}
 	"Title_ChangeConfogl"
 	{
-		"ko"		"configl 구성을 ' %s '로 변경하시겠습니까?"
+		"ko"		"경쟁 구성을 '%s' 모드로 변경하시겠습니까?"
 	}
 	"VotePass_Changed"
 	{
-		"ko"		"매치 모드가 변경되었습니다..."
+		"ko"		"경쟁 모드가 변경되었습니다."
 	}
 }

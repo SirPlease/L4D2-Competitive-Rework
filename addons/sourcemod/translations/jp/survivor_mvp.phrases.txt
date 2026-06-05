@@ -2,19 +2,19 @@
 {
 	"Tag"
 	{
-		"jp"		"{blue} [ {default} MVP {blue} ] {default}"
+		"jp"		"{blue}[{default}MVP{blue}]{default}"
 	}
 	"YourRankSI"
 	{
-		"jp"		"{blue} ランク {green} SI: {olive} # %d {blue} ( {default} %d {green} dmg {blue} [ {default} %.0f%% {blue} ] {default}, %d {green} は {blue} をキルします[ {default} %.0f%% {blue} ])"
+		"jp"		"{green} 特別感 {blue} ランク：{olive}#%d {blue}({default}%d {green} ダメージ{blue}[{default}%.0f%%{blue}]{default}、%d {green} {blue}[{default}%.0f%%{blue}])をキルします"
 	}
 	"YourRankCI"
 	{
-		"jp"		"{blue} ランク {green} CI: {olive} # %d {blue} ( {default} %d {green} 共通 {blue} [ {default} %.0f%% {blue} ])"
+		"jp"		"{green} ゾンビ {blue} ランキング: {olive}#%d {blue}({default}%d {green} ゾンビ{blue}[{default}%.0f%%{blue}])"
 	}
 	"YourRankFF"
 	{
-		"jp"		"{blue} ランク {green} FF: {olive} # %d {blue} ( {default} %d {green} フレンドリーファイア {blue} [ {default} %.0f%% {blue} ])"
+		"jp"		"{green} ブラックガン {blue} ランキング: {olive}#%d {blue}({default}%d {green} 味方ダメージ{blue}[{default}%.0f%%{blue}])"
 	}
 	"BotName"
 	{
@@ -22,62 +22,62 @@
 	}
 	"NobodyName"
 	{
-		"jp"		"{blue} ( {default} 誰も {blue} )"
+		"jp"		"{blue}({default}誰もいない {blue})"
 	}
 	"NotEnoughAction"
 	{
-		"jp"		"{blue} ( {default} はまだ十分なアクションがありません {blue} )"
+		"jp"		"{blue} ({default} には十分な操作がありません {blue})"
 	}
 	"ReportSI_Absolute"
 	{
-		"jp"		"{green} SI: {olive} %s {blue} ( {default} %d {green} dmg {default} 、 %d {green} kills {blue} )"
+		"jp"		"{green} 特殊センス: {olive}%s {blue}({default}%d {green} ダメージ {default}、%d {green} キル {blue})"
 	}
 	"ReportSI_Percent"
 	{
-		"jp"		"{green} SI: {olive} %s {blue} ( {green} dmg {blue} [ {default} %.0f%% {blue} ] {default} 、 {green} は {blue} をキルします [ {default} %.0f%% {blue} ])"
+		"jp"		"{green} 特殊センス: {olive}%s {blue}({green} ダメージ {blue}[{default}%.0f%%{blue}]{default}、{green} キル{blue}[{default}%.0f%%{blue}])"
 	}
 	"ReportSI_Full"
 	{
-		"jp"		"{green} SI: {olive} %s {blue} ( {default} %d {green} dmg {blue} [ {default} %.0f%% {blue} ] {default}, %d {green} は {blue} をキルします [ {default} %.0f%% {blue} ])"
+		"jp"		"{green} 特殊センス: {olive}%s {blue}({default}%d {green} ダメージ {blue}[{default}%.0f%%{blue}]{default}、 %d {green} {blue} をキル [{default}%.0f%%{blue}])"
 	}
 	"ReportSI_Nobody"
 	{
-		"jp"		"{green} SI: {blue} ( {default} 誰も {blue} )"
+		"jp"		"{green} 特別感: {blue} ({default} なし {blue})"
 	}
 	"ReportCI_Absolute"
 	{
-		"jp"		"{green} CI: {olive} %s {blue} ( {default} %d {green} 共通 {blue} )"
+		"jp"		"{green} ゾンビ: {olive}%s {blue}({default}%d {green}ゾンビ {blue})"
 	}
 	"ReportCI_Percent"
 	{
-		"jp"		"{green} CI: {olive} %s {blue} ( {green} 共通 {blue} [ {default} %.0f%% {blue} ])"
+		"jp"		"{green} ゾンビ: {olive}%s {blue}({green} ゾンビ {blue}[{default}%.0f%%{blue}])"
 	}
 	"ReportCI_Full"
 	{
-		"jp"		"{green} CI: {olive} %s {blue} ( {default} %d {green} 共通 {blue} [ {default} %.0f%% {blue} ])"
+		"jp"		"{green} ゾンビ: {olive}%s {blue}({default}%d {green} ゾンビ {blue}[{default}%.0f%%{blue}])"
 	}
 	"NoFF"
 	{
-		"jp"		"{blue} ( {default} フレンドリーファイアはまったくありません! {blue} )"
+		"jp"		"{blue} ({default} には黒い銃がまったくありません! {blue})"
 	}
 	"ReportFF_Absolute"
 	{
-		"jp"		"{green} FF: {olive} %s {blue} ( {default} %d {green} フレンドリーファイア {blue} )"
+		"jp"		"{green} 味方ダメージ: {olive}%s {blue}({default}%d {green} 味方ダメージ {blue})"
 	}
 	"ReportFF_Percent"
 	{
-		"jp"		"{green} FF: {olive} %s {blue} ( {green} フレンドリーファイア {blue} [ {default} %.0f%% {blue} ])"
+		"jp"		"{green} 味方ダメージ: {olive}%s {blue}({green} 味方ダメージ {blue}[{default}%.0f%%{blue}])"
 	}
 	"ReportFF_Full"
 	{
-		"jp"		"{green} FF: {olive} %s {blue} ( {default} %d {green} フレンドリーファイア {blue} [ {default} %.0f%% {blue} ])"
+		"jp"		"{green} 味方ダメージ: {olive}%s {blue}({default}%d {green} 味方ダメージ {blue}[{default}%.0f%%{blue}])"
 	}
 	"SurvivorMVP_PharmacyMVPStatisticsHeader"
 	{
-		"jp"		"{blue}[{default}薬局MVP統計 {blue}]"
+		"jp"		"{blue}[{default}医薬品MVP統計{blue}]"
 	}
 	"SurvivorMVP_PharmacyMVPStatisticsLine"
 	{
-		"jp"		"{olive}特感{green}%2d {olive}丧尸{green}%3d {olive}黑/被黑{green}%2d/%2d {olive}伤害{green}%4d {default}%N"
+		"jp"		"{olive} 特殊センス {green}%2d {olive} 一般センス {green}%3d {olive} 味方傷害/負傷 {green}%2d/%2d {olive}ポイント{green}%4d {default}%N"
 	}
 }

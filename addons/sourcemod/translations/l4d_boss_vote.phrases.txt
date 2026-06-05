@@ -137,6 +137,6 @@
 	"RoundNotReachLimit"
 	{
 		"#format"	"{1:i}"
-		"en"		"At this level of difficulty, you want to skip class right away? No! (You still need to try {blue}{1} times {default} and fail before you can use the {olive}boss voting function {default})."
+		"en"		"This difficulty does not allow Boss voting yet. You still need to try and fail {blue}{1}{default} times before using {olive}Boss voting{default}."
 	}
 }

@@ -22,15 +22,15 @@
 	}
 	"ConfoglCompMod_CompetitionConfigurationUninstalled"
 	{
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 比賽配置已卸載!"
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 比賽配置已解除安裝!"
 	}
 	"ConfoglCompMod_LoadConfiguration"
 	{
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 載入設定 '{olive}%s{default}'."
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 載入配置 '{olive}%s{default}'."
 	}
 	"ConfoglCompMod_ConfigurationNotFoundUseDefault"
 	{
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 設定 '{olive}%s{default}' 找不到, 使用預設設定!"
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 配置 '{olive}%s{default}' 沒找到, 使用預設配置!"
 	}
 	"ConfoglCompMod_SpecifyConfigLoad"
 	{
@@ -38,34 +38,34 @@
 	}
 	"ConfoglCompMod_ConfigNotFound"
 	{
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 找不到設定「{olive}%s{default}」！"
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 未找到配置“{olive}%s{default}”！"
 	}
 	"ConfoglCompMod_MapNotFound"
 	{
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 地圖「{olive}%s{default}」找不到！"
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 地圖“{olive}%s{default}”未找到！"
 	}
 	"ConfoglCompMod_Round1Bonus"
 	{
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 第 1 輪獎金：{olive}%d"
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 第 1 輪獎勵分：{olive}%d"
 	}
 	"ConfoglCompMod_CustomMaxDistance"
 	{
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 自訂最距離：{olive}%d"
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 自定義最大距離：{olive}%d"
 	}
 	"ConfoglCompMod_Round2Bonus"
 	{
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 第 2 輪獎金：{olive}%d"
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 第 2 輪獎勵分：{olive}%d"
 	}
 	"ConfoglCompMod_AverageHealth"
 	{
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 平均健康狀況：{olive}%.02f"
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 平均血量：{olive}%.02f"
 	}
 	"ConfoglCompMod_HealthBonus"
 	{
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 健康獎勵：{olive}%d"
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 血量獎勵分：{olive}%d"
 	}
 	"ConfoglCompMod_StaticSurvivalBonusPerSurvivor"
 	{
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 每位倖存者的靜態生存獎勵：{olive}%d"
+		"zho"		"{blue}[{default}Confogl{blue}]{default} 每個倖存者的固定生還獎勵分：{olive}%d"
 	}
 }

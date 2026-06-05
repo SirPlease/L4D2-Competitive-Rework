@@ -186,7 +186,7 @@
 	}
 	"Rotate 45 degree (X axys)"
 	{
-		"zho"		"選轉 40 度 (X 軸)"
+		"zho"		"選轉 45 度 (X 軸)"
 	}
 	"Rotate 90 degree (X axys)"
 	{
@@ -222,7 +222,7 @@
 	}
 	"Rotate 45 degree (Y axys)"
 	{
-		"zho"		"選轉 40 度 (Y 軸)"
+		"zho"		"選轉 45 度 (Y 軸)"
 	}
 	"Rotate 90 degree (Y axys)"
 	{
@@ -258,7 +258,7 @@
 	}
 	"Rotate 45 degree (Z axys)"
 	{
-		"zho"		"選轉 40 度 (Z 軸)"
+		"zho"		"選轉 45 度 (Z 軸)"
 	}
 	"Rotate 90 degree (Z axys)"
 	{
@@ -387,7 +387,7 @@
 	"The last spawned object index is not an object anymore!"
 	{
 		"#format"	"{1:d}"
-		"zho"		"上一個生成的物件 {1} 已經不再是一個合法的東西!"
+		"zho"		"最後生成的物體索引 {1} 已不再是有效物體！"
 	}
 	"The last object is not valid anymore"
 	{
@@ -395,7 +395,7 @@
 	}
 	"You haven't spawned anything yet"
 	{
-		"zho"		"你還沒生成過任何物件，You idiot!"
+		"zho"		"你還沒生成過任何物件，草包"
 	}
 	"The file already exists."
 	{

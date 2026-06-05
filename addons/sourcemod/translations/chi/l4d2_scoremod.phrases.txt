@@ -2,7 +2,7 @@
 {
 	"L4D2Scoremod_Round1Bonus"
 	{
-		"chi"		"{blue}[{default}!{blue}] {default}R圆{blue}1 {default}奖金：{olive}%d"
+		"chi"		"{blue}[{default}!{blue}] {default}第 {blue}1 {default}回合奖励分：{olive}%d"
 	}
 	"L4D2Scoremod_CustomMaxDistance"
 	{
@@ -10,18 +10,18 @@
 	}
 	"L4D2Scoremod_Round2Bonus"
 	{
-		"chi"		"{blue}[{default}!{blue}] {default}R圆{blue}2 {default}奖金：{olive}%d"
+		"chi"		"{blue}[{default}!{blue}] {default}第 {blue}2 {default}回合奖励分：{olive}%d"
 	}
 	"L4D2Scoremod_Difference"
 	{
-		"chi"		"{red}[{default}!{red}] {default}区别：{olive}%d"
+		"chi"		"{red}[{default}!{red}] {default}差值：{olive}%d"
 	}
 	"L4D2Scoremod_Round1BonusDifference"
 	{
-		"chi"		"{blue}[{default}!{blue}] {default}R圆{blue}1 {default}奖金：{olive}%d {default}({green}区别： {olive}%d{default}）"
+		"chi"		"{blue}[{default}!{blue}] {default}第 {blue}1 {default}回合奖励分：{olive}%d {default}({green}差值：{olive}%d{default})"
 	}
 	"L4D2Scoremod_HealthBonus"
 	{
-		"chi"		"{blue}[{default}!{blue}] {default}健康奖励：{olive}%d"
+		"chi"		"{blue}[{default}!{blue}] {default}血量奖励分：{olive}%d"
 	}
 }

@@ -2,19 +2,19 @@
 {
 	"TagRage"
 	{
-		"chi"		"{red} < {default} 坦克狂暴 {red} >"
+		"chi"		"{red}<{default}Tank 控制{red}>"
 	}
 	"Refilled"
 	{
-		"chi"		"{default} ( {green} %N {default} 的) {olive} 愤怒计 {red} 补充装"
+		"chi"		"{default}({green}%N{default}) 的 {olive}控制条{red}已恢复"
 	}
 	"RefilledBot"
 	{
-		"chi"		"{olive} 愤怒计 {red} 补充装"
+		"chi"		"{olive}控制条{red}已恢复"
 	}
 	"TagSelection"
 	{
-		"chi"		"{red} < {default} 坦克选择 {red} >"
+		"chi"		"{red}<{default}Tank 选择{red}>"
 	}
 	"YouBecomeTank"
 	{
@@ -22,47 +22,47 @@
 	}
 	"BecomeTank"
 	{
-		"chi"		"{olive}%N {default}将成为 {red}坦克！"
+		"chi"		"{olive}%s{default} 将会成为 {red}Tank{default}!"
 	}
 	"TagControl"
 	{
-		"chi"		"{green} [ {olive} 坦克控制 {green} ]"
+		"chi"		"{green}[{olive}Tank 控制{green}]"
 	}
 	"InvalidTarget"
 	{
-		"chi"		"{default} 目标无效。无法给予坦克"
+		"chi"		"{default}目标无效，无法分配 Tank"
 	}
 	"NoInfected"
 	{
-		"chi"		"{olive} %N {default} 不在受感染团队中。无法给予坦克"
+		"chi"		"{olive}%N {default}不在感染者队伍，无法分配 Tank"
 	}
 	"HintText"
 	{
-		"chi"		"愤怒计重新填充"
+		"chi"		"控制条已补满"
 	}
 	"L4DTankControlEq_TankRageMeterRefilled"
 	{
-		"chi"		"{red}<{default}T坦克怒气{red}> {olive}R怒气计{red}补充装"
+		"chi"		"{red}<{default}Tank 控制{red}> {olive}控制条{red}已恢复"
 	}
 	"L4DTankControlEq_TankRageMeterRefilled_2"
 	{
-		"chi"		"{red}<{default}T坦克愤怒{red}> {default}({green}%N{default}'s) {olive}R愤怒计{red}重新填充"
+		"chi"		"{red}<{default}Tank 控制{red}> {default}({green}%N{default}) 的 {olive}控制条{red}已恢复"
 	}
 	"L4DTankControlEq_TankSelectionBecomeTank"
 	{
-		"chi"		"{red}<{default}T坦克选择{red}> {green}您的{default}将成为{red}T坦克{default}！"
+		"chi"		"{red}<{default}Tank 选择{red}> {green}你{default} 将成为 {red}Tank{default}!"
 	}
 	"L4DTankControlEq_TankSelectionBecomeTank_2"
 	{
-		"chi"		"{red}<{default}T坦克选择{red}> {olive}%N {default}将成为{red}T坦克！"
+		"chi"		"{red}<{default}Tank 选择{red}> {olive}%N {default}将成为 {red}Tank{default}!"
 	}
 	"L4DTankControlEq_TankControlInvalidTargetUnable"
 	{
-		"chi"		"{green}[{olive}T坦克控制{green}] {default}无效目标。无法给予坦克"
+		"chi"		"{green}[{olive}Tank 选择{green}] {default}目标无效，无法分配 Tank"
 	}
 	"L4DTankControlEq_TankControlNotInfectedTeam"
 	{
-		"chi"		"{green} [ {olive} 坦克控制 {green} ] {olive} %N {default} 不在受感染队伍中。无法给予坦克"
+		"chi"		"{green}[{olive}Tank 选择{green}] {olive}%N {default}不在感染者队伍，无法分配 Tank"
 	}
 	"Hit_RageMeterRefilled"
 	{

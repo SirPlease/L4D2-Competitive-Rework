@@ -2,7 +2,7 @@
 {
 	"Tag"
 	{
-		"chi"		"[{olive}团队翻转{default}]"
+		"chi"		"[{olive}Teamflip{default}]"
 	}
 	"FlippedSurvivor"
 	{

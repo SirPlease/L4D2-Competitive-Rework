@@ -2,27 +2,27 @@
 {
 	"L4D2Playstats_UseStatsTypeRoundGame"
 	{
-		"zho"		"{default}使用：/stats [<類型>] [{olive}圓形{default}/{olive}遊戲{default}/{olive}團隊{default}/{olive}全部{default}/{olive}其他{default}]"
+		"zho"		"{default}使用：/stats [<型別>] [{olive}round{default}/{olive}game{default}/{olive}team{default}/{olive}all{default}/{olive}other{default}]"
 	}
 	"L4D2Playstats_StatsType"
 	{
-		"zho"		"{default} 或：/stats [<類型>] [{olive}r{default}/{olive}g{default}/{olive}t{default}/{olive}a{default}/{olive}o{default}]"
+		"zho"		"{default} 或：/stats [<型別>] [{olive}r{default}/{olive}g{default}/{olive}t{default}/{olive}a{default}/{olive}o{default}]"
 	}
 	"L4D2Playstats_TypeMVPSkillFFAcc"
 	{
-		"zho"		"{default} 其中 <類型> 是 '{green}MVP{default}', '{green}技能{default}', '{green}ff{default}', '{green}符合{default}'或'{green}訊息{default}'。 （更多資訊請參閱控制台）"
+		"zho"		"{default}，其中 <型別> 為“{green}mvp{default}”、“{green}skill{default}”、“{green}ff{default}”、“{green}acc{default}”或'{green}inf{default}'。 （更多資訊請參見控制檯）"
 	}
 	"L4D2Playstats_StatsCommandUnknownArgumentType"
 	{
-		"zho"		"統計指令：未知參數：「%s」。輸入“/stats help”以取得可能的參數。"
+		"zho"		"統計命令：未知引數：“%s”。輸入“/stats help”以獲取可能的引數。"
 	}
 	"L4D2Playstats_PlayerStatisticsReset"
 	{
-		"zho"		"玩家統計數據重置。"
+		"zho"		"玩家統計資料重置。"
 	}
 	"L4D2Playstats_UseStatsAutoFlagsType"
 	{
-		"zho"		"{default}使用：{green}/stats_auto <flags>{default}。輸入 {green}/stats_auto help{default} 以了解更多資訊。"
+		"zho"		"{default}使用：{green}/stats_auto <flags>{default}。輸入 {green}/stats_auto help{default} 瞭解更多資訊。"
 	}
 	"L4D2Playstats_UseStatsAutoFlagsInteger"
 	{
@@ -30,19 +30,19 @@
 	}
 	"L4D2Playstats_SetFlags0UseServer"
 	{
-		"zho"		"{default}將標誌設為 0 以使用伺服器自動列印預設值；設定為 -1 則完全不顯示任何內容。"
+		"zho"		"{default}將標誌設定為 0 以使用伺服器自動列印預設值；設定為 -1 則根本不顯示任何內容。"
 	}
 	"L4D2Playstats_StatsPreviewNoFlagsSet"
 	{
-		"zho"		"{default}Stats 預覽：未設定標誌。首先使用 {green}/stats_auto <flags>{default} 設定標誌。輸入 {green}/stats_auto help{default} 以了解更多資訊。"
+		"zho"		"{default}Stats 預覽：未設定標誌。首先使用 {green}/stats_auto <flags>{default} 設定標誌。輸入 {green}/stats_auto help{default} 瞭解更多資訊。"
 	}
 	"L4D2Playstats_StatsPrefInvalidValueType"
 	{
-		"zho"		"統計首選項：無效值：「%s」。輸入“/stats_auto help”以獲取更多資訊。"
+		"zho"		"統計首選項：無效值：“%s”。輸入“/stats_auto help”以獲取更多資訊。"
 	}
 	"L4D2Playstats_StatsPrefNoRoundEnd"
 	{
-		"zho"		"{default} 統計首選：{green} 根本沒有圓端印刷 {default}。"
+		"zho"		"{default}統計偏好: {green}不列印回合結束統計{default}."
 	}
 	"L4D2Playstats_StatsPrefServerDefault"
 	{
@@ -54,7 +54,7 @@
 	}
 	"L4D2Playstats_UseStatsAutoTestGet"
 	{
-		"zho"		"{default}使用 {green}/stats_auto test{default} 取得報表預覽。"
+		"zho"		"{default}使用 {green}/stats_auto test{default} 獲取報告預覽。"
 	}
 	"L4D2Playstats_StatsPrefErrorCookieNot"
 	{
@@ -62,6 +62,6 @@
 	}
 	"L4D2Playstats_SeeURLListFlags"
 	{
-		"zho"		"{default}查看：{olive}https://github.com/Tabbernaut/L4D2-Plugins/blob/master/stats/README.md{default} 取得 flags 清單。"
+		"zho"		"{default}檢視：{olive}https://github.com/Tabbernaut/L4D2-Plugins/blob/master/stats/README.md{default} 獲取 flags 列表。"
 	}
 }

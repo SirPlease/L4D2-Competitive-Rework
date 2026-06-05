@@ -2,42 +2,42 @@
 {
 	"ERROR"
 	{
-		"zho"		"檢索您的遊戲時間失敗"
+		"zho"		"獲取你的遊戲時間失敗"
 	}
 	"PRIVATEPROFILE"
 	{
-		"zho"		"您需要公開您的 Steam 社群資料，以便我們提取您的遊戲時間"
+		"zho"		"你需要將 Steam 社群資料設為公開，伺服器才能檢查你的遊戲時長。"
 	}
 	"REJECTED"
 	{
 		"#format"	"{1:.1f},{2:.1f},{3:.1f}"
-		"zho"		"您需要在 myserverhours 中至少玩 {1} 小時，總遊戲時間 {2} 小時，並且總遊戲時間減去您最近兩週的遊戲時間超過 {3} 小時才能加入此伺服器"
+		"zho"		"你需要在本伺服器組至少遊玩 {1} 小時、總遊戲時長達到 {2} 小時，並且扣除最近兩週後的總時長達到 {3} 小時，才能進入此伺服器。"
 	}
 	"EXCLUDED"
 	{
 		"#format"	"{1:s}"
-		"zho"		"SteamId {1} 加入到排除列表"
+		"zho"		"SteamId {1} 玩家已經被加入白名單"
 	}
 	"INCLUDED"
 	{
 		"#format"	"{1:s}"
-		"zho"		"SteamId {1} 從排除清單中刪除"
+		"zho"		"SteamId {1} 玩家已經被刪除出白名單"
 	}
 	"PRIMENEEDED"
 	{
-		"zho"		"您需要擁有主要狀態才能在此伺服器上玩遊戲"
+		"zho"		"你需要擁有 Prime 狀態才能在此伺服器遊玩。"
 	}
 	"Veterans_PlayerDurationDetectionNotMeet"
 	{
-		"zho"		"{default}[{green}玩家長度檢測{default}] 你因為 {blue}不符合 {default}時長要求，只允許觀戰."
+		"zho"		"{default}[{green}玩家時長檢測{default}] 你因為 {blue}不滿足 {default}時長要求，只允許觀戰."
 	}
 	"Veterans_PlayerTimeDetectionPlayerTotal"
 	{
-		"zho"		"{default}[{green} 玩家時間偵測 {default}] 播放器 {blue}%N 總播放時間 {default} 是： {green}%.1f 小時 {default} （實際： {green}%.1f 小時 {default}）。此伺服器的總播放時間為： {green}%.1f 小時 {default}."
+		"zho"		"{default}[{green}玩家時長檢測{default}] 玩家 {blue}%N {default}總共遊玩時間共：{green}%.1f小時{default}(實際：{green}%.1f小時{default})，本伺服器內遊玩總時長為：{green}%.1f小時{default}."
 	}
 	"Veterans_PlayerTimeDetectionPlayerPlaying"
 	{
-		"zho"		"{default}[{green}玩家長度偵測{default}] 玩家 {blue}%N {default}遊玩時間：{green}未知{default}，本伺服器內遊玩總長度為：{green}%.1f小時{default}."
+		"zho"		"{default}[{green}玩家時長檢測{default}] 玩家 {blue}%N {default}遊玩時間：{green}未知{default}，本伺服器內遊玩總時長為：{green}%.1f小時{default}."
 	}
 	"Veterans_PlayerDurationDetectionAdministratorExempt"
 	{
@@ -45,14 +45,14 @@
 	}
 	"Veterans_PlayerDurationDetectionPlayerGame"
 	{
-		"zho"		"{default} [{green} 玩家时长检测 {default}] 播放器 {blue}%N {{default}在该服务器上的游戏时长 {green} 不符合標準 {default}，是电信服务器组的玩家，允许正常玩"
+		"zho"		"{default}[{green}玩家時長檢測{default}] 玩家 {blue}%N{default} 在本伺服器組遊戲時長{green}不達標{default}，但屬於電信伺服器組玩家，允許正常遊玩。"
 	}
 	"Veterans_PlayerTimeDetectionPlayerGame"
 	{
-		"zho"		"{default} [ {green} 玩家時間偵測 {default} ] 玩家 {blue} %N { {default} 在本伺服器的遊戲時間 {green} 不符合標準 {default} 電信伺服器群組玩家，允許觀看但不允許玩玩家"
+		"zho"		"{default}[{green}玩家時長檢測{default}] 玩家 {blue}%N{default} 在本伺服器組遊戲時長{green}不達標{default}，但屬於電信伺服器組玩家，只允許旁觀。"
 	}
 	"Veterans_PlayerTimeDetectionPlayerGameTime"
 	{
-		"zho"		"{default}[{green} 玩家時間偵測 {default}] 播放器 {blue}%N {default}在该服务器上的游戏时间 {green} 不符合標準 {default}，並非電信伺服器組玩家，已自動要求休息。"
+		"zho"		"{default}[{green}玩家時長檢測{default}] 玩家 {blue}%N{default} 在本伺服器組遊戲時長{green}不達標{default}，且不屬於電信伺服器組玩家，已自動請去休息。"
 	}
 }

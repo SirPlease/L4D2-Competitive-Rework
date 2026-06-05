@@ -2,14 +2,14 @@
 {
 	"HoldoutBonus_EventStartsBonusSecondsonds"
 	{
-		"chi"		"{default}Holdout 活动开始...（{green}%i{default} 奖金超过 {olive}%i{default} 秒）"
+		"chi"		"{default}Holdout 事件开始...（{green}%i{default} 奖励分，持续 {olive}%i{default} 秒）"
 	}
 	"HoldoutBonus_DynamicBonusSummary"
 	{
-		"chi"		"{default}保留奖金：%s"
+		"chi"		"{default}Holdout 奖励分：%s"
 	}
 	"HoldoutBonus_DynamicBonusSummary_2"
 	{
-		"chi"		"{default}保留奖金：{olive}%i{default} 中的 {green}%i{default}。"
+		"chi"		"{default}Holdout 奖励分：{green}%i{default}/{olive}%i{default}。"
 	}
 }

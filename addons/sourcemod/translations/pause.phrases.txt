@@ -11,8 +11,8 @@
 	}
 	"PauseCommand"
 	{
-		"#format"	"{1:N}"
-		"en"		"{olive}%N {blue}Paused{default}."
+		"#format"	"{1:N},{2:s}"
+		"en"		"{olive}{1}{default} {blue}Paused{default}. {2}"
 	}
 	"PauseAction"
 	{
@@ -77,7 +77,8 @@
 	}
 	"PauseLimit"
 	{
-		"en"		"You have reached your pause limit."
+		"#format"	"{1:d}"
+		"en"		"You have reached your pause limit ({green}{1}{default})."
 	}
 	"PauseDeferred"
 	{
@@ -187,7 +188,7 @@
 	}
 	"Pause_PauseChatMessage"
 	{
-		"en"		"(%s) {teamcolor}%N{default} :  %s"
+		"en"		"(%s) {teamcolor}%N{default} : %s"
 	}
 	"PauseCountFormat"
 	{

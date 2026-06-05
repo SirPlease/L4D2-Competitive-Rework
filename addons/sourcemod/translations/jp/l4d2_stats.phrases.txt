@@ -15,31 +15,31 @@
 	"MeleeSkeeted"
 	{
 		"#format"	"{1:N},{2:N}"
-		"jp"		"{olive} {1} {default} は {blue} の白兵戦でした {default} - {default} を {olive} でスキートしました {2} {default}"
+		"jp"		"{olive}{1}{default} {olive}{2}{default} {blue} 近接航空ブラスト{default} が使用"
 	}
 	"Headshotted"
 	{
 		"#format"	"{1:N},{2:N}"
-		"jp"		"{olive} {1} {default} は {blue} にヘッドショットされました {default} によって {olive} {2} {default}"
+		"jp"		"{olive}{1}{default} は {olive}{2}{default} {blue} によってヘッドショットで殺されました {default}"
 	}
 	"TeamSkeeted"
 	{
 		"#format"	"{1:N},{2:N},{3:d},{4:d},{5:s},{6:s}"
-		"jp"		"{olive} {1} {default} チームは {olive} {2} {default} を {blue} に対して {3} ダメージ {default} を {blue} {4} {default} にショット {5} しました。支援者: {olive} {6} {default}"
+		"jp"		"{olive}{1}{default} はチームで {olive}{2}{default} を skeet し、{blue}{4}{default} 発{5}で {blue}{3} ダメージ{default}を与えました。アシスト: {olive}{6}{default}"
 	}
 	"Skeeted"
 	{
 		"#format"	"{1:N},{2:N},{3:d},{4:s}"
-		"jp"		"{olive} {1} {default} スキート {olive} {2} {default} で {blue} {3} {default} ショット {4}"
+		"jp"		"{olive}{1}{default} は {blue}{3}{default} 発{4}で {olive}{2}{default} を skeet しました"
 	}
 	"ShutBoomer"
 	{
 		"#format"	"{1:N},{2:s},{3:.1f}"
-		"jp"		"{olive} {1} {default} はシャットダウンしました {olive} {2} {default} の {blue} {3} {default} のブーマー"
+		"jp"		"{olive}{1}{default} は、{blue}{3} {default} の数秒前に生成された Boomer [{olive}{2}{default}] を即座に強制終了します。"
 	}
 	"AlarmedCar"
 	{
-		"jp"		"{olive} %N {default} が {olive} をトリガーしました 警報車 {default}"
+		"jp"		"{olive}%N{default} 警報車に衝突しました {olive}{default}"
 	}
 	"AssistShotsPlural"
 	{
@@ -52,6 +52,6 @@
 	"assister"
 	{
 		"#format"	"{1:N},{2:d},{3:d},{4:s}"
-		"jp"		"{1} ( {2} / {3} ショット {4} )"
+		"jp"		"{1} ({2}/{3} 発{4})"
 	}
 }

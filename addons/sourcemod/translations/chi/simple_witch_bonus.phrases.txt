@@ -2,6 +2,6 @@
 {
 	"SimpleWitchBonus_KillingWitchAwardedPoints"
 	{
-		"chi"		"{default}杀死魔女已奖励：{olive}%d {default}积分！"
+		"chi"		"{default}击杀 Witch 获得：{olive}%d {default}奖励分！"
 	}
 }

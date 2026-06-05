@@ -6,7 +6,7 @@
 	}
 	"L4DRockLagcomp_RockHealth"
 	{
-		"chi"		"岩石健康度：%d\\%"
+		"chi"		"石头血量: %d\\%"
 	}
 	"L4DRockLagcomp_EntityLocation"
 	{
@@ -14,6 +14,6 @@
 	}
 	"L4DRockLagcomp_WeaponRangeDamageRockHealth"
 	{
-		"chi"		"武器：%s |范围：%.2f |损坏：%.1f |岩石健康：%.1f%%"
+		"chi"		"武器: %s | 范围: %.2f | 伤害: %.1f | 石头血量: %.1f%%"
 	}
 }

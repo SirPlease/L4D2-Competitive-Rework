@@ -6,7 +6,7 @@
 	}
 	"L4DRockLagcomp_RockHealth"
 	{
-		"ko"		"암석 상태: %d\\%"
+		"ko"		"스톤 HP: %d\\%"
 	}
 	"L4DRockLagcomp_EntityLocation"
 	{
@@ -14,6 +14,6 @@
 	}
 	"L4DRockLagcomp_WeaponRangeDamageRockHealth"
 	{
-		"ko"		"무기: %s | 범위: %.2f | 손상: %.1f | 암석 상태: %.1f%%"
+		"ko"		"무기: %s | 범위: %.2f | 손상: %.1f | 스톤 HP: %.1f%%"
 	}
 }

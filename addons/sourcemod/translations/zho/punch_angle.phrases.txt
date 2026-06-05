@@ -2,28 +2,28 @@
 {
 	"Select"
 	{
-		"zho"		"[打孔角度] 選擇一個選項來儲存您的設定並開啟/關閉後座力"
+		"zho"		"[Punch Angle] 選擇一個選項來儲存設定並開關後坐力"
 	}
 	"CookieSlected"
 	{
-		"#format"	"{1:s}"
-		"zho"		"[打孔角度] 打孔角度切換：{1:t}"
+		"#format"		"{1:s}"
+		"zho"		"[Punch Angle] 後坐力開關: {1}"
 	}
 	"On"
 	{
-		"zho"		"On"
+		"zho"		"開"
 	}
 	"Off"
 	{
-		"zho"		"離開"
+		"zho"		"關"
 	}
 	"Recoil_On"
 	{
-		"zho"		"[後座力] ON（無沖孔）"
+		"zho"		"[抖動] 已關閉（無視角抖動）"
 	}
 	"Recoil_Off"
 	{
-		"zho"		"[後座力] 關閉（原版）"
+		"zho"		"[抖動] 已開啟（原版效果）"
 	}
 	"PunchAngle_RecoilUsageRecoil01"
 	{

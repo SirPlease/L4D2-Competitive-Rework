@@ -2,7 +2,7 @@
 {
 	"models/infected/gibs/gibs.mdl"
 	{
-		"ko"		"손 깁"
+		"ko"		"한 손으로 하늘을 가리고"
 	}
 	"models/infected/limbs/exploded_boomer_head.mdl"
 	{
@@ -26,7 +26,7 @@
 	}
 	"models/props_fairgrounds/mr_mustachio.mdl"
 	{
-		"ko"		"무스타치오 씨"
+		"ko"		"비어드 씨"
 	}
 	"models/props_fortifications/orange_cone001_clientside.mdl"
 	{
@@ -46,23 +46,23 @@
 	}
 	"models/props_urban/dock_pylon_cap001.mdl"
 	{
-		"ko"		"도크 파일론"
+		"ko"		"부두 타워"
 	}
 	"models/props_urban/life_ring001.mdl"
 	{
-		"ko"		"라이프 링"
+		"ko"		"구명 부표"
 	}
 	"models/props_lighting/light_construction02.mdl"
 	{
-		"ko"		"건설 조명"
+		"ko"		"건축 조명"
 	}
 	"models/extras/info_speech.mdl"
 	{
-		"ko"		"연설 인용문"
+		"ko"		"채팅 풍선"
 	}
 	"models/infected/smoker_tongue_attach.mdl"
 	{
-		"ko"		"흡연자 혀"
+		"ko"		"Smoker 혀"
 	}
 	"models/props/de_inferno/ceiling_fan_blade.mdl"
 	{
@@ -74,35 +74,35 @@
 	}
 	"models/deadbodies/dead_male_civilian_radio.mdl"
 	{
-		"ko"		"민간 라디오"
+		"ko"		"무전기"
 	}
 	"models/infected/cim_riot_faceplate.mdl"
 	{
-		"ko"		"폭동 페이스플레이트"
+		"ko"		"방폭 커버"
 	}
 	"models/props_interiors/styrofoam_cups.mdl"
 	{
-		"ko"		"스티로폼 컵"
+		"ko"		"거품컵"
 	}
 	"models/props_shacks/bug_lamp01.mdl"
 	{
-		"ko"		"버그 램프 재퍼"
+		"ko"		"모기 킬러 램프"
 	}
 	"models/props_unique/grill_campground.mdl"
 	{
-		"ko"		"바비큐 그릴"
+		"ko"		"바베큐 그릴"
 	}
 	"models/props_unique/luggagecart01.mdl"
 	{
-		"ko"		"수하물 카트"
+		"ko"		"슈퍼마켓 트롤리"
 	}
 	"models/props_unique/spawn_apartment/lantern.mdl"
 	{
-		"ko"		"칸델라"
+		"ko"		"휴대용 램프"
 	}
 	"models/props_urban/exit_sign002.mdl"
 	{
-		"ko"		"출구 표지판"
+		"ko"		"종료 표시"
 	}
 	"models/props_urban/garden_hose001.mdl"
 	{
@@ -126,11 +126,11 @@
 	}
 	"models/props_fairgrounds/garbage_popcorn_box.mdl"
 	{
-		"ko"		"팝콘 상자"
+		"ko"		"팝콘"
 	}
 	"models/props_fairgrounds/gnome_closet.mdl"
 	{
-		"ko"		"그놈 옷장"
+		"ko"		"난쟁이 스탠드"
 	}
 	"models/props_fairgrounds/snake.mdl"
 	{
@@ -138,7 +138,7 @@
 	}
 	"models/props_interiors/toaster.mdl"
 	{
-		"ko"		"빵 굽는 기구"
+		"ko"		"빵 기계"
 	}
 	"models/props_unique/doll01.mdl"
 	{
@@ -146,11 +146,11 @@
 	}
 	"models/props_junk/garbage_hubcap01a.mdl"
 	{
-		"ko"		"허브 캡"
+		"ko"		"타이어 커버"
 	}
 	"models/props_mall/mall_mannequin_rhand.mdl"
 	{
-		"ko"		"마네킹 손"
+		"ko"		"모델 손"
 	}
 	"models/props_lab/desklamp01.mdl"
 	{
@@ -174,7 +174,7 @@
 	}
 	"models/props_urban/big_wheel001.mdl"
 	{
-		"ko"		"어린이 세발 자전거"
+		"ko"		"어린이 세발자전거"
 	}
 	"models/props_interiors/mounteddeerhead01.mdl"
 	{
@@ -182,7 +182,7 @@
 	}
 	"models/props_misc/pot-1.mdl"
 	{
-		"ko"		"소스 냄비"
+		"ko"		"팬"
 	}
 	"models/props_c17/metalpot002a.mdl"
 	{
@@ -194,7 +194,7 @@
 	}
 	"models/props/cs_militia/caseofbeer01.mdl"
 	{
-		"ko"		"맥주의 경우"
+		"ko"		"맥주 상자"
 	}
 	"models/props/cs_office/chair_office.mdl"
 	{
@@ -206,7 +206,7 @@
 	}
 	"models/props_fairgrounds/kiddyland_riderocket_small.mdl"
 	{
-		"ko"		"키디랜드 로켓"
+		"ko"		"어린이 놀이터 로켓"
 	}
 	"models/props_interiors/toilet_b_breakable01.mdl"
 	{
@@ -226,11 +226,11 @@
 	}
 	"models/props_urban/mega_phone001.mdl"
 	{
-		"ko"		"메가폰"
+		"ko"		"큰 스피커"
 	}
 	"models/props/de_train/de_train_floodlights_01.mdl"
 	{
-		"ko"		"투광등"
+		"ko"		"투광 조명"
 	}
 	"models/props_vehicles/tire001c_car.mdl"
 	{
@@ -242,7 +242,7 @@
 	}
 	"models/props/de_prodigy/fan.mdl"
 	{
-		"ko"		"팬"
+		"ko"		"터보팬"
 	}
 	"models/props_foliage/urban_pot_clay01.mdl"
 	{
@@ -262,7 +262,7 @@
 	}
 	"models/infected/jockey.mdl"
 	{
-		"ko"		"기수"
+		"ko"		"Jockey"
 	}
 	"models/items/l4d_gift.mdl"
 	{
@@ -282,11 +282,11 @@
 	}
 	"models/props/de_nuke/light_red2.mdl"
 	{
-		"ko"		"빨간색 격벽등"
+		"ko"		"빨간색 칸막이등"
 	}
 	"models/props_buildables/mine.mdl"
 	{
-		"ko"		"휠 휠캡"
+		"ko"		"허브 캡"
 	}
 	"models/props_cemetery/crypts_top01.mdl"
 	{
@@ -294,7 +294,7 @@
 	}
 	"models/props_misc/tea_pot-1.mdl"
 	{
-		"ko"		"차 주전자"
+		"ko"		"거품 주전자"
 	}
 	"models/props_fairgrounds/pyrotechnics_launcher.mdl"
 	{
@@ -302,7 +302,7 @@
 	}
 	"models/props_interiors/coffee_maker.mdl"
 	{
-		"ko"		"커피 메이커"
+		"ko"		"커피 머신"
 	}
 	"models/props_interiors/pot01a.mdl"
 	{
@@ -330,7 +330,7 @@
 	}
 	"models/props_lighting/flashlight_dropped_01.mdl"
 	{
-		"ko"		"달렉 플래시 라이트"
+		"ko"		"플래시"
 	}
 	"models/props_lighting/lightfixture03.mdl"
 	{
@@ -354,11 +354,11 @@
 	}
 	"models/weapons/arms/v_jockey_arms.mdl"
 	{
-		"ko"		"기수 발톱"
+		"ko"		"Jockey 발톱"
 	}
 	"models/v_models/weapons/v_claw_hulk.mdl"
 	{
-		"ko"		"탱크 발톱"
+		"ko"		"Tank 클로"
 	}
 	"models/w_models/weapons/w_he_grenade.mdl"
 	{
@@ -370,11 +370,11 @@
 	}
 	"models/w_models/weapons/w_eq_medkit.mdl"
 	{
-		"ko"		"메디킷 캡"
+		"ko"		"의료용 가방 캡"
 	}
 	"models/weapons/melee/w_riotshield.mdl"
 	{
-		"ko"		"폭동의 방패"
+		"ko"		"폭발 방패"
 	}
 	"models/props_skybox/boat_rescue_tug_sunshine.mdl"
 	{

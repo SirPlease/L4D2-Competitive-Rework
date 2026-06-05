@@ -2,26 +2,26 @@
 {
 	"L4D2Scoremod_Round1Bonus"
 	{
-		"vi"		"{blue}[{default}!{blue}] {default}Round {blue}1 {default}Tiền thưởng: {olive}%d"
+		"vi"		"{blue}[{default}!{blue}] {default} Số {blue}1 {default} Điểm thưởng vòng: {olive}%d"
 	}
 	"L4D2Scoremod_CustomMaxDistance"
 	{
-		"vi"		"{blue}[{default}!{blue}] {default}Khoảng cách tối đa tùy chỉnh: {olive}%d"
+		"vi"		"{blue}[{default}!{blue}] {default} Khoảng cách tối đa tùy chỉnh: {olive}%d"
 	}
 	"L4D2Scoremod_Round2Bonus"
 	{
-		"vi"		"{blue}[{default}!{blue}] {default}Round {blue}2 {default}Tiền thưởng: {olive}%d"
+		"vi"		"{blue}[{default}!{blue}] {default} Số {blue}2 {default} Điểm thưởng vòng: {olive}%d"
 	}
 	"L4D2Scoremod_Difference"
 	{
-		"vi"		"{red}[{default}!{red}] {default}Dsự khác biệt: {olive}%d"
+		"vi"		"{red}[{default}!{red}] {default}Chênh lệch: {olive}%d"
 	}
 	"L4D2Scoremod_Round1BonusDifference"
 	{
-		"vi"		"{blue}[{default}!{blue}] {default}Round {blue}1 {default}Tiền thưởng: {olive}%d {default}({green}Dkhác biệt: {olive}%d{default})"
+		"vi"		"{blue}[{default}!{blue}] {default} Số {blue}1 {default} Điểm thưởng vòng: {olive}%d {default}({green} chênh lệch: {olive}%d{default})"
 	}
 	"L4D2Scoremod_HealthBonus"
 	{
-		"vi"		"{blue}[{default}!{blue}] {default}Health Tiền thưởng: {olive}%d"
+		"vi"		"{blue}[{default}!{blue}] {default} Điểm thưởng HP: {olive}%d"
 	}
 }

@@ -3,6 +3,6 @@
 	"IncapSurSpawnAWitch"
 	{
 		"#format"	"{1:N}"
-		"zho"		"{olive} {1} {default} 下去並產生了一個女巫！"
+		"zho"		"{olive}{1} {default}倒地並生成了一隻 Witch!"
 	}
 }

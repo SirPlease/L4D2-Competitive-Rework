@@ -6,16 +6,16 @@
 	}
 	"NoCommonRemaining"
 	{
-		"ko"		"{red} {default} 공통이 남아 있지 않습니다!"
+		"ko"		"{red} 평범한 감염된 {default}는 없습니다!"
 	}
 	"CommonRemaining"
 	{
 		"#format"	"{1:i}"
-		"ko"		"{red} {1} {default} 공통 남은.."
+		"ko"		"{red}{1} {default} 일반 감염자는 남아있습니다.."
 	}
 	"FiniteEventStarted"
 	{
 		"#format"	"{1:i}"
-		"ko"		"{blue}제한된 좀비 웨이브{default}가 시작되었습니다! 이번 라운드의 일반 감염자는 총 {olive}{1}{default}마리입니다. 밀지 기다릴지는 당신의 선택입니다!"
+		"ko"		"{blue} 한정 좀비 웨이브 {default}가 시작되었습니다! 이번 라운드에는 {olive}{1}{default} 일반 감염자가 있습니다! 서두르거나 기다릴지 결정하세요!"
 	}
 }

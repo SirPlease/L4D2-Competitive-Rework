@@ -18,7 +18,7 @@
 	}
 	"WhileCapped"
 	{
-		"chi"		"{red} 上限期间没有观看 {default}！"
+		"chi"		"{red}被控时不能旁观{default}!"
 	}
 	"FixBot"
 	{

@@ -2,7 +2,7 @@
 {
 	"Tag"
 	{
-		"chi"		"[{olive}规范监听器{default}]"
+		"chi"		"[{olive}SpecListener{default}]"
 	}
 	"OnlySpec"
 	{
@@ -10,7 +10,7 @@
 	}
 	"PanelTitle"
 	{
-		"chi"		"规范监听器"
+		"chi"		"SpecListener"
 	}
 	"PanelEnable"
 	{

@@ -6,29 +6,29 @@
 	}
 	"TagPvE"
 	{
-		"ko"		"[{olive}피해 보고{default}]"
+		"ko"		"[{olive}부상 신고{default}]"
 	}
 	"HealthRemaining"
 	{
-		"#format"	"{1:s},{2:s},{3:d}"
-		"ko"		"{red}{1}{default}({green}{2}{default})의 체력이 {olive}{3}{default} 남았습니다!"
+		"#format"	"{1:N},{2:s},{3:d}"
+		"ko"		"{red}{1}{default}({green}{2}{default})와 {olive}{3}{default}가 남았습니다!"
 	}
 	"HealthRemainingAI"
 	{
 		"#format"	"{1:s},{2:d}"
-		"ko"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default}의 체력이 {olive}{2}{default} 남았습니다!"
+		"ko"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default} 건강의 {olive}{2}{default}포인트가 남았습니다!"
 	}
 	"UMad"
 	{
-		"ko"		"화낼 필요는 없어요..."
+		"ko"		"화내지 말고 다음번에는 머리를 노리세요..."
 	}
 	"Sad"
 	{
-		"ko"		"슬퍼 보이네요...."
+		"ko"		"우울해 보이는데...."
 	}
 	"Close"
 	{
-		"ko"		"아까웠어요!"
+		"ko"		"닫다!"
 	}
 	"NBad"
 	{
@@ -36,6 +36,6 @@
 	}
 	"AI"
 	{
-		"ko"		"AI"
+		"ko"		"일체 포함"
 	}
 }

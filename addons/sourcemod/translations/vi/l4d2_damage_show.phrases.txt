@@ -2,7 +2,7 @@
 {
 	"L4D2DamageShow_HUDSavedLocallyCookieQueued"
 	{
-		"vi"		"{olive}[HUD]{default} đã được lưu cục bộ (Cookie) và được xếp hàng đợi, đồng thời sẽ được ghi vào cơ sở dữ liệu sau khi quá trình tải hoàn tất."
+		"vi"		"{olive}[HUD]{default} đã được lưu vào cục bộ (Cookie) và được xếp hàng đợi, đồng thời sẽ được ghi vào cơ sở dữ liệu sau khi quá trình tải hoàn tất."
 	}
 	"L4D2DamageShow_HUDSettingsSavedLocallyCookie"
 	{
@@ -18,7 +18,7 @@
 	}
 	"L4D2DamageShow_HUDMenuCannotUsedAdministrator"
 	{
-		"vi"		"{olive}[HUD]{default} Menu này không thể được sử dụng vì các yêu cầu về Cờ của quản trị viên không được đáp ứng."
+		"vi"		"{olive}[HUD]{default} Yêu cầu cờ của quản trị viên không được đáp ứng và không thể sử dụng menu này."
 	}
 	"L4D2DamageShow_HUDSettingsSaved"
 	{
@@ -38,7 +38,7 @@
 	}
 	"L4D2DamageShow_SpectatorDisplayToggled"
 	{
-		"vi"		"{green}旁观显示{default}已切换：{olive}%s"
+		"vi"		"Người xem {green} cho thấy {default} đã được chuyển đổi: {olive}%s"
 	}
 	"L4D2DamageShow_OnlyAdministratorsWatchingCanUse"
 	{
@@ -46,6 +46,6 @@
 	}
 	"L4D2DamageShow_HUDFunctionDisabledAdministratorFlag"
 	{
-		"vi"		"{olive}[HUD]{default} Chức năng bị vô hiệu hóa: Yêu cầu cờ của quản trị viên (%s) không được đáp ứng."
+		"vi"		"{olive}[HUD]{default} Tính năng bị tắt: Yêu cầu cờ của quản trị viên không được đáp ứng (%s)."
 	}
 }

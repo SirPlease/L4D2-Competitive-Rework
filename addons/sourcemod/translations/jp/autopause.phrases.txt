@@ -2,24 +2,24 @@
 {
 	"Unpausing"
 	{
-		"jp"		"{blue}[{default}AutoPause{blue}] {default}すべての {green} クラッシュした {default} プレイヤーが再接続しました。{blue}一時停止を解除しています{default}!"
+		"jp"		"{blue} [{default} 自動一時停止 {blue}] {default} クラッシュしたすべての {green} {default} プレイヤーが再接続しました。 {blue} {default} 一時停止を解除してください!"
 	}
 	"Waiting"
 	{
 		"#format"	"{1:i},{2:t}"
-		"jp"		"{blue}[{default}AutoPause{blue}] {default}{olive}{1} {default}さらに待機中、自動の{blue}一時停止解除{default}前に{green}がクラッシュしました。{default}{2}!"
+		"jp"		"{blue}[{default} 自動一時停止 {blue}] {default} が待機しています {olive}{1} {default} 名 {green} がクラッシュしました {default}{2} が開始します {blue} が解除するために一時停止します{default}!"
 	}
 	"Crashed"
 	{
 		"#format"	"{1:N}"
-		"jp"		"{blue}[{default}AutoPause{blue}] {olive}{1} {default}游戏崩溃."
+		"jp"		"{blue}[{default}自動一時停止{blue}] {olive}{1} {default}ゲームがクラッシュしました。"
 	}
 	"players"
 	{
-		"jp"		"選手"
+		"jp"		"プレイヤー"
 	}
 	"player"
 	{
-		"jp"		"プレーヤー"
+		"jp"		"プレイヤー"
 	}
 }

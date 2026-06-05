@@ -2,22 +2,22 @@
 {
 	"L4DMultiWitches_WitchSpawnedMaxAlive"
 	{
-		"vi"		"%s Phù thủy sinh ra # %d, max = %d, còn sống: %i"
+		"vi"		"%s Witch tạo # %d, giá trị tối đa = %d, còn sống: %i"
 	}
 	"L4DMultiWitches_L4DWitchesStartTimerMin"
 	{
-		"vi"		"[l4d_witches]: Start_Timer. Tối thiểu: %f, Tối đa: %f"
+		"vi"		"[l4d_witches]: Bắt đầu hẹn giờ. Giá trị tối thiểu: %f, giá trị tối đa: %f"
 	}
 	"L4DMultiWitches_L4DWitchesAliveWitches"
 	{
-		"vi"		"[l4d_witches]: Phù thủy còn sống: %i"
+		"vi"		"[l4d_witches]: Witch còn sống: %i"
 	}
 	"L4DMultiWitches_L4DWitchesTimerTriggered"
 	{
-		"vi"		"[l4d_witches]: Đã kích hoạt bộ hẹn giờ"
+		"vi"		"[l4d_witches]: Hẹn giờ đã kích hoạt"
 	}
 	"L4DMultiWitches_L4DWitchesTrySpawn"
 	{
-		"vi"		"[l4d_witches]: Cố gắng sinh sản"
+		"vi"		"[l4d_witches]: Cố gắng tạo"
 	}
 }

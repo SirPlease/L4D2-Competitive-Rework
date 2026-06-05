@@ -2,90 +2,90 @@
 {
 	"TagRage"
 	{
-		"ko"		"{red} < {default} 탱커 레이지 {red} >"
+		"ko"		"{red}<{default}Tank 제어 {red}>"
 	}
 	"Refilled"
 	{
-		"ko"		"{default} ( {green} %N {default} 의) {olive} 분노 측정기 {red} 리필"
+		"ko"		"{default}({green}%N{default})의 {olive} 컨트롤 바 {red}가 복원되었습니다."
 	}
 	"RefilledBot"
 	{
-		"ko"		"{olive} 분노 측정기 {red} 리필"
+		"ko"		"{olive} 컨트롤 바 {red}가 복원되었습니다."
 	}
 	"TagSelection"
 	{
-		"ko"		"{red} < {default} 탱크 선택 {red} >"
+		"ko"		"{red}<{default}Tank {red} 선택>"
 	}
 	"YouBecomeTank"
 	{
-		"ko"		"{green} 당신의 {default}는 {red} 탱크 {default}가 될 것입니다!"
+		"ko"		"{green}You{default}는 {red}Tank{default}가 됩니다!"
 	}
 	"BecomeTank"
 	{
-		"ko"		"{olive} %N {default}는 {red} 탱크가 됩니다!"
+		"ko"		"{olive}%s{default}는 {red}Tank{default}가 됩니다!"
 	}
 	"TagControl"
 	{
-		"ko"		"{green} [ {olive} 탱크 제어 {green} ]"
+		"ko"		"{green}[{olive}Tank 제어 {green}]"
 	}
 	"InvalidTarget"
 	{
-		"ko"		"{default} 유효하지 않은 대상입니다. 탱크를 줄 수 없습니다"
+		"ko"		"{default} 대상이 잘못되어 할당할 수 없습니다."
 	}
 	"NoInfected"
 	{
-		"ko"		"{olive} %N {default}는 감염된 팀에 속하지 않습니다. 탱크를 줄 수 없습니다"
+		"ko"		"{olive}%N {default}는 감염된 팀에 속하지 않아 Tank에 할당될 수 없습니다."
 	}
 	"HintText"
 	{
-		"ko"		"분노 측정기 리필"
+		"ko"		"컨트롤 막대가 채워졌습니다."
 	}
 	"L4DTankControlEq_TankRageMeterRefilled"
 	{
-		"ko"		"{red}<{default}T탱크 레이지{red}> {olive}R리지 미터 {red}리필"
+		"ko"		"{red}<{default}Tank 컨트롤 {red}> {olive} 컨트롤 바 {red}가 복원되었습니다."
 	}
 	"L4DTankControlEq_TankRageMeterRefilled_2"
 	{
-		"ko"		"{red}<{default}T탱크 레이지{red}> {default}({green}%N{default}'s) {olive}R속도계 {red}리필"
+		"ko"		"{red}<{default}Tank 컨트롤 {red}> {default}({green}%N{default}) {olive} 컨트롤 바 {red}가 복원되었습니다"
 	}
 	"L4DTankControlEq_TankSelectionBecomeTank"
 	{
-		"ko"		"{red}<{default}T탱크 선택{red}> {green}당신 {default}가 {red}Tank{default}가 됩니다!"
+		"ko"		"{red}<{default}Tank {red}> {green}를 선택하면 {default}가 {red}Tank{default}가 됩니다!"
 	}
 	"L4DTankControlEq_TankSelectionBecomeTank_2"
 	{
-		"ko"		"{red}<{default}T탱크 선택{red}> {olive}%N {default}가 {red}T탱크가 됩니다!"
+		"ko"		"{red}<{default}Tank 선택 {red}> {olive}%N {default}는 {red}Tank{default}가 됩니다!"
 	}
 	"L4DTankControlEq_TankControlInvalidTargetUnable"
 	{
-		"ko"		"{green}[{olive}Tank Control{green}] {default}잘못된 대상입니다. 탱크를 줄 수 없습니다"
+		"ko"		"{green}[{olive}Tank {green} 선택] {default} 대상이 잘못되어 할당할 수 없습니다. Tank"
 	}
 	"L4DTankControlEq_TankControlNotInfectedTeam"
 	{
-		"ko"		"{green}[{olive}Tank Control{green}] {olive}%N {default}i는 감염된 팀에 없습니다. 탱크를 줄 수 없습니다"
+		"ko"		"{green}[{olive}Tank {green} 선택] {olive}%N {default}는 감염된 팀에 속하지 않아 Tank에 할당될 수 없습니다."
 	}
 	"Hit_RageMeterRefilled"
 	{
-		"ko"		"첫 번째 탱크 패스 종료, 두 번째 탱크 패스 시작"
+		"ko"		"첫 번째 컨트롤이 종료되고 두 번째 컨트롤이 시작됩니다."
 	}
 	"RageMeterRefilled"
 	{
-		"ko"		"( {green} %N {default} ) {olive} 첫 번째 탱크 패스 종료, {red} 두 번째 탱크 패스 시작"
+		"ko"		"({green}%N{default}) {olive}의 첫 번째 제어권이 종료되고, {red}의 두 번째 제어권이 시작됩니다."
 	}
 	"Tag_Rage"
 	{
-		"ko"		"{red} < {default} 탱크 분노 {red} > {default}"
+		"ko"		"{red}<{default}Tank 제어 {red}>{default}"
 	}
 	"Tag_Selecion"
 	{
-		"ko"		"{red} < {default} 탱크 선택 {red} > {default}"
+		"ko"		"{red}<{default}Tank 시스템 선택 {red}>{default}"
 	}
 	"UnableGiveTank"
 	{
-		"ko"		"[ {olive} SM {default} ] %s는 감염되지 않았습니다. 탱크를 줄 수 없습니다"
+		"ko"		"[{olive}SM{default}] %s는 감염자가 아닙니다. Tank를 제공할 수 없습니다."
 	}
 	"YouRageMeterRefilled"
 	{
-		"ko"		"{olive} 첫 번째 탱크 패스 종료, {red} 두 번째 탱크 패스 시작 {default}"
+		"ko"		"{olive}의 첫 번째 제어권이 종료되고, {red}의 두 번째 제어권이 {default}를 시작합니다."
 	}
 }

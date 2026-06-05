@@ -10,10 +10,10 @@
 	}
 	"WitchAnnounce_StillSomeBloodLeft"
 	{
-		"vi"		"{default}[{green}!{default}] {blue}Witch {default} vẫn còn một ít máu {olive}%d {default}"
+		"vi"		"{default}[{green}!{default}] {blue}Witch {default} Vẫn còn một ít máu {olive}%d {default}"
 	}
 	"WitchAnnounce_WitchDamageHeader"
 	{
-		"vi"		"{default}[{green}!{default}] 对{blue}女巫{default}产生的{blue}伤害"
+		"vi"		"{default}[{green}!{default}] {blue} gây sát thương cho phù thủy {blue} {default}"
 	}
 }

@@ -46,7 +46,7 @@
 	}
 	"ConfoglCompMod_Round1Bonus"
 	{
-		"chi"		"{blue}[{default}Confogl{blue}]{default} 第 1 轮奖金：{olive}%d"
+		"chi"		"{blue}[{default}Confogl{blue}]{default} 第 1 轮奖励分：{olive}%d"
 	}
 	"ConfoglCompMod_CustomMaxDistance"
 	{
@@ -54,18 +54,18 @@
 	}
 	"ConfoglCompMod_Round2Bonus"
 	{
-		"chi"		"{blue}[{default}Confogl{blue}]{default} 第 2 轮奖金：{olive}%d"
+		"chi"		"{blue}[{default}Confogl{blue}]{default} 第 2 轮奖励分：{olive}%d"
 	}
 	"ConfoglCompMod_AverageHealth"
 	{
-		"chi"		"{blue}[{default}Confogl{blue}]{default} 平均健康状况：{olive}%.02f"
+		"chi"		"{blue}[{default}Confogl{blue}]{default} 平均血量：{olive}%.02f"
 	}
 	"ConfoglCompMod_HealthBonus"
 	{
-		"chi"		"{blue}[{default}Confogl{blue}]{default} 健康奖励：{olive}%d"
+		"chi"		"{blue}[{default}Confogl{blue}]{default} 血量奖励分：{olive}%d"
 	}
 	"ConfoglCompMod_StaticSurvivalBonusPerSurvivor"
 	{
-		"chi"		"{blue}[{default}Confogl{blue}]{default} 每个幸存者的静态生存奖励：{olive}%d"
+		"chi"		"{blue}[{default}Confogl{blue}]{default} 每个幸存者的固定生还奖励分：{olive}%d"
 	}
 }

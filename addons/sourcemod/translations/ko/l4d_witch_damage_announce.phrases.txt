@@ -3,21 +3,21 @@
 	"FailWitchCrown"
 	{
 		"#format"	"{1:N}"
-		"ko"		"{default}[{green}!{default}] {red}{1} {default}({olive}왕관 마녀 실패{default}) 그리고 {red}마녀에 의해 봉쇄되었습니다."
+		"ko"		"{default}[{green}!{default}] {red}{1} {default}({olive} 두 번째 자매가 {default}에 실패했습니다), 이전에는 {red}Witch였습니다. {default}가 긁혔습니다."
 	}
 	"TankKillWitch"
 	{
 		"#format"	"{1:N}"
-		"ko"		"{default}[{green}!{default}] {red}탱크 {default}({olive}{1}{default})가 {red}마녀를 죽였습니다."
+		"ko"		"{default}[{green}!{default}] {red}Tank {default}({olive}{1}{default})가 {red}Witch를 처치했습니다."
 	}
 	"WitchRemainedHealth"
 	{
 		"#format"	"{1:d}"
-		"ko"		"{default}[{green}!{default}] {blue}마녀 {default}의 체력은 {olive}{1} {default}남았습니다."
+		"ko"		"{default}[{green}!{default}] {blue}Witch {default} 아직 피가 남아있습니다 {olive}{1} {default}"
 	}
 	"DamageToWitch"
 	{
-		"ko"		"{default}[{green}!{default}] {blue}{blue}마녀에게 준 피해 {default}:"
+		"ko"		"{default}[{green}!{default}] {blue}~Witch{default}로 인한 손상:"
 	}
 	"PrefectWitchCrown"
 	{
@@ -37,22 +37,22 @@
 	"FinalShotInfWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"ko"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}감염된 {olive} ☆"
+		"ko"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red} 감염자 {olive} ☆"
 	}
 	"AssistanceInfWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"ko"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}감염됨"
+		"ko"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red} 감염자"
 	}
 	"FinalShotTankWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"ko"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}탱크 {olive} ☆"
+		"ko"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}Tank {olive} ☆"
 	}
 	"AssistanceTankWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"ko"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}탱크"
+		"ko"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}Tank"
 	}
 	"L4DWitchDamageAnnounce_TankKilledWitch"
 	{
@@ -60,11 +60,11 @@
 	}
 	"L4DWitchDamageAnnounce_WitchHealthRemaining"
 	{
-		"ko"		"{default}[{green}!{default}] {blue}마녀 {default}had {olive}%d {default}건강 남음"
+		"ko"		"{default}[{green}!{default}] {blue}Witch {default}혈액량 빼기 {olive}%d {default}"
 	}
 	"L4DWitchDamageAnnounce_DamageDealtWitch"
 	{
-		"ko"		"{default}[{green}!{default}] {blue}{default}가 {blue}마녀에게 처리한 피해:"
+		"ko"		"{default}[{green}!{default}] {blue}~Witch{default}로 인한 손상:"
 	}
 	"L4DWitchDamageAnnounce_WitchDamageLine"
 	{

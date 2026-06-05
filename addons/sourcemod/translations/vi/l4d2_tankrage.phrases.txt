@@ -2,30 +2,30 @@
 {
 	"Tag"
 	{
-		"vi"		"{red} [ {default} Cơn thịnh nộ của xe tăng {red} ] {default}"
+		"vi"		"{red} [ {default} Xe tăng hung hãn {red} ] {default}"
 	}
 	"SurvivorsRunBack"
 	{
-		"vi"		"Với mỗi {olive} %i {green} %% {default} Người sống sót chạy về, Xe tăng sẽ bị đóng băng sự thất vọng trong {olive} %0.1f {green} giây {default}."
+		"vi"		"Mỗi khi một người sống sót {olive}%i{green}%% {default} chạy trở lại, cơn giận dữ của Tank sẽ đóng băng {olive}%0.1f {green} giây{default}."
 	}
 	"L4D2Tankrage_Tank"
 	{
-		"vi"		"[%s]: %N là xe tăng"
+		"vi"		"[%s]: %N là Tank"
 	}
 	"L4D2Tankrage_EverythingReset"
 	{
-		"vi"		"[%s]: Mọi thứ đã được đặt lại!"
+		"vi"		"[%s]: Mọi thứ đã được thiết lập lại!"
 	}
 	"L4D2Tankrage_FlowDifferenceSinceLastCheck"
 	{
-		"vi"		"{green}[{lightgreen}%N{green}]{default}: Sự khác biệt về lưu lượng kể từ lần kiểm tra cuối cùng: %i"
+		"vi"		"{green}[{lightgreen}%N{green}]{default}: Sự khác biệt về quy trình kể từ lần kiểm tra cuối cùng: %i"
 	}
 	"L4D2Tankrage_FrusGrace"
 	{
-		"vi"		"{green} [ {lightgreen} %N {green} ] {default}: Frus: {lightgreen} %i {default} - Grace: {lightgreen} %f {green} s"
+		"vi"		"{green}[{lightgreen}%N{green}]{default}: Thịnh nộ: {lightgreen}%i {default}- Grace: {lightgreen}%f{green}s"
 	}
 	"L4D2Tankrage_SetGrace"
 	{
-		"vi"		"{green}[{lightgreen}%N{green}]{default}: Đặt ân hạn thành: {lightgreen}%f{green}s"
+		"vi"		"{green}[{lightgreen}%N{green}]{default}: Cài đặt gia hạn là: {lightgreen}%f{green}s"
 	}
 }

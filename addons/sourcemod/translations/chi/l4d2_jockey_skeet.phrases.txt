@@ -2,14 +2,14 @@
 {
 	"L4D2JockeySkeet_Skeeted"
 	{
-		"chi"		"{green}★★{default} 您是 {olive}%N{default} 的 {blue}skeeted{default}。"
+		"chi"		"{green}★★{default} 你被 {olive}%N{default} {blue}skeet{default} 了."
 	}
 	"L4D2JockeySkeet_SkeetedJockey"
 	{
-		"chi"		"{green}★★{default} 您{blue}skeeted {olive}%N{default} 的骑师。"
+		"chi"		"{green}★★{default} 你 {blue}skeet{default} 了 {olive}%N{default} 的 Jockey."
 	}
 	"L4D2JockeySkeet_JockeySkeeted"
 	{
-		"chi"		"{green}★★{default} {olive}%N{default} 的骑师是 {blue}skeeted{default} 的 {olive}%N{default}。"
+		"chi"		"{green}★★{default} {olive}%N{default} 的 Jockey 被 {olive}%N{default} {blue}skeet{default} 了."
 	}
 }

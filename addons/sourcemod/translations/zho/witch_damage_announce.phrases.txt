@@ -3,21 +3,21 @@
 	"FailWitchCrown"
 	{
 		"#format"	"{1:N}"
-		"zho"		"{default}【{green}！ {default}]{red}{1}{default}（{olive}加冕女巫失敗{default}）並被{red}女巫封印。"
+		"zho"		"{default}[{green}!{default}] {red}{1} {default}({olive}秒妹失敗{default}) ，被 {red}Witch {default}撓倒了"
 	}
 	"TankKillWitch"
 	{
 		"#format"	"{1:N}"
-		"zho"		"{default}【{green}！ {default}] {red}坦克{default}（{olive} {1} {default}）殺死了{red}女巫"
+		"zho"		"{default}[{green}!{default}] {red}Tank {default}({olive}{1}{default}) 殺死了 {red}Witch"
 	}
 	"WitchRemainedHealth"
 	{
 		"#format"	"{1:d}"
-		"zho"		"{default}【{green}！ {default} ] {blue} 女巫 {default} 有 {olive} {1} {default} 剩餘健康狀況"
+		"zho"		"{default}[{green}!{default}] {blue}Witch {default}還剩下 {olive}{1} {default}點血"
 	}
 	"DamageToWitch"
 	{
-		"zho"		"{default}【{green}！ {default} ] {blue} {default} 對 {blue} 女巫造成的傷害："
+		"zho"		"{default}[{green}!{default}] {blue}對 Witch 造成的傷害{default}:"
 	}
 	"PrefectWitchCrown"
 	{
@@ -37,21 +37,21 @@
 	"FinalShotInfWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"zho"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} 感染{olive} ☆"
+		"zho"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}感染者 {olive} ☆"
 	}
 	"AssistanceInfWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"zho"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} 感染"
+		"zho"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}感染者"
 	}
 	"FinalShotTankWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"zho"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} 坦克{olive} ☆"
+		"zho"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}Tank {olive} ☆"
 	}
 	"AssistanceTankWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"zho"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} 坦克"
+		"zho"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}Tank"
 	}
 }

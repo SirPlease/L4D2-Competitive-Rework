@@ -2,22 +2,22 @@
 {
 	"BoomerHordeEqualizer_PassedBiledSurvivor"
 	{
-		"ko"		"%N는 bBiledSurvivor를 %N에 전달했습니다."
+		"ko"		"%N의 담즙 상태가 %N으로 전송되었습니다."
 	}
 	"BoomerHordeEqualizer_NoLongerBoomedSurvivorCount"
 	{
-		"ko"		"%N는 더 이상 그렇지 않습니다. (BoomedSurvivorCount: %i)"
+		"ko"		"%N의 담즙 상태가 종료되었습니다. (현재 뿌린 사람 수: %i)"
 	}
 	"BoomerHordeEqualizer_BoomedTotal"
 	{
-		"ko"		"%N 붐 발생 (총계: %d)"
+		"ko"		"%N에 담즙을 뿌렸습니다(총계: %d)"
 	}
 	"BoomerHordeEqualizer_BoomHordeEventBoomedSurvivor"
 	{
-		"ko"		"BoomHordeEvent[BoomedSurvivorCount] : %i"
+		"ko"		"BoomHorde이벤트[BoomedSurvivorCount]:%i"
 	}
 	"BoomerHordeEqualizer_UncoveredBileEvent"
 	{
-		"ko"		"발견된 담즙 사건"
+		"ko"		"비생존자 담즙 사건이 감지되었습니다."
 	}
 }

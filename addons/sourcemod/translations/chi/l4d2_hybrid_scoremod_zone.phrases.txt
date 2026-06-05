@@ -2,31 +2,31 @@
 {
 	"L4D2HybridScoremodZone_MapHealthBonusTempHealth"
 	{
-		"chi"		"{default}地图生命值加成：{olive}%.1f{default}，临时生命值加成：{olive}%.1f{default}，烫发生命值：{lightgreen}%.1f{default}，临时生命值： {lightgreen}%.1f{default}，药丸价值：{lightgreen}%i{default}"
+		"chi"		"{default}地图血量奖励分：{olive}%.1f{default}，临时血量奖励分：{olive}%.1f{default}，永久 HP 价值：{lightgreen}%.1f{default}，临时 HP 价值：{lightgreen}%.1f{default}，药品价值：{lightgreen}%i{default}"
 	}
 	"L4D2HybridScoremodZone_1Bonus"
 	{
-		"chi"		"%s{default}R{green}#1{default} 奖金：{olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
+		"chi"		"%s{default}R{green}#1{default} 奖励分：{olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
 	}
 	"L4D2HybridScoremodZone_BonusHBDBPills"
 	{
-		"chi"		"%s{default}R{green}#%i{default} 奖金：{olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | DB：{olive}%d{default} <{lightgreen}%.1f%%{default}> |丸剂：{olive}%d{default} <{lightgreen}%.1f%%{default}>]"
+		"chi"		"%s{default}R{green}#%i{default} 奖励分：{olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | DB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | 药品: {olive}%d{default} <{lightgreen}%.1f%%{default}>]"
 	}
 	"L4D2HybridScoremodZone_Bonus"
 	{
-		"chi"		"%s{default}R{green}#%i{default} 奖金：{olive}%d{default} <{lightgreen}%.1f%%{default}>"
+		"chi"		"%s{default}R{green}#%i{default} 奖励分：{olive}%d{default} <{lightgreen}%.1f%%{default}>"
 	}
 	"L4D2HybridScoremodZone_1Bonus_2"
 	{
-		"chi"		"%s{default}R{green}#1{default} 奖金：{olive}%d{default} <{lightgreen}%.1f%%{default}>"
+		"chi"		"%s{default}R{green}#1{default} 奖励分：{olive}%d{default} <{lightgreen}%.1f%%{default}>"
 	}
 	"L4D2HybridScoremodZone_BonusHBDBPills_2"
 	{
-		"chi"		"%s{default}R{green}#%i{default} 奖金：{olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {lightgreen}%.0f%%{default} |数据库：{lightgreen}%.0f%%{default} |丸剂：{lightgreen}%.0f%%{default}]"
+		"chi"		"%s{default}R{green}#%i{default} 奖励分：{olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {lightgreen}%.0f%%{default} | DB: {lightgreen}%.0f%%{default} | 药品: {lightgreen}%.0f%%{default}]"
 	}
 	"L4D2HybridScoremodZone_HybridBonusMapInfo"
 	{
-		"chi"		"{default}[{green}混合奖金{default} :: {lightgreen}%iv%i{default}] 地图信息"
+		"chi"		"{default}[{green}混合奖励分{default} :: {lightgreen}%iv%i{default}] 地图信息"
 	}
 	"L4D2HybridScoremodZone_Distance"
 	{
@@ -34,47 +34,47 @@
 	}
 	"L4D2HybridScoremodZone_TotalBonus1000"
 	{
-		"chi"		"{default}总奖金：{olive}%d{default} <{lightgreen}100.0%%{default}>"
+		"chi"		"{default}总奖励分：{olive}%d{default} <{lightgreen}100.0%%{default}>"
 	}
 	"L4D2HybridScoremodZone_HealthBonus"
 	{
-		"chi"		"{default}健康奖励：{olive}%d{default} <{lightgreen}%.1f%%{default}>"
+		"chi"		"{default}血量奖励分：{olive}%d{default} <{lightgreen}%.1f%%{default}>"
 	}
 	"L4D2HybridScoremodZone_DamageBonus"
 	{
-		"chi"		"{default}伤害奖励：{olive}%d{default} <{lightgreen}%.1f%%{default}>"
+		"chi"		"{default}伤害奖励分：{olive}%d{default} <{lightgreen}%.1f%%{default}>"
 	}
 	"L4D2HybridScoremodZone_PillsBonusMax"
 	{
-		"chi"		"{default}P药丸奖金：{olive}%d{default}（最大{olive}%d{default}）<{lightgreen}%.1f%%{default}>"
+		"chi"		"{default}药品奖励分：{olive}%d{default}（最大 {olive}%d{default}） <{lightgreen}%.1f%%{default}>"
 	}
 	"L4D2HybridScoremodZone_Tiebreaker"
 	{
-		"chi"		"{default}T决胜局：{olive}%d{default}"
+		"chi"		"{default}决胜分：{olive}%d{default}"
 	}
 	"L4D2HybridScoremodZone_TempHPDamage"
 	{
-		"chi"		"{green}%N{default} 现在有 {olive}%d{default} 临时 HP（损坏：{lightgreen}%.1f{default}）"
+		"chi"		"{green}%N{default} 现在有 {olive}%d{default} 临时 HP（伤害: {lightgreen}%.1f{default}）"
 	}
 	"L4D2HybridScoremodZone_ValidDeathIncapsTotalPenalty"
 	{
-		"chi"		"{green}[{default}有效死亡{green}] {lightgreen}%N {default}had {lightgreen}%i {default}incaps，总罚款现在为{lightgreen}%i"
+		"chi"		"{green}[{default}有效死亡{green}] {lightgreen}%N {default}有 {lightgreen}%i {default}次倒地，总惩罚现为 {lightgreen}%i"
 	}
 	"L4D2HybridScoremodZone_LostTempHPAfterAttacked"
 	{
-		"chi"		"{lightgreen}%N{default}{olive} 被攻击后失去 %i{default} 临时 HP（arg 伤害：{lightgreen}%.1f{default}）"
+		"chi"		"{lightgreen}%N{default}{olive} 受到攻击后失去 %i{default} 临时 HP（参数伤害：{lightgreen}%.1f{default}）"
 	}
 	"L4D2HybridScoremodZone_DirectorEndVersusModeRound"
 	{
-		"chi"		"调用 CDirector::OnEndVersusModeRound()。 InSecondHalfOfRound()：%d，计数幸存者：%d"
+		"chi"		"CDirector::OnEndVersusModeRound() 已调用。InSecondHalfOfRound(): %d，countSurvivors: %d"
 	}
 	"L4D2HybridScoremodZone_SurvivalBonusCvarUpdatedValue"
 	{
-		"chi"		"{default}生存奖金 cvar 已更新。值：{olive}%i{default} [乘数：{olive}%i{default}]"
+		"chi"		"{default}生还奖励分 cvar 已更新。值：{olive}%i{default} [倍率：{olive}%i{default}]"
 	}
 	"L4D2HybridScoremodZone_RoundBonus"
 	{
-		"chi"		"%s{default}R圆形 {green}%i{default} 奖金：{olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
+		"chi"		"%s{default}第 {green}%i{default} 回合奖励分：{olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
 	}
 	"L4D2HybridScoremodZone_TiebreakerTeam1Team2"
 	{
@@ -86,14 +86,14 @@
 	}
 	"L4D2HybridScoremodZone_AddingPermHPBonusContribution"
 	{
-		"chi"		"{default}加入 {olive}%N{default} 的永久生命加成贡献：{olive}%d{default} 永久生命值 -> {lightgreen}%.1f{default} 加成；新总计：{olive}%.1f{default}"
+		"chi"		"{default}正在加入 {olive}%N{default} 的永久 HP 奖励分贡献：{olive}%d{default} 永久 HP -> {lightgreen}%.1f{default} 奖励分；新的总计：{olive}%.1f{default}"
 	}
 	"L4D2HybridScoremodZone_AddingTempHPBonusEligible"
 	{
-		"chi"		"{default}A添加临时生命值奖励：{olive}%.1f{default}（符合条件的幸存者：{olive}%d{default}）"
+		"chi"		"{default}正在加入临时 HP 奖励分：{olive}%.1f{default}（符合条件的幸存者：{olive}%d{default}）"
 	}
 	"L4D2HybridScoremodZone_AddingPillsContributionTotalBonus"
 	{
-		"chi"		"{default}A添加{olive}%N的{default}药丸贡献，总奖金：{olive}%d{default} 分"
+		"chi"		"{default}正在加入 {olive}%N{default} 的药品贡献，总奖励分：{olive}%d{default} 分"
 	}
 }

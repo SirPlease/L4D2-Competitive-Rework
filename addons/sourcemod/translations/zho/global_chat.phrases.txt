@@ -2,18 +2,50 @@
 {
 	"GlobalChat_FullServerNormalFullServer"
 	{
-		"zho"		"{green}[全服]{default} 你已%s普通全服聊天。"
+		"zho"		"{green}[全服]{default} %s。"
 	}
 	"GlobalChat_AllServersAskedTipTeammates"
 	{
-		"zho"		"{green}[全服]{default} 你已%s找隊友提示。"
+		"zho"		"{green}[全服找隊友]{default} %s。"
 	}
 	"GlobalChat_SummonTeammates"
 	{
-		"zho"		"{green}%s {olive}%s {default}玩家正在 {lightgreen}%s {default}召喚隊友"
+		"zho"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召喚隊友"
 	}
 	"GlobalChat_SummonTeammatesWithMessage"
 	{
-		"zho"		"{green}%s {olive}%s {default}玩家正在 {lightgreen}%s {default}召喚隊友\n{default}留言：{olive}%s"
+		"zho"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召喚隊友\n{default}留言: {olive}%s"
+	}
+	"GlobalChat_StatusReceive"
+	{
+		"zho"		"接收"
+	}
+	"GlobalChat_StatusBlock"
+	{
+		"zho"		"屏蔽"
+	}
+	"GlobalChat_MenuTitle"
+	{
+		"zho"		"全服聊天接收設定\n普通全服：%s\n找隊友提示：%s"
+	}
+	"GlobalChat_MenuReceiveNormal"
+	{
+		"zho"		"接收普通全服聊天"
+	}
+	"GlobalChat_MenuBlockNormal"
+	{
+		"zho"		"遮蔽普通全服聊天"
+	}
+	"GlobalChat_MenuReceiveLFG"
+	{
+		"zho"		"接收找隊友提示"
+	}
+	"GlobalChat_MenuBlockLFG"
+	{
+		"zho"		"遮蔽找隊友提示"
+	}
+	"GlobalChat_MenuLFGLocked"
+	{
+		"zho"		"找隊友提示：僅管理員可遮蔽"
 	}
 }

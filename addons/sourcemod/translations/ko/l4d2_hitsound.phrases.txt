@@ -18,7 +18,7 @@
 	}
 	"L4D2Hitsound_HitsoundSoundEffectPackageThree"
 	{
-		"ko"		"[Hitsound] 음향 효과 패키지(3개 항목)가 %d로 설정되었습니다."
+		"ko"		"[Hitsound] 음향 효과 패키지(3개 항목)가 다음으로 설정되었습니다: %d"
 	}
 	"L4D2Hitsound_HitsoundIconSetThreeItems"
 	{
@@ -30,11 +30,11 @@
 	}
 	"L4D2Hitsound_HitSoundEffectTurnedSet"
 	{
-		"ko"		"타격음 효과: 켜짐(%d 설정)"
+		"ko"		"타격음 효과 : 켜짐 (%d 설정)"
 	}
 	"L4D2Hitsound_HitSoundEffectTurnedOff"
 	{
-		"ko"		"타격음 효과 : 꺼짐"
+		"ko"		"타격음 : 꺼짐"
 	}
 	"L4D2Hitsound_KillSoundEffectTurnedSet"
 	{
@@ -42,7 +42,7 @@
 	}
 	"L4D2Hitsound_KillSoundEffectTurnedOff"
 	{
-		"ko"		"킬 사운드 효과: 꺼짐"
+		"ko"		"사운드 효과 제거: 끄기"
 	}
 	"L4D2Hitsound_HeadshotSoundEffectTurnedSet"
 	{
@@ -50,7 +50,7 @@
 	}
 	"L4D2Hitsound_HeadshotSoundEffectTurnedOff"
 	{
-		"ko"		"헤드샷 음향 효과: 꺼짐"
+		"ko"		"헤드샷 음향 효과: 끄기"
 	}
 	"L4D2Hitsound_SelectSuitIconSuitPlayer"
 	{
@@ -58,7 +58,7 @@
 	}
 	"L4D2Hitsound_HitIconTurnedSet"
 	{
-		"ko"		"히트 아이콘: 켜짐(%d 설정)"
+		"ko"		"히트 아이콘: 켜기(%d 설정)"
 	}
 	"L4D2Hitsound_HitIconClosed"
 	{
@@ -78,7 +78,7 @@
 	}
 	"L4D2Hitsound_HeadshotIconClosed"
 	{
-		"ko"		"얼굴 사진 아이콘: 폐쇄됨"
+		"ko"		"얼굴 사진 아이콘: 꺼짐"
 	}
 	"L4D2Hitsound_NotPermissionUseMenu"
 	{

@@ -6,7 +6,7 @@
 	}
 	"L4DRandomBeamItem_TargetEntityNoBeam"
 	{
-		"chi"		"{green}T目标实体没有光束。"
+		"chi"		"{green}目标实体没有光束。"
 	}
 	"L4DRandomBeamItem_BeamIndexTargetIndexClassname"
 	{

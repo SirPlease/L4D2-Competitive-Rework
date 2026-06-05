@@ -6,23 +6,23 @@
 	}
 	"L4DRandomBeamItem_TargetEntityNoBeam"
 	{
-		"zho"		"{green}T目標實體沒有光束。"
+		"zho"		"{green}目標實體沒有光束。"
 	}
 	"L4DRandomBeamItem_BeamIndexTargetIndexClassname"
 	{
-		"zho"		"{olive}梁指數： {lightgreen}%i {olive}目標指數： {lightgreen}%i {olive}類別名稱： {lightgreen}%s {olive}型號： {lightgreen}%s {olive}光束顏色（RGB|整數）： {lightgreen}%i %i %i|%i {olive}亮度： {lightgreen}%.1f {olive}長度： {lightgreen}%i {olive}寬度： {lightgreen}%i {olive}HDR 色標： {lightgreen}%.1f"
+		"zho"		"{olive}光束索引：{lightgreen}%i {olive}目標索引：{lightgreen}%i {olive}類名：{lightgreen}%s {olive}型號： {lightgreen}%s {olive}光束顏色（RGB|整數）：{lightgreen}%i %i %i|%i {olive}B亮度：{lightgreen}%.1f {olive}長度：{lightgreen}%i {olive}寬度：{lightgreen}%i {olive}HDR色標：{lightgreen}%.1f"
 	}
 	"L4DRandomBeamItem_BeamConfigsReloaded"
 	{
-		"zho"		"{green}Beam 設定已重新載入。"
+		"zho"		"{green}Beam 配置已重新載入。"
 	}
 	"L4DRandomBeamItem_RemovedTargetEntityPluginBeam"
 	{
-		"zho"		"{green}刪除了目標實體插件梁。"
+		"zho"		"{green}刪除了目標實體外掛梁。"
 	}
 	"L4DRandomBeamItem_RemovedAllBeamsCreatedPlugin"
 	{
-		"zho"		"{green}刪除了插件所建立的所有梁。"
+		"zho"		"{green}刪除了外掛建立的所有梁。"
 	}
 	"L4DRandomBeamItem_BeamAddedTargetEntity"
 	{

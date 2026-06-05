@@ -7,7 +7,7 @@
 	"FFAnnounceToVictim"
 	{
 		"#format"	"{1:N},{2:d}"
-		"vi"		"* {olive}{1} {default}đã làm {blue}FF {default}tới {green}bạn {default}@ {green}{2}HP"
+		"vi"		"* {olive}{1} {default} đã gây ra {green} cho bạn {default} đã gây ra chấn thương thân thiện cho {blue} {default}@ {green}{2}HP"
 	}
 	"FFAnnounceToGuiltyTotal"
 	{
@@ -16,18 +16,18 @@
 	}
 	"FFAnnounceToGuilty1"
 	{
-		"vi"		"* {olive}{GUILTY} {default}đã làm {blue}FF {default}tới {olive}{VICTIM1_NAME} {default}@ {green}{VICTIM1_DMG}HP"
+		"vi"		"* {olive}{GUILTY} {default} đã gây ra thiệt hại thân thiện cho {blue} đối với {olive}{VICTIM1_NAME} {default} {default}@ {green}{VICTIM1_DMG}HP"
 	}
 	"FFAnnounceToGuilty2"
 	{
-		"vi"		"* {olive}{GUILTY} {default}đã thực hiện {blue}FF {default}với {olive}{VICTIM1_NAME} {default}@ {green}{VICTIM1_DMG}HP{default}, {olive}{VICTIM2_NAME} {default}@ {green}{VICTIM2_DMG}HP"
+		"vi"		"* {olive}{GUILTY} {default} đã gây ra thiệt hại thân thiện cho {blue} đối với {olive}{VICTIM1_NAME} {default} {default}@ {green}{VICTIM1_DMG}HP{default}, {olive}{VICTIM2_NAME} {default}@ {green}{VICTIM2_DMG}HP"
 	}
 	"FFAnnounceToGuilty3"
 	{
-		"vi"		"* {olive}{GUILTY} {default}đã thực hiện {blue}FF {default}với {olive}{VICTIM1_NAME} {default}@ {green}{VICTIM1_DMG}HP{default}, {olive}{VICTIM2_NAME} {default}@ {green}{VICTIM2_DMG}HP{default}, {olive}{VICTIM3_NAME} {default}@ {green}{VICTIM3_DMG}HP"
+		"vi"		"* {olive}{GUILTY} {default} đã gây ra thiệt hại thân thiện cho {blue} đối với {olive}{VICTIM1_NAME} {default} {default}@ {green}{VICTIM1_DMG}HP{default}, {olive}{VICTIM2_NAME} {default}@ {green}{VICTIM2_DMG}HP{default}, {olive}{VICTIM3_NAME} {default}@ {green}{VICTIM3_DMG}HP"
 	}
 	"FFAnnounceToGuilty4"
 	{
-		"vi"		"* {olive}{GUILTY} {default}đã làm {blue}FF {default}tới {olive}{VICTIM1_NAME} {default}@ {green}{VICTIM1_DMG}HP{default}, {olive}{VICTIM2_NAME} {default}@ {green}{VICTIM2_DMG}HP{default}, {olive}{VICTIM3_NAME} {default}@ {green}{VICTIM3_DMG}HP{default}, {olive}{VICTIM4_NAME} {default}@ {green}{VICTIM4_DMG}HP"
+		"vi"		"* {olive}{GUILTY} {default} đã gây ra thiệt hại thân thiện cho {blue} đối với {olive}{VICTIM1_NAME} {default} {default}@ {green}{VICTIM1_DMG}HP{default}, {olive}{VICTIM2_NAME} {default}@ {green}{VICTIM2_DMG}HP{default}, {olive}{VICTIM3_NAME} {default}@ {green}{VICTIM3_DMG}HP{default}, {olive}{VICTIM4_NAME} {default}@ {green}{VICTIM4_DMG}HP"
 	}
 }

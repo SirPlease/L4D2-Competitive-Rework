@@ -13,12 +13,12 @@
 	"L4D_Chat_Infected_Dead"
 	{
 		"#format"	"{1:s},{2:s}"
-		"chi"		"{default}*死亡*(感染者) {1} {default}:  {2}"
+		"chi"		"{default}*DEAD*(感染者) {1} {default}:  {2}"
 	}
 	"L4D_Chat_Survivor_Dead"
 	{
 		"#format"	"{1:s},{2:s}"
-		"chi"		"{default}*死亡*(生还者) {1} {default}:  {2}"
+		"chi"		"{default}*DEAD*(生还者) {1} {default}:  {2}"
 	}
 	"L4D_Chat_Spec"
 	{

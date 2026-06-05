@@ -2,27 +2,27 @@
 {
 	"Tag"
 	{
-		"jp"		"{blue} < {green} ボス投票 {blue} > {default}"
+		"jp"		"{blue}<{green}BossVote{blue}>{default}"
 	}
 	"NotAvailable"
 	{
-		"jp"		"このマップではボス投票はできません。"
+		"jp"		"このマップ上のボスの位置を変更するために投票することはできません。"
 	}
 	"Available"
 	{
-		"jp"		"ボスの投票は準備中のみ可能です。"
+		"jp"		"ボスポジションの投票は準備が始まる前にのみ行うことができます。"
 	}
 	"FirstRound"
 	{
-		"jp"		"ボスの投票は、マップの最初のラウンド中にのみ利用できます。"
+		"jp"		"ボスポジションの投票は1回戦のみ可能です。"
 	}
 	"NotAvailableForSpec"
 	{
-		"jp"		"観客はボス投票を利用できません。"
+		"jp"		"ボスポジションの投票は観客には公開されていません。"
 	}
 	"CannotBeCalled"
 	{
-		"jp"		"現在、ボス投票を呼び出すことができません..."
+		"jp"		"ボスポジションの投票は一時的に利用できません..."
 	}
 	"Usage"
 	{
@@ -30,63 +30,63 @@
 	}
 	"Usage2"
 	{
-		"jp"		"{olive} スポーンなし {default} には {default} \" {blue} 0 {default} \" を、{olive} 無知には \" {blue} -1 {default} \" を使用します。"
+		"jp"		"{default}\"{blue}0{default}\" を使用して、{olive} が {default} を生成しないことを示し、\"{blue}-1{default}\" を使用して、{olive} が変更されないことを示します。"
 	}
 	"Invalid"
 	{
-		"jp"		"パーセンテージは {olive} 無効な {default} です。"
+		"jp"		"パーセンテージは {olive} ですが、これは無効な {default} です。"
 	}
 	"TankStatic"
 	{
-		"jp"		"戦車のスポーンは静的であり、このマップ上では変更できません。"
+		"jp"		"この地図上の Tank の位置は固定されており、変更できません。"
 	}
 	"WitchStatic"
 	{
-		"jp"		"魔女のスポーンは静的であり、このマップ上では変更できません。"
+		"jp"		"この地図上の Witch の位置は固定されており、変更できません。"
 	}
 	"TankBanned"
 	{
-		"jp"		"タンクの割合は {blue} 禁止 {default} です。"
+		"jp"		"この Tank の進行状況は、{blue} および {default} によって無効になりました。"
 	}
 	"WitchBanned"
 	{
-		"jp"		"魔女の割合は {blue} 禁止 {default} です。"
+		"jp"		"この Witch の進行状況は、{blue} および {default} によって無効になりました。"
 	}
 	"SetBosses"
 	{
-		"jp"		"タンクを %s に設定し、ウィッチを %s に設定しますか?"
+		"jp"		"Tank の進行状況を %s に設定し、Witch の進行状況を %s に設定しますか?"
 	}
 	"SetTank"
 	{
-		"jp"		"タンクを %s に設定し、ウィッチを無効に設定しますか?"
+		"jp"		"Tank の進行状況を %s に設定し、Witch を無効にしますか?"
 	}
 	"SetOnlyTank"
 	{
-		"jp"		"タンクを %s に設定しますか?"
+		"jp"		"Tank の進行状況を %s に設定しますか?"
 	}
 	"SetWitch"
 	{
-		"jp"		"タンクを無効に設定し、ウィッチを %s に設定しますか?"
+		"jp"		"Tank を無効にし、Witch の進行状況を %s? に設定します。"
 	}
 	"SetOnlyWitch"
 	{
-		"jp"		"ウィッチを %s に設定しますか?"
+		"jp"		"Witch の進行状況を %s に設定しますか?"
 	}
 	"SetBossesDisabled"
 	{
-		"jp"		"ボスを次のように設定します: 無効ですか?"
+		"jp"		"Tank と Witch の両方の世代をオフにしますか?"
 	}
 	"SetTankDisabled"
 	{
-		"jp"		"タンクを次のように設定します: 無効ですか?"
+		"jp"		"Tank 生成をオフに設定しますか?"
 	}
 	"SetWitchDisabled"
 	{
-		"jp"		"ウィッチを次のように設定します: 無効ですか?"
+		"jp"		"Witch 生成をオフに設定しますか?"
 	}
 	"OnlyReadyUp"
 	{
-		"jp"		"スポーンは準備中にのみ設定できます。"
+		"jp"		"タンクの生成は準備前にのみ設定できます。"
 	}
 	"SettingBoss"
 	{
@@ -94,49 +94,49 @@
 	}
 	"SettingTank"
 	{
-		"jp"		"タンクスポーンの設定..."
+		"jp"		"Tank を生成するように設定します..."
 	}
 	"SettingWitch"
 	{
-		"jp"		"ウィッチスポーンの設定..."
+		"jp"		"Witch を生成するように設定します..."
 	}
 	"SettingBossDisabled"
 	{
-		"jp"		"ボスを無効に設定しています..."
+		"jp"		"ボスを無効に設定..."
 	}
 	"CommandNotAvailable"
 	{
-		"jp"		"このマップではコマンドを使用できません。"
+		"jp"		"このコマンドはこのイメージには使用できません。"
 	}
 	"TankSpawnStatic"
 	{
-		"jp"		"戦車のスポーンは静的であり、このマップ上では変更できません。"
+		"jp"		"この地図上の Tank の位置は固定されており、変更できません。"
 	}
 	"PercentageInvalid"
 	{
-		"jp"		"パーセンテージは {blue} 無効な {default} です。"
+		"jp"		"この進行状況は {blue} ですが、無効な {default} です。"
 	}
 	"Percentagebanned"
 	{
-		"jp"		"パーセンテージは {blue} 禁止 {default} です。"
+		"jp"		"この進行状況は、{blue}{default} によって無効になります。"
 	}
 	"TankSpawnAdmin"
 	{
 		"#format"	"{1:i},{2:s}"
-		"jp"		"管理者によって、タンクのスポーンが {olive} {1} % {default} に設定されました {blue} {2} {default} 。"
+		"jp"		"Tank の場所は、管理者 {blue}{2}{default} によって {olive}{1}%{default} に設定されます。"
 	}
 	"WitchSpawnStatic"
 	{
-		"jp"		"魔女のスポーンは静的であり、このマップ上では変更できません。"
+		"jp"		"この地図上の Witch の位置は固定されており、変更できません。"
 	}
 	"WitchSpawnAdmin"
 	{
 		"#format"	"{1:i},{2:s}"
-		"jp"		"ウィッチのスポーンは、管理者 {blue} {2} {default} によって {olive} {1} % {default} に設定されました。"
+		"jp"		"Witch の場所は、管理者 {blue}{2}{default} によって {olive}{1}%{default} に設定されます。"
 	}
 	"RoundNotReachLimit"
 	{
 		"#format"	"{1:i}"
-		"jp"		"この難易度でもう楽をしたいですか？だめです！({olive}boss 投票機能{default}を使うには、あと {blue}{1} 回{default}クリア失敗する必要があります)."
+		"jp"		"この難易度ではボスの投票制限をスキップすることもできません。また、{olive}Boss 投票機能 {default} を使用するには、{blue}{1}{default} 回試行して失敗する必要があります。"
 	}
 }

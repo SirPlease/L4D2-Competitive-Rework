@@ -19,130 +19,130 @@
 	"Popped"
 	{
 		"#format"	"{1:N},{2:N}"
-		"ko"		"{olive}{1}{default} 가 터졌습니다. {olive}{2}{default}."
+		"ko"		"{olive}{1}{default}는 조용히 {olive}{2}{default}를 해결했습니다."
 	}
 	"PoppedBot"
 	{
-		"ko"		"{olive}%N{default}가 부머를 터뜨렸습니다."
+		"ko"		"{olive}%N{default} 조용히 부머를 쓰러뜨렸습니다."
 	}
 	"Leveled"
 	{
 		"#format"	"{1:N},{2:N}"
-		"ko"		"{olive}{1}{default} {blue}full{default} 수준의 {olive}{2}{default}"
+		"ko"		"{olive}{1}{default}님이 {olive}{2}{default}를 {blue}full level{default}했습니다"
 	}
 	"LeveledBot"
 	{
-		"ko"		"{olive}%N{default} {blue}완전히{default} 레벨링 {olive}충전기{default}"
+		"ko"		"{olive}%N{default} {blue}를 사용하면 체력이 가득 찬 근접전에서 {default}{olive}를 처치할 수 있습니다. 충전기 1개{default}"
 	}
 	"LeveledHurt"
 	{
 		"#format"	"{1:N},{2:N},{3:i}"
-		"ko"		"{olive}{1}{default} {blue}칩 수준{default} {olive}{2}{default} ({blue}{3} dmg{default})"
+		"ko"		"{olive}{1}{default} {blue}를 사용하여 근접전에서 {default}를 처치하세요. {2}{default}가 {olive}({blue}{3} Damage{default})에서 충전 중입니다."
 	}
 	"LeveledHurtBot"
 	{
 		"#format"	"{1:N},{2:i}"
-		"ko"		"{olive}{1}{default} {blue}칩 수준{default} 충전기({blue}{2} dmg{default})"
+		"ko"		"{olive}{1}{default}님이 Charger를 {blue}chip-level{default}했습니다 ({blue}{2} 피해{default})"
 	}
 	"Deadstopped"
 	{
 		"#format"	"{1:N},{2:N}"
-		"ko"		"{olive}{1}{default} {blue}deadstopped{default} {olive}{2}{default}"
+		"ko"		"{olive}{1}{default} {blue}푸시됨 {default} {olive}{2}{default}"
 	}
 	"DeadstoppedBot"
 	{
-		"ko"		"{olive}%N{default} {blue}deadstopped{default} {olive}사냥꾼{default}"
+		"ko"		"{olive}%N{default} {blue}푸시됨 {default} {olive}원 헌터{default}"
 	}
 	"Shoved"
 	{
 		"#format"	"{1:N},{2:N}"
-		"ko"		"{olive}{1}{default} {blue}밀쳐짐{default} {olive}{2}{default}."
+		"ko"		"{olive}{1}{default} {blue}가 {default} {olive}{2}{default}로 푸시되었습니다."
 	}
 	"ShovedBot"
 	{
-		"ko"		"{olive}%N{default} {blue}shoved{default}가 {olive}SI{default}를 밀어냈습니다."
+		"ko"		"{olive}%N{default} {blue}가 {default} {olive} 특수 감지 {default}로 푸시되었습니다."
 	}
 	"TeamSkeeted"
 	{
-		"ko"		"{olive}%N{default}는 {blue}팀 기반{default}이었습니다."
+		"ko"		"{olive}%N{default}는 {blue} 팀 {default}에 의해 공중 폭파되었습니다."
 	}
 	"TeamSkeetedBot"
 	{
-		"ko"		"{olive}hunter{default}는 {blue}팀 기반{default}이었습니다."
+		"ko"		"{olive}Hunter{default}는 {blue} 팀 {default}에 의해 공기 분사되었습니다."
 	}
 	"Skeeted"
 	{
-		"#format"	"{1:N},{2:s},{3:N}"
-		"ko"		"{olive}{1}{default} {blue}{2}스키트{default} {olive}{3}{default}."
+		"#format"		"{1:N},{2:t},{3:N}"
+		"ko"		"{olive}{1}{default} {blue}{2} 에어 버스트 {default} {olive}{3}{default}."
 	}
 	"SkeetedBot"
 	{
-		"#format"	"{1:N},{2:s}"
-		"ko"		"{olive}{1}{default} {blue}{2}skeeted{default} {olive}hunter{default}."
+		"#format"		"{1:N},{2:t}"
+		"ko"		"{olive}{1}{default} {blue}{2}에어 블래스트{default}{olive}a 헌터{default}."
 	}
 	"Melee"
 	{
-		"ko"		"난투-"
+		"ko"		"melee-"
 	}
 	"HeadShot"
 	{
-		"ko"		"얼굴 사진-"
+		"ko"		"headshot-"
 	}
 	"Grenade"
 	{
-		"ko"		"수류탄-"
+		"ko"		"무기 투척"
 	}
 	"HurtSkeet"
 	{
-		"#format"	"{1:N},{2:i},{3:s}"
-		"ko"		"{olive}{1}{default}  {green}아님{default} 스키트({blue}{2}{default} 손상).{3}"
+		"#format"		"{1:N},{2:i},{3:t}"
+		"ko"		"{olive}{1}{default}님이 {green}빈사 상태에서 공중 격추{default}되었습니다 ({blue}{2}{default} 피해).{3}"
 	}
 	"HurtSkeetBot"
 	{
-		"#format"	"{1:i},{2:s}"
-		"ko"		"{olive}헌터{default}  {green}아님{default} 스키트({blue}{1}{default} 손상).{2}"
+		"#format"		"{1:i},{2:t}"
+		"ko"		"{olive}Hunter{default}가 {green}빈사 상태에서 공중 격추{default}되었습니다 ({blue}{1}{default} 피해).{2}"
 	}
 	"Unchipped"
 	{
-		"ko"		"(헌터가 칩이 없었다면 스키트를 했을 것입니다!)"
+		"ko"		"(사냥꾼이 공중에서 죽으면 공중 폭발입니다!)"
 	}
 	"CrownedWitch"
 	{
 		"#format"	"{1:N},{2:i}"
-		"ko"		"{olive}{1}{default}가 마녀의 왕관을 썼습니다({blue}{2}{default} 피해)."
+		"ko"		"{olive}{1}{default} 초 마녀({blue}{2}{default} 피해)."
 	}
 	"CrownedWitch2"
 	{
-		"ko"		"마녀는 {blue}선정{default}."
+		"ko"		"마녀 {blue}가 {default}를 죽였습니다."
 	}
 	"DrawCrowned"
 	{
 		"#format"	"{1:N},{2:i},{3:i}"
-		"ko"		"{olive}{1}{default}가 마녀를 뽑았습니다({blue}{2}{default} 데미지, {olive}{3}{default} 칩)."
+		"ko"		"{olive}{1}{default}가 Witch를 draw-crown했습니다({blue}{2}{default} 피해, {olive}{3}{default} chip)."
 	}
 	"DrawCrowned2"
 	{
 		"#format"	"{1:i},{2:i}"
-		"ko"		"마녀가 왕관을 썼습니다({blue}{1}{default} 데미지, {olive}{2}{default} 칩)."
+		"ko"		"Witch는 초 단위로 인용됩니다(손상은 {blue}{1}{default}, 초 단위는 {olive}{2}{default})."
 	}
 	"CutTongue"
 	{
 		"#format"	"{1:N},{2:N}"
-		"ko"		"{olive}{1}{default} {blue}cut{default} {olive}{2}{default}의 혀"
+		"ko"		"{olive}{1}{default} {blue} {default} {olive}{2}{default}의 혀를 잘라냅니다."
 	}
 	"CutTongueBot"
 	{
-		"ko"		"{olive}%N{default} {blue}cut{default} 스모커 혀"
+		"ko"		"{olive}%N{default} {blue}는 {default} 흡연자의 혀를 잘라냅니다."
 	}
 	"SelfClearedTongue"
 	{
-		"#format"	"{1:N},{2:N},{3:s}"
-		"ko"		"{olive}{1}{default} {blue}자가 삭제된{default} {olive}{2}{default}의 혀 {blue}{3}{default}"
+		"#format"		"{1:N},{2:N},{3:t}"
+		"ko"		"{olive}{1}{default}님이 {olive}{2}{default}의 혀에서 {blue}자가 해제{default}했습니다 {blue}{3}{default}"
 	}
 	"SelfClearedTongueBot"
 	{
-		"#format"	"{1:N},{2:s}"
-		"ko"		"{olive}{1}{default} {blue}스모커 혀에서 자동 삭제{default} {blue}{2}{default}"
+		"#format"		"{1:N},{2:t}"
+		"ko"		"{olive}{1}{default} {olive}smoker{default} {blue}{2}{default} {blue}자가 구조{default}의 혀 아래에서"
 	}
 	"Shoving"
 	{
@@ -151,45 +151,45 @@
 	"SkeetedRock"
 	{
 		"#format"	"{1:N},{2:N}"
-		"ko"		"{olive}{1}{default} {blue}skeeted{default} {olive}{2}{default}의 바위입니다."
+		"ko"		"{olive}{1}{default} {blue} 에어블라스트 {default} {olive}{2}{default} 돌."
 	}
 	"SkeetedRockBot"
 	{
-		"ko"		"{olive}%N{default} {blue}skeet{default} 탱크 바위"
+		"ko"		"{olive}%N{default} {blue} 에어 블래스트 {default} 탱크 스톤"
 	}
 	"HunterHP"
 	{
 		"#format"	"{1:N},{2:N},{3:i},{4:i}"
-		"ko"		"{olive}{1}{default} {red}high-pounced{default} {olive}{2}{default} ({red}{3}{default} 데미지, 높이: {red}{4}{default})"
+		"ko"		"{olive}{1}{default} {red} 높은 공격 {default} {olive}{2}{default} ({red}{3}{default} 손상, 높이: {red}{4}{default})"
 	}
 	"HunterHPBot"
 	{
 		"#format"	"{1:N},{2:i},{3:i}"
-		"ko"		"{olive}hunter{default} {red}high-pounced{default} {olive}{1}{default} ({red}{2}{default} 데미지, 높이: {red}{3}{default})"
+		"ko"		"{olive}Hunter{default} {red} 높은 공격 {default} {olive}{1}{default} ({red}{2}{default} 손상, 높이: {red}{3}{default})"
 	}
 	"JockeyHP"
 	{
 		"#format"	"{1:N},{2:N},{3:i}"
-		"ko"		"{olive}{1}{default}이(가) {olive}{2}{default}에게 {red}높은 도약{default}을 성공했습니다 ({red}높이{default}: {red}{3}{default})"
+		"ko"		"{olive}{1}{default} {red}는 높은 곳에서 떨어져 {default} {olive}{2}{default}({red} 높이 {default}: {red}{3}{default})"
 	}
 	"JockeyHPBot"
 	{
 		"#format"	"{1:N},{2:i}"
-		"ko"		"{olive}기수{default} {red}높은 점프{default} {olive}{1}{default} ({red}높이{default}: {red}{2}{default})"
+		"ko"		"{olive}Jockey{default} {red}는 높은 곳에서 떨어져 {default} {olive}{1}{default}({red} 높이 {default}: {red}{2}{default})"
 	}
 	"DeathCharged"
 	{
-		"#format"	"{1:N},{2:N},{3:s},{4:i}"
-		"ko"		"{olive}{1}{default} {red}죽음의 충전{default} {olive}{2}{default} {3}({red}height{default}: {red}{4}{default})"
+		"#format"		"{1:N},{2:N},{3:t},{4:i}"
+		"ko"		"{olive}{1}{default} {red} 충전 {default} 원인 {olive}{2} 사망{default}({3})({red} 높이 {default}: {red}{4}{default})"
 	}
 	"DeathChargedBot"
 	{
-		"#format"	"{1:N},{2:s},{3:i}"
-		"ko"		"{olive}충전기{default} {red}죽음 충전{default} {olive}{1}{default} {2}({red}height{default}: {red}{3}{default})"
+		"#format"		"{1:N},{2:t},{3:i}"
+		"ko"		"{olive}Charger{default} {red} 충전 {default} 원인 {olive}{1}{default} 사망({2})({red} 높이 {default}: {red}{3}{default})"
 	}
 	"Bowling"
 	{
-		"ko"		"볼링으로"
+		"ko"		"운반되는"
 	}
 	"SIClear"
 	{
@@ -204,21 +204,21 @@
 	"SIClearBot"
 	{
 		"#format"	"{1:N},{2:N},{3:s},{4:.2f}"
-		"ko"		"{3}에서 {olive}{1}{default} {blue}insta-cleared{default} {olive}{2}{default}({blue}{4} {default}초)"
+		"ko"		"{olive}{1}{default} {blue}{4} 초만에 {default} {olive}와 {3}{default} 한 명을 죽이고 제어권을 해제했습니다. {olive}{2}{default}"
 	}
 	"SIClearTeammateBot"
 	{
 		"#format"	"{1:N},{2:s},{3:.2f}"
-		"ko"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}팀원{default}({2})({blue}{3} {default}초)"
+		"ko"		"{olive}{1}{default} {blue}{3} 초만에 {default} {olive}{2}{default}를 죽였습니다."
 	}
 	"BunnyHop"
 	{
-		"#format"	"{1:i},{2:s},{3:.1f}"
+		"#format"		"{1:i},{2:t},{3:.1f}"
 		"ko"		"{olive}당신은{default} 연속으로 {blue}{1} Bunnyhop{2}{default}을 획득했습니다({blue}최고 속도{default}: {olive}{3}{default})"
 	}
 	"PluralCount"
 	{
-		"ko"		"s"
+		"ko"		""
 	}
 	"Empty"
 	{
@@ -226,48 +226,48 @@
 	}
 	"CalarmHit"
 	{
-		"ko"		"{olive}%N{default}가 적중과 함께 경보를 트리거했습니다."
+		"ko"		"{olive}%N{default}가 사이렌을 울렸습니다."
 	}
 	"CalarmTouched"
 	{
 		"#format"	"{1:N},{2:N}"
-		"ko"		"{olive}{1}{default}로 인해 {olive}{2}{default}가 알람을 트리거했습니다."
+		"ko"		"{olive}{1}{default}로 인해 {olive}{2}{default}가 경보를 트리거합니다."
 	}
 	"CalarmTouchedHunter"
 	{
-		"ko"		"{olive}hunter{default}가 {olive}%N{default}가 경보를 울리도록 했습니다."
+		"ko"		"{olive}Hunter{default}로 인해 {olive}%N{default}가 경보를 트리거합니다."
 	}
 	"CalarmTouchedJockey"
 	{
-		"ko"		"{olive}jockey{default}로 인해 {olive}%N{default}가 경보를 트리거했습니다."
+		"ko"		"{olive}Jockey{default}로 인해 {olive}%N{default}가 경보를 트리거합니다."
 	}
 	"CalarmTouchedCharger"
 	{
-		"ko"		"{olive}충전기{default}로 인해 {olive}%N{default}가 알람을 트리거합니다."
+		"ko"		"{olive}Charger{default}로 인해 {olive}%N{default}가 경보를 트리거합니다."
 	}
 	"CalarmTouchedInfected"
 	{
-		"ko"		"{olive}봇이 감염{default}되어 {olive}%N{default}가 경보를 트리거했습니다."
+		"ko"		"{olive}Bot 감염 {default}로 인해 {olive}%N{default}가 경보를 트리거합니다."
 	}
 	"CalarmTouchedBot"
 	{
-		"ko"		"{olive}%N{default}가 경보를 받은 차량을 터치했습니다."
+		"ko"		"{olive}%N{default}가 사이렌을 울렸습니다."
 	}
 	"CalarmExplosion"
 	{
-		"ko"		"{olive}%N{default}가 폭발음과 함께 경보를 발령했습니다."
+		"ko"		"{olive}%N{default} 폭발을 사용하여 사이렌 자동차를 작동시키세요."
 	}
 	"CalarmBoomer"
 	{
 		"#format"	"{1:N},{2:N}"
-		"ko"		"{olive}{1}{default}는 부머 {olive}{2}{default}를 죽임으로써 경보를 발령했습니다."
+		"ko"		"{olive}{1}{default} 부머를 죽였습니다. {olive}{2}{default} 사이렌 자동차를 출발했습니다."
 	}
 	"CalarmBoomerBot"
 	{
-		"ko"		"{olive}%N{default}가 {olive}부머{default}를 발사하여 경보를 발령했습니다."
+		"ko"		"{olive}%N{default}가 한 명을 죽였습니다. {olive}boomer{default}가 경보 차량을 작동시켰습니다."
 	}
 	"Calarm"
 	{
-		"ko"		"{olive}%N{default}가 경보를 트리거했습니다."
+		"ko"		"{olive}%N{default}가 사이렌을 울렸습니다."
 	}
 }

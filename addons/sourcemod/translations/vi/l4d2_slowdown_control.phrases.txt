@@ -2,10 +2,10 @@
 {
 	"L4D2SlowdownControl_WaterSlowdownWaterSlowdownEffect"
 	{
-		"vi"		"{default}[{olive}Làm chậm nước{default}] {green} Làm chậm nước {default} Hiệu ứng bị suy yếu do tạo ra bể."
+		"vi"		"{default}[{olive}Water Slowdown{default}] {green} Water Slowdown {default} Hiệu ứng bị suy yếu do tạo ra xe tăng."
 	}
 	"L4D2SlowdownControl_WaterSlowdownWaterSlowdownEffectRestored"
 	{
-		"vi"		"{default}[{olive}Water Slowdown{default}] {green}Water Slowdown{default} Hiệu ứng đã được khôi phục về mức bình thường."
+		"vi"		"{default}[{olive}Water Slowdown{default}] {green} Water Slowdown {default} Hiệu ứng đã được khôi phục về mức bình thường."
 	}
 }

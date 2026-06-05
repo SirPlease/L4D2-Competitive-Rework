@@ -2,52 +2,52 @@
 {
 	"Tag"
 	{
-		"jp"		"{blue} [ {default} スロット {blue} ] {default}"
+		"jp"		"{blue}[{default}Slots{blue}]{default}"
 	}
 	"NotConsoleVote"
 	{
-		"jp"		"[スロット] ゲームに参加している必要があります。"
+		"jp"		"[Slots] ゲーム内でslotsコマンドを使用する必要があります。"
 	}
 	"LimitSlotsAbove"
 	{
-		"jp"		"このサーバーでは、{olive} %i {default} を超えるスロットを制限することはできません。"
+		"jp"		"このサーバーでは、{olive}%i{default} 人を超える人の位置を設定することはできません。"
 	}
 	"LimitedSlotsTo"
 	{
 		"#format"	"{1:s},{2:i}"
-		"jp"		"{olive} {1} {default} のスロットは {blue} {2} {default} に制限されています"
+		"jp"		"{olive}{1}{default} 位置を {blue}{2}{default} に設定します"
 	}
 	"RequiredPlayers"
 	{
-		"jp"		"必要なプレイヤー数よりも低いスロットを制限することはできません。"
+		"jp"		"最小ポジションをモードに必要な人数未満に設定することはできません。"
 	}
 	"SlotsUsage"
 	{
-		"jp"		"使用法: {olive}!slots {default} < {olive} 番号 {default} > {blue} | {default} 例: {olive}!slots 8 {default}"
+		"jp"		"使用法: {olive}!slots{default} <{olive}設定したいポジション数 {default}> {blue}|{default} 例: {olive}!slots 8{default}"
 	}
 	"Spectators"
 	{
-		"jp"		"観客の投票は許可されていません。"
+		"jp"		"観客は位置情報コマンドを使用できません。"
 	}
 	"LimitSlots"
 	{
-		"jp"		"スロットを「 %s 」に制限しますか?"
+		"jp"		"場所は「%s」に制限されていますか?"
 	}
 	"CannotBeStarted"
 	{
-		"jp"		"現在投票を開始できません。"
+		"jp"		"一時的に投票ができなくなります。"
 	}
 	"LimitingSlots"
 	{
-		"jp"		"スロットを制限中..."
+		"jp"		"サーバーの場所を設定しています..."
 	}
 	"SlotsVote_AdminOnlyBelowMinimumSlots"
 	{
 		"#format"	"{1:i}"
-		"jp"		"只有管理员才能将位置设为小于 {blue}{1}{default}人"
+		"jp"		"管理者のみが Slots を {blue}{1}{default} 人よりも低く設定できます"
 	}
 	"LimitSlotsBelow"
 	{
-		"jp"		"{blue} {1} {default} プレーヤー以下のスロットを設定できるのは管理者のみです"
+		"jp"		"管理者のみが場所を {blue}{1}{default} 人未満に設定できます"
 	}
 }

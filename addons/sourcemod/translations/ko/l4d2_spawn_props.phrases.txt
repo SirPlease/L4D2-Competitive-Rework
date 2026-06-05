@@ -2,7 +2,7 @@
 {
 	"Spawn Objects"
 	{
-		"ko"		"스폰 객체"
+		"ko"		"객체 생성"
 	}
 	"Select a task:"
 	{
@@ -10,23 +10,23 @@
 	}
 	"Select the delete task"
 	{
-		"ko"		"삭제 작업을 선택하세요"
+		"ko"		"작업 삭제 선택"
 	}
 	"Delete All Objects"
 	{
-		"ko"		"모든 객체 삭제"
+		"ko"		"생성된 모든 객체 삭제"
 	}
 	"Delete Looking Object"
 	{
-		"ko"		"찾고 있는 객체 삭제"
+		"ko"		"앞에 있는 개체(중심점) 삭제"
 	}
 	"Delete Last Object"
 	{
-		"ko"		"마지막 개체 삭제"
+		"ko"		"마지막으로 생성된 객체 삭제"
 	}
 	"Are you sure(Delete All)?"
 	{
-		"ko"		"모든 개체를 삭제하시겠습니까?"
+		"ko"		"생성된 개체를 모두 삭제하시겠습니까?"
 	}
 	"Yes"
 	{
@@ -38,7 +38,7 @@
 	}
 	"Successfully deleted all spawned objects"
 	{
-		"ko"		"생성된 모든 개체를 성공적으로 삭제했습니다."
+		"ko"		"생성된 객체를 모두 삭제했습니다."
 	}
 	"Canceled"
 	{
@@ -54,35 +54,35 @@
 	}
 	"Delete Object"
 	{
-		"ko"		"객체 삭제"
+		"ko"		"개체 삭제"
 	}
 	"Select the spawn method"
 	{
-		"ko"		"스폰 방법을 선택하세요"
+		"ko"		"생성 방법 선택"
 	}
 	"Spawn Physics On Cursor"
 	{
-		"ko"		"커서에 물리학 생성"
+		"ko"		"십자선 위치에서 동적 객체 생성"
 	}
 	"Spawn Physics On Origin"
 	{
-		"ko"		"원점에서 물리학 생성"
+		"ko"		"현재 위치에서 동적 객체 생성"
 	}
 	"Spawn Non-solid On Cursor"
 	{
-		"ko"		"커서에 비고체 생성"
+		"ko"		"중앙 위치에 관통 물체 생성"
 	}
 	"Spawn Non-solid On Origin"
 	{
-		"ko"		"원점에서 비고체 생성"
+		"ko"		"현재 위치에 관통 물체 생성"
 	}
 	"Spawn Solid On Cursor"
 	{
-		"ko"		"커서에 솔리드 생성"
+		"ko"		"중앙 위치에 고정된 객체 생성"
 	}
 	"Spawn Solid On Origin"
 	{
-		"ko"		"원점에서 솔리드 생성"
+		"ko"		"현재 위치에 고정된 객체 생성"
 	}
 	"Save Objects"
 	{
@@ -90,19 +90,19 @@
 	}
 	"Select The Save Method"
 	{
-		"ko"		"저장 방법을 선택하세요"
+		"ko"		"보관 방법 선택"
 	}
 	"Save Stripper File"
 	{
-		"ko"		"스트리퍼 파일 저장"
+		"ko"		"스트리퍼 파일에 저장(권장)"
 	}
 	"Save Routing File"
 	{
-		"ko"		"라우팅 파일 저장"
+		"ko"		"라우팅 파일에 저장됨(복잡함)"
 	}
 	"Save Spawn Objects File"
 	{
-		"ko"		"생성 개체 파일 저장"
+		"ko"		"생성 개체 파일에 저장됨(임시 저장소)"
 	}
 	"Select Path Difficulty"
 	{
@@ -110,7 +110,7 @@
 	}
 	"Easy Path"
 	{
-		"ko"		"쉬운 길"
+		"ko"		"간단한 경로"
 	}
 	"Medium Path"
 	{
@@ -118,7 +118,7 @@
 	}
 	"Hard Path"
 	{
-		"ko"		"하드 경로"
+		"ko"		"어려운 길"
 	}
 	"Load Objects"
 	{
@@ -126,7 +126,7 @@
 	}
 	"load the map data cache?"
 	{
-		"ko"		"지도 데이터 캐시를 로드하시겠습니까?"
+		"ko"		"임시 파일에서 개체를 로드하시겠습니까?"
 	}
 	"Are you sure?"
 	{
@@ -134,35 +134,35 @@
 	}
 	"Choose a map number please"
 	{
-		"ko"		"지도번호를 선택해주세요"
+		"ko"		"지도번호 선택"
 	}
 	"Vehicles"
 	{
-		"ko"		"차량"
+		"ko"		"차량 등급"
 	}
 	"Foliage"
 	{
-		"ko"		"잎"
+		"ko"		"식물"
 	}
 	"Interior"
 	{
-		"ko"		"내부"
+		"ko"		"실내 카테고리"
 	}
 	"Exterior"
 	{
-		"ko"		"외부"
+		"ko"		"아웃도어 카테고리"
 	}
 	"Decorative"
 	{
-		"ko"		"장식적인"
+		"ko"		"장식"
 	}
 	"Misc"
 	{
-		"ko"		"기타"
+		"ko"		"여러 가지 잡다한"
 	}
 	"Select an action:"
 	{
-		"ko"		"작업을 선택하세요:"
+		"ko"		"작업 선택:"
 	}
 	"Rotate"
 	{
@@ -186,7 +186,7 @@
 	}
 	"Rotate 45 degree (X axys)"
 	{
-		"ko"		"40도 회전(X축)"
+		"ko"		"45도 회전(X축)"
 	}
 	"Rotate 90 degree (X axys)"
 	{
@@ -222,7 +222,7 @@
 	}
 	"Rotate 45 degree (Y axys)"
 	{
-		"ko"		"40도 회전(Y축)"
+		"ko"		"45도 회전(Y축)"
 	}
 	"Rotate 90 degree (Y axys)"
 	{
@@ -258,7 +258,7 @@
 	}
 	"Rotate 45 degree (Z axys)"
 	{
-		"ko"		"40도 회전(Z축)"
+		"ko"		"45도 회전(Z축)"
 	}
 	"Rotate 90 degree (Z axys)"
 	{
@@ -290,7 +290,7 @@
 	}
 	"Move Up 30 Unit"
 	{
-		"ko"		"30 단위 위로 이동"
+		"ko"		"30단위 위로 이동"
 	}
 	"Move Down 1 Unit"
 	{
@@ -302,7 +302,7 @@
 	}
 	"Move Down 30 Unit"
 	{
-		"ko"		"아래로 30단위 이동"
+		"ko"		"30단위 아래로 이동"
 	}
 	"Move Right 1 Unit"
 	{
@@ -338,39 +338,39 @@
 	}
 	"Move Forward 30 Unit"
 	{
-		"ko"		"전진 30단위"
+		"ko"		"30단위 앞으로 이동"
 	}
 	"Move Backward 1 Unit"
 	{
-		"ko"		"뒤로 1단위 이동"
+		"ko"		"1단위 뒤로 이동"
 	}
 	"Move Backward 10 Unit"
 	{
-		"ko"		"뒤로 10단위 이동"
+		"ko"		"10단위 뒤로 이동"
 	}
 	"Move Backward 30 Unit"
 	{
-		"ko"		"뒤로 30단위 이동"
+		"ko"		"30단위 뒤로 이동"
 	}
 	"Object Model"
 	{
 		"#format"	"{1:d},{2:s}"
-		"ko"		"객체( {1} ) 모델: {2}"
+		"ko"		"개체({1}) 모듈: {2}"
 	}
 	"Object Position"
 	{
 		"#format"	"{1:d},{2:f},{3:f},{4:f}"
-		"ko"		"객체( {1} ) 위치: {2}, {3}, {4}"
+		"ko"		"개체({1}) 위치: {2}, {3}, {4}"
 	}
 	"Object Angle"
 	{
 		"#format"	"{1:d},{2:f},{3:f},{4:f}"
-		"ko"		"객체( {1} ) 각도: {2}, {3}, {4}"
+		"ko"		"물체({1}) 각도: {2}, {3}, {4}"
 	}
 	"Successfully removed an object"
 	{
 		"#format"	"{1:d}"
-		"ko"		"객체를 성공적으로 제거했습니다( {1} )"
+		"ko"		"개체가 성공적으로 제거되었습니다({1})"
 	}
 	"This plugin won't work in this game"
 	{
@@ -378,31 +378,31 @@
 	}
 	"You are not looking to a valid object"
 	{
-		"ko"		"유효한 개체를 찾고 있지 않습니다."
+		"ko"		"십자선이 합법적인 대상을 가리키지 않습니다."
 	}
 	"Succesfully deleted the last spawned object"
 	{
-		"ko"		"마지막으로 생성된 개체를 성공적으로 삭제했습니다."
+		"ko"		"마지막으로 생성한 오브젝트를 삭제했습니다."
 	}
 	"The last spawned object index is not an object anymore!"
 	{
 		"#format"	"{1:d}"
-		"ko"		"마지막으로 생성된 객체 인덱스 {1}는 더 이상 객체가 아닙니다!"
+		"ko"		"마지막으로 생성한 오브젝트 인덱스 {1}는 더 이상 유효한 오브젝트가 아닙니다!"
 	}
 	"The last object is not valid anymore"
 	{
-		"ko"		"마지막 개체는 더 이상 유효하지 않습니다."
+		"ko"		"마지막으로 생성된 개체가 더 이상 유효하지 않습니다."
 	}
 	"You haven't spawned anything yet"
 	{
-		"ko"		"아직 아무것도 생성하지 않았습니다."
+		"ko"		"아직 개체를 생성하지 않았습니다, 바보."
 	}
 	"The file already exists."
 	{
-		"ko"		"파일이 이미 존재합니다. 오래된 콘텐츠는 삭제되지 않습니다."
+		"ko"		"아카이브가 이미 존재합니다. 오래된 콘텐츠는 삭제되지 않습니다."
 	}
 	"Succesfully saved the map data"
 	{
-		"ko"		"지도 데이터를 성공적으로 저장했습니다."
+		"ko"		"모든 개체가 성공적으로 저장되었습니다."
 	}
 }

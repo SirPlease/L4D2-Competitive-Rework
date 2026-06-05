@@ -2,18 +2,50 @@
 {
 	"GlobalChat_FullServerNormalFullServer"
 	{
-		"en"		"{green}[Full server]{default} You have %s normal full server chat."
+		"en"		"{green}[Global]{default} %s."
 	}
 	"GlobalChat_AllServersAskedTipTeammates"
 	{
-		"en"		"{green}[All servers]{default} You have %s asked for a tip from your teammates."
+		"en"		"{green}[Global Team Finder]{default} %s."
 	}
 	"GlobalChat_SummonTeammates"
 	{
-		"en"		"{green}%s {olive}%s {default}The player summons teammates in {lightgreen}%s {default}"
+		"en"		"{green}%s {olive}%s {default}is looking for teammates on {lightgreen}%s{default}"
 	}
 	"GlobalChat_SummonTeammatesWithMessage"
 	{
-		"en"		"{green}%s {olive}%s {default}The player summons teammates in {lightgreen}%s {default}\n{default}Message: {olive}%s"
+		"en"		"{green}%s {olive}%s {default}is looking for teammates on {lightgreen}%s{default}\n{default}Message: {olive}%s"
+	}
+	"GlobalChat_StatusReceive"
+	{
+		"en"		"receive"
+	}
+	"GlobalChat_StatusBlock"
+	{
+		"en"		"block"
+	}
+	"GlobalChat_MenuTitle"
+	{
+		"en"		"Global chat receive settings\nNormal global chat: %s\nLooking-for-group alerts: %s"
+	}
+	"GlobalChat_MenuReceiveNormal"
+	{
+		"en"		"Receive normal server-wide chat"
+	}
+	"GlobalChat_MenuBlockNormal"
+	{
+		"en"		"Block normal server-wide chat"
+	}
+	"GlobalChat_MenuReceiveLFG"
+	{
+		"en"		"Receive looking-for-group alerts"
+	}
+	"GlobalChat_MenuBlockLFG"
+	{
+		"en"		"Block looking-for-group alerts"
+	}
+	"GlobalChat_MenuLFGLocked"
+	{
+		"en"		"Looking-for-group alerts: only admins can block these"
 	}
 }

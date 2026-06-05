@@ -2,7 +2,7 @@
 {
 	"Tag"
 	{
-		"chi"		"{blue}<{green}老板投票{blue}>{default}"
+		"chi"		"{blue}<{green}BossVote{blue}>{default}"
 	}
 	"NotAvailable"
 	{

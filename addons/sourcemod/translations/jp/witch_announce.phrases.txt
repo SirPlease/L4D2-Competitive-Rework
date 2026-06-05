@@ -6,14 +6,14 @@
 	}
 	"WitchAnnounce_TankKilledWitch"
 	{
-		"jp"		"{default}[{green}!{default}] {red}戦車 {default}({olive}%N{default}) {red}魔女を殺した"
+		"jp"		"{default}[{green}!{default}] {red}Tank {default}({olive}%N{default}) {red}Witch を殺しました"
 	}
 	"WitchAnnounce_StillSomeBloodLeft"
 	{
-		"jp"		"{default}[{green}!{default}] {blue}魔女 {default}にはまだ血が残っています {olive}%d {default}"
+		"jp"		"{default}[{green}!{default}] {blue}Witch {default} 血がまだ残っています {olive}%d {default}"
 	}
 	"WitchAnnounce_WitchDamageHeader"
 	{
-		"jp"		"{default}[{green}!{default}] 对{blue}女巫{default}产生的{blue}伤害"
+		"jp"		"{default}[{green}!{default}] {blue} {blue} 魔女にダメージ {default}"
 	}
 }

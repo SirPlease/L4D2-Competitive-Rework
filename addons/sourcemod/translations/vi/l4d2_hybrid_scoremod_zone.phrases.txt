@@ -2,31 +2,31 @@
 {
 	"L4D2HybridScoremodZone_MapHealthBonusTempHealth"
 	{
-		"vi"		"{default} Phần thưởng sức khỏe bản đồ: {olive} %.1f {default}, phần thưởng sức khỏe tạm thời: {olive} %.1f {default}, giá trị hp perm: {lightgreen} %.1f {default}, phần thưởng sức khỏe tạm thời: {lightgreen} %.1f {default}, giá trị viên thuốc: {lightgreen} %i {default}"
+		"vi"		"Điểm thưởng lượng máu bản đồ {default}: {olive}%.1f{default}, điểm thưởng lượng máu tạm thời: {olive}%.1f{default}, Giá trị HP vĩnh viễn: {lightgreen}%.1f{default}, giá trị HP tạm thời: {lightgreen}%.1f{default}, giá trị thuốc: {lightgreen}%i{default}"
 	}
 	"L4D2HybridScoremodZone_1Bonus"
 	{
-		"vi"		"%s{default}R{green}#1{default} Tiền thưởng: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
+		"vi"		"%s{default}R{green}#1{default} Điểm thưởng: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
 	}
 	"L4D2HybridScoremodZone_BonusHBDBPills"
 	{
-		"vi"		"%s{default}R{green}#%i{default} Tiền thưởng: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | ĐB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | Thuốc: {olive}%d{default} <{lightgreen}%.1f%%{default}>]"
+		"vi"		"%s{default}R{green}#%i{default} Điểm thưởng: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | DB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | Thuốc: {olive}%d{default} <{lightgreen}%.1f%%{default}>]"
 	}
 	"L4D2HybridScoremodZone_Bonus"
 	{
-		"vi"		"%s{default}R{green}#%i{default} Tiền thưởng: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+		"vi"		"%s{default}R{green}#%i{default} Điểm thưởng: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
 	}
 	"L4D2HybridScoremodZone_1Bonus_2"
 	{
-		"vi"		"%s{default}R{green}#1{default} Tiền thưởng: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+		"vi"		"%s{default}R{green}#1{default} Điểm thưởng: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
 	}
 	"L4D2HybridScoremodZone_BonusHBDBPills_2"
 	{
-		"vi"		"%s{default}R{green}#%i{default} Tiền thưởng: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {lightgreen}%.0f%%{default} | ĐB: {lightgreen}%.0f%%{default} | Thuốc: {lightgreen}%.0f%%{default}]"
+		"vi"		"%s{default}R{green}#%i{default} Điểm thưởng: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {lightgreen}%.0f%%{default} | DB: {lightgreen}%.0f%%{default} | Thuốc: {lightgreen}%.0f%%{default}]"
 	}
 	"L4D2HybridScoremodZone_HybridBonusMapInfo"
 	{
-		"vi"		"{default}[{green}Phần thưởng kết hợp{default} :: {lightgreen}%iv%i{default}] Thông tin bản đồ"
+		"vi"		"{default}[{green} điểm thưởng hỗn hợp {default}::{lightgreen}%iv%i{default}] Thông tin bản đồ"
 	}
 	"L4D2HybridScoremodZone_Distance"
 	{
@@ -34,66 +34,66 @@
 	}
 	"L4D2HybridScoremodZone_TotalBonus1000"
 	{
-		"vi"		"{default}Tổng tiền thưởng: {olive}%d{default} <{lightgreen}100.0%%{default}>"
+		"vi"		"{default} tổng điểm thưởng: {olive}%d{default} <{lightgreen}100.0%%{default}>"
 	}
 	"L4D2HybridScoremodZone_HealthBonus"
 	{
-		"vi"		"Phần thưởng {default}Health: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+		"vi"		"Điểm thưởng thể tích máu {default}: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
 	}
 	"L4D2HybridScoremodZone_DamageBonus"
 	{
-		"vi"		"Phần thưởng thiệt hại {default}D: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+		"vi"		"Điểm thưởng sát thương của {default}: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
 	}
 	"L4D2HybridScoremodZone_PillsBonusMax"
 	{
-		"vi"		"Phần thưởng {default}Pills: {olive}%d{default}(tối đa {olive}%d{default}) <{lightgreen}%.1f%%{default}>"
+		"vi"		"Điểm thưởng thuốc {default}: {olive}%d{default} (tối đa {olive}%d{default}) <{lightgreen}%.1f%%{default}>"
 	}
 	"L4D2HybridScoremodZone_Tiebreaker"
 	{
-		"vi"		"{default}TTiebreaker: {olive}%d{default}"
+		"vi"		"Điểm hòa {default}: {olive}%d{default}"
 	}
 	"L4D2HybridScoremodZone_TempHPDamage"
 	{
-		"vi"		"{green}%N{default} hiện có {olive}%d{default} HP tạm thời (thiệt hại: {lightgreen}%.1f{default})"
+		"vi"		"{green}%N{default} Hiện có {olive}%d{default} tạm thời HP (thiệt hại: {lightgreen}%.1f{default})"
 	}
 	"L4D2HybridScoremodZone_ValidDeathIncapsTotalPenalty"
 	{
-		"vi"		"{green}[{default}Valid Death{green}] {lightgreen}%N {default}had {lightgreen}%i {default}incaps và tổng số tiền phạt hiện tại là {lightgreen}%i"
+		"vi"		"{green}[{default} thực sự đã chết {green}] {lightgreen}%N {default} có {lightgreen}%i {default} lần và tổng số tiền phạt hiện tại là {lightgreen}%i"
 	}
 	"L4D2HybridScoremodZone_LostTempHPAfterAttacked"
 	{
-		"vi"		"{lightgreen}%N{default}{olive} mất %i{default} HP tạm thời sau khi bị tấn công (sát thương arg: {lightgreen}%.1f{default})"
+		"vi"		"{lightgreen}%N{default}{olive} Mất sau khi bị tấn công %i{default} HP tạm thời (thiệt hại tham số: {lightgreen}%.1f{default})"
 	}
 	"L4D2HybridScoremodZone_DirectorEndVersusModeRound"
 	{
-		"vi"		"CDirector::OnEndVersusModeRound() đã gọi. InSecondHalfOfRound(): %d, countSurvivors: %d"
+		"vi"		"CDirector::OnEndVersusModeRound() đã được gọi. InSecondHalfOfRound(): %d, countSurvivors: %d"
 	}
 	"L4D2HybridScoremodZone_SurvivalBonusCvarUpdatedValue"
 	{
-		"vi"		"Đã cập nhật cvar phần thưởng sinh tồn {default}. Giá trị: {olive}%i{default} [hệ số nhân: {olive}%i{default}]"
+		"vi"		"{default} Điểm thưởng sinh tồn cvar đã được cập nhật. Giá trị: {olive}%i{default} [Độ phóng đại: {olive}%i{default}]"
 	}
 	"L4D2HybridScoremodZone_RoundBonus"
 	{
-		"vi"		"%s{default}Round {green}%i{default} Tiền thưởng: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
+		"vi"		"%s{default} Số {green}%i{default} Điểm thưởng vòng: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
 	}
 	"L4D2HybridScoremodZone_TiebreakerTeam1Team2"
 	{
-		"vi"		"%s{lightgreen}TIEBREAKER{default}: Đội {green}%#1{default} - {olive}%i{default}, Đội {green}%#2{default} - {olive}%i{default}"
+		"vi"		"%s{lightgreen}TIEBREAKER{default}:Đội {green}%#1{default} - {olive}%i{default},Đội {green}%#2{default} - {olive}%i{default}"
 	}
 	"L4D2HybridScoremodZone_TeamsPerformedAbsolutelyEqualImpossible"
 	{
-		"vi"		"%s{olive}Hai đội thể hiện hoàn toàn ngang nhau! Không thể xác định đội thắng rõ ràng của vòng này"
+		"vi"		"%s{olive}Hai đội trình diễn giống hệt nhau! Không thể xác định người chiến thắng rõ ràng cho vòng này"
 	}
 	"L4D2HybridScoremodZone_AddingPermHPBonusContribution"
 	{
-		"vi"		"{default}Thêm đóng góp thưởng HP vĩnh viễn của {olive}%N{default}: {olive}%d{default} HP vĩnh viễn -> {lightgreen}%.1f{default} thưởng; tổng mới: {olive}%.1f{default}"
+		"vi"		"{default} đang tham gia đóng góp điểm thưởng vĩnh viễn HP của {olive}%N{default}: {olive}%d{default} HP vĩnh viễn -> {lightgreen}%.1f{default} Điểm thưởng; tổng số mới: {olive}%.1f{default}"
 	}
 	"L4D2HybridScoremodZone_AddingTempHPBonusEligible"
 	{
-		"vi"		"{default}Thêm phần thưởng hp tạm thời: {olive}%.1f{default} (những người sống sót đủ điều kiện: {olive}%d{default})"
+		"vi"		"{default} đang tham gia HP tạm thời Điểm thưởng: {olive}%.1f{default} (những người sống sót đủ điều kiện: {olive}%d{default})"
 	}
 	"L4D2HybridScoremodZone_AddingPillsContributionTotalBonus"
 	{
-		"vi"		"{default}Thêm đóng góp thuốc {olive}%N's{default}, tổng tiền thưởng: {olive}%d{default} điểm"
+		"vi"		"{default} đang tham gia đóng góp thuốc của {olive}%N{default}, tổng điểm thưởng là: {olive}%d{default} điểm"
 	}
 }

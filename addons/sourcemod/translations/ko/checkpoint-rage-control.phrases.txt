@@ -6,10 +6,10 @@
 	}
 	"LoseFrustration"
 	{
-		"ko"		"생존자가 {olive}안전실{default}에 있는 동안 {red}탱크{default}는 {green}여전히 좌절감을 잃습니다{default}."
+		"ko"		"{red}Tank{default} 모든 생존자가 {olive} 안전실 {default}에 있으면 {green}는 점차 {default}에 대한 통제력을 잃게 됩니다."
 	}
 	"KeepFrustration"
 	{
-		"ko"		"{red}탱크{default}는 생존자가 {olive}saferoom{default}에 있는 동안 좌절감을 {green}잃지 않습니다{default}."
+		"ko"		"{red}Tank{default} {green}는 모든 생존자가 {olive} 안전실 {default}에 있을 때 {default}의 제어권을 잃지 않습니다."
 	}
 }

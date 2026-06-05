@@ -2,15 +2,15 @@
 {
 	"BoomerHordeEqualizer_PassedBiledSurvivor"
 	{
-		"zho"		"%N 將 bBiledSurvivor 傳給 %N"
+		"zho"		"%N 的膽汁狀態已轉移給 %N"
 	}
 	"BoomerHordeEqualizer_NoLongerBoomedSurvivorCount"
 	{
-		"zho"		"%N 不再是它（BoomedSurvivorCount：%i）"
+		"zho"		"%N 的膽汁狀態已結束（當前被噴中人數：%i）"
 	}
 	"BoomerHordeEqualizer_BoomedTotal"
 	{
-		"zho"		"%N 轟鳴（總計：%d）"
+		"zho"		"%N 被膽汁噴中（總計：%d）"
 	}
 	"BoomerHordeEqualizer_BoomHordeEventBoomedSurvivor"
 	{
@@ -18,6 +18,6 @@
 	}
 	"BoomerHordeEqualizer_UncoveredBileEvent"
 	{
-		"zho"		"膽汁暴露事件"
+		"zho"		"檢測到非倖存者膽汁事件"
 	}
 }

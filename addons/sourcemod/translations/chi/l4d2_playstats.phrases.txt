@@ -42,7 +42,7 @@
 	}
 	"L4D2Playstats_StatsPrefNoRoundEnd"
 	{
-		"chi"		"{default} 统计首选：{green} 根本没有圆端印刷 {default}。"
+		"chi"		"{default}统计偏好: {green}不打印回合结束统计{default}."
 	}
 	"L4D2Playstats_StatsPrefServerDefault"
 	{

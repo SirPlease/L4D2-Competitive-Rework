@@ -2,27 +2,27 @@
 {
 	"L4D2GhostWarp_CommandDisabled"
 	{
-		"jp"		"%s 現在、このコマンドは {green}disabled{default} です。"
+		"jp"		"%s このコマンドは {green} で無効になり、{default} になりました。"
 	}
 	"L4D2GhostWarp_CanUseCommandOftenWait"
 	{
-		"jp"		"%s このコマンドは頻繁に使用することはできません。さらに {green}%.01f{default} 秒待ってください。"
+		"jp"		"%s このコマンドは頻繁に使用できません。さらに {green}%.01f{default} 秒待ってください。"
 	}
 	"L4D2GhostWarp_NoSurvivorsFound"
 	{
-		"jp"		"%s {green}生存者{default}が見つかりません!"
+		"jp"		"%s {green} 生存者 {default} が見つかりません!"
 	}
 	"L4D2GhostWarp_EnteredInvalidSurvivorIndex"
 	{
-		"jp"		"%s 無効な {green} 生存者インデックスを入力しました!%s"
+		"jp"		"%s {green} に無効な {default} サバイバー インデックスを入力しました。 %s"
 	}
 	"L4D2GhostWarp_Usage1"
 	{
-		"jp"		"%s 用途: {green}%s{default} <1 - %d>"
+		"jp"		"%s 使用法: {green}%s{default} <1 - %d>"
 	}
 	"L4D2GhostWarp_EnteredWrongSurvivorName"
 	{
-		"jp"		"%s {green}間違った{default}生存者名を入力しました!%s"
+		"jp"		"%s 入力した {green} は間違っています {default} 生存者の名前です。 %s"
 	}
 	"L4D2GhostWarp_UsageSurvivorName"
 	{
@@ -30,6 +30,6 @@
 	}
 	"L4D2GhostWarp_SurvivorSpecifiedNotFound"
 	{
-		"jp"		"%s あなたが指定した {green}survivor{default} は {green} 見つかりません {default}!"
+		"jp"		"%s 指定した {green} サバイバー、{default} が見つかりませんでした。"
 	}
 }

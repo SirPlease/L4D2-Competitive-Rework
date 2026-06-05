@@ -2,103 +2,104 @@
 {
 	"Tag"
 	{
-		"zho"		"{default}[{green}!{default}]"
+		"zho"		"[{green}!{default}]"
 	}
 	"ClientFullyLoaded"
 	{
 		"#format"	"{1:N}"
-		"zho"		"{olive} %N {default} 已滿載"
+		"zho"		"{olive}%N {default}已經完全載入"
 	}
 	"PauseCommand"
 	{
 		"#format"	"{1:N},{2:s}"
-		"zho"		"{olive} %N {blue} 已暫停 {default} 。"
+		"zho"		"{olive}{1}{default} {blue}暫停遊戲{default}{2}"
 	}
 	"PauseAction"
 	{
-		"zho"		"{red} 已暫停"
+		"zho"		"{red}暫停遊戲{default}"
 	}
 	"PauseDelay"
 	{
 		"#format"	"{1:d}"
-		"zho"		"{blue} 在 {default} 中暫停：{olive} %d"
+		"zho"		"{olive}%d 秒後 {blue}將暫停遊戲{default}"
 	}
 	"Crashed"
 	{
-		"zho"		"{olive} 遊戲 {default} 被 {green} 強制暫停 {default} 因為有玩家 {blue} 死機了 {default} 。"
+		"zho"		"{olive}遊戲 {default} 因為一個玩家客戶端{blue}崩潰{default} 所以被 {green}強行暫停."
 	}
 	"ForcePause"
 	{
 		"#format"	"{1:N}"
-		"zho"		"{green} 強制暫停 {default} 由 {blue} 管理員 {default} ( {olive} %N {default} ) 發出"
+		"zho"		"{blue}管理員 {default}({olive}%N{default})  {green}強行暫停遊戲 {default}. "
 	}
 	"UnpauseSurvivors"
 	{
 		"#format"	"{1:N},{2:s},{3:s}"
-		"zho"		"{olive} %N %s {default} 標記{blue} %s {default} 準備好。"
+		"zho"		"{olive}{1} {2}{default} 表示 {blue}{3}{default} 準備完畢."
 	}
 	"UnpauseInfected"
 	{
 		"#format"	"{1:N},{2:s},{3:s}"
-		"zho"		"{olive} %N %s {default} 標記{red} %s {default} 準備好。"
+		"zho"		"{olive}{1} {2}{default} 表示 {red}{3}{default} 準備完畢."
 	}
 	"UnpauseInitiator"
 	{
 		"#format"	"{1:N}"
-		"zho"		"{olive} %N {default} 標記 {green} 啟動器 {default} 已準備就緒。"
+		"zho"		"{olive}%N {default}表示 {green}發起者 {default}準備完畢."
 	}
 	"UnpauseAdminConfirm"
 	{
-		"zho"		"{olive} 團隊 {default} 已準備就緒。等待{blue}管理員{default}向{green}確認{default}。"
+		"zho"		"{olive}雙方團隊 {default}都已準備. 等待 {blue}管理員 {green}確認開始{default}."
 	}
 	"UnreadySurvivors"
 	{
 		"#format"	"{1:N},{2:s},{3:s}"
-		"zho"		"{olive} %N %s {default} 標記{blue} %s {default} 未準備好。"
+		"zho"		"{olive}{1} {2}{default} 表示 {blue}{3}{default} 還未準備完畢."
 	}
 	"UnreadyInfected"
 	{
 		"#format"	"{1:N},{2:s},{3:s}"
-		"zho"		"{olive} %N %s {default} 標記{red} %s {default} 未準備好。"
+		"zho"		"{olive}{1} {2}{default} 表示 {red}{3}{default} 還未準備完畢."
 	}
 	"UnreadyInitiator"
 	{
 		"#format"	"{1:N}"
-		"zho"		"{olive} %N {default} 標示為 {green} 啟動器 {default} 未就緒。"
+		"zho"		"{olive}%N {default}表示 {green}發起者 {default}還未準備完畢."
 	}
 	"AsInitiator"
 	{
-		"zho"		"{default} 作為 {green} 發起者"
+		"zho"		"{default}作為 {green}發起者 "
 	}
 	"ForceUnpause"
 	{
 		"#format"	"{1:N}"
-		"zho"		"{green} 強制取消暫停 {default} 由 {blue} 管理員 {default} ( {olive} %N {default} ) 發出"
+		"zho"		"{blue}管理員 {default}({olive}%N{default})  {green}強行解除暫停遊戲 {default}."
 	}
 	"PauseLimit"
 	{
-		"zho"		"您已達到暫停限制。"
+		"#format"	"{1:d}"
+		"zho"		"你已經達到你的 {red}暫停次數上限{default} [{green}%d{default}]."
 	}
 	"PauseDeferred"
 	{
-		"zho"		"{red} 由於正在進行接聽，暫停已被延遲！"
+		"zho"		"{red}暫停由於生還者正在拉人被推遲了!"
 	}
 	"PausePreventSpawn"
 	{
-		"zho"		"{default} 您的 {red} 產生 {default} 因暫停而被阻止"
+		"zho"		"{default}你因為暫停被阻止{red}生成"
 	}
 	"PanelShow"
 	{
-		"zho"		"面板現在是 {default} 上的 {blue} 。"
+		"zho"		"準備面板： [{blue}開啟{default}]."
 	}
 	"PanelHide"
 	{
-		"zho"		"現在面板是{red}，關閉{default}。"
+		"zho"		"準備面板： [{red}關閉{default}]."
 	}
 	"PanelSlots"
 	{
 		"#format"	"{1:s},{2:d},{3:d}"
-		"zho"		"▸ Server: %s\n▸ Slots: %d/%d"
+		"zho"		"▸ 伺服器: {1}\n▸ 位置: {2}/{3}"
 	}
 	"PanelDate"
 	{
@@ -106,84 +107,84 @@
 	}
 	"PanelTitle"
 	{
-		"zho"		"▸ 就緒狀態"
+		"zho"		"▸ 準備狀態"
 	}
 	"RequireAdmin"
 	{
-		"zho"		"->0。要求管理員取消暫停"
+		"zho"		"->0. 需要管理員解除暫停"
 	}
 	"SurvivorUnPaused"
 	{
-		"zho"		"->1。倖存者：[√]"
+		"zho"		"->1. 生還者: [√]"
 	}
 	"SurvivorPaused"
 	{
-		"zho"		"->1。倖存者：[X]"
+		"zho"		"->1. 生還者: [X]"
 	}
 	"InfectedUnPaused"
 	{
-		"zho"		"->2.感染者：[√]"
+		"zho"		"->2. 感染者: [√]"
 	}
 	"InfectedPaused"
 	{
-		"zho"		"->2.感染者：[X]"
+		"zho"		"->2. 感染者: [X]"
 	}
 	"InitiatorUnPaused"
 	{
-		"zho"		"->0。發起人：[√]"
+		"zho"		"->0. 發起者: [√]"
 	}
 	"InitiatorPaused"
 	{
-		"zho"		"->0。發起者：[X]"
+		"zho"		"->0. 發起者: [X]"
 	}
 	"AutoPauseCrash"
 	{
-		"zho"		"▸ 強制自動暫停 -> 崩潰"
+		"zho"		"▸ 強行暫停原因 -> 客戶端崩潰"
 	}
 	"ForcePauseAdmin"
 	{
 		"#format"	"{1:s}"
-		"zho"		"▸ 強制暫停 -> %s (管理員)"
+		"zho"		"▸ 強行暫停原因 -> %s (管理員暫停)"
 	}
 	"InitiatorPause"
 	{
 		"#format"	"{1:s},{2:s}"
-		"zho"		"▸ 發起者 -> %s ( %s )"
+		"zho"		"▸ 發起者 -> %s (%s)"
 	}
 	"DurationPause"
 	{
 		"#format"	"{1:d},{2:d}"
-		"zho"		"▸ 長度：%02d: %02d"
+		"zho"		"▸ 暫停持續時間: %02d:%02d"
 	}
 	"CountdownCancelNotify"
 	{
-		"zho"		"說 {olive}!unready {default} 即可取消"
+		"zho"		"輸入 {olive}!unready {default}取消倒計時"
 	}
 	"GameisLive"
 	{
-		"zho"		"比賽正在直播！"
+		"zho"		"遊戲繼續開始!"
 	}
 	"CountdownReadyDelay"
 	{
 		"#format"	"{1:d}"
-		"zho"		"{blue} {default} 直播：{olive} %d {default}..."
+		"zho"		"{blue}遊戲開始倒計時{default}: {olive}%d{default}..."
 	}
 	"CountdownCancelled"
 	{
 		"#format"	"{1:N}"
-		"zho"		"{olive} %N {default} 取消倒數！"
+		"zho"		"{olive}%N {default}取消此次倒計時!"
 	}
 	"CallvoteNoSpec"
 	{
-		"zho"		"您無法以旁觀者的身分進行投票。"
+		"zho"		"你作為旁觀無法發起暫停."
 	}
 	"CallvoteNoExploit"
 	{
-		"zho"		"您剛剛切換了團隊，有幾秒鐘無法投票。"
+		"zho"		"你剛剛換隊, 暫時無法進行投票."
 	}
 	"CallvoteCannotTargetAdmin"
 	{
-		"zho"		"您不能踢管理員。"
+		"zho"		"你可能不能踢出管理員..."
 	}
 	"Pause_PauseChatMessage"
 	{

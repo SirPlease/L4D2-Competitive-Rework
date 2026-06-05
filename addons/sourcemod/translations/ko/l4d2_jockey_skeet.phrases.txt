@@ -2,14 +2,14 @@
 {
 	"L4D2JockeySkeet_Skeeted"
 	{
-		"ko"		"{green}★★{default} 당신은 {olive}%N{default}에 의해 {blue}skeeted{default}였습니다."
+		"ko"		"{green}★★{default} 당신은 {olive}%N{default} {blue}skeet{default}였습니다."
 	}
 	"L4D2JockeySkeet_SkeetedJockey"
 	{
-		"ko"		"{green}★★{default} 당신은 {blue}skeet {olive}%N{default}의 기수입니다."
+		"ko"		"{green}★★{default} 당신은 {blue}skeet{default} {olive}%N{default} of Jockey."
 	}
 	"L4D2JockeySkeet_JockeySkeeted"
 	{
-		"ko"		"{green}★★{default} {olive}%N{default}의 기수는 {olive}%N{default}의 {blue}skeeted{default}였습니다."
+		"ko"		"{green}★★{default} {olive}%N{default}의 Jockey는 {olive}%N{default} {blue}skeet{default}로 대체되었습니다."
 	}
 }

@@ -2,26 +2,26 @@
 {
 	"L4D2Scoremod_Round1Bonus"
 	{
-		"ko"		"{blue}[{default}!{blue}] {default}R라운드 {blue}1 {default}보너스: {olive}%d"
+		"ko"		"{blue}[{default}!{blue}] {default} 번호 {blue}1 {default} 라운드 보너스 포인트: {olive}%d"
 	}
 	"L4D2Scoremod_CustomMaxDistance"
 	{
-		"ko"		"{blue}[{default}!{blue}] {default}사용자 정의 최대 거리: {olive}%d"
+		"ko"		"{blue}[{default}!{blue}] {default} 사용자 정의 최대 거리: {olive}%d"
 	}
 	"L4D2Scoremod_Round2Bonus"
 	{
-		"ko"		"{blue}[{default}!{blue}] {default}R라운드 {blue}2 {default}보너스: {olive}%d"
+		"ko"		"{blue}[{default}!{blue}] {default} 번호 {blue}2 {default} 라운드 보너스 포인트: {olive}%d"
 	}
 	"L4D2Scoremod_Difference"
 	{
-		"ko"		"{red}[{default}!{red}] {default}D차이: {olive}%d"
+		"ko"		"{red}[{default}!{red}] {default}차이: {olive}%d"
 	}
 	"L4D2Scoremod_Round1BonusDifference"
 	{
-		"ko"		"{blue}[{default}!{blue}] {default}R라운드 {blue}1 {default}보너스: {olive}%d {default}({green}D차이: {olive}%d{default})"
+		"ko"		"{blue}[{default}!{blue}] {default} 번호 {blue}1 {default} 라운드 보너스 포인트: {olive}%d {default}({green} 차이: {olive}%d{default})"
 	}
 	"L4D2Scoremod_HealthBonus"
 	{
-		"ko"		"{blue}[{default}!{blue}] {default}건강 보너스: {olive}%d"
+		"ko"		"{blue}[{default}!{blue}] {default} HP 보너스 포인트: {olive}%d"
 	}
 }

@@ -2,7 +2,7 @@
 {
 	"L4D2BlockBotPills_BotBlockPillsPreventedAccidental"
 	{
-		"chi"		"{green}[{default}Bot Block Pills{green}]{default}：%N 预防意外服用的药丸"
+		"chi"		"{green}[{default}Bot Block Pills{green}]{default}：已阻止 %N 误用止痛药"
 	}
 	"L4D2BlockBotPills_BotBlockPillsBotWants"
 	{

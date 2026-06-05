@@ -2,22 +2,22 @@
 {
 	"BoomerHordeEqualizer_PassedBiledSurvivor"
 	{
-		"jp"		"%N は bBiledSurvivor を %N に渡しました"
+		"jp"		"%N の胆汁の状態は %N に転送されました"
 	}
 	"BoomerHordeEqualizer_NoLongerBoomedSurvivorCount"
 	{
-		"jp"		"%N ではなくなりました (BoomedSurvivorCount: %i)"
+		"jp"		"%N の胆汁状態は終了しました (現在のスプレーされた人数: %i)"
 	}
 	"BoomerHordeEqualizer_BoomedTotal"
 	{
-		"jp"		"%Nが好調（合計：%d）"
+		"jp"		"%N に胆汁が噴霧されました (合計: %d)"
 	}
 	"BoomerHordeEqualizer_BoomHordeEventBoomedSurvivor"
 	{
-		"jp"		"BoomHordeEvent[BoomedSurvivorCount] : %i"
+		"jp"		"BoomHordeEvent[BoomedSurvivorCount]:%i"
 	}
 	"BoomerHordeEqualizer_UncoveredBileEvent"
 	{
-		"jp"		"胆汁イベントの発見"
+		"jp"		"非生存者胆汁イベントが検出されました"
 	}
 }

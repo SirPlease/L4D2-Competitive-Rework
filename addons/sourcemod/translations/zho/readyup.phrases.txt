@@ -2,90 +2,90 @@
 {
 	"PanelHide"
 	{
-		"zho"		"[ {olive} Readyup {default} ] 面板現已 {red} 關閉 {default}"
+		"zho"		"[{olive}Readyup{default}] 準備面板已 {red}關閉{default}"
 	}
 	"PanelShow"
 	{
-		"zho"		"[ {olive} Readyup {default} ] 面板現在是 {default} 上的 {blue}"
+		"zho"		"[{olive}Readyup{default}] 準備面板已 {blue}開啟{default}"
 	}
 	"ForceStartAdmin"
 	{
 		"#format"	"{1:N}"
-		"zho"		"[{green}！ {default}]{blue}遊戲{default}啟動是{green}強制{default}透過{blue}管理員{default}（{olive} {1} {default}）"
+		"zho"		"[{green}!{default}] {blue}管理員 {default}({olive}{1}{default}) {green}強制{default}了{blue}遊戲開始"
 	}
 	"VoteInProgress"
 	{
-		"zho"		"[{olive} 準備好 {default} ] 有 {olive} 投票 {green} 進行中 {default} 。"
+		"zho"		"[{olive}Readyup{default}] 現在有{olive}投票{green}正在進行{default}"
 	}
 	"VoteDelay"
 	{
 		"#format"	"{1:d}"
-		"zho"		"[ {olive} Readyup {default} ] 等待另一個{blue} {1} s {default} 發起投票。"
+		"zho"		"[{olive}Readyup{default}] 請等待 {blue}{1}秒 {default}以發起下一輪投票"
 	}
 	"Player marked unready"
 	{
 		"#format"	"{1:N}"
-		"zho"		"{default}【{green}！ {default} ] {green} 倒數計時取消！ {default} ( {teamcolor} {1} {green} 標示為未就緒 {default} )"
+		"zho"		"{default}[{green}!{default}] {green}倒數中止！ {default}({teamcolor}{1} {green}取消了準備{default})"
 	}
 	"Player switched team"
 	{
 		"#format"	"{1:N}"
-		"zho"		"{default}【{green}！ {default} ] {green} 倒數計時取消！ {default}（{teamcolor} {1} {olive} 轉隊{default}）"
+		"zho"		"{default}[{green}!{default}] {green}倒數中止！ {default}({teamcolor}{1} {olive}切換了陣營{default})"
 	}
 	"Player disconnected"
 	{
 		"#format"	"{1:N}"
-		"zho"		"{default}【{green}！ {default} ] {green} 倒數計時取消！ {default} ( {teamcolor} {1} {green} 已中斷 {default} )"
+		"zho"		"{default}[{green}!{default}] {green}倒數中止！ {default}({teamcolor}{1} {green}離開了遊戲{default})"
 	}
 	"Admin aborted"
 	{
 		"#format"	"{1:N}"
-		"zho"		"{default}【{green}！ {default} ] {green} 強制啟動中止！ {default}（{olive} {1} {green} 已發{default}）"
+		"zho"		"{default}[{green}!{default}] {green}叫停強制開始！ {default}({green}由 {olive}{1} {green}發起{default})"
 	}
 	"HintReady"
 	{
-		"zho"		"你已準備。\n輸入 !unready 或按 F2 取消準備。"
+		"zho"		"你已經準備了\n輸入 !unready / 按 F2 取消準備"
 	}
 	"HintUnready"
 	{
-		"zho"		"你尚未準備。\n輸入 !ready 或按 F1 準備。"
+		"zho"		"你還沒有準備\n輸入 !ready / 按 F1 確認準備"
 	}
 	"LiveCountdownBegin"
 	{
-		"zho"		"即將開始！\n輸入 !unready 或按 F2 取消"
+		"zho"		"比賽即將開始！\n輸入 !unready / 按 F2 中斷倒數"
 	}
 	"LiveCountdown"
 	{
 		"#format"	"{1:d}"
-		"zho"		"{1} 秒後開始\n輸入 !unready 或按 F2 取消"
+		"zho"		"請各就各位：{1} \n輸入 !unready / 按 F2 中斷倒數"
 	}
 	"LiveCountdownCancelled"
 	{
-		"zho"		"倒數取消！"
+		"zho"		"倒數中止！"
 	}
 	"RoundIsLive"
 	{
-		"zho"		"回合直播啦！"
+		"zho"		"比賽開始！"
 	}
 	"InitiateAutoStart"
 	{
-		"zho"		"遊戲將自動開始！"
+		"zho"		"遊戲將會自動開始！"
 	}
 	"AutoStartCountdown"
 	{
 		"#format"	"{1:d}"
-		"zho"		"遊戲開始時間：{1}"
+		"zho"		"遊戲開始於：{1}"
 	}
 	"AutoStartWaiting"
 	{
-		"zho"		"正在等待載入玩家..."
+		"zho"		"等待玩家加入..."
 	}
 	"AutoStartNotEnoughPlayers"
 	{
-		"zho"		"需要更多玩家..."
+		"zho"		"玩家數量不足..."
 	}
 	"Readyup_CanOnlyUnreadyTimesRound"
 	{
-		"zho"		"[{olive}Readyup{default}] 本回合你最多只能取消準備 {blue}%d{default} 次。"
+		"zho"		"[{olive}Readyup{default}] 本回合你最多隻能取消準備 {blue}%d{default} 次。"
 	}
 }

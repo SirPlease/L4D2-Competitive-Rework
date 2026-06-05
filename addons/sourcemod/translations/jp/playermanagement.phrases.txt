@@ -10,19 +10,19 @@
 	}
 	"NoSnoop"
 	{
-		"jp"		"戦車の {red} {default} を盗み見してはいけません。"
+		"jp"		"{red} {default} Tank を覗いてはいけません!"
 	}
 	"BecomeSpectator"
 	{
-		"jp"		"{teamcolor} %N {default} が観客になりました!"
+		"jp"		"{teamcolor} %N {default} は傍観者になりました!"
 	}
 	"WhileCapped"
 	{
-		"jp"		"{red} キャップ中は {default} を観戦できません!"
+		"jp"		"{red} の充電中は {default} を視聴できません。"
 	}
 	"FixBot"
 	{
-		"jp"		"{teamcolor} %N {default} はボット数を修正しようとしています"
+		"jp"		"{teamcolor} %N {default} ボット数を修正しようとしています"
 	}
 	"FixBotConsole"
 	{
@@ -34,6 +34,6 @@
 	}
 	"CouldNotSwitched"
 	{
-		"jp"		"{teamcolor} %N {default} は、ターゲット チームが満員であるか、引き継ぐボットが存在しないため、切り替えることができませんでした。"
+		"jp"		"{teamcolor} %N {default} ターゲット チームが満員であるか、引き継ぐボットが存在しないため、切り替えることができません。"
 	}
 }

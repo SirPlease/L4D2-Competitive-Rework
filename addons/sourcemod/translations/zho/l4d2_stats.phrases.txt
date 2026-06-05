@@ -15,31 +15,31 @@
 	"MeleeSkeeted"
 	{
 		"#format"	"{1:N},{2:N}"
-		"zho"		"{olive} {1} {default} 是 {blue} 混戰 {default} - {default} 被 {olive} {2} {default}"
+		"zho"		"{olive}{1}{default} 被 {olive}{2}{default} 用 {blue}近戰空爆{default}"
 	}
 	"Headshotted"
 	{
 		"#format"	"{1:N},{2:N}"
-		"zho"		"{olive} {1} {default} 被 {blue} 爆頭 {default} 被 {olive} {2} {default}"
+		"zho"		"{olive}{1}{default} 被 {olive}{2}{default} {blue}爆頭擊殺{default}"
 	}
 	"TeamSkeeted"
 	{
 		"#format"	"{1:N},{2:N},{3:d},{4:d},{5:s},{6:s}"
-		"zho"		"{olive}{1}{default} 與隊友空爆了 {olive}{2}{default}，在 {blue}{4}{default} 槍{5}內造成 {blue}{3} 傷害{default}。助攻：{olive}{6}{default}"
+		"zho"		"{olive}{1}{default} 和團隊空爆了 {olive}{2}{default} {blue}{4} {default}槍{5} {3} {default}傷害 {default} . 助攻: {olive}{6}{default}"
 	}
 	"Skeeted"
 	{
 		"#format"	"{1:N},{2:N},{3:d},{4:s}"
-		"zho"		"{olive} {1} {default} {olive} {2} {default} 中 {blue} {3} {default} 射擊 {4}"
+		"zho"		"{olive}{1}{default} {blue}{3}{default} 槍{4} 空爆了 {olive}{2}{default}"
 	}
 	"ShutBoomer"
 	{
 		"#format"	"{1:N},{2:s},{3:.1f}"
-		"zho"		"{olive} {1} {default} 已關閉 {olive} {2} {default} 的 {blue} {3} {default} 的 Boomer"
+		"zho"		"{olive}{1}{default} 瞬殺了在 {blue}{3}秒{default} 前生成的Boomer [{olive}{2}{default}]"
 	}
 	"AlarmedCar"
 	{
-		"zho"		"{olive} %N {default} 觸發{olive} 警報車 {default}"
+		"zho"		"{olive}%N{default} 打了 {olive}警報車{default}"
 	}
 	"AssistShotsPlural"
 	{
@@ -52,6 +52,6 @@
 	"assister"
 	{
 		"#format"	"{1:N},{2:d},{3:d},{4:s}"
-		"zho"		"{1}（{2} / {3} 拍{4}）"
+		"zho"		"{1} ({2}/{3} 槍{4})"
 	}
 }

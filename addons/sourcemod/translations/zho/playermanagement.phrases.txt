@@ -18,7 +18,7 @@
 	}
 	"WhileCapped"
 	{
-		"zho"		"{red} 上限期間沒有觀看 {default}！"
+		"zho"		"{red}被控時不能旁觀{default}!"
 	}
 	"FixBot"
 	{
@@ -26,7 +26,7 @@
 	}
 	"FixBotConsole"
 	{
-		"zho"		"控制台正在嘗試 {red} 修復機器人計數 {default}"
+		"zho"		"控制檯正在嘗試 {red} 修復機器人計數 {default}"
 	}
 	"ValidTeams"
 	{
@@ -34,6 +34,6 @@
 	}
 	"CouldNotSwitched"
 	{
-		"zho"		"{teamcolor} %N {default} 無法切換，因為目標團隊已滿或沒有機器人可以接手。"
+		"zho"		"{teamcolor} %N {default} 無法切換，因為目標團隊已滿或沒有機器人可以接管。"
 	}
 }

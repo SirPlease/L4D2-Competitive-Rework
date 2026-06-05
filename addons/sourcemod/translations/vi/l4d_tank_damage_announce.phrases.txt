@@ -6,15 +6,15 @@
 	}
 	"AI"
 	{
-		"vi"		"AI"
+		"vi"		"trí tuệ nhân tạo"
 	}
 	"HealthRemaining"
 	{
-		"vi"		"{blue}Xe tăng{default} ({olive}%s{default}) còn lại máu {green}%d{default}"
+		"vi"		"{blue}Tank{default} ({olive}%s{default}) {green}%d{default} điểm máu còn lại"
 	}
 	"DealtToTank"
 	{
-		"vi"		"{blue}Sát thương{default} gây ra cho {blue}Xe tăng{default} ({olive}%s{default})"
+		"vi"		"Thiệt hại {blue} gây ra cho {blue}Tank{default} ({olive}%s{default})"
 	}
 	"PercentDamage"
 	{
@@ -22,7 +22,7 @@
 	}
 	"L4DTankDamageAnnounce_RemainingBloodVolume"
 	{
-		"vi"		"[{green}!{default}] {green}%N {default} còn lại {green}%d{default}({green}%d%%{default}) thể tích máu {blue}"
+		"vi"		"[{green}!{default}] {green}%N {default} còn lại {green}%d{default}({green}%d%%{default}) {blue} thể tích máu"
 	}
 	"L4DTankDamageAnnounce_SurvivorDamageStatisticsTank"
 	{
@@ -34,11 +34,11 @@
 	}
 	"L4DTankDamageAnnounce_SurvivalTime"
 	{
-		"vi"		"[{green}!{default}] {green}%N {blue} Thời gian tồn tại: {green}%s"
+		"vi"		"[{green}!{default}] {green}%N {blue} Thời gian sống sót: {green}%s"
 	}
 	"L4DTankDamageAnnounce_TankSurvivalTime"
 	{
-		"vi"		"[{green}!{default}] {green}Tank {blue} Thời gian tồn tại: {green}%s"
+		"vi"		"[{green}!{default}] {green}Tank {blue} Thời gian sống sót: {green}%s"
 	}
 	"L4DTankDamageAnnounce_TankDamageSummaryLine"
 	{

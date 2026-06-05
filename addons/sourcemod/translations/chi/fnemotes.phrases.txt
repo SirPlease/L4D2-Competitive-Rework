@@ -326,7 +326,7 @@
 	}
 	"Emote_GrooveJam"
 	{
-		"chi"		"格雷夫格"
+		"chi"		"Grefg"
 	}
 	"Emote_guitar"
 	{

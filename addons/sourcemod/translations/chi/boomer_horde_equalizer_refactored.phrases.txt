@@ -2,15 +2,15 @@
 {
 	"BoomerHordeEqualizer_PassedBiledSurvivor"
 	{
-		"chi"		"%N 将 bBiledSurvivor 传递给 %N"
+		"chi"		"%N 的胆汁状态已转移给 %N"
 	}
 	"BoomerHordeEqualizer_NoLongerBoomedSurvivorCount"
 	{
-		"chi"		"%N 不再是它（BoomedSurvivorCount：%i）"
+		"chi"		"%N 的胆汁状态已结束（当前被喷中人数：%i）"
 	}
 	"BoomerHordeEqualizer_BoomedTotal"
 	{
-		"chi"		"%N 轰鸣（总计：%d）"
+		"chi"		"%N 被胆汁喷中（总计：%d）"
 	}
 	"BoomerHordeEqualizer_BoomHordeEventBoomedSurvivor"
 	{
@@ -18,6 +18,6 @@
 	}
 	"BoomerHordeEqualizer_UncoveredBileEvent"
 	{
-		"chi"		"胆汁暴露事件"
+		"chi"		"检测到非幸存者胆汁事件"
 	}
 }

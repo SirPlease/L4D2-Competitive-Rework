@@ -2,21 +2,21 @@
 {
 	"Unpausing"
 	{
-		"ko"		"{blue}[{default}AutoPause{blue}] {default}모든 {green}충돌된 {default}플레이어가 다시 연결되었습니다.. {blue}일시중지 해제 중{default}!"
+		"ko"		"{blue} [{default} 자동 일시 정지 {blue}] {default} 모든 {green} 충돌 {default} 플레이어가 다시 연결되었습니다.. {blue} {default} 일시 정지를 해제하세요!"
 	}
 	"Waiting"
 	{
 		"#format"	"{1:i},{2:t}"
-		"ko"		"{blue}[{default}AutoPause{blue}] {default}자동 {blue}Unpause{default} 전에 {olive}{1} {default}더 많은 {green}충돌 {default}{2}을 기다리는 중입니다!"
+		"ko"		"{blue}[{default} 자동 일시 중지 {blue}] {default}가 {olive}{1} {default} 이름 {green}가 시작되기를 기다리고 있습니다. {default}{2}가 충돌했습니다. {blue} {default}를 들어 올리려면 잠시 중지하세요!"
 	}
 	"Crashed"
 	{
 		"#format"	"{1:N}"
-		"ko"		"{blue}[{default}AutoPause{blue}] {olive}{1} {default}님이 충돌로 연결이 끊겼습니다."
+		"ko"		"{blue}[{default}자동 일시 정지{blue}] {olive}{1} {default}게임이 충돌했습니다."
 	}
 	"players"
 	{
-		"ko"		"선수"
+		"ko"		"플레이어"
 	}
 	"player"
 	{

@@ -6,26 +6,26 @@
 	}
 	"SurvivorMVPTest_DamageClient"
 	{
-		"en"		"Damage of client: {olive}%d{default}"
+		"en"		"Player damage: {olive}%d{default}"
 	}
 	"SurvivorMVPTest_SIKillsClient"
 	{
-		"en"		"SI kills of client: {olive}%d{default}"
+		"en"		"Player SI kills: {olive}%d{default}"
 	}
 	"SurvivorMVPTest_DamagePercentClient"
 	{
-		"en"		"Damage percent of client: {olive}%f{default}"
+		"en"		"Player damage ratio: {olive}%f{default}"
 	}
 	"SurvivorMVPTest_CurrentRoundMVPClientCommon"
 	{
-		"en"		"Current round MVP client (Common): {olive}%N{default}"
+		"en"		"Current round common infected MVP player: {olive}%N{default}"
 	}
 	"SurvivorMVPTest_CommonKillsClient"
 	{
-		"en"		"Common kills for client: {olive}%d{default}"
+		"en"		"Player common infected kills: {olive}%d{default}"
 	}
 	"SurvivorMVPTest_CIPercentClient"
 	{
-		"en"		"CI percent of client: {olive}%f{default}"
+		"en"		"Player common infected kill percent: {olive}%f{default}"
 	}
 }

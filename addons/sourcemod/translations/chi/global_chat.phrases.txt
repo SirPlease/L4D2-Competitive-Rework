@@ -2,11 +2,11 @@
 {
 	"GlobalChat_FullServerNormalFullServer"
 	{
-		"chi"		"{green}[全服]{default} 你已%s普通全服聊天。"
+		"chi"		"{green}[全服]{default} %s。"
 	}
 	"GlobalChat_AllServersAskedTipTeammates"
 	{
-		"chi"		"{green}[全服]{default} 你已%s找队友提示。"
+		"chi"		"{green}[全服找队友]{default} %s。"
 	}
 	"GlobalChat_SummonTeammates"
 	{
@@ -15,5 +15,37 @@
 	"GlobalChat_SummonTeammatesWithMessage"
 	{
 		"chi"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友\n{default}留言: {olive}%s"
+	}
+	"GlobalChat_StatusReceive"
+	{
+		"chi"		"接收"
+	}
+	"GlobalChat_StatusBlock"
+	{
+		"chi"		"屏蔽"
+	}
+	"GlobalChat_MenuTitle"
+	{
+		"chi"		"全服聊天接收设置\n普通全服：%s\n找队友提示：%s"
+	}
+	"GlobalChat_MenuReceiveNormal"
+	{
+		"chi"		"接收普通全服聊天"
+	}
+	"GlobalChat_MenuBlockNormal"
+	{
+		"chi"		"屏蔽普通全服聊天"
+	}
+	"GlobalChat_MenuReceiveLFG"
+	{
+		"chi"		"接收找队友提示"
+	}
+	"GlobalChat_MenuBlockLFG"
+	{
+		"chi"		"屏蔽找队友提示"
+	}
+	"GlobalChat_MenuLFGLocked"
+	{
+		"chi"		"找队友提示：仅管理员可屏蔽"
 	}
 }

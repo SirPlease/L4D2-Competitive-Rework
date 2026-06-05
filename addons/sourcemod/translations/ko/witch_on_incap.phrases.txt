@@ -3,6 +3,6 @@
 	"IncapSurSpawnAWitch"
 	{
 		"#format"	"{1:N}"
-		"ko"		"{olive} {1} {default}가 쓰러져 마녀가 탄생했습니다!."
+		"ko"		"{olive}{1} {default}가 땅에 떨어져 Witch를 생성했습니다!"
 	}
 }

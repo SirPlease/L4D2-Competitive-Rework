@@ -10,8 +10,8 @@
 	}
 	"HealthRemaining"
 	{
-		"#format"	"{1:s},{2:s},{3:d}"
-		"chi"		"{red}{1}{default}（{green}{2}{default}）还剩 {olive}{3}{default} 点生命值!"
+		"#format"	"{1:N},{2:s},{3:d}"
+		"chi"		"{red}{1}{default} ({green}{2}{default}) 还剩余 {olive}{3}{default} 血量!"
 	}
 	"HealthRemainingAI"
 	{
@@ -20,7 +20,7 @@
 	}
 	"UMad"
 	{
-		"chi"		"不用生气，下次记得瞄准头部..."
+		"chi"		"不需生气，下次记得瞄准头部..."
 	}
 	"Sad"
 	{
@@ -28,7 +28,7 @@
 	}
 	"Close"
 	{
-		"chi"		"差一点!"
+		"chi"		"接近了!"
 	}
 	"NBad"
 	{

@@ -2,6 +2,6 @@
 {
 	"SimpleWitchBonus_KillingWitchAwardedPoints"
 	{
-		"vi"		"{default}Giết phù thủy đã nhận được: {olive}%d {default} điểm!"
+		"vi"		"{default} tiêu diệt Witch và nhận được: {olive}%d {default} điểm thưởng!"
 	}
 }

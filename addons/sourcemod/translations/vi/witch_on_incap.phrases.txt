@@ -3,6 +3,6 @@
 	"IncapSurSpawnAWitch"
 	{
 		"#format"	"{1:N}"
-		"vi"		"{olive} {1} {default} đi xuống và sinh ra một phù thủy!."
+		"vi"		"{olive}{1} {default} rơi xuống đất và sinh ra Witch!"
 	}
 }

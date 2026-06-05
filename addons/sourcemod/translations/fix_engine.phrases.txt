@@ -2,54 +2,54 @@
 {
 	"FixEngine_IdrowndamageDamageTempHPRestore"
 	{
-		"en"		"m_idrowndmg = %d, dmg = %d, temp hp to restote = %d"
+		"en"		"m_idrowndmg = %d, dmg = %d, temp HP to restore = %d"
 	}
 	"FixEngine_RestoringStartedPlayerUsingGlitch"
 	{
-		"en"		"restoring started (player using glitch while have 1-10hp"
+		"en"		"Start recovery (player used exploit at 1-10 HP)"
 	}
 	"FixEngine_RestoreCountBeginningSeconds"
 	{
-		"en"		"restore count = %d (beginning in %.0f sec.)"
+		"en"		"Restore count = %d (starting in %.0f seconds)"
 	}
 	"FixEngine_RestoringStarted"
 	{
-		"en"		"restoring started"
+		"en"		"Recovery started"
 	}
 	"FixEngine_TempHealthLimitExceeded"
 	{
-		"en"		"temp health limit is exceeded"
+		"en"		"Temporary health limit exceeded"
 	}
 	"FixEngine_ResetDrownRestoredProp"
 	{
-		"en"		"reset drownrestored prop %N"
+		"en"		"Reset drown-restored health for %N"
 	}
 	"FixEngine_TempGlitchFixed"
 	{
-		"en"		"temp glitch fixed"
+		"en"		"Temporary health bug fixed"
 	}
 	"FixEngine_StoppedTempGlitchFixTimer"
 	{
-		"en"		"stopped temp glich fix timer"
+		"en"		"Temporary health bug fix timer stopped"
 	}
 	"FixEngine_RestoringStopped"
 	{
-		"en"		"restoring stopped"
+		"en"		"Recovery stopped"
 	}
 	"FixEngine_AttemptedUseLadderSpeedGlitch"
 	{
-		"en"		"%N (%s) attempted to use a ladder speed glitch."
+		"en"		"%N (%s) attempted to use a ladder speed exploit."
 	}
 	"FixEngine_SuspectedUsingNoFallDamage"
 	{
-		"en"		"%N (%s) is suspected of using a no fall damage bug."
+		"en"		"%N (%s) is suspected of using a no-fall-damage exploit."
 	}
 	"FixEngine_AttemptedUseHealthBoostGlitch"
 	{
-		"en"		"%N (%s) attempted to use a health boost glitch."
+		"en"		"%N (%s) attempted to use a health boost exploit."
 	}
 	"FixEngine_AttemptedUseLadderReloadGlitch"
 	{
-		"en"		"%N (%s) attempted to use a ladder reload glitch."
+		"en"		"%N (%s) attempted to use a ladder reload exploit."
 	}
 }

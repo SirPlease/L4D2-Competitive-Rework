@@ -2,19 +2,19 @@
 {
 	"TagTank"
 	{
-		"vi"		"< Xe tăng {olive} {default} >"
+		"vi"		"<{olive}Tank{default}>"
 	}
 	"TagWitch"
 	{
-		"vi"		"< {olive} Phù Thủy {default} >"
+		"vi"		"<{olive}Witch{default}>"
 	}
 	"TankOn"
 	{
-		"vi"		"Xe tăng: %d%%"
+		"vi"		"Tank: %d%%"
 	}
 	"WitchOn"
 	{
-		"vi"		"Phù Thủy: %d%%"
+		"vi"		"Witch: %d%%"
 	}
 	"Disabled"
 	{
@@ -22,7 +22,7 @@
 	}
 	"StaticSpawn"
 	{
-		"vi"		"Sinh sản tĩnh"
+		"vi"		"vị trí cố định"
 	}
 	"None"
 	{
@@ -30,26 +30,26 @@
 	}
 	"TankDisabled"
 	{
-		"vi"		"Xe tăng: Vô hiệu hóa"
+		"vi"		"Tank: Đã tắt"
 	}
 	"TankStatic"
 	{
-		"vi"		"Xe tăng: Sinh sản tĩnh"
+		"vi"		"Tank: vị trí cố định"
 	}
 	"TankNone"
 	{
-		"vi"		"Xe tăng: Không có"
+		"vi"		"Tank: Không có"
 	}
 	"WitchDisabled"
 	{
-		"vi"		"Phù thủy: Vô hiệu hóa"
+		"vi"		"Witch: Đã tắt"
 	}
 	"WitchStatic"
 	{
-		"vi"		"Phù thủy: Sinh sản tĩnh"
+		"vi"		"Witch: vị trí cố định"
 	}
 	"WitchNone"
 	{
-		"vi"		"Phù thủy: Không có"
+		"vi"		"Witch: Không có"
 	}
 }

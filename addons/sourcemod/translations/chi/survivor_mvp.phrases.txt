@@ -18,7 +18,7 @@
 	}
 	"BotName"
 	{
-		"chi"		"[机器人]"
+		"chi"		"[BOT]"
 	}
 	"NobodyName"
 	{
@@ -78,6 +78,6 @@
 	}
 	"SurvivorMVP_PharmacyMVPStatisticsLine"
 	{
-		"chi"		"{olive}特感{green}%2d {olive}丧尸{green}%3d {olive}黑/被黑{green}%2d/%2d {olive}伤害{green}%4d {default}%N"
+		"chi"		"{olive}特感{green}%2d {olive}普感{green}%3d {olive}黑/被黑{green}%2d/%2d {olive}伤害{green}%4d {default}%N"
 	}
 }

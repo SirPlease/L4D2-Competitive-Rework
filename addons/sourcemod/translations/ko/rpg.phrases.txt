@@ -14,27 +14,27 @@
 	}
 	"RPG_TitleUnset"
 	{
-		"ko"		"{green} 제목이 설정되지 않았습니다."
+		"ko"		"{green}제목이 설정되지 않았습니다"
 	}
 	"RPG_TitleUpdatedSuccessfullyNewTitle"
 	{
-		"ko"		"{green} 제목이 성공적으로 업데이트되었습니다. 새 제목은 {lightgreen}%s입니다."
+		"ko"		"{green} 귀하의 제목이 성공적으로 업데이트되었습니다. 새 제목은 {lightgreen}%s입니다."
 	}
 	"RPG_RANKCannotObtainAdditionalPoints"
 	{
-		"ko"		"{default}[{green}RANK{default}]{green}는 추가 포인트를 얻을 수 없으며 고급 HMI가 켜져 있기 때문에 지도 기록을 업데이트하지 않습니다."
+		"ko"		"{default}[{green}RANK{default}]{green}는 고급 인간 기계가 켜져 있기 때문에 추가 포인트를 얻을 수 없으며 지도 기록을 업데이트하지 않습니다."
 	}
 	"RPG_StoreClosedFunctionCannotUsed"
 	{
-		"ko"		"{lightgreen} 매장이 폐쇄되어 해당 기능을 이용하실 수 없습니다."
+		"ko"		"{lightgreen} 매장이 폐쇄되어 해당 기능을 사용할 수 없습니다."
 	}
 	"RPG_AddedBullets"
 	{
-		"ko"		"{green}%N {lightgreen} 글머리 기호 추가"
+		"ko"		"{green}%N {lightgreen}에 글머리 기호를 추가했습니다."
 	}
 	"RPG_FirstTimeRandomTrollFree"
 	{
-		"ko"		"{green}%N {lightgreen} 처음으로 트롤을 무료로 받았는데"
+		"ko"		"{green}%N {lightgreen} 처음으로 트롤을 무료로 무작위로 얻었습니다"
 	}
 	"RPG_QuicklySpend50BuySingle"
 	{
@@ -42,23 +42,23 @@
 	}
 	"RPG_NotEnoughMoneyForShotgun"
 	{
-		"ko"		"{lightgreen}没钱你买个屁喷子，心里没点B数"
+		"ko"		"{lightgreen} 돈이 없으면 똥 하나 사면 되는데, 아무 생각도 없어요."
 	}
 	"RPG_FirstTimeGotSecondsondGeneration"
 	{
-		"ko"		"{green}%N {lightgreen} 처음으로 2세대 싱글 스프레이를 무료로 받았어요"
+		"ko"		"{green}%N {lightgreen} 2세대 싱글스프레이를 무료로 받은 최초의 제품입니다."
 	}
 	"RPG_QuicklySpend50BuySecondsond"
 	{
-		"ko"		"{green}%N {lightgreen} 빠르게 50B를 지출하여 2세대 단일 스프레이어 구입"
+		"ko"		"{green}%N {lightgreen} 50B를 빨리 써서 2세대 단일 스프레이 구입"
 	}
 	"RPG_FirstGenerationSingleSpray"
 	{
-		"ko"		"{green}%N {lightgreen} 1세대 싱글 스프레이"
+		"ko"		"{green}%N {lightgreen} 최초로 무료로 제공되는 1세대 싱글 스프레이"
 	}
 	"RPG_QuicklySpend50BuyFirst"
 	{
-		"ko"		"{green}%N {lightgreen} 빠르게 50B를 지출하여 1세대 단일 스프레이를 무작위로 구매하세요"
+		"ko"		"{green}%N {lightgreen} 50B를 빠르게 소비하여 1세대 단일 스프레이를 무작위로 구매하세요"
 	}
 	"RPG_FirstTimeBoughtSilencedSMG"
 	{
@@ -70,11 +70,11 @@
 	}
 	"RPG_DonMoneyCanBuyCrappy"
 	{
-		"ko"		"{lightgreen} 돈이 없으면 형편없는 기관총을 사면 됩니다. 당신은 아무 생각이 없습니다"
+		"ko"		"{lightgreen}돈이 없으면 형편없는 기관총을 사면 됩니다. 당신은 전혀 모른다."
 	}
 	"RPG_FirstTimeFreeUzi"
 	{
-		"ko"		"{green}%N {lightgreen} 처음으로 Uzi를 무료로 받았을 때"
+		"ko"		"{green}%N {lightgreen}우지와 처음으로 괜히 섹스를 했을 때"
 	}
 	"RPG_QuicklySpend50RandomlyBuy"
 	{
@@ -82,7 +82,7 @@
 	}
 	"RPG_QuicklySpent400BuyBottle"
 	{
-		"ko"		"{green}%N {lightgreen} 약 한 병을 사기 위해 400B를 빨리 썼습니다."
+		"ko"		"{green}%N {lightgreen}는 약 한 병을 사기 위해 400B를 빨리 썼습니다."
 	}
 	"RPG_FirstUseSetchTitleName"
 	{
@@ -90,7 +90,7 @@
 	}
 	"RPG_TitleModuleNotEnabledTitle"
 	{
-		"ko"		"{green} 제목 모듈이 활성화되지 않았으며 제목을 설정할 수 없습니다."
+		"ko"		"{green} 타이틀 모듈이 활성화되지 않아 타이틀을 설정할 수 없습니다."
 	}
 	"RPG_CurrentlyProhibitedUseNumberPurchase"
 	{
@@ -106,7 +106,7 @@
 	}
 	"RPG_DonPointMind"
 	{
-		"ko"		"{lightgreen} 무슨 생각인지 모르겠어?"
+		"ko"		"{lightgreen}아무 생각이 없나요?"
 	}
 	"RPG_NewUserCreatingDatabase"
 	{
@@ -114,167 +114,167 @@
 	}
 	"RPG_ChangeOutlineColorGreen"
 	{
-		"ko"		"{olive}you {green} 윤곽선 색상을 {default}: {green} 녹색 {default}로 변경하세요!"
+		"ko"		"{olive} 당신은 {green} 윤곽선 색상을 {default}: {green} 녹색 {default}로 변경합니다!"
 	}
 	"RPG_SetOutlineColorBlue"
 	{
-		"ko"		"{olive}你 {green}将轮廓颜色改为{default}: {green}蓝色 {default}!"
+		"ko"		"{olive} you {green} 윤곽선 색상을 {default}: {green} 파란색 {default}로 변경하세요!"
 	}
 	"RPG_SetOutlineColorBlueViolet"
 	{
-		"ko"		"{olive}你 {green}将轮廓颜色改为{default}: {green}蓝紫色 {default}!"
+		"ko"		"{olive} 당신은 {green} 윤곽선 색상을 {default}: {green} 파란색 보라색 {default}로 변경합니다!"
 	}
 	"RPG_ChangeOutlineColorCyan"
 	{
-		"ko"		"{olive}you {green} 외곽선 색상을 {default}: {green} 청록색 {default}로 변경하세요!"
+		"ko"		"{olive} you {green} 외곽선 색상을 {default}: {green} 청록색 {default}로 변경하세요!"
 	}
 	"RPG_SetOutlineColorOrange"
 	{
-		"ko"		"{olive}你 {green}将轮廓颜色改为{default}: {green}橘黄色 {default}!"
+		"ko"		"{olive} 당신은 {green} 윤곽선 색상을 {default}: {green} 주황색 {default}로 변경합니다!"
 	}
 	"RPG_SetOutlineColorRed"
 	{
-		"ko"		"{olive}你 {green}将轮廓颜色改为{default}: {green}红色 {default}!"
+		"ko"		"{olive} 당신은 {green} 윤곽선 색상을 {default}: {green} 빨간색 {default}로 변경합니다!"
 	}
 	"RPG_SetOutlineColorGray"
 	{
-		"ko"		"{olive}你 {green}将轮廓颜色改为{default}: {green}灰色 {default}!"
+		"ko"		"{olive} 당신은 {green} 윤곽선 색상을 {default}: {green} 회색 {default}로 변경합니다!"
 	}
 	"RPG_SetOutlineColorYellow"
 	{
-		"ko"		"{olive}你 {green}将轮廓颜色改为{default}: {green}黄色 {default}!"
+		"ko"		"{olive} you {green} 윤곽선 색상을 {default}: {green} 노란색 {default}로 변경하세요!"
 	}
 	"RPG_SetOutlineColorLime"
 	{
-		"ko"		"{olive}你 {green}将轮廓颜色改为{default}: {green}酸橙色 {default}!"
+		"ko"		"{olive} you {green} 윤곽선 색상을 {default}: {green} 라임 오렌지 {default}로 변경하세요!"
 	}
 	"RPG_SetOutlineColorMaroon"
 	{
-		"ko"		"{olive}你 {green}将轮廓颜色改为{default}: {green}栗色 {default}!"
+		"ko"		"{olive} 당신은 {green} 윤곽선 색상을 {default}: {green} 적갈색 {default}로 변경합니다!"
 	}
 	"RPG_SetOutlineColorTeal"
 	{
-		"ko"		"{olive}你 {green}将轮廓颜色改为{default}: {green}藍綠色 {default}!"
+		"ko"		"{olive} 당신은 {green} 윤곽선 색상을 {default}: {green} 청록색 {default}로 변경합니다!"
 	}
 	"RPG_SetOutlineColorPink"
 	{
-		"ko"		"{olive}你 {green}将轮廓颜色改为{default}: {green}粉红色 {default}!"
+		"ko"		"{olive} 당신은 {green} 윤곽선 색상을 {default}: {green} 분홍색 {default}로 변경합니다!"
 	}
 	"RPG_SetOutlineColorPurple"
 	{
-		"ko"		"{olive}你 {green}将轮廓颜色改为{default}: {green}紫色 {default}!"
+		"ko"		"{olive} you {green} 외곽선 색상을 {default}: {green} 보라색 {default}로 변경하세요!"
 	}
 	"RPG_SetOutlineColorWhite"
 	{
-		"ko"		"{olive}你 {green}将轮廓颜色改为{default}: {green}白色 {default}!"
+		"ko"		"{olive} 당신은 {green} 윤곽선 색상을 {default}: {green} 흰색 {default}로 변경합니다!"
 	}
 	"RPG_SetOutlineColorGold"
 	{
-		"ko"		"{olive}你 {green}将轮廓颜色改为{default}: {green}金黄色 {default}!"
+		"ko"		"{olive} 당신은 {green} 윤곽선 색상을 {default}: {green} 황금색 노란색 {default}로 변경합니다!"
 	}
 	"RPG_SetOutlineColorRainbow"
 	{
-		"ko"		"{olive}你 {green}将轮廓颜色改为{default}: {green}彩虹色 {default}!"
+		"ko"		"{olive} you {green} 외곽선 색상을 {default}: {green} 무지개 색상 {default}로 변경하세요!"
 	}
 	"RPG_SetOutlineColorCustomOutline"
 	{
-		"ko"		"{olive}你 {green}将轮廓颜色改为您的{default}: {green}定制颜色轮廓 {default}!"
+		"ko"		"{olive} You {green} 외곽선 색상을 {default}로 변경하세요. {green} 사용자 정의 색상 외곽선 {default}!"
 	}
 	"RPG_ClosedSurvivorProfile"
 	{
-		"ko"		"{olive} 생존자 프로필을 닫았습니다."
+		"ko"		"{olive}생존자 프로필을 폐쇄하셨습니다"
 	}
 	"RPG_ChangeSkinColorGreen"
 	{
-		"ko"		"{olive}당신은 {green} 피부색을 {default}: {green} 녹색 {default}로 변경합니다!"
+		"ko"		"{olive} 당신은 {green} 피부색을 {default}: {green} 녹색 {default}로 변경하세요!"
 	}
 	"RPG_SetSkinColorBlue"
 	{
-		"ko"		"{olive}你 {green}将皮肤颜色改为{default}: {green}蓝色 {default}!"
+		"ko"		"{olive} you {green} 피부색을 {default}: {green} 파란색 {default}로 변경하세요!"
 	}
 	"RPG_SetSkinColorBlueViolet"
 	{
-		"ko"		"{olive}你 {green}将皮肤颜色改为{default}: {green}蓝紫色 {default}!"
+		"ko"		"{olive} 당신은 {green} 피부색을 {default}: {green} 파란색 보라색 {default}로 변경하세요!"
 	}
 	"RPG_SetSkinColorCyan"
 	{
-		"ko"		"{olive}你 {green}将皮肤颜色改为{default}: {green}青色 {default}!"
+		"ko"		"{olive} you {green} 피부색을 {default}: {green} 청록색 {default}로 변경하세요!"
 	}
 	"RPG_SetSkinColorOrange"
 	{
-		"ko"		"{olive}你 {green}将皮肤颜色改为{default}: {green}橘黄色 {default}!"
+		"ko"		"{olive} you {green} 피부색을 {default}로 변경하세요: {green} 주황색 {default}!"
 	}
 	"RPG_SetSkinColorRed"
 	{
-		"ko"		"{olive}你 {green}将皮肤颜色改为{default}: {green}红色 {default}!"
+		"ko"		"{olive} 당신은 {green} 피부색을 {default}: {green} 빨간색 {default}로 변경하세요!"
 	}
 	"RPG_SetSkinColorGray"
 	{
-		"ko"		"{olive}你 {green}将皮肤颜色改为{default}: {green}灰色 {default}!"
+		"ko"		"{olive} 당신은 {green} 피부색을 {default}: {green} 회색 {default}로 변경하세요!"
 	}
 	"RPG_SetSkinColorYellow"
 	{
-		"ko"		"{olive}你 {green}将皮肤颜色改为{default}: {green}黄色 {default}!"
+		"ko"		"{olive} you {green} 피부색을 {default}로 변경하세요: {green} 노란색 {default}!"
 	}
 	"RPG_SetSkinColorLime"
 	{
-		"ko"		"{olive}你 {green}将皮肤颜色改为{default}: {green}酸橙色 {default}!"
+		"ko"		"{olive}you {green} 피부색을 {default}로 변경하세요: {green}라임 오렌지 {default}!"
 	}
 	"RPG_SetSkinColorMaroon"
 	{
-		"ko"		"{olive}你 {green}将皮肤颜色改为{default}: {green}栗色 {default}!"
+		"ko"		"{olive} you {green} 피부색을 {default}로 변경하세요: {green}maroon {default}!"
 	}
 	"RPG_SetSkinColorTeal"
 	{
-		"ko"		"{olive}你 {green}将皮肤颜色改为{default}: {green}藍綠色 {default}!"
+		"ko"		"{olive} 당신은 {green} 피부색을 {default}: {green} 청록색 {default}로 변경하세요!"
 	}
 	"RPG_SetSkinColorPink"
 	{
-		"ko"		"{olive}你 {green}将皮肤颜色改为{default}: {green}粉红色 {default}!"
+		"ko"		"{olive} 당신은 {green} 피부색을 {default}: {green} 핑크 {default}로 변경하세요!"
 	}
 	"RPG_SetSkinColorPurple"
 	{
-		"ko"		"{olive}你 {green}将皮肤颜色改为{default}: {green}紫色 {default}!"
+		"ko"		"{olive} 당신은 {green} 피부색을 {default}: {green} 보라색 {default}로 변경하세요!"
 	}
 	"RPG_SetSkinColorBlack"
 	{
-		"ko"		"{olive}你 {green}将皮肤颜色改为{default}: {green}黑色 {default}!"
+		"ko"		"{olive} you {green} 피부색을 {default}: {green} 검정 {default}로 변경하세요!"
 	}
 	"RPG_SetSkinColorGold"
 	{
-		"ko"		"{olive}你 {green}将皮肤颜色改为{default}: {green}金黄色 {default}!"
+		"ko"		"{olive} 당신은 {green} 피부색을 {default}로 변경하세요: {green} 황금색 {default}!"
 	}
 	"RPG_ChangeSkinColorTransparentColor"
 	{
-		"ko"		"{olive}당신은 {green} 피부색을 {default}: {green} 투명색 {default}로 변경합니다!"
+		"ko"		"{olive} you {green} 피부색을 {default}: {green} 투명색 {default}로 변경하세요!"
 	}
 	"RPG_SetSkinColorCustomSkin"
 	{
-		"ko"		"{olive}你 {green}将皮肤颜色改为{default}: {green}您的定制皮肤 {default}!"
+		"ko"		"{olive} 귀하의 {green} 피부색을 {default}로 변경: {green} 귀하의 맞춤 피부 {default}!"
 	}
 	"RPG_FirstFreePurchase"
 	{
-		"ko"		"{green}%N{lightgreen}第一次白嫖了一把%s，还剩%d的B数"
+		"ko"		"{green}%N{lightgreen}님이 처음으로 %s을(를) 무료로 받았습니다. B 포인트가 %d 남았습니다"
 	}
 	"RPG_BoughtItemWithPoints"
 	{
-		"ko"		"{green}%N{lightgreen}B数-%d,购买了%s，还剩%d的B数"
+		"ko"		"{green}%N{lightgreen}B 번호-%d, %s를 구매했는데 아직 B 번호의 %d가 있습니다."
 	}
 	"RPG_MeleeWeaponSetMacheteGo"
 	{
-		"ko"		"{green} 외출 시 근접 무기는 마체테로 설정되어 있습니다."
+		"ko"		"{green}근접 무기를 마체테로 설정하세요."
 	}
 	"RPG_MeleeWeaponSetFireAx"
 	{
-		"ko"		"{green} 외출 시 근접 무기가 도끼를 발사하도록 설정되어 있습니다."
+		"ko"		"{green}외출 시 근접 무기를 소방용 도끼로 설정하세요."
 	}
 	"RPG_SetMeleeWeaponKnifeGo"
 	{
-		"ko"		"{green} 외출 시 근접 무기를 칼로 설정하세요."
+		"ko"		"{green}외출 시 근접 무기를 칼로 설정하세요."
 	}
 	"RPG_MeleeWeaponSetKatana"
 	{
-		"ko"		"{green} 근접 무기가 카타나로 설정되어 있습니다."
+		"ko"		"{green}근접 무기를 카타나로 설정하세요."
 	}
 	"RPG_MeleeWeaponSetMagnum"
 	{
@@ -282,23 +282,23 @@
 	}
 	"RPG_SetMeleeWeaponGoingElectric"
 	{
-		"ko"		"{green} 일렉기타를 하러 나갈 때 근접 무기를 설정하세요"
+		"ko"		"{green}근접 무기를 일렉트릭 기타로 설정하세요."
 	}
 	"RPG_SetMeleeWeaponGoingBaton"
 	{
-		"ko"		"{green} 지휘봉에 나갈 때 근접 무기를 설정하십시오"
+		"ko"		"{green}집을 떠날 때 근접 무기를 지휘봉에 설정하세요"
 	}
 	"RPG_SetOutgoingMeleeWeaponPitchfork"
 	{
-		"ko"		"{green} 나가는 근접 무기를 갈퀴로 설정"
+		"ko"		"{green}발신하는 근접 무기를 갈퀴로 설정하세요"
 	}
 	"RPG_SetExitMeleeWeaponShovel"
 	{
-		"ko"		"{green} 종료 근접 무기를 삽으로 설정하세요"
+		"ko"		"{green}근접 무기를 삽으로 설정하세요."
 	}
 	"RPG_SetMeleeWeaponGoingSmall"
 	{
-		"ko"		"{green} 외출시 근접무기를 소형 권총으로 세팅하세요"
+		"ko"		"{green}소형 권총으로 나갈 때 근접 무기를 설정하세요"
 	}
 	"RPG_SetExitMeleeWeaponPan"
 	{
@@ -306,15 +306,15 @@
 	}
 	"RPG_SetMeleeWeaponGoingCrowbar"
 	{
-		"ko"		"{green} 쇠지레로 나갈 때 근접 무기를 설정하세요"
+		"ko"		"{green}출구 근접 무기를 지렛대에 설정하세요"
 	}
 	"RPG_SetMeleeWeaponCricketBat"
 	{
-		"ko"		"{green} 집을 떠날 때 근접 무기를 크리켓 방망이로 설정하세요"
+		"ko"		"{green}귀뚜라미 방망이로 근접 무기를 설정하세요."
 	}
 	"RPG_CanceledMeleeWeaponGoing"
 	{
-		"ko"		"{green} 외출 시 근접 무기를 취소했습니다."
+		"ko"		"{green}외출 시 근접무기를 취소하셨습니다."
 	}
 	"RPG_MeleeWeaponSettingFailedExceeded"
 	{
@@ -322,7 +322,7 @@
 	}
 	"RPG_TurnedBloodRecoveryFunctionKilling"
 	{
-		"ko"		"{green} 특별한 사람을 죽이기 위해 혈액 회복 기능을 켜었습니다. 특별한 사람을 죽이면 혈액 2방울이 반환되며, 혈액량은 상한선을 초과하지 않습니다."
+		"ko"		"{green} 특별한 사람을 죽이기 위해 혈액 회복 기능을 켰습니다. 특별한 사람을 죽이면 혈액 2방울이 반환되며, 혈액량은 상한선을 초과하지 않습니다."
 	}
 	"RPG_TurnedOffBloodRecoverySpecial"
 	{
@@ -334,6 +334,6 @@
 	}
 	"RPG_AntiKickNotPermissionKick"
 	{
-		"ko"		"{green}[AntiKick]{default} 보호된 관리자를 추방할 수 있는 권한이 없습니다: {olive}%N{default}."
+		"ko"		"{green}[AntiKick]{default} 보호된 관리자를 추방할 권한이 없습니다: {olive}%N{default}."
 	}
 }

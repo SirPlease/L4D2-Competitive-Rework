@@ -19,66 +19,66 @@
 	"Popped"
 	{
 		"#format"	"{1:N},{2:N}"
-		"jp"		"{olive}{1}{default} は {olive}{2}{default} をポップしました。"
+		"jp"		"{olive}{1}{default} {olive}{2}{default} が静かに解決しました。"
 	}
 	"PoppedBot"
 	{
-		"jp"		"{olive}%N{default} はブーマーをポップしました。"
+		"jp"		"{olive}%N{default} 黙ってブーマーを倒しました。"
 	}
 	"Leveled"
 	{
 		"#format"	"{1:N},{2:N}"
-		"jp"		"{olive}{1}{default} {blue}完全に{default}レベルに達しました {olive}{2}{default}"
+		"jp"		"{olive}{1}{default} {blue} を使用すると、体力が満タンの状態で {default} を近接攻撃で即座に倒すことができます {olive}{2}{default}"
 	}
 	"LeveledBot"
 	{
-		"jp"		"{olive}%N{default} {blue}完全に{default}レベルになりました {olive}充電器{default}"
+		"jp"		"{olive}%N{default} {blue} を使用して、体力が満タンの状態で {default}{olive} を近接攻撃で倒します。充電器{default} 1台"
 	}
 	"LeveledHurt"
 	{
 		"#format"	"{1:N},{2:N},{3:i}"
-		"jp"		"{olive}{1}{default} {blue}チップレベル{default} {olive}{2}{default} ({blue}{3} ダメージ{default})"
+		"jp"		"{olive}{1}{default} {blue} を使用して、近接攻撃で {default} を倒します。 {2}{default} は {olive} で充電中です ({blue}{3} ダメージ{default})"
 	}
 	"LeveledHurtBot"
 	{
 		"#format"	"{1:N},{2:i}"
-		"jp"		"{olive}{1}{default} {blue}チップレベル{default} 充電器 ({blue}{2} ダメージ{default})"
+		"jp"		"{olive}{1}{default} {blue} を使用して、近接攻撃で {default} を倒す {olive} 突進する雄牛 {default}({blue}{2} ダメージ {default})"
 	}
 	"Deadstopped"
 	{
 		"#format"	"{1:N},{2:N}"
-		"jp"		"{olive}{1}{default} {blue}デッドストップ{default} {olive}{2}{default}"
+		"jp"		"{olive}{1}{default} {blue}プッシュされた {default} {olive}{2}{default}"
 	}
 	"DeadstoppedBot"
 	{
-		"jp"		"{olive}%N{default} {blue}デッドストップ{default} {olive}ハンター{default}"
+		"jp"		"{olive}%N{default} {blue}プッシュされた {default} {olive}ワンハンター{default}"
 	}
 	"Shoved"
 	{
 		"#format"	"{1:N},{2:N}"
-		"jp"		"{olive}{1}{default} {blue}押し込んだ{default} {olive}{2}{default}。"
+		"jp"		"{olive}{1}{default} {blue} は {default} {olive}{2}{default} にプッシュされました。"
 	}
 	"ShovedBot"
 	{
-		"jp"		"{olive}%N{default} {blue}は {default} を {olive}SI{default} に押し込みました。"
+		"jp"		"{olive}%N{default} {blue} は、{olive} 特別な意味の {default} に {default} にプッシュされました。"
 	}
 	"TeamSkeeted"
 	{
-		"jp"		"{olive}%N{default} は {blue}team-skeeted{default} でした。"
+		"jp"		"{olive}%N{default} は、{blue} チーム {default} によってエアブラストされました。"
 	}
 	"TeamSkeetedBot"
 	{
-		"jp"		"A {olive}ハンター{default} は {blue}チームスキート{default}."
+		"jp"		"{olive}Hunter{default} は、{blue} チーム {default} によってエアブラストされました。"
 	}
 	"Skeeted"
 	{
-		"#format"	"{1:N},{2:s},{3:N}"
-		"jp"		"{olive}{1}{default} {blue}{2}スキート{default} {olive}{3}{default}."
+		"#format"		"{1:N},{2:t},{3:N}"
+		"jp"		"{olive}{1}{default} {blue}{2}エアバースト {default} {olive}{3}{default}。"
 	}
 	"SkeetedBot"
 	{
-		"#format"	"{1:N},{2:s}"
-		"jp"		"{olive}{1}{default} {blue}{2}スキート{default} a {olive}ハンター{default}."
+		"#format"		"{1:N},{2:t}"
+		"jp"		"{olive}{1}{default} {blue}{2}エアーブラスト{default}{olive}ハンター{default}。"
 	}
 	"Melee"
 	{
@@ -90,59 +90,59 @@
 	}
 	"Grenade"
 	{
-		"jp"		"手榴弾-"
+		"jp"		"投擲武器"
 	}
 	"HurtSkeet"
 	{
-		"#format"	"{1:N},{2:i},{3:s}"
-		"jp"		"{olive}{1}{default} は {green}ではありません{default} スキート ({blue}{2}{default} 破損）。{3}"
+		"#format"		"{1:N},{2:i},{3:t}"
+		"jp"		"{olive}{1}{default} は {green}残り体力で空爆{default} されました ({blue}{2}{default} ダメージ).{3}"
 	}
 	"HurtSkeetBot"
 	{
-		"#format"	"{1:i},{2:s}"
-		"jp"		"{olive}ハンター{default} は {green}ではありません{default} スキート ({blue}{1}{default} 破損）。{2}"
+		"#format"		"{1:i},{2:t}"
+		"jp"		"{olive}Hunter{default} は {green}残り体力で空爆{default} されました ({blue}{1}{default} ダメージ).{2}"
 	}
 	"Unchipped"
 	{
-		"jp"		"(ハンターがチップを外していたらスキートをしただろう!)"
+		"jp"		"（ハンターが空中で死亡した場合、それは空中爆風です！）"
 	}
 	"CrownedWitch"
 	{
 		"#format"	"{1:N},{2:i}"
-		"jp"		"{olive}{1}{default} が魔女の冠を獲得しました ({blue}{2}{default} ダメージ)。"
+		"jp"		"{olive}{1}{default} 秒の魔女 ({blue}{2}{default} ダメージ)。"
 	}
 	"CrownedWitch2"
 	{
-		"jp"		"魔女はいた {blue}が戴冠{default}."
+		"jp"		"魔女 {blue} は {default} で殺されました。"
 	}
 	"DrawCrowned"
 	{
 		"#format"	"{1:N},{2:i},{3:i}"
-		"jp"		"{olive}{1}{default} ドロークラウンで魔女を獲得しました ({blue}{2}{default} ダメージ、{olive}{3}{default} チップ)。"
+		"jp"		"{olive}{1}{default} は、魔女に数秒でダメージを与えました ({blue}{2}{default} ダメージ、{olive}{3}{default} は数秒でダメージを与えました)。"
 	}
 	"DrawCrowned2"
 	{
 		"#format"	"{1:i},{2:i}"
-		"jp"		"魔女が王冠をかぶった ({blue}{1}{default} のダメージ、 {olive}{2}{default} チップ）。"
+		"jp"		"Witch は秒単位で引用されます (ダメージの場合は {blue}{1}{default}、秒単位のダメージの場合は {olive}{2}{default})。"
 	}
 	"CutTongue"
 	{
 		"#format"	"{1:N},{2:N}"
-		"jp"		"{olive}{1}{default} {blue}カット{default} {olive}{2}{default} の舌"
+		"jp"		"{olive}{1}{default} {blue} {default} {olive}{2}{default} の舌を切り落とします"
 	}
 	"CutTongueBot"
 	{
-		"jp"		"{olive}%N{default} {blue}カット{default} スモーカータン"
+		"jp"		"{olive}%N{default} {blue} {default} 喫煙者の舌を切り落としました"
 	}
 	"SelfClearedTongue"
 	{
-		"#format"	"{1:N},{2:N},{3:s}"
+		"#format"		"{1:N},{2:N},{3:t}"
 		"jp"		"{olive}{1}{default} {olive}{2}{default} の舌から {blue}セルフクリア{default} {blue}{3}{default}"
 	}
 	"SelfClearedTongueBot"
 	{
-		"#format"	"{1:N},{2:s}"
-		"jp"		"{olive}{1}{default} {blue}喫煙者の舌を自動的にクリア{default} {blue}{2}{default}"
+		"#format"		"{1:N},{2:t}"
+		"jp"		"{olive}{1}{default} {olive}喫煙者{default} {blue}{2}{default} {blue}セルフレスキュー{default}の舌の下から"
 	}
 	"Shoving"
 	{
@@ -151,45 +151,45 @@
 	"SkeetedRock"
 	{
 		"#format"	"{1:N},{2:N}"
-		"jp"		"{olive}{1}{default} {blue}スキーテッド{default} {olive}{2}{default} の岩。"
+		"jp"		"{olive}{1}{default} {blue} 石のエアブラスト {default} {olive}{2}{default}。"
 	}
 	"SkeetedRockBot"
 	{
-		"jp"		"{olive}%N{default} {blue}スキート{default} タンクロック"
+		"jp"		"{olive}%N{default} {blue} エアブラスト {default} タンクストーン"
 	}
 	"HunterHP"
 	{
 		"#format"	"{1:N},{2:N},{3:i},{4:i}"
-		"jp"		"{olive}{1}{default} {red}ハイパンチ{default} {olive}{2}{default} ({red}{3}{default} ダメージ、高さ: {red}{4}{default})"
+		"jp"		"{olive}{1}{default} {red} 高攻撃 {default} {olive}{2}{default} ({red}{3}{default} ダメージ、高さ: {red}{4}{default})"
 	}
 	"HunterHPBot"
 	{
 		"#format"	"{1:N},{2:i},{3:i}"
-		"jp"		"A {olive}ハンター{default} {red}ハイパウンス{default} {olive}{1}{default} ({red}{2}{default} ダメージ、高さ: {red}{3}{default})"
+		"jp"		"{olive}Hunter{default} {red} 高攻撃 {default} {olive}{1}{default} ({red}{2}{default} ダメージ、高さ: {red}{3}{default})"
 	}
 	"JockeyHP"
 	{
 		"#format"	"{1:N},{2:N},{3:i}"
-		"jp"		"{olive}{1}{default} {red}ハイパウンス{default} {olive}{2}{default} ({red}の高さ{default}: {red}{3}{default})"
+		"jp"		"{olive}{1}{default} {red} が高所から落ちて {default} {olive}{2}{default} ({red} の高さ {default}: {red}{3}{default})"
 	}
 	"JockeyHPBot"
 	{
 		"#format"	"{1:N},{2:i}"
-		"jp"		"A {olive}騎手{default} {red}ハイパウンス{default} {olive}{1}{default} ({red}の高さ{default}: {red}{2}{default})"
+		"jp"		"{olive}Jockey{default} {red} が高所から落ちて {default} {olive}{1}{default} ({red} の高さ {default}: {red}{2}{default})"
 	}
 	"DeathCharged"
 	{
-		"#format"	"{1:N},{2:N},{3:s},{4:i}"
-		"jp"		"{olive}{1}{default} {red}死刑{default} {olive}{2}{default} {3}({red}の高さ{default}: {red}{4}{default})"
+		"#format"		"{1:N},{2:N},{3:t},{4:i}"
+		"jp"		"{olive}{1}{default} {red} 料金 {default} 原因 {olive}{2} 死亡{default} ({3})({red} 高さ {default}: {red}{4}{default})"
 	}
 	"DeathChargedBot"
 	{
-		"#format"	"{1:N},{2:s},{3:i}"
-		"jp"		"A {olive}充電器{default} {red}死刑{default} {olive}{1}{default} {2}({red}の高さ{default}: {red}{3}{default})"
+		"#format"		"{1:N},{2:t},{3:i}"
+		"jp"		"{olive}Charger{default} {red} 料金 {default} 原因 {olive}{1}{default} 死亡({2})({red} 身長 {default}: {red}{3}{default})"
 	}
 	"Bowling"
 	{
-		"jp"		"ボウリングで"
+		"jp"		"運ばれている"
 	}
 	"SIClear"
 	{
@@ -204,21 +204,21 @@
 	"SIClearBot"
 	{
 		"#format"	"{1:N},{2:N},{3:s},{4:.2f}"
-		"jp"		"{olive}{1}{default} {blue}インスタクリア{default} {olive}{2}{default} から {3} ({blue}{4} {default} 秒)"
+		"jp"		"{olive}{1}{default} {blue}{4} 秒しかかからず、{default} {olive} と 1 つの {3}{default} を強制終了し、コントロール {olive}{2}{default} を解放しました。"
 	}
 	"SIClearTeammateBot"
 	{
 		"#format"	"{1:N},{2:s},{3:.2f}"
-		"jp"		"{olive}{1}{default} {blue}インスタクリア済み{default} {olive}チームメイト{default} から {2} ({blue}{3} {default}秒)"
+		"jp"		"{olive}{1}{default} {blue}{3} 秒だけで {default} {olive}{2}{default} を倒すことができました"
 	}
 	"BunnyHop"
 	{
-		"#format"	"{1:i},{2:s},{3:.1f}"
-		"jp"		"{olive}あなた{default}は、連続で{blue}{1}バニーホップ{2}{default}を獲得しました（{blue}最高速度{default}: {olive}{3}{default}）"
+		"#format"		"{1:i},{2:t},{3:.1f}"
+		"jp"		"{olive}あなた{default} は {blue}{1} 回連続ジャンプ{2}{default} に成功しました ({blue}最高速度{default}: {olive}{3}{default})"
 	}
 	"PluralCount"
 	{
-		"jp"		"s"
+		"jp"		""
 	}
 	"Empty"
 	{
@@ -226,48 +226,48 @@
 	}
 	"CalarmHit"
 	{
-		"jp"		"{olive}%N{default} がヒットでアラームをトリガーしました。"
+		"jp"		"{olive}%N{default} が車のサイレンを鳴らしました。"
 	}
 	"CalarmTouched"
 	{
 		"#format"	"{1:N},{2:N}"
-		"jp"		"{olive}{1}{default} は、{olive}{2}{default} にアラームをトリガーさせました。"
+		"jp"		"{olive}{1}{default} により、{olive}{2}{default} がアラームをトリガーします。"
 	}
 	"CalarmTouchedHunter"
 	{
-		"jp"		"{olive}hunter{default} が {olive}%N{default} にアラームをトリガーさせました。"
+		"jp"		"{olive}Hunter{default} により、{olive}%N{default} がアラームをトリガーします。"
 	}
 	"CalarmTouchedJockey"
 	{
-		"jp"		"{olive}騎手{default} が {olive}%N{default} にアラームをトリガーさせました。"
+		"jp"		"{olive}Jockey{default} により、{olive}%N{default} がアラームをトリガーします。"
 	}
 	"CalarmTouchedCharger"
 	{
-		"jp"		"{olive}充電器{default}により、{olive}%N{default}がアラームをトリガーしました。"
+		"jp"		"{olive}Charger{default} により、{olive}%N{default} がアラームをトリガーします。"
 	}
 	"CalarmTouchedInfected"
 	{
-		"jp"		"{olive}ボット感染{default}により、{olive}%N{default} がアラームをトリガーしました。"
+		"jp"		"{olive}Bot が感染した {default} により、{olive}%N{default} がアラームをトリガーします。"
 	}
 	"CalarmTouchedBot"
 	{
-		"jp"		"{olive}%N{default} が警報を発した車に接触しました。"
+		"jp"		"{olive}%N{default} が車のサイレンを鳴らしました。"
 	}
 	"CalarmExplosion"
 	{
-		"jp"		"{olive}%N{default} が爆発を伴う警報を作動させました。"
+		"jp"		"{olive}%N{default} 爆発を使用してサイレンカーをトリガーします。"
 	}
 	"CalarmBoomer"
 	{
 		"#format"	"{1:N},{2:N}"
-		"jp"		"{olive}{1}{default} はブーマーの {olive}{2}{default} を殺害して警報を発しました。"
+		"jp"		"{olive}{1}{default} ブーマーを殺した {olive}{2}{default} サイレンカーを鳴らした。"
 	}
 	"CalarmBoomerBot"
 	{
-		"jp"		"{olive}%N{default} が {olive}boomer{default} を撃って警報を鳴らしました。"
+		"jp"		"{olive}%N{default} が 1 台を殺害 {olive}boomer{default} が警報車を作動させた。"
 	}
 	"Calarm"
 	{
-		"jp"		"{olive}%N{default} がアラームをトリガーしました。"
+		"jp"		"{olive}%N{default} が車のサイレンを鳴らしました。"
 	}
 }

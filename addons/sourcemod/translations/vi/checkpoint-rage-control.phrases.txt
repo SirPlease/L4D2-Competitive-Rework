@@ -6,10 +6,10 @@
 	}
 	"LoseFrustration"
 	{
-		"vi"		"{red}Tank{default} vẫn sẽ {green}mất{default} frustration khi survivor đang trong {olive}saferoom{default}."
+		"vi"		"{red}Tank{default} Khi tất cả những người sống sót đều ở trong phòng an toàn {olive} {default}, {green} vẫn sẽ dần mất quyền kiểm soát {default}."
 	}
 	"KeepFrustration"
 	{
-		"vi"		"{red}Tank{default} sẽ {green}không mất{default} frustration khi survivor đang trong {olive}saferoom{default}."
+		"vi"		"{red}Tank{default} {green} sẽ không mất quyền kiểm soát {default} khi tất cả những người sống sót đều ở trong phòng an toàn {olive} {default}."
 	}
 }

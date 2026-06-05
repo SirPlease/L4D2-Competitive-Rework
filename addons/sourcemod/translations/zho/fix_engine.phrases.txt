@@ -2,11 +2,11 @@
 {
 	"FixEngine_IdrowndamageDamageTempHPRestore"
 	{
-		"zho"		"m_idrowndmg = %d，dmg = %d，要恢復的暫時馬力 = %d"
+		"zho"		"m_idrowndmg = %d，dmg = %d，要恢復的臨時血量 = %d"
 	}
 	"FixEngine_RestoringStartedPlayerUsingGlitch"
 	{
-		"zho"		"恢復開始（玩家在擁有 1-10hp 時使用故障"
+		"zho"		"開始恢復（玩家在 1-10 HP 時使用了漏洞）"
 	}
 	"FixEngine_RestoreCountBeginningSeconds"
 	{
@@ -14,31 +14,31 @@
 	}
 	"FixEngine_RestoringStarted"
 	{
-		"zho"		"恢復開始"
+		"zho"		"開始恢復"
 	}
 	"FixEngine_TempHealthLimitExceeded"
 	{
-		"zho"		"超出溫度健康限制"
+		"zho"		"超出臨時血量上限"
 	}
 	"FixEngine_ResetDrownRestoredProp"
 	{
-		"zho"		"重置溺水恢復道具 %N"
+		"zho"		"重置溺水恢復的血量 %N"
 	}
 	"FixEngine_TempGlitchFixed"
 	{
-		"zho"		"溫度故障已修復"
+		"zho"		"臨時血量漏洞已修復"
 	}
 	"FixEngine_StoppedTempGlitchFixTimer"
 	{
-		"zho"		"停止溫度故障修復計時器"
+		"zho"		"已停止臨時血量漏洞修復計時器"
 	}
 	"FixEngine_RestoringStopped"
 	{
-		"zho"		"恢復已停止"
+		"zho"		"已停止恢復"
 	}
 	"FixEngine_AttemptedUseLadderSpeedGlitch"
 	{
-		"zho"		"%N (%s) 嘗試使用梯形速度故障。"
+		"zho"		"%N (%s) 嘗試使用梯子加速漏洞。"
 	}
 	"FixEngine_SuspectedUsingNoFallDamage"
 	{
@@ -46,10 +46,10 @@
 	}
 	"FixEngine_AttemptedUseHealthBoostGlitch"
 	{
-		"zho"		"%N (%s) 嘗試使用生命值提升故障。"
+		"zho"		"%N (%s) 嘗試使用血量提升漏洞。"
 	}
 	"FixEngine_AttemptedUseLadderReloadGlitch"
 	{
-		"zho"		"%N (%s) 嘗試使用梯子重新加載故障。"
+		"zho"		"%N (%s) 嘗試使用梯子換彈漏洞。"
 	}
 }

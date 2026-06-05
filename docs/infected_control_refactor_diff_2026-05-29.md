@@ -166,7 +166,7 @@ inf_ai_difficulty_fallback_level 3
 | `inf_ai_difficulty_link` | `1` | 是否启用 AI 难度联动 |
 | `inf_ai_difficulty_fallback_level` | `3` | 未定档时使用哪一档 |
 | `inf_ai_wave_check_ratio` | `0.90 0.80 0.65 0.50 0.35` | 1-5 档开始判定下一波的时间比例 |
-| `inf_ai_wave_floor_ratio` | `1.35 1.25 1.12 1.00 1.00` | 1-5 档普通补波最早时间比例，代码层也钳制不低于设定刷新间隔 |
+| `inf_ai_wave_floor_ratio` | `1.50 1.40 1.25 1.15 1.10` | 1-5 档普通补波最早时间比例；配合新版 0.1s 开波 timer 恢复旧版实战节奏 |
 | `inf_ai_wave_low_si_ratio` | `0.12 0.20 0.27 0.34 0.50` | 存活 SI 低于多少比例时允许补波 |
 | `inf_ai_dist_sweet_offset` | `0 0 0 0 0` | 默认不改每类特感的甜点距离 |
 | `inf_ai_dist_width_scale` | `1.25 1.15 1.08 1.00 1.00` | 距离评分宽度倍率 |
@@ -188,7 +188,7 @@ inf_ai_difficulty_fallback_level 3
 | 项目 | 原版/当前专家基准 | 简单 | 普通 | 困难 | 专家 | 极限 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | 开始判定时间 | 8.0s | 14.4s | 12.8s | 10.4s | 8.0s | 5.6s |
-| 普通补波最早时间 | 16.0s | 21.6s | 20.0s | 17.9s | 16.0s | 16.0s |
+| 普通补波最早时间 | 旧版约 24.0s | 24.0s | 22.4s | 20.0s | 18.4s | 17.6s |
 | 低存活补波阈值 | 约 2 特 | 0 特 | 1 特 | 1 特 | 2 特 | 3 特 |
 | 候选评分预算 | 原版固定约 12；专家当前 8 | 5 | 6 | 7 | 8 | 8 |
 | 距离评分宽度倍率 | 1.00 | 1.25 | 1.15 | 1.08 | 1.00 | 1.00 |
@@ -249,7 +249,7 @@ Action：
 | --- | ---: | --- |
 | `inf_antibait_action` | `2` | `0=只记录/调试`，`1=限制最晚开波`，`2=再加不可见 SI 快速传送` |
 | `inf_antibait_force_after` | `25.0` | Pressure 持续多久后允许请求提前开波 |
-| `inf_antibait_fast_tp` | `1.5` | Pressure 下不可见 SI 的快速传送阈值 |
+| `inf_antibait_fast_tp` | `1.5` | Pressure 下不可见 SI 的快速传送阈值；用于存活 SI 换点，不是新增普通补波 |
 | `inf_antibait_latest_scale` | `1.50` | 简单档最晚开波倍率基准 |
 | `inf_antibait_latest_scale_step` | `0.10` | 档位越高，最晚开波倍率越接近基础间隔 |
 
@@ -262,7 +262,7 @@ Action：
 - 场上可能已经没活特，但 `lastSpawnSecs` 到达可判定窗口，或队列里已有待刷特。
 - 当前不在 Tank、暂停、全员被控等保护场景。
 
-结果：进入 Pressure。若 `inf_antibait_action 2`，不可见 SI 可以按 `1.5s` 阈值走快速传送重刷，逼生还推进或拉开。
+结果：进入 Pressure。若 `inf_antibait_action 2`，不可见 SI 可以按 `1.5s` 阈值走快速传送重刷，逼生还推进或拉开；开新波仍由 `DifficultyStrategy_CanStartNormalWave()` 的普通补波下限控制。
 
 反例 1：生还停了，但 1 人离最近队友超过 `inf_antibait_isolate_dist 950`。
 
@@ -327,7 +327,7 @@ Action：
 | `inf_ai_difficulty_link` | `1` | 是否联动 AI 难度 |
 | `inf_ai_difficulty_fallback_level` | `3` | AI 难度缺失/未定档时策略档 |
 | `inf_ai_wave_check_ratio` | `0.90 0.80 0.65 0.50 0.35` | 开始判定下一波比例 |
-| `inf_ai_wave_floor_ratio` | `1.35 1.25 1.12 1.00 1.00` | 普通补波最早比例，不低于设定刷新间隔 |
+| `inf_ai_wave_floor_ratio` | `1.50 1.40 1.25 1.15 1.10` | 普通补波最早比例；配合新版 0.1s 开波 timer 恢复旧版实战节奏 |
 | `inf_ai_wave_low_si_ratio` | `0.12 0.20 0.27 0.34 0.50` | 低存活补波阈值比例 |
 | `inf_ai_dist_sweet_offset` | `0 0 0 0 0` | 距离甜点偏移；默认不动 |
 | `inf_ai_dist_width_scale` | `1.25 1.15 1.08 1.00 1.00` | 距离评分宽度倍率 |
@@ -405,7 +405,7 @@ SpawnCore_EvaluateNavCandidate(...)
 - 出生后 `inf_TeleportSpawnGrace 2.5` 秒内不传送。
 - Smoker 技能未就绪时跳过传送，但保留 tick 计数和日志节奏。
 - 跑男可用 `inf_TeleportRunnerFast 1.5`。
-- anti-baiter Pressure 下可用 `inf_antibait_fast_tp 1.5`。
+- anti-baiter Pressure 下可用 `inf_antibait_fast_tp 1.5`；它只负责存活 SI 换点，开新波仍受普通补波下限控制。
 - 真正传送时会更新活 SI 数、失效桶计数缓存、加入传送刷出队列。
 
 ## Nav 调试差异

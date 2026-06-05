@@ -2,7 +2,7 @@
 {
 	"L4D2DamageShow_HUDSavedLocallyCookieQueued"
 	{
-		"jp"		"{olive}[HUD]{default} はローカル (Cookie) に保存されてキューに入れられ、ロードの完了後にデータベースに書き込まれます。"
+		"jp"		"{olive}[HUD]{default} はローカル (Cookie) に保存されてキューに登録されており、ロードの完了後にデータベースに書き込まれます。"
 	}
 	"L4D2DamageShow_HUDSettingsSavedLocallyCookie"
 	{
@@ -34,11 +34,11 @@
 	}
 	"L4D2DamageShow_HUDOnlyAdministratorsCanTurn"
 	{
-		"jp"		"{olive}[HUD]{default} このオプションをオンにできるのは管理者のみです。"
+		"jp"		"{olive}[HUD]{default} このオプションをオンにできるのは管理者だけです。"
 	}
 	"L4D2DamageShow_SpectatorDisplayToggled"
 	{
-		"jp"		"{green}旁观显示{default}已切换：{olive}%s"
+		"jp"		"{green} 監視者は、{default} が切り替わったことを示します: {olive}%s"
 	}
 	"L4D2DamageShow_OnlyAdministratorsWatchingCanUse"
 	{
@@ -46,6 +46,6 @@
 	}
 	"L4D2DamageShow_HUDFunctionDisabledAdministratorFlag"
 	{
-		"jp"		"{olive}[HUD]{default} 機能無効: 管理者フラグ要件 (%s) が満たされていません。"
+		"jp"		"{olive}[HUD]{default} 機能が無効になっています: 管理者フラグの要件が満たされていません (%s)。"
 	}
 }

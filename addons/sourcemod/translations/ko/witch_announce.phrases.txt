@@ -6,14 +6,14 @@
 	}
 	"WitchAnnounce_TankKilledWitch"
 	{
-		"ko"		"{default}[{green}!{default}] {red}T탱크 {default}({olive}%N{default})가 {red}마녀를 죽였습니다."
+		"ko"		"{default}[{green}!{default}] {red}Tank {default}({olive}%N{default})가 {red}Witch를 죽였습니다."
 	}
 	"WitchAnnounce_StillSomeBloodLeft"
 	{
-		"ko"		"{default}[{green}!{default}] {blue}Witch {default}에는 아직 피가 남아있습니다 {olive}%d {default}"
+		"ko"		"{default}[{green}!{default}] {blue}Witch {default} 아직 피가 남아있습니다 {olive}%d {default}"
 	}
 	"WitchAnnounce_WitchDamageHeader"
 	{
-		"ko"		"{default}[{green}!{default}] 对{blue}女巫{default}产生的{blue}伤害"
+		"ko"		"{default}[{green}!{default}] {blue}가 {blue} 마녀 {default}에게 피해를 입힙니다."
 	}
 }

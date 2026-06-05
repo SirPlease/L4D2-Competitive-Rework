@@ -2,18 +2,50 @@
 {
 	"GlobalChat_FullServerNormalFullServer"
 	{
-		"ko"		"{green}[풀서버]{default} %s 일반 풀서버 채팅이 있습니다."
+		"ko"		"{green}[풀서버]{default} 일반 풀서버 채팅 : %s."
 	}
 	"GlobalChat_AllServersAskedTipTeammates"
 	{
-		"ko"		"{green}[모든 서버]{default} %s가 팀원에게 팁을 요청했습니다."
+		"ko"		"{green}[모든 서버]{default} 팀원 찾기 팁: %s."
 	}
 	"GlobalChat_SummonTeammates"
 	{
-		"ko"		"{green}%s {olive}%s {default}플레이어가 {lightgreen}%s {default}에서 팀원을 부르고 있습니다"
+		"ko"		"{green}%s {olive}%s {default}플레이어는 {lightgreen}%s {default}에서 팀원을 소환합니다."
 	}
 	"GlobalChat_SummonTeammatesWithMessage"
 	{
-		"ko"		"{green}%s {olive}%s {default}플레이어가 {lightgreen}%s {default}에서 팀원을 부르고 있습니다\n{default}메시지: {olive}%s"
+		"ko"		"{green}%s {olive}%s {default}플레이어가 {lightgreen}%s {default}에 팀원 \n{default}를 소환하라는 메시지를 남겼습니다. {olive}%s"
+	}
+	"GlobalChat_StatusReceive"
+	{
+		"ko"		"수신"
+	}
+	"GlobalChat_StatusBlock"
+	{
+		"ko"		"차단"
+	}
+	"GlobalChat_MenuTitle"
+	{
+		"ko"		"풀서버 채팅 수신 설정 \n 일반 풀서버 : %s\n 팀원 찾기 팁 : %s"
+	}
+	"GlobalChat_MenuReceiveNormal"
+	{
+		"ko"		"일반 서버 전체 채팅 받기"
+	}
+	"GlobalChat_MenuBlockNormal"
+	{
+		"ko"		"일반적인 서버 전체 채팅 차단"
+	}
+	"GlobalChat_MenuReceiveLFG"
+	{
+		"ko"		"팀원을 찾으려면 알림을 받으세요."
+	}
+	"GlobalChat_MenuBlockLFG"
+	{
+		"ko"		"팀원을 찾으라는 메시지를 차단하세요."
+	}
+	"GlobalChat_MenuLFGLocked"
+	{
+		"ko"		"팀원 찾기 팁: 관리자만 차단할 수 있습니다."
 	}
 }

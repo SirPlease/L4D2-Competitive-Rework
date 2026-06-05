@@ -2,7 +2,7 @@
 {
 	"L4D2BlockBotPills_BotBlockPillsPreventedAccidental"
 	{
-		"zho"		"{green}[{default}Bot Block Pills{green}]{default}：%N 預防意外服用的藥丸"
+		"zho"		"{green}[{default}Bot Block Pills{green}]{default}：已阻止 %N 誤用止痛藥"
 	}
 	"L4D2BlockBotPills_BotBlockPillsBotWants"
 	{

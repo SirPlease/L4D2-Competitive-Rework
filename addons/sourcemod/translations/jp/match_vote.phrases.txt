@@ -6,7 +6,7 @@
 	}
 	"Disabled"
 	{
-		"jp"		"プラグインは {red} 無効です {default}"
+		"jp"		"プラグイン {red} 無効化{default}"
 	}
 	"NoConsole"
 	{
@@ -14,70 +14,70 @@
 	}
 	"ConfoglNotAvailable"
 	{
-		"jp"		"Configl は {red} ですが、 {default} は使用できません。"
+		"jp"		"競合構成 {red} は存在しません {default}。"
 	}
 	"CedaGame"
 	{
-		"jp"		"{red} cedapug match {default} でこのコマンドを実行することは許可されていません"
+		"jp"		"このコマンドは、{red}cedapug コンテストの {default} には許可されていません。"
 	}
 	"Title_Match"
 	{
-		"jp"		"一致モードを選択します:"
+		"jp"		"ゲームモードを選択します:"
 	}
 	"Title_Config"
 	{
-		"jp"		"タイプ %s を選択します。"
+		"jp"		"%s モードを選択します。"
 	}
 	"ConfigNotFound"
 	{
-		"jp"		"そのようなモードの構成は見つかりませんでした。"
+		"jp"		"この競技モードは見つかりませんでした。"
 	}
 	"NoSpec"
 	{
-		"jp"		"観客が投票を開始することはできません。"
+		"jp"		"傍観者は投票を開始することはできません。"
 	}
 	"MatchLoaded"
 	{
-		"jp"		"マッチモードはすでにロードされています!"
+		"jp"		"対戦モードが搭載されました！"
 	}
 	"NotEnoughPlayers"
 	{
-		"jp"		"投票を開始できません。 {red} プレイヤーが足りません {default} ( {red} %d {default} / {green} %d {default} )。"
+		"jp"		"投票を開くことができません。 {red} には、{default} ({red}%d{default}/{green}%d{default}) に対応する十分なプレーヤーがありません。"
 	}
 	"Title_LoadConfig"
 	{
-		"jp"		"configl ' %s ' 構成をロードしますか?"
+		"jp"		"「%s」構成をロードしますか?"
 	}
 	"VoteInProgress"
 	{
-		"jp"		"{red} 投票中 {default} 、{green} %d {default} 秒待ってください。"
+		"jp"		"{red} 投票が進行中です ({default})。{green}%d{default} 秒お待ちください。"
 	}
 	"VotePass_Loading"
 	{
-		"jp"		"マッチモード読み込み中..."
+		"jp"		"コンペティション設定を読み込んでいます..."
 	}
 	"MatchNotLoaded"
 	{
-		"jp"		"{red} マッチモード {default} がロードされていません。"
+		"jp"		"{red} 一致する構成はありません {default} がロードされました。"
 	}
 	"PlayersConnecting"
 	{
-		"jp"		"投票を開始できません。プレイヤーは接続中です。"
+		"jp"		"投票を開始できません。プレーヤーが接続中です。"
 	}
 	"Title_OffConfogl"
 	{
-		"jp"		"Configl をオフにしますか?"
+		"jp"		"近い構成ですか？"
 	}
 	"VotePass_Unloading"
 	{
-		"jp"		"構成をアンロードしています..."
+		"jp"		"競争構成をアンインストールしています..."
 	}
 	"Title_ChangeConfogl"
 	{
-		"jp"		"configl config を「 %s 」に変更しますか?"
+		"jp"		"競技構成を「%s」モードに変更しますか?"
 	}
 	"VotePass_Changed"
 	{
-		"jp"		"マッチモードが変更されました..."
+		"jp"		"対戦モードが変わりました…"
 	}
 }

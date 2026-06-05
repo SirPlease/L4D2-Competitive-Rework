@@ -6,24 +6,24 @@
 	}
 	"off"
 	{
-		"vi"		"{red}{default}"
+		"vi"		"{red}tắt{default}"
 	}
 	"Notify_SpechudState"
 	{
 		"#format"	"{1:t}"
-		"vi"		"<{olive}HUD{default}> HUD của khán giả hiện là {1}"
+		"vi"		"<{olive}HUD{default}> Bảng khán giả là {1}"
 	}
 	"Notify_TankhudState"
 	{
 		"#format"	"{1:t}"
-		"vi"		"<{olive}HUD{default}> HUD xe tăng hiện là {1}"
+		"vi"		"<{olive}HUD{default}> HUD xe tăng giờ đây là {1}"
 	}
 	"Notify_SpechudUsage"
 	{
-		"vi"		"<{olive}HUD{default}> Nhập {green}!spechud{default} vào cuộc trò chuyện để chuyển đổi {blue}HUD khán giả"
+		"vi"		"<{olive}HUD{default}> Đầu vào trò chuyện {green}!spechud{default} Công tắc {blue} Công tắc bảng điều khiển màn hình"
 	}
 	"Notify_TankhudUsage"
 	{
-		"vi"		"<{olive}HUD{default}> Nhập {green}!tankhud{default} vào cuộc trò chuyện để chuyển đổi {red}HUD xe tăng"
+		"vi"		"<{olive}HUD{default}> Đầu vào trò chuyện {green}!tankhud{default} Công tắc {red}Tank Công tắc bảng"
 	}
 }

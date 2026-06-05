@@ -6,36 +6,36 @@
 	}
 	"TagPvE"
 	{
-		"vi"		"[{olive}Báo cáo sát thương{default}]"
+		"vi"		"[{olive}Báo cáo thương tích{default}]"
 	}
 	"HealthRemaining"
 	{
-		"#format"	"{1:s},{2:s},{3:d}"
-		"vi"		"{red}{1}{default} ({green}{2}{default}) còn {olive}{3}{default} máu!"
+		"#format"	"{1:N},{2:s},{3:d}"
+		"vi"		"{red}{1}{default} ({green}{2}{default}) và {olive}{3}{default} còn lại!"
 	}
 	"HealthRemainingAI"
 	{
 		"#format"	"{1:s},{2:d}"
-		"vi"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default} còn {olive}{2}{default} máu!"
+		"vi"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default} Còn lại {olive}{2}{default} điểm máu!"
 	}
 	"UMad"
 	{
-		"vi"		"Không cần phải tức giận đâu..."
+		"vi"		"Đừng tức giận, lần sau nhớ nhắm vào đầu nhé..."
 	}
 	"Sad"
 	{
-		"vi"		"Trông bạn có vẻ buồn...."
+		"vi"		"Trông bạn có vẻ chán nản...."
 	}
 	"Close"
 	{
-		"vi"		"Suýt được rồi!"
+		"vi"		"Đóng!"
 	}
 	"NBad"
 	{
-		"vi"		"Không tệ."
+		"vi"		"không tệ."
 	}
 	"AI"
 	{
-		"vi"		"AI"
+		"vi"		"trí tuệ nhân tạo"
 	}
 }

@@ -6,16 +6,16 @@
 	}
 	"NoCommonRemaining"
 	{
-		"vi"		"{red} Không còn {default} chung!"
+		"vi"		"{red} Không có {default} bị nhiễm thông thường!"
 	}
 	"CommonRemaining"
 	{
 		"#format"	"{1:i}"
-		"vi"		"{red} {1} {default} còn lại phổ biến.."
+		"vi"		"{red}{1} {default} những người nhiễm bệnh thông thường vẫn còn.."
 	}
 	"FiniteEventStarted"
 	{
 		"#format"	"{1:i}"
-		"vi"		"{blue}Làn sóng zombie hữu hạn{default} đã bắt đầu! Vòng này có tổng cộng {olive}{1}{default} zombie thường. Tiến lên hay chờ đợi là lựa chọn của bạn!"
+		"vi"		"Làn sóng zombie giới hạn {blue} {default} đã bắt đầu! Có những người bị nhiễm {olive}{1}{default} bình thường trong vòng này! Vội vàng hay chờ đợi, bạn quyết định!"
 	}
 }

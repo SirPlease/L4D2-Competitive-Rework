@@ -2,18 +2,18 @@
 {
 	"L4D2MeleeDamageControl_MeleeDmgFixInfectedClass"
 	{
-		"chi"		"[MeleeDmgFix] 感染者：(%N) %d，等级：%s (%d)，攻击者：(%N) %d，伤害者：%d，伤害：%f，伤害类型： %d，设定伤害：%f"
+		"chi"		"[MeleeDmgFix] Infected: (%N) %d, Class: %s (%d), attacker: (%N) %d, inflictor: %d, damage: %f, damagetype: %d, set damage: %f"
 	}
 	"L4D2MeleeDamageControl_MeleeDmgControlChargerAttacker"
 	{
-		"chi"		"[MeleeDmgControl] 充电器：(%N) %d，攻击者：(%N) %d，加害者：%d，伤害：%f，伤害类型：%d，设定伤害：%f"
+		"chi"		"[MeleeDmgControl] Charger: (%N) %d, attacker: (%N) %d, inflictor: %d, damage: %f, damagetype: %d, set damage: %f"
 	}
 	"L4D2MeleeDamageControl_MeleeDmgControlTankAttacker"
 	{
-		"chi"		"[MeleeDmgControl] 坦克：(%N) %d，攻击者：(%N) %d，加害者：%d，伤害：%f，伤害类型：%d，设定伤害：%f"
+		"chi"		"[MeleeDmgControl] Tank: (%N) %d, attacker: (%N) %d, inflictor: %d, damage: %f, damagetype: %d, set damage: %f"
 	}
 	"L4D2MeleeDamageControl_ClassName"
 	{
-		"chi"		"类名：%s (%d)"
+		"chi"		"sClassName: %s (%d)"
 	}
 }

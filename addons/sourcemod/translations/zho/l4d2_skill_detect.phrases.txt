@@ -19,206 +19,206 @@
 	"Popped"
 	{
 		"#format"	"{1:N},{2:N}"
-		"zho"		"{olive}{1}{default} 彈出了 {olive}{2}{default}。"
+		"zho"		"{olive}{1}{default} 悄無聲息解決了 {olive}{2}{default}."
 	}
 	"PoppedBot"
 	{
-		"zho"		"{olive}%N{default} 出現了嬰兒潮世代。"
+		"zho"		"{olive}%N{default} 悄無聲息解決了一隻 boomer."
 	}
 	"Leveled"
 	{
 		"#format"	"{1:N},{2:N}"
-		"zho"		"{olive}{1}{default} {blue}完全{default}水平{olive}{2}{default}"
+		"zho"		"{olive}{1}{default} 使用 {blue}近戰滿血秒殺{default} {olive}{2}{default}"
 	}
 	"LeveledBot"
 	{
-		"zho"		"{olive}%N{default} {blue}完全{default}已平整的{olive}充電器{default}"
+		"zho"		"{olive}%N{default} 使用 {blue}近戰滿血秒殺{default}{olive} 一隻 charger{default}"
 	}
 	"LeveledHurt"
 	{
 		"#format"	"{1:N},{2:N},{3:i}"
-		"zho"		"{olive}{1}{default} {blue}晶片等級{default} {olive}{2}{default} ({blue}{3} dmg{default})"
+		"zho"		"{olive}{1}{default} 使用 {blue}近戰砍死{default} 正在 {olive}衝鋒的{2}{default} ({blue}{3} 傷害{default})"
 	}
 	"LeveledHurtBot"
 	{
 		"#format"	"{1:N},{2:i}"
-		"zho"		"{olive}{1}{default} {blue}晶片等級{default}充電器 ({blue}{2} dmg{default})"
+		"zho"		"{olive}{1}{default} 使用 {blue}近戰砍死{default} 一隻正在 {olive}衝鋒的牛 {default}({blue}{2} 傷害{default})"
 	}
 	"Deadstopped"
 	{
 		"#format"	"{1:N},{2:N}"
-		"zho"		"{olive}{1}{default} {blue}停頓{default} {olive}{2}{default}"
+		"zho"		"{olive}{1}{default} {blue}推停了{default} {olive}{2}{default}"
 	}
 	"DeadstoppedBot"
 	{
-		"zho"		"{olive}%N{default} {blue}停頓{default} {olive}獵人{default}"
+		"zho"		"{olive}%N{default} {blue}推停了{default} {olive}一隻 hunter{default}"
 	}
 	"Shoved"
 	{
 		"#format"	"{1:N},{2:N}"
-		"zho"		"{olive}{1}{default} {blue}推了{default} {olive}{2}{default}."
+		"zho"		"{olive}{1}{default} {blue}推到了{default} {olive}{2}{default}."
 	}
 	"ShovedBot"
 	{
-		"zho"		"{olive}%N{default} {blue}推了{default} 一個 {olive}SI{default}."
+		"zho"		"{olive}%N{default} {blue}推到了{default} 一個 {olive}特感{default}."
 	}
 	"TeamSkeeted"
 	{
-		"zho"		"{olive}%N{default} 是 {blue}team-sketed{default}。"
+		"zho"		"{olive}%N{default} 被 {blue}團隊空爆{default}."
 	}
 	"TeamSkeetedBot"
 	{
-		"zho"		"{olive}hunter{default} 是 {blue}team-sketed{default}。"
+		"zho"		"{olive}Hunter{default} 被 {blue}團隊空爆{default}."
 	}
 	"Skeeted"
 	{
-		"#format"	"{1:N},{2:s},{3:N}"
-		"zho"		"{olive}{1}{default} {blue}{2}碟式{default} {olive}{3}{default}."
+		"#format"		"{1:N},{2:t},{3:N}"
+		"zho"		"{olive}{1}{default} {blue}{2}空爆{default} 了 {olive}{3}{default}."
 	}
 	"SkeetedBot"
 	{
-		"#format"	"{1:N},{2:s}"
-		"zho"		"{olive}{1}{default} {blue}{2}追蹤{default}一位{olive}獵人{default}。"
+		"#format"		"{1:N},{2:t}"
+		"zho"		"{olive}{1}{default} {blue}{2}空爆{default} 了 {olive}一隻hunter{default}."
 	}
 	"Melee"
 	{
-		"zho"		"近戰-"
+		"zho"		"近戰"
 	}
 	"HeadShot"
 	{
-		"zho"		"爆頭-"
+		"zho"		"爆頭"
 	}
 	"Grenade"
 	{
-		"zho"		"手榴彈-"
+		"zho"		"投擲武器"
 	}
 	"HurtSkeet"
 	{
-		"#format"	"{1:N},{2:i},{3:s}"
-		"zho"		"{olive}{1}{default} {green}沒有{default}被瞄準（{blue}{2}{default} 損壞）。 {3}"
+		"#format"		"{1:N},{2:i},{3:t}"
+		"zho"		"{olive}{1}{default} 被 {green}殘血空爆{default} ({blue}{2}{default} 傷害).{3}"
 	}
 	"HurtSkeetBot"
 	{
-		"#format"	"{1:i},{2:s}"
-		"zho"		"{olive}Hunter{default} {green}沒有{default}被瞄準（{blue}{1}{default} 損壞）。 {2}"
+		"#format"		"{1:i},{2:t}"
+		"zho"		"{olive}Hunter{default} 被 {green}殘血空爆{default} ({blue}{1}{default} 傷害).{2}"
 	}
 	"Unchipped"
 	{
-		"zho"		"（如果獵人沒有傷痕的話，就會被飛碟擊中！）"
+		"zho"		"(如果hunter在空中被擊殺，就是空爆!)"
 	}
 	"CrownedWitch"
 	{
 		"#format"	"{1:N},{2:i}"
-		"zho"		"{olive}{1}{default} 加冕為女巫（{blue}{2}{default} 傷害）。"
+		"zho"		"{olive}{1}{default} 秒了女巫 ({blue}{2}{default} 傷害)."
 	}
 	"CrownedWitch2"
 	{
-		"zho"		"女巫是 {blue}加冕{default}."
+		"zho"		"女巫 {blue}被秒了{default}."
 	}
 	"DrawCrowned"
 	{
 		"#format"	"{1:N},{2:i},{3:i}"
-		"zho"		"{olive}{1}{default} 抽籤為女巫加冕（{blue}{2}{default} 傷害，{olive}{3}{default} 籌碼）。"
+		"zho"		"{olive}{1}{default} 引秒了一個女巫 ({blue}{2}{default} 傷害, {olive}{3}{default} 引秒傷害)."
 	}
 	"DrawCrowned2"
 	{
 		"#format"	"{1:i},{2:i}"
-		"zho"		"女巫被平手加冕（{blue}{1}{default} 傷害，{olive}{2}{default} 碎片）。"
+		"zho"		"Witch 被引秒 ({blue}{1}{default} 傷害, {olive}{2}{default} 引秒傷害)."
 	}
 	"CutTongue"
 	{
 		"#format"	"{1:N},{2:N}"
-		"zho"		"{olive}{1}{default} {blue}切{default} {olive}{2}{default}的舌頭"
+		"zho"		"{olive}{1}{default} {blue}砍斷{default} {olive}{2}{default}的舌頭"
 	}
 	"CutTongueBot"
 	{
-		"zho"		"{olive}%N{default} {blue}切{default} 煙舌"
+		"zho"		"{olive}%N{default} {blue}砍斷{default} smoker 的舌頭"
 	}
 	"SelfClearedTongue"
 	{
-		"#format"	"{1:N},{2:N},{3:s}"
-		"zho"		"{olive}{1}{default} {blue}自行清除 {olive}{2}{default} 的舌頭 {blue}{3}{default} {default}"
+		"#format"		"{1:N},{2:N},{3:t}"
+		"zho"		"{olive}{1}{default} 從 {olive}{2}{default}的舌頭下 {blue}{3}{default} {blue}自救{default} "
 	}
 	"SelfClearedTongueBot"
 	{
-		"#format"	"{1:N},{2:s}"
-		"zho"		"{olive}{1}{default} {blue}自清零{default} 來自吸煙者的舌頭 {blue}{2}{default}"
+		"#format"		"{1:N},{2:t}"
+		"zho"		"{olive}{1}{default} 從 {olive}smoker{default}的舌頭下 {blue}{2}{default} {blue}自救{default} "
 	}
 	"Shoving"
 	{
-		"zho"		"透過推搡"
+		"zho"		" 用推"
 	}
 	"SkeetedRock"
 	{
 		"#format"	"{1:N},{2:N}"
-		"zho"		"{olive}{1}{default} {blue}skeeted{default} {olive}{2}{default} 的搖滾。"
+		"zho"		"{olive}{1}{default} {blue}空爆{default} 了 {olive}{2}{default} 的 石頭."
 	}
 	"SkeetedRockBot"
 	{
-		"zho"		"{olive}%N{default} {blue}sketed{default} 坦克岩石"
+		"zho"		"{olive}%N{default} {blue}空爆{default} 了 tank 石頭"
 	}
 	"HunterHP"
 	{
 		"#format"	"{1:N},{2:N},{3:i},{4:i}"
-		"zho"		"{olive}{1}{default} {red}高位攻擊{default} {olive}{2}{default}（{red}{3}{default} dmg，高度：{red}{4}{default}）"
+		"zho"		"{olive}{1}{default} {red}高撲{default} {olive}{2}{default} ({red}{3}{default} 傷害, 高度: {red}{4}{default})"
 	}
 	"HunterHPBot"
 	{
 		"#format"	"{1:N},{2:i},{3:i}"
-		"zho"		"{olive}獵人{default} {red}高位猛撲{default} {olive}{1}{default}（{red}{2}{default} 傷害，高度：{red}{3}{default}）"
+		"zho"		"{olive}Hunter{default} {red}高撲{default} {olive}{1}{default} ({red}{2}{default} 傷害, 高度: {red}{3}{default})"
 	}
 	"JockeyHP"
 	{
 		"#format"	"{1:N},{2:N},{3:i}"
-		"zho"		"{olive}{1}{default} {red}高撲{default} {olive}{2}{default} ({red}高度{default}: {red}{3}{default})"
+		"zho"		"{olive}{1}{default} {red}高處掉下騎了{default} {olive}{2}{default} ({red}高度{default}: {red}{3}{default})"
 	}
 	"JockeyHPBot"
 	{
 		"#format"	"{1:N},{2:i}"
-		"zho"		"一位{olive}騎師{default} {red}高位猛撲{default} {olive}{1}{default}（{red}身高{default}：{red}{2}{default}）"
+		"zho"		"{olive}Jockey{default} {red}高處掉下騎了{default} {olive}{1}{default} ({red}高度{default}: {red}{2}{default})"
 	}
 	"DeathCharged"
 	{
-		"#format"	"{1:N},{2:N},{3:s},{4:i}"
-		"zho"		"{olive}{1}{default} {red}死亡控訴{default} {olive}{2}{default} {3}({red}高度{default}: {red}{4}{default})"
+		"#format"		"{1:N},{2:N},{3:t},{4:i}"
+		"zho"		"{olive}{1}{default} {red}衝鋒{default} 造成 {olive}{2} 死亡{default} ({3})({red}高度{default}: {red}{4}{default})"
 	}
 	"DeathChargedBot"
 	{
-		"#format"	"{1:N},{2:s},{3:i}"
-		"zho"		"{olive}充電器{default} {red}死亡充電{default} {olive}{1}{default} {2}（{red}高度{default}：{red}{3}{default}）"
+		"#format"		"{1:N},{2:t},{3:i}"
+		"zho"		"{olive}Charger{default} {red}衝鋒{default} 造成 {olive}{1}{default} 死亡({2})({red}高度{default}: {red}{3}{default})"
 	}
 	"Bowling"
 	{
-		"zho"		"透過保齡球"
+		"zho"		"被攜帶"
 	}
 	"SIClear"
 	{
 		"#format"	"{1:N},{2:N},{3:N},{4:s},{5:.2f}"
-		"zho"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}{2}{default} 來自 {olive}{3}{default} 的 {4}（{blue}{5} {default}秒）"
+		"zho"		"{olive}{1}{default} 只用了 {blue}{5}秒{default} 殺死了 {olive}{3}{default} 的 {4}， 解控了 {olive}{2}{default} "
 	}
 	"SIClearTeammate"
 	{
 		"#format"	"{1:N},{2:N},{3:s},{4:.2f}"
-		"zho"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}隊友{default}，來自 {olive}{2}{default} 的 {3}（{blue}{4} {default}秒）"
+		"zho"		"{olive}{1}{default} 只用了 {blue}{4}秒{default} 殺死了 {olive}{2}{default}的 {3}"
 	}
 	"SIClearBot"
 	{
 		"#format"	"{1:N},{2:N},{3:s},{4:.2f}"
-		"zho"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}{2}{default} 從 {3}（{blue}{4} {default}秒）"
+		"zho"		"{olive}{1}{default} 只用了 {blue}{4}秒{default} 殺死了 {olive}一隻{3}{default}， 解控了 {olive}{2}{default} "
 	}
 	"SIClearTeammateBot"
 	{
 		"#format"	"{1:N},{2:s},{3:.2f}"
-		"zho"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}隊友{default}從{2}（{blue}{3} {default}秒）"
+		"zho"		"{olive}{1}{default} 只用了 {blue}{3}秒{default} 殺死了 {olive}一隻{2}{default}"
 	}
 	"BunnyHop"
 	{
-		"#format"	"{1:i},{2:s},{3:.1f}"
-		"zho"		"{olive}您{default}連續得到了{blue}{1} bunnyhop{2}{default}（{blue}最高速率{default}：{olive}{3}{default}）"
+		"#format"		"{1:i},{2:t},{3:.1f}"
+		"zho"		"{olive}你{default} 連續完成了 {blue}{1} 次連跳{2}{default} ({blue}最高速度{default}: {olive}{3}{default})"
 	}
 	"PluralCount"
 	{
-		"zho"		"s"
+		"zho"		""
 	}
 	"Empty"
 	{
@@ -226,48 +226,48 @@
 	}
 	"CalarmHit"
 	{
-		"zho"		"{olive}%N{default}點擊觸發了警報。"
+		"zho"		"{olive}%N{default} 觸發了一輛警報車."
 	}
 	"CalarmTouched"
 	{
 		"#format"	"{1:N},{2:N}"
-		"zho"		"{olive}{1}{default} 讓 {olive}{2}{default} 觸發了警報。"
+		"zho"		"{olive}{1}{default} 讓 {olive}{2}{default} 觸發警報."
 	}
 	"CalarmTouchedHunter"
 	{
-		"zho"		"一位{olive}獵人{default}讓{olive}%N{default}觸發了警報。"
+		"zho"		"{olive}Hunter{default} 讓 {olive}%N{default} 觸發警報."
 	}
 	"CalarmTouchedJockey"
 	{
-		"zho"		"一位{olive}騎師{default}讓{olive}%N{default}觸發了警報。"
+		"zho"		"{olive}Jockey{default} 讓 {olive}%N{default} 觸發警報."
 	}
 	"CalarmTouchedCharger"
 	{
-		"zho"		"{olive}充電器{default}導致{olive}%N{default}觸發警報。"
+		"zho"		"{olive}Charger{default} 讓 {olive}%N{default} 觸發警報."
 	}
 	"CalarmTouchedInfected"
 	{
-		"zho"		"受{olive}機器人感染{default}導致{olive}%N{default}觸發警報。"
+		"zho"		"{olive}Bot infected{default} 讓 {olive}%N{default} 觸發警報."
 	}
 	"CalarmTouchedBot"
 	{
-		"zho"		"{olive}%N{default}碰到了一輛報警的汽車。"
+		"zho"		"{olive}%N{default} 觸發了一輛警報車."
 	}
 	"CalarmExplosion"
 	{
-		"zho"		"{olive}%N{default} 觸發了爆炸警報。"
+		"zho"		"{olive}%N{default} 用爆炸觸發一輛警報車."
 	}
 	"CalarmBoomer"
 	{
 		"#format"	"{1:N},{2:N}"
-		"zho"		"{olive}{1}{default} 殺死嬰兒潮世代 {olive}{2}{default} 觸發了警報。"
+		"zho"		"{olive}{1}{default} 殺了一隻 boomer {olive}{2}{default} 觸發了一輛警報車."
 	}
 	"CalarmBoomerBot"
 	{
-		"zho"		"{olive}%N{default} 拍攝了 {olive}boomer{default} 觸發了警報。"
+		"zho"		"{olive}%N{default} 殺了一隻 {olive}boomer{default}觸發了一輛警報車."
 	}
 	"Calarm"
 	{
-		"zho"		"{olive}%N{default} 觸發了警報。"
+		"zho"		"{olive}%N{default} 觸發了一輛警報車."
 	}
 }

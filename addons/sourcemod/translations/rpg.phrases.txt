@@ -14,7 +14,7 @@
 	}
 	"RPG_TitleUnset"
 	{
-		"en"		"{green} Your title is unset"
+		"en"		"{green}Your title is unset"
 	}
 	"RPG_TitleUpdatedSuccessfullyNewTitle"
 	{
@@ -22,11 +22,11 @@
 	}
 	"RPG_RANKCannotObtainAdditionalPoints"
 	{
-		"en"		"{default}[{green}RANK{default}]{green} cannot obtain additional points and will not update map records due to the advanced HMI being turned on."
+		"en"		"{default}[{green}RANK{default}]{green} Extra points cannot be earned and map records will not be updated because advanced bots are enabled."
 	}
 	"RPG_StoreClosedFunctionCannotUsed"
 	{
-		"en"		"{lightgreen} The store is closed and this function cannot be used."
+		"en"		"{lightgreen}The store is closed, so this function cannot be used."
 	}
 	"RPG_AddedBullets"
 	{
@@ -34,55 +34,55 @@
 	}
 	"RPG_FirstTimeRandomTrollFree"
 	{
-		"en"		"{green}%N {lightgreen} The first time I had a random troll for free"
+		"en"		"{green}%N {lightgreen}got a random shotgun for free for the first time."
 	}
 	"RPG_QuicklySpend50BuySingle"
 	{
-		"en"		"{green}%N {lightgreen} Quickly spend 50B to buy a single spray at random"
+		"en"		"{green}%N {lightgreen}quickly spent 50 B points to buy a random shotgun."
 	}
 	"RPG_NotEnoughMoneyForShotgun"
 	{
-		"en"		"{lightgreen}If you don’t have money, you can buy a piece of shit, and you don’t have any ideas in mind."
+		"en"		"{lightgreen}No money, no shotgun. Count your B points first."
 	}
 	"RPG_FirstTimeGotSecondsondGeneration"
 	{
-		"en"		"{green}%N {lightgreen} The first time I got a second generation single spray for free"
+		"en"		"{green}%N {lightgreen}got a Chrome Shotgun for free for the first time."
 	}
 	"RPG_QuicklySpend50BuySecondsond"
 	{
-		"en"		"{green}%N {lightgreen} Quickly spend 50B to buy a second-generation single sprayer"
+		"en"		"{green}%N {lightgreen}quickly spent 50 B points to buy a Chrome Shotgun."
 	}
 	"RPG_FirstGenerationSingleSpray"
 	{
-		"en"		"{green}%N {lightgreen} The first generation single spray"
+		"en"		"{green}%N {lightgreen}got a pump shotgun for free for the first time."
 	}
 	"RPG_QuicklySpend50BuyFirst"
 	{
-		"en"		"{green}%N {lightgreen} Quickly spend 50B to buy a first-generation single spray at random"
+		"en"		"{green}%N {lightgreen}quickly spent 50 B points to buy a pump shotgun."
 	}
 	"RPG_FirstTimeBoughtSilencedSMG"
 	{
-		"en"		"{green}%N {lightgreen} The first time I bought a silenced SMG machine gun for free"
+		"en"		"{green}%N {lightgreen}got a silenced SMG for free for the first time."
 	}
 	"RPG_QuicklySpend50BuySilenced"
 	{
-		"en"		"{green}%N {lightgreen} Quickly spend 50B to buy a silenced SMG machine gun"
+		"en"		"{green}%N {lightgreen}quickly spent 50 B points to buy a silenced SMG."
 	}
 	"RPG_DonMoneyCanBuyCrappy"
 	{
-		"en"		"{lightgreen} If you don’t have money, you can buy a crappy machine gun. You don’t have any idea"
+		"en"		"{lightgreen}No money, no SMG. Count your B points first."
 	}
 	"RPG_FirstTimeFreeUzi"
 	{
-		"en"		"{green}%N {lightgreen} The first time I had a free Uzi"
+		"en"		"{green}%N {lightgreen}got an Uzi for free for the first time."
 	}
 	"RPG_QuicklySpend50RandomlyBuy"
 	{
-		"en"		"{green}%N {lightgreen} Quickly spend 50B to randomly buy a Uzi machine gun"
+		"en"		"{green}%N {lightgreen}quickly spent 50 B points to buy an Uzi."
 	}
 	"RPG_QuicklySpent400BuyBottle"
 	{
-		"en"		"{green}%N {lightgreen} quickly spent 400B to buy a bottle of medicine"
+		"en"		"{green}%N {lightgreen}quickly spent 400 B points to buy pills."
 	}
 	"RPG_FirstUseSetchTitleName"
 	{
@@ -94,187 +94,187 @@
 	}
 	"RPG_CurrentlyProhibitedUseNumberPurchase"
 	{
-		"en"		"{lightgreen} It is currently prohibited to use B number to purchase goods (only 0B items are allowed)."
+		"en"		"{lightgreen}Purchases with B points are currently disabled. Only 0B items are allowed."
 	}
 	"RPG_ShopSkillsCoolingDownCooling"
 	{
-		"en"		"{lightgreen} shop skills are cooling down (cooling time 15s)"
+		"en"		"{lightgreen}Store skill is cooling down (15s cooldown)."
 	}
 	"RPG_ServerClosedCoinUsageChannel"
 	{
-		"en"		"The server has closed the B coin usage channel. If you want to use it, please vote to open it."
+		"en"		"The server has disabled B-coin purchases. Start a vote if you want to enable them."
 	}
 	"RPG_DonPointMind"
 	{
-		"en"		"{lightgreen} Don’t you have a point in your mind?"
+		"en"		"{lightgreen}Do you even know how many B points you have?"
 	}
 	"RPG_NewUserCreatingDatabase"
 	{
-		"en"		"{green} New user, creating database"
+		"en"		"{green}New user, creating database record."
 	}
 	"RPG_ChangeOutlineColorGreen"
 	{
-		"en"		"{olive}you {green} change the outline color to {default}: {green} green {default}!"
+		"en"		"{olive}You {green}changed your outline color to{default}: {green}green{default}!"
 	}
 	"RPG_SetOutlineColorBlue"
 	{
-		"en"		"{olive}You {green}change the outline color to {default}: {green}blue {default}!"
+		"en"		"{olive}You {green}changed your outline color to{default}: {green}blue{default}!"
 	}
 	"RPG_SetOutlineColorBlueViolet"
 	{
-		"en"		"{olive}You {green}change the outline color to {default}: {green}blue-purple {default}!"
+		"en"		"{olive}You {green}changed your outline color to{default}: {green}blue-violet{default}!"
 	}
 	"RPG_ChangeOutlineColorCyan"
 	{
-		"en"		"{olive}you {green} change the outline color to {default}: {green} cyan {default}!"
+		"en"		"{olive}You {green}changed your outline color to{default}: {green}cyan{default}!"
 	}
 	"RPG_SetOutlineColorOrange"
 	{
-		"en"		"{olive}You {green}change the outline color to {default}: {green}orange {default}!"
+		"en"		"{olive}You {green}changed your outline color to{default}: {green}orange{default}!"
 	}
 	"RPG_SetOutlineColorRed"
 	{
-		"en"		"{olive}You {green}change the outline color to {default}: {green}red {default}!"
+		"en"		"{olive}You {green}changed your outline color to{default}: {green}red{default}!"
 	}
 	"RPG_SetOutlineColorGray"
 	{
-		"en"		"{olive}You {green}change the outline color to {default}: {green}gray {default}!"
+		"en"		"{olive}You {green}changed your outline color to{default}: {green}gray{default}!"
 	}
 	"RPG_SetOutlineColorYellow"
 	{
-		"en"		"{olive}You {green}change the outline color to {default}: {green}yellow {default}!"
+		"en"		"{olive}You {green}changed your outline color to{default}: {green}yellow{default}!"
 	}
 	"RPG_SetOutlineColorLime"
 	{
-		"en"		"{olive}You {green}change the outline color to {default}: {green}lime {default}!"
+		"en"		"{olive}You {green}changed your outline color to{default}: {green}lime{default}!"
 	}
 	"RPG_SetOutlineColorMaroon"
 	{
-		"en"		"{olive}You {green}change the outline color to {default}: {green}maroon {default}!"
+		"en"		"{olive}You {green}changed your outline color to{default}: {green}maroon{default}!"
 	}
 	"RPG_SetOutlineColorTeal"
 	{
-		"en"		"{olive}You {green}change the outline color to {default}: {green}turquoise {default}!"
+		"en"		"{olive}You {green}changed your outline color to{default}: {green}teal{default}!"
 	}
 	"RPG_SetOutlineColorPink"
 	{
-		"en"		"{olive}You {green}change the outline color to {default}: {green}pink {default}!"
+		"en"		"{olive}You {green}changed your outline color to{default}: {green}pink{default}!"
 	}
 	"RPG_SetOutlineColorPurple"
 	{
-		"en"		"{olive}You {green}change the outline color to {default}: {green}purple {default}!"
+		"en"		"{olive}You {green}changed your outline color to{default}: {green}purple{default}!"
 	}
 	"RPG_SetOutlineColorWhite"
 	{
-		"en"		"{olive}You {green}change the outline color to {default}: {green}white {default}!"
+		"en"		"{olive}You {green}changed your outline color to{default}: {green}white{default}!"
 	}
 	"RPG_SetOutlineColorGold"
 	{
-		"en"		"{olive}You {green}change the outline color to {default}: {green}gold {default}!"
+		"en"		"{olive}You {green}changed your outline color to{default}: {green}gold{default}!"
 	}
 	"RPG_SetOutlineColorRainbow"
 	{
-		"en"		"{olive}You {green}change the outline color to {default}: {green}rainbow color {default}!"
+		"en"		"{olive}You {green}changed your outline color to{default}: {green}rainbow{default}!"
 	}
 	"RPG_SetOutlineColorCustomOutline"
 	{
-		"en"		"{olive}You {green}change the outline color to your {default}: {green}custom color outline {default}!"
+		"en"		"{olive}You {green}changed your outline color to{default}: {green}custom outline color{default}!"
 	}
 	"RPG_ClosedSurvivorProfile"
 	{
-		"en"		"{olive} You closed the survivor profile"
+		"en"		"{olive}You closed the survivor profile"
 	}
 	"RPG_ChangeSkinColorGreen"
 	{
-		"en"		"{olive}You {green} change the skin color to {default}: {green} green {default}!"
+		"en"		"{olive}You {green}changed your skin color to{default}: {green}green{default}!"
 	}
 	"RPG_SetSkinColorBlue"
 	{
-		"en"		"{olive}You {green}change your skin color to {default}: {green}blue {default}!"
+		"en"		"{olive}You {green}changed your skin color to{default}: {green}blue{default}!"
 	}
 	"RPG_SetSkinColorBlueViolet"
 	{
-		"en"		"{olive}You {green}change your skin color to {default}: {green}blue-purple {default}!"
+		"en"		"{olive}You {green}changed your skin color to{default}: {green}blue-violet{default}!"
 	}
 	"RPG_SetSkinColorCyan"
 	{
-		"en"		"{olive}You {green}change your skin color to {default}: {green}Cyan {default}!"
+		"en"		"{olive}You {green}changed your skin color to{default}: {green}cyan{default}!"
 	}
 	"RPG_SetSkinColorOrange"
 	{
-		"en"		"{olive}You {green}change your skin color to {default}: {green}orange {default}!"
+		"en"		"{olive}You {green}changed your skin color to{default}: {green}orange{default}!"
 	}
 	"RPG_SetSkinColorRed"
 	{
-		"en"		"{olive}You {green}change your skin color to {default}: {green}red {default}!"
+		"en"		"{olive}You {green}changed your skin color to{default}: {green}red{default}!"
 	}
 	"RPG_SetSkinColorGray"
 	{
-		"en"		"{olive}You {green}change your skin color to {default}: {green}gray {default}!"
+		"en"		"{olive}You {green}changed your skin color to{default}: {green}gray{default}!"
 	}
 	"RPG_SetSkinColorYellow"
 	{
-		"en"		"{olive}You {green}change your skin color to {default}: {green}yellow {default}!"
+		"en"		"{olive}You {green}changed your skin color to{default}: {green}yellow{default}!"
 	}
 	"RPG_SetSkinColorLime"
 	{
-		"en"		"{olive}You {green}change your skin color to {default}: {green}lime {default}!"
+		"en"		"{olive}You {green}changed your skin color to{default}: {green}lime{default}!"
 	}
 	"RPG_SetSkinColorMaroon"
 	{
-		"en"		"{olive}You {green}change your skin color to {default}: {green}maroon {default}!"
+		"en"		"{olive}You {green}changed your skin color to{default}: {green}maroon{default}!"
 	}
 	"RPG_SetSkinColorTeal"
 	{
-		"en"		"{olive}You {green}change your skin color to {default}: {green}turquoise {default}!"
+		"en"		"{olive}You {green}changed your skin color to{default}: {green}teal{default}!"
 	}
 	"RPG_SetSkinColorPink"
 	{
-		"en"		"{olive}You {green}change your skin color to {default}: {green}pink {default}!"
+		"en"		"{olive}You {green}changed your skin color to{default}: {green}pink{default}!"
 	}
 	"RPG_SetSkinColorPurple"
 	{
-		"en"		"{olive}You {green}change your skin color to {default}: {green}purple {default}!"
+		"en"		"{olive}You {green}changed your skin color to{default}: {green}purple{default}!"
 	}
 	"RPG_SetSkinColorBlack"
 	{
-		"en"		"{olive}You {green}change your skin color to {default}: {green}black {default}!"
+		"en"		"{olive}You {green}changed your skin color to{default}: {green}black{default}!"
 	}
 	"RPG_SetSkinColorGold"
 	{
-		"en"		"{olive}You {green}change your skin color to {default}: {green}gold {default}!"
+		"en"		"{olive}You {green}changed your skin color to{default}: {green}gold{default}!"
 	}
 	"RPG_ChangeSkinColorTransparentColor"
 	{
-		"en"		"{olive}You {green} change the skin color to {default}: {green} transparent color {default}!"
+		"en"		"{olive}You {green}changed your skin color to{default}: {green}transparent{default}!"
 	}
 	"RPG_SetSkinColorCustomSkin"
 	{
-		"en"		"{olive}You {green}change your skin color to {default}: {green}your custom skin {default}!"
+		"en"		"{olive}You {green}changed your skin color to{default}: {green}custom skin color{default}!"
 	}
 	"RPG_FirstFreePurchase"
 	{
-		"en"		"{green}%N{lightgreen} got a handful of %s for nothing for the first time, and there are still B numbers of %d"
+		"en"		"{green}%N{lightgreen} got %s for free for the first time, with %d B points remaining."
 	}
 	"RPG_BoughtItemWithPoints"
 	{
-		"en"		"{green}%N{lightgreen}B number-%d, purchased %s, left %d B number"
+		"en"		"{green}%N{lightgreen} spent %d B points to buy %s, with %d B points remaining."
 	}
 	"RPG_MeleeWeaponSetMacheteGo"
 	{
-		"en"		"{green} Your melee weapon is set to machete when you go out."
+		"en"		"{green}Set your melee weapon as a machete."
 	}
 	"RPG_MeleeWeaponSetFireAx"
 	{
-		"en"		"{green} Your melee weapon is set to fire ax when you go out."
+		"en"		"{green}Set your melee weapon as a fire ax when you go out."
 	}
 	"RPG_SetMeleeWeaponKnifeGo"
 	{
-		"en"		"{green} Set your melee weapon as a knife when you go out."
+		"en"		"{green}Set your melee weapon as a knife when you go out."
 	}
 	"RPG_MeleeWeaponSetKatana"
 	{
-		"en"		"{green} Your melee weapon is set to katana."
+		"en"		"{green}Set your melee weapon as katana."
 	}
 	"RPG_MeleeWeaponSetMagnum"
 	{
@@ -282,47 +282,47 @@
 	}
 	"RPG_SetMeleeWeaponGoingElectric"
 	{
-		"en"		"{green} Set your melee weapon when going out to electric guitar"
+		"en"		"{green}Set your melee weapon as an electric guitar."
 	}
 	"RPG_SetMeleeWeaponGoingBaton"
 	{
-		"en"		"{green} Set your melee weapon when going out to a baton"
+		"en"		"{green}Your starting melee weapon has been set to a nightstick."
 	}
 	"RPG_SetOutgoingMeleeWeaponPitchfork"
 	{
-		"en"		"{green} Set your outgoing melee weapon to a pitchfork"
+		"en"		"{green}Your starting melee weapon has been set to a pitchfork."
 	}
 	"RPG_SetExitMeleeWeaponShovel"
 	{
-		"en"		"{green} Set your exit melee weapon to a shovel"
+		"en"		"{green}Set your melee weapon as a shovel."
 	}
 	"RPG_SetMeleeWeaponGoingSmall"
 	{
-		"en"		"{green} Set your melee weapon when going out to a small pistol"
+		"en"		"{green}Your starting melee weapon has been set to a pistol."
 	}
 	"RPG_SetExitMeleeWeaponPan"
 	{
-		"en"		"{green} Set your exit melee weapon to a pan"
+		"en"		"{green}Your starting melee weapon has been set to a frying pan."
 	}
 	"RPG_SetMeleeWeaponGoingCrowbar"
 	{
-		"en"		"{green} Set your melee weapon when going out to a crowbar"
+		"en"		"{green}Your starting melee weapon has been set to a crowbar."
 	}
 	"RPG_SetMeleeWeaponCricketBat"
 	{
-		"en"		"{green} Set your melee weapon as cricket bat when leaving home"
+		"en"		"{green}Set your melee weapon as a cricket bat."
 	}
 	"RPG_CanceledMeleeWeaponGoing"
 	{
-		"en"		"{green} You canceled the melee weapon when going out"
+		"en"		"{green}You canceled your starting melee weapon."
 	}
 	"RPG_MeleeWeaponSettingFailedExceeded"
 	{
-		"en"		"{lightgreen} Your melee weapon setting failed and exceeded the limit."
+		"en"		"{lightgreen}Failed to set your starting melee weapon: limit exceeded."
 	}
 	"RPG_TurnedBloodRecoveryFunctionKilling"
 	{
-		"en"		"{green} You have turned on the blood recovery function for killing a special person. Killing a special person will return 2 drops of blood, and the blood volume does not exceed the upper limit."
+		"en"		"{green}Special-infected kill healing is now enabled. Killing a special infected restores 2 HP, but cannot restore HP beyond the health cap."
 	}
 	"RPG_TurnedOffBloodRecoverySpecial"
 	{
@@ -334,6 +334,6 @@
 	}
 	"RPG_AntiKickNotPermissionKick"
 	{
-		"en"		"{green}[AntiKick]{default} You do not have permission to kick protected administrators: {olive}%N{default}."
+		"en"		"{green}[AntiKick]{default} You do not have permission to kick protected admins: {olive}%N{default}."
 	}
 }

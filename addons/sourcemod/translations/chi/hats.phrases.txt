@@ -27,12 +27,12 @@
 	"Hat_Unblocked"
 	{
 		"#format"	"{1:s}"
-		"chi"		"{ORANGE} {1} {DEFAULT} 的解锁帽子。"
+		"chi"		"Unblocked hats for {ORANGE}{1}{DEFAULT}."
 	}
 	"Hat_Blocked"
 	{
 		"#format"	"{1:s}"
-		"chi"		"{ORANGE} {1} {DEFAULT} 的屏蔽帽子。"
+		"chi"		"Blocked hats for {ORANGE}{1}{DEFAULT}."
 	}
 	"Hat_View"
 	{
@@ -78,7 +78,7 @@
 	}
 	"ADMIN_VISIBILITY"
 	{
-		"chi"		"选择玩家设置帽子可见性："
+		"chi"		"Select player to set hat visibility:"
 	}
 	"HAT_SET_ANGLE"
 	{

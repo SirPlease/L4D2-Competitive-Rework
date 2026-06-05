@@ -14,11 +14,11 @@
 	}
 	"Server_StillUntakenBotsTakeThem"
 	{
-		"chi"		"{green}还有未接管的Bot，请先接管或等生还队满再试。"
+		"chi"		"{green}还有未接管的生还 Bot，请先接管或等生还队满再试。"
 	}
 	"Server_Not8PlayerSportHasn"
 	{
-		"chi"		"{green}不是 8 人运动，还没达到上限呢！"
+		"chi"		"{green}当前不是 8 人模式，而且还没达到人数上限！"
 	}
 	"Server_SurvivorBotGenerated"
 	{
@@ -30,15 +30,15 @@
 	}
 	"Server_NoBotNotTaken"
 	{
-		"chi"		"{green}不存在未接管的Bot。"
+		"chi"		"{green}没有未接管的生还 Bot。"
 	}
 	"Server_EverythingNormalStillWantSkip"
 	{
-		"chi"		"{green}一切正常，还想踢克逃课？"
+		"chi"		"{green}一切正常，还想跳过吗？"
 	}
 	"Server_ExcessGramsKicked"
 	{
-		"chi"		"{green}已经踢出多余的克"
+		"chi"		"{green}已移出多余玩家"
 	}
 	"Server_PromptsAlreadyBlackWhiteGive"
 	{

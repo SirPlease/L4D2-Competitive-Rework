@@ -147,7 +147,7 @@
 	}
 	"No db error unlock perm"
 	{
-		"chi"		"你没有权限在数据库错误时解除封禁."
+		"chi"		"你没有权限在数据库出错时解除通讯封禁."
 	}
 	"No permission unmute"
 	{
@@ -157,7 +157,7 @@
 	"No permission ungag"
 	{
 		"#format"	"{1:s}"
-		"chi"		"对玩家 {1} 的禁言是由更高级别的管理员完成的,因此你无法解除对此玩家的静音."
+		"chi"		"对玩家 {1} 的禁言是由更高级别的管理员完成的,因此你无法解除对此玩家的禁言."
 	}
 	"Unmuted player"
 	{
@@ -182,6 +182,26 @@
 	{
 		"#format"	"{1:s}"
 		"chi"		"已成功从数据库中取消对 {1} 的禁言."
+	}
+	"AdminMenu_Display_None"
+	{
+		"#format"	"{1:s}"
+		"chi"		"[  ] {1}"
+	}
+	"AdminMenu_Display_Muted"
+	{
+		"#format"	"{1:s}"
+		"chi"		"[M] {1}"
+	}
+	"AdminMenu_Display_Gagged"
+	{
+		"#format"	"{1:s}"
+		"chi"		"[G] {1}"
+	}
+	"AdminMenu_Display_Silenced"
+	{
+		"#format"	"{1:s}"
+		"chi"		"[S] {1}"
 	}
 	"AdminMenu_Main"
 	{
@@ -278,26 +298,6 @@
 	"AdminMenu_Not_Available"
 	{
 		"chi"		"你选择的玩家目前不可用."
-	}
-	"AdminMenu_Display_None"
-	{
-		"#format"	"{1:s}"
-		"chi"		"[  ] {1}"
-	}
-	"AdminMenu_Display_Muted"
-	{
-		"#format"	"{1:s}"
-		"chi"		"[M] {1}"
-	}
-	"AdminMenu_Display_Gagged"
-	{
-		"#format"	"{1:s}"
-		"chi"		"[G] {1}"
-	}
-	"AdminMenu_Display_Silenced"
-	{
-		"#format"	"{1:s}"
-		"chi"		"[S] {1}"
 	}
 	"Command_Target_Not_Targetable"
 	{

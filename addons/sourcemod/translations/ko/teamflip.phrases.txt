@@ -2,18 +2,18 @@
 {
 	"Tag"
 	{
-		"ko"		"[ {olive} 팀플립 {default} ]"
+		"ko"		"[{olive}팀플립{default}]"
 	}
 	"FlippedSurvivor"
 	{
-		"ko"		"{green} %s {default}가 팀을 뒤집어 {blue} 생존자 {default} 팀에 속해 있습니다!"
+		"ko"		"{green}%s{default}가 무작위로 팀을 선택했는데, 바로 {blue} 생존자 팀 {default}입니다!"
 	}
 	"FlippedInfected"
 	{
-		"ko"		"{green} %s {default}가 팀을 뒤집었고 {red} 감염된 {default} 팀에 속해 있습니다!"
+		"ko"		"{green}%s{default}가 무작위로 팀을 선택했는데, 바로 {red} 감염팀 {default}입니다!"
 	}
 	"Wait"
 	{
-		"ko"		"[Teamflip] 우와 친구, 천천히 하세요. 최소 %d초를 기다리세요."
+		"ko"		"[Teamflip] 워, 천천히 하세요. 최소 %d초를 기다리세요."
 	}
 }

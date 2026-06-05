@@ -3,53 +3,53 @@
 	"Banned Check Site"
 	{
 		"#format"	"{1:s}"
-		"zho"		"您已被該伺服器禁止，請查看{1}以了解更多信息"
+		"zho"		"你已被此伺服器封禁,詳情請參閱: {1}."
 	}
 	"DB Connect Fail"
 	{
-		"zho"		"資料庫連線失敗。請聯絡伺服器運營商。"
+		"zho"		"資料庫連線失敗，請聯絡伺服器管理員."
 	}
 	"Not In Game"
 	{
-		"zho"		"該玩家不在遊戲中，請造訪網頁面板禁止他們。"
+		"zho"		"此玩家目前不在遊戲內,請透過web管理面板來進行封禁."
 	}
 	"Ban Not Verified"
 	{
-		"zho"		"該玩家尚未得到驗證。請等待三十秒再重試。"
+		"zho"		"此玩家尚未被認證,請等待30秒後再試."
 	}
 	"Can Not Unban"
 	{
 		"#format"	"{1:s}"
-		"zho"		"您無法在伺服器中解封，請造訪{1}解封。"
+		"zho"		"你無法從遊戲中解除封禁,請訪問此連結來解除: {1} ."
 	}
 	"Can Not Add Ban"
 	{
 		"#format"	"{1:s}"
-		"zho"		"您無法在伺服器中新增封鎖，請造訪{1}新增封鎖。"
+		"zho"		"你不能在遊戲中新增封禁,請訪問此連結來封禁: {1} ."
 	}
 	"Check Menu"
 	{
-		"zho"		"請檢查選單以選擇禁止原因。"
+		"zho"		"請從選單中選擇封禁理由."
 	}
 	"Include Reason"
 	{
-		"zho"		"請附上禁止該客戶端的原因。"
+		"zho"		"請填寫封禁此玩家的理由."
 	}
 	"Ban Fail"
 	{
-		"zho"		"禁止玩家失敗，請重試。"
+		"zho"		"無法封禁此玩家,請重試."
 	}
 	"Chat Reason"
 	{
-		"zho"		"請在聊天中輸入禁止原因，然後按 Enter 鍵。輸入“!noreason”即可中止。"
+		"zho"		"請在聊天框中填寫封禁理由並提交或輸入 '!noreason' 放棄操作."
 	}
 	"Chat Reason Aborted"
 	{
-		"zho"		"禁令程序已成功停止。"
+		"zho"		"封禁操作已成功取消."
 	}
 	"SourceBans_FailedBan"
 	{
-		"zho"		"%s 封鎖 %s 失敗。"
+		"zho"		"%s 封禁 %s 失敗。"
 	}
 	"SourceBans_AlreadyBanned"
 	{
@@ -61,7 +61,7 @@
 	}
 	"SourceBans_SuccessfullyBanned"
 	{
-		"zho"		"%s%s 成功封鎖"
+		"zho"		"%s%s 成功封禁"
 	}
 	"SourceBans_SMUnbanFailed"
 	{
@@ -69,7 +69,7 @@
 	}
 	"SourceBans_NoActiveBansFoundFilter"
 	{
-		"zho"		"%s 找不到該過濾器的有效禁令"
+		"zho"		"%s 未找到該過濾器的有效禁令"
 	}
 	"SourceBans_SuccessfullyUnbanned"
 	{

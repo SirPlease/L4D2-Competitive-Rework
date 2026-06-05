@@ -2,18 +2,18 @@
 {
 	"Tag"
 	{
-		"jp"		"[ {olive} チームフリップ {default} ]"
+		"jp"		"[{olive}チームフリップ{default}]"
 	}
 	"FlippedSurvivor"
 	{
-		"jp"		"{green} %s {default} はチームを反転し、{blue} サバイバー {default} チームに加わりました。"
+		"jp"		"{green}%s{default} はランダムにチームを選択しました。それが {blue} 生存者チーム {default} です。"
 	}
 	"FlippedInfected"
 	{
-		"jp"		"{green} %s {default} はチームを反転させ、{red} 感染した {default} チームに加わりました!"
+		"jp"		"{green}%s{default} はランダムにチームを選択しました。これは、{red} 感染チーム {default} です。"
 	}
 	"Wait"
 	{
-		"jp"		"[チームフリップ] おっと、相棒、ゆっくりしてください。少なくとも %d 秒待ちます。"
+		"jp"		"[チームフリップ] おっと、ゆっくりしてください。少なくとも %d 秒待ちます。"
 	}
 }

@@ -2,19 +2,19 @@
 {
 	"Tag"
 	{
-		"ko"		"{blue} [ {default} MVP {blue} ] {default}"
+		"ko"		"{blue}[{default}MVP{blue}]{default}"
 	}
 	"YourRankSI"
 	{
-		"ko"		"{blue} 순위 {green} SI: {olive} # %d {blue} ( {default} %d {green} dmg {blue} [ {default} %.0f%% {blue} ] {default}, %d {green}가 {blue}를 죽입니다. [ {default} %.0f%% {blue} ])"
+		"ko"		"{green} 특별한 느낌 {blue} 순위: {olive}#%d {blue}({default}%d {green} 데미지 {blue}[{default}%.0f%%{blue}]{default}, %d {green} 킬 {blue}[{default}%.0f%%{blue}])"
 	}
 	"YourRankCI"
 	{
-		"ko"		"{blue} 순위 {green} CI: {olive} # %d {blue} ( {default} %d {green} 공통 {blue} [ {default} %.0f%% {blue} ])"
+		"ko"		"{green} 좀비 {blue} 순위: {olive}#%d {blue}({default}%d {green} 좀비 {blue}[{default}%.0f%%{blue}])"
 	}
 	"YourRankFF"
 	{
-		"ko"		"{blue} 순위 {green} FF: {olive} # %d {blue} ( {default} %d {green} 아군 사격 {blue} [ {default} %.0f%% {blue} ])"
+		"ko"		"{green} 검은 총 {blue} 순위 : {olive}#%d {blue}({default}%d {green} 아군 데미지 {blue}[{default}%.0f%%{blue}])"
 	}
 	"BotName"
 	{
@@ -22,62 +22,62 @@
 	}
 	"NobodyName"
 	{
-		"ko"		"{blue} ( {default} 아무도 {blue} )"
+		"ko"		"{blue}({default} 아무도 {blue})"
 	}
 	"NotEnoughAction"
 	{
-		"ko"		"{blue} ( {default} 아직 조치가 충분하지 않습니다 {blue} )"
+		"ko"		"{blue}({default}에는 {blue} 작업이 충분하지 않습니다.)"
 	}
 	"ReportSI_Absolute"
 	{
-		"ko"		"{green} SI: {olive} %s {blue} ( {default} %d {green} dmg {default}, %d {green} 가 {blue} 를 죽입니다 )"
+		"ko"		"{green} 특별한 감각: {olive}%s {blue}({default}%d {green} 데미지 {default}, %d {green} 킬 {blue})"
 	}
 	"ReportSI_Percent"
 	{
-		"ko"		"{green} SI: {olive} %s {blue} ( {green} dmg {blue} [ {default} %.0f%% {blue} ] {default}, {green}가 {blue}를 죽입니다 [ {default} %.0f%% {blue} ])"
+		"ko"		"{green} 특별한 감각: {olive}%s {blue}({green} 손상 {blue}[{default}%.0f%%{blue}]{default}, {green} 킬 {blue}[{default}%.0f%%{blue}])"
 	}
 	"ReportSI_Full"
 	{
-		"ko"		"{green} SI: {olive} %s {blue} ( {default} %d {green} dmg {blue} [ {default} %.0f%% {blue} ] {default}, %d {green} 가 {blue} [ {default} 를 죽입니다. %.0f%% {blue} ])"
+		"ko"		"{green} 특별한 감각: {olive}%s {blue}({default}%d {green} 손상 {blue}[{default}%.0f%%{blue}]{default}, %d {green} 킬 {blue}[{default}%.0f%%{blue}])"
 	}
 	"ReportSI_Nobody"
 	{
-		"ko"		"{green} SI: {blue} ( {default} 아무도 {blue} )"
+		"ko"		"{green} 특별한 느낌: {blue}({blue}가 없는 {default})"
 	}
 	"ReportCI_Absolute"
 	{
-		"ko"		"{green} CI: {olive} %s {blue} ( {default} %d {green} 공통 {blue} )"
+		"ko"		"{green} 좀비: {olive}%s {blue}({default}%d {green}좀비 {blue})"
 	}
 	"ReportCI_Percent"
 	{
-		"ko"		"{green} CI: {olive} %s {blue} ( {green} 공통 {blue} [ {default} %.0f%% {blue} ])"
+		"ko"		"{green} 좀비: {olive}%s {blue}({green} 좀비 {blue}[{default}%.0f%%{blue}])"
 	}
 	"ReportCI_Full"
 	{
-		"ko"		"{green} CI: {olive} %s {blue} ( {default} %d {green} 공통 {blue} [ {default} %.0f%% {blue} ])"
+		"ko"		"{green} 좀비: {olive}%s {blue}({default}%d {green} 좀비 {blue}[{default}%.0f%%{blue}])"
 	}
 	"NoFF"
 	{
-		"ko"		"{blue} ( {default} 아군 사격이 전혀 없습니다! {blue} )"
+		"ko"		"{blue} ({default}에는 검은 총이 전혀 없습니다! {blue})"
 	}
 	"ReportFF_Absolute"
 	{
-		"ko"		"{green} FF: {olive} %s {blue} ( {default} %d {green} 아군 사격 {blue} )"
+		"ko"		"{green} 아군 피해: {olive}%s {blue}({default}%d {green} 아군 피해 {blue})"
 	}
 	"ReportFF_Percent"
 	{
-		"ko"		"{green} FF: {olive} %s {blue} ( {green} 아군 사격 {blue} [ {default} %.0f%% {blue} ])"
+		"ko"		"{green} 아군 피해: {olive}%s {blue}({green} 아군 피해 {blue}[{default}%.0f%%{blue}])"
 	}
 	"ReportFF_Full"
 	{
-		"ko"		"{green} FF: {olive} %s {blue} ( {default} %d {green} 아군 사격 {blue} [ {default} %.0f%% {blue} ])"
+		"ko"		"{green} 아군 피해: {olive}%s {blue}({default}%d {green} 아군 피해 {blue}[{default}%.0f%%{blue}])"
 	}
 	"SurvivorMVP_PharmacyMVPStatisticsHeader"
 	{
-		"ko"		"{blue}[{default} 약국 MVP 통계 {blue}]"
+		"ko"		"{blue}[{default}제약 MVP통계{blue}]"
 	}
 	"SurvivorMVP_PharmacyMVPStatisticsLine"
 	{
-		"ko"		"{olive}特感{green}%2d {olive}丧尸{green}%3d {olive}黑/被黑{green}%2d/%2d {olive}伤害{green}%4d {default}%N"
+		"ko"		"{olive} 특수 감각 {green}%2d {olive} 일반 감각 {green}%3d {olive} 우호적 부상/상해 {green}%2d/%2d {olive} 포인트{green}%4d {default}%N"
 	}
 }

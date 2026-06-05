@@ -6,16 +6,16 @@
 	}
 	"NoCommonRemaining"
 	{
-		"jp"		"{red} {default} コモンが残りません!"
+		"jp"		"{red} 普通の感染者 {default} は存在しません!"
 	}
 	"CommonRemaining"
 	{
 		"#format"	"{1:i}"
-		"jp"		"{red} {1} {default} 共通残り.."
+		"jp"		"{red}{1} {default} 普通の感染者が残ってる…。"
 	}
 	"FiniteEventStarted"
 	{
 		"#format"	"{1:i}"
-		"jp"		"{blue}有限のゾンビの群れ{default}が始まりました！このラウンドの通常感染者は合計 {olive}{1}{default} 体です。急ぐか待つかはあなた次第です！"
+		"jp"		"{blue}限定のゾンビウェーブ{default}が始まりました！このラウンドには{olive}{1}{default}の一般感染者がいます！急ぐか待つか、決めるのはあなたです！"
 	}
 }

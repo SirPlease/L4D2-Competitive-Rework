@@ -2,15 +2,15 @@
 {
 	"Tag"
 	{
-		"ko"		"{red} [ {default} 탱크 분노 {red} ] {default}"
+		"ko"		"{red} [ {default} 탱크 날뛰기 {red} ] {default}"
 	}
 	"SurvivorsRunBack"
 	{
-		"ko"		"{olive} %i {green} %% {default} 생존자가 돌아올 때마다 탱크는 {olive} %0.1f {green} 초 {default} 동안 좌절감을 동결합니다."
+		"ko"		"{olive}%i{green}%% {default} 생존자가 뒤로 물러날 때마다 Tank의 분노는 {olive}%0.1f {green} 초{default}를 정지시킵니다."
 	}
 	"L4D2Tankrage_Tank"
 	{
-		"ko"		"[%s]: %N는 탱크입니다."
+		"ko"		"[%s]: %N은 Tank입니다."
 	}
 	"L4D2Tankrage_EverythingReset"
 	{
@@ -18,14 +18,14 @@
 	}
 	"L4D2Tankrage_FlowDifferenceSinceLastCheck"
 	{
-		"ko"		"{green}[{lightgreen}%N{green}]{default}: 마지막 점검 이후 유량 차이: %i"
+		"ko"		"{green}[{lightgreen}%N{green}]{default}: 지난 검사 이후 공정 차이: %i"
 	}
 	"L4D2Tankrage_FrusGrace"
 	{
-		"ko"		"{green}[{lightgreen}%N{green}]{default}: 프러스: {lightgreen}%i {default}- 그레이스: {lightgreen}%f{green}s"
+		"ko"		"{green}[{lightgreen}%N{green}]{default}: 분노: {lightgreen}%i {default}- 은혜: {lightgreen}%f{green}s"
 	}
 	"L4D2Tankrage_SetGrace"
 	{
-		"ko"		"{green}[{lightgreen}%N{green}]{default}: 유예 설정: {lightgreen}%f{green}s"
+		"ko"		"{green}[{lightgreen}%N{green}]{default}: 유예 설정은 다음과 같습니다: {lightgreen}%f{green}s"
 	}
 }

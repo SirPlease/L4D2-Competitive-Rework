@@ -2,22 +2,22 @@
 {
 	"L4DMultiWitches_WitchSpawnedMaxAlive"
 	{
-		"jp"		"%s 魔女がスポーン # %d、最大 = %d、生存: %i"
+		"jp"		"%s Witch は # %d を生成します、最大値 = %d、生きています: %i"
 	}
 	"L4DMultiWitches_L4DWitchesStartTimerMin"
 	{
-		"jp"		"[l4d_witches]: Start_Timer。最小: %f、最大: %f"
+		"jp"		"[l4d_witches]: タイマーを開始します。最小値：%f、最大値：%f"
 	}
 	"L4DMultiWitches_L4DWitchesAliveWitches"
 	{
-		"jp"		"[l4d_witches]: アライブウィッチーズ: %i"
+		"jp"		"[l4d_witches]: Witch 生きています: %i"
 	}
 	"L4DMultiWitches_L4DWitchesTimerTriggered"
 	{
-		"jp"		"[l4d_witches]: タイマーがトリガーされました"
+		"jp"		"[l4d_witches]: タイマーが起動されました"
 	}
 	"L4DMultiWitches_L4DWitchesTrySpawn"
 	{
-		"jp"		"[l4d_witches]: スポーンしてみます"
+		"jp"		"[l4d_witches]: 生成を試みます"
 	}
 }

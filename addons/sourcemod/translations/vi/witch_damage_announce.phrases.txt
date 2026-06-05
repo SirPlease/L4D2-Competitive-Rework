@@ -3,21 +3,21 @@
 	"FailWitchCrown"
 	{
 		"#format"	"{1:N}"
-		"vi"		"{default} [ {green}! {default} ] {red} {1} {default} ( {olive} đăng quang phù thủy thất bại {default} ) và bị phù thủy {red} lật đổ."
+		"vi"		"{default}[{green}!{default}] {red}{1} {default}({olive} chị thứ hai thất bại {default}), là {red}Witch {default} bị trầy xước"
 	}
 	"TankKillWitch"
 	{
 		"#format"	"{1:N}"
-		"vi"		"{default} [ {green}! {default} ] {red} Xe tăng {default} ( {olive} {1} {default} ) tiêu diệt mụ phù thủy {red}"
+		"vi"		"{default}[{green}!{default}] {red}Tank {default}({olive}{1}{default}) đã giết {red}Witch"
 	}
 	"WitchRemainedHealth"
 	{
 		"#format"	"{1:d}"
-		"vi"		"{default} [ {green}! {default} ] {blue} Phù thủy {default} còn {olive} {1} {default} máu còn lại"
+		"vi"		"{default}[{green}!{default}] {blue}Witch {default} Vẫn còn một ít máu {olive}{1} {default}"
 	}
 	"DamageToWitch"
 	{
-		"vi"		"{default} [ {green}! {default} ] {blue} Sát thương {default} gây ra cho Phù Thủy {blue}:"
+		"vi"		"{default}[{green}!{default}] Thiệt hại do {blue} gây ra cho Witch{default}:"
 	}
 	"PrefectWitchCrown"
 	{
@@ -37,21 +37,21 @@
 	"FinalShotInfWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"vi"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} Bị nhiễm {olive} ☆"
+		"vi"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red} người bị nhiễm {olive} ☆"
 	}
 	"AssistanceInfWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"vi"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} Bị Nhiễm"
+		"vi"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) người bị nhiễm {red}"
 	}
 	"FinalShotTankWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"vi"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) {red} Xe tăng {olive} ☆"
+		"vi"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}Tank {olive} ☆"
 	}
 	"AssistanceTankWitchCrown"
 	{
 		"#format"	"{1:d}{2:d}"
-		"vi"		"{red} [ {default} {1} {red} ] ( {default} {2} %% {red} ) Xe tăng {red}"
+		"vi"		"{red}[{default}{1}{red}] ({default}{2}%%{red}) {red}Tank"
 	}
 }

@@ -2,90 +2,90 @@
 {
 	"TagRage"
 	{
-		"jp"		"{red} < {default} タンクレイジ {red} >"
+		"jp"		"{red}<{default}Tank 制御 {red}>"
 	}
 	"Refilled"
 	{
-		"jp"		"{default} ( {green} %N {default} の) {olive} レイジメーター {red} 補充"
+		"jp"		"{default}({green}%N{default})の{olive}コントロールバー{red}が復旧しました"
 	}
 	"RefilledBot"
 	{
-		"jp"		"{olive} レイジメーター {red} 補充済み"
+		"jp"		"{olive} コントロールバー {red} が復元されました"
 	}
 	"TagSelection"
 	{
-		"jp"		"{red} < {default} タンク選択 {red} >"
+		"jp"		"{red}<{default}Tank {red} を選択>"
 	}
 	"YouBecomeTank"
 	{
-		"jp"		"{green} あなた {default} が {red} タンク {default} になります！"
+		"jp"		"{green}You{default} は {red}Tank{default} になります。"
 	}
 	"BecomeTank"
 	{
-		"jp"		"{olive} %N {default} が {red} 戦車になります!"
+		"jp"		"{olive}%s{default} は {red}Tank{default} になります。"
 	}
 	"TagControl"
 	{
-		"jp"		"{green} [ {olive} タンク制御 {green} ]"
+		"jp"		"{green}[{olive}Tank制御 {green}]"
 	}
 	"InvalidTarget"
 	{
-		"jp"		"{default} ターゲットが無効です。タンクを提供できません"
+		"jp"		"{default} ターゲットが無効なので割り当てることができません Tank"
 	}
 	"NoInfected"
 	{
-		"jp"		"{olive} %N {default} は感染チームに属していません。タンクを提供できません"
+		"jp"		"{olive}%N {default} は感染チームに属していないため、Tank を割り当てることができません"
 	}
 	"HintText"
 	{
-		"jp"		"怒りメーターが補充されました"
+		"jp"		"コントロールバーが埋まっています"
 	}
 	"L4DTankControlEq_TankRageMeterRefilled"
 	{
-		"jp"		"{red}<{default}タンクレイジ{red}> {olive}レイジメーター {red}補充"
+		"jp"		"{red}<{default}Tank コントロール {red}> {olive} コントロール バー {red} が復元されました"
 	}
 	"L4DTankControlEq_TankRageMeterRefilled_2"
 	{
-		"jp"		"{red}<{default}タンクレイジ{red}> {default}({green}%N{default}さん) {olive}レイジメーター {red}補充"
+		"jp"		"{red}<{default}Tank コントロール {red}> {default}({green}%N{default}) {olive} コントロールバー {red} が復元されました"
 	}
 	"L4DTankControlEq_TankSelectionBecomeTank"
 	{
-		"jp"		"{red}<{default}タンクセレクション{red}> {green}あなたの{default}が{red}タンク{default}になります！"
+		"jp"		"{red}<{default}Tank {red} を選択> {green} と、{default} は {red}Tank{default} になります。"
 	}
 	"L4DTankControlEq_TankSelectionBecomeTank_2"
 	{
-		"jp"		"{red}<{default}タンクセレクション{red}> {olive}%N {default}が{red}タンクになります！"
+		"jp"		"{red}<{default}Tank {red} を選択> {olive}%N {default} は {red}Tank{default} になります。"
 	}
 	"L4DTankControlEq_TankControlInvalidTargetUnable"
 	{
-		"jp"		"{green}[{olive}タンクコントロール{green}] {default}ターゲットが無効です。タンクを提供できません"
+		"jp"		"{green}[{olive}Tank {green} を選択] {default} ターゲットが無効なので割り当てることができません Tank"
 	}
 	"L4DTankControlEq_TankControlNotInfectedTeam"
 	{
-		"jp"		"{green} [ {olive} タンク コントロール {green} ] {olive} %N {default} は感染チームに属していません。タンクを提供できません"
+		"jp"		"{green}[{olive}Tank {green} を選択] {olive}%N {default} は感染チームに含まれていないため、Tank を割り当てることはできません"
 	}
 	"Hit_RageMeterRefilled"
 	{
-		"jp"		"最初のタンク パスが終了し、2 番目のタンク パスが開始されました"
+		"jp"		"最初のコントロールが終了し、2 番目のコントロールが始まります"
 	}
 	"RageMeterRefilled"
 	{
-		"jp"		"( {green} %N {default} ) {olive} 最初のタンク パスが終了し、{red} 2 番目のタンク パスが開始されました"
+		"jp"		"({green}%N{default}) {olive}の第1制御権が終了し、{red}の第2制御権が開始"
 	}
 	"Tag_Rage"
 	{
-		"jp"		"{red} < {default} タンクレイジ {red} > {default}"
+		"jp"		"{red}<{default}Tank コントロール {red}>{default}"
 	}
 	"Tag_Selecion"
 	{
-		"jp"		"{red} < {default} タンク選択 {red} > {default}"
+		"jp"		"{red}<{default}Tank システム選択 {red}>{default}"
 	}
 	"UnableGiveTank"
 	{
-		"jp"		"[ {olive} SM {default} ] %s は感染していません。タンクを与えることができません"
+		"jp"		"[{olive}SM{default}] %s は感染者ではありません。 Tank を与えることができません"
 	}
 	"YouRageMeterRefilled"
 	{
-		"jp"		"{olive} 最初のタンク パスが終了し、{red} 2 番目のタンク パスが開始されました {default}"
+		"jp"		"{olive} の第 1 制御権が終了し、{red} の第 2 制御権が開始 {default}"
 	}
 }

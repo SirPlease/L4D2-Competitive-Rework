@@ -423,6 +423,52 @@ witchparty 和 allcharger模式在普通药役的基础上小僵尸再减少17-2
 - 更新 `addons/sourcemod/configs/databases.cfg`，配合全服聊天、统计、伤害显示等插件的数据库连接与重连。
 - 更新 `.gitignore`，减少无关文件进入版本管理。
 
+### 2026年6月3日-6月6日更新记录
+#### 刷特插件 infected_control.smx
+- 修正重构后刷特节奏过快的问题。新版重构后会在满足开波条件时用 `CreateTimer(0.1)` 异步开下一波，这个 `0.1s` 本身只是避免回调内直接嵌套开波；真正导致体感过快的是普通补波 floor 太低。
+- `inf_ai_wave_floor_ratio` 默认值从 `1.35 1.25 1.12 1.00 1.00` 调整为 `1.50 1.40 1.25 1.15 1.10`。以 16 秒刷特间隔为例，简单/普通/困难/专家/极限的普通补波最早时间分别为 `24.0 / 22.4 / 20.0 / 18.4 / 17.6` 秒，用来恢复旧版实战节奏。
+- `GetNextSpawnTime()` 不再在没有长定时器时固定返回基础刷新间隔，而是返回当前难度 floor 剩余时间，方便 `text` 或其他插件显示更接近真实的下一波等待时间。
+- 删除 anti-baiter Pressure 里可能造成误解的冗余开波分支，明确 Pressure 不会绕过普通补波 floor；`inf_antibait_fast_tp` 只用于不可见存活特感快速传送换点，不等于新增普通补波。
+- 修正刷特评分权重说明里的特感顺序，统一按 `S,B,H,P,J,C` 解释距离、高度、流程和分散度权重，避免调参时把 Boomer/Hunter 顺序看错。
+- 修复部分翻译颜色显示问题，`infected_control.sp` 引入 `colors`，相关调试、提示和短语颜色按 SourceMod 彩色聊天格式重新整理。
+- 新增 `docs/infected_control_spawn_timing_audit_2026-06-03.md`，记录本次刷特节奏问题的原因、修复范围、各难度时序和验证方式。
+- 新增 `docs/infected_control_refactor_bug_audit_2026-06-04.md`，按 P1/P2/P3 重新审计重构后的刷特生命周期、队列、传送、低存活阈值、`nb_assault`、anti-baiter debug、flow fallback 等潜在问题。
+- 新增 `docs/infected_control_flow_visual_2026-06-04.html`，用可视化页面说明 `StartWave -> OnGameFrame -> MaintainSpawnQueueOnce -> TryNormalSpawnOnce/TryTeleportSpawnOnce -> FindSpawnPosViaNavArea -> DoSpawnAt` 的主流程和 Pressure 分支，方便之后继续查刷特 bug。
+- 已重新编译并替换 `addons/sourcemod/plugins/optional/AnneHappy/infected_control.smx`。
+
+#### 特感爬梯加速
+- `l4d2_ai_ladder_boost.sp` 升级到 `1.1.0`，把原 `l4d2_si_ladder_booster.smx` 的固定爬梯加速能力合并进新的可视检测爬梯加速插件。
+- 新增兼容旧插件的 cvar：`l4d2_ai_ladder_boost` 控制 AI 特感固定爬梯加速，`l4d2_pz_ladder_boost` 控制真人特感固定爬梯加速，`l4d2_boost_multiplier` 控制旧式固定加速倍率。
+- 保留新版“未被生还者看见才加速”的逻辑，并继续使用 `l4d2_ladder_boost_enabled`、`l4d2_ladder_boost_multiplier`、`l4d2_ladder_boost_detection`、`l4d2_ladder_boost_cooldown` 等参数控制。
+- 新增 `l4d2_ladder_boost_tank`，默认不让通用爬梯加速插件处理 Tank，避免和 `ai_tank3` 的 Tank 爬梯/翻越逻辑互相覆盖。
+- 重写运行时 hook 和 timer 管理：AI 通过固定检查 timer 保持稳定，真人特感可继续用 SDKHook 即时检测；开关或倍率变化时会重新刷新 hook，并把已经加速的玩家恢复到正确速度。
+- 记录每个玩家当前实际加速倍率，管理员 `sm_ladder_debug`、`sm_ladder_status` 输出会显示 AI/真人、Tank、冷却、当前速度和倍率，排查爬梯异常更直观。
+- `allcharger`、`alone`、`annehappy`、`annehappy_hardcore`、`annehappy_shotgun`、`hunters`、`witchparty` 的 `confogl_plugins.cfg` 注释掉旧的 `l4d2_si_ladder_booster.smx`，避免同一功能重复加载。
+- 已重新编译并替换 `addons/sourcemod/plugins/optional/AnneHappy/l4d2_ai_ladder_boost.smx`。
+
+#### 全服聊天与多语言翻译
+- `global_chat.sp` 的 `!qfmenu` 菜单从写死中文改为完整走 i18n 短语，菜单标题、普通全服接收状态、找队友提示接收状态、管理员锁定提示都改为翻译 key。
+- 新增全服聊天菜单短语：`GlobalChat_StatusReceive`、`GlobalChat_StatusBlock`、`GlobalChat_MenuTitle`、`GlobalChat_MenuReceiveNormal`、`GlobalChat_MenuBlockNormal`、`GlobalChat_MenuReceiveLFG`、`GlobalChat_MenuBlockLFG`、`GlobalChat_MenuLFGLocked`。
+- 调整全服聊天提示格式，普通全服聊天和找队友提示切换后只显示最终状态，不再把“接收/屏蔽”硬拼进中文句子里，避免其他语言语序不自然。
+- 大量整理 `addons/sourcemod/translations` 多语种短语文件，覆盖简中 `chi`、繁中 `zho`、英语、日语、韩语、越南语等目录；补齐部分插件缺失翻译，并修正颜色标签、`#format` 类型、技能提示、禁言/静音菜单、RPG、暂停、Boss 投票、MVP、SourceComms 等常见文本。
+- `l4d2_skill_detect` 重点修正空爆、推停、秒牛、舌头自救、死亡冲锋、连跳、警报车等提示的中文语义和参数类型，减少翻译看不懂或参数颜色错位的问题。
+- `sourcecomms` 相关翻译统一“禁言/静音/禁言加静音”的表达，避免 gag/mute/silence 混成“堵嘴、沉默”等机器翻译词。
+- 同步重新编译受影响插件，包括 `chat-processor.smx`、`global_chat.smx` 以及前面提到的刷特、爬梯插件二进制。
+
+#### 近战与武器配置
+- 修复部分模式出门后没有近战的问题。`l4d2_melee_spawn_control.sp` 在当前模式找不到近战配置时会依次 fallback 到 `coop`、`versus`，减少自定义模式名导致第一章近战池读取失败的情况。
+- `confoglcompmod` 的 `confogl_addcvar` 处理从单一 64 字符长度拆分为 cvar 名 64 字符、cvar 值 256 字符，避免较长参数值被截断后影响模式配置。
+- `AnneHappy.cfg`、`Coop.cfg`、`ShotgunOnly.cfg` 的喷子散布配置恢复中心弹丸，`sgspread_center_pellet` 从 `0` 改为 `1`。
+- 已重新编译并替换 `confoglcompmod.smx` 和 `l4d2_melee_spawn_control.smx`。
+
+#### Docker 部署与 A2S 说明
+- 新增 `scripts/l4d2-docker.README.md`，说明 Docker 一键部署脚本的适用场景、配置文件、旧脚本迁移、首次安装、日常更新、重启、状态查看、地图上传器、Go Proxy、A2S 防火墙和 Master SNAT。
+- 文档补充从旧 `sqproxy` 脚本迁移到 `a2s-proxy-go` 的变量映射，说明旧 `SERVER_IP`、`GAME_PORTS`、`BACKEND_PORTS`、MySQL、RCON、Steam 组等变量如何转为新版 `L4D2_*` 配置。
+- 端口模式说明改为 `front-proxy` 和 `a2s-only` 两类：`front-proxy` 兼容旧前置代理行为，`a2s-only` 让 srcds 直接监听公网游戏端口，只把 A2S 查询交给 Go Proxy。
+- 明确从旧 `sqproxy` 迁移时默认推荐 `a2s-only`；如果旧配置残留 `L4D2_GO_PROXY_TRANSPARENT_REDIRECT=false`，在默认 `L4D2_GO_PROXY_MODE=a2s-only` 下会自动改回 true。
+- 补充 A2S 防火墙默认限速参数：`L4D2_A2S_INFO_RATE/BURST`、`L4D2_A2S_PLAYER_RATE/BURST`、`L4D2_A2S_RULES_RATE/BURST`、`L4D2_A2S_BAN_HITCOUNT`、`L4D2_A2S_BAN_SECONDS`，默认值按单机 8 个求生服放宽，优先保证 Steam 组页面能正常扫到服务器。
+- `.gitignore` 同步加入 Docker 部署文档相关忽略项，避免本地部署说明或临时调整误进仓库。
+
 ### 2026年6月2日更新记录
 #### 插件与源码目录整理
 - 按上游 SourceMod 插件目录重新整理 `.smx` 与 `.sp`：运行插件位于 `addons/sourcemod/plugins/`，源码按相同相对路径放在 `addons/sourcemod/scripting/`，方便 release 重新编译后直接覆盖。

@@ -58,7 +58,7 @@
 	}
 	"RPG_QuicklySpend50BuyFirst"
 	{
-		"chi"		"{green}%N {lightgreen}快速花费50B数随机购买一把一代单喷"
+		"chi"		"{green}%N {lightgreen}快速花费50B数购买一把一代单喷"
 	}
 	"RPG_FirstTimeBoughtSilencedSMG"
 	{
@@ -78,7 +78,7 @@
 	}
 	"RPG_QuicklySpend50RandomlyBuy"
 	{
-		"chi"		"{green}%N {lightgreen}快速花费50B数随机购买一把Uzi机枪"
+		"chi"		"{green}%N {lightgreen}快速花费50B数购买一把Uzi机枪"
 	}
 	"RPG_QuicklySpent400BuyBottle"
 	{
@@ -322,7 +322,7 @@
 	}
 	"RPG_TurnedBloodRecoveryFunctionKilling"
 	{
-		"chi"		"{green}你已经开启了杀特回血，杀一只特感回2滴血，不超过血量上限"
+		"chi"		"{green}你已经开启了杀特回血，杀一只特感回2滴血，无法恢复血量超过血量上限"
 	}
 	"RPG_TurnedOffBloodRecoverySpecial"
 	{

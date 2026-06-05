@@ -2,26 +2,26 @@
 {
 	"L4D2Scoremod_Round1Bonus"
 	{
-		"zho"		"{blue}[{default}!{blue}] {default}R圓{blue}1 {default}獎金：{olive}%d"
+		"zho"		"{blue}[{default}!{blue}] {default}第 {blue}1 {default}回合獎勵分：{olive}%d"
 	}
 	"L4D2Scoremod_CustomMaxDistance"
 	{
-		"zho"		"{blue}[{default}!{blue}] {default}自訂最大距離：{olive}%d"
+		"zho"		"{blue}[{default}!{blue}] {default}自定義最大距離：{olive}%d"
 	}
 	"L4D2Scoremod_Round2Bonus"
 	{
-		"zho"		"{blue}[{default}!{blue}] {default}R圓{blue}2 {default}獎金：{olive}%d"
+		"zho"		"{blue}[{default}!{blue}] {default}第 {blue}2 {default}回合獎勵分：{olive}%d"
 	}
 	"L4D2Scoremod_Difference"
 	{
-		"zho"		"{red}[{default}!{red}] {default}區別：{olive}%d"
+		"zho"		"{red}[{default}!{red}] {default}差值：{olive}%d"
 	}
 	"L4D2Scoremod_Round1BonusDifference"
 	{
-		"zho"		"{blue}【{default}！ {blue}] {default} 一輪 {blue} 1 {default} 獎金：{olive} %d {default} ( {green} 區別：{olive} %d {default} )"
+		"zho"		"{blue}[{default}!{blue}] {default}第 {blue}1 {default}回合獎勵分：{olive}%d {default}({green}差值：{olive}%d{default})"
 	}
 	"L4D2Scoremod_HealthBonus"
 	{
-		"zho"		"{blue}[{default}!{blue}] {default}健康獎勵：{olive}%d"
+		"zho"		"{blue}[{default}!{blue}] {default}血量獎勵分：{olive}%d"
 	}
 }

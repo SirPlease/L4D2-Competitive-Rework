@@ -11,19 +11,19 @@
 	"Notify_SpechudState"
 	{
 		"#format"	"{1:t}"
-		"jp"		"<{olive}HUD{default}> 観客の HUD は {1} になりました"
+		"jp"		"<{olive}HUD{default}> 観客パネルは {1}"
 	}
 	"Notify_TankhudState"
 	{
 		"#format"	"{1:t}"
-		"jp"		"<{olive}HUD{default}> 戦車の HUD は {1} になりました"
+		"jp"		"<{olive}HUD{default}> タンク HUD は {1} になりました"
 	}
 	"Notify_SpechudUsage"
 	{
-		"jp"		"<{olive}HUD{default}> チャットに「{green}!spechud{default}」と入力して、{blue}観客 HUD を切り替えます"
+		"jp"		"<{olive}HUD{default}> チャット入力 {green}!spechud{default} スイッチ {blue} 観戦パネルスイッチ"
 	}
 	"Notify_TankhudUsage"
 	{
-		"jp"		"<{olive}HUD{default}> チャットに「{green}!tankhud{default}」と入力して、{red}Tank HUD を切り替えます"
+		"jp"		"<{olive}HUD{default}> チャット入力 {green}!tankhud{default} スイッチ {red}Tank パネルスイッチ"
 	}
 }

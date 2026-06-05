@@ -2,123 +2,123 @@
 {
 	"SelfCastNotAllowed"
 	{
-		"zho"		"{blue}[{default}Cast{blue}] {default}您無法在此伺服器{default}上註冊為施法者{green}。"
+		"zho"		"{blue}[{default}Cast{blue}] {green}該伺服器{default}拒絕了你的解說認證"
 	}
 	"SelfCast1"
 	{
-		"zho"		"{blue}[{default}Cast{blue}] {default}您已將自己註冊為施法者。"
+		"zho"		"{blue}[{default}Cast{blue}] 你已經被認證成為了解說"
 	}
 	"SelfCast2"
 	{
-		"zho"		"{blue}[{default}Cast{blue}] {default}重新連線以讓您的外掛程式正常運作。"
+		"zho"		"{blue}[{default}Cast{blue}] 重連伺服器以載入 MOD"
 	}
 	"RegCasterTarget"
 	{
 		"#format"	"{1:N}"
-		"zho"		"{default}[{olive}!{default}] {blue}管理員 {default}({olive}{1}{default}) 已將您註冊為施法者"
+		"zho"		"{default}[{olive}!{default}] {blue}管理員 {default}({olive}{1}{default}) 認證了你為解說"
 	}
 	"Reconnect1"
 	{
-		"zho"		"{blue}[{default}重新連線{blue}] {default}您將重新連線到伺服器。"
+		"zho"		"{blue}[{default}Reconnect{blue}] 你將會被重連至伺服器..."
 	}
 	"Reconnect2"
 	{
-		"zho"		"{blue}[{default}重新連接{blue}] {default}出現黑畫面而不是載入欄！"
+		"zho"		"{blue}[{default}Reconnect{blue}] 期間會黑屏而沒有載入條！"
 	}
 	"UnregCasterTarget"
 	{
 		"#format"	"{1:N}"
-		"zho"		"{default}[{olive}!{default}] {default}您已被 {blue}Admin {default} 取消註冊為施法者({olive}{1}{default})"
+		"zho"		"{default}[{olive}!{default}] {blue}管理員 {default}({olive}{1}{default}) 解除了你的解說身份"
 	}
 	"KickSpecsAdmin"
 	{
 		"#format"	"{1:N}"
-		"zho"		"[{green}!{default}] {blue}觀眾{default}被{blue}管理員{default}踢出({olive}{1}{default})"
+		"zho"		"[{green}!{default}] {blue}管理員 {default}({olive}{1}{default}) {default}踢出了{blue}所有旁觀者"
 	}
 	"KickSpecsVoteSpec"
 	{
-		"zho"		"[{olive}演員{default}] {blue}觀眾{default}不得對{green}踢球規格{default}進行投票。"
+		"zho"		"[{olive}Cast{default}] {blue}旁觀 {default}不可以投票 {green}踢出旁觀{default}"
 	}
 	"VoteInProgress"
 	{
-		"zho"		"[{olive}Cast{default}] 有{olive}投票{green}正在進行中{default}。"
+		"zho"		"[{olive}Cast{default}] 現在有{olive}投票{green}正在進行{default}"
 	}
 	"VoteDelay"
 	{
 		"#format"	"{1:d}"
-		"zho"		"[{olive}Cast{default}] 等待另一個 {blue}{1} 的 {default} 進行投票。"
+		"zho"		"[{olive}Cast{default}] 請等待 {blue}{1}秒 {default}以發起下一輪投票"
 	}
 	"ForbidAddons"
 	{
-		"zho"		"{blue}[{default}!{blue}] {default}外掛程式現在對腳輪{green}禁止{default}。"
+		"zho"		"{blue}[{default}!{blue}] {default}管理員{green}禁止了{default}解說使用 MOD"
 	}
 	"AllowAddons"
 	{
-		"zho"		"{blue}[{default}!{blue}] {default}外掛程式現在{green}允許{default}供腳輪使用。"
+		"zho"		"{blue}[{default}!{blue}] {default}管理員{green}開啟了{default}解說使用 MOD"
 	}
 	"CasterCheck1"
 	{
-		"zho"		"{default}<{olive}Cast{default}> 在播放之前先取消註冊投射。"
+		"zho"		"{default}<{olive}Cast{default}> 請先解除解說身份"
 	}
 	"CasterCheck2"
 	{
-		"zho"		"{default}<{olive}Cast{default}> 使用 {green}!notcasting {default}/ {green}!uncast"
+		"zho"		"{default}<{olive}Cast{default}> 命令為 {green}!notcasting {default}/ {green}!uncast"
 	}
 	"RegCasterReply"
 	{
 		"#format"	"{1:N}"
-		"zho"		"已註冊{1}為施法者"
+		"zho"		"認證了 {1} 為解說"
 	}
 	"CasterSteamIDError"
 	{
-		"zho"		"找不到 Steam ID。 檢查拼字錯誤並讓玩家完全連線。"
+		"zho"		"Steam ID查詢失敗。  請檢查拼寫錯誤，等待玩家載入。"
 	}
 	"UnregCasterNonAdmin"
 	{
-		"zho"		"只有管​​理員才能刪除其他施法者。如果您想刪除自己，請使用不含參數的 sm_notcasting。"
+		"zho"		"只有管理員可以撤銷其他人的解說身份。 輸入不帶引數的 sm_notcasting 以解除解說身份。"
 	}
 	"UnregCasterSuccess"
 	{
 		"#format"	"{1:N}"
-		"zho"		"{1} 不再是施法者"
+		"zho"		"{1} 已不再是解說。"
 	}
 	"CasterDBReset"
 	{
-		"zho"		"[casters_database]重置成功"
+		"zho"		"[casters_database] 重置成功"
 	}
 	"CasterDBAdd"
 	{
 		"#format"	"{1:s}"
-		"zho"		"[casters_database] 新增了“{1}”"
+		"zho"		"[casters_database] 新增了 '{1}'"
 	}
 	"CasterDBRemove"
 	{
 		"#format"	"{1:s}"
-		"zho"		"[casters_database] 已刪除“{1}”"
+		"zho"		"[casters_database] 移除了 '{1}'"
 	}
 	"CasterDBFound"
 	{
 		"#format"	"{1:s}"
-		"zho"		"[casters_database]「{1}」已存在"
+		"zho"		"[casters_database] '{1}' 已存在"
 	}
 	"CasterDBError"
 	{
-		"zho"		"[casters_database] 未指定參數/空緩衝區"
+		"zho"		"[casters_database] 缺少引數 / 空字串"
 	}
 	"KickSpecsVoteTitle"
 	{
-		"zho"		"踢掉非管理員和非選角觀眾？"
+		"zho"		"踢出所有非管理員和解說的旁觀？"
 	}
 	"KickSpecsVoteSuccess"
 	{
-		"zho"		"各位觀眾再見！"
+		"zho"		"撒尤娜拉"
 	}
 	"KickSpecsReason"
 	{
-		"zho"		"請無觀眾！"
+		"zho"		"本比賽不允許旁觀"
 	}
 	"CasterSystem_CastersDatabaseListPrintedConsole"
 	{
-		"zho"		"[casters_database] 清單列印在控制台中"
+		"zho"		"[casters_database] 列表列印在控制檯中"
 	}
 }

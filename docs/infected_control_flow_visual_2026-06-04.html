@@ -1,0 +1,839 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>infected_control 重构后刷特流程图</title>
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --paper: #ffffff;
+      --ink: #17212f;
+      --muted: #5f6b7a;
+      --line: #d7dde6;
+      --blue: #2f6fed;
+      --green: #159b74;
+      --orange: #d17a13;
+      --red: #c84444;
+      --violet: #7656c9;
+      --teal: #0f8b9d;
+      --soft-blue: #eaf1ff;
+      --soft-green: #e9f7f1;
+      --soft-orange: #fff3e2;
+      --soft-red: #ffeded;
+      --soft-violet: #f0edff;
+      --soft-teal: #e8f7fa;
+      --shadow: 0 8px 24px rgba(23, 33, 47, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      letter-spacing: 0;
+    }
+
+    header {
+      background: #101826;
+      color: #fff;
+      padding: 28px 28px 22px;
+    }
+
+    header .wrap,
+    main {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.2;
+      font-weight: 760;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 22px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0 0 10px;
+      color: var(--muted);
+    }
+
+    .subtitle {
+      max-width: 920px;
+      margin-top: 10px;
+      color: #c8d1de;
+    }
+
+    .meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      color: #edf3ff;
+      font-size: 13px;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(10px);
+    }
+
+    nav .wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 10px 24px;
+    }
+
+    nav a {
+      color: var(--ink);
+      text-decoration: none;
+      white-space: nowrap;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 11px;
+      font-size: 13px;
+      background: #fff;
+    }
+
+    main {
+      padding: 24px;
+    }
+
+    section {
+      margin: 0 0 24px;
+      padding: 22px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .note {
+      border-left: 4px solid var(--orange);
+      background: var(--soft-orange);
+      padding: 12px 14px;
+      border-radius: 6px;
+      color: #5b3b10;
+    }
+
+    .risk {
+      border-left: 4px solid var(--red);
+      background: var(--soft-red);
+      padding: 12px 14px;
+      border-radius: 6px;
+      color: #692525;
+    }
+
+    .ok {
+      border-left: 4px solid var(--green);
+      background: var(--soft-green);
+      padding: 12px 14px;
+      border-radius: 6px;
+      color: #174f3e;
+    }
+
+    .flow {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .flow.horizontal {
+      grid-template-columns: repeat(5, minmax(150px, 1fr));
+      align-items: stretch;
+    }
+
+    .flow.horizontal.six {
+      grid-template-columns: repeat(6, minmax(130px, 1fr));
+    }
+
+    .flow.horizontal.four {
+      grid-template-columns: repeat(4, minmax(150px, 1fr));
+    }
+
+    .step {
+      position: relative;
+      min-height: 92px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .step.blue { background: var(--soft-blue); border-color: #c9d8fb; }
+    .step.green { background: var(--soft-green); border-color: #c8ebdc; }
+    .step.orange { background: var(--soft-orange); border-color: #f0d3a5; }
+    .step.red { background: var(--soft-red); border-color: #f4c2c2; }
+    .step.violet { background: var(--soft-violet); border-color: #d6ccff; }
+    .step.teal { background: var(--soft-teal); border-color: #bce7ef; }
+
+    .step strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .step span,
+    .step code {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .flow.horizontal .step:not(:last-child)::after,
+    .flow.horizontal.six .step:not(:last-child)::after,
+    .flow.horizontal.four .step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: -12px;
+      top: 50%;
+      width: 12px;
+      height: 2px;
+      background: var(--line);
+    }
+
+    .flow.horizontal .step:not(:last-child)::before,
+    .flow.horizontal.six .step:not(:last-child)::before,
+    .flow.horizontal.four .step:not(:last-child)::before {
+      content: "";
+      position: absolute;
+      right: -15px;
+      top: calc(50% - 4px);
+      border-left: 8px solid var(--line);
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+    }
+
+    .stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .stack .step {
+      min-height: auto;
+    }
+
+    .state-row {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .state {
+      min-height: 96px;
+      border-radius: 8px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .state:nth-child(1) { border-top: 4px solid var(--muted); }
+    .state:nth-child(2) { border-top: 4px solid var(--teal); }
+    .state:nth-child(3) { border-top: 4px solid var(--blue); }
+    .state:nth-child(4) { border-top: 4px solid var(--orange); }
+    .state:nth-child(5) { border-top: 4px solid var(--green); }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+      background: #fff;
+    }
+
+    th,
+    td {
+      padding: 10px 11px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f0f3f7;
+      color: #243142;
+      font-weight: 700;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .center { text-align: center; }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+    }
+
+    .dot.blue { background: var(--blue); }
+    .dot.green { background: var(--green); }
+    .dot.orange { background: var(--orange); }
+    .dot.violet { background: var(--violet); }
+    .dot.red { background: var(--red); }
+
+    .timeline {
+      width: 100%;
+      min-height: 260px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfe;
+      margin-top: 12px;
+    }
+
+    .bar-label {
+      font-size: 12px;
+      fill: #243142;
+      font-weight: 700;
+    }
+
+    .bar-note {
+      font-size: 12px;
+      fill: #5f6b7a;
+    }
+
+    .range-grid {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .range-row {
+      display: grid;
+      grid-template-columns: 94px 1fr 84px;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .range-track {
+      position: relative;
+      height: 22px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #eef2f7, #dfe6ef);
+      overflow: hidden;
+      border: 1px solid #d7dde6;
+    }
+
+    .range-fill {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      border-radius: 999px;
+      background: rgba(47, 111, 237, 0.22);
+      border-left: 2px solid var(--blue);
+      border-right: 2px solid var(--blue);
+    }
+
+    .sweet {
+      position: absolute;
+      top: -3px;
+      width: 4px;
+      height: 28px;
+      border-radius: 2px;
+      background: var(--orange);
+    }
+
+    .range-row small {
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .formula {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .formula-line {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfe;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      overflow-x: auto;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .class-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fff;
+      min-height: 150px;
+    }
+
+    .class-card b {
+      display: block;
+      margin-bottom: 6px;
+      color: #1c2838;
+    }
+
+    .class-card small {
+      display: block;
+      color: var(--muted);
+      margin: 5px 0;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 24px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #eef2f7;
+      color: #35445a;
+      font-size: 12px;
+      margin: 2px 4px 2px 0;
+    }
+
+    footer {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px 32px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    a { color: var(--blue); }
+
+    @media (max-width: 980px) {
+      .grid-2,
+      .grid-3,
+      .flow.horizontal,
+      .flow.horizontal.six,
+      .flow.horizontal.four,
+      .state-row,
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .flow.horizontal .step::before,
+      .flow.horizontal .step::after,
+      .flow.horizontal.six .step::before,
+      .flow.horizontal.six .step::after,
+      .flow.horizontal.four .step::before,
+      .flow.horizontal.four .step::after {
+        display: none;
+      }
+
+      .range-row {
+        grid-template-columns: 82px 1fr;
+      }
+
+      .range-row small {
+        grid-column: 2;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>infected_control 重构后刷特流程图</h1>
+      <p class="subtitle">基于 2026-06-04 对 `infected_control.sp` 与 `infected_control/*.inc` 的重新审查。此页把插件流程、刷特流程、特感找位、评分权重、刷新喜好、anti-baiter、跑男，以及 6t16s 难度对比集中画出来。</p>
+      <div class="meta">
+        <span class="pill">插件版本：2025.10.26</span>
+        <span class="pill">示例：6 特，16 秒</span>
+        <span class="pill">SpawnMin 250，SpawnMax 1500</span>
+        <span class="pill">源码顺序：S,B,H,P,J,C</span>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <div class="wrap">
+      <a href="#plugin">插件流程</a>
+      <a href="#wave">刷特流程</a>
+      <a href="#find">特感找位</a>
+      <a href="#score">权重设计</a>
+      <a href="#preference">刷新喜好</a>
+      <a href="#antibait">anti-baiter</a>
+      <a href="#runner">跑男</a>
+      <a href="#compare">6t16s 对比</a>
+      <a href="#audit">审计摘要</a>
+    </div>
+  </nav>
+
+  <main>
+    <section id="plugin">
+      <h2>插件流程</h2>
+      <p>入口文件负责胶水，拆分模块负责算法。运行时是两条常驻线：`OnGameFrame` 处理刷出队列，`Timer_TeleportTick` 每秒处理传送监督。</p>
+      <div class="flow horizontal six">
+        <div class="step blue"><strong>OnPluginStart</strong><span>创建 CVar、队列、状态，加载 gamedata patch。</span></div>
+        <div class="step teal"><strong>Nav 初始化</strong><span>`BuildNavIdIndexMap`、`BuildNavBuckets`，优先读 KV 缓存。</span></div>
+        <div class="step green"><strong>Hook 事件</strong><span>round_start、player_spawn、player_death、ability_use 等。</span></div>
+        <div class="step orange"><strong>离开安全区</strong><span>外部 `text.sp` 调 `sm_startspawn`，启动第一波。</span></div>
+        <div class="step violet"><strong>双循环</strong><span>`OnGameFrame` 刷特；`Timer_TeleportTick` 传送。</span></div>
+        <div class="step red"><strong>Stop/MapEnd</strong><span>清队列、timer、Nav 运行缓存、死亡 CD。</span></div>
+      </div>
+      <div class="note" style="margin-top:14px">审查提示：`ResetMatchState()` 当前没有清 `siAlive[]`，报告中标为 P2；成功刷出后重复计数标为 P1。</div>
+    </section>
+
+    <section id="wave">
+      <h2>刷特流程</h2>
+      <div class="grid-2">
+        <div>
+          <h3>普通刷特主链路</h3>
+          <div class="stack">
+            <div class="step blue"><strong>StartWave</strong><span>重算 cap，收集存活生还，`siQueueCount += limit`，ring 从 `SpawnMin` 开始。</span></div>
+            <div class="step teal"><strong>MaintainSpawnQueueOnce</strong><span>按 alive/cap 缺口补队列，稀缺度优先，检查死亡 CD 和支援门槛。</span></div>
+            <div class="step green"><strong>TryNormalSpawnOnce</strong><span>看队首类别，过限类、死亡 CD、支援锁后开始找点。</span></div>
+            <div class="step orange"><strong>FindSpawnPosViaNavArea</strong><span>从目标生还者进度桶附近扫描候选 NavArea。</span></div>
+            <div class="step violet"><strong>DoSpawnAt</strong><span>成功则记录刷点、降 ring、出队；失败则扩圈。</span></div>
+            <div class="step red"><strong>fallback@max</strong><span>扩到上限后走 `L4D_GetRandomPZSpawnPosition` 兜底。</span></div>
+          </div>
+        </div>
+        <div>
+          <h3>下一波判定</h3>
+          <div class="stack">
+            <div class="step blue"><strong>Timer_CheckSpawnWindow 每秒</strong><span>`lastSpawnSecs++`，同时刷新 anti-baiter。</span></div>
+            <div class="step teal"><strong>开始判定时间</strong><span>`DifficultyStrategy_CanEvaluateWave()`，只允许观察补波条件。</span></div>
+            <div class="step green"><strong>普通补波 floor</strong><span>`DifficultyStrategy_CanStartNormalWave()`，是开新波的硬下限。</span></div>
+            <div class="step orange"><strong>补波条件</strong><span>全杀手死亡、低存活压力、latest、Pressure after force。</span></div>
+            <div class="step violet"><strong>0.1s timer</strong><span>只做异步开波，不代表 0.1 秒刷新。</span></div>
+          </div>
+          <div class="ok" style="margin-top:14px">已核对：`AntiBait_ShouldStartWaveByLatest()` 和 `AntiBait_ShouldStartWaveEarly()` 内部都要求普通补波 floor，Pressure 默认不能绕过 floor。</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="find">
+      <h2>特感找位流程</h2>
+      <p>找位入口是 `FindSpawnPosViaNavArea(zc, targetSurvivor, ring, teleportMode, ...)`。桶模式和全图模式最终都走同一个候选点评估函数。</p>
+      <div class="flow horizontal six">
+        <div class="step blue"><strong>生还数据</strong><span>`GetSurPosData` 收集存活且未倒地生还者眼位和 flow。</span></div>
+        <div class="step teal"><strong>中心进度桶</strong><span>目标有效取目标 flow，否则取最高 flow 生还者。</span></div>
+        <div class="step green"><strong>桶窗口</strong><span>ring 越大，窗口从 ±6 动态扩到 ±12。</span></div>
+        <div class="step orange"><strong>候选过滤</strong><span>冷却、flags、距离环、分散、身前身后、卡壳、可视、路径、桶占比。</span></div>
+        <div class="step violet"><strong>评分</strong><span>距离、高度、Flow、分散度加权求总分。</span></div>
+        <div class="step red"><strong>选点</strong><span>TopK 取最高分；FirstFit 开启时达到阈值即返回。</span></div>
+      </div>
+      <div class="grid-3" style="margin-top:16px">
+        <div class="note"><strong>Flow 分桶</strong><br>预建 0..100 桶，badflow 可映射到附近有效桶。候选点允许 mapped badflow，但会扣 Flow 分。</div>
+        <div class="note"><strong>扩圈策略</strong><br>普通刷特从 250 起，每失败一次加 100。Boomer/Spitter 支援类上限额外收在 1200。</div>
+        <div class="note"><strong>路径检查</strong><br>`PathPenalty_NoBuild` 用 NavAreaBuildPath，limitCost 是 `min(ring*3, spawnmax*1.5)`。</div>
+      </div>
+    </section>
+
+    <section id="score">
+      <h2>特感权重设计流程</h2>
+      <div class="formula">
+        <div class="formula-line">total = w_dist[class] * scoreDist + w_hght[class] * scoreHeight + w_flow[class] * scoreFlow + w_disp[class] * scoreDisp</div>
+        <div class="formula-line">scoreDist = 以各类特感甜点距离为峰值；低难度只放宽 width，默认不移动 sweet</div>
+        <div class="formula-line">scoreFlow = 候选桶 - 目标桶；前方 1..5 桶最优，太靠后或太靠前都会降分</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>特感</th>
+              <th class="num">w_dist</th>
+              <th class="num">w_hght</th>
+              <th class="num">w_flow</th>
+              <th class="num">w_disp</th>
+              <th>含义</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Smoker</td><td class="num">1.35</td><td class="num">2.20</td><td class="num">1.40</td><td class="num">1.25</td><td>最看重高度和 Flow，倾向远点和高点。</td></tr>
+            <tr><td>Boomer</td><td class="num">1.10</td><td class="num">1.10</td><td class="num">1.00</td><td class="num">1.05</td><td>近距离支援型，整体权重温和。</td></tr>
+            <tr><td>Hunter</td><td class="num">1.20</td><td class="num">1.60</td><td class="num">1.20</td><td class="num">1.15</td><td>需要高度和距离平衡，偏中远。</td></tr>
+            <tr><td>Spitter</td><td class="num">1.05</td><td class="num">1.40</td><td class="num">1.35</td><td class="num">1.30</td><td>更看 Flow 和分散，适合卡路口与补伤害。</td></tr>
+            <tr><td>Jockey</td><td class="num">1.20</td><td class="num">0.60</td><td class="num">1.10</td><td class="num">0.90</td><td>高度权重低，偏同平面接近。</td></tr>
+            <tr><td>Charger</td><td class="num">1.25</td><td class="num">0.60</td><td class="num">1.20</td><td class="num">0.80</td><td>距离和 Flow 更重要，避免高低差太离谱。</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="ok" style="margin-top:14px">权重 CVar 描述已按源码 enum 和解析顺序对齐为 `(S,B,H,P,J,C)`。调权重时按 Smoker、Boomer、Hunter、Spitter、Jockey、Charger 理解。</div>
+    </section>
+
+    <section id="preference">
+      <h2>特感刷新喜好</h2>
+      <div class="mini-grid">
+        <div class="class-card">
+          <b>Smoker</b>
+          <span class="badge">甜点 60%</span><span class="badge">高点优先</span>
+          <small>偏远、偏高、Flow 稳定。技能未就绪时不会被传送。</small>
+        </div>
+        <div class="class-card">
+          <b>Boomer</b>
+          <span class="badge">甜点 25%</span><span class="badge">近点支援</span>
+          <small>偏近，支援类受 `SUPPORT_EXPAND_MAX=1200` 限制。</small>
+        </div>
+        <div class="class-card">
+          <b>Hunter</b>
+          <span class="badge">甜点 45%</span><span class="badge">高度有利</span>
+          <small>中远距离，杀手/优先解锁类之一。</small>
+        </div>
+        <div class="class-card">
+          <b>Spitter</b>
+          <span class="badge">甜点 40%</span><span class="badge">Flow 和分散</span>
+          <small>支援类，传送时会尊重喷酸后 2 秒间隔。</small>
+        </div>
+        <div class="class-card">
+          <b>Jockey</b>
+          <span class="badge">甜点 35%</span><span class="badge">同平面</span>
+          <small>不吃高度 ring slack，高低差过大扣高度分。</small>
+        </div>
+        <div class="class-card">
+          <b>Charger</b>
+          <span class="badge">甜点 38%</span><span class="badge">冲线角度</span>
+          <small>不吃高度 ring slack，更偏能直接压到人的平面点。</small>
+        </div>
+      </div>
+      <div class="note" style="margin-top:14px">支援门槛：`Smoker/Boomer/Spitter` 会被 `IsSupportGateClassInt` 纳入门槛控制；默认需要 Hunter/Jockey/Charger 这类优先特感达到一定数量或等待 grace 后才放开。</div>
+    </section>
+
+    <section id="antibait">
+      <h2>anti-baiter 流程</h2>
+      <p>anti-baiter 不是直接无脑补波，它先判断队伍是不是停滞抱团，并且开新波仍受普通补波 floor 控制。</p>
+      <div class="state-row">
+        <div class="state"><h3>Off</h3><p>未开插件、未开始刷特、暂停、Tank、多人倒地或全员被控。</p></div>
+        <div class="state"><h3>Grace</h3><p>每波开始后默认 8 秒宽限，建立平均和最高 Flow 基线。</p></div>
+        <div class="state"><h3>Observe</h3><p>观察是否 12 秒没有推进，同时队伍仍互相覆盖。</p></div>
+        <div class="state"><h3>Pressure</h3><p>停滞且处于压力窗口。可限制最晚开波，并允许不可见 SI 快速传送。</p></div>
+        <div class="state"><h3>Recover</h3><p>队伍推进或散开后进入恢复，默认 4 秒后回 Observe。</p></div>
+      </div>
+      <div class="grid-2" style="margin-top:16px">
+        <div class="ok"><strong>进入 Pressure 需要</strong><br>超过 grace + window、团队抱团、没有推进、场上有压力或已到可判定窗口。</div>
+        <div class="risk"><strong>不会绕过 floor</strong><br>`ShouldStartWaveEarly()` 要求 `DifficultyStrategy_CanStartNormalWave()`，所以它只是请求结束等待，不是新增无下限补波。</div>
+      </div>
+    </section>
+
+    <section id="runner">
+      <h2>跑男流程</h2>
+      <div class="flow horizontal four">
+        <div class="step blue"><strong>采样进度</strong><span>每秒取存活未倒地生还者 Flow，算 max、median、avg。</span></div>
+        <div class="step teal"><strong>领先判定</strong><span>最高进度比中位数高 `inf_antibait_runner_gap_pct`，默认 12%。</span></div>
+        <div class="step orange"><strong>孤立判定</strong><span>1200 范围内没有其他存活未倒地生还者，才算跑男。</span></div>
+        <div class="step green"><strong>动作</strong><span>设置 `rushManIndex`，发 `OnDetectRushman`，目标选择优先跑男，传送可走 1.5 秒快通道。</span></div>
+      </div>
+      <div class="note" style="margin-top:14px">跑男快通道只影响不可见存活 SI 的传送换点，不会直接增加普通补波数量。</div>
+    </section>
+
+    <section id="compare">
+      <h2>6t16s 刷新时间对比</h2>
+      <p>假设 `l4d_infected_limit=6`，`versus_special_respawn_interval=16`，`inf_spawn_candidate_budget=8`。低存活阈值按当前源码实际计算。</p>
+      <svg class="timeline" viewBox="0 0 1000 260" role="img" aria-label="6 特 16 秒不同难度时间线">
+        <rect x="70" y="36" width="850" height="2" fill="#d7dde6"></rect>
+        <text x="70" y="25" class="bar-note">0s</text>
+        <text x="353" y="25" class="bar-note">8s</text>
+        <text x="636" y="25" class="bar-note">16s</text>
+        <text x="920" y="25" text-anchor="end" class="bar-note">24s</text>
+        <line x1="353" y1="30" x2="353" y2="238" stroke="#d7dde6" stroke-dasharray="4 5"></line>
+        <line x1="636" y1="30" x2="636" y2="238" stroke="#d7dde6" stroke-dasharray="4 5"></line>
+        <line x1="920" y1="30" x2="920" y2="238" stroke="#d7dde6" stroke-dasharray="4 5"></line>
+
+        <text x="20" y="62" class="bar-label">简单</text>
+        <rect x="70" y="50" width="510" height="16" rx="8" fill="#2f6fed" opacity="0.25"></rect>
+        <rect x="580" y="50" width="340" height="16" rx="8" fill="#159b74" opacity="0.55"></rect>
+        <circle cx="580" cy="58" r="5" fill="#2f6fed"></circle>
+        <circle cx="920" cy="58" r="5" fill="#159b74"></circle>
+        <text x="590" y="47" class="bar-note">14.4 判定</text>
+        <text x="882" y="47" class="bar-note">24.0 floor</text>
+
+        <text x="20" y="100" class="bar-label">普通</text>
+        <rect x="70" y="88" width="453" height="16" rx="8" fill="#2f6fed" opacity="0.25"></rect>
+        <rect x="523" y="88" width="340" height="16" rx="8" fill="#159b74" opacity="0.55"></rect>
+        <circle cx="523" cy="96" r="5" fill="#2f6fed"></circle>
+        <circle cx="863" cy="96" r="5" fill="#159b74"></circle>
+        <text x="532" y="85" class="bar-note">12.8</text>
+        <text x="828" y="85" class="bar-note">22.4</text>
+
+        <text x="20" y="138" class="bar-label">困难</text>
+        <rect x="70" y="126" width="368" height="16" rx="8" fill="#2f6fed" opacity="0.25"></rect>
+        <rect x="438" y="126" width="340" height="16" rx="8" fill="#159b74" opacity="0.55"></rect>
+        <circle cx="438" cy="134" r="5" fill="#2f6fed"></circle>
+        <circle cx="778" cy="134" r="5" fill="#159b74"></circle>
+        <text x="447" y="123" class="bar-note">10.4</text>
+        <text x="743" y="123" class="bar-note">20.0</text>
+
+        <text x="20" y="176" class="bar-label">专家</text>
+        <rect x="70" y="164" width="283" height="16" rx="8" fill="#2f6fed" opacity="0.25"></rect>
+        <rect x="353" y="164" width="298" height="16" rx="8" fill="#159b74" opacity="0.55"></rect>
+        <circle cx="353" cy="172" r="5" fill="#2f6fed"></circle>
+        <circle cx="651" cy="172" r="5" fill="#159b74"></circle>
+        <text x="362" y="161" class="bar-note">8.0</text>
+        <text x="617" y="161" class="bar-note">18.4</text>
+
+        <text x="20" y="214" class="bar-label">极限</text>
+        <rect x="70" y="202" width="198" height="16" rx="8" fill="#2f6fed" opacity="0.25"></rect>
+        <rect x="268" y="202" width="425" height="16" rx="8" fill="#159b74" opacity="0.55"></rect>
+        <circle cx="268" cy="210" r="5" fill="#2f6fed"></circle>
+        <circle cx="693" cy="210" r="5" fill="#159b74"></circle>
+        <text x="277" y="199" class="bar-note">5.6</text>
+        <text x="658" y="199" class="bar-note">17.6</text>
+      </svg>
+      <div class="legend">
+        <span><i class="dot blue"></i>开始判定时间</span>
+        <span><i class="dot green"></i>最早普通补波 floor</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>难度</th>
+              <th class="num">开始判定</th>
+              <th class="num">最早普通补波</th>
+              <th class="num">低存活阈值</th>
+              <th class="num">候选预算</th>
+              <th class="num">距离宽度倍率</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1 简单</td><td class="num">14.4s</td><td class="num">24.0s</td><td class="num">1 特</td><td class="num">5</td><td class="num">1.25</td></tr>
+            <tr><td>2 普通</td><td class="num">12.8s</td><td class="num">22.4s</td><td class="num">1 特</td><td class="num">6</td><td class="num">1.15</td></tr>
+            <tr><td>3 困难</td><td class="num">10.4s</td><td class="num">20.0s</td><td class="num">1 特</td><td class="num">7</td><td class="num">1.08</td></tr>
+            <tr><td>4 专家</td><td class="num">8.0s</td><td class="num">18.4s</td><td class="num">2 特</td><td class="num">8</td><td class="num">1.00</td></tr>
+            <tr><td>5 极限</td><td class="num">5.6s</td><td class="num">17.6s</td><td class="num">3 特</td><td class="num">8</td><td class="num">1.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="position">
+      <h2>6t16s 刷新位置对比</h2>
+      <p>默认 `inf_ai_dist_sweet_offset` 全为 0，所以不同难度不会移动甜点位置，只会改变距离评分宽度。下图以专家宽度为可视化范围，橙线是甜点。</p>
+      <div class="range-grid">
+        <div class="range-row">
+          <strong>Boomer</strong>
+          <div class="range-track"><span class="range-fill" style="left:24%;width:22%"></span><span class="sweet" style="left:25%"></span></div>
+          <small>甜点 562.5，宽 275</small>
+        </div>
+        <div class="range-row">
+          <strong>Hunter</strong>
+          <div class="range-track"><span class="range-fill" style="left:31%;width:28%"></span><span class="sweet" style="left:45%"></span></div>
+          <small>甜点 812.5，宽 350</small>
+        </div>
+        <div class="range-row">
+          <strong>Smoker</strong>
+          <div class="range-track"><span class="range-fill" style="left:45%;width:30%"></span><span class="sweet" style="left:60%"></span></div>
+          <small>甜点 1000，宽 375</small>
+        </div>
+        <div class="range-row">
+          <strong>Spitter</strong>
+          <div class="range-track"><span class="range-fill" style="left:27.5%;width:25%"></span><span class="sweet" style="left:40%"></span></div>
+          <small>甜点 750，宽 312.5</small>
+        </div>
+        <div class="range-row">
+          <strong>Jockey</strong>
+          <div class="range-track"><span class="range-fill" style="left:23%;width:24%"></span><span class="sweet" style="left:35%"></span></div>
+          <small>甜点 687.5，宽 300</small>
+        </div>
+        <div class="range-row">
+          <strong>Charger</strong>
+          <div class="range-track"><span class="range-fill" style="left:25%;width:26%"></span><span class="sweet" style="left:38%"></span></div>
+          <small>甜点 725，宽 325</small>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>特感</th>
+              <th class="num">甜点比例</th>
+              <th class="num">甜点距离</th>
+              <th class="num">简单宽度</th>
+              <th class="num">普通宽度</th>
+              <th class="num">困难宽度</th>
+              <th class="num">专家宽度</th>
+              <th class="num">极限宽度</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Boomer</td><td class="num">25%</td><td class="num">562.5</td><td class="num">343.8</td><td class="num">316.3</td><td class="num">297.0</td><td class="num">275.0</td><td class="num">275.0</td></tr>
+            <tr><td>Hunter</td><td class="num">45%</td><td class="num">812.5</td><td class="num">437.5</td><td class="num">402.5</td><td class="num">378.0</td><td class="num">350.0</td><td class="num">350.0</td></tr>
+            <tr><td>Smoker</td><td class="num">60%</td><td class="num">1000.0</td><td class="num">468.8</td><td class="num">431.3</td><td class="num">405.0</td><td class="num">375.0</td><td class="num">375.0</td></tr>
+            <tr><td>Spitter</td><td class="num">40%</td><td class="num">750.0</td><td class="num">390.6</td><td class="num">359.4</td><td class="num">337.5</td><td class="num">312.5</td><td class="num">312.5</td></tr>
+            <tr><td>Jockey</td><td class="num">35%</td><td class="num">687.5</td><td class="num">375.0</td><td class="num">345.0</td><td class="num">324.0</td><td class="num">300.0</td><td class="num">300.0</td></tr>
+            <tr><td>Charger</td><td class="num">38%</td><td class="num">725.0</td><td class="num">406.3</td><td class="num">373.8</td><td class="num">351.0</td><td class="num">325.0</td><td class="num">325.0</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="audit">
+      <h2>bug 审计摘要</h2>
+      <div class="grid-2">
+        <div class="risk"><strong>P1：成功刷出后重复计数</strong><br>`DoSpawnAt()` 已 `RecalcSiCapFromAlive(false)`，成功分支又手动 `siAlive++ / totalSI++`。6 特可能实际刷 3 只就被误判满。</div>
+        <div class="risk"><strong>P2：ResetMatchState 未清 siAlive</strong><br>重复调用会累加旧 `siAlive[]`，影响 cap 和中间状态。</div>
+        <div class="risk"><strong>P2：传送队首堵塞</strong><br>队首类别达到限类时直接 return，可能挡住后续传送项和普通刷特。</div>
+        <div class="note"><strong>P3：文档/调试偏差</strong><br>低存活阈值、`nb_assault` bypass、anti-bait debug、fallback reset、权重顺序都需要对齐。</div>
+      </div>
+      <p style="margin-top:14px">完整报告见：<a href="./infected_control_refactor_bug_audit_2026-06-04.md">infected_control_refactor_bug_audit_2026-06-04.md</a></p>
+    </section>
+  </main>
+
+  <footer>
+    生成日期：2026-06-04。此 HTML 是源码审查说明，不会修改插件运行行为。
+  </footer>
+</body>
+</html>

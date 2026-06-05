@@ -2,14 +2,14 @@
 {
 	"HoldoutBonus_EventStartsBonusSecondsonds"
 	{
-		"ko"		"{default}Holdout 이벤트 시작... ({green}%i{default} 보너스는 {olive}%i{default}초 이상)"
+		"ko"		"{default}Holdout 이벤트가 시작됩니다... ({green}%i{default} 보너스 포인트, {olive}%i{default}초 동안 지속)"
 	}
 	"HoldoutBonus_DynamicBonusSummary"
 	{
-		"ko"		"{default}홀드아웃 보너스: %s"
+		"ko"		"{default}Holdout 보너스 포인트: %s"
 	}
 	"HoldoutBonus_DynamicBonusSummary_2"
 	{
-		"ko"		"{default}홀드아웃 보너스: {olive}%i{default} 중 {green}%i{default}."
+		"ko"		"{default}Holdout 보너스 포인트: {green}%i{default}/{olive}%i{default}."
 	}
 }

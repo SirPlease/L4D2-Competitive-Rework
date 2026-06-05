@@ -6,33 +6,33 @@
 	}
 	"TagPvE"
 	{
-		"jp"		"[{olive}ダメージレポート{default}]"
+		"jp"		"[{olive}傷害報告{default}]"
 	}
 	"HealthRemaining"
 	{
-		"#format"	"{1:s},{2:s},{3:d}"
-		"jp"		"{red}{1}{default}（{green}{2}{default}）の体力は残り {olive}{3}{default} です!"
+		"#format"	"{1:N},{2:s},{3:d}"
+		"jp"		"{red}{1}{default} ({green}{2}{default}) と {olive}{3}{default} 残りです!"
 	}
 	"HealthRemainingAI"
 	{
 		"#format"	"{1:s},{2:d}"
-		"jp"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default} の体力は残り {olive}{2}{default} です!"
+		"jp"		"{blue}[{default}BOT{blue}]{default} {green}{1}{default} {olive}{2}{default} 健康ポイントが残っています!"
 	}
 	"UMad"
 	{
-		"jp"		"怒らなくても大丈夫です..."
+		"jp"		"怒らないで、次は頭を狙うことを忘れないでください..."
 	}
 	"Sad"
 	{
-		"jp"		"悲しそうですね...."
+		"jp"		"落ち込んでいるようですね……。"
 	}
 	"Close"
 	{
-		"jp"		"惜しい!"
+		"jp"		"近い！"
 	}
 	"NBad"
 	{
-		"jp"		"悪くない."
+		"jp"		"悪くない。"
 	}
 	"AI"
 	{
