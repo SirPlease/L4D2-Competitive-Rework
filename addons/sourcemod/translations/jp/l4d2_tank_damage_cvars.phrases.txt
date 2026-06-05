@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2TankDamageCvars_VictimAttackerInflictorDamageType"
+	{
+		"jp"		"i被害者: %N、i攻撃者: %N、i加害者、%s (%d)、fダメージ: %f、iダメージタイプ: %d"
+	}
+}

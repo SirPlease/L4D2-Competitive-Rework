@@ -1,0 +1,438 @@
+"Phrases"
+{
+	"Muted on connect"
+	{
+		"chi"		"你已被静音!"
+	}
+	"Gagged on connect"
+	{
+		"chi"		"你已被禁言!"
+	}
+	"Mute expired"
+	{
+		"chi"		"静音已过期."
+	}
+	"Gag expired"
+	{
+		"chi"		"禁言已过期."
+	}
+	"FWUnmute"
+	{
+		"chi"		"对你的静音已取消."
+	}
+	"FWUngag"
+	{
+		"chi"		"对你的禁言已取消."
+	}
+	"Usage_time"
+	{
+		"#format"	"{1:d}"
+		"chi"		"时间: {1} 分钟, 如果未做选择的话; 如果 0.\n 永久; 如果 < 0, 则在此局中封禁."
+	}
+	"Player Comms Not Verified"
+	{
+		"chi"		"此用户尚未认证,请等待30秒后再试."
+	}
+	"Player already muted"
+	{
+		"#format"	"{1:s}"
+		"chi"		"玩家 {1} 已被静音!"
+	}
+	"Player already gagged"
+	{
+		"#format"	"{1:s}"
+		"chi"		"玩家 {1} 已被禁言!"
+	}
+	"Player already silenced"
+	{
+		"#format"	"{1:s}"
+		"chi"		"玩家 {1} 已被禁言或静音!"
+	}
+	"Player not muted"
+	{
+		"chi"		"玩家尚未被静音."
+	}
+	"Player not gagged"
+	{
+		"chi"		"玩家尚未被禁言."
+	}
+	"Player not silenced"
+	{
+		"chi"		"玩家尚未被禁言或静音."
+	}
+	"Permagagged player"
+	{
+		"#format"	"{1:t}"
+		"chi"		"已对玩家 {1} 做永久禁言."
+	}
+	"Permagagged player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"chi"		"已对玩家 {1} 做永久禁言 (原因: {2})."
+	}
+	"Gagged player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"chi"		"已对玩家 {1} 的禁言延长了 {2} 分钟."
+	}
+	"Gagged player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"chi"		"已对玩家 {1} 的禁言延长了 {2} 分钟 (原因: {3})."
+	}
+	"Permamuted player"
+	{
+		"#format"	"{1:t}"
+		"chi"		"已对玩家 {1} 永久静音."
+	}
+	"Permamuted player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"chi"		"已对玩家 {1} 永久静音 (原因: {2})."
+	}
+	"Muted player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"chi"		"已对玩家 {1} 的静音延长了 {2} 分钟."
+	}
+	"Muted player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"chi"		"已对玩家 {1} 的静音延长了 {2} 分钟 (原因: {3})."
+	}
+	"Permasilenced player"
+	{
+		"#format"	"{1:t}"
+		"chi"		"已对玩家 {1} 进行永久禁言和静音."
+	}
+	"Permasilenced player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"chi"		"已对玩家 {1} 进行永久禁言和静音 (原因: {2})."
+	}
+	"Silenced player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"chi"		"已对玩家 {1} 的禁言和静音延长了 {2} 分钟."
+	}
+	"Silenced player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"chi"		"已对玩家 {1} 的禁言和静音延长了 {2} 分钟 (原因: {3})."
+	}
+	"Temp unmuted player"
+	{
+		"#format"	"{1:t}"
+		"chi"		"已对玩家 {1} 暂时解除静音."
+	}
+	"Temp ungagged player"
+	{
+		"#format"	"{1:t}"
+		"chi"		"已对玩家 {1} 暂时解除禁言."
+	}
+	"Temp unsilenced player"
+	{
+		"#format"	"{1:t}"
+		"chi"		"已对玩家 {1} 暂时解除禁言和静音."
+	}
+	"Unblock Select Failed"
+	{
+		"#format"	"{1:s}"
+		"chi"		"在数据库中对 {1} 进行禁止时出现错误."
+	}
+	"No blocks found"
+	{
+		"#format"	"{1:s}"
+		"chi"		"在数据库中未找到对 {1} 的禁止."
+	}
+	"No db error unlock perm"
+	{
+		"chi"		"你没有权限在数据库错误时解除封禁."
+	}
+	"No permission unmute"
+	{
+		"#format"	"{1:s}"
+		"chi"		"对玩家 {1} 的静音是由更高级别的管理员完成的,因此你无法解除对此玩家的静音."
+	}
+	"No permission ungag"
+	{
+		"#format"	"{1:s}"
+		"chi"		"对玩家 {1} 的禁言是由更高级别的管理员完成的,因此你无法解除对此玩家的静音."
+	}
+	"Unmuted player"
+	{
+		"#format"	"{1:t}"
+		"chi"		"已取消对玩家 {1} 的静音延长."
+	}
+	"Ungagged player"
+	{
+		"#format"	"{1:t}"
+		"chi"		"已取消对玩家 {1} 的禁言延长."
+	}
+	"Unblock insert failed"
+	{
+		"chi"		"从数据库中取消禁止失败."
+	}
+	"successfully unmuted"
+	{
+		"#format"	"{1:s}"
+		"chi"		"已成功从数据库中取消对 {1} 的静音."
+	}
+	"successfully ungagged"
+	{
+		"#format"	"{1:s}"
+		"chi"		"已成功从数据库中取消对 {1} 的禁言."
+	}
+	"AdminMenu_Main"
+	{
+		"chi"		"禁言和静音"
+	}
+	"AdminMenu_Select_Main"
+	{
+		"chi"		"禁言和静音:"
+	}
+	"AdminMenu_List"
+	{
+		"chi"		"显示惩罚"
+	}
+	"AdminMenu_Select_List"
+	{
+		"chi"		"选择玩家:"
+	}
+	"AdminMenu_Gag"
+	{
+		"chi"		"进行禁言"
+	}
+	"AdminMenu_Select_Gag"
+	{
+		"chi"		"选择玩家:"
+	}
+	"AdminMenu_Select_Mute"
+	{
+		"chi"		"选择玩家:"
+	}
+	"AdminMenu_Select_Silence"
+	{
+		"chi"		"选择玩家:"
+	}
+	"AdminMenu_Select_Ungag"
+	{
+		"chi"		"选择玩家:"
+	}
+	"AdminMenu_Select_Unmute"
+	{
+		"chi"		"选择玩家:"
+	}
+	"AdminMenu_Select_Unsilence"
+	{
+		"chi"		"选择玩家:"
+	}
+	"AdminMenu_Option_Mute_Empty"
+	{
+		"chi"		"没有玩家被静音"
+	}
+	"AdminMenu_Option_Gag_Empty"
+	{
+		"chi"		"没有玩家被禁言"
+	}
+	"AdminMenu_Option_Silence_Empty"
+	{
+		"chi"		"没有玩家被禁言和静音"
+	}
+	"ListMenu_Option_Empty"
+	{
+		"chi"		"没有玩家被惩罚"
+	}
+	"AdminMenu_Option_Empty"
+	{
+		"chi"		"没有可用的玩家"
+	}
+	"AdminMenu_UnGag"
+	{
+		"chi"		"取消禁言"
+	}
+	"AdminMenu_Title_Durations"
+	{
+		"chi"		"选择时长:"
+	}
+	"AdminMenu_Title_Reasons"
+	{
+		"chi"		"选择原因:"
+	}
+	"AdminMenu_Mute"
+	{
+		"chi"		"进行静音"
+	}
+	"AdminMenu_UnMute"
+	{
+		"chi"		"取消静音"
+	}
+	"AdminMenu_Silence"
+	{
+		"chi"		"进行禁言和静音"
+	}
+	"AdminMenu_UnSilence"
+	{
+		"chi"		"取消禁言和静音"
+	}
+	"AdminMenu_Not_Available"
+	{
+		"chi"		"你选择的玩家目前不可用."
+	}
+	"AdminMenu_Display_None"
+	{
+		"#format"	"{1:s}"
+		"chi"		"[  ] {1}"
+	}
+	"AdminMenu_Display_Muted"
+	{
+		"#format"	"{1:s}"
+		"chi"		"[M] {1}"
+	}
+	"AdminMenu_Display_Gagged"
+	{
+		"#format"	"{1:s}"
+		"chi"		"[G] {1}"
+	}
+	"AdminMenu_Display_Silenced"
+	{
+		"#format"	"{1:s}"
+		"chi"		"[S] {1}"
+	}
+	"Command_Target_Not_Targetable"
+	{
+		"chi"		"你无法选择此玩家."
+	}
+	"ListMenu_Option_Mute"
+	{
+		"chi"		"静音"
+	}
+	"ListMenu_Option_Gag"
+	{
+		"chi"		"禁言"
+	}
+	"ListMenu_Option_Duration"
+	{
+		"chi"		"- 时长:"
+	}
+	"ListMenu_Option_Duration_Perm"
+	{
+		"chi"		"永久"
+	}
+	"ListMenu_Option_Duration_Time"
+	{
+		"#format"	"{1:d}"
+		"chi"		"{1} 分钟"
+	}
+	"ListMenu_Option_Duration_Temp"
+	{
+		"chi"		"临时"
+	}
+	"ListMenu_Option_Expire"
+	{
+		"chi"		"- 解除: "
+	}
+	"ListMenu_Option_Expire_Perm"
+	{
+		"chi"		"永不"
+	}
+	"ListMenu_Option_Expire_Time"
+	{
+		"#format"	"{1:s}"
+		"chi"		"{1}"
+	}
+	"ListMenu_Option_Expire_Temp_Reconnect"
+	{
+		"chi"		"重新连接"
+	}
+	"ListMenu_Option_Admin"
+	{
+		"#format"	"{1:s}"
+		"chi"		"- 管理员: {1}"
+	}
+	"ListMenu_Option_Issue"
+	{
+		"#format"	"{1:s}"
+		"chi"		"- 已封禁: {1}"
+	}
+	"ListMenu_Option_Reason"
+	{
+		"chi"		"- 查看原因"
+	}
+	"ListMenu_Option_Reason_None"
+	{
+		"chi"		"- 原因: 无"
+	}
+	"ReasonPanel_Punishment_Mute"
+	{
+		"chi"		"静音: "
+	}
+	"ReasonPanel_Punishment_Gag"
+	{
+		"chi"		"禁言: "
+	}
+	"ReasonPanel_Perm"
+	{
+		"chi"		"永久"
+	}
+	"ReasonPanel_Time"
+	{
+		"#format"	"{1:d}"
+		"chi"		"{1} 分钟"
+	}
+	"ReasonPanel_Temp"
+	{
+		"chi"		"临时"
+	}
+	"ReasonPanel_Reason"
+	{
+		"#format"	"{1:s}"
+		"chi"		"原因: {1}"
+	}
+	"ReasonPanel_Back"
+	{
+		"chi"		"退出"
+	}
+	"Temp muted player"
+	{
+		"#format"	"{1:t}"
+		"chi"		"玩家 {1} 已被静音."
+	}
+	"Temp muted player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"chi"		"玩家 {1} 已被静音 (原因: {2})."
+	}
+	"Temp gagged player"
+	{
+		"#format"	"{1:t}"
+		"chi"		"玩家 {1} 已被禁言."
+	}
+	"Temp gagged player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"chi"		"玩家 {1} 已被禁言 (原因: {2})."
+	}
+	"Temp silenced player"
+	{
+		"#format"	"{1:t}"
+		"chi"		"玩家 {1} 已被禁言和静音."
+	}
+	"Temp silenced player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"chi"		"玩家 {1} 已被禁言和静音 (原因: {2})."
+	}
+	"CommandComms_na"
+	{
+		"chi"		"只对在游戏中的玩家可用."
+	}
+	"CommandComms_nb"
+	{
+		"chi"		"你没有被禁言或静音."
+	}
+	"no access"
+	{
+		"chi"		"你不能指定惩罚时长."
+	}
+}

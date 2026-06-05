@@ -3,10 +3,5 @@
 	"L4D2MagnumIncap_ClientWeapon"
 	{
 		"en"		"client %d -> weapon %s"
-		"chi"		"客户端%d -> 武器%s"
-		"zho"		"客戶端%d -> 武器%s"
-		"jp"		"クライアント %d -> 武器 %s"
-		"ko"		"클라이언트 %d -> 무기 %s"
-		"vi"		"khách hàng %d -> vũ khí %s"
 	}
 }

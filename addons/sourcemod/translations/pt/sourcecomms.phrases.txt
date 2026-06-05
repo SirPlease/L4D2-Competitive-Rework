@@ -1,0 +1,438 @@
+"Phrases"
+{
+	"Muted on connect"
+	{
+		"pt"		"Você foi silenciado!"
+	}
+	"Gagged on connect"
+	{
+		"pt"		"Você foi amordaçado!"
+	}
+	"Mute expired"
+	{
+		"pt"		"Seu emudecimento expirou."
+	}
+	"Gag expired"
+	{
+		"pt"		"Seu amordaçamento expirou."
+	}
+	"FWUnmute"
+	{
+		"pt"		"Seu emudecimento foi removido."
+	}
+	"FWUngag"
+	{
+		"pt"		"Seu amordaçamento foi removido."
+	}
+	"Usage_time"
+	{
+		"#format"	"{1:d}"
+		"pt"		"Tempo: {1} minutos se não for especificado, permanente se for 0 \.nSe for < 0, bloqueia na sessão."
+	}
+	"Player Comms Not Verified"
+	{
+		"pt"		"Este jogador não foi verificado. Por favor, aguarde trinta segundos antes de tentar novamente."
+	}
+	"Player already muted"
+	{
+		"#format"	"{1:s}"
+		"pt"		"Jogador {1} já foi emudecido!"
+	}
+	"Player already gagged"
+	{
+		"#format"	"{1:s}"
+		"pt"		"Jogador {1} já foi amordaçado!"
+	}
+	"Player already silenced"
+	{
+		"#format"	"{1:s}"
+		"pt"		"Jogador {1} já amordaçado ou emudecido!"
+	}
+	"Player not muted"
+	{
+		"pt"		"Jogador não emudecido."
+	}
+	"Player not gagged"
+	{
+		"pt"		"Jogador não amordaçado."
+	}
+	"Player not silenced"
+	{
+		"pt"		"Jogador não silenciado."
+	}
+	"Permagagged player"
+	{
+		"#format"	"{1:t}"
+		"pt"		"{1} foi permanentemente amordaçado."
+	}
+	"Permagagged player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"pt"		"{1} foi permanentemente amordaçado, (motivo: {2})."
+	}
+	"Gagged player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"pt"		"Amordaçamento de {1} foi estendido por {2} minutos."
+	}
+	"Gagged player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"pt"		"Amordaçamento de {1} foi estendido por {2} minutos, (motivo: {3})."
+	}
+	"Permamuted player"
+	{
+		"#format"	"{1:t}"
+		"pt"		"{1} foi permanentemente emudecido."
+	}
+	"Permamuted player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"pt"		"{1} foi permanentemente emudecido, (motivo: {2})."
+	}
+	"Muted player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"pt"		"Emudecimento de {1} foi estendido por {2} minutos."
+	}
+	"Muted player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"pt"		"Emudecimento de {1} foi estendido por {2} minutos, (motivo: {3})."
+	}
+	"Permasilenced player"
+	{
+		"#format"	"{1:t}"
+		"pt"		"{1} foi permanentemente silenciado."
+	}
+	"Permasilenced player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"pt"		"{1} foi permanentemente silenciado, (motivo: {2})."
+	}
+	"Silenced player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"pt"		"Silenciamento de {1} foi estendido por {2} minutos."
+	}
+	"Silenced player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"pt"		"Silenciamento de {1} foi estendido por {2} minutos, (motivo: {3})."
+	}
+	"Temp unmuted player"
+	{
+		"#format"	"{1:t}"
+		"pt"		"Emudecimento de {1} foi temporariamente removido."
+	}
+	"Temp ungagged player"
+	{
+		"#format"	"{1:t}"
+		"pt"		"Amordaçamento de {1} foi temporariamente removido."
+	}
+	"Temp unsilenced player"
+	{
+		"#format"	"{1:t}"
+		"pt"		"Silenciamento de {1} foi temporariamente removido."
+	}
+	"Unblock Select Failed"
+	{
+		"#format"	"{1:s}"
+		"pt"		"Ocorreu um erro no DB durante a pedido de bloqueio de {1}."
+	}
+	"No blocks found"
+	{
+		"#format"	"{1:s}"
+		"pt"		"Nenhum bloqueio ativo foi encontrado no DB para {1}."
+	}
+	"No db error unlock perm"
+	{
+		"pt"		"Você não tem permissão para desbloquear com erros de DB."
+	}
+	"No permission unmute"
+	{
+		"#format"	"{1:s}"
+		"pt"		"O emudecimento de {1} não pôde ser removido porque foi efetuado por um administrador de nível mais alto!"
+	}
+	"No permission ungag"
+	{
+		"#format"	"{1:s}"
+		"pt"		"O amordaçamento de {1} não pôde ser removido porque foi efetuado por um administrador de nível mais alto!"
+	}
+	"Unmuted player"
+	{
+		"#format"	"{1:t}"
+		"pt"		"Removido um emudecimento estendido de {1}."
+	}
+	"Ungagged player"
+	{
+		"#format"	"{1:t}"
+		"pt"		"Removido um amordaçamento estendido de {1}."
+	}
+	"Unblock insert failed"
+	{
+		"pt"		"Falha ao remover o bloqueio do DB."
+	}
+	"successfully unmuted"
+	{
+		"#format"	"{1:s}"
+		"pt"		"Removido com sucesso o emudecimento de {1} do DB."
+	}
+	"successfully ungagged"
+	{
+		"#format"	"{1:s}"
+		"pt"		"Removido com sucesso o amordaçamento de {1} do DB."
+	}
+	"AdminMenu_Display_None"
+	{
+		"#format"	"{1:s}"
+		"pt"		"[  ] {1}"
+	}
+	"AdminMenu_Display_Muted"
+	{
+		"#format"	"{1:s}"
+		"pt"		"[M] {1}"
+	}
+	"AdminMenu_Display_Gagged"
+	{
+		"#format"	"{1:s}"
+		"pt"		"[G] {1}"
+	}
+	"AdminMenu_Display_Silenced"
+	{
+		"#format"	"{1:s}"
+		"pt"		"[S] {1}"
+	}
+	"AdminMenu_Main"
+	{
+		"pt"		"Comandos de Comunicação"
+	}
+	"AdminMenu_Select_Main"
+	{
+		"pt"		"Comandos de Comunicação:"
+	}
+	"AdminMenu_List"
+	{
+		"pt"		"Ver Punições"
+	}
+	"AdminMenu_Select_List"
+	{
+		"pt"		"Selecionar Jogador:"
+	}
+	"AdminMenu_Gag"
+	{
+		"pt"		"Emitir Amordaçar"
+	}
+	"AdminMenu_Select_Gag"
+	{
+		"pt"		"Selecionar Jogador:"
+	}
+	"AdminMenu_Select_Mute"
+	{
+		"pt"		"Selecionar Jogador:"
+	}
+	"AdminMenu_Select_Silence"
+	{
+		"pt"		"Selecionar Jogador:"
+	}
+	"AdminMenu_Select_Ungag"
+	{
+		"pt"		"Selecionar Jogador:"
+	}
+	"AdminMenu_Select_Unmute"
+	{
+		"pt"		"Selecionar Jogador:"
+	}
+	"AdminMenu_Select_Unsilence"
+	{
+		"pt"		"Selecionar Jogador:"
+	}
+	"AdminMenu_Option_Mute_Empty"
+	{
+		"pt"		"Nenhum Jogador Emudecido"
+	}
+	"AdminMenu_Option_Gag_Empty"
+	{
+		"pt"		"Nenhum Jogador Amordaçado"
+	}
+	"AdminMenu_Option_Silence_Empty"
+	{
+		"pt"		"Nenhum Jogador Silenciado"
+	}
+	"ListMenu_Option_Empty"
+	{
+		"pt"		"Nenhum Cliente Punido"
+	}
+	"AdminMenu_Option_Empty"
+	{
+		"pt"		"Não há jogadores disponíveis"
+	}
+	"AdminMenu_UnGag"
+	{
+		"pt"		"Remover Amordaçar"
+	}
+	"AdminMenu_Title_Durations"
+	{
+		"pt"		"Selecionar Duração:"
+	}
+	"AdminMenu_Title_Reasons"
+	{
+		"pt"		"Selecionar Motivo:"
+	}
+	"AdminMenu_Mute"
+	{
+		"pt"		"Emitir Emudecer"
+	}
+	"AdminMenu_UnMute"
+	{
+		"pt"		"Remover Emudecer"
+	}
+	"AdminMenu_Silence"
+	{
+		"pt"		"Emitir Silenciar"
+	}
+	"AdminMenu_UnSilence"
+	{
+		"pt"		"Remover Silenciar"
+	}
+	"AdminMenu_Not_Available"
+	{
+		"pt"		"O jogador que você selecionou não está mais disponível."
+	}
+	"Command_Target_Not_Targetable"
+	{
+		"pt"		"Você não pode marcar este jogador."
+	}
+	"ListMenu_Option_Mute"
+	{
+		"pt"		"Emudecido"
+	}
+	"ListMenu_Option_Gag"
+	{
+		"pt"		"Amordaçado"
+	}
+	"ListMenu_Option_Duration"
+	{
+		"pt"		"- Duração: "
+	}
+	"ListMenu_Option_Duration_Perm"
+	{
+		"pt"		"Permanente"
+	}
+	"ListMenu_Option_Duration_Time"
+	{
+		"#format"	"{1:d}"
+		"pt"		"{1} Minutos"
+	}
+	"ListMenu_Option_Duration_Temp"
+	{
+		"pt"		"Temporário"
+	}
+	"ListMenu_Option_Expire"
+	{
+		"pt"		"- Expira: "
+	}
+	"ListMenu_Option_Expire_Perm"
+	{
+		"pt"		"Nunca"
+	}
+	"ListMenu_Option_Expire_Time"
+	{
+		"#format"	"{1:s}"
+		"pt"		"{1}"
+	}
+	"ListMenu_Option_Expire_Temp_Reconnect"
+	{
+		"pt"		"Reconectar"
+	}
+	"ListMenu_Option_Admin"
+	{
+		"#format"	"{1:s}"
+		"pt"		"- Admin: {1}"
+	}
+	"ListMenu_Option_Issue"
+	{
+		"#format"	"{1:s}"
+		"pt"		"- Emitido: {1}"
+	}
+	"ListMenu_Option_Reason"
+	{
+		"pt"		"- Ver Motivo"
+	}
+	"ListMenu_Option_Reason_None"
+	{
+		"pt"		"- Motivo: Nenhum"
+	}
+	"ReasonPanel_Punishment_Mute"
+	{
+		"pt"		"Emudecido: "
+	}
+	"ReasonPanel_Punishment_Gag"
+	{
+		"pt"		"Amordaçado: "
+	}
+	"ReasonPanel_Perm"
+	{
+		"pt"		"Permanente"
+	}
+	"ReasonPanel_Time"
+	{
+		"#format"	"{1:d}"
+		"pt"		"{1} Minutos"
+	}
+	"ReasonPanel_Temp"
+	{
+		"pt"		"Temporário"
+	}
+	"ReasonPanel_Reason"
+	{
+		"#format"	"{1:s}"
+		"pt"		"Motivo: {1}"
+	}
+	"ReasonPanel_Back"
+	{
+		"pt"		"Sair"
+	}
+	"Temp muted player"
+	{
+		"#format"	"{1:t}"
+		"pt"		"{1} Emudecido."
+	}
+	"Temp muted player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"pt"		"{1} Emudecido (motivo: {2})."
+	}
+	"Temp gagged player"
+	{
+		"#format"	"{1:t}"
+		"pt"		"{1} Amordaçado."
+	}
+	"Temp gagged player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"pt"		"{1} Amordaçado (motivo: {2})."
+	}
+	"Temp silenced player"
+	{
+		"#format"	"{1:t}"
+		"pt"		"{1} Silenciado."
+	}
+	"Temp silenced player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"pt"		"{1} Silenciado (motivo: {2})."
+	}
+	"CommandComms_na"
+	{
+		"pt"		"Disponível apenas para os jogadores no servidor."
+	}
+	"CommandComms_nb"
+	{
+		"pt"		"Seu chat de texto e voz e não estão bloqueados."
+	}
+	"no access"
+	{
+		"pt"		"O tempo de punição especificado não é permitido para você."
+	}
+}

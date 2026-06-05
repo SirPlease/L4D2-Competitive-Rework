@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2JockeyUnteleport_VoidMonkeyRepairTeleportedBack"
+	{
+		"vi"		"{blue}[Void Monkey Repair] {default} đã dịch chuyển trở lại %N đã được dịch chuyển bởi Void Monkey."
+	}
+}

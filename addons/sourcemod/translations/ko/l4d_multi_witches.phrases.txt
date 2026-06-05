@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"L4DMultiWitches_WitchSpawnedMaxAlive"
+	{
+		"ko"		"%s 마녀 생성 # %d, 최대 = %d, 살아 있음: %i"
+	}
+	"L4DMultiWitches_L4DWitchesStartTimerMin"
+	{
+		"ko"		"[l4d_witches]: Start_Timer. 최소: %f, 최대: %f"
+	}
+	"L4DMultiWitches_L4DWitchesAliveWitches"
+	{
+		"ko"		"[l4d_witches]: 살아있는 마녀들: %i"
+	}
+	"L4DMultiWitches_L4DWitchesTimerTriggered"
+	{
+		"ko"		"[l4d_witches]: 타이머가 작동됨"
+	}
+	"L4DMultiWitches_L4DWitchesTrySpawn"
+	{
+		"ko"		"[l4d_witches]: 스폰을 시도합니다"
+	}
+}

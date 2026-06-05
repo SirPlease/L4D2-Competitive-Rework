@@ -3,170 +3,69 @@
 	"ConfoglCompMod_KickedIllegalValue"
 	{
 		"en"		"{blue}[{default}Confogl{blue}] {olive}%L{default} was kicked for having an illegal value for '{green}%s{default}' {blue}({default}%f{blue})"
-		"chi"		"{blue}[{default}Confogl{blue}] {olive}%L{default} 因“{green}%s{default}”值非法而被踢出{blue}({default}%f{blue})"
-		"zho"		"{blue}[{default}Confogl{blue}] {olive}%L{default} 因“{green}%s{default}”值非法而被踢出{blue}({default}%f{blue})"
-		"jp"		"{blue}[{default}Confogl{blue}] {olive}%L{default} は、「{green}%s{default}」の値が不正であるためキックされました {blue}({default}%f{blue})"
-		"ko"		"{blue}[{default}Confogl{blue}] {olive}%L{default}는 '{green}%s{default}'에 잘못된 값이 있어서 쫓겨났습니다. {blue}({default}%f{blue})"
-		"vi"		"{blue}[{default}Confogl{blue}] {olive}%L{default} đã bị kick vì có giá trị bất hợp pháp cho '{green}%s{default}' {blue}({default}%f{blue})"
 	}
-
 	"ConfoglCompMod_MaximumSniperRifleEnforced"
 	{
 		"en"		"{blue}[{default}Confogl{blue}]{default} Maximum {blue}%d {olive}sniping rifle(s) {default}is enforced."
-		"chi"		"{blue}[{default}Confogl{blue}]{default} Maximum {blue}%d {olive}sniping rifle(s) {default}is enforced."
-		"zho"		"{blue}[{default}Confogl{blue}]{default} Maximum {blue}%d {olive}sniping rifle(s) {default}is enforced."
-		"jp"		"{blue}[{default}Confogl{blue}]{default} Maximum {blue}%d {olive}sniping rifle(s) {default}is enforced."
-		"ko"		"{blue}[{default}Confogl{blue}]{default} Maximum {blue}%d {olive}sniping rifle(s) {default}is enforced."
-		"vi"		"{blue}[{default}Confogl{blue}]{default} Tối đa {blue}%d {olive}súng trường bắn tỉa {default}is được thi hành."
 	}
-
 	"ConfoglCompMod_CompetitionModeLoaded"
 	{
 		"en"		"{blue}[{default}Confogl{blue}]{default} Competition mode has been loaded!"
-		"chi"		"{blue}[{default}Confogl{blue}]{default} 比赛模式已加载!"
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 比賽模式已載入!"
-		"jp"		"{blue}[{default}Confogl{blue}]{default} 競技モードがロードされました!"
-		"ko"		"{blue}[{default}Confogl{blue}]{default} 경쟁 모드가 로드되었습니다!"
-		"vi"		"{blue}[{default}Confogl{blue}]{default} Chế độ thi đấu đã được tải!"
 	}
-
 	"ConfoglCompMod_ChangeMap"
 	{
 		"en"		"{blue}[{default}Confogl{blue}]{default} Change the map to {green}%s{default}!"
-		"chi"		"{blue}[{default}Confogl{blue}]{default} 更改地图为 {green}%s{default}!"
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 更改地圖為 {green}%s{default}!"
-		"jp"		"{blue}[{default}Confogl{blue}]{default} マップを {green}%s{default} に変更します!"
-		"ko"		"{blue}[{default}Confogl{blue}]{default} 지도를 {green}%s{default}로 변경하세요!"
-		"vi"		"{blue}[{default}Confogl{blue}]{default} Thay đổi bản đồ thành {green}%s{default}!"
 	}
-
 	"ConfoglCompMod_RestartMap"
 	{
 		"en"		"{blue}[{default}Confogl{blue}]{default} Restart the map!"
-		"chi"		"{blue}[{default}Confogl{blue}]{default} 重启地图!"
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 重啟地圖!"
-		"jp"		"{blue}[{default}Confogl{blue}]{default} マップを再起動してください!"
-		"ko"		"{blue}[{default}Confogl{blue}]{default} 지도를 다시 시작하세요!"
-		"vi"		"{blue}[{default}Confogl{blue}]{default} Khởi động lại bản đồ!"
 	}
-
 	"ConfoglCompMod_CompetitionConfigurationUninstalled"
 	{
 		"en"		"{blue}[{default}Confogl{blue}]{default} Competition configuration has been uninstalled!"
-		"chi"		"{blue}[{default}Confogl{blue}]{default} 比赛配置已卸载!"
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 比賽配置已卸載!"
-		"jp"		"{blue}[{default}Confogl{blue}]{default} コンペティション構成はアンインストールされました。"
-		"ko"		"{blue}[{default}Confogl{blue}]{default} 경쟁 구성이 제거되었습니다!"
-		"vi"		"Cấu hình cuộc thi {blue}[{default}Confogl{blue}]{default} đã được gỡ cài đặt!"
 	}
-
 	"ConfoglCompMod_LoadConfiguration"
 	{
 		"en"		"{blue}[{default}Confogl{blue}]{default} Load configuration '{olive}%s{default}'."
-		"chi"		"{blue}[{default}Confogl{blue}]{default} 加载配置 '{olive}%s{default}'."
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 載入設定 '{olive}%s{default}'."
-		"jp"		"{blue}[{default}Confogl{blue}]{default} 構成「{olive}%s{default}」をロードします。"
-		"ko"		"{blue}[{default}Confogl{blue}]{default} '{olive}%s{default}' 구성을 로드합니다."
-		"vi"		"{blue}[{default}Confogl{blue}]{default} Tải cấu hình '{olive}%s{default}'."
 	}
-
 	"ConfoglCompMod_ConfigurationNotFoundUseDefault"
 	{
 		"en"		"{blue}[{default}Confogl{blue}]{default} configuration '{olive}%s{default}' not found, use the default configuration!"
-		"chi"		"{blue}[{default}Confogl{blue}]{default} 配置 '{olive}%s{default}' 没找到, 使用默认配置!"
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 設定 '{olive}%s{default}' 找不到, 使用預設設定!"
-		"jp"		"{blue}[{default}Confogl{blue}]{default} 構成 '{olive}%s{default}' が見つかりません。デフォルト構成を使用してください。"
-		"ko"		"{blue}[{default}Confogl{blue}]{default} 구성 '{olive}%s{default}'를 찾을 수 없습니다. 기본 구성을 사용하십시오!"
-		"vi"		"{blue}[{default}Confogl{blue}]{default} cấu hình '{olive}%s{default}' không tìm thấy, hãy sử dụng cấu hình mặc định!"
 	}
-
 	"ConfoglCompMod_SpecifyConfigLoad"
 	{
 		"en"		"{blue}[{default}Confogl{blue}]{default} Please specify a {olive}config{default} to load."
-		"chi"		"{blue}[{default}Confogl{blue}]{default} 请指定要加载的 {olive}config{default}。"
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 請指定要載入的 {olive}config{default}。"
-		"jp"		"{blue}[{default}Confogl{blue}]{default} ロードする {olive}config{default} を指定してください。"
-		"ko"		"{blue}[{default}Confogl{blue}]{default} 로드하려면 {olive}config{default}를 지정하세요."
-		"vi"		"{blue}[{default}Confogl{blue}]{default} Vui lòng chỉ định {olive}config{default} để tải."
 	}
-
 	"ConfoglCompMod_ConfigNotFound"
 	{
 		"en"		"{blue}[{default}Confogl{blue}]{default} Config '{olive}%s{default}' not found!"
-		"chi"		"{blue}[{default}Confogl{blue}]{default} 未找到配置“{olive}%s{default}”！"
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 找不到設定「{olive}%s{default}」！"
-		"jp"		"{blue}[{default}Confogl{blue}]{default} 構成 '{olive}%s{default}' が見つかりません。"
-		"ko"		"{blue}[{default}Confogl{blue}]{default} 구성 '{olive}%s{default}'를 찾을 수 없습니다!"
-		"vi"		"{blue}[{default}Confogl{blue}]{default} Cấu hình '{olive}%s{default}' không tìm thấy!"
 	}
-
 	"ConfoglCompMod_MapNotFound"
 	{
 		"en"		"{blue}[{default}Confogl{blue}]{default} Map '{olive}%s{default}' not found!"
-		"chi"		"{blue}[{default}Confogl{blue}]{default} 地图“{olive}%s{default}”未找到！"
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 地圖「{olive}%s{default}」找不到！"
-		"jp"		"{blue}[{default}Confogl{blue}]{default} マップ「{olive}%s{default}」が見つかりません。"
-		"ko"		"{blue}[{default}Confogl{blue}]{default} 지도 '{olive}%s{default}'를 찾을 수 없습니다!"
-		"vi"		"Không tìm thấy {blue}[{default}Confogl{blue}]{default} Bản đồ '{olive}%s{default}'!"
 	}
-
 	"ConfoglCompMod_Round1Bonus"
 	{
 		"en"		"{blue}[{default}Confogl{blue}]{default} Round 1 Bonus: {olive}%d"
-		"chi"		"{blue}[{default}Confogl{blue}]{default} 第 1 轮奖金：{olive}%d"
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 第 1 輪獎金：{olive}%d"
-		"jp"		"{blue}[{default}Configl{blue}]{default} ラウンド 1 ボーナス: {olive}%d"
-		"ko"		"{blue}[{default}Confogl{blue}]{default} 1라운드 보너스: {olive}%d"
-		"vi"		"{blue}[{default}Confogl{blue}]{default} Phần thưởng vòng 1: {olive}%d"
 	}
-
 	"ConfoglCompMod_CustomMaxDistance"
 	{
 		"en"		"{blue}[{default}Confogl{blue}]{default} Custom Max Distance: {olive}%d"
-		"chi"		"{blue}[{default}Confogl{blue}]{default} 自定义最大距离：{olive}%d"
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 自訂最距離：{olive}%d"
-		"jp"		"{blue}[{default}Confogl{blue}]{default}カスタム最大距離: {olive}%d"
-		"ko"		"{blue}[{default}Confogl{blue}]{default} 사용자 정의 최대 거리: {olive}%d"
-		"vi"		"{blue}[{default}Confogl{blue}]{default} Khoảng cách tối đa tùy chỉnh: {olive}%d"
 	}
-
 	"ConfoglCompMod_Round2Bonus"
 	{
 		"en"		"{blue}[{default}Confogl{blue}]{default} Round 2 Bonus: {olive}%d"
-		"chi"		"{blue}[{default}Confogl{blue}]{default} 第 2 轮奖金：{olive}%d"
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 第 2 輪獎金：{olive}%d"
-		"jp"		"{blue}[{default}Configl{blue}]{default} ラウンド 2 ボーナス: {olive}%d"
-		"ko"		"{blue}[{default}Confogl{blue}]{default} 2라운드 보너스: {olive}%d"
-		"vi"		"{blue}[{default}Confogl{blue}]{default} Phần thưởng vòng 2: {olive}%d"
 	}
-
 	"ConfoglCompMod_AverageHealth"
 	{
 		"en"		"{blue}[{default}Confogl{blue}]{default} Average Health: {olive}%.02f"
-		"chi"		"{blue}[{default}Confogl{blue}]{default} 平均健康状况：{olive}%.02f"
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 平均健康狀況：{olive}%.02f"
-		"jp"		"{blue}[{default}Confogl{blue}]{default} 平均健康状態: {olive}%.02f"
-		"ko"		"{blue}[{default}Confogl{blue}]{default} 평균 체력: {olive}%.02f"
-		"vi"		"{blue}[{default}Confogl{blue}]{default} Sức khỏe trung bình: {olive}%.02f"
 	}
-
 	"ConfoglCompMod_HealthBonus"
 	{
 		"en"		"{blue}[{default}Confogl{blue}]{default} Health Bonus: {olive}%d"
-		"chi"		"{blue}[{default}Confogl{blue}]{default} 健康奖励：{olive}%d"
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 健康獎勵：{olive}%d"
-		"jp"		"{blue}[{default}Confogl{blue}]{default} 健康ボーナス: {olive}%d"
-		"ko"		"{blue}[{default}Confogl{blue}]{default} 체력 보너스: {olive}%d"
-		"vi"		"{blue}[{default}Confogl{blue}]{default} Phần thưởng sức khỏe: {olive}%d"
 	}
-
 	"ConfoglCompMod_StaticSurvivalBonusPerSurvivor"
 	{
 		"en"		"{blue}[{default}Confogl{blue}]{default} Static Survival Bonus Per Survivor: {olive}%d"
-		"chi"		"{blue}[{default}Confogl{blue}]{default} 每个幸存者的静态生存奖励：{olive}%d"
-		"zho"		"{blue}[{default}Confogl{blue}]{default} 每位倖存者的靜態生存獎勵：{olive}%d"
-		"jp"		"{blue}[{default}Confogl{blue}]{default} 生存者ごとの静的生存ボーナス: {olive}%d"
-		"ko"		"{blue}[{default}Confogl{blue}]{default} 생존자당 정적 생존 보너스: {olive}%d"
-		"vi"		"{blue}[{default}Confogl{blue}]{default} Tiền thưởng sinh tồn tĩnh cho mỗi người sống sót: {olive}%d"
 	}
 }

@@ -86,7 +86,7 @@
 	}
 	"RPG_FirstUseSetchTitleName"
 	{
-		"ko"		"{green} 사용자 정의 제목을 설정하려면 먼저 {lightgreen}!setch \\\\\\\"원하는 제목 이름\\\\\\\" {green}를 사용해야 합니다."
+		"ko"		"{green} 사용자 정의 제목을 설정하려면 먼저 {lightgreen}!setch \"원하는 제목 이름\" {green}를 사용해야 합니다."
 	}
 	"RPG_TitleModuleNotEnabledTitle"
 	{

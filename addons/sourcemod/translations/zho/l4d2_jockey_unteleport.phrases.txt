@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2JockeyUnteleport_VoidMonkeyRepairTeleportedBack"
+	{
+		"zho"		"{blue}[虛空猴子修復]{default} 傳送回了被虛空猴傳送的%N."
+	}
+}

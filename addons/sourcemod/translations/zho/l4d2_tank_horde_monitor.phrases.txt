@@ -2,46 +2,46 @@
 {
 	"Tag"
 	{
-		"zho"		"< {olive} 部落 {default} >"
+		"zho"		"<{olive}屍潮{default}>"
 	}
 	"TankPlay"
 	{
-		"zho"		"由於坦克在場，部落已暫停 {blue} {default}！透過 {blue} %0.1f%% {default} 進行進度將啟動部落。"
+		"zho"		"由於坦克在場，屍潮已{blue}暫停{default}！繼續推進 {blue}%0.1f%%{default} 將啟動屍潮。"
 	}
 	"UntilHordeStarts"
 	{
-		"zho"		"{blue} %0.1f%% {default} 離開，直到部落開始..."
+		"zho"		"距離屍潮開始還剩 {blue}%0.1f%%{default}..."
 	}
 	"HordeResumed"
 	{
-		"zho"		"部落已{blue}恢復{default}在{green} %i%%強度{default}，推播會增加部落。"
+		"zho"		"屍潮已{blue}恢復{default}，目前為{green}%i%% 強度{default}，繼續推進會增強屍潮。"
 	}
 	"HordeStrength"
 	{
-		"zho"		"部落處於{green} %i%% 實力{default}..."
+		"zho"		"屍潮目前為{green}%i%% 強度{default}..."
 	}
 	"HordeVeryStrength"
 	{
-		"zho"		"{red} 倖存者已經把{default}推得太遠了，部落在{green} 100 %% 強度{default}！"
+		"zho"		"{red}倖存者推進太遠了{default}，屍潮已達到{green}100%% 強度{default}！"
 	}
 	"L4D2TankHordeMonitor_HordeZombieWaveTemporarilySuspended"
 	{
-		"zho"		"<{olive}部落{default}> 由於坦克{blue}{default}的存在，殭屍浪潮暫時停止！如果繼續轉發{blue}%0.1f%%{default}，殭屍浪潮將再次開始。"
+		"zho"		"<{olive}屍潮{default}> 由於 Tank 在場，屍潮暫時{blue}暫停{default}！再往前走 {blue}%0.1f%%{default} 路程將會重新開始刷出屍潮。"
 	}
 	"L4D2TankHordeMonitor_HordeNoteWaveZombiesStarted"
 	{
-		"zho"		"<{olive}Horde{default}> 請注意！離屍潮再次開啟剩餘{blue}%0.1f%%{default} 路程..."
+		"zho"		"<{olive}屍潮{default}> 請注意！離屍潮再次開啟剩餘 {blue}%0.1f%%{default} 路程..."
 	}
 	"L4D2TankHordeMonitor_HordeZombieTideRestoredCurrent"
 	{
-		"zho"		"<{olive}Horde{default}> 屍潮已經 {blue}恢復{default}， 目前為 {green}%i%% 強度"
+		"zho"		"<{olive}屍潮{default}> 屍潮已經 {blue}恢復{default}，目前為 {green}%i%% 強度，繼續推進會增加屍潮的強度。"
 	}
 	"L4D2TankHordeMonitor_HordeCurrentZombieWaveIntensity"
 	{
-		"zho"		"<{olive}Horde{default}> 屍潮目前為 {green}%i%% 強度{default}..."
+		"zho"		"<{olive}屍潮{default}> 屍潮目前為 {green}%i%% 強度{default}..."
 	}
 	"L4D2TankHordeMonitor_HordeSurvivorsAdvancedTooFar"
 	{
-		"zho"		"<{olive}Horde{default}> 生還者推進過遠, 屍潮強度改為 {green}100%% {default}!"
+		"zho"		"<{olive}屍潮{default}> 生還者推進過遠，屍潮強度改為 {green}100%% {default}!"
 	}
 }

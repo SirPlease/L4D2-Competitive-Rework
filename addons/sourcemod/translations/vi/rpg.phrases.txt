@@ -86,7 +86,7 @@
 	}
 	"RPG_FirstUseSetchTitleName"
 	{
-		"vi"		"{green} Trước tiên, bạn phải sử dụng {lightgreen}!setch \\\\\\\"tên tiêu đề bạn muốn\\\\\\\" {green} để đặt tiêu đề tùy chỉnh của mình"
+		"vi"		"{green} Trước tiên, bạn phải sử dụng {lightgreen}!setch \"tên tiêu đề bạn muốn\" {green} để đặt tiêu đề tùy chỉnh của mình"
 	}
 	"RPG_TitleModuleNotEnabledTitle"
 	{

@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2Dirspawn_DirSpawnKVGenerated"
+	{
+		"ko"		"[DirSpawn] KV 생성: %s"
+	}
+	"L4D2Dirspawn_DirSpawnFailedWriteKV"
+	{
+		"ko"		"[DirSpawn] KV 작성 실패: %s"
+	}
+}

@@ -216,7 +216,6 @@
 	{
 		"en"		"White Forest"
 	}
-
 	"2evileyes"
 	{
 		"en"		"2 Evil Eyes"

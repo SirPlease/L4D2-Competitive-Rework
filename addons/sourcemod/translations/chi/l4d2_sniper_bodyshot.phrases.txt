@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2SniperBodyshot_VictimAttackerHitgroupWeapon"
+	{
+		"chi"		"受害者%N，攻击者%N，打击组%s（%d），武器：%s，"
+	}
+}

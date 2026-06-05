@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2NoseyParker_DmgReportTookDamage"
+	{
+		"jp"		"{green}[DmgReport]{default} {lightgreen}%N{default}({green}%s{default})はあなたから{olive}%d{default}ダメージを受けました!"
+	}
+}

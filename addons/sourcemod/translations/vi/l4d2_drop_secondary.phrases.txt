@@ -1,0 +1,31 @@
+"Phrases"
+{
+	"L4D2DropSecondary_PlayerReplacedBotReplacedSecondary"
+	{
+		"vi"		"{green}[{olive}OnPlayerReplacedByBot{green}] {default}- {blue}BOT {default}thay thế {blue}%N {default}({green}Thứ cấp: {olive}%s{default})"
+	}
+	"L4D2DropSecondary_BotReplacedPlayerReplacedBOT"
+	{
+		"vi"		"{green}[{olive}OnBotReplacedByPlayer{green}] {default}- {blue}%N {default}thay thế {blue}BOT {default}({green}Thứ cấp: {olive}%s{default})"
+	}
+	"L4D2DropSecondary_PlayerUsePickedSecondsondarySecondary"
+	{
+		"vi"		"{green}[{olive}OnPlayerUse{green}] {default}- {blue}%N{default} đã chọn thứ cấp: ({green}Thứ cấp: {olive}%s{default})"
+	}
+	"L4D2DropSecondary_PlayerDeathSecondary"
+	{
+		"vi"		"{green}[{olive}OnPlayerDeath{green}] {default}- {blue}%N {default}({green}Phụ: {olive}%s{default})"
+	}
+	"L4D2DropSecondary_ErrorSomethingWentWrongDetermining"
+	{
+		"vi"		"{blue}[{default}L4D2 Drop thứ cấp{blue}]{default}: {green}ERROR {default}- Đã xảy ra lỗi khi xác định tập lệnh cận chiến cho vũ khí phụ của bạn, hãy báo cáo vấn đề này với Tác giả {olive}Plugin{default}."
+	}
+	"L4D2DropSecondary_DetermineMeleeScriptMS"
+	{
+		"vi"		"{green}[{olive}Xác địnhMeleeScript{green}] {default}- {blue}%N {default}has {olive}%s {default}- MS: {olive}%s"
+	}
+	"L4D2DropSecondary_Debugging"
+	{
+		"vi"		"{blue}[{default}L4D2 Thả phụ{blue}]{default}: {green}Gỡ lỗi {olive}%s"
+	}
+}

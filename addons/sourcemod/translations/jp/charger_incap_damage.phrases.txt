@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"ChargerIncapDamage_HookTakeDamageVictimAttacker"
+	{
+		"jp"		"[Hook_OnTakeDamage] 被害者: (%N) %d、攻撃者: (%N) %d、加害者: %d、ダメージ: %f、ダメージタイプ: %d"
+	}
+	"ChargerIncapDamage_HookTakeDamageWeaponDamage"
+	{
+		"jp"		"[Hook_OnTakeDamage] 武器: %d、ダメージフォース: %f %f %f、ダメージポジション: %f %f %f"
+	}
+}

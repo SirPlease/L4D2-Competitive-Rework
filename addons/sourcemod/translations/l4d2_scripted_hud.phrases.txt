@@ -3,10 +3,5 @@
 	"L4D2ScriptedHUD_HUDTextsDataFileReloaded"
 	{
 		"en"		"{green}[HUD texts from data file reloaded]"
-		"chi"		"{green}[数据文件中的 HUD 文本已重新加载]"
-		"zho"		"{green}[資料檔案中的 HUD 文字已重新載入]"
-		"jp"		"{green}[データ ファイルからの HUD テキストがリロードされました]"
-		"ko"		"{green}[데이터 파일의 HUD 텍스트가 다시 로드됨]"
-		"vi"		"{green}[Đã tải lại văn bản HUD từ tệp dữ liệu]"
 	}
 }

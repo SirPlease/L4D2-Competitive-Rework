@@ -1,0 +1,31 @@
+"Phrases"
+{
+	"SurvivorMVPTest_CurrentRoundMVP"
+	{
+		"jp"		"現在のラウンド MVP: {olive}%N{default}"
+	}
+	"SurvivorMVPTest_DamageClient"
+	{
+		"jp"		"クライアントの損害: {olive}%d{default}"
+	}
+	"SurvivorMVPTest_SIKillsClient"
+	{
+		"jp"		"クライアントの SI キル: {olive}%d{default}"
+	}
+	"SurvivorMVPTest_DamagePercentClient"
+	{
+		"jp"		"クライアントのダメージ割合: {olive}%f{default}"
+	}
+	"SurvivorMVPTest_CurrentRoundMVPClientCommon"
+	{
+		"jp"		"現在のラウンド MVP クライアント (共通): {olive}%N{default}"
+	}
+	"SurvivorMVPTest_CommonKillsClient"
+	{
+		"jp"		"クライアントの一般的なキル: {olive}%d{default}"
+	}
+	"SurvivorMVPTest_CIPercentClient"
+	{
+		"jp"		"クライアントの CI パーセント: {olive}%f{default}"
+	}
+}

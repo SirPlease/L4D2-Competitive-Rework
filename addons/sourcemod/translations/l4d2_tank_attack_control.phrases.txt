@@ -2,34 +2,18 @@
 {
 	"Title"
 	{
-		"en"	"{blue}[{default}Tank Rock Selector{blue}]"
-		"zho"		"{blue}[{default}Tank Rock Selector{blue}]"
-		"jp"		"{blue}[{default}Tank Rock Selector{blue}]"
-		"ko"		"{blue}[{default}Tank Rock Selector{blue}]"
-		"vi"		"{blue}[{default}Tank Rock Selector{blue}]"
+		"en"		"{blue}[{default}Tank Rock Selector{blue}]"
 	}
 	"Reload"
 	{
-		"en"	"{olive}Reload{default}/{olive}!overhand{default} = {blue}2 Handed Overhand{default}"
-		"zho"		"{olive}Reload{default}/{olive}!overhand{default} = {blue}2 Handed Overhand{default}"
-		"jp"		"{olive}Reload{default}/{olive}!overhand{default} = {blue}2 Handed Overhand{default}"
-		"ko"		"{olive}Reload{default}/{olive}!overhand{default} = {blue}2 Handed Overhand{default}"
-		"vi"		"{olive}Reload{default}/{olive}!overhand{default} = {blue}2 Handed Overhand{default}"
+		"en"		"{olive}Reload{default}/{olive}!overhand{default} = {blue}2 Handed Overhand{default}"
 	}
 	"Use"
 	{
-		"en"	"{olive}Use{default}/{olive}!underhand{default} = {blue}Underhand{default}"
-		"zho"		"{olive}Use{default}/{olive}!underhand{default} = {blue}Underhand{default}"
-		"jp"		"{olive}Use{default}/{olive}!underhand{default} = {blue}Underhand{default}"
-		"ko"		"{olive}Use{default}/{olive}!underhand{default} = {blue}Underhand{default}"
-		"vi"		"{olive}Use{default}/{olive}!underhand{default} = {blue}Underhand{default}"
+		"en"		"{olive}Use{default}/{olive}!underhand{default} = {blue}Underhand{default}"
 	}
 	"M2"
 	{
-		"en"	"{olive}M2{default}/{olive}!overonehand{default} = {blue}1 Handed Overhand{default}"
-		"zho"		"{olive}M2{default}/{olive}!overonehand{default} = {blue}1 Handed Overhand{default}"
-		"jp"		"{olive}M2{default}/{olive}!overonehand{default} = {blue}1 Handed Overhand{default}"
-		"ko"		"{olive}M2{default}/{olive}!overonehand{default} = {blue}1 Handed Overhand{default}"
-		"vi"		"{olive}M2{default}/{olive}!overonehand{default} = {blue}1 Handed Overhand{default}"
+		"en"		"{olive}M2{default}/{olive}!overonehand{default} = {blue}1 Handed Overhand{default}"
 	}
 }

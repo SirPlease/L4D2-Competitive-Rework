@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"L4DMultiWitches_WitchSpawnedMaxAlive"
+	{
+		"jp"		"%s 魔女がスポーン # %d、最大 = %d、生存: %i"
+	}
+	"L4DMultiWitches_L4DWitchesStartTimerMin"
+	{
+		"jp"		"[l4d_witches]: Start_Timer。最小: %f、最大: %f"
+	}
+	"L4DMultiWitches_L4DWitchesAliveWitches"
+	{
+		"jp"		"[l4d_witches]: アライブウィッチーズ: %i"
+	}
+	"L4DMultiWitches_L4DWitchesTimerTriggered"
+	{
+		"jp"		"[l4d_witches]: タイマーがトリガーされました"
+	}
+	"L4DMultiWitches_L4DWitchesTrySpawn"
+	{
+		"jp"		"[l4d_witches]: スポーンしてみます"
+	}
+}

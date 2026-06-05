@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"L4D2SmokerDragDamageInterval_TongueContinuityDragChokeDamage"
+	{
+		"zho"		"[tongue_continuity] %N 拖曳->扼流：損壞時鐘繼續 - %.2fs 中的下一個損壞（原版將重置為 %.2fs）"
+	}
+	"L4D2SmokerDragDamageInterval_TongueContinuityChokeDragDamage"
+	{
+		"zho"		"[tongue_連續性] %N 窒息->拖曳：傷害時鐘繼續 - %.2f 中的下一個傷害（原版會立即發射）"
+	}
+	"L4D2SmokerDragDamageInterval_DebugVictimDamageTimeGame"
+	{
+		"zho"		"[調試] 受害者：%N，%s傷害：%f，時間：%f，遊戲時間：%f"
+	}
+}

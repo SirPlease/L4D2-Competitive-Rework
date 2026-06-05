@@ -1,0 +1,55 @@
+"Phrases"
+{
+	"FixEngine_IdrowndamageDamageTempHPRestore"
+	{
+		"ko"		"m_idrowndmg = %d, dmg = %d, 복원할 임시 hp = %d"
+	}
+	"FixEngine_RestoringStartedPlayerUsingGlitch"
+	{
+		"ko"		"복원 시작됨(플레이어가 1-10hp를 가지고 있는 동안 결함을 사용함)"
+	}
+	"FixEngine_RestoreCountBeginningSeconds"
+	{
+		"ko"		"복원 횟수 = %d(%.0f초부터 시작)"
+	}
+	"FixEngine_RestoringStarted"
+	{
+		"ko"		"복원이 시작되었습니다"
+	}
+	"FixEngine_TempHealthLimitExceeded"
+	{
+		"ko"		"임시 건강 한도를 초과했습니다."
+	}
+	"FixEngine_ResetDrownRestoredProp"
+	{
+		"ko"		"익사복원 소품 %N 재설정"
+	}
+	"FixEngine_TempGlitchFixed"
+	{
+		"ko"		"온도 결함이 수정되었습니다."
+	}
+	"FixEngine_StoppedTempGlitchFixTimer"
+	{
+		"ko"		"임시 결함 수정 타이머가 중지되었습니다."
+	}
+	"FixEngine_RestoringStopped"
+	{
+		"ko"		"복원이 중지되었습니다"
+	}
+	"FixEngine_AttemptedUseLadderSpeedGlitch"
+	{
+		"ko"		"%N(%s)가 사다리 속도 결함을 사용하려고 시도했습니다."
+	}
+	"FixEngine_SuspectedUsingNoFallDamage"
+	{
+		"ko"		"%N(%s)는 낙하 피해 방지 버그를 사용한 것으로 의심됩니다."
+	}
+	"FixEngine_AttemptedUseHealthBoostGlitch"
+	{
+		"ko"		"%N(%s)가 체력 강화 결함을 사용하려고 시도했습니다."
+	}
+	"FixEngine_AttemptedUseLadderReloadGlitch"
+	{
+		"ko"		"%N(%s)가 사다리 재장전 결함을 사용하려고 시도했습니다."
+	}
+}

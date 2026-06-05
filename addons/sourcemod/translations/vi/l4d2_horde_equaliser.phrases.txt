@@ -2,7 +2,7 @@
 {
 	"Tag"
 	{
-		"vi"		"< {olive} Đại Tộc {default} >"
+		"vi"		"<{olive}Làn sóng zombie{default}>"
 	}
 	"NoCommonRemaining"
 	{
@@ -16,6 +16,6 @@
 	"FiniteEventStarted"
 	{
 		"#format"	"{1:i}"
-		"vi"		"Một sự kiện hữu hạn {blue} {default} của {olive} {1} {default} chung đã bắt đầu! Vội vàng hay chờ đợi, sự lựa chọn là của bạn!"
+		"vi"		"{blue}Làn sóng zombie hữu hạn{default} đã bắt đầu! Vòng này có tổng cộng {olive}{1}{default} zombie thường. Tiến lên hay chờ đợi là lựa chọn của bạn!"
 	}
 }

@@ -1,0 +1,43 @@
+"Phrases"
+{
+	"Vote_AdministratorCanceledCurrentVote"
+	{
+		"ko"		"[{olive}vote{default}] {blue}관리자가 현재 투표를 취소했습니다!"
+	}
+	"Vote_BystandersNotAllowedVoteExecute"
+	{
+		"ko"		"[{olive}vote{default}] {blue} 방관자는 명령이나 cfg 파일을 실행하기 위해 투표할 수 없습니다!"
+	}
+	"Vote_NoRelatedFilesExist"
+	{
+		"ko"		"[{olive}vote{default}] {red} 관련 파일이 없습니다."
+	}
+	"Vote_CannotVoteResetCurrentMap"
+	{
+		"ko"		"[{olive}vote{default}] {red}게임이 시작된 후에는 현재 지도를 재설정하는 투표를 할 수 없습니다."
+	}
+	"Vote_InitiatedVote"
+	{
+		"ko"		"[{olive}vote{default}] {blue}%N가 투표를 시작했습니다."
+	}
+	"Vote_AlreadyVoteProgress"
+	{
+		"ko"		"[{olive}vote{default}] {red} 이미 투표가 진행 중입니다."
+	}
+	"Vote_InitiatesVoteKick"
+	{
+		"ko"		"[{olive}vote{default}] {blue}%N {default}가 {blue} %N를 쫓아내기 위한 투표를 시작합니다."
+	}
+	"Vote_NotPreventBanMisusedRequires"
+	{
+		"ko"		"[{olive}vote{default}] {red}는 금지 조치의 오용을 방지하지 못하며 이를 사용하려면 100,000점 이상의 플레이어가 필요합니다."
+	}
+	"Vote_UsePowerCautionAbuseBans"
+	{
+		"ko"		"[{olive}vote{default}] {red}주의 깊게 전원을 사용하시기 바랍니다. 차단을 남용하면 계정이 차단됩니다(처음에는 7일, 두 번째에는 한 달, 세 번째에는 영구적으로)."
+	}
+	"Vote_InitiatesVoteBanOneDay"
+	{
+		"ko"		"[{olive}vote{default}] {blue}%N {default}는 언젠가 {blue} %N를 금지하는 투표를 시작합니다."
+	}
+}

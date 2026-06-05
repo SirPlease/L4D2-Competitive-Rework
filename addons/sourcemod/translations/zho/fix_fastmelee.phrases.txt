@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"FixFastMelee_EventWeaponFireWeaponTime"
+	{
+		"zho"		"Event_WeaponFire：%N，武器：%s，時間：%f，iWeaponId：%d"
+	}
+	"FixFastMelee_WeaponSwitchedWeaponNextAttack"
+	{
+		"zho"		"OnWeaponSwitched：%N，武器：%d（%s），fNextAttack：%f"
+	}
+}

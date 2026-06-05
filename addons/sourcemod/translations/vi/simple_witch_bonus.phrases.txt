@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"SimpleWitchBonus_KillingWitchAwardedPoints"
+	{
+		"vi"		"{default}Giết phù thủy đã nhận được: {olive}%d {default} điểm!"
+	}
+}

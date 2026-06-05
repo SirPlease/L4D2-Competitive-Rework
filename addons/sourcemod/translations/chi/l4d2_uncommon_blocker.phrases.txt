@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"L4D2UncommonBlocker_UncommonInfectedSpawnedEntityModel"
+	{
+		"chi"		"罕见感染者诞生！实体：%d，型号：%s，性别：%d，插件标志：%d，已屏蔽：%s。"
+	}
+	"L4D2UncommonBlocker_2BlockedUncommonInfectedEntity"
+	{
+		"chi"		"2 阻止罕见感染！实体：%d，位置：%.0f %.0f %.0f，mobRush：%s。"
+	}
+	"L4D2UncommonBlocker_SpawnedNewInfectedEntityLocation"
+	{
+		"chi"		"产生新的感染者！实体：%d，位置：%.0f %.0f %.0f，mobRush：%s。"
+	}
+}

@@ -1,0 +1,67 @@
+"Phrases"
+{
+	"L4D2Playstats_UseStatsTypeRoundGame"
+	{
+		"chi"		"{default}使用：/stats [<类型>] [{olive}round{default}/{olive}game{default}/{olive}team{default}/{olive}all{default}/{olive}other{default}]"
+	}
+	"L4D2Playstats_StatsType"
+	{
+		"chi"		"{default} 或：/stats [<类型>] [{olive}r{default}/{olive}g{default}/{olive}t{default}/{olive}a{default}/{olive}o{default}]"
+	}
+	"L4D2Playstats_TypeMVPSkillFFAcc"
+	{
+		"chi"		"{default}，其中 <类型> 为“{green}mvp{default}”、“{green}skill{default}”、“{green}ff{default}”、“{green}acc{default}”或'{green}inf{default}'。 （更多信息请参见控制台）"
+	}
+	"L4D2Playstats_StatsCommandUnknownArgumentType"
+	{
+		"chi"		"统计命令：未知参数：“%s”。输入“/stats help”以获取可能的参数。"
+	}
+	"L4D2Playstats_PlayerStatisticsReset"
+	{
+		"chi"		"玩家统计数据重置。"
+	}
+	"L4D2Playstats_UseStatsAutoFlagsType"
+	{
+		"chi"		"{default}使用：{green}/stats_auto <flags>{default}。输入 {green}/stats_auto help{default} 了解更多信息。"
+	}
+	"L4D2Playstats_UseStatsAutoFlagsInteger"
+	{
+		"chi"		"{default}使用：{green}/stats_auto <flags>{default}。 Flags 是一个整数，是回合结束时显示的所有打印输出的总和。"
+	}
+	"L4D2Playstats_SetFlags0UseServer"
+	{
+		"chi"		"{default}将标志设置为 0 以使用服务器自动打印默认值；设置为 -1 则根本不显示任何内容。"
+	}
+	"L4D2Playstats_StatsPreviewNoFlagsSet"
+	{
+		"chi"		"{default}Stats 预览：未设置标志。首先使用 {green}/stats_auto <flags>{default} 设置标志。输入 {green}/stats_auto help{default} 了解更多信息。"
+	}
+	"L4D2Playstats_StatsPrefInvalidValueType"
+	{
+		"chi"		"统计首选项：无效值：“%s”。输入“/stats_auto help”以获取更多信息。"
+	}
+	"L4D2Playstats_StatsPrefNoRoundEnd"
+	{
+		"chi"		"{default} 统计首选：{green} 根本没有圆端印刷 {default}。"
+	}
+	"L4D2Playstats_StatsPrefServerDefault"
+	{
+		"chi"		"{default}统计偏好：{green}服务器默认{default}。"
+	}
+	"L4D2Playstats_StatsPrefFlagsSet"
+	{
+		"chi"		"{default}Stats 首选项：标记设置为："
+	}
+	"L4D2Playstats_UseStatsAutoTestGet"
+	{
+		"chi"		"{default}使用 {green}/stats_auto test{default} 获取报告预览。"
+	}
+	"L4D2Playstats_StatsPrefErrorCookieNot"
+	{
+		"chi"		"统计首选项：错误：cookie 尚未缓存（稍后重试）。"
+	}
+	"L4D2Playstats_SeeURLListFlags"
+	{
+		"chi"		"{default}查看：{olive}https://github.com/Tabbernaut/L4D2-Plugins/blob/master/stats/README.md{default} 获取 flags 列表。"
+	}
+}

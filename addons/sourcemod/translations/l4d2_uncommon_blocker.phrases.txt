@@ -3,30 +3,13 @@
 	"L4D2UncommonBlocker_UncommonInfectedSpawnedEntityModel"
 	{
 		"en"		"Uncommon infected spawned! Entity: %d, model: %s, gender: %d, plugin flag: %d, blocked: %s."
-		"chi"		"罕见感染者诞生！实体：%d，型号：%s，性别：%d，插件标志：%d，已屏蔽：%s。"
-		"zho"		"罕見感染者誕生！實體：%d，型號：%s，性別：%d，外掛程式標誌：%d，已封鎖：%s。"
-		"jp"		"珍しい感染者が出現しました！エンティティ: %d、モデル: %s、性別: %d、プラグイン フラグ: %d、ブロック済み: %s。"
-		"ko"		"흔하지 않은 감염자가 발생했습니다! 엔터티: %d, 모델: %s, 성별: %d, 플러그인 플래그: %d, 차단됨: %s."
-		"vi"		"Nhiễm trùng không phổ biến sinh sản! Thực thể: %d, model: %s, giới tính: %d, cờ plugin: %d, bị chặn: %s."
 	}
-
 	"L4D2UncommonBlocker_2BlockedUncommonInfectedEntity"
 	{
 		"en"		"2 Blocked uncommon infected! Entity: %d, location: %.0f %.0f %.0f, mobRush: %s."
-		"chi"		"2 阻止罕见感染！实体：%d，位置：%.0f %.0f %.0f，mobRush：%s。"
-		"zho"		"2 阻止罕見感染！實體：%d，位置：%.0f %.0f %.0f，mobRush：%s。"
-		"jp"		"2 珍しい感染者をブロックしました!エンティティ: %d、場所: %.0f %.0f %.0f、mobRush: %s。"
-		"ko"		"2 흔하지 않은 감염자 차단! 엔터티: %d, 위치: %.0f %.0f %.0f, mobRush: %s."
-		"vi"		"2 Bị chặn không phổ biến bị nhiễm bệnh! Thực thể: %d, vị trí: %.0f %.0f %.0f, mobRush: %s."
 	}
-
 	"L4D2UncommonBlocker_SpawnedNewInfectedEntityLocation"
 	{
 		"en"		"Spawned new infected! Entity: %d, location: %.0f %.0f %.0f, mobRush: %s."
-		"chi"		"产生新的感染者！实体：%d，位置：%.0f %.0f %.0f，mobRush：%s。"
-		"zho"		"產生新的感染者！實體：%d，位置：%.0f %.0f %.0f，mobRush：%s。"
-		"jp"		"新たな感染者を生み出した！エンティティ: %d、場所: %.0f %.0f %.0f、mobRush: %s。"
-		"ko"		"새로운 감염자가 발생했습니다! 엔터티: %d, 위치: %.0f %.0f %.0f, mobRush: %s."
-		"vi"		"Sinh ra mới bị nhiễm bệnh! Thực thể: %d, vị trí: %.0f %.0f %.0f, mobRush: %s."
 	}
 }

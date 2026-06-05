@@ -3,62 +3,22 @@
 	"In Cooldown"
 	{
 		"#format"	"{1:.0f}"
-		
-		"en"	"Please wait {1} seconds before reporting again"
-		"fr"	"Veuillez patienter {1} secondes avant de rapporter à nouveau"
-		"pl"	"Zaczekaj {1} sekund przed ponownym wysłaniem zgłoszenia"
-		"chi"	"请等待 {1} 秒后再试"
-		"zho"		"Please wait {1} seconds before reporting again"
-		"jp"		"Please wait {1} seconds before reporting again"
-		"ko"		"Please wait {1} seconds before reporting again"
-		"vi"		"Please wait {1} seconds before reporting again"
+		"en"		"Please wait {1} seconds before reporting again"
 	}
-	
 	"Report Canceled"
 	{
-		"en"	"Report canceled"
-		"fr"	"Report annulé"
-		"pl"	"Raport został anulowany"
-		"chi"	"报告已取消"
-		"zho"		"Report canceled"
-		"jp"		"Report canceled"
-		"ko"		"Report canceled"
-		"vi"		"Report canceled"
+		"en"		"Report canceled"
 	}
-	
 	"Report Sent"
 	{
-		"en"	"Your report has been sent"
-		"fr"	"Votre report a été envoyé"
-		"pl"	"Twój raport został wysłany"
-		"chi"	"你的报告已发送"
-		"zho"		"Your report has been sent"
-		"jp"		"Your report has been sent"
-		"ko"		"Your report has been sent"
-		"vi"		"Your report has been sent"
+		"en"		"Your report has been sent"
 	}
-	
 	"Reason Prompt"
 	{
-		"en"	"Please enter the reason for the report or \"cancel\" to cancel"
-		"fr"	"Veuillez entrer la raison du rapport ou \"cancel\" pour annuler"
-		"pl"	"Podaj przyczynę zgłoszenia lub \"cancel\", aby anulować"
-		"chi"	"请填写报告填写理由或者 \"cancel\" 来取消"
-		"zho"		"Please enter the reason for the report or \"cancel\" to cancel"
-		"jp"		"Please enter the reason for the report or \"cancel\" to cancel"
-		"ko"		"Please enter the reason for the report or \"cancel\" to cancel"
-		"vi"		"Please enter the reason for the report or \"cancel\" to cancel"
+		"en"		"Please enter the reason for the report or \"cancel\" to cancel"
 	}
-	
 	"Reason Short Need More"
 	{
-		"en"	"Reason is too short, more details is required"
-		"fr"	"La raison est trop courte, plus de détails sont requis"
-		"pl"	"Powód jest za krótki, więcej szczegółów jest wymaganych"
-		"chi"	"理由过于简短,请做更多说明"
-		"zho"		"Reason is too short, more details is required"
-		"jp"		"Reason is too short, more details is required"
-		"ko"		"Reason is too short, more details is required"
-		"vi"		"Reason is too short, more details is required"
+		"en"		"Reason is too short, more details is required"
 	}
 }

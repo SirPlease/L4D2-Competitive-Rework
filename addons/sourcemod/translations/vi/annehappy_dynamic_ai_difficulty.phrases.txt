@@ -1,0 +1,31 @@
+"Phrases"
+{
+	"DynamicAIDifficulty_DynamicDifficultyRoundLocked"
+	{
+		"vi"		"{green}[AnneHappyAI]{default} Độ khó linh hoạt của vòng này đã bị khóa ở {lightgreen}%s{default}."
+	}
+	"DynamicAIDifficulty_FixedDynamicDifficulty"
+	{
+		"vi"		"{green}[AnneHappyAI]{default} Đã sửa lỗi độ khó động: {lightgreen}%s{default}."
+	}
+	"DynamicAIDifficulty_SwitchedAutomaticDifficultyTakeEffect"
+	{
+		"vi"		"{green}[AnneHappyAI]{default} đã được chuyển sang độ khó tự động, độ khó này sẽ có hiệu lực từ vòng tiếp theo; độ khó của vòng hiện tại không thay đổi."
+	}
+	"DynamicAIDifficulty_SwitchedAutomaticDifficulty"
+	{
+		"vi"		"{green}[AnneHappyAI]{default} đã được chuyển sang độ khó tự động."
+	}
+	"DynamicAIDifficulty_DifficultyNextRoundFixedDifficulty"
+	{
+		"vi"		"{green}[AnneHappyAI]{default} Độ khó của vòng tiếp theo đã được sửa thành {lightgreen}%s{default}; độ khó của vòng hiện tại không thay đổi."
+	}
+	"DynamicAIDifficulty_DifficultyCurrentRoundFixed"
+	{
+		"vi"		"{green}[AnneHappyAI]{default} Độ khó của vòng hiện tại đã được sửa thành {lightgreen}%s{default}."
+	}
+	"DynamicAIDifficulty_L4DStatsAveragePersonalPPM"
+	{
+		"vi"		"{green}[AnneHappyAI]{default} l4d_stats PPM cá nhân trung bình %.2f, %d điểm người %d / %d phút (%d người trong quý/%d người trong bảng xếp hạng tổng thể) và độ khó động được điều chỉnh thành {lightgreen}%s{default}."
+	}
+}

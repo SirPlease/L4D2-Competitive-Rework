@@ -27,7 +27,7 @@
 	"Usage_time"
 	{
 		"#format"	"{1:d}"
-		"zho"		"Time: {1} minutes, if unspecified; permanent, if 0.\\nIf < 0, blocks for session."
+		"zho"		"時間：{1} 分鐘；未指定時使用此值；若為 0 則永久。\n若小於 0，則只封鎖本次連線。"
 	}
 	"Player Comms Not Verified"
 	{

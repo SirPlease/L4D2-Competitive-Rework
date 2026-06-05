@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"Hextags_SMTitleSetSuccessfully"
+	{
+		"zho"		"[SM] 頭銜 %s 設定成功"
+	}
+}

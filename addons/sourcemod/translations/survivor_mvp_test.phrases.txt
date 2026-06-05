@@ -3,70 +3,29 @@
 	"SurvivorMVPTest_CurrentRoundMVP"
 	{
 		"en"		"Current round MVP: {olive}%N{default}"
-		"chi"		"本轮MVP：{olive}%N{default}"
-		"zho"		"本輪MVP：{olive}%N{default}"
-		"jp"		"現在のラウンド MVP: {olive}%N{default}"
-		"ko"		"현재 라운드 MVP: {olive}%N{default}"
-		"vi"		"MVP vòng hiện tại: {olive}%N{default}"
 	}
-
 	"SurvivorMVPTest_DamageClient"
 	{
 		"en"		"Damage of client: {olive}%d{default}"
-		"chi"		"客户损坏：{olive}%d{default}"
-		"zho"		"客戶損壞：{olive}%d{default}"
-		"jp"		"クライアントの損害: {olive}%d{default}"
-		"ko"		"클라이언트 손상: {olive}%d{default}"
-		"vi"		"Thiệt hại của khách hàng: {olive}%d{default}"
 	}
-
 	"SurvivorMVPTest_SIKillsClient"
 	{
 		"en"		"SI kills of client: {olive}%d{default}"
-		"chi"		"SI 杀死客户端：{olive}%d{default}"
-		"zho"		"SI 殺死客戶端：{olive}%d{default}"
-		"jp"		"クライアントの SI キル: {olive}%d{default}"
-		"ko"		"SI 클라이언트 킬: {olive}%d{default}"
-		"vi"		"SI giết chết khách hàng: {olive}%d{default}"
 	}
-
 	"SurvivorMVPTest_DamagePercentClient"
 	{
 		"en"		"Damage percent of client: {olive}%f{default}"
-		"chi"		"客户损坏百分比：{olive}%f{default}"
-		"zho"		"客戶損壞百分比：{olive}%f{default}"
-		"jp"		"クライアントのダメージ割合: {olive}%f{default}"
-		"ko"		"클라이언트 손상 비율: {olive}%f{default}"
-		"vi"		"Phần trăm thiệt hại của khách hàng: {olive}%f{default}"
 	}
-
 	"SurvivorMVPTest_CurrentRoundMVPClientCommon"
 	{
 		"en"		"Current round MVP client (Common): {olive}%N{default}"
-		"chi"		"本轮MVP客户（普通）：{olive}%N{default}"
-		"zho"		"本輪MVP客戶（普通）：{olive}%N{default}"
-		"jp"		"現在のラウンド MVP クライアント (共通): {olive}%N{default}"
-		"ko"		"현재 라운드 MVP 클라이언트(공통): {olive}%N{default}"
-		"vi"		"Khách hàng MVP vòng hiện tại (Thông thường): {olive}%N{default}"
 	}
-
 	"SurvivorMVPTest_CommonKillsClient"
 	{
 		"en"		"Common kills for client: {olive}%d{default}"
-		"chi"		"客户端常见击杀：{olive}%d{default}"
-		"zho"		"客戶端常見擊殺：{olive}%d{default}"
-		"jp"		"クライアントの一般的なキル: {olive}%d{default}"
-		"ko"		"클라이언트의 일반적인 킬: {olive}%d{default}"
-		"vi"		"Các lần giết phổ biến cho khách hàng: {olive}%d{default}"
 	}
-
 	"SurvivorMVPTest_CIPercentClient"
 	{
 		"en"		"CI percent of client: {olive}%f{default}"
-		"chi"		"客户 CI 百分比：{olive}%f{default}"
-		"zho"		"客戶 CI 百分比：{olive}%f{default}"
-		"jp"		"クライアントの CI パーセント: {olive}%f{default}"
-		"ko"		"클라이언트의 CI 비율: {olive}%f{default}"
-		"vi"		"Phần trăm CI của khách hàng: {olive}%f{default}"
 	}
 }

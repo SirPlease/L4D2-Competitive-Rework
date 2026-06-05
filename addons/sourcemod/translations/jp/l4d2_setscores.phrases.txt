@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"L4D2Setscores_ScoreVotingIsnAllowedSpectators"
+	{
+		"jp"		"観客によるスコア投票は禁止されています。"
+	}
+	"L4D2Setscores_ScoreVoteCannotStartedNot"
+	{
+		"jp"		"スコア投票を開始できません。選手が足りない。"
+	}
+	"L4D2Setscores_ScoreVoteCannotStarted"
+	{
+		"jp"		"現在スコア投票を開始できません。"
+	}
+	"L4D2Setscores_ScoresSetSurInf"
+	{
+		"jp"		"{default}スコアを {olive}%d {default}（{green}生存者{default}）- {olive}%d {default}（{green}感染者{default}）に設定しました。実行者：{lightgreen}%s{default}。"
+	}
+	"L4D2Setscores_ScoresSetSurInfVote"
+	{
+		"jp"		"{default}投票によりスコアを {olive}%d {default}（{green}生存者{default}）- {olive}%d {default}（{green}感染者{default}）に設定しました。"
+	}
+}

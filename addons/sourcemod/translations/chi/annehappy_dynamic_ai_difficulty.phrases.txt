@@ -1,0 +1,31 @@
+"Phrases"
+{
+	"DynamicAIDifficulty_DynamicDifficultyRoundLocked"
+	{
+		"chi"		"{green}[AnneHappyAI]{default} 本回合动态难度已锁定为 {lightgreen}%s{default}。"
+	}
+	"DynamicAIDifficulty_FixedDynamicDifficulty"
+	{
+		"chi"		"{green}[AnneHappyAI]{default} 固定动态难度：{lightgreen}%s{default}。"
+	}
+	"DynamicAIDifficulty_SwitchedAutomaticDifficultyTakeEffect"
+	{
+		"chi"		"{green}[AnneHappyAI]{default} 已切换为自动难度，将从下一回合开始生效；当前回合难度不变。"
+	}
+	"DynamicAIDifficulty_SwitchedAutomaticDifficulty"
+	{
+		"chi"		"{green}[AnneHappyAI]{default} 已切换为自动难度。"
+	}
+	"DynamicAIDifficulty_DifficultyNextRoundFixedDifficulty"
+	{
+		"chi"		"{green}[AnneHappyAI]{default} 已固定下一回合难度为 {lightgreen}%s{default}；当前回合难度不变。"
+	}
+	"DynamicAIDifficulty_DifficultyCurrentRoundFixed"
+	{
+		"chi"		"{green}[AnneHappyAI]{default} 已固定当前回合难度为 {lightgreen}%s{default}。"
+	}
+	"DynamicAIDifficulty_L4DStatsAveragePersonalPPM"
+	{
+		"chi"		"{green}[AnneHappyAI]{default} l4d_stats 平均个人PPM %.2f，%d人积分 %d / %d分钟（季度%d人/总榜回退%d人），动态难度调整为 {lightgreen}%s{default}。"
+	}
+}

@@ -2,47 +2,47 @@
 {
 	"TagKills"
 	{
-		"vi"		"[{olive}1v1Stat{default}] {green}giết chết{default}:"
+		"vi"		"[{olive}1v1Stat{default}] {green}Hạ gục{default}:"
 	}
 	"TagSkeet"
 	{
-		"vi"		"[{olive}1v1Stat{default}] {green}Skeet{default}:"
+		"vi"		"[{olive}1v1Stat{default}] {green}Bắn rơi{default}:"
 	}
 	"TagAcc"
 	{
-		"vi"		"[{olive}1v1Stat{default}] {green}{default}:"
+		"vi"		"[{olive}1v1Stat{default}] {green}Độ chính xác{default}:"
 	}
 	"SI_DMG_CI"
 	{
 		"#format"	"{1:d},{2:d},{3:d}"
-		"vi"		"{olive}{1}{default} damage | {olive}{2}{default} kills | {olive}{3}{default} common\\n"
+		"vi"		"{olive}{1}{default} sát thương | {olive}{2}{default} hạ gục | {olive}{3}{default} zombie thường\n"
 	}
 	"SI_DMG"
 	{
 		"#format"	"{1:d},{2:d}"
-		"vi"		"{olive}{1}{default} damage | {olive}{2}{default} kills\\n"
+		"vi"		"{olive}{1}{default} sát thương | {olive}{2}{default} hạ gục\n"
 	}
 	"SI_CI"
 	{
 		"#format"	"{1:d},{2:d}"
-		"vi"		"{olive}{1}{default} kills | {olive}{2}{default} common\\n"
+		"vi"		"{olive}{1}{default} hạ gục | {olive}{2}{default} zombie thường\n"
 	}
 	"SI"
 	{
-		"vi"		"{olive}%d{default} kills\\n"
+		"vi"		"{olive}%d{default} hạ gục\n"
 	}
 	"SKEET"
 	{
 		"#format"	"{1:d},{2:d},{3:d}"
-		"vi"		"{olive}{1}{default} normal | {olive}{2}{default} hurt | {olive}{3}{default} deadstops\\n"
+		"vi"		"{olive}{1}{default} đầy máu | {olive}{2}{default} bị thương | {olive}{3}{default} chặn đứng\n"
 	}
 	"ACC_AllShots"
 	{
-		"vi"		"tất cả ảnh ({blue}%.0f%%{default})"
+		"vi"		"tất cả phát bắn ({blue}%.0f%%{default})"
 	}
 	"ACC_BuckShot"
 	{
-		"vi"		"| ảnh chụp ngược ({blue}%.0f%%{default})"
+		"vi"		" | đạn ghém ({blue}%.0f%%{default})"
 	}
 	"ACC_Melee"
 	{
@@ -50,6 +50,6 @@
 	}
 	"ACC_NoShotsFired"
 	{
-		"vi"		"No shots fired\\n"
+		"vi"		"Không bắn phát nào\n"
 	}
 }

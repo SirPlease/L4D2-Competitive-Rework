@@ -1,0 +1,55 @@
+"Phrases"
+{
+	"FixEngine_IdrowndamageDamageTempHPRestore"
+	{
+		"vi"		"m_idrowndmg = %d, dmg = %d, hp tạm thời cần khôi phục = %d"
+	}
+	"FixEngine_RestoringStartedPlayerUsingGlitch"
+	{
+		"vi"		"quá trình khôi phục đã bắt đầu (người chơi gặp trục trặc khi còn 1-10 mã lực"
+	}
+	"FixEngine_RestoreCountBeginningSeconds"
+	{
+		"vi"		"số lượng khôi phục = %d (bắt đầu sau %.0f giây)"
+	}
+	"FixEngine_RestoringStarted"
+	{
+		"vi"		"bắt đầu khôi phục"
+	}
+	"FixEngine_TempHealthLimitExceeded"
+	{
+		"vi"		"vượt quá giới hạn sức khỏe tạm thời"
+	}
+	"FixEngine_ResetDrownRestoredProp"
+	{
+		"vi"		"đặt lại chỗ dựa bị chết đuối đã khôi phục %N"
+	}
+	"FixEngine_TempGlitchFixed"
+	{
+		"vi"		"đã sửa lỗi tạm thời"
+	}
+	"FixEngine_StoppedTempGlitchFixTimer"
+	{
+		"vi"		"đã dừng bộ hẹn giờ sửa lỗi tạm thời"
+	}
+	"FixEngine_RestoringStopped"
+	{
+		"vi"		"khôi phục đã dừng"
+	}
+	"FixEngine_AttemptedUseLadderSpeedGlitch"
+	{
+		"vi"		"%N (%s) đã cố gắng sử dụng trục trặc về tốc độ bậc thang."
+	}
+	"FixEngine_SuspectedUsingNoFallDamage"
+	{
+		"vi"		"%N (%s) bị nghi ngờ sử dụng lỗi không gây sát thương khi rơi."
+	}
+	"FixEngine_AttemptedUseHealthBoostGlitch"
+	{
+		"vi"		"%N (%s) đã cố gắng sử dụng trục trặc tăng cường sức khỏe."
+	}
+	"FixEngine_AttemptedUseLadderReloadGlitch"
+	{
+		"vi"		"%N (%s) đã cố gắng sử dụng trục trặc khi tải lại bậc thang."
+	}
+}

@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"ChatProcessor_DeadChatCurrentlyRestricted"
+	{
+		"jp"		"現在、デッドチャットは制限されています。"
+	}
+}

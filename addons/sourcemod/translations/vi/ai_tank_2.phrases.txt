@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"AITank2_MapTotalLaddersInitializationDetection"
+	{
+		"vi"		"Bản đồ này có tổng cộng: Thang phát hiện khởi tạo %d %d"
+	}
+}

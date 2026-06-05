@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"AITank2_MapTotalLaddersInitializationDetection"
+	{
+		"jp"		"このマップには合計: %d ラダー %d 初期化検出ラダー"
+	}
+}

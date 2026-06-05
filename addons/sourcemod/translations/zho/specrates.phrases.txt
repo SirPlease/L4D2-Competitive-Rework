@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"Specrates_SpecRatesScoreLess30"
+	{
+		"zho"		"{green}[SpecRates]{default} 你的分數小於 30W，無法設定旁觀速率。"
+	}
+	"Specrates_SpecRatesNumberSpectatorsExceeds"
+	{
+		"zho"		"{green}[SpecRates]{default} 旁觀人數超過 %d，人滿僅允許 30tick。"
+	}
+	"Specrates_SpecRatesSet60tick"
+	{
+		"zho"		"{green}[SpecRates]{default} 已設定為 {lightgreen}60tick{default} 旁觀。"
+	}
+	"Specrates_SpecRatesAdministratorMatchSet"
+	{
+		"zho"		"{green}[SpecRates]{default} 管理員（對局）已設定為 {lightgreen}128tick{default}。"
+	}
+	"Specrates_SpecRatesAdministratorSpectatorSet"
+	{
+		"zho"		"{green}[SpecRates]{default} 管理員（旁觀）已設定為 {lightgreen}100tick{default}。"
+	}
+}

@@ -3,30 +3,13 @@
 	"HoldoutBonus_EventStartsBonusSecondsonds"
 	{
 		"en"		"{default}Holdout event starts... ({green}%i{default} bonus over {olive}%i{default} seconds)"
-		"chi"		"{default}Holdout 活动开始...（{green}%i{default} 奖金超过 {olive}%i{default} 秒）"
-		"zho"		"{default}Holdout 活動開始...（{green}%i{default} 獎金超過 {olive}%i{default} 秒）"
-		"jp"		"{default}ホールドアウト イベント開始... ({green}%i{default} ボーナス {olive}%i{default} 秒以上)"
-		"ko"		"{default}Holdout 이벤트 시작... ({green}%i{default} 보너스는 {olive}%i{default}초 이상)"
-		"vi"		"Sự kiện {default}Holdout bắt đầu... ({green}%i{default} tiền thưởng trên {olive}%i{default} giây)"
 	}
-
 	"HoldoutBonus_DynamicBonusSummary"
 	{
 		"en"		"{default}Holdout Bonus: %s"
-		"chi"		"{default}保留奖金：%s"
-		"zho"		"{default}保留獎金：%s"
-		"jp"		"{default}ホールドアウトボーナス: %s"
-		"ko"		"{default}홀드아웃 보너스: %s"
-		"vi"		"{default}Holdout Tiền thưởng: %s"
 	}
-
 	"HoldoutBonus_DynamicBonusSummary_2"
 	{
 		"en"		"{default}Holdout Bonus: {green}%i{default} out of {olive}%i{default}."
-		"chi"		"{default}保留奖金：{olive}%i{default} 中的 {green}%i{default}。"
-		"zho"		"{default}保留獎金：{olive}%i{default} 中的 {green}%i{default}。"
-		"jp"		"{default}ホールドアウトボーナス: {olive}%i{default}のうち、{green}%i{default}。"
-		"ko"		"{default}홀드아웃 보너스: {olive}%i{default} 중 {green}%i{default}."
-		"vi"		"{default}Holdout Tiền thưởng: {green}%i{default} trong tổng số {olive}%i{default}."
 	}
 }

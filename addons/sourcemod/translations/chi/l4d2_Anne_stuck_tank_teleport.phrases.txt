@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2StuckTankTeleport_RunningTooFastTeleportTank"
+	{
+		"chi"		"{lightgreen}%N {green} 跑太快，按门口阈值传送 Tank。"
+	}
+}

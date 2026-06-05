@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"L4D2LagcompManager_SuccessfullyEntitySuccessfullyAddedArray"
+	{
+		"ko"		"[성공] '%s(%d)' 엔터티가 지연 보상을 위해 배열에 추가되었습니다!"
+	}
+	"L4D2LagcompManager_ErrorCouldNotFindEntity"
+	{
+		"ko"		"[오류] 지연 보상을 위한 배열에서 '%s(%d)' 엔터티를 찾을 수 없습니다!"
+	}
+	"L4D2LagcompManager_ErrorEntityNotRemovedAfter"
+	{
+		"ko"		"[오류] '%s(%d)' 엔터티는 지연 보상을 위해 배열에서 삭제된 후 제거되지 않습니다!"
+	}
+	"L4D2LagcompManager_SuccessfullyEntityRemovedAfterDestroyed"
+	{
+		"ko"		"[성공] '%s(%d)' 개체가 지연 보상을 위해 배열에서 삭제된 후 제거되었습니다!"
+	}
+	"L4D2LagcompManager_ErrorEntityNeverAddedArray"
+	{
+		"ko"		"[오류] '%s(%d)' 엔터티가 지연 보상을 위해 배열에 추가된 적이 없습니다!"
+	}
+}

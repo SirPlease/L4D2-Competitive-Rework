@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2SniperBodyshot_VictimAttackerHitgroupWeapon"
+	{
+		"ko"		"피해자 %N, 공격자 %N, 히트 그룹 %s(%d), 무기: %s,"
+	}
+}

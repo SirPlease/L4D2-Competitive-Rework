@@ -1,0 +1,31 @@
+"Phrases"
+{
+	"L4DRandomBeamItem_InvalidTarget"
+	{
+		"vi"		"{green}Mục tiêu không hợp lệ."
+	}
+	"L4DRandomBeamItem_TargetEntityNoBeam"
+	{
+		"vi"		"Thực thể {green}Target không có chùm tia."
+	}
+	"L4DRandomBeamItem_BeamIndexTargetIndexClassname"
+	{
+		"vi"		"Chỉ số {olive}Beam: {lightgreen}%i {olive}Chỉ mục mục tiêu: {lightgreen}%i {olive}Tên lớp: {lightgreen}%s {olive}Mẫu: {lightgreen}%s {olive}Màu tia (RGB|Số nguyên): {lightgreen}%i %i %i|%i {olive}Độ sáng: {lightgreen}%.1f {olive}LĐộ dài: {lightgreen}%i {olive}Width: {lightgreen}%i Thang màu {olive}HDR: {lightgreen}%.1f"
+	}
+	"L4DRandomBeamItem_BeamConfigsReloaded"
+	{
+		"vi"		"Đã tải lại cấu hình {green}Beam."
+	}
+	"L4DRandomBeamItem_RemovedTargetEntityPluginBeam"
+	{
+		"vi"		"{green}Đã xóa chùm plugin thực thể mục tiêu."
+	}
+	"L4DRandomBeamItem_RemovedAllBeamsCreatedPlugin"
+	{
+		"vi"		"{green}Đã xóa tất cả các dầm được tạo bởi plugin."
+	}
+	"L4DRandomBeamItem_BeamAddedTargetEntity"
+	{
+		"vi"		"{green}Beam được thêm vào thực thể mục tiêu."
+	}
+}

@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"SAMVS_DebugChatting"
+	{
+		"ko"		"[디버그] %N 채팅 중"
+	}
+	"SAMVS_DebugPressedButton"
+	{
+		"ko"		"[디버그] %N가 버튼을 눌렀습니다 (%d)"
+	}
+	"SAMVS_DebugSAMCheckIdlesFired"
+	{
+		"ko"		"[디버그] SAM_t_CheckIdles()-> 실행됨, RUP = %b!"
+	}
+	"SAMVS_DebugSAMCheckIdlesBussy"
+	{
+		"ko"		"[디버그] SAM_t_CheckIdles()-> %N는 버스/탱크입니다. 우리는 그를 건너뛴다..."
+	}
+	"SAMVS_DebugSAMCheckIdlesDancing"
+	{
+		"ko"		"[디버그] SAM_t_CheckIdles()-> %N가 춤을 추고 있습니다. 건너뛰세요..."
+	}
+	"SAMVS_DebugSAMCheckIdlesMoved"
+	{
+		"ko"		"[디버그] SAM_t_CheckIdles()-> %N가 사양으로 이동되었습니다(%.1fsec의 경우 AFK였습니다)."
+	}
+	"SAMVS_DebugSAMCheckIdlesAFK"
+	{
+		"ko"		"[디버그] SAM_t_CheckIdles()-> %N AFK, 타이머 %x hndl"
+	}
+	"SAMVS_DebugSAMTimeKillTimer"
+	{
+		"ko"		"[디버그] SAM_TimeToKill(%N)-> %x 타이머 hndl 종료"
+	}
+	"SAMVS_DebugSAMActionKickPlayer"
+	{
+		"ko"		"[디버그] SAM_t_ActionKick(%N) 플레이어 킥"
+	}
+}

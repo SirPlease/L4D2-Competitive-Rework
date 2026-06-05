@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2AILadderBoost_LadderAccelerationGetLadderAcceleration"
+	{
+		"vi"		"[Tăng tốc thang] %s Nhận tăng tốc thang"
+	}
+	"L4D2AILadderBoost_LadderAccelerationRestoreOriginalSpeed"
+	{
+		"vi"		"[Tăng tốc thang] %s khôi phục tốc độ ban đầu"
+	}
+}

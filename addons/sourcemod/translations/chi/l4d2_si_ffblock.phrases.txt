@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2SIFfblock_HookWitchTakeDamageVictim"
+	{
+		"chi"		"Hook_WitchOnTakeDamage。 iVictim：%s（%d），iAttacker：%N（%d），ZClass：%s（%d），iInflictor：%d，fDamage：%f，iDamagetype： %d"
+	}
+	"L4D2SIFfblock_HookPlayerTakeDamageVictim"
+	{
+		"chi"		"Hook_PlayerOnTakeDamage。 iVictim：%N（%d），iAttacker：%N（%d），ZClass：%s（%d），iInflictor：%d，fDamage：%f，iDamagetype： %d"
+	}
+}

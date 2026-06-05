@@ -86,7 +86,7 @@
 	}
 	"RPG_FirstUseSetchTitleName"
 	{
-		"chi"		"{green}你必须先用{lightgreen}!setch \\\\\\\"你想要的称号名字\\\\\\\" {green}设置好你的自定义称号"
+		"chi"		"{green}你必须先用{lightgreen}!setch \"你想要的称号名字\" {green}设置好你的自定义称号"
 	}
 	"RPG_TitleModuleNotEnabledTitle"
 	{

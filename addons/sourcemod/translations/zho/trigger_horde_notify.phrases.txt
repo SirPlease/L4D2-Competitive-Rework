@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Alarmed_Car"
+	{
+		"zho"		"{olive}%N{green} 觸發了警報車!"
+	}
+	"Horde"
+	{
+		"zho"		"{olive}%N{green} 觸發了屍潮事件!"
+	}
+	"Final Rescue Start"
+	{
+		"zho"		"{green}最後救援開始!"
+	}
+	"Final Rescue"
+	{
+		"zho"		"{blue}%N{olive} 觸發了救援開關!"
+	}
+}

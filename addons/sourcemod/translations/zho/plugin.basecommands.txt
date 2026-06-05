@@ -12,42 +12,42 @@
 	"Value of cvar"
 	{
 		"#format"	"{1:s},{2:s}"
-		"zho"		"cvar \\\"{1}\\\" 的值: \\\"{2}\\\" "
+		"zho"		"cvar \"{1}\" 的值: \"{2}\" "
 	}
 	"Cvar changed"
 	{
 		"#format"	"{1:s},{2:s}"
-		"zho"		"cvar 己由 \\\"{1}\\\" 更改為 \\\"{2}\\\". "
+		"zho"		"cvar 己由 \"{1}\" 更改為 \"{2}\". "
 	}
 	"Config not found"
 	{
 		"#format"	"{1:s}"
-		"zho"		"未找到設定文件 \\\"{1}\\\" "
+		"zho"		"未找到設定文件 \"{1}\" "
 	}
 	"Executed config"
 	{
 		"#format"	"{1:s}"
-		"zho"		"己執行設定文件 \\\"{1}\\\". "
+		"zho"		"己執行設定文件 \"{1}\". "
 	}
 	"Permabanned player"
 	{
 		"#format"	"{1:s}"
-		"zho"		"已永久封鎖玩家 \\\"{1}\\\" "
+		"zho"		"已永久封鎖玩家 \"{1}\" "
 	}
 	"Permabanned player reason"
 	{
 		"#format"	"{1:s},{2:s}"
-		"zho"		"已永久封鎖玩家 \\\"{1}\\\" (原因: {2})."
+		"zho"		"已永久封鎖玩家 \"{1}\" (原因: {2})."
 	}
 	"Banned player"
 	{
 		"#format"	"{1:s},{2:d}"
-		"zho"		"封鎖玩家 \\\"{1}\\\" {2} 分鐘 "
+		"zho"		"封鎖玩家 \"{1}\" {2} 分鐘 "
 	}
 	"Banned player reason"
 	{
 		"#format"	"{1:s},{2:d},{3:s}"
-		"zho"		"封鎖玩家 \\\"{1}\\\" {2} 分鐘 (原因: {3})."
+		"zho"		"封鎖玩家 \"{1}\" {2} 分鐘 (原因: {3})."
 	}
 	"Removed bans matching"
 	{
@@ -77,22 +77,22 @@
 	"Admin logged in as"
 	{
 		"#format"	"{1:s},{2:s},{3:s}"
-		"zho"		"\\\"{1}\\\" 以 \\\"{2}\\\" 身份登錄並具有權限: {3} "
+		"zho"		"\"{1}\" 以 \"{2}\" 身份登錄並具有權限: {3} "
 	}
 	"Admin logged in anon"
 	{
 		"#format"	"{1:s},{2:s}"
-		"zho"		"\\\"{1}\\\" 具備權限: {2}"
+		"zho"		"\"{1}\" 具備權限: {2}"
 	}
 	"Player is not an admin"
 	{
 		"#format"	"{1:s}"
-		"zho"		"\\\"{1}\\\" 並非管理員."
+		"zho"		"\"{1}\" 並非管理員."
 	}
 	"Player is an admin"
 	{
 		"#format"	"{1:s}"
-		"zho"		"\\\"{1}\\\" 是管理員."
+		"zho"		"\"{1}\" 是管理員."
 	}
 	"Username"
 	{

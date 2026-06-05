@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"VisualiseImpacts_NoteUseCommandRemovedecalsClient"
+	{
+		"vi"		"[Lưu ý] Sử dụng lệnh `r_removedecals` để khách hàng xóa đề can cũ."
+	}
+}

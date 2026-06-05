@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2JockeyUnteleport_VoidMonkeyRepairTeleportedBack"
+	{
+		"ko"		"{blue}[공허 원숭이 수리] {default}는 공허 원숭이가 순간이동한 %N를 다시 ​​순간이동시켰습니다."
+	}
+}

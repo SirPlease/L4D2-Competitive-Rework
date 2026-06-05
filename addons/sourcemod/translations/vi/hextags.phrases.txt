@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"Hextags_SMTitleSetSuccessfully"
+	{
+		"vi"		"[SM] Tiêu đề %s được đặt thành công"
+	}
+}

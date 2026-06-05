@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2BlockBotPills_BotBlockPillsPreventedAccidental"
+	{
+		"vi"		"{green}[{default}Bot Block Pills{green}]{default}: Thuốc vô tình được ngăn chặn bởi %N"
+	}
+	"L4D2BlockBotPills_BotBlockPillsBotWants"
+	{
+		"vi"		"{green}[{default}Bot Block Pills{green}]{default}: Bot {blue}%N{default} muốn sử dụng thuốc giảm đau. Đang chặn hành động này..."
+	}
+}

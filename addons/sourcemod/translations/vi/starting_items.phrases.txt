@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"StartingItems_DetermineItems"
+	{
+		"vi"		"Xác địnhItems()"
+	}
+}

@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"MapChanger_VoteWhetherEnableRescueMap"
+	{
+		"vi"		"{green}[MapChanger]{default} Bình chọn: Việc bật bản đồ giải cứu này có thất bại hay không {olive}%d{default} thay đổi bản đồ tự động?"
+	}
+	"MapChanger_Voted"
+	{
+		"vi"		"{green}[MapChanger]{default} %N Đã bình chọn."
+	}
+	"MapChanger_RescueMapEnabledFailedAutomatically"
+	{
+		"vi"		"{green}[MapChanger]{default} Bản đồ cứu hộ này đã được bật và không thể tự động thay đổi bản đồ {olive}%d{default} lần."
+	}
+	"MapChanger_RescueMapTurnedOffAutomatically"
+	{
+		"vi"		"{green}[MapChanger]{default} Bản đồ cứu hộ này đã bị tắt để tự động thay đổi bản đồ sau một số lần thất bại."
+	}
+}

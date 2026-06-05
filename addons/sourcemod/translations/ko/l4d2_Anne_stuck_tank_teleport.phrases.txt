@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2StuckTankTeleport_RunningTooFastTeleportTank"
+	{
+		"ko"		"{lightgreen}%N {green} 너무 빨리 달리면 문지방에 따라 탱크를 텔레포트합니다."
+	}
+}

@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"L4D2MeleeDamageControl_MeleeDmgFixInfectedClass"
+	{
+		"ko"		"[MeleeDmgFix] 감염됨: (%N) %d, 클래스: %s (%d), 공격자: (%N) %d, 침해자: %d, 피해: %f, 피해 유형: %d, 세트 데미지: %f"
+	}
+	"L4D2MeleeDamageControl_MeleeDmgControlChargerAttacker"
+	{
+		"ko"		"[MeleeDmgControl] 충전기: (%N) %d, 공격자: (%N) %d, 적용자: %d, 데미지: %f, 데미지 유형: %d, 세트 데미지: %f"
+	}
+	"L4D2MeleeDamageControl_MeleeDmgControlTankAttacker"
+	{
+		"ko"		"[MeleeDmgControl] 탱크: (%N) %d, 공격자: (%N) %d, 적용자: %d, 데미지: %f, 데미지 유형: %d, 세트 데미지: %f"
+	}
+	"L4D2MeleeDamageControl_ClassName"
+	{
+		"ko"		"s클래스 이름: %s (%d)"
+	}
+}

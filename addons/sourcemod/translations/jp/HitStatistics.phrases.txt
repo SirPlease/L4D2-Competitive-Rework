@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"HitStatistics_NotSurvivor"
+	{
+		"jp"		"あなたは生存者ではありません。"
+	}
+}

@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"SurvivorLegs_ClientSequenceLegsSequence"
+	{
+		"ko"		"클라이언트(m_nSequence)[%i] 다리(m_nSequence)[%i]"
+	}
+}

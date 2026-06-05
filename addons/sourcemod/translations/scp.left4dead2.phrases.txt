@@ -3,41 +3,41 @@
 	"L4D_Chat_Infected"
 	{
 		"#format"	"{1:s},{2:s}"
-		"en"			"{default}(Infected) {1} {default}:  {2}"
+		"en"		"{default}(Infected) {1} {default}:  {2}"
 	}
 	"L4D_Chat_Survivor"
 	{
 		"#format"	"{1:s},{2:s}"
-		"en"			"{default}(Survivor) {1} {default}:  {2}"
+		"en"		"{default}(Survivor) {1} {default}:  {2}"
 	}
 	"L4D_Chat_Infected_Dead"
 	{
 		"#format"	"{1:s},{2:s}"
-		"en"			"{default}*DEAD*(Infected) {1} {default}:  {2}"
+		"en"		"{default}*DEAD*(Infected) {1} {default}:  {2}"
 	}
 	"L4D_Chat_Survivor_Dead"
 	{
 		"#format"	"{1:s},{2:s}"
-		"en"			"{default}*DEAD*(Survivor) {1} {default}:  {2}"
+		"en"		"{default}*DEAD*(Survivor) {1} {default}:  {2}"
 	}
 	"L4D_Chat_Spec"
 	{
 		"#format"	"{1:s},{2:s}"
-		"en"			"{default}(Spectator) {1} {default}:  {2}"
+		"en"		"{default}(Spectator) {1} {default}:  {2}"
 	}
 	"L4D_Chat_All"
 	{
 		"#format"	"{1:s},{2:s}"
-		"en"			"{default}{1} {default}:  {2}"
+		"en"		"{default}{1} {default}:  {2}"
 	}
 	"L4D_Chat_AllDead"
 	{
 		"#format"	"{1:s},{2:s}"
-		"en"			"{default}*DEAD* {1} {default}:  {2}"
+		"en"		"{default}*DEAD* {1} {default}:  {2}"
 	}
 	"L4D_Chat_AllSpec"
 	{
 		"#format"	"{1:s},{2:s}"
-		"en"			"{default}*SPEC* {1} {default}:  {2}"
+		"en"		"{default}*SPEC* {1} {default}:  {2}"
 	}
 }

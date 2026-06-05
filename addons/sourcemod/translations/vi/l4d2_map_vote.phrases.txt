@@ -1,0 +1,59 @@
+"Phrases"
+{
+	"L4D2MapVote_MapnextChatPrompt"
+	{
+		"vi"		"Nhập {default} vào thanh trò chuyện {olive}!mapnext {default} để bỏ phiếu cho bản đồ tiếp theo."
+	}
+	"L4D2MapVote_VPKCampaignListsRefreshed"
+	{
+		"vi"		"{olive}[MapVote]{default} Danh sách VPK và chiến dịch đã được làm mới."
+	}
+	"L4D2MapVote_VPKRefreshCooldownRemaining"
+	{
+		"vi"		"Quá trình làm mới VPK đang nguội dần và sẽ mất %.1f giây."
+	}
+	"L4D2MapVote_PrePluginNotInstalled"
+	{
+		"vi"		"Plugin trước chưa được cài đặt"
+	}
+	"L4D2MapVote_CurrentMapNotFinalMap"
+	{
+		"vi"		"Bản đồ hiện tại không phải là bản đồ cuối cùng"
+	}
+	"L4D2MapVote_SpectatorsCannotVote"
+	{
+		"vi"		"Khán giả không thể bỏ phiếu"
+	}
+	"L4D2MapVote_VotingInProgressCannotStartNewVote"
+	{
+		"vi"		"Đang tiến hành bỏ phiếu, chưa thể bắt đầu bỏ phiếu mới"
+	}
+	"L4D2MapVote_NoValidChapterMapExists"
+	{
+		"vi"		"Không tồn tại bản đồ chương hợp lệ"
+	}
+	"L4D2MapVote_InitiatesVoteSetsNextMap"
+	{
+		"vi"		"{blue}%N {default} bắt đầu bỏ phiếu {olive} đặt bản đồ tiếp theo thành: %s"
+	}
+	"L4D2MapVote_Voted"
+	{
+		"vi"		"{blue}%N {default} đã bình chọn"
+	}
+	"L4D2MapVote_SetupFailed"
+	{
+		"vi"		"Thiết lập không thành công"
+	}
+	"L4D2MapVote_NextMapSet"
+	{
+		"vi"		"{default}Bản đồ tiếp theo đã được đặt thành {olive}%s"
+	}
+	"L4D2MapVote_InitiatesVoteReplacementCampaign"
+	{
+		"vi"		"{blue}%N {default} bắt đầu bỏ phiếu {olive} Chiến dịch thay thế: %s"
+	}
+	"L4D2MapVote_InitiatesVoteChangeMap"
+	{
+		"vi"		"{blue}%N {default} bắt đầu bỏ phiếu {olive} Thay đổi bản đồ: %s (%s)"
+	}
+}

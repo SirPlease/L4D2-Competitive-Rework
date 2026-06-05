@@ -1,0 +1,43 @@
+"Phrases"
+{
+	"Vote_AdministratorCanceledCurrentVote"
+	{
+		"zho"		"[{olive}vote{default}] {blue}管理員取消了目前投票!"
+	}
+	"Vote_BystandersNotAllowedVoteExecute"
+	{
+		"zho"		"[{olive}vote{default}] {blue}旁觀者不允許投票執行指令或cfg檔!"
+	}
+	"Vote_NoRelatedFilesExist"
+	{
+		"zho"		"[{olive}vote{default}] {red}沒有相關的檔案存在."
+	}
+	"Vote_CannotVoteResetCurrentMap"
+	{
+		"zho"		"[{olive}vote{default}] {red}對局開始後不能投票重置當前地圖."
+	}
+	"Vote_InitiatedVote"
+	{
+		"zho"		"[{olive}vote{default}] {blue}%N 發起了一個投票"
+	}
+	"Vote_AlreadyVoteProgress"
+	{
+		"zho"		"[{olive}vote{default}] {red}已經有一個投票正在進行."
+	}
+	"Vote_InitiatesVoteKick"
+	{
+		"zho"		"[{olive}vote{default}] {blue}%N {default}發起投票踢出 {blue} %N"
+	}
+	"Vote_NotPreventBanMisusedRequires"
+	{
+		"zho"		"[{olive}vote{default}] {red}未防止封鎖被亂用，需要10w以上積分玩家才能使用."
+	}
+	"Vote_UsePowerCautionAbuseBans"
+	{
+		"zho"		"[{olive}vote{default}] {red}請謹慎使用您的權力，亂用封禁會導致您的帳戶面臨封鎖（首次7天，第二次一個月，第三次永久）."
+	}
+	"Vote_InitiatesVoteBanOneDay"
+	{
+		"zho"		"[{olive}vote{default}] {blue}%N {default}發起投票封鎖 {blue} %N 一天"
+	}
+}

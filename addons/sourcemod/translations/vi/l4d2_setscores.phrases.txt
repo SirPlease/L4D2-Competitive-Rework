@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"L4D2Setscores_ScoreVotingIsnAllowedSpectators"
+	{
+		"vi"		"Việc bỏ phiếu điểm không được phép đối với khán giả."
+	}
+	"L4D2Setscores_ScoreVoteCannotStartedNot"
+	{
+		"vi"		"Không thể bắt đầu bỏ phiếu theo điểm. Không đủ người chơi."
+	}
+	"L4D2Setscores_ScoreVoteCannotStarted"
+	{
+		"vi"		"Việc bỏ phiếu cho điểm không thể bắt đầu ngay bây giờ."
+	}
+	"L4D2Setscores_ScoresSetSurInf"
+	{
+		"vi"		"{default}Điểm đã được đặt thành {olive}%d {default}({green}Sống sót{default}) - {olive}%d {default}({green}Nhiễm{default}) bởi {lightgreen}%s{default}."
+	}
+	"L4D2Setscores_ScoresSetSurInfVote"
+	{
+		"vi"		"{default}Điểm đã được đặt thành {olive}%d {default}({green}Sống sót{default}) - {olive}%d {default}({green}Nhiễm{default}) bằng bỏ phiếu."
+	}
+}

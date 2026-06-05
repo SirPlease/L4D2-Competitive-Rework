@@ -1,0 +1,27 @@
+"Phrases"
+{
+	"L4D2Scoremod_Round1Bonus"
+	{
+		"chi"		"{blue}[{default}!{blue}] {default}R圆{blue}1 {default}奖金：{olive}%d"
+	}
+	"L4D2Scoremod_CustomMaxDistance"
+	{
+		"chi"		"{blue}[{default}!{blue}] {default}自定义最大距离：{olive}%d"
+	}
+	"L4D2Scoremod_Round2Bonus"
+	{
+		"chi"		"{blue}[{default}!{blue}] {default}R圆{blue}2 {default}奖金：{olive}%d"
+	}
+	"L4D2Scoremod_Difference"
+	{
+		"chi"		"{red}[{default}!{red}] {default}区别：{olive}%d"
+	}
+	"L4D2Scoremod_Round1BonusDifference"
+	{
+		"chi"		"{blue}[{default}!{blue}] {default}R圆{blue}1 {default}奖金：{olive}%d {default}({green}区别： {olive}%d{default}）"
+	}
+	"L4D2Scoremod_HealthBonus"
+	{
+		"chi"		"{blue}[{default}!{blue}] {default}健康奖励：{olive}%d"
+	}
+}

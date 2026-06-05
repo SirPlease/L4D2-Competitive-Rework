@@ -2,43 +2,43 @@
 {
 	"TagKills"
 	{
-		"ko"		"[{olive}1v1Stat{default}] {green}사망{default}:"
+		"ko"		"[{olive}1v1Stat{default}] {green}처치 수{default}:"
 	}
 	"TagSkeet"
 	{
-		"ko"		"[{olive}1v1Stat{default}] {green}스키트{default}:"
+		"ko"		"[{olive}1v1Stat{default}] {green}공중 격추{default}:"
 	}
 	"TagAcc"
 	{
-		"ko"		"[{olive}1v1Stat{default}] {green}정확도{default}:"
+		"ko"		"[{olive}1v1Stat{default}] {green}명중률{default}:"
 	}
 	"SI_DMG_CI"
 	{
 		"#format"	"{1:d},{2:d},{3:d}"
-		"ko"		"{olive}{1}{default} damage | {olive}{2}{default} kills | {olive}{3}{default} common\\n"
+		"ko"		"{olive}{1}{default} 피해 | {olive}{2}{default} 처치 | {olive}{3}{default} 일반 감염자\n"
 	}
 	"SI_DMG"
 	{
 		"#format"	"{1:d},{2:d}"
-		"ko"		"{olive}{1}{default} damage | {olive}{2}{default} kills\\n"
+		"ko"		"{olive}{1}{default} 피해 | {olive}{2}{default} 처치\n"
 	}
 	"SI_CI"
 	{
 		"#format"	"{1:d},{2:d}"
-		"ko"		"{olive}{1}{default} kills | {olive}{2}{default} common\\n"
+		"ko"		"{olive}{1}{default} 처치 | {olive}{2}{default} 일반 감염자\n"
 	}
 	"SI"
 	{
-		"ko"		"{olive}%d{default} kills\\n"
+		"ko"		"{olive}%d{default} 처치\n"
 	}
 	"SKEET"
 	{
 		"#format"	"{1:d},{2:d},{3:d}"
-		"ko"		"{olive}{1}{default} normal | {olive}{2}{default} hurt | {olive}{3}{default} deadstops\\n"
+		"ko"		"{olive}{1}{default} 일반 | {olive}{2}{default} 부상 | {olive}{3}{default} 저지\n"
 	}
 	"ACC_AllShots"
 	{
-		"ko"		"모든 샷({blue}%.0f%%{default})"
+		"ko"		"모든 사격 ({blue}%.0f%%{default})"
 	}
 	"ACC_BuckShot"
 	{
@@ -50,6 +50,6 @@
 	}
 	"ACC_NoShotsFired"
 	{
-		"ko"		"No shots fired\\n"
+		"ko"		"발사한 탄 없음\n"
 	}
 }

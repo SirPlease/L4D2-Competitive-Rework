@@ -3,20 +3,9 @@
 	"L4D2Dirspawn_DirSpawnKVGenerated"
 	{
 		"en"		"[DirSpawn] KV generated: %s"
-		"chi"		"[DirSpawn] KV 已生成: %s"
-		"zho"		"[DirSpawn] KV 已產生: %s"
-		"jp"		"[DirSpawn] 生成された KV: %s"
-		"ko"		"[DirSpawn] KV 생성: %s"
-		"vi"		"[DirSpawn] KV được tạo: %s"
 	}
-
 	"L4D2Dirspawn_DirSpawnFailedWriteKV"
 	{
 		"en"		"[DirSpawn] Failed to write KV: %s"
-		"chi"		"[DirSpawn] 写入 KV 失败: %s"
-		"zho"		"[DirSpawn] 寫入 KV 失敗: %s"
-		"jp"		"[DirSpawn] KV の書き込みに失敗しました: %s"
-		"ko"		"[DirSpawn] KV 작성 실패: %s"
-		"vi"		"[DirSpawn] Không ghi được KV: %s"
 	}
 }

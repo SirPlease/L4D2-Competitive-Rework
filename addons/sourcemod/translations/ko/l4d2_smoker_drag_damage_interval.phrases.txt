@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"L4D2SmokerDragDamageInterval_TongueContinuityDragChokeDamage"
+	{
+		"ko"		"[tongue_continuity] %N 드래그->초크: 손상 시계 계속 - %.2f의 다음 손상(바닐라는 %.2f로 재설정됨)"
+	}
+	"L4D2SmokerDragDamageInterval_TongueContinuityChokeDragDamage"
+	{
+		"ko"		"[tongue_continuity] %N 초크->드래그: 손상 시계 계속 - %.2f의 다음 손상(바닐라는 즉시 발사되었을 것입니다)"
+	}
+	"L4D2SmokerDragDamageInterval_DebugVictimDamageTimeGame"
+	{
+		"ko"		"[디버그] 피해자: %N, %s피해: %f, 시간: %f, 게임 시간: %f"
+	}
+}

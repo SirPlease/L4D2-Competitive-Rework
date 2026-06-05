@@ -2,46 +2,46 @@
 {
 	"Tag"
 	{
-		"chi"		"< {olive} 部落 {default} >"
+		"chi"		"<{olive}尸潮{default}>"
 	}
 	"TankPlay"
 	{
-		"chi"		"由于坦克在场，部落已暂停 {blue} {default}！通过 {blue} %0.1f%% {default} 进行进度将启动部落。"
+		"chi"		"由于坦克在场，尸潮已{blue}暂停{default}！继续推进 {blue}%0.1f%%{default} 将启动尸潮。"
 	}
 	"UntilHordeStarts"
 	{
-		"chi"		"{blue} %0.1f%% {default} 离开，直到部落开始..."
+		"chi"		"距离尸潮开始还剩 {blue}%0.1f%%{default}..."
 	}
 	"HordeResumed"
 	{
-		"chi"		"部落已{blue}恢复{default}在{green} %i%%强度{default}，推送会增加部落。"
+		"chi"		"尸潮已{blue}恢复{default}，当前为{green}%i%% 强度{default}，继续推进会增强尸潮。"
 	}
 	"HordeStrength"
 	{
-		"chi"		"部落处于{green} %i%% 实力{default}..."
+		"chi"		"尸潮当前为{green}%i%% 强度{default}..."
 	}
 	"HordeVeryStrength"
 	{
-		"chi"		"{red} 幸存者已经把{default}推得太远了，部落在{green} 100 %% 强度{default}！"
+		"chi"		"{red}幸存者推进太远了{default}，尸潮已达到{green}100%% 强度{default}！"
 	}
 	"L4D2TankHordeMonitor_HordeZombieWaveTemporarilySuspended"
 	{
-		"chi"		"<{olive}Horde{default}> 尸潮暂时因为Tank在场 {blue}暂停{default} ! 再往前走 {blue}%0.1f%%{default} 路程将会重新开始刷出尸潮."
+		"chi"		"<{olive}尸潮{default}> 尸潮暂时因为 Tank 在场 {blue}暂停{default}！再往前走 {blue}%0.1f%%{default} 路程将会重新开始刷出尸潮."
 	}
 	"L4D2TankHordeMonitor_HordeNoteWaveZombiesStarted"
 	{
-		"chi"		"<{olive}Horde{default}> 请注意！离尸潮再次开启剩余{blue}%0.1f%%{default} 路程..."
+		"chi"		"<{olive}尸潮{default}> 请注意！离尸潮再次开启剩余 {blue}%0.1f%%{default} 路程..."
 	}
 	"L4D2TankHordeMonitor_HordeZombieTideRestoredCurrent"
 	{
-		"chi"		"<{olive}部落{default}> 僵尸潮有 {blue} 恢复为 {default}。目前的强度是 {green}%i%%。继续前进，丧尸潮的强度将会加大。"
+		"chi"		"<{olive}尸潮{default}> 尸潮已经 {blue}恢复{default}，当前为 {green}%i%% 强度，继续推进会增加尸潮的强度。"
 	}
 	"L4D2TankHordeMonitor_HordeCurrentZombieWaveIntensity"
 	{
-		"chi"		"<{olive}Horde{default}> 尸潮当前为 {green}%i%% 强度{default}..."
+		"chi"		"<{olive}尸潮{default}> 尸潮当前为 {green}%i%% 强度{default}..."
 	}
 	"L4D2TankHordeMonitor_HordeSurvivorsAdvancedTooFar"
 	{
-		"chi"		"<{olive}Horde{default}> 生还者推进过远, 尸潮强度更改为 {green}100%% {default}!"
+		"chi"		"<{olive}尸潮{default}> 生还者推进过远，尸潮强度更改为 {green}100%% {default}!"
 	}
 }

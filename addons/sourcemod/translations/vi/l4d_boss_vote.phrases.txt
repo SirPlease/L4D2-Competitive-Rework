@@ -30,7 +30,7 @@
 	}
 	"Usage2"
 	{
-		"vi"		"Sử dụng {default} \\\\\\\" {blue} 0 {default} \\\\\\\" cho {olive} Không sinh sản {default}, \\\\\\\" {blue} -1 {default} \\\\\\\" cho {olive} Sự thiếu hiểu biết."
+		"vi"		"Sử dụng {default} \" {blue} 0 {default} \" cho {olive} Không sinh sản {default}, \" {blue} -1 {default} \" cho {olive} Sự thiếu hiểu biết."
 	}
 	"Invalid"
 	{

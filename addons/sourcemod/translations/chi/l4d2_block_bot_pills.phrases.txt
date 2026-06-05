@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2BlockBotPills_BotBlockPillsPreventedAccidental"
+	{
+		"chi"		"{green}[{default}Bot Block Pills{green}]{default}：%N 预防意外服用的药丸"
+	}
+	"L4D2BlockBotPills_BotBlockPillsBotWants"
+	{
+		"chi"		"{green}[{default}Bot Block Pills{green}]{default}：机器人 {blue}%N{default} 想要使用止痛药。阻止此操作..."
+	}
+}

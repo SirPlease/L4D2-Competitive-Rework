@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"SimpleWitchBonus_KillingWitchAwardedPoints"
+	{
+		"zho"		"{default}殺死魔女已獎勵：{olive}%d {default}積分！"
+	}
+}

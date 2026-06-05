@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"L4D2UncommonBlocker_UncommonInfectedSpawnedEntityModel"
+	{
+		"vi"		"Nhiễm trùng không phổ biến sinh sản! Thực thể: %d, model: %s, giới tính: %d, cờ plugin: %d, bị chặn: %s."
+	}
+	"L4D2UncommonBlocker_2BlockedUncommonInfectedEntity"
+	{
+		"vi"		"2 Bị chặn không phổ biến bị nhiễm bệnh! Thực thể: %d, vị trí: %.0f %.0f %.0f, mobRush: %s."
+	}
+	"L4D2UncommonBlocker_SpawnedNewInfectedEntityLocation"
+	{
+		"vi"		"Sinh ra mới bị nhiễm bệnh! Thực thể: %d, vị trí: %.0f %.0f %.0f, mobRush: %s."
+	}
+}

@@ -1,0 +1,51 @@
+"Phrases"
+{
+	"L4D2DamageShow_HUDSavedLocallyCookieQueued"
+	{
+		"zho"		"{olive}[HUD]{default} 已儲存至本機（Cookie），並已排隊，待載入完成後寫入資料庫。"
+	}
+	"L4D2DamageShow_HUDSettingsSavedLocallyCookie"
+	{
+		"zho"		"{olive}[HUD]{default} 設定已儲存至本機（Cookie）。 MySQL 未啟用或無法使用。"
+	}
+	"L4D2DamageShow_HUDSettingsSavedLocallyCookieUnable"
+	{
+		"zho"		"{olive}[HUD]{default} 設定已儲存至本機（Cookie）。無法取得有效 SteamID。"
+	}
+	"L4D2DamageShow_HUDSettingsSavedLocalCookie"
+	{
+		"zho"		"{olive}[HUD]{default} 設定已儲存（本地 Cookie + 資料庫）。"
+	}
+	"L4D2DamageShow_HUDMenuCannotUsedAdministrator"
+	{
+		"zho"		"{olive}[HUD]{default} 未滿足管理員 Flag 要求，無法使用此功能表。"
+	}
+	"L4D2DamageShow_HUDSettingsSaved"
+	{
+		"zho"		"{olive}[HUD]{default} 設定已儲存。"
+	}
+	"L4D2DamageShow_HUDOnlyAdministratorsCanModify"
+	{
+		"zho"		"{olive}[HUD]{default} 只有管理者可以修改分享範圍。"
+	}
+	"L4D2DamageShow_HUDAdministratorSharedExternally"
+	{
+		"zho"		"{olive}[HUD]{default} 管理員對外分享已%s。"
+	}
+	"L4D2DamageShow_HUDOnlyAdministratorsCanTurn"
+	{
+		"zho"		"{olive}[HUD]{default} 只有管理者可開啟此選項。"
+	}
+	"L4D2DamageShow_SpectatorDisplayToggled"
+	{
+		"zho"		"{green}旁觀顯示{default}已切換：{olive}%s"
+	}
+	"L4D2DamageShow_OnlyAdministratorsWatchingCanUse"
+	{
+		"zho"		"{lightgreen}只有旁觀的管理員可以使用此開關。"
+	}
+	"L4D2DamageShow_HUDFunctionDisabledAdministratorFlag"
+	{
+		"zho"		"{olive}[HUD]{default} 功能已停用：未滿足管理員 Flag 要求（%s）。"
+	}
+}

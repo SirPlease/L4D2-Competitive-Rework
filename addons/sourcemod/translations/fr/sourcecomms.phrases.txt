@@ -1,0 +1,438 @@
+"Phrases"
+{
+	"Muted on connect"
+	{
+		"fr"		"Vous avez été muté!"
+	}
+	"Gagged on connect"
+	{
+		"fr"		"Vous avez été mis en muté du chat!"
+	}
+	"Mute expired"
+	{
+		"fr"		"Votre mute a expiré."
+	}
+	"Gag expired"
+	{
+		"fr"		"Votre mute du chat a expiré."
+	}
+	"FWUnmute"
+	{
+		"fr"		"Votre mute a été supprimée."
+	}
+	"FWUngag"
+	{
+		"fr"		"Votre mute du chat a été supprimé."
+	}
+	"Usage_time"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Temps: {1} minutes, si non spécifié; permanent, si 0.\nIf <0, bloque pour la session."
+	}
+	"Player Comms Not Verified"
+	{
+		"fr"		"Ce joueur n'a pas été vérifié. Veuillez attendre 30 secondes avant de réessayer."
+	}
+	"Player already muted"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Le joueur {1} est déjà muté!"
+	}
+	"Player already gagged"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Le joueur {1} est déjà muté du chat!"
+	}
+	"Player already silenced"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Le joueur {1} est déjà muté ou muté du chat!"
+	}
+	"Player not muted"
+	{
+		"fr"		"Le joueur n'est pas muté."
+	}
+	"Player not gagged"
+	{
+		"fr"		"Le joueur n'est pas muté du chat."
+	}
+	"Player not silenced"
+	{
+		"fr"		"Le joueur n'est pas silence."
+	}
+	"Permagagged player"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Un mute du chat permanent a été appliqué a {1}."
+	}
+	"Permagagged player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"fr"		"Un mute du chat permanent a été appliqué a {1} (raison: {2})."
+	}
+	"Gagged player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"fr"		"Un mute du chat a été appliqué a {1} pour {2} minutes."
+	}
+	"Gagged player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"fr"		"Un mute du chat a été appliqué a {1} pour {2} minutes (raison: {3})."
+	}
+	"Permamuted player"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Un mute permanent a été appliqué a {1}."
+	}
+	"Permamuted player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"fr"		"Un mute permanent a été appliqué a {1} (raison: {2})."
+	}
+	"Muted player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"fr"		"Un mute a été appliqué a {1} pour {2} minutes."
+	}
+	"Muted player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"fr"		"Un mute a été appliqué a {1} pour {2} minutes (raison: {3})."
+	}
+	"Permasilenced player"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Un silence permanent a été appliqué a {1}."
+	}
+	"Permasilenced player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"fr"		"Un silence permanent a été appliqué a {1} (raison: {2})."
+	}
+	"Silenced player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"fr"		"Un silence a été appliqué a {1} pour {2} minutes."
+	}
+	"Silenced player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"fr"		"Un silence a été appliqué a {1} pour {2} minutes (raison: {3})."
+	}
+	"Temp unmuted player"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Suppression temporaire du mute depuis {1}."
+	}
+	"Temp ungagged player"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Suppression temporaire du mute du chat depuis {1}."
+	}
+	"Temp unsilenced player"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Suppression temporaire du silence depuis {1}."
+	}
+	"Unblock Select Failed"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Une erreur s'est produite lors de la demande de blocs pour {1} à partir de DB."
+	}
+	"No blocks found"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Aucun bloc actif trouvé dans DB pour {1}."
+	}
+	"No db error unlock perm"
+	{
+		"fr"		"Vous n'avez pas la permission de débloquer avec des erreurs de DB."
+	}
+	"No permission unmute"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Le mute sur {1} n'a pas pu être supprimé en raison qu'il a été appliqué par un administrateur supérieur!"
+	}
+	"No permission ungag"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Le mute du chat sur {1} n'a pas pu être supprimé en raison qu'il a été appliqué par un administrateur supérieur!"
+	}
+	"Unmuted player"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Suppression du mute étendu de {1}."
+	}
+	"Ungagged player"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Suppression du silence étendu de {1}. "
+	}
+	"Unblock insert failed"
+	{
+		"fr"		"Impossible de supprimer le bloc de la base de données."
+	}
+	"successfully unmuted"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Suppression réussie du mute pour {1} de la base de données."
+	}
+	"successfully ungagged"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Suppression réussie du mute du chat pour {1} de la base de données."
+	}
+	"AdminMenu_Display_None"
+	{
+		"#format"	"{1:s}"
+		"fr"		"[  ] {1}"
+	}
+	"AdminMenu_Display_Muted"
+	{
+		"#format"	"{1:s}"
+		"fr"		"[M] {1}"
+	}
+	"AdminMenu_Display_Gagged"
+	{
+		"#format"	"{1:s}"
+		"fr"		"[G] {1}"
+	}
+	"AdminMenu_Display_Silenced"
+	{
+		"#format"	"{1:s}"
+		"fr"		"[S] {1}"
+	}
+	"AdminMenu_Main"
+	{
+		"fr"		"Commandes de communication"
+	}
+	"AdminMenu_Select_Main"
+	{
+		"fr"		"Commandes de communication:"
+	}
+	"AdminMenu_List"
+	{
+		"fr"		"Voir Les sanctions"
+	}
+	"AdminMenu_Select_List"
+	{
+		"fr"		"Sélectionner un joueur:"
+	}
+	"AdminMenu_Gag"
+	{
+		"fr"		"Sanction chat"
+	}
+	"AdminMenu_Select_Gag"
+	{
+		"fr"		"Sélectionner un joueur:"
+	}
+	"AdminMenu_Select_Mute"
+	{
+		"fr"		"Sélectionner un joueur:"
+	}
+	"AdminMenu_Select_Silence"
+	{
+		"fr"		"Sélectionner un joueur:"
+	}
+	"AdminMenu_Select_Ungag"
+	{
+		"fr"		"Sélectionner un joueur:"
+	}
+	"AdminMenu_Select_Unmute"
+	{
+		"fr"		"Sélectionner un joueur:"
+	}
+	"AdminMenu_Select_Unsilence"
+	{
+		"fr"		"Sélectionner un joueur:"
+	}
+	"AdminMenu_Option_Mute_Empty"
+	{
+		"fr"		"Aucun joueur de mute"
+	}
+	"AdminMenu_Option_Gag_Empty"
+	{
+		"fr"		"Aucun joueur de mute du chat"
+	}
+	"AdminMenu_Option_Silence_Empty"
+	{
+		"fr"		"Aucun joueur en silence"
+	}
+	"ListMenu_Option_Empty"
+	{
+		"fr"		"Aucun client puni"
+	}
+	"AdminMenu_Option_Empty"
+	{
+		"fr"		"Aucun joueur disponible"
+	}
+	"AdminMenu_UnGag"
+	{
+		"fr"		"Enleve un mute du chat"
+	}
+	"AdminMenu_Title_Durations"
+	{
+		"fr"		"Sélectionnez la durée:"
+	}
+	"AdminMenu_Title_Reasons"
+	{
+		"fr"		"Choisir la raison:"
+	}
+	"AdminMenu_Mute"
+	{
+		"fr"		"Sanction mute"
+	}
+	"AdminMenu_UnMute"
+	{
+		"fr"		"Enleve un mute"
+	}
+	"AdminMenu_Silence"
+	{
+		"fr"		"Santion en silence"
+	}
+	"AdminMenu_UnSilence"
+	{
+		"fr"		"Enleve un silence"
+	}
+	"AdminMenu_Not_Available"
+	{
+		"fr"		"Le joueur que vous avez sélectionné n'est plus disponible."
+	}
+	"Command_Target_Not_Targetable"
+	{
+		"fr"		"Vous ne pouvez pas attendre ce joueur."
+	}
+	"ListMenu_Option_Mute"
+	{
+		"fr"		"Muté"
+	}
+	"ListMenu_Option_Gag"
+	{
+		"fr"		"Muté du chat"
+	}
+	"ListMenu_Option_Duration"
+	{
+		"fr"		"- Durée: "
+	}
+	"ListMenu_Option_Duration_Perm"
+	{
+		"fr"		"Permanent"
+	}
+	"ListMenu_Option_Duration_Time"
+	{
+		"#format"	"{1:d}"
+		"fr"		"{1} Minutes"
+	}
+	"ListMenu_Option_Duration_Temp"
+	{
+		"fr"		"Temporaire"
+	}
+	"ListMenu_Option_Expire"
+	{
+		"fr"		"- Expire: "
+	}
+	"ListMenu_Option_Expire_Perm"
+	{
+		"fr"		"Jamais"
+	}
+	"ListMenu_Option_Expire_Time"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1}"
+	}
+	"ListMenu_Option_Expire_Temp_Reconnect"
+	{
+		"fr"		"Reconnecter"
+	}
+	"ListMenu_Option_Admin"
+	{
+		"#format"	"{1:s}"
+		"fr"		"- Admin: {1}"
+	}
+	"ListMenu_Option_Issue"
+	{
+		"#format"	"{1:s}"
+		"fr"		"- Publié: {1}"
+	}
+	"ListMenu_Option_Reason"
+	{
+		"fr"		"- Voir la raison"
+	}
+	"ListMenu_Option_Reason_None"
+	{
+		"fr"		"- Raison: Aucun"
+	}
+	"ReasonPanel_Punishment_Mute"
+	{
+		"fr"		"Muté: "
+	}
+	"ReasonPanel_Punishment_Gag"
+	{
+		"fr"		"Mute du chat: "
+	}
+	"ReasonPanel_Perm"
+	{
+		"fr"		"Permanent"
+	}
+	"ReasonPanel_Time"
+	{
+		"#format"	"{1:d}"
+		"fr"		"{1} Minutes"
+	}
+	"ReasonPanel_Temp"
+	{
+		"fr"		"Temporaire"
+	}
+	"ReasonPanel_Reason"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Raison: {1}"
+	}
+	"ReasonPanel_Back"
+	{
+		"fr"		"Sorti"
+	}
+	"Temp muted player"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Muté {1}."
+	}
+	"Temp muted player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"fr"		"Muté {1} (raison: {2})."
+	}
+	"Temp gagged player"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Mute du chat {1}."
+	}
+	"Temp gagged player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"fr"		"Mute du chat {1} (raison: {2})."
+	}
+	"Temp silenced player"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Silence {1}."
+	}
+	"Temp silenced player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"fr"		"Silence {1} (raison: {2})."
+	}
+	"CommandComms_na"
+	{
+		"fr"		"Disponible uniquement pour les joueurs sur le serveur."
+	}
+	"CommandComms_nb"
+	{
+		"fr"		"Votre chat et votre voix ne sont pas bloquées."
+	}
+	"no access"
+	{
+		"fr"		"La punition pour le temps spécifié n'est pas autorisée pour vous."
+	}
+}

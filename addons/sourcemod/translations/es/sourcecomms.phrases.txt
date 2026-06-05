@@ -1,0 +1,438 @@
+"Phrases"
+{
+	"Muted on connect"
+	{
+		"es"		"Has sido muteado!"
+	}
+	"Gagged on connect"
+	{
+		"es"		"Has sido gageado!"
+	}
+	"Mute expired"
+	{
+		"es"		"Tu muteo ha expirado."
+	}
+	"Gag expired"
+	{
+		"es"		"Tu gageo ha expirado."
+	}
+	"FWUnmute"
+	{
+		"es"		"Tu muteo ha sido eliminado"
+	}
+	"FWUngag"
+	{
+		"es"		"Tu gageo ha sido eliminado"
+	}
+	"Usage_time"
+	{
+		"#format"	"{1:d}"
+		"es"		"Tiempo: {1} minutos, si no es especificado el tiempo = permanente en caso de ser 0.\nSi es < 0, bloqueo sólo para la sesión."
+	}
+	"Player Comms Not Verified"
+	{
+		"es"		"este jugador no ha podido ser verificado. Por favor, espera 30 segundos antes de volver a intentarlo"
+	}
+	"Player already muted"
+	{
+		"#format"	"{1:s}"
+		"es"		"El jugador {1} ya está muteado actualmente!"
+	}
+	"Player already gagged"
+	{
+		"#format"	"{1:s}"
+		"es"		"El jugador {1} ya está gageado actualmente!"
+	}
+	"Player already silenced"
+	{
+		"#format"	"{1:s}"
+		"es"		"El jugador {1} ya está gageado o muteado actualmente!"
+	}
+	"Player not muted"
+	{
+		"es"		"Jugador no muteado."
+	}
+	"Player not gagged"
+	{
+		"es"		"Jugador no gageado."
+	}
+	"Player not silenced"
+	{
+		"es"		"Jugador no silenciado."
+	}
+	"Permagagged player"
+	{
+		"#format"	"{1:t}"
+		"es"		"Ha gageado permanentemente a {1}."
+	}
+	"Permagagged player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"es"		"Ha gageado permanentemente a {1} (razón: {2})."
+	}
+	"Gagged player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"es"		"Ha gageado extensivamente a {1} por {2} minutos."
+	}
+	"Gagged player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"es"		"Ha gageado extensivamente a {1} por {2} minutos (razón: {3})."
+	}
+	"Permamuted player"
+	{
+		"#format"	"{1:t}"
+		"es"		"Ha muteado permanentemente a {1}."
+	}
+	"Permamuted player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"es"		"Ha muteado permanentemente a {1} (razón: {2})."
+	}
+	"Muted player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"es"		"Ha muteado extensivamente a {1} por {2} minutos."
+	}
+	"Muted player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"es"		"Ha muteado extensivamente a {1} por {2} minutos (razón: {3})."
+	}
+	"Permasilenced player"
+	{
+		"#format"	"{1:t}"
+		"es"		"Ha silenciado permanentemente a {1}."
+	}
+	"Permasilenced player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"es"		"Ha silenciado permanentemente a {1} (razón: {2})."
+	}
+	"Silenced player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"es"		"Ha silenciado extensivamente a {1} por {2} minutos."
+	}
+	"Silenced player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"es"		"Ha silenciado extensivamente a {1} por {2} minutos (razón: {3})."
+	}
+	"Temp unmuted player"
+	{
+		"#format"	"{1:t}"
+		"es"		"Ha eliminado el muteo temporal a {1}."
+	}
+	"Temp ungagged player"
+	{
+		"#format"	"{1:t}"
+		"es"		"Ha eliminado el gageo temporal a {1}."
+	}
+	"Temp unsilenced player"
+	{
+		"#format"	"{1:t}"
+		"es"		"Ha eliminado el silencio temporal a {1}."
+	}
+	"Unblock Select Failed"
+	{
+		"#format"	"{1:s}"
+		"es"		"Ha ocurrido un error durante la solicitud de los bloqueos de {1} en la Base de Datos"
+	}
+	"No blocks found"
+	{
+		"#format"	"{1:s}"
+		"es"		"No hay bloqueos activos que se encuentren en la Base de Datos para {1}."
+	}
+	"No db error unlock perm"
+	{
+		"es"		"No tienes permisos para desbloquear errores de la Base de Datos."
+	}
+	"No permission unmute"
+	{
+		"#format"	"{1:s}"
+		"es"		"El muteo de {1} no pudo ser eliminado debido a que fue muteado por un administrador superior a ti!"
+	}
+	"No permission ungag"
+	{
+		"#format"	"{1:s}"
+		"es"		"El gageo de {1} no pudo ser eliminado debido a que fue gageado por un administrador superior a ti!"
+	}
+	"Unmuted player"
+	{
+		"#format"	"{1:t}"
+		"es"		"Ha eliminado el muteo extendido a {1}."
+	}
+	"Ungagged player"
+	{
+		"#format"	"{1:t}"
+		"es"		"Ha eliminado el gageo extendido a {1}."
+	}
+	"Unblock insert failed"
+	{
+		"es"		"Error al eliminar este bloqueo de la Base de Datos."
+	}
+	"successfully unmuted"
+	{
+		"#format"	"{1:s}"
+		"es"		"Eliminado con éxito el muteo de {1} desde la Base de Datos."
+	}
+	"successfully ungagged"
+	{
+		"#format"	"{1:s}"
+		"es"		"Eliminado con éxito el gageo de {1} desde la Base de Datos."
+	}
+	"AdminMenu_Display_None"
+	{
+		"#format"	"{1:s}"
+		"es"		"[  ] {1}"
+	}
+	"AdminMenu_Display_Muted"
+	{
+		"#format"	"{1:s}"
+		"es"		"[M] {1}"
+	}
+	"AdminMenu_Display_Gagged"
+	{
+		"#format"	"{1:s}"
+		"es"		"[G] {1}"
+	}
+	"AdminMenu_Display_Silenced"
+	{
+		"#format"	"{1:s}"
+		"es"		"[S] {1}"
+	}
+	"AdminMenu_Main"
+	{
+		"es"		"Comandos de Comunicación"
+	}
+	"AdminMenu_Select_Main"
+	{
+		"es"		"Comandos de Comunicación:"
+	}
+	"AdminMenu_List"
+	{
+		"es"		"Ver Castigos"
+	}
+	"AdminMenu_Select_List"
+	{
+		"es"		"Seleccionar Jugador:"
+	}
+	"AdminMenu_Gag"
+	{
+		"es"		"Gagear Jugador"
+	}
+	"AdminMenu_Select_Gag"
+	{
+		"es"		"Seleccionar Jugador:"
+	}
+	"AdminMenu_Select_Mute"
+	{
+		"es"		"Seleccionar Jugador:"
+	}
+	"AdminMenu_Select_Silence"
+	{
+		"es"		"Seleccionar Jugador:"
+	}
+	"AdminMenu_Select_Ungag"
+	{
+		"es"		"Seleccionar Jugador:"
+	}
+	"AdminMenu_Select_Unmute"
+	{
+		"es"		"Seleccionar Jugador:"
+	}
+	"AdminMenu_Select_Unsilence"
+	{
+		"es"		"Seleccionar Jugador:"
+	}
+	"AdminMenu_Option_Mute_Empty"
+	{
+		"es"		"No hay jugadores muteados"
+	}
+	"AdminMenu_Option_Gag_Empty"
+	{
+		"es"		"No hay jugadores gageados"
+	}
+	"AdminMenu_Option_Silence_Empty"
+	{
+		"es"		"No hay jugadores silenciados"
+	}
+	"ListMenu_Option_Empty"
+	{
+		"es"		"No hay jugadores castigados"
+	}
+	"AdminMenu_Option_Empty"
+	{
+		"es"		"No hay jugadores disponibles"
+	}
+	"AdminMenu_UnGag"
+	{
+		"es"		"Eliminar Gageo"
+	}
+	"AdminMenu_Title_Durations"
+	{
+		"es"		"Seleccionar Duración:"
+	}
+	"AdminMenu_Title_Reasons"
+	{
+		"es"		"Seleccionar Razón:"
+	}
+	"AdminMenu_Mute"
+	{
+		"es"		"Mutear Jugador"
+	}
+	"AdminMenu_UnMute"
+	{
+		"es"		"Eliminar Muteo"
+	}
+	"AdminMenu_Silence"
+	{
+		"es"		"Silenciar Jugador"
+	}
+	"AdminMenu_UnSilence"
+	{
+		"es"		"Eliminar Silencio"
+	}
+	"AdminMenu_Not_Available"
+	{
+		"es"		"El jugador que has seleccionado ya no está disponible."
+	}
+	"Command_Target_Not_Targetable"
+	{
+		"es"		"Tú no puedes controlar a este jugador."
+	}
+	"ListMenu_Option_Mute"
+	{
+		"es"		"Muteado"
+	}
+	"ListMenu_Option_Gag"
+	{
+		"es"		"Gageado"
+	}
+	"ListMenu_Option_Duration"
+	{
+		"es"		"- Duración: "
+	}
+	"ListMenu_Option_Duration_Perm"
+	{
+		"es"		"Permanente"
+	}
+	"ListMenu_Option_Duration_Time"
+	{
+		"#format"	"{1:d}"
+		"es"		"{1} Minutos"
+	}
+	"ListMenu_Option_Duration_Temp"
+	{
+		"es"		"Temporal"
+	}
+	"ListMenu_Option_Expire"
+	{
+		"es"		"- Expira en: "
+	}
+	"ListMenu_Option_Expire_Perm"
+	{
+		"es"		"Nunca"
+	}
+	"ListMenu_Option_Expire_Time"
+	{
+		"#format"	"{1:s}"
+		"es"		"{1}"
+	}
+	"ListMenu_Option_Expire_Temp_Reconnect"
+	{
+		"es"		"Al reconectar"
+	}
+	"ListMenu_Option_Admin"
+	{
+		"#format"	"{1:s}"
+		"es"		"- Admin: {1}"
+	}
+	"ListMenu_Option_Issue"
+	{
+		"#format"	"{1:s}"
+		"es"		"- Emitido: {1}"
+	}
+	"ListMenu_Option_Reason"
+	{
+		"es"		"- Ver Razón"
+	}
+	"ListMenu_Option_Reason_None"
+	{
+		"es"		"- Razón: Ninguna"
+	}
+	"ReasonPanel_Punishment_Mute"
+	{
+		"es"		"Muteado: "
+	}
+	"ReasonPanel_Punishment_Gag"
+	{
+		"es"		"Gageado: "
+	}
+	"ReasonPanel_Perm"
+	{
+		"es"		"Permanente"
+	}
+	"ReasonPanel_Time"
+	{
+		"#format"	"{1:d}"
+		"es"		"{1} Minutos"
+	}
+	"ReasonPanel_Temp"
+	{
+		"es"		"Temporal"
+	}
+	"ReasonPanel_Reason"
+	{
+		"#format"	"{1:s}"
+		"es"		"Razón: {1}"
+	}
+	"ReasonPanel_Back"
+	{
+		"es"		"Salir"
+	}
+	"Temp muted player"
+	{
+		"#format"	"{1:t}"
+		"es"		"{1} Muteado."
+	}
+	"Temp muted player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"es"		"{1} Muteado (razón: {2})."
+	}
+	"Temp gagged player"
+	{
+		"#format"	"{1:t}"
+		"es"		"{1} Gageado."
+	}
+	"Temp gagged player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"es"		"{1} Gageado (razón: {2})."
+	}
+	"Temp silenced player"
+	{
+		"#format"	"{1:t}"
+		"es"		"{1} Silenciado."
+	}
+	"Temp silenced player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"es"		"{1} Silenciado (razón: {2})."
+	}
+	"CommandComms_na"
+	{
+		"es"		"Sólo está disponible para los jugadores que están en el servidor"
+	}
+	"CommandComms_nb"
+	{
+		"es"		"Tu chat y tu voz no están bloqueados."
+	}
+	"no access"
+	{
+		"es"		"El castigo por tiempo especificado no está permitido para ti"
+	}
+}

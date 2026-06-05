@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"L4DRockLagcomp_WeaponRange"
+	{
+		"vi"		"Vũ khí: %s | Phạm vi: %.2f"
+	}
+	"L4DRockLagcomp_RockHealth"
+	{
+		"vi"		"Sức khỏe đá: %d\\%"
+	}
+	"L4DRockLagcomp_EntityLocation"
+	{
+		"vi"		"Thực thể %s (%d) ở vị trí: (%.2f, %.2f, %.2f)"
+	}
+	"L4DRockLagcomp_WeaponRangeDamageRockHealth"
+	{
+		"vi"		"Vũ khí: %s | Phạm vi: %.2f | Thiệt hại: %.1f | Sức khỏe đá: %.1f%%"
+	}
+}

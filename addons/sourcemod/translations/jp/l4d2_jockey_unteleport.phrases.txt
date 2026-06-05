@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2JockeyUnteleport_VoidMonkeyRepairTeleportedBack"
+	{
+		"jp"		"{blue}[Void Monkey Repair] {default}は、Void Monkeyによってテレポートされた%Nをテレポートさせました。"
+	}
+}

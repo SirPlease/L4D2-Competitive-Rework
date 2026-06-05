@@ -1,85 +1,39 @@
 "Phrases"
 {
-    "Tag"
-    {
-        "en"    "[{olive}!{default}]"
-		"chi"		"[{olive}!{default}]"
-		"zho"		"[{olive}!{default}]"
-		"jp"		"[{olive}!{default}]"
-		"ko"		"[{olive}!{default}]"
-		"vi"		"[{olive}!{default}]"
-    }
-    "Usage"
-    {
-        "en"    "{blue}Usage{default}"
-		"chi"		"{blue}Usage{default}"
-		"zho"		"{blue}Usage{default}"
-		"jp"		"{blue}Usage{default}"
-		"ko"		"{blue}Usage{default}"
-		"vi"		"{blue}Usage{default}"
-    }
-    "NoSnoop"
-    {
-        "en"    "You Should Not {red}Snoop{default} on The Tank!"
-    
-		"chi"		"You Should Not {red}Snoop{default} on The Tank!"
-		"zho"		"You Should Not {red}Snoop{default} on The Tank!"
-		"jp"		"You Should Not {red}Snoop{default} on The Tank!"
-		"ko"		"You Should Not {red}Snoop{default} on The Tank!"
-		"vi"		"You Should Not {red}Snoop{default} on The Tank!"
+	"Tag"
+	{
+		"en"		"[{olive}!{default}]"
 	}
-    "BecomeSpectator"
-    {
-        "en"    "{teamcolor}%N{default} has become a spectator!"
-    
-		"chi"		"{teamcolor}%N{default} has become a spectator!"
-		"zho"		"{teamcolor}%N{default} has become a spectator!"
-		"jp"		"{teamcolor}%N{default} has become a spectator!"
-		"ko"		"{teamcolor}%N{default} has become a spectator!"
-		"vi"		"{teamcolor}%N{default} has become a spectator!"
+	"Usage"
+	{
+		"en"		"{blue}Usage{default}"
 	}
-    "WhileCapped"
-    {
-        "en"    "{red}No spectating{default} while capped!"
-    
-		"chi"		"{red}No spectating{default} while capped!"
-		"zho"		"{red}No spectating{default} while capped!"
-		"jp"		"{red}No spectating{default} while capped!"
-		"ko"		"{red}No spectating{default} while capped!"
-		"vi"		"{red}No spectating{default} while capped!"
+	"NoSnoop"
+	{
+		"en"		"You Should Not {red}Snoop{default} on The Tank!"
 	}
-    "FixBot"
-    {
-        "en"    "{teamcolor}%N{default} is attempting to fix bot counts"
-    
-		"chi"		"{teamcolor}%N{default} is attempting to fix bot counts"
-		"zho"		"{teamcolor}%N{default} is attempting to fix bot counts"
-		"jp"		"{teamcolor}%N{default} is attempting to fix bot counts"
-		"ko"		"{teamcolor}%N{default} is attempting to fix bot counts"
-		"vi"		"{teamcolor}%N{default} is attempting to fix bot counts"
+	"BecomeSpectator"
+	{
+		"en"		"{teamcolor}%N{default} has become a spectator!"
 	}
-    "FixBotConsole"
-    {
-        "en"    "Console is attempting to {red}fix bot counts{default}"
-    
-		"chi"		"Console is attempting to {red}fix bot counts{default}"
-		"zho"		"Console is attempting to {red}fix bot counts{default}"
-		"jp"		"Console is attempting to {red}fix bot counts{default}"
-		"ko"		"Console is attempting to {red}fix bot counts{default}"
-		"vi"		"Console is attempting to {red}fix bot counts{default}"
+	"WhileCapped"
+	{
+		"en"		"{red}No spectating{default} while capped!"
 	}
-    "ValidTeams"
-    {
-        "en"    "Valid teams: %d = Spectators, %d = Survivors, %d = Infected"
-    }
-    "CouldNotSwitched"
-    {
-        "en"    "{teamcolor}%N{default} could not be switched because the target team was full or has no bot to take over."
-    
-		"chi"		"{teamcolor}%N{default} could not be switched because the target team was full or has no bot to take over."
-		"zho"		"{teamcolor}%N{default} could not be switched because the target team was full or has no bot to take over."
-		"jp"		"{teamcolor}%N{default} could not be switched because the target team was full or has no bot to take over."
-		"ko"		"{teamcolor}%N{default} could not be switched because the target team was full or has no bot to take over."
-		"vi"		"{teamcolor}%N{default} could not be switched because the target team was full or has no bot to take over."
+	"FixBot"
+	{
+		"en"		"{teamcolor}%N{default} is attempting to fix bot counts"
+	}
+	"FixBotConsole"
+	{
+		"en"		"Console is attempting to {red}fix bot counts{default}"
+	}
+	"ValidTeams"
+	{
+		"en"		"Valid teams: %d = Spectators, %d = Survivors, %d = Infected"
+	}
+	"CouldNotSwitched"
+	{
+		"en"		"{teamcolor}%N{default} could not be switched because the target team was full or has no bot to take over."
 	}
 }

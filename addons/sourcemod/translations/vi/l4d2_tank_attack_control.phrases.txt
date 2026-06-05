@@ -2,18 +2,18 @@
 {
 	"Title"
 	{
-		"vi"		"{blue}[{default}{blue}]"
+		"vi"		"{blue}[{default}Bộ chọn ném đá Tank{blue}]"
 	}
 	"Reload"
 	{
-		"vi"		"{olive}Tải lại{default}/{olive}!overhand{default} = {blue}2 tay được trao tay{default}"
+		"vi"		"{olive}Nạp đạn{default}/{olive}!overhand{default} = {blue}Ném cao hai tay{default}"
 	}
 	"Use"
 	{
-		"vi"		"{olive}Sử dụng{default}/{olive}!underhand{default} = {blue}Âm mưu{default}"
+		"vi"		"{olive}Sử dụng{default}/{olive}!underhand{default} = {blue}Ném thấp{default}"
 	}
 	"M2"
 	{
-		"vi"		"{olive}M2{default}/{olive}!overonehand{default} = {blue}1 Handed Overhand{default}"
+		"vi"		"{olive}M2{default}/{olive}!overonehand{default} = {blue}Ném cao một tay{default}"
 	}
 }

@@ -1,0 +1,31 @@
+"Phrases"
+{
+	"DynamicAIDifficulty_DynamicDifficultyRoundLocked"
+	{
+		"zho"		"{green}[AnneHappyAI]{default} 本回合動態難度已鎖定為 {lightgreen}%s{default}。"
+	}
+	"DynamicAIDifficulty_FixedDynamicDifficulty"
+	{
+		"zho"		"{green}[AnneHappyAI]{default} 固定動態難度：{lightgreen}%s{default}。"
+	}
+	"DynamicAIDifficulty_SwitchedAutomaticDifficultyTakeEffect"
+	{
+		"zho"		"{green}[AnneHappyAI]{default} 已切換為自動難度，將從下一回合開始生效；目前回合難度不變。"
+	}
+	"DynamicAIDifficulty_SwitchedAutomaticDifficulty"
+	{
+		"zho"		"{green}[AnneHappyAI]{default} 已切換為自動難度。"
+	}
+	"DynamicAIDifficulty_DifficultyNextRoundFixedDifficulty"
+	{
+		"zho"		"{green}[AnneHappyAI]{default} 已固定下一回合難度為 {lightgreen}%s{default}；目前回合難度不變。"
+	}
+	"DynamicAIDifficulty_DifficultyCurrentRoundFixed"
+	{
+		"zho"		"{green}[AnneHappyAI]{default} 已固定目前回合難度為 {lightgreen}%s{default}。"
+	}
+	"DynamicAIDifficulty_L4DStatsAveragePersonalPPM"
+	{
+		"zho"		"{green}[AnneHappyAI]{default} l4d_stats 平均個人PPM %.2f，%d人積分 %d / %d分鐘（季度%d人/總榜回退%d人），動態難度調整為 {lightgreen}%s{default}。"
+	}
+}

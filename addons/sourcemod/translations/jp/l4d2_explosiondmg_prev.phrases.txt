@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2ExplosiondmgPrev_TakeDamageVictimAttackerInflictor"
+	{
+		"jp"		"hOnTakeDamage 被害者: %d、攻撃者: %d (%s)、加害者: %d、ダメージ: %f、ダメージタイプ: %d"
+	}
+}

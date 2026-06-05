@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Ratemonitor_RatesNetsettingsChanged"
+	{
+		"ko"		"{default}<{olive}Rates{default}> {teamcolor}%N{default}의 네트워크 설정이 {teamcolor}%d/%d/%d {default}to에서 변경되었습니다. {teamcolor}%d/%d/%d {olive}%s"
+	}
+	"Ratemonitor_RatesNetsettingsSet"
+	{
+		"ko"		"{default}<{olive}Rates{default}> {teamcolor}%N{default}의 netsettings가 {teamcolor}%d/%d/%d로 설정되었습니다."
+	}
+	"Ratemonitor_RatesNetsettingsSetIllegalValues"
+	{
+		"ko"		"{default}<{olive}Rates{default}> {teamcolor}%N{default}의 netsettings가 잘못된 값으로 설정됨: {teamcolor}%s/%s/%s {olive}%s"
+	}
+	"Ratemonitor_RatesIllegalyChangedNetsettingsMidgame"
+	{
+		"ko"		"{default}<{olive}Rates{default}> {teamcolor}%N{default}의 게임 중반 네트 설정이 불법적으로 변경되었습니다: {teamcolor}%s/%s/%s {olive}%s"
+	}
+	"Ratemonitor_RatesMovedSpectatorsIllegalNetsettings"
+	{
+		"ko"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}는 불법적인 정산으로 인해 관중석으로 이동되었습니다: {teamcolor}%s/%s/%s {olive}%s"
+	}
+	"Ratemonitor_RatesAdjustRatesValuesHigher"
+	{
+		"ko"		"{default}<{olive}Rates{default}> 요금을 {olive}%d/%d/%d%s보다 높은 값으로 조정하세요."
+	}
+	"Ratemonitor_RatesChangeNetsettingsBack"
+	{
+		"ko"		"{default}<{olive}Rates{default}> 네트워크 설정을 다시 다음으로 변경합니다: {teamcolor}%d/%d/%d"
+	}
+	"Ratemonitor_RatesKickedIllegalNetsettings"
+	{
+		"ko"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}는 불법적인 netsettings로 인해 추방되었습니다: {teamcolor}%s/%s/%s {olive}%s"
+	}
+	"Ratemonitor_RatesKickedDueIllegalNetsettings"
+	{
+		"ko"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}는 불법적인 넷 설정 변경으로 인해 추방되었습니다: {teamcolor}%s/%s/%s {olive}%s"
+	}
+}

@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"ChargerIncapDamage_HookTakeDamageVictimAttacker"
+	{
+		"ko"		"[Hook_OnTakeDamage] 피해자: (%N) %d, 공격자: (%N) %d, 가해자: %d, 피해: %f, 피해 유형: %d"
+	}
+	"ChargerIncapDamage_HookTakeDamageWeaponDamage"
+	{
+		"ko"		"[Hook_OnTakeDamage] 무기: %d, 데미지 포스: %f %f %f, 데미지 위치: %f %f %f"
+	}
+}

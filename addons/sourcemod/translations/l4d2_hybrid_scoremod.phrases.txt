@@ -3,230 +3,93 @@
 	"L4D2HybridScoremod_MapHealthBonusTempHealth"
 	{
 		"en"		"{default}Map health bonus: {olive}%.1f{default}, temp health bonus: {olive}%.1f{default}, perm hp worth: {lightgreen}%.1f{default}, temp hp worth: {lightgreen}%.1f{default}, pill worth: {lightgreen}%i{default}"
-		"chi"		"{default}地图生命值加成：{olive}%.1f{default}，临时生命值加成：{olive}%.1f{default}，烫发生命值：{lightgreen}%.1f{default}，临时生命值： {lightgreen}%.1f{default}，药丸价值：{lightgreen}%i{default}"
-		"zho"		"{default}Map health bonus: {olive}%.1f{default}, temp health bonus: {olive}%.1f{default}, perm hp worth: {lightgreen}%.1f{default}, temp hp worth: {lightgreen}%.1f{default}, pill worth: {lightgreen}%i{default}"
-		"jp"		"{default}マップの健康ボーナス: {olive}%.1f{default}、一時的な健康ボーナス: {olive}%.1f{default}、パーマ値のHP: {lightgreen}%.1f{default}、一時的なHP値: {lightgreen}%.1f{default}、錠剤相当: {lightgreen}%i{default}"
-		"ko"		"{default}Map 체력 보너스: {olive}%.1f{default}, 임시 체력 보너스: {olive}%.1f{default}, 영구 HP 가치: {lightgreen}%.1f{default}, 임시 HP 가치: {lightgreen}%.1f{default}, 알약 가치: {lightgreen}%i{default}"
-		"vi"		"{default}Map health bonus: {olive}%.1f{default}, temp health bonus: {olive}%.1f{default}, perm hp worth: {lightgreen}%.1f{default}, temp hp worth: {lightgreen}%.1f{default}, pill worth: {lightgreen}%i{default}"
 	}
-
 	"L4D2HybridScoremod_1Bonus"
 	{
 		"en"		"%s{default}R{green}#1{default} Bonus: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
-		"chi"		"%s{default}R{green}#1{default} 奖金：{olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
-		"zho"		"%s{default}R{green}#1{default} Bonus: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
-		"jp"		"%s{default}R{green}#1{default} ボーナス: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
-		"ko"		"%s{default}R{green}#1{default} 보너스: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
-		"vi"		"%s{default}R{green}#1{default} Tiền thưởng: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
 	}
-
 	"L4D2HybridScoremod_BonusHBDBPills"
 	{
 		"en"		"%s{default}R{green}#%i{default} Bonus: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | DB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | Pills: {olive}%d{default} <{lightgreen}%.1f%%{default}>]"
-		"chi"		"%s{default}R{green}#%i{default} 奖金：{olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | DB：{olive}%d{default} <{lightgreen}%.1f%%{default}> |丸剂：{olive}%d{default} <{lightgreen}%.1f%%{default}>]"
-		"zho"		"%s{default}R{green}#%i{default} Bonus: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | DB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | Pills: {olive}%d{default} <{lightgreen}%.1f%%{default}>]"
-		"jp"		"%s{default}R{green}#%i{default} ボーナス: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | DB: {olive}%d{default} <{lightgreen}%.1f%%{default}> |錠剤: {olive}%d{default} <{lightgreen}%.1f%%{default}>]"
-		"ko"		"%s{default}R{green}#%i{default} 보너스: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | DB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | 알약: {olive}%d{default} <{lightgreen}%.1f%%{default}>]"
-		"vi"		"%s{default}R{green}#%i{default} Tiền thưởng: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | ĐB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | Thuốc: {olive}%d{default} <{lightgreen}%.1f%%{default}>]"
 	}
-
 	"L4D2HybridScoremod_Bonus"
 	{
 		"en"		"%s{default}R{green}#%i{default} Bonus: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
-		"chi"		"%s{default}R{green}#%i{default} 奖金：{olive}%d{default} <{lightgreen}%.1f%%{default}>"
-		"zho"		"%s{default}R{green}#%i{default} 獎金：{olive}%d{default} <{lightgreen}%.1f%%{default}>"
-		"jp"		"%s{default}R{green}#%i{default} ボーナス: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
-		"ko"		"%s{default}R{green}#%i{default} 보너스: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
-		"vi"		"%s{default}R{green}#%i{default} Tiền thưởng: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
 	}
-
 	"L4D2HybridScoremod_1Bonus_2"
 	{
 		"en"		"%s{default}R{green}#1{default} Bonus: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
-		"chi"		"%s{default}R{green}#1{default} 奖金：{olive}%d{default} <{lightgreen}%.1f%%{default}>"
-		"zho"		"%s{default}R{green}#1{default} Bonus: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
-		"jp"		"%s{default}R{green}#1{default} ボーナス: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
-		"ko"		"%s{default}R{green}#1{default} 보너스: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
-		"vi"		"%s{default}R{green}#1{default} Tiền thưởng: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
 	}
-
 	"L4D2HybridScoremod_BonusHBDBPills_2"
 	{
 		"en"		"%s{default}R{green}#%i{default} Bonus: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {lightgreen}%.0f%%{default} | DB: {lightgreen}%.0f%%{default} | Pills: {lightgreen}%.0f%%{default}]"
-		"chi"		"%s{default}R{green}#%i{default} 奖金：{olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {lightgreen}%.0f%%{default} |数据库：{lightgreen}%.0f%%{default} |丸剂：{lightgreen}%.0f%%{default}]"
-		"zho"		"%s{default}R{green}#%i{default} Bonus: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {lightgreen}%.0f%%{default} | DB: {lightgreen}%.0f%%{default} | Pills: {lightgreen}%.0f%%{default}]"
-		"jp"		"%s{default}R{green}#%i{default} ボーナス: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {lightgreen}%.0f%%{default} | DB: {lightgreen}%.0f%%{default} |錠剤: {lightgreen}%.0f%%{default}]"
-		"ko"		"%s{default}R{green}#%i{default} 보너스: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {lightgreen}%.0f%%{default} | DB: {lightgreen}%.0f%%{default} | 알약: {lightgreen}%.0f%%{default}]"
-		"vi"		"%s{default}R{green}#%i{default} Tiền thưởng: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {lightgreen}%.0f%%{default} | ĐB: {lightgreen}%.0f%%{default} | Thuốc: {lightgreen}%.0f%%{default}]"
 	}
-
 	"L4D2HybridScoremod_HybridBonusMapInfo"
 	{
 		"en"		"{default}[{green}Hybrid Bonus{default} :: {lightgreen}%iv%i{default}] Map Info"
-		"chi"		"{default}[{green}混合奖金{default} :: {lightgreen}%iv%i{default}] 地图信息"
-		"zho"		"{default}[{green}混合獎金{default} :: {lightgreen}%iv%i{default}] 地圖資訊"
-		"jp"		"{default}[{green}ハイブリッドボーナス{default} :: {lightgreen}%iv%i{default}] マップ情報"
-		"ko"		"{default}[{green}Hybrid Bonus{default} :: {lightgreen}%iv%i{default}] 지도 정보"
-		"vi"		"{default}[{green}Phần thưởng kết hợp{default} :: {lightgreen}%iv%i{default}] Thông tin bản đồ"
 	}
-
 	"L4D2HybridScoremod_Distance"
 	{
 		"en"		"{default}Distance: {olive}%d{default}"
-		"chi"		"{default}距离：{olive}%d{default}"
-		"zho"		"{default}Distance: {olive}%d{default}"
-		"jp"		"{default}距離: {olive}%d{default}"
-		"ko"		"{default}거리: {olive}%d{default}"
-		"vi"		"{default}Khoảng cách: {olive}%d{default}"
 	}
-
 	"L4D2HybridScoremod_TotalBonus1000"
 	{
 		"en"		"{default}Total Bonus: {olive}%d{default} <{lightgreen}100.0%%{default}>"
-		"chi"		"{default}总奖金：{olive}%d{default} <{lightgreen}100.0%%{default}>"
-		"zho"		"{default}總獎金：{olive}%d{default} <{lightgreen}100.0%%{default}>"
-		"jp"		"{default}ボーナス合計: {olive}%d{default} <{lightgreen}100.0%%{default}>"
-		"ko"		"{default}총 보너스: {olive}%d{default} <{lightgreen}100.0%%{default}>"
-		"vi"		"{default}Tổng tiền thưởng: {olive}%d{default} <{lightgreen}100.0%%{default}>"
 	}
-
 	"L4D2HybridScoremod_HealthBonus"
 	{
 		"en"		"{default}Health Bonus: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
-		"chi"		"{default}健康奖励：{olive}%d{default} <{lightgreen}%.1f%%{default}>"
-		"zho"		"{default}Health Bonus: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
-		"jp"		"{default}健康ボーナス: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
-		"ko"		"{default}건강 보너스: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
-		"vi"		"Phần thưởng {default}Health: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
 	}
-
 	"L4D2HybridScoremod_DamageBonus"
 	{
 		"en"		"{default}Damage Bonus: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
-		"chi"		"{default}伤害奖励：{olive}%d{default} <{lightgreen}%.1f%%{default}>"
-		"zho"		"{default}Damage Bonus: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
-		"jp"		"{default}ダメージボーナス: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
-		"ko"		"{default}데미지 보너스: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
-		"vi"		"Phần thưởng thiệt hại {default}D: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
 	}
-
 	"L4D2HybridScoremod_PillsBonusMax"
 	{
 		"en"		"{default}Pills Bonus: {olive}%d{default}(max {olive}%d{default}) <{lightgreen}%.1f%%{default}>"
-		"chi"		"{default}P药丸奖金：{olive}%d{default}（最大{olive}%d{default}）<{lightgreen}%.1f%%{default}>"
-		"zho"		"{default}Pills Bonus: {olive}%d{default}(max {olive}%d{default}) <{lightgreen}%.1f%%{default}>"
-		"jp"		"{default}Pピルズボーナス: {olive}%d{default}(最大{olive}%d{default}) <{lightgreen}%.1f%%{default}>"
-		"ko"		"{default}P약 보너스: {olive}%d{default}(최대 {olive}%d{default}) <{lightgreen}%.1f%%{default}>"
-		"vi"		"Phần thưởng {default}Pills: {olive}%d{default}(tối đa {olive}%d{default}) <{lightgreen}%.1f%%{default}>"
 	}
-
 	"L4D2HybridScoremod_Tiebreaker"
 	{
 		"en"		"{default}Tiebreaker: {olive}%d{default}"
-		"chi"		"{default}T决胜局：{olive}%d{default}"
-		"zho"		"{default}T決賽：{olive}%d{default}"
-		"jp"		"{default}Tタイブレーカー: {olive}%d{default}"
-		"ko"		"{default}T타이브레이커: {olive}%d{default}"
-		"vi"		"{default}TTiebreaker: {olive}%d{default}"
 	}
-
 	"L4D2HybridScoremod_TempHPDamage"
 	{
 		"en"		"{green}%N{default} has {olive}%d{default} temp HP now(damage: {lightgreen}%.1f{default})"
-		"chi"		"{green}%N{default} 现在有 {olive}%d{default} 临时 HP（损坏：{lightgreen}%.1f{default}）"
-		"zho"		"{green}%N{default} has {olive}%d{default} temp HP now(damage: {lightgreen}%.1f{default})"
-		"jp"		"{green}%N{default} の現在の HP は {olive}%d{default} です(ダメージ: {lightgreen}%.1f{default})"
-		"ko"		"{green}%N{default}에는 현재 {olive}%d{default} 임시 HP가 있습니다(손상: {lightgreen}%.1f{default})"
-		"vi"		"{green}%N{default} hiện có {olive}%d{default} HP tạm thời (thiệt hại: {lightgreen}%.1f{default})"
 	}
-
 	"L4D2HybridScoremod_LostTempHPAfterAttacked"
 	{
 		"en"		"{lightgreen}%N{default}{olive} lost %i{default} temp HP after being attacked(arg damage: {lightgreen}%.1f{default})"
-		"chi"		"{lightgreen}%N{default}{olive} 被攻击后失去 %i{default} 临时 HP（arg 伤害：{lightgreen}%.1f{default}）"
-		"zho"		"{lightgreen}%N{default}{olive} lost %i{default} temp HP after being attacked(arg damage: {lightgreen}%.1f{default})"
-		"jp"		"{lightgreen}%N{default}{olive}が攻撃を受けた後、%i{default}の一時HPを失いました(引数ダメージ: {lightgreen}%.1f{default})"
-		"ko"		"{lightgreen}%N{default}{olive}는 공격을 받은 후 %i{default} 임시 HP를 잃었습니다(인수 피해: {lightgreen}%.1f{default})"
-		"vi"		"{lightgreen}%N{default}{olive} mất %i{default} HP tạm thời sau khi bị tấn công (sát thương arg: {lightgreen}%.1f{default})"
 	}
-
 	"L4D2HybridScoremod_DirectorEndVersusModeRound"
 	{
 		"en"		"CDirector::OnEndVersusModeRound() called. InSecondHalfOfRound(): %d, countSurvivors: %d"
-		"chi"		"调用 CDirector::OnEndVersusModeRound()。 InSecondHalfOfRound()：%d，计数幸存者：%d"
-		"zho"		"CDirector::OnEndVersusModeRound() called. InSecondHalfOfRound()：%d，計數倖存者：%d"
-		"jp"		"CDirector::OnEndVersusModeRound() が呼び出されました。 InSecondHalfOfRound(): %d、生存者数: %d"
-		"ko"		"CDirector::OnEndVersusModeRound()가 호출되었습니다. InSecondHalfOfRound(): %d, 생존자 수: %d"
-		"vi"		"CDirector::OnEndVersusModeRound() đã gọi. InSecondHalfOfRound(): %d, countSurvivors: %d"
 	}
-
 	"L4D2HybridScoremod_SurvivalBonusCvarUpdatedValue"
 	{
 		"en"		"{default}Survival bonus cvar updated. Value: {olive}%i{default} [multiplier: {olive}%i{default}]"
-		"chi"		"{default}生存奖金 cvar 已更新。值：{olive}%i{default} [乘数：{olive}%i{default}]"
-		"zho"		"{default}生存獎金 cvar 已更新。值：{olive}%i{default} [乘數：{olive}%i{default}]"
-		"jp"		"{default}サバイバルボーナスcvarが更新されました。値: {olive}%i{default} [乗数: {olive}%i{default}]"
-		"ko"		"{default}S생존 보너스 cvar가 업데이트되었습니다. 값: {olive}%i{default} [승수: {olive}%i{default}]"
-		"vi"		"Đã cập nhật cvar phần thưởng sinh tồn {default}. Giá trị: {olive}%i{default} [hệ số nhân: {olive}%i{default}]"
 	}
-
 	"L4D2HybridScoremod_RoundBonus"
 	{
 		"en"		"%s{default}Round {green}%i{default} Bonus: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
-		"chi"		"%s{default}R圆形 {green}%i{default} 奖金：{olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
-		"zho"		"%s{default}Round {green}%i{default} Bonus: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
-		"jp"		"%s{default}ラウンド {green}%i{default} ボーナス：{olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> 【%s】"
-		"ko"		"%s{default}R라운드 {green}%i{default} 보너스: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
-		"vi"		"%s{default}Round {green}%i{default} Tiền thưởng: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
 	}
-
 	"L4D2HybridScoremod_TiebreakerTeam1Team2"
 	{
 		"en"		"%s{lightgreen}TIEBREAKER{default}: Team {green}%#1{default} - {olive}%i{default}, Team {green}%#2{default} - {olive}%i{default}"
-		"chi"		"%s{lightgreen}TIEBREAKER{default}：团队 {green}%#1{default} - {olive}%i{default}，团队 {green}%#2{default} - {olive}%i{default}"
-		"zho"		"%s{lightgreen}TIEBREAKER{default}: Team {green}%#1{default} - {olive}%i{default}, Team {green}%#2{default} - {olive}%i{default}"
-		"jp"		"%s{lightgreen}TIEBREAKER{default}: チーム {green}%#1{default} - {olive}%i{default}、チーム {green}%#2{default} - {olive}%i{default}"
-		"ko"		"%s{lightgreen}TIEBREAKER{default}: 팀 {green}%#1{default} - {olive}%i{default}, 팀 {green}%#2{default} - {olive}%i{default}"
-		"vi"		"%s{lightgreen}TIEBREAKER{default}: Đội {green}%#1{default} - {olive}%i{default}, Đội {green}%#2{default} - {olive}%i{default}"
 	}
-
 	"L4D2HybridScoremod_TeamsPerformedAbsolutelyEqualImpossible"
 	{
 		"en"		"%s{olive}Teams have performed absolutely equal! Impossible to decide a clear round winner"
-		"chi"		"%s{olive}团队表现绝对平等！不可能决定一轮明显的获胜者"
-		"zho"		"%s{olive}團隊表現絕對平等！ Impossible to decide a clear round winner"
-		"jp"		"%s{olive}チームは完全に同等のパフォーマンスを示しました。明確なラウンド勝者を決定することは不可能"
-		"ko"		"%s{olive}팀은 완전히 동등한 성과를 거두었습니다! 확실한 라운드 승자를 결정하는 것은 불가능합니다"
-		"vi"		"%s{olive}Teams đã hoạt động hoàn toàn ngang nhau! Không thể quyết định người chiến thắng vòng rõ ràng"
 	}
-
 	"L4D2HybridScoremod_AddingPermHPBonusContribution"
 	{
 		"en"		"{default}Adding {olive}%N's{default} perm hp bonus contribution: {olive}%d{default} perm HP -> {lightgreen}%.1f{default} bonus; new total: {olive}%.1f{default}"
-		"chi"		"{default}A添加{olive}%N的{default}烫发生命加成贡献：{olive}%d{default}烫发生命值 -> {lightgreen}%.1f{default} 加成；新总计：{olive}%.1f{default}"
-		"zho"		"{default}Adding {olive}%N's{default} perm hp bonus contribution: {olive}%d{default} perm HP -> {lightgreen}%.1f{default} bonus; new total: {olive}%.1f{default}"
-		"jp"		"{default}A {olive}%N の {default} パーマ HP ボーナス貢献: {olive}%d{default} パーマ HP -> {lightgreen}%.1f{default} ボーナス;新しい合計: {olive}%.1f{default}"
-		"ko"		"{default}A{olive}%N's{default} 파마 HP 보너스 기여 추가: {olive}%d{default} 파마 HP -> {lightgreen}%.1f{default} 보너스; 새로운 합계: {olive}%.1f{default}"
-		"vi"		"{default}Thêm {olive}%N's{default} đóng góp tiền thưởng perm hp: {olive}%d{default} HP perm -> {lightgreen}%.1f{default} tiền thưởng; tổng số mới: {olive}%.1f{default}"
 	}
-
 	"L4D2HybridScoremod_AddingTempHPBonusEligible"
 	{
 		"en"		"{default}Adding temp hp bonus: {olive}%.1f{default} (eligible survivors: {olive}%d{default})"
-		"chi"		"{default}A添加临时生命值奖励：{olive}%.1f{default}（符合条件的幸存者：{olive}%d{default}）"
-		"zho"		"{default}A新增臨時生命值獎勵：{olive}%.1f{default}（符合條件的倖存者：{olive}%d{default}）"
-		"jp"		"{default}A一時HPボーナスの追加: {olive}%.1f{default} (対象となる生存者: {olive}%d{default})"
-		"ko"		"{default}A임시 HP 보너스 추가: {olive}%.1f{default} (적격 생존자: {olive}%d{default})"
-		"vi"		"{default}Thêm phần thưởng hp tạm thời: {olive}%.1f{default} (những người sống sót đủ điều kiện: {olive}%d{default})"
 	}
-
 	"L4D2HybridScoremod_AddingPillsContributionTotalBonus"
 	{
 		"en"		"{default}Adding {olive}%N's{default} pills contribution, total bonus: {olive}%d{default} pts"
-		"chi"		"{default}A添加{olive}%N的{default}药丸贡献，总奖金：{olive}%d{default} 分"
-		"zho"		"{default}A添加{olive}%N的{default}藥丸貢獻，總獎金：{olive}%d{default} 分"
-		"jp"		"{default}A {olive}%N の {default} 錠剤の貢献を追加、合計ボーナス: {olive}%d{default} ポイント"
-		"ko"		"{default}A{olive}%N's{default} 알약 기여 추가, 총 보너스: {olive}%d{default} 포인트"
-		"vi"		"{default}Thêm đóng góp thuốc {olive}%N's{default}, tổng tiền thưởng: {olive}%d{default} điểm"
 	}
 }

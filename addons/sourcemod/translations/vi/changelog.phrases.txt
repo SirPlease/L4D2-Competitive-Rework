@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"Changelog_ChangeLogViewChangeLog"
+	{
+		"vi"		"{blue}[{green}ChangeLog{blue}]{default} Bạn có thể xem nhật ký thay đổi @ {blue}%s"
+	}
+}

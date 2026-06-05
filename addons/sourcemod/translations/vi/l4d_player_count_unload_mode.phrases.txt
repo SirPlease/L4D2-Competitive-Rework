@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4DPlayerCountUnloadMode_AdministratorNotPresentPlayersAll"
+	{
+		"vi"		"Quản trị viên không có mặt, hiện tại có người chơi trên tất cả các máy chủ {green}%d/%d{default} và giới hạn thời gian cao điểm ({green}%.0f%%{default}) vẫn là {green}%d{default} phút; không có đủ người ở chế độ này {green}%d{default}, {green} buộc phải gỡ cài đặt chế độ!!!!"
+	}
+	"L4DPlayerCountUnloadMode_AdministratorNotPresentCurrentlyRestricted"
+	{
+		"vi"		"Quản trị viên không có mặt và hiện đang trong khoảng thời gian bị hạn chế; không có đủ người ở chế độ này {green}%d{default} người, {green} buộc phải gỡ cài đặt chế độ!!!!"
+	}
+}

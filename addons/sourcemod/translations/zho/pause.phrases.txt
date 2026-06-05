@@ -98,7 +98,7 @@
 	"PanelSlots"
 	{
 		"#format"	"{1:s},{2:d},{3:d}"
-		"zho"		"▸ Server: %s\\n▸ Slots: %d/%d"
+		"zho"		"▸ Server: %s\n▸ Slots: %d/%d"
 	}
 	"PanelDate"
 	{

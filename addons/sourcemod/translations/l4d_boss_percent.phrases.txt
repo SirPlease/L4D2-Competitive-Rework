@@ -2,62 +2,54 @@
 {
 	"TagTank"
 	{
-		"en"	"<{olive}Tank{default}>"
-		"zho"		"<{olive}Tank{default}>"
-		"jp"		"<{olive}Tank{default}>"
-		"ko"		"<{olive}Tank{default}>"
-		"vi"		"<{olive}Tank{default}>"
+		"en"		"<{olive}Tank{default}>"
 	}
 	"TagWitch"
 	{
-		"en"	"<{olive}Witch{default}>"
-		"zho"		"<{olive}Witch{default}>"
-		"jp"		"<{olive}Witch{default}>"
-		"ko"		"<{olive}Witch{default}>"
-		"vi"		"<{olive}Witch{default}>"
+		"en"		"<{olive}Witch{default}>"
 	}
 	"TankOn"
 	{
-		"en"	"Tank: %d%%"
+		"en"		"Tank: %d%%"
 	}
 	"WitchOn"
 	{
-		"en"	"Witch: %d%%"
+		"en"		"Witch: %d%%"
 	}
 	"Disabled"
 	{
-		"en"	"Disabled"
+		"en"		"Disabled"
 	}
 	"StaticSpawn"
 	{
-		"en"	"Static Spawn"
+		"en"		"Static Spawn"
 	}
 	"None"
 	{
-		"en"	"None"
+		"en"		"None"
 	}
 	"TankDisabled"
 	{
-		"en"	"Tank: Disabled"
+		"en"		"Tank: Disabled"
 	}
 	"TankStatic"
 	{
-		"en"	"Tank: Static Spawn"
+		"en"		"Tank: Static Spawn"
 	}
 	"TankNone"
 	{
-		"en"	"Tank: None"
+		"en"		"Tank: None"
 	}
 	"WitchDisabled"
 	{
-		"en"	"Witch: Disabled"
+		"en"		"Witch: Disabled"
 	}
 	"WitchStatic"
 	{
-		"en"	"Witch: Static Spawn"
+		"en"		"Witch: Static Spawn"
 	}
 	"WitchNone"
 	{
-		"en"	"Witch: None"
+		"en"		"Witch: None"
 	}
 }

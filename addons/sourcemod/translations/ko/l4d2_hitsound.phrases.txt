@@ -1,0 +1,119 @@
+"Phrases"
+{
+	"L4D2Hitsound_OverlayIcon"
+	{
+		"ko"		"오버레이 아이콘: %s(%s)"
+	}
+	"L4D2Hitsound_CurrentlyNoIconSetsAvailable"
+	{
+		"ko"		"현재 사용 가능한 아이콘 세트가 없습니다."
+	}
+	"L4D2Hitsound_SoundEffectRange"
+	{
+		"ko"		"음향 효과 범위: %s"
+	}
+	"L4D2Hitsound_IconRange"
+	{
+		"ko"		"아이콘 범위: %s"
+	}
+	"L4D2Hitsound_HitsoundSoundEffectPackageThree"
+	{
+		"ko"		"[Hitsound] 음향 효과 패키지(3개 항목)가 %d로 설정되었습니다."
+	}
+	"L4D2Hitsound_HitsoundIconSetThreeItems"
+	{
+		"ko"		"[Hitsound] 아이콘 세트(3개 항목)가 %d - %s로 설정되었습니다."
+	}
+	"L4D2Hitsound_SelectSetSoundEffectSet"
+	{
+		"ko"		"먼저 \"효과음 세트(플레이어)\"에서 세트를 선택해 주세요."
+	}
+	"L4D2Hitsound_HitSoundEffectTurnedSet"
+	{
+		"ko"		"타격음 효과: 켜짐(%d 설정)"
+	}
+	"L4D2Hitsound_HitSoundEffectTurnedOff"
+	{
+		"ko"		"타격음 효과 : 꺼짐"
+	}
+	"L4D2Hitsound_KillSoundEffectTurnedSet"
+	{
+		"ko"		"킬 사운드 효과: 켜짐(%d 설정)"
+	}
+	"L4D2Hitsound_KillSoundEffectTurnedOff"
+	{
+		"ko"		"킬 사운드 효과: 꺼짐"
+	}
+	"L4D2Hitsound_HeadshotSoundEffectTurnedSet"
+	{
+		"ko"		"헤드샷 사운드 효과: 켜짐(%d 설정)"
+	}
+	"L4D2Hitsound_HeadshotSoundEffectTurnedOff"
+	{
+		"ko"		"헤드샷 음향 효과: 꺼짐"
+	}
+	"L4D2Hitsound_SelectSuitIconSuitPlayer"
+	{
+		"ko"		"먼저 \"아이콘 슈트(플레이어)\"에서 슈트를 선택해 주세요."
+	}
+	"L4D2Hitsound_HitIconTurnedSet"
+	{
+		"ko"		"히트 아이콘: 켜짐(%d 설정)"
+	}
+	"L4D2Hitsound_HitIconClosed"
+	{
+		"ko"		"조회 아이콘: 종료됨"
+	}
+	"L4D2Hitsound_KillIconTurnedSet"
+	{
+		"ko"		"킬 아이콘: 켜짐(%d 설정)"
+	}
+	"L4D2Hitsound_KillIconClosed"
+	{
+		"ko"		"처치 아이콘: 닫힘"
+	}
+	"L4D2Hitsound_HeadshotIconTurnedSet"
+	{
+		"ko"		"얼굴 사진 아이콘: 켜짐(%d 설정)"
+	}
+	"L4D2Hitsound_HeadshotIconClosed"
+	{
+		"ko"		"얼굴 사진 아이콘: 폐쇄됨"
+	}
+	"L4D2Hitsound_NotPermissionUseMenu"
+	{
+		"ko"		"이 메뉴를 사용할 수 있는 권한이 없습니다."
+	}
+	"L4D2Hitsound_ThreeSoundEffectsAllTurned"
+	{
+		"ko"		"세 가지 음향 효과: 모두 꺼짐"
+	}
+	"L4D2Hitsound_HeadshotSoundEffectSet"
+	{
+		"ko"		"헤드샷 사운드 효과: %d로 설정"
+	}
+	"L4D2Hitsound_HitSoundEffectSet"
+	{
+		"ko"		"타격음 효과 : %d로 설정"
+	}
+	"L4D2Hitsound_KillSoundEffectSet"
+	{
+		"ko"		"킬 사운드 효과: %d로 설정"
+	}
+	"L4D2Hitsound_ThreeIconsAllClosed"
+	{
+		"ko"		"아이콘 3개: 모두 닫힘"
+	}
+	"L4D2Hitsound_HeadshotIconSet"
+	{
+		"ko"		"얼굴 사진 아이콘: %d로 설정"
+	}
+	"L4D2Hitsound_HitIconSet"
+	{
+		"ko"		"히트 아이콘: %d로 설정"
+	}
+	"L4D2Hitsound_KillIconSet"
+	{
+		"ko"		"킬 아이콘: %d로 설정"
+	}
+}

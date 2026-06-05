@@ -1,0 +1,63 @@
+"Phrases"
+{
+	"RYGive_TryingKickDeadInfectedRobot"
+	{
+		"ko"		"죽은 감염된 로봇을 쫓아내려고 하는데..."
+	}
+	"RYGive_KickedBots"
+	{
+		"ko"		"%i 봇을 쫓아냈습니다."
+	}
+	"RYGive_AdminSpawnedInfected"
+	{
+		"ko"		"{lightgreen}管理员{default}[{olive}%N{default}]刷出一只{olive}%s"
+	}
+	"RYGive_FriendlyDamageCoefficientResetDefault"
+	{
+		"ko"		"아군 피해 계수가 기본값으로 재설정되었습니다."
+	}
+	"RYGive_FriendlyDamageCoefficientSet"
+	{
+		"ko"		"{default} 아군 피해 계수가 {green}%.1f로 설정되었습니다."
+	}
+	"RYGive_FailedObtainCrosshairPositionTry"
+	{
+		"ko"		"십자선 위치 획득에 실패했습니다! 다시 시도해 주세요."
+	}
+	"RYGive_ImmuneDamage"
+	{
+		"ko"		"{green}는 %s {olive}%N {default}의 피해에 면역입니다."
+	}
+	"RYGive_TargetPlayerExpired"
+	{
+		"ko"		"대상 플레이어가 만료되었습니다"
+	}
+	"RYGive_ImmuneSpecialSenseControl"
+	{
+		"ko"		"{green}는 %s {olive}%N의 특수 감지 제어에 면역입니다."
+	}
+	"RYGive_OnlySurvivorsCanIdle"
+	{
+		"ko"		"생존자만 유휴 상태일 수 있습니다."
+	}
+	"RYGive_Survival"
+	{
+		"ko"		"생존은 끝났다"
+	}
+	"RYGive_NumberInfectedPeopleFull"
+	{
+		"ko"		"감염자 수가 꽉 찼습니다."
+	}
+	"RYGive_PlayerAlreadyTargetTeam"
+	{
+		"ko"		"플레이어가 이미 대상 팀에 있습니다"
+	}
+	"RYGive_AllPlayersWeaponManeuverabilitySet"
+	{
+		"ko"		"{olive} 모든 플레이어 {default}의 무기 기동성이 {green}%.1fx로 설정되었습니다."
+	}
+	"RYGive_WeaponManeuverabilitySet"
+	{
+		"ko"		"{olive}%N {default}의 무기 기동성이 {green}%.1fx로 설정되었습니다."
+	}
+}

@@ -1,0 +1,95 @@
+"Phrases"
+{
+	"L4D2HybridScoremod_MapHealthBonusTempHealth"
+	{
+		"chi"		"{default}地图生命值加成：{olive}%.1f{default}，临时生命值加成：{olive}%.1f{default}，烫发生命值：{lightgreen}%.1f{default}，临时生命值： {lightgreen}%.1f{default}，药丸价值：{lightgreen}%i{default}"
+	}
+	"L4D2HybridScoremod_1Bonus"
+	{
+		"chi"		"%s{default}R{green}#1{default} 奖金：{olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
+	}
+	"L4D2HybridScoremod_BonusHBDBPills"
+	{
+		"chi"		"%s{default}R{green}#%i{default} 奖金：{olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | DB：{olive}%d{default} <{lightgreen}%.1f%%{default}> |丸剂：{olive}%d{default} <{lightgreen}%.1f%%{default}>]"
+	}
+	"L4D2HybridScoremod_Bonus"
+	{
+		"chi"		"%s{default}R{green}#%i{default} 奖金：{olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+	"L4D2HybridScoremod_1Bonus_2"
+	{
+		"chi"		"%s{default}R{green}#1{default} 奖金：{olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+	"L4D2HybridScoremod_BonusHBDBPills_2"
+	{
+		"chi"		"%s{default}R{green}#%i{default} 奖金：{olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {lightgreen}%.0f%%{default} |数据库：{lightgreen}%.0f%%{default} |丸剂：{lightgreen}%.0f%%{default}]"
+	}
+	"L4D2HybridScoremod_HybridBonusMapInfo"
+	{
+		"chi"		"{default}[{green}混合奖金{default} :: {lightgreen}%iv%i{default}] 地图信息"
+	}
+	"L4D2HybridScoremod_Distance"
+	{
+		"chi"		"{default}距离：{olive}%d{default}"
+	}
+	"L4D2HybridScoremod_TotalBonus1000"
+	{
+		"chi"		"{default}总奖金：{olive}%d{default} <{lightgreen}100.0%%{default}>"
+	}
+	"L4D2HybridScoremod_HealthBonus"
+	{
+		"chi"		"{default}健康奖励：{olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+	"L4D2HybridScoremod_DamageBonus"
+	{
+		"chi"		"{default}伤害奖励：{olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+	"L4D2HybridScoremod_PillsBonusMax"
+	{
+		"chi"		"{default}P药丸奖金：{olive}%d{default}（最大{olive}%d{default}）<{lightgreen}%.1f%%{default}>"
+	}
+	"L4D2HybridScoremod_Tiebreaker"
+	{
+		"chi"		"{default}T决胜局：{olive}%d{default}"
+	}
+	"L4D2HybridScoremod_TempHPDamage"
+	{
+		"chi"		"{green}%N{default} 现在有 {olive}%d{default} 临时 HP（损坏：{lightgreen}%.1f{default}）"
+	}
+	"L4D2HybridScoremod_LostTempHPAfterAttacked"
+	{
+		"chi"		"{lightgreen}%N{default}{olive} 被攻击后失去 %i{default} 临时 HP（arg 伤害：{lightgreen}%.1f{default}）"
+	}
+	"L4D2HybridScoremod_DirectorEndVersusModeRound"
+	{
+		"chi"		"调用 CDirector::OnEndVersusModeRound()。 InSecondHalfOfRound()：%d，计数幸存者：%d"
+	}
+	"L4D2HybridScoremod_SurvivalBonusCvarUpdatedValue"
+	{
+		"chi"		"{default}生存奖金 cvar 已更新。值：{olive}%i{default} [乘数：{olive}%i{default}]"
+	}
+	"L4D2HybridScoremod_RoundBonus"
+	{
+		"chi"		"%s{default}R圆形 {green}%i{default} 奖金：{olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
+	}
+	"L4D2HybridScoremod_TiebreakerTeam1Team2"
+	{
+		"chi"		"%s{lightgreen}TIEBREAKER{default}：团队 {green}%#1{default} - {olive}%i{default}，团队 {green}%#2{default} - {olive}%i{default}"
+	}
+	"L4D2HybridScoremod_TeamsPerformedAbsolutelyEqualImpossible"
+	{
+		"chi"		"%s{olive}两队表现完全相同！无法判定本回合明确胜者"
+	}
+	"L4D2HybridScoremod_AddingPermHPBonusContribution"
+	{
+		"chi"		"{default}加入 {olive}%N{default} 的永久生命加成贡献：{olive}%d{default} 永久生命值 -> {lightgreen}%.1f{default} 加成；新总计：{olive}%.1f{default}"
+	}
+	"L4D2HybridScoremod_AddingTempHPBonusEligible"
+	{
+		"chi"		"{default}A添加临时生命值奖励：{olive}%.1f{default}（符合条件的幸存者：{olive}%d{default}）"
+	}
+	"L4D2HybridScoremod_AddingPillsContributionTotalBonus"
+	{
+		"chi"		"{default}A添加{olive}%N的{default}药丸贡献，总奖金：{olive}%d{default} 分"
+	}
+}

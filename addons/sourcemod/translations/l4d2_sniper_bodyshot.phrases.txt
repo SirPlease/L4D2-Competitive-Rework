@@ -3,10 +3,5 @@
 	"L4D2SniperBodyshot_VictimAttackerHitgroupWeapon"
 	{
 		"en"		"Victim %N, attacker %N, hitgroup %s (%d), weapon: %s, "
-		"chi"		"受害者%N，攻击者%N，打击组%s（%d），武器：%s，"
-		"zho"		"受害者%N，攻擊者%N，打擊組%s（%d），武器：%s，"
-		"jp"		"被害者 %N、攻撃者 %N、ヒットグループ %s (%d)、武器: %s、"
-		"ko"		"피해자 %N, 공격자 %N, 히트 그룹 %s(%d), 무기: %s,"
-		"vi"		"Nạn nhân %N, kẻ tấn công %N, nhóm sát thủ %s (%d), vũ khí: %s,"
 	}
 }

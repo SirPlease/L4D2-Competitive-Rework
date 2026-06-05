@@ -1,0 +1,83 @@
+"Phrases"
+{
+	"Gnome_ErrorAddAnymoreGnomesUsed"
+	{
+		"vi"		"%sError: Không thể thêm thần lùn nữa. Đã sử dụng: ({olive}%d/%d{default})."
+	}
+	"Gnome_CannotPlaceGnomeTryAgain"
+	{
+		"vi"		"%sKhông thể đặt thần lùn, vui lòng thử lại."
+	}
+	"Gnome_ErrorCannotReadGnomeConfig"
+	{
+		"vi"		"%sError: Không thể đọc cấu hình gnome, giả sử tệp trống. ({olive}%s{default})."
+	}
+	"Gnome_ErrorFailedAddMapGnome"
+	{
+		"vi"		"%sError: Không thể thêm bản đồ vào cấu hình sinh sản của gnome."
+	}
+	"Gnome_SavedPosAng"
+	{
+		"vi"		"%s({olive}%d/%d{default}) - Đã lưu tại pos:[{olive}%f %f %f{default}] ang:[{olive}%f %f %f{default}]"
+	}
+	"Gnome_FailedSaveGnome"
+	{
+		"vi"		"%s({olive}%d/%d{default}) - Không lưu được Gnome."
+	}
+	"Gnome_ErrorCannotFindGnomeConfig"
+	{
+		"vi"		"%sError: Không thể tìm thấy cấu hình gnome ({olive}%s{default})."
+	}
+	"Gnome_ErrorCannotLoadGnomeConfig"
+	{
+		"vi"		"%sError: Không thể tải cấu hình gnome ({olive}%s{default})."
+	}
+	"Gnome_ErrorCurrentMapNotGnome"
+	{
+		"vi"		"%sError: Bản đồ hiện tại không có trong cấu hình gnome."
+	}
+	"Gnome_RemovedConfig"
+	{
+		"vi"		"%s({olive}%d/%d{default}) - Gnome đã bị xóa khỏi config."
+	}
+	"Gnome_FailedRemoveGnomeConfig"
+	{
+		"vi"		"%s({olive}%d/%d{default}) - Không thể xóa Gnome khỏi config."
+	}
+	"Gnome_0AllGnomesRemovedConfig"
+	{
+		"vi"		"%s(0/%d) - Tất cả các thần lùn bị xóa khỏi cấu hình, thêm bằng {olive}sm_gnomesave{default}."
+	}
+	"Gnome_GlowTurned"
+	{
+		"vi"		"%sGlow đã được chuyển thành %s"
+	}
+	"Gnome_Total"
+	{
+		"vi"		"%s Tổng cộng: %d."
+	}
+	"Gnome_Teleported"
+	{
+		"vi"		"%sTĐã chuyển sang %d."
+	}
+	"Gnome_CouldNotFindIndexTeleportation"
+	{
+		"vi"		"%sKhông thể tìm thấy chỉ mục cho dịch chuyển tức thời."
+	}
+	"Gnome_UsageSMGnometeleIndex1"
+	{
+		"vi"		"%sUsử dụng: sm_gnometele <chỉ mục 1-%d>."
+	}
+	"Gnome_NewAngles"
+	{
+		"vi"		"%sGóc mới: %f %f %f"
+	}
+	"Gnome_NewOrigin"
+	{
+		"vi"		"%sXuất xứ mới: %f %f %f"
+	}
+	"Gnome_SavedOriginAnglesDataConfig"
+	{
+		"vi"		"%sĐã lưu gốc và góc vào cấu hình dữ liệu"
+	}
+}

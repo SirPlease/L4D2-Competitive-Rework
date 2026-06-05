@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2ExplosiondmgPrev_TakeDamageVictimAttackerInflictor"
+	{
+		"zho"		"hOnTakeDamage 受害者：%d，攻擊者：%d (%s)，加害者：%d，傷害：%f，傷害類型：%d"
+	}
+}

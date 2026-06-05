@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"L4DRockLagcomp_WeaponRange"
+	{
+		"zho"		"武器：%s |範圍：%.2f"
+	}
+	"L4DRockLagcomp_RockHealth"
+	{
+		"zho"		"岩石健康度：%d\\%"
+	}
+	"L4DRockLagcomp_EntityLocation"
+	{
+		"zho"		"實體 %s (%d) 位於下列位置：(%.2f、%.2f、%.2f)"
+	}
+	"L4DRockLagcomp_WeaponRangeDamageRockHealth"
+	{
+		"zho"		"武器：%s |範圍：%.2f |損壞：%.1f |岩石健康：%.1f%%"
+	}
+}

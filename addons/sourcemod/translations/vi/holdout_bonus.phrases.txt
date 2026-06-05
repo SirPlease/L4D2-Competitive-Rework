@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"HoldoutBonus_EventStartsBonusSecondsonds"
+	{
+		"vi"		"Sự kiện {default}Holdout bắt đầu... ({green}%i{default} tiền thưởng trên {olive}%i{default} giây)"
+	}
+	"HoldoutBonus_DynamicBonusSummary"
+	{
+		"vi"		"{default}Holdout Tiền thưởng: %s"
+	}
+	"HoldoutBonus_DynamicBonusSummary_2"
+	{
+		"vi"		"{default}Holdout Tiền thưởng: {green}%i{default} trong tổng số {olive}%i{default}."
+	}
+}

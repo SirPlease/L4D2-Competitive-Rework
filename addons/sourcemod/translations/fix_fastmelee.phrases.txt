@@ -3,20 +3,9 @@
 	"FixFastMelee_EventWeaponFireWeaponTime"
 	{
 		"en"		"Event_WeaponFire: %N, weapon: %s, time: %f, iWeaponId: %d"
-		"chi"		"Event_WeaponFire：%N，武器：%s，时间：%f，iWeaponId：%d"
-		"zho"		"Event_WeaponFire：%N，武器：%s，時間：%f，iWeaponId：%d"
-		"jp"		"Event_WeaponFire: %N、武器: %s、時間: %f、iWeaponId: %d"
-		"ko"		"Event_WeaponFire: %N, 무기: %s, 시간: %f, iWeaponId: %d"
-		"vi"		"Event_WeaponFire: %N, vũ khí: %s, thời gian: %f, iWeaponId: %d"
 	}
-
 	"FixFastMelee_WeaponSwitchedWeaponNextAttack"
 	{
 		"en"		"OnWeaponSwitched: %N, weapon: %d (%s), fNextAttack: %f"
-		"chi"		"OnWeaponSwitched：%N，武器：%d（%s），fNextAttack：%f"
-		"zho"		"OnWeaponSwitched：%N，武器：%d（%s），fNextAttack：%f"
-		"jp"		"OnWeaponSwitched: %N、武器: %d (%s)、fNext Attack: %f"
-		"ko"		"OnWeaponSwitched: %N, 무기: %d(%s), fNextAttack: %f"
-		"vi"		"OnWeaponSwitched: %N, vũ khí: %d (%s), fNextAttack: %f"
 	}
 }

@@ -1,0 +1,43 @@
+"Phrases"
+{
+	"L4D2Antibaiter_AntibaiterDebugEligiblePlayerZombieclass"
+	{
+		"jp"		"{lightgreen}[アンチバイター デバッグ] 対象となるプレイヤー {green}%N{default} はゾンビクラス {olive}%d{default} で {olive}%fs{default} に生存しています"
+	}
+	"L4D2Antibaiter_AntibaiterDebugSpectatorBugDetected"
+	{
+		"jp"		"{lightgreen}[Antibaiter DEBUG] 観客のバグが検出されました: {green}eligibleZombies{default}={olive}%d{default}、{green}z_max_player_zombies{default}={olive}%d{default}"
+	}
+	"L4D2Antibaiter_AntibaiterDebugMinimumProgressUnsatisfied"
+	{
+		"jp"		"{lightgreen}[Antibaiter DEBUG] {olive}%d{default} チェック中に最小限の進行状況が満たされていません: {green}initial{default}={olive}%f{default}、 {green}現在{default}={olive}%f{default}、{green}進捗状況{default}={olive}%f{default}"
+	}
+	"L4D2Antibaiter_AntibaiterDebugCountdownRunning"
+	{
+		"jp"		"{lightgreen}[アンチバイター デバッグ] カウントダウンは {olive}running{default}"
+	}
+	"L4D2Antibaiter_AntibaiterDebugCountdownElapsedLaunching"
+	{
+		"jp"		"{lightgreen}[アンチバイター デバッグ] カウントダウンが{green}終了{default}しました！ゾンビの群れを開始し、チェックカウンターをリセットします"
+	}
+	"L4D2Antibaiter_AntiBaiterPrepareIncomingHorde"
+	{
+		"jp"		"{blue}[{default}アンチバイター{blue}]{default} 迫りくるゾンビの群れに備えてください！"
+	}
+	"L4D2Antibaiter_AntibaiterDebugCountdownNotRunning"
+	{
+		"jp"		"{lightgreen}[Antibaiter DEBUG] カウントダウンは {olive} 実行されていません {default}。それを開始しています..."
+	}
+	"L4D2Antibaiter_AntibaiterDebugSurvivorProgressIncreased"
+	{
+		"jp"		"{lightgreen}[Antibaiter DEBUG] サバイバーの進行状況は {olive} 増加し、最小しきい値を超えています。アルゴリズムをリセットしています..."
+	}
+	"L4D2Antibaiter_PanicTimerDurationTimestamp"
+	{
+		"jp"		"m_PanicTimer - 期間: %f、タイムスタンプ: %f"
+	}
+	"L4D2Antibaiter_PostMobDelayDurationTimestamp"
+	{
+		"jp"		"m_PostMobDelay - 期間: %f、タイムスタンプ: %f"
+	}
+}

@@ -1,0 +1,411 @@
+"Phrases"
+{
+	"SCOPE_DETECTED"
+	{
+		"es"		"[{olive}Emotes{default}]{darkred} No puedes usar esto mientras usas la mirilla del arma!"
+	}
+	"NO_DANCES_ACCESS_FLAG"
+	{
+		"es"		"[{olive}Emotes{default}]{darkred} No tienes acceso a usar dances!!"
+	}
+	"NO_EMOTES_ACCESS_FLAG"
+	{
+		"es"		"[{olive}Emotes{default}]{darkred} No tienes acceso a usar emotes!!"
+	}
+	"MUST_BE_ALIVE"
+	{
+		"es"		"[{olive}Emotes{default}]{darkred} Debes estar vivo para usar eso!"
+	}
+	"STAY_ON_GROUND"
+	{
+		"es"		"[{olive}Emotes{default}]{darkred} Debes estar en el suelo para usar eso!"
+	}
+	"COOLDOWN_EMOTES"
+	{
+		"es"		"[{olive}Emotes{default}]{darkred} Está enfriándose!"
+	}
+	"AMIN_1_INVALID"
+	{
+		"es"		"[{olive}Emotes{default}]{darkred} El Argumento 1 es inválido"
+	}
+	"CANNOT_USE_NOW"
+	{
+		"es"		"[{olive}Emotes{default}]{darkred} No puedes usar eso ahora mismo!"
+	}
+	"INVALID_EMOTE_ID"
+	{
+		"es"		"[{olive}Emotes{default}]{darkred} Emote ID inválida, Debe estar entre (1-86)"
+	}
+	"RANDOM_EMOTE"
+	{
+		"es"		"Emote Aleatorio"
+	}
+	"RANDOM_DANCE"
+	{
+		"es"		"Baile Aleatorio"
+	}
+	"EMOTES_LIST"
+	{
+		"es"		"Lista de Emotes"
+	}
+	"DANCES_LIST"
+	{
+		"es"		"Lista de Bailes"
+	}
+	"EMOTE_PLAYER"
+	{
+		"es"		"Reproductor de Emotes"
+	}
+	"SELECT_EMOTE"
+	{
+		"es"		"Seleccionar Emote"
+	}
+	"TITLE_MAIM_MENU"
+	{
+		"es"		"Emotes y Bailes"
+	}
+	"TITLE_EMOTES_MENU"
+	{
+		"es"		"Emotes"
+	}
+	"TITLE_DANCES_MENU"
+	{
+		"es"		"Bailes"
+	}
+	"Emote_Fonzie_Pistol"
+	{
+		"es"		"Pistolas de Dedos"
+	}
+	"Emote_Bring_It_On"
+	{
+		"es"		"Ven A Mi"
+	}
+	"Emote_ThumbsDown"
+	{
+		"es"		"Pulgares Abajo"
+	}
+	"Emote_Celebration_Loop"
+	{
+		"es"		"Celebración"
+	}
+	"Emote_BlowKiss"
+	{
+		"es"		"Beso Aéreo"
+	}
+	"Emote_Calculated"
+	{
+		"es"		"Calculado"
+	}
+	"Emote_Confused"
+	{
+		"es"		"Confundido"
+	}
+	"Emote_Chug"
+	{
+		"es"		"Resoplar"
+	}
+	"Emote_Cry"
+	{
+		"es"		"Llorar"
+	}
+	"Emote_DustingOffHands"
+	{
+		"es"		"Desempolvarse las Manos"
+	}
+	"Emote_DustOffShoulders"
+	{
+		"es"		"Muévelo 2"
+	}
+	"Emote_Facepalm"
+	{
+		"es"		"Palmada en la Cara"
+	}
+	"Emote_Fishing"
+	{
+		"es"		"En el Gancho"
+	}
+	"Emote_Flex"
+	{
+		"es"		"Flexionarse"
+	}
+	"Emote_golfclap"
+	{
+		"es"		"Palmaditas"
+	}
+	"Emote_HandSignals"
+	{
+		"es"		"Selales de Mano"
+	}
+	"Emote_HeelClick"
+	{
+		"es"		"Click!"
+	}
+	"Emote_Hotstuff"
+	{
+		"es"		"Cosas Calientes"
+	}
+	"Emote_IBreakYou"
+	{
+		"es"		"Punto de Ruptura"
+	}
+	"Emote_IHeartYou"
+	{
+		"es"		"Amor Verdadero"
+	}
+	"Emote_Kung-Fu_Salute"
+	{
+		"es"		"Saludo de Kung-Fu"
+	}
+	"Emote_Laugh"
+	{
+		"es"		"Risa"
+	}
+	"Emote_Luchador"
+	{
+		"es"		"Luchador"
+	}
+	"Emote_Make_It_Rain"
+	{
+		"es"		"Haz que Llueva"
+	}
+	"Emote_NotToday"
+	{
+		"es"		"Hoy No"
+	}
+	"Emote_RockPaperScissor_Paper"
+	{
+		"es"		"Papel"
+	}
+	"Emote_RockPaperScissor_Rock"
+	{
+		"es"		"Piedra"
+	}
+	"Emote_RockPaperScissor_Scissor"
+	{
+		"es"		"Tijeras"
+	}
+	"Emote_Salt"
+	{
+		"es"		"Sal"
+	}
+	"Emote_Salute"
+	{
+		"es"		"Saludo"
+	}
+	"Emote_SmoothDrive"
+	{
+		"es"		"Conducir Coche"
+	}
+	"Emote_Snap"
+	{
+		"es"		"Chasquido"
+	}
+	"Emote_StageBow"
+	{
+		"es"		"Reverencia"
+	}
+	"Emote_ThumbsUp"
+	{
+		"es"		"Pulgares Arriba"
+	}
+	"Emote_Wave2"
+	{
+		"es"		"Saludo 2"
+	}
+	"Emote_Yeet"
+	{
+		"es"		"Estúpido"
+	}
+	"DanceMoves"
+	{
+		"es"		"Movimientos de Baile"
+	}
+	"Emote_Mask_Off_Intro"
+	{
+		"es"		"Justicia Naranja"
+	}
+	"Emote_Zippy_Dance"
+	{
+		"es"		"Bullicioso"
+	}
+	"ElectroShuffle"
+	{
+		"es"		"Shuffle Electrónico"
+	}
+	"Emote_AerobicChamp"
+	{
+		"es"		"Aeróbico"
+	}
+	"Emote_Bendy"
+	{
+		"es"		"Flexible"
+	}
+	"Emote_BandOfTheFort"
+	{
+		"es"		"Mejores Amigos"
+	}
+	"Emote_Boogie_Down_Intro"
+	{
+		"es"		"Boogie"
+	}
+	"Emote_Capoeira"
+	{
+		"es"		"Capoeira"
+	}
+	"Emote_Charleston"
+	{
+		"es"		"A la Moda"
+	}
+	"Emote_Chicken"
+	{
+		"es"		"Pollo"
+	}
+	"Emote_Dance_NoBones"
+	{
+		"es"		"Sin Huesos"
+	}
+	"Emote_Dance_Shoot"
+	{
+		"es"		"Bombo"
+	}
+	"Emote_Dance_SwipeIt"
+	{
+		"es"		"Muévelo"
+	}
+	"Emote_Dance_Disco_T3"
+	{
+		"es"		"Disco para Siempre"
+	}
+	"Emote_DG_Disco"
+	{
+		"es"		"Disco para Siempre 2"
+	}
+	"Emote_Dance_Worm"
+	{
+		"es"		"El Gusano"
+	}
+	"Emote_Dance_Loser"
+	{
+		"es"		"Toma La L"
+	}
+	"Emote_Dance_Breakdance"
+	{
+		"es"		"BreakDance"
+	}
+	"Emote_Dance_Pump"
+	{
+		"es"		"Bomba"
+	}
+	"Emote_Dance_RideThePony"
+	{
+		"es"		"Monta Al Pony"
+	}
+	"Emote_Dab"
+	{
+		"es"		"Dab"
+	}
+	"Emote_EasternBloc_Start"
+	{
+		"es"		"Bloque Oriental"
+	}
+	"Emote_FancyFeet"
+	{
+		"es"		"Pies de Suelo"
+	}
+	"Emote_FlossDance"
+	{
+		"es"		"Hilo Dental"
+	}
+	"Emote_FlippnSexy"
+	{
+		"es"		"Flippin Sexy"
+	}
+	"Emote_Fresh"
+	{
+		"es"		"Fresco"
+	}
+	"Emote_GrooveJam"
+	{
+		"es"		"Grefg"
+	}
+	"Emote_guitar"
+	{
+		"es"		"Guitarra"
+	}
+	"Emote_Hillbilly_Shuffle_Intro"
+	{
+		"es"		"Shuffle"
+	}
+	"Emote_Hiphop_01"
+	{
+		"es"		"Hip Hop"
+	}
+	"Emote_Hula_Start"
+	{
+		"es"		"Hula Hop"
+	}
+	"Emote_InfiniDab_Intro"
+	{
+		"es"		"Dab Infinito"
+	}
+	"Emote_Intensity_Start"
+	{
+		"es"		"Intensidad"
+	}
+	"Emote_IrishJig_Start"
+	{
+		"es"		"Dabke Turco"
+	}
+	"Emote_KoreanEagle"
+	{
+		"es"		"Águila"
+	}
+	"Emote_Kpop_02"
+	{
+		"es"		"Corazón Verdadero"
+	}
+	"Emote_LivingLarge"
+	{
+		"es"		"Viviendo a lo Grande"
+	}
+	"Emote_Maracas"
+	{
+		"es"		"Maracas"
+	}
+	"Emote_PopLock"
+	{
+		"es"		"Pop Lock"
+	}
+	"Emote_PopRock"
+	{
+		"es"		"Poder Estelar"
+	}
+	"Emote_RobotDance"
+	{
+		"es"		"Robot"
+	}
+	"Emote_T-Rex"
+	{
+		"es"		"T-Rex"
+	}
+	"Emote_TechnoZombie"
+	{
+		"es"		"Reanimado"
+	}
+	"Emote_Twist"
+	{
+		"es"		"Twist"
+	}
+	"Emote_WarehouseDance_Start"
+	{
+		"es"		"Almacén"
+	}
+	"Emote_Wiggle"
+	{
+		"es"		"Meneo"
+	}
+	"Emote_Youre_Awesome"
+	{
+		"es"		"Eres Increíble"
+	}
+}

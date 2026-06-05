@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2AILadderBoost_LadderAccelerationGetLadderAcceleration"
+	{
+		"ko"		"[사다리 가속도] %s 사다리 가속도 얻기"
+	}
+	"L4D2AILadderBoost_LadderAccelerationRestoreOriginalSpeed"
+	{
+		"ko"		"[사다리 가속] %s 원래 속도 복원"
+	}
+}

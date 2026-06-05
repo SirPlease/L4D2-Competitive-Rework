@@ -1,0 +1,438 @@
+"Phrases"
+{
+	"Muted on connect"
+	{
+		"hu"		"Le lettél némítva!"
+	}
+	"Gagged on connect"
+	{
+		"hu"		"Az írás jogod elvéve!"
+	}
+	"Mute expired"
+	{
+		"hu"		"A némítás lejárt."
+	}
+	"Gag expired"
+	{
+		"hu"		"Az írás jog visszaadva"
+	}
+	"FWUnmute"
+	{
+		"hu"		"A némítás törölve."
+	}
+	"FWUngag"
+	{
+		"hu"		"Az írástól való eltíltás törölve"
+	}
+	"Usage_time"
+	{
+		"#format"	"{1:d}"
+		"hu"		"Idő: {1} perc, nem specifikált; örökre, ha 0.\nIf < 0, blocks for session."
+	}
+	"Player Comms Not Verified"
+	{
+		"hu"		"Ezt a játékost még nem igazolták. Kérlek, várj harminc másodpercet , mielőtt újra próbálkoznál."
+	}
+	"Player already muted"
+	{
+		"#format"	"{1:s}"
+		"hu"		"Játékos {1} már le van némítva!"
+	}
+	"Player already gagged"
+	{
+		"#format"	"{1:s}"
+		"hu"		"Játékos {1} már el van véve az írás joga!"
+	}
+	"Player already silenced"
+	{
+		"#format"	"{1:s}"
+		"hu"		"Játékos {1} már le van némítva és az írás jog-tól meg van fosztva!"
+	}
+	"Player not muted"
+	{
+		"hu"		"A játékos nincs elnémítva."
+	}
+	"Player not gagged"
+	{
+		"hu"		"A játékos írhat a chat-be."
+	}
+	"Player not silenced"
+	{
+		"hu"		"A játékos nincs meg fosztva az írás és a hang chat-től."
+	}
+	"Permagagged player"
+	{
+		"#format"	"{1:t}"
+		"hu"		"Az írás jogtól megfosztott örökre {1}."
+	}
+	"Permagagged player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"hu"		"Az írás jogtól megfosztott örökre {1} (ok: {2})."
+	}
+	"Gagged player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"hu"		"Az írás jogtól való eltíltás kiterjed {1} {2} percre."
+	}
+	"Gagged player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"hu"		"Az írás jogtól való eltíltás kiterjed {1} {2} percre (ok: {3})."
+	}
+	"Permamuted player"
+	{
+		"#format"	"{1:t}"
+		"hu"		"Örök némítást kapot {1}."
+	}
+	"Permamuted player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"hu"		"Örök némítást kapot {1} (ok: {2})."
+	}
+	"Muted player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"hu"		"{1} némítva {2} percre."
+	}
+	"Muted player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"hu"		"{1} némítva {2} percre. (ok: {3})."
+	}
+	"Permasilenced player"
+	{
+		"#format"	"{1:t}"
+		"hu"		"Örekre elnémítva és eltíltva a chat-től {1}."
+	}
+	"Permasilenced player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"hu"		"Örekre elnémítva és eltíltva a chat-től {1} (ok: {2})."
+	}
+	"Silenced player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"hu"		"Elnémítva és eltíltva a chat-től {1} {2} perc."
+	}
+	"Silenced player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"hu"		"Elnémítva és eltíltva a chat-től {1} {2} perc (ok: {3})."
+	}
+	"Temp unmuted player"
+	{
+		"#format"	"{1:t}"
+		"hu"		"Ideiglenesen feloldva a némítás {1}."
+	}
+	"Temp ungagged player"
+	{
+		"#format"	"{1:t}"
+		"hu"		"Ideiglenesen feloldva az írás jogtól való eltíltás {1}."
+	}
+	"Temp unsilenced player"
+	{
+		"#format"	"{1:t}"
+		"hu"		"Ideiglenesen feloldva az elnémítás és az írás jogtól való eltíltás {1}."
+	}
+	"Unblock Select Failed"
+	{
+		"#format"	"{1:s}"
+		"hu"		"Hiba történt {1} az adatbázisban."
+	}
+	"No blocks found"
+	{
+		"#format"	"{1:s}"
+		"hu"		"Nem található tiltás az adatbázisban róla {1}."
+	}
+	"No db error unlock perm"
+	{
+		"hu"		"Nincs engedélyed feloldani az adatbázis hibát."
+	}
+	"No permission unmute"
+	{
+		"#format"	"{1:s}"
+		"hu"		"A némítás {1} nem lehet eltávolítani mivel egy magasabb rangú admin adta!"
+	}
+	"No permission ungag"
+	{
+		"#format"	"{1:s}"
+		"hu"		"Az írástól való eltíltást {1} nem lehet eltávolítani mivel egy magasabb rangú admin adta!"
+	}
+	"Unmuted player"
+	{
+		"#format"	"{1:t}"
+		"hu"		"Eltávolítva a némítás {1}."
+	}
+	"Ungagged player"
+	{
+		"#format"	"{1:t}"
+		"hu"		"Eltávolítva az írástól való eltíltás {1}."
+	}
+	"Unblock insert failed"
+	{
+		"hu"		"Sikertelen eltávolítás az adatbázisból."
+	}
+	"successfully unmuted"
+	{
+		"#format"	"{1:s}"
+		"hu"		"Sikeresen törölve a némítás {1}-ről az adatbázisból."
+	}
+	"successfully ungagged"
+	{
+		"#format"	"{1:s}"
+		"hu"		"Sikeresen törölve az írástól való eltíltás {1}-ről az adatbázisból."
+	}
+	"AdminMenu_Display_None"
+	{
+		"#format"	"{1:s}"
+		"hu"		"[  ] {1}"
+	}
+	"AdminMenu_Display_Muted"
+	{
+		"#format"	"{1:s}"
+		"hu"		"[M] {1}"
+	}
+	"AdminMenu_Display_Gagged"
+	{
+		"#format"	"{1:s}"
+		"hu"		"[G] {1}"
+	}
+	"AdminMenu_Display_Silenced"
+	{
+		"#format"	"{1:s}"
+		"hu"		"[S] {1}"
+	}
+	"AdminMenu_Main"
+	{
+		"hu"		"Kommunikációs parancsok"
+	}
+	"AdminMenu_Select_Main"
+	{
+		"hu"		"Kommunikációs parancsok:"
+	}
+	"AdminMenu_List"
+	{
+		"hu"		"Részletek a büntetésről"
+	}
+	"AdminMenu_Select_List"
+	{
+		"hu"		"Játékos kiválasztása:"
+	}
+	"AdminMenu_Gag"
+	{
+		"hu"		"Adás: Írásjog megvonása"
+	}
+	"AdminMenu_Select_Gag"
+	{
+		"hu"		"Játékos kiválasztása:"
+	}
+	"AdminMenu_Select_Mute"
+	{
+		"hu"		"Játékos kiválasztása:"
+	}
+	"AdminMenu_Select_Silence"
+	{
+		"hu"		"Játékos kiválasztása:"
+	}
+	"AdminMenu_Select_Ungag"
+	{
+		"hu"		"Játékos kiválasztása:"
+	}
+	"AdminMenu_Select_Unmute"
+	{
+		"hu"		"Játékos kiválasztása:"
+	}
+	"AdminMenu_Select_Unsilence"
+	{
+		"hu"		"Játékos kiválasztása:"
+	}
+	"AdminMenu_Option_Mute_Empty"
+	{
+		"hu"		"Nincsenek némított játékosok"
+	}
+	"AdminMenu_Option_Gag_Empty"
+	{
+		"hu"		"Nincsenek gaggolt játékosok"
+	}
+	"AdminMenu_Option_Silence_Empty"
+	{
+		"hu"		"Nincsenek gagg-olt és némított játékosok"
+	}
+	"ListMenu_Option_Empty"
+	{
+		"hu"		"Nincsenek büntetett kliensek"
+	}
+	"AdminMenu_Option_Empty"
+	{
+		"hu"		"Nincsenek elérhető játékosok"
+	}
+	"AdminMenu_UnGag"
+	{
+		"hu"		"Feloldás: Írásjog megvonása"
+	}
+	"AdminMenu_Title_Durations"
+	{
+		"hu"		"Időtartam kiválasztása:"
+	}
+	"AdminMenu_Title_Reasons"
+	{
+		"hu"		"Ok kiválasztása:"
+	}
+	"AdminMenu_Mute"
+	{
+		"hu"		"Adás: Némítás"
+	}
+	"AdminMenu_UnMute"
+	{
+		"hu"		"Feloldás: Némítás"
+	}
+	"AdminMenu_Silence"
+	{
+		"hu"		"Adás: Teljes Csend (Silence)"
+	}
+	"AdminMenu_UnSilence"
+	{
+		"hu"		"Feloldás: Teljes Csend (Silence)"
+	}
+	"AdminMenu_Not_Available"
+	{
+		"hu"		"A kiválasztott játékos már nem elérhető."
+	}
+	"Command_Target_Not_Targetable"
+	{
+		"hu"		"Nem tudod befogni ezt a játékost."
+	}
+	"ListMenu_Option_Mute"
+	{
+		"hu"		"Némítva"
+	}
+	"ListMenu_Option_Gag"
+	{
+		"hu"		"Gagg-olva"
+	}
+	"ListMenu_Option_Duration"
+	{
+		"hu"		"- Időtartam: "
+	}
+	"ListMenu_Option_Duration_Perm"
+	{
+		"hu"		"Örökre"
+	}
+	"ListMenu_Option_Duration_Time"
+	{
+		"#format"	"{1:d}"
+		"hu"		"{1} Perc"
+	}
+	"ListMenu_Option_Duration_Temp"
+	{
+		"hu"		"Ideiglenes"
+	}
+	"ListMenu_Option_Expire"
+	{
+		"hu"		"- Lejárt: "
+	}
+	"ListMenu_Option_Expire_Perm"
+	{
+		"hu"		"Soha"
+	}
+	"ListMenu_Option_Expire_Time"
+	{
+		"#format"	"{1:s}"
+		"hu"		"{1}"
+	}
+	"ListMenu_Option_Expire_Temp_Reconnect"
+	{
+		"hu"		"Újracsatlakozás"
+	}
+	"ListMenu_Option_Admin"
+	{
+		"#format"	"{1:s}"
+		"hu"		"- Admin: {1}"
+	}
+	"ListMenu_Option_Issue"
+	{
+		"#format"	"{1:s}"
+		"hu"		"- Issued: {1}"
+	}
+	"ListMenu_Option_Reason"
+	{
+		"hu"		"- Ok megnézése"
+	}
+	"ListMenu_Option_Reason_None"
+	{
+		"hu"		"- Ok: Nincs"
+	}
+	"ReasonPanel_Punishment_Mute"
+	{
+		"hu"		"Némítva: "
+	}
+	"ReasonPanel_Punishment_Gag"
+	{
+		"hu"		"Gagg-olva: "
+	}
+	"ReasonPanel_Perm"
+	{
+		"hu"		"Örökre"
+	}
+	"ReasonPanel_Time"
+	{
+		"#format"	"{1:d}"
+		"hu"		"{1} Perc"
+	}
+	"ReasonPanel_Temp"
+	{
+		"hu"		"Ideiglenes"
+	}
+	"ReasonPanel_Reason"
+	{
+		"#format"	"{1:s}"
+		"hu"		"Ok: {1}"
+	}
+	"ReasonPanel_Back"
+	{
+		"hu"		"Kilépés"
+	}
+	"Temp muted player"
+	{
+		"#format"	"{1:t}"
+		"hu"		"Némítva {1}."
+	}
+	"Temp muted player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"hu"		"Némítva {1} (Ok: {2})."
+	}
+	"Temp gagged player"
+	{
+		"#format"	"{1:t}"
+		"hu"		"Gagg-olva {1}."
+	}
+	"Temp gagged player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"hu"		"Gagg-olva{1} (ok: {2})."
+	}
+	"Temp silenced player"
+	{
+		"#format"	"{1:t}"
+		"hu"		"Gagg-olva és némítva {1}."
+	}
+	"Temp silenced player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"hu"		"Gagg-olva és némítva {1} (ok: {2})."
+	}
+	"CommandComms_na"
+	{
+		"hu"		"Available only for players on server."
+	}
+	"CommandComms_nb"
+	{
+		"hu"		"Az írás és a hang chat nincs blokkolva."
+	}
+	"no access"
+	{
+		"hu"		"A büntetés a megadott ideig nem engedélyezett a számodra."
+	}
+}

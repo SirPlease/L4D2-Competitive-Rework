@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2Dirspawn_DirSpawnKVGenerated"
+	{
+		"vi"		"[DirSpawn] KV được tạo: %s"
+	}
+	"L4D2Dirspawn_DirSpawnFailedWriteKV"
+	{
+		"vi"		"[DirSpawn] Không ghi được KV: %s"
+	}
+}

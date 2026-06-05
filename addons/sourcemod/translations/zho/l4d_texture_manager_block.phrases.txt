@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4DTextureManagerBlock_MathackDetectorKickedUsingMathack"
+	{
+		"zho"		"{green}[{default}MMathack探測器{green}] {lightgreen}%s {default}因使用mathack而被踢！"
+	}
+}

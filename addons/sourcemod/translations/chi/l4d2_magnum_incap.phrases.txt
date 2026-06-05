@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2MagnumIncap_ClientWeapon"
+	{
+		"chi"		"客户端%d -> 武器%s"
+	}
+}

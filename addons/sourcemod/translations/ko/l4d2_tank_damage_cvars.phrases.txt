@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2TankDamageCvars_VictimAttackerInflictorDamageType"
+	{
+		"ko"		"iVictim: %N, iAttacker: %N, iInflector, %s(%d), fDamage: %f, iDamagetype: %d"
+	}
+}

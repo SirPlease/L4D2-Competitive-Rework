@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"VisualiseImpacts_NoteUseCommandRemovedecalsClient"
+	{
+		"ko"		"[참고] 오래된 데칼을 청소하려면 클라이언트에 `r_removedecals` 명령을 사용하십시오."
+	}
+}

@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2ScriptedHUD_HUDTextsDataFileReloaded"
+	{
+		"ko"		"{green}[데이터 파일의 HUD 텍스트가 다시 로드됨]"
+	}
+}

@@ -1,0 +1,67 @@
+"Phrases"
+{
+	"L4D2Playstats_UseStatsTypeRoundGame"
+	{
+		"vi"		"{default}Sử dụng: /stats [<type>] [{olive}round{default}/{olive}game{default}/{olive}team{default}/{olive}all{default}/{olive}other{default}]"
+	}
+	"L4D2Playstats_StatsType"
+	{
+		"vi"		"{default} hoặc: /stats [<type>] [{olive}r{default}/{olive}g{default}/{olive}t{default}/{olive}a{default}/{olive}o{default}]"
+	}
+	"L4D2Playstats_TypeMVPSkillFFAcc"
+	{
+		"vi"		"{default} trong đó <loại> là '{green}mvp{default}', '{green}skill{default}', '{green}ff{default}', '{green}acc{default}' hoặc '{green}inf{default}'. (để biết thêm, xem bảng điều khiển)"
+	}
+	"L4D2Playstats_StatsCommandUnknownArgumentType"
+	{
+		"vi"		"Lệnh thống kê: đối số không xác định: '%s'. Nhập '/stats help' để biết các đối số có thể có."
+	}
+	"L4D2Playstats_PlayerStatisticsReset"
+	{
+		"vi"		"Đặt lại thống kê người chơi."
+	}
+	"L4D2Playstats_UseStatsAutoFlagsType"
+	{
+		"vi"		"{default}Sử dụng: {green}/stats_auto <flags>{default}. Nhập {green}/stats_auto help{default} để biết thêm thông tin."
+	}
+	"L4D2Playstats_UseStatsAutoFlagsInteger"
+	{
+		"vi"		"{default}Sử dụng: {green}/stats_auto <flags>{default}. Cờ là một số nguyên là tổng của tất cả các bản in được hiển thị ở cuối."
+	}
+	"L4D2Playstats_SetFlags0UseServer"
+	{
+		"vi"		"{default}Đặt cờ thành 0 để sử dụng mặc định tự động in của máy chủ; đặt thành -1 để không hiển thị gì cả."
+	}
+	"L4D2Playstats_StatsPreviewNoFlagsSet"
+	{
+		"vi"		"Xem trước {default}Stats: Không có cờ nào được đặt. Đặt cờ đầu tiên với {green}/stats_auto <flags>{default}. Nhập {green}/stats_auto help{default} để biết thêm thông tin."
+	}
+	"L4D2Playstats_StatsPrefInvalidValueType"
+	{
+		"vi"		"Thống kê ưu tiên: giá trị không hợp lệ: '%s'. Nhập '/stats_auto trợ giúp' để biết thêm thông tin."
+	}
+	"L4D2Playstats_StatsPrefNoRoundEnd"
+	{
+		"vi"		"{default}Stats Pref.: {green}Không có bản in đầu tròn nào cả{default}."
+	}
+	"L4D2Playstats_StatsPrefServerDefault"
+	{
+		"vi"		"{default}Stats Tùy chọn: {green}máy chủ mặc định{default}."
+	}
+	"L4D2Playstats_StatsPrefFlagsSet"
+	{
+		"vi"		"{default}Stats Pref.: Cờ được đặt cho:"
+	}
+	"L4D2Playstats_UseStatsAutoTestGet"
+	{
+		"vi"		"{default}Sử dụng {green}/stats_auto test{default} để xem trước báo cáo."
+	}
+	"L4D2Playstats_StatsPrefErrorCookieNot"
+	{
+		"vi"		"Thống kê trước: Lỗi: cookie chưa được lưu vào bộ nhớ đệm (hãy thử lại sau một lát)."
+	}
+	"L4D2Playstats_SeeURLListFlags"
+	{
+		"vi"		"{default}Xem danh sách flags tại: {olive}https://github.com/Tabbernaut/L4D2-Plugins/blob/master/stats/README.md{default}."
+	}
+}

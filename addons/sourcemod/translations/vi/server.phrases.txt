@@ -1,0 +1,51 @@
+"Phrases"
+{
+	"Server_WatchingChatBlue"
+	{
+		"vi"		"[{olive} đang xem {default}] {blue}%N{default}:%s"
+	}
+	"Server_WatchingChatRed"
+	{
+		"vi"		"[{olive} đang xem {default}] {red}%N{default}:%s"
+	}
+	"Server_PromptFirstGroupWipeoutContinue"
+	{
+		"vi"		"[{olive} nhắc {default}] Đây là {blue}%d{default} lần xóa nhóm đầu tiên của bạn, hãy tiếp tục làm việc chăm chỉ."
+	}
+	"Server_StillUntakenBotsTakeThem"
+	{
+		"vi"		"Vẫn còn những Bot chưa được sử dụng, vui lòng xử lý chúng trước hoặc đợi cho đến khi đội sống sót đầy đủ rồi thử lại."
+	}
+	"Server_Not8PlayerSportHasn"
+	{
+		"vi"		"Đây không phải là môn thể thao 8 người, nó vẫn chưa đạt đến giới hạn trên!"
+	}
+	"Server_SurvivorBotGenerated"
+	{
+		"vi"		"Một Bot sống sót đã được tạo ra."
+	}
+	"Server_SurvivorBotCannotGeneratedMoment"
+	{
+		"vi"		"Hiện tại không thể tạo Bot sống sót."
+	}
+	"Server_NoBotNotTaken"
+	{
+		"vi"		"Không có Bot nào chưa được tiếp quản."
+	}
+	"Server_EverythingNormalStillWantSkip"
+	{
+		"vi"		"Mọi chuyện vẫn bình thường nhưng bạn vẫn muốn trốn học?"
+	}
+	"Server_ExcessGramsKicked"
+	{
+		"vi"		"Số gram thừa đã bị loại bỏ"
+	}
+	"Server_PromptsAlreadyBlackWhiteGive"
+	{
+		"vi"		"[{olive} nhắc {default}] {green}%N{default} Đã {olive} đen trắng {default}, hãy ưu tiên bảo vệ và xử lý!"
+	}
+	"Server_PromptBlackWhiteTreatSoon"
+	{
+		"vi"		"[{olive} nhắc {default}] Bạn hiện là {green} {default} đen trắng, hãy xử lý nó càng sớm càng tốt!"
+	}
+}

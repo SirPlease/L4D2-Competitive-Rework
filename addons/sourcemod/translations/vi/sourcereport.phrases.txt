@@ -15,7 +15,7 @@
 	}
 	"Reason Prompt"
 	{
-		"vi"		"Vui lòng nhập lý do báo cáo hoặc \\\"hủy\\\" để hủy"
+		"vi"		"Vui lòng nhập lý do báo cáo hoặc \"hủy\" để hủy"
 	}
 	"Reason Short Need More"
 	{

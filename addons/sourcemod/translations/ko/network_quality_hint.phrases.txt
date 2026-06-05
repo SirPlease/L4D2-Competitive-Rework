@@ -1,0 +1,27 @@
+"Phrases"
+{
+	"NetworkQualityHint_CurrentNetworkPingMSLoss"
+	{
+		"ko"		"%s 현재 네트워크: ping {olive}%dms{default}, 손실 {olive}%.2f%%{default}, 초크 {olive}%.2f%%{default}."
+	}
+	"NetworkQualityHint_DetectionCaliberChokeUseDirection"
+	{
+		"ko"		"%s 감지 구경: 초크 서버에서 보낸 방향을 사용합니다. 서버로 보낸 방향은 현재 {olive}%.2f%%{default}입니다."
+	}
+	"NetworkQualityHint_AbnormalDelayPacketLossOpen"
+	{
+		"ko"		"%s 비정상적인 지연 또는 패킷 손실이 있는 경우 IP 페이지를 열고 현재 서버 주소를 복사한 후 다시 연결하십시오: {green}%s{default}"
+	}
+	"NetworkQualityHint_AbnormalityNetworkStatusDetectedCurrent"
+	{
+		"ko"		"%s 네트워크 상태의 이상이 감지되었습니다: {olive}%s{default}. 현재 핑 {olive}%dms{default}, 손실 {olive}%.2f%%{default}, 초크 {olive}%.2f%%{default}."
+	}
+	"NetworkQualityHint_OpenIPPageCopyConnect"
+	{
+		"ko"		"%s IP 페이지를 열고 현재 서버에 해당하는 연결 명령을 복사한 후 콘솔에 붙여넣어 다시 연결하십시오: {green}%s{default}"
+	}
+	"NetworkQualityHint_ThirdLineServersGivePriority"
+	{
+		"ko"		"%s 3차 서버의 경우 컬렉션이나 이력 기록에서 잘못된 경로를 선택하지 않도록 웹 페이지에 표시된 전환 입구를 우선적으로 이용하시기 바랍니다."
+	}
+}

@@ -1,46 +1,25 @@
 "Phrases"
 {
-    "Unpausing"
-    {
-        "en"        "{blue}[{default}AutoPause{blue}] {default}All {green}crashed {default}players have reconnected.. {blue}Unpausing{default}!"
-	"chi"        "{blue}[{default}AutoPause{blue}] {default}所以 {green}游戏崩溃 {default}玩家都已经重新连接.. {blue}解除暂停{default}!"
-		"zho"		"{blue}[{default}AutoPause{blue}] {default}All {green}crashed {default}players have reconnected.. {blue}Unpausing{default}!"
-		"jp"		"{blue}[{default}AutoPause{blue}] {default}All {green}crashed {default}players have reconnected.. {blue}Unpausing{default}!"
-		"ko"		"{blue}[{default}AutoPause{blue}] {default}All {green}crashed {default}players have reconnected.. {blue}Unpausing{default}!"
-		"vi"		"{blue}[{default}AutoPause{blue}] {default}All {green}crashed {default}players have reconnected.. {blue}Unpausing{default}!"
-    }
-
-    "Waiting"
-    {
-        "#format"   "{1:i},{2:t}"   // 1: remainingCrashers 2: remainingCrashers > 1 ? "players" : "player"
-        "en"        "{blue}[{default}AutoPause{blue}] {default}Waiting for {olive}{1} {default}more {green}crashed {default}{2} before automatic {blue}Unpause{default}!"
-        "chi"        "{blue}[{default}AutoPause{blue}] {default}正在等待 {olive}{1}{default}{2}{green}游戏崩溃玩家{default}重新连接来 {blue}解除暂停{default}!"
-		"zho"		"{blue}[{default}AutoPause{blue}] {default}Waiting for {olive}{1} {default}more {green}crashed {default}{2} before automatic {blue}Unpause{default}!"
-		"jp"		"{blue}[{default}AutoPause{blue}] {default}Waiting for {olive}{1} {default}more {green}crashed {default}{2} before automatic {blue}Unpause{default}!"
-		"ko"		"{blue}[{default}AutoPause{blue}] {default}Waiting for {olive}{1} {default}more {green}crashed {default}{2} before automatic {blue}Unpause{default}!"
-		"vi"		"{blue}[{default}AutoPause{blue}] {default}Waiting for {olive}{1} {default}more {green}crashed {default}{2} before automatic {blue}Unpause{default}!"
-    }
-
-    "Crashed"
-    {
-        "#format"   "{1:N}"         // 1: client
-        "en"        "{blue}[{default}AutoPause{blue}] {olive}{1} {default}crashed."
-        "chi"       "{blue}[{default}AutoPause{blue}] {olive}{1} {default}游戏崩溃."
-		"zho"		"{blue}[{default}AutoPause{blue}] {olive}{1} {default}游戏崩溃."
-		"jp"		"{blue}[{default}AutoPause{blue}] {olive}{1} {default}游戏崩溃."
-		"ko"		"{blue}[{default}AutoPause{blue}] {olive}{1} {default}游戏崩溃."
-		"vi"		"{blue}[{default}AutoPause{blue}] {olive}{1} {default}游戏崩溃."
-    }
-
-    "players"
-    {
-        "en"        "players"
-        "chi"       "位"
-    }
-
-    "player"
-    {
-        "en"        "player"
-        "chi"       "位"
-    }
+	"Unpausing"
+	{
+		"en"		"{blue}[{default}AutoPause{blue}] {default}All {green}crashed {default}players have reconnected.. {blue}Unpausing{default}!"
+	}
+	"Waiting"
+	{
+		"#format"	"{1:i},{2:t}"
+		"en"		"{blue}[{default}AutoPause{blue}] {default}Waiting for {olive}{1} {default}more {green}crashed {default}{2} before automatic {blue}Unpause{default}!"
+	}
+	"Crashed"
+	{
+		"#format"	"{1:N}"
+		"en"		"{blue}[{default}AutoPause{blue}] {olive}{1} {default}crashed."
+	}
+	"players"
+	{
+		"en"		"players"
+	}
+	"player"
+	{
+		"en"		"player"
+	}
 }

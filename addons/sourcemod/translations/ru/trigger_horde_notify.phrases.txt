@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Alarmed_Car"
+	{
+		"ru"		"{olive}%N{green} провоцирует сигнализацию машины!"
+	}
+	"Horde"
+	{
+		"ru"		"{olive}%N{green} провоцирует орду!"
+	}
+	"Final Rescue Start"
+	{
+		"ru"		"{green}Спасение последнего этапа началось!"
+	}
+	"Final Rescue"
+	{
+		"ru"		"{blue}%N{olive} начинает спасение последнего этапа!"
+	}
+}

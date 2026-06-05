@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2BlockBotPills_BotBlockPillsPreventedAccidental"
+	{
+		"jp"		"{green}[{default}ボットブロックピル{green}]{default}: %Nによる誤って錠剤の摂取を防止"
+	}
+	"L4D2BlockBotPills_BotBlockPillsBotWants"
+	{
+		"jp"		"{green}[{default}ボットブロック丸薬{green}]{default}: ボット{blue}%N{default}は鎮痛剤の使用を希望しています。このアクションをブロックしています..."
+	}
+}

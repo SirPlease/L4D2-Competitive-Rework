@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Ratemonitor_RatesNetsettingsChanged"
+	{
+		"chi"		"{default}<{olive}Rates{default}> {teamcolor}%N{default} 的网络设置从 {teamcolor}%d/%d/%d {default} 更改为{teamcolor}%d/%d/%d {olive}%s"
+	}
+	"Ratemonitor_RatesNetsettingsSet"
+	{
+		"chi"		"{default}<{olive}Rates{default}> {teamcolor}%N{default} 的网络设置设置为 {teamcolor}%d/%d/%d"
+	}
+	"Ratemonitor_RatesNetsettingsSetIllegalValues"
+	{
+		"chi"		"{default}<{olive}Rates{default}> {teamcolor}%N{default} 的网络设置设置为非法值：{teamcolor}%s/%s/%s {olive}%s"
+	}
+	"Ratemonitor_RatesIllegalyChangedNetsettingsMidgame"
+	{
+		"chi"		"{default}<{olive}Rates{default}> {teamcolor}%N{default} 非法更改网络设置：{teamcolor}%s/%s/%s {olive}%s"
+	}
+	"Ratemonitor_RatesMovedSpectatorsIllegalNetsettings"
+	{
+		"chi"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}因非法下网而被移至观众：{teamcolor}%s/%s/%s {olive}%s"
+	}
+	"Ratemonitor_RatesAdjustRatesValuesHigher"
+	{
+		"chi"		"{default}<{olive}Rates{default}> 请将您的费率调整为高于 {olive}%d/%d/%d%s 的值"
+	}
+	"Ratemonitor_RatesChangeNetsettingsBack"
+	{
+		"chi"		"{default}<{olive}Rates{default}> 将网络设置更改回：{teamcolor}%d/%d/%d"
+	}
+	"Ratemonitor_RatesKickedIllegalNetsettings"
+	{
+		"chi"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}因非法组网被踢：{teamcolor}%s/%s/%s {olive}%s"
+	}
+	"Ratemonitor_RatesKickedDueIllegalNetsettings"
+	{
+		"chi"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}因非法网络设置更改而被踢：{teamcolor}%s/%s/%s {olive}%s"
+	}
+}

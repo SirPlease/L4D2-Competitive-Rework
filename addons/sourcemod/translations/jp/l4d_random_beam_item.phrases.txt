@@ -1,0 +1,31 @@
+"Phrases"
+{
+	"L4DRandomBeamItem_InvalidTarget"
+	{
+		"jp"		"{green}ターゲットが無効です。"
+	}
+	"L4DRandomBeamItem_TargetEntityNoBeam"
+	{
+		"jp"		"{green}ターゲット エンティティにはビームがありません。"
+	}
+	"L4DRandomBeamItem_BeamIndexTargetIndexClassname"
+	{
+		"jp"		"{olive}ビームインデックス: {lightgreen}%i {olive}ターゲットインデックス: {lightgreen}%i {olive}クラス名: {lightgreen}%s {olive}モデル: {lightgreen}%s {olive}ビームカラー(RGB|整数): {lightgreen}%i %i %i|%i {olive}B明るさ: {lightgreen}%.1f {olive}長さ: {lightgreen}%i {olive}幅: {lightgreen}%i {olive}HDR カラースケール: {lightgreen}%.1f"
+	}
+	"L4DRandomBeamItem_BeamConfigsReloaded"
+	{
+		"jp"		"{green}Beam 構成がリロードされました。"
+	}
+	"L4DRandomBeamItem_RemovedTargetEntityPluginBeam"
+	{
+		"jp"		"{green}ターゲット エンティティ プラグイン ビームを削除しました。"
+	}
+	"L4DRandomBeamItem_RemovedAllBeamsCreatedPlugin"
+	{
+		"jp"		"{green}プラグインによって作成されたすべてのビームを削除しました。"
+	}
+	"L4DRandomBeamItem_BeamAddedTargetEntity"
+	{
+		"jp"		"{green}Beam がターゲット エンティティに追加されました。"
+	}
+}

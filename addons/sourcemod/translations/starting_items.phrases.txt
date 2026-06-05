@@ -3,10 +3,5 @@
 	"StartingItems_DetermineItems"
 	{
 		"en"		"DetermineItems()"
-		"chi"		"确定项目()"
-		"zho"		"確定項目()"
-		"jp"		"DetermineItems()"
-		"ko"		"항목 결정()"
-		"vi"		"Xác địnhItems()"
 	}
 }

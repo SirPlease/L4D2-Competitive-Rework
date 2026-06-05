@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2SIFfblock_HookWitchTakeDamageVictim"
+	{
+		"jp"		"Hook_WitchOnTakeDamage。 i被害者: %s (%d)、i攻撃者: %N (%d)、Zクラス: %s (%d)、i加害者: %d、fダメージ: %f、iダメージタイプ: %d"
+	}
+	"L4D2SIFfblock_HookPlayerTakeDamageVictim"
+	{
+		"jp"		"Hook_PlayerOnTakeDamage。 i被害者: %N (%d)、i攻撃者: %N (%d)、Zクラス: %s (%d)、i加害者: %d、fダメージ: %f、iダメージタイプ: %d"
+	}
+}

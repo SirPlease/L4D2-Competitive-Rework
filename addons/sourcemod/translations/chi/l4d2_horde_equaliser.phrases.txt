@@ -1,0 +1,21 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"chi"		"<{olive}尸潮{default}>"
+	}
+	"NoCommonRemaining"
+	{
+		"chi"		"{red}没有{default}普通感染者了！"
+	}
+	"CommonRemaining"
+	{
+		"#format"	"{1:i}"
+		"chi"		"{red}{1} {default}个普通感染者剩余.."
+	}
+	"FiniteEventStarted"
+	{
+		"#format"	"{1:i}"
+		"chi"		"一场{blue}有限尸潮{default}开始了！本轮共有{olive}{1}{default}个普通感染者！是冲还是等，你来决定！"
+	}
+}

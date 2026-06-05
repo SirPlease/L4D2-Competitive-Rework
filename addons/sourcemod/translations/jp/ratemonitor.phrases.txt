@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Ratemonitor_RatesNetsettingsChanged"
+	{
+		"jp"		"{default}<{olive}Rates{default}> {teamcolor}%N{default} のネット設定が {teamcolor}%d/%d/%d {default} に変更されました{teamcolor}%d/%d/%d {olive}%s"
+	}
+	"Ratemonitor_RatesNetsettingsSet"
+	{
+		"jp"		"{default}<{olive}Rates{default}> {teamcolor}%N{default} のネット設定が {teamcolor}%d/%d/%d に設定されました"
+	}
+	"Ratemonitor_RatesNetsettingsSetIllegalValues"
+	{
+		"jp"		"{default}<{olive}Rates{default}> {teamcolor}%N{default} のネット設定が不正な値に設定されています: {teamcolor}%s/%s/%s {olive}%s"
+	}
+	"Ratemonitor_RatesIllegalyChangedNetsettingsMidgame"
+	{
+		"jp"		"{default}<{olive}Rates{default}> {teamcolor}%N{default} がゲーム中にネット設定を不正に変更しました: {teamcolor}%s/%s/%s {olive}%s"
+	}
+	"Ratemonitor_RatesMovedSpectatorsIllegalNetsettings"
+	{
+		"jp"		"{default}<{olive}Rates{default}> {teamcolor}%N {default} が違法なネット設定のため観客に移動されました: {teamcolor}%s/%s/%s {olive}%s"
+	}
+	"Ratemonitor_RatesAdjustRatesValuesHigher"
+	{
+		"jp"		"{default}<{olive}Rates{default}> レートを {olive}%d/%d/%d%s より高い値に調整してください。"
+	}
+	"Ratemonitor_RatesChangeNetsettingsBack"
+	{
+		"jp"		"{default}<{olive}Rates{default}> ネット設定を次のように変更します: {teamcolor}%d/%d/%d"
+	}
+	"Ratemonitor_RatesKickedIllegalNetsettings"
+	{
+		"jp"		"{default}<{olive}Rates{default}> {teamcolor}%N {default} は違法なネット設定によりキックされました: {teamcolor}%s/%s/%s {olive}%s"
+	}
+	"Ratemonitor_RatesKickedDueIllegalNetsettings"
+	{
+		"jp"		"{default}<{olive}Rates{default}> {teamcolor}%N {default} は、違法なネット設定変更によりキックされました: {teamcolor}%s/%s/%s {olive}%s"
+	}
+}

@@ -3,10 +3,5 @@
 	"L4D2TankFlyingIncap_FlyingIncapStateLine"
 	{
 		"en"		"{default}[FlyingIncap]: (%.1f) (%N) [{olive}%s{default}] [{green}%s{default}]"
-		"chi"		"{default}[FlyingIncap]: (%.1f) (%N) [{olive}%s{default}] [{green}%s{default}]"
-		"zho"		"{default}[FlyingIncap]: (%.1f) (%N) [{olive}%s{default}] [{green}%s{default}]"
-		"jp"		"{default}[フライングインキャップ]: (%.1f) (%N) [{olive}%s{default}] [{green}%s{default}]"
-		"ko"		"{default}[플라잉인캡]: (%.1f) (%N) [{olive}%s{default}] [{green}%s{default}]"
-		"vi"		"{default}[FlyingIncap]: (%.1f) (%N) [{olive}%s{default}] [{green}%s{default}]"
 	}
 }

@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4DBackjumpFix_OtherSolid"
+	{
+		"vi"		"loại khác: %s (%i), rắn: %i"
+	}
+}

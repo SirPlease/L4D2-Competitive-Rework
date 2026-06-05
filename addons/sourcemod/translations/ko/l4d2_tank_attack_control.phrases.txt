@@ -6,14 +6,14 @@
 	}
 	"Reload"
 	{
-		"ko"		"{olive}Reload{default}/{olive}!overhand{default} = {blue}2 Handed Overhand{default}"
+		"ko"		"{olive}재장전{default}/{olive}!overhand{default} = {blue}양손 오버핸드{default}"
 	}
 	"Use"
 	{
-		"ko"		"{olive}사용{default}/{olive}!underhand{default} = {blue}Underhand{default}"
+		"ko"		"{olive}사용{default}/{olive}!underhand{default} = {blue}언더핸드{default}"
 	}
 	"M2"
 	{
-		"ko"		"{olive}M2{default}/{olive}!overonehand{default} = {blue}1 Handed Overhand{default}"
+		"ko"		"{olive}M2{default}/{olive}!overonehand{default} = {blue}한손 오버핸드{default}"
 	}
 }

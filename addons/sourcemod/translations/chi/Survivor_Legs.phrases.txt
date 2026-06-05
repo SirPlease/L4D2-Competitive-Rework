@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"SurvivorLegs_ClientSequenceLegsSequence"
+	{
+		"chi"		"客户端(m_nSequence)[%i] 腿(m_nSequence)[%i]"
+	}
+}

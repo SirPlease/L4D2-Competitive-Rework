@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4DBlackandwhite_BlackWhite"
+	{
+		"vi"		"{blue}[{default}!{blue}]{default} {olive}%s{default} có màu đen và trắng."
+	}
+}

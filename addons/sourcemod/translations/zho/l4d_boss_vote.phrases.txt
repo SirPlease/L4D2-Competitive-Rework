@@ -30,7 +30,7 @@
 	}
 	"Usage2"
 	{
-		"zho"		"使用 {default} \\\\\\\" {blue} 0 {default} \\\\\\\" 表示 {olive} 無生成 {default} ， \\\\\\\" {blue} -1 {default} \\\\\\\" 表示 {olive} 無知。"
+		"zho"		"使用 {default} \" {blue} 0 {default} \" 表示 {olive} 無生成 {default} ， \" {blue} -1 {default} \" 表示 {olive} 無知。"
 	}
 	"Invalid"
 	{

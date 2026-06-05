@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"L4DRockLagcomp_WeaponRange"
+	{
+		"jp"		"武器：%s |範囲: %.2f"
+	}
+	"L4DRockLagcomp_RockHealth"
+	{
+		"jp"		"岩の健康: %d\\%"
+	}
+	"L4DRockLagcomp_EntityLocation"
+	{
+		"jp"		"エンティティ %s (%d) の場所: (%.2f、%.2f、%.2f)"
+	}
+	"L4DRockLagcomp_WeaponRangeDamageRockHealth"
+	{
+		"jp"		"武器：%s |範囲: %.2f |ダメージ: %.1f |岩の健康: %.1f%%"
+	}
+}

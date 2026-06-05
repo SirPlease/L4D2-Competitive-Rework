@@ -3,10 +3,5 @@
 	"L4D2TankDamageCvars_VictimAttackerInflictorDamageType"
 	{
 		"en"		"iVictim: %N, iAttacker: %N, iInflictor, %s (%d), fDamage: %f, iDamagetype: %d"
-		"chi"		"iVictim：%N，iAttacker：%N，iInflictor，%s（%d），fDamage：%f，iDamagetype：%d"
-		"zho"		"iVictim: %N, iAttacker: %N, iInflictor, %s (%d), fDamage: %f, iDamagetype: %d"
-		"jp"		"i被害者: %N、i攻撃者: %N、i加害者、%s (%d)、fダメージ: %f、iダメージタイプ: %d"
-		"ko"		"iVictim: %N, iAttacker: %N, iInflector, %s(%d), fDamage: %f, iDamagetype: %d"
-		"vi"		"iVictim: %N, iAttacker: %N, iInflictor, %s (%d), fDamage: %f, iDamagetype: %d"
 	}
 }

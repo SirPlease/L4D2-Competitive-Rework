@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2ExplosiondmgPrev_TakeDamageVictimAttackerInflictor"
+	{
+		"ko"		"hOnTakeDamage 피해자: %d, 공격자: %d(%s), 가해자: %d, 피해: %f, 피해 유형: %d"
+	}
+}

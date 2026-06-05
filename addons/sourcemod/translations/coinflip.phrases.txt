@@ -3,10 +3,6 @@
 	"Tag"
 	{
 		"en"		"[{olive}Coinflip{default}]"
-		"zho"		"[{olive}Coinflip{default}]"
-		"jp"		"[{olive}Coinflip{default}]"
-		"ko"		"[{olive}Coinflip{default}]"
-		"vi"		"[{olive}Coinflip{default}]"
 	}
 	"Heads"
 	{
@@ -15,19 +11,9 @@
 	"Tails"
 	{
 		"en"		"{lightgreen}%s{default} flipped a coin!\nIt's {green}Tails{default}!"
-	
-		"zho"		"{lightgreen}%s{default} flipped a coin!\nIt's {green}Tails{default}!"
-		"jp"		"{lightgreen}%s{default} flipped a coin!\nIt's {green}Tails{default}!"
-		"ko"		"{lightgreen}%s{default} flipped a coin!\nIt's {green}Tails{default}!"
-		"vi"		"{lightgreen}%s{default} flipped a coin!\nIt's {green}Tails{default}!"
 	}
 	"rolled"
 	{
 		"en"		"{lightgreen}%s{default} rolled a {teamcolor}%d{default} sided die!\nIt's {green}%d{default}!"
-	
-		"zho"		"{lightgreen}%s{default} rolled a {teamcolor}%d{default} sided die!\nIt's {green}%d{default}!"
-		"jp"		"{lightgreen}%s{default} rolled a {teamcolor}%d{default} sided die!\nIt's {green}%d{default}!"
-		"ko"		"{lightgreen}%s{default} rolled a {teamcolor}%d{default} sided die!\nIt's {green}%d{default}!"
-		"vi"		"{lightgreen}%s{default} rolled a {teamcolor}%d{default} sided die!\nIt's {green}%d{default}!"
 	}
 }

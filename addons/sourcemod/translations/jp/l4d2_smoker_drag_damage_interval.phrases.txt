@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"L4D2SmokerDragDamageInterval_TongueContinuityDragChokeDamage"
+	{
+		"jp"		"[tongue_continuity] %N ドラッグ -> チョーク: ダメージ クロック 継続 - 次のダメージは %.2f にあります (バニラでは %.2f にリセットされます)"
+	}
+	"L4D2SmokerDragDamageInterval_TongueContinuityChokeDragDamage"
+	{
+		"jp"		"[tongue_continuity] %N チョーク -> ドラッグ: ダメージ クロック 継続 - %.2f で次のダメージ (バニラならすぐに発射されるはず)"
+	}
+	"L4D2SmokerDragDamageInterval_DebugVictimDamageTimeGame"
+	{
+		"jp"		"[デバッグ] 被害者: %N、%sダメージ: %f、時間: %f、ゲーム時間: %f"
+	}
+}

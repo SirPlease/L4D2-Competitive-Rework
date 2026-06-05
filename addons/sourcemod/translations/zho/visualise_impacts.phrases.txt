@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"VisualiseImpacts_NoteUseCommandRemovedecalsClient"
+	{
+		"zho"		"[注意] 用戶端使用指令 `r_removedecals` 來清理舊貼花。"
+	}
+}

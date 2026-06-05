@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"L4D2JockeySkeet_Skeeted"
+	{
+		"vi"		"{green}★★{default} Bạn đã là {blue}skeeted{default} bởi {olive}%N{default}."
+	}
+	"L4D2JockeySkeet_SkeetedJockey"
+	{
+		"vi"		"{green}★★{default} Bạn {blue}skeeded {olive}%N{default}'s Jockey."
+	}
+	"L4D2JockeySkeet_JockeySkeeted"
+	{
+		"vi"		"Tay đua của {green}★★{default} {olive}%N{default}'s Jockey là {blue}skeeted{default} bởi {olive}%N{default}."
+	}
+}

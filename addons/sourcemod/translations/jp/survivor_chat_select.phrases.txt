@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"SurvivorChatSelect_TeamUseCommand"
+	{
+		"jp"		"このコマンドを使用するには、サバイバー チームに参加している必要があります。"
+	}
+	"SurvivorChatSelect_DefaultCharacterSet"
+	{
+		"jp"		"%s {olive} のデフォルトの {default} 文字が {lightgreen}%s{default} に設定されました。"
+	}
+	"SurvivorChatSelect_CouldnLoadDefaultCharacterType"
+	{
+		"jp"		"%s デフォルトのキャラクターをロードできませんでした。 「{olive}!csm {default}」と入力して、{lightgreen}デフォルトの{default}文字を選択します。"
+	}
+}

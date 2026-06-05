@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2SniperBodyshot_VictimAttackerHitgroupWeapon"
+	{
+		"jp"		"被害者 %N、攻撃者 %N、ヒットグループ %s (%d)、武器: %s、"
+	}
+}

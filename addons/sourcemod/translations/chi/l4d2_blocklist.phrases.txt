@@ -1,0 +1,114 @@
+"Phrases"
+{
+	"Usage_Block"
+	{
+		"chi"		"用法：sm_block <#userid|steam64|名字>"
+	}
+	"Usage_Unblock"
+	{
+		"chi"		"用法：sm_unblock <#userid|steam64|名字>"
+	}
+	"DB_NotReady"
+	{
+		"chi"		"[BlockList] 数据库未就绪。"
+	}
+	"Resolve_Failed"
+	{
+		"chi"		"[BlockList] 目标解析失败，请使用 #userid / steam64 / 名字。"
+	}
+	"Self_Steam_Failed"
+	{
+		"chi"		"[BlockList] 你的 SteamID 解析失败。"
+	}
+	"Block_SelfDenied"
+	{
+		"chi"		"[BlockList] 不能屏蔽自己。"
+	}
+	"Block_LimitReached"
+	{
+		"#format"	"{1:i}"
+		"chi"		"[BlockList] 你已达到屏蔽上限（{1}）。"
+	}
+	"Block_Added"
+	{
+		"#format"	"{1:s}"
+		"chi"		"[BlockList] 已屏蔽：{1}"
+	}
+	"Block_Failed_Generic"
+	{
+		"chi"		"[BlockList] 屏蔽失败。"
+	}
+	"Unblock_Removed"
+	{
+		"chi"		"[BlockList] 已解除屏蔽。"
+	}
+	"Unblock_NotFound"
+	{
+		"chi"		"[BlockList] 未找到对应的屏蔽记录。"
+	}
+	"Unblock_Failed_Generic"
+	{
+		"chi"		"[BlockList] 解除屏蔽失败。"
+	}
+	"Query_Failed_Generic"
+	{
+		"chi"		"[BlockList] 查询失败。"
+	}
+	"BlockList_Header"
+	{
+		"#format"	"{1:i}"
+		"chi"		"[BlockList] 共 {1} 条记录："
+	}
+	"BlockLimit_Info"
+	{
+		"#format"	"{1:i}"
+		"chi"		"[BlockList] 你的屏蔽上限：{1}"
+	}
+	"Notify_Blocker"
+	{
+		"#format"	"{1:N}"
+		"chi"		"[BlockList] 你的屏蔽已阻止 {1} 加入。"
+	}
+	"Kick_By_Blocked"
+	{
+		"chi"		"服务器中有人屏蔽了你，无法进入。"
+	}
+	"Kick_By_Blocked_With_Blocker"
+	{
+		"#format"	"{1:s}"
+		"chi"		"你被本服玩家屏蔽（ID：{1}）。无法进入。"
+	}
+	"Menu_Title"
+	{
+		"chi"		"黑名单菜单"
+	}
+	"Menu_BlockOnline"
+	{
+		"chi"		"屏蔽/解屏蔽 在线玩家"
+	}
+	"Menu_MyBlockList"
+	{
+		"chi"		"查看/移除 我的黑名单"
+	}
+	"Menu_BlockOnline_Title"
+	{
+		"chi"		"在线玩家（选择以切换屏蔽状态）"
+	}
+	"Menu_MyBlockList_Title"
+	{
+		"chi"		"我的黑名单（选择以移除）"
+	}
+	"Target_Left"
+	{
+		"chi"		"[BlockList] 目标已不在服务器。"
+	}
+	"Kick_By_SelfBlocked"
+	{
+		"chi"		"你屏蔽了本服正在游玩的某位玩家，无法加入。"
+	}
+	"Kick_By_SelfBlocked_With_Target"
+	{
+		"#format"	"{1:s}"
+		"chi"		"你屏蔽了本服正在游玩的玩家（ID：{1}），无法加入。"
+	}
+}

@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"FixFastMelee_EventWeaponFireWeaponTime"
+	{
+		"ko"		"Event_WeaponFire: %N, 무기: %s, 시간: %f, iWeaponId: %d"
+	}
+	"FixFastMelee_WeaponSwitchedWeaponNextAttack"
+	{
+		"ko"		"OnWeaponSwitched: %N, 무기: %d(%s), fNextAttack: %f"
+	}
+}

@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"L4D2UncommonBlocker_UncommonInfectedSpawnedEntityModel"
+	{
+		"jp"		"珍しい感染者が出現しました！エンティティ: %d、モデル: %s、性別: %d、プラグイン フラグ: %d、ブロック済み: %s。"
+	}
+	"L4D2UncommonBlocker_2BlockedUncommonInfectedEntity"
+	{
+		"jp"		"2 珍しい感染者をブロックしました!エンティティ: %d、場所: %.0f %.0f %.0f、mobRush: %s。"
+	}
+	"L4D2UncommonBlocker_SpawnedNewInfectedEntityLocation"
+	{
+		"jp"		"新たな感染者を生み出した！エンティティ: %d、場所: %.0f %.0f %.0f、mobRush: %s。"
+	}
+}

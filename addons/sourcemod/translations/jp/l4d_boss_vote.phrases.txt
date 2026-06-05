@@ -30,7 +30,7 @@
 	}
 	"Usage2"
 	{
-		"jp"		"{olive} スポーンなし {default} には {default} \\\\\\\" {blue} 0 {default} \\\\\\\" を、{olive} 無知には \\\\\\\" {blue} -1 {default} \\\\\\\" を使用します。"
+		"jp"		"{olive} スポーンなし {default} には {default} \" {blue} 0 {default} \" を、{olive} 無知には \" {blue} -1 {default} \" を使用します。"
 	}
 	"Invalid"
 	{

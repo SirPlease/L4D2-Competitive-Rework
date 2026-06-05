@@ -1,71 +1,40 @@
 "Phrases"
 {
-    "Select"
-    {
-        "en"        "[Punch Angle] Select an option to save your setting and toggle recoil on/off"
-		"zho"		"[Punch Angle] Select an option to save your setting and toggle recoil on/off"
-		"jp"		"[Punch Angle] Select an option to save your setting and toggle recoil on/off"
-		"ko"		"[Punch Angle] Select an option to save your setting and toggle recoil on/off"
-		"vi"		"[Punch Angle] Select an option to save your setting and toggle recoil on/off"
-    }
-
-    "CookieSlected"
-    {
-        "#format"   "{1:t}"
-        "en"        "[Punch Angle] Punch Angle Toggle: {1:t}"
-		"zho"		"[Punch Angle] Punch Angle Toggle: {1:t}"
-		"jp"		"[Punch Angle] Punch Angle Toggle: {1:t}"
-		"ko"		"[Punch Angle] Punch Angle Toggle: {1:t}"
-		"vi"		"[Punch Angle] Punch Angle Toggle: {1:t}"
-    }
-
-    "On"
-    {
-        "en"        "On"
-    }
-
-    "Off"
-    {
-        "en"        "Off"
-    }
+	"Select"
+	{
+		"en"		"[Punch Angle] Select an option to save your setting and toggle recoil on/off"
+	}
+	"CookieSlected"
+	{
+		"#format"	"{1:t}"
+		"en"		"[Punch Angle] Punch Angle Toggle: {1:t}"
+	}
+	"On"
+	{
+		"en"		"On"
+	}
+	"Off"
+	{
+		"en"		"Off"
+	}
 	"Recoil_On"
-    {
-        "en"          "[Recoil] ON (no punch)"
-    } 
-
-    "Recoil_Off"
-    {
-        "en"           "[Recoil] OFF (vanilla)"
-    } 
-
-
+	{
+		"en"		"[Recoil] ON (no punch)"
+	}
+	"Recoil_Off"
+	{
+		"en"		"[Recoil] OFF (vanilla)"
+	}
 	"PunchAngle_RecoilUsageRecoil01"
 	{
 		"en"		"[Recoil] Usage: !recoil or !recoil 0/1 (0=jitter, 1=no jitter)"
-		"chi"		"[Recoil] 用法: !recoil 或 !recoil 0/1 （0=抖动，1=不抖动）"
-		"zho"		"[Recoil] 用法: !recoil 或 !recoil 0/1 （0=抖動，1=不抖動）"
-		"jp"		"[リコイル] 使用法: !recoil または !recoil 0/1 (0=ジッター、1=ジッターなし)"
-		"ko"		"[반동] 사용법: !recoil 또는 !recoil 0/1(0=지터, 1=지터 없음)"
-		"vi"		"[Recoil] Cách sử dụng: !recoil hoặc !recoil 0/1 (0=jitter, 1=không jitter)"
 	}
-
 	"PunchAngle_JitterTurnedOffDebounceNo"
 	{
 		"en"		"[Jitter] is turned off (debounce/no viewing angle jitter)"
-		"chi"		"[抖动] 已关闭（去抖 / 无视角抖动）"
-		"zho"		"[抖動] 已關閉（去抖 / 無視角抖動）"
-		"jp"		"［ジッター］がオフ（デバウンス/視野角ジッターなし）"
-		"ko"		"[지터]가 꺼졌습니다(디바운스/시야각 지터 없음)"
-		"vi"		"[Jitter] bị tắt (gỡ lỗi/không có jitter góc nhìn)"
 	}
-
 	"PunchAngle_JitterOriginalEffect"
 	{
 		"en"		"[Jitter] is on (original effect)"
-		"chi"		"[抖动] 已开启（原版效果）"
-		"zho"		"[抖動] 已開啟（原版效果）"
-		"jp"		"［ジッター］オン（オリジナルエフェクト）"
-		"ko"		"[지터] 켜짐(원래 효과)"
-		"vi"		"[Jitter] đang bật (hiệu ứng gốc)"
 	}
 }

@@ -10,7 +10,7 @@
 	}
 	"NoSnoop"
 	{
-		"chi"		"You Should Not {red}Snoop{default} on The Tank!"
+		"chi"		"你不应该{red}偷看{default} Tank！"
 	}
 	"BecomeSpectator"
 	{

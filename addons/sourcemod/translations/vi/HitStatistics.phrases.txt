@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"HitStatistics_NotSurvivor"
+	{
+		"vi"		"Bạn không phải là người sống sót."
+	}
+}

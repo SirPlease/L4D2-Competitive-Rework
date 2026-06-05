@@ -2,7 +2,7 @@
 {
 	"L4D2DropSecondary_PlayerReplacedBotReplacedSecondary"
 	{
-		"zho"		"{green}[{olive}OnPlayerReplacedByBot{green}] {default}- {blue}BOT {default}replaced {blue}%N {default}({green}Secondary: {olive}%s{default})"
+		"zho"		"{green}[{olive}OnPlayerReplacedByBot{green}] {default}- {blue}BOT {default}取代了 {blue}%N {default}({green}副武器: {olive}%s{default})"
 	}
 	"L4D2DropSecondary_BotReplacedPlayerReplacedBOT"
 	{

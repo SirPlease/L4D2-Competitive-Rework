@@ -1,0 +1,438 @@
+"Phrases"
+{
+	"Muted on connect"
+	{
+		"ru"		"Вам был отключен микрофон!"
+	}
+	"Gagged on connect"
+	{
+		"ru"		"Вам был отключен чат!"
+	}
+	"Mute expired"
+	{
+		"ru"		"Вам был включен микрофон (истек срок блокировки)."
+	}
+	"Gag expired"
+	{
+		"ru"		"Вам был включен чат (истек срок блокировки)."
+	}
+	"FWUnmute"
+	{
+		"ru"		"Вам был включен микрофон."
+	}
+	"FWUngag"
+	{
+		"ru"		"Вам был включен чат."
+	}
+	"Usage_time"
+	{
+		"#format"	"{1:d}"
+		"ru"		"Длительность: {1} минут, если не указана; навсегда, если 0.\nЕсли < 0, блокировка на сессию."
+	}
+	"Player Comms Not Verified"
+	{
+		"ru"		"Игрок еще не идентифицирован. Подождите 30 секунд перед следующей попыткой."
+	}
+	"Player already muted"
+	{
+		"#format"	"{1:s}"
+		"ru"		"У игрока {1} уже отключен микрофон!"
+	}
+	"Player already gagged"
+	{
+		"#format"	"{1:s}"
+		"ru"		"У игрока {1} уже отключен чат!"
+	}
+	"Player already silenced"
+	{
+		"#format"	"{1:s}"
+		"ru"		"У игрока {1} уже отключен чат или микрофон!"
+	}
+	"Player not muted"
+	{
+		"ru"		"У игрока не отключен микрофон."
+	}
+	"Player not gagged"
+	{
+		"ru"		"У игрока не отключен чат."
+	}
+	"Player not silenced"
+	{
+		"ru"		"У игрока не отключен чат или микрофон."
+	}
+	"Permagagged player"
+	{
+		"#format"	"{1:t}"
+		"ru"		"Игроку {1} навсегда отключен чат."
+	}
+	"Permagagged player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"ru"		"Игроку {1} навсегда отключен чат (причина: {2})."
+	}
+	"Gagged player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"ru"		"Игроку {1} отключен чат на {2} минут."
+	}
+	"Gagged player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"ru"		"Игроку {1} отключен чат на {2} минут (причина: {3})."
+	}
+	"Permamuted player"
+	{
+		"#format"	"{1:t}"
+		"ru"		"Игроку {1} навсегда отключен микрофон."
+	}
+	"Permamuted player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"ru"		"Игроку {1} навсегда отключен микрофон (причина: {2})."
+	}
+	"Muted player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"ru"		"Игроку {1} отключен микрофон на {2} минут."
+	}
+	"Muted player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"ru"		"Игроку {1} отключен микрофон на {2} минут (причина: {3})."
+	}
+	"Permasilenced player"
+	{
+		"#format"	"{1:t}"
+		"ru"		"Игроку {1} навсегда отключен чат и микрофон."
+	}
+	"Permasilenced player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"ru"		"Игроку {1} навсегда отключен чат и микрофон (причина: {2})."
+	}
+	"Silenced player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"ru"		"Игроку {1} отключен чат и микрофон на {2} минут."
+	}
+	"Silenced player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"ru"		"Игроку {1} отключен чат и микрофон на {2} минут (причина: {3})."
+	}
+	"Temp unmuted player"
+	{
+		"#format"	"{1:t}"
+		"ru"		"Игроку {1} временно включен микрофон."
+	}
+	"Temp ungagged player"
+	{
+		"#format"	"{1:t}"
+		"ru"		"Игроку {1} временно включен чат."
+	}
+	"Temp unsilenced player"
+	{
+		"#format"	"{1:t}"
+		"ru"		"Игроку {1} временно включен чат и микрофон."
+	}
+	"Unblock Select Failed"
+	{
+		"#format"	"{1:s}"
+		"ru"		"Произошла ошибка при запросе блокировок для {1} из базы."
+	}
+	"No blocks found"
+	{
+		"#format"	"{1:s}"
+		"ru"		"В базе не найдено действующих блокировок для {1}."
+	}
+	"No db error unlock perm"
+	{
+		"ru"		"У вас нет разрешения на разблокировку при ошибках базы."
+	}
+	"No permission unmute"
+	{
+		"#format"	"{1:s}"
+		"ru"		"Невозможно включить микрофон {1}, т.к. он был отключен более высоким администратором!"
+	}
+	"No permission ungag"
+	{
+		"#format"	"{1:s}"
+		"ru"		"Невозможно включить чат {1}, т.к. он был отключен более высоким администратором!"
+	}
+	"Unmuted player"
+	{
+		"#format"	"{1:t}"
+		"ru"		"Игроку {1} включен микрофон."
+	}
+	"Ungagged player"
+	{
+		"#format"	"{1:t}"
+		"ru"		"Игроку {1} включен чат."
+	}
+	"Unblock insert failed"
+	{
+		"ru"		"Не удалось удалить блокировку из базы."
+	}
+	"successfully unmuted"
+	{
+		"#format"	"{1:s}"
+		"ru"		"Успешно удалена блокировка микрофона для {1} из базы."
+	}
+	"successfully ungagged"
+	{
+		"#format"	"{1:s}"
+		"ru"		"Успешно удалена блокировка чата для {1} из базы."
+	}
+	"AdminMenu_Display_None"
+	{
+		"#format"	"{1:s}"
+		"ru"		"[  ] {1}"
+	}
+	"AdminMenu_Display_Muted"
+	{
+		"#format"	"{1:s}"
+		"ru"		"[M] {1}"
+	}
+	"AdminMenu_Display_Gagged"
+	{
+		"#format"	"{1:s}"
+		"ru"		"[G] {1}"
+	}
+	"AdminMenu_Display_Silenced"
+	{
+		"#format"	"{1:s}"
+		"ru"		"[S] {1}"
+	}
+	"AdminMenu_Main"
+	{
+		"ru"		"Чат и микрофон"
+	}
+	"AdminMenu_Select_Main"
+	{
+		"ru"		"Чат и микрофон:"
+	}
+	"AdminMenu_List"
+	{
+		"ru"		"Посмотреть наказания"
+	}
+	"AdminMenu_Select_List"
+	{
+		"ru"		"Игроки:"
+	}
+	"AdminMenu_Gag"
+	{
+		"ru"		"Отключить чат"
+	}
+	"AdminMenu_Select_Gag"
+	{
+		"ru"		"Отключить чат игроку:"
+	}
+	"AdminMenu_Select_Mute"
+	{
+		"ru"		"Отключить микрофон игроку:"
+	}
+	"AdminMenu_Select_Silence"
+	{
+		"ru"		"Отключить микрофон и чат игроку:"
+	}
+	"AdminMenu_Select_Ungag"
+	{
+		"ru"		"Включить чат игроку:"
+	}
+	"AdminMenu_Select_Unmute"
+	{
+		"ru"		"Включить микрофон игроку:"
+	}
+	"AdminMenu_Select_Unsilence"
+	{
+		"ru"		"Включить микрофон и чат игроку:"
+	}
+	"AdminMenu_Option_Mute_Empty"
+	{
+		"ru"		"Нет игроков с отключенным микрофоном"
+	}
+	"AdminMenu_Option_Gag_Empty"
+	{
+		"ru"		"Нет игроков с отключенным чатом"
+	}
+	"AdminMenu_Option_Silence_Empty"
+	{
+		"ru"		"Нет игроков с отключенным микрофоном и чатом"
+	}
+	"ListMenu_Option_Empty"
+	{
+		"ru"		"Нет наказанных игроков"
+	}
+	"AdminMenu_Option_Empty"
+	{
+		"ru"		"Нет доступных игроков"
+	}
+	"AdminMenu_UnGag"
+	{
+		"ru"		"Включить чат"
+	}
+	"AdminMenu_Title_Durations"
+	{
+		"ru"		"На сколько:"
+	}
+	"AdminMenu_Title_Reasons"
+	{
+		"ru"		"Причина:"
+	}
+	"AdminMenu_Mute"
+	{
+		"ru"		"Отключить микрофон"
+	}
+	"AdminMenu_UnMute"
+	{
+		"ru"		"Включить микрофон"
+	}
+	"AdminMenu_Silence"
+	{
+		"ru"		"Отключить микрофон и чат"
+	}
+	"AdminMenu_UnSilence"
+	{
+		"ru"		"Включить микрофон и чат"
+	}
+	"AdminMenu_Not_Available"
+	{
+		"ru"		"Игрок не доступен."
+	}
+	"Command_Target_Not_Targetable"
+	{
+		"ru"		"Вы не можете выбрать этого игрока."
+	}
+	"ListMenu_Option_Mute"
+	{
+		"ru"		"Микрофон"
+	}
+	"ListMenu_Option_Gag"
+	{
+		"ru"		"Чат"
+	}
+	"ListMenu_Option_Duration"
+	{
+		"ru"		"- На время: "
+	}
+	"ListMenu_Option_Duration_Perm"
+	{
+		"ru"		"Навсегда"
+	}
+	"ListMenu_Option_Duration_Time"
+	{
+		"#format"	"{1:d}"
+		"ru"		"{1} минут"
+	}
+	"ListMenu_Option_Duration_Temp"
+	{
+		"ru"		"Временный"
+	}
+	"ListMenu_Option_Expire"
+	{
+		"ru"		"- Истекает: "
+	}
+	"ListMenu_Option_Expire_Perm"
+	{
+		"ru"		"Никогда"
+	}
+	"ListMenu_Option_Expire_Time"
+	{
+		"#format"	"{1:s}"
+		"ru"		"{1}"
+	}
+	"ListMenu_Option_Expire_Temp_Reconnect"
+	{
+		"ru"		"Перезаход"
+	}
+	"ListMenu_Option_Admin"
+	{
+		"#format"	"{1:s}"
+		"ru"		"- Админ: {1}"
+	}
+	"ListMenu_Option_Issue"
+	{
+		"#format"	"{1:s}"
+		"ru"		"- Отключен: {1}"
+	}
+	"ListMenu_Option_Reason"
+	{
+		"ru"		"- Причина"
+	}
+	"ListMenu_Option_Reason_None"
+	{
+		"ru"		"- Нет причины"
+	}
+	"ReasonPanel_Punishment_Mute"
+	{
+		"ru"		"Микрофон: "
+	}
+	"ReasonPanel_Punishment_Gag"
+	{
+		"ru"		"Чат: "
+	}
+	"ReasonPanel_Perm"
+	{
+		"ru"		"Навсегда"
+	}
+	"ReasonPanel_Time"
+	{
+		"#format"	"{1:d}"
+		"ru"		"{1} минут"
+	}
+	"ReasonPanel_Temp"
+	{
+		"ru"		"Временный"
+	}
+	"ReasonPanel_Reason"
+	{
+		"#format"	"{1:s}"
+		"ru"		"Причина: {1}"
+	}
+	"ReasonPanel_Back"
+	{
+		"ru"		"Выход"
+	}
+	"Temp muted player"
+	{
+		"#format"	"{1:t}"
+		"ru"		"Игроку {1} отключен микрофон."
+	}
+	"Temp muted player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"ru"		"Игроку {1} отключен микрофон (причина: {2})."
+	}
+	"Temp gagged player"
+	{
+		"#format"	"{1:t}"
+		"ru"		"Игроку {1} отключен чат."
+	}
+	"Temp gagged player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"ru"		"Игроку {1} отключен чат (причина: {2})."
+	}
+	"Temp silenced player"
+	{
+		"#format"	"{1:t}"
+		"ru"		"Игроку {1} отключен чат и микрофон."
+	}
+	"Temp silenced player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"ru"		"Игроку {1} отключен чат и микрофон (причина: {2})."
+	}
+	"CommandComms_na"
+	{
+		"ru"		"Доступно только для игроков на сервере."
+	}
+	"CommandComms_nb"
+	{
+		"ru"		"У вас не заблокированы чат и микрофон."
+	}
+	"no access"
+	{
+		"ru"		"Блокировка на указанное время недоступна для вас."
+	}
+}

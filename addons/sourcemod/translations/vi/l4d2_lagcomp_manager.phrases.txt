@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"L4D2LagcompManager_SuccessfullyEntitySuccessfullyAddedArray"
+	{
+		"vi"		"[Thành công] Thực thể '%s (%d)' đã được thêm thành công vào mảng để bù độ trễ!"
+	}
+	"L4D2LagcompManager_ErrorCouldNotFindEntity"
+	{
+		"vi"		"[Lỗi] Không thể tìm thấy thực thể '%s (%d)' trong mảng để bù độ trễ!"
+	}
+	"L4D2LagcompManager_ErrorEntityNotRemovedAfter"
+	{
+		"vi"		"[Lỗi] Thực thể '%s (%d)' không bị xóa sau khi bị hủy khỏi mảng để bù độ trễ!"
+	}
+	"L4D2LagcompManager_SuccessfullyEntityRemovedAfterDestroyed"
+	{
+		"vi"		"[Thành công] Thực thể '%s (%d)' đã bị xóa sau khi bị phá hủy khỏi mảng để bù độ trễ!"
+	}
+	"L4D2LagcompManager_ErrorEntityNeverAddedArray"
+	{
+		"vi"		"[Lỗi] Thực thể '%s (%d)' chưa bao giờ được thêm vào mảng để bù độ trễ!"
+	}
+}

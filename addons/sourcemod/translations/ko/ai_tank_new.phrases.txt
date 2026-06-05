@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"AITankNew_TankLikesWalkAroundTrees"
+	{
+		"ko"		"{R}<탱크>: {G}는 나무 주위를 걷는 걸 좋아하죠?"
+	}
+}

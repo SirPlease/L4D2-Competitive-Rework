@@ -2,111 +2,57 @@
 {
 	"ERROR"
 	{
-		"en"			"Failed to retrieve your playtime"
-		"chi"			"获取你的游戏时间失败"
+		"en"		"Failed to retrieve your playtime"
 	}
-	
 	"PRIVATEPROFILE"
 	{
-		"en"			"You need to make your steam community profile public so we can extract your playtime"
-		"chi"			"你需要把你steam社区页面设为公开才能获取确切游戏时间，否则不允许进入此服务器"
+		"en"		"You need to make your steam community profile public so we can extract your playtime"
 	}
-
 	"REJECTED"
 	{
-		"#format"		"{1:.1f},{2:.1f},{3:.1f}"
-		"en"			"You need to have at least play {1} hours in myserverhours ,{2} hours  of total playtime and  total playtime minus your last two weeks playtime more than {3} hours  to be able to join this server"
-		"chi"			"你至少需要在电信服服务器玩过{1}小时，求生之路2总游戏时间大于{2}，去除最近两周游戏时间还需要{3}小时才能进入此服务器"
+		"#format"	"{1:.1f},{2:.1f},{3:.1f}"
+		"en"		"You need to have at least play {1} hours in myserverhours ,{2} hours  of total playtime and  total playtime minus your last two weeks playtime more than {3} hours  to be able to join this server"
 	}
-	
 	"EXCLUDED"
 	{
-		"#format"		"{1:s}"
-		"en"			"SteamId {1} added to the exclude list"
-		"chi"			"SteamId {1} 玩家已经被加入白名单"
+		"#format"	"{1:s}"
+		"en"		"SteamId {1} added to the exclude list"
 	}
-	
 	"INCLUDED"
 	{
-		"#format"		"{1:s}"
-		"en"			"SteamId {1} removed from the exclude list"
-		"chi"			"SteamId {1} 玩家已经被删除出白名单"
+		"#format"	"{1:s}"
+		"en"		"SteamId {1} removed from the exclude list"
 	}
-	
 	"PRIMENEEDED"
 	{
-		"en"			"You need to have a prime status to be able to play on this server"
-		"chi"			"你必须的是会员才能在这个服务器游玩"
+		"en"		"You need to have a prime status to be able to play on this server"
 	}
-
-
 	"Veterans_PlayerDurationDetectionNotMeet"
 	{
 		"en"		"{default}[{green} player duration detection {default}] Because {blue} does not meet the {default} duration requirement, you are only allowed to watch the game."
-		"chi"		"{default}[{green}玩家时长检测{default}] 你因为 {blue}不满足 {default}时长要求，只允许观战."
-		"zho"		"{default}[{green}玩家長度檢測{default}] 你因為 {blue}不符合 {default}時長要求，只允許觀戰."
-		"jp"		"{default}[{green} プレーヤーの継続時間検出 {default}] {blue} は {default} の継続時間要件を満たしていないため、試合の視聴のみが許可されます。"
-		"ko"		"{default}[{green} 플레이어 지속 시간 감지 {default}] {blue}는 {default} 지속 시간 요구 사항을 충족하지 않으므로 게임 시청만 허용됩니다."
-		"vi"		"{default}[{green} phát hiện thời lượng người chơi {default}] Vì {blue} không đáp ứng yêu cầu về thời lượng {default} nên bạn chỉ được phép xem trò chơi."
 	}
-
 	"Veterans_PlayerTimeDetectionPlayerTotal"
 	{
 		"en"		"{default}[{green} player time detection {default}] player {blue}%N The total playing time of {default} is: {green}%.1f hours {default} (actual: {green}%.1f hours {default}). The total playing time in this server is: {green}%.1f hours {default}."
-		"chi"		"{default}[{green}玩家时长检测{default}] 玩家 {blue}%N {default}总共游玩时间共：{green}%.1f小时{default}(实际：{green}%.1f小时{default})，本服务器内游玩总时长为：{green}%.1f小时{default}."
-		"zho"		"{default}[{green} player time detection {default}] player {blue}%N The total playing time of {default} is: {green}%.1f hours {default} (actual: {green}%.1f hours {default}). The total playing time in this server is: {green}%.1f hours {default}."
-		"jp"		"{default}[{green} プレーヤー時間検出 {default}] プレーヤー {blue}%N {default} の合計再生時間は、{green}%.1f 時間 {default} (実際: {green}%.1f 時間 {default}) です。このサーバーでの合計プレイ時間は、{green}%.1f 時間 {default} です。"
-		"ko"		"{default}[{green} 플레이어 시간 감지 {default}] 플레이어 {blue}%N {default}의 총 플레이 시간은 {green}%.1f 시간 {default} (실제: {green}%.1f) 시간 {default}). 이 서버의 총 플레이 시간은 {green}%.1f시간 {default}입니다."
-		"vi"		"{default}[{green} phát hiện thời gian của người chơi {default}] người chơi {blue}%N Tổng thời gian chơi của {default} là: {green}%.1f giờ {default} (thực tế: {green}%.1f giờ {default}). Tổng thời gian chơi trên máy chủ này là: {green}%.1f giờ {default}."
 	}
-
 	"Veterans_PlayerTimeDetectionPlayerPlaying"
 	{
 		"en"		"{default}[{green} player time detection {default}] player {blue}%N {default} playing time: {green} unknown {default}, the total playing time in this server is: {green}%.1f hours {default}."
-		"chi"		"{default}[{green}玩家时长检测{default}] 玩家 {blue}%N {default}游玩时间：{green}未知{default}，本服务器内游玩总时长为：{green}%.1f小时{default}."
-		"zho"		"{default}[{green}玩家長度偵測{default}] 玩家 {blue}%N {default}遊玩時間：{green}未知{default}，本伺服器內遊玩總長度為：{green}%.1f小時{default}."
-		"jp"		"{default}[{green} プレイヤー時間検出 {default}] プレイヤー {blue}%N {default} プレイ時間: {green} 不明 {default}、このサーバーの合計プレイ時間: {green}%.1f 時間 {default}。"
-		"ko"		"{default}[{green} 플레이어 시간 감지 {default}] 플레이어 {blue}%N {default} 플레이 시간: {green} 알 수 없음 {default}, 이 서버의 총 플레이 시간: {green}%.1f 시간 {default}."
-		"vi"		"{default}[{green} phát hiện thời gian của người chơi {default}] người chơi {blue}%N {default} thời gian chơi: {green} không xác định {default}, tổng thời gian chơi trên máy chủ này là: {green}%.1f giờ {default}."
 	}
-
 	"Veterans_PlayerDurationDetectionAdministratorExempt"
 	{
 		"en"		"{default}[{green} player duration detection {default}] Administrator {blue}%N {default} is exempt from duration detection."
-		"chi"		"{default}[{green}玩家时长检测{default}] 管理员 {blue}%N {default}免去时长检测."
-		"zho"		"{default}[{green}玩家時長檢測{default}] 管理員 {blue}%N {default}免去時長檢測."
-		"jp"		"{default}[{green} プレーヤー継続時間検出 {default}] 管理者 {blue}%N {default} は継続時間検出の対象外です。"
-		"ko"		"{default}[{green} 플레이어 지속 시간 감지 {default}] 관리자 {blue}%N {default}는 지속 시간 감지에서 제외됩니다."
-		"vi"		"{default}[{green} phát hiện thời lượng người chơi {default}] Quản trị viên {blue}%N {default} được miễn phát hiện thời lượng."
 	}
-
 	"Veterans_PlayerDurationDetectionPlayerGame"
 	{
 		"en"		"{default} [{green} player duration detection {default}] Player {blue}%N {{default}'s game duration on this server {green} does not meet the standard {default}, who is a player in the telecommunications server group and is allowed to play normally"
-		"chi"		"{default}[{green}玩家时长检测{default}] 玩家 {blue}%N {{default}在本服务器游戏时长{green}不达标{default}，是电信服务器组玩家，允许正常游玩"
-		"zho"		"{default}[{green}玩家時長檢測{default}] 玩家 {blue}%N {{default}在本伺服器遊戲時長{green}不達標{default}，是電信伺服器組玩家，允許正常遊玩"
-		"jp"		"{default} [{green} プレーヤー継続時間検出 {default}] プレーヤー {blue}%N {このサーバー上の {default} のゲーム継続時間 {green} は、電気通信サーバー グループのプレーヤーであり、通常のプレイが許可されている {default} の基準を満たしていません"
-		"ko"		"{default} [{green} 플레이어 지속 시간 감지 {default}] 플레이어 {blue}%N {{default}의 이 서버에서의 게임 지속 시간은 {green}가 표준 {default}를 충족하지 않습니다. 해당 플레이어는 통신 서버 그룹에 속한 플레이어이며 정상적으로 플레이가 허용됩니다."
-		"vi"		"{default} [{green} phát hiện thời lượng người chơi {default}] Người chơi {blue}%N {Thời lượng trò chơi của {default} trên máy chủ này {green} không đáp ứng tiêu chuẩn {default}, là người chơi trong nhóm máy chủ viễn thông và được phép chơi bình thường"
 	}
-
 	"Veterans_PlayerTimeDetectionPlayerGame"
 	{
 		"en"		"{default} [{green} player time detection {default}] Player {blue}%N {{default}’s game time on this server {green} does not meet the standard {default}, a player in the telecommunications server group, allowed to watch but not allowed to play"
-		"chi"		"{default}[{green}玩家时长检测{default}] 玩家 {blue}%N {{default}在本服务器游戏时长{green}不达标{default}，是电信服务器组玩家，允许旁观不允许游玩"
-		"zho"		"{default} [{green} player time detection {default}] Player {blue}%N {{default}’s game time on this server {green} does not meet the standard {default}, a player in the telecommunications server group, allowed to watch but not allowed to play"
-		"jp"		"{default} [{green} プレーヤー時間検出 {default}] プレーヤー {blue}%N {このサーバー上の {default} のゲーム時間 {green} は基準を満たしていません 通信サーバー グループのプレーヤーである {default} は、視聴は許可されていますが、プレイは許可されていません"
-		"ko"		"{default} [{green} 플레이어 시간 감지 {default}] 플레이어 {blue}%N {이 서버 {default}의 게임 시간이 표준 {default}를 충족하지 않습니다. 통신 서버 그룹에 속한 플레이어는 시청은 허용되지만 플레이는 허용되지 않습니다."
-		"vi"		"{default} [{green} phát hiện thời gian của người chơi {default}] Người chơi {blue}%N {Thời gian chơi game của {default} trên máy chủ này {green} không đạt tiêu chuẩn {default}, người chơi thuộc nhóm máy chủ viễn thông, được phép xem nhưng không được phép chơi"
 	}
-
 	"Veterans_PlayerTimeDetectionPlayerGameTime"
 	{
 		"en"		"{default}[{green} player time detection {default}] Player {blue}%N {default}'s game time on this server {green} does not meet the standard {default}, and is not a player in the telecommunications server group, and has been automatically asked to take a rest."
-		"chi"		"{default}[{green}玩家时长检测{default}] 玩家 {blue}%N {default}在本服务器游戏时长{green}不达标{default}，且不为电信服务器组玩家，已经自动请去休息."
-		"zho"		"{default}[{green}玩家時長檢測{default}] 玩家 {blue}%N {default}在本伺服器遊戲時長{green}不達標{default}，且不是電信伺服器組玩家，已自動請去休息."
-		"jp"		"{default}[{green} プレイヤー時間検出 {default}] プレイヤー {blue}%N {default} のこのサーバー {green} のゲーム時間は基準 {default} を満たしておらず、通信サーバー グループのプレイヤーではないため、自動的に休憩するように求められました。"
-		"ko"		"{default}[{green} 플레이어 시간 감지 {default}] 플레이어 {blue}%N {default}의 이 서버 {default}의 게임 시간은 {default} 표준을 충족하지 않으며 통신 서버 그룹에 속한 플레이어가 아니며 자동으로 휴식을 요청 받았습니다."
-		"vi"		"{default}[{green} phát hiện thời gian của người chơi {default}] Người chơi {blue}%N {default} Thời gian chơi trò chơi của người chơi trên máy chủ này {green} không đáp ứng tiêu chuẩn {default} và không phải là người chơi trong nhóm máy chủ viễn thông và đã tự động được yêu cầu nghỉ ngơi."
 	}
 }

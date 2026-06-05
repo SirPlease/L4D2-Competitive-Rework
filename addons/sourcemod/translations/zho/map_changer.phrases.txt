@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"MapChanger_VoteWhetherEnableRescueMap"
+	{
+		"zho"		"{green}[MapChanger]{default} 投票：是否啟用本救援圖失敗 {olive}%d{default} 次自動換圖？"
+	}
+	"MapChanger_Voted"
+	{
+		"zho"		"{green}[MapChanger]{default} %N 已投票。"
+	}
+	"MapChanger_RescueMapEnabledFailedAutomatically"
+	{
+		"zho"		"{green}[MapChanger]{default} 已啟用本救援圖失敗 {olive}%d{default} 次自動換圖。"
+	}
+	"MapChanger_RescueMapTurnedOffAutomatically"
+	{
+		"zho"		"{green}[MapChanger]{default} 本救援圖已關閉失敗次數自動換圖。"
+	}
+}

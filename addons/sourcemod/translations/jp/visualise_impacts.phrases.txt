@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"VisualiseImpacts_NoteUseCommandRemovedecalsClient"
+	{
+		"jp"		"[注意] クライアントが古いデカールを削除するにはコマンド `r_removedecals` を使用してください。"
+	}
+}

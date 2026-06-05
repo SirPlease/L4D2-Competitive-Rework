@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Command_SwitchOff"
+	{
+		"chi"		"{blue}[{default}物品切换{blue}] {default}拾取时切换为{olive}副武器{default}：{blue}关闭"
+	}
+	"Command_SwitchOn"
+	{
+		"chi"		"{blue}[{default}物品切换{blue}] {default}拾取时切换为{olive}副武器{default}：{blue}开启"
+	}
+	"Command_SwitchPrimaryOff"
+	{
+		"chi"		"{blue}[{default}物品切换{blue}] {default}拾取时切换为{olive}主武器{default}：{blue}关闭"
+	}
+	"Command_SwitchPrimaryOn"
+	{
+		"chi"		"{blue}[{default}物品切换{blue}] {default}拾取时切换为{olive}主武器{default}：{blue}开启"
+	}
+}

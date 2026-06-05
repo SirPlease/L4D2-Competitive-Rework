@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"L4DRockLagcomp_WeaponRange"
+	{
+		"ko"		"무기: %s | 범위: %.2f"
+	}
+	"L4DRockLagcomp_RockHealth"
+	{
+		"ko"		"암석 상태: %d\\%"
+	}
+	"L4DRockLagcomp_EntityLocation"
+	{
+		"ko"		"엔티티 %s(%d)는 다음 위치에 있습니다: (%.2f, %.2f, %.2f)"
+	}
+	"L4DRockLagcomp_WeaponRangeDamageRockHealth"
+	{
+		"ko"		"무기: %s | 범위: %.2f | 손상: %.1f | 암석 상태: %.1f%%"
+	}
+}

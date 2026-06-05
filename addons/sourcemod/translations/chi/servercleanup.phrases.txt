@@ -1,0 +1,115 @@
+"Phrases"
+{
+	"srvcln_version"
+	{
+		"chi"		"服务器清理插件版本。"
+	}
+	"srvcln_enable"
+	{
+		"chi"		"启用自动服务器清理（1=启用，0=禁用，仅保留手动清理命令）。"
+	}
+	"srvcln_logs"
+	{
+		"chi"		"清理常规服务器日志。"
+	}
+	"srvcln_logging_mode"
+	{
+		"chi"		"记录服务器清理删除的内容。"
+	}
+	"srvcln_smlogs"
+	{
+		"chi"		"清理 SourceMod 日志。"
+	}
+	"srvcln_sprays"
+	{
+		"chi"		"清理已上传的喷图。"
+	}
+	"srvcln_demos"
+	{
+		"chi"		"清理自动录制的 demo 文件。"
+	}
+	"srvcln_replays"
+	{
+		"chi"		"清理生成的回放文件。"
+	}
+	"srvcln_roundbackups"
+	{
+		"chi"		"清理 CS:GO 回合备份文件（注意：仅当回合备份的命名选项保持默认设置时生效）。"
+	}
+	"srvcln_demos_archives"
+	{
+		"chi"		"删除旧 demo 时一并删除其压缩包（若服务器会自动压缩，支持检测 bz2、zip、rar、7z）。"
+	}
+	"srvcln_replays_archives"
+	{
+		"chi"		"删除旧回放时一并删除其压缩包（若服务器会自动压缩，支持检测 bz2、zip、rar、7z）。"
+	}
+	"srvcln_smlogs_type"
+	{
+		"chi"		"从 SM 日志目录删除的日志类型（0=仅普通日志；1=普通+错误日志；2=全部日志）。"
+	}
+	"srvcln_logs_time"
+	{
+		"chi"		"保留常规服务器日志的时间（小时）（默认 1 周；最小 12 小时；设为 -1 仅保留当天）。"
+	}
+	"srvcln_replays_time"
+	{
+		"chi"		"保留生成回放文件的时间（小时）（默认 1 周；最小 12 小时；设为 -1 仅保留当天）。"
+	}
+	"srvcln_roundbackups_time"
+	{
+		"chi"		"保留 CS:GO 回合备份的时间（小时）（默认 1 周；最小 12 小时；设为 -1 仅保留当天）。"
+	}
+	"srvcln_sprays_time"
+	{
+		"chi"		"保留已上传喷图的时间（小时）（默认 1 周；最小 12 小时；设为 -1 仅保留当天）。"
+	}
+	"srvcln_smlogs_time"
+	{
+		"chi"		"保留 SourceMod 日志的时间（小时）（默认 1 周；最小 12 小时；设为 -1 仅保留当天）。"
+	}
+	"srvcln_demos_time"
+	{
+		"chi"		"保留 demo 文件的时间（小时）（默认 1 周；最小 12 小时；设为 -1 仅保留当天）。"
+	}
+	"srvcln_demos_path"
+	{
+		"chi"		"可选：若手动把 demo 保存到其它位置，请填写该目录路径。"
+	}
+	"srvcln_now"
+	{
+		"chi"		"立即手动执行服务器清理。"
+	}
+	"Command Now Start"
+	{
+		"chi"		"[SM] 正在开始服务器清理。"
+	}
+	"Command Now End"
+	{
+		"chi"		"[SM] 服务器清理完成。"
+	}
+	"Command Now Log"
+	{
+		"chi"		"已手动执行一次服务器清理。"
+	}
+	"CL Error TS"
+	{
+		"#format"	"{1:s}"
+		"chi"		"读取“{1}”的时间戳时发生致命错误。"
+	}
+	"CL Error Del"
+	{
+		"#format"	"{1:s}"
+		"chi"		"无法删除“{1}”，请检查权限。"
+	}
+	"CL Deleted File"
+	{
+		"#format"	"{1:s}"
+		"chi"		"已删除文件“{1}”"
+	}
+	"CL Deleted Folder"
+	{
+		"#format"	"{1:s}"
+		"chi"		"已删除文件夹“{1}”"
+	}
+}

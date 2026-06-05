@@ -3,10 +3,5 @@
 	"VisualiseImpacts_NoteUseCommandRemovedecalsClient"
 	{
 		"en"		"[Note] Use command `r_removedecals` for client to clean old decals."
-		"chi"		"[注意] 客户端使用命令 `r_removedecals` 来清理旧贴花。"
-		"zho"		"[注意] 用戶端使用指令 `r_removedecals` 來清理舊貼花。"
-		"jp"		"[注意] クライアントが古いデカールを削除するにはコマンド `r_removedecals` を使用してください。"
-		"ko"		"[참고] 오래된 데칼을 청소하려면 클라이언트에 `r_removedecals` 명령을 사용하십시오."
-		"vi"		"[Lưu ý] Sử dụng lệnh `r_removedecals` để khách hàng xóa đề can cũ."
 	}
 }

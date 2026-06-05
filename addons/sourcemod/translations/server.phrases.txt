@@ -3,120 +3,49 @@
 	"Server_WatchingChatBlue"
 	{
 		"en"		"[{olive} watching {default}] {blue}%N{default}：%s"
-		"chi"		"[{olive}旁观{default}] {blue}%N{default}：%s"
-		"zho"		"[{olive}旁觀{default}] {blue}%N{default}：%s"
-		"jp"		"[{olive} 見て {default}] {blue}%N{default}：%s"
-		"ko"		"[{olive} {default}를 보고 있다] {blue}%N{default}：%s"
-		"vi"		"[{olive} đang xem {default}] {blue}%N{default}:%s"
 	}
-
 	"Server_WatchingChatRed"
 	{
 		"en"		"[{olive} watching {default}] {red}%N{default}：%s"
-		"chi"		"[{olive}旁观{default}] {red}%N{default}：%s"
-		"zho"		"[{olive}旁觀{default}] {red}%N{default}：%s"
-		"jp"		"[{olive} 見て {default}] {red}%N{default}：%s"
-		"ko"		"[{olive} {default}를 보고 있다] {red}%N{default}：%s"
-		"vi"		"[{olive} đang xem {default}] {red}%N{default}:%s"
 	}
-
 	"Server_PromptFirstGroupWipeoutContinue"
 	{
 		"en"		"[{olive} prompt {default}] This is your {blue}%d{default} first group wipeout, please continue to work hard."
-		"chi"		"[{olive}提示{default}] 这是你们第 {blue}%d{default} 次团灭，请继续努力"
-		"zho"		"[{olive}提示{default}] 這是你們第 {blue}%d{default} 次團滅，請繼續努力"
-		"jp"		"[{olive} プロンプト {default}] これはあなたの {blue}%d{default} の最初のグループ全滅です。引き続き頑張ってください。"
-		"ko"		"[{olive} 프롬프트 {default}] {blue}%d{default} 첫 번째 그룹 전멸입니다. 계속해서 열심히 노력해주세요."
-		"vi"		"[{olive} nhắc {default}] Đây là {blue}%d{default} lần xóa nhóm đầu tiên của bạn, hãy tiếp tục làm việc chăm chỉ."
 	}
-
 	"Server_StillUntakenBotsTakeThem"
 	{
 		"en"		"There are still untaken Bots, please take them over first or wait until the survivor team is full and try again."
-		"chi"		"{green}还有未接管的Bot，请先接管或等生还队满再试。"
-		"zho"		"還有未接管的Bot，請先接管或等生還隊滿再試。"
-		"jp"		"まだ取得されていないボットが残っています。最初にボットを引き継ぐか、サバイバー チームがいっぱいになるまで待ってから再試行してください。"
-		"ko"		"아직 확보되지 않은 봇이 있습니다. 먼저 봇을 인수하거나 생존자 팀이 가득 찰 때까지 기다렸다가 다시 시도하세요."
-		"vi"		"Vẫn còn những Bot chưa được sử dụng, vui lòng xử lý chúng trước hoặc đợi cho đến khi đội sống sót đầy đủ rồi thử lại."
 	}
-
 	"Server_Not8PlayerSportHasn"
 	{
 		"en"		"It’s not an 8-player sport, it hasn’t reached the upper limit yet!"
-		"chi"		"{green}不是 8 人运动，还没达到上限呢！"
-		"zho"		"不是 8 人運動，還沒達到上限！"
-		"jp"		"8人制スポーツではないので、まだ上限に達していません！"
-		"ko"		"8인 스포츠가 아니고 아직 상한선에 도달하지 않았습니다!"
-		"vi"		"Đây không phải là môn thể thao 8 người, nó vẫn chưa đạt đến giới hạn trên!"
 	}
-
 	"Server_SurvivorBotGenerated"
 	{
 		"en"		"A survivor Bot has been generated."
-		"chi"		"{green}一个生还者Bot已生成。"
-		"zho"		"一個生還者Bot已產生。"
-		"jp"		"生存者ボットが生成されました。"
-		"ko"		"생존 봇이 생성되었습니다."
-		"vi"		"Một Bot sống sót đã được tạo ra."
 	}
-
 	"Server_SurvivorBotCannotGeneratedMoment"
 	{
 		"en"		"The survivor Bot cannot be generated at the moment."
-		"chi"		"{green}暂时无法生成生还者Bot。"
-		"zho"		"暫時無法產生生還者Bot。"
-		"jp"		"現時点では生存者ボットを生成できません。"
-		"ko"		"지금은 생존 봇을 생성할 수 없습니다."
-		"vi"		"Hiện tại không thể tạo Bot sống sót."
 	}
-
 	"Server_NoBotNotTaken"
 	{
 		"en"		"There is no Bot that has not taken over."
-		"chi"		"{green}不存在未接管的Bot。"
-		"zho"		"不存在未接管的Bot。"
-		"jp"		"引き継いでいないボットはありません。"
-		"ko"		"인계받지 않은 봇은 없습니다."
-		"vi"		"Không có Bot nào chưa được tiếp quản."
 	}
-
 	"Server_EverythingNormalStillWantSkip"
 	{
 		"en"		"Everything is normal, but you still want to skip class?"
-		"chi"		"{green}一切正常，还想踢克逃课？"
-		"zho"		"一切正常，還想踢克逃課？"
-		"jp"		"すべては正常ですが、それでも授業をサボりたいですか?"
-		"ko"		"모든 것이 정상인데도 여전히 수업을 빼먹고 싶나요?"
-		"vi"		"Mọi chuyện vẫn bình thường nhưng bạn vẫn muốn trốn học?"
 	}
-
 	"Server_ExcessGramsKicked"
 	{
 		"en"		"The excess grams have been kicked out"
-		"chi"		"{green}已经踢出多余的克"
-		"zho"		"已經踢出多餘的克"
-		"jp"		"余分なグラムは追い出されました"
-		"ko"		"초과 그램이 쫓겨났습니다."
-		"vi"		"Số gram thừa đã bị loại bỏ"
 	}
-
 	"Server_PromptsAlreadyBlackWhiteGive"
 	{
 		"en"		"[{olive} prompts {default}] {green}%N{default} Already {olive} black and white {default}, please give priority to protection and treatment!"
-		"chi"		"[{olive}提示{default}] {green}%N{default} 已经 {olive}黑白{default}，请优先保护并治疗！"
-		"zho"		"[{olive}提示{default}] {green}%N{default} 已經 {olive}黑白{default}，請優先保護並治療！"
-		"jp"		"[{olive}は{default}を促します] {green}%N{default}すでに{olive}白黒{default}、保護と治療を優先してください！"
-		"ko"		"[{olive} 프롬프트 {default}] {green}%N{default} 이미 {olive} 흑백 {default} 보호와 치료를 우선으로 해주세요!"
-		"vi"		"[{olive} nhắc {default}] {green}%N{default} Đã {olive} đen trắng {default}, hãy ưu tiên bảo vệ và xử lý!"
 	}
-
 	"Server_PromptBlackWhiteTreatSoon"
 	{
 		"en"		"[{olive} prompt {default}] You are now {green} black and white {default}, please treat it as soon as possible!"
-		"chi"		"[{olive}提示{default}] 你现在 {green}黑白{default}，请尽快治疗！"
-		"zho"		"[{olive}提示{default}] 你現在 {green}黑白{default}，請盡快治療！"
-		"jp"		"【{olive}即発{default}】あなたは今、{green}白黒{default}です、できるだけ早く治療してください！"
-		"ko"		"[{olive} 프롬프트 {default}] 당신은 이제 {green} 흑백 {default}입니다. 빨리 처리해주세요!"
-		"vi"		"[{olive} nhắc {default}] Bạn hiện là {green} {default} đen trắng, hãy xử lý nó càng sớm càng tốt!"
 	}
 }

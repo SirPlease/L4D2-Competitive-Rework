@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"L4D2ItemHint_MarkingSystemPointsLess5W"
+	{
+		"chi"		"{default}[{green}标记系统{default}]你的积分不足5w，无法使用标记系统"
+	}
+	"L4D2ItemHint_PlayerMarkedItem"
+	{
+		"chi"		"{default}[{green}标记系统{default}] {olive}%N{default}: %s"
+	}
+	"L4D2ItemHint_PlayerMarkedItemHighlighted"
+	{
+		"chi"		"{default}[{green}标记系统{default}] {olive}%N{default}: {green}%s"
+	}
+}

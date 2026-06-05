@@ -1,0 +1,63 @@
+"Phrases"
+{
+	"RYGive_TryingKickDeadInfectedRobot"
+	{
+		"vi"		"Đang cố gắng đuổi con robot bị nhiễm bệnh đã chết ra ngoài..."
+	}
+	"RYGive_KickedBots"
+	{
+		"vi"		"Đã loại bỏ bot %i."
+	}
+	"RYGive_AdminSpawnedInfected"
+	{
+		"vi"		"{lightgreen}管理员{default}[{olive}%N{default}]刷出一只{olive}%s"
+	}
+	"RYGive_FriendlyDamageCoefficientResetDefault"
+	{
+		"vi"		"Hệ số sát thương thân thiện đã được đặt lại về giá trị mặc định"
+	}
+	"RYGive_FriendlyDamageCoefficientSet"
+	{
+		"vi"		"Hệ số sát thương thân thiện {default} đã được đặt thành {green}%.1f"
+	}
+	"RYGive_FailedObtainCrosshairPositionTry"
+	{
+		"vi"		"Không thể lấy được vị trí tâm ngắm! Vui lòng thử lại."
+	}
+	"RYGive_ImmuneDamage"
+	{
+		"vi"		"{green} miễn nhiễm với sát thương từ %s {olive}%N {default}"
+	}
+	"RYGive_TargetPlayerExpired"
+	{
+		"vi"		"Người chơi mục tiêu đã hết hạn"
+	}
+	"RYGive_ImmuneSpecialSenseControl"
+	{
+		"vi"		"{green} miễn nhiễm với sự điều khiển cảm giác đặc biệt của %s {olive}%N"
+	}
+	"RYGive_OnlySurvivorsCanIdle"
+	{
+		"vi"		"Chỉ những người sống sót mới có thể nhàn rỗi"
+	}
+	"RYGive_Survival"
+	{
+		"vi"		"Sự sống còn đã kết thúc"
+	}
+	"RYGive_NumberInfectedPeopleFull"
+	{
+		"vi"		"Số người nhiễm bệnh đã đầy"
+	}
+	"RYGive_PlayerAlreadyTargetTeam"
+	{
+		"vi"		"Người chơi đã ở trong đội mục tiêu"
+	}
+	"RYGive_AllPlayersWeaponManeuverabilitySet"
+	{
+		"vi"		"{olive} Tất cả người chơi Khả năng cơ động của vũ khí của {default} đã được đặt thành {green}%.1fx"
+	}
+	"RYGive_WeaponManeuverabilitySet"
+	{
+		"vi"		"{olive}%N Khả năng cơ động của vũ khí của {default} đã được đặt thành {green}%.1fx"
+	}
+}

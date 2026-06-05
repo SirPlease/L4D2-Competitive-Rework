@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"L4D2BWRockHit_VictimAttackerInflictorDamageType"
+	{
+		"vi"		"Nạn nhân %d kẻ tấn công %d kẻ gây ra %d loại sát thương %d vũ khí %d"
+	}
+	"L4D2BWRockHit_VictimAttackerClassname"
+	{
+		"vi"		"Kẻ tấn công %N(%i/%i) của nạn nhân %N tên lớp %s"
+	}
+	"L4D2BWRockHit_TankRockDetonate"
+	{
+		"vi"		"CTankRock__Kích nổ: %d"
+	}
+	"L4D2BWRockHit_OwnerTankRockDetonate"
+	{
+		"vi"		"Chủ sở hữu: %N (%d). Đá xe tăng %d phát nổ)"
+	}
+	"L4D2BWRockHit_UnknownOwnerTankRockDetonate"
+	{
+		"vi"		"Không rõ chủ sở hữu: %d. Đá xe tăng %d phát nổ)"
+	}
+}

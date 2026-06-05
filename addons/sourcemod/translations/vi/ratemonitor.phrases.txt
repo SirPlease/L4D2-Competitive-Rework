@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"Ratemonitor_RatesNetsettingsChanged"
+	{
+		"vi"		"{default}<{olive}Rates{default}> Cài đặt mạng của {teamcolor}%N{default} đã thay đổi từ {teamcolor}%d/%d/%d {default}to {teamcolor}%d/%d/%d {olive}%s"
+	}
+	"Ratemonitor_RatesNetsettingsSet"
+	{
+		"vi"		"{default}<{olive}Rates{default}> Cài đặt mạng của {teamcolor}%N{default} được đặt thành {teamcolor}%d/%d/%d"
+	}
+	"Ratemonitor_RatesNetsettingsSetIllegalValues"
+	{
+		"vi"		"{default}<{olive}Rates{default}> Cài đặt mạng của {teamcolor}%N{default} được đặt thành giá trị không hợp lệ: {teamcolor}%s/%s/%s {olive}%s"
+	}
+	"Ratemonitor_RatesIllegalyChangedNetsettingsMidgame"
+	{
+		"vi"		"{default}<{olive}Rates{default}> {teamcolor}%N{default} đã thay đổi cài đặt mạng bất hợp pháp ở giữa game: {teamcolor}%s/%s/%s {olive}%s"
+	}
+	"Ratemonitor_RatesMovedSpectatorsIllegalNetsettings"
+	{
+		"vi"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}đã được chuyển đến khán giả vì cài đặt mạng bất hợp pháp: {teamcolor}%s/%s/%s {olive}%s"
+	}
+	"Ratemonitor_RatesAdjustRatesValuesHigher"
+	{
+		"vi"		"{default}<{olive}Rates{default}> Vui lòng điều chỉnh giá của bạn thành giá trị cao hơn {olive}%d/%d/%d%s"
+	}
+	"Ratemonitor_RatesChangeNetsettingsBack"
+	{
+		"vi"		"{default}<{olive}Rates{default}> Thay đổi cài đặt mạng của bạn trở lại: {teamcolor}%d/%d/%d"
+	}
+	"Ratemonitor_RatesKickedIllegalNetsettings"
+	{
+		"vi"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}đã bị kick vì cài đặt mạng bất hợp pháp: {teamcolor}%s/%s/%s {olive}%s"
+	}
+	"Ratemonitor_RatesKickedDueIllegalNetsettings"
+	{
+		"vi"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}đã bị kick do thay đổi cài đặt mạng bất hợp pháp: {teamcolor}%s/%s/%s {olive}%s"
+	}
+}

@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4DPlayerCountUnloadMode_AdministratorNotPresentPlayersAll"
+	{
+		"ko"		"관리자가 없고 현재 모든 {green}%d/%d{default} 서버에 플레이어가 있으며 피크 기간 제한({green}%.0f%%{default})이 그대로 유지됩니다. {green}%d{default}분; 이 모드에는 사람이 부족합니다 {green}%d{default}, {green} 강제 제거 모드!!!!"
+	}
+	"L4DPlayerCountUnloadMode_AdministratorNotPresentCurrentlyRestricted"
+	{
+		"ko"		"관리자가 현재 부재중이며 제한된 시간 내에 있습니다. 이 모드에는 사람이 부족합니다 {green}%d{default} 사람, {green} 강제 제거 모드!!!!"
+	}
+}

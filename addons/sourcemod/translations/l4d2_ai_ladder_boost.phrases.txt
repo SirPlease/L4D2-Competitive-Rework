@@ -3,20 +3,9 @@
 	"L4D2AILadderBoost_LadderAccelerationGetLadderAcceleration"
 	{
 		"en"		"[Ladder acceleration] %s Get ladder acceleration"
-		"chi"		"[梯子加速] %s 获得爬梯加速"
-		"zho"		"[梯子加速] %s 獲得爬梯加速"
-		"jp"		"[ラダー加速] %s ラダー加速を取得"
-		"ko"		"[사다리 가속도] %s 사다리 가속도 얻기"
-		"vi"		"[Tăng tốc thang] %s Nhận tăng tốc thang"
 	}
-
 	"L4D2AILadderBoost_LadderAccelerationRestoreOriginalSpeed"
 	{
 		"en"		"[Ladder acceleration] %s restore original speed"
-		"chi"		"[梯子加速] %s 恢复原始速度"
-		"zho"		"[梯子加速] %s 恢復原始速度"
-		"jp"		"[ラダー加速] %s 元の速度に戻す"
-		"ko"		"[사다리 가속] %s 원래 속도 복원"
-		"vi"		"[Tăng tốc thang] %s khôi phục tốc độ ban đầu"
 	}
 }

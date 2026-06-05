@@ -1,0 +1,83 @@
+"Phrases"
+{
+	"Gnome_ErrorAddAnymoreGnomesUsed"
+	{
+		"chi"		"%sError：无法再添加侏儒。使用：（{olive}%d/%d{default}）。"
+	}
+	"Gnome_CannotPlaceGnomeTryAgain"
+	{
+		"chi"		"%s无法放置 gnome，请重试。"
+	}
+	"Gnome_ErrorCannotReadGnomeConfig"
+	{
+		"chi"		"%sError：无法读取 gnome 配置，假设文件为空。 （{olive}%s{default}）。"
+	}
+	"Gnome_ErrorFailedAddMapGnome"
+	{
+		"chi"		"%sError：无法将地图添加到 gnome 生成配置。"
+	}
+	"Gnome_SavedPosAng"
+	{
+		"chi"		"%s({olive}%d/%d{default}) - 保存位置：[{olive}%f %f %f{default}] ang:[{olive}%f %f %f{default}]"
+	}
+	"Gnome_FailedSaveGnome"
+	{
+		"chi"		"%s({olive}%d/%d{default}) - 无法保存 Gnome。"
+	}
+	"Gnome_ErrorCannotFindGnomeConfig"
+	{
+		"chi"		"%sError：找不到 gnome 配置（{olive}%s{default}）。"
+	}
+	"Gnome_ErrorCannotLoadGnomeConfig"
+	{
+		"chi"		"%sError：无法加载 gnome 配置（{olive}%s{default}）。"
+	}
+	"Gnome_ErrorCurrentMapNotGnome"
+	{
+		"chi"		"%sError：当前地图不在 gnome 配置中。"
+	}
+	"Gnome_RemovedConfig"
+	{
+		"chi"		"%s({olive}%d/%d{default}) - Gnome 从配置中删除。"
+	}
+	"Gnome_FailedRemoveGnomeConfig"
+	{
+		"chi"		"%s({olive}%d/%d{default}) - 无法从配置中删除 Gnome。"
+	}
+	"Gnome_0AllGnomesRemovedConfig"
+	{
+		"chi"		"%s(0/%d) - 从配置中删除所有侏儒，添加 {olive}sm_gnomesave{default}。"
+	}
+	"Gnome_GlowTurned"
+	{
+		"chi"		"%sGlow已变成%s"
+	}
+	"Gnome_Total"
+	{
+		"chi"		"%s 总计：%d。"
+	}
+	"Gnome_Teleported"
+	{
+		"chi"		"%s传送到%d。"
+	}
+	"Gnome_CouldNotFindIndexTeleportation"
+	{
+		"chi"		"%s找不到传送索引。"
+	}
+	"Gnome_UsageSMGnometeleIndex1"
+	{
+		"chi"		"%sU用法：sm_gnometele <索引1-%d>。"
+	}
+	"Gnome_NewAngles"
+	{
+		"chi"		"%s新角度：%f %f %f"
+	}
+	"Gnome_NewOrigin"
+	{
+		"chi"		"%s新产地：%f %f %f"
+	}
+	"Gnome_SavedOriginAnglesDataConfig"
+	{
+		"chi"		"%s保存数据配置的原点和角度"
+	}
+}

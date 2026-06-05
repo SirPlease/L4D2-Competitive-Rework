@@ -1,0 +1,407 @@
+"Phrases"
+{
+	"NO_DANCES_ACCESS_FLAG"
+	{
+		"tr"		"[{olive}Emotes{default}]{darkred} Dances kullanmaya erişiminiz yok!!"
+	}
+	"NO_EMOTES_ACCESS_FLAG"
+	{
+		"tr"		"[{olive}Emotes{default}]{darkred} Emotes kullanmaya erişiminiz yok!!"
+	}
+	"MUST_BE_ALIVE"
+	{
+		"tr"		"[{olive}Emotes{default}]{darkred} Bunu kullanmak için hayatta olmalısın!"
+	}
+	"STAY_ON_GROUND"
+	{
+		"tr"		"[{olive}Emotes{default}]{darkred} Bunu kullanmak için haraket etmemelisin!"
+	}
+	"COOLDOWN_EMOTES"
+	{
+		"tr"		"[{olive}Emotes{default}]{darkred} Biraz bekle!"
+	}
+	"AMIN_1_INVALID"
+	{
+		"tr"		"[{olive}Emotes{default}]{darkred} Bağımsız değişken 1 geçersiz!!!"
+	}
+	"CANNOT_USE_NOW"
+	{
+		"tr"		"[{olive}Emotes{default}]{darkred} Şu anda kullanamazsın!"
+	}
+	"INVALID_EMOTE_ID"
+	{
+		"tr"		"[{olive}Emotes{default}]{darkred} Geçersiz Emote ID, (1-86) arasında olmalıdır"
+	}
+	"RANDOM_EMOTE"
+	{
+		"tr"		"Rastgele Emote"
+	}
+	"RANDOM_DANCE"
+	{
+		"tr"		"Rastgele Dans"
+	}
+	"EMOTES_LIST"
+	{
+		"tr"		"Emotelar Listesi"
+	}
+	"DANCES_LIST"
+	{
+		"tr"		"Dans Listesi"
+	}
+	"EMOTE_PLAYER"
+	{
+		"tr"		"Emote oyuncu"
+	}
+	"SELECT_EMOTE"
+	{
+		"tr"		"Emote Seç"
+	}
+	"TITLE_MAIM_MENU"
+	{
+		"tr"		"Emotelar ve Danslar"
+	}
+	"TITLE_EMOTES_MENU"
+	{
+		"tr"		"Emotelar"
+	}
+	"TITLE_DANCES_MENU"
+	{
+		"tr"		"Danslar"
+	}
+	"Emote_Fonzie_Pistol"
+	{
+		"tr"		"Parmak silahları"
+	}
+	"Emote_Bring_It_On"
+	{
+		"tr"		"Bana Gel"
+	}
+	"Emote_ThumbsDown"
+	{
+		"tr"		"Başparmak Aşağı"
+	}
+	"Emote_Celebration_Loop"
+	{
+		"tr"		"Kutlama"
+	}
+	"Emote_BlowKiss"
+	{
+		"tr"		"Öpücük atmak"
+	}
+	"Emote_Calculated"
+	{
+		"tr"		"Hesaplanmış"
+	}
+	"Emote_Confused"
+	{
+		"tr"		"Şaşkın"
+	}
+	"Emote_Chug"
+	{
+		"tr"		"Chug"
+	}
+	"Emote_Cry"
+	{
+		"tr"		"Ağlamak"
+	}
+	"Emote_DustingOffHands"
+	{
+		"tr"		"Kale grubu"
+	}
+	"Emote_DustOffShoulders"
+	{
+		"tr"		"2 kadar salla"
+	}
+	"Emote_Facepalm"
+	{
+		"tr"		"Facepalm"
+	}
+	"Emote_Fishing"
+	{
+		"tr"		"Kancada"
+	}
+	"Emote_Flex"
+	{
+		"tr"		"Esnek"
+	}
+	"Emote_golfclap"
+	{
+		"tr"		"Golf alkış"
+	}
+	"Emote_HandSignals"
+	{
+		"tr"		"El işaretleri"
+	}
+	"Emote_HeelClick"
+	{
+		"tr"		"Tıkla!"
+	}
+	"Emote_Hotstuff"
+	{
+		"tr"		"Sıcak sayfalar"
+	}
+	"Emote_IBreakYou"
+	{
+		"tr"		"Kırılma noktası"
+	}
+	"Emote_IHeartYou"
+	{
+		"tr"		"Gerçek aşk"
+	}
+	"Emote_Kung-Fu_Salute"
+	{
+		"tr"		"Kung-Fu Selamı"
+	}
+	"Emote_Laugh"
+	{
+		"tr"		"Gülmek"
+	}
+	"Emote_Luchador"
+	{
+		"tr"		"Savaşçı"
+	}
+	"Emote_Make_It_Rain"
+	{
+		"tr"		"Yağdır"
+	}
+	"Emote_NotToday"
+	{
+		"tr"		"Bugün değil"
+	}
+	"Emote_RockPaperScissor_Paper"
+	{
+		"tr"		"Kağıt"
+	}
+	"Emote_RockPaperScissor_Rock"
+	{
+		"tr"		"Taş"
+	}
+	"Emote_RockPaperScissor_Scissor"
+	{
+		"tr"		"Taş"
+	}
+	"Emote_Salt"
+	{
+		"tr"		"Tuz"
+	}
+	"Emote_Salute"
+	{
+		"tr"		"Sağlık"
+	}
+	"Emote_SmoothDrive"
+	{
+		"tr"		"Araba sürmek"
+	}
+	"Emote_Snap"
+	{
+		"tr"		"Ani"
+	}
+	"Emote_StageBow"
+	{
+		"tr"		"Sahne yay"
+	}
+	"Emote_ThumbsUp"
+	{
+		"tr"		"Başparmak havaya"
+	}
+	"Emote_Wave2"
+	{
+		"tr"		"Sağlık 2"
+	}
+	"Emote_Yeet"
+	{
+		"tr"		"Yeet"
+	}
+	"DanceMoves"
+	{
+		"tr"		"Dans hareketleri"
+	}
+	"Emote_Mask_Off_Intro"
+	{
+		"tr"		"Turuncu Adalet"
+	}
+	"Emote_Zippy_Dance"
+	{
+		"tr"		"Neşeli"
+	}
+	"ElectroShuffle"
+	{
+		"tr"		"Elektro Karıştırma"
+	}
+	"Emote_AerobicChamp"
+	{
+		"tr"		"Aerobik"
+	}
+	"Emote_Bendy"
+	{
+		"tr"		"Bendy"
+	}
+	"Emote_BandOfTheFort"
+	{
+		"tr"		"En iyi arkadaşlar"
+	}
+	"Emote_Boogie_Down_Intro"
+	{
+		"tr"		"Boogie"
+	}
+	"Emote_Capoeira"
+	{
+		"tr"		"Capoeira"
+	}
+	"Emote_Charleston"
+	{
+		"tr"		"Sineklik"
+	}
+	"Emote_Chicken"
+	{
+		"tr"		"Tavuk"
+	}
+	"Emote_Dance_NoBones"
+	{
+		"tr"		"Kemiksiz"
+	}
+	"Emote_Dance_Shoot"
+	{
+		"tr"		"Yutturmaca"
+	}
+	"Emote_Dance_SwipeIt"
+	{
+		"tr"		"Salla"
+	}
+	"Emote_Dance_Disco_T3"
+	{
+		"tr"		"Disko ateşi"
+	}
+	"Emote_DG_Disco"
+	{
+		"tr"		"Disko ateşi 2"
+	}
+	"Emote_Dance_Worm"
+	{
+		"tr"		"Solucan"
+	}
+	"Emote_Dance_Loser"
+	{
+		"tr"		"L al"
+	}
+	"Emote_Dance_Breakdance"
+	{
+		"tr"		"BreakDance"
+	}
+	"Emote_Dance_Pump"
+	{
+		"tr"		"Pompa"
+	}
+	"Emote_Dance_RideThePony"
+	{
+		"tr"		"Midilli Yolculuğu"
+	}
+	"Emote_Dab"
+	{
+		"tr"		"Dab"
+	}
+	"Emote_EasternBloc_Start"
+	{
+		"tr"		"Doğu Bloğu"
+	}
+	"Emote_FancyFeet"
+	{
+		"tr"		"Rüya Ayakları"
+	}
+	"Emote_FlossDance"
+	{
+		"tr"		"Diş ipi"
+	}
+	"Emote_FlippnSexy"
+	{
+		"tr"		"Flippn"
+	}
+	"Emote_Fresh"
+	{
+		"tr"		"Taze"
+	}
+	"Emote_GrooveJam"
+	{
+		"tr"		"Grefg"
+	}
+	"Emote_guitar"
+	{
+		"tr"		"Gitar"
+	}
+	"Emote_Hillbilly_Shuffle_Intro"
+	{
+		"tr"		"Karıştır"
+	}
+	"Emote_Hiphop_01"
+	{
+		"tr"		"Hip Hop"
+	}
+	"Emote_Hula_Start"
+	{
+		"tr"		"Hula Hop"
+	}
+	"Emote_InfiniDab_Intro"
+	{
+		"tr"		"Sonsuz Dab"
+	}
+	"Emote_Intensity_Start"
+	{
+		"tr"		"Yoğunluk"
+	}
+	"Emote_IrishJig_Start"
+	{
+		"tr"		"Türk Dabke"
+	}
+	"Emote_KoreanEagle"
+	{
+		"tr"		"Kartal"
+	}
+	"Emote_Kpop_02"
+	{
+		"tr"		"Gerçek kalp"
+	}
+	"Emote_LivingLarge"
+	{
+		"tr"		"Büyük Yaşa"
+	}
+	"Emote_Maracas"
+	{
+		"tr"		"Maracas"
+	}
+	"Emote_PopLock"
+	{
+		"tr"		"Pop Kilidi"
+	}
+	"Emote_PopRock"
+	{
+		"tr"		"Yıldız gücü"
+	}
+	"Emote_RobotDance"
+	{
+		"tr"		"Robot"
+	}
+	"Emote_T-Rex"
+	{
+		"tr"		"T-Rex"
+	}
+	"Emote_TechnoZombie"
+	{
+		"tr"		"Yeniden canlandırıldı"
+	}
+	"Emote_Twist"
+	{
+		"tr"		"Dönemeç"
+	}
+	"Emote_WarehouseDance_Start"
+	{
+		"tr"		"Depo"
+	}
+	"Emote_Wiggle"
+	{
+		"tr"		"Kıpırdatmak"
+	}
+	"Emote_Youre_Awesome"
+	{
+		"tr"		"Harikasın"
+	}
+}

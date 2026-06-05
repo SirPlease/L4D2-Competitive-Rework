@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2StuckTankTeleport_RunningTooFastTeleportTank"
+	{
+		"jp"		"{lightgreen}%N {green} 走るのが速すぎます。ドアの敷居に従ってタンクをテレポートします。"
+	}
+}

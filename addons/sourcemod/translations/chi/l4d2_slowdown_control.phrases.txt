@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2SlowdownControl_WaterSlowdownWaterSlowdownEffect"
+	{
+		"chi"		"{default}[{olive}Water Slowdown{default}]  {green}水中减速{default} 效果因tank生成被减弱."
+	}
+	"L4D2SlowdownControl_WaterSlowdownWaterSlowdownEffectRestored"
+	{
+		"chi"		"{default}[{olive}Water Slowdown{default}]  {green}水中减速{default} 效果已恢复到正常水平。"
+	}
+}

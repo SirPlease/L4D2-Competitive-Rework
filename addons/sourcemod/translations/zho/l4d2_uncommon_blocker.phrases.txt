@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"L4D2UncommonBlocker_UncommonInfectedSpawnedEntityModel"
+	{
+		"zho"		"罕見感染者誕生！實體：%d，型號：%s，性別：%d，外掛程式標誌：%d，已封鎖：%s。"
+	}
+	"L4D2UncommonBlocker_2BlockedUncommonInfectedEntity"
+	{
+		"zho"		"2 阻止罕見感染！實體：%d，位置：%.0f %.0f %.0f，mobRush：%s。"
+	}
+	"L4D2UncommonBlocker_SpawnedNewInfectedEntityLocation"
+	{
+		"zho"		"產生新的感染者！實體：%d，位置：%.0f %.0f %.0f，mobRush：%s。"
+	}
+}

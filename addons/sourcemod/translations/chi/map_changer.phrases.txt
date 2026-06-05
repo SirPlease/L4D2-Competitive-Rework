@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"MapChanger_VoteWhetherEnableRescueMap"
+	{
+		"chi"		"{green}[MapChanger]{default} 投票：是否启用本救援图失败 {olive}%d{default} 次自动换图？"
+	}
+	"MapChanger_Voted"
+	{
+		"chi"		"{green}[MapChanger]{default} %N 已投票。"
+	}
+	"MapChanger_RescueMapEnabledFailedAutomatically"
+	{
+		"chi"		"{green}[MapChanger]{default} 已启用本救援图失败 {olive}%d{default} 次自动换图。"
+	}
+	"MapChanger_RescueMapTurnedOffAutomatically"
+	{
+		"chi"		"{green}[MapChanger]{default} 本救援图已关闭失败次数自动换图。"
+	}
+}

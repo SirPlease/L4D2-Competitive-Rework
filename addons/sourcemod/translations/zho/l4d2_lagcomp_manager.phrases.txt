@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"L4D2LagcompManager_SuccessfullyEntitySuccessfullyAddedArray"
+	{
+		"zho"		"【成功】實體‘%s(%d)’已成功加入延遲補償數組！"
+	}
+	"L4D2LagcompManager_ErrorCouldNotFindEntity"
+	{
+		"zho"		"[錯誤] 在延遲補償數組中找不到實體「%s (%d)」！"
+	}
+	"L4D2LagcompManager_ErrorEntityNotRemovedAfter"
+	{
+		"zho"		"[錯誤] 實體「%s (%d)」在從陣列中銷毀以進行延遲補償後並未被刪除！"
+	}
+	"L4D2LagcompManager_SuccessfullyEntityRemovedAfterDestroyed"
+	{
+		"zho"		"【成功】實體「%s（%d）」被從陣列中摧毀後被移除以進行延遲補償！"
+	}
+	"L4D2LagcompManager_ErrorEntityNeverAddedArray"
+	{
+		"zho"		"[錯誤] 實體「%s (%d)」從未加入到陣列中進行滯後補償！"
+	}
+}

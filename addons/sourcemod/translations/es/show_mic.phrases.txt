@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"Players Speaking:"
+	{
+		"es"		"Jugadores Hablando:"
+	}
+}

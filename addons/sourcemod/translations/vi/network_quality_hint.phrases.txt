@@ -1,0 +1,27 @@
+"Phrases"
+{
+	"NetworkQualityHint_CurrentNetworkPingMSLoss"
+	{
+		"vi"		"%s Mạng hiện tại: ping {olive}%dms{default}, mất {olive}%.2f%%{default}, sặc {olive}%.2f%%{default}."
+	}
+	"NetworkQualityHint_DetectionCaliberChokeUseDirection"
+	{
+		"vi"		"%s Phát hiện cỡ nòng: sặc Sử dụng hướng được máy chủ gửi cho bạn; hướng bạn gửi tới máy chủ hiện tại là {olive}%.2f%%{default}."
+	}
+	"NetworkQualityHint_AbnormalDelayPacketLossOpen"
+	{
+		"vi"		"%s Nếu có độ trễ hoặc mất gói bất thường, vui lòng mở trang IP và sao chép địa chỉ máy chủ hiện tại và kết nối lại: {green}%s{default}"
+	}
+	"NetworkQualityHint_AbnormalityNetworkStatusDetectedCurrent"
+	{
+		"vi"		"%s Đã phát hiện sự bất thường trong trạng thái mạng của bạn: {olive}%s{default}. Ping hiện tại {olive}%dms{default}, mất {olive}%.2f%%{default}, sặc {olive}%.2f%%{default}."
+	}
+	"NetworkQualityHint_OpenIPPageCopyConnect"
+	{
+		"vi"		"%s Vui lòng mở trang IP, sao chép lệnh kết nối tương ứng với máy chủ hiện tại và dán vào bảng điều khiển để kết nối lại: {green}%s{default}"
+	}
+	"NetworkQualityHint_ThirdLineServersGivePriority"
+	{
+		"vi"		"%s Đối với các máy chủ tuyến thứ ba, vui lòng ưu tiên sử dụng lối vào chuyển hướng hiển thị trên trang web để tránh đi sai đường từ các bộ sưu tập hoặc hồ sơ lịch sử."
+	}
+}

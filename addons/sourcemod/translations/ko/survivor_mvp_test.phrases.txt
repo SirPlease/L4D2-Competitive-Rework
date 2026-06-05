@@ -1,0 +1,31 @@
+"Phrases"
+{
+	"SurvivorMVPTest_CurrentRoundMVP"
+	{
+		"ko"		"현재 라운드 MVP: {olive}%N{default}"
+	}
+	"SurvivorMVPTest_DamageClient"
+	{
+		"ko"		"클라이언트 손상: {olive}%d{default}"
+	}
+	"SurvivorMVPTest_SIKillsClient"
+	{
+		"ko"		"SI 클라이언트 킬: {olive}%d{default}"
+	}
+	"SurvivorMVPTest_DamagePercentClient"
+	{
+		"ko"		"클라이언트 손상 비율: {olive}%f{default}"
+	}
+	"SurvivorMVPTest_CurrentRoundMVPClientCommon"
+	{
+		"ko"		"현재 라운드 MVP 클라이언트(공통): {olive}%N{default}"
+	}
+	"SurvivorMVPTest_CommonKillsClient"
+	{
+		"ko"		"클라이언트의 일반적인 킬: {olive}%d{default}"
+	}
+	"SurvivorMVPTest_CIPercentClient"
+	{
+		"ko"		"클라이언트의 CI 비율: {olive}%f{default}"
+	}
+}

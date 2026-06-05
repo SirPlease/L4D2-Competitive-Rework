@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4DBlackandwhite_BlackWhite"
+	{
+		"zho"		"{blue}[{default}!{blue}]{default} {olive}%s{default} 為黑白。"
+	}
+}

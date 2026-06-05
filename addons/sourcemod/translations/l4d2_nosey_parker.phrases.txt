@@ -3,10 +3,5 @@
 	"L4D2NoseyParker_DmgReportTookDamage"
 	{
 		"en"		"{green}[DmgReport]{default} {lightgreen}%N{default}({green}%s{default}) took {olive}%d{default} damage from you!"
-		"chi"		"{green}[DmgReport]{default} {lightgreen}%N{default}({green}%s{default}) 受到了 {olive}%d{default} 的伤害！"
-		"zho"		"{green}[DmgReport]{default} {lightgreen}%N{default}({green}%s{default}) 受到了{olive}%d{default} 的傷害！"
-		"jp"		"{green}[DmgReport]{default} {lightgreen}%N{default}({green}%s{default})はあなたから{olive}%d{default}ダメージを受けました!"
-		"ko"		"{green}[DmgReport]{default} {lightgreen}%N{default}({green}%s{default})가 당신에게서 {olive}%d{default} 피해를 입었습니다!"
-		"vi"		"{green}[DmgReport]{default} {lightgreen}%N{default}({green}%s{default}) đã nhận thiệt hại {olive}%d{default} từ bạn!"
 	}
 }

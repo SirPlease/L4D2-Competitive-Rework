@@ -6,14 +6,14 @@
 	}
 	"Heads"
 	{
-		"jp"		"{lightgreen}%s{default} flipped a coin!\\nIt's {green}Heads{default}!"
+		"jp"		"{lightgreen}%s{default} がコインを投げました!\n結果は {green}表{default}!"
 	}
 	"Tails"
 	{
-		"jp"		"{lightgreen}%s{default} flipped a coin!\\nIt's {green}Tails{default}!"
+		"jp"		"{lightgreen}%s{default} がコインを投げました!\n結果は {green}裏{default}!"
 	}
 	"rolled"
 	{
-		"jp"		"{lightgreen}%s{default} rolled a {teamcolor}%d{default} sided die!\\nIt's {green}%d{default}!"
+		"jp"		"{lightgreen}%s{default} が {teamcolor}%d{default} 面ダイスを振りました!\n結果は {green}%d{default}!"
 	}
 }

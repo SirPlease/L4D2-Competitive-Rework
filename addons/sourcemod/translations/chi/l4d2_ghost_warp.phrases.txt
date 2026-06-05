@@ -1,0 +1,35 @@
+"Phrases"
+{
+	"L4D2GhostWarp_CommandDisabled"
+	{
+		"chi"		"%s 该命令现在为 {green}disabled{default}。"
+	}
+	"L4D2GhostWarp_CanUseCommandOftenWait"
+	{
+		"chi"		"%s 您不能经常使用此命令，请再等待 {green}%.01f{default} 秒。"
+	}
+	"L4D2GhostWarp_NoSurvivorsFound"
+	{
+		"chi"		"%s 未找到 {green} 幸存者 {default}！"
+	}
+	"L4D2GhostWarp_EnteredInvalidSurvivorIndex"
+	{
+		"chi"		"%s 您输入了 {green} 无效的 {default} 幸存者索引！%s"
+	}
+	"L4D2GhostWarp_Usage1"
+	{
+		"chi"		"%s 用法：{green}%s{default} <1 - %d>"
+	}
+	"L4D2GhostWarp_EnteredWrongSurvivorName"
+	{
+		"chi"		"%s 您输入的{green}错误{default}幸存者姓名！%s"
+	}
+	"L4D2GhostWarp_UsageSurvivorName"
+	{
+		"chi"		"%s 用法：{green}%s{default} <幸存者名称>"
+	}
+	"L4D2GhostWarp_SurvivorSpecifiedNotFound"
+	{
+		"chi"		"%s 您指定的{green}survivor{default}是{green}未找到{default}！"
+	}
+}

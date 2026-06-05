@@ -78,11 +78,11 @@
 	}
 	"L4D2HybridScoremod_TeamsPerformedAbsolutelyEqualImpossible"
 	{
-		"vi"		"%s{olive}Teams đã hoạt động hoàn toàn ngang nhau! Không thể quyết định người chiến thắng vòng rõ ràng"
+		"vi"		"%s{olive}Hai đội thể hiện hoàn toàn ngang nhau! Không thể xác định đội thắng rõ ràng của vòng này"
 	}
 	"L4D2HybridScoremod_AddingPermHPBonusContribution"
 	{
-		"vi"		"{default}Thêm {olive}%N's{default} đóng góp tiền thưởng perm hp: {olive}%d{default} HP perm -> {lightgreen}%.1f{default} tiền thưởng; tổng số mới: {olive}%.1f{default}"
+		"vi"		"{default}Thêm đóng góp thưởng HP vĩnh viễn của {olive}%N{default}: {olive}%d{default} HP vĩnh viễn -> {lightgreen}%.1f{default} thưởng; tổng mới: {olive}%.1f{default}"
 	}
 	"L4D2HybridScoremod_AddingTempHPBonusEligible"
 	{

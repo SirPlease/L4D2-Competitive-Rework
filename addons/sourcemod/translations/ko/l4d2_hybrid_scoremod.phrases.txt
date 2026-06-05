@@ -1,0 +1,95 @@
+"Phrases"
+{
+	"L4D2HybridScoremod_MapHealthBonusTempHealth"
+	{
+		"ko"		"{default}Map 체력 보너스: {olive}%.1f{default}, 임시 체력 보너스: {olive}%.1f{default}, 영구 HP 가치: {lightgreen}%.1f{default}, 임시 HP 가치: {lightgreen}%.1f{default}, 알약 가치: {lightgreen}%i{default}"
+	}
+	"L4D2HybridScoremod_1Bonus"
+	{
+		"ko"		"%s{default}R{green}#1{default} 보너스: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
+	}
+	"L4D2HybridScoremod_BonusHBDBPills"
+	{
+		"ko"		"%s{default}R{green}#%i{default} 보너스: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | DB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | 알약: {olive}%d{default} <{lightgreen}%.1f%%{default}>]"
+	}
+	"L4D2HybridScoremod_Bonus"
+	{
+		"ko"		"%s{default}R{green}#%i{default} 보너스: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+	"L4D2HybridScoremod_1Bonus_2"
+	{
+		"ko"		"%s{default}R{green}#1{default} 보너스: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+	"L4D2HybridScoremod_BonusHBDBPills_2"
+	{
+		"ko"		"%s{default}R{green}#%i{default} 보너스: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {lightgreen}%.0f%%{default} | DB: {lightgreen}%.0f%%{default} | 알약: {lightgreen}%.0f%%{default}]"
+	}
+	"L4D2HybridScoremod_HybridBonusMapInfo"
+	{
+		"ko"		"{default}[{green}Hybrid Bonus{default} :: {lightgreen}%iv%i{default}] 지도 정보"
+	}
+	"L4D2HybridScoremod_Distance"
+	{
+		"ko"		"{default}거리: {olive}%d{default}"
+	}
+	"L4D2HybridScoremod_TotalBonus1000"
+	{
+		"ko"		"{default}총 보너스: {olive}%d{default} <{lightgreen}100.0%%{default}>"
+	}
+	"L4D2HybridScoremod_HealthBonus"
+	{
+		"ko"		"{default}건강 보너스: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+	"L4D2HybridScoremod_DamageBonus"
+	{
+		"ko"		"{default}데미지 보너스: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+	"L4D2HybridScoremod_PillsBonusMax"
+	{
+		"ko"		"{default}P약 보너스: {olive}%d{default}(최대 {olive}%d{default}) <{lightgreen}%.1f%%{default}>"
+	}
+	"L4D2HybridScoremod_Tiebreaker"
+	{
+		"ko"		"{default}T타이브레이커: {olive}%d{default}"
+	}
+	"L4D2HybridScoremod_TempHPDamage"
+	{
+		"ko"		"{green}%N{default}에는 현재 {olive}%d{default} 임시 HP가 있습니다(손상: {lightgreen}%.1f{default})"
+	}
+	"L4D2HybridScoremod_LostTempHPAfterAttacked"
+	{
+		"ko"		"{lightgreen}%N{default}{olive}는 공격을 받은 후 %i{default} 임시 HP를 잃었습니다(인수 피해: {lightgreen}%.1f{default})"
+	}
+	"L4D2HybridScoremod_DirectorEndVersusModeRound"
+	{
+		"ko"		"CDirector::OnEndVersusModeRound()가 호출되었습니다. InSecondHalfOfRound(): %d, 생존자 수: %d"
+	}
+	"L4D2HybridScoremod_SurvivalBonusCvarUpdatedValue"
+	{
+		"ko"		"{default}S생존 보너스 cvar가 업데이트되었습니다. 값: {olive}%i{default} [승수: {olive}%i{default}]"
+	}
+	"L4D2HybridScoremod_RoundBonus"
+	{
+		"ko"		"%s{default}R라운드 {green}%i{default} 보너스: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
+	}
+	"L4D2HybridScoremod_TiebreakerTeam1Team2"
+	{
+		"ko"		"%s{lightgreen}TIEBREAKER{default}: 팀 {green}%#1{default} - {olive}%i{default}, 팀 {green}%#2{default} - {olive}%i{default}"
+	}
+	"L4D2HybridScoremod_TeamsPerformedAbsolutelyEqualImpossible"
+	{
+		"ko"		"%s{olive}팀은 완전히 동등한 성과를 거두었습니다! 확실한 라운드 승자를 결정하는 것은 불가능합니다"
+	}
+	"L4D2HybridScoremod_AddingPermHPBonusContribution"
+	{
+		"ko"		"{default}{olive}%N{default}의 영구 HP 보너스 기여 추가: {olive}%d{default} 영구 HP -> {lightgreen}%.1f{default} 보너스; 새 합계: {olive}%.1f{default}"
+	}
+	"L4D2HybridScoremod_AddingTempHPBonusEligible"
+	{
+		"ko"		"{default}A임시 HP 보너스 추가: {olive}%.1f{default} (적격 생존자: {olive}%d{default})"
+	}
+	"L4D2HybridScoremod_AddingPillsContributionTotalBonus"
+	{
+		"ko"		"{default}A{olive}%N's{default} 알약 기여 추가, 총 보너스: {olive}%d{default} 포인트"
+	}
+}

@@ -1,0 +1,438 @@
+"Phrases"
+{
+	"Muted on connect"
+	{
+		"pl"		"Zostałeś wyciszony!"
+	}
+	"Gagged on connect"
+	{
+		"pl"		"Zostałeś zakneblowany!"
+	}
+	"Mute expired"
+	{
+		"pl"		"Twoje wyciszenie wygasło."
+	}
+	"Gag expired"
+	{
+		"pl"		"Twój knebel wygasł."
+	}
+	"FWUnmute"
+	{
+		"pl"		"Twoje wyciszenie zostało usunięte."
+	}
+	"FWUngag"
+	{
+		"pl"		"Twój knebel został usunięty."
+	}
+	"Usage_time"
+	{
+		"#format"	"{1:d}"
+		"pl"		"Czas: {1} minut, jeśli nieokreślony; permanentny, jeśli 0.\nJeśli < 0, blokada na sesje."
+	}
+	"Player Comms Not Verified"
+	{
+		"pl"		"Gracz niezweryfikowany. Proszę poczekać 30 sekund przed ponowną probą."
+	}
+	"Player already muted"
+	{
+		"#format"	"{1:s}"
+		"pl"		"Gracz {1} jest już wyciszony!"
+	}
+	"Player already gagged"
+	{
+		"#format"	"{1:s}"
+		"pl"		"Gracz {1} jest już zakneblowany!"
+	}
+	"Player already silenced"
+	{
+		"#format"	"{1:s}"
+		"pl"		"Gracz {1} jest już całkowicie wyciszony!"
+	}
+	"Player not muted"
+	{
+		"pl"		"Gracz nie jest wyciszony."
+	}
+	"Player not gagged"
+	{
+		"pl"		"Gracz nie jest zakneblowany."
+	}
+	"Player not silenced"
+	{
+		"pl"		"Gracz nie jest całkowicie wyciszony."
+	}
+	"Permagagged player"
+	{
+		"#format"	"{1:t}"
+		"pl"		"Permanentnie zakneblowano {1}."
+	}
+	"Permagagged player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"pl"		"Permanentnie zakneblowano {1} (powód: {2})."
+	}
+	"Gagged player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"pl"		"Zakneblowano {1} na {2} minut."
+	}
+	"Gagged player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"pl"		"Zakneblowano {1} na {2} minut (powód: {3})."
+	}
+	"Permamuted player"
+	{
+		"#format"	"{1:t}"
+		"pl"		"Permanentnie wyciszono {1}."
+	}
+	"Permamuted player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"pl"		"Permanentnie wyciszono {1} (powód: {2})."
+	}
+	"Muted player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"pl"		"Wyciszono {1} na {2} minut."
+	}
+	"Muted player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"pl"		"Wyciszono {1} na {2} minut (powód: {3})."
+	}
+	"Permasilenced player"
+	{
+		"#format"	"{1:t}"
+		"pl"		"Permanentnie całkowicie wyciszono {1}."
+	}
+	"Permasilenced player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"pl"		"Permanentnie całkowicie wyciszono {1} (powód: {2})."
+	}
+	"Silenced player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"pl"		"Całkowicie wyciszono {1} na {2} minut."
+	}
+	"Silenced player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"pl"		"Całkowicie wyciszono {1} na {2} minut (powód: {3})."
+	}
+	"Temp unmuted player"
+	{
+		"#format"	"{1:t}"
+		"pl"		"Tymczasowo usunięto wyciszenie {1}."
+	}
+	"Temp ungagged player"
+	{
+		"#format"	"{1:t}"
+		"pl"		"Tymczasowo usunięto knebel {1}."
+	}
+	"Temp unsilenced player"
+	{
+		"#format"	"{1:t}"
+		"pl"		"Tymczasowo usunięto całkowite wyciszenie {1}."
+	}
+	"Unblock Select Failed"
+	{
+		"#format"	"{1:s}"
+		"pl"		"Wystąpił błąd podczas pobierania blokad {1} z bazy danych."
+	}
+	"No blocks found"
+	{
+		"#format"	"{1:s}"
+		"pl"		"Brak aktywnych blokad {1} w bazie danych."
+	}
+	"No db error unlock perm"
+	{
+		"pl"		"Nie masz uprawnień do usuwania blokad z bazy danych."
+	}
+	"No permission unmute"
+	{
+		"#format"	"{1:s}"
+		"pl"		"Wyciszenie {1} nie może zostać usunięte, ponieważ zostało nadane przez admina z wyższymi uprawnieniami!"
+	}
+	"No permission ungag"
+	{
+		"#format"	"{1:s}"
+		"pl"		"Knebel {1} nie może zostać usunięty, ponieważ został nadany przez admina z wyższymi uprawnieniami!"
+	}
+	"Unmuted player"
+	{
+		"#format"	"{1:t}"
+		"pl"		"Usunięto wyciszenie {1}."
+	}
+	"Ungagged player"
+	{
+		"#format"	"{1:t}"
+		"pl"		"Usunięto knebel {1}."
+	}
+	"Unblock insert failed"
+	{
+		"pl"		"Nie udało się usunąć blokady z bazy danych."
+	}
+	"successfully unmuted"
+	{
+		"#format"	"{1:s}"
+		"pl"		"Usunięto wyciszenie {1} z bazy danych."
+	}
+	"successfully ungagged"
+	{
+		"#format"	"{1:s}"
+		"pl"		"Usunięto knebel {1} z bazy danych."
+	}
+	"AdminMenu_Display_None"
+	{
+		"#format"	"{1:s}"
+		"pl"		"[  ] {1}"
+	}
+	"AdminMenu_Display_Muted"
+	{
+		"#format"	"{1:s}"
+		"pl"		"[M] {1}"
+	}
+	"AdminMenu_Display_Gagged"
+	{
+		"#format"	"{1:s}"
+		"pl"		"[G] {1}"
+	}
+	"AdminMenu_Display_Silenced"
+	{
+		"#format"	"{1:s}"
+		"pl"		"[S] {1}"
+	}
+	"AdminMenu_Main"
+	{
+		"pl"		"Komunikacja"
+	}
+	"AdminMenu_Select_Main"
+	{
+		"pl"		"Komunikacja:"
+	}
+	"AdminMenu_List"
+	{
+		"pl"		"Zobacz kary"
+	}
+	"AdminMenu_Select_List"
+	{
+		"pl"		"Wybierz Gracza:"
+	}
+	"AdminMenu_Gag"
+	{
+		"pl"		"Zaknebluj"
+	}
+	"AdminMenu_Select_Gag"
+	{
+		"pl"		"Wybierz Gracza:"
+	}
+	"AdminMenu_Select_Mute"
+	{
+		"pl"		"Wybierz Gracza:"
+	}
+	"AdminMenu_Select_Silence"
+	{
+		"pl"		"Wybierz Gracza:"
+	}
+	"AdminMenu_Select_Ungag"
+	{
+		"pl"		"Wybierz Gracza:"
+	}
+	"AdminMenu_Select_Unmute"
+	{
+		"pl"		"Wybierz Gracza:"
+	}
+	"AdminMenu_Select_Unsilence"
+	{
+		"pl"		"Wybierz Gracza:"
+	}
+	"AdminMenu_Option_Mute_Empty"
+	{
+		"pl"		"Brak wyciszonych graczy"
+	}
+	"AdminMenu_Option_Gag_Empty"
+	{
+		"pl"		"Brak zakneblowanych graczy"
+	}
+	"AdminMenu_Option_Silence_Empty"
+	{
+		"pl"		"Brak całkowicie wyciszonych graczy"
+	}
+	"ListMenu_Option_Empty"
+	{
+		"pl"		"Brak ukaranych graczy"
+	}
+	"AdminMenu_Option_Empty"
+	{
+		"pl"		"Brak dostępnych graczy"
+	}
+	"AdminMenu_UnGag"
+	{
+		"pl"		"Usuń knebel"
+	}
+	"AdminMenu_Title_Durations"
+	{
+		"pl"		"Wybierz czas trwania:"
+	}
+	"AdminMenu_Title_Reasons"
+	{
+		"pl"		"Wybierz powód:"
+	}
+	"AdminMenu_Mute"
+	{
+		"pl"		"Wycisz"
+	}
+	"AdminMenu_UnMute"
+	{
+		"pl"		"Usuń wyciszenie"
+	}
+	"AdminMenu_Silence"
+	{
+		"pl"		"Wycisz całkowicie"
+	}
+	"AdminMenu_UnSilence"
+	{
+		"pl"		"Usuń całkowite wyciszenie"
+	}
+	"AdminMenu_Not_Available"
+	{
+		"pl"		"Wybrany gracz nie jest już dostępny."
+	}
+	"Command_Target_Not_Targetable"
+	{
+		"pl"		"Nie możesz wskazać tego gracza."
+	}
+	"ListMenu_Option_Mute"
+	{
+		"pl"		"Wyciszony"
+	}
+	"ListMenu_Option_Gag"
+	{
+		"pl"		"Zakneblowany"
+	}
+	"ListMenu_Option_Duration"
+	{
+		"pl"		"- Czas trwania: "
+	}
+	"ListMenu_Option_Duration_Perm"
+	{
+		"pl"		"Permanentnie"
+	}
+	"ListMenu_Option_Duration_Time"
+	{
+		"#format"	"{1:d}"
+		"pl"		"{1} minut"
+	}
+	"ListMenu_Option_Duration_Temp"
+	{
+		"pl"		"Tymczasowo"
+	}
+	"ListMenu_Option_Expire"
+	{
+		"pl"		"- Wygasa: "
+	}
+	"ListMenu_Option_Expire_Perm"
+	{
+		"pl"		"Nigdy"
+	}
+	"ListMenu_Option_Expire_Time"
+	{
+		"#format"	"{1:s}"
+		"pl"		"{1}"
+	}
+	"ListMenu_Option_Expire_Temp_Reconnect"
+	{
+		"pl"		"Ponowne połączenie"
+	}
+	"ListMenu_Option_Admin"
+	{
+		"#format"	"{1:s}"
+		"pl"		"- Admin: {1}"
+	}
+	"ListMenu_Option_Issue"
+	{
+		"#format"	"{1:s}"
+		"pl"		"- Nadano: {1}"
+	}
+	"ListMenu_Option_Reason"
+	{
+		"pl"		"- Zobacz powód"
+	}
+	"ListMenu_Option_Reason_None"
+	{
+		"pl"		"- Powód: Brak"
+	}
+	"ReasonPanel_Punishment_Mute"
+	{
+		"pl"		"Wyciszono: "
+	}
+	"ReasonPanel_Punishment_Gag"
+	{
+		"pl"		"Zakneblowano: "
+	}
+	"ReasonPanel_Perm"
+	{
+		"pl"		"Permanentnie"
+	}
+	"ReasonPanel_Time"
+	{
+		"#format"	"{1:d}"
+		"pl"		"{1} minut"
+	}
+	"ReasonPanel_Temp"
+	{
+		"pl"		"Tymczasowo"
+	}
+	"ReasonPanel_Reason"
+	{
+		"#format"	"{1:s}"
+		"pl"		"Powód: {1}"
+	}
+	"ReasonPanel_Back"
+	{
+		"pl"		"Wyjdź"
+	}
+	"Temp muted player"
+	{
+		"#format"	"{1:t}"
+		"pl"		"Wyciszono {1}."
+	}
+	"Temp muted player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"pl"		"Wyciszono {1} (powód: {2})."
+	}
+	"Temp gagged player"
+	{
+		"#format"	"{1:t}"
+		"pl"		"Zakneblowano {1}."
+	}
+	"Temp gagged player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"pl"		"Zakneblowano {1} (powód: {2})."
+	}
+	"Temp silenced player"
+	{
+		"#format"	"{1:t}"
+		"pl"		"Całkowicie wyciszono {1}."
+	}
+	"Temp silenced player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"pl"		"Całkowicie wyciszono {1} (powód: {2})."
+	}
+	"CommandComms_na"
+	{
+		"pl"		"Dostępne tylko dla graczy na serwerze."
+	}
+	"CommandComms_nb"
+	{
+		"pl"		"Nie zostałeś wyciszony ani zakneblowany."
+	}
+	"no access"
+	{
+		"pl"		"Nie możesz nakładać kar na określony czas."
+	}
+}

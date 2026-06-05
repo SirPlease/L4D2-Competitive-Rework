@@ -1,0 +1,63 @@
+"Phrases"
+{
+	"RYGive_TryingKickDeadInfectedRobot"
+	{
+		"zho"		"嘗試踢出死亡的感染機器人..."
+	}
+	"RYGive_KickedBots"
+	{
+		"zho"		"踢掉 %i 機器人。"
+	}
+	"RYGive_AdminSpawnedInfected"
+	{
+		"zho"		"{lightgreen}管理員{default}[{olive}%N{default}]刷出一隻{olive}%s"
+	}
+	"RYGive_FriendlyDamageCoefficientResetDefault"
+	{
+		"zho"		"友傷係數已被重設為預設值"
+	}
+	"RYGive_FriendlyDamageCoefficientSet"
+	{
+		"zho"		"{default}友傷係數已被設定為 {green}%.1f"
+	}
+	"RYGive_FailedObtainCrosshairPositionTry"
+	{
+		"zho"		"取得準心處位置失敗! 請重新嘗試."
+	}
+	"RYGive_ImmuneDamage"
+	{
+		"zho"		"{green}已%s {olive}%N {default}的傷害免疫"
+	}
+	"RYGive_TargetPlayerExpired"
+	{
+		"zho"		"目標玩家失效"
+	}
+	"RYGive_ImmuneSpecialSenseControl"
+	{
+		"zho"		"{green}%s {olive}%N 已免疫特感控制"
+	}
+	"RYGive_OnlySurvivorsCanIdle"
+	{
+		"zho"		"只有生還者才能閒置"
+	}
+	"RYGive_Survival"
+	{
+		"zho"		"生還已滿"
+	}
+	"RYGive_NumberInfectedPeopleFull"
+	{
+		"zho"		"感染者已滿"
+	}
+	"RYGive_PlayerAlreadyTargetTeam"
+	{
+		"zho"		"玩家已在目標隊伍中"
+	}
+	"RYGive_AllPlayersWeaponManeuverabilitySet"
+	{
+		"zho"		"{olive}所有玩家 {default}的武器操控性已被設定為 {green}%.1fx"
+	}
+	"RYGive_WeaponManeuverabilitySet"
+	{
+		"zho"		"{olive}%N {default}的武器操控性已設定為 {green}%.1fx"
+	}
+}

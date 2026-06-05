@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2FixSpawnOrder_DebugMessage"
+	{
+		"vi"		"{green}[GỠ LỖI]{default} %s"
+	}
+}

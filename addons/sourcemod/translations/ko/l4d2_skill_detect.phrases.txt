@@ -170,7 +170,7 @@
 	"JockeyHP"
 	{
 		"#format"	"{1:N},{2:N},{3:i}"
-		"ko"		"{olive}{1}{default} {red}high-pounced{default} {olive}{2}{default} ({red}height{default}: {red}{3}{default})"
+		"ko"		"{olive}{1}{default}이(가) {olive}{2}{default}에게 {red}높은 도약{default}을 성공했습니다 ({red}높이{default}: {red}{3}{default})"
 	}
 	"JockeyHPBot"
 	{

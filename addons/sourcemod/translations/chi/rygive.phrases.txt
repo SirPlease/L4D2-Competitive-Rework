@@ -1,0 +1,63 @@
+"Phrases"
+{
+	"RYGive_TryingKickDeadInfectedRobot"
+	{
+		"chi"		"尝试踢出死亡的感染机器人..."
+	}
+	"RYGive_KickedBots"
+	{
+		"chi"		"踢掉 %i 机器人。"
+	}
+	"RYGive_AdminSpawnedInfected"
+	{
+		"chi"		"{lightgreen}管理员{default}[{olive}%N{default}]刷出一只{olive}%s"
+	}
+	"RYGive_FriendlyDamageCoefficientResetDefault"
+	{
+		"chi"		"友伤系数已被重置为默认值"
+	}
+	"RYGive_FriendlyDamageCoefficientSet"
+	{
+		"chi"		"{default}友伤系数已被设置为 {green}%.1f"
+	}
+	"RYGive_FailedObtainCrosshairPositionTry"
+	{
+		"chi"		"获取准心处位置失败! 请重新尝试."
+	}
+	"RYGive_ImmuneDamage"
+	{
+		"chi"		"{green}已%s {olive}%N {default}的伤害免疫"
+	}
+	"RYGive_TargetPlayerExpired"
+	{
+		"chi"		"目标玩家已失效"
+	}
+	"RYGive_ImmuneSpecialSenseControl"
+	{
+		"chi"		"{green}%s {olive}%N 已免疫特感控制"
+	}
+	"RYGive_OnlySurvivorsCanIdle"
+	{
+		"chi"		"只有生还者才能进行闲置"
+	}
+	"RYGive_Survival"
+	{
+		"chi"		"生还已满"
+	}
+	"RYGive_NumberInfectedPeopleFull"
+	{
+		"chi"		"感染者已满"
+	}
+	"RYGive_PlayerAlreadyTargetTeam"
+	{
+		"chi"		"玩家已在目标队伍中"
+	}
+	"RYGive_AllPlayersWeaponManeuverabilitySet"
+	{
+		"chi"		"{olive}所有玩家 {default}的武器操纵性已被设置为 {green}%.1fx"
+	}
+	"RYGive_WeaponManeuverabilitySet"
+	{
+		"chi"		"{olive}%N {default}的武器操纵性已被设置为 {green}%.1fx"
+	}
+}

@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2NoseyParker_DmgReportTookDamage"
+	{
+		"vi"		"{green}[DmgReport]{default} {lightgreen}%N{default}({green}%s{default}) đã nhận thiệt hại {olive}%d{default} từ bạn!"
+	}
+}

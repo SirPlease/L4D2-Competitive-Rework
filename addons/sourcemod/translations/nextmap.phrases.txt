@@ -4,32 +4,26 @@
 	{
 		"en"		"Map History"
 	}
-
 	"Map"
 	{
 		"en"		"[Map]"
 	}
-
 	"Started"
 	{
 		"en"		"[Started]"
 	}
-
 	"Played Time"
 	{
 		"en"		"[Played Time]"
 	}
-
 	"Reason"
 	{
 		"en"		"[Reason for ending]"
 	}
-
 	"Current Map"
 	{
 		"en"		"Current Map"
 	}
-
 	"ago"
 	{
 		"en"		"ago"

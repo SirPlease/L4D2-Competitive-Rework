@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4DBlackandwhite_BlackWhite"
+	{
+		"ko"		"{blue}[{default}!{blue}]{default} {olive}%s{default}는 흑백입니다."
+	}
+}

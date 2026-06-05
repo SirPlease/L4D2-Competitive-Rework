@@ -44,20 +44,20 @@
 	}
 	"HintReady"
 	{
-		"vi"		"You are ready.\\nSay !unready / Press F2 to unready."
+		"vi"		"Bạn đã sẵn sàng.\nGõ !unready hoặc nhấn F2 để hủy sẵn sàng."
 	}
 	"HintUnready"
 	{
-		"vi"		"You are not ready.\\nSay !ready / Press F1 to ready up."
+		"vi"		"Bạn chưa sẵn sàng.\nGõ !ready hoặc nhấn F1 để sẵn sàng."
 	}
 	"LiveCountdownBegin"
 	{
-		"vi"		"Going live!\\nSay !unready / Press F2 to cancel"
+		"vi"		"Sắp bắt đầu!\nGõ !unready hoặc nhấn F2 để hủy"
 	}
 	"LiveCountdown"
 	{
 		"#format"	"{1:d}"
-		"vi"		"Live in: {1}\\nSay !unready / Press F2 to cancel"
+		"vi"		"Bắt đầu sau: {1}\nGõ !unready hoặc nhấn F2 để hủy"
 	}
 	"LiveCountdownCancelled"
 	{

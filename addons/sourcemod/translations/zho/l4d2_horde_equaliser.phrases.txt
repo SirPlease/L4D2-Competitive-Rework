@@ -2,7 +2,7 @@
 {
 	"Tag"
 	{
-		"zho"		"< {olive} 部落 {default} >"
+		"zho"		"<{olive}屍潮{default}>"
 	}
 	"NoCommonRemaining"
 	{

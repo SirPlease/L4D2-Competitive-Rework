@@ -3,30 +3,13 @@
 	"Left4DHooksTest_Deton"
 	{
 		"en"		"DETON A (%0.0f %0.0f %0.0f)"
-		"chi"		"德顿A (%0.0f %0.0f %0.0f)"
-		"zho"		"德頓A (%0.0f %0.0f %0.0f)"
-		"jp"		"デトンA(%0.0f %0.0f %0.0f)"
-		"ko"		"디톤 A (%0.0f %0.0f %0.0f)"
-		"vi"		"DETON A (%0.0f %0.0f %0.0f)"
 	}
-
 	"Left4DHooksTest_Deton_2"
 	{
 		"en"		"DETON B (%0.0f %0.0f %0.0f)"
-		"chi"		"德顿B (%0.0f %0.0f %0.0f)"
-		"zho"		"德頓B (%0.0f %0.0f %0.0f)"
-		"jp"		"デトンB(%0.0f %0.0f %0.0f)"
-		"ko"		"디톤 B (%0.0f %0.0f %0.0f)"
-		"vi"		"DETON B (%0.0f %0.0f %0.0f)"
 	}
-
 	"Left4DHooksTest_Trace"
 	{
 		"en"		"Trace (%0.0f %0.0f %0.0f)"
-		"chi"		"跟踪（%0.0f %0.0f %0.0f）"
-		"zho"		"追蹤（%0.0f %0.0f %0.0f）"
-		"jp"		"トレース (%0.0f %0.0f %0.0f)"
-		"ko"		"추적(%0.0f %0.0f %0.0f)"
-		"vi"		"Dấu vết (%0.0f %0.0f %0.0f)"
 	}
 }

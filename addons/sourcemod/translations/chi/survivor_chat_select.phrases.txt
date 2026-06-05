@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"SurvivorChatSelect_TeamUseCommand"
+	{
+		"chi"		"您必须在幸存者队伍中才能使用此命令！"
+	}
+	"SurvivorChatSelect_DefaultCharacterSet"
+	{
+		"chi"		"%s 您的 {olive} 默认 {default} 字符现已设置为 {lightgreen}%s{default}。"
+	}
+	"SurvivorChatSelect_CouldnLoadDefaultCharacterType"
+	{
+		"chi"		"%s 无法加载您的默认字符。输入 {olive}!csm {default} 选择您的 {lightgreen} 默认 {default} 字符。"
+	}
+}

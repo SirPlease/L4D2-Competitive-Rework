@@ -10,10 +10,10 @@
 	}
 	"GlobalChat_SummonTeammates"
 	{
-		"vi"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友"
+		"vi"		"{green}%s {olive}%s {default}người chơi đang gọi đồng đội tại {lightgreen}%s {default}"
 	}
 	"GlobalChat_SummonTeammatesWithMessage"
 	{
-		"vi"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友\\n{default}留言: {olive}%s"
+		"vi"		"{green}%s {olive}%s {default}người chơi đang gọi đồng đội tại {lightgreen}%s {default}\n{default}Tin nhắn: {olive}%s"
 	}
 }

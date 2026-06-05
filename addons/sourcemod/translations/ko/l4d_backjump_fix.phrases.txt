@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4DBackjumpFix_OtherSolid"
+	{
+		"ko"		"기타: %s(%i), 솔리드: %i"
+	}
+}

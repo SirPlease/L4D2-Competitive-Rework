@@ -2,18 +2,18 @@
 {
 	"Tag"
 	{
-		"vi"		"[{olive}{default}]"
+		"vi"		"[{olive}Tung xu{default}]"
 	}
 	"Heads"
 	{
-		"vi"		"{lightgreen}%s{default} flipped a coin!\\nIt's {green}Heads{default}!"
+		"vi"		"{lightgreen}%s{default} đã tung một đồng xu!\nKết quả là {green}mặt ngửa{default}!"
 	}
 	"Tails"
 	{
-		"vi"		"{lightgreen}%s{default} flipped a coin!\\nIt's {green}Tails{default}!"
+		"vi"		"{lightgreen}%s{default} đã tung một đồng xu!\nKết quả là {green}mặt sấp{default}!"
 	}
 	"rolled"
 	{
-		"vi"		"{lightgreen}%s{default} rolled a {teamcolor}%d{default} sided die!\\nIt's {green}%d{default}!"
+		"vi"		"{lightgreen}%s{default} đã gieo xúc xắc {teamcolor}%d{default} mặt!\nKết quả là {green}%d{default}!"
 	}
 }

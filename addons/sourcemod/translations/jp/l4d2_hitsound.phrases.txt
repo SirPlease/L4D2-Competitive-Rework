@@ -1,0 +1,119 @@
+"Phrases"
+{
+	"L4D2Hitsound_OverlayIcon"
+	{
+		"jp"		"オーバーレイアイコン: %s (%s)"
+	}
+	"L4D2Hitsound_CurrentlyNoIconSetsAvailable"
+	{
+		"jp"		"現在利用可能なアイコン セットはありません。"
+	}
+	"L4D2Hitsound_SoundEffectRange"
+	{
+		"jp"		"効果音範囲：%s"
+	}
+	"L4D2Hitsound_IconRange"
+	{
+		"jp"		"アイコン範囲: %s"
+	}
+	"L4D2Hitsound_HitsoundSoundEffectPackageThree"
+	{
+		"jp"		"[Hitsound] 効果音パッケージ(3点)を%dに設定しました"
+	}
+	"L4D2Hitsound_HitsoundIconSetThreeItems"
+	{
+		"jp"		"[Hitsound] アイコンセット(3個)が%d～%sに設定されました"
+	}
+	"L4D2Hitsound_SelectSetSoundEffectSet"
+	{
+		"jp"		"まずは「効果音セット（プレーヤー）」でセットを選択してください。"
+	}
+	"L4D2Hitsound_HitSoundEffectTurnedSet"
+	{
+		"jp"		"ヒット音：ON（%d設定）"
+	}
+	"L4D2Hitsound_HitSoundEffectTurnedOff"
+	{
+		"jp"		"ヒット音：OFF"
+	}
+	"L4D2Hitsound_KillSoundEffectTurnedSet"
+	{
+		"jp"		"キル効果音：オン（%dを設定）"
+	}
+	"L4D2Hitsound_KillSoundEffectTurnedOff"
+	{
+		"jp"		"キル効果音: オフ"
+	}
+	"L4D2Hitsound_HeadshotSoundEffectTurnedSet"
+	{
+		"jp"		"ヘッドショット効果音：オン（%d設定）"
+	}
+	"L4D2Hitsound_HeadshotSoundEffectTurnedOff"
+	{
+		"jp"		"ヘッドショット効果音：オフ"
+	}
+	"L4D2Hitsound_SelectSuitIconSuitPlayer"
+	{
+		"jp"		"まずは「アイコンスーツ(プレイヤー)」でスーツを選択してください。"
+	}
+	"L4D2Hitsound_HitIconTurnedSet"
+	{
+		"jp"		"ヒットアイコン：オン（%dを設定）"
+	}
+	"L4D2Hitsound_HitIconClosed"
+	{
+		"jp"		"ヒットアイコン: クローズ"
+	}
+	"L4D2Hitsound_KillIconTurnedSet"
+	{
+		"jp"		"キルアイコン: オン (%d を設定)"
+	}
+	"L4D2Hitsound_KillIconClosed"
+	{
+		"jp"		"キルアイコン: 終了"
+	}
+	"L4D2Hitsound_HeadshotIconTurnedSet"
+	{
+		"jp"		"ヘッドショットアイコン：オン（%dに設定）"
+	}
+	"L4D2Hitsound_HeadshotIconClosed"
+	{
+		"jp"		"ヘッドショットアイコン: 閉じています"
+	}
+	"L4D2Hitsound_NotPermissionUseMenu"
+	{
+		"jp"		"このメニューを使用する権限がありません。"
+	}
+	"L4D2Hitsound_ThreeSoundEffectsAllTurned"
+	{
+		"jp"		"3 つの効果音: すべてオフ"
+	}
+	"L4D2Hitsound_HeadshotSoundEffectSet"
+	{
+		"jp"		"ヘッドショット効果音：%dに設定"
+	}
+	"L4D2Hitsound_HitSoundEffectSet"
+	{
+		"jp"		"ヒット音：%dに設定"
+	}
+	"L4D2Hitsound_KillSoundEffectSet"
+	{
+		"jp"		"キル効果音：%dに設定"
+	}
+	"L4D2Hitsound_ThreeIconsAllClosed"
+	{
+		"jp"		"3 つのアイコン: すべて閉じています"
+	}
+	"L4D2Hitsound_HeadshotIconSet"
+	{
+		"jp"		"ヘッドショットアイコン：%dに設定"
+	}
+	"L4D2Hitsound_HitIconSet"
+	{
+		"jp"		"ヒットアイコン：%dに設定"
+	}
+	"L4D2Hitsound_KillIconSet"
+	{
+		"jp"		"キルアイコン: %dに設定"
+	}
+}

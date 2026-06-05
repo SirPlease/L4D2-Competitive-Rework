@@ -1,0 +1,408 @@
+"Phrases"
+{
+	"Spawn Objects"
+	{
+		"zho"		"生成物件"
+	}
+	"Select a task:"
+	{
+		"zho"		"選擇一項任務:"
+	}
+	"Select the delete task"
+	{
+		"zho"		"選擇刪除任務"
+	}
+	"Delete All Objects"
+	{
+		"zho"		"刪除所有生成過的物件"
+	}
+	"Delete Looking Object"
+	{
+		"zho"		"刪除眼前的物件(準心指向)"
+	}
+	"Delete Last Object"
+	{
+		"zho"		"刪除上一個生成的物件"
+	}
+	"Are you sure(Delete All)?"
+	{
+		"zho"		"確定刪除所有生成過的物件?"
+	}
+	"Yes"
+	{
+		"zho"		"是"
+	}
+	"No"
+	{
+		"zho"		"不要"
+	}
+	"Successfully deleted all spawned objects"
+	{
+		"zho"		"成功地刪除了所有生成過的物件"
+	}
+	"Canceled"
+	{
+		"zho"		"取消"
+	}
+	"delete all the spawned objects?"
+	{
+		"zho"		"你確定要刪除所有生成過的物件?"
+	}
+	"Edit Object"
+	{
+		"zho"		"編輯物件"
+	}
+	"Delete Object"
+	{
+		"zho"		"刪除物件"
+	}
+	"Select the spawn method"
+	{
+		"zho"		"選擇一個生成方式"
+	}
+	"Spawn Physics On Cursor"
+	{
+		"zho"		"生成動態物件在準心位置上"
+	}
+	"Spawn Physics On Origin"
+	{
+		"zho"		"生成動態物件在目前位置上"
+	}
+	"Spawn Non-solid On Cursor"
+	{
+		"zho"		"生成穿透物件在準心位置上"
+	}
+	"Spawn Non-solid On Origin"
+	{
+		"zho"		"生成穿透物件在目前位置上"
+	}
+	"Spawn Solid On Cursor"
+	{
+		"zho"		"生成固定物件在準心位置上"
+	}
+	"Spawn Solid On Origin"
+	{
+		"zho"		"生成固定物件在目前位置上"
+	}
+	"Save Objects"
+	{
+		"zho"		"儲存物件"
+	}
+	"Select The Save Method"
+	{
+		"zho"		"選擇儲存方式"
+	}
+	"Save Stripper File"
+	{
+		"zho"		"儲存於 Stripper File (推薦)"
+	}
+	"Save Routing File"
+	{
+		"zho"		"儲存於 Routing File (複雜)"
+	}
+	"Save Spawn Objects File"
+	{
+		"zho"		"儲存於 Spawn Objects File (暫存)"
+	}
+	"Select Path Difficulty"
+	{
+		"zho"		"選擇路徑難度"
+	}
+	"Easy Path"
+	{
+		"zho"		"簡單路徑"
+	}
+	"Medium Path"
+	{
+		"zho"		"中等路徑"
+	}
+	"Hard Path"
+	{
+		"zho"		"困難路徑"
+	}
+	"Load Objects"
+	{
+		"zho"		"載入物件"
+	}
+	"load the map data cache?"
+	{
+		"zho"		"你確定從暫存檔案裡載入物件?"
+	}
+	"Are you sure?"
+	{
+		"zho"		"你確定?"
+	}
+	"Choose a map number please"
+	{
+		"zho"		"選擇地圖編號"
+	}
+	"Vehicles"
+	{
+		"zho"		"載具類"
+	}
+	"Foliage"
+	{
+		"zho"		"植物類"
+	}
+	"Interior"
+	{
+		"zho"		"室內類"
+	}
+	"Exterior"
+	{
+		"zho"		"室外類"
+	}
+	"Decorative"
+	{
+		"zho"		"裝飾類"
+	}
+	"Misc"
+	{
+		"zho"		"雜項類"
+	}
+	"Select an action:"
+	{
+		"zho"		"選擇動作:"
+	}
+	"Rotate"
+	{
+		"zho"		"旋轉"
+	}
+	"Move"
+	{
+		"zho"		"移動"
+	}
+	"Rotate 1 degree (X axys)"
+	{
+		"zho"		"選轉 1 度 (X 軸)"
+	}
+	"Rotate 10 degree (X axys)"
+	{
+		"zho"		"選轉 10 度 (X 軸)"
+	}
+	"Rotate 15 degree (X axys)"
+	{
+		"zho"		"選轉 15 度 (X 軸)"
+	}
+	"Rotate 45 degree (X axys)"
+	{
+		"zho"		"選轉 40 度 (X 軸)"
+	}
+	"Rotate 90 degree (X axys)"
+	{
+		"zho"		"選轉 90 度 (X 軸)"
+	}
+	"Rotate 180 degree (X axys)"
+	{
+		"zho"		"選轉 180 度 (X 軸)"
+	}
+	"Back 1 degree (X axys)"
+	{
+		"zho"		"退回 1 度 (X 軸)"
+	}
+	"Back 10 degree (X axys)"
+	{
+		"zho"		"退回 10 度 (X 軸)"
+	}
+	"Back 15 degree (X axys)"
+	{
+		"zho"		"退回 15 度 (X 軸)"
+	}
+	"Rotate 1 degree (Y axys)"
+	{
+		"zho"		"選轉 1 度 (Y 軸)"
+	}
+	"Rotate 10 degree (Y axys)"
+	{
+		"zho"		"選轉 10 度 (Y 軸)"
+	}
+	"Rotate 15 degree (Y axys)"
+	{
+		"zho"		"選轉 15 度 (Y 軸)"
+	}
+	"Rotate 45 degree (Y axys)"
+	{
+		"zho"		"選轉 40 度 (Y 軸)"
+	}
+	"Rotate 90 degree (Y axys)"
+	{
+		"zho"		"選轉 90 度 (Y 軸)"
+	}
+	"Rotate 180 degree (Y axys)"
+	{
+		"zho"		"選轉 180 度 (Y 軸)"
+	}
+	"Back 1 degree (Y axys)"
+	{
+		"zho"		"退回 1 度 (Y 軸)"
+	}
+	"Back 10 degree (Y axys)"
+	{
+		"zho"		"退回 10 度 (Y 軸)"
+	}
+	"Back 15 degree (Y axys)"
+	{
+		"zho"		"退回 15 度 (Y 軸)"
+	}
+	"Rotate 1 degree (Z axys)"
+	{
+		"zho"		"選轉 1 度 (Z 軸)"
+	}
+	"Rotate 10 degree (Z axys)"
+	{
+		"zho"		"選轉 10 度 (Z 軸)"
+	}
+	"Rotate 15 degree (Z axys)"
+	{
+		"zho"		"選轉 15 度 (Z 軸)"
+	}
+	"Rotate 45 degree (Z axys)"
+	{
+		"zho"		"選轉 40 度 (Z 軸)"
+	}
+	"Rotate 90 degree (Z axys)"
+	{
+		"zho"		"選轉 90 度 (Z 軸)"
+	}
+	"Rotate 180 degree (Z axys)"
+	{
+		"zho"		"選轉 180 度 (Z 軸)"
+	}
+	"Back 1 degree (Z axys)"
+	{
+		"zho"		"退回 1 度 (Z 軸)"
+	}
+	"Back 10 degree (Z axys)"
+	{
+		"zho"		"退回 10 度 (Z 軸)"
+	}
+	"Back 15 degree (Z axys)"
+	{
+		"zho"		"退回 15 度 (Z 軸)"
+	}
+	"Move Up 1 Unit"
+	{
+		"zho"		"向上移動 1 單位"
+	}
+	"Move Up 10 Unit"
+	{
+		"zho"		"向上移動 10 單位"
+	}
+	"Move Up 30 Unit"
+	{
+		"zho"		"向上移動 30 單位"
+	}
+	"Move Down 1 Unit"
+	{
+		"zho"		"向下移動 1 單位"
+	}
+	"Move Down 10 Unit"
+	{
+		"zho"		"向下移動 10 單位"
+	}
+	"Move Down 30 Unit"
+	{
+		"zho"		"向下移動 30 單位"
+	}
+	"Move Right 1 Unit"
+	{
+		"zho"		"向右移動 1 單位"
+	}
+	"Move Right 10 Unit"
+	{
+		"zho"		"向右移動 10 單位"
+	}
+	"Move Right 30 Unit"
+	{
+		"zho"		"向右移動 30 單位"
+	}
+	"Move Left 1 Unit"
+	{
+		"zho"		"向左移動 1 單位"
+	}
+	"Move Left 10 Unit"
+	{
+		"zho"		"向左移動 10 單位"
+	}
+	"Move Left 30 Unit"
+	{
+		"zho"		"向左移動 30 單位"
+	}
+	"Move Forward 1 Unit"
+	{
+		"zho"		"向前移動 1 單位"
+	}
+	"Move Forward 10 Unit"
+	{
+		"zho"		"向前移動 10 單位"
+	}
+	"Move Forward 30 Unit"
+	{
+		"zho"		"向前移動 30 單位"
+	}
+	"Move Backward 1 Unit"
+	{
+		"zho"		"向後移動 1 單位"
+	}
+	"Move Backward 10 Unit"
+	{
+		"zho"		"向後移動 10 單位"
+	}
+	"Move Backward 30 Unit"
+	{
+		"zho"		"向後移動 30 單位"
+	}
+	"Object Model"
+	{
+		"#format"	"{1:d},{2:s}"
+		"zho"		"物件({1}) 模組: {2}"
+	}
+	"Object Position"
+	{
+		"#format"	"{1:d},{2:f},{3:f},{4:f}"
+		"zho"		"物件({1}) 位置: {2}, {3}, {4}"
+	}
+	"Object Angle"
+	{
+		"#format"	"{1:d},{2:f},{3:f},{4:f}"
+		"zho"		"物件({1}) 角度: {2}, {3}, {4}"
+	}
+	"Successfully removed an object"
+	{
+		"#format"	"{1:d}"
+		"zho"		"成功地移除了物件({1})"
+	}
+	"This plugin won't work in this game"
+	{
+		"zho"		"這個插件在這款遊戲上行不通"
+	}
+	"You are not looking to a valid object"
+	{
+		"zho"		"你準心並沒有指向一個合法的物件"
+	}
+	"Succesfully deleted the last spawned object"
+	{
+		"zho"		"成功地刪除了上一個生成的物件"
+	}
+	"The last spawned object index is not an object anymore!"
+	{
+		"#format"	"{1:d}"
+		"zho"		"上一個生成的物件 {1} 已經不再是一個合法的東西!"
+	}
+	"The last object is not valid anymore"
+	{
+		"zho"		"上一個生成的物件已經不合法了"
+	}
+	"You haven't spawned anything yet"
+	{
+		"zho"		"你還沒生成過任何物件，You idiot!"
+	}
+	"The file already exists."
+	{
+		"zho"		"檔案已存在. 舊的內容不會被刪除."
+	}
+	"Succesfully saved the map data"
+	{
+		"zho"		"已成功儲存所有物件"
+	}
+}

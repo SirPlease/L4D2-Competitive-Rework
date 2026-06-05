@@ -1,0 +1,83 @@
+"Phrases"
+{
+	"Gnome_ErrorAddAnymoreGnomesUsed"
+	{
+		"jp"		"%sエラー: これ以上ノームを追加できません。中古: ({olive}%d/%d{default})。"
+	}
+	"Gnome_CannotPlaceGnomeTryAgain"
+	{
+		"jp"		"%sgnome を配置できません。もう一度お試しください。"
+	}
+	"Gnome_ErrorCannotReadGnomeConfig"
+	{
+		"jp"		"%sError: ファイルが空であると想定されるため、gnome 構成を読み取ることができません。 ({olive}%s{default})。"
+	}
+	"Gnome_ErrorFailedAddMapGnome"
+	{
+		"jp"		"%sエラー: gnome スポーン構成にマップを追加できませんでした。"
+	}
+	"Gnome_SavedPosAng"
+	{
+		"jp"		"%s({olive}%d/%d{default}) - 保存場所:[{olive}%f %f %f{default}] ang:[{olive}%f %f] %f{default}]"
+	}
+	"Gnome_FailedSaveGnome"
+	{
+		"jp"		"%s({olive}%d/%d{default}) - Gnome の保存に失敗しました。"
+	}
+	"Gnome_ErrorCannotFindGnomeConfig"
+	{
+		"jp"		"%sエラー: gnome 構成が見つかりません ({olive}%s{default})。"
+	}
+	"Gnome_ErrorCannotLoadGnomeConfig"
+	{
+		"jp"		"%sエラー: gnome 構成をロードできません ({olive}%s{default})。"
+	}
+	"Gnome_ErrorCurrentMapNotGnome"
+	{
+		"jp"		"%sエラー: 現在のマップは gnome 設定にありません。"
+	}
+	"Gnome_RemovedConfig"
+	{
+		"jp"		"%s({olive}%d/%d{default}) - Gnome が設定から削除されました。"
+	}
+	"Gnome_FailedRemoveGnomeConfig"
+	{
+		"jp"		"%s({olive}%d/%d{default}) - 構成から Gnome を削除できませんでした。"
+	}
+	"Gnome_0AllGnomesRemovedConfig"
+	{
+		"jp"		"%s(0/%d) - すべてのノームが設定から削除され、{olive}sm_gnomesave{default} で追加されます。"
+	}
+	"Gnome_GlowTurned"
+	{
+		"jp"		"%sグローが%sになりました"
+	}
+	"Gnome_Total"
+	{
+		"jp"		"%s合計: %d。"
+	}
+	"Gnome_Teleported"
+	{
+		"jp"		"%sが%dにテレポートしました。"
+	}
+	"Gnome_CouldNotFindIndexTeleportation"
+	{
+		"jp"		"%sテレポートのインデックスが見つかりませんでした。"
+	}
+	"Gnome_UsageSMGnometeleIndex1"
+	{
+		"jp"		"%s使用法: sm_gnometele <インデックス 1-%d>。"
+	}
+	"Gnome_NewAngles"
+	{
+		"jp"		"%s新しいアングル: %f %f %f"
+	}
+	"Gnome_NewOrigin"
+	{
+		"jp"		"%s新しい起源: %f %f %f"
+	}
+	"Gnome_SavedOriginAnglesDataConfig"
+	{
+		"jp"		"%s原点と角度をデータ構成に保存"
+	}
+}

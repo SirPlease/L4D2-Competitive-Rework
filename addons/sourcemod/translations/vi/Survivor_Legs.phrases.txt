@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"SurvivorLegs_ClientSequenceLegsSequence"
+	{
+		"vi"		"Khách hàng(m_nSquence)[%i] Chân(m_nSequence)[%i]"
+	}
+}

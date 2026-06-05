@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2Dirspawn_DirSpawnKVGenerated"
+	{
+		"jp"		"[DirSpawn] 生成された KV: %s"
+	}
+	"L4D2Dirspawn_DirSpawnFailedWriteKV"
+	{
+		"jp"		"[DirSpawn] KV の書き込みに失敗しました: %s"
+	}
+}

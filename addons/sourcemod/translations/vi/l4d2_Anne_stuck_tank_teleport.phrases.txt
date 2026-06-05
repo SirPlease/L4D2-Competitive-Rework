@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2StuckTankTeleport_RunningTooFastTeleportTank"
+	{
+		"vi"		"{lightgreen}%N {green} Chạy quá nhanh, dịch chuyển Tank theo ngưỡng cửa."
+	}
+}

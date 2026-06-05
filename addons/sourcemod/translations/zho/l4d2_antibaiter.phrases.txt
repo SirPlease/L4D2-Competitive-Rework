@@ -18,11 +18,11 @@
 	}
 	"L4D2Antibaiter_AntibaiterDebugCountdownElapsedLaunching"
 	{
-		"zho"		"{lightgreen}[反誘餌調試] 倒數計時有{green}elapsed{default}！啟動部落並重置檢查計數器"
+		"zho"		"{lightgreen}[反誘餌調試] 倒數計時已{green}結束{default}！啟動屍潮並重置檢查計數器"
 	}
 	"L4D2Antibaiter_AntiBaiterPrepareIncomingHorde"
 	{
-		"zho"		"{blue}[{default}反誘餌{blue}]{default} 為即將到來的部落做好準備！"
+		"zho"		"{blue}[{default}反誘餌{blue}]{default} 準備迎接即將到來的屍潮！"
 	}
 	"L4D2Antibaiter_AntibaiterDebugCountdownNotRunning"
 	{

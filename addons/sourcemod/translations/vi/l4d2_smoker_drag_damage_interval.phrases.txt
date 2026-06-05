@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"L4D2SmokerDragDamageInterval_TongueContinuityDragChokeDamage"
+	{
+		"vi"		"[tongue_continuity] %N drag->choke: đồng hồ sát thương TIẾP TỤC - sát thương tiếp theo ở %.2f (vani sẽ được đặt lại thành %.2fs)"
+	}
+	"L4D2SmokerDragDamageInterval_TongueContinuityChokeDragDamage"
+	{
+		"vi"		"[tongue_continuity] %N sặc->kéo: đồng hồ sát thương TIẾP TỤC - sát thương tiếp theo ở %.2f (vani sẽ bắn ngay lập tức)"
+	}
+	"L4D2SmokerDragDamageInterval_DebugVictimDamageTimeGame"
+	{
+		"vi"		"[DEBUG] Nạn nhân: %N, %sSát thương: %f, thời gian: %f, thời gian chơi: %f"
+	}
+}

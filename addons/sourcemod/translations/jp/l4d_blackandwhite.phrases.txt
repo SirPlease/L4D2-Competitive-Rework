@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4DBlackandwhite_BlackWhite"
+	{
+		"jp"		"{blue}[{default}!{blue}]{default} {olive}%s{default}は白黒です。"
+	}
+}

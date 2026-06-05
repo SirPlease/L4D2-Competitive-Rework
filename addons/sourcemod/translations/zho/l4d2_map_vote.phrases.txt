@@ -1,0 +1,59 @@
+"Phrases"
+{
+	"L4D2MapVote_MapnextChatPrompt"
+	{
+		"zho"		"{default}聊天欄輸入 {olive}!mapnext {default}投票下一張地圖."
+	}
+	"L4D2MapVote_VPKCampaignListsRefreshed"
+	{
+		"zho"		"{olive}[MapVote]{default} 已刷新 VPK 與戰役清單。"
+	}
+	"L4D2MapVote_VPKRefreshCooldownRemaining"
+	{
+		"zho"		"VPK 刷新冷卻中，還需 %.1f 秒。"
+	}
+	"L4D2MapVote_PrePluginNotInstalled"
+	{
+		"zho"		"前置插件未安裝"
+	}
+	"L4D2MapVote_CurrentMapNotFinalMap"
+	{
+		"zho"		"目前地圖非終局地圖"
+	}
+	"L4D2MapVote_SpectatorsCannotVote"
+	{
+		"zho"		"旁觀者無法進行投票"
+	}
+	"L4D2MapVote_VotingInProgressCannotStartNewVote"
+	{
+		"zho"		"投票正在進行中, 暫不能發起新的投票"
+	}
+	"L4D2MapVote_NoValidChapterMapExists"
+	{
+		"zho"		"無有效的章節地圖存在"
+	}
+	"L4D2MapVote_InitiatesVoteSetsNextMap"
+	{
+		"zho"		"{blue}%N {default}發起投票 {olive}設定下一張地圖為: %s"
+	}
+	"L4D2MapVote_Voted"
+	{
+		"zho"		"{blue}%N {default}已投票"
+	}
+	"L4D2MapVote_SetupFailed"
+	{
+		"zho"		"設定失敗"
+	}
+	"L4D2MapVote_NextMapSet"
+	{
+		"zho"		"{default}下一張地圖已設定為 {olive}%s"
+	}
+	"L4D2MapVote_InitiatesVoteReplacementCampaign"
+	{
+		"zho"		"{blue}%N {default}發起投票 {olive}更換戰役: %s"
+	}
+	"L4D2MapVote_InitiatesVoteChangeMap"
+	{
+		"zho"		"{blue}%N {default}發起投票 {olive}更換地圖: %s (%s)"
+	}
+}

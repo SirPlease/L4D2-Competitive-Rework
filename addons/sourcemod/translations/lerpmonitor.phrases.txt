@@ -3,90 +3,37 @@
 	"Lerpmonitor_LerpWarningLerpValueIllegal"
 	{
 		"en"		"{default}<{olive}Lerp{default}> {teamcolor} warning: {default} Your Lerp value is illegal (minimum: {teamcolor}%.01f{default}, maximum: {teamcolor}%.01f{default})! Please change it back within 5 seconds."
-		"chi"		"{default}<{olive}Lerp{default}> {teamcolor}警告:{default} 你的Lerp值非法 (最小: {teamcolor}%.01f{default}, 最大: {teamcolor}%.01f{default})! 请在 5 秒内改回来。"
-		"zho"		"{default}<{olive}Lerp{default}> {teamcolor} warning: {default} Your Lerp value is illegal (minimum: {teamcolor}%.01f{default}, maximum: {teamcolor}%.01f{default})! Please change it back within 5 seconds."
-		"jp"		"{default}<{olive}Lerp{default}> {teamcolor} 警告: {default} Lerp 値が不正です (最小値: {teamcolor}%.01f{default}、最大値: {teamcolor}%.01f{default})! 5 秒以内に元に戻してください。"
-		"ko"		"{default}<{olive}Lerp{default}> {teamcolor} 경고: {default} Lerp 값이 잘못되었습니다(최소: {teamcolor}%.01f{default}, 최대: {teamcolor}%.01f{default})! 5초 이내에 다시 바꿔주세요."
-		"vi"		"{default}<{olive}Lerp{default}> Cảnh báo {teamcolor}: {default} Giá trị Lerp của bạn là bất hợp pháp (tối thiểu: {teamcolor}%.01f{default}, tối đa: {teamcolor}%.01f{default})! Vui lòng thay đổi lại trong vòng 5 giây."
 	}
-
 	"Lerpmonitor_LerpThanksCooperationLerpRestored"
 	{
 		"en"		"{default}<{olive}Lerp{default}> Thanks for your cooperation, Lerp has been restored to the legal range."
-		"chi"		"{default}<{olive}Lerp{default}> 感谢配合, Lerp已恢复到合法范围。"
-		"zho"		"{default}<{olive}Lerp{default}> 感謝配合, Lerp已恢復到合法範圍。"
-		"jp"		"{default}<{olive}Lerp{default}> ご協力のおかげで、Lerp が法定範囲に戻りました。"
-		"ko"		"{default}<{olive}Lerp{default}> 귀하의 협조에 감사드립니다. Lerp가 법적 범위로 복원되었습니다."
-		"vi"		"{default}<{olive}Lerp{default}> Cảm ơn sự hợp tác của bạn, Lerp đã được khôi phục về phạm vi pháp lý."
 	}
-
 	"Lerpmonitor_Lerp"
 	{
 		"en"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f"
-		"chi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f"
-		"zho"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f"
-		"jp"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f"
-		"ko"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f"
-		"vi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f"
 	}
-
 	"Lerpmonitor_LerpChanges"
 	{
 		"en"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f {default}[%s%d{default}/%d {olive}changes]"
-		"chi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f {default}[%s%d{default}/%d {olive}变更]"
-		"zho"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f {default}[%s%d{default}/%d {olive}changes]"
-		"jp"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f {default}[%s%d{default}/%d {olive}変更点]"
-		"ko"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f {default}[%s%d{default}/%d {olive}변경]"
-		"vi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f {default}[%s%d{default}/%d {olive}thay đổi]"
 	}
-
 	"Lerpmonitor_LerpMovedSpectatorIllegalLerp"
 	{
 		"en"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default} was moved to spectator (illegal lerp change)!"
-		"chi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}被移动到旁观者 (不合法的lerp改变)!"
-		"zho"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}被移到旁觀者 (不合法的lerp改變)!"
-		"jp"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default} が観客に移動されました (違法な lerp 変更)!"
-		"ko"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}가 관전자로 이동되었습니다(불법적인 러프 변경)!"
-		"vi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default} đã được chuyển sang khán giả (thay đổi lerp bất hợp pháp)!"
 	}
-
 	"Lerpmonitor_LerpIllegalChangeLerpGame"
 	{
 		"en"		"{default}<{olive}Lerp{default}> Illegal change of lerp in the game! Change lerp back to {teamcolor}%.01f"
-		"chi"		"{default}<{olive}Lerp{default}> 游戏里不合法的更改lerp! 将lerp改回 {teamcolor}%.01f"
-		"zho"		"{default}<{olive}Lerp{default}> 遊戲裡不合法的更改lerp! 將lerp改回 {teamcolor}%.01f"
-		"jp"		"{default}<{olive}Lerp{default}> ゲーム内のlerp変更が不正です！ lerp を {teamcolor}%.01f に戻します"
-		"ko"		"{default}<{olive}Lerp{default}> 게임 내에서 불법적인 lerp 변경이 발생했습니다! Lerp를 다시 {teamcolor}%.01f로 변경합니다."
-		"vi"		"{default}<{olive}Lerp{default}> Thay đổi trái phép lerp trong trò chơi! Thay đổi lerp trở lại {teamcolor}%.01f"
 	}
-
 	"Lerpmonitor_Lerp_2"
 	{
 		"en"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f"
-		"chi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f"
-		"zho"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f"
-		"jp"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f"
-		"ko"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f"
-		"vi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}@ {teamcolor}%.01f {default}<== {teamcolor}%.01f"
 	}
-
 	"Lerpmonitor_LerpMovedBystanderDueFailure"
 	{
 		"en"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default} was moved to the bystander due to failure to adjust Lerp to the legal range within 5 seconds"
-		"chi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}因未在5秒内调整Lerp至合法范围，被移至旁观者"
-		"zho"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}因未在5秒內調整Lerp至合法範圍，被移至旁觀者"
-		"jp"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default} は、5 秒以内に Lerp を正当な範囲に調整できなかったため、バイスタンダーに移動されました"
-		"ko"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}는 5초 이내에 Lerp를 합법적 범위로 조정하지 못해 방관자에게 이동되었습니다."
-		"vi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default} đã được chuyển sang người ngoài cuộc do không điều chỉnh Lerp về phạm vi pháp lý trong vòng 5 giây"
 	}
-
 	"Lerpmonitor_LerpKickedGameHeFailed"
 	{
 		"en"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default} was kicked out of the game because he failed to adjust Lerp to the legal range within 5 seconds."
-		"chi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}因未在5秒内调整Lerp至合法范围，被踢出游戏"
-		"zho"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}因未在5秒內調整Lerp"
-		"jp"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default} は、5 秒以内に Lerp を合法範囲に調整できなかったため、ゲームから追放されました。"
-		"ko"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default}가 5초 이내에 Lerp를 합법적인 범위로 조정하지 못해 게임에서 퇴장당했습니다."
-		"vi"		"{default}<{olive}Lerp{default}> {teamcolor}%N {default} đã bị đuổi khỏi trò chơi vì không điều chỉnh Lerp về phạm vi hợp pháp trong vòng 5 giây."
 	}
 }

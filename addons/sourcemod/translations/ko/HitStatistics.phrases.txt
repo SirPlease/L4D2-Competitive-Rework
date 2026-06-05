@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"HitStatistics_NotSurvivor"
+	{
+		"ko"		"당신은 생존자가 아닙니다."
+	}
+}

@@ -1,0 +1,43 @@
+"Phrases"
+{
+	"L4D2Antibaiter_AntibaiterDebugEligiblePlayerZombieclass"
+	{
+		"chi"		"{lightgreen}[Antibaiter DEBUG] 符合条件的玩家 {green}%N{default} 是 {olive}%d{default} 的僵尸类 {olive}%fs{default}"
+	}
+	"L4D2Antibaiter_AntibaiterDebugSpectatorBugDetected"
+	{
+		"chi"		"{lightgreen}[Antibaiter DEBUG] 检测到观众错误：{green}eligibleZombies{default}={olive}%d{default}， {green}z_max_player_zombies{default}={olive}%d{default}"
+	}
+	"L4D2Antibaiter_AntibaiterDebugMinimumProgressUnsatisfied"
+	{
+		"chi"		"{lightgreen}[Antibaiter DEBUG] {olive}%d{default} 检查期间未满足的最小进度：{green}initial{default}={olive}%f{default}， {green}当前{default}={olive}%f{default}、{green}进度{default}={olive}%f{default}"
+	}
+	"L4D2Antibaiter_AntibaiterDebugCountdownRunning"
+	{
+		"chi"		"{lightgreen}[反诱饵调试] 倒计时为 {olive}running{default}"
+	}
+	"L4D2Antibaiter_AntibaiterDebugCountdownElapsedLaunching"
+	{
+		"chi"		"{lightgreen}[反诱饵调试] 倒计时已{green}结束{default}！启动尸潮并重置检查计数器"
+	}
+	"L4D2Antibaiter_AntiBaiterPrepareIncomingHorde"
+	{
+		"chi"		"{blue}[{default}反诱饵{blue}]{default} 准备迎接即将到来的尸潮！"
+	}
+	"L4D2Antibaiter_AntibaiterDebugCountdownNotRunning"
+	{
+		"chi"		"{lightgreen}[反诱饵调试] 倒计时为 {olive} 未运行 {default}。正在启动它..."
+	}
+	"L4D2Antibaiter_AntibaiterDebugSurvivorProgressIncreased"
+	{
+		"chi"		"{lightgreen}[Antibaiter DEBUG] 幸存者进度{olive}增加{default}超出最小阈值。重置算法..."
+	}
+	"L4D2Antibaiter_PanicTimerDurationTimestamp"
+	{
+		"chi"		"m_PanicTimer - 持续时间：%f，时间戳：%f"
+	}
+	"L4D2Antibaiter_PostMobDelayDurationTimestamp"
+	{
+		"chi"		"m_PostMobDelay - 持续时间：%f，时间戳：%f"
+	}
+}

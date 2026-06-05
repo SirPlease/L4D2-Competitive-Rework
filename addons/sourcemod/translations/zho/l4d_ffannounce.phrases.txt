@@ -20,14 +20,14 @@
 	}
 	"FFAnnounceToGuilty2"
 	{
-		"zho"		"* {olive}{GUILTY} {default}did {blue}FF {default}to {olive}{VICTIM1_NAME} {default}@ {green}{VICTIM1_DMG}HP{default}, {olive}{VICTIM2_NAME} {default}@ {green}{VICTIM2_DMG}HP"
+		"zho"		"* {olive}{GUILTY} {default}對 {olive}{VICTIM1_NAME} {default}造成 {blue}友傷 {default}@ {green}{VICTIM1_DMG}HP{default}，{olive}{VICTIM2_NAME} {default}@ {green}{VICTIM2_DMG}HP"
 	}
 	"FFAnnounceToGuilty3"
 	{
-		"zho"		"* {olive}{GUILTY} {default}did {blue}FF {default}to {olive}{VICTIM1_NAME} {default}@ {green}{VICTIM1_DMG}HP{default}, {olive}{VICTIM2_NAME} {default}@ {green}{VICTIM2_DMG}HP{default}, {olive}{VICTIM3_NAME} {default}@ {green}{VICTIM3_DMG}HP"
+		"zho"		"* {olive}{GUILTY} {default}對 {olive}{VICTIM1_NAME} {default}造成 {blue}友傷 {default}@ {green}{VICTIM1_DMG}HP{default}，{olive}{VICTIM2_NAME} {default}@ {green}{VICTIM2_DMG}HP{default}，{olive}{VICTIM3_NAME} {default}@ {green}{VICTIM3_DMG}HP"
 	}
 	"FFAnnounceToGuilty4"
 	{
-		"zho"		"* {olive}{GUILTY} {default}did {blue}FF {default}to {olive}{VICTIM1_NAME} {default}@ {green}{VICTIM1_DMG}HP{default}, {olive}{VICTIM2_NAME} {default}@ {green}{VICTIM2_DMG}HP{default}, {olive}{VICTIM3_NAME} {default}@ {green}{VICTIM3_DMG}HP{default}, {olive}{VICTIM4_NAME} {default}@ {green}{VICTIM4_DMG}HP"
+		"zho"		"* {olive}{GUILTY} {default}對 {olive}{VICTIM1_NAME} {default}造成 {blue}友傷 {default}@ {green}{VICTIM1_DMG}HP{default}，{olive}{VICTIM2_NAME} {default}@ {green}{VICTIM2_DMG}HP{default}，{olive}{VICTIM3_NAME} {default}@ {green}{VICTIM3_DMG}HP{default}，{olive}{VICTIM4_NAME} {default}@ {green}{VICTIM4_DMG}HP"
 	}
 }

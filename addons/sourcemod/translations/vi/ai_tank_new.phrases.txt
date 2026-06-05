@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"AITankNew_TankLikesWalkAroundTrees"
+	{
+		"vi"		"{R}<Tank>: {G} thích đi dạo quanh cây phải không?"
+	}
+}

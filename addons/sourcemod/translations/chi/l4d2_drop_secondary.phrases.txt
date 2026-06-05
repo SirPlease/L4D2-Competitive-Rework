@@ -1,0 +1,31 @@
+"Phrases"
+{
+	"L4D2DropSecondary_PlayerReplacedBotReplacedSecondary"
+	{
+		"chi"		"{green}[{olive}OnPlayer 替换为 Bot{green}] {default}- {blue}BOT {default} 替换为 {blue}%N {default}({green}次要: {olive}%s{default}）"
+	}
+	"L4D2DropSecondary_BotReplacedPlayerReplacedBOT"
+	{
+		"chi"		"{green}[{olive}OnBot 被玩家替换为 {green}] {default}- {blue}%N {default} 替换为 {blue}BOT {default}({green}次要: {olive}%s{default}）"
+	}
+	"L4D2DropSecondary_PlayerUsePickedSecondsondarySecondary"
+	{
+		"chi"		"{green}[{olive}OnPlayerUse{green}] {default}- {blue}%N{default} 拾取了辅助：（{green}辅助： {olive}%s{default})"
+	}
+	"L4D2DropSecondary_PlayerDeathSecondary"
+	{
+		"chi"		"{green}[{olive}On玩家死亡{green}] {default}- {blue}%N {default}({green}次要：{olive}%s{default})"
+	}
+	"L4D2DropSecondary_ErrorSomethingWentWrongDetermining"
+	{
+		"chi"		"{blue}[{default}L4D2 Drop secondary{blue}]{default}：{green}ERROR {default} - 确定辅助武器的近战脚本时出现问题，请向 {olive}Plugin 作者 {default} 报告此问题。"
+	}
+	"L4D2DropSecondary_DetermineMeleeScriptMS"
+	{
+		"chi"		"{green}[{olive}D确定近战脚本{green}] {default}- {blue}%N {default}有 {olive}%s {default}- MS: {olive}%s"
+	}
+	"L4D2DropSecondary_Debugging"
+	{
+		"chi"		"{blue}[{default}L4D2 Drop secondary{blue}]{default}：{green}调试{olive}%s"
+	}
+}

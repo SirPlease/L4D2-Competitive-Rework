@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"ChatProcessor_DeadChatCurrentlyRestricted"
+	{
+		"ko"		"현재 데드채팅이 제한되어 있습니다."
+	}
+}

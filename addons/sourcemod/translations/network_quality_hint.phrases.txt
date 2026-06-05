@@ -3,60 +3,25 @@
 	"NetworkQualityHint_CurrentNetworkPingMSLoss"
 	{
 		"en"		"%s Current network: ping {olive}%dms{default}, loss {olive}%.2f%%{default}, choke {olive}%.2f%%{default}."
-		"chi"		"%s 当前网络：ping {olive}%dms{default}，loss {olive}%.2f%%{default}，choke {olive}%.2f%%{default}。"
-		"zho"		"%s Current network: ping {olive}%dms{default}, loss {olive}%.2f%%{default}, choke {olive}%.2f%%{default}."
-		"jp"		"%s 現在のネットワーク: ping {olive}%dms{default}、損失 {olive}%.2f%%{default}、チョーク {olive}%.2f%%{default}。"
-		"ko"		"%s 현재 네트워크: ping {olive}%dms{default}, 손실 {olive}%.2f%%{default}, 초크 {olive}%.2f%%{default}."
-		"vi"		"%s Mạng hiện tại: ping {olive}%dms{default}, mất {olive}%.2f%%{default}, sặc {olive}%.2f%%{default}."
 	}
-
 	"NetworkQualityHint_DetectionCaliberChokeUseDirection"
 	{
 		"en"		"%s Detection caliber: choke Use the direction sent to you by the server; the direction you sent to the server is currently {olive}%.2f%%{default}."
-		"chi"		"%s 检测口径：choke 使用服务器发给你的方向；你发给服务器方向当前为 {olive}%.2f%%{default}。"
-		"zho"		"%s 偵測口徑：choke 使用伺服器寄給你的方向；你寄給伺服器方向目前為 {olive}%.2f%%{default}。"
-		"jp"		"%s 検出口径: チョーク サーバーから送信された方向を使用します。サーバーに送信した方向は現在 {olive}%.2f%%{default} です。"
-		"ko"		"%s 감지 구경: 초크 서버에서 보낸 방향을 사용합니다. 서버로 보낸 방향은 현재 {olive}%.2f%%{default}입니다."
-		"vi"		"%s Phát hiện cỡ nòng: sặc Sử dụng hướng được máy chủ gửi cho bạn; hướng bạn gửi tới máy chủ hiện tại là {olive}%.2f%%{default}."
 	}
-
 	"NetworkQualityHint_AbnormalDelayPacketLossOpen"
 	{
 		"en"		"%s If there is an abnormal delay or packet loss, please open the IP page and copy the current server address and reconnect: {green}%s{default}"
-		"chi"		"%s 如果延迟或丢包异常，请打开 IP 页面复制当前服务器地址后重新连接：{green}%s{default}"
-		"zho"		"%s 如果延遲或丟包異常，請開啟 IP 頁面複製目前伺服器位址後重新連線：{green}%s{default}"
-		"jp"		"%s 異常な遅延またはパケット損失が発生した場合は、IP ページを開いて現在のサーバー アドレスをコピーし、再接続してください: {green}%s{default}"
-		"ko"		"%s 비정상적인 지연 또는 패킷 손실이 있는 경우 IP 페이지를 열고 현재 서버 주소를 복사한 후 다시 연결하십시오: {green}%s{default}"
-		"vi"		"%s Nếu có độ trễ hoặc mất gói bất thường, vui lòng mở trang IP và sao chép địa chỉ máy chủ hiện tại và kết nối lại: {green}%s{default}"
 	}
-
 	"NetworkQualityHint_AbnormalityNetworkStatusDetectedCurrent"
 	{
 		"en"		"%s An abnormality in your network status has been detected: {olive}%s{default}. Current ping {olive}%dms{default}, loss {olive}%.2f%%{default}, choke {olive}%.2f%%{default}."
-		"chi"		"%s 检测到你的网络状态异常：{olive}%s{default}。当前 ping {olive}%dms{default}，loss {olive}%.2f%%{default}，choke {olive}%.2f%%{default}。"
-		"zho"		"%s An abnormality in your network status has been detected: {olive}%s{default}. Current ping {olive}%dms{default}, loss {olive}%.2f%%{default}, choke {olive}%.2f%%{default}."
-		"jp"		"%s ネットワーク状態の異常が検出されました: {olive}%s{default}。現在のping {olive}%dms{default}、損失{olive}%.2f%%{default}、チョーク{olive}%.2f%%{default}。"
-		"ko"		"%s 네트워크 상태의 이상이 감지되었습니다: {olive}%s{default}. 현재 핑 {olive}%dms{default}, 손실 {olive}%.2f%%{default}, 초크 {olive}%.2f%%{default}."
-		"vi"		"%s Đã phát hiện sự bất thường trong trạng thái mạng của bạn: {olive}%s{default}. Ping hiện tại {olive}%dms{default}, mất {olive}%.2f%%{default}, sặc {olive}%.2f%%{default}."
 	}
-
 	"NetworkQualityHint_OpenIPPageCopyConnect"
 	{
 		"en"		"%s Please open the IP page, copy the connect command corresponding to the current server, and paste it into the console to reconnect: {green}%s{default}"
-		"chi"		"%s 请打开 IP 页面，复制当前服务器对应的 connect 命令，粘贴到控制台重新连接：{green}%s{default}"
-		"zho"		"%s 請開啟 IP 頁面，複製目前伺服器對應的 connect 指令，貼上到控制台重新連線：{green}%s{default}"
-		"jp"		"%s IP ページを開いて、現在のサーバーに対応する接続コマンドをコピーし、コンソールに貼り付けて再接続してください: {green}%s{default}"
-		"ko"		"%s IP 페이지를 열고 현재 서버에 해당하는 연결 명령을 복사한 후 콘솔에 붙여넣어 다시 연결하십시오: {green}%s{default}"
-		"vi"		"%s Vui lòng mở trang IP, sao chép lệnh kết nối tương ứng với máy chủ hiện tại và dán vào bảng điều khiển để kết nối lại: {green}%s{default}"
 	}
-
 	"NetworkQualityHint_ThirdLineServersGivePriority"
 	{
 		"en"		"%s For third-line servers, please give priority to using the diversion entrance displayed on the web page to avoid taking the wrong route from collections or history records."
-		"chi"		"%s 三线服务器请优先使用网页展示的分流入口，避免从收藏或历史记录走错线路。"
-		"zho"		"%s 三線伺服器請優先使用網頁展示的分流入口，避免從收藏或歷史記錄走錯線路。"
-		"jp"		"%s サードラインサーバーの場合は、コレクションや履歴からの誤ったルートを避けるために、Web ページに表示される迂回入り口を優先して使用してください。"
-		"ko"		"%s 3차 서버의 경우 컬렉션이나 이력 기록에서 잘못된 경로를 선택하지 않도록 웹 페이지에 표시된 전환 입구를 우선적으로 이용하시기 바랍니다."
-		"vi"		"%s Đối với các máy chủ tuyến thứ ba, vui lòng ưu tiên sử dụng lối vào chuyển hướng hiển thị trên trang web để tránh đi sai đường từ các bộ sưu tập hoặc hồ sơ lịch sử."
 	}
 }

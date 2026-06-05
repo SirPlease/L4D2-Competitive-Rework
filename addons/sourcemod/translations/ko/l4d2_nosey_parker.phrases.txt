@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2NoseyParker_DmgReportTookDamage"
+	{
+		"ko"		"{green}[DmgReport]{default} {lightgreen}%N{default}({green}%s{default})가 당신에게서 {olive}%d{default} 피해를 입었습니다!"
+	}
+}

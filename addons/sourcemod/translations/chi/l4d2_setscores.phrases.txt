@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"L4D2Setscores_ScoreVotingIsnAllowedSpectators"
+	{
+		"chi"		"观众不允许进行分数投票。"
+	}
+	"L4D2Setscores_ScoreVoteCannotStartedNot"
+	{
+		"chi"		"无法开始评分投票。玩家不够。"
+	}
+	"L4D2Setscores_ScoreVoteCannotStarted"
+	{
+		"chi"		"现在无法开始评分投票。"
+	}
+	"L4D2Setscores_ScoresSetSurInf"
+	{
+		"chi"		"{default}分数已设置为 {olive}%d {default}（{green}生还者{default}）- {olive}%d {default}（{green}感染者{default}），操作者：{lightgreen}%s{default}。"
+	}
+	"L4D2Setscores_ScoresSetSurInfVote"
+	{
+		"chi"		"{default}分数已通过投票设置为 {olive}%d {default}（{green}生还者{default}）- {olive}%d {default}（{green}感染者{default}）。"
+	}
+}

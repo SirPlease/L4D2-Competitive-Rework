@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"SurvivorLegs_ClientSequenceLegsSequence"
+	{
+		"jp"		"クライアント(m_nシーケンス)[%i] 脚(m_nシーケンス)[%i]"
+	}
+}

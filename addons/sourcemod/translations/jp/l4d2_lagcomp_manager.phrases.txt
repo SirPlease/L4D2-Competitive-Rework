@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"L4D2LagcompManager_SuccessfullyEntitySuccessfullyAddedArray"
+	{
+		"jp"		"[成功] エンティティ「%s (%d)」がラグ補正のために配列に正常に追加されました。"
+	}
+	"L4D2LagcompManager_ErrorCouldNotFindEntity"
+	{
+		"jp"		"[エラー] ラグ補正用の配列内にエンティティ '%s (%d)' が見つかりませんでした。"
+	}
+	"L4D2LagcompManager_ErrorEntityNotRemovedAfter"
+	{
+		"jp"		"[エラー] エンティティ「%s (%d)」は、ラグ補正のために配列から破棄された後も削除されません。"
+	}
+	"L4D2LagcompManager_SuccessfullyEntityRemovedAfterDestroyed"
+	{
+		"jp"		"[成功] エンティティ「%s (%d)」は、ラグ補正のために配列から破棄された後、削除されました。"
+	}
+	"L4D2LagcompManager_ErrorEntityNeverAddedArray"
+	{
+		"jp"		"[エラー] エンティティ '%s (%d)' は、ラグ補正のために配列に追加されていません。"
+	}
+}

@@ -1,0 +1,50 @@
+"Phrases"
+{
+	"Banned Check Site"
+	{
+		"#format"	"{1:s}"
+		"da"		"Du er blevet udlukket fra denne server, check {1} for mere info"
+	}
+	"DB Connect Fail"
+	{
+		"da"		"Database tilslutningen fejlede. Kontakt venligst server bestyrren."
+	}
+	"Not In Game"
+	{
+		"da"		"Spilleren er ikke i spillet, besøg venligst web panelet for at udelukke ham."
+	}
+	"Ban Not Verified"
+	{
+		"da"		"Denne spiller er ikke blevet identificeret. Vent venligst 30 sekunder før du prøver igen."
+	}
+	"Can Not Unban"
+	{
+		"#format"	"{1:s}"
+		"da"		"Du kan ikke fjerne udelukkelserne inde fra serveren, besøg {1} for at fjerne udelukkelsen."
+	}
+	"Can Not Add Ban"
+	{
+		"#format"	"{1:s}"
+		"da"		"Du kan ikke tilføje en udelukkelse fra serveren, besøg {1} for at tilføje en udelukkelse."
+	}
+	"Check Menu"
+	{
+		"da"		"Check venligst menuen for en grund til udelukkelse"
+	}
+	"Include Reason"
+	{
+		"da"		"Indkludere venligst en grund for at udelukke klienten."
+	}
+	"Ban Fail"
+	{
+		"da"		"Fejlede udelukkelsen, prøv venligst igen."
+	}
+	"Chat Reason"
+	{
+		"da"		"Skriv venligst din grund for udelukkelsen ind i chatten og tryk enter. Skriv '!noreason' for at annullere."
+	}
+	"Chat Reason Aborted"
+	{
+		"da"		"Udelukkelses proceduren blev stoppet med success"
+	}
+}

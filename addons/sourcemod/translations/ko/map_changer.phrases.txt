@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"MapChanger_VoteWhetherEnableRescueMap"
+	{
+		"ko"		"{green}[MapChanger]{default} 투표: 이 구조 지도 활성화 여부 {olive}%d{default} 자동 지도 변경에 실패했나요?"
+	}
+	"MapChanger_Voted"
+	{
+		"ko"		"{green}[MapChanger]{default} %N 투표했습니다."
+	}
+	"MapChanger_RescueMapEnabledFailedAutomatically"
+	{
+		"ko"		"{green}[MapChanger]{default} 이 구조 지도가 활성화되었지만 자동으로 지도 {olive}%d{default}를 변경하지 못했습니다."
+	}
+	"MapChanger_RescueMapTurnedOffAutomatically"
+	{
+		"ko"		"{green}[MapChanger]{default} 이 구조 맵은 실패 횟수 이후 자동으로 맵을 변경하도록 꺼졌습니다."
+	}
+}

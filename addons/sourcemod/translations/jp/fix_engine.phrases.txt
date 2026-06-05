@@ -1,0 +1,55 @@
+"Phrases"
+{
+	"FixEngine_IdrowndamageDamageTempHPRestore"
+	{
+		"jp"		"m_idrowndmg = %d、dmg = %d、復元する温度 HP = %d"
+	}
+	"FixEngine_RestoringStartedPlayerUsingGlitch"
+	{
+		"jp"		"復元を開始しました (プレイヤーは 1 ～ 10hp の状態でグリッチを使用しています)"
+	}
+	"FixEngine_RestoreCountBeginningSeconds"
+	{
+		"jp"		"復元カウント = %d (%.0f 秒から開始)"
+	}
+	"FixEngine_RestoringStarted"
+	{
+		"jp"		"復元を開始しました"
+	}
+	"FixEngine_TempHealthLimitExceeded"
+	{
+		"jp"		"一時的なヘルス制限を超えています"
+	}
+	"FixEngine_ResetDrownRestoredProp"
+	{
+		"jp"		"リセットドラウンド復元された小道具 %N"
+	}
+	"FixEngine_TempGlitchFixed"
+	{
+		"jp"		"温度の不具合が修正されました"
+	}
+	"FixEngine_StoppedTempGlitchFixTimer"
+	{
+		"jp"		"温度グリッチ修正タイマーを停止しました"
+	}
+	"FixEngine_RestoringStopped"
+	{
+		"jp"		"復元が停止しました"
+	}
+	"FixEngine_AttemptedUseLadderSpeedGlitch"
+	{
+		"jp"		"%N (%s) はラダー速度グリッチを使用しようとしました。"
+	}
+	"FixEngine_SuspectedUsingNoFallDamage"
+	{
+		"jp"		"%N (%s) は落下ダメージがなくなるバグを使用している疑いがあります。"
+	}
+	"FixEngine_AttemptedUseHealthBoostGlitch"
+	{
+		"jp"		"%N (%s) はヘルスブーストグリッチを使用しようとしました。"
+	}
+	"FixEngine_AttemptedUseLadderReloadGlitch"
+	{
+		"jp"		"%N (%s) はラダーのリロード グリッチを使用しようとしました。"
+	}
+}

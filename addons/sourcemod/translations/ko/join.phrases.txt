@@ -1,0 +1,87 @@
+"Phrases"
+{
+	"Join_CrawlingServer"
+	{
+		"ko"		"{green} %N {olive}가 서버로 크롤링 중입니다."
+	}
+	"Join_LeftGameReason"
+	{
+		"ko"		"{green}%N {olive}가 게임에서 나갔습니다. - 이유: [{green}%s{olive}]"
+	}
+	"Join_AnneDonatePaymentMethodOnly"
+	{
+		"ko"		"{green}[AnneDonate]{default} 결제 수단은 wechat 또는 alipay만 지원합니다. 다시 선택해 주세요."
+	}
+	"Join_FinishRemindsAdministratorVerify"
+	{
+		"ko"		"{olive}!finish{default}는 관리자에게 확인을 요청합니다."
+	}
+	"Join_AnneDonateSponsorshipConfirmedNot"
+	{
+		"ko"		"{green}[AnneDonate]{default} 확인하실 후원을 아직 찾지 못했습니다. {olive}!donate{default}를 입력하여 장비 및 결제 방법을 선택하세요."
+	}
+	"Join_AnneDonateRecordingPaymentCompletion"
+	{
+		"ko"		"{green}[AnneDonate]{default}가 결제 완료 메시지를 기록하고 있습니다. 관리자가 결제를 확인할 때까지 기다려 주세요."
+	}
+	"Join_AnneDonateCurrentlyPeakPeriod"
+	{
+		"ko"		"{green}[AnneDonate]{default} 현재 피크타임이라 관리자만 플레이 가능합니다. 관리자를 지원하고 계속 플레이하십시오."
+	}
+	"Join_AnneDonateUnableObtainSteam"
+	{
+		"ko"		"{green}[AnneDonate]{default} SteamID64를 얻을 수 없습니다. 나중에 다시 시도해 주세요."
+	}
+	"Join_AnneDonateSteamWorksNot"
+	{
+		"ko"		"{green}[AnneDonate]{default} SteamWorks를 사용할 수 없습니다. 후원 페이지가 오픈되었습니다. QR코드를 스캔하여 결제하시고, 관리자에게 연락하여 확인해주세요."
+	}
+	"Join_AnneDonateFailedCreateSponsorship"
+	{
+		"ko"		"{green}[AnneDonate]{default} 후원 신청서를 생성하지 못했습니다. 나중에 다시 시도해 주세요."
+	}
+	"Join_AnneDonateFailedSendSponsorship"
+	{
+		"ko"		"{green}[AnneDonate]{default} 후원 신청서를 보내지 못했습니다. 나중에 다시 시도해 주세요."
+	}
+	"Join_AnneDonateSponsorshipRecordCreated"
+	{
+		"ko"		"{green}[AnneDonate]{default} 후원기록이 생성되는 중이며, 해당 수신코드가 후원 페이지에 바로 표시됩니다."
+	}
+	"Join_AnneDonateSponsorshipInformationSubmission"
+	{
+		"ko"		"{green}[AnneDonate]{default} 후원 정보 제출 실패, HTTP 상태: %d. QR코드를 스캔하여 결제하시고, 관리자에게 연락하여 확인해주세요."
+	}
+	"Join_AnneDonateSponsorshipRecordCreatedScan"
+	{
+		"ko"		"{green}[AnneDonate]{default} 후원 기록이 생성되었습니다. 열리는 페이지에서 QR 코드를 스캔하여 결제하세요."
+	}
+	"Join_AnneDonateUnableObtainSteamID64"
+	{
+		"ko"		"{green}[AnneDonate]{default} SteamID64를 얻을 수 없습니다. 확인을 위해 관리자에게 문의하세요."
+	}
+	"Join_AnneDonateSteamWorksNotAvailable"
+	{
+		"ko"		"{green}[AnneDonate]{default} SteamWorks를 이용할 수 없습니다. 결제 확인을 위해 관리자에게 문의하세요."
+	}
+	"Join_AnneDonatePaymentCompletionPrompt"
+	{
+		"ko"		"{green}[AnneDonate]{default} 결제 완료 메시지를 보내지 못했습니다. 확인을 위해 관리자에게 문의하세요."
+	}
+	"Join_AnneDonatePaymentCompletionPrompts"
+	{
+		"ko"		"{green}[AnneDonate]{default} 결제가 완료되면 동기화 실패 메시지가 표시됩니다. HTTP 상태: %d. 확인하려면 관리자에게 문의하세요."
+	}
+	"Join_AnneDonatePaymentCompletionPromptSynchronized"
+	{
+		"ko"		"{green}[AnneDonate]{default} 결제 완료 메시지가 동기화되었습니다. 관리자가 결제 확인 후 권한을 활성화해 드립니다."
+	}
+	"Join_UseCommandsTooFast"
+	{
+		"ko"		"{lightgreen} 명령을 너무 빨리 사용합니다"
+	}
+	"Join_SurvivorTeamFullNoOther"
+	{
+		"ko"		"{lightgreen} 생존자 팀이 꽉 찼으며 인계받을 수 있는 다른 생존자 봇이 없습니다."
+	}
+}

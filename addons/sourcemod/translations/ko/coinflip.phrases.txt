@@ -6,14 +6,14 @@
 	}
 	"Heads"
 	{
-		"ko"		"{lightgreen}%s{default} flipped a coin!\\nIt's {green}Heads{default}!"
+		"ko"		"{lightgreen}%s{default}님이 동전을 던졌습니다!\n결과는 {green}앞면{default}!"
 	}
 	"Tails"
 	{
-		"ko"		"{lightgreen}%s{default} flipped a coin!\\nIt's {green}Tails{default}!"
+		"ko"		"{lightgreen}%s{default}님이 동전을 던졌습니다!\n결과는 {green}뒷면{default}!"
 	}
 	"rolled"
 	{
-		"ko"		"{lightgreen}%s{default} rolled a {teamcolor}%d{default} sided die!\\nIt's {green}%d{default}!"
+		"ko"		"{lightgreen}%s{default}님이 {teamcolor}%d{default}면 주사위를 굴렸습니다!\n결과는 {green}%d{default}!"
 	}
 }

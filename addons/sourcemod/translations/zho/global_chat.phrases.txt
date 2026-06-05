@@ -10,10 +10,10 @@
 	}
 	"GlobalChat_SummonTeammates"
 	{
-		"zho"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友"
+		"zho"		"{green}%s {olive}%s {default}玩家正在 {lightgreen}%s {default}召喚隊友"
 	}
 	"GlobalChat_SummonTeammatesWithMessage"
 	{
-		"zho"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友\\n{default}留言: {olive}%s"
+		"zho"		"{green}%s {olive}%s {default}玩家正在 {lightgreen}%s {default}召喚隊友\n{default}留言：{olive}%s"
 	}
 }

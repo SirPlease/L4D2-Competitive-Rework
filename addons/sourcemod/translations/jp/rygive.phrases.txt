@@ -1,0 +1,63 @@
+"Phrases"
+{
+	"RYGive_TryingKickDeadInfectedRobot"
+	{
+		"jp"		"死んだ感染ロボットを追い出そうとしています..."
+	}
+	"RYGive_KickedBots"
+	{
+		"jp"		"%i ボットをキックしました。"
+	}
+	"RYGive_AdminSpawnedInfected"
+	{
+		"jp"		"{lightgreen}管理员{default}[{olive}%N{default}]刷出一只{olive}%s"
+	}
+	"RYGive_FriendlyDamageCoefficientResetDefault"
+	{
+		"jp"		"味方ダメージ係数がデフォルト値にリセットされました"
+	}
+	"RYGive_FriendlyDamageCoefficientSet"
+	{
+		"jp"		"{default} 味方ダメージ係数が {green}%.1f に設定されました"
+	}
+	"RYGive_FailedObtainCrosshairPositionTry"
+	{
+		"jp"		"十字線の位置を取得できませんでした。もう一度試してください。"
+	}
+	"RYGive_ImmuneDamage"
+	{
+		"jp"		"{green} は %s {olive}%N {default} によるダメージを受けません"
+	}
+	"RYGive_TargetPlayerExpired"
+	{
+		"jp"		"対象プレイヤーの有効期限が切れています"
+	}
+	"RYGive_ImmuneSpecialSenseControl"
+	{
+		"jp"		"{green} は、%s {olive}%N の特殊なセンス制御の影響を受けません。"
+	}
+	"RYGive_OnlySurvivorsCanIdle"
+	{
+		"jp"		"生存者だけがアイドル状態にできる"
+	}
+	"RYGive_Survival"
+	{
+		"jp"		"サバイバルは終わった"
+	}
+	"RYGive_NumberInfectedPeopleFull"
+	{
+		"jp"		"感染者数がいっぱい"
+	}
+	"RYGive_PlayerAlreadyTargetTeam"
+	{
+		"jp"		"プレーヤーはすでにターゲットチームに所属しています"
+	}
+	"RYGive_AllPlayersWeaponManeuverabilitySet"
+	{
+		"jp"		"{olive} 全プレイヤー {default} の武器操作性を {green}%.1fx に設定しました"
+	}
+	"RYGive_WeaponManeuverabilitySet"
+	{
+		"jp"		"{olive}%N {default}の武器操作性が{green}%.1fxに設定されました"
+	}
+}

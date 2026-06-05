@@ -2,377 +2,193 @@
 {
 	"Tag"
 	{
-		"en"	"{default}[{green}!{default}]"
-		"zho"		"{default}[{green}!{default}]"
-		"jp"		"{default}[{green}!{default}]"
-		"ko"		"{default}[{green}!{default}]"
-		"vi"		"{default}[{green}!{default}]"
+		"en"		"{default}[{green}!{default}]"
 	}
-
 	"ClientFullyLoaded"
 	{
-		"#format" "{1:N}"
-		"en"	"{olive}%N {default}has fully loaded"
-	
-		"zho"		"{olive}%N {default}has fully loaded"
-		"jp"		"{olive}%N {default}has fully loaded"
-		"ko"		"{olive}%N {default}has fully loaded"
-		"vi"		"{olive}%N {default}has fully loaded"
+		"#format"	"{1:N}"
+		"en"		"{olive}%N {default}has fully loaded"
 	}
-
 	"PauseCommand"
 	{
-		"#format" "{1:N}"
-		"en"	"{olive}%N {blue}Paused{default}."
-	
-		"zho"		"{olive}%N {blue}Paused{default}."
-		"jp"		"{olive}%N {blue}Paused{default}."
-		"ko"		"{olive}%N {blue}Paused{default}."
-		"vi"		"{olive}%N {blue}Paused{default}."
+		"#format"	"{1:N}"
+		"en"		"{olive}%N {blue}Paused{default}."
 	}
-
-	// PauseDelay_Timer
 	"PauseAction"
 	{
-		"en"	"{red}PAUSED"
-	
-		"zho"		"{red}PAUSED"
-		"jp"		"{red}PAUSED"
-		"ko"		"{red}PAUSED"
-		"vi"		"{red}PAUSED"
+		"en"		"{red}PAUSED"
 	}
-
 	"PauseDelay"
 	{
-		"#format" "{1:d}"
-		"en"	"{blue}Pausing in{default}: {olive}%d"
-	
-		"zho"		"{blue}Pausing in{default}: {olive}%d"
-		"jp"		"{blue}Pausing in{default}: {olive}%d"
-		"ko"		"{blue}Pausing in{default}: {olive}%d"
-		"vi"		"{blue}Pausing in{default}: {olive}%d"
+		"#format"	"{1:d}"
+		"en"		"{blue}Pausing in{default}: {olive}%d"
 	}
-
-	// ForcePause_Cmd
 	"Crashed"
 	{
-		"en"	"{olive}Game {default}was {green}force paused {default}because a player has {blue}crashed{default}."
-		"zho"		"{olive}Game {default}was {green}force paused {default}because a player has {blue}crashed{default}."
-		"jp"		"{olive}Game {default}was {green}force paused {default}because a player has {blue}crashed{default}."
-		"ko"		"{olive}Game {default}was {green}force paused {default}because a player has {blue}crashed{default}."
-		"vi"		"{olive}Game {default}was {green}force paused {default}because a player has {blue}crashed{default}."
+		"en"		"{olive}Game {default}was {green}force paused {default}because a player has {blue}crashed{default}."
 	}
-
 	"ForcePause"
 	{
-		"#format" "{1:N}"
-		"en"	"A {green}force pause {default}is issued by {blue}Admin {default}({olive}%N{default})"
-	
-		"zho"		"A {green}force pause {default}is issued by {blue}Admin {default}({olive}%N{default})"
-		"jp"		"A {green}force pause {default}is issued by {blue}Admin {default}({olive}%N{default})"
-		"ko"		"A {green}force pause {default}is issued by {blue}Admin {default}({olive}%N{default})"
-		"vi"		"A {green}force pause {default}is issued by {blue}Admin {default}({olive}%N{default})"
+		"#format"	"{1:N}"
+		"en"		"A {green}force pause {default}is issued by {blue}Admin {default}({olive}%N{default})"
 	}
-
-	// Unpause_Cmd
 	"UnpauseSurvivors"
 	{
-		"#format" "{1:N},{2:s},{3:s}"
-		"en"	"{olive}%N %s{default}marked {blue}%s {default}ready."
-	
-		"zho"		"{olive}%N %s{default}marked {blue}%s {default}ready."
-		"jp"		"{olive}%N %s{default}marked {blue}%s {default}ready."
-		"ko"		"{olive}%N %s{default}marked {blue}%s {default}ready."
-		"vi"		"{olive}%N %s{default}marked {blue}%s {default}ready."
+		"#format"	"{1:N},{2:s},{3:s}"
+		"en"		"{olive}%N %s{default}marked {blue}%s {default}ready."
 	}
-
 	"UnpauseInfected"
 	{
-		"#format" "{1:N},{2:s},{3:s}"
-		"en"	"{olive}%N %s{default}marked {red}%s {default}ready."
-	
-		"zho"		"{olive}%N %s{default}marked {red}%s {default}ready."
-		"jp"		"{olive}%N %s{default}marked {red}%s {default}ready."
-		"ko"		"{olive}%N %s{default}marked {red}%s {default}ready."
-		"vi"		"{olive}%N %s{default}marked {red}%s {default}ready."
+		"#format"	"{1:N},{2:s},{3:s}"
+		"en"		"{olive}%N %s{default}marked {red}%s {default}ready."
 	}
-
 	"UnpauseInitiator"
 	{
-		"#format" "{1:N}"
-		"en"	"{olive}%N {default}marked {green}Initiator {default}ready."
-	
-		"zho"		"{olive}%N {default}marked {green}Initiator {default}ready."
-		"jp"		"{olive}%N {default}marked {green}Initiator {default}ready."
-		"ko"		"{olive}%N {default}marked {green}Initiator {default}ready."
-		"vi"		"{olive}%N {default}marked {green}Initiator {default}ready."
+		"#format"	"{1:N}"
+		"en"		"{olive}%N {default}marked {green}Initiator {default}ready."
 	}
-
 	"UnpauseAdminConfirm"
 	{
-		"en"	"{olive}Teams {default}are ready. Wait for {blue}Admin {default}to {green}confirm{default}."
-	
-		"zho"		"{olive}Teams {default}are ready. Wait for {blue}Admin {default}to {green}confirm{default}."
-		"jp"		"{olive}Teams {default}are ready. Wait for {blue}Admin {default}to {green}confirm{default}."
-		"ko"		"{olive}Teams {default}are ready. Wait for {blue}Admin {default}to {green}confirm{default}."
-		"vi"		"{olive}Teams {default}are ready. Wait for {blue}Admin {default}to {green}confirm{default}."
+		"en"		"{olive}Teams {default}are ready. Wait for {blue}Admin {default}to {green}confirm{default}."
 	}
-
-	// Unready_Cmd
 	"UnreadySurvivors"
 	{
-		"#format" "{1:N},{2:s},{3:s}"
-		"en"	"{olive}%N %s{default}marked {blue}%s {default}not ready."
-	
-		"zho"		"{olive}%N %s{default}marked {blue}%s {default}not ready."
-		"jp"		"{olive}%N %s{default}marked {blue}%s {default}not ready."
-		"ko"		"{olive}%N %s{default}marked {blue}%s {default}not ready."
-		"vi"		"{olive}%N %s{default}marked {blue}%s {default}not ready."
+		"#format"	"{1:N},{2:s},{3:s}"
+		"en"		"{olive}%N %s{default}marked {blue}%s {default}not ready."
 	}
-
 	"UnreadyInfected"
 	{
-		"#format" "{1:N},{2:s},{3:s}"
-		"en"	"{olive}%N %s{default}marked {red}%s {default}not ready."
+		"#format"	"{1:N},{2:s},{3:s}"
+		"en"		"{olive}%N %s{default}marked {red}%s {default}not ready."
 	}
-
 	"UnreadyInitiator"
 	{
-		"#format" "{1:N}"
-		"en"	"{olive}%N {default}marked {green}Initiator {default}not ready."
-	
-		"zho"		"{olive}%N {default}marked {green}Initiator {default}not ready."
-		"jp"		"{olive}%N {default}marked {green}Initiator {default}not ready."
-		"ko"		"{olive}%N {default}marked {green}Initiator {default}not ready."
-		"vi"		"{olive}%N {default}marked {green}Initiator {default}not ready."
+		"#format"	"{1:N}"
+		"en"		"{olive}%N {default}marked {green}Initiator {default}not ready."
 	}
-
-	// void AsInitiator()
 	"AsInitiator"
 	{
-		"en"	"{default}as {green}Initiator "
+		"en"		"{default}as {green}Initiator "
 	}
-
-	// ForceUnpause_Cmd
 	"ForceUnpause"
 	{
-		"#format" "{1:N}"
-		"en"	"A {green}force unpause {default}is issued by {blue}Admin {default}({olive}%N{default})"
-	
-		"zho"		"A {green}force unpause {default}is issued by {blue}Admin {default}({olive}%N{default})"
-		"jp"		"A {green}force unpause {default}is issued by {blue}Admin {default}({olive}%N{default})"
-		"ko"		"A {green}force unpause {default}is issued by {blue}Admin {default}({olive}%N{default})"
-		"vi"		"A {green}force unpause {default}is issued by {blue}Admin {default}({olive}%N{default})"
+		"#format"	"{1:N}"
+		"en"		"A {green}force unpause {default}is issued by {blue}Admin {default}({olive}%N{default})"
 	}
-
-	// AddPauseCount
 	"PauseLimit"
 	{
-		"en"	"You have reached your pause limit."
-	
-		"zho"		"You have reached your pause limit."
-		"jp"		"You have reached your pause limit."
-		"ko"		"You have reached your pause limit."
-		"vi"		"You have reached your pause limit."
+		"en"		"You have reached your pause limit."
 	}
-
-	// AttemptPause
 	"PauseDeferred"
 	{
-		"en"	"{red}Pause has been delayed due to a pick-up in progress!"
-	
-		"zho"		"{red}Pause has been delayed due to a pick-up in progress!"
-		"jp"		"{red}Pause has been delayed due to a pick-up in progress!"
-		"ko"		"{red}Pause has been delayed due to a pick-up in progress!"
-		"vi"		"{red}Pause has been delayed due to a pick-up in progress!"
+		"en"		"{red}Pause has been delayed due to a pick-up in progress!"
 	}
-
-	// Pause
 	"PausePreventSpawn"
 	{
-		"en"	"{default}Your {red}Spawn {default}has been prevented because of the Pause"
-	
-		"zho"		"{default}Your {red}Spawn {default}has been prevented because of the Pause"
-		"jp"		"{default}Your {red}Spawn {default}has been prevented because of the Pause"
-		"ko"		"{default}Your {red}Spawn {default}has been prevented because of the Pause"
-		"vi"		"{default}Your {red}Spawn {default}has been prevented because of the Pause"
+		"en"		"{default}Your {red}Spawn {default}has been prevented because of the Pause"
 	}
-
-	// Show_Cmd
 	"PanelShow"
 	{
-		"en"	"Panel is now {blue}on{default}."
-		"zho"		"Panel is now {blue}on{default}."
-		"jp"		"Panel is now {blue}on{default}."
-		"ko"		"Panel is now {blue}on{default}."
-		"vi"		"Panel is now {blue}on{default}."
+		"en"		"Panel is now {blue}on{default}."
 	}
-
 	"PanelHide"
 	{
-		"en"	"Panel is now {red}off{default}."
-		"zho"		"Panel is now {red}off{default}."
-		"jp"		"Panel is now {red}off{default}."
-		"ko"		"Panel is now {red}off{default}."
-		"vi"		"Panel is now {red}off{default}."
+		"en"		"Panel is now {red}off{default}."
 	}
-
-	// UpdatePanel
 	"PanelSlots"
 	{
-		"#format" "{1:s},{2:d},{3:d}"
-		"en"	"▸ Server: %s\n▸ Slots: %d/%d"
+		"#format"	"{1:s},{2:d},{3:d}"
+		"en"		"▸ Server: %s\n▸ Slots: %d/%d"
 	}
-
 	"PanelDate"
 	{
-		"en"	"▸ %m/%d/%Y - %I:%M%p"
+		"en"		"▸ %m/%d/%Y - %I:%M%p"
 	}
-
 	"PanelTitle"
 	{
-		"en"	"▸ Ready Status"
+		"en"		"▸ Ready Status"
 	}
-
 	"RequireAdmin"
 	{
-		"en"	"->0. Require Admin to Unpause"
+		"en"		"->0. Require Admin to Unpause"
 	}
-
 	"SurvivorUnPaused"
 	{
-		"en"	"->1. Survivors: [√]"
+		"en"		"->1. Survivors: [√]"
 	}
-
 	"SurvivorPaused"
 	{
-		"en"	"->1. Survivors: [X]"
+		"en"		"->1. Survivors: [X]"
 	}
-
 	"InfectedUnPaused"
 	{
-		"en"	"->2. Infected: [√]"
+		"en"		"->2. Infected: [√]"
 	}
-
 	"InfectedPaused"
 	{
-		"en"	"->2. Infected: [X]"
+		"en"		"->2. Infected: [X]"
 	}
-
 	"InitiatorUnPaused"
 	{
-		"en"	"->0. Initiator: [√]"
+		"en"		"->0. Initiator: [√]"
 	}
-
 	"InitiatorPaused"
 	{
-		"en"	"->0. Initiator: [X]"
+		"en"		"->0. Initiator: [X]"
 	}
-
 	"AutoPauseCrash"
 	{
-		"en"	"▸ Forced AutoPause -> Crash"
+		"en"		"▸ Forced AutoPause -> Crash"
 	}
-
 	"ForcePauseAdmin"
 	{
-		"#format" "{1:s}"
-		"en"	"▸ Force Pause -> %s (Admin)"
+		"#format"	"{1:s}"
+		"en"		"▸ Force Pause -> %s (Admin)"
 	}
-
 	"InitiatorPause"
 	{
-		"#format" "{1:s},{2:s}"
-		"en"	"▸ Initiator -> %s (%s)"
+		"#format"	"{1:s},{2:s}"
+		"en"		"▸ Initiator -> %s (%s)"
 	}
-
 	"DurationPause"
 	{
-		"#format" "{1:d},{2:d}"
-		"en"	"▸ Duration: %02d:%02d"
+		"#format"	"{1:d},{2:d}"
+		"en"		"▸ Duration: %02d:%02d"
 	}
-
-	// InitiateLiveCountdown
 	"CountdownCancelNotify"
 	{
-		"en"	"Say {olive}!unready {default}to cancel"
-	
-		"zho"		"Say {olive}!unready {default}to cancel"
-		"jp"		"Say {olive}!unready {default}to cancel"
-		"ko"		"Say {olive}!unready {default}to cancel"
-		"vi"		"Say {olive}!unready {default}to cancel"
+		"en"		"Say {olive}!unready {default}to cancel"
 	}
-
 	"GameisLive"
 	{
-		"en"	"Game is live!"
+		"en"		"Game is live!"
 	}
-
 	"CountdownReadyDelay"
 	{
-		"#format" "{1:d}"
-		"en"	"{blue}Live in{default}: {olive}%d{default}..."
-	
-		"zho"		"{blue}Live in{default}: {olive}%d{default}..."
-		"jp"		"{blue}Live in{default}: {olive}%d{default}..."
-		"ko"		"{blue}Live in{default}: {olive}%d{default}..."
-		"vi"		"{blue}Live in{default}: {olive}%d{default}..."
+		"#format"	"{1:d}"
+		"en"		"{blue}Live in{default}: {olive}%d{default}..."
 	}
-
-	// CancelFullReady
 	"CountdownCancelled"
 	{
-		"#format" "{1:N}"
-		"en"	"{olive}%N {default}cancelled the countdown!"
-	
-		"zho"		"{olive}%N {default}cancelled the countdown!"
-		"jp"		"{olive}%N {default}cancelled the countdown!"
-		"ko"		"{olive}%N {default}cancelled the countdown!"
-		"vi"		"{olive}%N {default}cancelled the countdown!"
+		"#format"	"{1:N}"
+		"en"		"{olive}%N {default}cancelled the countdown!"
 	}
-
-	// Callvote_Callback
 	"CallvoteNoSpec"
 	{
-		"en"	"You're unable to call votes as a spectator."
-	
-		"zho"		"You're unable to call votes as a spectator."
-		"jp"		"You're unable to call votes as a spectator."
-		"ko"		"You're unable to call votes as a spectator."
-		"vi"		"You're unable to call votes as a spectator."
+		"en"		"You're unable to call votes as a spectator."
 	}
-
 	"CallvoteNoExploit"
 	{
-		"en"	"You've just switched Teams, you are unable to vote for a few seconds."
-	
-		"zho"		"You've just switched Teams, you are unable to vote for a few seconds."
-		"jp"		"You've just switched Teams, you are unable to vote for a few seconds."
-		"ko"		"You've just switched Teams, you are unable to vote for a few seconds."
-		"vi"		"You've just switched Teams, you are unable to vote for a few seconds."
+		"en"		"You've just switched Teams, you are unable to vote for a few seconds."
 	}
-
 	"CallvoteCannotTargetAdmin"
 	{
-		"en"	"You may not kick Admins."
-	
-		"zho"		"You may not kick Admins."
-		"jp"		"You may not kick Admins."
-		"ko"		"You may not kick Admins."
-		"vi"		"You may not kick Admins."
+		"en"		"You may not kick Admins."
 	}
-
-
 	"Pause_PauseChatMessage"
 	{
 		"en"		"(%s) {teamcolor}%N{default} :  %s"
-		"chi"		"(%s) {teamcolor}%N{default} : %s"
-		"zho"		"(%s) {teamcolor}%N{default} : %s"
-		"jp"		"(%s) {teamcolor}%N{default} : %s"
-		"ko"		"(%s) {teamcolor}%N{default} : %s"
-		"vi"		"(%s) {teamcolor}%N{default} : %s"
 	}
-
 	"PauseCountFormat"
 	{
 		"#format"	"{1:d},{2:d}"

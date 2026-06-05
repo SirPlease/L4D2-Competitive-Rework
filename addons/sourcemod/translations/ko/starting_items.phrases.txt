@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"StartingItems_DetermineItems"
+	{
+		"ko"		"항목 결정()"
+	}
+}

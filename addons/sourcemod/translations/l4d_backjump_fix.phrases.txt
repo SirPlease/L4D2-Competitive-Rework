@@ -3,10 +3,5 @@
 	"L4DBackjumpFix_OtherSolid"
 	{
 		"en"		"other: %s (%i), solid: %i"
-		"chi"		"其他：%s（%i），实心：%i"
-		"zho"		"其他：%s（%i），實心：%i"
-		"jp"		"その他：%s（%i）、ソリッド：%i"
-		"ko"		"기타: %s(%i), 솔리드: %i"
-		"vi"		"loại khác: %s (%i), rắn: %i"
 	}
 }

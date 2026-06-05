@@ -78,11 +78,11 @@
 	}
 	"L4D2HybridScoremod_TeamsPerformedAbsolutelyEqualImpossible"
 	{
-		"zho"		"%s{olive}團隊表現絕對平等！ Impossible to decide a clear round winner"
+		"zho"		"%s{olive}兩隊表現完全相同！無法判定本回合明確勝者"
 	}
 	"L4D2HybridScoremod_AddingPermHPBonusContribution"
 	{
-		"zho"		"{default}Adding {olive}%N's{default} perm hp bonus contribution: {olive}%d{default} perm HP -> {lightgreen}%.1f{default} bonus; new total: {olive}%.1f{default}"
+		"zho"		"{default}加入 {olive}%N{default} 的永久生命加成貢獻：{olive}%d{default} 永久生命值 -> {lightgreen}%.1f{default} 加成；新總計：{olive}%.1f{default}"
 	}
 	"L4D2HybridScoremod_AddingTempHPBonusEligible"
 	{

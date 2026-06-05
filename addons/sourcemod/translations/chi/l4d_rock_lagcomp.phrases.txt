@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"L4DRockLagcomp_WeaponRange"
+	{
+		"chi"		"武器：%s |范围：%.2f"
+	}
+	"L4DRockLagcomp_RockHealth"
+	{
+		"chi"		"岩石健康度：%d\\%"
+	}
+	"L4DRockLagcomp_EntityLocation"
+	{
+		"chi"		"实体 %s (%d) 位于以下位置：(%.2f、%.2f、%.2f)"
+	}
+	"L4DRockLagcomp_WeaponRangeDamageRockHealth"
+	{
+		"chi"		"武器：%s |范围：%.2f |损坏：%.1f |岩石健康：%.1f%%"
+	}
+}

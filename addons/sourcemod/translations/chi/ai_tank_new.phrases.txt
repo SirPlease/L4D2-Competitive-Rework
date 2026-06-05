@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"AITankNew_TankLikesWalkAroundTrees"
+	{
+		"chi"		"{R}<Tank>：{G}喜欢绕树是吧？"
+	}
+}

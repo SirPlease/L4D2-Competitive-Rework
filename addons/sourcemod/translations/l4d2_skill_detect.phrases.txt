@@ -2,175 +2,83 @@
 {
 	"Tag+"
 	{
-		"en"	"{green}★{default}"
-		"zho"		"{green}★{default}"
-		"jp"		"{green}★{default}"
-		"ko"		"{green}★{default}"
-		"vi"		"{green}★{default}"
+		"en"		"{green}★{default}"
 	}
 	"Tag++"
 	{
-		"en"	"{green}★★{default}"
-		"zho"		"{green}★★{default}"
-		"jp"		"{green}★★{default}"
-		"ko"		"{green}★★{default}"
-		"vi"		"{green}★★{default}"
+		"en"		"{green}★★{default}"
 	}
 	"Tag+++"
 	{
-		"en"	"{green}★★★{default}"
-		"zho"		"{green}★★★{default}"
-		"jp"		"{green}★★★{default}"
-		"ko"		"{green}★★★{default}"
-		"vi"		"{green}★★★{default}"
+		"en"		"{green}★★★{default}"
 	}
 	"Tag++++"
 	{
-		"en"	"{green}★★★★{default}"
-		"zho"		"{green}★★★★{default}"
-		"jp"		"{green}★★★★{default}"
-		"ko"		"{green}★★★★{default}"
-		"vi"		"{green}★★★★{default}"
+		"en"		"{green}★★★★{default}"
 	}
-	// boomer pop
 	"Popped"
 	{
-        "#format"   "{1:N},{2:N}" // 1:attacker 2:victim
+		"#format"	"{1:N},{2:N}"
 		"en"		"{olive}{1}{default} popped {olive}{2}{default}."
-	
-		"zho"		"{olive}{1}{default} popped {olive}{2}{default}."
-		"jp"		"{olive}{1}{default} popped {olive}{2}{default}."
-		"ko"		"{olive}{1}{default} popped {olive}{2}{default}."
-		"vi"		"{olive}{1}{default} popped {olive}{2}{default}."
 	}
 	"PoppedBot"
 	{
 		"en"		"{olive}%N{default} popped a boomer."
-	
-		"zho"		"{olive}%N{default} popped a boomer."
-		"jp"		"{olive}%N{default} popped a boomer."
-		"ko"		"{olive}%N{default} popped a boomer."
-		"vi"		"{olive}%N{default} popped a boomer."
 	}
-    // charger level
 	"Leveled"
 	{
-        "#format"   "{1:N},{2:N}" // 1:attacker, 2:victim
+		"#format"	"{1:N},{2:N}"
 		"en"		"{olive}{1}{default} {blue}fully{default} leveled {olive}{2}{default}"
-	
-		"zho"		"{olive}{1}{default} {blue}fully{default} leveled {olive}{2}{default}"
-		"jp"		"{olive}{1}{default} {blue}fully{default} leveled {olive}{2}{default}"
-		"ko"		"{olive}{1}{default} {blue}fully{default} leveled {olive}{2}{default}"
-		"vi"		"{olive}{1}{default} {blue}fully{default} leveled {olive}{2}{default}"
 	}
 	"LeveledBot"
 	{
 		"en"		"{olive}%N{default} {blue}fully{default} leveled {olive}a charger{default}"
-	
-		"zho"		"{olive}%N{default} {blue}fully{default} leveled {olive}a charger{default}"
-		"jp"		"{olive}%N{default} {blue}fully{default} leveled {olive}a charger{default}"
-		"ko"		"{olive}%N{default} {blue}fully{default} leveled {olive}a charger{default}"
-		"vi"		"{olive}%N{default} {blue}fully{default} leveled {olive}a charger{default}"
 	}
-    // charger level hurt
 	"LeveledHurt"
 	{
-        "#format"   "{1:N},{2:N},{3:i}" // 1:attacker 2:victim 3:damage
+		"#format"	"{1:N},{2:N},{3:i}"
 		"en"		"{olive}{1}{default} {blue}chip-leveled{default} {olive}{2}{default} ({blue}{3} dmg{default})"
-	
-		"zho"		"{olive}{1}{default} {blue}chip-leveled{default} {olive}{2}{default} ({blue}{3} dmg{default})"
-		"jp"		"{olive}{1}{default} {blue}chip-leveled{default} {olive}{2}{default} ({blue}{3} dmg{default})"
-		"ko"		"{olive}{1}{default} {blue}chip-leveled{default} {olive}{2}{default} ({blue}{3} dmg{default})"
-		"vi"		"{olive}{1}{default} {blue}chip-leveled{default} {olive}{2}{default} ({blue}{3} dmg{default})"
 	}
 	"LeveledHurtBot"
 	{
-        "#format"   "{1:N},{2:i}" // 1:attacker 2:damage
+		"#format"	"{1:N},{2:i}"
 		"en"		"{olive}{1}{default} {blue}chip-leveled{default} a charger ({blue}{2} dmg{default})"
-	
-		"zho"		"{olive}{1}{default} {blue}chip-leveled{default} a charger ({blue}{2} dmg{default})"
-		"jp"		"{olive}{1}{default} {blue}chip-leveled{default} a charger ({blue}{2} dmg{default})"
-		"ko"		"{olive}{1}{default} {blue}chip-leveled{default} a charger ({blue}{2} dmg{default})"
-		"vi"		"{olive}{1}{default} {blue}chip-leveled{default} a charger ({blue}{2} dmg{default})"
 	}
-    // deadstops
 	"Deadstopped"
 	{
-        "#format"   "{1:N},{2:N}" // 1:attacker 2:victim
+		"#format"	"{1:N},{2:N}"
 		"en"		"{olive}{1}{default} {blue}deadstopped{default} {olive}{2}{default}"
-	
-		"zho"		"{olive}{1}{default} {blue}deadstopped{default} {olive}{2}{default}"
-		"jp"		"{olive}{1}{default} {blue}deadstopped{default} {olive}{2}{default}"
-		"ko"		"{olive}{1}{default} {blue}deadstopped{default} {olive}{2}{default}"
-		"vi"		"{olive}{1}{default} {blue}deadstopped{default} {olive}{2}{default}"
 	}
 	"DeadstoppedBot"
 	{
 		"en"		"{olive}%N{default} {blue}deadstopped{default} {olive}a hunter{default}"
-	
-		"zho"		"{olive}%N{default} {blue}deadstopped{default} {olive}a hunter{default}"
-		"jp"		"{olive}%N{default} {blue}deadstopped{default} {olive}a hunter{default}"
-		"ko"		"{olive}%N{default} {blue}deadstopped{default} {olive}a hunter{default}"
-		"vi"		"{olive}%N{default} {blue}deadstopped{default} {olive}a hunter{default}"
 	}
-	// shove
 	"Shoved"
 	{
-        "#format"   "{1:N},{2:N}" // 1:attacker 2:victim
+		"#format"	"{1:N},{2:N}"
 		"en"		"{olive}{1}{default} {blue}shoved{default} {olive}{2}{default}."
-	
-		"zho"		"{olive}{1}{default} {blue}shoved{default} {olive}{2}{default}."
-		"jp"		"{olive}{1}{default} {blue}shoved{default} {olive}{2}{default}."
-		"ko"		"{olive}{1}{default} {blue}shoved{default} {olive}{2}{default}."
-		"vi"		"{olive}{1}{default} {blue}shoved{default} {olive}{2}{default}."
 	}
 	"ShovedBot"
 	{
 		"en"		"{olive}%N{default} {blue}shoved{default} an {olive}SI{default}."
-	
-		"zho"		"{olive}%N{default} {blue}shoved{default} an {olive}SI{default}."
-		"jp"		"{olive}%N{default} {blue}shoved{default} an {olive}SI{default}."
-		"ko"		"{olive}%N{default} {blue}shoved{default} an {olive}SI{default}."
-		"vi"		"{olive}%N{default} {blue}shoved{default} an {olive}SI{default}."
 	}
-    // real skeet
 	"TeamSkeeted"
 	{
 		"en"		"{olive}%N{default} was {blue}team-skeeted{default}."
-	
-		"zho"		"{olive}%N{default} was {blue}team-skeeted{default}."
-		"jp"		"{olive}%N{default} was {blue}team-skeeted{default}."
-		"ko"		"{olive}%N{default} was {blue}team-skeeted{default}."
-		"vi"		"{olive}%N{default} was {blue}team-skeeted{default}."
 	}
 	"TeamSkeetedBot"
 	{
 		"en"		"A {olive}hunter{default} was {blue}team-skeeted{default}."
-	
-		"zho"		"A {olive}hunter{default} was {blue}team-skeeted{default}."
-		"jp"		"A {olive}hunter{default} was {blue}team-skeeted{default}."
-		"ko"		"A {olive}hunter{default} was {blue}team-skeeted{default}."
-		"vi"		"A {olive}hunter{default} was {blue}team-skeeted{default}."
 	}
 	"Skeeted"
 	{
-        "#format"   "{1:N},{2:t},{3:N}" // 1:attacker 2:"Melee"/"HeadShot"/"Grenade"/"Empty" key 3:victim
+		"#format"	"{1:N},{2:t},{3:N}"
 		"en"		"{olive}{1}{default} {blue}{2}skeeted{default} {olive}{3}{default}."
-	
-		"zho"		"{olive}{1}{default} {blue}{2}skeeted{default} {olive}{3}{default}."
-		"jp"		"{olive}{1}{default} {blue}{2}skeeted{default} {olive}{3}{default}."
-		"ko"		"{olive}{1}{default} {blue}{2}skeeted{default} {olive}{3}{default}."
-		"vi"		"{olive}{1}{default} {blue}{2}skeeted{default} {olive}{3}{default}."
 	}
 	"SkeetedBot"
 	{
-        "#format"   "{1:N},{2:t}" // 1:attacker 2:"Melee"/"HeadShot"/"Grenade"/"Empty" key
+		"#format"	"{1:N},{2:t}"
 		"en"		"{olive}{1}{default} {blue}{2}skeeted{default} a {olive}hunter{default}."
-	
-		"zho"		"{olive}{1}{default} {blue}{2}skeeted{default} a {olive}hunter{default}."
-		"jp"		"{olive}{1}{default} {blue}{2}skeeted{default} a {olive}hunter{default}."
-		"ko"		"{olive}{1}{default} {blue}{2}skeeted{default} a {olive}hunter{default}."
-		"vi"		"{olive}{1}{default} {blue}{2}skeeted{default} a {olive}hunter{default}."
 	}
 	"Melee"
 	{
@@ -184,251 +92,129 @@
 	{
 		"en"		"grenade-"
 	}
-    // hurt skeet / non-skeet
 	"HurtSkeet"
 	{
-        "#format"   "{1:N},{2:i},{3:t}" // 1:victim 2:damage 3:"Unchipped"/"Empty" key
+		"#format"	"{1:N},{2:i},{3:t}"
 		"en"		"{olive}{1}{default} was {green}not{default} skeeted ({blue}{2}{default} damage).{3}"
-	
-		"zho"		"{olive}{1}{default} was {green}not{default} skeeted ({blue}{2}{default} damage).{3}"
-		"jp"		"{olive}{1}{default} was {green}not{default} skeeted ({blue}{2}{default} damage).{3}"
-		"ko"		"{olive}{1}{default} was {green}not{default} skeeted ({blue}{2}{default} damage).{3}"
-		"vi"		"{olive}{1}{default} was {green}not{default} skeeted ({blue}{2}{default} damage).{3}"
 	}
 	"HurtSkeetBot"
 	{
-        "#format"   "{1:i},{2:t}" // 1:damage 2:"Unchipped"/"Empty" key
+		"#format"	"{1:i},{2:t}"
 		"en"		"{olive}Hunter{default} was {green}not{default} skeeted ({blue}{1}{default} damage).{2}"
-	
-		"zho"		"{olive}Hunter{default} was {green}not{default} skeeted ({blue}{1}{default} damage).{2}"
-		"jp"		"{olive}Hunter{default} was {green}not{default} skeeted ({blue}{1}{default} damage).{2}"
-		"ko"		"{olive}Hunter{default} was {green}not{default} skeeted ({blue}{1}{default} damage).{2}"
-		"vi"		"{olive}Hunter{default} was {green}not{default} skeeted ({blue}{1}{default} damage).{2}"
 	}
 	"Unchipped"
 	{
 		"en"		"(Would've skeeted if hunter were unchipped!)"
 	}
-    // crown
 	"CrownedWitch"
 	{
-        "#format"   "{1:N},{2:i}" // 1:attacker 2:damage
+		"#format"	"{1:N},{2:i}"
 		"en"		"{olive}{1}{default} crowned a witch ({blue}{2}{default} damage)."
-	
-		"zho"		"{olive}{1}{default} crowned a witch ({blue}{2}{default} damage)."
-		"jp"		"{olive}{1}{default} crowned a witch ({blue}{2}{default} damage)."
-		"ko"		"{olive}{1}{default} crowned a witch ({blue}{2}{default} damage)."
-		"vi"		"{olive}{1}{default} crowned a witch ({blue}{2}{default} damage)."
 	}
 	"CrownedWitch2"
 	{
 		"en"		"A witch was {blue}crowned{default}."
-		"zho"		"A witch was {blue}crowned{default}."
-		"jp"		"A witch was {blue}crowned{default}."
-		"ko"		"A witch was {blue}crowned{default}."
-		"vi"		"A witch was {blue}crowned{default}."
 	}
-    // drawcrown
 	"DrawCrowned"
 	{
-        "#format"   "{1:N},{2:i},{3:i}" // 1:attacker 2:damage 3:chipdamage
+		"#format"	"{1:N},{2:i},{3:i}"
 		"en"		"{olive}{1}{default} draw-crowned a witch ({blue}{2}{default} damage, {olive}{3}{default} chip)."
-	
-		"zho"		"{olive}{1}{default} draw-crowned a witch ({blue}{2}{default} damage, {olive}{3}{default} chip)."
-		"jp"		"{olive}{1}{default} draw-crowned a witch ({blue}{2}{default} damage, {olive}{3}{default} chip)."
-		"ko"		"{olive}{1}{default} draw-crowned a witch ({blue}{2}{default} damage, {olive}{3}{default} chip)."
-		"vi"		"{olive}{1}{default} draw-crowned a witch ({blue}{2}{default} damage, {olive}{3}{default} chip)."
 	}
 	"DrawCrowned2"
 	{
-        "#format"   "{1:i},{2:i}" // 1:damage 2:chipdamage
+		"#format"	"{1:i},{2:i}"
 		"en"		"A witch was draw-crowned ({blue}{1}{default} damage, {olive}{2}{default} chip)."
-		"zho"		"A witch was draw-crowned ({blue}{1}{default} damage, {olive}{2}{default} chip)."
-		"jp"		"A witch was draw-crowned ({blue}{1}{default} damage, {olive}{2}{default} chip)."
-		"ko"		"A witch was draw-crowned ({blue}{1}{default} damage, {olive}{2}{default} chip)."
-		"vi"		"A witch was draw-crowned ({blue}{1}{default} damage, {olive}{2}{default} chip)."
 	}
-    // smoker clears
 	"CutTongue"
 	{
-        "#format"   "{1:N},{2:N}" // 1:attacker 2:victim
+		"#format"	"{1:N},{2:N}"
 		"en"		"{olive}{1}{default} {blue}cut{default} {olive}{2}{default}'s tongue"
-	
-		"zho"		"{olive}{1}{default} {blue}cut{default} {olive}{2}{default}'s tongue"
-		"jp"		"{olive}{1}{default} {blue}cut{default} {olive}{2}{default}'s tongue"
-		"ko"		"{olive}{1}{default} {blue}cut{default} {olive}{2}{default}'s tongue"
-		"vi"		"{olive}{1}{default} {blue}cut{default} {olive}{2}{default}'s tongue"
 	}
 	"CutTongueBot"
 	{
 		"en"		"{olive}%N{default} {blue}cut{default} smoker tongue"
-	
-		"zho"		"{olive}%N{default} {blue}cut{default} smoker tongue"
-		"jp"		"{olive}%N{default} {blue}cut{default} smoker tongue"
-		"ko"		"{olive}%N{default} {blue}cut{default} smoker tongue"
-		"vi"		"{olive}%N{default} {blue}cut{default} smoker tongue"
 	}
 	"SelfClearedTongue"
 	{
-        "#format"   "{1:N},{2:N},{3:t}" // 1:attacker 2:victim 3:"Shoving"/"Empty" key
+		"#format"	"{1:N},{2:N},{3:t}"
 		"en"		"{olive}{1}{default} {blue}self-cleared{default} from {olive}{2}{default}'s tongue {blue}{3}{default}"
-	
-		"zho"		"{olive}{1}{default} {blue}self-cleared{default} from {olive}{2}{default}'s tongue {blue}{3}{default}"
-		"jp"		"{olive}{1}{default} {blue}self-cleared{default} from {olive}{2}{default}'s tongue {blue}{3}{default}"
-		"ko"		"{olive}{1}{default} {blue}self-cleared{default} from {olive}{2}{default}'s tongue {blue}{3}{default}"
-		"vi"		"{olive}{1}{default} {blue}self-cleared{default} from {olive}{2}{default}'s tongue {blue}{3}{default}"
 	}
 	"SelfClearedTongueBot"
 	{
-        "#format"   "{1:N},{2:t}" // 1:attacker 2:"Shoving"/"Empty" key
+		"#format"	"{1:N},{2:t}"
 		"en"		"{olive}{1}{default} {blue}self-cleared{default} from a smoker tongue {blue}{2}{default}"
-	
-		"zho"		"{olive}{1}{default} {blue}self-cleared{default} from a smoker tongue {blue}{2}{default}"
-		"jp"		"{olive}{1}{default} {blue}self-cleared{default} from a smoker tongue {blue}{2}{default}"
-		"ko"		"{olive}{1}{default} {blue}self-cleared{default} from a smoker tongue {blue}{2}{default}"
-		"vi"		"{olive}{1}{default} {blue}self-cleared{default} from a smoker tongue {blue}{2}{default}"
 	}
 	"Shoving"
 	{
 		"en"		"by shoving"
 	}
-    // rocks
 	"SkeetedRock"
 	{
-        "#format"   "{1:N},{2:N}" // 1:attacker 2:victim
+		"#format"	"{1:N},{2:N}"
 		"en"		"{olive}{1}{default} {blue}skeeted{default} {olive}{2}{default} 's rock."
-	
-		"zho"		"{olive}{1}{default} {blue}skeeted{default} {olive}{2}{default} 's rock."
-		"jp"		"{olive}{1}{default} {blue}skeeted{default} {olive}{2}{default} 's rock."
-		"ko"		"{olive}{1}{default} {blue}skeeted{default} {olive}{2}{default} 's rock."
-		"vi"		"{olive}{1}{default} {blue}skeeted{default} {olive}{2}{default} 's rock."
 	}
 	"SkeetedRockBot"
 	{
 		"en"		"{olive}%N{default} {blue}skeeted{default} a tank rock"
-	
-		"zho"		"{olive}%N{default} {blue}skeeted{default} a tank rock"
-		"jp"		"{olive}%N{default} {blue}skeeted{default} a tank rock"
-		"ko"		"{olive}%N{default} {blue}skeeted{default} a tank rock"
-		"vi"		"{olive}%N{default} {blue}skeeted{default} a tank rock"
 	}
-    // highpounces
 	"HunterHP"
 	{
-        "#format"   "{1:N},{2:N},{3:i},{4:i}" // 1:attacker 2:victim 3:RoundFloat(calculatedDamage) 4:RoundFloat(height)
+		"#format"	"{1:N},{2:N},{3:i},{4:i}"
 		"en"		"{olive}{1}{default} {red}high-pounced{default} {olive}{2}{default} ({red}{3}{default} dmg, height: {red}{4}{default})"
-	
-		"zho"		"{olive}{1}{default} {red}high-pounced{default} {olive}{2}{default} ({red}{3}{default} dmg, height: {red}{4}{default})"
-		"jp"		"{olive}{1}{default} {red}high-pounced{default} {olive}{2}{default} ({red}{3}{default} dmg, height: {red}{4}{default})"
-		"ko"		"{olive}{1}{default} {red}high-pounced{default} {olive}{2}{default} ({red}{3}{default} dmg, height: {red}{4}{default})"
-		"vi"		"{olive}{1}{default} {red}high-pounced{default} {olive}{2}{default} ({red}{3}{default} dmg, height: {red}{4}{default})"
 	}
 	"HunterHPBot"
 	{
-        "#format"   "{1:N},{2:i},{3:i}" // 1:victim 2:RoundFloat(calculatedDamage) 3:RoundFloat(height)
+		"#format"	"{1:N},{2:i},{3:i}"
 		"en"		"A {olive}hunter{default} {red}high-pounced{default} {olive}{1}{default} ({red}{2}{default} dmg, height: {red}{3}{default})"
-	
-		"zho"		"A {olive}hunter{default} {red}high-pounced{default} {olive}{1}{default} ({red}{2}{default} dmg, height: {red}{3}{default})"
-		"jp"		"A {olive}hunter{default} {red}high-pounced{default} {olive}{1}{default} ({red}{2}{default} dmg, height: {red}{3}{default})"
-		"ko"		"A {olive}hunter{default} {red}high-pounced{default} {olive}{1}{default} ({red}{2}{default} dmg, height: {red}{3}{default})"
-		"vi"		"A {olive}hunter{default} {red}high-pounced{default} {olive}{1}{default} ({red}{2}{default} dmg, height: {red}{3}{default})"
 	}
 	"JockeyHP"
 	{
-        "#format"   "{1:N},{2:N},{3:i}" // 1:attacker 2:victim 3:RoundFloat(height)
+		"#format"	"{1:N},{2:N},{3:i}"
 		"en"		"{olive}{1}{default} {red}high-pounced{default} {olive}{2}{default} ({red}height{default}: {red}{3}{default})"
-	
-		"zho"		"{olive}{1}{default} {red}high-pounced{default} {olive}{2}{default} ({red}height{default}: {red}{3}{default})"
-		"jp"		"{olive}{1}{default} {red}high-pounced{default} {olive}{2}{default} ({red}height{default}: {red}{3}{default})"
-		"ko"		"{olive}{1}{default} {red}high-pounced{default} {olive}{2}{default} ({red}height{default}: {red}{3}{default})"
-		"vi"		"{olive}{1}{default} {red}high-pounced{default} {olive}{2}{default} ({red}height{default}: {red}{3}{default})"
 	}
 	"JockeyHPBot"
 	{
-        "#format"   "{1:N},{2:i}" // 1:victim 2:RoundFloat(height)
+		"#format"	"{1:N},{2:i}"
 		"en"		"A {olive}jockey{default} {red}high-pounced{default} {olive}{1}{default} ({red}height{default}: {red}{2}{default})"
-	
-		"zho"		"A {olive}jockey{default} {red}high-pounced{default} {olive}{1}{default} ({red}height{default}: {red}{2}{default})"
-		"jp"		"A {olive}jockey{default} {red}high-pounced{default} {olive}{1}{default} ({red}height{default}: {red}{2}{default})"
-		"ko"		"A {olive}jockey{default} {red}high-pounced{default} {olive}{1}{default} ({red}height{default}: {red}{2}{default})"
-		"vi"		"A {olive}jockey{default} {red}high-pounced{default} {olive}{1}{default} ({red}height{default}: {red}{2}{default})"
 	}
-    // deathcharges
 	"DeathCharged"
 	{
-        "#format"   "{1:N},{2:N},{3:t},{4:i}" // 1:attacker 2:victim 3:"Empty"/"Bowling" key 4:RoundFloat(height)
+		"#format"	"{1:N},{2:N},{3:t},{4:i}"
 		"en"		"{olive}{1}{default} {red}death-charged{default} {olive}{2}{default} {3}({red}height{default}: {red}{4}{default})"
-	
-		"zho"		"{olive}{1}{default} {red}death-charged{default} {olive}{2}{default} {3}({red}height{default}: {red}{4}{default})"
-		"jp"		"{olive}{1}{default} {red}death-charged{default} {olive}{2}{default} {3}({red}height{default}: {red}{4}{default})"
-		"ko"		"{olive}{1}{default} {red}death-charged{default} {olive}{2}{default} {3}({red}height{default}: {red}{4}{default})"
-		"vi"		"{olive}{1}{default} {red}death-charged{default} {olive}{2}{default} {3}({red}height{default}: {red}{4}{default})"
 	}
 	"DeathChargedBot"
 	{
-        "#format"   "{1:N},{2:t},{3:i}" // 1:victim 2:"Empty"/"Bowling" key 3:RoundFloat(height)
+		"#format"	"{1:N},{2:t},{3:i}"
 		"en"		"A {olive}charger{default} {red}death-charged{default} {olive}{1}{default} {2}({red}height{default}: {red}{3}{default})"
-	
-		"zho"		"A {olive}charger{default} {red}death-charged{default} {olive}{1}{default} {2}({red}height{default}: {red}{3}{default})"
-		"jp"		"A {olive}charger{default} {red}death-charged{default} {olive}{1}{default} {2}({red}height{default}: {red}{3}{default})"
-		"ko"		"A {olive}charger{default} {red}death-charged{default} {olive}{1}{default} {2}({red}height{default}: {red}{3}{default})"
-		"vi"		"A {olive}charger{default} {red}death-charged{default} {olive}{1}{default} {2}({red}height{default}: {red}{3}{default})"
 	}
 	"Bowling"
 	{
 		"en"		"by bowling"
 	}
-    // SI clears    (cleartimeA = pummel/pounce/ride/choke, cleartimeB = tongue drag, charger carry)
 	"SIClear"
 	{
-        "#format"   "{1:N},{2:N},{3:N},{4:s},{5:.2f}" // 1:attacker 2:pinVictim 3:victim 4:g_csSIClassName[zombieClass] 5:fClearTime
+		"#format"	"{1:N},{2:N},{3:N},{4:s},{5:.2f}"
 		"en"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}{2}{default} from {olive}{3}{default}'s {4} ({blue}{5} {default}seconds)"
-	
-		"zho"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}{2}{default} from {olive}{3}{default}'s {4} ({blue}{5} {default}seconds)"
-		"jp"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}{2}{default} from {olive}{3}{default}'s {4} ({blue}{5} {default}seconds)"
-		"ko"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}{2}{default} from {olive}{3}{default}'s {4} ({blue}{5} {default}seconds)"
-		"vi"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}{2}{default} from {olive}{3}{default}'s {4} ({blue}{5} {default}seconds)"
 	}
 	"SIClearTeammate"
 	{
-        "#format"   "{1:N},{2:N},{3:s},{4:.2f}" // 1:attacker 2:victim 3:g_csSIClassName[zombieClass] 4:fClearTime
+		"#format"	"{1:N},{2:N},{3:s},{4:.2f}"
 		"en"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}a teammate{default} from {olive}{2}{default}'s {3} ({blue}{4} {default}seconds)"
-	
-		"zho"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}a teammate{default} from {olive}{2}{default}'s {3} ({blue}{4} {default}seconds)"
-		"jp"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}a teammate{default} from {olive}{2}{default}'s {3} ({blue}{4} {default}seconds)"
-		"ko"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}a teammate{default} from {olive}{2}{default}'s {3} ({blue}{4} {default}seconds)"
-		"vi"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}a teammate{default} from {olive}{2}{default}'s {3} ({blue}{4} {default}seconds)"
 	}
 	"SIClearBot"
 	{
-        "#format"   "{1:N},{2:N},{3:s},{4:.2f}" // 1:attacker 2:pinVictim 3:g_csSIClassName[zombieClass] 4:fClearTime
+		"#format"	"{1:N},{2:N},{3:s},{4:.2f}"
 		"en"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}{2}{default} from a {3} ({blue}{4} {default}seconds)"
-	
-		"zho"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}{2}{default} from a {3} ({blue}{4} {default}seconds)"
-		"jp"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}{2}{default} from a {3} ({blue}{4} {default}seconds)"
-		"ko"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}{2}{default} from a {3} ({blue}{4} {default}seconds)"
-		"vi"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}{2}{default} from a {3} ({blue}{4} {default}seconds)"
 	}
 	"SIClearTeammateBot"
 	{
-        "#format"   "{1:N},{2:s},{3:.2f}" // 1:attacker 2:g_csSIClassName[zombieClass] 3:fClearTime)
+		"#format"	"{1:N},{2:s},{3:.2f}"
 		"en"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}a teammate{default} from a {2} ({blue}{3} {default}seconds)"
-	
-		"zho"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}a teammate{default} from a {2} ({blue}{3} {default}seconds)"
-		"jp"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}a teammate{default} from a {2} ({blue}{3} {default}seconds)"
-		"ko"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}a teammate{default} from a {2} ({blue}{3} {default}seconds)"
-		"vi"		"{olive}{1}{default} {blue}insta-cleared{default} {olive}a teammate{default} from a {2} ({blue}{3} {default}seconds)"
 	}
-    // bhaps
 	"BunnyHop"
 	{
-        "#format"   "{1:i},{2:t},{3:.1f}" // 1:streak 2:"PluralCount"/"Empty" key 3:maxVelocity
+		"#format"	"{1:i},{2:t},{3:.1f}"
 		"en"		"{olive}You{default} got {blue}{1} bunnyhop{2}{default} in a row ({blue}top speed{default}: {olive}{3}{default})"
-	
-		"zho"		"{olive}You{default} got {blue}{1} bunnyhop{2}{default} in a row ({blue}top speed{default}: {olive}{3}{default})"
-		"jp"		"{olive}You{default} got {blue}{1} bunnyhop{2}{default} in a row ({blue}top speed{default}: {olive}{3}{default})"
-		"ko"		"{olive}You{default} got {blue}{1} bunnyhop{2}{default} in a row ({blue}top speed{default}: {olive}{3}{default})"
-		"vi"		"{olive}You{default} got {blue}{1} bunnyhop{2}{default} in a row ({blue}top speed{default}: {olive}{3}{default})"
 	}
 	"PluralCount"
 	{
@@ -438,44 +224,22 @@
 	{
 		"en"		""
 	}
-    // car alarms
 	"CalarmHit"
 	{
 		"en"		"{olive}%N{default} triggered an alarm with a hit."
-	
-		"zho"		"{olive}%N{default} triggered an alarm with a hit."
-		"jp"		"{olive}%N{default} triggered an alarm with a hit."
-		"ko"		"{olive}%N{default} triggered an alarm with a hit."
-		"vi"		"{olive}%N{default} triggered an alarm with a hit."
 	}
 	"CalarmTouched"
 	{
-        "#format"   "{1:N},{2:N}" // 1:infected 2:survivor
+		"#format"	"{1:N},{2:N}"
 		"en"		"{olive}{1}{default} made {olive}{2}{default} trigger an alarm."
-	
-		"zho"		"{olive}{1}{default} made {olive}{2}{default} trigger an alarm."
-		"jp"		"{olive}{1}{default} made {olive}{2}{default} trigger an alarm."
-		"ko"		"{olive}{1}{default} made {olive}{2}{default} trigger an alarm."
-		"vi"		"{olive}{1}{default} made {olive}{2}{default} trigger an alarm."
 	}
 	"CalarmTouchedHunter"
 	{
 		"en"		"A {olive}hunter{default} made {olive}%N{default} trigger an alarm."
-	
-		"zho"		"A {olive}hunter{default} made {olive}%N{default} trigger an alarm."
-		"jp"		"A {olive}hunter{default} made {olive}%N{default} trigger an alarm."
-		"ko"		"A {olive}hunter{default} made {olive}%N{default} trigger an alarm."
-		"vi"		"A {olive}hunter{default} made {olive}%N{default} trigger an alarm."
 	}
 	"CalarmTouchedJockey"
-	{	
+	{
 		"en"		"A {olive}jockey{default} made {olive}%N{default} trigger an alarm."
-	
-		"chi"		"A {olive}jockey{default} made {olive}%N{default} trigger an alarm."
-		"zho"		"A {olive}jockey{default} made {olive}%N{default} trigger an alarm."
-		"jp"		"A {olive}jockey{default} made {olive}%N{default} trigger an alarm."
-		"ko"		"A {olive}jockey{default} made {olive}%N{default} trigger an alarm."
-		"vi"		"A {olive}jockey{default} made {olive}%N{default} trigger an alarm."
 	}
 	"CalarmTouchedCharger"
 	{
@@ -484,56 +248,26 @@
 	"CalarmTouchedInfected"
 	{
 		"en"		"A {olive}bot infected{default} made {olive}%N{default} trigger an alarm."
-	
-		"zho"		"A {olive}bot infected{default} made {olive}%N{default} trigger an alarm."
-		"jp"		"A {olive}bot infected{default} made {olive}%N{default} trigger an alarm."
-		"ko"		"A {olive}bot infected{default} made {olive}%N{default} trigger an alarm."
-		"vi"		"A {olive}bot infected{default} made {olive}%N{default} trigger an alarm."
 	}
 	"CalarmTouchedBot"
 	{
 		"en"		"{olive}%N{default} touched an alarmed car."
-	
-		"zho"		"{olive}%N{default} touched an alarmed car."
-		"jp"		"{olive}%N{default} touched an alarmed car."
-		"ko"		"{olive}%N{default} touched an alarmed car."
-		"vi"		"{olive}%N{default} touched an alarmed car."
 	}
 	"CalarmExplosion"
 	{
 		"en"		"{olive}%N{default} triggered an alarm with an explosion."
-	
-		"zho"		"{olive}%N{default} triggered an alarm with an explosion."
-		"jp"		"{olive}%N{default} triggered an alarm with an explosion."
-		"ko"		"{olive}%N{default} triggered an alarm with an explosion."
-		"vi"		"{olive}%N{default} triggered an alarm with an explosion."
 	}
 	"CalarmBoomer"
 	{
-        "#format"   "{1:N},{2:N}" // 1:infected 2:survivor
+		"#format"	"{1:N},{2:N}"
 		"en"		"{olive}{1}{default} triggered an alarm by killing a boomer {olive}{2}{default}."
-	
-		"zho"		"{olive}{1}{default} triggered an alarm by killing a boomer {olive}{2}{default}."
-		"jp"		"{olive}{1}{default} triggered an alarm by killing a boomer {olive}{2}{default}."
-		"ko"		"{olive}{1}{default} triggered an alarm by killing a boomer {olive}{2}{default}."
-		"vi"		"{olive}{1}{default} triggered an alarm by killing a boomer {olive}{2}{default}."
 	}
 	"CalarmBoomerBot"
 	{
 		"en"		"{olive}%N{default} triggered an alarm by shooting a {olive}boomer{default}."
-	
-		"zho"		"{olive}%N{default} triggered an alarm by shooting a {olive}boomer{default}."
-		"jp"		"{olive}%N{default} triggered an alarm by shooting a {olive}boomer{default}."
-		"ko"		"{olive}%N{default} triggered an alarm by shooting a {olive}boomer{default}."
-		"vi"		"{olive}%N{default} triggered an alarm by shooting a {olive}boomer{default}."
 	}
 	"Calarm"
 	{
 		"en"		"{olive}%N{default} triggered an alarm."
-	
-		"zho"		"{olive}%N{default} triggered an alarm."
-		"jp"		"{olive}%N{default} triggered an alarm."
-		"ko"		"{olive}%N{default} triggered an alarm."
-		"vi"		"{olive}%N{default} triggered an alarm."
 	}
 }

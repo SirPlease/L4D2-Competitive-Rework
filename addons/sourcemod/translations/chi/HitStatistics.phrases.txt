@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"HitStatistics_NotSurvivor"
+	{
+		"chi"		"你不是幸存者。"
+	}
+}

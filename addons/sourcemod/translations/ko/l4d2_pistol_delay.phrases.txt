@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2PistolDelay_EntityCreatedEntity"
+	{
+		"ko"		"[OnEntityCreated] iEntity: %s(%d)"
+	}
+	"L4D2PistolDelay_WeaponOldFireTimeCurrent"
+	{
+		"ko"		"무기: %s (%d), 이전 발사 시간: %f, 현재 발사 시간: %f, 차이: %f"
+	}
+}

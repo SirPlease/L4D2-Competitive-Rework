@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4DNoCans_EntityModel"
+	{
+		"chi"		"iEntity：%d（%s），型号：%s"
+	}
+}

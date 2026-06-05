@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"BoomerHordeEqualizer_PassedBiledSurvivor"
+	{
+		"zho"		"%N 將 bBiledSurvivor 傳給 %N"
+	}
+	"BoomerHordeEqualizer_NoLongerBoomedSurvivorCount"
+	{
+		"zho"		"%N 不再是它（BoomedSurvivorCount：%i）"
+	}
+	"BoomerHordeEqualizer_BoomedTotal"
+	{
+		"zho"		"%N 轟鳴（總計：%d）"
+	}
+	"BoomerHordeEqualizer_BoomHordeEventBoomedSurvivor"
+	{
+		"zho"		"BoomHordeEvent[BoomedSurvivorCount]：%i"
+	}
+	"BoomerHordeEqualizer_UncoveredBileEvent"
+	{
+		"zho"		"膽汁暴露事件"
+	}
+}

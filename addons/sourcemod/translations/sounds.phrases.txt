@@ -2,7 +2,7 @@
 {
 	"Played sound to target"
 	{
-		"#format"		"{1:t}"
-		"en"			"Played sound to {1}"
+		"#format"	"{1:t}"
+		"en"		"Played sound to {1}"
 	}
 }

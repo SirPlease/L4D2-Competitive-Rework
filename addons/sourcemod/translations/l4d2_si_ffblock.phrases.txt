@@ -3,20 +3,9 @@
 	"L4D2SIFfblock_HookWitchTakeDamageVictim"
 	{
 		"en"		"Hook_WitchOnTakeDamage. iVictim: %s (%d), iAttacker: %N (%d), ZClass: %s (%d), iInflictor: %d, fDamage: %f, iDamagetype: %d"
-		"chi"		"Hook_WitchOnTakeDamage。 iVictim：%s（%d），iAttacker：%N（%d），ZClass：%s（%d），iInflictor：%d，fDamage：%f，iDamagetype： %d"
-		"zho"		"Hook_WitchOnTakeDamage. iVictim: %s (%d), iAttacker: %N (%d), ZClass: %s (%d), iInflictor: %d, fDamage: %f, iDamagetype: %d"
-		"jp"		"Hook_WitchOnTakeDamage。 i被害者: %s (%d)、i攻撃者: %N (%d)、Zクラス: %s (%d)、i加害者: %d、fダメージ: %f、iダメージタイプ: %d"
-		"ko"		"Hook_WitchOnTakeDamage. iVictim: %s (%d), iAttacker: %N (%d), ZClass: %s (%d), iInflector: %d, fDamage: %f, iDamagetype: %d"
-		"vi"		"Hook_WitchOnTakeDamage. iVictim: %s (%d), iAttacker: %N (%d), ZClass: %s (%d), iInflictor: %d, fDamage: %f, iDamagetype: %d"
 	}
-
 	"L4D2SIFfblock_HookPlayerTakeDamageVictim"
 	{
 		"en"		"Hook_PlayerOnTakeDamage. iVictim: %N (%d), iAttacker: %N (%d), ZClass: %s (%d), iInflictor: %d, fDamage: %f, iDamagetype: %d"
-		"chi"		"Hook_PlayerOnTakeDamage。 iVictim：%N（%d），iAttacker：%N（%d），ZClass：%s（%d），iInflictor：%d，fDamage：%f，iDamagetype： %d"
-		"zho"		"Hook_PlayerOnTakeDamage. iVictim: %N (%d), iAttacker: %N (%d), ZClass: %s (%d), iInflictor: %d, fDamage: %f, iDamagetype: %d"
-		"jp"		"Hook_PlayerOnTakeDamage。 i被害者: %N (%d)、i攻撃者: %N (%d)、Zクラス: %s (%d)、i加害者: %d、fダメージ: %f、iダメージタイプ: %d"
-		"ko"		"Hook_PlayerOnTakeDamage. iVictim: %N (%d), iAttacker: %N (%d), ZClass: %s (%d), iInflector: %d, fDamage: %f, iDamagetype: %d"
-		"vi"		"Hook_PlayerOnTakeDamage. iVictim: %N (%d), iAttacker: %N (%d), ZClass: %s (%d), iInflictor: %d, fDamage: %f, iDamagetype: %d"
 	}
 }

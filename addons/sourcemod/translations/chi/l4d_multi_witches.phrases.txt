@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"L4DMultiWitches_WitchSpawnedMaxAlive"
+	{
+		"chi"		"%s 女巫生成 # %d，最大值 = %d，活着：%i"
+	}
+	"L4DMultiWitches_L4DWitchesStartTimerMin"
+	{
+		"chi"		"[l4d_witches]：开始计时器。最小值：%f，最大值：%f"
+	}
+	"L4DMultiWitches_L4DWitchesAliveWitches"
+	{
+		"chi"		"[l4d_witches]：活着的女巫：%i"
+	}
+	"L4DMultiWitches_L4DWitchesTimerTriggered"
+	{
+		"chi"		"[l4d_witches]：计时器已触发"
+	}
+	"L4DMultiWitches_L4DWitchesTrySpawn"
+	{
+		"chi"		"[l4d_witches]：尝试生成"
+	}
+}

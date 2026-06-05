@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"L4D2JockeySkeet_Skeeted"
+	{
+		"jp"		"{green}★★{default} あなたは、{olive}%N{default} によって {blue}skeeted{default} されました。"
+	}
+	"L4D2JockeySkeet_SkeetedJockey"
+	{
+		"jp"		"{green}★★{default} {blue}スキートした{olive}%N{default}のジョッキーです。"
+	}
+	"L4D2JockeySkeet_JockeySkeeted"
+	{
+		"jp"		"{green}★★{default} {olive}%N{default}の騎手は{olive}%N{default}の{blue}skeeted{default}でした。"
+	}
+}

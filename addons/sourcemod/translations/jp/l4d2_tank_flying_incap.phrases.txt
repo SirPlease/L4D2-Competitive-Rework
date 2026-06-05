@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2TankFlyingIncap_FlyingIncapStateLine"
+	{
+		"jp"		"{default}[フライングインキャップ]: (%.1f) (%N) [{olive}%s{default}] [{green}%s{default}]"
+	}
+}

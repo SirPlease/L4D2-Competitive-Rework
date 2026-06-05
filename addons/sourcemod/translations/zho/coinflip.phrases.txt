@@ -6,14 +6,14 @@
 	}
 	"Heads"
 	{
-		"zho"		"{lightgreen}%s{default} flipped a coin!\\nIt's {green}Heads{default}!"
+		"zho"		"{lightgreen}%s{default} 拋了一枚硬幣!\n結果是 {green}正面{default}!"
 	}
 	"Tails"
 	{
-		"zho"		"{lightgreen}%s{default} flipped a coin!\\nIt's {green}Tails{default}!"
+		"zho"		"{lightgreen}%s{default} 拋了一枚硬幣!\n結果是 {green}反面{default}!"
 	}
 	"rolled"
 	{
-		"zho"		"{lightgreen}%s{default} rolled a {teamcolor}%d{default} sided die!\\nIt's {green}%d{default}!"
+		"zho"		"{lightgreen}%s{default} 擲了一個 {teamcolor}%d{default} 面骰子!\n結果是 {green}%d{default}!"
 	}
 }

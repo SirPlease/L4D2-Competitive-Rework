@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"SurvivorChatSelect_TeamUseCommand"
+	{
+		"zho"		"您必須在倖存者隊伍中才能使用此指令！"
+	}
+	"SurvivorChatSelect_DefaultCharacterSet"
+	{
+		"zho"		"%s 您的 {olive} 預設 {default} 字元現已設定為 {lightgreen}%s{default}。"
+	}
+	"SurvivorChatSelect_CouldnLoadDefaultCharacterType"
+	{
+		"zho"		"%s 无法加载您的默认字符。输入 {olive}!csm {default} 选择您的 {lightgreen} 默认 {default} 字符。"
+	}
+}

@@ -1,0 +1,55 @@
+"Phrases"
+{
+	"FixEngine_IdrowndamageDamageTempHPRestore"
+	{
+		"zho"		"m_idrowndmg = %d，dmg = %d，要恢復的暫時馬力 = %d"
+	}
+	"FixEngine_RestoringStartedPlayerUsingGlitch"
+	{
+		"zho"		"恢復開始（玩家在擁有 1-10hp 時使用故障"
+	}
+	"FixEngine_RestoreCountBeginningSeconds"
+	{
+		"zho"		"恢復計數 = %d（從 %.0f 秒開始）"
+	}
+	"FixEngine_RestoringStarted"
+	{
+		"zho"		"恢復開始"
+	}
+	"FixEngine_TempHealthLimitExceeded"
+	{
+		"zho"		"超出溫度健康限制"
+	}
+	"FixEngine_ResetDrownRestoredProp"
+	{
+		"zho"		"重置溺水恢復道具 %N"
+	}
+	"FixEngine_TempGlitchFixed"
+	{
+		"zho"		"溫度故障已修復"
+	}
+	"FixEngine_StoppedTempGlitchFixTimer"
+	{
+		"zho"		"停止溫度故障修復計時器"
+	}
+	"FixEngine_RestoringStopped"
+	{
+		"zho"		"恢復已停止"
+	}
+	"FixEngine_AttemptedUseLadderSpeedGlitch"
+	{
+		"zho"		"%N (%s) 嘗試使用梯形速度故障。"
+	}
+	"FixEngine_SuspectedUsingNoFallDamage"
+	{
+		"zho"		"%N（%s）疑似使用了無墜落傷害漏洞。"
+	}
+	"FixEngine_AttemptedUseHealthBoostGlitch"
+	{
+		"zho"		"%N (%s) 嘗試使用生命值提升故障。"
+	}
+	"FixEngine_AttemptedUseLadderReloadGlitch"
+	{
+		"zho"		"%N (%s) 嘗試使用梯子重新加載故障。"
+	}
+}

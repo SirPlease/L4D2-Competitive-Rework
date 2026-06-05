@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"SimpleWitchBonus_KillingWitchAwardedPoints"
+	{
+		"jp"		"{default}魔女を倒すと獲得したポイント: {olive}%d {default}ポイント!"
+	}
+}

@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"FixFastMelee_EventWeaponFireWeaponTime"
+	{
+		"vi"		"Event_WeaponFire: %N, vũ khí: %s, thời gian: %f, iWeaponId: %d"
+	}
+	"FixFastMelee_WeaponSwitchedWeaponNextAttack"
+	{
+		"vi"		"OnWeaponSwitched: %N, vũ khí: %d (%s), fNextAttack: %f"
+	}
+}

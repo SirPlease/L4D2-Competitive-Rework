@@ -3,160 +3,73 @@
 	"Tag"
 	{
 		"en"		"[{olive}SpecListener{default}]"
-		"chi"		"[{olive}SpecListener{default}]"
-		"zho"		"[{olive}SpecListener{default}]"
-		"jp"		"[{olive}SpecListener{default}]"
-		"ko"		"[{olive}SpecListener{default}]"
-		"vi"		"[{olive}SpecListener{default}]"
 	}
 	"OnlySpec"
 	{
 		"en"		"Only spectator can listen."
-		"chi"		"只有旁观者可以听."
-	
-		"zho"		"Only spectator can listen."
-		"jp"		"Only spectator can listen."
-		"ko"		"Only spectator can listen."
-		"vi"		"Only spectator can listen."
 	}
 	"PanelTitle"
 	{
 		"en"		"SpecListener"
-		"chi"		"SpecListener"
 	}
 	"PanelEnable"
 	{
 		"en"		"Enable"
-		"chi"		"开启"
 	}
 	"PanelDisable"
 	{
 		"en"		"Disable"
-		"chi"		"关闭"
 	}
 	"PanelStatus"
 	{
 		"en"		"Status"
-		"chi"		"状态"
 	}
 	"Enable"
 	{
 		"en"		"{green}Enable{default}"
-		"chi"		"{green}开启{default}"
-	
-		"zho"		"{green}Enable{default}"
-		"jp"		"{green}Enable{default}"
-		"ko"		"{green}Enable{default}"
-		"vi"		"{green}Enable{default}"
 	}
 	"Disable"
 	{
 		"en"		"{green}Disable{default}"
-		"chi"		"{green}关闭{default}"
-	
-		"zho"		"{green}Disable{default}"
-		"jp"		"{green}Disable{default}"
-		"ko"		"{green}Disable{default}"
-		"vi"		"{green}Disable{default}"
 	}
 	"Usage"
 	{
 		"en"		"Usage: sm_listen <enable/disable/status>"
-		"chi"		"用法: sm_listen <enable/disable/status>"
-		"zho"		"Usage: sm_listen <enable/disable/status>"
-		"jp"		"Usage: sm_listen <enable/disable/status>"
-		"ko"		"Usage: sm_listen <enable/disable/status>"
-		"vi"		"Usage: sm_listen <enable/disable/status>"
 	}
 	"ErrorFlags"
 	{
 		"en"		"Error: section voice flags."
-		"chi"		"错误: section voice flags"
-	
-		"zho"		"Error: section voice flags."
-		"jp"		"Error: section voice flags."
-		"ko"		"Error: section voice flags."
-		"vi"		"Error: section voice flags."
 	}
 	"ErrorCookie"
 	{
 		"en"		"Error: cookie not cached yet (try again in a bit)."
-		"chi"		"错误: cookie 还没有缓存 (请过会再进行尝试)."
-	
-		"zho"		"Error: cookie not cached yet (try again in a bit)."
-		"jp"		"Error: cookie not cached yet (try again in a bit)."
-		"ko"		"Error: cookie not cached yet (try again in a bit)."
-		"vi"		"Error: cookie not cached yet (try again in a bit)."
 	}
-
-
 	"SpecListener_SelectedItemFoundInfo"
 	{
 		"en"		"[SpecListener] You selected item: %d (found? %d info: %s)"
-		"chi"		"[SpecListener] 您选择的项目：%d（找到？%d 信息：%s）"
-		"zho"		"[SpecListener] 您選擇的項目：%d（找到？%d 資訊：%s）"
-		"jp"		"[SpecListener] 選択したアイテム: %d (見つかりましたか? %d 情報: %s)"
-		"ko"		"[SpecListener] 선택한 항목: %d (발견? %d 정보: %s)"
-		"vi"		"[SpecListener] Bạn đã chọn mục: %d (tìm thấy? Thông tin %d: %s)"
 	}
-
 	"SpecListener_ClientMenuCancelledReason"
 	{
 		"en"		"[SpecListener] Client %d' menu was cancelled.  Reason: %d"
-		"chi"		"[SpecListener] 客户端 %d 的菜单被取消。  原因：%d"
-		"zho"		"[SpecListener] 客戶端 %d 的選單被取消。  原因：%d"
-		"jp"		"[SpecListener]クライアント「%d」メニューがキャンセルされました。  理由: %d"
-		"ko"		"[SpecListener] 클라이언트 %d' 메뉴가 취소되었습니다.  이유: %d"
-		"vi"		"[SpecListener] Menu %d của khách hàng đã bị hủy.  Lý do: %d"
 	}
-
 	"SpecListener_Enabled"
 	{
 		"en"		"[SpecListener] Enabled"
-		"chi"		"[SpecListener] 已启用"
-		"zho"		"[SpecListener] 已啟用"
-		"jp"		"[SpecListener] 有効"
-		"ko"		"[SpecListener] 활성화됨"
-		"vi"		"[SpecListener] Đã bật"
 	}
-
 	"SpecListener_Cookie"
 	{
 		"en"		"[SpecListener] Cookie: %d"
-		"chi"		"[SpecListener] Cookie：%d"
-		"zho"		"[SpecListener] Cookie：%d"
-		"jp"		"[SpecListener] クッキー: %d"
-		"ko"		"[SpecListener] 쿠키: %d"
-		"vi"		"[SpecListener] Cookie: %d"
 	}
-
 	"SpecListener_Disable"
 	{
 		"en"		"[SpecListener] disable"
-		"chi"		"[SpecListener] 禁用"
-		"zho"		"[SpecListener] 停用"
-		"jp"		"[SpecListener]を無効にする"
-		"ko"		"[SpecListener] 비활성화"
-		"vi"		"[SpecListener] vô hiệu hóa"
 	}
-
 	"SpecListener_ReEnableListenAllTalk"
 	{
 		"en"		"[SpecListener] Re-Enable Listen Because of All-Talk"
-		"chi"		"[SpecListener] 由于 All-Talk 重新启用监听"
-		"zho"		"[SpecListener] 由於 All-Talk 重新啟用監聽"
-		"jp"		"[SpecListener] オールトークのためリッスンを再度有効にする"
-		"ko"		"[SpecListener] All-Talk 때문에 Listen을 다시 활성화합니다."
-		"vi"		"[SpecListener] Kích hoạt lại tính năng Nghe vì All-Talk"
 	}
-
 	"SpecListener_Executed"
 	{
 		"en"		"[SpecListener] %s was executed"
-		"chi"		"[SpecListener] %s 已执行"
-		"zho"		"[SpecListener] %s 已執行"
-		"jp"		"[SpecListener] %sが実行されました"
-		"ko"		"[SpecListener] %s가 실행되었습니다"
-		"vi"		"[SpecListener] %s đã được thực thi"
 	}
 }

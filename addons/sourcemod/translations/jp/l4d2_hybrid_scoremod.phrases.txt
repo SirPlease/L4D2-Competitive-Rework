@@ -1,0 +1,95 @@
+"Phrases"
+{
+	"L4D2HybridScoremod_MapHealthBonusTempHealth"
+	{
+		"jp"		"{default}マップの健康ボーナス: {olive}%.1f{default}、一時的な健康ボーナス: {olive}%.1f{default}、パーマ値のHP: {lightgreen}%.1f{default}、一時的なHP値: {lightgreen}%.1f{default}、錠剤相当: {lightgreen}%i{default}"
+	}
+	"L4D2HybridScoremod_1Bonus"
+	{
+		"jp"		"%s{default}R{green}#1{default} ボーナス: {olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> [%s]"
+	}
+	"L4D2HybridScoremod_BonusHBDBPills"
+	{
+		"jp"		"%s{default}R{green}#%i{default} ボーナス: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {olive}%d{default} <{lightgreen}%.1f%%{default}> | DB: {olive}%d{default} <{lightgreen}%.1f%%{default}> |錠剤: {olive}%d{default} <{lightgreen}%.1f%%{default}>]"
+	}
+	"L4D2HybridScoremod_Bonus"
+	{
+		"jp"		"%s{default}R{green}#%i{default} ボーナス: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+	"L4D2HybridScoremod_1Bonus_2"
+	{
+		"jp"		"%s{default}R{green}#1{default} ボーナス: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+	"L4D2HybridScoremod_BonusHBDBPills_2"
+	{
+		"jp"		"%s{default}R{green}#%i{default} ボーナス: {olive}%d{default} <{lightgreen}%.1f%%{default}> [HB: {lightgreen}%.0f%%{default} | DB: {lightgreen}%.0f%%{default} |錠剤: {lightgreen}%.0f%%{default}]"
+	}
+	"L4D2HybridScoremod_HybridBonusMapInfo"
+	{
+		"jp"		"{default}[{green}ハイブリッドボーナス{default} :: {lightgreen}%iv%i{default}] マップ情報"
+	}
+	"L4D2HybridScoremod_Distance"
+	{
+		"jp"		"{default}距離: {olive}%d{default}"
+	}
+	"L4D2HybridScoremod_TotalBonus1000"
+	{
+		"jp"		"{default}ボーナス合計: {olive}%d{default} <{lightgreen}100.0%%{default}>"
+	}
+	"L4D2HybridScoremod_HealthBonus"
+	{
+		"jp"		"{default}健康ボーナス: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+	"L4D2HybridScoremod_DamageBonus"
+	{
+		"jp"		"{default}ダメージボーナス: {olive}%d{default} <{lightgreen}%.1f%%{default}>"
+	}
+	"L4D2HybridScoremod_PillsBonusMax"
+	{
+		"jp"		"{default}Pピルズボーナス: {olive}%d{default}(最大{olive}%d{default}) <{lightgreen}%.1f%%{default}>"
+	}
+	"L4D2HybridScoremod_Tiebreaker"
+	{
+		"jp"		"{default}Tタイブレーカー: {olive}%d{default}"
+	}
+	"L4D2HybridScoremod_TempHPDamage"
+	{
+		"jp"		"{green}%N{default} の現在の HP は {olive}%d{default} です(ダメージ: {lightgreen}%.1f{default})"
+	}
+	"L4D2HybridScoremod_LostTempHPAfterAttacked"
+	{
+		"jp"		"{lightgreen}%N{default}{olive}が攻撃を受けた後、%i{default}の一時HPを失いました(引数ダメージ: {lightgreen}%.1f{default})"
+	}
+	"L4D2HybridScoremod_DirectorEndVersusModeRound"
+	{
+		"jp"		"CDirector::OnEndVersusModeRound() が呼び出されました。 InSecondHalfOfRound(): %d、生存者数: %d"
+	}
+	"L4D2HybridScoremod_SurvivalBonusCvarUpdatedValue"
+	{
+		"jp"		"{default}サバイバルボーナスcvarが更新されました。値: {olive}%i{default} [乗数: {olive}%i{default}]"
+	}
+	"L4D2HybridScoremod_RoundBonus"
+	{
+		"jp"		"%s{default}ラウンド {green}%i{default} ボーナス：{olive}%d{default}/{olive}%d{default} <{lightgreen}%.1f%%{default}> 【%s】"
+	}
+	"L4D2HybridScoremod_TiebreakerTeam1Team2"
+	{
+		"jp"		"%s{lightgreen}TIEBREAKER{default}: チーム {green}%#1{default} - {olive}%i{default}、チーム {green}%#2{default} - {olive}%i{default}"
+	}
+	"L4D2HybridScoremod_TeamsPerformedAbsolutelyEqualImpossible"
+	{
+		"jp"		"%s{olive}チームは完全に同等のパフォーマンスを示しました。明確なラウンド勝者を決定することは不可能"
+	}
+	"L4D2HybridScoremod_AddingPermHPBonusContribution"
+	{
+		"jp"		"{default}{olive}%N{default} の永続 HP ボーナス貢献を追加: {olive}%d{default} 永続 HP -> {lightgreen}%.1f{default} ボーナス; 新しい合計: {olive}%.1f{default}"
+	}
+	"L4D2HybridScoremod_AddingTempHPBonusEligible"
+	{
+		"jp"		"{default}A一時HPボーナスの追加: {olive}%.1f{default} (対象となる生存者: {olive}%d{default})"
+	}
+	"L4D2HybridScoremod_AddingPillsContributionTotalBonus"
+	{
+		"jp"		"{default}A {olive}%N の {default} 錠剤の貢献を追加、合計ボーナス: {olive}%d{default} ポイント"
+	}
+}

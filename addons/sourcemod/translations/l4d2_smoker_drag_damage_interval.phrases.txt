@@ -3,30 +3,13 @@
 	"L4D2SmokerDragDamageInterval_TongueContinuityDragChokeDamage"
 	{
 		"en"		"[tongue_continuity] %N drag->choke: damage clock CONTINUED - next damage in %.2fs (vanilla would have reset to %.2fs)"
-		"chi"		"[tongue_continuity] %N 拖动->扼流：损坏时钟继续 - %.2fs 中的下一个损坏（原版将重置为 %.2fs）"
-		"zho"		"[tongue_continuity] %N 拖曳->扼流：損壞時鐘繼續 - %.2fs 中的下一個損壞（原版將重置為 %.2fs）"
-		"jp"		"[tongue_continuity] %N ドラッグ -> チョーク: ダメージ クロック 継続 - 次のダメージは %.2f にあります (バニラでは %.2f にリセットされます)"
-		"ko"		"[tongue_continuity] %N 드래그->초크: 손상 시계 계속 - %.2f의 다음 손상(바닐라는 %.2f로 재설정됨)"
-		"vi"		"[tongue_continuity] %N drag->choke: đồng hồ sát thương TIẾP TỤC - sát thương tiếp theo ở %.2f (vani sẽ được đặt lại thành %.2fs)"
 	}
-
 	"L4D2SmokerDragDamageInterval_TongueContinuityChokeDragDamage"
 	{
 		"en"		"[tongue_continuity] %N choke->drag: damage clock CONTINUED - next damage in %.2fs (vanilla would have fired immediately)"
-		"chi"		"[tongue_连续性] %N 窒息->拖动：伤害时钟继续 - %.2f 中的下一个伤害（原版会立即发射）"
-		"zho"		"[tongue_連續性] %N 窒息->拖曳：傷害時鐘繼續 - %.2f 中的下一個傷害（原版會立即發射）"
-		"jp"		"[tongue_continuity] %N チョーク -> ドラッグ: ダメージ クロック 継続 - %.2f で次のダメージ (バニラならすぐに発射されるはず)"
-		"ko"		"[tongue_continuity] %N 초크->드래그: 손상 시계 계속 - %.2f의 다음 손상(바닐라는 즉시 발사되었을 것입니다)"
-		"vi"		"[tongue_continuity] %N sặc->kéo: đồng hồ sát thương TIẾP TỤC - sát thương tiếp theo ở %.2f (vani sẽ bắn ngay lập tức)"
 	}
-
 	"L4D2SmokerDragDamageInterval_DebugVictimDamageTimeGame"
 	{
 		"en"		"[DEBUG] Victim: %N, %sdamage: %f, time: %f, game time: %f"
-		"chi"		"[调试] 受害者：%N，%s伤害：%f，时间：%f，游戏时间：%f"
-		"zho"		"[調試] 受害者：%N，%s傷害：%f，時間：%f，遊戲時間：%f"
-		"jp"		"[デバッグ] 被害者: %N、%sダメージ: %f、時間: %f、ゲーム時間: %f"
-		"ko"		"[디버그] 피해자: %N, %s피해: %f, 시간: %f, 게임 시간: %f"
-		"vi"		"[DEBUG] Nạn nhân: %N, %sSát thương: %f, thời gian: %f, thời gian chơi: %f"
 	}
 }

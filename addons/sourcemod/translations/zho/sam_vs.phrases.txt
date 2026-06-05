@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"SAMVS_DebugChatting"
+	{
+		"zho"		"[調試] %N 聊天"
+	}
+	"SAMVS_DebugPressedButton"
+	{
+		"zho"		"[調試] %N 按下了一個按鈕 (%d)"
+	}
+	"SAMVS_DebugSAMCheckIdlesFired"
+	{
+		"zho"		"[調試] SAM_t_CheckIdles()-> 觸發，RUP = %b！"
+	}
+	"SAMVS_DebugSAMCheckIdlesBussy"
+	{
+		"zho"		"[調試] SAM_t_CheckIdles()-> %N 為bussy/tank。我們跳過他..."
+	}
+	"SAMVS_DebugSAMCheckIdlesDancing"
+	{
+		"zho"		"[調試] SAM_t_CheckIdles()-> %N 正在跳舞，跳過他..."
+	}
+	"SAMVS_DebugSAMCheckIdlesMoved"
+	{
+		"zho"		"[調試] SAM_t_CheckIdles()-> %N 移至規格（%.1fsec 為 AFK）"
+	}
+	"SAMVS_DebugSAMCheckIdlesAFK"
+	{
+		"zho"		"[調試] SAM_t_CheckIdles()-> %N AFK，定時器 %x hndl"
+	}
+	"SAMVS_DebugSAMTimeKillTimer"
+	{
+		"zho"		"[調試] SAM_TimeToKill(%N)-> 殺死 %x 定時器 hndl"
+	}
+	"SAMVS_DebugSAMActionKickPlayer"
+	{
+		"zho"		"[調試] SAM_t_ActionKick(%N) 踢球員"
+	}
+}

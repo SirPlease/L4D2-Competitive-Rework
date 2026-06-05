@@ -1,0 +1,119 @@
+"Phrases"
+{
+	"L4D2Hitsound_OverlayIcon"
+	{
+		"chi"		"覆盖图标：%s（%s）"
+	}
+	"L4D2Hitsound_CurrentlyNoIconSetsAvailable"
+	{
+		"chi"		"当前没有可用的图标套装。"
+	}
+	"L4D2Hitsound_SoundEffectRange"
+	{
+		"chi"		"音效范围：%s"
+	}
+	"L4D2Hitsound_IconRange"
+	{
+		"chi"		"图标范围：%s"
+	}
+	"L4D2Hitsound_HitsoundSoundEffectPackageThree"
+	{
+		"chi"		"[Hitsound] 音效套装(三项)已设置为: %d"
+	}
+	"L4D2Hitsound_HitsoundIconSetThreeItems"
+	{
+		"chi"		"[Hitsound] 图标套装(三项)已设置为: %d - %s"
+	}
+	"L4D2Hitsound_SelectSetSoundEffectSet"
+	{
+		"chi"		"请先在『音效套装（玩家）』里选择一个套装。"
+	}
+	"L4D2Hitsound_HitSoundEffectTurnedSet"
+	{
+		"chi"		"命中音效：已开启（套装 %d）"
+	}
+	"L4D2Hitsound_HitSoundEffectTurnedOff"
+	{
+		"chi"		"命中音效：已关闭"
+	}
+	"L4D2Hitsound_KillSoundEffectTurnedSet"
+	{
+		"chi"		"击杀音效：已开启（套装 %d）"
+	}
+	"L4D2Hitsound_KillSoundEffectTurnedOff"
+	{
+		"chi"		"击杀音效：已关闭"
+	}
+	"L4D2Hitsound_HeadshotSoundEffectTurnedSet"
+	{
+		"chi"		"爆头音效：已开启（套装 %d）"
+	}
+	"L4D2Hitsound_HeadshotSoundEffectTurnedOff"
+	{
+		"chi"		"爆头音效：已关闭"
+	}
+	"L4D2Hitsound_SelectSuitIconSuitPlayer"
+	{
+		"chi"		"请先在『图标套装（玩家）』里选择一个套装。"
+	}
+	"L4D2Hitsound_HitIconTurnedSet"
+	{
+		"chi"		"命中图标：已开启（套装 %d）"
+	}
+	"L4D2Hitsound_HitIconClosed"
+	{
+		"chi"		"命中图标：已关闭"
+	}
+	"L4D2Hitsound_KillIconTurnedSet"
+	{
+		"chi"		"击杀图标：已开启（套装 %d）"
+	}
+	"L4D2Hitsound_KillIconClosed"
+	{
+		"chi"		"击杀图标：已关闭"
+	}
+	"L4D2Hitsound_HeadshotIconTurnedSet"
+	{
+		"chi"		"爆头图标：已开启（套装 %d）"
+	}
+	"L4D2Hitsound_HeadshotIconClosed"
+	{
+		"chi"		"爆头图标：已关闭"
+	}
+	"L4D2Hitsound_NotPermissionUseMenu"
+	{
+		"chi"		"你没有权限使用此菜单。"
+	}
+	"L4D2Hitsound_ThreeSoundEffectsAllTurned"
+	{
+		"chi"		"音效三项：已全部关闭"
+	}
+	"L4D2Hitsound_HeadshotSoundEffectSet"
+	{
+		"chi"		"爆头音效：已设置为 %d"
+	}
+	"L4D2Hitsound_HitSoundEffectSet"
+	{
+		"chi"		"命中音效：已设置为 %d"
+	}
+	"L4D2Hitsound_KillSoundEffectSet"
+	{
+		"chi"		"击杀音效：已设置为 %d"
+	}
+	"L4D2Hitsound_ThreeIconsAllClosed"
+	{
+		"chi"		"图标三项：已全部关闭"
+	}
+	"L4D2Hitsound_HeadshotIconSet"
+	{
+		"chi"		"爆头图标：已设置为 %d"
+	}
+	"L4D2Hitsound_HitIconSet"
+	{
+		"chi"		"命中图标：已设置为 %d"
+	}
+	"L4D2Hitsound_KillIconSet"
+	{
+		"chi"		"击杀图标：已设置为 %d"
+	}
+}

@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4DNoCans_EntityModel"
+	{
+		"jp"		"iエンティティ: %d (%s)、モデル: %s"
+	}
+}

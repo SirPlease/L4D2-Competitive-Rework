@@ -10,10 +10,10 @@
 	}
 	"GlobalChat_SummonTeammates"
 	{
-		"ko"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友"
+		"ko"		"{green}%s {olive}%s {default}플레이어가 {lightgreen}%s {default}에서 팀원을 부르고 있습니다"
 	}
 	"GlobalChat_SummonTeammatesWithMessage"
 	{
-		"ko"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友\\n{default}留言: {olive}%s"
+		"ko"		"{green}%s {olive}%s {default}플레이어가 {lightgreen}%s {default}에서 팀원을 부르고 있습니다\n{default}메시지: {olive}%s"
 	}
 }

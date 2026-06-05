@@ -3,50 +3,21 @@
 	"L4D2BWRockHit_VictimAttackerInflictorDamageType"
 	{
 		"en"		"Victim %d attacker %d inflictor %d damageType %d weapon %d"
-		"chi"		"受害者 %d 攻击者 %d 伤害者 %d 伤害类型 %d 武器 %d"
-		"zho"		"受害者 %d 攻擊者 %d 傷害者 %d 傷害型 %d 武器 %d"
-		"jp"		"被害者 %d 攻撃者 %d 加害者 %d ダメージタイプ %d 武器 %d"
-		"ko"		"피해자 %d 공격자 %d 가해자 %d 피해 유형 %d 무기 %d"
-		"vi"		"Nạn nhân %d kẻ tấn công %d kẻ gây ra %d loại sát thương %d vũ khí %d"
 	}
-
 	"L4D2BWRockHit_VictimAttackerClassname"
 	{
 		"en"		"Victim %N(%i/%i) attacker %N classname %s"
-		"chi"		"受害者 %N(%i/%i) 攻击者 %N 类名 %s"
-		"zho"		"受害者 %N(%i/%i) 攻擊者 %N 類別名稱 %s"
-		"jp"		"被害者 %N(%i/%i) 攻撃者 %N クラス名 %s"
-		"ko"		"피해자 %N(%i/%i) 공격자 %N 클래스명 %s"
-		"vi"		"Kẻ tấn công %N(%i/%i) của nạn nhân %N tên lớp %s"
 	}
-
 	"L4D2BWRockHit_TankRockDetonate"
 	{
 		"en"		"CTankRock__Detonate: %d"
-		"chi"		"CTankRock__引爆：%d"
-		"zho"		"CTankRock__引爆：%d"
-		"jp"		"CTankRock__Detonate: %d"
-		"ko"		"CTankRock__Detonate: %d"
-		"vi"		"CTankRock__Kích nổ: %d"
 	}
-
 	"L4D2BWRockHit_OwnerTankRockDetonate"
 	{
 		"en"		"Owner: %N (%d). Tank rock %d detonate)"
-		"chi"		"所有者：%N（%d）。罐岩%d引爆）"
-		"zho"		"所有者：%N（%d）。罐岩%d引爆）"
-		"jp"		"所有者: %N (%d)。タンクロック %d 爆発)"
-		"ko"		"소유자: %N (%d). 탱크록 %d 폭파)"
-		"vi"		"Chủ sở hữu: %N (%d). Đá xe tăng %d phát nổ)"
 	}
-
 	"L4D2BWRockHit_UnknownOwnerTankRockDetonate"
 	{
 		"en"		"Unknown owner: %d. Tank rock %d detonate)"
-		"chi"		"所有者未知：%d。罐岩%d引爆）"
-		"zho"		"所有者未知：%d。罐岩%d引爆）"
-		"jp"		"不明な所有者: %d。タンクロック %d 爆発)"
-		"ko"		"알 수 없는 소유자: %d. 탱크록 %d 폭파)"
-		"vi"		"Không rõ chủ sở hữu: %d. Đá xe tăng %d phát nổ)"
 	}
 }

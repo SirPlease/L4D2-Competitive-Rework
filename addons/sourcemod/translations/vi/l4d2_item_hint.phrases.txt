@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"L4D2ItemHint_MarkingSystemPointsLess5W"
+	{
+		"vi"		"{default}[Hệ thống chấm điểm {green} {default}] Điểm của bạn dưới 5w nên không thể sử dụng hệ thống chấm điểm"
+	}
+	"L4D2ItemHint_PlayerMarkedItem"
+	{
+		"vi"		"{default}[{green} hệ thống đánh dấu {default}] {olive}%N{default}: %s"
+	}
+	"L4D2ItemHint_PlayerMarkedItemHighlighted"
+	{
+		"vi"		"{default}[{green}标记系统{default}] {olive}%N{default}: {green}%s"
+	}
+}

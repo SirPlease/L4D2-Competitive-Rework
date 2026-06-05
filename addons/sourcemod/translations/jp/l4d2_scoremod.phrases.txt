@@ -1,0 +1,27 @@
+"Phrases"
+{
+	"L4D2Scoremod_Round1Bonus"
+	{
+		"jp"		"{blue}[{default}!{blue}] {default}ラウンド {blue}1 {default}ボーナス: {olive}%d"
+	}
+	"L4D2Scoremod_CustomMaxDistance"
+	{
+		"jp"		"{blue}[{default}!{blue}] {default}カスタム最大距離: {olive}%d"
+	}
+	"L4D2Scoremod_Round2Bonus"
+	{
+		"jp"		"{blue}[{default}!{blue}] {default}ラウンド {blue}2 {default}ボーナス: {olive}%d"
+	}
+	"L4D2Scoremod_Difference"
+	{
+		"jp"		"{red}[{default}!{red}] {default}違い: {olive}%d"
+	}
+	"L4D2Scoremod_Round1BonusDifference"
+	{
+		"jp"		"{blue}[{default}!{blue}] {default}ラウンド {blue}1 {default}ボーナス：{olive}%d {default}({green}違い：{olive}%d{default})"
+	}
+	"L4D2Scoremod_HealthBonus"
+	{
+		"jp"		"{blue}[{default}!{blue}] {default}健康ボーナス: {olive}%d"
+	}
+}

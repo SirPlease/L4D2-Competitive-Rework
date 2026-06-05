@@ -1,0 +1,87 @@
+"Phrases"
+{
+	"Join_CrawlingServer"
+	{
+		"jp"		"{green} %N {olive} がサーバーにクロールしています"
+	}
+	"Join_LeftGameReason"
+	{
+		"jp"		"{green}%N {olive} がゲームから退出しました - 理由: [{green}%s{olive}]"
+	}
+	"Join_AnneDonatePaymentMethodOnly"
+	{
+		"jp"		"{green}[AnneDonate]{default} 支払い方法はwechatまたはalipayのみをサポートしています。再度選択してください。"
+	}
+	"Join_FinishRemindsAdministratorVerify"
+	{
+		"jp"		"{olive}!finish{default} は管理者に確認を促します。"
+	}
+	"Join_AnneDonateSponsorshipConfirmedNot"
+	{
+		"jp"		"{green}[AnneDonate]{default} 確認するスポンサーシップはまだ見つかりません。 {olive}!donate{default}と入力してギアと支払い方法を選択してください。"
+	}
+	"Join_AnneDonateRecordingPaymentCompletion"
+	{
+		"jp"		"{green}[AnneDonate]{default} は支払い完了プロンプトを記録しています。管理者が支払いを確認するまでお待ちください。"
+	}
+	"Join_AnneDonateCurrentlyPeakPeriod"
+	{
+		"jp"		"{green}[AnneDonate]{default} 現在繁忙期のため管理者のみプレイ可能です。管理者をサポートしてプレイを続けてください。"
+	}
+	"Join_AnneDonateUnableObtainSteam"
+	{
+		"jp"		"{green}[AnneDonate]{default} SteamID64 を取得できません。後でもう一度お試しください。"
+	}
+	"Join_AnneDonateSteamWorksNot"
+	{
+		"jp"		"{green}[AnneDonate]{default} SteamWorks は利用できません。協賛ページを開設しました。 QR コードをスキャンして支払いを行い、確認のために管理者に連絡してください。"
+	}
+	"Join_AnneDonateFailedCreateSponsorship"
+	{
+		"jp"		"{green}[AnneDonate]{default} スポンサーシップ アプリケーションの作成に失敗しました。後でもう一度お試しください。"
+	}
+	"Join_AnneDonateFailedSendSponsorship"
+	{
+		"jp"		"{green}[AnneDonate]{default} スポンサーシップ申請の送信に失敗しました。後でもう一度お試しください。"
+	}
+	"Join_AnneDonateSponsorshipRecordCreated"
+	{
+		"jp"		"{green}[AnneDonate]{default} スポンサーシップ レコードが作成されており、対応する受取可能コードがスポンサーシップ ページに直接表示されます。"
+	}
+	"Join_AnneDonateSponsorshipInformationSubmission"
+	{
+		"jp"		"{green}[AnneDonate]{default} スポンサー情報の送信に失敗しました。HTTP ステータス: %d。 QR コードをスキャンして支払いを行い、確認のために管理者に連絡してください。"
+	}
+	"Join_AnneDonateSponsorshipRecordCreatedScan"
+	{
+		"jp"		"{green}[AnneDonate]{default} スポンサーシップレコードが作成されました。開いたページでQRコードをスキャンして支払いを行ってください。"
+	}
+	"Join_AnneDonateUnableObtainSteamID64"
+	{
+		"jp"		"{green}[AnneDonate]{default} SteamID64 を取得できません。確認のために管理者に連絡してください。"
+	}
+	"Join_AnneDonateSteamWorksNotAvailable"
+	{
+		"jp"		"{green}[AnneDonate]{default} SteamWorks は利用できません。支払いを確認するには管理者に連絡してください。"
+	}
+	"Join_AnneDonatePaymentCompletionPrompt"
+	{
+		"jp"		"{green}[AnneDonate]{default} 支払い完了プロンプトの送信に失敗しました。確認のために管理者に連絡してください。"
+	}
+	"Join_AnneDonatePaymentCompletionPrompts"
+	{
+		"jp"		"{green}[AnneDonate]{default} 支払い完了時に同期エラーが表示されます。HTTP ステータス: %d。管理者に連絡して確認してください。"
+	}
+	"Join_AnneDonatePaymentCompletionPromptSynchronized"
+	{
+		"jp"		"{green}[AnneDonate]{default} 支払い完了プロンプトが同期されました。管理者は支払いを確認した後、権限を有効にします。"
+	}
+	"Join_UseCommandsTooFast"
+	{
+		"jp"		"{lightgreen} コマンドの使用が早すぎます"
+	}
+	"Join_SurvivorTeamFullNoOther"
+	{
+		"jp"		"{lightgreen} サバイバー チームは満員で、他に引き継ぐことができるサバイバー ボットはありません。"
+	}
+}

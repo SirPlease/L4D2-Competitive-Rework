@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2ExplosiondmgPrev_TakeDamageVictimAttackerInflictor"
+	{
+		"vi"		"hOnTakeThiệt hại nạn nhân: %d, kẻ tấn công: %d (%s), kẻ gây ra: %d, sát thương: %f, loại sát thương: %d"
+	}
+}

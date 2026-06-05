@@ -3,10 +3,6 @@
 	"Tag"
 	{
 		"en"		"{blue}[{default}MVP{blue}]{default}"
-		"zho"		"{blue}[{default}MVP{blue}]{default}"
-		"jp"		"{blue}[{default}MVP{blue}]{default}"
-		"ko"		"{blue}[{default}MVP{blue}]{default}"
-		"vi"		"{blue}[{default}MVP{blue}]{default}"
 	}
 	"YourRankSI"
 	{
@@ -62,7 +58,7 @@
 	}
 	"NoFF"
 	{
-		"en"		"{blue}({default}No friendly fire at all!{blue})" 
+		"en"		"{blue}({default}No friendly fire at all!{blue})"
 	}
 	"ReportFF_Absolute"
 	{
@@ -76,25 +72,12 @@
 	{
 		"en"		"{green}FF: {olive}%s {blue}({default}%d {green}friendly fire {blue}[{default}%.0f%%{blue}])"
 	}
-
-
 	"SurvivorMVP_PharmacyMVPStatisticsHeader"
 	{
 		"en"		"{blue}[{default} Pharmacy MVP statistics {blue}]"
-		"chi"		"{blue}[{default}药役MVP统计{blue}]"
-		"zho"		"{blue}[{default}藥役MVP統計{blue}]"
-		"jp"		"{blue}[{default}薬局MVP統計 {blue}]"
-		"ko"		"{blue}[{default} 약국 MVP 통계 {blue}]"
-		"vi"		"{blue}[{default} Thống kê MVP Dược phẩm {blue}]"
 	}
-
 	"SurvivorMVP_PharmacyMVPStatisticsLine"
 	{
 		"en"		"{olive}Special feeling{green}%2d {olive}Zombies{green}%3d {olive}Black/Being hacked{green}%2d/%2d {olive}Damage{green}%4d {default}%N"
-		"chi"		"{olive}特感{green}%2d {olive}丧尸{green}%3d {olive}黑/被黑{green}%2d/%2d {olive}伤害{green}%4d {default}%N"
-		"zho"		"{olive}特感{green}%2d {olive}丧尸{green}%3d {olive}黑/被黑{green}%2d/%2d {olive}伤害{green}%4d {default}%N"
-		"jp"		"{olive}特感{green}%2d {olive}丧尸{green}%3d {olive}黑/被黑{green}%2d/%2d {olive}伤害{green}%4d {default}%N"
-		"ko"		"{olive}特感{green}%2d {olive}丧尸{green}%3d {olive}黑/被黑{green}%2d/%2d {olive}伤害{green}%4d {default}%N"
-		"vi"		"{olive}特感{green}%2d {olive}丧尸{green}%3d {olive}黑/被黑{green}%2d/%2d {olive}伤害{green}%4d {default}%N"
 	}
 }

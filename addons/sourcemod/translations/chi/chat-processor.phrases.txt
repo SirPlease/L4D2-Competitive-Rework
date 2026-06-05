@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"ChatProcessor_DeadChatCurrentlyRestricted"
+	{
+		"chi"		"死聊目前受到限制。"
+	}
+}

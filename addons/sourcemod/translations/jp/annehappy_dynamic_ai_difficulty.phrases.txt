@@ -1,0 +1,31 @@
+"Phrases"
+{
+	"DynamicAIDifficulty_DynamicDifficultyRoundLocked"
+	{
+		"jp"		"{green}[AnneHappyAI]{default} このラウンドのダイナミック難易度は {lightgreen}%s{default} にロックされています。"
+	}
+	"DynamicAIDifficulty_FixedDynamicDifficulty"
+	{
+		"jp"		"{green}[AnneHappyAI]{default} 動的難易度を修正しました: {lightgreen}%s{default}。"
+	}
+	"DynamicAIDifficulty_SwitchedAutomaticDifficultyTakeEffect"
+	{
+		"jp"		"{green}[AnneHappyAI]{default} は自動難易度に切り替えられ、次のラウンドから有効になります。現在のラウンドの難易度は変わりません。"
+	}
+	"DynamicAIDifficulty_SwitchedAutomaticDifficulty"
+	{
+		"jp"		"{green}[AnneHappyAI]{default}は難易度が自動に切り替わりました。"
+	}
+	"DynamicAIDifficulty_DifficultyNextRoundFixedDifficulty"
+	{
+		"jp"		"{green}[AnneHappyAI]{default} 次のラウンドの難易度は {lightgreen}%s{default} に修正されました。現在のラウンドの難易度は変わりません。"
+	}
+	"DynamicAIDifficulty_DifficultyCurrentRoundFixed"
+	{
+		"jp"		"{green}[AnneHappyAI]{default} 現在のラウンドの難易度は{lightgreen}%s{default}に修正されました。"
+	}
+	"DynamicAIDifficulty_L4DStatsAveragePersonalPPM"
+	{
+		"jp"		"{green}[AnneHappyAI]{default} l4d_stats 平均個人 PPM %.2f、%d 人ポイント %d / %d 分 (四半期の %d 人/総合ランキングの %d 人)、および動的難易度は次のように調整されます。 {lightgreen}%s{default}。"
+	}
+}

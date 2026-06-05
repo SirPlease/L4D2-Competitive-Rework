@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2MagnumIncap_ClientWeapon"
+	{
+		"jp"		"クライアント %d -> 武器 %s"
+	}
+}

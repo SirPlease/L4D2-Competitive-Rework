@@ -1,0 +1,51 @@
+"Phrases"
+{
+	"L4D2DamageShow_HUDSavedLocallyCookieQueued"
+	{
+		"chi"		"{olive}[HUD]{default} 已保存到本地（Cookie），并已排队，待加载完成后写入数据库。"
+	}
+	"L4D2DamageShow_HUDSettingsSavedLocallyCookie"
+	{
+		"chi"		"{olive}[HUD]{default} 设置已保存到本地（Cookie）。MySQL 未启用或不可用。"
+	}
+	"L4D2DamageShow_HUDSettingsSavedLocallyCookieUnable"
+	{
+		"chi"		"{olive}[HUD]{default} 设置已保存到本地（Cookie）。无法获取有效 SteamID。"
+	}
+	"L4D2DamageShow_HUDSettingsSavedLocalCookie"
+	{
+		"chi"		"{olive}[HUD]{default} 设置已保存（本地 Cookie + 数据库）。"
+	}
+	"L4D2DamageShow_HUDMenuCannotUsedAdministrator"
+	{
+		"chi"		"{olive}[HUD]{default} 未满足管理员 Flag 要求，无法使用此菜单。"
+	}
+	"L4D2DamageShow_HUDSettingsSaved"
+	{
+		"chi"		"{olive}[HUD]{default} 设置已保存。"
+	}
+	"L4D2DamageShow_HUDOnlyAdministratorsCanModify"
+	{
+		"chi"		"{olive}[HUD]{default} 只有管理员可以修改分享范围。"
+	}
+	"L4D2DamageShow_HUDAdministratorSharedExternally"
+	{
+		"chi"		"{olive}[HUD]{default} 管理员对外分享已%s。"
+	}
+	"L4D2DamageShow_HUDOnlyAdministratorsCanTurn"
+	{
+		"chi"		"{olive}[HUD]{default} 只有管理员可开启该选项。"
+	}
+	"L4D2DamageShow_SpectatorDisplayToggled"
+	{
+		"chi"		"{green}旁观显示{default}已切换：{olive}%s"
+	}
+	"L4D2DamageShow_OnlyAdministratorsWatchingCanUse"
+	{
+		"chi"		"{lightgreen}只有旁观中的管理员可以使用该开关。"
+	}
+	"L4D2DamageShow_HUDFunctionDisabledAdministratorFlag"
+	{
+		"chi"		"{olive}[HUD]{default} 功能已禁用：未满足管理员 Flag 要求（%s）。"
+	}
+}

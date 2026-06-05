@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2SniperBodyshot_VictimAttackerHitgroupWeapon"
+	{
+		"vi"		"Nạn nhân %N, kẻ tấn công %N, nhóm sát thủ %s (%d), vũ khí: %s,"
+	}
+}

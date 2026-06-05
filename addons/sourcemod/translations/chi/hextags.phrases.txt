@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"Hextags_SMTitleSetSuccessfully"
+	{
+		"chi"		"[SM] 称号 %s 设置成功"
+	}
+}

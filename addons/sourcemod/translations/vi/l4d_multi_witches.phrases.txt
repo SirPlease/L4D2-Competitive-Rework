@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"L4DMultiWitches_WitchSpawnedMaxAlive"
+	{
+		"vi"		"%s Phù thủy sinh ra # %d, max = %d, còn sống: %i"
+	}
+	"L4DMultiWitches_L4DWitchesStartTimerMin"
+	{
+		"vi"		"[l4d_witches]: Start_Timer. Tối thiểu: %f, Tối đa: %f"
+	}
+	"L4DMultiWitches_L4DWitchesAliveWitches"
+	{
+		"vi"		"[l4d_witches]: Phù thủy còn sống: %i"
+	}
+	"L4DMultiWitches_L4DWitchesTimerTriggered"
+	{
+		"vi"		"[l4d_witches]: Đã kích hoạt bộ hẹn giờ"
+	}
+	"L4DMultiWitches_L4DWitchesTrySpawn"
+	{
+		"vi"		"[l4d_witches]: Cố gắng sinh sản"
+	}
+}

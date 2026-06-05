@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2FixSpawnOrder_DebugMessage"
+	{
+		"chi"		"{green}[调试]{default} %s"
+	}
+}

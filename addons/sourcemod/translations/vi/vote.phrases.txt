@@ -1,0 +1,43 @@
+"Phrases"
+{
+	"Vote_AdministratorCanceledCurrentVote"
+	{
+		"vi"		"[{olive}vote{default}] {blue}Quản trị viên đã hủy bỏ phiếu hiện tại!"
+	}
+	"Vote_BystandersNotAllowedVoteExecute"
+	{
+		"vi"		"[{olive}vote{default}] {blue} Người ngoài cuộc không được phép bỏ phiếu để thực thi lệnh hoặc tệp cfg!"
+	}
+	"Vote_NoRelatedFilesExist"
+	{
+		"vi"		"[{olive}vote{default}] Không tồn tại tệp liên quan nào cho {red}."
+	}
+	"Vote_CannotVoteResetCurrentMap"
+	{
+		"vi"		"[{olive}vote{default}] {red}Bạn không thể bỏ phiếu để đặt lại bản đồ hiện tại sau khi trò chơi bắt đầu."
+	}
+	"Vote_InitiatedVote"
+	{
+		"vi"		"[{olive}vote{default}] {blue}%N đã bắt đầu bỏ phiếu"
+	}
+	"Vote_AlreadyVoteProgress"
+	{
+		"vi"		"[{olive}vote{default}] {red} Hiện đã có một cuộc bỏ phiếu đang diễn ra."
+	}
+	"Vote_InitiatesVoteKick"
+	{
+		"vi"		"[{olive}vote{default}] {blue}%N {default} bắt đầu bỏ phiếu loại bỏ {blue} %N"
+	}
+	"Vote_NotPreventBanMisusedRequires"
+	{
+		"vi"		"[{olive}vote{default}] {red} không ngăn chặn việc lạm dụng lệnh cấm và yêu cầu người chơi có trên 100.000 điểm phải sử dụng."
+	}
+	"Vote_UsePowerCautionAbuseBans"
+	{
+		"vi"		"[{olive}vote{default}] {red}Vui lòng sử dụng năng lượng của bạn một cách thận trọng. Việc lạm dụng lệnh cấm sẽ dẫn đến việc tài khoản của bạn bị cấm (lần đầu tiên là 7 ngày, lần thứ hai là một tháng và lần thứ ba là vĩnh viễn)."
+	}
+	"Vote_InitiatesVoteBanOneDay"
+	{
+		"vi"		"[{olive}vote{default}] {blue}%N {default} bắt đầu bỏ phiếu cấm {blue} %N vào một ngày nào đó"
+	}
+}

@@ -3,120 +3,49 @@
 	"L4D2DamageShow_HUDSavedLocallyCookieQueued"
 	{
 		"en"		"{olive}[HUD]{default} has been saved locally (Cookie) and queued, and will be written to the database after loading is completed."
-		"chi"		"{olive}[HUD]{default} 已保存到本地（Cookie），并已排队，待加载完成后写入数据库。"
-		"zho"		"{olive}[HUD]{default} 已儲存至本機（Cookie），並已排隊，待載入完成後寫入資料庫。"
-		"jp"		"{olive}[HUD]{default} はローカル (Cookie) に保存されてキューに入れられ、ロードの完了後にデータベースに書き込まれます。"
-		"ko"		"{olive}[HUD]{default}는 로컬(쿠키)에 저장되어 대기열에 추가되었으며 로드가 완료된 후 데이터베이스에 기록됩니다."
-		"vi"		"{olive}[HUD]{default} đã được lưu cục bộ (Cookie) và được xếp hàng đợi, đồng thời sẽ được ghi vào cơ sở dữ liệu sau khi quá trình tải hoàn tất."
 	}
-
 	"L4D2DamageShow_HUDSettingsSavedLocallyCookie"
 	{
 		"en"		"{olive}[HUD]{default} Settings have been saved locally (Cookie). MySQL is not enabled or unavailable."
-		"chi"		"{olive}[HUD]{default} 设置已保存到本地（Cookie）。MySQL 未启用或不可用。"
-		"zho"		"{olive}[HUD]{default} 設定已儲存至本機（Cookie）。 MySQL 未啟用或無法使用。"
-		"jp"		"{olive}[HUD]{default} 設定はローカルに保存されました (Cookie)。 MySQL が有効になっていない、または使用できません。"
-		"ko"		"{olive}[HUD]{default} 설정이 로컬(쿠키)에 저장되었습니다. MySQL이 활성화되지 않았거나 사용할 수 없습니다."
-		"vi"		"Cài đặt {olive}[HUD]{default} đã được lưu cục bộ (Cookie). MySQL không được kích hoạt hoặc không có sẵn."
 	}
-
 	"L4D2DamageShow_HUDSettingsSavedLocallyCookieUnable"
 	{
 		"en"		"{olive}[HUD]{default} Settings have been saved locally (Cookie). Unable to get valid SteamID."
-		"chi"		"{olive}[HUD]{default} 设置已保存到本地（Cookie）。无法获取有效 SteamID。"
-		"zho"		"{olive}[HUD]{default} 設定已儲存至本機（Cookie）。無法取得有效 SteamID。"
-		"jp"		"{olive}[HUD]{default} 設定はローカルに保存されました (Cookie)。有効な SteamID を取得できません。"
-		"ko"		"{olive}[HUD]{default} 설정이 로컬(쿠키)에 저장되었습니다. 유효한 SteamID를 얻을 수 없습니다."
-		"vi"		"Cài đặt {olive}[HUD]{default} đã được lưu cục bộ (Cookie). Không thể lấy SteamID hợp lệ."
 	}
-
 	"L4D2DamageShow_HUDSettingsSavedLocalCookie"
 	{
 		"en"		"{olive}[HUD]{default} Settings saved (local cookie + database)."
-		"chi"		"{olive}[HUD]{default} 设置已保存（本地 Cookie + 数据库）。"
-		"zho"		"{olive}[HUD]{default} 設定已儲存（本地 Cookie + 資料庫）。"
-		"jp"		"{olive}[HUD]{default} 設定が保存されました (ローカル Cookie + データベース)。"
-		"ko"		"{olive}[HUD]{default} 설정이 저장되었습니다(로컬 쿠키 + 데이터베이스)."
-		"vi"		"Đã lưu cài đặt {olive}[HUD]{default} (cookie + cơ sở dữ liệu cục bộ)."
 	}
-
 	"L4D2DamageShow_HUDMenuCannotUsedAdministrator"
 	{
 		"en"		"{olive}[HUD]{default} This menu cannot be used because the administrator Flag requirements are not met."
-		"chi"		"{olive}[HUD]{default} 未满足管理员 Flag 要求，无法使用此菜单。"
-		"zho"		"{olive}[HUD]{default} 未滿足管理員 Flag 要求，無法使用此功能表。"
-		"jp"		"{olive}[HUD]{default} 管理者フラグの要件を満たしていないため、このメニューは使用できません。"
-		"ko"		"{olive}[HUD]{default} 관리자 플래그 요구 사항을 충족하지 않아 이 메뉴를 사용할 수 없습니다."
-		"vi"		"{olive}[HUD]{default} Menu này không thể được sử dụng vì các yêu cầu về Cờ của quản trị viên không được đáp ứng."
 	}
-
 	"L4D2DamageShow_HUDSettingsSaved"
 	{
 		"en"		"{olive}[HUD]{default} Settings saved."
-		"chi"		"{olive}[HUD]{default} 设置已保存。"
-		"zho"		"{olive}[HUD]{default} 設定已儲存。"
-		"jp"		"{olive}[HUD]{default} 設定が保存されました。"
-		"ko"		"{olive}[HUD]{default} 설정이 저장되었습니다."
-		"vi"		"Đã lưu cài đặt {olive}[HUD]{default}."
 	}
-
 	"L4D2DamageShow_HUDOnlyAdministratorsCanModify"
 	{
 		"en"		"{olive}[HUD]{default} Only administrators can modify the sharing range."
-		"chi"		"{olive}[HUD]{default} 只有管理员可以修改分享范围。"
-		"zho"		"{olive}[HUD]{default} 只有管理者可以修改分享範圍。"
-		"jp"		"{olive}[HUD]{default} 共有範囲を変更できるのは管理者のみです。"
-		"ko"		"{olive}[HUD]{default} 관리자만 공유 범위를 수정할 수 있습니다."
-		"vi"		"{olive}[HUD]{default} Chỉ quản trị viên mới có thể sửa đổi phạm vi chia sẻ."
 	}
-
 	"L4D2DamageShow_HUDAdministratorSharedExternally"
 	{
 		"en"		"{olive}[HUD]{default} The administrator has shared %s externally."
-		"chi"		"{olive}[HUD]{default} 管理员对外分享已%s。"
-		"zho"		"{olive}[HUD]{default} 管理員對外分享已%s。"
-		"jp"		"{olive}[HUD]{default} 管理者は %s を外部に共有しました。"
-		"ko"		"{olive}[HUD]{default} 관리자가 %s를 외부에 공유했습니다."
-		"vi"		"{olive}[HUD]{default} Quản trị viên đã chia sẻ %s ra bên ngoài."
 	}
-
 	"L4D2DamageShow_HUDOnlyAdministratorsCanTurn"
 	{
 		"en"		"{olive}[HUD]{default} Only administrators can turn on this option."
-		"chi"		"{olive}[HUD]{default} 只有管理员可开启该选项。"
-		"zho"		"{olive}[HUD]{default} 只有管理者可開啟此選項。"
-		"jp"		"{olive}[HUD]{default} このオプションをオンにできるのは管理者のみです。"
-		"ko"		"{olive}[HUD]{default} 관리자만 이 옵션을 설정할 수 있습니다."
-		"vi"		"{olive}[HUD]{default} Chỉ quản trị viên mới có thể bật tùy chọn này."
 	}
-
 	"L4D2DamageShow_SpectatorDisplayToggled"
 	{
 		"en"		"{green}View display {default} switched: {olive}%s"
-		"chi"		"{green}旁观显示{default}已切换：{olive}%s"
-		"zho"		"{green}旁觀顯示{default}已切換：{olive}%s"
-		"jp"		"{green}旁观显示{default}已切换：{olive}%s"
-		"ko"		"{green}旁观显示{default}已切换：{olive}%s"
-		"vi"		"{green}旁观显示{default}已切换：{olive}%s"
 	}
-
 	"L4D2DamageShow_OnlyAdministratorsWatchingCanUse"
 	{
 		"en"		"{lightgreen}Only administrators who are watching can use this switch."
-		"chi"		"{lightgreen}只有旁观中的管理员可以使用该开关。"
-		"zho"		"{lightgreen}只有旁觀的管理員可以使用此開關。"
-		"jp"		"{lightgreen}監視している管理者のみがこのスイッチを使用できます。"
-		"ko"		"{lightgreen} 감시 중인 관리자만 이 스위치를 사용할 수 있습니다."
-		"vi"		"{lightgreen}Chỉ quản trị viên đang xem mới có thể sử dụng nút chuyển này."
 	}
-
 	"L4D2DamageShow_HUDFunctionDisabledAdministratorFlag"
 	{
 		"en"		"{olive}[HUD]{default} Function disabled: Administrator Flag requirement (%s) not met."
-		"chi"		"{olive}[HUD]{default} 功能已禁用：未满足管理员 Flag 要求（%s）。"
-		"zho"		"{olive}[HUD]{default} 功能已停用：未滿足管理員 Flag 要求（%s）。"
-		"jp"		"{olive}[HUD]{default} 機能無効: 管理者フラグ要件 (%s) が満たされていません。"
-		"ko"		"{olive}[HUD]{default} 기능 비활성화됨: 관리자 플래그 요구 사항(%s)이 충족되지 않았습니다."
-		"vi"		"{olive}[HUD]{default} Chức năng bị vô hiệu hóa: Yêu cầu cờ của quản trị viên (%s) không được đáp ứng."
 	}
 }

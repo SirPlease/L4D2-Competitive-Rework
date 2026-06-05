@@ -27,7 +27,7 @@
 	"Usage_time"
 	{
 		"#format"	"{1:d}"
-		"vi"		"Time: {1} minutes, if unspecified; permanent, if 0.\\nIf < 0, blocks for session."
+		"vi"		"Thời gian: {1} phút. Nếu không chỉ định sẽ dùng giá trị này; 0 là vĩnh viễn.\nNếu nhỏ hơn 0, chỉ chặn trong phiên hiện tại."
 	}
 	"Player Comms Not Verified"
 	{

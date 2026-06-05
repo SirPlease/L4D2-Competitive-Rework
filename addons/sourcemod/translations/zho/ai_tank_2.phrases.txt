@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"AITank2_MapTotalLaddersInitializationDetection"
+	{
+		"zho"		"本地圖共有：%d 梯子 %d個初始化檢測梯子"
+	}
+}

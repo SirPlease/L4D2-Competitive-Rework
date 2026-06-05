@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2Dirspawn_DirSpawnKVGenerated"
+	{
+		"chi"		"[DirSpawn] KV 已生成: %s"
+	}
+	"L4D2Dirspawn_DirSpawnFailedWriteKV"
+	{
+		"chi"		"[DirSpawn] 写入 KV 失败: %s"
+	}
+}

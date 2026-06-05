@@ -3,30 +3,13 @@
 	"L4D2ItemHint_MarkingSystemPointsLess5W"
 	{
 		"en"		"{default}[{green} marking system {default}] Your points are less than 5w, so you cannot use the marking system"
-		"chi"		"{default}[{green}标记系统{default}]你的积分不足5w，无法使用标记系统"
-		"zho"		"{default}[{green}標記系統{default}]你的積分不足5w，無法使用標記系統"
-		"jp"		"{default}[{green} マーキングシステム {default}] ポイントが5w未満のためマーキングシステムはご利用いただけません"
-		"ko"		"{default}[{green} 마킹 시스템 {default}] 귀하의 포인트가 5w 미만이므로 마킹 시스템을 사용할 수 없습니다."
-		"vi"		"{default}[Hệ thống chấm điểm {green} {default}] Điểm của bạn dưới 5w nên không thể sử dụng hệ thống chấm điểm"
 	}
-
 	"L4D2ItemHint_PlayerMarkedItem"
 	{
 		"en"		"{default}[{green} marking system {default}] {olive}%N{default}: %s"
-		"chi"		"{default}[{green}标记系统{default}] {olive}%N{default}: %s"
-		"zho"		"{default}[{green}標記系統{default}] {olive}%N{default}: %s"
-		"jp"		"{default}[{green}マーキングシステム {default}] {olive}%N{default}：%s"
-		"ko"		"{default}[{green} 마킹 시스템 {default}] {olive}%N{default}: %s"
-		"vi"		"{default}[{green} hệ thống đánh dấu {default}] {olive}%N{default}: %s"
 	}
-
 	"L4D2ItemHint_PlayerMarkedItemHighlighted"
 	{
 		"en"		"{default}[{green}Tagging system{default}] {olive}%N{default}: {green}%s"
-		"chi"		"{default}[{green}标记系统{default}] {olive}%N{default}: {green}%s"
-		"zho"		"{default}[{green}标记系统{default}] {olive}%N{default}: {green}%s"
-		"jp"		"{default}[{green}标记系统{default}] {olive}%N{default}: {green}%s"
-		"ko"		"{default}[{green}标记系统{default}] {olive}%N{default}: {green}%s"
-		"vi"		"{default}[{green}标记系统{default}] {olive}%N{default}: {green}%s"
 	}
 }

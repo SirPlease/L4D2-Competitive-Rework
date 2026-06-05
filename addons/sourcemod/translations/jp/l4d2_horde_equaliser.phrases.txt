@@ -2,7 +2,7 @@
 {
 	"Tag"
 	{
-		"jp"		"< {olive} 大群 {default} >"
+		"jp"		"<{olive}ゾンビの群れ{default}>"
 	}
 	"NoCommonRemaining"
 	{
@@ -16,6 +16,6 @@
 	"FiniteEventStarted"
 	{
 		"#format"	"{1:i}"
-		"jp"		"{olive} {1} {default} コモンズの {blue} 有限イベント {default} が開始されました。急ぐか待つか、選択はあなた次第です!"
+		"jp"		"{blue}有限のゾンビの群れ{default}が始まりました！このラウンドの通常感染者は合計 {olive}{1}{default} 体です。急ぐか待つかはあなた次第です！"
 	}
 }

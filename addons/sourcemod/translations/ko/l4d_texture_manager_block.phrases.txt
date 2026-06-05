@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4DTextureManagerBlock_MathackDetectorKickedUsingMathack"
+	{
+		"ko"		"{green}[{default}Mathack Detector{green}] {lightgreen}%s {default}가 mathack을 사용하여 쫓겨났습니다!"
+	}
+}

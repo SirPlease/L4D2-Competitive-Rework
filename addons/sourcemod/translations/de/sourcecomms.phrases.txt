@@ -1,0 +1,438 @@
+"Phrases"
+{
+	"Muted on connect"
+	{
+		"de"		"Sie wurden im Voice-Chat gesperrt!"
+	}
+	"Gagged on connect"
+	{
+		"de"		"Sie wurden im Chat gesperrt!"
+	}
+	"Mute expired"
+	{
+		"de"		"Sie wurden im Voice-Chat entsperrt (Die Sperrzeit ist abgelaufen)."
+	}
+	"Gag expired"
+	{
+		"de"		"Sie wurden im Chat entsperrt. (Die Sperrzeit ist abgelaufen)."
+	}
+	"FWUnmute"
+	{
+		"de"		"Sie wurden im Voice-Chat entsperrt."
+	}
+	"FWUngag"
+	{
+		"de"		"Sie wurden im Chat entsperrt."
+	}
+	"Usage_time"
+	{
+		"#format"	"{1:d}"
+		"de"		"Dauer: {1} Minuten, wenn nicht festgelegt; für immer, wenn 0. \.nWenn < 0, Blockierung für nächste Periode."
+	}
+	"Player Comms Not Verified"
+	{
+		"de"		"Der Spieler ist noch nicht identifiziert. Warten Sie 30 Sekunden vor dem nächsten Versuch."
+	}
+	"Player already muted"
+	{
+		"#format"	"{1:s}"
+		"de"		"Der Spieler {1} ist bereits im Voice-Chat gesperrt!"
+	}
+	"Player already gagged"
+	{
+		"#format"	"{1:s}"
+		"de"		"Der Spieler {1} ist bereits im Chat gesperrt!"
+	}
+	"Player already silenced"
+	{
+		"#format"	"{1:s}"
+		"de"		"Der Spieler {1} ist bereits im Chat oder im Voice-Chat gesperrt!"
+	}
+	"Player not muted"
+	{
+		"de"		"Der Spieler ist im Voice-Chat nicht gesperrt."
+	}
+	"Player not gagged"
+	{
+		"de"		"Der Spieler ist im Chat nicht gesperrt."
+	}
+	"Player not silenced"
+	{
+		"de"		"Der Spieler ist im Chat oder im Voice-Chat nicht gesperrt."
+	}
+	"Permagagged player"
+	{
+		"#format"	"{1:t}"
+		"de"		"Der Spieler {1} ist für immer im Chat gesperrt."
+	}
+	"Permagagged player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"de"		"Der Spieler {1} ist für immer im Chat gesperrt (Grund: {2})."
+	}
+	"Gagged player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"de"		"Der Spieler {1} ist für {2} Minuten im Chat gesperrt."
+	}
+	"Gagged player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"de"		"Der Spieler {1} ist für {2} Minuten im Chat gesperrt (Grund: {3})."
+	}
+	"Permamuted player"
+	{
+		"#format"	"{1:t}"
+		"de"		"Der Spieler {1} ist für immer im Voice-Chat gesperrt."
+	}
+	"Permamuted player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"de"		"Der Spieler {1} ist für immer im Voice-Chat gesperrt (Grund: {2})."
+	}
+	"Muted player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"de"		"Der Spieler {1} ist für {2} Minuten im Voice-Chat gesperrt."
+	}
+	"Muted player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"de"		"Der Spieler {1} ist für {2} Minuten im Voice-Chat gesperrt (Grund: {3})."
+	}
+	"Permasilenced player"
+	{
+		"#format"	"{1:t}"
+		"de"		"Der Spieler {1} ist für immer im Voice-Chat und im Chat gesperrt."
+	}
+	"Permasilenced player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"de"		"Der Spieler {1} ist im Chat und im Voice-Chat gesperrt (Grund: {2})."
+	}
+	"Silenced player"
+	{
+		"#format"	"{1:t},{2:d}"
+		"de"		"Der Spieler {1} ist für {2} Minuten im Voice-Chat und im Chat gesperrt."
+	}
+	"Silenced player reason"
+	{
+		"#format"	"{1:t},{2:d},{3:s}"
+		"de"		"Der Spieler {1} ist für {2} Minuten im Voice-Chat und im Chat gesperrt (Grund: {3})."
+	}
+	"Temp unmuted player"
+	{
+		"#format"	"{1:t}"
+		"de"		"Der Spieler {1} ist zeitweilig im Voice-Chat entsperrt."
+	}
+	"Temp ungagged player"
+	{
+		"#format"	"{1:t}"
+		"de"		"Der Spieler {1} ist zeitweilig im Chat entsperrt."
+	}
+	"Temp unsilenced player"
+	{
+		"#format"	"{1:t}"
+		"de"		"Der Spieler {1} ist zeitweilig im Voice-Chat und im Chat entsperrt."
+	}
+	"Unblock Select Failed"
+	{
+		"#format"	"{1:s}"
+		"de"		"Es ist ein Fehler bei der Anfrage der Sperren für {1} aus der Datenbank passiert"
+	}
+	"No blocks found"
+	{
+		"#format"	"{1:s}"
+		"de"		"Es wurde keine gültige Sperre für {1}in der Datenbank gefunden."
+	}
+	"No db error unlock perm"
+	{
+		"de"		"Sie haben keine Erlaubnis zur Entsperrung bei den Fehlern in der Datenbank."
+	}
+	"No permission unmute"
+	{
+		"#format"	"{1:s}"
+		"de"		"Es ist unmöglich {1} im Voice-Chat zu entsperren, weil er von höherem Administrator gesperrt wurde!"
+	}
+	"No permission ungag"
+	{
+		"#format"	"{1:s}"
+		"de"		"Es ist unmöglich {1}im Chat zu entsperren, weil er von höherem Administrator gesperrt wurde!"
+	}
+	"Unmuted player"
+	{
+		"#format"	"{1:t}"
+		"de"		"Der Spieler {1} wurde im Voice-Chat entsperrt."
+	}
+	"Ungagged player"
+	{
+		"#format"	"{1:t}"
+		"de"		"Der Spieler {1} wurde im Chat entsperrt."
+	}
+	"Unblock insert failed"
+	{
+		"de"		"Es ist ein Fehler beim Entfernen der Sperre aus der Datenbank passiert."
+	}
+	"successfully unmuted"
+	{
+		"#format"	"{1:s}"
+		"de"		"Die Sperre {1} im Voice-Chat wurde erfolgreich aus der Datenbank entfernt."
+	}
+	"successfully ungagged"
+	{
+		"#format"	"{1:s}"
+		"de"		"Die Sperre {1} im Chat wurde erfolgreich aus der Datenbank entfernt."
+	}
+	"AdminMenu_Display_None"
+	{
+		"#format"	"{1:s}"
+		"de"		"[  ] {1}"
+	}
+	"AdminMenu_Display_Muted"
+	{
+		"#format"	"{1:s}"
+		"de"		"[M] {1}"
+	}
+	"AdminMenu_Display_Gagged"
+	{
+		"#format"	"{1:s}"
+		"de"		"[G] {1}"
+	}
+	"AdminMenu_Display_Silenced"
+	{
+		"#format"	"{1:s}"
+		"de"		"[S] {1}"
+	}
+	"AdminMenu_Main"
+	{
+		"de"		"Chat und Voice-Chat"
+	}
+	"AdminMenu_Select_Main"
+	{
+		"de"		"Chat und Voice-Chat:"
+	}
+	"AdminMenu_List"
+	{
+		"de"		"Die Bestrafungen zeigen"
+	}
+	"AdminMenu_Select_List"
+	{
+		"de"		"Die Spieler:"
+	}
+	"AdminMenu_Gag"
+	{
+		"de"		"Chat sperren"
+	}
+	"AdminMenu_Select_Gag"
+	{
+		"de"		"Spieler im Chat sperren:"
+	}
+	"AdminMenu_Select_Mute"
+	{
+		"de"		"Spieler im Voice-Chat sperren:"
+	}
+	"AdminMenu_Select_Silence"
+	{
+		"de"		"Spieler im Voice-Chat und im Chat sperren:"
+	}
+	"AdminMenu_Select_Ungag"
+	{
+		"de"		"Spieler im Chat entsperren:"
+	}
+	"AdminMenu_Select_Unmute"
+	{
+		"de"		"Spieler im Voice-Chat entsperren:"
+	}
+	"AdminMenu_Select_Unsilence"
+	{
+		"de"		"Spieler im Voice-Chat und im Chat entsperren:"
+	}
+	"AdminMenu_Option_Mute_Empty"
+	{
+		"de"		"Es gibt keinen Spieler, der im Chat gesperrt wurde"
+	}
+	"AdminMenu_Option_Gag_Empty"
+	{
+		"de"		"Es gibt keinen Spieler, der im Voice-Chat gesperrt wurde"
+	}
+	"AdminMenu_Option_Silence_Empty"
+	{
+		"de"		"Es gibt keinen Spieler, der im Voice-Chat und im Chat gesperrt wurde"
+	}
+	"ListMenu_Option_Empty"
+	{
+		"de"		"Es gibt keinen bestraften Spieler"
+	}
+	"AdminMenu_Option_Empty"
+	{
+		"de"		"Es gibt keinen zugänglichen Spieler"
+	}
+	"AdminMenu_UnGag"
+	{
+		"de"		"Chat entsperren"
+	}
+	"AdminMenu_Title_Durations"
+	{
+		"de"		"Dauer auswählen:"
+	}
+	"AdminMenu_Title_Reasons"
+	{
+		"de"		"Grund auswählen:"
+	}
+	"AdminMenu_Mute"
+	{
+		"de"		"Voice-Chat sperren"
+	}
+	"AdminMenu_UnMute"
+	{
+		"de"		"Voice-Chat entsperren"
+	}
+	"AdminMenu_Silence"
+	{
+		"de"		"Voice-Chat und Chat sperren"
+	}
+	"AdminMenu_UnSilence"
+	{
+		"de"		"Voice-Chat und Chat entsperren"
+	}
+	"AdminMenu_Not_Available"
+	{
+		"de"		"Der Spieler ist nicht zugänglich."
+	}
+	"Command_Target_Not_Targetable"
+	{
+		"de"		"Sie können diesen Spieler nicht auswählen."
+	}
+	"ListMenu_Option_Mute"
+	{
+		"de"		"Voice-Chat"
+	}
+	"ListMenu_Option_Gag"
+	{
+		"de"		"Chat"
+	}
+	"ListMenu_Option_Duration"
+	{
+		"de"		"- Dauer: "
+	}
+	"ListMenu_Option_Duration_Perm"
+	{
+		"de"		"Für immer"
+	}
+	"ListMenu_Option_Duration_Time"
+	{
+		"#format"	"{1:d}"
+		"de"		"{1} Minuten"
+	}
+	"ListMenu_Option_Duration_Temp"
+	{
+		"de"		"Zeitweilig"
+	}
+	"ListMenu_Option_Expire"
+	{
+		"de"		"- Läuft ab: "
+	}
+	"ListMenu_Option_Expire_Perm"
+	{
+		"de"		"Nie"
+	}
+	"ListMenu_Option_Expire_Time"
+	{
+		"#format"	"{1:s}"
+		"de"		"{1}"
+	}
+	"ListMenu_Option_Expire_Temp_Reconnect"
+	{
+		"de"		"Wiederverbinden"
+	}
+	"ListMenu_Option_Admin"
+	{
+		"#format"	"{1:s}"
+		"de"		"- Admin: {1}"
+	}
+	"ListMenu_Option_Issue"
+	{
+		"#format"	"{1:s}"
+		"de"		"- Gesperrt: {1}"
+	}
+	"ListMenu_Option_Reason"
+	{
+		"de"		"- Grund"
+	}
+	"ListMenu_Option_Reason_None"
+	{
+		"de"		"- Kein Grund"
+	}
+	"ReasonPanel_Punishment_Mute"
+	{
+		"de"		"Voice-Chat: "
+	}
+	"ReasonPanel_Punishment_Gag"
+	{
+		"de"		"Chat: "
+	}
+	"ReasonPanel_Perm"
+	{
+		"de"		"Für immer"
+	}
+	"ReasonPanel_Time"
+	{
+		"#format"	"{1:d}"
+		"de"		"{1} Minuten"
+	}
+	"ReasonPanel_Temp"
+	{
+		"de"		"Zeitweihlig"
+	}
+	"ReasonPanel_Reason"
+	{
+		"#format"	"{1:s}"
+		"de"		"Grund: {1}"
+	}
+	"ReasonPanel_Back"
+	{
+		"de"		"Ausgang"
+	}
+	"Temp muted player"
+	{
+		"#format"	"{1:t}"
+		"de"		"Der Spieler {1} wurde im Voice-Chat gesperrt."
+	}
+	"Temp muted player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"de"		"Der Spieler {1} wurde im Voice-Chat gesperrt (Grund: {2}}."
+	}
+	"Temp gagged player"
+	{
+		"#format"	"{1:t}"
+		"de"		"Der Spieler {1} wurde im Chat gesperrt."
+	}
+	"Temp gagged player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"de"		"Der Spieler {1} wurde im Chat gesperrt (Grund: {2}}."
+	}
+	"Temp silenced player"
+	{
+		"#format"	"{1:t}"
+		"de"		"Der Spieler {1} wurde im Chat und im Voice-Chat gesperrt."
+	}
+	"Temp silenced player reason"
+	{
+		"#format"	"{1:t},{2:s}"
+		"de"		"Der Spieler {1} wurde im Chat und im Voice-Chat gesperrt (Grund: {2}}."
+	}
+	"CommandComms_na"
+	{
+		"de"		"Es ist nur für die Spieler auf dem Server zugänglich."
+	}
+	"CommandComms_nb"
+	{
+		"de"		"Sie sind im Chat und Voice-Chat nicht gesperrt."
+	}
+	"no access"
+	{
+		"de"		"Die Sperre für festgelegte Zeit ist für Sie nicht zugänglich."
+	}
+}

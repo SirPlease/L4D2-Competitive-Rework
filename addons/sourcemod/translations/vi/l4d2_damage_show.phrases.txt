@@ -1,0 +1,51 @@
+"Phrases"
+{
+	"L4D2DamageShow_HUDSavedLocallyCookieQueued"
+	{
+		"vi"		"{olive}[HUD]{default} đã được lưu cục bộ (Cookie) và được xếp hàng đợi, đồng thời sẽ được ghi vào cơ sở dữ liệu sau khi quá trình tải hoàn tất."
+	}
+	"L4D2DamageShow_HUDSettingsSavedLocallyCookie"
+	{
+		"vi"		"Cài đặt {olive}[HUD]{default} đã được lưu cục bộ (Cookie). MySQL không được kích hoạt hoặc không có sẵn."
+	}
+	"L4D2DamageShow_HUDSettingsSavedLocallyCookieUnable"
+	{
+		"vi"		"Cài đặt {olive}[HUD]{default} đã được lưu cục bộ (Cookie). Không thể lấy SteamID hợp lệ."
+	}
+	"L4D2DamageShow_HUDSettingsSavedLocalCookie"
+	{
+		"vi"		"Đã lưu cài đặt {olive}[HUD]{default} (cookie + cơ sở dữ liệu cục bộ)."
+	}
+	"L4D2DamageShow_HUDMenuCannotUsedAdministrator"
+	{
+		"vi"		"{olive}[HUD]{default} Menu này không thể được sử dụng vì các yêu cầu về Cờ của quản trị viên không được đáp ứng."
+	}
+	"L4D2DamageShow_HUDSettingsSaved"
+	{
+		"vi"		"Đã lưu cài đặt {olive}[HUD]{default}."
+	}
+	"L4D2DamageShow_HUDOnlyAdministratorsCanModify"
+	{
+		"vi"		"{olive}[HUD]{default} Chỉ quản trị viên mới có thể sửa đổi phạm vi chia sẻ."
+	}
+	"L4D2DamageShow_HUDAdministratorSharedExternally"
+	{
+		"vi"		"{olive}[HUD]{default} Quản trị viên đã chia sẻ %s ra bên ngoài."
+	}
+	"L4D2DamageShow_HUDOnlyAdministratorsCanTurn"
+	{
+		"vi"		"{olive}[HUD]{default} Chỉ quản trị viên mới có thể bật tùy chọn này."
+	}
+	"L4D2DamageShow_SpectatorDisplayToggled"
+	{
+		"vi"		"{green}旁观显示{default}已切换：{olive}%s"
+	}
+	"L4D2DamageShow_OnlyAdministratorsWatchingCanUse"
+	{
+		"vi"		"{lightgreen}Chỉ quản trị viên đang xem mới có thể sử dụng nút chuyển này."
+	}
+	"L4D2DamageShow_HUDFunctionDisabledAdministratorFlag"
+	{
+		"vi"		"{olive}[HUD]{default} Chức năng bị vô hiệu hóa: Yêu cầu cờ của quản trị viên (%s) không được đáp ứng."
+	}
+}

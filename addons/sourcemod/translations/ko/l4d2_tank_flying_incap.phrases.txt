@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2TankFlyingIncap_FlyingIncapStateLine"
+	{
+		"ko"		"{default}[플라잉인캡]: (%.1f) (%N) [{olive}%s{default}] [{green}%s{default}]"
+	}
+}

@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"L4D2UncommonBlocker_UncommonInfectedSpawnedEntityModel"
+	{
+		"ko"		"흔하지 않은 감염자가 발생했습니다! 엔터티: %d, 모델: %s, 성별: %d, 플러그인 플래그: %d, 차단됨: %s."
+	}
+	"L4D2UncommonBlocker_2BlockedUncommonInfectedEntity"
+	{
+		"ko"		"2 흔하지 않은 감염자 차단! 엔터티: %d, 위치: %.0f %.0f %.0f, mobRush: %s."
+	}
+	"L4D2UncommonBlocker_SpawnedNewInfectedEntityLocation"
+	{
+		"ko"		"새로운 감염자가 발생했습니다! 엔터티: %d, 위치: %.0f %.0f %.0f, mobRush: %s."
+	}
+}

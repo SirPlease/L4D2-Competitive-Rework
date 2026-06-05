@@ -3,10 +3,5 @@
 	"AITank2_MapTotalLaddersInitializationDetection"
 	{
 		"en"		"This map has a total of: %d ladders %d initialization detection ladders"
-		"chi"		"本地图共有：%d 个梯子 %d个初始化检测梯子"
-		"zho"		"本地圖共有：%d 梯子 %d個初始化檢測梯子"
-		"jp"		"このマップには合計: %d ラダー %d 初期化検出ラダー"
-		"ko"		"이 맵에는 총 다음 항목이 있습니다. %d 사다리 %d 초기화 감지 사다리"
-		"vi"		"Bản đồ này có tổng cộng: Thang phát hiện khởi tạo %d %d"
 	}
 }

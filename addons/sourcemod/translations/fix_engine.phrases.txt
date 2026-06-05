@@ -3,130 +3,53 @@
 	"FixEngine_IdrowndamageDamageTempHPRestore"
 	{
 		"en"		"m_idrowndmg = %d, dmg = %d, temp hp to restote = %d"
-		"chi"		"m_idrowndmg = %d，dmg = %d，要恢复的临时马力 = %d"
-		"zho"		"m_idrowndmg = %d，dmg = %d，要恢復的暫時馬力 = %d"
-		"jp"		"m_idrowndmg = %d、dmg = %d、復元する温度 HP = %d"
-		"ko"		"m_idrowndmg = %d, dmg = %d, 복원할 임시 hp = %d"
-		"vi"		"m_idrowndmg = %d, dmg = %d, hp tạm thời cần khôi phục = %d"
 	}
-
 	"FixEngine_RestoringStartedPlayerUsingGlitch"
 	{
 		"en"		"restoring started (player using glitch while have 1-10hp"
-		"chi"		"恢复开始（玩家在拥有 1-10hp 时使用故障"
-		"zho"		"恢復開始（玩家在擁有 1-10hp 時使用故障"
-		"jp"		"復元を開始しました (プレイヤーは 1 ～ 10hp の状態でグリッチを使用しています)"
-		"ko"		"복원 시작됨(플레이어가 1-10hp를 가지고 있는 동안 결함을 사용함)"
-		"vi"		"quá trình khôi phục đã bắt đầu (người chơi gặp trục trặc khi còn 1-10 mã lực"
 	}
-
 	"FixEngine_RestoreCountBeginningSeconds"
 	{
 		"en"		"restore count = %d (beginning in %.0f sec.)"
-		"chi"		"恢复计数 = %d（从 %.0f 秒开始）"
-		"zho"		"恢復計數 = %d（從 %.0f 秒開始）"
-		"jp"		"復元カウント = %d (%.0f 秒から開始)"
-		"ko"		"복원 횟수 = %d(%.0f초부터 시작)"
-		"vi"		"số lượng khôi phục = %d (bắt đầu sau %.0f giây)"
 	}
-
 	"FixEngine_RestoringStarted"
 	{
 		"en"		"restoring started"
-		"chi"		"恢复开始"
-		"zho"		"恢復開始"
-		"jp"		"復元を開始しました"
-		"ko"		"복원이 시작되었습니다"
-		"vi"		"bắt đầu khôi phục"
 	}
-
 	"FixEngine_TempHealthLimitExceeded"
 	{
 		"en"		"temp health limit is exceeded"
-		"chi"		"超出温度健康限制"
-		"zho"		"超出溫度健康限制"
-		"jp"		"一時的なヘルス制限を超えています"
-		"ko"		"임시 건강 한도를 초과했습니다."
-		"vi"		"vượt quá giới hạn sức khỏe tạm thời"
 	}
-
 	"FixEngine_ResetDrownRestoredProp"
 	{
 		"en"		"reset drownrestored prop %N"
-		"chi"		"重置溺水恢复道具 %N"
-		"zho"		"重置溺水恢復道具 %N"
-		"jp"		"リセットドラウンド復元された小道具 %N"
-		"ko"		"익사복원 소품 %N 재설정"
-		"vi"		"đặt lại chỗ dựa bị chết đuối đã khôi phục %N"
 	}
-
 	"FixEngine_TempGlitchFixed"
 	{
 		"en"		"temp glitch fixed"
-		"chi"		"温度故障已修复"
-		"zho"		"溫度故障已修復"
-		"jp"		"温度の不具合が修正されました"
-		"ko"		"온도 결함이 수정되었습니다."
-		"vi"		"đã sửa lỗi tạm thời"
 	}
-
 	"FixEngine_StoppedTempGlitchFixTimer"
 	{
 		"en"		"stopped temp glich fix timer"
-		"chi"		"停止温度故障修复计时器"
-		"zho"		"停止溫度故障修復計時器"
-		"jp"		"温度グリッチ修正タイマーを停止しました"
-		"ko"		"임시 결함 수정 타이머가 중지되었습니다."
-		"vi"		"đã dừng bộ hẹn giờ sửa lỗi tạm thời"
 	}
-
 	"FixEngine_RestoringStopped"
 	{
 		"en"		"restoring stopped"
-		"chi"		"恢复已停止"
-		"zho"		"恢復已停止"
-		"jp"		"復元が停止しました"
-		"ko"		"복원이 중지되었습니다"
-		"vi"		"khôi phục đã dừng"
 	}
-
 	"FixEngine_AttemptedUseLadderSpeedGlitch"
 	{
 		"en"		"%N (%s) attempted to use a ladder speed glitch."
-		"chi"		"%N (%s) 尝试使用梯形速度故障。"
-		"zho"		"%N (%s) 嘗試使用梯形速度故障。"
-		"jp"		"%N (%s) はラダー速度グリッチを使用しようとしました。"
-		"ko"		"%N(%s)가 사다리 속도 결함을 사용하려고 시도했습니다."
-		"vi"		"%N (%s) đã cố gắng sử dụng trục trặc về tốc độ bậc thang."
 	}
-
 	"FixEngine_SuspectedUsingNoFallDamage"
 	{
 		"en"		"%N (%s) is suspected of using a no fall damage bug."
-		"chi"		"%N（%s）疑似使用了无坠落伤害漏洞。"
-		"zho"		"%N（%s）疑似使用了無墜落傷害漏洞。"
-		"jp"		"%N (%s) は落下ダメージがなくなるバグを使用している疑いがあります。"
-		"ko"		"%N(%s)는 낙하 피해 방지 버그를 사용한 것으로 의심됩니다."
-		"vi"		"%N (%s) bị nghi ngờ sử dụng lỗi không gây sát thương khi rơi."
 	}
-
 	"FixEngine_AttemptedUseHealthBoostGlitch"
 	{
 		"en"		"%N (%s) attempted to use a health boost glitch."
-		"chi"		"%N (%s) 尝试使用生命值提升故障。"
-		"zho"		"%N (%s) 嘗試使用生命值提升故障。"
-		"jp"		"%N (%s) はヘルスブーストグリッチを使用しようとしました。"
-		"ko"		"%N(%s)가 체력 강화 결함을 사용하려고 시도했습니다."
-		"vi"		"%N (%s) đã cố gắng sử dụng trục trặc tăng cường sức khỏe."
 	}
-
 	"FixEngine_AttemptedUseLadderReloadGlitch"
 	{
 		"en"		"%N (%s) attempted to use a ladder reload glitch."
-		"chi"		"%N (%s) 尝试使用梯子重新加载故障。"
-		"zho"		"%N (%s) 嘗試使用梯子重新加載故障。"
-		"jp"		"%N (%s) はラダーのリロード グリッチを使用しようとしました。"
-		"ko"		"%N(%s)가 사다리 재장전 결함을 사용하려고 시도했습니다."
-		"vi"		"%N (%s) đã cố gắng sử dụng trục trặc khi tải lại bậc thang."
 	}
 }

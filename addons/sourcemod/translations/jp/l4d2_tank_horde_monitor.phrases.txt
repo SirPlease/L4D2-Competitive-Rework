@@ -2,46 +2,46 @@
 {
 	"Tag"
 	{
-		"jp"		"< {olive} 大群 {default} >"
+		"jp"		"<{olive}ゾンビの群れ{default}>"
 	}
 	"TankPlay"
 	{
-		"jp"		"Horde は戦車がプレイ中のため、{blue} が {default} を一時停止しました! {blue} %0.1f%% {default} と進むと大群が開始されます。"
+		"jp"		"Tank が出現中のため、ゾンビの群れは{blue}一時停止{default}しました！あと {blue}%0.1f%%{default} 進むとゾンビの群れが始まります。"
 	}
 	"UntilHordeStarts"
 	{
-		"jp"		"大群が始まるまで {blue} %0.1f%% {default} 残っています..."
+		"jp"		"ゾンビの群れ開始まで残り {blue}%0.1f%%{default}..."
 	}
 	"HordeResumed"
 	{
-		"jp"		"大群は {blue} 再開 {default} で {green} %i%% 強さ {default} を持ち、押すと大群が増加します。"
+		"jp"		"ゾンビの群れが{blue}再開{default}しました。現在の強度は {green}%i%%{default}、進むほど強くなります。"
 	}
 	"HordeStrength"
 	{
-		"jp"		"Horde は {green} %i%% の強さ {default} にあります..."
+		"jp"		"ゾンビの群れの強度は {green}%i%%{default}..."
 	}
 	"HordeVeryStrength"
 	{
-		"jp"		"{red} 生存者は押しすぎました {default}、大群は {green} 100 %% の強さ {default} です！"
+		"jp"		"{red}生存者が進みすぎました{default}。ゾンビの群れは {green}100%%{default} の強度です！"
 	}
 	"L4D2TankHordeMonitor_HordeZombieWaveTemporarilySuspended"
 	{
-		"jp"		"<{olive}Horde{default}> タンク {blue}{default} の存在により、ゾンビ ウェーブが一時的に停止されます。 {blue}%0.1f%%{default} と進むと、再びゾンビウェーブが始まります。"
+		"jp"		"<{olive}ゾンビの群れ{default}> Tank がいるため、ゾンビの群れは一時的に{blue}停止{default}しています。さらに {blue}%0.1f%%{default} 進むと再開します。"
 	}
 	"L4D2TankHordeMonitor_HordeNoteWaveZombiesStarted"
 	{
-		"jp"		"<{olive}Horde{default}> ご注意ください！残りの {blue}%0.1f%%{default} の旅で、ゾンビの波が再び始まりました..."
+		"jp"		"<{olive}ゾンビの群れ{default}> 注意！残り {blue}%0.1f%%{default} の地点でゾンビの群れが再開しました..."
 	}
 	"L4D2TankHordeMonitor_HordeZombieTideRestoredCurrent"
 	{
-		"jp"		"<{olive}Horde{default}> ゾンビタイドでは、{blue}が{default}に復元されました。現在の強さは{green}%i%%です。前進を続けると、ゾンビの潮流が激化します。"
+		"jp"		"<{olive}ゾンビの群れ{default}> ゾンビの群れが{blue}再開{default}しました。現在の強度は {green}%i%%{default}。進むほど強度が上がります。"
 	}
 	"L4D2TankHordeMonitor_HordeCurrentZombieWaveIntensity"
 	{
-		"jp"		"<{olive}Horde{default}> 現在のゾンビ ウェーブは {green}%i%% 強度 {default}..."
+		"jp"		"<{olive}ゾンビの群れ{default}> 現在の強度は {green}%i%%{default}..."
 	}
 	"L4D2TankHordeMonitor_HordeSurvivorsAdvancedTooFar"
 	{
-		"jp"		"<{olive}Horde{default}> 生存者が進みすぎて、ゾンビウェーブの強さが{green}100%% {default}に変化しました！"
+		"jp"		"<{olive}ゾンビの群れ{default}> 生存者が進みすぎたため、ゾンビの群れの強度が {green}100%%{default} になりました！"
 	}
 }

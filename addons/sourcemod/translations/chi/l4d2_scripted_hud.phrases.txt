@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2ScriptedHUD_HUDTextsDataFileReloaded"
+	{
+		"chi"		"{green}[数据文件中的 HUD 文本已重新加载]"
+	}
+}

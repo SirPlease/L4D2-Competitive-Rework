@@ -1,0 +1,50 @@
+"Phrases"
+{
+	"Banned Check Site"
+	{
+		"#format"	"{1:s}"
+		"hu"		"Bannolva vagy erről a szerverről, látogass el {1} honlapra a további információkért."
+	}
+	"DB Connect Fail"
+	{
+		"hu"		"Sikertelen adatbázis csatlakozás. Kérlek vedd fel a kapcsolatott egy szerver operátorral."
+	}
+	"Not In Game"
+	{
+		"hu"		"A játékos nincs játékban, kérlek nézd meg a honlapon a bannolásért."
+	}
+	"Ban Not Verified"
+	{
+		"hu"		"Ez a játékos nincs hitelesítve. Kérlek várj 30 másodpercet mielőtt újra próbálnád."
+	}
+	"Can Not Unban"
+	{
+		"#format"	"{1:s}"
+		"hu"		"Nem tudsz unbannolni a szerverről, látogasd meg {1} a ban feloldásért."
+	}
+	"Can Not Add Ban"
+	{
+		"#format"	"{1:s}"
+		"hu"		"Nem tudsz a szerverről bannolni, látogasd meg {1} a bannolásért."
+	}
+	"Check Menu"
+	{
+		"hu"		"Kérjük, ellenőrizze a menüt, hogy kiválassza a tilalom okait."
+	}
+	"Include Reason"
+	{
+		"hu"		"Kérlek írj indokot is a kliens bannolásához."
+	}
+	"Ban Fail"
+	{
+		"hu"		"Sikertelen bannolás, próbáld újra."
+	}
+	"Chat Reason"
+	{
+		"hu"		"Írd be a chatre az indokot, majd nyomj entert. Írd '!noreason' a megszakításhoz."
+	}
+	"Chat Reason Aborted"
+	{
+		"hu"		"A ban eljárás sikeresen leállítva."
+	}
+}

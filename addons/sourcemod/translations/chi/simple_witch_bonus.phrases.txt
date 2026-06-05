@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"SimpleWitchBonus_KillingWitchAwardedPoints"
+	{
+		"chi"		"{default}杀死魔女已奖励：{olive}%d {default}积分！"
+	}
+}

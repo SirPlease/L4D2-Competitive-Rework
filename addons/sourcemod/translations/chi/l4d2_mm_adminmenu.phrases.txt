@@ -1,0 +1,43 @@
+"Phrases"
+{
+	"Switch Map/Mission"
+	{
+		"chi"		"切换地图/关卡"
+	}
+	"Official Maps"
+	{
+		"chi"		"官方地图"
+	}
+	"Addon Maps"
+	{
+		"chi"		"三方地图"
+	}
+	"Official Missions"
+	{
+		"chi"		"官方战役"
+	}
+	"Addon Missions"
+	{
+		"chi"		"三方战役"
+	}
+	"L4D2MMAdminMenu_SMFailedGetMissionList"
+	{
+		"chi"		"[SM]获取任务列表失败。"
+	}
+	"L4D2MMAdminMenu_SMNoMapsFoundCurrent"
+	{
+		"chi"		"[SM] 没有找到适合当前游戏模式的地图。"
+	}
+	"L4D2MMAdminMenu_SMNoValidMapsFound"
+	{
+		"chi"		"[SM] 未找到此任务的有效地图。"
+	}
+	"L4D2MMAdminMenu_SMAdminForcingMapChange"
+	{
+		"chi"		"{green}[SM]{default} 管理员正在强制将地图更改为 {lightgreen}%s{default}。"
+	}
+	"L4D2MMAdminMenu_SMAdminReloadingVPKs"
+	{
+		"chi"		"{green}[SM]{default} 管理员正在重新加载 VPK 和任务列表..."
+	}
+}

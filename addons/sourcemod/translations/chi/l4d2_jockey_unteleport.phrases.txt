@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2JockeyUnteleport_VoidMonkeyRepairTeleportedBack"
+	{
+		"chi"		"{blue}[虚空猴修复]{default} 传送回了被虚空猴传送的%N."
+	}
+}

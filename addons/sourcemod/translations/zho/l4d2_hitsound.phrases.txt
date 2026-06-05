@@ -1,0 +1,119 @@
+"Phrases"
+{
+	"L4D2Hitsound_OverlayIcon"
+	{
+		"zho"		"覆蓋圖示：%s（%s）"
+	}
+	"L4D2Hitsound_CurrentlyNoIconSetsAvailable"
+	{
+		"zho"		"目前沒有可用的圖示套裝。"
+	}
+	"L4D2Hitsound_SoundEffectRange"
+	{
+		"zho"		"音效範圍：%s"
+	}
+	"L4D2Hitsound_IconRange"
+	{
+		"zho"		"圖示範圍：%s"
+	}
+	"L4D2Hitsound_HitsoundSoundEffectPackageThree"
+	{
+		"zho"		"[Hitsound] 音效組(三項)已設定為: %d"
+	}
+	"L4D2Hitsound_HitsoundIconSetThreeItems"
+	{
+		"zho"		"[Hitsound] 圖示套裝(三項)已設定為: %d - %s"
+	}
+	"L4D2Hitsound_SelectSetSoundEffectSet"
+	{
+		"zho"		"請先在『音效套裝（玩家）』裡選出一個套裝。"
+	}
+	"L4D2Hitsound_HitSoundEffectTurnedSet"
+	{
+		"zho"		"命中音效：已開啟（套裝 %d）"
+	}
+	"L4D2Hitsound_HitSoundEffectTurnedOff"
+	{
+		"zho"		"命中音效：已關閉"
+	}
+	"L4D2Hitsound_KillSoundEffectTurnedSet"
+	{
+		"zho"		"擊殺音效：已開啟（套裝 %d）"
+	}
+	"L4D2Hitsound_KillSoundEffectTurnedOff"
+	{
+		"zho"		"擊殺音效：已關閉"
+	}
+	"L4D2Hitsound_HeadshotSoundEffectTurnedSet"
+	{
+		"zho"		"爆頭音效：已開啟（套裝 %d）"
+	}
+	"L4D2Hitsound_HeadshotSoundEffectTurnedOff"
+	{
+		"zho"		"爆頭音效：已關閉"
+	}
+	"L4D2Hitsound_SelectSuitIconSuitPlayer"
+	{
+		"zho"		"請先在『圖示套裝（玩家）』裡選擇一個套裝。"
+	}
+	"L4D2Hitsound_HitIconTurnedSet"
+	{
+		"zho"		"命中圖示：已開啟（套裝 %d）"
+	}
+	"L4D2Hitsound_HitIconClosed"
+	{
+		"zho"		"命中圖示：已關閉"
+	}
+	"L4D2Hitsound_KillIconTurnedSet"
+	{
+		"zho"		"擊殺圖示：已開啟（套裝 %d）"
+	}
+	"L4D2Hitsound_KillIconClosed"
+	{
+		"zho"		"擊殺圖示：已關閉"
+	}
+	"L4D2Hitsound_HeadshotIconTurnedSet"
+	{
+		"zho"		"爆頭圖示：已開啟（套裝 %d）"
+	}
+	"L4D2Hitsound_HeadshotIconClosed"
+	{
+		"zho"		"爆頭圖示：已關閉"
+	}
+	"L4D2Hitsound_NotPermissionUseMenu"
+	{
+		"zho"		"你沒有權限使用此選單。"
+	}
+	"L4D2Hitsound_ThreeSoundEffectsAllTurned"
+	{
+		"zho"		"音效三項：已全部關閉"
+	}
+	"L4D2Hitsound_HeadshotSoundEffectSet"
+	{
+		"zho"		"爆頭音效：已設定為 %d"
+	}
+	"L4D2Hitsound_HitSoundEffectSet"
+	{
+		"zho"		"命中音效：已設定為 %d"
+	}
+	"L4D2Hitsound_KillSoundEffectSet"
+	{
+		"zho"		"擊殺音效：已設定為 %d"
+	}
+	"L4D2Hitsound_ThreeIconsAllClosed"
+	{
+		"zho"		"圖示三項：已全部關閉"
+	}
+	"L4D2Hitsound_HeadshotIconSet"
+	{
+		"zho"		"爆頭圖示：已設定為 %d"
+	}
+	"L4D2Hitsound_HitIconSet"
+	{
+		"zho"		"命中圖示：已設定為 %d"
+	}
+	"L4D2Hitsound_KillIconSet"
+	{
+		"zho"		"擊殺圖示：已設定為 %d"
+	}
+}

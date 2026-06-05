@@ -1,0 +1,51 @@
+"Phrases"
+{
+	"Server_WatchingChatBlue"
+	{
+		"jp"		"[{olive} 見て {default}] {blue}%N{default}：%s"
+	}
+	"Server_WatchingChatRed"
+	{
+		"jp"		"[{olive} 見て {default}] {red}%N{default}：%s"
+	}
+	"Server_PromptFirstGroupWipeoutContinue"
+	{
+		"jp"		"[{olive} プロンプト {default}] これはあなたの {blue}%d{default} の最初のグループ全滅です。引き続き頑張ってください。"
+	}
+	"Server_StillUntakenBotsTakeThem"
+	{
+		"jp"		"まだ取得されていないボットが残っています。最初にボットを引き継ぐか、サバイバー チームがいっぱいになるまで待ってから再試行してください。"
+	}
+	"Server_Not8PlayerSportHasn"
+	{
+		"jp"		"8人制スポーツではないので、まだ上限に達していません！"
+	}
+	"Server_SurvivorBotGenerated"
+	{
+		"jp"		"生存者ボットが生成されました。"
+	}
+	"Server_SurvivorBotCannotGeneratedMoment"
+	{
+		"jp"		"現時点では生存者ボットを生成できません。"
+	}
+	"Server_NoBotNotTaken"
+	{
+		"jp"		"引き継いでいないボットはありません。"
+	}
+	"Server_EverythingNormalStillWantSkip"
+	{
+		"jp"		"すべては正常ですが、それでも授業をサボりたいですか?"
+	}
+	"Server_ExcessGramsKicked"
+	{
+		"jp"		"余分なグラムは追い出されました"
+	}
+	"Server_PromptsAlreadyBlackWhiteGive"
+	{
+		"jp"		"[{olive}は{default}を促します] {green}%N{default}すでに{olive}白黒{default}、保護と治療を優先してください！"
+	}
+	"Server_PromptBlackWhiteTreatSoon"
+	{
+		"jp"		"【{olive}即発{default}】あなたは今、{green}白黒{default}です、できるだけ早く治療してください！"
+	}
+}

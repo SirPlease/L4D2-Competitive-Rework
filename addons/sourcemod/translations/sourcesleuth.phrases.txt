@@ -4,33 +4,14 @@
 	{
 		"#format"	""
 		"en"		"Duplicate account"
-		"hu"		"Duplikált account"
-		"ru"		"Аккаунт дубликат"
-		"fr"		"Compte dupliquer"
-		"pl"		"Zduplikowane konto"
-		"chi"		"马甲/多重账户"
 	}
-	
 	"sourcesleuth_admintext"
 	{
 		"#format"	"{1:N},{2:s},{3:s}"
 		"en"		"Player {1} (ID: {2} | IP: {3}) has active bans on IP"
-		"hu"		"{1} (ID: {2} | IP: {3}) játékosnak van aktív kitiltása az alábbi IP-n"
-		"ru"		"Игрок {1} (ID: {2} | IP: {3}) имеет активный бан по IP"
-		"sv"		"Spelare {1} (ID: {2} | IP: {3}) har aktiva bannlysningar på IP"
-		"fr"		"Le joueur {1} (ID: {2} | IP: {3}) a des bannissements actives sur IP"
-		"pl"		"Gracz {1} (ID: {2} | IP: {3}) ma aktywne blokady na IP"
-		"chi"		"玩家 {1} (ID: {2} | IP: {3}) 目前有多次IP封禁"
 	}
-
-
 	"SourceSleuth_WhiteListReloaded"
 	{
 		"en"		"[SourceSleuth] WhiteList has been reloaded!"
-		"chi"		"[SourceSleuth] 白名单已重新加载！"
-		"zho"		"[SourceSleuth] 白名單已重新載入！"
-		"jp"		"[SourceSleuth] ホワイトリストがリロードされました!"
-		"ko"		"[SourceSleuth] 화이트리스트가 리로드되었습니다!"
-		"vi"		"[SourceSleuth] Danh sách trắng đã được tải lại!"
 	}
 }

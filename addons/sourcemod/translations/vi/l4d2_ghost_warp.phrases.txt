@@ -1,0 +1,35 @@
+"Phrases"
+{
+	"L4D2GhostWarp_CommandDisabled"
+	{
+		"vi"		"%s Lệnh này bây giờ là {green}disabled{default}."
+	}
+	"L4D2GhostWarp_CanUseCommandOftenWait"
+	{
+		"vi"		"%s Bạn không thể sử dụng lệnh này thường xuyên, hãy đợi một {green}%.01f{default} giây."
+	}
+	"L4D2GhostWarp_NoSurvivorsFound"
+	{
+		"vi"		"%s Không tìm thấy {green}survivors{default}!"
+	}
+	"L4D2GhostWarp_EnteredInvalidSurvivorIndex"
+	{
+		"vi"		"%s Bạn đã nhập chỉ số người sống sót {green}không hợp lệ{default}!%s"
+	}
+	"L4D2GhostWarp_Usage1"
+	{
+		"vi"		"%s Cách sử dụng: {green}%s{default} <1 - %d>"
+	}
+	"L4D2GhostWarp_EnteredWrongSurvivorName"
+	{
+		"vi"		"%s Bạn đã nhập tên người sống sót {green}sai{default}!%s"
+	}
+	"L4D2GhostWarp_UsageSurvivorName"
+	{
+		"vi"		"%s Cách sử dụng: {green}%s{default} <tên người sống sót>"
+	}
+	"L4D2GhostWarp_SurvivorSpecifiedNotFound"
+	{
+		"vi"		"%s {green}survivor{default} bạn đã chỉ định là {green}không tìm thấy{default}!"
+	}
+}

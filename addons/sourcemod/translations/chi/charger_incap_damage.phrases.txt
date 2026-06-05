@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"ChargerIncapDamage_HookTakeDamageVictimAttacker"
+	{
+		"chi"		"[Hook_OnTakeDamage] 受害者：(%N) %d，攻击者：(%N) %d，加害者：%d，伤害：%f，伤害类型：%d"
+	}
+	"ChargerIncapDamage_HookTakeDamageWeaponDamage"
+	{
+		"chi"		"[Hook_OnTakeDamage] 武器：%d，伤害力：%f %f %f，伤害位置：%f %f %f"
+	}
+}

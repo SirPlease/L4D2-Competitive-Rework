@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"Changelog_ChangeLogViewChangeLog"
+	{
+		"ko"		"{blue}[{green}ChangeLog{blue}]{default} {blue}%s에서 변경 로그를 볼 수 있습니다."
+	}
+}

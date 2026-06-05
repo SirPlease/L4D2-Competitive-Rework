@@ -1,0 +1,119 @@
+"Phrases"
+{
+	"L4D2Hitsound_OverlayIcon"
+	{
+		"vi"		"Biểu tượng lớp phủ: %s (%s)"
+	}
+	"L4D2Hitsound_CurrentlyNoIconSetsAvailable"
+	{
+		"vi"		"Hiện tại không có bộ biểu tượng nào có sẵn."
+	}
+	"L4D2Hitsound_SoundEffectRange"
+	{
+		"vi"		"Phạm vi hiệu ứng âm thanh: %s"
+	}
+	"L4D2Hitsound_IconRange"
+	{
+		"vi"		"Phạm vi biểu tượng: %s"
+	}
+	"L4D2Hitsound_HitsoundSoundEffectPackageThree"
+	{
+		"vi"		"[Hitsound] Gói hiệu ứng âm thanh (ba mục) đã được đặt thành: %d"
+	}
+	"L4D2Hitsound_HitsoundIconSetThreeItems"
+	{
+		"vi"		"[Hitsound] Bộ biểu tượng (ba mục) đã được đặt thành: %d - %s"
+	}
+	"L4D2Hitsound_SelectSetSoundEffectSet"
+	{
+		"vi"		"Trước tiên hãy chọn một bộ trong \"Bộ hiệu ứng âm thanh (Trình phát)\"."
+	}
+	"L4D2Hitsound_HitSoundEffectTurnedSet"
+	{
+		"vi"		"Hiệu ứng âm thanh nhấn: đã bật (Đặt %d)"
+	}
+	"L4D2Hitsound_HitSoundEffectTurnedOff"
+	{
+		"vi"		"Hiệu ứng âm thanh nhấn: đã tắt"
+	}
+	"L4D2Hitsound_KillSoundEffectTurnedSet"
+	{
+		"vi"		"Hiệu ứng âm thanh tiêu diệt: đã bật (Đặt %d)"
+	}
+	"L4D2Hitsound_KillSoundEffectTurnedOff"
+	{
+		"vi"		"Hiệu ứng âm thanh tiêu diệt: đã tắt"
+	}
+	"L4D2Hitsound_HeadshotSoundEffectTurnedSet"
+	{
+		"vi"		"Hiệu ứng âm thanh headshot: đã bật (Đặt %d)"
+	}
+	"L4D2Hitsound_HeadshotSoundEffectTurnedOff"
+	{
+		"vi"		"Hiệu ứng âm thanh headshot: đã tắt"
+	}
+	"L4D2Hitsound_SelectSuitIconSuitPlayer"
+	{
+		"vi"		"Trước tiên hãy chọn một bộ đồ trong \"Bộ đồ biểu tượng (Người chơi)\"."
+	}
+	"L4D2Hitsound_HitIconTurnedSet"
+	{
+		"vi"		"Biểu tượng nhấn: đã bật (Đặt %d)"
+	}
+	"L4D2Hitsound_HitIconClosed"
+	{
+		"vi"		"Biểu tượng lượt truy cập: Đã đóng"
+	}
+	"L4D2Hitsound_KillIconTurnedSet"
+	{
+		"vi"		"Biểu tượng tiêu diệt: đã bật (Đặt %d)"
+	}
+	"L4D2Hitsound_KillIconClosed"
+	{
+		"vi"		"Biểu tượng tiêu diệt: Đã đóng"
+	}
+	"L4D2Hitsound_HeadshotIconTurnedSet"
+	{
+		"vi"		"Biểu tượng headshot: đã bật (Đặt %d)"
+	}
+	"L4D2Hitsound_HeadshotIconClosed"
+	{
+		"vi"		"Biểu tượng headshot: Đã đóng"
+	}
+	"L4D2Hitsound_NotPermissionUseMenu"
+	{
+		"vi"		"Bạn không có quyền sử dụng menu này."
+	}
+	"L4D2Hitsound_ThreeSoundEffectsAllTurned"
+	{
+		"vi"		"Ba hiệu ứng âm thanh: tất cả đã tắt"
+	}
+	"L4D2Hitsound_HeadshotSoundEffectSet"
+	{
+		"vi"		"Hiệu ứng âm thanh headshot: đặt thành %d"
+	}
+	"L4D2Hitsound_HitSoundEffectSet"
+	{
+		"vi"		"Hiệu ứng âm thanh nhấn: đặt thành %d"
+	}
+	"L4D2Hitsound_KillSoundEffectSet"
+	{
+		"vi"		"Hiệu ứng âm thanh tiêu diệt: đặt thành %d"
+	}
+	"L4D2Hitsound_ThreeIconsAllClosed"
+	{
+		"vi"		"Ba biểu tượng: Tất cả đã đóng"
+	}
+	"L4D2Hitsound_HeadshotIconSet"
+	{
+		"vi"		"Biểu tượng headshot: đặt thành %d"
+	}
+	"L4D2Hitsound_HitIconSet"
+	{
+		"vi"		"Biểu tượng lượt truy cập: đặt thành %d"
+	}
+	"L4D2Hitsound_KillIconSet"
+	{
+		"vi"		"Biểu tượng tiêu diệt: đặt thành %d"
+	}
+}

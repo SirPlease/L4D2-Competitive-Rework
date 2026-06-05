@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4DTextureManagerBlock_MathackDetectorKickedUsingMathack"
+	{
+		"vi"		"{green}[{default}Mathack Detector{green}] {lightgreen}%s {default}đã bị kick vì sử dụng mathack!"
+	}
+}

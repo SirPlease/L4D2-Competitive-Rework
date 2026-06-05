@@ -3,32 +3,17 @@
 	"Door_Open"
 	{
 		"en"		"{olive}[Saferoom] {white}opened by {orange}%N"
-		"zho"		"{olive}[Saferoom] {white}opened by {orange}%N"
-		"jp"		"{olive}[Saferoom] {white}opened by {orange}%N"
-		"ko"		"{olive}[Saferoom] {white}opened by {orange}%N"
-		"vi"		"{olive}[Saferoom] {white}opened by {orange}%N"
 	}
-
 	"Door_Close"
 	{
 		"en"		"{olive}[Saferoom] {white}closed by {orange}%N"
 	}
-
 	"Door_Wait"
 	{
 		"en"		"{olive}[Saferoom] {white}door will unlock in {orange}%d {white}seconds"
-		"zho"		"{olive}[Saferoom] {white}door will unlock in {orange}%d {white}seconds"
-		"jp"		"{olive}[Saferoom] {white}door will unlock in {orange}%d {white}seconds"
-		"ko"		"{olive}[Saferoom] {white}door will unlock in {orange}%d {white}seconds"
-		"vi"		"{olive}[Saferoom] {white}door will unlock in {orange}%d {white}seconds"
 	}
-
 	"Door_Unlocked"
 	{
 		"en"		"{olive}[Saferoom] {white}door {orange}opened"
-		"zho"		"{olive}[Saferoom] {white}door {orange}opened"
-		"jp"		"{olive}[Saferoom] {white}door {orange}opened"
-		"ko"		"{olive}[Saferoom] {white}door {orange}opened"
-		"vi"		"{olive}[Saferoom] {white}door {orange}opened"
 	}
 }

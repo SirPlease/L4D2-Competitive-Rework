@@ -1,0 +1,31 @@
+"Phrases"
+{
+	"SurvivorMVPTest_CurrentRoundMVP"
+	{
+		"zho"		"本輪MVP：{olive}%N{default}"
+	}
+	"SurvivorMVPTest_DamageClient"
+	{
+		"zho"		"客戶損壞：{olive}%d{default}"
+	}
+	"SurvivorMVPTest_SIKillsClient"
+	{
+		"zho"		"SI 殺死客戶端：{olive}%d{default}"
+	}
+	"SurvivorMVPTest_DamagePercentClient"
+	{
+		"zho"		"客戶損壞百分比：{olive}%f{default}"
+	}
+	"SurvivorMVPTest_CurrentRoundMVPClientCommon"
+	{
+		"zho"		"本輪MVP客戶（普通）：{olive}%N{default}"
+	}
+	"SurvivorMVPTest_CommonKillsClient"
+	{
+		"zho"		"客戶端常見擊殺：{olive}%d{default}"
+	}
+	"SurvivorMVPTest_CIPercentClient"
+	{
+		"zho"		"客戶 CI 百分比：{olive}%f{default}"
+	}
+}

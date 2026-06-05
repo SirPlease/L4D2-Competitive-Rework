@@ -14,6 +14,6 @@
 	}
 	"GlobalChat_SummonTeammatesWithMessage"
 	{
-		"chi"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友\\n{default}留言: {olive}%s"
+		"chi"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友\n{default}留言: {olive}%s"
 	}
 }

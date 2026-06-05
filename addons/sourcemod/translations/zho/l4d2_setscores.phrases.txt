@@ -14,10 +14,10 @@
 	}
 	"L4D2Setscores_ScoresSetSurInf"
 	{
-		"zho"		"{default}Scores set to {olive}%d {default} ({green}Sur{default}) - {olive}%d {default} ({green}Inf{default}) by {lightgreen}%s{default}."
+		"zho"		"{default}分數已設定為 {olive}%d {default}（{green}生還者{default}）- {olive}%d {default}（{green}感染者{default}），操作者：{lightgreen}%s{default}。"
 	}
 	"L4D2Setscores_ScoresSetSurInfVote"
 	{
-		"zho"		"{default} 分數透過投票設定為 {olive} %d {default} ({green} Sur {default}) - {olive} %d {default} ({green} Inf {default})。"
+		"zho"		"{default}分數已透過投票設定為 {olive}%d {default}（{green}生還者{default}）- {olive}%d {default}（{green}感染者{default}）。"
 	}
 }

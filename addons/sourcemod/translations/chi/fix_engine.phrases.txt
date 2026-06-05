@@ -1,0 +1,55 @@
+"Phrases"
+{
+	"FixEngine_IdrowndamageDamageTempHPRestore"
+	{
+		"chi"		"m_idrowndmg = %d，dmg = %d，要恢复的临时马力 = %d"
+	}
+	"FixEngine_RestoringStartedPlayerUsingGlitch"
+	{
+		"chi"		"恢复开始（玩家在拥有 1-10hp 时使用故障"
+	}
+	"FixEngine_RestoreCountBeginningSeconds"
+	{
+		"chi"		"恢复计数 = %d（从 %.0f 秒开始）"
+	}
+	"FixEngine_RestoringStarted"
+	{
+		"chi"		"恢复开始"
+	}
+	"FixEngine_TempHealthLimitExceeded"
+	{
+		"chi"		"超出温度健康限制"
+	}
+	"FixEngine_ResetDrownRestoredProp"
+	{
+		"chi"		"重置溺水恢复道具 %N"
+	}
+	"FixEngine_TempGlitchFixed"
+	{
+		"chi"		"温度故障已修复"
+	}
+	"FixEngine_StoppedTempGlitchFixTimer"
+	{
+		"chi"		"停止温度故障修复计时器"
+	}
+	"FixEngine_RestoringStopped"
+	{
+		"chi"		"恢复已停止"
+	}
+	"FixEngine_AttemptedUseLadderSpeedGlitch"
+	{
+		"chi"		"%N (%s) 尝试使用梯形速度故障。"
+	}
+	"FixEngine_SuspectedUsingNoFallDamage"
+	{
+		"chi"		"%N（%s）疑似使用了无坠落伤害漏洞。"
+	}
+	"FixEngine_AttemptedUseHealthBoostGlitch"
+	{
+		"chi"		"%N (%s) 尝试使用生命值提升故障。"
+	}
+	"FixEngine_AttemptedUseLadderReloadGlitch"
+	{
+		"chi"		"%N (%s) 尝试使用梯子重新加载故障。"
+	}
+}

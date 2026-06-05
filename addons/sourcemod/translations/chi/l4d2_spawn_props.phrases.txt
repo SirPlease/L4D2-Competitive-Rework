@@ -1,0 +1,408 @@
+"Phrases"
+{
+	"Spawn Objects"
+	{
+		"chi"		"生成物件"
+	}
+	"Select a task:"
+	{
+		"chi"		"选择一项任务:"
+	}
+	"Select the delete task"
+	{
+		"chi"		"选择删除任务"
+	}
+	"Delete All Objects"
+	{
+		"chi"		"删除所有生成过的物件"
+	}
+	"Delete Looking Object"
+	{
+		"chi"		"删除眼前的物件(准心指向)"
+	}
+	"Delete Last Object"
+	{
+		"chi"		"删除上一个生成的物件"
+	}
+	"Are you sure(Delete All)?"
+	{
+		"chi"		"确定删除所有生成过的物件?"
+	}
+	"Yes"
+	{
+		"chi"		"是"
+	}
+	"No"
+	{
+		"chi"		"不要"
+	}
+	"Successfully deleted all spawned objects"
+	{
+		"chi"		"成功地删除了所有生成过的物件"
+	}
+	"Canceled"
+	{
+		"chi"		"取消"
+	}
+	"delete all the spawned objects?"
+	{
+		"chi"		"你确定要删除所有生成过的物件?"
+	}
+	"Edit Object"
+	{
+		"chi"		"编辑物件"
+	}
+	"Delete Object"
+	{
+		"chi"		"删除物件"
+	}
+	"Select the spawn method"
+	{
+		"chi"		"选择一个生成方式"
+	}
+	"Spawn Physics On Cursor"
+	{
+		"chi"		"生成动态物件在准心位置上"
+	}
+	"Spawn Physics On Origin"
+	{
+		"chi"		"生成动态物件在目前位置上"
+	}
+	"Spawn Non-solid On Cursor"
+	{
+		"chi"		"生成穿透物件在准心位置上"
+	}
+	"Spawn Non-solid On Origin"
+	{
+		"chi"		"生成穿透物件在目前位置上"
+	}
+	"Spawn Solid On Cursor"
+	{
+		"chi"		"生成固定物件在准心位置上"
+	}
+	"Spawn Solid On Origin"
+	{
+		"chi"		"生成固定物件在目前位置上"
+	}
+	"Save Objects"
+	{
+		"chi"		"储存物件"
+	}
+	"Select The Save Method"
+	{
+		"chi"		"选择储存方式"
+	}
+	"Save Stripper File"
+	{
+		"chi"		"储存于 Stripper File (推荐)"
+	}
+	"Save Routing File"
+	{
+		"chi"		"储存于 Routing File (复杂)"
+	}
+	"Save Spawn Objects File"
+	{
+		"chi"		"储存于 Spawn Objects File (暂存)"
+	}
+	"Select Path Difficulty"
+	{
+		"chi"		"选择路径难度"
+	}
+	"Easy Path"
+	{
+		"chi"		"简单路径"
+	}
+	"Medium Path"
+	{
+		"chi"		"中等路径"
+	}
+	"Hard Path"
+	{
+		"chi"		"困难路径"
+	}
+	"Load Objects"
+	{
+		"chi"		"载入物件"
+	}
+	"load the map data cache?"
+	{
+		"chi"		"你确定从暂存档案里载入物件?"
+	}
+	"Are you sure?"
+	{
+		"chi"		"你确定?"
+	}
+	"Choose a map number please"
+	{
+		"chi"		"选择地图编号"
+	}
+	"Vehicles"
+	{
+		"chi"		"载具类"
+	}
+	"Foliage"
+	{
+		"chi"		"植物类"
+	}
+	"Interior"
+	{
+		"chi"		"室内类"
+	}
+	"Exterior"
+	{
+		"chi"		"室外类"
+	}
+	"Decorative"
+	{
+		"chi"		"装饰类"
+	}
+	"Misc"
+	{
+		"chi"		"杂项类"
+	}
+	"Select an action:"
+	{
+		"chi"		"选择动作:"
+	}
+	"Rotate"
+	{
+		"chi"		"旋转"
+	}
+	"Move"
+	{
+		"chi"		"移动"
+	}
+	"Rotate 1 degree (X axys)"
+	{
+		"chi"		"旋转 1 度 (X 轴)"
+	}
+	"Rotate 10 degree (X axys)"
+	{
+		"chi"		"旋转 10 度 (X 轴)"
+	}
+	"Rotate 15 degree (X axys)"
+	{
+		"chi"		"旋转 15 度 (X 轴)"
+	}
+	"Rotate 45 degree (X axys)"
+	{
+		"chi"		"旋转 40 度 (X 轴)"
+	}
+	"Rotate 90 degree (X axys)"
+	{
+		"chi"		"旋转 90 度 (X 轴)"
+	}
+	"Rotate 180 degree (X axys)"
+	{
+		"chi"		"旋转 180 度 (X 轴)"
+	}
+	"Back 1 degree (X axys)"
+	{
+		"chi"		"退回 1 度 (X 轴)"
+	}
+	"Back 10 degree (X axys)"
+	{
+		"chi"		"退回 10 度 (X 轴)"
+	}
+	"Back 15 degree (X axys)"
+	{
+		"chi"		"退回 15 度 (X 轴)"
+	}
+	"Rotate 1 degree (Y axys)"
+	{
+		"chi"		"旋转 1 度 (Y 轴)"
+	}
+	"Rotate 10 degree (Y axys)"
+	{
+		"chi"		"旋转 10 度 (Y 轴)"
+	}
+	"Rotate 15 degree (Y axys)"
+	{
+		"chi"		"旋转 15 度 (Y 轴)"
+	}
+	"Rotate 45 degree (Y axys)"
+	{
+		"chi"		"旋转 40 度 (Y 轴)"
+	}
+	"Rotate 90 degree (Y axys)"
+	{
+		"chi"		"旋转 90 度 (Y 轴)"
+	}
+	"Rotate 180 degree (Y axys)"
+	{
+		"chi"		"旋转 180 度 (Y 轴)"
+	}
+	"Back 1 degree (Y axys)"
+	{
+		"chi"		"退回 1 度 (Y 轴)"
+	}
+	"Back 10 degree (Y axys)"
+	{
+		"chi"		"退回 10 度 (Y 轴)"
+	}
+	"Back 15 degree (Y axys)"
+	{
+		"chi"		"退回 15 度 (Y 轴)"
+	}
+	"Rotate 1 degree (Z axys)"
+	{
+		"chi"		"旋转 1 度 (Z 轴)"
+	}
+	"Rotate 10 degree (Z axys)"
+	{
+		"chi"		"旋转 10 度 (Z 轴)"
+	}
+	"Rotate 15 degree (Z axys)"
+	{
+		"chi"		"旋转 15 度 (Z 轴)"
+	}
+	"Rotate 45 degree (Z axys)"
+	{
+		"chi"		"旋转 40 度 (Z 轴)"
+	}
+	"Rotate 90 degree (Z axys)"
+	{
+		"chi"		"旋转 90 度 (Z 轴)"
+	}
+	"Rotate 180 degree (Z axys)"
+	{
+		"chi"		"旋转 180 度 (Z 轴)"
+	}
+	"Back 1 degree (Z axys)"
+	{
+		"chi"		"退回 1 度 (Z 轴)"
+	}
+	"Back 10 degree (Z axys)"
+	{
+		"chi"		"退回 10 度 (Z 轴)"
+	}
+	"Back 15 degree (Z axys)"
+	{
+		"chi"		"退回 15 度 (Z 轴)"
+	}
+	"Move Up 1 Unit"
+	{
+		"chi"		"向上移动 1 单位"
+	}
+	"Move Up 10 Unit"
+	{
+		"chi"		"向上移动 10 单位"
+	}
+	"Move Up 30 Unit"
+	{
+		"chi"		"向上移动 30 单位"
+	}
+	"Move Down 1 Unit"
+	{
+		"chi"		"向下移动 1 单位"
+	}
+	"Move Down 10 Unit"
+	{
+		"chi"		"向下移动 10 单位"
+	}
+	"Move Down 30 Unit"
+	{
+		"chi"		"向下移动 30 单位"
+	}
+	"Move Right 1 Unit"
+	{
+		"chi"		"向右移动 1 单位"
+	}
+	"Move Right 10 Unit"
+	{
+		"chi"		"向右移动 10 单位"
+	}
+	"Move Right 30 Unit"
+	{
+		"chi"		"向右移动 30 单位"
+	}
+	"Move Left 1 Unit"
+	{
+		"chi"		"向左移动 1 单位"
+	}
+	"Move Left 10 Unit"
+	{
+		"chi"		"向左移动 10 单位"
+	}
+	"Move Left 30 Unit"
+	{
+		"chi"		"向左移动 30 单位"
+	}
+	"Move Forward 1 Unit"
+	{
+		"chi"		"向前移动 1 单位"
+	}
+	"Move Forward 10 Unit"
+	{
+		"chi"		"向前移动 10 单位"
+	}
+	"Move Forward 30 Unit"
+	{
+		"chi"		"向前移动 30 单位"
+	}
+	"Move Backward 1 Unit"
+	{
+		"chi"		"向后移动 1 单位"
+	}
+	"Move Backward 10 Unit"
+	{
+		"chi"		"向后移动 10 单位"
+	}
+	"Move Backward 30 Unit"
+	{
+		"chi"		"向后移动 30 单位"
+	}
+	"Object Model"
+	{
+		"#format"	"{1:d},{2:s}"
+		"chi"		"物件({1}) 模组: {2}"
+	}
+	"Object Position"
+	{
+		"#format"	"{1:d},{2:f},{3:f},{4:f}"
+		"chi"		"物件({1}) 位置: {2}, {3}, {4}"
+	}
+	"Object Angle"
+	{
+		"#format"	"{1:d},{2:f},{3:f},{4:f}"
+		"chi"		"物件({1}) 角度: {2}, {3}, {4}"
+	}
+	"Successfully removed an object"
+	{
+		"#format"	"{1:d}"
+		"chi"		"成功地移除了物件({1})"
+	}
+	"This plugin won't work in this game"
+	{
+		"chi"		"这个插件在这款游戏上行不通"
+	}
+	"You are not looking to a valid object"
+	{
+		"chi"		"你准心并没有指向一个合法的物件"
+	}
+	"Succesfully deleted the last spawned object"
+	{
+		"chi"		"成功地删除了上一个生成的物件"
+	}
+	"The last spawned object index is not an object anymore!"
+	{
+		"#format"	"{1:d}"
+		"chi"		"上一个生成的物件 {1} 已经不再是一个合法的东西!"
+	}
+	"The last object is not valid anymore"
+	{
+		"chi"		"上一个生成的物件已经不合法了"
+	}
+	"You haven't spawned anything yet"
+	{
+		"chi"		"你还没生成过任何物件，草包"
+	}
+	"The file already exists."
+	{
+		"chi"		"档案已存在. 旧的内容不会被删除."
+	}
+	"Succesfully saved the map data"
+	{
+		"chi"		"已成功储存所有物件"
+	}
+}

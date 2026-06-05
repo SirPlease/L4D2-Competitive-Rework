@@ -2,11 +2,11 @@
 {
 	"TagKills"
 	{
-		"zho"		"[{olive}1v1Stat{default}] {green}殺死{default}："
+		"zho"		"[{olive}1v1Stat{default}] {green}擊殺數{default}："
 	}
 	"TagSkeet"
 	{
-		"zho"		"[{olive}1v1Stat{default}] {green}雙向飛碟{default}："
+		"zho"		"[{olive}1v1Stat{default}] {green}空爆數{default}："
 	}
 	"TagAcc"
 	{
@@ -15,41 +15,41 @@
 	"SI_DMG_CI"
 	{
 		"#format"	"{1:d},{2:d},{3:d}"
-		"zho"		"{olive}{1}{default} damage | {olive}{2}{default} kills | {olive}{3}{default} common\\n"
+		"zho"		"{olive}{1}{default} 傷害 | {olive}{2}{default} 擊殺 | {olive}{3}{default} 普感\n"
 	}
 	"SI_DMG"
 	{
 		"#format"	"{1:d},{2:d}"
-		"zho"		"{olive}{1}{default} damage | {olive}{2}{default} kills\\n"
+		"zho"		"{olive}{1}{default} 傷害 | {olive}{2}{default} 擊殺\n"
 	}
 	"SI_CI"
 	{
 		"#format"	"{1:d},{2:d}"
-		"zho"		"{olive}{1}{default} kills | {olive}{2}{default} common\\n"
+		"zho"		"{olive}{1}{default} 擊殺 | {olive}{2}{default} 普感\n"
 	}
 	"SI"
 	{
-		"zho"		"{olive}%d{default} kills\\n"
+		"zho"		"{olive}%d{default} 擊殺\n"
 	}
 	"SKEET"
 	{
 		"#format"	"{1:d},{2:d},{3:d}"
-		"zho"		"{olive}{1}{default} normal | {olive}{2}{default} hurt | {olive}{3}{default} deadstops\\n"
+		"zho"		"{olive}{1}{default} 滿血 | {olive}{2}{default} 殘血 | {olive}{3}{default} 推停\n"
 	}
 	"ACC_AllShots"
 	{
-		"zho"		"所有鏡頭（{blue}%.0f%%{default}）"
+		"zho"		"全部射擊 ({blue}%.0f%%{default})"
 	}
 	"ACC_BuckShot"
 	{
-		"zho"		" |鉛彈（{blue}%.0f%%{default})"
+		"zho"		" | 霰彈 ({blue}%.0f%%{default})"
 	}
 	"ACC_Melee"
 	{
-		"zho"		" |近戰（{blue}%.0f%%{default})"
+		"zho"		" | 近戰 ({blue}%.0f%%{default})"
 	}
 	"ACC_NoShotsFired"
 	{
-		"zho"		"No shots fired\\n"
+		"zho"		"沒有開槍\n"
 	}
 }

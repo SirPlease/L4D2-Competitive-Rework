@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"HoldoutBonus_EventStartsBonusSecondsonds"
+	{
+		"ko"		"{default}Holdout 이벤트 시작... ({green}%i{default} 보너스는 {olive}%i{default}초 이상)"
+	}
+	"HoldoutBonus_DynamicBonusSummary"
+	{
+		"ko"		"{default}홀드아웃 보너스: %s"
+	}
+	"HoldoutBonus_DynamicBonusSummary_2"
+	{
+		"ko"		"{default}홀드아웃 보너스: {olive}%i{default} 중 {green}%i{default}."
+	}
+}

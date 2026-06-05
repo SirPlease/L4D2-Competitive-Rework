@@ -1,0 +1,31 @@
+"Phrases"
+{
+	"SurvivorMVPTest_CurrentRoundMVP"
+	{
+		"vi"		"MVP vòng hiện tại: {olive}%N{default}"
+	}
+	"SurvivorMVPTest_DamageClient"
+	{
+		"vi"		"Thiệt hại của khách hàng: {olive}%d{default}"
+	}
+	"SurvivorMVPTest_SIKillsClient"
+	{
+		"vi"		"SI giết chết khách hàng: {olive}%d{default}"
+	}
+	"SurvivorMVPTest_DamagePercentClient"
+	{
+		"vi"		"Phần trăm thiệt hại của khách hàng: {olive}%f{default}"
+	}
+	"SurvivorMVPTest_CurrentRoundMVPClientCommon"
+	{
+		"vi"		"Khách hàng MVP vòng hiện tại (Thông thường): {olive}%N{default}"
+	}
+	"SurvivorMVPTest_CommonKillsClient"
+	{
+		"vi"		"Các lần giết phổ biến cho khách hàng: {olive}%d{default}"
+	}
+	"SurvivorMVPTest_CIPercentClient"
+	{
+		"vi"		"Phần trăm CI của khách hàng: {olive}%f{default}"
+	}
+}

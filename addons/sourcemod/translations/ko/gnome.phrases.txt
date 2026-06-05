@@ -1,0 +1,83 @@
+"Phrases"
+{
+	"Gnome_ErrorAddAnymoreGnomesUsed"
+	{
+		"ko"		"%sError: 더 이상 노움을 추가할 수 없습니다. 중고: ({olive}%d/%d{default})."
+	}
+	"Gnome_CannotPlaceGnomeTryAgain"
+	{
+		"ko"		"%s그놈을 배치할 수 없습니다. 다시 시도해 주세요."
+	}
+	"Gnome_ErrorCannotReadGnomeConfig"
+	{
+		"ko"		"%sError: 빈 파일로 가정하여 그놈 구성을 읽을 수 없습니다. ({olive}%s{default})."
+	}
+	"Gnome_ErrorFailedAddMapGnome"
+	{
+		"ko"		"%sError: 그놈 생성 구성에 지도를 추가하지 못했습니다."
+	}
+	"Gnome_SavedPosAng"
+	{
+		"ko"		"%s({olive}%d/%d{default}) - 위치에 저장됨:[{olive}%f %f %f{default}] 중앙:[{olive}%f %f %f{default}]"
+	}
+	"Gnome_FailedSaveGnome"
+	{
+		"ko"		"%s({olive}%d/%d{default}) - 그놈을 저장하지 못했습니다."
+	}
+	"Gnome_ErrorCannotFindGnomeConfig"
+	{
+		"ko"		"%sError: 그놈 구성({olive}%s{default})을 찾을 수 없습니다."
+	}
+	"Gnome_ErrorCannotLoadGnomeConfig"
+	{
+		"ko"		"%sError: gnome 구성({olive}%s{default})을 로드할 수 없습니다."
+	}
+	"Gnome_ErrorCurrentMapNotGnome"
+	{
+		"ko"		"%sError: 현재 지도가 그놈 구성에 없습니다."
+	}
+	"Gnome_RemovedConfig"
+	{
+		"ko"		"%s({olive}%d/%d{default}) - 그놈이 구성에서 제거되었습니다."
+	}
+	"Gnome_FailedRemoveGnomeConfig"
+	{
+		"ko"		"%s({olive}%d/%d{default}) - 구성에서 Gnome을 제거하지 못했습니다."
+	}
+	"Gnome_0AllGnomesRemovedConfig"
+	{
+		"ko"		"%s(0/%d) - 구성에서 모든 노움이 제거되었습니다. {olive}sm_gnomesave{default}로 추가하세요."
+	}
+	"Gnome_GlowTurned"
+	{
+		"ko"		"%sGlow가 %s로 바뀌었습니다."
+	}
+	"Gnome_Total"
+	{
+		"ko"		"%s총계: %d."
+	}
+	"Gnome_Teleported"
+	{
+		"ko"		"%s%d로 텔레포트되었습니다."
+	}
+	"Gnome_CouldNotFindIndexTeleportation"
+	{
+		"ko"		"%s순간이동에 대한 색인을 찾을 수 없습니다."
+	}
+	"Gnome_UsageSMGnometeleIndex1"
+	{
+		"ko"		"%sUsage: sm_gnometele <색인 1-%d>."
+	}
+	"Gnome_NewAngles"
+	{
+		"ko"		"%s새로운 각도: %f %f %f"
+	}
+	"Gnome_NewOrigin"
+	{
+		"ko"		"%s새로운 원산지: %f %f %f"
+	}
+	"Gnome_SavedOriginAnglesDataConfig"
+	{
+		"ko"		"%sS원점과 각도를 데이터 구성에 저장했습니다."
+	}
+}

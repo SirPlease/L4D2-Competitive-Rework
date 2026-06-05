@@ -1,0 +1,87 @@
+"Phrases"
+{
+	"Join_CrawlingServer"
+	{
+		"chi"		"{green} %N {olive}正在爬进服务器"
+	}
+	"Join_LeftGameReason"
+	{
+		"chi"		"{green}%N {olive}离开了游戏 - 理由: [{green}%s{olive}]"
+	}
+	"Join_AnneDonatePaymentMethodOnly"
+	{
+		"chi"		"{green}[AnneDonate]{default} 支付方式只支持 wechat 或 alipay，请重新选择。"
+	}
+	"Join_FinishRemindsAdministratorVerify"
+	{
+		"chi"		"{green}[AnneDonate]{default} 扫码支付完成后，请输入 {olive}!wc{default} / {olive}!wanchen{default} / {olive}!finish{default} 提醒管理员核实。"
+	}
+	"Join_AnneDonateSponsorshipConfirmedNot"
+	{
+		"chi"		"{green}[AnneDonate]{default} 暂未找到你的待确认赞助，请先输入 {olive}!donate{default} 选择档位和支付方式。"
+	}
+	"Join_AnneDonateRecordingPaymentCompletion"
+	{
+		"chi"		"{green}[AnneDonate]{default} 正在记录你的支付完成提示，请等待管理员核实到账。"
+	}
+	"Join_AnneDonateCurrentlyPeakPeriod"
+	{
+		"chi"		"{green}[AnneDonate]{default} 当前属于高峰期，仅管理员可以游玩。请赞助管理员后继续游玩。"
+	}
+	"Join_AnneDonateUnableObtainSteam"
+	{
+		"chi"		"{green}[AnneDonate]{default} 无法获取 SteamID64，请稍后重试。"
+	}
+	"Join_AnneDonateSteamWorksNot"
+	{
+		"chi"		"{green}[AnneDonate]{default} SteamWorks 不可用，已打开赞助页面，请扫码支付后联系管理员核实。"
+	}
+	"Join_AnneDonateFailedCreateSponsorship"
+	{
+		"chi"		"{green}[AnneDonate]{default} 创建赞助申请失败，请稍后重试。"
+	}
+	"Join_AnneDonateFailedSendSponsorship"
+	{
+		"chi"		"{green}[AnneDonate]{default} 发送赞助申请失败，请稍后重试。"
+	}
+	"Join_AnneDonateSponsorshipRecordCreated"
+	{
+		"chi"		"{green}[AnneDonate]{default} 正在创建赞助记录，赞助页面将直接显示对应收款码。"
+	}
+	"Join_AnneDonateSponsorshipInformationSubmission"
+	{
+		"chi"		"{green}[AnneDonate]{default} 赞助信息提交失败，HTTP 状态: %d。请扫码支付后联系管理员核实。"
+	}
+	"Join_AnneDonateSponsorshipRecordCreatedScan"
+	{
+		"chi"		"{green}[AnneDonate]{default} 赞助记录已创建，请在打开的页面扫码支付。"
+	}
+	"Join_AnneDonateUnableObtainSteamID64"
+	{
+		"chi"		"{green}[AnneDonate]{default} 无法获取 SteamID64，请联系管理员核实。"
+	}
+	"Join_AnneDonateSteamWorksNotAvailable"
+	{
+		"chi"		"{green}[AnneDonate]{default} SteamWorks 不可用，请联系管理员核实到账。"
+	}
+	"Join_AnneDonatePaymentCompletionPrompt"
+	{
+		"chi"		"{green}[AnneDonate]{default} 支付完成提示发送失败，请联系管理员核实。"
+	}
+	"Join_AnneDonatePaymentCompletionPrompts"
+	{
+		"chi"		"{green}[AnneDonate]{default} 支付完成提示同步失败，HTTP 状态: %d。请联系管理员核实。"
+	}
+	"Join_AnneDonatePaymentCompletionPromptSynchronized"
+	{
+		"chi"		"{green}[AnneDonate]{default} 支付完成提示已同步，管理员核实到账后会开通权限。"
+	}
+	"Join_UseCommandsTooFast"
+	{
+		"chi"		"{lightgreen} 你使用命令的速度太快了"
+	}
+	"Join_SurvivorTeamFullNoOther"
+	{
+		"chi"		"{lightgreen} 生还者团队已满，无其他生还者bot可供接管"
+	}
+}

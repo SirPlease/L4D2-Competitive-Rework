@@ -1,0 +1,43 @@
+"Phrases"
+{
+	"Vote_AdministratorCanceledCurrentVote"
+	{
+		"jp"		"[{olive}vote{default}] {blue}管理者が現在の投票をキャンセルしました。"
+	}
+	"Vote_BystandersNotAllowedVoteExecute"
+	{
+		"jp"		"[{olive}vote{default}] {blue} 傍観者はコマンドや cfg ファイルの実行に投票することはできません。"
+	}
+	"Vote_NoRelatedFilesExist"
+	{
+		"jp"		"[{olive}vote{default}] {red} に関連するファイルは存在しません。"
+	}
+	"Vote_CannotVoteResetCurrentMap"
+	{
+		"jp"		"[{olive}vote{default}] {red}ゲーム開始後に現在のマップをリセットするために投票することはできません。"
+	}
+	"Vote_InitiatedVote"
+	{
+		"jp"		"[{olive}vote{default}] {blue}%N が投票を開始しました"
+	}
+	"Vote_AlreadyVoteProgress"
+	{
+		"jp"		"[{olive}vote{default}] {red} すでに投票が行われています。"
+	}
+	"Vote_InitiatesVoteKick"
+	{
+		"jp"		"[{olive}vote{default}] {blue}%N {default} が {blue} %N を排除するための投票を開始します"
+	}
+	"Vote_NotPreventBanMisusedRequires"
+	{
+		"jp"		"[{olive}vote{default}] {red} は禁止の悪用を防ぐものではなく、100,000 ポイントを超えるプレイヤーが禁止を使用する必要があります。"
+	}
+	"Vote_UsePowerCautionAbuseBans"
+	{
+		"jp"		"[{olive}vote{default}] {red}力の使い方には注意してください。禁止を乱用すると、アカウントが禁止されます (初回は 7 日間、2 回目は 1 か月、3 回目は永久に)。"
+	}
+	"Vote_InitiatesVoteBanOneDay"
+	{
+		"jp"		"[{olive}vote{default}] {blue}%N {default} は、いつか {blue} %N を禁止する投票を開始します"
+	}
+}

@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"BoomerHordeEqualizer_PassedBiledSurvivor"
+	{
+		"chi"		"%N 将 bBiledSurvivor 传递给 %N"
+	}
+	"BoomerHordeEqualizer_NoLongerBoomedSurvivorCount"
+	{
+		"chi"		"%N 不再是它（BoomedSurvivorCount：%i）"
+	}
+	"BoomerHordeEqualizer_BoomedTotal"
+	{
+		"chi"		"%N 轰鸣（总计：%d）"
+	}
+	"BoomerHordeEqualizer_BoomHordeEventBoomedSurvivor"
+	{
+		"chi"		"BoomHordeEvent[BoomedSurvivorCount]：%i"
+	}
+	"BoomerHordeEqualizer_UncoveredBileEvent"
+	{
+		"chi"		"胆汁暴露事件"
+	}
+}

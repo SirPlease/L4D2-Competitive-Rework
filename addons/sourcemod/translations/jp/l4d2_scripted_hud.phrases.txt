@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2ScriptedHUD_HUDTextsDataFileReloaded"
+	{
+		"jp"		"{green}[データ ファイルからの HUD テキストがリロードされました]"
+	}
+}

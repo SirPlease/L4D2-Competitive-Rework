@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"StartingItems_DetermineItems"
+	{
+		"zho"		"確定項目()"
+	}
+}

@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"Text_NotExceed10SpecialAnne"
+	{
+		"vi"		"{lightgreen} Vì không vượt quá 10 đặc biệt nên vũ khí AnneHappy+ được tự động chuyển sang vũ khí AnneHappy"
+	}
+	"Text_CannotUseAnneHappyPlus"
+	{
+		"vi"		"{lightgreen} không thể sử dụng vũ khí AnneHappyPlus vì không vượt quá 10 đặc biệt"
+	}
+}

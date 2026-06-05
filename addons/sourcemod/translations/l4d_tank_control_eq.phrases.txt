@@ -12,99 +12,58 @@
 	{
 		"en"		"{olive}Rage Meter {red}Refilled"
 	}
-
-    "TagSelection"
+	"TagSelection"
 	{
 		"en"		"{red}<{default}Tank Selection{red}>"
 	}
-    "YouBecomeTank"
+	"YouBecomeTank"
 	{
 		"en"		"{green}You {default}will become the {red}Tank{default}!"
 	}
-   "BecomeTank"
+	"BecomeTank"
 	{
 		"en"		"{olive}%N {default}will become the {red}Tank!"
 	}
-
-    "TagControl"
+	"TagControl"
 	{
 		"en"		"{green}[{olive}Tank Control{green}]"
 	}
-   "InvalidTarget"
+	"InvalidTarget"
 	{
 		"en"		"{default}Invalid Target. Unable to give tank"
 	}
-   "NoInfected"
+	"NoInfected"
 	{
 		"en"		"{olive}%N {default}is not on the infected team. Unable to give tank"
 	}
-
-    "HintText"
+	"HintText"
 	{
 		"en"		"Rage Meter Refilled"
 	}
-
-
 	"L4DTankControlEq_TankRageMeterRefilled"
 	{
 		"en"		"{red}<{default}Tank Rage{red}> {olive}Rage Meter {red}Refilled"
-		"chi"		"{red}<{default}T坦克怒气{red}> {olive}R怒气计{red}补充装"
-		"zho"		"{red}<{default}T戰車怒氣{red}> {olive}R怒氣計{red}補充裝"
-		"jp"		"{red}<{default}タンクレイジ{red}> {olive}レイジメーター {red}補充"
-		"ko"		"{red}<{default}T탱크 레이지{red}> {olive}R리지 미터 {red}리필"
-		"vi"		"{red}<{default}Tank Rage{red}> {olive}R Máy đo cường độ {red}Được nạp lại"
 	}
-
 	"L4DTankControlEq_TankRageMeterRefilled_2"
 	{
 		"en"		"{red}<{default}Tank Rage{red}> {default}({green}%N{default}'s) {olive}Rage Meter {red}Refilled"
-		"chi"		"{red}<{default}T坦克愤怒{red}> {default}({green}%N{default}'s) {olive}R愤怒计{red}重新填充"
-		"zho"		"{red}<{default}T戰車憤怒{red}> {default}({green}%N{default}'s) {olive}R"
-		"jp"		"{red}<{default}タンクレイジ{red}> {default}({green}%N{default}さん) {olive}レイジメーター {red}補充"
-		"ko"		"{red}<{default}T탱크 레이지{red}> {default}({green}%N{default}'s) {olive}R속도계 {red}리필"
-		"vi"		"{red}<{default}Tank Rage{red}> {default}({green}%N{default}'s) {olive}Rage Meter {red}Refill"
 	}
-
 	"L4DTankControlEq_TankSelectionBecomeTank"
 	{
 		"en"		"{red}<{default}Tank Selection{red}> {green}You {default}will become the {red}Tank{default}!"
-		"chi"		"{red}<{default}T坦克选择{red}> {green}您的{default}将成为{red}T坦克{default}！"
-		"zho"		"{red}<{default}T戰車選擇{red}> {green}您的{default}將成為{red}T戰車{default}！"
-		"jp"		"{red}<{default}タンクセレクション{red}> {green}あなたの{default}が{red}タンク{default}になります！"
-		"ko"		"{red}<{default}T탱크 선택{red}> {green}당신 {default}가 {red}Tank{default}가 됩니다!"
-		"vi"		"{red}<{default}Tank Selection{red}> {green}Bạn {default}sẽ trở thành {red}Tank{default}!"
 	}
-
 	"L4DTankControlEq_TankSelectionBecomeTank_2"
 	{
 		"en"		"{red}<{default}Tank Selection{red}> {olive}%N {default}will become the {red}Tank!"
-		"chi"		"{red}<{default}T坦克选择{red}> {olive}%N {default}将成为{red}T坦克！"
-		"zho"		"{red}<{default}T戰車選擇{red}> {olive}%N {default}將成為{red}T戰車！"
-		"jp"		"{red}<{default}タンクセレクション{red}> {olive}%N {default}が{red}タンクになります！"
-		"ko"		"{red}<{default}T탱크 선택{red}> {olive}%N {default}가 {red}T탱크가 됩니다!"
-		"vi"		"{red}<{default}Tank Selection{red}> {olive}%N {default}sẽ trở thành {red}Tank!"
 	}
-
 	"L4DTankControlEq_TankControlInvalidTargetUnable"
 	{
 		"en"		"{green}[{olive}Tank Control{green}] {default}Invalid Target. Unable to give tank"
-		"chi"		"{green}[{olive}T坦克控制{green}] {default}无效目标。无法给予坦克"
-		"zho"		"{green}[{olive}T戰車控制{green}] {default}無效目標。無法給予坦克"
-		"jp"		"{green}[{olive}タンクコントロール{green}] {default}ターゲットが無効です。タンクを提供できません"
-		"ko"		"{green}[{olive}Tank Control{green}] {default}잘못된 대상입니다. 탱크를 줄 수 없습니다"
-		"vi"		"{green}[{olive}Tank Control{green}] {default}Mục tiêu không hợp lệ. Không thể tặng xe tăng"
 	}
-
 	"L4DTankControlEq_TankControlNotInfectedTeam"
 	{
 		"en"		"{green}[{olive}Tank Control{green}] {olive}%N {default}is not on the infected team. Unable to give tank"
-		"chi"		"{green}[{olive}Tank Control{green}] {olive}%N {default}is not on the infected team. Unable to give tank"
-		"zho"		"{green}[{olive}Tank Control{green}] {olive}%N {default}is not on the infected team. Unable to give tank"
-		"jp"		"{green}[{olive}Tank Control{green}] {olive}%N {default}is not on the infected team. Unable to give tank"
-		"ko"		"{green}[{olive}Tank Control{green}] {olive}%N {default}i는 감염된 팀에 없습니다. 탱크를 줄 수 없습니다"
-		"vi"		"{green}[{olive}Tank Control{green}] {olive}%N {default}không thuộc nhóm bị nhiễm. Không thể tặng xe tăng"
 	}
-
 	"Hit_RageMeterRefilled"
 	{
 		"en"		"First tank pass ended, second tank pass started"

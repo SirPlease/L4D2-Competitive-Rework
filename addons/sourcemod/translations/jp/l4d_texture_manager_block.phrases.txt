@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4DTextureManagerBlock_MathackDetectorKickedUsingMathack"
+	{
+		"jp"		"{green}[{default}Mathack Detector{green}] {lightgreen}%s {default}がMathack使用でキックされました！"
+	}
+}

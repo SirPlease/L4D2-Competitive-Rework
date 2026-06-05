@@ -1,0 +1,59 @@
+"Phrases"
+{
+	"L4D2MapVote_MapnextChatPrompt"
+	{
+		"chi"		"{default}聊天栏输入 {olive}!mapnext {default}投票下一张地图."
+	}
+	"L4D2MapVote_VPKCampaignListsRefreshed"
+	{
+		"chi"		"{olive}[MapVote]{default} 已刷新 VPK 与战役列表。"
+	}
+	"L4D2MapVote_VPKRefreshCooldownRemaining"
+	{
+		"chi"		"VPK 刷新冷却中，还需 %.1f 秒。"
+	}
+	"L4D2MapVote_PrePluginNotInstalled"
+	{
+		"chi"		"前置插件未安装"
+	}
+	"L4D2MapVote_CurrentMapNotFinalMap"
+	{
+		"chi"		"当前地图非终局地图"
+	}
+	"L4D2MapVote_SpectatorsCannotVote"
+	{
+		"chi"		"旁观者无法进行投票"
+	}
+	"L4D2MapVote_VotingInProgressCannotStartNewVote"
+	{
+		"chi"		"投票正在进行中, 暂不能发起新的投票"
+	}
+	"L4D2MapVote_NoValidChapterMapExists"
+	{
+		"chi"		"无有效的章节地图存在"
+	}
+	"L4D2MapVote_InitiatesVoteSetsNextMap"
+	{
+		"chi"		"{blue}%N {default}发起投票 {olive}设置下一张地图为: %s"
+	}
+	"L4D2MapVote_Voted"
+	{
+		"chi"		"{blue}%N {default}已投票"
+	}
+	"L4D2MapVote_SetupFailed"
+	{
+		"chi"		"设置失败"
+	}
+	"L4D2MapVote_NextMapSet"
+	{
+		"chi"		"{default}下一张地图已设置为 {olive}%s"
+	}
+	"L4D2MapVote_InitiatesVoteReplacementCampaign"
+	{
+		"chi"		"{blue}%N {default}发起投票 {olive}更换战役: %s"
+	}
+	"L4D2MapVote_InitiatesVoteChangeMap"
+	{
+		"chi"		"{blue}%N {default}发起投票 {olive}更换地图: %s (%s)"
+	}
+}

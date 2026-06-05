@@ -1,0 +1,27 @@
+"Phrases"
+{
+	"InfectedControl_ICFailedObtainCrosshairHit"
+	{
+		"ko"		"{green}[IC]{default}가 십자선 적중점을 획득하지 못했습니다."
+	}
+	"InfectedControl_ICNoNavAreaNearby"
+	{
+		"ko"		"{green}[IC]{default} 근처에 NavArea가 없습니다."
+	}
+	"InfectedControl_ICNavidBucketCalculationReturn"
+	{
+		"ko"		"{green}[IC]{default} navid=%d 버킷=%d(계산) / %d(반환) 플래그=%s"
+	}
+	"InfectedControl_ICNavidBucketReturnFlag"
+	{
+		"ko"		"{green}[IC]{default} navid=%d 버킷=N/A / %d(반환) 플래그=%s"
+	}
+	"InfectedControl_ICNavCanGenerateTotal"
+	{
+		"ko"		"{green}[IC]{default} Nav %d {olive}는 {default} | 총점: {lightgreen}%.1f{default} | 자세한 내용은 콘솔을 참조하세요."
+	}
+	"InfectedControl_ICNavCannotGenerateSee"
+	{
+		"ko"		"{green}[IC]{default} Nav %d {lightgreen}는 {default}를 생성할 수 없습니다 | 자세한 내용은 콘솔을 참조하세요."
+	}
+}

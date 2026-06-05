@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4DNoCans_EntityModel"
+	{
+		"ko"		"iEntity: %d(%s), 모델: %s"
+	}
+}

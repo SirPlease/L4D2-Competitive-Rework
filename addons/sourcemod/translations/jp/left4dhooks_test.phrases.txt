@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"Left4DHooksTest_Deton"
+	{
+		"jp"		"デトンA(%0.0f %0.0f %0.0f)"
+	}
+	"Left4DHooksTest_Deton_2"
+	{
+		"jp"		"デトンB(%0.0f %0.0f %0.0f)"
+	}
+	"Left4DHooksTest_Trace"
+	{
+		"jp"		"トレース (%0.0f %0.0f %0.0f)"
+	}
+}

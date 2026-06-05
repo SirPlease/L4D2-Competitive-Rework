@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"Specrates_SpecRatesScoreLess30"
+	{
+		"ko"		"{green}[SpecRates]{default} 점수가 30W 미만이므로 시청률을 설정할 수 없습니다."
+	}
+	"Specrates_SpecRatesNumberSpectatorsExceeds"
+	{
+		"ko"		"{green}[SpecRates]{default} 관중 수가 %d를 초과했습니다. 군중이 가득 차면 30틱만 허용됩니다."
+	}
+	"Specrates_SpecRatesSet60tick"
+	{
+		"ko"		"{green}[SpecRates]{default}가 {lightgreen}60tick{default}로 설정되었습니다."
+	}
+	"Specrates_SpecRatesAdministratorMatchSet"
+	{
+		"ko"		"{green}[SpecRates]{default} 관리자(일치)가 {lightgreen}128tick{default}로 설정되었습니다."
+	}
+	"Specrates_SpecRatesAdministratorSpectatorSet"
+	{
+		"ko"		"{green}[SpecRates]{default} 관리자(관전자)가 {lightgreen}100tick{default}로 설정되었습니다."
+	}
+}

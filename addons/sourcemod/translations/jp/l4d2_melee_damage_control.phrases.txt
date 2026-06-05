@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"L4D2MeleeDamageControl_MeleeDmgFixInfectedClass"
+	{
+		"jp"		"[MeleeDmgFix] 感染者: (%N) %d、クラス: %s (%d)、攻撃者: (%N) %d、加害者: %d、ダメージ: %f、ダメージタイプ: %d、セットダメージ: %f"
+	}
+	"L4D2MeleeDamageControl_MeleeDmgControlChargerAttacker"
+	{
+		"jp"		"[MeleeDmgControl] チャージャー: (%N) %d、アタッカー: (%N) %d、インフリクター: %d、ダメージ: %f、ダメージタイプ: %d、セットダメージ: %f"
+	}
+	"L4D2MeleeDamageControl_MeleeDmgControlTankAttacker"
+	{
+		"jp"		"[MeleeDmgControl] タンク: (%N) %d、攻撃者: (%N) %d、加害者: %d、ダメージ: %f、ダメージタイプ: %d、セットダメージ: %f"
+	}
+	"L4D2MeleeDamageControl_ClassName"
+	{
+		"jp"		"sクラス名: %s (%d)"
+	}
+}

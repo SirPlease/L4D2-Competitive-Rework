@@ -3,150 +3,61 @@
 	"RYGive_TryingKickDeadInfectedRobot"
 	{
 		"en"		"Trying to kick out the dead infected robot..."
-		"chi"		"尝试踢出死亡的感染机器人..."
-		"zho"		"嘗試踢出死亡的感染機器人..."
-		"jp"		"死んだ感染ロボットを追い出そうとしています..."
-		"ko"		"죽은 감염된 로봇을 쫓아내려고 하는데..."
-		"vi"		"Đang cố gắng đuổi con robot bị nhiễm bệnh đã chết ra ngoài..."
 	}
-
 	"RYGive_KickedBots"
 	{
 		"en"		"Kicked %i bots."
-		"chi"		"踢掉 %i 机器人。"
-		"zho"		"踢掉 %i 機器人。"
-		"jp"		"%i ボットをキックしました。"
-		"ko"		"%i 봇을 쫓아냈습니다."
-		"vi"		"Đã loại bỏ bot %i."
 	}
-
 	"RYGive_AdminSpawnedInfected"
 	{
 		"en"		"{lightgreen}admin{default}[{olive}%N{default}] spawned a {olive}%s"
-		"chi"		"{lightgreen}管理员{default}[{olive}%N{default}]刷出一只{olive}%s"
-		"zho"		"{lightgreen}管理員{default}[{olive}%N{default}]刷出一隻{olive}%s"
-		"jp"		"{lightgreen}管理员{default}[{olive}%N{default}]刷出一只{olive}%s"
-		"ko"		"{lightgreen}管理员{default}[{olive}%N{default}]刷出一只{olive}%s"
-		"vi"		"{lightgreen}管理员{default}[{olive}%N{default}]刷出一只{olive}%s"
 	}
-
 	"RYGive_FriendlyDamageCoefficientResetDefault"
 	{
 		"en"		"Friendly damage coefficient has been reset to default value"
-		"chi"		"友伤系数已被重置为默认值"
-		"zho"		"友傷係數已被重設為預設值"
-		"jp"		"味方ダメージ係数がデフォルト値にリセットされました"
-		"ko"		"아군 피해 계수가 기본값으로 재설정되었습니다."
-		"vi"		"Hệ số sát thương thân thiện đã được đặt lại về giá trị mặc định"
 	}
-
 	"RYGive_FriendlyDamageCoefficientSet"
 	{
 		"en"		"{default} friendly damage coefficient has been set to {green}%.1f"
-		"chi"		"{default}友伤系数已被设置为 {green}%.1f"
-		"zho"		"{default}友傷係數已被設定為 {green}%.1f"
-		"jp"		"{default} 味方ダメージ係数が {green}%.1f に設定されました"
-		"ko"		"{default} 아군 피해 계수가 {green}%.1f로 설정되었습니다."
-		"vi"		"Hệ số sát thương thân thiện {default} đã được đặt thành {green}%.1f"
 	}
-
 	"RYGive_FailedObtainCrosshairPositionTry"
 	{
 		"en"		"Failed to obtain the crosshair position! Please try again."
-		"chi"		"获取准心处位置失败! 请重新尝试."
-		"zho"		"取得準心處位置失敗! 請重新嘗試."
-		"jp"		"十字線の位置を取得できませんでした。もう一度試してください。"
-		"ko"		"십자선 위치 획득에 실패했습니다! 다시 시도해 주세요."
-		"vi"		"Không thể lấy được vị trí tâm ngắm! Vui lòng thử lại."
 	}
-
 	"RYGive_ImmuneDamage"
 	{
 		"en"		"{green} is immune to damage from %s {olive}%N {default}"
-		"chi"		"{green}已%s {olive}%N {default}的伤害免疫"
-		"zho"		"{green}已%s {olive}%N {default}的傷害免疫"
-		"jp"		"{green} は %s {olive}%N {default} によるダメージを受けません"
-		"ko"		"{green}는 %s {olive}%N {default}의 피해에 면역입니다."
-		"vi"		"{green} miễn nhiễm với sát thương từ %s {olive}%N {default}"
 	}
-
 	"RYGive_TargetPlayerExpired"
 	{
 		"en"		"The target player has expired"
-		"chi"		"目标玩家已失效"
-		"zho"		"目標玩家失效"
-		"jp"		"対象プレイヤーの有効期限が切れています"
-		"ko"		"대상 플레이어가 만료되었습니다"
-		"vi"		"Người chơi mục tiêu đã hết hạn"
 	}
-
 	"RYGive_ImmuneSpecialSenseControl"
 	{
 		"en"		"{green} is immune to the special sense control of %s {olive}%N"
-		"chi"		"{green}%s {olive}%N 已免疫特感控制"
-		"zho"		"{green}%s {olive}%N 已免疫特感控制"
-		"jp"		"{green} は、%s {olive}%N の特殊なセンス制御の影響を受けません。"
-		"ko"		"{green}는 %s {olive}%N의 특수 감지 제어에 면역입니다."
-		"vi"		"{green} miễn nhiễm với sự điều khiển cảm giác đặc biệt của %s {olive}%N"
 	}
-
 	"RYGive_OnlySurvivorsCanIdle"
 	{
 		"en"		"Only survivors can idle"
-		"chi"		"只有生还者才能进行闲置"
-		"zho"		"只有生還者才能閒置"
-		"jp"		"生存者だけがアイドル状態にできる"
-		"ko"		"생존자만 유휴 상태일 수 있습니다."
-		"vi"		"Chỉ những người sống sót mới có thể nhàn rỗi"
 	}
-
 	"RYGive_Survival"
 	{
 		"en"		"Survival is over"
-		"chi"		"生还已满"
-		"zho"		"生還已滿"
-		"jp"		"サバイバルは終わった"
-		"ko"		"생존은 끝났다"
-		"vi"		"Sự sống còn đã kết thúc"
 	}
-
 	"RYGive_NumberInfectedPeopleFull"
 	{
 		"en"		"The number of infected people is full"
-		"chi"		"感染者已满"
-		"zho"		"感染者已滿"
-		"jp"		"感染者数がいっぱい"
-		"ko"		"감염자 수가 꽉 찼습니다."
-		"vi"		"Số người nhiễm bệnh đã đầy"
 	}
-
 	"RYGive_PlayerAlreadyTargetTeam"
 	{
 		"en"		"The player is already in the target team"
-		"chi"		"玩家已在目标队伍中"
-		"zho"		"玩家已在目標隊伍中"
-		"jp"		"プレーヤーはすでにターゲットチームに所属しています"
-		"ko"		"플레이어가 이미 대상 팀에 있습니다"
-		"vi"		"Người chơi đã ở trong đội mục tiêu"
 	}
-
 	"RYGive_AllPlayersWeaponManeuverabilitySet"
 	{
 		"en"		"{olive} All players The weapon maneuverability of {default} has been set to {green}%.1fx"
-		"chi"		"{olive}所有玩家 {default}的武器操纵性已被设置为 {green}%.1fx"
-		"zho"		"{olive}所有玩家 {default}的武器操控性已被設定為 {green}%.1fx"
-		"jp"		"{olive} 全プレイヤー {default} の武器操作性を {green}%.1fx に設定しました"
-		"ko"		"{olive} 모든 플레이어 {default}의 무기 기동성이 {green}%.1fx로 설정되었습니다."
-		"vi"		"{olive} Tất cả người chơi Khả năng cơ động của vũ khí của {default} đã được đặt thành {green}%.1fx"
 	}
-
 	"RYGive_WeaponManeuverabilitySet"
 	{
 		"en"		"{olive}%N The weapon maneuverability of {default} has been set to {green}%.1fx"
-		"chi"		"{olive}%N {default}的武器操纵性已被设置为 {green}%.1fx"
-		"zho"		"{olive}%N {default}的武器操控性已設定為 {green}%.1fx"
-		"jp"		"{olive}%N {default}の武器操作性が{green}%.1fxに設定されました"
-		"ko"		"{olive}%N {default}의 무기 기동성이 {green}%.1fx로 설정되었습니다."
-		"vi"		"{olive}%N Khả năng cơ động của vũ khí của {default} đã được đặt thành {green}%.1fx"
 	}
 }

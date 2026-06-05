@@ -3,71 +3,29 @@
 	"Tag"
 	{
 		"en"		"{red}[{default}Tank Rage{red}]{default}"
-		"chi"		"{red}[{default}Tank Rage{red}]{default}"
-		"zho"		"{red}[{default}Tank Rage{red}]{default}"
-		"jp"		"{red}[{default}Tank Rage{red}]{default}"
-		"ko"		"{red}[{default}Tank Rage{red}]{default}"
-		"vi"		"{red}[{default}Tank Rage{red}]{default}"
 	}
 	"SurvivorsRunBack"
 	{
 		"en"		"For every {olive}%i{green}%% {default}Survivors run back, the Tank will have their frustration frozen for {olive}%0.1f {green}seconds{default}."
-	
-		"chi"		"For every {olive}%i{green}%% {default}Survivors run back, the Tank will have their frustration frozen for {olive}%0.1f {green}seconds{default}."
-		"zho"		"For every {olive}%i{green}%% {default}Survivors run back, the Tank will have their frustration frozen for {olive}%0.1f {green}seconds{default}."
-		"jp"		"For every {olive}%i{green}%% {default}Survivors run back, the Tank will have their frustration frozen for {olive}%0.1f {green}seconds{default}."
-		"ko"		"For every {olive}%i{green}%% {default}Survivors run back, the Tank will have their frustration frozen for {olive}%0.1f {green}seconds{default}."
-		"vi"		"For every {olive}%i{green}%% {default}Survivors run back, the Tank will have their frustration frozen for {olive}%0.1f {green}seconds{default}."
 	}
-
-
 	"L4D2Tankrage_Tank"
 	{
 		"en"		"[%s]: %N is Tank"
-		"chi"		"[%s]：%N是坦克"
-		"zho"		"[%s]：%N是坦克"
-		"jp"		"[%s]: %Nはタンクです"
-		"ko"		"[%s]: %N는 탱크입니다."
-		"vi"		"[%s]: %N là xe tăng"
 	}
-
 	"L4D2Tankrage_EverythingReset"
 	{
 		"en"		"[%s]: Everything is reset!"
-		"chi"		"[%s]：一切都重置了！"
-		"zho"		"[%s]：一切都重置了！"
-		"jp"		"[%s]: すべてがリセットされました!"
-		"ko"		"[%s]: 모든 것이 재설정되었습니다!"
-		"vi"		"[%s]: Mọi thứ đã được đặt lại!"
 	}
-
 	"L4D2Tankrage_FlowDifferenceSinceLastCheck"
 	{
 		"en"		"{green}[{lightgreen}%N{green}]{default}: Flow Difference since last check: %i"
-		"chi"		"{green}[{lightgreen}%N{green}]{default}：自上次检查以来的流量差异：%i"
-		"zho"		"{green}[{lightgreen}%N{green}]{default}：自上次檢查以來的流量差異：%i"
-		"jp"		"{green}[{lightgreen}%N{green}]{default}: 前回のチェック以降のフローの差: %i"
-		"ko"		"{green}[{lightgreen}%N{green}]{default}: 마지막 점검 이후 유량 차이: %i"
-		"vi"		"{green}[{lightgreen}%N{green}]{default}: Sự khác biệt về lưu lượng kể từ lần kiểm tra cuối cùng: %i"
 	}
-
 	"L4D2Tankrage_FrusGrace"
 	{
 		"en"		"{green}[{lightgreen}%N{green}]{default}: Frus: {lightgreen}%i {default}- Grace: {lightgreen}%f{green}s"
-		"chi"		"{green}[{lightgreen}%N{green}]{default}： 弗鲁斯：{lightgreen}%i {default}- 恩典：{lightgreen}%f{green}s"
-		"zho"		"{green}[{lightgreen}%N{green}]{default}: Frus: {lightgreen}%i {default}- Grace: {lightgreen}%f{green}s"
-		"jp"		"{green}[{lightgreen}%N{green}]{default}: フルス: {lightgreen}%i {default}- グレース: {lightgreen}%f{green}s"
-		"ko"		"{green}[{lightgreen}%N{green}]{default}: 프러스: {lightgreen}%i {default}- 그레이스: {lightgreen}%f{green}s"
-		"vi"		"{green}[{lightgreen}%N{green}]{default}: Frus: {lightgreen}%i {default}- Grace: {lightgreen}%f{green}s"
 	}
-
 	"L4D2Tankrage_SetGrace"
 	{
 		"en"		"{green}[{lightgreen}%N{green}]{default}: Set Grace To: {lightgreen}%f{green}s"
-		"chi"		"{green}[{lightgreen}%N{green}]{default}：将宽限设置为：{lightgreen}%f{green}s"
-		"zho"		"{green}[{lightgreen}%N{green}]{default}：將寬限設定為：{lightgreen}%f{green}s"
-		"jp"		"{green}[{lightgreen}%N{green}]{default}: 猶予期間を次のように設定します: {lightgreen}%f{green}s"
-		"ko"		"{green}[{lightgreen}%N{green}]{default}: 유예 설정: {lightgreen}%f{green}s"
-		"vi"		"{green}[{lightgreen}%N{green}]{default}: Đặt ân hạn thành: {lightgreen}%f{green}s"
 	}
 }

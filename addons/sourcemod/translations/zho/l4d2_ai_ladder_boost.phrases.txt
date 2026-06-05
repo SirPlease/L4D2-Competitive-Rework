@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2AILadderBoost_LadderAccelerationGetLadderAcceleration"
+	{
+		"zho"		"[梯子加速] %s 獲得爬梯加速"
+	}
+	"L4D2AILadderBoost_LadderAccelerationRestoreOriginalSpeed"
+	{
+		"zho"		"[梯子加速] %s 恢復原始速度"
+	}
+}

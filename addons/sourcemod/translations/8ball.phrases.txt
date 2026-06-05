@@ -3,80 +3,37 @@
 	"Tag"
 	{
 		"en"		"{default}[{green}8Ball{default}]"
-		"zho"		"{default}[{green}8Ball{default}]"
-		"jp"		"{default}[{green}8Ball{default}]"
-		"ko"		"{default}[{green}8Ball{default}]"
-		"vi"		"{default}[{green}8Ball{default}]"
 	}
 	"Usage"
 	{
 		"en"		"Usage: !8ball <question>"
-		"zho"		"Usage: !8ball <question>"
-		"jp"		"Usage: !8ball <question>"
-		"ko"		"Usage: !8ball <question>"
-		"vi"		"Usage: !8ball <question>"
 	}
 	"Asked"
 	{
 		"en"		"{teamcolor}%N{default} Asked: {olive}%s{default}"
-	
-		"zho"		"{teamcolor}%N{default} Asked: {olive}%s{default}"
-		"jp"		"{teamcolor}%N{default} Asked: {olive}%s{default}"
-		"ko"		"{teamcolor}%N{default} Asked: {olive}%s{default}"
-		"vi"		"{teamcolor}%N{default} Asked: {olive}%s{default}"
 	}
 	"WithYes"
 	{
 		"en"		"I'm going with {olive}Yes{default}!"
-	
-		"zho"		"I'm going with {olive}Yes{default}!"
-		"jp"		"I'm going with {olive}Yes{default}!"
-		"ko"		"I'm going with {olive}Yes{default}!"
-		"vi"		"I'm going with {olive}Yes{default}!"
 	}
 	"WithNo"
 	{
 		"en"		"I'm going with a {red}No{default}!"
-	
-		"zho"		"I'm going with a {red}No{default}!"
-		"jp"		"I'm going with a {red}No{default}!"
-		"ko"		"I'm going with a {red}No{default}!"
-		"vi"		"I'm going with a {red}No{default}!"
 	}
 	"Yikes"
 	{
 		"en"		"Yikes. {red}No{default}!"
-	
-		"zho"		"Yikes. {red}No{default}!"
-		"jp"		"Yikes. {red}No{default}!"
-		"ko"		"Yikes. {red}No{default}!"
-		"vi"		"Yikes. {red}No{default}!"
 	}
 	"Sure"
 	{
 		"en"		"Uhhhhh... {olive}Sure{default}?"
-	
-		"zho"		"Uhhhhh... {olive}Sure{default}?"
-		"jp"		"Uhhhhh... {olive}Sure{default}?"
-		"ko"		"Uhhhhh... {olive}Sure{default}?"
-		"vi"		"Uhhhhh... {olive}Sure{default}?"
 	}
 	"AbsolutelyNot"
 	{
 		"en"		"LOL {red}Absolutely Not{default}!"
-	
-		"zho"		"LOL {red}Absolutely Not{default}!"
-		"jp"		"LOL {red}Absolutely Not{default}!"
-		"ko"		"LOL {red}Absolutely Not{default}!"
-		"vi"		"LOL {red}Absolutely Not{default}!"
 	}
 	"Yeah"
 	{
 		"en"		"You know what? {olive}Yeah{default}!"
-	
-		"zho"		"You know what? {olive}Yeah{default}!"
-		"jp"		"You know what? {olive}Yeah{default}!"
-		"ko"		"You know what? {olive}Yeah{default}!"
-		"vi"		"You know what? {olive}Yeah{default}!"
 	}
 }

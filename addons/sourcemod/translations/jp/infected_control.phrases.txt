@@ -1,0 +1,27 @@
+"Phrases"
+{
+	"InfectedControl_ICFailedObtainCrosshairHit"
+	{
+		"jp"		"{green}[IC]{default} は十字線のヒット ポイントを取得できませんでした。"
+	}
+	"InfectedControl_ICNoNavAreaNearby"
+	{
+		"jp"		"{green}[IC]{default} 近くに NavArea がありません。"
+	}
+	"InfectedControl_ICNavidBucketCalculationReturn"
+	{
+		"jp"		"{green}[IC]{default} ナビッド=%d バケット=%d(計算) / %d(リターン) フラグ=%s"
+	}
+	"InfectedControl_ICNavidBucketReturnFlag"
+	{
+		"jp"		"{green}[IC]{default} ナビッド=%d バケット=N/A / %d(リターン) フラグ=%s"
+	}
+	"InfectedControl_ICNavCanGenerateTotal"
+	{
+		"jp"		"{green}[IC]{default} ナビ %d {olive} は {default} を生成できます |合計スコア: {lightgreen}%.1f{default} |詳細についてはコンソールを参照してください"
+	}
+	"InfectedControl_ICNavCannotGenerateSee"
+	{
+		"jp"		"{green}[IC]{default} ナビ %d {lightgreen} は {default} を生成できません |詳細についてはコンソールを参照してください"
+	}
+}

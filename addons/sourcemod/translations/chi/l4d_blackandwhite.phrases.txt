@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4DBlackandwhite_BlackWhite"
+	{
+		"chi"		"{blue}[{default}!{blue}]{default} {olive}%s{default} 为黑白。"
+	}
+}

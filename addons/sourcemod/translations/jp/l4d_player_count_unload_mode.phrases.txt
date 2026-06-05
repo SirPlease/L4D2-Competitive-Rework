@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4DPlayerCountUnloadMode_AdministratorNotPresentPlayersAll"
+	{
+		"jp"		"管理者は不在で、現在すべての {green}%d/%d{default} サーバーにプレイヤーが存在し、ピーク期間の制限 ({green}%.0f%%{default}) は {green}%d{default} 分のままです。このモード {green}%d{default}、{green} 強制アンインストール モードには人が足りません!!!!"
+	}
+	"L4DPlayerCountUnloadMode_AdministratorNotPresentCurrentlyRestricted"
+	{
+		"jp"		"管理者は不在のため、現在制限時間帯にあります。このモードには人が足りません {green}%d{default} 人、{green} 強制アンインストール モード!!!!"
+	}
+}

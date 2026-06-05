@@ -1,0 +1,27 @@
+"Phrases"
+{
+	"InfectedControl_ICFailedObtainCrosshairHit"
+	{
+		"vi"		"{green}[IC]{default} không đạt được điểm trúng tâm ngắm."
+	}
+	"InfectedControl_ICNoNavAreaNearby"
+	{
+		"vi"		"{green}[IC]{default} Không có NavArea nào gần đó."
+	}
+	"InfectedControl_ICNavidBucketCalculationReturn"
+	{
+		"vi"		"{green}[IC]{default} navid=%d xô=%d(tính toán) / %d(trả về) cờ=%s"
+	}
+	"InfectedControl_ICNavidBucketReturnFlag"
+	{
+		"vi"		"{green}[IC]{default} navid=%d xô=N/A / %d(trở lại) cờ=%s"
+	}
+	"InfectedControl_ICNavCanGenerateTotal"
+	{
+		"vi"		"{green}[IC]{default} Nav %d {olive} có thể tạo {default} | Tổng số điểm: {lightgreen}%.1f{default} | Xem bảng điều khiển để biết chi tiết"
+	}
+	"InfectedControl_ICNavCannotGenerateSee"
+	{
+		"vi"		"{green}[IC]{default} Nav %d {lightgreen} không thể tạo {default} | Xem bảng điều khiển để biết chi tiết"
+	}
+}

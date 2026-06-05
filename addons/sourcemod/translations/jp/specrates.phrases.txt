@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"Specrates_SpecRatesScoreLess30"
+	{
+		"jp"		"{green}[SpecRates]{default} スコアが 30W 未満のため、視聴レートを設定できません。"
+	}
+	"Specrates_SpecRatesNumberSpectatorsExceeds"
+	{
+		"jp"		"{green}[SpecRates]{default} 観客数が%dを超えています。混雑時は 30 ティックのみ許可されます。"
+	}
+	"Specrates_SpecRatesSet60tick"
+	{
+		"jp"		"{green}[スペックレート]{default}が{lightgreen}60tick{default}に設定されました。"
+	}
+	"Specrates_SpecRatesAdministratorMatchSet"
+	{
+		"jp"		"{green}[SpecRates]{default} 管理者 (一致) が {lightgreen}128tick{default} に設定されました。"
+	}
+	"Specrates_SpecRatesAdministratorSpectatorSet"
+	{
+		"jp"		"{green}[SpecRates]{default} 管理者 (観客) が {lightgreen}100tick{default} に設定されました。"
+	}
+}

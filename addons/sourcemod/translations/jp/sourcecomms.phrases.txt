@@ -27,7 +27,7 @@
 	"Usage_time"
 	{
 		"#format"	"{1:d}"
-		"jp"		"Time: {1} minutes, if unspecified; permanent, if 0.\\nIf < 0, blocks for session."
+		"jp"		"時間: {1} 分。未指定の場合はこの値を使用します。0 の場合は永久です。\n0 未満の場合はこのセッションのみブロックします。"
 	}
 	"Player Comms Not Verified"
 	{

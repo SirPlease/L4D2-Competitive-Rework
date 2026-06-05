@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2Nobhaps_SpeedMaxSpeed"
+	{
+		"vi"		"Tốc độ: %f {%.02f, %.02f, %.02f}, Tốc độ tối đa: %f"
+	}
+}

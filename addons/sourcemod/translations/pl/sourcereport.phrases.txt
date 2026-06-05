@@ -1,0 +1,24 @@
+"Phrases"
+{
+	"In Cooldown"
+	{
+		"#format"	"{1:.0f}"
+		"pl"		"Zaczekaj {1} sekund przed ponownym wysłaniem zgłoszenia"
+	}
+	"Report Canceled"
+	{
+		"pl"		"Raport został anulowany"
+	}
+	"Report Sent"
+	{
+		"pl"		"Twój raport został wysłany"
+	}
+	"Reason Prompt"
+	{
+		"pl"		"Podaj przyczynę zgłoszenia lub \"cancel\", aby anulować"
+	}
+	"Reason Short Need More"
+	{
+		"pl"		"Powód jest za krótki, więcej szczegółów jest wymaganych"
+	}
+}

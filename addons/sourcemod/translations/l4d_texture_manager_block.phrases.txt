@@ -3,10 +3,5 @@
 	"L4DTextureManagerBlock_MathackDetectorKickedUsingMathack"
 	{
 		"en"		"{green}[{default}Mathack Detector{green}] {lightgreen}%s {default}has been kicked for using mathack!"
-		"chi"		"{green}[{default}MMathack探测器{green}] {lightgreen}%s {default}因使用mathack而被踢！"
-		"zho"		"{green}[{default}MMathack探測器{green}] {lightgreen}%s {default}因使用mathack而被踢！"
-		"jp"		"{green}[{default}Mathack Detector{green}] {lightgreen}%s {default}がMathack使用でキックされました！"
-		"ko"		"{green}[{default}Mathack Detector{green}] {lightgreen}%s {default}가 mathack을 사용하여 쫓겨났습니다!"
-		"vi"		"{green}[{default}Mathack Detector{green}] {lightgreen}%s {default}đã bị kick vì sử dụng mathack!"
 	}
 }

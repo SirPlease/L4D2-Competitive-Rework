@@ -1,0 +1,50 @@
+"Phrases"
+{
+	"Banned Check Site"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez été banni de ce serveur, allez sur {1} pour plus d'informations"
+	}
+	"DB Connect Fail"
+	{
+		"fr"		"Problème de connection avec la base de données. Merci de bien vouloir contacter un admin."
+	}
+	"Not In Game"
+	{
+		"fr"		"Le joueur n'est pas en jeu, merci d'aller sur le panel internet pour le bannir."
+	}
+	"Ban Not Verified"
+	{
+		"fr"		"Le systeme n'a pas réussi à déterminer si ce joueur est banni. Merci d'attendre 30 secondes avant de re-essayer."
+	}
+	"Can Not Unban"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous ne pouvez pas annuler de ban depuis ce serveur, allez sur {1} pour le faire."
+	}
+	"Can Not Add Ban"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous ne pouvez pas ajouter de ban depuis ce serveur, allez sur {1} pour ajouter un ban."
+	}
+	"Check Menu"
+	{
+		"fr"		"Merci d'utiliser le menu pour sélectionner la raison du ban."
+	}
+	"Include Reason"
+	{
+		"fr"		"Merci d'ajouter la raison du ban."
+	}
+	"Ban Fail"
+	{
+		"fr"		"Le joueur n'a pas pu être banni merci d'essayer ultérieurement."
+	}
+	"Chat Reason"
+	{
+		"fr"		"Merci d'écrire la raison du ban dans le chat. Tapez '!noreason' pour annuler."
+	}
+	"Chat Reason Aborted"
+	{
+		"fr"		"La procédure de ban a été arrêté avec succès."
+	}
+}

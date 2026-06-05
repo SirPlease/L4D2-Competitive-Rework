@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"L4D2ItemHint_MarkingSystemPointsLess5W"
+	{
+		"jp"		"{default}[{green} マーキングシステム {default}] ポイントが5w未満のためマーキングシステムはご利用いただけません"
+	}
+	"L4D2ItemHint_PlayerMarkedItem"
+	{
+		"jp"		"{default}[{green}マーキングシステム {default}] {olive}%N{default}：%s"
+	}
+	"L4D2ItemHint_PlayerMarkedItemHighlighted"
+	{
+		"jp"		"{default}[{green}标记系统{default}] {olive}%N{default}: {green}%s"
+	}
+}

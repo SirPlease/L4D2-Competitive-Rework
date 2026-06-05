@@ -2,28 +2,14 @@
 {
 	"Tag"
 	{
-		"en"    "[{green}!{default}]"
-		"zho"		"[{green}!{default}]"
-		"jp"		"[{green}!{default}]"
-		"ko"		"[{green}!{default}]"
-		"vi"		"[{green}!{default}]"
+		"en"		"[{green}!{default}]"
 	}
 	"LoseFrustration"
 	{
-		"en"	"{red}Tank{default} will {green}still lose{default} frustration while survivors are in {olive}saferoom{default}."
-	
-		"zho"		"{red}Tank{default} will {green}still lose{default} frustration while survivors are in {olive}saferoom{default}."
-		"jp"		"{red}Tank{default} will {green}still lose{default} frustration while survivors are in {olive}saferoom{default}."
-		"ko"		"{red}Tank{default} will {green}still lose{default} frustration while survivors are in {olive}saferoom{default}."
-		"vi"		"{red}Tank{default} will {green}still lose{default} frustration while survivors are in {olive}saferoom{default}."
+		"en"		"{red}Tank{default} will {green}still lose{default} frustration while survivors are in {olive}saferoom{default}."
 	}
 	"KeepFrustration"
 	{
-		"en"	"{red}Tank{default} will {green}not lose{default} frustration while survivors are in {olive}saferoom{default}."
-	
-		"zho"		"{red}Tank{default} will {green}not lose{default} frustration while survivors are in {olive}saferoom{default}."
-		"jp"		"{red}Tank{default} will {green}not lose{default} frustration while survivors are in {olive}saferoom{default}."
-		"ko"		"{red}Tank{default} will {green}not lose{default} frustration while survivors are in {olive}saferoom{default}."
-		"vi"		"{red}Tank{default} will {green}not lose{default} frustration while survivors are in {olive}saferoom{default}."
+		"en"		"{red}Tank{default} will {green}not lose{default} frustration while survivors are in {olive}saferoom{default}."
 	}
 }

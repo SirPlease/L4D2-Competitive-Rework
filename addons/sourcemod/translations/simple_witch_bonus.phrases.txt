@@ -3,10 +3,5 @@
 	"SimpleWitchBonus_KillingWitchAwardedPoints"
 	{
 		"en"		"{default}Killing the witch has awarded: {olive}%d {default}points!"
-		"chi"		"{default}杀死魔女已奖励：{olive}%d {default}积分！"
-		"zho"		"{default}殺死魔女已獎勵：{olive}%d {default}積分！"
-		"jp"		"{default}魔女を倒すと獲得したポイント: {olive}%d {default}ポイント!"
-		"ko"		"{default}마녀를 죽여 다음 보상을 받았습니다: {olive}%d {default}포인트!"
-		"vi"		"{default}Giết phù thủy đã nhận được: {olive}%d {default} điểm!"
 	}
 }

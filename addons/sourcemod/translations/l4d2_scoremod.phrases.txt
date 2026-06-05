@@ -3,60 +3,25 @@
 	"L4D2Scoremod_Round1Bonus"
 	{
 		"en"		"{blue}[{default}!{blue}] {default}Round {blue}1 {default}Bonus: {olive}%d"
-		"chi"		"{blue}[{default}!{blue}] {default}R圆{blue}1 {default}奖金：{olive}%d"
-		"zho"		"{blue}[{default}!{blue}] {default}R圓{blue}1 {default}獎金：{olive}%d"
-		"jp"		"{blue}[{default}!{blue}] {default}ラウンド {blue}1 {default}ボーナス: {olive}%d"
-		"ko"		"{blue}[{default}!{blue}] {default}R라운드 {blue}1 {default}보너스: {olive}%d"
-		"vi"		"{blue}[{default}!{blue}] {default}Round {blue}1 {default}Tiền thưởng: {olive}%d"
 	}
-
 	"L4D2Scoremod_CustomMaxDistance"
 	{
 		"en"		"{blue}[{default}!{blue}] {default}Custom Max Distance: {olive}%d"
-		"chi"		"{blue}[{default}!{blue}] {default}自定义最大距离：{olive}%d"
-		"zho"		"{blue}[{default}!{blue}] {default}自訂最大距離：{olive}%d"
-		"jp"		"{blue}[{default}!{blue}] {default}カスタム最大距離: {olive}%d"
-		"ko"		"{blue}[{default}!{blue}] {default}사용자 정의 최대 거리: {olive}%d"
-		"vi"		"{blue}[{default}!{blue}] {default}Khoảng cách tối đa tùy chỉnh: {olive}%d"
 	}
-
 	"L4D2Scoremod_Round2Bonus"
 	{
 		"en"		"{blue}[{default}!{blue}] {default}Round {blue}2 {default}Bonus: {olive}%d"
-		"chi"		"{blue}[{default}!{blue}] {default}R圆{blue}2 {default}奖金：{olive}%d"
-		"zho"		"{blue}[{default}!{blue}] {default}R圓{blue}2 {default}獎金：{olive}%d"
-		"jp"		"{blue}[{default}!{blue}] {default}ラウンド {blue}2 {default}ボーナス: {olive}%d"
-		"ko"		"{blue}[{default}!{blue}] {default}R라운드 {blue}2 {default}보너스: {olive}%d"
-		"vi"		"{blue}[{default}!{blue}] {default}Round {blue}2 {default}Tiền thưởng: {olive}%d"
 	}
-
 	"L4D2Scoremod_Difference"
 	{
 		"en"		"{red}[{default}!{red}] {default}Difference: {olive}%d"
-		"chi"		"{red}[{default}!{red}] {default}区别：{olive}%d"
-		"zho"		"{red}[{default}!{red}] {default}區別：{olive}%d"
-		"jp"		"{red}[{default}!{red}] {default}違い: {olive}%d"
-		"ko"		"{red}[{default}!{red}] {default}D차이: {olive}%d"
-		"vi"		"{red}[{default}!{red}] {default}Dsự khác biệt: {olive}%d"
 	}
-
 	"L4D2Scoremod_Round1BonusDifference"
 	{
 		"en"		"{blue}[{default}!{blue}] {default}Round {blue}1 {default}Bonus: {olive}%d {default}({green}Difference: {olive}%d{default})"
-		"chi"		"{blue}[{default}!{blue}] {default}R圆{blue}1 {default}奖金：{olive}%d {default}({green}区别： {olive}%d{default}）"
-		"zho"		"{blue}[{default}!{blue}] {default}Round {blue}1 {default}Bonus: {olive}%d {default}({green}Difference: {olive}%d{default})"
-		"jp"		"{blue}[{default}!{blue}] {default}ラウンド {blue}1 {default}ボーナス：{olive}%d {default}({green}違い：{olive}%d{default})"
-		"ko"		"{blue}[{default}!{blue}] {default}R라운드 {blue}1 {default}보너스: {olive}%d {default}({green}D차이: {olive}%d{default})"
-		"vi"		"{blue}[{default}!{blue}] {default}Round {blue}1 {default}Tiền thưởng: {olive}%d {default}({green}Dkhác biệt: {olive}%d{default})"
 	}
-
 	"L4D2Scoremod_HealthBonus"
 	{
 		"en"		"{blue}[{default}!{blue}] {default}Health Bonus: {olive}%d"
-		"chi"		"{blue}[{default}!{blue}] {default}健康奖励：{olive}%d"
-		"zho"		"{blue}[{default}!{blue}] {default}健康獎勵：{olive}%d"
-		"jp"		"{blue}[{default}!{blue}] {default}健康ボーナス: {olive}%d"
-		"ko"		"{blue}[{default}!{blue}] {default}건강 보너스: {olive}%d"
-		"vi"		"{blue}[{default}!{blue}] {default}Health Tiền thưởng: {olive}%d"
 	}
 }

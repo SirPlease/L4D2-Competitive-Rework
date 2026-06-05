@@ -11,12 +11,12 @@
 	"Map Already In Vote"
 	{
 		"#format"	"{1:s}"
-		"zho"		"地圖 \\\"{1}\\\" 己在提名列表中"
+		"zho"		"地圖 \"{1}\" 己在提名列表中"
 	}
 	"Map Inserted"
 	{
 		"#format"	"{1:s}"
-		"zho"		"地圖 \\\"{1}\\\" 加入提名列表"
+		"zho"		"地圖 \"{1}\" 加入提名列表"
 	}
 	"Map Already Nominated"
 	{

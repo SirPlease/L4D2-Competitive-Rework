@@ -3,40 +3,17 @@
 	"MapChanger_VoteWhetherEnableRescueMap"
 	{
 		"en"		"{green}[MapChanger]{default} Vote: Whether to enable this rescue map failed {olive}%d{default} automatic map change?"
-		"chi"		"{green}[MapChanger]{default} 投票：是否启用本救援图失败 {olive}%d{default} 次自动换图？"
-		"zho"		"{green}[MapChanger]{default} 投票：是否啟用本救援圖失敗 {olive}%d{default} 次自動換圖？"
-		"jp"		"{green}[MapChanger]{default} 投票: このレスキューマップを有効にするかどうか失敗しました {olive}%d{default} 自動マップ変更?"
-		"ko"		"{green}[MapChanger]{default} 투표: 이 구조 지도 활성화 여부 {olive}%d{default} 자동 지도 변경에 실패했나요?"
-		"vi"		"{green}[MapChanger]{default} Bình chọn: Việc bật bản đồ giải cứu này có thất bại hay không {olive}%d{default} thay đổi bản đồ tự động?"
 	}
-
 	"MapChanger_Voted"
 	{
 		"en"		"{green}[MapChanger]{default} %N Voted."
-		"chi"		"{green}[MapChanger]{default} %N 已投票。"
-		"zho"		"{green}[MapChanger]{default} %N 已投票。"
-		"jp"		"{green}[マップチェンジャー]{default} %N 投票しました。"
-		"ko"		"{green}[MapChanger]{default} %N 투표했습니다."
-		"vi"		"{green}[MapChanger]{default} %N Đã bình chọn."
 	}
-
 	"MapChanger_RescueMapEnabledFailedAutomatically"
 	{
 		"en"		"{green}[MapChanger]{default} This rescue map has been enabled and failed to automatically change maps {olive}%d{default} times."
-		"chi"		"{green}[MapChanger]{default} 已启用本救援图失败 {olive}%d{default} 次自动换图。"
-		"zho"		"{green}[MapChanger]{default} 已啟用本救援圖失敗 {olive}%d{default} 次自動換圖。"
-		"jp"		"{green}[MapChanger]{default} このレスキュー マップは有効になっていますが、マップの自動変更に {olive}%d{default} 回失敗しました。"
-		"ko"		"{green}[MapChanger]{default} 이 구조 지도가 활성화되었지만 자동으로 지도 {olive}%d{default}를 변경하지 못했습니다."
-		"vi"		"{green}[MapChanger]{default} Bản đồ cứu hộ này đã được bật và không thể tự động thay đổi bản đồ {olive}%d{default} lần."
 	}
-
 	"MapChanger_RescueMapTurnedOffAutomatically"
 	{
 		"en"		"{green}[MapChanger]{default} This rescue map has been turned off to automatically change the map after the number of failures."
-		"chi"		"{green}[MapChanger]{default} 本救援图已关闭失败次数自动换图。"
-		"zho"		"{green}[MapChanger]{default} 本救援圖已關閉失敗次數自動換圖。"
-		"jp"		"{green}[MapChanger]{default} このレスキューマップは、失敗回数に応じて自動的にマップを変更するためにオフになっています。"
-		"ko"		"{green}[MapChanger]{default} 이 구조 맵은 실패 횟수 이후 자동으로 맵을 변경하도록 꺼졌습니다."
-		"vi"		"{green}[MapChanger]{default} Bản đồ cứu hộ này đã bị tắt để tự động thay đổi bản đồ sau một số lần thất bại."
 	}
 }

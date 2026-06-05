@@ -1,0 +1,67 @@
+"Phrases"
+{
+	"L4D2Playstats_UseStatsTypeRoundGame"
+	{
+		"jp"		"{default}Use: /stats [<タイプ>] [{olive}round{default}/{olive}game{default}/{olive}team{default}/{olive}all{default}/{olive}other{default}]"
+	}
+	"L4D2Playstats_StatsType"
+	{
+		"jp"		"{default} または: /stats [<タイプ>] [{olive}r{default}/{olive}g{default}/{olive}t{default}/{olive}a{default}/{olive}o{default}]"
+	}
+	"L4D2Playstats_TypeMVPSkillFFAcc"
+	{
+		"jp"		"{default} ここで、<タイプ> は「{green}mvp{default}」、「{green}skill{default}」、「{green}ff{default}」、「{green}acc{default}」または「{green}inf{default}」です。 (詳細については、コンソールを参照してください)"
+	}
+	"L4D2Playstats_StatsCommandUnknownArgumentType"
+	{
+		"jp"		"統計コマンド: 不明な引数: '%s'。可能な引数として「/stats help」と入力します。"
+	}
+	"L4D2Playstats_PlayerStatisticsReset"
+	{
+		"jp"		"プレイヤーの統計がリセットされました。"
+	}
+	"L4D2Playstats_UseStatsAutoFlagsType"
+	{
+		"jp"		"{default}使用: {green}/stats_auto <フラグ>{default}。詳細については、「{green}/stats_auto help{default}」と入力してください。"
+	}
+	"L4D2Playstats_UseStatsAutoFlagsInteger"
+	{
+		"jp"		"{default}使用: {green}/stats_auto <フラグ>{default}。 Flags は、ラウンドエンドで表示されるすべての印刷出力の合計である整数です。"
+	}
+	"L4D2Playstats_SetFlags0UseServer"
+	{
+		"jp"		"{default}サーバーの自動印刷のデフォルトを使用するには、フラグを 0 に設定します。何も表示しない場合は -1 に設定します。"
+	}
+	"L4D2Playstats_StatsPreviewNoFlagsSet"
+	{
+		"jp"		"{default}Stats プレビュー: フラグが設定されていません。まず、{green}/stats_auto <flags>{default} でフラグを設定します。詳細については、「{green}/stats_auto help{default}」と入力してください。"
+	}
+	"L4D2Playstats_StatsPrefInvalidValueType"
+	{
+		"jp"		"統計県: 無効な値: '%s'。詳細については、「/stats_auto help」と入力してください。"
+	}
+	"L4D2Playstats_StatsPrefNoRoundEnd"
+	{
+		"jp"		"{default}統計県: {green}ラウンドエンドプリントが全くありません{default}。"
+	}
+	"L4D2Playstats_StatsPrefServerDefault"
+	{
+		"jp"		"{default}Stats 都道府県: {green}サーバーのデフォルト{default}。"
+	}
+	"L4D2Playstats_StatsPrefFlagsSet"
+	{
+		"jp"		"{default}Stats 都道府県: フラグが設定されています:"
+	}
+	"L4D2Playstats_UseStatsAutoTestGet"
+	{
+		"jp"		"{default}レポートのプレビューを取得するには、{green}/stats_auto test{default} を使用します。"
+	}
+	"L4D2Playstats_StatsPrefErrorCookieNot"
+	{
+		"jp"		"統計県: エラー: Cookie がまだキャッシュされていません (しばらくしてからもう一度お試しください)。"
+	}
+	"L4D2Playstats_SeeURLListFlags"
+	{
+		"jp"		"{default}flags の一覧は {olive}https://github.com/Tabbernaut/L4D2-Plugins/blob/master/stats/README.md{default} を参照してください。"
+	}
+}

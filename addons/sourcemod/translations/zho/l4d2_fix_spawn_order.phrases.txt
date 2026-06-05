@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2FixSpawnOrder_DebugMessage"
+	{
+		"zho"		"{green}[調試]{default} %s"
+	}
+}

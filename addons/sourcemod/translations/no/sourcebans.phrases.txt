@@ -1,0 +1,50 @@
+"Phrases"
+{
+	"Banned Check Site"
+	{
+		"#format"	"{1:s}"
+		"no"		"Du har blitt stengt ute fra denne serveren, sjekk {1} for mer info."
+	}
+	"DB Connect Fail"
+	{
+		"no"		"Kommunikasjon med databasen feilet. Vennligst kontakt serveradmin."
+	}
+	"Not In Game"
+	{
+		"no"		"Spilleren er ikke på serveren, vennligst besøk web panelet for og stenge han ute."
+	}
+	"Ban Not Verified"
+	{
+		"no"		"Denne spilleren har ikke blitt indentifisert. Vennligst vent 30 sekunder før du prøver igjen."
+	}
+	"Can Not Unban"
+	{
+		"#format"	"{1:s}"
+		"no"		"Du kan ikke fjerne utestengelsen inne fra serveren, besøk {1} for og fjerne utestengelsen."
+	}
+	"Can Not Add Ban"
+	{
+		"#format"	"{1:s}"
+		"no"		"Du kan ikke legge til en utestengelse fra serveren, besøk {1} for og legge til en utestengelse."
+	}
+	"Check Menu"
+	{
+		"no"		"Venligst sjekk menyen for en grunn til utestengelse"
+	}
+	"Include Reason"
+	{
+		"no"		"Inkluder vennligst en grunn for og utelukke klienten."
+	}
+	"Ban Fail"
+	{
+		"no"		"Utestengelse feilet, vennligst prøv igjen."
+	}
+	"Chat Reason"
+	{
+		"no"		"Vennligst skriv din grunn for utestengelse i chaten og trykk enter. Skriv 'noreason' for og annulere."
+	}
+	"Chat Reason Aborted"
+	{
+		"no"		"Utestengelses prossedyren ble stoppet vellykket."
+	}
+}

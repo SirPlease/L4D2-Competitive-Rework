@@ -1,0 +1,24 @@
+"Phrases"
+{
+	"In Cooldown"
+	{
+		"#format"	"{1:.0f}"
+		"chi"		"请等待 {1} 秒后再试"
+	}
+	"Report Canceled"
+	{
+		"chi"		"报告已取消"
+	}
+	"Report Sent"
+	{
+		"chi"		"你的报告已发送"
+	}
+	"Reason Prompt"
+	{
+		"chi"		"请填写报告填写理由或者 \"cancel\" 来取消"
+	}
+	"Reason Short Need More"
+	{
+		"chi"		"理由过于简短,请做更多说明"
+	}
+}

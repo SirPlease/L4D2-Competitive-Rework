@@ -10,10 +10,10 @@
 	}
 	"GlobalChat_SummonTeammates"
 	{
-		"jp"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友"
+		"jp"		"{green}%s {olive}%s {default}プレイヤーが {lightgreen}%s {default}でチームメイトを呼んでいます"
 	}
 	"GlobalChat_SummonTeammatesWithMessage"
 	{
-		"jp"		"{green}%s {olive}%s {default}玩家在 {lightgreen}%s {default}召唤队友\\n{default}留言: {olive}%s"
+		"jp"		"{green}%s {olive}%s {default}プレイヤーが {lightgreen}%s {default}でチームメイトを呼んでいます\n{default}メッセージ: {olive}%s"
 	}
 }

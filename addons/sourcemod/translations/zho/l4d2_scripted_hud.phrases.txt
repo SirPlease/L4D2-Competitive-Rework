@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2ScriptedHUD_HUDTextsDataFileReloaded"
+	{
+		"zho"		"{green}[資料檔案中的 HUD 文字已重新載入]"
+	}
+}

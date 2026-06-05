@@ -1,0 +1,59 @@
+"Phrases"
+{
+	"L4D2MapVote_MapnextChatPrompt"
+	{
+		"jp"		"次のマップに投票するには、チャット バーに「{default}」「{olive}!mapnext {default}」と入力します。"
+	}
+	"L4D2MapVote_VPKCampaignListsRefreshed"
+	{
+		"jp"		"{olive}[MapVote]{default} VPK とキャンペーンのリストが更新されました。"
+	}
+	"L4D2MapVote_VPKRefreshCooldownRemaining"
+	{
+		"jp"		"VPK のリフレッシュが冷却されており、%.1f 秒かかります。"
+	}
+	"L4D2MapVote_PrePluginNotInstalled"
+	{
+		"jp"		"プリプラグインがインストールされていません"
+	}
+	"L4D2MapVote_CurrentMapNotFinalMap"
+	{
+		"jp"		"現在のマップは最終マップではありません"
+	}
+	"L4D2MapVote_SpectatorsCannotVote"
+	{
+		"jp"		"観客は投票できない"
+	}
+	"L4D2MapVote_VotingInProgressCannotStartNewVote"
+	{
+		"jp"		"投票は進行中です。新しい投票はまだ開始できません"
+	}
+	"L4D2MapVote_NoValidChapterMapExists"
+	{
+		"jp"		"有効なチャプター マップが存在しません"
+	}
+	"L4D2MapVote_InitiatesVoteSetsNextMap"
+	{
+		"jp"		"{blue}%N {default} が投票を開始します {olive} 次のマップを %s に設定します"
+	}
+	"L4D2MapVote_Voted"
+	{
+		"jp"		"{blue}%N {default} が投票しました"
+	}
+	"L4D2MapVote_SetupFailed"
+	{
+		"jp"		"セットアップに失敗しました"
+	}
+	"L4D2MapVote_NextMapSet"
+	{
+		"jp"		"{default}次のマップは {olive}%s に設定されました"
+	}
+	"L4D2MapVote_InitiatesVoteReplacementCampaign"
+	{
+		"jp"		"{blue}%N {default} が投票を開始します {olive} 置換キャンペーン: %s"
+	}
+	"L4D2MapVote_InitiatesVoteChangeMap"
+	{
+		"jp"		"{blue}%N {default} が投票を開始します {olive} マップを変更します: %s (%s)"
+	}
+}

@@ -1,0 +1,31 @@
+"Phrases"
+{
+	"L4D2DropSecondary_PlayerReplacedBotReplacedSecondary"
+	{
+		"jp"		"{green}[{olive}OnPlayerReplacedByBot{green}] {default}- {blue}BOT {default}Replaced {blue}%N {default}({green}セカンダリ: {olive}%s{default})"
+	}
+	"L4D2DropSecondary_BotReplacedPlayerReplacedBOT"
+	{
+		"jp"		"{green}[{olive}OnBotReplacedByPlayer{green}] {default}- {blue}%N {default}置き換えられた {blue}BOT {default}({green}セカンダリ: {olive}%s{default})"
+	}
+	"L4D2DropSecondary_PlayerUsePickedSecondsondarySecondary"
+	{
+		"jp"		"{green}[{olive}OnPlayerUse{green}] {default}- {blue}%N{default} がセカンダリを選択しました: ({green}セカンダリ: {olive}%s{default})"
+	}
+	"L4D2DropSecondary_PlayerDeathSecondary"
+	{
+		"jp"		"{green}[{olive}OnPlayerDeath{green}] {default}- {blue}%N {default}({green}セカンダリ: {olive}%s{default})"
+	}
+	"L4D2DropSecondary_ErrorSomethingWentWrongDetermining"
+	{
+		"jp"		"{blue}[{default}L4D2 Drop Secondary{blue}]{default}: {green}ERROR {default}- セカンダリ武器の近接スクリプトの決定中に問題が発生しました。この問題を {olive}Plugin 作者 {default} に報告してください。"
+	}
+	"L4D2DropSecondary_DetermineMeleeScriptMS"
+	{
+		"jp"		"{green}[{olive}DetermineMeleeScript{green}] {default}- {blue}%N {default} は {olive}%s {default}- MS: {olive}%s"
+	}
+	"L4D2DropSecondary_Debugging"
+	{
+		"jp"		"{blue}[{default}L4D2 セカンダリをドロップ{blue}]{default}: {green}デバッグ {olive}%s"
+	}
+}

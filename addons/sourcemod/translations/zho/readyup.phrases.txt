@@ -44,20 +44,20 @@
 	}
 	"HintReady"
 	{
-		"zho"		"You are ready.\\nSay !unready / Press F2 to unready."
+		"zho"		"你已準備。\n輸入 !unready 或按 F2 取消準備。"
 	}
 	"HintUnready"
 	{
-		"zho"		"You are not ready.\\nSay !ready / Press F1 to ready up."
+		"zho"		"你尚未準備。\n輸入 !ready 或按 F1 準備。"
 	}
 	"LiveCountdownBegin"
 	{
-		"zho"		"Going live!\\nSay !unready / Press F2 to cancel"
+		"zho"		"即將開始！\n輸入 !unready 或按 F2 取消"
 	}
 	"LiveCountdown"
 	{
 		"#format"	"{1:d}"
-		"zho"		"Live in: {1}\\nSay !unready / Press F2 to cancel"
+		"zho"		"{1} 秒後開始\n輸入 !unready 或按 F2 取消"
 	}
 	"LiveCountdownCancelled"
 	{

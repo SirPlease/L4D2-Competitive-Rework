@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"ChargerIncapDamage_HookTakeDamageVictimAttacker"
+	{
+		"vi"		"[Hook_OnTakeDamage] Nạn nhân: (%N) %d, kẻ tấn công: (%N) %d, kẻ gây ra: %d, sát thương: %f, loại sát thương: %d"
+	}
+	"ChargerIncapDamage_HookTakeDamageWeaponDamage"
+	{
+		"vi"		"[Hook_OnTakeDamage] Vũ khí: %d, lực sát thương: %f %f %f, vị trí sát thương: %f %f %f"
+	}
+}

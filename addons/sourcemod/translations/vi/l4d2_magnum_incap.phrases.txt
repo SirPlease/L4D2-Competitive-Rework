@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2MagnumIncap_ClientWeapon"
+	{
+		"vi"		"khách hàng %d -> vũ khí %s"
+	}
+}

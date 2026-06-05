@@ -1,0 +1,43 @@
+"Phrases"
+{
+	"L4D2Antibaiter_AntibaiterDebugEligiblePlayerZombieclass"
+	{
+		"vi"		"{lightgreen}[GỠ LỖI Antibaiter] Người chơi đủ điều kiện {green}%N{default} là một lớp zombie {olive}%d{default} còn sống cho {olive}%fs{default}"
+	}
+	"L4D2Antibaiter_AntibaiterDebugSpectatorBugDetected"
+	{
+		"vi"		"{lightgreen}[GỠ LỖI Antibaiter] Đã phát hiện lỗi khán giả: {green}eligibleZombies{default}={olive}%d{default}, {green}z_max_player_zombies{default}={olive}%d{default}"
+	}
+	"L4D2Antibaiter_AntibaiterDebugMinimumProgressUnsatisfied"
+	{
+		"vi"		"{lightgreen}[GỠ LỖI Antibaiter] Không đạt tiến độ tối thiểu trong quá trình kiểm tra {olive}%d{default}: {green}initial{default}={olive}%f{default}, {green}current{default}={olive}%f{default}, {green}progress{default}={olive}%f{default}"
+	}
+	"L4D2Antibaiter_AntibaiterDebugCountdownRunning"
+	{
+		"vi"		"{lightgreen}[GỠ LỖI Antibaiter] Đếm ngược là {olive}running{default}"
+	}
+	"L4D2Antibaiter_AntibaiterDebugCountdownElapsedLaunching"
+	{
+		"vi"		"{lightgreen}[GỠ LỖI Anti-baiter] Đếm ngược đã {green}kết thúc{default}! Khởi động làn sóng zombie và đặt lại bộ đếm kiểm tra"
+	}
+	"L4D2Antibaiter_AntiBaiterPrepareIncomingHorde"
+	{
+		"vi"		"{blue}[{default}Anti-baiter{blue}]{default} Chuẩn bị cho làn sóng zombie sắp tới!"
+	}
+	"L4D2Antibaiter_AntibaiterDebugCountdownNotRunning"
+	{
+		"vi"		"{lightgreen}[GỠ LỖI Antibaiter] Đếm ngược là {olive}không chạy{default}. Bắt đầu nó..."
+	}
+	"L4D2Antibaiter_AntibaiterDebugSurvivorProgressIncreased"
+	{
+		"vi"		"{lightgreen}[Antibaiter DEBUG] Tiến trình sống sót có {olive}increased{default} vượt quá ngưỡng tối thiểu. Đặt lại thuật toán..."
+	}
+	"L4D2Antibaiter_PanicTimerDurationTimestamp"
+	{
+		"vi"		"m_PanicTimer - thời lượng: %f, dấu thời gian: %f"
+	}
+	"L4D2Antibaiter_PostMobDelayDurationTimestamp"
+	{
+		"vi"		"m_PostMobDelay - thời lượng: %f, dấu thời gian: %f"
+	}
+}

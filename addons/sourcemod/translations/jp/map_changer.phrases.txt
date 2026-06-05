@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"MapChanger_VoteWhetherEnableRescueMap"
+	{
+		"jp"		"{green}[MapChanger]{default} 投票: このレスキューマップを有効にするかどうか失敗しました {olive}%d{default} 自動マップ変更?"
+	}
+	"MapChanger_Voted"
+	{
+		"jp"		"{green}[マップチェンジャー]{default} %N 投票しました。"
+	}
+	"MapChanger_RescueMapEnabledFailedAutomatically"
+	{
+		"jp"		"{green}[MapChanger]{default} このレスキュー マップは有効になっていますが、マップの自動変更に {olive}%d{default} 回失敗しました。"
+	}
+	"MapChanger_RescueMapTurnedOffAutomatically"
+	{
+		"jp"		"{green}[MapChanger]{default} このレスキューマップは、失敗回数に応じて自動的にマップを変更するためにオフになっています。"
+	}
+}

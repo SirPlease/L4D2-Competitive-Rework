@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"Text_NotExceed10SpecialAnne"
+	{
+		"jp"		"{lightgreen} スペシャル10を超えないため、アンハッピー+武器はアンハッピー武器に自動的に切り替わりました"
+	}
+	"Text_CannotUseAnneHappyPlus"
+	{
+		"jp"		"{lightgreen}はアンハッピープラス武器がスペシャル10を超えないため使用できません"
+	}
+}

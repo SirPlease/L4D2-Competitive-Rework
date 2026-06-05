@@ -1,0 +1,35 @@
+"Phrases"
+{
+	"L4D2GhostWarp_CommandDisabled"
+	{
+		"jp"		"%s 現在、このコマンドは {green}disabled{default} です。"
+	}
+	"L4D2GhostWarp_CanUseCommandOftenWait"
+	{
+		"jp"		"%s このコマンドは頻繁に使用することはできません。さらに {green}%.01f{default} 秒待ってください。"
+	}
+	"L4D2GhostWarp_NoSurvivorsFound"
+	{
+		"jp"		"%s {green}生存者{default}が見つかりません!"
+	}
+	"L4D2GhostWarp_EnteredInvalidSurvivorIndex"
+	{
+		"jp"		"%s 無効な {green} 生存者インデックスを入力しました!%s"
+	}
+	"L4D2GhostWarp_Usage1"
+	{
+		"jp"		"%s 用途: {green}%s{default} <1 - %d>"
+	}
+	"L4D2GhostWarp_EnteredWrongSurvivorName"
+	{
+		"jp"		"%s {green}間違った{default}生存者名を入力しました!%s"
+	}
+	"L4D2GhostWarp_UsageSurvivorName"
+	{
+		"jp"		"%s 使用法: {green}%s{default} <生存者名>"
+	}
+	"L4D2GhostWarp_SurvivorSpecifiedNotFound"
+	{
+		"jp"		"%s あなたが指定した {green}survivor{default} は {green} 見つかりません {default}!"
+	}
+}

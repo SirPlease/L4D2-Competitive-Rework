@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"HoldoutBonus_EventStartsBonusSecondsonds"
+	{
+		"zho"		"{default}Holdout 活動開始...（{green}%i{default} 獎金超過 {olive}%i{default} 秒）"
+	}
+	"HoldoutBonus_DynamicBonusSummary"
+	{
+		"zho"		"{default}保留獎金：%s"
+	}
+	"HoldoutBonus_DynamicBonusSummary_2"
+	{
+		"zho"		"{default}保留獎金：{olive}%i{default} 中的 {green}%i{default}。"
+	}
+}

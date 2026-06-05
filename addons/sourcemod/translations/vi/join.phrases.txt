@@ -1,0 +1,87 @@
+"Phrases"
+{
+	"Join_CrawlingServer"
+	{
+		"vi"		"{green} %N {olive} đang thu thập dữ liệu vào máy chủ"
+	}
+	"Join_LeftGameReason"
+	{
+		"vi"		"{green}%N {olive} đã rời khỏi trò chơi - Lý do: [{green}%s{olive}]"
+	}
+	"Join_AnneDonatePaymentMethodOnly"
+	{
+		"vi"		"{green}[AnneDonate]{default} Phương thức thanh toán chỉ hỗ trợ wechat hoặc alipay, vui lòng chọn lại."
+	}
+	"Join_FinishRemindsAdministratorVerify"
+	{
+		"vi"		"{olive}!finish{default} nhắc nhở quản trị viên xác minh."
+	}
+	"Join_AnneDonateSponsorshipConfirmedNot"
+	{
+		"vi"		"{green}[AnneDonate]{default} Tài trợ của bạn được xác nhận vẫn chưa được tìm thấy. Vui lòng nhập {olive}!donate{default} để chọn thiết bị và phương thức thanh toán."
+	}
+	"Join_AnneDonateRecordingPaymentCompletion"
+	{
+		"vi"		"{green}[AnneDonate]{default} đang ghi lại lời nhắc hoàn tất thanh toán của bạn, vui lòng đợi quản trị viên xác minh khoản thanh toán."
+	}
+	"Join_AnneDonateCurrentlyPeakPeriod"
+	{
+		"vi"		"{green}[AnneDonate]{default} Hiện tại đang trong thời kỳ cao điểm và chỉ quản trị viên mới có thể chơi. Hãy ủng hộ quản trị viên và tiếp tục chơi."
+	}
+	"Join_AnneDonateUnableObtainSteam"
+	{
+		"vi"		"{green}[AnneDonate]{default} Không thể tải SteamID64, vui lòng thử lại sau."
+	}
+	"Join_AnneDonateSteamWorksNot"
+	{
+		"vi"		"{green}[AnneDonate]{default} SteamWorks không có sẵn. Trang tài trợ đã được mở. Vui lòng quét mã QR để thanh toán và liên hệ với quản trị viên để xác minh."
+	}
+	"Join_AnneDonateFailedCreateSponsorship"
+	{
+		"vi"		"{green}[AnneDonate]{default} Không tạo được đơn đăng ký tài trợ, vui lòng thử lại sau."
+	}
+	"Join_AnneDonateFailedSendSponsorship"
+	{
+		"vi"		"{green}[AnneDonate]{default} Không gửi được đơn đăng ký tài trợ, vui lòng thử lại sau."
+	}
+	"Join_AnneDonateSponsorshipRecordCreated"
+	{
+		"vi"		"{green}[AnneDonate]{default} Bản ghi tài trợ đang được tạo và mã khoản phải thu tương ứng sẽ được hiển thị trực tiếp trên trang tài trợ."
+	}
+	"Join_AnneDonateSponsorshipInformationSubmission"
+	{
+		"vi"		"{green}[AnneDonate]{default} gửi thông tin tài trợ không thành công, trạng thái HTTP: %d. Vui lòng quét mã QR để thanh toán và liên hệ với quản trị viên để xác minh."
+	}
+	"Join_AnneDonateSponsorshipRecordCreatedScan"
+	{
+		"vi"		"{green}[AnneDonate]{default} Bản ghi tài trợ đã được tạo, vui lòng quét mã QR để thanh toán trên trang mở ra."
+	}
+	"Join_AnneDonateUnableObtainSteamID64"
+	{
+		"vi"		"{green}[AnneDonate]{default} Không thể lấy SteamID64, vui lòng liên hệ với quản trị viên để xác minh."
+	}
+	"Join_AnneDonateSteamWorksNotAvailable"
+	{
+		"vi"		"{green}[AnneDonate]{default} SteamWorks không khả dụng, vui lòng liên hệ với quản trị viên để xác minh thanh toán."
+	}
+	"Join_AnneDonatePaymentCompletionPrompt"
+	{
+		"vi"		"{green}[AnneDonate]{default} Không gửi được lời nhắc hoàn tất thanh toán, vui lòng liên hệ với quản trị viên để xác minh."
+	}
+	"Join_AnneDonatePaymentCompletionPrompts"
+	{
+		"vi"		"{green}[AnneDonate]{default} Thông báo hoàn tất thanh toán không đồng bộ hóa được, trạng thái HTTP: %d. Vui lòng liên hệ với quản trị viên để xác minh."
+	}
+	"Join_AnneDonatePaymentCompletionPromptSynchronized"
+	{
+		"vi"		"{green}[AnneDonate]{default} Lời nhắc hoàn tất thanh toán đã được đồng bộ hóa. Quản trị viên sẽ kích hoạt quyền sau khi xác minh thanh toán."
+	}
+	"Join_UseCommandsTooFast"
+	{
+		"vi"		"{lightgreen} Bạn dùng lệnh quá nhanh"
+	}
+	"Join_SurvivorTeamFullNoOther"
+	{
+		"vi"		"{lightgreen} Đội sống sót đã đầy đủ và không có bot sống sót nào khác để tiếp quản."
+	}
+}

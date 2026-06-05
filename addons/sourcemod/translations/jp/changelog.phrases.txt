@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"Changelog_ChangeLogViewChangeLog"
+	{
+		"jp"		"{blue}[{green}ChangeLog{blue}]{default} @ {blue}%s で変更ログが表示されます。"
+	}
+}

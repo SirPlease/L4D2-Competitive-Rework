@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4DBackjumpFix_OtherSolid"
+	{
+		"chi"		"其他：%s（%i），实心：%i"
+	}
+}

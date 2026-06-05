@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"SimpleWitchBonus_KillingWitchAwardedPoints"
+	{
+		"ko"		"{default}마녀를 죽여 다음 보상을 받았습니다: {olive}%d {default}포인트!"
+	}
+}

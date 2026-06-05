@@ -3,210 +3,85 @@
 	"Join_CrawlingServer"
 	{
 		"en"		"{green} %N {olive} is crawling into the server"
-		"chi"		"{green} %N {olive}正在爬进服务器"
-		"zho"		"{green} %N {olive}正在爬進伺服器"
-		"jp"		"{green} %N {olive} がサーバーにクロールしています"
-		"ko"		"{green} %N {olive}가 서버로 크롤링 중입니다."
-		"vi"		"{green} %N {olive} đang thu thập dữ liệu vào máy chủ"
 	}
-
 	"Join_LeftGameReason"
 	{
 		"en"		"{green}%N {olive} left the game - Reason: [{green}%s{olive}]"
-		"chi"		"{green}%N {olive}离开了游戏 - 理由: [{green}%s{olive}]"
-		"zho"		"{green}%N {olive}離開了遊戲 - 理由: [{green}%s{olive}]"
-		"jp"		"{green}%N {olive} がゲームから退出しました - 理由: [{green}%s{olive}]"
-		"ko"		"{green}%N {olive}가 게임에서 나갔습니다. - 이유: [{green}%s{olive}]"
-		"vi"		"{green}%N {olive} đã rời khỏi trò chơi - Lý do: [{green}%s{olive}]"
 	}
-
 	"Join_AnneDonatePaymentMethodOnly"
 	{
 		"en"		"{green}[AnneDonate]{default} The payment method only supports wechat or alipay, please select again."
-		"chi"		"{green}[AnneDonate]{default} 支付方式只支持 wechat 或 alipay，请重新选择。"
-		"zho"		"{green}[AnneDonate]{default} 付款方式只支援 wechat 或 alipay，請重新選擇。"
-		"jp"		"{green}[AnneDonate]{default} 支払い方法はwechatまたはalipayのみをサポートしています。再度選択してください。"
-		"ko"		"{green}[AnneDonate]{default} 결제 수단은 wechat 또는 alipay만 지원합니다. 다시 선택해 주세요."
-		"vi"		"{green}[AnneDonate]{default} Phương thức thanh toán chỉ hỗ trợ wechat hoặc alipay, vui lòng chọn lại."
 	}
-
 	"Join_FinishRemindsAdministratorVerify"
 	{
 		"en"		"{olive}!finish{default} reminds the administrator to verify."
-		"chi"		"{green}[AnneDonate]{default} 扫码支付完成后，请输入 {olive}!wc{default} / {olive}!wanchen{default} / {olive}!finish{default} 提醒管理员核实。"
-		"zho"		"{green}[AnneDonate]{default} 掃碼支付完成後，請輸入 {olive}!wc{default} / {olive}!wanchen!wanchenZ/ {olive}!finish{default} 提醒管理者核實。"
-		"jp"		"{olive}!finish{default} は管理者に確認を促します。"
-		"ko"		"{olive}!finish{default}는 관리자에게 확인을 요청합니다."
-		"vi"		"{olive}!finish{default} nhắc nhở quản trị viên xác minh."
 	}
-
 	"Join_AnneDonateSponsorshipConfirmedNot"
 	{
 		"en"		"{green}[AnneDonate]{default} Your sponsorship to be confirmed has not been found yet. Please enter {olive}!donate{default} to select the gear and payment method."
-		"chi"		"{green}[AnneDonate]{default} 暂未找到你的待确认赞助，请先输入 {olive}!donate{default} 选择档位和支付方式。"
-		"zho"		"{green}[AnneDonate]{default} 暫時找不到你的待確認贊助，請先輸入 {olive}!donate{default} 選擇檔位和付款方式。"
-		"jp"		"{green}[AnneDonate]{default} 確認するスポンサーシップはまだ見つかりません。 {olive}!donate{default}と入力してギアと支払い方法を選択してください。"
-		"ko"		"{green}[AnneDonate]{default} 확인하실 후원을 아직 찾지 못했습니다. {olive}!donate{default}를 입력하여 장비 및 결제 방법을 선택하세요."
-		"vi"		"{green}[AnneDonate]{default} Tài trợ của bạn được xác nhận vẫn chưa được tìm thấy. Vui lòng nhập {olive}!donate{default} để chọn thiết bị và phương thức thanh toán."
 	}
-
 	"Join_AnneDonateRecordingPaymentCompletion"
 	{
 		"en"		"{green}[AnneDonate]{default} is recording your payment completion prompt, please wait for the administrator to verify the payment."
-		"chi"		"{green}[AnneDonate]{default} 正在记录你的支付完成提示，请等待管理员核实到账。"
-		"zho"		"{green}[AnneDonate]{default} 正在記錄你的付款完成提示，請等待管理員核實到帳。"
-		"jp"		"{green}[AnneDonate]{default} は支払い完了プロンプトを記録しています。管理者が支払いを確認するまでお待ちください。"
-		"ko"		"{green}[AnneDonate]{default}가 결제 완료 메시지를 기록하고 있습니다. 관리자가 결제를 확인할 때까지 기다려 주세요."
-		"vi"		"{green}[AnneDonate]{default} đang ghi lại lời nhắc hoàn tất thanh toán của bạn, vui lòng đợi quản trị viên xác minh khoản thanh toán."
 	}
-
 	"Join_AnneDonateCurrentlyPeakPeriod"
 	{
 		"en"		"{green}[AnneDonate]{default} It is currently in the peak period and only administrators can play. Please support the administrator and continue playing."
-		"chi"		"{green}[AnneDonate]{default} 当前属于高峰期，仅管理员可以游玩。请赞助管理员后继续游玩。"
-		"zho"		"{green}[AnneDonate]{default} 目前屬於高峰期，僅管理員可遊玩。請贊助管理員後繼續遊玩。"
-		"jp"		"{green}[AnneDonate]{default} 現在繁忙期のため管理者のみプレイ可能です。管理者をサポートしてプレイを続けてください。"
-		"ko"		"{green}[AnneDonate]{default} 현재 피크타임이라 관리자만 플레이 가능합니다. 관리자를 지원하고 계속 플레이하십시오."
-		"vi"		"{green}[AnneDonate]{default} Hiện tại đang trong thời kỳ cao điểm và chỉ quản trị viên mới có thể chơi. Hãy ủng hộ quản trị viên và tiếp tục chơi."
 	}
-
 	"Join_AnneDonateUnableObtainSteam"
 	{
 		"en"		"{green}[AnneDonate]{default} Unable to obtain SteamID64, please try again later."
-		"chi"		"{green}[AnneDonate]{default} 无法获取 SteamID64，请稍后重试。"
-		"zho"		"{green}[AnneDonate]{default} 無法取得 SteamID64，請稍後再試。"
-		"jp"		"{green}[AnneDonate]{default} SteamID64 を取得できません。後でもう一度お試しください。"
-		"ko"		"{green}[AnneDonate]{default} SteamID64를 얻을 수 없습니다. 나중에 다시 시도해 주세요."
-		"vi"		"{green}[AnneDonate]{default} Không thể tải SteamID64, vui lòng thử lại sau."
 	}
-
 	"Join_AnneDonateSteamWorksNot"
 	{
 		"en"		"{green}[AnneDonate]{default} SteamWorks is not available. The sponsorship page has been opened. Please scan the QR code to pay and contact the administrator for verification."
-		"chi"		"{green}[AnneDonate]{default} SteamWorks 不可用，已打开赞助页面，请扫码支付后联系管理员核实。"
-		"zho"		"{green}[AnneDonate]{default} SteamWorks 不可用，已開啟贊助頁面，請掃碼付款後聯絡管理員核實。"
-		"jp"		"{green}[AnneDonate]{default} SteamWorks は利用できません。協賛ページを開設しました。 QR コードをスキャンして支払いを行い、確認のために管理者に連絡してください。"
-		"ko"		"{green}[AnneDonate]{default} SteamWorks를 사용할 수 없습니다. 후원 페이지가 오픈되었습니다. QR코드를 스캔하여 결제하시고, 관리자에게 연락하여 확인해주세요."
-		"vi"		"{green}[AnneDonate]{default} SteamWorks không có sẵn. Trang tài trợ đã được mở. Vui lòng quét mã QR để thanh toán và liên hệ với quản trị viên để xác minh."
 	}
-
 	"Join_AnneDonateFailedCreateSponsorship"
 	{
 		"en"		"{green}[AnneDonate]{default} Failed to create sponsorship application, please try again later."
-		"chi"		"{green}[AnneDonate]{default} 创建赞助申请失败，请稍后重试。"
-		"zho"		"{green}[AnneDonate]{default} 建立贊助申請失敗，請稍後重試。"
-		"jp"		"{green}[AnneDonate]{default} スポンサーシップ アプリケーションの作成に失敗しました。後でもう一度お試しください。"
-		"ko"		"{green}[AnneDonate]{default} 후원 신청서를 생성하지 못했습니다. 나중에 다시 시도해 주세요."
-		"vi"		"{green}[AnneDonate]{default} Không tạo được đơn đăng ký tài trợ, vui lòng thử lại sau."
 	}
-
 	"Join_AnneDonateFailedSendSponsorship"
 	{
 		"en"		"{green}[AnneDonate]{default} Failed to send sponsorship application, please try again later."
-		"chi"		"{green}[AnneDonate]{default} 发送赞助申请失败，请稍后重试。"
-		"zho"		"{green}[AnneDonate]{default} 發送贊助申請失敗，請稍後重試。"
-		"jp"		"{green}[AnneDonate]{default} スポンサーシップ申請の送信に失敗しました。後でもう一度お試しください。"
-		"ko"		"{green}[AnneDonate]{default} 후원 신청서를 보내지 못했습니다. 나중에 다시 시도해 주세요."
-		"vi"		"{green}[AnneDonate]{default} Không gửi được đơn đăng ký tài trợ, vui lòng thử lại sau."
 	}
-
 	"Join_AnneDonateSponsorshipRecordCreated"
 	{
 		"en"		"{green}[AnneDonate]{default} The sponsorship record is being created, and the corresponding receivable code will be directly displayed on the sponsorship page."
-		"chi"		"{green}[AnneDonate]{default} 正在创建赞助记录，赞助页面将直接显示对应收款码。"
-		"zho"		"{green}[AnneDonate]{default} 正在建立贊助記錄，贊助頁面將直接顯示對應收款碼。"
-		"jp"		"{green}[AnneDonate]{default} スポンサーシップ レコードが作成されており、対応する受取可能コードがスポンサーシップ ページに直接表示されます。"
-		"ko"		"{green}[AnneDonate]{default} 후원기록이 생성되는 중이며, 해당 수신코드가 후원 페이지에 바로 표시됩니다."
-		"vi"		"{green}[AnneDonate]{default} Bản ghi tài trợ đang được tạo và mã khoản phải thu tương ứng sẽ được hiển thị trực tiếp trên trang tài trợ."
 	}
-
 	"Join_AnneDonateSponsorshipInformationSubmission"
 	{
 		"en"		"{green}[AnneDonate]{default} Sponsorship information submission failed, HTTP status: %d. Please scan the QR code to pay and contact the administrator for verification."
-		"chi"		"{green}[AnneDonate]{default} 赞助信息提交失败，HTTP 状态: %d。请扫码支付后联系管理员核实。"
-		"zho"		"{green}[AnneDonate]{default} 贊助資訊提交失敗，HTTP 狀態: %d。請掃碼付款後聯絡管理員核實。"
-		"jp"		"{green}[AnneDonate]{default} スポンサー情報の送信に失敗しました。HTTP ステータス: %d。 QR コードをスキャンして支払いを行い、確認のために管理者に連絡してください。"
-		"ko"		"{green}[AnneDonate]{default} 후원 정보 제출 실패, HTTP 상태: %d. QR코드를 스캔하여 결제하시고, 관리자에게 연락하여 확인해주세요."
-		"vi"		"{green}[AnneDonate]{default} gửi thông tin tài trợ không thành công, trạng thái HTTP: %d. Vui lòng quét mã QR để thanh toán và liên hệ với quản trị viên để xác minh."
 	}
-
 	"Join_AnneDonateSponsorshipRecordCreatedScan"
 	{
 		"en"		"{green}[AnneDonate]{default} The sponsorship record has been created, please scan the QR code to pay on the page that opens."
-		"chi"		"{green}[AnneDonate]{default} 赞助记录已创建，请在打开的页面扫码支付。"
-		"zho"		"{green}[AnneDonate]{default} 贊助記錄已創建，請在打開的頁面掃碼支付。"
-		"jp"		"{green}[AnneDonate]{default} スポンサーシップレコードが作成されました。開いたページでQRコードをスキャンして支払いを行ってください。"
-		"ko"		"{green}[AnneDonate]{default} 후원 기록이 생성되었습니다. 열리는 페이지에서 QR 코드를 스캔하여 결제하세요."
-		"vi"		"{green}[AnneDonate]{default} Bản ghi tài trợ đã được tạo, vui lòng quét mã QR để thanh toán trên trang mở ra."
 	}
-
 	"Join_AnneDonateUnableObtainSteamID64"
 	{
 		"en"		"{green}[AnneDonate]{default} Unable to obtain SteamID64, please contact the administrator for verification."
-		"chi"		"{green}[AnneDonate]{default} 无法获取 SteamID64，请联系管理员核实。"
-		"zho"		"{green}[AnneDonate]{default} 無法取得 SteamID64，請聯絡管理員核實。"
-		"jp"		"{green}[AnneDonate]{default} SteamID64 を取得できません。確認のために管理者に連絡してください。"
-		"ko"		"{green}[AnneDonate]{default} SteamID64를 얻을 수 없습니다. 확인을 위해 관리자에게 문의하세요."
-		"vi"		"{green}[AnneDonate]{default} Không thể lấy SteamID64, vui lòng liên hệ với quản trị viên để xác minh."
 	}
-
 	"Join_AnneDonateSteamWorksNotAvailable"
 	{
 		"en"		"{green}[AnneDonate]{default} SteamWorks is not available, please contact the administrator to verify the payment."
-		"chi"		"{green}[AnneDonate]{default} SteamWorks 不可用，请联系管理员核实到账。"
-		"zho"		"{green}[AnneDonate]{default} SteamWorks 不可用，請聯絡管理員核實到帳。"
-		"jp"		"{green}[AnneDonate]{default} SteamWorks は利用できません。支払いを確認するには管理者に連絡してください。"
-		"ko"		"{green}[AnneDonate]{default} SteamWorks를 이용할 수 없습니다. 결제 확인을 위해 관리자에게 문의하세요."
-		"vi"		"{green}[AnneDonate]{default} SteamWorks không khả dụng, vui lòng liên hệ với quản trị viên để xác minh thanh toán."
 	}
-
 	"Join_AnneDonatePaymentCompletionPrompt"
 	{
 		"en"		"{green}[AnneDonate]{default} The payment completion prompt failed to be sent, please contact the administrator for verification."
-		"chi"		"{green}[AnneDonate]{default} 支付完成提示发送失败，请联系管理员核实。"
-		"zho"		"{green}[AnneDonate]{default} 付款完成提示傳送失敗，請聯絡管理員核實。"
-		"jp"		"{green}[AnneDonate]{default} 支払い完了プロンプトの送信に失敗しました。確認のために管理者に連絡してください。"
-		"ko"		"{green}[AnneDonate]{default} 결제 완료 메시지를 보내지 못했습니다. 확인을 위해 관리자에게 문의하세요."
-		"vi"		"{green}[AnneDonate]{default} Không gửi được lời nhắc hoàn tất thanh toán, vui lòng liên hệ với quản trị viên để xác minh."
 	}
-
 	"Join_AnneDonatePaymentCompletionPrompts"
 	{
 		"en"		"{green}[AnneDonate]{default} Payment completion prompts synchronization failure, HTTP status: %d. Please contact the administrator to verify."
-		"chi"		"{green}[AnneDonate]{default} 支付完成提示同步失败，HTTP 状态: %d。请联系管理员核实。"
-		"zho"		"{green}[AnneDonate]{default} 支付完成提示同步失敗，HTTP 狀態: %d。請聯絡管理員核實。"
-		"jp"		"{green}[AnneDonate]{default} 支払い完了時に同期エラーが表示されます。HTTP ステータス: %d。管理者に連絡して確認してください。"
-		"ko"		"{green}[AnneDonate]{default} 결제가 완료되면 동기화 실패 메시지가 표시됩니다. HTTP 상태: %d. 확인하려면 관리자에게 문의하세요."
-		"vi"		"{green}[AnneDonate]{default} Thông báo hoàn tất thanh toán không đồng bộ hóa được, trạng thái HTTP: %d. Vui lòng liên hệ với quản trị viên để xác minh."
 	}
-
 	"Join_AnneDonatePaymentCompletionPromptSynchronized"
 	{
 		"en"		"{green}[AnneDonate]{default} The payment completion prompt has been synchronized. The administrator will activate the permission after verifying the payment."
-		"chi"		"{green}[AnneDonate]{default} 支付完成提示已同步，管理员核实到账后会开通权限。"
-		"zho"		"{green}[AnneDonate]{default} 付款完成提示已同步，管理員核對到帳後會開通權限。"
-		"jp"		"{green}[AnneDonate]{default} 支払い完了プロンプトが同期されました。管理者は支払いを確認した後、権限を有効にします。"
-		"ko"		"{green}[AnneDonate]{default} 결제 완료 메시지가 동기화되었습니다. 관리자가 결제 확인 후 권한을 활성화해 드립니다."
-		"vi"		"{green}[AnneDonate]{default} Lời nhắc hoàn tất thanh toán đã được đồng bộ hóa. Quản trị viên sẽ kích hoạt quyền sau khi xác minh thanh toán."
 	}
-
 	"Join_UseCommandsTooFast"
 	{
 		"en"		"{lightgreen} You use commands too fast"
-		"chi"		"{lightgreen} 你使用命令的速度太快了"
-		"zho"		"{lightgreen} 你使用指令的速度太快了"
-		"jp"		"{lightgreen} コマンドの使用が早すぎます"
-		"ko"		"{lightgreen} 명령을 너무 빨리 사용합니다"
-		"vi"		"{lightgreen} Bạn dùng lệnh quá nhanh"
 	}
-
 	"Join_SurvivorTeamFullNoOther"
 	{
 		"en"		"{lightgreen} The survivor team is full and there are no other survivor bots available to take over."
-		"chi"		"{lightgreen} 生还者团队已满，无其他生还者bot可供接管"
-		"zho"		"{lightgreen} 生還者團隊已滿，無其他生還者bot可供接管"
-		"jp"		"{lightgreen} サバイバー チームは満員で、他に引き継ぐことができるサバイバー ボットはありません。"
-		"ko"		"{lightgreen} 생존자 팀이 꽉 찼으며 인계받을 수 있는 다른 생존자 봇이 없습니다."
-		"vi"		"{lightgreen} Đội sống sót đã đầy đủ và không có bot sống sót nào khác để tiếp quản."
 	}
 }

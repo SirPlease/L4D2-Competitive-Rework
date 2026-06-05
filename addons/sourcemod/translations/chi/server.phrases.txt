@@ -1,0 +1,51 @@
+"Phrases"
+{
+	"Server_WatchingChatBlue"
+	{
+		"chi"		"[{olive}旁观{default}] {blue}%N{default}：%s"
+	}
+	"Server_WatchingChatRed"
+	{
+		"chi"		"[{olive}旁观{default}] {red}%N{default}：%s"
+	}
+	"Server_PromptFirstGroupWipeoutContinue"
+	{
+		"chi"		"[{olive}提示{default}] 这是你们第 {blue}%d{default} 次团灭，请继续努力"
+	}
+	"Server_StillUntakenBotsTakeThem"
+	{
+		"chi"		"{green}还有未接管的Bot，请先接管或等生还队满再试。"
+	}
+	"Server_Not8PlayerSportHasn"
+	{
+		"chi"		"{green}不是 8 人运动，还没达到上限呢！"
+	}
+	"Server_SurvivorBotGenerated"
+	{
+		"chi"		"{green}一个生还者Bot已生成。"
+	}
+	"Server_SurvivorBotCannotGeneratedMoment"
+	{
+		"chi"		"{green}暂时无法生成生还者Bot。"
+	}
+	"Server_NoBotNotTaken"
+	{
+		"chi"		"{green}不存在未接管的Bot。"
+	}
+	"Server_EverythingNormalStillWantSkip"
+	{
+		"chi"		"{green}一切正常，还想踢克逃课？"
+	}
+	"Server_ExcessGramsKicked"
+	{
+		"chi"		"{green}已经踢出多余的克"
+	}
+	"Server_PromptsAlreadyBlackWhiteGive"
+	{
+		"chi"		"[{olive}提示{default}] {green}%N{default} 已经 {olive}黑白{default}，请优先保护并治疗！"
+	}
+	"Server_PromptBlackWhiteTreatSoon"
+	{
+		"chi"		"[{olive}提示{default}] 你现在 {green}黑白{default}，请尽快治疗！"
+	}
+}

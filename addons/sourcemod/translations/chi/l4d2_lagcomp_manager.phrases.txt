@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"L4D2LagcompManager_SuccessfullyEntitySuccessfullyAddedArray"
+	{
+		"chi"		"【成功】实体‘%s(%d)’已成功添加到延迟补偿数组中！"
+	}
+	"L4D2LagcompManager_ErrorCouldNotFindEntity"
+	{
+		"chi"		"[错误] 在延迟补偿数组中找不到实体“%s (%d)”！"
+	}
+	"L4D2LagcompManager_ErrorEntityNotRemovedAfter"
+	{
+		"chi"		"[错误] 实体“%s (%d)”在从数组中销毁以进行延迟补偿后并未被删除！"
+	}
+	"L4D2LagcompManager_SuccessfullyEntityRemovedAfterDestroyed"
+	{
+		"chi"		"【成功】实体“%s（%d）”被从阵列中摧毁后被移除以进行延迟补偿！"
+	}
+	"L4D2LagcompManager_ErrorEntityNeverAddedArray"
+	{
+		"chi"		"[错误] 实体“%s (%d)”从未添加到数组中进行滞后补偿！"
+	}
+}

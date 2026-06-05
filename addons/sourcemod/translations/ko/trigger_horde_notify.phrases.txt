@@ -6,7 +6,7 @@
 	}
 	"Horde"
 	{
-		"ko"		"{olive} %N {green}가 호드 이벤트를 발동시켰습니다!"
+		"ko"		"{olive}%N{green}님이 좀비 웨이브 이벤트를 발동했습니다!"
 	}
 	"Final Rescue Start"
 	{

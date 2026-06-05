@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4DPlayerCountUnloadMode_AdministratorNotPresentPlayersAll"
+	{
+		"chi"		"管理员不在场，当前全服 {green}%d/%d{default} 台服务器有玩家，高峰期限制({green}%.0f%%{default})剩余 {green}%d{default} 分钟；本模式人数不足 {green}%d{default} 人，{green}强制卸载模式!!!!"
+	}
+	"L4DPlayerCountUnloadMode_AdministratorNotPresentCurrentlyRestricted"
+	{
+		"chi"		"管理员不在场，当前处于限制时间段；本模式人数不足 {green}%d{default} 人，{green}强制卸载模式!!!!"
+	}
+}

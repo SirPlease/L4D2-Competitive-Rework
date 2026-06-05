@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"L4D2Setscores_ScoreVotingIsnAllowedSpectators"
+	{
+		"ko"		"관중의 점수투표는 허용되지 않습니다."
+	}
+	"L4D2Setscores_ScoreVoteCannotStartedNot"
+	{
+		"ko"		"점수 투표를 시작할 수 없습니다. 플레이어가 부족합니다."
+	}
+	"L4D2Setscores_ScoreVoteCannotStarted"
+	{
+		"ko"		"지금은 점수 투표를 시작할 수 없습니다."
+	}
+	"L4D2Setscores_ScoresSetSurInf"
+	{
+		"ko"		"{default}점수를 {olive}%d {default}({green}생존자{default}) - {olive}%d {default}({green}감염자{default})로 설정했습니다. 실행자: {lightgreen}%s{default}."
+	}
+	"L4D2Setscores_ScoresSetSurInfVote"
+	{
+		"ko"		"{default}투표로 점수를 {olive}%d {default}({green}생존자{default}) - {olive}%d {default}({green}감염자{default})로 설정했습니다."
+	}
+}

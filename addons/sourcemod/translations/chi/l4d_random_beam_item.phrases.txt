@@ -1,0 +1,31 @@
+"Phrases"
+{
+	"L4DRandomBeamItem_InvalidTarget"
+	{
+		"chi"		"{green}目标无效。"
+	}
+	"L4DRandomBeamItem_TargetEntityNoBeam"
+	{
+		"chi"		"{green}T目标实体没有光束。"
+	}
+	"L4DRandomBeamItem_BeamIndexTargetIndexClassname"
+	{
+		"chi"		"{olive}光束索引：{lightgreen}%i {olive}目标索引：{lightgreen}%i {olive}类名：{lightgreen}%s {olive}型号： {lightgreen}%s {olive}光束颜色（RGB|整数）：{lightgreen}%i %i %i|%i {olive}B亮度：{lightgreen}%.1f {olive}长度：{lightgreen}%i {olive}宽度：{lightgreen}%i {olive}HDR色标：{lightgreen}%.1f"
+	}
+	"L4DRandomBeamItem_BeamConfigsReloaded"
+	{
+		"chi"		"{green}Beam 配置已重新加载。"
+	}
+	"L4DRandomBeamItem_RemovedTargetEntityPluginBeam"
+	{
+		"chi"		"{green}删除了目标实体插件梁。"
+	}
+	"L4DRandomBeamItem_RemovedAllBeamsCreatedPlugin"
+	{
+		"chi"		"{green}删除了插件创建的所有梁。"
+	}
+	"L4DRandomBeamItem_BeamAddedTargetEntity"
+	{
+		"chi"		"{green}Beam 添加到目标实体。"
+	}
+}

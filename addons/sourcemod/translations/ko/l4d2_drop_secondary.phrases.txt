@@ -1,0 +1,31 @@
+"Phrases"
+{
+	"L4D2DropSecondary_PlayerReplacedBotReplacedSecondary"
+	{
+		"ko"		"{green}[{olive}OnPlayerReplacedByBot{green}] {default}- {blue}BOT {default}{blue}%N {default}({green}S보조: {olive}%s{default})"
+	}
+	"L4D2DropSecondary_BotReplacedPlayerReplacedBOT"
+	{
+		"ko"		"{green}[{olive}OnBotReplacedByPlayer{green}] {default}- {blue}%N {default}교체된 {blue}BOT {default}({green}S보조: {olive}%s{default})"
+	}
+	"L4D2DropSecondary_PlayerUsePickedSecondsondarySecondary"
+	{
+		"ko"		"{green}[{olive}OnPlayerUse{green}] {default}- {blue}%N{default}가 보조 장치를 선택했습니다: ({green}S보조 장치: {olive}%s{default})"
+	}
+	"L4D2DropSecondary_PlayerDeathSecondary"
+	{
+		"ko"		"{green}[{olive}OnPlayerDeath{green}] {default}- {blue}%N {default}({green}보조: {olive}%s{default})"
+	}
+	"L4D2DropSecondary_ErrorSomethingWentWrongDetermining"
+	{
+		"ko"		"{blue}[{default}L4D2 Drop Secondary{blue}]{default}: {green}ERROR {default}- 보조 무기에 대한 근접 스크립트를 결정하는 데 문제가 발생했습니다. 이 문제를 {olive}Plugin Author{default}에게 보고하세요."
+	}
+	"L4D2DropSecondary_DetermineMeleeScriptMS"
+	{
+		"ko"		"{green}[{olive}DDetermineMeleeScript{green}] {default}- {blue}%N {default}가 {olive}%s {default}- MS: {olive}%s"
+	}
+	"L4D2DropSecondary_Debugging"
+	{
+		"ko"		"{blue}[{default}L4D2 드롭 보조{blue}]{default}: {green}{olive}%s 디버깅"
+	}
+}

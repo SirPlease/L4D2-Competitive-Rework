@@ -2,7 +2,7 @@
 {
 	"L4D2Antibaiter_AntibaiterDebugEligiblePlayerZombieclass"
 	{
-		"ko"		"{lightgreen} [안티베이터 디버그] 적격 플레이어 {green} %N {default}는 {olive} %f s {default}에 대해 살아있는 좀비 클래스 {olive} %d {default}입니다."
+		"ko"		"{lightgreen}[안티베이터 디버그] 적격 플레이어 {green}%N{default}는 좀비 클래스 {olive}%d{default}로 {olive}%fs{default} 동안 생존 중입니다."
 	}
 	"L4D2Antibaiter_AntibaiterDebugSpectatorBugDetected"
 	{
@@ -18,11 +18,11 @@
 	}
 	"L4D2Antibaiter_AntibaiterDebugCountdownElapsedLaunching"
 	{
-		"ko"		"{lightgreen}[안티베이터 디버그] 카운트다운에 {green}elapsed{default}가 발생했습니다! 호드 시작 및 수표 카운터 재설정"
+		"ko"		"{lightgreen}[안티베이터 디버그] 카운트다운이 {green}종료{default}되었습니다! 좀비 웨이브를 시작하고 검사 카운터를 초기화합니다"
 	}
 	"L4D2Antibaiter_AntiBaiterPrepareIncomingHorde"
 	{
-		"ko"		"{blue}[{default}안티베이터{blue}]{default} 다가오는 무리를 준비하세요!"
+		"ko"		"{blue}[{default}안티베이터{blue}]{default} 다가오는 좀비 웨이브에 대비하세요!"
 	}
 	"L4D2Antibaiter_AntibaiterDebugCountdownNotRunning"
 	{

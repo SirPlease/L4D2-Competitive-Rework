@@ -3,28 +3,14 @@
 	"Tag"
 	{
 		"en"		"[{olive}Teamflip{default}]"
-		"zho"		"[{olive}Teamflip{default}]"
-		"jp"		"[{olive}Teamflip{default}]"
-		"ko"		"[{olive}Teamflip{default}]"
-		"vi"		"[{olive}Teamflip{default}]"
 	}
 	"FlippedSurvivor"
 	{
 		"en"		"{green}%s{default} flipped a team and is on the {blue}Survivor{default} team!"
-	
-		"zho"		"{green}%s{default} flipped a team and is on the {blue}Survivor{default} team!"
-		"jp"		"{green}%s{default} flipped a team and is on the {blue}Survivor{default} team!"
-		"ko"		"{green}%s{default} flipped a team and is on the {blue}Survivor{default} team!"
-		"vi"		"{green}%s{default} flipped a team and is on the {blue}Survivor{default} team!"
 	}
 	"FlippedInfected"
 	{
 		"en"		"{green}%s{default} flipped a team and is on the {red}Infected{default} team!"
-	
-		"zho"		"{green}%s{default} flipped a team and is on the {red}Infected{default} team!"
-		"jp"		"{green}%s{default} flipped a team and is on the {red}Infected{default} team!"
-		"ko"		"{green}%s{default} flipped a team and is on the {red}Infected{default} team!"
-		"vi"		"{green}%s{default} flipped a team and is on the {red}Infected{default} team!"
 	}
 	"Wait"
 	{

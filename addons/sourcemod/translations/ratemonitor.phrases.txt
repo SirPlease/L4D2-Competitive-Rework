@@ -3,90 +3,37 @@
 	"Ratemonitor_RatesNetsettingsChanged"
 	{
 		"en"		"{default}<{olive}Rates{default}> {teamcolor}%N{default}'s netsettings changed from {teamcolor}%d/%d/%d {default}to {teamcolor}%d/%d/%d {olive}%s"
-		"chi"		"{default}<{olive}Rates{default}> {teamcolor}%N{default} 的网络设置从 {teamcolor}%d/%d/%d {default} 更改为{teamcolor}%d/%d/%d {olive}%s"
-		"zho"		"{default}<{olive}Rates{default}> {teamcolor}%N{default}'s netsettings changed from {teamcolor}%d/%d/%d {default}to {teamcolor}%d/%d/%d {olive}%s"
-		"jp"		"{default}<{olive}Rates{default}> {teamcolor}%N{default} のネット設定が {teamcolor}%d/%d/%d {default} に変更されました{teamcolor}%d/%d/%d {olive}%s"
-		"ko"		"{default}<{olive}Rates{default}> {teamcolor}%N{default}의 네트워크 설정이 {teamcolor}%d/%d/%d {default}to에서 변경되었습니다. {teamcolor}%d/%d/%d {olive}%s"
-		"vi"		"{default}<{olive}Rates{default}> Cài đặt mạng của {teamcolor}%N{default} đã thay đổi từ {teamcolor}%d/%d/%d {default}to {teamcolor}%d/%d/%d {olive}%s"
 	}
-
 	"Ratemonitor_RatesNetsettingsSet"
 	{
 		"en"		"{default}<{olive}Rates{default}> {teamcolor}%N{default}'s netsettings set to {teamcolor}%d/%d/%d"
-		"chi"		"{default}<{olive}Rates{default}> {teamcolor}%N{default} 的网络设置设置为 {teamcolor}%d/%d/%d"
-		"zho"		"{default}<{olive}Rates{default}> {teamcolor}%N{default}'s netsettings set to {teamcolor}%d/%d/%d"
-		"jp"		"{default}<{olive}Rates{default}> {teamcolor}%N{default} のネット設定が {teamcolor}%d/%d/%d に設定されました"
-		"ko"		"{default}<{olive}Rates{default}> {teamcolor}%N{default}의 netsettings가 {teamcolor}%d/%d/%d로 설정되었습니다."
-		"vi"		"{default}<{olive}Rates{default}> Cài đặt mạng của {teamcolor}%N{default} được đặt thành {teamcolor}%d/%d/%d"
 	}
-
 	"Ratemonitor_RatesNetsettingsSetIllegalValues"
 	{
 		"en"		"{default}<{olive}Rates{default}> {teamcolor}%N{default}'s netsettings set to illegal values: {teamcolor}%s/%s/%s {olive}%s"
-		"chi"		"{default}<{olive}Rates{default}> {teamcolor}%N{default} 的网络设置设置为非法值：{teamcolor}%s/%s/%s {olive}%s"
-		"zho"		"{default}<{olive}Rates{default}> {teamcolor}%N{default}'s netsettings set to illegal values: {teamcolor}%s/%s/%s {olive}%s"
-		"jp"		"{default}<{olive}Rates{default}> {teamcolor}%N{default} のネット設定が不正な値に設定されています: {teamcolor}%s/%s/%s {olive}%s"
-		"ko"		"{default}<{olive}Rates{default}> {teamcolor}%N{default}의 netsettings가 잘못된 값으로 설정됨: {teamcolor}%s/%s/%s {olive}%s"
-		"vi"		"{default}<{olive}Rates{default}> Cài đặt mạng của {teamcolor}%N{default} được đặt thành giá trị không hợp lệ: {teamcolor}%s/%s/%s {olive}%s"
 	}
-
 	"Ratemonitor_RatesIllegalyChangedNetsettingsMidgame"
 	{
 		"en"		"{default}<{olive}Rates{default}> {teamcolor}%N{default}'s illegaly changed netsettings midgame: {teamcolor}%s/%s/%s {olive}%s"
-		"chi"		"{default}<{olive}Rates{default}> {teamcolor}%N{default} 非法更改网络设置：{teamcolor}%s/%s/%s {olive}%s"
-		"zho"		"{default}<{olive}Rates{default}> {teamcolor}%N{default}'s illegaly changed netsettings midgame: {teamcolor}%s/%s/%s {olive}%s"
-		"jp"		"{default}<{olive}Rates{default}> {teamcolor}%N{default} がゲーム中にネット設定を不正に変更しました: {teamcolor}%s/%s/%s {olive}%s"
-		"ko"		"{default}<{olive}Rates{default}> {teamcolor}%N{default}의 게임 중반 네트 설정이 불법적으로 변경되었습니다: {teamcolor}%s/%s/%s {olive}%s"
-		"vi"		"{default}<{olive}Rates{default}> {teamcolor}%N{default} đã thay đổi cài đặt mạng bất hợp pháp ở giữa game: {teamcolor}%s/%s/%s {olive}%s"
 	}
-
 	"Ratemonitor_RatesMovedSpectatorsIllegalNetsettings"
 	{
 		"en"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}was moved to spectators for illegal netsettings: {teamcolor}%s/%s/%s {olive}%s"
-		"chi"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}因非法下网而被移至观众：{teamcolor}%s/%s/%s {olive}%s"
-		"zho"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}was moved to spectators for illegal netsettings: {teamcolor}%s/%s/%s {olive}%s"
-		"jp"		"{default}<{olive}Rates{default}> {teamcolor}%N {default} が違法なネット設定のため観客に移動されました: {teamcolor}%s/%s/%s {olive}%s"
-		"ko"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}는 불법적인 정산으로 인해 관중석으로 이동되었습니다: {teamcolor}%s/%s/%s {olive}%s"
-		"vi"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}đã được chuyển đến khán giả vì cài đặt mạng bất hợp pháp: {teamcolor}%s/%s/%s {olive}%s"
 	}
-
 	"Ratemonitor_RatesAdjustRatesValuesHigher"
 	{
 		"en"		"{default}<{olive}Rates{default}> Please adjust your rates to values higher than {olive}%d/%d/%d%s"
-		"chi"		"{default}<{olive}Rates{default}> 请将您的费率调整为高于 {olive}%d/%d/%d%s 的值"
-		"zho"		"{default}<{olive}Rates{default}> Please adjust your rates to values higher than {olive}%d/%d/%d%s"
-		"jp"		"{default}<{olive}Rates{default}> レートを {olive}%d/%d/%d%s より高い値に調整してください。"
-		"ko"		"{default}<{olive}Rates{default}> 요금을 {olive}%d/%d/%d%s보다 높은 값으로 조정하세요."
-		"vi"		"{default}<{olive}Rates{default}> Vui lòng điều chỉnh giá của bạn thành giá trị cao hơn {olive}%d/%d/%d%s"
 	}
-
 	"Ratemonitor_RatesChangeNetsettingsBack"
 	{
 		"en"		"{default}<{olive}Rates{default}> Change your netsettings back to: {teamcolor}%d/%d/%d"
-		"chi"		"{default}<{olive}Rates{default}> 将网络设置更改回：{teamcolor}%d/%d/%d"
-		"zho"		"{default}<{olive}Rates{default}> 將網路設定變更回：{teamcolor}%d/%d/%d"
-		"jp"		"{default}<{olive}Rates{default}> ネット設定を次のように変更します: {teamcolor}%d/%d/%d"
-		"ko"		"{default}<{olive}Rates{default}> 네트워크 설정을 다시 다음으로 변경합니다: {teamcolor}%d/%d/%d"
-		"vi"		"{default}<{olive}Rates{default}> Thay đổi cài đặt mạng của bạn trở lại: {teamcolor}%d/%d/%d"
 	}
-
 	"Ratemonitor_RatesKickedIllegalNetsettings"
 	{
 		"en"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}was kicked for illegal netsettings: {teamcolor}%s/%s/%s {olive}%s"
-		"chi"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}因非法组网被踢：{teamcolor}%s/%s/%s {olive}%s"
-		"zho"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}was kicked for illegal netsettings: {teamcolor}%s/%s/%s {olive}%s"
-		"jp"		"{default}<{olive}Rates{default}> {teamcolor}%N {default} は違法なネット設定によりキックされました: {teamcolor}%s/%s/%s {olive}%s"
-		"ko"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}는 불법적인 netsettings로 인해 추방되었습니다: {teamcolor}%s/%s/%s {olive}%s"
-		"vi"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}đã bị kick vì cài đặt mạng bất hợp pháp: {teamcolor}%s/%s/%s {olive}%s"
 	}
-
 	"Ratemonitor_RatesKickedDueIllegalNetsettings"
 	{
 		"en"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}was kicked due to illegal netsettings change: {teamcolor}%s/%s/%s {olive}%s"
-		"chi"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}因非法网络设置更改而被踢：{teamcolor}%s/%s/%s {olive}%s"
-		"zho"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}was kicked due to illegal netsettings change: {teamcolor}%s/%s/%s {olive}%s"
-		"jp"		"{default}<{olive}Rates{default}> {teamcolor}%N {default} は、違法なネット設定変更によりキックされました: {teamcolor}%s/%s/%s {olive}%s"
-		"ko"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}는 불법적인 넷 설정 변경으로 인해 추방되었습니다: {teamcolor}%s/%s/%s {olive}%s"
-		"vi"		"{default}<{olive}Rates{default}> {teamcolor}%N {default}đã bị kick do thay đổi cài đặt mạng bất hợp pháp: {teamcolor}%s/%s/%s {olive}%s"
 	}
 }

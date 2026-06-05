@@ -1,0 +1,59 @@
+"Phrases"
+{
+	"L4D2MapVote_MapnextChatPrompt"
+	{
+		"ko"		"다음 맵에 투표하려면 채팅창 {olive}!mapnext {default}에 {default}를 입력하세요."
+	}
+	"L4D2MapVote_VPKCampaignListsRefreshed"
+	{
+		"ko"		"{olive}[MapVote]{default} VPK 및 캠페인 목록이 새로 고쳐졌습니다."
+	}
+	"L4D2MapVote_VPKRefreshCooldownRemaining"
+	{
+		"ko"		"VPK 새로 고침이 냉각 중이며 %.1f초가 소요됩니다."
+	}
+	"L4D2MapVote_PrePluginNotInstalled"
+	{
+		"ko"		"사전 플러그인이 설치되지 않았습니다."
+	}
+	"L4D2MapVote_CurrentMapNotFinalMap"
+	{
+		"ko"		"현재 지도는 최종 지도가 아닙니다."
+	}
+	"L4D2MapVote_SpectatorsCannotVote"
+	{
+		"ko"		"관객은 투표할 수 없다"
+	}
+	"L4D2MapVote_VotingInProgressCannotStartNewVote"
+	{
+		"ko"		"투표가 진행 중입니다. 아직 새 투표를 시작할 수 없습니다."
+	}
+	"L4D2MapVote_NoValidChapterMapExists"
+	{
+		"ko"		"유효한 챕터 맵이 없습니다."
+	}
+	"L4D2MapVote_InitiatesVoteSetsNextMap"
+	{
+		"ko"		"{blue}%N {default}가 투표를 시작합니다. {olive}는 다음 맵을 %s로 설정합니다."
+	}
+	"L4D2MapVote_Voted"
+	{
+		"ko"		"{blue}%N {default}가 투표했습니다"
+	}
+	"L4D2MapVote_SetupFailed"
+	{
+		"ko"		"설정 실패"
+	}
+	"L4D2MapVote_NextMapSet"
+	{
+		"ko"		"{default}다음 맵이 {olive}%s로 설정되었습니다."
+	}
+	"L4D2MapVote_InitiatesVoteReplacementCampaign"
+	{
+		"ko"		"{blue}%N {default}가 투표를 시작합니다. {olive} 교체 캠페인: %s"
+	}
+	"L4D2MapVote_InitiatesVoteChangeMap"
+	{
+		"ko"		"{blue}%N {default}가 투표를 시작합니다 {olive} 지도 변경: %s (%s)"
+	}
+}

@@ -3,10 +3,5 @@
 	"L4DStats_RankMessage"
 	{
 		"en"		"{green}[{lightgreen}RANK{green}] {default}%s"
-		"chi"		"{green}[{lightgreen}RANK{green}] {default}%s"
-		"zho"		"{green}[{lightgreen}RANK{green}] {default}%s"
-		"jp"		"{green}[{lightgreen}RANK{green}] {default}%s"
-		"ko"		"{green}[{lightgreen}RANK{green}] {default}%s"
-		"vi"		"{green}[{lightgreen}RANK{green}] {default}%s"
 	}
 }

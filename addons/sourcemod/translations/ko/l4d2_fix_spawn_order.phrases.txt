@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2FixSpawnOrder_DebugMessage"
+	{
+		"ko"		"{green}[디버그]{default} %s"
+	}
+}

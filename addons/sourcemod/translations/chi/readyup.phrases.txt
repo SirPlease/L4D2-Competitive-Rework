@@ -1,108 +1,91 @@
 "Phrases"
 {
-// The following uses bracket style color tags (see colors.inc)
 	"PanelHide"
 	{
 		"chi"		"[{olive}Readyup{default}] 准备面板已 {red}关闭{default}"
 	}
-	
 	"PanelShow"
 	{
 		"chi"		"[{olive}Readyup{default}] 准备面板已 {blue}开启{default}"
 	}
-	
 	"ForceStartAdmin"
 	{
 		"#format"	"{1:N}"
 		"chi"		"[{green}!{default}] {blue}管理员 {default}({olive}{1}{default}) {green}强制{default}了{blue}游戏开始"
 	}
-	
 	"VoteInProgress"
 	{
 		"chi"		"[{olive}Readyup{default}] 现在有{olive}投票{green}正在进行{default}"
 	}
-	
 	"VoteDelay"
 	{
 		"#format"	"{1:d}"
 		"chi"		"[{olive}Readyup{default}] 请等待 {blue}{1}秒 {default}以发起下一轮投票"
 	}
-	
 	"Player marked unready"
 	{
 		"#format"	"{1:N}"
 		"chi"		"{default}[{green}!{default}] {green}倒数中止！ {default}({teamcolor}{1} {green}取消了准备{default})"
 	}
-	
 	"Player switched team"
 	{
 		"#format"	"{1:N}"
 		"chi"		"{default}[{green}!{default}] {green}倒数中止！ {default}({teamcolor}{1} {olive}切换了阵营{default})"
 	}
-	
 	"Player disconnected"
 	{
 		"#format"	"{1:N}"
 		"chi"		"{default}[{green}!{default}] {green}倒数中止！ {default}({teamcolor}{1} {green}离开了游戏{default})"
 	}
-	
 	"Admin aborted"
 	{
 		"#format"	"{1:N}"
 		"chi"		"{default}[{green}!{default}] {green}叫停强制开始！ {default}({green}由 {olive}{1} {green}发起{default})"
 	}
-	
-	
-// The following are not allowed to use any color tag
 	"HintReady"
 	{
 		"chi"		"你已经准备了\n输入 !unready / 按 F2 取消准备"
 	}
-	
 	"HintUnready"
 	{
 		"chi"		"你还没有准备\n输入 !ready / 按 F1 确认准备"
 	}
-	
 	"LiveCountdownBegin"
 	{
 		"chi"		"比赛即将开始！\n输入 !unready / 按 F2 中断倒数"
 	}
-	
 	"LiveCountdown"
 	{
 		"#format"	"{1:d}"
 		"chi"		"请各就各位：{1} \n输入 !unready / 按 F2 中断倒数"
 	}
-	
 	"LiveCountdownCancelled"
 	{
 		"chi"		"倒数中止！"
 	}
-	
 	"RoundIsLive"
 	{
 		"chi"		"比赛开始！"
-	}	
-	
+	}
 	"InitiateAutoStart"
 	{
 		"chi"		"游戏将会自动开始！"
 	}
-	
 	"AutoStartCountdown"
 	{
 		"#format"	"{1:d}"
 		"chi"		"游戏开始于：{1}"
 	}
-	
 	"AutoStartWaiting"
 	{
 		"chi"		"等待玩家加入..."
 	}
-	
 	"AutoStartNotEnoughPlayers"
 	{
 		"chi"		"玩家数量不足..."
+	}
+	"Readyup_CanOnlyUnreadyTimesRound"
+	{
+		"chi"		"[{olive}Readyup{default}] 本回合你最多只能取消准备 {blue}%d{default} 次。"
 	}
 }

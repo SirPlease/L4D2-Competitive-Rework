@@ -1,43 +1,19 @@
-﻿"Phrases"
+"Phrases"
 {
 	"Alarmed_Car"
 	{
 		"en"		"{olive}%N{green} triggered an alarmed car!"
-		"zho"		"{olive}%N{green} 觸發了警報車!"
-		"chi"		"{olive}%N{green} 触发了警报车!"
-		"ru"		"{olive}%N{green} провоцирует сигнализацию машины!"
-		"jp"		"{olive}%N{green} triggered an alarmed car!"
-		"ko"		"{olive}%N{green} triggered an alarmed car!"
-		"vi"		"{olive}%N{green} triggered an alarmed car!"
 	}
 	"Horde"
 	{
 		"en"		"{olive}%N{green} triggered a horde event!"
-		"zho"		"{olive}%N{green} 觸發了屍潮事件!"
-		"chi"		"{olive}%N{green} 触发了尸潮事件!"
-		"ru"		"{olive}%N{green} провоцирует орду!"
-		"jp"		"{olive}%N{green} triggered a horde event!"
-		"ko"		"{olive}%N{green} triggered a horde event!"
-		"vi"		"{olive}%N{green} triggered a horde event!"
 	}
 	"Final Rescue Start"
 	{
 		"en"		"{green}Final Rescure has started!"
-		"zho"		"{green}最後救援開始!"
-		"chi"		"{green}最后救援开始!"
-		"ru"		"{green}Спасение последнего этапа началось!"
-		"jp"		"{green}Final Rescure has started!"
-		"ko"		"{green}Final Rescure has started!"
-		"vi"		"{green}Final Rescure has started!"
 	}
 	"Final Rescue"
 	{
 		"en"		"{blue}%N{olive} triggered the final rescue!"
-		"zho"		"{blue}%N{olive} 觸發了救援開關!"
-		"chi"		"{blue}%N{olive} 触发了救援开关!"
-		"ru"		"{blue}%N{olive} начинает спасение последнего этапа!"
-		"jp"		"{blue}%N{olive} triggered the final rescue!"
-		"ko"		"{blue}%N{olive} triggered the final rescue!"
-		"vi"		"{blue}%N{olive} triggered the final rescue!"
 	}
 }

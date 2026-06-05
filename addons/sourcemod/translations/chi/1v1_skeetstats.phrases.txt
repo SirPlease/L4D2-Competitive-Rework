@@ -41,15 +41,15 @@
 	//  3. accuracy
 	"ACC_AllShots"
 	{
-		"chi"		"总命中率 ({blue}%3.0f%%{default})"
+		"chi"		"总命中率 ({blue}%.0f%%{default})"
 	}
 	"ACC_BuckShot"
 	{
-		"chi"		"| 铅弹命中率 ({blue}%3.0f%%{default})"
+		"chi"		"| 铅弹命中率 ({blue}%.0f%%{default})"
 	}
 	"ACC_Melee"
 	{
-		"chi"		"| 近战命中率 ({blue}%3.0f%%{default})"
+		"chi"		"| 近战命中率 ({blue}%.0f%%{default})"
 	}
 	"ACC_NoShotsFired"
 	{

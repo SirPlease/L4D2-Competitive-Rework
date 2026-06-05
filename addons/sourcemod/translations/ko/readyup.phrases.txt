@@ -44,20 +44,20 @@
 	}
 	"HintReady"
 	{
-		"ko"		"당신은 준비되었습니다.\\n!unready 를 입력 / F2 를 눌러 준비해제할 수 있습니다."
+		"ko"		"준비 완료되었습니다.\n!unready 입력 또는 F2 로 준비 해제."
 	}
 	"HintUnready"
 	{
-		"ko"		"당신은 준비되지않았습니다.\\n!ready 를 입력 / F1 를 눌러 준비할 수 있습니다."
+		"ko"		"아직 준비되지 않았습니다.\n!ready 입력 또는 F1 로 준비 완료."
 	}
 	"LiveCountdownBegin"
 	{
-		"ko"		"시작 중!\\n!unready 를 입력 / F2 를 눌러 취소할 수 있습니다."
+		"ko"		"곧 시작합니다!\n!unready 입력 또는 F2 로 취소."
 	}
 	"LiveCountdown"
 	{
 		"#format"	"{1:d}"
-		"ko"		"{1} 초 후 시작\\n!unready 를 입력 / F2 를 눌러 취소할 수 있습니다."
+		"ko"		"시작까지: {1}\n!unready 입력 또는 F2 로 취소."
 	}
 	"LiveCountdownCancelled"
 	{

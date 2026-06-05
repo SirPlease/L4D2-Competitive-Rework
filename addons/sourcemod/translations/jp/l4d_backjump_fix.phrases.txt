@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4DBackjumpFix_OtherSolid"
+	{
+		"jp"		"その他：%s（%i）、ソリッド：%i"
+	}
+}

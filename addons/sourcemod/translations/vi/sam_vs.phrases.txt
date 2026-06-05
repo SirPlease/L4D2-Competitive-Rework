@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"SAMVS_DebugChatting"
+	{
+		"vi"		"[gỡ lỗi] Trò chuyện %N"
+	}
+	"SAMVS_DebugPressedButton"
+	{
+		"vi"		"[gỡ lỗi] %N đã nhấn nút (%d)"
+	}
+	"SAMVS_DebugSAMCheckIdlesFired"
+	{
+		"vi"		"[gỡ lỗi] SAM_t_CheckIdles()-> đã kích hoạt, RUP = %b!"
+	}
+	"SAMVS_DebugSAMCheckIdlesBussy"
+	{
+		"vi"		"[gỡ lỗi] SAM_t_CheckIdles()-> %N đang bận/tăng. Chúng ta bỏ qua anh ấy..."
+	}
+	"SAMVS_DebugSAMCheckIdlesDancing"
+	{
+		"vi"		"[gỡ lỗi] SAM_t_CheckIdles()-> %N đang nhảy múa, bỏ qua anh ấy..."
+	}
+	"SAMVS_DebugSAMCheckIdlesMoved"
+	{
+		"vi"		"[gỡ lỗi] SAM_t_CheckIdles()-> %N đã được chuyển sang thông số kỹ thuật (Là AFK cho %.1fsec)"
+	}
+	"SAMVS_DebugSAMCheckIdlesAFK"
+	{
+		"vi"		"[gỡ lỗi] SAM_t_CheckIdles()-> %N AFK, hẹn giờ %x hndl"
+	}
+	"SAMVS_DebugSAMTimeKillTimer"
+	{
+		"vi"		"[gỡ lỗi] SAM_TimeToKill(%N)-> Tắt bộ đếm thời gian %x hndl"
+	}
+	"SAMVS_DebugSAMActionKickPlayer"
+	{
+		"vi"		"[gỡ lỗi] Trình phát đá SAM_t_ActionKick(%N)"
+	}
+}

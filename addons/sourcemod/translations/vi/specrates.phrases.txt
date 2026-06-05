@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"Specrates_SpecRatesScoreLess30"
+	{
+		"vi"		"{green}[SpecRates]{default} Điểm của bạn dưới 30W và không thể đặt tốc độ xem."
+	}
+	"Specrates_SpecRatesNumberSpectatorsExceeds"
+	{
+		"vi"		"{green}[SpecRates]{default} Số lượng khán giả vượt quá %d. Chỉ cho phép 30 tích tắc khi đám đông đã đầy."
+	}
+	"Specrates_SpecRatesSet60tick"
+	{
+		"vi"		"{green}[SpecRates]{default} đã được đặt thành {lightgreen}60tick{default}."
+	}
+	"Specrates_SpecRatesAdministratorMatchSet"
+	{
+		"vi"		"{green}[SpecRates]{default} Quản trị viên (khớp) đã được đặt thành {lightgreen}128tick{default}."
+	}
+	"Specrates_SpecRatesAdministratorSpectatorSet"
+	{
+		"vi"		"{green}[SpecRates]{default} Quản trị viên (khán giả) đã được đặt thành {lightgreen}100tick{default}."
+	}
+}

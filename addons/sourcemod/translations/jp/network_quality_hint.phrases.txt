@@ -1,0 +1,27 @@
+"Phrases"
+{
+	"NetworkQualityHint_CurrentNetworkPingMSLoss"
+	{
+		"jp"		"%s 現在のネットワーク: ping {olive}%dms{default}、損失 {olive}%.2f%%{default}、チョーク {olive}%.2f%%{default}。"
+	}
+	"NetworkQualityHint_DetectionCaliberChokeUseDirection"
+	{
+		"jp"		"%s 検出口径: チョーク サーバーから送信された方向を使用します。サーバーに送信した方向は現在 {olive}%.2f%%{default} です。"
+	}
+	"NetworkQualityHint_AbnormalDelayPacketLossOpen"
+	{
+		"jp"		"%s 異常な遅延またはパケット損失が発生した場合は、IP ページを開いて現在のサーバー アドレスをコピーし、再接続してください: {green}%s{default}"
+	}
+	"NetworkQualityHint_AbnormalityNetworkStatusDetectedCurrent"
+	{
+		"jp"		"%s ネットワーク状態の異常が検出されました: {olive}%s{default}。現在のping {olive}%dms{default}、損失{olive}%.2f%%{default}、チョーク{olive}%.2f%%{default}。"
+	}
+	"NetworkQualityHint_OpenIPPageCopyConnect"
+	{
+		"jp"		"%s IP ページを開いて、現在のサーバーに対応する接続コマンドをコピーし、コンソールに貼り付けて再接続してください: {green}%s{default}"
+	}
+	"NetworkQualityHint_ThirdLineServersGivePriority"
+	{
+		"jp"		"%s サードラインサーバーの場合は、コレクションや履歴からの誤ったルートを避けるために、Web ページに表示される迂回入り口を優先して使用してください。"
+	}
+}

@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"L4D2BWRockHit_VictimAttackerInflictorDamageType"
+	{
+		"zho"		"受害者 %d 攻擊者 %d 傷害者 %d 傷害型 %d 武器 %d"
+	}
+	"L4D2BWRockHit_VictimAttackerClassname"
+	{
+		"zho"		"受害者 %N(%i/%i) 攻擊者 %N 類別名稱 %s"
+	}
+	"L4D2BWRockHit_TankRockDetonate"
+	{
+		"zho"		"CTankRock__引爆：%d"
+	}
+	"L4D2BWRockHit_OwnerTankRockDetonate"
+	{
+		"zho"		"所有者：%N（%d）。罐岩%d引爆）"
+	}
+	"L4D2BWRockHit_UnknownOwnerTankRockDetonate"
+	{
+		"zho"		"所有者未知：%d。罐岩%d引爆）"
+	}
+}

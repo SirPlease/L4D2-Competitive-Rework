@@ -6,7 +6,7 @@
 	}
 	"Horde"
 	{
-		"jp"		"{olive} %N {green} は大群イベントを引き起こしました!"
+		"jp"		"{olive}%N{green} がゾンビの群れイベントを発動しました！"
 	}
 	"Final Rescue Start"
 	{

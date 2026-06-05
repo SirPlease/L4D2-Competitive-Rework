@@ -1,0 +1,51 @@
+"Phrases"
+{
+	"Server_WatchingChatBlue"
+	{
+		"zho"		"[{olive}旁觀{default}] {blue}%N{default}：%s"
+	}
+	"Server_WatchingChatRed"
+	{
+		"zho"		"[{olive}旁觀{default}] {red}%N{default}：%s"
+	}
+	"Server_PromptFirstGroupWipeoutContinue"
+	{
+		"zho"		"[{olive}提示{default}] 這是你們第 {blue}%d{default} 次團滅，請繼續努力"
+	}
+	"Server_StillUntakenBotsTakeThem"
+	{
+		"zho"		"還有未接管的Bot，請先接管或等生還隊滿再試。"
+	}
+	"Server_Not8PlayerSportHasn"
+	{
+		"zho"		"不是 8 人運動，還沒達到上限！"
+	}
+	"Server_SurvivorBotGenerated"
+	{
+		"zho"		"一個生還者Bot已產生。"
+	}
+	"Server_SurvivorBotCannotGeneratedMoment"
+	{
+		"zho"		"暫時無法產生生還者Bot。"
+	}
+	"Server_NoBotNotTaken"
+	{
+		"zho"		"不存在未接管的Bot。"
+	}
+	"Server_EverythingNormalStillWantSkip"
+	{
+		"zho"		"一切正常，還想踢克逃課？"
+	}
+	"Server_ExcessGramsKicked"
+	{
+		"zho"		"已經踢出多餘的克"
+	}
+	"Server_PromptsAlreadyBlackWhiteGive"
+	{
+		"zho"		"[{olive}提示{default}] {green}%N{default} 已經 {olive}黑白{default}，請優先保護並治療！"
+	}
+	"Server_PromptBlackWhiteTreatSoon"
+	{
+		"zho"		"[{olive}提示{default}] 你現在 {green}黑白{default}，請盡快治療！"
+	}
+}

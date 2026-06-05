@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"Text_NotExceed10SpecialAnne"
+	{
+		"zho"		"{lightgreen}因為不超過10特，AnneHappy+武器已經自動切換為AnneHappy武器"
+	}
+	"Text_CannotUseAnneHappyPlus"
+	{
+		"zho"		"{lightgreen}因為不超過10特，無法使用AnneHappyPlus武器"
+	}
+}

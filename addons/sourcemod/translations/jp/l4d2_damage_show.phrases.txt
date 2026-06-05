@@ -1,0 +1,51 @@
+"Phrases"
+{
+	"L4D2DamageShow_HUDSavedLocallyCookieQueued"
+	{
+		"jp"		"{olive}[HUD]{default} はローカル (Cookie) に保存されてキューに入れられ、ロードの完了後にデータベースに書き込まれます。"
+	}
+	"L4D2DamageShow_HUDSettingsSavedLocallyCookie"
+	{
+		"jp"		"{olive}[HUD]{default} 設定はローカルに保存されました (Cookie)。 MySQL が有効になっていない、または使用できません。"
+	}
+	"L4D2DamageShow_HUDSettingsSavedLocallyCookieUnable"
+	{
+		"jp"		"{olive}[HUD]{default} 設定はローカルに保存されました (Cookie)。有効な SteamID を取得できません。"
+	}
+	"L4D2DamageShow_HUDSettingsSavedLocalCookie"
+	{
+		"jp"		"{olive}[HUD]{default} 設定が保存されました (ローカル Cookie + データベース)。"
+	}
+	"L4D2DamageShow_HUDMenuCannotUsedAdministrator"
+	{
+		"jp"		"{olive}[HUD]{default} 管理者フラグの要件を満たしていないため、このメニューは使用できません。"
+	}
+	"L4D2DamageShow_HUDSettingsSaved"
+	{
+		"jp"		"{olive}[HUD]{default} 設定が保存されました。"
+	}
+	"L4D2DamageShow_HUDOnlyAdministratorsCanModify"
+	{
+		"jp"		"{olive}[HUD]{default} 共有範囲を変更できるのは管理者のみです。"
+	}
+	"L4D2DamageShow_HUDAdministratorSharedExternally"
+	{
+		"jp"		"{olive}[HUD]{default} 管理者は %s を外部に共有しました。"
+	}
+	"L4D2DamageShow_HUDOnlyAdministratorsCanTurn"
+	{
+		"jp"		"{olive}[HUD]{default} このオプションをオンにできるのは管理者のみです。"
+	}
+	"L4D2DamageShow_SpectatorDisplayToggled"
+	{
+		"jp"		"{green}旁观显示{default}已切换：{olive}%s"
+	}
+	"L4D2DamageShow_OnlyAdministratorsWatchingCanUse"
+	{
+		"jp"		"{lightgreen}監視している管理者のみがこのスイッチを使用できます。"
+	}
+	"L4D2DamageShow_HUDFunctionDisabledAdministratorFlag"
+	{
+		"jp"		"{olive}[HUD]{default} 機能無効: 管理者フラグ要件 (%s) が満たされていません。"
+	}
+}

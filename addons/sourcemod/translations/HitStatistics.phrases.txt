@@ -3,10 +3,5 @@
 	"HitStatistics_NotSurvivor"
 	{
 		"en"		"You are not a survivor."
-		"chi"		"你不是幸存者。"
-		"zho"		"你不是倖存者。"
-		"jp"		"あなたは生存者ではありません。"
-		"ko"		"당신은 생존자가 아닙니다."
-		"vi"		"Bạn không phải là người sống sót."
 	}
 }

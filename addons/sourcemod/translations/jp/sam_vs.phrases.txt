@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"SAMVS_DebugChatting"
+	{
+		"jp"		"[デバッグ] %N チャット"
+	}
+	"SAMVS_DebugPressedButton"
+	{
+		"jp"		"[デバッグ] %N がボタンを押しました (%d)"
+	}
+	"SAMVS_DebugSAMCheckIdlesFired"
+	{
+		"jp"		"[デバッグ] SAM_t_CheckIdles()-> 起動、RUP = %b!"
+	}
+	"SAMVS_DebugSAMCheckIdlesBussy"
+	{
+		"jp"		"[デバッグ] SAM_t_CheckIdles()-> %N はビジー/タンクです。私たちは彼をスキップします..."
+	}
+	"SAMVS_DebugSAMCheckIdlesDancing"
+	{
+		"jp"		"[デバッグ] SAM_t_CheckIdles()-> %N が踊っています。スキップしてください..."
+	}
+	"SAMVS_DebugSAMCheckIdlesMoved"
+	{
+		"jp"		"[デバッグ] SAM_t_CheckIdles() -> %N が仕様に移動されました (%.1fsec の AFK でした)"
+	}
+	"SAMVS_DebugSAMCheckIdlesAFK"
+	{
+		"jp"		"[デバッグ] SAM_t_CheckIdles() -> %N AFK、タイマー %x hndl"
+	}
+	"SAMVS_DebugSAMTimeKillTimer"
+	{
+		"jp"		"[デバッグ] SAM_TimeToKill(%N)-> %x タイマー hndl を強制終了します。"
+	}
+	"SAMVS_DebugSAMActionKickPlayer"
+	{
+		"jp"		"[デバッグ] SAM_t_ActionKick(%N) プレーヤーをキックします"
+	}
+}

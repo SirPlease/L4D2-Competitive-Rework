@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"Changelog_ChangeLogViewChangeLog"
+	{
+		"chi"		"{blue}[{green}ChangeLog{blue}]{default} 可以查看变更日志@{blue}%s"
+	}
+}

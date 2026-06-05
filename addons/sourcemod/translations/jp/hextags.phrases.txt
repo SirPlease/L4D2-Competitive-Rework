@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"Hextags_SMTitleSetSuccessfully"
+	{
+		"jp"		"[SM] タイトル %s が正常に設定されました"
+	}
+}

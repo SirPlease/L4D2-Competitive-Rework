@@ -6,35 +6,35 @@
 	}
 	"TagSkeet"
 	{
-		"jp"		"[{olive}1v1ステータス{default}] {green}スキート{default}:"
+		"jp"		"[{olive}1v1Stat{default}] {green}空爆数{default}:"
 	}
 	"TagAcc"
 	{
-		"jp"		"[{olive}1v1Stat{default}] {green}精度{default}:"
+		"jp"		"[{olive}1v1Stat{default}] {green}命中率{default}:"
 	}
 	"SI_DMG_CI"
 	{
 		"#format"	"{1:d},{2:d},{3:d}"
-		"jp"		"{olive}{1}{default} damage | {olive}{2}{default} kills | {olive}{3}{default} common\\n"
+		"jp"		"{olive}{1}{default} ダメージ | {olive}{2}{default} キル | {olive}{3}{default} 通常感染者\n"
 	}
 	"SI_DMG"
 	{
 		"#format"	"{1:d},{2:d}"
-		"jp"		"{olive}{1}{default} damage | {olive}{2}{default} kills\\n"
+		"jp"		"{olive}{1}{default} ダメージ | {olive}{2}{default} キル\n"
 	}
 	"SI_CI"
 	{
 		"#format"	"{1:d},{2:d}"
-		"jp"		"{olive}{1}{default} kills | {olive}{2}{default} common\\n"
+		"jp"		"{olive}{1}{default} キル | {olive}{2}{default} 通常感染者\n"
 	}
 	"SI"
 	{
-		"jp"		"{olive}%d{default} kills\\n"
+		"jp"		"{olive}%d{default} キル\n"
 	}
 	"SKEET"
 	{
 		"#format"	"{1:d},{2:d},{3:d}"
-		"jp"		"{olive}{1}{default} normal | {olive}{2}{default} hurt | {olive}{3}{default} deadstops\\n"
+		"jp"		"{olive}{1}{default} 満血 | {olive}{2}{default} 負傷 | {olive}{3}{default} デッドストップ\n"
 	}
 	"ACC_AllShots"
 	{
@@ -50,6 +50,6 @@
 	}
 	"ACC_NoShotsFired"
 	{
-		"jp"		"No shots fired\\n"
+		"jp"		"発砲なし\n"
 	}
 }

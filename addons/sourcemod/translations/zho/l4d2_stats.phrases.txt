@@ -25,7 +25,7 @@
 	"TeamSkeeted"
 	{
 		"#format"	"{1:N},{2:N},{3:d},{4:d},{5:s},{6:s}"
-		"zho"		"{olive}{1}{default} teamskeeted {olive}{2}{default} for {blue}{3} damage{default} in {blue}{4}{default} shot{5}. Assisted by: {olive}{6}{default}"
+		"zho"		"{olive}{1}{default} 與隊友空爆了 {olive}{2}{default}，在 {blue}{4}{default} 槍{5}內造成 {blue}{3} 傷害{default}。助攻：{olive}{6}{default}"
 	}
 	"Skeeted"
 	{

@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2AILadderBoost_LadderAccelerationGetLadderAcceleration"
+	{
+		"jp"		"[ラダー加速] %s ラダー加速を取得"
+	}
+	"L4D2AILadderBoost_LadderAccelerationRestoreOriginalSpeed"
+	{
+		"jp"		"[ラダー加速] %s 元の速度に戻す"
+	}
+}

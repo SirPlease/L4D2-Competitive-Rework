@@ -98,7 +98,7 @@
 	"PanelSlots"
 	{
 		"#format"	"{1:s},{2:d},{3:d}"
-		"vi"		"▸ Server: %s\\n▸ Slots: %d/%d"
+		"vi"		"▸ Server: %s\n▸ Slots: %d/%d"
 	}
 	"PanelDate"
 	{

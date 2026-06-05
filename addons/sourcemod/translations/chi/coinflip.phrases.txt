@@ -6,14 +6,14 @@
 	}
 	"Heads"
 	{
-		"chi"		"{lightgreen}%s{default} 抛了个硬币!\nIt's {green}正面{default}!"
+		"chi"		"{lightgreen}%s{default} 抛了一枚硬币!\n结果是 {green}正面{default}!"
 	}
 	"Tails"
 	{
-		"chi"		"{lightgreen}%s{default} 抛了个硬币!\nIt's {green}反面{default}!"
+		"chi"		"{lightgreen}%s{default} 抛了一枚硬币!\n结果是 {green}反面{default}!"
 	}
 	"rolled"
 	{
-		"chi"		"{lightgreen}%s{default} 挑选随机数字，最大为 {teamcolor}%d{default}!\n数字为 {green}%d{default}!"
+		"chi"		"{lightgreen}%s{default} 掷了一个 {teamcolor}%d{default} 面骰子!\n结果是 {green}%d{default}!"
 	}
 }

@@ -27,7 +27,7 @@
 	"Usage_time"
 	{
 		"#format"	"{1:d}"
-		"ko"		"Time: {1} minutes, if unspecified; permanent, if 0.\\nIf < 0, blocks for session."
+		"ko"		"시간: {1}분. 지정하지 않으면 이 값이 사용됩니다. 0이면 영구 적용됩니다.\n0보다 작으면 현재 세션 동안만 차단합니다."
 	}
 	"Player Comms Not Verified"
 	{

@@ -1,0 +1,82 @@
+"Phrases"
+{
+	"Banned Check Site"
+	{
+		"#format"	"{1:s}"
+		"chi"		"你已被此服务器封禁,详情请参阅: {1}."
+	}
+	"DB Connect Fail"
+	{
+		"chi"		"数据库连接失败，请联系服务器管理员."
+	}
+	"Not In Game"
+	{
+		"chi"		"此玩家目前不在游戏内,请通过web管理面板来进行封禁."
+	}
+	"Ban Not Verified"
+	{
+		"chi"		"此玩家尚未被认证,请等待30秒后再试."
+	}
+	"Can Not Unban"
+	{
+		"#format"	"{1:s}"
+		"chi"		"你无法从游戏中解除封禁,请访问此链接来解除: {1} ."
+	}
+	"Can Not Add Ban"
+	{
+		"#format"	"{1:s}"
+		"chi"		"你不能在游戏中添加封禁,请访问此链接来封禁: {1} ."
+	}
+	"Check Menu"
+	{
+		"chi"		"请从菜单中选择封禁理由."
+	}
+	"Include Reason"
+	{
+		"chi"		"请填写封禁此玩家的理由."
+	}
+	"Ban Fail"
+	{
+		"chi"		"无法封禁此玩家,请重试."
+	}
+	"Chat Reason"
+	{
+		"chi"		"请在聊天框中填写封禁理由并提交或输入 '!noreason' 放弃操作."
+	}
+	"Chat Reason Aborted"
+	{
+		"chi"		"封禁操作已成功取消."
+	}
+	"SourceBans_FailedBan"
+	{
+		"chi"		"%s 封禁 %s 失败。"
+	}
+	"SourceBans_AlreadyBanned"
+	{
+		"chi"		"%s%s 已被禁止。"
+	}
+	"SourceBans_SMBanipFailed"
+	{
+		"chi"		"%ssm_banip 失败"
+	}
+	"SourceBans_SuccessfullyBanned"
+	{
+		"chi"		"%s%s 成功封禁"
+	}
+	"SourceBans_SMUnbanFailed"
+	{
+		"chi"		"%ssm_unban 失败"
+	}
+	"SourceBans_NoActiveBansFoundFilter"
+	{
+		"chi"		"%s 未找到该过滤器的有效禁令"
+	}
+	"SourceBans_SuccessfullyUnbanned"
+	{
+		"chi"		"%s%s成功解禁"
+	}
+	"SourceBans_SMAddbanFailed"
+	{
+		"chi"		"%ssm_addban 失败"
+	}
+}

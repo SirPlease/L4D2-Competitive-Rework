@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2NoseyParker_DmgReportTookDamage"
+	{
+		"chi"		"{green}[DmgReport]{default} {lightgreen}%N{default}({green}%s{default}) 受到了 {olive}%d{default} 的伤害！"
+	}
+}

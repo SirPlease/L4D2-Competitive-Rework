@@ -1,0 +1,27 @@
+"Phrases"
+{
+	"NetworkQualityHint_CurrentNetworkPingMSLoss"
+	{
+		"chi"		"%s 当前网络：ping {olive}%dms{default}，loss {olive}%.2f%%{default}，choke {olive}%.2f%%{default}。"
+	}
+	"NetworkQualityHint_DetectionCaliberChokeUseDirection"
+	{
+		"chi"		"%s 检测口径：choke 使用服务器发给你的方向；你发给服务器方向当前为 {olive}%.2f%%{default}。"
+	}
+	"NetworkQualityHint_AbnormalDelayPacketLossOpen"
+	{
+		"chi"		"%s 如果延迟或丢包异常，请打开 IP 页面复制当前服务器地址后重新连接：{green}%s{default}"
+	}
+	"NetworkQualityHint_AbnormalityNetworkStatusDetectedCurrent"
+	{
+		"chi"		"%s 检测到你的网络状态异常：{olive}%s{default}。当前 ping {olive}%dms{default}，loss {olive}%.2f%%{default}，choke {olive}%.2f%%{default}。"
+	}
+	"NetworkQualityHint_OpenIPPageCopyConnect"
+	{
+		"chi"		"%s 请打开 IP 页面，复制当前服务器对应的 connect 命令，粘贴到控制台重新连接：{green}%s{default}"
+	}
+	"NetworkQualityHint_ThirdLineServersGivePriority"
+	{
+		"chi"		"%s 三线服务器请优先使用网页展示的分流入口，避免从收藏或历史记录走错线路。"
+	}
+}

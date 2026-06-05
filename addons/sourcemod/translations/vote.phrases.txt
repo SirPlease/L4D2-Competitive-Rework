@@ -3,100 +3,41 @@
 	"Vote_AdministratorCanceledCurrentVote"
 	{
 		"en"		"[{olive}vote{default}] {blue}The administrator canceled the current vote!"
-		"chi"		"[{olive}vote{default}] {blue}管理员取消了当前投票!"
-		"zho"		"[{olive}vote{default}] {blue}管理員取消了目前投票!"
-		"jp"		"[{olive}vote{default}] {blue}管理者が現在の投票をキャンセルしました。"
-		"ko"		"[{olive}vote{default}] {blue}관리자가 현재 투표를 취소했습니다!"
-		"vi"		"[{olive}vote{default}] {blue}Quản trị viên đã hủy bỏ phiếu hiện tại!"
 	}
-
 	"Vote_BystandersNotAllowedVoteExecute"
 	{
 		"en"		"[{olive}vote{default}] {blue} Bystanders are not allowed to vote to execute commands or cfg files!"
-		"chi"		"[{olive}vote{default}] {blue}旁观者不允许投票执行命令或cfg文件!"
-		"zho"		"[{olive}vote{default}] {blue}旁觀者不允許投票執行指令或cfg檔!"
-		"jp"		"[{olive}vote{default}] {blue} 傍観者はコマンドや cfg ファイルの実行に投票することはできません。"
-		"ko"		"[{olive}vote{default}] {blue} 방관자는 명령이나 cfg 파일을 실행하기 위해 투표할 수 없습니다!"
-		"vi"		"[{olive}vote{default}] {blue} Người ngoài cuộc không được phép bỏ phiếu để thực thi lệnh hoặc tệp cfg!"
 	}
-
 	"Vote_NoRelatedFilesExist"
 	{
 		"en"		"[{olive}vote{default}] No related files for {red} exist."
-		"chi"		"[{olive}vote{default}] {red}没有相关的文件存在."
-		"zho"		"[{olive}vote{default}] {red}沒有相關的檔案存在."
-		"jp"		"[{olive}vote{default}] {red} に関連するファイルは存在しません。"
-		"ko"		"[{olive}vote{default}] {red} 관련 파일이 없습니다."
-		"vi"		"[{olive}vote{default}] Không tồn tại tệp liên quan nào cho {red}."
 	}
-
 	"Vote_CannotVoteResetCurrentMap"
 	{
 		"en"		"[{olive}vote{default}] {red}You cannot vote to reset the current map after the game starts."
-		"chi"		"[{olive}vote{default}] {red}对局开始后不能投票重置当前地图."
-		"zho"		"[{olive}vote{default}] {red}對局開始後不能投票重置當前地圖."
-		"jp"		"[{olive}vote{default}] {red}ゲーム開始後に現在のマップをリセットするために投票することはできません。"
-		"ko"		"[{olive}vote{default}] {red}게임이 시작된 후에는 현재 지도를 재설정하는 투표를 할 수 없습니다."
-		"vi"		"[{olive}vote{default}] {red}Bạn không thể bỏ phiếu để đặt lại bản đồ hiện tại sau khi trò chơi bắt đầu."
 	}
-
 	"Vote_InitiatedVote"
 	{
 		"en"		"[{olive}vote{default}] {blue}%N initiated a vote"
-		"chi"		"[{olive}vote{default}] {blue}%N 发起了一个投票"
-		"zho"		"[{olive}vote{default}] {blue}%N 發起了一個投票"
-		"jp"		"[{olive}vote{default}] {blue}%N が投票を開始しました"
-		"ko"		"[{olive}vote{default}] {blue}%N가 투표를 시작했습니다."
-		"vi"		"[{olive}vote{default}] {blue}%N đã bắt đầu bỏ phiếu"
 	}
-
 	"Vote_AlreadyVoteProgress"
 	{
 		"en"		"[{olive}vote{default}] {red} There is already a vote in progress."
-		"chi"		"[{olive}vote{default}] {red}已经有一个投票正在进行."
-		"zho"		"[{olive}vote{default}] {red}已經有一個投票正在進行."
-		"jp"		"[{olive}vote{default}] {red} すでに投票が行われています。"
-		"ko"		"[{olive}vote{default}] {red} 이미 투표가 진행 중입니다."
-		"vi"		"[{olive}vote{default}] {red} Hiện đã có một cuộc bỏ phiếu đang diễn ra."
 	}
-
 	"Vote_InitiatesVoteKick"
 	{
 		"en"		"[{olive}vote{default}] {blue}%N {default} initiates a vote to kick out {blue} %N"
-		"chi"		"[{olive}vote{default}] {blue}%N {default}发起投票踢出 {blue} %N"
-		"zho"		"[{olive}vote{default}] {blue}%N {default}發起投票踢出 {blue} %N"
-		"jp"		"[{olive}vote{default}] {blue}%N {default} が {blue} %N を排除するための投票を開始します"
-		"ko"		"[{olive}vote{default}] {blue}%N {default}가 {blue} %N를 쫓아내기 위한 투표를 시작합니다."
-		"vi"		"[{olive}vote{default}] {blue}%N {default} bắt đầu bỏ phiếu loại bỏ {blue} %N"
 	}
-
 	"Vote_NotPreventBanMisusedRequires"
 	{
 		"en"		"[{olive}vote{default}] {red} does not prevent the ban from being misused and requires players with more than 100,000 points to use it."
-		"chi"		"[{olive}vote{default}] {red}未防止封禁被乱用，需要10w以上积分玩家才能使用."
-		"zho"		"[{olive}vote{default}] {red}未防止封鎖被亂用，需要10w以上積分玩家才能使用."
-		"jp"		"[{olive}vote{default}] {red} は禁止の悪用を防ぐものではなく、100,000 ポイントを超えるプレイヤーが禁止を使用する必要があります。"
-		"ko"		"[{olive}vote{default}] {red}는 금지 조치의 오용을 방지하지 못하며 이를 사용하려면 100,000점 이상의 플레이어가 필요합니다."
-		"vi"		"[{olive}vote{default}] {red} không ngăn chặn việc lạm dụng lệnh cấm và yêu cầu người chơi có trên 100.000 điểm phải sử dụng."
 	}
-
 	"Vote_UsePowerCautionAbuseBans"
 	{
 		"en"		"[{olive}vote{default}] {red}Please use your power with caution. Abuse of bans will result in your account being banned (for 7 days for the first time, one month for the second time, and permanently for the third time)."
-		"chi"		"[{olive}vote{default}] {red}请谨慎使用您的权力，乱用封禁会导致您的账户面临封禁（首次7天，第二次一个月，第三次永久）."
-		"zho"		"[{olive}vote{default}] {red}請謹慎使用您的權力，亂用封禁會導致您的帳戶面臨封鎖（首次7天，第二次一個月，第三次永久）."
-		"jp"		"[{olive}vote{default}] {red}力の使い方には注意してください。禁止を乱用すると、アカウントが禁止されます (初回は 7 日間、2 回目は 1 か月、3 回目は永久に)。"
-		"ko"		"[{olive}vote{default}] {red}주의 깊게 전원을 사용하시기 바랍니다. 차단을 남용하면 계정이 차단됩니다(처음에는 7일, 두 번째에는 한 달, 세 번째에는 영구적으로)."
-		"vi"		"[{olive}vote{default}] {red}Vui lòng sử dụng năng lượng của bạn một cách thận trọng. Việc lạm dụng lệnh cấm sẽ dẫn đến việc tài khoản của bạn bị cấm (lần đầu tiên là 7 ngày, lần thứ hai là một tháng và lần thứ ba là vĩnh viễn)."
 	}
-
 	"Vote_InitiatesVoteBanOneDay"
 	{
 		"en"		"[{olive}vote{default}] {blue}%N {default} initiates a vote to ban {blue} %N one day"
-		"chi"		"[{olive}vote{default}] {blue}%N {default}发起投票封禁 {blue} %N 一天"
-		"zho"		"[{olive}vote{default}] {blue}%N {default}發起投票封鎖 {blue} %N 一天"
-		"jp"		"[{olive}vote{default}] {blue}%N {default} は、いつか {blue} %N を禁止する投票を開始します"
-		"ko"		"[{olive}vote{default}] {blue}%N {default}는 언젠가 {blue} %N를 금지하는 투표를 시작합니다."
-		"vi"		"[{olive}vote{default}] {blue}%N {default} bắt đầu bỏ phiếu cấm {blue} %N vào một ngày nào đó"
 	}
 }

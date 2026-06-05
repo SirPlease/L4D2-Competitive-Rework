@@ -1,0 +1,135 @@
+"Phrases"
+{
+	"Ready Up Countdown"
+	{
+		"#format"	"{1:d}"
+		"chi"		"准备时间: {1}"
+	}
+	"Round Begin Countdown"
+	{
+		"#format"	"{1:d}"
+		"chi"		"回合将在 {1} 后开始"
+	}
+	"Move Out"
+	{
+		"chi"		"开干!"
+	}
+	"Leavers Message"
+	{
+		"chi"		"其他玩家尚未准备好, 请等待 ..."
+	}
+	"Round Started"
+	{
+		"chi"		"[Lock] 错误: 回合尚未开始"
+	}
+	"Saferoom Locked"
+	{
+		"chi"		"[Lock] 错误: 安全区域尚未解锁"
+	}
+	"Saferoom Unlocked"
+	{
+		"chi"		"[Lock] 错误: 安全区域解锁中"
+	}
+	"Ready Up Time Ended"
+	{
+		"chi"		"[Lock] 错误: 准备时间已结束"
+	}
+	"Admin Locks"
+	{
+		"#format"	"{1:N}"
+		"chi"		"[Lock] 管理员 {1} 已锁定安全区域"
+	}
+	"Admin Unlocks"
+	{
+		"#format"	"{1:N}"
+		"chi"		"[Lock] 管理员 {1} 已解锁安全区域"
+	}
+	"Spectator Ready"
+	{
+		"chi"		"[Lock] 错误: 你需要加入队伍来使用这个指令"
+	}
+	"You Are Ready"
+	{
+		"chi"		"[Lock] 错误: 你已经准备好了"
+	}
+	"You Are Unready"
+	{
+		"chi"		"[Lock] 错误: 你尚未准备"
+	}
+	"Ready Up Limit"
+	{
+		"chi"		"[Lock] 错误: 你无法继续使用这个指令"
+	}
+	"Admin Controls"
+	{
+		"chi"		"[Lock] 错误: 管理员已控制此安全区域"
+	}
+	"Player Is Ready"
+	{
+		"chi"		"你已经准备好了"
+	}
+	"Player Is Unready"
+	{
+		"chi"		"你还没有准备好"
+	}
+	"Notify Survivors Ready"
+	{
+		"#format"	"{1:d},{2:d},{3:.1f%%}"
+		"chi"		"[Lock] 生还者团队已准备 ({1}/{2} - {3})."
+	}
+	"Notify Infected Ready"
+	{
+		"#format"	"{1:d},{2:d},{3:.1f%%}"
+		"chi"		"[Lock] 感染者团队已准备 ({1}/{2} - {3})."
+	}
+	"Notify Survivors Unready"
+	{
+		"#format"	"{1:d},{2:d},{3:.1f%%}"
+		"chi"		"[Lock] 生还者团队未准备 ({1}/{2} - {3})."
+	}
+	"Notify Infected Unready"
+	{
+		"#format"	"{1:d},{2:d},{3:.1f%%}"
+		"chi"		"[Lock] 感染者团队未准备 ({1}/{2} - {3})."
+	}
+	"Menu Title"
+	{
+		"chi"		"你准备好了吗:"
+	}
+	"Menu Ready"
+	{
+		"chi"		"按1确认准备"
+	}
+	"Menu Unready"
+	{
+		"chi"		"按2取消准备"
+	}
+	"Menu Survivor"
+	{
+		"chi"		"生还者"
+	}
+	"Menu Infected"
+	{
+		"chi"		"感染者"
+	}
+	"Menu Close"
+	{
+		"chi"		"关闭"
+	}
+	"L4D2DoorLock_DoorLockDoorLockNot"
+	{
+		"chi"		"{olive}[DoorLock]{default} 第一关不启用锁门。"
+	}
+	"L4D2DoorLock_DoorLockPictureLockedOnce"
+	{
+		"chi"		"{olive}[DoorLock]{default} 本图已经锁过一次，灭团重启不再锁门。"
+	}
+	"L4D2DoorLock_DoorLockDoorLockOnly"
+	{
+		"chi"		"{olive}[DoorLock]{default} 只在每张非第一关过图后的第一次回合启用锁门。"
+	}
+	"L4D2DoorLock_DoorLockSurvivorBotUnfrozen"
+	{
+		"chi"		"{olive}[DoorLock]{default} 第一关已解冻生还者Bot。"
+	}
+}

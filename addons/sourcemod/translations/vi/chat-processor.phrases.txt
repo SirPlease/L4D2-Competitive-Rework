@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"ChatProcessor_DeadChatCurrentlyRestricted"
+	{
+		"vi"		"Trò chuyện chết hiện đang bị hạn chế."
+	}
+}

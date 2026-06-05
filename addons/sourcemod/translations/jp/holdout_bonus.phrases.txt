@@ -1,0 +1,15 @@
+"Phrases"
+{
+	"HoldoutBonus_EventStartsBonusSecondsonds"
+	{
+		"jp"		"{default}ホールドアウト イベント開始... ({green}%i{default} ボーナス {olive}%i{default} 秒以上)"
+	}
+	"HoldoutBonus_DynamicBonusSummary"
+	{
+		"jp"		"{default}ホールドアウトボーナス: %s"
+	}
+	"HoldoutBonus_DynamicBonusSummary_2"
+	{
+		"jp"		"{default}ホールドアウトボーナス: {olive}%i{default}のうち、{green}%i{default}。"
+	}
+}

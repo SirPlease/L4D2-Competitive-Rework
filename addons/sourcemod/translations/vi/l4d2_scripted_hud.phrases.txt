@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"L4D2ScriptedHUD_HUDTextsDataFileReloaded"
+	{
+		"vi"		"{green}[Đã tải lại văn bản HUD từ tệp dữ liệu]"
+	}
+}

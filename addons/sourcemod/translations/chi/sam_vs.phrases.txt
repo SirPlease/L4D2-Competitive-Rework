@@ -1,0 +1,39 @@
+"Phrases"
+{
+	"SAMVS_DebugChatting"
+	{
+		"chi"		"[调试] %N 聊天"
+	}
+	"SAMVS_DebugPressedButton"
+	{
+		"chi"		"[调试] %N 按下了一个按钮 (%d)"
+	}
+	"SAMVS_DebugSAMCheckIdlesFired"
+	{
+		"chi"		"[调试] SAM_t_CheckIdles()-> 触发，RUP = %b！"
+	}
+	"SAMVS_DebugSAMCheckIdlesBussy"
+	{
+		"chi"		"[调试] SAM_t_CheckIdles()-> %N 为bussy/tank。我们跳过他..."
+	}
+	"SAMVS_DebugSAMCheckIdlesDancing"
+	{
+		"chi"		"[调试] SAM_t_CheckIdles()-> %N 正在跳舞，跳过他..."
+	}
+	"SAMVS_DebugSAMCheckIdlesMoved"
+	{
+		"chi"		"[调试] SAM_t_CheckIdles()-> %N 移至规范（%.1fsec 为 AFK）"
+	}
+	"SAMVS_DebugSAMCheckIdlesAFK"
+	{
+		"chi"		"[调试] SAM_t_CheckIdles()-> %N AFK，定时器 %x hndl"
+	}
+	"SAMVS_DebugSAMTimeKillTimer"
+	{
+		"chi"		"[调试] SAM_TimeToKill(%N)-> 杀死 %x 定时器 hndl"
+	}
+	"SAMVS_DebugSAMActionKickPlayer"
+	{
+		"chi"		"[调试] SAM_t_ActionKick(%N) 踢球员"
+	}
+}

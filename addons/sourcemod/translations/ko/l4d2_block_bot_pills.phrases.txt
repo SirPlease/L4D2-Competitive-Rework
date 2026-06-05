@@ -1,0 +1,11 @@
+"Phrases"
+{
+	"L4D2BlockBotPills_BotBlockPillsPreventedAccidental"
+	{
+		"ko"		"{green}[{default}Bot Block Pills{green}]{default}: %N로 실수로 약을 복용하는 것을 방지합니다."
+	}
+	"L4D2BlockBotPills_BotBlockPillsBotWants"
+	{
+		"ko"		"{green}[{default}Bot Block Pills{green}]{default}: 봇 {blue}%N{default}는 진통제를 사용하고 싶어합니다. 이 작업을 차단하는 중..."
+	}
+}

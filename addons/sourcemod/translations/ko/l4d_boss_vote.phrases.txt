@@ -30,7 +30,7 @@
 	}
 	"Usage2"
 	{
-		"ko"		"{olive} 생성 없음 {default} 의 경우 {default} \\\\\" {blue} 0 {default} \\\\\" 를 사용하고, {olive} 무지의 경우 \\\\\" {blue} -1 {default} \\\\\" 를 사용합니다."
+		"ko"		"{olive} 생성 없음 {default} 의 경우 {default} \" {blue} 0 {default} \" 를 사용하고, {olive} 무지의 경우 \" {blue} -1 {default} \" 를 사용합니다."
 	}
 	"Invalid"
 	{

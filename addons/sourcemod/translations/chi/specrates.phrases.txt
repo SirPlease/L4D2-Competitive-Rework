@@ -1,0 +1,23 @@
+"Phrases"
+{
+	"Specrates_SpecRatesScoreLess30"
+	{
+		"chi"		"{green}[SpecRates]{default} 你的分数小于 30W，无法设置旁观速率。"
+	}
+	"Specrates_SpecRatesNumberSpectatorsExceeds"
+	{
+		"chi"		"{green}[SpecRates]{default} 旁观人数超过 %d，人满仅允许 30tick。"
+	}
+	"Specrates_SpecRatesSet60tick"
+	{
+		"chi"		"{green}[SpecRates]{default} 已设置为 {lightgreen}60tick{default} 旁观。"
+	}
+	"Specrates_SpecRatesAdministratorMatchSet"
+	{
+		"chi"		"{green}[SpecRates]{default} 管理员（对局）已设置为 {lightgreen}128tick{default}。"
+	}
+	"Specrates_SpecRatesAdministratorSpectatorSet"
+	{
+		"chi"		"{green}[SpecRates]{default} 管理员（旁观）已设置为 {lightgreen}100tick{default}。"
+	}
+}

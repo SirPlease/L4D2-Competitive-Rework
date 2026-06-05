@@ -6,7 +6,7 @@
 	}
 	"Horde"
 	{
-		"vi"		"{olive} %N {green} đã kích hoạt một sự kiện đông đảo!"
+		"vi"		"{olive}%N{green} đã kích hoạt sự kiện làn sóng zombie!"
 	}
 	"Final Rescue Start"
 	{

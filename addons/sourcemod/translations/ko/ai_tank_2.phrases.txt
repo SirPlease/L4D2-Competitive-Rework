@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"AITank2_MapTotalLaddersInitializationDetection"
+	{
+		"ko"		"이 맵에는 총 다음 항목이 있습니다. %d 사다리 %d 초기화 감지 사다리"
+	}
+}

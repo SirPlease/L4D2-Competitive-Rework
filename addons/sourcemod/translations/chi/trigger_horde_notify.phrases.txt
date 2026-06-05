@@ -1,0 +1,19 @@
+"Phrases"
+{
+	"Alarmed_Car"
+	{
+		"chi"		"{olive}%N{green} 触发了警报车!"
+	}
+	"Horde"
+	{
+		"chi"		"{olive}%N{green} 触发了尸潮事件!"
+	}
+	"Final Rescue Start"
+	{
+		"chi"		"{green}最后救援开始!"
+	}
+	"Final Rescue"
+	{
+		"chi"		"{blue}%N{olive} 触发了救援开关!"
+	}
+}

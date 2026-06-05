@@ -1,0 +1,87 @@
+"Phrases"
+{
+	"Join_CrawlingServer"
+	{
+		"zho"		"{green} %N {olive}正在爬進伺服器"
+	}
+	"Join_LeftGameReason"
+	{
+		"zho"		"{green}%N {olive}離開了遊戲 - 理由: [{green}%s{olive}]"
+	}
+	"Join_AnneDonatePaymentMethodOnly"
+	{
+		"zho"		"{green}[AnneDonate]{default} 付款方式只支援 wechat 或 alipay，請重新選擇。"
+	}
+	"Join_FinishRemindsAdministratorVerify"
+	{
+		"zho"		"{green}[AnneDonate]{default} 掃碼支付完成後，請輸入 {olive}!wc{default} / {olive}!wanchen!wanchenZ/ {olive}!finish{default} 提醒管理者核實。"
+	}
+	"Join_AnneDonateSponsorshipConfirmedNot"
+	{
+		"zho"		"{green}[AnneDonate]{default} 暫時找不到你的待確認贊助，請先輸入 {olive}!donate{default} 選擇檔位和付款方式。"
+	}
+	"Join_AnneDonateRecordingPaymentCompletion"
+	{
+		"zho"		"{green}[AnneDonate]{default} 正在記錄你的付款完成提示，請等待管理員核實到帳。"
+	}
+	"Join_AnneDonateCurrentlyPeakPeriod"
+	{
+		"zho"		"{green}[AnneDonate]{default} 目前屬於高峰期，僅管理員可遊玩。請贊助管理員後繼續遊玩。"
+	}
+	"Join_AnneDonateUnableObtainSteam"
+	{
+		"zho"		"{green}[AnneDonate]{default} 無法取得 SteamID64，請稍後再試。"
+	}
+	"Join_AnneDonateSteamWorksNot"
+	{
+		"zho"		"{green}[AnneDonate]{default} SteamWorks 不可用，已開啟贊助頁面，請掃碼付款後聯絡管理員核實。"
+	}
+	"Join_AnneDonateFailedCreateSponsorship"
+	{
+		"zho"		"{green}[AnneDonate]{default} 建立贊助申請失敗，請稍後重試。"
+	}
+	"Join_AnneDonateFailedSendSponsorship"
+	{
+		"zho"		"{green}[AnneDonate]{default} 發送贊助申請失敗，請稍後重試。"
+	}
+	"Join_AnneDonateSponsorshipRecordCreated"
+	{
+		"zho"		"{green}[AnneDonate]{default} 正在建立贊助記錄，贊助頁面將直接顯示對應收款碼。"
+	}
+	"Join_AnneDonateSponsorshipInformationSubmission"
+	{
+		"zho"		"{green}[AnneDonate]{default} 贊助資訊提交失敗，HTTP 狀態: %d。請掃碼付款後聯絡管理員核實。"
+	}
+	"Join_AnneDonateSponsorshipRecordCreatedScan"
+	{
+		"zho"		"{green}[AnneDonate]{default} 贊助記錄已創建，請在打開的頁面掃碼支付。"
+	}
+	"Join_AnneDonateUnableObtainSteamID64"
+	{
+		"zho"		"{green}[AnneDonate]{default} 無法取得 SteamID64，請聯絡管理員核實。"
+	}
+	"Join_AnneDonateSteamWorksNotAvailable"
+	{
+		"zho"		"{green}[AnneDonate]{default} SteamWorks 不可用，請聯絡管理員核實到帳。"
+	}
+	"Join_AnneDonatePaymentCompletionPrompt"
+	{
+		"zho"		"{green}[AnneDonate]{default} 付款完成提示傳送失敗，請聯絡管理員核實。"
+	}
+	"Join_AnneDonatePaymentCompletionPrompts"
+	{
+		"zho"		"{green}[AnneDonate]{default} 支付完成提示同步失敗，HTTP 狀態: %d。請聯絡管理員核實。"
+	}
+	"Join_AnneDonatePaymentCompletionPromptSynchronized"
+	{
+		"zho"		"{green}[AnneDonate]{default} 付款完成提示已同步，管理員核對到帳後會開通權限。"
+	}
+	"Join_UseCommandsTooFast"
+	{
+		"zho"		"{lightgreen} 你使用指令的速度太快了"
+	}
+	"Join_SurvivorTeamFullNoOther"
+	{
+		"zho"		"{lightgreen} 生還者團隊已滿，無其他生還者bot可供接管"
+	}
+}
