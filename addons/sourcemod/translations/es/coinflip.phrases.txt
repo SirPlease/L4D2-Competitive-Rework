@@ -10,6 +10,6 @@
 	}
 	"rolled"
 	{
-		"es"		"!{lightgreen}%s{default} eligió un número del 1 al {teamcolor}%d{default}!\n¡Es {green}%d{default}!"
+		"es"		"!{lightgreen}%s{default} eligió un número del 1 al {green}%d{default}!\n¡Es {green}%d{default}!"
 	}
 }

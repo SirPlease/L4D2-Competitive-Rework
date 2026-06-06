@@ -14,6 +14,6 @@
 	}
 	"rolled"
 	{
-		"jp"		"{lightgreen}%s{default} が {teamcolor}%d{default} 面ダイスを振りました!\n結果は {green}%d{default}!"
+		"jp"		"{lightgreen}%s{default} が {green}%d{default} 面ダイスを振りました!\n結果は {green}%d{default}!"
 	}
 }
