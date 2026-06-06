@@ -66,6 +66,8 @@ RCON_PASSWORD         -> L4D2_RCON_PASSWORD
 OPTIONAL_STEAM_ID     -> L4D2_OPTIONAL_STEAM_ID
 ```
 
+`L4D2_SERVER_IP` 是给 Steam/玩家看的公网地址，`L4D2_BIND_IP` 是本机实际监听地址。NAT 机器上通常 `L4D2_SERVER_IP` 是公网 IP，`L4D2_BIND_IP` 是内网 IP；A2S Go Proxy 默认会通过 `L4D2_BIND_IP` 回查本机 srcds。
+
 如果旧脚本里检测到 `sqproxy`，新版脚本会自动启用 `L4D2_GO_PROXY_ENABLE=true`，并在安装 `a2s-proxy-go` 前停止旧的 `sqproxy` systemd 服务，避免端口冲突。
 
 迁移时还会自动处理端口：
@@ -224,6 +226,7 @@ L4D2_GO_PROXY_TRANSPARENT_REDIRECT=true
 - iptables 只把 A2S 查询包重定向到 Go Proxy
 - 非 A2S 游戏流量仍直接进入 srcds
 - `BACKEND_PORTS` 只作为 Go Proxy 内部监听端口，不再作为游戏后端端口
+- Go Proxy 默认回查 `L4D2_BIND_IP:L4D2_GAME_PORTS`，如果你的 srcds 只能通过其他本机地址访问，可以设置 `L4D2_GO_PROXY_BACKEND_IP`
 
 从老 `sqproxy` 脚本迁移时，默认会进入 A2S only 模式。如果旧配置里残留 `L4D2_GO_PROXY_TRANSPARENT_REDIRECT=false`，默认 `L4D2_GO_PROXY_MODE=a2s-only` 会在加载配置时自动改回 true。只有明确设置 `L4D2_GO_PROXY_MODE=front-proxy` 时，Go Proxy 才会占用公网游戏端口，游戏容器改用 backend 端口。
 

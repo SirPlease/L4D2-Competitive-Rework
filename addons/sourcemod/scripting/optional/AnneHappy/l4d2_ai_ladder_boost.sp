@@ -313,6 +313,32 @@ public void Hook_PostThinkPost(int client)
     CheckAndUpdatePlayerSpeed(client);
 }
 
+public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3])
+{
+    if (!g_bSpeedBoosted[client])
+    {
+        return Plugin_Continue;
+    }
+
+    if (!IsValidInfected(client))
+    {
+        RestorePlayerSpeed(client);
+        g_bIsOnLadder[client] = false;
+        return Plugin_Continue;
+    }
+
+    if (!IsPlayerOnLadder(client) || !IsClassAllowedForBoost(client))
+    {
+        RestorePlayerSpeed(client);
+        g_bIsOnLadder[client] = false;
+        return Plugin_Continue;
+    }
+
+    CheckAndUpdatePlayerSpeed(client);
+
+    return Plugin_Continue;
+}
+
 public Action Timer_CheckPlayers(Handle timer)
 {
     if (!ShouldRunBoostChecks())
