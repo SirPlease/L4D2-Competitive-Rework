@@ -256,6 +256,7 @@ CREATE TABLE `l4d_server_status` (
   `players` int(11) NOT NULL DEFAULT '0',
   `updated_at` int(11) NOT NULL DEFAULT '0',
   `enabled` tinyint(4) NOT NULL DEFAULT '1',
+  `is_good_server` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`server_id`),
   KEY `updated_at` (`updated_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

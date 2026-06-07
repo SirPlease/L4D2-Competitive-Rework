@@ -3,7 +3,7 @@
 #endif
 #define _infected_control_config_included
 
-static const float DEFAULT_AI_WAVE_CHECK_RATIO[AI_LEVEL_SLOTS] = { 0.0, 0.90, 0.80, 0.65, 0.50, 0.35 };
+static const float DEFAULT_AI_WAVE_CHECK_TIME[AI_LEVEL_SLOTS] = { 0.0, 16.0, 12.0, 10.0, 8.0, 6.0 };
 static const float DEFAULT_AI_WAVE_FLOOR_RATIO[AI_LEVEL_SLOTS] = { 0.0, 1.50, 1.40, 1.25, 1.15, 1.10 };
 static const float DEFAULT_AI_WAVE_LOW_SI_RATIO[AI_LEVEL_SLOTS] = { 0.0, 0.12, 0.20, 0.27, 0.34, 0.50 };
 static const float DEFAULT_AI_DIST_SWEET_OFFSET[AI_LEVEL_SLOTS] = { 0.0, 0.00, 0.00, 0.00, 0.00, 0.00 };
@@ -54,6 +54,7 @@ enum struct Config
     // —— AI 难度联动策略 —— //
     ConVar AiDifficultyLink;
     ConVar AiDifficultyFallbackLevel;
+    ConVar AiWaveCheckTime;
     ConVar AiWaveCheckRatio;
     ConVar AiWaveFloorRatio;
     ConVar AiWaveLowSiRatio;
@@ -176,7 +177,7 @@ enum struct Config
 
     bool  bAiDifficultyLink;
     int   iAiDifficultyFallbackLevel;
-    float fAiWaveCheckRatio[AI_LEVEL_SLOTS];
+    float fAiWaveCheckTime[AI_LEVEL_SLOTS];
     float fAiWaveFloorRatio[AI_LEVEL_SLOTS];
     float fAiWaveLowSiRatio[AI_LEVEL_SLOTS];
     float fAiDistSweetOffset[AI_LEVEL_SLOTS];
@@ -271,19 +272,24 @@ enum struct Config
             "Fallback spawn strategy level when dynamic AI difficulty is missing or not locked (1-5)",
             CVAR_FLAG, true, 1.0, true, 5.0
         );
+        this.AiWaveCheckTime = CreateConVar(
+            "inf_ai_wave_check_time", "16.0 12.0 10.0 8.0 6.0",
+            "Per AI level absolute seconds before anti-bait/AutoSpawn starts evaluating next-wave pressure; spawn still respects versus_special_respawn_interval",
+            CVAR_FLAG
+        );
         this.AiWaveCheckRatio = CreateConVar(
-            "inf_ai_wave_check_ratio", "0.90 0.80 0.65 0.50 0.35",
-            "Per AI level: when to start checking next-wave conditions, as respawn interval ratio",
+            "inf_ai_wave_check_ratio", "1.00 0.75 0.625 0.50 0.375",
+            "Legacy ratio-based check window; kept for old cfgs, replaced by inf_ai_wave_check_time",
             CVAR_FLAG
         );
         this.AiWaveFloorRatio = CreateConVar(
             "inf_ai_wave_floor_ratio", "1.50 1.40 1.25 1.15 1.10",
-            "Per AI level: earliest normal next-wave time, as respawn interval ratio",
+            "Legacy per AI level normal-wave floor ratio; current spawn lower bound is versus_special_respawn_interval",
             CVAR_FLAG
         );
         this.AiWaveLowSiRatio = CreateConVar(
             "inf_ai_wave_low_si_ratio", "0.12 0.20 0.27 0.34 0.50",
-            "Per AI level: alive SI ratio low enough to allow the next wave",
+            "Legacy per AI level low-SI pressure ratio; no longer allows waves before base respawn interval",
             CVAR_FLAG
         );
         this.AiDistSweetOffset = CreateConVar(
@@ -444,7 +450,7 @@ enum struct Config
         );
         this.AntiBaitForceAfter = CreateConVar(
             "inf_antibait_force_after", "25.0",
-            "Seconds in pressure before anti-bait may request action",
+            "Seconds in pressure before anti-bait may release a held wave after base respawn interval",
             CVAR_FLAG, true, 0.0, true, 180.0
         );
         this.AntiBaitRecover = CreateConVar(
@@ -474,7 +480,7 @@ enum struct Config
         );
         this.AntiBaitLatestBaseScale = CreateConVar(
             "inf_antibait_latest_scale", "1.50",
-            "Latest wave delay multiplier at AI difficulty 1; base respawn interval remains the lower bound",
+            "Latest held-wave release multiplier at AI difficulty 1; base respawn interval remains the lower bound",
             CVAR_FLAG, true, 1.0, true, 3.0
         );
         this.AntiBaitLatestScaleStep = CreateConVar(
@@ -511,6 +517,7 @@ enum struct Config
         // 变更回调
         this.AiDifficultyLink.AddChangeHook(OnCfgChanged);
         this.AiDifficultyFallbackLevel.AddChangeHook(OnCfgChanged);
+        this.AiWaveCheckTime.AddChangeHook(OnCfgChanged);
         this.AiWaveCheckRatio.AddChangeHook(OnCfgChanged);
         this.AiWaveFloorRatio.AddChangeHook(OnCfgChanged);
         this.AiWaveLowSiRatio.AddChangeHook(OnCfgChanged);
@@ -636,7 +643,7 @@ enum struct Config
 
         this.bAiDifficultyLink = this.AiDifficultyLink.BoolValue;
         this.iAiDifficultyFallbackLevel = ClampInt(this.AiDifficultyFallbackLevel.IntValue, 1, AI_DIFFICULTY_LEVELS);
-        Config_ParseDifficultyFloatList(this.AiWaveCheckRatio, DEFAULT_AI_WAVE_CHECK_RATIO, this.fAiWaveCheckRatio, 0.05, 2.50);
+        Config_ParseDifficultyFloatList(this.AiWaveCheckTime, DEFAULT_AI_WAVE_CHECK_TIME, this.fAiWaveCheckTime, 1.00, 120.00);
         Config_ParseDifficultyFloatList(this.AiWaveFloorRatio, DEFAULT_AI_WAVE_FLOOR_RATIO, this.fAiWaveFloorRatio, 1.00, 3.00);
         Config_ParseDifficultyFloatList(this.AiWaveLowSiRatio, DEFAULT_AI_WAVE_LOW_SI_RATIO, this.fAiWaveLowSiRatio, 0.0, 1.0);
         Config_ParseDifficultyFloatList(this.AiDistSweetOffset, DEFAULT_AI_DIST_SWEET_OFFSET, this.fAiDistSweetOffset, -0.40, 0.40);

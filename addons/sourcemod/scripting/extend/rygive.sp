@@ -22,6 +22,8 @@
 #define NAME_CreateJockey		"NextBotCreatePlayerBot<Jockey>"
 #define NAME_CreateCharger		"NextBotCreatePlayerBot<Charger>"
 #define NAME_CreateTank			"NextBotCreatePlayerBot<Tank>"
+#define RYGIVE_LIMIT_IMMUNITY	90
+#define RYGIVE_ROUND_LIMIT		20
 
 StringMap
 	g_smSteamIDs,
@@ -48,6 +50,7 @@ Address
 int
 	g_iFunction[MAXPLAYERS + 1],
 	g_iSelection[MAXPLAYERS + 1],
+	g_iRoundUseCount[MAXPLAYERS + 1],
 	g_iOff_m_nFallenSurvivors,
 	g_iOff_m_FallenSurvivorTimer;
 
@@ -245,6 +248,7 @@ public void OnPluginStart() {
 	CreateConVar("rygive_version", PLUGIN_VERSION, "Give Item Menu plugin version.", FCVAR_NOTIFY|FCVAR_DONTRECORD);
 
 	HookEvent("player_disconnect", Event_PlayerDisconnect, EventHookMode_Pre);
+	HookEvent("round_start", Event_RoundStart, EventHookMode_PostNoCopy);
 	RegAdminCmd("sm_rygive", cmdRygive, ADMFLAG_CHAT, "rygive");
 
 	g_smMeleeTrans.SetString("fireaxe", "斧头");
@@ -279,6 +283,12 @@ public void OnClientDisconnect(int client) {
 	g_fSpeedUp[client] = 1.0;
 	g_bGodMode[client] = false;
 	g_bIgnoreAbility[client] = false;
+	g_iRoundUseCount[client] = 0;
+}
+
+void Event_RoundStart(Event event, const char[] name, bool dontBroadcast) {
+	for (int i = 1; i <= MaxClients; i++)
+		g_iRoundUseCount[i] = 0;
 }
 
 public void OnClientPutInServer(int client) {
@@ -657,6 +667,11 @@ int Infected_MenuHandler(Menu menu, MenuAction action, int client, int param2) {
 		case MenuAction_Select: {
 			char item[32];
 			menu.GetItem(param2, item, sizeof item);
+			if (IsRygiveRoundLimitReached(client)) {
+				Infected(client, menu.Selection);
+				return 0;
+			}
+
 			int kicked;
 			if (GetClientCount(false) >= MaxClients - 1) {
 				CPrintToChat(client, "%t", "RYGive_TryingKickDeadInfectedRobot");
@@ -718,6 +733,10 @@ int CreateInfected(int client, const char[] zombie) {
 	float vEnd[3];
 	if (!GetTeleportEndPoint(client, vEnd))
 		return -1;
+
+	if (!TryConsumeRygiveRoundUse(client))
+		return -1;
+
 	CPrintToChatAll("%t", "RYGive_AdminSpawnedInfected", client, zombie);
 	return _CreateInfected(zombie, vEnd, NULL_VECTOR);
 }
@@ -2111,13 +2130,18 @@ int ShowAliveSur_MenuHandler(Menu menu, MenuAction action, int client, int param
 			menu.GetItem(param2, item, sizeof item);
 			bool executed = false;
 			if (item[0] == 'a') {
-				for (int i = 1; i <= MaxClients; i++) {
-					if (IsClientInGame(i) && GetClientTeam(i) == 2 && IsPlayerAlive(i))
-						executed = CheatCommand(i, g_sNamedItem[client]) || executed;
+				if (HasAliveSurvivorTarget() && TryConsumeRygiveRoundUse(client)) {
+					for (int i = 1; i <= MaxClients; i++) {
+						if (IsClientInGame(i) && GetClientTeam(i) == 2 && IsPlayerAlive(i))
+							executed = CheatCommand(i, g_sNamedItem[client]) || executed;
+					}
 				}
 			}
-			else
-				executed = CheatCommand(GetClientOfUserId(StringToInt(item)), g_sNamedItem[client]);
+			else {
+				int target = GetClientOfUserId(StringToInt(item));
+				if (target && IsClientInGame(target) && GetClientTeam(target) == 2 && IsPlayerAlive(target) && TryConsumeRygiveRoundUse(client))
+					executed = CheatCommand(target, g_sNamedItem[client]);
+			}
 
 			if (executed)
 				UpdateRpgRoundForRygiveItems();
@@ -2146,6 +2170,43 @@ void PageExitBack(int client, int func, int item) {
 		case 3:
 			Item(client, item);
 	}
+}
+
+bool HasAliveSurvivorTarget() {
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsClientInGame(i) && GetClientTeam(i) == 2 && IsPlayerAlive(i))
+			return true;
+	}
+	return false;
+}
+
+bool TryConsumeRygiveRoundUse(int client) {
+	if (!IsRygiveLimitedAdmin(client))
+		return true;
+
+	if (IsRygiveRoundLimitReached(client))
+		return false;
+
+	g_iRoundUseCount[client]++;
+	return true;
+}
+
+bool IsRygiveRoundLimitReached(int client) {
+	if (!IsRygiveLimitedAdmin(client))
+		return false;
+
+	if (g_iRoundUseCount[client] < RYGIVE_ROUND_LIMIT)
+		return false;
+
+	CPrintToChat(client, "{default}[{green}RYGive{default}] 本回合刷东西次数已达上限 {olive}%d{default} 次。", RYGIVE_ROUND_LIMIT);
+	return true;
+}
+
+bool IsRygiveLimitedAdmin(int client) {
+	if (client < 1 || client > MaxClients || !IsClientInGame(client))
+		return false;
+
+	return GetClientImmunityLevel(client) == RYGIVE_LIMIT_IMMUNITY;
 }
 
 void UpdateRpgRoundForRygiveItems() {

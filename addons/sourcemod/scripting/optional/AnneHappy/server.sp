@@ -70,6 +70,7 @@ public Plugin myinfo =
 ConVar hMaxSurvivors, hSurvivorsManagerEnable, hCvarAutoKickTank;
 ConVar g_cvResetOnTransition;          // 满血+清背包（原逻辑）
 ConVar g_cvHeal50OnTransition;         // 新增：通关/切图最低50实血+重置倒地次数
+ConVar g_cvWarpSpawnToStart;           // 生还 player_spawn 后拉回起始点
 
 int   iMaxSurvivors, iEnable, iAutoKickTankEnable;
 int   g_RoundWipeCount = 0;
@@ -126,6 +127,9 @@ public void OnPluginStart()
     g_cvHeal50OnTransition = CreateConVar("anne_heal50_on_transition", "0",
         "通关/切图时，若生还者实血<50则补至50，并重置倒地次数；>=50不变。仅在 anne_reset_on_transition=0 时生效",
         CVAR_FLAGS, true, 0.0, true, 1.0);
+
+    g_cvWarpSpawnToStart = CreateConVar("anne_spawn_warp_to_start", "1",
+        "生还者 player_spawn 后是否在未离开安全区前传送到起始点 (0/1)", CVAR_FLAGS, true, 0.0, true, 1.0);
 
     // ---- 黑白提醒 ----
     HookEvent("revive_success",       Event_ReviveSuccess);
@@ -316,7 +320,34 @@ public void Event_PlayerSpawn(Event hEvent, const char[] name, bool dontBroadcas
         KickMoreTank(true);
 
     if (IsValidClient(client) && GetClientTeam(client) == 2)
+    {
         g_bwAnnounced[client] = false;
+        QueueSpawnWarpToStart(client);
+    }
+}
+
+void QueueSpawnWarpToStart(int client)
+{
+	if (!g_cvWarpSpawnToStart.BoolValue || !IsValidAliveClient(client) || GetClientTeam(client) != 2)
+		return;
+
+	if (L4D_HasAnySurvivorLeftSafeArea())
+		return;
+
+	CreateTimer(0.1, Timer_WarpSpawnToStart, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
+}
+
+public Action Timer_WarpSpawnToStart(Handle timer, any userid)
+{
+	int client = GetClientOfUserId(userid);
+	if (!g_cvWarpSpawnToStart.BoolValue || !IsValidAliveClient(client) || GetClientTeam(client) != 2)
+		return Plugin_Stop;
+
+	if (L4D_HasAnySurvivorLeftSafeArea())
+		return Plugin_Stop;
+
+	BypassAndExecuteCommandNoArgs(client, "warp_to_start_area");
+	return Plugin_Stop;
 }
 
 public void OnPlayerIncappedOrDeath(Event event, const char[] name, bool dontBroadcast)
@@ -708,6 +739,14 @@ void BypassAndExecuteCommand(int client, const char[] cmd, const char[] arg1)
     int flags = GetCommandFlags(cmd);
     SetCommandFlags(cmd, flags & ~FCVAR_CHEAT);
     FakeClientCommand(client, "%s %s", cmd, arg1);
+    SetCommandFlags(cmd, flags);
+}
+
+void BypassAndExecuteCommandNoArgs(int client, const char[] cmd)
+{
+    int flags = GetCommandFlags(cmd);
+    SetCommandFlags(cmd, flags & ~FCVAR_CHEAT);
+    FakeClientCommand(client, "%s", cmd);
     SetCommandFlags(cmd, flags);
 }
 

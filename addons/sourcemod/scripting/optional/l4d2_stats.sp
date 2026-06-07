@@ -457,7 +457,7 @@ void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontBroadcas
 				    }
 				}*/
 
-				CPrintToChatAll("%t %t", "Tag+" , "TeamSkeeted", attacker, victim, damage, shots, shots == 1 ? "" : "s", assister_string);
+				CPrintToChatAll("%t %t", "Tag+" , "TeamSkeeted", attacker, victim, damage, shots, shots == 1 ? AssistShotsSingular() : AssistShotsPlural(), assister_string);
 			}
 			else {
 				/*CPrintToChat(victim, "{green}★ {default}You were skeeted by {olive}%N {default}in {blue}%d shot%c", attacker, shots, plural);
@@ -471,7 +471,7 @@ void Event_PlayerDeath(Event hEvent, const char[] sEventName, bool bDontBroadcas
 				    }
 				}*/
 
-				CPrintToChatAll("%t %t", "Tag+", "Skeeted", attacker, victim, shots, shots == 1 ? "" : "s");
+				CPrintToChatAll("%t %t", "Tag+", "Skeeted", attacker, victim, shots, shots == 1 ? AssistShotsSingular() : AssistShotsPlural());
 			}
 		}
 	}

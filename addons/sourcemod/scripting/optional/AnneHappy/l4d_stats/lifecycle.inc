@@ -9,6 +9,7 @@
 
 public OnMapStart()
 {
+	MapChangingForConnectAnnounce = false;
 	GetConVarString(cvar_Gamemode, CurrentGamemode, sizeof(CurrentGamemode));
 	CurrentGamemodeID = GetCurrentGamemodeID();
 	SetCurrentGamemodeName();
@@ -33,7 +34,7 @@ public OnClientPostAdminCheck(client)
 		return;
 	}
 
-	CreateTimer(1.0, ClientPostAdminCheck, client);
+	CreateTimer(1.0, ClientPostAdminCheck, client, TIMER_FLAG_NO_MAPCHANGE);
 }
 
 public Action:ClientPostAdminCheck(Handle:timer, any:client)
@@ -42,7 +43,7 @@ public Action:ClientPostAdminCheck(Handle:timer, any:client)
 	{
 		if (PostAdminCheckRetryCounter[client]++ < 10)
 		{
-			CreateTimer(3.0, ClientPostAdminCheck, client);
+			CreateTimer(3.0, ClientPostAdminCheck, client, TIMER_FLAG_NO_MAPCHANGE);
 		}
 
 		return;
@@ -60,10 +61,24 @@ public Action:ClientPostAdminCheck(Handle:timer, any:client)
 	TimerKills[client] = 0;
 	TimerHeadshots[client] = 0;
 
-	CreateTimer(10.0, RankConnect, client);
-	CreateTimer(15.0, AnnounceConnect, client);
+	new bool:AlreadyAnnounced = false;
+	if (ConnectAnnounceTrie != INVALID_HANDLE)
+	{
+		GetTrieValue(ConnectAnnounceTrie, SteamID, AlreadyAnnounced);
+	}
 
-	AnnouncePlayerConnect(client);
+	if (!AlreadyAnnounced)
+	{
+		if (ConnectAnnounceTrie != INVALID_HANDLE)
+		{
+			SetTrieValue(ConnectAnnounceTrie, SteamID, true);
+		}
+
+		CreateTimer(10.0, RankConnect, client, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(15.0, AnnounceConnect, client, TIMER_FLAG_NO_MAPCHANGE);
+
+		AnnouncePlayerConnect(client);
+	}
 }
 
 public OnPluginEnd()
@@ -97,10 +112,11 @@ public OnPluginEnd()
 	//	CloseHandle(ClearPlayerMenu);
 	//	ClearPlayerMenu = INVALID_HANDLE;
 	//}
-	delete MapTimingSurvivors; 
- 	delete MapTimingInfected; 
- 	delete FriendlyFireDamageTrie; 
- 	delete PlayerRankVoteTrie; 
+	delete MapTimingSurvivors;
+	delete MapTimingInfected;
+	delete FriendlyFireDamageTrie;
+	delete PlayerRankVoteTrie;
+	delete ConnectAnnounceTrie;
 }
 
 // Show rank on connect.
@@ -131,7 +147,7 @@ public Action:AnnounceConnect(Handle:timer, any:client)
 		else
 		{
 			AnnounceCounter[client]++;
-			CreateTimer(5.0, AnnounceConnect, client);
+			CreateTimer(5.0, AnnounceConnect, client, TIMER_FLAG_NO_MAPCHANGE);
 		}
 
 		return;
@@ -165,11 +181,15 @@ public OnClientDisconnect(client)
 	if (IsClientBot(client))
 		return;
 
+	decl String:ClientID[MAX_LINE_WIDTH];
+	GetClientRankAuthString(client, ClientID, sizeof(ClientID));
+	if (!MapChangingForConnectAnnounce && ConnectAnnounceTrie != INVALID_HANDLE)
+	{
+		RemoveFromTrie(ConnectAnnounceTrie, ClientID);
+	}
+
 	if (MapTimingStartTime >= 0.0)
 	{
-		decl String:ClientID[MAX_LINE_WIDTH];
-		GetClientRankAuthString(client, ClientID, sizeof(ClientID));
-
 		RemoveFromTrie(MapTimingSurvivors, ClientID);
 		RemoveFromTrie(MapTimingInfected, ClientID);
 	}

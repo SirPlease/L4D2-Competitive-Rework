@@ -165,6 +165,8 @@ public Action:event_CampaignWin(Handle:event, const String:name[], bool:dontBroa
 
 public Action:event_MapTransitionPre(Handle:event, const String:name[], bool:dontBroadcast)
 {
+	MapChangingForConnectAnnounce = true;
+
 	if (StatsDisabled())
 		return;
 	g_broundend = true;

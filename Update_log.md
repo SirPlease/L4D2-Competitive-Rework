@@ -401,7 +401,7 @@ witchparty 和 allcharger模式在普通药役的基础上小僵尸再减少17-2
 - `join.smx` 修复赞助页面和赞助流程，新增 `anne_donate.cfg`，优化 IP 页面显示；fantasydong 组和 Anne 电信服免除广告。
 - `l4d2_door_lock.smx` 新增锁门相关功能，增加玩家加载锁安全帽设置，修复强行开始问题，并增加出门前不允许 Bot 活动的限制。
 - `network_quality_hint.smx` 新增网络延迟检测插件，方便玩家切换到正确运营商的三线 IP，并优化 `cfg/sourcemod/network_quality_hint.cfg`、`cfg/confogl_rates.cfg` 和 `cfg/server.cfg` 参数。
-- `l4d_player_count_unload_mode.smx` 优化高峰期判定，改为统计服务器有人数量且没有大于 60% 的情况；降低数据库压力、调整提示语句并修复高峰期相关 bug。
+- `l4d_player_count_unload_mode.smx` 优化高峰期判定，改为统计有效服务器中有玩家服务器占比达到 70% 时触发；新增 `l4d_server_status.is_good_server` 标记，好服务器始终保留给 4 人及以上多人模式，高峰期普通服务器也不开放单人模式，并细化卸载提示。
 - `l4d2_hitsound.smx` 新增只对特感生效的开关，并修复命中反馈配置有时整关丢失的问题。
 - `l4d2_blacklist.smx` 修复未使用数据库的问题。
 - `chatlog.smx`、`l4d2_damage_show.smx`、`veterans.smx`、`server.smx` 修复数据库错误或增加数据库重连处理。

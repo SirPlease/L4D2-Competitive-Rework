@@ -93,7 +93,6 @@ static bool DoSpawnAt(const float pos[3], int zc)
         g_LastSpawnOkTime = GetGameTime();
         InvalidateBucketShareCache();
         Debug_Print("[SPAWN OK] %s idx=%d at (%.1f %.1f %.1f)", g_sInfectedClassNames[zc], idx, pos[0], pos[1], pos[2]);
-        RecalcSiCapFromAlive(false);
         return true;
     }
 
@@ -238,8 +237,22 @@ void TryTeleportSpawnOnce()
     int want = 0;
     if (!TeleportQueue_Peek(want))
         return;
-    if (gST.totalSI >= gCV.iSiLimit || HasReachedLimit(want))
+    if (gST.totalSI >= gCV.iSiLimit)
         return;
+    if (HasReachedLimit(want))
+    {
+        RecalcSiCapFromAlive(false);
+        if (gST.totalSI >= gCV.iSiLimit)
+            return;
+
+        if (HasReachedLimit(want))
+        {
+            TeleportQueue_DropHead(want);
+            TeleportQueue_Push(want);
+            Debug_Print("[TP QUEUE ROTATE] %s reached alive-cap, rotate to tail", g_sInfectedClassNames[want]);
+            return;
+        }
+    }
 
     float pos[3];
     int areaIdx = -1;

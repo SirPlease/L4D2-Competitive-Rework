@@ -20,6 +20,9 @@
 new String:CacheFile[PLATFORM_MAX_PATH];
 new String:ExcludeFile[PLATFORM_MAX_PATH];
 new bool:isBlocked = false;
+new Handle:g_hVeteransConnectAnnounceTrie = INVALID_HANDLE;
+new bool:g_bVeteransConnectAnnounce[MAXPLAYERS + 1];
+new bool:g_bVeteransMapChanging = false;
 
 //new Handle:cvar_url;
 new Handle:cvar_enable;
@@ -199,6 +202,7 @@ public OnPluginStart()
 	);
 
 	CleanupPlaytimeCache(true);
+	g_hVeteransConnectAnnounceTrie = CreateTrie();
 
 	RegAdminCmd("sm_veterans_exclude", AddToWhitelist, ADMFLAG_GENERIC, "Exludes a user from veterans plugin", "", 0);
 	RegAdminCmd("sm_veterans_include", RemoveFromWhitelist, ADMFLAG_GENERIC, "Includes an already excluded user from veterans plugin", "", 0);
@@ -209,13 +213,18 @@ public OnPluginStart()
 	//AutoExecConfig(true, "veterans");
 	new iPort = GetConVarInt(FindConVar("hostport"));
 	HookEvent("player_team", event_PlayerTeam, EventHookMode_Post); // When a survivor changes team...
+	HookEvent("map_transition", event_MapTransition, EventHookMode_Pre);
+	HookEvent("finale_win", event_MapTransition, EventHookMode_Pre);
 	BuildPath(Path_SM, CacheFile, sizeof(CacheFile), "data/veterans_cache_%d.txt", iPort);
 	BuildPath(Path_SM, ExcludeFile, sizeof(ExcludeFile), "data/veterans_exclude.txt");
 }
 
 public void l4dstats_AnnounceGameTime(int client)
 {
-	CreateTimer(0.3,announcetime,client);
+	if (!Veterans_ShouldConnectAnnounceClient(client))
+		return;
+
+	CreateTimer(0.3,announcetime,client, TIMER_FLAG_NO_MAPCHANGE);
 }
 
 public Action:event_PlayerTeam(Handle:event, const String:name[], bool:dontBroadcast)
@@ -240,6 +249,12 @@ public Action:event_PlayerTeam(Handle:event, const String:name[], bool:dontBroad
 	return Plugin_Continue;
 }
 
+public Action:event_MapTransition(Handle:event, const String:name[], bool:dontBroadcast)
+{
+	Veterans_StopMapChangeConnectAnnounces();
+	return Plugin_Continue;
+}
+
 
 public Action announcetime(Handle timer, any client){
 	if(IsClientConnected(client) && !IsFakeClient(client) )
@@ -255,13 +270,40 @@ public Action announcetime(Handle timer, any client){
 public OnPluginEnd()
 {
 	//RemoveServerTag2("Veterans");
+	delete g_hVeteransConnectAnnounceTrie;
 }
 
 public OnMapStart()
 {
+	g_bVeteransMapChanging = false;
 	CleanupPlaytimeCache(false);
 	
 	isBlocked = false;
+}
+
+public OnMapEnd()
+{
+	Veterans_StopMapChangeConnectAnnounces();
+}
+
+public OnClientDisconnect(client)
+{
+	if (!g_bVeteransMapChanging)
+	{
+		char steamId[64];
+		if (GetClientAuthId(client, AuthId_Steam2, steamId, sizeof(steamId)) && !StrEqual(steamId, "BOT", false) && g_hVeteransConnectAnnounceTrie != INVALID_HANDLE)
+			RemoveFromTrie(g_hVeteransConnectAnnounceTrie, steamId);
+	}
+
+	g_bVeteransConnectAnnounce[client] = false;
+}
+
+void Veterans_StopMapChangeConnectAnnounces()
+{
+	g_bVeteransMapChanging = true;
+
+	for (int i = 1; i <= MaxClients; i++)
+		g_bVeteransConnectAnnounce[i] = false;
 }
 
 
@@ -277,6 +319,8 @@ public void InitPlayerStats(client)
 
 public OnClientAuthorized(client, const String:steamId[])
 {
+	g_bVeteransConnectAnnounce[client] = false;
+
 	if (isBlocked || !GetConVarBool(cvar_enable))
 	{
 		return;
@@ -287,6 +331,8 @@ public OnClientAuthorized(client, const String:steamId[])
 	if (StrEqual(steamId, "BOT", false)) {
 		return;
 	}
+
+	g_bVeteransConnectAnnounce[client] = Veterans_BeginConnectAnnounceSteam(steamId);
 	
 	InitPlayerStats(client);
 
@@ -295,19 +341,22 @@ public OnClientAuthorized(client, const String:steamId[])
 	if (adminId != INVALID_ADMIN_ID) {
 		// Exclude privileged
 		if (GetConVarBool(cvar_excludePrivileged)) {
-			CPrintToChatAll("%t", "Veterans_PlayerDurationDetectionAdministratorExempt", client);
+			if (Veterans_ShouldConnectAnnounceClient(client))
+				CPrintToChatAll("%t", "Veterans_PlayerDurationDetectionAdministratorExempt", client);
 			return;
 		}
-		
+
 		// Exclude reserved slots
 		if (GetConVarBool(cvar_excludeReservedSlots) && GetAdminFlag(adminId, Admin_Reservation)) {
-			CPrintToChatAll("%t", "Veterans_PlayerDurationDetectionAdministratorExempt", client);
+			if (Veterans_ShouldConnectAnnounceClient(client))
+				CPrintToChatAll("%t", "Veterans_PlayerDurationDetectionAdministratorExempt", client);
 			return;
 		}
 
 		// Exclude admins
 		if (GetAdminFlag(adminId, Admin_Generic) || GetAdminFlag(adminId, Admin_Root)) {
-			CPrintToChatAll("%t", "Veterans_PlayerDurationDetectionAdministratorExempt", client);
+			if (Veterans_ShouldConnectAnnounceClient(client))
+				CPrintToChatAll("%t", "Veterans_PlayerDurationDetectionAdministratorExempt", client);
 			return;
 		}
 	}
@@ -337,23 +386,32 @@ public void l4dstats_SuccessGetPlayerTime(int client){
 // --------------------------------- PLAYER TIME DECISION ---------------------------------
 CheckIfUserQualified(client)
 {
-	
 	if (HasEnoughPlaytime(player[client].servertime))
 	{	
 		return;
-	}else{
+	}
+	else
+	{
 		if (GetConVarBool(cvar_excludeGroupMember) && player[client].isGroupMember)
 		{
 			if(GetConVarBool(cvar_excludeGroupMemberPlay))
-				CPrintToChatAll("%t", "Veterans_PlayerDurationDetectionPlayerGame", client);
+			{
+				if (Veterans_ShouldConnectAnnounceClient(client))
+					CPrintToChatAll("%t", "Veterans_PlayerDurationDetectionPlayerGame", client);
+			}
 			else
-				CPrintToChatAll("%t", "Veterans_PlayerTimeDetectionPlayerGame", client);
+			{
+				if (Veterans_ShouldConnectAnnounceClient(client))
+					CPrintToChatAll("%t", "Veterans_PlayerTimeDetectionPlayerGame", client);
+			}
 			//PrintToServer("VeteransOnly: Excluded for being a group member");
 			return;
 		}
-		else{
-			CPrintToChatAll("%t", "Veterans_PlayerTimeDetectionPlayerGameTime", client);
-		}		
+		else
+		{
+			if (Veterans_ShouldConnectAnnounceClient(client))
+				CPrintToChatAll("%t", "Veterans_PlayerTimeDetectionPlayerGameTime", client);
+		}
 	}
 
 	float minPlaytime = GetConVarFloat(cvar_minPlaytime) / 60;
@@ -371,6 +429,31 @@ CheckIfUserQualified(client)
 		minPlaytimeExcludingLast2Weeks	
 	);
 	ThrowPlayerOut(client, formated);	
+}
+
+bool:Veterans_ShouldConnectAnnounceClient(client)
+{
+	if (client < 1 || client > MaxClients)
+		return false;
+
+	return g_bVeteransConnectAnnounce[client];
+}
+
+bool:Veterans_BeginConnectAnnounceSteam(const String:steamId[])
+{
+	if (StrEqual(steamId, "BOT", false))
+		return false;
+
+	if (g_hVeteransConnectAnnounceTrie == INVALID_HANDLE)
+		g_hVeteransConnectAnnounceTrie = CreateTrie();
+
+	new bool:announced = false;
+	GetTrieValue(g_hVeteransConnectAnnounceTrie, steamId, announced);
+	if (announced)
+		return false;
+
+	SetTrieValue(g_hVeteransConnectAnnounceTrie, steamId, true);
+	return true;
 }
 
 bool:HasEnoughPlaytime(int ServerPlayTime)
@@ -529,11 +612,11 @@ RequestUserInfo(client)
 	request.AppendQueryParam("include_played_free_games", "%i", 0);
 	request.Get(HTTPResponse_GetOwnedGames, client);
 	
-	CreateTimer(1.0, GetRealTime, client);
+	CreateTimer(1.0, GetRealTime, client, TIMER_FLAG_NO_MAPCHANGE);
 	
-	CreateTimer(2.0, GetGroup, client);
+	CreateTimer(2.0, GetGroup, client, TIMER_FLAG_NO_MAPCHANGE);
 	//CreateTimer(10.0, CheckPlayer, client);
-	CreateTimer(35.0, CachePlayer, client);
+	CreateTimer(35.0, CachePlayer, client, TIMER_FLAG_NO_MAPCHANGE);
 }
 
 public Action GetRealTime(Handle hTimer, any client){

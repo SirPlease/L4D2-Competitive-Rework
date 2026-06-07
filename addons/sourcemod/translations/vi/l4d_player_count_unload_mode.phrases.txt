@@ -8,4 +8,16 @@
 	{
 		"vi"		"Quản trị viên không có mặt và hiện đang trong khoảng thời gian bị hạn chế; không có đủ người ở chế độ này {green}%d{default} người, {green} buộc phải gỡ cài đặt chế độ!!!!"
 	}
+	"L4DPlayerCountUnloadMode_GoodServerReserved"
+	{
+		"vi"		"No administrator is present. This good server is reserved for modes with {green}%d{default} or more player slots; current mode has {green}%d{default} slots, {green}forcing mode unload!!!!"
+	}
+	"L4DPlayerCountUnloadMode_PeakNormalSingle"
+	{
+		"vi"		"No administrator is present. {green}%d/%d{default} active servers reached the peak threshold {green}%.0f%%{default}, about {green}%d{default} minutes remain; normal servers do not allow single-player modes during peak time, current mode has {green}%d{default} slot, {green}forcing mode unload!!!!"
+	}
+	"L4DPlayerCountUnloadMode_TimeRestricted"
+	{
+		"vi"		"No administrator is present. This is a restricted time period, only modes with {green}%d{default} or more player slots are allowed; current mode has {green}%d{default} slots, {green}forcing mode unload!!!!"
+	}
 }

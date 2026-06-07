@@ -244,7 +244,7 @@ public any Native_GetNextSpawnTime(Handle plugin, int numParams)
         return view_as<any>(rem);
     }
 
-    float rem = DifficultyStrategy_GetWaveFloorDelay() - float(gST.lastSpawnSecs);
+    float rem = DifficultyStrategy_GetConfiguredWaveDelay() - float(gST.lastSpawnSecs);
     if (rem < 0.0) rem = 0.0;
     return view_as<any>(rem);
 }

@@ -8,4 +8,16 @@
 	{
 		"zho"		"管理員不在場，目前處於限制時段；本模式人數不足 {green}%d{default} 人，{green}強制卸載模式!!!!"
 	}
+	"L4DPlayerCountUnloadMode_GoodServerReserved"
+	{
+		"zho"		"管理員不在場，本服是好伺服器，保留給 {green}%d{default} 人及以上多人模式；目前模式只有 {green}%d{default} 人位，{green}強制卸載模式!!!!"
+	}
+	"L4DPlayerCountUnloadMode_PeakNormalSingle"
+	{
+		"zho"		"管理員不在場，目前全服 {green}%d/%d{default} 台伺服器有玩家，達到高峰期門檻 {green}%.0f%%{default}，限制剩餘約 {green}%d{default} 分鐘；高峰期非好伺服器不開放單人模式，目前模式只有 {green}%d{default} 人位，{green}強制卸載模式!!!!"
+	}
+	"L4DPlayerCountUnloadMode_TimeRestricted"
+	{
+		"zho"		"管理員不在場，目前處於限制時段，僅允許 {green}%d{default} 人及以上模式；目前模式只有 {green}%d{default} 人位，{green}強制卸載模式!!!!"
+	}
 }

@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>infected_control anti-baiter 时序理解图</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f8fb;
+      --ink: #18202f;
+      --muted: #667085;
+      --line: #cfd6e4;
+      --blue: #dbeafe;
+      --blue-border: #60a5fa;
+      --green: #dcfce7;
+      --green-border: #4ade80;
+      --yellow: #fef3c7;
+      --yellow-border: #fbbf24;
+      --red: #fee2e2;
+      --red-border: #fb7185;
+      --panel: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 20px 44px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      margin: 0 0 24px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .flow {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+      overflow-x: auto;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 220px 40px 260px 40px 260px 40px 260px;
+      align-items: center;
+      min-width: 1120px;
+      margin-bottom: 18px;
+    }
+
+    .row:last-child { margin-bottom: 0; }
+
+    .node {
+      min-height: 104px;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+      background: #fff;
+    }
+
+    .node strong {
+      font-size: 17px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .node span {
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    .blue { background: var(--blue); border-color: var(--blue-border); }
+    .green { background: var(--green); border-color: var(--green-border); }
+    .yellow { background: var(--yellow); border-color: var(--yellow-border); }
+    .red { background: var(--red); border-color: var(--red-border); }
+
+    .arrow {
+      color: #64748b;
+      font-size: 26px;
+      text-align: center;
+      line-height: 1;
+    }
+
+    .branch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      min-width: 1120px;
+      margin-top: 20px;
+    }
+
+    .branch-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      background: #fff;
+    }
+
+    .branch-card h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      letter-spacing: 0;
+    }
+
+    .mini-flow {
+      display: grid;
+      grid-template-columns: 1fr 34px 1fr 34px 1fr;
+      align-items: center;
+      gap: 0;
+    }
+
+    .mini {
+      min-height: 92px;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .mini strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 15px;
+      line-height: 1.25;
+    }
+
+    .mini span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .notes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+      min-width: 1120px;
+    }
+
+    .note {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: #fff;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .note strong {
+      display: block;
+      color: var(--ink);
+      margin-bottom: 4px;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>infected_control anti-baiter 时序理解图</h1>
+    <p class="lead">
+      这里按“anti-baiter 嵌在正常下一波倒计时里”的设计来画：它不是独立刷特系统，也不会把开波时间提前到基础刷特间隔之前；
+      它观察上一波处理完后，生还在等待下一波期间有没有正常推进，到点后再决定放行还是继续等机会。
+    </p>
+
+    <section class="flow" aria-label="anti-baiter 时序流程">
+      <div class="row">
+        <div class="node blue">
+          <strong>当前波开始</strong>
+          <span>StartWave 后刷出本波特感，同时记录本波起点和 anti-baiter baseline。</span>
+        </div>
+        <div class="arrow">→</div>
+        <div class="node blue">
+          <strong>本波交火</strong>
+          <span>生还处理特感；插件仍维护传送、死亡计数和剩余队列。</span>
+        </div>
+        <div class="arrow">→</div>
+        <div class="node green">
+          <strong>进入下一波倒计时</strong>
+          <span>核心是 versus_special_respawn_interval 配置的刷特进程，例如 16 秒；anti-baiter 只在这个等待区间观察。</span>
+        </div>
+        <div class="arrow">→</div>
+        <div class="node yellow">
+          <strong>每秒检测推进状态</strong>
+          <span>难度检测时间只决定何时开始评估 pressure；到基础刷特时间前，只观察，不开波。</span>
+        </div>
+      </div>
+
+      <div class="branch">
+        <div class="branch-card">
+          <h2>正常推进路径</h2>
+          <div class="mini-flow">
+            <div class="mini green">
+              <strong>生还有推进</strong>
+              <span>平均或最高 flow 持续增加，超过进度阈值。</span>
+            </div>
+            <div class="arrow">→</div>
+            <div class="mini green">
+              <strong>保持正常倒计时</strong>
+              <span>anti-baiter 不拦截，不额外改变刷特节奏。</span>
+            </div>
+            <div class="arrow">→</div>
+            <div class="mini green">
+              <strong>配置时间到点开波</strong>
+              <span>达到 16 秒这类基础刷特时间后，下一波按正常节奏开始。</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="branch-card">
+          <h2>anti-baiter 路径</h2>
+          <div class="mini-flow">
+            <div class="mini red">
+              <strong>生还不推进</strong>
+              <span>处理完特感后卡点等刷，队形仍抱团互相保护。</span>
+            </div>
+            <div class="arrow">→</div>
+            <div class="mini red">
+              <strong>进入 Pressure</strong>
+              <span>检测时间到了且玩家抱团卡点，标记“到点后不要白给下一波”。</span>
+            </div>
+            <div class="arrow">→</div>
+            <div class="mini red">
+              <strong>等机会再开波</strong>
+              <span>必须先达到基础刷特时间；之后等生还移动、散开或达到兜底放行条件。</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="notes">
+        <div class="note">
+          <strong>不是独立刷特</strong>
+          anti-baiter 挂在同一个下一波计时器上，只影响“到点后这一次下一波要不要按点放出”。
+        </div>
+        <div class="note">
+          <strong>检测不是开波</strong>
+          6、8、10、12、16 秒这类难度时间是开始判断 pressure 的窗口，不是最早刷特时间。
+        </div>
+        <div class="note">
+          <strong>下限必须守住</strong>
+          “等机会再开波”也不能小于 versus_special_respawn_interval；例如配置 16 秒时，任何 release 都不早于 16 秒。
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

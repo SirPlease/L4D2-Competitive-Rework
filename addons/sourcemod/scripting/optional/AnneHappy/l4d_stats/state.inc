@@ -263,6 +263,8 @@ new QueryCounter = 0;
 
 new AnnounceCounter[MAXPLAYERS + 1];
 new PostAdminCheckRetryCounter[MAXPLAYERS + 1];
+new Handle:ConnectAnnounceTrie = INVALID_HANDLE;
+new bool:MapChangingForConnectAnnounce = false;
 
 // For every medkit used the points earned by the Survivor team is calculated with this formula:
 // NormalPointsEarned * (1 - MedkitsUsedCounter * cvar_MedkitUsedPointPenalty)

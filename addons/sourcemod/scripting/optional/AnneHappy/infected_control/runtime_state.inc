@@ -30,6 +30,7 @@ enum struct State
     bool   bLate;
     bool   bPickRushMan;
     bool   bShouldCheck;
+    bool   bPausedSpawnTimer;
 
     bool   bPauseLib;
     bool   bSmokerLib;
@@ -67,6 +68,7 @@ enum struct State
 
         this.bPickRushMan = false;
         this.bShouldCheck = false;
+        this.bPausedSpawnTimer = false;
         this.bLate        = false;
 
         this.siQueueCount = 0;

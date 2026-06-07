@@ -7,6 +7,8 @@
 void ResetMatchState()
 {
     gST.totalSI = 0;
+    for (int i = 0; i < SI_COUNT; i++) gST.siAlive[i] = 0;
+
     for (int i = 1; i <= MaxClients; i++)
     {
         if (IsInfectedBot(i) && IsPlayerAlive(i))

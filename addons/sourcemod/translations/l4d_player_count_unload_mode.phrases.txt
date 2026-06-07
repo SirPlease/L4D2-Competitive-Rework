@@ -8,4 +8,16 @@
 	{
 		"en"		"The administrator is not present and is currently in a restricted time period; there are not enough people in this mode {green}%d{default} people, {green} forced uninstall mode!!!!"
 	}
+	"L4DPlayerCountUnloadMode_GoodServerReserved"
+	{
+		"en"		"No administrator is present. This is a good server reserved for modes with {green}%d{default} or more player slots; the current mode only has {green}%d{default} slots, {green}forcing mode unload!!!!"
+	}
+	"L4DPlayerCountUnloadMode_PeakNormalSingle"
+	{
+		"en"		"No administrator is present. {green}%d/%d{default} active servers reached the peak threshold {green}%.0f%%{default}, with about {green}%d{default} minutes remaining; normal servers do not allow single-player modes during peak time, current mode has {green}%d{default} slot, {green}forcing mode unload!!!!"
+	}
+	"L4DPlayerCountUnloadMode_TimeRestricted"
+	{
+		"en"		"No administrator is present. This is a restricted time period, only modes with {green}%d{default} or more player slots are allowed; the current mode only has {green}%d{default} slots, {green}forcing mode unload!!!!"
+	}
 }

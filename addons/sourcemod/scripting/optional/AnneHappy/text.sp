@@ -174,6 +174,7 @@ void printinfo(int client = 0, bool All = true){
 	//FormatTime(sBuffer, sizeof(sBuffer), "%Y/%m/%d");
 	char buffer[256];
 	char buffer2[256];
+	char buffer3[256];
 	char aiBuffer[64];
 	if(g_hCvarTankBhop != null){
 		Format(buffer, sizeof(buffer), "{lightgreen}Tank连跳{olive}[{green}%s{olive}]", TankBhop > 0?"开启":"关闭");
@@ -185,31 +186,33 @@ void printinfo(int client = 0, bool All = true){
 
 	if(BuildAiDifficultyText(aiBuffer, sizeof(aiBuffer)))
 		Format(buffer, sizeof(buffer), "%s %s", buffer, aiBuffer);
-		
+
 	if(PLUGIN_VERSION[0] == '\0')
 	GetConVarString(g_hCvarPluginVersion, PLUGIN_VERSION, sizeof(PLUGIN_VERSION));
-	Format(buffer, sizeof(buffer), "%s {lightgreen}特感{olive}[{green}%s%i特%i秒{olive}] {lightgreen}电信服{olive}[{green}%s{olive}]", buffer, (g_hAutoSpawnTimeControl != null && g_hAutoSpawnTimeControl.BoolValue)?"自动":"固定", CommonLimit, CommonTime, PLUGIN_VERSION);
+	Format(buffer2, sizeof(buffer2), "{lightgreen}特感{olive}[{green}%s%i特%i秒{olive}] {lightgreen}电信服{olive}[{green}%s{olive}]", (g_hAutoSpawnTimeControl != null && g_hAutoSpawnTimeControl.BoolValue)?"自动":"固定", CommonLimit, CommonTime, PLUGIN_VERSION);
 	int max_dist = GetConVarInt(FindConVar("inf_SpawnDistanceMin"));
-	Format(buffer2, sizeof(buffer2), "{lightgreen}特感最近生成距离{olive}[{green}%d{olive}]", max_dist);
+	Format(buffer3, sizeof(buffer3), "{lightgreen}特感最近生成距离{olive}[{green}%d{olive}]", max_dist);
 	if(FindConVar("inf_TeleportCheckTime")){
 		int Teleport_CheckTime = GetConVarInt(FindConVar("inf_TeleportCheckTime"));
-		Format(buffer2, sizeof(buffer2), "%s {lightgreen}特感传送条件{olive}[{green}%d秒不可见{olive}]", buffer2, Teleport_CheckTime);
+		Format(buffer3, sizeof(buffer3), "%s {lightgreen}特感传送条件{olive}[{green}%d秒不可见{olive}]", buffer3, Teleport_CheckTime);
 	}
 	if(FindConVar("ReturnBlood") && GetConVarInt(FindConVar("ReturnBlood")) > 0)
-		Format(buffer2, sizeof(buffer2), "%s {lightgreen}回血{olive}[{green}开启{olive}]", buffer2);
+		Format(buffer3, sizeof(buffer3), "%s {lightgreen}回血{olive}[{green}开启{olive}]", buffer3);
 	if(FindConVar("ai_TankConsume") && GetConVarInt(FindConVar("ai_TankConsume")) > 0)
-		Format(buffer2, sizeof(buffer2), "%s {lightgreen}坦克消耗{olive}[{green}开启{olive}]", buffer2);
+		Format(buffer3, sizeof(buffer3), "%s {lightgreen}坦克消耗{olive}[{green}开启{olive}]", buffer3);
 	else if(FindConVar("ai_TankSneakTime") && GetConVarFloat(FindConVar("ai_TankSneakTime")) > 0.0)
 	{
-		Format(buffer2, sizeof(buffer2), "%s {lightgreen}狡猾坦克{olive}[{green}开启{olive}]", buffer2);
+		Format(buffer3, sizeof(buffer3), "%s {lightgreen}狡猾坦克{olive}[{green}开启{olive}]", buffer3);
 	}
 	if(All){
 		CPrintToChatAll(buffer);
 		CPrintToChatAll(buffer2);
+		CPrintToChatAll(buffer3);
 	}else
 	{
 		CPrintToChat(client, buffer);
 		CPrintToChat(client, buffer2);
+		CPrintToChat(client, buffer3);
 	}
 }
 

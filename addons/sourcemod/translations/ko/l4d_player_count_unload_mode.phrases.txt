@@ -8,4 +8,16 @@
 	{
 		"ko"		"관리자가 현재 부재중이며 제한된 시간 내에 있습니다. 이 모드에는 사람이 부족합니다 {green}%d{default} 사람, {green} 강제 제거 모드!!!!"
 	}
+	"L4DPlayerCountUnloadMode_GoodServerReserved"
+	{
+		"ko"		"No administrator is present. This good server is reserved for modes with {green}%d{default} or more player slots; current mode has {green}%d{default} slots, {green}forcing mode unload!!!!"
+	}
+	"L4DPlayerCountUnloadMode_PeakNormalSingle"
+	{
+		"ko"		"No administrator is present. {green}%d/%d{default} active servers reached the peak threshold {green}%.0f%%{default}, about {green}%d{default} minutes remain; normal servers do not allow single-player modes during peak time, current mode has {green}%d{default} slot, {green}forcing mode unload!!!!"
+	}
+	"L4DPlayerCountUnloadMode_TimeRestricted"
+	{
+		"ko"		"No administrator is present. This is a restricted time period, only modes with {green}%d{default} or more player slots are allowed; current mode has {green}%d{default} slots, {green}forcing mode unload!!!!"
+	}
 }

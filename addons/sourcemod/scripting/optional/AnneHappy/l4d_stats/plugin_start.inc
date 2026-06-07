@@ -336,6 +336,7 @@ public OnPluginStart()
 	MapTimingInfected = CreateTrie();
 	FriendlyFireDamageTrie = CreateTrie();
 	PlayerRankVoteTrie = CreateTrie();
+	ConnectAnnounceTrie = CreateTrie();
 
 	new Handle:topmenu;
 	if (LibraryExists("adminmenu") && ((topmenu = GetAdminTopMenu()) != INVALID_HANDLE))
@@ -452,6 +453,7 @@ public OnPluginStart()
 
 public OnMapEnd()
 {
+	MapChangingForConnectAnnounce = true;
 	// 数据库连接保持跨地图运行。
 }
 

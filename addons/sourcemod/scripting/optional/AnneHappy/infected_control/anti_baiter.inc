@@ -258,9 +258,9 @@ static float AntiBait_GetLatestWaveDelay()
     return gCV.fSiInterval * AntiBait_GetSpawnLatestScale();
 }
 
-static bool AntiBait_HasReachedEarliestSpawnTime()
+static bool AntiBait_HasReachedConfiguredSpawnTime()
 {
-    return DifficultyStrategy_CanStartNormalWave();
+    return DifficultyStrategy_CanStartConfiguredWave();
 }
 
 static float AntiBait_GetPressureAge()
@@ -282,13 +282,16 @@ static bool AntiBait_HasEnoughSiPressure()
 
 static bool AntiBait_IsSpawnWindowPressure()
 {
+    if (!DifficultyStrategy_CanEvaluateWave())
+        return false;
+
     if (AntiBait_HasEnoughSiPressure())
         return true;
 
     if (gST.siQueueCount > 0 || SpawnQueue_Length() > 0 || TeleportQueue_Length() > 0)
         return true;
 
-    return DifficultyStrategy_CanEvaluateWave();
+    return true;
 }
 
 static bool AntiBait_TeamHoldingFormation(float spreadDist, float avgNearestDist, int isolatedCount, int groupCount)
@@ -433,6 +436,7 @@ void AntiBait_Update()
         AntiBait_ClearRunner();
         if (gAB.state != AB_Off)
             AntiBait_Debug("blocked state=%s allPinned=%d", g_sAntiBaitStateName[view_as<int>(gAB.state)], gAB.allPinned);
+        AntiBait_SetState(AB_Off, now, "blocked");
         return;
     }
 
@@ -504,22 +508,33 @@ bool AntiBait_ShouldStartWaveByLatest()
 {
     if (!gCV.bAntiBaitEnable || gST.hSpawn != INVALID_HANDLE || !gST.bShouldCheck)
         return false;
-    if (!AntiBait_HasReachedEarliestSpawnTime())
+    if (!AntiBait_HasReachedConfiguredSpawnTime())
         return false;
 
     return float(gST.lastSpawnSecs) >= AntiBait_GetLatestWaveDelay();
 }
 
-bool AntiBait_ShouldStartWaveEarly()
+bool AntiBait_ShouldReleaseHeldWave()
 {
     if (!gCV.bAntiBaitEnable || gCV.iAntiBaitAction < 1)
         return false;
     if (gAB.state != AB_Pressure)
         return false;
-    if (!AntiBait_HasReachedEarliestSpawnTime())
+    if (!AntiBait_HasReachedConfiguredSpawnTime())
         return false;
 
-    return AntiBait_GetPressureAge() >= gCV.fAntiBaitForceAfter;
+    return AntiBait_ShouldStartWaveByLatest()
+        || AntiBait_GetPressureAge() >= gCV.fAntiBaitForceAfter;
+}
+
+bool AntiBait_ShouldHoldWave()
+{
+    if (!gCV.bAntiBaitEnable || gCV.iAntiBaitAction < 1)
+        return false;
+    if (gAB.state != AB_Pressure)
+        return false;
+
+    return !AntiBait_ShouldReleaseHeldWave();
 }
 
 bool AntiBait_ShouldFastTeleport(int client)
@@ -527,6 +542,8 @@ bool AntiBait_ShouldFastTeleport(int client)
     if (!gCV.bAntiBaitEnable || gCV.iAntiBaitAction < 2)
         return false;
     if (gAB.state != AB_Pressure)
+        return false;
+    if (!AntiBait_HasReachedConfiguredSpawnTime())
         return false;
     if (!CanBeTeleport(client))
         return false;

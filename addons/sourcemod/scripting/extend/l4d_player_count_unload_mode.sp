@@ -37,12 +37,8 @@
  */
 
 /**
- * 晚上6-11点，非管理员只能玩大于等于4人的模式，2v2或者3v3，小于4人的模式就卸载模式，并写个提示
- * 检测survivor_limit和那个特感人数就行
- * 相加小于4，就卸载模式，卸载可以confogl自带的，sm_resetmatch
- * 时间给个Convar更改
- * 晚上有人玩1人模式太占资源了
- * 检测所有玩家里是否有管理员，没有的话就卸载模式。
+ * 好服务器始终保留给多人模式；高峰期时普通服务器也不开放单人模式。
+ * 管理员在场时不强制卸载模式。
  */
 
 #pragma semicolon 1
@@ -87,6 +83,14 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 #define TEAM_INFECTED		3
 #define PEAK_STATE_TABLE    "l4d_peak_state"
 
+enum ERestrictionReason
+{
+    RestrictionReason_None = 0,
+    RestrictionReason_GoodServerReserved,
+    RestrictionReason_PeakNormalSingle,
+    RestrictionReason_TimeRestricted
+}
+
 ConVar survivor_limit, z_max_player_zombies;
 int g_iCvarSurvivorLimit, g_iCvarInfectedMax;
 
@@ -123,7 +127,7 @@ Handle
     g_hStatusTimer;
 
 Database g_hDB;
-bool g_bDBReady, g_bPeakQueryPending, g_bLastPeakActive, g_bLastPeakKnown, g_bIsMySQL;
+bool g_bDBReady, g_bPeakQueryPending, g_bLastPeakActive, g_bLastGoodServer, g_bIsMySQL;
 bool g_bAutoServerId;
 int g_iLastActiveServers, g_iLastTotalServers;
 int g_iLastStatusWriteTime, g_iLastStatusPlayerCount = -1;
@@ -141,7 +145,7 @@ public void OnPluginStart()
     g_hCvarFlag         = CreateConVar(	PLUGIN_NAME ... "_flag", 		  "b",              "有這權限的管理員在場就不會被強制卸載模式", CVAR_FLAGS);
     g_hCvarDelay        = CreateConVar(	PLUGIN_NAME ... "_delay", 		  "60.0",           "地圖載入此秒數後才會檢測時間與人數", CVAR_FLAGS, true, 0.0);
     g_hCvarPeakMode     = CreateConVar( PLUGIN_NAME ... "_peak_mode",     "1",              "高峰期判定方式: 0=按_time時間段, 1=共享数据库统计所有服务器有玩家比例", CVAR_FLAGS, true, 0.0, true, 1.0);
-    g_hCvarPeakRatio    = CreateConVar( PLUGIN_NAME ... "_peak_ratio",    "0.60",           "peak_mode=1 时，有玩家服务器数/有效服务器数 >= 此比例即视为高峰期", CVAR_FLAGS, true, 0.0, true, 1.0);
+    g_hCvarPeakRatio    = CreateConVar( PLUGIN_NAME ... "_peak_ratio",    "0.70",           "peak_mode=1 时，有玩家服务器数/有效服务器数 >= 此比例即视为高峰期", CVAR_FLAGS, true, 0.0, true, 1.0);
     g_hCvarPeakHoldTime = CreateConVar( PLUGIN_NAME ... "_peak_hold_time", "3600",          "peak_mode=1 时，一旦进入高峰期后至少持续限制多少秒；0=不保持", CVAR_FLAGS, true, 0.0);
     g_hCvarDBConfig     = CreateConVar( PLUGIN_NAME ... "_db_config",     "l4dstats",        "peak_mode=1 使用的 databases.cfg 区块名", CVAR_FLAGS);
     g_hCvarServerId     = CreateConVar( PLUGIN_NAME ... "_server_id",     "",               "本服务器唯一ID；留空时优先从hostname提取前缀#编号，如Anne云服#21，失败则使用hostname:hostport", CVAR_FLAGS);
@@ -385,7 +389,7 @@ Action Timer_DetectPlayerCount(Handle timer)
     if (!g_bCvarEnable)
         return Plugin_Continue;
 
-    if (g_iCvarSurvivorLimit + GetInfectedSlots() > g_iCvarCount)
+    if (!ShouldCheckCurrentMode())
         return Plugin_Continue;
 
     if (g_iCvarPeakMode == 1)
@@ -395,7 +399,7 @@ Action Timer_DetectPlayerCount(Handle timer)
     }
 
     if (IsInConfiguredTime())
-        ApplyPeakRestriction();
+        ApplyRestriction(RestrictionReason_TimeRestricted);
 
     return Plugin_Continue;
 }
@@ -429,20 +433,30 @@ bool IsInConfiguredTime()
     return bIsInCvarTime;
 }
 
-void ApplyPeakRestriction()
+void ApplyRestriction(ERestrictionReason reason)
 {
     if (IsAnyAdminOnline())
         return;
 
     ServerCommand("sm_resetmatch");
-    if (g_iCvarPeakMode == 1 && g_bLastPeakKnown)
+    int iModeSlots = GetModePlayerSlots();
+    int iMultiMin = g_iCvarCount + 1;
+
+    switch (reason)
     {
-        int iRemain = GetPeakHoldRemaining();
-        CPrintToChatAll("%t", "L4DPlayerCountUnloadMode_AdministratorNotPresentPlayersAll", g_iLastActiveServers, g_iLastTotalServers, g_fCvarPeakRatio * 100.0, RoundToCeil(float(iRemain) / 60.0), g_iCvarCount);
-    }
-    else
-    {
-        CPrintToChatAll("%t", "L4DPlayerCountUnloadMode_AdministratorNotPresentCurrentlyRestricted", g_iCvarCount);
+        case RestrictionReason_GoodServerReserved:
+        {
+            CPrintToChatAll("%t", "L4DPlayerCountUnloadMode_GoodServerReserved", iMultiMin, iModeSlots);
+        }
+        case RestrictionReason_PeakNormalSingle:
+        {
+            int iRemain = GetPeakHoldRemaining();
+            CPrintToChatAll("%t", "L4DPlayerCountUnloadMode_PeakNormalSingle", g_iLastActiveServers, g_iLastTotalServers, g_fCvarPeakRatio * 100.0, RoundToCeil(float(iRemain) / 60.0), iModeSlots);
+        }
+        default:
+        {
+            CPrintToChatAll("%t", "L4DPlayerCountUnloadMode_TimeRestricted", iMultiMin, iModeSlots);
+        }
     }
 }
 
@@ -453,7 +467,7 @@ void SetupPeakDatabase()
 
     g_bDBReady = false;
     g_bPeakQueryPending = false;
-    g_bLastPeakKnown = false;
+    g_bLastGoodServer = false;
     g_iLastActiveServers = 0;
     g_iLastTotalServers = 0;
     g_iLastStatusWriteTime = 0;
@@ -505,6 +519,7 @@ void CreateStatusTable()
                 `players` INT NOT NULL DEFAULT 0, \
                 `updated_at` INT NOT NULL DEFAULT 0, \
                 `enabled` TINYINT NOT NULL DEFAULT 1, \
+                `is_good_server` TINYINT NOT NULL DEFAULT 0, \
                 PRIMARY KEY (`server_id`), \
                 KEY `updated_at` (`updated_at`) \
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
@@ -518,7 +533,8 @@ void CreateStatusTable()
                 `hostname` TEXT NOT NULL DEFAULT '', \
                 `players` INTEGER NOT NULL DEFAULT 0, \
                 `updated_at` INTEGER NOT NULL DEFAULT 0, \
-                `enabled` INTEGER NOT NULL DEFAULT 1 \
+                `enabled` INTEGER NOT NULL DEFAULT 1, \
+                `is_good_server` INTEGER NOT NULL DEFAULT 0 \
             )",
             g_sCvarStatusTable);
     }
@@ -534,6 +550,43 @@ public void SQLCB_CreateStatusTable(Handle owner, Handle hndl, const char[] erro
         return;
     }
 
+    EnsureStatusGoodServerColumn();
+}
+
+void EnsureStatusGoodServerColumn()
+{
+    char sQuery[512];
+    if (g_bIsMySQL)
+    {
+        FormatEx(sQuery, sizeof(sQuery),
+            "ALTER TABLE `%s` ADD COLUMN `is_good_server` TINYINT NOT NULL DEFAULT 0 AFTER `enabled`",
+            g_sCvarStatusTable);
+    }
+    else
+    {
+        FormatEx(sQuery, sizeof(sQuery),
+            "ALTER TABLE `%s` ADD COLUMN `is_good_server` INTEGER NOT NULL DEFAULT 0",
+            g_sCvarStatusTable);
+    }
+
+    SQL_TQuery(g_hDB, SQLCB_EnsureStatusGoodServerColumn, sQuery);
+}
+
+public void SQLCB_EnsureStatusGoodServerColumn(Handle owner, Handle hndl, const char[] error, any data)
+{
+    if (hndl == null && error[0] != '\0'
+        && StrContains(error, "Duplicate column", false) == -1
+        && StrContains(error, "duplicate column", false) == -1)
+    {
+        LogError("[%s] Add status good-server column failed: %s", PLUGIN_NAME, error);
+        return;
+    }
+
+    CreatePeakStateTable();
+}
+
+void CreatePeakStateTable()
+{
     char sQuery[512];
     if (g_bIsMySQL)
     {
@@ -628,15 +681,8 @@ void UpdateServerStatus(bool bForce = false)
     else
         strcopy(sHostname, sizeof(sHostname), "server");
 
-    if (g_bAutoServerId)
-    {
-        if (!TryBuildIndexedHostnameId(sHostname, sServerId, sizeof(sServerId)))
-            return;
-    }
-    else
-    {
-        strcopy(sServerId, sizeof(sServerId), g_sCvarServerId);
-    }
+    if (!BuildCurrentServerId(sHostname, sServerId, sizeof(sServerId)))
+        return;
 
     SQL_EscapeString(g_hDB, sServerId, sEscServerId, sizeof(sEscServerId));
     SQL_EscapeString(g_hDB, sHostname, sEscHostname, sizeof(sEscHostname));
@@ -645,20 +691,26 @@ void UpdateServerStatus(bool bForce = false)
     if (g_bIsMySQL)
     {
         FormatEx(sQuery, sizeof(sQuery),
-            "REPLACE INTO `%s` (`server_id`, `hostname`, `players`, `updated_at`, `enabled`) VALUES ('%s', '%s', %d, UNIX_TIMESTAMP(), 1)",
+            "INSERT INTO `%s` (`server_id`, `hostname`, `players`, `updated_at`, `enabled`) VALUES ('%s', '%s', %d, UNIX_TIMESTAMP(), 1) \
+             ON DUPLICATE KEY UPDATE `hostname` = VALUES(`hostname`), `players` = VALUES(`players`), `updated_at` = VALUES(`updated_at`), `enabled` = VALUES(`enabled`)",
             g_sCvarStatusTable, sEscServerId, sEscHostname, iPlayers);
+        SQL_TQuery(g_hDB, SQLCB_Generic, sQuery);
     }
     else
     {
         FormatEx(sQuery, sizeof(sQuery),
-            "REPLACE INTO `%s` (`server_id`, `hostname`, `players`, `updated_at`, `enabled`) VALUES ('%s', '%s', %d, strftime('%%s','now'), 1)",
+            "INSERT OR IGNORE INTO `%s` (`server_id`, `hostname`, `players`, `updated_at`, `enabled`) VALUES ('%s', '%s', %d, strftime('%%s','now'), 1)",
             g_sCvarStatusTable, sEscServerId, sEscHostname, iPlayers);
+        SQL_TQuery(g_hDB, SQLCB_Generic, sQuery);
+
+        FormatEx(sQuery, sizeof(sQuery),
+            "UPDATE `%s` SET `hostname` = '%s', `players` = %d, `updated_at` = strftime('%%s','now'), `enabled` = 1 WHERE `server_id` = '%s'",
+            g_sCvarStatusTable, sEscHostname, iPlayers, sEscServerId);
+        SQL_TQuery(g_hDB, SQLCB_Generic, sQuery);
     }
 
     g_iLastStatusWriteTime = iNow;
     g_iLastStatusPlayerCount = iPlayers;
-
-    SQL_TQuery(g_hDB, SQLCB_Generic, sQuery);
 }
 
 void QueryPeakState(int iReplyUserid)
@@ -670,8 +722,12 @@ void QueryPeakState(int iReplyUserid)
     {
         if (iReplyUserid != 0)
             ReplyPeakStatus(iReplyUserid, false, false);
-        else if (g_bLastPeakKnown && g_bLastPeakActive)
-            ApplyPeakRestriction();
+        else
+        {
+            ERestrictionReason reason = GetRestrictionReason(g_bLastPeakActive, g_bLastGoodServer);
+            if (reason != RestrictionReason_None)
+                ApplyRestriction(reason);
+        }
         return;
     }
 
@@ -682,18 +738,30 @@ void QueryPeakState(int iReplyUserid)
     if (iReplyUserid == 0)
         g_bPeakQueryPending = true;
 
-    char sQuery[768];
+    char sHostname[256], sServerId[256], sEscServerId[512];
+    ConVar hHostname = FindConVar("hostname");
+    if (hHostname != null)
+        hHostname.GetString(sHostname, sizeof(sHostname));
+    else
+        strcopy(sHostname, sizeof(sHostname), "server");
+
+    if (BuildCurrentServerId(sHostname, sServerId, sizeof(sServerId)))
+        SQL_EscapeString(g_hDB, sServerId, sEscServerId, sizeof(sEscServerId));
+    else
+        sEscServerId[0] = '\0';
+
+    char sQuery[1024];
     if (g_bIsMySQL)
     {
         FormatEx(sQuery, sizeof(sQuery),
-            "SELECT SUM(CASE WHEN `players` > 0 THEN 1 ELSE 0 END), COUNT(*), COALESCE((SELECT `hold_until` FROM `%s` WHERE `state_key` = 'global' LIMIT 1), 0) FROM `%s` WHERE `enabled` = 1 AND `updated_at` >= UNIX_TIMESTAMP() - %d",
-            PEAK_STATE_TABLE, g_sCvarStatusTable, g_iCvarStatusMaxAge);
+            "SELECT SUM(CASE WHEN `players` > 0 THEN 1 ELSE 0 END), COUNT(*), COALESCE((SELECT `hold_until` FROM `%s` WHERE `state_key` = 'global' LIMIT 1), 0), COALESCE((SELECT `is_good_server` FROM `%s` WHERE `server_id` = '%s' LIMIT 1), 0) FROM `%s` WHERE `enabled` = 1 AND `updated_at` >= UNIX_TIMESTAMP() - %d",
+            PEAK_STATE_TABLE, g_sCvarStatusTable, sEscServerId, g_sCvarStatusTable, g_iCvarStatusMaxAge);
     }
     else
     {
         FormatEx(sQuery, sizeof(sQuery),
-            "SELECT SUM(CASE WHEN `players` > 0 THEN 1 ELSE 0 END), COUNT(*), COALESCE((SELECT `hold_until` FROM `%s` WHERE `state_key` = 'global' LIMIT 1), 0) FROM `%s` WHERE `enabled` = 1 AND `updated_at` >= strftime('%%s','now') - %d",
-            PEAK_STATE_TABLE, g_sCvarStatusTable, g_iCvarStatusMaxAge);
+            "SELECT SUM(CASE WHEN `players` > 0 THEN 1 ELSE 0 END), COUNT(*), COALESCE((SELECT `hold_until` FROM `%s` WHERE `state_key` = 'global' LIMIT 1), 0), COALESCE((SELECT `is_good_server` FROM `%s` WHERE `server_id` = '%s' LIMIT 1), 0) FROM `%s` WHERE `enabled` = 1 AND `updated_at` >= strftime('%%s','now') - %d",
+            PEAK_STATE_TABLE, g_sCvarStatusTable, sEscServerId, g_sCvarStatusTable, g_iCvarStatusMaxAge);
     }
 
     SQL_TQuery(g_hDB, SQLCB_QueryPeakState, sQuery, iReplyUserid);
@@ -723,10 +791,12 @@ public void SQLCB_QueryPeakState(Handle owner, Handle hndl, const char[] error, 
     int iActiveServers = SQL_FetchInt(hndl, 0);
     int iTotalServers = SQL_FetchInt(hndl, 1);
     int iGlobalHoldUntil = SQL_FetchInt(hndl, 2);
+    bool bGoodServer = (SQL_FetchInt(hndl, 3) != 0);
     bool bRawPeak = false;
 
     g_iLastActiveServers = iActiveServers;
     g_iLastTotalServers = iTotalServers;
+    g_bLastGoodServer = bGoodServer;
 
     if (iTotalServers > 0)
     {
@@ -747,16 +817,16 @@ public void SQLCB_QueryPeakState(Handle owner, Handle hndl, const char[] error, 
 
     bool bIsPeak = bRawPeak || (g_iPeakHoldUntil > iNow);
 
-    g_bLastPeakKnown = true;
     g_bLastPeakActive = bIsPeak;
 
     if (iReplyUserid != 0)
         ReplyPeakStatus(iReplyUserid, true, bRawPeak);
 
-    if (!bIsPeak || !g_bCvarEnable || g_iCvarSurvivorLimit + GetInfectedSlots() > g_iCvarCount)
+    ERestrictionReason reason = GetRestrictionReason(bIsPeak, g_bLastGoodServer);
+    if (!g_bCvarEnable || reason == RestrictionReason_None)
         return;
 
-    ApplyPeakRestriction();
+    ApplyRestriction(reason);
 }
 
 public void SQLCB_Generic(Handle owner, Handle hndl, const char[] error, any data)
@@ -818,13 +888,13 @@ void ReplyPeakStatus(int iReplyUserid, bool bQueryOk, bool bRawPeak)
     int iRemain = GetPeakHoldRemaining();
     if (g_bLastPeakActive)
     {
-        ReplyToCommand(client, "[Peak] 当前处于高峰期限制。全服有玩家服务器: %d/%d (%.1f%%)，阈值: %.0f%%，本轮锁定剩余: %d 分钟，实时占比%s达到阈值。",
-            g_iLastActiveServers, g_iLastTotalServers, fRatio * 100.0, g_fCvarPeakRatio * 100.0, RoundToCeil(float(iRemain) / 60.0), bRawPeak ? "已" : "未");
+        ReplyToCommand(client, "[Peak] 当前处于高峰期。全服有玩家服务器: %d/%d (%.1f%%)，阈值: %.0f%%，本轮锁定剩余: %d 分钟，实时占比%s达到阈值。本服好服务器: %s。规则：好服务器始终保留给%d人及以上模式；高峰期非好服务器也不开放单人模式；管理员在场免疫。",
+            g_iLastActiveServers, g_iLastTotalServers, fRatio * 100.0, g_fCvarPeakRatio * 100.0, RoundToCeil(float(iRemain) / 60.0), bRawPeak ? "已" : "未", g_bLastGoodServer ? "是" : "否", g_iCvarCount + 1);
     }
     else
     {
-        ReplyToCommand(client, "[Peak] 当前未进入高峰期限制。全服有玩家服务器: %d/%d (%.1f%%)，阈值: %.0f%%。",
-            g_iLastActiveServers, g_iLastTotalServers, fRatio * 100.0, g_fCvarPeakRatio * 100.0);
+        ReplyToCommand(client, "[Peak] 当前未进入高峰期。全服有玩家服务器: %d/%d (%.1f%%)，阈值: %.0f%%。本服好服务器: %s。规则：好服务器始终保留给%d人及以上模式；高峰期非好服务器也不开放单人模式；管理员在场免疫。",
+            g_iLastActiveServers, g_iLastTotalServers, fRatio * 100.0, g_fCvarPeakRatio * 100.0, g_bLastGoodServer ? "是" : "否", g_iCvarCount + 1);
     }
 }
 
@@ -913,6 +983,40 @@ int GetInfectedSlots()
     }
 }
 
+int GetModePlayerSlots()
+{
+    return g_iCvarSurvivorLimit + GetInfectedSlots();
+}
+
+bool IsCurrentSinglePlayerMode()
+{
+    return g_iCvarSurvivorLimit <= 1 && GetInfectedSlots() == 0;
+}
+
+bool IsBelowMultiplayerMode()
+{
+    return GetModePlayerSlots() <= g_iCvarCount;
+}
+
+bool ShouldCheckCurrentMode()
+{
+    if (g_iCvarPeakMode == 1)
+        return IsBelowMultiplayerMode() || IsCurrentSinglePlayerMode();
+
+    return IsBelowMultiplayerMode();
+}
+
+ERestrictionReason GetRestrictionReason(bool bIsPeak, bool bGoodServer)
+{
+    if (bGoodServer && IsBelowMultiplayerMode())
+        return RestrictionReason_GoodServerReserved;
+
+    if (bIsPeak && !bGoodServer && IsCurrentSinglePlayerMode())
+        return RestrictionReason_PeakNormalSingle;
+
+    return RestrictionReason_None;
+}
+
 int GetHumanPlayerCount()
 {
     int iCount = 0;
@@ -946,6 +1050,15 @@ void BuildServerIdFromHostname(const char[] hostname, char[] buffer, int maxlen)
     int iPort = (hHostPort != null) ? hHostPort.IntValue : 0;
 
     FormatEx(buffer, maxlen, "%s:%d", hostname, iPort);
+}
+
+bool BuildCurrentServerId(const char[] hostname, char[] buffer, int maxlen)
+{
+    if (g_bAutoServerId)
+        return TryBuildIndexedHostnameId(hostname, buffer, maxlen);
+
+    strcopy(buffer, maxlen, g_sCvarServerId);
+    return buffer[0] != '\0';
 }
 
 bool TryBuildIndexedHostnameId(const char[] hostname, char[] buffer, int maxlen)

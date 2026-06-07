@@ -41,6 +41,12 @@ Action Timer_StartNewWave(Handle timer)
     return Plugin_Stop;
 }
 
+static void ScheduleNextWave()
+{
+    gST.bShouldCheck = false;
+    gST.hSpawn = CreateTimer(0.1, Timer_StartNewWave);
+}
+
 Action Timer_CheckSpawnWindow(Handle timer)
 {
     if (g_bPauseLib && IsInPause())
@@ -48,8 +54,11 @@ Action Timer_CheckSpawnWindow(Handle timer)
         if (gST.hSpawn != INVALID_HANDLE)
         {
             gST.unpauseDelay = gCV.fSiInterval - (GetGameTime() - gST.lastWaveStartTime);
+            if (gST.unpauseDelay < 0.1)
+                gST.unpauseDelay = 0.1;
             KillTimer(gST.hSpawn);
             gST.hSpawn = INVALID_HANDLE;
+            gST.bPausedSpawnTimer = true;
         }
         return Plugin_Continue;
     }
@@ -64,39 +73,20 @@ Action Timer_CheckSpawnWindow(Handle timer)
     if (survivorLimit >= 2 && IsAnyTankOrAboveHalfSurvivorDownOrDied(1) && !DifficultyStrategy_CanEvaluateWave())
         return Plugin_Continue;
 
-    bool reachedSpawnFloor = DifficultyStrategy_CanStartNormalWave();
-    bool lowSiPressure = DifficultyStrategy_IsLowSiPressure();
-    bool shouldStartByLatest = AntiBait_ShouldStartWaveByLatest();
-    bool shouldStartByPressure = AntiBait_ShouldStartWaveEarly();
+    bool reachedConfiguredSpawnTime = DifficultyStrategy_CanStartConfiguredWave();
+    bool shouldHoldByAntiBait = AntiBait_ShouldHoldWave();
 
     // 注意：0.1s 定时器只用于延迟调用，真正的间隔保护由
-    // DifficultyStrategy_GetWaveFloorDelay() 的难度 floor 负责。
-    if (!gCV.bAutoSpawn)
+    // versus_special_respawn_interval 负责；anti-baiter 只会在到点后拦截或放行。
+    if (reachedConfiguredSpawnTime)
     {
         if (gST.siQueueCount == gCV.iSiLimit)
         {
             gST.lastSpawnSecs = 0;
         }
-        else if (reachedSpawnFloor || shouldStartByLatest || shouldStartByPressure)
+        else if (!shouldHoldByAntiBait)
         {
-            gST.bShouldCheck = false;
-            gST.hSpawn = CreateTimer(0.1, Timer_StartNewWave);
-        }
-    }
-    else if (reachedSpawnFloor && (
-        (IsAllKillersDown() && gST.siQueueCount == 0)
-        || (lowSiPressure && gST.siQueueCount == 0)
-        || shouldStartByLatest
-        || shouldStartByPressure))
-    {
-        if (gST.siQueueCount == gCV.iSiLimit)
-        {
-            gST.lastSpawnSecs = 0;
-        }
-        else
-        {
-            gST.bShouldCheck = false;
-            gST.hSpawn = CreateTimer(0.1, Timer_StartNewWave);
+            ScheduleNextWave();
         }
     }
 
@@ -108,16 +98,20 @@ void PauseSpawnTimer()
     if (gST.hSpawn != INVALID_HANDLE)
     {
         gST.unpauseDelay = gCV.fSiInterval - (GetGameTime() - gST.lastWaveStartTime);
+        if (gST.unpauseDelay < 0.1)
+            gST.unpauseDelay = 0.1;
         KillTimer(gST.hSpawn);
         gST.hSpawn = INVALID_HANDLE;
+        gST.bPausedSpawnTimer = true;
         Debug_Print("Pause spawn timer, resume after %.2f", gST.unpauseDelay);
     }
 }
 
 void UnpauseSpawnTimer(float delay)
 {
-    if (gST.hSpawn == INVALID_HANDLE)
+    if (gST.bPausedSpawnTimer && gST.hSpawn == INVALID_HANDLE)
     {
+        gST.bPausedSpawnTimer = false;
         gST.hSpawn = CreateTimer(delay, Timer_StartNewWave);
         Debug_Print("Resume spawn in %.2f", delay);
     }

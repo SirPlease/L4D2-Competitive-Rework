@@ -25,18 +25,21 @@ int DifficultyStrategy_GetLevel()
 float DifficultyStrategy_GetWaveCheckDelay()
 {
     int level = DifficultyStrategy_GetLevel();
-    float delay = gCV.fSiInterval * gCV.fAiWaveCheckRatio[level];
-    return FloatMax(1.0, delay);
+    float delay = gCV.fAiWaveCheckTime[level];
+    if (gCV.fSiInterval <= 1.0)
+        return FloatMax(0.0, gCV.fSiInterval);
+
+    return ClampFloat(delay, 1.0, gCV.fSiInterval);
 }
 
-float DifficultyStrategy_GetWaveFloorDelay()
+stock float DifficultyStrategy_GetWaveFloorDelay()
 {
     int level = DifficultyStrategy_GetLevel();
     float delay = gCV.fSiInterval * gCV.fAiWaveFloorRatio[level];
     return FloatMax(gCV.fSiInterval, delay);
 }
 
-int DifficultyStrategy_GetLowSiThreshold()
+stock int DifficultyStrategy_GetLowSiThreshold()
 {
     int level = DifficultyStrategy_GetLevel();
     float ratio = gCV.fAiWaveLowSiRatio[level];
@@ -51,7 +54,7 @@ int DifficultyStrategy_GetLowSiThreshold()
     return threshold;
 }
 
-bool DifficultyStrategy_IsLowSiPressure()
+stock bool DifficultyStrategy_IsLowSiPressure()
 {
     int threshold = DifficultyStrategy_GetLowSiThreshold();
     return threshold > 0 && gST.totalSI <= threshold;
@@ -79,7 +82,17 @@ bool DifficultyStrategy_CanEvaluateWave()
     return float(gST.lastSpawnSecs) >= DifficultyStrategy_GetWaveCheckDelay();
 }
 
-bool DifficultyStrategy_CanStartNormalWave()
+float DifficultyStrategy_GetConfiguredWaveDelay()
+{
+    return gCV.fSiInterval;
+}
+
+bool DifficultyStrategy_CanStartConfiguredWave()
+{
+    return float(gST.lastSpawnSecs) >= DifficultyStrategy_GetConfiguredWaveDelay();
+}
+
+stock bool DifficultyStrategy_CanStartNormalWave()
 {
     return float(gST.lastSpawnSecs) >= DifficultyStrategy_GetWaveFloorDelay();
 }

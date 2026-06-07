@@ -8,4 +8,16 @@
 	{
 		"chi"		"管理员不在场，当前处于限制时间段；本模式人数不足 {green}%d{default} 人，{green}强制卸载模式!!!!"
 	}
+	"L4DPlayerCountUnloadMode_GoodServerReserved"
+	{
+		"chi"		"管理员不在场，本服是好服务器，保留给 {green}%d{default} 人及以上多人模式；当前模式只有 {green}%d{default} 人位，{green}强制卸载模式!!!!"
+	}
+	"L4DPlayerCountUnloadMode_PeakNormalSingle"
+	{
+		"chi"		"管理员不在场，当前全服 {green}%d/%d{default} 台服务器有玩家，达到高峰期阈值 {green}%.0f%%{default}，限制剩余约 {green}%d{default} 分钟；高峰期非好服务器不开放单人模式，当前模式只有 {green}%d{default} 人位，{green}强制卸载模式!!!!"
+	}
+	"L4DPlayerCountUnloadMode_TimeRestricted"
+	{
+		"chi"		"管理员不在场，当前处于限制时间段，仅允许 {green}%d{default} 人及以上模式；当前模式只有 {green}%d{default} 人位，{green}强制卸载模式!!!!"
+	}
 }

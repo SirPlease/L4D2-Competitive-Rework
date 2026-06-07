@@ -8,4 +8,16 @@
 	{
 		"jp"		"管理者は不在のため、現在制限時間帯にあります。このモードには人が足りません {green}%d{default} 人、{green} 強制アンインストール モード!!!!"
 	}
+	"L4DPlayerCountUnloadMode_GoodServerReserved"
+	{
+		"jp"		"No administrator is present. This good server is reserved for modes with {green}%d{default} or more player slots; current mode has {green}%d{default} slots, {green}forcing mode unload!!!!"
+	}
+	"L4DPlayerCountUnloadMode_PeakNormalSingle"
+	{
+		"jp"		"No administrator is present. {green}%d/%d{default} active servers reached the peak threshold {green}%.0f%%{default}, about {green}%d{default} minutes remain; normal servers do not allow single-player modes during peak time, current mode has {green}%d{default} slot, {green}forcing mode unload!!!!"
+	}
+	"L4DPlayerCountUnloadMode_TimeRestricted"
+	{
+		"jp"		"No administrator is present. This is a restricted time period, only modes with {green}%d{default} or more player slots are allowed; current mode has {green}%d{default} slots, {green}forcing mode unload!!!!"
+	}
 }

@@ -209,7 +209,7 @@ int ChooseTargetSurvivor()
     return fb;
 }
 
-bool IsAllKillersDown()
+stock bool IsAllKillersDown()
 {
     int sum = gST.siAlive[view_as<int>(SI_Charger) - 1] + gST.siAlive[view_as<int>(SI_Hunter) - 1] + gST.siAlive[view_as<int>(SI_Jockey) - 1] + gST.siAlive[view_as<int>(SI_Smoker) - 1];
     return sum == 0;
