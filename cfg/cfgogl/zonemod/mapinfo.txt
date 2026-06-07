@@ -2987,9 +2987,12 @@
 //=============== Outline 跨越边境
 	"outline_m4"
 	{
+	//	"max_distance"		"800"
+	//	900 now, consider reduce score because its too long stages? not sure how to do
+	//	现版本自带是900分，考虑降低路程分？不确定如何做
 		"ItemLimits"
 		{
-			"pain_pills"	"4"
+			"pain_pills"	"6"
 		}
 	}
 	
