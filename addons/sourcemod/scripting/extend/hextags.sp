@@ -78,6 +78,7 @@ bool bWarden;
 bool bMyJBWarden;
 bool bGangs;
 bool bSteamWorks = true;
+bool bCanUseClanTags;
 bool bHideTag[MAXPLAYERS + 1];
 bool bHasRoundEnded;
 bool bIsAnonymous[MAXPLAYERS + 1];
@@ -125,6 +126,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	
 	EngineVersion engine = GetEngineVersion();
 	bCSGO = (engine == Engine_CSGO || engine == Engine_CSS);
+	bCanUseClanTags = bCSGO && GetFeatureStatus(FeatureType_Native, "CS_SetClientClanTag") == FeatureStatus_Available;
 	
 	//LateLoad
 	//bLate = late;
@@ -307,8 +309,7 @@ public void warden_OnWardenCreated(int client)
 
 public void warden_OnWardenRemoved(int client)
 {
-	if (bCSGO)
-		CS_SetClientClanTag(client, sUserTag[client]);
+	SetClientScoreTag(client, sUserTag[client]);
 	
 	RequestFrame(Frame_LoadTag, client);
 	
@@ -349,8 +350,7 @@ public void warden_OnDeputyCreated(int client)
 
 public void warden_OnDeputyRemoved(int client)
 {
-	if (bCSGO)
-		CS_SetClientClanTag(client, sUserTag[client]);
+	SetClientScoreTag(client, sUserTag[client]);
 	
 	RequestFrame(Frame_LoadTag, client);
 }
@@ -376,7 +376,7 @@ public Action Cmd_ToggleTags(int client, int args)
 	else
 	{
 		bHideTag[client] = true;
-		CS_SetClientClanTag(client, sUserTag[client]);
+		SetClientScoreTag(client, sUserTag[client]);
 		ReplyToCommand(client, "[SM] 你的称号已经不可见.");
 	}
 	
@@ -444,7 +444,7 @@ public int Handler_TagsMenu(Menu menu, MenuAction action, int param1, int param2
 		}
 		else if (selectedTags[param1].ScoreTag[0] != '\0')
 		{
-			CS_SetClientClanTag(param1, selectedTags[param1].ScoreTag);
+			SetClientScoreTag(param1, selectedTags[param1].ScoreTag);
 		}
 		iSelTagId[param1] = selectedTags[param1].SectionId;
 		
@@ -538,7 +538,7 @@ public void OnClientCookiesCached(int client)
 		bIsAnonymous[client] = true;
 		
 		LoadTags(client);
-		CS_SetClientClanTag(client, selectedTags[client].ScoreTag);
+		SetClientScoreTag(client, selectedTags[client].ScoreTag);
 	}
 	return;
 }
@@ -569,7 +569,7 @@ public Action RankMe_LoadTags(int client, int rank, any data)
 			return Plugin_Continue;
 		
 		ReplaceString(selectedTags[client].ScoreTag, sizeof(CustomTags::ScoreTag), "{rmRank}", sRank);
-		CS_SetClientClanTag(client, selectedTags[client].ScoreTag); //Instantly load the score-tag
+		SetClientScoreTag(client, selectedTags[client].ScoreTag); //Instantly load the score-tag
 	}
 	return Plugin_Continue;
 }
@@ -895,7 +895,7 @@ void LoadTags(int client)
 				if (selectedTags[client].ScoreTag[0] == '\0')
 					return;
 				
-				CS_SetClientClanTag(client, selectedTags[client].ScoreTag);
+				SetClientScoreTag(client, selectedTags[client].ScoreTag);
 				return;
 			}
 		}
@@ -1127,7 +1127,7 @@ bool CheckSelector(const char[] selector, int client)
 //Timers
 public Action Timer_ForceTag(Handle timer)
 {
-	if (!bCSGO)
+	if (!bCanUseClanTags)
 		return Plugin_Continue;
 	
 	for (int i = 1; i <= MaxClients; i++)if (IsClientInGame(i) && selectedTags[i].ForceTag && selectedTags[i].ScoreTag[0] != '\0' && !bHideTag[i])
@@ -1141,7 +1141,7 @@ public Action Timer_ForceTag(Handle timer)
 			LogMessage("%L was changed by an external plugin, forcing him back to the HexTags' default one!", i, sTag);
 		}
 		
-		CS_SetClientClanTag(i, selectedTags[i].ScoreTag);
+		SetClientScoreTag(i, selectedTags[i].ScoreTag);
 	}
 	return Plugin_Continue;
 }
@@ -1184,7 +1184,7 @@ void GetTags(int client, KeyValues kv)
 	Call_PushCell(client);
 	Call_Finish();
 	
-	if (tags.ScoreTag[0] != '\0' && bCSGO)
+	if (tags.ScoreTag[0] != '\0' && bCanUseClanTags)
 	{
 		//Update params
 		if (StrContains(tags.ScoreTag, "{country}") != -1)
@@ -1215,7 +1215,7 @@ void GetTags(int client, KeyValues kv)
 		}
 		
 		Debug_Print("Setted tag: %s", tags.ScoreTag);
-		CS_SetClientClanTag(client, tags.ScoreTag); //Instantly load the score-tag
+		SetClientScoreTag(client, tags.ScoreTag); //Instantly load the score-tag
 	}
 	if (StrContains(tags.ChatTag, "{rainbow}") == 0)
 	{
@@ -1425,6 +1425,14 @@ public int Native_AddCustomSelector(Handle plugin, int numParams)
 public int Native_RemoveCustomSelector(Handle plugin, int numParams)
 {
 	return pfCustomSelector.RemoveFunction(plugin, GetNativeFunction(1));
+}
+
+void SetClientScoreTag(int client, const char[] tag)
+{
+	if (!bCanUseClanTags || !IsValidClient(client, true, true))
+		return;
+
+	CS_SetClientClanTag(client, tag);
 }
 
 

@@ -592,7 +592,8 @@ RequestUserInfo(client)
 	SteamWorks_SendHTTPRequest(hRequest);
 	*/
 	char authId64[65];
-	GetClientAuthId(client, AuthId_SteamID64, authId64, sizeof(authId64));
+	if (!GetClientSteamID64(client, authId64, sizeof(authId64)))
+		return;
 	
 	char apikey[65];
 	GetConVarString(g_cvAPIkey, apikey, sizeof(apikey));
@@ -622,7 +623,8 @@ RequestUserInfo(client)
 public Action GetRealTime(Handle hTimer, any client){
 	int gameId = GetConVarInt(cvar_gameId);
 	char authId64[65];
-	GetClientAuthId(client, AuthId_SteamID64, authId64, sizeof(authId64));
+	if (!GetClientSteamID64(client, authId64, sizeof(authId64)))
+		return Plugin_Stop;
 	
 	char apikey[65];
 	GetConVarString(g_cvAPIkey, apikey, sizeof(apikey));
@@ -636,7 +638,8 @@ public Action GetRealTime(Handle hTimer, any client){
 
 public Action GetGroup(Handle hTimer, any client){
 	char authId64[65];
-	GetClientAuthId(client, AuthId_SteamID64, authId64, sizeof(authId64));
+	if (!GetClientSteamID64(client, authId64, sizeof(authId64)))
+		return Plugin_Stop;
 	
 	char apikey[65];
 	GetConVarString(g_cvAPIkey, apikey, sizeof(apikey));
@@ -654,7 +657,8 @@ public Action CachePlayer(Handle hTimer, any client){
 	if(!IsClientConnected(client))
 		return Plugin_Handled;
 	char steamId[64];
-	GetClientAuthId(client, AuthId_Steam2, steamId, sizeof(steamId));
+	if (!GetClientAuthId(client, AuthId_Steam2, steamId, sizeof(steamId)) || StrEqual(steamId, "BOT", false))
+		return Plugin_Handled;
 	CacheUserData(SteamIdToInt(steamId), player[client].totalplaytime, player[client].last2weektime, player[client].isGroupMember, player[client].servertime, player[client].realplaytime);
 	//LogError("%N: 总时长：%i 最近2周：%i 组成员：%i 服务器时长：%i 真实时长：%i(时长单位min)", client, player[client].totalplaytime, player[client].last2weektime, player[client].isGroupMember, player[client].servertime, player[client].realplaytime);
 	return Plugin_Continue;
@@ -663,6 +667,8 @@ public Action CachePlayer(Handle hTimer, any client){
 public void HTTPResponse_GetOwnedGames(HTTPResponse response, int client)
 {
 	//LogError("获取总游戏时长");
+	if (!Veterans_IsValidHumanClient(client))
+		return;
 	
 	if (response.Status != HTTPStatus_OK || response.Data == null)
 	{
@@ -739,6 +745,9 @@ public void HTTPResponse_GetOwnedGames(HTTPResponse response, int client)
 
 public void HTTPResponse_GetUserGroups(HTTPResponse response, int client)
 {	
+	if (!Veterans_IsValidHumanClient(client))
+		return;
+
 	if (response.Status != HTTPStatus_OK || response.Data == null)
 	{
 		LogError("Failed to retrieve response (GetGroupinf) - HTTPStatus: %i", view_as<int>(response.Status));
@@ -824,8 +833,18 @@ bool:IsConfiguredGroupExempt(const String:steamGroupId[])
 
 public void HTTPResponse_GetUserStatsForGame(HTTPResponse response, int client)
 {	
+	if (!Veterans_IsValidHumanClient(client))
+		return;
+
 	if (response.Status != HTTPStatus_OK || response.Data == null)
 	{
+		if (response.Status == HTTPStatus_BadRequest)
+		{
+			player[client].realplaytime = 0;
+			LogMessage("[veterans] GetUserStatsForGame returned HTTP 400 for %N; using 0 real playtime.", client);
+			return;
+		}
+
 		LogError("Failed to retrieve response (GetUserStatsForGame) - HTTPStatus: %i", view_as<int>(response.Status));
 		
 		// seems chances that this error represents privacy as well.
@@ -1048,6 +1067,25 @@ bool:QueryCachedData(int steamIntId, int &totalTime, int &last2WeeksTime, int &i
 }
 
 // --------------------------------- HELPER FUNCTIONS ---------------------------------
+bool:Veterans_IsValidHumanClient(client)
+{
+	return client >= 1
+		&& client <= MaxClients
+		&& IsClientConnected(client)
+		&& !IsFakeClient(client);
+}
+
+bool:GetClientSteamID64(client, String:authId64[], maxlen)
+{
+	if (!Veterans_IsValidHumanClient(client))
+		return false;
+
+	if (!GetClientAuthId(client, AuthId_SteamID64, authId64, maxlen) || authId64[0] == '\0')
+		return false;
+
+	return true;
+}
+
 int SteamIdToInt(const String:steamId[])
 {
     decl String:subinfo[3][16];

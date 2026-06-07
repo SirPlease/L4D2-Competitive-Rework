@@ -498,9 +498,8 @@ stock int CFormat(char[] szMessage, int maxlength, int author = NO_INDEX)
 			continue;
 		}
 
-		/* If found another team color tag throw error */
-		//ReplaceString(szMessage, maxlength, CTag[i], "");
-		ThrowError("Using two team colors in one message is not allowed");
+		/* If another team color tag is found, fall back instead of aborting chat. */
+		ReplaceString(szMessage, maxlength, CTag[i], CTagCode[Color_Green], false);
 	}
 
 	return iRandomPlayer;
@@ -792,7 +791,7 @@ stock void CShowActivity(int client, const char[] format, any ...)
 		bool is_root = GetAdminFlag(id, Admin_Root, Access_Effective);
 
 		if ((value & 4) || (value & 8) || ((value & 16) && is_root)) {
-			char newsign[MAX_NAME_LENGTH]
+			char newsign[MAX_NAME_LENGTH];
 
 			newsign = sign;
 			if ((value & 8) || ((value & 16) && is_root) || (i == client)) {

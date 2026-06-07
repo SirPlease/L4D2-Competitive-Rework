@@ -170,7 +170,7 @@ public void OnPluginEnd()
 
 public Action OnClientSayCommand(int client, const char[] command, const char[] szArgs)
 {
-	if (g_bFullyConnected && !IsFakeClient(client))
+	if (g_bFullyConnected && client > 0 && IsClientInGame(client) && !IsFakeClient(client))
 	{
 		if (strlen(szArgs) > 0 && szArgs[0]!='!' && szArgs[0]!='/')
 		{
@@ -194,7 +194,6 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 
 			if(!GetClientAuthId(client, AuthId_Steam2, szSteamID, sizeof(szSteamID)))
 			{
-				LogError("Player %N's steamid couldn't be fetched", client);
 				return Plugin_Continue;
 			}
 			iServerPort = GetConVarInt( FindConVar( "hostport" ) );
